@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes fonction en UNIMARC (français)
-$Id: sutrs_authfun.xml,v 1.2 2005-03-15 17:19:59 maxman Exp $ -->
+$Id: sutrs_authfun.xml,v 1.2 2005/03/15 17:19:59 maxman Exp $ -->
 
 <XMLlist>
 	<entry code="075">Postfazione di</entry>

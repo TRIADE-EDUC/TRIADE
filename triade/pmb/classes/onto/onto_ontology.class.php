@@ -2,11 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_ontology.class.php,v 1.46 2019-04-26 13:16:54 tsamson Exp $
+// $Id: onto_ontology.class.php,v 1.72 2024/03/22 14:54:51 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $class_path;
 require_once($class_path."/onto/onto_store.class.php");
 require_once($class_path."/onto/common/onto_common_class.class.php");
 require_once($class_path."/onto/common/onto_common_property.class.php");
@@ -33,19 +33,19 @@ class onto_ontology {
 	protected $classes_uris = array();
 
 	/**
-	 * Tableau des instances des classes dÃ©jÃ Â  lues
+	 * Tableau des instances des classes déjà  lues
 	 * @access private
 	 */
 	private $classes;
 
 	/**
-	 * Tableau des URI & infos annexes (domaine, range) des propriÃ©tÃ©s de l'ontologie
+	 * Tableau des URI & infos annexes (domaine, range) des propriétés de l'ontologie
 	 * @access private
 	 */
 	private $properties_uri;
 	
 	/**
-	 * Tableau des instances des propriÃ©tÃ©s dÃ©jÃ Â  lues
+	 * Tableau des instances des propriétés déjà  lues
 	 * @access private
 	 */
 	private $properties;
@@ -57,6 +57,12 @@ class onto_ontology {
 	public $name = "";
 
 	/**
+	 * 
+	 * @access public
+	 */
+	public $title;
+
+	/**
 	 * Store de l'ontologie
 	 * @var onto_store
 	 * @access private
@@ -64,13 +70,13 @@ class onto_ontology {
 	private $store;
 	
 	/**
-	 * Store de donnÃ©es
+	 * Store de données
 	 * @var onto_store
 	 * @access private
 	 */
 	private $data_store;	
 	/**
-	 * Tableau des URI des propriÃ©tÃ©s inverse
+	 * Tableau des URI des propriétés inverse
 	 * @access private
 	 */
 	private $inverse_of;
@@ -100,7 +106,7 @@ class onto_ontology {
 	} // end of member function __construct
 
 	/**
-	 * RÃ©cupÃ¨re le nom informatique de l'ontologie
+	 * Récupère le nom informatique de l'ontologie
 	 *
 	 * @return void
 	 * @access private
@@ -126,7 +132,7 @@ class onto_ontology {
 	}
 	
 	/**
-	 * RÃ©cupÃ¨re la liste des URI des classes de l'ontologie (propriÃ©tÃ© classes_uri)
+	 * Récupère la liste des URI des classes de l'ontologie (propriété classes_uri)
 	 *
 	 * @return void
 	 * @access public
@@ -145,9 +151,13 @@ class onto_ontology {
     		$query  = "select * where { 
     			?class rdf:type <http://www.w3.org/2002/07/owl#Class> .
     			?class rdfs:label ?label .
+    			?class pmb:name ?pmb_name .
     			?class pmb:name ?name .
                 optional {
                 	?class pmb:flag ?flag .
+    			}.	
+                optional {
+                	?class pmb:field ?field .
     			}.	
     			optional {
     				?class rdfs:subClassOf ?sub_class_of .
@@ -160,16 +170,23 @@ class onto_ontology {
     		
     		if($this->store->query($query)){
     			if($this->store->num_rows()){
-    				$result = $this->store->get_result();		
+    				$result = $this->store->get_result();
     				foreach ($result as $elem){
+    				    if(!empty($elem->flag) && $elem->flag === "internal"){
+    				        // On utilise ce flag pour masquer de l'interface certains éléments
+    				        continue;
+    				    }
                         if (!isset($this->classes_uris[$elem->class])) {
     						$class = new onto_class();
     						$class->uri = $elem->class;
     						$class->name = $elem->label;
-    						$class->pmb_name = $elem->name;
+    						$class->pmb_name = $elem->pmb_name;
+    						$class->label = $this->get_label($elem);
     						$this->classes_uris[$elem->class] = $class;					
                         }        
-    
+                        if(isset($elem->field)) {
+                            $this->classes_uris[$elem->class]->field = $elem->field;
+                        }
                         if(isset($elem->sub_class_of)) {
                         	$this->classes_uris[$elem->class]->add_sub_class_of($elem->sub_class_of);
                         }
@@ -196,7 +213,7 @@ class onto_ontology {
 	} // end of member function get_classes
 
 	/**
-	 * Retourne une instance de la classe correspondante Ã  l'URI
+	 * Retourne une instance de la classe correspondante à l'URI
 	 *
 	 * @param string uri_class 
 
@@ -211,6 +228,7 @@ class onto_ontology {
 			$class_name = $this->get_class_name("class", $elements);
 			$this->classes[$uri_class] = new $class_name($uri_class,$this);
 			$this->classes[$uri_class]->set_pmb_name($this->classes_uris[$uri_class]->pmb_name);
+			$this->classes[$uri_class]->set_field($this->classes_uris[$uri_class]->field);
 			$this->classes[$uri_class]->set_onto_name($this->name);
 			$this->classes[$uri_class]->set_data_store($this->data_store);
 		}
@@ -218,7 +236,7 @@ class onto_ontology {
 	} // end of member function get_class
 
 	/**
-	 * RÃ©cupÃ¨re les cardinalitÃ©s entre une classe et une propriÃ©tÃ©
+	 * Récupère les cardinalités entre une classe et une propriété
 	 *
 	 * @param string uri_class 
 
@@ -266,6 +284,10 @@ class onto_ontology {
 						$restriction->set_max($result->max);
 					}
 				}
+			} else {
+			    if (isset($this->classes_uris[$uri_class]->sub_class_of[0])) {
+			        return $this->get_restriction($this->classes_uris[$uri_class]->sub_class_of[0],$uri_property);
+			    }
 			}
 		}else{
 			var_dump($this->store->get_errors());
@@ -274,7 +296,7 @@ class onto_ontology {
 	} // end of member function get_card
 
 	/**
-	 * Retourne la liste des URI des propriÃ©tÃ©s avec les domain et range (propriÃ©tÃ©
+	 * Retourne la liste des URI des propriétés avec les domain et range (propriété
 	 * properties_uri)
 	 *
 	 * @return void
@@ -282,191 +304,137 @@ class onto_ontology {
 	 */
 	public function get_properties( ) {
 	    if (!$this->properties_uri) {
-	        //UPPRESSION TEMPORAIRE DU CACHE
- 		    /*$cache = cache_factory::getCache();
- 		    if(is_object($cache)){
- 		        $properties_uri = $cache->getFromCache('onto_'.$this->name.'_properties');
- 		        if(is_array($properties_uri) && count($properties_uri)){
-                    $this->properties_uri = $properties_uri;
-                    return $this->properties_uri;
- 		        }
- 		    }*/
-		    
-			$query  = "select * where {
-				?property rdf:type <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
-				?property rdfs:label ?label .
-				?property pmb:name ?name . 
-				optional {
-					?property rdfs:range ?range
-				} .
+	        
+	        $success  = $this->store->query("select * where {
+				?property rdf:type <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .	
+                optional {
+                	?property pmb:subfield ?subfield .
+    			}.	
 				optional {
 					?property rdfs:domain ?domain
-				}
-				optional {
-					?property pmb:datatype ?datatype
 				} .
+                optional {
+                    ?property rdfs:range ?range
+                } .
+                optional {
+                    ?property pmb:flag ?flag
+                } .
 				optional {
 					?property pmb:defaultValueType ?default_value .
-					?property pmb:defaultValue ?default_value_name
-				} . 
-				optional {
-					?property pmb:flag ?flag				
-				} . 
-				optional {
-					?property pmb:marclist_type ?marclist_type				
-				} . 
+					?property pmb:defaultValue ?default_value_name .
+				} .
 				optional {
 					?property pmb:list_item ?list_item .
 					optional {
 						?list_item rdfs:label ?list_item_value .
 						?list_item pmb:identifier ?list_item_id .
-					}
-					
-				} .
-				optional {
-					?property pmb:list_query ?list_query				
-				} .
-				optional {
-					?property pmb:cp_options ?cp_options				
-				} .
-				optional {
-					?property pmb:extended ?extended .
-					optional {
-						?extended ?extended_prop ?extended_object .
-						optional {
-							?extended pmb:default_value ?extended_default_value .
-							optional {
-								?extended_default_value ?extended_uri_blank_node ?extended_blank_node .
-								optional {
-									?extended_blank_node pmb:value ?extended_value.
-									optional {
-										?extended_value ?extended_value_uri_blank_node ?extended_value_blank_node .
-									}.
-									optional {
-										?extended_blank_node pmb:lang ?extended_lang.
-									}.
-									optional {
-										?extended_blank_node pmb:type ?extended_type.
-									}.
-									optional {
-										?extended_blank_node pmb:display_label ?extended_display_label.
-									}
-								}
-							}
-						}
+						?list_item pmb:msg_code ?list_item_msg_code .
+	       				optional {
+    						?list_item pmb:order ?list_item_order .
+    					}
 					}
 				} .
-				optional {
-					?property pmb:undisplayed ?undisplayed
-				}
-			}";
-			if($this->store->query($query)){
-				if($this->store->num_rows()){
-					$result = $this->store->get_result();
-					foreach ($result as $elem){
-						if(!isset($this->properties_uri[$elem->property])){
-							$this->properties_uri[$elem->property] = new onto_property();
-							$this->properties_uri[$elem->property]->uri = $elem->property;
-							$this->properties_uri[$elem->property]->name = $elem->label;
-							$this->properties_uri[$elem->property]->pmb_name = $elem->name;
-							if(isset($elem->datatype)){
-								$this->properties_uri[$elem->property]->pmb_datatype = $elem->datatype;
-							}
-						}
-						if(isset($elem->marclist_type) && $elem->marclist_type){
-							$this->properties_uri[$elem->property]->pmb_marclist_type = $elem->marclist_type;
-						}
-						if(isset($elem->list_item) && $elem->list_item){
-							if (!isset($this->properties_uri[$elem->property]->pmb_list_item)) {
-								$this->properties_uri[$elem->property]->pmb_list_item = array();
-							}
-							if (!isset($this->properties_uri[$elem->property]->pmb_list_item[$elem->list_item_id])) {
-								$this->properties_uri[$elem->property]->pmb_list_item[$elem->list_item_id] = array(
-										'value' => $elem->list_item_value,
-										'id' => $elem->list_item_id
-								);
-							}
-						}
-						if(!empty($elem->list_query) && !isset($this->properties_uri[$elem->property]->pmb_list_query)){
-							$this->properties_uri[$elem->property]->pmb_list_query = $elem->list_query;
-						}
-						if(!empty($elem->domain) && !isset($this->properties_uri[$elem->property]->domain[$elem->domain])){
-							$this->properties_uri[$elem->property]->domain[$elem->domain] = $elem->domain;
-						}
-						if (!empty($elem->cp_options) && !isset($this->properties_uri[$elem->property]->cp_options)) {
-							$this->properties_uri[$elem->property]->cp_options = $elem->cp_options;
-						}
-						if(!empty($elem->range)){
-							if(!$this->properties_uri[$elem->property]->range) {
-								$this->properties_uri[$elem->property]->range = array();
-							}
-							//il faut gÃ©rer le cas du noeud blanc
-							if($elem->range_type == "bnode"){
-								$this->properties_uri[$elem->property]->range = array_merge($this->properties_uri[$elem->property]->range,$this->get_recursive_blank_range($elem->range));
-							}else{
-								if(!in_array($elem->range,$this->properties_uri[$elem->property]->range)){
-									$this->properties_uri[$elem->property]->range[] = $elem->range;
-								}
-							}
-						}
-						if(!empty($elem->default_value) && !isset($this->properties_uri[$elem->property]->default_value)){
-							$this->properties_uri[$elem->property]->default_value = array(
-								'value' => $elem->default_value_name,
-								'type' => $elem->default_value
-							);
-						}
-						if(!empty($elem->flag)){
-							if(!$this->properties_uri[$elem->property]->flags) {
-								$this->properties_uri[$elem->property]->flags = array();
-							}
-							$this->properties_uri[$elem->property]->flags[] = $elem->flag;
-						}
-
-						if (isset($elem->extended_prop) && isset($elem->extended_object) && ($elem->extended_object_type != 'bnode')) {
-							$extended_property_name = explode('#', $elem->extended_prop);
-							$this->properties_uri[$elem->property]->pmb_extended[$extended_property_name[1]] = $elem->extended_object;
-						}
-						
-						if (!empty($elem->extended_value) || !empty($elem->extended_lang) || !empty($elem->extended_type)) {
-						    if (!empty($elem->extended_value_type) && ($elem->extended_value_type == 'bnode') && !empty($elem->extended_value_uri_blank_node)) {
-								$tab_value[$elem->property][$elem->extended_value_uri_blank_node] = $elem->extended_value_blank_node;
-							}else {
-								$tab_value[$elem->property][] = $elem->extended_value;
-							}
-							
-							if ($elem->extended_blank_node) {
-								$this->properties_uri[$elem->property]->pmb_extended['default_value'][$elem->extended_blank_node] = array(
-										"value" => (isset($tab_value[$elem->property]) ? $tab_value[$elem->property] : ''),
-										"lang" => (isset($elem->extended_lang) ? $elem->extended_lang : ''),
-										"type" => (isset($elem->extended_type) ? $elem->extended_type : ''),
-								        "display_label" => (isset($elem->display_label) ? $elem->display_label : ''),
-								);
-							}
-						}
-						
-						if (!empty($elem->undisplayed)) {
-							$this->properties_uri[$elem->property]->undisplayed = $elem->undisplayed;
-						}
-					}
-				}
-				//on vÃ©rifie, si aucun domaine prÃ©cisÃ©, on peut mettre la propriÃ©tÃ© partout
-				if (is_array($this->properties_uri)) {
-					foreach($this->properties_uri as $property_uri => $property){
-						if(!is_array($property->domain) || !count($property->domain)){
-							foreach($this->classes_uris as $class_uri => $class){
-								$this->properties_uri[$property_uri]->domain[] = $class_uri;
-							}
-						}
-					}
-				}
-				/*if(is_object($cache)){
-                    $cache->setInCache('onto_'.$this->name.'_properties', $this->properties_uri);
-				}*/
-			}else{
-				highlight_string(print_r($this->store->get_errors(),true));
+                optional {
+                    ?property pmb:extended ?extended .
+                } .
+                optional {
+                    ?property pmb:marclist_type ?marclist_type
+                } .
+                optional {
+                    ?property pmb:formOrder ?form_order
+                }
 			}
-		}
-		return $this->properties_uri;
+            ORDER BY ?form_order");
+	        if($success && $this->store->num_rows()) {
+                $result = $this->store->get_result();
+                foreach ($result as $elem) {
+                    if(!isset($this->properties_uri[$elem->property])){
+                        $this->properties_uri[$elem->property] = new onto_property();
+                        $this->properties_uri[$elem->property]->uri = $elem->property;
+                        $this->properties_uri[$elem->property]->get_properties($this->store);
+                    }
+                    
+                    if(isset($elem->subfield)) {
+                        $this->properties_uri[$elem->property]->subfield = $elem->subfield;
+                    }
+                    if (!empty($elem->domain)) {
+                        if(!isset($this->properties_uri[$elem->property]->domain) || !is_array($this->properties_uri[$elem->property]->domain)) {
+                            $this->properties_uri[$elem->property]->domain = array();
+                        }
+                        if(!isset($this->properties_uri[$elem->property]->domain[$elem->domain])) {
+                            $this->properties_uri[$elem->property]->domain[$elem->domain] = $elem->domain;
+                        }
+                    }
+                    
+                    if(isset($elem->list_item) && $elem->list_item){
+                        if (!isset($this->properties_uri[$elem->property]->pmb_list_item)  || !is_array($this->properties_uri[$elem->property]->pmb_list_item)) {
+                            $this->properties_uri[$elem->property]->pmb_list_item = array();
+                        }
+                        if (!isset($this->properties_uri[$elem->property]->pmb_list_item[$elem->list_item_id])) {
+                            $this->properties_uri[$elem->property]->pmb_list_item[$elem->list_item_id] = array(
+                                'value' => $this->get_label_from_msg($elem->list_item_msg_code, $elem->list_item_value),
+                                'id' => $elem->list_item_id,
+                                'order' => $elem->list_item_order ?? 0
+                            );
+                        }
+                    }
+                    
+                    if(!empty($elem->range)){
+                        if(!isset($this->properties_uri[$elem->property]->range) || !is_array($this->properties_uri[$elem->property]->range)) {
+                            $this->properties_uri[$elem->property]->range = array();
+                        }
+                        //il faut gérer le cas du noeud blanc
+                        if($elem->range_type == "bnode"){
+                            $this->properties_uri[$elem->property]->range = array_merge($this->properties_uri[$elem->property]->range,$this->get_recursive_blank_range($elem->range));
+                        }else{
+                            if(!in_array($elem->range, $this->properties_uri[$elem->property]->range)){
+                                $this->properties_uri[$elem->property]->range[] = $elem->range;
+                            }
+                        }
+                    }
+                    if(!empty($elem->default_value) && empty($this->properties_uri[$elem->property]->default_value)){
+                        $this->properties_uri[$elem->property]->default_value = array(
+                            'value' => $elem->default_value_name,
+                            'type' => $elem->default_value
+                        );
+                    }
+                    if(!empty($elem->flag)){
+                        if(!isset($this->properties_uri[$elem->property]->flags)) {
+                            $this->properties_uri[$elem->property]->flags = array();
+                        }
+                        if (!in_array($elem->flag, $this->properties_uri[$elem->property]->flags)) {
+                            $this->properties_uri[$elem->property]->flags[] = $elem->flag;
+                        }
+                    }
+                    
+                    if (!empty($elem->extended)){
+                        $this->properties_uri[$elem->property]->pmb_extended = $this->get_pmb_extended_from_property($elem->extended);
+                    }
+                }
+	        } else {
+	            $errors = $this->store->get_errors();
+	            if (!empty($errors)) {
+    	            highlight_string(__FILE__.'  ('.__LINE__.')');
+    	            highlight_string(print_r($errors, true));
+	            }
+	        }
+	    }
+	    
+	    //on vérifie, si aucun domaine précisé, on peut mettre la propriété partout
+	    if (!empty($this->properties_uri) && is_array($this->properties_uri)) {
+	        foreach($this->properties_uri as $property_uri => $property){
+	            if(!is_array($property->domain) || !count($property->domain)){
+	                foreach($this->classes_uris as $class_uri => $class){
+	                	if(!isset($this->properties_uri[$property_uri]->domain) || !is_array($this->properties_uri[$property_uri]->domain)) {
+	                		$this->properties_uri[$property_uri]->domain = array();
+	                	}
+	                    $this->properties_uri[$property_uri]->domain[] = $class_uri;
+	                }
+	            }
+	        }
+	    }
+	    
+	    return $this->properties_uri;
 	} // end of member function get_properties
 
 	
@@ -504,10 +472,26 @@ class onto_ontology {
 		$this->class_properties[$class_uri] = array();
 		if (is_array($this->properties_uri)) {
     		foreach($this->properties_uri as $property_uri => $property){
-    			if(in_array($class_uri,$property->domain)){
+    		    // C'est une property associée au domain et sans le flag internal
+    			if(in_array($class_uri,$property->domain) && !in_array("internal",$property->flags)){
    			        $this->class_properties[$class_uri][] = $property_uri;
     			}
     		}
+		}
+		if (!empty($this->classes_uris[$class_uri]) && is_array($this->classes_uris[$class_uri]->sub_class_of)) {
+		    foreach($this->classes_uris[$class_uri]->sub_class_of as $parent_uri) {
+		        $properties = $this->get_class_properties($parent_uri);
+		        if (!empty($properties) && is_array($properties)) {
+    		        for($i=0 ; $i < count($properties); $i++){
+    		            if (!is_array($properties[$i])) {
+    		                $property = $this->get_property($parent_uri, $properties[$i]);
+    		                if (!$property->is_undisplayed()) {
+                                $this->class_properties[$class_uri][] = $properties[$i];
+    		                }
+    		            }
+    		        }
+		        }
+		    }
 		}
 		return $this->class_properties[$class_uri];
 	}
@@ -533,6 +517,7 @@ class onto_ontology {
 			$this->properties[$uri_property][$uri_class]->set_domain($this->properties_uri[$uri_property]->domain);
 			$this->properties[$uri_property][$uri_class]->set_range($this->properties_uri[$uri_property]->range);
 			$this->properties[$uri_property][$uri_class]->set_pmb_name($this->properties_uri[$uri_property]->pmb_name);
+			$this->properties[$uri_property][$uri_class]->set_subfield($this->properties_uri[$uri_property]->subfield ?? "");
 			if(isset($this->properties_uri[$uri_property]->pmb_marclist_type)){
 				$this->properties[$uri_property][$uri_class]->set_pmb_marclist_type($this->properties_uri[$uri_property]->pmb_marclist_type);
 			}
@@ -551,6 +536,9 @@ class onto_ontology {
 			if(isset($this->properties_uri[$uri_property]->undisplayed)){
 				$this->properties[$uri_property][$uri_class]->set_undisplayed($this->properties_uri[$uri_property]->undisplayed);
 			}
+			if(isset($this->properties_uri[$uri_property]->no_search)){
+				$this->properties[$uri_property][$uri_class]->set_no_search($this->properties_uri[$uri_property]->no_search);
+			}
 			if(isset($this->properties_uri[$uri_property]->cp_options)){
 				$this->properties[$uri_property][$uri_class]->set_cp_options($this->properties_uri[$uri_property]->cp_options);
 			}
@@ -566,7 +554,7 @@ class onto_ontology {
 	 *
 	 * @param string class_prefix 
 
-	 * @param Array() elements Tableau des noms pour dÃ©terminer le nom de la classe. Associatif ?
+	 * @param Array() elements Tableau des noms pour déterminer le nom de la classe. Associatif ?
 
 	 * @return string
 	 * @access public
@@ -623,24 +611,54 @@ class onto_ontology {
 			$this->get_name();
 		}
 
-		if(isset($msg['onto_'.$this->name.'_'.$object->pmb_name])){
-			//le message PMB spÃ©cifique pour l'ontologie courante
+		if (isset($object->pmb_name) && isset($msg['onto_'.$this->name.'_'.$object->pmb_name])){
+			//le message PMB spécifique pour l'ontologie courante
 			$label = $msg['onto_'.$this->name.'_'.$object->pmb_name];
-		}else if (isset($msg['onto_common_'.$object->pmb_name])){
-			//le message PMB gÃ©nÃ©rique
+		} elseif (isset($object->pmb_name) &&  isset($msg['onto_common_'.$object->pmb_name])){
+			//le message PMB générique
 			$label = $msg['onto_common_'.$object->pmb_name];
-		}else {
-			$label = $object->name;
+		} elseif (isset($object->pmb_name) &&  isset($msg[$object->pmb_name])){
+			$label = $msg[$object->pmb_name];
+		} else {
+			$label = $object->name ?? "";
+    		if (substr($label,0,4) == "msg:") {
+    		    if (isset($msg[substr($label,4)])) {
+    		        $label = $msg[substr($label,4)];
+    		    } else {
+    		        // si on trouve pas le message on met juste le code dans le label
+    		        $label = substr($label,4);
+    		    }
+    		}
 		}
 		return $label;
 	}
+	
+	public function get_label_from_msg($code, $label = ""){
+	    global $msg;
+	    if(!$this->name){
+	        $this->get_name();
+	    }
+	    if(isset($msg['onto_'.$this->name.'_'.$code])){
+	        return $msg['onto_'.$this->name.'_'.$code];
+	    }
+	    if (isset($msg['onto_common_'.$code])){
+	        return $msg['onto_common_'.$code];
+	    }
+	    if (isset($msg[$code])){
+	        return $msg[$code];
+	    }
+	    return $label;
+	}
 
 	public function get_class_label($uri_class){
-		return $this->get_label($this->classes_uris[$uri_class]);
+		return $this->get_label($this->classes_uris[$uri_class] ?? "");
 	}
 	
 	public function get_property_label($uri_property){
-		return $this->get_label($this->properties_uri[$uri_property]);
+	    if (isset($this->properties_uri[$uri_property])) {
+	        return $this->get_label($this->properties_uri[$uri_property]);
+	    }
+	    return "";
 	}
 	
 	public function get_property_pmb_datatype($uri_property){
@@ -651,7 +669,10 @@ class onto_ontology {
 	}
 	
 	public function get_property_default_value($uri_property){
-		return $this->properties_uri[$uri_property]->default_value;
+	    if (isset($this->properties_uri[$uri_property]->default_value)) {
+	        return $this->properties_uri[$uri_property]->default_value;
+	    }
+	    return "";
 	}
 	
 	public function get_classes_uri(){
@@ -665,9 +686,12 @@ class onto_ontology {
 			}";
 			$this->store->query($query);
 			$inverse_results = $this->store->get_result();
-			foreach($inverse_results as $inverse_of){
-				$this->inverse_of[$inverse_of->property] = $inverse_of->inverse;
+			if (!empty($inverse_results)) {
+			    foreach($inverse_results as $inverse_of){
+			        $this->inverse_of[$inverse_of->property] = $inverse_of->inverse;
+			    }
 			}
+			
 		}
 		return $this->inverse_of;
 	}
@@ -682,6 +706,41 @@ class onto_ontology {
 		return $flags;
 	}
 	
+	public function get_multilingue($uri_class="", $uri_property="") {
+	    $multilingue = false;
+	    
+	    if($uri_class && isset($this->classes_uri[$uri_class]->multilingue)){
+	        $multilingue = true;
+	    } else if (isset($this->properties_uri[$uri_property]->multilingue)){
+	        $multilingue = true;
+	    }
+	    
+	    return $multilingue;
+	}
+	
+	public function is_use_lang_concept($uri_class="", $uri_property="") {
+	    $langConcept = false;
+	    if($uri_class && isset($this->classes_uri[$uri_class]->useLangConcept)){
+	        $langConcept = true;
+	    } else if (isset($this->properties_uri[$uri_property]->useLangConcept)){
+	        $langConcept = true;
+	    }
+	    return $langConcept;
+	}
+	
+	
+	public function is_cp($uri_class="", $uri_property="") {
+	    $is_cp = false;
+	    
+	    if($uri_class && isset($this->classes_uri[$uri_class]->is_cp)){
+	        $is_cp = true;
+	    } else if (isset($this->properties_uri[$uri_property]->is_cp)){
+	        $is_cp = true;
+	    }
+	    
+	    return $is_cp;
+	}
+	
 	public function set_data_store($data_store){
 		$this->data_store = $data_store;
 	}
@@ -691,8 +750,10 @@ class onto_ontology {
 		$query = "
 			select ?sub_class_of where {
 				<".$uri."> rdfs:subClassOf ?sub_class_of .
-				?sub_class_of rdfs:subClassOf pmb:Class .
-				?sub_class_of rdf:type owl:Class .
+                optional {
+					?sub_class_of rdfs:subClassOf pmb:Class .
+					?sub_class_of rdf:type owl:Class .
+				} .
 			}
 		";
 		$this->store->query($query);
@@ -703,5 +764,47 @@ class onto_ontology {
 			}
 		}
 		return $sub_class_of;
+	}
+	
+	protected function get_sub_assertions($blanknode){
+	    $sub_assertions = array();
+	    $query = "select * where {
+			<".$blanknode."> pmb:assertions ?assertions .
+            ?assertions ?prop ?obj .
+		}";
+	    
+	    $this->store->query($query);
+	    $results = $this->store->get_result();
+	    
+	    foreach($results as $result){
+	        if ($result->obj_type == 'bnode'){
+	            $sub_assertions["assertions"] = $this->get_sub_assertions($result->obj);  
+	        } else {
+    	        $sub_assertions[$result->prop] = $result->obj;
+	        }
+	    }
+	    return $sub_assertions;
+	    
+	}
+	
+	protected function get_pmb_extended_from_property($uri) : array{
+	    $return = [];
+	    $query = "select * where {
+			'$uri' ?prop ?obj .
+        }";
+	    
+	    $this->store->query($query);
+	    if ($this->store->num_rows()) {
+	        $results = $this->store->get_result();
+	        foreach($results as $result){
+    	        $prop_name = explode('#', $result->prop);
+	            if ($result->obj_type == "bnode"){
+	                $return[$prop_name[1]] = $this->get_pmb_extended_from_property($result->obj);
+	            } else {
+    	            $return[$prop_name[1]] = $result->obj;
+	            }
+	        }
+	    }
+	    return $return;
 	}
 } // end of onto_ontology

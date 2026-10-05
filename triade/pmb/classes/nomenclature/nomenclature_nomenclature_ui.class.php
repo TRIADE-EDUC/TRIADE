@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_nomenclature_ui.class.php,v 1.6 2015-01-22 14:33:41 dgoron Exp $
+// $Id: nomenclature_nomenclature_ui.class.php,v 1.6 2015/01/22 14:33:41 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($class_path."/nomenclature/nomenclature_nomenclature.class.php");
@@ -11,7 +11,7 @@ require_once($class_path."/encoding_normalize.class.php");
 
 /**
  * class nomenclature_nomenclature
- * Représente une nomenclature
+ * Repr�sente une nomenclature
  */
 class nomenclature_nomenclature_ui {
 

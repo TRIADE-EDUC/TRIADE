@@ -1,10 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: download_docnum.inc.php,v 1.6 2019-06-04 13:49:50 ngantier Exp $
+// $Id: download_docnum.inc.php,v 1.9 2023/10/24 09:57:08 gneveu Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $sub, $select_noti;
 //gestion des droits
 require_once($class_path."/acces.class.php");
 require_once($class_path."/explnum.class.php");
@@ -18,29 +19,30 @@ switch($sub){
 		break;
 }
 function doc_num_gen_list($id_notices){
-	global $msg,$dbh, $gestion_acces_active,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
+	global $msg, $gestion_acces_active,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
 	global $opac_allow_download_docnums,$opac_url_base;
 	
 	if (!$opac_allow_download_docnums) return;
 	
 	$explnum_list=array();
 	foreach($id_notices as $notice_id){
+	    $notice_id = intval($notice_id);
 		$query = "SELECT explnum_id from explnum where explnum_notice=$notice_id ";
 		$query .= " union ";
 		$query .= " select explnum_id from explnum ,bulletins where explnum_bulletin=bulletin_id and num_notice=$notice_id ";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if ($result) {
 			while($row = pmb_mysql_fetch_object($result)){
 				$explnum_id=$row->explnum_id;
 			
-				$res = pmb_mysql_query("SELECT explnum_id, explnum_notice, explnum_bulletin, explnum_nom, explnum_mimetype, explnum_url, explnum_data, length(explnum_data) as taille,explnum_path, concat(repertoire_path,explnum_path,explnum_nomfichier) as path, repertoire_id FROM explnum left join upload_repertoire on repertoire_id=explnum_repertoire WHERE explnum_id = '$explnum_id' ", $dbh);
+				$res = pmb_mysql_query("SELECT explnum_id, explnum_notice, explnum_bulletin, explnum_nom, explnum_mimetype, explnum_url, explnum_data, length(explnum_data) as taille,explnum_path, concat(repertoire_path,explnum_path,explnum_nomfichier) as path, repertoire_id FROM explnum left join upload_repertoire on repertoire_id=explnum_repertoire WHERE explnum_id = '$explnum_id' ");
 				$ligne = pmb_mysql_fetch_object($res);
 					
 				$id_for_rigths = $ligne->explnum_notice;
 				if($ligne->explnum_bulletin != 0){
-					//si bulletin, les droits sont rattachÃ©s Ã  la notice du bulletin, Ã  dÃ©faut du pÃ©rio...
+					//si bulletin, les droits sont rattachés à la notice du bulletin, à défaut du pério...
 					$req = "select bulletin_notice,num_notice from bulletins where bulletin_id =".$ligne->explnum_bulletin;
-					$res = pmb_mysql_query($req,$dbh);
+					$res = pmb_mysql_query($req);
 					if(pmb_mysql_num_rows($res)){
 						$r = pmb_mysql_fetch_object($res);
 						$id_for_rigths = $r->num_notice;
@@ -57,9 +59,9 @@ function doc_num_gen_list($id_notices){
 					$rights= $dom_2->getRights($_SESSION['id_empr_session'],$id_for_rigths);
 				}
 						
-				//AccessibilitÃ© des documents numÃ©riques aux abonnÃ©s en opac
+				//Accessibilité des documents numériques aux abonnés en opac
 				$req_restriction_abo = "SELECT explnum_visible_opac, explnum_visible_opac_abon ,notice_id FROM notice_statut, explnum, notices WHERE explnum_notice=notice_id AND statut=id_notice_statut  AND explnum_id='$explnum_id' ";
-				$res_restriction_abo=pmb_mysql_query($req_restriction_abo,$dbh);
+				$res_restriction_abo=pmb_mysql_query($req_restriction_abo);
 				if(! pmb_mysql_num_rows($res_restriction_abo) ){// bulletin
 					$req_restriction_abo="SELECT explnum_visible_opac, explnum_visible_opac_abon,notice_id
 						FROM notice_statut, explnum, bulletins, notices
@@ -67,18 +69,18 @@ function doc_num_gen_list($id_notices){
 						AND num_notice = notice_id
 						AND statut = id_notice_statut
 						AND explnum_id='$explnum_id' ";
-					$res_restriction_abo=pmb_mysql_query($req_restriction_abo,$dbh);
+					$res_restriction_abo=pmb_mysql_query($req_restriction_abo);
 				}			
 				$expl_num=pmb_mysql_fetch_array($res_restriction_abo);
 			
-				//droits d'acces emprunteur/document numÃ©rique
+				//droits d'acces emprunteur/document numérique
 				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
 					$ac= new acces();
 					$dom_3= $ac->setDomain(3);
 					$docnum_rights= $dom_3->getRights($_SESSION['id_empr_session'],$explnum_id);
 				}
 					
-				//AccessibilitÃ© (Consultation/TÃ©lÃ©chargement) sur le document numÃ©rique aux abonnÃ©s en opac
+				//Accessibilité (Consultation/Téléchargement) sur le document numérique aux abonnés en opac
 				$req_restriction_docnum_abo = "SELECT explnum_download_opac, explnum_download_opac_abon FROM explnum,explnum_statut WHERE explnum_id='".$explnum_id."' AND explnum_docnum_statut=id_explnum_statut ";
 					
 				$result_docnum=pmb_mysql_query($req_restriction_docnum_abo);
@@ -96,7 +98,7 @@ function doc_num_gen_list($id_notices){
 	if (count($explnum_list)) {
 		if ($opac_allow_download_docnums == 1) {
 			foreach ($explnum_list as $explnum_id) {
-				print "<script type='text/javascript'>
+				print "<script>
 					window.open('".$opac_url_base."doc_num_data.php?explnum_id=".$explnum_id."&force_download=1','_blank','');
 					</script>";
 			}
@@ -131,7 +133,7 @@ function doc_num_gen_list($id_notices){
 			}
 		}
 	} else {
-		print "<script type='text/javascript'>
+		print "<script>
 					alert('".$msg["download_docnum_no_doc"]."');
 					window.close();
 				</script>";

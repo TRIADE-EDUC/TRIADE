@@ -6,7 +6,7 @@ exit; // plus en service
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -17,6 +17,10 @@
  *   (at your option) any later version.
  *
  ***************************************************************************/
+?>
+<?php
+include_once('./common/config2.inc.php');
+include_once('librairie_php/langue.php');
 ?>
 <div ID="cache">
 <TABLE border=0 width=400 >

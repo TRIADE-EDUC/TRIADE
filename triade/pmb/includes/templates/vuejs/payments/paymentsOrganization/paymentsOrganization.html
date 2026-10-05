@@ -1,0 +1,15 @@
+<div id="paymentsOrganization">
+	<template v-if="action && (action == 'add' || action == 'edit')">
+		<paymentorganizationform
+			:organization = "organization"
+			:organizationlistavaible = "organizationlistavaible"
+			:action = "action"
+		</paymentorganizationform>
+	</template>
+	<template v-else>
+		<paymentsorganizationlist 
+			:organizationlist = "organizationlist"
+			:organizationlistavaible = "organizationlistavaible">
+		</paymentsorganizationlist>
+	</template>
+</div>

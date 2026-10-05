@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
@@ -40,16 +42,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Retenue non effectuées </font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td valign=top>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <!-- // fin  -->
 <?php
 
@@ -129,7 +126,7 @@ $worksheet->write('F1',"Motif.",$header);
 $data_2=affRetenu_eleve_non_effectue($orderby);
 // $data : tab bidim - soustab 3 champs
 $H=1;
-for($j=0;$j<count($data_2);$j++) {
+for($j=0;$j<countTriade($data_2);$j++) {
 	$classe=chercheClasse($data_2[$j][13]);
 	$repport=$data_2[$j][14];
 	if ($repport != "0000-00-00") { $imgreport="<a href='#'  onMouseOver=\"AffBulle('<font size=2> Report du ".dateForm($repport)." </FONT>');\" onMouseOut='HideBulle()'><img src='./image/commun/important.png' border='0'></a>"; }else{  $imgreport=''; }
@@ -180,17 +177,17 @@ $workbook->close();
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

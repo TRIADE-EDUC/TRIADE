@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_view_concept.tpl.php,v 1.10 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: skos_view_concept.tpl.php,v 1.10 2019/05/29 11:23:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

@@ -1,0 +1,1192 @@
+/* ═══════════════════════════════════════════════════════════════════
+   css-v4-2.css — Triade Design 2026 — classes communes
+   Complément de css-v4.css : patterns réutilisables définis
+   jusqu'ici en <style> inline dans chaque fichier redesigné.
+   Inclure APRÈS css.css et css-v4.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Carte formulaire (.na-card / .na-row / .na-lbl / .na-foot) ── */
+.na-card {
+    background: #fff !important;
+    border: 1px solid #c5cae9 !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    margin: 8px 0 !important;
+}
+.na-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 9px !important;
+    flex-wrap: wrap !important;
+}
+.na-row:last-child { margin-bottom: 0 !important; }
+.na-lbl {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #080A66 !important;
+    min-width: 120px !important;
+    flex-shrink: 0 !important;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif !important;
+}
+.na-lbl-wide { min-width: 160px !important; }
+.na-foot {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    overflow: hidden !important;
+    flex-wrap: wrap !important;
+}
+.na-textarea-lbl {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #080A66 !important;
+    display: block !important;
+    margin-bottom: 4px !important;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif !important;
+}
+
+/* ── 2. Pattern messagerie (liste d'actions) ── */
+.dest-wrap {
+    padding: 6px 8px 12px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.dest-list {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #dde0f0;
+    border-radius: 8px;
+    overflow: visible;
+}
+.dest-row:first-child { border-radius: 8px 8px 0 0; }
+.dest-row:last-child  { border-radius: 0 0 8px 8px; }
+.dest-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid #eef0f8;
+    transition: background .12s;
+}
+.dest-row:last-child { border-bottom: none; }
+.dest-row:hover { background: #f5f6fd; }
+.dest-row-label {
+    font-size: 13px;
+    color: #222;
+    flex: 1;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.dest-row-sub {
+    font-size: 11px;
+    color: #888;
+    font-weight: 400;
+}
+.btn-dest {
+    background: #CACCEF;
+    color: #080A66;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s;
+    flex-shrink: 0;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.btn-dest:hover { background: #b0b4e8; }
+.btn-dest-disabled {
+    background: #e8e8e8;
+    color: #aaa;
+    cursor: not-allowed;
+}
+.btn-dest-disabled:hover { background: #e8e8e8; }
+
+/* ── 3. Tooltip CSS — notes (.note-wrap / .note-tip) ── */
+.note-wrap {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+}
+.note-tip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid #c5cae9;
+    border-radius: 8px;
+    padding: 9px 13px;
+    min-width: 210px;
+    box-shadow: 0 6px 20px rgba(8,10,102,.13);
+    pointer-events: none;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.note-tip::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top: none;
+    border-bottom: 7px solid #c5cae9;
+}
+.note-tip::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top: none;
+    border-bottom: 6px solid #fff;
+}
+.note-tip-row  { margin-bottom: 5px; font-size: 11px; color: #333; }
+.note-tip-lbl  { font-weight: 700; color: #080A66; margin-right: 5px; }
+.note-tip-exam { background: #fff8e1; border-left: 3px solid #f5c842; padding: 3px 6px; border-radius: 3px; }
+.note-wrap:hover .note-tip { display: block; }
+
+/* ── 4. Tooltip CSS — aide/help (.htip-wrap / .htip) ── */
+.htip-wrap {
+    position: relative;
+    display: inline-block;
+}
+.htip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid #c5cae9;
+    border-radius: 8px;
+    padding: 9px 13px;
+    min-width: 200px;
+    box-shadow: 0 6px 20px rgba(8,10,102,.13);
+    pointer-events: none;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.5;
+    white-space: normal;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.htip::before {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-bottom: none;
+    border-top: 7px solid #c5cae9;
+}
+.htip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom: none;
+    border-top: 6px solid #fff;
+}
+.htip-wrap:hover .htip { display: block; }
+/* right-aligned variant — tooltip aligns to right edge of trigger */
+.htip.htip-r { left: auto; right: 0; transform: none; }
+.htip.htip-r::before { left: auto; right: 14px; transform: none; }
+.htip.htip-r::after  { left: auto; right: 15px; transform: none; }
+
+/* ── 5. Affichage notes & élèves ── */
+.note-cell {
+    min-width: 34px;
+    text-align: center;
+    padding: 3px 5px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+    white-space: nowrap;
+    overflow: visible !important;
+}
+.note-exam {
+    background: #fff8e1 !important;
+    border-color: #f5c842 !important;
+}
+.note-moy {
+    min-width: 40px;
+    text-align: center;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid #ffb74d;
+    background: #ffe0b2;
+}
+.eleve-cell {
+    display: inline-block;
+    min-width: 160px;
+    max-width: 200px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a2e;
+    background: #eef0fb;
+    border: 1px solid #c5cae9;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── 6. Boutons communs ── */
+.btn-enr {
+    background: #080A66;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    transition: background .12s;
+}
+.btn-enr:hover:not(:disabled) { background: #1a1e8a; color: #fff; }
+.btn-enr:disabled { background: #aaa; cursor: not-allowed; }
+
+.btn-retour {
+    background: #c8e6c9;
+    color: #1b5e20;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    transition: background .12s;
+}
+.btn-retour:hover { background: #a5d6a7; color: #1b5e20; }
+
+/* ── 7. Navigation précédent/suivant ── */
+.nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 4px;
+}
+.btn-nav {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: #1565c0;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    cursor: pointer;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    transition: background .12s;
+}
+.btn-nav:hover { background: #1976d2; color: #fff; }
+
+/* ── 8. Boutons colorés d'action — cahier de textes ── */
+.btn-view-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 6px;
+}
+.btn-view {
+    font-family: Electrolize, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter .15s;
+    letter-spacing: .3px;
+}
+.btn-view:hover { filter: brightness(1.12); }
+.btn-view-semaine  { background: #1565c0; }
+.btn-view-matiere  { background: #283593; }
+.btn-view-complet  { background: #4527a0; }
+.btn-view-ia       { background: #2e7d32; }
+
+/* ── 9. Formulaire visu popup (.visu-form) ── */
+.visu-form {
+    background: #fff;
+    border: 1px solid #dde0f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.visu-lbl {
+    font-size: 13px;
+    font-weight: 700;
+    color: #080A66;
+    white-space: nowrap;
+}
+.btn-visu {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background .12s;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.btn-visu:hover { filter: brightness(1.12); }
+.btn-vdevoir   { background: #1565c0; }
+.btn-vcontenu  { background: #283593; }
+.btn-vobjectif { background: #4527a0; }
+.btn-vprint    { background: #37474f; }
+
+/* ── 10. Module IA / TRIADE-COPILOT ── */
+.ia-wrap {
+    max-width: 720px;
+    margin: 14px auto;
+    padding: 0 10px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.ia-card {
+    background: #fff;
+    border: 1px solid #dde0f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.ia-lbl {
+    font-size: 13px;
+    font-weight: 700;
+    color: #080A66;
+    white-space: nowrap;
+}
+.ia-subject {
+    font-size: 13px;
+    font-weight: 700;
+    color: #283593;
+    background: #eef0fb;
+    border: 1px solid #c5cae9;
+    border-radius: 5px;
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+.btn-ia {
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.btn-ia:hover { background: #388e3c; }
+.ia-response {
+    border-radius: 10px;
+    background: #f3f6fc;
+    border: 1px solid #dde0f0;
+    min-height: 120px;
+    padding: 13px 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* ── 11. Lecteur code barre & liste élèves ── */
+.cb-area {
+    color: #000066;
+    background: #eef0fb;
+    border: 1px solid #c5cae9;
+    border-radius: 5px;
+    height: 28px;
+    width: 90px;
+    overflow: hidden;
+    resize: none;
+    font-size: 12px;
+    padding: 3px 6px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    vertical-align: middle;
+}
+.btn-cb {
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    transition: background .12s;
+}
+.btn-cb:hover { background: #388e3c; }
+.elv-section { margin: 10px 0 6px; }
+.elv-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #080A66;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    margin-bottom: 6px;
+}
+.elv-listing {
+    background: #f5f6fd;
+    border: 1px solid #dde0f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    min-height: 36px;
+    font-size: 13px;
+}
+.cb-check {
+    font-size: 13px;
+    color: #333;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.warn-msg {
+    color: #c62828;
+    font-style: italic;
+    font-size: 12px;
+    text-align: center;
+    padding: 3px 0;
+}
+.dt-stack{display:flex;flex-direction:column;gap:14px;padding:10px 6px}
+.dt-card{background:#fff;border:1px solid #dde0f0;border-radius:10px;padding:14px 16px}
+.dt-card-title{font-size:12px;font-weight:700;color:#080A66;display:flex;align-items:center;gap:7px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #eef0f8}
+.dt-card-icon{font-size:15px}
+
+/* Filters row */
+.dt-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.dt-filter-label{font-size:12px;font-weight:600;color:#333;white-space:nowrap}
+.dt-select{border:1px solid #dde0f0;border-radius:7px;padding:6px 9px;font-size:12px;color:#333;background:#fff}
+.dt-select:focus{border-color:#080A66;outline:none}
+
+/* Trimester table */
+.dt-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px}
+.dt-table thead th{background:#080A66;color:#fff;padding:8px 10px;text-align:center;font-weight:600;font-size:11px}
+.dt-table tbody tr{border-bottom:1px solid #eef0f8;transition:background .12s}
+.dt-table tbody tr:hover{background:#f5f7ff}
+.dt-table td{padding:8px 10px;text-align:center;vertical-align:middle}
+.dt-trim-name{font-weight:700;color:#080A66}
+.dt-date-input{padding:5px 7px;border:1px solid #dde0f0;border-radius:6px;font-size:12px;color:#333;width:90px;background:#f8f9ff;text-align:center}
+
+/* Checkbox option */
+.dt-checkbox-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:12px;color:#333}
+.dt-checkbox-row input{width:15px;height:15px;accent-color:#080A66}
+.dt-note{font-size:11px;color:#888;font-style:italic;margin-top:8px}
+
+/* Display list */
+.dt-class-item{background:#fff;border:1px solid #dde0f0;border-radius:8px;padding:10px 14px;margin-bottom:8px}
+.dt-class-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.dt-class-name{font-size:12px;font-weight:700;color:#080A66;display:flex;align-items:center;gap:6px}
+.dt-class-dot{width:8px;height:8px;border-radius:50%;background:#080A66;display:inline-block}
+.dt-class-actions{display:flex;gap:6px}
+.dt-link{font-size:11px;font-weight:600;color:#080A66;text-decoration:none;padding:3px 9px;border:1px solid #dde0f0;border-radius:5px;background:#f0f2fa;white-space:nowrap}
+.dt-link:hover{background:#dde0f0}
+.dt-link-del{color:#c62828;border-color:#f9b4b4;background:#fff5f5}
+.dt-link-del:hover{background:#fce4ec}
+.dt-trims{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:#555}
+.dt-trim-badge{background:#f0f2fa;border:1px solid #dde0f0;border-radius:5px;padding:3px 8px}
+.dt-trim-badge b{color:#080A66}
+
+/* ════════════════════════════════════════════════════════════════════
+   CLASSES GLOBALES "LEGO" — Guide de Migration CSS Triade 2026
+   Remplacent les classes page-spécifiques en doublon.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── 12. Toolbar (.toolbar / .toolbar-dark) ── */
+.toolbar {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    background: #f0f2fa; border: 1px solid #d0d4ee; border-radius: 6px;
+    padding: 8px 12px; margin-bottom: 10px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.toolbar-dark {
+    background: #080A66; border-color: #080A66; color: #fff;
+}
+
+/* ── 13. Card (.card / .card-header / .card-body) ── */
+.card {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; overflow: visible; margin-bottom: 8px;
+}
+.card-header {
+    background: #eef0f8; color: #080A66;
+    padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    border-bottom: 1px solid #dde0f0;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    border-radius: 8px 8px 0 0;
+}
+.card-title {
+    font-size: 11px; font-weight: 700;
+    color: #080A66; text-transform: uppercase;
+    letter-spacing: 0.07em; margin: 0;
+}
+.card-body {
+    padding: 14px 16px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.card-header-primary {
+    background: linear-gradient(135deg, #080A66, #1a1c8a);
+    color: #fff; border-bottom: none;
+    justify-content: flex-start;
+}
+.card-header i.bi { font-family: "bootstrap-icons" !important; font-style: normal; }
+.card-header-primary i.bi { color: #CACCEF; }
+.card-header-primary .card-badge { color: #CACCEF; font-weight: 400; }
+.card-footer-total {
+    text-align: center; padding: 8px 14px;
+    font-weight: 700; color: #080A66;
+    background: #f0f2fa; border-top: 1px solid #dde0f0;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif; font-size: 12px;
+}
+
+/* ── 14. Table (.table / .table-hover / .table-striped) ── */
+.table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px; background: #fff;
+}
+.table th {
+    background: #f0f2fa; color: #080A66;
+    font-size: 11px; font-weight: 700;
+    padding: 8px 10px; text-align: left;
+    border-bottom: 2px solid #dde0f0;
+}
+.table td {
+    padding: 7px 10px; border-bottom: 1px solid #eef0f8;
+    color: #333; vertical-align: middle;
+}
+.table tr:last-child td { border-bottom: none; }
+.table-hover tbody tr:hover td { background: #f5f7ff; }
+.table-striped tbody tr:nth-child(even) td { background: #f8f9fd; }
+
+/* ── 15. Forms (.form-row / .form-label / .form-control) ── */
+.form-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 14px; border-bottom: 1px solid #eef0f8;
+    flex-wrap: wrap;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.form-row:last-child { border-bottom: none; }
+.form-label {
+    font-size: 12px; font-weight: 600; color: #444;
+    min-width: 150px; flex-shrink: 0;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.form-control {
+    border: 1px solid #c5cae9; border-radius: 5px;
+    padding: 4px 8px; font-size: 12px; color: #333;
+    background: #fff; outline: none; flex: 1;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.form-control:focus {
+    border-color: #080A66;
+    box-shadow: 0 0 0 2px rgba(8,10,102,.1);
+}
+
+/* ── 16. Buttons (.btn + variants) ── */
+.btn {
+    display: inline-block; padding: 5px 14px;
+    font-size: 12px; font-weight: 700;
+    border: none; border-radius: 6px;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    transition: background .12s;
+}
+.btn-primary   { background: #080A66; color: #fff; }
+.btn-primary:hover   { background: #1a1e8a; color: #fff; }
+.btn-secondary { background: #eef0f8; color: #080A66; border: 1px solid #c5cae9; }
+.btn-secondary:hover { background: #c5cae9; color: #080A66; }
+.btn-danger    { background: #c62828; color: #fff; }
+.btn-danger:hover    { background: #b71c1c; color: #fff; }
+.btn-warning   { background: #f9c600; color: #1a237e; }
+.btn-warning:hover   { background: #ffe54c; color: #1a237e; }
+.btn-action    { background: #3949ab; color: #fff; }
+.btn-action:hover    { background: #283593; color: #fff; }
+
+/* ── 17. Alerts (.alert + variants) ── */
+.alert {
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.alert-warning { background: #fff3e0; border: 1px solid #ffb74d; color: #e65100; }
+.alert-danger  { background: #fce4e4; border: 1px solid #ef9a9a; color: #c62828; }
+.alert-success { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+.alert-info    { background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0; }
+
+/* ── 18. Badges (.badge + variants) ── */
+.badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 700; white-space: nowrap;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.badge-primary { background: #eef0f8; color: #080A66; }
+.badge-success { background: #e8f5e9; color: #2e7d32; }
+.badge-danger  { background: #fce4e4; color: #c62828; }
+.badge-warning { background: #fff8e1; color: #e65100; }
+
+/* ── 19. Utilitaires Flexbox & Texte ── */
+.d-flex          { display: flex; }
+.align-center    { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+.flex-wrap       { flex-wrap: wrap; }
+.gap-xs          { gap: 4px; }
+.gap-sm          { gap: 8px; }
+.gap-md          { gap: 14px; }
+.text-center     { text-align: center; }
+.text-right      { text-align: right; }
+.text-danger     { color: #c62828; }
+.text-success    { color: #2e7d32; }
+.text-muted      { color: #888; }
+.text-light      { color: #aaa; }
+.text-primary    { color: #080A66; }
+.text-sm         { font-size: 11px; }
+.text-bold       { font-weight: 700; }
+.mt-sm           { margin-top: 6px; }
+.mt-md           { margin-top: 14px; }
+.mb-sm           { margin-bottom: 6px; }
+.mb-md           { margin-bottom: 14px; }
+
+/* ── 20. Compte / GesCompte (.gc-*) ── */
+.gc-vcard{display:flex;align-items:center;gap:16px;padding:16px 18px;background:linear-gradient(135deg,#f0f2fa 0%,#fff 100%);border:1px solid #dde0f0;border-radius:10px;border-top:4px solid #080A66}
+.gc-vcard-avatar{width:66px;height:66px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;background:#080A66;border:3px solid #fff;box-shadow:0 2px 8px rgba(8,10,102,.18)}
+.gc-vcard-avatar img{width:100%;height:100%;object-fit:cover}
+.gc-vcard-body{flex:1;min-width:0}
+.gc-vcard-name{font-size:15px;font-weight:800;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gc-vcard-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:7px;font-family:Electrolize,Trebuchet MS,Arial;letter-spacing:.3px}
+.gc-vcard-detail{font-size:11px;color:#555;font-family:Electrolize,Trebuchet MS,Arial;display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.gc-vcard-detail-icon{font-size:12px;width:16px;text-align:center;flex-shrink:0}
+.gc-stack{display:flex;flex-direction:column;gap:12px;padding:10px 6px}
+.gc-card{background:#fff;border:1px solid #dde0f0;border-radius:10px;padding:14px 16px}
+.gc-card-title{font-size:12px;font-weight:700;color:#080A66;display:flex;align-items:center;gap:7px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #eef0f8}
+.gc-card-icon{font-size:16px}
+.gc-field-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gc-field-col{display:flex;flex-direction:column;gap:6px}
+.gc-label{font-size:11px;font-weight:700;color:#080A66;font-family:Electrolize,'Trebuchet MS',Arial,sans-serif}
+.gc-input{flex:1;min-width:160px;padding:8px 10px;border:1px solid #dde0f0;border-radius:7px;font-size:12px;color:#333;background:#fff}
+.gc-input:focus{border-color:#080A66;outline:none;box-shadow:0 0 0 2px rgba(8,10,102,.08)}
+.gc-textarea{width:100%;padding:8px 10px;border:1px solid #dde0f0;border-radius:7px;font-size:12px;color:#333;background:#fff;resize:vertical;box-sizing:border-box}
+.gc-textarea:focus{border-color:#080A66;outline:none;box-shadow:0 0 0 2px rgba(8,10,102,.08)}
+.gc-input-readonly{background:#f8f9ff;color:#555}
+.gc-btn{background:#080A66;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.gc-btn:hover{background:#0b0f8a}
+.gc-btn-outline{background:#f0f2fa;color:#080A66;border:1px solid #dde0f0;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer}
+.gc-btn-outline:hover{background:#dde0f0}
+.gc-btn-ia{background:#7b1fa2;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer}
+.gc-btn-ia:hover{background:#6a1b9a}
+.gc-msg-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:7px;padding:8px 12px;font-size:12px;color:#2e7d32;margin-top:6px}
+.gc-msg-box.error{background:#fce4ec;border-color:#f48fb1;color:#c62828}
+.gc-note{font-size:11px;color:#888;margin-top:6px;font-style:italic}
+.gc-message{margin-top:8px;font-size:12px;font-style:italic}
+.gc-key-create{font-size:11px;color:#c62828;font-style:italic;margin-top:6px}
+.gc-radio-group{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.gc-radio-opt{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;cursor:pointer}
+.gc-radio-opt.on{color:#2e7d32}
+.gc-radio-opt.off{color:#c62828}
+.gc-radio-opt input{width:16px;height:16px;cursor:pointer;accent-color:#080A66}
+.gc-retour{font-size:11px;font-style:italic;color:#555;margin-top:6px;min-height:16px}
+.gc-ical-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.gc-ical-input{flex:1;min-width:180px;padding:7px 10px;border:1px solid #dde0f0;border-radius:7px;font-size:11px;color:#555;background:#f8f9ff}
+.gc-match-ok{color:#2e7d32;font-size:11px;font-style:italic;margin-top:4px}
+.gc-match-err{color:#c62828;font-size:11px;font-style:italic;margin-top:4px}
+.gc-pwd-form{display:flex;flex-direction:column;gap:12px}
+.gc-pwd-field{display:flex;flex-direction:column;gap:4px}
+.gc-pwd-wrapper{position:relative;display:flex;align-items:center}
+.gc-pwd-wrapper .gc-input{padding-right:38px}
+.gc-pwd-toggle{position:absolute;right:8px;background:none;border:none;color:#666;cursor:pointer;font-size:15px;padding:4px;display:flex;align-items:center;justify-content:center}
+.gc-pwd-toggle:hover{color:#080A66}
+.gc-pwd-meter{display:flex;align-items:center;gap:10px;margin-top:4px}
+.gc-pwd-bars{display:flex;gap:4px;flex:1;max-width:200px}
+.gc-pwd-bar{height:5px;flex:1;border-radius:3px;background:#e2e5f1;transition:background .25s ease}
+.gc-pwd-meter.lvl-1 .gc-pwd-bar:nth-child(1){background:#e53935}
+.gc-pwd-meter.lvl-2 .gc-pwd-bar:nth-child(-n+2){background:#fb8c00}
+.gc-pwd-meter.lvl-3 .gc-pwd-bar:nth-child(-n+3){background:#7cb342}
+.gc-pwd-meter.lvl-4 .gc-pwd-bar:nth-child(-n+4){background:#2e7d32}
+.gc-pwd-text{font-size:11px;font-weight:700;color:#888;font-family:Electrolize,'Trebuchet MS',Arial,sans-serif;letter-spacing:.2px}
+.gc-pwd-meter.lvl-1 .gc-pwd-text{color:#e53935}
+.gc-pwd-meter.lvl-2 .gc-pwd-text{color:#fb8c00}
+.gc-pwd-meter.lvl-3 .gc-pwd-text{color:#7cb342}
+.gc-pwd-meter.lvl-4 .gc-pwd-text{color:#2e7d32}
+.gc-pwd-actions{display:flex;align-items:center;gap:10px;margin-top:6px}
+
+/* ── 21. Page Besoin d'aide (.ba-*) ── */
+.ba-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 16px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg,#0d1b4a 0%,#1a3a6a 60%,#1e4d8c 100%);
+}
+.ba-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.35);
+    max-width: 560px;
+    width: 100%;
+    padding: 40px 36px 32px;
+}
+.ba-title {
+    font-family: Electrolize,'Trebuchet MS',Arial,sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #080A66;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.ba-sub { font-size: 13px; color: #555; margin: 0 0 28px; line-height: 1.6; }
+.ba-section { margin-bottom: 24px; }
+.ba-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #080A66;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    border-bottom: 2px solid #e8eaf6;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+}
+.ba-btn-agent {
+    display: inline-block;
+    background: linear-gradient(135deg,#080A66,#1a3a8a) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: Electrolize,'Trebuchet MS',Arial,sans-serif;
+    letter-spacing: .05em;
+    cursor: pointer;
+    text-decoration: none !important;
+    box-shadow: 0 4px 14px rgba(8,10,102,.35);
+}
+.ba-btn-agent:hover { opacity: .9; color: #fff !important; text-decoration: none !important; }
+.ba-footer { margin-top: 28px; font-size: 10px; color: #999; text-align: center; line-height: 1.5; }
+
+/* ── 21. Page Agent COPILOT (.ac-*) ── */
+.ac-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: linear-gradient(135deg,#0d1b4a 0%,#1a3a6a 60%,#1e4d8c 100%);
+}
+.ac-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: rgba(8,10,102,.85);
+    border-bottom: 2px solid rgba(255,255,255,.12);
+}
+.ac-header-title {
+    font-family: Electrolize,'Trebuchet MS',Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.ac-header-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #e74c3c;
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.ac-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+.ac-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.35);
+    max-width: 600px;
+    width: 100%;
+    padding: 40px 36px 32px;
+    text-align: center;
+}
+.ac-icon { font-size: 52px; color: #080A66; margin-bottom: 16px; }
+.ac-title {
+    font-family: Electrolize,'Trebuchet MS',Arial,sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #080A66;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+}
+.ac-sub { font-size: 13px; color: #555; margin: 0 0 32px; line-height: 1.7; }
+.ac-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #080A66;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid #d0d4ee;
+    border-radius: 6px;
+    padding: 6px 14px;
+    transition: background .15s;
+}
+.ac-back:hover { background: #eef0f8; text-decoration: none; color: #080A66; }
+.ac-footer { margin-top: 28px; font-size: 10px; color: #999; line-height: 1.5; }
+
+/* ── Dashboard agents IA (acces2.php) ── */
+#dash_agents_list table { width: 100%; background: #fff; border-radius: 6px; overflow: hidden; }
+#dash_agents_list td, #dash_agents_list th { background: #fff !important; }
+#dash_agents_list tr { border-bottom: 1px solid #eee !important; }
+
+/* ── 22. Accordéon configuration (.acc-panel / .acc-header / .conf-inner) ── */
+.acc-panel { border:1px solid #c5cae9; border-radius:8px; margin-bottom:8px; }
+.acc-header { background:#080A66; color:#fff; padding:10px 16px; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:13px; font-weight:700; font-family:Electrolize,Trebuchet MS,Arial; user-select:none; }
+.acc-header > span:first-child { flex:1; }
+.acc-header:hover { background:#152a8a; }
+.acc-arrow { transition:transform .25s; font-size:10px; }
+.acc-open .acc-arrow { transform:rotate(180deg); }
+.acc-body { display:none; }
+.acc-open .acc-body { display:block; }
+.acc-alert { background:#c62828; color:#fff; border-radius:50%; width:17px; height:17px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; margin-left:2px; flex-shrink:0; cursor:default; vertical-align:middle; }
+.acc-inline-alert { background:#c62828; color:#fff; border-radius:50%; width:14px; height:14px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; margin-left:6px; cursor:default; vertical-align:middle; }
+
+/* ── conf-inner rows ── */
+.conf-inner { width:100%; border-collapse:collapse; }
+.conf-inner tr { background:#fff; border-bottom:1px solid #e8eaf6; transition:background .15s; }
+.conf-inner tr:last-child { border-bottom:none; }
+.conf-inner td { background:transparent !important; }
+.conf-inner tr:hover { background:#eef0fb !important; }
+.conf-inner td[align="right"] { width:54%; font-size:12px; font-weight:700; color:#080A66; font-family:Electrolize,Trebuchet MS,Arial; padding:6px 10px 6px 4px; text-align:right; vertical-align:middle; }
+.conf-inner td[align="left"] { padding:6px 10px; vertical-align:middle; font-family:Electrolize,Trebuchet MS,Arial; font-size:12px; }
+.conf-inner select { padding:3px 6px; border:1px solid #c5cae9; border-radius:4px; font-family:Electrolize,Trebuchet MS,Arial; font-size:12px; color:#080A66; background:#fff; }
+.conf-inner input[type=radio] { accent-color:#080A66; }
+.conf-inner input[type=text] { padding:3px 6px; border:1px solid #c5cae9; border-radius:4px; font-family:Electrolize,Trebuchet MS,Arial; font-size:12px; }
+.conf-inner a img[src*="help.gif"] { opacity:.6; transition:opacity .2s; }
+.conf-inner a:hover img[src*="help.gif"] { opacity:1; }
+
+
+/* ── 23. Onglets fiche élève (.fe-main-tabs / .fe-sub-tabs) ── */
+.fe-main-tabs { display:flex; flex-wrap:wrap; gap:4px; padding:8px 10px 0; background:#fff; border:1px solid #c5cae9; border-bottom:none; }
+.fe-main-tab { display:inline-flex; align-items:center; gap:5px; padding:5px 10px 6px; border:1px solid #c5cae9; border-bottom:none; border-radius:6px 6px 0 0; font-size:11px; font-weight:600; cursor:pointer; color:#080A66; background:#f0f2fa; position:relative; top:-3px; transition:background .15s,color .15s; user-select:none; }
+.fe-main-tab i { font-size:13px; }
+.fe-main-tab:hover { background:#e8eaf6; }
+.fe-main-tab.active { background:#080A66; color:#fff; border-color:#080A66; }
+.fe-main-tab.active i { color:#90caf9; }
+.fe-panels { background:#fff; border:1px solid #c5cae9; border-top:none; border-radius:0 0 8px 8px; }
+.fe-panel { display:none; padding:14px; }
+.fe-panel.active { display:block; }
+.fe-sub-tabs { display:flex; flex-wrap:wrap; gap:0; border-bottom:2px solid #e8eaf6; margin:16px 0 12px; }
+.fe-sub-tab { display:inline-flex; align-items:center; gap:4px; padding:5px 9px 6px; font-size:10px; font-weight:600; cursor:pointer; color:#888; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; user-select:none; }
+.fe-sub-tab:hover { color:#3949ab; }
+.fe-sub-tab.active { color:#080A66; border-bottom-color:#080A66; }
+.fe-sub-tab i { font-size:13px; }
+.fe-sub-panel { display:none; }
+.fe-sub-panel.active { display:block; }
+
+/* ── 24. Document type feuille de papier / Aperçu impression (.paper-wrapper, .paper-sheet, etc.) ── */
+.paper-wrapper {
+    background: #eef1f8;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+}
+.paper-toolbar {
+    max-width: 860px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid #c5cae9;
+    border-radius: 8px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 8px rgba(8,10,102,.06);
+}
+.paper-toolbar-info {
+    font-size: 12px;
+    color: #444;
+    line-height: 1.4;
+}
+.paper-toolbar-info strong {
+    color: #080A66;
+}
+.paper-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.paper-sheet {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #c5cae9;
+    border-radius: 4px;
+    padding: 36px 44px;
+    box-shadow: 0 6px 24px rgba(8,10,102,.12);
+    box-sizing: border-box;
+}
+.paper-header {
+    border-bottom: 2px solid #080A66;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.paper-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #080A66;
+    margin: 0 0 4px 0;
+}
+.paper-subtitle {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+}
+.paper-date {
+    font-size: 11px;
+    color: #777;
+    text-align: right;
+    white-space: nowrap;
+}
+.paper-notice {
+    background: #f8f9ff;
+    border: 1px solid #c5cae9;
+    border-left: 4px solid #080A66;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+.paper-notice p {
+    margin: 0 0 6px 0;
+}
+.paper-notice p:last-child {
+    margin: 0;
+}
+.paper-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+.paper-table th {
+    background: #f0f2fa;
+    color: #080A66;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    padding: 9px 12px;
+    border: 1px solid #c5cae9;
+    text-align: left;
+}
+.paper-table td {
+    padding: 8px 12px;
+    border: 1px solid #dde0f0;
+    color: #222;
+    vertical-align: middle;
+}
+.paper-table tr:nth-child(even) td {
+    background: #fafbff;
+}
+.paper-pwd-cell {
+    font-family: Consolas, "Courier New", monospace;
+    font-weight: 700;
+    font-size: 12px;
+    color: #080A66;
+    background: #f0f2fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #dde0f0;
+    display: inline-block;
+}
+.paper-footer {
+    margin-top: 24px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+    font-size: 11px;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media print {
+    body, .paper-wrapper {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .paper-toolbar, .no-print {
+        display: none !important;
+    }
+    .paper-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 10px 0 !important;
+        margin: 0 !important;
+    }
+    .paper-table th {
+        background: #eee !important;
+        color: #000 !important;
+    }
+    .paper-pwd-cell {
+        background: none !important;
+        color: #000 !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+}
+
+/* ── 19. Pattern Digicode / Pavé numérique virtuel sécurisé ── */
+.triade-digicode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 12px auto;
+    max-width: 280px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.digicode-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: #f0f2fa;
+    border: 1.5px solid #dde0f0;
+    border-radius: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.digicode-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #2e5fca;
+    background: #fff;
+    transition: all .15s ease;
+}
+.digicode-dot.filled {
+    background: #1a3a8f;
+    transform: scale(1.1);
+    box-shadow: 0 0 6px rgba(26,58,143,.4);
+}
+.digicode-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+.digicode-btn {
+    height: 48px;
+    background: #fff;
+    border: 1.5px solid #dde0f0;
+    border-radius: 8px;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a3a8f;
+    cursor: pointer;
+    transition: all .12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+.digicode-btn:hover {
+    background: #f0f4ff;
+    border-color: #2e5fca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(46,95,202,0.15);
+}
+.digicode-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background: #e1e9ff;
+}
+.digicode-btn-action {
+    background: #fafbff;
+    color: #c62828;
+    font-size: 14px;
+    border-color: #f5c6cb;
+}
+.digicode-btn-action:hover {
+    background: #ffebee;
+    border-color: #e57373;
+    color: #b71c1c;
+}
+.digicode-btn-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    border-color: #eee;
+}
+.digicode-notice {
+    font-size: 11px;
+    color: #666;
+    margin-top: 10px;
+    text-align: center;
+    line-height: 1.4;
+}
+.digicode-checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #444;
+    cursor: pointer;
+}
+

@@ -2,16 +2,20 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_onglet.class.php,v 1.10 2017-12-19 13:56:54 ngantier Exp $
+// $Id: notice_onglet.class.php,v 1.14.2.1 2025/01/08 09:07:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/notice_tpl_gen.class.php"); 
 
 class notice_onglet {
 	
+    public $id_tpl = 0;
+    public $noti_tpl = '';
+    
 	public function __construct($id_tpl){
-		$this->id_tpl=$id_tpl+0;
+		$this->id_tpl=intval($id_tpl);
 		$this->fetch_data();
 	}
 	
@@ -33,6 +37,7 @@ class notice_onglets {
 	
 	protected static $notice_onglet;
 	protected $data_onglets_perso;
+	public $ids;
 	
 	public function __construct($ids='') {
 		global $opac_notices_format_onglets;
@@ -43,7 +48,7 @@ class notice_onglets {
 	}
 	
 	public function insert_onglets($id_notice,$retour_aff) {			
-		$id_notice+=0;
+	    $id_notice = intval($id_notice);
 		$onglets_title="";
 		$onglets_content="";
 		if($this->ids) {
@@ -83,7 +88,7 @@ class notice_onglets {
 	public function build_onglets($id_notice,$li_tags){
 		global $opac_notices_format,$msg;
 	
-		$id_notice+=0;
+		$id_notice = intval($id_notice);
 		$onglets_title="";
 		$onglets_content="";
 		$this->data_onglets_perso = array();

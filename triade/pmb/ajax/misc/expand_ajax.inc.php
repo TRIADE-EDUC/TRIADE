@@ -1,23 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expand_ajax.inc.php,v 1.12 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: expand_ajax.inc.php,v 1.14 2023/07/26 15:07:57 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $link_serial, $link_analysis, $link_bulletin, $link_explnum_serial, $link_explnum_analysis, $link_explnum_bulletin, $mono_display_cmd, $msg;
+global $class_path, $mono_display_cmd, $msg;
 
-// functions particuliÃ¨res Ã  ce module
+// functions particulières à ce module
 require_once("$class_path/mono_display.class.php");
 require_once("$class_path/serial_display.class.php");
+require_once($class_path."/notice.class.php");
 
-$link_serial = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
-$link_analysis = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!';
-$link_bulletin = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!';
-$link_explnum_serial = "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!";
-$link_explnum_analysis = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!";
-$link_explnum_bulletin = "./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id=!!bul_id!!&explnum_id=!!explnum_id!!";
+notice::init_globals_patterns_links();
 
 $mono_display_cmd=stripslashes($mono_display_cmd);
 $param=unserialize($mono_display_cmd);
@@ -40,14 +36,14 @@ if(!isset($param['bouton_explnum'])) $param['bouton_explnum'] = '';
 
 switch($param['function_to_call']) {
 	case 'serial_display' :
-		// on a affaire Ã  un pÃ©riodique
+		// on a affaire à un périodique
 		// function serial_display ($id, $level='1', $action_serial='', $action_analysis='', $action_bulletin='', $lien_suppr_cart="", 
 		//$lien_explnum="", $bouton_explnum=1,$print=0,$show_explnum=1, $show_statut=0, $show_opac_hidden_fields=true, $draggable=0, $ajax_mode=0 , $anti_loop='' ) {
 		$display = new serial_display($param['id'], 6, $param['action_serial'], $param['action_analysis'], 
 			$param['action_bulletin'], $param['lien_suppr_cart'], $param['lien_explnum'],$param['bouton_explnum'],
 			$param['print'],1, 1, 1,1);
 		if(SESSrights & CATALOGAGE_AUTH){
-			$display->result="	<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click $cart_over_out>$print_action !!serial_type!! !!ISBD!!";
+			$display->result="	<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click $cart_over_out>$print_action !!serial_type!! !!ISBD!!";
 		}else{
 			$display->result="	$print_action !!serial_type!! !!ISBD!!";
 		}
@@ -55,15 +51,15 @@ switch($param['function_to_call']) {
 		$html=$display->result;				
 	break;
 	case 'mono_display' :
-		// on a affaire Ã  un bulletin ou monographie
+		// on a affaire à un bulletin ou monographie
 		//mono_display($id, $level=1, $action='', $expl=1, $expl_link='', $lien_suppr_cart="", $explnum_link='', $show_resa=0, 
 		//$print=0, $show_explnum=1, $show_statut=0, $anti_loop='', $draggable=0, $no_link=false, $show_opac_hidden_fields=true,$ajax_mode=0,$show_planning=0)
 		$display = new mono_display($param['id'], 6, $param['action'], $param['expl'], 
 			$param['expl_link'], $param['lien_suppr_cart'], $param['explnum_link'],1,
 			$param['print'],1, 1, '', 1, false, true, 0, 1);
 		if(SESSrights & CATALOGAGE_AUTH){
-			//$display->result="<div onMouseOver='if(init_drag) init_drag();'><img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click>$print_action !!ISBD!!</div>";
-			$display->result="<div><img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click $cart_over_out>$print_action !!ISBD!!</div>";
+			//$display->result="<div onMouseOver='if(init_drag) init_drag();'><img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click>$print_action !!ISBD!!</div>";
+			$display->result="<div><img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click $cart_over_out>$print_action !!ISBD!!</div>";
 		}else{
 			$display->result=" $print_action !!ISBD!!";
 		}

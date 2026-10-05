@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -43,7 +43,7 @@ global $cnx;
 function verifRss($idpers,$membre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT id FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' ";
+	$sql="SELECT id FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' ";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	return count($data);

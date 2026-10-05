@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -68,91 +70,88 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <script language="JavaScript" >var envoiform=true; </script>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form name="formulaire"  method=post action='gestion_abs_retard_codebar2.php' id='formulaire' >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGABS25 ?> via code barre</font></b></td></tr>
 <tr  id='cadreCentral0' >
 <td>
-<BR>
 <!-- // fin  -->
-<UL>
-<br>
-<font class=T2> Horaire : 
-<select name="saisie_heure" onChange="fonc2()" id="saisie_heure" >
-<option STYLE='color:#000066;background-color:#FCE4BA' value="null" ><?php print LANGCHOIX ?></option>
-<?php
-$disabled="disabled";
-$data3=recupCreneauDefault("creneau"); // libelle,text
-if (count($data3) > 0) {
-	$data3=recupInfoCreneau($data3[0][1]); // libelle,dep_h,fin_h
-	print "<option  id='select0' value=\"".trim($data3[0][0])."#".$data3[0][1]."#".$data3[0][2]."\" selected='selected' >".trim($data3[0][0])." : ".timeForm($data3[0][1])." - ".timeForm($data3[0][2])."</option>\n";
-	$disabled="";
-}else{
-?>
-<option STYLE='color:#000066;background-color:#FCE4BA' value="null" ><?php print LANGCHOIX ?></option>
-<?php
-}
-select_creneaux2();
-?>
-	</select> - <input type=text name="datedepart" value="<?php print dateDMY() ?>" size=12 readonly class="bouton2" id="datedepart" /> <?php
-	include_once("librairie_php/calendar.php");
-	calendar('id1','document.formulaire.datedepart',$_SESSION["langue"],"1");
-	?>
-
-</font> 
-<br><br>
-
-<font class=T2>Matière : </font><select name="idmatiere" id="saisie_matiere">
-
-<?php 
-	if ($_SESSION["membre"] == "menuprof") {
-		if (isset($_GET["smat"])) print "<option value=".$_GET["smat"]." id='select1' >".chercheMatiereNom($_GET["smat"])."</option>";
-		if (PROFPACCESABSRTD == "oui") {
-			if (!isset($_GET["smat"])) {
-				print "<option id='select0' value='' >".LANGCHOIX."</option>";
-				select_matiere3("20");
-			}
-
-		}
-	}else{	
-		print "<option id='select0' value='' >".LANGCHOIX."</option>";
-		select_matiere3("20");
-	}
-?>
-</select>
-<br><br>
-
-<font class=T2>Enseignant : </font><select name="idprof" id="saisie_prof">
-<?php
-	if ($_SESSION["membre"] == "menuprof") {
-		print "<option value=".$_SESSION["id_pers"]." id='select1' >".recherche_personne2($_SESSION["id_pers"])."</option>";
-	}else{	
-		print "<option id='select0' value='' >".LANGCHOIX."</option>";
-		select_personne_nom_len_id('ENS',25);
-	}	
-?>
-</select>
-
-<br><br>
-
-
-<font class=T2>Nature (abs/retard) : </font><select name="type_abs">
-<option value="absent" STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGABS?></option>
-<option value="retard" STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGRTD?></option>
-</select>
-
-
-<br><br>
-
-
-<font class=T2>Lecture code barre : </font> 
-	<textarea name='codebar' rows=1 cols=15 STYLE='color:#000066;background-color:#CCCCFF;height: 15px; width:70px ; overflow:hidden ' onBlur="clearTimeout(idtime);this.value='NON-ACTIF';document.formulaire.action.value='Activer Ecoute code barre'"  onclick="func_codebar();" >NON-ACTIF</textarea> <input type="button" value="Activer Ecoute code barre" class="bouton2" onclick="document.formulaire.codebar.focus();func_codebar();this.value='Lecture en cours...'"  name='action' />
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl">Horaire :</span>
+    <select name="saisie_heure" onChange="fonc2()" id="saisie_heure" class="cc-select">
+      <option STYLE='color:#000066;background-color:#FCE4BA' value="null"><?php print LANGCHOIX ?></option>
+      <?php
+      $disabled="disabled";
+      $data3=recupCreneauDefault("creneau");
+      if (countTriade($data3) > 0) {
+          $data3=recupInfoCreneau($data3[0][1]);
+          print "<option id='select0' value=\"".trim($data3[0][0])."#".$data3[0][1]."#".$data3[0][2]."\" selected='selected'>".trim($data3[0][0])." : ".timeForm($data3[0][1])." - ".timeForm($data3[0][2])."</option>\n";
+          $disabled="";
+      }else{
+      ?>
+      <option STYLE='color:#000066;background-color:#FCE4BA' value="null"><?php print LANGCHOIX ?></option>
+      <?php
+      }
+      select_creneaux2();
+      ?>
+    </select>
+    <div style="display:inline-flex;align-items:center;gap:5px;">
+      <input type="text" name="datedepart" value="<?php print dateDMY() ?>" size="12" readonly class="bouton2" id="datedepart">
+      <?php include_once("librairie_php/calendar.php"); calendar('id1','document.formulaire.datedepart',$_SESSION["langue"],"1"); ?>
+    </div>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Matière :</span>
+    <select name="idmatiere" id="saisie_matiere" class="cc-select">
+      <?php
+      if ($_SESSION["membre"] == "menuprof") {
+          if (isset($_GET["smat"])) print "<option value=".$_GET["smat"]." id='select1'>".chercheMatiereNom($_GET["smat"])."</option>";
+          if (PROFPACCESABSRTD == "oui") {
+              if (!isset($_GET["smat"])) {
+                  print "<option id='select0' value=''>".LANGCHOIX."</option>";
+                  select_matiere3("20");
+              }
+          }
+      }else{
+          print "<option id='select0' value=''>".LANGCHOIX."</option>";
+          select_matiere3("20");
+      }
+      ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Enseignant :</span>
+    <select name="idprof" id="saisie_prof" class="cc-select">
+      <?php
+      if ($_SESSION["membre"] == "menuprof") {
+          print "<option value=".$_SESSION["id_pers"]." id='select1'>".recherche_personne2($_SESSION["id_pers"])."</option>";
+      }else{
+          print "<option id='select0' value=''>".LANGCHOIX."</option>";
+          select_personne_nom_len_id('ENS',25);
+      }
+      ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Nature :</span>
+    <select name="type_abs" class="cc-select">
+      <option value="absent" style='color:#000066;background-color:#CCCCFF'><?php print LANGABS ?></option>
+      <option value="retard" style='color:#000066;background-color:#CCCCFF'><?php print LANGRTD ?></option>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Code barre :</span>
+    <textarea name='codebar' rows="1" cols="15" class="cb-area" onBlur="clearTimeout(idtime);this.value='NON-ACTIF';document.formulaire.action.value='Activer Ecoute code barre'" onclick="func_codebar();">NON-ACTIF</textarea>
+    <input type="button" value="Activer écoute code barre" class="btn-cb" onclick="document.formulaire.codebar.focus();func_codebar();this.value='Lecture en cours...'" name='action'>
+  </div>
+</div>
 
 
 <script language="JavaScript" >
@@ -324,27 +323,25 @@ function func_codebar() {
 }
 
 </script>
-<br><br>
-<font class="T2"><b>Liste des élèves :</b> </font><br><br>
-<div id='listing' width=10></div>
-
-</UL>
-
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit3("<?php print LANGENR?>","rien","<?php print $disabled ?>"); //text,nomInput</script>
-<?php if ($_SESSION["membre"] != "menuprof") { ?>
-<script language=JavaScript>buttonMagicRetour2('gestion_abs_retard.php','_self','Retour menu')</script>
-<?php } ?>
-</td></tr>
-<tr><td><input type='checkbox' onclick="fonc2()" name="valide" > Valider l'enregistrement </td></tr>
-</table>
-<br>
-<div id="inf" style='color:red' ><center><i>Indiquer heure d'abs/rtd</i></center></div>
+<div class="elv-section">
+  <div class="elv-title">Liste des élèves :</div>
+  <div id='listing' class="elv-listing"></div>
+</div>
+<div class="na-card">
+  <div class="na-row">
+    <label class="cb-check"><input type='checkbox' onclick="fonc2()" name="valide"> Valider l'enregistrement</label>
+  </div>
+  <div id="inf" class="warn-msg">Indiquer heure d'abs/rtd</div>
+</div>
+<div class="na-foot">
+  <button type="submit" name="rien" value="1" <?php if ($disabled == 'disabled') print 'disabled' ?> class="btn-enr"><?php print LANGENR ?></button>
+  <?php if ($_SESSION["membre"] != "menuprof"): ?>
+  <button type="button" onclick="open('gestion_abs_retard.php','_self','')" class="btn-retour">Retour menu</button>
+  <?php endif ?>
+</div>
 <?php if ($disabled == '') {
-	print "<script>document.getElementById('inf').style.visibility='hidden';</script>";
-}
-?>
-<br>
+    print "<script>document.getElementById('inf').style.visibility='hidden';</script>";
+} ?>
 </form>
 
      <!-- // fin  -->
@@ -353,17 +350,17 @@ function func_codebar() {
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

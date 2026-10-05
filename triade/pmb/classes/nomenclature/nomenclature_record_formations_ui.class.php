@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_formations_ui.class.php,v 1.28 2018-07-05 15:32:20 vtouchard Exp $
+// $Id: nomenclature_record_formations_ui.class.php,v 1.32 2023/05/05 13:38:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 
 /**
  * class nomenclature_record_formations
- * ReprÃ©sente les formations de la nomenclature d'une notice
+ * Représente les formations de la nomenclature d'une notice
  */
-
+global $class_path;
 require_once($class_path."/nomenclature/nomenclature_record_formations.class.php");
 require_once($class_path."/nomenclature/nomenclature_formations.class.php");
 require_once($class_path."/nomenclature/nomenclature_datastore.class.php");
@@ -31,6 +31,7 @@ class nomenclature_record_formations_ui {
 	 */
 
 	public $record_formations;
+	public $id;
 		
 	/**
 	 * Constructeur
@@ -41,7 +42,7 @@ class nomenclature_record_formations_ui {
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		$this->id=$id*1;
+		$this->id = intval($id);
 		$this->record_formations = new nomenclature_record_formations($id);
 	} // end of member function __construct
 	
@@ -78,7 +79,7 @@ class nomenclature_record_formations_ui {
 	}
 	
 	public function get_isbd(){
-		global $dbh,$msg;	
+		global $msg;	
 		
 		$all_formations= new nomenclature_formations();
 		$isbd="";
@@ -99,7 +100,7 @@ class nomenclature_record_formations_ui {
 							break;
 						}						
 					}
-					// dÃ©compose par atelier				
+					// décompose par atelier				
 					foreach ($record_formation["workshops"] as $workshop){
 						$workshop_tpl="- ".$workshop["label"];
 						if(!$workshop['defined']){
@@ -140,7 +141,7 @@ class nomenclature_record_formations_ui {
 						if(isset($instrument["other"]) && is_array($instrument["other"])) {
     						foreach ($instrument["other"] as $instrument_other){	
     							if($instruments_no_standard_tpl)$instruments_no_standard_tpl.=" / ";
-    							$instruments_no_standard_tpl.= " ".$instrument_other["effective"]." ".$instrument_other["code"];
+    							$instruments_no_standard_tpl.= " ".$instrument["effective"]." ".$instrument_other["code"];
     							if($instrument_other["name"])$instruments_no_standard_tpl.=" ( ". $instrument_other["name"]." ) ";
     							
     						}				
@@ -150,7 +151,7 @@ class nomenclature_record_formations_ui {
 					if(is_array($record_formation['families_notes'])) {
 						foreach ($record_formation['families_notes'] as $id_family=>$family_note) {
 							if($family_note != '') {
-								$nomenclature_family = new nomenclature_family($id_family);
+								$nomenclature_family = nomenclature_family::get_instance($id_family);
 								$families_notes_tpl .= "<br />".$msg['nomenclature_js_family_note']." ".$nomenclature_family->get_name()." : ".$family_note;
 							}
 						}

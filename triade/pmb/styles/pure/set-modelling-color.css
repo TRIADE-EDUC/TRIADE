@@ -2,7 +2,7 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: set-modelling-color.css,v 1.3 2018-04-17 15:21:19 wlair Exp $ */
+// $Id: set-modelling-color.css,v 1.4 2021/02/16 10:40:25 gneveu Exp $ */
 /*------------------------------------------------------------------------------------------*/
 
 /* ========================================================================
@@ -198,11 +198,14 @@ inside menu //  button
     border-color: #bd4180;    
 }
  
+.modelling div[class^='dijit'] input[class^='bouton'],
 .modelling input[type='submit'],
 .modelling input[type='button'],
 .modelling .bouton{
 	background-color: #bd4180;
 }
+
+.modelling div[class^='dijit'] input[class^='bouton']:hover,
 .modelling input[type='submit']:hover,
 .modelling input[type='button']:hover,
 .modelling .bouton:hover{

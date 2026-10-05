@@ -1,47 +1,54 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: parser.inc.php,v 1.25 2019-06-11 08:53:16 btafforeau Exp $
+// $Id: parser.inc.php,v 1.31.2.1 2024/09/10 13:38:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 /*----------------------------------------------------------------------------------------
  Fonctions pour parser un fichier XML
- La fonction Ã  appeler est _parser_ avec comme arguments :
+ La fonction à appeler est _parser_ avec comme arguments :
      $nom_fichier : le nom du fichier XML
-     $fonction : la lise des fonctions associÃ©es aux tags de niveau 2
-     $rootelement : l'Ã©lÃ©ment root du fichier XML
+     $fonction : la lise des fonctions associées aux tags de niveau 2
+     $rootelement : l'élément root du fichier XML
 ----------------------------------------------------------------------------------------*/
 
-// Lecture rÃ©cursive de la structure et stockage des paramÃ¨tres
+// Lecture récursive de la structure et stockage des paramètres
 
 function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	$nb_vals = count($vals);
-	if ($indice > $nb_vals)
+	if ($indice > $nb_vals) {
 		exit;
+	}
+	
 	while ($indice < $nb_vals) {
-	    $val = $vals[$indice];
+	    
+		$val = $vals[$indice];
 		$indice ++;
-		if (!isset($tag_count[$val["tag"]]))
+	
+		if (!isset($tag_count[$val["tag"]])) {
 			$tag_count[$val["tag"]] = 0;
-		else {
+		} else {
 			$tag_count[$val["tag"]]++;
 		}
+		
 		if (isset($val["attributes"])) {
 			$attributs = $val["attributes"];
-			foreach ($attributs as $key_att=>$val_att) {
+			foreach ($attributs as $key_att => $val_att) {
 				$param[$val["tag"]][$tag_count[$val["tag"]]][$key_att] = $val_att;
 			}
 		}
+		
 		if ($val["type"] == "open") {
 			$tag_count_next = array();
 			_recursive_($indice, $niveau +1, $param[$val["tag"]][$tag_count[$val["tag"]]], $tag_count_next, $vals);
 		}
-		if ($val["type"] == "close") {
-			if ($niveau > 2)
-				break;
+		
+		if ($val["type"] == "close" && $niveau > 2) {
+			break;
 		}
+		
 		if ($val["type"] == "complete") {
 			if(isset($val["value"])) {
 				$param[$val["tag"]][$tag_count[$val["tag"]]]["value"] = $val["value"];
@@ -52,7 +59,7 @@ function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	}
 }
 
-//Parse le fichier [nom_fichier] et exÃ©cute les fonctions liÃ©es aux tags
+//Parse le fichier [nom_fichier] et exécute les fonctions liées aux tags
 
 function _parser_($nom_fichier, $fonction, $rootelement) {
 	global $charset;
@@ -64,7 +71,7 @@ function _parser_($nom_fichier, $fonction, $rootelement) {
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
+		//encodages supportés par les fonctions suivantes
 		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
@@ -83,11 +90,11 @@ function _parser_($nom_fichier, $fonction, $rootelement) {
 				exit;
 			}
 			$param_var = $param[$rootelement][0];
-			for ($i = 0; $i < count($param_var); $i ++) {
-				if (isset($fonction[$i])) {
-				    for ($j = 0; $j < count($param_var[$i]); $j ++) {
-				        $param_fonction = $param_var[$i][$j];
-						eval($fonction[$i]."(\$param_fonction);");
+			foreach ($param_var as $key => $val) {
+				if (isset($fonction[$key])) {
+					for ($j = 0; $j < count($val); $j ++) {
+						$param_fonction = $val[$j];
+						eval($fonction[$key]."(\$param_fonction);");
 					}
 				}
 			}
@@ -105,7 +112,7 @@ function _parser_text_($xml, $fonction, $rootelement) {
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
+		//encodages supportés par les fonctions suivantes
 		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
@@ -118,17 +125,17 @@ function _parser_text_($xml, $fonction, $rootelement) {
 			_recursive_($indice, 1, $param, $tag_count, $vals);
 		}
 		unset($vals, $index);
-		if (is_array($param)) {
+		if (!empty($param) && is_array($param)) {
 			if (count($param[$rootelement]) != 1) {
 				echo "Erreur, ceci, n'est pas un fichier $rootelement !";
 				exit;
 			}
 			$param_var = $param[$rootelement][0];
-			for ($i = 0; $i < count($param_var); $i ++) {
-				if (isset($fonction[$i])) {
-				    for ($j = 0; $j < count($param_var[$i]); $j ++) {
-				        $param_fonction = $param_var[$i][$j];
-						eval($fonction[$i]."(\$param_fonction);");
+			foreach ($param_var as $key => $val) {
+				if (isset($fonction[$key])) {
+					for ($j = 0; $j < count($val); $j ++) {
+						$param_fonction = $val[$j];
+						eval($fonction[$key]."(\$param_fonction);");
 					}
 				}
 			}
@@ -139,41 +146,64 @@ function _parser_text_($xml, $fonction, $rootelement) {
 function _parser_text_no_function_($xml, $rootelement="", $full_path = '') {
 	global $charset;
 	global $class_path;
+	
 	$vals = array();
 	$index = array();
+	
 	if ($xml) {
 		$simple = $xml;
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
-		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
-			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
-		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
+	
+		if (preg_match($rx, $simple, $m)) {
+			$encoding = strtoupper($m[1]);
+		} else {
+			$encoding = "ISO-8859-1";
+		}
+		
+		//encodages supportés par les fonctions suivantes
+		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) {
+			$encoding = "ISO-8859-1";
+		}
+		
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
 		xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 		if (xml_parse_into_struct($p, $simple, $vals, $index) == 1) {
+			
+			// Libération de la mémoire
 			xml_parser_free($p);
+			
 			$param = array();
 			$tag_count = array();
-			$indice=0;
+			$indice = 0;
+			
 			_recursive_($indice, 1, $param, $tag_count, $vals);
 		} else {
 			echo xml_error_string(xml_get_error_code($p))." ". xml_get_current_line_number($p);
 		}
+		
+		$p = null;
 		unset($vals, $index);
-		if (is_array($param)) {
+		
+		if (isset($param) && is_array($param)) {
 			if ($rootelement) {
 				if (count($param[$rootelement]) != 1) {
 					echo "Erreur, ceci n'est pas un fichier $rootelement !";
+					if (!empty($full_path)) {
+					    PHP_log::register(PHP_log::prepare($full_path), "Erreur, ceci n'est pas un fichier $rootelement !");
+					}
 					exit;
 				}
 				$param_var = $param[$rootelement][0];
-			} else $param_var = $param;
+			} else {
+				$param_var = $param;
+			}
 			
-			//ParamÃ©trage de substitution par l'interface
-			if($full_path) {
+			//Paramétrage de substitution par l'interface
+			if ($full_path) {
 				$path = substr($full_path, 0, strrpos($full_path, '/'));
 				$filename = substr($full_path, strrpos($full_path, '/')+1);
+				
 				switch ($rootelement) {
 					case 'CATALOG':
 						require_once($class_path.'/misc/files/misc_file_catalog.class.php');

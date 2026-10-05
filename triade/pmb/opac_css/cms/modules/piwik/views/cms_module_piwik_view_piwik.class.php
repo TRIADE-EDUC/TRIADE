@@ -1,18 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_piwik_view_piwik.class.php,v 1.2 2015-03-12 08:58:39 arenou Exp $
+// $Id: cms_module_piwik_view_piwik.class.php,v 1.4 2023/08/17 09:47:56 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_piwik_view_piwik extends cms_module_common_view{
-	
-	
-	public function __construct($id=0){
-		parent::__construct($id);
-	}
-	
+
 
 	public function get_form(){
 		$form = parent::get_form();
@@ -21,27 +16,28 @@ class cms_module_piwik_view_piwik extends cms_module_common_view{
 			<label>".$this->format_text($this->msg['cms_module_piwik_view_piwik_visualization'])."</label>
 		</div>
 		<div class='row'>
-				<pre>ninja</pre>	
+				<pre>ninja</pre>
 			<textarea disabled='yes'>ninja</textarea>
 		</div>";
 		return $form;
 	}
-	
+
+
 	public function get_headers($datas=array()){
-		global $base_path;
+
 		$headers = parent::get_headers($datas);
-		$args = array(
-			'do' => "get_piwik_script"
-		);
-		$headers[]= "<script type='text/javascript'>".$this->generate_piwik_script($datas)."</script>";
+		$headers[]= "<script>".$this->generate_piwik_script($datas)."</script>";
 		return $headers;
 	}
-	
+
+
 	public function render($datas){
 		return "";
 	}
 
+
 	private function generate_piwik_script($server){
+
 		$script = "var _paq = _paq || [];";
 		if(isset($server['search'])){
 			$script.= "
@@ -71,7 +67,7 @@ _paq.push(['enableLinkTracking']);
 	_paq.push(['setTrackerUrl', u+'piwik.php']);
 	_paq.push(['setSiteId', ".$server['site_id']."]);
 	var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-	g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+	g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
 })();";
 		return $script;
 	}

@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes pays en UNIMARC (français)
-$Id: country.xml,v 1.1 2004-06-09 07:15:06 touraine37 Exp $ -->
+$Id: country.xml,v 1.1 2004/06/09 07:15:06 touraine37 Exp $ -->
 
 <XMLlist>
 	<entry code="AF">Afghanistan</entry>

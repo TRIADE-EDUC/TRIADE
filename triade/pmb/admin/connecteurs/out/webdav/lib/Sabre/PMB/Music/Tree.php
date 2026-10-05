@@ -1,17 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Tree.php,v 1.1 2016-02-05 10:06:14 vtouchard Exp $
+// $Id: Tree.php,v 1.3 2019/07/05 13:25:14 btafforeau Exp $
 
 namespace Sabre\PMB\Music;
 
-use Sabre\DAV;
 use Sabre\PMB;
 
 class Tree extends PMB\Tree {
 	
-	function getRootNode(){
+	public function getRootNode(){
 		$this->rootNode = new RootNode($this->config);
 	}
 	

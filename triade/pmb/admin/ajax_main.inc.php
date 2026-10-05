@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.23 2018-11-26 11:43:56 dgoron Exp $
+// $Id: ajax_main.inc.php,v 1.34.2.2.2.1 2025/03/06 08:09:03 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $categ, $action, $object_type, $class_path, $plugin, $sub, $PMBuserid, $num_roles;
+global $opac_search_universes_activate, $search_xml_file, $search_xml_file_full_path;
 
 //En fonction de $categ, il inclut les fichiers correspondants
 switch($categ):
@@ -17,12 +20,12 @@ switch($categ):
 	case 'sync':
 		include('./admin/connecteurs/in/dosync.php');
 		break;
+	case 'gestion':
+	    include('./admin/gestion/ajax_main.inc.php');
+	    break;
 	case 'opac':
 		include('./admin/opac/ajax_main.inc.php');
-	break;	
-	case 'harvest':
-		include('./admin/harvest/ajax_main.inc.php');
-	break;
+	   break;
 	case 'dashboard' :
 		include("./dashboard/ajax_main.inc.php");
 		break;
@@ -34,23 +37,6 @@ switch($categ):
 		break;
 	case 'connector' :
 		include("./admin/connecteurs/ajax_main.inc.php");
-		break;
-	case 'custom_fields':
-		switch($action) {
-			case "list":
-				if(isset($object_type) && $object_type) {
-					$class_name = 'list_'.$object_type;
-					require_once($class_path.'/list/custom_fields/'.$class_name.'.class.php');
-					$filters = (!empty($filters) ? encoding_normalize::json_decode(stripslashes($filters),true) : array());
-					$pager = (!empty($pager) ? encoding_normalize::json_decode(stripslashes($pager),true) : array());
-					$class_name::set_prefix($prefix);
-					$class_name::set_option_visibilite(encoding_normalize::json_decode(urldecode(stripslashes($option_visibilite))));
-					$instance_class_name = new $class_name($filters, $pager, array('by' => $sort_by, 'asc_desc' => (isset($sort_asc_desc) ? $sort_asc_desc : '')));
-					print encoding_normalize::utf8_normalize($instance_class_name->get_display_header_list());
-					print encoding_normalize::utf8_normalize($instance_class_name->get_display_content_list());
-				}
-				break;
-		}
 		break;
 	case 'plugin' :
 		$plugins = plugins::get_instance();
@@ -77,7 +63,7 @@ switch($categ):
 		require_once($class_path."/search.class.php");
 		if(!isset($search_xml_file)) $search_xml_file = '';
 		if(!isset($search_xml_file_full_path)) $search_xml_file_full_path = '';
-		
+
 		$sc=new search(true, $search_xml_file, $search_xml_file_full_path);
 		$sc->proceed_ajax();
 		break;
@@ -86,12 +72,81 @@ switch($categ):
 		$module_admin = new module_admin();
 		$module_admin->proceed_ajax_misc();
 		break;
-	default:
+	case 'docnum':
+		switch($sub) {
+			case 'perso':
+				switch($action) {
+					case "list":
+						require_once "$class_path/custom_fields/custom_fields_controller.class.php";
+						custom_fields_controller::proceed_ajax($object_type);
+						break;
+				}
+				break;
+			default:
+				switch($action) {
+					case "list":
+						lists_controller::proceed_ajax($object_type, 'configuration/explnum');
+						break;
+				}
+		}
+		break;
+	case 'animations':
+	    include("./admin/animations/ajax_main.inc.php");
+	    break;
+	case 'contact_forms':
 		switch($action) {
 			case "list":
-				require_once($class_path.'/list/lists_controller.class.php');
-				lists_controller::proceed_ajax($object_type, 'configuration/'.$categ);
+				lists_controller::proceed_ajax($object_type, 'contact_forms');
 				break;
 		}
-		break;		
+		break;
+	case 'ark':
+	    include("./admin/ark/ajax_main.inc.php");
+	    break;
+	case 'digital_signature':
+	    include("./admin/digital_signature/ajax_main.inc.php");
+	    break;
+	case 'users':
+	    switch($action) {
+	        case 'rights_content_form':
+	            $user = new user($PMBuserid);
+	            if (!empty($num_roles)) {
+	                if (!is_array($num_roles)) {
+	                   $num_roles = explode(',', $num_roles);
+	                }
+	                $user->adjustment_rights_from_roles($num_roles);
+	            }
+	            print $user->get_rights_content_form();
+	            break;
+	        case 'list':
+                users_controller::proceed_ajax($object_type);
+	        break;
+	    }
+	    break;
+	default:
+		switch($sub) {
+			case 'perso':
+			case 'parperso':
+			case 'authperso':
+			case 'type':
+				switch($action) {
+				    case "list":
+					    if ($object_type == 'configuration_authorities_authperso_ui') {
+					        lists_controller::proceed_ajax($object_type, 'configuration/'.$categ);
+					    } else {
+					        require_once "$class_path/custom_fields/custom_fields_controller.class.php";
+					        custom_fields_controller::proceed_ajax($object_type);
+					    }
+						break;
+				}
+				break;
+			default:
+				switch($action) {
+					case "list":
+						lists_controller::proceed_ajax($object_type, 'configuration/'.$categ);
+						break;
+				}
+				break;
+		}
+		break;
 endswitch;

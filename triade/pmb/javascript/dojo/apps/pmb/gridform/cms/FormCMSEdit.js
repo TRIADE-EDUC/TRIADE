@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormCMSEdit.js,v 1.4 2019-05-17 12:39:05 dgoron Exp $
+// $Id: FormCMSEdit.js,v 1.9 2024/03/20 16:27:52 dbellamy Exp $
 
 define([
         'dojo/_base/declare',
@@ -10,13 +10,14 @@ define([
         'dojo/query',
         'dojo/on',
         'dojo/request',
+        'dojo/dom',
         'dojo/dom-attr',
+        'dojo/dom-style',
         'apps/pmb/gridform/FormEdit',
-        ], function(declare, lang, topic, query, on, request, domAttr, FormEdit){
+        ], function(declare, lang, topic, query, on, request, dom, domAttr, domStyle, FormEdit){
 		return declare([FormEdit], {
 			
 			 constructor:function(module, type, context){
-				this.loadTinymceElements(); 
 			 },
 			switchGrid: function(evt){
 				this.flagOriginalFormat = true;
@@ -34,8 +35,23 @@ define([
 				    }, 1000);
 				}
 			},
+			btnEditCallback: function(evt){
+				this.inherited(arguments);
+				
+				//Particularité au contenu éditorial - L'identifiant n'est pas visible en création
+		  		var domCMSEditorialId = dom.byId('el0Child_0');
+	  			domStyle.set(domCMSEditorialId, 'display', 'block');
+			},
+			getDatasCallback: function(response){
+				this.inherited(arguments);
+				if(!this.getObjId()) {
+					this.hideNodeIdentifiant();
+				}
+			},
 			destroyTinymceElements: function() {
-				unload_tinymce();
+				if(typeof(tinyMCE)!= 'undefined') {
+					tinyMCE.remove();
+				}
 			},
 			loadTinymceElements: function() {
 				if(typeof(tinyMCE)!= 'undefined') {
@@ -52,6 +68,23 @@ define([
 						}
 					},1000);
 				}
+				//Ajout du parse pour les champs perso
+				if(typeof(tinyMCE)!= 'undefined') {
+					setTimeout(function(){
+						tinyMCE_init();
+					},1000);
+				}
+			},
+			getObjId: function() {
+				var nodeObjId = dom.byId('cms_editorial_form_obj_id');
+				if(nodeObjId) {
+					return parseInt(nodeObjId.value);
+				}
+				return 0;
+			},
+			hideNodeIdentifiant: function() {
+				var domCMSEditorialId = dom.byId('el0Child_0');
+				domStyle.set(domCMSEditorialId, 'display', 'none');
 			}
 		})
 });

@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000 
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,11 +34,11 @@
 </head>
 <body bgcolor="#FAEBD7" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr bgcolor="#666666">
 <td height="2"> <b><font  color="red"><font  color="#FFFFFF">Visualisation  bannière de publicité</font></b></td>
@@ -60,8 +60,8 @@ $cnx=cnx();
 error($cnx);
 $data=visu_banniere();
 // $data :
-$j=count($data);
-for($i=0;$i<count($data);$i++)
+$j=countTriade($data);
+for($i=0;$i<countTriade($data);$i++)
 {
 if ($data[$i][4] == 0) {$freq="peu";}
 if ($data[$i][4] == 1) {$freq="normal";}
@@ -90,17 +90,17 @@ Pgclose();
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
              
             top_d();
              
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,11 +41,11 @@ include_once("librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_consul_classe()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSUPP14?></font></b></td>
@@ -69,7 +69,7 @@ select_classe(); // creation des options
 // affichage de la classe
 if(isset($_POST["consult"])) {
 $saisie_classe=$_POST["saisie_classe"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -85,7 +85,7 @@ $cl=$data[0][0];
 	</font></td>
 </tr>
 <?php
-if( count($data) <= 0 )
+if( countTriade($data) <= 0 )
 	{
 	print("<tr><td align='center' valign='center'  id='cadreCentral0' ><?php print LANGDISP1?></td></tr>");
 	}
@@ -93,7 +93,7 @@ else {
 ?>
 <tr bgcolor="yellow"><td> <B><?php print LANGEL1?></B></td><td><B><?php print LANGEL2?></B></td></tr>
 <?php
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 	{
 	?>
 	<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
@@ -107,7 +107,7 @@ print "</table>";
 }
 ?>
 
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

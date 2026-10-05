@@ -1,8 +1,8 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | PMB est sous licence GPL, la rÃ©utilisation du code est cadrÃ©e            |
+// | PMB est sous licence GPL, la réutilisation du code est cadrée            |
 // +--------------------------------------------------------------------------+
-// $Id: help.php,v 1.3 2016-12-23 15:54:41 jpermanne Exp $
+// $Id: help.php,v 1.4 2023/03/16 14:16:14 dgoron Exp $
 
 //Impression
 
@@ -13,6 +13,8 @@ $base_nobody=1;
 $base_noheader=1;
 
 require($base_path."/includes/init.inc.php");
+
+global $msg, $charset, $action_help, $std_header;
 
 if ($action_help=="configure_time") {
 	header ("Content-Type: text/html; charset=$charset");

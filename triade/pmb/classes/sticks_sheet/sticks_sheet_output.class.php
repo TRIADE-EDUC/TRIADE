@@ -2,14 +2,15 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sticks_sheet_output.class.php,v 1.1 2016-07-26 13:38:41 dgoron Exp $
+// $Id: sticks_sheet_output.class.php,v 1.3 2022/03/10 15:19:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/fpdf_etiquette.class.php");
 
 /**
- * Classe de gÃ©nÃ©ration d'une planche
+ * Classe de génération d'une planche
  */
 class sticks_sheet_output {
 	
@@ -32,7 +33,7 @@ class sticks_sheet_output {
 	 */
 	public function __construct($id, $display_class) {
 		global $class_path;
-		$this->sticks_sheet = new sticks_sheet($id*1);
+		$this->sticks_sheet = new sticks_sheet($id);
 		$this->sticks_sheet_stick = null;
 		if(file_exists($class_path."/sticks_sheet/stick/".$display_class.".class.php")) {
 			require_once($class_path."/sticks_sheet/stick/".$display_class.".class.php");
@@ -45,8 +46,8 @@ class sticks_sheet_output {
 	/**
 	 * 
 	 * @param string $type Type de sortie
-	 * @param unknown $first_row Indice horizontal de la premiÃ¨re Ã©tiquette
-	 * @param unknown $first_col Indice vertical de la premiÃ¨re Ã©tiquette
+	 * @param integer $first_row Indice horizontal de la première étiquette
+	 * @param integer $first_col Indice vertical de la première étiquette
 	 */
 	public function output($type, $data=array(), $first_row=1, $first_col=1) {
 		switch ($type) {
@@ -60,7 +61,7 @@ class sticks_sheet_output {
 		global $fpdf;
 		global $pmb_pdf_fontfixed;
 		
-		// DÃ©marrage et configuration du pdf
+		// Démarrage et configuration du pdf
 		$nom_classe = $fpdf . "_Etiquette";
 		$pdf = new $nom_classe ($this->sticks_sheet->get_nbr_x_sticks(), $this->sticks_sheet->get_nbr_y_sticks(), $this->sticks_sheet->get_page_orientation(), $this->sticks_sheet->get_unit() , $this->sticks_sheet->get_page_format());
 		$pdf->Open();

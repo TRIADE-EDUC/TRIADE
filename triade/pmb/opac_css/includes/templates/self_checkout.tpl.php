@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: self_checkout.tpl.php,v 1.3 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: self_checkout.tpl.php,v 1.5 2023/08/17 09:47:52 dbellamy Exp $
 
-// templates pour gestion des autoritÃ©s collections
+// templates pour gestion des autorités collections
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -13,7 +13,7 @@ global $form_self_checkin;
 global $msg;
 
 $form_self_checkout ="
-	<script type='text/javascript'>		
+	<script>		
 		function test_form() {
 			if(document.getElementById('cb_expl').value.length == 0) {
 				alert('".$msg["empr_checkout_cb_empty"]."');
@@ -35,13 +35,21 @@ $form_self_checkout ="
 		</div>
 	</form>
 	
-	<script type='text/javascript'>	
+	<script>	
 		document.getElementById('cb_expl').focus();
 	</script>	
 ";
 
 $form_self_checkin ="
-	<script type='text/javascript'>		
+	<script>
+		function test_form() {
+			if(document.getElementById('cb_expl').value.length == 0) {
+				alert('".$msg["empr_checkout_cb_empty"]."');
+				document.getElementById('cb_expl').focus();
+				return false;
+			}			
+			return true;
+		}		
 		function do_retour() {
 			if(document.getElementById('cb_expl').value.length == 0) {
 				alert('".$msg["empr_checkout_cb_empty"]."');
@@ -62,7 +70,7 @@ $form_self_checkin ="
 		</div>
 	</form>
 		
-	<script type='text/javascript'>	
+	<script>	
 		document.getElementById('cb_expl').focus();
 	</script>	
 ";

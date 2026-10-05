@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: translations.inc.php,v 1.2 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: translations.inc.php,v 1.3 2024/01/17 08:09:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -17,6 +17,6 @@ switch($action){
 		break;
 	case 'get_translations':
 		$translation = new translation($num_field, $table_name);
-		print encoding_normalize::json_encode($translation->get_data());
+		print $translation->get_json_data();
 		break;
 }

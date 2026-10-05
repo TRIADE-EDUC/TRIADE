@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: cms_article.xml,v 1.1 2023/04/20 08:42:16 gneveu Exp $ -->
+<pmbtabs>
+    <url_target></url_target>
+    <default_mode>0</default_mode>
+    <tabs>
+        <tab title="msg:search_extended" mode="6" multiSearchCriteria="yes" />
+    </tabs>
+</pmbtabs>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,7 +27,7 @@ if ((VIESCOLAIRENOTEENSEIGNANT == "oui") && ($_SESSION["membre"] != "menupersonn
 }else{
 	if (($_SESSION["membre"] != "menuadmin") && ($_SESSION["membre"] != "menuprof")) {
 		$cnx=cnx();
-		if (!verifDroit($_SESSION["id_pers"],"carnetnotes")) {
+		if ((!verifDroit($_SESSION["id_pers"],"carnetnotes"))  && (!verifDroit($_SESSION["id_pers"],"AESH")) )  {
 			accesNonReserveFen();
 			exit();
 		}
@@ -49,7 +49,7 @@ $sClasseGrp=$_POST["sClasseGrp"];
 $data=explode(";",$data);
 array_shift($data);
 $i=1;
-$l=count($data);
+$l=countTriade($data);
 while($i<$l){
 	unset($data[$i]);
 	$i=$i+2;
@@ -78,7 +78,7 @@ unset($data);
 
 if (trim($elev_id) != "") {
 	$sql="SELECT note_id, CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ), round(note,2), n.elev_id, n.typenote, n.noteexam, n.notationsur,	n.notevisiblele , e.classe
-		FROM  ${prefixe}notes n, ${prefixe}eleves e
+		FROM  {$prefixe}notes n, {$prefixe}eleves e
 		WHERE
 		sujet = '$sujet'
 		AND date  = '$date'
@@ -101,9 +101,9 @@ if ((trim($mat[0][4]) == "fr") || (trim($mat[0][4]) == "")) { $note_usa=0;$typen
 $noteexamen=$mat[0][5];
 $notevisible=dateForm($mat[0][7]);
 
-for($i=0;$i<count($mat);$i++){
+for($i=0;$i<countTriade($mat);$i++){
 
-	for($j=0;$j<count($mat[$i]);$j++){
+	for($j=0;$j<countTriade($mat[$i]);$j++){
 		if($mat[$i][$j] == -1){
 			$mat[$i][$j] = 'abs';
 		} elseif ($mat[$i][$j] == -2) {
@@ -218,7 +218,7 @@ for($i=0;$i<count($mat);$i++){
 <div align='center'><?php top_h();?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/<?php print $_SESSION["membre"] ?>1.js"></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROF15?> </b><font id="color2"><?php $titre1=urldecode($_POST["titre1"]); print $titre1?></font></font>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROF15?> </b><font id="color2"><?php $titre1=urldecode($_POST["titre1"]); print stripslashes(stripslashes($titre1)) ?></font></font>
 </td>
 </tr>
 <tr id='cadreCentral0' >
@@ -301,7 +301,7 @@ if ((isset($_POST["typenote"])) && ($_POST["typenote"] == "oui")) {
 	$list_cor="";
 	$datalist=aff_config_note_usa();
 	// id,libelle,min,max
-	for($i=0;$i<count($datalist);$i++) {
+	for($i=0;$i<countTriade($datalist);$i++) {
 		$list_cor.="<font class=T2> De ".$datalist[$i][2]." à ".$datalist[$i][3]." équivaut à  ".$datalist[$i][1]."</font><br>";
 	}
 	print "&nbsp;<a href='#' onMouseOver=\"AffBulle3('Correspondance','./image/commun/info.jpg','".$list_cor."');\"  onMouseOut='HideBulle()'; ><img src='./image/help.gif' border='0' align='center'></a>";
@@ -316,7 +316,7 @@ if ((isset($_POST["typenote"])) && ($_POST["typenote"] == "oui")) {
 <table border=1 style="-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;padding:5px" >
 <?php
 $nbelem=6;
-for($i=0;$i<count($mat);$i++){
+for($i=0;$i<countTriade($mat);$i++){
 $photoeleve="image_trombi.php?idE=".$mat[$i][3];
 print htmlFormHidden("note_id[$i]",$mat[$i][0]);
 print htmlFormHidden("elev_id[$i]",$mat[$i][3]);
@@ -459,10 +459,10 @@ if (NOTEEXAMEN == "oui") {
 <?php
       $dataexam=recupExamenConfig();
       //id, libelle , coef
-      if (count($dataexam)>0) {
+      if (countTriade($dataexam)>0) {
                print "<optgroup label='Examen Config' />";
       }
-      for($ex=0;$ex<count($dataexam);$ex++) {
+      for($ex=0;$ex<countTriade($dataexam);$ex++) {
                $libelle=$dataexam[$ex][1];
                $coef=$dataexam[$ex][2];
                print "<option value='$libelle' STYLE='color:#000066;background-color:#CCCCFF'>$libelle</option>";
@@ -512,15 +512,15 @@ if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonn
 
 
 <?php 
-$nbtop=count($mat)*30; 
+$nbtop=countTriade($mat)*30; 
 $order="ORDER BY 2";
-if($HPV[gid]){
-        $gid=$HPV[gid];
+if($HPV['gid']){
+        $gid=$HPV['gid'];
         $sqlIn=<<<SQL
         SELECT
         	liste_elev
         FROM
-        	${prefixe}groupes
+        	{$prefixe}groupes
         WHERE
         	group_id='$gid'
 SQL;
@@ -531,16 +531,16 @@ SQL;
 	$in=substr($in,1);
 	$in=substr($in,0,-1);
 	if (trim($in) == "") {
-		$sql="SELECT elev_id, CONCAT( upper(trim(nom)),' ',trim(prenom) ) ,classe, numero_eleve  FROM ${prefixe}eleves WHERE elev_id=''  AND compte_inactif != 1 $order ";
+		$sql="SELECT elev_id, CONCAT( upper(trim(nom)),' ',trim(prenom) ) ,classe, numero_eleve  FROM {$prefixe}eleves WHERE elev_id=''  AND compte_inactif != 1 $order ";
 		unset($in);		
 	}else{
-		$sql="SELECT elev_id, CONCAT( upper(trim(nom)),' ',trim(prenom) ) ,classe, numero_eleve  FROM ${prefixe}eleves WHERE compte_inactif != 1 AND elev_id IN ($in) $order ";
+		$sql="SELECT elev_id, CONCAT( upper(trim(nom)),' ',trim(prenom) ) ,classe, numero_eleve  FROM {$prefixe}eleves WHERE compte_inactif != 1 AND elev_id IN ($in) $order ";
 		unset($in);
 	}
 } else {
       	$sql="SELECT elev_id, ";
        	$sql.=" CONCAT( upper(trim(nom)),' ',trim(prenom) ) ";
-	$sql.=",classe  FROM ${prefixe}eleves WHERE classe='$idcl' AND compte_inactif != 1 $order ";
+	$sql.=",classe  FROM {$prefixe}eleves WHERE classe='$idcl' AND compte_inactif != 1 $order ";
 }
         $curs=execSql($sql);
         unset($sql);
@@ -554,11 +554,11 @@ SQL;
 	<select name=ideleve >
 		<option value='' id='select0' ><?php print LANGCHOIX ?></option>
 	<?php
-	for($a=0;$a<count($ele);$a++){
-		$sql="SELECT note_id, CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ), round(note,2),n.elev_id,n.typenote,n.noteexam,n.notationsur,n.notevisiblele FROM ${prefixe}notes n, ${prefixe}eleves e WHERE sujet = '$sujet' AND date  = '$date' AND coef  = '$coef' AND n.elev_id = '".$ele[$a][0]."' AND code_mat = '$code_mat' AND prof_id = '$prof_id' AND n.elev_id = e.elev_id";
+	for($a=0;$a<countTriade($ele);$a++){
+		$sql="SELECT note_id, CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ), round(note,2),n.elev_id,n.typenote,n.noteexam,n.notationsur,n.notevisiblele FROM {$prefixe}notes n, {$prefixe}eleves e WHERE sujet = '$sujet' AND date  = '$date' AND coef  = '$coef' AND n.elev_id = '".$ele[$a][0]."' AND code_mat = '$code_mat' AND prof_id = '$prof_id' AND n.elev_id = e.elev_id";
 		$curs=execSql($sql);
 		$mat3=chargeMat($curs);
-		if (count($mat3) == 0) {
+		if (countTriade($mat3) == 0) {
 			print "<option value='".$ele[$a][0]."' id='select1' >".$ele[$a][1]."</option>";
 		}
 	}
@@ -705,7 +705,7 @@ function valid_modif_note() {
                         errfound=true;
                         }
 	                var a=10;
-			var nbnote="<?php print 4 + count($mat) * 5 - 1?>";
+			var nbnote="<?php print 4 + countTriade($mat) * 5 - 1?>";
 
                 	for ( a ; a <= nbnote ; a++ ) {
                         	if  (document.form11.elements[a].value.length < 1) {

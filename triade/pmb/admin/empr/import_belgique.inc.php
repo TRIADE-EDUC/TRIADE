@@ -1,111 +1,116 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_belgique.inc.php,v 1.13 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: import_belgique.inc.php,v 1.16.6.1 2024/12/20 15:54:27 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once("$class_path/emprunteur.class.php");
-require_once($class_path."/import/import_empr.class.php");
-//import_belgique - Version modifiÃ©e par A.-M Cubat en avril 2006
+global $class_path;
+global $action, $imp_elv, $imp_prof, $Sep_Champs, $type_import;
+
+require_once $class_path."/emprunteur.class.php";
+require_once $class_path."/import/import_empr.class.php";
+
+//import_belgique - Version modifiée par A.-M Cubat en avril 2006
 //Ecole N.-D. de la Sagesse - Avenue Van Overbeke, 10 - B-1083 Bruxelles (Belgique)
 
 
-//DiffÃ©rence majeure entre l'import "Bretagne" et l'import "Belgique" : l'import des professeurs
+//Différence majeure entre l'import "Bretagne" et l'import "Belgique" : l'import des professeurs
 
-//Dans la version import_bretagne, les Ã©lÃ¨ves Ã©taient "importÃ©s" en groupe (crÃ©ation automatique des groupes, insertion automatique dans le bon groupe)
-//Les profs Ã©taient "importÃ©s" individuellement, le nombre de champs importÃ©s dans leur fiche "lecteur" Ã©tait rÃ©duit, leur numÃ©ro de lecteur Ã©tait tirÃ© au sort.
+//Dans la version import_bretagne, les élèves étaient "importés" en groupe (création automatique des groupes, insertion automatique dans le bon groupe)
+//Les profs étaient "importés" individuellement, le nombre de champs importés dans leur fiche "lecteur" était réduit, leur numéro de lecteur était tiré au sort.
 
-//Dans la version import_belgique, non seulement les groupes "Ã©lÃ¨ves", mais aussi les groupes "professeurs" sont crÃ©Ã©s automatiquement
-//Il n'est plus nÃ©cessaire de crÃ©er "manuellement" un ou plusieurs groupes de professeurs en rÃ©Ã©ditant la fiche de chaque membre du personnel.
+//Dans la version import_belgique, non seulement les groupes "élèves", mais aussi les groupes "professeurs" sont créés automatiquement
+//Il n'est plus nécessaire de créer "manuellement" un ou plusieurs groupes de professeurs en rééditant la fiche de chaque membre du personnel.
 //C'est donc un avantage majeur, qui apporte un net gain de temps au niveau de l'encodage. Imaginez la situation s'il y a une centaine de professeurs.
 
-//Merci aux concepteurs de import_bretagne, ce sont eux qui ont mis au point l'import des Ã©lÃ¨ves avec crÃ©ation automatique des groupes
-//Je n'ai aucun mÃ©rite, je n'ai rien inventÃ© - j'ai modifiÃ© un programme existant que j'aurais Ã©tÃ© incapable de rÃ©diger moi-mÃªme.
-//J'y ai simplement ajoutÃ© la possibilitÃ© de crÃ©er Ã©galement des groupes de professeurs.
+//Merci aux concepteurs de import_bretagne, ce sont eux qui ont mis au point l'import des élèves avec création automatique des groupes
+//Je n'ai aucun mérite, je n'ai rien inventé - j'ai modifié un programme existant que j'aurais été incapable de rédiger moi-même.
+//J'y ai simplement ajouté la possibilité de créer également des groupes de professeurs.
 
 
-//import_belgique permet donc d'avoir pour les professeurs exactement les mÃªmes champs que pour les Ã©lÃ¨ves.
-//Vous n'aurez donc qu'un seul modÃ¨le de fichier de lecteurs en Excel, ce qui est plus pratique.
+//import_belgique permet donc d'avoir pour les professeurs exactement les mêmes champs que pour les élèves.
+//Vous n'aurez donc qu'un seul modèle de fichier de lecteurs en Excel, ce qui est plus pratique.
 
-//La structure du fichier texte doit Ãªtre la suivante : 11 champs (pour tout le monde)
-//NumÃ©ro identifiant/Nom/PrÃ©nom/Rue/ComplÃ©ment de rue/Code postal/Commune/TÃ©lÃ©phone/Date de naissance/Classe/Sexe
+//La structure du fichier texte doit être la suivante : 11 champs (pour tout le monde)
+//Numéro identifiant/Nom/Prénom/Rue/Complément de rue/Code postal/Commune/Téléphone/Date de naissance/Classe/Sexe
 
-//La liste de ces 11 champs figurera peut-Ãªtre Ã  la premiÃ¨re ligne de votre fichier Excel (c'est souvent plus simple, ne vous privez pa de cette facilitÃ©)
-//Mais si c'est le cas, il faut absolument la supprimer avant de convertir le fichier. La fiche du premier lecteur doit se trouver Ã  la premiÃ¨re ligne.
-//Sinon, vous crÃ©ez un lecteur dont le nom est "nom", dont le prÃ©nom est "prÃ©nom", et dont l'annÃ©e de naissance est "annÃ©e" au lieu d'une date !
+//La liste de ces 11 champs figurera peut-être à la première ligne de votre fichier Excel (c'est souvent plus simple, ne vous privez pa de cette facilité)
+//Mais si c'est le cas, il faut absolument la supprimer avant de convertir le fichier. La fiche du premier lecteur doit se trouver à la première ligne.
+//Sinon, vous créez un lecteur dont le nom est "nom", dont le prénom est "prénom", et dont l'année de naissance est "année" au lieu d'une date !
 
 //Pas question de changer l'ordre des champs, ni d'en supprimer
-//Vous n'Ãªtes pas obligÃ© de complÃ©ter ces 11 champs, mais n'oubliez pas de laisser dans ce cas des colonnes vides dans Excel.
-//Evitez toutefois de laisser le champ "sexe" vide pour la fiche du premier lecteur (car c'est le dernier champ de la premiÃ¨re ligne).
-//Excel risque de "croire" qu'il y a moins de 11 colonnes Ã  convertir (le nombre de cellules complÃ©tÃ©es Ã  la premiÃ¨re ligne est dÃ©terminant Ã  cet Ã©gard).
+//Vous n'êtes pas obligé de compléter ces 11 champs, mais n'oubliez pas de laisser dans ce cas des colonnes vides dans Excel.
+//Evitez toutefois de laisser le champ "sexe" vide pour la fiche du premier lecteur (car c'est le dernier champ de la première ligne).
+//Excel risque de "croire" qu'il y a moins de 11 colonnes à convertir (le nombre de cellules complétées à la première ligne est déterminant à cet égard).
 
-//Le fichier Excel doit Ãªtre converti en format .csv avant l'import dans PMB - c'est un type de fichier texte avec le point-virgule comme sÃ©parateur de champ.
-//VÃ©rifiez que chaque ligne du fichier .csv se termine bien par un point-virgule, sinon vous perdrez le dernier caractÃ¨re du dernier champ de chaque ligne.
+//Le fichier Excel doit être converti en format .csv avant l'import dans PMB - c'est un type de fichier texte avec le point-virgule comme séparateur de champ.
+//Vérifiez que chaque ligne du fichier .csv se termine bien par un point-virgule, sinon vous perdrez le dernier caractère du dernier champ de chaque ligne.
 
 //Contenu des champs
-//Pour le Sexe, vous mettez "M" ou "F" (Ã©lÃ¨ves ou professeurs, peu importe)
-//SI vous voulez crÃ©er des groupes (d'Ã©lÃ¨ves ou de professeurs), il faut bien sÃ»r complÃ©ter la colonne "Classe" pour tout le monde.
+//Pour le Sexe, vous mettez "M" ou "F" (élèves ou professeurs, peu importe)
+//SI vous voulez créer des groupes (d'élèves ou de professeurs), il faut bien sûr compléter la colonne "Classe" pour tout le monde.
 
-//Si le champ "Classe" reste vide, ce lecteur sera encodÃ© dans la base mais ne fera partie d'aucun groupe, et risque donc de passer "inaperÃ§u" dans certains cas.
-//Si vous voulez crÃ©er plusieurs groupes de professeurs, il suffit d'avoir des libellÃ©s diffÃ©rents (Profs - Profs1 - Profs2 ...) - comme pour les Ã©lÃ¨ves et leurs classes..
-//Standardisez l'orthographe - "Profs 1" n'est pas la mÃªme chose que "Profs1" (avec ou sans espace intermÃ©diaire) - cela crÃ©erait 2 groupes diffÃ©rents.
+//Si le champ "Classe" reste vide, ce lecteur sera encodé dans la base mais ne fera partie d'aucun groupe, et risque donc de passer "inaperçu" dans certains cas.
+//Si vous voulez créer plusieurs groupes de professeurs, il suffit d'avoir des libellés différents (Profs - Profs1 - Profs2 ...) - comme pour les élèves et leurs classes..
+//Standardisez l'orthographe - "Profs 1" n'est pas la même chose que "Profs1" (avec ou sans espace intermédiaire) - cela créerait 2 groupes différents.
 
-//Au moment d'importer, sÃ©lectionnez le fichier .csv et choisissez entre "import des Ã©lÃ¨ves" et "import des professeurs".
-//Le programme crÃ©e automatiquement les groupes (dans un cas comme dans l'autre), et insÃ¨re aussi chacun dans le groupe correspondant..
-//Il attribue le bon code statistique Ã  chaque lecteur et le place Ã©galement dans la bonne catÃ©gorie.
+//Au moment d'importer, sélectionnez le fichier .csv et choisissez entre "import des élèves" et "import des professeurs".
+//Le programme crée automatiquement les groupes (dans un cas comme dans l'autre), et insère aussi chacun dans le groupe correspondant..
+//Il attribue le bon code statistique à chaque lecteur et le place également dans la bonne catégorie.
 
 
-//La suite du commentaire concerne les adaptations Ã©ventuelles Ã  faire pour les codes statistiques et pour les catÃ©gories - en fonction de votre configuration.
+//La suite du commentaire concerne les adaptations éventuelles à faire pour les codes statistiques et pour les catégories - en fonction de votre configuration.
 
-//J'ai attribuÃ© Ã  tous les Ã©lÃ¨ves et tous les professeurs le code statistique "Ã©cole".
-//J'ai mis les Ã©lÃ¨ves dans la catÃ©gorie "Ã©lÃ¨ves", les professeurs dans la catÃ©gorie "professeurs".
-//Vous pouvez bien sÃ»r changer ces paramÃ¨tres, j'explique comment procÃ©der.
+//J'ai attribué à tous les élèves et tous les professeurs le code statistique "école".
+//J'ai mis les élèves dans la catégorie "élèves", les professeurs dans la catégorie "professeurs".
+//Vous pouvez bien sûr changer ces paramètres, j'explique comment procéder.
 
-//Pour attribuer un code statistique ou une catÃ©gorie Ã  un lecteur, il faut connaÃ®tre la clef primaire (le "id") du code ou de la catÃ©gorie.
+//Pour attribuer un code statistique ou une catégorie à un lecteur, il faut connaître la clef primaire (le "id") du code ou de la catégorie.
 //Donc, il  faut aller voir dans les tables empr_codestat et empr_categ si vous voulez changer ceci.
-//Clic droit de souris sur l'icÃ´ne PHP - choisir Administration - PHPMyAdmin - administration BDD.
+//Clic droit de souris sur l'icône PHP - choisir Administration - PHPMyAdmin - administration BDD.
 
-//Voici comment les tables se prÃ©sentent chez nous, cela vous aidera Ã  faire les modifications qui seront  probablement nÃ©cessaires chez vous.
+//Voici comment les tables se présentent chez nous, cela vous aidera à faire les modifications qui seront  probablement nécessaires chez vous.
 
-//Je n'ai pas supprimÃ© de clefs primaires dans les tables empr_codestat et empr_categ, j'ai changÃ© les libellÃ©s mais j'ai gardÃ© les clefs primaires d'origine.
+//Je n'ai pas supprimé de clefs primaires dans les tables empr_codestat et empr_categ, j'ai changé les libellés mais j'ai gardé les clefs primaires d'origine.
 
-//Dans la table empr_codestat, j'ai gardÃ© idcode = 2 mais j'ai remplacÃ© le libellÃ© "communautÃ© de communes" par le libellÃ© "Ã©cole".
-//Dans la table empr_categ, j'ai gardÃ© id_categ_empr = 1 mais j'ai remplacÃ© le libellÃ© "enfants"  par le libellÃ© "Ã©lÃ¨ves".
-//Dans la table empr_categ, j'ai gardÃ© id_categ_empr = 2 mais j'ai remplacÃ© le libellÃ© "retraitÃ©s"  par le libellÃ© "professeurs".
+//Dans la table empr_codestat, j'ai gardé idcode = 2 mais j'ai remplacé le libellé "communauté de communes" par le libellé "école".
+//Dans la table empr_categ, j'ai gardé id_categ_empr = 1 mais j'ai remplacé le libellé "enfants"  par le libellé "élèves".
+//Dans la table empr_categ, j'ai gardé id_categ_empr = 2 mais j'ai remplacé le libellé "retraités"  par le libellé "professeurs".
 
 //Si vous voulez d'autres valeurs, c'est facile, il suffit de changer 4 lignes dans ce programme.
 //Voici les lignes qui correspondent aux codes de notre configuration.
 
-//Chez nous, les Ã©lÃ¨ves ont le code statistique 2 (Ã©cole), et sont dans la catÃ©gorie 1  (Ã©lÃ¨ves)
-//Import_eleves  - cet Ã©lÃ¨ve n'est pas enregistrÃ©).
+//Chez nous, les élèves ont le code statistique 2 (école), et sont dans la catégorie 1  (élèves)
+//Import_eleves  - cet élève n'est pas enregistré).
 //$req_insert .= "'$tab[6]', '$tab[7]', '$tab[8]', 1, 2, '$date_auj', '$sexe', ";
-//Iimport_eleves (cet Ã©lÃ¨ve est dÃ©jÃ   enregistrÃ©)
+//Iimport_eleves (cet élève est déjà  enregistré)
 // $req_update .= "empr_tel1 = '$tab[7]', empr_year = '$tab[8]', empr_categ = '1', empr_codestat = '2', empr_modif = '$date_auj', empr_sexe = '$sexe', ";
 
-//Chez nous, les profs ont le code statistique 2 (Ã©cole), et sont dans la catÃ©gorie 2  (professeurs)
-//Import_profs  - ce prof n'est pas enregistrÃ©)
+//Chez nous, les profs ont le code statistique 2 (école), et sont dans la catégorie 2  (professeurs)
+//Import_profs  - ce prof n'est pas enregistré)
 //$req_insert .= "'$tab[6]', '$tab[7]', '$tab[8]', 2, 2, '$date_auj', '$sexe', ";
-//Import_profs  - ce prof est dÃ©jÃ  enregistrÃ©)
+//Import_profs  - ce prof est déjà enregistré)
 //$req_update .= "empr_tel1 = '$tab[7]', empr_year = '$tab[8]', empr_categ = '2', empr_codestat = '2', empr_modif = '$date_auj', empr_sexe = '$sexe', ";
 
-//Attention ! Comme je le disais, cette version est conÃ§ue en fonction des nÂ° de clefs primaires de la configuration actuelle de mon Ã©cole.
-//Si vous avez d'autres libellÃ©s, ou les mÃªmes libellÃ©s mais liÃ©s Ã  d'autres nÂ° de clefs primaires, il faudra modifier les valeurs (les id)
+//Attention ! Comme je le disais, cette version est conçue en fonction des n° de clefs primaires de la configuration actuelle de mon école.
+//Si vous avez d'autres libellés, ou les mêmes libellés mais liés à d'autres n° de clefs primaires, il faudra modifier les valeurs (les id)
 
-//Chercher les commentaires suivants : Cet Ã©lÃ¨ve est dÃ©jÃ  enregistrÃ© - n'est pas enregistrÃ© - Cet prof est dÃ©jÃ  enregistrÃ© - n'est pas enregistrÃ©
-//Vous trouverez facilement les 4 lignes Ã  modifier - ce sont celles reprises ci-dessus et qui commencent par $req_insert ou par $req_update
-//Un bref commentaire Ã  ces endroits-lÃ  vous rappelle les codes que j'ai employÃ©s et vous permet de repÃ©rer aisÃ©ment les lignes Ã  changer.
+//Chercher les commentaires suivants : Cet élève est déjà enregistré - n'est pas enregistré - Cet prof est déjà enregistré - n'est pas enregistré
+//Vous trouverez facilement les 4 lignes à modifier - ce sont celles reprises ci-dessus et qui commencent par $req_insert ou par $req_update
+//Un bref commentaire à ces endroits-là vous rappelle les codes que j'ai employés et vous permet de repérer aisément les lignes à changer.
 
-//A vous de remplacer les valeurs qui s'y trouvent (1 ou 2 dans le cas prÃ©sent) par celles que vous trouverez dans vos tables empr_categ et empr_codestat.
-//PHPMyAdmin vous permettra de savoir quelles clefs primaires correspondent aux libellÃ©s des catÃ©gories et des codes statistiques que vous avez sÃ©lectionnÃ©s.
+//A vous de remplacer les valeurs qui s'y trouvent (1 ou 2 dans le cas présent) par celles que vous trouverez dans vos tables empr_categ et empr_codestat.
+//PHPMyAdmin vous permettra de savoir quelles clefs primaires correspondent aux libellés des catégories et des codes statistiques que vous avez sélectionnés.
 
 //Bonne chance !
 
 //Explications de A.-M. Cubat
 
 
-function show_import_choix_fichier($dbh) {
+function show_import_choix_fichier() {
+
 	global $msg;
 	global $current_module ;
 
@@ -116,7 +121,7 @@ print "
 	<div class='row'>
 		<label class='etiquette' for='form_import_lec'>".$msg["import_lec_fichier"]."</label>
         <input name='import_lec' accept='text/plain' type='file' class='saisie-80em' size='40'>
-		</div>	
+		</div>
 	<div class='row'>
         <label class='etiquette' for='form_import_lec'>". $msg["import_lec_separateur"]."</label>
         <select name='Sep_Champs' >
@@ -128,55 +133,58 @@ print "
 	<div class='row'>
         <input type=radio name='type_import' value='nouveau_lect' checked>
         <label class='etiquette' for='form_import_lec'>Nouveaux lecteurs</label>
-        (ajoute ou modifie les lecteurs prÃ©sents dans le fichier)
+        (ajoute ou modifie les lecteurs présents dans le fichier)
         <br />
         <input type=radio name='type_import' value='maj_complete'>
-        <label class='etiquette' for='form_import_lec'>Mise Ã  jour complÃ¨te</label>
-        (supprime les lecteurs non prÃ©sents dans le fichier et qui n'ont pas de prÃªt en cours)
+        <label class='etiquette' for='form_import_lec'>Mise à jour complète</label>
+        (supprime les lecteurs non présents dans le fichier et qui n'ont pas de prêt en cours)
     </div>
     <div class='row'></div>
-    
+
 	</div>
 <div class='row'>
-	<input name='imp_elv' type='submit' class='bouton' value='Import des Ã©lÃ¨ves'/>
+	<input name='imp_elv' type='submit' class='bouton' value='Import des élèves'/>
 	<input name='imp_prof' value='Import des professeurs' type='submit' class='bouton'/>
 </div>
 </form>";
 }
 
-function import_eleves($separateur, $dbh, $type_import){
+function import_eleves($separateur, $type_import){
 
-    //La structure du fichier texte doit Ãªtre la suivante : 
-    //NumÃ©ro identifiant/Nom/PrÃ©nom/Rue/ComplÃ©ment de rue/Code postal/Commune/TÃ©lÃ©phone/Date de naissance/Classe/Sexe
+    //La structure du fichier texte doit être la suivante :
+    //Numéro identifiant/Nom/Prénom/Rue/Complément de rue/Code postal/Commune/Téléphone/Date de naissance/Classe/Sexe
 
-    $eleve_abrege = array("NumÃ©ro identifiant","Nom","PrÃ©nom");
+    global $lang;
+    $cpt_insert = 0;
+    $cpt_maj = 0;
+
+    $eleve_abrege = array("Numéro identifiant","Nom","Prénom");
     $date_auj = date("Y-m-d", time());
     $date_an_proch = date("Y-m-d", time()+3600*24*30.42*12);
-    
+
     //Upload du fichier
     if (!($_FILES['import_lec']['tmp_name'])) {
         print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
     } elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
-        print "Le fichier n'a pas pu Ãªtre tÃ©lÃ©chargÃ©. Voici plus d'informations :<br />";
+        print "Le fichier n'a pas pu être téléchargé. Voici plus d'informations :<br />";
         print_r($_FILES)."<p>";
     }
     $fichier = @fopen( "./temp/".basename($_FILES['import_lec']['tmp_name']), "r" );
-       
+
     if ($fichier) {
 
         if ($type_import == 'maj_complete') {
             //Vide la table empr_groupe
-            pmb_mysql_query("DELETE FROM empr_groupe",$dbh);
-            //Supprime les Ã©lÃ¨ves qui n'ont pas de prÃªts en cours
+            pmb_mysql_query("DELETE FROM empr_groupe");
+            //Supprime les élèves qui n'ont pas de prêts en cours
             $req_select_verif_pret = "SELECT id_empr FROM empr left join pret on id_empr=pret_idempr WHERE pret_idempr is null and empr_cb NOT LIKE 'E%'";
-            $select_verif_pret = pmb_mysql_query($req_select_verif_pret,$dbh);
+            $select_verif_pret = pmb_mysql_query($req_select_verif_pret);
             while (($verif_pret = pmb_mysql_fetch_array($select_verif_pret))) {
             	//pour tous les emprunteurs qui n'ont pas de pret en cours
                 emprunteur::del_empr($verif_pret["id_empr"]);
             }
         }
-        
-        
+
         while (!feof($fichier)) {
             $buffer = fgets($fichier, 4096);
             $buffer = import_empr::get_encoded_buffer($buffer);
@@ -184,90 +192,120 @@ function import_eleves($separateur, $dbh, $type_import){
             $tab = explode($separateur, $buffer);
 
             //Gestion du sexe
-            switch ($tab[10]{0}) {
-                case 'M': 
+            switch ($tab[10][0]) {
+                case 'M':
                     $sexe = 1;
                     break;
                 case 'F':
-                    $sexe = 2; 
+                    $sexe = 2;
                     break;
                 default:
                     $sexe = 0;
                     break;
             }
 
-            // Traitement de l'Ã©lÃ¨ve
-            $select = pmb_mysql_query("SELECT id_empr FROM empr WHERE empr_cb = '".$tab[0]."'",$dbh);
+            // Traitement de l'élève
+            $id_empr = 0;
+            $select = pmb_mysql_query("SELECT id_empr FROM empr WHERE empr_cb = '".$tab[0]."'");
             $nb_enreg = pmb_mysql_num_rows($select);
-            
-            //Test si un numÃ©ro id est fourni
+
+            //Test si un numéro id est fourni
             if (!$tab[0] || $tab[0] == "") {
-                print("<b> ElÃ¨ve non pris en compte car \"NumÃ©ro identifiant\" non renseignÃ© : </b><br />");
+                print("<b> Elève non pris en compte car \"Numéro identifiant\" non renseigné : </b><br />");
                 for ($i=0;$i<3;$i++) {
                     print($eleve_abrege[$i]." : ".$tab[$i].", ");
                 }
                 print("<br />");
                 $nb_enreg = 2;
             }
-            
+            if($nb_enreg == 1) {
+                $row = pmb_mysql_fetch_assoc($select);
+                $id_empr = $row['id_empr'];
+            }
+
             $login = import_empr::cre_login($tab[1],$tab[2]);
-            
+
             switch ($nb_enreg) {
+
                 case 0:
-                	//Ce Ã©lÃ¨ve n'est pas enregistrÃ© 
+                	//Cet élève n'est pas enregistré
                     $req_insert = "INSERT INTO empr(empr_cb, empr_nom, empr_prenom, empr_adr1, empr_adr2, empr_cp, empr_ville, ";
                     $req_insert .= "empr_tel1, empr_year, empr_categ, empr_codestat, empr_creation, empr_sexe,  ";
                     $req_insert .= "empr_login, empr_password, empr_date_adhesion, empr_date_expiration) ";
                     $req_insert .= "VALUES ('$tab[0]','$tab[1]','$tab[2]','$tab[3]', '$tab[4]', '$tab[5]', ";
-	//VÃ©rifier dans la table empr_categ si id_categ_empr 1 = Ã©lÃ¨ves    VÃ©rifier dans la table empr_codestat si idcode 2 = Ã©cole    Sinon, changer les valeurs
+	               //Vérifier dans la table empr_categ si id_categ_empr 1 = élèves    Vérifier dans la table empr_codestat si idcode 2 = école    Sinon, changer les valeurs
                     $req_insert .= "'$tab[6]', '$tab[7]', '$tab[8]', 1, 2, '$date_auj', '$sexe', ";
                     $req_insert .= "'$login', '$tab[8]', '$date_auj', '$date_an_proch')";
-                    $insert = pmb_mysql_query($req_insert,$dbh);
+                    $insert = pmb_mysql_query($req_insert);
+
                     if (!$insert) {
-                        print("<b>Echec de la crÃ©ation de l'Ã©lÃ¨ve suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
+
+                        print("<b>Echec de la création de l'élève suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
                         for ($i=0;$i<3;$i++) {
                             print($eleve_abrege[$i]." : ".$tab[$i].", ");
                         }
                         print("<br />");
-                    }
-                    else {
-                    	emprunteur::update_digest($login,$tab[8]);
-                    	emprunteur::hash_password($login,$tab[8]);
+
+                    } else {
+
+                        $id_empr = pmb_mysql_insert_id();
+
+                        //Chiffrement du mot de passe
+                        //On verifie que le mot de passe lecteur correspond aux regles de saisie definies
+                        //Si non, encodage dans l'ancien format
+                        $old_hash = false;
+                        $check_password_rules = emprunteur::check_password_rules((int) $id_empr, $tab[8], [], $lang);
+                        if( !$check_password_rules['result'] ) {
+                            $old_hash = true;
+                        }
+                        emprunteur::update_digest($login,$tab[8]);
+                    	emprunteur::hash_password($login,$tab[8], $old_hash);
+
                         $cpt_insert ++;
                     }
                     import_empr::gestion_groupe($tab[9], $tab[0]);
-                    $j++;
                     break;
 
                 case 1:
-                	//Ce Ã©lÃ¨ve est dÃ©jÃ  enregistrÃ© 
+                	//Cet élève est déjà enregistré
                     $req_update = "UPDATE empr SET empr_nom = '$tab[1]', empr_prenom = '$tab[2]', empr_adr1 = '$tab[3]', ";
                     $req_update .= "empr_adr2 = '$tab[4]', empr_cp = '$tab[5]', empr_ville = '$tab[6]', ";
-					//VÃ©rifier dans la table empr_categ si id_categ_empr 1 = Ã©lÃ¨ves    VÃ©rifier dans la table empr_codestat si idcode 2 = Ã©cole    Sinon, changer les valeurs
+					//Vérifier dans la table empr_categ si id_categ_empr 1 = élèves    Vérifier dans la table empr_codestat si idcode 2 = école    Sinon, changer les valeurs
                     $req_update .= "empr_tel1 = '$tab[7]', empr_year = '$tab[8]', empr_categ = '1', empr_codestat = '2', empr_modif = '$date_auj', empr_sexe = '$sexe', ";
                     $req_update .= "empr_login = '$login', empr_password= '$tab[8]', ";
                     $req_update .= "empr_date_adhesion = '$date_auj', empr_date_expiration = '$date_an_proch' ";
                     $req_update .= "WHERE empr_cb = '$tab[0]'";
-                    $update = pmb_mysql_query($req_update, $dbh);
+                    $update = pmb_mysql_query($req_update);
+
                     if (!$update) {
-                        print("<b>Echec de la modification de l'Ã©lÃ¨ve suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
+
+                        print("<b>Echec de la modification de l'élève suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
                         for ($i=0;$i<3;$i++) {
                             print($eleve_abrege[$i]." : ".$tab[$i].", ");
                         }
                         print("<br />");
-                    }
-                    else {
-                    	emprunteur::update_digest($login,$tab[8]);
-                    	emprunteur::hash_password($login,$tab[8]);
+
+                    } else {
+
+                        //Chiffrement du mot de passe
+                        //On verifie que le mot de passe lecteur correspond aux regles de saisie definies
+                        //Si non, encodage dans l'ancien format
+                        $old_hash = false;
+                        $check_password_rules = emprunteur::check_password_rules((int) $id_empr, $tab[8], [], $lang);
+                        if( !$check_password_rules['result'] ) {
+                            $old_hash = true;
+                        }
+                        emprunteur::update_digest($login,$tab[8]);
+                        emprunteur::hash_password($login,$tab[8], $old_hash);
+
                         $cpt_maj ++;
                     }
                     import_empr::gestion_groupe($tab[9], $tab[0]);
-                    $j++;
                     break;
                 case 2:
                     break;
                 default:
-                    print("<b>Echec pour l'Ã©lÃ¨ve suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
+                    print("<b>Echec pour l'élève suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
                     for ($i=0;$i<3;$i++) {
                         print($eleve_abrege[$i]." : ".$tab[$i].", ");
                     }
@@ -278,46 +316,49 @@ function import_eleves($separateur, $dbh, $type_import){
 
         //Affichage des insert et update
         print("<br />_____________________<br />");
-        if ($cpt_insert) print($cpt_insert." ElÃ¨ves crÃ©Ã©s. <br />");
-        if ($cpt_maj) print($cpt_maj." ElÃ¨ves modifiÃ©s. <br />");
+        if ($cpt_insert) print($cpt_insert." Elèves créés. <br />");
+        if ($cpt_maj) print($cpt_maj." Elèves modifiés. <br />");
         fclose($fichier);
     }
-    
+
 }
 
-function import_profs($separateur, $dbh, $type_import){
+function import_profs($separateur, $type_import){
 
-    //La structure du fichier texte doit Ãªtre la suivante : 
-    //NumÃ©ro identifiant/Nom/PrÃ©nom/Rue/ComplÃ©ment de rue/Code postal/Commune/TÃ©lÃ©phone/Date de naissance/Classe/Sexe
- 
-    $prof_abrege = array("NumÃ©ro identifiant","Nom","PrÃ©nom");
+    //La structure du fichier texte doit être la suivante :
+    //Numéro identifiant/Nom/Prénom/Rue/Complément de rue/Code postal/Commune/Téléphone/Date de naissance/Classe/Sexe
+
+    global $lang;
+    $cpt_insert = 0;
+    $cpt_maj = 0;
+
+    $prof_abrege = array("Numéro identifiant","Nom","Prénom");
     $date_auj = date("Y-m-d", time());
     $date_an_proch = date("Y-m-d", time()+3600*24*30.42*12);
-    
+
     //Upload du fichier
-    if (!($_FILES['import_lec']['tmp_name']))
+    if (!($_FILES['import_lec']['tmp_name'])) {
         print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
-    elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
-        print "Le fichier n'a pas pu Ãªtre tÃ©lÃ©chargÃ©. Voici plus d'informations :<br />";
+    } elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
+        print "Le fichier n'a pas pu être téléchargé. Voici plus d'informations :<br />";
         print_r($_FILES)."<p>";
     }
     $fichier = @fopen( "./temp/".basename($_FILES['import_lec']['tmp_name']), "r" );
-       
+
     if ($fichier) {
 
         if ($type_import == 'maj_complete') {
             //Vide la table empr_groupe
-            pmb_mysql_query("DELETE FROM empr_groupe",$dbh);
-            //Supprime les profs qui n'ont pas de prÃªts en cours
+            pmb_mysql_query("DELETE FROM empr_groupe");
+            //Supprime les profs qui n'ont pas de prêts en cours
             $req_select_verif_pret = "SELECT id_empr FROM empr left join pret on id_empr=pret_idempr WHERE pret_idempr is null and empr_cb NOT LIKE 'E%'";
-            $select_verif_pret = pmb_mysql_query($req_select_verif_pret,$dbh);
+            $select_verif_pret = pmb_mysql_query($req_select_verif_pret);
             while (($verif_pret = pmb_mysql_fetch_array($select_verif_pret))) {
             	//pour tous les emprunteurs qui n'ont pas de pret en cours
                 emprunteur::del_empr($verif_pret["id_empr"]);
             }
         }
-        
-        
+
         while (!feof($fichier)) {
             $buffer = fgets($fichier, 4096);
             $buffer = import_empr::get_encoded_buffer($buffer);
@@ -325,12 +366,12 @@ function import_profs($separateur, $dbh, $type_import){
             $tab = explode($separateur, $buffer);
 
             //Gestion du sexe
-            switch ($tab[10]{0}) {
-                case 'M': 
+            switch ($tab[10][0]) {
+                case 'M':
                     $sexe = 1;
                     break;
                 case 'F':
-                    $sexe = 2; 
+                    $sexe = 2;
                     break;
                 default:
                     $sexe = 0;
@@ -338,24 +379,29 @@ function import_profs($separateur, $dbh, $type_import){
             }
 
             // Traitement du prof
-            $select = pmb_mysql_query("SELECT id_empr FROM empr WHERE empr_cb = '".$tab[0]."'",$dbh);
+            $id_empr = 0;
+            $select = pmb_mysql_query("SELECT id_empr FROM empr WHERE empr_cb = '".$tab[0]."'");
             $nb_enreg = pmb_mysql_num_rows($select);
-            
-            //Test si un numÃ©ro id est fourni
+            //Test si un numéro id est fourni
             if (!$tab[0] || $tab[0] == "") {
-                print("<b> Prof non pris en compte car \"NumÃ©ro identifiant\" non renseignÃ© : </b><br />");
+                print("<b> Prof non pris en compte car \"Numéro identifiant\" non renseigné : </b><br />");
                 for ($i=0;$i<3;$i++) {
                     print($prof_abrege[$i]." : ".$tab[$i].", ");
                 }
                 print("<br />");
                 $nb_enreg = 2;
             }
-            
+            if($nb_enreg == 1) {
+                $row = pmb_mysql_fetch_assoc($select);
+                $id_empr = $row['id_empr'];
+            }
+
             $login = import_empr::cre_login($tab[1],$tab[2]);
-            
+
             switch ($nb_enreg) {
+
                 case 0:
-                	//Ce prof n'est pas enregistre 
+                	//Ce prof n'est pas enregistre
                     $req_insert = "INSERT INTO empr(empr_cb, empr_nom, empr_prenom, empr_adr1, empr_adr2, empr_cp, empr_ville, ";
                     $req_insert .= "empr_tel1, empr_year, empr_categ, empr_codestat, empr_creation, empr_sexe,  ";
                     $req_insert .= "empr_login, empr_password, empr_date_adhesion, empr_date_expiration) ";
@@ -363,47 +409,70 @@ function import_profs($separateur, $dbh, $type_import){
 					//Verifier dans la table empr_categ si id_categ_empr 2 = profs    Verifier dans la table empr_codestat si idcode 2 = ecole    Sinon, changer les valeurs
                     $req_insert .= "'$tab[6]', '$tab[7]', '$tab[8]', 2, 2, '$date_auj', '$sexe', ";
                     $req_insert .= "'$login', '$tab[8]', '$date_auj', '$date_an_proch')";
-                    $insert = pmb_mysql_query($req_insert,$dbh);
+                    $insert = pmb_mysql_query($req_insert);
+
                     if (!$insert) {
-                        print("<b>Echec de la crÃ©ation du prof suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
+
+                        print("<b>Echec de la création du prof suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
                         for ($i=0;$i<3;$i++) {
                             print($prof_abrege[$i]." : ".$tab[$i].", ");
                         }
                         print("<br />");
-                    }
-                    else {
+
+                    } else {
+
+                        $id_empr = pmb_mysql_insert_id();
+
+                        //Chiffrement du mot de passe
+                        //On verifie que le mot de passe lecteur correspond aux regles de saisie definies
+                        //Si non, encodage dans l'ancien format
+                        $old_hash = false;
+                        $check_password_rules = emprunteur::check_password_rules((int) $id_empr, $tab[8], [], $lang);
+                        if( !$check_password_rules['result'] ) {
+                            $old_hash = true;
+                        }
                     	emprunteur::update_digest($login,$tab[8]);
-                    	emprunteur::hash_password($login,$tab[8]);
+                    	emprunteur::hash_password($login,$tab[8], $old_hash);
                         $cpt_insert ++;
                     }
                     import_empr::gestion_groupe($tab[9], $tab[0]);
-                    $j++;
                     break;
 
                 case 1:
-                	//Ce prof est dÃ©ja enregistrÃ© 
+                	//Ce prof est déja enregistré
                     $req_update = "UPDATE empr SET empr_nom = '$tab[1]', empr_prenom = '$tab[2]', empr_adr1 = '$tab[3]', ";
                     $req_update .= "empr_adr2 = '$tab[4]', empr_cp = '$tab[5]', empr_ville = '$tab[6]', ";
-	//VÃ©rifier dans la table empr_categ si id_categ_empr 2 = profs    VÃ©rifier dans la table empr_codestat si idcode 2 = Ã©cole    Sinon, changer les valeurs
+	//Vérifier dans la table empr_categ si id_categ_empr 2 = profs    Vérifier dans la table empr_codestat si idcode 2 = école    Sinon, changer les valeurs
                     $req_update .= "empr_tel1 = '$tab[7]', empr_year = '$tab[8]', empr_categ = '2', empr_codestat = '2', empr_modif = '$date_auj', empr_sexe = '$sexe', ";
                     $req_update .= "empr_login = '$login', empr_password= '$tab[8]', ";
                     $req_update .= "empr_date_adhesion = '$date_auj', empr_date_expiration = '$date_an_proch' ";
                     $req_update .= "WHERE empr_cb = '$tab[0]'";
-                    $update = pmb_mysql_query($req_update, $dbh);
+                    $update = pmb_mysql_query($req_update);
+
                     if (!$update) {
+
                         print("<b>Echec de la modification du prof suivant (Erreur : ".pmb_mysql_error().") : </b><br />");
                         for ($i=0;$i<3;$i++) {
                             print($prof_abrege[$i]." : ".$tab[$i].", ");
                         }
                         print("<br />");
-                    }
-                    else {
-                    	emprunteur::update_digest($login,$tab[8]);
-                    	emprunteur::hash_password($login,$tab[8]);
+
+                    } else {
+
+                        //Chiffrement du mot de passe
+                        //On verifie que le mot de passe lecteur correspond aux regles de saisie definies
+                        //Si non, encodage dans l'ancien format
+                        $old_hash = false;
+                        $check_password_rules = emprunteur::check_password_rules((int) $id_empr, $tab[8], [], $lang);
+                        if( !$check_password_rules['result'] ) {
+                            $old_hash = true;
+                        }
+                        emprunteur::update_digest($login,$tab[8]);
+                        emprunteur::hash_password($login,$tab[8], $old_hash);
+
                         $cpt_maj ++;
                     }
                     import_empr::gestion_groupe($tab[9], $tab[0]);
-                    $j++;
                     break;
                 case 2:
                     break;
@@ -419,11 +488,11 @@ function import_profs($separateur, $dbh, $type_import){
 
         //Affichage des insert et update
         print("<br />_____________________<br />");
-        if ($cpt_insert) print($cpt_insert." Prof crÃ©Ã©s. <br />");
-        if ($cpt_maj) print($cpt_maj." Profs modifiÃ©s. <br />");
+        if ($cpt_insert) print($cpt_insert." Prof créés. <br />");
+        if ($cpt_maj) print($cpt_maj." Profs modifiés. <br />");
         fclose($fichier);
     }
-    
+
 }
 
 
@@ -432,23 +501,18 @@ function import_profs($separateur, $dbh, $type_import){
 switch($action) {
     case 1:
         if ($imp_elv){
-            import_eleves($Sep_Champs, $dbh, $type_import);
+            import_eleves($Sep_Champs, $type_import);
         }
         elseif ($imp_prof) {
-            import_profs($Sep_Champs, $dbh, $type_import);
+            import_profs($Sep_Champs, $type_import);
         }
         else {
-            show_import_choix_fichier($dbh);
+            show_import_choix_fichier();
         }
         break;
     case 2:
         break;
     default:
-        show_import_choix_fichier($dbh);
+        show_import_choix_fichier();
         break;
 }
-
-?>
-
-
-

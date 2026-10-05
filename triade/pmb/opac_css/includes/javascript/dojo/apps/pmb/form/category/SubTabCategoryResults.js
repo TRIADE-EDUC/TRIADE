@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabCategoryResults.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabCategoryResults.js,v 1.2 2020/09/15 08:19:59 dgoron Exp $
 
 
 define([
@@ -39,22 +39,7 @@ define([
 					this.inherited(arguments);
 				}
 			},
-			changePage: function(elementClicked, e){
-				e.preventDefault();	
-				var link = elementClicked.form;
-				if(domAttr.get(elementClicked, 'href').indexOf('select.php') != -1){
-					var link = domAttr.get(elementClicked, 'href').replace('select.php?', 'ajax.php?module=selectors&');
-				}
-				domAttr.set(elementClicked, 'href', '');
-				request(link+"&action=hierarchical_results_search", {
-					data: '',
-					method: 'GET',
-					handleAs: 'html',
-				}).then(lang.hitch(this, function(data){
-					topic.publish('SubTabCategoryResults', 'SubTabCategoryResults', 'printResults', {results: data, origin: link+"&action=hierarchical_results_search&search_type=hierarchy", search_type:'hierarchy'});
-				}));
-				return false;
-			},
+			
 			setSearchType: function(searchType){
 				this.searchType = searchType;
 			}

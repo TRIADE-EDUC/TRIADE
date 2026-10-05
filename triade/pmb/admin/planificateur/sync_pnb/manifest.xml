@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- gestion des commandes pour les procédures
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2019/10/10 11:50:22 arenou Exp $ -->
+
+<manifest>
+	<capacities>
+		<nostates>
+			<!--<state name="STOPPED"/>
+			--><state name="SUSPENDED"/>
+		</nostates>
+		<states>
+			<state name="STOPPED">
+				<nocommand commands="RESUME"/>
+			</state>
+			<state name="SUSPENDED">
+				<nextState commands="FLUSH">SUSPENDED</nextState>
+			</state>
+		</states>
+		<commands>
+			<command id="10" name="***" label="msg:****"/>
+		</commands>
+	</capacities>
+	<directory_upload>0</directory_upload>
+</manifest>

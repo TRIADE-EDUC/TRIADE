@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_param.tpl.php,v 1.6 2019-05-27 09:56:54 ngantier Exp $
+// $Id: contribution_area_param.tpl.php,v 1.11.10.1 2025/04/29 09:51:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -43,10 +43,48 @@ $contribution_area_param_form =
 		<div class='row'> 
 		</div>
 	</div>	
+	<div class='form-contenu'>	
+		<div class='row'> 
+			<label for='accordion_result'>".$msg['admin_contribution_area_accordion_result']."</label>
+			<input id='accordion_result' type='checkbox' !!accordion_result!! value='1' name='accordion_result'>
+		</div>			
+		<div class='row'> 
+		</div>
+	</div>	
+	<div class='form-contenu'>	
+		<div class='row'> 
+			<label for='auto_save_draft'>".$msg['contribution_auto_save_draft']."</label>
+			<input id='auto_save_draft' type='checkbox' !!auto_save_draft!! value='1' name='auto_save_draft'>
+		</div>			
+		<div class='row'> 
+		</div>
+	</div>	
+	<div class='form-contenu'>	
+		<div class='row'> 
+			<label for='contribution_edit_entity'>".$msg['contribution_edit_entity']."</label>
+			<input id='contribution_edit_entity' type='checkbox' !!contribution_edit_entity!! value='1' name='contribution_edit_entity'>
+		</div>			
+		<div class='row'> 
+		</div>
+	</div>
+	<div class='form-contenu'>
+		<div class=row>
+			<label class='etiquette' for='contribution_docnum_directory'>".$msg['contribution_docnum_directory']."</label>
+		</div>
+		<div class=row>
+			<select name='contribution_docnum_directory'>
+				!!contribution_docnum_directory_options!!
+			</select>
+		</div>
+	</div>	
 	<div class='row'>	
 		<div class='left'>
 			<input type='button' class='bouton' value='".$msg['admin_nomenclature_voice_form_exit']."'  onclick=\"document.location='./modelling.php?categ=contribution_area'\"  />
 			<input type='submit' class='bouton' value='".$msg['admin_nomenclature_voice_form_save']."' onclick=\"document.getElementById('action').value='save';if (!test_form(this.form)) return false;\" />
+		</div>
+		<div class='right'>
+			<input type='button' class='bouton' value='".$msg['admin_clear_contribution_store_drafts']."'  onclick=\"document.location='./modelling.php?categ=contribution_area&sub=param&action=clear_drafts'\"  />
+			<input type='button' class='bouton' value='".$msg['admin_empty_contribution_store']."'  onclick=\"document.location='./modelling.php?categ=contribution_area&sub=param&action=empty_store'\"  />
 		</div>
 	</div>
 <div class='row'></div>

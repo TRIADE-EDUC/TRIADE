@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_scan_requests.inc.php,v 1.4 2017-04-11 09:13:55 ngantier Exp $
+// $Id: ajax_scan_requests.inc.php,v 1.6 2022/07/12 07:54:03 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $sub, $action, $msg;
+global $record_type, $record_id;
 
 require_once($base_path."/classes/scan_request/scan_request.class.php");
 
@@ -13,8 +16,6 @@ switch($sub){
 		switch ($action){
 			case 'create':
 				$scan_request=new scan_request();
-				$scan_request_deadline_date = extraitdate($scan_request_deadline_date);
-				$scan_request_wish_date = extraitdate($scan_request_wish_date);
 				$scan_request->get_values_from_form();
 				$saved = $scan_request->save();
 				print '<span class="scan_request_submit">';
@@ -28,6 +29,11 @@ switch($sub){
 				break;
 			case 'edit':
 				$scan_request=new scan_request();
+				if($record_type == 'notices') {
+				    $scan_request->set_title(strip_tags(aff_notice($record_id, 0, 1, 0, AFF_ETA_NOTICES_REDUIT, '', 1, 0)));
+				} elseif($record_type == 'bulletins') {
+				    $scan_request->set_title(strip_tags(bulletin_header($record_id)));
+				}
 				$scan_request->add_linked_records(array($record_type => array($record_id)));
 				print $scan_request->get_form_in_record($record_id, $record_type);
 				break;

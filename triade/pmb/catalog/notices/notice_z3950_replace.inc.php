@@ -1,14 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_z3950_replace.inc.php,v 1.4 2017-01-25 16:43:50 dgoron Exp $
+// $Id: notice_z3950_replace.inc.php,v 1.5 2022/01/03 14:10:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $gestion_acces_active, $gestion_acces_user_notice, $z3950_accessible, $PMBuserid, $charset, $id_notice;
+
 // page de remplacement notice par z3950
 
-if(!isset($id_notice)) $id_notice = 0;
+$id_notice = intval($id_notice);
 
 //verification des droits de modification notice
 $acces_m=1;
@@ -29,13 +31,13 @@ if ($acces_m==0) {
 		// menage dans les trucs un peu vieux qui ont ete remontes
 		// on delete ce qui est vieux de plus de deux jours.
 		$rqt = "select zquery_id from z_query where zquery_date < date_sub(now(),INTERVAL 2 DAY) ";
-		$res_zquery=pmb_mysql_query($rqt,$dbh);
+		$res_zquery=pmb_mysql_query($rqt);
 		while ($ligne=pmb_mysql_fetch_array($res_zquery)) {
 			$zquery_id=$ligne["zquery_id"];
 			$rqt_notices = "delete from z_notices where znotices_query_id ='".$zquery_id."' ";
-			$res=pmb_mysql_query($rqt_notices,$dbh);
+			pmb_mysql_query($rqt_notices);
 			$rqt_query = "delete from z_query where zquery_id ='".$zquery_id."' ";
-			$del_znotices=pmb_mysql_query($rqt_query,$dbh);
+			pmb_mysql_query($rqt_query);
 		}
 		include('./catalog/z3950/main.inc.php');
 	}

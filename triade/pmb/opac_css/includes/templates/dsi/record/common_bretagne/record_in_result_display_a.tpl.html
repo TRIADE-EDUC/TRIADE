@@ -1,0 +1,24 @@
+{% extends '../common/record_in_result_display.tpl.html' %}
+
+<!-- $Id: record_in_result_display_a.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+{% block record_year %}{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.bulletin_id %}
+		{% if record.responsabilites.auteurs.0.id %} | {% else %}{% if record.publishers.0.isbd %} | {% else %}{% if record.collection.isbd %} | {% endif %}{% endif %}{% endif %}
+		<div class="in_notCourte">
+			<span>{{ msg.dans_start }} </span> <!-- Titre du periodique-->
+			<span><a href="{{ record.liens_opac.lien_rech_bulletin | replace '!!id!!' record.bul_info.bulletin_id }}" title="{{ record.bul_info.title }} ({{ record.bul_info.numero }}, {{ record.bul_info.date }})">{{ record.bul_info.title }}{% if record.bul_info.numero %} ({{ record.bul_info.numero }}{% if record.bul_info.date %}, {{ record.bul_info.date }}{% endif %}){% else %}{% if record.bul_info.date %} ({{ record.bul_info.date }}){% endif %}{% endif %}</a></span>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block record_expl %}
+	{% if record.availability.availability != 'none' %}
+		<!-- Exemplaire -->
+		<div id="zone_exemplaires">
+			{{ record.display_expl_responsive_list }}
+		</div>
+	{% endif %}
+{% endblock %}

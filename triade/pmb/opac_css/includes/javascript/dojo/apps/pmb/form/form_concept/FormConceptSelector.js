@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormConceptSelector.js,v 1.2 2018-10-11 08:08:20 vtouchard Exp $
+// $Id: FormConceptSelector.js,v 1.3 2020/04/22 15:14:25 tsamson Exp $
 
 /*****
  * 
@@ -230,7 +230,11 @@ define([
 				}
 			},
 			getSelectedTab: function(){
-				return domAttr.get(query('span[class="selected"][data-pmb-object-type]')[0], 'data-pmb-object-type');
+				var nodesList = query('span[class="selected"][data-pmb-object-type]');
+				if (nodesList[0]) {
+					return domAttr.get(nodesList[0], 'data-pmb-object-type');
+				}
+				return "";
 			},
 		})
 });

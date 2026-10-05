@@ -8,7 +8,7 @@ suppPieceJointe($ficmd5);
 @unlink("./data/comptaenseignant/$ficmd5");
 $data=recupPieceJointe($idpiecejointe); //md5,nom,etat
 print "&nbsp;&nbsp;";
-for ($i=0;$i<count($data);$i++) {
+for ($i=0;$i<countTriade($data);$i++) {
 	$ficName=$data[$i][1];
 	$md5=$data[$i][0];
 	$ficJ="./data/comptaenseignant/".$data[$i][0];

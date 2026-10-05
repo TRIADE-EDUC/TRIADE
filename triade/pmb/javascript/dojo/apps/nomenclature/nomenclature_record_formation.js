@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_formation.js,v 1.18 2016-06-23 15:18:55 dgoron Exp $
+// $Id: nomenclature_record_formation.js,v 1.18 2016/06/23 15:18:55 dgoron Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_nomenclature", "dijit/registry", "apps/nomenclature/nomenclature_nomenclature_voices"], function(declare, Nomenclature, registry, Nomenclature_voices){
 	/*

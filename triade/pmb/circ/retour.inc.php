@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: retour.inc.php,v 1.37 2018-12-03 13:52:16 dgoron Exp $
+// $Id: retour.inc.php,v 1.38 2021/12/09 09:00:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $action_piege, $piege_resa, $pmb_confirm_retour;
 
 require_once("$class_path/emprunteur.class.php");
 require_once("$class_path/serial_display.class.php");

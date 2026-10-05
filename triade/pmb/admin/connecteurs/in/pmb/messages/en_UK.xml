@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.2 2015-06-15 12:55:34 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.3 2019/08/01 13:52:00 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="pmb_site">Address of the webservice</entry>
@@ -25,4 +25,5 @@ $Id: en_UK.xml,v 1.2 2015-06-15 12:55:34 pmbs Exp $ -->
 	<entry code="pmb_authentification">Is an authentification necessary ?</entry>
 	<entry code="pmb_username">Username to authenticate</entry>
 	<entry code="pmb_password">Password to authenticate</entry>
+	<entry code="pmb_connexion_phrase">Phrase de connexion pour l'authentification</entry>
 </XMLlist>

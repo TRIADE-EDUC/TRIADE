@@ -15,6 +15,7 @@ langmenudepart1="T.R.I.A.D.E.";
 langmenudepart10="Acu&egrave;lh";
 langmenudepart11="A prepaus";
 langmenudepart12="La v&ograve;stra Publicitat"; 
+langmenudepart13="Protection - RGPD";
 //-------
 langmenudepart2="Assist&eacute;ncia";
 langmenudepart21="Probl&egrave;ma d'acc&egrave;s";
@@ -36,7 +37,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Per visualizar aqueste site de fai&ccedil;on optimala : resolucion minimala : 800x600 <br>";  
 }else{
-	langmenupied="<p> La <b>T</b>ranspar&eacute;ncia e la <b>R</b>apiditat de l'<b>I</b>nformatica <b>A</b>l servici <b>D</b>e l'<b>E</b>nsenhament<br>Per visualizar aqueste site de fai&ccedil;on optimala : resolucion minimala : 800x600 <br> T.R.I.A.D.E. &copy;  2024  - Totes los dreits reservats";
+	langmenupied="<p> La <b>T</b>ranspar&eacute;ncia e la <b>R</b>apiditat de l'<b>I</b>nformatica <b>A</b>l servici <b>D</b>e l'<b>E</b>nsenhament<br>Per visualizar aqueste site de fai&ccedil;on optimala : resolucion minimala : 800x600 <br> T.R.I.A.D.E. &copy;  2026  - Totes los dreits reservats";
 }
 
 // --------------

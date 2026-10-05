@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: chklnk_authorities_thumbnail.class.php,v 1.1 2017-10-11 12:39:17 dgoron Exp $
+// $Id: chklnk_authorities_thumbnail.class.php,v 1.2 2020/03/04 08:09:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -44,7 +44,7 @@ class chklnk_authorities_thumbnail extends chklnk {
     		$url=$pmb_url_base."/".$url;
 		}
 		$element->link = $url;
-    	$this->check_link($element);
+    	return $this->check_link($element);
     }
 }
 ?>

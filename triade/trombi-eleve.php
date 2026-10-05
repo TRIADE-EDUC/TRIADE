@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,7 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -33,93 +34,78 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php
-// connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
+
+$idEleve      = $_SESSION["id_pers"];
+$saisie_classe= chercheIdClasseDunEleve($idEleve);
+$sql = "SELECT libelle, elev_id, nom, prenom, photo
+        FROM {$prefixe}eleves, {$prefixe}classes
+        WHERE classe='$saisie_classe' AND code_class='$saisie_classe'
+        ORDER BY nom";
+$res  = execSql($sql);
+$data = chargeMat($res);
+$nomClasse = (countTriade($data) > 0) ? ucwords(strtolower($data[0][0])) : "";
+
+$membre   = $_SESSION["membre"];
+$idSelf   = $_SESSION["id_pers"];
+$hideOthers = ((TROMBIELEVE == "non" && $membre == "menueleve") ||
+               (TROMBIPARENT == "non" && $membre == "menuparent"));
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<form method=post onsubmit="return valide_consul_classe()" name="formulaire">
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE32?></font></b></td></tr>
+<tr id='coulBar0'>
+<td>
+  <div class="vrp-topbar">
+    <span class="vrp-title"><?php print LANGTITRE32 ?></span>
+    <?php if ($nomClasse !== "") { ?>
+    <span style="color:#f9c600;font-size:12px;font-weight:700"><?php print htmlspecialchars($nomClasse) ?></span>
+    <?php } ?>
+  </div>
+</td>
+</tr>
 <tr id='cadreCentral0'>
-<td >
-<!-- // debut form  -->
-<?php
-// affichage de la classe
-$idEleve=$_SESSION["id_pers"];
-$saisie_classe=chercheIdClasseDunEleve($idEleve);
-$sql="SELECT libelle,elev_id,nom,prenom,photo FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
-$res=execSql($sql);
-$data=chargeMat($res);
+<td>
 
-// ne fonctionne que si au moins 1 élève dans la classe
-// nom classe
-$cl=$data[0][0];
+<?php if (countTriade($data) <= 0) { ?>
+  <div class="tro-empty"><?php print LANGRECH1 ?></div>
+<?php } else { ?>
+  <div class="tro-grid">
+  <?php for ($i=0; $i<countTriade($data); $i++) {
+      $elevId  = $data[$i][1];
+      $nom     = strtoupper($data[$i][2]);
+      $prenom  = trunchaine(ucwords(strtolower($data[$i][3])), 15);
+      $hidden  = $hideOthers && ($idSelf != $elevId);
+      $imgSrc  = $hidden
+                 ? "./image/commun/photo_vide.jpg"
+                 : "image_trombi.php?idE=".$elevId;
+  ?>
+    <div class="tro-card">
+      <img src="<?php print $imgSrc ?>" class="tro-photo" alt="<?php print htmlspecialchars($nom) ?>">
+      <?php if (!$hidden) { ?>
+      <span class="tro-name"><?php print htmlspecialchars($nom) ?><br><?php print htmlspecialchars($prenom) ?></span>
+      <?php } ?>
+    </div>
+  <?php } ?>
+  </div>
+<?php } ?>
 
-if( count($data) <= 0 )
-	{
-	print("<center>".LANGRECH1."</center>");
-	}
-else {
-?>
-<table border="1" width="100%">
-<tr>
-<?php
-$nbphoto=0;
-for($i=0;$i<count($data);$i++) {
-?>
-	<td bgcolor="#FFFFFF" align=center>
-	<?php
-	$nbphoto++;
-	if (  ((TROMBIELEVE == "non") && ($_SESSION["membre"] == "menueleve") && ($_SESSION["id_pers"] != $data[$i][1])) ||  ((TROMBIPARENT == "non") && ($_SESSION["membre"] == "menuparent") && ($_SESSION["id_pers"] != $data[$i][1])) ) {
-		print "<img src='./image/commun/photo_vide.jpg' /><br>";
-		//print strtoupper($data[$i][2])?> <?php // print trunchaine(ucwords($data[$i][3]),15);
-	}else{
-		print "<img src='image_trombi.php?idE=".$data[$i][1]."' /><br>";
-		print strtoupper($data[$i][2])?> <?php print trunchaine(ucwords($data[$i][3]),15);
-	}
-	?>
-	</td>
-	<?php
-	if ($nbphoto > 2) {
-		print "</tr><tr>";
-		$nbphoto=0;
-	}
-
-}
-print "</tr>";
-print "</table>";
-}
-?>
 </td></tr></table>
 <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            	print "<SCRIPT language='JavaScript' ";
-       		print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-            	print "</SCRIPT>";
-       else :
-            	print "<SCRIPT language='JavaScript' ";
-      		print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-            	print "</SCRIPT>";
-
-            top_d();
-
-            	print "<SCRIPT language='JavaScript' ";
-      		print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-            	print "</SCRIPT>";
-
-      endif ;
-     ?>
-<?php
-// deconnexion en fin de fichier
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
 Pgclose();
 ?>
 </BODY>

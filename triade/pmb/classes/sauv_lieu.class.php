@@ -1,16 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauv_lieu.class.php,v 1.13 2017-11-07 15:20:00 ngantier Exp $
+// $Id: sauv_lieu.class.php,v 1.15 2023/05/04 09:36:37 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 //Formulaire de gestion des lieux
+global $include_path;
 include ($include_path."/templates/lieux_form.tpl.php");
 class sauv_lieu {
 
-	//DonnÃ©es
+	//Données
 	public $sauv_lieu_id; //Identifiant
 	public $sauv_lieu_nom; //Nom du lieu
 	public $sauv_lieu_url; //Chemin
@@ -21,7 +22,7 @@ class sauv_lieu {
 	public $act; //Action
 
 	public function __construct() {
-		global $sauv_lieu_id; //DonnÃ©es reÃ§ues du formulaire
+		global $sauv_lieu_id; //Données reçues du formulaire
 		global $sauv_lieu_nom;
 		global $sauv_lieu_url;
 		global $sauv_lieu_protocol;
@@ -30,8 +31,8 @@ class sauv_lieu {
 		global $sauv_lieu_password;
 		global $act;
 
-		//Stockage des donnÃ©es reÃ§ues
-		$this -> sauv_lieu_id = $sauv_lieu_id;
+		//Stockage des données reçues
+		$this -> sauv_lieu_id = intval($sauv_lieu_id);
 		$this -> sauv_lieu_nom = $sauv_lieu_nom;
 		$this -> sauv_lieu_url = $sauv_lieu_url;
 		$this -> sauv_lieu_protocol = $sauv_lieu_protocol;
@@ -53,8 +54,8 @@ class sauv_lieu {
 		}
 	}
 	
-	//Traitement de l'action reÃ§ue du formulaire (Ã  appeller juste aprÃ¨s l'instanciation de la classe)
-	//Renvoie le formulaire Ã  afficher
+	//Traitement de l'action reçue du formulaire (à appeller juste après l'instanciation de la classe)
+	//Renvoie le formulaire à afficher
 	public function proceed() {
 
 		global $first;
@@ -62,7 +63,7 @@ class sauv_lieu {
 		switch ($this -> act) {
 			//Enregistrer
 			case "update" :
-				//Si sauv_lieu_id vide alors crÃ©ation
+				//Si sauv_lieu_id vide alors création
 				if ($this -> sauv_lieu_id == "") {
 					$this->verifName();
 					$requete = "insert into sauv_lieux (sauv_lieu_nom,sauv_lieu_url) values('','')";
@@ -70,7 +71,7 @@ class sauv_lieu {
 					$this -> sauv_lieu_id = pmb_mysql_insert_id();
 					$first="";
 				}
-				//Update avec les donnÃ©es rfeÃ§ues
+				//Update avec les données rfeçues
 				$this->verifName();
 				$requete = "update sauv_lieux set sauv_lieu_nom='".$this -> sauv_lieu_nom."', sauv_lieu_url='".$this -> sauv_lieu_url."', sauv_lieu_protocol='".$this -> sauv_lieu_protocol."',sauv_lieu_host='".$this -> sauv_lieu_host."',sauv_lieu_login='".$this -> sauv_lieu_login."', sauv_lieu_password='".$this -> sauv_lieu_password."' where sauv_lieu_id=".$this -> sauv_lieu_id;
 				pmb_mysql_query($requete) or die(pmb_mysql_error());
@@ -90,24 +91,24 @@ class sauv_lieu {
 				break;
 				//Visualiser
 			default :
-				//Ne rien faire, le numÃ©ro de la fiche est dÃ©jÃ  dans $this->sauv_lieu_id
+				//Ne rien faire, le numéro de la fiche est déjà dans $this->sauv_lieu_id
 		}
 		return $this -> showForm();
 	}
 
-	//PrÃ©aparation du formulaire pour affiochage
+	//Préaparation du formulaire pour affiochage
 	public function showForm() {
 		global $form;
 		global $first;
 		global $msg;
 		
-		//Si premiÃ¨re connexion
+		//Si première connexion
 		if (!$first) {
 			$form = "<h3>".$msg["sauv_lieux_sel_or_add"]."</h3>";
 		} else {
 			//Si identifiant non vide
 			if ($this -> sauv_lieu_id) {
-				//RÃ©cupÃ©ration des donnÃ©es de la fiche
+				//Récupération des données de la fiche
 				$requete = "select sauv_lieu_nom,sauv_lieu_url,sauv_lieu_protocol, sauv_lieu_host, sauv_lieu_login, sauv_lieu_password from sauv_lieux where sauv_lieu_id=".$this -> sauv_lieu_id;
 				$resultat = pmb_mysql_query($requete);
 				if (pmb_mysql_num_rows($resultat) != 0)
@@ -120,8 +121,8 @@ class sauv_lieu {
 				$form = str_replace("!!delete!!", "", $form);
 			}
 			$form = str_replace("!!sauv_lieu_id!!", $this -> sauv_lieu_id, $form);
-			$form = str_replace("!!sauv_lieu_nom!!", $this -> sauv_lieu_nom, $form);
-			$form = str_replace("!!sauv_lieu_url!!", $this -> sauv_lieu_url, $form);
+			$form = str_replace("!!sauv_lieu_nom!!", $this -> sauv_lieu_nom ?? "", $form);
+			$form = str_replace("!!sauv_lieu_url!!", $this -> sauv_lieu_url ?? "", $form);
 			$form = str_replace("!!protocol_list!!", $this -> showSelectProtocol(), $form);
 
 			$login = "<tr><th class='nobrd' colspan=2>".$msg["sauv_lieu_form_param_cnx"]."</th></tr>\n";
@@ -138,15 +139,14 @@ class sauv_lieu {
 	//Affichage de la liste des lieux existants dans la base
 	//linkToForm : true = rend la liste interactive avec le formulaire
 	public function showTree($linkToForm = true) {
-		global $dbh;
 		global $msg;
 		
 		$tree = "<form><table>\n";
 		$tree.= "<th class='brd'>".$msg["sauv_lieux_tree_title"]."</th>";
 
-		//RÃ©cupÃ©ration de la liste
+		//Récupération de la liste
 		$requete = "select sauv_lieu_id, sauv_lieu_nom, sauv_lieu_protocol from sauv_lieux order by sauv_lieu_nom";
-		$resultat = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error());
+		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 		while ($res = pmb_mysql_fetch_object($resultat)) {
 			$tree.= "<tr><td class='brd'>";
 			switch ($res -> sauv_lieu_protocol) {
@@ -181,7 +181,7 @@ class sauv_lieu {
 		return $tree;
 	}
 
-	//Liste des protocols avec sÃ©lection par dÃ©faut
+	//Liste des protocols avec sélection par défaut
 	public function showSelectProtocol() {
 		global $msg;
 		$values = array("file", "ftp");

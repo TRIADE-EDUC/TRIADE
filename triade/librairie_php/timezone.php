@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,6 +19,28 @@
  ***************************************************************************/
 
 function dateDMY() {
+	$timezone = TIMEZONE;           // ex: 1
+    	$timezoneminute = TIMEZONEMINUTE; // ex: 0
+
+    	$date = new DateTime('now', new DateTimeZone('UTC'));
+
+    	// Ajout du décalage horaire
+    	$interval = new DateInterval(sprintf(
+        	'PT%dH%dM',
+        	abs($timezone),
+        	abs($timezoneminute)
+    	));
+
+    	if ($timezone < 0 || $timezoneminute < 0) {
+        	$date->sub($interval);
+    	} else {
+        	$date->add($interval);
+    	}
+	
+	return $date->format('d/m/Y');
+
+
+	/*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -32,9 +54,25 @@ function dateDMY() {
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
 	$resultat2=strftime("%d/%m/%Y",$resultat);
 	return $resultat2;
+	 */
 }
 
 function dateDMY2() {
+	$timezone = TIMEZONE;
+    	$timezoneminute = TIMEZONEMINUTE;
+
+    	$heure   = date("H") + $timezone;
+    	$minute  = date("i") + $timezoneminute;
+    	$seconde = date("s");
+    	$jour    = date("d");
+    	$mois    = date("m");
+    	$annee   = date("Y");
+
+	$resultat = mktime($heure, $minute, $seconde, $mois, $jour, $annee);
+
+    	return date("Y-m-d", $resultat);
+
+	/*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -48,6 +86,7 @@ function dateDMY2() {
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
 	$resultat2=strftime("%Y-%m-%d",$resultat);
 	return $resultat2;
+	*/
 }
 
 function dateYMD() {
@@ -84,6 +123,21 @@ function dateMY() {
 
 
 function dateMY2() {
+	$timezone = TIMEZONE;
+    	$timezoneminute = TIMEZONEMINUTE;
+
+	$heure   = date("H") + $timezone;
+	$minute  = date("i") + $timezoneminute;
+	$seconde = date("s");
+	$jour    = date("d");
+	$mois    = date("m");
+	$annee   = date("Y");
+
+	$resultat = mktime($heure, $minute, $seconde, $mois, $jour, $annee);
+
+	return date("m-d", $resultat);
+
+    /*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -97,9 +151,24 @@ function dateMY2() {
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
 	$resultat2=strftime("%m-%d",$resultat);
 	return $resultat2;
+    */
 }
 
 function dateY() {
+	$timezone = TIMEZONE;
+	$timezoneminute = TIMEZONEMINUTE;
+
+    	$heure   = date("H") + $timezone;
+    	$minute  = date("i") + $timezoneminute;
+    	$seconde = date("s");
+    	$jour    = date("d");
+    	$mois    = date("m");
+    	$annee   = date("Y");
+
+    	$resultat = mktime($heure, $minute, $seconde, $mois, $jour, $annee);
+
+    	return date("Y", $resultat);
+    /*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -113,6 +182,7 @@ function dateY() {
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
 	$resultat2=strftime("%Y",$resultat);
 	return $resultat2;
+	*/
 }
 
 function dateY_duServeur() {
@@ -159,6 +229,21 @@ function dateD() {
 }
 
 function datej() {
+	$timezone = TIMEZONE;
+    	$timezoneminute = TIMEZONEMINUTE;
+
+    	$heure   = date("H") + $timezone;
+    	$minute  = date("i") + $timezoneminute;
+    	$seconde = date("s");
+    	$jour    = date("d");
+    	$mois    = date("m");
+    	$annee   = date("Y");
+
+    	$resultat = mktime($heure, $minute, $seconde, $mois, $jour, $annee);
+
+    	return date("j", $resultat);
+
+/*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -175,6 +260,7 @@ function datej() {
 		$resultat2=trim(strtr($resultat2, "0", " "));
 	}
 	return $resultat2;
+ */
 }
 
 function dateM() {
@@ -207,6 +293,26 @@ function dateM_duServeur() {
 }
 
 function dateHIS() {
+	$timezone = TIMEZONE;
+    	$timezoneminute = TIMEZONEMINUTE;
+
+    	$date = new DateTime('now', new DateTimeZone('UTC'));
+
+    	$interval = new DateInterval(sprintf(
+        	'PT%dH%dM',
+        	abs($timezone),
+        	abs($timezoneminute)
+    	));
+
+    	if ($timezone < 0 || $timezoneminute < 0) {
+        	$date->sub($interval);
+    	} else {
+        	$date->add($interval);
+    	}
+
+    	return $date->format('H:i:s');
+	
+    	/*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -220,6 +326,7 @@ function dateHIS() {
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
 	$resultat2=strftime("%H:%M:%S",$resultat);
 	return $resultat2;
+	 */
 }
 
 function dateHI() {
@@ -291,6 +398,18 @@ function dateH() {
 }
 
 function datecalendrier() {
+	$timezone = TIMEZONE;
+	$timezoneminute = TIMEZONEMINUTE;
+	$heure   = date("H") + $timezone;
+	$minute  = date("i") + $timezoneminute;
+	$seconde = date("s");
+	$jour    = date("d");
+	$mois    = date("m");
+	$annee   = date("Y");
+	$resultat = mktime($heure, $minute, $seconde, $mois, $jour, $annee);
+	$resultat2 = date("Y,m,d,H,i,s", $resultat);
+	return "new Date($resultat2);";
+/*
 	$timezone=TIMEZONE;
 	$timezoneminute=TIMEZONEMINUTE;
 	$heure=date("H");
@@ -302,9 +421,10 @@ function datecalendrier() {
 	$heure=$heure+$timezone;
 	$minute=$minute+$timezoneminute;
 	$resultat=mktime($heure,$minute,$seconde,$mois,$jour,$annee);
-	$resultat2=strftime("%Y,%m,%d,%H,%M,%S",$resultat);
+	$resultat2 = $date->format("Y,m,d,H,i,s");
 	$objet="new Date($resultat2);";
 	return $objet;
+*/
 }
 
 function dateYMDHMS2() {
@@ -386,6 +506,28 @@ function dateLettre($date) {
 	if ($mois == 12) { $mois=LANGMOIS12; }
 	$resultat2="$jour $mois $annee";
 	return $resultat2;
+}
+
+function dateMoisAnnee2($date) {
+        // au format dd/mm/yyyy
+        $elements=preg_split('/\//',$date);
+        $annee=$elements[2];
+        $mois=$elements[1];
+        $jour=$elements[0];
+        if ($mois == 1) { $mois="JAN"; }
+        if ($mois == 2) { $mois="FEV"; }
+        if ($mois == 3) { $mois="MARS"; }
+        if ($mois == 4) { $mois="AVR"; }
+        if ($mois == 5) { $mois="MAI"; }
+        if ($mois == 6) { $mois="JUI"; }
+        if ($mois == 7) { $mois="JUIL"; }
+        if ($mois == 8) { $mois="AOUT"; }
+        if ($mois == 9) { $mois="SEPT"; }
+        if ($mois == 10) { $mois="OCT"; }
+        if ($mois == 11) { $mois="NOV"; }
+        if ($mois == 12) { $mois="DEV"; }
+        $resultat2="$mois $annee";
+        return $resultat2;
 }
 
 function recupdateFin($mois) {
@@ -529,6 +671,18 @@ function dateplusn($date,$nj) {
         $resultat=$resultat + $nj * 86400 ;
         $resultat2=strftime("%Y-%m-%d",$resultat);
         return $resultat2;
+}
+
+
+function calculerHeureDeFin($heureDebut, $duree) {
+    // Convertir l'heure de début en timestamp
+    $timestampDebut = strtotime($heureDebut);
+    // Séparer la durée en heures et minutes
+    list($heures, $minutes) = explode(':', $duree);
+    // Ajouter la durée à l'heure de début
+    $timestampFin = strtotime("+$heures hours +$minutes minutes", $timestampDebut);
+    // Retourner l'heure de fin au format H:i
+    return date('H:i:s', $timestampFin);
 }
 
 
@@ -776,6 +930,15 @@ function age($date_naissance) {
 	}
 }
 
+function dateMoinsNJours($date=null,$njour=null) {
+    // Si aucune date n'est fournie, utiliser la date actuelle
+    $date = $date ? new DateTime($date) : new DateTime();
+    // Soustraire 7 jours
+    $date->modify("-$njour days");
+    // Retourner la date au format souhaité (par défaut : Y-m-d)
+    return $date->format('Y-m-d');
+}
+
 
 function diffheure($heuredeb,$heurefin) {
 	$hd=explode(":",$heuredeb);
@@ -788,5 +951,27 @@ function diffheure($heuredeb,$heurefin) {
    	return (($hf[0]-$hd[0]).":".($hf[1]-$hd[1]).":".($hf[2]-$hd[2]));
 }
 
+
+function getMonthsDifference($startDate, $endDate) {
+    // Convertir les dates en objets DateTime
+    $start = new DateTime($startDate);
+    $end = new DateTime($endDate);
+    // Calculer la différence entre les deux dates
+    $diff = $start->diff($end);
+    // Retourner le nombre total de mois
+    return $diff->y * 12 + $diff->m;
+}
+
+function isTimeOutsideInterval($time, $start, $end) {
+    $time = DateTime::createFromFormat('H:i', $time);
+    $start = DateTime::createFromFormat('H:i', $start);
+    $end = DateTime::createFromFormat('H:i', $end);
+    // Cas simple : l'intervalle ne traverse pas minuit
+    if ($start <= $end) {
+        return $time < $start || $time > $end;
+    }
+    // Cas où l'intervalle traverse minuit (ex: 22:00 - 02:00)
+    return $time > $end && $time < $start;
+}
 
 ?>

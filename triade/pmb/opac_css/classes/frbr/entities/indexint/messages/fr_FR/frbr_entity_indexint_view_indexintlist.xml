@@ -5,10 +5,13 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_indexint_view_indexintlist.xml,v 1.1 2017-04-28 09:06:36 dgoron Exp $ -->
+$Id: frbr_entity_indexint_view_indexintlist.xml,v 1.2 2021/03/01 11:04:07 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_indexint_view_title">Titre de la liste</entry>
 	<entry code="frbr_entity_indexint_view_indexint_desc">Titres de l'indexation décimale</entry>
 	<entry code="frbr_entity_indexint_view_indexintlist_title">Liste des indexations décimales</entry>
+	<entry code="frbr_entity_indexint_view_grouped_indexint">Groupement d'indexations décimales</entry>
+	<entry code="frbr_entity_indexint_view_grouped_indexint_label">Libellé du regroupement</entry>
+	<entry code="frbr_entity_indexint_view_grouped_indexint_values">Liste des indexations décimales par regroupement</entry>
 </XMLlist>

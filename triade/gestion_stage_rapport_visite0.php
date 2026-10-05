@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,11 +42,11 @@ validerequete(3);
 $cnx=cnx();
 error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?></div>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'><?php print "Compte rendu de rapport de visite" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -136,7 +136,7 @@ print "<form method=post action='gestion_stage_visu_eleve.php$nc'>";
 print "<table border=0 width=100%><tr><td valign=top><b>".ucwords($prenom)." ".strtoupper($nom)."</b></td><td valign=top>";
 print "<input type=submit value='".LANGSTAGE73."' class='BUTTON' >";
 print "<input type=hidden name=saisie_classe value='".chercheIdClasseDunEleve($eid)."'></form>";
-print "</td></tr></table><table width=100% border=1 >";
+print "</td></tr></table><table width=100% border=1 style='border-collapse: collapse;'>";
 print "<tr ><td width=5 bgcolor='yellow' >&nbsp;N°&nbsp;Stage&nbsp;</td>";
 print "<td align=center  bgcolor='yellow' >".LANGSTAGE72."</td>";
 print "<td align=center  bgcolor='yellow'  width=40%>&nbsp;".LANGSTAGE39."&nbsp;</td>";
@@ -147,7 +147,7 @@ print "<td align=center  bgcolor='yellow'  >&nbsp;".LANGSTAGE37."&nbsp;</td></tr
 
 $data=recherche_stage_eleve($eid);
 // id_eleve,id_entreprise,lieu_stage,ville_stage,id_prof_visite,date_visite_prof,loger,nourri,passage_x_service,raison,info_plus,num_stage,code_p,id,tuteur_stage,tel,compte_tuteur_stage,alternance,jour_alternance,dateDebutAlternance,dateFinAlternance
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if ($data[$i][17] == 1) { 
 		$etat="Alternance"; 
 		$date=dateForm($data[$i][19]).' au '.dateForm($data[$i][20]);

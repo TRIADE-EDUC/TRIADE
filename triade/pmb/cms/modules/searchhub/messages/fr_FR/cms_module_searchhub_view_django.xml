@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_searchhub_view_django.xml,v 1.1.2.3.2.1 2025/02/17 15:30:22 tsamson Exp $ -->
+
+<XMLlist>
+    <entry code="cms_module_searchhub_view_profile_desc">Profil de recherche</entry>
+    <entry code="cms_module_searchhub_view_profile_id_desc">Identifiant</entry>
+    <entry code="cms_module_searchhub_view_profile_name_desc">Nom</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_desc">Recherches</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_name_desc">Nom de la recherche</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_description_desc">Description de la recherche</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_type_desc">Type de la recherche</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_settings_desc">Paramètrage de la recherche</entry>
+    <entry code="cms_module_searchhub_view_profile_searches_translations_desc">Traductions</entry>
+</XMLlist>

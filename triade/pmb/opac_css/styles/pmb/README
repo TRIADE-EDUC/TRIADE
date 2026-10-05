@@ -52,7 +52,7 @@ Cet écran vous présente de nombreuses possibilités de recherche et de navigation
 biblio_preamble_p2
 #Conseille
 *************************/
-<img src=./images/site/sec2.jpg align=middle><br>
+<img src=./images/site/sec2.jpg ><br>
 9:30-17:30 Lun-Jeu.<BR>
 9:30-14:00 Vendr.<BR><br>
 <em>PMB Services</em> est à votre disposition pour vous aider à paramétrer ou adapter votre PMB.<br>

@@ -2,108 +2,86 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sticks_sheet.tpl.php,v 1.5 2019-05-27 10:45:29 ngantier Exp $
+// $Id: sticks_sheet.tpl.php,v 1.6 2021/03/15 09:02:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $sticks_sheet_form, $msg, $base_path, $charset, $stick_sheet_stick_select_button, $stick_sheet_stick_select_button_script;
+global $sticks_sheet_content_form, $msg, $base_path, $charset, $stick_sheet_stick_select_button, $stick_sheet_stick_select_button_script;
 
-$sticks_sheet_form = "
-<script type='text/javascript'>
-	function sticks_sheet_delete() {
-		return confirm(\"".addslashes($msg['sticks_sheet_delete_confirm'])."\");
-	}	
-</script>
-<form class='form-".$current_module."' name='sticks_sheet_form' method='post' action='".$base_path."/edit.php?categ=sticks_sheet&sub=models&action=save&id=!!id!!' >
-	<h3>".htmlentities($msg['sticks_sheet_form_edit'], ENT_QUOTES, $charset)."</h3>
-	<!--	Contenu du form	-->
-	<div class='form-contenu'>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_label'], ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_label' name='sticks_sheet_label' class='saisie-30em' value='!!label!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_page_format'], ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<select id='sticks_sheet_page_format' name='sticks_sheet_page_format' >
-					!!page_format!!
-				</select>
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_page_orientation'], ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite'>
-				<select id='sticks_sheet_page_orientation' name='sticks_sheet_page_orientation' >
-					!!page_orientation!!
-				</select>
-			</div>
-		</div>
-		<input type='hidden' id='sticks_sheet_unit' name='sticks_sheet_unit' value='!!unit!!' />
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_nbr_x_sticks'], ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_nbr_x_sticks' name='sticks_sheet_nbr_x_sticks' class='saisie-5em' style='text-align:right;' value='!!nbr_x_sticks!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_nbr_y_sticks'], ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_nbr_y_sticks' name='sticks_sheet_nbr_y_sticks' class='saisie-5em' style='text-align:right;' value='!!nbr_y_sticks!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_stick_width']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_stick_width' name='sticks_sheet_stick_width' class='saisie-5em' style='text-align:right;' value='!!stick_width!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_stick_height']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_stick_height' name='sticks_sheet_stick_height' class='saisie-5em' style='text-align:right;' value='!!stick_height!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_left_margin']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_left_margin' name='sticks_sheet_left_margin' class='saisie-5em' style='text-align:right;' value='!!left_margin!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_top_margin']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_top_margin' name='sticks_sheet_top_margin' class='saisie-5em' style='text-align:right;' value='!!top_margin!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_x_sticks_spacing']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_x_sticks_spacing' name='sticks_sheet_x_sticks_spacing' class='saisie-5em' style='text-align:right;' value='!!x_sticks_spacing!!' />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne25'>".htmlentities($msg['sticks_sheet_y_sticks_spacing']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
-			<div class='colonne_suite' >
-				<input type='text' id='sticks_sheet_y_sticks_spacing' name='sticks_sheet_y_sticks_spacing' class='saisie-5em' style='text-align:right;' value='!!y_sticks_spacing!!' />
-			</div>
-		</div>
-		!!cote_coords!!
-		!!image_coords!!
+$sticks_sheet_content_form = "
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_label'], ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_label' name='sticks_sheet_label' class='saisie-30em' value='!!label!!' />
 	</div>
-	<!-- Boutons -->
-	<div class='row'>
-		<div class='left'>
-			<input class='bouton' type='button' value=' $msg[76] ' onclick=\"history.go(-1);\" />&nbsp;
-			<input class='bouton' type='submit' value=' $msg[77] '/>
-		</div>
-		<div class='right'>
-			!!button_delete!!
-		</div>
-		<div class='row'></div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_page_format'], ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<select id='sticks_sheet_page_format' name='sticks_sheet_page_format' >
+			!!page_format!!
+		</select>
 	</div>
-</form>";
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_page_orientation'], ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite'>
+		<select id='sticks_sheet_page_orientation' name='sticks_sheet_page_orientation' >
+			!!page_orientation!!
+		</select>
+	</div>
+</div>
+<input type='hidden' id='sticks_sheet_unit' name='sticks_sheet_unit' value='!!unit!!' />
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_nbr_x_sticks'], ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_nbr_x_sticks' name='sticks_sheet_nbr_x_sticks' class='saisie-5em' style='text-align:right;' value='!!nbr_x_sticks!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_nbr_y_sticks'], ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_nbr_y_sticks' name='sticks_sheet_nbr_y_sticks' class='saisie-5em' style='text-align:right;' value='!!nbr_y_sticks!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_stick_width']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_stick_width' name='sticks_sheet_stick_width' class='saisie-5em' style='text-align:right;' value='!!stick_width!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_stick_height']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_stick_height' name='sticks_sheet_stick_height' class='saisie-5em' style='text-align:right;' value='!!stick_height!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_left_margin']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_left_margin' name='sticks_sheet_left_margin' class='saisie-5em' style='text-align:right;' value='!!left_margin!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_top_margin']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_top_margin' name='sticks_sheet_top_margin' class='saisie-5em' style='text-align:right;' value='!!top_margin!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_x_sticks_spacing']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_x_sticks_spacing' name='sticks_sheet_x_sticks_spacing' class='saisie-5em' style='text-align:right;' value='!!x_sticks_spacing!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne25'>".htmlentities($msg['sticks_sheet_y_sticks_spacing']." (!!unit!!)", ENT_QUOTES, $charset)."</div>
+	<div class='colonne_suite' >
+		<input type='text' id='sticks_sheet_y_sticks_spacing' name='sticks_sheet_y_sticks_spacing' class='saisie-5em' style='text-align:right;' value='!!y_sticks_spacing!!' />
+	</div>
+</div>
+!!cote_coords!!
+!!image_coords!!";
 
 $stick_sheet_stick_select_button = '<input class="bouton" type="button" onclick="openSticksSheetDialog(\'!!source!!\', \'!!sticksSheetSelected!!\');" value="!!button_label!!">';
 

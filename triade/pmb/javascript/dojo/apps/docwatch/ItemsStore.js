@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ItemsStore.js,v 1.28 2016-11-15 14:19:21 jpermanne Exp $
+// $Id: ItemsStore.js,v 1.29 2020/10/01 07:41:42 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang","dojo/request/xhr","dojo/_base/json"], function(declare, PMBStore, topic, lang, xhr, json){
@@ -64,10 +64,10 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang",
 			  }
 		  },
 		  needItems:function(watchId){
-			  //Les items de cette veille ont déjà été récupéré 
+			  //Les items de cette veille ont d�j� �t� r�cup�r� 
 			  if(this.query({watch_id:watchId}).length != 0){
 				  topic.publish("itemsStore", "gotItems", {watchId:watchId,formated_last_date:itemsAjax.formated_last_date});
-			  }else{//Nous n'avons pas encore les items associés a cette veille
+			  }else{//Nous n'avons pas encore les items associ�s a cette veille
 				  xhr(this.url+'&action=get_items&watch_id='+watchId, {
 						handleAs:'json',
 				  }).then(lang.hitch(this, this.gotItems, watchId));  
@@ -75,7 +75,7 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang",
 		  },
 		  gotItems:function(watchId, itemsAjax){
 			  this.setDataAjax(itemsAjax.items);
-			  topic.publish("itemsStore", "gotItems", {sources_updated:itemsAjax.sources_updated, watchId:watchId, formated_last_date:itemsAjax.formated_last_date});
+			  topic.publish("itemsStore", "gotItems", {sources_updated:itemsAjax.sources_updated, watchId:watchId, formated_last_date:itemsAjax.formated_last_date, deflt_docwatch_watch_filter_deleted:itemsAjax.deflt_docwatch_watch_filter_deleted});
 		  },
 		  markItemAsRead:function(itemId) {
 			  if(itemId) {

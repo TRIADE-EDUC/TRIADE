@@ -1,42 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: tu_notice.class.php,v 1.46 2019-03-28 21:47:25 ccraig Exp $
+// $Id: tu_notice.class.php,v 1.52 2023/05/04 14:15:47 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/titre_uniforme.class.php");
 require_once($class_path."/authority.class.php");
 require_once($class_path."/indexation_stack.class.php");
 class tu_notice {
 	
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------	
 	public $id;		// MySQL id notice
-	public $ntu_data;	//donnÃ©es des titres uniformes liÃ© a la notice 
+	public $ntu_data;	//données des titres uniformes lié a la notice 
 	public $ntu_form;
 	public $oeuvre_events_order;
+	public $recursif;
 	
 	// ---------------------------------------------------------------
 	//		tu_notice($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0,$recursif=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		if($this->id) {
-			// on cherche Ã  atteindre une notice existante
-			$this->recursif=$recursif+0;
+			// on cherche à atteindre une notice existante
+			$this->recursif=intval($recursif);
 		}
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos auteur
+	//		getData() : récupération infos auteur
 	// ---------------------------------------------------------------
 	public function getData() {
-		global $msg;
-
 		$this->ntu_data=array();
 		$this->oeuvre_events_order=array();
 		if($this->id) {				
@@ -55,7 +55,7 @@ class tu_notice {
 					$this->ntu_data[$nb_result]->mention=	$res_tu->ntu_mention;  
 					$authority = new authority(0, $this->ntu_data[$nb_result]->num_tu, AUT_TABLE_TITRES_UNIFORMES);
 					$this->ntu_data[$nb_result]->tu = $authority;
-					/*  Champs rÃ©cupÃ©rÃ©s du titre uniforme:
+					/*  Champs récupérés du titre uniforme:
 					 	name 			
 						tonalite
 						comment
@@ -63,16 +63,16 @@ class tu_notice {
 						ref (array)
 						subdiv (array)
 					*/
-					// mÃ©morisation de l'ordre des Ã©venemments par leur date, si renseignÃ©.
+					// mémorisation de l'ordre des évenemments par leur date, si renseigné.
 					if(isset($this->ntu_data[$nb_result]->tu->get_object_instance()->get_oeuvre_events()[0]) && isset($this->ntu_data[$nb_result]->tu->get_object_instance()->get_oeuvre_events()[0]['date']) && $this->ntu_data[$nb_result]->tu->get_object_instance()->get_oeuvre_events()[0]['date']){
 						$this->oeuvre_events_order[$this->ntu_data[$nb_result]->tu->get_object_instance()->get_oeuvre_events()[0]['date']][]=$nb_result;
 					}
 					$nb_result++;
 				}
 				krsort($this->oeuvre_events_order);
-				uasort($this->ntu_data, array('self', 'sort_tu'));				
+				uasort($this->ntu_data, array(self::class, 'sort_tu'));				
 			} else {
-				// pas trouvÃ© avec cette clÃ©
+				// pas trouvé avec cette clé
 			}
 		}
 	}
@@ -288,8 +288,8 @@ class tu_notice {
 	public static function gen_input_selection($label,$form_name,$item,$values,$what_sel,$class='saisie-80em', $show_other_fields=1) {  
 	
 		global $msg, $charset;
-		$select_prop = "scrollbars=yes, toolbar=no, dependent=yes, resizable=yes";
-		$link="'./select.php?what=$what_sel&caller=$form_name&param1=f_".$item."_code!!num!!&param2=f_".$item."!!num!!&deb_rech='+".pmb_escape()."(this.form.f_".$item."!!num!!.value), '$what_sel', 400, 400, -2, -2, '$select_prop'";
+// 		$select_prop = "scrollbars=yes, toolbar=no, dependent=yes, resizable=yes";
+// 		$link="'./select.php?what=$what_sel&caller=$form_name&param1=f_".$item."_code!!num!!&param2=f_".$item."!!num!!&deb_rech='+".pmb_escape()."(this.form.f_".$item."!!num!!.value), '$what_sel', 400, 400, -2, -2, '$select_prop'";
 		$size_item=strlen($item)+2;
 		
 		$show_other_fields_plus_js = '';
@@ -470,7 +470,7 @@ class tu_notice {
 			$label_element=$value["label"];
 			$id_element=$value["id"];
 			$temp= str_replace('!!id_element!!', $id_element, $aff);	
-			$temp= str_replace('!!label_element!!', htmlentities($label_element,ENT_QUOTES,$charset), $temp);	
+			$temp= str_replace('!!label_element!!', htmlentities(html_entity_decode($label_element),ENT_QUOTES,$charset), $temp);	
 			$temp= str_replace('!!num!!', $num, $temp);	
 			
 			if($id_element == $last_id){
@@ -498,7 +498,7 @@ class tu_notice {
 				$j=0;
 				if(is_array($value["objets"]))
 				foreach($value["objets"] as $objet) {
-					// Ajout des javascript qui permet la rÃ©pÃ©tabilitÃ© des champs option 			
+					// Ajout des javascript qui permet la répétabilité des champs option 			
 					$option_js = str_replace('!!label!!', addslashes($objet["label"]), $script_js_option);		
 					$option_js = str_replace('!!name!!', $objet["name"], $option_js);		
 					$option_js = str_replace('!!class!!', $objet["class"], $option_js);		
@@ -556,7 +556,7 @@ class tu_notice {
 		$titre_uniforme_form = str_replace("<!--	Distribution instrumentale et vocale (pour la musique)	-->",$distribution_form, $titre_uniforme_form);
 
 		$ref_num_form=static::gen_input_selection($msg["aut_titre_uniforme_form_ref_numerique"],"saisie_titre_uniforme","ref",$this->ref,"","saisie-80em");
-		$titre_uniforme_form = str_replace("<!--	RÃ©fÃ©rence numÃ©rique (pour la musique)	-->",$ref_num_form, $titre_uniforme_form);
+		$titre_uniforme_form = str_replace("<!--	Référence numérique (pour la musique)	-->",$ref_num_form, $titre_uniforme_form);
 		
 		$titre_uniforme_form = str_replace('!!tonalite!!',			htmlentities($this->tonalite,ENT_QUOTES, $charset),	$titre_uniforme_form);				
 		$titre_uniforme_form = str_replace('!!comment!!',			htmlentities($this->comment,ENT_QUOTES, $charset),	$titre_uniforme_form);
@@ -601,12 +601,9 @@ class tu_notice {
 	//		delete() : suppression 
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
-		global $msg;
-		
 		if(!$this->id) return false;
 		$requete = "DELETE FROM notices_titres_uniformes WHERE ntu_num_notice='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$this->id=0;
 		$this->ntu_data=array();
 	}
@@ -626,35 +623,32 @@ class tu_notice {
 	}
 	
 	// ---------------------------------------------------------------
-	//		update($value) : mise Ã  jour 
+	//		update($value) : mise à jour 
 	// ---------------------------------------------------------------
 	public function update($values) {
-	
-		global $dbh;
-		global $msg;
-		global $include_path;
-
 		if(!$this->id) return false;
 		$requete = "DELETE FROM notices_titres_uniformes WHERE ntu_num_notice=".$this->id;
-		pmb_mysql_query($requete, $dbh);
-		// nettoyage des chaÃ®nes en entrÃ©e		
-		$ordre=0;
-		foreach($values as $value) {			
-			if($value['num_tu']) {
-				$requete = "INSERT INTO notices_titres_uniformes SET 
-				ntu_num_notice='$this->id', 
-				ntu_num_tu='".$value['num_tu']."', 
-				ntu_titre='".clean_string($value['ntu_titre'])."', 
-				ntu_date='".clean_string($value['ntu_date'])."', 
-				ntu_sous_vedette='".clean_string($value['ntu_sous_vedette'])."', 
-				ntu_langue='".clean_string($value['ntu_langue'])."', 
-				ntu_version='".clean_string($value['ntu_version'])."', 
-				ntu_mention='".clean_string($value['ntu_mention'])."',
-				ntu_ordre=$ordre 				
-				";
-				pmb_mysql_query($requete, $dbh);
-			}
-			$ordre++;
+		pmb_mysql_query($requete);
+		if (!empty($values)) {
+    		// nettoyage des chaînes en entrée		
+    		$ordre=0;
+    		foreach($values as $value) {			
+    			if($value['num_tu']) {
+    				$requete = "INSERT INTO notices_titres_uniformes SET 
+    				ntu_num_notice='$this->id', 
+    				ntu_num_tu='".$value['num_tu']."', 
+    				ntu_titre='".clean_string($value['ntu_titre'])."', 
+    				ntu_date='".clean_string($value['ntu_date'])."', 
+    				ntu_sous_vedette='".clean_string($value['ntu_sous_vedette'])."', 
+    				ntu_langue='".clean_string($value['ntu_langue'])."', 
+    				ntu_version='".clean_string($value['ntu_version'])."', 
+    				ntu_mention='".clean_string($value['ntu_mention'])."',
+    				ntu_ordre=$ordre 				
+    				";
+    				pmb_mysql_query($requete);
+    			}
+    			$ordre++;
+    		}
 		}
 		return TRUE;
 	}
@@ -689,10 +683,10 @@ class tu_notice {
 	// update_index($id) : maj des n-uplets la table notice_global_index en rapport avec cet author	
 	//---------------------------------------------------------------
 	public static function update_index($id) {
-		global $dbh;
-		// On cherche tous les n-uplet de la table notice correspondant Ã  ce titre_uniforme.
-		$found = pmb_mysql_query("select ntu_num_notice from notices_titres_uniformes where ntu_num_tu = ".$id,$dbh);
-		// Pour chaque n-uplet trouvÃ©s on met a jour la table notice_global_index avec l'auteur modifiÃ© :
+		$id = intval($id);
+		// On cherche tous les n-uplet de la table notice correspondant à ce titre_uniforme.
+		$found = pmb_mysql_query("select ntu_num_notice from notices_titres_uniformes where ntu_num_tu = ".$id);
+		// Pour chaque n-uplet trouvés on met a jour la table notice_global_index avec l'auteur modifié :
 		while(($mesNotices = pmb_mysql_fetch_object($found))) {
 			$notice_id = $mesNotices->ntu_num_notice;
 			indexation_stack::push($notice_id, TYPE_NOTICE);
@@ -709,6 +703,9 @@ class tu_notice {
 	} 
 	
 	public static function create_tu_notice_link($num_tu, $num_notice, $ordre = 0) {
+		$num_tu = intval($num_tu);
+		$num_notice = intval($num_notice);
+		$ordre = intval($ordre);
 		$query = "INSERT INTO notices_titres_uniformes SET
 						ntu_num_notice='" . $num_notice . "',
 						ntu_num_tu='" . $num_tu . "',

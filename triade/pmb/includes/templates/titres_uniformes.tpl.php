@@ -1,386 +1,273 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: titres_uniformes.tpl.php,v 1.81 2019-05-27 12:26:22 btafforeau Exp $
+// $Id: titres_uniformes.tpl.php,v 1.91.4.1 2025/02/28 14:10:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $titre_uniforme_form, $oeuvre_expression_tpl, $oeuvre_expression_tpl_first, $oeuvre_expression_tpl_other, $other_link_tpl, $other_link_tpl_first, $other_link_tpl_other;
+global $titre_uniforme_content_form, $oeuvre_expression_tpl, $oeuvre_expression_tpl_first, $oeuvre_expression_tpl_other, $other_link_tpl, $other_link_tpl_first, $other_link_tpl_other;
 global $tu_authors_tpl, $tu_authors_all_tpl, $titre_uniforme_replace, $user_query_tpl, $oeuvre_event_tpl, $oeuvre_event_tpl_first, $oeuvre_event_tpl_other;
 global $oeuvre_expression_from_tpl, $oeuvre_expression_from_tpl_first, $oeuvre_expression_from_tpl_other, $tu_notices_tpl, $tu_notices_tpl_first, $tu_notices_tpl_other;
 global $pmb_authors_qualification, $pmb_autorites_verif_js, $value_deflt_fonction, $mapping_dojo_inclusion_tu, $base_path, $msg, $current_module, $pmb_form_authorities_editables;
-global $aut_fonctions, $tu_warning_tu_exist;
+global $aut_fonctions;
 
-$mapping_dojo_inclusion_tu = '';
-if(form_mapper::isMapped('tu')){
-	$mapping_dojo_inclusion_tu.= '
-	     	var formMapper = new FormMapper("tu", "saisie_titre_uniforme");
-	     	window["formMapperCallback"] = lang.hitch(formMapper, formMapper.selectorCallback, "tu");';	
-}
 
-$titre_uniforme_form = jscript_unload_question();
-$titre_uniforme_form.= $pmb_autorites_verif_js!= "" ? "<script type='text/javascript' src='$base_path/javascript/$pmb_autorites_verif_js'></script>":"";
-$titre_uniforme_form.= "
-<script type='text/javascript'>
-
-function test_form(form) {
-	if (typeof check_form == 'function') {
-		if (!check_form()) {
-			return false;
-		}
-	}
-	";
-	if ($pmb_autorites_verif_js != "") {
-		$titre_uniforme_form.= "
-			if(typeof check_perso_tu_form == 'function'){
-				var check = check_perso_tu_form(form);
-				if (check == false) return false;
-			}";
-	}
-	$titre_uniforme_form.=
-	"if(form.tu_name.value.length == 0)	{
-		alert(\"".$msg['tu_form_submit_error']."\");
-		return false;
-	}
-	unload_off();	
-	return true;
-}
-
-function confirm_delete() {
-    result = confirm(\"".$msg['confirm_suppr']."\");
-    if(result) {
-        unload_off();
-        document.location='!!delete_action!!';
-	} else
-        document.forms['saisie_titre_uniforme'].elements['form_nom'].focus();
-}
-function check_link(id) {
-	w=window.open(document.getElementById(id).value);
-	w.focus();
-}
-</script>
-
-<script src='javascript/ajax.js'></script>
-<script type='text/javascript'>
-	require(['dojo/ready', 'apps/pmb/gridform/FormEdit','dojo/dom-attr','dojo/dom','apps/form_mapper/FormMapper', 'dojo/_base/lang'], function(ready, FormEdit, domAttr, dom, FormMapper, lang){
-	     ready(function(){
-	     	domAttr.set(dom.byId('oeuvre_type'),'backbone','yes');
-	     	domAttr.set(dom.byId('oeuvre_nature'),'backbone','yes');
-	     	new FormEdit();
-	     	".$mapping_dojo_inclusion_tu."
-	     });
-	});
-</script>
-<script type='text/javascript'>
-	document.title='!!document_title!!';
-</script>
-<form class='form-$current_module' id='saisie_titre_uniforme' name='saisie_titre_uniforme' method='post' action='!!action!!' onSubmit=\"return false\" enctype='multipart/form-data'>
-<div class='row'>
-	<div class='left'><h3>!!libelle!!</h3></div>
-	<div class='right'>";
-
-	$titre_uniforme_form.='
-	<!-- Selecteur de statut -->
-		<label class="etiquette" for="authority_statut">'.$msg['authorities_statut_label'].'</label>
-		!!auth_statut_selector!!
-	';
-
-	if(isset($pmb_form_authorities_editables)) {
-		if (isset($PMBuserid) && $PMBuserid==1 && $pmb_form_authorities_editables==1){
-			$titre_uniforme_form.="<input type='button' class='bouton_small' value='".$msg["authorities_edit_format"]."' id=\"bt_inedit\"/>";
-		}
-		if ($pmb_form_authorities_editables==1) {
-			$titre_uniforme_form.="<input type='button' class='bouton_small' value=\"".$msg["authorities_origin_format"]."\" id=\"bt_origin_format\"/>";
-		}
-	}
-	$titre_uniforme_form .= "
-	</div>
-</div>
-<div class='form-contenu'>
+$titre_uniforme_content_form = "
+<div id='el0Child_0' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_type"], ENT_QUOTES, $charset)."\">
 	<div class='row'>
-		<a onclick='expandAll();return false;' href='#'><img border='0' id='expandall' src='".get_url_icon('expand_all.gif')."'></a>
-		<a onclick='collapseAll();return false;' href='#'><img border='0' id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>
+		<label class='etiquette' for='oeuvre_type'>".$msg["aut_oeuvre_form_oeuvre_type"]."</label>
 	</div>
-	<div id='zone-container'>
-		<div id='el0Child_0' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_type"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='oeuvre_type'>".$msg["aut_oeuvre_form_oeuvre_type"]."</label>
-			</div>
-			<div class='row'>
-				!!oeuvre_type!!
-			</div>
-		</div>
-		<div id='el0Child_1' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_nature"], ENT_QUOTES, $charset)."\">			
-			<div class='row'>
-				<label class='etiquette' for='oeuvre_nature'>".$msg["aut_oeuvre_form_oeuvre_nature"]."</label>
-			</div>
-			<div class='row'>
-				!!oeuvre_nature!!
-			</div>
-		</div>
-		<!--	nom	-->
-		<div id='el0Child_2' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_nom"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_nom'>".$msg["aut_titre_uniforme_form_nom"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-80em' id='form_nom' name='tu_name' value=\"!!nom!!\" data-form-name='tu_name' data-pmb-deb-rech='1'/>
-			</div>
-		</div>
-		<div id='el0Child_3' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_expression"], ENT_QUOTES, $charset)."\">				
-			<div class='row'>
-				<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_expression"]."</label>
-			</div>
-			<div class='row'>
-				!!oeuvre_expression!!
-			</div>	
-		</div>
-		<div id='el0Child_25' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_expression_from"], ENT_QUOTES, $charset)."\">				
-			<div class='row'>
-				<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_expression_from"]."</label>
-			</div>
-			<div class='row'>
-				!!oeuvre_expression_from!!
-			</div>	
-		</div>
-		<div id='el0Child_4' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_other_link"], ENT_QUOTES, $charset)."\">				
-			<div class='row'>
-				<label class='etiquette' >".$msg["aut_oeuvre_form_other_link"]."</label>
-			</div>
-			<div class='row'>
-			!!other_link!!
-			</div>
-		</div>
-		<div id='el0Child_5' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_event"], ENT_QUOTES, $charset)."\">				
-			<div class='row'>
-				<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_event"]."</label>
-			</div>
-			<div class='row'>			
-				!!oeuvre_event!!
-			</div>
-		</div>
-		!!authors!!
-		
-		<!--	Forme de l'oeuvre	-->
-		<div id='el0Child_6' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_forme"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_form'>".$msg["aut_oeuvre_form_forme"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-30em' id='form_form' name='tu_form' data-form-name='tu_form' value='!!tu_form!!'>
-			</div>	
-		</div>
-		
-		<!--	Forme de l'oeuvre liste controlÃ©e -->
-		<div id='el0Child_7' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_forme_list"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_form'>".$msg["aut_oeuvre_form_forme_list"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' completion='music_form' autfield='form_form_selector' id='music_form' class='saisie-30emr' name='music_form' data-form-name='music_form' value=\"!!music_form!!\" />
-	            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=music_form&caller=saisie_titre_uniforme&p1=form_form_selector&p2=music_form&deb_rech='+".pmb_escape()."(this.form.music_form.value), 'selector')\" />
-	            <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.music_form.value=''; this.form.form_form_selector.value=''; \" />
-	            <input type='hidden' name='form_form_selector' data-form-name='form_form_selector' id='form_form_selector' value=\"!!music_form_id!!\" />  
-			</div>
-		</div>
-		
-		<!--	Date de l'oeuvre	-->
-		<div id='el0Child_8' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_date"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_dates'>".$msg["aut_oeuvre_form_date"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-30em' id='form_dates' name='date' data-form-name='date' value='!!date!!'>
-			</div>
-		</div>
-		
-		<!--	Lieu d'origine de l'oeuvre	-->
-		<div id='el0Child_9' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_lieu"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_place'>".$msg["aut_oeuvre_form_lieu"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-30em' id='form_place' name='place' data-form-name='place' value='!!place!!'>
-			</div>
-		</div>
-		
-		<!--	Sujet de l'oeuvre	-->
-		<div id='el0Child_10' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_sujet"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_subject'>".$msg["aut_oeuvre_form_sujet"]."</label>
-			</div>
-			<div class='row'>
-				<textarea class='saisie-80em' id='form_subject' name='subject' data-form-name='subject' cols='62' rows='4' wrap='virtual'>!!subject!!</textarea>
-			</div>
-		</div>
-		
-		<!--	ComplÃ©tude visÃ©e de l'oeuvre	-->
-		<div id='el0Child_11' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_completude"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_completude'>".$msg["aut_oeuvre_form_completude"]."</label>
-			</div>
-			<div class='row'>
-				<select id='form_intended_termination' name='intended_termination' data-form-name='intended_termination' class='saisie-20em'>
-					<option value='0' !!intended_termination_0!!>--</option>\n
-					<option value='1' !!intended_termination_1!!>".$msg['aut_oeuvre_form_completude_finished']."</option>\n
-					<option value='2' !!intended_termination_2!!>".$msg['aut_oeuvre_form_completude_infinite']."</option>\n
-				</select>	
-			</div>
-		</div>
-		
-		<!--	Public visÃ© de l'oeuvre	-->
-		<div id='el0Child_12' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_public"], ENT_QUOTES, $charset)."\">		
-			<div class='colonne_suite'>
-				<label class='etiquette' for='form_intended_audience'>".$msg["aut_oeuvre_form_public"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-30em' id='form_intended_audience' name='intended_audience' data-form-name='intended_audience' value='!!intended_audience!!'>
-			</div>
-		</div>
-		
-		<!--	Histoire de l'oeuvre	-->
-		<div id='el0Child_13' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_histoire"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_history'>".$msg["aut_oeuvre_form_histoire"]."</label>
-			</div>
-			<div class='row'>
-				<textarea class='saisie-80em' id='form_history' name='history'  data-form-name='history' cols='62' rows='4' wrap='virtual'>!!history!!</textarea>
-			</div>
-		</div>
-		
-		<!--	Contexte de l'oeuvre	-->
-		<div id='el0Child_14' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_contexte"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_context'>".$msg["aut_oeuvre_form_contexte"]."</label>
-			</div>
-			<div class='row'>
-				<textarea class='saisie-80em' id='form_context' name='context' data-form-name='context' cols='62' rows='4' wrap='virtual'>!!context!!</textarea>
-			</div>
-		</div>
-						
-		<div id='el0Child_15' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_distribution"], ENT_QUOTES, $charset)."\">					
-			<!--	Distribution instrumentale et vocale (pour la musique)	-->
-		</div>
-				
-		<div id='el0Child_16' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_ref_numerique"], ENT_QUOTES, $charset)."\">
-			<!--	RÃ©fÃ©rence numÃ©rique (pour la musique)	-->
-		</div>
-				
-		<!--	TonalitÃ© (Saisie Libre)	-->
-		<div id='el0Child_17' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_tonalite"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_tonalite'>".$msg["aut_titre_uniforme_form_tonalite"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-80em' id='form_tonalite' name='tonalite' value='!!tonalite!!'>
-			</div>
-		</div>
-		
-		<!--	TonalitÃ© (Liste controlÃ©e)	-->
-		<div id='el0Child_18' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_tonalite_list"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_tonalite'>".$msg["aut_titre_uniforme_form_tonalite_list"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' completion='music_key' autfield='form_tonalite_selector' id='music_key' class='saisie-30emr' name='music_key' data-form-name='music_key' value=\"!!music_key!!\" />
-	            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=music_key&caller=saisie_titre_uniforme&p1=form_tonalite_selector&p2=music_key&deb_rech='+".pmb_escape()."(this.form.music_key.value), 'selector')\" />
-	            <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.music_key.value=''; this.form.form_tonalite_selector.value=''; \" />
-	            <input type='hidden' name='form_tonalite_selector' data-form-name='form_tonalite_selector' id='form_tonalite_selector' value=\"!!music_key_id!!\" />  
-			</div>
-		</div>
-		
-		<!--	CoordonnÃ©es (oeuvre cartographique)	-->
-		<div id='el0Child_19' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_coordonnees"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_coordinates'>".$msg["aut_oeuvre_form_coordonnees"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-80em' id='form_coordinates' name='coordinates' data-form-name='coordinates' value='!!coordinates!!'>
-			</div>
-		</div>
-				
-		<!--	Equinoxe (oeuvre cartographique)	-->
-		<div id='el0Child_20' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_equinoxe"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_equinox'>".$msg["aut_oeuvre_form_equinoxe"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' class='saisie-80em' id='form_equinox' name='equinox' data-form-name='equinox' value='!!equinox!!'>
-			</div>
-		</div>
-	
-		<div id='el0Child_21' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_subdivision_forme"], ENT_QUOTES, $charset)."\">
-			<!-- Subdivision de forme -->
-		</div>
-				
-		<!--	Autres caractÃ©ristiques distinctives de l'oeuvre	-->
-		<div id='el0Child_22' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_caracteristique"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='form_carac'>".$msg["aut_oeuvre_form_caracteristique"]."</label>
-			</div>
-			<div class='row'>
-				<textarea class='saisie-80em' id='form_carac' name='characteristic' cols='62' rows='4' wrap='virtual'>!!characteristic!!</textarea>
-			</div>
-		</div>
-				
-		<!-- 	Commentaire -->
-		<div id='el0Child_23' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_commentaire"], ENT_QUOTES, $charset)."\">
-			<div class='row'>
-				<label class='etiquette' for='comment'>".$msg["aut_titre_uniforme_commentaire"]."</label>
-			</div>
-			<div class='row'>
-				<textarea class='saisie-80em' id='comment' name='comment' data-form-name='comment' cols='62' rows='4' wrap='virtual'>!!comment!!</textarea>
-			</div>
-		</div>
-						
-		!!concept_form!!
-		!!thumbnail_url_form!!				
-		!!aut_pperso!!
-						
-		<div id='el0Child_24' class='row' movable='yes' title=\"".htmlentities($msg["authority_import_denied"], ENT_QUOTES, $charset)."\">	
-			<div class='row'>
-				<label class='etiquette' for='tu_import_denied'>".$msg['authority_import_denied']."</label> &nbsp;
-				<input type='checkbox' id='tu_import_denied' name='tu_import_denied' value='1' data-form-name='tu_import_denied' !!tu_import_denied!!/>
-			</div>
-		</div>
-		
-		<!-- aut_link -->
-		
-		<!-- tu_notices --> 		
-		<div id='el0Child_26' class='row' movable='yes' title=\"".htmlentities($msg["notice_relations"], ENT_QUOTES, $charset)."\">				
-			!!tu_notices!!
-		</div>
+	<div class='row'>
+		!!oeuvre_type!!
 	</div>
 </div>
-<!--	boutons	-->
-<div class='row'>
-	<div class='left'>
-		<input type='button' class='bouton' value='$msg[76]' id='btcancel' onClick=\"unload_off();document.location='!!cancel_action!!';\" />
-		<input type='button' value='$msg[77]' class='bouton' id='btsubmit' onClick=\"document.getElementById('save_and_continue').value=0;if (test_form(this.form)) this.form.submit();\" />
-        <input type='hidden' name='save_and_continue' id='save_and_continue' value='' />
-		<input type='button' id='update_continue' class='bouton' value='" . $msg['save_and_continue'] . "' onClick=\"document.getElementById('save_and_continue').value=1;if (test_form(this.form)) this.form.submit();\" />
+<div id='el0Child_1' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_nature"], ENT_QUOTES, $charset)."\">			
+	<div class='row'>
+		<label class='etiquette' for='oeuvre_nature'>".$msg["aut_oeuvre_form_oeuvre_nature"]."</label>
+	</div>
+	<div class='row'>
+		!!oeuvre_nature!!
+	</div>
+</div>
+<!--	nom	-->
+<div id='el0Child_2' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_nom"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_nom'>".$msg["aut_titre_uniforme_form_nom"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-80em' id='form_nom' name='tu_name' value=\"!!nom!!\" data-form-name='tu_name' data-pmb-deb-rech='1'/>
+	</div>
+</div>
+<div id='el0Child_3' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_expression"], ENT_QUOTES, $charset)."\">				
+	<div class='row'>
+		<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_expression"]."</label>
+	</div>
+	<div class='row'>
+		!!oeuvre_expression!!
+	</div>	
+</div>
+<div id='el0Child_25' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_expression_from"], ENT_QUOTES, $charset)."\">				
+	<div class='row'>
+		<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_expression_from"]."</label>
+	</div>
+	<div class='row'>
+		!!oeuvre_expression_from!!
+	</div>	
+</div>
+<div id='el0Child_4' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_other_link"], ENT_QUOTES, $charset)."\">				
+	<div class='row'>
+		<label class='etiquette' >".$msg["aut_oeuvre_form_other_link"]."</label>
+	</div>
+	<div class='row'>
+	!!other_link!!
+	</div>
+</div>
+<div id='el0Child_5' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_oeuvre_event"], ENT_QUOTES, $charset)."\">				
+	<div class='row'>
+		<label class='etiquette' >".$msg["aut_oeuvre_form_oeuvre_event"]."</label>
+	</div>
+	<div class='row'>			
+		!!oeuvre_event!!
+	</div>
+</div>
+!!authors!!
 
-		!!remplace!!
-		!!voir_notices!!
-		!!audit_bt!!
-		<input type='hidden' name='page' value='!!page!!' />
-		<input type='hidden' name='nbr_lignes' value='!!nbr_lignes!!' />
-		<input type='hidden' name='user_input' value=\"!!user_input!!\" />
+<!--	Forme de l'oeuvre	-->
+<div id='el0Child_6' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_forme"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_form'>".$msg["aut_oeuvre_form_forme"]."</label>
 	</div>
-	<div class='right'>
-		!!delete!!
+	<div class='row'>
+		<input type='text' class='saisie-30em' id='form_form' name='tu_form' data-form-name='tu_form' value='!!tu_form!!'>
+	</div>	
+</div>
+
+<!--	Forme de l'oeuvre liste controlée -->
+<div id='el0Child_7' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_forme_list"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_form'>".$msg["aut_oeuvre_form_forme_list"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' completion='music_form' autfield='form_form_selector' id='music_form' class='saisie-30emr' name='music_form' data-form-name='music_form' value=\"!!music_form!!\" />
+        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=music_form&caller=saisie_titre_uniforme&p1=form_form_selector&p2=music_form&deb_rech='+".pmb_escape()."(this.form.music_form.value), 'selector')\" />
+        <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.music_form.value=''; this.form.form_form_selector.value=''; \" />
+        <input type='hidden' name='form_form_selector' data-form-name='form_form_selector' id='form_form_selector' value=\"!!music_form_id!!\" />  
 	</div>
 </div>
-<div class='row'></div>
-</form>
-<script type='text/javascript'>
-	ajax_parse_dom();
-	document.forms['saisie_titre_uniforme'].elements['tu_name'].focus();
-</script>
+
+<!--	Date de l'oeuvre	-->
+<div id='el0Child_8' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_date"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_dates'>".$msg["aut_oeuvre_form_date"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-30em' id='form_dates' name='date' data-form-name='date' value='!!date!!'>
+	</div>
+</div>
+
+<!--	Lieu d'origine de l'oeuvre	-->
+<div id='el0Child_9' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_lieu"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_place'>".$msg["aut_oeuvre_form_lieu"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-30em' id='form_place' name='place' data-form-name='place' value='!!place!!'>
+	</div>
+</div>
+
+<!--	Sujet de l'oeuvre	-->
+<div id='el0Child_10' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_sujet"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_subject'>".$msg["aut_oeuvre_form_sujet"]."</label>
+	</div>
+	<div class='row'>
+		<textarea class='saisie-80em' id='form_subject' name='subject' data-form-name='subject' cols='62' rows='4' wrap='virtual'>!!subject!!</textarea>
+	</div>
+</div>
+
+<!--	Complétude visée de l'oeuvre	-->
+<div id='el0Child_11' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_completude"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_completude'>".$msg["aut_oeuvre_form_completude"]."</label>
+	</div>
+	<div class='row'>
+		<select id='form_intended_termination' name='intended_termination' data-form-name='intended_termination' class='saisie-20em'>
+			<option value='0' !!intended_termination_0!!>--</option>\n
+			<option value='1' !!intended_termination_1!!>".$msg['aut_oeuvre_form_completude_finished']."</option>\n
+			<option value='2' !!intended_termination_2!!>".$msg['aut_oeuvre_form_completude_infinite']."</option>\n
+		</select>	
+	</div>
+</div>
+
+<!--	Public visé de l'oeuvre	-->
+<div id='el0Child_12' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_public"], ENT_QUOTES, $charset)."\">		
+	<div class='colonne_suite'>
+		<label class='etiquette' for='form_intended_audience'>".$msg["aut_oeuvre_form_public"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-30em' id='form_intended_audience' name='intended_audience' data-form-name='intended_audience' value='!!intended_audience!!'>
+	</div>
+</div>
+
+<!--	Histoire de l'oeuvre	-->
+<div id='el0Child_13' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_histoire"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_history'>".$msg["aut_oeuvre_form_histoire"]."</label>
+	</div>
+	<div class='row'>
+		<textarea class='saisie-80em' id='form_history' name='history'  data-form-name='history' cols='62' rows='4' wrap='virtual'>!!history!!</textarea>
+	</div>
+</div>
+
+<!--	Contexte de l'oeuvre	-->
+<div id='el0Child_14' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_contexte"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_context'>".$msg["aut_oeuvre_form_contexte"]."</label>
+	</div>
+	<div class='row'>
+		<textarea class='saisie-80em' id='form_context' name='context' data-form-name='context' cols='62' rows='4' wrap='virtual'>!!context!!</textarea>
+	</div>
+</div>
+				
+<div id='el0Child_15' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_distribution"], ENT_QUOTES, $charset)."\">					
+	<!--	Distribution instrumentale et vocale (pour la musique)	-->
+</div>
+		
+<div id='el0Child_16' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_ref_numerique"], ENT_QUOTES, $charset)."\">
+	<!--	Référence numérique (pour la musique)	-->
+</div>
+		
+<!--	Tonalité (Saisie Libre)	-->
+<div id='el0Child_17' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_tonalite"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_tonalite'>".$msg["aut_titre_uniforme_form_tonalite"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-80em' id='form_tonalite' name='tonalite' value='!!tonalite!!'>
+	</div>
+</div>
+
+<!--	Tonalité (Liste controlée)	-->
+<div id='el0Child_18' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_tonalite_list"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_tonalite'>".$msg["aut_titre_uniforme_form_tonalite_list"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' completion='music_key' autfield='form_tonalite_selector' id='music_key' class='saisie-30emr' name='music_key' data-form-name='music_key' value=\"!!music_key!!\" />
+        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=music_key&caller=saisie_titre_uniforme&p1=form_tonalite_selector&p2=music_key&deb_rech='+".pmb_escape()."(this.form.music_key.value), 'selector')\" />
+        <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.music_key.value=''; this.form.form_tonalite_selector.value=''; \" />
+        <input type='hidden' name='form_tonalite_selector' data-form-name='form_tonalite_selector' id='form_tonalite_selector' value=\"!!music_key_id!!\" />  
+	</div>
+</div>
+
+<!--	Coordonnées (oeuvre cartographique)	-->
+<div id='el0Child_19' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_coordonnees"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_coordinates'>".$msg["aut_oeuvre_form_coordonnees"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-80em' id='form_coordinates' name='coordinates' data-form-name='coordinates' value='!!coordinates!!'>
+	</div>
+</div>
+		
+<!--	Equinoxe (oeuvre cartographique)	-->
+<div id='el0Child_20' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_equinoxe"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_equinox'>".$msg["aut_oeuvre_form_equinoxe"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' class='saisie-80em' id='form_equinox' name='equinox' data-form-name='equinox' value='!!equinox!!'>
+	</div>
+</div>
+
+<div id='el0Child_21' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_form_subdivision_forme"], ENT_QUOTES, $charset)."\">
+	<!-- Subdivision de forme -->
+</div>
+		
+<!--	Autres caractéristiques distinctives de l'oeuvre	-->
+<div id='el0Child_22' class='row' movable='yes' title=\"".htmlentities($msg["aut_oeuvre_form_caracteristique"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='form_carac'>".$msg["aut_oeuvre_form_caracteristique"]."</label>
+	</div>
+	<div class='row'>
+		<textarea class='saisie-80em' id='form_carac' name='characteristic' cols='62' rows='4' wrap='virtual'>!!characteristic!!</textarea>
+	</div>
+</div>
+		
+<!-- 	Commentaire -->
+<div id='el0Child_23' class='row' movable='yes' title=\"".htmlentities($msg["aut_titre_uniforme_commentaire"], ENT_QUOTES, $charset)."\">
+	<div class='row'>
+		<label class='etiquette' for='comment'>".$msg["aut_titre_uniforme_commentaire"]."</label>
+	</div>
+	<div class='row'>
+		<textarea class='saisie-80em' id='comment' name='comment' data-form-name='comment' cols='62' rows='4' wrap='virtual'>!!comment!!</textarea>
+	</div>
+</div>
+				
+!!concept_form!!
+!!thumbnail_url_form!!				
+!!aut_pperso!!
+				
+<div id='el0Child_24' class='row' movable='yes' title=\"".htmlentities($msg["authority_import_denied"], ENT_QUOTES, $charset)."\">	
+	<div class='row'>
+		<label class='etiquette' for='tu_import_denied'>".$msg['authority_import_denied']."</label> &nbsp;
+		<input type='checkbox' id='tu_import_denied' name='tu_import_denied' value='1' data-form-name='tu_import_denied' !!tu_import_denied!!/>
+	</div>
+</div>
+
+<!-- aut_link -->
+
+<!-- tu_notices --> 		
+<div id='el0Child_26' class='row' movable='yes' title=\"".htmlentities($msg["notice_relations"], ENT_QUOTES, $charset)."\">				
+	!!tu_notices!!
+</div>
+
 ";
 
 $oeuvre_expression_tpl="
+<input type='hidden' name='tab_oeuvre_expression_order' id='tab_oeuvre_expression_order' value='!!tab_oeuvre_expression_order!!' />
+<input type='hidden' id='oeuvre_expression_new_order' name='oeuvre_expression_new_order' value=\"!!oeuvre_expression_new_order!!\" />
 <script type='text/javascript'>
 
 function fonction_selecteur_oeuvre_expression() {
@@ -389,7 +276,17 @@ function fonction_selecteur_oeuvre_expression() {
 	openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&param1='+name_id+'&param2='+name, 'selector');
 }
 function add_oeuvre_expression() {
-	templates.add_completion_qualified_field('f_oeuvre_expression', 'f_oeuvre_expression_code', 'titre_uniforme', 'f_oeuvre_expression_type');
+	templates.add_completion_qualified_field('f_oeuvre_expression', 'f_oeuvre_expression_code', 'titre_uniforme', 'f_oeuvre_expression_type', 'oeuvre_expression');
+
+   	var element_name = 'oeuvre_expression';
+    var new_order_element=document.getElementById(element_name+'_new_order');
+	var new_order=parseInt(new_order_element.value)+1;
+	new_order_element.value=new_order;
+    var tab_oeuvre_expression_order = document.getElementById('tab_oeuvre_expression_order');
+	tab_oeuvre_expression_order.value = tab_oeuvre_expression_order.value + ',' + new_order;
+	init_drag();
+	ajax_pack_element(document.getElementById('f_oeuvre_expression'+new_order));
+	return true;
 }
 
 </script>";
@@ -398,18 +295,24 @@ $oeuvre_expression_tpl_first = "
 <input type='button' class='bouton' value='$msg[parcourir]' 
 	onclick=\"openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&field_id=f_oeuvre_expression_code&field_name_id=f_oeuvre_expression&dyn=3&max_field=max_oeuvre_expression&add_field=add_oeuvre_expression&callback=formMapperCallback', 'selector')\" />
 <input type='button' class='bouton' value='+' onClick=\"add_oeuvre_expression();\"/>	
-<div class='row'>
+<div id='f_oeuvre_expression!!ioeuvre_expression!!' class='row' dragtype='oeuvre_expression' draggable='yes' recept='yes' recepttype='oeuvre_expression' handler='f_oeuvre_expression!!ioeuvre_expression!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!oeuvre_expression!!' downlight=\"oeuvre_expression_downlight\" highlight=\"oeuvre_expression_highlight\" order='!!ioeuvre_expression!!'  style='' >
+ 	<span id='f_oeuvre_expression!!ioeuvre_expression!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
 	!!expression_type!!
-	<input type='text' class='saisie-30emr' callback='formMapperCallback' id='f_oeuvre_expression!!ioeuvre_expression!!' name='f_oeuvre_expression!!ioeuvre_expression!!' data-form-name='f_oeuvre_expression' value=\"!!oeuvre_expression!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_code!!ioeuvre_expression!!\" />
+	<input type='text' class='saisie-30emr' id='f_oeuvre_expression!!ioeuvre_expression!!_display_label' name='f_oeuvre_expression!!ioeuvre_expression!!' value=\"!!oeuvre_expression!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_code!!ioeuvre_expression!!\" callback='formMapperCallback' data-form-name='f_oeuvre_expression' />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_expression!!ioeuvre_expression!!.value=''; this.form.f_oeuvre_expression_code!!ioeuvre_expression!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_expression_code!!ioeuvre_expression!!'  data-form-name='f_oeuvre_expression_code'  id='f_oeuvre_expression_code!!ioeuvre_expression!!' value='!!oeuvre_expression_code!!' />
 	!!button_add_oeuvre_expression!!
 </div>
 ";
 $oeuvre_expression_tpl_other = "
-<div class='row'>
+<div id='f_oeuvre_expression!!ioeuvre_expression!!' class='row' dragtype='oeuvre_expression' draggable='yes' recept='yes' recepttype='oeuvre_expression' handler='f_oeuvre_expression!!ioeuvre_expression!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!oeuvre_expression!!' downlight=\"oeuvre_expression_downlight\" highlight=\"oeuvre_expression_highlight\" order='!!ioeuvre_expression!!'  style='' >
+ 	<span id='f_oeuvre_expression!!ioeuvre_expression!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
 	!!expression_type!!
-	<input type='text' class='saisie-30emr' id='f_oeuvre_expression!!ioeuvre_expression!!' name='f_oeuvre_expression!!ioeuvre_expression!!' value=\"!!oeuvre_expression!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_code!!ioeuvre_expression!!\" />
+	<input type='text' class='saisie-30emr' id='f_oeuvre_expression!!ioeuvre_expression!!_display_label' name='f_oeuvre_expression!!ioeuvre_expression!!' value=\"!!oeuvre_expression!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_code!!ioeuvre_expression!!\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_expression!!ioeuvre_expression!!.value=''; this.form.f_oeuvre_expression_code!!ioeuvre_expression!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_expression_code!!ioeuvre_expression!!' id='f_oeuvre_expression_code!!ioeuvre_expression!!' value='!!oeuvre_expression_code!!' />
 	!!button_add_oeuvre_expression!!
@@ -418,6 +321,8 @@ $oeuvre_expression_tpl_other = "
 
 
 $other_link_tpl="
+<input type='hidden' name='tab_other_link_order' id='tab_other_link_order' value='!!tab_other_link_order!!' />
+<input type='hidden' id='other_link_new_order' name='other_link_new_order' value=\"!!other_link_new_order!!\" />
 <script type='text/javascript'>
 
 function fonction_selecteur_other_link() {
@@ -426,7 +331,17 @@ function fonction_selecteur_other_link() {
 	openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&param1='+name_id+'&param2='+name, 'selector');
 }
 function add_other_link() {
-	templates.add_completion_qualified_field('f_other_link', 'f_other_link_code', 'titre_uniforme', 'f_oeuvre_other_link');
+	templates.add_completion_qualified_field('f_other_link', 'f_other_link_code', 'titre_uniforme', 'f_oeuvre_other_link', 'other_link');
+
+	var element_name = 'other_link';
+    var new_order_element=document.getElementById(element_name+'_new_order');
+	var new_order=parseInt(new_order_element.value)+1;
+	new_order_element.value=new_order;
+    var tab_other_link_order = document.getElementById('tab_other_link_order');
+	tab_other_link_order.value = tab_other_link_order.value + ',' + new_order;
+	init_drag();
+	ajax_pack_element(document.getElementById('f_other_link'+new_order));
+	return true;
 }
 
 </script>";
@@ -435,18 +350,24 @@ $other_link_tpl_first = "
 <input type='button' class='bouton' value='$msg[parcourir]' 
 	onclick=\"openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&field_id=f_other_link_code&field_name_id=f_other_link&dyn=3&max_field=max_other_link&add_field=add_other_link&myid=!!myid!!', 'selector')\" />
 <input type='button' class='bouton' value='+' onClick=\"add_other_link();\"/>	
-<div class='row'>
+<div id='f_other_link!!iother_link!!' class='row' dragtype='other_link' draggable='yes' recept='yes' recepttype='other_link' handler='f_other_link!!iother_link!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!other_link!!' downlight=\"other_link_downlight\" highlight=\"other_link_highlight\" order='!!iother_link!!'  style='' >
+ 	<span id='f_other_link!!iother_link!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
 	!!link_type!!
-	<input type='text' class='saisie-30emr' id='f_other_link!!iother_link!!' data-form-name='f_other_link' name='f_other_link!!iother_link!!' value=\"!!other_link!!\" completion=\"titre_uniforme\" autfield=\"f_other_link_code!!iother_link!!\" />
+	<input type='text' class='saisie-30emr' id='f_other_link!!iother_link!!_display_label' data-form-name='f_other_link' name='f_other_link!!iother_link!!' value=\"!!other_link!!\" completion=\"titre_uniforme\" autfield=\"f_other_link_code!!iother_link!!\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_other_link!!iother_link!!.value=''; this.form.f_other_link_code!!iother_link!!.value=''; \" />
 	<input type='hidden' name='f_other_link_code!!iother_link!!' data-form-name='f_other_link_code' id='f_other_link_code!!iother_link!!' value='!!other_link_code!!' />
 	!!button_add_other_link!!
 </div>
 ";
 $other_link_tpl_other = "
-<div class='row'>
-	!!link_type!!
-	<input type='text' class='saisie-30emr' id='f_other_link!!iother_link!!' name='f_other_link!!iother_link!!' value=\"!!other_link!!\" completion=\"titre_uniforme\" autfield=\"f_other_link_code!!iother_link!!\" />
+<div id='f_other_link!!iother_link!!' class='row' dragtype='other_link' draggable='yes' recept='yes' recepttype='other_link' handler='f_other_link!!iother_link!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!other_link!!' downlight=\"other_link_downlight\" highlight=\"other_link_highlight\" order='!!iother_link!!'  style='' >
+ 	<span id='f_other_link!!iother_link!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
+    !!link_type!!
+	<input type='text' class='saisie-30emr' id='f_other_link!!iother_link!!_display_label' name='f_other_link!!iother_link!!' value=\"!!other_link!!\" completion=\"titre_uniforme\" autfield=\"f_other_link_code!!iother_link!!\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_other_link!!iother_link!!.value=''; this.form.f_other_link_code!!iother_link!!.value=''; \" />
 	<input type='hidden' name='f_other_link_code!!iother_link!!' id='f_other_link_code!!iother_link!!' value='!!other_link_code!!' />
 	!!button_add_other_link!!
@@ -517,7 +438,7 @@ $tu_authors_tpl="
 		<label for='f_aut!!n!!' class='etiquette' style='!!title_display!!'>".$msg['notice_vedette_composee_author']."</label>	
 	</div>
 	<div class='row'>
-		<img class='img_plus' hspace='3' border='0' onclick=\"expand_vedette(this,'vedette!!iaut!!_!!vedettetype!!'); return false;\" title='dÃ©tail' name='imEx' src='".get_url_icon('plus.gif')."'>
+		<img class='img_plus' hspace='3' border='0' onclick=\"expand_vedette(this,'vedette!!iaut!!_!!vedettetype!!'); return false;\" title='détail' name='imEx' src='".get_url_icon('plus.gif')."'>
 		<input type='text' class='saisie-30emr'  readonly='readonly'  name='saisie_titre_uniforme_!!vedettetype!!_composed_!!iaut!!_vedette_composee_apercu_autre' id='saisie_titre_uniforme_!!vedettetype!!_composed_!!iaut!!_vedette_composee_apercu_autre'  data-form-name='vedette_composee_!!vedettetype!!' value=\"!!vedette_apercu!!\" />		
 		<input type='button' class='bouton' value='$msg[raz]' onclick=\"del_vedette('!!vedettetype!!',!!iaut!!);\" />	
 		<input class='bouton' type='button' onclick='duplicate(!!n!!,!!iaut!!);' value='".$msg['duplicate']."'>
@@ -715,8 +636,6 @@ $tu_authors_all_tpl = "
 			img_plus.name='img_plus'+suffixe;
 			img_plus.setAttribute('id','img_plus'+suffixe+'_'+role_field);		
 			img_plus.className='img_plus';
-			img_plus.setAttribute('hspace','3');	
-			img_plus.setAttribute('border','0');	
 			img_plus.setAttribute('src','".get_url_icon('plus.gif')."');
 			img_plus.setAttribute('onclick','expand_vedette(this, \"vedette'+suffixe+'_'+role_field+'\")');			
 		
@@ -823,7 +742,7 @@ $titre_uniforme_replace = "
 		<label class='etiquette' for='titre_uniforme_libelle'>$msg[160]</label>
 	</div>
 	<div class='row'>
-		<input type='text' class='saisie-50emr' id='titre_uniforme_libelle' name='titre_uniforme_libelle' value=\"\" completion=\"titres_uniformess\" autfield=\"by\" autexclude=\"!!id!!\"
+		<input type='text' class='saisie-50emr' id='titre_uniforme_libelle' name='titre_uniforme_libelle' value=\"\" completion=\"titre_uniforme\" autfield=\"by\" autexclude=\"!!id!!\"
     	onkeypress=\"if (window.event) { e=window.event; } else e=event; if (e.keyCode==9) { openPopUp('./select.php?what=titre_uniforme&caller=titre_uniforme_replace&param1=by&param2=titre_uniforme_libelle&no_display=!!id!!', 'selector'); }\" />
 
 		<input class='bouton' type='button' onclick=\"openPopUp('./select.php?what=titre_uniforme&caller=titre_uniforme_replace&param1=by&param2=titre_uniforme_libelle&no_display=!!id!!', 'selector')\" title='$msg[157]' value='$msg[parcourir]' />
@@ -906,18 +825,34 @@ function fonction_selecteur_oeuvre_event() {
 	var name_id = name.substr(0,14)+'_code'+name.substr(14);
 	openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&param1='+name_id+'&param2='+name, 'selector');
 }
+
 function add_oeuvre_event() {
-	templates.add_completion_field('f_oeuvre_event', 'f_oeuvre_event_code', 'oeuvre_event');
+    var event_type_value_default = '!!event_type_default!!';
+    var selector_function = \"openPopUp('./select.php?what=oeuvre_event&caller=saisie_titre_uniforme&field_id=f_oeuvre_event_code&field_name_id=f_oeuvre_event&dyn=3&max_field=max_oeuvre_event&add_field=add_oeuvre_event&param1=\"+event_type_value_default+\"', 'selector')\";
+    var attribute = {'name':'onchange','value':'onchange_oeuvre_type_event'};
+	templates.add_completion_qualified_selection_fields('f_oeuvre_event', 'f_oeuvre_event_code', 'oeuvre_event', 'f_oeuvre_type_event', selector_function, attribute);
+}
+
+function onchange_oeuvre_type_event(n) {
+    var selector = document.getElementById('f_oeuvre_type_event'+n);
+    var oeuvre_event_type_value = selector.value;
+    
+    var completion_field = document.getElementById('f_oeuvre_event'+n);
+    completion_field.setAttribute('param1', oeuvre_event_type_value);
+    completion_field.value = '';
+    
+    var selection_button = document.getElementById('sel_f_oeuvre_event'+n);
+    selection_button.setAttribute('onclick', \"openPopUp('./select.php?what=oeuvre_event&caller=saisie_titre_uniforme&field_id=f_oeuvre_event_code&field_name_id=f_oeuvre_event&dyn=3&max_field=max_oeuvre_event&add_field=add_oeuvre_event&param1=\"+oeuvre_event_type_value+\"', 'selector')\");
 }
 
 </script>";
 
 $oeuvre_event_tpl_first = "	
-<input type='button' class='bouton' value='".$msg['parcourir']."' 
-	onclick=\"openPopUp('./select.php?what=oeuvre_event&caller=saisie_titre_uniforme&field_id=f_oeuvre_event_code&field_name_id=f_oeuvre_event&dyn=3&max_field=max_oeuvre_event&add_field=add_oeuvre_event&myid=!!myid!!', 'selector')\" />
 <input type='button' class='bouton' value='+' onClick=\"add_oeuvre_event();\"/>	
 <div class='row'>
-	<input type='text' class='saisie-30emr' id='f_oeuvre_event!!ioeuvre_event!!' name='f_oeuvre_event!!ioeuvre_event!!' data-form-name='f_oeuvre_event' value=\"!!oeuvre_event!!\" completion=\"oeuvre_event\" autfield=\"f_oeuvre_event_code!!ioeuvre_event!!\" />
+    !!oeuvre_event_type!!
+	<input type='text' class='saisie-30emr' id='f_oeuvre_event!!ioeuvre_event!!' name='f_oeuvre_event!!ioeuvre_event!!' data-form-name='f_oeuvre_event' value=\"!!oeuvre_event!!\" completion=\"oeuvre_event\" autfield=\"f_oeuvre_event_code!!ioeuvre_event!!\" param1=\"!!oeuvre_event_type_value!!\" />
+	<input type='button' class='bouton' id='sel_f_oeuvre_event!!ioeuvre_event!!' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=oeuvre_event&caller=saisie_titre_uniforme&field_id=f_oeuvre_event_code&field_name_id=f_oeuvre_event&dyn=3&max_field=max_oeuvre_event&add_field=add_oeuvre_event&param1=!!type!!', 'selector')\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_event!!ioeuvre_event!!.value=''; this.form.f_oeuvre_event_code!!ioeuvre_event!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_event_code!!ioeuvre_event!!' data-form-name='f_oeuvre_event_code' id='f_oeuvre_event_code!!ioeuvre_event!!' value='!!oeuvre_event_code!!' />
 	!!button_add_oeuvre_event!!
@@ -925,7 +860,9 @@ $oeuvre_event_tpl_first = "
 ";
 $oeuvre_event_tpl_other = "
 <div class='row'>
-	<input type='text' class='saisie-30emr' id='f_oeuvre_event!!ioeuvre_event!!' name='f_oeuvre_event!!ioeuvre_event!!' value=\"!!oeuvre_event!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_event_code!!ioeuvre_event!!\" />
+    !!oeuvre_event_type!!
+	<input type='text' class='saisie-30emr' id='f_oeuvre_event!!ioeuvre_event!!' name='f_oeuvre_event!!ioeuvre_event!!' value=\"!!oeuvre_event!!\" completion=\"oeuvre_event\" autfield=\"f_oeuvre_event_code!!ioeuvre_event!!\" param1=\"!!oeuvre_event_type_value!!\" />
+	<input type='button' class='bouton' id='sel_f_oeuvre_event!!ioeuvre_event!!' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=oeuvre_event&caller=saisie_titre_uniforme&field_id=f_oeuvre_event_code&field_name_id=f_oeuvre_event&dyn=3&max_field=max_oeuvre_event&add_field=add_oeuvre_event&param1=!!type!!', 'selector')\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_event!!ioeuvre_event!!.value=''; this.form.f_oeuvre_event_code!!ioeuvre_event!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_event_code!!ioeuvre_event!!' id='f_oeuvre_event_code!!ioeuvre_event!!' value='!!oeuvre_event_code!!' />
 	!!button_add_oeuvre_event!!
@@ -933,6 +870,8 @@ $oeuvre_event_tpl_other = "
 ";
 
 $oeuvre_expression_from_tpl="
+<input type='hidden' name='tab_oeuvre_expression_from_order' id='tab_oeuvre_expression_from_order' value='!!tab_oeuvre_expression_from_order!!' />
+<input type='hidden' id='oeuvre_expression_from_new_order' name='oeuvre_expression_from_new_order' value=\"!!oeuvre_expression_from_new_order!!\" />
 <script type='text/javascript'>
 
 function fonction_selecteur_oeuvre_expression_from() {
@@ -947,27 +886,43 @@ function fonction_raz_oeuvre_expression_from() {
 	document.getElementById(name).value='';
 }
 function add_oeuvre_expression_from() {
-	templates.add_completion_qualified_field('f_oeuvre_expression_from', 'f_oeuvre_expression_from_code', 'titre_uniforme', 'f_oeuvre_expression_from_type');
+	templates.add_completion_qualified_field('f_oeuvre_expression_from', 'f_oeuvre_expression_from_code', 'titre_uniforme', 'f_oeuvre_expression_from_type', 'oeuvre_expression_from');
+
+	var element_name = 'oeuvre_expression_from';
+    var new_order_element=document.getElementById(element_name+'_new_order');
+	var new_order=parseInt(new_order_element.value)+1;
+	new_order_element.value=new_order;
+    var tab_oeuvre_expression_from_order = document.getElementById('tab_oeuvre_expression_from_order');
+	tab_oeuvre_expression_from_order.value = tab_oeuvre_expression_from_order.value + ',' + new_order;
+	init_drag();
+	ajax_pack_element(document.getElementById('f_oeuvre_expression_from'+new_order));
+	return true;
 }
 
 </script>";
 
 $oeuvre_expression_from_tpl_first = "
 <input type='button' class='bouton' value='$msg[parcourir]' 
-	onclick=\"openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&field_id=f_oeuvre_expression_from_code&field_name_id=f_oeuvre_expression_from&dyn=3&max_field=max_oeuvre_expression_from&add_field=add_oeuvre_expression_from&callback=formMapperCallback', 'selector')\" />
+	onclick=\"openPopUp('./select.php?what=titre_uniforme&caller=saisie_titre_uniforme&field_id=f_oeuvre_expression_from_code&field_name_id=f_oeuvre_expression_from&dyn=3&max_field=max_oeuvre_expression_from&add_field=add_oeuvre_expression_from', 'selector')\" />
 <input type='button' class='bouton' value='+' onClick=\"add_oeuvre_expression_from();\"/>	
-<div class='row'>
+<div id='f_oeuvre_expression_from!!ioeuvre_expression_from!!' class='row' dragtype='oeuvre_expression_from' draggable='yes' recept='yes' recepttype='oeuvre_expression_from' handler='f_oeuvre_expression_from!!ioeuvre_expression_from!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!oeuvre_expression_from!!' downlight=\"oeuvre_expression_from_downlight\" highlight=\"oeuvre_expression_from_highlight\" order='!!ioeuvre_expression_from!!'  style='' >
+ 	<span id='f_oeuvre_expression_from!!ioeuvre_expression_from!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
 	!!expression_type!!
-	<input type='text' class='saisie-30emr' callback='formMapperCallback' id='f_oeuvre_expression_from!!ioeuvre_expression_from!!' name='f_oeuvre_expression_from!!ioeuvre_expression_from!!' data-form-name='f_oeuvre_expression_from' value=\"!!oeuvre_expression_from!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_from_code!!ioeuvre_expression_from!!\" />
+	<input type='text' class='saisie-30emr' id='f_oeuvre_expression_from!!ioeuvre_expression_from!!_display_label' name='f_oeuvre_expression_from!!ioeuvre_expression_from!!' data-form-name='f_oeuvre_expression_from' value=\"!!oeuvre_expression_from!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_from_code!!ioeuvre_expression_from!!\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_expression_from!!ioeuvre_expression_from!!.value=''; this.form.f_oeuvre_expression_from_code!!ioeuvre_expression_from!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_expression_from_code!!ioeuvre_expression_from!!'  data-form-name='f_oeuvre_expression_from_code'  id='f_oeuvre_expression_from_code!!ioeuvre_expression_from!!' value='!!oeuvre_expression_from_code!!' />
 	!!button_add_oeuvre_expression_from!!
 </div>
 ";
 $oeuvre_expression_from_tpl_other = "
-<div class='row'>
+<div id='f_oeuvre_expression_from!!ioeuvre_expression_from!!' class='row' dragtype='oeuvre_expression_from' draggable='yes' recept='yes' recepttype='oeuvre_expression_from' handler='f_oeuvre_expression_from!!ioeuvre_expression_from!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!oeuvre_expression_from!!' downlight=\"oeuvre_expression_from_downlight\" highlight=\"oeuvre_expression_from_highlight\" order='!!ioeuvre_expression_from!!'  style='' >
+ 	<span id='f_oeuvre_expression_from!!ioeuvre_expression_from!!_handle' style='float:left;padding-right:7px;'>
+         <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+     </span>
 	!!expression_type!!
-	<input type='text' class='saisie-30emr' id='f_oeuvre_expression_from!!ioeuvre_expression_from!!' name='f_oeuvre_expression_from!!ioeuvre_expression_from!!' value=\"!!oeuvre_expression_from!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_from_code!!ioeuvre_expression_from!!\" />
+	<input type='text' class='saisie-30emr' id='f_oeuvre_expression_from!!ioeuvre_expression_from!!_display_label' name='f_oeuvre_expression_from!!ioeuvre_expression_from!!' value=\"!!oeuvre_expression_from!!\" completion=\"titre_uniforme\" autfield=\"f_oeuvre_expression_from_code!!ioeuvre_expression_from!!\" />
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_oeuvre_expression_from!!ioeuvre_expression_from!!.value=''; this.form.f_oeuvre_expression_from_code!!ioeuvre_expression_from!!.value=''; \" />
 	<input type='hidden' name='f_oeuvre_expression_from_code!!ioeuvre_expression_from!!' id='f_oeuvre_expression_from_code!!ioeuvre_expression_from!!' value='!!oeuvre_expression_from_code!!' />
 	!!button_add_oeuvre_expression_from!!
@@ -1052,20 +1007,4 @@ $tu_notices_tpl_other = "
 	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_tu_notices!!itu_notices!!.value=''; this.form.f_tu_notices_code!!itu_notices!!.value=''; \" />
 	<input type='hidden' name='f_tu_notices_code!!itu_notices!!' id='f_tu_notices_code!!itu_notices!!' value='!!tu_notices_code!!' />
 </div>
-";
-
-$tu_warning_tu_exist = "
-<form class='form-".$current_module."' id='forcing_tu_creation' name='forcing_tu_creation' method='post' action='!!action!!' enctype='multipart/form-data'>
-    <div class='row'>
-		<img src='".get_url_icon('error.gif')."'>
-        <strong>!!error_title!!</strong>
-        <br/>
-        !!error_message!!
-    </div>
-    <div class='row'>
-        !!hidden_values!!
-        <input type='hidden' id='forcing_values' name='forcing_values' value='!!forcing_values!!'/>
-        <input type='submit' class='bouton' id='forcing_button' value='".htmlentities($msg[287], ENT_QUOTES, $charset)."'/>
-    </div>
-</form>
 ";

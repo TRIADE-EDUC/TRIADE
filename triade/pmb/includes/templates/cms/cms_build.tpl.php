@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_build.tpl.php,v 1.84 2019-05-27 12:09:24 ngantier Exp $
+// $Id: cms_build.tpl.php,v 1.92 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -59,14 +59,14 @@ $cms_edit_css="
 	    	var div_name='add_div_'+id;
 	    	var obj_div=parent.frames['opac_frame'].document.getElementById(div_name);
 			if(document.getElementById('div_class_row').checked) {
-				if(obj_div) return;// il existe dÃ©gÃ 
+				if(obj_div) return;// il existe dégà
 				var obj_div = parent.frames['opac_frame'].document.createElement('div');
 				obj_div.setAttribute('id',div_name);
 				obj_div.className='row';
 				obj.parentNode.insertBefore(obj_div,obj);
 
 			}else{
-				//on enlÃ¨ve le div
+				//on enlève le div
 				if(obj_div){
 					obj_div=obj_div.parentNode.removeChild(obj_div);
 				}
@@ -247,7 +247,7 @@ $cms_objet_type_selection="
 	</h3>
 	<div class='row'>
 
-		<table border='0'  width='100%' cellspacing='0'>
+		<table style='border:0px; width:100%; border-spacing: 0px'>
 		<tr>
 			<td>"
 				.$msg["cms_dragable_type"]."
@@ -291,8 +291,8 @@ $cms_edit_objet="
 			if(n>0)url=url.substring(0,n);
 		 
 			var n=url.lastIndexOf('/')+1;
-			var url='".$opac_url_base."'+url.substring(n);
-					
+			var url='".$build_url."'+url.substring(n);
+			
 			document.getElementById('cms_navig_information').innerHTML=url;
 			document.getElementById('navbar_opac').value=url;
 		}
@@ -361,9 +361,15 @@ $cms_build_cadres_not_in_cms_tpl="
 </table>
 ";
 
+$cms_build_frbr_cadres_in_page_tpl="
+	<table id='cms_portail_frbr_cadres_list_in_page'>
+		!!items!!
+	</table>
+";
+
 $cms_build_cadre_tpl_item="
 <tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"
- 	onclick=\"cms_show_obj('!!cadre_object!!_!!id_cadre!!');return false; \" search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!!'>
+ 	onclick=\"cms_show_obj('!!cadre_object!!_!!id_cadre!!');return false; \" search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!! !!template_inclusion!!'>
 	<td>
 		<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form',!!id_cadre!!);\" href='#' >
 			<img class='icon' width='16' height='16' title='".$msg["cms_build_edit_bt"]."' alt='".$msg["cms_build_page_add_bt"]."' src='".get_url_icon('b_edit.png')."'  >
@@ -378,9 +384,12 @@ $cms_build_cadre_tpl_item="
 				<a onclick=\"cms_unchain_cadre(!!id_cadre!!);\" href='#' >
 		    		<i class='fa fa-chain-broken' aria-hidden='true' title='".$msg["cms_build_cadre_action_unchain"]."' alt='".$msg["cms_build_cadre_action_unchain"]."'></i>	
 				</a>&nbsp;	
-				<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
-		    		<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
-				</a>	
+                ".''
+                //TODO : refaire la mécanique de dupliquation de cadre en s'inspirant de celle existante dans le cadre
+				//<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
+		    		//<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
+				//</a>
+                ."	
 				<hr />			
 		    	<label class='etiquette' for='cadre_classement_list'>".$msg['cms_build_cadre_classement_list']."</label>
 		   		<br />
@@ -396,7 +405,7 @@ $cms_build_cadre_tpl_item="
 ";
 
 $cms_build_cadre_tpl_not_in_page_item="
-<tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"  search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!!'>
+<tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"  search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!! !!template_inclusion!!'>
 	<td>
 		<a onclick=\"!!load_page_opac!!cms_build_load_module('!!cadre_object!!','get_form',!!id_cadre!!);\" href='#' >
 			<img class='icon' width='16' height='16' title='".$msg["cms_build_edit_bt"]."' alt='".$msg["cms_build_page_add_bt"]."' src='".get_url_icon('b_edit.png')."'  >
@@ -410,10 +419,14 @@ $cms_build_cadre_tpl_not_in_page_item="
 		        <br />
 				<a onclick=\"cms_unchain_cadre(!!id_cadre!!);\" href='#' >
 		    		<i class='fa fa-chain-broken' aria-hidden='true' title='".$msg["cms_build_cadre_action_unchain"]."' alt='".$msg["cms_build_cadre_action_unchain"]."'></i>	
-		    	</a>	
-				<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
-		    		<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
-				</a>&nbsp;		
+		    	</a>
+				".''
+				//TODO : refaire la mécanique de dupliquation de cadre en s'inspirant de celle existante dans le cadre
+                //<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
+		    		//<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
+				//</a>
+                ."
+                &nbsp;		
 				<hr />			
 		    	<label class='etiquette' for='cadre_classement_list'>".$msg['cms_build_cadre_classement_list']."</label>
 		   		<br />
@@ -430,7 +443,7 @@ $cms_build_cadre_tpl_not_in_page_item="
 
 
 $cms_build_cadre_tpl_not_in_cms_item="
-<tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"  search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!!'>
+<tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"  search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!! !!template_inclusion!!'>
 	<td>
 		<a onclick=\"!!load_page_opac!!cms_build_load_module('!!cadre_object!!','get_form',!!id_cadre!!);\" href='#' >
 			<img class='icon' width='16' height='16' title='".$msg["cms_build_edit_bt"]."' alt='".$msg["cms_build_page_add_bt"]."' src='".get_url_icon('b_edit.png')."'  >
@@ -439,13 +452,16 @@ $cms_build_cadre_tpl_not_in_cms_item="
 		<div data-dojo-type='dijit/form/DropDownButton' style='float:right'>
 		    <span></span>
 		    <!-- The dialog portion -->
-		    <div data-dojo-type='dijit/TooltipDialog' id='ttDialog_!!id_cadre!!'>
-		    	<label class='etiquette'>".$msg['cms_build_cadre_actions']."</label>
-		        <br />
-				<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
-		    		<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
-				</a>		
-				<hr />			
+ 		    <div data-dojo-type='dijit/TooltipDialog' id='ttDialog_!!id_cadre!!'>
+				".''
+// 		    	<label class='etiquette'>".$msg['cms_build_cadre_actions']."</label>
+// 		        <br />
+				//TODO : refaire la mécanique de dupliquation de cadre en s'inspirant de celle existante dans le cadre
+				//<a onclick=\"cms_build_load_module('!!cadre_object!!','get_form_duplicate',!!id_cadre!!);\" href='#' >
+		    		//<i class='fa fa-files-o' aria-hidden='true' title='".$msg["cms_editorial_form_duplicate"]."' alt='".$msg["cms_editorial_form_duplicate"]."'></i>	
+				//</a>
+// 				<hr />			
+				."
 		    	<label class='etiquette' for='cadre_classement_list'>".$msg['cms_build_cadre_classement_list']."</label>
 		   		<br />
 				<select data-dojo-type='dijit/form/ComboBox' id='classement_!!id_cadre!!' name='classement_!!id_cadre!!'>
@@ -459,6 +475,17 @@ $cms_build_cadre_tpl_not_in_cms_item="
 </tr>
 ";
 
+$cms_build_frbr_cadre_tpl_item="
+<tr class='!!odd_even!!' style='cursor: pointer;' onmouseout=\"this.className='!!odd_even!!'\" onmouseover=\"this.className='surbrillance'\"
+ 	onclick=\"cms_show_obj('!!cadre_object!!_!!id_cadre!!');return false; \" search='!!cadre_object!!_!!id_cadre!!_!!cadre_name!! !!template_inclusion!!'>
+	<td>
+		<a onclick=\"cms_build_load_cadre_frbr('cadre','get_form',!!id_cadre!!);\" href='#' >
+			<img class='icon' width='16' height='16' title='".$msg["cms_build_edit_bt"]."' alt='".$msg["cms_build_page_add_bt"]."' src='".get_url_icon('b_edit.png')."'  >
+		</a>
+		!!cadre_name!!
+	</td>
+</tr>
+";
 
 $cms_build_pages_tpl="
 <script type='text/javascript'>
@@ -531,7 +558,7 @@ $cms_build_modules_tpl="
 			var dialogDijit = dijit.byId('cms_build_dialog');
 			dialogDijit.set('title','".$msg["cms_build_modules"]."');
 
-			//dÃ©finition du post !
+			//définition du post !
 	        var post_datas = '&callback=window.parent.cms_build_save_module';
 	        post_datas+='&cancel_callback=window.parent.cms_build_cancel_module';
 	        post_datas+='&delete_callback=window.parent.cms_build_delete_callback';
@@ -557,6 +584,48 @@ $cms_build_modules_tpl="
 			}
 			dojo.xhrPost(xhrAgrs);
         }
+        
+        function cms_build_load_cadre_frbr(type,action,id){
+            if(!dijit.byId('cms_build_dialog')){
+                //creates a new dialog
+                var myDijit = new PMBDojoxDialogSimple({
+                    title: '".$msg["cms_build_modules"]."',
+                    executeScripts:true,
+                    id:'cms_build_dialog'
+                });
+            }
+            var dialogDijit = dijit.byId('cms_build_dialog');
+            dialogDijit.set('title','".$msg["cms_build_modules"]."');
+        
+            //définition du post !
+            var post_datas = '&no_deletion=1';
+            
+            var xhrAgrs = {
+                url : './ajax.php?module=cms&categ=frbr_entities&type='+type+'&action='+action+'&id='+id,
+                postData : post_datas,
+                handelAs : 'text/html',
+                load : function(data){
+                    dialogDijit.set('content',data);
+                    dialogDijit.startup();
+                    dialogDijit.show();
+                }
+            }
+            dojo.xhrPost(xhrAgrs);
+
+            require(['dojo/topic'], function(topic){
+                topic.subscribe('EntityForm', function(evtType,evtArgs){
+                    switch(evtType) {
+        				case 'saved':
+        					dialogDijit.hide();
+			                cms_refresh_cadres_list();
+        					break;
+        				case 'canceled':
+        					cms_build_cancel_module();
+        					break;
+        			}			
+                });
+            });
+        }
 
         function cms_build_cancel_module(data){
         	dijit.byId('cms_build_dialog').hide();
@@ -566,7 +635,7 @@ $cms_build_modules_tpl="
         	dijit.byId('cms_build_dialog').hide();
 
         	cms_refresh_cadres_list();
-			// delete du cadre dans l'opac si prÃ©sent
+			// delete du cadre dans l'opac si présent
 			var cadre=parent.frames['opac_frame'].document.getElementById(data.dom_id);
 			if(cadre){
 				cadre.parentNode.removeChild(cadre);
@@ -787,6 +856,13 @@ $cms_build_block_tpl="
 	dojo.require('dijit.form.Button');
 	dojo.require('dijit.form.ComboBox');
 	dojo.require('dojo.store.Memory');
+	dojo.require('dojo.request.xhr');
+
+    function cms_clean_cache() {
+        dojo.request.xhr(window.location.href + '&action=clean_cache').then(function(data) {
+            document.getElementById('opac_frame').contentDocument.location.reload(true);
+        });
+    }
 
 	function cms_save_cadre_classement(id_cadre){
 		var id= 'classement_'+id_cadre;
@@ -826,8 +902,13 @@ $cms_build_block_tpl="
 		dojo.forEach(dijit.findWidgets(dojo.byId('cms_cadre_list_not_in_cms')), function(w) {
 			w.destroyRecursive();
 		});
+		dojo.forEach(dijit.findWidgets(dojo.byId('cms_frbr_cadres_list_in_page')), function(w) {
+			w.destroyRecursive();
+		});
 		
 		cadre_list = get_cadres_list();
+		
+        frbr_cadres_list = get_frbr_cadres_list();
 
 		var list=cms_build_load_cadres_in_page_list();
 		dojo.html.set('cms_cadre_list_in_page', list, { parseContent:true });
@@ -838,6 +919,9 @@ $cms_build_block_tpl="
         var list=cms_build_load_cadres_not_in_cms_list();
 		dojo.html.set('cms_cadre_list_not_in_cms', list, { parseContent:true });
 		
+        var list=cms_build_load_frbr_cadres_in_page_list();
+		dojo.html.set('cms_frbr_cadres_list_in_page', list, { parseContent:true });
+
 		cms_filter_cadres();
 	}
 
@@ -907,7 +991,18 @@ $cms_build_block_tpl="
 	}
 				
 	function go_opac_url(){
-		var url=document.getElementById('navbar_opac').value;
+	     	
+        var url=document.getElementById('navbar_opac').value;
+
+        /*
+        Cas de l'url modifié (pour celui de l'opac par exemple)
+        */
+        var url_is_true_build_url = url.startsWith('". $build_url ."');
+        if (!url_is_true_build_url) {
+            var params_of_request = url.substring(url.indexOf('?'));
+            url = '".$build_url."'+'index.php'+params_of_request;
+        }
+        
 		if(!url)return;
 
 		parent.frames['opac_frame'].location=url;
@@ -946,7 +1041,7 @@ $cms_build_block_tpl="
 				        	<div class='row'>
 				        		". gen_plus_titre("cadre_of_opac",$msg["cms_edit_sel_objet_list"],"
 				        		<div class='row' id='cms_edit_sel_objet_list'>
-									<table id='cms_edit_sel_objet_list_table' border='0'  width='100%' cellspacing='0'>
+									<table id='cms_edit_sel_objet_list_table' style='border:0px; width:100%; border-spacing: 0px'>
 									</table>
 								</div>
 				        		",1)."
@@ -964,6 +1059,13 @@ $cms_build_block_tpl="
 				        			!!cadre_list_in_page!!
 								</div>
 				        		",1)."
+							</div>
+							<div class='row'>
+				        		". gen_plus_titre("frbr_cadres",$msg["cms_build_frbr_cadres_in_page"]." (<span id='cms_frbr_cadres_list_in_page_nb'>!!frbr_cadres_list_in_page_nb!!</span> ".strtolower($msg['cms_build_cadres']).")","
+								<div class='row' id='cms_frbr_cadres_list_in_page'>
+									!!frbr_cadres_list_in_page!!
+								</div>
+				        		",0)."
 							</div>
 				        	<div class='row'>
 				        		". gen_plus_titre("cadre_not_in_page",$msg["cms_build_cadre_not_in_page"]." (<span id='cms_cadre_list_not_in_page_nb'>!!cadre_list_not_in_page_nb!!</span> ".strtolower($msg['cms_build_cadres']).")","
@@ -984,7 +1086,7 @@ $cms_build_block_tpl="
 				        	<div class='row'>
 				        		". gen_plus_titre("zone_of_opac",$msg["cms_edit_sel_cadre_list"],"
 								<div class='row' id='cms_edit_sel_cadre_list'>
-									<table id='cms_edit_sel_cadre_list_table' border='0'  width='100%' cellspacing='0'>
+									<table id='cms_edit_sel_cadre_list_table' style='border:0px; width:100%; border-spacing: 0px'>
 									</table>
 								</div>
 
@@ -1003,6 +1105,9 @@ $cms_build_block_tpl="
 				        </div>
 				        <div dojoType= 'dijit.layout.AccordionPane' title='".$msg["cms_build_versions"]."'>
 				        	!!cms_objet_versions!!
+				        </div>
+				        <div dojoType= 'dijit.layout.AccordionPane' title='" . $msg["cms_migrate_portal"] . "'>
+				        	!!cms_migrate_portal!!
 				        </div>
 		      		</div>
 		        </div>
@@ -1044,7 +1149,8 @@ $cms_build_cadre_tpl_filter = "
 				cadres[0] = document.querySelectorAll('table#cms_portail_cadres_list tr');
 				cadres[1] = document.querySelectorAll('table#cms_portail_cadres_not_in_page_list tr');
 				cadres[2] = document.querySelectorAll('table#cms_portail_cadres_not_in_cms_list tr');
-				var counter = ['cms_cadre_list_in_page_nb', 'cms_cadre_list_not_in_page_nb', 'cms_cadre_list_not_in_cms_nb'];
+				cadres[3] = document.querySelectorAll('table#cms_portail_frbr_cadres_list_in_page tr');
+				var counter = ['cms_cadre_list_in_page_nb', 'cms_cadre_list_not_in_page_nb', 'cms_cadre_list_not_in_cms_nb', 'cms_frbr_cadres_list_in_page_nb'];
 		
 				for (var i=0; i<cadres.length; i++) {
 					var cadre_classement = null;

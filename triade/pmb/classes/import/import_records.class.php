@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_records.class.php,v 1.3 2019-01-24 16:51:48 dgoron Exp $
+// $Id: import_records.class.php,v 1.5.6.1.2.3 2025/05/15 13:58:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/import/import_entities.class.php");
 
 class import_records extends import_entities {
@@ -47,6 +48,7 @@ class import_records extends import_entities {
 		$hidden_form .= static::get_input_hidden_variable('import_force_notice_is_new');
 		$hidden_form .= static::get_input_hidden_variable('import_notice_existing_replace');
 		$hidden_form .= static::get_input_hidden_variable('notice_replace_links');
+		$hidden_form .= static::get_input_hidden_variable('import_without_index');
 		$hidden_form .= static::get_hidden_caddies_form();
 		$hidden_form .="</form>";
 		return $hidden_form;
@@ -77,47 +79,47 @@ class import_records extends import_entities {
 		global $info_607_a, $info_607_j, $info_607_x, $info_607_y, $info_607_z ;
 		
 		$mots_cles = "";
-		for ($a=0; $a<sizeof($info_600_a); $a++) {
+		for ($a=0; $a<count($info_600_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_600_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_600_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_600_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_600_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_600_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_z[$a][$j] ;
+			for ($j=0; $j<count($info_600_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_j[$a][$j] ;
+			for ($j=0; $j<count($info_600_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_x[$a][$j] ;
+			for ($j=0; $j<count($info_600_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_y[$a][$j] ;
+			for ($j=0; $j<count($info_600_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_z[$a][$j] ;
 		}
-		for ($a=0; $a<sizeof($info_601_a); $a++) {
+		for ($a=0; $a<count($info_601_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_601_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_601_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_601_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_601_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_601_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_z[$a][$j] ;
+			for ($j=0; $j<count($info_601_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_j[$a][$j] ;
+			for ($j=0; $j<count($info_601_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_x[$a][$j] ;
+			for ($j=0; $j<count($info_601_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_y[$a][$j] ;
+			for ($j=0; $j<count($info_601_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_z[$a][$j] ;
 		}
-		for ($a=0; $a<sizeof($info_602_a); $a++) {
+		for ($a=0; $a<count($info_602_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_602_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_602_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_602_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_602_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_602_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_z[$a][$j] ;
+			for ($j=0; $j<count($info_602_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_j[$a][$j] ;
+			for ($j=0; $j<count($info_602_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_x[$a][$j] ;
+			for ($j=0; $j<count($info_602_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_y[$a][$j] ;
+			for ($j=0; $j<count($info_602_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_z[$a][$j] ;
 		}
-		for ($a=0; $a<sizeof($info_605_a); $a++) {
+		for ($a=0; $a<count($info_605_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_605_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_605_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_605_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_605_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_605_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_z[$a][$j] ;
+			for ($j=0; $j<count($info_605_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_j[$a][$j] ;
+			for ($j=0; $j<count($info_605_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_x[$a][$j] ;
+			for ($j=0; $j<count($info_605_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_y[$a][$j] ;
+			for ($j=0; $j<count($info_605_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_z[$a][$j] ;
 		}
-		for ($a=0; $a<sizeof($info_606_a); $a++) {
+		for ($a=0; $a<count($info_606_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_606_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_606_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_606_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_606_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_606_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_z[$a][$j] ;
+			for ($j=0; $j<count($info_606_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_j[$a][$j] ;
+			for ($j=0; $j<count($info_606_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_x[$a][$j] ;
+			for ($j=0; $j<count($info_606_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_y[$a][$j] ;
+			for ($j=0; $j<count($info_606_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_z[$a][$j] ;
 		}
-		for ($a=0; $a<sizeof($info_607_a); $a++) {
+		for ($a=0; $a<count($info_607_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_607_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_607_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_607_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_607_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_607_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_z[$a][$j] ;
+			for ($j=0; $j<count($info_607_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_j[$a][$j] ;
+			for ($j=0; $j<count($info_607_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_x[$a][$j] ;
+			for ($j=0; $j<count($info_607_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_y[$a][$j] ;
+			for ($j=0; $j<count($info_607_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_z[$a][$j] ;
 		}
 		return $mots_cles;
 	}
@@ -202,5 +204,140 @@ class import_records extends import_entities {
 			$id = pmb_mysql_result($res, 0, 0);
 		}
 		return $id;
+	}
+	
+	/**
+	 * Suppression de bulletin
+	 * @param int $id_issue
+	 * @return boolean
+	 */
+	public static function delete_bulletin($id_bulletin) {
+		$id_bulletin = intval($id_bulletin);
+		if (pmb_mysql_num_rows(pmb_mysql_query("SELECT 1 FROM bulletins WHERE bulletin_id = ".$id_bulletin))) {
+			$bulletinage = new bulletinage($id_bulletin);
+			$bulletinage->delete();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Creation du lien Bulletin -> Article
+	 * @param int $id_analysis Identifiant de l'article
+	 * @param int $id_bulletin Identifiant du bulletin
+	 * @return boolean
+	 */
+	public static function insert_relation_analysis_bulletin($id_analysis, $id_bulletin) {
+		$id_analysis = intval($id_analysis);
+		$id_bulletin = intval($id_bulletin);
+		// On verifie que l'article est bien cree
+		$query = "SELECT notice_id FROM notices WHERE notice_id = ".$id_analysis;
+		$res = pmb_mysql_query($query);
+		if (pmb_mysql_num_rows($res)) {
+			// On verifie que le lien entre le bulletin et l'article n'est pas deja present
+			$query = "SELECT 1 FROM analysis WHERE analysis_notice = " . $id_analysis . " AND analysis_bulletin = " . $id_bulletin;
+			$res = pmb_mysql_query($query);
+			if (!pmb_mysql_num_rows($res)) {
+				// On créer le lien entre le bulletin et l'article
+				$query = "INSERT INTO analysis(analysis_bulletin, analysis_notice) VALUES('".$id_bulletin."', '".$id_analysis."' )";
+				pmb_mysql_query($query);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Suppression du lien Bulletin -> Article
+	 * @param int $id_analysis Identifiant de l'article
+	 * @param int $id_bulletin Identifiant du bulletin
+	 * @return boolean
+	 */
+	public static function delete_relation_analysis_bulletin($id_analysis, $id_bulletin) {
+		$id_analysis = intval($id_analysis);
+		$id_bulletin = intval($id_bulletin);
+		// On verifie que l'article est bien cree
+		$query = "SELECT notice_id FROM notices WHERE notice_id = ".$id_analysis;
+		$res = pmb_mysql_query($query);
+		if (pmb_mysql_num_rows($res)) {
+			// On verifie que le lien entre le bulletin et l'article est present
+			$query = "SELECT 1 FROM analysis WHERE analysis_notice = ".$id_analysis." AND analysis_bulletin = ".$id_bulletin;
+			$res = pmb_mysql_query($query);
+			if (pmb_mysql_num_rows($res)) {
+				$query = "DELETE FROM analysis WHERE analysis_bulletin='".$id_bulletin."' AND analysis_notice='".$id_analysis."'";
+				pmb_mysql_query($query);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static function insert_relation_bulletin_num_notice($id_bulletin, $num_notice, $data = array()) {
+		global $msg;
+		
+		$id_bulletin = intval($id_bulletin);
+		$num_notice = intval($num_notice);
+		// On contrôle que ce bulletin n'a pas déjà une notice
+		$query = "SELECT num_notice FROM bulletins WHERE bulletin_id = '$id_bulletin'";
+		if (!empty($num_notice)) {
+			$query .= " AND num_notice != '$num_notice'";
+		}
+		$result = pmb_mysql_query($query);
+		if (pmb_mysql_num_rows($result) && pmb_mysql_result($result, 0, 0)) {
+			// Si j'ai déja une notice associé à ce bulletin je la récupère
+			if (!empty($num_notice)) {
+				// Si j'ai aussi un identifiant de notice de bulletin, je supprime le plus récent
+				notice::del_notice($num_notice);
+				pmb_mysql_query("INSERT INTO error_log(error_origin, error_text) VALUES('import_" . addslashes(SESSid) . ".inc', '" . $msg[542] . (!empty($data['code']) ? " ".$data['code']." " : "") . addslashes(clean_string(implode(" ; ", $data['titles']))) . "')");
+			}
+			return pmb_mysql_result($result, 0, 0);
+		} else {
+			if (empty($num_notice) && !empty($data['tit1'])) {
+				// Si j'ai un titre je créé la notice de bulletin
+				$query = "INSERT INTO notices(tit1, niveau_biblio, niveau_hierar, statut) VALUES('" . addslashes(clean_string($data['tit1'])) . "', 'b', '2', '".$data['statut']."')";
+				pmb_mysql_query($query);
+				$num_notice = pmb_mysql_insert_id();
+				
+				audit::insert_creation(AUDIT_NOTICE, $num_notice);
+				// Calcul des droits d'accès s'ils sont activés
+				notice::calc_access_rights($num_notice);
+				
+				// Mise à jour de tous les index de la notice
+				notice::majNoticesTotal($num_notice);
+			}
+			
+			// On créer le lien entre le bulletin et la notice de bulletin
+			$query = "UPDATE bulletins SET num_notice = '".$num_notice."' WHERE bulletin_id = '".$id_bulletin."'";
+			pmb_mysql_query($query);
+			return $num_notice;
+		}
+	}
+	
+	public static function insert_caddie($id_notice,$libelle_panier,$type="NOTI"){
+	    $error = false;
+	    $error_message = '';
+	    $id_notice = intval($id_notice);
+	    $requete="select idcaddie from caddie where name='".addslashes($libelle_panier)."' AND type='".$type."' ";
+	    $res = pmb_mysql_query($requete);
+	    $id_panier = pmb_mysql_result($res,0);
+	    if(!$id_panier){
+	        $requete="insert into caddie(name,type,autorisations) values ('".addslashes($libelle_panier)."','".$type."','1')";
+	        if(!pmb_mysql_query($requete)){
+	            $error = true;
+	            $error_message = "requete echouee : ".$requete;
+	            $id_panier=1;
+	        }else{
+	            $id_panier=pmb_mysql_insert_id();
+	        }
+	    }
+	    $requete="INSERT IGNORE INTO caddie_content(caddie_id,object_id) VALUES('".$id_panier."','".$id_notice."')";
+	    if(!pmb_mysql_query($requete)){
+	        $error = true;
+	        $error_message .= "requete echouee : ".$requete;
+	    }
+	    return [
+	        'error' => $error,
+	        'error_message' => $error_message
+	    ];
 	}
 }

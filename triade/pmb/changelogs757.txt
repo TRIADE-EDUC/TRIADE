@@ -1,0 +1,152 @@
+
+# CHANGE LOG
+## [V7.5.7] - 2025-01-28
+
+## Amélioration / Évolution
+
+- #165779 Acquisitions [Décomptes] Ajout d'un filtre multiple sur les grilles associées
+- #164338 Acquisitions [Gestion des locations] Ajout fonctionnalité exports
+- #159096 Acquisitions [Gestion des locations] Ajout dates de diffusion et de fin de droits
+- #165703 Administration [Administration] Ajout d'un paramètre de favorabilité dans les quotas
+- #165649 Administration [vignettes] Affichage d'une image par défaut même en l'absence de paramétrage
+- #165447 Administration Notification des utilisateurs du site de retrait en cas de réservation
+- #164975 Administration [Traduction] Adresse et ville de la localisation
+- #164875 Administration [Mots de passe lecteurs] Ajout d’un champ de sélection des caractères spéciaux et d’un bouton de réinitialisation
+- #164495 Administration Paramétrage d'un type de mail
+- #164351 Administration [bibloto] connexion externe dans un nouvel onglet
+- #164318 Administration [Connecteurs entrants] Ajout d'un connecteur et d'un cadre de portail "Arte Campus"
+- #163756 Administration Ajout du poids du document numérique dans l'export
+- #162001 Administration [Traduction] Nom de la sur-localisation
+- #162000 Administration [Traduction] Nom de la localisation
+- #161967 Administration Changement de messages dans le formulaire d'utilisateur pour le mail destinataire.
+- #161194 Administration [Connecteurs] Ajout d'un paramètre pour activer l'authentification externe dans l'applimobile
+- #160593 Administration [Mails] Limitation au super administrateur de la surcharge des informations de connexion possibles
+- #165908 Animation [Animations] Masquage du type de tarif si égal à 0
+- #165702 Animation [Animations] Forçage de l'inscription si le quota est à 0
+- #165673 Animation [Animations] Ajout de la possibilité de modifier l'intitulé du bouton d'inscription à l'OPAC
+- #165647 Animation [Animations] Suppression de l'envoi de mail lors de la suppression d'une animation passée
+- #165644 Animation [Animations] Ajout du tri par date décroissante dans la liste des inscriptions
+- #164782 Animation [Animations] Prise en compte du paramétrage utilisateur "Campagne de mails associée par défaut ?"
+- #164760 Animation [Animations] Ajout de la possibilité d'inscription à une animation passée
+- #164757 Animation [Animations > Compte emprunteur] Ajout de la liste des participants
+- #164751 Animation [Animations] Affichage des quotas disponibles
+- #162255 Animation [Animation] Envoi d'une invitation pour l'ajouter dans le calendrier de l'usager
+- #165035 Catalogue [RMC Notices] Ajout d'un critère "Identifiant du document numérique"
+- #165032 Catalogue [RMC Exemplaires] Ajout d'opérateurs "Est vide" et " N'est pas vide" pour le critère "Date de parution du bulletin"
+- #163053 Catalogue [Editions avancées de paniers]  Ajout des avis dans les colonnes disponibles de paniers de notices
+- #162728 Catalogue Amélioration création de tables temporaires
+- #161533 Catalogue Optimisation de la suppression des notices via les paniers
+- #160653 Catalogue Indexation sphinx par tranches d'identifiants
+- #165042 Circulation [Transferts / Tableaux] Ajout de la "date de la demande"
+- #164944 Circulation [Recouvrements]  Ajout de la date dans le message de non restitution de l'exemplaire par le lecteur
+- #160795 Circulation [Demandes de numérisation] Ajout d'un filtre "Emprunteur"
+- #165882 Divers [ORM] Retour d'une erreur 404 sur sélection d'un enregistrement inexistant
+- #165010 Divers [Vendor] Mise à jour des packages
+- #164662 Divers Correction cohérence charset par défaut en OPAC et Gestion
+- #164613 Divers Modification de la synchronisation des prêts numériques pour éviter la suppression / re-création de commandes
+- #164604 Divers Mise en cache des vignettes
+- #163623 Divers Export de la date au format machine dans le champ 210$h 
+- #162461 Divers [Plugins] Modification de la gestion des plugins pour permettre la génération d'exports tableur
+- #162224 Divers [Mails] Prise en compte de la langue des lecteurs
+- #162217 Divers [Courriers] Prise en compte de la langue des lecteurs
+- #162216 Divers [Lecteurs] Ajout d'un filtre sur la langue du lecteur
+- #162037 Divers Amélioration de la classe d'autoload
+- #161682 Divers [Templates de notices] Ajout fonction #strpos
+- #161445 Divers [Tableaux]  Optimisation du filtrage des tableaux pour limiter le nombre d'appels en saisie rapide
+- #161022 Divers [Borne de prêt] Ajout d'un message d'alerte en prêt / Ajout de pièges en retour 
+- #160792 Divers Optimisation des verrous de session
+- #164363 DSI Correction de l'affichage des vignettes en base64 via les templates de notices
+- #163934 DSI Ajout d'un paramètre de limitation du nombre de notices envoyées par mail
+- #165886 OPAC Ajout d'un message d'alerte en cas de lien de changement de mot de passe expiré
+- #165422 OPAC [Univers de recherche] Refonte de la recherche multi-critères
+- #165399 OPAC [Animations] Corrections d'informations dans l'onglet "Mes animations" du compte lecteur
+- #164970 OPAC [Traduction] Envoi du mot de passe au lecteur par mail
+- #163406 OPAC [Inscription lecteur] Prise en charge de l'email comme identifiant
+- #163245 OPAC Ajout d'un template personnalisé d'affichage de la notice dans la visionneuse 
+- #162465 OPAC Ajout du tri dans l'impression des résultats de recherche
+- #162269 OPAC [Univers de recherche] Modification des templates django de contenu éditorial
+- #162202 OPAC Améliorations des segments de recherche sur le contenu éditorial
+- #161207 OPAC  [Segment de recherche] Remise en place du placeholder dans la recherche
+- #160857 OPAC [Contributions] Ajout des champs calculés dans les formulaires de modification
+- #165834 Portail Améliorations dans le paginateur des listes en OPAC
+- #165464 Portail Possibilité de forcer la suppression d'un document du portail
+- #165457 Portail Ajout d'attributs pour indiquer le nom de la page et du modèle
+- #163630 Portail Ajout de la possibilité d'avoir plusieurs cadres de listes de favoris sur une même page
+- #161264 Portail Ajout d'une alerte sur la taille des images dans le contenu éditorial
+
+## Anomalie
+
+- #165824 Acquisitions [Réceptions] Correction affichage du tableau
+- #163913 Acquisitions [Gestion des locations] Correction décomptes
+- #161330 Acquisitions [Commandes] Correction filtre exercice
+- #165903 Administration [Arte Campus] Gestion des erreurs
+- #165600 Administration [Connecteurs] Corrections connecteur isidore
+- #164435 Administration [Gestion des fichiers] Fonctions d'auteurs
+- #164062 Administration [Exemplaires > Localisations] Correction encodage dans le tableau de réservations
+- #164015 Administration [Connecteur entrant OAI] Compatibilité PHP8
+- #163079 Administration [Envoi de mails > Paramétrage] Correction changement multiple d'expéditeur
+- #160769 Administration [Paramétrage des vues OPAC] Correction erreur déclaration classe facettes 
+- #160706 Administration [Recherche prédéfinie OPAC] Redéfinition symbole flèche basse
+- #160705 Administration [Champs personnalisés] affichage des options
+- #164763 Animation [Animations] Correction inscription sur liste d'attente
+- #164339 Animation [Animation] Correction lors de l'enregistrement
+- #160497 Animation [Animations] Correction nombre de réservations incorrect lors de la recherche
+- #160861 Autorités [Autorités personnalisés] Correction création + indexation
+- #165808 Catalogue [Grilles de notices ] Protection injections SQL
+- #165396 Catalogue [Catalogue] Correction erreur duplication de lien entre notices de bulletins
+- #164941 Catalogue [Notice] Correction sélection de notice liée
+- #164480 Catalogue [Editions avancées de paniers] Optimisations de la mémoire
+- #164045 Catalogue [Catalogue] Ajout de l'autoloader dans la popup d'ajout d'un ISBN
+- #163654 Catalogue [Catalogue] Correction erreur de pondération lors de la recherche sans synonyme
+- #161053 Catalogue [Concepts] Correction autocomplétion de concepts avec apostrophe
+- #160902 Catalogue [Création étagère] Correction autorisation du créateur
+- #165800 Circulation [Grilles de lecteurs] Ajout d'une option "Sauver et appliquer à toutes les grilles"
+- #164872 Circulation Correction génération de mot de passe
+- #164497 Circulation Ajout de l'autoloader dans la popup d'ajout d'un code-barres
+- #164989 Divers [PDF / Localisation d'exemplaire] Traduction selon la langue du lecteur
+- #164591 Divers Corrections droits d'accès
+- #164465 Divers [Gestion des paniers] Correction de l'accès aux actions 
+- #163833 Divers Correction fichiers messages
+- #163674 Divers [Impression] Gestion du contenu de la balise HTML TD
+- #161468 Divers [Indexation] Correction sur la gestion de l'indexation au travers des scripts externes
+- #161025 Divers [Interface catalane] Correction mots vides
+- #160809 Divers Optimisation de l'affichage des paniers
+- #160506 Divers [Nomenclatures] Correction erreur d'affichage à l'OPAC
+- #160475 Divers Correction de l'indexation des concepts sur les notices
+- #162724 DSI [Bannettes] Suppression de l'affichage des paniers associés aux notices
+- #162576 DSI Correction dans l'export des vignettes en base64 (e-mails, doc, ...) 
+- #161969 DSI [Affichage des équations] Optimisation du calcul
+- #160816 DSI [Refonte D.S.I.] Vérification d’intégrité des données
+- #160734 DSI [Bannettes] Correction groupement avec un champ personnalisé d'autorité perso
+- #164663 Editions [Prêts en cours] Correction de la couleur d'affichage des dates de retour selon la date du jour
+- #160830 Editions Correction de l'affichage des retards en tri par groupes
+- #165876 OPAC [Affichage notice] Correction boucle infinie
+- #165843 OPAC Correction de l'affichage des facettes quand la recherche ne retourne aucun résultat
+- #165782 OPAC Correction du calcul de visibilité des exemplaires dans le résultat de recherche
+- #165472 OPAC Correction autocomplétion RMC en mode "glisser-déposer"
+- #165049 OPAC [Compte lecteur] Correction d'affichage des prêts archivés n'ayant plus de référence dans la base de données
+- #164766 OPAC Correction du calcul de visibilité des exemplaires dans le résultat de recherche
+- #164607 OPAC [Univers de recherche] Correction d'erreur d'affichage des résultats
+- #164478 OPAC [Géoréférencement] Affichage des facettes selon la sélection effectuée sur la carte
+- #164403 OPAC [Périodiques] Correction de l'affichage des champs personnalisés des états des collections
+- #164032 OPAC Correction d'affichage de l'aide en OPAC selon l'encodage
+- #163956 OPAC   Correction de l'affichage du nombre de résultats par facette avec Sphinx
+- #162380 OPAC [Recherche avancée]  Prise en compte du numéro d'ordre avant le libellé pour l'affichage des thésaurus
+- #161625 OPAC [Contributions] Tri des valeurs des champs personnalisés en fonction de l'ordre défini
+- #161599 OPAC Correction de l'impression de tous les résultats sur une recherche segment
+- #161442 OPAC [Visionneuse] Correction affichage page d'une autorité
+- #161422 OPAC Correction de l'affichage des articles dépouillés issus d'un bulletin sans notice
+- #161083 OPAC [Univers & Segment] Optimisation
+- #160997 OPAC Correction appel notices_relations::get_rank
+- #164984 Portail Correction de la source de données de liste d'animations par champ personnalisé
+- #163249 Portail [Refonte Portail] Génération d'une page par défaut
+- #163076 Portail [Contributions] Correction de liens erronés en modification
+- #162809 Portail Amélioration de la gestion des erreurs lors de la recherche d'article et de rubrique
+- #161612 Portail Correction bug d'affichage avec TinyMCE
+
+## Nouvelle fonctionnalité
+
+- #165676 Administration [imports] Ajout d'un paramètre pour définir un propriétaire par défaut en import d'exemplaires
+- #159093 Bibloto [bibloto] Ajout d'une authentification en mode trombinosocope
+- #164517 Divers Ajout d'une méthode d'authentification par token chiffré dans les Web Services 
+

@@ -6,6 +6,14 @@
 	!!checkStartScenario!!
 	<label for="startScenario">!!msg_start_scenario!!</label>
 	<br/>
+	<label for="response">!!msg_form_response!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="response" name="response">!!formResponse!!</textarea>
+	<br/>
+	<label for="orderResponse">!!msg_order_response!!</label>
+	<br/>
+	<input data-dojo-type="dijit/form/NumberTextBox" id="orderResponse" name="orderResponse" value="!!formOrderResponse!!"/>
+	<br/>
 	<label for="question">!!msg_scenario_question!!</label>
 	<br/>
 	<textarea data-dojo-type="dijit/form/Textarea" id="question" name="question">!!scenarioQuestion!!</textarea>
@@ -13,6 +21,8 @@
 	<label for="comment">!!msg_scenario_comment!!</label>
 	<br/>
 	<textarea data-dojo-type="dijit/form/Textarea" id="comment" name="comment">!!scenarioComment!!</textarea>
+	<br/>
+	!!formEquation!!
 	<br/>
 	<label for="scenarioStatus">!!msg_scenario_status!!</label>
 	!!scenarioStatus!!<br/>
@@ -33,6 +43,7 @@
 					} else {
 						topic.publish("Dialog", "addScenario", form.getValues());
 					}
+					popup.hide();
 					popup.destroyRecursive();
 					popup.destroy();
 				}

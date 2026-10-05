@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_carousel_view_carousel.class.php,v 1.29 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_carousel_view_carousel.class.php,v 1.30.8.2 2025/01/21 15:29:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($include_path."/h2o/h2o.php");
@@ -166,17 +166,17 @@ class cms_module_carousel_view_carousel extends cms_module_common_view_django{
 	public function get_headers($datas=array()){
 		global $base_path;
 		$headers = parent::get_headers($datas);
-		$headers[]= "<script type='text/javascript' src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxSlider.min.js'></script>";
+		$headers[]= "<script src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxSlider.min.js'></script>";
 		$args = array(
 			'do' => "generate_css"
 		);
-		$headers[]= "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link($args)."'/>";
+		$headers[]= "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link($args, 'css')."'/>";
 		return $headers;
 	}
 	
 	public function render($datas){
 		$html2return = "";
-		if(count($datas['records'])){
+		if(is_countable($datas['records']) && count($datas['records'])){
 			$id = "carousel_".$this->get_module_dom_id();
 			$datas['id']=$this->get_module_dom_id();
 			$html2return.= H2o::parseString($this->parameters['active_template'])->render($datas);

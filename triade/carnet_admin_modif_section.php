@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -68,7 +68,7 @@ if (isset($_POST["modif"])) {
 	$idsection=$_POST["saisie_section"];
 	$cr=modif_section($listeIdClasse,$idsection);
 	if ($cr) {
-		alertJs("Section modifiée \\n\\n L'Equipe TRIADE");
+		alertJs("Cycle modifié \\n\\n L'Equipe TRIADE");
 	}
 }
 
@@ -76,7 +76,7 @@ if (isset($_POST["modif"])) {
 <br />
 <form method=post name="formulaire" >
 <table border=0 align="center">
-<tr><td align="center" colspan=3><font class="T2">Nom de la section : </font>
+<tr><td align="center" colspan=3><font class="T2">Nom du cycle/niveau : </font>
 
 <select name="saisie_section" onchange="this.form.submit()" /> 
 <?php select_section($_POST['saisie_section']);  ?>
@@ -98,7 +98,7 @@ if (isset($_POST["modif"])) {
 <input type="button" value="&lt;&lt;&lt; <?php print LANGCHER6 ?>" onClick="calcul('-1');Deplacer(this.form.saisie_recherche,this.form.saisie_depart,'Choisissez un élément')" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" >
 	  </td>
 	  <td width=33% align=center>
-		Classes liées à la section
+		Classes liées au cycle
      		<select size=18 name="saisie_recherche" style="width:130px" multiple="multiple">
 			<?php select_classeSection($_POST['saisie_section']);  ?>
 		</select>

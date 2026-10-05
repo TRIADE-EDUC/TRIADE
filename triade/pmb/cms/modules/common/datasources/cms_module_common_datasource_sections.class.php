@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_sections.class.php,v 1.7 2016-09-21 13:09:44 vtouchard Exp $
+// $Id: cms_module_common_datasource_sections.class.php,v 1.8.6.1 2025/01/17 10:40:41 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class cms_module_common_datasource_sections extends cms_module_common_datasource
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = false;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -24,7 +25,7 @@ class cms_module_common_datasource_sections extends cms_module_common_datasource
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -36,14 +37,15 @@ class cms_module_common_datasource_sections extends cms_module_common_datasource
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$selector = $this->get_selected_selector();
 		if ($selector) {
 			$return = array();
-			if (count($selector->get_value()) > 0) {
-				foreach ($selector->get_value() as $value) {
+			$values = $selector->get_value();
+			if (is_countable($values) && count($values) > 0) {
+			    foreach ($values as $value) {
 					$return[] = $value;
 				}
 			}
@@ -58,9 +60,15 @@ class cms_module_common_datasource_sections extends cms_module_common_datasource
 				if(pmb_mysql_num_rows($result)){
 					$return = array();
 					while($row=pmb_mysql_fetch_object($result)){
-						$return[] = $row->id_section;
+					    $return["sections"][] = $row->id_section;
 					}
 				}
+			}
+			
+			// Pagination
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($return["sections"]);
+			    $return["sections"] = $this->cut_paging_list($return["sections"], $return["paging"]);
 			}
 			return $return;
 		}

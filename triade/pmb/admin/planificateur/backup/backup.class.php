@@ -1,33 +1,33 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: backup.class.php,v 1.7 2018-01-05 08:29:26 jpermanne Exp $
+// $Id: backup.class.php,v 1.8.4.1 2025/03/13 16:40:34 qvarin Exp $
 
 global $class_path, $include_path;
 require_once($include_path."/parser.inc.php");
 require_once($class_path."/scheduler/scheduler_task.class.php");
 
 class backup extends scheduler_task {
-	public $liste_sauvegarde=array();		//liste des jeux de sauvegarde sÃ©lectionnÃ©es
+	public $liste_sauvegarde=array();		//liste des jeux de sauvegarde sélectionnées
 	public $indice_tableau;				//indice tableau jeu de sauvegarde avant traitement
-	public $log_ids=array();				//les jeux de sauvegarde rÃ©alisÃ©s en cas d'annulation.. 
-	
+	public $log_ids=array();				//les jeux de sauvegarde réalisés en cas d'annulation..
+
 	public function execution() {
 		global $msg;
-		
+
 		if (SESSrights & SAUV_AUTH) {
 			$parameters = $this->unserialize_task_params();
 
-			// rÃ©cupÃ©rer les jeux de sauvegarde
+			// récupérer les jeux de sauvegarde
 			$this->add_section_report($this->msg["sauv_sets"]);
 			if (method_exists($this->proxy, 'pmbesBackup_listSetBackup')) {
 				$result = $this->proxy->pmbesBackup_listSetBackup();
-				//lister les sauvegardes sÃ©lectionnÃ©es en vÃ©rifiant qu'elles soient toujours prÃ©sentes dans PMB
+				//lister les sauvegardes sélectionnées en vérifiant qu'elles soient toujours présentes dans PMB
 				if ($result) {
 					foreach ($result as $aresult) {
 						foreach ($parameters["form_jeu_sauv"] as $id_lst) {
-							//rÃ©cupÃ©ration des sauvegardes sÃ©lectionnÃ©es
+							//récupération des sauvegardes sélectionnées
 							if ($aresult["sauv_sauvegarde_id"] == $id_lst) {
 								$t=array();
 								$t["id_sauv"] = $id_lst;
@@ -43,18 +43,18 @@ class backup extends scheduler_task {
 					$this->indice_tableau = 0;
 					foreach($this->liste_sauvegarde as $sauvegarde) {
 						$this->listen_commande(array(&$this, 'traite_commande')); //fonction a rappeller (traite commande)
-						
-						if($this->statut == WAITING) {
-							$this->send_command(RUNNING);
+
+						if($this->statut == scheduler_task::WAITING) {
+						    $this->send_command(scheduler_task::RUNNING);
 						}
-						if($this->statut == RUNNING) {
+						if($this->statut == scheduler_task::RUNNING) {
 							//lancement de la sauvegarde
 							$this->add_content_report($this->msg["sauv_launch"]." : ".$sauvegarde["nom_sauv"]);
 							if (method_exists($this->proxy, 'pmbesBackup_launchBackup')) {
 								$result_save = $this->proxy->pmbesBackup_launchBackup($sauvegarde["id_sauv"]);
 								$this->report[] = $result_save["report"];
 								$this->log_ids[] = $result_save["logid"];
-								//mise Ã  jour de la progression
+								//mise à jour de la progression
 								$percent += $p_value;
 								$this->update_progression($percent);
 								$this->indice_tableau++;
@@ -73,7 +73,7 @@ class backup extends scheduler_task {
 			$this->add_rights_bad_user_report();
 		}
 	}
-	
+
 	public function traite_commande($cmd,$message = '') {
 		switch ($cmd) {
 			case STOP :
@@ -88,8 +88,8 @@ class backup extends scheduler_task {
 		}
 		parent::traite_commande($cmd, $message);
 	}
-    
-	/*RÃ©cupÃ¨re les jeux de sauvegarde non traitÃ©es*/
+
+	/*Récupère les jeux de sauvegarde non traitées*/
 	public function stop_backup() {
 		$this->add_section_report($this->msg["backup_stopped"]);
 		$chaine = "<tr><td>".$this->msg["backup_no_proceed"]." : <br />";
@@ -99,14 +99,12 @@ class backup extends scheduler_task {
 		$chaine .= "</td></tr>";
 		$this->report[] = $chaine;
 	}
-	
-	/*RÃ©cupÃ¨re les jeux de sauvegarde traitÃ©es*/
-	public function abort_backup() {
-		global $msg;
 
+	/*Récupère les jeux de sauvegarde traitées*/
+	public function abort_backup() {
 		$this->add_section_report($this->msg["backup_abort"]);
 		if(method_exists($this->proxy, "pmbesBackup_deleteSauvPerformed")) {
-			$chaine .= "";
+			$chaine = "";
 			for($i=0; $i < $this->indice_tableau; $i++) {
 				if ($this->log_ids[$i] != "") {
 					$succeed = $this->proxy->pmbesBackup_deleteSauvPerformed($this->log_ids[$i]);

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_list.inc.php,v 1.12 2018-01-15 14:58:29 ngantier Exp $
+// $Id: expl_list.inc.php,v 1.14 2024/01/12 16:00:45 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -15,8 +15,8 @@ function expl_list($type,$id) {
 	$requete = "SELECT exemplaires.*, pret.*, docs_location.*, docs_section.*, docs_statut.*";
 	$requete .= " FROM exemplaires, docs_location, docs_section, docs_statut";
 	$requete .= " LEFT JOIN pret ON exemplaires.expl_id=pret.pret_idexpl";
-	// selon le type de donnÃ©es d'origine : ouvrage ou bulletin d'un pÃ©riodique
-	// on adapte la requÃªte
+	// selon le type de données d'origine : ouvrage ou bulletin d'un périodique
+	// on adapte la requête
 	switch ($type){
 		case 'b' :
 			$requete .= " WHERE expl_bulletin='$id'";
@@ -32,7 +32,7 @@ function expl_list($type,$id) {
 	$requete .= " AND section_visible_opac = 1 ";
 	$requete .= " AND statut_visible_opac = 1 ";
 	
-	// rÃ©cupÃ©ration du nombre d'exemplaires
+	// récupération du nombre d'exemplaires
 	$res = pmb_mysql_query($requete, $dbh);
 	$compteur=0;
 	while($expl = pmb_mysql_fetch_object($res)) {
@@ -42,9 +42,13 @@ function expl_list($type,$id) {
 		$expl_liste .= "</td><td><strong>";
 		$expl_liste .= $expl->expl_cote."&nbsp;";
 		$expl_liste .= "</strong></td><td>";
-		$expl_liste .= $expl->location_libelle."&nbsp;";
+		$expl_liste .= translation::get_translated_text($expl->idlocation, "docs_location", "location_libelle", $expl->location_libelle)."&nbsp;";
 		$expl_liste .= "</td><td>";
-		$expl_liste .= $expl->section_libelle."&nbsp;";
+		if($expl->section_libelle_opac) {
+			$expl_liste .= $expl->section_libelle_opac."&nbsp;";
+		} else {
+			$expl_liste .= $expl->section_libelle."&nbsp;";
+		}
 		$situation = "";
 		if ($expl->statut_libelle_opac !="") $situation .= $expl->statut_libelle_opac."<br />";
 		if ($expl->pret_flag) {
@@ -61,7 +65,7 @@ function expl_list($type,$id) {
 		$expl_liste .="</tr>";
 	}
 	
-	// affichage de la liste d'exemplaires calculÃ©es ci-dessus
+	// affichage de la liste d'exemplaires calculées ci-dessus
 	if ($compteur==0){
 		$expl_liste="<tr class='even'><td colspan=5>".$msg["no_expl"]."</td></tr>";
 	}

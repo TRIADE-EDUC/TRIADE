@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_status.tpl.php,v 1.2 2019-05-27 10:32:59 ngantier Exp $
+// $Id: contribution_area_status.tpl.php,v 1.3 2020/04/08 14:50:44 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -33,6 +33,10 @@ $admin_contribution_area_status_form = "
 	<div class='row'>
 		<div class='colonne5'>
 			<label class='etiquette' for='form_used_for'>".$msg["authorities_used_for"]."</label>
+        	<div class='row'>
+            	<input class='bouton' type='!!coche_button_type!!' value='". $msg["tout_cocher_checkbox"] ."' onclick='selection_all();'>&nbsp;
+            	<input class='bouton' type='!!coche_button_type!!' value='". $msg["tout_decocher_checkbox"] ."' onclick='unselection_all();'>
+        	</div>
 		</div>
 		<div class='colonne_suite'>
 			!!list_entities!!
@@ -51,5 +55,17 @@ $admin_contribution_area_status_form = "
 		</div>
 	</div>
 	<div class='row'></div>
+	<script type='text/javascript'>
+		function selection_all() {
+			dojo.query('.entitie_item_checkbox').forEach(function(node) {
+				node.setAttribute('checked', 'checked');
+			});
+		}
+		function unselection_all() {
+			dojo.query('.entitie_item_checkbox').forEach(function(node) {
+				node.removeAttribute('checked');
+			});
+		}
+	</script>
 </form>
 <script type='text/javascript'>document.forms['statusform'].elements['form_gestion_libelle'].focus();</script>";

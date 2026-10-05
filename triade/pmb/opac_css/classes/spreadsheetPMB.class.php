@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: spreadsheetPMB.class.php,v 1.1 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: spreadsheetPMB.class.php,v 1.3 2023/08/30 14:56:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,11 +22,12 @@ class spreadsheetPMB {
 		$cache_dir = $base_path."/temp/";
 		$this->clear_cache($cache_dir);
 		$this->objPHPSpreadsheet = new Spreadsheet();
+		$this->objPHPSpreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(18);
 		$this->active_sheet = 0;
 	}
 	
 	public function clear_cache($cache_dir) {
-		//Existence du rÃ©pertoire
+		//Existence du répertoire
 		if(file_exists($cache_dir)){
 			$array_files = scandir($cache_dir);
 			if ((is_array($array_files)) && (count($array_files))) {
@@ -60,6 +61,9 @@ class spreadsheetPMB {
 	}
 	
 	public function merge_cells($row1, $col1, $row2, $col2) {
+	    if ($col1 == 0) $col1 = 1;
+	    if ($col2 == 0) $col2 = 1;
+	    
 	    $this->objPHPSpreadsheet->setActiveSheetIndex($this->active_sheet)->mergeCellsByColumnAndRow($col1, $row1+1, $col2, $row2+1);
 	}
 	
@@ -70,6 +74,7 @@ class spreadsheetPMB {
 			$value = iconv("CP1252", "UTF-8//TRANSLIT", $value);
 		}
 		if (trim($value)) {
+		    $value = html_entity_decode($value, ENT_COMPAT | ENT_HTML401 | ENT_QUOTES, 'utf-8');
 		    $this->objPHPSpreadsheet->setActiveSheetIndex($this->active_sheet)->setCellValueExplicitByColumnAndRow($col+1, $row+1, $value, DataType::TYPE_STRING);
 		}
 		if (count($styleArray)) {
@@ -92,9 +97,9 @@ class spreadsheetPMB {
 	}
 	
 	public function download($filename){
-		//On force en xlsx pour compatibilitÃ© avec les tableurs
+		//On force en xlsx pour compatibilité avec les tableurs
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
-		if ($extension = "xls") {
+		if ($extension == "xls") {
 			$filename = substr($filename,0,strlen($filename)-4).'.xlsx';
 		}
 		

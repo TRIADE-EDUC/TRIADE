@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+$Id: manifest.xml,v 1.6 2020/10/01 08:48:40 dgoron Exp $ -->
 <manifest>
 	<name>pmbesMailing</name>
 	<description>msg:Mailing_functions_description</description>
@@ -24,7 +24,9 @@ $Id: manifest.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
 				<description>msg:sendMailingCaddie_input_description</description>
 				<param name="id_caddie_empr" type="scalar" dataType="integer" description="msg:sendMailingCaddie_id_caddie_empr"/>
 				<param name="id_tpl" type="scalar" dataType="integer" description="msg:sendMailingCaddie_id_tpl"/>
-				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingCaddie_email_cc"/>
+				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingCaddie_email_cc" optional="yes"/>
+				<param name="attachments" type="scalar" dataType="array" description="msg:sendMailingCaddie_attachments" optional="yes"/>
+				<param name="associated_campaign" type="scalar" dataType="integer" description="msg:sendMailingCaddie_associated_campaign" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:sendMailingCaddie_output_description</description>
@@ -40,7 +42,9 @@ $Id: manifest.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
 				<description>msg:sendMailingSearchPerso_input_description</description>
 				<param name="id_search_perso" type="scalar" dataType="integer" description="msg:sendMailingSearchPerso_id_empr_search_perso"/>
 				<param name="id_tpl" type="scalar" dataType="integer" description="msg:sendMailingSearchPerso_id_tpl"/>
-				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingSearchPerso_email_cc"/>
+				<param name="email_cc" type="scalar" dataType="string" description="msg:sendMailingSearchPerso_email_cc" optional="yes"/>
+				<param name="attachments" type="scalar" dataType="array" description="msg:sendMailingSearchPerso_attachments" optional="yes"/>
+				<param name="associated_campaign" type="scalar" dataType="integer" description="msg:sendMailingSearchPerso_associated_campaign" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:sendMailingSearchPerso_output_description</description>

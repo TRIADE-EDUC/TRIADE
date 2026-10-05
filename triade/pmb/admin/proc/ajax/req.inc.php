@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: req.inc.php,v 1.2 2009-06-25 16:33:22 dbellamy Exp $
+// $Id: req.inc.php,v 1.2 2009/06/25 16:33:22 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -11,7 +11,7 @@ require_once ($class_path.'/requester.class.php');
 require_once ($include_path.'/templates/requests.tpl.php');
 
 
-//Traitement des donnÃ©es
+//Traitement des données
 //TODO traitement pour conversion en UTF8 
 $req_datas=$_POST;
 

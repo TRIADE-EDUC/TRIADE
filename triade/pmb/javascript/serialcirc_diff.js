@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_diff.js,v 1.10 2017-11-30 12:50:42 dgoron Exp $
+// $Id: serialcirc_diff.js,v 1.10 2017/11/30 12:50:42 dgoron Exp $
 var diff_list_checked=0;
 function serialcirc_diff_get_group_form(){
 	

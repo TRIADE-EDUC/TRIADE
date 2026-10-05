@@ -1,28 +1,28 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_notice.class.php,v 1.3 2018-11-27 15:41:30 ngantier Exp $
-  
+// $Id: selector_notice.class.php,v 1.8.2.2 2025/01/16 11:24:28 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 require($base_path."/selectors/templates/sel_notice.tpl.php");
 require_once($class_path."/mono_display.class.php");
 
 class selector_notice extends selector {
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 		$this->objects_type = 'records';
 	}
-	
+
 	public function proceed() {
-		global $msg;
 		global $action;
 		global $pmb_allow_authorities_first_page;
 		global $page;
-		
+
 		$entity_form = '';
 		switch($action){
 			case 'simple_search':
@@ -54,22 +54,17 @@ class selector_notice extends selector {
 		    print encoding_normalize::utf8_normalize($entity_form);
 		}
 	}
-	
+
 	protected function get_display_list() {
-		global $nb_per_page;
-		global $page;
 		global $no_display;
-	
+
+		$no_display = intval($no_display);
+
 		$display_list = '';
-		if(!$page) {
-			$debut = 0;
-		} else {
-			$debut = ($page-1)*$nb_per_page;
-		}
 		$searcher_instance = $this->get_searcher_instance();
 		$this->nbr_lignes = $searcher_instance->get_nb_results();
 		if($this->nbr_lignes) {
-			$sorted_objects = $searcher_instance->get_sorted_result('default', $debut, $nb_per_page);
+			$sorted_objects = $searcher_instance->get_sorted_result('default', $this->get_start_list(), $this->get_nb_per_page_list());
 			foreach ($sorted_objects as $object_id) {
 				$display_list .= $this->get_display_object(0, $object_id);
 			}
@@ -79,13 +74,13 @@ class selector_notice extends selector {
 		}
 		return $display_list;
 	}
-	
+
 	protected function get_display_object($id=0, $object_id=0) {
-		global $msg, $charset;
+		global $charset;
 		global $caller;
 		global $callback;
 		global $niveau_biblio, $modele_id, $serial_id;
-		
+
 		$display = '';
 		if($niveau_biblio){
 			$location="./catalog.php?categ=serials&sub=modele&act=copy&modele_id=$modele_id&serial_id=$serial_id&new_serial_id=".$object_id;
@@ -100,13 +95,13 @@ class selector_notice extends selector {
 					</div>
 				</div>";
 		}
-			
+
 		else{
 			$mono_display = new mono_display($object_id, 0, '', 0, '', '', '',0, 0, 0, 0,"", 0, false, true);
 			$display .= "
 				<div class='row'>
 					<div class='left'>
-						<a href='#' onclick=\"set_parent('$caller', '".$object_id."', '".trim(htmlentities(addslashes(strip_tags($mono_display->header_texte)),ENT_QUOTES,$charset)." ".($mono_display->notice->code ? "($mono_display->notice->code)" : ""))."','$callback')\">".$mono_display->result."</a>
+						<a href='#' onclick=\"set_parent('$caller', '".$object_id."', '".trim(htmlentities(addslashes(str_replace("\r"," ",str_replace("\n"," ",strip_tags($mono_display->header_texte)))),ENT_QUOTES,$charset)." ".($mono_display->notice->code ? "(".$mono_display->notice->code.")" : ""))."','$callback')\">".$mono_display->result."</a>
 					</div>
 					<div class='right'>
 						".htmlentities($mono_display->notice->code,ENT_QUOTES,$charset)."
@@ -115,20 +110,20 @@ class selector_notice extends selector {
 		}
 		return $display;
 	}
-		
+
 	protected function get_searcher_instance() {
 		return searcher_factory::get_searcher('records', '', $this->user_input);
 	}
-	
+
 	protected function get_entities_controller_instance($id=0) {
 		return new entities_records_controller($id);
 	}
-		
+
 	protected function get_typdocfield() {
 		global $msg, $charset;
 		global $typdoc_query;
-		
-		// rÃ©cupÃ©ration des types de documents utilisÃ©s.
+
+		// récupération des types de documents utilisés.
 		$query = "SELECT count(typdoc), typdoc ";
 		$query .= "FROM notices where typdoc!='' GROUP BY typdoc";
 		$result = pmb_mysql_query($query);
@@ -150,11 +145,11 @@ class selector_notice extends selector {
 		}
 		return $toprint_typdocfield;
 	}
-	
+
 	public function get_sel_search_form_template() {
 		global $msg, $charset;
 		global $pmb_show_notice_id, $id_restrict;
-		
+
 		$sel_search_form ="
 			<form name='".$this->get_sel_search_form_name()."' method='post' action='".static::get_base_url()."'>
 				<input type='text' name='f_user_input' value=\"".htmlentities($this->user_input,ENT_QUOTES,$charset)."\">
@@ -169,7 +164,7 @@ class selector_notice extends selector {
 		$sel_search_form .="&nbsp;
 				<input type='submit' class='bouton_small' value='".$msg[142]."' />
 			</form>
-			<script type='text/javascript'>
+			<script>
 				<!--
 				document.forms['".$this->get_sel_search_form_name()."'].elements['f_user_input'].focus();
 				-->
@@ -178,14 +173,14 @@ class selector_notice extends selector {
 		";
 		return $sel_search_form;
 	}
-	
+
 	public static function get_params_url() {
 		global $typdoc_query;
 		global $id_restrict;
 		global $niveau_biblio;
 		global $modele_id;
 		global $serial_id;
-		
+
 		$params_url = parent::get_params_url();
 		$params_url .= ($typdoc_query ? "&typdoc_query=".$typdoc_query : "");
 		$params_url .= ($id_restrict ? "&id_restrict=".$id_restrict : "");
@@ -194,20 +189,22 @@ class selector_notice extends selector {
 		$params_url .= ($serial_id ? "&serial_id=".$serial_id : "");
 		return $params_url;
 	}
-	
+
 	protected function get_searcher_tabs_instance() {
 		if(!isset($this->searcher_tabs_instance)) {
 			$this->searcher_tabs_instance = new searcher_selectors_tabs('records');
 		}
 		return $this->searcher_tabs_instance;
 	}
-	
+
 	protected function get_search_perso_instance($id=0) {
 		return new search_perso($id);
 	}
-	
+
 	protected function get_search_instance() {
-		return new search();
+		$search = new search();
+		$search->add_context_parameter('in_selector', true);
+		return $search;
 	}
 }
 ?>

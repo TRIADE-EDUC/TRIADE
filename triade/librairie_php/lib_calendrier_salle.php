@@ -52,12 +52,12 @@ $LDIMANCHE=LANGLETTREDIMANCHE;
 $FerieSamedi="";
 $FerieMercredi="";
 if ((CALMERCREDIAP == "oui") && (CALMERCREDIMATIN == "oui"))  { $FerieMercredi=" || (j==2)"; }
-if ((CALMERCREDIAP == "oui") && (CALMERCREDIMATIN == "non"))  { $Ferieap="background='image/commun/ma.jpg'"; $FerieMatin=""; }
-if ((CALMERCREDIAP == "non") && (CALMERCREDIMATIN == "oui"))  { $FerieMatin="background='image/commun/ap.jpg'"; $Ferieap=""; }
+if ((CALMERCREDIAP == "oui") && (CALMERCREDIMATIN == "non"))  { $Ferieap=""; $FerieMatin=""; }
+if ((CALMERCREDIAP == "non") && (CALMERCREDIMATIN == "oui"))  { $FerieMatin=""; $Ferieap=""; }
 
 if ((CALSAMEDIAP == "oui") && (CALSAMEDIMATIN == "oui"))  { $FerieSamedi=" || (j==5)"; }
-if ((CALSAMEDIAP == "oui") && (CALSAMEDIMATIN == "non"))  { $FerieSaap="background='image/commun/ma.jpg'"; $FerieSaMatin=""; }
-if ((CALSAMEDIAP == "non") && (CALSAMEDIMATIN == "oui"))  { $FerieSaMatin="background='image/commun/ap.jpg'"; $FerieSaap=""; }
+if ((CALSAMEDIAP == "oui") && (CALSAMEDIMATIN == "non"))  { $FerieSaap=""; $FerieSaMatin=""; }
+if ((CALSAMEDIAP == "non") && (CALSAMEDIMATIN == "oui"))  { $FerieSaMatin=""; $FerieSaap=""; }
 
 
 print "<script language=JavaScript>";
@@ -90,6 +90,17 @@ function estConseil(j,m) {
         return false;
 }
 
+function showCalInfo(txt) {
+    var el = document.getElementById('cal-info');
+    if (!el) return;
+    el.innerHTML = txt;
+    el.style.display = 'block';
+}
+function hideCalInfo() {
+    var el = document.getElementById('cal-info');
+    if (el) el.style.display = 'none';
+}
+
 var ii=1;
 
 
@@ -98,69 +109,57 @@ EOF;
 	$newDATE=datecalendrier();
 	print "var d_jour=$newDATE";
 print <<<EOF
-	  var d_jour=new Date();
-        var d=new Date(a,m-1,1);
-        var dfin=new Date(a,m-1,1);
-        var nb_jour=31;
-        var aff_j="";
-        for(var k=32;k>27;k--) {
-                dfin.setMonth(m-1);
-                dfin.setDate(k);
-                if (dfin.getMonth()!=m-1) {nb_jour=k-1;}
-        }
+	var d_jour=new Date();
+	var d=new Date(a,m-1,1);
+	var dfin=new Date(a,m-1,1);
+	var nb_jour=31;
+	var aff_j="";
+	for(var k=32;k>27;k--) {
+		dfin.setMonth(m-1);
+		dfin.setDate(k);
+		if (dfin.getMonth()!=m-1) {nb_jour=k-1;}
+	}
 
-        var j1=d.getDay(); if (j1==0) j1=7;
-        var jour=0;
-        disp("<FONT   color='#000000' size=1><CENTER><B>"+mois[d.getMonth()]+" "+a+"</B></CENTER></FONT>");
-        disp("<TABLE border=0 bgcolor='#000099' cellspacing=0 cellpadding='2'>");
-        disp("<TR align='center' bgcolor='#CCCCCC'><TD width='10'>$LLUNDI</TD><TD width='10'>$LMARDI</TD><TD width='10'>$LMERCREDI</TD><TD width='10'>$LJEUDI</TD><TD width='10'>$LVENDREDI</TD><TD width='10'>$LSAMEDI</TD><TD width='10'>$LDIMANCHE</TD></TR>");
-        for(var i=0;i<6;i++) {
-                disp("<TR>");
-                for (j=0;j<7;j++) {
-                        jour=7*i+j-j1+2;
+	var j1=d.getDay(); if (j1==0) j1=7;
+	var jour=0;
+	disp("<div class='cal-wrap'><div class='cal-title'>"+mois[d.getMonth()]+" "+a+"<\/div>");
+	disp("<table class='cal-table'>");
+	disp("<tr class='cal-head'><th>$LLUNDI<\/th><th>$LMARDI<\/th><th>$LMERCREDI<\/th><th>$LJEUDI<\/th><th>$LVENDREDI<\/th><th>$LSAMEDI<\/th><th>$LDIMANCHE<\/th><\/tr>");
+	for(var i=0;i<6;i++) {
+		disp("<tr>");
+		for (j=0;j<7;j++) {
+			jour=7*i+j-j1+2;
 			aff_j=jour;
 			aff_jj=aff_j;
-                        if ((jour==d_jour.getDate())&&(m==d_jour.getMonth()+1)) {aff_jj="<b><font color='#CC0000' >"+jour+"</font></b>";}
-                        if ((7*i+j>=j1-1)&&(jour<=nb_jour)) {
-                                if ((j==6)||(estFerie(jour,m)) || (estConseil(jour,m))  $FerieSamedi $FerieMercredi ) {
+			if ((jour==d_jour.getDate())&&(m==d_jour.getMonth()+1)) {aff_jj="<span class='cal-day-today'>"+jour+"<\/span>";}
+			if ((7*i+j>=j1-1)&&(jour<=nb_jour)) {
+				if ((j==6)||(estFerie(jour,m)) || (estConseil(jour,m)) $FerieSamedi $FerieMercredi ) {
 					if (estConseil(jour,m)) {
-
-                                     disp("<TD width='10' bgcolor='pink'  align='center'><FONT face='Arial' size='-1' color='#0000CC'><A href='#' onMouseOver=\"AffBulle('<font face=Georgia, Times New Roman, Times, serif>"+dstT[ii]+" </FONT>');\"  onMouseOut='HideBulle()' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','scrollbars=yes','calendrier');\">"+aff_jj+"</A></FONT></TD>");
-					ii++;
-                                        }else {
-                                                disp("<TD width='10' bgcolor='#CCCCff' align='center'><FONT face='Arial' size='-1' color='#0000CC'>"+aff_j+"</FONT></TD>")
-                                        }
-
-                                }  else {
-				    if(j==2) {
-					disp("<TD $Ferieap $FerieMatin width='10' bgcolor='#FFFFFF' align='center'><FONT face='Arial' size='-1' color='#0000CC'><A href='#' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','','calendrier')\";>"+aff_j+"</A></FONT></TD>");
-				    }else{
-					   if (j == 5) 
-						disp("<TD $FerieSaap $FerieSaMatin width='10' bgcolor='#FFFFFF' align='center'><FONT face='Arial' size='-1' color='#0000CC'><A href='#' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','','calendrier')\";>"+aff_j+"</A></FONT></TD>");
-					   else
-	                                    disp("<TD width='10' bgcolor='#FFFFFF' align='center'><FONT face='Arial' size='-1' color='#0000CC'><A href='#' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','','calendrier')\";>"+aff_j+"</A></FONT></TD>");
-				    }
+						disp("<td class='cal-day cal-day-dst'><a href='#' onmouseover=\"showCalInfo('"+dstT[ii]+"')\" onmouseout='hideCalInfo()' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','scrollbars=yes','calendrier'); return false;\">"+aff_jj+"<\/a><\/td>");
+						ii++;
+					}else {
+						disp("<td class='cal-day cal-day-ferie'>"+aff_j+"<\/td>");
+					}
+				} else {
+					disp("<td class='cal-day'><a href='#' onclick=\"PopupCentrer('calendrier_config_salle.php?saisiejour="+aff_j+"&saisiemois="+mois[d.getMonth()]+"&saisieannee="+a+"','600','400','','calendrier'); return false;\">"+aff_j+"<\/a><\/td>");
 				}
-                        }
-                        else
-                            disp("<TD width='10' bgcolor='#FFFFFF'><FONT size=-1>&nbsp; </TD>");
-
-                }
-                disp("</TR>");
-        }
-        disp("</TABLE>");
+			}
+			else disp("<td class='cal-day'>&nbsp;<\/td>");
+		}
+		disp("<\/tr>");
+	}
+	disp("<\/table><\/div>");
 }
 function annee(an) {
-        disp("<center><TABLE cellspacing=15>");
-        for (var i=0;i<4;i++) {
-                disp("<TR>");
-                for (var j=0;j<3;j++) {
-                        disp("<TD align='center'>");
-                        calendar(i*3+j+1,an);
-                        disp("</TD>");
-                }
-        }
-        disp("</TABLE></center>");
+	disp("<div class='cal-year-grid'>");
+	for (var i=0;i<4;i++) {
+		for (var j=0;j<3;j++) {
+			disp("<div>");
+			calendar(i*3+j+1,an);
+			disp("<\/div>");
+		}
+	}
+	disp("<\/div>");
 }
 </script>
 EOF;

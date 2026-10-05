@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external_services_rights.class.php,v 1.4 2017-05-19 10:06:11 dgoron Exp $
+// $Id: external_services_rights.class.php,v 1.6.4.1 2025/04/24 12:37:04 qvarin Exp $
 
 //Gestion des droits des services externes
 
@@ -24,7 +24,7 @@ class es_rights {
 	public $available=true;
 	public $anonymous_user;
 	public $users=array();
-	
+
 	public function __construct($group,$method) {
 		$this->group=$group;
 		$this->method=$method;
@@ -35,17 +35,17 @@ class external_services_rights extends es_base {
 	public $es;			//Services externes
 	public $users=array();	//Tableau des users
 	public $all_rights;	//Tous les droits !
-	
+
 	public function __construct($external_services) {
 		//Instantiation de la classe external_services
 		$this->es=$external_services;
-		
-		//RÃ©cupÃ©ration des droits des utilisateurs
+
+		//Récupération des droits des utilisateurs
 		$resultat=pmb_mysql_query("select * from users");
 		while ($r=pmb_mysql_fetch_object($resultat)) {
 			$this->users[$r->userid]= clone $r;
 		}
-		
+
 		//Calcul de tous les droits existants
 		$constants=get_defined_constants(true);
 		$this->all_rights=0;
@@ -53,16 +53,16 @@ class external_services_rights extends es_base {
 			if (substr($key,strlen($key)-5,5)=="_AUTH") $this->all_rights|=$val;
 		}
 	}
-	
+
 	public function user_rights($user) {
-		return $this->users[$user]->rights;
+		return $this->users[$user]->rights ?? "";
 	}
-	
-	//RÃ©cupÃ¨re les droits d'une mÃ©thode
+
+	//Récupère les droits d'une méthode
 	public function get_rights($group,$method) {
 		global $msg;
 		$this->clear_error();
-		//VÃ©rification que le groupe / mÃ©thode existe
+		//Vérification que le groupe / méthode existe
 		if (((!$method)&&($this->es->group_exists($group)))||($this->es->method_exists($group,$method))) {
 			$es_r=new es_rights($group,$method);
 			$requete="select available, num_user, anonymous from es_methods, es_methods_users where groupe='".addslashes($group)."' and method='".addslashes($method)."' and id_method=num_method";
@@ -71,7 +71,7 @@ class external_services_rights extends es_base {
 				$first=true;
 				while ($r=pmb_mysql_fetch_object($resultat)) {
 					if ($first) $es_r->available=$r->available;
-					if ($r->anonymous) 
+					if ($r->anonymous)
 						$es_r->anonymous_user=$r->num_user;
 					else
 						$es_r->users[]=$r->num_user;
@@ -83,7 +83,7 @@ class external_services_rights extends es_base {
 			return false;
 		}
 	}
-	
+
 	public function has_basic_rights($user,$group,$method) {
 		global $msg;
 		$this->clear_error();
@@ -98,11 +98,15 @@ class external_services_rights extends es_base {
 				}
 			}
 			if (!$has_rights) $group_rights=$this->all_rights;
-			if ((!$method)&&(!($group_rights&$this->user_rights($user)))) return false;
+			if ((!$method) && (!($group_rights & intval($this->user_rights($user))))) {
+			    return false;
+			}
 			if ($this->es->method_exists($group,$method)) {
 				$method_rights=$this->es->catalog->groups[$group]->methods[$method]->rights;
 				if (!$method_rights) $method_rights=$this->all_rights;
-				if (($method)&&(!($method_rights&$this->user_rights($user)))) return false;
+				if (($method) && (!($method_rights & intval($this->user_rights($user))))) {
+				    return false;
+				}
 			} else {
 				if ($method) {
 					$this->set_error(ES_RIGHTS_UNKNOWN_GROUP_OR_METHOD,$msg["es_rights_error_unknown_group"]);
@@ -115,27 +119,27 @@ class external_services_rights extends es_base {
 		}
 		return false;
 	}
-	
+
 	public function has_rights($user,$group,$method) {
 		global $msg;
-		$user += 0;
+		$user = intval($user);
 		$this->clear_error();
-		//La mÃ©thode est-elle disponible
-		//Recherche de la disponibilitÃ© du groupe
+		//La méthode est-elle disponible
+		//Recherche de la disponibilité du groupe
 		$requete="select available from es_methods where groupe='".addslashes($group)."' and available=0";
 		$resultat=pmb_mysql_query($requete);
-		if (pmb_mysql_num_rows($resultat)) 
+		if (pmb_mysql_num_rows($resultat))
 			$available=pmb_mysql_result($resultat,0,0);
 		else {
 			 $requete="select available from es_methods where groupe='".addslashes($group)."' and method='".addslashes($method)."'";
 			 $resultat=pmb_mysql_query($requete);
-			 if (pmb_mysql_num_rows($resultat)) 
+			 if (pmb_mysql_num_rows($resultat))
 				$available=pmb_mysql_result($resultat,0,0);
 		}
-		
+
 		//Si user est vide, on recherche l'utilisateur anonyme
 		if ($user=="") {
-			//Recherche de l'anonyme de la mÃ©thode
+			//Recherche de l'anonyme de la méthode
 			$requete="select num_user from es_methods, es_methods_users where groupe='".addslashes($group)."' and method='".addslashes($method)."' and num_method=id_method and anonymous=1";
 			$resultat=pmb_mysql_query($requete);
 			if (pmb_mysql_num_rows($resultat)) {
@@ -151,16 +155,16 @@ class external_services_rights extends es_base {
 				}
 			}
 		} else {
-			//L'utilisateur est fourni, on regarde si il peut utiliser la mÃ©thode
-			
-			//Voyons si il a les accÃ¨s complet au groupe directement
+			//L'utilisateur est fourni, on regarde si il peut utiliser la méthode
+
+			//Voyons si il a les accès complet au groupe directement
 			$sql = "SELECT COUNT(1) FROM es_methods_users LEFT JOIN es_methods ON (es_methods_users.num_method = id_method) WHERE groupe = '".addslashes($group)."' AND method = '' AND available = 1 AND num_user = ".$user;
 			$res = pmb_mysql_query($sql);
 			$full_group_allowed = pmb_mysql_result($res,0,0);
 			if ($full_group_allowed)
 				$user_u = $user;
 			else {
-				//Voyons si il a les accÃ¨s Ã  la mÃ©thode
+				//Voyons si il a les accès à la méthode
 				$sql = "SELECT COUNT(1) FROM es_methods_users LEFT JOIN es_methods ON (es_methods_users.num_method = id_method) WHERE groupe = '".addslashes($group)."' AND method = '".addslashes($method)."' AND available = 1 AND num_user = ".$user;
 				$res = pmb_mysql_query($sql);
 				$method_allowed = pmb_mysql_result($res,0,0);
@@ -168,7 +172,7 @@ class external_services_rights extends es_base {
 					$user_u = $user;
 			}
 		}
-		//Si utilisateur trouvÃ©, on vÃ©rifie ses droits de base
+		//Si utilisateur trouvé, on vérifie ses droits de base
 		if (!$this->has_basic_rights($user_u,$group,$method)) {
 			$this->set_error(ES_RIGHTS_BAD_PMB_RIGHTS_FOR_THIS_USER,sprintf($msg["es_rights_bad_user_rights"],$this->users[$user_u]->username));
 		} else if (!$available) {
@@ -176,24 +180,26 @@ class external_services_rights extends es_base {
 		} else return true;
 		return false;
 	}
-	
+
 	public function set_rights($es_r) {
 		global $msg;
 		$this->clear_error();
-		//VÃ©rification des droits 
+		//Vérification des droits
 		if (((!$es_r->method)&&($this->es->group_exists($es_r->group)))||($this->es->method_exists($es_r->group,$es_r->method))) {
-			//VÃ©rification des droits
+			//Vérification des droits
 			if ((($es_r->anonymous_user)&&($this->has_basic_rights($es_r->anonymous_user,$es_r->group,$es_r->method)))||(!$es_r->anonymous_user)) {
-				//Pour chaque user, vÃ©rification des droits !
+				//Pour chaque user, vérification des droits !
 				for ($i=0; $i<count($es_r->users); $i++) {
 					if (($es_r->users[$i]!=$es_r->anonymous_user)&&(!$this->has_basic_rights($es_r->users[$i],$es_r->group,$es_r->method))) {
-						if ($es_r->method)
-							$this->set_error(ES_RIGHTS_USER_BAD_PMB_RIGHTS_FOR_METHOD,sprintf($msg["es_rights_user_unsifficent_rights"],$this->users[$es_r->users[$i]]->username,$es_r->method,$es_r->group));
-						else $this->set_error(ES_RIGHTS_USER_BAD_PMB_RIGHTS_FOR_GROUP,sprintf($msg["es_rights_user_unsifficent_rights_group"],$this->users[$es_r->users[$i]]->username,$es_r->group));
-						return false; 
+					    if ($es_r->method) {
+					        $this->set_error(ES_RIGHTS_USER_BAD_PMB_RIGHTS_FOR_METHOD,sprintf($msg["es_rights_user_unsifficent_rights"],$this->users[$es_r->users[$i]]->username ?? "",$es_r->method,$es_r->group));
+					    } else {
+					        $this->set_error(ES_RIGHTS_USER_BAD_PMB_RIGHTS_FOR_GROUP,sprintf($msg["es_rights_user_unsifficent_rights_group"],$this->users[$es_r->users[$i]]->username ?? "",$es_r->group));
+					    }
+						return false;
 					}
 				}
-				//Tout va bien, on insÃ¨re !!
+				//Tout va bien, on insère !!
 				//Recherche de l'ancien id
 				$id_method=0;
 				$requete="select id_method from es_methods where groupe='".addslashes($es_r->group)."' and method='".addslashes($es_r->method)."'";
@@ -220,20 +226,22 @@ class external_services_rights extends es_base {
 				if ($es_r->method)
 					$this->set_error(ES_RIGHTS_ANONYMOUS_USER_BAD_PMB_RIGHTS_FOR_METHOD,sprintf($msg["es_rights_unsufficent_anonymous_user_method"],$this->users[$es_r->anonymous_user]->username,$es_r->method,$es_r->group));
 				else $this->set_error(ES_RIGHTS_ANONYMOUS_USER_BAD_PMB_RIGHTS_FOR_GROUP,sprintf($msg["es_rights_unsufficent_anonymous_user_group"],$this->users[$es_r->anonymous_user]->username,$es_r->group));
-				return false; 
+				return false;
 			}
 		} else {
 			$this->set_error(ES_RIGHTS_UNKNOWN_GROUP_OR_METHOD,$msg["es_rights_error_unknown_group"]);
 			return false;
 		}
 	}
-	
-	//Utilisateurs possibles en fonction des droits d'un groupe ou d'une mÃ©thode
+
+	//Utilisateurs possibles en fonction des droits d'un groupe ou d'une méthode
 	public function possible_users($group,$method) {
+		global $msg;
+
 		$this->clear_error();
-		//Si pas de mÃ©thode, consolidation au niveau du groupe
+		//Si pas de méthode, consolidation au niveau du groupe
 		if ($this->es->group_exists($group)) {
-			if (!$method) {	
+			if (!$method) {
 				$group_rights=0;
 				$has_rights=false;
 				foreach ($this->es->catalog->groups[$group]->methods as $method_name=>$m) {
@@ -243,7 +251,7 @@ class external_services_rights extends es_base {
 					}
 				}
 				if (!$has_rights) $group_rights=$this->all_rights;
-				
+
 				//Recherche des emprunteurs qui on le droit
 				$r_users=array();
 				foreach($this->users as $user_id=>$user) {

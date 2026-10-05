@@ -1,8 +1,11 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: move.js,v 1.32 2018-05-17 07:42:00 vtouchard Exp $
+// $Id: move.js,v 1.45.2.1 2024/09/03 13:33:42 dgoron Exp $
 
+if (typeof(grid_type) == "undefined") {
+	grid_type = 'records';
+}
 down=false;
 down_parent=false;
 child_move="";
@@ -17,6 +20,7 @@ parent_last_h=0;
 relative=true;
 formatpage="";
 inedit=false;
+
 
 function move(e) {
 	e.cancelBubble = true;
@@ -274,6 +278,9 @@ function invisible(child_name) {
 	child.style.display="none";
 	child.setAttribute("hide","yes");
 	if (document.getElementById("popup_onglet")) document.getElementById("popup_onglet").parentNode.removeChild(document.getElementById("popup_onglet"));
+	if (grid_type == 'readers') {
+		recalc_recept();
+	}
 }
 
 function invisible_onglet(onglet_name) {
@@ -295,6 +302,9 @@ function visible(child_name) {
 	child=document.getElementById(child_name);
 	child.style.display="";
 	child.setAttribute("hide","");
+	if(grid_type == 'readers') {
+		recalc_recept();
+	}
 }
 
 function visible_onglet(onglet_name) {
@@ -327,7 +337,7 @@ function close_onglet(onglet_name) {
 
 }
 
-function save_all(e) {
+function save_all(e, backbones) {
 	var xml="<formpage relative='"+(relative?"yes":"no")+"'>\n";
 	var etn=0;
 	var relp=relative;
@@ -364,6 +374,9 @@ function save_all(e) {
 		var post_params = "&empr_grille_categ="+empr_grille_categ.value+"&empr_grille_location=";
 		if (empr_grille_location) post_params+= empr_grille_location.value;
 		post_params+= "&empr_grille_format="+encodeURIComponent(xml);
+		if(backbones) {
+			post_params+= "&backbones=1";
+		}
 		var req = new http_request();
 		if(req.request(url,1,post_params)){
 			alert(msg_move_saved_error);
@@ -386,6 +399,44 @@ function save_all(e) {
 	grille_niveau_biblio=document.notice.b_level.value;
 	if (document.notice.grille_location) grille_loc=document.notice.grille_location.value;
 	requete["sauve_notice"].send("datas="+encode_URL(xml)+"&grille_typdoc="+encode_URL(grille_typdoc)+"&grille_niveau_biblio="+encode_URL(grille_niveau_biblio)+"&grille_location="+encode_URL(grille_loc));
+}
+
+function addTinyEditor(text_areas_with_tinymce) {
+	  if (text_areas_with_tinymce.length >0) {
+		  for (var j=0; j<text_areas_with_tinymce.length; j++) {
+			  tinyMCE_execCommand('mceAddControl', true, text_areas_with_tinymce[j]);
+		  }
+	  }
+}
+
+function addDateboxes(dateboxes) {
+	if(dateboxes.length){ //on a des dates à recréer
+		require(['dojo/dom', 'dojo/dom-construct', 'dojo/dom-attr'], function(dom, domConstruct, domAttr){
+			dateboxes.forEach(dateObj => {
+				if(dateObj.value){
+					var val = new Date(dateObj.value);
+					var day = val.getDate();
+					var month = val.getMonth()+1;
+
+					var year = val.getFullYear();
+					if(day<10){
+					    day='0'+day;
+					} 
+					if(month<10){
+					    month='0'+month;
+					} 
+					day = year+'-'+month+'-'+day;
+					dateObj.params.value = day;	
+				}
+				
+				delete dateObj.params.constraints;
+				dateObj.params['data-dojo-type']='dijit/form/DateTextBox';
+				
+				var input = domConstruct.create('input', dateObj.params, dom.byId(dateObj.divId), 'replace');
+				input.setAttribute('value', dateObj.params.value);
+			});
+		});
+	}
 }
 
 function move_fields(domXML) {
@@ -419,7 +470,7 @@ function move_fields(domXML) {
 	text_areas_with_tinymce = new Array();
 	if (text_areas.length >0) {
 		for (var j=0; j<text_areas.length; j++) {
-			if(typeof(tinyMCE)!= 'undefined') {
+			if(typeof(tinyMCE) != 'undefined' && typeof(tinyMCE_getInstance) != 'undefined') {
 				var test = tinyMCE_getInstance(text_areas[j].getAttribute("id"));
 				if (test != null) {
 					tinyMCE_execCommand('mceRemoveControl', true, text_areas[j].getAttribute("id"));
@@ -428,152 +479,145 @@ function move_fields(domXML) {
 			}
 		}
 	}
-	root=domXML.getElementsByTagName("formpage");
-	relative=root[0].getAttribute("relative");
-	if (relative=="yes") relative=true; else relative=false;
 	
-	var relp=relative;
-	
-	var etirables=domXML.getElementsByTagName("etirable");
-	var parent_onglet=false;
-	for (i=0; i<etirables.length; i++) {
-		if(document.getElementById(etirables[i].getAttribute("id"))) {
-			parent_onglet=document.getElementById(etirables[i].getAttribute("id")).parentNode;
-			break;
-		}
-	}
-	if(!parent_onglet) return;
-	var onglet=new Array();
-	var onglet_titre=Array();
-	var fields= new Array();
-	var id=0;
-	
-	for (i=0; i<etirables.length; i++) {
-		//Onglets flottants
-		id=etirables[i].getAttribute("id");
-		if(!document.getElementById(id)) continue;
-		//on reg�n�re le dom des textarea, le navigateur se contente d'affecter la propri�t� value... 
-		var text_areas = document.getElementById(id).getElementsByTagName('textarea');
-		for(var x=0 ; x<text_areas.length ; x++){
-			if(!text_areas[x].firstChild){
-				text_areas[x].appendChild(document.createTextNode(text_areas[x].value));
+	if(grid_type == 'readers') {
+		move_empr_fields(domXML);
+	} else {
+		root=domXML.getElementsByTagName("formpage");
+		relative=root[0].getAttribute("relative");
+		if (relative=="yes") relative=true; else relative=false;
+		
+		var relp=relative;
+		
+		var etirables=domXML.getElementsByTagName("etirable");
+		var parent_onglet=false;
+		for (i=0; i<etirables.length; i++) {
+			if(document.getElementById(etirables[i].getAttribute("id"))) {
+				parent_onglet=document.getElementById(etirables[i].getAttribute("id")).parentNode;
+				break;
 			}
 		}
-		//on reg�n�re le dom des select, le navigateur se contente d'affecter la propri�t� selected sans recr�er l'attribut... 
-		var selects = document.getElementById(id).getElementsByTagName('select');
-		for(var x=0 ; x<selects.length ; x++){
-			for(var y=0 ; y<selects[x].options.length ; y++){
-				if(selects[x].options[y].selected){
-					selects[x].options[y].setAttribute('selected','selected');
+		if(!parent_onglet){
+			if(dateboxes.length){ //on a des dates à recréer
+				this.addDateboxes(dateboxes);
+			}
+	      	//Ajout des noeuds contenant l'editeur HTML
+			this.addTinyEditor(text_areas_with_tinymce);
+			return;
+		}
+		var onglet=new Array();
+		var onglet_titre=Array();
+		var fields= new Array();
+		var id=0;
+		
+		for (i=0; i<etirables.length; i++) {
+			//Onglets flottants
+			id=etirables[i].getAttribute("id");
+			if(!document.getElementById(id)) continue;
+			//on reg�n�re le dom des textarea, le navigateur se contente d'affecter la propri�t� value... 
+			var text_areas = document.getElementById(id).getElementsByTagName('textarea');
+			for(var x=0 ; x<text_areas.length ; x++){
+				if(!text_areas[x].firstChild){
+					text_areas[x].appendChild(document.createTextNode(text_areas[x].value));
+				}
+			}
+			//on reg�n�re le dom des select, le navigateur se contente d'affecter la propri�t� selected sans recr�er l'attribut... 
+			var selects = document.getElementById(id).getElementsByTagName('select');
+			for(var x=0 ; x<selects.length ; x++){
+				for(var y=0 ; y<selects[x].options.length ; y++){
+					if(selects[x].options[y].selected){
+						selects[x].options[y].setAttribute('selected','selected');
+					} else {
+						selects[x].options[y].removeAttribute('selected');
+					}
+				}
+			}
+			onglet[i]=document.getElementById(id).cloneNode(true);
+			if (etirables[i].getAttribute("invert")=="yes") onglet[i].setAttribute("invert","yes"); else onglet[i].setAttribute("invert","");
+			var onglet_tit=get_onglet_title(document.getElementById(id));
+			onglet_titre[i]=onglet_tit.cloneNode(true);
+			parent_onglet.removeChild(document.getElementById(id));
+			parent_onglet.removeChild(onglet_tit);
+		}
+		for (i=0; i<etirables.length; i++) {
+			//Remise en ordre
+			if(!onglet_titre[i]) continue;
+			parent_onglet.appendChild(onglet_titre[i]);
+			parent_onglet.appendChild(onglet[i]);
+			if (onglet[i].getAttribute("invert")=="yes") 
+				relp=(!relative)
+			else relp=relative;
+			onglet[i].style.position=relp?"":"relative";
+			if (!relp) onglet[i].style.height=etirables[i].getAttribute("height")+"px"; else onglet[i].style.height="";
+			if (etirables[i].getAttribute("visible")=="no") {
+				onglet_titre[i].style.display="none";
+				onglet[i].style.display="none";
+				onglet[i].setAttribute("hide","yes");
+			} else {
+				onglet_titre[i].style.display="block";
+				onglet[i].style.display="block";
+				onglet[i].setAttribute("hide","");
+			}	
+
+			if(etirables[i].getAttribute("startOpen")=="yes"){
+				onglet[i].setAttribute("startOpen","yes");
+			}
+			if(etirables[i].getAttribute("startOpen")=="no"){
+				onglet[i].setAttribute("startOpen","no");
+			}
+			if(etirables[i].getAttribute("visible")=="no"){
+				onglet[i].setAttribute("startOpen","no");
+			}
+			if(etirables[i].getAttribute("startOpen")!="no" && onglet[i].id=='el0Child'){
+				onglet[i].setAttribute("startOpen","yes");
+			}
+		}
+
+		var movables=domXML.getElementsByTagName("movable");
+
+		for (i=0; i<movables.length; i++) {
+			id=movables[i].getAttribute("id");
+			var parent_id=movables[i].getAttribute("parent");
+			var mov=document.getElementById(id);
+			if (mov != null && document.getElementById(parent_id)) {
+				var new_mov=mov.cloneNode(true);
+				mov.parentNode.removeChild(mov);
+				document.getElementById(parent_id).appendChild(new_mov);
+				//Positionnement en fonction de relative
+				if (document.getElementById(parent_id).getAttribute("invert")=="yes") 
+					relp=(!relative) 
+				else relp=relative;
+				new_mov.style.position=relp?"":"absolute";
+				if (!relp) {
+					new_mov.style.left=movables[i].getAttribute("left")+"px";
+					new_mov.style.top=movables[i].getAttribute("top")+"px";
+				} else {
+					new_mov.style.left="";
+					new_mov.style.top="";
+				} 
+				if (movables[i].getAttribute("visible")=="no") {
+					new_mov.style.display="none";
+				} else {
+					new_mov.style.display="block";
 				}
 			}
 		}
-		onglet[i]=document.getElementById(id).cloneNode(true);
-		if (etirables[i].getAttribute("invert")=="yes") onglet[i].setAttribute("invert","yes"); else onglet[i].setAttribute("invert","");
-		var onglet_tit=get_onglet_title(document.getElementById(id));
-		onglet_titre[i]=onglet_tit.cloneNode(true);
-		parent_onglet.removeChild(document.getElementById(id));
-		parent_onglet.removeChild(onglet_tit);
+		parent_onglet.style.visibility="visible";
 	}
-	for (i=0; i<etirables.length; i++) {
-		//Remise en ordre
-		if(!onglet_titre[i]) continue;
-		parent_onglet.appendChild(onglet_titre[i]);
-		parent_onglet.appendChild(onglet[i]);
-		if (onglet[i].getAttribute("invert")=="yes") 
-			relp=(!relative)
-		else relp=relative;
-		onglet[i].style.position=relp?"":"relative";
-		if (!relp) onglet[i].style.height=etirables[i].getAttribute("height")+"px"; else onglet[i].style.height="";
-		if (etirables[i].getAttribute("visible")=="no") {
-			onglet_titre[i].style.display="none";
-			onglet[i].style.display="none";
-			onglet[i].setAttribute("hide","yes");
-		} else {
-			onglet_titre[i].style.display="block";
-			onglet[i].style.display="block";
-			onglet[i].setAttribute("hide","");
-		}	
-
-		if(etirables[i].getAttribute("startOpen")=="yes"){
-			onglet[i].setAttribute("startOpen","yes");
-		}
-		if(etirables[i].getAttribute("startOpen")=="no"){
-			onglet[i].setAttribute("startOpen","no");
-		}
-		if(etirables[i].getAttribute("visible")=="no"){
-			onglet[i].setAttribute("startOpen","no");
-		}
-		if(etirables[i].getAttribute("startOpen")!="no" && onglet[i].id=='el0Child'){
-			onglet[i].setAttribute("startOpen","yes");
-		}
-	}
-
-	var movables=domXML.getElementsByTagName("movable");
-
-	for (i=0; i<movables.length; i++) {
-		id=movables[i].getAttribute("id");
-		var parent_id=movables[i].getAttribute("parent");
-		var mov=document.getElementById(id);
-		if (mov != null && document.getElementById(parent_id)) {
-			var new_mov=mov.cloneNode(true);
-			mov.parentNode.removeChild(mov);
-			document.getElementById(parent_id).appendChild(new_mov);
-			//Positionnement en fonction de relative
-			if (document.getElementById(parent_id).getAttribute("invert")=="yes") 
-				relp=(!relative) 
-			else relp=relative;
-			new_mov.style.position=relp?"":"absolute";
-			if (!relp) {
-				new_mov.style.left=movables[i].getAttribute("left")+"px";
-				new_mov.style.top=movables[i].getAttribute("top")+"px";
-			} else {
-				new_mov.style.left="";
-				new_mov.style.top="";
-			} 
-			if (movables[i].getAttribute("visible")=="no") {
-				new_mov.style.display="none";
-			} else {
-				new_mov.style.display="block";
-			}
-		}
-	}
-	parent_onglet.style.visibility="visible";
-	if(need_parse){
-	if(dateboxes.length){ //on a des dates à recréer
-			require(['dojo/dom', 'dojo/dom-construct', 'dojo/dom-attr'], function(dom, domConstruct, domAttr){
-				dateboxes.forEach(dateObj => {
-					if(dateObj.value){
-						var val = new Date(dateObj.value);
-						var day = val.getDate();
-						var month = val.getMonth()+1;
 	
-						var year = val.getFullYear();
-						if(day<10){
-						    day='0'+day;
-						} 
-						if(month<10){
-						    month='0'+month;
-						} 
-						day = year+'-'+month+'-'+day;
-						dateObj.params.value = day;	
-					}
-					
-					delete dateObj.params.constraints;
-					dateObj.params['data-dojo-type']='dijit/form/DateTextBox';
-					
-					var input = domConstruct.create('input', dateObj.params, dom.byId(dateObj.divId), 'replace');
-					input.setAttribute('value', dateObj.params.value);
-				});
-			});
+	if(need_parse){
+		if(dateboxes.length){ //on a des dates à recréer
+			this.addDateboxes(dateboxes);
 		}
-		dojo.parser.parse(document.getElementById('notice'));
-	}
-	if (text_areas_with_tinymce.length >0) {
-		for (var j=0; j<text_areas_with_tinymce.length; j++) {
-			tinyMCE_execCommand('mceAddControl', true, text_areas_with_tinymce[j]);
+		if(grid_type == 'readers') {
+			dojo.parser.parse(document.getElementById('empr_form'));
+		} else {
+			dojo.parser.parse(document.getElementById('notice'));
 		}
 	}
+	//Ajout des noeuds contenant l'editeur HTML
+	this.addTinyEditor(text_areas_with_tinymce);
+
 }
 
 function move_getted_pos() {
@@ -601,16 +645,35 @@ function get_pos(def) {
 			var url = "./ajax.php?module=circ&categ=empr&sub=get_default_empr_grille";
 		} else {
 			var empr_grille_categ=document.getElementById('form_categ');
+			empr_grille_categ.setAttribute('onchange','get_pos();');
 			var empr_grille_location=document.getElementById('empr_location_id');
+			if(typeof calculate_type_abts != 'undefined') {
+				empr_grille_location.setAttribute('onchange','get_pos();calculate_type_abts(this);');
+			} else {
+				empr_grille_location.setAttribute('onchange','get_pos();');
+			}
 			var url = "./ajax.php?module=circ&categ=empr&sub=get_empr_grille";
 		}
 		var post_params = "&empr_grille_categ="+empr_grille_categ.value+"&empr_grille_location="+empr_grille_location.value;
 		var req = new http_request();
 		if(req.request(url,1,post_params)){
 		} else {
-			document.body.dispatchEvent(new Event('movestart'));
-			move_fields(req.get_xml());
-			document.body.dispatchEvent(new Event('moveend'));
+			if(def) {
+				document.body.dispatchEvent(new Event('movestart'));
+				move_fields(req.get_xml());
+				document.body.dispatchEvent(new Event('moveend'));
+			} else {
+				//Sauvegarde tempo des valeurs
+				var selected_location = empr_grille_location.value;
+				var selected_categ = empr_grille_categ.value;
+				//Traitement de la grille
+				document.body.dispatchEvent(new Event('movestart'));
+				move_fields(req.get_xml());
+				document.body.dispatchEvent(new Event('moveend'));
+				//Restitution des valeurs sélectionnées
+				document.getElementById('form_categ').value = selected_categ;
+				document.getElementById('empr_location_id').value = selected_location;
+			}
 		}
 		return;
 	}
@@ -686,24 +749,7 @@ function move_parse_dom(rel) {
 	//Rendre visible les listes des categories et localisations et desactiver les selecteurs du formulaire
 	var sc = document.getElementById('form_categ');
 	if(sc) {
-		// Grille fiche lecteur
-		var sgc = document.getElementById('empr_grille_categ');
-		if (sgc!=null) {
-			sgc.onchange = function(e) {
-				get_pos();
-			}
-			sgc.style.display = "block";
-			sgc.value = sc.value;
-		}
-		var sl = document.getElementById('empr_location_id');
-		var sgl = document.getElementById('empr_grille_location');
-		if (sgl!=null) {
-			sgl.onchange = function(e) {
-				get_pos();
-			}
-			sgl.style.display = "block";
-			sgl.value = sl.value;
-		}	
+		move_empr_parse_dom(rel);	
 	} else {	
 		// Grille notice
 		//Rendre visible la liste des localisations
@@ -711,12 +757,19 @@ function move_parse_dom(rel) {
 			document.getElementById("grille_location").style.display="block";
 	}
 	//Rendre invisible le bouton d'�dition et visible le bouton de switch
-	if (!relative) 
-		document.getElementById("bt_swap_relative").value=msg_move_to_relative_pos;
-	else
-		document.getElementById("bt_swap_relative").value=msg_move_to_absolute_pos;
-	document.getElementById("bt_swap_relative").style.display="";
+	if(document.getElementById("bt_swap_relative")) {
+		if (!relative) 
+			document.getElementById("bt_swap_relative").value=msg_move_to_relative_pos;
+		else
+			document.getElementById("bt_swap_relative").value=msg_move_to_absolute_pos;
+		document.getElementById("bt_swap_relative").style.display="";
+	}
 	document.getElementById("bt_inedit").style.display="none";
+	init_movables(relative);
+}
+
+function init_movables(rel) {
+	relative=rel;
 	movables=document.getElementsByTagName("div");
 	for(i=0; i<movables.length; i++) {
 		if (movables[i].getAttribute("movable")=="yes") {
@@ -724,6 +777,7 @@ function move_parse_dom(rel) {
 			if (!relp) {
 				movables[i].style.border="#999 2px solid";
 				movables[i].style.background="#DDD";
+				movables[i].style.width='100%';
 			} else {
 				movables[i].style.border="";
 				movables[i].style.background="";
@@ -819,6 +873,17 @@ function move_parse_dom(rel) {
 						textHtml+=textHtml_open;
 					}
 					textHtml+="<div onmouseover='this.style.background=\"#666\"; this.style.color=\"#FFF\";' onmouseout='this.style.background=\"#CCC\"; this.style.color=\"#000\";' style='width:100%;background:#CCC' onClick='save_all(event);'>"+msg_move_save+"</div>";
+					
+					// Sauver et appliquer a toutes les grilles
+					var empr_grille_categ = document.getElementById('empr_grille_categ');
+					if(empr_grille_categ) {
+						// Grille fiche lecteur
+						var empr_grille_location = document.getElementById('empr_grille_location');
+						if(!parseInt(empr_grille_categ.value) || !parseInt(empr_grille_location.value)) {
+							textHtml+="<div onmouseover='this.style.background=\"#666\"; this.style.color=\"#FFF\";' onmouseout='this.style.background=\"#CCC\"; this.style.color=\"#000\";' style='width:100%;background:#CCC;' onClick='save_all(event, true);'>"+msg_move_save_backbones+"</div>";
+						}
+					}
+					
 					popup.innerHTML=textHtml;
 					document.body.appendChild(popup);
 					popup.onmouseover=function(e) {
@@ -933,6 +998,17 @@ function move_parse_dom(rel) {
 						textHtml+=textHtml_open;
 					}			
 					textHtml+="<div onmouseover='this.style.background=\"#666\"; this.style.color=\"#FFF\";' onmouseout='this.style.background=\"#CCC\"; this.style.color=\"#000\";' style='width:100%;background:#CCC' onClick='save_all(event);'>"+msg_move_save+"</div>";
+					
+					// Sauver et appliquer a toutes les grilles
+					var empr_grille_categ = document.getElementById('empr_grille_categ');
+					if(empr_grille_categ) {
+						// Grille fiche lecteur
+						var empr_grille_location = document.getElementById('empr_grille_location');
+						if(!parseInt(empr_grille_categ.value) || !parseInt(empr_grille_location.value)) {
+							textHtml+="<div onmouseover='this.style.background=\"#666\"; this.style.color=\"#FFF\";' onmouseout='this.style.background=\"#CCC\"; this.style.color=\"#000\";' style='width:100%;background:#CCC;' onClick='save_all(event, true);'>"+msg_move_save_backbones+"</div>";
+						}
+					}
+					
 					popup.innerHTML=textHtml;
 					document.body.appendChild(popup);
 					popup.onmouseover=function(e) {

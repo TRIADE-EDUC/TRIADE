@@ -5,8 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_agenda_selector_calendars.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+$Id: cms_module_agenda_selector_calendars.xml,v 1.2 2019/11/04 13:32:53 jlaurent Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_agenda_selector_calendars_calendar'>Select the calendars to use</entry>
+	<entry code='cms_module_agenda_selector_calendars_old_events'>Afficher les anciens évènements</entry>
+	<entry code='cms_module_agenda_selector_calendars_futur_events'>Afficher les évènements à venir</entry>
 </XMLlist>

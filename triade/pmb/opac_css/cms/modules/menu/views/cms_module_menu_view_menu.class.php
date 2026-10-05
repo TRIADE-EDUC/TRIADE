@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_menu_view_menu.class.php,v 1.6 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_menu_view_menu.class.php,v 1.6.14.1 2025/01/17 10:40:46 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -28,7 +28,7 @@ class cms_module_menu_view_menu extends cms_module_common_view{
 	
 	protected function build_items($datas,$lvl=0){
 		$display = "";
-		if(count($datas)){
+		if(is_countable($datas) && count($datas)){
 			global $opac_url_base;
 			$display.= "
 			<ul class='cms_menu cms_menu_deep".$lvl."'>";

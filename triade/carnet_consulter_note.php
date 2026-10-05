@@ -3,15 +3,15 @@ session_start();
 include_once("./librairie_php/lib_get_init.php");
 $id=php_ini_get("safe_mode");
 if ($id != 1) {
-	set_time_limit(900);
+	set_time_limit(3000);
 }
 /***************************************************************************
- *                              T.R.I.A.D.E
+ *                              T.R.I.A.D.E.
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) S.A.R.L. T.R.I.A.D.E. 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -26,6 +26,7 @@ if ($id != 1) {
 ?>
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -41,23 +42,27 @@ if ($id != 1) {
 <?php 
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
-validerequete("profadmin");
+include_once('librairie_php/recupnoteperiode.php');
+validerequete("menuprof");
 $cnx=cnx();
 
-include_once('librairie_php/recupnoteperiode.php');
+$idClasse=$_POST['saisie_classe'];
 
-$idcarnet=$_POST["idcarnet"];
-$nom_carnet=chercheNomCarnet($idcarnet);
-$idclasse=$_POST["saisie_classe"];
+if ((isset($_POST["modif"])) &&  ($_POST["saisie_carnet"] > 0)) {
+	$idcarnet=$_POST["saisie_carnet"];
+	$nom_carnet=chercheNomCarnet($idcarnet);
+}else{
+	print "<script>location.href='carnet_admin_modif.php?erreur'</script>";
+}
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Consultation du carnet de suivi : <font id='color2'> $nom_carnet </font>" ?></font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Consultation du Carnet de Suivi : <font id='color2'> $nom_carnet </font>" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td valign=top>
 <!-- // fin  -->
@@ -66,386 +71,318 @@ $idclasse=$_POST["saisie_classe"];
 //----------------------------------------------------------------
 define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
 include_once('./librairie_pdf/fpdf/fpdf.php');
-include_once('./librairie_pdf/html2pdf.php');
+include_once('./librairie_pdf/lib.php');
+//include_once('./librairie_pdf/html2pdf.php');
+
+$pdf=new RPDF('P','mm','A4');
+
+$eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve
+
+for($jT=0;$jT<countTriade($eleveT);$jT++) {
+
+        $nomEleve=ucwords($eleveT[$jT][0]);
+        $prenomEleve=ucfirst($eleveT[$jT][1]);
+        $lv1Eleve=$eleveT[$jT][2];
+        $lv2Eleve=$eleveT[$jT][3];
+        $idEleve=$eleveT[$jT][4];
+        $datenaissance=dateForm($eleveT[$jT][5]);
 
 
-
-$pdf=new PDF();  // declaration du constructeur
-
-$pdf->SetTitle("Carnet de compétence");
+//$pdf=new PDF();  // declaration du constructeur
+$pdf->AddPage();
+$pdf->SetTitle("Carnet de suivi");
 $pdf->SetCreator("T.R.I.A.D.E.");
-$pdf->SetSubject("Carnet de compétence"); 
-$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com"); 
+$pdf->SetSubject("Carnet de suivi"); 
+$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.org"); 
 
 //
 //$pdf->WriteHTML($nom_carnet);
 
-$data=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays
-for($i=0;$i<count($data);$i++) {
-       $nom_etablissement=trim($data[$i][0]);
-       $adresse=trim($data[$i][1]);
-       $postal=trim($data[$i][2]);
-       $ville=trim($data[$i][3]);
-       $tel=trim($data[$i][4]);
-       $mail=trim($data[$i][5]);
-       $directeur=trim($data[$i][6]);
-       $urlsite=trim($data[$i][7]);
-       $academie=trim($data[$i][8]);
-       $pays=strtoupper(trim($data[$i][9]));
-}
+$x=3;
+$y=3;
 
-
-$idClasse=$_POST["saisie_classe"];
-$data=chercheClasse($idClasse);
-$classe_nom=$data[0][1];
-
-$idprofP=rechercheprofp($idClasse);
-$nomprofP=recherche_personne2($idprofP);
-
-
-$eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance
-
-for($jT=0;$jT<count($eleveT);$jT++) {
-
-	$nomEleve=ucwords($eleveT[$jT][0]);
-	$prenomEleve=ucfirst($eleveT[$jT][1]);
-	$lv1Eleve=$eleveT[$jT][2];
-	$lv2Eleve=$eleveT[$jT][3];
-	$idEleve=$eleveT[$jT][4];
-	$datenaissance=dateForm($eleveT[$jT][5]);
-
-	
-
-	$pdf->AddPage();
-
-
-	$x=3;
-	$y=3;
-
-	$sizePolice="12";
-	$fontPolice="Arial";
+$sizePolice="12";
+$fontPolice="Arial";
 
 
 /* 1er cadre */
 
-
-
-
-
-$pdf->SetFont($fontPolice,'B',$sizePolice);
-$pdf->SetXY($x,$y);
-$pdf->MultiCell(204,33,"",1,'C',0);
-$pdf->SetXY($x,$y+1);
-$pdf->MultiCell(204,5,"$nom_carnet",0,'C',0);
-$pdf->SetXY($x,$y);
-$pdf->SetFont($fontPolice,'',$sizePolice);
-$pdf->MultiCell(204,5,"\n\n${nom_etablissement}\n${pays}",0,'C',0);
-$pdf->SetXY($x,$y+25);
-$pdf->WriteHTML("Classe : $classe_nom  Enseignant(s) : $nomprofP ");
-
-/* 2eme cadre (Eleve) */
-$x=3;
-$y+=33; 
-
-$pdf->SetXY($x,$y+3);
-$pdf->SetFont($fontPolice,'B',$sizePolice);
-$pdf->MultiCell(20,5,"ÉLÈVE",1,'L',0);
-$pdf->SetXY($x+20,$y+3);
-$pdf->SetFont($fontPolice,'',$sizePolice-2);
-$pdf->MultiCell(184,5,"Nom : $nomEleve      - Prénom : $prenomEleve       - Né(e) le $datenaissance ",1,'L',0);
-
-
-/* 3eme cadre (Style de note) */
-$data=chercheTypeNotation($idcarnet); // code_lettre,code_chiffre,code_couleur,code_note,code
-
-if ($data[0][5] == 0) {
-
-	$x=3;
-	$y+=8; 
-	$pdf->SetXY($x+=50,$y+3);
-	$pdf->MultiCell(25,10,"acquis",1,'C',0);
-	$pdf->SetXY($x+=25,$y+3);
-	$pdf->MultiCell(25,10,"à confirmer",1,'C',0);
-	$pdf->SetXY($x+=25,$y+3);
-	$pdf->MultiCell(25,5,"en cours dacquisition",1,'C',0);
-	$pdf->SetXY($x+=25,$y+3);
-	$pdf->MultiCell(25,10,"non acquis",1,'C',0);
-
-	$x=3;
-	$y+=3;
-	$pdf->SetXY($x,$y+10);
-	$pdf->SetFont($fontPolice,'',$sizePolice-5);
-	$pdf->MultiCell(25,5,"Codes dappréciation pouvant être choisis par lenseignant\n\n\n",1,'C',0);
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->SetFont($fontPolice,'B',$sizePolice-2);
-	$chiffre=($data[0][1] == 1) ? "Chiffres -> \n" : "\n";
-	$code_lettre=($data[0][0] == 1) ? "Lettres -> \n" : "\n";
-	$code_couleur=($data[0][2] == 1) ? "Couleurs -> \n" : "\n";
-	$pdf->MultiCell(25,5,"$chiffre $code_lettre $code_couleur \n",1,'C',0);
-
-	$chiffre=($data[0][1] == 1) ? "1\n" : "\n";
-	$code_lettre=($data[0][0] == 1) ? "A\n" : "\n";
-	$code_couleur=($data[0][2] == 1) ? "Vert\n" : "\n";
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->MultiCell(25,5,"$chiffre $code_lettre $code_couleur\n",1,'C',0);
-
-	$chiffre=($data[0][1] == 1) ? "2\n" : "\n";
-	$code_lettre=($data[0][0] == 1) ? "B\n" : "\n";
-	$code_couleur=($data[0][2] == 1) ? "Bleu\n" : "\n";
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->MultiCell(25,5,"$chiffre $code_lettre $code_couleur\n",1,'C',0);
-	
-	$chiffre=($data[0][1] == 1) ? "3\n" : "\n";
-	$code_lettre=($data[0][0] == 1) ? "C\n" : "\n";
-	$code_couleur=($data[0][2] == 1) ? "Orange\n" : "\n";
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->MultiCell(25,5,"$chiffre $code_lettre $code_couleur\n",1,'C',0);
-	
-
-	$chiffre=($data[0][1] == 1) ? "4\n" : "\n";
-	$code_lettre=($data[0][0] == 1) ? "D\n" : "\n";
-	$code_couleur=($data[0][2] == 1) ? "Rouge\n" : "\n";
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->MultiCell(25,5,"$chiffre $code_lettre $code_couleur\n",1,'C',0);
-	
-	$pdf->SetFont($fontPolice,'',$sizePolice-5);
-	$pdf->SetXY($x+=25,$y+10);
-	$pdf->MultiCell(25,5,"X\nCompétence travaillée mais non évaluée\n",1,'C',0);
-	
-	if ($data[0][2] == 1) {
-		$code_note="Notes";
-		$texte_note="0 à 10 ou 0 à 20";
-	}else{
-		$code_note="";
-		$texte_note="";
-	}
-
-	$x=3;
-	$y+=10;
-	$pdf->SetXY($x+25,$y+20);
-	$pdf->SetFont($fontPolice,'B',$sizePolice-2);
-	$pdf->MultiCell(25,5,"$code_note\n\n",1,'C',0);
-	$pdf->SetXY($x+50,$y+20);
-	$pdf->MultiCell(125,5,"$texte_note\n\n",1,'C',0);
-	$flagCom=0;
-}else{
-	$flagCom=1;
-//	$x=3;
-//	$y+=8; 
-
+$data=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays
+for($i=0;$i<countTriade($data);$i++) {
+       $nom_etablissement=strtoupper(trim($data[$i][0]));
+       $adresse=strtoupper(trim($data[$i][1]));
+       $postal=strtoupper(trim($data[$i][2]));
+       $ville=strtoupper(trim($data[$i][3]));
+       $tel=trim($data[$i][4]);
+       $mail=trim($data[$i][5]);
+       $directeur=trim($data[$i][6]);
+       $urlsite=trim($data[$i][7]);
+       $academie=strtoupper(trim($data[$i][8]));
+       $pays=strtoupper(trim($data[$i][9]));
 }
-
-/* Definition des périodes */
-
-$nbPeriode=nb_periode($idcarnet);
-
-
-$y+=35;
-
-if ($nbPeriode == 1) { $largeurCom=60; }
-if ($nbPeriode == 2) { $largeurCom=40; }
-if ($nbPeriode == 3) { $largeurCom=30; }
-if ($nbPeriode == 4) { $largeurCom=20; }
-if ($nbPeriode == 5) { $largeurCom=15; }
-
-
-for($i=1;$i<=$nbPeriode;$i++) {
-
-$x=3;
-
-$pdf->SetFont($fontPolice,'B',$sizePolice-2);
-$pdf->SetXY($x,$y);
-$pdf->MultiCell(110,5,"Période $i",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->MultiCell(94,5,"SIGNATURES",1,'C',0);
-$pdf->SetFont($fontPolice,'',$sizePolice-2);
-$pdf->SetXY($x,$y+=5);
-$pdf->MultiCell(110,5,"Observation de lenseignant/des enseignants ",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->MultiCell(31,5,"Enseignant(s)",1,'C',0);
-$pdf->SetXY($x+110+31,$y);
-$pdf->MultiCell(31,5,"Direction",1,'C',0);
-$pdf->SetXY($x+110+31+31,$y);
-$pdf->MultiCell(32,5,"Parents",1,'C',0);
-$pdf->SetXY($x,$y+=5);
-$pdf->MultiCell(110,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->MultiCell(31,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110+31,$y);
-$pdf->MultiCell(31,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110+31+31,$y);
-$pdf->MultiCell(32,$largeurCom,"",1,'C',0);
-
-$y+=$largeurCom+5;
-
-}
-
-$pdf->SetFont($fontPolice,'',$sizePolice-2);
-$pdf->SetXY($x,$y);
-$pdf->MultiCell(110,5,"Décision de léquipe pédagogique",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->MultiCell(94,5,"",1,'C',0);
-$pdf->SetFont($fontPolice,'B',$sizePolice-2);
-$pdf->SetXY($x,$y+=5);
-$pdf->MultiCell(55,5,"Admis(e)",1,'C',0);
-$pdf->SetXY($x+55,$y);
-$pdf->MultiCell(55,5,"Maintenu(e)",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->SetFont($fontPolice,'',$sizePolice-2);
-$pdf->MultiCell(31,5,"Enseignant(s)",1,'C',0);
-$pdf->SetXY($x+110+31,$y);
-$pdf->MultiCell(31,5,"Direction",1,'C',0);
-$pdf->SetXY($x+110+31+31,$y);
-$pdf->MultiCell(32,5,"Parents",1,'C',0);
-$pdf->SetXY($x,$y+=5);
-$pdf->MultiCell(110,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110,$y);
-$pdf->MultiCell(31,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110+31,$y);
-$pdf->MultiCell(31,$largeurCom,"",1,'C',0);
-$pdf->SetXY($x+110+31+31,$y);
-$pdf->MultiCell(32,$largeurCom,"",1,'C',0);
-// ---------------------------------------------------------------------------------------
-
-
-
-// ---------------------------------------------------------------------------------------
-$pdf->AddPage();
-
-$tabCompetence=listeCompetence($idcarnet); // id,idcarnet,libelle,ordre
-$tabSection=chercheSectionCarnet($idcarnet);
-
 
 $x=3;
 $y=3;
+$pdf->Image("./image/commun/logo-educnational.jpg",$x,$y);
+$x=28;
 
-$largeurSection=$nbPeriode*6;
-//print $largeurSection."<br>";
-$nbSection=count($tabSection);
-//print $nbSection."<br>";
-$largeurSectionTotal=$nbSection*$largeurSection;
-//print $largeurSectionTotal."<br>";
-$largeurCommentaire=204-$largeurSectionTotal;
-//print $largeurCommentaire."<br>";
-$largeurcom=6;
+$pdf->SetXY($x,$y);
+$pdf->SetFont($fontPolice,'',$sizePolice-2);
+$pdf->MultiCell(30,3,"Académie",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Département",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Circonscription",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Ecole",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Adresse",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Téléphone",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(30,3,"Courriel",0,'L',0);
+// Reponse 
+$x+=32;
+$y=3;
+$pdf->SetXY($x,$y);
+$pdf->MultiCell(80,3,"$academie",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"$postal",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"$nom_etablissement",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"$adresse",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"$tel",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"$mail",0,'L',0);
+$y=3;
 
-if ($flagCom == 1) {
-	$largeurCommentaire=90;
-	$hu=205-$largeurCommentaire;
-	$largeurcom=$hu/$nbPeriode;
-	$largeurSectionTotal=$nbSection*$largeurcom;
-	$largeurSection=$nbPeriode*$largeurcom;
-}
+$anneeScolaire="2023 - 2024";
+$pdf->SetXY(130,$y);
+$pdf->SetFont($fontPolice,'B',$sizePolice);
+$pdf->MultiCell(80,3,"Année scolaire $anneeScolaire",0,'L',0);
+$pdf->SetFont($fontPolice,'',$sizePolice-2);
+$y+=5;
+$x+=53;
 
-for ($i=0;$i<count($tabCompetence);$i++) {
+if ($datenaissance == "") $datenaissance=".......................";
+if ($nomEleve == "") $nomEleve=".......................";
+$classe_nom=chercheClasse_nom(chercheClasseEleve($idEleve));
+if ($classe_nom == "") $classe_nom=".......................";
+
+$pdf->SetXY($x,$y);
+$pdf->MultiCell(80,3,"Né le $datenaissance",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"Elève $nomEleve $prenomEleve",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"Cycle / Niveau ....................",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"Classe de $classe_nom",0,'L',0);
+$pdf->SetXY($x,$y+=5);
+$pdf->MultiCell(80,3,"Enseignant(e)(s) .......................",0,'L',0);
+
+/* 1er cadre (Style de note) */
+$x=3;
+$y+=12; 
+$pdf->SetFont($fontPolice,'B',$sizePolice);
+$pdf->SetFillColor(210);
+$pdf->SetXY($x,$y);
+$pdf->MultiCell(205,10,"Bilan des acquis scolaires de l'élève",1,'C',1);
+$pdf->SetXY($x,$y+=15);
+$pdf->MultiCell(205,10,"Suivi des acquis scolaires de l'élève",1,'C',1);
+$pdf->SetFillColor(255);
+
+$y+=15;
+
+$pdf->SetFont($fontPolice,'',$sizePolice);
+$pdf->SetXY($x,$y);
+$pdf->MultiCell(109,25,"",1,'C',0);
+$pdf->SetXY($x,$y+3);
+$pdf->MultiCell(109,5,"Éléments du programme travaillés durant la période (connaissances/compétences)",0,'C',0);
+
+$pdf->SetXY($x+=109,$y);
+$pdf->MultiCell(54,25,"",1,'C',1);
+$pdf->SetXY($x,$y+3);
+$pdf->SetFont($fontPolice,'',$sizePolice);
+$pdf->MultiCell(54,5,"Acquisitions, progrès et difficultés éventuelles",0,'C',0);
+
+$pdf->SetFont($fontPolice,'',$sizePolice-4);
+
+$pdf->SetXY($x+=54,$y);
+$pdf->MultiCell(41,10,"",1,'C',1);
+$pdf->SetXY($x,$y+1);
+$pdf->MultiCell(41,3,"Positionnement Objectifs d'apprentissage",0,'C',0);
+$pdf->SetXY($x,$y+=10);
+$pdf->MultiCell(10,15,"",1,'C',1);
+$pdf->TextWithRotation($x+3,$y+10,"Non",'90');
+$pdf->TextWithRotation($x+6,$y+12,"atteints",'90');
+$pdf->SetXY($x+=10,$y);
+$pdf->MultiCell(10,15,"",1,'C',1);
+$pdf->SetFont($fontPolice,'',$sizePolice-5);
+$pdf->TextWithRotation($x+3,$y+14,"Partielleme",'90');
+$pdf->TextWithRotation($x+6,$y+14,"nts atteints",'90');
+
+$pdf->SetFont($fontPolice,'',$sizePolice-4);
+$pdf->SetXY($x+=10,$y);
+$pdf->MultiCell(10,15,"",1,'C',1);
+$pdf->SetFont($fontPolice,'',$sizePolice-5);
+$pdf->TextWithRotation($x+5,$y+12,"Atteints",'90');
+
+$pdf->SetXY($x+=10,$y);
+$pdf->MultiCell(11,15,"",1,'C',1);
+$pdf->SetFont($fontPolice,'',$sizePolice-5);
+$pdf->TextWithRotation($x+5,$y+12,utf8_decode("Dépassés"),'90');
+
+$y+=10;
+
+// ---------------------------------------------------------------------------------------
+
+$tabCompetence=listeCompetence($idcarnet); //  id,idcarnet,libelle,ordre
+$tabSection=chercheSectionCarnet($idcarnet);
+
+
+for ($i=0;$i<countTriade($tabCompetence);$i++) {
 	$x=3;
 	$idcompetence=$tabCompetence[$i][0];
 	$tabDescriptif=rechercheDescriptif($idcompetence,$idcarnet); // id,libelle,bold,ordre
-	$libelle=$tabCompetence[$i][2];
-	$pdf->SetFont($fontPolice,'B',$sizePolice);
+	$matiere=stripslashes($tabCompetence[$i][2]);
+
+	$pdf->SetFont($fontPolice,'',$sizePolice-4);
 	$pdf->SetXY($x,$y+2);
-	$pdf->MultiCell(204,5,"$libelle",0,'C',0);
-	$y+=10;
-	$x+=$largeurCommentaire;
-	$pdf->SetFont($fontPolice,'B',$sizePolice-3);
-	foreach($tabSection as $key=>$value) {
-		$value=chercheNomSection($value);
-		$pdf->SetXY($x,$y);	
-		$pdf->MultiCell($largeurSection,5,"$value",1,'C',0);
-		$x+=$largeurSection;
-	}
 	$y+=5;
-	$x=3+$largeurCommentaire;
-	for($jj=0;$jj<$nbSection;$jj++) {
-		for($j=1;$j<=$nbPeriode;$j++) {
-	
-			$pdf->SetXY($x,$y);
-			$pdf->MultiCell($largeurcom,5,"T$j",1,'C',0);
-			$x+=$largeurcom;
-		}
-	}
-	$y+=5;
-	for($jjj=0;$jjj<count($tabDescriptif);$jjj++) {
-		$idDescriptif=$tabDescriptif[$jjj][0];
-		$libelle=$tabDescriptif[$jjj][1];
-		$bold=$tabDescriptif[$jjj][2];
-		$x=3;
-		
-		$pdf->SetXY($x,$y);
-		if ($bold) { 
+	$hauteurZ=10;
+	for($jjj=0;$jjj<countTriade($tabDescriptif);$jjj++) {
+		$iddescriptif=$tabDescriptif[$jjj][0];
+		$libelle=stripslashes(stripslashes($tabDescriptif[$jjj][1]));
+		$bold=$tabDescriptif[$jjj][3];
+		if ($bold == 1) {	
+			$pdf->SetFont($fontPolice,'',$sizePolice);
 			$pdf->SetFillColor(210);
-			$hauteurCommentaire=5;
-			$center='C'; 
-			$B='B';
-		}else { 
+			$pdf->SetXY($x,$y);
+			$pdf->MultiCell(204,10,"",1,'',1);
+			$pdf->SetXY($x,$y);
+			$pdf->MultiCell(204,10,"$matiere / $libelle",0,"C",0);
+			$x+=50;
+			$y+=10;
+		}else{
+			$pdf->SetFont($fontPolice,'',$sizePolice-3);
 			$pdf->SetFillColor(255);
-			if ($flagCom == 1) {
-				$hauteurCommentaire=30;
-			}else{
-				$hauteurCommentaire=10;
-			}
-			$center='L'; 
-			$B='';
+			$len=strlen($libelle);
+			$hauteurZ=($len/40)*3.5;
+			$hauteurZ=number_format($hauteurZ,0,'','');
+			if ($hauteurZ < 10) $hauteurZ=8;
+
+			if ($y+$hauteurZ > 260) {
+                        	$pdf->AddPage();
+	                        $y=3;
+        	                $x=3;
+                	}
+
+
+			$note=recupNoteCarnetSuivi($idEleve,$idcompetence,$idcarnet,$iddescriptif,"educnational",$idClasse);
+
+			$pdf->SetXY(3,$y);
+			$pdf->MultiCell(109,$hauteurZ,"",1,'',1);
+			$pdf->SetXY(3,$y+1);
+			$libelle=preg_replace("/\n/","\n- ",$libelle);
+			$pdf->MultiCell(109,3.5,"- $libelle",0,"L",0);
+
+			$pdf->SetFillColor(210);
+
+			$pdf->SetXY(112,$y);
+			$pdf->MultiCell(54,$hauteurZ,"",1,'',0);
+		
+			$pdf->SetXY(112+54,$y);
+			if ($note == 'X') { $etat="1"; }else{ $etat="0"; }
+			$pdf->MultiCell(10,$hauteurZ,"",1,'',$etat);
+		
+			$pdf->SetXY(112+54+10,$y);
+			if ($note == '1') { $etat="1"; }else{ $etat="0"; }
+			$pdf->MultiCell(10,$hauteurZ,"",1,'$etat');
+
+			$pdf->SetXY(112+54+10+10,$y);
+			if ($note == '2') { $etat="1"; }else{ $etat="0"; }
+			$pdf->MultiCell(10,$hauteurZ,"",1,'',$etat);
+
+			$pdf->SetXY(112+54+10+10+10,$y);
+			if ($note == '4') { $etat="1"; }else{ $etat="0"; }
+			$pdf->MultiCell(11,$hauteurZ,"",1,'',$etat);
+
+			$pdf->SetFillColor(255);
+
+			$y+=$hauteurZ;
 		}
-		$pdf->SetFont($fontPolice,$B,$sizePolice-3);
-		$pdf->MultiCell($largeurCommentaire,$hauteurCommentaire,"",1,'',1);
-		$pdf->SetXY($x,$y);
-		$pdf->MultiCell($largeurCommentaire,5,"$libelle",0,$center,0);
-		$x+=$largeurCommentaire;
-		for($jj=0;$jj<$nbSection;$jj++) {
 
-			$nomsection=chercheNomSection($tabSection[$jj]);
-			$listeidclasse=chercheListeIdClasseSection($nomsection);
-
-			for($j=1;$j<=$nbPeriode;$j++) {
-				$pdf->SetXY($x,$y);
-				$tabnote=rechercheEvalutionEleveBultin($idEleve,$idcarnet,$idDescriptif,$idcompetence,$j,$listeidclasse);
-				//id,note,type_notation
-
-				$note=trim($tabnote[0][1]);
-				$type_note=$tabnote[0][2];
-				if ($type_note == "commentaire") {
-					$pdf->MultiCell($largeurcom,$hauteurCommentaire,"",1,'L',1);
-					$pdf->SetXY($x,$y);
-					$pdf->MultiCell($largeurcom,3,"$note",0,'L',0);
-					$x+=$largeurcom;
-				}elseif(trim($type_note) == "") {
-
-				}else{
-					if (trim($type_note) == "couleur") {
-						if ($note == "rouge") { $pdf->SetFillColor(255,0,0); }
-						if ($note == "bleu") { $pdf->SetFillColor(0,0,255); }
-						if ($note == "vert") { $pdf->SetFillColor(0,255,0); }
-						if ($note == "orange") { $pdf->SetFillColor(255,176,79); }
-						$pdf->MultiCell(6,$hauteurCommentaire,"",1,'C',1);
-						$pdf->SetFillColor(255);
-					}else{
-						$pdf->MultiCell($largeurcom,$hauteurCommentaire,"$note",1,'C',1);  
-					}
-					$x+=$largeurcom;
-				}
-			}
-		}
-		$pdf->SetFillColor(255);
-
-		$y+=$hauteurCommentaire;
 		if ($y > 260) {
 			$pdf->AddPage();
 			$y=3;
+			$x=3;
 		}	
 	}
 
 	if ($y > 260) {
 		$pdf->AddPage();
 		$y=3;
+		$x=3;
 	}
 
 }
+	$y+=10;	
 
-} //fin du for du tableau eleve
+	$pdf->SetXY(3,$y);
+	$pdf->SetFillColor(210);
+	$pdf->SetFont($fontPolice,'',$sizePolice);
+	$pdf->MultiCell(205,10,"Bilan de l'acquisition des connaissances et compétences",1,'C',1);
+
+	$pdf->SetXY(3,$y+=10);
+	$pdf->MultiCell(205,60,"",1,'L',0);
+	$pdf->SetXY(4,$y+1);
+	$pdf->SetFont($fontPolice,'B',$sizePolice-2);
+	$pdf->MultiCell(203,10,"Appréciation générale sur la progression de l'élève",0,'L',1);
+	$pdf->SetFont($fontPolice,'',$sizePolice-2);
+	$pdf->SetXY(3,$y+12);
+	$pdf->MultiCell(203,10,"Appréciation personnelle de l’enseignant(e) / des enseignant(e)s",0,'L',0);
+	$pdf->SetXY(100,$y+22);
+	$date=dateDMY();
+	$pdf->MultiCell(205,10,"Le $date",0,'L',0);
+	$pdf->SetXY(100,$y+27);
+	$pdf->MultiCell(205,10,"Signature de l'enseignant(e) / des enseignant(e)s",0,'L',0);
+
+	$y+=60;	
+	
+	$y+=10;
+	$pdf->SetXY(3,$y);
+	$pdf->SetFillColor(210);
+        $pdf->SetFont($fontPolice,'',$sizePolice);
+        $pdf->MultiCell(205,10,"Communication avec les familles",1,'C',1);
+	$pdf->SetXY(3,$y+=10);
+        $pdf->MultiCell(205,60,"",1,'L',0);
+        $pdf->SetXY(4,$y+1);
+        $pdf->SetFont($fontPolice,'B',$sizePolice-2);
+        $pdf->MultiCell(203,10,"Visa des parents ou du responsable légal",0,'L',1);
+	$pdf->SetFont($fontPolice,'',$sizePolice-2);
+        $pdf->SetXY(100,$y+22);
+        $date=dateDMY();
+        $pdf->MultiCell(205,10,"Pris connaissance le :",0,'L',0);
+        $pdf->SetXY(100,$y+27);
+        $pdf->MultiCell(205,10,"Signatures :",0,'L',0);
+	
+	$pdf->SetXY(3,$y+61);
+	$text="Conformément aux articles 39 et suivants de la loi n° 78-17 du 6 janvier 1978 modifiée en 2004 relative à l’informatique, aux fichiers et aux libertés, toute personne peut obtenir communication et, le cas échéant, rectification ou suppression des informations la concernant, en s’adressant à son établissement scolaire.";
+        $pdf->SetFont($fontPolice,'I',$sizePolice-4);
+	$pdf->MultiCell(205,3,"$text",0,'L',0);
+
+}
+
 // ---------------------------------------------------------------
 
+
 // ---------------------------------------------------------------
+$nom_carnet=preg_replace('/\//','_',$nom_carnet);
+$nom_carnet=preg_replace('/ /','_',$nom_carnet);
 $fichier="./data/parametrage/${nom_carnet}.pdf";
 @unlink($fichier); // destruction avant creation
 $pdf->output('F',$fichier);
@@ -454,13 +391,14 @@ $pdf->close();
 //
 ?>
 <br />
-<ul><ul>
-<?php  if ($_SESSION["membre"] == "menuprof" ) { ?>
-	<input type=button onclick="open('visu_pdf_prof.php?id=<?php print $fichier?>','_blank','');" value="Récupération du carnet de suivi au format PDF"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
-<?php }else{ ?>
-	<input type=button onclick="open('visu_pdf_admin.php?id=<?php print $fichier?>','_blank','');" value="Récupération du carnet de suivi au format PDF"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
-<?php } ?>
-</ul></ul>
+
+<font class="T2">&nbsp;&nbsp;<?php print LANGCARNET57 ?> :</font> 
+	<input type=button onclick="open('visu_pdf_admin.php?id=<?php print $fichier?>','_blank','');" value="<?php print CLICKICI ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<br><br>
+<script language=JavaScript>buttonMagicRetour2("carnet_admin.php","_parent","<?php print LANGCIRCU14?>");</script>
+<br><br>
+
+
 <!-- // fin  -->
 </td></tr></table>
 
@@ -468,17 +406,17 @@ $pdf->close();
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

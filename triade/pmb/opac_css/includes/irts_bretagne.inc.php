@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: irts_bretagne.inc.php,v 1.8 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: irts_bretagne.inc.php,v 1.10.8.1 2025/03/25 07:32:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 function search_other_function_filters() {
-	global $typ_notice, $charset, $irts_bibli, $dbh;
+	global $typ_notice, $irts_bibli;
 	
-	$r.="<select name='irts_bibli'>";
+	$r ="<select name='irts_bibli'>";
 	$r.="<option value=''>tous les sites</option>";
 	$requete="select location_libelle,idlocation from docs_location where location_visible_opac=1";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($result)){
 		while ($loc = pmb_mysql_fetch_object($result)) {
 			$selected="";
@@ -22,8 +22,8 @@ function search_other_function_filters() {
 	}
 	$r.="</select>";
 
-	$r.="<br/>Restreindre Ã  <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles&nbsp;
-		<input type='checkbox' name=\"typ_notice[b]\" value='1' ".($typ_notice['b']?"checked":"")."/>&nbsp;NumÃ©ros de revue&nbsp;
+	$r.="<br/>Restreindre à <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles&nbsp;
+		<input type='checkbox' name=\"typ_notice[b]\" value='1' ".($typ_notice['b']?"checked":"")."/>&nbsp;Numéros de revue&nbsp;
 		<input type='checkbox' name=\"typ_notice[s]\" value='1' ".($typ_notice['s']?"checked":"")."/>&nbsp;Revues&nbsp;
 		<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
 	return $r;
@@ -48,7 +48,7 @@ function search_other_function_clause() {
 		}
 	}
 	
-	//RequÃªte renvoyÃ©e
+	//Requête renvoyée
 	if ($irts_bibli) {
 		$r = "select distinct notice_id from (
 				select distinct notice_id from notices join exemplaires on expl_notice=notice_id where expl_location=$irts_bibli $where 
@@ -88,18 +88,17 @@ function search_other_function_get_history($n) {
 }
 
 function search_other_function_human_query($n) {
-	global $dbh;
 	global $typ_notice;
 	global $irts_bibli;
 	$r="";
-	$irts_bibli=$_SESSION["irts_bibli".$n];
+	$irts_bibli=intval($_SESSION["irts_bibli".$n]);
 	if ($irts_bibli) {
 		$r="bibliotheque : ";
 		$requete="select location_libelle from docs_location where idlocation='".$irts_bibli."' limit 1";
-		$res=pmb_mysql_query($requete,$dbh);
-		$r.=@pmb_mysql_result($res,0,0);
+		$res=pmb_mysql_query($requete);
+		$r.=pmb_mysql_result($res,0,0);
 	}
-	$notices_t=array("m"=>"Monographies","s"=>"PÃ©riodiques","a"=>"Articles","b"=>"Bulletins");
+	$notices_t=array("m"=>"Monographies","s"=>"Périodiques","a"=>"Articles","b"=>"Bulletins");
 	$typ_notice=$_SESSION["typ_notice".$n];
 	if (count($typ_notice)) {
 		$r.="pour les types de notices ";
@@ -115,15 +114,23 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $irts_bibli,$typ_notice;
+	global $irts_bibli,$typ_notice, $charset;
 	
 	$ret = "";
-	if ($typ_notice['m'] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[m]\" value=\"$typ_notice[m]\">";
-	if ($typ_notice['s'] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[s]\" value=\"$typ_notice[s]\">";
-	if ($typ_notice['b'] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[b]\" value=\"$typ_notice[b]\">";
-	if ($typ_notice['a'] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[a]\" value=\"$typ_notice[a]\">";
-	return "<input type=\"hidden\" name=\"irts_bibli\" value=\"$irts_bibli\">".$ret."\n";
+	if (is_array($typ_notice)) {
+	    if ($typ_notice['m'] != "") {
+	        $ret .= "<input type=\"hidden\" name=\"typ_notice[m]\" value=\"".htmlentities($typ_notice['m'], ENT_QUOTES, $charset)."\">";
+	    }
+	    if ($typ_notice['s'] != "") {
+	        $ret .= "<input type=\"hidden\" name=\"typ_notice[s]\" value=\"".htmlentities($typ_notice['s'], ENT_QUOTES, $charset)."\">";
+	    }
+	    if ($typ_notice['b'] != "") {
+	        $ret .= "<input type=\"hidden\" name=\"typ_notice[b]\" value=\"".htmlentities($typ_notice['b'], ENT_QUOTES, $charset)."\">";
+	    }
+	    if ($typ_notice['a'] != "") {
+	        $ret .= "<input type=\"hidden\" name=\"typ_notice[a]\" value=\"".htmlentities($typ_notice['a'], ENT_QUOTES, $charset)."\">";
+	    }
+	}
+	return "<input type=\"hidden\" name=\"irts_bibli\" value=\"".htmlentities($irts_bibli, ENT_QUOTES, $charset)."\">".$ret."\n";
 	
 }
-
-?>

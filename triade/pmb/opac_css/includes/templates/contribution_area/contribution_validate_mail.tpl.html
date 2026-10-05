@@ -1,0 +1,9 @@
+<!-- $Id: contribution_validate_mail.tpl.html,v 1.2 2021/02/22 09:58:59 jlaurent Exp $ -->
+
+{% block user_info %}
+	<h3>Bonjour {{ empr.nom }} {{ empr.prenom }}</h3>
+	{{ msg.subject }} :
+	"{{ isbd }}" 
+	{{ date_contrib }} 
+	<a href='{{ url }}'>{{ msg.url }}</a>
+{% endblock %}

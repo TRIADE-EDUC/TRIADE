@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
+$Id: manifest.xml,v 1.1 2017/09/04 12:47:43 tsamson Exp $ -->
 
 <manifest>
 	<name>empr_contribution_scenario</name>

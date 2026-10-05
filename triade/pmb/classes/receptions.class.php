@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions.class.php,v 1.10 2019-04-20 14:45:16 ccraig Exp $
+// $Id: receptions.class.php,v 1.13 2021/12/28 08:46:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$class_path/analyse_query.class.php");
 require_once("$include_path/user_error.inc.php");
 
@@ -14,16 +15,16 @@ if(!defined('TYP_ACT_CDE')) define('TYP_ACT_CDE', 0);	//				0 = Commande
 if(!defined('TYP_ACT_DEV')) define('TYP_ACT_DEV', 1);	//				1 = Demande de devis
 if(!defined('TYP_ACT_LIV')) define('TYP_ACT_LIV', 2);	//				2 = Bon de Livraison
 if(!defined('TYP_ACT_FAC')) define('TYP_ACT_FAC', 3);	//				3 = Facture
-if(!defined('TYP_ACT_RENT_ACC')) define('TYP_ACT_RENT_ACC', 4);	//		4 = Demande/DÃ©compte de location
+if(!defined('TYP_ACT_RENT_ACC')) define('TYP_ACT_RENT_ACC', 4);	//		4 = Demande/Décompte de location
 if(!defined('TYP_ACT_RENT_INV')) define('TYP_ACT_RENT_INV', 5);	//		5 = Facture de Location
 
 if(!defined('STA_ACT_ALL')) define('STA_ACT_ALL', -1);	//Statut acte	-1 = Tous
 if(!defined('STA_ACT_AVA')) define('STA_ACT_AVA', 1);	//				1 = A valider
 if(!defined('STA_ACT_ENC')) define('STA_ACT_ENC', 2);	//				2 = En cours
-if(!defined('STA_ACT_REC')) define('STA_ACT_REC', 4);	//				4 = ReÃ§u/LivrÃ©
-if(!defined('STA_ACT_FAC')) define('STA_ACT_FAC', 8);	//				8 = FacturÃ©
-if(!defined('STA_ACT_PAY')) define('STA_ACT_PAY', 16);	//				16 = PayÃ©
-if(!defined('STA_ACT_ARC')) define('STA_ACT_ARC', 32);	//				32 = ArchivÃ©
+if(!defined('STA_ACT_REC')) define('STA_ACT_REC', 4);	//				4 = Reçu/Livré
+if(!defined('STA_ACT_FAC')) define('STA_ACT_FAC', 8);	//				8 = Facturé
+if(!defined('STA_ACT_PAY')) define('STA_ACT_PAY', 16);	//				16 = Payé
+if(!defined('STA_ACT_ARC')) define('STA_ACT_ARC', 32);	//				32 = Archivé
 
 class receptions {
 	
@@ -39,8 +40,8 @@ class receptions {
 	
 	//Constructeur
 	public function __construct($id_bibli,$id_exer) {
-		$this->id_bibli=$id_bibli+0;
-		$this->id_exer=$id_exer+0;
+		$this->id_bibli=intval($id_bibli);
+		$this->id_exer=intval($id_exer);
 	}
 	
 	
@@ -78,7 +79,7 @@ class receptions {
 			$this->filtre_lignes.= "and lignes_actes.num_rubrique in ('".implode("','",$tab_rub)."') ";
 		}
 		
-		if (is_array($lgstat_filter) && count($lgstat_filter)) {
+		if (is_array($lgstat_filter) && count($lgstat_filter) && $lgstat_filter[0]) {
 			$this->filtre_lignes.= "and lignes_actes.statut in ('".implode("','",$lgstat_filter)."') ";
 		}
 		
@@ -101,7 +102,7 @@ class receptions {
 	
 	//Compte le nb de lignes d'acte en reception
 	public function calcNbLignes($all_query='') {
-		global $dbh,$msg;
+		global $msg;
 		
 		//analyse_query 
 		switch ($this->type_acte) {
@@ -117,7 +118,7 @@ class receptions {
 					$q_cde.= "left join suggestions on num_acquisition=id_suggestion left join suggestions_origine on num_suggestion=id_suggestion ";
 					$q_cde.= "where ";
 					$q_cde.= $this->filtre_actes.$this->filtre_lignes.$this->filtre_origines;
-					pmb_mysql_query($q_cde, $dbh);
+					pmb_mysql_query($q_cde);
 					//echo $q_cde.'<br />';
 					
 					$q_liv = "create temporary table tmp_liv as ";
@@ -125,7 +126,7 @@ class receptions {
 					$q_liv.= "join actes on num_acte=id_acte and type_acte='".TYP_ACT_LIV."' ";
 					$q_liv.= "where lig_ref in (select id_ligne from tmp_cde)";
 					$q_liv.= "group by lig_ref ";
-					pmb_mysql_query($q_liv, $dbh);
+					pmb_mysql_query($q_liv);
 					//echo $q_liv.'<br />';
 					
 					$q_sol = "select distinct id_ligne, id_acte, numero, num_fournisseur, raison_sociale, type_ligne, date_acte, nb_cde ,if(nb_liv is null,0,nb_liv) as nb_liv, if(nb_liv is null,nb_cde,((nb_cde*1)-(nb_liv*1))) as nb_sol, ";
@@ -133,7 +134,7 @@ class receptions {
 					$q_sol.= "from tmp_cde left join tmp_liv on id_ligne=lig_ref ";
 					$q_sol.= "where ((nb_cde*1)-(nb_liv*1)) > 0 or nb_liv is null ";
 					$q_sol.= "order by raison_sociale, numero ";
-					$r_sol = pmb_mysql_query($q_sol, $dbh);
+					$r_sol = pmb_mysql_query($q_sol);
 					//echo $q_sol.'<br />';
 					
 					$r = pmb_mysql_num_rows($r_sol);
@@ -169,7 +170,7 @@ class receptions {
 					} else {
 										
 						//$members_actes = $aq->get_query_members("actes","numero","index_acte", "id_acte");
-						$members_actes = array();
+						$members_actes = array('where' => '0');
 						
 						$members_lignes = $aq->get_query_members("lignes_actes","code","index_ligne", "id_ligne");
 						$members_global = $aq->get_query_members("notices_global_index","infos_global","index_infos_global","num_notice");
@@ -201,7 +202,7 @@ class receptions {
 						$q_cde.= "or ".$members_global['where'].") ";
 						$q_cde.= ")  ";
 						
-						pmb_mysql_query($q_cde, $dbh);
+						pmb_mysql_query($q_cde);
 						//echo $q_cde.'<br />';
 						
 						$q_liv = "create temporary table tmp_liv as ";
@@ -209,7 +210,7 @@ class receptions {
 						$q_liv.= "join actes on lignes_actes.num_acte=actes.id_acte and actes.type_acte='".TYP_ACT_LIV."' ";
 						$q_liv.= "where lig_ref in (select id_ligne from tmp_cde) ";
 						$q_liv.= "group by lig_ref ";
-						pmb_mysql_query($q_liv, $dbh);
+						pmb_mysql_query($q_liv);
 						//echo $q_liv.'<br />';
 						
 						$q_sol = "select distinct id_ligne, id_acte, numero, num_fournisseur, raison_sociale, type_ligne, date_acte, nb_cde, if(nb_liv is null,0,nb_liv) as nb_liv, if(nb_liv is null,nb_cde, ((nb_cde*1)-(nb_liv*1))) as nb_sol, ";
@@ -217,7 +218,7 @@ class receptions {
 						$q_sol.= "from tmp_cde left join tmp_liv on id_ligne=lig_ref ";
 						$q_sol.= "where ((nb_cde*1)-(nb_liv*1)) > 0 or nb_liv is null ";
 						$q_sol.= "order by raison_sociale, numero ";
-						$r_sol = pmb_mysql_query($q_sol, $dbh);
+						$r_sol = pmb_mysql_query($q_sol);
 						//echo $q_sol.'<br />';
 						
 						$r = pmb_mysql_num_rows($r_sol);
@@ -238,9 +239,10 @@ class receptions {
 								$this->t_list[$i][$j]['libelle'] = $row->libelle;
 								$this->t_list[$i][$j]['statut'] = $row->statut;
 								$this->t_list[$i][$j]['commentaires_gestion'] = $row->commentaires_gestion;
-								$this->t_list[$i][$j]['commentaires_opac'] = $row->commentaires_opac;															}
+								$this->t_list[$i][$j]['commentaires_opac'] = $row->commentaires_opac;
 								$this->t_list[$i][$j]['num_produit'] = $row->num_produit;
 								$this->t_list[$i][$j]['num_acquisition'] = $row->num_acquisition;
+							}
 						}
 					}
 				}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!-- liste des enrichissements de notice 
-$Id: categories.xml,v 1.2 2012-02-15 14:40:40 arenou Exp $ -->
+$Id: categories.xml,v 1.2 2012/02/15 14:40:40 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="resume">msg:source_enrichment_resume</entry>

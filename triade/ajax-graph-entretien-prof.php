@@ -9,7 +9,7 @@ include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 $data=listingEntretienEnseignant(); // idprof,duree,idclasse,date_saisie,reference,ideleve
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$idclasse=$data[$i][2];
 	$seconde=conv_en_seconde($data[$i][1]);
 	if ($seconde != "") {

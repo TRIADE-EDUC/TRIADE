@@ -26,7 +26,7 @@ $id=php_ini_get("safe_mode");
 if ($id != 1) {
 	set_time_limit(300);
 }
-$nofooterPDF=NOFOOTERPDF;
+if (defined("NOFOOTERPDF")) $nofooterPDF=NOFOOTERPDF;
 
 ?>
 <HTML>
@@ -45,11 +45,11 @@ $nofooterPDF=NOFOOTERPDF;
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -80,7 +80,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 $debut=deb_prog();
 $valeur=visu_affectation_detail_bulletin($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; $triabsconet="T1"; $sem=1; }
 	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; $triabsconet="T2"; $sem=2; }
@@ -98,7 +98,7 @@ if ($_POST["typetrisem"] == "semestre") {
 
 if ($triabsconet == "T1") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"]);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -109,7 +109,7 @@ if ($triabsconet == "T1") {
 
 if ($triabsconet == "T2") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"]);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -120,7 +120,7 @@ if ($triabsconet == "T2") {
 
 if ($triabsconet == "T3") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"]);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -130,13 +130,13 @@ if ($triabsconet == "T3") {
 
 if ($triabsconet == "T4") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"]);
-        for($j=0;$j<count($dateRecup);$j++) {
+        for($j=0;$j<countTriade($dateRecup);$j++) {
                 $dateDebut=$dateRecup[$j][0];
         }
         $dateDebut=dateForm($dateDebut);
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"]);
-        for($j=0;$j<count($dateRecup);$j++) {
+        for($j=0;$j<countTriade($dateRecup);$j++) {
                 $dateFin=$dateRecup[$j][1];
         }
         $dateFin=dateForm($dateFin);
@@ -152,11 +152,19 @@ $classe_long=stripslashes($data[0][2]);
 $anneeScolaire=$_POST["annee_scolaire"];
 $eleveT=recupEleve($_POST["saisie_classe"]);
 
+
+if (isset($_POST['previsu'])){
+	if($_POST['previsu'] == "oui") {
+		// nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve
+		$eleveT=array("nom","prenom","lv1","lv2","-1","date_naissance","lieu_naissance","adr1,code_post_adr1","commune_adr1","telephone","numero_eleve","tel_fixe_eleve");
+	}
+}
+
 if (isset($_POST["createadmis"])) {
 	$idclasse=$_POST["idclasse"];
 	$bulletinProvisoire=$_POST["bulletinProvisoire"];
 
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		$idEleve=$eleveT[$j][4];
 		$admis=$_POST["admis_$idEleve"];
 		saveIpacBulletin($idEleve,$admis,$anneeScolaire,$idclasse,$bulletinProvisoire);
@@ -179,7 +187,7 @@ if (isset($_POST["createadmis"])) {
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_paramViaIdSite(chercheIdSite($_POST["saisie_classe"]));
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim(TextNoAccent($data[$i][0]));
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -191,10 +199,9 @@ for($i=0;$i<count($data);$i++) {
 }
 // fin de la recup
 
-
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -257,14 +264,14 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 // Fin du Calcul moyenne classe
 
 $plageEleve=$_POST["plageEleve"];
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$moyenneGenerale="";
@@ -288,7 +295,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$dejapasse=0;
 
 	$admisManuel=recupIpacBulletin($idEleve,$anneeScolaire,$idclasse,$bulletinProvisoire);
-	
+
 	$pdf->AddPage();
 	$pdf->SetTitle("Bulletin - $nomEleve $prenomEleve");
 	$pdf->SetCreator("T.R.I.A.D.E.");
@@ -306,7 +313,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	// mise en place du logo
 	$photo=recup_photo_bulletin_idsite(chercheIdSite($_POST["saisie_classe"]));
-	if (count($photo) > 0) {
+	if (countTriade($photo) > 0) {
 		$logo="./data/image_pers/".$photo[0][0];
 		if (file_exists($logo)) {
 			$xcoor0=30;
@@ -378,7 +385,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$ectsTOTAL=0;
 	// mise en place des matieres
 	$largeurMat=50;
-	for($f=0;$f<count($recupUE);$f++) {
+	for($f=0;$f<countTriade($recupUE);$f++) {
 		$code_ue=$recupUE[$f][0];
 		$nom_ue=$recupUE[$f][1];
 		$coef_ue=$recupUE[$f][2];
@@ -395,7 +402,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		// Verification si saut de page
 		// ---------------------------
 		$nbmatiere=0;
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 			$idmatiere=$idMatiere=$listeMatiere[$i][0];
 			$ordreaffichage=$listeMatiere[$i][3];
 			$verifGroupe=verifMatiereAvecGroupeUE($idmatiere,$idEleve,$idClasse,$ordreaffichage);
@@ -443,7 +450,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			}else{
 
 			//  u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull , a.langue , a.specif_etat , e.semestre , a.ects
-				for($i=0;$i<count($listeMatiere);$i++) {
+				for($i=0;$i<countTriade($listeMatiere);$i++) {
 					if ($listeMatiere[$i][6] != "etudedecasipac") continue;
 			               	$X=$Xorigine;
 	        	               	$idmatiere=$listeMatiere[$i][0];
@@ -655,7 +662,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 
 		//  // u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull, a.langue
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 			$X=$Xorigine;
 			
 			if ($listeMatiere[$i][6] == "etudedecasipac") continue;
@@ -1132,16 +1139,21 @@ if ($point > 0) {
 }
 $pdf->SetFillColor(43,164,136);
 $pdf->SetTextColor(255,255,255);
-$pdf->RoundedRect($X=$Xorigine, $Y+=0, $largeurBulle, 17, 3.5, 'DF');
-$pdf->SetXY($X,$Y+1);
+$pdf->RoundedRect($X=$Xorigine, $Y+=0, $largeurBulle, 17, 3.5,'DF');
+$pdf->SetXY($X+2,$Y+1);
 if ($point > 0) {
-	$pdf->MultiCell($largeurBulle,$hpt,"$textPT",0,'R',0);
-	$pdf->SetXY($X,$Y+=7);
+	$pdf->SetXY($X+2,$Y+1);
+	$pdf->MultiCell($largeurBulle,$hpt,"$textPT",0,'L',0);
+	$pdf->SetXY($X+2,$Y+=7);
 }
 
-$pdf->MultiCell($largeurBulle/2,$hpt,"$texte1",0,'R',0);
-$pdf->SetXY($X+($largeurBulle/2),$Y+3);
-$pdf->MultiCell($largeurBulle/2,5,"$texte2",0,'L',0);
+$pdf->MultiCell($largeurBulle/2,$hpt,"$texte1",0,'L',0);
+if ($point > 0) {
+	$pdf->SetXY($X+($largeurBulle/2),$Y);
+}else{
+	$pdf->SetXY($X+($largeurBulle/2),$Y+1);
+}
+$pdf->MultiCell($largeurBulle/2,$hpt,"$texte2",0,'L',0);
 
 $pdf->SetFillColor(255);
 $pdf->SetTextColor(0);
@@ -1329,7 +1341,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -1348,7 +1360,7 @@ if (($niveauClasse == "A1") || ($niveauClasse == "A2") || ($niveauClasse == "A4"
 	print  "<form method='post' action='bulletin_construction04UE.php' >";
 	print  "<ul><font class='T2'>Liste des admissions $provisoire actuellement positionnées : </font>";
 	$saisie="Saisie AUTO";
-	if (count($valeurIPACBULL)) $saisie="Saisie MANUELLE"; 
+	if (countTriade($valeurIPACBULL)) $saisie="Saisie MANUELLE"; 
 	print  "(<font id='color3'><b>$saisie</b></font>)</ul>";
 	print  "<ul><table border='1' style='border-collapse: collapse;' width='80%' >$afficheAdmis" ;
 	print  "</table><br><br>";

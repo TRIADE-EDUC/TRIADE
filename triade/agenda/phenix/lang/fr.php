@@ -90,8 +90,8 @@ $LG['COMMUN_DATE_DERNIERE_MODIF'] = "Derni&egrave;re modification le %s";
 $LG['COMMUN_MODIFICATION_PAR'] = "par %s";
 $LG['COMMUN_CHANGER_STATUT'] = "Changer le statut";
 /*** fonctions.inc ***/
-$LG['FCT_MAIL_AUTO'] = "Mail automatique g&eacute;n&eacute;r&eacute; par Phenix %s [<A href=\"http://www.phenix.gapi.fr\"><FONT color=\"black\">phenix.gapi.fr</FONT></A>]";
-$LG['FCT_SUJET_MAIL'] = "[Phenix] %s";
+$LG['FCT_MAIL_AUTO'] = "Mail automatique g&eacute;n&eacute;r&eacute; par TRIADE-Phenix %s ]";
+$LG['FCT_SUJET_MAIL'] = "[Triade] %s";
 $LG['FCT_CONTACT_ASSOCIE'] = "Contact associ&eacute;";
 /*** html.inc ***/
 $LG['MSG_UTIL_INCONNU'] = "Utilisateur inconnu !";
@@ -872,7 +872,7 @@ $LG['PPX_MOT_DE_PASSE'] = "Mot de passe";
 $LG['PPX_BT_OK'] = "OK";
 $LG['PPX_BT_RAZ'] = "Raz";
 $LG['PPX_VERSION_PHENIX'] = "Pocket-PheniX %s";
-$LG['PPX_COPYRIGHT'] = "&copy; <a href=\"mailto:phenix-agenda@laposte.net\">St&eacute;phane TEIL</a>";
+$LG['PPX_COPYRIGHT'] = "&copy; Triade-Phenix";
 $LG['PPX_CALEPIN_DE'] = "Calepin de <b>%s</b>";
 $LG['PPX_AGENDA_DE'] = "Agenda de <b>%s</b>";
 $LG['PPX_MENU_AGENDA'] = "Agenda";
@@ -1147,7 +1147,7 @@ $LG['TIMODE_MOT_DE_PASSE'] = "Mot de passe";
 $LG['TIMODE_BT_OK'] = "OK";
 $LG['TIMODE_BT_RAZ'] = "Raz";
 $LG['TIMODE_VERSION_PHENIX'] = "TiMode %s";
-$LG['TIMODE_COPYRIGHT'] = "&copy; <a href=\"mailto:phenix-agenda@laposte.net \">St&eacute;phane TEIL</a>";
+$LG['TIMODE_COPYRIGHT'] = "&copy; Triade-Phenix";
 $LG['TIMODE_CALEPIN_DE'] = "Calepin de %s";
 $LG['TIMODE_AGENDA_DE'] = "Agenda de %s";
 $LG['TIMODE_PAS_DE_NOTE'] = "Pas de note";
@@ -1671,7 +1671,7 @@ $LG['ABOUT_TRADUCTION'] = "traductions non officielles";
 $LG['ABOUT_PHENIX'] = "Phenix Agenda";
 $LG['ABOUT_PHP'] = "PHP Logo";
 $LG['ABOUT_MYSQL'] = "MySQL Logo";
-$LG['ABOUT_COPYRIGHT'] = "<B>&copy; 2005-2008 - <A href=\"mailto:phenix-agenda@laposte.net\" class=\"about\">St&eacute;phane TEIL</A> - Tous Droits R&eacute;serv&eacute;s.</B>";
+$LG['ABOUT_COPYRIGHT'] = "<B>&copy; 2005-2008 - Stéphane TEIL | &copy; 2009-".date("Y")." - T.R.I.A.D.E. - Tous Droits R&eacute;serv&eacute;s.</B>";
 // FIN - En accord avec la licence GPL sous laquelle Phenix est distribue, merci de ne pas supprimer ou modifier le code qui precede
 // Fichiers langue des MODs, NE PAS MODIFER OU SUPPRIMER la ligne ci-dessous
 include "mods/mod_lang.php";

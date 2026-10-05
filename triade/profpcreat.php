@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 $anneeScolaire=$_COOKIE["anneeScolaire"];
 if (isset($_POST["anneeScolaire"])) {
@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -31,6 +31,12 @@ if (isset($_POST["anneeScolaire"])) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg) { alertify.error(msg); };</script>
 <script language="JavaScript" src="./librairie_js/lib_affectation.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -41,99 +47,132 @@ if (isset($_POST["anneeScolaire"])) {
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php
 include("./librairie_php/lib_licence.php");
-?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
-<?php include("./librairie_php/lib_defilement.php"); ?>
-</TD><td width="472" valign="middle" rowspan="3" align="center">
-<div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE15?></font></b></td></tr>
-<tr id='cadreCentral0'>
-<td>
-<!-- //  debut -->
-<br>
-<?php
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 validerequete("menuadmin");
+
 if (isset($_GET["suppidprof"])) {
 	@delete_profp2($_GET["suppidprof"],$_GET["idclass"],$_GET["anneeScolaire"]);
 }
 
+$__successMsg = null;
 if (isset($_POST["create"])) {
-	for($i=0;$i<$_POST["nb"];$i++) { 
+	for($i=0;$i<$_POST["nb"];$i++) {
 		$saisie_classe=$_POST["saisie_classe_$i"];
-		@create_profp($_POST["saisie_prof"],$saisie_classe,$anneeScolaire);	
-        }
-	alertJs(LANGDONENR);
+		@create_profp($_POST["saisie_prof"],$saisie_classe,$anneeScolaire);
+	}
+	$__successMsg = LANGDONENR;
 }
 ?>
-<ul>
-<form method='post' action='profpcreat.php'  >
-<font class="T2"><?php print LANGBULL3 ?> :</font>
-<select name='anneeScolaire' onChange="this.form.submit()" >
-<?php
-filtreAnneeScolaireSelectNote($anneeScolaire,10);
-?>
-</select>
-</form>
-<br>
-<form method='post' action='profpcreat.php' >
-<font class="T2"><?php print LANGPER6?> :</font> <select name="saisie_prof">
-<option value="rien"  STYLE='color:#000066;background-color:#FCE4BA' ><?php print LANGCHOIX?></option>
-<?php select_personne_2("ENS",35);?>
-</select>
-<br><br><br>
-<font class="T2"><?php print LANGPER7?> :</font>
-<br/>
-<table align='center'>
-<tr>
-<?php
-$data=affClasse();
-$ii=0;
-for($i=0;$i<count($data);$i++) {
-        $nomclasse=$data[$i][1];
-	$idclasse=$data[$i][0];
-	print "<td style='padding-right:5px' ><input type='checkbox' value='$idclasse' name='saisie_classe_$i'  /> $nomclasse ";
-	print "</td>";
-	$ii++; 
- 	if ($ii == 4) { print "</tr><tr>"; $ii=0; }
-}
-?>
-</tr></table>
-<input type='hidden' name='nb' value='<?php print count($data) ?>' />
-<br><br>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT18?>","create"); //text,nomInput</script>
-<br><br>
-<input type='hidden' name='anneeScolaire' value="<?php print $anneeScolaire ?>" />
-</form>
-</ul>
-<hr width=70%>
-<br>
-<table border=1 width=90% bgcolor="#FFFFFF" bordercolor="#CCCC00" align=center>
+<?php if ($__successMsg): ?>
+<script>document.addEventListener('DOMContentLoaded',function(){ alertify.success('<?php print addslashes($__successMsg) ?>'); });</script>
+<?php endif; ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
+<?php include("./librairie_php/lib_defilement.php"); ?>
+</TD><td width="472" valign="middle" rowspan="3" align="center">
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGTITRE15?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
+<!-- //  debut -->
+
+<div style="display:flex;flex-direction:column;gap:16px;padding:12px 8px">
+
+<!-- Filtre année scolaire -->
+<div class="toolbar">
+  <form method='post' action='profpcreat.php' style="display:inline-flex;align-items:center;gap:8px">
+    <span class="form-label" style="margin:0"><?php print LANGBULL3 ?> :</span>
+    <select name='anneeScolaire' class="form-control" onChange="this.form.submit()">
+      <?php filtreAnneeScolaireSelectNote($anneeScolaire,10); ?>
+    </select>
+  </form>
+</div>
+
+<!-- Formulaire d'affectation -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="bi bi-person-badge"></i> <?php print LANGPER6 ?></span>
+  </div>
+  <div class="card-body">
+    <form method='post' action='profpcreat.php'>
+
+      <div class="form-row">
+        <span class="form-label"><?php print LANGPER6 ?> :</span>
+        <select name="saisie_prof" class="form-control">
+          <option value="rien" style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+          <?php select_personne_2("ENS",35); ?>
+        </select>
+      </div>
+
+      <div class="form-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <span class="form-label"><?php print LANGPER7 ?> :</span>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px;width:100%;padding:10px;background:#f8f9ff;border:1px solid #e0e4f4;border-radius:8px">
+          <?php
+          $data=affClasse();
+          for($i=0;$i<countTriade($data);$i++) {
+              $nomclasse=$data[$i][1];
+              $idclasse=$data[$i][0];
+              print "<label style='display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer'>";
+              print "<input type='checkbox' value='$idclasse' name='saisie_classe_$i' style='accent-color:#080A66'> $nomclasse";
+              print "</label>";
+          }
+          ?>
+        </div>
+      </div>
+
+      <input type='hidden' name='nb' value='<?php print countTriade($data) ?>' />
+      <input type='hidden' name='anneeScolaire' value="<?php print $anneeScolaire ?>" />
+
+      <div class="form-row" style="border-bottom:none;padding-top:8px;gap:8px">
+        <script language=JavaScript>buttonMagicSubmit("<?php print LANGBT18?>","create");</script>
+        <script language=JavaScript>buttonMagicRetour("javascript:history.back()");</script>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- Liste des affectations existantes -->
 <?php
 nettoyageProfP();
 $data=aff_prof_p($anneeScolaire);
-for($i=0;$i<count($data);$i++) {
 ?>
-<tr class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'" >
-<td id="bordure" width='50%' >
-<?php $nomprenom=recherche_personne($data[$i][0]); print ucwords(strtolower($nomprenom)); ?> </td><td id="bordure"  > <?php $data2=chercheClasse($data[$i][1]);print ucwords(preg_replace('/ /',"&nbsp;",$data2[0][1]));?>
-</td>
-<td id="bordure" width=5 >
-&nbsp;[&nbsp;<a href="profpcreat.php?suppidprof=<?php print $data[$i][0]?>&idclass=<?php print $data[$i][1]?>&anneeScolaire=<?php print $anneeScolaire ?>"><?php print LANGacce21 ?></a>&nbsp;]&nbsp;
-</td>
-</tr>
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i class="bi bi-list-ul"></i> Affectations existantes</span>
+  </div>
+  <table class="table" style="margin:0">
+    <thead>
+      <tr>
+        <th class="cc-th" style="width:45%">Enseignant</th>
+        <th class="cc-th">Classe</th>
+        <th class="cc-th" style="width:70px;text-align:center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    <?php for($i=0;$i<countTriade($data);$i++) { ?>
+      <tr class="cc-tr-data">
+        <td><?php $nomprenom=recherche_personne($data[$i][0]); print ucwords(strtolower($nomprenom)); ?></td>
+        <td><?php $data2=chercheClasse($data[$i][1]); print ucwords(preg_replace('/ /',"&nbsp;",$data2[0][1])); ?></td>
+        <td style="text-align:center">
+          <a href="profpcreat.php?suppidprof=<?php print $data[$i][0]?>&idclass=<?php print $data[$i][1]?>&anneeScolaire=<?php print $anneeScolaire ?>"
+             style="color:#c62828;font-size:15px;text-decoration:none" title="<?php print LANGacce21 ?>">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+    <?php } ?>
+    <?php if (countTriade($data)==0) { ?>
+      <tr><td colspan="3" style="text-align:center;color:#888;font-style:italic;padding:12px">Aucune affectation</td></tr>
+    <?php } ?>
+    </tbody>
+  </table>
+</div>
 
-
-<?php
-}
-?>
-</table>
-<br>
-<br>
+</div>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

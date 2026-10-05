@@ -1,10 +1,10 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: circdiff_drop.js,v 1.4 2016-09-29 13:44:41 dgoron Exp $ */
+// $Id: circdiff_drop.js,v 1.4 2016/09/29 13:44:41 dgoron Exp $ */
 
 /*
- * Fonction pour trier la liste des destinataires en circulation de pÃ©riodique
+ * Fonction pour trier la liste des destinataires en circulation de périodique
  */
 function circdiffdrop_circdiffdrop(dragged,target){
 	element_drop(dragged,target,'circdiffdrop');

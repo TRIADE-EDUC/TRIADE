@@ -4,15 +4,44 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.1 2018-06-08 08:10:26 vtouchard Exp $ -->
+$Id: en_UK.xml,v 1.4 2021/02/09 15:30:46 jlaurent Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
-  <entry code="loanBook_description">Webservice permettant de réaliser un prêt numérique depuis l'OPAC</entry>
-  <entry code="loanBook_id_empr">Identifiant de l'emprunteur</entry>
-  <entry code="loanBook_record_id">Identifiant de la notice</entry>
-  <entry code="loanBook_user_agent">Identifiant du périphérique utilisé par l'emprunteur</entry>
-  <entry code="loanBook_output_description">Retour du prêt</entry>
-  <entry code="loanBook_input_description">Paramètres nécessaires à l'appel de la méthode</entry>
+  <entry code="pmbesPNB_description">Fonctions relatives au prêt numérique (PNB)</entry>
+  
+  <entry code="loanBook_description">Effectuer un prêt numérique depuis l'OPAC</entry>
+  <entry code="loanBook_inputs_description" />
+  <entry code="loanBook_input_id_empr">Identifiant de l'emprunteur</entry>
+  <entry code="loanBook_input_record_id">Identifiant de la notice</entry>
+  <entry code="loanBook_input_user_agent">Identifiant du périphérique de lecture utilisé</entry>
+  <entry code="loanBook_input_pass">Mot de passe choisi par l'utilisateur, si celui-ci défini un mot de passe spécifique pour l'emprunt</entry>
+  <entry code="loanBook_input_hintPass">Phrase secrète choisie par l'utilisateur, si celui-ci défini un mot de passe spécifique pour l'emprunt</entry>
+  <entry code="loanBook_outputs_description"/>
+  <entry code="loanBook_output_status">Résultat de la requête</entry>
+  <entry code="loanBook_output_message">Message à afficher</entry>
+  <entry code="loanBook_output_infos">Informations retournées par le Web service DILICOM</entry>
+  
+  <entry code="returnBook_description">Effectuer un retour de prêt numérique depuis l'OPAC</entry>
+  <entry code="returnBook_inputs_description"/>
+  <entry code="returnBook_input_emprId">Identifiant de l'emprunteur</entry>
+  <entry code="returnBook_input_explId">Identifiant de l'exemplaire</entry>
+  <entry code="returnBook_input_fromPortal">Indicateur appel depuis Portail</entry>
+  <entry code="returnBook_input_drm">DRM utilisée (ACS, LCP)</entry>
+  <entry code="returnBook_outputs_description"/>
+  <entry code="returnBook_output_status">Résultat de la requête</entry>
+  <entry code="returnBook_output_message">Message à afficher</entry>
+  <entry code="returnBook_output_infos">Informations retournées par le Web service DILICOM</entry>
+  
+  <entry code="extendLoan_description">Prolonger un prêt numérique depuis l'OPAC</entry>
+  <entry code="extendLoan_inputs_description"/>
+  <entry code="extendLoan_input_emprId">Identifiant de l'emprunteur</entry>
+  <entry code="extendLoan_input_explId">Identifiant de l'exemplaire</entry>
+  <entry code="extendLoan_input_fromPortal">Indicateur appel depuis Portail</entry>
+  <entry code="extendLoan_input_drm">DRM utilisée (ACS, LCP)</entry>
+  <entry code="extendLoan_outputs_description"/>
+  <entry code="extendLoan_output_status">Résultat de la requête</entry>
+  <entry code="extendLoan_output_message">Message à afficher</entry>
+  <entry code="extendLoan_output_infos">Informations retournées par le Web service DILICOM</entry>
   
 </XMLlist>

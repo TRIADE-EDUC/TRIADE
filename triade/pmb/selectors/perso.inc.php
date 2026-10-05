@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: perso.inc.php,v 1.24 2019-06-06 15:04:28 btafforeau Exp $
+// $Id: perso.inc.php,v 1.27 2023/08/30 14:32:32 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $recherche;
+global $recherche, $default_tmp_storage_engine;
 
 $base_url = "./select.php?what=perso&caller=$caller&p1=$p1&p2=$p2&perso_id=$perso_id&custom_prefixe=".$custom_prefixe."&dyn=$dyn&perso_name=$perso_name";
 
@@ -72,10 +72,11 @@ if ($type=="list") {
 			}
 			foreach($alphabet as $dummykey=>$char) {
 				$present = pmb_preg_grep("/^$char/i", $marclist_type->table);
-				if(sizeof($present) && strcasecmp($letter, $char))
-						print "<a href='$base_url&letter=$char'>$char</a> ";
-				else if(!strcasecmp($letter, $char))
-						print "<strong><u>$char</u></strong> ";
+				if (!empty($present) && strcasecmp($letter, $char)) {
+					print "<a href='$base_url&letter=$char'>$char</a> ";
+				} else if (!strcasecmp($letter, $char)) {
+					print "<strong><u>$char</u></strong> ";
+				}
 			}
 			print "</div><hr />";
 
@@ -90,7 +91,7 @@ if ($type=="list") {
 			} elseif (($options['METHOD_SORT_VALUE'][0]['value']=="3") && ($options['METHOD_SORT_ASC'][0]['value']=="2")) {
 				$marclist_type->table = array_reverse($marclist_type->table, true);
 			}
-			// Sinon on ne fait rien, le tableau est dÃ©jÃ  triÃ© avec l'attribut order
+			// Sinon on ne fait rien, le tableau est déjà trié avec l'attribut order
 			
 			reset($marclist_type->table);
 			
@@ -114,7 +115,7 @@ if ($type=="list") {
 			} elseif (($options['METHOD_SORT_VALUE'][0]['value']=="3") && ($options['METHOD_SORT_ASC'][0]['value']=="2")) {
 				$marclist_type->table = array_reverse($marclist_type->table, true);
 			}
-			// Sinon on ne fait rien, le tableau est dÃ©jÃ  triÃ© avec l'attribut order
+			// Sinon on ne fait rien, le tableau est déjà trié avec l'attribut order
 			
 			reset($marclist_type->table);
 			
@@ -149,7 +150,7 @@ if ($type=="list") {
 	}
 	
 } else {
-	$requete="create temporary table temp_perso_list ENGINE=MyISAM ".$options['QUERY'][0]['value'];
+	$requete="create temporary table temp_perso_list ENGINE={$default_tmp_storage_engine} ".$options['QUERY'][0]['value'];
 	pmb_mysql_query($requete);
 	
 	$resultat=pmb_mysql_query("show columns from temp_perso_list");
@@ -171,7 +172,7 @@ if ($type=="list") {
 }
 
 if ($has_searchable) {
-	$sel_search_form=str_replace("!!deb_rech!!",htmlentities(stripslashes($f_user_input),ENT_QUOTES,$charset),$sel_search_form);
+	$sel_search_form=str_replace("!!deb_rech!!",htmlentities(stripslashes($recherche),ENT_QUOTES,$charset),$sel_search_form);
 	print $sel_search_form;
 }
 
@@ -207,7 +208,7 @@ if ($has_paginated) {
 	$nbepages = ceil($nbr_lignes/$nb_per_page);
 	$suivante = $page+1;
 	$precedente = $page-1;
-	// affichage du lien prÃ©cÃ©dent si nÃ©cÃ©ssaire
+	// affichage du lien précédent si nécéssaire
 	print "<div class='row'>&nbsp;<hr /></div><div class='center'>";
 	if($precedente >= 0) {
 		print "<a href='$base_url&page=$precedente&nbr_lignes=$nbr_lignes&recherche=".rawurlencode($recherche)."'><img src='".get_url_icon('left.gif')."' border='0' title='$msg[48]' alt='[$msg[48]]' hspace='3' class='align_middle' /></a>";

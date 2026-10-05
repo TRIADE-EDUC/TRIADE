@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- liste des fonctions d'import disponible
-$Id: func_import.xml,v 1.8 2019-05-27 13:57:45 mbertin Exp $ -->
+$Id: func_import.xml,v 1.8 2019/05/27 13:57:45 mbertin Exp $ -->
 <catalog>
 	<item name="ADAV" function="func_adav.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, le 856 $u en vignette de la notice, les 900 $a et 902 $a en documents numériques, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>
 	<item name="BDP" function="func_bdp.inc.php" description="Importe les 600, 601, 602, 605, 606, 607 $a,$j,$x,$y,$z en mots-clés libres, les 995 $f, $r, $k, $q, $u, $m, $n, $0 en exemplaires"/>

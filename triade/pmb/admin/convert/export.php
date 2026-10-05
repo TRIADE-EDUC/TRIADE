@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export.php,v 1.15 2017-02-17 15:34:01 dgoron Exp $
+// $Id: export.php,v 1.15 2017/02/17 15:34:01 dgoron Exp $
 
 //Interface de lancement de l'import
 $base_path="../..";
@@ -25,7 +25,7 @@ function _item_($param) {
 	if (isset($param['EXPORT']) && $param['EXPORT']=="yes") $catalog[]=$t;
 }
 
-//Lecture des diffÃ©rents exports possibles
+//Lecture des différents exports possibles
 $catalog=array();
 $n_typ_total=0;
 if (file_exists("imports/catalog_subst.xml"))
@@ -35,7 +35,7 @@ else
 
 _parser_($fic_catal, array("ITEM" => "_item_"), "CATALOG");
 
-//CrÃ©ation de la liste des types d'import
+//Création de la liste des types d'import
 $export_type="<select name=\"export_type\">\n";
 for ($i=0; $i<count($catalog); $i++) {
 	$export_type.="<option value=\"".$catalog[$i]['INDEX']."\">".$catalog[$i]['NAME']."</option>\n";
@@ -46,7 +46,7 @@ $form=str_replace("!!export_type!!",$export_type,$form);
 
 //Filtres
 
-//PropriÃ©taires
+//Propriétaires
 $requete="select idlender,lender_libelle from lenders";
 $lenders="<select name=\"lender\" onChange=\"show_list(this);\">\n";
 $lenders.="<option value=\"x\">".$msg['admin_convert_propri']."</option>\n";
@@ -62,7 +62,7 @@ $typ_doc_lists = "";
 $requete="select idlender, lender_libelle from lenders";
 $resultat=pmb_mysql_query($requete);
 while (list($id_lender,$lender_libelle)=pmb_mysql_fetch_row($resultat)) {
-	//RÃ©cupÃ©ration des codes exemplaires du proptiÃ©taire
+	//Récupération des codes exemplaires du proptiétaire
 	$requete="select idtyp_doc, concat(tdoc_libelle) as lib from docs_type, exemplaires, lenders where idtyp_doc=expl_typdoc and expl_owner=$id_lender and (idlender=tdoc_owner or tdoc_owner=0) group by expl_typdoc";
 	$typ_doc_lists.="<div id=\"dtypdoc$id_lender\" style=\"display:none\">";
 	$typ_doc_lists.=gen_liste($requete,"idtyp_doc","lib","typdoc".$id_lender."[]","","","","","","",1);
@@ -80,7 +80,7 @@ $statut_lists = '';
 $requete="select idlender, lender_libelle from lenders";
 $resultat=pmb_mysql_query($requete);
 while (list($id_lender,$lender_libelle)=pmb_mysql_fetch_row($resultat)) {
-	//RÃ©cupÃ©ration des codes exemplaires du propriÃ©taire ayant le statut
+	//Récupération des codes exemplaires du propriétaire ayant le statut
 	$requete="select idstatut, concat(statut_libelle) as lib from docs_statut, exemplaires, lenders where idstatut=expl_statut and expl_owner=$id_lender and (idlender=statusdoc_owner or statusdoc_owner=0) group by expl_statut";
 	$statut_lists.="<div id=\"dstatut$id_lender\" style=\"display:none\">";
 	$statut_lists.=gen_liste($requete,"idstatut","lib","statut".$id_lender."[]","","","","","","",1);

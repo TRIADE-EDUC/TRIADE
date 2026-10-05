@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,10 +19,6 @@ session_start();
  *
  ***************************************************************************/
 ?>
-<!-- /************************************************************
-
-Last updated: 03/01/2004    par Taesch  Eric
-*************************************************************/  -->
 <HTML>
 <HEAD>
 <META http-equiv="CacheControl" content = "no-cache">
@@ -49,9 +45,6 @@ Last updated: 03/01/2004    par Taesch  Eric
              <!--  -->
 
              <SCRIPT language="JavaScript" src="./librairie_js/menudepart1.js"></SCRIPT>
-
-             <?php print "$affiche" ?>
-
       <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
                 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Messages internes</font></b></td>
                     </tr>

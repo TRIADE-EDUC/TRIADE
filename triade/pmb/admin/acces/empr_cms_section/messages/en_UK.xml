@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la gestion des droits d'accès Emprunteurs Notices
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2020/03/19 10:30:29 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="long_name">Droits d'accès Emprunteurs - Rubriques</entry>
+	<entry code="menu_name">Emprunteurs - Rubriques</entry>
+	<entry code="user_prf_lib">Rôles emprunteurs</entry>
+	<entry code="user_prf_bt_add">Ajouter un rôle</entry>
+	<entry code="user_prf_bt_calc">Calcul automatique des rôles</entry>
+	<entry code="user_prf_calc_list_lib">Rôles emprunteurs calculés</entry>
+	<entry code="user_prf_used_list_lib">Rôles emprunteurs définis</entry>
+	<entry code="user_prf_unused_list_lib">Rôles emprunteurs précédents à réaffecter</entry>
+	<entry code="user_prf_calc_lib">Rôle emprunteur</entry>
+	<entry code="user_prf_def_lib">Rôle emprunteur par défaut (non précisé)</entry>
+	
+	<entry code="res_prf_lib">Profils rubriques</entry>
+	<entry code="res_prf_bt_add">Ajouter un profil</entry>
+	<entry code="res_prf_bt_calc">Calcul automatique des profils</entry>
+	<entry code="res_prf_calc_list_lib">Profils rubriques calculés</entry>
+	<entry code="res_prf_used_list_lib">Profils rubriques définis</entry>
+	<entry code="res_prf_unused_list_lib">Profils rubriques précédents à réaffecter</entry>
+	<entry code="res_prf_calc_lib">Profil rubrique</entry>
+	<entry code="res_prf_def_lib">Profil rubrique par défaut (non précisé)</entry>
+	
+	<entry code="dom_mod_rights">Modifier droits d'accès rubriques</entry> 
+	<entry code="dom_mod_pro">Modifier profil rubrique</entry>
+	
+	<entry code="view_cms_section">Voir rubrique</entry>
+
+	<entry code="override">Surcharge des droits d'accès Emprunteurs - Rubriques</entry>
+	<entry code="override_none">Ne rien faire</entry>
+	<entry code="override_yes">Surcharger</entry>
+	<entry code="override_no">Supprimer</entry>
+	<entry code="dom_override_rights">Autoriser la surcharge des droits d'accès dans la fiche emprunteur</entry>
+</XMLlist>

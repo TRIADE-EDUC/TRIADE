@@ -1,9 +1,9 @@
 <?php
 // +-------------------------------------------------+
 
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_authperso.tpl.php,v 1.15 2019-05-11 08:05:25 dgoron Exp $
+// $Id: sel_authperso.tpl.php,v 1.17 2021/01/04 10:19:16 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -14,7 +14,7 @@ require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 //-------------------------------------------
 
 /**
- * Script de mise √† jour des champs vedette compos√©e authperso
+ * Script de mise ‡ jour des champs vedette composÈe authperso
  */
 
 global $p1, $p2, $p3, $p4, $p5, $p6;
@@ -24,6 +24,7 @@ global $jscript;
 global $jscript_common_selector_simple;
 global $authperso_form_all;
 global $infield;
+global $caller;
 
 
 if($dyn == 1){
@@ -39,7 +40,7 @@ if($dyn == 1){
 	
 	}
 </script>";
-}elseif ($dyn==2) { // Pour les liens entre autorit√©s
+}elseif ($dyn==2) { // Pour les liens entre autoritÈs
 	$jscript = $jscript_common_authorities_link;
 
 }elseif ($dyn==4) { // aut_pperso
@@ -47,33 +48,51 @@ if($dyn == 1){
 	<script type='text/javascript'>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, type_value, callback){	
-		w=window;
-					
-		var n_aut = eval('w.parent.document.'+f_caller+'.n_".$param1.".value');	
-						
-		flag = 1;	
-		//V√©rification que l'autorit√© n'est pas d√©j√† s√©lectionn√©e
-		
-		for (var i=0; i<n_aut; i++) {
-			if (w.parent.document.getElementById('".$param1."_'+i) && w.parent.document.getElementById('".$param1."_'+i).value==id_value) {
+
+		let w=window;
+		let n_aut = eval('w.parent.document.'+f_caller+'.n_".$param1.".value');	
+		let add = true;
+		if ( 'function' != typeof(w.parent.add_".$param1.") ){
+			add = false;
+		};
+		let first_empty_place = null;
+		let i=0;
+				
+		for (i=0; i<n_aut; i++) {
+
+			//Si l'autorite est deja selectionnee, on le dit et on s'en va
+			if (id_value==w.parent.document.getElementById('".$param1."_'+i).value) {
 				alert('".$msg["term_already_in_use"]."');
-				flag = 0;
-				break;
+			return;
+			}
+			//Si l'emplacement est vide on le note pour eviter de refaire un tour
+			if ( null == first_empty_place && ((0==w.parent.document.getElementById('".$param1."_'+i).value)||(''==w.parent.document.getElementById('".$param1."_'+i).value)) ) {
+				first_empty_place = i;
 			}
 		}	
-		if (flag) {
-			for (var i=0; i<n_aut; i++) {
-				if ((w.parent.document.getElementById('".$param1."_'+i).value==0)||(w.parent.document.getElementById('".$param1."_'+i).value=='')) break;
-			}	
-			if (i==n_aut) w.parent.add_".$param1."();
-			
-			window.parent.document.forms[f_caller].elements['".$param1."_'+i].value = id_value;
-			window.parent.document.forms[f_caller].elements['".$param2."_'+i].value = reverse_html_entities(libelle_value);
-		}	
+		//Un emplacement vide 
+		if(null != first_empty_place) {
+			window.parent.document.forms[f_caller].elements['".$param1."_'+first_empty_place].value = id_value;
+			window.parent.document.forms[f_caller].elements['".$param2."_'+first_empty_place].value = reverse_html_entities(libelle_value);
+			if(!add) {
+				closeCurrentEnv();
+			}
+			return;
+		}
+		if(!add) {
+			i=0;
+		} else {
+			w.parent.add_".$param1."();
+		} 
+		window.parent.document.forms[f_caller].elements['".$param1."_'+i].value = id_value;
+		window.parent.document.forms[f_caller].elements['".$param2."_'+i].value = reverse_html_entities(libelle_value);
+		if(!add) {
+			closeCurrentEnv();
+		}
+		return;
 	}
 	-->
-	</script>
-	";
+	</script>";
 }elseif($dyn==5){
     $jscript ="
 <script type='text/javascript'>
@@ -83,7 +102,7 @@ if($dyn == 1){
 		
 		var n_auth=w.parent.document.forms[f_caller].elements['$max_field'].value;
 		var flag = 1;
-		//V√©rification pas d√©j√† s√©lectionn√©e
+		//VÈrification pas dÈj‡ sÈlectionnÈe
 		for (var i=0; i<n_auth; i++) {
 			if (w.parent.document.getElementById('$p1'+i).value==id_value) {
 				alert('".$msg["term_already_in_use"]."');
@@ -113,7 +132,7 @@ $jscript = "
 function set_parent(f_caller, id_value, libelle_value,callback){
 	var p1 = '$p1';
 	var p2 = '$p2';
-	//on enl√®ve le dernier _X
+	//on enlËve le dernier _X
 	var tmp_p1 = p1.split('_');
 	var tmp_p1_length = tmp_p1.length;
 	tmp_p1.pop();
@@ -160,6 +179,9 @@ function set_parent(f_caller, id_value, libelle_value,callback){
 -->
 </script>
 ";
+if ($caller == 'contribution_area_form'){
+    $jscript = $jscript_common_selector_simple;
+}
 }
 // ------------------------------------------
 // 	$authperso_form : form saisie

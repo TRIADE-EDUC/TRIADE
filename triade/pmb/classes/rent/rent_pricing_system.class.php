@@ -2,10 +2,12 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rent_pricing_system.class.php,v 1.2 2016-02-18 10:42:21 dgoron Exp $
+// $Id: rent_pricing_system.class.php,v 1.6 2023/07/05 15:32:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
+require_once($class_path.'/interface/admin/interface_admin_acquisition_form.class.php');
 require_once($include_path."/templates/rent/rent_pricing_system.tpl.php");
 require_once($class_path."/entites.class.php");
 require_once($class_path."/exercices.class.php");
@@ -14,38 +16,38 @@ require_once($class_path."/rent/rent_pricing_system_grid.class.php");
 class rent_pricing_system {
 	
 	/**
-	 * Identifiant du systÃ¨me de tarification
+	 * Identifiant du système de tarification
 	 * @var integer
 	 */
 	protected $id;
 	
 	/**
-	 * LibellÃ© du systÃ¨me de tarification
+	 * Libellé du système de tarification
 	 * @var string
 	 */
 	protected $label;
 	
 	/**
-	 * Description du systÃ¨me de tarification
+	 * Description du système de tarification
 	 * @var string
 	 */
 	
 	protected $desc;
 	
 	/**
-	 * Liste des pourcentages du systÃ¨me de tarification
+	 * Liste des pourcentages du système de tarification
 	 * @var array
 	 */
 	protected $percents;
 	
 	/**
-	 * Exercice associÃ©
+	 * Exercice associé
 	 * @var exercices
 	 */
 	protected $exercice;
 
 	public function __construct($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -74,11 +76,11 @@ class rent_pricing_system {
 	protected function get_entity(){
 		global $id_entity;
 		
-		return new entites($id_entity*1);
+		return new entites($id_entity);
 	}
 	
 	/**
-	 * SÃ©lecteur des exercices comptables en cours
+	 * Sélecteur des exercices comptables en cours
 	 */
 	protected function gen_selector_exercices() {
 		global $msg;
@@ -90,34 +92,43 @@ class rent_pricing_system {
 		return $display;
 	}
 
+	public function get_content_form() {
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('pricing_system_label', 'pricing_system_label')
+		->add_input_node('text', $this->label);
+		$interface_content_form->add_element('pricing_system_desc', 'pricing_system_desc')
+		->add_textarea_node($this->desc)
+		->set_rows(3)
+		->set_attributes(array('wrap' => 'virtual'));
+		$entity = $this->get_entity();
+		$interface_content_form->add_element('pricing_system_entities', 'pricing_system_associated_entity')
+		->add_html_node($entity->raison_sociale);
+		$interface_content_form->add_element('pricing_system_exercices', 'pricing_system_associated_exercice')
+		->add_html_node($this->gen_selector_exercices());
+		return $interface_content_form->get_display();
+	}
+	
 	/**
 	 * Formulaire
 	 */
 	public function get_form(){
-		global $msg,$charset;
-		global $rent_pricing_system_form_tpl;
+		global $msg;
+		global $rent_pricing_system_js_content_form_tpl;
 		
-		$form = $rent_pricing_system_form_tpl;
-
-		if($this->id) {
-			$form = str_replace("!!form_title!!",htmlentities($msg['pricing_system_form_edit'], ENT_QUOTES, $charset),$form);
-			$button_duplicate = "<input type='button' class='bouton' value='".htmlentities($msg['pricing_system_duplicate'], ENT_QUOTES, $charset)."' onclick=\"if(pricing_system_confirm_duplicate()) { document.location='./admin.php?categ=acquisition&sub=pricing_systems&id_entity=!!id_entity!!&action=duplicate&id=".$this->id."'; }\"/>";
-			$form = str_replace("!!button_duplicate!!",$button_duplicate,$form);
-			$button_delete = "<input type='button' class='bouton' value='".htmlentities($msg['pricing_system_delete'], ENT_QUOTES, $charset)."' onclick=\"if(pricing_system_confirm_delete()) { document.location='./admin.php?categ=acquisition&sub=pricing_systems&id_entity=!!id_entity!!&action=delete&id=".$this->id."'; }\"/>";
-			$form = str_replace("!!button_delete!!",$button_delete,$form);
-		} else {
-			$form = str_replace("!!form_title!!",htmlentities($msg['pricing_system_form_add'], ENT_QUOTES, $charset),$form);
-			$form = str_replace("!!button_duplicate!!",'',$form);
-			$form = str_replace("!!button_delete!!",'',$form);
+		$interface_form = new interface_admin_acquisition_form('pricing_system_form');
+		if(!$this->id){
+			$interface_form->set_label($msg['pricing_system_form_add']);
+		}else{
+			$interface_form->set_label($msg['pricing_system_form_edit']);
 		}
-		$form = str_replace("!!label!!",$this->label,$form);
-		$form = str_replace("!!desc!!",$this->desc,$form);
-		$entity = $this->get_entity();
-		$form = str_replace("!!associated_entity!!",$entity->raison_sociale,$form);
-		$form = str_replace("!!exercices!!",$this->gen_selector_exercices(),$form);
-		$form = str_replace("!!id!!",$this->id,$form);
-		$form = str_replace("!!id_entity!!",$this->get_entity()->id_entite,$form);
-		return $form;
+		$interface_form->set_object_id($this->id)
+		->set_id_entity($this->get_entity()->id_entite)
+		->set_confirm_delete_msg($msg['pricing_system_delete_confirm'])
+		->set_content_form($rent_pricing_system_js_content_form_tpl.$this->get_content_form())
+		->set_table_name('rent_pricing_systems')
+		->set_field_focus('pricing_system_label')
+		->set_duplicable(true);
+		return $interface_form->get_display();
 	}
 
 	/**
@@ -174,7 +185,7 @@ class rent_pricing_system {
 		if(!$this->id) {
 			return false;
 		}			
-		$query .= '
+		$query = '
 				update rent_pricing_systems set 
 				pricing_system_percents = "'.addslashes(serialize($this->percents)).'"
 				where id_pricing_system= '.$this->id;

@@ -19,8 +19,8 @@ if (isset($_POST["idperiode"])) {
 	global $prefixe;
 	$data=rechercheStageCentralSouhait2($_POST["idperiode"]); 
 	// id,datedemande,identreprise,sexe,service,observation,nbdemande,nomentreprisen,s.adresse,s.ville,s.code_p,s.contact,s.tel,s.fax,s.email,s.info_plu,idproductreserv,null,salaire,logement
-	for($i=0;$i<count($data);$i++) {
-		if (count($data) > 0) {
+	for($i=0;$i<countTriade($data);$i++) {
+		if (countTriade($data) > 0) {
 			echo serialize($data);
 		}else{
 			echo "";

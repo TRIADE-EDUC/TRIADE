@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FileStore.js,v 1.2 2018-11-30 13:53:07 dgoron Exp $
+// $Id: FileStore.js,v 1.2 2018/11/30 13:53:07 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic"], function(declare,PMBStore, xhr, lang, topic){

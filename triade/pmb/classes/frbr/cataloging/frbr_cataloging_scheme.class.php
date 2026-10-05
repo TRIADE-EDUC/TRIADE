@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_scheme.class.php,v 1.4 2018-08-30 14:09:07 apetithomme Exp $
-if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
-	die("no access");
+// $Id: frbr_cataloging_scheme.class.php,v 1.5 2022/01/21 08:37:14 dgoron Exp $
+if (stristr($_SERVER ['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/frbr/cataloging/frbr_cataloging_entities_links.class.php');
 require_once($class_path.'/frbr/cataloging/frbr_cataloging_entities.class.php');
 require_once($class_path.'/frbr/cataloging/frbr_cataloging_datastore.class.php');
@@ -31,32 +31,32 @@ class frbr_cataloging_scheme {
 	protected $name;
 	
 	/**
-	 * Tableau indicÃ© des entitÃ©s du scÃ©nario dans l'ordre
+	 * Tableau indicé des entités du scénario dans l'ordre
 	 * @var array
 	 */
 	protected $entities;
 	
 	/**
-	 * Tableau indicÃ© des liens du scÃ©nario dans l'ordre
+	 * Tableau indicé des liens du scénario dans l'ordre
 	 * @var array
 	 */
 	protected $links;
 	
 	/**
-	 * Tableau indicÃ© des types de liens
+	 * Tableau indicé des types de liens
 	 * @var array
 	 */
 	protected $links_types;
 	
 	/**
-	 * URI de l'entitÃ© de dÃ©part
+	 * URI de l'entité de départ
 	 * @var string
 	 */
 	protected $start_entity_uri;
 	
 	/**
-	 * URI du type de l'entitÃ© de dÃ©part
-	 * @var unknown
+	 * URI du type de l'entité de départ
+	 * @var string
 	 */
 	protected $start_entity_type_uri;
 	
@@ -66,7 +66,7 @@ class frbr_cataloging_scheme {
 	 * @param number $id
 	 */
 	public function __construct($id = 0, $uri = '') {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->uri = $uri;
 	}
 	

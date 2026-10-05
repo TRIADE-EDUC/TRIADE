@@ -1,17 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dsi_auto.php,v 1.11 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: dsi_auto.php,v 1.13.4.1 2025/01/30 09:08:07 tsamson Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";                            
 $base_auth = "";  
 $base_title = "\$msg[dsi_menu_title]";
 $base_noheader=1;
 $base_nosession=1;
 $base_nocheck = 1 ;
+
 require_once ("$base_path/includes/init.inc.php");  
+
+use Pmb\Common\Helper\MySQL;
 
 if (!$user) $user=$argv[1];
 if (!$password) $password=$argv[2];
@@ -22,15 +25,15 @@ require_once("$include_path/db_param.inc.php");
 require_once("$include_path/mysql_connect.inc.php");
 $dbh = connection_mysql();
 // on checke si l'utilisateur existe et si le mot de passe est OK
-$query = "SELECT count(1) FROM users WHERE username='$user' AND pwd=password('$password') ";
+$query = "SELECT count(1) FROM users WHERE username='$user' AND pwd='".MySQL::password($password)."'";
 $result = pmb_mysql_query($query, $dbh);
 $valid_user = pmb_mysql_result($result, 0, 0);
 if (!$valid_user) die("Interdit : utilisateur invalide ");
 
-if (!$dsi_auto) die("DSI Auto pas activÃ©e sur base $database (user=$user) Version noyau: $pmb_bdd_version ");
+if (!$dsi_auto) die("DSI Auto pas activée sur base $database (user=$user) Version noyau: $pmb_bdd_version ");
 
 
-	/* param par dÃ©faut */	
+	/* param par défaut */	
 	$requete_param = "SELECT * FROM users WHERE username='$user' LIMIT 1 ";
 	$res_param = pmb_mysql_query($requete_param, $dbh);
 	$field_values = pmb_mysql_fetch_row( $res_param );
@@ -84,30 +87,22 @@ include_once("$class_path/equation.class.php");
 include_once("$class_path/classements.class.php");
 require_once("$class_path/docs_location.class.php");
 include_once("$class_path/rss_flux.class.php");
-require_once("./dsi/func_abo.inc.php");
 require_once("./dsi/func_pro.inc.php");
 require_once("./dsi/func_common.inc.php");
-require_once("./dsi/func_clas.inc.php");
-require_once("./dsi/func_equ.inc.php");
-require_once("./dsi/func_diff.inc.php");
-require_once("./dsi/func_rss.inc.php");
 
 $action_diff_aff = "<h1>".$msg['dsi_dif_auto_titre']."</h1>" ;
 
-// rÃ©cupÃ©rer les bannettes Ã  diffuser
+// récupérer les bannettes à diffuser
 
 
 $requete = "SELECT id_bannette, proprio_bannette FROM bannettes ";
 $requete .= " WHERE (DATE_ADD(date_last_envoi, INTERVAL periodicite DAY) <= sysdate()) and bannette_auto=1 " ;
 $res = pmb_mysql_query($requete, $dbh);
-
+$liste_bannette = [];
 while(($bann=pmb_mysql_fetch_object($res))) {
 	$liste_bannette[]=$bann->id_bannette ;
-	}
+}
 pmb_mysql_free_result($res);
-
-if (!$liste_bannette) $liste_bannette = array() ;
-
 for ($i=0 ; $i < sizeof($liste_bannette) ; $i++) {
 	$bannette = new bannette($liste_bannette[$i]) ;
 
@@ -118,7 +113,7 @@ for ($i=0 ; $i < sizeof($liste_bannette) ; $i++) {
 	$action_diff_aff .= $bannette->purger();
 	$action_diff_aff .= "<strong>".$msg['dsi_dif_diffusion'].": ".$bannette->nom_bannette."</strong><br />" ; 
 	$action_diff_aff .= $bannette->diffuser();
-	}
+}
 
 print $action_diff_aff ;
 // deconnection MYSql

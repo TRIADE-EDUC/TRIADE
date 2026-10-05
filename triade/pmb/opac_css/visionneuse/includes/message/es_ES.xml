@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!-- Messages localisés en français
+****************************************************************************************
+© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: es_ES.xml,v 1.3 2024/03/29 14:42:14 pmallambic Exp $ -->
+<messages>
+	<entry code="close">Cerrar</entry>
+	<entry code="fullscreen">Pantalla completa</entry>
+	<entry code="normal">Normal</entry>
+	<entry code="nothing_to_display">No hay documentos disponibles.</entry>
+	<entry code="forbidden_resources">No puede acceder a este documento.</entry>
+	<entry code="download_doc">Descargar el documento fuera del visor.</entry>
+	
+	<entry code="zoom_in">Ampliar</entry>
+	<entry code="zoom_out">Alejar el zoom</entry>
+	<entry code="onepg">Vista de una sola página</entry>
+	<entry code="twopg">Vista de dos páginas</entry>
+	<entry code="thumb">Vista en miniatura</entry>
+	<entry code="print">Imprimir esta página</entry>
+	<entry code="embed">Exportar desde BookReader</entry>
+	<entry code="link">Enlace a este libro (esta página)</entry>
+	<entry code="bookmark">Marcar esta página</entry>
+	<entry code="read">Leer este libro</entry>
+	<entry code="share">Compartir este libro</entry>
+	<entry code="info">Sobre el libro</entry>
+	<entry code="full">Pantalla completa</entry>
+	<entry code="book_left">Pasar la página a la izquierda</entry>
+	<entry code="book_right">Pasar la página a la derecha</entry>
+	<entry code="book_up">Página arriba</entry>
+	<entry code="book_down">Página abajo</entry>
+	<entry code="play">Leer</entry>
+	<entry code="pause">Descanso</entry>
+	<entry code="BRdn">Mostrar/Ocultar</entry>
+	<entry code="BRup">Mostrar/Ocultar</entry>
+	<entry code="book_top">Portada</entry>
+	<entry code="book_bottom">Última página</entry>
+	<entry code="contrast">Ajustar el brillo/contraste</entry>
+	<entry code="new_tab">Nueva ventana</entry>
+	<entry code="go_new_doc">Valider <![CDATA[<span class='visually-hidden'>et accéder au document numérique</span>]]></entry>
+	<entry code="go_page_label">Accéder directement à un document numérique en renseignant sa position dans le résultat de recherche</entry>
+	<entry code="paginator_first">Premier document</entry>
+	<entry code="paginator_prev">Document précédent</entry>
+	<entry code="paginator_next">Document suivant</entry>
+	<entry code="paginator_last">Dernier document</entry>
+	<entry code="paginator_label">Pagination des différents documents numériques</entry>
+	<entry code="paginator_current">Document</entry>
+	<entry code="record_section_title">Consulter la notice de ce document numérique</entry>
+	<entry code="BR_search">Chercher dans le document</entry>
+	<entry code="BR_search_btn">Rechercher</entry>
+</messages>

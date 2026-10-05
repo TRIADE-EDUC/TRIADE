@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: manu_ajax.inc.php,v 1.5 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: manu_ajax.inc.php,v 1.6 2023/08/28 14:01:11 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -32,6 +32,6 @@ $result = array(
 	'id'=>$id_item,
 	'idcaddie'=>$idcaddie,
 	'res_pointage'=>$res_pointage,
-	'aff_cart_nb_items'=>($charset != "utf-8" ? utf8_encode($aff_cart_nb_items) : $aff_cart_nb_items)
+	'aff_cart_nb_items'=>($charset != "utf-8" ? encoding_normalize::utf8_normalize($aff_cart_nb_items) : $aff_cart_nb_items)
 );
 ajax_http_send_response($result);

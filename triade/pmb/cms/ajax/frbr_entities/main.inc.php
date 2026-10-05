@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.26 2017-09-20 09:41:18 vtouchard Exp $
+// $Id: main.inc.php,v 1.34 2023/01/11 15:46:26 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -10,24 +10,37 @@ if(!isset($type)) $type = '';
 
 require_once($class_path."/frbr/frbr_place.class.php");
 
-require_once($class_path."/autoloader.class.php");
-$autoloader = new autoloader();
-$autoloader->add_register("frbr_entities",true);
+$object_id = 0;
+if(!empty($id_element)){
+    $object_id = intval($id_element);
+} else if (!empty($id)) {
+    $object_id = intval($id);
+}
+
+//TODO vérifier que la classe existe avant de l'instancier !!
+if (!empty($elem)) {
+    //cas particulier des autorites perso
+    if (strpos($elem, "authperso") !== false) {
+        $authperso =  preg_split("#_([\d]+)#", $elem, 0 ,PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $element = new $authperso[0]($object_id);
+        if (!empty($authperso[1])) {
+            $element->set_authperso_id($authperso[1]);
+        }
+    } else {
+        $element = new $elem($object_id);
+    }
+}
 
 switch($action){
 	case "save_form" :
-		if(!isset($id_element)){
-			$id_element = 0;
-		}
-		$element = new $elem($id_element);
 		$element->set_properties_from_form();
 		$status = $element->save();
 		$response = encoding_normalize::json_encode(array('tree_data' => ($element->get_type() == "page" ? $element->get_dojo_tree() : $element->get_page()->get_dojo_tree()), 'status' => $status, 'type' => $element->get_type()));
 		break;
 	case "delete" :
 		$status = false;
-		$id_element +=0;
-		if (isset($type) && $type && $id_element) {
+		$id_element = ( isset($id_element) ? intval($id_element) : 0 );
+		if (!empty($type) && $id_element) {
 			switch ($type) {
 				case 'datanode':
 					$status = frbr_entity_common_entity_datanode::delete($id_element, (isset($recursive) ? $recursive : false));
@@ -37,14 +50,13 @@ switch($action){
 					break;
 			}
 		}
-		$num_page += 0;
+		$num_page = ( isset($num_page) ? intval($num_page) : 0 );
 		$frbr_page = new frbr_entity_common_entity_page($num_page);
 		$response = encoding_normalize::json_encode(array('tree_data' => $frbr_page->get_dojo_tree(), 'status' => $status, 'type' => $type));
 		break;	
  	case "ajax" :
- 		$element = new $elem($id_element);
- 		$response = $element->execute_ajax();
- 		ajax_http_send_response($response['content'],$response['content-type']);
+ 		$response_array = $element->execute_ajax();
+ 		ajax_http_send_response($response_array['content'], $response_array['content-type']);
  		break;	
 	case "get_form" :
 		switch($type){
@@ -62,7 +74,7 @@ switch($action){
 				$response = $frbr_datanode->get_form(true);
 				break;
 			case 'cadre' :				
-				$id*=1;
+				$id = intval($id);
 				if ($id) {
 					$frbr_cadre_name = frbr_entity_common_entity_cadre::get_class_name_from_id($id);
 					$frbr_cadre = new $frbr_cadre_name($id);
@@ -72,7 +84,7 @@ switch($action){
 						$entity_type = frbr_entity_common_entity_datanode::get_entity_type_from_id($num_parent);
 					} elseif ($num_page) {
 						$entity_type = frbr_entity_common_entity_page::get_entity_type_from_id($num_page);
-						//vue par dÃ©faut quand on est sur un cadre racine associÃ© Ã  la page
+						//vue par défaut quand on est sur un cadre racine associé à la page
 						$default_view = 'frbr_entity_'.$entity_type.'_view';
 					}
 					$frbr_cadre_name = 'frbr_entity_'.$entity_type.'_cadre';
@@ -102,7 +114,6 @@ switch($action){
 				if(!isset($callback)) $callback = "";
 				if(!isset($cancel_callback) || !$cancel_callback) $cancel_callback = "";
 				if(!isset($delete_callback)) $delete_callback = "";
-				$element = new $elem($id);
 				if(isset($frbr_entity_class) && $frbr_entity_class){
 					$element->set_entity_class_name($frbr_entity_class);
 				}
@@ -115,7 +126,14 @@ switch($action){
 				if(isset($frbr_indexation_path)) {
 					$element->set_indexation_path($frbr_indexation_path);
 				}
-				$form = $element->get_form(true);
+				if (!empty($num_page) && intval($num_page)) {
+				    $element->add_parameter("num_page", intval($num_page));
+				}
+				if (isset($dom_node_id) && $dom_node_id == "sub_datasource_form") {
+				    $form = $element->get_sub_form();
+				} else {
+				    $form = $element->get_form(true);
+				}
 				if(isset($filter_refresh) && $filter_refresh && isset($sort_refresh) && $sort_refresh) {
 					if($element->get_entity_type()){
 						$entity_class_name = "frbr_entity_".$element->get_entity_type()."_datanode";
@@ -125,6 +143,14 @@ switch($action){
 					$datanode = new $entity_class_name($element->get_num_datanode());
 					$datanode->set_entity_type($element->get_entity_type());
 					$datanode->set_page_from_num($num_page);
+					
+					if (strpos($elem, "authperso") !== false && strpos($entity_class_name, "authperso") !== false) {
+					    $authperso =  preg_split("#_([\d]+)#", $elem, 0 ,PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+					    if (!empty($authperso[1])) {
+					        $datanode->set_temp_authperso_id($authperso[1]);
+					    }
+					}
+					
 					$element_form = array(
 						$dom_node_id => $form,
 						'datasource_filters' => $datanode->get_filters_selector(),
@@ -149,23 +175,18 @@ switch($action){
 		$response = $frbr_page->get_dojo_tree();
 		break;
 	case 'get_already_selected_filters' :
-		$element = new $elem($id_element);
 		$response = $element->get_already_selected_fields('filters');
 		break;
 	case 'get_already_selected_sorting' :
-		$element = new $elem($id_element);
 		$response = $element->get_already_selected_fields('sorting');
 		break;
 	case 'get_already_selected_backbones' :
-		$element = new $elem($id_element);
 		$response = $element->get_already_selected_fields('backbones');
 		break;
 	case "get_manage_form" :
-		$element = new $elem($id_element);
 		$response = $element->get_manage_forms();
 		break;
 	case "save_manage_form" :
-		$element = new $elem($id_element);
 		$status = $element->save_manage_forms();
 
 		$name = '';
@@ -218,7 +239,7 @@ switch($action){
 				} elseif ($num_page) {
 					$entity_type = frbr_entity_common_entity_page::get_entity_type_from_id($num_page);
 					$frbr_cadre_name = 'frbr_entity_'.$entity_type.'_cadre';
-					//vue par dÃ©faut quand on est sur un cadre racine associÃ© Ã  la page
+					//vue par défaut quand on est sur un cadre racine associé à la page
 					$default_view = 'frbr_entity_'.$entity_type.'_view';
 				} else {
 					$frbr_cadre_name = 'frbr_entity_common_entity_cadre';
@@ -236,15 +257,22 @@ switch($action){
 		}
 		break;
 	case "save_cadres_placement" :
+
+        $num_page = ( isset($num_page) ? intval($num_page) : 0 );
+		$obj_cadres = [];
+		if (isset($cadres)) {
+		  $json_cadres = encoding_normalize::utf8_normalize(stripslashes($cadres));
+		  $obj_cadres = json_decode($json_cadres);
+		}
+		
 		$frbr_place = new frbr_place($num_page);
-		$frbr_place->set_cadres(json_decode(stripslashes($cadres)));
+		$frbr_place->set_cadres($obj_cadres);
 		$response = $frbr_place->save();
 		break;
 	default :
 		if(!isset($callback)) $callback = "";
 		if(!isset($cancel_callback) || !$cancel_callback) $cancel_callback = "";
 		if(!isset($delete_callback)) $delete_callback = "";
-		$element = new $elem($id_element);
 		$response = $element->get_form(true,$callback,$cancel_callback,$delete_callback);
 		break;
 }

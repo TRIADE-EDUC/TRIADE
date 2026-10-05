@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatches.class.php,v 1.4 2017-07-10 15:50:01 dgoron Exp $
+// $Id: docwatches.class.php,v 1.6 2024/04/11 08:26:23 dbellamy Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_task.class.php");
@@ -11,15 +11,13 @@ require_once($class_path."/docwatch/docwatch_watch.class.php");
 class docwatches extends scheduler_task {
 		
 	public function execution() {
-		global $dbh,$msg, $PMBusername;
+		global $msg, $charset;
 	
 		if (SESSrights & DSI_AUTH) {
-			
-			$percent = 0;
-			if($this->statut == WAITING) {
-				$this->send_command(RUNNING);				
+		    if($this->statut == scheduler_task::WAITING) {
+		        $this->send_command(scheduler_task::RUNNING);
 			}
-			if($this->statut == RUNNING) {						
+			if($this->statut == scheduler_task::RUNNING) {
 				if (method_exists($this->proxy, 'pmbesDocwatches_update')) {
 					$docwatchesUpdated = $this->proxy->pmbesDocwatches_update();
 					$this->update_progression(100);

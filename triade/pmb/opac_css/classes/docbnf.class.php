@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docbnf.class.php,v 1.5 2019-06-06 09:56:19 btafforeau Exp $
+// $Id: docbnf.class.php,v 1.8.4.2 2025/03/07 15:33:04 dbellamy Exp $
 
 
 if (stristr ($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($class_path."/fpdf.class.php");
 
-	
+
 class docbnf {
 	protected $path;
 	public $ref;
@@ -27,23 +27,23 @@ class docbnf {
 		$this->resolution = $resolution;
 		$this->init();
 	}
-	
+
 	public function init(){
 		//Si on peut parser le contenu
 		if($this->parse()){
-			//on rÃ©cupÃ¨re le ref
+			//on récupère le ref
 			$this->getRef();
-			//on rÃ©cupÃ¨re l'ArkNumber
+			//on récupère l'ArkNumber
 			$this->getArkNumber();
-			//on rÃ©cupÃ¨re le nombre de pages
+			//on récupère le nombre de pages
 			$this->getNbPages();
-			//on regarde les rÃ©solutions disponibles!
+			//on regarde les résolutions disponibles!
 			$this->getAvailableResolution();
 			//on regarde si on a la couche OCR
 			$this->checkOcr();
 			//on regarde si on a une page d'avertissement
 			$this->getAdvertissement();
-			//on ajuste la rÃ©solution au besoin
+			//on ajuste la résolution au besoin
 			$this->adjustResolution();
 			//tableau des tailles de pages
 			$this->getPagesSizes();
@@ -51,11 +51,11 @@ class docbnf {
 			die();
 		}
 	}
-	
+
 	public function get_file_path($file){
 		return $this->path."/".$file;
 	}
-	
+
 	protected function parse(){
 		$dh = opendir($this->path);
 		$found = false;
@@ -72,25 +72,25 @@ class docbnf {
 		if($found){
 			//on a trouver le refnum, on va pouvoir regarder ce qu'il contient...
  			$this->refnum = new domDocument();
- 			$this->refnum->load(realpath($this->get_file_path($refnum)));	
+ 			$this->refnum->load(realpath($this->get_file_path($refnum)));
 
- 			
- 			
 
- 			
+
+
+
 		}
 		return $found;
 	}
-	
+
 	public function getRef(){
 		if(!$this->ref){
-			//on va chercher la rÃ©fÃ©rence!
+			//on va chercher la référence!
 			$doc =  $this->refnum->getElementsByTagName('document')->item(0);
 			$this->ref = $doc->getAttribute("identifiant");
 		}
 		return $this->ref;
 	}
-	
+
 	public function getArkNumber(){
 		if(!$this->arkNumber){
 		//l'identifiant Ark;
@@ -104,7 +104,7 @@ class docbnf {
 		}
 		return $this->arkNumber;
 	}
-	
+
 	public function getNbPages(){
 		if(!$this->nb_pages){
 			//le nombre de page
@@ -112,11 +112,11 @@ class docbnf {
 		}
 		return $this->nb_pages;
 	}
-	
+
 	public function getAvailableResolution(){
 		if(!$this->available_resolution){
 			$this->available_resolution=array();
-			
+
 			if($this->file_exists($this->get_file_path("A"))){
 				$this->available_resolution[] = "A";
 			}
@@ -138,25 +138,25 @@ class docbnf {
 		}
 		return $this->available_resolution;
 	}
-	
+
 	public function adjustResolution(){
 		if(count($this->available_resolution) == 1){
 			$this->resolution = $this->available_resolution[0];
 		}
 	}
-	
+
 	public function checkOcr(){
 		if($this->file_exists($this->get_file_path("X"))){
 			$this->ocr = true;
-		}		
+		}
 	}
-	
+
 	public function getAdvertissement(){
 		if($this->file_exists($this->get_file_path("advertissement.png"))){
 			$this->advertissement = "advertissement.png";
 		}
 	}
-	
+
 	public function get_page_content($num_page=1){
 		//pour chaque page
 		$pages = $this->refnum->getElementsByTagName("vueObjet");
@@ -175,28 +175,28 @@ class docbnf {
 			return $this->get_file_content($this->get_file_path($this->resolution."/".$image.".JPG"));
 		}
 	}
-	
+
 	public function get_file_content($file_path){
 		return file_get_contents($this->get_file_path($file_path));
 	}
-	
+
 	public function getWidth($num_page){
 		return $this->pagesSizes[$num_page]['width'];
 	}
-	
+
 	public function getHeight($num_page){
 		return $this->pagesSizes[$num_page]['height'];
-	}	
-	
+	}
+
 	public function file_exists($file){
 		return file_exists($this->get_file_path($file));
 	}
-	
+
 	public function search($user_query){
 		$matches = array();
 		//pour chaque page
 		$terms = explode(" ",strtolower(convert_diacrit($user_query)));
-		
+
 		$pages = $this->refnum->getElementsByTagName("vueObjet");
 		foreach($pages as $page){
 			//on va chercher la couche OCR
@@ -207,10 +207,10 @@ class docbnf {
 			if($this->file_exists($this->get_file_path("X/".$ocr.".xml.gz"))){
 				ob_start();
 				readgzfile($this->get_file($this->get_file_path("X/".$ocr.".xml.gz")));
-				$file = ob_get_clean();	
+				$file = ob_get_clean();
 				$xml = new domDocument("1.0","iso-8859-1");
 				$xml->loadXML($file);
-				//on va avoir besoin de la rÃ©solution d'origine pour calculer le ratio...
+				//on va avoir besoin de la résolution d'origine pour calculer le ratio...
 				$page = $xml->getElementsByTagName("Page")->item(0);
 				$original_width = $page->getAttribute('WIDTH');
 				$original_height = $page->getAttribute('HEIGHT');
@@ -223,12 +223,12 @@ class docbnf {
 				$strings = $xml->getElementsByTagName('String');
 				foreach($strings as $string){
 					foreach($terms as $term){
-						if(strtolower(convert_diacrit(utf8_decode($string->getAttribute("CONTENT")))) == $term){
+					    if(strtolower(convert_diacrit(encoding_normalize::utf8_decode($string->getAttribute("CONTENT")))) == $term){
 							$matches[] = array(
 								"text"=> $this->get_paragraphe($string),
 								'par' => array(
 									array(
-										'page' => ($num_page*1),
+										'page' => intval($num_page),
 										'page_height' => $height,
 										'b' => $height,
 										't' => 0,
@@ -241,7 +241,7 @@ class docbnf {
 												'r' => ($string->getAttribute("HPOS")+$string->getAttribute("WIDTH"))*$w_ratio,
 												'b' => ($string->getAttribute("VPOS")+$string->getAttribute("HEIGHT"))*$h_ratio,
 												't' => $string->getAttribute("VPOS")*$h_ratio,
-												'page' => ($num_page*1)
+												'page' => intval($num_page)
 											)
 										)
 									)
@@ -254,31 +254,31 @@ class docbnf {
 		}
 		return array('matches' => $matches);
 	}
-	
+
 	public function get_paragraphe($string){
 		$current = $string;
 		$paragraphe = "";
 		while($current->nodeName != "TextBlock"){
 			$current = $current->parentNode;
 		}
-		
+
 		for($i=0; $i<$current->childNodes->length ; $i++){
 			$line = $current->childNodes->item($i);
 			if($line->nodeName == "TextLine"){
 				for($j=0 ; $j<$line->childNodes->length ; $j++){
 					$node = $line->childNodes->item($j);
 					switch($node->nodeName){
-						case "SP" : 
+						case "SP" :
 							$paragraphe.= " ";
 							break;
 						case "String" :
 							if($node->getAttribute("CONTENT") == $string->getAttribute("CONTENT")){
-								$paragraphe.= "{{{".utf8_decode($node->getAttribute("CONTENT"))."}}}";
+							    $paragraphe.= "{{{".encoding_normalize::utf8_decode($node->getAttribute("CONTENT"))."}}}";
 							}else {
-								$paragraphe.= utf8_decode($node->getAttribute("CONTENT"));
+								$paragraphe.= encoding_normalize::utf8_decode($node->getAttribute("CONTENT"));
 							}
-							break;	
-						default : 
+							break;
+						default :
 							$paragraphe.= " ";
 							break;
 					}
@@ -288,10 +288,10 @@ class docbnf {
 		}
 		return $paragraphe;
 	}
-	
+
 	public function getTDM(){
 		if(!$this->tdm && $this->file_exists($this->get_file_path("T".$this->ref.".xml"))){
-			
+
 			$xml = new domDocument();
 			$xml->load($this->get_file($this->get_file_path("T".$this->ref.".xml")));
 			$elems = $xml->getElementsByTagName("div0");
@@ -301,28 +301,28 @@ class docbnf {
 		}
 		return $this->tdm;
 	}
-	
+
 	public function getBookmarks(){
 		$this->getTDM();
 		return $this->bookmarks;
 	}
-	
+
 	public function parseTDM($encoding,$element,$deep=0){
 		foreach($element->childNodes as $child){
 			switch ($child->tagName){
 				case "head" :
-					//pour rÃ©cupÃ©rer une table des matiÃ¨res textuel
-					if($deep>0)$this->tdm.= utf8_decode($child->nodeValue)."\n";
+					//pour récupérer une table des matières textuel
+					if($deep>0)$this->tdm.= encoding_normalize::utf8_decode($child->nodeValue)."\n";
 					//pour les bookmarks
 					$item = array();
-					$item['label'] = utf8_decode($child->nodeValue);
+					$item['label'] = encoding_normalize::utf8_decode($child->nodeValue);
 					$item['page'] = 1;
 					$item['deep'] = $deep;
 					$item['head'] = true;
 					$this->bookmarks[]= $item;
 					break;
 				case "item" :
-					//pour rÃ©cupÃ©rer une table des matiÃ¨res textuel
+					//pour récupérer une table des matières textuel
 					for ($i = 1 ; $i<$deep ; $i++){
 						if($i<$deep) $this->tdm.="\t";
 					}
@@ -334,13 +334,13 @@ class docbnf {
 						}
 						$text = $seg->item(0)->nodeValue;
 						$page = $child->getElementsByTagName("xref")->item(0)->nodeValue;
-						$page = utf8_decode($page);
+						$page = encoding_normalize::utf8_decode($page);
 						$this->tdm.= "$text / page $page\n";
 					}
 					//pour les bookmarks
 					if($seg->length ==0){
 						$item =array();
-						$item['label'] = utf8_decode($child->nodeValue);
+						$item['label'] = encoding_normalize::utf8_decode($child->nodeValue);
 						$item['page'] = 1;
 						$item['deep'] = $deep;
 						$item['head'] = true;
@@ -354,21 +354,21 @@ class docbnf {
 							$item['analysis_page'] = $child->getElementsByTagName("xref")->item($i)->nodeValue;
 							if($item['page']){
 								if(preg_match("/.*".$this->ref."\/([^.]+)[.].*/", $item['page'],$matches)){
-									$item['page'] = $matches[1]*1;
+								    $item['page'] = intval($matches[1]);
 								}
 							}
-							$item['label'] = utf8_decode($item['label']);
-							$item['page'] = utf8_decode($item['page']);
+							$item['label'] = encoding_normalize::utf8_decode($item['label']);
+							$item['page'] = encoding_normalize::utf8_decode($item['page']);
 							$this->bookmarks[]= $item;
 						}
 					}
 					break;
 				case "list" :
 					$deep++;
-						
+
 				case "div1" :
 				case "div2" :
-					//pour rÃ©cupÃ©rer une table des matiÃ¨res textuel
+					//pour récupérer une table des matières textuel
 					$this->tdm.="\n";
 					$this->parseTDM($encoding,$child,$deep);
 					break;
@@ -376,15 +376,15 @@ class docbnf {
 		}
 		return $this->tdm;
 	}
-	
+
 	public function generatePDF($pdfParams){
 		$this->convert = new fpdf_bnf($pdfParams);
 		$this->convert->SetMargins(0,0);
 		$this->convert->SetAutoPageBreak(true,0);
-		$title = utf8_decode($this->refnum->getElementsByTagName("titre")->item(0)->nodeValue);
+		$title = encoding_normalize::utf8_decode($this->refnum->getElementsByTagName("titre")->item(0)->nodeValue);
 		$this->convert->setTitle($title);
 		$this->convert->Open();
-		
+
 		if($this->advertissement){
 			$src_img = imagecreatefromstring($this->get_file_content(($this->get_file_path($this->advertissement))));
 			$img=imagecreatetruecolor(imagesx($src_img),imagesy($src_img));
@@ -396,7 +396,7 @@ class docbnf {
 			$this->convert->Image(realpath("./temp/advertissement.png"));
 			unlink(realpath("./temp/advertissement.png"));
 		}
-		
+
 		$i=0;
 		//pour chaque page
 		$pages = $this->refnum->getElementsByTagName("vueObjet");
@@ -419,9 +419,9 @@ class docbnf {
 		}
 		$this->generateBookmarks();
 		$this->convert->Output($pdfParams['outname'],"I");
-		return true;		
+		return true;
 	}
-	
+
 	public function generateOCR($pageName){
 		if($this->file_exists($this->get_file_path("X/".$pageName.".xml.gz"))){
 			$filepath = $this->get_file($this->get_file_path("X/".$pageName.".xml.gz"));
@@ -494,7 +494,7 @@ class docbnf {
 							$line[$name] =$attrNode->value;
 						}
 						//style de la ligne
-						
+
 						$line['CONTENT'] = "";
 						foreach($textLine->childNodes as $child){
 							if(($child->nodeName == "String" && $child->getAttribute("STYLEREFS") != $line['STYLEREFS']) || $child->nodeName == "SP"){
@@ -506,12 +506,12 @@ class docbnf {
 								$this->convert->setY($this->convert->convertPxToMm($line['VPOS']));
 								$this->convert->setX($this->convert->convertPxToMm($line['HPOS']));
 								$this->convert->SetFont($styles[$line['STYLEREFS']]['FONTFAMILY'],$styles[$line['STYLEREFS']]['FONTSTYLE'],$styles[$line['STYLEREFS']]['FONTSIZE']);
-								$this->convert->Cell($this->convert->convertPxToMm($line['WIDTH']),$this->convert->convertPxToMm($line['HEIGHT']), utf8_decode($line['CONTENT']),0,0,$align);
+								$this->convert->Cell($this->convert->convertPxToMm($line['WIDTH']),$this->convert->convertPxToMm($line['HEIGHT']), encoding_normalize::utf8_decode($line['CONTENT']),0,0,$align);
 								if($child->nodeName != "SP")
 									$line['STYLEREFS'] = $child->getAttribute("STYLEREFS");
 								$line['CONTENT'] = "";
 								$line['HPOS'] = $line['HPOS']+$line['WIDTH'];
-								
+
 							}
 							switch($child->nodeName){
 								case "String" :
@@ -519,22 +519,22 @@ class docbnf {
 									$width= $child->getAttribute("WIDTH");
 									break;
 							}
-							
+
 						}
 						if($line['CONTENT']){
 							$line['WIDTH'] = $width;
 							$this->convert->setY($this->convert->convertPxToMm($line['VPOS']));
 							$this->convert->setX($this->convert->convertPxToMm($line['HPOS']));
 							$this->convert->SetFont($styles[$line['STYLEREFS']]['FONTFAMILY'],$styles[$line['STYLEREFS']]['FONTSTYLE'],$styles[$line['STYLEREFS']]['FONTSIZE']);
-							$this->convert->Cell($this->convert->convertPxToMm($line['WIDTH']),$this->convert->convertPxToMm($line['HEIGHT']), utf8_decode($line['CONTENT'])." ",0,0,$align);
-							$this->textContent.=" ".utf8_decode($line['CONTENT']);
+							$this->convert->Cell($this->convert->convertPxToMm($line['WIDTH']),$this->convert->convertPxToMm($line['HEIGHT']), encoding_normalize::utf8_decode($line['CONTENT'])." ",0,0,$align);
+							$this->textContent.=" ".encoding_normalize::utf8_decode($line['CONTENT']);
 						}
 					}
 				}
-			}			
+			}
 		}
 	}
-	
+
 	public function generateBookmarks(){
 		$this->getTDM();
 		for($i=0 ; $i<count($this->bookmarks) ; $i++){
@@ -550,15 +550,15 @@ class docbnf {
 			}
 		}
 	}
-	
+
 	public function getImagePath($image){
 		$image = str_replace("T",$this->resolution,$image);
 		$img_path = $this->resolution."/".$image.".PNG";
 		if(!$this->file_exists($this->get_file_path($img_path))){
 			$img_path = $this->resolution."/".$image.".JPG";
 		}
-		
-		$number = str_replace($this->resolution,"",$image)*1;
+
+		$number = intval(str_replace($this->resolution,"",$image));
  		$src_img = imagecreatefromstring($this->get_file_content(($this->get_file_path($img_path))));
  		$img=imagecreatetruecolor($this->getWidth($number),$this->getHeight($number));
 		ImageSaveAlpha($img, false);
@@ -568,11 +568,11 @@ class docbnf {
  		imagejpeg($img,"./temp/".$image.".jpg");
  		return realpath("./temp/".$image.".jpg");
 	}
-	
+
 	public function get_file($file_path){
 		return $this->get_file_path($file_path);
 	}
-	
+
 	public function getPagesSizes(){
 		//pour chaque page
 		if(!$this->pagesSizes){
@@ -598,8 +598,8 @@ class docbnf {
  * Extention FPDF pour les documents BnF
  */
 
-class fpdf_bnf extends fpdf{
-	public $logoUrl;	//url du logo dÃ©posÃ© sur chaque page...
+class fpdf_bnf extends FPDF{
+	public $logoUrl;	//url du logo déposé sur chaque page...
 	public $header;	//header de page...
 	public $footers;	//pied de page du document...
 	public $resolution;
@@ -611,7 +611,7 @@ class fpdf_bnf extends fpdf{
 	public function __construct($params=array()){
 		parent::__construct();
 		$this->footers = $params['footers'];
-		$this->setCreator(utf8_decode($params['creator']));
+		$this->setCreator(encoding_normalize::utf8_decode($params['creator']));
 		$this->SetTextColor(0);
 		$this->cMargin = 0;
 	}
@@ -636,11 +636,11 @@ class fpdf_bnf extends fpdf{
 		if ($this->logoUrl !="") $this->Image($this->logoUrl,10,8,20);
 		if ($this->header) {
 			$this->SetFont('Arial',"",14);
-			$this->Cell(80); //DÃ©calage Ã  droite
+			$this->Cell(80); //Décalage à droite
 			$this->Cell(30,10,$this->header,0,'C');
 		}
 
-		//si on a un footer spÃ©cificique pour la page courante...
+		//si on a un footer spécificique pour la page courante...
 		$footer = array();
 		if(isset($this->footers['page'.$this->PageNo()])){
 			$footer = $this->footers['page'.$this->PageNo()];
@@ -655,15 +655,15 @@ class fpdf_bnf extends fpdf{
 			//Police Arial italique 8
 			$this->SetFont('Arial','I',(8*$this->w/210));
 			if($footer['link']){
-				$this->Cell(0,10,utf8_decode($footer['name']),0,0,'',false,utf8_decode($footer['link']));
+			    $this->Cell(0,10,encoding_normalize::utf8_decode($footer['name']),0,0,'',false,encoding_normalize::utf8_decode($footer['link']));
 			}else{
-				$this->Cell(0,10,utf8_decode($footer['name']),0,0,'',false,'');
+			    $this->Cell(0,10,encoding_normalize::utf8_decode($footer['name']),0,0,'',false,'');
 			}
 		}
 	}
 
 	public function Error($msg){
-		//erreur sur la classe FDPF, on la log avant d'arreter la gÃ©nÃ©ration...
+		//erreur sur la classe FDPF, on la log avant d'arreter la génération...
 // 		logMsg($msg);
 		//Fatal error
 		parent::Error($msg);
@@ -672,7 +672,7 @@ class fpdf_bnf extends fpdf{
 	/*************************************************************************
 	 *  Fonctions pour les signets (provient du site FPDF / Auteur : Olivier  *
 	 		*  http://www.fpdf.org/fr/script/script1.php                            *
-	 		*  ModifiÃ© par Arnaud RENOU (prise en compte d'un numÃ©ro de page        *
+	 		*  Modifié par Arnaud RENOU (prise en compte d'un numéro de page        *
 	 				*************************************************************************/
 
 	public function Bookmark($txt, $page=-1, $level=0, $y=0)	{
@@ -746,17 +746,17 @@ class fpdf_bnf extends fpdf{
 		$this->_out('endobj');
 	}
 
-	public function _putresources(){
+	protected function _putresources(){
 		parent::_putresources();
 		$this->_putbookmarks();
 	}
 
-	public function _putcatalog(){
+	protected function _putcatalog(){
 		parent::_putcatalog();
 		if(count($this->outlines)>0)
 		{
-			$this->_out('/Outlines '.$this->OutlineRoot.' 0 R');
-			$this->_out('/PageMode /UseOutlines');
+			$this->_put('/Outlines '.$this->OutlineRoot.' 0 R');
+			$this->_put('/PageMode /UseOutlines');
 		}
 	}
 

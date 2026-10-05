@@ -4,26 +4,82 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2018-06-08 08:10:27 vtouchard Exp $ -->
+$Id: manifest.xml,v 1.6 2021/02/09 15:30:46 jlaurent Exp $ -->
 <manifest>
 	<name>pmbesLoans</name>
-	<description>msg:Loans_functions_description</description>
+	   <description>msg:pmbesPNB_description</description>
 	<methods>
-		<method name="loanBook" rights="" version="1.0" comment="msg:loanBook_description" language_independant="true">
+	
+		<method name="loanBook" rights="" version="1.0" comment="msg:loanBook_description" language_independant="false">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="pnb/pnb.class.php"/>
 			</pmb_requirements>
 			<inputs>
-				<description>msg:loanBook_input_description</description>
-				<param name="id_empr" type="scalar" dataType="string" description="msg:loanBook_id_empr"/>
-				<param name="record_id" type="scalar" dataType="string" description="msg:loanBook_record_id"/>
-				<param name="user_agent" type="scalar" dataType="string" description="msg:loanBook_user_agent"/>
+				<description>msg:loanBook_inputs_description</description>
+				<param name="id_empr" type="scalar" dataType="string" description="msg:loanBook_input_id_empr"/>
+				<param name="record_id" type="scalar" dataType="string" description="msg:loanBook_input_record_id"/>
+				<param name="user_agent" type="scalar" dataType="string" description="msg:loanBook_input_user_agent"/>
+				<param name="pass" type="scalar" dataType="string" description="msg:loanBook_input_pass"/>
+				<param name="hint_pass" type="scalar" dataType="string" description="msg:loanBook_input_hintPass"/>
 			</inputs>
 			<outputs>
-				<description>msg:loanBook_output_description</description>
-				<!-- -<result name="result" type="scalar" dataType="type_a_definir" description="msg:filterLoansReaders_result"/> -->
+				<description>msg:loanBook_outputs_description</description>		    
+				<result name="status"  type="scalar" dataType="boolean" description="msg:loanBook_output_status"/>
+                <result name="message" type="scalar" dataType="string" description="msg:loanBook_output_message"/>
+                <result name="infos" type="array" description="msg:loanBook_output_infos">
+                    <result name="requestId" type="scalar" dataType="string" description="" />
+                    <result name="returnStatus" type="scalar" dataType="string" description="" />
+                    <result name="returnMessage" type="scalar" dataType="string" description="" />
+                </result>
 			</outputs>
 		</method>
+		
+		<method name="returnBook" rights="" version="1.0" comment="msg:returnBook_description" language_independant="false">
+			<pmb_requirements>s
+				<pmb_requirement start_path="class" file="pnb/pnb.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:retunBook_inputs_description</description>
+				<param name="emprId" type="scalar" dataType="string" description="msg:returnBook_input_emprId"/>
+				<param name="explId" type="scalar" dataType="string" description="msg:returnBook_input_explId"/>
+				<param name="fromPortal" type="scalar" dataType="boolean" description="msg:returnBook_input_fromPortal"/>
+				<param name="drm" type="scalar" dataType="string" description="msg:returnBook_input_drm"/>
+			</inputs>
+			<outputs>
+				<description>msg:returnBook_outputs_description</description>
+                <result name="status"  type="scalar" dataType="boolean" description="msg:returnBook_output_status"/>
+                <result name="message" type="scalar" dataType="string" description="msg:returnBook_output_message"/>
+                <result name="infos" type="array" description="msg:returnBook_output_infos">
+                    <result name="requestId" type="scalar" dataType="string" description="" />
+                    <result name="returnStatus" type="scalar" dataType="string" description="" />
+                    <result name="returnMessage" type="scalar" dataType="string" description="" />
+                </result>			
+            </outputs>
+		</method>
+		
+		<method name="extendLoan" rights="" version="1.0" comment="msg:extendLoan_description" language_independant="false">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="pnb/pnb.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:extendLoan_inputs_description</description>
+				<param name="emprId" type="scalar" dataType="string" description="msg:extendLoan_input_emprId"/>
+				<param name="explId" type="scalar" dataType="string" description="msg:extendLoan_input_explId"/>
+				<param name="fromPortal" type="scalar" dataType="boolean" description="msg:extendLoan_input_fromPortal"/>
+				<param name="drm" type="scalar" dataType="string" description="msg:extendLoan_input_drm"/>
+			</inputs>
+			<outputs>
+				<description>msg:extendLoan_outputs_description</description>
+				<result name="status"  type="scalar" dataType="boolean" description="msg:extendLoan_output_status"/>
+                <result name="message" type="scalar" dataType="string" description="msg:extendLoan_output_message"/>
+                <result name="infos" type="array" description="msg:extendLoan_output_infos">
+                    <result name="requestId" type="scalar" dataType="string" description="" />
+                    <result name="returnStatus" type="scalar" dataType="string" description="" />
+                    <result name="returnMessage" type="scalar" dataType="string" description="" />
+                </result>
+			</outputs>
+		</method>
+		
 	</methods>
 </manifest>
 

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,11 +47,11 @@ $cnx=cnx();
 include_once("./librairie_php/ajax-select.php");
 ajax_js();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <FORM name=formulaire  method=post action='gestion_discipline-retenu-ajout2.php'>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGacce17 ?> </font></b></td></tr>
@@ -63,7 +63,7 @@ ajax_js();
 $id=$_GET["id"];
 $data=cherche_eleve_retenu_id($id);
 //id_eleve,sanction,devoir_a_faire,devoir_pour_le,demande_retenu,retenu_enrg,info_plus,motif,idprof,classe,id,description_fait,idsanction
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         $nom_eleve=recherche_eleve_nom($data[$i][0]);
         $prenom_eleve=recherche_eleve_prenom($data[$i][0]);
         $devoir_a_faire=$data[$i][2];
@@ -114,7 +114,7 @@ Devoir à faire : <br><br>
 <table border="1" bordercolor="#000000" width="100%">
 <?php
 $sub=0;
-if( count($data) <= 0 )
+if( countTriade($data) <= 0 )
         {
         print("<tr><td align=center valign=center><BR><font size=3>".LANGDISP1."</font><BR><BR></td></tr>");
         }
@@ -129,7 +129,7 @@ else {
 <td bgcolor="yellow" align=center>&nbsp;<A href='#' onMouseOver="AffBulle3('Attention','./image/commun/warning.jpg','<font face=Verdana size=1><B><font color=red>C</font></B>ochez la case si l\'élève est soit en <br>retenue soit sanctionné.</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A>&nbsp;</td>
 </tr>
 <?php
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
         ?>
 <tr id="tr<?php print $i ?>" class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
@@ -163,8 +163,8 @@ print "</table>";
 ?>
 <?php if ($sub == 1) { ?>
 <BR>
-<input type=hidden name=saisie_id value="<?php print count($data)?>">
-<script>var nb=<?php print count($data)?>;</script>
+<input type=hidden name=saisie_id value="<?php print countTriade($data)?>">
+<script>var nb=<?php print countTriade($data)?>;</script>
 <table align=center border=0><tr><td>
 <script language=JavaScript>buttonMagicSubmit("Enregistrer Sanction(s)","rien"); //text,nomInput</script>
 </td></tr></table>
@@ -177,17 +177,17 @@ print "</table>";
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

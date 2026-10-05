@@ -1,0 +1,41 @@
+@startuml
+
+entity "dashboard" {
+  + id_dashboard: int
+  dashboard_name: string
+  dashboard_editable: bool
+}
+
+entity "widget" {
+  + id_widget: int
+  widget_name: string
+  widget_editable: bool
+  widget_type: int
+  widget_settings: blob
+}
+
+entity "users_groups" {
+  + grp_id: int
+}
+
+entity "users" {
+  + userid: int
+}
+
+entity "dashboard_users_groups" {
+  + num_dashboard: int
+  + num_users_groups: int
+}
+
+entity "dashboard_widget" {
+  + num_dashboard: int
+  + num_widget: int
+  dashboard_widget_settings : blob
+}
+
+"dashboard" ||--o{ "dashboard_widget" : "0..*"
+"widget" ||--o{ "dashboard_widget" : "0..*"
+"dashboard" ||--o{ "dashboard_users_groups" : "0..*"
+"users_groups" ||--o{ "dashboard_users_groups" : "0..*"
+"users" --|{ "dashboard" : "1"
+@enduml

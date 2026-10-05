@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
@@ -38,86 +40,106 @@ function newkeyCode(form,variable){
 	form.text2display.value += String.fromCharCode(variable);
 }
 </script>
+<style>
+body { background:#f4f6fb; margin:0; padding:12px; font-family:Arial,sans-serif; font-size:12px; }
+.cb-toolbar { padding:0 0 12px; }
+.cb-grid { display:flex; flex-wrap:wrap; gap:12px; }
+.cb-card {
+  background:#fff;
+  border:1px solid #dde2f4;
+  border-radius:8px;
+  padding:12px 14px;
+  width:220px;
+  box-sizing:border-box;
+  transition:box-shadow .15s, border-color .15s;
+}
+.cb-card:hover { border-color:#9ba8d8; box-shadow:0 3px 10px rgba(60,74,138,.13); }
+.cb-card-head {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:8px;
+  border-bottom:1px solid #eef0fa;
+  padding-bottom:6px;
+}
+.cb-name { font-weight:700; font-size:12px; color:#1a2340; line-height:1.3; flex:1; }
+.cb-badge-actif   { width:8px;height:8px;border-radius:50%;background:#43a047;flex-shrink:0; }
+.cb-badge-inactif { width:8px;height:8px;border-radius:50%;background:#e53935;flex-shrink:0; }
+.cb-card-actions { display:flex; gap:6px; align-items:center; margin-bottom:10px; }
+.cb-card-actions a { opacity:.8; line-height:0; }
+.cb-card-actions a:hover { opacity:1; }
+.cb-card-barcode { text-align:center; min-height:40px; }
+.cb-card-barcode img { max-width:100%; }
+.cb-input { font-size:12px;padding:2px 4px;border:1px solid #b0b8e0;border-radius:3px;width:100%;box-sizing:border-box;margin-top:4px; }
+.cb-warn { margin:0 0 12px;padding:8px 12px;background:#ffebee;border:1px solid #ef9a9a;border-radius:6px;font-size:12px;color:#c62828;text-align:center; }
+</style>
 </head>
 <?php
 include("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
-$cnx=cnx();
+$cnx = cnx();
+?>
+<body>
+<?php
+$version = phpversion();
 
-if (VATEL == 1) {
-		print "<body bgcolor='#F4F5F7' marginheight='0' marginwidth='0' leftmargin='0' topmargin='0'>";
-}else{
-		print "<body id='coulfond1' marginheight='0' marginwidth='0' leftmargin='0' topmargin='0'>";	
+if (!preg_match('/^8/', $version)) {
+	print "<div class='cb-warn'><strong>ATTENTION</strong> : " . LANGCODEBAR2 . "</div>";
 }
 
+$saisie_classe = $_GET["idclasse"];
+$sql = "SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$res  = execSql($sql);
+$data = chargeMat($res);
 
-$version=phpversion();
-if (!preg_match('/^7/',$version)) {
-	$mess="<center><b><br><b><font color=red>ATTENTION</font> : ".LANGCODEBAR2."</b><br><br></center>";
+if (preg_match('/^8/', $version)) {
+	print "<div class='cb-toolbar'>";
+	print "<button type='button' class='btn-enr' style='font-size:11px;padding:4px 10px;' onclick=\"open('codebarimpr.php?idclasse=$saisie_classe&codebase=" . $_GET["codebase"] . "','_blank','')\">&#128438; Imprimer</button>";
+	print "</div>";
 }
-
-$saisie_classe=$_GET["idclasse"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
-$res=execSql($sql);
-$data=chargeMat($res);
-if (preg_match('/^7/',$version)) {
-	print "<br><table><tr><td><input type=button value='Imprimer' onclick=\"open('codebarimpr.php?idclasse=$saisie_classe&codebase=".$_GET["codebase"]."','_blank','')\"  class='button'\"></td>";
-}
-print "$mess";
 
 if (isset($_GET["idvalide"])) {
-	valideIdCodeBar($_GET["idvalide"],"menueleve",$_GET["valide"]);
+	valideIdCodeBar($_GET["idvalide"], "menueleve", $_GET["valide"]);
 }
 if (isset($_GET["idsupp"])) {
-	suppIdCodeBar($_GET["idsupp"],"menueleve");
+	suppIdCodeBar($_GET["idsupp"], "menueleve");
 }
 
+print "<form><div class='cb-grid'>";
 
-print "<form><table width='100%'  border='0' align='left' >";
-$x=3;
-$y=3;
+for ($i = 0; $i < countTriade($data); $i++) {
+	$texte  = recupIdCodeBar($data[$i][1], "menueleve");
+	$nom    = strtoupper(trim(stripslashes($data[$i][2])));
+	$prenom = ucfirst(trim(stripslashes($data[$i][3])));
+	$actif  = verifCodebarre($data[$i][1], "menueleve");
+	$actvalide = $actif ? 0 : 1;
 
-for($i=0;$i<count($data);$i++) {
-	$texte=recupIdCodeBar($data[$i][1],"menueleve");
-	if (VATEL == 1) {
-		$bgcolor=($bgcolor=="#87C1E6") ? $bgcolor="#BCDAF0" : $bgcolor="#87C1E6" ;
-		print "<tr bgcolor='$bgcolor' >\n";
-	}else{
-		print "<tr>";
+	print "<div class='cb-card'>";
+
+	print "<div class='cb-card-head'>";
+	print "<span class='" . ($actif ? "cb-badge-actif" : "cb-badge-inactif") . "' title='" . ($actif ? "actif" : "non actif") . "'></span>";
+	print "<span class='cb-name'>$nom<br><span style='font-weight:400;color:#555;'>$prenom</span></span>";
+	print "</div>";
+
+	print "<div class='cb-card-actions'>";
+	print "<a href='codebar.php?idclasse=$saisie_classe&idvalide=" . $data[$i][1] . "&valide=$actvalide&codebase=" . $_GET["codebase"] . "' title='Bloquer / Activer'>&#128164;</a>";
+	print "<a href='codebar.php?idclasse=$saisie_classe&idsupp=" . $data[$i][1] . "&codebase=" . $_GET["codebase"] . "' title='Nouveau code'><img src='./image/commun/recycle.jpg' border='0'></a>";
+	print "<a href='#' onclick=\"document.getElementById('codeim$i').style.display='none'; document.getElementById('codeinput$i').style.display='block'; return false;\" title='Modifier code'><img src='./image/commun/editer.gif' border='0'></a>";
+	print "</div>";
+
+	if (preg_match('/^8/', $version)) {
+		print "<div class='cb-card-barcode'>";
+		print "<img id='codeim$i' src='./codebar/image.php?code=" . $_GET["codebase"] . "&text=$texte'>";
+		print "<span id='codespan$i'><input type='text' id='codeinput$i' class='cb-input' style='display:none' onchange=\"enrModifCodebarre(this.value,'" . $data[$i][1] . "','codespan$i','menueleve')\"></span>";
+		print "</div>";
 	}
-	print "<td align=left><b>&nbsp;".strtoupper(trim($data[$i][2]))." ".ucfirst(trim(trunchaine($data[$i][3],10)))."</b></td>";
-	print "<td align=left>&nbsp;";
-	if (verifCodebarre($data[$i][1],"menueleve")) {
-		print "	<img src='./image/commun/stat1.gif' title='actif' />&nbsp;";
-		$actvalide=0;
-	}else{
-		print "	<img src='./image/commun/stat2.gif' title='non actif' />&nbsp;";
-		$actvalide=1;
-	}
-	print "<a href='codebar.php?idclasse=$saisie_classe&idvalide=".$data[$i][1]."&valide=$actvalide&codebase=".$_GET["codebase"]."'><img src='./image/commun/img_ssl_mini.png' border='0' title='bloquer code barre' /></a>&nbsp;&nbsp;";
-	print "<a href='codebar.php?idclasse=$saisie_classe&idsupp=".$data[$i][1]."&codebase=".$_GET["codebase"]."'><img src='./image/commun/recycle.jpg' border='0' title='Nouveau code' /></a> ";
-	print "<a href=\"#\" onclick=\"document.getElementById('codeim$i').style.display='none';  document.getElementById('codeinput$i').style.display='inline'; return false; \"><img src='./image/commun/editer.gif' border='0' title='Enregistrer un code' /></a>";
-	print "</td>";
-	if (preg_match('/^7/',$version)) {
-		print "<td align=center>";
-		print "";
-		print "<img id='codeim$i' src=\"./codebar/image.php?code=".$_GET["codebase"]."&text=".$texte."\">";
-		print "<span id='codespan$i'><input type=text id='codeinput$i' size='10' style='display:none' onchange=\"enrModifCodebarre(this.value,'".$data[$i][1]."','codespan$i','menueleve')\" ></span>";
-		print "</td>";
-	}else {
-		print "<td></td>";
-	}
-	print "</tr>";
+
+	print "</div>";
 }
-	print "</table></form>";
-// deconnexion en fin de fichier
+
+print "</div></form>";
 Pgclose();
-
-
-
-
 ?>
-</form>
 </body>
 </html>

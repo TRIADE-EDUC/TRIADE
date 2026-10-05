@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: comment_gestion.class.php,v 1.3 2017-04-26 10:20:06 dgoron Exp $
+// $Id: comment_gestion.class.php,v 1.4 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,19 +15,17 @@ class comment_gestion{
 	public $idobjet = 0;
 	
 	public function __construct($id_elt,$fieldElt){
-		global $quoifaire;
-		
 		$this->id_element = $id_elt;
 		$format_affichage = explode('/',$fieldElt);
 		$this->champ_entree = $format_affichage[0];
 		if($format_affichage[1]) $this->champ_sortie = $format_affichage[1];
 	
 		$ids = explode("_",$id_elt);
-		$this->idobjet = $ids[1];
+		$this->idobjet = intval($ids[1]);
 	}
 	
 	public function make_display(){
-		global $msg, $charset,$dbh;
+		global $msg, $charset;
 
 		$req="SELECT * from perio_relance where rel_id=".$this->idobjet."";	
 		$res= pmb_mysql_query($req);
@@ -48,11 +46,10 @@ class comment_gestion{
 	}
 	
 	public function update(){
-		
-		global $dbh, $comment_gestion;		
+		global $comment_gestion;		
 		
 		$req = "update perio_relance set rel_comment_gestion='".$comment_gestion."' where rel_id='".$this->idobjet."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		
 		switch($this->champ_sortie){
 			default :				

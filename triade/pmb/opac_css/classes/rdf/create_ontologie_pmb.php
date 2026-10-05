@@ -9,15 +9,16 @@
   * Fichier en UTF-8
   */
  
- include_once("arc2/ARC2.php");
-
 /*
- RÃªgle Implicite :
- 	- Si pas de domaine ou de range : peu s'appliquer Ã  toutes les ressources
+ Règle Implicite :
+ 	- Si pas de domaine ou de range : peut s'appliquer à toutes les ressources
  	- Si pas de owl:maxCardinality : liaison n (sans limite)
  	- Si pas de owl:minCarinality : liaison 0 (il peut ne pas y en avoir)
  	- Si pas de owl:maxCardinality ni owl:minCarinality c'est une liaison 0-n
  */
+
+$base_path =  __DIR__ . '/../..';
+require_once $base_path.'/vendor/autoload.php';
 
 $config = array(
   /* db */

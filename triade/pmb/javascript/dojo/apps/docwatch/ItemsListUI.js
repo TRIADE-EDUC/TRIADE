@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ItemsListUI.js,v 1.47 2019-03-13 14:48:22 dgoron Exp $
+// $Id: ItemsListUI.js,v 1.50 2021/08/10 09:53:05 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "dojo/topic", "dojox/grid/DataGrid", "dojo/data/ObjectStore", "dojo/store/Memory", "dojo/ready", "apps/docwatch/ItemsStore", "dojo/date/locale", "dojo/dom-construct", "dojo/on", 'dijit/form/Button', 'dijit/form/RadioButton',  'dojox/widget/Standby', "dojo/dom"], function(declare,ContentPane,lang,topic,DataGrid,ObjectStore,Memory,ready,ItemsStore,locale, domConstruct, on, Button, RadioButton, standby, dom){
@@ -16,6 +16,7 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 		header:null,
 		storeQuery:null,
 		myItemsSearch:null,
+		defltFilterDeleted:null,
 		constructor : function() {
 			this.storeQuery = {num_watch:this.idWatch};
 			this.itemsStore = new ItemsStore({
@@ -81,6 +82,9 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 			      	break;
 			    case "watchDeleted":
 			    	this.watchDeleted();
+			      	break;
+			    case "itemsMarkAsDeletedPurged":
+			    	this.itemsMarkAsDeletedPurged(evtArgs.watchId);
 			      	break;
 		    }
 		},
@@ -149,8 +153,16 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 				topic.publish("itemsListUI","noMoreItems");
 			}
 			this.hidePatience();
-			if(datas != undefined)
+			if(datas != undefined) {
 				this.updateDate(datas);
+				this.defltFilterDeleted = parseInt(datas.deflt_docwatch_watch_filter_deleted);
+			}
+			if(dijit.byId('filter_deleted_hide')) {
+				if(!this.defltFilterDeleted || dijit.byId('filter_deleted_hide').checked) {
+					dijit.byId('filter_deleted_hide').setChecked(true);
+					this.filterDeletedHideClicked();
+				}
+			}
 		},
 
 		refreshItem : function(datas, deletion) {
@@ -298,17 +310,33 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 			        label: pmbDojo.messages.getMessage('dsi', 'dsi_js_docwatch_edit_watch'),
 			        onClick: lang.hitch(this, this.editClicked, watch)
 			    }).placeAt(mainRow).startup();
+			var myButton = new Button({
+			        label: pmbDojo.messages.getMessage('dsi', 'docwatch_watch_purge'),
+			       	title: pmbDojo.messages.getMessage('dsi', 'docwatch_watch_purge_items_mark_as_deleted'),
+			        onClick: lang.hitch(this, this.purgeItemsMarkAsDeletedClicked, watch)
+			    }).placeAt(mainRow).startup();
 			domConstruct.create('span', {innerHTML:pmbDojo.messages.getMessage("dsi","docwatch_watch_filter_deleted"), style:{marginLeft:'5px',marginRight:'5px'}}, mainRow);
-			var myButton_1 = new RadioButton({
-				name: 'filter_deleted',
-		        checked: true,
-		        onClick: lang.hitch(this, this.filterDeletedShowClicked, watch)
-		    }).placeAt(mainRow).startup();
+			
+			if(dijit.byId('filter_deleted_show')) {
+				dijit.byId('filter_deleted_show').placeAt(mainRow).startup();
+			} else {
+				var myButton_1 = new RadioButton({
+					id: 'filter_deleted_show',
+					name: 'filter_deleted',
+			        checked: true,
+			        onClick: lang.hitch(this, this.filterDeletedShowClicked, watch)
+			    }).placeAt(mainRow).startup();
+			}
 			domConstruct.create('span', {innerHTML:pmbDojo.messages.getMessage("dsi","docwatch_yes"), style:{marginLeft:'5px',marginRight:'5px'}}, mainRow);
-			var myButton_2 = new RadioButton({
-				name: 'filter_deleted',
-		        onClick: lang.hitch(this, this.filterDeletedHideClicked, watch)
-		    }).placeAt(mainRow).startup();	
+			if(dijit.byId('filter_deleted_hide')) {
+				dijit.byId('filter_deleted_hide').placeAt(mainRow).startup();
+			} else {
+				var myButton_2 = new RadioButton({
+					id: 'filter_deleted_hide',
+					name: 'filter_deleted',
+			        onClick: lang.hitch(this, this.filterDeletedHideClicked, watch)
+			    }).placeAt(mainRow).startup();
+			}
 			domConstruct.create('span', {innerHTML:pmbDojo.messages.getMessage("dsi","docwatch_no"), style:{marginLeft:'5px',marginRight:'5px'}}, mainRow);
 			this.myItemsSearch = domConstruct.create('input', {
 				type:'text', 
@@ -351,6 +379,13 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 			};
 			this.refreshItem(null, false);
 		},
+		purgeItemsMarkAsDeletedClicked: function(watch) {
+			if(confirm(pmbDojo.messages.getMessage("dsi","docwatch_watch_purge_items_mark_as_deleted_confirm"))){
+				topic.publish("itemsListUI","purgeItemsMarkAsDeleted",{
+				watchId: this.idWatch
+				});
+			}
+		},
 		updateDate:function(datas){
 			if(dom.byId('watch_last_date')){
 				dom.byId('watch_last_date').innerHTML = '('+locale.format(new Date(datas.formated_last_date))+')';	
@@ -366,6 +401,11 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/_base/lang", "do
 		},
 		watchDeleted: function(){		
 			this.destroyDescendants();
+		},
+		itemsMarkAsDeletedPurged: function(watchId){
+			topic.publish("itemsListUI","updateWatch",{
+				watchId: watchId
+			});
 		},
 	});
 });

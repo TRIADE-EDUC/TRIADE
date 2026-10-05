@@ -2,25 +2,23 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: transaction_payment_method.class.php,v 1.2 2019-06-07 12:23:10 ngantier Exp $
+// $Id: transaction_payment_method.class.php,v 1.6 2023/06/28 07:53:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/transaction/transaction_payment_method.tpl.php");
-
 
 class transaction_payment_method {
     protected $id = 0;				// identifiant du mode de paiement
-    protected $name = "";			// LibellÃ© du mode de paiement
+    protected $name = "";			// Libellé du mode de paiement
 	
 	public function __construct($id = 0) {
-	    
 	    $this->id = intval($id);
 	    $this->fetch_data();		
 	}
 	
 	protected function fetch_data() {
-	    
 		$this->name = '';
 		if (!$this->id)	return false;
 		$rqt = "SELECT * FROM transaction_payment_methods WHERE transaction_payment_method_id = " . $this->id;
@@ -32,56 +30,41 @@ class transaction_payment_method {
 		}
 	}
 	
-	public function get_form(){
-		global $msg, $charset;
-		global $transaction_payment_method_form;
-		
-		$form = $transaction_payment_method_form;
-		
-		if ($this->id) {
-			$titre = $msg["transaction_payment_method_form_titre_edit"];
-			$form = str_replace('!!supprimer!!', "<input type='button' class='bouton' value=' ".$msg["transaction_payment_method_form_delete"]." ' onClick=\"if(confirm('".$msg["transaction_payment_method_form_delete_question"]."'))
-					document.location = './admin.php?categ=finance&sub=transaction_payment_method&action=delete&id=!!id!!'\" />", $form);
-		} else {
-			$titre = $msg["transaction_payment_method_form_titre_add"];
-			$form = str_replace('!!supprimer!!', "", $form);
-		}		
-		$form = str_replace('!!titre!!', $titre, $form);
-		$form = str_replace('!!name!!', htmlentities($this->name, ENT_QUOTES, $charset), $form);
-				
-		$form = str_replace('!!action!!', "./admin.php?categ=finance&sub=transaction_payment_method&action=save&id=!!id!!", $form);
-		$form = str_replace('!!id!!', $this->id, $form);
-		return $form; 
+	public function get_content_form() {
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('f_name', 'transaction_payment_method_form_name')
+		->add_input_node('text', $this->name);
+		return $interface_content_form->get_display();
 	}
 	
-	public function get_from_form() {		
-		global $f_name;
-		global $id;
+	public function get_form(){
+		global $msg;
 		
-		$this->id = $id+0;
+		$interface_form = new interface_admin_form('transaction_payment_method');
+		if(!$this->id){
+			$interface_form->set_label($msg['transaction_payment_method_form_titre_add']);
+		}else{
+			$interface_form->set_label($msg['transaction_payment_method_form_titre_edit']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg["transaction_payment_method_form_delete_question"])
+		->set_content_form($this->get_content_form())
+		->set_table_name('transaction_payment_methods')
+		->set_field_focus('f_name');
+		return $interface_form->get_display();
+	}
+	
+	public function set_properties_from_form() {		
+		global $f_name;
+		
 		$this->name = stripslashes($f_name);
 	}
 	
-	public function check_delete() {
-		
-		return 1;
-	}
-	
 	public function get_name() {
-	    
 	    return $this->name;
 	}
 	
-	public function delete() {
-		
-		$rqt = "DELETE FROM transaction_payment_methods WHERE transaction_payment_method_id = " . $this->id;
-		pmb_mysql_query($rqt);
-		
-		$this->id = 0;
-	}
-	
 	public function save() {
-		
 		if ($this->id) {			
 			$save = "UPDATE ";
 			$clause = "WHERE transaction_payment_method_id = " . $this->id;
@@ -94,31 +77,12 @@ class transaction_payment_method {
 		if (!$this->id) {
 			$this->id=pmb_mysql_insert_id();
 		}			
-		$this->fetch_data();
 	}
 	
-	public function proceed(){
-		global $action, $msg;
-		
-		switch ($action) {
-			case 'edit':
-				print $this->get_form();
-				break;
-			case 'save':
-				$this->get_from_form();
-				$this->save();
-				print "<script type='text/javascript'>window.location='./admin.php?categ=finance&sub=transaction_payment_method'</script>";
-				break;
-			case 'delete':
-				if ($this->check_delete()) {
-					$this->delete();
-					print "<script type='text/javascript'>window.location='./admin.php?categ=finance&sub=transaction_payment_method'</script>";
-				} else {
-					print "<script type='text/javascript'>alert(".$msg["transaction_payment_method_form_delete_no"].");window.location='./admin.php?categ=finance&sub=transaction_payment_method'</script>";
-				}
-				break;	
-			default:
-				break;
-		}
+	public static function delete($id) {
+		$id = intval($id);
+		$rqt = "DELETE FROM transaction_payment_methods WHERE transaction_payment_method_id = ".$id;
+		pmb_mysql_query($rqt);
+		return true;
 	}
 }

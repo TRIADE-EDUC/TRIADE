@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 <!-- liste des codes fonction en UNIMARC (français)
-$Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
+$Id: function.xml,v 1.19 2020/02/24 12:02:31 dgoron Exp $ -->
 
 <XMLlist>
-	
-<entry code="005">Actor</entry>
+	<entry code="000">Fonction indéterminée</entry>
+	<entry code="005">Actor</entry>
 	<entry code="010">Adaptador</entry>
 	<entry code="018">Autor de l'animació</entry>
 	<entry code="020">Anotador</entry>
@@ -38,6 +38,8 @@ $Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="212">Autor de comentari</entry>
 	<entry code="220">Compilador</entry>
 	<entry code="230">Compositor</entry>
+	<entry code="233">Compositeur de l'oeuvre adaptée</entry>
+	<entry code="236">Compositeur de l'oeuvre principale</entry>
 	<entry code="240">Compositor d'impremta</entry>
 	<entry code="245">Concebidor</entry>
 	<entry code="250">Director d'orquestra</entry>
@@ -51,6 +53,7 @@ $Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="290">Dedicador</entry>
 	<entry code="295">Organisme de sosteniment</entry>
 	<entry code="300">Director</entry>
+	<entry code="303">Disc jockey</entry>
 	<entry code="305">Candidat</entry>
 	<entry code="310">Distribuïdor</entry>
 	<entry code="320">Donador</entry>
@@ -68,6 +71,7 @@ $Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="420">Persona honorada</entry>
 	<entry code="430">Il·luminador</entry>
 	<entry code="440">Il·lustrador</entry>
+	<entry code="445">Impresario</entry>
 	<entry code="450">Autor de l'enviament</entry>
 	<entry code="460">Persona entrevistada</entry>
 	<entry code="470">Entrevistador</entry>
@@ -106,7 +110,9 @@ $Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="651">Director de publicació, redactor en cap</entry>
 	<entry code="655">Marionetista</entry>
 	<entry code="660">Destinatari de cartes</entry>
+	<entry code="665">Producteur de phonogramme</entry>
 	<entry code="670">Enginyer de so</entry>
+	<entry code="672">Remixeur</entry>
 	<entry code="673">Responsable de l'equip de recerca</entry>
 	<entry code="675">Responsable d'informe crític</entry>
 	<entry code="677">Membre de l'equip de recerca</entry>
@@ -129,7 +135,6 @@ $Id: function.xml,v 1.18 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="755">Cantant, executor vocal</entry>
 	<entry code="760">Gravador sobre fusta</entry>
 	<entry code="770">Autor del material d'acompanyament</entry>
-	
 </XMLlist>
 
 

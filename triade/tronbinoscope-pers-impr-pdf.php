@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,7 +38,7 @@ if (isset($_GET["saisie_type"])) {
 	if ($_GET["saisie_type"] != "0") $sqlsuite=" type_pers='".$_GET["saisie_type"]."' ";
 }
 
-$sql="SELECT pers_id,pers_id,nom,prenom FROM ${prefixe}personnel WHERE $sqlsuite AND  offline='0' ORDER BY nom";
+$sql="SELECT pers_id,pers_id,nom,prenom FROM {$prefixe}personnel WHERE $sqlsuite AND  offline='0' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -62,20 +62,18 @@ $y+=10;
 $x=7;
 $nbp=1;
 $pdf->SetFont('Arial','',8);
-for($i=0;$i<count($data);$i++) {
-
+for($i=0;$i<countTriade($data);$i++) {
 	$logo="./data/image_pers/".trim($data[$i][1]).".jpg";
 	if (!file_exists($logo)) { $logo="./image/commun/photo_vide.jpg"; }
 	$pdf->Image($logo,$x,$y,20,20);
 	$pdf->SetXY($x+20,$y);
 	$nomprenom=strtoupper($data[$i][2])."\n".ucwords($data[$i][3]);
-	$pdf->MultiCell(30,5,"$nomprenom",0,'L',0);	
+	$pdf->MultiCell(30,5,stripslashes("$nomprenom"),0,'L',0);	
 	$x+=50;
 	if ($x >= 200) {
 		$x=7;
 		$y+=25;
 	}
-
 	if ($y > 250) {
 		$pdf->AddPage();
 		$y=10;$x=7;

@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: commande.inc.php,v 1.6 2019-03-06 11:46:54 dbellamy Exp $
+// $Id: commande.inc.php,v 1.7 2019/08/29 10:05:39 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 
-// traitement en entrÃ©e des requÃªtes utilisateur
+// traitement en entrée des requêtes utilisateur
 if ($deb_rech) $f_user_input = $deb_rech ;
 if($f_user_input=="" && $user_input=="") {
 	$user_input='';
@@ -138,7 +138,8 @@ function show_commandes ($user_input, $statut=0, $nbr_lignes=0, $page=0, $id = 0
 	global $id_exercice;
 	global $callback;
 	global $id_cde;
-
+	global $sortBy;
+	
 	// traitement de la saisie utilisateur
 	if(!$page) $page=1;
 	$debut =($page-1)*$nb_per_page;
@@ -161,7 +162,7 @@ function show_commandes ($user_input, $statut=0, $nbr_lignes=0, $page=0, $id = 0
 
 	if ($nbr_lignes) {
 		// liste
-		if (!$sortBy) {
+		if (empty($sortBy)) {
 			$sortBy = '-date_acte';
 		}
 		if(!$user_input) {

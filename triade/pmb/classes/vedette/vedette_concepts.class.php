@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_concepts.class.php,v 1.7 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: vedette_concepts.class.php,v 1.8 2020/12/22 16:55:44 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,9 +14,11 @@ class vedette_concepts extends vedette_element{
 	protected $type = TYPE_CONCEPT;
 	
 	public function __construct($type, $id, $isbd = "", $params = array()) {
-		if ($id*1) {
-			$id = onto_common_uri::get_uri($id);
-		}
+	    if (is_numeric($id)) {
+	        $id = onto_common_uri::get_uri($id);
+	    } else {
+	        $id = stripslashes($id);
+	    }
 		parent::__construct($type, $id, $isbd, $params);
 	}
 	

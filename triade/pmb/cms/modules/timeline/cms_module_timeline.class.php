@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_timeline.class.php,v 1.1 2017-09-29 12:51:31 arenou Exp $
+// $Id: cms_module_timeline.class.php,v 1.1 2017/09/29 12:51:31 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

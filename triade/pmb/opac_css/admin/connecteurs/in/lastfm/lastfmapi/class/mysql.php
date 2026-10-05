@@ -47,7 +47,7 @@ class lastfmApiDatabase {
 	 * @param string $dbName Database name
 	 * @return void
 	 */
-	function __construct($host,$dbUser,$dbPass,$dbName) {
+	public function __construct($host,$dbUser,$dbPass,$dbName) {
 		$this->host = $host;
 		$this->dbUser = $dbUser;
 		$this->dbPass = $dbPass;
@@ -120,7 +120,7 @@ class lastfmApiDatabase_result {
 	 * @param class $query The query
 	 * @return void
 	 */
-	function lastfmApiDatabase_result(&$mysql,$query) {
+	public function __construct(&$mysql, $query) {
 		$this->mysql = &$mysql;
 		$this->query = $query;
 	}
@@ -146,7 +146,7 @@ class lastfmApiDatabase_result {
 	 * Fetches all the results
 	 * @return array
 	 */
-	function fetchAll() {
+	public function fetchAll() {
 		$result = array();
 		while ( $row = pmb_mysql_fetch_array($this->query) ) {
 			$result[] =$row;
@@ -158,7 +158,7 @@ class lastfmApiDatabase_result {
 	 * Shows the number of results
 	 * @return integer
 	 */
-	function size () {
+	public function size () {
 		return pmb_mysql_num_rows($this->query);
 	}
 }

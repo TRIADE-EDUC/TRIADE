@@ -5,8 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_records_cadre.xml,v 1.1 2017-05-05 07:43:10 dgoron Exp $ -->
+$Id: frbr_entity_records_cadre.xml,v 1.2 2019/12/30 13:49:45 jlaurent Exp $ -->
 
 <XMLlist>
 	<entry code='frbr_entity_records_view_recordslist'>Liste de notices - template Django</entry>
+	<entry code='frbr_entity_records_view_timeline'>Liste de notices - Frise Chronologique</entry>
 </XMLlist>

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: webepires2uni.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: webepires2uni.class.php,v 1.2 2022/04/21 07:34:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once("$class_path/marc_table.class.php");
 require_once($base_path."/admin/convert/convert.class.php");
 
@@ -29,7 +30,7 @@ class webepires2uni extends convert {
 	}
 	
 	public static function convert_data($notice, $s, $islast, $isfirst, $param_path) {
-		global $cols,$charset;
+		global $cols;
 		global $intitules;
 		global $base_path,$origine;
 		global $tab_functions;
@@ -37,7 +38,7 @@ class webepires2uni extends convert {
 		if (!$tab_functions) $tab_functions=new marc_list('function');
 		
 		if (!$cols) {
-			//On lit les intitulÃ©s dans le fichier temporaire
+			//On lit les intitulés dans le fichier temporaire
 			$fcols=fopen("$base_path/temp/".$origine."_cols.txt","r");
 			if ($fcols) {
 				$cols=fread($fcols,filesize("$base_path/temp/".$origine."_cols.txt"));
@@ -47,6 +48,7 @@ class webepires2uni extends convert {
 		}
 		
 		$fields=explode(";;",$notice);
+		$ntable=array();
 		for ($i=0; $i<count($fields); $i++) {
 			$ntable[$cols[$i]]=$fields[$i];
 		}
@@ -57,7 +59,7 @@ class webepires2uni extends convert {
 			$error="";
 			$data="<notice>\n";
 			
-			//EntÃªte
+			//Entête
 			if ($s["LOCALBASE"][0]["value"]==DATA_BASE) $rs="c"; else $rs="n";
 			$data.="  <rs>".$rs."</rs>\n";
 			$dt="w";
@@ -65,39 +67,23 @@ class webepires2uni extends convert {
 			$data.="  <dt>".$dt."</dt>\n";
 			$data.="<bl>".$bl."</bl>\n";
 			$data.="<hl>*</hl>\n<el>1</el>\n<ru>i</ru>\n";
-			//NumÃ©ro d'enregistrement
+			//Numéro d'enregistrement
 			//$data.="  <f c='001' ind='  '>".$ntable["REF"]."</f>\n";
 			
 			//Titre
-			$data.="  <f c='200' ind='  '>\n";
-			$data.="    <s c='a'>".htmlspecialchars($ntable["NOM"],ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
+			$data.=static::get_converted_field_uni('200', 'a', $ntable["NOM"]);
 			
 			//Site web
-			$data.="  <f c='856'>\n";
-			$data.="    <s c='u'>".htmlspecialchars($ntable["SITE"],ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
+			$data.=static::get_converted_field_uni('856', 'u', $ntable["SITE"]);
 		
-			//Adresse mail : note gÃ©nÃ©rale
-			if ($ntable["MEL"]) {
-				$data.="  <f c='300'>\n";
-				$data.="    <s c='a'>".htmlspecialchars($ntable["MEL"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";	
-			}
+			//Adresse mail : note générale
+			$data.=static::get_converted_field_uni('300', 'a', $ntable["MEL"]);
 		
 			//LI : Note de contenu
-			if ($ntable["LI"]) {
-				$data.="  <f c='327'>\n";
-				$data.="    <s c='a'>".htmlspecialchars($ntable["LI"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			} 
+			$data.=static::get_converted_field_uni('327', 'a', $ntable["LI"]);
 			
-			//COMMENT : RÃ©sumÃ©
-			if ($ntable["COMMENT"]) {
-				$data.="  <f c='330'>\n";
-				$data.="    <s c='a'>".htmlspecialchars($ntable["COMMENT"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			} 
+			//COMMENT : Résumé
+			$data.=static::get_converted_field_uni('330', 'a', $ntable["COMMENT"]);
 			
 			//DOC : Indexation Web
 			 if ($ntable["DOC"]) {
@@ -109,28 +95,19 @@ class webepires2uni extends convert {
 				$data.=static::make_index($ntable["DE"],"DE");
 			}
 			
-			if ($ntable["DO"]) {
-				$data.="  <f c='676'>\n";
-				$data.="    <s c='a'>".htmlspecialchars($ntable["DO"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			}
+			$data.=static::get_converted_field_uni('676', 'a', $ntable["DO"]);
 			
-			//Champs spÃ©ciaux
+			//Champs spéciaux
 			if (trim($ntable["OP"])) {
-				$data.="  <f c='900'>\n";
-				$data.="    <s c='a'>".htmlspecialchars($ntable["OP"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
+				$data.=static::get_converted_field_uni('900', 'a', $ntable["OP"]);
 			}else{
-				$data.="  <f c='900'>\n";
-				$data.="    <s c='a'>".htmlspecialchars("PRISME",ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
+				$data.=static::get_converted_field_uni('900', 'a', $ntable["PRISME"]);
 			}
-			$data.="  <f c='902'>\n";
-			$data.="    <s c='a'>".htmlspecialchars(date("Y")."-".date("m")."-".date("d"),ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
+			$data.=static::get_converted_field_uni('902', 'a', date("Y")."-".date("m")."-".date("d"));
 			$data.="</notice>\n";
 		}
 		
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

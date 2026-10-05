@@ -1,20 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: chklnk.inc.php,v 1.27 2017-10-26 10:16:36 dgoron Exp $
+// $Id: chklnk.inc.php,v 1.31 2021/12/15 08:47:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($suite)) $suite = '';
+global $class_path, $include_path, $msg, $suite;
+global $filtering_parameters, $parameters;
+
+if(empty($suite)) $suite = '';
 
 require_once ("$include_path/misc.inc.php");
 require_once ("$class_path/chklnk/chklnk.class.php");
 
 session_write_close();
-
-$admin_layout = str_replace('!!menu_sous_rub!!', $msg['chklnk_titre'], $admin_layout);
-print $admin_layout;
 
 if (!$suite) {
 	chklnk::init_filtering_parameters();
@@ -23,6 +23,11 @@ if (!$suite) {
 	print $chklnk->get_form(); 
 } else {
 	echo "<h1>".$msg['chklnk_verifencours']."</h1>" ;
+	
+	if(empty($filtering_parameters['chkrestrict'])) {
+		$filtering_parameters['chkrestrict'] = 0;
+	}
+	chklnk::set_filtering_parameters($filtering_parameters);
 	
 	chklnk::init_queries();
 	

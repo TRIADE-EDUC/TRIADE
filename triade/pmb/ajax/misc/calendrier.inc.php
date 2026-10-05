@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: calendrier.inc.php,v 1.2 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: calendrier.inc.php,v 1.2 2019/05/29 12:03:09 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -15,7 +15,7 @@ switch($action){
 			$req_date_calendrier = "select date_ouverture from ouvertures where date_ouverture='".$id_value."' and ouvert=1 and num_location='".$loc_id."'";
 			$res_date_calendrier = pmb_mysql_query($req_date_calendrier);
 			if (!pmb_mysql_num_rows($res_date_calendrier)) {
-				//le jour sÃ©lectionnÃ© n'est pas un jour d'ouverture, on va chercher le prochain
+				//le jour sélectionné n'est pas un jour d'ouverture, on va chercher le prochain
 				$req_date_calendrier = "select date_ouverture from ouvertures where date_ouverture>'".$id_value."' and ouvert=1 and num_location='".$loc_id."' LIMIT 1";
 				$res_date_calendrier = pmb_mysql_query($req_date_calendrier);
 				if (pmb_mysql_num_rows($res_date_calendrier)) {

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_instrument.js,v 1.17 2016-03-01 15:47:48 apetithomme Exp $
+// $Id: nomenclature_instrument.js,v 1.17 2016/03/01 15:47:48 apetithomme Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_musicstand", "dijit/registry"], function(declare, Musicstand, registry){
 	/*

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_filter_articles_by_publication_state.class.php,v 1.1 2016-12-27 16:21:46 dgoron Exp $
+// $Id: cms_module_common_filter_articles_by_publication_state.class.php,v 1.2 2020/02/28 09:53:27 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class cms_module_common_filter_articles_by_publication_state extends cms_module_
 		$selector_by = $this->get_selected_selector("by");
 		$field_by = $selector_by->get_value();
 		if(count($field_by)){
-			array_walk($field_by, 'static::int_caster');
+		    $field_by = $this->array_int_caster($field_by);
 			$query = "select id_article from cms_articles where article_publication_state in ('".implode("','",$field_by)."')";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){

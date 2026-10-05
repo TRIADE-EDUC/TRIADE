@@ -1,20 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.tpl.php,v 1.50 2018-07-13 06:58:05 dgoron Exp $
+// $Id: search.tpl.php,v 1.56 2023/04/21 09:32:02 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
+global $msg, $charset, $categ, $sub, $action, $mode, $current_module;
+global $priv_pro, $opac_view_id, $id_empr, $pmb_extended_search_auto;
+global $limited_search, $no_search, $id_champ;
+
 if(!isset($mode)) $mode = '';
-if(!isset($opac_view_id)) $opac_view_id = 0;
-if(!isset($id_empr)) $id_empr = 0;
+$opac_view_id = intval($opac_view_id);
+$id_empr = intval($id_empr);
 if(!isset($priv_pro)) $priv_pro = '';
 if(!isset($categ)) $categ = '';
 if(!isset($sub)) $sub = '';
-if(!isset($pmb_extended_search_auto)) $pmb_extended_search_auto = 0;
+$pmb_extended_search_auto = intval($pmb_extended_search_auto);
 
-//Template du formulaire de recherches avancÃ©es
+//Template du formulaire de recherches avancées
 $search_form="
 <script src=\"javascript/ajax.js\"></script>
 <script>var operators_to_enable = new Array();</script>
@@ -27,7 +31,28 @@ if(!isset($limited_search) || !$limited_search){
 	$search_form .= "
 			<label class='etiquette' for='add_field'>".htmlentities($msg["search_add_field"], ENT_QUOTES, $charset)."</label> !!field_list!! ";
 	if(!$pmb_extended_search_auto){	
-		$search_form .="	<input type='button' class='bouton' value='".htmlentities($msg["925"], ENT_QUOTES, $charset)."' onClick=\"if (this.form.add_field.value!='') { this.form.action='!!url!!'; this.form.target=''; this.form.submit();} else { alert('".htmlentities($msg["multi_select_champ"], ENT_QUOTES, $charset)."'); }\"/>";
+		$search_form .="<input type='button' class='bouton' value='".htmlentities($msg["925"], ENT_QUOTES, $charset)."' onClick=\"getFormInfos()\"/>
+        <script>
+            function getFormInfos() {
+                if (search_form.add_field.value != '') { 
+                    var node = document.getElementById('add_field');
+                    if (node && search_form.authperso_id) {
+                        var option = node.options.item(node.selectedIndex);
+			            if (option && option.attributes.getNamedItem('data-authperso_id')) {
+			                attribute = option.attributes.getNamedItem('data-authperso_id');
+                            if (attribute) {
+                                search_form.authperso_id.value = attribute.value;
+                            }
+			            }
+                    }
+                    search_form.action = '!!url!!'; 
+                    search_form.target = '';
+                    search_form.submit();
+                } else { 
+                    alert('".htmlentities($msg["multi_select_champ"], ENT_QUOTES, $charset)."'); 
+                }
+            }
+        </script>";
 	}
 }
 $search_form .=" </div>
@@ -48,7 +73,7 @@ if($sub=="opac_view" && $action =="add") {
 } else if(!empty($no_search)) {
     $search_form.="
 	<div class='row'>
-	   <input type='button' class='bouton' value='".htmlentities($msg["77"], ENT_QUOTES, $charset)."' id='save_search' data-pmb-evt='{\"class\" : \"".$class_name."\", \"type\" : \"click\", \"method\" : \"".$method."\", \"parameters\" : {\"formId\" : \"search_form\", \"entity_type\" : \"".$entity_type."\", \"entity_id\" : \"".$entity_id."\"}}'/>
+	   <input type='button' class='bouton' value='".htmlentities($msg["77"], ENT_QUOTES, $charset)."' id='save_search' data-pmb-evt='{\"class\" : \"".$class_name."\", \"type\" : \"click\", \"method\" : \"".$method."\", \"parameters\" : {\"formId\" : \"search_form\", \"entity_type\" : \"".$entity_type."\", \"entity_id\" : \"".$entity_id."\", \"id_champ\" : \"".$id_champ."\"}}'/>
 	</div>";
 } else if( $mode!=7 && $mode!=8 && $current_module !="circ" ) {
 	$search_form.="
@@ -62,11 +87,12 @@ if($mode==7 || $mode==8 || $current_module=="circ") $search_form.=	"
 	<div class='row'>
 		<div class='left'>
 			<input type='submit' class='bouton' value='".htmlentities($msg["142"], ENT_QUOTES, $charset)."' id='search_form_submit'/>
-			".($current_module=="circ" && $categ=='consult' ? "" : "<input type='button' class='bouton' id='save_predefined_search' value='".htmlentities($msg["search_perso_save"], ENT_QUOTES, $charset)."' onClick=\"enable_operators();this.form.launch_search.value=1; this.form.action='!!memo_url!!'; this.form.page.value=''; !!target_js!! this.form.submit()\"/>")."
+			".(($current_module=="circ") || ($current_module == "catalog" && $mode==8) ? ($categ=='consult' ? "" : "<input type='button' class='bouton' id='save_predefined_search' value='".htmlentities($msg["search_perso_save"], ENT_QUOTES, $charset)."' onClick=\"enable_operators();this.form.launch_search.value=1; this.form.action='!!memo_url!!'; this.form.page.value=''; !!target_js!! this.form.submit()\"/>") : "")."
 		</div>
 	</div>";
 		
 $search_form.="
+	<input type='hidden' name='authperso_id' value='' id='authperso_id'/>
 	<input type='hidden' name='delete_field' value=''/>
 	<input type='hidden' name='launch_search' value=''/>
 	<input type='hidden' name='page' value='!!page!!'/>

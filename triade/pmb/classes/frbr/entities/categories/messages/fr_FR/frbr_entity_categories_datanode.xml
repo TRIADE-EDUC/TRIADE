@@ -5,8 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_categories_datanode.xml,v 1.2 2017-05-05 07:43:36 dgoron Exp $ -->
+$Id: frbr_entity_categories_datanode.xml,v 1.3 2019/10/21 13:47:50 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code='frbr_entity_categories_datasource_concepts'>Concepts</entry>
+	<entry code='frbr_entity_categories_datasource_records'>Notices</entry>
 </XMLlist>

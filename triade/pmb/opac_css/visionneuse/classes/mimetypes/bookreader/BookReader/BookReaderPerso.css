@@ -1,4 +1,36 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: BookReaderPerso.css,v 1.2 2017-04-25 15:14:47 mbertin Exp $ */
+// $Id: BookReaderPerso.css,v 1.3 2024/03/29 14:42:14 pmallambic Exp $ */
+
+#BRtoolbarbuttons {
+    float: none;
+}
+
+#BookReader     #BRtoolbar a.logo {
+    display: none;
+}
+
+#BRreturn {
+    text-align: right;
+    display: block;
+}
+
+#BRreturn a {
+    display: inline;
+}
+
+#BRtoolbar {
+    padding: 0 10px;
+    width: calc(100% - 20px);
+}
+
+div#BRpage {
+    float: none;
+}
+
+div#BRnavpos {
+    margin-left: 320px;
+    padding-left: 30px;
+    margin-right: 0;
+}

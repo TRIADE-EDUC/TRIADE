@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿? 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿? 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dico_synonymes.inc.php,v 1.12 2019-06-03 07:04:57 btafforeau Exp $action $mot
+// $Id: dico_synonymes.inc.php,v 1.16.2.1 2024/06/11 08:23:55 qvarin Exp $action $mot
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $word_search, $word_selected, $clause, $limit, $include_path, $class_path, $baseurl, $page, $aff_liste_mots, $action, $mot_js, $aff_modif_mot;
-global $mot, $aff_mot_lie, $mots_lies, $msg, $id_mot, $word_code_selected, $max_word, $nb_per_page, $nb_per_page_gestion, $tri, $letter, $charset;
+global $mot, $aff_mot_lie, $mots_lies, $msg, $id_mot, $word_id_selected, $max_f_word, $nb_per_page, $nb_per_page_gestion, $tri, $letter, $charset;
 
 if (!isset($word_search)) $word_search = "";
 if (!isset($word_selected)) $word_selected = "";
@@ -20,116 +20,154 @@ require_once("$class_path/semantique.class.php");
 $baseurl="./autorites.php?categ=semantique&sub=synonyms";
 if (!isset($page) || !$page) $page=1;
 
-//si on recherche une clÃ© spÃ©cifique, on remplace !!cle!! par la clÃ© sinon par rien
-if ($word_search) $aff_liste_mots=str_replace("!!cle!!","'".stripslashes($word_search)."'",$aff_liste_mots);
-		else $aff_liste_mots=str_replace("!!cle!!","",$aff_liste_mots);
+//si on recherche une clé spécifique, on remplace !!cle!! par la clé sinon par rien
+if ($word_search) {
+    $aff_liste_mots=str_replace("!!cle!!", "'".htmlentities(stripslashes($word_search), ENT_QUOTES, $charset)."'", $aff_liste_mots);
+} else {
+    $aff_liste_mots=str_replace("!!cle!!", "", $aff_liste_mots);
+}
 
 switch ($action) {
 	case 'view':
 		$aff_mots=str_replace("!!mots_js!!",$mot_js,$aff_modif_mot);
 		if ($mot) {
-			
+
 			$mot=stripslashes($mot);
-			
+
 			$t=semantique::list_synonyms(rawurldecode($mot));
 			$compt=count($t);
 			if ($compt) {
-				//parcours des mots liÃ©s trouvÃ©s
+				//parcours des mots liés trouvés
 				for ($j=0;$j<$compt;$j++) {
 					$mots_lies.=$aff_mot_lie;
 					$mots_lies=str_replace("!!iword!!",$j,$mots_lies);
 					$mots_lies=str_replace("!!word!!",stripslashes($t[$j]["mot"]),$mots_lies);
 					$mots_lies=str_replace("!!id_word!!",$t[$j]["code"],$mots_lies);
-					if ($j==0) $mots_lies=str_replace("!!bouton_ajouter!!","<input type='button' class='bouton' value='+' onClick=\"add_word();\"/>",$mots_lies);
-						else $mots_lies=str_replace("!!bouton_ajouter!!","",$mots_lies);
+					$mots_lies=str_replace("!!word_mutual_checked!!",(!empty($t[$j]["has_word_mutual"]) ? "checked='checked'" : ""),$mots_lies);
 				}
-				$aff_mots=str_replace("!!supprimer!!","<div class='right'><input type='button' class='bouton' value='".$msg["63"]."' onClick=\"var response; response=confirm('".$msg["word_del_confirm"]."'); if (response) document.location='./autorites.php?categ=semantique&sub=synonyms&action=del&id_mot=!!id_mot!!&mot=!!mot!!'; return false;\"></div>\n",$aff_mots);
-				$aff_mots=str_replace("!!mots_lie!!",$mots_lies,$aff_mots);			
-				$aff_mots=str_replace("!!max_word!!",$compt,$aff_mots);
+				$aff_mots=str_replace("!!mots_lie!!",$mots_lies,$aff_mots);
+				$aff_mots=str_replace("!!max_f_word!!",$compt,$aff_mots);
 			} else {
-				//pas de rÃ©sultat on affiche une seule case de saisie
+				//pas de résultat on affiche une seule case de saisie
 				$aff_mot_lie=str_replace("!!iword!!","0",$aff_mot_lie);
 				$aff_mot_lie=str_replace("!!word!!","",$aff_mot_lie);
 				$aff_mot_lie=str_replace("!!id_word!!","",$aff_mot_lie);
+				$aff_mot_lie=str_replace("!!word_mutual_checked!!","checked='checked'",$aff_mot_lie);
 				$aff_mots=str_replace("!!mots_lie!!",$aff_mot_lie,$aff_mots);
-				$aff_mots=str_replace("!!supprimer!!","<div class='right'><input type='button' class='bouton' value='".$msg["63"]."' onClick=\"var response; response=confirm('".$msg["word_del_confirm"]."'); if (response) document.location='./autorites.php?categ=semantique&sub=synonyms&action=del&id_mot=!!id_mot!!&mot=!!mot!!'; return false;\"></div>\n",$aff_mots);
-				$aff_mots=str_replace("!!max_word!!","1",$aff_mots);
-				$aff_mots=str_replace("!!bouton_ajouter!!","<input type='button' class='bouton' value='+' onClick=\"add_word();\"/>",$aff_mots);
+
+				$aff_mots=str_replace("!!max_f_word!!","1",$aff_mots);
 			}
 		//	$baseurl.="&word_selected=".$mot;
-			$aff_mots=str_replace("!!mot!!",rawurlencode($mot),$aff_mots);
 			$aff_mots=str_replace("!!id_mot!!",$id_mot,$aff_mots);
 			$aff_mots=str_replace("!!mot_original!!",$mot,$aff_mots);
-			
+			$aff_mots=str_replace("!!supprimer!!","<div class='right'><input type='button' class='bouton' value='".$msg["63"]."' onClick=\"var response; response=confirm('".$msg["word_del_confirm"]."'); if (response) document.location='./autorites.php?categ=semantique&sub=synonyms&action=del&id_mot=".$id_mot."&mot=".rawurlencode($mot)."'; return false;\"></div>\n",$aff_mots);
 		} else {
-			//si le mot est vide, on affiche le formulaire vierge 
+			//si le mot est vide, on affiche le formulaire vierge
 			$aff_mot_lie=str_replace("!!iword!!","0",$aff_mot_lie);
 			$aff_mot_lie=str_replace("!!word!!","",$aff_mot_lie);
 			$aff_mot_lie=str_replace("!!id_word!!","",$aff_mot_lie);
+			$aff_mot_lie=str_replace("!!word_mutual_checked!!","checked='checked'",$aff_mot_lie);
 			$aff_mots=str_replace("!!mots_lie!!",$aff_mot_lie,$aff_mots);
-			$aff_mots=str_replace("!!mot!!","",$aff_mots);
 			$aff_mots=str_replace("!!mot_original!!","",$aff_mots);
 			//on ne peut supprimer un mot inexistant
 			$aff_mots=str_replace("!!supprimer!!","",$aff_mots);
-			$aff_mots=str_replace("!!max_word!!","1",$aff_mots);
+			$aff_mots=str_replace("!!max_f_word!!","1",$aff_mots);
 			$aff_mots=str_replace("!!id_mot!!","",$aff_mots);
-			$aff_mots=str_replace("!!bouton_ajouter!!","<input type='button' class='bouton' value='+' onClick=\"add_word();\"/>",$aff_mots);
 		}
 		if ($word_search) $baseurl.="&action=search&word_search=".rawurlencode($word_search);
-		$aff_mots=str_replace("!!action!!",$baseurl,$aff_mots);	
+		$aff_mots=str_replace("!!action!!",$baseurl,$aff_mots);
 		print $aff_mots;
 		break;
 	case 'modif':
 		$bool_erreur=false;
 		if ($word_selected) {
-			//insertion d'un nouveau mot			 			
-			if ($word_code_selected)$rqt_ins = "update mots set mot='".$word_selected."' where id_mot='$word_code_selected' ";
-			else $rqt_ins ="insert into mots set mot='".$word_selected."' ";
-			
-			@pmb_mysql_query($rqt_ins);
-			if (!$word_code_selected)$word_code_selected= pmb_mysql_insert_id();		
+			//insertion d'un nouveau mot
+		    if ($word_id_selected){
+		        $rqt_ins = "update mots set mot='".$word_selected."' where id_mot='$word_id_selected' ";
+		    }else {
+		        if (pmb_mysql_num_rows(pmb_mysql_query("SELECT id_mot FROM mots WHERE mot = '$word_selected'"))) {
+		            $bool_erreur=true;
+		            print "<script> alert('{$msg['word_exists']}'); </script>";
+		        } else {
+    		        $rqt_ins ="insert into mots set mot='".$word_selected."' ";
+        			@pmb_mysql_query($rqt_ins);
+        			$word_id_selected= pmb_mysql_insert_id();
+		        }
+		    }
 		} else {
 				$bool_erreur=true;
 				print "<script> alert('".$msg["word_error"]."'); </script>";
-		}		
+		}
 		if ($bool_erreur==false) {
+		    //nettoyage des liens qui ne devraient pas exister
+		    pmb_mysql_query("DELETE FROM linked_mots WHERE num_linked_mot = 0 AND type_lien = 1;");
+		    pmb_mysql_query("DELETE FROM linked_mots WHERE num_mot = 0 AND type_lien = 1;");
 			$f_words=array();
-			//rÃ©cupÃ©ration des synonymes affectÃ©s au mot
-			for ($i=$max_word-1;$i>=0 ; $i--) {
+			$f_words_mutal=array();
+			//récupération des synonymes affectés au mot
+			for ($i=$max_f_word-1;$i>=0 ; $i--) {
 				$var_word = "f_word$i" ;
 				global ${$var_word};
 				if (${$var_word} && (${$var_word}!=$word_selected)) {
-					$var_word_code="f_word_code$i";
-					global ${$var_word_code};
-					if (${$var_word_code}) $f_words[]=${$var_word_code};
-					else {
-						//vÃ©rification de l'existence du mot
-						$rqt_exist="select id_mot, mot from mots left join linked_mots on (num_mot=id_mot) where mot='".${$var_word}."' and id_mot not in (select num_mot from linked_mots where linked_mots.num_linked_mot=0) group by id_mot";
+					$var_word_id="f_word_id$i";
+					global ${$var_word_id};
+					$var_word_mutual = "f_word_mutual$i" ;
+					global ${$var_word_mutual};
+					if (${$var_word_id}) {
+						$f_words[]=${$var_word_id};
+						$f_words_mutal[]=array(
+								'code' =>${$var_word_id},
+								'is_mutual' => (${$var_word_mutual} ? 1 : 0)
+						);
+					} else {
+						//vérification de l'existence du mot
+						$rqt_exist="select id_mot, mot from mots where mot='".${$var_word}."' and id_mot not in (select num_mot from linked_mots where linked_mots.num_linked_mot=0) group by id_mot";
 						$query_exist=pmb_mysql_query($rqt_exist);
 						if (!pmb_mysql_num_rows($query_exist)) {
 							//insertion d'un nouveau mot
 							$rqt_ins="insert into mots (mot) values ('".${$var_word}."')";
-							
+
 							@pmb_mysql_query($rqt_ins);
-							//recherche de l'id du mot insÃ©rÃ©
+							//recherche de l'id du mot inséré
 							$f_words[]=pmb_mysql_insert_id();
-						}						
+							$f_words_mutal[]=array(
+									'code' => pmb_mysql_insert_id(),
+									'is_mutual' => (${$var_word_mutual} ? 1 : 0)
+							);
+						} else {
+						    $row = pmb_mysql_fetch_assoc($query_exist);
+						    $f_words[]=$row["id_mot"];
+						    $f_words_mutal[]=array(
+						        'code' => $row["id_mot"],
+						        'is_mutual' => (${$var_word_mutual} ? 1 : 0)
+						    );
+						}
 					}
 				}
-			}					
-			//dÃ©doublonne le tableau
+			}
+			//dédoublonne le tableau
 			$f_words=array_unique($f_words);
-		
+
 			//suppression des enregistrements existants
-			$rqt_del = "delete from linked_mots where num_mot='".$word_code_selected."' ";
-			$res_del = pmb_mysql_query($rqt_del);
+			$rqt_del = "delete from linked_mots where num_mot='".$word_id_selected."' ";
+			pmb_mysql_query($rqt_del);
 			//insertion du mot et de ses synonymes
 			$rqt_ins = "insert into linked_mots (num_mot, num_linked_mot, type_lien, ponderation) VALUES ";
-						
-			//rÃ©cupÃ©ration des synonymes affectÃ©s au mot
+
+			//récupération des synonymes affectés au mot
 			for ($i=0;$i<count($f_words) ; $i++) {
-				$valeurs="('".$word_code_selected."','".$f_words[$i]."','1','0.5')";
-				$res_ins=pmb_mysql_query($rqt_ins.$valeurs);
+				$valeurs="('".$word_id_selected."','".$f_words[$i]."','1','0.5')";
+				pmb_mysql_query($rqt_ins.$valeurs);
+			}
+			//enregistrement des synonymes réciproques
+			for ($i=0;$i<count($f_words_mutal) ; $i++) {
+				if($f_words_mutal[$i]['is_mutual']) {
+					$rqt_ins = "insert ignore into linked_mots (num_mot, num_linked_mot, type_lien, ponderation) VALUES ";
+					$valeurs="('".$f_words_mutal[$i]['code']."','".$word_id_selected."','1','0.5')";
+					pmb_mysql_query($rqt_ins.$valeurs);
+				} else {
+					pmb_mysql_query("delete from linked_mots where num_mot='".$f_words_mutal[$i]['code']."' and num_linked_mot='".$word_id_selected."' and type_lien='1'");
+				}
 			}
 			$letter=convert_diacrit(pmb_strtolower(pmb_substr($word_selected,0,1)));
 		}
@@ -157,27 +195,27 @@ switch ($action) {
 				$rqt_del = "delete from mots where id_mot='".$id_mot."' ";
 				@pmb_mysql_query($rqt_del);
 				$rqt_del = "delete from linked_mots where num_mot='".$id_mot."' ";
-				@pmb_mysql_query($rqt_del);	
+				@pmb_mysql_query($rqt_del);
 				//$letter=convert_diacrit(pmb_strtolower(pmb_substr($mot,0,1)));
 			} else print "<script> alert('".addslashes($msg["other_word_syn_error"])."'); document.location='./autorites.php?categ=semantique&sub=synonyms&id_mot=$id_mot&mot=$mot&action=view';</script>";
 		} else print "<script> alert('".$msg["word_error"]."'); </script>";
 		break;
 	default:
-		
-		break;		
+
+		break;
 }
 if ($action!='view') {
 	if (!$nb_per_page) $nb_per_page=$nb_per_page_gestion;
 	if ($action!='last_words') $tri="order by mot";
 	//comptage des mots
-	$rqt1="select id_mot, mot from mots left join linked_mots on (num_mot=id_mot) where id_mot not in (select num_mot from linked_mots where linked_mots.num_linked_mot=0)$clause group by id_mot";
+	$rqt1="SELECT id_mot, mot FROM mots WHERE id_mot NOT IN (SELECT num_mot FROM linked_mots WHERE linked_mots.num_linked_mot=0 AND type_lien > 1)$clause GROUP BY id_mot";
 	$execute_query1=pmb_mysql_query($rqt1);
 	$nb_result=pmb_mysql_num_rows($execute_query1);
 	pmb_mysql_free_result($execute_query1);
 	//recherche des mots
 	$affichage_mots="";
 	$affichage_lettres="";
-	$rqt="select id_mot, mot from mots left join linked_mots on (num_mot=id_mot) where id_mot not in (select num_mot from linked_mots where linked_mots.num_linked_mot=0)$clause group by id_mot $tri $limit";
+	$rqt="SELECT id_mot, mot FROM mots WHERE id_mot NOT IN (SELECT num_mot FROM linked_mots WHERE linked_mots.num_linked_mot=0 AND type_lien > 1)$clause GROUP BY id_mot $tri $limit";
 	$execute_query=pmb_mysql_query($rqt);
 	if ($execute_query&&$nb_result) {
 		$affichage_mots="<div class='row'>";
@@ -203,7 +241,7 @@ if ($action!='view') {
 					$affichage_mots.="<tr class='$pair_impair'><td><a href='".$baseurl."&id_mot=".$r->id_mot."&mot=".rawurlencode(stripslashes($r->mot))."&action=view'>".stripslashes($r->mot)."</a></td></tr>";
 				}
 		}
-		
+
 		if ($action=='last_words'||$word_search) {
 			$aff_liste_mots=str_replace("!!lettres!!","",$aff_liste_mots);
 			$affichage_mots.="</table>";
@@ -223,46 +261,51 @@ if ($action!='view') {
 					if ($val!="") {
 						$carac=convert_diacrit(pmb_strtolower(pmb_substr($val,0,1)));
 						if ($bool==false) {
-							if ($word_selected) $premier_carac=convert_diacrit(pmb_strtolower(pmb_substr($word_selected,0,1))); 
+							if ($word_selected) $premier_carac=convert_diacrit(pmb_strtolower(pmb_substr($word_selected,0,1)));
 								else $premier_carac=$carac;
 							$bool=true;
 						}
 						if (array_search($carac,$alphabet)===FALSE) $alphabet_num[]=$carac;
 					}
 				}
-				
-				//dÃ©doublonnage du tableau des autres caractÃ¨res
+
+				//dédoublonnage du tableau des autres caractères
 				if (count($alphabet_num)) $alphabet_num = array_unique($alphabet_num);
 				if (!$letter) {
 					if (count($alphabet_num)) $letter="My";
 					elseif ($premier_carac) $letter=$premier_carac;
 					else $letter="a";
 				} elseif (!array_search($letter,$alphabet)) $letter="My";
-					
+
 				// affichage d'un sommaire par lettres
-				$affichage_lettres="<div class='row'>";
-				
-				if (count($alphabet_num)) {
-					if ($letter=='My') $affichage_lettres.="<strong><u>#</u></strong> ";
-						else $affichage_lettres.="<a href='$baseurl&letter=My'>#</a> ";
+				$affichage_lettres = "<div class='row'>";
+
+				if (!empty($alphabet_num)) {
+				    if ($letter == 'My') {
+				        $affichage_lettres .= "<strong><u>#</u></strong> ";
+				    } else {
+				        $affichage_lettres .= "<a href='$baseurl&letter=My'>#</a> ";
+				    }
 				}
-				foreach($alphabet as $char) {
+				foreach ($alphabet as $char) {
 					$present = pmb_preg_grep("/^$char/i", $words_for_syn1);
-					if(sizeof($present) && strcasecmp($letter, $char))
-						$affichage_lettres.="<a href='$baseurl&letter=$char'>$char</a> ";
-					else if(!strcasecmp($letter, $char))
-						$affichage_lettres.="<strong><u>$char</u></strong> ";
-					else $affichage_lettres.="<span class='gris'>".$char."</span> ";
+					if (!empty($present) && strcasecmp($letter, $char)) {
+						$affichage_lettres .= "<a href='$baseurl&letter=$char'>$char</a> ";
+					} elseif (!strcasecmp($letter, $char)) {
+						$affichage_lettres .= "<strong><u>$char</u></strong> ";
+					} else {
+					    $affichage_lettres .= "<span class='gris'>$char</span> ";
+					}
 				}
-				$affichage_lettres.="</div>";
-		
+				$affichage_lettres .= "</div>";
+
 				//affichage des mots
-				
+
 				$compt=0;
 				$bool=false;
 				if (!$page) $page=1;
-				
-				//parcours du tableau de mots, dÃ©coupage en colonne et dÃ©termination des valeurs par rapport Ã  la pagination et la lettre
+
+				//parcours du tableau de mots, découpage en colonne et détermination des valeurs par rapport à la pagination et la lettre
 				foreach ($words_for_syn as $key=>$valeur_syn) {
 					if ($valeur_syn!="") {
 						if ($compt>=(($page-1)*$nb_per_page)&&($compt<($page*$nb_per_page))) {
@@ -274,19 +317,19 @@ if ($action!='view') {
 							if (preg_match("/^$letter/i", convert_diacrit(pmb_strtolower($valeur_syn)))) {
 								if (($compt>=(($page-1)*$nb_per_page))&&($compt<($page*$nb_per_page))) {
 									$affichage_mots.="<a href='$baseurl&id_mot=".$key."&mot=".rawurlencode($valeur_syn)."&action=view'>".htmlentities($valeur_syn,ENT_QUOTES,$charset)."</a><br />\n";
-								} 
+								}
 								$compt++;
 							}
 						} else {
 							if (pmb_substr($valeur_syn,0,1)=='0'||!array_search(convert_diacrit(pmb_strtolower(pmb_substr($valeur_syn,0,1))),$alphabet)) {
 								if (($compt>=(($page-1)*$nb_per_page))&&($compt<($page*$nb_per_page))) {
 									$affichage_mots.="<a href='$baseurl&id_mot=".$key."&mot=".rawurlencode($valeur_syn)."&action=view'>".htmlentities($valeur_syn,ENT_QUOTES,$charset)."</a><br />\n";
-								} 
-								$compt++;	
-							}	
+								}
+								$compt++;
+							}
 						}
 						if ($compt>=(($page-1)*$nb_per_page)&&($compt<($page*$nb_per_page))) {
-							if ($compt!=0&&(($compt % 30)==0)) {
+						    if ($compt == $nb_per_page) {
 								$affichage_mots.="</div>";
 							}
 						}

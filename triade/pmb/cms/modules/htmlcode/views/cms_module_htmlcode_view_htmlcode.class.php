@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_htmlcode_view_htmlcode.class.php,v 1.7 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_htmlcode_view_htmlcode.class.php,v 1.7 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_acquisition.php,v 1.2 2015-08-13 08:06:36 jpermanne Exp $
+// $Id: print_acquisition.php,v 1.2 2015/08/13 08:06:36 jpermanne Exp $
 
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";                            
 $base_auth = "ACQUISITION_AUTH";  
 $base_title = "\$msg[acquisition_menu_title]"; 
@@ -15,7 +15,7 @@ require_once ("$base_path/includes/init.inc.php");
 
 $acquisition_no_html = 1;
 
-//pour Ã©viter une mauvaise entrÃ©e
+//pour éviter une mauvaise entrée
 if ($action != "print_budget") {
 	die();
 }

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_accounting_PDF.class.php,v 1.4 2019-05-23 15:23:26 dgoron Exp $
+// $Id: lettre_accounting_PDF.class.php,v 1.9 2022/09/20 08:13:31 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/pdf/lettre_PDF.class.php");
 require_once("$class_path/entites.class.php");
 require_once("$class_path/coordonnees.class.php");
@@ -29,7 +30,7 @@ class lettre_accounting_PDF extends lettre_PDF {
 	public $l_date = 0;				//Largeur date
 	public $h_date = 6;				//Hauteur date
 	public $fs_date = 8;				//Taille police date
-	public $sep_ville_date = '';		//SÃ©parateur entre ville et date
+	public $sep_ville_date = '';		//Séparateur entre ville et date
 	public $x_adr_fac = 10;			//Distance adr facture / bord gauche de page
 	public $y_adr_fac = 35;			//Distance adr facture / bord haut de page
 	public $l_adr_fac = 60;			//Largeur adr facture
@@ -62,7 +63,7 @@ class lettre_accounting_PDF extends lettre_PDF {
 	public $fs_num = 16;				//Taille police num acte
 	public $text_num = '';				//Texte commande
 	public $text_before = '';			//texte avant table acte
-	public $text_after = '';			//texte aprÃ¨s table acte
+	public $text_after = '';			//texte après table acte
 	public $h_tab = 5;					//Hauteur de ligne table acte
 	public $fs_tab = 10;				//Taille police table acte
 	public $x_tab = 10;				//position table acte / bord gauche page 
@@ -131,12 +132,6 @@ class lettre_accounting_PDF extends lettre_PDF {
 		} else {
 			$this->text_sign = $msg['acquisition_act_sign'];
 		}
-		
-		$pos_footer = explode(',', $this->get_parameter_value('pos_footer'));
-		if ($pos_footer[0]) $this->PDF->y_footer = $pos_footer[0];
-		else $this->PDF->y_footer=$this->y_footer;
-		if ($pos_footer[1]) $this->PDF->fs_footer = $pos_footer[1];
-		else $this->PDF->fs_footer=$this->fs_footer;
 	}
 	
 	protected function _init_PDF() {
@@ -193,7 +188,7 @@ class lettre_accounting_PDF extends lettre_PDF {
 	
 	protected function _init_pos_sign() {
 		$pos_sign = explode(',', $this->get_parameter_value('pos_sign'));
-		//Insertion de la valeur 0 pour la position Y inexistante dans le paramÃ©trage
+		//Insertion de la valeur 0 pour la position Y inexistante dans le paramétrage
 		array_splice($pos_sign, 1, 0, array('0'));
 		$this->_init_position('sign', $pos_sign);
 	}
@@ -221,16 +216,16 @@ class lettre_accounting_PDF extends lettre_PDF {
 		$coord = $this->get_coord_fou();
 		$address = '';
 		if($this->get_fou()->raison_sociale != '') {
-			$address.= $this->get_fou()->raison_sociale."\n";
-		} else {
-			$address.= $coord->libelle."\n";
+		    $address.= $this->get_fou()->raison_sociale.PHP_EOL;
+		} elseif (!empty($address)) {
+		    $address.= $coord->libelle.PHP_EOL;
 		}
 		if(is_object($coord)) {
-			if($coord->adr1 != '') $address.= $coord->adr1."\n";
-			if($coord->adr2 != '') $address.= $coord->adr2."\n";
+			if($coord->contact != '') $address.= $coord->contact.PHP_EOL;
+			if($coord->adr1 != '') $address.= $coord->adr1.PHP_EOL;
+			if($coord->adr2 != '') $address.= $coord->adr2.PHP_EOL;
 			if($coord->cp != '') $address.= $coord->cp." ";
-			if($coord->ville != '') $address.= $coord->ville."\n\n";
-			if($coord->contact != '') $address.= $this->text_adr_fou.$coord->contact;
+			if($coord->ville != '') $address.= $coord->ville.PHP_EOL.PHP_EOL;
 		}
 		return $address;
 	}
@@ -297,6 +292,9 @@ class lettre_accounting_PDF extends lettre_PDF {
 	}
 	
 	public function get_acte() {
+		if(isset($this->acte) && $this->acte->id_acte != $this->id_acte) {
+			$this->unset_coords();
+		}
 		if(!isset($this->acte)) {
 			$this->acte = new actes($this->id_acte);
 		}
@@ -337,5 +335,14 @@ class lettre_accounting_PDF extends lettre_PDF {
 			$this->coord_fou = pmb_mysql_fetch_object($this->coord_fou);
 		}
 		return $this->coord_fou;
+	}
+	
+	public function unset_coords() {
+		unset($this->acte);
+		unset($this->bib);
+		unset($this->coord_liv);
+		unset($this->coord_fac);
+		unset($this->fou);
+		unset($this->coord_fou);
 	}
 }

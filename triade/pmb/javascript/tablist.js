@@ -1,5 +1,5 @@
 // gestion des listes "collapsibles" en Javascript
-// $Id: tablist.js,v 1.41 2019-05-06 09:00:21 btafforeau Exp $
+// $Id: tablist.js,v 1.45 2023/09/01 15:25:35 tsamson Exp $
 
 if(!base_path) var base_path = '.';
 var imgOpened = new Image();
@@ -58,8 +58,9 @@ function expandAll_ajax_callback(text,el) {
 	var whichEl = document.getElementById(el + 'Child');
   	whichEl.innerHTML = text ;
   	if(typeof(dojo) == "object"){
-  		
-  		dojo.parser.parse(whichEl);
+  		if (dijit.registry.byId(whichEl) == "undefined") {
+			dojo.parser.parse(whichEl);
+		}
   		require(['dojo/dom-construct', 'dojo/query'], function(domConstruct, query){
 			query('script', whichEl).forEach(function(node) {
 				domConstruct.create('script', {
@@ -136,7 +137,8 @@ function expandAll_ajax(start, context) {
   	}
 	
 	for (var i = 0; i < tempColl_img.length; i++) {
-		if(Array.prototype.slice.call(tempColl_img[i].parentElement.classList).indexOf('notice-parent')!= -1 || Array.prototype.slice.call(tempColl_img[i].parentElement.classList).indexOf('parent')!= -1){
+		//on teste sur 2 niveaux
+		if(Array.prototype.slice.call(tempColl_img[i].parentElement.classList).indexOf('notice-parent') != -1 || Array.prototype.slice.call(tempColl_img[i].parentElement.classList).indexOf('parent')!= -1 || Array.prototype.slice.call(tempColl_img[i].parentElement.parentElement.classList).indexOf('notice-parent') != -1 || Array.prototype.slice.call(tempColl_img[i].parentElement.parentElement.classList).indexOf('parent') != -1) {
 			tempColl_img[i].src = imgOpened.src;
 			
 			var obj_id=tempColl_img[i].getAttribute('id');
@@ -244,17 +246,31 @@ function initIt() {
  	if(tempColl[i].hasAttribute('startOpen')){
  		var localStorageItem = null;
  		if(typeof window.localStorage != 'undefined') {
- 			localStorageItem = parseInt(window.localStorage.getItem('pmb-expand-'+tempColl[i].id));
+ 			try {
+ 				localStorageItem = parseInt(window.localStorage.getItem('pmb-expand-'+tempColl[i].id));
+ 			} catch(e) {
+ 			}
  		}
+ 		let elId = tempColl[i].id.substring(0,tempColl[i].id.indexOf('Child'));
 		if (tempColl[i].getAttribute('startOpen') == 'Yes' ) {
 			if(localStorageItem != null && !isNaN(localStorageItem) && !localStorageItem) {
 	 			collapseBase (tempColl[i].id.substring(0,tempColl[i].id.indexOf('Child')));
 	 		} else {
-	 			expandBase (tempColl[i].id.substring(0,tempColl[i].id.indexOf('Child')), true);
+ 				if (tempColl[i].hasAttribute('data-expand-ajax')) {
+					let expandImg = document.getElementById(elId + 'Img');
+					expandBase_ajax(elId,true,expandImg.getAttribute('param'));
+				} else {
+					expandBase(elId, true);
+				}
 	 		}
 	 	} else {
 	 		if(localStorageItem != null && !isNaN(localStorageItem) && localStorageItem) {
-	 			expandBase (tempColl[i].id.substring(0,tempColl[i].id.indexOf('Child')), true);
+	 			if (tempColl[i].hasAttribute('data-expand-ajax')) {
+					let expandImg = document.getElementById(elId + 'Img');
+					expandBase_ajax(elId,true,expandImg.getAttribute('param'));
+				} else {
+					expandBase(elId, true);
+				}
 	 		} else {
 	 			tempColl[i].style.display = 'none';
 	 		}
@@ -312,7 +328,11 @@ function expandBase(el, unexpand) {
   var whichIm = document.getElementById(el + 'Img');
   var callback = whichEl.getAttribute("callback");
   if (whichEl.style.display == 'none') {
-    whichEl.style.display  = 'block';
+	if(whichEl.tagName == 'TABLE') {
+		whichEl.style.display  = 'inline-table';
+	} else {
+		whichEl.style.display  = 'block';
+	}
     if (whichIm)whichIm.src = imgOpened.src;
     changeCoverImage(whichEl);
   }
@@ -353,15 +373,21 @@ function publishDojoResize(){
 }
 
 function setItemLocalStorage(name, value) {
-	if(typeof window.localStorage != 'undefined') {
-		if(value == 'none') {
-			window.localStorage.setItem(name, 0);
-		} else if(value == 'block') {
-			window.localStorage.setItem(name, 1);
-		} else {
-			window.localStorage.setItem(name, value);
+	try {
+		if(typeof window.localStorage != 'undefined') {
+			if(value == 'none') {
+				window.localStorage.setItem(name, 0);
+			} else if(value == 'block') {
+				window.localStorage.setItem(name, 1);
+			} else {
+				window.localStorage.setItem(name, value);
+			}
+			
 		}
-		
+	} catch(e) {
+	    if(e.name == "NS_ERROR_FILE_CORRUPTED") {
+	        console.log("Sorry, it looks like your browser storage has been corrupted. Please clear your storage by going to Tools -> Clear Recent History -> Cookies and set time range to 'Everything'. This will remove the corrupted browser storage across all sites.");
+	    }
 	}
 }
 

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_entities.class.php,v 1.7 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: import_entities.class.php,v 1.9.4.1 2025/05/15 13:58:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -121,5 +121,179 @@ class import_entities {
 	
 	public static function get_type() {
 	    return static::class;
+	}
+	
+	public static function get_encoded_buffer($buffer) {
+		global $charset;
+		global $encodage_fic_source;
+		
+		if(isset($encodage_fic_source)){
+			$_SESSION["encodage_fic_source"]=$encodage_fic_source;
+		}elseif(isset($_SESSION["encodage_fic_source"])){
+			$encodage_fic_source=$_SESSION["encodage_fic_source"];
+		}
+		if($encodage_fic_source){//On a forcé l'encodage
+			switch ($encodage_fic_source) {
+				case 'iso8859':
+					if($charset == 'utf-8') {
+						if(function_exists("mb_convert_encoding") && ((strpos($buffer,chr(0x92)) !== false) || (strpos($buffer,chr(0x93)) !== false) || (strpos($buffer,chr(0x9c)) !== false) || (strpos($buffer,chr(0x8c)) !== false))){//Pour les caractères windows
+							$buffer = mb_convert_encoding($buffer,"UTF-8","Windows-1252");
+						}else{
+							$buffer = encoding_normalize::utf8_normalize($buffer);
+						}
+					}
+					break;
+				case 'iso5426':
+					$buffer=iso2709_record::ISO_646_5426_decode($buffer);
+					if($charset == 'utf-8') {
+						if(function_exists("mb_convert_encoding") && ((strpos($buffer,chr(0x92)) !== false) || (strpos($buffer,chr(0x93)) !== false) || (strpos($buffer,chr(0x9c)) !== false) || (strpos($buffer,chr(0x8c)) !== false))){//Pour les caractères windows
+							$buffer = mb_convert_encoding($buffer,"UTF-8","Windows-1252");
+						}else{
+							$buffer = encoding_normalize::utf8_normalize($buffer);
+						}
+					}
+					break;
+				case 'utf-8':
+					if($charset == 'iso-8859-1') {
+						$buffer = encoding_normalize::utf8_decode($buffer);
+					}
+					break;
+			}
+		}
+		return $buffer;
+	}
+	
+	public static function decoupe_date($date_non_formate,$annee_seule=false,$complement="01"){
+	    $date="";
+	    $tab=preg_split("/\D/",$date_non_formate);
+	    
+	    switch(count($tab)){
+	        case 3 :
+	            if(strlen($tab[0]) == 4){
+	                $date=$tab[0]."-".$tab[1]."-".$tab[2];
+	            }elseif(strlen($tab[2]) == 4){
+	                $date=$tab[2]."-".$tab[1]."-".$tab[0];
+	            }elseif($tab[0] > 31){
+	                $date="19".$tab[0]."-".$tab[1]."-".$tab[2];
+	            }elseif($tab[2] > 31){
+	                $date="19".$tab[2]."-".$tab[1]."-".$tab[0];
+	            }
+	            break;
+	        case 2 :
+	            if(strlen($tab[0]) == 4){
+	                $date=$tab[0]."-".$tab[1]."-".$complement;
+	            }elseif(strlen($tab[1]) == 4){
+	                $date=$tab[1]."-".$tab[0]."-".$complement;
+	            }elseif($tab[0] > 31){
+	                $date="19".$tab[0]."-".$tab[1]."-".$complement;
+	            }elseif($tab[1] > 31){
+	                $date="19".$tab[1]."-".$tab[0]."-".$complement;
+	            }
+	            break;
+	        case 1 :
+	            if(strlen($tab[0]) == 8){
+	                $date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".substr($tab[0],6,2);
+	            }elseif(strlen($tab[0]) == 6){
+	                $date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".$complement;
+	            }elseif(strlen($tab[0]) == 4){
+	                $date=substr($tab[0],0,4)."-".$complement."-".$complement;
+	            }
+	    }
+	    
+	    if($annee_seule){
+	        return substr($date,0,4);
+	    }else{
+	        return $date;
+	    }
+	}
+	
+	//trouve un champ perso et renvoi son id
+	public static function trouve_champ_perso($nom,$table="notices") {
+	    $rqt = "SELECT idchamp FROM ".$table."_custom WHERE name='" . addslashes($nom) . "'";
+	    $res = pmb_mysql_query($rqt);
+	    if (pmb_mysql_num_rows($res)>0) {
+	        return pmb_mysql_result($res,0);
+	    }
+	    return 0;
+	}
+	
+	//Pour renseigner les champs perso
+	public static function renseigne_champ_perso($nom,$type,$value,$notice_id,$table="notices", $decoupe_date=true) {
+	    if(!trim($value) or !trim($nom) or !trim($notice_id)  )return false; // On sort si la valeur ou le nom du champ sont vide
+	    $mon_champ = static::trouve_champ_perso($nom,$table);
+	    if ($mon_champ){
+	        switch ($type) {
+	            case "small_text":
+	                $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_small_text) values('".$mon_champ."','".$notice_id."','".addslashes(trim($value))."')";
+	                if(!pmb_mysql_query($requete)) return false;
+	                break;
+	            case "integer":
+	                $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_integer) values('".$mon_champ."','".$notice_id."','".addslashes(trim($value))."')";
+	                if(!pmb_mysql_query($requete)) return false;
+	                break;
+	            case "text":
+	                $rqt = "select datatype from ".$table."_custom where idchamp = $mon_champ";
+	                $res = pmb_mysql_query($rqt);
+	                $datatype = @pmb_mysql_result($res,0,0);
+	                if($datatype == "small_text"){
+	                    $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_small_text) values('".$mon_champ."','".$notice_id."','".addslashes(trim($value))."')";
+	                }else{
+	                    $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_text) values('".$mon_champ."','".$notice_id."','".addslashes(trim($value))."')";
+	                }
+	                if(!pmb_mysql_query($requete)) return false;
+	                break;
+	            case "date":
+	                if ($decoupe_date) {
+	                    $value = static::decoupe_date($value);
+	                }
+	                $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_date) values('".$mon_champ."','".$notice_id."','".addslashes(trim($value))."')";
+	                if(!pmb_mysql_query($requete)){
+	                    echo "requete : ".$requete."<br>";
+	                    return false;
+	                }
+	                break;
+	            case "list":
+	                $requete="select ".$table."_custom_list_value from ".$table."_custom_lists where ".$table."_custom_list_lib='".addslashes(trim($value))."' and ".$table."_custom_champ='".$mon_champ."' ";
+	                $resultat=pmb_mysql_query($requete);
+	                if (pmb_mysql_num_rows($resultat)) {
+	                    $value2=pmb_mysql_result($resultat,0,0);
+	                } else {
+	                    $requete="select max(".$table."_custom_list_value*1) from ".$table."_custom_lists where ".$table."_custom_champ='".$mon_champ."' ";
+	                    $resultat=pmb_mysql_query($requete);
+	                    $max=@pmb_mysql_result($resultat,0,0);
+	                    $n=$max+1;
+	                    $requete="insert into ".$table."_custom_lists (".$table."_custom_champ,".$table."_custom_list_value,".$table."_custom_list_lib) values('".$mon_champ."',$n,'".addslashes(trim($value))."')";
+	                    if(!pmb_mysql_query($requete)) return false;
+	                    $value2=$n;
+	                }
+	                $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_integer) values('".$mon_champ."',$notice_id,$value2)";
+	                if(!pmb_mysql_query($requete)) return false;
+	                break;
+	            case "list_text"://apport d'une modif
+	                $requete="select ".$table."_custom_list_value from ".$table."_custom_lists where ".$table."_custom_list_lib='".addslashes(trim($value))."' and ".$table."_custom_champ='".$mon_champ."' ";
+	                $resultat=pmb_mysql_query($requete);
+	                if (pmb_mysql_num_rows($resultat)) {
+	                    $value2=pmb_mysql_result($resultat,0,0);
+	                } else {
+	                    $requete="select max(".$table."_custom_list_value*1) from ".$table."_custom_lists where ".$table."_custom_champ='".$mon_champ."' ";
+	                    $resultat=pmb_mysql_query($requete);
+	                    $max=@pmb_mysql_result($resultat,0,0);
+	                    $n=$max+1;
+	                    $requete="insert into ".$table."_custom_lists (".$table."_custom_champ,".$table."_custom_list_value,".$table."_custom_list_lib) values('".$mon_champ."',$n,'".addslashes(trim($value))."')";
+	                    if(!pmb_mysql_query($requete)) return false;
+	                    $value2=$n;
+	                }
+	                $requete="insert into ".$table."_custom_values (".$table."_custom_champ,".$table."_custom_origine,".$table."_custom_small_text) values('".$mon_champ."',$notice_id,'".$value2."')";
+	                if(!pmb_mysql_query($requete)) return false;
+	                break;
+	            default:
+	                return false;
+	                break;
+	        }
+	    }else{
+	        return false;
+	    }
+	    return true;
+	    
 	}
 }

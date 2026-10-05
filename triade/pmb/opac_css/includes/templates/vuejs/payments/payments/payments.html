@@ -1,0 +1,5 @@
+<div id="payments">
+	<template v-if="action == 'list'">
+		<paymentslist :accounts="accounts" :emprid="emprid" :sold="sold" :groupmember="groupmember" :devise="devise" :transactionlist="transactionlist"></paymentslist>
+	</template>
+</div>

@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_request.class.php,v 1.21.2.1 2019-06-18 06:51:41 dgoron Exp $
+// $Id: scan_request.class.php,v 1.33 2024/04/10 14:26:32 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path.'/scan_request/scan_request_status.class.php');
 require_once($class_path.'/scan_request/scan_request_priorities.class.php');
 require_once($class_path.'/scan_request/scan_request_priority.class.php');
@@ -63,6 +64,8 @@ class scan_request {
 
 	protected $formatted_deadline_date = null;
 	
+	protected $nb_scanned_pages = 0;
+	
 	protected static $scripts_already_included = false;
 	
 	protected $scannable_linked_record = false;
@@ -70,18 +73,17 @@ class scan_request {
 	protected $nb_explnums = 0;
 	
 	public function __construct($id = 0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
 	protected function fetch_data() {
-		global $dbh;
 		global $empr_location;
 		
 		$this->num_location = $empr_location;
 		if ($this->id) {
 			$query = 'select * from scan_requests where id_scan_request = '.$this->id;
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$this->title = $row->scan_request_title;
@@ -105,9 +107,10 @@ class scan_request {
 				$this->formatted_date = formatdate($this->date);
 				$this->formatted_wish_date = formatdate($this->wish_date);
 				$this->formatted_deadline_date = formatdate($this->deadline_date);
+				$this->nb_scanned_pages = $row->scan_request_nb_scanned_pages;
 				
 				$query = 'select * from scan_request_linked_records where scan_request_linked_record_num_request = '.$this->id.' order by scan_request_linked_record_order';
-				$result = pmb_mysql_query($query, $dbh);
+				$result = pmb_mysql_query($query);
 				while ($row = pmb_mysql_fetch_object($result)) {
 					$this->add_linked_record($row->scan_request_linked_record_num_notice, $row->scan_request_linked_record_num_bulletin, $row->scan_request_linked_record_comment);
 				}
@@ -132,7 +135,7 @@ class scan_request {
 					//notice de bulletin
 					$id_for_right = $infos->num_notice;
 				}else{
-					//notice de pÃ©rio
+					//notice de pério
 					$id_for_right = $infos->bulletin_notice;
 				}
 			}
@@ -207,18 +210,17 @@ class scan_request {
 	}
 	
 	public function get_values_from_form() {
-		global $scan_request_title, $scan_request_desc, $scan_request_num_location, $scan_request_comment;
+	    global $scan_request_title, $scan_request_desc, $scan_request_nb_scanned_pages, $scan_request_num_location, $scan_request_comment;
 		global $scan_request_priority, $scan_request_status, $scan_request_date, $scan_request_wish_date, $scan_request_deadline_date;
 		global $scan_request_linked_records_notices, $scan_request_linked_records_bulletins;
 		global $empr_location;
 		
 		$this->title = strip_tags(stripslashes($scan_request_title));
 		$this->desc = strip_tags(stripslashes($scan_request_desc));
-		$this->num_location = (isset($scan_request_num_location) ? $scan_request_num_location+0 : $empr_location);
-		$scan_request_priority += 0;
-		$this->priority = new scan_request_priority($scan_request_priority);
-		$scan_request_status += 0;
-		$this->status = new scan_request_status($scan_request_status);
+		$this->nb_scanned_pages = strip_tags(stripslashes($scan_request_nb_scanned_pages));
+		$this->num_location = (!empty($scan_request_num_location) ? intval($scan_request_num_location) : $empr_location);
+		$this->priority = new scan_request_priority(intval($scan_request_priority));
+		$this->status = new scan_request_status(intval($scan_request_status));
 		$this->date = $scan_request_date;
 		$this->wish_date = $scan_request_wish_date;
 		$this->deadline_date = $scan_request_deadline_date;
@@ -242,27 +244,13 @@ class scan_request {
 	}
 	
 	public function send_mail(){
-		global $charset, $msg;
-		global $empr_nom, $empr_prenom, $empr_mail;
-		
-		$headers  = "MIME-Version: 1.0\n";
-		$headers .= "Content-type: text/html; charset=".$charset."\n";
-		
-		//En crÃ©ation de demande, on envoie Ã  la localisation
-		$location = new docs_location($this->num_location);
-		if ($location->email) {
-			$title = $msg["scan_request_creation_mail_title"];
-			$content = $msg["scan_request_creation_mail_content"];
-			$content = str_replace("!!scan_title!!", $this->title, $content);
-			$content = str_replace("!!scan_desc!!", $this->desc, $content);
-			$content = str_replace("!!scan_dest!!", $this->get_lib_empr($this->num_dest_empr*1), $content);
-			mailpmb($location->libelle, $location->email, $title, $content, $empr_prenom." ".$empr_nom, $empr_mail, $headers);
-		}
+		$mail_opac_scan_request = new mail_opac_scan_request();
+		$mail_opac_scan_request->set_mail_to_id($this->num_location);
+		$mail_opac_scan_request->set_scan_request($this);
+		$mail_opac_scan_request->send_mail();
 	}
 	
 	public function save() {
-		global $dbh;
-		
 		if($this->id) {
 			$query = 'update scan_requests set ';
 			$where = 'where id_scan_request='.$this->id;
@@ -278,6 +266,7 @@ class scan_request {
 		}
 		$query .= 'scan_request_title="'.addslashes($this->title).'",
 				scan_request_desc="'.addslashes($this->desc).'",
+                scan_request_nb_scanned_pages = "'.addslashes($this->nb_scanned_pages).'",
 				scan_request_num_priority="'.$this->priority->get_id().'",
 				scan_request_date="'.$this->date.'",
 				scan_request_wish_date="'.$this->wish_date.'",
@@ -288,13 +277,13 @@ class scan_request {
 		$result = pmb_mysql_query($query);
 		
 		if ($result) {
-			// On sauve les documents liÃ©s
+			// On sauve les documents liés
 			$is_new = false;
 			if (!$this->id) {
 				$is_new = true;
-				$this->id = pmb_mysql_insert_id($dbh);
+				$this->id = pmb_mysql_insert_id();
 			}
-			//Envoi du mail en crÃ©ation/modification
+			//Envoi du mail en création/modification
 			$this->send_mail();
 			foreach ($this->linked_records as $linked_record) {
 				if($linked_record['scannable']) {
@@ -329,7 +318,7 @@ class scan_request {
 	}
 	
 	/**
-	 * Ajoute les enregistrements en sÃ©parant notices et bulletins Ã  partir d'un tableau d'identifiant de notices
+	 * Ajoute les enregistrements en séparant notices et bulletins à partir d'un tableau d'identifiant de notices
 	 * @param array $records_ids Tableau des identifiants de notices
 	 */
 	public function add_linked_records_from_notices_ids($notices_ids) {
@@ -402,11 +391,16 @@ class scan_request {
 		global $charset, $msg;
 		global $scan_request_form_in_record, $scan_request_form_in_record_scripts;
 		global $base_path;
+		global $opac_rgaa_active;
 		
 		$display = '';
 		if ($_SESSION['id_empr_session']) {
 			$display = $scan_request_form_in_record;
-			$display = str_replace("<!--bouton close-->","<a href='#' onClick='parent.kill_scan_request_frame();return false;'><img src='".get_url_icon('close.gif')."' alt='".$msg["close"]."' style='border:0px' class='align_right'></a></div>", $display);
+			if($opac_rgaa_active){
+				$display = str_replace("<!--bouton close-->","<button type='button' class='button-unstylized close' onClick='parent.kill_scan_request_frame();return false;'><img src='".get_url_icon('close.gif')."' alt='' class='align_right'><span class='visually-hidden'>".$msg['close'] . $msg['rgaa_modal_close']."</span></button></div>", $display);
+			}else{
+				$display = str_replace("<!--bouton close-->","<a href='#' onClick='parent.kill_scan_request_frame();return false;'><img src='".get_url_icon('close.gif')."' alt='".$msg["close"]."' style='border:0px' class='align_right'></a></div>", $display);
+			}
 			if($this->id){
 				$display = str_replace('!!form_title!!', htmlentities($msg['scan_request_edit_form'], ENT_QUOTES, $charset), $display);
 			} else {
@@ -444,6 +438,7 @@ class scan_request {
 		$display = str_replace('!!date!!', ($this->date ? substr($this->date,0,10) : date('Y-m-d')), $display);
 		$display = str_replace('!!wish_date!!', ($this->wish_date ? substr($this->wish_date,0,10) : date('Y-m-d')), $display);
 		$display = str_replace('!!deadline_date!!', ($this->deadline_date ? substr($this->deadline_date,0,10) : date('Y-m-d')), $display);
+		$display = str_replace('!!nb_scanned_pages!!', $this->nb_scanned_pages, $display);
 		
 		if($opac_scan_request_location_activate) {
 			$display = str_replace("!!location_selector!!",gen_liste ("select idlocation, location_libelle from docs_location where location_visible_opac = 1 order by location_libelle ", "idlocation", "location_libelle", 'scan_request_num_location'.$id_suffix, "", $this->num_location, "", "", "", $msg['no_location'],0), $display);
@@ -504,13 +499,33 @@ class scan_request {
 		return $h2o->render(array('scan_request' => $this));
 	}
 	
+	public function get_display_in_list() {
+	    global $include_path;
+	    
+	    $tpl = $include_path.'/templates/scan_request/scan_request_in_list.tpl.html';
+	    if (file_exists($include_path.'/templates/scan_request/scan_request_in_list_subst.tpl.html')) {
+	        $tpl = $include_path.'/templates/scan_request/scan_request_in_list_subst.tpl.html';
+	    }
+	    $h2o = H2o_collection::get_instance($tpl);
+	    $empr = '';
+	    if ($this->num_dest_empr) {
+	        $query = 'select empr_nom, empr_prenom from empr where id_empr = '.$this->num_dest_empr;
+	        $result = pmb_mysql_query($query);
+	        if (pmb_mysql_num_rows($result)) {
+	            $row = pmb_mysql_fetch_object($result);
+	            $empr = $row->empr_nom;
+	            if($row->empr_prenom) $empr .= ', '.$row->empr_prenom;
+	        }
+	    }
+	    return $h2o->render(array('scan_request' => $this, 'empr' => $empr));
+	}
+	
 	public function delete() {
-		global $dbh;
 		global $opac_scan_request_cancel_status;
 		
 		if($this->id && $opac_scan_request_cancel_status){
 			$query = 'update scan_requests set scan_request_num_status="'.$opac_scan_request_cancel_status.'" where id_scan_request = '.$this->id;
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 		}
 	}
 	
@@ -541,7 +556,7 @@ class scan_request {
 				'nb_explnums' => 0,
 				'explnums' => array(),
 				'visionneuse_script' => '
-							<script type="text/javascript">
+							<script>
 								if(typeof(sendToVisionneuse) == "undefined"){
 									var sendToVisionneuse = function (infos){
 										document.getElementById("visionneuseIframe").src = "visionneuse.php?mode=scan_request"+(typeof(infos.explnum_id) != "undefined" ? "&explnum_id="+infos.explnum_id : "")+(typeof(infos.id) != "undefined" ? "&id="+infos.id : "")+(typeof(infos.record_id) != "undefined" ? "&record_id="+infos.record_id : "")+(typeof(infos.record_type) != "undefined" ? "&record_type="+infos.record_type : "");
@@ -556,7 +571,7 @@ class scan_request {
 			create_tableau_mimetype();
 		}
 		
-		// rÃ©cupÃ©ration du nombre d'exemplaires
+		// récupération du nombre d'exemplaires
 		$query = "SELECT explnum_id, explnum_notice, explnum_bulletin, explnum_nom, explnum_mimetype, explnum_url, explnum_vignette, explnum_nomfichier, explnum_extfichier, explnum_docnum_statut 
 				FROM explnum 
 				JOIN scan_request_explnum ON scan_request_explnum.scan_request_explnum_num_explnum = explnum.explnum_id 
@@ -587,7 +602,7 @@ class scan_request {
 		}
 
 		if ($nb_explnums && ($docnum_visible || $opac_show_links_invisible_docnums)) {
-			// on rÃ©cupÃ¨re les donnÃ©es des exemplaires
+			// on récupère les données des exemplaires
 			global $search_terms;
 			while (($expl = pmb_mysql_fetch_object($res))) {
 				$explnum_docnum_visible = true;
@@ -597,7 +612,7 @@ class scan_request {
 					$explnum_docnum_consult = $dom_3->getRights($_SESSION['id_empr_session'],$expl->explnum_id,4);
 				} else {
 					$requete = "SELECT explnum_visible_opac, explnum_visible_opac_abon, explnum_consult_opac, explnum_consult_opac_abon FROM explnum, explnum_statut WHERE explnum_id ='".$expl->explnum_id."' and id_explnum_statut=explnum_docnum_statut ";
-					$myQuery = pmb_mysql_query($requete, $dbh);
+					$myQuery = pmb_mysql_query($requete);
 					if(pmb_mysql_num_rows($myQuery)) {
 						$statut_temp = pmb_mysql_fetch_object($myQuery);
 						if(!$statut_temp->explnum_visible_opac)	{
@@ -636,21 +651,21 @@ class scan_request {
 							'href' => '#',
 							'onclick' => ''
 					);
-					//si l'affichage du lien vers les documents numÃ©riques est forcÃ© et qu'on est pas connectÃ©, on propose l'invite de connexion!
+					//si l'affichage du lien vers les documents numériques est forcé et qu'on est pas connecté, on propose l'invite de connexion!
 					if(!$explnum_docnum_visible && $opac_show_links_invisible_docnums && !$_SESSION['id_empr_session']){
 						if ($opac_visionneuse_allow) {
 							$allowed_mimetype = explode(",",str_replace("'","",$opac_photo_filtre_mimetype));
 						}
 						if ($allowed_mimetype && in_array($expl->explnum_mimetype,$allowed_mimetype)){
 							$explnum_datas['access_datas']['script'] = "
-							<script type='text/javascript'>
+							<script>
 								function sendToVisionneuse_".$expl->explnum_id."(){
 									open_visionneuse(sendToVisionneuse,{explnum_id : ".$expl->explnum_id.", id : ".$this->id.", record_id : ".$record_id.", record_type : '".$record_type."'});
 								}
 							</script>";
 							$explnum_datas['access_datas']['onclick'] = "auth_popup('./ajax.php?module=ajax&categ=auth&callback_func=sendToVisionneuse_".$expl->explnum_id."');";
 						}else{
-							$explnum_datas['access_datas']['onclick'] = "auth_popup('./ajax.php?module=ajax&categ=auth&new_tab=1&callback_url=".rawurlencode($opac_url_base."doc_num.php?explnum_id=".$expl->explnum_id)."')";
+							$explnum_datas['access_datas']['onclick'] = "auth_popup('./ajax.php?module=ajax&categ=auth&new_tab=1&callback_url=".rawurlencode($opac_url_base."doc_num.php?explnum_id=".$expl->explnum_id)."'); return false;";
 						}
 					}else{
 						if ($opac_visionneuse_allow)
@@ -671,7 +686,7 @@ class scan_request {
 			}
 			if($explnums['nb_explnums']) {
 				$explnums['access_datas']['script'] = "
-				<script type='text/javascript'>
+				<script>
 					function sendToVisionneuse_".$this->id."_".$record_type."_".$record_id."(){
 						open_visionneuse(sendToVisionneuse,{id : ".$this->id.", record_id : ".$record_id.", record_type : '".$record_type."'});
 					}
@@ -734,6 +749,22 @@ class scan_request {
 		return $this->num_dest_empr;
 	}
 
+	public function get_empr() {
+	    if (!isset($this->empr)) {
+	        $this->empr = "";
+	        if (!empty($this->num_dest_empr)) {
+	            $query = 'select empr_nom, empr_prenom from empr where id_empr = '.$this->num_dest_empr;
+	            $result = pmb_mysql_query($query);
+	            if (pmb_mysql_num_rows($result)) {
+	                $row = pmb_mysql_fetch_object($result);
+	                $this->empr = $row->empr_nom;
+	                if($row->empr_prenom) $this->empr .= ', '.$row->empr_prenom;
+	            }
+	        }
+	    }
+	    return $this->empr;
+	}
+	
 	public function get_num_creator() {
 		return $this->num_creator;
 	}
@@ -786,7 +817,7 @@ class scan_request {
 	}
 	
 	/**
-	 * Indique si la demande Ã  des documents liÃ©s numÃ©risables
+	 * Indique si la demande à des documents liés numérisables
 	 */
 	public function has_scannable_linked_record() {
 		return $this->scannable_linked_record;
@@ -865,15 +896,18 @@ class scan_request {
 	}
 	
 	public function get_lib_empr($id_empr){
-		global $dbh;
 		if($id_empr){
 			$query = "select empr_prenom, empr_nom from empr where id_empr= ".$id_empr;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
 				return $row->empr_nom.($row->empr_prenom?', '.$row->empr_prenom:'');
 			}
 		}
 		return '';
+	}
+	
+	public function get_nb_scanned_pages(){
+	    return $this->nb_scanned_pages;
 	}
 }

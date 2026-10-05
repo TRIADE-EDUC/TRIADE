@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_biotope.inc.php,v 1.2 2015-04-03 11:16:23 jpermanne Exp $
+// $Id: func_biotope.inc.php,v 1.3 2022/01/12 07:49:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -21,7 +21,6 @@ function recup_noticeunimarc_suite($notice) {
 } // fin recup_noticeunimarc_suite 
 	
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 	global $info_606_a;
 	global $info_900;
@@ -38,7 +37,7 @@ function import_new_notice_suite() {
 			
 			if ($categ_id) {
 				$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) values($notice_id,$categ_id,$ordre_categ)";
-				pmb_mysql_query( $requete, $dbh );
+				pmb_mysql_query($requete);
 				$ordre_categ ++;
 			}
 		}
@@ -48,7 +47,7 @@ function import_new_notice_suite() {
 	for($i=0;$i<count($info_900);$i++){		
 		
 		$req = " select idchamp, type, datatype from notices_custom where name='".$info_900[$i]['n']."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			$perso = pmb_mysql_fetch_object($res);
 			if($perso->idchamp){						

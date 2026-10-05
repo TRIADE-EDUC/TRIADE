@@ -1,9 +1,9 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: facettes_external_search_compare.class.php,v 1.6 2019-01-09 16:18:35 tsamson Exp $
+// $Id: facettes_external_search_compare.class.php,v 1.8.4.1 2025/01/30 09:08:06 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,11 +12,11 @@ require_once($class_path."/facettes_external.class.php");
 require_once($class_path."/notice_affichage_unimarc.class.php");
 
 class facettes_external_search_compare extends facette_search_compare {
-	
+
 	public function __construct() {
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Tableau d'identifiants de notices
 	 */
@@ -30,7 +30,7 @@ class facettes_external_search_compare extends facette_search_compare {
 		}
 		return $objects_ids;
 	}
-	
+
 	protected function get_query_groupby($facette_groupby, $tmpArray) {
 		$sub_queries = facettes_external::get_sub_queries($facette_groupby[1], $facette_groupby[2]);
 		$selected_sources = facettes_external::get_selected_sources();
@@ -44,51 +44,53 @@ class facettes_external_search_compare extends facette_search_compare {
 				.implode(' UNION ', $queries).") as sub";
 		return $query;
 	}
-	
+
 	/**
-	 * On lance la comparaison Ã  partir d'une liste d'identifiants
+	 * On lance la comparaison à partir d'une liste d'identifiants
 	 * Rempli la variables result
 	 *
 	 * @param object_ids
-	 * @return true si succÃ¨s message d'erreur sinon
+	 * @return true si succès message d'erreur sinon
 	 */
 	public function compare_from_objects($objects_ids){
 		self::session_facette_compare($this);
-	
-		if(sizeof($this->facette_compare)){
+
+		if(is_countable($this->facette_compare) && sizeof($this->facette_compare)){
 			//on insert les notices externes de la recherche en table memoire
 			self::gen_temporary_table_name();
 			$query = "CREATE TEMPORARY TABLE ".static::$temporary_table_name." engine=memory SELECT rid FROM external_count WHERE rid IN (".$objects_ids.")";
 			pmb_mysql_query($query);
 			$query = "ALTER TABLE ".static::$temporary_table_name." engine=memory ADD INDEX notice_id_index BTREE (rid)";
 			pmb_mysql_query($query);
-	
+
 			//pour toutes les facettes choisies en comparaison
 			$this->build_result();
-	
-			//Si trop de rÃ©sultat, la gÃ©nÃ©ration du tableau html sera trop longue = on coupe.
-			if(sizeof($this->result)*sizeof($this->facette_compare) > $this->max_display){
-				return 'facette_compare_too_more_result';
+
+			//Si trop de résultat, la génération du tableau html sera trop longue = on coupe.
+			if (is_countable($this->result) && is_countable($this->facette_compare)){
+				if(sizeof($this->result)*sizeof($this->facette_compare) > $this->max_display){
+					return 'facette_compare_too_more_result';
+				}
 			}
 			return true;
 		}else{
-			//pas de rÃ©sultat
+			//pas de résultat
 			return 'facettes_compare_no_result';
 		}
 	}
-	
+
 	/**
-	 * si une des facette n'est pas dÃ©jÃ  choisie pour comparer et n'est pas utilisÃ© en recherche, on la rend active pour pouvoir etre utilisÃ© en comparaison
-	 * @param string $id l'id de la facette concernÃ©e 
-	 * @param bool $available 
+	 * si une des facette n'est pas déjà choisie pour comparer et n'est pas utilisé en recherche, on la rend active pour pouvoir etre utilisé en comparaison
+	 * @param string $id l'id de la facette concernée
+	 * @param bool $available
 	 */
 	public function set_available_compare($id,$available=true){
 		$this->facette_compare[$id]['available']=$available;
 		$_SESSION['check_facettes_external_compare'][$id]['available']=$available;
 	}
-	
+
 	/**
-	 * Si un groupe n'est pas dÃ©jÃ  choisi et dont un Ã©lement au moins est disponible pour la recherche, on le rend actif pour pouvoir etre utilisÃ© en groupement
+	 * Si un groupe n'est pas déjà choisi et dont un élement au moins est disponible pour la recherche, on le rend actif pour pouvoir etre utilisé en groupement
 	 * @param integer $id l'id du groupe
 	 * @param bool $available
 	 */
@@ -96,97 +98,96 @@ class facettes_external_search_compare extends facette_search_compare {
 		$this->facette_groupby[$id]['available']=$available;
 		$_SESSION['check_facettes_external_groupby'][$id]['available']=$available;
 	}
-	
+
 	/**
 	 * Classe permettant d'appeler l'affichage des notices
-	 * Retire de la liste envoyÃ©e en rÃ©fÃ©rence les notices dÃ©jÃ  affichÃ©es
+	 * Retire de la liste envoyée en référence les notices déjà affichées
 	 *
-	 * @param string $notices_ids la liste des notices, sÃ©parÃ©es par ,
-	 * @param integer $notice_nb le nombre de notices Ã  afficher par passe
+	 * @param string $notices_ids la liste des notices, séparées par ,
+	 * @param integer $notice_nb le nombre de notices à afficher par passe
 	 * @param integer $notice_tpl l'identifiant du template d'affichage, si null, affiche le header de la classe d'affichage
 	 */
 	public static function call_notice_display(&$notices_ids,$notice_nb,$notice_tpl){
 		global $msg;
-		global $opac_cart_allow, $opac_cart_only_for_subscriber;
-		
+		global $opac_cart_allow, $opac_cart_only_for_subscriber, $charset;
+
 		if ((($opac_cart_allow)&&(!$opac_cart_only_for_subscriber))||(($opac_cart_allow)&&($_SESSION["user_code"]))) $cart=1; else $cart=0;
 		if ($nocart) $cart=0;
-		
+
 		$entrepots_localisations = array();
 		$entrepots_localisations_sql = "SELECT * FROM entrepots_localisations ORDER BY loc_visible DESC";
 		$res = pmb_mysql_query($entrepots_localisations_sql);
 		while ($row = pmb_mysql_fetch_array($res)) {
 			$entrepots_localisations[$row["loc_code"]] = array("libelle" => $row["loc_libelle"], "visible" => $row["loc_visible"]);
 		}
-		
+
 		$notices_ids=explode(",",$notices_ids);
-		
+
 		$notices='';
 		for($i_notice_nb=0;$i_notice_nb<$notice_nb;$i_notice_nb++) {
 			if($notices_ids[$i_notice_nb]){
 				$notices.='<li>';
-								
+
 				$current = new notice_affichage_unimarc($notices_ids[$i_notice_nb],"",$cart,0, $entrepots_localisations);
 				$current->do_header();
 				if($current->notice_header == ""){
 					$current->notice_header = sprintf($msg['cart_notice_expired'],$notices_ids[$i_notice_nb]);
 					$current->notice_expired = true;
 				}
-				
+
 				//le panier
 				if ($current->cart_allowed){
 					if(isset($_SESSION["cart"]) && in_array("es".$notices_ids[$i_notice_nb], $_SESSION["cart"])) {
-						$notices.="<a href='#' class=\"img_basket_exist\" title=\"".$msg['notice_title_basket_exist']."\"><img src=\"".get_url_icon('basket_exist.png', 1)."\" align='absmiddle' style='border:0px' alt=\"".$msg['notice_title_basket_exist']."\" /></a>";
+						$notices.="<a href='#' class=\"img_basket_exist\" title=\"".$msg['notice_title_basket_exist']."\"><img src=\"".get_url_icon('basket_exist.png', 1)."\" style='border:0px' alt=\"".htmlentities($msg['notice_title_basket_exist'],ENT_QUOTES, $charset)."\" /></a>";
 					} else {
-						$notices.="<a href=\"cart_info.php?id=es".$notices_ids[$i_notice_nb]."&header=".rawurlencode(strip_tags($current->notice_header))."\" target=\"cart_info\" title=\"".$msg['notice_title_basket']."\"><img src=\"".get_url_icon("basket_small_20x20.png", 1)."\" style='border:0px' alt=\"".$msg['notice_title_basket']."\"></a>";
+						$notices.="<a href=\"cart_info.php?id=es".$notices_ids[$i_notice_nb]."&header=".rawurlencode(strip_tags($current->notice_header))."\" target=\"cart_info\" title=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES, $charset)."\"><img src=\"".get_url_icon("basket_small_20x20.png", 1)."\" style='border:0px' alt=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES, $charset)."\"></a>";
 					}
 				}else {
 					$notices.="";
 				}
 				$notices.=$current->notice_header;
-				
+
 				unset($notices_ids[$i_notice_nb]);
 				$notices.='</a>';
 				$notices.='</li>';
 			}
 		}
-		
-		if(sizeof($notices_ids)){
+		if(is_countable($notices_ids) && sizeof($notices_ids)){
 			$notices_ids=implode(',', $notices_ids);
 		}
 		return $notices;
 	}
-	
+
 	public static function get_compare_checked_session() {
 	    if (isset($_SESSION['check_facettes_external_compare'])) {
 	        return $_SESSION['check_facettes_external_compare'];
 	    }
 	    return null;
 	}
-	
+
 	public static function set_compare_checked_session($facettes_compare) {
 		$_SESSION['check_facettes_external_compare'] = $facettes_compare;
 	}
-	
+
 	public static function unset_compare_checked_session() {
 		unset($_SESSION['check_facettes_external_compare']);
 	}
-	
+
 	public static function get_groupby_checked_session() {
 	    if (isset($_SESSION['check_facettes_external_groupby'])) {
 	        return $_SESSION['check_facettes_external_groupby'];
 	    }
 		return null;
 	}
-	
+
 	public static function set_groupby_checked_session($facettes_groupby) {
 		$_SESSION['check_facettes_external_groupby'] = $facettes_groupby;
 	}
-	
+
 	public static function unset_groupby_checked_session() {
 		unset($_SESSION['check_facettes_external_groupby']);
 	}
-	
+
 	public static function get_formatted_value($id_critere, $id_ss_critere, $value) {
 		return facettes_external::get_formatted_value($id_critere, $id_ss_critere, $value);
 	}

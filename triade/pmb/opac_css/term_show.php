@@ -1,26 +1,28 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_show.php,v 1.31 2019-05-09 10:35:37 ngantier Exp $
+// $Id: term_show.php,v 1.35.4.1 2025/04/07 14:53:18 dgoron Exp $
 $base_path=".";                            
 $base_auth = ""; 
 
 require_once ("$base_path/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once($base_path.'/includes/templates/common.tpl.php');
 
+global $class_path, $id_thes, $term, $jscript_term, $charset;
+
 require_once("$class_path/term_show.class.php"); 
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
 
-$id_thes+= 0;
+$id_thes = intval($id_thes);
 
-//RÃ©cupÃ©ration des paramÃ¨tres du formulaire appellant
+//Récupération des paramètres du formulaire appellant
 $base_query = "history=".rawurlencode(stripslashes($term))."&history_thes=".rawurlencode(stripslashes($id_thes));
 
 // RSS
@@ -31,8 +33,9 @@ $short_header= str_replace("!!liens_rss!!","",$short_header);
 $short_header= str_replace("<body>","<body class='searchTerm'>",$short_header);
 
 echo $short_header;
-
-echo $jscript_term;
+if (!isset($_POST["jscript_term"]) && !isset($_GET["jscript_term"])) {
+    echo $jscript_term;
+}
 
 
 function parent_link($categ_id,$categ_see) {
@@ -50,7 +53,7 @@ function parent_link($categ_id,$categ_see) {
 		$visible=false;
 		
 	if (category::has_notices($categ)) {
-		$link="<a href='#' onClick=\"parent.parent.document.term_search_form.action='".$base_path."/index.php?lvl=categ_see&id=$categ&rec_history=1'; parent.parent.document.term_search_form.submit(); return false;\" title='".$msg["categ_see_alt"]."'><img src='".get_url_icon('search.gif')."' style='border:0px' align='absmiddle'></a>";
+		$link="<a href='#' onClick=\"parent.parent.document.term_search_form.action='".$base_path."/index.php?lvl=categ_see&id=$categ&rec_history=1'; parent.parent.document.term_search_form.submit(); return false;\" title='".htmlentities($msg["categ_see_alt"],ENT_QUOTES,$charset)."'><img src='".get_url_icon('search.gif')."' style='border:0px' ></a>";
 		$visible=true;	
 	}
 	$r=array("VISIBLE"=>$visible,"LINK"=>$link);

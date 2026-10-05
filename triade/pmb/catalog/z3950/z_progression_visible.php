@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: z_progression_visible.php,v 1.15 2017-11-22 11:07:35 dgoron Exp $
+// $Id: z_progression_visible.php,v 1.15 2017/11/22 11:07:35 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "";
@@ -34,7 +34,7 @@ print "
 	</div>";
 
 //
-// On dÃ©termine les BibliothÃ¨ques sÃ©lectionnÃ©es
+// On détermine les Bibliothèques sélectionnées
 //
 
 $recherche=pmb_mysql_query("SELECT * FROM z_bib $selection_bib ORDER BY bib_nom");

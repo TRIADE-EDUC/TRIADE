@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_rss.class.php,v 1.2 2013-10-10 09:20:25 arenou Exp $
+// $Id: cms_module_rss.class.php,v 1.2 2013/10/10 09:20:25 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

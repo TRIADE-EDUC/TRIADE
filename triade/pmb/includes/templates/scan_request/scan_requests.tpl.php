@@ -1,15 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_requests.tpl.php,v 1.18 2019-05-27 10:35:11 ngantier Exp $
+// $Id: scan_requests.tpl.php,v 1.20 2021/04/21 20:49:30 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $scan_requests_list, $msg, $current_module, $pmb_scan_request_location_activate;
 
 $scan_requests_list = "
-<h1>".$msg["scan_request_list"]."</h1>		
 <script type='text/javascript'>
 	function test_form(form){
 		if(form.user_input.value.length == 0){
@@ -111,8 +110,8 @@ $scan_requests_list = "
 					<label for='scan_request_date'>".$msg['scan_request_form_date']."</label>
 				</div>
 				<div class='row'>
-					<input type='text' name='scan_request_date_start' id='scan_request_date_start' value='!!scan_request_date_start!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
-					 - <input type='text' name='scan_request_date_end' id='scan_request_date_end' value='!!scan_request_date_end!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
+					<input type='date' name='scan_request_date_start' id='scan_request_date_start' value='!!scan_request_date_start!!' />
+					 - <input type='date' name='scan_request_date_end' id='scan_request_date_end' value='!!scan_request_date_end!!' />
 				</div>
 			</div>
 			<div class='colonne3'>
@@ -120,8 +119,8 @@ $scan_requests_list = "
 					<label for='scan_request_wish_date'>".$msg['scan_request_form_wish_date']."</label>
 				</div>
 				<div class='row'>
-					<input type='text' name='scan_request_wish_date_start' id='scan_request_wish_date_start' value='!!scan_request_wish_date_start!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
-					 - <input type='text' name='scan_request_wish_date_end' id='scan_request_wish_date_end' value='!!scan_request_wish_date_end!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
+					<input type='date' name='scan_request_wish_date_start' id='scan_request_wish_date_start' value='!!scan_request_wish_date_start!!' />
+					 - <input type='date' name='scan_request_wish_date_end' id='scan_request_wish_date_end' value='!!scan_request_wish_date_end!!' />
 				</div>
 			</div>
 			<div class='colonne3'>
@@ -129,8 +128,8 @@ $scan_requests_list = "
 					<label for='scan_request_deadline_date'>".$msg['scan_request_form_deadline_date']."</label>
 				</div>
 				<div class='row'>
-					<input type='text' name='scan_request_deadline_date_start' id='scan_request_deadline_date_start' value='!!scan_request_deadline_date_start!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
-					 - <input type='text' name='scan_request_deadline_date_end' id='scan_request_deadline_date_end' value='!!scan_request_deadline_date_end!!'  data-dojo-type='dijit/form/DateTextBox' required='false' />
+					<input type='date' name='scan_request_deadline_date_start' id='scan_request_deadline_date_start' value='!!scan_request_deadline_date_start!!' />
+					 - <input type='date' name='scan_request_deadline_date_end' id='scan_request_deadline_date_end' value='!!scan_request_deadline_date_end!!' />
 				</div>
 			</div>
 			".(isset($pmb_scan_request_location_activate) && $pmb_scan_request_location_activate ?

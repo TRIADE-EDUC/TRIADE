@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ris2pmbxml.class.php,v 1.2 2019-03-04 16:46:24 mbertin Exp $
+// $Id: ris2pmbxml.class.php,v 1.4.2.1 2024/08/01 09:41:24 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$include_path/isbn.inc.php");
 require_once($base_path."/admin/convert/convert.class.php");
@@ -16,11 +17,14 @@ class ris2pmbxml extends convert {
 		$res = array();
 		
 		for($i=0;$i<count($tab_line);$i++){
+			$matches = array();
 			if(preg_match("/([A-Z0-9]{1,4}) *- (.*)/",$tab_line[$i],$matches)){
 				$champ = $matches[1];
-				if($res[$champ]) {
+				if(isset($res[$champ]) && $res[$champ]) {
 					$res[$champ] = $res[$champ]."###".trim($matches[2]);		
-				} else $res[$champ] = trim($matches[2]);
+				} else {
+				    $res[$champ] = trim($matches[2]);
+				}
 			} else {
 				$res[$champ] = $res[$champ]." ".trim($tab_line[$i]);
 			}
@@ -38,7 +42,7 @@ class ris2pmbxml extends convert {
 		global $charset;
 		
 		if(mb_detect_encoding($notice) =='UTF-8' && $charset == "iso-8859-1")
-			$notice = utf8_decode($notice);
+			$notice = encoding_normalize::utf8_decode($notice);
 			
 		if (!$tab_functions) $tab_functions=new marc_list('function');
 		$fields=explode("\n",$notice);
@@ -106,9 +110,21 @@ class ris2pmbxml extends convert {
 				case 'PY':
 					//Date de publication (YYYY/MM/DD)
 					$dates = explode("/",$value);
-					if($dates[0]) $year = $dates[0];
-					if($dates[1]) $month = $dates[1];
-					if($dates[2]) $day = $dates[2];
+					if (!empty($dates[0])) {
+					    $year = $dates[0];
+					} else {
+					    $year = '';
+					}
+					if (!empty($dates[1])) {
+					    $month = $dates[1];
+					} else {
+					    $month = '';
+					}
+					if (!empty($dates[2])) {
+					    $day = $dates[2];
+					} else {
+					    $day = '';
+					}
 					$publication_date = $year;
 					if(!isset($lignes['Y1']) && $year && $month && $day){
 						$date_sql = str_replace("/","-",$value);
@@ -123,9 +139,21 @@ class ris2pmbxml extends convert {
 				break;
 				case 'Y1' :
 					$dates = explode("/",$value);
-					if($dates[0]) $year = $dates[0];
-					if($dates[1]) $month = $dates[1];
-					if($dates[2]) $day = $dates[2];
+					if (!empty($dates[0])) {
+					    $year = $dates[0];
+					} else {
+					    $year = '';
+					}
+					if (!empty($dates[1])) {
+					    $month = $dates[1];
+					} else {
+					    $month = '';
+					}
+					if (!empty($dates[2])) {
+					    $day = $dates[2];
+					} else {
+					    $day = '';
+					}
 					if(!isset($lignes['PY'])){
 						$publication_date = $year;
 					}
@@ -213,7 +241,7 @@ class ris2pmbxml extends convert {
 				break;
 				case 'IS':
 				case 'IP':
-					//NumÃ©ro de bulletin
+					//Numéro de bulletin
 					$bull_num = $value;
 					break;
 				case 'VL':
@@ -222,21 +250,21 @@ class ris2pmbxml extends convert {
 					$bull_vol = $value;
 					break;
 				case 'AB':
-					//RÃ©sumÃ©
+					//Résumé
 					$resume = $value;
 					break;
 				case 'JF':
-					//Titre complet du pÃ©rio
+					//Titre complet du pério
 					$perio_title = $value;
 					break;
 				case 'JO' :
-					//Titre standard du pÃ©rio
+					//Titre standard du pério
 					if(!isset($lignes['JF'])){
 					$perio_title = $value;
 					}
 					break;
 				case 'DO' :
-					//NumÃ©ro de DOI
+					//Numéro de DOI
 					$doi = $value;
 				default:
 					$data .= '';
@@ -253,18 +281,14 @@ class ris2pmbxml extends convert {
 			  <el>1</el>
 			  <ru>i</ru>\n";	
 		
-		//Soyons sÃ»r que le microtime ne sera plus le mÃªme..
+		//Soyons sûr que le microtime ne sera plus le même..
 		usleep(1);
 		
 		$data.="<f c='001' ind='  '>\n";
 		$data.=htmlspecialchars(microtime(),ENT_QUOTES,$charset);
 		$data.="</f>\n";
 
-		if($infos_isbn){
-			$data.="<f c='010' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($infos_isbn,ENT_QUOTES,$charset)."</s>\n";
-			$data.="</f>\n";
-		}
+		$data.=static::get_converted_field_uni('010', 'a', $infos_isbn);
 	
 		if($titre){
 			$data.="<f c='200' ind='  '>\n";								
@@ -272,11 +296,11 @@ class ris2pmbxml extends convert {
 			if($titre_other) $data.="	<s c='e'>".htmlspecialchars($titre_other,ENT_QUOTES,$charset)."</s>";
 			$data.="</f>\n";
 		}
-		if($editeur_nom || $publication_date || $editeur_ville){
+		if($editeur_nom || !empty($publication_date) || $editeur_ville){
 			$data.="<f c='210' ind='  '>\n";				
 			if($editeur_ville) $data.="	<s c='a'>".htmlspecialchars($editeur_ville,ENT_QUOTES,$charset)."</s>\n";		
 			if($editeur_nom) $data.="	<s c='c'>".htmlspecialchars($editeur_nom,ENT_QUOTES,$charset)."</s>\n";
-			if($publication_date) $data.="	<s c='d'>".htmlspecialchars($publication_date,ENT_QUOTES,$charset)."</s>";	
+			if(!empty($publication_date)) $data.="	<s c='d'>".htmlspecialchars($publication_date,ENT_QUOTES,$charset)."</s>";	
 			$data.="</f>\n";
 		}	
 		if($start_page || $end_page){
@@ -299,24 +323,16 @@ class ris2pmbxml extends convert {
 					if(strlen($note[$i]) > 9000){
 						$word =wordwrap($note[$i],9000,"####");
 						$words = explode("####",$word);
-						for($j=0;$j<count($words);$j++){						
-							$data.="<f c='300' ind='  '>\n";
-							$data.="	<s c='a'>".htmlspecialchars($words[$j],ENT_QUOTES,$charset)."</s>\n";
-							$data.="</f>\n";						
+						for($j=0;$j<count($words);$j++){
+							$data.=static::get_converted_field_uni('300', 'a', $words[$j]);
 						}
 					} else {
-						$data.="<f c='300' ind='  '>\n";
-						$data.="	<s c='a'>".htmlspecialchars($note[$i],ENT_QUOTES,$charset)."</s>\n";
-						$data.="</f>\n";
+						$data.=static::get_converted_field_uni('300', 'a', $note[$i]);
 					}
 				}
 			}	
 		}
-		if($resume){
-			$data.="<f c='330' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($resume,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}		
+		$data.=static::get_converted_field_uni('330', 'a', $resume);
 		if($perio_title){
 			$data.="<f c='461' ind='  '>\n";				
 			$data.="	<s c='t'>".htmlspecialchars($perio_title,ENT_QUOTES,$charset)."</s>\n";	
@@ -354,8 +370,12 @@ class ris2pmbxml extends convert {
 			$aut = explode(", ",array_shift($first_auts));
 			$data.="<f c='700' ind='  '>\n";								
 			$data.="	<s c='a'>".htmlspecialchars($aut[0],ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
-			if($aut[2]) $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+			if (!empty($aut[1])) {
+                $data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
+			}
+			if (!empty($aut[2])) {
+			    $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+			}
 			$data.="</f>\n";
 			if(is_array($first_auts) && count($first_auts)){
 				$autres_auteurs = implode('###',$first_auts).($autres_auteurs? '###' : '').$autres_auteurs;
@@ -395,57 +415,44 @@ class ris2pmbxml extends convert {
 				$aut = explode(", ",$others[$i]);
 				$data.="<f c='701' ind='  '>\n";								
 				$data.="	<s c='a'>".htmlspecialchars($aut[0],ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
-				if($aut[2]) $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+				if (!empty($aut[1])) {
+				    $data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
+				}
+				if (!empty($aut[2])) {
+				    $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+				}
 				$data.="</f>\n";
 			}
 		}
 		if($auteur_secondaire){
 			$secs = explode("###",$auteur_secondaire);
 			for($i=0;$i<count($secs);$i++){
-				$aut = explode(", ",$secs);
+				$aut = explode(", ",$secs[$i]);
 				$data.="<f c='702' ind='  '>\n";								
 				$data.="	<s c='a'>".htmlspecialchars($aut[0],ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
-				if($aut[2]) $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+				if (!empty($aut[1])) {
+				    $data.="	<s c='b'>".htmlspecialchars($aut[1],ENT_QUOTES,$charset)."</s>\n";
+				}
+				if (!empty($aut[2])) {
+				    $data.="	<s c='c'>".htmlspecialchars($aut[2],ENT_QUOTES,$charset)."</s>\n";
+				}
 				$data.="</f>\n";
 			}
 		}
 		
-		if($url){
-			$data.="<f c='856' ind='  '>\n";
-			$data.="	<s c='u'>".htmlspecialchars($url,ENT_QUOTES,$charset)."</s>";
-			$data.="</f>\n";
-		}	
-		if($subtype){
-			$data.="<f c='900' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($subtype,ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='l'>Sub-Type</s>\n";
-			$data.="	<s c='n'>subtype</s>\n";
-			$data.="</f>\n";
-		}
+		$data.=static::get_converted_field_uni('856', 'u', $url);
+		$data.=static::get_converted_field_uni('900', 'a', $subtype, array('l' => 'Sub-Type', 'n' => 'subtype'));
 		if($doi){
 			$doi = trim(str_replace("doi:","",$doi));
-			if($doi){
-				$data.="<f c='900' ind='  '>\n";
-				$data.="	<s c='a'>".htmlspecialchars($doi,ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='l'>DOI</s>\n";
-				$data.="	<s c='n'>cp_doi_identifier</s>\n";
-				$data.="</f>\n";
-			}
+			$data.=static::get_converted_field_uni('900', 'a', $doi, array('l' => 'DOI', 'n' => 'cp_doi_identifier'));
 		}
-		if($pubmedid){	
+		if (!empty($pubmedid)){	
 			$pubmedid = trim(str_replace("PubMed ID:","",$pubmedid));
-			if($pubmedid){	
-				$data.="<f c='900' ind='  '>\n";
-				$data.="	<s c='a'>".htmlspecialchars($pubmedid,ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='l'>PUBMED</s>\n";
-				$data.="	<s c='n'>cp_pubmed_identifier</s>\n";
-				$data.="</f>\n";
-			}
+			$data.=static::get_converted_field_uni('900', 'a', $pubmedid, array('l' => 'PUBMED', 'n' => 'cp_pubmed_identifier'));
 		}
 		$data .= "</notice>\n";
 	
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['WARNING'] = $warning;

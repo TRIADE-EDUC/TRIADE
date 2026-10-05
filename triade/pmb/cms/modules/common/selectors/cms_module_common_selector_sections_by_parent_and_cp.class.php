@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_sections_by_parent_and_cp.class.php,v 1.4 2016-09-21 15:38:44 vtouchard Exp $
+// $Id: cms_module_common_selector_sections_by_parent_and_cp.class.php,v 1.4.20.1 2025/04/16 08:05:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -24,7 +24,7 @@ class cms_module_common_selector_sections_by_parent_and_cp extends cms_module_co
 	
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){
@@ -42,8 +42,10 @@ class cms_module_common_selector_sections_by_parent_and_cp extends cms_module_co
 				if(pmb_mysql_num_rows($result)){
 					while($row = pmb_mysql_fetch_object($result)){
 						$fields->get_values($row->id_section);
-						if(in_array($var->get_value(),$fields->values[$field['field']])){
-							$this->value[] = $row->id_section;
+						if (!empty($fields->values[$field['field']]) && is_array($fields->values[$field['field']])) {
+    						if(in_array($var->get_value(),$fields->values[$field['field']])){
+    							$this->value[] = $row->id_section;
+    						}
 						}
 					}
 				}

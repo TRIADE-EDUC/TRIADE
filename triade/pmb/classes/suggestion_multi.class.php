@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_multi.class.php,v 1.21 2019-05-27 16:11:52 dgoron Exp $
+// $Id: suggestion_multi.class.php,v 1.24.8.1 2025/03/04 15:50:01 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/suggestion_multi.tpl.php");
 require_once($class_path."/suggestions_origine.class.php");
 require_once($class_path."/suggestions.class.php");
@@ -15,36 +16,37 @@ require_once($class_path."/suggestions_unimarc.class.php");
 require_once($class_path."/docs_location.class.php");
 
 class suggestion_multi{
-	
+
 	public $liste_sugg=array();
-	
+
 	/**
 	 * Constructeur
 	 */
 	public function __construct($tableau_sugg=array()){
 		$this->liste_sugg = $tableau_sugg;
 	}
-	
+
 	/**
 	 * Formulaire de saisie des suggestions multiples
 	 */
 	public function display_form(){
-		global $dbh, $multi_sug_form,$charset,$msg, $src_liste;
+		global $multi_sug_form,$charset,$msg, $src_liste;
 		global $PMBusernom;
 		global $PMBuserprenom;
-		global $origine_id, $type_origine, $acquisition_sugg_categ, $acquisition_sugg_localises;
-		
+		global $origine_id, $type_origine, $acquisition_sugg_categ, $acquisition_sugg_localises, $sugg_location_id;
+
 		$req = "select * from suggestions_source order by libelle_source";
-		$res= pmb_mysql_query($req,$dbh);
+		$res= pmb_mysql_query($req);
 		$option = "<option value='0' selected>".htmlentities($msg['acquisition_sugg_no_src'],ENT_QUOTES,$charset)."</option>";
 		$select="";
 		while(($src=pmb_mysql_fetch_object($res))){
 			$select = ($src_liste == $src->id_source ? "selected" : "");
 			$option .= "<option value='".$src->id_source."' $select >".htmlentities($src->libelle_source,ENT_QUOTES,$charset)."</option>";
-		}	
+		}
+		$ligne = "";
 		if(!$this->liste_sugg){
-			$multi_sug_form = str_replace("!!max_lignes!!","1",$multi_sug_form);	
-			$ligne = "<tr id='sugg_0'>
+			$multi_sug_form = str_replace("!!max_lignes!!","1",$multi_sug_form);
+			$ligne .= "<tr id='sugg_0'>
 					<td><input type='text' name='sugg_tit_0' id='sugg_tit_0' value='' disabled /></td>
 					<td><input type='text' name='sugg_aut_0' id='sugg_aut_0' value='' disabled /></td>
 					<td><input type='text' name='sugg_edi_0' id='sugg_edi_0' value='' disabled /></td>
@@ -63,7 +65,7 @@ class suggestion_multi{
 					<td id='act_btn_0'><input type='button' class='bouton' name='add_line_0' id='add_line_0' value='+' onclick=\"add_line(0);\"/></td>
 				</tr>";
 		} else {
-			$multi_sug_form = str_replace("!!max_lignes!!",count($this->liste_sugg),$multi_sug_form);	
+			$multi_sug_form = str_replace("!!max_lignes!!",count($this->liste_sugg),$multi_sug_form);
 			for($i=0;$i<=count($this->liste_sugg);$i++){
 				if($this->liste_sugg[$i]){
 					$ligne .= "<tr id='sugg_$i'>
@@ -82,41 +84,41 @@ class suggestion_multi{
 							</select>
 						</td>
 						<td><input type='text' name='sugg_qte_$i' id='sugg_qte_$i' value='1' /></td>";
-					
-					if($i==count($this->liste_sugg)){	
+
+					if($i==count($this->liste_sugg)){
 						$ligne .= "<td id='act_btn_$i'><input type='button' class='bouton' name='add_line_$i' id='add_line_$i' value='+' onclick=\"add_line($i);\"/></td>";
-					} else { 	
+					} else {
 						$ligne .= "<td id='act_btn_$i'><input type='button' class='bouton' name='del_line_$i' id='del_line_$i' value='X' onclick=\"del_line($i);\"/></td>";
 					}
-					
-					if($this->liste_sugg[$i]['id_uni']) 
+
+					if($this->liste_sugg[$i]['id_uni'])
 						$ligne .= "<input type='hidden' name='id_unimarc_$i' id='id_unimarc_$i' value='".$this->liste_sugg[$i]['id_uni']."'/> ";
-					
+
 					$ligne .= "</tr>";
-				}					
+				}
 			}
 		}
 		$multi_sug_form = str_replace('!!ligne!!',$ligne,$multi_sug_form);
-		
+
 		if(!$origine_id){
 			$multi_sug_form = str_replace('!!id_user!!',SESSuserid,$multi_sug_form);
-			$multi_sug_form = str_replace('!!type_user!!',0,$multi_sug_form);				
+			$multi_sug_form = str_replace('!!type_user!!',0,$multi_sug_form);
 			$multi_sug_form = str_replace('!!user_txt!!',$PMBusernom.", ".$PMBuserprenom,$multi_sug_form);
 		} else  {
 			$multi_sug_form = str_replace('!!id_user!!',$origine_id,$multi_sug_form);
 			$multi_sug_form = str_replace('!!type_user!!',$type_origine,$multi_sug_form);
-			
+
 			if($type_origine)
 				$req = "select concat(empr_prenom,' ',empr_nom) as nom from empr where id_empr='".$origine_id."'";
 			 else $req = "select concat(prenom,' ',nom) as nom from users where userid='".$origine_id."'";
-			$res = pmb_mysql_query($req,$dbh);
-			$empr = pmb_mysql_fetch_object($res); 
+			$res = pmb_mysql_query($req);
+			$empr = pmb_mysql_fetch_object($res);
 			$multi_sug_form = str_replace('!!user_txt!!',$empr->nom,$multi_sug_form);
 		}
-		
+
 		//Selecteur Affecter a une categorie
-		if ($acquisition_sugg_categ == '1' ) { 		
-			$sel_categ = "<label class='etiquette' >".htmlentities($msg['acquisition_sug_sel_categ'],ENT_QUOTES, $charset)."</label>&nbsp;";		
+		if ($acquisition_sugg_categ == '1' ) {
+			$sel_categ = "<label class='etiquette' >".htmlentities($msg['acquisition_sug_sel_categ'],ENT_QUOTES, $charset)."</label>&nbsp;";
 			$tab_categ = suggestions_categ::getCategList();
 			$sel_categ.= "<select class='saisie-25em' id='num_categ' name='num_categ'>";
 			$sel_categ.= "<option value='-1'>".htmlentities($msg['acquisition_sug_tous'],ENT_QUOTES, $charset)."</option>";
@@ -139,26 +141,25 @@ class suggestion_multi{
 		} else {
 			$list_locs='';
 		}
-				
+
 		$multi_sug_form = str_replace('!!categorie!!',$sel_categ,$multi_sug_form);
 		$multi_sug_form = str_replace('!!localisation!!',$list_locs,$multi_sug_form);
-		return $multi_sug_form;		
+		return $multi_sug_form;
 	}
-	
+
 	/**
 	 * Enregistrement de la suggestion multiple
 	 */
 	public function save(){
-		
-		global $dbh, $max_nblignes, $msg, $id_user, $type_user, $sugg_location_id, $num_categ;
-		
+		global $max_nblignes, $msg, $id_user, $type_user, $sugg_location_id, $num_categ;
+
 		for($i=0;$i<$max_nblignes;$i++){
 			$tit = "sugg_tit_".$i;	$aut = "sugg_aut_".$i;	$edi = "sugg_edi_".$i;
 			$code = "sugg_code_".$i; $prix = "sugg_prix_".$i; $com = "sugg_com_".$i; $com_gestion = "sugg_com_gestion_".$i;
 			$url = "sugg_url_".$i; $qte = "sugg_qte_".$i; $src = "sugg_src_".$i;
 			$date = "sugg_date_".$i; $unimarc = "id_unimarc_".$i;
 			global ${$tit}, ${$aut}, ${$edi}, ${$code}, ${$com}, ${$com_gestion}, ${$prix}, ${$url}, ${$qte}, ${$src}, ${$date}, ${$unimarc};
-			
+
 			if(isset(${$tit})){
 				if(!is_numeric(${$qte})){
 					print "<strong>".$msg['acquisition_sugg_qte_error']."</strong>";
@@ -168,7 +169,7 @@ class suggestion_multi{
 					return;
 				} else if(!suggestions::exists($id_user,${$tit},${$aut},${$edi},${$code})) {
 					${$prix} = str_replace(',','.',${$prix});
-					$req="insert into suggestions set 
+					$req="insert into suggestions set
 							titre='".${$tit}."',
 							auteur='".${$aut}."',
 							editeur='".${$edi}."',
@@ -176,6 +177,7 @@ class suggestion_multi{
 							prix='".${$prix}."',
 							commentaires='".${$com}."',
 							commentaires_gestion='".${$com_gestion}."',
+							index_suggestion = ' ".strip_empty_words(${$tit})." ".strip_empty_words(${$edi})." ".strip_empty_words(${$aut})." ".${$code}." ".strip_empty_words(${$com})." ".strip_empty_words(${$com_gestion})." ',
 							url_suggestion='".${$url}."',
 							nb='".${$qte}."',
 							sugg_source='".${$src}."',
@@ -185,40 +187,62 @@ class suggestion_multi{
 							num_categ='".$num_categ."',
 							sugg_location='".$sugg_location_id."'
 							";
-					
+
 					if(${$unimarc}){
 						$uni = new suggestions_unimarc(${$unimarc});
-						$req .= ", notice_unimarc ='".addslashes($uni->sugg_uni_notice)."'";							
-					} 
-					pmb_mysql_query($req,$dbh);
+						$req .= ", notice_unimarc ='".addslashes($uni->sugg_uni_notice)."'";
+					}
+					pmb_mysql_query($req);
 					$num_suggestion = pmb_mysql_insert_id();
-					
-					if (is_object($uni)) $uni->delete();
-						
+
+					if (isset($uni) && is_object($uni)) $uni->delete();
+
 					$sug_orig = new suggestions_origine($id_user, $num_suggestion);
 					$sug_orig->type_origine = $type_user;
 					$sug_orig->save();
-					
+
 				print "<b>".$msg['acquisition_sugg_ok']."</b>";
 				} else {
 					print "<b>".$msg['acquisition_sugg_already_exist']."</b>";
-				}				
+				}
 			}
 		}
 	}
-	
+
 	public function traite_notice($notice_iso2709,$n_notice) {
 		$notice=new iso2709_notices($notice_iso2709);
 		$n_notice--;
 		if (!$notice->error) {
-			$this->liste_sugg[$n_notice]['code'] = ($notice->fields['010'][0]['a'][0] ? $notice->fields['010'][0]['a'][0] : $notice->fields['011'][0]['a'][0] );
+			$this->liste_sugg[$n_notice]['code'] = (!empty($notice->fields['010'][0]['a'][0]) ? $notice->fields['010'][0]['a'][0] : $notice->fields['011'][0]['a'][0] );
 			$this->liste_sugg[$n_notice]['prix'] = $notice->fields['010'][0]['d'][0];
 			$this->liste_sugg[$n_notice]['titre'] = $notice->fields['200'][0]['a'][0];
-			$this->liste_sugg[$n_notice]['editeur'] = $notice->fields['210'][0]['a'][0];
-			$this->liste_sugg[$n_notice]['date']= $notice->fields['210'][0]['d'][0];
-			$this->liste_sugg[$n_notice]['auteur'] = ( $notice->fields['700'][0]['a'][0] ? $notice->fields['700'][0]['a'][0] : ($notice->fields['710'][0]['a'][0] ? $notice->fields['710'][0]['a'][0] :  $notice->fields['701'][0]['a'][0].", ".$notice->fields['701'][0]['b'][0])) ;
-			$this->liste_sugg[$n_notice]['url'] = $notice->fields['856'][0]['u'][0];	
-			
+			if(!empty($notice->fields['214'][0]['c'][0])) {
+				$this->liste_sugg[$n_notice]['editeur'] = $notice->fields['214'][0]['c'][0];
+				if(!empty($notice->fields['214'][0]['a'][0])) {
+					$this->liste_sugg[$n_notice]['editeur'] .= ", ".$notice->fields['214'][0]['a'][0];
+				}
+			} else {
+				$this->liste_sugg[$n_notice]['editeur'] = $notice->fields['210'][0]['c'][0];
+				if(!empty($notice->fields['210'][0]['a'][0])) {
+					$this->liste_sugg[$n_notice]['editeur'] .= ", ".$notice->fields['210'][0]['a'][0];
+				}
+			}
+			if(!empty($notice->fields['214'][0]['d'][0])) {
+				$this->liste_sugg[$n_notice]['date'] = $notice->fields['214'][0]['d'][0];
+			} else {
+				$this->liste_sugg[$n_notice]['date'] = $notice->fields['210'][0]['d'][0];
+			}
+			if(!empty($notice->fields['700'][0]['a'][0])) {
+				$this->liste_sugg[$n_notice]['auteur'] = $notice->fields['700'][0]['a'][0].", ".$notice->fields['700'][0]['b'][0];
+			} elseif(!empty($notice->fields['710'][0]['a'][0])) {
+				$this->liste_sugg[$n_notice]['auteur'] = $notice->fields['710'][0]['a'][0].", ".$notice->fields['710'][0]['b'][0];
+			} elseif(!empty($notice->fields['701'][0]['a'][0])) {
+				$this->liste_sugg[$n_notice]['auteur'] = $notice->fields['701'][0]['a'][0].", ".$notice->fields['701'][0]['b'][0];
+			} else {
+				$this->liste_sugg[$n_notice]['auteur'] = '';
+			}
+			$this->liste_sugg[$n_notice]['url'] = $notice->fields['856'][0]['u'][0];
+
 			//Enregistrement de la suggestion unimarc
 			$uni = new suggestions_unimarc();
 			$uni->sugg_uni_notice = $notice_iso2709;
@@ -226,45 +250,46 @@ class suggestion_multi{
 			$uni->sugg_uni_origine = $this->ori_unimarc;
 			$uni->save();
 			$this->liste_sugg[$n_notice]['id_uni'] = $uni->sugg_uni_id;
+		} else {
+			PHP_log::register(PHP_log::prepare($_FILES["import_file"]["name"]), $notice->error_message);
 		}
 	}
-	
+
 	public function create_table_from_uni() {
-		global $charset,$file_in,$suffix;
-		
+		global $file_in,$suffix;
+
 		//Lecture des notices
 		if(!$suffix)
 			$fp=@fopen("temp/$file_in","r");
-		else 
+		else
 			$fp=@fopen("temp/$file_in.$suffix~","r");
 		if ($fp) {
 			$n=1;
-			$car=0x1d;
 			$i=false;
 			$notice="";
 			$notices="";
 			$this->ori_unimarc = microtime()."_unimulti";
 			while (!feof($fp)) {
 				$notices.=fread($fp,4096);
-				$i=strpos($notices,$car);
+				$i=strpos($notices,chr(0x1d));
 				while ($i!==false) {
 					$notice=substr($notices,0,$i+1);
 					$this->traite_notice($notice,$n);
 					$n++;
 					$notices=substr($notices,$i+1);
-					$i=strpos($notices,$car);
+					$i=strpos($notices,chr(0x1d));
 				}
 			}
 			if ($notices!="") {
 				$notice=$notices;
-				$this->traite_notice($notice);
+				$this->traite_notice($notice,$n);
 				$n++;
-			}	
+			}
 		}
 		fclose($fp);
 		if(!$suffix)
 			unlink("temp/$file_in");
-		else 
+		else
 			unlink("temp/$file_in.$suffix~");
 	}
 }

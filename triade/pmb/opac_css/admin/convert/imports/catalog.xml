@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: catalog.xml,v 1.13 2017-09-18 10:05:21 jpermanne Exp $ -->
+<!-- $Id: catalog.xml,v 1.13 2017/09/18 10:05:21 jpermanne Exp $ -->
 <catalog>
 	<item name="Base PMB -&gt; pmb-XML MARC" path="equi" export="yes" exportname="UNIMARC PMB XML" visible="no"/>
 	<item name="Base PMB -&gt; UNIMARC Bretagne" path="pmb2bretagne" export="yes" exportname="UNIMARC Bretagne" visible="no"/>

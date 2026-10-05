@@ -1,15 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: quick_access.class.php,v 1.1 2018-04-25 10:36:19 dgoron Exp $
+// $Id: quick_access.class.php,v 1.10 2024/03/13 15:25:24 pmallambic Exp $
+
+use Pmb\MFA\Controller\MFAServicesController;
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class quick_access {
     
 	public static function get_selector() {
-		global $msg;
+		global $msg, $charset;
 		global $allow_loan, $allow_loan_hist;
 		global $allow_book, $opac_resa;
 		global $opac_dsi_active, $allow_dsi, $allow_dsi_priv;
@@ -20,9 +22,11 @@ class quick_access {
 		global $opac_scan_request_activate, $allow_scan_request;
 		global $opac_contribution_area_activate, $allow_contribution;
 		global $opac_quick_access_logout;
+		global $allow_pnb, $animations_active, $security_mfa_active;
 		
 	    $selector = "
-	    <select name='empr_quick_access' onchange='if (this.value) window.location.href=this.value'>
+		<label for='empr_quick_access' class='visually-hidden'>".htmlentities($msg["empr_quick_access"],ENT_QUOTES,$charset)."</label>
+	    <select id='empr_quick_access' name='empr_quick_access' onchange='if (this.value) window.location.href=this.value'>
 			<option value=''>".$msg["empr_quick_access"]."</option>
 			<option value='empr.php'>".$msg["empr_my_account"]."</option>";
 		if ($allow_loan || $allow_loan_hist) {
@@ -50,8 +54,24 @@ class quick_access {
 			$selector .= "<option value='empr.php?tab=scan_requests&lvl=scan_requests_list' class='empr_quick_access_scan_requests'>".$msg["empr_menu_scan_requests"]."</option>";
 		}
 		if ($opac_contribution_area_activate && $allow_contribution) {
-			$selector  .= "<option value='empr.php?tab=contribution_area&lvl=contribution_area_list' class='empr_quick_access_contribution_area'>" . $msg["empr_menu_contribution_area"] . "</option>";
+			$selector .= "<option value='empr.php?tab=contribution_area&lvl=contribution_area_list' class='empr_quick_access_contribution_area'>" . $msg["empr_menu_contribution_area"] . "</option>";
 		}
+		if ($allow_pnb) {
+			$selector .= "<option value='empr.php?tab=pnb&lvl=pnb_devices' class='empr_quick_access_pnb'>" . $msg['empr_menu_pnb']. "</option>";
+		}
+		if ($animations_active) {
+	        $selector .= "<option value='empr.php?tab=animations&lvl=animations_list' class='empr_quick_access_animations'>" . $msg['empr_menu_animations'] . "</option>";
+		}
+		if ($security_mfa_active) {
+		    $mfa_service = (new MFAServicesController())->getData("OPAC");
+			if($mfa_service->application) {
+				$selector .= "<option value='empr.php?tab=mfa&lvl=mfa_initialization' class='empr_quick_access_mfa'>" . $msg['empr_menu_mfa'] . "</option>";
+			}
+		}
+		
+		// En cour de Dev
+	    // $selector .= "<option value='empr.php?tab=payments&lvl=payments_list' class='empr_quick_access_payment'>" . $msg['empr_menu_payment'] . "</option>";
+	    
 		if($opac_quick_access_logout){			
 			$selector .= "<option value='index.php?logout=1'>".$msg["empr_logout"]."</option>";
 		}

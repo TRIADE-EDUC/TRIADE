@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_concept_ui.class.php,v 1.47 2019-05-29 14:06:42 tsamson Exp $
+// $Id: onto_skos_concept_ui.class.php,v 1.52 2022/10/31 10:24:49 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path.'/templates/onto/skos/onto_skos_concept_ui.tpl.php');
 require_once($class_path.'/authorities_statuts.class.php');
 
 class onto_skos_concept_ui extends onto_common_ui{
 	
 	/**
-	 * Retourne la liste hierarchisÃ©e en provenance du controler instanciÃ©
+	 * Retourne la liste hierarchisée en provenance du controler instancié
 	 *
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
@@ -37,7 +38,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 // 					break;
 // 			}
 // 		}
-// 		//@todo : ajouter une factory pour dÃ©terminer quelle liste remonter?
+// 		//@todo : ajouter une factory pour déterminer quelle liste remonter?
 		
 // 		if($this->)
 		
@@ -58,10 +59,10 @@ class onto_skos_concept_ui extends onto_common_ui{
 	 * @return string $selector
 	 */
 	public static function get_scheme_list_selector($controler,$params,$empty=false,$onchange='',$name='',$id='',$multiple=false){
-		global $msg,$charset,$lang,$base_path,$ontology_tpl;
+		global $msg,$charset,$lang,$ontology_tpl;
 		if($params->action=='list_selector'){
 			$list=$controler->get_scheme_list();
-			if($params->unique_scheme && $params->concept_scheme[0] != -1){
+			if(!empty($params->unique_scheme) && $params->concept_scheme[0] != -1){
 			    return "<input type='hidden' name='".$name.($multiple ? "[]" : "")."' value='".$params->concept_scheme[0]."' />";
 			}
 			
@@ -81,7 +82,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 			$option= str_replace("!!scheme_list_selector_options_selected!!", $selected, $option);
 			$selector_options.=$option;
 			
-			// Ajout de l'option "Sans schÃ©ma"
+			// Ajout de l'option "Sans schéma"
 			$option = $ontology_tpl['scheme_radio_selector'];
 			$option = str_replace("!!scheme_list_selector_options_value!!",'0' , $option);
 			$option = str_replace("!!scheme_list_selector_options_label!!", $msg["onto_skos_concept_no_scheme"], $option);
@@ -149,7 +150,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 			$option= str_replace("!!scheme_list_selector_options_selected!!", $selected, $option);
 			$selector_options.=$option;
 			
-			// Ajout de l'option "Sans schÃ©ma"
+			// Ajout de l'option "Sans schéma"
 			$option=$ontology_tpl['scheme_list_selector_option'];
 			$option= str_replace("!!scheme_list_selector_options_value!!",'0' , $option);
 			$option= str_replace("!!scheme_list_selector_options_label!!", $msg["onto_skos_concept_no_scheme"], $option);
@@ -201,7 +202,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 		$breadcrumb=$controler->handle_breadcrumb();
 		$return='';
 		if(is_array($breadcrumb) && count($breadcrumb)) {
-			foreach($breadcrumb as $key=>$parent_id){
+			foreach($breadcrumb as $parent_id){
 				if($return){
 					$return.=' > ';
 				}
@@ -243,7 +244,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 		$form = str_replace('<!-- imprimer_concepts -->', $lien_imprimer_concepts, $form);
 		
 		$form = str_replace('!!skos_concept_search_form_title!!', $title, $form);
-		$form = str_replace('<!-- sel_authority_statuts -->', authorities_statuts::get_form_for(AUT_TABLE_CONCEPT, ($authority_statut+0), true), $form);
+		$form = str_replace('<!-- sel_authority_statuts -->', authorities_statuts::get_form_for(AUT_TABLE_CONCEPT, intval($authority_statut), true), $form);
 		$form = str_replace('!!skos_concept_search_form_selector!!', self::get_scheme_list_selector($controler, $params,false,$onchange_scheme_list_selector,$name_scheme_list_selector,$id_scheme_list_selector), $form);
 		
 		$onchange_only_top_concepts = '';
@@ -273,7 +274,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 	}
 	
 	/**
-	 * Renvoie l'affichage html de la liste hierarchisÃ©e
+	 * Renvoie l'affichage html de la liste hierarchisée
 	 * 
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
@@ -287,9 +288,14 @@ class onto_skos_concept_ui extends onto_common_ui{
 		} else {
 			$elements = $controler->get_last_elements();
 		}
-		$list="<h3>".$elements['nb_total_elements']." ".$msg['onto_skos_concept_nb_results'] . "</h3>!!caddie_link!!" . $ontology_tpl['skos_concept_list'];
- 		$list=str_replace("!!list_header!!", htmlentities($msg['103'],ENT_QUOTES,$charset), $list);
- 		$list=str_replace("!!list_header_utilisation!!", htmlentities($msg['voir_notices_assoc'],ENT_QUOTES,$charset), $list);
+		$list = "<h3>".$elements['nb_total_elements']." ".$msg['onto_skos_concept_nb_results'] . "</h3>!!caddie_link!! !!sort_link!!" . $ontology_tpl['skos_concept_list'];
+		if (!empty($params->user_input) && $params->user_input != "*" && $params->sub == "concept") {
+		    $list = str_replace("!!sort_link!!",  entities_authorities_controller::get_sort_link($elements['nb_total_elements'], "concepts"), $list);
+		} else {
+		    $list = str_replace("!!sort_link!!",  "", $list);
+		}
+ 		$list = str_replace("!!list_header!!", htmlentities($msg['103'], ENT_QUOTES, $charset), $list);
+ 		$list = str_replace("!!list_header_utilisation!!", htmlentities($msg['voir_notices_assoc'], ENT_QUOTES, $charset), $list);
 		
 		$list_content='';
 		foreach($elements['elements'] as $uri => $item){
@@ -310,8 +316,8 @@ class onto_skos_concept_ui extends onto_common_ui{
  			    while(($controler->has_broader($current, $params))){
  			        $broaders = $controler->get_broaders($current, $params);
 			        if(count($broaders)>1){
-			            //LE cas oÃ¹ il y a plusieurs parents dans le mÃªme schÃ©ma
-			            // onregarde du cotÃ© de la session pour voir si on retrouve une navigation prÃ©alable
+			            //LE cas où il y a plusieurs parents dans le même schéma
+			            // onregarde du coté de la session pour voir si on retrouve une navigation préalable
 			            // sinon, on prend le premier !
 			            
 			            if(isset($_SESSION['breadcrumb'])){
@@ -376,7 +382,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 				
 			}
 			
-			$line=str_replace("!!list_line_nb_utilisations!!", count($concept->get_indexed_notices()), $line);
+			$line=str_replace("!!list_line_nb_utilisations!!", $concept->get_nb_indexed_entities(), $line);
 			$line=str_replace("!!list_line_nb_utilisations_href!!", $base_path."/catalog.php?categ=search&mode=0&etat=aut_search&aut_type=concept&aut_id=".$id, $line);
 			
 			$list_content.=$line;
@@ -389,7 +395,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 	}
 	
 	/**
-	 * Renvoie l'affichage html de la liste pour le selecteur d'autoritÃ©
+	 * Renvoie l'affichage html de la liste pour le selecteur d'autorité
 	 *
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
@@ -426,8 +432,8 @@ class onto_skos_concept_ui extends onto_common_ui{
 				
 				$current_element_form = str_replace("!!caller!!", $params->caller, $current_element_form);
 				$current_element_form = str_replace("!!element!!", $params->element, $current_element_form);
-				$current_element_form = str_replace("!!order!!", $params->order, $current_element_form);
-				if($params->return_concept_id){
+				$current_element_form = str_replace("!!order!!", (!empty($params->order) ? $params->order : 0), $current_element_form);
+				if(!empty($params->return_concept_id)){
 					$current_element_form = str_replace("!!uri!!", onto_common_uri::get_id($uri), $current_element_form);
 				}else{
 					$current_element_form = str_replace("!!uri!!", $uri, $current_element_form);
@@ -442,7 +448,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 				$infobulle_libelle = "";
 				if ($controler->has_broader($uri,$params)) {
 					$parents = $controler->get_broaders($uri,$params);
-					if ($parents[0]["id"]){
+					if (!empty($parents[0]["id"])) {
 						$infobulle_libelle .= $msg["onto_skos_concept_broader"]." ".$parents[0]["label"].". ";
 					}
 				} 				
@@ -469,6 +475,8 @@ class onto_skos_concept_ui extends onto_common_ui{
 		
 		if($params->objs){
 			$property=$controler->get_onto_property_from_pmb_name($params->objs);
+			// AR - 31/10/22 Pas d'ordre naturel à  la lecture de l'ontologie, donc on trie arbitrairement pour garantir une cohérence dans les ids d'onglets
+			sort($property->range);
 			$element = $property->range[$params->range];
 		}else {
 			$property=null;
@@ -500,7 +508,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 		$onchange_scheme_list_selector = '';
 		$name_scheme_list_selector='concept_scheme';
 		$id_scheme_list_selector='id_concept_scheme';
-		$form=str_replace('<!-- sel_authority_statuts -->', authorities_statuts::get_form_for(AUT_TABLE_CONCEPT, ($authority_statut+0), true), $form);
+		$form=str_replace('<!-- sel_authority_statuts -->', authorities_statuts::get_form_for(AUT_TABLE_CONCEPT, intval($authority_statut), true), $form);
 		$form=str_replace('!!skos_concept_search_form_selector!!', self::get_scheme_list_selector($controler, $params,false,$onchange_scheme_list_selector,$name_scheme_list_selector,$id_scheme_list_selector), $form);
 
 		$onchange_only_top_concepts = '';
@@ -516,7 +524,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 		$form.= $jscript;
 		
 		$button_add = '';
-		if($params->bt_ajouter != 'no') {
+		if(!empty($params->bt_ajouter) && $params->bt_ajouter != 'no') {
 			//ajout d'un nouveau concept
 			$button_add = $ontology_tpl['skos_concept_selector_search_form_add'];
 			if(isset($msg['onto_'.$controler->get_onto_name().'_add_concept'])){
@@ -541,7 +549,7 @@ class onto_skos_concept_ui extends onto_common_ui{
 		$breadcrumb=$controler->handle_breadcrumb();
 		$return='';
 		if(is_array($breadcrumb) && count($breadcrumb)) {
-			foreach($breadcrumb as $key=>$parent_id){
+			foreach($breadcrumb as $parent_id){
 				if($return){
 					$return.=' > ';
 				}

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,6 +27,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_note.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
@@ -61,26 +63,24 @@ $cl=chercheClasse_nom($saisie_classe);
 	$ideleve2=$data[0][4];
 
 ?>
-<br><br>
-<table border=0 align=center >
-<tr><td align=right><font class='T2'>&nbsp;&nbsp;<?php print LANGPROFP14 ?> 1 : <?php print "<font class=T1>Parent de </font>" ?></font></td>
-<td><b><?php print rechercheEleveNomPrenom($idparent1) ?></b></td></tr>
-
-<tr><td align=center colspan=2  >&nbsp;</td></tr>
-<tr><td align=right><font class='T2'>&nbsp;&nbsp;<?php print LANGPROFP14 ?> 2 : <?php print "<font class=T1>Parent de </font>" ?> </font></td>
-<td><b><?php print rechercheEleveNomPrenom($idparent2) ?></b></td></tr>
-
-<tr><td align=center colspan=2  >&nbsp;</td></tr>
-<tr><td align=right><font class='T2'>&nbsp;&nbsp;<?php print LANGPROFP16 ?> 1 : </font><?php print "<font class=T1>Elève </font>" ?></td>
-<td><b><?php print rechercheEleveNomPrenom($ideleve1) ?></b></td></tr>
-
-<tr><td align=center colspan=2  >&nbsp;</td></tr>
-<tr><td align=right><font class='T2'>&nbsp;&nbsp;<?php print LANGPROFP16 ?> 2 : </font><?php print "<font class=T1>Elève </font>" ?></td>
-<td><b><?php print rechercheEleveNomPrenom($ideleve2) ?></b></td></tr>
-
-
-</table>
-<br>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFP14 ?> 1 :</span>
+    <span><i style="font-size:11px;color:#555;">Parent de</i> <b><?php print rechercheEleveNomPrenom($idparent1) ?></b></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFP14 ?> 2 :</span>
+    <span><i style="font-size:11px;color:#555;">Parent de</i> <b><?php print rechercheEleveNomPrenom($idparent2) ?></b></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFP16 ?> 1 :</span>
+    <span><i style="font-size:11px;color:#555;">Elève</i> <b><?php print rechercheEleveNomPrenom($ideleve1) ?></b></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFP16 ?> 2 :</span>
+    <span><i style="font-size:11px;color:#555;">Elève</i> <b><?php print rechercheEleveNomPrenom($ideleve2) ?></b></span>
+  </div>
+</div>
      <!-- // fin  -->
      </td></tr></table>
      <?php

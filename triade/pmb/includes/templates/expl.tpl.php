@@ -2,13 +2,13 @@
 // +-------------------------------------------------+
 // ? 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl.tpl.php,v 1.94 2019-05-27 13:19:54 ngantier Exp $
+// $Id: expl.tpl.php,v 1.104.4.1 2025/05/30 12:00:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $cb, $id, $expl_new, $msg, $current_module, $expl_script, $antivol_form, $pmb_rfid_driver, $pmb_rfid_serveur_url, $expl_form, $charset, $expl_msg_form, $expl_pointage_base, $expl_pointage, $expl_cb_tmpl, $expl_cb_tmpl_recep, $expl_cb_retour_tmpl, $expl_pret, $expl_view_form, $expl_create_update_date_form, $expl_create_update_date_form, $expl_filing_return_date_form;
+global $cb, $id, $expl_new, $msg, $current_module, $expl_script, $antivol_form, $expl_form, $charset, $expl_pointage_base, $expl_pointage, $expl_cb_tmpl, $expl_cb_tmpl_recep, $expl_cb_retour_tmpl, $expl_pret, $expl_view_form, $expl_create_update_date_form, $expl_create_update_date_form, $expl_filing_return_date_form;
 global $pmb_antivol;
-global $pmb_rfid_activate;
+global $pmb_rfid_activate, $pmb_rfid_driver, $pmb_rfid_serveur_url, $rfid_js_header;
 global $pmb_numero_exemplaire_auto;
 global $PMBuserid;
 global $pmb_form_expl_editables;
@@ -67,7 +67,7 @@ $expl_new = "
 </script>
 ";
  
-// $expl_script : vÃ©rification du formulaire
+// $expl_script : vérification du formulaire
 $expl_script = "
 <script type='text/javascript'>
 <!--
@@ -139,7 +139,21 @@ if ($pmb_rfid_activate==1 && $pmb_rfid_serveur_url ) {
 // $expl_form :form de saisie/modif exemplaire
 $expl_form =jscript_unload_question();
 
+$js_script_check_perso = "";
+$js_script_import_perso = "";
+global $pmb_expl_verif_js, $base_path;
+if (!empty($pmb_expl_verif_js)) {
+    $js_script_import_perso = "<script type='text/javascript' src='$base_path/javascript/$pmb_expl_verif_js'></script>";
+    $js_script_check_perso = "
+        if(typeof check_perso_form == 'function'){
+			var check = check_perso_form(form);
+			if (check == false) return false;
+		}
+    ";
+}
+
 $expl_form.="
+$js_script_import_perso
 $rfid_script_catalog
 <script type='text/javascript'>
 	require(['dojo/ready', 'apps/pmb/gridform/FormEdit'], function(ready, FormEdit){
@@ -151,7 +165,10 @@ $rfid_script_catalog
 <script type='text/javascript'>
 <!--
 	function test_form(form) {
+        $js_script_check_perso
+
 		!!questionrfid!!
+
 		if((form.f_ex_cb.value.replace(/^\s+|\s+$/g, '').length == 0) || (form.f_ex_cote.value.replace(/^\s+/g, '').replace(/\s+$/g,'').length == 0)) {
 			alert(\"$msg[304]\");
 			return false;
@@ -330,50 +347,18 @@ $expl_form.="</div>
 </form>
 <script type='text/javascript' src='./javascript/ajax.js' ></script>
 <script type=\"text/javascript\">
-	document.forms['expl'].elements['f_ex_cote'].focus();
+    var dom_node_f_ex_cote = document.forms['expl'].elements['f_ex_cote']; 
+	dom_node_f_ex_cote.focus();
+    if(dom_node_f_ex_cote.value.length) {
+        dom_node_f_ex_cote.setSelectionRange(dom_node_f_ex_cote.value.length, dom_node_f_ex_cote.value.length);
+    }
 	ajax_parse_dom();
 </script>
 ";
 
-// template pour le form de saisie du message
-$expl_msg_form = "
-<h1>$msg[377]</h1>
-<form class='form-$current_module' name='msg_form' method='post' action='./circ.php?categ=note_ex&cb=".rawurlencode(stripslashes($cb))."&id=$id&action=submit'>
-<div class='row'>
-	<h3>!!notice!!</h3>
-</div>
-<div class='row'>
-	<b>$msg[232] : <strong>".stripslashes($cb)."</strong></b>
-</div>
-<div class='form-contenu'>
-	<!-- notes -->
-	<div class='row'>
-		<label class='etiquette' for='message_content'>$msg[expl_message]</label>
-	</div>
-	<div class='row'>
-		<textarea name='message_content' id='message_content' class='saisie-80em'>!!message!!</textarea>
-	</div>
-	<div class='row'>
-		<label class='etiquette' for='f_ex_comment'>$msg[expl_zone_comment]</label>
-	</div>
-	<div class='row'>
-		<textarea name='f_ex_comment' id='f_ex_comment' class='saisie-80em'>!!comment!!</textarea>
-	</div>
-</div>
-<div class='row'>
-	<input class='bouton' type='button' value='$msg[76]' onClick=\"document.location='./circ.php?categ=visu_ex&form_cb_expl=".$cb."'\" />
-	<input class='bouton' type='submit' value='$msg[77]' />
-</div>
-</form>
-<script type='text/javascript'>
-<!--
-	document.forms['msg_form'].elements['message_content'].focus();	
--->
-</script> 
-";
-
 //	$expl_pointage_base : ecran de pointage des exemplaires apres import
 $expl_pointage_base = "
+<script type='text/javascript' src='".$base_path."/javascript/expl_list.js'></script>
 <script type='text/javascript'>
 <!--
 	function test_noex(soumission) {
@@ -386,6 +371,17 @@ $expl_pointage_base = "
 		}
 		document.forms['pointage_expl'].noex.value = document.forms['pointage_expl'].noex.value.replace(/ /g, '');
 		document.forms['pointage_expl'].submit();
+		return false;
+	}
+	function pointage_refresh_sections_from_location(location) {
+		var num_location = location.value;
+		var is_visible = is_visible_section_from_location(document.getElementById('book_section_id'), num_location);
+		if(is_visible || confirm(parent.pmbDojo.messages.getMessage('pointage', 'pointage_expl_sections_refresh'))) { 
+			refresh_sections_from_location(document.getElementById('book_section_id'), num_location, is_visible);
+			pointage_expl_current_location = num_location;
+			return true;
+		}
+		location.value = pointage_expl_current_location;
 		return false;
 	}
 -->
@@ -410,17 +406,17 @@ $expl_pointage_base = "
 			</div>
 		</div>
 		<div class='colonne4'>
-			<!-- section -->
-			<label class='etiquette' for='f_ex_section'>$msg[295]</label>
-			<div class='row'>
-				!!book_section_id!!
-			</div>
-		</div>
-		<div class='colonne_suite'>
 			<!-- localisation -->
 			<label class='etiquette' for='f_ex_location'>$msg[298]</label>
 			<div class='row'>
 				!!book_location_id!!
+			</div>
+		</div>
+		<div class='colonne_suite'>
+			<!-- section -->
+			<label class='etiquette' for='f_ex_section'>$msg[295]</label>
+			<div class='row'>
+				!!book_section_id!!
 			</div>
 		</div>
 	</div>
@@ -458,6 +454,11 @@ $expl_pointage_base = "
 <input type='hidden' name='action' value='pointage' />
 <script type='text/javascript'>
 	document.forms['pointage_expl'].elements['noex'].focus();
+	if(document.getElementById('book_section_id') && document.getElementById('book_location_id')) {
+        var pointage_expl_is_visible = is_visible_section_from_location(document.getElementById('book_section_id'), document.getElementById('book_location_id').value);
+		refresh_sections_from_location(document.getElementById('book_section_id'), document.getElementById('book_location_id').value, pointage_expl_is_visible);
+		var pointage_expl_current_location = document.getElementById('book_location_id').value;
+	}
 </script>
 <div class='row'>
 	!!explencoursdevalidation!!
@@ -586,11 +587,11 @@ if ($pmb_rfid_activate==1 && $pmb_rfid_serveur_url ) {
 		var cb_lu =new Array();	
 		setTimeout(\"init_rfid_read_cb(0,f_expl);\",0);
 		function f_expl(cb) {
-			// il y a une ou plusieurs Ã©tiquette rfid
+			// il y a une ou plusieurs étiquette rfid
 			if( cb.length>0) {	
 				if(document.activeElement.getAttribute('id') == 'input_edit_cb' ){
 					document.getElementById('input_edit_cb').value=cb[0];
-					//Fonction dÃ©finie dans expl_info.inc.php
+					//Fonction définie dans expl_info.inc.php
 					launchUpdateRequest();
 				}else{
 					if (document.getElementById('expl_cb').value != cb[0]) {	
@@ -664,7 +665,7 @@ if ($pmb_rfid_activate==1 && $pmb_rfid_serveur_url ) {
 		setTimeout(\"init_rfid_read_cb(0,f_expl);\",0);
 		
 		function f_expl(cb) {
-			// il y a une ou plusieurs Ã©tiquette rfid
+			// il y a une ou plusieurs étiquette rfid
 			if( cb.length>0) {					
 				if (document.getElementById('expl_cb').value != cb[0]) {	
 					document.getElementById('form_cb_expl').value=cb[0];
@@ -837,14 +838,29 @@ if ($pmb_rfid_activate==1  ) {
 		</form>
 		<script type='text/javascript'>
 			document.forms['saisie_cb_ex'].elements['form_cb_expl'].focus();
-		</script>
-		";
 
-
+            // Affichage de loader lors du submit du formulaire (#148428)
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementsByName('saisie_cb_ex')[0];
+                if(form) {
+                    form.addEventListener('submit', () => {
+						if(form.form_cb_expl.value.replace(/^\s+$/g,'').length != 0) {
+							pmb_show_loader('saisie_cb_ex');
+							//form.form_cb_expl.disabled = true;
+							form.setAttribute('onsubmit', '');
+							const submit = form.querySelector('[type=submit]');
+							if(submit) {
+								submit.disabled = true;
+							}
+						}
+                    });
+                }
+            });
+		</script>";
 
 //	$expl_pret :form d'affichage exemplaire pr?t?
 $expl_pret ="
-<table class='expl-form center' cellspacing='3px'>
+<table class='expl-form center' style='border-spacing: 3px'>
 		<tr>
 			<td colspan='2' class='listheader'>
 				$msg[300]
@@ -932,7 +948,7 @@ style='vertical-align:top'l_message] <!-- zone de notes -->
 		</tr>
 		<tr>
 			<td colspan='2'>
-						<table border='0' width='100%' cellspacing='0'>
+						<table style='border: 0px; width: 100%; border-spacing: 0px'>
 							<tr>
 								<td>
 									&nbsp;
@@ -955,7 +971,7 @@ style='vertical-align:top'l_message] <!-- zone de notes -->
 ";
 
 $expl_view_form="
-<table class='expl-form center' cellspacing='3px'>
+<table class='expl-form center' style='border-spacing: 3px'>
 		<tr>
 			<td class='align_right'>
 				<label class='etiquette'>$msg[291]</label> <!-- code barres -->

@@ -3,7 +3,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_view_concepts.class.php,v 1.17 2019-03-12 10:59:25 tsamson Exp $
+// $Id: skos_view_concepts.class.php,v 1.20 2022/08/30 14:28:04 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,17 +14,17 @@ require_once($class_path."/skos/skos_onto.class.php");
 
 /**
  * class skos_view_concepts
- * Vue de la liste des concepts qui indexent un Ã©lÃ©ment
+ * Vue de la liste des concepts qui indexent un élément
 */
 class skos_view_concepts {
 	
     
 	/**
-	 * Retourne la liste Ã  afficher
-	 * @param array $datas Liste des concepts formatÃ©s
-	 * @param string $template Nom du template Ã  utiliser
-	 * @param array $parameters ParamÃ¨tres qui influent sur la liste
-	 * @return string La liste Ã  afficher
+	 * Retourne la liste à afficher
+	 * @param array $datas Liste des concepts formatés
+	 * @param string $template Nom du template à utiliser
+	 * @param array $parameters Paramètres qui influent sur la liste
+	 * @return string La liste à afficher
 	 */
 	static public function render($datas, $template, $parameters = array()) {
 		global ${$template}, $base_path;
@@ -37,13 +37,13 @@ class skos_view_concepts {
 	}
 	
 	/**
-	 * Retourne l'affichage des concepts liÃ©s Ã  une notice
+	 * Retourne l'affichage des concepts liés à une notice
 	 * 
-	 * Recompose le tableau de paramÃ¨tres via les globales et transmet le bon template au render
-	 * @param skos_concepts_list $concepts_list Liste des concepts associÃ©s Ã  la notice
+	 * Recompose le tableau de paramètres via les globales et transmet le bon template au render
+	 * @param skos_concepts_list $concepts_list Liste des concepts associés à la notice
 	 * @return string
 	 */
-	static public function get_list_in_notice($concepts_list) {
+	static public function get_list_in_notice($concepts_list, $all_links=true) {
 		global $msg;
 		global $thesaurus_concepts_concept_in_line;
 	
@@ -51,17 +51,17 @@ class skos_view_concepts {
 		
 		$datas = array(
 				'title' => $msg['skos_view_concepts_concepts'],
-				'elements' => self::get_sorted_concepts($concepts, true)
+				'elements' => self::get_sorted_concepts($concepts, $all_links)
 		);
 		
 		return self::render($datas, "skos_view_concepts_list_in_notice", array('concepts_in_line' => $thesaurus_concepts_concept_in_line*1));
 	}
 
 	/**
-	 * Retourne l'affichage des concepts liÃ©s Ã  une autoritÃ©
+	 * Retourne l'affichage des concepts liés à une autorité
 	 *
-	 * Recompose le tableau de paramÃ¨tres via les globales et transmet le bon template au render
-	 * @param skos_concepts_list $concepts_list Liste des concepts associÃ©s Ã  l'autoritÃ©
+	 * Recompose le tableau de paramètres via les globales et transmet le bon template au render
+	 * @param skos_concepts_list $concepts_list Liste des concepts associés à l'autorité
 	 * @return string
 	 */
 	static public function get_list_in_authority($concepts_list) {
@@ -132,7 +132,7 @@ class skos_view_concepts {
 	}
 	
 	/**
-	 * Retourne l'affichage des termes associÃ©s d'un concept
+	 * Retourne l'affichage des termes associés d'un concept
 	 * @param skos_concepts_list $concepts_list Liste des parents
 	 * @return string
 	 */
@@ -145,13 +145,13 @@ class skos_view_concepts {
 	        'title' => skos_onto::get_property_label("http://www.w3.org/2004/02/skos/core#Concept", "http://www.w3.org/2004/02/skos/core#relatedMatch"),
 	        'elements' => self::get_sorted_concepts($concepts, false)
 	    );
-	    //on garde le mÃªme template que pour les relation associatives (skos_view_concepts_related_list)
+	    //on garde le même template que pour les relation associatives (skos_view_concepts_related_list)
 	    return self::render($datas, "skos_view_concepts_related_list", 0);
 	}
 	
 	/**
-	 * Retourne l'affichage des concepts composÃ©s qui utilisent un concept
-	 * @param skos_concepts_list $concepts_list Liste des concepts composÃ©s
+	 * Retourne l'affichage des concepts composés qui utilisent un concept
+	 * @param skos_concepts_list $concepts_list Liste des concepts composés
 	 * @return string
 	 */
 	static public function get_composed_concepts_list($concepts_list) {
@@ -169,10 +169,10 @@ class skos_view_concepts {
 	}
 	
 	/**
-	 * Renvoie un tableau triÃ© des concepts selon leurs schÃ©mas
-	 * @param skos_concept $concepts Tableau des concepts Ã  trier
-	 * @param boolean $all_links SpÃ©cifie si les liens vers les concepts composÃ©s doivent Ã©tre dÃ©composÃ©s
-	 * @return skos_concept Tableau triÃ© [schema][] = concept
+	 * Renvoie un tableau trié des concepts selon leurs schémas
+	 * @param skos_concept $concepts Tableau des concepts à trier
+	 * @param boolean $all_links Spécifie si les liens vers les concepts composés doivent étre décomposés
+	 * @return skos_concept Tableau trié [schema][] = concept
 	 */
 	static protected function get_sorted_concepts($concepts, $all_links) {
 		global $msg;
@@ -184,20 +184,71 @@ class skos_view_concepts {
 		foreach ($concepts as $concept) {
 			$schemes = $concept->get_schemes();
 			if (count($schemes)) {
-				$scheme = implode(',', $schemes);
+				$scheme = implode(' / ', $schemes);
 			} else {
 				$scheme = $msg['skos_view_concept_no_scheme'];
 			}
 			$sorted_concepts[$scheme][] = ($all_links ? skos_view_concept::get_concept_in_list_with_all_links($concept) : skos_view_concept::get_concept_in_list($concept));
 		}
 		
-		//On gÃ©nÃ¨re la liste
+		//On génère la liste
 		foreach ($sorted_concepts as $scheme => $concepts) {
-			// On trie par ordre alphabÃ©tique si spÃ©cifiÃ© en paramÃ¨tre
+			// On trie par ordre alphabétique si spécifié en paramètre
 			if ($thesaurus_concepts_affichage_ordre != 1) {
 				asort($concepts);
 			}
 		}
 		return $sorted_concepts;
+	}
+	
+	/**
+	 * Retourne l'affichage des termes équivalents d'un concept
+	 * @param skos_concepts_list $concepts_list Liste des parents
+	 * @return string
+	 */
+	static public function get_exactmatch_list($concepts_list) {
+		
+		$concepts = $concepts_list->get_concepts();
+		
+		$datas = array(
+			'title' => skos_onto::get_property_label("http://www.w3.org/2004/02/skos/core#Concept", "http://www.w3.org/2004/02/skos/core#exactMatch"),
+			'elements' => self::get_sorted_concepts($concepts, false)
+		);
+		//on garde le même template que pour les relation associatives (skos_view_concepts_related_list)
+		return self::render($datas, "skos_view_concepts_related_list", 0);
+	}
+	
+	/**
+	 * Retourne l'affichage des termes approchants d'un concept
+	 * @param skos_concepts_list $concepts_list Liste des parents
+	 * @return string
+	 */
+	static public function get_closematch_list($concepts_list) {
+		
+		$concepts = $concepts_list->get_concepts();
+		
+		$datas = array(
+			'title' => skos_onto::get_property_label("http://www.w3.org/2004/02/skos/core#Concept", "http://www.w3.org/2004/02/skos/core#closeMatch"),
+			'elements' => self::get_sorted_concepts($concepts, false)
+		);
+		//on garde le même template que pour les relation associatives (skos_view_concepts_related_list)
+		return self::render($datas, "skos_view_concepts_related_list", 0);
+	}
+	
+	/**
+	 * Retourne l'affichage des relations d'équivalence d'un concept
+	 * @param skos_concepts_list $concepts_list Liste des parents
+	 * @return string
+	 */
+	static public function get_mappingrelation_list($concepts_list) {
+		
+		$concepts = $concepts_list->get_concepts();
+		
+		$datas = array(
+			'title' => skos_onto::get_property_label("http://www.w3.org/2004/02/skos/core#Concept", "http://www.w3.org/2004/02/skos/core#mappingRelation"),
+			'elements' => self::get_sorted_concepts($concepts, false)
+		);
+		//on garde le même template que pour les relation associatives (skos_view_concepts_related_list)
+		return self::render($datas, "skos_view_concepts_related_list", 0);
 	}
 }

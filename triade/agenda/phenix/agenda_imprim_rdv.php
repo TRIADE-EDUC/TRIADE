@@ -36,7 +36,7 @@ $idUser = Session_ok($sid);
 
 include_once("../../common/config.inc.php");
 $prefixe=PREFIXE;
-$DB_CX->DbQuery("SELECT nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire FROM ${prefixe}info_ecole");
+$DB_CX->DbQuery("SELECT nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire FROM {$prefixe}info_ecole");
 $nom_ecole = $DB_CX->DbResult(0,0);
 $adresse = $DB_CX->DbResult(0,1);
 $postal = $DB_CX->DbResult(0,2);
@@ -58,20 +58,20 @@ $mail="$mail";
 
 
 // Recuperation user
-$DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL."), util_email  FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+$DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL."), util_email  FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
 $nomUtil = $DB_CX->DbResult(0,0);
 $mailUtil = $DB_CX->DbResult(0,"util_email");
 
 // Recuperation note res= array de $res[0] pour age_date
 $sql  = "SELECT  UNIX_TIMESTAMP(age_date), age_heure_debut, age_libelle, age_detail ";
-$sql .= " FROM ${PREFIX_TABLE}agenda";
+$sql .= " FROM {$PREFIX_TABLE}agenda";
 $sql .= " WHERE age_id='".$idAge."'";
 $DB_CX->DbQuery($sql);
 $res = $DB_CX->DbNextRow();
 
 //****************************
 // Recuperation des infos de timezone de l'utilisateur
-$DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t1.util_format_heure FROM ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2, ${PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
+$DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t1.util_format_heure FROM {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2, {$PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
 $tzGmt = $DB_CX->DbResult(0,1);
 $tzEte = calculBasculeDST($DB_CX->DbResult(0,2),gmdate("Y"),$DB_CX->DbResult(0,3),$tzGmt,0);
 $tzHiver = calculBasculeDST($DB_CX->DbResult(0,4),gmdate("Y"),$DB_CX->DbResult(0,5),$tzGmt,1);

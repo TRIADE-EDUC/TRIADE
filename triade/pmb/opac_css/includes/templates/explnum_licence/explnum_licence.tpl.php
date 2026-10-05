@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_licence.tpl.php,v 1.5 2019-05-29 11:23:33 btafforeau Exp $
+// $Id: explnum_licence.tpl.php,v 1.6 2023/08/17 09:47:56 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -51,7 +51,7 @@ $explnum_licence_info_picto = '
 	</span>';
 
 $explnum_licence_script_dialog = '			
-<script type="text/javascript">
+<script>
 	require(["dojo/dom", 
 		"dojo/query", 
 		"dojo/ready", 

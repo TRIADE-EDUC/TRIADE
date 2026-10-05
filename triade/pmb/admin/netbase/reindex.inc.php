@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: reindex.inc.php,v 1.37 2017-11-22 11:07:34 dgoron Exp $
+// $Id: reindex.inc.php,v 1.41 2024/04/17 13:55:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg;
+global $start, $v_state, $spec, $count, $index_quoi, $current_module;
 
 require_once($class_path."/notice.class.php");
 require_once("$class_path/stemming.class.php");
@@ -15,24 +18,24 @@ require_once($class_path."/custom_parametres_perso.class.php");
 // la taille d'un paquet de notices
 $lot = REINDEX_PAQUET_SIZE; // defini dans ./params.inc.php
 
-// initialisation de la borne de dÃ©part
+// initialisation de la borne de départ
 if (!isset($start)) $start=0;
 
 $v_state=urldecode($v_state);
 
 // on commence par :
-if (!isset($index_quoi)) $index_quoi='NOTICES';
+if (empty($index_quoi)) $index_quoi='NOTICES';
 if (!isset($count)) $count = 0;
 	
 switch ($index_quoi) {
 	case 'NOTICES':
 	
 		if (!$count) {
-			$notices = pmb_mysql_query("SELECT count(1) FROM notices", $dbh);
+			$notices = pmb_mysql_query("SELECT count(1) FROM notices");
 			$count = pmb_mysql_result($notices, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_notices"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_notices"]);
 		
 		$query = pmb_mysql_query("SELECT notice_id FROM notices LIMIT $start, $lot");
 		if(pmb_mysql_num_rows($query)) {
@@ -46,9 +49,9 @@ switch ($index_quoi) {
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'NOTICES', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-				$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_notices"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_notices"], ENT_QUOTES, $charset);
+				$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_notices"], $count." ".$msg["nettoyage_res_reindex_notices"]);
 				print netbase::get_current_state_form($v_state, $spec, 'AUTEURS');
 		}
 	
@@ -56,13 +59,13 @@ switch ($index_quoi) {
 	
 	case 'AUTEURS':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM authors", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM authors");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_authors"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_authors"]);
 		
-		$query = pmb_mysql_query("SELECT author_id as id,concat(author_name,' ',author_rejete,' ', author_lieu, ' ',author_ville,' ',author_pays,' ',author_numero,' ',author_subdivision) as auteur from authors LIMIT $start, $lot", $dbh);
+		$query = pmb_mysql_query("SELECT author_id as id,concat(author_name,' ',author_rejete,' ', author_lieu, ' ',author_ville,' ',author_pays,' ',author_numero,' ',author_subdivision) as auteur from authors LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
 			print netbase::get_display_progress($start, $count);
 			
@@ -70,28 +73,28 @@ switch ($index_quoi) {
 				// constitution des pseudo-indexes
 				$ind_elt = strip_empty_chars($row->auteur); 
 				$req_update = "UPDATE authors ";
-				$req_update .= " SET index_author=' ${ind_elt} '";
+				$req_update .= " SET index_author=' {$ind_elt} '";
 				$req_update .= " WHERE author_id=$row->id ";
-				$update = pmb_mysql_query($req_update, $dbh);
+				pmb_mysql_query($req_update);
 				}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'AUTEURS', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_authors"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_authors"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_authors"], $count." ".$msg["nettoyage_res_reindex_authors"]);
 			print netbase::get_current_state_form($v_state, $spec, 'EDITEURS');
 		}
 		break ;
 	
 	case 'EDITEURS':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM publishers", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM publishers");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_publishers"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_publishers"]);
 		
 		$query = pmb_mysql_query("SELECT ed_id as id, ed_name as publisher, ed_ville, ed_pays from publishers LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -101,31 +104,31 @@ switch ($index_quoi) {
 				// constitution des pseudo-indexes
 				$ind_elt = strip_empty_chars($row->publisher." ".$row->ed_ville." ".$row->ed_pays); 
 				$req_update = "UPDATE publishers ";
-				$req_update .= " SET index_publisher=' ${ind_elt} '";
+				$req_update .= " SET index_publisher=' {$ind_elt} '";
 				$req_update .= " WHERE ed_id=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 				}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'EDITEURS', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_publishers"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_publishers"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_publishers"], $count." ".$msg["nettoyage_res_reindex_publishers"]);
 			print netbase::get_current_state_form($v_state, $spec, 'CATEGORIES');
 		}
 		break ;
 	
 	case 'CATEGORIES':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM categories", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM categories");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_categories"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_categories"]);
 		
 		$req = "select num_noeud, langue, libelle_categorie from categories limit $start, $lot ";
-		$query = pmb_mysql_query($req, $dbh);
+		$query = pmb_mysql_query($req);
 		 
 		if (pmb_mysql_num_rows($query)) {
 			print netbase::get_display_progress($start, $count);
@@ -135,9 +138,9 @@ switch ($index_quoi) {
 				$ind_elt = strip_empty_words($row->libelle_categorie, $row->langue); 
 				
 				$req_update = "UPDATE categories ";
-				$req_update.= "SET index_categorie=' ${ind_elt} '";
+				$req_update.= "SET index_categorie=' {$ind_elt} '";
 				$req_update.= "WHERE num_noeud='".$row->num_noeud."' and langue='".$row->langue."' ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 				
 				
 				//ajout des mots des termes dans la table words pour l autoindexation
@@ -158,28 +161,28 @@ switch ($index_quoi) {
 					//calcul de stem et double_metaphone
 					foreach ($t_words as $i=>$w) {
 						$q1 = "select id_word from words where word='".addslashes($w['word'])."' and lang='".addslashes($w['lang'])."' limit 1";
-						$r1 = pmb_mysql_query($q1, $dbh);
+						$r1 = pmb_mysql_query($q1);
 						if(pmb_mysql_num_rows($r1)) {
 							//le mot existe
-							$t_words[$i]['allready_exists']=1;
+							$w['allready_exists']=1;
 						} else {
 							//le mot n'existe pas
 							$dmeta = new DoubleMetaPhone($w['word']);
 							if($dmeta->primary || $dmeta->secondary){
-								$t_words[$i]['double_metaphone'] = $dmeta->primary." ".$dmeta->secondary;
+								$w['double_metaphone'] = $dmeta->primary." ".$dmeta->secondary;
 							}
 							if($w['lang']=='fr_FR') {
 								$stemming = new stemming($w['word']);
-								$t_words[$i]['stem']=$stemming->stem;
+								$w['stem']=$stemming->stem;
 							} else {
-								$t_words[$i]['stem']='';
+								$w['stem']='';
 							}
 						}
 					}
 					foreach($t_words as $i=>$w) {
 						if (!$w['allready_exists']) {
 							$q2 = "insert ignore into words (word, lang, double_metaphone, stem) values ('".$w['word']."', '".$w['lang']."', '".$w['double_metaphone']."', '".$w['stem']."') ";
-							pmb_mysql_query($q2,$dbh);
+							pmb_mysql_query($q2);
 						}
 					}
 				}
@@ -190,20 +193,20 @@ switch ($index_quoi) {
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'CATEGORIES', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_categories"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_categories"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_categories"], $count." ".$msg["nettoyage_res_reindex_categories"]);
 			print netbase::get_current_state_form($v_state, $spec, 'COLLECTIONS');
 		}
 		break ;
 	
 	case 'COLLECTIONS':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM collections", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM collections");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_collections"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_collections"]);
 		
 		$query = pmb_mysql_query("SELECT collection_id as id, collection_name as collection, collection_issn from collections LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -217,28 +220,28 @@ switch ($index_quoi) {
 				}
 				
 				$req_update = "UPDATE collections ";
-				$req_update .= " SET index_coll=' ${ind_elt} '";
+				$req_update .= " SET index_coll=' {$ind_elt} '";
 				$req_update .= " WHERE collection_id=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 			}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'COLLECTIONS', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_collections"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_collections"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_collections"], $count." ".$msg["nettoyage_res_reindex_collections"]);
 			print netbase::get_current_state_form($v_state, $spec, 'SOUSCOLLECTIONS');
 		}
 		break ;
 	
 	case 'SOUSCOLLECTIONS':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM sub_collections", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM sub_collections");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_sub_collections"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_sub_collections"]);
 		
 		$query = pmb_mysql_query("SELECT sub_coll_id as id, sub_coll_name as sub_collection, sub_coll_issn from sub_collections LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -251,28 +254,28 @@ switch ($index_quoi) {
 					$ind_elt .= " ".strip_empty_words($tmp); 
 				}
 				$req_update = "UPDATE sub_collections ";
-				$req_update .= " SET index_sub_coll=' ${ind_elt} '";
+				$req_update .= " SET index_sub_coll=' {$ind_elt} '";
 				$req_update .= " WHERE sub_coll_id=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 			}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'SOUSCOLLECTIONS', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_sub_collections"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_sub_collections"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_sub_collections"], $count." ".$msg["nettoyage_res_reindex_sub_collections"]);
 			print netbase::get_current_state_form($v_state, $spec, 'SERIES');
 		}
 		break ;
 	
 	case 'SERIES':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM series", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM series");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_series"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_series"]);
 		
 		$query = pmb_mysql_query("SELECT serie_id as id, serie_name from series LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -283,28 +286,28 @@ switch ($index_quoi) {
 				$ind_elt = strip_empty_words($row->serie_name); 
 				
 				$req_update = "UPDATE series ";
-				$req_update .= " SET serie_index=' ${ind_elt} '";
+				$req_update .= " SET serie_index=' {$ind_elt} '";
 				$req_update .= " WHERE serie_id=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 			}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'SERIES', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_series"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_series"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_series"], $count." ".$msg["nettoyage_res_reindex_series"]);
 			print netbase::get_current_state_form($v_state, $spec, 'DEWEY');
 		}
 		break ;
 	
 	case 'DEWEY':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM indexint", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM indexint");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_indexint"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_indexint"]);
 		
 		$query = pmb_mysql_query("SELECT indexint_id as id, concat(indexint_name,' ',indexint_comment) as index_indexint from indexint LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -315,28 +318,28 @@ switch ($index_quoi) {
 				$ind_elt = strip_empty_words($row->index_indexint); 
 				
 				$req_update = "UPDATE indexint ";
-				$req_update .= " SET index_indexint=' ${ind_elt} '";
+				$req_update .= " SET index_indexint=' {$ind_elt} '";
 				$req_update .= " WHERE indexint_id=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 			}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'DEWEY', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_indexint"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_indexint"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_indexint"], $count." ".$msg["nettoyage_res_reindex_indexint"]);
 			print netbase::get_current_state_form($v_state, $spec, 'TITRES_UNIFORMES');
 		}
 		break ;
 		
 	case 'TITRES_UNIFORMES':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM titres_uniformes", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM titres_uniformes");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_tu"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_tu"]);
 		
 		$query = pmb_mysql_query("SELECT tu_id from titres_uniformes ORDER BY 1 LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -351,20 +354,20 @@ switch ($index_quoi) {
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'TITRES_UNIFORMES', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_tu"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_tu"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_tu"], $count." ".$msg["nettoyage_res_reindex_tu"]);
 			print netbase::get_current_state_form($v_state, $spec, 'FRAIS_ANNEXES');
 		}
 		break ;
 	
 	case 'FRAIS_ANNEXES':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM frais", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM frais");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_frais_annexes"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_frais_annexes"]);
 		
 		$query = pmb_mysql_query("SELECT id_frais as id, libelle from frais LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -375,28 +378,28 @@ switch ($index_quoi) {
 				$ind_elt = strip_empty_words($row->libelle); 
 				
 				$req_update = "UPDATE frais ";
-				$req_update .= " SET index_libelle=' ${ind_elt} '";
+				$req_update .= " SET index_libelle=' {$ind_elt} '";
 				$req_update .= " WHERE id_frais=$row->id ";
-				$update = pmb_mysql_query($req_update);
+				pmb_mysql_query($req_update);
 			}
 			pmb_mysql_free_result($query);
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'FRAIS_ANNEXES', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_frais_annexes"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_frais_annexes"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_frais_annexes"], $count." ".$msg["nettoyage_res_reindex_frais_annexes"]);
 			print netbase::get_current_state_form($v_state, $spec, 'AUTHPERSO');
 		}
 		break ;
 
 	case 'AUTHPERSO':
 		if (!$count) {
-			$elts = pmb_mysql_query("SELECT count(1) FROM authperso_authorities", $dbh);
+			$elts = pmb_mysql_query("SELECT count(1) FROM authperso_authorities");
 			$count = pmb_mysql_result($elts, 0, 0);
 		}
 		
-		print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_reindex_authperso"], ENT_QUOTES, $charset)."</h2>";
+		print netbase::get_display_progress_title($msg["nettoyage_reindex_authperso"]);
 		
 		$query = pmb_mysql_query("SELECT id_authperso_authority as id, authperso_authority_authperso_num from authperso_authorities ORDER BY authperso_authority_authperso_num LIMIT $start, $lot");
 		if (pmb_mysql_num_rows($query)) {
@@ -421,16 +424,16 @@ switch ($index_quoi) {
 			$next = $start + $lot;
 			print netbase::get_current_state_form($v_state, $spec, 'AUTHPERSO', $next, $count);
 		} else {
-			// mise Ã  jour de l'affichage de la jauge
+			// mise à jour de l'affichage de la jauge
 			print netbase::get_display_final_progress();
-			$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_authperso"], ENT_QUOTES, $charset)." $count ".htmlentities($msg["nettoyage_res_reindex_authperso"], ENT_QUOTES, $charset);
+			$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_authperso"], $count." ".$msg["nettoyage_res_reindex_authperso"]);
 			print netbase::get_current_state_form($v_state, $spec, 'FINI');
 		}
 		break ;
 		
 	case 'FINI':
 		$spec = $spec - INDEX_NOTICES;
-		$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_reindex_fini"], ENT_QUOTES, $charset);
+		$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_reindex_fini"]);
 		print "
 			<form class='form-$current_module' name='process_state' action='./clean.php?spec=$spec&start=0' method='post'>
 				<input type='hidden' name='v_state' value=\"".urlencode($v_state)."\">

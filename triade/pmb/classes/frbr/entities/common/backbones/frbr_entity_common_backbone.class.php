@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_backbone.class.php,v 1.8 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_backbone.class.php,v 1.9 2019/08/22 09:44:33 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,7 +22,7 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_data(){
 		$this->parameters = new stdClass();
@@ -45,11 +45,11 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 		$human_query = "";
 		$frbr_instance_fields = new frbr_backbone_fields($this->indexation_type, $this->indexation_path);
 		foreach ($this->managed_datas[$this->manage_id]['fields'] as $field) {
-			$f=explode("_",$field['NAME']);
-			if($f[2] && $this->indexation_type != 'skos') {
+			$f = explode("_", $field['NAME']);
+			if (isset($frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["TABLE"][0]["TABLEFIELD"]) && $f[2] && $this->indexation_type != 'skos') {
 				$title = $msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["TABLE"][0]["TABLEFIELD"][$f[2]]["NAME"]];
 			} else {
-			    if(isset($msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"]])) {
+			    if (isset($msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"]])) {
 			        $title =$msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"]];
 			    } else {
 			        $title =$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"];
@@ -76,7 +76,7 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	}
 
 	/*
-	 * MÃ©thode de gÃ©nÃ©ration du formulaire...
+	 * Méthode de génération du formulaire...
 	 */
 	public function get_form(){
 		$form = "";
@@ -123,7 +123,7 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	}
 
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
 		if($this->id){

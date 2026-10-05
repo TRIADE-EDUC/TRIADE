@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_breadcrumb_datasource_sections.class.php,v 1.7 2017-07-25 07:42:48 arenou Exp $
+// $Id: cms_module_breadcrumb_datasource_sections.class.php,v 1.7 2017/07/25 07:42:48 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,10 +22,10 @@ class cms_module_breadcrumb_datasource_sections extends cms_module_common_dataso
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$section_id = $selector->get_value();
@@ -49,7 +49,7 @@ class cms_module_breadcrumb_datasource_sections extends cms_module_common_dataso
 					}else{
 						break;
 					}
-				//en thÃ©orie on sort toujours, mais comme c'est un pays formidable, on lock Ã  100 itÃ©rations...
+				//en théorie on sort toujours, mais comme c'est un pays formidable, on lock à 100 itérations...
 				}while ($row->section_num_parent != 0 || $i>100);
 				$datas['sections'] = array_reverse($datas['sections']);
 				return $datas;

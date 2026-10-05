@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_multi.tpl.php,v 1.9 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: suggestion_multi.tpl.php,v 1.14 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -15,12 +15,12 @@ global $base_path, $msg, $charset, $include_path;
 require_once($base_path.'/classes/suggestions_categ.class.php');
 
 $multi_sug_form= "<div id='make_mul_sugg'>
-<h3><span>".htmlentities($msg['empr_make_mul_sugg'], ENT_QUOTES, $charset)."</span></h3>
+!!title!!
 <div id='make_mul_sugg-container'>
-<script src='$include_path/javascript/suggestion_multi.js' type='text/javascript'></script>
+<script src='$include_path/javascript/suggestion_multi.js' ></script>
 <script>
 	function check_fields(nb_ligne){
-	
+
 	var retour=true;
 	var qte_error = false;
 	var txt_error = false;
@@ -29,14 +29,14 @@ $multi_sug_form= "<div id='make_mul_sugg'>
 			if((document.getElementById('sugg_tit_'+i).disabled == true) && (i==0) ){
 				alert(\"".$msg['sugg_no_field_fill']."\");
 				return false;
-			} else if(document.getElementById('sugg_tit_'+i).disabled == true) 
-					break;		 
+			} else if(document.getElementById('sugg_tit_'+i).disabled == true)
+					break;
 			var tit = document.getElementById('sugg_tit_'+i).value;
 			var aut = document.getElementById('sugg_aut_'+i).value;
 			var edi = document.getElementById('sugg_edi_'+i).value;
 			var qte = document.getElementById('sugg_qte_'+i).value;
 			var cod = document.getElementById('sugg_code_'+i).value;
-					
+
 			if(!tit || (!aut && !edi && !cod)){
 				document.getElementById('sugg_'+i).className = 'erreur_saisie';
 				retour=false;
@@ -56,11 +56,11 @@ $multi_sug_form= "<div id='make_mul_sugg'>
 	} else if(txt_error){
 		alert(\"".$msg['empr_sugg_ko']."\");
 	}
-		
+
 	return retour;
 }
 </script>
-<form action=\"empr.php\" method=\"post\" name=\"FormName\" onsubmit=\"return check_fields(document.getElementById('max_nblignes').value);\"> 
+<form action=\"empr.php\" method=\"post\" name=\"FormName\" onsubmit=\"return check_fields(document.getElementById('max_nblignes').value);\">
 	<input type='hidden' name='act' id='act' />
 	<input type='hidden' name='lvl' id='lvl' />
 	<input type='hidden' name='max_nblignes' id='max_nblignes' value='!!max_ligne!!'/>
@@ -82,8 +82,8 @@ $multi_sug_form= "<div id='make_mul_sugg'>
 		!!ligne!!
 		</tbody>
 	</table>";
-				
-if ($opac_sugg_categ == '1' ) {	
+
+if ($opac_sugg_categ == '1' ) {
 	if (suggestions_categ::exists($opac_sugg_categ_default) ){
 		$default_categ = $opac_sugg_categ_default;
 	} else {
@@ -97,13 +97,13 @@ if ($opac_sugg_categ == '1' ) {
 		$sel_categ = "<select class='saisie-25em' id='num_categ' name='num_categ' >";
 		foreach($tab_categ as $id_categ=>$lib_categ){
 			$sel_categ.= "<option value='".$id_categ."' ";
-			if ($id_categ==$default_categ) $sel_categ.= "selected='selected' "; 
+			if ($id_categ==$default_categ) $sel_categ.= "selected='selected' ";
 			$sel_categ.= "> ";
 			$sel_categ.= htmlentities($lib_categ, ENT_QUOTES, $charset)."</option>";
 		}
 		$sel_categ.= "</select>";
 	}
-	$multi_sug_form .= "	
+	$multi_sug_form .= "
 		<div class='row'>
 			<label class='etiquette'>".htmlentities($msg["acquisition_categ"], ENT_QUOTES, $charset)."</label>
 			$sel_categ
@@ -111,7 +111,8 @@ if ($opac_sugg_categ == '1' ) {
 		<br />
 	";
 }
-$multi_sug_form .= "	
+$multi_sug_form .= "
+	<input type='hidden' id='from_cart' name='from_cart' value='!!from_cart!!' />
 	<input type='submit' class='bouton' name='save_multi_sugg' value='$msg[empr_sugg_save_multi]' onclick='this.form.act.value=\"save_multi_sugg\";this.form.lvl.value=\"make_multi_sugg\"' />
 </form>
 </div>

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: docwatch_selector_sections_type_section.xml,v 1.1 2019-03-19 14:38:56 dgoron Exp $ -->
+$Id: docwatch_selector_sections_type_section.xml,v 1.1 2019/03/19 14:38:56 dgoron Exp $ -->
 
 <XMLlist>	
 		<entry code="docwatch_selector_editorial_type_label">Type de contenu des rubriques</entry>

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts.inc.php,v 1.9 2017-11-21 14:23:55 dgoron Exp $
+// $Id: abts.inc.php,v 1.9 2017/11/21 14:23:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
+// la variable $caller, passée par l'URL, contient le nom du form appelant
 $base_url = "./select.php?what=abts&caller=$caller&param1=$param1&param2=$param2&no_display=$no_display&bt_ajouter=$bt_ajouter&dyn=$dyn&callback=$callback&infield=$infield"
 		."&max_field=".$max_field."&field_id=".$field_id."&field_name_id=".$field_name_id."&add_field=".$add_field;
 
@@ -23,7 +23,7 @@ function show_results($user_input, $nbr_lignes=0, $page=0, $id = 0) {
 	global $msg;
 	global $callback;
 	global $param1;
-	// on rÃ©cupÃ©re le nombre de lignes qui vont bien
+	// on récupére le nombre de lignes qui vont bien
 //	if($param1) $restrict=" and abt_id  not in (select num_serialcirc_abt from serialcirc) ";
 	if (!$id) {
 		$user_input = str_replace("*","%",$user_input);
@@ -40,7 +40,7 @@ function show_results($user_input, $nbr_lignes=0, $page=0, $id = 0) {
 	$debut = ($page-1)*$nb_per_page;
 
 	if($nbr_lignes) {
-		// on lance la vraie requÃªte
+		// on lance la vraie requête
 		if (!$id) {
 			if($user_input=="") {
 				$requete = "SELECT * FROM abts_abts where abt_id!='$no_display' $restrict ";

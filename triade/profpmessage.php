@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,16 +41,16 @@ include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de la classe
 $saisie_classe=$_GET["sClasseGrp"];
 verif_profp_class($_SESSION["id_pers"],$saisie_classe);
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -105,7 +105,7 @@ $data=aff_news_prof_p($_GET["sClasseGrp"],$_SESSION["id_pers"]);
 <tr><td  bgcolor="#FFFFFF" bordercolor="#000000">
 <table align='center' border='0' width='97%' >
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$message=$data[$i][2];
 	$message=preg_replace('/<p>\&nbsp;<\/p>/','',$message);
 	$message=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$message);
@@ -135,17 +135,17 @@ for($i=0;$i<count($data);$i++) {
 
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

@@ -1,24 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_tagcloud_datasource_tagcloud_manuel.class.php,v 1.2 2017-11-21 12:01:00 dgoron Exp $
+// $Id: cms_module_tagcloud_datasource_tagcloud_manuel.class.php,v 1.2.14.2 2025/01/21 15:29:49 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud_datasource_tagcloud{
-	
+
 	public function __construct($id=0){
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
 		);
 	}
-	
+
 	public function get_form(){
 		$form = parent::get_form();
 		$form.= $this->format_text($this->msg['cms_module_tagcloud_datasource_tagcloud_no_parameters']);
@@ -26,11 +26,11 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 		return $form;
 	}
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
-		
+
 		$this->parameters= array();
 		return parent::save_form();
 	}
@@ -43,7 +43,7 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 
 		if(!$this->managed_datas) $this->managed_datas = array();
 		if($this->managed_datas['clouds'][$cms_cloud_delete]) unset($this->managed_datas['clouds'][$cms_cloud_delete]);
-		
+
 		$form="
 		<div dojoType='dijit.layout.BorderContainer' style='width: 100%; height: 800px;'>
 			<div dojoType='dijit.layout.ContentPane' region='left' splitter='true' style='width:200px;' >";
@@ -60,7 +60,7 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 			}
 		}
 			$form.="
-				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->module_class_name)."&quoi=datasources&elem=".$this->class_name."&cms_cloud=new&action=get_form'/>".$this->format_text($this->msg['cms_module_tagcloud_datasource_tagcloud_add_cloud'])."</a> 
+				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->module_class_name)."&quoi=datasources&elem=".$this->class_name."&cms_cloud=new&action=get_form'/>".$this->format_text($this->msg['cms_module_tagcloud_datasource_tagcloud_add_cloud'])."</a>
 			";
 		$form.="
 			</div>
@@ -75,10 +75,10 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 		</div>";
 		return $form;
 	}
-	
+
 	protected function get_managed_cloud_form($cms_cloud){
 		global $opac_url_base;
-	
+
 		if($cms_cloud != "new"){
 			$infos = $this->managed_datas['clouds'][$cms_cloud];
 		}else{
@@ -87,7 +87,7 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 			);
 		}
 		//nom
-		$form.="
+		$form ="
 			<div class='row'>
 				<div class='colonne3'>
 					<label for='cms_module_tagcloud_datasource_tagcloud_cloud_name'>".$this->format_text($this->msg['cms_module_tagcloud_datasource_tagcloud_cloud_name'])."</label>
@@ -109,12 +109,12 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 // 			</div>";
 		return $form;
 	}
-	
+
 	public function save_manage_form($managed_datas){
 		global $cms_cloud;
 		global $cms_cloud_delete;
 		global $cms_module_tagcloud_datasource_tagcloud_cloud_name;
-	
+
 		if($cms_cloud_delete){
 			unset($managed_datas['clouds'][$cms_cloud_delete]);
 		}else{
@@ -126,37 +126,37 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 			);
 		}
 		return $managed_datas;
-	}	
-	
+	}
+
 	protected static function get_max_cloud_id($datas){
 		$max = 0;
-		if(count($datas)){
+		if (is_countable($datas) && count($datas)) {
 			foreach	($datas as $key => $val){
-				$key = str_replace("cloud","",$key)*1;
+				$key = intval(str_replace("cloud","",$key));
 				if($key>$max) $max = $key;
 			}
 		}
 		return $max;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 // 	$selector = $this->get_selected_selector();
 // 		if($selector){
 // 			$article_id = $selector->get_value();
@@ -168,60 +168,60 @@ class cms_module_tagcloud_datasource_tagcloud_manuel extends cms_module_tagcloud
 // 		}
 // 		return false;
 		return array(
-			array( 
+			array(
 				'label' => "un label 1",
 				'link' => "ici un lien a mettre",
 				'weight' => 1,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label ",
 				'link' => "ici un lien a mettre",
 				'weight' => 1,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 4",
 				'link' => "ici un lien a mettre",
 				'weight' => 1,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 5",
 				'link' => "ici un lien a mettre",
 				'weight' => 2,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 6",
 				'link' => "ici un lien a mettre",
 				'weight' => 4,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 7",
 				'link' => "ici un lien a mettre",
 				'weight' => 10,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 8",
 				'link' => "ici un lien a mettre",
 				'weight' => 1,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 9",
 				'link' => "ici un lien a mettre",
 				'weight' => 1,
 				'js' => ""
 			),
-			array( 
+			array(
 				'label' => "un label 10",
 				'link' => "ici un lien a mettre",
 				'weight' => 2,
 				'js' => ""
-			)	
+			)
 		);
 	}
 }

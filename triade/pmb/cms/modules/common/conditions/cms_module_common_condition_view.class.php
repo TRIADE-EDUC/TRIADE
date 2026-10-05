@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_condition_view.class.php,v 1.3 2013-09-25 07:08:36 arenou Exp $
+// $Id: cms_module_common_condition_view.class.php,v 1.3 2013/09/25 07:08:36 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -32,7 +32,7 @@ class cms_module_common_condition_view extends cms_module_common_condition {
 		if(in_array($_SESSION['opac_view'],$values)){
 			return true;
 		}
-		//on est encore dans la fonction, donc la condition n'est pas vÃ©rifiÃ©e!
+		//on est encore dans la fonction, donc la condition n'est pas vérifiée!
 		return false;
 	}
 }

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_cache.class.php,v 1.2 2017-05-18 11:02:07 dgoron Exp $
+// $Id: vedette_cache.class.php,v 1.2 2017/05/18 11:02:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

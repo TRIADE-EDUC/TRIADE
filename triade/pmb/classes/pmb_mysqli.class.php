@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmb_mysqli.class.php,v 1.1 2017-07-31 13:21:40 tsamson Exp $
+// $Id: pmb_mysqli.class.php,v 1.2 2023/02/10 13:47:32 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -44,7 +44,11 @@ class pmb_mysqli {
 	 * @return mysqli
 	 */
 	public static function init_connection($server = null, $username = null, $password = null, $dbname = null, $port = null, $socket = null) {
-		return new mysqli($server, $username, $password, $dbname, $port, $socket);		
+		
+	    /* PHP >= 8.1 : Desactivation du rapport d'erreur defini par defaut a : MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT (auparavant : MYSQLI_REPORT_OFF).*/
+	    mysqli_report(MYSQLI_REPORT_OFF);
+	    
+	    return new mysqli($server, $username, $password, $dbname, $port, $socket);
 	}
 	
 	/**
@@ -83,6 +87,6 @@ class pmb_mysqli {
 		return static::$mysqli_flags;
 	}
 
-} # fin de dÃ©finition de la classe pmb_mysqli
+} # fin de définition de la classe pmb_mysqli
 
 

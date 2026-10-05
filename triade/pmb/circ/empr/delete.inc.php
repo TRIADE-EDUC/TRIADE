@@ -1,19 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: delete.inc.php,v 1.15 2017-08-23 08:27:52 ngantier Exp $
+// $Id: delete.inc.php,v 1.16 2022/01/07 14:23:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $id, $form_cb, $groupID;
 
 require_once("$class_path/bannette.class.php");
 require_once("$class_path/emprunteur.class.php");
 
 // suppression d'un lecteur
 $erreur=0;
+$id = intval($id);
 if ($id) {
 	$total = 0;
-	$total = pmb_mysql_result(pmb_mysql_query("select count(1) from pret where pret_idempr='".$id."' ", $dbh), 0, 0);
+	$total = pmb_mysql_result(pmb_mysql_query("select count(1) from pret where pret_idempr='".$id."' "), 0, 0);
 	if ($total==0) {
 		emprunteur::del_empr($id);
 	} else {

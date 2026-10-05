@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_generic_record.class.php,v 1.1 2016-04-20 13:54:54 apetithomme Exp $
+// $Id: cms_module_common_selector_generic_record.class.php,v 1.1 2016/04/20 13:54:54 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,7 +21,7 @@ class cms_module_common_selector_generic_record extends cms_module_common_select
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

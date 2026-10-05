@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormsList.js,v 1.8 2018-01-09 10:48:40 vtouchard Exp $
+// $Id: FormsList.js,v 1.9 2020/07/21 14:35:16 gneveu Exp $
 
 
 define([
@@ -31,6 +31,7 @@ define([
 			this.inherited(arguments);
 			this.own(
 				topic.subscribe('EntitiesList', lang.hitch(this, this.handleEvents)),
+				topic.subscribe('GraphStore', lang.hitch(this, this.handleEvents)),
 				topic.subscribe('Form', lang.hitch(this, this.handleEvents)),
 				topic.subscribe('Node', lang.hitch(this,this.handleEvents))
 			);
@@ -50,6 +51,10 @@ define([
 					break;
 				case 'nodeSelected':
 					this.buildList('', evtArgs.node);
+					break;
+				case 'refreshNodes' :
+					this.cleanEvents()
+					this.buildList();
 					break;
 			}
 		},

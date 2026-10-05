@@ -26,7 +26,7 @@ $ideleverecup=$ideleve;
 
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse($trim_en_cours,$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        $dateDebut=$dateRecup[$j][0];
        $dateFin=$dateRecup[$j][1];
 }
@@ -42,13 +42,13 @@ $eleveT=recupEleve($idclasse); // recup liste eleve
 
 
 function ListeMatiere($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse) {
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
 	        // variable eleve
 	        $lv1Eleve=$eleveT[$j][2];
 	        $lv2Eleve=$eleveT[$j][3];
 	        $idEleve=$eleveT[$j][4];
 	        if ($idEleve != $ideleverecup) { continue; }
-	        for($i=0;$i<count($ordre);$i++) {
+	        for($i=0;$i<countTriade($ordre);$i++) {
         	       $idMatiere=$ordre[$i][0];
 	               $matiere=chercheMatiereNom($idMatiere);
 				   $codeMatiere=chercheCodeMatiere($idMatiere);
@@ -64,13 +64,13 @@ function ListeMatiere($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse
 
 // ---------------------------//
 function moyenEleveMat($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse) {
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
 	        // variable eleve
 	        $lv1Eleve=$eleveT[$j][2];
 	        $lv2Eleve=$eleveT[$j][3];
 	        $idEleve=$eleveT[$j][4];
         	if ($idEleve != $ideleverecup) { continue; }
-	        for($i=0;$i<count($ordre);$i++) {
+	        for($i=0;$i<countTriade($ordre);$i++) {
 	               $idMatiere=$ordre[$i][0];
 	               $verifGroupe=verifMatiereAvecGroupe($idMatiere,$idEleve,$idclasse,$ordre[$i][2]);
 	               if ($verifGroupe) { continue; } // verif pour l'eleve de l'affichage de la matiere
@@ -89,13 +89,13 @@ function moyenEleveMat($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclass
 
 
 function moyenEleveGenGraph($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse) {
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
 	        // variable eleve
 	        $lv1Eleve=$eleveT[$j][2];
 	        $lv2Eleve=$eleveT[$j][3];
 	        $idEleve=$eleveT[$j][4];
         	if ($idEleve != $ideleverecup) { continue; }
-	        for($i=0;$i<count($ordre);$i++) {
+	        for($i=0;$i<countTriade($ordre);$i++) {
 	               $idMatiere=$ordre[$i][0];
 	               $verifGroupe=verifMatiereAvecGroupe($idMatiere,$idEleve,$idclasse,$ordre[$i][2]);
 	               if ($verifGroupe) { continue; } // verif pour l'eleve de l'affichage de la matiere
@@ -118,14 +118,14 @@ function moyenEleveGenGraph($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$id
 
 
 $matieretab=ListeMatiere($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse);
-if (count($matieretab) > 0) {
+if (countTriade($matieretab) > 0) {
 	$nom_matiere=$matieretab;
 }else{
 	$nom_matiere=array();
 }
 // taille du graph
 $largeur_graph=300;
-$nbmatiere=count($matieretab);
+$nbmatiere=countTriade($matieretab);
 if ($nbmatiere > 3) {
 	for( $pp=5;$pp<$nbmatiere;$pp++) {
 		$largeur_graph=$largeur_graph+45;
@@ -135,13 +135,13 @@ if ($nbmatiere > 3) {
 $graphTab=moyenEleveMat($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse);
 $graphTabM=moyenEleveGenGraph($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse);
 
-if (count($graphTab) > 0) {
+if (countTriade($graphTab) > 0) {
 	$graph=$graphTab;
 }else{
 	$graph=array();
 }
 
-if (count($graphTabM) > 0) {
+if (countTriade($graphTabM) > 0) {
 	$graphM=$graphTabM;
 }else{
 	$graphM=array();

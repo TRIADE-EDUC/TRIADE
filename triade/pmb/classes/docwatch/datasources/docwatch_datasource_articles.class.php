@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_datasource_articles.class.php,v 1.10 2019-03-19 14:38:56 dgoron Exp $
+// $Id: docwatch_datasource_articles.class.php,v 1.12 2023/04/26 13:26:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/cms/cms_article.class.php");
 /**
  * class docwatch_datasource_articles
@@ -29,35 +30,34 @@ class docwatch_datasource_articles extends docwatch_datasource{
 	} // end of member function __construct
 	
 	/**
-	 * Génération de la structure de données representant les items de type article
+	 * G�n�ration de la structure de donn�es representant les items de type article
 	 *
 	 */
 	
-	protected function get_items_datas($selector_values){
-		global $dbh;
+	protected function get_items_datas($items){
 		$articles_retour = array();
-		if(count($selector_values)){
-			foreach($selector_values as $id){
+		if(count($items)){
+			foreach($items as $id){
 				$article_instance = new cms_article($id);
 				$article_data = $article_instance->format_datas();
 				$article = array();
 				$article['type'] = 'article';
-				$article['num_article'] = $article_data['id'];
-				$article['title'] = $article_data['title'];
-				$article['summary'] = $article_data['resume'];
-				$article['content'] = $article_data['content'];
-				if($article_data['start_date'] == ""){
-					$article['publication_date'] = extraitdate($article_data['create_date']);
+				$article['num_article'] = $article_data->get_id();
+				$article['title'] = $article_data->get_title();
+				$article['summary'] = $article_data->get_resume();
+				$article['content'] = $article_data->get_content();
+				if($article_data->get_start_date() == ""){
+					$article['publication_date'] = extraitdate($article_data->get_create_date());
+				} else{
+				    $article['publication_date'] = extraitdate($article_data->get_start_date());
 				}
-				else{
-					$article['publication_date'] = extraitdate($article_data['start_date']);
-				}
-				$article['logo_url'] = $article_data['logo']['large'];
-				$article['url'] = $this->get_constructed_link("article", $article_data['id']);
-				if(count($article_data['descriptors'])){
+				$article['logo_url'] = $article_data->get_logo()['large'];
+				$article['url'] = $this->get_constructed_link("article", $article_data->get_id());
+				if(count($article_data->get_descriptors())){
 				    $descriptors = array();
-				    for($i=0 ; $i<count($article_data['descriptors']) ; $i++){
-				        $descriptors[]  = array('id' => $article_data['descriptors'][$i]['id']);
+				    $article_data_descriptors = $article_data->get_descriptors();
+				    for($i=0 ; $i<count($article_data_descriptors) ; $i++){
+				        $descriptors[]  = array('id' => $article_data_descriptors[$i]['id']);
 				    }
 				    $article['descriptors'] = $descriptors;
 				}

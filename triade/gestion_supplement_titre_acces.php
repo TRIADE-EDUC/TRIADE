@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ include_once('librairie_php/recupnoteperiode.php');
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTMESS507 ?></font></b></td>
 </tr>
@@ -69,7 +69,7 @@ $data=recupListeSupplementAuTitre();
 print "<font class='T2'>".LANGTMESS510."</font>";
 print "<select name='doc' >";
 print "<option STYLE='color:#000066;background-color:#FCE4BA'>".LANGCHOIX."</option>";
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$libelle=$data[$i][0];
 	$fichier="./data/parametrage/".$data[$i][1];
 	print "<option value=\"$fichier\" >$libelle</font>";
@@ -109,7 +109,7 @@ if (isset($_POST["creatett"])) {
 	$datedujour=dateDMY();
 
 	$eleveT=recupEleve($idClasse); // recup liste eleve
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$nomEleve=ucwords($eleveT[$j][0]);
 		$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -129,7 +129,7 @@ if (isset($_POST["creatett"])) {
 		$dataHisto=recherche_stage_historique($idEleve); //e.nom,s.nomprenomeleve,s.classeeleve,s.periodestage,s.trimestre,s.langue
 		//$historyEtudiant="School / Ecole - Company / Société - Date - Service";
 		$historyEtudiant="(School / Ecole - Company / Société - Date) \\par ";
-		for($a=0;$a<count($dataHisto);$a++){
+		for($a=0;$a<countTriade($dataHisto);$a++){
 			$nomEt=$dataHisto[$a][0];
 			$periode=$dataHisto[$a][3];
 			$semestre=$dataHisto[$a][4];
@@ -209,17 +209,17 @@ Pgclose();
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

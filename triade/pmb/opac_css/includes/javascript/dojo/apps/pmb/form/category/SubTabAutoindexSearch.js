@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabAutoindexSearch.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabAutoindexSearch.js,v 1.3 2020/07/22 13:17:20 jlaurent Exp $
 
 
 define([
@@ -28,15 +28,21 @@ define([
 			},
 			onDownloadEnd: function(){
 				var searchButton = query('input[id="launch_autoindex_search_button"]', this.containerNode)[0];
-				searchButton.remove();
-				
+				if (searchButton) {
+					searchButton.remove();
+				}
 				var refreshButton = query('input[id="refresh_autoindex_search_button"]', this.containerNode)[0];
-				domAttr.set(refreshButton, 'onclick', '');
-				domAttr.set(refreshButton, 'type', 'submit');
-				this.form = refreshButton.form;
-				
-				on(this.form, 'submit', lang.hitch(this, this.get_index));				
-				this.getParent().resizeIframe();
+				if (refreshButton) {
+					domAttr.set(refreshButton, 'onclick', '');
+					domAttr.set(refreshButton, 'type', 'submit');
+					this.form = refreshButton.form;
+					on(this.form, 'submit', lang.hitch(this, this.get_index));
+				}
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			destroy: function(){
 				this.inherited(arguments);

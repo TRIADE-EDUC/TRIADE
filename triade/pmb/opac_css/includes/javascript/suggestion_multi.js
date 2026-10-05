@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_multi.js,v 1.3 2009-11-30 10:39:25 kantin Exp $
+// $Id: suggestion_multi.js,v 1.3 2009/11/30 10:39:25 kantin Exp $
 
 function add_line(nb_ligne){
 	

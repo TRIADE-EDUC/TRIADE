@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: custom_label_caue38.inc.php,v 1.11 2019-06-10 15:14:33 btafforeau Exp $
+// $Id: custom_label_caue38.inc.php,v 1.11.14.1 2025/01/30 15:36:35 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -10,7 +10,7 @@ global $base_path, $label_fmt, $label_con, $msg, $charset;
 
 require_once ("$base_path/catalog/caddie/custom_label_no_script.inc.php");
 
-$label_fmt['p0']['label_name'] 					= "PersonnalisÃ© CAUE38 - 38.1x21.2mm - Avery J8651";
+$label_fmt['p0']['label_name'] 					= "Personnalisé CAUE38 - 38.1x21.2mm - Avery J8651";
 $label_fmt['p0']['page_format'] 				= "A4";
 $label_fmt['p0']['page_orientation']			= "P";
 $label_fmt['p0']['unit'] 						= "mm";
@@ -46,7 +46,7 @@ $label_con['p0']['from_left'][1] 		= "13";
 $label_con['p0']['rotation'][1]			= "90";
 
 
-$label_fmt['p1']['label_name'] 					= "PersonnalisÃ© CAUE38 - 38.1x21.2mm - Rotation90 - Avery J8651";
+$label_fmt['p1']['label_name'] 					= "Personnalisé CAUE38 - 38.1x21.2mm - Rotation90 - Avery J8651";
 $label_fmt['p1']['page_format'] 				= "A4";
 $label_fmt['p1']['page_orientation']			= "P";
 $label_fmt['p1']['unit'] 						= "mm";
@@ -91,15 +91,15 @@ function verif_cote_caue_content($label_id, $step) {
 }
 
 function print_cote_caue(&$target, $content_value, $content_src='') {
-		
+
 	$q = "select expl_cote from exemplaires where expl_id = '".$content_src."' ";
 	$r = pmb_mysql_query($q);
-	$cote = "";
+	$str_cote = "";
 	if (pmb_mysql_num_rows($r)) {
 		$row_cote = pmb_mysql_fetch_row($r);
 		//$tab_cote = explode("/", trim($row_cote[0]) );
 		$str_cote = trim($row_cote[0]);
-	} 
+	}
 	$target->setFont($content_value['font'],$content_value['font_style'] ,$content_value['font_size']);
 	$r = 0; $g=-1; $b=-1;
 	switch (strlen($content_value['font_color'])) {
@@ -125,4 +125,3 @@ function print_cote_caue(&$target, $content_value, $content_src='') {
 	//$target->Rect($target->GetStickX(), $target->GetStickY(), 38.1, 21.2 );
 }
 
-?>

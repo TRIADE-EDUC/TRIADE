@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_view_concept.tpl.php,v 1.3 2017-06-08 12:47:19 arenou Exp $
+// $Id: skos_view_concept.tpl.php,v 1.5 2021/09/14 12:46:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 global $skos_view_concept_concept_in_list_with_all_links;
@@ -51,7 +51,7 @@ $skos_view_concept_detail_concept = "
 							<a href='{{value.uri}}' target='_blank'>{{value.uri}}</a>
 						{% endif %}							
 					{% else %}
-		 				<span>{{value}}</span>
+		 				<span>{{value | escape | safe | nl2br}}</span>
 					{% endif %}
 					{% if !loop.last %}
 						<br>

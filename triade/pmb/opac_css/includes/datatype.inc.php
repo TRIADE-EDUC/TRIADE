@@ -1,18 +1,37 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: datatype.inc.php,v 1.7 2018-09-20 15:07:30 apetithomme Exp $
+// $Id: datatype.inc.php,v 1.7.16.1 2025/04/02 09:52:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 require_once($base_path."/includes/divers.inc.php");
 
+global $msg;
 global $datatype_list, $chk_type_list, $format_list;
 
-$datatype_list=array("small_text"=>$msg["parperso_datatype_text"],"text"=>$msg["parperso_datatype_huge_text"],"integer"=>$msg["parperso_datatype_integer"],"date"=>$msg["parperso_datatype_date"],"float"=>$msg["parperso_datatype_float"]);
-$chk_type_list=array("small_text"=>"chk_type_small_text","text"=>"chk_type_text","integer"=>"chk_type_integer","date"=>"chk_type_date","float"=>"chk_type_float");
-$format_list=array("small_text"=>"format_small_text","text"=>"format_text","integer"=>"format_integer","date"=>"format_date","float"=>"format_float");
+$datatype_list = array(
+        "small_text" => (isset($msg["parperso_datatype_text"]) ? $msg["parperso_datatype_text"] : ''),
+        "text" => (isset($msg["parperso_datatype_huge_text"]) ? $msg["parperso_datatype_huge_text"] : ''),
+        "integer" => (isset($msg["parperso_datatype_integer"]) ? $msg["parperso_datatype_integer"] : ''),
+        "date" => (isset($msg["parperso_datatype_date"]) ? $msg["parperso_datatype_date"] : ''),
+        "float" => (isset($msg["parperso_datatype_float"]) ? $msg["parperso_datatype_float"] : '')
+);
+$chk_type_list = array(
+        "small_text"=>"chk_type_small_text",
+        "text"=>"chk_type_text",
+        "integer"=>"chk_type_integer",
+        "date"=>"chk_type_date",
+        "float"=>"chk_type_float"
+);
+$format_list = array(
+        "small_text"=>"format_small_text",
+        "text"=>"format_text",
+        "integer"=>"format_integer",
+        "date"=>"format_date",
+        "float"=>"format_float"
+);
 
 function chk_type_small_text($value,&$chk_message) {
 	$chk_message="";
@@ -37,7 +56,7 @@ function chk_type_integer($value,&$chk_message) {
 	global $msg;
 	
 	$chk_message="";
-	if ((string)round($value*1)!=$value) {
+	if ((string)round(intval($value))!=$value) {
 		$chk_message=$msg["parperso_datatype_not_integer"];
 		return $value;
 	} else
@@ -75,7 +94,7 @@ function chk_type_float($value,&$chk_message) {
 	global $msg;
 	
 	$chk_message="";
-	if (($value*1)!=$value) {
+	if ((floatval($value))!=$value) {
 		$chk_message=$msg["parperso_datatype_not_float"];
 		return $value;
 	} else

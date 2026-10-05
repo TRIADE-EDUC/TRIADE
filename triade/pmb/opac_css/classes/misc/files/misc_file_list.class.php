@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_list.class.php,v 1.3 2018-11-26 09:20:57 dgoron Exp $
+// $Id: misc_file_list.class.php,v 1.3 2018/11/26 09:20:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,11 +25,11 @@ class misc_file_list extends misc_file {
 		$this->options=new marc_list($this->type);
 // 		$tmp=array();
 // 		$tmp = $this->options->table;
-// 		$tmp=array_map("convert_diacrit",$tmp);//On enlÃ¨ve les accents
+// 		$tmp=array_map("convert_diacrit",$tmp);//On enlève les accents
 // 		$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 // 		asort($tmp);//Tri sur les valeurs en majuscule sans accent
 // 		foreach ( $tmp as $key => $value ) {
-// 			$tmp[$key]=$this->options->table[$key];//On reprend les bons couples clÃ© / libellÃ©
+// 			$tmp[$key]=$this->options->table[$key];//On reprend les bons couples clé / libellé
 // 		}
 // 		$this->options->table=$tmp;
 		reset($this->options->table);

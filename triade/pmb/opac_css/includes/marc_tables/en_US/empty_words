@@ -1,5 +1,5 @@
-<?PHP
-// $Id: empty_words,v 1.2 2007-06-06 22:16:38 touraine37 Exp $
+<?php
+// $Id: empty_words,v 1.2.38.1 2025/01/16 10:24:13 qvarin Exp $
 
 // tableau contenant les mots vides
 

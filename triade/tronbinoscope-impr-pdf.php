@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,7 +35,7 @@ $cnx=cnx();
 
 if (isset($_GET["idclasse"])) {
 	$saisie_classe=$_GET["idclasse"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves,${prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves,{$prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$cl=$data[0][0];
@@ -44,7 +44,7 @@ if (isset($_GET["idclasse"])) {
 
 if (isset($_GET['nomregime'])) {
 	$regime=$_GET["nomregime"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves,${prefixe}classes  WHERE regime='$regime' AND code_class=classe  ";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves,{$prefixe}classes  WHERE regime='$regime' AND code_class=classe  ";
 	$res=execSql($sql);
         $data=chargeMat($res);
 	$cl=$regime;
@@ -73,7 +73,7 @@ $x=7;
 $nbp=1;
 
 $pdf->SetFont('Arial','',8);
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 
 	$logo="./data/image_eleve/".$data[$i][1].".jpg";
 	if (!file_exists($logo)) { $logo="./image/commun/photo_vide.jpg"; }

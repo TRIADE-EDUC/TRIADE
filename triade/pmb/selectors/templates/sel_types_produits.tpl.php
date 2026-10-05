@@ -1,13 +1,15 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_types_produits.tpl.php,v 1.9 2017-10-13 10:41:16 dgoron Exp $
+// $Id: sel_types_produits.tpl.php,v 1.10 2019/08/29 10:05:39 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates du sÃ©lecteur adresses
+global $param1, $param2, $param3, $param4, $param5, $sel_header, $msg, $charset, $jscript, $acquisition_gestion_tva, $callback, $sel_footer;
+
+// templates du sélecteur adresses
 
 //-------------------------------------------
 //	$sel_header : header

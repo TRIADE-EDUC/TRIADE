@@ -1,44 +1,46 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: File.php,v 1.6 2015-04-03 11:16:24 jpermanne Exp $
+// $Id: File.php,v 1.7.12.1 2025/03/14 08:07:34 qvarin Exp $
 namespace Sabre\PMB;
 
 use Sabre\DAV;
 
 class File extends DAV\File {
-	
-	function get_code_from_name($name){
+	public $parentNode;
+	public $config;
+
+	public function get_code_from_name($name){
 		return substr($name,strrpos($name,"(")+1,(strrpos($name,")")-strrpos($name,"("))-1);
 	}
-	
-	function set_parent($parent){
+
+	public function set_parent($parent){
 		$this->parentNode = $parent;
 	}
 
-	function getName() {
+	public function getName() {
 		return "";
 	}
 
-	function get() {
+	public function get() {
 		return "";
 	}
 
-	function getSize() {
+	public function getSize() {
 		return 0;
 	}
 
-	function getETag() {
+	public function getETag() {
 		if(file_exists(time())){
 			return '"' . md5_file(time()) . '"';
 		}else{
 			return '"' . md5(time()) . '"';
 		}
-		
+
 	}
-	
-    function check_write_permission(){
+
+    public function check_write_permission(){
     	global $webdav_current_user_id;
     	if($this->config['write_permission']){
     		$tab = array();
@@ -50,7 +52,7 @@ class File extends DAV\File {
     				break;
     			case "opac" :
     				$query = "select empr_categ from empr where id_empr = ".$webdav_current_user_id;
-    			case "anonymous" : 
+    			case "anonymous" :
     			default :
     				$tab = $this->config['restrcited_empr_write_permission'];
     				break;
@@ -59,16 +61,16 @@ class File extends DAV\File {
     		if(!count($tab)){
     			return true;
     		}elseif($query != ""){
-    			//on doit s'assurer que la personne connectÃ©e est dispose des droits...
+    			//on doit s'assurer que la personne connectée est dispose des droits...
     			$result = pmb_mysql_query($query);
     			if(pmb_mysql_num_rows($result)){
     				if(in_array(pmb_mysql_result($result,0,0),$tab)){
     					return true;
     				}
     			}
-    		} 
+    		}
     	}
-    	//si on est encore dans la fonction, c'est qu'on correspond Ã  aucun critÃ¨re !
+    	//si on est encore dans la fonction, c'est qu'on correspond à aucun critère !
     	return false;
-    }	
+    }
 }

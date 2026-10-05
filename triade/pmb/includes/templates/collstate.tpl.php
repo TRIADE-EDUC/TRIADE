@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: collstate.tpl.php,v 1.18 2019-05-27 14:03:25 ngantier Exp $
+// $Id: collstate.tpl.php,v 1.21 2023/12/20 08:26:48 dgoron Exp $
 
-// templates pour gestion des autoritÃ©s collections
+// templates pour gestion des autorités collections
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $base_path, $collstate_form, $msg, $current_module, $location_field, $statut_field, $emplacement_field, $support_field, $tpl_collstate_liste_form, $collstate_list_header, $collstate_list_footer, $tpl_collstate_liste, $tpl_collstate_liste_line, $tpl_collstate_surloc_liste, $tpl_collstate_surloc_liste_line, $tpl_collstate_bulletins_list_th, $tpl_collstate_bulletins_list_td, $collstate_advanced_form, $collstate_expl_list_form, $charset, $tpl_collstate_bulletins_list_page; 
+global $base_path, $collstate_form, $msg, $current_module, $location_field, $statut_field, $emplacement_field, $support_field, $collstate_advanced_form, $collstate_expl_list_form, $charset, $tpl_collstate_bulletins_list_page; 
 
 require_once($base_path."/javascript/misc.inc.php");
 
@@ -173,105 +173,7 @@ $support_field="
 		!!support!!
 	</div>
 </div>";
-$tpl_collstate_liste_script="
-<script>
-	function show_collstate(id) {
-		if (document.getElementById(id).style.display=='none') {
-			document.getElementById(id).style.display='';		
-		} else {
-			document.getElementById(id).style.display='none';
-		}
-	} 
-</script>";
 	
-$tpl_collstate_liste_form="
-<form action='!!base_url!!' method='post' name='filter_form'><input type='hidden' name='location' value='!!location!!'/>
-	!!collstate_table!!
-</form>";
-
-$collstate_list_header = "
-<table class='exemplaires' cellpadding='2' width='100%'>
-	<tbody>
-";
-
-$collstate_list_footer ="
-	</tbody>
-</table>";
-
-$tpl_collstate_liste[0]="
-<table>	
-	<tr>		
-		<!-- surloc -->
-		<th>".$msg["collstate_form_emplacement"]."</th>		
-		<th>".$msg["collstate_form_cote"]."</th>
-		<th>".$msg["collstate_form_support"]."</th>
-		<th>".$msg["collstate_form_statut"]."</th>		
-		<th>".$msg["collstate_form_origine"]."</th>		
-		<th>".$msg["collstate_form_collections"]."</th>
-		<th>".$msg["collstate_form_archive"]."</th>
-		<th>".$msg["collstate_form_lacune"]."</th>
-		!!collstate_bulletins_list_th!!
-	</tr>
-	!!collstate_liste!!
-</table>";
-
-$tpl_collstate_liste_line[0]="
-<tr class='!!pair_impair!!' !!tr_surbrillance!! style='cursor: pointer'>
-	<!-- surloc -->
-	<td !!tr_javascript!! >!!emplacement_libelle!!</td>
-	<td !!tr_javascript!! >!!cote!!</td>
-	<td !!tr_javascript!! >!!type_libelle!!</td>
-	<td !!tr_javascript!! >!!statut_libelle!!</td>	
-	<td !!tr_javascript!! >!!origine!!</td>
-	<td !!tr_javascript!! >!!state_collections!!</td>
-	<td !!tr_javascript!! >!!archive!!</td>
-	<td !!tr_javascript!! >!!lacune!!</td>
-	!!collstate_bulletins_list_td!!
-</tr>";
-
-$tpl_collstate_liste[1]="
-$tpl_collstate_liste_script
-<table>	
-	<tr>
-		<!-- surloc -->
-		<th>".$msg["collstate_form_localisation"]."</th>		
-		<th>".$msg["collstate_form_emplacement"]."</th>		
-		<th>".$msg["collstate_form_cote"]."</th>
-		<th>".$msg["collstate_form_support"]."</th>
-		<th>".$msg["collstate_form_statut"]."</th>		
-		<th>".$msg["collstate_form_origine"]."</th>		
-		<th>".$msg["collstate_form_collections"]."</th>
-		<th>".$msg["collstate_form_archive"]."</th>
-		<th>".$msg["collstate_form_lacune"]."</th>
-		!!collstate_bulletins_list_th!!
-	</tr>
-	!!collstate_liste!!
-</table>
-";
-
-$tpl_collstate_liste_line[1]="
-<tr class='!!pair_impair!!' !!tr_surbrillance!! style='cursor: pointer'>	
-	<!-- surloc -->
-	<td !!tr_javascript!! >!!localisation!!</td>
-	<td !!tr_javascript!! >!!emplacement_libelle!!</td>
-	<td !!tr_javascript!! >!!cote!!</td>
-	<td !!tr_javascript!! >!!type_libelle!!</td>
-	<td !!tr_javascript!! >!!statut_libelle!!</td>
-	<td !!tr_javascript!! >!!origine!!</td>
-	<td !!tr_javascript!! >!!state_collections!!</td>
-	<td !!tr_javascript!! >!!archive!!</td>
-	<td !!tr_javascript!! >!!lacune!!</td>
-	!!collstate_bulletins_list_td!!
-</tr>";
-
-$tpl_collstate_surloc_liste = "<th>".$msg["collstate_surloc"]."</th>";
-
-$tpl_collstate_surloc_liste_line = "<td !!tr_javascript!! >!!surloc!!</td>";
-
-$tpl_collstate_bulletins_list_th = "<th>".$msg["collstate_linked_bulletins_list"]."</th>";
-
-$tpl_collstate_bulletins_list_td = "<td><input type='button' class='bouton' value='".$msg["collstate_linked_bulletins_list_link"]."' onclick='!!collstate_bulletins_list_onclick!!'></td>";
-
 $collstate_advanced_form = "
 <script type='text/javascript'>
 	function collstate_add_expl(form) {
@@ -406,7 +308,7 @@ $collstate_expl_list_form = "
 </script>
 <!-- Liste des expl -->
 <div id='collstate_advanced_expl_listParent' class='notice-parent'>
-	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='collstate_advanced_expl_list"."Img' title='".$msg['plus_detail']."' border='0' onClick=\"expandBase('collstate_advanced_expl_list', true); return false;\" hspace='3'>
+    ".get_expandBase_button('collstate_advanced_expl_list')."
 	<span id='collstate_advanced_expl_listParent' class='notice-heada'>
 		".$msg["collstate_advanced_expl_list"]." (<span id='collstate_advanced_expl_listParent_nb'>0</span>)
 	</span>

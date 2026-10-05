@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<schema targetNamespace="http://export.divercities.eu/OAI/2.0/oai1dtouch_dc/" xmlns:oai1dtouch_dc="http://export.divercities.eu/OAI/2.0/oai1dtouch_dc/" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<annotation>
+		<documentation>
+			XML Schema 2016-09-23 by Grégoire Colson for 1D touch.
+			Adjusted for usage in the OAI-PMH.
+			Schema describe the 1D touch DC elements for description of albums and videogames
+		</documentation>
+	</annotation>
+
+	<element name="oai1dtouch_dc" type="oai1dtouch_dc:oai1dtouch_dcType" />
+
+	<complexType name="oai1dtouch_dcType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="id" minOccurs="1" maxOccurs="1" />
+			<element name="icpn" minOccurs="0" maxOccurs="1" />
+			<element name="category" minOccurs="0" maxOccurs="1" />
+			<element name="title" minOccurs="1" maxOccurs="1" />
+			<element name="date" minOccurs="1" maxOccurs="1" />
+			<element name="dateOfPublication" minOccurs="1" maxOccurs="1" />
+			<element name="label" minOccurs="0" maxOccurs="1" />
+			<element name="description" minOccurs="0" maxOccurs="1" />
+			<element name="summary" minOccurs="0" maxOccurs="1" />
+			<element name="publishing_year" minOccurs="0" maxOccurs="1" />
+			<element name="country" minOccurs="0" maxOccurs="1" />
+			<element name="duration" minOccurs="0" maxOccurs="1" />
+			<element name="producer" minOccurs="0" maxOccurs="1" />
+			<element name="hd" minOccurs="0" maxOccurs="1" />
+			<element name="languages" minOccurs="0" maxOccurs="1" />
+			<element name="subtitles" minOccurs="0" maxOccurs="1" />
+			<element name="credit" minOccurs="0" maxOccurs="1" />
+			<element name="description" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="default" minOccurs="0" maxOccurs="1" />
+						<element name="fr" minOccurs="0" maxOccurs="1" />
+						<element name="es" minOccurs="0" maxOccurs="1" />
+						<element name="en" minOccurs="0" maxOccurs="1" />
+						<element name="it" minOccurs="0" maxOccurs="1" />
+						<element name="de" minOccurs="0" maxOccurs="1" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="category" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="id_category" minOccurs="1" maxOccurs="1" />
+						<element name="name" minOccurs="1" maxOccurs="1" />
+						<element name="description" minOccurs="1" maxOccurs="1" />
+						<element name="description_short" minOccurs="1" maxOccurs="1" />
+						<element name="meta_description" minOccurs="1" maxOccurs="1" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="cover_url" minOccurs="1" maxOccurs="1" />
+			<element name="cover_url_highres" minOccurs="0" maxOccurs="1" />
+			<element name="url" minOccurs="1" maxOccurs="1" />
+			<element name="credits" minOccurs="0" maxOccurs="1" />
+			<element name="requirements" minOccurs="0" maxOccurs="1" />
+			<element name="artists" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="artist" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="styles" minOccurs="1" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="style" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="tracks" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="track" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element name="isrc" minOccurs="0" maxOccurs="1" />
+									<element name="position" minOccurs="1" maxOccurs="1" />
+									<element name="title" minOccurs="1" maxOccurs="1" />
+									<element name="length" minOccurs="1" maxOccurs="1" />
+									<element name="url" minOccurs="1" maxOccurs="1" />
+									<element name="url_low_bitrate" minOccurs="1" maxOccurs="1" />
+									<element name="artists">
+										<complexType>
+											<sequence>
+												<element name="artist" maxOccurs="unbounded" />
+											</sequence>
+										</complexType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="platforms" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="platform" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="videos" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="id" minOccurs="0" maxOccurs="1" />
+						<element name="name" minOccurs="0" maxOccurs="1" />
+						<element name="description" minOccurs="0" maxOccurs="1" />
+						<element name="duration" minOccurs="0" maxOccurs="1" />
+						<element name="video_url" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="studios" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="studio" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element name="name" minOccurs="1" maxOccurs="1" />
+									<element name="description" minOccurs="0" maxOccurs="1">
+										<complexType>
+											<sequence>
+												<element name="default" minOccurs="0" maxOccurs="1" />
+												<element name="fr" minOccurs="0" maxOccurs="1" />
+												<element name="es" minOccurs="0" maxOccurs="1" />
+												<element name="en" minOccurs="0" maxOccurs="1" />
+												<element name="it" minOccurs="0" maxOccurs="1" />
+												<element name="de" minOccurs="0" maxOccurs="1" />
+											</sequence>
+										</complexType>
+									</element>
+									<element name="creation_year" minOccurs="0" maxOccurs="1" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="actors" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="actor" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element name="name" minOccurs="1" maxOccurs="1" />
+									<element name="description" minOccurs="1" maxOccurs="1" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="directors" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="director" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element name="name" minOccurs="1" maxOccurs="1" />
+									<element name="description" minOccurs="1" maxOccurs="1" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+
+</schema>

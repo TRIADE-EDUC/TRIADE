@@ -1,12 +1,12 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_ui.js,v 1.7 2016-11-29 13:00:29 vtouchard Exp $
+// $Id: nomenclature_record_ui.js,v 1.7 2016/11/29 13:00:29 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/_base/lang", "apps/nomenclature/nomenclature_record_formations_ui", "apps/nomenclature/nomenclature_record_formations", "apps/nomenclature/nomenclature_record_partial_ui", "dijit/registry", "dojo/topic"], function(declare, _WidgetBase, domConstruct, dom, on, lang, record_formations_ui, record_formations, record_partial_ui, registry, topic){
 	/*
-	* Classe nomenclature_record_ui. Aiguilleur gÃ©nÃ©ral pour le formulaire (gÃ©nÃ©ral ou celui d'une fille
+	* Classe nomenclature_record_ui. Aiguilleur général pour le formulaire (général ou celui d'une fille
 	*/
 	return declare("nomenclature_record_ui",[_WidgetBase], {
 		current_form:null,
@@ -31,7 +31,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-construct", "dojo/d
 		},
 
 	    handle_events : function(evt_type,evt_args){
-	    	//pour le dÃ©bug, on affiche tout ce que l'on voit passer
+	    	//pour le débug, on affiche tout ce que l'on voit passer
 	    	//console.log("DEBUG",evt_type,evt_args);
 	    	switch(evt_type){
 	    		case "error_on_submit" :

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watcheslist_selector_categories.class.php,v 1.4 2015-04-03 11:16:29 jpermanne Exp $
+// $Id: cms_module_watcheslist_selector_categories.class.php,v 1.5 2022/01/18 20:34:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/docwatch/docwatch_category.class.php");
 
 class cms_module_watcheslist_selector_categories extends cms_module_common_selector{
@@ -36,9 +37,8 @@ class cms_module_watcheslist_selector_categories extends cms_module_common_selec
 	}
 	
 	protected function gen_select(){
-		global $dbh;
 		$query= "select id_category, category_title from docwatch_categories order by category_title";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		$select = "
 					<select name='".$this->get_form_value_name("categories")."[]' multiple='multiple'>";
 		if(pmb_mysql_num_rows($result)){
@@ -62,7 +62,7 @@ class cms_module_watcheslist_selector_categories extends cms_module_common_selec
 // 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

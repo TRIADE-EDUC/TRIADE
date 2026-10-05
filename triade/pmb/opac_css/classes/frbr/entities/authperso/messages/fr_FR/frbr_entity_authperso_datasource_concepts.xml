@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_authperso_datasource_concepts.xml,v 1.1 2019/09/26 13:34:52 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_authperso_datasource_concepts_indexing'>Concepts indexant l'autorité personnalisée</entry>
+	<entry code='frbr_entity_authperso_datasource_concepts_used_in_custom_fields'>Autorité utilisée dans un champ perso de concepts</entry>
+	<entry code='frbr_entity_authperso_datasource_concepts_aut_link'>Autorités liées</entry>
+</XMLlist>

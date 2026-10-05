@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bookreaderZIP.class.php,v 1.4 2018-02-26 17:01:59 apetithomme Exp $
+// $Id: bookreaderZIP.class.php,v 1.7.2.1 2024/12/19 08:50:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $visionneuse_path;
 
 if(!class_exists('zip')) {
 	require_once($visionneuse_path."/../classes/zip.class.php");
@@ -12,22 +14,21 @@ if(!class_exists('zip')) {
 require_once($visionneuse_path."/classes/mimetypes/bookreader/PDFMetadata.class.php");
 
 class bookreaderZIP {
-	public $doc;			//le document ZIP Ã  traiter
-	public $parameters;	//tableau dÃ©crivant les paramÃ¨tres de la classe
+	public $doc;			//le document ZIP à traiter
+	public $parameters;	//tableau décrivant les paramètres de la classe
 	public $zipClass;			//l'objet zip
 	public $html_ordered;	//tableau des chemins vers les fichiers html de l'ebook dans l'ordre
  	public $PDFMetadata;
 	public $pagesSizes;
 	
-	function bookreaderZIP($doc,$parameters){
+	public function __construct($doc,$parameters){
 		$this->doc = $doc;
 		$this->parameters = $parameters;
 		$this->zipClass = new zip($this->doc->driver->get_cached_filename($this->doc->id));
 // 		$this->PDFMetadata = new PDFMetadata($this->generatePDF());
 	}
 	
-	function getPage($page){
-		$len = strlen($this->getPageCount());
+	public function getPage($page){
 		if (!file_exists($this->doc->driver->get_cached_filename("page_".$this->doc->id)."-".$page)) {
  			$content = $this->zipClass->get_page_content($page);
  			$this->doc->driver->setInCache("page_".$this->doc->id."-".$page,$content);
@@ -38,15 +39,15 @@ class bookreaderZIP {
 		header("Content-Type: image/jpg");
 	}
 	
-	function getWidth($page){
+	public function getWidth($page){
 		return $this->PDFMetadata->pagesSizes[$page]['width']*72/$this->parameters['resolution_image'];
 	}
 	
-	function getHeight($page){
+	public function getHeight($page){
 		return $this->PDFMetadata->pagesSizes[$page]['height']*72/$this->parameters['resolution_image'];
 	}
 	
-	function getPagesSizes(){
+	public function getPagesSizes(){
 		$this->pagesSizes= array();
 		if (!$this->doc->driver->isInCache($this->doc->id."_pagessized")) {
 			$this->pagesSizes = $this->zipClass->getPagesSizes();
@@ -62,19 +63,25 @@ class bookreaderZIP {
 // 		}
 	}
 	
-	function getPDF($pdfParams){
+	public function search($user_query){
+	    $matches = array();
+	    
+	    return array('matches' => $matches);
+	}
+	
+	public function getPDF($pdfParams){
 		$file = $this->generatePDF();
 		if (file_exists($file)){
 			header('Content-Type: application/pdf');
-			header('Content-Disposition: attachment; filename="' . str_replace(" ","_",basename(utf8_decode($pdfParams["outname"]))).'"');
+			header('Content-Disposition: attachment; filename="' . str_replace(" ","_",basename(encoding_normalize::utf8_decode($pdfParams["outname"]))).'"');
 			readfile($file);
 			exit;
 		} else {
-			print "Le PDF n'a pas Ã©tÃ© gÃ©nÃ©rÃ© correctement.";
+			print "Le PDF n'a pas été généré correctement.";
 		}
 	}
 	
-	function generatePDF(){
+	public function generatePDF(){
 		global $charset;
 		
 		if (!file_exists($this->doc->driver->get_cached_filename($this->doc->id).".pdf")){
@@ -88,7 +95,7 @@ class bookreaderZIP {
 				$tab_html_docs = array();
 				
 				//- On espace les % pour les styles d'image
-				//- On antislashe les espace dans les noms de fichiers pour compatibilitÃ© en ligne de commande
+				//- On antislashe les espace dans les noms de fichiers pour compatibilité en ligne de commande
 				foreach ($this->zipClass->entries as $file=>$entry) {
 					$file_path = $this->doc->driver->get_cached_filename($this->doc->id)."_unzip/".$file;
 					file_put_contents($file_path, str_replace("%", " %", file_get_contents($file_path)));
@@ -96,7 +103,7 @@ class bookreaderZIP {
 				}
 				$list_html_docs = implode(" ", $tab_html_docs);
 				if ($this->doc->titre) {
-					if ($charset != "utf-8") $titre = utf8_encode($this->doc->titre);
+					if ($charset != "utf-8") $titre = encoding_normalize::utf8_normalize($this->doc->titre);
 					else $titre = $this->doc->titre;
 				} else {
 					$titre = $this->doc->id;
@@ -105,19 +112,19 @@ class bookreaderZIP {
 				
 				$this->rrmdir($this->doc->driver->get_cached_filename($this->doc->id)."_unzip");
 			} else {
-				print "Erreur Ã  l'ouverture du zip!";
+				print "Erreur à l'ouverture du zip!";
 			}
 		}
 		return $this->doc->driver->get_cached_filename($this->doc->id).".pdf";
 	}
 	
-	function getPageCount(){
+	public function getPageCount(){
 // 		$page_count = $this->PDFMetadata->nb_pages;
 		$page_count = $this->zipClass->getNbPages();
 		return $page_count;
 	}
 
-	function rrmdir($dir){
+	public function rrmdir($dir){
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {

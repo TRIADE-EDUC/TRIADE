@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_docs_typdoc_ui.class.php,v 1.2 2019-06-10 15:14:33 btafforeau Exp $
+// $Id: list_configuration_docs_typdoc_ui.class.php,v 1.5 2023/03/24 07:44:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/docs/list_configuration_docs_ui.class.php");
 
 class list_configuration_docs_typdoc_ui extends list_configuration_docs_ui {
 	
@@ -15,10 +13,7 @@ class list_configuration_docs_typdoc_ui extends list_configuration_docs_ui {
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'tdoc_libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('tdoc_libelle');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -40,6 +35,22 @@ class list_configuration_docs_typdoc_ui extends list_configuration_docs_ui {
 		return $main_fields;
 	}
 	
+	protected function get_default_attributes_format_cell($object, $property) {
+		switch($property) {
+			case 'tdoc_libelle':
+				if ($object->tdoc_owner) {
+					return array(
+							'style' => 'font-style:italic;'
+					);
+				} else {
+					return array(
+							'style' => 'font-weight:bold;'
+					);
+				}
+		}
+		return parent::get_default_attributes_format_cell($object, $property);
+	}
+	
 	protected function get_cell_content($object, $property) {
 		global $msg, $charset;
 		global $pmb_quotas_avances;
@@ -47,13 +58,6 @@ class list_configuration_docs_typdoc_ui extends list_configuration_docs_ui {
 		
 		$content = '';
 		switch($property) {
-			case 'tdoc_libelle':
-				if ($object->tdoc_owner) {
-					$content .= "<i>".$object->tdoc_libelle."</i>";
-				} else {
-					$content .= "<strong>".$object->tdoc_libelle."</strong>";
-				}
-				break;
 			case 'duree_pret':
 			case 'duree_resa':
 			case 'short_loan_duration':

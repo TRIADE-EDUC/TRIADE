@@ -4,17 +4,17 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: workflow.xml,v 1.2 2012-07-31 10:12:16 dgoron Exp $ -->
+$Id: workflow.xml,v 1.3 2023/03/28 13:02:14 dgoron Exp $ -->
 
 <workflow>
 	<states>
 		<state id="1" name="WAITING">
 			<nextState>WAITING</nextState>
 			<nextState>RUNNING</nextState>
+			<nextState commands="ABORT">ABORTED</nextState>
 		</state>
 		<state id="2" name="RUNNING">
 			<nextState commands="SUSPEND">SUSPENDED</nextState>
-			<nextState commands="ABORT">ABORTED</nextState>
 			<nextState commands="STOP">STOPPED</nextState>
 			<nextState commands="FAIL" dontsend="yes">FAILED</nextState>
 			<nextState>FAILED</nextState>
@@ -25,12 +25,11 @@ $Id: workflow.xml,v 1.2 2012-07-31 10:12:16 dgoron Exp $ -->
 		<state id="4" name="SUSPENDED">
 			<nextState commands="RESUME">WAITING</nextState>
 			<nextState commands="STOP">STOPPED</nextState>
-			<nextState commands="ABORT">ABORTED</nextState>
+<!-- 			<nextState commands="ABORT">ABORTED</nextState> -->
 			<nextState commands="FAIL" dontsend="yes">FAILED</nextState>
 		</state>
 		<state id="5" name="STOPPED">
-			<!--<nextState commands="ABORT" dontsend="yes">ENDED</nextState>
-			--><!--<nextState commands="RESUME">RUNNING</nextState>-->
+			<!--<nextState commands="RESUME">RUNNING</nextState>-->
 		</state>
 		<state id="6" name="FAILED">
 			<nextState commands="STOP" dontsend="yes">STOPPED</nextState>

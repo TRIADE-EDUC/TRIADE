@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_generic_authorities_uniform_titles.class.php,v 1.5 2016-09-20 14:33:53 vtouchard Exp $
+// $Id: cms_module_common_selector_generic_authorities_uniform_titles.class.php,v 1.5 2016/09/20 14:33:53 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -23,14 +23,14 @@ class cms_module_common_selector_generic_authorities_uniform_titles extends cms_
 	}
 	
 	/**
-	 * Retourne les identifiants non uniques des autoritÃ©s
+	 * Retourne les identifiants non uniques des autorités
 	 */
 	public function get_authorities_raw_ids() {
 		if (!$this->authorities_raw_ids) {
 			$values = parent::get_authorities_raw_ids();
 			if (is_array($values)) {
 				$this->authorities_raw_ids = array();
-				// On trie par titre par dÃ©faut
+				// On trie par titre par défaut
 				$query = 'select tu_id from titres_uniformes where tu_id in ("'.implode('","', $values).'") order by index_tu';
 				$result = pmb_mysql_query($query);
 				if (pmb_mysql_num_rows($result)) {

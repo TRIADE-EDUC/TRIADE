@@ -1,14 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.18 2017-07-28 14:00:16 ngantier Exp $
+// $Id: main.inc.php,v 1.21 2023/07/26 12:49:31 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($id_empr)) $id_empr = 0; else $id_empr += 0;
-if(!isset($id_notice)) $id_notice = 0; else $id_notice += 0;
-if(!isset($id_bulletin)) $id_bulletin = 0; else $id_bulletin += 0;
+global $class_path, $include_path, $msg;
+global $pmb_indexation_lang;
+global $id_empr, $id_notice, $id_bulletin, $groupID;
+global $database_window_title, $layout_begin, $menu_search, $mode;
+
+$id_empr = intval($id_empr);
+$id_notice = intval($id_notice);
+$id_bulletin = intval($id_bulletin);
+$groupID = intval($groupID);
 
 // page de switch recherche notice
 
@@ -43,55 +49,59 @@ if (!$id_empr) {
 	error_message($msg[350], $msg[54], 1 , './circ.php');
 } else {
 	if($id_notice || $id_bulletin) {
-		// notice sÃ©lectionnÃ©e -> crÃ©ation de la rÃ©servation
-		// include du fichier des opÃ©rations de rÃ©servation
+		// notice sélectionnée -> création de la réservation
+		// include du fichier des opérations de réservation
 		include('./circ/resa/do_resa.inc.php');
 	} else {
-		// rÃ©cupÃ©ration nom emprunteur
+		// récupération nom emprunteur
 		$requete = "SELECT empr_nom, empr_prenom, empr_cb FROM empr WHERE id_empr=$id_empr LIMIT 1";
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = @pmb_mysql_query($requete);
 		if(!pmb_mysql_num_rows($result)) {
 			// pas d'emprunteur correspondant, quelque chose ne va pas
 			error_message($msg[350], $msg[54], 1 , './circ.php');
 		} else {
 			$empr = pmb_mysql_fetch_object($result);
 			$name = $empr->empr_prenom;
-			$name ? $name .= ' '.$empr->empr_nom : $name = $empr->empr_nom;
+			if ($name) {
+			    $name .= ' '.$empr->empr_nom;
+			} else {
+			    $name = $empr->empr_nom;
+			}
 			echo window_title($database_window_title.$name.$msg[1003].$msg[352]);
 			$layout_begin = preg_replace('/!!nom_lecteur!!/m', $name, $layout_begin);
 			$layout_begin = preg_replace('/!!cb_lecteur!!/m', $empr->empr_cb, $layout_begin);
 			print pmb_bidi($layout_begin);
 			switch($mode) {
-				case 1:
-					// recherche catÃ©gorie/sujet
+				case '1' :
+					// recherche catégorie/sujet
 					print $menu_search[1];
 					include('./circ/resa/subjects/main.inc.php');
 					break;
-				case 5:
+				case '5' :
 					// recherche par termes
 					print $menu_search[6];
 					include('./circ/resa/terms/main.inc.php');
 					break;
-				case 2:
-					// recherche Ã©diteur/collection
+				case '2' :
+					// recherche éditeur/collection
 					print $menu_search[2];
 					include('./circ/resa/publishers/main.inc.php');
 					break;
-				case 3:
-					// accÃ¨s aux paniers
+				case '3' :
+					// accès aux paniers
 					print $menu_search[3];
 					include('./circ/resa/cart.inc.php');
 					break;
-				case 4:
+				case '4' :
 					// autres recherches
 					print $menu_search[4];
 					include('./circ/resa/others.inc.php');
 					break;
 				case 'view_serial':
-					// affichage de la liste des Ã©lÃ©ments bulletinÃ©s pour un pÃ©riodique
+					// affichage de la liste des éléments bulletinés pour un périodique
 					include('./circ/resa/view_serial.inc.php');
 					break;
-				case 6:
+				case '6' :
 					// recherches avancees
 					print $menu_search[6];
 					include('./circ/resa/extended/main.inc.php');

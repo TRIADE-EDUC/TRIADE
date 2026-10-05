@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
 <!-- messages localisés en français pour le module Article
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_list.xml,v 1.4 2018-05-25 12:05:27 dgoron Exp $ -->
+$Id: cms_module_common_datasource_list.xml,v 1.9.6.2.2.1 2025/04/11 10:10:09 jparis Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_datasource_list_limit">Maximum number of elements to return</entry>
@@ -35,4 +35,24 @@ $Id: cms_module_common_datasource_list.xml,v 1.4 2018-05-25 12:05:27 dgoron Exp 
 	<entry code="cms_module_common_datasource_list_sort_by_default">Défaut</entry>
 	<entry code="cms_module_common_datasource_list_sort_by_name">Libellé</entry>
 	<entry code="cms_module_common_datasource_list_sort_by_idetagere">Identifiant</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_rand">Aléatoire</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_nom_bannette">Nom de la bannette</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_comment_public">Commentaire public</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_date_last_remplissage">Date de dernier remplissage</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_date_last_envoi">Date de dernier envoi</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_area">Identifiant</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_area_title">Libellé</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_animation">Identifiant</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_dateajout">Date d'ajout</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_note">Note</entry>
+	<entry code="cms_module_common_datasource_list_paging">Pagination</entry>
+	<entry code="cms_module_common_datasource_list_paging_nb_elements">Nombre d'éléments par page</entry>
+	<entry code="cms_module_common_datasource_list_paging_activate">Activer</entry>
+	<entry code="cms_module_common_datasource_list_paging_not_activate">Désactiver</entry>
+	<entry code="cms_module_common_view_list_paging_paginator_title">Affiche le paginateur</entry>
+	<entry code="cms_module_common_view_list_paging_nb_per_page_title">Affiche la sélection du nombre d'éléments par page</entry>
+	<entry code="cms_module_common_view_list_paging_navigator_title">Affiche le paginateur + le nombre d'éléments par page</entry>	
+	<entry code="cms_module_common_datasource_list_paging_customs">Valeurs numériques du paginateur (séparées par des virgules)</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_source_order">Ordre défini dans le champ</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_id_diffusion">Identifiant</entry>
 </XMLlist>

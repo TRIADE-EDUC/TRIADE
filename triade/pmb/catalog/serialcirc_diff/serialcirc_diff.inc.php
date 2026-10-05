@@ -1,21 +1,28 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_diff.inc.php,v 1.13 2019-04-20 14:45:16 ccraig Exp $
+// $Id: serialcirc_diff.inc.php,v 1.14 2023/01/05 11:11:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $sub, $action;
+global $id_serialcirc, $num_abt, $empr_id;
+global $circ_type, $virtual_circ, $simple_circ, $no_ret_circ, $duration, $checked, $retard_mode;
+global $allow_resa, $allow_copy, $allow_send_ask, $allow_subscription;
+global $duration_before_send, $expl_statut_circ, $expl_statut_circ_after;
+
 require_once("$class_path/serialcirc_diff.class.php");
 
-if(!isset($id_serialcirc)) $id_serialcirc = 0;
-if(!isset($empr_id)) $empr_id = 0;
+$id_serialcirc = intval($id_serialcirc);
+$num_abt = intval($num_abt);
+$empr_id = intval($empr_id);
 
 $serialcirc_diff=new serialcirc_diff($id_serialcirc,$num_abt);
 
 switch($sub){		
 	case 'option_form':
-		if($action=='save'){	
+		if($action=='save'){
 			if(!isset($virtual_circ)) $virtual_circ='';
 			if(!isset($simple_circ)) $simple_circ='';
 			if(!isset($no_ret_circ)) $no_ret_circ='';
@@ -25,9 +32,10 @@ switch($sub){
 			if(!isset($allow_send_ask)) $allow_send_ask='';
 			if(!isset($allow_subscription)) $allow_subscription='';			
 			
-			$data['circ_type']=$circ_type; // rotative ou Ã©toile
+			if(!isset($data)) $data = array();
+			$data['circ_type']=$circ_type; // rotative ou étoile
 			$data['virtual_circ']=$virtual_circ; //  virtuelle
-			$data['simple_circ']=$simple_circ; //  simplifiÃ©e
+			$data['simple_circ']=$simple_circ; //  simplifiée
 			$data['no_ret_circ']=$no_ret_circ; 
 			$data['duration']=$duration;
 			$data['checked']=$checked;
@@ -62,6 +70,7 @@ switch($sub){
 	break;	
 	case 'empr_form':
 		if($action=='save'){
+			if(!isset($data)) $data = array();
 			$data['duration']=$duration;
 			$data['id_empr']=$id_empr;
 			$serialcirc_diff->empr_save($id_diff,$data);
@@ -71,6 +80,7 @@ switch($sub){
 	break;	
 	case 'group_form':		
 		if($action=='save'){
+			if(!isset($data)) $data = array();
 			$data['group_name']=$group_name;
 			$data['type_diff']=$type_diff; // circ en Marguerite ou normal
 			$data['duration']=$duration;

@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: caddie_ajax.inc.php,v 1.6 2018-11-06 13:12:31 dgoron Exp $
+// $Id: caddie_ajax.inc.php,v 1.11 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $sub, $idcaddie, $action, $id_item, $charset, $action, $caddie, $object, $object_type;
 
 require_once("$class_path/empr_caddie.class.php");
 require_once($include_path."/empr_cart.inc.php");
@@ -37,7 +39,7 @@ switch($sub) {
 				'id'=>$id_item,
 				'idcaddie'=>$idcaddie,
 				'res_pointage'=>$res_pointage,
-				'aff_cart_nb_items'=>($charset != "utf-8" ? utf8_encode($aff_cart_nb_items) : $aff_cart_nb_items)
+				'aff_cart_nb_items'=>($charset != "utf-8" ? encoding_normalize::utf8_normalize($aff_cart_nb_items) : $aff_cart_nb_items)
 		);
 		ajax_http_send_response($result);
 		break;
@@ -58,23 +60,31 @@ switch($sub) {
 		}
 		break;
 	default:
-		$idcaddie=substr($caddie,5);
-		$object_type=substr($object,0,4);
-		$object_id=substr($object,10);
-		$idcaddie = empr_caddie::check_rights($idcaddie) ;
-		if ($idcaddie) {
-			$myCart = new empr_caddie($idcaddie);
-			switch($action) {
-				case 'delete':
-					$myCart->del_item($object_id);
-					break;
-				default:
-					$myCart->add_item($object_id);
-					break;
-			}
-			$myCart->compte_items();
-		} else die("Failed: "."obj=".$object." caddie=".$caddie);
-		print $myCart->nb_item;
+	    switch($action) {
+	        case "list":
+	            require_once($class_path.'/caddie/caddie_root_lists_controller.class.php');
+	            caddie_root_lists_controller::proceed_ajax($object_type, 'caddie_content');
+	            break;
+	        default:
+        		$idcaddie=substr($caddie,5);
+        		$object_type=substr($object,0,4);
+        		$object_id=substr($object,10);
+        		$idcaddie = empr_caddie::check_rights($idcaddie) ;
+        		if ($idcaddie) {
+        			$myCart = new empr_caddie($idcaddie);
+        			switch($action) {
+        				case 'delete':
+        					$myCart->del_item($object_id);
+        					break;
+        				default:
+        					$myCart->add_item($object_id);
+        					break;
+        			}
+        			$myCart->compte_items();
+        		} else die("Failed: "."obj=".$object." caddie=".$caddie);
+        		print $myCart->nb_item;
+        		break;
+	    }
 		break;
 }
 

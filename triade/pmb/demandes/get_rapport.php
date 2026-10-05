@@ -1,9 +1,9 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Yves PRATTER                                                   |
 // +-------------------------------------------------+
-// $Id: get_rapport.php,v 1.4 2012-09-06 08:02:11 ngantier Exp $
+// $Id: get_rapport.php,v 1.4 2012/09/06 08:02:11 ngantier Exp $
 
 $base_path="./..";                            
 $base_auth = "DEMANDES_AUTH";  

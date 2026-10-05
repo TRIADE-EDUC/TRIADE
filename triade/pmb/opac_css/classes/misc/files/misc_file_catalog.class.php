@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_catalog.class.php,v 1.4 2018-11-27 16:56:20 dgoron Exp $
+// $Id: misc_file_catalog.class.php,v 1.6 2020/08/17 11:57:12 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -24,7 +24,11 @@ class misc_file_catalog extends misc_file {
 		if(file_exists($this->path.'/'.$this->filename)) {
 			$xml = file_get_contents($this->path.'/'.$this->filename);
 			static::$xml_catalog = _parser_text_no_function_($xml,"CATALOG");
-			static::$xml_catalog['ACTION'] = $this->apply_sort(static::$xml_catalog['ACTION']);
+			if(isset(static::$xml_catalog['ACTION'])) {
+				static::$xml_catalog['ACTION'] = $this->apply_sort(static::$xml_catalog['ACTION']);
+			}elseif(isset(static::$xml_catalog['ITEM'])) {
+				static::$xml_catalog['ITEM'] = $this->apply_sort(static::$xml_catalog['ITEM']);
+			}
 		}
 	}
 	
@@ -62,7 +66,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	public function get_display_list() {
-		$display = "<table id='file_catalog_list'>";
+		$display = "<table id='misc_file_catalog_list'>";
 		$display .= $this->get_display_header_list();
 		if(count(static::$xml_catalog)) {
 			$display .= $this->get_display_content_list();
@@ -101,7 +105,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	protected function apply_sort($substitution_fields) {
-		if(!count($this->data)) {
+		if (empty($this->data)) {
 			return $substitution_fields;
 		}
 		$sorted_substitution = array();
@@ -117,7 +121,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	public function apply_substitution($fields) {
-		if(count($this->data)) {
+		if (!empty($this->data)) {
 			$substitution = array();
 			foreach ($fields as $field) {
 				if(!isset($this->data[$field['ID']]['visible']) || $this->data[$field['ID']]['visible']) {

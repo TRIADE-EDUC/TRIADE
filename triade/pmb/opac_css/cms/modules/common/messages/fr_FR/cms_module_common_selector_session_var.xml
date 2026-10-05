@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le sélecteur flux rss
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_session_var.xml,v 1.1 2020/02/21 14:36:01 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_session_var_label">Valeur</entry>
+</XMLlist>

@@ -1,6 +1,6 @@
 <?php
-error_reporting(0);
 session_start();
+error_reporting(0);
 if (empty($_SESSION["nom"])){
 	header('Location: ./acces_refuse.php');
 	exit;
@@ -20,7 +20,7 @@ PgClose();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -78,8 +78,8 @@ print "$_POST[statDebit]<br>";
 		<!-- "text-align: center" à cause du bug centrage d'IE :( -->
 		<div style="text-align: center;">
 			<div id="mainInst" style='box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);'>
-				<img src="./image/logo_triade_licence.gif"
-				     alt="logo_triade_licence" />
+				<img src="./image/commun/logo_triade_licence.png" width='50%'
+                                     alt="logo_triade_licence" />
 <?php
 	include_once("./common/version.php");
 	include_once("./common/productId.php");
@@ -163,7 +163,7 @@ print "$_POST[statDebit]<br>";
 	</div>		</div>	</div>
 
 <?php
-	include_once("installation/librairie/pied_page.php");
+	pieddepage();
 ?>
 
 	</body>

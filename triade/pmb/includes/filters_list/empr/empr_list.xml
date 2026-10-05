@@ -101,19 +101,50 @@
 		</link>
 	</field>
 	
+	<!-- message -->
+	<field name="msg:empr_msg" type="text" value="m" id="13" filterable="no" sortable="no" displayable="yes">
+		<tablefield>empr_msg</tablefield>
+	</field>
+	
+	<!-- Identifiant -->
+	<field name="msg:1601" type="text" value="i" id="14" filterable="no" sortable="yes" displayable="yes">
+		<tablefield>id_empr</tablefield>
+	</field>
+	
+	<!-- Mail -->
+	<field name="msg:email" type="text" value="em" id="15" filterable="no" sortable="yes" displayable="yes">
+		<tablefield>empr_mail</tablefield>
+	</field>
+	
+	<!-- Téléphone -->
+	<field name="msg:73" type="text" value="t" id="16" filterable="no" sortable="yes" displayable="yes">
+		<tablefield>empr_tel1</tablefield>
+	</field>
+	
+	<!-- Langue -->
+	<field name="msg:empr_langue_opac" type="text" value="lg" id="21" filterable="yes" sortable="yes" displayable="yes">
+		<tablefield>empr_lang</tablefield>
+	</field>
+	
 	</fixedfields>
 	<specialfields>
 		<field name="msg:add_empr_cart" id="1" function="iconepanier">
 		</field>
-		<field name="msg:relance_dernier_niveau" id="2" function="filter_niveau" defaultvalue="msg:all_level_relances">
+		<field name="msg:relance_dernier_niveau" id="2" function="relance::filter_niveau" defaultvalue="msg:all_level_relances">
 			<param>level_min</param>
 		</field>
-		<field name="msg:relance_niveau_suppose" id="3" function="filter_niveau" defaultvalue="msg:all_level_relances">
+		<field name="msg:relance_niveau_suppose" id="3" function="relance::filter_niveau" defaultvalue="msg:all_level_relances">
 			<param>level_normal</param>
 		</field>
 		<field name="msg:empr_nb_pret" id="4" function="get_nbpret" defaultvalue="msg:empr_nb_pret">
 		</field>
-		<field name="msg:empr_filter_expl_loc" id="13" function="filter_loc_expl" defaultvalue="msg:all_location"/>
+		<field name="msg:relance_last_dates" id="17" function="relance::filter_last_dates" defaultvalue="msg:print_relance_clear_all">
+			<param>level_min_date_relance</param>
+		</field>
+		<field name="msg:empr_filter_expl_loc" id="13" function="relance::filter_loc_expl" defaultvalue="msg:all_location"/>
+		<field name="msg:groupes_nb_resa_dont_valides" id="18" function="emprunteur::get_nb_resas_and_validated" defaultvalue="msg:empr_nb_resa" />
+		<field name="msg:nb_loans_late" id="19" function="emprunteur::get_nb_loans_late" defaultvalue="msg:empr_nb_pret" />
+		<field name="msg:nb_loans_including_late" id="20" function="emprunteur::get_nb_loans_including_late" defaultvalue="msg:empr_nb_pret" />
 	</specialfields>
 	
 	<!-- Table de référence pour les champs personnalisés de prêts -->

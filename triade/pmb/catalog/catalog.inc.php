@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: catalog.inc.php,v 1.45 2018-09-05 15:27:30 tsamson Exp $
+// $Id: catalog.inc.php,v 1.49 2023/09/04 14:31:19 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-echo window_title($database_window_title.$msg[6].$msg[1003].$msg[1001]);
+global $base_path, $class_path, $include_path, $pmb_indexation_lang, $pmb_prefill_cote, $pmb_javascript_office_editor;
+global $categ, $msg, $id, $plugin,$sub;
 
-$_SESSION["encodage_fic_source"]="";//On rÃ©initialise l'encodage des fichiers d'entrÃ©es (pour z39-50 et connecteur)
+$_SESSION["encodage_fic_source"]="";//On réinitialise l'encodage des fichiers d'entrées (pour z39-50 et connecteur)
 
 require_once("$include_path/templates/catalog.tpl.php");
 require_once("$include_path/isbn.inc.php");
@@ -44,7 +45,9 @@ if ($pmb_prefill_cote) {
 }
 if($pmb_javascript_office_editor){
 	print $pmb_javascript_office_editor;
-	print "<script type='text/javascript' src='".$base_path."/javascript/tinyMCE_interface.js'></script>";
+	print "<script type='text/javascript'>
+        pmb_include('$base_path/javascript/tinyMCE_interface.js');
+    </script>";
 }
 
 switch($categ) {
@@ -109,7 +112,6 @@ switch($categ) {
 		include('./catalog/notices/notice_replace.inc.php');
 		break;
 	case 'duplicate':
-		print "<h1>$msg[catal_duplicate_notice]</h1>";
 		// routine de copie
 		$notice = new notice($id);
 		$notice->id=0 ;
@@ -133,7 +135,7 @@ switch($categ) {
 		include('./catalog/explnum/del_explnum.inc.php');
 		break;
 	case 'sug' :
-		//CrÃ©ation de suggestion
+		//Création de suggestion
 		include("./catalog/suggestions/make_sug.inc.php");
 		break;
 	case 'avis':
@@ -157,9 +159,6 @@ switch($categ) {
 		break;
 	case 'contribution_area':
 		include("./catalog/contribution_area/main.inc.php");
-		break;
-	case 'rdf_conversion':
-		include("./catalog/notices/rdf_conversion.inc.php");
 		break;
 	default:
 		include('./catalog/notices/search/main.inc.php');

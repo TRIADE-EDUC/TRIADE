@@ -1,11 +1,11 @@
 <?php
-      session_start();
+session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -21,146 +21,100 @@
 ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4-2.css">
 <script language="JavaScript" src="librairie_js/clickdroit.js"></script>
-<title>Triade</title>
+<title>Triade — Maintenance</title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php include("./librairie_php/db_triade_admin.php"); ?>
 <SCRIPT language="JavaScript" src="librairie_js/menudepart.js"></SCRIPT>
 <?php include("librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<?php
-      if ($_GET["saisie_efface"] == "oui") {
-      		$fic="../data/maintenance.txt";
-      		if (file_exists($fic)) {
-	              unlink($fic);
-		}
-      }
-?>
-<SCRIPT language="JavaScript" src="./librairie_js/menudepart1.js"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Service de maintenance</font></b></td></tr>
-<tr id='cadreCentral0' ><td > <p align="left"><font color="#000000">
-<TABLE  bordercolor="#000000" border=0 width=100%>
-<TR><TD>
-<font class=T1>
-<form method=post name=formulaire >
-<BR><DIV align=right>
-<input type=submit Value="Ajouter la maintenance" name=create STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=button Value="Supprimer la maintenance" onclick="open('maintenance.php?saisie_efface=oui','_parent','')" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;</div><BR>
-<ul>
-<font class="T2">
-Le service Triade sera indisponible le <input type=text value="jj/mm/aaaa" readonly name="dates" size=12>
-<?php
- include_once("../librairie_php/calendar.php");
- calendarDim("id2","document.formulaire.dates",$_SESSION["langue"],"0","0");
-?>
-<br><br>
-entre
-<select name=time1>
-<option value="00h00" STYLE='color:#000066;background-color:#FCE4BA'>00h00</option>
-<option value="01h00" STYLE='color:#000066;background-color:#FCE4BA'>01h00</option>
-<option value="02h00" STYLE='color:#000066;background-color:#FCE4BA'>02h00</option>
-<option value="03h00" STYLE='color:#000066;background-color:#FCE4BA'>03h00</option>
-<option value="04h00" STYLE='color:#000066;background-color:#FCE4BA'>04h00</option>
-<option value="05h00" STYLE='color:#000066;background-color:#FCE4BA'>05h00</option>
-<option value="06h00" STYLE='color:#000066;background-color:#FCE4BA'>06h00</option>
-<option value="07h00" STYLE='color:#000066;background-color:#FCE4BA'>07h00</option>
-<option value="08h00" STYLE='color:#000066;background-color:#FCE4BA'>08h00</option>
-<option value="09h00" STYLE='color:#000066;background-color:#FCE4BA'>09h00</option>
-<option value="10h00" STYLE='color:#000066;background-color:#FCE4BA'>10h00</option>
-<option value="11h00" STYLE='color:#000066;background-color:#FCE4BA'>11h00</option>
-<option value="12h00" STYLE='color:#000066;background-color:#FCE4BA'>12h00</option>
-<option value="13h00" STYLE='color:#000066;background-color:#FCE4BA'>13h00</option>
-<option value="14h00" STYLE='color:#000066;background-color:#FCE4BA'>14h00</option>
-<option value="15h00" STYLE='color:#000066;background-color:#FCE4BA'>15h00</option>
-<option value="16h00" STYLE='color:#000066;background-color:#FCE4BA'>16h00</option>
-<option value="17h00" STYLE='color:#000066;background-color:#FCE4BA'>17h00</option>
-<option value="18h00" STYLE='color:#000066;background-color:#FCE4BA'>18h00</option>
-<option value="19h00" STYLE='color:#000066;background-color:#FCE4BA'>19h00</option>
-<option value="20h00" STYLE='color:#000066;background-color:#FCE4BA'>20h00</option>
-<option value="21h00" STYLE='color:#000066;background-color:#FCE4BA'>21h00</option>
-<option value="22h00" STYLE='color:#000066;background-color:#FCE4BA'>22h00</option>
-<option value="23h00" STYLE='color:#000066;background-color:#FCE4BA'>23h00</option>
-</select>
-et
-<select name=time2>
-<option value="00h00" STYLE='color:#000066;background-color:#FCE4BA'>00h00</option>
-<option value="01h00" STYLE='color:#000066;background-color:#FCE4BA'>01h00</option>
-<option value="02h00" STYLE='color:#000066;background-color:#FCE4BA'>02h00</option>
-<option value="03h00" STYLE='color:#000066;background-color:#FCE4BA'>03h00</option>
-<option value="04h00" STYLE='color:#000066;background-color:#FCE4BA'>04h00</option>
-<option value="05h00" STYLE='color:#000066;background-color:#FCE4BA'>05h00</option>
-<option value="06h00" STYLE='color:#000066;background-color:#FCE4BA'>06h00</option>
-<option value="07h00" STYLE='color:#000066;background-color:#FCE4BA'>07h00</option>
-<option value="08h00" STYLE='color:#000066;background-color:#FCE4BA'>08h00</option>
-<option value="09h00" STYLE='color:#000066;background-color:#FCE4BA'>09h00</option>
-<option value="10h00" STYLE='color:#000066;background-color:#FCE4BA'>10h00</option>
-<option value="11h00" STYLE='color:#000066;background-color:#FCE4BA'>11h00</option>
-<option value="12h00" STYLE='color:#000066;background-color:#FCE4BA'>12h00</option>
-<option value="13h00" STYLE='color:#000066;background-color:#FCE4BA'>13h00</option>
-<option value="14h00" STYLE='color:#000066;background-color:#FCE4BA'>14h00</option>
-<option value="15h00" STYLE='color:#000066;background-color:#FCE4BA'>15h00</option>
-<option value="16h00" STYLE='color:#000066;background-color:#FCE4BA'>16h00</option>
-<option value="17h00" STYLE='color:#000066;background-color:#FCE4BA'>17h00</option>
-<option value="18h00" STYLE='color:#000066;background-color:#FCE4BA'>18h00</option>
-<option value="19h00" STYLE='color:#000066;background-color:#FCE4BA'>19h00</option>
-<option value="20h00" STYLE='color:#000066;background-color:#FCE4BA'>20h00</option>
-<option value="21h00" STYLE='color:#000066;background-color:#FCE4BA'>21h00</option>
-<option value="22h00" STYLE='color:#000066;background-color:#FCE4BA'>22h00</option>
-<option value="23h00" STYLE='color:#000066;background-color:#FCE4BA'>23h00</option>
-</select>
-</font>
-</ul>
-               <!-- // debut de la saisie -->
-               <?php
-	       if (isset($_POST["create"])) {
-	       		list($jour,$mois,$annee)=preg_split ('/\//', $_POST["dates"],3);
-	       		if (checkdate($mois,$jour,$annee)) {
-		       		$fic="../data/maintenance.txt";
-			       	$fichier=fopen("$fic","w");
-				$donnee=fwrite($fichier,$_POST["dates"].":".$_POST["time1"].":".$_POST["time2"]);
-			}else {
-				alertJs("Date refusée");
-			}
-		}
-               ?>
-</form>
-</font>
 
 <?php
-$fic="../data/maintenance.txt";
-$disabled="";
-if (file_exists($fic)) {
-	print "<br><br><br>";
-       	print "&nbsp;&nbsp;&nbsp;<i>Actuellement en position sur la première page d'accès de TRIADE :</i> ";
-       	print "<center>";
-       	print "<hr><br>";
-       	$fichier=fopen("$fic","r");
-       	$message=fread($fichier,"100");
-       	list($date,$time1,$time2)= preg_split ("/:/", $message, 3);
-       	$message="<b><font class='T2'><font color=red>ATTENTION</font></b><br><br>";
-       	$message.="Une intervention est prévue sur le logiciel <br><br>" ;
-       	$message.="Le service Triade sera inaccessible le <b>$date</b> <br><br> entre  <b>$time1 et $time2</font>";
-       	list($heure1,$minute1)=preg_split("/h/", $time1,2);
-       	list($heure2,$minute2)=preg_split("/h/", $time2,2);
-       	print $message;
-       	print "<br><br>";
+if (isset($_GET["saisie_efface"]) && $_GET["saisie_efface"] == "oui") {
+    $fic = "../data/maintenance.txt";
+    if (file_exists($fic)) { unlink($fic); }
 }
-
-
 ?>
-</center>
-<br><br>
-</TD></TR></TABLE>
-                   <!-- // fin de la saisie -->
+
+<SCRIPT language="JavaScript" src="./librairie_js/menudepart1.js"></SCRIPT>
+
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Service de maintenance</font></b></td></tr>
+<tr id='cadreCentral0'><td>
+
+<!-- Formulaire -->
+<div style="margin:10px 8px 14px;background:#f5f7ff;border:1px solid #c5cae9;border-radius:8px;padding:14px 18px;">
+    <form method="post" name="formulaire">
+
+        <div style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial;color:#333;margin-bottom:12px;">
+            Le service Triade sera indisponible le
+            <input type="text" value="jj/mm/aaaa" readonly name="dates" size="12"
+                   style="font-size:12px;border:1px solid #c5cae9;border-radius:4px;padding:3px 8px;cursor:pointer;">
+            <?php
+            include_once("../librairie_php/calendar.php");
+            calendarDim("id2", "document.formulaire.dates", $_SESSION["langue"], "0", "0");
+            ?>
+        </div>
+
+        <div style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial;color:#333;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            entre
+            <select name="time1" class="cc-select">
+                <?php for ($h = 0; $h < 24; $h++) { $v = sprintf("%02dh00", $h); echo "<option value=\"$v\">$v</option>"; } ?>
+            </select>
+            et
+            <select name="time2" class="cc-select">
+                <?php for ($h = 0; $h < 24; $h++) { $v = sprintf("%02dh00", $h); echo "<option value=\"$v\">$v</option>"; } ?>
+            </select>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="submit" value="Ajouter la maintenance" name="create" class="btn-enr">
+            <a href="maintenance.php?saisie_efface=oui" class="btn-retour" style="text-decoration:none;">Supprimer la maintenance</a>
+        </div>
+
+        <?php
+        if (isset($_POST["create"])) {
+            list($jour, $mois, $annee) = preg_split('/\//', $_POST["dates"], 3);
+            if (checkdate($mois, $jour, $annee)) {
+                $fic = "../data/maintenance.txt";
+                $fichier = fopen($fic, "w");
+                fwrite($fichier, $_POST["dates"] . ":" . $_POST["time1"] . ":" . $_POST["time2"]);
+                fclose($fichier);
+            } else {
+                alertJs("Date refusée");
+            }
+        }
+        ?>
+    </form>
+</div>
+
+<!-- Maintenance active -->
+<?php
+$fic = "../data/maintenance.txt";
+if (file_exists($fic)) {
+    $fichier = fopen($fic, "r");
+    $message = fread($fichier, 100);
+    fclose($fichier);
+    list($date, $time1, $time2) = preg_split("/:/", $message, 3);
+?>
+<div style="margin:0 8px 14px;padding:14px 18px;background:#fff3f3;border:1px solid #f5c6c6;border-radius:8px;font-size:12px;font-family:Electrolize,Trebuchet MS,Arial;color:#333;">
+    <div style="font-size:13px;font-weight:700;color:#c0392b;margin-bottom:8px;">&#9888; Maintenance active sur la page d'accueil</div>
+    Une intervention est prévue sur le logiciel.<br><br>
+    Le service Triade sera inaccessible le <strong><?php echo htmlspecialchars($date); ?></strong>
+    entre <strong><?php echo htmlspecialchars($time1); ?></strong> et <strong><?php echo htmlspecialchars($time2); ?></strong>.
+</div>
+<?php } ?>
+
 </td></tr></table>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>

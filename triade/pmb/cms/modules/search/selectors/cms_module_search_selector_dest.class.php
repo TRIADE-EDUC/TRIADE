@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_search_selector_dest.class.php,v 1.6 2019-02-28 08:22:16 dgoron Exp $
+// $Id: cms_module_search_selector_dest.class.php,v 1.7 2020/10/06 14:45:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -33,7 +33,7 @@ class cms_module_search_selector_dest extends cms_module_common_selector{
 		asort($dests_order);
 		$this->parameters = array();
 		foreach ($dests_order as $key=>$dest_order) {
-			if(in_array($key, $dests)) {
+			if(!empty($dests) && in_array($key, $dests)) {
 				$this->parameters[] = $key;
 			}
 		}
@@ -104,7 +104,7 @@ class cms_module_search_selector_dest extends cms_module_common_selector{
 	
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

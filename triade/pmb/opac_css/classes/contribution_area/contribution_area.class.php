@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area.class.php,v 1.6 2018-08-23 15:09:39 tsamson Exp $
+// $Id: contribution_area.class.php,v 1.15 2021/04/20 13:35:25 gneveu Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -16,7 +16,7 @@ require_once($class_path.'/onto/common/onto_common_uri.class.php');
 
 /**
  * class contribution_area
- * ReprÃ©sente un espace de contribution
+ * Représente un espace de contribution
  */
 class contribution_area {
 	
@@ -35,7 +35,7 @@ class contribution_area {
 	protected $id;
 	
 	/**
-	 * ScÃ©narios de dÃ©part
+	 * Scénarios de départ
 	 * 
 	 * @access protected
 	 */
@@ -57,11 +57,35 @@ class contribution_area {
 	 * Ordre
 	 * @var int $order
 	 */
-	protected $order; 
-
+	protected $order;
+	
+	/**
+	 * Répertoire de template d'autorités
+	 * @var string $repo_template_authorities
+	 */
+	protected $repo_template_authorities;
+	
+	/**
+	 * Répertoire de template de notices
+	 * @var string $repo_template
+	 */
+	protected $repo_template_records;
+	
+	/**
+	 * Espace utilisé pour la modification d'entité
+	 * @var int $repo_template
+	 */
+	protected $editing_entity;
+	
+	/**
+	 * parametre de visibilité de l'espace à l'opac
+	 * @var string $opac_visibility
+	 */
+	protected $opac_visibility;
+	
 	public function __construct($area_id = 0) {
 		if ($area_id) {
-			$this->id = $area_id * 1;
+			$this->id = intval($area_id);
 			$this->fetch_datas();
 		}
 	} // end of member function __construct
@@ -77,6 +101,10 @@ class contribution_area {
 				$this->comment = $result->area_comment;
 				$this->color = $result->area_color;
 				$this->order = $result->area_order;
+				$this->repo_template_authorities = $result->area_repo_template_authorities;
+				$this->repo_template_records = $result->area_repo_template_records;
+				$this->editing_entity = $result->area_editing_entity;
+				$this->opac_visibility = $result->area_opac_visibility;
 			}
 		}
 	}
@@ -90,7 +118,7 @@ class contribution_area {
 	 */
 	public static function get_list() {
 		$areas = array();
-		$query = 'select id_area as id,	area_title as title, area_comment as comment, area_color as color, area_order from contribution_area_areas order by area_order';
+		$query = 'select id_area as id,	area_title as title, area_comment as comment, area_color as color, area_order, area_opac_visibility, area_logo from contribution_area_areas order by area_order';
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			global $gestion_acces_active, $gestion_acces_empr_contribution_area;
@@ -104,7 +132,13 @@ class contribution_area {
 				if (isset($dom_4) && !$dom_4->getRights($_SESSION['id_empr_session'],$row['id'], 4)) {
 					$visible = false;
 				}
+				if (!$row['area_opac_visibility']) {
+				    $visible = false;
+				}
 				if ($visible) {
+				    if ($row['area_logo']) {
+				        $row['area_logo'] = "data:image/png;base64,".base64_encode(file_get_contents($row['area_logo']));
+				    }
 					$areas[] = $row;
 				}
 			}
@@ -160,5 +194,52 @@ class contribution_area {
 		return $this->color;
 	}
 		
+	public function get_repo_template_authorities() {
+	    return $this->repo_template_authorities;
+	}
 	
+	public function get_repo_template_records() {
+	    return $this->repo_template_records;
+	}
+	
+	public function get_editing_entity() {
+	    return $this->editing_entity;
+	}
+	
+	public static function get_editing_entity_area_id() {
+	    // On récupère l'espace de contribution pour la modification d'entité
+	    $query = "SELECT id_area FROM contribution_area_areas WHERE area_editing_entity = 1";
+	    $result = pmb_mysql_query($query);
+	    if (pmb_mysql_num_rows($result)) {
+    	    $row = pmb_mysql_fetch_assoc($result);
+    	    return $row['id_area'];
+	    }
+	    return 0;
+	}
+	
+	public function get_acces_editing_entity() {
+	    global $msg;
+	    
+	    return [
+	        0 => $msg['contribution_area_is_default_area_not_use'],
+	        1 => $msg['contribution_area_is_default_area']
+	    ];
+	}
+	
+	public function get_normalized_item(){
+	    $retour = array(
+	        "id" => $this->id,
+	        "title" => $this->title,
+	        "comment" => (!empty($this->comment) ? $this->comment : ''),
+	        "color" => (!empty($this->color) ? $this->color : ''),
+	        "order" => (!empty($this->order) ? $this->order : ''),
+	        "status" => (!empty($this->status) ? $this->status : ''),
+	        "opac_visibility" => $this->opac_visibility,
+	        "repo_template_authorities" => (!empty($this->repo_template_authorities) ? $this->repo_template_authorities : ''),
+	        "repo_template_records" => (!empty($this->repo_template_records) ? $this->repo_template_records : ''),
+	        "area_logo" => (!empty($this->area_logo) ? $this->area_logo : '')
+	    );
+	    
+	    return $retour;
+	}
 } // end of contribution_area

@@ -37,10 +37,13 @@
   }
 
   $idUser = Session_ok($sid);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
   include("lang/$APPLI_LANGUE.php");
 
-  $idAge += 0;
+  $idAge = (int)$idAge + 0;
 
   $sTmp = "";
 
@@ -158,7 +161,7 @@ if ($ztFrom == "note") {
   }
 
   // Recuperation pour les alertes par mail du nom et de l'adresse mail de l'utilisateur courant
-  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL."), util_email FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL."), util_email FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   $sNomExpediteur = $DB_CX->DbResult(0,0);
   $sMailExpediteur = $DB_CX->DbResult(0,1);
   // MOD Copie note par mail
@@ -174,7 +177,7 @@ if ($ztFrom == "note") {
     list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$tsNoteUTC);
     // Test de l'existence d'une note pour la plage horaire concernee
     // pour les personnes concernees par la note (autre que le createur)
-    $sql  = "SELECT DISTINCT(aco_util_id) AS acoUtilId FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne ";
+    $sql  = "SELECT DISTINCT(aco_util_id) AS acoUtilId FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne ";
     $sql .= "WHERE aco_age_id=age_id AND aco_util_id!=".$idUser." AND age_aty_id=2 AND age_id!=".$idAge;
     $sql .= " AND (($age_date='".$ztDateForm."' AND (($age_heure_debut<=".$zlHeureDebut." AND $age_heure_fin>".$zlHeureDebut.")";
     $sql .= " OR ($age_heure_debut>=".$zlHeureDebut." AND $age_heure_fin<=".$zlHeureFin." AND $age_heure_debut<=$age_heure_fin)";
@@ -211,7 +214,7 @@ if ($ztFrom == "note") {
   if (($ztAction == "DELETE" || $ztAction == "UPDATE") && $idAge) {
     // Construction de la liste des personnes qui ETAIENT concernees par l'ANCIENNE note
     // On ne retient que les utilisateurs (autres que l'auteur) qui ont choisi d'etre informe par email
-    $DB_CX->DbQuery("SELECT util_id, util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE aco_age_id=".$idAge." AND aco_util_id!=".$idUser." AND util_id=aco_util_id AND util_alert_affect='O' AND tzn_zone=util_timezone");
+    $DB_CX->DbQuery("SELECT util_id, util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE aco_age_id=".$idAge." AND aco_util_id!=".$idUser." AND util_id=aco_util_id AND util_alert_affect='O' AND tzn_zone=util_timezone");
     $aTabConcerne = array();
     $sOldDestMail = array();
     $sSupDestMail = array();
@@ -243,7 +246,7 @@ if ($ztFrom == "note") {
       $aTabNvConcerne = array();
       for ($nb=0;$nb < count($idParticipant);$nb++) {
         if ($idParticipant[$nb]!=$idUser) {
-          $DB_CX->DbQuery("SELECT util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idParticipant[$nb]." AND util_alert_affect='O' AND tzn_zone=util_timezone");
+          $DB_CX->DbQuery("SELECT util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idParticipant[$nb]." AND util_alert_affect='O' AND tzn_zone=util_timezone");
           // Test pour savoir si cet utilisateur a renseigne son adresse email
           if ($enr = $DB_CX->DbNextRow()) {
             if (!empty($enr['util_email'])) {
@@ -263,12 +266,12 @@ if ($ztFrom == "note") {
       // Permet d'envoyer un mail de suppression si une personne est retiree de la note
       $aTmp = array_diff($aTabConcerne, $aTabNvConcerne);
       // Concatenation des emails des personnes de la liste ci-dessus
-      while(list($sCle,$sValeur)=each($aTmp)) {
+      foreach ($aTmp as $sCle => $sValeur) {
         $sSupDestMail[$sCle] = $sValeur;
       }
     }
     // Recuperation des informations de la note avant la suppression
-    $DB_CX->DbQuery("SELECT age_date, age_heure_debut, age_libelle, age_lieu, age_detail, age_email_copie FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+    $DB_CX->DbQuery("SELECT age_date, age_heure_debut, age_libelle, age_lieu, age_detail, age_email_copie FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
     $sDate = $DB_CX->DbResult(0,0);
     $sHeureNoteSupp = $DB_CX->DbResult(0,1);
     $sLibelle = $DB_CX->DbResult(0,2);
@@ -311,7 +314,7 @@ if ($ztFrom == "note") {
     }
     if ($flag == 2 && $AUTORISE_SUPPR) {
       // Un utilisateur supprime une note qui lui avait ete affectee -> on informe le createur de la note
-      $DB_CX->DbQuery("SELECT util_email, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE age_id=".$idAge." AND util_id=age_util_id AND tzn_zone=util_timezone");
+      $DB_CX->DbQuery("SELECT util_email, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE age_id=".$idAge." AND util_id=age_util_id AND tzn_zone=util_timezone");
       $sAuteurNote = array();
       if ($enr = $DB_CX->DbNextRow()) {
         if ($enr['util_email']!="") {
@@ -334,16 +337,24 @@ if ($ztFrom == "note") {
     }
   }
 
+
+function esc($value,$DB_CX) {
+    return mysqli_real_escape_string($DB_CX->ConnexionID, $value);
+//    return "'" . mysqli_real_escape_string($DB_CX, $value) . "'";
+}
+
+
   if ($ztAction == "INSERT") {
     $sd = $ztDateForm;
-    $sql = "INSERT INTO ${PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id, age_email_contact, age_email_copie) ";
-    $sql .= "VALUES (0,".$idUser.",".$ckTypeNote.",'".$ztDateUTC."',".$zlHeureDebutUTC.",".$zlHeureFinUTC.",".$zlPeriodicite.",".$periode1.",".$periode2.",".$periode3.",".$periode4.",".$rdPlage.",".($nbOccurrence + $dateMax).",'".$ztLibelle."','".$ztDetail."',".$zlR1.",".$zlR2.",".$ckEmail.",".$rdPrive.",'".$zlCouleur."',".count($idParticipant).",".$idUser.",".$rdDispo.",'".$dateCreation."','".$dateCreation."',".$idUser.",'".$ztLieu."',".$zlContactAssocie.",".$ckEmailContact.",'".$ztEmailCopie."')";
+    $sql = "INSERT INTO {$PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id, age_email_contact, age_email_copie) ";
+    $sql .= "VALUES (0,".$idUser.",".$ckTypeNote.",'".$ztDateUTC."',".$zlHeureDebutUTC.",".$zlHeureFinUTC.",".$zlPeriodicite.",".$periode1.",".$periode2.",".$periode3.",".$periode4.",".$rdPlage.",".($nbOccurrence + $dateMax).",'".esc($ztLibelle,$DB_CX)."','".esc($ztDetail,$DB_CX)."',".$zlR1.",".$zlR2.",".$ckEmail.",".$rdPrive.",'".$zlCouleur."',".count($idParticipant).",".$idUser.",".$rdDispo.",'".$dateCreation."','".$dateCreation."',".$idUser.",'".esc($ztLieu,$DB_CX)."',".esc($zlContactAssocie,$DB_CX).",".$ckEmailContact.",'".$ztEmailCopie."')";
+//    print $sql; exit;
     $DB_CX->DbQuery($sql);
     $idAge = $DB_CX->DbInsertID();
 
     // Enregistrement des personnes concernees
     for ($nb=0;$nb < count($idParticipant);$nb++)
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
     $msg=8;
 
     //Si l'utilisateur a clique sur le bouton Recommencer,
@@ -359,29 +370,30 @@ if ($ztFrom == "note") {
     $liste = "0";
     if ($edit!="occ") {
       // Modification de la note mere -> on supprime toutes les occurences pour les recreer
-      $DB_CX->DbQuery("SELECT DISTINCT age_id FROM ${PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge);
+      $DB_CX->DbQuery("SELECT DISTINCT age_id FROM {$PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge);
       while ($enr = $DB_CX->DbNextRow()) {
         $liste .= ",".$enr['age_id'];
       }
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
       // Information sur la note mere a conserver dans les occurences recrees
-      $DB_CX->DbQuery("SELECT age_date_creation FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+      $DB_CX->DbQuery("SELECT age_date_creation FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
       if ($enr = $DB_CX->DbNextRow()) {
         $dateCreation = $enr['age_date_creation'];
       }
     }
-    $DB_CX->DbQuery("SELECT paf_util_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_consultant_id=".$idUser);
+    $DB_CX->DbQuery("SELECT paf_util_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_consultant_id=".$idUser);
     $utilAffecte = array();
     while ($enr = $DB_CX->DbNextRow()) {
       $utilAffecte[] = $enr['paf_util_id'];
     }
-    $DB_CX->DbQuery("SELECT DISTINCT aco_util_id FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.") AND aco_util_id NOT IN (".implode(",", $utilAffecte).") AND aco_util_id!=".$idUser);
+    $DB = new DB();
+    $DB_CX->DbQuery("SELECT DISTINCT aco_util_id FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.") AND aco_util_id NOT IN (".implode(",", $utilAffecte).") AND aco_util_id!=".$idUser);
     while ($enr = $DB_CX->DbNextRow()) {
       $idParticipant[] = $enr['aco_util_id'];
     }
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.")");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.")");
 
-    $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+    $sql = "UPDATE {$PREFIX_TABLE}agenda ";
     $sql .= "SET age_aty_id=".$ckTypeNote.",";
     $sql .= " age_date='".$ztDateUTC."',";
     $sql .= " age_heure_debut=".$zlHeureDebutUTC.",";
@@ -395,8 +407,8 @@ if ($ztFrom == "note") {
       $sql .= " age_plage=".$rdPlage.",";
       $sql .= " age_plage_duree=".($nbOccurrence + $dateMax).",";
     }
-    $sql .= " age_libelle='".$ztLibelle."',";
-    $sql .= " age_detail='".$ztDetail."',";
+    $sql .= " age_libelle='".esc($ztLibelle,$DB_CX)."',";
+    $sql .= " age_detail='".esc($ztDetail,$DB_CX)."',";
     $sql .= " age_rappel=".$zlR1.",";
     $sql .= " age_rappel_coeff=".$zlR2.",";
     $sql .= " age_email=".$ckEmail.",";
@@ -410,17 +422,20 @@ if ($ztFrom == "note") {
     $sql .= " age_disponibilite=".$rdDispo.",";
     $sql .= " age_date_modif='".gmdate("Y-m-d H:i:s", time())."',";
     $sql .= " age_modificateur_id=".$idUser.",";
-    $sql .= " age_lieu='".$ztLieu."',";
+    $sql .= " age_lieu='".esc($ztLieu,$DB_CX)."',";
     $sql .= " age_cal_id=".$zlContactAssocie." ";
     $sql .= "WHERE age_id=".$idAge;
     if ($droit_NOTES < _DROIT_NOTE_MODIF_CREATION)
       $sql .= " AND age_util_id=".$idUser;
+
+    if ($DB_CX == NULL) { $DB=new DB(); $DB_CX=$DB; } 
+
     $DB_CX->DbQuery($sql);
     $msg=9;
 
     // Enregistrement des personnes concernees
     for ($nb=0;$nb < count($idParticipant);$nb++)
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
   }
 
   elseif ($ztAction == "DELETE" && $idAge) {
@@ -434,16 +449,16 @@ if ($ztFrom == "note") {
     // Fin MOD Copie note par mail
     if ($flag == 2 && $AUTORISE_SUPPR) {
       //Suppression d'une note affectee
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge." AND aco_util_id=".$idUser);
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id=".$idAge." AND info_destinataire_id=".$idUser);
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge." AND aco_util_id=".$idUser);
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id=".$idAge." AND info_destinataire_id=".$idUser);
       //Recherche s'il reste des personnes concernees par cette note
-      $DB_CX->DbQuery("SELECT aco_util_id FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge);
+      $DB_CX->DbQuery("SELECT aco_util_id FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge);
       //si NON : on efface la note
       if (!$DB_CX->DbNumRows()) {
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
       } else {
         //si OUI : on reajuste le nombre de participant (pour l'appropriation)
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_nb_participant = ".$DB_CX->DbNumRows()." WHERE age_id=".$idAge);
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_nb_participant = ".$DB_CX->DbNumRows()." WHERE age_id=".$idAge);
       }
 
       //On informe l'auteur de la note
@@ -452,12 +467,12 @@ if ($ztFrom == "note") {
       }
     } elseif ($flag == 1) {
       //Suppression de la totalite d'une note par son auteur
-      $DB_CX->DbQuery("SELECT DISTINCT age_id FROM ${PREFIX_TABLE}agenda WHERE (age_id=".$idAge." OR age_mere_id=".$idAge.")".(($droit_NOTES < _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
+      $DB_CX->DbQuery("SELECT DISTINCT age_id FROM {$PREFIX_TABLE}agenda WHERE (age_id=".$idAge." OR age_mere_id=".$idAge.")".(($droit_NOTES < _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
       $liste = "0";
       while ($enr = $DB_CX->DbNextRow())
         $liste .= ",".$enr['age_id'];
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.")");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.")");
       //On informe les personnes concernees que l'auteur vient de supprimer la note qu'il avait cree
       if ($DB_CX->DbAffectedRows()>0 && count($tabOldDestMail)>0) {
         // On distingue chaque fuseau pour l'envoi
@@ -465,7 +480,7 @@ if ($ztFrom == "note") {
           envoiMail($sNomExpediteur, $sMailExpediteur, $tabOldDestMail[$key], $sSujet, $aCorps[$key]);
         }
       }
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id IN (".$liste.")");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id IN (".$liste.")");
       $msg=10;
       // MOD Copie note par mail
       if (count($tabSupEmailCopie)>0) {
@@ -474,15 +489,15 @@ if ($ztFrom == "note") {
       // Fin MOD Copie note par mail
     } else {
       //Suppression d'une occurrence d'une note par son auteur
-      $DB_CX->DbQuery("SELECT MIN(age_id) FROM ${PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge.(($droit_NOTES >= _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
+      $DB_CX->DbQuery("SELECT MIN(age_id) FROM {$PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge.(($droit_NOTES >= _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
       $newIdAge = $DB_CX->DbResult(0,0) + 0;
       if ($newIdAge) {
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=".$newIdAge." WHERE age_mere_id=".$idAge);
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=0 WHERE age_id=".$newIdAge);
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=".$newIdAge." WHERE age_mere_id=".$idAge);
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=0 WHERE age_id=".$newIdAge);
       }
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge.(($droit_NOTES < _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge.(($droit_NOTES < _DROIT_NOTE_COMPLET) ? " AND age_util_id=".$idUser :""));
       if ($DB_CX->DbAffectedRows()>0) {
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge);
        //On informe les personnes concernees que l'auteur vient de supprimer une occurrence d'une note qu'il avait cree
         if ($DB_CX->DbAffectedRows()>0 && count($tabOldDestMail)>0) {
           // On distingue chaque fuseau pour l'envoi
@@ -490,7 +505,7 @@ if ($ztFrom == "note") {
             envoiMail($sNomExpediteur, $sMailExpediteur, $tabOldDestMail[$key], $sSujet, $aCorps[$key]);
           }
         }
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id=".$idAge);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id=".$idAge);
       }
       $msg=11;
       // MOD Copie note par mail
@@ -504,18 +519,18 @@ if ($ztFrom == "note") {
 
   elseif ($ztAction == "APPROPRIATION" && $idAge) {
     // On recherche si c'est une note recurrente pour s'approprier toute la serie
-    $DB_CX->DbQuery("SELECT age_mere_id FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+    $DB_CX->DbQuery("SELECT age_mere_id FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
     $idAgeMere = $DB_CX->DbResult(0,0) + 0;
     if ($idAgeMere) {
       $idAge = $idAgeMere;
     }
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_util_id=".$idUser." WHERE (age_id=".$idAge." OR age_mere_id=".$idAge.")");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_util_id=".$idUser." WHERE (age_id=".$idAge." OR age_mere_id=".$idAge.")");
     $idAge = 0;
   }
   // MOD Scission de note
   elseif ($ztAction == "DIVIDE" && $idAge) {
     // Recuperation des infos sur la note mere et la fin des occurrences
-    $DB_CX->DbQuery("SELECT age_mere_id,age_date,age_heure_debut,age_plage,age_plage_duree FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+    $DB_CX->DbQuery("SELECT age_mere_id,age_date,age_heure_debut,age_plage,age_plage_duree FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
     $enr = $DB_CX->DbNextRow();
     $idAgeMere = $enr['age_mere_id'];
     $ageDate = $enr['age_date'];
@@ -527,13 +542,13 @@ if ($ztFrom == "note") {
     list($zlP3,$zlP2,$zlP1) = explode("-",$ageDate);
     $dateAge = mktime($hNote,$mNote,0,$zlP2,$zlP1,$zlP3);
     // Recuperation de la date de la note mere
-    $DB_CX->DbQuery("SELECT age_date FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAgeMere);
+    $DB_CX->DbQuery("SELECT age_date FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAgeMere);
     $ageDateMere = $DB_CX->DbResult(0,"age_date");
     // Decoupage
     if ($rdPlage==1) {
       // Repetition avec nombre d'occurrences
       // On trouve le nombre d'occurrences precedent la note de scission
-      $DB_CX->DbQuery("SELECT COUNT(*) FROM ${PREFIX_TABLE}agenda WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."'");
+      $DB_CX->DbQuery("SELECT COUNT(*) FROM {$PREFIX_TABLE}agenda WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."'");
       $nbOccG1 = $DB_CX->DbResult(0,0);
       $nbOccG2 = $nbOccurrence-$nbOccG1;
       $dateMaxG1 = 0;
@@ -541,7 +556,7 @@ if ($ztFrom == "note") {
     } else {
       // Repetition avec une date de fin
       // On trouve l'occurrence precedent la note de scission
-      $DB_CX->DbQuery("SELECT age_date FROM ${PREFIX_TABLE}agenda WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."' ORDER BY age_date DESC LIMIT 0,1");
+      $DB_CX->DbQuery("SELECT age_date FROM {$PREFIX_TABLE}agenda WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."' ORDER BY age_date DESC LIMIT 0,1");
       $ageDateFinG1 = $DB_CX->DbResult(0,"age_date");
       list($zlP3,$zlP2,$zlP1) = explode("-",$ageDateFinG1);
       $nbOccG1 = ($ageDateFinG1==$ageDateMere) ? 1 : 0;
@@ -552,26 +567,26 @@ if ($ztFrom == "note") {
     // On redefini le nombre ou la date de fin des occurrences du premier groupe de note
     if ($nbOccG1==1) {
       // Si une seule note se trouve dans le premier groupe, on enleve la periodicite
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=0, age_ape_id=1, age_periode1=0, age_periode2=0, age_periode3=0, age_periode4=0, age_plage=1, age_plage_duree=10 WHERE age_id=".$idAgeMere);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=0, age_ape_id=1, age_periode1=0, age_periode2=0, age_periode3=0, age_periode4=0, age_plage=1, age_plage_duree=10 WHERE age_id=".$idAgeMere);
     } else {
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_plage_duree=".($nbOccG1+$dateMaxG1)." WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."'");
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_plage_duree=".($nbOccG1+$dateMaxG1)." WHERE (age_id=".$idAgeMere." OR age_mere_id=".$idAgeMere.") AND age_date<'".$ageDate."'");
     }
     // On redefini le nombre d'occurrences du second groupe de note
     if ($nbOccG2==1) {
       // Si une seule note se trouve dans le second groupe, on enleve la periodicite
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=0, age_ape_id=1, age_periode1=0, age_periode2=0, age_periode3=0, age_periode4=0, age_plage=1, age_plage_duree=10 WHERE age_id=".$idAge);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=0, age_ape_id=1, age_periode1=0, age_periode2=0, age_periode3=0, age_periode4=0, age_plage=1, age_plage_duree=10 WHERE age_id=".$idAge);
     } else {
       // On defini la note de scission en note mere
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=0, age_plage_duree=".($nbOccG2+$dateMaxG2)." WHERE age_id=".$idAge);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=0, age_plage_duree=".($nbOccG2+$dateMaxG2)." WHERE age_id=".$idAge);
       // On redefini le nombre d'occurrences du second groupe de note et on les rattache a la note de scission
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=".$idAge.", age_plage_duree=".($nbOccG2+$dateMaxG2)." WHERE age_mere_id=".$idAgeMere." AND age_date>='".$ageDate."'");
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=".$idAge.", age_plage_duree=".($nbOccG2+$dateMaxG2)." WHERE age_mere_id=".$idAgeMere." AND age_date>='".$ageDate."'");
     }
     $idAge = 0;
   }
   // Fin MOD Scission de note
   if ($idAge) {
     // Information par mail des personnes a qui on a affecte une note
-    $DB_CX->DbQuery("SELECT util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}timezone WHERE aco_age_id=".$idAge." AND util_id=aco_util_id AND util_id!=".$idUser." AND util_alert_affect='O' AND tzn_zone=util_timezone");
+    $DB_CX->DbQuery("SELECT util_email, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}timezone WHERE aco_age_id=".$idAge." AND util_id=aco_util_id AND util_id!=".$idUser." AND util_alert_affect='O' AND tzn_zone=util_timezone");
     if ($DB_CX->DbNumRows()) {
       $destMail = array();
       while ($enr = $DB_CX->DbNextRow()) {
@@ -613,14 +628,14 @@ if ($ztFrom == "note") {
     }
     // Fin MOD Copie note par mail
     // Si la liste des destinataires non conserves est non nulle alors on les avertit
-    if (count($tabSupDestMail)>0) {
+    if (countTriade($tabSupDestMail)>0) {
       // On distingue chaque fuseau pour l'envoi
       foreach ($aDestListTZ as $key=>$libTZ) {
         envoiMail($sNomExpediteur, $sMailExpediteur, $tabSupDestMail[$key], $sSujet, $aCorps[$key]);
       }
     }
     // Requete generique
-    $sql = "INSERT INTO ${PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id, age_email_contact, age_email_copie) ";
+    $sql = "INSERT INTO {$PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id, age_email_contact, age_email_copie) ";
     $sql .= "VALUES (".$idAge.",".$idUser.",".$ckTypeNote.",'{theNewDate}',{theBeginHour},{theEndHour},".$zlPeriodicite.",".$periode1.",".$periode2.",".$periode3.",".$periode4.",".$rdPlage.",".($nbOccurrence + $dateMax).",'".$ztLibelle."','".$ztDetail."', ".$zlR1.",".$zlR2.",".$ckEmail.",".$rdPrive.",'".$zlCouleur."',".count($idParticipant).",".$idUser.",".$rdDispo.",'".$dateCreation."','".gmdate("Y-m-d H:i:s", time())."',".$idUser.",'".$ztLieu."',".$zlContactAssocie.",".$ckEmailContact.",'".$ztEmailCopie."')";
     if ($rdPlage == 1) {
       // Repetition en nombre d'occurrence
@@ -817,14 +832,14 @@ elseif ($ztFrom == "anniv") {
   }
   if ($ztAction == "INSERT" && $dateAnnivOK) {
     $sd = date("Y")."-".$tabDate[1]."-".$tabDate[0];
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda (age_util_id,age_aty_id,age_date,age_libelle,age_createur_id,age_date_creation,age_modificateur_id,age_date_modif) VALUES (".$idUser.",1,'".$ztDate."','".$ztLibelle."',".$idUser.",'".gmdate("Y-m-d H:i:s", time())."',".$idUser.",'".gmdate("Y-m-d H:i:s", time())."')");
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$DB_CX->DbInsertID().",".$idUser.",1,0)");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda (age_util_id,age_aty_id,age_date,age_libelle,age_createur_id,age_date_creation,age_modificateur_id,age_date_modif) VALUES (".$idUser.",1,'".$ztDate."','".$ztLibelle."',".$idUser.",'".gmdate("Y-m-d H:i:s", time())."',".$idUser.",'".gmdate("Y-m-d H:i:s", time())."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$DB_CX->DbInsertID().",".$idUser.",1,0)");
     $msg=12;
   }
 
   elseif ($ztAction == "UPDATE" && $idAge && $dateAnnivOK) {
     $sd = date("Y")."-".$tabDate[1]."-".$tabDate[0];
-    $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+    $sql = "UPDATE {$PREFIX_TABLE}agenda ";
     $sql .= "SET age_date='".$ztDate."',";
     $sql .= " age_libelle='".$ztLibelle."',";
     $sql .= " age_date_modif='".gmdate("Y-m-d H:i:s", time())."',";
@@ -835,8 +850,8 @@ elseif ($ztFrom == "anniv") {
   }
 
   elseif ($ztAction == "DELETE" && $idAge) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge." AND age_util_id=".$idUser);
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge." AND aco_util_id=".$idUser);
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge." AND age_util_id=".$idUser);
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge." AND aco_util_id=".$idUser);
     $msg=14;
   }
 }
@@ -867,18 +882,18 @@ elseif ($ztFrom == "evenement") {
   }
   if ($ztAction == "INSERT" && $eventOK) {
     $sd = $ztDateDebut;
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}evenement (eve_date_debut,eve_date_fin,eve_libelle,eve_type,eve_couleur,eve_util_id,eve_partage) VALUES ('".$ztDateDebut."','".$ztDateFin."','".$ztLibelle."',".$rdType.",'".$ztCouleur."',".$idUser.",'".$ckPartage."');");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}evenement (eve_date_debut,eve_date_fin,eve_libelle,eve_type,eve_couleur,eve_util_id,eve_partage) VALUES ('".$ztDateDebut."','".$ztDateFin."','".$ztLibelle."',".$rdType.",'".$ztCouleur."',".$idUser.",'".$ckPartage."');");
     $msg=18;
   }
 
   elseif ($ztAction == "UPDATE" && $idEvt && $eventOK) {
     $sd = $ztDateDebut;
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}evenement  SET eve_date_debut='".$ztDateDebut."', eve_date_fin='".$ztDateFin."', eve_libelle='".$ztLibelle."', eve_type=".$rdType.", eve_couleur='".$ztCouleur."', eve_partage='".$ckPartage."' WHERE eve_id=".$idEvt.(($MODIF_PARTAGE) ? "" : " AND eve_util_id=".$idUser));
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}evenement  SET eve_date_debut='".$ztDateDebut."', eve_date_fin='".$ztDateFin."', eve_libelle='".$ztLibelle."', eve_type=".$rdType.", eve_couleur='".$ztCouleur."', eve_partage='".$ckPartage."' WHERE eve_id=".$idEvt.(($MODIF_PARTAGE) ? "" : " AND eve_util_id=".$idUser));
     $msg=19;
   }
 
   elseif ($ztAction == "DELETE" && $idEvt) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}evenement WHERE eve_id=".$idEvt.(($MODIF_PARTAGE) ? "" : " AND eve_util_id=".$idUser));
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}evenement WHERE eve_id=".$idEvt.(($MODIF_PARTAGE) ? "" : " AND eve_util_id=".$idUser));
     $msg=20;
   }
   $sTmp .= "&tcType="._TYPE_EVENEMENT."&openEvtAnnee=".$openEvtAnnee;
@@ -899,21 +914,21 @@ elseif ($ztFrom == "memo") {
 	$date_actuelle=date("d/m/Y");
     $heure_actuelle=date("H:i");
 	if ($zlUtilisateur != $idUser) {
-		$DB_CX->DbQuery("SELECT util_nom,util_prenom FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+		$DB_CX->DbQuery("SELECT util_nom,util_prenom FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
 		$origine_memo=$DB_CX->DbNextRow();
-		$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}memo (mem_titre, mem_date, mem_contenu, mem_util_id, mem_partage, mem_progress) VALUES ('".trim($ztTitre)."  de $origine_memo[1] $origine_memo[0]','$date_actuelle à $heure_actuelle','".trim($ztContenu)."',".$zlUtilisateur.",'".$ckPartage."','".$ckProgress."')");
+		$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}memo (mem_titre, mem_date, mem_contenu, mem_util_id, mem_partage, mem_progress) VALUES ('".trim($ztTitre)."  de $origine_memo[1] $origine_memo[0]','$date_actuelle à $heure_actuelle','".trim($ztContenu)."',".$zlUtilisateur.",'".$ckPartage."','".$ckProgress."')");
 		} else {
-			$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}memo (mem_titre, mem_date, mem_contenu, mem_util_id, mem_partage, mem_progress) VALUES ('".trim($ztTitre)."  ','$date_actuelle à $heure_actuelle','".trim($ztContenu)."',".$zlUtilisateur.",'".$ckPartage."','".$ckProgress."')"); 
+			$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}memo (mem_titre, mem_date, mem_contenu, mem_util_id, mem_partage, mem_progress) VALUES ('".trim($ztTitre)."  ','$date_actuelle à $heure_actuelle','".trim($ztContenu)."',".$zlUtilisateur.",'".$ckPartage."','".$ckProgress."')"); 
 		}
 	//fin Mod MemoProgress
   }
 
   elseif ($ztAction == "UPDATE" && $id && !empty($ztTitre)) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}memo SET mem_titre='".$ztTitre."', mem_contenu='".$ztContenu."', mem_partage='".$ckPartage."', mem_progress='".$ckProgress."' WHERE mem_id=".$id.(($MODIF_PARTAGE) ? "" : " AND mem_util_id=".$idUser));
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}memo SET mem_titre='".$ztTitre."', mem_contenu='".$ztContenu."', mem_partage='".$ckPartage."', mem_progress='".$ckProgress."' WHERE mem_id=".$id.(($MODIF_PARTAGE) ? "" : " AND mem_util_id=".$idUser));
   }
 
   elseif ($ztAction == "DELETE" && $id) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}memo WHERE mem_id=".$id.(($MODIF_PARTAGE) ? "" : " AND mem_util_id=".$idUser));
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}memo WHERE mem_id=".$id.(($MODIF_PARTAGE) ? "" : " AND mem_util_id=".$idUser));
   }
 }
 
@@ -928,11 +943,11 @@ elseif ($ztFrom == "libelles") {
   if ($ckJournee == "1")
     $zlDuree = "0";
   if ($ztAction == "INSERT" && !empty($ztLibelle)) {
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}libelle (lib_nom,lib_duree,lib_couleur,lib_util_id, lib_partage, lib_detail) VALUES ('".$ztLibelle."',".$zlDuree.",'".$zlCouleur."',".$idUser.",'".$ckPartage."','".$ztDetail."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}libelle (lib_nom,lib_duree,lib_couleur,lib_util_id, lib_partage, lib_detail) VALUES ('".$ztLibelle."',".$zlDuree.",'".$zlCouleur."',".$idUser.",'".$ckPartage."','".$ztDetail."')");
   } elseif ($ztAction == "UPDATE" && $id && !empty($ztLibelle)) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}libelle SET lib_nom='".$ztLibelle."',lib_duree=".$zlDuree.",lib_couleur='".$zlCouleur."',lib_partage='".$ckPartage."',lib_detail='".$ztDetail."' WHERE lib_id=".$id.(($MODIF_PARTAGE) ? "" : " AND lib_util_id=".$idUser));
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}libelle SET lib_nom='".$ztLibelle."',lib_duree=".$zlDuree.",lib_couleur='".$zlCouleur."',lib_partage='".$ckPartage."',lib_detail='".$ztDetail."' WHERE lib_id=".$id.(($MODIF_PARTAGE) ? "" : " AND lib_util_id=".$idUser));
   } elseif ($ztAction == "DELETE" && $id) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}libelle WHERE lib_id=".$id.(($MODIF_PARTAGE) ? "" : " AND lib_util_id=".$idUser));
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}libelle WHERE lib_id=".$id.(($MODIF_PARTAGE) ? "" : " AND lib_util_id=".$idUser));
   }
 }
 
@@ -945,13 +960,13 @@ elseif ($ztFrom == "favoris") {
   if ($ckPartage!="O")
     $ckPartage = "N";
   if ($ztAction == "INSERT") {
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}favoris (fav_nom, fav_url, fav_commentaire, fav_util_id, fav_fgr_id, fav_partage) VALUES ('".$ztNom."','".$ztURL."','".$ztCommentaire."',".$idUser.",".$zlGroupe.",'".$ckPartage."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}favoris (fav_nom, fav_url, fav_commentaire, fav_util_id, fav_fgr_id, fav_partage) VALUES ('".$ztNom."','".$ztURL."','".$ztCommentaire."',".$idUser.",".$zlGroupe.",'".$ckPartage."')");
     $openFavGrp = $zlGroupe;
   } elseif ($ztAction == "UPDATE" && $id) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}favoris SET fav_nom='".$ztNom."', fav_url='".$ztURL."', fav_commentaire='".$ztCommentaire."', fav_fgr_id=".$zlGroupe.", fav_partage='".$ckPartage."' WHERE fav_id=".$id.(($MODIF_PARTAGE) ? "" : " AND fav_util_id=".$idUser));
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}favoris SET fav_nom='".$ztNom."', fav_url='".$ztURL."', fav_commentaire='".$ztCommentaire."', fav_fgr_id=".$zlGroupe.", fav_partage='".$ckPartage."' WHERE fav_id=".$id.(($MODIF_PARTAGE) ? "" : " AND fav_util_id=".$idUser));
     $openFavGrp = $zlGroupe;
   } elseif ($ztAction == "DELETE" && $id) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}favoris WHERE fav_id=".$id.(($MODIF_PARTAGE) ? "" : " AND fav_util_id=".$idUser));
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}favoris WHERE fav_id=".$id.(($MODIF_PARTAGE) ? "" : " AND fav_util_id=".$idUser));
   }
   $sTmp .= "&tcType="._TYPE_FAVORIS."&openFavGrp=".$openFavGrp;
 }
@@ -961,13 +976,13 @@ elseif ($ztFrom == "favoris") {
             GESTION DES ACHEVEMENTS
 --------------------------------------------*/
 elseif ($ztAction == "TERMINE" && $idAge) {
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda_concerne SET aco_termine= 1-aco_termine WHERE aco_age_id=".$idAge." AND aco_util_id=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda_concerne SET aco_termine= 1-aco_termine WHERE aco_age_id=".$idAge." AND aco_util_id=".$USER_SUBSTITUE);
 
   if ($comp == 1) {
     Header("location: blank.html");
     exit;
   } else {
-    $DB_CX->DbQuery("SELECT age_date FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+    $DB_CX->DbQuery("SELECT age_date FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
     $sd = $DB_CX->DbResult(0,0);
   }
 }
@@ -1034,12 +1049,12 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
     //  MODS menu note
 
   // Verifie si le login choisi n'est pas deja utilise
-  $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_login='".$ztLogin."' AND util_id!=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_login='".$ztLogin."' AND util_id!=".$USER_SUBSTITUE);
   if (!$DB_CX->DbNumRows()) {
     $passOK = true;
     if (!empty($ztPasswdMD5)) {
       // Verification de l'ancien mot de passe
-      $DB_CX->DbQuery("SELECT util_passwd FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("SELECT util_passwd FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
       $verif_pwd = $DB_CX->DbResult(0,0);
       if ($ztOldPasswdMD5 != $verif_pwd) {
         // Mot de passe invalide
@@ -1059,12 +1074,12 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
     if ($passOK) {
       if (($droit_PROFILS >= _DROIT_PROFIL_AUTRE_PARAM_PARTAGE) or (($droit_PROFILS >= _DROIT_PROFIL_PARAM_PARTAGE) and ($idUser==$USER_SUBSTITUE))) {
       // Partage du planning en consultation
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE);
       if ($rdPartage==2) {// Si partage selectif uniquement
         $tabPartage = explode("+", $ztPartage);
         for ($i=0;$i<count($tabPartage);$i++) {
           if ($tabPartage[$i]!="0") {
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_partage VALUES ('".$USER_SUBSTITUE."','".$tabPartage[$i]."','0')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_partage VALUES ('".$USER_SUBSTITUE."','".$tabPartage[$i]."','0')");
           }
         }
 
@@ -1073,23 +1088,23 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
           list ($grpg, $ztPrtGroupe) = explode ('|', $tabPrtPartage[$ij]);
           $PrtGroupe = explode(",", $ztPrtGroupe);
           for ($i=0;$i<count($PrtGroupe);$i++) {
-            if ($PrtGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_partage VALUES ('".$USER_SUBSTITUE."','".$PrtGroupe[$i]."','".$grpg."')");
+            if ($PrtGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_partage VALUES ('".$USER_SUBSTITUE."','".$PrtGroupe[$i]."','".$grpg."')");
           }
         }
       }
 
       // Partage du planning en modification
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE);
       if ($zlAffectation==3) {// Si affectation selective uniquement
         $tabAffecte = explode("+", $ztAffecte);
         for ($i=0;$i<count($tabAffecte);$i++)
-          if ($tabAffecte[$i]!="0") $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$tabAffecte[$i]."','0')");
+          if ($tabAffecte[$i]!="0") $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$tabAffecte[$i]."','0')");
         $tabAffPartage = explode("+", $ztAffGroupe);
         for ($ij=0;$ij<count($tabAffPartage);$ij++) {
           list ($grpg, $ztAffGroupe) = explode ('|', $tabAffPartage[$ij]);
           $AffGroupe = explode(",", $ztAffGroupe);
           for ($i=0;$i<count($AffGroupe);$i++) {
-            if ($AffGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$AffGroupe[$i]."','".$grpg."')");
+            if ($AffGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$AffGroupe[$i]."','".$grpg."')");
           }
         }
       } elseif ($zlAffectation==2) {// Si consultation basee sur la liste du partage
@@ -1098,22 +1113,22 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
         else {
           for ($i=0;$i<count($tabPartage);$i++)
             if ($tabPartage[$i]!="0") {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$tabPartage[$i]."','0')");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$tabPartage[$i]."','0')");
             }
             for ($ij=0;$ij<count($tabPrtPartage);$ij++) {
               list ($grpg, $ztPrtGroupe) = explode ('|', $tabPrtPartage[$ij]);
               $PrtGroupe = explode(",", $ztPrtGroupe);
               for ($i=0;$i<count($PrtGroupe);$i++) {
-                if ($PrtGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$PrtGroupe[$i]."','".$grpg."')");
+                if ($PrtGroupe[$i]!="0") $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$USER_SUBSTITUE."','".$PrtGroupe[$i]."','".$grpg."')");
               }
             }
           }
         }
       }
       // Verifie si le code pour l'export URL n'est pas deja utilise
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_url_export='".$ztCodeURL."' AND util_id!=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_url_export='".$ztCodeURL."' AND util_id!=".$USER_SUBSTITUE);
       if (!$DB_CX->DbNumRows()) {
-        $sql = "UPDATE ${PREFIX_TABLE}utilisateur SET";
+        $sql = "UPDATE {$PREFIX_TABLE}utilisateur SET";
         $sql .= " util_nom='".(($AUTO_UPPERCASE == true) ? strtoupper($ztNom) : ucfirst(strtolower($ztNom)))."',";
         $sql .= " util_prenom='".ucfirst($ztPrenom)."',";
         $sql .= " util_login='".$ztLogin."',";
@@ -1184,7 +1199,7 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
           if ($droit_Aff_THEME!="1")
             $droit_Aff_THEME = "0";
           $droit_Aff= $droit_Aff_Login.$droit_Aff_MDP.$droit_Aff_THEME;
-          $sql = "UPDATE ${PREFIX_TABLE}droit SET";
+          $sql = "UPDATE {$PREFIX_TABLE}droit SET";
           $sql .= " droit_profils=".$zlAMProfils.",";
           $sql .= " droit_agendas=".$zlAMAgendas.",";
           $sql .= " droit_notes=".$zlAMNotes.",";
@@ -1193,7 +1208,7 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
           $DB_CX->DbQuery($sql);
         }
         // MAJ de la semaine type de l'utilisateur dans la table des sessions
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_semaine_type='".$SEMAINE_TYPE."' WHERE sid_id='".$sid."'");
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_semaine_type='".$SEMAINE_TYPE."' WHERE sid_id='".$sid."'");
         $tcMenu = $tcPlg;
         $msg = 7;
         // MAJ du cookie d'identification
@@ -1202,14 +1217,14 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
 
         if ($zlFuseauHoraireValid=="OUI") {
           // Timezone d'origine
-          $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}timezone WHERE tzn_zone='".$zlFuseauHoraireORG."'");
+          $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}timezone WHERE tzn_zone='".$zlFuseauHoraireORG."'");
           $tzOrgGmt = $DB_CX->DbResult(0,"tzn_gmt");
           $tzOrgDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
           $tzOrgHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
           $tzOrgDateHiver = $DB_CX->DbResult(0,"tzn_date_hiver");
           $tzOrgHeureHiver = $DB_CX->DbResult(0,"tzn_heure_hiver");
           // Timezone desire
-          $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}timezone WHERE tzn_zone='".$zlFuseauHoraire."'");
+          $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}timezone WHERE tzn_zone='".$zlFuseauHoraire."'");
           $tzChgGmt = $DB_CX->DbResult(0,"tzn_gmt");
           $tzChgDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
           $tzChgHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -1217,16 +1232,17 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
           $tzChgHeureHiver = $DB_CX->DbResult(0,"tzn_heure_hiver");
           // Creation d'une nouvelle instance pour l'execution de requetes en boucle
           $DB = new Db($DB_CX->ConnexionID);
+	  $DB=$DB_CX;
           // Calcul du decalage et mise a jour des notes
-          $DB_CX->DbQuery("SELECT age_id, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_date_creation, age_date_modif FROM ${PREFIX_TABLE}agenda WHERE age_util_id=".$USER_SUBSTITUE);
+          $DB_CX->DbQuery("SELECT age_id, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_date_creation, age_date_modif FROM {$PREFIX_TABLE}agenda WHERE age_util_id=".$USER_SUBSTITUE);
           while ($enr = $DB_CX->DbNextRow()) {
             list($enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif'],$enr['age_date']) = decaleNote($tzOrgGmt,$tzOrgDateEte,$tzOrgHeureEte,$tzOrgDateHiver,$tzOrgHeureHiver,$dateJour,$enr['age_date'],$enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif'],1,0,1);
             list($enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif'],$enr['age_date']) = decaleNote($tzChgGmt,$tzChgDateEte,$tzChgHeureEte,$tzChgDateHiver,$tzChgHeureHiver,$dateJour,$enr['age_date'],$enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif'],1,1,1);
             // Mise a jour des dates et heures de notes (pour les anniversaires uniquement la date de creation)
             if ($enr['age_aty_id']!=1) {
-              $DB->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_date='".$enr['age_date']."', age_heure_debut=".$enr['age_heure_debut'].", age_heure_fin=".$enr['age_heure_fin'].", age_date_creation='".$enr['age_date_creation']."', age_date_modif='".$enr['age_date_modif']."' WHERE age_id=".$enr['age_id']);
+              $DB->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_date='".$enr['age_date']."', age_heure_debut=".$enr['age_heure_debut'].", age_heure_fin=".$enr['age_heure_fin'].", age_date_creation='".$enr['age_date_creation']."', age_date_modif='".$enr['age_date_modif']."' WHERE age_id=".$enr['age_id']);
             } else {
-              $DB->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_date_creation='".$enr['age_date_creation']."' WHERE age_id=".$enr['age_id']);
+              $DB->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_date_creation='".$enr['age_date_creation']."' WHERE age_id=".$enr['age_id']);
             }
           }
         }
@@ -1248,7 +1264,7 @@ elseif ($ztFrom == "profil" && $ztAction == "UPDATE") {
           SUBSTITUTION D'UTILISATEUR
 --------------------------------------------*/
 elseif ($ztAction == "SUBST" && $suid) {
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_util_subst_id=".$suid." WHERE sid_id='".$sid."'");
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_util_subst_id=".$suid." WHERE sid_id='".$sid."'");
   // Si on accede a la substitution depuis la page des disponibilites, on redirige vers le planning quotidien
   if ($tcMenu==_MENU_DISP_QUOT)
     $tcMenu=_MENU_PLG_QUOT;
@@ -1275,20 +1291,20 @@ elseif ($ztActionGrp == "SauvPref") {
   // Si la selection il n'y a pas d'identifiant de groupe renseigne
   if (!$grpID) {
     // On recherche s'il existe un groupe 'NoGroup' en base
-    $DB_CX->DbQuery("SELECT ggr_id FROM ${PREFIX_TABLE}global_groupe WHERE ggr_nom='NoGroup' and ggr_util_id=".$idUser." AND ggr_type=".$typeGroupe);
+    $DB_CX->DbQuery("SELECT ggr_id FROM {$PREFIX_TABLE}global_groupe WHERE ggr_nom='NoGroup' and ggr_util_id=".$idUser." AND ggr_type=".$typeGroupe);
     if ($DB_CX->DbNumRows()) {
       // Si OUI on recupere son identifiant
       $grpID = $DB_CX->DbResult(0,0);
     } else {
       // Si NON on le cree et on recupere son identifiant
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}global_groupe (ggr_util_id,ggr_nom,ggr_liste,ggr_aff,ggr_type) VALUES (".$idUser.",'NoGroup','".$sChoix."','O',".$typeGroupe.")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}global_groupe (ggr_util_id,ggr_nom,ggr_liste,ggr_aff,ggr_type) VALUES (".$idUser.",'NoGroup','".$sChoix."','O',".$typeGroupe.")");
       $grpID = $DB_CX->DbInsertID();
     }
   }
   // On met a jour le groupe (existant ou cree) avec la liste d'utilisateur selectionnee et on active son affichage
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}global_groupe SET ggr_liste='".$sChoix."', ggr_aff='O' WHERE ggr_id=".$grpID." AND ggr_type=".$typeGroupe);
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}global_groupe SET ggr_liste='".$sChoix."', ggr_aff='O' WHERE ggr_id=".$grpID." AND ggr_type=".$typeGroupe);
   // On desactive l'affichage des autres groupes de l'utilisateur
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}global_groupe SET ggr_aff='N' WHERE ggr_id!=".$grpID." AND ggr_util_id=".$idUser." AND ggr_type=".$typeGroupe);
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}global_groupe SET ggr_aff='N' WHERE ggr_id!=".$grpID." AND ggr_util_id=".$idUser." AND ggr_type=".$typeGroupe);
 
   // Enregistrement des options d'affichage
   // Precision / Heure debut / Heure fin
@@ -1304,13 +1320,13 @@ elseif ($ztActionGrp == "SauvPref") {
   if ($ckAffCache!="O")
     $ckAffCache="N";
   // Recherche s'il existe deja des preferences d'affichage pour cet utilisateur
-  $DB_CX->DbQuery("SELECT aff_util_id FROM ${PREFIX_TABLE}planning_affichage WHERE aff_util_id=".$idUser." AND aff_type=".$typeGroupe);
+  $DB_CX->DbQuery("SELECT aff_util_id FROM {$PREFIX_TABLE}planning_affichage WHERE aff_util_id=".$idUser." AND aff_type=".$typeGroupe);
   if ($DB_CX->DbNumRows()) {
     // Si OUI on les met a jour
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}planning_affichage SET aff_figer='".$ckAffGr."', aff_user='".$ckAffCache."'".$infoPrecision." WHERE aff_util_id=".$idUser." AND aff_type=".$typeGroupe);
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}planning_affichage SET aff_figer='".$ckAffGr."', aff_user='".$ckAffCache."'".$infoPrecision." WHERE aff_util_id=".$idUser." AND aff_type=".$typeGroupe);
   } else {
     // Si NON on les cree
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affichage (aff_util_id,aff_type,aff_figer,aff_user,aff_precision,aff_debut,aff_fin) VALUES (".$idUser.",".$typeGroupe.",'".$ckAffGr."','".$ckAffCache."','".$zlPrec."',".$zlHD.",".$zlHF.")");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affichage (aff_util_id,aff_type,aff_figer,aff_user,aff_precision,aff_debut,aff_fin) VALUES (".$idUser.",".$typeGroupe.",'".$ckAffGr."','".$ckAffCache."','".$zlPrec."',".$zlHD.",".$zlHF.")");
   }
 
   $msg = 21;
@@ -1321,35 +1337,35 @@ elseif ($ztActionGrp == "SauvPref") {
 elseif ($ztActionGrp == "SauvGrp") {
   if ($utilgr!="O") {
     list ($grpg, $GrChoix) = explode ('|', $ggr);
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}global_groupe SET ggr_liste='".$sChoix."' WHERE ggr_id=".$grpg."");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}global_groupe SET ggr_liste='".$sChoix."' WHERE ggr_id=".$grpg."");
     $msg = 21;
     $url="&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&ggr=".$grpg."|".$sChoix."&ztActionGrp=NvGr";
     $RetConsul=true;
   } else {
     list ($grpg, $GrChoix) = explode ('|', $ggr);
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}groupe_util SET gr_util_liste='".$sChoix."' WHERE gr_util_id=".$grpg."");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}groupe_util SET gr_util_liste='".$sChoix."' WHERE gr_util_id=".$grpg."");
 
     $tChoix= explode (',', $sChoix);
     $TabPartage= array();
-    $DB_CX->DbQuery("SELECT DISTINCT ppl_util_id FROM ${PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
+    $DB_CX->DbQuery("SELECT DISTINCT ppl_util_id FROM {$PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
     while ($enr = $DB_CX->DbNextRow()) {
       $TabPartage[]=$enr['ppl_util_id'];
     }
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
     for ($j=0; $j<count($TabPartage); $j++) {
       for ($i=0; $i<count($tChoix); $i++) {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_partage VALUES ('".$TabPartage[$j]."','".$tChoix[$i]."','".$grpg."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_partage VALUES ('".$TabPartage[$j]."','".$tChoix[$i]."','".$grpg."')");
       }
     }
     $TabAffecte= array();
-    $DB_CX->DbQuery("SELECT DISTINCT paf_util_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
+    $DB_CX->DbQuery("SELECT DISTINCT paf_util_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
     while ($enr = $DB_CX->DbNextRow()) {
       $TabAffecte[]=$enr['paf_util_id'];
     }
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
     for ($j=0; $j<count($TabAffecte); $j++) {
       for ($i=0; $i<count($tChoix); $i++) {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$TabAffecte[$j]."','".$tChoix[$i]."','".$grpg."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$TabAffecte[$j]."','".$tChoix[$i]."','".$grpg."')");
       }
     }
     $msg = 21;
@@ -1361,15 +1377,15 @@ elseif ($ztActionGrp == "SauvGrp") {
 elseif ($ztActionGrp == "SupGrp") {
   if ($utilgr!="O") {
     list ($grpg, $GrChoix) = explode ('|', $ggr);
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg."");
     $msg = 21;
     $url="&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg;
     $RetConsul=true;
   } else {
     list ($grpg, $GrChoix) = explode ('|', $ggr);
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}groupe_util WHERE gr_util_id=".$grpg."");
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}groupe_util WHERE gr_util_id=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
     $msg = 21;
     $url = "&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&groupe=1";
     $RetConsul = true;
@@ -1378,13 +1394,13 @@ elseif ($ztActionGrp == "SupGrp") {
 
 elseif ($ztActionGrp == "AjoutGgg") {
   if ($utilgr!="O") {
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}global_groupe VALUES ('','".$idUser."','".$ztNom."','".$sChoix."','N','".$typegr."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}global_groupe VALUES ('','".$idUser."','".$ztNom."','".$sChoix."','N','".$typegr."')");
     $grpg = $DB_CX->DbInsertID();
     $msg = 21;
     $url="&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&ggr=".$grpg."|".$sChoix."&ztActionGrp=NvGr";
     $RetConsul=true;
   } else {
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}groupe_util VALUES ('','".$ztNom."','".$sChoix."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}groupe_util VALUES ('','".$ztNom."','".$sChoix."')");
     $grpg = $DB_CX->DbInsertID();
     $msg = 21;
     $url = "&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&ggr=".$grpg."|".$sChoix."&ztActionGrp=NvGr&groupe=1&ztNom=".$ztNom;
@@ -1394,37 +1410,37 @@ elseif ($ztActionGrp == "AjoutGgg") {
 
 elseif ($ztActionGrp == "ModifGgg") {
   if ($utilgr!="O") {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}global_groupe SET ggr_nom='".$ztNom."', ggr_liste='".$sChoix."' WHERE ggr_id=".$grpg."");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}global_groupe SET ggr_nom='".$ztNom."', ggr_liste='".$sChoix."' WHERE ggr_id=".$grpg."");
     $msg = 21;
     $url="&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&ggr=".$grpg."|".$sChoix."&ztActionGrp=NvGr";
     $RetConsul=true;
   } else {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}groupe_util SET gr_util_nom='".$ztNom."', gr_util_liste='".$sChoix."' WHERE gr_util_id=".$grpg."");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}groupe_util SET gr_util_nom='".$ztNom."', gr_util_liste='".$sChoix."' WHERE gr_util_id=".$grpg."");
     $msg = 21;
     $url = "&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&msg=".$msg."&ggr=".$grpg."|".$sChoix."&ztActionGrp=NvGr&groupe=1";
     $RetConsul = true;
 
     $tChoix= explode (',', $sChoix);
     $TabPartage= array();
-    $DB_CX->DbQuery("SELECT DISTINCT ppl_util_id FROM ${PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
+    $DB_CX->DbQuery("SELECT DISTINCT ppl_util_id FROM {$PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
     while ($enr = $DB_CX->DbNextRow()) {
       $TabPartage[]=$enr['ppl_util_id'];
     }
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_partage WHERE ppl_gr=".$grpg."");
     for ($j=0; $j<count($TabPartage); $j++) {
       for ($i=0; $i<count($tChoix); $i++) {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_partage VALUES ('".$TabPartage[$j]."','".$tChoix[$i]."','".$grpg."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_partage VALUES ('".$TabPartage[$j]."','".$tChoix[$i]."','".$grpg."')");
       }
     }
     $TabAffecte= array();
-    $DB_CX->DbQuery("SELECT DISTINCT paf_util_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
+    $DB_CX->DbQuery("SELECT DISTINCT paf_util_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
     while ($enr = $DB_CX->DbNextRow()) {
       $TabAffecte[]=$enr['paf_util_id'];
     }
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}planning_affecte WHERE paf_gr=".$grpg."");
     for ($j=0; $j<count($TabAffecte); $j++) {
       for ($i=0; $i<count($tChoix); $i++) {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES ('".$TabAffecte[$j]."','".$tChoix[$i]."','".$grpg."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES ('".$TabAffecte[$j]."','".$tChoix[$i]."','".$grpg."')");
       }
     }
     $msg = 21;
@@ -1438,7 +1454,7 @@ elseif ($ztActionGrp == "ModifGgg") {
     DECONNEXION DU COMPTE D'ADMINISTRATION
 --------------------------------------------*/
 elseif ($ztDiscon == "Admin") {
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_admin_id=0 WHERE sid_id='".$sid."'");
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_admin_id=0 WHERE sid_id='".$sid."'");
   $idAdmin = 0;
   $url = "&tcMenu=".$tcPlg;
   $RetConsul = true;
@@ -1452,11 +1468,11 @@ elseif ($ztFrom == "emplacement") {
   if ($ckPartLieu != "O")
     $ckPartLieu = "N";
   if ($ztAction == "INSERT" && !empty($ztLieu)) {
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}emplacement (empl_nom, empl_util_id, empl_type, empl_partage) VALUES ('".$ztLieu."',".$idUser.",".$rdType.",'".$ckPartLieu."')");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}emplacement (empl_nom, empl_util_id, empl_type, empl_partage) VALUES ('".$ztLieu."',".$idUser.",".$rdType.",'".$ckPartLieu."')");
   } elseif ($ztAction == "UPDATE" && $id && !empty($ztLieu)) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}emplacement SET empl_nom='".$ztLieu."', empl_type=".$rdType.", empl_partage='".$ckPartLieu."' WHERE empl_id=".$id.(($MODIF_PARTAGE) ? "" : " AND empl_util_id=".$idUser));
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}emplacement SET empl_nom='".esc($ztLieu,$DB_CX)."', empl_type=".$rdType.", empl_partage='".$ckPartLieu."' WHERE empl_id=".$id.(($MODIF_PARTAGE) ? "" : " AND empl_util_id=".$idUser));
   } elseif ($ztAction == "DELETE" && $id) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}emplacement WHERE empl_id=".$id.(($MODIF_PARTAGE) ? "" : " AND empl_util_id=".$idUser));
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}emplacement WHERE empl_id=".$id.(($MODIF_PARTAGE) ? "" : " AND empl_util_id=".$idUser));
   }
 }
   // Fermeture BDD
@@ -1478,5 +1494,5 @@ elseif ($ztFrom == "emplacement") {
   if ($classSMTPLoaded)
     $mailer->smtp->quit();
 
-  Header("location: agenda.php?sid=".$sid.$url);
+  header("location: agenda.php?sid=".$sid.$url);
 ?>

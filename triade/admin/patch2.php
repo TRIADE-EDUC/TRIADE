@@ -1,12 +1,12 @@
 <?php
 session_start();
-error_reporting(0);
+//error_reporting(0);
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -45,12 +45,12 @@ include_once("./librairie_php/lib_licence.php");
 <!-- // debut de la saisie -->
 <ul><br>
 <font color=red><b>INFORMATION.</b></font><br>
-<i>L'installation de patch ne peut être réalisé qu'avec des patchs provenant du <u>Support Triade</u>, tout patch non conforme
-peut provoquer la perte des données de Triade.</font></i><br><br>
+<i>L'installation de patch ne peut être réalisé qu'avec des patchs provenant du <u>Support Triade</u>, tout patch non conforme peut provoquer la perte des données de Triade.</font></i><br><br>
 <?php
 
 include_once("librairie_php/db_triade_admin.php");
 $cnx=cnx();
+
 
 $fichier_orig="./patch_ftp/".$_POST["patch_ftp"];
 
@@ -62,6 +62,7 @@ $md5fichier=md5_file("./patch.zip");
 
 include_once('./librairie_php/pclzip.lib.php');
 $archive = new PclZip('patch.zip');
+
 	
 if ($archive->extract(PCLZIP_OPT_PATH, '../data/patch') == 0) {
 die(print "<a href='javascript:history.go(0)'><b>Cliquez ici pour réactualiser le patch</a></b>"); }
@@ -72,7 +73,7 @@ if (file_exists($fichier_info)) {
 	$donnee=fread($fic,900000);
 	$donnee=nl2br($donnee);
 	print "<font class='T2'>$donnee</font>";
-	fclose($fichier);
+	fclose($fic);
 }
 
 		
@@ -81,8 +82,9 @@ if (file_exists($fichier_info)) {
 	$fic=fopen($fichier_info,"r");
 	$patchrequis=fread($fic,900000);
 	$patchrequis=trim($patchrequis);
-	fclose($fichier);
+	fclose($fic);
 }
+
 
 if (isset($patchrequis)) {
 	if (file_exists("../common/lib_patch.php")) include_once("../common/lib_patch.php");

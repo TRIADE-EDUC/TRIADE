@@ -13,9 +13,9 @@ $data=periodeStageCentralDate();
 PgClose($cnx);
 // datedebut,datefin,id,nomstage
 print "document.write(\"<option id='select0' value='' >Choix...</option>\");\n";
-for($i=0;$i<count($data);$i++) {
-        if (count($data) > 0) {
-                for ($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
+        if (countTriade($data) > 0) {
+                for ($i=0;$i<countTriade($data);$i++) {
                         $dateDebut=$data[$i][0];
                         $datefin=$data[$i][1];
                         $nomstage=$data[$i][3];

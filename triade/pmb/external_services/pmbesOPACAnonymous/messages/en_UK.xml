@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
+$Id: en_UK.xml,v 1.5 2024/04/15 13:06:44 rtigero Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -302,4 +302,5 @@ listRecordsFromFacets
   <entry code="listRecordsFromFacets_results">Liste des notices</entry>
   <entry code="listRecordsFromFacets_outputs_description_noticeId">Identifiant de la notice</entry>
   
+  <entry code="getNbResa">Récupérer le nombre de réservations associées</entry>
 </XMLlist>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: catalog.xml,v 1.18 2019-04-12 14:21:45 ccraig Exp $ -->
+<!-- $Id: catalog.xml,v 1.21.6.1 2024/12/20 08:08:13 dgoron Exp $ -->
 <specialfields>
 	<type name="combine" class="combine_search" path="combine"></type>
 	<type name="combine_unimarc" class="combine_search_unimarc" path="combine_unimarc"></type>
@@ -21,4 +21,8 @@
 	<type name="record_qualified_author" class="record_qualified_author" path="record_qualified_author"></type>
 	<type name="map_circle" class="map_circle" path="map_circle"></type>
 	<type name="map_address" class="map_address" path="map_address"></type>
+	<type name="dynamic_value" class="dynamic_value" path="dynamic_value"></type>
+	<type name="search_segment" class="search_universe_segment_search" path="search_universe_segment"></type>	
+	<type name="avis" class="avis_search" path="avis"></type>
+	<type name="search_perso" class="search_perso_search" path="search_perso"></type>
 </specialfields>

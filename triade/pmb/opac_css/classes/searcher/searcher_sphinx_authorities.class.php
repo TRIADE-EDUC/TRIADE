@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_sphinx_authorities.class.php,v 1.4 2019-05-27 12:55:59 arenou Exp $
+// $Id: searcher_sphinx_authorities.class.php,v 1.6.2.1 2024/10/17 08:22:50 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,9 +10,12 @@ class searcher_sphinx_authorities extends searcher_sphinx {
 	
 	protected $authority_type;
 	
+	protected $object_table_key;
+	
 	public function __construct($user_query){
 		parent::__construct($user_query);
 		$this->id_key = 'id_authority';
+		$this->object_key = 'id_authority';
 		$this->index_name = 'authors,categories,indexint,series,publishers,collections,subcollections,titres_uniformes,concepts';
  	}	
  	
@@ -63,7 +66,7 @@ class searcher_sphinx_authorities extends searcher_sphinx {
 	
 	public function get_full_query(){		
 		$this->get_result();
-		$query =  'select id_authority, pert from '.$this->get_tempo_tablename();	
+		$query =  'select distinct id_authority, pert from '.$this->get_tempo_tablename();	
 		return $query;
 	}
 	
@@ -75,6 +78,7 @@ class searcher_sphinx_authorities extends searcher_sphinx {
 	}
 	
 	public function explain($display = "",$mode = "",$mini=false){
+		global $begin_result_liste, $end_result_liste;
 		print '<div style="margin-left:10px;width:49%;overflow:hidden;float:left">';
 		print '<h1>Recherche SPHINX</h1>';
 		print '<p>QUERY : '.$this->sphinx_query.'</p>';
@@ -98,12 +102,76 @@ class searcher_sphinx_authorities extends searcher_sphinx {
 		$filters = parent::get_filters();
 		global $authority_statut;
 		if($authority_statut){
-			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est gÃ©rÃ© dans la classe racine Ã  la volÃ©e! 
+			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est géré dans la classe racine à la volée! 
 			$filters[] = array(
 				'name'=> 'status',
 				'values' => $authority_statut*1	
 			);
 		}
 		return $filters;
+	}
+	
+	public function get_authority_tri() {
+		// à surcharger si besoin
+		return '';
+	}
+	
+	public function get_object_key() {
+		return $this->object_key;
+	}
+	
+	public function get_object_table() {
+		return $this->object_table;
+	}
+	
+	public function get_object_table_key() {
+		return $this->object_table_key;
+	}
+	
+	public function get_authority_type() {
+		return $this->authority_type;
+	}
+	
+	public function get_human_query() {
+		global $msg, $charset;
+		
+		$human_query = '';
+		$human_queries = $this->_get_human_queries();
+		if (count($human_queries)) {
+			foreach ($human_queries as $element) {
+				if ($human_query) {
+					$human_query.= ', ';
+				}
+				$human_query.= '<b>'.$element['name'].'</b> '.htmlentities($element['value'], ENT_QUOTES, $charset);
+			}
+		}
+		$nb_results = $this->get_nb_results();
+		if($nb_results) {
+			$human_query.= " => ".sprintf($msg["searcher_results"], $nb_results);
+		} else {
+			$human_query.= " => ".sprintf($msg['1915'], $nb_results);
+		}
+		return "<div class='othersearchinfo'>".$human_query."</div>";
+	}
+	
+	protected function _get_human_queries() {
+		global $authority_statut, $msg;
+		
+		$human_queries = array();
+		if ($this->user_query) {
+			$human_queries[] = array(
+					'name' => $msg['global_search'],
+					'value' => $this->user_query
+			);
+		}
+		if ($authority_statut) {
+			$authority_statut_label = pmb_mysql_result(pmb_mysql_query('select authorities_statut_label from authorities_statuts where id_authorities_statut = '.$authority_statut), 0, 0);
+			$human_queries[] = array(
+					'name' => $msg['authorities_statut_label'],
+					'value' => $authority_statut_label
+			);
+		}
+		
+		return $human_queries;
 	}
 }

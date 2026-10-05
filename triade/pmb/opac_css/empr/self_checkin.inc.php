@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: self_checkin.inc.php,v 1.4 2015-04-03 11:16:26 jpermanne Exp $
+// $Id: self_checkin.inc.php,v 1.6 2023/08/28 14:04:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path, $msg, $charset, $opac_self_checkout_url_connector;
+global $form_self_checkin, $cb_expl;
 
 require_once($base_path.'/includes/templates/self_checkout.tpl.php');
 require_once($class_path.'/pmb_jsonrpc_client.inc');
@@ -22,12 +25,12 @@ if($cb_expl){
 */	
 	$result = $rpc->pmbesSelfServices_self_checkin($cb_expl);	
 	if ($charset!= "utf-8") {
-		$result->title=utf8_decode($result->title);
-		$result->message=utf8_decode($result->message);
-		$result->message_loc=utf8_decode($result->message_loc);
-		$result->message_resa=utf8_decode($result->message_resa);
-		$result->message_retard=utf8_decode($result->message_retard);
-		$result->message_amende=utf8_decode($result->message_amende);
+		$result->title=encoding_normalize::utf8_decode($result->title);
+		$result->message=encoding_normalize::utf8_decode($result->message);
+		$result->message_loc=encoding_normalize::utf8_decode($result->message_loc);
+		$result->message_resa=encoding_normalize::utf8_decode($result->message_resa);
+		$result->message_retard=encoding_normalize::utf8_decode($result->message_retard);
+		$result->message_amende=encoding_normalize::utf8_decode($result->message_amende);
 	}
 	
 	if($result->status){

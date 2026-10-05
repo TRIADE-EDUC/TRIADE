@@ -1,0 +1,38 @@
+<!-- $Id: expl_list.tpl.html,v 1.3 2023/12/14 10:59:53 dgoron Exp $ -->
+{% if global.opac_rgaa_active %}
+<h2>
+	<span id='titre_exemplaires_{{ id }}' class='titre_exemplaires'>
+		{{ msg.exemplaries }}({{ expls_datas.expls | length }})
+	</span>
+</h2>
+{% else %}
+<h3>
+	<span id='titre_exemplaires' class='titre_exemplaires'>
+		{{ msg.exemplaries }}({{ expls_datas.expls | length }})
+	</span>
+</h3>
+{% endif %}
+
+{% if global.opac_aff_expl_localises and session_vars.empr_location and expls_datas.nb_expl_other_loc %}
+	<ul id='onglets_isbd_public{{ id }}' class='onglets_isbd_public'>  
+		<li id='onglet_expl_loc{{ id }}' class='isbd_public_active'>
+			<a href='#' onclick="show_what('EXPL_LOC', '{{ id }}'); return false;">
+				{{ empr_location_libelle }}
+			</a>
+		</li>
+		<li id='onglet_expl{{ id }}' class='isbd_public_inactive'>
+			<a href='#' onclick="show_what('EXPL', '{{ id }}'); return false;">
+				{{ msg.onglet_expl_alllocation }}
+			</a>
+		</li>
+	</ul>
+	
+	<div id='div_expl_loc{{ id }}' style='display:block;'>
+		{% include "expl_table_loc.tpl.html" %}
+	</div>
+	<div id='div_expl{{ id }}' style='display:none;'>
+		{% include "expl_table.tpl.html" %}
+	</div>
+{% else %}
+	{% include "expl_table.tpl.html" %}
+{% endif %}

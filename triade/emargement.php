@@ -11,7 +11,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,11 +27,20 @@ if (isset($_POST["anneeScolaire"])) {
 ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<style>
+.na-card     { background:#fff !important; border:1px solid #c5cae9 !important; border-radius:8px !important; padding:14px 16px !important; margin:10px 0 10px !important; }
+.na-row      { display:flex !important; align-items:center !important; margin-bottom:8px !important; gap:8px !important; flex-wrap:wrap !important; }
+.na-lbl      { font-size:12px !important; font-weight:600 !important; color:#333 !important; min-width:140px !important; flex-shrink:0 !important; }
+.na-foot     { margin-top:8px !important; overflow:hidden !important; }
+.na-hr       { border:none !important; border-top:1px solid #c5cae9 !important; margin:6px 0 !important; }
+.na-subtitle { font-size:12px !important; font-weight:600 !important; color:#333 !important; text-align:center !important; margin:8px 0 !important; }
+</style>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -42,21 +51,20 @@ if (isset($_POST["anneeScolaire"])) {
 <script type="text/javascript" src="./librairie_js/ajax_comptaSupp.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS303 ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td >
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS303 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 <?php
 include_once('librairie_php/db_triade.php');
 validerequete("3");
-$cnx=cnx();
 $datap=config_param_visu("hauteuremarg");
 $hauteur=$datap[0][0];
 if ($hauteur != "") {
@@ -64,151 +72,148 @@ if ($hauteur != "") {
 }else{
     $hauteur=6;
 }
-
 nettoyageEdt();
-
 ?>
-<br />
 
-<table border='0' align=center width="100%">
-<tr><td align='center' colspan='2' >
-<form method='post' >
-<font class="T2"><?php print LANGBULL29 ?> :</font>
-<select name='anneeScolaire' onChange="this.form.submit()"  >
-<?php
-filtreAnneeScolaireSelectNote($anneeScolaire,3);
-?>
-</select>
-</form>
-</td></tr>
+<div class="na-card">
+  <form method='post'>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGBULL29 ?> :</span>
+    <select name='anneeScolaire' class="cc-select" onChange="this.form.submit()">
+      <?php filtreAnneeScolaireSelectNote($anneeScolaire,3); ?>
+    </select>
+  </div>
+  </form>
+</div>
 
-<tr><td height='20' width='50%' ></td></tr>
+<div class="na-card">
+  <div class="na-subtitle" style="margin-bottom:12px !important;"><?php print LANGMESS304 ?></div>
 
+  <form action='emargementvierge.php?idclasse' method='post' name='form1'>
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur1' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS305 ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select" onChange="this.form.submit();">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_classe2(20); ?>
+    </select>
+  </div>
+  </form>
+  <form action='emargementviergeexamen.php' method='post' name='form2'>
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur2' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS306 ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select" onChange="this.form.submit();">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_classe2(20); ?>
+    </select>
+  </div>
+  </form>
+<br><br>
+  <div class="na-subtitle" style="margin-bottom:12px !important;"><?php print LANGMESS307 ?></div>
 
-<tr><td height='20' colspan='2' align='center' > <b><font class="T2 shadow"><?php print LANGMESS304 ?></font></b> </td></tr>
-<tr><td height='20' width='50%' ></td></tr>
-<tr>
-<form action='emargementvierge.php?idclasse' method='post' name='form1' >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur1'  />
-<td align=right><font class="T2"><?php print LANGMESS305 ?> :</font></td>
-<td align=left ><select id="saisie_classe" name="saisie_classe" onChange="this.form.submit();">
-<option id='select0' ><?php print LANGCHOIX?></option>
-<?php
-select_classe2(20); // creation des options
-?>
-</select></td></tr>
-</form>
+  <form action='emargementvierge.php?idgroupe' method='post' name='form3'>
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur3' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS305 ?> :</span>
+    <select id="saisie_groupe" name="saisie_groupe" class="cc-select" onChange="this.form.submit();">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_groupe_id(); ?>
+    </select>
+  </div>
+  </form>
 
-<tr><td height='20'></td></tr>
+  <form action='emargementviergeexamen.php' method='post' name='form4'>
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur4' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS306 ?> :</span>
+    <select id="saisie_groupe" name="saisie_groupe" class="cc-select" onChange="this.form.submit();">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_groupe_id(20); ?>
+    </select>
+  </div>
+  </form>
+</div>
 
-<tr>
-<form action='emargementviergeexamen.php' method='post' name='form2' >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur2' />
-<td align=right ><font class="T2"><?php print LANGMESS306 ?> :</font></td>
-<td align=left ><select id="saisie_classe" name="saisie_classe" onChange="this.form.submit();">
-<option id='select0' ><?php print LANGCHOIX?></option>
-<?php
-select_classe2(20); // creation des options
-?>
-</select></td></tr>
-</form>
-<tr><td height='20'></td></tr>
-<tr><td height='20' colspan='2' align='center'> <b><font class="T2 shadow"><?php print LANGMESS307 ?></font></b> </td></tr>
-<tr><td height='20'></td></tr>
+<hr class="na-hr">
 
-<form action='emargementvierge.php?idgroupe' method='post' name='form1' >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur3' />
-<td align=right ><font class="T2"><?php print LANGMESS305 ?> :</font></td>
-<td align=left ><select id="saisie_groupe" name="saisie_groupe" onChange="this.form.submit();">
-<option id='select0' ><?php print LANGCHOIX?></option>
-<?php
-select_groupe_id(); // creation des options
-?>
-</select></td></tr>
-</form>
-
-
-<tr><td height='20'></td></tr>
-
-<tr>
-<form action='emargementviergeexamen.php' method='post' name='form2' >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur4' />
-<td align=right ><font class="T2"><?php print LANGMESS306 ?> :</font></td>
-<td align=left ><select id="saisie_groupe" name="saisie_groupe" onChange="this.form.submit();">
-<option id='select0' ><?php print LANGCHOIX?></option>
-<?php
-select_groupe_id(20); // creation des options
-?>
-</select></td></tr>
-</form>
-<tr><td height='20'></td></tr>
-<tr><td height='20' colspan='2'><hr></td></tr>
-
-<tr><td height='20'></td></tr>
-
-<tr>
-<form action='emargementdujour.php' method='post' name='form3' >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur5'  />
-<td align=right><font class="T2"><?php print LANGMESS314 ?> :</font></td>
-<td align=left ><script language=JavaScript> buttonMagicSubmit3("<?php print LANGBT28?>","create","")</script></td></tr>
-<input type="hidden" name="datedujour" value="<?php print date("d/m/Y") ?>" />
+<div class="na-card">
+  <form action='emargementdujour.php' method='post' name='form_today'>
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur5' />
+  <input type='hidden' name='datedujour' value='<?php print date("d/m/Y") ?>' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS314 ?> :</span>
+  </div>
+</div>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagicSubmit3("<?php print LANGBT28?>","create","")</script>
+</div>
+<br>
 </form>
 
-<tr><td height='20'></td></tr>
-
-<form action='emargementdujour.php' method='post' name="formulaire" >
-<input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur6'  />
-<td align=right><font class="T2"><?php print LANGMESS315 ?></td><td>
-<input type="text" name="datedujour" value="<?php print date("d/m/Y") ?>"  onclick="this.value=''" size=12 class="bouton2" onKeyPress="onlyChar(event)" />&nbsp;<?php
-include_once("librairie_php/calendar.php");
-calendarDim("id1","document.formulaire.datedujour",$_SESSION["langue"],"0","0");
-?></td></tr>
-<td align=right><font class="T2">au&nbsp;</td><td><input type="text" name="datedujourfin" value=""  onclick="this.value=''" size=12 class="bouton2" onKeyPress="onlyChar(event)" />&nbsp;<?php
-include_once("librairie_php/calendar.php");
-calendarDim("id2","document.formulaire.datedujourfin",$_SESSION["langue"],"0","0");
-?>&nbsp;</font></td>
-<tr><td align=right><font class="T2"><?php print LANGMESS316 ?> </font></td><td><select id="saisie_classe" name="saisie_classe" >
-<option id='select0' value='tous' ><?php print LANGAFF5 ?></option>
-<?php
-select_classe2(20); // creation des options
-?>
-</select>
-</td></tr>
-<tr><td align=right ><font class="T2"><?php print LANGMESS317 ?>  </font></td><td><select id="saisie_prof" name="saisie_prof" >
-<option id='select0' value='tous' ><?php print LANGMESS318 ?></option>
-<?php select_personne_2('ENS','25'); ?>
-</select>
-</td></tr>
-<tr><td></td><td align=right valign='bottom' ><br><script language=JavaScript> buttonMagicSubmit3("<?php print LANGBT28?>","create","")</script></td></tr>
-</form>
-<form name="form0" >
-<td >
-         <div align="right"><br><font class="T2"><?php print LANGMESS319 ?> : </font></div>
-        </td>
-	<td colspan="2" ><br>
-	
-	<select name="hauteur" size=1 onChange='affecttaille(this.value)' >
-		<?php print $option ?>
-		<option value="4" id='select1'>04</option>
-		<option value="5" id='select1'>05</option>
-		<option value="5.5" id='select1'>05.5</option>
-		<option value="6" id='select1'>06</option>
-		<option value="7" id='select1'>07</option>
-		<option value="8" id='select1'>08</option>
-		<option value="9" id='select1' >09</option>
-		<option value="10" id='select1'>10</option>
-		<option value="11" id='select1'>11</option>
-		<option value="12" id='select1'>12</option>
-		<option value="13" id='select1'>13</option>
-		<option value="14" id='select1'>14</option>
-		<option value="15" id='select1'>15</option>
-	</select>
-	 </td>
-    </tr>
+<div class="na-card">
+  <form action='emargementdujour.php' method='post' name="formulaire">
+  <input type='hidden' name='hauteur' value='<?php print $hauteur ?>' id='hauteur6' />
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS315 ?> :</span>
+    <input type="text" name="datedujour" value="<?php print date("d/m/Y") ?>" onclick="this.value=''" size=12 class="bouton2" onKeyPress="onlyChar(event)" />
+    &nbsp;<?php
+    include_once("librairie_php/calendar.php");
+    calendarDim("id1","document.formulaire.datedujour",$_SESSION["langue"],"0","0");
+    ?>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">au :</span>
+    <input type="text" name="datedujourfin" value="" onclick="this.value=''" size=12 class="bouton2" onKeyPress="onlyChar(event)" />
+    &nbsp;<?php
+    include_once("librairie_php/calendar.php");
+    calendarDim("id2","document.formulaire.datedujourfin",$_SESSION["langue"],"0","0");
+    ?>&nbsp;
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS316 ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select">
+      <option value='tous'><?php print LANGAFF5 ?></option>
+      <?php select_classe2(20); ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS317 ?> :</span>
+    <select id="saisie_prof" name="saisie_prof" class="cc-select">
+      <option value='tous'><?php print LANGMESS318 ?></option>
+      <?php select_personne_2('ENS','25'); ?>
+    </select>
+  </div>
+</div>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagicSubmit3("<?php print LANGBT28?>","create","")</script>
+</div>
+<br>
 </form>
 
-
-</table>
+<div class="na-card">
+  <form name="form0">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS319 ?> :</span>
+    <select name="hauteur" size=1 class="cc-select" onChange='affecttaille(this.value)'>
+      <?php print $option ?>
+      <option value="4">04</option>
+      <option value="5">05</option>
+      <option value="5.5">05.5</option>
+      <option value="6">06</option>
+      <option value="7">07</option>
+      <option value="8">08</option>
+      <option value="9">09</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+    </select>
+  </div>
+  </form>
+</div>
 
 <script>
 function affecttaille(val) {
@@ -219,29 +224,18 @@ function affecttaille(val) {
 	document.getElementById('hauteur5').value=val;
 	document.getElementById('hauteur6').value=val;
 }
-
 </script>
 
 <br /><br />
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
+</td></tr></table>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."2.js'></SCRIPT>";
+else :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."33.js'></SCRIPT>";
+endif;
 ?>
- <SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>  
-   </BODY></HTML>
+<SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
+</BODY></HTML>

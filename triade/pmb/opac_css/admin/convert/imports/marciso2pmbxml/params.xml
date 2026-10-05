@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: params.xml,v 1.2 2006-04-28 05:35:04 touraine37 Exp $ -->
+<!-- $Id: params.xml,v 1.2 2006/04/28 05:35:04 touraine37 Exp $ -->
 <params>
 	<!-- Nom de l'import -->
 	<importname>MARC ISO2709 -&gt; pmb-XML MARC</importname>

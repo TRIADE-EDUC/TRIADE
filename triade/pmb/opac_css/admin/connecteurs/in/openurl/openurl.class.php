@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl.class.php,v 1.10 2017-07-12 15:15:02 tsamson Exp $
+// $Id: openurl.class.php,v 1.13.4.1 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,22 +14,19 @@ require_once($include_path."/parser.inc.php");
 
 class openurl extends connector {
 
-	public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::get_id()
+	 */
+    public function get_id()
+    {
     	return "openurl";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
 		global $charset,$base_path;
-		
+
 		$params=$this->get_source_params($source_id);
 		if($params["PARAMETERS"]!=""){
 		//Affichage du formulaire avec $params["PARAMETERS"]
@@ -68,7 +65,7 @@ class openurl extends connector {
 												break;
 											case "doi" :
 												$rft_doi=$identifier['ALLOW'] == "yes" ? 1:0;
-												break;												
+												break;
 										}
 									}
 							    	$rft_byval=$entity['BYVALUE'][0]['ALLOW'] == "yes" ? 1:0;
@@ -90,17 +87,17 @@ class openurl extends connector {
 												break;
 											case "doi" :
 												$rfe_doi=$identifier['ALLOW'] == "yes" ? 1:0;
-												break;	
+												break;
 										}
 									}
 							    	$rfe_byval=$entity['BYVALUE'][0]['ALLOW'] == "yes" ? 1:0;
 							    	$rfe_byref=$entity['BYREFERENCE'][0]['ALLOW'] == "yes" ? 1:0;
 							    	$rfe_private=$entity['PRIVATE'][0]['ALLOW'] == "yes" ? 1:0;
-									break;	
+									break;
 								case "requester":
 									$req_allow=$entity['ALLOW'] == "yes" ? 1:0;
 									$req_parameter=$entity['PARAMETER'][0]['value'];
-									break;	
+									break;
 								case "service_type":
 									$svc_allow=$entity['ALLOW'] == "yes" ? 1:0;
 									$svc_services = array();
@@ -114,7 +111,7 @@ class openurl extends connector {
 								case "resolver":
 									$res_allow=$entity['ALLOW'] == "yes" ? 1:0;
 	    							$res_parameter=$entity['PARAMETER'][0]['value'];
-									break;	
+									break;
 								case "referrer":
 									$rfr_allow=$entity['ALLOW'] == "yes" ? 1:0;
 	    							$rfr_parameter=$entity['PARAMETER'][0]['value'];
@@ -125,7 +122,7 @@ class openurl extends connector {
 				}
 			}
 		}
-		
+
 		if (!isset($libelle))
 			$libelle = "OpenURL";
 		if (!isset($source_name))
@@ -138,7 +135,7 @@ class openurl extends connector {
 			$infobulle = "";
 		if (!isset($byref_url))
 			$byref_url = '';
-			
+
 		$result = "";
 //		$result ="
 //			<div class='row'>&nbsp;</div>
@@ -150,7 +147,7 @@ class openurl extends connector {
 //					<input type='file' name='conf_file'/>
 //				</div>
 //			</div>";
-		
+
 		//VISUEL
 		$form_visuel ="
 			<div class='row'>&nbsp;</div>
@@ -172,8 +169,8 @@ class openurl extends connector {
 			</div>
 			<div class='row'>&nbsp;</div>";
 		$result.= gen_plus("form_opac",$this->msg['openurl_form_param_visuel'],$form_visuel,1);
-			
-		
+
+
 		//TRANSPORT
 		$form_transport	="
 			<div class='row'>&nbsp;</div>
@@ -201,8 +198,8 @@ class openurl extends connector {
 				<div class='colonne-suite'><input type='text' name='byref_url' value='".htmlentities($byref_url,ENT_QUOTES,$charset)."'/></div>
 			</div>
 			<div class='row'>&nbsp;</div>";
-		//TODO : voir pour genre plus gÃ©nÃ©rique tparameters... doit pouvoir renvoyer une chaine ou un tableau...
-		$result.= gen_plus("form_transport",$this->msg['openurl_form_param_transport'],$form_transport,1);	
+		//TODO : voir pour genre plus générique tparameters... doit pouvoir renvoyer une chaine ou un tableau...
+		$result.= gen_plus("form_transport",$this->msg['openurl_form_param_transport'],$form_transport,1);
 
 		$form_serialize ="
 			<div class='row'>&nbsp;</div>
@@ -214,12 +211,12 @@ class openurl extends connector {
 				</div>
 			</div>
 			<div class='row'>&nbsp;</div>";
-		$result.= gen_plus("form_serialize",$this->msg['openurl_form_param_serialization'],$form_serialize,1);	
+		$result.= gen_plus("form_serialize",$this->msg['openurl_form_param_serialization'],$form_serialize,1);
 
 		$form_entities = "
 			<div class='row'>&nbsp;</div>
 			<div class='row'>";
-				
+
 		//REFERENT
 		$referent="
 					<table >
@@ -274,17 +271,17 @@ class openurl extends connector {
 							<td style='text-align:center;'>
 								<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rft_byref' value='1' ".($rft_byref == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rft_byref' value='0' ".($rft_byref == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><br/>
 							</td>
-						</tr>						
+						</tr>
 						<tr class='odd'>
 							<td style='text-align:center;'>".$this->msg['openurl_descriptors_private']."</td>
 							<td></td>
 							<td style='text-align:center;'>
 								<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rft_private' value='1' ".($rft_private == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rft_private' value='0' ".($rft_private == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><br/>
 							</td>
-						</tr>						
+						</tr>
 					</table>";
 		$form_entities.= gen_plus("referent",$this->msg['openurl_entities_referent'],$referent,1);
-		
+
 		//REFERRING ENTITY
 		$referring_entity="
 				<div class='row'>&nbsp;</div>
@@ -292,8 +289,8 @@ class openurl extends connector {
 				<div class='colonne-suite'>
 					<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rfe_allow' value='1' ".($rfe_allow == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span>
 					<span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rfe_allow' value='0' ".($rfe_allow == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span>
-				</div>	
-				<div class='row'>&nbsp;</div>	
+				</div>
+				<div class='row'>&nbsp;</div>
 					<table >
 						<tr>
 							<th style='text-align:center;'>".$this->msg['openurl_descriptors_type']."</th>
@@ -309,7 +306,7 @@ class openurl extends connector {
 								<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rfe_isbn' value='1' ".($rfe_isbn == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rfe_isbn' value='0' ".($rfe_isbn == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><br/>
 							</td>
 						</tr>
-						<tr class='even'>					
+						<tr class='even'>
 							<td style='text-align:center;'>
 								".$this->msg['openurl_descriptors_identifier_issn']."
 							</td>
@@ -346,17 +343,17 @@ class openurl extends connector {
 							<td style='text-align:center;'>
 								<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rfe_byref' value='1' ".($rfe_byref == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rfe_byref' value='0' ".($rfe_byref == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><br/>
 							</td>
-						</tr>						
+						</tr>
 						<tr class='odd'>
 							<td style='text-align:center;'>".$this->msg['openurl_descriptors_private']."</td>
 							<td></td>
 							<td style='text-align:center;'>
 								<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='rfe_private' value='1' ".($rfe_private == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='rfe_private' value='0' ".($rfe_private == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span><br/>
 							</td>
-						</tr>						
+						</tr>
 					</table>";
-		$form_entities.= gen_plus("referring_entity",$this->msg['openurl_entities_referring_entity'],$referring_entity,1);		
-		
+		$form_entities.= gen_plus("referring_entity",$this->msg['openurl_entities_referring_entity'],$referring_entity,1);
+
 		//REQUESTER
 		$requester = "
 				<div class='row'>&nbsp;</div>
@@ -369,7 +366,7 @@ class openurl extends connector {
 				<div class='colonne-suite'><input type='text' name='req_parameter' value='".htmlentities($req_parameter,ENT_QUOTES,$charset)."'/></div>
 				<div class='row'>&nbsp;</div>";
 		$form_entities.= gen_plus("requester",$this->msg['openurl_entities_requester'],$requester,1);
-		
+
 		//SERVICE TYPE
 		$service_type = "
 				<div class='row'>&nbsp;</div>
@@ -377,7 +374,7 @@ class openurl extends connector {
 				<div class='colonne-suite'>
 					<span>".$this->msg['openurl_yes']."&nbsp;<input type='radio' name='svc_allow' value='1' ".($req_allow == "1" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span>
 					<span>".$this->msg['openurl_no']."&nbsp;<input type='radio' name='svc_allow' value='0' ".($req_allow == "0" ? "checked='checked' ": "")."style='vertical-align:bottom;' /></span>
-				</div>	
+				</div>
 				<table >
 					<tr>
 						<th style='text-align:center;'>".$this->msg['openurl_service']."</th>
@@ -393,11 +390,11 @@ class openurl extends connector {
 						</td>
 					</tr>";
 		}
-		$service_type.="			
+		$service_type.="
 				</table>
 				<div class='row'>&nbsp;</div>";
 		$form_entities.= gen_plus("service_type",$this->msg['openurl_entities_service_type'],$service_type,1);
-		
+
 		//RESOLVER
 		$resolver = "
 				<div class='row'>&nbsp;</div>
@@ -410,7 +407,7 @@ class openurl extends connector {
 				<div class='colonne-suite'><input type='text' name='res_parameter' value='".htmlentities($res_parameter,ENT_QUOTES,$charset)."'/></div>
 				<div class='row'>&nbsp;</div>";
 		$form_entities.= gen_plus("resolver",$this->msg['openurl_entities_resolver'],$resolver,1);
-		
+
 		//REFERRER
 		$referrer = "
 				<div class='row'>&nbsp;</div>
@@ -421,18 +418,18 @@ class openurl extends connector {
 				</div>
 				<div class='colonne3'><label for='rfr_parameter'>".$this->msg['openurl_referrer_param']."</label></div>
 				<div class='colonne-suite'><input type='text' name='rfr_parameter' value='".htmlentities($rfr_parameter,ENT_QUOTES,$charset)."'/></div>
-				<div class='row'>&nbsp;</div>	
+				<div class='row'>&nbsp;</div>
 		";
 		$form_entities.= gen_plus("referrer",$this->msg['openurl_entities_referrer'],$referrer,1);
-		$result.= gen_plus("form_entities",$this->msg['openurl_form_param_entities'],$form_entities,1);		
-			
-			
+		$result.= gen_plus("form_entities",$this->msg['openurl_form_param_entities'],$form_entities,1);
+
+
 		$result.="
 			<div class='row'>&nbsp;</div>
-			<script type='text/javascript' src='javascript/tablist.js'></script>";
+			<script src='javascript/tablist.js'></script>";
 		return $result;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $iwidth,$iheight,$libelle,$source_name,$infobulle;
     	global $protocole,$method,$tparameters,$byref_url;
@@ -444,10 +441,11 @@ class openurl extends connector {
     	global $res_allow,$res_parameter;
     	global $rfr_allow,$rfr_parameter;
 
+    	$t = array();
     	$t['libelle'] = $libelle ? stripslashes($libelle) : "OpenURL";
     	$t['source_name'] = $source_name ? stripslashes($source_name) : "OpenURL";
-    	$t['iwidth']=$iwidth+0;
-    	$t['iheight']=$iheight+0;
+    	$t['iwidth'] = (int) $iwidth;
+    	$t['iheight'] = (int) $iheight;
     	$t['infobulle'] = $infobulle ? stripslashes($infobulle) : "";
 //      	if (($_FILES["conf_file"])&&(!$_FILES["conf_file"]["error"])) {
 //			$file_params = file_get_contents($_FILES["conf_file"]["tmp_name"]);
@@ -544,7 +542,7 @@ class openurl extends connector {
 	    	$t['rft_isbn']=$rft_isbn;
 	    	$t['rft_issn']=$rft_issn;
 	    	$t['rft_pmid']=$rft_pmid;
-	    	$t['rft_doi']=$rft_doi;	    		    	
+	    	$t['rft_doi']=$rft_doi;
 	    	$t['rft_byval']=$rft_byval;
 	    	$t['rft_byref']=$rft_byref;
 	    	$t['rft_private']=$rft_private;
@@ -552,7 +550,7 @@ class openurl extends connector {
 	    	$t['rfe_isbn']=$rfe_isbn;
 	    	$t['rfe_issn']=$rfe_issn;
 	    	$t['rfe_pmid']=$rfe_pmid;
-	    	$t['rfe_doi']=$rfe_doi;	  	    	
+	    	$t['rfe_doi']=$rfe_doi;
 	    	$t['rfe_byval']=$rfe_byval;
 	    	$t['rfe_byref']=$rfe_byref;
 	    	$t['rfe_private']=$rfe_private;
@@ -568,17 +566,24 @@ class openurl extends connector {
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader($source_id){
 		$header= array();
 		$header[]= "<!-- Script d'enrichissement pour OpenURL -->";
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($notice_id,$source_id){
+		$type = array();
 		$libelle = '';
 		$infobulle = '';
 		$params=$this->get_source_params($source_id);
@@ -588,19 +593,19 @@ class openurl extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$type['type'] = array(
 			array(
 				'code' => str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle))),
 				'label' => $libelle,
 				'infobulle' => $infobulle
-			) 
+			)
 		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array(),$page=1){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -609,10 +614,10 @@ class openurl extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$enrichment= array();
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
 			case str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle))) :
 			default :
@@ -624,11 +629,11 @@ class openurl extends connector {
 					print $openurl_instance->getInFrame(1980,980);
 				}else $enrichment[str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle)))]['content'] = $openurl_instance->getInFrame($iwidth,$iheight);
 				break;
-		}		
+		}
 		$enrichment['source_label']=sprintf($this->msg['openurl_enrichment_source'],$source_name);
 		return $enrichment;
 	}
-	
+
 	public function getByRefContent($source_id,$notice_id,$uri,$entity){
 		global $include_path;
 		global $openurl_map;
@@ -644,14 +649,14 @@ class openurl extends connector {
 		}
 		require_once ($include_path."/parser.inc.php") ;
     	_parser_($include_path."/openurl/openurl_mapping.xml", array("ITEM" => "_getMapItem_"), "MAP");
-		
+
     	if($entity){
-			//rÃ©cupÃ¨re les param d'exports
+			//récupère les param d'exports
 			$export_param = new export_param();
 			$param = $export_param->get_parametres($export_param->context);
 			//petit nettoyage pour un bon fonctionnement...
 			foreach($param as $key => $value){
-				$param["exp_".$key] = $param[$key];
+			    $param["exp_".$key] = $value;
 			}
 			//maintenant que c'est en ordre, on peut y aller!
 			$export = new export(array($notice_id),array(),array());
@@ -660,14 +665,14 @@ class openurl extends connector {
 			$elem->setEntityType($entity);
 			print $elem->serialize();
 		}else{
-			//si on demande pas une entitÃ©, c'est un contextObject
+			//si on demande pas une entité, c'est un contextObject
 			$openurl_param = new openurl_parameters();
 			$openurl_param->setParameters($vars);
 			$openurl_instance = new openurl_instance($notice_id,0,$openurl_param->getParameters(),$source_id);
 			$openurl_instance->generateContextObject();
 			print $openurl_instance->contextObject->serialize();
 		}
-		
+
 	}
 }
 ?>

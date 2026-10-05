@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.1 2015/06/15 12:55:34 pmbs Exp $ -->
 
 <XMLlist>
 	<entry code="planificateur_sync_liste">Repository list</entry>

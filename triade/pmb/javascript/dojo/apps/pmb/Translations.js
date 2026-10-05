@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Translations.js,v 1.4 2018-11-21 21:11:00 dgoron Exp $
+// $Id: Translations.js,v 1.11.2.1 2024/04/30 07:44:54 dgoron Exp $
 
 define([
         "dojo/_base/declare",
@@ -18,9 +18,12 @@ define([
 		domNodeId:null,
 		data:null,
 		languages:null,
-		constructor: function(domNodeId, data) {
+		constructor: function(domNodeId, data, languages) {
 			this.domNodeId = domNodeId;
 			this.data = JSON.parse(data);
+			if(languages) {
+				this.languages = JSON.parse(languages);
+			}
 			this.buildFields();
 		},
 		getDisplayButton: function(node) {
@@ -43,11 +46,11 @@ define([
 			on(icon, 'click', lang.hitch(this, this.displayTranslations, node));
 			return icon;
 		},
-		getTranslationLabel: function(lang) {
+		getTranslationLabel: function(node, language) {
 			var div = domConstruct.create('div');
 			domAttr.set(div, 'class', 'row');
 			
-			return domConstruct.place(domConstruct.create('label', { innerHTML : lang, class:'etiquette'}), div);
+			return domConstruct.place(domConstruct.create('label', { innerHTML : language.label, class:'etiquette', for: language.code+'_'+node.id}), div);
 		},
 		getTranslationField: function(node, lang) {
 			var div_field = domConstruct.create('div');
@@ -61,8 +64,25 @@ define([
 			} else {
 				domAttr.set(cloneNode, 'value', '');
 			}
+			domAttr.remove(cloneNode, 'data-translation-fieldname');
 			domConstruct.place(cloneNode, div_field);
 			return div_field;
+		},
+		hasDisplayTranslation: function(node, language) {
+			if(language.is_current_lang == true) {
+				if(this.data[domAttr.get(node, 'data-translation-fieldname')] && this.data[domAttr.get(node, 'data-translation-fieldname')][language.code]) {
+					let translated_value = this.data[domAttr.get(node, 'data-translation-fieldname')][language.code];
+					//Simulation d'un clone pour la comparaison des deux valeurs
+					var cloneNode = dojo.clone(node);
+					domAttr.set(cloneNode, 'value', translated_value);
+					if(node.value == cloneNode.value) {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			return true;
 		},
 		getDisplayTranslations: function(node) {
 //			this.getTranslations(domAttr.get(node, 'data-translation-tablename'), domAttr.get(node, 'node.data-translation-fieldname'));
@@ -71,8 +91,10 @@ define([
 			domAttr.set(translations, 'class', 'row translations');
 			domAttr.set(translations, 'style', 'display: none;');
 			this.languages.forEach(lang.hitch(this, function(language) {
-				domConstruct.place(this.getTranslationLabel(language.label), translations);
-				domConstruct.place(this.getTranslationField(node, language.code), translations);
+				if(this.hasDisplayTranslation(node, language)) {
+					domConstruct.place(this.getTranslationLabel(node, language), translations);
+					domConstruct.place(this.getTranslationField(node, language.code), translations);
+				}
 			}));
 			return translations;
 		},
@@ -109,7 +131,7 @@ define([
 			this.languages = data;
 		},
 //		getTranslations: function(num_field, table_name, field_name) {
-//			request.get('./ajax.php?module=ajax&categ=translations&action=get_translations&num_field='+num_field+'table_name='+table_name+'field_name='+field_name, {
+//			request.get('./ajax.php?module=ajax&categ=translations&action=get_translations&num_field='+num_field+'&table_name='+table_name+'field_name='+field_name, {
 //				handleAs:'json',
 //				sync: true
 //			}).then(lang.hitch(this, this.gotTranslations));

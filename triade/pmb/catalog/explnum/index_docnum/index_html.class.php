@@ -1,33 +1,33 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_html.class.php,v 1.3 2017-06-30 14:08:17 dgoron Exp $
+// $Id: index_html.class.php,v 1.4 2019/08/01 13:16:35 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 /**
  * Classe qui permet la gestion de l'indexation des fichiers HTML
  */
-class index_html{
+class index_html {
 	
-	public $fichier='';
+	public $fichier = '';
 	
 	/**
 	 * Constructeur
 	 */
-	public function __construct($filename, $mimetype='', $extension=''){
+	public function __construct($filename, $mimetype = '', $extension = '') {
 		$this->fichier = $filename;
 	}
 	
 	/**
-	 * R√©cup√©ration du texte √† indexer dans le fichier HTML
+	 * RÈcupÈration du texte ‡ indexer dans le fichier HTML
 	 */
-	public function get_text($filename){
+	public function get_text($filename) {
 		
 		$fp = fopen($filename, "r");
-		while(!feof($fp)){
-			$line = fgets($fp,4096); 
+		while (!feof($fp)) {
+			$line = fgets($fp, 4096); 
 			$texte .= $line;
 		}
 		fclose($fp);
@@ -35,22 +35,25 @@ class index_html{
 		//Traitement du texte 
 		$result = array();
 		$result_style = array();
-		$texte = str_replace("\n","",$texte);
-		$texte = str_replace("\r","",$texte);
-		//On enl√®ve les htmlentities
+		$texte = str_replace("\n", "", $texte);
+		$texte = str_replace("\r", "", $texte);
+		//On enlËve les htmlentities
 		$texte = html_entity_decode($texte);
-		//On enl√®ve les balises <script> et <style>
-		preg_match_all("(<script.*?>.*?</script>)",$texte,$result);	
-		preg_match_all("(<style.*?>.*?</style>)",$texte,$result_style);	
-		for($i=0;$i<sizeof($result[0]);$i++){
-			$texte = str_replace($result[0][$i],"",$texte);
+		//On enlËve les balises <script> et <style>
+		preg_match_all("(<script.*?>.*?</script>)", $texte, $result);	
+		preg_match_all("(<style.*?>.*?</style>)", $texte, $result_style);
+		
+		$nb_results = count($result[0]);
+		for ($i = 0; $i < $nb_results; $i++) {
+			$texte = str_replace($result[0][$i], "", $texte);
 		}
-		for($i=0;$i<sizeof($result_style[0]);$i++){
-			$texte = str_replace($result_style[0][$i],"",$texte);
+		
+		$nb_results_style = count($result_style[0]);
+		for ($i = 0; $i < $nb_results_style; $i++) {
+			$texte = str_replace($result_style[0][$i], "", $texte);
 		}
-		//On enl√®ve les tags
+		//On enlËve les tags
 		$texte_final = strip_tags($texte);
-
 		return $texte_final;
 	}
 }

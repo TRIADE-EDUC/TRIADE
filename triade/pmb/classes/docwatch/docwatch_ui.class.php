@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_ui.class.php,v 1.11 2019-03-13 14:48:22 dgoron Exp $
+// $Id: docwatch_ui.class.php,v 1.13 2022/01/04 12:44:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/docwatch.tpl.php");
 require_once($class_path."/cms/cms_editorial_types.class.php");
 require_once($class_path."/cms/cms_editorial.class.php");
@@ -25,16 +26,22 @@ class docwatch_ui{
 	/** Fonctions: */
 	
 	public static function get_watch_form(){
-		global $docwatch_watch_form_tpl, $msg, $value_deflt_lang, $lang, $include_path, $xmlta_indexation_lang, $deflt_notice_is_new;
+		global $docwatch_watch_form_tpl, $msg, $value_deflt_lang, $include_path, $xmlta_indexation_lang, $deflt_notice_is_new;
+		$langs = array();
 		if ($value_deflt_lang) {
 			$create_lang = new marc_list('lang');
 			$langs[] = array(
 				'lang_code' => $value_deflt_lang,
 				'langue' => $create_lang->table[$value_deflt_lang]
 			);
+		} else {
+		    $langs[] = array(
+		        'lang_code' => '',
+		        'langue' => ''
+		    );
 		}
 
-		// CrÃ©ation du selecteur de statut nouveautÃ© en prenant le paramÃªtre utilisateur en compte
+		// Création du selecteur de statut nouveauté en prenant le paramêtre utilisateur en compte
 		$is_new_select = '<select id="watch_record_is_new" name="watch_record_is_new" data-dojo-type="dijit/form/Select" style="width:auto">';
 		if ($deflt_notice_is_new == "1") {
 			$is_new_select .= '
@@ -47,11 +54,8 @@ class docwatch_ui{
 		}
 		$is_new_select .= '</select>';
 
-		// CrÃ©ation du selecteur de langue d'indexation
+		// Création du selecteur de langue d'indexation
 		$index_lang_select = new marc_select("languages", 'indexation_lang', $xmlta_indexation_lang, '', '--', '--');
-
-		// SÃ©lecteur langue de publication
-		$lang_select = new marc_select("lang", 'record_default_lang', $value_deflt_lang, '', '--', '--');
 
 		$marc_select = new marc_select("doctype", 'record_types');
 		$cms_editorial_article = new cms_editorial_types('article');
@@ -197,13 +201,13 @@ class docwatch_ui{
 	}
 	
 	public static function generate_users(){
-		global $dbh,$charset;
+		global $charset;
 		$counter = 1;
 		$users_checkboxes = "
 	<input type='hidden' name='owner' id='owner' value='".SESSuserid."'/>
 	<table id='user_id_table'><tr>";
 		$query = "select userid, username from users order by username";
-		$result=pmb_mysql_query($query, $dbh);
+		$result=pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			while($row=pmb_mysql_fetch_object($result)){
 				$checked = '';
@@ -222,13 +226,13 @@ class docwatch_ui{
 	}
 	
 	public static function get_record_status(){
-		global $dbh, $msg, $charset, $statut_query;
-		// rÃ©cupÃ©ration des statuts de documents utilisÃ©s.
+		global $charset, $statut_query;
+		// récupération des statuts de documents utilisés.
 		$query = "SELECT count(statut), id_notice_statut, gestion_libelle ";
 		$query .= "FROM notice_statut LEFT JOIN notices ON id_notice_statut=statut GROUP BY id_notice_statut order by gestion_libelle";
-		$res = pmb_mysql_query($query, $dbh);
+		$res = pmb_mysql_query($query);
 		$toprint_statutfield = "";
-		while ($obj = @pmb_mysql_fetch_row($res)) {
+		while ($obj = pmb_mysql_fetch_row($res)) {
 			$toprint_statutfield .= "  <option value='$obj[1]'";
 			if ($statut_query==$obj[1]) $toprint_statutfield.=" selected";
 			$toprint_statutfield .=">".htmlentities($obj[2]."  (".$obj[0].")",ENT_QUOTES, $charset)."</OPTION>\n";

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_authorities.class.php,v 1.2 2018-07-26 15:25:52 tsamson Exp $
+// $Id: cms_module_common_datasource_authorities.class.php,v 1.2.14.1 2025/01/17 10:40:42 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,7 +16,7 @@ class cms_module_common_datasource_authorities extends cms_module_common_datasou
 		$this->limitable = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -25,7 +25,7 @@ class cms_module_common_datasource_authorities extends cms_module_common_datasou
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -34,14 +34,14 @@ class cms_module_common_datasource_authorities extends cms_module_common_datasou
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$authorities_ids = array();
-			if (count($selector->get_value()) > 0) {
+			if (is_countable($selector->get_value()) && count($selector->get_value()) > 0) {
 				foreach ($selector->get_value() as $value) {
 					$authorities_ids[] = $value;
 				}
@@ -49,8 +49,7 @@ class cms_module_common_datasource_authorities extends cms_module_common_datasou
 			$authorities_ids = $this->filter_datas("authorities", $authorities_ids);
 			$authorities = array();
 			foreach ($authorities_ids as $authority_id) {
-				//$authorities[] = new authority($authority_id);
-				$authorities[] = authorities_collection::get_authority('authority', $authority_id);
+				$authorities[] = new authority($authority_id);
 			}
 			return $authorities;
 		}

@@ -1,87 +1,103 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: setcb.php,v 1.17 2018-06-19 13:00:53 dgoron Exp $
+// $Id: setcb.php,v 1.21.2.1.2.1 2025/05/20 14:00:07 qvarin Exp $
 
 // popup de saisie d'un code barre pour emprunteur
 
-/* reste à faire :
+use Pmb\Security\Library\Auth;
 
-sur soumission auto :
-	document.location = soi-même
-		verif code-barre non utilisé
-			oui : afficher message et rester ouvert
-			non : updateParent et close
+$base_path = "..";
+$current_module = "circ";
 
-dans maj emprunteur : tenir compte du code-barre pour l'update !
+require_once "../includes/error_report.inc.php";
+require_once "../includes/global_vars.inc.php";
+require_once "../includes/config.inc.php";
 
-*/
-
-$base_path="..";	
-$current_module="circ";
-
-require_once ("../includes/error_report.inc.php") ;
-require_once ("../includes/global_vars.inc.php") ;
-require_once ("../includes/config.inc.php");
-
-$include_path      = "../".$include_path; 
+$include_path      = "../".$include_path;
 $class_path        = "../".$class_path;
-$javascript_path   = "../".$javascript_path;
 $styles_path       = "../".$styles_path;
 
-require("$include_path/db_param.inc.php");
-require("$include_path/mysql_connect.inc.php");
+require "$include_path/db_param.inc.php";
+require "$include_path/mysql_connect.inc.php";
 // connection MySQL
 $dbh = connection_mysql();
 
-include("$include_path/error_handler.inc.php");
-include("$include_path/sessions.inc.php");
-include("$include_path/misc.inc.php");
-include("$class_path/XMLlist.class.php");
+// Chargement de l'autoload des librairies externes
+require_once $base_path.'/vendor/autoload.php';
+// Chargement de l'autoload back-office
+require_once "$class_path/autoloader/classLoader.class.php";
+$al = classLoader::getInstance();
+$al->register();
 
-if(!checkUser('PhpMyBibli')) {
-	// localisation (fichier XML) (valeur par défaut)
+// Definition et chargement des parametres necessaires
+// puis verification blocage acces / liste noire / liste blanche
+if(!defined('GESTION')) {
+    define('GESTION', 1);
+}
+
+include "$include_path/error_handler.inc.php";
+include "$include_path/sessions.inc.php";
+include "$include_path/misc.inc.php";
+include "$class_path/XMLlist.class.php";
+
+// Chargement de l'autoload back-office
+require_once "$class_path/autoloader/classLoader.class.php";
+$al = classLoader::getInstance();
+$al->register();
+
+if( !checkUser('PhpMyBibli') ) {
+	// localisation (fichier XML) (valeur par d�faut)
 	$messages = new XMLlist("$include_path/messages/$lang.xml", 0);
 	$messages->analyser();
 	$msg = $messages->table;
 	print '<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"../../styles/$stylesheet; ?>\"></head><body>';
-	require_once("$include_path/user_error.inc.php");
+	require_once "$include_path/user_error.inc.php";
 	error_message($msg[11], $msg[12], 1);
 	print '</body></html>';
 	exit;
+} else {
+	$auth_instance = Auth::getInstance();
+	if ($auth_instance->isInBlackList()) {
+		header('Location: ./logout.php', true, 302);
+		exit();
 	}
+}
 
-if(SESSlang) {
+if( defined('SESSlang') && SESSlang ) {
 	$lang=SESSlang;
 	$helpdir = $lang;
-	}
+}
 
 // localisation (fichier XML)
 $messages = new XMLlist("$include_path/messages/$lang.xml", 0);
 $messages->analyser();
 $msg = $messages->table;
 
-require("$include_path/templates/common.tpl.php");
+require_once $class_path."/html_helper.class.php";
 
 header ("Content-Type: text/html; charset=".$charset);
 
-print "<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><meta charset=\"".$charset."\" />
-	<meta http-equiv='Pragma' content='no-cache'>
-	<meta http-equiv='Cache-Control' content='no-cache'>";
-print link_styles($stylesheet) ;
-print "	<title>setcb</title>
-	</head>
-	<body>";
-
+echo
+"<!DOCTYPE html>
+	<html lang='".get_iso_lang_code()."'>
+		<head>
+			<meta charset=\"".$charset."\" />
+			<meta http-equiv='Pragma' content='no-cache'>
+			<meta http-equiv='Cache-Control' content='no-cache'>";
+echo HtmlHelper::getInstance()->getStyle($stylesheet);
+echo
+			"<title>setcb</title>
+		</head>
+		<body>";
 ?>
-<script type="text/javascript">
 
-
-function updateParent() {
-	window.opener.document.forms['empr_form'].elements['f_cb'].value = document.forms['setcb'].elements['cb'].value;
-	self.close();
-}
+<script>
+	function updateParent() {
+		window.opener.document.forms['empr_form'].elements['f_cb'].value = document.forms['setcb'].elements['cb'].value;
+		self.close();
+	}
 </script>
 <div class='center'>
 	<form class='form-circ' name='setcb' onSubmit='updateParent();'>
@@ -93,10 +109,10 @@ function updateParent() {
 			<input type='submit' class='bouton' name='save' value='<?php echo $msg[77]; ?>' />
 		</p>
 	</form>
-<script type="text/javascript">
-self.focus();
-		document.forms['setcb'].elements['cb'].focus();
-</script>
+	<script>
+	self.focus();
+			document.forms['setcb'].elements['cb'].focus();
+	</script>
 </div>
 </body>
 </html>

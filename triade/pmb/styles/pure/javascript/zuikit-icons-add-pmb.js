@@ -1,4 +1,4 @@
-// $Id: zuikit-icons-add-pmb.js,v 1.3 2018-04-18 08:40:19 wlair Exp $ 
+// $Id: zuikit-icons-add-pmb.js,v 1.3 2018/04/18 08:40:19 wlair Exp $ 
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define('uikiticons', factory) :

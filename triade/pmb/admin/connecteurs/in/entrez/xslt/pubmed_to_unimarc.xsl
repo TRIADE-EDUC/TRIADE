@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- feuille de transformation xslt pour le connecteur entrant entrez
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: pubmed_to_unimarc.xsl,v 1.12 2023/09/19 15:16:12 tsamson Exp $ -->
+
 <xsl:stylesheet version = '1.0' 
 	xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 	
@@ -114,7 +121,14 @@
 		<xsl:call-template name="book_authors"/>
 		<xsl:call-template name="resume"/>
 		<xsl:call-template name="link"/>
-		<xsl:call-template name="sections"/>
+		<xsl:call-template name="sections"/>	
+		<xsl:if test="BookDocument">
+			<xsl:for-each select="BookDocument"> 
+				<xsl:call-template name="autorite"/>
+				<xsl:call-template name="langue"/>
+				<xsl:call-template name="journal_dateparution"/>
+			</xsl:for-each>
+		</xsl:if>
 		
 	</xsl:element>
 </xsl:template>
@@ -195,7 +209,14 @@
 	<xsl:if test="Affiliation">
 		<xsl:element name="f">
 			<xsl:attribute name="c">
-				<xsl:text>710</xsl:text>
+				<xsl:choose>
+					<xsl:when test="not(../AuthorList/Author)">
+						<xsl:text>710</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>711</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			<s c="a"><xsl:value-of select="substring-before(Affiliation,', ')"/></s>
 			<s c="e"><xsl:value-of select="substring-after(Affiliation,', ')"/></s>
@@ -205,7 +226,7 @@
 	<xsl:element name="f">
 		<xsl:attribute name="c">
 			<xsl:choose>
-				<xsl:when test="position()=1 and not(../../Affiliation)">
+				<xsl:when test="position()=1">
 					<xsl:text>700</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
@@ -330,7 +351,7 @@
 				<xsl:when test="Journal/JournalIssue/PubDate/Month = 'Oct'">10</xsl:when>
 				<xsl:when test="Journal/JournalIssue/PubDate/Month = 'Nov'">11</xsl:when>
 				<xsl:when test="Journal/JournalIssue/PubDate/Month = 'Dec'">12</xsl:when>
-				<xsl:otherwise test="Journal/JournalIssue/PubDate/Month">
+				<xsl:otherwise>
 					<xsl:value-of select="Journal/JournalIssue/PubDate/Month" />
 				</xsl:otherwise>
 			</xsl:choose>
@@ -404,7 +425,7 @@
 					<xsl:when test="PublicationTypeList/PublicationType = 'Encyclopedias'">Encyclopedia</xsl:when>
 					<xsl:when test="PublicationTypeList/PublicationType = 'Letter'">Letter</xsl:when>
 					<xsl:when test="PublicationTypeList/PublicationType = 'Unpublished Works'">Preprint</xsl:when>
-					<xsl:otherwise test="PublicationTypeList">Article</xsl:otherwise>
+					<xsl:otherwise>Article</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
 			<s c="a"><xsl:value-of select="$doctype"/></s>

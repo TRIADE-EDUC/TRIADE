@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,22 +32,29 @@ if (isset($_GET["order"])) {
 }
 setcookie("tri_eleve",$triEleve,time()+36000*24*30);
 
-$anneeScolaire=$_COOKIE["anneeScolaire"];
+$anneeScolaire = $_COOKIE["anneeScolaire"] ?: ($_GET["anneeScolaire"] ?? '');
 
 include_once("./librairie_php/lib_error.php");
 include_once("./common/config.inc.php");
 include_once("./common/config2.inc.php");
 include_once("./librairie_php/db_triade.php");
+
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+ */
+
 validerequete("menuprof");
 $cnx=cnx();
 
 
 if(isset($_POST["create"])) {
-	$cgrp1=$_POST["sClasseGrp"];
+	$cgrp1 = $_POST["sClasseGrp"] ?: $_GET["sClasseGrp"];
 	$cgrp=explode(":",$cgrp1);
 	$cid=$cgrp[0];
 	$gid=$cgrp[1];
-	$mid=$_POST["sMat"];
+	$mid = $_POST["sMat"] ?: $_GET["sMat"];
 	$choix_tri=$_POST["choix_trimestre"];
 }else {
 	$cgrp1=$_GET["sClasseGrp"];
@@ -64,6 +71,10 @@ if(isset($_POST["create"])) {
 
 if ($choix_tri == '') $choix_tri="trimestre1";
 
+if (empty($anneeScolaire)) {
+	$anneeScolaire = anneeScolaireViaIdClasse($cid);
+}
+
 $nomClasse=chercheClasse($cid);
 $nomClasse=$nomClasse[0][1];
 $nomMat=chercheMatiereNom($mid);
@@ -75,31 +86,109 @@ $libel=$nomClasse." ".$nomGrp." ".$nomMat;
 // creation de la requete
 
 	$data=recherche_intervalle_trimestre_via_classe($choix_tri,$cid,$anneeScolaire);
-	for($i=0;$i<count($data);$i++){
+	for($i=0;$i<countTriade($data);$i++){
 		$date_debut=$data[$i][0];
 		$date_fin=$data[$i][1];
 		$sql2="date >= '$date_debut' AND date <= '$date_fin' ";
 	}	
 
 	// fin de la creation
-	$listTmp=explode(":",$cgrp);
-	unset($HPV[cgrp]);
-	$HPV[cid]=$cid;
-	$HPV[gid]=$gid;
+	
+	if (is_string($cgrp)) {
+		$listTmp = explode(":", $cgrp);
+	} elseif (is_array($cgrp)) {
+		$listTmp = $cgrp;
+	} else {
+		$listTmp = [];
+	}
+	unset($HPV['cgrp']);
+	$HPV['cid']=$cid;
+	$HPV['gid']=$gid;
 	unset($listTmp);
 	//print_r($HPV);
-	if($HPV[gid]):
-	        $who="<font color=\"#FFFFFF\">- ".LANGPROF4." : </font> ".chercheGroupeNom($HPV[gid]);
+	if($HPV['gid']):
+	        $who="<font color=\"#FFFFFF\">- ".LANGPROF4." : </font> ".chercheGroupeNom($HPV['gid']);
 	else:
-	        $cl=chercheClasse($HPV[cid]);
-	        $who="<font color=\"#FFFFFF\">- ".strtolower(LANGELE4)." : </font>".$cl[0][1];
+	        $cl=chercheClasse($HPV['cid']);
+	        if (defined("LANGELE4")) $who="<font color=\"#FFFFFF\">- ".strtolower(LANGELE4)." : </font>".$cl[0][1];
 	        unset($cl);
 	endif;
-
 ?>
 <HTML>
 <HEAD>
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<style>
+.na-card  { background:#fff !important; border:1px solid #c5cae9 !important; border-radius:8px !important; padding:14px 16px !important; margin:10px 0 10px !important; }
+.na-row   { display:flex !important; align-items:center !important; margin-bottom:8px !important; gap:8px !important; flex-wrap:wrap !important; }
+.na-lbl   { font-size:12px !important; font-weight:600 !important; color:#333 !important; min-width:140px !important; flex-shrink:0 !important; }
+.na-foot  { margin-top:8px !important; overflow:hidden !important; display:flex !important; align-items:center !important; gap:8px !important; }
+.note-cell {
+    min-width: 34px; text-align: center;
+    padding: 3px 5px; font-size: 12px;
+    border-radius: 4px; border: 1px solid #e0e0e0;
+    background: #fafafa; white-space: nowrap;
+}
+.note-exam { background: #fff8e1 !important; border-color: #f5c842 !important; }
+.note-moy  {
+    min-width: 40px; text-align: center;
+    padding: 3px 6px; font-size: 12px; font-weight: bold;
+    border-radius: 4px; border: 1px solid #ffb74d;
+    background: #ffe0b2;
+}
+.eleve-cell {
+    display: inline-block;
+    min-width: 160px; max-width: 200px;
+    padding: 4px 10px;
+    font-size: 12px; font-weight: 600; color: #1a1a2e;
+    background: #eef0fb;
+    border: 1px solid #c5cae9;
+    border-radius: 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    vertical-align: middle;
+}
+.note-wrap {
+    position: relative; display: inline-block; cursor: default;
+}
+.note-tip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 50%; transform: translateX(-50%);
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid #c5cae9;
+    border-radius: 8px;
+    padding: 9px 13px;
+    min-width: 210px;
+    box-shadow: 0 6px 20px rgba(8,10,102,.13);
+    text-align: left;
+    pointer-events: none;
+    font-weight: normal;
+}
+.note-tip::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top: none;
+    border-bottom-color: #c5cae9;
+}
+.note-tip::after {
+    content: '';
+    position: absolute;
+    top: -5px; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top: none;
+    border-bottom-color: #fff;
+}
+.note-tip-row { margin-bottom: 5px; font-size: 11px; color: #333; line-height: 1.4; }
+.note-tip-row:last-child { margin-bottom: 0; }
+.note-tip-lbl { font-weight: 700; color: #080A66; margin-right: 5px; }
+.note-tip-exam { background:#fff8e1; border-left:3px solid #f5c842; padding:3px 6px; border-radius:3px; margin-top:3px; font-size:11px; }
+.note-wrap:hover .note-tip { display: block; }
+.note-cell { overflow: visible !important; }
+</style>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
@@ -107,50 +196,39 @@ $libel=$nomClasse." ".$nomGrp." ".$nomMat;
 </head>
 <body id='coulfond1' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<br>
-
-<table border=0>
-<tr><td>
-<form method=POST>
-&nbsp;&nbsp;<font class="T2"><?php print LANGPROF5 ?> :</font>
-<?php
-$choix_tri_text=$choix_tri;
-if ($choix_tri_text == "trimestre1") {
-	$choix_tri_text=LANGPROJ3;
-}
-if ($choix_tri_text == "trimestre2") {
-        $choix_tri_text=LANGPROJ4;
-}
-if ($choix_tri_text == "trimestre3") {
-        $choix_tri_text=LANGPROJ5;
-}
-?>
-<select name="choix_trimestre">
-<option value='<?php print $choix_tri?>' STYLE="color:#000066;background-color:#FCE4BA"><?php print ucfirst($choix_tri_text)?></option>
-<option value='trimestre1' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ3?> <?php print LANGOU ?> <?php print LANGPROJ19?></option>
-<option value='trimestre2' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ4?> <?php print LANGOU ?> <?php print LANGPROJ20?></option>
-<option value='trimestre3' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ5?></option>
-</select>
-<input type=hidden name="sMat" value='<?php print $_GET["sMat"];?>' />
-<input type=hidden name="sClasseGrp" value='<?php print $_GET["sClasseGrp"];?>' />
-<input type=hidden name="anneeScolaire" value='<?php print $anneeScolaire ?>' />
-</td><td>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGOK ?>","create"); //text,nomInput</script>
 <?php
 $fichier="./data/pdf_bull/edition_".$_SESSION["id_pers"].".pdf";
-// creation excel
 require_once "./librairie_php/class.writeexcel_workbook.inc.php";
 require_once "./librairie_php/class.writeexcel_worksheet.inc.php";
 $fichierxls="./data/fichier_ASCII/exportnote_".$_SESSION["id_pers"].".xls";
 @unlink($fichierxls);
 $fichiername="Rapport-${nomClasse}_$choix_tri.xls";
+$choix_tri_text=$choix_tri;
+if ($choix_tri_text == "trimestre1") { $choix_tri_text=LANGPROJ3; }
+if ($choix_tri_text == "trimestre2") { $choix_tri_text=LANGPROJ4; }
+if ($choix_tri_text == "trimestre3") { $choix_tri_text=LANGPROJ5; }
 ?>
-&nbsp;&nbsp;&nbsp;
-<a href="visu_pdf_prof.php?id=<?php print $fichier?>" target="_blank"><img src="image/commun/print.gif" border=0 align=center></a>
-<a href="telecharger.php?fichier=<?php print $fichierxls?>&fichiername=<?php print $fichiername ?>" target="_blank"><img src="image/commun/Logo-Excel.gif" border=0 align=center></a>
-</td></tr></table>
+<form method=POST action="visunoteprof.php?sMat=<?php echo urlencode($mid) ?>&sClasseGrp=<?php echo urlencode($cgrp1) ?>&anneeScolaire=<?php echo urlencode($anneeScolaire) ?>">
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROF5 ?> :</span>
+    <select name="choix_trimestre" class="cc-select">
+      <option value='<?php print $choix_tri?>' style="color:#000066;background-color:#FCE4BA"><?php print ucfirst($choix_tri_text)?></option>
+      <option value='trimestre1' style='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ3?> <?php print LANGOU ?> <?php print LANGPROJ19?></option>
+      <option value='trimestre2' style='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ4?> <?php print LANGOU ?> <?php print LANGPROJ20?></option>
+      <option value='trimestre3' style='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ5?></option>
+    </select>
+    <input type=hidden name="sMat" value='<?php print htmlspecialchars($mid);?>' />
+    <input type=hidden name="sClasseGrp" value='<?php print htmlspecialchars($cgrp1);?>' />
+    <input type=hidden name="anneeScolaire" value='<?php print $anneeScolaire ?>' />
+    <button type="submit" name="create" value="1" style="background:#CACCEF;color:#080A66;border:none;border-radius:5px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;">Afficher les notes</button>
+  </div>
+</div>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagic('Imprimer PDF','visu_pdf_prof.php?id=<?php print $fichier?>','_blank','','');</script>
+  <script language=JavaScript>buttonMagic('Export Excel','telecharger.php?fichier=<?php print $fichierxls?>&fichiername=<?php print $fichiername?>','_blank','','');</script>
+</div>
 </form>
-</ul>
 <div id="MoyenClasse"></div>
 <br>
 <br>
@@ -158,7 +236,7 @@ $fichiername="Rapport-${nomClasse}_$choix_tri.xls";
 <table  border="0" bordercolor="#000000">
 
 <?php 
-if ($HPV[gid]) {
+if ($HPV['gid']) {
 
 if ($triEleve == "nomeleve") { ?>
 	<tr><td align="center">[ <a href="visunoteprof.php?sMat=<?php print $mid ?>&sClasseGrp=<?php print $cgrp1 ?>&order=classe "><?php print LANGNNOTE2 ?></a> ]</td></tr>
@@ -178,13 +256,13 @@ if ($triEleve == "classe") {
 	$order="ORDER BY 2";
 }
 
-if($HPV[gid]){
-        $gid=$HPV[gid];
+if($HPV['gid']){
+        $gid=$HPV['gid'];
         $sqlIn=<<<SQL
         SELECT
         	liste_elev
         FROM
-        	${prefixe}groupes
+        	{$prefixe}groupes
         WHERE
 		group_id='$gid'
 SQL;
@@ -210,7 +288,7 @@ SQL;
 	}
 	$sql .= ",classe
         FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	elev_id IN ($in)
         $order
@@ -219,7 +297,7 @@ SQL;
 	}
 
 } else {
-        $cid=$HPV[cid];
+        $cid=$HPV['cid'];
 /*	$sql="
         SELECT
         	elev_id,
@@ -234,16 +312,16 @@ SQL;
 	}
 	$sql .= ",classe
 	FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	classe='$cid'
 	ORDER BY 2
 
 	"; */
 
-//	$sql="(SELECT e.elev_id, CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ) ,e.classe  FROM ${prefixe}eleves e WHERE e.classe='$cid' AND e.compte_inactif != 1 $order  ) UNION ( SELECT e.elev_id,  CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ) ,e.classe  FROM ${prefixe}eleves e , ${prefixe}eleves_histo h WHERE h.idclasse='$cid' AND e.compte_inactif != 1 AND e.elev_id=h.ideleve  ) $order";
+//	$sql="(SELECT e.elev_id, CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ) ,e.classe  FROM {$prefixe}eleves e WHERE e.classe='$cid' AND e.compte_inactif != 1 $order  ) UNION ( SELECT e.elev_id,  CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ) ,e.classe  FROM {$prefixe}eleves e , {$prefixe}eleves_histo h WHERE h.idclasse='$cid' AND e.compte_inactif != 1 AND e.elev_id=h.ideleve  ) $order";
 
-	$sql=" SELECT s.* FROM ( SELECT elev_id,CONCAT(upper(trim(nom)),' ',trim(prenom)),classe FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$cid' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT e.elev_id,CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ),e.classe FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$cid' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 2";
+	$sql=" SELECT s.* FROM ( SELECT elev_id,CONCAT(upper(trim(nom)),' ',trim(prenom)),classe FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$cid' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT e.elev_id,CONCAT( upper(trim(e.nom)),' ',trim(e.prenom) ),e.classe FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$cid' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 2";
 
 }
 	if ($sql != "") {
@@ -253,7 +331,6 @@ SQL;
         	freeResult($curs);
         	unset($curs);
 	}
-
 
 //
 
@@ -308,7 +385,7 @@ $moyenmin=100;
 $idClasseA="";
 $y=0;$yxls=0;
 $x=2;
-	for($i=0;$i<count($mat);$i++){
+	for($i=0;$i<countTriade($mat);$i++){
 
 
 		if ($ii == 28) {
@@ -341,10 +418,10 @@ $x=2;
 		
 		$pdf->SetFillColor(220);
 		$pdf->SetXY($xcoor,$ycoor+=$h); // placement du cadre du nom de l eleve
-		$nomprenom=trunchaine($mat[$i][1],13);
-		$pdf->MultiCell(40,5,"$nomprenom",1,'',0);
+		$nomprenom=trunchaine($mat[$i][1],25);
+		$pdf->MultiCell(60,5,"$nomprenom",1,'',0);
 
-		$worksheet1->write($x+=1, $y, $mat[$i][1] , $center); // colonne des noms et prenoms
+		$worksheet1->write($x+=1, $y, utf8_decode($mat[$i][1]) , $center); // colonne des noms et prenoms
 	
 	
 	
@@ -357,7 +434,7 @@ $x=2;
 		$photoeleve="image_trombi.php?idE=".$mat[$i][0];
 
 		print "<tr>\n";
-		print "<td><input type=text width='5' readonly size=20 value=\"".$mat[$i][1]."\" title=\"".$mat[$i][1]."\" ></td>\n";
+		print "<td><span class='eleve-cell' title=\"".$mat[$i][1]."\">".$mat[$i][1]."</span></td>\n";
 		$data_note=recherche_note_pour_prof($mat[$i][0],$sql2,$mid,$_SESSION["id_pers"]);
 
 
@@ -367,8 +444,8 @@ $x=2;
 	
 
 		$unenote=0;
-print "<td><table><tr>";
-		for($t=0;$t<count($data_note);$t++){
+print "<td><table style='border-collapse:separate;border-spacing:2px;'><tr>";
+		for($t=0;$t<countTriade($data_note);$t++){
 			//note_id,elev_id,prof_id,code_mat,coef,date,sujet,$f_trunc(note,2),typenote,noteexam,notationsur
 			$noteinfo="";
 			$note=$data_note[$t][7];
@@ -389,9 +466,9 @@ print "<td><table><tr>";
 			if ($note == -6) {$noteaff="VAL";}
 			if ($note == -7) {$noteaff="NVAL";}
 
-			$bgexam="bgcolor=\"#FFFFFF\"";
+			$noteClass="note-cell";
 			if ($data_note[$t][9] != "") {
-				$bgexam="bgcolor=\"yellow\"";
+				$noteClass="note-cell note-exam";
 			}
 
 
@@ -440,7 +517,22 @@ print "<td><table><tr>";
 
 			if (($noteaff < 10) && (is_numeric($noteaff))) { $noteaff="0".$noteaff; }
         	?>
-			<td width='10' <?php print $bgexam ?> ><a href="#" onMouseOver="AffBulle('<font face=Georgia, Times New Roman, Times, serif><u><?php print LANGPARENT12 ?></u> <?php print $date?> <br> <u><?php print LANGPROF6 ?></u> : <?php print $sujet?><br><?php print $noteExam ?><u><?php print LANGPER19 ?></u> : <?php print $coef?> <br> <?php print $noteinfo?></FONT>');"  onMouseOut="HideBulle()";><?php print $bold.$noteaff.$boldf ?></a></td>
+			<td class='<?php print $noteClass ?>'>
+				<div class="note-wrap">
+					<?php print $bold.$noteaff.$boldf ?>
+					<div class="note-tip">
+						<div class="note-tip-row"><span class="note-tip-lbl"><?php print LANGPARENT12 ?> :</span> <?php print $date ?></div>
+						<div class="note-tip-row"><span class="note-tip-lbl"><?php print LANGPROF6 ?> :</span> <?php print htmlspecialchars($sujetpdf) ?></div>
+						<?php if(trim($data_note[$t][9]) != "" && trim($data_note[$t][9]) != "aucun"): ?>
+						<div class="note-tip-exam"><?php print $data_note[$t][9] ?></div>
+						<?php endif ?>
+						<div class="note-tip-row"><span class="note-tip-lbl"><?php print LANGPER19 ?> :</span> <?php print $coef ?></div>
+						<?php if($notationSur && $notationSur != 20): ?>
+						<div class="note-tip-row"><span class="note-tip-lbl">Sur :</span> <?php print $notationSur ?></div>
+						<?php endif ?>
+					</div>
+				</div>
+			</td>
 			<?php
 			// moyenne de l'élève
 		   	if (($note >= 0) && (is_numeric($note))) {
@@ -482,14 +574,14 @@ print "<td><table><tr>";
 			$pdf->SetTextColor(0,0,0);
 			if ($sujetaff == 0) {
 					$pdf->SetFont('Arial','',9);
-					$pdf->TextWithRotation($xsujet,$ysujet,trunchaine($sujetpdf,13),45,-45);
+					$pdf->TextWithRotation($xsujet,$ysujet,trunchaine(utf8_decode($sujetpdf),13),45,-45);
 					$xsujet1=$xsujet+4;
 					$pdf->TextWithRotation($xsujet1,$ysujet,"$date",45,-45);
 					$xsujet2=$xsujet1+4;
 					$pdf->TextWithRotation($xsujet2,$ysujet,"coef : $coefPDF",45,-45);
 					$xsujet+=15;
 					
-					$worksheet1->write(0, $yxls+=1 ,"$sujetpdf", $center);
+					$worksheet1->write(0, $yxls+=1 ,utf8_decode("$sujetpdf"), $center);
 					$worksheet1->write(1, $yxls ,"$date ", $center);
 					$worksheet1->write(2, $yxls ,"coef : $coefPDF", $center);
 				}
@@ -523,8 +615,9 @@ print "<td><table><tr>";
 					$font="";
 				}
 			}
-			if ($okmoy == 1) {
-				print "</tr></table>";
+			print "</tr></table></td>";
+
+		if ($okmoy == 1) {
 				$moyenneleveaff=$moyenneeleve;
 				if ($noteeng == 1) {
 					$moyenneleveaff=$moyenneeleve."% - ".recherche_note_en($moyenneeleve);
@@ -539,10 +632,10 @@ print "<td><table><tr>";
 				/*-------------*/
 				if ($unenote == 1) {
 					$nbeleve++;;
-					print "<td bgcolor='#FFCC99'><b><a href='#' title=\"".LANGMESS82." ".INTITULEELEVE." $sur20 \" >$font $moyenneleveaff $fontf</a></b></td>";
+					print "<td class='note-moy'><a href='#' title=\"".LANGMESS82." ".INTITULEELEVE." $sur20 \" >$font $moyenneleveaff $fontf</a></td>";
 				}else{
 					$moyenneleveaff="";
-					print "<td bgcolor='#FFCC99'>&nbsp;</td>";
+					print "<td class='note-moy'>&nbsp;</td>";
 				}
 				if (($sujetaff == 0) && ($moyenneeleve > 0)) {
 					$pdf->SetFont('Arial','',9);
@@ -569,8 +662,8 @@ $y=0;
 $sujetaff=1;
 $ycoor+=5;
 $xcoor=5;
-	}
 print "</tr>\n";
+	}
 
 if ($nbeleve > 0) { $moyenClasse=$moyenClasse/$nbeleve; }
 

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabComposedConceptResults.js,v 1.2 2017-10-25 16:22:44 vtouchard Exp $
+// $Id: SubTabComposedConceptResults.js,v 1.2 2017/10/25 16:22:44 vtouchard Exp $
 
 
 define([

@@ -18,7 +18,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -53,11 +53,11 @@ include_once("./librairie_php/lib_licence.php");
 $cnx=cnx();
 $data=listingEntreprise();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" >
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Impression des entreprises" ?></font></b></td></tr>
 <tr id='cadreCentral0' ><td >
@@ -109,7 +109,7 @@ $pdf->MultiCell(33,6,"Information",1,'L',1);
 $ycoor0+=6;
 
 // nom,contact,adresse,code_p,ville,secteur_ac,activite_prin,tel,fax,email,info_plus,bonus,contact_fonction,pays_ent
-for($i=0;$i<count($data);$i++) { 
+for($i=0;$i<countTriade($data);$i++) { 
 	$xcoor0=5;
 	$societe=$data[$i][0];
 	$addr=$data[$i][2];

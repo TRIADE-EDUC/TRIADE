@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: author.tpl.php,v 1.17 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: author.tpl.php,v 1.18 2023/12/04 13:07:59 dgoron Exp $
 
 // ce fichier contient des templates indiquant comment doit s'afficher un auteur
 
@@ -12,18 +12,18 @@ if ( ! defined( 'AUTHOR_TMPL' ) ) {
   define( 'AUTHOR_TMPL', 1 );
 
 //	----------------------------------
-//	$author_display : Ã©cran d'info pour un auteur
+//	$author_display : écran d'info pour un auteur
 // Liste des variables statiques prises en charges :
 // !!id!!        identifiant de l'auteur
 // !!name!!      nom de l'auteur
-// !!rejete!!    forme rejetÃ©e de l'auteur
+// !!rejete!!    forme rejetée de l'auteur
 // !!date1!!     date de naissance
-// !!date2!!     date du dÃ©cÃ¨s
+// !!date2!!     date du décès
 
 // Liste des variables dynamiques prises en charges. Les affichages dynamiques sont cliquables le plus souvent
 // !!allname!!   Nom complet et lisible
 // !!allnamenc!! Nom complet et lisible non clikable (pour affichage seulement)
-// !!dates!!     date de naissance et de dÃ©cÃ¨s
+// !!dates!!     date de naissance et de décès
 
 global $msg;
 global $author_level1_display;
@@ -35,7 +35,7 @@ global $author_display_similar_congres_ligne;
 global $author_display_similar_congres_element;
 global $author_level2_no_dates_info;
   
-// level 1 : affichage rÃ©duit
+// level 1 : affichage réduit
 $author_level1_display = "
 <div class=authorlevel1>
 !!allname!!
@@ -45,7 +45,7 @@ $author_level1_display = "
 $author_level1_no_dates_info = "";
 
 
-// level 2 : affichage gÃ©nÃ©ral
+// level 2 : affichage général
 //
 $author_level2_display = "
 <div class=authorlevel2>
@@ -80,7 +80,7 @@ $author_display_similar_congres_element = "
 ";
 */
 $author_display_similar_congres = "
-<table style='margin-left: 48px; border:0px' cellpadding='3'>
+<table style='margin-left: 48px; border:0px; padding:3px'>
 <tbody>
 !!congres_contens!!
 </tbody></table>
@@ -97,4 +97,4 @@ $author_display_similar_congres_element = "
 </td>
 ";
 $author_level2_no_dates_info = "";
-} # fin de dÃ©finition
+} # fin de définition

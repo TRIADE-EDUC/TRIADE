@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,7 +35,7 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php");
 include_once('librairie_php/db_triade.php');
 validerequete("3");
@@ -44,7 +44,7 @@ $cnx=cnx();
 ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCIRCU5 ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -109,7 +109,7 @@ if($cr){
 		$number=md5(uniqid(rand()));
 		if ($prof == 1) {
 		$data=affPers("ENS") ; // pers_id, civ, nom, prenom, identifiant, offline
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$idEns=$data[$i][0];
 			$offline=$data[$i][5];
 			if ($offline == 1) { continue; }
@@ -118,7 +118,7 @@ if($cr){
 		}
 		if ($pers == 1) {
 			$data=affPers("PER") ; // pers_id, civ, nom, prenom, identifiant, offline
-			for($i=0;$i<count($data);$i++) {
+			for($i=0;$i<countTriade($data);$i++) {
 				$idEns=$data[$i][0];
 				$offline=$data[$i][5];
 				if ($offline == 1) { continue; }
@@ -127,7 +127,7 @@ if($cr){
 		}
 		if ($mvs == 1) {
 			$data=affPers("MVS") ; // pers_id, civ, nom, prenom, identifiant, offline
-			for($i=0;$i<count($data);$i++) {
+			for($i=0;$i<countTriade($data);$i++) {
 				$idEns=$data[$i][0];
 				$offline=$data[$i][5];
 				if ($offline == 1) { continue; }
@@ -136,7 +136,7 @@ if($cr){
 		}
 		if ($dir == 1) {
 			$data=affPers("ADM") ; // pers_id, civ, nom, prenom, identifiant, offline
-			for($i=0;$i<count($data);$i++) {
+			for($i=0;$i<countTriade($data);$i++) {
 				$idEns=$data[$i][0];
 				$offline=$data[$i][5];
 				if ($offline == 1) { continue; }
@@ -145,7 +145,7 @@ if($cr){
 		}
 		if ($tut == 1) {
 			$data=affPers("TUT") ; // pers_id, civ, nom, prenom, identifiant, offline
-			for($i=0;$i<count($data);$i++) {
+			for($i=0;$i<countTriade($data);$i++) {
 				$idEns=$data[$i][0];
 				$offline=$data[$i][5];
 				if ($offline == 1) { continue; }
@@ -153,11 +153,11 @@ if($cr){
 			}
 		}
 		foreach ( $_POST["saisie_classe"] as $key=>$idclasse) {
-			$sql="SELECT elev_id FROM ${prefixe}eleves WHERE classe='$idclasse'";
+			$sql="SELECT elev_id FROM {$prefixe}eleves WHERE classe='$idclasse'";
 			$res=execSql($sql);
 			$data=chargeMat($res);
-			if(count($data) > 0) {
-				for($i=0;$i<count($data);$i++) {
+			if(countTriade($data) > 0) {
+				for($i=0;$i<countTriade($data);$i++) {
 					$idEleve=$data[$i][0];
 					envoi_messagerie($_SESSION["id_pers"],$idEleve,$titre,Crypte($text,$number),$date,$heure,renvoiTypePersonne($_SESSION["membre"]),'PAR',$number,'');
 					envoi_messagerie($_SESSION["id_pers"],$idEleve,$titre,Crypte($text,$number),$date,$heure,renvoiTypePersonne($_SESSION["membre"]),'ELE',$number,'');
@@ -173,7 +173,14 @@ if ($erreur_fichier == "oui" ) {
 	print "<br><br><center><font color=red>".LANGCIRCU17."</font></center>";
 }
 
-print "<br><br><table align='center'><tr><td><script>buttonMagicRetour('circulaire_admin.php','_self')</script></td></tr></table><br><br>";
+if ($_SESSION["membre"] == "menuadmin") {
+	print "<br><br><table align='center'><tr><td><script>buttonMagicRetour('circulaire_admin.php','_self')</script></td></tr></table><br><br>";
+}
+
+if ($_SESSION["membre"] == "menuprof") {
+	print "<br><br><table align='center'><tr><td><script>buttonMagicRetour('profp2.php','_self')</script></td></tr></table><br><br>";
+}
+
 ?>
 </center>
      <!-- // fin  -->
@@ -182,17 +189,17 @@ print "<br><br><table align='center'><tr><td><script>buttonMagicRetour('circulai
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

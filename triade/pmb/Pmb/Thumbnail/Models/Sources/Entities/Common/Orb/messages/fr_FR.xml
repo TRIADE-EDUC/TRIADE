@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2023/05/16 09:15:34 tsamson Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">ORB Decitre</entry>
+	<entry code="description">L'outil de recherche bibliographique</entry>
+    <entry code="user">Nom d'utilisateur : </entry>
+    <entry code="api_key">Clé API : </entry>
+</XMLlist>

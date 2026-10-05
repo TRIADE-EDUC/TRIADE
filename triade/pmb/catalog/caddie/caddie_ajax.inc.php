@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: caddie_ajax.inc.php,v 1.12 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: caddie_ajax.inc.php,v 1.13 2020/10/21 11:14:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $include_path, $class_path, $sub, $idcaddie, $action, $id_item, $object_type, $caddie, $object, $object_id;
 
-// functions particuliÃ¨res Ã  ce module
+// functions particulières à ce module
 require_once("./catalog/caddie/caddie_func.inc.php");
 require_once("$include_path/templates/cart.tpl.php");
 require_once("$include_path/expl_info.inc.php");
@@ -48,7 +48,7 @@ switch($sub) {
 		switch($action) {
 			case "list":
 				require_once($class_path.'/caddie/caddie_root_lists_controller.class.php');
-				caddie_root_lists_controller::proceed_ajax($object_type, 'caddie');
+				caddie_root_lists_controller::proceed_ajax($object_type, 'caddie_content');
 				break;
 			default:
 				$idcaddie=substr($caddie,5);

@@ -1,20 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_titre_uniforme.tpl.php,v 1.5 2018-03-26 14:03:48 dgoron Exp $
+// $Id: sel_titre_uniforme.tpl.php,v 1.7 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-// templates du s√©lecteur auteur
+// templates du sÈlecteur auteur
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
 //-------------------------------------------
 
-global $dyn;
+global $dyn, $msg, $max_field;
 global $jscript;
 global $jscript_common_authorities_link;
 global $jscript_common_selector, $jscript_common_selector_simple;
@@ -23,7 +24,7 @@ global $myid;
 
 if ($dyn==3) {
 	$jscript ="
-<script type='text/javascript'>
+<script>
 	function set_parent(f_caller, id_value, libelle_value, callback){
 		var w=window;
 		var i=0;
@@ -36,7 +37,7 @@ if ($dyn==3) {
 		var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 		var flag = 1;
 		
-		//V√©rification que l'√©l√©ment n'est pas d√©j√† s√©lectionn√©e
+		//VÈrification que l'ÈlÈment n'est pas dÈj‡ sÈlectionnÈe
 		for (var i=0; i<n_element; i++) {
 			if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 				alert('".addslashes($msg["aut_oeuvre_already_in_use"])."');
@@ -64,7 +65,7 @@ if ($dyn==3) {
 		}	
 	}
 </script>";
-}elseif ($dyn==2) { // Pour les liens entre autorit√©s
+}elseif ($dyn==2) { // Pour les liens entre autoritÈs
 	$jscript = $jscript_common_authorities_link;
 }elseif ($dyn!=1) {
 	$jscript = $jscript_common_selector;

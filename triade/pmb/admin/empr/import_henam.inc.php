@@ -1,13 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
+// $Id: import_henam.inc.php,v 1.7 2022/09/07 15:13:30 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once("$class_path/emprunteur.class.php");
+global $class_path;
+global $action, $imp_empr;
 
-function show_import_choix_fichier($dbh) {
+require_once $class_path."/emprunteur.class.php";
+
+function show_import_choix_fichier() {
 	global $msg;
 	global $current_module ;
 
@@ -21,11 +25,11 @@ print "
 	</div>
 	<br />
 	<div class='row'>
-		<b>Pour plus de sÃ©curitÃ© avant de lancer l'import faire une sauvegarde de la base de pmb</b>	
+		<b>Pour plus de sécurité avant de lancer l'import faire une sauvegarde de la base de pmb</b>	
 	</div>	
     <br />
 	<div class='row'>
-		Le fichier doit Ãªtre au format cvs en ISO-8859-15 avec , comme sÃ©parateur de champ et le texte entre guillemets (ex : \"Nom\")	
+		Le fichier doit être au format cvs en ISO-8859-15 avec , comme séparateur de champ et le texte entre guillemets (ex : \"Nom\")	
 	</div>
 	<div class='row'>
 		Fichier etudiant : \"MatriculeHenam\",\"Code_barres\",\"Nom\",\"Prenom\",\"Adresse\",\"Code_postal\",\"Ville\",\"Pays\",\"Telephone_1\",\"Telephone_2\",\"Email\",\"Sexe\",\"Date_naissance\",\"Email_perso\",\"Localisation\",\"Groupe_1\",\"Groupe_2\",\"Login\"
@@ -34,19 +38,19 @@ print "
 		Fichier professeur : \"MatriculeHenam\",\"Code_barres\",\"Nom\",\"Prenom\",\"Adresse\",\"Code_postal\",\"Ville\",\"Pays\",\"Telephone_1\",\"Telephone_2\",\"Email\",\"Sexe\",\"Date_naissance\",\"Login\"
 	</div>
 	<div class='row'>
-		Si la premiÃ¨re ligne du fichier comporte les entÃªtes des colonnes il faut que la premiÃ¨re ligne, premiÃ¨re colonne soit 'MatriculeHenam'	
+		Si la première ligne du fichier comporte les entêtes des colonnes il faut que la première ligne, première colonne soit 'MatriculeHenam'	
 	</div>
 	<div class='row'>
-		Les statuts de lecteur \"A supprimer\" et \"ImportÃ©\" ne doivent pas avoir Ã©tÃ© supprimÃ©s.
+		Les statuts de lecteur \"A supprimer\" et \"Importé\" ne doivent pas avoir été supprimés.
 	</div>
 	<div class='row'>
-		Les codages d'import des localisations ne doivent pas Ãªtre modifiÃ©s
+		Les codages d'import des localisations ne doivent pas être modifiés
 	</div>
 	<div class='row'>
 		Le controle des lecteurs se fait sur le matricule et le code barres
 	</div>
 	<div class='row'>
-		Si l'on choisi de supprimer les lecteurs prÃ©sents dans le fichier et qu'ils ont des prÃªts en cours seul leur statut sera mis Ã  \"A supprimer\"	
+		Si l'on choisi de supprimer les lecteurs présents dans le fichier et qu'ils ont des prêts en cours seul leur statut sera mis à \"A supprimer\"	
 	</div>
 </div>
 <h3>Type d'utilisation</h3>			
@@ -57,22 +61,22 @@ print "
 	<div class='row'>
 		<input type=radio name='type_import' value='nouveau_lect' checked>
         <label class='etiquette' for='form_import_lec'>Importer</label>
-        (ajoute ou modifie les lecteurs prÃ©sents dans le fichier)
+        (ajoute ou modifie les lecteurs présents dans le fichier)
         <br />
         <input type=radio name='type_import' value='maj_complete'>
         <label class='etiquette' for='form_import_lec'>Supprimer</label>
-        (supprime les lecteurs prÃ©sents dans le fichier et dans la base s'ils n'ont pas de prÃªt en cours)
+        (supprime les lecteurs présents dans le fichier et dans la base s'ils n'ont pas de prêt en cours)
 	</div>
 	<br />
 	<div class='row'>
-		<b>Choisisez si vous voulez remettre tous les statuts des lecteurs Ã  \"ImportÃ©\"</b> (actualisation annuelle)<b> : </b>
+		<b>Choisisez si vous voulez remettre tous les statuts des lecteurs à \"Importé\"</b> (actualisation annuelle)<b> : </b>
 	</div>
 	<div class='row'>
 		<input type=radio name='type_modif' value='garder_statut' checked>
         <label class='etiquette' for='form_import_lec'>Ne pas modifier le statut</label>
         <br />
         <input type=radio name='type_modif' value='modif_statut'>
-        <label class='etiquette' for='form_import_lec'>Mettre le statut \"ImportÃ©\" Ã  tous les lecteurs</label>
+        <label class='etiquette' for='form_import_lec'>Mettre le statut \"Importé\" à tous les lecteurs</label>
 	</div>
 </div>
 <div class='row'>
@@ -81,7 +85,8 @@ print "
 </form>";
 }
 
-function import_lect_par_lect($tab,$dbh){
+function import_lect_par_lect($tab){
+    
 	global $lect_cree,$lect_erreur;
 	//update empr set `empr_modif`= DATE_SUB(empr_modif, INTERVAL 6 MONTH),`empr_date_expiration`= DATE_SUB(`empr_date_expiration`, INTERVAL 6 MONTH)
 	
@@ -113,7 +118,7 @@ function import_lect_par_lect($tab,$dbh){
 	$empr_cb2=$empr_cb;
 	while ($pb==1) {
 		$q = "SELECT empr_cb FROM empr WHERE empr_cb='".addslashes($empr_cb2)."' LIMIT 1 ";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		$nb = pmb_mysql_num_rows($r);
 		if ($nb) {
 			$empr_cb2 =$empr_cb."-".$num_cb ;
@@ -123,7 +128,7 @@ function import_lect_par_lect($tab,$dbh){
 	$data['cb']=$empr_cb2;
 	/*if($data['cb'] != $tab[1]){
 		$lect_erreur++;
-		echo "<b>Erreur : pour le lecteur ".$tab[2]." ".$tab[3]." le code barres ".$data['cb']." est dÃ©ja utilisÃ© comme code barre pour un autre lecteur</b><br />";
+		echo "<b>Erreur : pour le lecteur ".$tab[2]." ".$tab[3]." le code barres ".$data['cb']." est déja utilisé comme code barres pour un autre lecteur</b><br />";
 		return;
 	}*/
 	
@@ -176,20 +181,20 @@ function import_lect_par_lect($tab,$dbh){
 	
 	$data['location_libelle_create']=$tab[14];
 	if(!$data['location_libelle_create']){
-		$data['location_libelle_create']="IndÃ©terminÃ©";
+		$data['location_libelle_create']="Indéterminé";
 	}
 	
 	$data['msg']="";
 
 	$data['lang']='fr_FR';
 	
-	$data['statut_libelle_create']="ImportÃ©";
+	$data['statut_libelle_create']="Importé";
 	
 	$mon_emprunteur= new emprunteur();
 	$id_empr=$mon_emprunteur->import($data);
 	if(!$id_empr){
 		$lect_erreur++;
-		echo "Erreur : Lecteur non crÃ©Ã©\n";
+		echo "Erreur : Lecteur non créé\n";
 		echo "<pre>";
 		print_r($data);
 		echo "</pre>";
@@ -197,60 +202,61 @@ function import_lect_par_lect($tab,$dbh){
 		$lect_cree++;
 		if ($tab[13] and count($tab) == 18) {
 			$q="select idchamp from empr_custom where name='email_perso' limit 1";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			if (pmb_mysql_num_rows($r)) {
 				$idchamp=pmb_mysql_result($r,0,0);
 				$q = "insert into empr_custom_values (empr_custom_champ, empr_custom_origine, empr_custom_small_text) ";
 				$q.= "values('".$idchamp."', '".$id_empr."','".addslashes($tab[13])."' ) ";
-				$r=pmb_mysql_query($q, $dbh);
+				$r=pmb_mysql_query($q);
 			}
 		}
 		if ($tab[0]) {
 			$q="select idchamp from empr_custom where name='matricule' limit 1";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			if (pmb_mysql_num_rows($r)) {
 				$idchamp=pmb_mysql_result($r,0,0);
 				$q = "insert into empr_custom_values (empr_custom_champ, empr_custom_origine, empr_custom_small_text) ";
 				$q.= "values('".$idchamp."', '".$id_empr."','".addslashes($tab[0])."' ) ";
-				$r=pmb_mysql_query($q, $dbh);
+				$r=pmb_mysql_query($q);
 			}
 		}
 		if(trim($tab[15])){
-			//On crÃ©er le groupe si il n'existe pas et on y affecte le lecteur
+			//On crée le groupe si il n'existe pas et on y affecte le lecteur
 			$requete="select id_groupe from groupe where libelle_groupe='".addslashes(trim($tab[15]))."'";
-			$r = pmb_mysql_query($requete, $dbh);
+			$r = pmb_mysql_query($requete);
 			if (pmb_mysql_num_rows($r)) {
 				$id_grp=pmb_mysql_result($r,0,0);
 			}else{
 				$q= "insert into groupe (libelle_groupe) values ('".addslashes(trim($tab[15]))."') ";
-				$r = pmb_mysql_query($q, $dbh);
-				$id_grp =pmb_mysql_insert_id($dbh);
+				$r = pmb_mysql_query($q);
+				$id_grp =pmb_mysql_insert_id();
 			}
 			$requete="insert into empr_groupe(empr_id,groupe_id) values ('".$id_empr."','".$id_grp."')";
-			if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";	
+			if(!pmb_mysql_query($requete)) echo "Requete echoué : ".$requete."<br>";	
 		}
 		
 		if(trim($tab[16]) and trim($tab[16]) != trim($tab[15])){
-			//On crÃ©er le groupe si il n'existe pas et on y affecte le lecteur
+			//On crée le groupe si il n'existe pas et on y affecte le lecteur
 			$requete="select id_groupe from groupe where libelle_groupe='".addslashes(trim($tab[16]))."'";
-			$r = pmb_mysql_query($requete, $dbh);
+			$r = pmb_mysql_query($requete);
 			if (pmb_mysql_num_rows($r)) {
 				$id_grp=pmb_mysql_result($r,0,0);
 			}else{
 				$q= "insert into groupe (libelle_groupe) values ('".addslashes(trim($tab[16]))."') ";
-				$r = pmb_mysql_query($q, $dbh);
-				$id_grp =pmb_mysql_insert_id($dbh);
+				$r = pmb_mysql_query($q);
+				$id_grp =pmb_mysql_insert_id();
 			}
 			$requete="insert into empr_groupe(empr_id,groupe_id) values ('".$id_empr."','".$id_grp."')";
-			if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";	
+			if(!pmb_mysql_query($requete)) echo "Requete échouée : ".$requete."<br>";	
 		}
 	}
 }
 
-function supp_lect_par_lect($tab,$dbh){
+function supp_lect_par_lect($tab){
+    
 	global $lect_erreur,$lect_supprime,$lect_interdit;
 	$requete="select id_empr,pret_idexpl from empr left join pret on id_empr=pret_idempr join empr_custom_values on empr_custom_origine=id_empr where empr_cb like '".addslashes($tab[1])."%' and empr_custom_champ='2' and empr_custom_small_text='".addslashes($tab[0])."' group by id_empr";
-	$select = pmb_mysql_query($requete,$dbh);
+	$select = pmb_mysql_query($requete);
 	$nb_enreg = pmb_mysql_num_rows($select);
 	if($nb_enreg == 1){
 		$id=pmb_mysql_result($select,0,0);
@@ -259,40 +265,41 @@ function supp_lect_par_lect($tab,$dbh){
 			emprunteur::del_empr($id);
 			$lect_supprime++;
 		}else{
-			//On modifi le statut
+			//On modifie le statut
 			$q="select idstatut from empr_statut where statut_libelle='A supprimer' limit 1";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			if (pmb_mysql_num_rows($r)) {
 				$id_statut =pmb_mysql_result($r,0,0);	
 			} else {
 				$q= "insert into empr_statut (statut_libelle) values ('A supprimer') ";
-				$r = pmb_mysql_query($q, $dbh);
-				$id_statut =pmb_mysql_insert_id($dbh);
+				$r = pmb_mysql_query($q);
+				$id_statut =pmb_mysql_insert_id();
 			}
 			$requete="update empr set empr_statut='".$id_statut."' where id_empr='".$id."' ";
 			if(pmb_mysql_query($requete)){
 				$lect_interdit++;
 			}else{
 				$lect_erreur++;
-				echo "<b>Erreur : Pour le lecteur ".$tab[2]." ".$tab[3]." avec le code barre ".$tab[1]." un problÃ¨me est survenu lors de la modification de son statut<b><br />";
+				echo "<b>Erreur : Pour le lecteur ".$tab[2]." ".$tab[3]." avec le code barre ".$tab[1]." un problème est survenu lors de la modification de son statut<b><br />";
 			}
 		}
 	}elseif($nb_enreg > 1){
 		$lect_erreur++;
-		echo "<b>Erreur : Attention le code barre ".$tab[1]." est en double dans la base veuillez le modifier pour l'un des deux lecteurs<b><br />";
+		echo "<b>Erreur : Attention le code barres ".$tab[1]." est en double dans la base. Veuillez le modifier pour l'un des deux lecteurs<b><br />";
 		return;
 	}else{
 		$lect_erreur++;
-		echo "<b>Erreur : Attention le lecteur ".$tab[2]." ".$tab[3]." avec le code barre ".$tab[1]." n'existe pas dans la base, il ne sera pas supprimÃ©<b><br />";
+		echo "<b>Erreur : Attention le lecteur ".$tab[2]." ".$tab[3]." avec le code barres ".$tab[1]." n'existe pas dans la base, il ne sera pas supprimé<b><br />";
 		return;
 	}
 	
 }
 
-function maj_lect_par_lect($tab,$dbh,$statut,$id_lect){
+function maj_lect_par_lect($tab,$statut,$id_lect){
+    
 	global $lect_modif,$lect_erreur;
-	/*Les informations qui sont mise Ã  jour sont :
-	* l'adresse, le code postal, la ville, le pays, le telephone, emailPerso, la locatisation et le groupe
+	/* Les informations qui sont mises à jour sont :
+	 * l'adresse, le code postal, la ville, le pays, le telephone, emailPerso, la localisation et le groupe
 	*/
 	
 	$requete = "update empr set ";
@@ -322,7 +329,7 @@ function maj_lect_par_lect($tab,$dbh,$statut,$id_lect){
 	}
 	
 	if($statut){
-		//On repasse le statut de tous les lecteurs Ã  "IndÃ©termiÃ¨" et on remet les dates
+		//On repasse le statut de tous les lecteurs à "Indéterminé" et on remet les dates
 		$requete .= ", empr_date_adhesion='".addslashes(date('Y-m-j'))."'";
 		$requete .= ", empr_modif='".addslashes(date('Y-m-j'))."'";
 		
@@ -331,14 +338,14 @@ function maj_lect_par_lect($tab,$dbh,$statut,$id_lect){
 				$requete .= ", empr_date_expiration='".addslashes($row[0])."'";
 			}
 		}
-		$q="select idstatut from empr_statut where statut_libelle='ImportÃ©' limit 1";
-		$r = pmb_mysql_query($q, $dbh);
+		$q="select idstatut from empr_statut where statut_libelle='Importé' limit 1";
+		$r = pmb_mysql_query($q);
 		if (pmb_mysql_num_rows($r)) {
 			$requete .= ", empr_statut='".pmb_mysql_result($r,0,0)."'";
 		} else {
-			$q= "insert into empr_statut (statut_libelle) values ('ImportÃ©') ";
-			$r = pmb_mysql_query($q, $dbh);
-			$requete .= ", empr_statut='".pmb_mysql_insert_id($dbh)."'";
+			$q= "insert into empr_statut (statut_libelle) values ('Importé') ";
+			$r = pmb_mysql_query($q);
+			$requete .= ", empr_statut='".pmb_mysql_insert_id()."'";
 		}
 		
 	}else{
@@ -349,56 +356,56 @@ function maj_lect_par_lect($tab,$dbh,$statut,$id_lect){
 		$lect_modif++;
 	}else{
 		$lect_erreur++;
-		echo "Requete echouÃ© : ".$requete."<br>";
+		echo "Requete échouée : ".$requete."<br>";
 	}
 	
 	//Traitement des groupes
 	$requete="delete from empr_groupe where empr_id='".$id_lect."'";
-	if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";
+	if(!pmb_mysql_query($requete)) echo "Requete echoué : ".$requete."<br>";
 	
 	if(trim($tab[15])){
-		//On crÃ©er le groupe si il n'existe pas et on y affecte le lecteur
+		//On crée le groupe si il n'existe pas et on y affecte le lecteur
 		$requete="select id_groupe from groupe where libelle_groupe='".addslashes(trim($tab[15]))."'";
-		$r = pmb_mysql_query($requete, $dbh);
+		$r = pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($r)) {
 			$id_grp=pmb_mysql_result($r,0,0);
 		}else{
 			$q= "insert into groupe (libelle_groupe) values ('".addslashes(trim($tab[15]))."') ";
-			$r = pmb_mysql_query($q, $dbh);
-			$id_grp =pmb_mysql_insert_id($dbh);
+			$r = pmb_mysql_query($q);
+			$id_grp =pmb_mysql_insert_id();
 		}
 		$requete="insert into empr_groupe(empr_id,groupe_id) values ('".$id_lect."','".$id_grp."')";
-		if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";	
+		if(!pmb_mysql_query($requete)) echo "Requete echoué : ".$requete."<br>";	
 	}
 	
 	if(trim($tab[16]) and trim($tab[16]) != trim($tab[15])){
-		//On crÃ©er le groupe si il n'existe pas et on y affecte le lecteur
+		//On crée le groupe si il n'existe pas et on y affecte le lecteur
 		$requete="select id_groupe from groupe where libelle_groupe='".addslashes(trim($tab[16]))."'";
-		$r = pmb_mysql_query($requete, $dbh);
+		$r = pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($r)) {
 			$id_grp=pmb_mysql_result($r,0,0);
 		}else{
 			$q= "insert into groupe (libelle_groupe) values ('".addslashes(trim($tab[16]))."') ";
-			$r = pmb_mysql_query($q, $dbh);
-			$id_grp =pmb_mysql_insert_id($dbh);
+			$r = pmb_mysql_query($q);
+			$id_grp =pmb_mysql_insert_id();
 		}
 		$requete="insert into empr_groupe(empr_id,groupe_id) values ('".$id_lect."','".$id_grp."')";
-		if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";	
+		if(!pmb_mysql_query($requete)) echo "Requete echoué : ".$requete."<br>";	
 	}
 	
 	if ($tab[13] and count($tab) == 18) {
-		//Traitement du champs perso email
+		//Traitement du champ perso email
 		$q="select idchamp from empr_custom where name='email_perso' limit 1";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		if (pmb_mysql_num_rows($r)) {
 			$idchamp=pmb_mysql_result($r,0,0);
 			//On supprime l'ancien
 			$requete="delete from empr_custom_values where empr_custom_origine='".$id_lect."' and empr_custom_champ='".$idchamp."'";
-			if(!pmb_mysql_query($requete)) echo "Requete echouÃ© : ".$requete."<br>";
-			//On crÃ©er le nouveau
+			if(!pmb_mysql_query($requete)) echo "Requete echoué : ".$requete."<br>";
+			//On crée le nouveau
 			$q = "insert into empr_custom_values (empr_custom_champ, empr_custom_origine, empr_custom_small_text) ";
 			$q.= "values('".$idchamp."', '".$id_lect."','".addslashes($tab[13])."' ) ";
-			pmb_mysql_query($q, $dbh);
+			pmb_mysql_query($q);
 		}
 	}
 	
@@ -414,8 +421,15 @@ function decoup_fic_lect($fichier){
 	return $notices;	
 }
 
-function import_empr($dbh){
-	global $lect_cree,$lect_erreur,$lect_modif,$type_import,$type_modif,$lect_supprime,$lect_interdit;
+function import_empr(){
+    
+	//La structure du fichier texte doit être la suivante avec ceci comme première ligne:
+	// Etudiant 
+    // "MatriculeHenam","empr_cb","empr_nom","empr_prenom","empr_adr1","empr_cp","empr_ville","empr_pays","empr_tel1","empr_tel2","empr_mail","empr_sexe","empr_year","EmailPerso","localisation","groupe"
+    //Professeur
+    // "MatriculeHenam","empr_cb","empr_nom","empr_prenom","empr_adr1","empr_cp","empr_ville","empr_pays","empr_tel1","empr_tel2","empr_mail","empr_sexe","empr_year"
+
+    global $lect_cree,$lect_erreur,$lect_modif,$type_import,$type_modif,$lect_supprime,$lect_interdit;
 	$lect_tot=0;
 	$lect_supprime=0;
 	$lect_cree=0;
@@ -423,17 +437,12 @@ function import_empr($dbh){
 	$lect_modif=0;
 	$lect_interdit=0;
 	
-	//La structure du fichier texte doit Ãªtre la suivante avec ceci comme premiÃ¨re ligne:
-	// Etudiant 
-    // "MatriculeHenam","empr_cb","empr_nom","empr_prenom","empr_adr1","empr_cp","empr_ville","empr_pays","empr_tel1","empr_tel2","empr_mail","empr_sexe","empr_year","EmailPerso","localisation","groupe"
-    //Professeur
-    // "MatriculeHenam","empr_cb","empr_nom","empr_prenom","empr_adr1","empr_cp","empr_ville","empr_pays","empr_tel1","empr_tel2","empr_mail","empr_sexe","empr_year"
     //Upload du fichier
-    if (!($_FILES['import_lec']['tmp_name'])){
+    if (!($_FILES['import_lec']['tmp_name'])) {
     	print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
         return ;
-    }elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
-        print "Le fichier n'a pas pu Ãªtre tÃ©lÃ©chargÃ©. Voici plus d'informations :<br />";
+    } elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
+        print "Le fichier n'a pas pu être téléchargé. Voici plus d'informations :<br />";
         print_r($_FILES)."<p>";
         return ;
     }
@@ -444,63 +453,70 @@ function import_empr($dbh){
         for($i=0;$i<count($lect);$i++){
         	$statut="";
         	if($type_modif == "modif_statut"){
-        		$statut="ImportÃ©";
+        		$statut="Importé";
         	}
-        	if(count($lect[$i]) == 1 or $lect[$i][0] == "MatriculeHenam"){
-	        	//Passe ici pour l'entÃªte et les ligne vide (la derniÃ¨re)
-	        }elseif(count($lect[$i]) != 18 && count($lect[$i]) != 14){
+        	if (count($lect[$i]) == 1 or $lect[$i][0] == "MatriculeHenam") {
+	        	//Passe ici pour l'entête et les ligne vide (la dernière)
+	        } elseif (count($lect[$i]) != 18 && count($lect[$i]) != 14){
 	        	$lect_tot++;
 	        	$lect_erreur++;
-	        	print("<b>Erreur : Personne non prise en compte car le nombre de champ n'est pas valide : </b><br />");
+	        	print("<b>Erreur : Personne non prise en compte car le nombre de champs n'est pas valide : </b><br />");
 	        	echo "<pre>";
 	      	 	print_r($lect[$i]);
 	        	echo "</pre>";
-	        }elseif(trim($lect[$i][0]) == "" or trim($lect[$i][1]) == "" or trim($lect[$i][2]) === ""){
+	        } elseif (trim($lect[$i][0]) == "" or trim($lect[$i][1]) == "" or trim($lect[$i][2]) === ""){
 	        	$lect_tot++;
 	        	$lect_erreur++;
 	        	print("<b>Erreur : Personne non prise en compte car elle n'a pas de nom, de code barres ou de matricule : </b><br />");
 	        	echo "<pre>";
 	      	 	print_r($lect[$i]);
 	        	echo "</pre>";
-	        }else{
+	        } else {
 	        	$lect_tot++;
 	        	if($type_import == "nouveau_lect"){
-		        	//Tout les lecteurs Ã  traiter
+		        	//Tous les lecteurs à traiter
 	        		
-	        		//On regarde si le lecteur existe dÃ©ja en le recherchant par son badge
+	        		//On regarde si le lecteur existe déja en le recherchant par son badge
 					$requete="select id_empr from empr join empr_custom_values on empr_custom_origine=id_empr where empr_cb LIKE '".addslashes($lect[$i][1])."%' and empr_custom_champ='2' and empr_custom_small_text='".addslashes($lect[$i][0])."' ";
-					$select = pmb_mysql_query($requete,$dbh);
+					$select = pmb_mysql_query($requete);
+					
 					$nb_enreg = pmb_mysql_num_rows($select);
 					if($nb_enreg == 1){
-						maj_lect_par_lect($lect[$i],$dbh,$statut,pmb_mysql_result($select,0,0));
+					    $id_empr = pmb_mysql_result($select,0,0);
+					    maj_lect_par_lect($lect[$i], $statut, $id_empr);
+						
 					}elseif($nb_enreg > 1){
+					    
 						$lect_erreur++;
-						echo "<b>Erreur : Attention le code barre ".$lect[$i][0]." est en double dans la base veuillez le modifier pour l'un des deux lecteurs<b><br />";
+						echo "<b>Erreur : Attention le code barres ".$lect[$i][0]." est en double dans la base veuillez le modifier pour l'un des deux lecteurs<b><br />";
 						return;
-					}else{
-						import_lect_par_lect($lect[$i],$dbh);
+						
+					} else {
+					    
+						import_lect_par_lect($lect[$i]);
 					}
-		        }else{
-		        	supp_lect_par_lect($lect[$i],$dbh);
+		        } else {
+		        	supp_lect_par_lect($lect[$i]);
 		        	$group_supp=0;
 		        	if($i+1 == count($lect)){
 		        		$requete="delete groupe from groupe left join empr_groupe on id_groupe=groupe_id where empr_id is null";
-		        		$res=pmb_mysql_query($requete, $dbh);
+		        		pmb_mysql_query($requete);
 		        		$group_supp=pmb_mysql_affected_rows();
 		        	}
 		        }	
 	        }
         }
+        
     	print("<br />_____________________<br />");
-    	if($lect_erreur)echo "<b> Attention ".$lect_erreur." lecteur(s) n'a(ont) pas Ã©tÃ© traitÃ©(s) : voir erreur(s) ci-dessus </b><br />";
+    	if($lect_erreur)echo "<b> Attention ".$lect_erreur." lecteur(s) n'a(ont) pas été traité(s) : voir erreur(s) ci-dessus </b><br />";
     	echo "Nombre total de lecteurs dans le fichier : ".$lect_tot."<br />";
         if($type_import == "nouveau_lect"){
-	    	echo "Nombre de lecteurs crÃ©Ã©s : ".$lect_cree."<br />";
-        	echo "Nombre de lecteurs modifiÃ©s : ".$lect_modif."<br />";
+	    	echo "Nombre de lecteurs créés : ".$lect_cree."<br />";
+        	echo "Nombre de lecteurs modifiés : ".$lect_modif."<br />";
 	    }else{
-        	echo "Nombre d'anciens lecteurs supprimÃ©s : ".$lect_supprime."<br />";
-	        echo "Nombre d'anciens lecteurs avec un statut Interdit (non supprimÃ©s car ils ont au moins un prÃªt en cours) : ".$lect_interdit."<br />";
-	        echo "Nombre de groupes inutilisÃ©s supprimÃ©s : ".$group_supp."<br />";
+        	echo "Nombre d'anciens lecteurs supprimés : ".$lect_supprime."<br />";
+	        echo "Nombre d'anciens lecteurs avec un statut Interdit (non supprimés car ils ont au moins un prêt en cours) : ".$lect_interdit."<br />";
+	        echo "Nombre de groupes inutilisés supprimés : ".$group_supp."<br />";
         }
         fclose($fichier);
     }
@@ -509,20 +525,15 @@ function import_empr($dbh){
 switch($action) {
     case 1:
         if ($imp_empr){
-            import_empr($dbh);
+            import_empr();
         }
         else {
-            show_import_choix_fichier($dbh);
+            show_import_choix_fichier();
         }
         break;
     case 2:
         break;
     default:
-        show_import_choix_fichier($dbh);
+        show_import_choix_fichier();
         break;
 }
-
-?>
-
-
-

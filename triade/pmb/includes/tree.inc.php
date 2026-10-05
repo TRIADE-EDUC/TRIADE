@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: tree.inc.php,v 1.7 2017-11-07 15:28:53 ngantier Exp $
+// $Id: tree.inc.php,v 1.7 2017/11/07 15:28:53 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-//CrÃ©ation d'un arbre de navigation dans les catÃ©gories
+//Création d'un arbre de navigation dans les catégories
 
 function gen_div($categ_parent,$level,$prefix_name, $is_last, $last_before, $js) {
 	global $cnt;
@@ -99,7 +99,7 @@ function tree($js) {
      }
 	}
 	</script>
-	<div id=\"1\"><img src=\"$base_path/images/tree/ftv2folderopen.gif\" border=0 class='center'>CatÃ©gories";
+	<div id=\"1\"><img src=\"$base_path/images/tree/ftv2folderopen.gif\" border=0 class='center'>Catégories";
 
 	$categ_id=0;
 	$level=1;

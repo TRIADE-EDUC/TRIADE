@@ -1,17 +1,25 @@
-<!-- $Id: record_extended_display.tpl.html,v 1.97 2019-02-19 08:05:59 dgoron Exp $ -->
+<!-- $Id: record_extended_display.tpl.html,v 1.105.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
 {% block css_style %}
 	<style type="text/css">
 		
 	</style>
 {% endblock %}
-<div id="noticeNot" data-record-id="{{ record.id }}">
+<div id="noticeNot" data-record-id="{{ record.id }}" data-template="{{ global.opac_notices_format_django_directory | default 'common' }} - {{ record.niveau_biblio }} - {{ record.typdoc }}">
 	<div class="parentNot">
 		<div id="blocNotice_descr">
 			
 			<!-- Affichage des onglets d'enrichissement -->
 			{% if record.enrichment_sources %}
 				<ul id="onglets_isbd_public{{ record.id }}" class="onglets_isbd_publicNot">
-					<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
+					{% if global.opac_rgaa_active %}
+						<li id="onglet_detail{{ record.id }}" class="isbd_public_active">
+							<button type="button" onclick="display_tab(this, 'detail', {{ record.id }}); return false;">
+								<span>{{ msg.demandes_action_detail }}</span>
+							</button>
+						</li>
+					{% else %}
+						<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
+					{% endif %}
 					{% if record.onglets_perso%}
 						{% for onglet in record.onglets_perso %}
 							{{ onglet.onglet_title }}
@@ -21,10 +29,18 @@
 			{% else %}
 				{% if record.onglets_perso%}
 					<ul id="onglets_isbd_public{{ record.id }}" class="onglets_isbd_publicNot">
-						<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
-							{% for onglet in record.onglets_perso %}
-								{{ onglet.onglet_title }}
-							{% endfor %}	
+						{% if global.opac_rgaa_active %}
+							<li id="onglet_detail{{ record.id }}" class="isbd_public_active">
+								<button type="button" onclick="display_tab(this, 'detail', {{ record.id }}); return false;">
+									<span>{{ msg.demandes_action_detail }}</span>
+								</button>
+							</li>
+						{% else %}
+							<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
+						{% endif %}
+						{% for onglet in record.onglets_perso %}
+							{{ onglet.onglet_title }}
+						{% endfor %}	
 					</ul>
 				{% endif %}
 			{% endif %}
@@ -50,7 +66,7 @@
 							<!-- Vignette de la notice -->
 							<div class="vignetteimgNot">
 								<div class="vignetteDocNot">
-									<img class="vignetteNot" src="{{ record.picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+									<img class="vignetteNot" src="{{ record.picture_url }}" alt="" />
 								</div>
 							</div>
 						{% endif %}
@@ -80,17 +96,17 @@
 							<div class="onglet_basketNot ui-panel-basket-item">
 								<div id="record_container_{{ record.id }}_cart" class="ui-flex ui-flex-middle">
 									{% if record.in_cart %}
-										<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove }}" target="cart_info" class="img_basketNot">
-											<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" style="border:0px" alt="{{ msg.notice_basket_remove }}" /></span>
+										<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove }}" target="cart_info" class="img_basketNot" aria-hidden="true" tabindex="-1" role="button">
+											<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" alt="" /></span>
 										</a>
-										<a href="./index.php?lvl=show_cart" class="label_basketNot" title="{{ msg.notice_title_basket_exist }}">
-											<span class="label_basketNot">{{ msg.notice_title_basket_exist }}</span>
+										<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNot" aria-label="{{ msg.notice_basket_remove  | escape  }} : {{ record.tit1 | escape }}" role="button">
+											<span class="label_basketNot">{{ msg.notice_basket_remove }}</span>
 										</a>
 									{% else %}
-										<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.record_display_add_to_cart }}" target="cart_info" class="img_basketNot">
-											<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" style="border:0px" alt="{{ msg.record_display_add_to_cart }}"/></span>
+										<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.record_display_add_to_cart | escape }}" target="cart_info" class="img_basketNot" aria-hidden="true" tabindex="-1" role="button">
+											<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" alt=""/></span>
 										</a>
-										<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.record_display_add_to_cart }}" target="cart_info" class="label_basketNot">
+										<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNot" aria-label="{{ msg.record_display_add_to_cart | escape  }} : {{ record.tit1  | escape }}" role="button">
 											<span class="label_basketNot">{{ msg.record_display_add_to_cart }}</span>
 										</a>
 									{% endif %}
@@ -98,12 +114,41 @@
 							</div>	
 						{% endif %}
 					{% endblock %}
-					
+					{% block record_pnb %}
+						<!-- Bouton de pnb -->
+						{% if record.pnb_datas.flag_pnb_visible %}
+							<div class="statutPartN">
+								<span class="imgStatutPartN">
+									<img class="imgStatutPartN" src="{{ img.new_w.png }}" alt="{{ msg.record_display_new | escape }}"/>
+								</span>
+								<span class="StatutPartN">
+									<a href="#" id="bt_pnb_NotCourte-{{ record.id }}" onclick="{{ record.pnb_datas.onclick }}" class="bt_pnb_NotCourte">{{ msg.empr_bt_checkout }}</a>
+								</span>										
+				                <div id="response_pnb_pret_{{ record.id }}">
+				                </div>
+				            </div>   
+						{% endif %}						
+					{% endblock %}
+					{% block record_edit %}
+						<!-- Bouton edition -->
+						{% if record.edit_link %}
+							<div class="statutPartN">
+								<span class="imgStatutPartN">
+									<img class="imgStatutPartN" src="{{ img.new_w.png }}" alt="{{ msg.record_display_new | escape }}"/>
+								</span>
+								<span class="StatutPartN">
+									<a href="{{record.edit_link}}" title="{{ msg.edit_record | escape }}<">
+										<span class="bt_record_edit">{{ msg.edit_record }}</span>
+									</a>
+								</span>										
+				            </div>   
+						{% endif %}				
+					{% endblock %}
 					{% block record_new %}
 						{% if record.new %}
 							<!-- Statut particulier (nouveaute)-->
 							<div class="statutPartN">
-								<span class="imgStatutPartN"><img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.record_display_new }}"/></span><span class="StatutPartN">{{ msg.record_display_new }}</span>
+								<span class="imgStatutPartN"><img class="imgStatutPartN" src="{{ img.new_w.png }}" alt="{{ msg.record_display_new | escape }}"/></span><span class="StatutPartN">{{ msg.record_display_new }}</span>
 							</div>
 						{% endif %}
 					{% endblock %}
@@ -113,7 +158,7 @@
 							{% if global.opac_avis_display_mode == '0' %}
 								<!-- Avis sur la notice -->
 								<div class="avisN">
-									<span class="ExtnotCom imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" style="border:0px" alt="Commentaires"/></span><span class="avisN">{{ record.display_avis | safe }}</span>
+									<span class="ExtnotCom imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" alt=""/></span><span class="avisN">{{ record.display_avis | safe }}</span>
 								</div>
 							{% endif %}
 						{% endif %}
@@ -122,7 +167,7 @@
 						{% if record.tag_allowed %}
 							<!--  Tag sur la notice -->
 							<div class="tagsN">
-								<span class="ExtnotCom imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" style="border:0px" alt="Tags"/></span><span class="tagsN">{{ record.display_tag }}</span>
+								<span class="ExtnotCom imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" alt=""/></span><span class="tagsN">{{ record.display_tag }}</span>
 							</div>
 						{% endif %}
 					{% endblock %}
@@ -130,7 +175,7 @@
 						{% if record.sugg_allowed %}
 							<!--  Suggestion sur la notice -->
 							<div class="suggestN">
-								<span class="ExtnotCom imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" style="border:0px" alt="Suggestions"/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
+								<span class="ExtnotCom imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" alt=""/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
 							</div>
 						{% endif %}
 					{% endblock %}
@@ -148,7 +193,7 @@
 							<!-- Permalink -->
 							<div class="lienP">
 								<span class="img_permalink"><i class="fa fa-clipboard" aria-hidden="true"></i></span>
-								<span class="label_permalink"><a href="{{ record.permalink }}" title="{{ msg.record_display_permalink_label }}">{{ msg.record_display_permalink_label }}</a></span>
+								<span class="label_permalink"><a href="{{ record.permalink }}" title="{{ msg.record_display_permalink_label | escape }}">{{ msg.record_display_permalink_label }}</a></span>
 							</div>
 						{% endif %}
 					{% endblock %}
@@ -162,7 +207,7 @@
 							<!-- Vignette de la notice -->
 							<div class="vignetteimgNot">
 								<div class="vignetteDocNot">
-									<img class="vignetteNot" src="{{ record.picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+									<img class="vignetteNot" src="{{ record.picture_url }}" alt="" />
 								</div>
 							</div>
 						{% endif %}
@@ -173,7 +218,7 @@
 				<div class="notice_contenu">
 					{{ record.display_coins_span | safe }}
 					{% block record_content %}
-						<table class="descr_notice">
+						<table class="descr_notice" role="presentation">
 							<tbody>
 								{% block record_tit1 %}
 									<tr class="record_tit1">
@@ -638,6 +683,27 @@
 									{% endfor %}
 								{% endblock %}
 								
+								<!--Autorités persos-->
+								{% block record_authperso %}
+									{% for authperso in record.authpersos_ranked %}
+										{% for auth in authperso %}
+											{% if loop.first%}
+												<tr class="record_authperso">
+													<td class="labelNot">
+														<span>{{ auth.type_label }} :</span>
+													</td>
+													<td class="labelContent">
+											{% endif %}
+											{% if loop.counter!=1 %}{{global.pmb_keyword_sep}}{% endif %}
+														<span><a href="{{global.opac_url_base}}index.php?lvl=authperso_see&id={{auth.num_object}}">{{ auth.isbd }}</a></span>
+											{% if loop.last %}
+													</td>
+												</tr>
+											{%endif%}
+										{% endfor %}
+									{% endfor %}
+								{% endblock %}
+                                
 								{% block record_lien %}
 									{% if record.lien %}
 										   <tr class="record_lien">
@@ -645,7 +711,13 @@
 										   			<span>{{ msg.lien_start }}</span>
 										   		</td>
 										   		<td class="labelContent">
-										   			<span><a href="{{record.lien}}" target="_blank" title="{{msg.open_link_url_notice}}">{{ record.lien }}</a></span>
+										   			<span>
+										   				<a href="{{record.lien}}" target="_blank" title="{{msg.open_link_url_notice}}">
+										   					{% block record_lien_content %}
+										   						{{ record.lien }}
+										   					{% endblock %}	
+										   				</a>
+										   			</span>
 										   		</td>
 										   </tr>
 										{% endif %}
@@ -765,9 +837,15 @@
 		{% endblock %}
 		
 		{% block record_explnums %}
-			<div id="docnum">
-				{{ record.display_explnums }}
-			</div>
+			{% if global.opac_rgaa_active %}
+				<div id="docnum_{{ record.id }}" class="docnum">
+					{{ record.display_explnums }}
+				</div>
+			{% else %}
+				<div id="docnum">
+					{{ record.display_explnums }}
+				</div>
+			{% endif %}
 		{% endblock %}
 		
 		{% block record_other_readings %}

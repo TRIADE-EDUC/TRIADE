@@ -2,15 +2,18 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: storages.class.php,v 1.4 2019-06-07 13:30:42 ngantier Exp $
+// $Id: storages.class.php,v 1.11 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/storages/storage.class.php");
 
 class storages {
 	public $list = array();
 	public $defined_list = array();
+	
+	public static $storages_list;
 	
 	public function __construct(){
 		$this->get_storages_list();
@@ -34,23 +37,29 @@ class storages {
 		}
 	}
 	
-	public function process($action="",$id){
+	public function process($action="",$id=0){
+		$id = intval($id);
 		switch($action){
+			case "add":
 			case "edit":
 				print $this->get_form($id);
 				break;
 			case "delete" :
-				$this->delete($id);
-				$this->fetch_datas();
-				print $this->get_table();
+			    $deleted = static::delete($id);
+				if($deleted) {
+    				$this->fetch_datas();
+    				print list_configuration_explnum_storages_ui::get_instance()->get_display_list();
+				} else {
+    			    pmb_error::get_instance(get_class($this))->display(1, $this->get_url_base());
+				}
 				break;
 			case "save" :
 				$this->save_form();
 				$this->fetch_datas();
-				print $this->get_table();
+				print list_configuration_explnum_storages_ui::get_instance()->get_display_list();
 				break;
 			default : 
-				print $this->get_table();
+				print list_configuration_explnum_storages_ui::get_instance()->get_display_list();
 				break;
 		}
 	}
@@ -58,6 +67,10 @@ class storages {
 	protected function get_storages_list(){
 		global $class_path;
 		global $charset,$msg;
+		if(!empty(static::$storages_list)) {
+			$this->list = static::$storages_list;
+			return static::$storages_list;
+		}
 		$xml = new DOMDocument();
 		if(file_exists($class_path."/storages/storages_subst.xml")){
 			$file = $class_path."/storages/storages_subst.xml";
@@ -68,13 +81,15 @@ class storages {
 		$storages = $xml->getElementsByTagName("storage");
 		for($i=0 ; $i<$storages->length ; $i++){
 			$storage = array();
-			$storage['class'] = ($charset != "utf-8" ? utf8_decode($storages->item($i)->getAttribute('class')) : $storages->item($i)->getAttribute('class'));
-			$storage['label'] = ($charset != "utf-8" ? utf8_decode($storages->item($i)->nodeValue) : $storages->item($i)->nodeValue);
+			$storage['class'] = ($charset != "utf-8" ? encoding_normalize::utf8_decode($storages->item($i)->getAttribute('class')) : $storages->item($i)->getAttribute('class'));
+			$storage['label'] = ($charset != "utf-8" ? encoding_normalize::utf8_decode($storages->item($i)->nodeValue) : $storages->item($i)->nodeValue);
 			if(substr($storage['label'],0,4) == "msg:"){
 				$storage['label'] = $msg[substr($storage['label'],4)];
 			}
 			$this->list[] = $storage;
 		}
+		static::$storages_list = $this->list;
+		return static::$storages_list;
 	}
 	
 	public function get_item_form($id=0){
@@ -86,7 +101,7 @@ class storages {
 		<div class='row'>&nbsp;</div>
 		";
 		
-		$id+=0;	
+		$id = intval($id);	
 		$form.="
 		<div class='row'>
 			<div class='colonne3'>
@@ -109,36 +124,6 @@ class storages {
 		return $form;
 	}
 	
-	public function get_table($form_link=""){
-		global $msg,$charset;
-		
-		if(!$form_link){
-			$form_link="./admin.php?categ=docnum&sub=storages&action=edit";
-		}
-		$table = "
-		<table>
-		<tr>
-		<th>".$msg['storage_name']."</th>
-		<th>".$msg['storage_type']."</th>
-		<th>".$msg['storage_resume']."</th>
-		</tr>";
-		for($i=0 ; $i<count($this->defined_list) ; $i++){
-			$table.="
-			<tr class='".($i%2 ? "odd" : "even")."' onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".($i%2 ? "odd" : "even")."'\"  >
-				<td onclick='document.location=\"".$form_link."&id=".$this->defined_list[$i]['id']."\"' style='cursor: pointer'>".htmlentities($this->defined_list[$i]['name'],ENT_QUOTES,$charset)."</td>
-				<td>".htmlentities($this->get_type($this->defined_list[$i]['class']),ENT_QUOTES,$charset)."</td>
-				<td>".$this->get_stockage_infos($this->defined_list[$i]['id'])."</td>
-			</tr>";
-		}
-		$table.="
-		</table>
-		<div class='row'>&nbsp;</div>
-		<div class='row'>
-		<input type='button' class='bouton' value='".$msg['storage_add']."' onclick='document.location=\"".$form_link."&id=0\"'/>
-		</div>";
-		return $table;		
-	}
-	
 	public function get_type($class){
 		foreach($this->list as $method){
 			if($method['class'] == $class){
@@ -149,8 +134,10 @@ class storages {
 	}
 	
 	public static function get_storage_class($id){
-		global $base_path,$include_path,$class_path;
-		$query = "select storage_class from storages where id_storage = ".($id*1);
+		global $class_path;
+		
+		$id = intval($id);
+		$query = "select storage_class from storages where id_storage = ".$id;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			$row = pmb_mysql_fetch_object($result);
@@ -177,7 +164,7 @@ class storages {
 				<h3>".htmlentities($msg['storage_form_title'],ENT_QUOTES,$charset)."</h3>
 			</div>
 			<div class='row'>&nbsp;</div>";
-		$id+=0;
+		$id = intval($id);
 		$row =array();
 		if($id){
 			$query ="select * from storages where id_storage = '".$id."'";
@@ -194,7 +181,7 @@ class storages {
 						<label for='storage_name'>".$msg['storage_name']."</label>
 					</div>
 					<div class='colonne_suite'>
-						<input type='text' name='storage_name' value='".(!empty($row['storage_name']) ? htmlentities($row['storage_name'],ENT_QUOTES,$charset) : "")."' />
+						<input type='text' id='storage_name' name='storage_name' value='".(!empty($row['storage_name']) ? htmlentities($row['storage_name'],ENT_QUOTES,$charset) : "")."' />
 					</div>
 				</div>
 				<div class='row'>
@@ -202,7 +189,7 @@ class storages {
 						<label for='storage_method'>".htmlentities($msg['storage_method_label'],ENT_QUOTES,$charset)."</label>
 					</div>
 					<div class='colonne_suite'>
-						<select name='storage_method' onchange='get_storage_params_form(this.value);'>
+						<select id='storage_method' name='storage_method' onchange='get_storage_params_form(this.value);'>
 							<option value='0'>".htmlentities($msg['storage_method_choice'],ENT_QUOTES,$charset)."</option>";
 		foreach($this->list as $storage){
 			if(count($row) && $storage['class'] == $row['storage_class']){
@@ -293,14 +280,32 @@ class storages {
 		pmb_mysql_query($query.$clause);
 	}
 	
-	public function delete($id){
-		$id+=0;
-		pmb_mysql_query("delete from storages where id_storage='".$id."'");
+	public static function delete($id){
+		$id = intval($id);
+		if ($id) {
+		    $total = pmb_mysql_num_rows(pmb_mysql_query("SELECT 1 FROM cms_collections WHERE collection_num_storage =".$id));
+		    if ($total) {
+		        pmb_error::get_instance(static::class)->add_message('storage_method_label', 'storage_used_in_cms_collections');
+		        return false;
+		    }
+		    $total = pmb_mysql_num_rows(pmb_mysql_query("SELECT 1 FROM cms_documents WHERE document_num_storage =".$id));
+		    if ($total) {
+		        pmb_error::get_instance(static::class)->add_message('storage_method_label', 'storage_used_in_cms_documents');
+		        return false;
+		    }
+		    pmb_mysql_query("DELETE FROM storages WHERE id_storage='".$id."'");
+	        return true;
+		}
+		return true;
 	}
 	
 	public function get_params_form($class_name,$id){
-		global $base_path,$include_path,$class_path;
 		$storage = new storage($id);
 		return $storage->get_form($class_name);
+	}
+	
+	public function get_url_base() {
+	    global $base_path, $current_module, $categ, $sub;
+	    return  $base_path.'/'.$current_module.'.php?categ='.$categ.(!empty($sub) ? '&sub='.$sub : '');
 	}
 }

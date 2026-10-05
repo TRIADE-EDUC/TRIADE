@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ExplnumUpload.js,v 1.5 2018-11-13 14:14:13 vtouchard Exp $
+// $Id: ExplnumUpload.js,v 1.8 2021/11/25 12:54:54 dgoron Exp $
 
 define([
         "dojo/_base/declare",
@@ -28,6 +28,7 @@ define([
 		entityId: null,
 		entityType: null,
 		bulId: null,
+		upl:null,
 		constructor: function(entityId, entityType, bulId) {
 			this.entityId = entityId;
 			this.entityType = entityType;
@@ -39,7 +40,7 @@ define([
 			 * TODO: switch sur l'url selon le type d'entité
 			 */
 			
-			var upl = new Uploader({
+			this.upl = new Uploader({
 				
 				url: './ajax.php?module=catalog&categ=explnum&quoifaire=upload_docnum&record_id='+this.entityId+(this.bulId ? '&bul_id='+this.bulId : ''),
 				dropTarget: 'dropTarget_'+this.entityId,
@@ -54,15 +55,15 @@ define([
 				/**
 				 * TODO: Switch sur le type d'entité pour récupérer l'endroit où placer l'élément
 				 */
-                if(this.entityType == 'article'){
+				if(this.entityType == 'article'){
                 	var divDepouille = query('div[class="depouillements-perio"]');
-                	var divContainer = query('div[class="row"]', divDepouille[0]);
+                	var divContainer = query('div[id="bulletin_analysis_list"]', divDepouille[0]);
                 	var widgets = registry.toArray();
                 	widgets.forEach(function(widget){
                 		if(widget.id.indexOf('commande') != -1){
                 			widget.destroy();
                 		}
-                	})
+                	});
                 	domConstruct.empty(divContainer[0]);
                 	domConstruct.place(data.bull_display, divContainer[0], 'last');
                 	var divContainerBack = query('div[id^="el'+this.entityId+'_"][id$="Child"]')[0];
@@ -95,6 +96,22 @@ define([
                     domConstruct.place(data.response, explnumContainer, 'last');	
                     topic.publish('ExplnumUpload', 'docnumUploaded');
                 }
+                if(dijit.byId(this.upl.idDropTarget+'snetUploader')) {
+                	dijit.byId(this.upl.idDropTarget+'snetUploader').hide();
+                }
+            }
+			if(data.has_doublons) {
+				if(this.upl.progressBars.length) {
+					var progressBar = this.upl.progressBars[0];
+					progressBar.abort();
+					progressBar.setState('error');
+					var error = {
+							'statusCode' : '200', 
+							'statusText' : 'Conflict',
+							'responseText' : pmbDojo.messages.getMessage('docnum', 'explnum_has_doublons')
+					};
+					progressBar.error(error);
+				}
             }
 		},
 		getTableContainer: function(){

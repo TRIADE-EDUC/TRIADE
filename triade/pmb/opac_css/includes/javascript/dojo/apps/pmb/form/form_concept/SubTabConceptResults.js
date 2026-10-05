@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabConceptResults.js,v 1.2 2018-10-12 10:16:18 tsamson Exp $
+// $Id: SubTabConceptResults.js,v 1.4 2021/01/14 16:30:12 tsamson Exp $
 
 
 define([
@@ -53,11 +53,18 @@ define([
 			},
 			onDownloadEnd: function(){
 				this.inherited(arguments);
-				this.getParent().resizeIframe();
-			},
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}			},
 			setContent:function(){
 				this.inherited(arguments);
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			onLoad: function(){
 				if(query('input[type="button"]', this.containerNode).length){
@@ -112,7 +119,15 @@ define([
 					method: 'POST',
 					handleAs: 'html',
 				}).then(lang.hitch(this, function(data){
-					this.set('content', data);
+					var content = "";
+					try{
+						//on teste s'il s'agit d'un json ou non
+						data = JSON.parse(data);
+						content = data.results;
+					} catch(e) {
+						content = data;
+					}
+					this.set('content', content);
 				}));
 				return false;
 			},

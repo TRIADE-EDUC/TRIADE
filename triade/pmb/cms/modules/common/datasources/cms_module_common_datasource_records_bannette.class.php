@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records_bannette.class.php,v 1.3 2016-05-17 09:07:15 apetithomme Exp $
+// $Id: cms_module_common_datasource_records_bannette.class.php,v 1.4.6.1 2025/01/17 10:40:41 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,9 +11,10 @@ class cms_module_common_datasource_records_bannette extends cms_module_common_da
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -26,11 +27,11 @@ class cms_module_common_datasource_records_bannette extends cms_module_common_da
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+	    if(is_array($this->selectors) && $this->parameters['selector'] != ""){
 			for($i=0 ; $i<count($this->selectors) ; $i++){
 				if($this->selectors[$i]['name'] == $this->parameters['selector']){
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
@@ -47,14 +48,14 @@ class cms_module_common_datasource_records_bannette extends cms_module_common_da
 					}
 				}
 			}
-			$records = $this->filter_datas("notices",$records);
-			if($this->parameters['nb_max_elements'] > 0){
-				$records = array_slice($records, 0, $this->parameters['nb_max_elements']);
+			$return["records"] = $this->filter_datas("notices", $records);
+			
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($return['records']);
+			    $return['records'] = $this->cut_paging_list($return['records'], $return["paging"]);
+			} else if($this->parameters['nb_max_elements'] > 0){
+			    $return["records"] = array_slice($return["records"], 0, $this->parameters['nb_max_elements']);
 			}
-			$return = array(
-					'title'=> 'Liste de Notices',
-					'records' => $records
-			);
 			
 			return $return;
 		}

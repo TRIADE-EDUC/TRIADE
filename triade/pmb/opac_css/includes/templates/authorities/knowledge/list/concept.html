@@ -1,0 +1,15 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: concept.html,v 1.2 2020/10/09 15:19:17 tgrassin Exp $ -->
+{% block title_authorities %}
+	<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+		<div class="title_notCourte">
+			<h3>
+				<span class="tit1_notCourte">{{ list_element.isbd | safe }}</span>
+			</h3>
+		</div>
+	</a>
+{% endblock %}
+
+{% block info_authorities %}
+{% endblock %}

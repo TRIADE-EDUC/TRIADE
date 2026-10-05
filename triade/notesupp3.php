@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,7 +28,7 @@ if ((VIESCOLAIRENOTEENSEIGNANT == "oui") && ($_SESSION["membre"] != "menupersonn
 }else{
 	if (($_SESSION["membre"] != "menuadmin") && ($_SESSION["membre"] != "menuprof")) {
 		$cnx=cnx();
-		if (!verifDroit($_SESSION["id_pers"],"carnetnotes")) {
+		if ((!verifDroit($_SESSION["id_pers"],"carnetnotes"))  && (!verifDroit($_SESSION["id_pers"],"AESH")) )  {
 			accesNonReserveFen();
 			exit();
 		}
@@ -45,7 +45,7 @@ $data=urldecode($_GET["args"]);
 $data=explode(";",$data);
 array_shift($data);
 $i=1;
-$l=count($data);
+$l=countTriade($data);
 while($i<$l){
 	unset($data[$i]);
 	$i=$i+2;
@@ -81,21 +81,21 @@ if ($_GET["gid"] > 0) {
 	$idgroupe=$_GET["gid"];
 	$idClasse=$_GET["idClasse"];
  	// si c'est un groupe
-	$sql="DELETE FROM ${prefixe}notes WHERE sujet='".$sujet."' AND date='$date' AND coef='$coef' AND elev_id IN ($elev_id) AND code_mat='$code_mat' AND (id_classe='$idClasse' OR id_classe='-1') AND prof_id='$prof_id' AND (id_groupe='$idgroupe' OR id_groupe='0') ";
+	$sql="DELETE FROM {$prefixe}notes WHERE sujet='".$sujet."' AND date='$date' AND coef='$coef' AND elev_id IN ($elev_id) AND code_mat='$code_mat' AND (id_classe='$idClasse' OR id_classe='-1') AND prof_id='$prof_id' AND (id_groupe='$idgroupe' OR id_groupe='0') ";
 
 }else{
 	$idClasse=$_GET["idClasse"];
  	// si c'est pas un groupe 
-	$sql="DELETE FROM ${prefixe}notes WHERE sujet='".$sujet."' AND date='$date' AND coef='$coef' AND elev_id IN ($elev_id) AND code_mat='$code_mat'  AND id_classe='$idClasse' AND  prof_id='$prof_id' ";
+	$sql="DELETE FROM {$prefixe}notes WHERE sujet='".$sujet."' AND date='$date' AND coef='$coef' AND elev_id IN ($elev_id) AND code_mat='$code_mat'  AND id_classe='$idClasse' AND  prof_id='$prof_id' ";
 }
 execSql($sql);
 history_cmd($_SESSION["nom"],"SUPPRESSION","Notes - $sujet du ".dateForm($date));
-$mySession[Sn]=$_SESSION["nom"];
-$mySession[Sp]=$_SESSION["prenom"];
+$mySession['Sn']=$_SESSION["nom"];
+$mySession['Spid']=$_SESSION["prenom"];
 ?>
 <html>
 <head>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -144,17 +144,17 @@ if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonn
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

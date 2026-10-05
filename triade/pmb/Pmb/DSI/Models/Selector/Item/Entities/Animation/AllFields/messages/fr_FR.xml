@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1.4.2 2025/05/21 08:03:12 rtigero Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Tous les champs</entry>
+	<entry code="search_input"><![CDATA[<i><strong>Tous les champs</strong></i>]]></entry>
+	<entry code="tlc">Tous les champs :</entry>
+</XMLlist>

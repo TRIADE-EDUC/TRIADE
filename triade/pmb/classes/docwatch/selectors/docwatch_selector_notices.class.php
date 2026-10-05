@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_notices.class.php,v 1.1 2014-12-24 11:18:09 arenou Exp $
+// $Id: docwatch_selector_notices.class.php,v 1.1 2014/12/24 11:18:09 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

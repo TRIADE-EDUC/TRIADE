@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export_z3950_new.php,v 1.10 2019-01-16 16:57:14 dgoron Exp $
+// $Id: export_z3950_new.php,v 1.15 2023/10/17 14:18:55 tsamson Exp $
 
 $base_path="../..";
 
@@ -22,11 +22,11 @@ $corresp=array(
 "4"=>		"1", 	// titre
 "1003"=>	"2", 	// auteur
 "1018"=>	"3",	// editeur
-"31"=>		"23",	// annÃ©e d'Ã©dition
+"31"=>		"23",	// année d'édition
 "5"=>		"4",	// collection
 "7"=>		"22",	// ISBN
 "8"=>		"22",	// ISSN
-"21"=>		"13"	// Mots clÃ©s
+"21"=>		"13"	// Mots clés
 );
 
 $corresp_op=array(
@@ -42,7 +42,7 @@ $corresp_op=array(
 "21"=>		"BOOLEAN"
 );
 function make_error($nerr,$err_message) {
-	echo $nerr."@".$err_message."@";
+    echo htmlentities($nerr."@".$err_message."@");
 	exit();
 }
 
@@ -54,7 +54,7 @@ if (!@pmb_mysql_select_db(DATA_BASE, $mysql_connect)) {
 	make_error(2,"Database unknown");
 }
 
-//Commande envoyÃ©e
+//Commande envoyée
 $command=$_GET["command"];
 //Requete
 $query=$_GET["query"];
@@ -65,7 +65,7 @@ function traite_val($value,$idf) {
 			 if(isISBN($value)) {
 					// si la saisie est un ISBN
 					$code = formatISBN($value);
-					// si Ã©chec, ISBN erronÃ© on le prend sous cette forme
+					// si échec, ISBN erroné on le prend sous cette forme
 					if(!$code) $code = $value;
 			    } else $code = $value;
 			  $ret=$code;
@@ -79,7 +79,9 @@ function traite_val($value,$idf) {
 
 function construct_query($query,$not,$level,$argn="",$oper="") {
 	global $corresp,$search,$corresp_op;
-	//La requÃªte commence-t-elle par and, or ou and not ?
+	//La requête commence-t-elle par and, or ou and not ?
+	$query = stripslashes($query);
+	
 	$pos=strpos($query,"and not");
 	if (($pos!==false)&&($pos==0)) {
 		$ope="ex";
@@ -96,7 +98,7 @@ function construct_query($query,$not,$level,$argn="",$oper="") {
 	}
 	
 	if ($ope!="") {
-		//Si opÃ©rateur, recherche des arguments
+		//Si opérateur, recherche des arguments
 		$arqs=array();
 		preg_match("/^".($ope=="ex"?"and not":$ope)." arg".$level."!1\((.*)\) arg".$level."!2\((.*)\)$/",$query,$args);
 		//print "/^".$ope." arg".$level."!1\((.*)\) arg".$level."!2\((.*)\)$/";
@@ -137,7 +139,7 @@ function construct_query($query,$not,$level,$argn="",$oper="") {
 			${$field}=$vals;
 			$op="op_".(!$level?0:($level-2+$argn))."_f_".$idf;
 			global ${$op};
-			${$op}=$corresp_op[$use[0]];
+			${$op}=$corresp_op[$use[0]] ?? null;
 			return $idf;
 		}	
 	}
@@ -146,6 +148,12 @@ function construct_query($query,$not,$level,$argn="",$oper="") {
 
 switch ($command) {
 	case "search":
+	    // On reçoit toujours en UTF-8 #140711
+	    global $charset;
+	    if($charset == "iso-8859-1") {
+	        $query = encoding_normalize::utf8_decode($query);
+	    }
+	    
 		//print $query."<br />";
 		construct_query($query,0,0);
 		$s=new search();
@@ -160,7 +168,7 @@ switch ($command) {
 		}
 		break;
 	case "get_notice":
-		$id=$query;
+		$id = intval($query);
 		$e = new export(array($id));
 		$e -> get_next_notice();
 		$toiso = new xml_unimarc();

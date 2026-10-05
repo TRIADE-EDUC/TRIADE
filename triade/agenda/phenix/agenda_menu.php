@@ -255,10 +255,10 @@
             <TR><TD nowrap align="left" onclick="javascript: nvlVu('<?php echo _MENU_ADMIN; ?>');" style="cursor:pointer;<?php echo (($tcMenu==_MENU_ADMIN) ? " font-weight:bold;\"".(($menuProfil || $menuImport) ? " class=\"bordT\"" : "")." bgcolor=\"".$ListeChoixSelection : "\" onmouseover=\"javascript:this.style.backgroundColor='".$ListeChoixSurvol."';\" onmouseout=\"javascript:this.style.backgroundColor='';"); ?>"><IMG src="./image/menu/ico_admin.gif" border="0" align="absmiddle">&nbsp;<?php
       if (!$idAdmin && !empty($ztLoginAdm) && !empty($ztPasswdMD5Adm)) {
         // Recherche d'une connexion administrateur
-        $DB_CX->DbQuery("SELECT admin_id FROM ${PREFIX_TABLE}admin WHERE admin_login = '".$ztLoginAdm."' AND admin_passwd = '".$ztPasswdMD5Adm."'");
+        $DB_CX->DbQuery("SELECT admin_id FROM {$PREFIX_TABLE}admin WHERE admin_login = '".$ztLoginAdm."' AND admin_passwd = '".$ztPasswdMD5Adm."'");
         if ($DB_CX->DbNumRows()) {
           $idAdmin = $DB_CX->DbResult(0,0);
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_admin_id=".$idAdmin." WHERE sid_id='".$sid."'");
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_admin_id=".$idAdmin." WHERE sid_id='".$sid."'");
         }
       }
       if (!$idAdmin)

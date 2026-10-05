@@ -20,8 +20,8 @@ if (isset($_POST["idperiode"])) {
 	global $prefixe;
 	$data=rechercheDateStageCentralSouhait2($_POST["idperiode"]); 
 	//  nomstage,datedebut,datefin,id
-	for($i=0;$i<count($data);$i++) {
-		if (count($data) > 0) {
+	for($i=0;$i<countTriade($data);$i++) {
+		if (countTriade($data) > 0) {
 			echo serialize($data);
 		}else{
 			echo "";

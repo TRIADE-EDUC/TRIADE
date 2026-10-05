@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_perso.class.php,v 1.25 2019-05-11 15:14:16 dgoron Exp $
+// $Id: search_perso.class.php,v 1.29.4.1 2025/04/25 14:16:44 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// classes de gestion des recherches personnalisÃ©es
+// classes de gestion des recherches personnalisées
 
 // inclusions principales
 require_once("$include_path/templates/search_perso.tpl.php");
@@ -31,18 +31,21 @@ class search_perso {
 	public $directlink_user;
 	public $order;
 	protected $my_search;
-	
+	protected $uses;
+	protected $error_message;
+	public $messages;
+
 	// constructeur
 	public function __construct($id=0, $type='RECORDS') {
 		$this->id = $id;
 		$this->type = $type;
 		$this->fetch_data();
 	}
-    
-	// rÃ©cupÃ©ration des infos en base
+
+	// récupération des infos en base
 	protected function fetch_data() {
 		global $PMBuserid;
-		
+
 		$this->name='';
 		$this->shortname='';
 		$this->comment='';
@@ -67,13 +70,13 @@ class search_perso {
 				$this->order = $row->search_order;
 			}
 		}
-		//On rÃ©cupÃ¨re Ã©galement ses recherches prÃ©dÃ©finies
+		//On récupère également ses recherches prédéfinies
 		$this->fetch_search_perso_user();
 	}
-	
+
 	protected function fetch_search_perso_user() {
 		global $PMBuserid;
-		
+
 		$query = "SELECT * FROM search_perso WHERE search_type = '".$this->type."'";
 		if ($PMBuserid!=1) $query .= " AND (autorisations='$PMBuserid' or autorisations like '$PMBuserid %' or autorisations like '% $PMBuserid %' or autorisations like '% $PMBuserid') ";
 		$query .= " order by search_order, search_name ";
@@ -112,9 +115,10 @@ class search_perso {
 		}
 		$this->directlink_user=$link;
 	}
-	
+
 	public function proceed() {
-		global $sub;
+		global $msg, $sub;
+
 		switch($sub) {
 			case "form":
 				print $this->do_form();
@@ -135,36 +139,40 @@ class search_perso {
 				print $this->do_form();
 				break;
 			case "delete":
-				$this->delete();
-				print $this->do_list();
+				$deleted = $this->delete();
+				if($deleted) {
+				    print $this->do_list();
+				} else {
+				    print $this->get_display_header_list();
+				    error_message(	$msg[294], implode('<br />', $this->messages), 1, $this->get_url_base());
+				}
 				break;
 			case "launch":
-				// accÃ¨s direct Ã  une recherche personalisÃ©e
+				// accès direct à une recherche personalisée
 				print $this->launch();
 				break;
 			default :
-				// affiche liste des recherches prÃ©dÃ©finies
+				// affiche liste des recherches prédéfinies
 				print $this->do_list();
 				break;
 		}
 	}
-	
+
 	public function proceed_ajax() {
 		global $action;
 		global $class_path;
 		global $object_type;
-		
+
 		switch($action) {
 			case "list":
-				require_once($class_path.'/list/lists_controller.class.php');
 				lists_controller::proceed_ajax($object_type, 'configuration/search_perso');
 				break;
 		}
 	}
-	
+
 	public function set_properties_form_form() {
 		global $name, $shortname, $query, $human, $directlink, $directlink_auto_submit, $autorisations, $comment;
-		
+
 		$this->name = stripslashes($name);
 		$this->shortname = stripslashes($shortname);
 		$this->comment = stripslashes($comment);
@@ -180,9 +188,9 @@ class search_perso {
 			$this->autorisations = "1";
 		}
 	}
-	
+
 	public function set_order($order=0) {
-		$order += 0;
+		$order = intval($order);
 		if(!$order) {
 			$query = "select max(search_order) as max_order from search_perso";
 			$result = pmb_mysql_query($query);
@@ -190,15 +198,17 @@ class search_perso {
 		}
 		$this->order = $order;
 	}
-	
+
 	public function set_query() {
 		$this->get_instance_search();
 		$this->query = $this->my_search->serialize_search();
 		$this->my_search->unserialize_search($this->query);
 		$this->human = $this->my_search->make_human_query();
 	}
-	
+
 	public function save() {
+		global $msg;
+
 		if($this->id) {
 			$query = 'update search_perso set ';
 			$where = 'where search_id = '.$this->id;
@@ -235,16 +245,15 @@ class search_perso {
 			return false;
 		}
 	}
-	
-	// fonction gÃ©nÃ©rant le form de saisie 
+
+	// fonction générant le form de saisie
 	public function do_form() {
-		global $msg,$tpl_search_perso_form,$charset;	
-		global $base_path, $current_module;
-		
+		global $msg,$tpl_search_perso_form,$charset;
+
 		// titre formulaire
 		if($this->id) {
 			$libelle=$msg["search_perso_form_edit"];
-			$link_duplicate="<input type='button' class='bouton' value='".$msg['duplicate']."' onClick=\"document.location='".$base_path."/".$current_module.".php?categ=search_perso&sub=duplicate&id=".$this->id."'\" />";
+			$link_duplicate="<input type='button' class='bouton' value='".$msg['duplicate']."' onClick=\"document.location='".$this->get_url_base()."&sub=duplicate&id=".$this->id."'\" />";
 			$link_delete="<input type='button' class='bouton' value='".$msg[63]."' onClick=\"confirm_delete();\" />";
 			$button_modif_requete = "";
 			$form_modif_requete = "";
@@ -260,7 +269,7 @@ class search_perso {
 				$this->human = $this->my_search->make_human_query();
 			}
 		}
-		// Champ Ã©ditable
+		// Champ éditable
 		$tpl_search_perso_form = str_replace('!!id!!', htmlentities($this->id,ENT_QUOTES,$charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES,$charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!shortname!!', htmlentities($this->shortname,ENT_QUOTES,$charset), $tpl_search_perso_form);
@@ -271,47 +280,63 @@ class search_perso {
 		if($this->directlink == 2) $checked= " checked='checked' ";
 		else $checked= "";
 		$tpl_search_perso_form = str_replace('!!directlink_auto_submit!!', $checked, $tpl_search_perso_form);
-		
+
 		if ($this->id) {
 			$tpl_search_perso_form = str_replace('!!autorisations_users!!', users::get_form_autorisations($this->autorisations,0), $tpl_search_perso_form);
 		} else {
 			$tpl_search_perso_form = str_replace('!!autorisations_users!!', users::get_form_autorisations($this->autorisations,1), $tpl_search_perso_form);
 		}
-	
+
 		$tpl_search_perso_form = str_replace('!!query!!', htmlentities($this->query,ENT_QUOTES,$charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!human!!', htmlentities($this->human,ENT_QUOTES,$charset), $tpl_search_perso_form);
-		
+
 		$tpl_search_perso_form = str_replace('!!requete!!', htmlentities($this->query,ENT_QUOTES, $charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!requete_human!!', $this->human, $tpl_search_perso_form);
-		
+
 		$tpl_search_perso_form = str_replace('!!bouton_modif_requete!!', $button_modif_requete,  $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!form_modif_requete!!', $form_modif_requete,  $tpl_search_perso_form);
-		
+
 		$tpl_search_perso_form = str_replace('!!duplicate!!', $link_duplicate, $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!delete!!', $link_delete, $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!libelle!!',htmlentities($libelle,ENT_QUOTES,$charset) , $tpl_search_perso_form);
-		
+
 		$link_annul = "onClick=\"unload_off();history.go(-1);\"";
 		$tpl_search_perso_form = str_replace('!!annul!!', $link_annul, $tpl_search_perso_form);
-		
-		return $tpl_search_perso_form;	
+		$tpl_search_perso_form = str_replace('!!url_base!!', $this->get_url_base(), $tpl_search_perso_form);
+
+		return $tpl_search_perso_form;
 	}
 
-	// fonction gÃ©nÃ©rant le form de saisie 
-	public function do_list() {
-		global $base_path;
-		global $msg;
-		global $action;
-		global $current_module;
-		
-		$display = "
+	protected function get_list_title() {
+	    global $msg;
+	    switch ($this->type) {
+	        case 'EXPL':
+	            return $msg["search_perso_expl_title"];
+	        default:
+	            return $msg["search_perso_title"];
+	    }
+	}
+
+	public function get_display_header_list() {
+	    global $base_path;
+	    global $msg;
+
+	    $display = "
 		<script type='text/javascript' src='".$base_path."/javascript/search_perso_drop.js'></script>
-		<h1>".$msg["search_perso_title"]."</h1>
-		<div class='hmenu'>
-			<span><a href='./".$current_module.".php?categ=search_perso'>".$msg["search_perso_list_title"]."</a></span>".$this->directlink_user."
+		<h1>".$this->get_list_title()."</h1>
+        <div class='hmenu'>
+			<span><a href='".$this->get_url_base()."'>".$msg["search_perso_list_title"]."</a></span>".$this->directlink_user."
 		</div>
 		<hr />
 		<h3>".$msg["search_perso_list"]."</h3>";
+	    return $display;
+	}
+
+	// fonction générant le form de saisie
+	public function do_list() {
+		global $action;
+
+		$display = $this->get_display_header_list();
 		switch ($action) {
 			case 'up':
 			case 'down':
@@ -325,12 +350,12 @@ class search_perso {
 				$instance = list_configuration_search_perso_ui::get_instance(array('type' => $this->type));
 				break;
 		}
-		$display .= $instance->get_display_list(); 
-		return $display;		
+		$display .= $instance->get_display_list();
+		return $display;
 	}
 
 	public function get_forms_list() {
-		
+
 		if($this->type == 'AUTHORITIES') {
 			$searcher_tabs = new searcher_tabs();
 			$this->my_search=new search_authorities(true, 'search_fields_authorities');
@@ -358,15 +383,71 @@ class search_perso {
 		return $forms_search.$links;
 	}
 
-	// suppression d'une collection ou de toute les collections d'un pÃ©riodique
-	public function delete() {
-		if($this->id) {
-			pmb_mysql_query("DELETE from search_perso WHERE search_id='".$this->id."' ");
-			$this->fetch_search_perso_user();
-		}
+	protected function get_uses_from_query($query) {
+	    $details = array();
+	    $result = pmb_mysql_query($query);
+	    if(pmb_mysql_num_rows($result)) {
+	        while($row = pmb_mysql_fetch_object($result)) {
+	            $search_query = unserialize($row->query);
+	            if(is_array($search_query)) {
+	                $criteria = $search_query['SEARCH'];
+	                if(is_array($criteria) && in_array('s_108', $criteria)) {
+	                    foreach ($criteria as $key=>$field) {
+	                        if($field == 's_1' && ($search_query[$key]['FIELD'][0] == $this->id)) {
+	                            $details[] = $row;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    return $details;
 	}
-	
-	// fonction permettant d'accÃ©der directement Ã  une recherche prÃ©dÃ©finie
+
+	protected function is_used() {
+	    global $msg;
+
+	    $this->uses = array();
+	    $this->messages = array();
+
+	    //DSI - Equations
+	    $query = "SELECT id_equation as id, nom_equation as label, requete as query FROM equations";
+	    $this->uses['equations'] = $this->get_uses_from_query($query);
+	    if(count($this->uses['equations'])) {
+	        $this->messages[] = $msg['search_perso_delete_used_by_equations'];
+	    }
+
+	    //Autre recherche prédéfinie
+	    $query = "SELECT search_id as id, search_name as label, search_query as query FROM search_perso WHERE search_id <> ".$this->id;
+	    $this->uses['search_perso'] = $this->get_uses_from_query($query);
+	    if(count($this->uses['search_perso'])) {
+	        $this->messages[] = $msg['search_perso_delete_used_by_search_perso'];
+	    }
+
+	    //Vues OPAC
+	    $query = "SELECT opac_view_id as id, opac_view_name as label, opac_view_query as query FROM opac_views";
+	    $this->uses['opac_views'] = $this->get_uses_from_query($query);
+	    if(count($this->uses['opac_views'])) {
+	        $this->messages[] = $msg['search_perso_delete_used_by_opac_views'];
+	    }
+
+	    if(count($this->uses['equations']) || count($this->uses['search_perso']) || count($this->uses['opac_views'])) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	// suppression d'une collection ou de toute les collections d'un périodique
+	public function delete() {
+	    if($this->id && !$this->is_used()) {
+	        pmb_mysql_query("DELETE from search_perso WHERE search_id='".$this->id."' ");
+	        $this->fetch_search_perso_user();
+	        return true;
+		}
+		return false;
+	}
+
+	// fonction permettant d'accéder directement à une recherche prédéfinie
 	public function launch() {
 		if($this->id) {
 			$this->my_search=new search();
@@ -377,7 +458,7 @@ class search_perso {
 			print $this->do_list();
 		}
 	}
-	
+
 	public function get_instance_search() {
 	    if (!empty($this->my_search)) {
 	        return $this->my_search;
@@ -389,14 +470,19 @@ class search_perso {
 			case 'EMPR':
 				$this->my_search=new search(true, 'search_fields_empr');
 				break;
+			case 'EXPL':
+			    $this->my_search=new search(true, 'search_fields_expl');
+			    break;
 			default:
 				$this->my_search=new search();
 				break;
 		}
 		return $this->my_search;
 	}
-	
+
 	protected function get_target_url($id_predefined_search=0) {
+	    global $option_show_notice_fille, $option_show_expl;
+
 		switch ($this->type) {
 			case 'AUTHORITIES':
 				$searcher_tabs = new searcher_tabs();
@@ -405,6 +491,9 @@ class search_perso {
 			case 'EMPR':
 				$target_url = "./circ.php?categ=search";
 				break;
+			case 'EXPL':
+			    $target_url = "./catalog.php?categ=search&mode=8&option_show_notice_fille=$option_show_notice_fille&option_show_expl=$option_show_expl";
+			    break;
 			default:
 				$target_url = "./catalog.php?categ=search&mode=6";
 				break;
@@ -415,4 +504,9 @@ class search_perso {
 		return $target_url;
 	}
 
-} // fin dÃ©finition classe
+	protected function get_url_base() {
+	    global $base_path, $current_module, $type;
+	    return $base_path.'/'.$current_module.'.php?categ=search_perso'.($type ? '&type='.$type : '');
+	}
+
+} // fin définition classe

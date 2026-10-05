@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: escPos.class.php,v 1.1 2018-02-13 15:02:30 jpermanne Exp $
+// $Id: escPos.class.php,v 1.1 2018/02/13 15:02:30 jpermanne Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -72,8 +72,8 @@ class escPos {
 	
 	public static function initialize($printer) {
 		static::$printers[$printer] -> initialize();
-		//Attention, cette commande sÃ©lectionne une table de caractÃ¨res bien spÃ©cifique
-		//DemandÃ© par Florent lors des tests avec Christophe
+		//Attention, cette commande sélectionne une table de caractères bien spécifique
+		//Demandé par Florent lors des tests avec Christophe
 		static::$printers[$printer] -> selectCharacterTable(16);
 	}
 	

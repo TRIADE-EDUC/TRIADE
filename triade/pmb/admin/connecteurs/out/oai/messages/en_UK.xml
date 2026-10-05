@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.4 2016-11-18 09:32:12 jpermanne Exp $ -->
+$Id: en_UK.xml,v 1.6.8.1 2025/03/12 14:19:30 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="illegal_verb">Illegal Verb</entry>
@@ -45,4 +45,9 @@ $Id: en_UK.xml,v 1.4 2016-11-18 09:32:12 jpermanne Exp $ -->
 	<entry code="badArgument">Bad Argument</entry>
 	<entry code="noSetHierarchy">Set introuvable</entry>
 	<entry code="oai_pmh_valid">Validité OAI-PMH</entry>
+	<entry code="oai_no_configuration_required">Nothing to configure</entry>
+	<entry code="oai_clean_html">Nettoyer le contenu HTML des notices ?</entry>
+	<entry code="header_datestamp">Date de référence (datestamp)</entry>
+	<entry code="header_datestamp_update_date">Date de mise à jour</entry>
+	<entry code="header_datestamp_create_date">Date de création</entry>
 </XMLlist>

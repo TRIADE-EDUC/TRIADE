@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabAdd.js,v 1.16 2019-04-19 09:40:05 ccraig Exp $
+// $Id: SubTabAdd.js,v 1.22 2020/08/28 14:40:27 tsamson Exp $
 
 
 define([
@@ -76,6 +76,12 @@ define([
 			  		this.setSubmitEvent(querySubmit);
 			  	}
 			  	
+			  	//Bouton "Enregistrer et continuer"
+			  	var querySaveAndContinue = query('input[type="button"][id="update_continue"]', this.containerNode);
+			  	if(querySaveAndContinue.length){
+			  		domConstruct.destroy(querySaveAndContinue[0]);
+			  	}
+			  	
 			  	/**
 			  	 * Cas particuliers pour les concepts
 			  	 */
@@ -84,9 +90,13 @@ define([
 			  		domConstruct.destroy(queryPrevious[0]);
 			  	}
 			  	var querySubmit = query('input[onclick="submit_onto_form();"]', this.containerNode);
-//			  	console.log(querySubmit);
 			  	if(querySubmit.length){
 			  		this.setSubmitEvent(querySubmit);
+			  	}
+			  	//Bouton "Enregistrer et continuer"
+			  	var querySaveAndContinue = query('input[id="btsubmit_continue"]', this.containerNode);
+			  	if(querySaveAndContinue.length){
+			  		domConstruct.destroy(querySaveAndContinue[0]);
 			  	}
 			  	/** fin cas particulier **/
 			  	
@@ -190,38 +200,49 @@ define([
 			postForm: function(buttonClicked, forcing){
 				var form = buttonClicked.form;
 				var forcing = forcing || false;
+				var verified = false;
 				if(domAttr.get(form, 'action').indexOf('select.php') != -1){
 					domAttr.set(form, 'action', domAttr.get(form, 'action').replace('select.php?', 'ajax.php?module=selectors&is_iframe=1&'));
 				}
 				if(forcing){
 					domAttr.set(form, 'action', domAttr.get(form, 'action')+'&forcing=1');
 				}
-				iframe(domAttr.get(buttonClicked.form, 'action'),{
-					form: buttonClicked.form,
-					handleAs: 'json',
-				}).then(lang.hitch(this, function(data){
-					if(parseInt(data.id) && (parseInt(data.id) !=0)){
-						this.set('href', this.href);
-						data.ghostContainerId = this.parameters.ghostContainerId;
-						topic.publish('SubTabAdd', 'SubTabAdd', 'elementAdded', data);	
-					}else if(data.html){
-						var dialog = PMBDojoxDialogSimple({
-							title: "",
-							content: data.html,
-						});
-						var forcingForm = query('form', dialog.containerNode)[0];
-						domAttr.remove(forcingForm, 'action');
-						var button = query('#forcing_button', dialog.containerNode)[0];
-						domAttr.set(button, 'type', 'button');
-						on(button, 'click', lang.hitch(this, 
-							function(){
-								this.postForm(buttonClicked, 1);
-								dialog.hide();
-							} ,
-						buttonClicked));
-						dialog.show();
-					}
-				}));
+				if (typeof test_notice === 'function' && test_notice(form) || typeof test_form === 'function' && test_form(form)) {
+					verified = true;
+				}
+				if (verified) {
+					iframe(domAttr.get(buttonClicked.form, 'action'),{
+						form: buttonClicked.form,
+						handleAs: 'json',
+					}).then(lang.hitch(this, function(data){
+						console.log(data);
+						if(parseInt(data.id) && (parseInt(data.id) !=0)){
+							this.set('href', this.href);
+							data.ghostContainerId = this.parameters.ghostContainerId;
+							topic.publish('SubTabAdd', 'SubTabAdd', 'elementAdded', data);	
+						}else if(data.html){
+							var dialog = PMBDojoxDialogSimple({
+								title: "",
+								content: data.html,
+							});
+							var forcingForm = query('form', dialog.containerNode)[0];
+							domAttr.remove(forcingForm, 'action');
+							if(query('#forcing_button', dialog.containerNode)[0]) {
+								var button = query('#forcing_button', dialog.containerNode)[0];
+								domAttr.set(button, 'type', 'button');
+								on(button, 'click', lang.hitch(this, 
+									function(){
+										this.postForm(buttonClicked, 1);
+										dialog.hide();
+									} ,
+								buttonClicked));
+							}
+							dialog.show();
+						} else {
+							test_form(form);
+						}
+					}));
+				}
 				return false;
 			},
 			getGridTypeEntity: function(type){

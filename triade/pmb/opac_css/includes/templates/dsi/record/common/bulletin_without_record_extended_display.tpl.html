@@ -1,0 +1,108 @@
+<!-- $Id: bulletin_without_record_extended_display.tpl.html,v 1.3.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
+
+<div id="noticeNot">
+	<div class="parentNot">
+		<div id="blocNotice_descr">
+			
+			{% if record.enrichment_sources %}
+				<ul id="onglets_isbd_public{{ bulletin.bulletin_id }}" class="onglets_isbd_publicNot">
+					<li id="onglet_detail{{ bulletin.bulletin_id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ bulletin.bulletin_id }})"><span>{{ msg.demandes_action_detail }}</span></a></li>
+				</ul>
+			{% endif %}
+			<div id="div_detail{{ bulletin.bulletin_id }}">
+				<div class="asideContentNot">
+					{% if global.opac_permalink %}
+						<!-- Permalink -->
+						<div class="lienP">
+							<span class="img_permalink"><i class="fa fa-clipboard" aria-hidden="true"></i></span>
+							<span class="label_permalink"><a href="{{ liens_opac.lien_rech_bulletin | replace '!!id!!' bulletin.bulletin_id }}" title="{{ msg.record_display_permalink_label }}">{{ msg.record_display_permalink_label }}</a></span>
+						</div>
+					{% endif %}
+				</div>
+				<!-- Contenu de la notice -->
+				<div class="notice_contenu">
+					{{ record.display_coins_span }}
+					<table class="descr_notice" role="presentation">
+						<tbody>
+							<tr>
+								<td class="labelNot">
+									<span>{{ msg.tit1display_start }}</span>
+								</td>
+								<td>
+									<span id="exempl_titleNot"><a href="{{ liens_opac.lien_rech_notice | replace '!!id!!' parent.id }}" title="{{ parent.tit1 }}">{{ parent.tit1 }}{% if parent.tit4 %} : {{parent.tit4}}{% endif %}</a>, {{ bulletin.bulletin_numero }}. {{ bulletin.bulletin_titre }}{% if bulletin.mention_date %} - {{ bulletin.mention_date }}{% endif %}</span>
+								</td>
+							</tr>
+							{% if bulletin.biblio_doc %}
+								<tr>
+									<td class="labelNot">
+										<span>{{ msg.typdocdisplay_start }}</span> <!-- Type de document-->
+									</td>
+									<td>
+										<span>{{ bulletin.biblio_doc }}</span>
+									</td>
+								</tr>
+							{% endif %}
+							{% if bulletin.aff_date_date %}
+								<tr>
+									<td class="labelNot">
+										<span>{{ msg.bull_date_date }}</span> <!-- Paru le -->
+									</td>
+									<td>
+										<span>{{ bulletin.aff_date_date }}</span>
+									</td>
+								</tr>
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!-- Bouton de reservation -->
+		{% if resas_datas.flag_resa_visible %}
+			{% if resas_datas.flag_resa_possible %}
+				{% if !resas_datas.flag_max_resa %}
+					<div id="resa_notice-{{ bulletin.bulletin_id }}" class="resa_notice">
+						<a href="{{ resas_datas.href }}" onclick="{{ resas_datas.onclick }}" id="bt_resa_NotCourte-{{ bulletin.bulletin_id }}" class="bt_resa_NotCourte">{{ msg.record_display_expl_reserve }}</a>
+						{% if resas_datas.nb_resas %}
+							<p class='record_nb_resas'>{{ msg.resa_nb_deja_resa | replace '!!nbresa!!' resas_datas.nb_resas }}</p>
+						{% endif %}
+					</div>
+					<div class='clear'></div>
+				{% endif %}
+			{% endif %}
+		{% endif %}
+		
+		<!-- Depouillements -->
+		{% for article in bulletin.articles %}
+			{% if loop.first %}
+				<div id="zone_depouillements">
+					<h3>
+						<span id="titre_depouillements">{{ msg.bull_dep }}</span>
+					</h3>
+					{% if record.cart_allow %}
+						{% if global.opac_cart_only_for_subscriber == "1" %}
+						      {% if session_vars.id_empr %}
+								<a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
+						      {% endif %}
+						{% else %}
+						      <a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
+						{% endif %}
+					{% endif %}
+			{% endif %}
+			{{ article }}
+			{% if loop.last %}
+				</div>
+			{% endif %}
+		{% endfor %}
+		
+		 <!-- Exemplaires -->
+		<div id="zone_exemplaires">
+			{{ bulletin.display_expls }}
+		</div>
+		<!-- Exemplaires numériques -->
+		<div id="zone_docnum">
+			{{ bulletin.display_explnum }}
+		</div>
+	</div>
+</div>

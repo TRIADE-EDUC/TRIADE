@@ -1,17 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: view_log.inc.php,v 1.11 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: view_log.inc.php,v 1.14 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-$admin_layout = preg_replace('/!!menu_sous_rub!!/m', $msg["view_log"], $admin_layout);
-print $admin_layout;
-		
+global $logfile, $del;
 
-function parseentry($str)
-{
+function parseentry($str) {
+    $tab= array();
+    $regs= array();
 	preg_match('/<datetime>(.+?)<\/datetime>/msi', $str, $regs);
 	$tab['datetime']= $regs[1];
 	preg_match('/<errornum>(.+?)<\/errornum>/msi', $str, $regs);
@@ -27,22 +26,23 @@ function parseentry($str)
 	return $tab;
 }
 
-function parselog($str)
-{
+function parselog($str) {
 
+	$regs = array();
   if(!strlen($str)) {
+  	$array = array();
     $array[] = "";
     return $array;
   }
 
-// premier niveau du parser : r√©cup√©ration des pattern <
+// premier niveau du parser : rÈcupÈration des pattern <
 
   while(preg_match("/<errorentry>(.+?)<\/errorentry>/msi", $str, $regs)) {
 
     # on check s'il y a un pattern flml, si oui -> $tab[0]
 
 	$pattern=$regs[0];
-	$tab[] = parseentry($pattern);
+	$tab = array(parseentry($pattern));
 	$del = preg_replace("/\//", "\/", quotemeta($pattern));
     $str = preg_replace("/$del/msi", "", $str);
   }
@@ -52,7 +52,7 @@ function parselog($str)
 
 print "<table >";
 print "<tr><td class=\"formtitle\">";
-print "Journal des √©v√©nements";
+print "Journal des ÈvÈnements";
 print "</td></tr><tr><td>";
 
 if(!$del) {
@@ -60,16 +60,14 @@ if($fp=fopen($logfile, 'r')) {
 	$str=fread($fp, filesize($logfile));
 	fclose($fp);
 
-
-
-	// r√©cup√©ration du tableau des entr√©es
+	// rÈcupÈration du tableau des entrÈes
 	$entry = parselog($str);
 
-	if(sizeof($entry) && filesize($logfile) > 0) {
+	if (!empty($entry) && filesize($logfile) > 0) {
 		$entry = array_reverse($entry);
 		print "<a href='./admin.php?categ=log&del=1'>vider le journal</a>";
-		print "<table border='0' cellspacing='1'>";
-		foreach ($entry as $cle => $valeur) {
+		print "<table style='border:0px; border-spacing:1px'>";
+		foreach ($entry as $valeur) {
 
 			switch($valeur['errornum']) {
 				case E_CORE_ERROR:
@@ -114,13 +112,9 @@ if($fp=fopen($logfile, 'r')) {
 	if($fp=fopen($logfile, 'w')) {
 		fwrite($fp, '');
 		fclose($fp);
-		print "le fichier journal a √©t√© purg√©";
+		print "le fichier journal a ÈtÈ purgÈ";
 	} else {
 		print "impossible de purger le fichier journal";
 	}
 }
-
-
 print "</td></tr></table>";
-
-

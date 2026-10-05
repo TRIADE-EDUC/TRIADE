@@ -1,0 +1,44 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_extended_display_a.tpl.html,v 1.2 2020/10/09 15:19:16 tgrassin Exp $ -->
+
+{% block record_tit1 %}
+	<tr class="record_tit1">
+		<td class="labelNot">
+			<span>{{ msg.tit1display_start }}</span>
+		</td>
+		<td class="labelContent">
+			<span id="exempl_titleNot">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %} {% if record.year %}({{ record.year }}){% endif %}</span>
+		</td>
+	</tr>
+{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.bulletin_id %}
+		<tr class="record_bul_info">
+			<td class="labelNot">
+				<span>{{ msg.dans_start }} :</span> <!-- Titre du periodique-->
+			</td>
+			<td class="labelContent">
+				<span><a href="{{ record.liens_opac.lien_rech_bulletin | replace '!!id!!' record.bul_info.bulletin_id }}" title="{{ record.bul_info.title }} ({{ record.bul_info.numero }} {{ record.bul_info.date }})">{{ record.bul_info.title }} {% if record.bul_info.numero %}({{ record.bul_info.numero }}{% if record.bul_info.date %}, {{ record.bul_info.date }}{% endif %}){% else %}{% if record.bul_info.date %}({{ record.bul_info.date }}){% endif %}{% endif %}</a></span>
+			</td>
+		</tr>
+	{% endif %}
+{% endblock %}
+
+{% block record_npages %}
+		{% if record.npages %}
+			<tr class="record_npages">
+				<td class="labelNot">
+						<span>{{ msg.npages_start_perio }}</span>				
+				</td>
+				<td class="labelContent">
+					<span>{{record.npages}}</span>
+				</td>
+			</tr>
+	{% endif %}
+{% endblock %}
+
+{% block record_size %}{% endblock %}
+
+{% block record_publishers %}{% endblock %}

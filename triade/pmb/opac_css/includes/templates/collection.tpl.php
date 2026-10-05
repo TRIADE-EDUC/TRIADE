@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: collection.tpl.php,v 1.9 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: collection.tpl.php,v 1.9 2019/05/29 11:23:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -12,23 +12,23 @@ if ( ! defined( 'COLLECTION_TMPL' ) ) {
   define( 'COLLECTION_TMPL', 1 );
 
 //	----------------------------------
-//	$collection_display : Ã©cran d'info pour une collection
+//	$collection_display : écran d'info pour une collection
 // Liste des variables statiques prises en charges :
 // !!name!!      nom de la collection
-// !!issn!!      numÃ©ro ISSN de la collection
-// !!publ!!      libellÃ© de l'Ã©diteur "parent" de la collection
-// !!publ_isbd!! nom de l'Ã©diteur principal, affichage isbd
+// !!issn!!      numéro ISSN de la collection
+// !!publ!!      libellé de l'éditeur "parent" de la collection
+// !!publ_isbd!! nom de l'éditeur principal, affichage isbd
 // !!isbd!!      affichage isbd de la collection
 
 // Liste des variables dynamiques prises en charges. Les affichages dynamiques sont cliquables le plus souvent
-// !!publisher!! nom de l'Ã©diteur principal
+// !!publisher!! nom de l'éditeur principal
 // !!subcolls!!  sous-collections
 
 global $msg;
 global $collection_level2_display;
 global $collection_level2_no_issn_info;
 
-// level 2 : affichage gÃ©nÃ©ral
+// level 2 : affichage général
 $collection_level2_display = "
 <div class=collectionlevel2>
 <h3>$msg[collection_tpl_coll] !!name!!</h3>
@@ -43,4 +43,4 @@ $collection_level2_display = "
 
 $collection_level2_no_issn_info = "$msg[collection_tpl_no_issn]";
 
-} # fin de dÃ©finition
+} # fin de définition

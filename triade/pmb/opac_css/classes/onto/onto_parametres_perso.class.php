@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_parametres_perso.class.php,v 1.7 2019-04-19 14:33:32 apetithomme Exp $
+// $Id: onto_parametres_perso.class.php,v 1.21 2024/01/19 07:42:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/parametres_perso.class.php");
 require_once($class_path."/encoding_normalize.class.php");
 
 class onto_parametres_perso extends parametres_perso {
 	
 	/**
-	 * dÃ©claration des uri liÃ©es aux prÃ©fixes
+	 * déclaration des uri liées aux préfixes
 	 * 
 	 * @var array
 	 */
@@ -32,7 +33,7 @@ class onto_parametres_perso extends parametres_perso {
 	);
 	
 	/**
-	 * Nom du fichier oÃ¹ est enregistrÃ©e l'ontologie des champs persos
+	 * Nom du fichier où est enregistrée l'ontologie des champs persos
 	 * @var string
 	 */
 	protected static $filename = "./temp/ontologies_pmb_entities_ppersos.rdf";
@@ -59,20 +60,25 @@ class onto_parametres_perso extends parametres_perso {
 	protected $uri_datatype;
 	
 	/**
-	 * Portion de propriÃ©tÃ©s optionnelle en fonction du type de champ perso
+	 * Portion de propriétés optionnelle en fonction du type de champ perso
 	 * 
 	 * @var string
 	 */
 	protected $optional_properties;
 	
 	/**
-	 * Noeuds blancs nÃ©cessaires
+	 * Noeuds blancs nécessaires
 	 * @var string
 	 */
 	protected $blank_nodes;
 	
 	/**
-	 * Triplets qui dÃ©finissent les sous-classes de l'entitÃ© parente
+	 * @var string
+	 */
+	protected $rdf_nodeId;
+	
+	/**
+	 * Triplets qui définissent les sous-classes de l'entité parente
 	 * @var string
 	 */
 	protected $parent_subclasses;
@@ -95,23 +101,32 @@ class onto_parametres_perso extends parametres_perso {
 			$this->set_restrictions($t_field);
 			
 			$onto.= "
-	<rdf:Description rdf:about='http://www.pmbservices.fr/ontology#" . $this->uri_description. "'>
-		<rdfs:label>" . htmlspecialchars(encoding_normalize::utf8_normalize($t_field["TITRE"]), ENT_QUOTES, 'utf-8') . "</rdfs:label>
-		<rdfs:comment>" . htmlspecialchars(encoding_normalize::utf8_normalize($t_field["COMMENT"]), ENT_QUOTES, 'utf-8') . "</rdfs:comment>
-		<rdfs:isDefinedBy rdf:resource='http://www.pmbservices.fr/ontology#'/>
-       	<rdf:type rdf:resource='http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'/>
-		<rdfs:domain rdf:resource='" . self::$entities_uri[$this->prefix] . "'/>
-		<rdfs:range rdf:resource='$this->uri_range'/>
-		<pmb:datatype rdf:resource='$this->uri_datatype'/>";
-			$onto.= $this->optional_properties;
-			
-			$onto.= "
-		<pmb:cp_options>".htmlspecialchars(encoding_normalize::json_encode($t_field["OPTIONS"][0]))."</pmb:cp_options>
-		<pmb:name>$this->uri_description</pmb:name>
-    </rdf:Description>
-";
-			// On n'oublie pas les noeuds blancs
-			$onto.= $this->blank_nodes;
+	            <rdf:Description rdf:about='http://www.pmbservices.fr/ontology#" . $this->uri_description. "'>
+        		<rdfs:label>" . htmlspecialchars(encoding_normalize::utf8_normalize($t_field["TITRE"]), ENT_QUOTES, 'utf-8') . "</rdfs:label>
+        		<rdfs:comment>" . htmlspecialchars(encoding_normalize::utf8_normalize($t_field["COMMENT"]), ENT_QUOTES, 'utf-8') . "</rdfs:comment>
+        		<rdfs:isDefinedBy rdf:resource='http://www.pmbservices.fr/ontology#'/>
+               	<rdf:type rdf:resource='http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'/>
+        		<rdfs:domain rdf:resource='" . self::$entities_uri[$this->prefix] . "'/>
+        		<rdfs:range rdf:resource='$this->uri_range'/>
+        		<pmb:datatype rdf:resource='$this->uri_datatype'/>";
+            $onto.= $this->optional_properties;
+		
+		    $onto.= "
+                <pmb:is_cp>1</pmb:is_cp>
+        		<pmb:cp_options>".htmlspecialchars(encoding_normalize::json_encode($t_field["OPTIONS"][0]))."</pmb:cp_options>
+        		<pmb:name>$this->uri_description</pmb:name>";
+		    
+		    $type = $t_field["TYPE"] ?? ($t_field["type"] ?? "");
+		    if (strpos($type, 'i18n') !== false) {
+		        $onto .= "<pmb:multilingue>1</pmb:multilingue>";
+		    }
+        			
+            if (isset($t_field["OPTIONS"][0]["DATA_TYPE"][0]["value"])){
+                $onto .= "<pmb:flag>".$this->get_authority_type_from_query_auth($t_field["OPTIONS"][0]["DATA_TYPE"][0]["value"])."</pmb:flag>";
+            }
+            $onto .= "</rdf:Description>";
+    		// On n'oublie pas les noeuds blancs
+    		$onto.= $this->blank_nodes;
 		}
 		
 		// On ajoute les sous-classes au parent
@@ -127,16 +142,8 @@ class onto_parametres_perso extends parametres_perso {
 	}
 		
 	public function set_datatype_from_field ($id ,$t_field)	{
-		if (!isset($t_field["TYPE"])) {
-			$this->uri_datatype = 'http://www.pmbservices.fr/ontology#small_text';
-			return;
-		}
-		switch ($t_field["TYPE"]) {
-			case "comment" :
-			case "html" :
-				$this->uri_datatype = 'http://www.pmbservices.fr/ontology#text';
-				break;
-				
+	    $type = $t_field["TYPE"] ?? ($t_field["type"] ?? "");
+	    switch ($type) {
 			case "list" :
 			case "query_list" :
 				$this->get_items_from_options($id, $t_field["OPTIONS"][0]);
@@ -161,23 +168,31 @@ class onto_parametres_perso extends parametres_perso {
 				break;
 				
 			case "marclist" :
-				$this->uri_datatype = 'http://www.pmbservices.fr/ontology#marclist';
-				$dom = new DomDocument();
-				$dom->loadXML($t_field["OPTIONS"]);
-				$types=$dom->getElementsByTagName('DATA_TYPE');
-				foreach($types as $type){
-					$data_type = $type->firstChild->nodeValue;
-				}
-				$this->optional_properties.= "
-		<pmb:marclist_type>".$data_type."</pmb:marclist_type>";
+			    $this->uri_datatype = 'http://www.pmbservices.fr/ontology#marclist';
+			    $this->optional_properties.= "
+					<pmb:marclist_type>".$t_field["OPTIONS"][0]["DATA_TYPE"][0]["value"]."</pmb:marclist_type>";
 				break;
-			case "text" :
-			case "text_i18n" :
-			case "external" :
+			case "date_flot":
+			    $this->uri_datatype = 'http://www.pmbservices.fr/ontology#floating_date';
+			    break;
 			case "q_txt_i18n" :
+			    // Texte multilingue qualifié
+			    $this->uri_datatype = 'http://www.pmbservices.fr/ontology#multilingual_qualified';
+			    break;
+			    
+			case "text" :
+			case "text_i18n" : // Texte multilingue
+			case "comment" :
+			case "html" :
+			    $datatype = $t_field["DATATYPE"] ?? ($t_field["datatype"] ?? "");
+			    if (!empty($datatype) && $datatype == "text") { // Texte large
+			        $this->uri_datatype = 'http://www.pmbservices.fr/ontology#text';
+			        break;
+			    }
+			case "external":
 			default:
-				$this->uri_datatype = 'http://www.pmbservices.fr/ontology#small_text';
-				break;
+			    $this->uri_datatype = 'http://www.pmbservices.fr/ontology#small_text';
+			    break;
 		}
 	}
 	
@@ -201,6 +216,9 @@ class onto_parametres_perso extends parametres_perso {
 				return 'http://www.pmbservices.fr/ontology#work';
 			case 9:
 			default:
+			    if($choice >=1000){
+			        return 'http://www.pmbservices.fr/ontology#authperso_'.intval($choice-1000);
+			    }
 				return "http://www.w3.org/2004/02/skos/core#Concept";
 		}
 	}
@@ -216,28 +234,30 @@ class onto_parametres_perso extends parametres_perso {
 	protected function get_items_from_options($id,$options) {
 		$query = '';
 		$list_items = array();
-		
-		switch ($options['FOR']) {
-			case 'list':
-				$query = "SELECT ". $this->prefix . "_custom_list_value as id, ". $this->prefix . "_custom_list_lib as libelle  FROM " . $this->prefix ."_custom_lists WHERE " . $this->prefix . "_custom_champ = " . $id . " ORDER BY ordre";
-
-				$result = pmb_mysql_query($query);
-				if (pmb_mysql_num_rows($result)) {
-					while ($row = pmb_mysql_fetch_object($result)) {
-						$this->optional_properties.= "
-        <pmb:list_item rdf:nodeID='list_item_".$this->uri_description."_".$row->id."'/>";
-						$this->blank_nodes.= "
-	<rdf:Description rdf:nodeID='list_item_".$this->uri_description."_".$row->id."'>
-		<rdfs:label xml:lang='fr'>".htmlspecialchars(encoding_normalize::utf8_normalize($row->libelle), ENT_QUOTES, 'utf-8')."</rdfs:label>
-		<pmb:identifier>".htmlspecialchars(encoding_normalize::utf8_normalize($row->id), ENT_QUOTES, 'utf-8')."</pmb:identifier>
-	</rdf:Description>";
-					}
-				}
-				break;
-			case 'query_list':
-				$this->optional_properties.= "
-		<pmb:list_query>".htmlspecialchars($options['QUERY'][0]['value'], ENT_QUOTES, 'utf-8')."</pmb:list_query>";
-				break;
+		if(!empty($options['FOR'])) {
+    		switch ($options['FOR']) {
+    			case 'list':
+    				$query = "SELECT ". $this->prefix . "_custom_list_value as id, ". $this->prefix . "_custom_list_lib as libelle, ordre FROM " . $this->prefix ."_custom_lists WHERE " . $this->prefix . "_custom_champ = " . $id . " ORDER BY ordre";
+    				$result = pmb_mysql_query($query);
+    				if (pmb_mysql_num_rows($result)) {
+    					while ($row = pmb_mysql_fetch_object($result)) {
+    						$this->optional_properties.= "
+            					<pmb:list_item rdf:nodeID='list_item_".$this->uri_description."_".htmlspecialchars(encoding_normalize::utf8_normalize($row->id), ENT_QUOTES, 'utf-8')."'/>";
+    						$this->blank_nodes.= "
+    							<rdf:Description rdf:nodeID='list_item_".$this->uri_description."_".htmlspecialchars(encoding_normalize::utf8_normalize($row->id), ENT_QUOTES, 'utf-8')."'>
+    								<rdfs:label xml:lang='fr'>".htmlspecialchars(encoding_normalize::utf8_normalize($row->libelle), ENT_QUOTES, 'utf-8')."</rdfs:label>
+    								<pmb:identifier>".htmlspecialchars(encoding_normalize::utf8_normalize($row->id), ENT_QUOTES, 'utf-8')."</pmb:identifier>
+                                    <pmb:msg_code></pmb:msg_code>
+                                    <pmb:order>".htmlspecialchars(encoding_normalize::utf8_normalize(isset($row->ordre) ? $row->ordre : 0), ENT_QUOTES, 'utf-8')."</pmb:order>
+    							</rdf:Description>";
+    					}
+    				}
+    				break;
+    			case 'query_list':
+    				$this->optional_properties.= "
+    					<pmb:list_query>".htmlspecialchars($options['QUERY'][0]['value'], ENT_QUOTES, 'utf-8')."</pmb:list_query>";
+    				break;
+    		}
 		}
 		return $list_items;
 	}
@@ -251,7 +271,7 @@ class onto_parametres_perso extends parametres_perso {
 	}
 	
 	public function rec_fields_perso_with_integrator($integrator, $uri, $id) {
-		//Enregistrement des champs personalisÃ©s
+		//Enregistrement des champs personalisés
 		$integrated_entities = array();
 		$query = "delete from ".$this->prefix."_custom_values where ".$this->prefix."_custom_origine=".$id;
 		pmb_mysql_query($query);
@@ -271,7 +291,16 @@ class onto_parametres_perso extends parametres_perso {
 					if ($query) {
 						$query.= ',';
 					}
-					$query.= '('.$key.','.$id.',"'.$property[$j]['value'].'",'.$j.')';
+					
+					$value = $property[$j]['value'];
+					
+					// Multilingue
+					$type = $val['TYPE'] ?? ($val['type'] ?? "");
+					if (strpos($type, 'i18n') !== FALSE) {
+					    $value .= '|||'.$property[$j]['lang'];
+					}
+					
+					$query.= '('.$key.','.$id.',"'.addslashes($value).'",'.$j.')';
 				}
 				if ($query) {
 					$query = 'insert into '.$this->prefix.'_custom_values ('.$this->prefix.'_custom_champ,'.$this->prefix.'_custom_origine,'.$this->prefix.'_custom_'.$val["DATATYPE"].','.$this->prefix.'_custom_order) values '.$query;
@@ -283,7 +312,7 @@ class onto_parametres_perso extends parametres_perso {
 	}
 	
 	/**
-	 * Les champs persos ont-ils Ã©tÃ© modifiÃ©s rÃ©cemment ?
+	 * Les champs persos ont-ils été modifiés récemment ?
 	 * @return boolean
 	 */
 	public static function is_modified() {
@@ -322,8 +351,12 @@ class onto_parametres_perso extends parametres_perso {
 			$onto_cms_parametre_perso = new onto_cms_parametres_perso();
 			$ontology_pperso_cms = $onto_cms_parametre_perso->build_onto();
 			$ontology_pperso.= $ontology_pperso_cms;
-			//$ontology_pperso.= $onto_cms_parametre_perso->build_onto();
 			
+			//autorite perso
+			$onto_auth_perso = new onto_auth_perso();
+			$ontology_pperso.= $onto_auth_perso->build_onto();
+			
+			self::remove_file();
 			file_put_contents(self::$filename, "<?xml version='1.0' encoding='UTF-8'?>
 	<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 		xmlns:dct='http://purl.org/dc/terms/'
@@ -333,7 +366,7 @@ class onto_parametres_perso extends parametres_perso {
 		".$ontology_pperso."
 	</rdf:RDF>");
 			
-			$res = $store->query('LOAD <file://'.realpath(self::$filename).'>');
+			$res = $store->query('LOAD <file:///'.realpath(self::$filename).'>');
 			
 			$tab_file_rdf[self::$filename] = filemtime(self::$filename);
 			
@@ -367,7 +400,7 @@ class onto_parametres_perso extends parametres_perso {
 		$min = '0';
 		$max = 'n';
 		$restrict = "";
-		if (isset($field_params['MANDATORY']) && $field_params['MANDATORY']) {
+		if ((isset($field_params['MANDATORY']) && $field_params['MANDATORY']) || (isset($field_params['obligatoire']) && $field_params['obligatoire'])) {
 			$min = '1';
 			$restrict.= "
 		<owl:minCardinality rdf:datatype='http://www.w3.org/2001/XMLSchema#nonNegativeInteger'>1</owl:minCardinality>";
@@ -387,8 +420,9 @@ class onto_parametres_perso extends parametres_perso {
 		".$restrict."
 	</rdf:Description>";
 			
+			$this->rdf_nodeId = $this->uri_description."_".$min."-".$max;
 			$this->parent_subclasses.= "
-		<rdfs:subClassOf rdf:nodeID='".$this->uri_description."_".$min."-".$max."'/>";
+		<rdfs:subClassOf rdf:nodeID='".$this->rdf_nodeId."'/>";
 		}
 	}
 	
@@ -426,8 +460,9 @@ class onto_parametres_perso extends parametres_perso {
 	            break;
 	    }
 	}
-	
+		
 	public function get_authority_type_from_query_auth ($choice) {
+		$choice = intval($choice);
 	    switch ($choice){
 	        case 1:
 	            return 'author';
@@ -447,7 +482,21 @@ class onto_parametres_perso extends parametres_perso {
 	            return 'work';
 	        case 9:
 	        default:
+	            if($choice >=1000){
+	                return 'authperso_'.intval($choice-1000);
+	            }
 	            return "concept";
 	    }
+	}
+	
+	/**
+	 * On supprime le fichier temporaire
+	 * @return boolean
+	 */
+	public static function remove_file() {
+	    if (is_file(self::$filename)) {
+	        return unlink(self::$filename);
+	    }
+	    return false;
 	}
 }

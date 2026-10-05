@@ -1,90 +1,73 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: upload.js,v 1.5 2017-03-29 11:57:53 jpermanne Exp $
+// $Id: upload.js,v 1.7 2022/09/28 07:08:47 dbellamy Exp $
 
+require(['apps/pmb/FolderTree', 'dojo/domReady!'], function(FolderTree){
 
-//Ouverture de la frame a partir du parent
-function upload_openFrame(e) {
+    //Ouverture de la frame a partir du parent
+    window.upload_openFrame= function (e) {
+            
+    	up_frame=document.getElementById('up_frame');
+    	if (up_frame==null) {
+    		if(!e) e=window.event;			
+    		e.cancelBubble = true;
+    		if (e.stopPropagation) e.stopPropagation();			
+    		up_frame=document.createElement("div");		
+    		up_frame.setAttribute('id','up_frame');
+    		up_frame.setAttribute('name','up_frame');
+    		var ft = new FolderTree({'att':up_frame});	
+    		var att=document.getElementById("att");	
+    		up_frame.style.visibility="hidden";
+    		up_frame.style.display="block";
+    		up_frame=att.appendChild(up_frame);		
+    		var btn_pos = findPos(document.getElementById("upload_path"));
+    		var pos_contenu = findPos(document.getElementById("contenu"));
+    		var w=getWindowWidth();
+    		var h=getWindowHeight();
+    		var wTop= document.documentElement.scrollTop;
+    		up_frame.style.width=Math.round(0.7*w)+'px';
+    		up_frame.style.height=Math.round(0.6*h)+'px';
+    		
+    		up_frame.style.left=pos_contenu[0]+'px';
+    		up_frame.style.top=wTop+'px';
+    	}
+    	up_frame.style.visibility="visible";	
+    	up_frame.style.display='block';
+    	document.addEventListener("mousedown", up_clic);
+    	return false;
+    }
+});
 
-	up_frame=document.getElementById('up_frame');
-	if (up_frame==null) {
-		if(!e) e=window.event;			
-		e.cancelBubble = true;
-		if (e.stopPropagation) e.stopPropagation();			
-		up_frame=document.createElement("iframe");		
-		up_frame.setAttribute('id','up_frame');
-		up_frame.setAttribute('name','up_frame');
-		up_frame.src="./admin/upload/upload_frame.php"; 		
-		var att=document.getElementById("att");	
-		up_frame.style.visibility="hidden";
-		up_frame.style.display="block";
-		up_frame=att.appendChild(up_frame);		
-		var btn_pos = findPos(document.getElementById("upload_path"));
-		var pos_contenu = findPos(document.getElementById("contenu"));
-		var w=getWindowWidth();
-		var h=getWindowHeight();
-		var wTop= document.documentElement.scrollTop;
-		up_frame.style.width=Math.round(0.7*w)+'px';
-		up_frame.style.height=Math.round(0.6*h)+'px';
-		
-		up_frame.style.left=pos_contenu[0]+'px';
-		up_frame.style.top=wTop+'px';
-	}
-	up_frame.style.visibility="visible";	
-	up_frame.style.display='block';
-	document.onmousedown=clic;
-	return false;
-}
-
-function copy_to_div(texte, id){
-	var up_div = window.parent.document.getElementById("path");
-	up_div.value = tab_libelle[texte];	
-	
-	if(window.parent.document.getElementById("id_rep") == null){
-		var id_hidden = window.parent.document.createElement("input");
-		id_hidden.setAttribute("name", "id_rep");
-		id_hidden.setAttribute("id", "id_rep");
-		id_hidden.setAttribute("type","hidden");
-		id_hidden.setAttribute("value",id);
-		up_div.appendChild(id_hidden);
-	} else window.parent.document.getElementById("id_rep").value = id;
-	
-	up_killFrame();
-}
-
-
-function clic(e){
+//Gestion clic dans la page
+function up_clic(e){
   	if (!e) var e=window.event;
-	if (e.stopPropagation) {
-		e.preventDefault();
-		e.stopPropagation();
-	} else { 
-		e.cancelBubble=true;
-		e.returnValue=false;
-	}
-  	up_killFrame();
-  	document.onmousedown='';
+	if(false == document.getElementById('up_frame').contains(e.target)) {
+        up_hideFrame();
+    }
 }
 
 
-
-//Mise en arriere plan de la frame
+//Occultation frame
 function up_hideFrame() {
-	up_frame=document.getElementById('up_frame');
-	if (up_frame!=null) {
-		up_frame.style.visibility="hidden";
-		up_frame.style.display='none';
-	}
+    try {
+        up_frame=document.getElementById('up_frame');
+        up_frame.style.visibility="hidden";
+        up_frame.style.display='none';
+        
+    } catch(e) {}
+    document.removeEventListener("mousedown", up_clic);
 	return false;
 }
 
-//Destruction de la frame
+
+//Destruction frame
+//DB 14/09/2022 : Inutilisé 
 function up_killFrame() {
-	up_frame=window.parent.document.getElementById('up_frame');
-	if (up_frame!=null) {
-		up_frame.parentNode.removeChild(up_frame);
-	}	
+    try {
+	   up_frame=document.getElementById('up_frame');
+	   up_frame.parentNode.removeChild(up_frame);
+	} catch(e) {}
 	return false;
 }
 

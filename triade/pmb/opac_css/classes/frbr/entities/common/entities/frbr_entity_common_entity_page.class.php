@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_entity_page.class.php,v 1.12 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: frbr_entity_common_entity_page.class.php,v 1.14 2023/08/17 09:47:54 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/frbr/frbr_entities.class.php");
 //require_once($class_path."/opac_views.class.php");
 require_once($class_path."/encoding_normalize.class.php");
@@ -20,7 +21,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	protected $id;
 	
 	/**
-	 * LibellÃ© de la page
+	 * Libellé de la page
 	 * @var string
 	 */
 	protected $name;
@@ -31,12 +32,12 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	protected $comment;
 	
 	/**
-	 * Type d'entitÃ©
+	 * Type d'entité
 	 */
 	protected $entity;
 	
 	/**
-	 * ParamÃ¨tres spÃ©cifiques
+	 * Paramètres spécifiques
 	 */
 	protected $parameters;
 	
@@ -119,7 +120,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 					switch ($ligne->page_content_type) {
 						case "backbone":
 							$this->backbone = array(
-							'id' => $ligne->id_page_content+0,
+							'id' => (int) $ligne->id_page_content,
 							'name' => $ligne->page_content_object,
 							'data' => json_decode($ligne->page_content_data)
 							);
@@ -227,7 +228,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			</div>
 			<div class='row'></div>
 		</form>
-		<script type='text/javascript'>
+		<script>
 			document.forms['".$this->class_name."_form'].elements['".$this->type."_name'].focus();
 		</script>
 			";
@@ -235,7 +236,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	}
 	
 	protected function get_backbones_list_form(){
-		global $msg, $charset, $base_path;
+		global $msg, $charset;
 	
 		$form = "";
 		$form.="
@@ -259,7 +260,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
  			<div class='row'>&nbsp;</div>";
 		if(isset($this->backbone['data']->id) && $this->backbone['data']->id) {
 			$form.="
-				<script type='text/javascript'>
+				<script>
 						require(['dojo/topic'],
 						function(topic){
 							topic.publish('ParametersFormsReady', 'frbrEntityLoadManagedElemForm', {elem:'frbr_entity_common_backbone',selectedIndex:'backbone".$this->backbone['data']->id."',id: '".$this->backbone['id']."', domId:'backbone_form',numPage:'".$this->id."'})	  
@@ -283,7 +284,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	}
 	
 	/**
-	 * DonnÃ©es provenant d'un formulaire
+	 * Données provenant d'un formulaire
 	 */
 	public function set_properties_from_form() {
 		global $page_name;
@@ -386,10 +387,9 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	 * Suppression
 	 */
 	public static function delete($id=0){
-		global $msg;
-		$id += 0;
+		$id = intval($id);
 		if($id) {
-			//suppression des datanodes associÃ©s
+			//suppression des datanodes associés
 			$query = "SELECT id_datanode FROM frbr_datanodes WHERE datanode_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -397,7 +397,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 					frbr_entity_common_entity_datanode::delete($row->id_datanode, true);
 				}
 			}
-			//suppression des cadres associÃ©s
+			//suppression des cadres associés
 			$query = "SELECT id_cadre FROM frbr_cadres WHERE cadre_num_datanode = 0 AND cadre_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -452,7 +452,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	}
 	
 	/**
-	 * modification d'un seul paramÃ¨tre
+	 * modification d'un seul paramètre
 	 * @param stdClass $parameters
 	 */
 	public function set_parameter($parameter) {
@@ -558,7 +558,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 	}
 	
 	public static function get_class_name_from_id($id_page) {
-		$id_page+=0;
+		$id_page = intval($id_page);
 		$class_name = '';
 		$query = '	SELECT page_entity
 					FROM frbr_pages
@@ -616,7 +616,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 						SET place_visibility = "'.(isset($this->parameters->{$cadre_type}) ? $this->parameters->{$cadre_type}->value : 0).'" 
 						WHERE place_num_page = "'.$this->id.'"
 						AND place_cadre_type = "'.$cadre_type.'"';
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 		}
 	}
 }

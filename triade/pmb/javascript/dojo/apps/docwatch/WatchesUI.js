@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: WatchesUI.js,v 1.26 2019-03-13 14:48:22 dgoron Exp $
+// $Id: WatchesUI.js,v 1.27 2019/10/07 16:15:33 arenou Exp $
 
 
 define(["dojo/_base/declare", "dijit/layout/ContentPane" ,"apps/docwatch/WatchStore", "dojo/store/Observable", "apps/docwatch/WatchesModel", "dijit/Tree", "dojo/dom-construct", "dojo/topic", "dojo/_base/lang", "dijit/form/Button", "apps/docwatch/Dialog", "dojo/on", "dijit/tree/dndSource", "dojo/aspect"], function(declare, ContentPane, WatchStore, Observable, WatchesModel, Tree, domConstruct, topic, lang, Button, Dialog, on, dndSource, aspect){
@@ -41,7 +41,7 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane" ,"apps/docwatch/WatchSt
 				on(domConstruct.create("img",{src:pmbDojo.images.getImage('expand_all.gif')},divCollapse,"last"),'click', lang.hitch(this, this.expandAll)),
 				on(domConstruct.create("img",{src:pmbDojo.images.getImage('collapse_all.gif')},divCollapse,"last"), 'click', lang.hitch(this, this.collapseAll))
 			);
-			setInterval(lang.hitch(this, this.checkWatchesTTL), 120000);
+			//setInterval(lang.hitch(this, this.checkWatchesTTL), 120000);
 		},
 		
 		handleEvents: function(evtType,evtArgs){

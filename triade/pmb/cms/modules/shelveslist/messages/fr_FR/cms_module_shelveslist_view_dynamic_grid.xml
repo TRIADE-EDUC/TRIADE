@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_shelveslist_view_dynamic_grid.xml,v 1.2 2021/10/13 12:46:29 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_django_default_template_id'>Date de création</entry>
+	<entry code='cms_module_common_view_django_default_template_id_desc'>Date de création décroissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title'>Titre croissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title_desc'>Titre décroissant</entry>
+	<entry code='cms_module_selveslist_view_link'>Construction du lien vers une étagère</entry>
+	<entry code="cms_module_shelveslist_view_desc">Liste des étagères</entry>
+	<entry code="cms_module_shelveslist_view_id_desc">ID</entry>
+	<entry code="cms_module_shelveslist_view_name_desc">Nom</entry>
+	<entry code="cms_module_shelveslist_view_link_desc">Lien vers une étagère</entry>
+	<entry code="cms_module_shelveslist_view_link_rss_desc">Lien du Flux RSS</entry>
+	<entry code="cms_module_shelveslist_view_comment_desc">Commentaire</entry>
+	<entry code="cms_module_shelveslist_view_records_desc">Liste des notices</entry>
+</XMLlist>

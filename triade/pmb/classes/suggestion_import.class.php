@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_import.class.php,v 1.7 2019-02-18 08:53:28 dgoron Exp $
+// $Id: suggestion_import.class.php,v 1.8 2021/12/16 06:50:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/suggestion_multi.tpl.php");
-require_once ("$include_path/parser.inc.php");
+require_once("$include_path/parser.inc.php");
 
 function _item_($param) {
 	global $catalog;
@@ -33,8 +34,7 @@ class suggestion_import{
 	}
 
 	public function show_form(){
-		
-		global $import_sug_form, $dbh, $charset, $msg;
+		global $import_sug_form, $charset, $msg;
 		global $catalog;
 		global $catalog_import;
 		global $explnumdoc_id;
@@ -45,7 +45,7 @@ class suggestion_import{
 			left join suggestions on num_suggestion=id_suggestion
 			left join suggestions_origine so on so.num_suggestion=id_suggestion
 			where id_explnum_doc='".$explnumdoc_id."'";
-			$res = pmb_mysql_query($req,$dbh);
+			$res = pmb_mysql_query($req);
 			$expl = pmb_mysql_fetch_object($res);
 			$import_file = htmlentities($expl->data,ENT_QUOTES,$charset);
 			$import_sug_form = str_replace('!!explnum_id!!',$explnumdoc_id,$import_sug_form);
@@ -63,7 +63,7 @@ class suggestion_import{
 		} 
 		$import_sug_form = str_replace('!!import_file!!',$import_file,$import_sug_form);
 		$req = "select * from suggestions_source order by libelle_source";
-		$res= pmb_mysql_query($req,$dbh);
+		$res= pmb_mysql_query($req);
 		$option = "<option value='0'>".htmlentities($msg['acquisition_sugg_no_src'],ENT_QUOTES,$charset)."</option>";
 		while(($src=pmb_mysql_fetch_object($res))){
 			if($src->id_source == $source) $selected="selected";
@@ -73,14 +73,14 @@ class suggestion_import{
 		$selecteur = "<select id='src_liste' name='src_liste'>".$option."</select>";	
 		$import_sug_form = str_replace('!!liste_source!!',$selecteur,$import_sug_form);
 		
-		//Lecture des diffÃ©rents imports possibles
+		//Lecture des différents imports possibles
 		if (file_exists("./admin/convert/imports/catalog_subst.xml"))
 			$fic_catal = "./admin/convert/imports/catalog_subst.xml";
 		else
 			$fic_catal = "./admin/convert/imports/catalog.xml";		
 		$catalog=array();
 		_parser_($fic_catal,array("ITEM"=>"_item_"),"CATALOG");		
-		//CrÃ©ation de la liste des types d'import
+		//Création de la liste des types d'import
 		$select_import="<select name=\"import_type\">\n";
 		$select_import .= "<option value='uni'>".$msg['acquisition_import_sugg_uni']."</option>";
 		for ($i=0; $i<count($catalog); $i++) {

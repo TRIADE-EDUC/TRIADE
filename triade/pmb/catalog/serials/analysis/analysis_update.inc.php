@@ -1,15 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: analysis_update.inc.php,v 1.72 2017-11-21 12:01:00 dgoron Exp $
+// $Id: analysis_update.inc.php,v 1.76 2023/09/06 06:55:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $charset, $current_module, $pmb_notice_controle_doublons;
+global $analysis_id, $serial_id, $bul_id, $nb_per_page_search;
+global $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid, $pmb_synchro_rdf;
+global $serial_header, $ret_url, $forcage, $id_form, $id, $f_tit1, $f_year;
 
 if(!isset($forcage)) $forcage = 0;
 
 require_once($class_path."/notice_doublon.class.php");
 require_once($class_path."/serials.class.php");
+
+// valorisation du champ f_year à partir de la date de parution du bulletin
+// on le fait ici car il peut être nécessaire pour le calcul de dédoublonnage
+if($bul_id && empty($f_year)) {
+	$f_year = substr(bulletinage::get_date_date_from_id($bul_id),0,4);
+}
 
 $sign = new notice_doublon();
 $signature = $sign->gen_signature();
@@ -22,14 +33,14 @@ if ($forcage == 1) {
 		$GLOBALS[$key] = $val;
 	}
 } elseif ($pmb_notice_controle_doublons != 0 && !$analysis_id) {	
-	//Si control de dÃ©doublonnage activÃ©	
+	//Si control de dédoublonnage activé	
 	$requete="select signature, niveau_biblio ,notice_id from notices where signature='$signature'";
 	if($serial_id)	$requete.= " and notice_id != '$analysis_id' ";
 	//$requete.= " limit 1 ";
 		
-	$result=pmb_mysql_query($requete, $dbh);	
+	$result=pmb_mysql_query($requete);	
 	if ($dbls=pmb_mysql_num_rows($result)) {
-		//affichage de l'erreur, en passant tous les param postÃ©s (serialise) pour l'Ã©ventuel forcage 
+		//affichage de l'erreur, en passant tous les param postés (serialise) pour l'éventuel forcage 
 		$tab = new stdClass();
 		$tab->POST = addslashes_array($_POST);
 		$tab->GET = addslashes_array($_GET);
@@ -71,14 +82,14 @@ if ($forcage == 1) {
 			$r=pmb_mysql_fetch_object($result);
 			if($r->niveau_biblio != 's' && $r->niveau_biblio != 'a') {
 				// notice de monographie
-				$nt = new mono_display($r->notice_id,1,'catalog.php?categ=isbd&id='.$r->notice_id);
+				$nt = new mono_display($r->notice_id,1,notice::get_permalink($r->notice_id));
 			} elseif($r->niveau_biblio == 's'){
-				// on a affaire Ã  un pÃ©riodique
-				$nt = new serial_display($r->notice_id,1,'catalog.php?categ=serials&sub=view&serial_id='.$r->notice_id);
+				// on a affaire à un périodique
+				$nt = new serial_display($r->notice_id,1,serial::get_permalink($r->notice_id));
 			}else{
-				// on a affaire Ã  un article
+				// on a affaire à un article
 				$bulletin_id = analysis::getBulletinIdFromAnalysisId($r->notice_id);
-				$nt = new serial_display($r->notice_id,1,'','catalog.php?categ=serials&sub=bulletinage&action=view&bul_id='.$bulletin_id);
+				$nt = new serial_display($r->notice_id,1,'',bulletinage::get_permalink($bulletin_id));
 			}
 			echo "
 				<div class='row'>
@@ -116,14 +127,14 @@ if ($acces_m==0) {
 
 } else {
 
-	// mise Ã  jour de l'entÃªte de page
+	// mise à jour de l'entête de page
 	echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4023], $serial_header);
 	
 	$p_perso=new parametres_perso("notices");
 	$nberrors=$p_perso->check_submited_fields();
 	$tit1 = clean_string($f_tit1);
 	if(trim($tit1)&&(!$nberrors)) {
-		//Traitement des pÃ©rios et bulletins
+		//Traitement des périos et bulletins
 		global $perio_type, $bull_type;
 		global  $f_perio_new, $f_perio_new_issn;
 		global  $f_bull_new_num, $f_bull_new_date, $f_bull_new_mention, $f_bull_new_titre;
@@ -153,14 +164,18 @@ if ($acces_m==0) {
 				$synchro_rdf->addRdf(0,$bul_id);
 			}
 		}
-		
+		if($analysis_id && $bul_id) {
+		    //Assurons-nous que la relation dans analysis existe
+		    //Traité pour le cas des articles de périodique orphelins
+		    import_records::insert_relation_analysis_bulletin($analysis_id, $bul_id);
+		}
 		$myAnalysis = new analysis($analysis_id, $bul_id);
 		$myAnalysis->signature = $signature;
 		$myAnalysis->set_properties_from_form();
 		$saved = $myAnalysis->save();
 		if($saved) {
 			print "<div class='row'><div class='msg-perio'>".$msg['maj_encours']."</div></div>";
-			$retour = "./catalog.php?categ=serials&sub=view&sub=bulletinage&action=view&bul_id=".$myAnalysis->get_bulletinage()->bulletin_id;
+			$retour = bulletinage::get_permalink($myAnalysis->get_bulletinage()->bulletin_id);
 			print "
 			<form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"$retour\" style=\"display:none\">
 			<input type=\"hidden\" name=\"id_form\" value=\"$id_form\">

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: show_form.inc.php,v 1.9 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: show_form.inc.php,v 1.9 2019/06/07 08:05:39 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -11,7 +11,7 @@ global $form_to_show, $msg;
 
 require_once($class_path."/facettes_external.class.php");
 
-//RÃ©initialisation des facettes externes
+//Réinitialisation des facettes externes
 facettes_external::destroy_global_env();
 
 //Si c'est une multi
@@ -22,13 +22,13 @@ if ($_SESSION["ext_type"]=="multi") {
 		$op_0_s_2="EQ";
 		$field_0_s_2=array();
 	} else {
-		//Recherche du champ source, s'il n'est pas prÃ©sent, on dÃ©cale tout et on l'ajoute
+		//Recherche du champ source, s'il n'est pas présent, on décale tout et on l'ajoute
 		$flag_found=false;
 		for ($i=0; $i<count($search); $i++) {
 			if ($search[$i]=="s_2") { $flag_found=true; break; }
 		}
 		if (!$flag_found) {
-			//Pas trouvÃ©, on dÃ©cale tout !!
+			//Pas trouvé, on décale tout !!
 			for ($i=count($search)-1; $i>=0; $i--) {
 				$search[$i+1]=$search[$i];
 				decale("field_".$i."_".$search[$i],"field_".($i+1)."_".$search[$i]);
@@ -45,14 +45,14 @@ if ($_SESSION["ext_type"]=="multi") {
 } else {
 	//sinon s'il y a un environnement, on le restaure
 	if (is_array($search) && count($search)) {
-		//Recherche du champp source, s'il n'est pas prÃ©sent, on dÃ©cale tout et on l'ajoute
+		//Recherche du champp source, s'il n'est pas présent, on décale tout et on l'ajoute
 		$flag_found=false;
 		for ($i=0; $i<count($search); $i++) {
 			if ($search[$i]=="s_2") { $flag_found=true; break; }
 		}
 		if ($flag_found) {
 			$source=$field_0_s_2;
-			//On dÃ©cale tout !!
+			//On décale tout !!
 			for ($i=0; $i<count($search)-1; $i++) {
 				$search[$i]=$search[$i+1];
 				decale("field_".($i+1)."_".$search[$i],"field_".$i."_".$search[$i]);

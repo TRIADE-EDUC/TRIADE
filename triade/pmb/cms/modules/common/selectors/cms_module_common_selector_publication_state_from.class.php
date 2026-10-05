@@ -1,39 +1,46 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_publication_state_from.class.php,v 1.1 2016-12-27 16:21:46 dgoron Exp $
+// $Id: cms_module_common_selector_publication_state_from.class.php,v 1.2 2021/02/18 16:31:56 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-class cms_module_common_selector_publication_state_from extends cms_module_common_selector{
+class cms_module_common_selector_publication_state_from extends cms_module_common_selector {
 	
-	public function __construct($id=0){
+	public function __construct($id = 0) {
 		parent::__construct($id);
 	}
 	
-	public function get_form(){
-		$form=parent::get_form();
+	public function get_form() {
+		$form = parent::get_form();
 		$form.= "
 			<div class='row'>
-				<label for='cms_module_common_selector_publication_state_from'>".$this->format_text($this->msg['cms_module_common_selector_publication_state_from'])."</label>
+                <div class='colonne3'>
+                    &nbsp;
+                </div>
+                <div class='colonne-suite'>
+				    <label for='cms_module_common_selector_publication_state_from'>" . $this->format_text($this->msg['cms_module_common_selector_publication_state_from']) . "</label>
+                </div>
 			</div>";
-		return $form;	
 		
+		return $form;	
 	}
 	
-	public function save_form(){
+	public function save_form() {
 		$this->parameters = array();
+		
 		return parent::save_form();
 	} 
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
-	public function get_value(){
-		if(!$this->value){
+	public function get_value() {
+		if (empty($this->value)) {
 			$this->value = "";
 		}
+		
 		return $this->value;
 	}
 }

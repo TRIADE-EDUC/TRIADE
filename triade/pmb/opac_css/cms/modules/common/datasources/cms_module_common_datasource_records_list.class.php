@@ -1,21 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records_list.class.php,v 1.2 2018-01-08 14:52:37 tsamson Exp $
+// $Id: cms_module_common_datasource_records_list.class.php,v 1.3.6.2.2.1 2025/02/12 12:34:07 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_datasource_records_list extends cms_module_common_datasource_list{
-	
+
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->limitable = true;
 		$this->sortable = true;
+		$this->paging = false;
 	}
-	
+
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -24,21 +25,20 @@ class cms_module_common_datasource_records_list extends cms_module_common_dataso
 			"index_sew"
 		);
 	}
-	
+
 	protected function sort_records($records) {
-		$return = array('records' => array());
-		if(!count($records)) {
-			return $return;
+		$return = array();
+		if (!is_countable($records) || !count($records)) {
+		    return false;
 		}
-		if (empty($this->parameters["sort_by"])) {
-			$return["records"] = $records;
-			return $return;
+		foreach ($records as $key => $record) {
+			$records[$key] = intval($record);
 		}
 		$query = 'select notice_id from notices
-				where notice_id in ('.implode(',', $records).')
+				where notice_id in ("'.implode('","', $records).'")
 				order by '.$this->parameters["sort_by"].' '.$this->parameters["sort_order"];
-		if ($this->parameters['nb_max_elements']*1) {
-			$query.= ' limit '.$this->parameters['nb_max_elements']*1;
+		if (!empty($this->parameters['nb_max_elements']) && $this->parameters['nb_max_elements']*1) {
+			$query.= ' limit '. (string) intval($this->parameters['nb_max_elements']);
 		}
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result) > 0) {

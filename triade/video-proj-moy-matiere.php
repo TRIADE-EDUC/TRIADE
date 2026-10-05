@@ -22,7 +22,7 @@ $trim_en_cours=$_GET["trimestre"];
 $ideleverecup=$ideleve;
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        $dateDebut1=$dateRecup[$j][0];
        $dateFin1=$dateRecup[$j][1];
 }
@@ -30,7 +30,7 @@ $dateDebutT1=dateForm($dateDebut1);
 $dateFinT1=dateForm($dateFin1);
 //-----/
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        $dateDebut2=$dateRecup[$j][0];
        $dateFin2=$dateRecup[$j][1];
 }
@@ -38,7 +38,7 @@ $dateDebutT2=dateForm($dateDebut2);
 $dateFinT2=dateForm($dateFin2);
 //-----/
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        $dateDebut3=$dateRecup[$j][0];
        $dateFin3=$dateRecup[$j][1];
 }
@@ -51,13 +51,13 @@ $eleveT=recupEleve($idclasse); // recup liste eleve
 
 // ---------------------------//
 function ListeMatiere($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse) {
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
         // variable eleve
         $lv1Eleve=$eleveT[$j][2];
         $lv2Eleve=$eleveT[$j][3];
         $idEleve=$eleveT[$j][4];
         if ($idEleve != $ideleverecup) { continue; }
-        for($i=0;$i<count($ordre);$i++) {
+        for($i=0;$i<countTriade($ordre);$i++) {
                $idMatiere=$ordre[$i][0];
                $matiere=chercheMatiereNom($idMatiere);
 			   $codeMatiere=chercheCodeMatiere($idMatiere);
@@ -74,13 +74,13 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 
 // ---------------------------//
 function moyenEleveMat($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse) {
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
         // variable eleve
         $lv1Eleve=$eleveT[$j][2];
         $lv2Eleve=$eleveT[$j][3];
         $idEleve=$eleveT[$j][4];
         if ($idEleve != $ideleverecup) { continue; }
-        for($i=0;$i<count($ordre);$i++) {
+        for($i=0;$i<countTriade($ordre);$i++) {
                $idMatiere=$ordre[$i][0];
                $verifGroupe=verifMatiereAvecGroupe($idMatiere,$idEleve,$idclasse,$ordre[$i][2]);
                if ($verifGroupe) { continue; } // verif pour l'eleve de l'affichage de la matiere
@@ -100,14 +100,14 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 }
 
 $matieretab=ListeMatiere($eleveT,$ordre,$dateDebut,$dateFin,$ideleverecup,$idclasse);
-if (count($matieretab) > 0) {
+if (countTriade($matieretab) > 0) {
 	$nom_matiere=$matieretab;
 }else{
 	$nom_matiere=array();
 }
 // taille du graph
 $largeur_graph=300;
-$nbmatiere=count($matieretab);
+$nbmatiere=countTriade($matieretab);
 if ($nbmatiere > 3) {
 	for( $pp=5;$pp<$nbmatiere;$pp++) {
 		$largeur_graph=$largeur_graph+45;
@@ -118,19 +118,19 @@ $graphTabT1=moyenEleveMat($eleveT,$ordre,$dateDebutT1,$dateFinT1,$ideleverecup,$
 $graphTabT2=moyenEleveMat($eleveT,$ordre,$dateDebutT2,$dateFinT2,$ideleverecup,$idclasse);
 $graphTabT3=moyenEleveMat($eleveT,$ordre,$dateDebutT3,$dateFinT3,$ideleverecup,$idclasse);
 
-if (count($graphTabT1) > 0) {
+if (countTriade($graphTabT1) > 0) {
 	$graphT1=$graphTabT1;
 }else{
 	$graphT1=array();
 }
 
-if (count($graphTabT2) > 0) {
+if (countTriade($graphTabT2) > 0) {
 	$graphT2=$graphTabT2;
 }else{
 	$graphT2=array();
 }
 
-if (count($graphTabT3) > 0) {
+if (countTriade($graphTabT3) > 0) {
 	$graphT3=$graphTabT3;
 }else{
 	$graphT3=array();
@@ -138,7 +138,7 @@ if (count($graphTabT3) > 0) {
 /*
 if ($trim_en_cours == "trimestre1" ) {
 	$graphTabT1=moyenEleveMat($eleveT,$ordre,$dateDebutT1,$dateFinT1,$ideleverecup,$idclasse);
-	if (count($graphTabT1) > 0) {
+	if (countTriade($graphTabT1) > 0) {
 		$graphT1=$graphTabT1;
 	}else{
 		$graphT1=array();
@@ -149,14 +149,14 @@ if ($trim_en_cours == "trimestre1" ) {
 
 if ($trim_en_cours == "trimestre2" ) {
 	$graphTabT2=moyenEleveMat($eleveT,$ordre,$dateDebutT2,$dateFinT2,$ideleverecup,$idclasse);
-	if (count($graphTabT2) > 0) {
+	if (countTriade($graphTabT2) > 0) {
 		$graphT2=$graphTabT2;
 	}else{
 		$graphT2=array();
 	}
 	$note_en_cours=$graphT2;
 	$graphTabT1=moyenEleveMat($eleveT,$ordre,$dateDebutT1,$dateFinT1,$ideleverecup,$idclasse);
-	if (count($graphTabT1) > 0) {
+	if (countTriade($graphTabT1) > 0) {
 		$graphT1=$graphTabT1;
 	}else{
 		$graphT1=array();
@@ -166,13 +166,13 @@ if ($trim_en_cours == "trimestre2" ) {
 
 if ($trim_en_cours == "trimestre3" ) {
 	$graphTabT3=moyenEleveMat($eleveT,$ordre,$dateDebutT3,$dateFinT3,$ideleverecup,$idclasse);
-	if (count($graphTabT3) > 0) {
+	if (countTriade($graphTabT3) > 0) {
 		$note_en_cours=$graphTabT3;
 	}else{
 		$note_en_cours=array();
 	}
 	$graphTabT2=moyenEleveMat($eleveT,$ordre,$dateDebutT2,$dateFinT2,$ideleverecup,$idclasse);
-	if (count($graphTabT2) > 0) {
+	if (countTriade($graphTabT2) > 0) {
 		$graphT2=$graphTabT2;
 	}else{
 		$graphT2=array();

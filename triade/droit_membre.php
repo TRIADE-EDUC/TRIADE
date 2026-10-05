@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -58,17 +58,18 @@ if (isset($_POST["create"])) {
 	$params["videoprojo"]=$_POST["videoprojo"];
 	$params["entretien"]=$_POST["entretien"];
 	$params["edt"]=$_POST["edt"];
+	$params["AESH"]=$_POST["AESH"];
 	droitModule($_POST["idpers"],$params);
 	$idpers=$_POST["idpers"]; 	
 	$message="<br><center><font id=color3 class=T2 ><b>Permissions enregistrées</b></center><br><br>";
 }
 $data=affPers_nom($idpers); // pers_id, civ, nom, prenom
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method="post" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Permission sur l'accès aux modules de <?php print civ($data[0][1])." ".strtoupper($data[0][2])." ".ucfirst($data[0][3]) ?></font></b></td>
@@ -225,6 +226,14 @@ $perm=(verifDroit($idpers,"edt")) ? "checked='checked'" : "";
 <td id=bordure ><input type='checkbox' value='1' name='edt' <?php print $perm  ?> /></td>
 </tr>
 
+<?php 
+$perm=(verifDroit($idpers,"AESH")) ? "checked='checked'" : ""; 
+?>
+<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
+<td id=bordure align='right'><font class=T2> Profil de type AESH(/AVS) : </font></td>
+<td id=bordure ><input type='checkbox' value='1' name='AESH' <?php print $perm  ?> /></td>
+</tr>
+
 <td colspan='2' align='center' id='bordure' ><table><tr><td><script language=JavaScript>buttonMagicSubmit3("<?php print LANGENR ?>","create",""); //text,nomInput</script></td></tr></table></td>
 </tr>
 
@@ -232,7 +241,7 @@ $perm=(verifDroit($idpers,"edt")) ? "checked='checked'" : "";
 </td></tr></table>
 <input type=hidden name="idpers" value="<?php print $_GET["saisie_id"] ?>" />
 </form>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>
 
 

@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
+$Id: manifest.xml,v 1.3 2019/08/28 06:48:51 ngantier Exp $ -->
 <manifest>
 	<name>pmbesThesauri</name>
 	<requirements>
@@ -19,7 +19,7 @@ $Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
 				<pmb_requirement start_path="class" file="thesaurus.class.php"/>
 			</pmb_requirements>
 			<inputs>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="thesauri">
@@ -35,7 +35,7 @@ $Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<param name="node_id" type="scalar" dataType="integer"/>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes"  default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result name="node" type="scalar" dataType="node"/>
@@ -49,7 +49,7 @@ $Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<param name="node_id" type="scalar" dataType="integer"/>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result name="notice_ids" type="array">
@@ -64,7 +64,7 @@ $Id: manifest.xml,v 1.2 2013-02-20 16:09:28 mbertin Exp $ -->
 			</requirements>
 			<inputs>
 				<param name="node_id" type="scalar" dataType="integer"/>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result name="node" type="scalar" dataType="node"/>

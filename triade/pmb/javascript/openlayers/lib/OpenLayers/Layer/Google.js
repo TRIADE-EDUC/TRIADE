@@ -95,8 +95,8 @@ OpenLayers.Layer.Google = OpenLayers.Class(
     
     /**
      * APIProperty: useTiltImages
-     * {Boolean} Should Google use 45Â° (tilt) imagery when available or 
-     *     should it stick to the 0Â° overhead view? While tilt images look
+     * {Boolean} Should Google use 45° (tilt) imagery when available or 
+     *     should it stick to the 0° overhead view? While tilt images look
      *     impressive, the changed viewing angle can cause the misalignment
      *     of overlay layers.
      */

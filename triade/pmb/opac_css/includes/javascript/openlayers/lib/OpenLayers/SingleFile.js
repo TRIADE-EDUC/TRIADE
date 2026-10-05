@@ -58,7 +58,7 @@ var OpenLayers = {
      * 
      * (code)
      *   <script src="/path/to/my-custom-ol.js" type="text/javascript"></script>
-     *   <script type="text/javascript">
+     *   <script>
      *      // tell OpenLayers where the control images are
      *      // remember the trailing slash
      *      OpenLayers.ImgPath = "/resources/external/images/ol/";

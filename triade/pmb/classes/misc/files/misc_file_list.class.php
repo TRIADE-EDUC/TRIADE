@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_list.class.php,v 1.5 2018-11-26 09:20:57 dgoron Exp $
+// $Id: misc_file_list.class.php,v 1.6.6.2 2024/07/23 08:59:29 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,11 +25,11 @@ class misc_file_list extends misc_file {
 		$this->options=new marc_list($this->type);
 // 		$tmp=array();
 // 		$tmp = $this->options->table;
-// 		$tmp=array_map("convert_diacrit",$tmp);//On enlÃ¨ve les accents
+// 		$tmp=array_map("convert_diacrit",$tmp);//On enlève les accents
 // 		$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 // 		asort($tmp);//Tri sur les valeurs en majuscule sans accent
 // 		foreach ( $tmp as $key => $value ) {
-// 			$tmp[$key]=$this->options->table[$key];//On reprend les bons couples clÃ© / libellÃ©
+// 			$tmp[$key]=$this->options->table[$key];//On reprend les bons couples clé / libellé
 // 		}
 // 		$this->options->table=$tmp;
 		reset($this->options->table);
@@ -44,7 +44,7 @@ class misc_file_list extends misc_file {
 			<th>".htmlentities($msg['misc_file_code'], ENT_QUOTES, $charset)."</th>
 			<th>".htmlentities($msg['misc_file_label'], ENT_QUOTES, $charset)."</th>
 			<th>".htmlentities($msg['misc_file_visible'], ENT_QUOTES, $charset)."</th>
-			<th></th>
+			<!--<th></th>-->
 		</tr>";
 		return $display;
 	}
@@ -60,7 +60,7 @@ class misc_file_list extends misc_file {
 				</td>
 				<td>".$value."</td>
 				<td>".$this->get_visible_checkbox($key)."</td>
-				<td>".$this->get_substituted_icon($key)."</td>
+				<!--<td>".$this->get_substituted_icon($key)."</td>-->
 			</tr>";
 		}
 		return $display;
@@ -104,7 +104,7 @@ class misc_file_list extends misc_file {
 	}
 	
 	protected function apply_sort($substitution_fields) {
-		if(!count($this->data)) {
+	    if(is_countable($this->data) && !count($this->data)) {
 			return $substitution_fields;
 		}
 		$sorted_substitution = array();
@@ -115,12 +115,15 @@ class misc_file_list extends misc_file {
 				unset($substitution_fields[$field_exists]);
 			}
 		}
-		$sorted_substitution = array_merge($sorted_substitution, $substitution_fields);
+		//foreach au lieu de array_merge car array_merge gere mal les cles numeriques
+		foreach ($substitution_fields as $substitution_key=>$substitution_field) {
+		    $sorted_substitution[$substitution_key] = $substitution_field;
+		}
 		return $sorted_substitution;
 	}
 	
 	public function apply_substitution($fields) {
-		if(count($this->data)) {
+	    if(is_countable($this->data) && count($this->data)) {
 			$substitution = array();
 			foreach ($fields as $code=>$value) {
 				if(!isset($this->data[$code]['visible']) || $this->data[$code]['visible']) {

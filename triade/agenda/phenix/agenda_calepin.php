@@ -28,7 +28,7 @@ include("agenda_calepin_import.php");
 // Indique si une lettre contient des entrees ou non
   function alim_alphabet(&$alphabet, $A){
     global $DB_CX, $PREFIX_TABLE, $idUser;
-    $DB_CX->DbQuery("SELECT DISTINCT UPPER(SUBSTRING(cal_nom,1,1)) AS initiale FROM ${PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR (cal_util_id!=".$idUser." AND cal_partage='O') ORDER BY initiale");
+    $DB_CX->DbQuery("SELECT DISTINCT UPPER(SUBSTRING(cal_nom,1,1)) AS initiale FROM {$PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR (cal_util_id!=".$idUser." AND cal_partage='O') ORDER BY initiale");
     while ($enr = $DB_CX->DbNextRow())
       $alphabet[ord($enr['initiale'])-$A] = 1;
   }
@@ -95,7 +95,8 @@ include("agenda_calepin_import.php");
     global $initGrp, $lstGrp, $lstAff;
     // Fin MOD Groupes de contacts multiples
     $DB = new Db($DB_CX->ConnexionID);
-    $DB->DbQuery("SELECT cgr_id, cgr_nom FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_pere_id=".$grpPere." AND cgr_util_id=".$idUser." ORDER BY cgr_nom");
+    $DB=$DB_CX;
+    $DB->DbQuery("SELECT cgr_id, cgr_nom FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_pere_id=".$grpPere." AND cgr_util_id=".$idUser." ORDER BY cgr_nom");
     $nivGrp++;
     while ($enr = $DB->DbNextRow()) {
       if ($grp == $enr['cgr_id']) {
@@ -327,7 +328,7 @@ include("agenda_calepin_import.php");
     global $DB_CX, $PREFIX_TABLE, $idUser;
     $listeGrp .= $id.",";
     $DB = new Db($DB_CX->ConnexionID);
-    $DB->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_pere_id=".$id." AND cgr_util_id=".$idUser);
+    $DB->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_pere_id=".$id." AND cgr_util_id=".$idUser);
     while ($enr = $DB->DbNextRow()) {
       grpFils($enr['cgr_id'],$listeGrp);
     }
@@ -374,7 +375,7 @@ include("agenda_calepin_import.php");
       // Recherche par le groupe d'appartenance
       // On verifie si on affiche le groupe des partages
       if ($rech_txt == 100000000)
-        $sqlPartage = "SELECT ${PREFIX_TABLE}calepin.*, 100000000, 'Partage' FROM ${PREFIX_TABLE}calepin WHERE cal_partage='O' ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC";
+        $sqlPartage = "SELECT {$PREFIX_TABLE}calepin.*, 100000000, 'Partage' FROM {$PREFIX_TABLE}calepin WHERE cal_partage='O' ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC";
       else {
         // Recuperation des groupes fils de celui selectionne
         grpFils($rech_txt,$listeGrp);
@@ -473,7 +474,7 @@ include("agenda_calepin_import.php");
     if ($sqlPartage != "")
       $sql = $sqlPartage;
     elseif ($sql != "")
-      $sql = "SELECT ${PREFIX_TABLE}calepin.*, cgr_id, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe ".$sql.") AND ((cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) OR (cal_util_id!=".$idUser." AND cal_partage='O' AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id)) ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC";
+      $sql = "SELECT {$PREFIX_TABLE}calepin.*, cgr_id, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe ".$sql.") AND ((cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) OR (cal_util_id!=".$idUser." AND cal_partage='O' AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id)) ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC";
 
     if ($sql != "") {
       // MOD Groupes de contacts multiples
@@ -488,7 +489,7 @@ include("agenda_calepin_import.php");
         //Nom du groupe selectionne
         if ($rech_txt != 100000000) {
           $DB = new Db($DB_CX->ConnexionID);
-          $DB->DbQuery("SELECT cgr_nom FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_id=".$rech_txt);
+          $DB->DbQuery("SELECT cgr_nom FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_id=".$rech_txt);
           $critere = sprintf(trad("CALEPIN_TROUVE_GROUPE"), $pluriel, $DB->DbResult(0,0));
         }
         else
@@ -554,7 +555,7 @@ include("agenda_calepin_import.php");
           */
           $strOutput .= "        <TD width=\"".$grpWidth."\" valign=\"top\" colspan=\"".$colspan."\"><IMG src=\"image/calepin/groupe.gif\" border=0 width=16 height=16 vspace=1 title=\"".trad("CALEPIN_AFFECTE_GROUPE")."\" align=\"absmiddle\">&nbsp;".(($enr['cal_partage']=="O") ? "<A href=\"?sid=".$sid."&tcMenu=".$tcMenu."&tcPlg=".$tcPlg."&sd=".$sd."&grp=100000000\">".trad("CALEPIN_LIB_PARTAGE")."</A>, " : "");
           $DB = new Db($DB_CX->ConnexionID);
-          $DB->DbQuery("SELECT cgr_id, cgr_nom FROM ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cgr_id=cap_cgr_id AND cap_cal_id=".$enr['cal_id']);
+          $DB->DbQuery("SELECT cgr_id, cgr_nom FROM {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cgr_id=cap_cgr_id AND cap_cal_id=".$enr['cal_id']);
           $rdGrp = array();
           while ($enrGrp = $DB->DbNextRow())
             $rdGrp[$enrGrp['cgr_id']] = $enrGrp['cgr_nom'];
@@ -667,9 +668,9 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
 
   if ($ztAction == "S" && $id)  {
     //Suppression d'une entree
-    if ($DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)) && $DB_CX->DbAffectedRows()>0) {
+    if ($DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)) && $DB_CX->DbAffectedRows()>0) {
       $msg_maj = "<P class=\"vert\">".trad("CALEPIN_EFFACE_OK")."</P>";
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
     } else
       $msg_maj = "<P class=\"rouge\">".trad("CALEPIN_SUPPR_IMPOSSIBLE")."</P>";
   } elseif ($ztAction == "M") {
@@ -678,10 +679,10 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
       //Enregistrement d'un groupe depuis le popup
       if ($groupe != "0") {
         //UPDATE
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin_groupe SET cgr_pere_id=".$zlPere.", cgr_nom='".htmlspecialchars($ztNom)."' WHERE cgr_id=".$groupe);
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin_groupe SET cgr_pere_id=".$zlPere.", cgr_nom='".htmlspecialchars($ztNom)."' WHERE cgr_id=".$groupe);
       } else {
         //INSERT
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_pere_id, cgr_util_id, cgr_nom) VALUES (".$zlPere.", ".$idUser.", '".htmlspecialchars($ztNom)."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_pere_id, cgr_util_id, cgr_nom) VALUES (".$zlPere.", ".$idUser.", '".htmlspecialchars($ztNom)."')");
         $groupe = $DB_CX->DbInsertID();
       }
       //Recuperation des info deja saisies
@@ -706,7 +707,7 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
       $siteweb   = htmlspecialchars(stripslashes($siteweb));
     } else {
       //Recuperation des info dans la bdd
-      $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cap_cgr_id FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)." AND cap_cal_id=cal_id");
+      $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cap_cgr_id FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)." AND cap_cal_id=cal_id");
       $enr      = $DB_CX->DbNextRow();
       $societe  = $enr['cal_societe'];
       $nom      = $enr['cal_nom'];
@@ -738,7 +739,7 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
         $naissance = "";
     }
     // MOD Groupes de contacts multiples
-    $DB_CX->DbQuery("SELECT cap_cgr_id, cgr_util_id FROM ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cgr_id=cap_cgr_id AND cap_cal_id=".$id);
+    $DB_CX->DbQuery("SELECT cap_cgr_id, cgr_util_id FROM {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cgr_id=cap_cgr_id AND cap_cal_id=".$id);
     $groupe = "";
     while ($enrGrp = $DB_CX->DbNextRow())   
       $groupe .= $enrGrp['cap_cgr_id'].(($enr['cgr_util_id']==$idUser || $MODIF_PARTAGE) ? "N" : "O")."+";
@@ -785,13 +786,13 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
       }
       $lettre = strtoupper($nom[0]);
       if ($type2 == "modif") {
-        if ($DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET cal_societe='".$societe."', cal_nom='".$nom."', cal_prenom='".$prenom."', cal_adresse='".$add."', cal_cp='".$cp."', cal_ville='".$ville."', cal_pays='".$pays."', cal_domicile='".$domicile."', cal_travail='".$travail."', cal_portable='".$portable."', cal_fax='".$fax."', cal_email='".$email."', cal_emailpro='".$emailpro."', cal_icq=".$icq.", cal_partage='".$partage."', cal_note='".$note."',cal_date_naissance='".$naissance."',cal_aim='".$aim."',cal_msn='".$msn."',cal_yahoo='".$yahoo."',cal_siteweb='".$siteweb."' WHERE cal_id=".$id)) {
+        if ($DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET cal_societe='".$societe."', cal_nom='".$nom."', cal_prenom='".$prenom."', cal_adresse='".$add."', cal_cp='".$cp."', cal_ville='".$ville."', cal_pays='".$pays."', cal_domicile='".$domicile."', cal_travail='".$travail."', cal_portable='".$portable."', cal_fax='".$fax."', cal_email='".$email."', cal_emailpro='".$emailpro."', cal_icq=".$icq.", cal_partage='".$partage."', cal_note='".$note."',cal_date_naissance='".$naissance."',cal_aim='".$aim."',cal_msn='".$msn."',cal_yahoo='".$yahoo."',cal_siteweb='".$siteweb."' WHERE cal_id=".$id)) {
           // MOD Groupes de contacts multiples
-          //$DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin_appartient SET cap_cgr_id=".$groupe." WHERE cap_cal_id=".$id);
-          $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
+          //$DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin_appartient SET cap_cgr_id=".$groupe." WHERE cap_cal_id=".$id);
+          $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
           $idGroupe = explode("+",str_replace(array("N","O"),"",$groupe));
           for ($nb=count($idGroupe)-1;$nb>=0;$nb--)
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$idGroupe[$nb]."','".$id."')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$idGroupe[$nb]."','".$id."')");
           // Fin MOD Groupes de contacts multiples
           $msg_maj = "<P class=\"vert\">".trad("CALEPIN_MODIF_OK")."</P>";
         } else {
@@ -805,13 +806,13 @@ function verif($nom,&$domicile,&$travail,&$portable,&$fax,$email,$emailpro,$icq,
         if (!empty($siteweb) && (substr($siteweb,0,5)!="http:") && (substr($siteweb,0,6)!="https:") && (substr($siteweb,0,4)!="ftp:")) {
           $siteweb = "http://".$siteweb;
         }
-        if ($DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro,cal_icq,cal_util_id,cal_partage,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_siteweb) VALUES ('".$societe."','".$nom."','".$prenom."','".$add."','".$cp."','".$ville."','".$pays."','".$domicile."','".$travail."','".$portable."','".$fax."','".$email."','".$emailpro."',".$icq.",".$idUser.",'".$partage."','".$note."','".$naissance."','".$aim."','".$msn."','".$yahoo."','".$siteweb."')") && $DB_CX->DbAffectedRows()) {
+        if ($DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro,cal_icq,cal_util_id,cal_partage,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_siteweb) VALUES ('".$societe."','".$nom."','".$prenom."','".$add."','".$cp."','".$ville."','".$pays."','".$domicile."','".$travail."','".$portable."','".$fax."','".$email."','".$emailpro."',".$icq.",".$idUser.",'".$partage."','".$note."','".$naissance."','".$aim."','".$msn."','".$yahoo."','".$siteweb."')") && $DB_CX->DbAffectedRows()) {
           // MOD Groupes de contacts multiples
-          //$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$groupe."','".$DB_CX->DbInsertID()."')");
+          //$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$groupe."','".$DB_CX->DbInsertID()."')");
           $id = $DB_CX->DbInsertID();
           $idGroupe = explode("+",str_replace(array("N","O"),"",$groupe));
           for ($nb=count($idGroupe)-1;$nb>=0;$nb--)
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$idGroupe[$nb]."','".$id."')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$idGroupe[$nb]."','".$id."')");
           // Fin MOD Groupes de contacts multiples
           $msg_maj = "<P class=\"vert\">".trad("CALEPIN_AJOUT_OK")."</P>";
           //Si pas d'erreur on vide le formulaire si l'utilisateur a choisi de creer un nouveau contact

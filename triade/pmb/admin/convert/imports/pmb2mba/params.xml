@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.2.14.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>Base PMB -&gt; PRISME</importname>
@@ -6,7 +12,7 @@
 	<nperpass>200</nperpass>
 	<!-- Type de l'entrée -->
 	<input type="xml" rootelement="*" noticeelement="notice" specialexport="yes"/>
-	<!-- Type de sortie -->	 
+	<!-- Type de sortie -->
 	 <output importable="no" script="pmb2mba_output.class.php" type="xml" suffix="xml">
 		<rootelement>notices</rootelement>
 	</output>

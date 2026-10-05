@@ -1063,7 +1063,7 @@ td.docnum
 iframe#history {
 	width:30%;
 	height:97%;
-	position:absolute; 
+	position:fixed; 
 	top:1%; 
 	right:1%;
 	z-index:1000;

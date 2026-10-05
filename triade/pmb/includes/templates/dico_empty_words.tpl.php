@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dico_empty_words.tpl.php,v 1.5 2019-05-27 14:10:48 ngantier Exp $
+// $Id: dico_empty_words.tpl.php,v 1.8 2021/04/22 11:53:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -59,9 +59,6 @@ $autorites_list_empty_word="
 -->
 </script>
 <div class='row'>
-	<h1>".$msg["semantique"]." : ".$msg["dico_empty_words"]."</h1>
-</div>
-<div class='row'>
 	<form class='form-$current_module' name='search_mots_vides' method='post' action='./autorites.php?categ=semantique&sub=empty_words&action=search' onSubmit='if (test_form(search_mots_vides)) return true; else return false;'>
 	<h3>".$msg["357"]." : ".$msg["dico_empty_words"]."</h3>\n
 	<div class='form-contenu'>
@@ -90,20 +87,7 @@ $autorites_list_empty_word="
 <script type='text/javascript'>document.forms['search_mots_vides'].elements['search_empty_word'].focus();</script>\n";
 
 //$autorites_add_empty_word : template form ajout de mot vide
-$autorites_add_empty_word="<div class='row'>
-			<h1>".$msg["semantique"]." : ".$msg["dico_empty_words"]."</h1>
-			</div><form name='add_empty_word' class='form-$current_module' method=post action=\"./autorites.php?categ=semantique&sub=empty_words&action=update\">
-<h3>".$msg["add_empty_word"]."</h3>
-<!--    Contenu du form    -->
-<div class='form-contenu'>
-	<div class='row'>
-		<input type='text' name='text_empty_word' value='' class='saisie-30em' />
-		</div>
-	
-</div>
-<input type='button' class='bouton' value='".$msg["76"]."' onClick=\"history.back(-1);\">
-<input type='submit' class='bouton' value='".$msg["ajouter"]."'>
-</form>
-<script type='text/javascript'>document.forms['add_empty_word'].elements['text_empty_word'].focus();</script>
-";
-?>
+$autorites_add_empty_word="
+<div class='row'>
+	<input type='text' name='text_empty_word' value='' class='saisie-30em' />
+</div>";

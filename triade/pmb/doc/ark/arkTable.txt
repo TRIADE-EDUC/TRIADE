@@ -1,0 +1,15 @@
+@startuml
+	entity Ark {
+		id: int
+		identifiant: varchar
+		metadonnees: text
+		typeEntite
+	}
+	
+	entity ArkEntityPmb {
+		type
+		entitePmb
+	}
+	
+	Ark |o--|| ArkEntityPmb : associé à
+@enduml

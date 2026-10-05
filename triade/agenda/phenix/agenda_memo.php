@@ -27,7 +27,7 @@
   if ($id) {
     // Edition d'un memo
 	  //debut mod MemProg
-    $DB_CX->DbQuery("SELECT mem_titre, mem_contenu, mem_partage, mem_progress, mem_util_id, mem_pcent FROM ${PREFIX_TABLE}memo WHERE mem_id=".$id." AND (mem_util_id=".$idUser." OR mem_partage='O')");
+    $DB_CX->DbQuery("SELECT mem_titre, mem_contenu, mem_partage, mem_progress, mem_util_id, mem_pcent FROM {$PREFIX_TABLE}memo WHERE mem_id=".$id." AND (mem_util_id=".$idUser." OR mem_partage='O')");
     //fin mod MemProg
     if ($enr = $DB_CX->DbNextRow()) {
       $titre = $enr['mem_titre'];
@@ -122,7 +122,7 @@
     <INPUT type=\"hidden\" name=\"zlUtilisateur\" value=\"".$createur."\">
     <TABLE border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"600\">\n");
   } else {
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
     if ($DB_CX->DbNumRows() == 1) {
       echo "    <INPUT type=\"hidden\" name=\"zlUtilisateur\" value=\"".$idUser."\">\n";
     }
@@ -164,7 +164,7 @@
 <?php
   //Liste des differents memos
   // MOD MemoProgress
-	$DB_CX->DbQuery("SELECT mem_id, mem_titre, mem_contenu, mem_progress, mem_util_id, mem_pcent, mem_date FROM ${PREFIX_TABLE}memo WHERE mem_util_id=".$idUser." OR mem_partage='O' ORDER BY mem_id ASC");
+	$DB_CX->DbQuery("SELECT mem_id, mem_titre, mem_contenu, mem_progress, mem_util_id, mem_pcent, mem_date FROM {$PREFIX_TABLE}memo WHERE mem_util_id=".$idUser." OR mem_partage='O' ORDER BY mem_id ASC");
   // Fin MOD MemoProgress
   if ($DB_CX->DbNumRows()) {
     echo ("  <BR><TABLE width=\"600\" border=\"0\" cellspacing=\"0\" cellpadding=\"2\">\n");

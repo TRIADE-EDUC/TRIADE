@@ -1,13 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_aix.inc.php,v 1.3 2015-04-03 11:16:21 jpermanne Exp $
+// $Id: import_aix.inc.php,v 1.6 2022/09/07 15:13:30 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once("$class_path/emprunteur.class.php");
-require_once("$include_path/misc.inc.php");
+global $class_path, $include_path;
+global $action, $type_import;
+
+require_once "$class_path/emprunteur.class.php";
+require_once "$include_path/misc.inc.php";
 
 function show_import_choix_fichier() {
 	
@@ -29,7 +32,7 @@ function show_import_choix_fichier() {
 		        (ajoute ou modifie les lecteurs pr&eacute;sents dans le fichier)
 		        <br />
 		        <input type='radio' name='type_import' id='ml' value='maj_complete'>
-		        <label class='etiquette' for='ml' >Mise Ã  jour compl&egrave;te</label>
+		        <label class='etiquette' for='ml' >Mise à jour compl&egrave;te</label>
 		        (supprime les lecteurs non pr&eacute;sents dans le fichier et qui n&apos;ont pas de pr&ecirc;ts en cours)
 		    </div>
 		    <div class='row'></div>
@@ -61,12 +64,10 @@ function show_import_choix_fichier() {
 
 
 function import_lecteurs($type_import){
-
-	global $dbh;
 	global $text,$n,$t_xml;
 	global $deflt2docs_location;
 
-	//La structure du fichier xml doit Ãªtre la suivante : 
+	//La structure du fichier xml doit être la suivante : 
 	 /*    
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<inm:Results productTitle="Superdoc Premium" productVersion="9.00" xmlns:inm="http://www.inmagic.com/webpublisher/query">
@@ -104,7 +105,7 @@ function import_lecteurs($type_import){
         print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
         exit;
     } elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
-        print "Le fichier n'a pas pu Ãªtre t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
+        print "Le fichier n'a pas pu être t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
         print_r($_FILES)."<p>";
         exit;
     }
@@ -117,13 +118,13 @@ function import_lecteurs($type_import){
     	
         if ($type_import == 'maj_complete') {
     		
-        	Print "Suppression des groupes et lecteurs sans prÃªts.<br /><br />";
+        	Print "Suppression des groupes et lecteurs sans prêts.<br /><br />";
         	
         	//Vide la table empr_groupe
-            pmb_mysql_query("DELETE FROM empr_groupe",$dbh);
-            //Supprime les lecteurs qui n'ont pas de prÃªts en cours
+            pmb_mysql_query("DELETE FROM empr_groupe");
+            //Supprime les lecteurs qui n'ont pas de prêts en cours
             $req_select_verif_pret = "SELECT id_empr FROM empr left join pret on id_empr=pret_idempr WHERE pret_idempr is null ";
-            $select_verif_pret = pmb_mysql_query($req_select_verif_pret,$dbh);
+            $select_verif_pret = pmb_mysql_query($req_select_verif_pret);
             while (($verif_pret = pmb_mysql_fetch_array($select_verif_pret))) {
             	//pour tous les lecteurs qui n'ont pas de pret en cours
                 emprunteur::del_empr($verif_pret["id_empr"]);
@@ -177,7 +178,7 @@ function import_lecteurs($type_import){
 				xml_set_character_data_handler($parser, "texte");
 				
 				if ( !xml_parse( $parser, $buffer, TRUE ) ) {
-					die( sprintf( "erreur XML %s Ã  la ligne: %d", 
+					die( sprintf( "erreur XML %s à la ligne: %d", 
 						xml_error_string(xml_get_error_code($parser ) ),
 						xml_get_current_line_number($parser) ) );
 				}
@@ -187,13 +188,13 @@ function import_lecteurs($type_import){
 				//traitement des enregistrements
 				for($i=1;$i<=count($t_xml);$i++) {
 					
-					//il faut au minimum un nom ou un prÃ©nom
+					//il faut au minimum un nom ou un prénom
 					$t_xml[$i]['INM:NOM'][0]=trim($t_xml[$i]['INM:NOM'][0]);
 					$t_xml[$i]['INM:PRENOM'][0]=trim($t_xml[$i]['INM:PRENOM'][0]);					
 					if( ($t_xml[$i]['INM:NOM'][0]!='') || ($t_xml[$i]['INM:PRENOM'][0]!='') ) {
 						
 						$e_data=array();
-						//print "Enregistrement nÂ° ".$t_xml[$i]['INM:ID'][0]."<br />";
+						//print "Enregistrement n° ".$t_xml[$i]['INM:ID'][0]."<br />";
 						
 						//localisation
 						$e_data['location'] = $deflt2docs_location;
@@ -213,13 +214,13 @@ function import_lecteurs($type_import){
 							$e_data['cb'] = trim($t_xml[$i]['INM:NUMERO-EMPRUNTEUR'][0]);
 						} else { 
 							$q="select (count(*)+1) from empr";
-							$r=pmb_mysql_query($q,$dbh);
+							$r=pmb_mysql_query($q);
 							$x=pmb_mysql_result($r,0,0);
 							$e_data['cb'] = 'PMB_'.$x;
 						}
 						
 						
-						//civilitÃ©
+						//civilité
 						$t_xml[$i]['INM:CIVILITE'][0]=substr(strtolower(trim($t_xml[$i]['INM:CIVILITE'][0])),0,2);
 						switch($t_xml[$i]['INM:CIVILITE'][0]) {
 							case 'm.':
@@ -282,14 +283,14 @@ function import_lecteurs($type_import){
 						
 						//date fin adhesion
 						$qda="select duree_adhesion from empr_categ where id_categ_empr='".$e_data['categ']."' ";
-						$rda=pmb_mysql_query($qda,$dbh);
+						$rda=pmb_mysql_query($qda);
 						if(pmb_mysql_num_rows($rda)) {
 							$da=pmb_mysql_result($rda,0,0);
 						}else {
 							$da=365;
 						}
 						$qd="select date_add('".$e_data['date_adhesion']."', INTERVAL ".$da." DAY) ";
-						$rd=pmb_mysql_query($qd,$dbh);
+						$rd=pmb_mysql_query($qd);
 						if(pmb_mysql_num_rows($rd)) {
 							$de=pmb_mysql_result($rd,0,0);
 						}
@@ -313,38 +314,38 @@ function import_lecteurs($type_import){
 	
 								//groupe
 								$qg="select groupe_id from groupe where libelle_groupe='".addslashes($t_xml[$i]['INM:SERVICE'][0])."' limit 1 ";
-								$rg=pmb_mysql_query($qg,$dbh);
+								$rg=pmb_mysql_query($qg);
 								if(pmb_mysql_num_rows($rg)) {
 									$g_id=pmb_mysql_result($rg,0,0);
 								} else {
 									$qg="insert into groupe set libelle_groupe='".addslashes($t_xml[$i]['INM:SERVICE'][0])."' ";
-									pmb_mysql_query($qg,$dbh);
-									$g_id=pmb_mysql_insert_id($dbh);
+									pmb_mysql_query($qg);
+									$g_id=pmb_mysql_insert_id();
 								}
 								$qeg = "insert into empr_groupe (empr_id,groupe_id) values ($e_id,$g_id) ";
-								pmb_mysql_query($qeg,$dbh);
+								pmb_mysql_query($qeg);
 								
 								//champ perso service
 								$qn="select idchamp from empr_custom where name='service' ";
-								$rn=pmb_mysql_query($qn,$dbh);
+								$rn=pmb_mysql_query($qn);
 								if (pmb_mysql_num_rows($rn)) {
 									$idc=pmb_mysql_result($rn,0,0);
 									$requete="select max(empr_custom_list_value*1) from empr_custom_lists where empr_custom_champ=$idc ";
-									$resultat=pmb_mysql_query($requete,$dbh);
+									$resultat=pmb_mysql_query($requete);
 									$max=@pmb_mysql_result($resultat,0,0);
 									$n=$max+1;
 									$requete="select empr_custom_list_value from empr_custom_lists where empr_custom_list_lib='".addslashes($t_xml[$i]['INM:SERVICE'][0])."' and empr_custom_champ=$idc ";
-									$resultat=pmb_mysql_query($requete,$dbh);
+									$resultat=pmb_mysql_query($requete);
 									if (pmb_mysql_num_rows($resultat)) {
 										$value=pmb_mysql_result($resultat,0,0);
 									} else {
 										$requete="insert into empr_custom_lists (empr_custom_champ,empr_custom_list_value,empr_custom_list_lib) values($idc,$n,'".addslashes($t_xml[$i]['INM:SERVICE'][0])."')";
-										pmb_mysql_query($requete,$dbh);
+										pmb_mysql_query($requete);
 										$value=$n;
 										$n++;
 									}
 									$requete="insert into empr_custom_values (empr_custom_champ,empr_custom_origine,empr_custom_integer) values($idc,$e_id,$value)";
-									pmb_mysql_query($requete,$dbh);
+									pmb_mysql_query($requete);
 								}
 							}
 						} else {
@@ -368,7 +369,7 @@ function import_lecteurs($type_import){
   		
   		if(count($tab_err)) {
 	  		for ($i=0;$i<count($tab_err);$i++) {
-				print "Erreur &agrave; l&apos;enregistrement nÂ° ".$tab_err[$i]."<br />";
+				print "Erreur &agrave; l&apos;enregistrement n° ".$tab_err[$i]."<br />";
   			}
 			print "<hr /><br />";
   		}
@@ -382,10 +383,9 @@ function import_lecteurs($type_import){
 
 
 function import_prets() {
-	global $dbh;
 	global $text,$n,$t_xml;
 
-	//La structure du fichier xml doit Ãªtre la suivante : 
+	//La structure du fichier xml doit être la suivante : 
 	 /*    
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<inm:Results productTitle="Superdoc Premium" productVersion="9.00" xmlns:inm="http://www.inmagic.com/webpublisher/query">
@@ -422,7 +422,7 @@ function import_prets() {
         print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
         exit;
     } elseif (!(move_uploaded_file($_FILES['import_lec']['tmp_name'], "./temp/".basename($_FILES['import_lec']['tmp_name'])))) {
-        print "Le fichier n'a pas pu Ãªtre t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
+        print "Le fichier n'a pas pu être t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
         print_r($_FILES)."<p>";
         exit;
     }
@@ -479,7 +479,7 @@ function import_prets() {
 				xml_set_character_data_handler($parser, "texte");
 				
 				if ( !xml_parse( $parser, $buffer, TRUE ) ) {
-					die( sprintf( "erreur XML %s Ã  la ligne: %d", 
+					die( sprintf( "erreur XML %s à la ligne: %d", 
 						xml_error_string(xml_get_error_code($parser ) ),
 						xml_get_current_line_number($parser) ) );
 				}
@@ -489,7 +489,7 @@ function import_prets() {
 				//traitement des enregistrements
 				for($i=1;$i<=count($t_xml);$i++) {
 					
-					//il faut un cb exemplaire,un cb lecteur, une date de pret, une date de retour prÃ©vu et pas de date de retour
+					//il faut un cb exemplaire,un cb lecteur, une date de pret, une date de retour prévu et pas de date de retour
 					$t_xml[$i]['INM:CODE-BARRE-OBJET'][0]=trim($t_xml[$i]['INM:CODE-BARRE-OBJET'][0]);
 					$t_xml[$i]['INM:CODE-EMPRUNTEUR'][0]=trim($t_xml[$i]['INM:CODE-EMPRUNTEUR'][0]);		
 					$t_xml[$i]['INM:DATE-DU-PRET'][0]=trim($t_xml[$i]['INM:DATE-DU-PRET'][0]);			
@@ -498,12 +498,12 @@ function import_prets() {
 					
 					if( (!$t_xml[$i]['INM:DATE-DE-RETOUR'][0]) && ($t_xml[$i]['INM:CODE-BARRE-OBJET'][0]!='') && ($t_xml[$i]['INM:CODE-EMPRUNTEUR'][0]!='') && ($t_xml[$i]['INM:DATE-DU-PRET'][0]!='') && ($t_xml[$i]['INM:RETOUR-PREVU-LE'][0]!='') ) {
 						
-						//print "Enregistrement nÂ° ".$t_xml[$i]['INM:NUMERO-DE-PRET'][0]."<br />";
+						//print "Enregistrement n° ".$t_xml[$i]['INM:NUMERO-DE-PRET'][0]."<br />";
 
 						//id exemplaire
 						$expl_id=0;
 						$q="select expl_id from exemplaires where expl_cb='".$t_xml[$i]['INM:CODE-BARRE-OBJET'][0]."' ";
-						$r=pmb_mysql_query($q,$dbh);
+						$r=pmb_mysql_query($q);
 						if(pmb_mysql_num_rows($r)) {
 							$expl_id=pmb_mysql_result($r,0,0);
 						} else {
@@ -514,7 +514,7 @@ function import_prets() {
 						//id lecteur
 						$empr_id=0;
 						$q="select id_empr from empr where empr_cb='".$t_xml[$i]['INM:CODE-EMPRUNTEUR'][0]."' ";
-						$r=pmb_mysql_query($q,$dbh);
+						$r=pmb_mysql_query($q);
 						if(pmb_mysql_num_rows($r)) {
 							$empr_id=pmb_mysql_result($r,0,0);
 						} else {
@@ -531,7 +531,7 @@ function import_prets() {
 						// insert pret 
 						$q = "INSERT INTO pret SET pret_idempr = '".$empr_id."', pret_idexpl = '".$expl_id."', pret_date   = '".$date_pret."', ";
 						$q.= "pret_retour = '".$date_retour."', retour_initial = '".$date_retour."' ";
-						pmb_mysql_query($q,$dbh);
+						pmb_mysql_query($q);
 											
 					} else {
 						$tab_err[]=$t_xml[$i]['INM:NUMERO-DE-PRET'][0];
@@ -550,7 +550,7 @@ function import_prets() {
   		
   		if(count($tab_err)) {
 	  		for ($i=0;$i<count($tab_err);$i++) {
-				print "Erreur &agrave; l&apos;enregistrement nÂ° ".$tab_err[$i]."<br />";
+				print "Erreur &agrave; l&apos;enregistrement n° ".$tab_err[$i]."<br />";
   			}
 			print "<hr /><br />";
   		}
@@ -562,7 +562,7 @@ function import_prets() {
 }
 
 
-//MÃ©thodes du parser
+//Méthodes du parser
 function debutBalise($parser, $tag, $att) {
 	return;
 }
@@ -606,8 +606,3 @@ switch($action) {
         show_import_choix_fichier();
         break;
 }
-
-?>
-
-
-

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.8 2023/10/10 07:39:14 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="mail_accounting_commande">Acquisition : commande / relance fournisseur</entry>
+	<entry code="mail_accounting_devis">Acquisition : devis / relance fournisseur</entry>
+	
+	<entry code="mail_dsi">D.S.I. : diffusion d'une bannette</entry>
+
+	<entry code="mail_mailing">Mailing : diffusion à partir d'un panier de lecteurs</entry>
+
+	<entry code="mail_opac_contact_form">Formulaire de contact : demande d'un usager</entry>
+	<entry code="mail_opac_contact_form_confirm">Formulaire de contact : accusé de réception au demandeur</entry>
+
+	<entry code="mail_opac_print">Résultat de recherche : impression</entry>
+
+	<entry code="mail_opac_reader_contribution">Lecteur : validation d'une contribution</entry>
+	<entry code="mail_opac_reader_dsi">Lecteur : diffusion d'une bannette</entry>
+	<entry code="mail_opac_reader_forgotten_password">Lecteur : mot de passe oublié</entry>
+	<entry code="mail_opac_reader_mfa">Lecteur : double authentification (MFA)</entry>
+	<entry code="mail_opac_reader_readinglist_accept_access">Liste de lecture : demande d'accès acceptée</entry>
+	<entry code="mail_opac_reader_readinglist_refuse_access">Liste de lecture : demande d'accès refusée</entry>
+	<entry code="mail_opac_reader_readinglist_request_access">Liste de lecture : demande d'accès</entry>
+	<entry code="mail_opac_reader_readinglist_subscribe">Liste de lecture : demande d'inscription</entry>
+	<entry code="mail_opac_reader_readinglist_unsubscribe">Liste de lecture : demande de désinscription</entry>
+	<entry code="mail_opac_reader_registration">Lecteur : inscription</entry>
+	
+	<entry code="mail_opac_scan_request">Demande de numérisation : création</entry>
+	
+	<entry code="mail_opac_user_contribution">Alerte utilisateur : création d'une contribution</entry>
+	<entry code="mail_opac_user_demande">Alerte utilisateur : création d'une demande</entry>
+	<entry code="mail_opac_user_demande_note">Alerte utilisateur : création d'une note</entry>
+	<entry code="mail_opac_user_registration">Alerte utilisateur : inscription d'un nouveau lecteur</entry>
+	<entry code="mail_opac_user_resa">Alerte utilisateur : ajout d'une réservation</entry>
+	<entry code="mail_opac_user_resa_planning">Alerte utilisateur : ajout d'une prévision</entry>
+	<entry code="mail_opac_user_suggestion">Alerte utilisateur : création d'une suggestion</entry>
+	
+	<entry code="mail_print">Résultat de recherche : impression</entry>
+	
+	<entry code="mail_reader_contribution">Lecteur : validation d'une contribution</entry>
+	<entry code="mail_reader_loans">Lecteur : prêts en cours</entry>
+	<entry code="mail_reader_loans_late">Lecteur : prêts en retard</entry>
+	<entry code="mail_reader_loans_late_group">Groupe de lecteurs : prêts en retard</entry>
+	<entry code="mail_reader_loans_late_relance">Lecteur : relance des prêts en retard</entry>
+	<entry code="mail_reader_relance_adhesion">Lecteur : relance d'adhésion</entry>
+	<entry code="mail_reader_loans_extension">Lecteur : prolongation</entry>
+	<entry code="mail_reader_loans_ticket">Lecteur : ticket de prêt</entry>
+	<entry code="mail_reader_resa">Lecteur : confirmation d'une réservation</entry>
+	<entry code="mail_reader_resa_planning">Lecteur : confirmation d'une prévision</entry>
+	<entry code="mail_reader_demande_note">Lecteur : modification d'une note</entry>
+	<entry code="mail_reader_temp_password">Lecteur : mot de passe temporaire</entry>
+	
+	<entry code="mail_scan_request">Demande de numérisation : création / modification</entry>
+	
+	<entry code="mail_scheduler_task">Gestionnaire de tâches : arrêt non volontaire</entry>
+	
+	<entry code="mail_serialcirc_ask_accept">Liste de circulation : demande d'inscription acceptée</entry>
+	<entry code="mail_serialcirc_ask_refus">Liste de circulation : demande d'inscription refusée</entry>
+	<entry code="mail_serialcirc_copy_accept">Liste de circulation : demande de reproduction acceptée</entry>
+	<entry code="mail_serialcirc_copy_isdone">Liste de circulation : demande de reproduction effectuée</entry>
+	<entry code="mail_serialcirc_copy_none">Liste de circulation : demande de reproduction rejetée</entry>
+	
+	<entry code="mail_suggestion_confirmed">Suggestion : suggestion confirmée</entry>
+	<entry code="mail_suggestion_givenup">Suggestion : suggestion abandonnée</entry>
+	<entry code="mail_suggestion_ordered">Suggestion : suggestion commandée</entry>
+	<entry code="mail_suggestion_rejected">Suggestion : suggestion rejetée</entry>
+	<entry code="mail_suggestion_received">Suggestion : suggestion reçue</entry>
+	
+	<entry code="mail_user_demande_note">Alerte utilisateur : modification d'une note</entry>
+	<entry code="mail_user_mfa">Utilisateur : double authentification (MFA)</entry>
+</XMLlist>

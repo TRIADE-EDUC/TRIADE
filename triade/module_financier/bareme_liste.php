@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -251,20 +251,18 @@ if(autorisation_module()) {
 		// Verification droits acces groupe
 		validerequete("2");
 		?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 		<?php include("./librairie_php/lib_defilement.php"); ?>
 		</td>
 		<td width="472" valign="middle" rowspan="3" align="center">
-			<div align='center'>
-				<?php top_h(); ?>
-				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
-
-
+		<div align='center'>
+		<?php top_h(); ?>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 		<?php
 		// Verification autorisations acces au module
 		if(autorisation_module()) {
 		?>	
-		
+
 		<!-- TITRE ET CADRE CENTRAL -->
 		<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" >
 			<tr id="coulBar0">
@@ -276,7 +274,7 @@ if(autorisation_module()) {
 				<td valign="top" align="center">
 					<form name="formulaire_principal" id="formulaire_principal" action="<?php echo url_script(); ?>" method="post" onSubmit="">
 						<input type="hidden" name="operation" id="operation" value="">
-						<input type="hidden" name="bareme_id" id="bareme_id" value="<?php echo bareme_id; ?>">
+						<input type="hidden" name="bareme_id" id="bareme_id" value="<?php echo $bareme_id; ?>">
 						<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
 					
 							<?php //********** AFFICHAGE DES DONNEES ********** ?>
@@ -745,7 +743,7 @@ if(autorisation_module()) {
 
 
 		<?php //********** GENERATION DES MENUS ADMINISTRATEUR ********** ?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></script>
 		
 
 		<?php //********** INITIALISATION DES BULLES D'AIDE ********** ?>

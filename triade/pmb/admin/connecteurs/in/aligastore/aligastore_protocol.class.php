@@ -1,23 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: aligastore_protocol.class.php,v 1.7 2019-04-03 14:24:00 arenou Exp $
+// $Id: aligastore_protocol.class.php,v 1.9.10.2 2025/03/17 08:15:42 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 global $class_path,$base_path, $include_path;
 
 /**
- * \brief Petit parser dom autonome et Ã©lÃ©gant
- * 
- * Parse une chaine XML et permet un accÃ¨s rapide par une interface simplifiÃ©e DOM. 
+ * \brief Petit parser dom autonome et élégant
+ *
+ * Parse une chaine XML et permet un accès rapide par une interface simplifiée DOM.
  * Cette classe fonctionne uassi bien en PHP4 que 5.
  * \note Cette classe manipule des noeuds de type noeud (\ref noeud "voir l'attribut $tree").\n
- * \note Des chemins sont utilisÃ©s pour accÃ©der aux noeuds, les syntaxes sont dÃ©taillÃ©es dans les mÃ©thodes qui les utilisent :\n
- * \note -\ref path_node "syntaxe des chemins pour la mÃ©thode get_node"\n
- * \note -\ref path_nodes "syntaxe des chemins pour la mÃ©thode get_nodes"\n
- *   
+ * \note Des chemins sont utilisés pour accéder aux noeuds, les syntaxes sont détaillées dans les méthodes qui les utilisent :\n
+ * \note -\ref path_node "syntaxe des chemins pour la méthode get_node"\n
+ * \note -\ref path_nodes "syntaxe des chemins pour la méthode get_nodes"\n
+ *
  * @author Florent TETART
  */
 class xml_dom_aligastore {
@@ -25,27 +25,27 @@ class xml_dom_aligastore {
 	public $charset;			/*!< Charset courant (iso-8859-1 ou utf-8) */
 	/**
 	 * \brief Arbre des noeuds du document
-	 * 
-	 * L'arbre est composÃ© de noeuds qui ont la structure suivante :
+	 *
+	 * L'arbre est composé de noeuds qui ont la structure suivante :
 	 * \anchor noeud
 	 * \verbatim
 	 $noeud = array(
-	 	NAME	=> Nom de l'Ã©lÃ©ment pour un noeud de type Ã©lÃ©ment (TYPE = 1)
+	 	NAME	=> Nom de l'élément pour un noeud de type élément (TYPE = 1)
 	 	ATTRIBS	=> Tableau des attributs (nom => valeur)
-	 	TYPE	=> 1 = Noeud Ã©lÃ©ment, 2 = Noeud texte
+	 	TYPE	=> 1 = Noeud élément, 2 = Noeud texte
 	 	CHILDS	=> Tableau des noeuds enfants
 	 )
 	 \endverbatim
 	 */
-	public $tree; 
+	public $tree;
 	public $error=false; 		/*!< Signalement d'erreur : true : erreur lors du parse, false : pas d'erreur */
-	public $error_message=""; 	/*!< Message d'erreur correspondant Ã  l'erreur de parse */
+	public $error_message=""; 	/*!< Message d'erreur correspondant à l'erreur de parse */
 	public $depth=0;			/*!< \protected */
 	public $last_elt=array();	/*!< \protected */
 	public $n_elt=array();		/*!< \protected */
 	public $cur_elt=array();	/*!< \protected */
 	public $last_char=false;	/*!< \protected */
-	
+
 	/**
 	 * \protected
 	 */
@@ -55,7 +55,7 @@ class xml_dom_aligastore {
 		$this->cur_elt=$this->last_elt[$this->depth-1];
 		$this->depth--;
 	}
-	
+
 	/**
 	 * \protected
 	 */
@@ -69,7 +69,7 @@ class xml_dom_aligastore {
 		$this->last_char=false;
 		$this->depth++;
 	}
-	
+
 	/**
 	 * \protected
 	 */
@@ -77,7 +77,7 @@ class xml_dom_aligastore {
 		if ($this->last_char) $this->close_node();
 		$this->close_node();
 	}
-	
+
 	/**
 	 * \protected
 	 */
@@ -90,18 +90,18 @@ class xml_dom_aligastore {
 		$this->cur_elt["TYPE"]=2;
 		$this->depth++;
 	}
-	
+
 	/**
 	 * \brief Instanciation du parser
-	 * 
-	 * Le document xml est parsÃ© selon le charset donnÃ© et une reprÃ©sentation sous forme d'arbre est gÃ©nÃ©rÃ©e
+	 *
+	 * Le document xml est parsé selon le charset donné et une représentation sous forme d'arbre est générée
 	 * @param string $xml XML a manipuler
 	 * @param string $charset Charset du document XML
 	 */
 	public function __construct($xml,$charset="iso-8859-1") {
 		$this->charset=$charset;
 		$this->cur_elt=array("NAME"=>"document","TYPE"=>"0");
-		
+
 		//Initialisation du parser
 		$xml_parser=xml_parser_create($this->charset);
 		xml_set_object($xml_parser,$this);
@@ -109,22 +109,24 @@ class xml_dom_aligastore {
 		xml_parser_set_option( $xml_parser, XML_OPTION_SKIP_WHITE, 1 );
 		xml_set_element_handler($xml_parser, "startElement", "endElement");
 		xml_set_character_data_handler($xml_parser,"charElement");
-		
+
 		if (!xml_parse($xml_parser, $xml)) {
        		$this->error_message=sprintf("XML error: %s at line %d",xml_error_string(xml_get_error_code($xml_parser)),xml_get_current_line_number($xml_parser));
        		$this->error=true;
 		}
 		$this->tree=$this->last_elt[0];
+		xml_parser_free($xml_parser);
+		unset($xml_parser);
 	}
-	
+
 	/**
 	 * \anchor path_node
-	 * \brief RÃ©cupÃ©ration d'un noeud par son chemin
-	 * 
-	 * Recherche un noeud selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin du noeud recherchÃ©
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvÃ©
+	 * \brief Récupération d'un noeud par son chemin
+	 *
+	 * Recherche un noeud selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin du noeud recherché
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -136,24 +138,24 @@ class xml_dom_aligastore {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
-	 a/b/c		Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>)
-	 a/b/c[2]/d	Le premier noeud Ã©lÃ©ment d du deuxiÃ¨me noeud c (<d>Sous texte</d>)
-	 a/b/c[3]	Le troisiÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>) 
-	 a/b/id@c	Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>). L'attribut est ignorÃ©
-	 a/b/id@c[3]	Le troisÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>). L'attribut est ignorÃ©
-	 
-	 Les attributs ne peuvent Ãªtre citÃ©s que sur le noeud final.
+
+	 a/b/c		Le premier noeud élément c (<c id="0">Texte</c>)
+	 a/b/c[2]/d	Le premier noeud élément d du deuxième noeud c (<d>Sous texte</d>)
+	 a/b/c[3]	Le troisième noeud élément c (<c id="2">Texte 2</c>)
+	 a/b/id@c	Le premier noeud élément c (<c id="0">Texte</c>). L'attribut est ignoré
+	 a/b/id@c[3]	Le troisème noeud élément c (<c id="2">Texte 2</c>). L'attribut est ignoré
+
+	 Les attributs ne peuvent être cités que sur le noeud final.
 	 \endverbatim
 	 */
-	public function get_node($path,$node="") {
-		if ($node=="") $node=&$this->tree;
+	public function get_node($path, $node = array()) {
+		if (empty($node)) $node =& $this->tree;
 		$paths=explode("/",$path);
 		for ($i=0; $i<count($paths); $i++) {
 			if ($i==count($paths)-1) {
 				$pelt=explode("@",$paths[$i]);
-				if (count($pelt)==1) { 
-					$p=$pelt[0]; 
+				if (count($pelt)==1) {
+					$p=$pelt[0];
 				} else {
 					$p=$pelt[1];
 					$attr=$pelt[0];
@@ -170,7 +172,7 @@ class xml_dom_aligastore {
 			$found=false;
 			for ($j=0; $j<count($node["CHILDS"]); $j++) {
 				if (($node["CHILDS"][$j]["TYPE"]==1)&&($node["CHILDS"][$j]["NAME"]==$name)) {
-					//C'est celui lÃ  !!
+					//C'est celui là !!
 					if ($nc==$n) {
 						$node=&$node["CHILDS"][$j];
 						$found=true;
@@ -182,15 +184,15 @@ class xml_dom_aligastore {
 		}
 		return $node;
 	}
-	
+
 	/**
 	 * \anchor path_nodes
-	 * \brief RÃ©cupÃ©ration d'un ensemble de noeuds par leur chemin
-	 * 
-	 * Recherche d'un ensemble de noeuds selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin des noeuds recherchÃ©s
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvÃ©
+	 * \brief Récupération d'un ensemble de noeuds par leur chemin
+	 *
+	 * Recherche d'un ensemble de noeuds selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin des noeuds recherchés
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -202,10 +204,10 @@ class xml_dom_aligastore {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
-	 a/b/c		Tous les Ã©lÃ©ments c fils de a/b 
-	 a/b/c[2]/d	Tous les Ã©lÃ©ments d fils de a/b et du deuxiÃ¨me Ã©lÃ©ment c
-	 a/b/id@c	Tous les noeuds Ã©lÃ©ments c fils de a/b. L'attribut est ignorÃ©
+
+	 a/b/c		Tous les éléments c fils de a/b
+	 a/b/c[2]/d	Tous les éléments d fils de a/b et du deuxième élément c
+	 a/b/id@c	Tous les noeuds éléments c fils de a/b. L'attribut est ignoré
 	 \endverbatim
 	 */
 	public function get_nodes($path,$node="") {
@@ -217,21 +219,21 @@ class xml_dom_aligastore {
 		}
 		return $nodes;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ©ration des donnÃ©es sÃ©rialisÃ©es d'un noeud Ã©lÃ©ment
-	 * 
-	 * RÃ©cupÃ¨re sous forme texte les donnÃ©es d'un noeud Ã©lÃ©ment :\n
-	 * -Si c'est un Ã©lÃ©ment qui n'a qu'un noeud texte comme fils, renvoie le texte\n
-	 * -Si c'est un Ã©lÃ©ment qui a d'autres Ã©lÃ©ments comme fils, la version sÃ©rialisÃ©e des enfants est renvoyÃ©e
-	 * @param noeud $node Noeud duquel rÃ©cupÃ©rer les donnÃ©es
-	 * @param bool $force_entities true : les donnÃ©es sont renvoyÃ©es avec les entitÃ©s xml, false : les donnÃ©es sont renvoyÃ©es sans entitÃ©s
-	 * @return string donnÃ©es sÃ©rialisÃ©es du noeud Ã©lÃ©ment
+	 * \brief Récupération des données sérialisées d'un noeud élément
+	 *
+	 * Récupère sous forme texte les données d'un noeud élément :\n
+	 * -Si c'est un élément qui n'a qu'un noeud texte comme fils, renvoie le texte\n
+	 * -Si c'est un élément qui a d'autres éléments comme fils, la version sérialisée des enfants est renvoyée
+	 * @param noeud $node Noeud duquel récupérer les données
+	 * @param bool $force_entities true : les données sont renvoyées avec les entités xml, false : les données sont renvoyées sans entités
+	 * @return string données sérialisées du noeud élément
 	 */
 	public function get_datas($node,$force_entities=false) {
 		$char="";
 		if ($node["TYPE"]!=1) return false;
-		//Recherche des fils et vÃ©rification qu'il n'y a que du texte !
+		//Recherche des fils et vérification qu'il n'y a que du texte !
 		$flag_text=true;
 		for ($i=0; $i<count($node["CHILDS"]); $i++) {
 			if ($node["CHILDS"][$i]["TYPE"]!=2) $flag_text=false;
@@ -241,7 +243,7 @@ class xml_dom_aligastore {
 		}
 		for ($i=0; $i<count($node["CHILDS"]); $i++) {
 			if ($node["CHILDS"][$i]["TYPE"]==2)
-				if ($force_entities) 
+				if ($force_entities)
 					$char.=htmlspecialchars($node["CHILDS"][$i]["DATA"],ENT_NOQUOTES,$this->charset);
 				else $char.=$node["CHILDS"][$i]["DATA"];
 			else {
@@ -258,27 +260,27 @@ class xml_dom_aligastore {
 		}
 		return $char;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ©ration des attributs d'un noeud
-	 * 
-	 * Renvoie le tableau des attributs d'un noeud Ã©lÃ©ment (Type 1)
-	 * @param noeud $node Noeud Ã©lÃ©ment duquel on veut les attributs
+	 * \brief Récupération des attributs d'un noeud
+	 *
+	 * Renvoie le tableau des attributs d'un noeud élément (Type 1)
+	 * @param noeud $node Noeud élément duquel on veut les attributs
 	 * @return mixed Tableau des attributs Nom => Valeur ou false si ce n'est pas un noeud de type 1
 	 */
 	public function get_attributes($node) {
 		if ($node["TYPE"]!=1) return false;
 		return $node["ATTRIBUTES"];
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un noeud par son chemin
-	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es d'un noeud ou la valeur d'un attribut selon le chemin
-	 * @param string $path chemin du noeud recherchÃ©
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return string DonnÃ©e sÃ©rialsiÃ©e ou valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * \brief Récupère les données ou l'attribut d'un noeud par son chemin
+	 *
+	 * Récupère les données sérialisées d'un noeud ou la valeur d'un attribut selon le chemin
+	 * @param string $path chemin du noeud recherché
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return string Donnée sérialsiée ou valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -289,11 +291,11 @@ class xml_dom_aligastore {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
+
 	 a/b/c		Renvoie : "Texte"
 	 a/b/c[2]/d	Renvoie : "Sous texte"
 	 a/b/c[2]	Renvoie : "<d>Sous texte</d>"
-	 a/b/c[3]	Renvoie : "Texte 2" 
+	 a/b/c[3]	Renvoie : "Texte 2"
 	 a/b/id@c	Renvoie : "0"
 	 a/b/id@c[3]	Renvoie : "2"
 	 \endverbatim
@@ -317,7 +319,7 @@ class xml_dom_aligastore {
 				$found=false;
 				foreach($elt["ATTRIBS"] as $key=>$val) {
 					if ($key==$attr) {
-						//C'est celui lÃ  !!
+						//C'est celui là !!
 						if ($nc==$n) {
 							$value=$val;
 							$found=true;
@@ -332,15 +334,15 @@ class xml_dom_aligastore {
 		}
 		return $value;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un ensemble de noeuds par leur chemin
-	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
-	 * @param string $path chemin des noeuds recherchÃ©s
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return array Tableau des donnÃ©es sÃ©rialisÃ©es ou des valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * \brief Récupère les données ou l'attribut d'un ensemble de noeuds par leur chemin
+	 *
+	 * Récupère les données sérialisées ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
+	 * @param string $path chemin des noeuds recherchés
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return array Tableau des données sérialisées ou des valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -351,7 +353,7 @@ class xml_dom_aligastore {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
+
 	 a/b/c		Renvoie : [0]=>"Texte",[1]=>"<d>Sous texte</d>",[2]=>"Texte 2"
 	 a/b/c[2]/d	Renvoie : [0]=>"Sous texte"
 	 a/b/id@c	Renvoie : [0]=>"0",[1]=>"1",[2]=>"2"
@@ -382,7 +384,7 @@ class xml_dom_aligastore {
 					$found=false;
 					foreach($elt["ATTRIBS"] as $key=>$val) {
 						if ($key==$attr) {
-							//C'est celui lÃ  !!
+							//C'est celui là !!
 							if ($nc==$n) {
 								$values[]=$val;
 								$found=true;
@@ -404,19 +406,19 @@ class xml_dom_aligastore {
 class aligastore_get_data {
     public $error=false;
     public $error_message="";
-    public $response_date;			
+    public $response_date;
     public $charset="iso-8859-1";
-    public $time_out;				
-    public $xml_parser;			
-    public $retry_after;			
+    public $time_out;
+    public $xml_parser;
+    public $retry_after;
     public $data = '';
-    					
+
     public function __construct($url="", $charset="iso-8859-1", $time_out="") {
     	$this->charset=$charset;
     	$this->time_out=$time_out;
     	if ($url) $this->get_data($url);
     }
-    
+
     public function parse_xml($ch,$data) {
     	if (!$this->retry_after) {
 	    	//Parse de la ressource
@@ -424,38 +426,40 @@ class aligastore_get_data {
 	       		$this->error_message=sprintf("XML error: %s at line %d",xml_error_string(xml_get_error_code($this->xml_parser)),xml_get_current_line_number($this->xml_parser));
 	       		$this->error=true;
 	       		return strlen($data);
-	    	} 
+	    	}
     	}
     	return strlen($data);
 	}
-    
+
     public function verif_header($ch,$headers) {
     	$h=explode("\n",$headers);
     	for ($i=0; $i<count($h); $i++) {
     		$v=explode(":",$h[$i]);
-    		if ($v[0]=="Retry-After") { $this->retry_after=$v[1]*1; }
+    		if ($v[0]=="Retry-After") {
+    		    $this->retry_after = intval($v[1]);
+    		}
     	}
     	return strlen($headers);
     }
-    
+
     public function get_data($url) {
-    	//Remise Ã  zÃ©ro des erreurs
+    	//Remise à zéro des erreurs
     	$this->error=false;
     	$this->error_message="";
-    	
+
     	//Initialisation de la ressource
     	$ch = curl_init();
 		// configuration des options CURL
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_WRITEFUNCTION,array(&$this,"parse_xml"));
-		curl_setopt($ch, CURLOPT_HEADERFUNCTION,array(&$this,"verif_header"));	
+		curl_setopt($ch, CURLOPT_HEADERFUNCTION,array(&$this,"verif_header"));
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		if ($this->time_out) curl_setopt($ch, CURLOPT_TIMEOUT,$this->time_out);
-    	//RÃ©initialisation du "retry_after"
-		$this->retry_after="";    	
-    	
-    	//Explosion des arguments de la requÃ¨te pour ceux qui ne respectent pas la norme !!
+    	//Réinitialisation du "retry_after"
+		$this->retry_after="";
+
+    	//Explosion des arguments de la requète pour ceux qui ne respectent pas la norme !!
     	$query=substr($url,strpos($url,"?")+1);
     	$query=explode("&",$query);
     	for ($i=0; $i<count($query); $i++) {
@@ -463,21 +467,21 @@ class aligastore_get_data {
     			$operation=substr($query[$i],9);
     			break;
     		}
-    	}    	
-    	
+    	}
+
     	//Initialisation du parser
 		$this->xml_parser=xml_parser_create("utf-8");
 		xml_parser_set_option( $this->xml_parser, XML_OPTION_CASE_FOLDING, 0 );
 		xml_parser_set_option( $this->xml_parser, XML_OPTION_SKIP_WHITE, 1 );
-		
+
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		
+
 		configurer_proxy_curl($ch,$url);
 
 		$n_try=0;
 		$data =  $cexec=curl_exec($ch);
 		while (($cexec)&&($this->retry_after)&&($n_try<3)) {
-			$n_try++; 
+			$n_try++;
 			sleep((int)$this->retry_after*1);
 			$this->retry_after="";
 			$data = $cexec=curl_exec($ch);
@@ -490,9 +494,12 @@ class aligastore_get_data {
 		xml_parser_free($this->xml_parser);
 		$this->xml_parser="";
 		curl_close($ch);
-		
-		if ($this->error) { $this->error_message.=" - ".$url; unset($s); return; }
-		
+
+		if ($this->error) {
+			$this->error_message.= " - " . $url;
+			return;
+		}
+
 		$this->data = $data;
     }
 }
@@ -504,25 +511,26 @@ class aligastore_request {
 	public $error = false;
 	public $error_message = '';
 	public $data = '';
-	
+
 	public function __construct($base_url, $parameters=array()) {
-		
-		$this->base_url = $base_url;		
+
+		$this->base_url = $base_url;
 		$this->parameters = $parameters;
 	}
-	
+
 	public function aligastore_response($charset='ISO-8859-1') {
 		$parameters = [];
-		foreach ($this->parameters as $name => $value)
-			$parameters[] .= $name.'='.urlencode($value);
-		$url = $this->base_url . '?'.implode('&', $parameters);
+		foreach ($this->parameters as $name => $value) {
+			$parameters[] = $name.'='.urlencode($value);
+		}
 
+		$url = $this->base_url . '?'.implode('&', $parameters);
 		$get_data = new aligastore_get_data($url, $charset);
 
-		$this->data = $get_data->data; 
+		$this->data = $get_data->data;
 		return $get_data->data;
 	}
-	
+
 }
 
 ?>

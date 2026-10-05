@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: storages.class.php,v 1.2 2015-04-03 11:16:23 jpermanne Exp $
+// $Id: storages.class.php,v 1.6 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -45,8 +45,8 @@ class storages {
 		$storages = $xml->getElementsByTagName("storage");
 		for($i=0 ; $i<$storages->length ; $i++){
 			$storage = array();
-			$storage['class'] = ($charset != "utf-8" ? utf8_decode($storages->item($i)->getAttribute('class')) : $storages->item($i)->getAttribute('class'));
-			$storage['label'] = ($charset != "utf-8" ? utf8_decode($storages->item($i)->nodeValue) : $storages->item($i)->nodeValue);
+			$storage['class'] = ($charset != "utf-8" ? encoding_normalize::utf8_decode($storages->item($i)->getAttribute('class')) : $storages->item($i)->getAttribute('class'));
+			$storage['label'] = ($charset != "utf-8" ? encoding_normalize::utf8_decode($storages->item($i)->nodeValue) : $storages->item($i)->nodeValue);
 			if(substr($storage['label'],0,4) == "msg:"){
 				$storage['label'] = $msg[substr($storage['label'],4)];
 			}
@@ -63,7 +63,7 @@ class storages {
 		<div class='row'>&nbsp;</div>
 		";
 		
-		$id+=0;	
+		$id = intval($id);	
 		$form.="
 		<div class='row'>
 			<div class='colonne3'>
@@ -87,8 +87,10 @@ class storages {
 	} 
 	
 	public static function get_storage_class($id){
-		global $base_path,$include_path,$class_path;
-		$query = "select storage_class from storages where id_storage = ".($id*1);
+		global $class_path;
+		
+		$id = intval($id);
+		$query = "select storage_class from storages where id_storage = ".$id;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			$row = pmb_mysql_fetch_object($result);
@@ -108,7 +110,7 @@ class storages {
 		<div class='row'>&nbsp;</div>
 		";
 
-		$id+=0;
+		$id = intval($id);
 		$row =array();
 		if($id){
 			$query ="select * from storages where storage_object_type = '".$type."' and storage_num_object = '".$id."'";
@@ -144,7 +146,7 @@ class storages {
 		}	
 		$form.= "
 			</div>
-			<script type='text/javascript'>
+			<script>
 				function get_storage_params_form(class_name){
 					if(class_name!= 0){
 						var change= new http_request();
@@ -167,7 +169,7 @@ class storages {
 	public function save_form($type,$id){
 		global $storage_method,$storage_params;
 		
-		$id+=0;
+		$id = intval($id);
 		$row =array();
 		if($id){
 			$query ="select * from storages where storage_object_type = '".$type."' and storage_num_object = '".$id."'";
@@ -193,7 +195,7 @@ class storages {
 	}
 	
 	public function get_params_form($class_name,$params=array()){
-		global $base_path,$include_path,$class_path;
+		global $class_path;
 		
 		$exists = false;
 		foreach($this->list as $storage){

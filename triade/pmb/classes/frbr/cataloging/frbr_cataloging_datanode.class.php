@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_datanode.class.php,v 1.4 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_cataloging_datanode.class.php,v 1.4 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

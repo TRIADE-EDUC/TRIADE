@@ -1,0 +1,58 @@
+<!-- $Id: askmdp.tpl.html,v 1.8 2024/04/23 13:46:43 jparis Exp $ -->
+
+{% if global.opac_rgaa_active %}
+	<div id="askmdp">
+{% else %}
+	<blockquote id="askmdp" role="presentation">
+{% endif %}
+
+    {% if global.opac_rgaa_active %}
+    	<h1>{{ msg.mdp_forgotten }}</h1>
+    {% endif %}
+
+{% if send_email %}
+	<hr /><p class='texte'>{{ success_msg }}</p>
+{% else %}
+	<hr />
+	<p class='texte'>{{ msg.mdp_txt_intro_demande }}</p>
+	<script>
+		function validForm(event) {
+			if (!event.target || !event.target.email) {
+				event.preventDefault();
+				console.error('email not found');
+				return false;
+			}
+	
+			const email = event.target.email.value ?? '';
+			if (!validMail(email)) {
+				event.preventDefault();
+				return false;
+			}
+			return true;
+		}
+	
+		function validMail(email) {
+			var node = document.getElementById('invalid_email');
+			if (email.length == 0 || !is_valid_mail(email)) {
+				if (node) node.style.display = '';
+				return false;
+			}
+			if (node) node.style.display = 'none';
+			return true;
+		}
+	</script>
+	
+	<form action="askmdp.php" method="post" onsubmit="validForm(event)"><br />
+		<p id="invalid_email" {%if not email_unavailable %}style="display:none"{% endif %}>{{ msg.contact_form_error_email_adress }}</p>
+		<label for="askmdp_email" class="visually-hidden">{{ msg.subs_f_email }}</label>
+		<input id="askmdp_email" title='email' type="email" name="email" value="{{ email }}" placeholder="email@" autocomplete="email" onchange="validMail(event.target.value)" required>
+		&nbsp;&nbsp;
+		<input type="hidden" name="demande" value="ok" >
+		<input type="submit" name="ok" value="{{ msg.mdp_bt_send }}" class="bouton">
+	</form>
+{% endif %}
+{% if global.opac_rgaa_active %}
+	</div>
+{% else %}
+	</blockquote>
+{% endif %}

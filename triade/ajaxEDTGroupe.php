@@ -10,8 +10,8 @@ if (isset($_POST["idclasse"])) {
 	global $prefixe;
 	$data2=chercheClasse($_POST["idclasse"]);
 	$data=matGroup2($data2[0][1]);
-	for($i=0;$i<count($data);$i++) {
-		if (count($data) > 0) {
+	for($i=0;$i<countTriade($data);$i++) {
+		if (countTriade($data) > 0) {
 			echo serialize($data);
 		}else{
 			echo "";

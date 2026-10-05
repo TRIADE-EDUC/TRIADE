@@ -1,0 +1,24 @@
+<div id="registration">
+
+	<h1 class="section-title">
+		<template v-if="action == 'add' ">
+			{{ pmb.getMessage("animation", "animation_registration_add") }}
+		</template>
+		<template v-else-if="action == 'edit' ">
+			{{ pmb.getMessage("animation", "animation_registration_edit") }}
+		</template>
+		<template v-else >
+			{{ pmb.getMessage("animation", "animation_registration_list") }}
+		</template>
+	</h1>
+	
+	<template v-if="action == 'add' || action == 'edit'">
+		<registrationform :registrationlist="registrationlist" :pmb="pmb" :formdata="formdata" :action="action"></registrationform>
+	</template>
+	<template v-else-if="action == 'view'">
+		<registrationview :registrationlist="registrationlist" :pmb="pmb"></registrationview>
+	</template>
+	<template v-else>
+		<registration :registrationlist="registrationlist" :animationlist="animationlist" :pmb="pmb" :statuslist="statuslist" :selectedstatus="selectedstatus" :localisationlist="localisationlist"></registration>
+	</template>
+</div>

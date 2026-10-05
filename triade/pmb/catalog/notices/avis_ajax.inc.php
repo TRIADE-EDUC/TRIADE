@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis_ajax.inc.php,v 1.16 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: avis_ajax.inc.php,v 1.18 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -20,10 +20,11 @@ switch($quoifaire){
 }
 
 function show_form($id){
-	global $dbh, $msg, $charset,$pmb_javascript_office_editor;
+	global $msg, $charset,$pmb_javascript_office_editor;
 
+	$id = intval($id);
 	$req = "select sujet, commentaire from avis where id_avis='".$id."'";
-	$res = pmb_mysql_query($req,$dbh);
+	$res = pmb_mysql_query($req);
 	while(($avis = pmb_mysql_fetch_object($res))){
 		$sujet = $avis->sujet;
 		$desc = $avis->commentaire;
@@ -31,7 +32,7 @@ function show_form($id){
 	}
 	if ($pmb_javascript_office_editor) {
 		$office_editor_cmd_quit="if (typeof(tinyMCE) != 'undefined') tinyMCE_execCommand('mceRemoveControl', true, 'avis_desc_".$id."');";
-		$display .= "
+		$display = "
 		<div class='row'>
 			<label class='etiquette'>$msg[avis_sujet]</label> <br />
 			<input type='text' size='50' name='field_sujet_$id' id='field_sujet_$id' value='".htmlentities($sujet,ENT_QUOTES,$charset)."' />
@@ -47,7 +48,7 @@ function show_form($id){
 		";
 
 	} else{
-		$display .= "
+		$display = "
 		<div class='row'>
 			<label class='etiquette'>$msg[avis_sujet]</label>
 			<input type='text' class='saisie-20em' name='field_sujet_$id' id='field_sujet_$id' value='".htmlentities($sujet,ENT_QUOTES,$charset)."' />
@@ -74,10 +75,10 @@ function show_form($id){
 
 function update_avis($id){
 	global $desc, $sujet, $msg, $charset;
-	global $pmb_avis_note_display_mode;
 	
 	header('Content-Type: text/html;charset='.$charset);
 
+	$id = intval($id);
 	$req = "update avis set sujet='".$sujet."', commentaire='".$desc."' where id_avis='".$id."'";
 	pmb_mysql_query($req);
 

@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,11 +42,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -67,7 +67,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"],$_POST["annee_scolaire"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -112,7 +112,7 @@ if (MODNAMUR0 == "oui") {
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        	$nom_etablissement=trim($data[$i][0]);
        	$adresse=trim($data[$i][1]);
        	$postal=trim($data[$i][2]);
@@ -129,7 +129,7 @@ for($i=0;$i<count($data);$i++) {
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim("trimestre1");
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -138,7 +138,7 @@ $dateFinT1=dateForm($dateFin);
 
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
 //$dateRecup=recupDateTrim("trimestre2");
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -147,7 +147,7 @@ $dateFinT2=dateForm($dateFin);
 
 //$dateRecup=recupDateTrim("trimestre3");
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -171,11 +171,11 @@ $merge=new FPDF_Merge();
 
 
 $eleveT=recupEleve($_POST["saisie_classe"]); // recup liste eleve
-$effectif=count($eleveT);
+$effectif=countTriade($eleveT);
 
 $hautclassant=0;
 $profptab=rechercheprofpMulti($_POST["saisie_classe"]); // idprof,idclasse
-for($j=0;$j<count($profptab);$j++) {
+for($j=0;$j<countTriade($profptab);$j++) {
 	$profp1=recherche_personne2($profptab[$j][0]);
 	$profp1=trunchaine($profp1,14);
 	$profp[$j]=$profp1;
@@ -184,20 +184,20 @@ $profp=implode(', ',$profp);
 
 
 
-if (count($profptab) > 1) { $hautclassant=1.5; }
+if (countTriade($profptab) > 1) { $hautclassant=1.5; }
 
 @nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
 @rmdir('./data/pdf_bull/'.$classe_nom);
 
 $plageEleve=$_POST["plageEleve"];
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	// variable eleve
@@ -237,7 +237,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	// mise en place du logo
 	$photo=recup_photo_bulletin_idsite(chercheIdSite($_POST["saisie_classe"]));
-	if (count($photo) > 0) {
+	if (countTriade($photo) > 0) {
 		$logo="./data/image_pers/".$photo[0][0];
 		if (file_exists($logo)) {
 			$xlogo=25;
@@ -334,7 +334,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 
 	$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -466,11 +466,12 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// ------------------
 	$largeurMat=$LR3;
 	$hauteurMaT=$hauteurMatiere=6;
+	if (countTriade($ordre) >= 14) $hauteurMaT=$hauteurMatiere=5;
 	$Xmat=2;
 	$Ymat=$ycoor0;
 	
 	// Mise en place des matieres et nom de prof
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$totalAnnee="";
 		$totalMax="";
 		$pdf->SetTextColor(0,0,0);   // noir
@@ -1158,13 +1159,14 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
 <br /><br />
 <?php
 // gestion d'historie
+nettoyage_repertoire("./data/pdf_bull/$classe_nom");
 @destruction_bulletin($fichier,$classe_nom,$_POST["saisie_trimestre"],$dateDebut,$dateFin);
 $cr=historyBulletin($fichier,$classe_nom,$_POST["saisie_trimestre"],$dateDebut,$dateFin);
 if($cr == 1){

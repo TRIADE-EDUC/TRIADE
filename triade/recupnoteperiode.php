@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,7 +33,7 @@ SELECT
 	end
 	,m.sous_matiere,m.libelle,a.nb_heure
 FROM
-	${prefixe}affectations a, ${prefixe}matieres m
+	{$prefixe}affectations a, {$prefixe}matieres m
 WHERE
 	a.code_classe = '$idClasse'
 AND a.code_matiere = m.code_mat
@@ -62,7 +62,7 @@ SELECT
 	end
 	,m.sous_matiere,m.libelle,a.ects,a.langue
 FROM
-	${prefixe}affectations a, ${prefixe}matieres m
+	{$prefixe}affectations a, {$prefixe}matieres m
 WHERE
 	a.code_classe = '$idClasse'
 AND a.code_matiere = m.code_mat
@@ -92,7 +92,7 @@ SELECT
         end
         ,m.sous_matiere,m.libelle,a.ects,a.langue
 FROM
-        ${prefixe}affectations a, ${prefixe}matieres m
+        {$prefixe}affectations a, {$prefixe}matieres m
 WHERE
         a.code_classe = '$idClasse'
 AND a.code_matiere = m.code_mat
@@ -117,13 +117,13 @@ function recupEleve($idClasse,$anneeScolaire="") {
 	global $prefixe;
 	if ($anneeScolaire == "") $anneeScolaire=$_COOKIE["anneeScolaire"];
 	if (trim($anneeScolaire) == "") {
-		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM ${prefixe}eleves WHERE classe='$idClasse' ORDER BY nom,prenom";
+		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM {$prefixe}eleves WHERE classe='$idClasse' ORDER BY nom,prenom";
 		$curs=execSql($sql);
 		$liste=chargeMat($curs);
 		unset($curs);
 		return $liste;
 	}else{
-		$sql="(SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM ${prefixe}eleves , ${prefixe}classes  WHERE  classe='$idClasse' AND code_class='$idClasse' AND annee_scolaire='$anneeScolaire') UNION (SELECT e.nom,e.prenom,e.lv1,e.lv2,e.elev_id,e.date_naissance,e.lieu_naissance,e.adr1,e.code_post_adr1,e.commune_adr1,e.telephone,e.numero_eleve,e.tel_fixe_eleve FROM ${prefixe}eleves e , ${prefixe}classes c , ${prefixe}eleves_histo h WHERE h.idclasse='$idClasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire' GROUP BY e.elev_id ) ORDER BY 1 ";
+		$sql="(SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM {$prefixe}eleves , {$prefixe}classes  WHERE  classe='$idClasse' AND code_class='$idClasse' AND annee_scolaire='$anneeScolaire') UNION (SELECT e.nom,e.prenom,e.lv1,e.lv2,e.elev_id,e.date_naissance,e.lieu_naissance,e.adr1,e.code_post_adr1,e.commune_adr1,e.telephone,e.numero_eleve,e.tel_fixe_eleve FROM {$prefixe}eleves e , {$prefixe}classes c , {$prefixe}eleves_histo h WHERE h.idclasse='$idClasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire' GROUP BY e.elev_id ) ORDER BY 1 ";
 		$curs=execSql($sql);
 		$liste=chargeMat($curs);
 		unset($curs);
@@ -139,7 +139,7 @@ function verifAffichageMatierelv1($nomEleve,$prenomEleve,$matiere) {
 	$nomEleve=strtolower($nomEleve);
 	$prenomEleve=strtolower($prenomEleve);
 	$matiere=strtolower($matiere);
-	$sql="SELECT nom,prenom,lv1 FROM ${prefixe}eleves WHERE  nom='$nomEleve' AND prenom='$prenomEleve' AND lv1='$matiere'";
+	$sql="SELECT nom,prenom,lv1 FROM {$prefixe}eleves WHERE  nom='$nomEleve' AND prenom='$prenomEleve' AND lv1='$matiere'";
 	$curs=execSql($sql);
 	$curs=pg_numrows($curs);
 	return $curs;
@@ -149,7 +149,7 @@ function verifAffichageMatierelv1($nomEleve,$prenomEleve,$matiere) {
 function verifsousmatierebull($idMatiere) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_mat,sous_matiere,libelle FROM ${prefixe}matieres  WHERE code_mat='$idMatiere' ";
+	$sql="SELECT code_mat,sous_matiere,libelle FROM {$prefixe}matieres  WHERE code_mat='$idMatiere' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -164,7 +164,7 @@ function verifsousmatierebull($idMatiere) {
 function verifMatierAvecGroupeRecupId($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+	$sql="SELECT code_matiere,code_groupe FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -181,7 +181,7 @@ function verifMatierAvecGroupeRecupId($idMatiere,$idEleve,$idClasse,$ordreaffich
 function verifMatiereGroupe($idMatiere,$idEleve,$idClasse,$ordreaffich) {
         global $cnx;
         global $prefixe;
-        $sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+        $sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
         $curs=execSql($sql);
         $resultat=chargeMat($curs);
         unset($curs);
@@ -196,7 +196,7 @@ function verifMatiereGroupe($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 function verifMatierAvecGroupeRecupId2($idMatiere,$idClasse,$ordreaffich) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+	$sql="SELECT code_matiere,code_groupe FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -213,7 +213,7 @@ function verifMatierAvecGroupeRecupId2($idMatiere,$idClasse,$ordreaffich) {
 function recherche_prof($idMatiere,$idClasse,$ordre){
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage,code_prof FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre' ";
+	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage,code_prof FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	return $resultat[0][4];
@@ -222,7 +222,7 @@ function recherche_prof($idMatiere,$idClasse,$ordre){
 function verifMatiereAvecGroupe3($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -233,7 +233,7 @@ function verifMatiereAvecGroupe3($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 		$idGr=$resultat[0][1];
 	}
 
-	$sql="SELECT group_id,liste_elev FROM ${prefixe}groupes WHERE group_id='$idGr'";
+	$sql="SELECT group_id,liste_elev FROM {$prefixe}groupes WHERE group_id='$idGr'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$liste_eleves=preg_replace('/\{/',"",$data[0][1]);
@@ -250,7 +250,7 @@ function verifMatiereAvecGroupe3($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 function verifMatiereAvecGroupe2($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -260,7 +260,7 @@ function verifMatiereAvecGroupe2($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 	}else {
 		$idGr=$resultat[0][1];
 	}
-	$sql="SELECT group_id,liste_elev FROM ${prefixe}groupes WHERE group_id='$idGr'";
+	$sql="SELECT group_id,liste_elev FROM {$prefixe}groupes WHERE group_id='$idGr'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$liste_eleves=preg_replace('/\{/',"",$data[0][1]);
@@ -279,7 +279,7 @@ function verifMatiereAvecGroupe2($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 function verifElevDansGroupe($idGr,$idEleve) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT group_id,liste_elev FROM ${prefixe}groupes WHERE group_id='$idGr'";
+	$sql="SELECT group_id,liste_elev FROM {$prefixe}groupes WHERE group_id='$idGr'";
         $res=execSql($sql);
         $data=chargeMat($res);
         $liste_eleves=preg_replace('/\{/',"",$data[0][1]);
@@ -296,7 +296,7 @@ function verifElevDansGroupe($idGr,$idEleve) {
 function verifMatiereAvecGroupe($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -307,7 +307,7 @@ function verifMatiereAvecGroupe($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 		$idGr=$resultat[0][1];
 	}
 
-	$sql="SELECT group_id,liste_elev FROM ${prefixe}groupes WHERE group_id='$idGr'";
+	$sql="SELECT group_id,liste_elev FROM {$prefixe}groupes WHERE group_id='$idGr'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$liste_eleves=preg_replace('/\{/',"",$data[0][1]);
@@ -325,7 +325,7 @@ function verifMatiereAvecGroupe($idMatiere,$idEleve,$idClasse,$ordreaffich) {
 function verifMatiereOPT4($idmatiere,$idClasse,$ordre) {
 	global $cnx;
         global $prefixe;
-        $sql="SELECT langue FROM ${prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre'";
+        $sql="SELECT langue FROM {$prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre'";
 	$curs=execSql($sql);
         $resultat=chargeMat($curs);
 	if ($resultat[0][1] == "OPT4") return true;
@@ -336,7 +336,7 @@ function verifMatiereOPT4($idmatiere,$idClasse,$ordre) {
 function verifMatiereAvecGroupeUE($idMatiere,$idEleve,$idClasse,$ordre) {
          global $cnx;
          global $prefixe;
-         $sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre' ";
+         $sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordre' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	unset($curs);
@@ -347,7 +347,7 @@ function verifMatiereAvecGroupeUE($idMatiere,$idEleve,$idClasse,$ordre) {
 		$idGr=$resultat[0][1];
 	}
 
-	$sql="SELECT group_id,liste_elev FROM ${prefixe}groupes WHERE group_id='$idGr'";
+	$sql="SELECT group_id,liste_elev FROM {$prefixe}groupes WHERE group_id='$idGr'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$liste_eleves=preg_replace('/\{/',"",$data[0][1]);
@@ -366,9 +366,9 @@ function recupECTS($idmatiere,$idClasse,$trim) {
 	global $cnx;
 	global $prefixe;
 	if ($trim == "T4") {
-		$sql="SELECT ects FROM ${prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'";
+		$sql="SELECT ects FROM {$prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'";
 	}else{
-		$sql="SELECT ects FROM ${prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'";
+		$sql="SELECT ects FROM {$prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'";
 	}		
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
@@ -378,7 +378,7 @@ function recupECTS($idmatiere,$idClasse,$trim) {
 function recupCoefUE($idmatiere,$idClasse,$trim) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT coef FROM ${prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'  AND (trim='tous' OR trim='$trim') ";
+	$sql="SELECT coef FROM {$prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'  AND (trim='tous' OR trim='$trim') ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	return $resultat[0][0];
@@ -388,7 +388,7 @@ function recupCoefUEviaGrp($idmatiere,$idClasse,$trim,$idgroupe) {
         global $cnx;
         global $prefixe;
 	if ($idgroupe == '') $idgroupe=0;
-        $sql="SELECT coef FROM ${prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'  AND (trim='tous' OR trim='$trim') AND code_groupe='$idgroupe' ";
+        $sql="SELECT coef FROM {$prefixe}affectations WHERE code_matiere='$idmatiere' AND code_classe='$idClasse'  AND (trim='tous' OR trim='$trim') AND code_groupe='$idgroupe' ";
         $curs=execSql($sql);
         $resultat=chargeMat($curs);
         return $resultat[0][0];
@@ -412,7 +412,7 @@ function recupNote($idEleve,$idMatiere,$dateDebut,$dateFin) {
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -432,7 +432,7 @@ function recupNote($idEleve,$idMatiere,$dateDebut,$dateFin) {
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -464,7 +464,7 @@ function recupNote2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		notationsur,
 		prof_id
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -485,7 +485,7 @@ function recupNote2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		notationsur,
 		prof_id
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -517,7 +517,7 @@ function recupNoteBull($nbNote,$idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$
 		notationsur,
 		prof_id
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -539,7 +539,7 @@ function recupNoteBull($nbNote,$idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$
 		notationsur,
 		prof_id
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -554,7 +554,7 @@ function recupNoteBull($nbNote,$idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$
 	$curs=execSql($sql);
 	$liste=chargeMat($curs);
 	unset($curs);
-	for($i=0;$i<count($liste);$i++) {
+	for($i=0;$i<countTriade($liste);$i++) {
 		if ($liste[$i][0] < 0) {
 			$liste[$i][0]=preg_replace('/.00/','',$liste[$i][0]);
 			$liste[$i][0]=preg_replace('/-1/','abs',$liste[$i][0]);
@@ -586,7 +586,7 @@ function recupExam($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -604,7 +604,7 @@ function recupExam($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -619,7 +619,7 @@ function recupExam($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -653,7 +653,7 @@ function recupNoteExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$examen
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -665,7 +665,7 @@ function recupNoteExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$examen
 	$curs=execSql($sql);
 	$liste=chargeMat($curs);
 	unset($curs);
-	for($i=0;$i<count($liste);$i++){
+	for($i=0;$i<countTriade($liste);$i++){
 		$coef=$liste[$i][1];
 		$listing.=$liste[$i][0].", ";
 	}	
@@ -685,7 +685,7 @@ function recupNoteGroupeExamen($idEleve,$idMatiere,$idgroupe,$dateDebut,$dateFin
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -698,7 +698,7 @@ function recupNoteGroupeExamen($idEleve,$idMatiere,$idgroupe,$dateDebut,$dateFin
 	$curs=execSql($sql);
 	$liste=chargeMat($curs);
 	unset($curs);
-	for($i=0;$i<count($liste);$i++){
+	for($i=0;$i<countTriade($liste);$i++){
 		$coef=$liste[$i][1];
 		$listing.=$liste[$i][0].", ";
 	}	
@@ -718,7 +718,7 @@ function recupExamPigierNimes($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -732,7 +732,7 @@ function recupExamPigierNimes($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -763,7 +763,7 @@ function listingNoteExam($idEleve,$idMatiere,$dateDebut,$dateFin,$exam,$idprof) 
 	SELECT
 		TRUNCATE(note,2)
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -793,7 +793,7 @@ function moyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		notationsur
 
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -808,7 +808,7 @@ function moyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -845,7 +845,7 @@ function moyenneDevoir($idMatiere,$date,$idprof,$sujet,$coeff,$examen,$idgroupe,
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		code_mat='$idMatiere'
 		AND date = '$date'
@@ -864,7 +864,7 @@ function moyenneDevoir($idMatiere,$date,$idprof,$sujet,$coeff,$examen,$idgroupe,
 	$nbcoef=0;
 	$min=10000;
 	$max=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -910,7 +910,7 @@ function moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin) {
 		notationsur
 
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -924,7 +924,7 @@ function moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -959,7 +959,7 @@ function moyenneEleveMatiereBrevetViaExamen($idEleve,$idMatiere,$dateDebut,$date
 		notationsur
 
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -974,7 +974,7 @@ function moyenneEleveMatiereBrevetViaExamen($idEleve,$idMatiere,$dateDebut,$date
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1011,7 +1011,7 @@ function sommeMoyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 		notationsur
 
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1026,7 +1026,7 @@ function sommeMoyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1070,7 +1070,7 @@ function moyenneEleveMatiereExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idpr
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1085,7 +1085,7 @@ function moyenneEleveMatiereExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idpr
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1124,7 +1124,7 @@ function verifSiAbsExamen2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$exam
         SELECT
                 TRUNCATE(note,2)
         FROM
-                ${prefixe}notes
+                {$prefixe}notes
         WHERE
                 elev_id='$idEleve'
                 AND code_mat='$idMatiere'
@@ -1137,7 +1137,7 @@ function verifSiAbsExamen2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$exam
         $liste=chargeMat($curs);
         unset($curs);
         $notefinale="";
-        for($cc=0;$cc<count($liste);$cc++) {
+        for($cc=0;$cc<countTriade($liste);$cc++) {
                 if ($liste[$cc][0]=="-1.00") { return "ABS" ;    }
                 if ($liste[$cc][0]=="-2.00") { return "DISP" ;   }
                 if ($liste[$cc][0]=="-3.00") { return "ABS"  ;   }
@@ -1167,7 +1167,7 @@ function verifSiAbsExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$exame
         SELECT
                 TRUNCATE(note,2)
         FROM
-                ${prefixe}notes
+                {$prefixe}notes
         WHERE
                 elev_id='$idEleve'
                 AND code_mat='$idMatiere'
@@ -1180,7 +1180,7 @@ function verifSiAbsExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$exame
         $liste=chargeMat($curs);
         unset($curs);
         $notefinale="";
-        for($cc=0;$cc<count($liste);$cc++) {
+        for($cc=0;$cc<countTriade($liste);$cc++) {
                 if ($liste[$cc][0]=="-1.00") { $abs='1'; continue; }
                 if ($liste[$cc][0]=="-2.00") { $disp='1'; continue; }
                 if ($liste[$cc][0]=="-3.00") { $abs='1'; continue; }
@@ -1213,7 +1213,7 @@ function moyenneEleveMatiereSansExam($idEleve,$idMatiere,$dateDebut,$dateFin,$id
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1233,7 +1233,7 @@ function moyenneEleveMatiereSansExam($idEleve,$idMatiere,$dateDebut,$dateFin,$id
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1250,7 +1250,7 @@ function moyenneEleveMatiereSansExam($idEleve,$idMatiere,$dateDebut,$dateFin,$id
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1289,7 +1289,7 @@ function moyenneEleveMatiereExam($idEleve,$idMatiere,$examen,$idprof) {
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1307,7 +1307,7 @@ function moyenneEleveMatiereExam($idEleve,$idMatiere,$examen,$idprof) {
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -1322,7 +1322,7 @@ function moyenneEleveMatiereExam($idEleve,$idMatiere,$examen,$idprof) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1357,7 +1357,7 @@ function moyenneCCMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1371,7 +1371,7 @@ function moyenneCCMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1404,7 +1404,7 @@ function moyenneCCMatierePigierNimes($idEleve,$idMatiere,$dateDebut,$dateFin,$id
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1418,7 +1418,7 @@ function moyenneCCMatierePigierNimes($idEleve,$idMatiere,$dateDebut,$dateFin,$id
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1454,7 +1454,7 @@ function moyenneEleveMatiereGroupeSansExam($idEleve,$idMatiere,$dateDebut,$dateF
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1474,7 +1474,7 @@ function moyenneEleveMatiereGroupeSansExam($idEleve,$idMatiere,$dateDebut,$dateF
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1513,7 +1513,7 @@ function moyenneEleveMatiereGroupe($idEleve,$idMatiere,$dateDebut,$dateFin,$idgr
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1530,7 +1530,7 @@ function moyenneEleveMatiereGroupe($idEleve,$idMatiere,$dateDebut,$dateFin,$idgr
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1559,11 +1559,11 @@ function verifNoteDansMatiere($idMatiere,$idClasse,$idgroupe,$dateDebut,$dateFin
 	global $prefixe;
 	$dateDebut=dateFormBase($dateDebut);
 	$dateFin=dateFormBase($dateFin);
-	$sql="SELECT * FROM ${prefixe}notes WHERE code_mat='$idMatiere' AND date >= '$dateDebut' AND date <= '$dateFin' 
+	$sql="SELECT * FROM {$prefixe}notes WHERE code_mat='$idMatiere' AND date >= '$dateDebut' AND date <= '$dateFin' 
 		AND ((id_classe='$idClasse' AND  id_groupe = '0') OR (id_groupe = '$idgroupe'  AND   id_classe='-1')  OR  (id_groupe = '$idgroupe'  AND   id_classe='$idClasse') ) ";
 	$curs=execSql($sql);
 	$liste=chargeMat($curs);
-	if (count($liste) > 0) { return false ; }else{ return true; }
+	if (countTriade($liste) > 0) { return false ; }else{ return true; }
 }
 
 function sommeMoyenneEleveMatiereGroupe($idEleve,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof) {
@@ -1580,7 +1580,7 @@ function sommeMoyenneEleveMatiereGroupe($idEleve,$idMatiere,$dateDebut,$dateFin,
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1597,7 +1597,7 @@ function sommeMoyenneEleveMatiereGroupe($idEleve,$idMatiere,$dateDebut,$dateFin,
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1644,7 +1644,7 @@ function moyenneEleveMatiereGroupeExamen($idEleve,$idMatiere,$dateDebut,$dateFin
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1664,7 +1664,7 @@ function moyenneEleveMatiereGroupeExamen($idEleve,$idMatiere,$dateDebut,$dateFin
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1705,7 +1705,7 @@ function moyenneEleveMatiereGroupeExam($idEleve,$idMatiere,$examen,$idgroupe,$id
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1726,7 +1726,7 @@ function moyenneEleveMatiereGroupeExam($idEleve,$idMatiere,$examen,$idgroupe,$id
 		typenote,
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -1744,7 +1744,7 @@ function moyenneEleveMatiereGroupeExam($idEleve,$idMatiere,$examen,$idgroupe,$id
 	unset($curs);
 	$notefinale="";
 	$nbcoef=0;
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1771,7 +1771,7 @@ function moyenneEleveMatiereGroupeExam($idEleve,$idMatiere,$examen,$idgroupe,$id
 function coeffMatiere($idMatiere,$idClasse){
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT coef FROM ${prefixe}affectations WHERE code_classe='$idClasse' AND code_matiere='$idMatiere' ";
+	$sql="SELECT coef FROM {$prefixe}affectations WHERE code_classe='$idClasse' AND code_matiere='$idMatiere' ";
 	$curs=execSql($sql);
 	$liste2=chargeMat($curs);
 	unset($curs);
@@ -1781,11 +1781,11 @@ function coeffMatiere($idMatiere,$idClasse){
 function recupCoeff($idMatiere,$idClasse,$ordre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT coef FROM ${prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' ";
+	$sql="SELECT coef FROM {$prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' ";
 	$curs=execSql($sql);
 	$liste2=chargeMat($curs);
 	unset($curs);
-	if (count($liste2) > 0) {
+	if (countTriade($liste2) > 0) {
 		return $liste2[0][0];
 	}else {
 		return "";
@@ -1932,7 +1932,7 @@ function recherchetypenotegroupe($idMatiere,$dateDebut,$dateFin,$idgroupe) {
 
 	$dateDebut=dateFormBase($dateDebut);
 	$dateFin=dateFormBase($dateFin);
-	$sql="SELECT truncate(note,2),coef,typenote FROM ${prefixe}notes WHERE note >= 0 AND code_mat='$idMatiere' AND date>='$dateDebut' AND date<='$dateFin' AND ( id_groupe = '$idgroupe' OR id_groupe = 0 )";
+	$sql="SELECT truncate(note,2),coef,typenote FROM {$prefixe}notes WHERE note >= 0 AND code_mat='$idMatiere' AND date>='$dateDebut' AND date<='$dateFin' AND ( id_groupe = '$idgroupe' OR id_groupe = 0 )";
 	// AND ( id_groupe = '$idgroupe' OR id_groupe = 0 )";
 	// supprimer OR id_groupe = 0
 
@@ -1940,7 +1940,7 @@ function recherchetypenotegroupe($idMatiere,$dateDebut,$dateFin,$idgroupe) {
         $liste=chargeMat($curs);
 	unset($curs);
 	$noteret="fr";
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1957,12 +1957,12 @@ function recherchetypenote($idMatiere,$dateDebut,$dateFin,$idclasse) {
 
 	$dateDebut=dateFormBase($dateDebut);
 	$dateFin=dateFormBase($dateFin);
-	$sql="SELECT truncate(note,2),coef,typenote FROM ${prefixe}notes WHERE code_mat='$idMatiere' AND date>='$dateDebut' AND date<='$dateFin' AND id_classe = '$idclasse'";
+	$sql="SELECT truncate(note,2),coef,typenote FROM {$prefixe}notes WHERE code_mat='$idMatiere' AND date>='$dateDebut' AND date<='$dateFin' AND id_classe = '$idclasse'";
 	$curs=execSql($sql);
         $liste=chargeMat($curs);
 	unset($curs);
 	$noteret="fr";
-	for($cc=0;$cc<count($liste);$cc++) {
+	for($cc=0;$cc<countTriade($liste);$cc++) {
 		if ($liste[$cc][0]=="-1") { continue; }
 		if ($liste[$cc][0]=="-2") { continue; }
 		if ($liste[$cc][0]=="-3") { continue; }
@@ -1980,7 +1980,7 @@ function moyeMatGenExamen($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof,$exam
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiereExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$examen);
 		if (trim($moyenneEleve) != "") {
@@ -2006,7 +2006,7 @@ function moyeMatGen($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof) {
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof);
 		if (trim($moyenneEleve) != "") {
@@ -2032,7 +2032,7 @@ function moyeMatGenSansExam($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof) {
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiereSansExam($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof);
 		if (trim($moyenneEleve) != "") {
@@ -2057,7 +2057,7 @@ function moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idclasse) {
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if (trim($moyenneEleve) != "") {
@@ -2082,7 +2082,7 @@ function moyeMatGenBrevetExamen($idMatiere,$dateDebut,$dateFin,$idclasse,$examen
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiereBrevetViaExamen($idEleve,$idMatiere,$dateDebut,$dateFin,$examen);
 		if (trim($moyenneEleve) != "") {
@@ -2106,7 +2106,7 @@ function sommeMoyeMatGen($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof) {
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof);
 		if (trim($moyenneEleve) != "") {
@@ -2132,7 +2132,7 @@ function Rangs($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof) {
 	$tablisteEleve=recupEleve($idclasse); 
 	$ii=0;
 	$notefinale=0;
-	for($i=0;$i<count($tablisteEleve);$i++) {
+	for($i=0;$i<countTriade($tablisteEleve);$i++) {
 		$idEleve=$tablisteEleve[$i][4];
 		$moyenneEleve=moyenneEleveMatiere($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof);	
 		if (trim($moyenneEleve) != "") {
@@ -2152,7 +2152,7 @@ function Rangs($idMatiere,$dateDebut,$dateFin,$idclasse,$idprof) {
 function profAff($idMatiere,$idClasse,$ordre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT code_prof FROM ${prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' ";
+	$sql="SELECT code_prof FROM {$prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' ";
 	$curs=execSql($sql);
 	$liste2=chargeMat($curs);
 	unset($curs);
@@ -2163,13 +2163,13 @@ function calculMoyenClasseBlanc($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,$ex
 	global $cnx;
 	global $prefixe;
 	$ordre=ordre_matiere($idClasse);
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		//moyennes matières
@@ -2226,13 +2226,13 @@ function calculMoyenClasse($idClasse,$eleveT,$dateDebut,$dateFin,$ordre){
 	global $cnx;
 	global $prefixe;
 	$ordre=ordre_matiere($idClasse);
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		//moyennes matières
@@ -2275,13 +2275,13 @@ function calculMoyenClasseSansExam($idClasse,$eleveT,$dateDebut,$dateFin,$ordre)
 	global $cnx;
 	global $prefixe;
 	$ordre=ordre_matiere($idClasse);
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		//moyennes matières
@@ -2324,13 +2324,13 @@ function calculMoyenClasse2($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,$tabMat
 	global $cnx;
 	global $prefixe;
 	$ordre=ordre_matiere($idClasse);
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		//moyennes matières
@@ -2373,16 +2373,16 @@ function calculNoteVieScolaireEns($idEleve,$trimestre) {
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE ideleve='$idEleve' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ORDER BY idclasse DESC";
+	$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE ideleve='$idEleve' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ORDER BY idclasse DESC";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
 	$idclasse=$data[0][1];
-	$sql="SELECT coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data2=chargeMat($curs);
 	$coefprof=$data2[0][0];
 	$coefviescolaire=$data2[0][1];
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
 		$idmatiere=$data[$i][2];
 		$note=$data[$i][0];
 		if ($note >= 0) {
@@ -2408,16 +2408,16 @@ function calculNoteVieScolaire($idEleve,$coefProf,$coefVieScol,$trimestre,$exame
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE ideleve='$idEleve' AND trimestre='$trimestre' AND examen='$examen' AND annee_scolaire='$anneeScolaire' ORDER BY idclasse DESC";
+	$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE ideleve='$idEleve' AND trimestre='$trimestre' AND examen='$examen' AND annee_scolaire='$anneeScolaire' ORDER BY idclasse DESC";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
 	$idclasse=$data[0][1];
-	$sql="SELECT coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse'  AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse'  AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data2=chargeMat($curs);
 	$coefprof=$data2[0][0];
 	$coefviescolaire=$data2[0][1];
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
 		$idmatiere=$data[$i][2];
 		$note=$data[$i][0];
 		if ($note >= 0) {
@@ -2449,16 +2449,16 @@ function calculNoteVieScolaireJusquauTrimestre($idEleve,$coefProf,$coefVieScol,$
 	if ($trimestre == "trimestre2") { $tabT[]="trimestre1";$tabT[]="trimestre2"; }
 	if ($trimestre == "trimestre3") { $tabT[]="trimestre1";$tabT[]="trimestre2";$tabT[]="trimestre3"; }
 	foreach($tabT as $key => $trimestre) {
-		$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE ideleve='$idEleve' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ";
+		$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE ideleve='$idEleve' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ";
 		$curs=execSql($sql);
 		$data=chargeMat($curs);
 		$idclasse=$data[0][1];
-		$sql="SELECT coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+		$sql="SELECT coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 		$curs=execSql($sql);	
 		$data2=chargeMat($curs);
 		$coefprof=$data2[0][0];
 		$coefviescolaire=$data2[0][1];
-		for ($i=0;$i<count($data);$i++) {
+		for ($i=0;$i<countTriade($data);$i++) {
 			$idmatiere=$data[$i][2];
 			$note=$data[$i][0];
 			if ($note >= 0) {
@@ -2488,16 +2488,16 @@ function calculNoteVieScolaireBrevet($idEleve,$idclasse) {
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE ideleve='$idEleve' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE ideleve='$idEleve' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
 	//$idclasse=$data[0][1];
-	$sql="SELECT coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data2=chargeMat($curs);
 	$coefprof=$data2[0][0];
 	$coefviescolaire=$data2[0][1];
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
 		$idmatiere=$data[$i][2];
 		$note=$data[$i][0];
 		if ($note >= 0) {
@@ -2526,15 +2526,15 @@ function moyeMatGenVieScolaireBrevet($idclasse) {
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT   coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT   coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data2=chargeMat($curs);
 	$coefprof=$data2[0][0];
 	$coefviescolaire=$data2[0][1];
-	$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
 		$idmatiere=$data[$i][2];
 		$note=$data[$i][0];
 		if ($note >= 0) {
@@ -2565,15 +2565,15 @@ function moyeMatGenVieScolaire($trimestre,$idclasse) {
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT   coefprof,coefviescolaire FROM ${prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT   coefprof,coefviescolaire FROM {$prefixe}notes_scolaire_param WHERE idclasse='$idclasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data2=chargeMat($curs);
 	$coefprof=$data2[0][0];
 	$coefviescolaire=$data2[0][1];
-	$sql="SELECT  note,idclasse,idmatiere FROM ${prefixe}notes_scolaire WHERE idclasse='$idclasse' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT  note,idclasse,idmatiere FROM {$prefixe}notes_scolaire WHERE idclasse='$idclasse' AND  trimestre='$trimestre' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
 		$idmatiere=$data[$i][2];
 		$note=$data[$i][0];
 		if ($note >= 0) {
@@ -2616,7 +2616,7 @@ function verifMatFacul($tabMatFacul,$idmatiere,$note) {
 
 function nbMatiere($ordre,$idEleve,$idClasse) {
 	$nb=0;
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$TT=0;
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
@@ -2674,7 +2674,7 @@ function moyenEleveMat2($idEleve,$idMatiere,$dateDebut,$dateFin,$idclasse,$ordre
 function verifMatiereAvecGroupeSansEleve($idMatiere,$idClasse,$ordreaffich) {
         global $cnx;
         global $prefixe;
-        $sql="SELECT code_groupe FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
+        $sql="SELECT code_groupe FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND ordre_affichage='$ordreaffich' ";
         $curs=execSql($sql);
         $resultat=chargeMat($curs);
         unset($curs);
@@ -2687,7 +2687,7 @@ function moyenEleveUE($code_ue,$idClasse,$idEleve,$trimestre,$dateDebut,$dateFin
         global $cnx;
 	global $prefixe;
 	$listeMatiere=recupMatiereUE($code_ue,$idClasse);
-	for($i=0;$i<count($listeMatiere);$i++) {
+	for($i=0;$i<countTriade($listeMatiere);$i++) {
 		$idmatiere=$listeMatiere[$i][0];
 		$idprof=$listeMatiere[$i][2];
 		$verifGroupe=verifMatiereAvecGroupeUE($idmatiere,$idEleve,$idClasse,$ordre);
@@ -2720,7 +2720,7 @@ function moyenEleveUESansOPT4($code_ue,$idClasse,$idEleve,$trimestre,$dateDebut,
         global $cnx;
         global $prefixe;
         $listeMatiere=recupMatiereUE($code_ue,$idClasse);
-        for($i=0;$i<count($listeMatiere);$i++) {
+        for($i=0;$i<countTriade($listeMatiere);$i++) {
                 $idmatiere=$listeMatiere[$i][0];
 		if (verifMatiereOPT4($idmatiere,$idClasse,$ordre)) continue;
                 $idprof=$listeMatiere[$i][2];
@@ -2754,11 +2754,11 @@ function moyenEleveUESansOPT4($code_ue,$idClasse,$idEleve,$trimestre,$dateDebut,
 function recupCoeffViaTrim($idMatiere,$idClasse,$ordre,$tri) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT coef FROM ${prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' AND (trim='$tri' OR trim='tous')";
+	$sql="SELECT coef FROM {$prefixe}affectations WHERE ordre_affichage='$ordre' AND code_classe='$idClasse' AND code_matiere='$idMatiere' AND (trim='$tri' OR trim='tous')";
 	$curs=execSql($sql);
 	$liste2=chargeMat($curs);
 	unset($curs);
-	if (count($liste2) > 0) {
+	if (countTriade($liste2) > 0) {
 		return $liste2[0][0];
 	}else {
 		return "";
@@ -2776,7 +2776,7 @@ function recupExamPigierAix($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
                 TRUNCATE(coef,2),
                 notationsur
         FROM
-                ${prefixe}notes
+                {$prefixe}notes
         WHERE
                 elev_id='$idEleve'
         	AND code_mat='$idMatiere'
@@ -2790,7 +2790,7 @@ function recupExamPigierAix($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
         unset($curs);
         $notefinale="";
         $nbcoef=0;
-        for($cc=0;$cc<count($liste);$cc++) {
+        for($cc=0;$cc<countTriade($liste);$cc++) {
                 if ($liste[$cc][0]=="-1") { continue; }
                 if ($liste[$cc][0]=="-2") { continue; }
                 if ($liste[$cc][0]=="-3") { continue; }
@@ -2816,10 +2816,10 @@ function verifABSPartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$examen
         global $prefixe;
         $dateDebut=dateFormBase($dateDebut);
         $dateFin=dateFormBase($dateFin);
-        $sql="SELECT * FROM ${prefixe}notes WHERE elev_id='$idEleve' AND code_mat='$idMatiere' AND date >= '$dateDebut' AND date <= '$dateFin' AND prof_id='$idprof' AND noteexam = '$examen' AND note = '-1'"; 
+        $sql="SELECT * FROM {$prefixe}notes WHERE elev_id='$idEleve' AND code_mat='$idMatiere' AND date >= '$dateDebut' AND date <= '$dateFin' AND prof_id='$idprof' AND noteexam = '$examen' AND note = '-1'"; 
         $curs=execSql($sql);
         $liste=chargeMat($curs);
-        return(count($liste));
+        return(countTriade($liste));
 }
 
 ?>

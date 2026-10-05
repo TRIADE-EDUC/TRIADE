@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: en_UK.xml,v 1.19 2018-06-22 10:00:09 ngantier Exp $ -->
+<!-- $Id: en_UK.xml,v 1.27 2024/04/03 13:12:55 qvarin Exp $ -->
 <XMLlist>
 <!-- Types de page  -->
+
 <entry code="1">Search</entry>
 <entry code="2">Results</entry>
 <entry code="3">Record results</entry>
@@ -37,8 +38,10 @@
 <entry code="34">Univers</entry>
 <entry code="35">Segment</entry>
 <entry code="36">PNB</entry>
+<entry code="40">Animation</entry>
 
 <!-- Sous-Types de page  -->
+
 <entry code="101">Quick Search</entry>
 <entry code="102">Advanced Search</entry>
 <entry code="103">Terms Search</entry>
@@ -47,6 +50,8 @@
 <entry code="106">Predefined Search</entry>
 <entry code="107">Homepage Search</entry>
 <entry code="108">Search on a periodical browser</entry>
+<entry code="109">Recherche multi-critères autorités</entry>
+
 <entry code="201">Intermediate result from Quick Search</entry>
 <entry code="202">Intermediate result from Advanced Search</entry>
 <entry code="203">Intermediate result from Terms Search</entry>
@@ -54,6 +59,8 @@
 <entry code="205">Intermediate result from Tags Search</entry>
 <entry code="206">Intermediate result from Predefined Search</entry>
 <entry code="207">Intermediate result from Homepage Search</entry>
+<entry code="208">Résultat intermédiaire d'une recherche multi-critères autorités</entry>
+
 <entry code="301">Results from Title Search</entry>
 <entry code="302">Results from All Fields Search</entry>
 <entry code="303">Results from E-Copies Search</entry>
@@ -63,6 +70,7 @@
 <entry code="307">Addition of a facet on the search results</entry>
 <entry code="308">Deletion of a facet on the search results</entry>
 <entry code="309">Results from Tags Search</entry>
+
 <entry code="401">Results from Author Search</entry>
 <entry code="402">Results from Publisher Search</entry>
 <entry code="403">Results from Category Search</entry>
@@ -72,6 +80,9 @@
 <entry code="407">Results from Class Number Search</entry>
 <entry code="408">Results from Tags Search</entry>
 <entry code="409">Results from Notes or Recap Search</entry>
+<entry code="410">Résultats d'une recherche par concepts</entry>
+<entry code="411">Résultats d'une recherche multi-critères autorités</entry>
+
 <entry code="501">Author</entry>
 <entry code="502">Publisher</entry>
 <entry code="503">Category</entry>
@@ -81,10 +92,12 @@
 <entry code="507">Class Number</entry>
 <entry code="508">Collection</entry>
 <entry code="509">Fiche Concept</entry>
+
 <entry code="601">Monograph display</entry>
 <entry code="602">Serial display</entry>
 <entry code="603">Serial check-in display</entry>
 <entry code="604">Article display</entry>
+
 <entry code="701">Overdue Loans</entry>
 <entry code="702">Current loans / Holds</entry>
 <entry code="703">Holds</entry>
@@ -97,12 +110,15 @@
 <entry code="710">Valid suggestion</entry>
 <entry code="711">View suggestions</entry>
 <entry code="712">Multiple suggestion</entry>
+
 <entry code="713">Private reading lists</entry>
 <entry code="714">Public reading lists</entry>
 <entry code="715">Access request to reading lists</entry>
 <entry code="716">Print reading lists</entry>
+
 <entry code="717">Make a request</entry>
 <entry code="718">My requests</entry>
+
 <entry code="719">Previous loans</entry>
 <entry code="720">Loan of a document</entry>
 <entry code="721">Return of a document</entry>
@@ -113,6 +129,19 @@
 <entry code="726">Mes demandes de numérisation</entry>
 <entry code="727">Edit an alert</entry>
 <entry code="728">Désinscription d'une alerte</entry>
+<entry code="730">Mot de passe oublié</entry>
+<entry code="731">Page d'inscription</entry>
+
+<entry code="732">Mes Animations</entry>
+
+<entry code="733">Mes Contributions</entry>
+<entry code="734">Nouvelle contribution</entry>
+<entry code="735">Mes contributions en cours</entry>
+<entry code="736">Mes contributions validées</entry>
+<entry code="738">Formulaire de contribution</entry>
+
+<entry code="737">Mes prêts numériques</entry>
+
 <entry code="801">Show Basket</entry>
 <entry code="802">Print Basket</entry>
 <entry code="803">Export Basket</entry>
@@ -123,47 +152,88 @@
 <entry code="808">Sorting of the basket</entry>
 <entry code="809">Transform the content of the basket into a multiple suggestion</entry>
 <entry code="810">Transform the content of the basket into a reading list</entry>
+
 <entry code="901">History</entry>
+
 <entry code="1001">Shelves</entry>
 <entry code="1002">Shelves list</entry>
+
 <entry code="1101">Infopage</entry>
+
 <entry code="1201">Add tags</entry>
+
 <entry code="1301">Reviews</entry>
 <entry code="1302">Add a review</entry>
+
 <entry code="1401">Make a suggestion (From Search)</entry>
 <entry code="1402">Valid a suggestion (From Search)</entry>
+
 <entry code="1501">RSS</entry>
+
 <entry code="1601">Section</entry>
+
 <entry code="1701">Sort</entry>
+
 <entry code="1801">Info</entry>
+
 <entry code="1901">Photo library</entry>
+
 <entry code="2001">Download of a digital document</entry>
 <entry code="2002">Display of a digital document</entry>
+<entry code="2003">Téléchargement d'un document numérique du portfolio</entry>
+
 <entry code="2101">Custom authorities</entry>
+
 <entry code="2201">Periodical browser</entry>
+
 <entry code="2301">SDI basket</entry>
+
 <entry code="2401">FAQ</entry>
+
 <entry code="2500">Portal page</entry>
+
 <entry code="2601">Custom extended script</entry>
+
 <entry code="2801">Homepage</entry>
+
 <entry code="2901">Display of a monograph in a search result</entry>
 <entry code="2902">Display of a periodical in a search result</entry>
 <entry code="2903">Display of an issue in a search result</entry>
 <entry code="2904">Display of an article in a search result</entry>
+
 <entry code="3001">External url</entry>
+<entry code="3002">Page statique interne</entry>
+
+<entry code="3101">Formulaire de contact</entry>
+
+<entry code="3201">Etat de collection</entry>
+
 <entry code="3401">Recherche univers</entry>
+
 <entry code="3501">Recherche segment</entry>
-<entry code="3601">Prêts numérique en cours</entry>
+
+<entry code="3601">Prêts numériques en cours</entry>
+
 <entry code="3602">Mes périphériques de lecture</entry>
 <entry code="3603">Paramètres</entry>
+
+<entry code="4001">Liste des animations</entry>
+<entry code="4002">Fiche animation</entry>
+<entry code="4003">Page d'inscription d'une animation</entry>
+<entry code="4004">Page de désinscription d'une animation</entry>
+<entry code="4005">Inscription à une animation</entry>
+<entry code="4006">Page récapitulatif d'une inscription à une animation</entry>
+
 <!-- Types d'url cliquées  -->
 <entry code="external_url_notice">Url sur la notice</entry>
 <entry code="external_url_autor">Url sur l'autorité</entry>
 <entry code="external_url_external">Url externe</entry>
+<entry code="external_url_internal">Page statique interne</entry>
 <entry code="external_url_docnum">Url document numérique</entry>
+
 <!-- Types de notice -->
 <entry code="notice_type_a">Article</entry>
 <entry code="notice_type_m">Monographie</entry>
 <entry code="notice_type_s">Périodique</entry>
-<entry code="3101">Formulaire de contact</entry>
+
 </XMLlist>

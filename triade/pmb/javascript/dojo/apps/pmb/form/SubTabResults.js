@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabResults.js,v 1.6 2018-01-18 15:34:14 vtouchard Exp $
+// $Id: SubTabResults.js,v 1.10 2023/12/27 13:57:47 tsamson Exp $
 
 
 define([
@@ -52,6 +52,12 @@ define([
 			onLoad: function(){
 				if(query('input[type="button"]', this.containerNode).length){
 					domConstruct.destroy(query('input[type="button"]', this.containerNode)[0]);
+				}
+				
+				// On masque TOUS les boutons cocher/décocher, puisque la ligne au dessus ne fait le job qu'à moitié
+				let check_all_buttons = query('input[name="check_all"]', this.containerNode);
+				for (let i = 0; i < check_all_buttons.length; i++) {
+					domConstruct.destroy(check_all_buttons[i]);
 				}
 				collapseAll(this.containerNode);
 				if(query('form[name^="search_form_"]', this.containerNode).length){
@@ -109,7 +115,7 @@ define([
 				noticeChilds.forEach(lang.hitch(this, function(childDiv){
 					var links = query('a[href]', childDiv);
 					links.forEach(lang.hitch(this, function(link){
-						if(!domAttr.get(link, 'target') || (domAttr.get(link, 'target') && (domAttr.get(link, 'target') != '#'))){
+						if(domAttr.get(link, 'href') != '#'){
 							domAttr.set(link, 'target', '_blank');
 						}
 					}));
@@ -120,11 +126,13 @@ define([
 					//Link remapping
 					var results = query('a[onclick][data-element-id]');
 					results.forEach(lang.hitch(this, function(a){
-						on(a, 'click', lang.hitch(this, function(a){
+						on(a, 'click', lang.hitch(this, function(a, e){
+							e.preventDefault();
+							e.stopPropagation();
 							topic.publish('SubTabResults', 'eltClicked', 
 								{
 									id: domAttr.get(a, 'data-element-id'), 
-									type: this.parameters.queryParameters.what,
+									type: domAttr.get(a, 'data-element-type'),
 								}
 							);	
 						}, a));

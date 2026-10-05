@@ -1,13 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: timer.php,v 1.8 2017-10-23 10:13:00 ngantier Exp $
+// $Id: timer.php,v 1.9 2023/11/30 11:10:07 dgoron Exp $
 
 $base_path="../..";
 $base_auth="SAUV_AUTH|ADMINISTRATION_AUTH";
 $base_title="\$msg[sauv_misc_timer_title]";
 require($base_path."/includes/init.inc.php");
+
+global $msg, $current_module;
+global $delai, $sauv_timer, $sauv_time_hour, $sauv_time_min, $sauv_delay;
+global $sauvegardes;
 
 //Timer pour la sauvegarde
 if ($delai=="")
@@ -16,7 +20,10 @@ if ($delai=="")
 		echo "<script>alert(\"".$msg["sauv_misc_timer_valid"]."\"); history.go(-1);</script>";
 		exit();
 	}
-	//calcul du dÃ©lai en minutes
+	$sauv_timer = intval($sauv_timer);
+	$sauv_time_hour = intval($sauv_time_hour);
+	$sauv_time_min = intval($sauv_time_min);
+	//calcul du délai en minutes
 	if ($sauv_timer==1) {
 		$delai=0;
 	}
@@ -45,12 +52,12 @@ echo "<h1>".sprintf($msg["sauv_misc_timer_delay"],$delai)."</h1>\n";
 echo "<form class='form-$current_module' method=\"post\" name=\"timer_form\" action=\"$url\">\n";
 echo "<input type=\"hidden\" name=\"delai\" value=\"".$delai."\">\n";
 echo "<br /><br />
-<table cellspacing=0><tr><td class='center' style=\"border:solid;border-width:1px\"><b>".$msg["sauv_misc_timer_sets"]."</b></td><td class='center' style=\"border:solid;border-width:1px\"><b>".$msg["sauv_misc_timer_groups"]."</b></td></tr>\n";
+<table style='border-spacing: 0px;'><tr><td class='center' style=\"border:solid;border-width:1px\"><b>".$msg["sauv_misc_timer_sets"]."</b></td><td class='center' style=\"border:solid;border-width:1px\"><b>".$msg["sauv_misc_timer_groups"]."</b></td></tr>\n";
 $sauv=implode(",",$sauvegardes);
 $requete="select sauv_sauvegarde_nom,sauv_sauvegarde_tables from sauv_sauvegardes where sauv_sauvegarde_id in (".$sauv.") order by sauv_sauvegarde_nom";
 $resultat=pmb_mysql_query($requete) or die(pmb_mysql_error());
 $sauv_name=array();
-$sauv_table=array();
+$sauv_tables=array();
 while (list($nom,$tables)=pmb_mysql_fetch_row($resultat)) {
 	$sauv_name[]=$nom;
 	$sauv_tables[]=$tables;

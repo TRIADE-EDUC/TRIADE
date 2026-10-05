@@ -1,12 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bannette_edit.inc.php,v 1.5 2019-06-03 12:55:27 ccraig Exp $
+// $Id: bannette_edit.inc.php,v 1.8 2023/08/02 06:21:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($id_bannette)) $id_bannette = 0;
+global $base_path, $class_path, $msg, $charset;
+global $opac_allow_bannette_priv, $id_empr, $id_bannette;
+global $enregistrer, $bannette_diffuse_checked, $nom_bannette, $search;
+
+$id_bannette = intval($id_bannette);
 
 require_once($class_path."/search.class.php");
 require_once($class_path."/bannette.class.php");
@@ -15,7 +19,7 @@ require_once($base_path."/includes/bannette_func.inc.php");
 
 if (!$opac_allow_bannette_priv || !bannette::has_rights($id_bannette)) die ("Acc&egrave;s interdit");
 
-// afin de rÃ©soudre un pb d'effacement de la variable $id_empr par empr_included, bug Ã  trouver
+// afin de résoudre un pb d'effacement de la variable $id_empr par empr_included, bug à trouver
 if (!$id_empr) $id_empr=$_SESSION["id_empr_session"] ;
 
 print "<div id='aut_details' class='aut_details_bannette'>\n";
@@ -23,7 +27,7 @@ print "<div id='aut_details' class='aut_details_bannette'>\n";
 if (isset($enregistrer) && $enregistrer==1 && !$nom_bannette) $enregistrer = 2 ;
 
 $bannette = new bannette($id_bannette);
-print "<h3><span>".$msg['dsi_bannette_edit']."</span></h3>\n";
+print common::format_title($msg['dsi_bannette_edit']);
 //Instantiation d'une classe recherche
 $search_class=new search();
 if(isset($search) && $search) {
@@ -66,14 +70,14 @@ if ($equation) {
 		    $bannette->vider();
 		    $bannette->remplir();
 		} else {
-		    // mise Ã  jour de l'instance bannette_equations de classe bannette
+		    // mise à jour de l'instance bannette_equations de classe bannette
 		    $bannette->set_bannette_equations();
 		    
 		    $bannette->vider();
 		    $bannette->remplir();
 		}
 
-		// bannette modifiÃ©e, on supprime le bouton des rech multicritÃ¨res
+		// bannette modifiée, on supprime le bouton des rech multicritères
 		$_SESSION['abon_edit_bannette_priv'] = 0 ;
 		print "<br />" ;
 		print str_replace("!!nom_bannette!!", $bannette->nom_bannette, $msg['dsi_bannette_saved']);
@@ -84,6 +88,7 @@ if ($equation) {
 		// pour construction correcte du mail de diffusion
 		$liens_opac = array() ;
 	} else {
+	    print '<div id="equation_container">';
 		print $equ_human;
 		$search_class->unserialize_search($equation);
 		print $search_class->make_hidden_search_form($base_path."/index.php?tab=dsi&bt_edit_bannette_priv=1&search_type_asked=extended_search&id_bannette=".$bannette->id_bannette,"bannette_search_form_".$bannette->id_bannette);
@@ -91,6 +96,7 @@ if ($equation) {
 		print "<a href=\"javascript:document.forms['bannette_search_form_".$bannette->id_bannette."'].submit();\" style='cursor : pointer'>";
 		print "<img src='".get_url_icon('tag.png')."' alt='".htmlentities($msg['edit'],ENT_QUOTES,$charset)."' title='".htmlentities($msg['edit'],ENT_QUOTES,$charset)."' />";
 		print "</a>";
+		print "</div>";
 		print "<br /><br />".$bannette->get_short_form($equation);
 	}
 } else {
@@ -116,6 +122,7 @@ if ($equation) {
         print "<br /><br />".$msg['dsi_bannette_no_equation'];
         
     } else {
+        print '<div id="equation_container">';
         print '<span>
             '.$msg['dsi_bannette_no_equation'].'
             </span>';
@@ -123,7 +130,8 @@ if ($equation) {
         print "<a href=\"javascript:document.forms['bannette_search_form_".$bannette->id_bannette."'].submit();\" style='cursor : pointer'>";
         print "<img src='".get_url_icon('tag.png')."' alt='".htmlentities($msg['edit'],ENT_QUOTES,$charset)."' title='".htmlentities($msg['edit'],ENT_QUOTES,$charset)."' />";
         print "</a>";
-        print "<br /><br />".$bannette->get_short_form($equation);        
+        print "</div>";
+        print "<br /><br />".$bannette->get_short_form($equation);
     }
 }
 

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -22,7 +22,9 @@ error_reporting(0);
 include_once("./common/config3.inc.php");
 include_once("./common/config7.inc.php");
 include_once("./common/config.inc.php");
+include_once("./common/config2.inc.php");
 include_once("./librairie_php/db_triade.php");
+include_once("./librairie_php/timezone.php");
 
 validerequete("3");
 
@@ -35,9 +37,9 @@ if (defined("KEYENR")) {
 	$verif3=0;
 }
 
-if ($_SESSION["adminplus"] == "suppreme" ) {
+if ($_SESSION["adminplus"] == "suppreme") {
 	$verif2=1;
-}else {
+}else{
 
 	if ((!defined("PASS1")) || (!defined("PASS2")) || (!defined("PASS3"))) {
 		print "<html><script type='text/javascript'>";
@@ -252,6 +254,11 @@ if ($verif2 == "1" ) {
 	if ($_POST["base"] == "codebarrexls") {
 		$_SESSION["adminplus"]="suppreme";
 		print "<html><script type='text/javascript'>location.href='./base_de_donne_importation810.php'</script></html>";
+		exit;
+	}
+	if ($_POST["base"] == "sieclebeexml") {
+		$_SESSION["adminplus"]="suppreme";
+		print "<html><script type='text/javascript'>location.href='./base_de_donne_importation1110.php'</script></html>";
 		exit;
 	}	
 	if ($_POST["base"] == "bilanfinancier") {

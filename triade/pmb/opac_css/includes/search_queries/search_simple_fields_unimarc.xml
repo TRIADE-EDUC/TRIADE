@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: search_simple_fields_unimarc.xml,v 1.21 2019-02-21 11:03:40 ngantier Exp $ -->
+<!-- $Id: search_simple_fields_unimarc.xml,v 1.25 2023/01/16 14:00:42 tsamson Exp $ -->
 <pmbfields>
 
 	<!-- Zone fixedFields :
@@ -53,7 +53,7 @@
 			<variable name="selected_sources" type="global"/>
 			<query for="BOOLEAN" booleanSearch="yes">
 				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
-				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!)]]></main>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) group by notice_id]]></main>
 				<table>entrepots</table>
 				<index_l>value</index_l>
 				<index_i>i_value</index_i>
@@ -85,12 +85,12 @@
 			</query>
 		</field>
 		<!-- éditeur -->
-		<field title="msg:publisher_search" id="3" unimarcField="210$c219$c">
+		<field title="msg:publisher_search" id="3" unimarcField="210$c214$c219$c">
 			<input type="text"/>
 			<variable name="selected_sources" type="global"/>
 			<query for="BOOLEAN" booleanSearch="yes" stemming="no">
 				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
-				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ( (ufield='210' and usubfield in ('c') OR (ufield='219' and usubfield in ('c')) )]]></main>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ( (ufield='210' and usubfield in ('c') OR (ufield='214' and usubfield in ('c')) OR (ufield='219' and usubfield in ('c')) )]]></main>
 				<table>entrepots</table>
 				<index_l>value</index_l>
 				<index_i>i_value</index_i>
@@ -133,6 +133,16 @@
 				<multipleOperator>or</multipleOperator>
 			</query>
 		</field>
+		<field title="msg:external_search_analysis_id" id="32" unimarcField="014$a" >
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH" isbnSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm=""/>
+				<main><![CDATA[select distinct recid as notice_id from entrepot_source_!!current_source!! where (ufield='014') and usubfield='a' and !!multiple_term!! group by notice_id]]></main>
+				<multipleTerm>value like '!!p!!%'</multipleTerm>
+				<multipleOperator>or</multipleOperator>
+			</query>
+		</field>
 		<!-- catégories -->
 		<field title="msg:categories_search" id="1" unimarcField="60X" separator="msg:indexations_query">
 			<input type="text"/>
@@ -167,8 +177,8 @@
 			</input>
 			<variable name="selected_sources" type="global"/>
 			<query for="EQ">
-				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm=""/>
-				<main><![CDATA[select distinct recid as notice_id from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='dt') order by value]]></main>
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='dt')]]></main>
 			</query>
 		</field>
 		<!-- statut de notice -->

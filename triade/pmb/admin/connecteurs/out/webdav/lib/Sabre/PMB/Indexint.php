@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Indexint.php,v 1.8 2016-01-26 15:36:15 dgoron Exp $
+// $Id: Indexint.php,v 1.9 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB;
 
 class Indexint extends Collection {
 	protected $indexint;
 
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		$this->config = $config;
 		$this->type = "indexint";
 		$code = $this->get_code_from_name($name);
@@ -19,7 +19,7 @@ class Indexint extends Collection {
 		
 	}
 	
-	function getChildren(){
+	public function getChildren(){
 		$current_children=array();
 		$children = parent::getChildren();
 		$query = "select indexint_id from indexint where num_pclass = ".$this->indexint->id_pclass." and indexint_name like '".addslashes(trim($this->indexint->name,0))."%' and indexint_id != ".$this->indexint->indexint_id;
@@ -33,15 +33,15 @@ class Indexint extends Collection {
 		return array_merge($children,$current_children);
 	}
 
-	function getName() {
+	public function getName() {
 		return $this->format_name($this->indexint->name." - ".$this->indexint->comment.""." (I".$this->indexint->indexint_id.")");
 	}
 	
-	function need_to_display($categ_id){
+	public function need_to_display($categ_id){
 		return true;
 	}
 	
-	function getNotices(){
+	public function getNotices(){
 		$this->notices = array();		
 		if($this->indexint->indexint_id){
 			$clause ="";
@@ -55,7 +55,7 @@ class Indexint extends Collection {
 		return $this->notices;
 	}
 	
-	function update_notice_infos($notice_id){
+	public function update_notice_infos($notice_id){
 		if($notice_id*1 >0){
 			$query = "update notices set indexint = ".$this->indexint->indexint_id." where notice_id = ".$notice_id;
 			pmb_mysql_query($query);

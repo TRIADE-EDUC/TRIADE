@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: driver.js,v 1.8 2012-11-23 14:02:37 ngantier Exp $
+// $Id: driver.js,v 1.8 2012/11/23 14:02:37 ngantier Exp $
 
 var f_empr_client;
 var f_expl_client;
@@ -27,7 +27,7 @@ function init_rfid_read_cb(empr_client,expl_client){
 	try {
 		//netscape.security.PrivilegeManager.enablePrivilege('UniversalBrowserRead');
 		/*
-Dans pref.js , toutes les instances de Firefox fermÃ©es, rajouter:
+Dans pref.js , toutes les instances de Firefox fermées, rajouter:
 user_pref("capability.policy.default.XMLHttpRequest.open", "allAccess");
 user_pref("capability.policy.default.CDATASection.nodeValue", "allAccess");
 user_pref("capability.policy.default.Element.attributes", "allAccess");
@@ -190,7 +190,7 @@ function result_read_cb_ex (retVal) {
 	setTimeout('read_cb()',1500);
 	flag_semaphore_rfid_read=0;
 }
-// Detect le nombre d'Ã©lement rfid
+// Detect le nombre d'élement rfid
 function init_rfid_detect(ack_detect) {
 	if(!flag_rfid_active) return;
 	f_ack_detect=ack_detect;
@@ -215,7 +215,7 @@ function result_erase(retVal) {
 	if(f_ack_erase)f_ack_erase(retVal['EraseAllTagsResult']);
 }
 	
-// Programme une Ã©tiquette
+// Programme une étiquette
 function init_rfid_write_etiquette (cb,nbtags,ack_write) {
 	if(!flag_rfid_active) return;
 	f_ack_write=ack_write;
@@ -242,7 +242,7 @@ function result_write_empr(retVal) {
 	if(f_ack_write_empr)f_ack_write_empr(retVal['WritePatronResult']);
 }     
 
-// Active / dÃ©sactive un antivol
+// Active / désactive un antivol
 function init_rfid_antivol (cb,level,ack_antivol) {
 	if(!flag_rfid_active) return;
 	f_ack_antivol=ack_antivol;
@@ -258,7 +258,7 @@ function result_ack_antivol(retVal) {
 	if(f_ack_antivol)f_ack_antivol(statut);
 }  
 
-// Active / dÃ©sactive tous les antivols
+// Active / désactive tous les antivols
 function init_rfid_antivol_all (level,ack_antivol) {
 	f_ack_antivol_all=ack_antivol;
 
@@ -293,7 +293,7 @@ function result_GetInfo(retVal) {
 
 
 
-//Pour le prÃªt a la chaine mode1
+//Pour le prêt a la chaine mode1
 
 function mode1_init_rfid_read_cb(empr_client,expl_client){	
 	f_empr_client=empr_client;

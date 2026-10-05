@@ -1,9 +1,9 @@
 <?php
 
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: facettes_external_search_compare.class.php,v 1.6 2018-08-10 10:43:01 dgoron Exp $
+// $Id: facettes_external_search_compare.class.php,v 1.7 2019/08/01 13:16:35 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -46,16 +46,16 @@ class facettes_external_search_compare extends facette_search_compare {
 	}
 	
 	/**
-	 * On lance la comparaison √† partir d'une liste d'identifiants
+	 * On lance la comparaison ‡ partir d'une liste d'identifiants
 	 * Rempli la variables result
 	 *
 	 * @param object_ids
-	 * @return true si succ√®s message d'erreur sinon
+	 * @return true si succËs message d'erreur sinon
 	 */
 	public function compare_from_objects($objects_ids){
 		self::session_facette_compare($this);
 	
-		if(sizeof($this->facette_compare)){
+		if (!empty($this->facette_compare)) {
 			//on insert les notices externes de la recherche en table memoire
 			self::gen_temporary_table_name();
 			$query = "CREATE TEMPORARY TABLE ".static::$temporary_table_name." engine=memory SELECT rid FROM external_count WHERE rid IN (".$objects_ids.")";
@@ -66,20 +66,20 @@ class facettes_external_search_compare extends facette_search_compare {
 			//pour toutes les facettes choisies en comparaison
 			$this->build_result();
 	
-			//Si trop de r√©sultat, la g√©n√©ration du tableau html sera trop longue = on coupe.
-			if(sizeof($this->result)*sizeof($this->facette_compare) > $this->max_display){
+			//Si trop de rÈsultat, la gÈnÈration du tableau html sera trop longue = on coupe.
+			if ((count($this->result) * count($this->facette_compare)) > $this->max_display) {
 				return 'facette_compare_too_more_result';
 			}
 			return true;
 		}else{
-			//pas de r√©sultat
+			//pas de rÈsultat
 			return 'facettes_compare_no_result';
 		}
 	}
 	
 	/**
-	 * si une des facette n'est pas d√©j√† choisie pour comparer et n'est pas utilis√© en recherche, on la rend active pour pouvoir etre utilis√© en comparaison
-	 * @param string $id l'id de la facette concern√©e 
+	 * si une des facette n'est pas dÈj‡ choisie pour comparer et n'est pas utilisÈ en recherche, on la rend active pour pouvoir etre utilisÈ en comparaison
+	 * @param string $id l'id de la facette concernÈe 
 	 * @param bool $available 
 	 */
 	public function set_available_compare($id,$available=true){
@@ -88,7 +88,7 @@ class facettes_external_search_compare extends facette_search_compare {
 	}
 	
 	/**
-	 * Si un groupe n'est pas d√©j√† choisi et dont un √©lement au moins est disponible pour la recherche, on le rend actif pour pouvoir etre utilis√© en groupement
+	 * Si un groupe n'est pas dÈj‡ choisi et dont un Èlement au moins est disponible pour la recherche, on le rend actif pour pouvoir etre utilisÈ en groupement
 	 * @param integer $id l'id du groupe
 	 * @param bool $available
 	 */
@@ -99,10 +99,10 @@ class facettes_external_search_compare extends facette_search_compare {
 	
 	/**
 	 * Classe permettant d'appeler l'affichage des notices
-	 * Retire de la liste envoy√©e en r√©f√©rence les notices d√©j√† affich√©es
+	 * Retire de la liste envoyÈe en rÈfÈrence les notices dÈj‡ affichÈes
 	 *
-	 * @param string $notices_ids la liste des notices, s√©par√©es par ,
-	 * @param integer $notice_nb le nombre de notices √† afficher par passe
+	 * @param string $notices_ids la liste des notices, sÈparÈes par ,
+	 * @param integer $notice_nb le nombre de notices ‡ afficher par passe
 	 * @param integer $notice_tpl l'identifiant du template d'affichage, si null, affiche le header de la classe d'affichage
 	 */
 	public static function call_notice_display(&$notices_ids,$notice_nb,$notice_tpl){
@@ -131,8 +131,8 @@ class facettes_external_search_compare extends facette_search_compare {
 			}
 		}
 		
-		if(sizeof($notices_ids)){
-			$notices_ids=implode(',', $notices_ids);
+		if (!empty($notices_ids)) {
+			$notices_ids = implode(',', $notices_ids);
 		}
 		return $notices;
 	}

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,7 +35,7 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Vie Scolaire - Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php
 include_once("./librairie_php/lib_licence.php");
 // connexion (après include_once lib_licence.php obligatoirement)
@@ -47,13 +47,12 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 }else{
 	validerequete("2");
 }
-$cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Statistiques absences et retards - TOP 10" ?> / <?php print LANGBULL3 ?> : <font id='color2'><?php print $anneeScolaire ?></font></font></b></td></tr>
 <tr id='cadreCentral0' ><td valign='top'>
@@ -64,7 +63,7 @@ $cnx=cnx();
 <tr><td bgcolor='yellow'>&nbsp;Nom&nbsp;Prénom&nbsp;</td><td bgcolor='yellow'>&nbsp;Classe&nbsp;</td><td bgcolor='yellow'>&nbsp;N&nbsp;d'absences&nbsp;</td></tr>
 <?php
 $data=topabs('10');
-for ($i=0;$i<count($data);$i++){
+for ($i=0;$i<countTriade($data);$i++){
 	print "<tr bgcolor='#FFFFFF' ><td>&nbsp;".rechercheEleveNomPrenom($data[$i][0])."&nbsp;&nbsp;</td>";
 	print "<td>&nbsp;".chercheClasse_nom(chercheClasseEleve($data[$i][0]))."&nbsp;</td>";
 	print "<td align='center'>&nbsp;".nbabstotal($data[$i][0])."</td></tr>";

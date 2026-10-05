@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_locations_controler.js,v 1.2 2017-09-05 08:37:29 vtouchard Exp $
+// $Id: map_locations_controler.js,v 1.2 2017/09/05 08:37:29 vtouchard Exp $
 
 const TYPE_RECORD = 11;
 const TYPE_LOCATION = 15;

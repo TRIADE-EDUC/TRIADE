@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -81,7 +81,7 @@ if ($_GET["saisie_trimestre"] == "trimestre3" ) {  $sem=3; }
 // recuperation des coordonnées
 // de l'etablissement
 $data=visu_paramViaIdSite(chercheIdSite($_GET["saisie_classe"]));
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -94,7 +94,7 @@ for($i=0;$i<count($data);$i++) {
 
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse($_GET["saisie_trimestre"],$_GET["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -122,7 +122,7 @@ $noteMoyEleG=0;
 $coefEleG=0;
 $afficheMoyen="oui";
 
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
 	// variable eleve
 	$lv1Eleve=$eleveT[$j][2];
 	$lv2Eleve=$eleveT[$j][3];
@@ -136,7 +136,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 	$ectsTOTALP1=0;
 	$ectsTOTALP2=0;
 
-	for($f=0;$f<count($recupUE);$f++) {
+	for($f=0;$f<countTriade($recupUE);$f++) {
 		$code_ue=$recupUE[$f][0];
 		$nom_ue=$recupUE[$f][1];
 		$coef_ue=$recupUE[$f][2];
@@ -149,7 +149,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 		print "</tr>";
 
 		// u.code_matiere,m.libelle
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 			$X=$Xorigine;
 			
 			$idmatiere=$listeMatiere[$i][0];
@@ -201,7 +201,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 				$notepartiel = recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse);
 				$moy_partiel_eu='';
 				$som_coef_partiel_eu=0;
-				for ($nb_note=0;$nb_note<count($notepartiel);$nb_note++) { 
+				for ($nb_note=0;$nb_note<countTriade($notepartiel);$nb_note++) { 
 					if ($notepartiel[$nb_note][0]>=0 && is_numeric($notepartiel[$nb_note][0])) {$nb_mat+=1;
 						$moy_partiel_eu+=$notepartiel[$nb_note][6]*$notepartiel[$nb_note][0];
 						$som_coef_partiel_eu+=$notepartiel[$nb_note][6];
@@ -213,8 +213,8 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 					}
 				}
 				$moy_coef_partiel="";
-				if (count($notepartiel)>0) {
-					$moy_coef_partiel=$som_coef_partiel_eu/count($notepartiel);
+				if (countTriade($notepartiel)>0) {
+					$moy_coef_partiel=$som_coef_partiel_eu/countTriade($notepartiel);
 					$moy_coef_partiel="($moy_coef_partiel)";
 				}
 				$affich_coef_partiel='';
@@ -237,8 +237,8 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
 				$moyenne_periode='';
 				$nb_note_periode=0;
 				$som_coef_periode=0;
-				for ($nb_note=0;$nb_note<count($noteperiode);$nb_note++) { 
-					if ($noteperiode[$nb_note][0]>=0 && is_numeric($noteperiode[$nb_note][0]) && count($noteperiode)>0) {
+				for ($nb_note=0;$nb_note<countTriade($noteperiode);$nb_note++) { 
+					if ($noteperiode[$nb_note][0]>=0 && is_numeric($noteperiode[$nb_note][0]) && countTriade($noteperiode)>0) {
 						$moyenne_periode+=$noteperiode[$nb_note][0]*$noteperiode[$nb_note][6];
 						$nb_note_periode+=1;
 						$som_coef_periode+=$noteperiode[$nb_note][6];

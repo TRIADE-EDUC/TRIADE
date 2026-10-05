@@ -1,16 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: collections_state.inc.php,v 1.14 2019-06-07 09:00:19 ngantier Exp $
+// $Id: collections_state.inc.php,v 1.16 2022/02/11 09:39:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $action, $object_type, $fname;
 
 require_once($class_path.'/caddie.class.php');
 require_once($class_path.'/encoding_normalize.class.php');
 
 function ajax_calculate_collections_state() {
-	global $msg,$id_location,$id_serial, $bulletins;
+	global $id_location,$id_serial, $bulletins;
 	
 	if($bulletins != '') {
 		$rqt="select bulletin_id,bulletin_numero,mention_date from bulletins where bulletin_id IN (".$bulletins.") order by date_date";
@@ -26,33 +28,33 @@ function ajax_calculate_collections_state() {
 	$debut="";
 	$t=array();
 	
-	//est-ce que l'Ã©tat des collections est localisÃ©
+	//est-ce que l'état des collections est localisé
 	if ($id_location){
 		$restrict_location=" and expl_location=$id_location";
 	}else{
 		$restrict_location="";
 	}
 	
-	//parcours des bulletins de la notice de pÃ©riodique
+	//parcours des bulletins de la notice de périodique
 	while ($r=pmb_mysql_fetch_object($execute_query)) {
 		
 		$rqt1="select expl_id from exemplaires where expl_bulletin=".$r->bulletin_id.$restrict_location;
 		$compt1=pmb_mysql_num_rows(pmb_mysql_query($rqt1));
 		$temp=pmb_mysql_error();
-		//remplissage d'un tableau avec des trous si le bulletin n'a aucun exemplaire associÃ©
+		//remplissage d'un tableau avec des trous si le bulletin n'a aucun exemplaire associé
 		if ($compt1==0) {
 			$t[]="";
 		} else {
 			$item=$r->bulletin_numero;
 			if ($r->mention_date) $item.=" (".$r->mention_date.")";
 			$t[]=$item;
-			//dÃ©termination du premier bulletin de la liste qui a des exemplaires associÃ©s 
+			//détermination du premier bulletin de la liste qui a des exemplaires associés 
 			if ($debut === "") $debut=count($t)-1;
-			//comptage des bulletins avec des exemplaires associÃ©s
+			//comptage des bulletins avec des exemplaires associés
 			$i++;
 		}
 	}
-	//si tous les bulletins ont des exemplaires associÃ©s, on prend l'intÃ©gralitÃ© de la liste
+	//si tous les bulletins ont des exemplaires associés, on prend l'intégralité de la liste
 	
 	if ($i==$compt) {
 		$all="";
@@ -65,11 +67,11 @@ function ajax_calculate_collections_state() {
 		$tableau_final=array();
 		//parcours du tableau final
 		for ($j=0;$j<count($t);$j++) {
-			//si l'Ã©lÃ©ment n'est pas un trou
+			//si l'élément n'est pas un trou
 			if ($t[$j]!="") {
 				$temp1=$t[$j];
 				$bool=false;
-				//parcours du tableau Ã  partir de l'Ã©lÃ©ment jusqu'au premier trou existant
+				//parcours du tableau à partir de l'élément jusqu'au premier trou existant
 				for ($x=$j;$x<count($t);$x++) {
 					if ($t[$x]=="") {
 						if ($t[$x-1]!=$t[$j]) $temp1.=" - ".$t[$x-1];
@@ -78,16 +80,16 @@ function ajax_calculate_collections_state() {
 						$bool=true;					
 					}	
 				}
-				//si aucun trou jusqu'Ã  la fin n'est trouvÃ©, on finit la borne par le dernier
-				//numÃ©ro et on quitte la boucle de parcours
+				//si aucun trou jusqu'à la fin n'est trouvé, on finit la borne par le dernier
+				//numéro et on quitte la boucle de parcours
 				if ($bool==false) {
 					$temp1.=" - ".$t[count($t)-1];
 					$j=count($t);
 				}
-				//on remplit un tableau avec les intervalles trouvÃ©s
+				//on remplit un tableau avec les intervalles trouvés
 				$tableau_final[]=$temp1;
 			} else {
-				//on remplit un tableau avec l'Ã©lÃ©ment trouvÃ©
+				//on remplit un tableau avec l'élément trouvé
 				if ($t[$j-1]!="") $tableau_final[]=$t[$j-1];
 			}
 		}
@@ -99,7 +101,8 @@ function ajax_calculate_collections_state() {
 }
 
 function ajax_modify_collections_state() {
-	global $id_serial,$id_location,$texte_coll_state,$charset;
+	global $id_serial,$id_location,$texte_coll_state;
+	
 	if ($id_location) $restrict_location=" and location_id=$id_location";
 	$rqt1="select state_collections from collections_state where id_serial=$id_serial $restrict_location";
 	$execute_query1=pmb_mysql_query($rqt1);
@@ -115,8 +118,8 @@ function ajax_modify_collections_state() {
 function ajax_add_expl_to_carts() {
 	global $id_caddie_bull, $id_caddie_expl, $cb_expl;
 	
-	$id_caddie_bull += 0;
-	$id_caddie_expl += 0;
+	$id_caddie_bull = intval($id_caddie_bull);
+	$id_caddie_expl = intval($id_caddie_expl);
 	
 	if (!$cb_expl || !$id_caddie_bull || !$id_caddie_expl) {
 		return 0;
@@ -146,9 +149,9 @@ function ajax_add_expl_to_carts() {
 function ajax_get_data_expl_list() {
 	global $id_caddie_expl, $id_caddie_bull, $id_location;
 	
-	$id_caddie_bull += 0;
-	$id_caddie_expl += 0;
-	$id_location += 0;
+	$id_caddie_bull = intval($id_caddie_bull);
+	$id_caddie_expl = intval($id_caddie_expl);
+	$id_location = intval($id_location);
 	
 	$data = array(
 		'caddie_bull' => array(),
@@ -202,7 +205,6 @@ function ajax_get_data_expl_list() {
 
 switch($action) {
 	case 'list':
-		require_once($class_path.'/list/lists_controller.class.php');
 		lists_controller::proceed_ajax($object_type);
 		break;
 	default:

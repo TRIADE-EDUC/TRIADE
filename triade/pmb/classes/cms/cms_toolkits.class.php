@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_toolkits.class.php,v 1.4 2017-05-23 15:00:04 dgoron Exp $
+// $Id: cms_toolkits.class.php,v 1.4 2017/05/23 15:00:04 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

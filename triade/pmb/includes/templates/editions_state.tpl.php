@@ -1,88 +1,72 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state.tpl.php,v 1.4 2019-05-27 13:03:56 ngantier Exp $
+// $Id: editions_state.tpl.php,v 1.5 2021/03/15 09:02:51 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $editions_state_form, $current_module, $base_path, $msg, $editions_state_form_tabs, $charset, $edition_state_render, $edition_state_filter_form;
+global $editions_state_content_form, $current_module, $base_path, $msg, $editions_state_form_tabs, $charset, $edition_state_render, $edition_state_filter_form;
 
-$editions_state_form="
-<form class='form-$current_module' name='editions_state_form' method='post' action='".$base_path."/edit.php?categ=state&action=save&id=!!id!!'>
-	<h3>!!form_title!!</h3>
-	<div class='form-contenu'>
+$editions_state_content_form="
+<div class='row'>
+	<div class='colonne2'>
 		<div class='row'>
-			<div class='colonne2'>
-				<div class='row'>
-					<label class='etiquette' for='editions_state_name'>".$msg["editions_state_form_name"]."</label>
-				</div>
-				<div class='row'>
-					<input type='text' name='editions_state_name' value='!!name!!' maxlength='255' class='saisie-50em' />
-				</div>
-			</div>
-			<div class=colonne_suite>
-				<div class='row'>
-					<label class='etiquette' for='editions_state_classement'>$msg[proc_clas_proc]</label>
-				</div>
-				<div class='row'>
-					!!classement!!
-				</div>
-			</div>
+			<label class='etiquette' for='editions_state_name'>".$msg["editions_state_form_name"]."</label>
 		</div>
 		<div class='row'>
-			<div class='row'>
-				<label for='editions_state_datasource'>".$msg['editions_state_datasource']."</label>
-				<select name='editions_state_datasource' id='editions_state_datasource' onchange='load_tab_content(this.value)' !!datasource_readonly!!>
-					!!datasource_options!!
-				</select>
-				<!--editions_state_datasource-->
-				<script type='text/javascript'>
-					function load_tab_content(datasource){
-						if(datasource!=0){
-							document.forms['editions_state_form'].action = '".$base_path."/edit.php?categ=state&action=edit&id=!!id!!';
-							document.forms['editions_state_form'].partial_submit.value = 2;
-							document.forms['editions_state_form'].submit();
-						}
-					}
-					function test_form(form) {
-						if(form.editions_state_name.value.length == 0) {
-							alert('".addslashes($msg["editions_state_name_isempty"])."');
-							return false;
-						}
-						if(document.getElementById('editions_state_datasource').value == 0) {
-							alert('".addslashes($msg["editions_state_source_isempty"])."');
-							return false;
-						}
-						return true;
-					}
-				</script>
-			</div>
+			<input type='text' name='editions_state_name' value='!!name!!' maxlength='255' class='saisie-50em' />
 		</div>
-		<div class='row'>&nbsp;</div>
-		<input type='hidden' name='editionsstate_active_tab' id='editionsstate_active_tab'value='!!active_tab!!'/>
-		!!tabs!!
-		<div class='row'>
-			<label class='etiquette' for='form_comment'>$msg[707]</label>
-		</div>
-		<div class='row'>
-			<input type='text' name='editions_state_comment' value='!!comment!!' maxlength='255' class='saisie-50em' />
-		</div>
-		<div class='row'>&nbsp;</div>
 	</div>
-<!-- Boutons -->
+	<div class=colonne_suite>
+		<div class='row'>
+			<label class='etiquette' for='editions_state_classement'>$msg[proc_clas_proc]</label>
+		</div>
+		<div class='row'>
+			!!classement!!
+		</div>
+	</div>
+</div>
+<div class='row'>
 	<div class='row'>
-		<div class='left'>
-			<input type='hidden' name='partial_submit' value='0'/>
-			<input type='button' class='bouton' value='$msg[76]' onClick='document.location=\"./edit.php?categ=state\"' />&nbsp;
-			<input type='submit' class='bouton' value='$msg[77]' onClick=\"return test_form(this.form)\" />&nbsp;
-		</div>
-		<div class='right'>
-			!!del_button!!
-		</div>
+		<label for='editions_state_datasource'>".$msg['editions_state_datasource']."</label>
+		<select name='editions_state_datasource' id='editions_state_datasource' onchange='load_tab_content(this.value)' !!datasource_readonly!!>
+			!!datasource_options!!
+		</select>
+		<!--editions_state_datasource-->
+		<script type='text/javascript'>
+			function load_tab_content(datasource){
+				if(datasource!=0){
+					document.forms['editions_state_form'].action = '".$base_path."/edit.php?categ=state&action=edit&id=!!id!!';
+					document.forms['editions_state_form'].partial_submit.value = 2;
+					document.forms['editions_state_form'].submit();
+				}
+			}
+			function test_form(form) {
+				if(form.editions_state_name.value.length == 0) {
+					alert('".addslashes($msg["editions_state_name_isempty"])."');
+					return false;
+				}
+				if(document.getElementById('editions_state_datasource').value == 0) {
+					alert('".addslashes($msg["editions_state_source_isempty"])."');
+					return false;
+				}
+				return true;
+			}
+		</script>
 	</div>
-	<div class='row'>&nbsp;</div>
-</form>";
+</div>
+<div class='row'>&nbsp;</div>
+<input type='hidden' name='editionsstate_active_tab' id='editionsstate_active_tab'value='!!active_tab!!'/>
+!!tabs!!
+<div class='row'>
+	<label class='etiquette' for='form_comment'>$msg[707]</label>
+</div>
+<div class='row'>
+	<input type='text' name='editions_state_comment' value='!!comment!!' maxlength='255' class='saisie-50em' />
+</div>
+<input type='hidden' name='partial_submit' value='0'/>
+";
 
 $editions_state_form_tabs = "
 		<script type='text/javascript' src='".$javascript_path."/editions_state_dnd.js'></script>

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: WidgetSource.js,v 1.1 2015-12-10 10:04:11 vtouchard Exp $
+// $Id: WidgetSource.js,v 1.1 2015/12/10 10:04:11 vtouchard Exp $
 
 
 define(['dojo/_base/declare', 

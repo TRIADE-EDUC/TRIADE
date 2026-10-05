@@ -1,0 +1,24 @@
+<div id="facettes_modal" class="modal-container" v-show="showModal" style="display:none;"
+	v-on:keydown.escape.prevent="closeModal"
+	>
+	<loader />
+	<div class="modal" role="dialog" :aria-labelledby="facetteLabel" aria-modal="true">
+		<div class="modal-header">
+			<button class="modal-close" type='button' :title="getMessage('close_modal')" :aria-label="getMessage('facettes_close_modal')" v-on:click.prevent="closeModal">
+				{{ getMessage('close_modal') }}
+				<span class="fa fa-times" aria-hidden="true"></span>
+			</button>
+		</div>
+		<div class="modal-content">
+			<h3 class="modal-title">{{ facetteLabel }}</h3>
+			<p class="modal-description">{{ description }}</p>
+			<sort :facettes="facettes" v-on:check="check($event)" v-on:facetteclicked="facetteClicked($event)" />
+		</div>
+		<div class="modal-footer">
+			<button v-on:click.prevent="closeModal" type="button" class="bouton modal-cancel" >{{ getMessage('cancel_modal') }}</button>
+			<a href="#" :aria-label="validateLabel" v-on:click.prevent="valid" class="bouton modal-valid" >
+				{{ getMessage('validate_modal') }}
+			</a>		
+		</div>
+	</div>
+</div>

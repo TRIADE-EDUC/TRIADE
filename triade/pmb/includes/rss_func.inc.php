@@ -1,18 +1,18 @@
-<?php 
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rss_func.inc.php,v 1.10 2017-10-19 14:06:21 ngantier Exp $
+// $Id: rss_func.inc.php,v 1.11.12.1 2025/01/30 11:42:35 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// --------- funtion affichage RSS, reÃ§oit fichier XML
+// --------- funtion affichage RSS, reçoit fichier XML
 function affiche_rss($id_rss=0) {
 
 	$req_rss = "select lien, eformat from notices where notice_id='$id_rss' " ;
 	$res_rss = pmb_mysql_query($req_rss);
 	$rss = pmb_mysql_fetch_object($res_rss);
-	
+
 	$rss_lien = $rss->lien;
 	$rss_lu = explode(' ', $rss->eformat) ;
 	$rss_time = $rss_lu[1] ;
@@ -22,16 +22,16 @@ function affiche_rss($id_rss=0) {
 		$req_content = "select if(sysdate()<date_add(rss_last, interval $rss_time minute), rss_content, null) as contenu, if(sysdate()<date_add(rss_last, interval $rss_time minute), rss_content_parse, null) as contenu_parse from rss_content where rss_id='$id_rss' " ;
 		$res_content = pmb_mysql_query($req_content);
 		if ($content = pmb_mysql_fetch_object($res_content)) {
-			// on a trouvÃ© un truc dans la table
+			// on a trouvé un truc dans la table
 			if ($content->contenu) {
 				$etat_cache_rss = 1 ;
 			} else {
-				// truc trouvÃ© mais pÃ©rimÃ©
+				// truc trouvé mais périmé
 				$etat_cache_rss = 2 ;
 			}
 		} else {
-			// mÃªme pas trouvÃ©
-			$etat_cache_rss = 0 ; 
+			// même pas trouvé
+			$etat_cache_rss = 0 ;
 		}
 		switch ($etat_cache_rss) {
 			case 1 :
@@ -53,12 +53,12 @@ function affiche_rss($id_rss=0) {
 				return $contenu_parse ;
 				break ;
 		}
-	}	
+	}
 }
 
 function lit_fichier_rss($url_fichier) {
 	global $opac_curl_available, $pmb_curl_timeout;
-	
+
 	$res="";
 	if ($opac_curl_available) {
 		$timeout=($pmb_curl_timeout*1 ? $pmb_curl_timeout*1 : 5);
@@ -81,7 +81,7 @@ function lit_fichier_rss($url_fichier) {
 	return $res;
 }
 
-// --------- funtion affichage RSS, reÃ§oit URL fichier XML
+// --------- funtion affichage RSS, reçoit URL fichier XML
 function affiche_rss_from_url($url_fichier="") {
 
 	$fp=lit_fichier_rss($url_fichier) ;
@@ -91,8 +91,10 @@ function affiche_rss_from_url($url_fichier="") {
 		//Parse du fichier
 		$param=_parser_text_no_function_($content);
 		if (is_array($param)) {
-			list($forme,$val)=each($param);
-			$param=$val[0];
+			$forme = key($param);
+			$val = current($param);
+			next($param);
+			$param = $val[0];
 			for ($j=0; $j<count($param["CHANNEL"]); $j++) {
 				$current=$param["CHANNEL"][$j];
 				$articles.="<div class='row'>";
@@ -100,21 +102,23 @@ function affiche_rss_from_url($url_fichier="") {
 				$articles.="<b>".$current["TITLE"][0]["value"]."</b>";
 				if (strpos($forme,"RDF")!==false) $current=$param;
 				$articles.="<ul class='rss_section'>";
-				for ($k=0; $k<count($current["ITEM"]); $k++) {
-					$articles.="<li class='rss_articles'>";
-					$item=$current["ITEM"][$k];
-					$articles.="<p><i><a href='".$item["LINK"][0]["value"]."' target='_blank'>".$item["TITLE"][0]["value"]."</a></i></p><div class='rss_descriptions'>".$item["DESCRIPTION"][0]["value"]."</div>";
-					$articles.="</li>";
+				if(is_array($current) && array_key_exists("ITEM", $current) && is_countable($current["ITEM"])) {
+					for ($k=0; $k<count($current["ITEM"]); $k++) {
+						$articles.="<li class='rss_articles'>";
+						$item=$current["ITEM"][$k];
+						$articles.="<p><i><a href='".$item["LINK"][0]["value"]."' target='_blank'>".$item["TITLE"][0]["value"]."</a></i></p><div class='rss_descriptions'>".$item["DESCRIPTION"][0]["value"]."</div>";
+						$articles.="</li>";
+					}
 				}
 				$articles.="<div style='clear:both;'></div></ul>";
 				$articles.="</div>";
 			}
 		}
 	}
-	return $articles;		
+	return $articles;
 }
 
-// --------- funtion affichage RSS, reÃ§oit fichier XML
+// --------- funtion affichage RSS, reçoit fichier XML
 function affiche_rss_from_fichier($fichier="") {
 
 	$content = $fichier ;
@@ -122,8 +126,10 @@ function affiche_rss_from_fichier($fichier="") {
 	//Parse du fichier
 	$param=_parser_text_no_function_($content);
 	if (is_array($param)) {
-		list($forme,$val)=each($param);
-		$param=$val[0];
+		$forme = key($param);
+		$val = current($param);
+		next($param);
+		$param = $val[0];
 		for ($j=0; $j<count($param["CHANNEL"]); $j++) {
 			$current=$param["CHANNEL"][$j];
 			$articles.="<div class='row'>";
@@ -141,6 +147,6 @@ function affiche_rss_from_fichier($fichier="") {
 			$articles.="</div>";
 		}
 	}
-	return $articles;		
+	return $articles;
 }
 

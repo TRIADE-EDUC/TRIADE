@@ -1,17 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abonnement_parution_edition.php,v 1.12 2019-06-06 14:26:20 ngantier Exp $
+// $Id: abonnement_parution_edition.php,v 1.13 2022/01/03 10:20:17 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="./../../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[6]";
 require_once ("$base_path/includes/init.inc.php");
 
-if (!isset($act)) $act = '';
-if (!isset($nom)) $nom = '';
+global $current_module, $msg, $act, $abonnement_id, $nom, $date_parution;
+
+$abonnement_id = intval($abonnement_id);
+
 $templates = <<<ENDOFFILE
 			<script type='text/javascript'>
 				function Fermer(obj,type_doc) {
@@ -76,7 +78,7 @@ $type_doc=0;
 switch ($act) {
 	case 'update':	
 		$requete = "delete FROM abts_grille_abt WHERE num_abt='$abonnement_id' and date_parution ='$date_parution'  ";
-		pmb_mysql_query($requete, $dbh);	
+		pmb_mysql_query($requete);	
 		$requete = "SELECT  distinct (modele_name) ,abts_grille_abt.modele_id from abts_modeles, abts_grille_abt where num_abt='$abonnement_id' and abts_grille_abt.modele_id = abts_modeles.modele_id ";
 		$resultat=pmb_mysql_query($requete);
 		while($r=pmb_mysql_fetch_object($resultat)){
@@ -85,7 +87,7 @@ switch ($act) {
 			$nombre= $serie[$modele_id];
 			/*			if($nombre){
 				$requete = "INSERT INTO abts_grille_abt SET num_abt='$abonnement_id', date_parution ='$date_parution', modele_id = '$modele_id', type = '1', nombre='$nombre'";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 				$type_serie=1;
 			}*/
 			for($i=1;$i<=$nombre;$i++){
@@ -95,14 +97,14 @@ switch ($act) {
 							type = '1',
 							nombre='1', 
 							ordre='$i' ";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 				$type_serie=1;			
 			}
 
 			if (isset($check_hors_serie[$modele_id])){	
 				$numero= $numero[$modele_id];
 				$requete = "INSERT INTO abts_grille_abt SET num_abt='$abonnement_id', date_parution ='$date_parution', modele_id = '$modele_id', type = '2', numero='$numero', nombre='1', ordre='1' ";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 				$type_horsserie=2;					
 			}				
 		}		

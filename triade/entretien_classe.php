@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,17 +40,17 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de la classe
 if(isset($_POST["sClasseGrp"]))
 {
 $saisie_classe=$_POST["sClasseGrp"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -60,10 +60,10 @@ $cl=$data[0][0];
 ?>
 <form method="post" action="entretien2_classe.php" >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2" colspan=3><b><font   id='menumodule1' ><?php print LANGELE4 ?> : <font id="color2"><?php print $cl?></font> / <?php print LANGCOM3 ?> <font id="color2"><?php print count($data) ?></font> / <?php print LANGBULL3 ?> : <font id="color2"><?php print anneeScolaireViaIdClasse($saisie_classe) ?></font></font></b></td>
+<tr id='coulBar0' ><td height="2" colspan=3><b><font   id='menumodule1' ><?php print LANGELE4 ?> : <font id="color2"><?php print $cl?></font> / <?php print LANGCOM3 ?> <font id="color2"><?php print countTriade($data) ?></font> / <?php print LANGBULL3 ?> : <font id="color2"><?php print anneeScolaireViaIdClasse($saisie_classe) ?></font></font></b></td>
 </tr>
 <?php
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
 	print("<tr id='cadreCentral0' ><td align=center valign=center>".LANGPROJ6."</td></tr>");
 }else{
 ?>
@@ -73,7 +73,7 @@ if( count($data) <= 0 ) {
 <td width=5%><b><?php print "Ajouter" ?></b></td>
 </tr>
 <?php 
-for($i=0;$i<count($data);$i++) { ?>
+for($i=0;$i<countTriade($data);$i++) { ?>
 		<tr id='tr<?php print $i ?>' class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
 		<td><?php  infoBulleEleveSansLoupe($data[$i][1],strtoupper($data[$i][2])) ?></td>
 		<td><?php print ucwords($data[$i][3])?></td>

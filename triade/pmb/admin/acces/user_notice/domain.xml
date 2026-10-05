@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: domain.xml,v 1.8 2013-05-07 08:58:21 dbellamy Exp $ -->
+$Id: domain.xml,v 1.8.28.1 2024/07/25 14:42:21 dbellamy Exp $ -->
 
 
 <!-- format du fichier 
@@ -39,7 +39,7 @@ USR_REF_NAME			Nom donnée
 USR_REF_KEY				Identifiant pour donnée de type table
 
 USR_R_QUERY_TYPE		Type donnée permettant de connaître le rôle utilisateur lors de l'accès à la ressource 
-						(var=variable postée, session=variable session, field=champ dans une table, sql=valeur calculee a partir d'une requete)
+						(var=variable postée, session=variable session, field=champ dans une table, sql=valeur calculee a partir d'une requete, callable=methode d'une classe)
 USR_R_QUERY_VALUE		Nom champ, requete
 ****************************************************************************************
 
@@ -66,11 +66,11 @@ RES_REF_NAME			Nom donnée
 RES_REF_KEY				Identifiant pour donnée de type table
 
 RES_C_QUERY_TYPE		Type donnée permettant de définir le profil ressource à la création 
-						(var=variable postée, session=variable session, field=champ dans une table)
+						(var=variable postée, session=variable session, field=champ dans la table ressource, sql=valeur calculee a partir d'une requete, callable=methode d'une classe)
 RES_C_QUERY_VALUE		Nom donnée
 
 RES_I_QUERY_TYPE		Type donnée permettant de définir le profil ressource à l'initialisation
-						(field=champ dans la table ressource, sql=valeur calculee a partir d'une requete)
+						(field=champ dans la table ressource, sql=valeur calculee a partir d'une requete, callable=methode d'une classe)
 RES_I_QUERY_VALUE		Nom champ, requete
 ****************************************************************************************
 
@@ -89,7 +89,7 @@ PN_ID					Identifiant propriété
 PN_LIBELLE				Libellé affiché pour la propriété (si msg:xxx, xxx sera repris dans la liste 
 						des messages, sinon, dans le fichier situé dans le répertoire des messages 
 						pour les droits d'accés courants).
-PN_REF_TYPE				Type donnée propriété (table, marc_table)
+PN_REF_TYPE				Type donnée propriété (table, marc_table, callable)
 PN_REF_NAME				Nom donnée
 PN_REF_KEY				Identifiant pour donnée de type table				
 PN_REF_VALUE			Valeur affichée pour donnée de type table
@@ -102,9 +102,6 @@ définition des droits atomiques qu'il est possible de spécifier pour chaque ress
 <controls>
 	<control id='1' global='GLOBAL' lib='CTL1_LIB' />
 	<control id='2' global='GLOBAL' lib='CTL1_LIB' />
-
-
-	<control id='CTL3_ID' lib='CTL3_LIB' />
 	...
 	<control id='CTLN_ID' lib='CTLN_LIB' />
 </controls>

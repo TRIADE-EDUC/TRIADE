@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtdplanifier.js"></script>
@@ -40,22 +42,18 @@ include_once("./librairie_php/db_triade.php");
 validerequete("3");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGDISC18?> </font></b></td></tr>
-<tr id='cadreCentral0'>
-<td >
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de la liste d'élèves trouvées
 $motif=strtolower(trim($_POST["saisie_nom_eleve"]));
 $sql=<<<EOF
 
 SELECT c.libelle,e.nom,e.prenom,e.elev_id
-FROM ${prefixe}eleves e, ${prefixe}classes c
+FROM {$prefixe}eleves e, {$prefixe}classes c
 WHERE lower(e.nom) LIKE '%$motif%'
 AND c.code_class = e.classe
 ORDER BY c.libelle, e.nom, e.prenom
@@ -66,12 +64,12 @@ $data=chargeMat($res);
 
 ?>
 <?php
-if( count($data) <= 0 )
+if( countTriade($data) <= 0 )
         {
         print("<BR><center>".LANGDISP1."<BR><BR></center>");
         }
 else {
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
         ?>
 <table border="1" bordercolor="#000000" width="100%" style="border-collapse: collapse;" >
@@ -96,7 +94,7 @@ $data_2=affSanction_par_eleve($data[$i][3]);
 // id,id_eleve,motif,id_category,date_saisie,origin_saisie,signature_parent,attribuer_par,devoir_a_faire,description_fait
 // $data : tab bidim - soustab 3 champs
 $nb=0;
-for($j=0;$j<count($data_2);$j++) {
+for($j=0;$j<countTriade($data_2);$j++) {
 	$raison=$data_2[$j][8];
 	$raison=preg_replace('/\r\n/',"<br />",$raison);
 	$raison=preg_replace('/\n/',"<br />",$raison);
@@ -142,17 +140,17 @@ for($j=0;$j<count($data_2);$j++) {
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

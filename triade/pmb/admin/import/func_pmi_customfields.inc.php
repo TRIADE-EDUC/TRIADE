@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_pmi_customfields.inc.php,v 1.6 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_pmi_customfields.inc.php,v 1.9 2021/12/09 14:22:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -19,23 +19,25 @@ function recup_noticeunimarc_suite($notice) {
 } // fin recup_noticeunimarc_suite 
 	
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 	global $info_606_a;
 	global $pmb_keyword_sep ;
 	global $info_900;
-	$mots_cles='';
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
+	
+	$mots_cles = '';
+	
+	$nb_infos_606_a = count($info_606_a);
+	for ($a = 0; $a < $nb_infos_606_a; $a++) {
 		$mots_cles .= $info_606_a[$a][0]." $pmb_keyword_sep " ;
 	}
 	$mots_cles ? $index_matieres = strip_empty_words($mots_cles) : $index_matieres = '';
 	$rqt_maj = "update notices set index_l='".addslashes($mots_cles)."', index_matieres=' ".addslashes($index_matieres)." ' where notice_id='$notice_id' " ;
-	pmb_mysql_query($rqt_maj, $dbh);
+	pmb_mysql_query($rqt_maj);
 	
 	for($i=0;$i<count($info_900);$i++){		
 		
 		$req = " select idchamp, type, datatype from notices_custom where name='".$info_900[$i]['n']."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			$perso = pmb_mysql_fetch_object($res);
 			if($perso->idchamp){
@@ -75,19 +77,19 @@ function import_new_notice_suite() {
 function traite_exemplaires () {
 	global $nb_expl_ignores,$bulletin_ex ;
 	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, 
-		$section_995, $sdoc_codage, $book_statut_id, $codstatdoc_995, $statisdoc_codage,
+		$sdoc_codage, $book_statut_id, $statisdoc_codage,
 		$cote_mandatory, $book_location_id ;
 		
 	// lu en 010$d de la notice
 	$price = $prix[0];
 	
-	// la zone 995 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
-		
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 		
-		/* pr√©paration du tableau √† passer √† la m√©thode */
+		/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
 		
 		if ($bulletin_ex) {
@@ -98,12 +100,12 @@ function traite_exemplaires () {
 			$expl['bulletin']=0;
 		}
 		
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; √† chercher dans docs_typdoc
+		// $expl['typdoc']     = $info_995[$nb_expl]['r']; ‡ chercher dans docs_typdoc
 		$data_doc=array();
-		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc import√© (".$book_lender_id.")";
+		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importÈ (".$book_lender_id.")";
 		$data_doc['tdoc_libelle'] = $typdoc_995[$info_995[$nb_expl]['r']];
 		if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "\$r non conforme -".$info_995[$nb_expl]['r']."-" ;
-		$data_doc['duree_pret'] = 0 ; /* valeur par d√©faut */
+		$data_doc['duree_pret'] = 0 ; /* valeur par dÈfaut */
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
 			else $data_doc['tdoc_owner'] = 0 ;
@@ -111,7 +113,7 @@ function traite_exemplaires () {
 		
 		$expl['cote'] = $info_995[$nb_expl]['k'];
                       	
-		// $expl['section']    = $info_995[$nb_expl]['q']; √† chercher dans docs_section
+		// $expl['section']    = $info_995[$nb_expl]['q']; ‡ chercher dans docs_section
 		$data_doc=array();
 		$info_995[$nb_expl]['q']=trim($info_995[$nb_expl]['q']);
 		if (!$info_995[$nb_expl]['q']) 
@@ -122,11 +124,11 @@ function traite_exemplaires () {
 			else $data_doc['sdoc_owner'] = 0 ;
 		$expl['section'] = docs_section::import($data_doc);
 		
-		/* $expl['statut']     √† chercher dans docs_statut */
+		/* $expl['statut']     ‡ chercher dans docs_statut */
 		/* TOUT EST COMMENTE ICI, le statut est maintenant choisi lors de l'import
 		if ($info_995[$nb_expl]['o']=="") $info_995[$nb_expl]['o'] = "e";
 		$data_doc=array();
-		$data_doc['statut_libelle'] = $info_995[$nb_expl]['o']." -Statut import√© (".$book_lender_id.")";
+		$data_doc['statut_libelle'] = $info_995[$nb_expl]['o']." -Statut importÈ (".$book_lender_id.")";
 		$data_doc['pret_flag'] = 1 ; 
 		$data_doc['statusdoc_codage_import'] = $info_995[$nb_expl]['o'] ;
 		$data_doc['statusdoc_owner'] = $book_lender_id ;
@@ -136,9 +138,9 @@ function traite_exemplaires () {
 		$expl['statut'] = $book_statut_id;
 		$expl['location'] = $book_location_id;
 		
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilis√©, √©ventuellement √† fixer par combo_box
+		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÈ, Èventuellement ‡ fixer par combo_box
 		$data_doc=array();
-		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub vis√© import√© (".$book_lender_id.")";
+		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visÈ importÈ (".$book_lender_id.")";
 		$data_doc['codestat_libelle'] = 'Unknown';
 		$data_doc['statisdoc_codage_import'] = 'Un' ;
 		if ($statisdoc_codage) $data_doc['statisdoc_owner'] = $book_lender_id ;
@@ -146,16 +148,20 @@ function traite_exemplaires () {
 		$expl['codestat'] = docs_codestat::import($data_doc);
 		
 		
-		// $expl['creation']   = $info_995[$nb_expl]['']; √† pr√©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; √† pr√©ciser
+		// $expl['creation']   = $info_995[$nb_expl]['']; ‡ prÈciser
+		// $expl['modif']      = $info_995[$nb_expl]['']; ‡ prÈciser
                       	
 		$expl['note']       = $info_995[$nb_expl]['u'];
 		$expl['prix']       = $price;
 		$expl['expl_owner'] = $book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 		
-		$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;      
-		$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		if (!empty($info_995[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_995[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		}
 		
 		// quoi_faire
 		if ($info_995[$nb_expl]['0']) $expl['quoi_faire'] = $info_995[$nb_expl]['0']  ;
@@ -184,7 +190,7 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area.class.php,v 1.18 2019-02-18 16:05:11 tsamson Exp $
+// $Id: contribution_area.class.php,v 1.47.4.2 2025/04/29 09:51:00 tsamson Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -13,7 +13,7 @@ require_once($class_path.'/onto/common/onto_common_uri.class.php');
 
 /**
  * class contribution_area
- * ReprÃ©sente un espace de contribution
+ * Représente un espace de contribution
  */
 class contribution_area {
 	
@@ -55,8 +55,57 @@ class contribution_area {
 	 */
 	protected $order;
 	
+	/**
+	 * Répertoire de template d'autorités
+	 * @var string $repo_template
+	 */
+	protected $repo_template_authorities;
+	
+	/**
+	 * Répertoire de template de notices
+	 * @var string $repo_template
+	 */
+	protected $repo_template_records;
+	
+	/**
+	 * Espace utilisé pour la modification d'entité
+	 * @var int $repo_template
+	 */
+	protected $editing_entity;
+	
+	/**
+	 * parametre de visibilité de l'espace à l'opac
+	 * @var string $opac_visibility
+	 */
+	protected $opac_visibility;
+
+	/**
+	 * parametre pour mettre une image de fond en opac
+	 * @var string $area_logo
+	 */
+	protected $area_logo;
+
+	/**
+	 * parametre si on doit supprimer l'image de fond en opac
+	 * @var string $area_del_logo
+	 */
+	protected $area_del_logo;
+	
 	private static $onto;
+
+	/**
+	 * store de parametrage des espaces de contribution
+	 *
+	 * @var onto_store_arc2
+	 */
 	private static $graphstore;
+
+	/**
+	 * store des donnees de contribution
+	 *
+	 * @var onto_store_arc2
+	 */
+	private static $datastore;
 
 	public function __construct($id = 0) {
 		if ($id) {
@@ -77,6 +126,10 @@ class contribution_area {
 				$this->color = $result->area_color;
 				$this->order = $result->area_order;
 				$this->status = $result->area_status;
+				$this->opac_visibility = $result->area_opac_visibility;
+				$this->repo_template_authorities = $result->area_repo_template_authorities;
+				$this->repo_template_records = $result->area_repo_template_records;
+				$this->area_logo = $result->area_logo;
 			}
 		}
 	}
@@ -97,26 +150,46 @@ class contribution_area {
 		global $contribution_area_list_tpl;
 		global $contribution_area_list_line_tpl;
 		global $contribution_area_add_button;
+		global $pmb_contribution_opac_edit_entity;
+		global $contribution_area_edit_entity;
 		
 		$query = 'SELECT contribution_area_areas.*, contribution_area_status_gestion_libelle AS status_label 
 				FROM contribution_area_areas 
 				LEFT JOIN contribution_area_status ON area_status = contribution_area_status_id   
-				ORDER BY area_title';
+				ORDER BY area_order';
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			$list = '';
 			$pair = 'even';
 			while ( $area = pmb_mysql_fetch_object($result) ) {
+			    if ($area->area_order == 0) {
+			        SELF::update_order($area->id_area);
+			    }
 				if ($pair == 'odd') {
 					$pair = 'even';
 				} else {
 					$pair = 'odd';
 				}
 				$list .= str_replace('!!odd_even!!', $pair, $contribution_area_list_line_tpl);
-				$list = str_replace('!!id!!', $area->id_area, $list);
 				$list = str_replace('!!area_title!!', $area->area_title, $list);
 				$list = str_replace('!!area_color!!', $area->area_color, $list);
 				$list = str_replace('!!area_status!!', ($area->status_label ? $area->status_label : ""), $list);
+				$list = str_replace('!!disabled_default_area!!', ($pmb_contribution_opac_edit_entity ? $contribution_area_edit_entity : ""), $list);
+				
+				if ($pmb_contribution_opac_edit_entity) {
+    				//Bouton utilisé par défaut
+    				$message = str_replace('%f', $area->area_title, $msg['contribution_area_confirm_default_area']);
+    				$list = str_replace('!!confirm_msg_default!!', addslashes($message), $list);
+    				if ($area->area_editing_entity) {
+    				    $list = str_replace('!!button_default_area!!', $msg['contribution_area_is_default_area'], $list);
+    				    $list = str_replace('!!disabled_default_area!!', 'disabled', $list);
+    				} else {
+    				    $list = str_replace('!!button_default_area!!', $msg['contribution_area_default_area'], $list);
+    				    $list = str_replace('!!disabled_default_area!!', '', $list);
+    				}
+				}
+				
+				$list = str_replace('!!id!!', $area->id_area, $list);
 			}
 			$table = str_replace('!!list!!', $list, $contribution_area_list_tpl);
 			return $table . $contribution_area_add_button;
@@ -126,11 +199,8 @@ class contribution_area {
 	}
 
 	public function get_form() {
-		global $contribution_area_form;
-		global $contribution_area_delete_button;
-		global $msg;
-		global $charset;
-		if($this->id){
+		global $contribution_area_form, $contribution_area_delete_button, $msg, $charset;
+		if ($this->id) {
 			$contribution_area_form = str_replace('!!delete!!', $contribution_area_delete_button, $contribution_area_form);
 			$contribution_area_form = str_replace('!!msg_title!!', $msg['contribution_area_form_edit'], $contribution_area_form);
 			$contribution_area_form = str_replace('!!id!!', $this->id, $contribution_area_form);
@@ -139,8 +209,12 @@ class contribution_area {
 			$contribution_area_form = str_replace('!!area_color!!', htmlentities($this->color, ENT_QUOTES, $charset), $contribution_area_form);
 			$contribution_area_form = str_replace('!!area_status!!', $this->get_status_options(), $contribution_area_form);
 			$contribution_area_form = str_replace('!!area_rights!!', $this->get_rights_form(), $contribution_area_form);
-			return $contribution_area_form;
-		}else{
+			$contribution_area_form = str_replace('!!area_repo_template_authorities!!', htmlentities($this->repo_template_authorities, ENT_QUOTES, $charset), $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_repo_template_records!!', htmlentities($this->repo_template_records, ENT_QUOTES, $charset), $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_logo!!', $this->get_content_area_logo(), $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_logo_src_display!!', !empty($this->area_logo) ? "block" : "none", $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_opac_visibility!!', ($this->opac_visibility ? 'checked' : '' ), $contribution_area_form);
+		} else {
 			$contribution_area_form = str_replace('!!delete!!', '', $contribution_area_form);
 			$contribution_area_form = str_replace('!!msg_title!!', $msg['contribution_area_form_create'], $contribution_area_form);
 			$contribution_area_form = str_replace('!!id!!', 0, $contribution_area_form);
@@ -149,8 +223,13 @@ class contribution_area {
 			$contribution_area_form = str_replace('!!area_color!!', '', $contribution_area_form);
 			$contribution_area_form = str_replace('!!area_status!!', $this->get_status_options(), $contribution_area_form);
 			$contribution_area_form = str_replace('!!area_rights!!', $this->get_rights_form(), $contribution_area_form);
-			return $contribution_area_form;
+			$contribution_area_form = str_replace('!!area_repo_template_authorities!!', '', $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_repo_template_records!!', '', $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_logo!!', $this->get_content_area_logo(), $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_logo_src_display!!', !empty($this->area_logo) ? "block" : "none", $contribution_area_form);
+			$contribution_area_form = str_replace('!!area_opac_visibility!!', 'checked', $contribution_area_form);
 		}
+		return $contribution_area_form;
 	}
 
 	public function get_definition_form(){
@@ -165,44 +244,100 @@ class contribution_area {
 	
 	/**
 	 * Non static (avoir pour des tests supp
-	 *  sur les Ã©lÃ©ments de scÃ©narii)
+	 *  sur les éléments de scénarii)
 	 */
 	public function delete() {		
-		//suppression des droits d'acces empr_contribution_area
-		$requete = "delete from acces_res_4 where res_num=".$this->id;
-		@pmb_mysql_query($requete);
+ 		//suppression des droits d'acces empr_contribution_area
+	    $query_acces = "show tables like 'acces_res_4'";
+	    $result_acces = pmb_mysql_query($query_acces);
+	    if($result_acces && pmb_mysql_num_rows($result_acces)) {
+    		$requete = "delete from acces_res_4 where res_num=".$this->id;
+    		@pmb_mysql_query($requete);
+	    }
 		
-		$query = 'delete from contribution_area_areas where id_area = "'.$this->id.'"';
+	    $this->delete_in_stores();
+	    $this->delete_uplodad_directory();
+	    
+		$query = "DELETE FROM contribution_area_areas WHERE id_area = '".$this->id."'";
 		return pmb_mysql_query($query);
 	}
+	
+	private function delete_in_stores() {
+	    //suppression des donnees du graphstore
+	    self::get_graphstore();
+	    $succes = self::$graphstore->query('select * where { 
+            ?attachment <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pmbservices.fr/ca/Attachment> .
+            ?attachment <http://www.pmbservices.fr/ca/inArea> '.$this->get_area_uri().' .
+            ?attachment <http://www.pmbservices.fr/ca/attachmentSource> '.$this->get_area_uri().' .
+            ?attachment <http://www.pmbservices.fr/ca/attachmentDest> ?scenario .
+        }');
+	    if ($succes) {
+	        $results = self::$graphstore->get_result();
+	        foreach ($results as $row) {
+	            $scenario_id = onto_common_uri::get_id($row->scenario);
+	            contribution_area_scenario::delete($scenario_id);
+	        }
+			$delete_query = "DELETE {
+                ?s ?p ".$this->get_area_uri()." .
+            }";
+	        $succes = self::$graphstore->query($delete_query);
+	        if (!$succes) {
+	            var_dump($delete_query, self::$graphstore->get_errors());
+	        }
+	    } else {
+	        var_dump(self::$graphstore->get_errors());
+	    }
 
-	public function save_from_form(){
-		global $area_title;
-		global $area_comment;
-		global $area_color;
-		global $area_status;
-		
-		$this->title = stripslashes($area_title);
+		//suppression des donnees du datastore
+		self::get_datastore();
+		$delete_query = "DELETE {?s ?p ?o} WHERE {
+			?s ?p ?o .
+			?s pmb:area '".$this->id."' .
+		}";
+		$success = self::$datastore->query($delete_query);
+		if (!$success) {
+			var_dump($delete_query, self::$datastore->get_errors());
+		}
+	}
+
+	public function save_from_form() {
+	    global $area_title, $area_comment, $area_color, $area_status, $area_repo_template_authorities, $area_repo_template_records, $area_opac_visibility, $area_del_logo;
+
+	    $this->title = stripslashes($area_title);
 		$this->comment = stripslashes($area_comment);
 		$this->color = stripslashes($area_color);
 		$this->status = stripslashes($area_status);
+		$this->repo_template_authorities = stripslashes($area_repo_template_authorities);
+		$this->repo_template_records = stripslashes($area_repo_template_records);
+		$this->opac_visibility = stripslashes($area_opac_visibility);
+		$this->area_del_logo = stripslashes($area_del_logo);
+		$this->area_logo = stripslashes($this->get_path_area_logo());
 	}
 	
 	public function save() {
 		$query_clause = '';
-		if($this->id){
+		if ($this->id) {
 			$update = true;
 			$query_statement = 'update ';
 			$query_clause = ' where id_area = '.$this->id;
-		}else{
+		} else {
 			$update = false;
 			$query_statement = 'insert into ';
+			$query = "SELECT MAX(area_order) FROM contribution_area_areas";
+			$result = pmb_mysql_query($query);
+			$max_order = pmb_mysql_result($result,0,0);
+			$this->order = $max_order + 1; 
 		}
-		$query_statement.= ' contribution_area_areas set ';
-		$query_statement.= 'area_title = "'.addslashes($this->title).'", ';
-		$query_statement.= 'area_comment = "'.addslashes($this->comment).'", ';
-		$query_statement.= 'area_color = "'.addslashes($this->color).'", ';
-		$query_statement.= 'area_status = "'.addslashes($this->status).'" ';
+		$query_statement .= ' contribution_area_areas set ';
+		$query_statement .= 'area_title = "'.addslashes($this->title).'", ';
+		$query_statement .= 'area_comment = "'.addslashes($this->comment).'", ';
+		$query_statement .= 'area_color = "'.addslashes($this->color).'", ';
+		$query_statement .= 'area_status = "'.addslashes($this->status).'", ';
+		$query_statement .= 'area_opac_visibility = "'.addslashes($this->opac_visibility).'", ';
+		$query_statement .= 'area_repo_template_authorities = "'.addslashes($this->repo_template_authorities).'", ';
+		$query_statement .= 'area_repo_template_records = "'.addslashes($this->repo_template_records).'", ';
+		$query_statement .= 'area_logo = "'.addslashes($this->area_logo).'", ';
+		$query_statement .= 'area_order = '.$this->order;
 		pmb_mysql_query($query_statement.$query_clause);
 		if(!$this->id){
 			$this->id = pmb_mysql_insert_id();
@@ -227,63 +362,39 @@ class contribution_area {
 		}
 	}
 	
-	public static function get_ontology(){
-		global $base_path;
-		global $class_path;
-		
-		if(!isset(self::$onto)){
-			$onto_store_config = array(
-				/* db */
-				'db_name' => DATA_BASE,
-				'db_user' => USER_NAME,
-				'db_pwd' => USER_PASS,
-				'db_host' => SQL_SERVER,
-				/* store */
-				'store_name' => 'ontodemo',
-				/* stop after 100 errors */
-				'max_errors' => 100,
-				'store_strip_mb_comp_str' => 0
-			);
-			$tab_namespaces = array(
-				"skos"	=> "http://www.w3.org/2004/02/skos/core#",
-				"dc"	=> "http://purl.org/dc/elements/1.1",
-				"dct"	=> "http://purl.org/dc/terms/",
-				"owl"	=> "http://www.w3.org/2002/07/owl#",
-				"rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-				"rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
-				"xsd"	=> "http://www.w3.org/2001/XMLSchema#",
-				"pmb"	=> "http://www.pmbservices.fr/ontology#"
-			);
-			
-			$onto_store = new onto_store_arc2_extended($onto_store_config);
-			$onto_store->set_namespaces($tab_namespaces);
-			
- 			//chargement de l'ontologie dans son store
-			$reset = $onto_store->load($class_path."/rdf/ontologies_pmb_entities.rdf", onto_parametres_perso::is_modified());
-			onto_parametres_perso::load_in_store($onto_store, $reset);
-			
-			self::$onto = new onto_ontology($onto_store);
+	/**
+	 * @return onto_ontology
+	 */
+	public static function get_ontology() {
+		if(!isset(self::$onto)) {
+            $contribution_area_store = new contribution_area_store();
+            self::$onto = $contribution_area_store->get_ontology();
 		}
 		return self::$onto;
 	}
 	
 	public function get_graph_store_data() {
-		$area_linked_entities = $this->get_attachment_detail($this->get_area_uri());
-		return $area_linked_entities;
+	    return $this->get_attachment_detail($this->get_area_uri(false));
 	}
 
-	private function get_attachment_detail($source_uri,$source_id=""){
+	private function get_attachment_detail($source_uri, $source_id="") {
 		$details = array();
-		$attachments = $this->get_attachment($source_uri);
+		$attachments = $this->get_attachment("<{$source_uri}>");
 		for($i=0 ; $i<count($attachments) ; $i++){
 			$infos = $this->get_infos($attachments[$i]->dest);
-			 
+			if (empty($infos)) {
+			    continue;
+			}
+			
 			if(!empty($attachments[$i]->name)){
+			    $property = $this->get_property_attachment($source_uri, $attachments[$i]);
 				$node = array(
 					'type' => 'attachment',
 					'name' => $attachments[$i]->name,
 					'id' => $attachments[$i]->identifier,
-					'entityType' => $infos['entityType']
+				    'entityType' => $property['flag'] ?? $infos['entityType'],
+				    'question' => !empty($attachments[$i]->question) ? $attachments[$i]->question : '',
+				    'comment' => !empty($attachments[$i]->comment) ? $attachments[$i]->comment : '',
 				);
 				if($source_id){
 					$node['parent'] = $source_id;
@@ -292,16 +403,41 @@ class contribution_area {
 					$node['propertyPmbName'] = $attachments[$i]->property_pmb_name;
 				} 
 				$infos['parent'] = $attachments[$i]->identifier;
-				$details[] = $node;			
+				
+				if (!in_array($node, $details)) {
+    				$details[] = $node;			
+				}
 			}else{				
 				if($source_id){
 					$infos['parent'] = $source_id;
 				}
 			}
 			$details[] = $infos;
-			$details = array_merge($details,$this->get_attachment_detail('<'.$attachments[$i]->dest.'>',$infos['id']));
+			$details = array_merge($details, $this->get_attachment_detail($attachments[$i]->dest, $infos['id']));
+			
 		}
 		return $details;
+	}
+	
+	/**
+	 * Retourne la première propriété qui matche avec un noeud d'attache et le formulaire
+	 * 
+	 * @param string $form_uri
+	 * @param string $attachment
+	 * @return array
+	 */
+	private function get_property_attachment($form_uri, $attachment) {
+	    $formInfo = $this->get_infos($form_uri);
+	    $matches = array_filter(contribution_area_forms_controller::get_store_data(), function ($item) use($formInfo, $attachment) {
+	        if (!is_array($item) || $item['type'] != "property") {
+	            return false;
+	        }
+	        if ($item['form_id'] != $formInfo['eltId'] && $item['parent_type'] != $formInfo['entityType']) {
+	            return false;
+	        }
+	        return $item['name'] == $attachment->name;
+	    });
+        return !empty($matches) ? array_shift($matches) : [];
 	}
 	
 	private function get_attachment($source_uri){
@@ -316,11 +452,14 @@ class contribution_area {
 			optional {
 				?attachment rdf:label ?name .
 				?attachment ca:identifier ?identifier .
-				?attachment pmb:name ?property_pmb_name
+				?attachment pmb:name ?property_pmb_name .
+				optional {
+					?attachment pmb:question ?question .
+					?attachment pmb:comment ?comment
+				}
 			}
 		}');
-
-		if($result){
+		if ($result) {
 			$attachments = self::$graphstore->get_result();
 		}
 		return $attachments;
@@ -392,50 +531,82 @@ class contribution_area {
 					case 'http://www.pmbservices.fr/ontology#status' :
 						$infos['status'] = $results[$i]->o;
 						break;
+					case 'http://www.pmbservices.fr/ontology#response' :
+						$infos['response'] = $results[$i]->o;
+						break;
+					case 'http://www.pmbservices.fr/ontology#orderResponse' :
+						$infos['orderResponse'] = $results[$i]->o;
+						break;
+					case 'http://www.pmbservices.fr/ontology#equation' :
+						$infos['equation'] = $results[$i]->o;
+						break;
 				}
 			}
 		}
 		return $infos;
 	}
+	
+	private function reset_graph() {
+	    self::get_graphstore();
+	    if ($this->id) {
+	        // On commence par supprimer ce qui existe
+	        $query = "
+					select ?suj where {
+						?suj ca:inArea <http://www.pmbservices.fr/ca/Area#".$this->id.">
+					}
+					";
+	        $result = self::$graphstore->query($query);
+	        if(!$result){
+	            var_dump("Errors : ".self::$graphstore->get_errors());
+	        } else {
+	            $rows = self::$graphstore->get_result();
+	            foreach ($rows as $row) {
+	                $query = "delete {
+						<".$row->suj."> ?prop ?obj
+					}";
+	                
+	                $result_delete = self::$graphstore->query($query);
+	                if(!$result_delete){
+	                    var_dump("Errors : ".self::$graphstore->get_errors());
+	                }
+	            }
+	        }
+	    }
+	}
 		
 	public function save_graph($data, $current_scenario = 0){
 		self::get_graphstore();
 		
-		if ($this->id) {
-			// On commence par supprimer ce qui existe
-			$query = "
-					select ?suj where {
-						?suj ca:inArea <http://www.pmbservices.fr/ca/Area#".$this->id.">								
-					}
-					";
-			$result = self::$graphstore->query($query);
-			if(!$result){
-				var_dump("Errors : ".self::$graphstore->get_errors());
-			} else {
-				$rows = self::$graphstore->get_result();
-				foreach ($rows as $row) {
-					$query = "delete {						
-						<".$row->suj."> ?prop ?obj
-					}";
-					
-					$result_delete = self::$graphstore->query($query);
-					if(!$result_delete){
-						var_dump("Errors : ".self::$graphstore->get_errors());
-					}
-				}
-			}
+		if (empty($data) && empty($current_scenario)) {
+		    //dans ce cas on est surement sur un bug d'affichage (ex : APCA #157453)
+		    return;
 		}
+		$this->reset_graph();
 		//on encadre les float avec des guillemets sinon json_decode arrondit l'id
-		$data = json_decode(preg_replace('/:\s*(\-?\d+(\.\d+)?([e|E][\-|\+]\d+)?)/', ': "$1"', stripslashes($data)));
+		$data = encoding_normalize::utf8_normalize(preg_replace('/:\s*(\-?\d+(\.\d+)?([e|E][\-|\+]\d+)?)/', ': "$1"', stripslashes($data)));
+		$data = json_decode($data);
 		$graph_data = $this->prepare_data($data);
+		
+		$query = 'delete {';
+		for($i=0 ; $i<count($graph_data) ; $i++){
+		    $query.= '
+            '.$graph_data[$i]['subject'].' ?p ?o .';
+		}
+		$query.='
+        }';
+		$result = self::$graphstore->query($query);
+		if(!$result){
+		    var_dump(self::$graphstore->get_errors());
+		}
 		
 		$query = 'insert into <pmb> {';
 		for($i=0 ; $i<count($graph_data) ; $i++){
 			$query.= '
-			'.$graph_data[$i]['subject'].' '.$graph_data[$i]['predicat'].' '.$graph_data[$i]['value'].' .';			
+			'.$graph_data[$i]['subject'].' '.$graph_data[$i]['predicat'].' '.encoding_normalize::charset_normalize($graph_data[$i]['value'],"utf-8").' .';			
 		}		
 		$query.='
 		}';
+		
 		$result = self::$graphstore->query($query);
 		if(!$result){
 			var_dump(self::$graphstore->get_errors());
@@ -453,7 +624,7 @@ class contribution_area {
 		for($i=0 ; $i<count($tree) ; $i++){
 			//attachment 
 			$assertions = array_merge($assertions,$this->getAttachmentAssertions($this->getObjectUri($tree[$i],true),$this->get_area_uri() , $tree[$i]));
-			// les infos de l'Ã©lÃ©ment
+			// les infos de l'élément
 			$assertions = array_merge($assertions,$this->get_node_assertions($tree[$i]));
 			//la suite...
 			if(!empty($tree[$i]->children)){
@@ -466,7 +637,7 @@ class contribution_area {
 	private function getChildrenAssertions($source,$children){
 		$assertions = array();
 		for($i=0 ; $i<count($children) ; $i++){
-			// les infos de l'Ã©lÃ©ment
+			// les infos de l'élément
 			$assertions = array_merge($assertions,$this->get_node_assertions($children[$i]));
 			//attachment
 			if($children[$i]->type == 'attachment'){
@@ -525,9 +696,11 @@ class contribution_area {
 	private function get_uri($object,$attachment=false){
 		if($attachment){
 			$uri = "http://www.pmbservices.fr/ca/Attachement#!!id!!";
-			$id = $object->type.$object->id;
-			if($object->type == 'attachment'){
-				$id = $object->entityType.$object->id;
+			if ($object->type == 'attachment') {
+			    // Petit hack horrible à mettre à la poubelle, mais bon ça marche
+			    $id = is_array($object->entityType) ? "Array{$object->id}" : $object->entityType.$object->id;
+			} else {
+    			$id = $object->type.$object->id;
 			}
 			return str_replace('!!id!!',$id,$uri);
 		}
@@ -550,26 +723,39 @@ class contribution_area {
 		$tree = array();		
 		//reformatage..
 		for($i=0 ; $i<count($data) ; $i++){
-			if($data[$i]->type == "scenario" && !isset($data[$i]->parentScenario)){
+		    if(isset($data[$i]->type) && $data[$i]->type == "scenario" && !isset($data[$i]->parentScenario)){
 				$node = $data[$i];
-				if (!empty($data[$i]->startScenario)) {
-					$node->children = $this->get_children($data[$i]->id,$data);				
+				if (!empty($data[$i]->startScenario) && $this->has_children($data[$i]->id, $data)) {
+					$node->children = $this->get_children($data[$i]->id, $data);				
 				}
 				$tree[]=$node;
 			}
 		}
 		return $tree;
 	}
-	private function get_children($parent,$data){
+	
+	private function get_children($parent, $data) {
 		$children = array();
 		for($i=0 ; $i<count($data) ; $i++){
 			if(isset($data[$i]->parent) && $parent == $data[$i]->parent){
-				$child =  $data[$i];
-				$child->children = $this->get_children($child->id, $data);
+				$child = $data[$i];
+				$child->children = array();
+				if ($this->has_children($child->id, $data)) {
+    				$child->children = $this->get_children($child->id, $data);
+				}
 				$children[] = $data[$i];
 			}
 		}
 		return $children;
+	}	
+	
+	private function has_children($parent, $data) {
+	    for($i=0 ; $i < count($data); $i++) {
+	        if(isset($data[$i]->parent) && $parent == $data[$i]->parent){
+			    return true;
+			}
+		}
+	    return false;
 	}	
 	
 	private function get_node_assertions($data){
@@ -584,13 +770,20 @@ class contribution_area {
 				$node_uri = str_replace('!!id!!',$data->id,$scenario_uri);
 				//le type de noeud
 				$node_type = 'ca:Scenario';
+				if(isset($data->equation)){
+				    $assertions[] = array(
+				        'subject' => $node_uri,
+				        'predicat' => 'pmb:equation',
+				        'value' => '"'.addslashes($data->equation).'"'
+				    );
+				}
 				break;
 			case 'form':
 				//l'URI du noeud en cours
 				$node_uri = str_replace('!!id!!',$data->id,$form_uri);
 				//le type de noeud
 				$node_type = 'ca:Form';
-				//PropriÃ©tÃ©s communes Ã© tous
+				//Propriétés communes é tous
 				$assertions[]  =array(
 					'subject' => $node_uri,
 					'predicat' => 'ca:eltId',
@@ -599,17 +792,18 @@ class contribution_area {
 				break;	
 			case 'attachment':
 				//l'URI du noeud en cours
-				$node_uri = str_replace('!!id!!',$data->entityType.$data->id,$attachment_uri);
+			    $id = is_array($data->entityType) ? "Array{$data->id}" : $data->entityType.$data->id;
+			    $node_uri = str_replace('!!id!!', $id, $attachment_uri);
 				//le type de noeud
 				$node_type = 'ca:Attachment';
-// 				//PropriÃ©tÃ©s communes Ã© tous
+// 				//Propriétés communes é tous
 // 				$assertions[]  =array(
 // 					'subject' => $node_uri,
 // 					'predicat' => 'ca:eltId',
 // 					'value' => '"'.addslashes($data->eltId).'"'
 // 				);
 		}
-		//PropriÃ©tÃ©s communes Ã  tous
+		//Propriétés communes à tous
 		$assertions[]  =array(
 				'subject' => $node_uri,
 				'predicat' => 'ca:identifier',
@@ -635,9 +829,9 @@ class contribution_area {
 			);
 		}
 		$assertions[]  =array(
-				'subject' => $node_uri,
-				'predicat' => 'pmb:entity',
-				'value' => '"'.addslashes($data->entityType).'"'
+		    'subject' => $node_uri,
+		    'predicat' => 'pmb:entity',
+		    'value' => is_array($data->entityType) ? '"'.addslashes(encoding_normalize::json_encode($data->entityType)).'"' : '"'.addslashes($data->entityType).'"'
 		);
 		
 		if(isset($data->startScenario)){
@@ -671,6 +865,22 @@ class contribution_area {
 					'value' => '"'.addslashes($data->question).'"'
 			);
 		}
+		
+		if(isset($data->response)){
+			$assertions[]  =array(
+					'subject' => $node_uri,
+					'predicat' => 'pmb:response',
+					'value' => '"'.addslashes($data->response).'"'
+			);
+		}
+
+		if(isset($data->orderResponse)){
+			$assertions[]  =array(
+					'subject' => $node_uri,
+					'predicat' => 'pmb:orderResponse',
+			    'value' => '"'.addslashes($data->orderResponse).'"'
+			);
+		}
 
 		if(isset($data->comment)){
 			$assertions[]  =array(
@@ -691,39 +901,31 @@ class contribution_area {
 		return $assertions;
 	}
 	
-	public function get_area_uri(){
-		return "<http://www.pmbservices.fr/ca/Area#".$this->id.">";
+	public function get_area_uri($formated = true) {
+	    $uri = "http://www.pmbservices.fr/ca/Area#{$this->id}";
+        return $formated ? "<{$uri}>" : $uri;
 	}
 	
+	/**
+	 * @return onto_store_arc2
+	 */
 	public static function get_graphstore(){
-		if(!isset(self::$graphstore)){
-			$store_config = array(
-					/* db */
-					'db_name' => DATA_BASE,
-					'db_user' => USER_NAME,
-					'db_pwd' => USER_PASS,
-					'db_host' => SQL_SERVER,
-					/* store */
-					'store_name' => 'contribution_area_graphstore',
-					/* stop after 100 errors */
-					'max_errors' => 100,
-					'store_strip_mb_comp_str' => 0
-			);
-			$tab_namespaces = array(
-					"dc"	=> "http://purl.org/dc/elements/1.1",
-					"dct"	=> "http://purl.org/dc/terms/",
-					"owl"	=> "http://www.w3.org/2002/07/owl#",
-					"rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-					"rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
-					"xsd"	=> "http://www.w3.org/2001/XMLSchema#",
-					"pmb"	=> "http://www.pmbservices.fr/ontology#",
-					"ca"	=> "http://www.pmbservices.fr/ca/"
-			);
-				
-			self::$graphstore = new onto_store_arc2($store_config);
-			self::$graphstore->set_namespaces($tab_namespaces);
+		if(!isset(self::$graphstore)) { 
+		    $contribution_area_store = new contribution_area_store();
+		    self::$graphstore = $contribution_area_store->get_graphstore();
 		}
 		return self::$graphstore;		
+	}
+	
+	/**
+	 * @return onto_store_arc2
+	 */
+	public static function get_datastore(){
+		if(!isset(self::$datastore)) {
+		    $contribution_area_store = new contribution_area_store();
+		    self::$datastore = $contribution_area_store->get_datastore();
+		}
+		return self::$datastore;
 	}
 	
 	public static function search_datatype_ui_class_name($property, $onto_pmb_name, $onto_name='common'){
@@ -835,13 +1037,13 @@ class contribution_area {
 					
 				if ($user_rights & 2) {
 					$p_sel = gen_liste($q, 'prf_id', 'prf_name', 'res_prf[4]', '', $res_prf, '0', $def_prf, '0', $def_prf);
-					$p_rad = "<input type='radio' name='prf_rad[4]' value='R' ";
+					$p_rad = "<input type='radio' id='prf_rad_4_R' name='prf_rad[4]' value='R' ";
 					if ($gestion_acces_empr_contribution_area_def != '1')
 						$p_rad .= "checked='checked' ";
-					$p_rad .= ">" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</input><input type='radio' name='prf_rad[4]' value='C' ";
+					$p_rad .= "><label for='prf_rad_4_R' >" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</label></input><input type='radio' id='prf_rad_4_C' name='prf_rad[4]' value='C' ";
 					if ($gestion_acces_empr_contribution_area_def == '1')
 						$p_rad .= "checked='checked' ";
-					$p_rad .= ">" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . " $p_sel</input>";
+					$p_rad .= "><label for='prf_rad_4_C' >" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . $p_sel. "</label></input>";
 					$r_form = str_replace('<!-- prf_rad -->', $p_rad, $r_form);
 				} else {
 					$r_form = str_replace('<!-- prf_rad -->', htmlentities($dom_4->getResourceProfileName($res_prf), ENT_QUOTES, $charset), $r_form);
@@ -849,13 +1051,13 @@ class contribution_area {
 					
 				// droits/profils utilisateurs
 				if ($user_rights & 1) {
-					$r_rad = "<input type='radio' name='r_rad[4]' value='R' ";
+					$r_rad = "<input type='radio' id='r_rad_4_R' name='r_rad[4]' value='R' ";
 					if ($gestion_acces_empr_contribution_area_def != '1')
 						$r_rad .= "checked='checked' ";
-					$r_rad .= ">" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</input><input type='radio' name='r_rad[4]' value='C' ";
+					$r_rad .= "><label for='r_rad_4_R' >" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</label></input><input type='radio' id='r_rad_4_C' name='r_rad[4]' value='C' ";
 					if ($gestion_acces_empr_contribution_area_def == '1')
 						$r_rad .= "checked='checked' ";
-					$r_rad .= ">" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . "</input>";
+					$r_rad .= "><label for='r_rad_4_C' >" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . "</label></input>";
 					$r_form = str_replace('<!-- r_rad -->', $r_rad, $r_form);
 				}
 					
@@ -892,15 +1094,19 @@ class contribution_area {
 	
 							$t_rows .= "
 								<tr>
-									<td style='width:25px;' ><input type='checkbox' name='chk_rights[4][" . $k . "][" . $k2 . "]' value='1' ";
+									<td style='width:25px;' ><input type='checkbox' id='chk_rights_4_".$k."_".$k2."' name='chk_rights[4][" . $k . "][" . $k2 . "]' value='1' ";
 							if (isset($t_rights[$k]) && isset($t_rights[$k][$res_prf]) && ($t_rights[$k][$res_prf] & (pow(2, $k2 - 1)))) {
 								$t_rows .= "checked='checked' ";
 							}
-							if (($user_rights & 1) == 0)
-								$t_rows .= "disabled='disabled' ";
-							$t_rows .= "/></td>
+							if (($user_rights & 1) == 0) {
+								$t_rows .= "disabled='disabled' /></td>
 									<td>" . htmlentities($v2, ENT_QUOTES, $charset) . "</td>
 								</tr>";
+							} else {
+							    $t_rows .= "/></td>
+									<td><label for='chk_rights_4_".$k."_".$k2."' >" . htmlentities($v2, ENT_QUOTES, $charset) . "</td>
+								</tr>";
+							}
 						}
 						$c_tab = str_replace('<!-- rows -->', $t_rows, $c_tab);
 					}
@@ -970,5 +1176,275 @@ class contribution_area {
 			$objects[] = $child; 
 		}
 		return $objects;
+	}
+	
+	public function up_order() {
+	    
+	    $query_min_order = 'SELECT MIN(area_order) FROM contribution_area_areas';
+	    $select_min_order = pmb_mysql_query($query_min_order);
+	    $min_order = pmb_mysql_result($select_min_order,0,0);
+		
+		$query_contribution_current = "SELECT * FROM contribution_area_areas WHERE id_area = $this->id";
+		$select_contribution_current = pmb_mysql_query($query_contribution_current);
+		$contribution_current = pmb_mysql_fetch_assoc($select_contribution_current);
+		$order = $this->order - 1;
+		
+		if ($order < $min_order) {
+		    $order = $min_order;
+		}
+		
+		$query_contribution_old = "SELECT * FROM contribution_area_areas WHERE area_order = $order";
+		$select_contribution_old = pmb_mysql_query($query_contribution_old);
+		$contribution_old = pmb_mysql_fetch_assoc($select_contribution_old);
+		
+		$query_update_contribution_current = "UPDATE contribution_area_areas SET area_order = $order WHERE id_area =".$contribution_current['id_area'] ;
+		pmb_mysql_query($query_update_contribution_current);
+		
+		$query_update_contribution_old = "UPDATE contribution_area_areas SET area_order = $this->order WHERE id_area =".$contribution_old['id_area'] ;
+		pmb_mysql_query($query_update_contribution_old);
+
+	}
+	
+	public function down_order() {
+	    
+	    $query_max_order = 'SELECT MAX(area_order) FROM contribution_area_areas';
+	    $select_max_order = pmb_mysql_query($query_max_order);
+	    $max_order = pmb_mysql_result($select_max_order,0,0);
+	    
+	    $query_contribution_current = "SELECT * FROM contribution_area_areas WHERE id_area = $this->id";
+	    $select_contribution_current = pmb_mysql_query($query_contribution_current);
+	    $contribution_current = pmb_mysql_fetch_assoc($select_contribution_current);
+	    $order = $this->order + 1;
+	    
+	    if ($order > $max_order) {
+	        $order = $max_order;
+	    }
+	    
+	    $query_contribution_old = "SELECT * FROM contribution_area_areas WHERE area_order = $order";
+	    $select_contribution_old = pmb_mysql_query($query_contribution_old);
+	    $contribution_old = pmb_mysql_fetch_assoc($select_contribution_old);
+	    
+	    $query_update_contribution_current = "UPDATE contribution_area_areas SET area_order = $order WHERE id_area =".$contribution_current['id_area'] ;
+	    pmb_mysql_query($query_update_contribution_current);
+	    
+	    $query_update_contribution_old = "UPDATE contribution_area_areas SET area_order = $this->order WHERE id_area =".$contribution_old['id_area'] ;
+	    pmb_mysql_query($query_update_contribution_old);
+	}
+	
+	public static function update_order($id_area) {
+	    $query_max_order = 'SELECT MAX(area_order) FROM contribution_area_areas';
+	    $select_max_order = pmb_mysql_query($query_max_order);
+	    $max_order = pmb_mysql_result($select_max_order,0,0) + 1;
+	    
+	    $query = "UPDATE contribution_area_areas SET area_order = $max_order WHERE id_area =".$id_area ;
+	    pmb_mysql_query($query);
+	}
+	
+	public static function get_list_ajax() {
+	    
+	    $area_list = array();
+	    
+	    $query = 'SELECT contribution_area_areas.*, contribution_area_status_gestion_libelle AS status_label
+				FROM contribution_area_areas
+				LEFT JOIN contribution_area_status ON area_status = contribution_area_status_id
+				ORDER BY area_order';
+	    $result = pmb_mysql_query($query);
+	    
+	    if (pmb_mysql_num_rows($result)) {
+	        while ( $area = pmb_mysql_fetch_object($result) ) {
+	            $area_list[$area->id_area] = $area;
+	        }
+	        $area_list["total"] = count($area_list);
+	    }
+	    return $area_list;
+	}
+	
+	public function duplicate_scenario_to_area() {
+	    global $data, $duplicate_forms, $source_area_id;
+	    self::get_graphstore();
+	    
+	    //on encadre les float avec des guillemets sinon json_decode arrondit l'id
+	    $data = json_decode(preg_replace('/:\s*(\-?\d+(\.\d+)?([e|E][\-|\+]\d+)?)/', ': "$1"', stripslashes($data)));
+	    
+	    // On modifie les "identifier"
+	    $newNodeId = array();
+	    foreach ($data as $node) {
+	        unset($node->x, $node->y);
+	        
+	        $new_id = $this->generate_identifier();
+	        $newNodeId[$node->id] = $new_id;
+	        
+	        if ('form' === $node->type && "true" === $duplicate_forms) {
+	            $form = new contribution_area_form($node->entityType, $node->eltId);
+	            $form->generate_duplication_form();
+	            $node->eltId = $form->get_id();
+	            $node->name = $form->get_name();
+	            $node->comment = $form->get_comment();
+	        }
+	        
+            computed_field::duplicate_all_computed_field($source_area_id, $node->id, $new_id, $this->id);
+	        $node->id = $new_id;
+	    }
+	    
+	    // Modifie les id des parent avec les nouveaux "identifier"
+	    foreach ($data as $node) {
+	        if (!empty($node->parent) && $newNodeId[$node->parent]) {
+	            $node->parent = $newNodeId[$node->parent];
+	        }
+	        
+	        if ('scenario' === $node->type && !empty($node->parentScenario)) {
+	            if (!empty($newNodeId[$node->parentScenario])) {
+	                $node->parentScenario = $newNodeId[$node->parentScenario];
+	            } else {
+    	            $newParentScenario = clone $node;
+    	            $newParentScenario->displayed = false;
+    	            unset($newParentScenario->parentScenario, $newParentScenario->parent);
+    	            
+    	            $newParentScenario->id = $this->generate_identifier();
+    	            $node->parentScenario = $newParentScenario->id;
+    	            
+    	            $data[] = $newParentScenario;
+	            }
+	        }
+	    }
+	    
+	    $graph_data = $this->prepare_data($data);
+	    $query = 'insert into <pmb> {';
+	    for ($i=0 ; $i < count($graph_data) ; $i++) {
+	        $query.= '
+			'.$graph_data[$i]['subject'].' '.$graph_data[$i]['predicat'].' '.$graph_data[$i]['value'].' .';
+	    }
+	    $query.='
+		}';
+	    
+	    $succes = self::$graphstore->query($query);
+	    if(!$succes){
+	        var_dump(self::$graphstore->get_errors());
+	    }
+	}
+	
+	public function generate_identifier() {
+	    self::get_graphstore();
+	    
+	    $temp_identifier = "0.".round(microtime(true)*10000);
+	    $query = "select * where {
+                    ?uri <http://www.pmbservices.fr/ca/identifier> ?identifier .
+                    filter regex(?identifier, '".$temp_identifier."')
+                  }";
+	    $succes = self::$graphstore->query($query);
+	    if($succes){
+	       $results = self::$graphstore->get_result();
+	       if(!empty($results)){
+    	       $temp_identifier = $this->generate_identifier();
+	       }else{
+	           return $temp_identifier;
+	       }
+	    }else{
+	        var_dump("Errors : ".self::$graphstore->get_errors());
+	    }
+	}
+	
+	public function set_area_default()
+	{
+	    if (empty($this->id)) {
+	        return false;
+	    }
+	    $query = "UPDATE contribution_area_areas SET area_editing_entity = 0 WHERE area_editing_entity = 1";
+	    pmb_mysql_query($query);
+	    
+	    $query = "UPDATE contribution_area_areas SET area_editing_entity = 1 WHERE id_area = '" . $this->id . "'";
+	    pmb_mysql_query($query);
+	    
+	}
+	
+	public function get_acces_editing_entity() {
+	    global $msg;
+	    
+	    return [ 
+	        0 => $msg['contribution_area_is_default_area_not_use'], 
+	        1 => $msg['contribution_area_is_default_area']
+	    ];
+	}
+	
+	public function get_normalized_item(){
+	    $retour = array(
+	        "id" => $this->id,
+	        "title" => $this->title,
+	        "comment" => (!empty($this->comment) ? $this->comment : ''),
+	        "color" => (!empty($this->color) ? $this->color : ''),
+	        "order" => (!empty($this->order) ? $this->order : ''),
+	        "status" => (!empty($this->status) ? $this->status : ''),
+	        "opac_visibility" => $this->opac_visibility,
+	        "repo_template_authorities" => (!empty($this->repo_template_authorities) ? $this->repo_template_authorities : ''),
+	        "repo_template_records" => (!empty($this->repo_template_records) ? $this->repo_template_records : ''),
+	        "area_logo" => (!empty($this->area_logo) ? $this->area_logo : '')
+	    );
+	    
+	    return $retour;
+	}
+	
+	public function delete_uplodad_directory() {
+	    global $pmb_contribution_opac_docnum_directory;
+	    
+	    if (empty($pmb_contribution_opac_docnum_directory)) {
+	        return '';
+	    }
+	    
+	    $upload_directory = new upload_folder($pmb_contribution_opac_docnum_directory);
+	    $real_path = $upload_directory->repertoire_path . "espace_" . $this->id;
+	    upload_folder::rrmdir($real_path);
+	}
+	
+	public function get_path_area_logo() {
+	    global $pmb_contribution_opac_docnum_directory;
+
+	    if ('true' == $this->area_del_logo && empty($_FILES['area_logo']['tmp_name'])) {
+	        return '';
+	    }
+	    
+		// Récupère le chemin temporaire du fichier téléchargé
+		$file_temp_path = $_FILES['area_logo']['tmp_name'];
+	    if (!file_exists($file_temp_path)) {
+	       return '';
+	    }
+
+		// Creation d'un objet FileInfo pour analyser le type MIME du fichier
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$fileMimeType = $finfo->file($file_temp_path);
+
+		// Verifier si le type MIME est autorise
+		if (!in_array(
+			$fileMimeType, 
+			["image/png", "image/jpg", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/svg+xml"])
+			) {
+			return '';
+		}
+	    
+	    $upload_directory = new upload_folder($pmb_contribution_opac_docnum_directory);
+	    $rep_path = $upload_directory->repertoire_path;
+
+	    $blob =  file_get_contents($file_temp_path);
+	    $filename = $_FILES['area_logo']['name'];
+	    
+	    // Vérifie si le répertoire existe :
+	    $path = "espace_" . $this->id . "/wallpaper/";
+	    upload_folder::rrmdir($rep_path . $path);
+	    
+	    if (!is_dir($rep_path . $path)) {
+	        mkdir($rep_path . $path, 0777, true);
+	    }
+	    
+	    $complete_path = $path . $filename;
+	    file_put_contents($rep_path . $complete_path, $blob);
+
+	    return $rep_path . $complete_path;
+	}
+	
+	public function get_content_area_logo() {
+	    if (empty($this->area_logo)) {
+	        return '';
+	    }
+	    $content = "data:image/png;base64,".base64_encode(file_get_contents($this->area_logo));
+	    return $content;
 	}
 } // end of contribution_area

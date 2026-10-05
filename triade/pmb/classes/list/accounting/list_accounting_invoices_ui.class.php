@@ -2,17 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_accounting_invoices_ui.class.php,v 1.3 2018-05-26 06:51:25 dgoron Exp $
+// $Id: list_accounting_invoices_ui.class.php,v 1.6 2021/05/25 11:12:21 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/accounting/list_accounting_ui.class.php");
-
 class list_accounting_invoices_ui extends list_accounting_ui {
-		
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
 	
 	/**
 	 * Initialisation des colonnes disponibles
@@ -42,17 +36,14 @@ class list_accounting_invoices_ui extends list_accounting_ui {
 		$this->add_column_print('fact');
 	}
 	
-	protected function get_selection_actions() {
+	protected function init_default_selection_actions() {
 		global $msg;
-	
-		if(!isset($this->selection_actions)) {
-			$this->selection_actions = array();
-			if($this->filters['status'] == STA_ACT_REC) {
-				//Bouton payer
-				$this->selection_actions[] = $this->get_selection_action('pay', $msg['acquisition_fac_bt_pay'], 'pay.png', $this->get_link_action('list_pay', 'pay'));
-			}
+		
+		parent::init_default_selection_actions();
+		if($this->filters['status'] == STA_ACT_REC) {
+			//Bouton payer
+			$this->add_selection_action('pay', $msg['acquisition_fac_bt_pay'], 'pay.png', $this->get_link_action('list_pay', 'pay'));
 		}
-		return $this->selection_actions;
 	}
 	
 	public function get_type_acte() {

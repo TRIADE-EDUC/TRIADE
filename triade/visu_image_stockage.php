@@ -23,6 +23,11 @@ if (empty($_SESSION["nom"]))  {
 	header('Location: ./acces_refuse.php');
 	exit;
 }
+
+
+include_once("./common/config.inc.php");
+include_once("./common/config2.inc.php");
+
 $fic=trim($_GET["fic"]);
 $id_pers_ss=$_SESSION['id_pers'];
 $id_pers=$_GET['idpers'];
@@ -41,6 +46,7 @@ switch(strrchr(basename($filename), ".")) {
 	case ".php": exit; break;
 	default: $type = "application/octet-stream"; exit ; break;
 }
+
 header("Content-disposition: attachment; filename=$filename");
 header("Content-Type: $type");
 header("Content-Transfer-Encoding: $type\n"); // Surtout ne pas enlever le \n
@@ -55,4 +61,5 @@ if (HTTPS == "oui") {
 	header("Expires: 0");
 }
 readfile($fic);
+exit;
 ?>

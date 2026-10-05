@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ScanRequests.php,v 1.2 2016-01-26 15:36:15 dgoron Exp $
+// $Id: ScanRequests.php,v 1.3 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB\ScanRequest;
 
 class ScanRequests extends Collection {
 	protected $scan_requests;
 	public $config;
 
-	function __construct($scan_requests,$config) {
+	public function __construct($scan_requests,$config) {
 		
 		$this->scan_requests = $scan_requests;
 		$this->config = $config;
@@ -20,7 +20,7 @@ class ScanRequests extends Collection {
 		return $this->scan_requests;
 	}
 	
-	function getChildren() {
+	public function getChildren() {
 		$children = array();
 		for($i=0 ; $i<count($this->scan_requests) ; $i++){
 			$children[] = $this->getChild("(R".$this->scan_requests[$i].")");
@@ -28,7 +28,7 @@ class ScanRequests extends Collection {
 		return $children;
 	}
 
-	function getName() {
+	public function getName() {
 		return $this->format_name("[Demandes]");
 	}
 }

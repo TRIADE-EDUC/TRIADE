@@ -1,11 +1,16 @@
 <?php
 session_start();
+if ( (empty($_SESSION["nom"])) && (empty($_SESSION["membre"]) ) ) {
+    header("./index.php");
+    exit;
+}
+$md5=md5(time());
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2024
- *   copyright            : (C) 2000 E. TAESCH - 
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.org
  *
  *
@@ -27,100 +32,191 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <script language="JavaScript" src="./librairie_js/docopy.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print htmlspecialchars($_SESSION['nom']).' '.htmlspecialchars($_SESSION['prenom']) ?></title>
+<script type="text/javascript">
+function alertjs(item) { alert(item); }
+
+function _(el) {
+    return document.getElementById(el);
+}
+
+function uploadFile(name) {
+    var file = _("Filedata").files[0];
+    var formdata = new FormData();
+    formdata.append("md5", name);
+    formdata.append("Filedata", file);
+    var ajax = new XMLHttpRequest();
+    ajax.upload.addEventListener("progress", progressHandler, false);
+    ajax.addEventListener("load", completeHandler, false);
+    ajax.addEventListener("error", errorHandler, false);
+    ajax.addEventListener("abort", abortHandler, false);
+    ajax.open("POST", "IAupload.php");
+    ajax.send(formdata);
+}
+
+function progressHandler(event) {
+    _("loaded_n_total").innerHTML = "téléchargement " + event.loaded + " bytes sur " + event.total;
+    var percent = (event.loaded / event.total) * 100;
+    _("progressBar").value = Math.round(percent);
+    _("status").innerHTML = Math.round(percent) + "% téléchargement... attendre S.V.P";
+}
+
+function completeHandler(event) {
+    _("status").innerHTML = event.target.responseText;
+    _("progressBar").value = 0;
+    _("loaded_n_total").innerHTML = "";
+    _("status").innerHTML = "Image transmise pour analyse, poser votre question à l'IA concernant l'image";
+    document.getElementById('imggo').value = 'ok';
+}
+
+function errorHandler(event) {
+    _("status").innerHTML = "Téléchargement erreur";
+}
+
+function abortHandler(event) {
+    _("status").innerHTML = "Téléchargement Abandonné";
+}
+</script>
 </head>
-<body id="bodyfond" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  >
-<?php include("./librairie_php/lib_licence.php");?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<body id="bodyfond" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<?php include("./librairie_php/lib_licence.php"); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
-if (($_SESSION['membre'] == "menuadmin") || ($_SESSION['membre'] == "menuprof") || ($_SESSION['membre'] == "menuscolaire") || ($_SESSION['membre'] == "menupersonnel") ) {
+if (in_array($_SESSION['membre'], ["menuadmin","menuprof","menuscolaire","menupersonnel","menuparent"])) {
 ?>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="750">
-<tr id='coulBar0' >
-<td height="2"> <b><font  id='menumodule1' ><?php print "TRIADE-COPILOT"?></font></b></td>
+<tr id='coulBar0'>
+<td height="2"><b><font id='menumodule1'><?php print "TRIADE-COPILOT </b> - <i>L'intelligence artificielle à portée de main !</i>" ?></font></td>
 </tr>
-<tr  id='cadreCentral0'>
-<td valign='top' >
-
+<tr id='cadreCentral0'>
+<td valign='top'>
 <?php
-if(file_exists("./common/config-ia.php")) {
-	include_once("common/productId.php");
-        include_once("common/config-ia.php");
-        $productID=PRODUCTID;
-        $iakey=IAKEY;
-	$lienIA="ajaxCopilot(document.getElementById('question').value,'$productID','$iakey','afficheretour')";
-}else{
-        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+if (file_exists("./common/config-ia.php")) {
+    include_once("common/productId.php");
+    include_once("common/config-ia.php");
+    $productID = PRODUCTID;
+    $iakey = IAKEY;
+    $iakeypers = recupkeytriade($_SESSION["membre"], $_SESSION["id_pers"], $_SESSION["idparent"]);
+    $lienIA = "ajaxCopilot(document.getElementById('question').value,'$productID','$iakey','afficheretour',document.getElementById('imggo').value,document.getElementById('img').value,document.getElementById('searchweb').checked,'$iakeypers')";
+} else {
+    $lienIA = "alert('Votre Triade n\'est pas configuré pour utiliser l\'IA. Contacter votre administrateur Triade')";
 }
+
+include_once("./common/config6.inc.php");
+$taille = "2Mo";
+$maxsize = "2000000";
+if ((defined('MAXUPLOAD')) && (MAXUPLOAD == "oui")) { $taille = "8Mo"; $maxsize = "8000000"; }
 ?>
 
-<div style="border-radius:30px;background-color:#F3F6FC;border:solid;border-width:1px;height:92%;width:94%;margin:5px;padding:13px;overflow-x:hidden;overflow-y:auto;" >
-<input placeholder="Poser votre question." style="border-radius:30px;height:40px;padding:20px;font-size:14px;"  type='text' name='question' size='70' maxlength='300' id='question' /> 
-<input type='button' id='question' value='Envoyer' class="button" onClick="<?php print $lienIA ?>" /><br>&nbsp;&nbsp;&nbsp;&nbsp;<font size='1'><i>TRIADE-COPILOT peut afficher des informations inexactes ou choquantes qui ne rep&eacute;rsentent pas l'opinion de Triade.</i></font>
-<br /><br />
-<div id='afficheretour' ></div>
-<div id='afficheToken' ></div>
+<div class="bda-chat-wrap">
 
+  <form id="upload_form" enctype="multipart/form-data" method="post">
+    <div class="bda-upload-row">
+      <span class="bda-upload-lbl">Transmettre une image à analyser :</span>
+      <input type="file" name="Filedata" id="Filedata"
+             onchange="uploadFile('<?php print $md5 ?>')" accept="image/jpeg"
+             class="bda-file-input">
+      <span class="bda-upload-hint">(Max : <?php print $taille ?>)</span>
+    </div>
+    <div class="bda-progress-wrap">
+      <progress id="progressBar" value="0" max="100" class="bda-progress"></progress>
+      <span id="loaded_n_total" class="bda-progress-text"></span>
+    </div>
+    <div id="status" class="bda-status"></div>
+  </form>
+
+  <div style="margin-bottom:8px;">
+    <script language="JavaScript">buttonMagic2("AGENT - TRIADE-COPILOT",'agent_copilot.php','_self','','0')</script>
+  </div>
+
+  <div class="bda-question-row">
+    <input type="text" name="question" id="question"
+           placeholder="Poser votre question."
+           size="65" maxlength="300" class="bda-question">
+    <div class="bda-send-col">
+      <input type="button" value="Envoyer" class="bda-send-btn"
+             onClick="<?php print $lienIA ?>">
+      <label class="bda-check-row">
+        <input type="checkbox" name="searchweb" id="searchweb" value="1">
+        Recherche Web
+      </label>
+    </div>
+  </div>
+
+  <div class="bda-disclaimer">
+    TRIADE-COPILOT peut afficher des informations inexactes ou choquantes qui ne représentent pas l'opinion de Triade.
+  </div>
+
+  <div id="afficheretour" class="bda-result"></div>
+  <div id="afficheToken"></div>
+
+  <input type="hidden" name="imggo" id="imggo" value="ko">
+  <input type="hidden" name="img" id="img" value="<?php print $md5 ?>">
 
 </div>
-<br><br><br>
 
-<!-- // fin  -->
 </td></tr></table>
-<br />
+<br>
+
+<?php } ?>
+
 <?php
-}
+if (in_array($_SESSION['membre'], ["menuadmin","menuprof","menuscolaire","menupersonnel","menuparent"])) {
 ?>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' >
-<td height="2"> <b><font  id='menumodule1' ><?php print "Online Assistance"?></font></b></td>
+<tr id='coulBar0'>
+<td height="2"><b><font id='menumodule1'>Online Assistance</font></b></td>
 </tr>
-<tr  id='cadreCentral0'>
-<td valign='top' >
-<!-- // fin  -->
-<br>
-<table><tr><td><img src="image/commun/assisante.gif" /></td><td><font class=T2><?php print "Disposer d'un service d'assistance en ligne." ?></font></td></tr></table>
-<br><br>
-<table align='center' ><tr><td align='center'>
-<script language=JavaScript>buttonMagic2("TRIADE-CLIENT",'http://www.triade-educ.org/accueil/acces_client.php','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("TRIADE-FORUM",'http://forum.triade-educ.org','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("TRIADE-DOC",'http://doc.triade-educ.org','_blank','','0')</script>
-<script language=JavaScript>buttonMagic2("TRIADE-DISCORD",'https://www.triade-educ.org/accueil/discord.php','_blank','','0')</script>&nbsp;&nbsp;</td></tr></table>
-&nbsp;&nbsp;
-<br><br><br>
-    
-     <!-- // fin  -->
-     </td></tr></table>
+<tr id='cadreCentral0'>
+<td valign='top'>
 
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-// Test du membre pour savoir quel fichier JS je dois executer
-if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-     print "<SCRIPT type='text/javascript' ";
-     print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-     print "</SCRIPT>";
-else :
-     print "<SCRIPT type='text/javascript' ";
-     print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-     print "</SCRIPT>";
-     top_d();
-     print "<SCRIPT type='text/javascript' ";
-     print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-     print "</SCRIPT>";
-endif ;
-     ?>
+<div class="bda-assist-card">
+  <div class="bda-assist-intro">
+    <img src="image/commun/assisante.gif" alt="assistance" class="bda-assist-img">
+    <span class="bda-assist-text">Disposer d'un service d'assistance en ligne.</span>
+  </div>
+  <div class="bda-assist-actions">
+    <script language="JavaScript">buttonMagic2("TRIADE-PRESENTATION",'acces2.php?aidenew','_self','','')</script>
+    <script language="JavaScript">buttonMagic2("TRIADE-CLIENT",'https://www.triade-educ.org/fr/espace-client.php','_blank','','0')</script>
+    <script language="JavaScript">buttonMagic2("TRIADE-DOC",'https://www.triade-educ.org/fr/documentation.php','_blank','','0')</script>
+    <script language="JavaScript">buttonMagic2("TRIADE-DISCORD",'https://www.triade-educ.org/fr/discord.php','_blank','','0')</script>
+  </div>
+</div>
+
+</td></tr></table>
+<?php } ?>
+
+<?php
+if (in_array($_SESSION["membre"], ["menuadmin","menuscolaire"])) {
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."2.js'></SCRIPT>";
+} else {
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."33.js'></SCRIPT>";
+}
+?>
 
 <!-- Brevo Conversations {literal} -->
+<script>
+    window.BrevoConversationsSetup = {
+        colors: {
+            buttonText: '#FFFFFF',
+            buttonBg: '#080A66'
+        }
+    };
+</script>
 <script>
     (function(d, w, c) {
         w.BrevoConversationsID = '64baa5aa2041cf06f4299bfc';

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state.class.php,v 1.7 2018-11-07 13:28:27 dgoron Exp $
+// $Id: editions_state.class.php,v 1.11 2023/05/04 14:15:47 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/editions_state.tpl.php");
 require_once($class_path."/editions_state_order.class.php");
 require_once($class_path."/editions_datasource.class.php");
@@ -19,9 +20,10 @@ class editions_state {
 	public $datasource;
 	public $state_fields_list = array();	
 	public $state_fields_params = array();
+	public $fields;
 	
 	public function __construct($id=0){
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	} 
 
@@ -47,7 +49,7 @@ class editions_state {
 		}
 		$this->datasource = new editions_datasource($this->used_datasource);
 		$this->fields = $this->datasource->get_struct_format();
-		$this->get_filter();//Je rÃ©cupÃ¨re les valeurs des filtres si besoin
+		$this->get_filter();//Je récupère les valeurs des filtres si besoin
 	}
 	
 	public function save(){
@@ -58,7 +60,7 @@ class editions_state {
 			$query ="insert into editions_states";
 			$clause= "";
 		}
-		//On supprimer les informations de paramÃ©trage pour les vues au cas ou on supprime un champ utilisÃ© pour une vue
+		//On supprimer les informations de paramétrage pour les vues au cas ou on supprime un champ utilisé pour une vue
 		$this->state_fields_params["view"]=array();
 		
 		//on va chercher les infos des filtres, tris, groupements...
@@ -85,11 +87,13 @@ class editions_state {
 		}
 	}
 	
-	public function delete(){
-		if($this->id){
-			$query = "delete from editions_states where id_editions_state=".$this->id;
+	public static function delete($id){
+		$id = intval($id);
+		if($id){
+			$query = "delete from editions_states where id_editions_state=".$id;
 			pmb_mysql_query($query);
 		}
+		return true;
 	}
 	
 	public function get_from_form(){
@@ -114,7 +118,7 @@ class editions_state {
 		$this->datasource = new editions_datasource($this->used_datasource);
 		$this->comment = stripslashes($editions_state_comment);
 		$this->fields = $this->datasource->get_struct_format();
-		if($partial_submit == 1 || $action == "save"){// On vient de dÃ©placer une information pour crÃ©er l'Ã©tat
+		if($partial_submit == 1 || $action == "save"){// On vient de déplacer une information pour créer l'état
 			//Je garde les valeurs
 			$this->state_fields_list=array(
 				'fields' => array(
@@ -138,8 +142,8 @@ class editions_state {
 				$this->state_fields_params['orders'][$field] = $order->get_params();
 			}
 		
-		}else{//$partial_submit == 2 On vient de changer la source de donnÃ©es
-			//Je rÃ©initialise toutes les informations
+		}else{//$partial_submit == 2 On vient de changer la source de données
+			//Je réinitialise toutes les informations
 			$this->state_fields_list=array(
 				'fields' => array(
 					'fields' => array(),
@@ -159,27 +163,31 @@ class editions_state {
 	
 	public function get_form(){
 		global $msg,$charset;
-		global $editions_state_form;
+		global $editions_state_content_form;
 		
-		$form = str_replace('!!id!!', $this->id, $editions_state_form);
+		$content_form = $editions_state_content_form;
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$interface_form = new interface_form('editions_state_form');
+		if(!$this->id){
+			$interface_form->set_label($msg['704']);
+		}else{
+			$interface_form->set_label($msg['procs_modification']);
+		}
 		
 		//positionnement auto sur le dernier onglet, ca marche tout seul, pas besoin de s'en soucier !
 		global $editionsstate_active_tab;
-		$form = str_replace('!!active_tab!!', htmlentities($editionsstate_active_tab,ENT_QUOTES, $charset), $form);
-		
-		//Titre du formulaire
-		if (!$this->id) $form = str_replace('!!form_title!!', $msg[704], $form);
-		else $form = str_replace('!!form_title!!', $msg["procs_modification"], $form);
+		$content_form = str_replace('!!active_tab!!', htmlentities($editionsstate_active_tab ?? "",ENT_QUOTES, $charset), $content_form);
 		
 		//nom 
-		$form = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES, $charset), $form);
+		$content_form = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES, $charset), $content_form);
 		//commentaire 
-		$form = str_replace('!!comment!!', htmlentities($this->comment,ENT_QUOTES, $charset), $form);
+		$content_form = str_replace('!!comment!!', htmlentities($this->comment,ENT_QUOTES, $charset), $content_form);
 		//classement
 		$combo_clas= gen_liste ("SELECT idproc_classement,libproc_classement FROM procs_classements ORDER BY libproc_classement ", "idproc_classement", "libproc_classement", "editions_state_classement", "", $this->classement, 0, $msg['proc_clas_aucun'],0, $msg['proc_clas_aucun']) ;
-		$form = str_replace('!!classement!!', $combo_clas, $form);
+		$content_form = str_replace('!!classement!!', $combo_clas, $content_form);
 		
-		//source de donnÃ©es
+		//source de données
 		$datasource_options = "
 			<option value='0'>".$msg['editions_state_datasource_choice']."</options>";
 		$datasources_list = $this->datasource->get_datasources_list();
@@ -189,38 +197,29 @@ class editions_state {
 		}
 //		
 //		$datasource_options.="
-//			<option value='editions_datasource_loans' ".($this->used_datasource == "editions_datasource_loans" ? "selected='selected'":"").">PrÃªts</option>";
-		$form = str_replace('!!datasource_options!!', $datasource_options, $form);
+//			<option value='editions_datasource_loans' ".($this->used_datasource == "editions_datasource_loans" ? "selected='selected'":"").">Prêts</option>";
+		$content_form = str_replace('!!datasource_options!!', $datasource_options, $content_form);
 		
 		if((isset($this->state_fields_list['filters']['content']) && count($this->state_fields_list['filters']['content'])) || (isset($this->state_fields_list['fields']['content']) && count($this->state_fields_list['fields']['content']))){
-			//J'ai commencÃ© Ã  crÃ©er un Ã©tat je ne peux donc pas changer de source
-			$form = str_replace('!!datasource_readonly!!', "disabled='disabled'", $form);
-			$form = str_replace('<!--editions_state_datasource-->', "<input type='hidden' name='editions_state_datasource' id='editions_state_datasource' value='".$this->used_datasource."'/>", $form);
+			//J'ai commencé à créer un état je ne peux donc pas changer de source
+			$content_form = str_replace('!!datasource_readonly!!', "disabled='disabled'", $content_form);
+			$content_form = str_replace('<!--editions_state_datasource-->', "<input type='hidden' name='editions_state_datasource' id='editions_state_datasource' value='".$this->used_datasource."'/>", $content_form);
 		}else{
-			$form = str_replace('!!datasource_readonly!!', "", $form);
+			$content_form = str_replace('!!datasource_readonly!!', "", $content_form);
 		}
 		
 		if(!$this->used_datasource){
-			$form = str_replace("!!tabs!!","",$form);
+			$content_form = str_replace("!!tabs!!","",$content_form);
 		}else{
-			$form = str_replace("!!tabs!!",$this->get_tabs_form(),$form);
+			$content_form = str_replace("!!tabs!!",$this->get_tabs_form(),$content_form);
 		}
 		
-		$del_button = "";
-		if($this->id){
-			$del_button = "<input type='button' class='bouton' value=' $msg[supprimer] ' onClick='confirm_delete(".$this->id.")' />
-			<script type='text/javascript'>
-				function confirm_delete(id){
-					if(confirm('".addslashes($msg['editions_state_confirm_delete'])."')){
-						document.location='./edit.php?categ=state&action=delete&id='+id;
-					}
-				}
-			</script>
-			";
-		}
-		$form = str_replace("!!del_button!!",$del_button,$form);
-		
-		return $form;
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['editions_state_confirm_delete'])
+		->set_content_form($content_form)
+		->set_table_name('editions_states')
+		->set_field_focus('editions_state_name');
+		return $interface_form->get_display();
 	}
 	
 	public function get_tabs_form(){
@@ -238,7 +237,7 @@ class editions_state {
 		}else{
 			$nb_champ=count($this->state_fields_list['fields']['fields']) + count($this->state_fields_list['fields']['content']);
 			if($nb_champ < count($this->fields)){
-				//On a ajoutÃ© des champs dans le fichier datasources.xml
+				//On a ajouté des champs dans le fichier datasources.xml
 				foreach($this->fields as $id => $field){
 					if(!in_array($id,$this->state_fields_list['fields']['fields']) && !in_array($id,$this->state_fields_list['fields']['content'])){
 						$this->state_fields_list['fields']['fields'][] = $id;
@@ -246,7 +245,7 @@ class editions_state {
 					}
 				}
 			}elseif($nb_champ > count($this->fields)){
-				//On a enlevÃ© des champs dans le fichier datasources.xml
+				//On a enlevé des champs dans le fichier datasources.xml
 				foreach($this->state_fields_list['fields']['fields'] as $key => $field){
 					if(!($this->fields[$field])){
 						unset($this->state_fields_list['fields']['fields'][$key]);
@@ -295,8 +294,20 @@ class editions_state {
 		return $form;
 	}
 	
+	protected function _compare_fields($a, $b) {
+		if(isset($this->fields[$a]['label']) && $this->fields[$b]['label']) {
+			return strcmp(convert_diacrit($this->fields[$a]['label']), convert_diacrit($this->fields[$b]['label']));
+		}
+		return '';
+	}
+	
+	protected function _sort_tab_fields($tab) {
+		usort($this->state_fields_list[$tab]['fields'], array($this, "_compare_fields"));
+	}
+	
 	public function gen_tab_list($tab){
 		$list = "";
+		$this->_sort_tab_fields($tab);
 		foreach($this->state_fields_list[$tab]['fields'] as $field){
 			switch($tab){
 				case "fields" :
@@ -338,14 +349,19 @@ class editions_state {
 					break;
 				case "filters" :
 					$class = $this->get_filter_class($field);
-					require_once($class_path."/".$class.".class.php");
-					$filter= new $class($this->fields[$field],$this->state_fields_params['filters'][$field]);
-					$content.= "
-					<div class='row' id='".$tab."_".$field."'>
-						<input type='hidden' name='editions_state_".$tab."_content_fields[]' value='".$this->fields[$field]['id']."' />"; 
-					$content.= $filter->get_form($draggable);	
-					$content.="
-					</div>";
+					if(file_exists($class_path."/".$class.".class.php")) {
+						require_once($class_path."/".$class.".class.php");
+						if(!isset($this->state_fields_params['filters'][$field])) {
+							$this->state_fields_params['filters'][$field] = array();
+						}
+						$filter= new $class($this->fields[$field],$this->state_fields_params['filters'][$field]);
+						$content.= "
+						<div class='row' id='".$tab."_".$field."'>
+							<input type='hidden' name='editions_state_".$tab."_content_fields[]' value='".$this->fields[$field]['id']."' />"; 
+						$content.= $filter->get_form($draggable);	
+						$content.="
+						</div>";
+					}
 					break;
 				case "orders" :
 					$order = new editions_state_order($this->fields[$field],$this->state_fields_params['orders'][$field]);
@@ -362,9 +378,11 @@ class editions_state {
 	}
 	
 	public function get_filter_class($field){
-		$this->fields=$this->datasource->redo_values($field);//Je rÃ©cupÃ¨re les valeurs pour le cas oÃ¹ le champ est de type liste
+		$this->fields=$this->datasource->redo_values($field);//Je récupère les valeurs pour le cas où le champ est de type liste
 		if($this->fields[$field]['input'] == "list"){
 			$class = "editions_state_filter_list";
+		}elseif($this->fields[$field]['input'] == "auth"){
+			$class = "editions_state_filter_auth";
 		}else{
 			$class = "editions_state_filter_".$this->fields[$field]['type'];
 		}
@@ -372,18 +390,20 @@ class editions_state {
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des filtres Ã  partir de la variable global si elle est dÃ©finit
+	 * Récupération des filtres à partir de la variable global si elle est définit
 	 */
 	public function get_filter(){
 		global $class_path;
 		global $editions_state_filters_content_fields;
-		if(isset($this->state_fields_list['filters']['content']) && is_array($this->state_fields_list['filters']['content']) && count($this->state_fields_list['filters']['content'])){//Si les filtres sont prÃ©sent dans la variable
+		if(isset($this->state_fields_list['filters']['content']) && is_array($this->state_fields_list['filters']['content']) && count($this->state_fields_list['filters']['content'])){//Si les filtres sont présent dans la variable
 			foreach($this->state_fields_list['filters']['content'] as $field){
 				$class = $this->get_filter_class($field);
-				require_once($class_path."/".$class.".class.php");
-				$filter= new $class($this->fields[$field]);
-				if($tmp=$filter->get_params()){
-					$this->state_fields_params['filters'][$field] =$tmp;
+				if(file_exists($class_path."/".$class.".class.php")) {
+					require_once($class_path."/".$class.".class.php");
+					$filter= new $class($this->fields[$field]);
+					if($tmp=$filter->get_params()){
+						$this->state_fields_params['filters'][$field] =$tmp;
+					}
 				}
 			}
 		}

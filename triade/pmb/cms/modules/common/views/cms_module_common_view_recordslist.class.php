@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_recordslist.class.php,v 1.15 2017-07-26 07:57:50 dgoron Exp $
+// $Id: cms_module_common_view_recordslist.class.php,v 1.21 2023/06/07 10:27:46 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_common_view_recordslist extends cms_module_common_view_django{
 	
@@ -59,24 +61,31 @@ class cms_module_common_view_recordslist extends cms_module_common_view_django{
 		global $opac_notice_affichage_class;
 		global $opac_show_book_pics;
 		global $opac_book_pics_url;
-		global $opac_book_pics_msg;
-		global $opac_url_base;
 		global $include_path;
 		global $opac_notices_format, $opac_notices_format_django_directory;
 		global $record_css_already_included; // Pour pas inclure la css 10 fois
 	
-		if(!$opac_notice_affichage_class){
+		if(empty($opac_notice_affichage_class)){
 			$opac_notice_affichage_class ="notice_affichage";
 		}
-
-		//on rajoute nos Ã©lÃ©ments...
+		
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
-		$render_datas['title'] = $datas["title"];
+		$render_datas['title'] = $datas["title"] ?? "";
+		$render_datas['source_infos'] = isset($datas["source_infos"]) ? $datas["source_infos"] : "";
+		
+		// Données de la pagination
+		if(isset($datas['paging']) && $datas['paging']['activate']) {
+		    $render_datas['paging'] = $datas['paging'];
+		}
+		
 		$render_datas['records'] = array();
 		$add_to_cart_link = '';
-		if(is_array($datas["records"])){
-			foreach($datas["records"] as $notice){
+		if (isset($datas["records"]) && is_array($datas["records"])) {
+		    $records = isset($datas["records"]) ? $datas["records"] : $datas;
+		    $thumbnailSourcesHandler = new ThumbnailSourcesHandler();
+		    foreach($records as $notice){
 				//on calcule les templates pour chaque notices...
 				$notice_class = new $opac_notice_affichage_class($notice);
 				$notice_class->do_header();
@@ -87,21 +96,43 @@ class cms_module_common_view_recordslist extends cms_module_common_view_django{
 					$notice_id = $notice_class->bulletin_id;
 					$is_bulletin = true;
 				}
-				$url_vign = "";
-				if (($row->thumbnail_url || $row->code) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $row->thumbnail_url))) {
-					$url_vign = getimage_url($row->code, $row->thumbnail_url);
-				}
+				$url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $notice_id);
 				$infos = array(
 					'id' => $notice_id,
 					'title' => $notice_class->notice->tit1,
 					'vign' => $url_vign,
 					'header' => $notice_class->notice_header,
 					'link' => $this->get_constructed_link("notice",$notice_id,$is_bulletin),
+				    'parent' => []
 				);
+				
+				if (!empty($notice_class->parent_id)) {
+				    $url_parent_vign = "";
+				    $notice_parent_class = new $opac_notice_affichage_class($notice_class->parent_id);
+				    
+			        $parent_notice_id = $notice_parent_class->notice_id;
+			        $is_parent_bulletin = false;
+				    if ($notice_parent_class->notice->niveau_biblio == 'b') {
+				        $parent_notice_id = $notice_parent_class->bulletin_id;
+				        $is_parent_bulletin = true;
+				    }
+				    $url_parent_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $parent_notice_id);
+				    $infos['parent'] = [
+				        'id' => $parent_notice_id,
+				        'title' => $notice_parent_class->notice->tit1,
+				        'vign' => $url_parent_vign,
+				        'header' => $notice_parent_class->notice_header,
+				        'link' => $this->get_constructed_link('notice', $notice_parent_class->notice_id, $is_parent_bulletin)
+				    ];
+				}
+				
 				if($this->parameters['used_template']){
 					$tpl = notice_tpl_gen::get_instance($this->parameters['used_template']);
 					$infos['content'] = $tpl->build_notice($notice);
 				}else{
+				    if(!isset($infos['content'])) {
+				        $infos['content'] = "";
+				    }
 					if($opac_notices_format == AFF_ETA_NOTICES_TEMPLATE_DJANGO){							
 						if (!$opac_notices_format_django_directory) $opac_notices_format_django_directory = "common";							
 						if (!$record_css_already_included) {
@@ -134,6 +165,10 @@ class cms_module_common_view_recordslist extends cms_module_common_view_django{
 			'var' => "title",
 			'desc' => $this->msg['cms_module_common_view_title']
 		);
+		$format[] = array(
+			'var' => "source_infos",
+			'desc' => $this->msg['cms_module_common_view_source_infos_desc']
+		);
 		$format[] =	array(
 			'var' => "records",
 			'desc' => $this->msg['cms_module_commom_view_records_desc'],
@@ -161,14 +196,61 @@ class cms_module_common_view_recordslist extends cms_module_common_view_django{
 				array(
 					'var' => "records[i].link",
 					'desc'=> $this->msg['cms_module_common_view_record_link_desc']
-				)
+				),
+			    array(
+					'var' => "records[i].parent",
+					'desc'=> $this->msg['cms_module_common_view_record_parent_desc'],
+			        'children' => array(
+			            array(
+			                'var' => "parent.id",
+			                'desc'=> $this->msg['cms_module_common_view_record_id_desc']
+			            ),
+			            array(
+			                'var' => "parent.title",
+			                'desc'=> $this->msg['cms_module_common_view_record_title_desc']
+			            ),
+			            array(
+			                'var' => "parent.vign",
+			                'desc'=> $this->msg['cms_module_common_view_record_vign_desc']
+			            ),
+			            array(
+			                'var' => "parent.header",
+			                'desc'=> $this->msg['cms_module_common_view_record_header_desc']
+			            ),
+			            array(
+			                'var' => "parent.content",
+			                'desc'=> $this->msg['cms_module_common_view_record_content_desc']
+			            ),
+			            array(
+			                'var' => "parent.link",
+			                'desc'=> $this->msg['cms_module_common_view_record_link_desc']
+			            )
+			        )
+			    )
 			)
 		);
 		$format[] = array(
 			'var' => "add_to_cart_link",
 			'desc' => $this->msg['cms_module_recordslist_view_add_cart_link_desc']
 		);
-		
+		$format[] = array(
+		    'var' => "paginator",
+		    'desc' => $this->msg['cms_module_common_view_list_paging_title'],
+		    'children' => array(
+		        array(
+		            'var' => "paginator.paginator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_paginator_title']
+		        ),
+		        array(
+		            'var' => "paginator.nbPerPageSelector",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_nb_per_page_title']
+		        ),
+		        array(
+		            'var' => "paginator.navigator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_navigator_title']
+		        )
+		    )
+		);
 		$format = array_merge($format,parent::get_format_data_structure());
 		return $format;
 	}

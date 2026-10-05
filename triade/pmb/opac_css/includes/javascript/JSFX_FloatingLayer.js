@@ -1,6 +1,6 @@
 /*******************************************************************
 *
-* File    : JSFX_FloatingLayer.js Â© JavaScript-FX.com
+* File    : JSFX_FloatingLayer.js © JavaScript-FX.com
 *
 * Created : 2001/03/16
 *
@@ -15,7 +15,7 @@
 * 2001-03-17	2.0		Converted for javascript-fx
 ***********************************************************************/
 // +-------------------------------------------------+
-// $Id: JSFX_FloatingLayer.js,v 1.2 2008-11-10 13:26:06 touraine37 Exp $
+// $Id: JSFX_FloatingLayer.js,v 1.2 2008/11/10 13:26:06 touraine37 Exp $
 
 JSFX.FloatingLayer = function(theDiv, x, y)
 {

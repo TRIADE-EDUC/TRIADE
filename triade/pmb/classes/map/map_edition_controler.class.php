@@ -1,18 +1,20 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_edition_controler.class.php,v 1.33 2019-06-06 10:09:21 ngantier Exp $
+// $Id: map_edition_controler.class.php,v 1.34.8.1 2025/04/24 09:50:00 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
+
+global $class_path;
 require_once($class_path . "/map/map_model.class.php");
 require_once($class_path . "/map/map_objects_controler.class.php");
 
 /**
  * class map_edition_controler
- * 
+ *
  */
 class map_edition_controler {
     /** Aggregations: */
@@ -20,17 +22,21 @@ class map_edition_controler {
     /*     * * Attributes: ** */
 
     /**
-     * 
+     *
      * @access protected
      */
     protected $model;
 
-    /**
-     * 
-     *
-     * @param string object_type Type d'objet liÃ© Ã Â  l'emprise
+    protected $editable;
+    protected $type;
+    protected $id;
 
-     * @param int object_id Identifiant de l'objet liÃ© Ã Â  l'emprise
+    /**
+     *
+     *
+     * @param string object_type Type d'objet lié à  l'emprise
+
+     * @param int object_id Identifiant de l'objet lié à  l'emprise
 
      * @return void
      * @access public
@@ -83,7 +89,6 @@ class map_edition_controler {
 
     public function get_json_informations() {
         global $pmb_url_base;
-        global $dbh;
 
         $map_hold = $this->get_bounding_box();
         if (!$map_hold) {
@@ -101,7 +106,6 @@ class map_edition_controler {
     }
 
     public function get_map() {
-        global $dbh;
         global $pmb_map_base_layer_type;
         global $pmb_map_base_layer_params;
         global $pmb_map_size_notice_edition;
@@ -117,48 +121,21 @@ class map_edition_controler {
             if ($layer_params['options'])
                 $baselayer.=",baseLayerOptions:" . json_encode($layer_params['options']);
         }
-
-        $ids[] = $this->id;
         $size = explode("*", $pmb_map_size_notice_edition);
-
         switch ($this->type) {
             case TYPE_RECORD :
-                $objects[] = array(
-                    'layer' => "record",
-                    'ids' => $ids
-                );
                 break;
             case TYPE_LOCATION :
-                $objects[] = array(
-                    'layer' => "location",
-                    'ids' => $ids
-                );
                 $size = explode("*", $pmb_map_size_location_edition);
                 break;
             case TYPE_SUR_LOCATION :
-                $objects[] = array(
-                    'layer' => "sur_location",
-                    'ids' => $ids
-                );
                 $size = explode("*", $pmb_map_size_location_edition);
                 break;
             case AUT_TABLE_CATEG :
-                $objects[] = array(
-                    'type' => $this->type,
-                    'layer' => "authority",
-                    'ids' => $ids
-                );
                 break;
             case AUT_TABLE_CONCEPT :
-                $objects[] = array(
-                'type' => $this->type,
-                'layer' => "authority_concept",
-                'ids' => $ids
-                );
                 break;
         }
-        $map_hold = null;
-
         if(count($size)!=2) {
             $map_size="width:100%; height:400px;";
         } else {
@@ -178,15 +155,15 @@ class map_edition_controler {
 			</div>
 			<div class='colonne40'>
 				<div id='map_manual_edition'>
-				</div>		
-			</div>	
-			<div class='row'></div>					
+				</div>
+			</div>
+			<div class='row'></div>
 		</div>";
         return $map;
     }
 
     public function get_form() {
-        global $dbh, $msg;
+        global $msg;
         $form_map = "";
 
         switch ($this->type) {
@@ -236,7 +213,6 @@ class map_edition_controler {
     }
 
     public function save_form() {
-        global $dbh;
         global $map_wkt;
 
         $this->delete();
@@ -248,34 +224,32 @@ class map_edition_controler {
 				map_emprise_type=" . $this->type . ",
 				map_emprise_obj_num=" . $this->id . ",
 				map_emprise_order = " . $i;
-                pmb_mysql_query($query, $dbh);
-                $id_emprise = pmb_mysql_insert_id($dbh);
+                pmb_mysql_query($query);
+                $id_emprise = pmb_mysql_insert_id();
                 $query_area = "insert into map_hold_areas set
   				id_obj=" . $id_emprise . ",
   				type_obj=" . $this->type . ",
   				area=Area(GeomFromText('" . $map_wkt[$i] . "')),
   				bbox_area=Area(envelope(GeomFromText('" . $map_wkt[$i] . "'))),
   				center=AsText(Centroid(envelope(GeomFromText('" . $map_wkt[$i] . "'))))";
-                pmb_mysql_query($query_area, $dbh);
+                pmb_mysql_query($query_area);
             }
         }
     }
 
     public function delete() {
-        global $dbh;
-
         $req = "select map_emprise_id from map_emprises where map_emprise_type=" . $this->type . " and map_emprise_obj_num=" . $this->id;
-        $result = pmb_mysql_query($req, $dbh);
+        $result = pmb_mysql_query($req);
         if (pmb_mysql_num_rows($result)) {
             $row = pmb_mysql_fetch_object($result);
             $req = "DELETE FROM map_emprises where map_emprise_type=" . $this->type . " and map_emprise_obj_num=" . $this->id;
-            pmb_mysql_query($req, $dbh);
+            pmb_mysql_query($req);
             //Partie map_hold_areas
             $req_areas = "DELETE FROM map_hold_areas where type_obj=" . $this->type . " and id_obj=" . $row->map_emprise_id;
-            pmb_mysql_query($req_areas, $dbh);
+            pmb_mysql_query($req_areas);
         }
     }
-    
+
     public function replace($by) {
         // TO DO
         $this->delete();

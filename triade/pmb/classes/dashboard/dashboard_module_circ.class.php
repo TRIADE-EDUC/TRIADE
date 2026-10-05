@@ -1,15 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dashboard_module_circ.class.php,v 1.13 2018-02-13 15:02:30 jpermanne Exp $
+// $Id: dashboard_module_circ.class.php,v 1.15.2.1 2024/09/13 08:39:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/dashboard/dashboard_module.class.php");
 
 class dashboard_module_circ extends dashboard_module {
-
+	public $template = "";
+	public $module = "";
+	public $module_name = "";
+	public $alert_url = "";
 	
 	public function __construct(){
 		global $msg,$base_path;
@@ -24,7 +28,7 @@ class dashboard_module_circ extends dashboard_module {
 	public function get_quick_params_form(){
 		global $msg, $pmb_transferts_actif, $pmb_printer_name;
 		$html= "";
-		if(SESSrights & PREF_AUTH) {
+		if(defined('SESSrights') && SESSrights & PREF_AUTH) {
 			$html= "
 			<div class='circ'>
 			<form name='quick_params_circ' action='' method='post' onsubmit='return false;' class='form-circ'>

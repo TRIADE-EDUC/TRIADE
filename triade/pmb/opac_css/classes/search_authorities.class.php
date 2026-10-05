@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_authorities.class.php,v 1.7 2019-03-25 11:45:46 dgoron Exp $
+// $Id: search_authorities.class.php,v 1.14 2022/01/07 11:40:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion des recherches avancees des autoritÃ©s
-
+//Classe de gestion des recherches avancees des autorités
+global $class_path;
 require_once($class_path."/search.class.php");
 require_once($class_path."/searcher/searcher_authorities_authors.class.php");
 require_once($class_path."/searcher/searcher_authorities_authpersos.class.php");
@@ -27,16 +27,10 @@ class search_authorities extends search {
     protected $hidden_form_name;    
 	
 	public function filter_searchtable_from_accessrights($table) {
-		global $dbh;
 		
 	}
 	
 	protected function sort_results($table) {
-		global $nb_per_page_search;
-		global $page;
-		 
-		$start_page=$nb_per_page_search*$page;
-		 
 		return $table;
 	}
 	
@@ -47,7 +41,6 @@ class search_authorities extends search {
 	}
 	
 	protected function show_objects_results($table, $has_sort) {
-		global $dbh;
 		global $search;
 		global $nb_per_page;
 		global $page;
@@ -55,13 +48,13 @@ class search_authorities extends search {
 		
 		$query = "select ".$table.".*,authorities.num_object,authorities.type_object from ".$table.",authorities where authorities.id_authority=".$table.".id_authority";
 		if(count($search) > 1 && !$has_sort) {
-			//Tri Ã  appliquer par dÃ©faut
+			//Tri à appliquer par défaut
 		}		
 		if (!empty($nb_per_page)) {
 		    $query .= " limit ".$start_page.",".$nb_per_page;
 		}
 	
-		$result=pmb_mysql_query($query, $dbh);
+		$result=pmb_mysql_query($query);
 		$objects_ids = array();
 		while ($row=pmb_mysql_fetch_object($result)) {
 			$objects_ids[] = $row->id_authority;
@@ -83,7 +76,7 @@ class search_authorities extends search {
 		return "";
 	}
 
-	public static function get_join_and_clause_from_equation($type = AUT_TABLE_AUTHORS, $equation) {
+	public static function get_join_and_clause_from_equation($type = AUT_TABLE_AUTHORS, $equation='') {
 		
 		$authority_join = '';
 		$authority_clause = '';
@@ -146,15 +139,10 @@ class search_authorities extends search {
 	}
 	
 	public function show_results($url,$url_to_search_form,$hidden_form=true,$search_target="", $acces=false) {
-	    global $dbh;
 	    global $begin_result_liste;
-	    global $nb_per_page_search;
-	    global $page;
-	    global $charset;
 	    global $search;
 	    global $msg;
 	    global $opac_nb_max_tri;
-	    global $opac_allow_external_search;
 	    global $debug;
 	    //Y-a-t-il des champs ?
 	    if (count($search)==0) {
@@ -162,7 +150,7 @@ class search_authorities extends search {
 	        error_message_history($msg["search_empty_field"], $msg["search_no_fields"], 1);
 	        exit();
 	    }
-	    $recherche_externe=true;//Savoir si l'on peut faire une recherche externe Ã  partir des critÃ¨res choisis
+	    $recherche_externe=true;//Savoir si l'on peut faire une recherche externe à partir des critères choisis
 	    //Verification des champs vides
 	    for ($i=0; $i<count($search); $i++) {
 	        $op=$this->get_global_value("op_".$i."_".$search[$i]);
@@ -271,10 +259,28 @@ class search_authorities extends search {
 	    }
 	    return $this->hidden_form_name;
 	}
-	
+		
 	public static function get_caddie_link() {
 	    //global $msg;
 	    //print "&nbsp;<a href='#' onClick=\"openPopUp('./print_cart.php?current_print=".$_SESSION['CURRENT']."&action=print_prepare&object_type=".self::get_type_from_mode()."&authorities_caddie=1','print_cart'); return false;\"><img src='".get_url_icon('basket_small_20x20.gif')."' style='border:0px' class='center' alt=\"".$msg["histo_add_to_cart"]."\" title=\"".$msg["histo_add_to_cart"]."\"></a>&nbsp;";
+	}
+	
+	public function generate_query_op_and($prefixe = "", $suffixe = "", $search_table = "") {
+	    if ($prefixe) {
+	        return "create temporary table ".$prefixe."and_result_".$suffixe." ENGINE=".$this->current_engine." select ".$search_table.".* from ".$search_table." where exists ( select ".$prefixe."mf_".$suffixe.".* from ".$prefixe."mf_".$suffixe." where ".$search_table.".id_authority=".$prefixe."mf_".$suffixe.".id_authority)";
+	    } else {
+	        return "create temporary table and_result_".$suffixe." ENGINE=".$this->current_engine." select ".$search_table.".* from ".$search_table." where exists ( select mf_".$suffixe.".* from mf_".$suffixe." where ".$search_table.".id_authority=mf_".$suffixe.".id_authority)";
+	    }
+	}
+	
+	/**
+	 * Retourne le template pour appliquer un tri
+	 * @param int|string $nb_results nombre de résultat de la recherce
+	 * @param string $entity_type type de l'entité
+	 * @return string
+	 */
+	public static function get_sort_link($nb_results, $entity_type) {
+	    print entities_authorities_controller::get_sort_link($nb_results, $entity_type);
 	}
 }
 ?>

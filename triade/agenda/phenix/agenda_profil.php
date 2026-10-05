@@ -1,6 +1,4 @@
-<?php // Mod applied : 2008-11-02 * Mod_Phenix_V5_Couleur_par_defaut.txt ?>
-<?php // Mod applied : 2008-11-02 * Mod_Phenix_V5.5_Aide.txt ?>
-<?php // Mod applied : 2008-11-02 * Mod_Phenix_V5_Rappel_Sonore.txt ?>
+<?php // Mod applied : 2008-08-04 * Mod_Phenix_V5_Rappel_Sonore.txt ?>
 <?php // Mod applied : 2008-08-04 * Mod_Phenix_V5_Meteo_today_ico.txt ?>
 <?php // Mod applied : 2008-08-04 * Mod_Phenix_V5_Menu_Note.txt ?>
 <?php // Mod applied : 2008-08-04 * Mod_Phenix_V5_horoscope_hebdo.txt ?>
@@ -21,15 +19,11 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-  // Mod Aide
-  // Fichier d'aide contextuel
-  ?> <SCRIPT> HelpPhenixCtx="{834C7C2C-9580-4D38-958D-3F077E3B1FEB}.htm"; </SCRIPT> <?php
-  // Mod Aide
 
   if ($USER_SUBSTITUE) {
     if ($idAdmin!=0)
       $admin_PROFILS = $droit_PROFILS;
-    $DB_CX->DbQuery("SELECT *, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil  FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+    $DB_CX->DbQuery("SELECT *, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil  FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
     $rsProfil = $DB_CX->DbNextRow();
     $ztAction = "UPDATE";
     $nouveau = trad("PROFIL_LIB_NV_PASSWD");
@@ -45,7 +39,7 @@
       $titrePage = sprintf(trad("PROFIL_TITRE_MODIFIER_AUTRE"), $genre, $rsProfil['nomUtil']);
     }
     $btnAnnul = "btAnnul()";
-    $DB_CX->DbQuery("SELECT droit_profils, droit_agendas, droit_notes, droit_aff FROM ${PREFIX_TABLE}droit WHERE droit_util_id=".$USER_SUBSTITUE."");
+    $DB_CX->DbQuery("SELECT droit_profils, droit_agendas, droit_notes, droit_aff FROM {$PREFIX_TABLE}droit WHERE droit_util_id=".$USER_SUBSTITUE."");
     if ($DB_CX->DbNumRows() && (($droit_PROFILS >= _DROIT_PROFIL_AUTRE_PARAM_BASE) || ($USER_SUBSTITUE==$idUser))) {
       $dr_PROFILS = $DB_CX->DbResult(0,0);
       $dr_AGENDAS = $DB_CX->DbResult(0,1);
@@ -180,20 +174,9 @@
       }
     }
 
-    var vPartage = '<?php echo $rsProfil['util_partage_planning']; ?>';
-    var vAffecte = '<?php echo $rsProfil['util_autorise_affect']; ?>';
-<?php
-    if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-      $DB_CX->DbQuery("SELECT aff_util_id FROM ${PREFIX_TABLE}planning_affichage WHERE (aff_consultant_id=".$idUser." AND aff_type_planning ='4')");
-      if ($DB_CX->DbNumRows()) $affTotal = 1;
-      if ($affTotal==1) {
-        echo "    var JaffTotal = 1;\n";
-      } else {
-        $affTotal=0;
-        echo "    var JaffTotal = 0;\n";
-      }
-    }
- ?>
+    var vPartage = <?php echo $rsProfil['util_partage_planning']; ?>;
+    var vAffecte = <?php echo $rsProfil['util_autorise_affect']; ?>;
+
     function selectUtil(_listeSource, _listeDest) {
       var i,j;
       var ok = false;
@@ -270,7 +253,7 @@
   if (($droit_PROFILS >= _DROIT_PROFIL_AUTRE_PARAM_PARTAGE) or (($droit_PROFILS >= _DROIT_PROFIL_PARAM_PARTAGE) and ($idUser==$USER_SUBSTITUE))) {
       echo "      recupSelection(theForm.zlPartage, theForm.ztPartage);\n";
       echo "      recupSelection(theForm.zlAffecte, theForm.ztAffecte);\n";
-    $DB_CX->DbQuery("SELECT gr_util_id FROM ${PREFIX_TABLE}groupe_util");
+    $DB_CX->DbQuery("SELECT gr_util_id FROM {$PREFIX_TABLE}groupe_util");
     if ($DB_CX->DbNumRows()>0) {
       $NoGroupe=true;
       echo "      recupSelection(theForm.zlPrtGroupe, theForm.ztPrtGroupe);\n";
@@ -378,10 +361,6 @@
     var tabOnglets = new Array("Info","Affichage","Param","Admin");
     var selOnglet = tabOnglets[0];
     function affOnglet(_onglet) {
-        if (_onglet=="Info") HelpPhenixCtx="{77E12098-C143-4D6C-AB5E-660373B46053}.htm";
-        if (_onglet=="Affichage") HelpPhenixCtx="{52E3826F-0A74-4031-AE03-2EF75660F860}.htm";
-        if (_onglet=="Param") HelpPhenixCtx="{F06EEE75-CA56-4A72-951A-1F8029E2FC77}.htm";
-        if (_onglet=="Admin") HelpPhenixCtx="{58782409-74AE-4D5D-9EE4-B21C1588D9B0}.htm";
       document.getElementById("td"+selOnglet).className = "ProfilMenuInactif";
       document.getElementById("href"+selOnglet).className = "ProfilMenuInactif";
       document.getElementById("div"+selOnglet).style.display = "none";
@@ -431,18 +410,18 @@
     <TABLE cellspacing="0" cellpadding="0" width="<?php echo ($idUser) ? "585" : "565"; ?>" border="0">
     <TR bgcolor="<?php echo $bgColor[$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" height="20"><?php echo trad("PROFIL_LIB_NOM"); ?></TD>
-      <TD width="436" class="tabInput"><INPUT type="text" class="Texte" name="ztNom" size="25" maxlength="32" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_nom'])); ?>" readonly='readonly' style="text-transform: <?php echo ($AUTO_UPPERCASE == true) ? "uppercase" : "capitalize"; ?>;"></TD>
+      <TD width="436" class="tabInput"><INPUT type="text" class="Texte" name="ztNom" size="25" maxlength="32" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_nom'])); ?>" style="text-transform: <?php echo ($AUTO_UPPERCASE == true) ? "uppercase" : "capitalize"; ?>;"></TD>
     </TR>
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" height="20"><?php echo trad("PROFIL_LIB_PRENOM"); ?></TD>
-      <TD class="tabInput"><INPUT type="text" class="Texte" name="ztPrenom" readonly='readonly' size="25" maxlength="32" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_prenom'])); ?>" style="text-transform: capitalize;"></TD>
+      <TD class="tabInput"><INPUT type="text" class="Texte" name="ztPrenom" size="25" maxlength="32" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_prenom'])); ?>" style="text-transform: capitalize;"></TD>
     </TR>
 <?php
   if ($droit_Aff_Login=="0") {
 ?>
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" height="20"><?php echo trad("PROFIL_LIB_LOGIN"); ?></TD>
-      <TD class="tabInput">Interne à TRIADE<INPUT type="text" style="visibility:hidden" class="Texte" name="ztLogin" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_login'])); ?>">&nbsp;&nbsp;&nbsp;</TD>
+      <TD class="tabInput"><i>*******</i><INPUT type="hidden" name="ztLogin" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_login'])); ?>"></TD>
     </TR>
 <?php
   } else {
@@ -450,28 +429,29 @@
     <INPUT type="hidden" name="ztLogin" value="<?php echo htmlspecialchars(stripslashes($rsProfil['util_login'])); ?>">
 <?php
   }
+  $password="aucun";
   if ($droit_Aff_MDP=="0") {
 ?>
 <?php if ($ztAction == "UPDATE") { ?>
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" nowrap height="20"><?php echo trad("PROFIL_LIB_ANCIEN_PASSWD"); ?></TD>
-      <TD class="tabInput">******<INPUT type="hidden" class="Texte" name="ztOldPasswd" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="aucun"><INPUT type="hidden" name="ztOldPasswdMD5"></TD>
+      <TD class="tabInput"><i>*******</i><INPUT style="visibility:hidden"  type="password" class="Texte" name="ztOldPasswd" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="<?php print $password ?>"><INPUT type="hidden" name="ztOldPasswdMD5"></TD>
     </TR>
 <?php } ?>
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" nowrap height="20"><?php echo $nouveau ?>&nbsp;&nbsp;</TD>
-      <TD class="tabInput">******<INPUT type="hidden" class="Texte" name="ztPasswdNew" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="aucun"><INPUT type="hidden" name="ztPasswdMD5"></TD>
+      <TD class="tabInput"><i>*******</i><INPUT style="visibility:hidden"  type="password" class="Texte" name="ztPasswdNew" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="<?php print $password ?>"><INPUT type="hidden" name="ztPasswdMD5"></TD>
     </TR>
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
       <TD class="tabIntitule" height="20"><?php echo trad("PROFIL_LIB_CONFIRMATION"); ?></TD>
-      <TD class="tabInput">******<INPUT type="hidden" class="Texte" name="ztConfirmPasswd" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="aucun"></TD>
+      <TD class="tabInput"><i>*******</i><INPUT  style="visibility:hidden"  type="password" class="Texte" name="ztConfirmPasswd" size="15" maxlength="12" tabindex="<?php echo $tabIndex++; ?>" value="<?php print $password ?>"></TD>
     </TR>
 <?php
   } else {
 ?>
-     <INPUT type="hidden" class="Texte" name="ztOldPasswd"  value="aucun"><INPUT type="hidden" name="ztOldPasswdMD5">
-    <INPUT type="hidden" class="Texte" name="ztPasswdNew"  value="aucun"><INPUT type="hidden" name="ztPasswdMD5">
-    <INPUT type="hidden" class="Texte" name="ztConfirmPasswd" value="aucun">
+     <INPUT type="hidden" class="Texte" name="ztOldPasswd"  value=""><INPUT type="hidden" name="ztOldPasswdMD5">
+    <INPUT type="hidden" class="Texte" name="ztPasswdNew"  value=""><INPUT type="hidden" name="ztPasswdMD5">
+    <INPUT type="hidden" class="Texte" name="ztConfirmPasswd" value="">
 <?php
   }
 ?>
@@ -696,7 +676,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
       <SELECT name="zlFuseauHoraire" size="1" tabindex="<?php echo $tabIndex++; ?>">
 <?php
   // On recupere la liste des fuseaux horaires
-  $DB_CX->DbQuery("SELECT tzn_zone, tzn_libelle, tzn_gmt FROM ${PREFIX_TABLE}timezone ORDER BY tzn_gmt, tzn_libelle");
+  $DB_CX->DbQuery("SELECT tzn_zone, tzn_libelle, tzn_gmt FROM {$PREFIX_TABLE}timezone ORDER BY tzn_gmt, tzn_libelle");
   while ($enr = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_timezone'] == $enr['tzn_zone']) ? " selected" : "";
     $signe = ($enr['tzn_gmt']<0) ? "-" : "+";
@@ -731,9 +711,13 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
     <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>" height="21">
   <?php
   $meteo = explode(";",$rsProfil['util_meteo_code']);
+  include_once("../../common/config2.inc.php");
+  if (defined("METEOID")) {
+	$meteoTRIADE=METEOID;
+  }
   ?>
       <TD class="tabIntitule" height="20"><?php echo trad("MODMET_PROFIL"); ?></TD>
-      <TD class="tabInput"><?php echo trad("MODMET_CODE"); ?> : <INPUT type="text" class="Texte" name="ztMeteoCode" id="ztMeteoCode" size="10" maxlength="10" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo $meteo[0]; ?>">&nbsp;&nbsp;&nbsp;<INPUT type="checkbox" name="ztMeteoActif" id="ztMeteoActif" value="<?php if ($meteo[1]=="1") echo "1";else echo "0"; ?>" class="Case" onchange="javascript: switch_meteo('<?php echo $meteo[0]; ?>');" tabindex="<?php echo $tabIndex++; ?>"<?php if ($meteo[1]=="1") echo " checked"; ?>><?php echo trad("MODMET_ACTIF"); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <TD class="tabInput"><?php echo trad("MODMET_CODE"); ?> : <INPUT type="text" class="Texte" name="ztMeteoCode" id="ztMeteoCode" size="10" maxlength="10" tabindex="<?php echo $tabIndex++; ?>" value="<?php echo $meteoTRIADE ?>" readonly >&nbsp;&nbsp;&nbsp;<INPUT type="checkbox" name="ztMeteoActif" id="ztMeteoActif" value="<?php if ($meteo[1]=="1") echo "1";else echo "0"; ?>" class="Case" onchange="javascript: switch_meteo('<?php echo $meteo[0]; ?>');" tabindex="<?php echo $tabIndex++; ?>"<?php if ($meteo[1]=="1") echo " checked"; ?>><?php echo trad("MODMET_ACTIF"); ?>
     <INPUT type="hidden" id="ztMeteo" name="ztMeteo" value="">
     </TD>
     </TR>
@@ -776,32 +760,6 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
 <?php $iColor = 0; ?>
   <DIV id="divParam" style="display: none;">
     <TABLE cellspacing="0" cellpadding="0" width="<?php echo ($idUser) ? "585" : "565"; ?>" border="0">
-<?php
-  // MOD Couleur par defaut
-  if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-?>
-    <TR bgcolor="<?php echo $bgColor[++$iColor%2]; ?>">
-      <TD class="tabIntitule" height="20"><?php echo trad("PROFIL_LIB_COULEUR"); ?></TD>
-      <TD class="tabInput"><?php
-    //Recuperation des couleurs/categories de notes
-    $tabTemp    = array(trad("COMMUN_COUL_DEFAUT") => $AgendaFondNotePerso);
-    $tabCouleur = array_merge($tabTemp,getListeCouleur());
-    //Construction de la liste des couleurs/categories de notes
-    reset($tabCouleur);
-    if (empty($rsProfil['util_couleur']))
-      $rsProfil['util_couleur'] = $AgendaFondNotePerso;
-    echo "<SELECT name=\"zlCouleur\" style=\"background-color:".$rsProfil['util_couleur'].";\" onchange=\"javascript: changeCouleurListe(this,document.frmProfil.ztCouleur);\">\n";
-    while (list($key, $val) = each($tabCouleur)) {
-      $selected = ($val==$rsProfil['util_couleur']) ? " selected" : "";
-      echo "        <OPTION style=\"background-color:".$val.";\" value=\"".$val."\"".$selected.">".$key."</OPTION>\n";
-    }
-?>
-      </SELECT>&nbsp;&nbsp;&nbsp;<INPUT type="text" name="ztCouleur" class="Texte" value="<?php echo trad("NOTE_APPARENCE_NOTE"); ?>" style="background:<?php echo $rsProfil['util_couleur']; ?>; text-align:center; font-weight:bold; height:17px;" size=25 readonly tabindex="1000"></TD>
-    </TR>
-<?php
-  }
-  // Fin MOD Couleur par defaut
-?>
 <?php
   if ($rsProfil['util_rappel_delai']) {
     $rdRappel1 = "";
@@ -924,7 +882,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPartage = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr='0'");
+    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPartage[] = $enr['ppl_consultant_id'];
   } else {
@@ -932,7 +890,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_partage_planning'] == "1") ? " selected" : "";
     for ($i=0; $i<count($tabPartage) && empty($selected); $i++) {
@@ -970,7 +928,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPrtGroupe = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT DISTINCT ppl_gr FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr!='0'");
+    $DB_CX->DbQuery("SELECT DISTINCT ppl_gr FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr!='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPrtGroupe[] = $enr['ppl_gr'];
   } else {
@@ -978,7 +936,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM ${PREFIX_TABLE}groupe_util");
+  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM {$PREFIX_TABLE}groupe_util");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = "";
     for ($i=0; $i<count($tabPrtGroupe) && empty($selected); $i++) {
@@ -1059,7 +1017,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPartage = array();
   // On recupere la liste des personnes concernees par l'affectation sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT paf_consultant_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr='0'");
+    $DB_CX->DbQuery("SELECT paf_consultant_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPartage[] = $enr['paf_consultant_id'];
   } else {
@@ -1067,7 +1025,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_autorise_affect'] == "1") ? " selected" : "";
     for ($i=0; $i<count($tabPartage) && empty($selected); $i++) {
@@ -1106,7 +1064,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabAffGroupe = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT DISTINCT paf_gr FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr!='0'");
+    $DB_CX->DbQuery("SELECT DISTINCT paf_gr FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr!='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabAffGroupe[] = $enr['paf_gr'];
   } else {
@@ -1114,7 +1072,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM ${PREFIX_TABLE}groupe_util");
+  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM {$PREFIX_TABLE}groupe_util");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = "";
     for ($i=0; $i<count($tabAffGroupe) && empty($selected); $i++) {
@@ -1172,7 +1130,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
           <TD><SELECT size="6" style="width:200px; border:<?php echo $FormulaireBordureInput; ?>; background-color:<?php echo $FormulaireFondInput; ?>;">
 <?php
     // Liste des utilisateurs dont on peut consulter le planning
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
     while ($enr=$DB_CX->DbNextRow()) {
       echo "            <OPTION value=\"".$enr['util_id']."\" disabled>".htmlspecialchars($enr['nomUtil'])."</OPTION>\n";
     }
@@ -1182,7 +1140,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
           <TD align="right"><SELECT size="6" style="width:200px; border:<?php echo $FormulaireBordureInput; ?>; background-color:<?php echo $FormulaireFondInput; ?>;">
 <?php
     // Liste des utilisateurs a qui l'on peut affecter une note
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_autorise_affect ='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_autorise_affect ='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
     while ($enr=$DB_CX->DbNextRow()) {
       echo "            <OPTION value=\"".$enr['util_id']."\" disabled>".htmlspecialchars($enr['nomUtil'])."</OPTION>\n";
     }
@@ -1203,7 +1161,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
     $idRand = md5(uniqid(rand()));
     if ($USER_SUBSTITUE) {
       // Si on n'est pas dans la creation d'un nouveau compte => on met a jour dans la bdd
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}utilisateur SET util_url_export='".$idRand."' WHERE util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}utilisateur SET util_url_export='".$idRand."' WHERE util_id=".$USER_SUBSTITUE);
     }
     $rsProfil['util_url_export']=$idRand;
   }

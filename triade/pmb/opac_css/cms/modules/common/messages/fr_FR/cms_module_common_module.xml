@@ -5,10 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_module.xml,v 1.16 2019-02-22 11:53:29 dgoron Exp $ -->
+$Id: cms_module_common_module.xml,v 1.24 2021/02/12 15:50:05 qvarin Exp $ -->
 
 <XMLlist>
-	<entry code="cms_module_datasource_choice">Choisissez une source de donnée</entry>
+	<entry code="cms_module_datasource_choice">Choisissez une source de données</entry>
 	<entry code="cms_module_common_module_save">Enregistrer</entry>
 	<entry code="cms_module_common_module_cancel">Annuler</entry>
 	<entry code="cms_module_common_module_name">Nom du Cadre</entry>
@@ -63,4 +63,10 @@ $Id: cms_module_common_module.xml,v 1.16 2019-02-22 11:53:29 dgoron Exp $ -->
 	<entry code="cms_module_common_condition_lang">Langues de l'OPAC</entry>
 	<entry code="cms_module_common_condition_readers_categories">Catégories de lecteurs</entry>
 	<entry code="cms_module_common_condition_readers_statuses">Statuts de lecteurs</entry>
+	<entry code="cms_module_common_condition_search_universes">Selection d'univers de recherche</entry>
+	<entry code="cms_module_common_view_breadcrumb">Fil d'Arianne</entry>
+	<entry code='cms_module_common_view_carousel_uikit'>Vue en Carrousel Uikit</entry>
+	<entry code='cms_module_common_view_slideshow'>Vue en Slideshow</entry>
+	
+	<entry code="cms_module_common_filter_bannettes_by_classement">Par le type de classement</entry>
 </XMLlist>

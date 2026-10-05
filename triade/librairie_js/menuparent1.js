@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 document.write("</div></td>");
 document.write("</tr>");
 document.write("<tr> </tr>");
@@ -6,13 +6,13 @@ document.write("<tr> </tr>");
 document.write("</table>");
 document.write("<table border='0' cellpadding='0' cellspacing='0' width='100%' height='20' bgcolor='#175216'>");
 document.write("<tr id='coulBar0'>");
-document.write("<td height='20' width='20%'>");
+document.write("<td height='20' width='20%'><span data-title=\"TRIADE-COPILOT\" data-step='98' data-intro =\"L'IA à porter de main ! Un IA à votre disposition.\" >");
 if (lienassist == '0' ) {
 	document.write("<div align='center'><a href='#' onclick=\"open('besoin_daide.php','_self','')\" class='m'>"+langtitre0+"</a></div>");
 }else{
 	document.write("<div align='center'><a href='"+lienassist+"' class='m' target='_blank' >"+langtitre0+"</a></div>");
 }
-document.write("</td>");
+document.write("</span></td>");
 document.write("<td height='20' width='20%'>");
 document.write("<div align='center'><a href='./acces2.php' class='m'>"+langtitre1+"</a></div>");
 document.write("</td>");
@@ -45,7 +45,7 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 }else{	
 	if ((webrad == "oui") && (moduleradio == "oui"))   {
 		document.write("<tr>");
-		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.org/webradio/infomusic.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
+		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.org/webradio/infomusic-2.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
 		document.write("</tr>");
 		document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
 	}else{
@@ -54,25 +54,28 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 	}
 } 
 document.write("<tr>");
-document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>"+langmenuadmin07+"</font></b></td>");
+document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>&#128274; "+langmenuadmin07+"</font></b></td>");
 document.write("</tr>");
 document.write(" <tr>");
 document.write("<td colspan='3' height='13' id='coulModule0' >");
+document.write("<span data-title=\"Espace Privé\" data-step='1' data-intro =\"Configuration de votre compte, accès à votre agenda privé, de votre stockages, d'une messagerie instantanée, etc... \" >");
 document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./triade-phone.php' id='menumodule0' >Triade-Phone</a><br>");
 if (moduleparentagenda == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','resizable=yes,width=1000,height=700');\" >"+langmenuadmin00+"</a><br>"); }
+if (moduleparentlocalisation == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./localisation_parent.php'>Localisation</a><br>"); }
 if (moduleparentstockage == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
 if (moduleparentcompta == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='compta_consulte3.php' >"+langmenuadmin90+"</a><br>"); } 
 if (moduleparentrss == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./flux.php' id='menumodule0' >"+langmenuadmin521+"</a><br>"); }
 if (moduleparentcantine == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./cantine_consulte.php' >"+langmenupersonnel2+"</a><br>"); }
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./parametrage.php' >"+langmenuadmin46+"</a><br>");
 if (lan == "oui") {
-	if (modulefourniturescolaire == "oui") { 
+	if (modulefourniturescolaire == "oui") {
 		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('http://support.triade-educ.com/support/triade-shop.php','triadeshop','width=1024,height=765,resizable=no,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin526+"</a><br>");
 	}
 }
-document.write(" </p>");
+document.write(" </span></p>");
 document.write("</td>");
 document.write("</tr>")
 document.write("<tr>");
@@ -80,27 +83,40 @@ document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write(" </tr>")
 if (modulemessagerieparent == "oui") {
 	document.write("<tr>");
-	document.write("<td colspan='3' id='coulTitre0' ><b><font id='menumodule1' >"+langmenuparent1+"</font></b></td>");
+	document.write("<td colspan='3' id='coulTitre0' ><b><font id='menumodule1' >&#9993; "+langmenuparent1+"</font></b></td>");
 	document.write("</tr>");
 	document.write("<tr>");
 	document.write("<td colspan='3'   id='coulModule0' >");
-	document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
+	document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'><span data-title=\"Messagerie interne\" data-step='3' data-intro =\"Gestionde la messagerie, permettant d'envoyer, recevoir des messages internes aux utilisateurs Triade de cet établissement.\" >");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_reception.php'>"+langmenuparent12+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./messagerie_envoi.php'>"+langmenuparent11+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./corbeille_message.php' id='menumodule0'>"+langmenuadmin023+"</a><br>");
 	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./messagerie_suppression.php' id='menumodule0'>"+langmenuadmin04+"</a><br>");
-	document.write("</p>");
+	document.write("</span></p>");
 	document.write("</td>");
 	document.write("</tr>");
 	document.write("<tr>");
 	document.write("<td colspan='3' height=19>&nbsp;</td>");
 	document.write(" </tr>");
 }
-document.write(" <tr>");
-document.write(" <td colspan='3' id='coulTitre0' ><b><font id='menumodule1'>"+langmenuparent2+"</font></b></td>");
+document.write("<tr>");
+document.write("<td colspan='3' id='coulTitre0' style='border-radius: 5px 5px 0px 0px; padding-left:5px'><b><font id='menumodule1'>&#128249; Visioconf&#233;rence</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
-document.write("<td colspan='3'  id='coulModule0' >");
+document.write("<td colspan='3' id='coulModule0'>");
+document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./tvisio.php?p=rooms'>Rejoindre une salle</a><br>");
+document.write("</p>");
+document.write("</td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3' height=19>&nbsp;</td>");
+document.write("</tr>");
+document.write(" <tr>");
+document.write(" <td colspan='3' id='coulTitre0' ><b><font id='menumodule1'>&#128218; "+langmenuparent2+"</font></b></td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3'  id='coulModule0' ><span data-title=\"Vie Scolaire\" data-step='4' data-intro =\"Ces modules vous permet de consulter les notes, les devoirs, l'absenteisme concernant votre enfant.\" >");
 document.write(" <p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write(" <img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./notesEleve.php'>"+langmenuparent21+"</a><br>");
 if (moduleparentretard == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a  id='menumodule0' href='./visu_retard_parent.php'>"+langmenuparent22+"</a><br>"); }
@@ -110,17 +126,19 @@ if (moduleparentdispence == "oui") { document.write("<img src='./image/cube.gif'
 if (moduleparentdiscipline == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a  id='menumodule0'href='./visu_discipline_parent.php'>"+langmenuparent25+"</a><br>"); }
 if (moduleparentcahierdetexte == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./cahiertext_visu.php'>"+langmenuparent27+"</a><br>"); }
 if (modulebulletinvisuparent == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visu_bulletin.php'>"+langmenuadmin6+"</a><br>"); } 
-document.write("</p>");
+//document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='triade-pedago.php' target='_blank'  >Triade-Pedago</a><br>");
+document.write("</span></p>");
 document.write("</td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write("</tr>");
 document.write("<tr>");
-document.write("<td colspan='3' height='13' id='coulTitre0' ><b><font id='menumodule1'>"+langmenuparent3+"</font></b></td>");
+document.write("<td colspan='3' height='13' id='coulTitre0' ><b><font id='menumodule1'>&#127963; "+langmenuparent3+"</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3' id='coulModule0' >");
+document.write("<span data-title=\"Direction\" data-step='6' data-intro =\"Consulter les informations de votre établissement scolaire, l'emploi du temps, les circulaires administratifs, les stages, et bien d'autres modules.\" >");
 document.write("<p style='margin-left: 2; margin-bottom:5; margin-top:5'>");
 //document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='soutienscolaire.php' >Soutien Scolaire</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./information.php'>"+langmenuprof29+"</a><br>");
@@ -132,7 +150,7 @@ if (moduleplanningparent == "oui") { document.write("<img src='./image/cube.gif'
 if (moduleparentdst == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./calendrier_dst_visu_readonly.php'>"+langmenuparent35+"</a><br>"); }
 if (moduleparenttrombinoscope == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./trombi-eleve.php'>"+langmenuadmin518+"</a><br>"); }
 if (moduleparentplandeclasse == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onclick=\"open('planclasse-visu-pe.php','planclasse','width=1050,height=650,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')\">"+langmenuprof46+"</a><br>"); }
-document.write(" </td>");
+document.write("</span></td>");
 document.write("</tr>");
 document.write("</table> ");
 document.write("</td>");

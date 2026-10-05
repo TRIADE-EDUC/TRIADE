@@ -10,7 +10,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 $cnx=cnx();
 $classe=chercheClasse_nom($_POST["saisie_classe"]);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" >
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Impression des absences et retards de la classe "." <font id='color2'>".$classe."</font>" ?></font></b></td></tr>
 <tr id='cadreCentral0' ><td >
@@ -146,14 +146,14 @@ include_once('librairie_php/recupnoteperiode.php');
 
 $listclasse=affClasse();
 
-for($c=0;$c<count($listclasse);$c++) {
+for($c=0;$c<countTriade($listclasse);$c++) {
 	$idClasse=$listclasse[$c][0];
 	if (($_POST["saisie_classe"] != $idClasse) && ($_POST["saisie_classe"] != "tous")) { continue; }
 
 
 	$eleveT=recupEleve($idClasse);      // recup liste eleve
 	$classe=chercheClasse_nom($idClasse);
-	$nbeleve=count($eleveT);
+	$nbeleve=countTriade($eleveT);
 	
 	$idsite=chercheIdSite($idClasse);	
 	$dataInfo=visu_paramViaIdSite($idsite);
@@ -175,7 +175,7 @@ for($c=0;$c<count($listclasse);$c++) {
 
 	$H=2;
 
-	for($i=0;$i<count($eleveT);$i++) {
+	for($i=0;$i<countTriade($eleveT);$i++) {
 	
 		$xcoor0="5";
 		$ycoor0="5";
@@ -233,7 +233,7 @@ for($c=0;$c<count($listclasse);$c++) {
 			// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier,creneaux
 			$listeabs=affAbsence2_via_date($idEleve,$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 			$ycoor0+=7;
-			for($j=0;$j<count($listeabs);$j++) {
+			for($j=0;$j<countTriade($listeabs);$j++) {
 				$pdf->SetFont('Arial','',7);
 				$xcoor0="5";
 	
@@ -250,7 +250,7 @@ for($c=0;$c<count($listclasse);$c++) {
 	
 				$dataRattrapage=recupRattrappage($listeabs[$j][12]); // date,heure_depart,duree,valider
 		                $infoRattrapage="";
-        		        for($k=0;$k<count($dataRattrapage);$k++) {
+        		        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 	                	        $rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
 	                        	$infoRattrapage.="\n- Rattrapage le ".dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." Effectuer : $rattragefait";
 		                }
@@ -294,7 +294,7 @@ for($c=0;$c<count($listclasse);$c++) {
 				$worksheet->write("H$H","$motif",$center);
 				
 				$B=8;
-	        	        for($k=0;$k<count($dataRattrapage);$k++) {
+	        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 	                      		$date=$dataRattrapage[$k][0];
 					$heure_depart=$dataRattrapage[$k][1];
 					$duree=$dataRattrapage[$k][2];
@@ -336,7 +336,7 @@ for($c=0;$c<count($listclasse);$c++) {
 		$listeabs=affRetard_via_date($idEleve,$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]); 
 		//elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere,justifier,heure_saisie,creneaux, idrattrapage
 		$ycoor0+=7;
-		for($j=0;$j<count($listeabs);$j++) {
+		for($j=0;$j<countTriade($listeabs);$j++) {
 			$pdf->SetFont('Arial','',7);
 			$xcoor0="5";
 
@@ -353,7 +353,7 @@ for($c=0;$c<count($listclasse);$c++) {
 
 			$dataRattrapage=recupRattrappage($listeabs[$j][11]); // date,heure_depart,duree,valider
 	                $infoRattrapage="";
-        	        for($k=0;$k<count($dataRattrapage);$k++) {
+        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
                 	        $rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
                         	$infoRattrapage.="\n- Rattrapage le ".dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." Effectuer : $rattragefait";
 	                }
@@ -394,7 +394,7 @@ for($c=0;$c<count($listclasse);$c++) {
 			$worksheet->write("G$H","$matiere",$center);
 			$worksheet->write("H$H","$motif",$center);
 			$B=8;
-        	        for($k=0;$k<count($dataRattrapage);$k++) {
+        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
                       		$date=$dataRattrapage[$k][0];
 				$heure_depart=$dataRattrapage[$k][1];
 				$duree=$dataRattrapage[$k][2];
@@ -455,15 +455,15 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")):
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
       top_d();
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
       print "</SCRIPT>";
     endif ;
 

@@ -1,0 +1,73 @@
+<!-- $Id: article_in_result_display.tpl.html,v 1.1.4.1 2024/06/07 10:26:48 pmallambic Exp $ -->
+
+<article>
+    <div id="article_container_{{ article.id }}" class="pmb_item">
+        <div class="uk-flex uk-flex-wrap">
+            {% if article.logo.exists %}
+                <!-- image -->
+                <div class="pmb_side_img pmb_img">
+                    {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                        <a aria-hidden="true" href="{{artcle.permalink}}">
+                    {% endif %}
+                        <img src="{{article.logo.medium}}" alt="{{artcle.fields_type.cp_edt_a_logo_alt.values.0.value}}"/>
+                    {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="uk-flex uk-flex-wrap uk-flex-column uk-width-expand">
+                <!-- item -->
+                <h3 class="pmb_subtitle">
+                    {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                        <a aria-hidden="true" href="{{article.permalink}}">
+                    {% endif %}
+                    {{article.title}}
+                    {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                        </a>
+                    {% endif %}
+                </h3>
+                    {% if article.fields_type.cp_edt_e_begin.values.0.value %}
+                    <!-- dates -->
+                        {% if article.fields_type.cp_edt_e_end.values.0.value %}
+                            <span class="pmb_date">{{ msg.prt_du }} {{article.fields_type.cp_edt_e_begin.values.0.format_value}} {{ msg.prt_au }} {{article.fields_type.cp_edt_e_end.values.0.format_value}}</span>
+                        {% else %}
+                            <span class="pmb_date">{{ msg.prt_le }} {{article.fields_type.cp_edt_e_begin.values.0.format_value}}</span>
+                        {% endif %}
+                    {% endif %}
+                <div class="pmb_resume">
+                    {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                    <!-- resume avec troncature -->
+                        {% if article.fields_type.cp_edt_dp_resume.values.0.value==1 %}
+                            {% if article.resume %}
+                                <p class="pmb_cap">
+                                    {{article.resume | strip_tags | limitstring, 150, "..."}}
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                        {% if article.content %}
+                            <p class="pmb_content"> 
+                                {{article.content | strip_tags | limitstring, 350, "..."}}
+                            </p>    
+                        {% endif %}
+                    {% else %}
+                        <!-- resume sans troncature -->
+                        {% if article.resume %}
+                            <div class="pmb_cap">
+                                {{article.resume }}
+                            </div>
+                        {% endif %}
+                        {% if article.content %}
+                            <div class="pmb_content"> 
+                                {{article.content }}
+                            </div>    
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if article.fields_type.cp_edt_dp_content.values.0.value!=1 %}
+                    <!-- lien si on affihe pas tout le contenu -->
+                    <a class="pmb_button pmb-button-left" href="{{article.permalink}}">{{msg.prt_lire}}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article>

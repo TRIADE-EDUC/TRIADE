@@ -1,7 +1,7 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: set-grid-main-uncolored.js,v 1.23 2018-07-12 10:23:19 wlair Exp $ */
+// $Id: set-grid-main-uncolored.js,v 1.24.8.1 2024/09/12 09:49:49 pmallambic Exp $ */
 // grid test
 $(document).ready(function () {
 	$("#main_hors_footer").addClass(function () {
@@ -33,7 +33,7 @@ $(document).ready(function () {
 					bandeauChilds[i].getAttribute('id') != 'accueil' &&
 					bandeauChilds[i].getAttribute('id') != 'adresse' &&
 					bandeauChilds[i].getAttribute('class') != 'cmsNoStyles' &&
-					bandeauChilds[i].getAttribute('type') != 'text/javascript') {
+					bandeauChilds[i].tagName != 'SCRIPT'){
 					return true;
 				}
 			}
@@ -74,11 +74,6 @@ $(document).ready(function () {
 	}
 	// Pixel blanc
 	imgEvents();
-	//Pixel blanc fin
-	if (window.parent && window.parent.cms_build_init && (typeof window.parent.cms_build_init != "undefined")) {
-		console.log("cms_build_active")
-	} else {
-	}
 	$("div:empty").not(".cms_module_agenda *").not("div[class*='dijit']").not("div[id^='add_div_cms_module']").not("div[data-dojo-type]").not("div[data-dojo-type] :empty").not("#att").addClass("ui-empty-item");
 	$("body").addClass("ready");
 });

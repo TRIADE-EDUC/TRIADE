@@ -1,0 +1,102 @@
+<!-- $Id: printRegistrationList.tpl.html,v 1.4.8.2.2.1 2025/04/04 07:57:32 jparis Exp $ -->
+<html>
+	<head>
+		<style>
+			table {
+				margin-bottom: 50px
+			}
+			table, th, tr {
+			  width: 100%;
+			}
+			th, td {
+			  border: 1px solid black;
+			  padding: 5px;
+			}
+			.contact-person {
+			  background-color: #dddddd;
+			}
+			.sign {
+			  width: 15%;
+			  border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>{{ animation.name }}</h1>
+		<p>
+			{{ msg.animation_date_print }} <strong>{{ animation.event.startDate }} - {{ animation.event.endDate }}</strong>
+			<br>
+			{{ msg.animation_quota_reserved_print }} <strong>{{ allQuotas.reserved.global }} / {{ allQuotas.animationQuotas.global }}</strong>
+		</p>
+		<p>
+			{{ msg.animation_summary_price_print }}
+			<br>
+			{% for namePrice, sum in summaryPrice %}
+			<div>
+				<p>
+					{{ namePrice }} :
+					{% if sum.price %}
+						(Prix : {{ sum.price }} euros) <br>
+					{% else %}
+						(Prix : 0 euros) <br>
+					{% endif %}
+					Nombre de personne : {{ sum.nb_person }} <br>
+					{% if sum.price %}
+						<strong>Total du tarif : {{ sum.total }}</strong><br>
+					{% endif %}
+				</p>
+			</div>
+			{% endfor %}
+		</p>
+
+		
+		{% for status in registrationStatus %}
+			{% setglobalvalue hasRegistrations "false" %}
+			
+			{% for registration in registrationList %}
+				{% if registration.numRegistrationStatus == status.id_registration_status %}
+					{% if hasRegistrations == "false" %}
+						{% setglobalvalue hasRegistrations "true" %}
+					{% endif %}
+				{% endif %}
+		  	{% endfor %}
+
+			{% if hasRegistrations == "true" %}
+				<table>
+					<thead>
+						<tr>
+							<th colspan="4">{{ msg.animation_registration_list_print }} - {{ status.name }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for registration in registrationList %}
+							{% if registration.numRegistrationStatus == status.id_registration_status %}
+								<tr class="contact-person">
+									<td>{{ registration.name }}</td>
+									<td>{{ registration.email }}</td>
+									<td>{{ registration.phoneNumber }}</td>
+									<td>{{ msg.animation_point_print }}</td>
+								</tr>
+								{% if registration.registrationListPerson %}
+									{% for index, person in registration.registrationListPerson %}
+									<tr>
+										<td style="text-align:center;">
+											{% if person.barcode %}
+											<barcode dimension="1D" type="C39" value="{{ person.barcode }}" style="width:200px; height:50px; font-size: 10px"></barcode>
+											{% endif %}
+										</td>
+										<td colspan="2" style="width: 10%;">
+											{{ person.personName }} ( {{ person.price.name }} )
+										</td>
+										<td class="sign"></td>
+									</tr>
+									{% endfor %}
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		{% endfor %}
+	</body>
+</html>

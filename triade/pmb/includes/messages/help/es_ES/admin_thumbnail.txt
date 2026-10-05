@@ -1,0 +1,7 @@
+<h2>Vignettes</h2>
+</p><p>
+Gestion des vignettes.
+</p>
+<p><b>Sources</b> : Param&eacute;trage des sources de vignettes.<br/>
+<b>Entit&eacute;s</b> : Param&eacute;trage de l'ordre des sources de vignettes en fonction des pivot de l'entit&eacute;.<br/>
+<b>Cache</b> :  Param&eacute;trage du cache de vignettes.</p>

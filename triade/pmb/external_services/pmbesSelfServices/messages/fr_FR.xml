@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.7 2015-10-05 10:12:21 vtouchard Exp $ -->
+$Id: fr_FR.xml,v 1.11.8.1 2025/03/14 13:20:34 tsamson Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -39,6 +39,7 @@ $Id: fr_FR.xml,v 1.7 2015-10-05 10:12:21 vtouchard Exp $ -->
 <entry code="self_checkin_outputs_description"></entry>
 <entry code="self_checkin_expl_cb">Le code-barres du document</entry>
 <entry code="self_checkin_pmbUserId">Id de l'utilisateur PMB</entry>
+<entry code="self_checkin_device">Appareil utilisé</entry>
 
 <entry code="self_checkin_status">1: Le retour du document est accepté. 0: Le retour du document est refusé</entry>
 <entry code="self_checkin_message">Message du retour de prêt</entry>
@@ -54,6 +55,7 @@ $Id: fr_FR.xml,v 1.7 2015-10-05 10:12:21 vtouchard Exp $ -->
 <entry code="self_renew_outputs_description"></entry>
 <entry code="self_renew_expl_cb">Le code-barres du document</entry>
 <entry code="self_renew_pmbUserId">Id de l'utilisateur PMB</entry>
+<entry code="self_renew_check_resa">Activer la vérification des réservations lors de la prolongation</entry>
 
 <entry code="self_renew_status">1: La prolongation du prêt est acceptée. 0: La prolongation du prêt est refusée</entry>
 <entry code="self_renew_message">Message de la prolongation du prêt</entry>
@@ -68,4 +70,17 @@ $Id: fr_FR.xml,v 1.7 2015-10-05 10:12:21 vtouchard Exp $ -->
 <entry code="self_checkout_bibloto_empr_cb">Le code-barres de l'emprunteur</entry>
 <entry code="self_checkout_bibloto_confirm">Confirme le prêt</entry>
 
+
+<entry code="print_loans_description">Permet d'obtenir le template d'impression d'un ticket de prêt</entry>
+<entry code="print_loans_inputs_description">Le paramètre expl_cb est optionnel. S'il n'est pas fourni, le template affichant tous les prêts en cours est renvoyé</entry>
+<entry code="print_loans_outputs_description"></entry>
+<entry code="print_loans_empr_cb">Le code-barres de l'emprunteur</entry>
+<entry code="print_loans_expl_cb">Le code-barres de l'exemplaire</entry>
+<entry code="print_loans_tpl_result">Template d'impression de ticket</entry>
+
+<entry code="get_printers_config_description">Permet d'obtenir les valeurs des paramètres de configuration des imprimantes</entry>
+<entry code="print_loans_outputs_description"></entry>
+<entry code="get_printers_config_result">Tableau des paramètres d'imprimante</entry>
+<entry code="get_printers_config_printer_name">IP du serveur d'impression</entry>
+<entry code="get_printers_config_printer_list">Liste des imprimantes configurées</entry>
 </XMLlist>

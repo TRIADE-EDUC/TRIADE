@@ -2,7 +2,61 @@
 
 All notable changes to this project will be documented in this file.
 
-## [5.2.1](https://github.com/spipu/html2pdf/compare/v5.2.0...5.2.1) - 2018-10-26
+## [5.3.0](https://github.com/spipu/html2pdf/compare/v5.2.8...v5.3.0) - 2025-01-08
+
+  * bump supported phpversion from **5.6 -> 8.2** to **7.2 -> 8.4**
+  * add html tag "strike" - thanks to @milan-ghevariya
+  * add html tag "figure" - thanks to @fredmatrack
+  * replace Travis with Github actions for CI - thanks to @W0rma
+  * fix casing of parameter type - thanks to @W0rma 
+  * fix bad type hint on setModeDebug function - thanks to @W0rma
+  * fix fgetcsv usage for php 8.4 compatibility - thanks to @W0rma
+  * fix TCPDF::$pdfa argument type as per upstream - thanks to @jankal
+
+## [5.2.8](https://github.com/spipu/html2pdf/compare/v5.2.7...v5.2.8) - 2023-07-18
+
+  * fix XSS vulnerabilities in examples `example9.php` and `forms.php` - thanks to Michał Majchrowicz, Livio Victoriano and Zbigniew Piotrak  from [AFINE  Team](https://www.afine.pl/)
+
+## [5.2.7](https://github.com/spipu/html2pdf/compare/v5.2.6...v5.2.7) - 2023-02-02
+
+  * fix phpunit compatibility
+
+## [5.2.6](https://github.com/spipu/html2pdf/compare/v5.2.5...v5.2.6) - 2023-01-28
+
+  * add support of PHP 8.1 and PHP 8.2
+  * add phpunit 9 compatibility - thanks to @jausions
+  * remove useless files
+
+## [5.2.5](https://github.com/spipu/html2pdf/compare/v5.2.4...v5.2.5) - 2022-04-04
+
+  * fix security on scheme of css and image paths for windows paths
+
+## [5.2.4](https://github.com/spipu/html2pdf/compare/v5.2.3...v5.2.4) - 2021-12-16
+
+  * revert fix multibyte aware substr when setting newline position - it causes pbs on some specific cases
+  * security #CVE-2021-45394 - add security on scheme of css and image paths - thanks to Clément Amic and Antoine Gicquel from [Synacktiv](https://www.synacktiv.com/)
+
+## [5.2.3](https://github.com/spipu/html2pdf/compare/v5.2.2...v5.2.3) - 2021-10-19
+
+  * add support for BASE64 encoded images also for backimg tag in page - thanks to @berengan
+  * fix issue on write2DBarcode parameters - thanks to @Sarigue
+  * fix svg path parser - thanks to @CWBudde - issue #618
+  * fix html attribute parser - thanks to @Tofandel
+  * fix multibyte aware substr when setting newline position - thanks to @AndyTWF
+  * add php8 compatibility and fix tcpdf compatibilty - thanks to @humancopy
+
+## [5.2.2](https://github.com/spipu/html2pdf/compare/v5.2.1...v5.2.2) - 2020-03-22
+
+  * allow usage of [[page_cu]] in css class names - thanks to @marbetschar - see example 15
+  * add support for BASE64 encoded images - thanks to @darius-heavy
+  * add Chinese local file - thanks to @Jaggle
+  * add powershell test script
+  * bump supported version from 5.4-7.2 to 5.6-7.4 - thanks to @coffeemedia
+  * fix issue on \_drawRectangle where array offset was being accessed on value of type null - thanks to @coffeemedia
+  * fix issue on lower-roman style - thanks to @jigneshsolanki
+  * fix issue on composer autoload warning - thanks to @adrienfr
+
+## [5.2.1](https://github.com/spipu/html2pdf/compare/v5.2.0...v5.2.1) - 2018-10-26
 
   * add `cert` tag - thanks to @LittleBigFox
   * add `balloon` example - issue #385

@@ -54,7 +54,7 @@
         "legi": false,
         "dalloz": true
     },
-    "Juridiction deproximit\u00e9": {
+    "Juridiction de proximit\u00e9": {
         "code": "juridictiondeproximite",
         "legi": false,
         "dalloz": true
@@ -89,7 +89,7 @@
         "legi": false,
         "dalloz": true
     },
-    "Tribunal de premire instance": {
+    "Tribunal de premi\u00e8re instance": {
         "code": "tribunalpremiereinstance",
         "legi": true,
         "dalloz": true
@@ -107,6 +107,11 @@
     "Tribunal des conflits": {
         "code": "tribunalconflits",
         "legi": true,
+        "dalloz": true
+    },
+    "CAA": {
+        "code": "couradministrativeappel",
+        "legi": false,
         "dalloz": true
     }
 }

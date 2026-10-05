@@ -1,9 +1,11 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: titre_uniforme.html,v 1.12 2019-02-15 15:45:21 ngantier Exp $ -->
+<!-- $Id: titre_uniforme.html,v 1.15 2023/08/08 15:36:21 qvarin Exp $ -->
 
-{% block header %}
-	<h3><span>{{ msg.titre_uniforme_see_title }}</span></h3>
+{% block title %}
+    {% title authority_isbd %}
+    	{{ msg.titre_uniforme_tpl_titre_uniforme }} {{ authority.name  }}
+    {% endtitle %}
 {% endblock %}
 
 {% block aut_see %}
@@ -12,10 +14,6 @@
 	</div>
 {% endblock %}
 	
-{% block title %}
-		<h3>{{ authority.name }}</h3>
-{% endblock %} 
-
 {% block details %}
 	{% for author in authority.sorted_responsabilities.authors %}
 		{% if loop.first %}
@@ -80,6 +78,21 @@
 				</div>
 			</div>
 		{% endif %}
+	{% endfor %}
+	{% for expressions_type in authority.oeuvre_expressions_datas %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ expressions_type.label }} :</b>
+			</div>
+			<div class="aut_display_cell">
+			{% for expression in expressions_type.elements %}
+				{% if !loop.first %}
+					<br/>
+				{% endif %}
+					<a href='index.php?lvl=titre_uniforme_see&id={{ expression.num_object }}'>{{ expression.isbd }}</a>
+			{% endfor %}
+			</div>
+		</div>
 	{% endfor %}
 	{% for other_links_type in authority.other_links_datas %}
 		<div class="aut_display_row">

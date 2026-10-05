@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_filter.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+$Id: cms_module_common_filter.xml,v 1.4 2021/02/22 08:47:26 btafforeau Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_filter_selector_choice">Choose a selector for the filter</entry>
@@ -15,4 +15,6 @@ $Id: cms_module_common_filter.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
 	<entry code="cms_module_common_filter_compare_from">Field to compare</entry>
 	<entry code="cms_module_common_selector_empr_infos">Borrower's informations</entry>
 	<entry code="cms_module_common_selector_value">Manual value</entry>
+	<entry code="cms_module_common_selector_session_var">Variable de session</entry>
+	<entry code="cms_module_common_filter_selector_by_choice_default">Choose a variable</entry>
 </XMLlist>

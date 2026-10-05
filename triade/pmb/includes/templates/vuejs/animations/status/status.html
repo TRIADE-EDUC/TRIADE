@@ -1,0 +1,8 @@
+<div id="status">
+	<template v-if="'add' == action || 'edit' == action">
+		<statusform :pmb="pmb" :status="status" :action="action" :img="img"></statusform>
+	</template>
+	<template v-else>
+		<statuslist :pmb="pmb" :statuslist="status"></statuslist>
+	</template>
+</div>

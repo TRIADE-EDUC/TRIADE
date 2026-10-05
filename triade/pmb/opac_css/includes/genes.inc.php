@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: genes.inc.php,v 1.15 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: genes.inc.php,v 1.17.8.1 2025/03/25 07:32:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 function search_other_function_filters() {
-	global $typ_notice, $charset, $annee_parution, $cnl_bibli, $dbh;
+	global $typ_notice, $cnl_bibli;
 	
+	$cnl_bibli = intval($cnl_bibli);
 	$r.="<select name='cnl_bibli'>";
 	$r.="<option value=''>tous les sites</option>";
 	$requete="select location_libelle,idlocation from docs_location where location_visible_opac=1";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($result)){
 		while ($loc = pmb_mysql_fetch_object($result)) {
 			$selected="";
@@ -22,25 +23,29 @@ function search_other_function_filters() {
 	}
 	$r.="</select>";
 
-	// AnnÃ©e de parution : fonctionnel mais dÃ©sactivÃ© pour l'instant
-	//$r.="AnnÃ©e de parution <input type='text' size='5' name='annee_parution' value='".htmlentities($annee_parution,ENT_QUOTES,$charset)."'/>";
-	$r.="<br/>Restreindre Ã  <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles de revues<input type='checkbox' name=\"typ_notice[s]\" value='1' ".($typ_notice['s']?"checked":"")."/>&nbsp;Revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
+	// Année de parution : fonctionnel mais désactivé pour l'instant
+	//$r.="Année de parution <input type='text' size='5' name='annee_parution' value='".htmlentities($annee_parution,ENT_QUOTES,$charset)."'/>";
+	$r.="<br/>Restreindre à <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles de revues<input type='checkbox' name=\"typ_notice[s]\" value='1' ".($typ_notice['s']?"checked":"")."/>&nbsp;Revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
 	return $r;
 }
 
 function search_other_function_clause() {
 	global $typ_notice,$annee_parution;
 	global $cnl_bibli;
-	reset($typ_notice);
+	
 	$from="";
 	$where="";
+	$cnl_bibli = intval($cnl_bibli);
 	if ($cnl_bibli) {
 		$from .= ",exemplaires";
 		$where .= " and notices.notice_id=exemplaires.expl_notice and expl_location=$cnl_bibli";
 	}
 	$t_n_tab=array();
-	foreach ($typ_notice as $key => $val) {
-	    $t_n_tab[]=$key;
+	if (is_array($typ_notice)) {
+	    reset($typ_notice);
+    	foreach ($typ_notice as $key => $val) {
+    	    $t_n_tab[]=$key;
+    	}
 	}
 	$t_n=implode("','",$t_n_tab);
 	if ($t_n) {
@@ -48,7 +53,7 @@ function search_other_function_clause() {
 		$where .= " and niveau_biblio in (".$t_n.")";
 	}
 	if ($annee_parution) {
-		$where .= " and year like '%".$annee_parution."%'";
+		$where .= " and year like '%".addslashes($annee_parution)."%'";
 	}
 	if ($cnl_bibli || $t_n || $annee_parution) {
 		$r = "select distinct notice_id from notices $from where 1 $where";
@@ -84,22 +89,21 @@ function search_other_function_get_history($n) {
 }
 
 function search_other_function_human_query($n) {
-	global $dbh;
 	global $typ_notice,$annee_parution;
 	global $cnl_bibli;
 	$r="";
-	$cnl_bibli=$_SESSION["cnl_bibli".$n];
+	$cnl_bibli = intval($_SESSION["cnl_bibli".$n]);
 	if ($cnl_bibli) {
 		$r="bibliotheque : ";
 		$requete="select location_libelle from docs_location where id_location='".$cnl_bibli."' limit 1";
 		$res=pmb_mysql_query($requete);
-		$r.=@pmb_mysql_result($res,0,0);
+		$r.=pmb_mysql_result($res,0,0);
 		$r=" ";
 	}
-	$notices_t=array("m"=>"Monographies","s"=>"PÃ©riodiques","a"=>"Articles");
+	$notices_t=array("m"=>"Monographies","s"=>"Périodiques","a"=>"Articles");
 	$typ_notice=$_SESSION["typ_notice".$n];
 	$annee_parution=$_SESSION["annee_parution".$n];
-	if (count($typ_notice)) {
+	if (is_array($typ_notice) && count($typ_notice)) {
 		$r.="pour les types de notices ";
 		reset($typ_notice);
 		$t_l=array();
@@ -116,8 +120,8 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $cnl_bibli;
-	return "<input type=\"hidden\" name=\"cnl_bibli\" value=\"$cnl_bibli\">\n";
+	global $cnl_bibli, $charset;
+	return "<input type=\"hidden\" name=\"cnl_bibli\" value=\"".htmlentities($cnl_bibli, ENT_QUOTES, $charset)."\">\n";
 }
 
 ?>

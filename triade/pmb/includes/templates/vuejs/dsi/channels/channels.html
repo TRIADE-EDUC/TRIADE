@@ -1,0 +1,11 @@
+<div id="channels">
+    <loader></loader>
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<edit 
+		v-if="action == 'add' || action == 'edit'"
+		:channel="channel" 
+		:channel_type_list="channelTypeList" 
+		:is_model="true">
+	</edit>
+	<list v-else :list="list" :channel_type_list="channelTypeList"></list>
+</div>

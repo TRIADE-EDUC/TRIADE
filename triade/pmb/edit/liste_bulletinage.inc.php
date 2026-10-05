@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: liste_bulletinage.inc.php,v 1.7 2012-10-05 07:40:33 dgoron Exp $
+// $Id: liste_bulletinage.inc.php,v 1.8 2021/12/08 12:56:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $pmb_hide_biblioinfo_letter, $biblio_name, $fpdf, $serial_id;
 
 // Impression PDF du bulletinage
 require_once($class_path."/abts_pointage.class.php");
 $pointage=new abts_pointage($serial_id);
 
-function bulletinage_bulletin($fiche, $x, $y, $link, $short=0, $longmax=99999) {
+function bulletinage_bulletin($fiche, $x, $y, $short=0, $longmax=99999) {
 	global $ourPDF;
-	global $msg ;
 	global $pmb_pdf_font;
 
 	$ourPDF->SetXY ($x,$y);
@@ -33,9 +34,8 @@ function bulletinage_bulletin($fiche, $x, $y, $link, $short=0, $longmax=99999) {
 	
 }		
 
-function bulletinage_categorie($titre, $x, $y, $link, $short=0, $longmax=99999) {
+function bulletinage_categorie($titre, $x, $y, $short=0, $longmax=99999) {
 	global $ourPDF;
-	global $msg ;
 	global $pmb_pdf_font;
 	
 	$ourPDF->SetXY ($x,$y);
@@ -71,7 +71,7 @@ if($liste_bulletin){
 			$ourPDF->SetLeftMargin(10);
 			$ourPDF->SetTopMargin(10);
 	
-			// paramÃ©trage spÃ©cifique Ã  ce document :
+			// paramétrage spécifique à ce document :
 			$offsety = 0;
 			if(!$pmb_hide_biblioinfo_letter) biblio_info( 10, 10, 1) ;
 			$offsety=(ceil($ourPDF->GetStringWidth($biblio_name)/90)-1)*10; //90=largeur de la cell, 10=hauteur d'une ligne
@@ -81,10 +81,9 @@ if($liste_bulletin){
 			$nb_1ere_page = 37;
 			$taille_bloc = 6;
 			$titre.=" (".count($bulletin_retard)."):";					
-			bulletinage_categorie ($titre,10,25+$offsety,$dbh, 1, 80);	
+			bulletinage_categorie ($titre,10,25+$offsety, 1, 80);	
 	
 			$cpt=0;
-			$contenu='';
 			foreach($bulletin_retard as $id_bull => $fiche){
 				if ($nb_page==0 && $i<$nb_1ere_page) {
 					$pos_page = 50+$offsety+$taille_bloc*$i;
@@ -96,7 +95,7 @@ if($liste_bulletin){
 				if ($nb_page>=1) {
 					$pos_page = 10+($taille_bloc*($i-$nb_1ere_page-($nb_page-1)*$nb_par_page));
 				}
-				bulletinage_bulletin ($fiche,10,3+$pos_page,$dbh, 1, 80);	
+				bulletinage_bulletin ($fiche,10,3+$pos_page, 1, 80);	
 				$i++;														
 			}
 		}	

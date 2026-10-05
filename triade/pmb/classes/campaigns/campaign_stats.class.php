@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_stats.class.php,v 1.6 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: campaign_stats.class.php,v 1.7 2022/05/05 06:44:02 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/campaigns/campaign_logs.class.php');
 require_once($class_path.'/campaigns/campaign_recipients.class.php');
 require_once($class_path.'/encoding_normalize.class.php');
@@ -326,7 +327,7 @@ class campaign_stats {
 	}
 	
 	/**
-	 * @return json DonnÃ©es au format JSON
+	 * @return string Données au format JSON
 	 */
 	public function get_json_data() {
 		if(!isset($this->data)) {

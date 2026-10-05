@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,7 +19,7 @@
  ***************************************************************************/
 if (file_exists("./common/config3.inc.php"))  include_once("./common/config3.inc.php");
 if (file_exists("../common/config3.inc.php")) include_once("../common/config3.inc.php");
-$message=LANGPROFA;
+$message = defined('LANGPROFA') ? LANGPROFA : '';
 function vsuite() {
 	if (!defined("PASS1")) {
 		return 1;

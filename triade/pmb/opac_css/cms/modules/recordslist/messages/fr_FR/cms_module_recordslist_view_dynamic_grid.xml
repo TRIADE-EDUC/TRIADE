@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist_view_dynamic_grid.xml,v 1.2 2021/10/13 12:46:29 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_recordslist_view_link'>Construction du lien vers une notice</entry>
+</XMLlist>

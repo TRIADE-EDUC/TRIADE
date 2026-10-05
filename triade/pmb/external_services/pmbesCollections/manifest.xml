@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.5 2013-02-20 16:09:28 mbertin Exp $ -->
+$Id: manifest.xml,v 1.7 2019/08/27 13:34:04 jlaurent Exp $ -->
 <manifest>
 	<name>pmbesCollections</name>
 	<requirements>
@@ -48,7 +48,7 @@ $Id: manifest.xml,v 1.5 2013-02-20 16:09:28 mbertin Exp $ -->
 			<inputs>
 				<description>msg:list_collection_notices_input_description</description>
 				<param name="collection_id" type="scalar" dataType="integer" description="msg:list_collection_notices_collection_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_collection_notices_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_collection_notices_OPACUserId" optional="yes"  default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:list_collection_notices_output_description</description>
@@ -76,7 +76,7 @@ $Id: manifest.xml,v 1.5 2013-02-20 16:09:28 mbertin Exp $ -->
 			<inputs>
 				<description>msg:list_subcollection_notices_input_description</description>
 				<param name="subcollection_id" type="scalar" dataType="integer" description="msg:list_subcollection_notices_subcollection_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_subcollection_notices_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_subcollection_notices_OPACUserId" optional="yes"  default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:list_subcollection_notices_output_description</description>
@@ -94,7 +94,7 @@ $Id: manifest.xml,v 1.5 2013-02-20 16:09:28 mbertin Exp $ -->
 			<inputs>
 				<description>msg:get_collection_information_and_notices_input_description</description>
 				<param name="collection_id" type="scalar" dataType="integer" description="msg:get_collection_information_and_notices_collection_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:get_collection_information_and_notices_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:get_collection_information_and_notices_OPACUserId" optional="yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:get_collection_information_and_notices_output_description</description>
@@ -113,7 +113,7 @@ $Id: manifest.xml,v 1.5 2013-02-20 16:09:28 mbertin Exp $ -->
 			<inputs>
 				<description>msg:get_subcollection_information_and_notices_input_description</description>
 				<param name="subcollection_id" type="scalar" dataType="integer" description="msg:get_subcollection_information_and_notices_subcollection_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:get_subcollection_information_and_notices_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:get_subcollection_information_and_notices_OPACUserId" optional="yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:get_subcollection_information_and_notices_output_description</description>

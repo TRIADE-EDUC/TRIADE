@@ -1,53 +1,52 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: procs.inc.php,v 1.64 2019-06-05 06:41:19 btafforeau Exp $
+// $Id: procs.inc.php,v 1.71.2.4 2024/09/14 08:09:21 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $msg, $charset, $categ, $sub, $pmb_set_time_limit;
+global $dest, $force_exec, $form_type, $nombre_lignes_total, $id_proc, $sort;
+global $query_parameters, $form_notice_tpl, $proc_notice_tpl;
+
 if(!isset($sort)) $sort = 0;
-if(!isset($force_exec)) $force_exec = '';
-if(!isset($form_type)) $form_type = '';
 
 include("$class_path/parameters.class.php");
 require_once("$class_path/notice_tpl_gen.class.php");
+require_once ($class_path."/procs/procs_edition_controller.class.php");
 
-switch($dest) {
-	case "TABLEAU":
-	    $worksheet = new spreadsheetPMB();
-		break;
-	case "TABLEAUHTML":
-		echo "<h1>".$msg[1130]."&nbsp;:&nbsp;".$msg[1131]."</h1>";  
-		break;
-	case "TABLEAUCSV":
-		break;
-	case "EXPORT_NOTI":
-		$fichier_temp_nom=str_replace(" ","",microtime());
-		$fichier_temp_nom=str_replace("0.","",$fichier_temp_nom);
-		$fname = tempnam("./temp", $fichier_temp_nom.".doc");		
-		break;
-	default:
-		echo "<h1>".$msg[1130]."&nbsp;:&nbsp;".$msg[1131]."</h1>";  
-		break;
-	}
-
-if(!isset($id_proc)) $id_proc = 0;
+$id_proc = intval($id_proc);
 if (!$id_proc) {
-	procs::$module = 'edit';
-	print procs::get_display_list();
+	procs_edition_controller::proceed($id_proc);
 } else {
+	switch($dest) {
+		case "TABLEAU":
+			break;
+		case "TABLEAUHTML":
+			break;
+		case "TABLEAUCSV":
+			break;
+		case "EXPORT_NOTI":
+			$fichier_temp_nom=str_replace(" ","",microtime());
+			$fichier_temp_nom=str_replace("0.","",$fichier_temp_nom);
+			$fname = tempnam("./temp", $fichier_temp_nom.".doc");
+			break;
+		default:
+			break;
+	}
+	
 	@set_time_limit ($pmb_set_time_limit);
-	//R√©cup√©ration des variables post√©es, on en aura besoin pour les liens
+	//RÈcupÈration des variables postÈes, on en aura besoin pour les liens
 	$page="./edit.php";
 	$requete = "SELECT idproc, name, requete, comment, proc_notice_tpl, proc_notice_tpl_field FROM procs where idproc='".$id_proc."' ";
-	$res = pmb_mysql_query($requete, $dbh);
+	$res = pmb_mysql_query($requete);
 	$row=pmb_mysql_fetch_row($res);
 	
-	//Requete et calcul du nombre de pages √† afficher selon la taille de la base 'pret'
+	//Requete et calcul du nombre de pages ‡ afficher selon la taille de la base 'pret'
 	//********************************************************************************/
 	
-	// r√©cup√©rer ici la proc√©dure √† lancer
+	// rÈcupÈrer ici la procÈdure ‡ lancer
 	$sql = $row[2];
 	//$proc_notice_tpl=$row[4];
 	$proc_notice_tpl_field=$row[5];
@@ -55,17 +54,18 @@ if (!$id_proc) {
 		$hp=new parameters($id_proc,"procs");
 		$hp->gen_form("edit.php?categ=procs&sub=&action=execute&id_proc=".$id_proc."&force_exec=".$force_exec);
 	} else {
-		
+	    list_query_proc_edition_ui::set_id_proc($id_proc);
+	    
 		$param_hidden="";
 		if($force_exec){
-			$param_hidden.="<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forc√© la requete
+			$param_hidden.="<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forcÈ la requete
 		}
 		if (preg_match_all("|!!(.*)!!|U",$sql,$query_parameters)) {
 			$hp=new parameters($id_proc,"procs");
 			$hp->get_final_query();
 			$sql=$hp->final_query;
-			$param_hidden.=$hp->get_hidden_values();//Je mets les param√™tres en champ cach√© en cas de for√ßage
-			$param_hidden.="<input type='hidden' name='form_type'  value='gen_form' />";//Je mets le marqueur des param√™tres en champ cach√© en cas de for√ßage
+			$param_hidden.=$hp->get_hidden_values();//Je mets les paramÍtres en champ cachÈ en cas de forÁage
+			$param_hidden.="<input type='hidden' name='form_type'  value='gen_form' />";//Je mets le marqueur des paramÍtres en champ cachÈ en cas de forÁage
 		}
 		
 		if($dest != "TABLEAU" && $dest != "TABLEAUHTML" && $dest != "TABLEAUCSV"){
@@ -94,103 +94,37 @@ if (!$id_proc) {
 			}
 			$nombre_lignes_total = pmb_mysql_num_rows($req_nombre_lignes);
 		}
-		$param_hidden.="<input type='hidden' name='nombre_lignes_total'  value='".$nombre_lignes_total."' />";//Je garde le nombre de ligne total pour le pas refaire la requ√™te √† la page suivante
+		$param_hidden.="<input type='hidden' name='nombre_lignes_total'  value='".$nombre_lignes_total."' />";//Je garde le nombre de ligne total pour le pas refaire la requÍte ‡ la page suivante
 		
-		//REINITIALISATION DE LA REQUETE SQL
+		$nbr_lignes = 0;
+		$nbr_champs = 0;
 		switch($dest) {
-			case "TABLEAU":
-			case "TABLEAUHTML":
-			case "TABLEAUCSV":
-			case "EXPORT_NOTI":
-				if(!$req_nombre_lignes){
-					$res = @pmb_mysql_query($sql, $dbh) or die($sql."<br /><br />".pmb_mysql_error()); 
-				}else{
-					$res = $req_nombre_lignes;
-				}
-				break;
-			default:
-				echo "<h1>".htmlentities($row[1], ENT_QUOTES, $charset)."</h1><h2>".htmlentities($row[3], ENT_QUOTES, $charset)."</h2>";
-				//tri d√©fini ?
-				if($sort>0){
-// 					preg_match('`^(.+)( order by .+)$`i',$sql,$arraySql);
-					preg_match("/(.+)(order by.+)$/isU", $sql,$arraySql);
-					if(count($arraySql)) {
-						$sql=$arraySql[1]." order by ".($sort>0?$sort:(-$sort)." DESC");
-					} else {
-						$sql .= " order by ".($sort>0?$sort:(-$sort)." DESC");
-					}
-				}
-				//Si aucune limite_page n'a √©t√© pass√©e, valeur par d√©faut : 10
-				if (!isset($limite_page) || !$limite_page) $limite_page = 10;
-				$nbpages= $nombre_lignes_total / $limite_page;
-				
-				// on arondi le nombre de page pour ne pas avoir de virgules, ici au chiffre sup√©rieur
-				$nbpages_arrondi = ceil($nbpages);
-				
-				// on enl√®ve 1 au nombre de pages, car la 1ere page affich√©e ne fait pas partie des pages suivantes
-				$nbpages_arrondi = $nbpages_arrondi - 1;
-				
-				if (!isset($numero_page) || !$numero_page) $numero_page=0;
-				
-				$limite_mysql = $limite_page * $numero_page;
-				
-				//on d√©finit les limites
-				if(stripos($sql, ' LIMIT ') !== false) {
-					$sql = substr($sql, 0, stripos($sql, 'LIMIT'));
-				}
-				$sql = $sql." LIMIT ".$limite_mysql.", ".$limite_page;
-				// on execute la requete avec les bonnes limites
-				$res = @pmb_mysql_query($sql, $dbh) or die($sql."<br /><br />".pmb_mysql_error()); 
-				echo "<p>";	
-				break;
+		    case "TABLEAU":
+		        list_query_proc_edition_ui::get_instance()->get_display_spreadsheet_list();
+		        break;
+		    case "TABLEAUHTML":
+		        print list_query_proc_edition_ui::get_instance()->get_display_html_list();
+		        break;
+		    case "TABLEAUCSV":
+		    case "EXPORT_NOTI":
+		        if(!$req_nombre_lignes){
+		            $res = pmb_mysql_query($sql) or die($sql."<br /><br />".pmb_mysql_error());
+		        }else{
+		            $res = $req_nombre_lignes;
+		        }
+		        $nbr_lignes = @pmb_mysql_num_rows($res);
+		        $nbr_champs = @pmb_mysql_num_fields($res);
+		        break;
+		    default:
+		        print list_query_proc_edition_ui::get_instance()->get_display_list();
+		        break;
 		}
-		
-		$nbr_lignes = @pmb_mysql_num_rows($res);
-		$nbr_champs = @pmb_mysql_num_fields($res);
-
 		if ($nbr_lignes) {
 			switch($dest) {
 				case "TABLEAU":
-					$worksheet->write_string(0,0,$row[1]);
-					$worksheet->write_string(0,1,$row[3]);
-					for($i=0; $i < $nbr_champs; $i++) {
-						// ent√™te de colonnes
-						$fieldname = pmb_mysql_field_name($res, $i);
-						$worksheet->write_string(1,$i,$fieldname);
-					}
-              		        		
-					for($i=0; $i < $nbr_lignes; $i++) {
-						$row = pmb_mysql_fetch_row($res);
-						$j=0;
-						foreach($row as $dummykey=>$col) {
-							if(trim($col)=='') $col=" ";
-							$worksheet->write(($i+2),$j,$col);
-							$j++;
-						}
-					}
-					
-					$worksheet->download('Procedure_'.$id_proc.'.xls');
+
 					break;
 				case "TABLEAUHTML":
-					echo "<h1>$row[1]</h1><h2>$row[3]</h2>$sql<br />";						
-					echo "<table>";
-					for($i=0; $i < $nbr_champs; $i++) {
-						$fieldname = pmb_mysql_field_name($res, $i);
-						print("<th class='align_left'>".$fieldname."</th>");
-					}
-       		        for($i=0; $i < $nbr_lignes; $i++) {
-						$row = pmb_mysql_fetch_row($res);
-						echo "<tr>";
-						foreach($row as $dummykey=>$col) {
-							if (is_numeric($col)){
-								$col = "'".$col ;
-							}
-							if(trim($col)=='') $col="&nbsp;";
-							print '<td>'.$col.'</td>';
-						}
-						echo "</tr>";
-					}
-					echo "</table>";
 					break;
 				case "TABLEAUCSV":
 					for($i=0; $i < $nbr_champs; $i++) {
@@ -200,7 +134,7 @@ if (!$id_proc) {
 					for($i=0; $i < $nbr_lignes; $i++) {
 						$row = pmb_mysql_fetch_row($res);
 						echo "\n";
-						foreach($row as $dummykey=>$col) {
+						foreach($row as $col) {
 							/* if (is_numeric($col)) {
 								$col = "\"'".(string)$col."\"" ;
 							} */
@@ -222,93 +156,9 @@ if (!$id_proc) {
 					echo "<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><meta charset=\"".$charset."\" /></head><body>".$contents."</body></html>";
 					break;
 				default:
-					echo "<script type='text/javascript'>
-					function survol(obj){
-						obj.style.cursor = 'pointer';
-					}
-					function sort_by_col(type){
-						document.forms['navbar'].sort.value = type;
-						document.forms['navbar'].submit();					
-					}
-					</script>";
-					echo "<table>";
-					ini_set("display_errors",1);
-					error_reporting(E_ALL);
-					//
-					for($i=0; $i < $nbr_champs; $i++) {
-						$fieldname = pmb_mysql_field_name($res, $i);
-						print "<th class='align_left' onMouseOver ='survol(this);' onClick='sort_by_col(".($sort==($i+1)?(-($i+1)):($i+1)).");'>".$fieldname;
-						if($sort==($i+1)){
-							print "&nbsp;&#x25B4;";
-						}elseif((-$sort)==($i+1)){
-							print "&nbsp;&#x25BE;";
-						}
-						print "</th>";
-					}
-       		        $odd_even=0;
-					for($i=0; $i < $nbr_lignes; $i++) {
-						$row = pmb_mysql_fetch_row($res);
-						if ($odd_even==0) {
-							echo "	<tr class='odd'>";
-							$odd_even=1;
-						} elseif ($odd_even==1) {
-							echo "	<tr class='even'>";
-							$odd_even=0;
-						}
-						foreach($row as $dummykey=>$col) {
-							if(trim($col)=='') $col="&nbsp;";
-							print '<td>'.$col.'</td>';
-						}
-						echo "</tr>";
-					}
-					echo "</table><hr />";
-					
-					echo "<p class='align_left pn-normal' size='-3'>
-					<form name='navbar' class='form-$current_module' action='$page' method='post'>";
-					echo "
-					<input type='hidden' name='numero_page'  value='$numero_page' />
-					<input type='hidden' name='id_proc'  value='$id_proc' />
-					<input type='hidden' name='categ'  value='$categ' />
-					<input type='hidden' name='sub' value='$sub' />
-					<input type='hidden' id='sort' name='sort' value='$sort' />";
-					print $param_hidden;
-					
-					// LIENS PAGE SUIVANTE et PAGE PRECEDENTE
-					// si le nombre de page n'est pas 0 et si la variable numero_page n'est pas d√©finie
-					// dans cette condition, la variable numero_page est incr√©ment√© et est inf√©rieure √† $nombre 
-					
-					// constitution des liens
-					$nav_bar = '';
-					$suivante = $numero_page+1;
-					$precedente = $numero_page-1;
-					// affichage du lien pr√©c√©dent si n√©c√©ssaire
-					if ($precedente >= 0)
-						$nav_bar .= "<img src='".get_url_icon('left.gif')."' style='border:0px; margin:3px 3px' title='$msg[48]' alt='[$msg[48]]' class='align_bottom' onClick=\"document.navbar.dest.value='';document.navbar.numero_page.value='$precedente'; document.navbar.limite_page.value='$limite_page'; document.navbar.submit(); \"/>" ;
-					for ($i = 0; $i <=$nbpages_arrondi; $i++) {
-						if($i==$numero_page) $nav_bar .= "<strong>".($i+1)."/".($nbpages_arrondi+1)."</strong>";
-					}
-					if ($suivante<=$nbpages_arrondi) $nav_bar .= "<img src='".get_url_icon('right.gif')."' style='border:0px; margin:3px 3px' title='$msg[49]' alt='[$msg[49]]' class='align_bottom' onClick=\"document.navbar.dest.value='';document.navbar.numero_page.value='$suivante'; document.navbar.limite_page.value='$limite_page'; document.navbar.submit(); \" />";
-					echo $nav_bar ;
-
-					echo "
-					<input type='hidden' name='dest' value='' />
-					$msg[edit_cbgen_mep_afficher] <input type='text' name='limite_page' value='$limite_page' class='saisie-5em' /> $msg[1905]
-					<input type='submit' class='bouton' value='".$msg['actualiser']."' onclick=\"this.form.dest.value='';document.navbar.numero_page.value=0;\" />&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type='image' src='".get_url_icon('tableur.gif')."' style='border:0px' onClick=\"this.form.dest.value='TABLEAU';\" alt='".$msg['export_tableur']."' title='".$msg['export_tableur']."' />&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type='image' src='".get_url_icon('tableur_html.gif')."' style='border:0px' onClick=\"this.form.dest.value='TABLEAUHTML';\" alt='".$msg['export_tableau_html']."' title='".$msg['export_tableau_html']."' />";
- 
-					if($proc_notice_tpl_field) {
-						echo "&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type='submit' class='bouton' value='".$msg['etatperso_export_notice']."' onclick=\"this.form.dest.value='EXPORT_NOTI';\" />&nbsp;";
-						echo notice_tpl_gen::gen_tpl_select("form_notice_tpl",$proc_notice_tpl,'',0,1);
-					}
-					echo "</form></p>";
 					break;
 				}
-			} else {
-				echo $msg["etatperso_aucuneligne"];
+				pmb_mysql_free_result($res);
 			}
-			
-			pmb_mysql_free_result($res); 
-		} // fin if else proc param√©tr√©e
+		} // fin if else proc paramÈtrÈe
 	}

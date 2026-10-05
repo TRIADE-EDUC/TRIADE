@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -44,6 +44,7 @@ if (empty($_SESSION["admin1"])) {
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <title>Triade</title>
 </head>
@@ -78,8 +79,8 @@ $cnx=cnx();
 error($cnx);
 $data=affStatEcran();
 // $data :
-$j=count($data);
-for($i=0;$i<count($data);$i++)
+$j=countTriade($data);
+for($i=0;$i<countTriade($data);$i++)
 {
 	?>
 	<ul>

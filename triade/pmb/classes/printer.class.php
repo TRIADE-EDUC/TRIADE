@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: printer.class.php,v 1.6 2018-02-13 15:02:29 jpermanne Exp $
+// $Id: printer.class.php,v 1.6.16.1 2025/04/03 10:09:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/printer/printer_data.class.php");
 require_once($class_path."/printer/printer_data_converter.class.php");
 
@@ -14,7 +15,7 @@ class printer {
 	public $printer_name='metapace';			// nom de l'imprimante
 	public $printer_driver='metapace';			// driver imprimante
 	public $printer_data=NULL;					// info d'impression
-	public $printer_data_convert_to='';			// conversion des donnÃ©es
+	public $printer_data_convert_to='';			// conversion des données
 	public $printer_jzebra=true;
 	public $printer_jzebra_url = '';
 
@@ -89,7 +90,7 @@ class printer {
 	public function transacash_ticket($transacash_id,$tpl_perso=''){
 		
 		$r='';
-		$this->printer_data->get_data_empr($id_empr);
+		//$this->printer_data->get_data_empr($id_empr);
 		$r = $this->gen_print($this->printer_data->data,$tpl_perso);
 		return $r;
 	}
@@ -115,9 +116,10 @@ class printer {
 			$list_printers = explode(";", $pmb_printer_list);
 			foreach ($list_printers as $printer) {
 				$printer = trim($printer);
+				$out = [];
 				if (preg_match('#^ *(\d+) *\_ *(.+?) *(\(([\d\.:]+)\))? *$#',$printer,$out)) {
-					if ($out[1] == $deflt_printer) {
-						$r = $out[1]."@".($out[4]?$out[4]:$raspberry_ip_to_call);
+				    if (!empty($out[1]) && $out[1] == $deflt_printer) {
+						$r = $out[1]."@".(!empty($out[4]) ? $out[4] : $raspberry_ip_to_call);
 						break;
 					}
 				}

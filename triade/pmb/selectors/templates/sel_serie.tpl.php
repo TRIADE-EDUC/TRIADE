@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_serie.tpl.php,v 1.22 2018-03-26 14:03:48 dgoron Exp $
+// $Id: sel_serie.tpl.php,v 1.22 2018/03/26 14:03:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-// templates du sÃ©lecteur titre de sÃ©rie
+// templates du sélecteur titre de série
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -22,14 +22,14 @@ global $jscript_common_selector;
 
 if ($dyn==3) {
 	$jscript = $jscript_common_authorities_unique;
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = $jscript_common_authorities_link;
 }else {
 	$jscript = $jscript_common_selector;
 }
 
 // ------------------------------------------
-// 	$selector_serie_form : form saisie titre de sÃ©rie
+// 	$selector_serie_form : form saisie titre de série
 // ------------------------------------------
 
 $selector_serie_form = "
@@ -45,7 +45,7 @@ $selector_serie_form = "
 -->
 </script>
 <form name='saisie_serie' method='post' action=\"!!base_url!!&action=update\">
-<!-- ajouter un titre de  sÃ©rie -->
+<!-- ajouter un titre de  série -->
 <h3>$msg[339]</h3>
 <div class='form-contenu'>
 	<!-- nom -->

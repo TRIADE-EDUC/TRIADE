@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -53,7 +53,7 @@ $cnx=cnx();
 <?php
 $data=recherche_retenue_du_jour_2bis($_GET["date"],$_GET["dateFin"],$_GET['tri']);
 // id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$classe=chercheClasse(chercheIdClasseDunEleve($data[$i][0]));
 ?>
 	<TR>

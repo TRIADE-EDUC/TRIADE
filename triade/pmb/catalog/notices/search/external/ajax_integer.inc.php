@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_integer.inc.php,v 1.8 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: ajax_integer.inc.php,v 1.12 2023/09/06 07:01:23 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $class_path, $include_path, $item, $infos, $signature, $pmb_notice_controle_doublons, $id_notice, $ret, $recid, $retour, $notice_id;
-global $url_view, $serialize_search, $result, $charset;
+global $url_view, $serialize_search, $result, $msg, $charset;
 
 require_once($class_path."/search.class.php");
 require_once($class_path."/searcher.class.php");
@@ -15,16 +15,17 @@ require_once($class_path."/mono_display_unimarc.class.php");
 require_once($include_path."/external.inc.php");
 require_once($class_path."/z3950_notice.class.php");
 require_once($class_path."/notice_doublon.class.php");
+require_once($class_path."/serials.class.php");
 
 if($item) {
 	$infos = entrepot_to_unimarc($item);
 }	
-//on regarde si la signature existe dÃ©jÃ ..;
+//on regarde si la signature existe déjà..;
 $signature = "";
 		
 
 $z=new z3950_notice("unimarc",$infos['notice'],$infos['source_id']);
-//on reporte la signature de la notice calculÃ©e ou non...
+//on reporte la signature de la notice calculée ou non...
 if($pmb_notice_controle_doublons != 0){
 	$sign = new notice_doublon(true,$infos['source_id']);
 	$signature = $sign->gen_signature($item);
@@ -33,15 +34,19 @@ $z->signature = $signature;
 if($infos['notice']) $z->notice = $infos['notice'];
 if($infos['source_id']) $z->source_id = $infos['source_id'];
 $z->var_to_post();
-$ret=$z->insert_in_database(true);
+$ret=$z->insert_in_database();
 
 //on conserve la trace de l'origine de la notice...
-$id_notice = $ret[1];
-$rqt = "select recid from external_count where rid = '$item'";
+$id_notice = intval($ret[1]);
+$rqt = "select recid from external_count where rid = '".addslashes($item)."'";
 $res = pmb_mysql_query($rqt);
-if(pmb_mysql_num_rows($res)) $recid = pmb_mysql_result($res,0,0);
-$req= "insert into notices_externes set num_notice = '".$id_notice."', recid = '".$recid."'";
-pmb_mysql_query($req);
+if(pmb_mysql_num_rows($res)) {
+    $recid = pmb_mysql_result($res,0,0);
+}
+if($id_notice && $recid) {
+    $req= "insert into notices_externes set num_notice = '".$id_notice."', recid = '".addslashes($recid)."'";
+    pmb_mysql_query($req);
+}
 if ($ret[0]) {
 	if($z->bull_id && $z->perio_id){
 		$notice_display=new serial_display($ret[1],6);
@@ -58,9 +63,11 @@ if ($ret[0]) {
 			".$notice_display->result."
 		</div>
 	</div>";
-	if($z->bull_id && $z->perio_id)
-		$url_view = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$z->bull_id&art_to_show=$ret[1]";
-	else $url_view = "./catalog.php?categ=isbd&id=".$ret[1];
+	if($z->bull_id && $z->perio_id) {
+	    $url_view = analysis::get_permalink($ret[1], $z->bull_id);
+	} else {
+	    $url_view = notice::get_permalink($ret[1]);
+	}
 	$retour .= "
 		<div class='row'>
 			<div class='row'>
@@ -74,7 +81,9 @@ if ($ret[0]) {
 } else if ($ret[1]){
 	if($z->bull_id && $z->perio_id){
 		$notice_display=new serial_display($ret[1],6);
-	} else $notice_display=new mono_display($ret[1],6);
+	} else {
+	    $notice_display=new mono_display($ret[1],6);
+	}
 	$retour = "
 	<script src='javascript/tablist.js'></script>
 	<br /><div class='erreur'>$msg[540]</div>
@@ -87,9 +96,11 @@ if ($ret[0]) {
 			".$notice_display->result."
 		</div>
 	</div>";
-	if($z->bull_id && $z->perio_id)
-		$url_view = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$z->bull_id&art_to_show=$ret[1]";
-	else $url_view = "./catalog.php?categ=isbd&id=".$ret[1];
+	if($z->bull_id && $z->perio_id) {
+	    $url_view = analysis::get_permalink($ret[1], $z->bull_id);
+	} else {
+	    $url_view = notice::get_permalink($ret[1]);
+	}
 	$retour .= "
 	<div class='row'>
 			<div class='row'>
@@ -107,6 +118,6 @@ else {
 }
 $result = array(
 	'id'=>$item,
-	'html'=>($charset != "utf-8" ? utf8_encode($retour) : $retour)
+	'html'=>($charset != "utf-8" ? encoding_normalize::utf8_normalize($retour) : $retour)
 );
 ajax_http_send_response($result);

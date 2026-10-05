@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serial_update.inc.php,v 1.86 2017-09-05 13:39:12 dgoron Exp $
+// $Id: serial_update.inc.php,v 1.88 2022/01/07 14:00:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $serial_id, $id;
+global $serial_header, $current_module, $id_form, $ret_url, $id_form, $forcage, $f_tit1;
 
 if(!isset($forcage)) $forcage = 0;
 
@@ -14,24 +17,16 @@ echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[346], $serial_head
 
 $entities_serials_controller = new entities_serials_controller($serial_id);
 if($entities_serials_controller->has_rights()) {
-	// On a besoin de rÃ©cupÃ©rer le tit1 sur forcage
+	// On a besoin de récupérer le tit1 sur forcage
 	if ($forcage == 1) {
 		$tab= unserialize(stripslashes($ret_url));
 		foreach($tab->GET as $key => $val){
-			if (get_magic_quotes_gpc())
-				$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+			add_sl($val);
+			$GLOBALS[$key] = $val;
 		}
 		foreach($tab->POST as $key => $val){
-			if (get_magic_quotes_gpc())
-				$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+			add_sl($val);
+			$GLOBALS[$key] = $val;
 		}
 	}
 	$p_perso=new parametres_perso("notices");
@@ -41,7 +36,7 @@ if($entities_serials_controller->has_rights()) {
 		$updated = $entities_serials_controller->proceed_update();
 		if($updated) {
 			print "<div class='row'><div class='msg-perio'>".$msg['maj_encours']."</div></div>";
-			$retour = "./catalog.php?categ=serials&sub=view&serial_id=".$entities_serials_controller->get_id();
+			$retour = serial::get_permalink($entities_serials_controller->get_id());
 			print "
 			<form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"$retour\" style=\"display:none\">
 			<input type=\"hidden\" name=\"id_form\" value=\"$id_form\">

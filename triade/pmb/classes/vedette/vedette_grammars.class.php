@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_grammars.class.php,v 1.1 2018-11-27 16:26:47 apetithomme Exp $
+// $Id: vedette_grammars.class.php,v 1.1 2018/11/27 16:26:47 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -37,7 +37,7 @@ class vedette_grammars {
 	}
 	
 	/**
-	 * Retourne le formulaire d'association des grammaires avec les entitÃ©s PMB
+	 * Retourne le formulaire d'association des grammaires avec les entités PMB
 	 * @return string
 	 */
 	public function get_grammars_by_entity_form() {
@@ -84,7 +84,7 @@ class vedette_grammars {
 	}
 	
 	/**
-	 * RÃ©cupÃ¨re les valeurs postÃ©e du formulaire d'association des grammaires avec les entitÃ©s PMB
+	 * Récupère les valeurs postée du formulaire d'association des grammaires avec les entités PMB
 	 */
 	public function set_grammars_by_entity_from_form() {
 		global $grammars_by_entity;
@@ -93,7 +93,7 @@ class vedette_grammars {
 	}
 	
 	/**
-	 * Sauvegarde l'association des grammaires avec les entitÃ©s PMB
+	 * Sauvegarde l'association des grammaires avec les entités PMB
 	 */
 	public function save_grammars_by_entity() {
 		pmb_mysql_query('TRUNCATE TABLE vedette_grammars_by_entity');
@@ -111,9 +111,9 @@ class vedette_grammars {
 	}
 	
 	/**
-	 * Retourne les grammaires Ã  utiliser par entitÃ©
-	 * Si une entitÃ© est prÃ©cisÃ©e, ne retourne que les grammaires pour cette entitÃ©
-	 * @param number $entity Constante d'entitÃ© de type TYPE_NOTICE, TYPE_AUTHOR, ...
+	 * Retourne les grammaires à utiliser par entité
+	 * Si une entité est précisée, ne retourne que les grammaires pour cette entité
+	 * @param number $entity Constante d'entité de type TYPE_NOTICE, TYPE_AUTHOR, ...
 	 * @return array
 	 */
 	public static function get_grammars_by_entity($entity = 0) {

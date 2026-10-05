@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_records_datasource_categories.xml,v 1.2 2019/10/21 13:47:50 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_records_datasource_categories_custom_fields'>Champ perso de notice</entry>
+	<entry code='frbr_entity_records_datasource_categories_link'>Catégories associées</entry>
+</XMLlist>

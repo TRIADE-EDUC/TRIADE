@@ -1,22 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubManifestation.php,v 1.8 2016-03-30 13:13:27 apetithomme Exp $
+// $Id: SubManifestation.php,v 1.9 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB\Music;
 
 class SubManifestation extends Collection {
 	private $notice_id;
 	public $type;
 
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		$this->notice_id = substr($this->get_code_from_name($name),1);
 		$this->type = "submanifestation";
 		$this->config = $config;
 	}
 	
 
-	function getChildren() {
+	public function getChildren() {
 		$children = array();
 		global $pmb_nomenclature_record_children_link;
 		global $pmb_nomenclature_music_concept_before, $pmb_nomenclature_music_concept_after, $pmb_nomenclature_music_concept_blank;
@@ -47,7 +47,7 @@ class SubManifestation extends Collection {
 				break;
 			case 'scan_request':
 				// la requete se complexifie un peu... mais dans le cas de la sous-manif de nomenclature
-				// on doit rÃ©cupÃ©rer les documents associÃ© Ã  la sous-manif mais dont le dÃ©pot est lui assumÃ© par la manif au niveau de la demande de numÃ©risation
+				// on doit récupérer les documents associé à la sous-manif mais dont le dépot est lui assumé par la manif au niveau de la demande de numérisation
 				$query = "select scan_request_explnum_num_explnum as explnum_id 
 						from scan_request_explnum 
 						join explnum on scan_request_explnum_num_explnum = explnum_id 
@@ -82,7 +82,7 @@ class SubManifestation extends Collection {
 		parent::createFile($name, $data);
 	}
 	
-	function getName() {
+	public function getName() {
 		$query = "select notices.tit1 as title, submanifs.child_record_order, musicstands.musicstand_order, families.family_order from notices
 				left join nomenclature_children_records as submanifs on notices.notice_id = submanifs.child_record_num_record
 				left join nomenclature_musicstands as musicstands on submanifs.child_record_num_musicstand = musicstands.id_musicstand

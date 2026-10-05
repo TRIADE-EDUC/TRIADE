@@ -1,12 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: livraisons.inc.php,v 1.40 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: livraisons.inc.php,v 1.45 2023/05/04 10:35:19 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $include_path, $msg, $charset, $action, $id_bibli, $id_cde, $id_liv;
+global $class_path, $include_path, $msg, $charset, $id_bibli, $id, $id_liv;
+
+if(!isset($id)) {
+	$id = 0;
+}
+$id = intval($id);
 
 // gestion des livraisons
 require_once("$class_path/entites.class.php");
@@ -14,7 +19,7 @@ require_once("$class_path/actes.class.php");
 include_once("$include_path/templates/actes.tpl.php");
 require_once("$class_path/liens_actes.class.php");
 include_once("$include_path/templates/livraisons.tpl.php");
-require_once($class_path."/list/accounting/list_accounting_livraisons_ui.class.php");
+require_once($class_path.'/accounting/accounting_livraisons_controller.class.php');
 
 //Affiche la liste des livraisons pour un etablissement
 function show_list_liv($id_bibli) {
@@ -22,14 +27,14 @@ function show_list_liv($id_bibli) {
 	global $accounting_livraisons_ui_status;
 	
 	$filters = array();
-	$filters['user_input'] = stripslashes($accounting_livraisons_ui_user_input);
+	$filters['user_input'] = stripslashes($accounting_livraisons_ui_user_input ?? "");
 	$filters['status'] = $accounting_livraisons_ui_status;
 	
 	$list_accounting_livraisons_ui = new list_accounting_livraisons_ui($filters);
 	print $list_accounting_livraisons_ui->get_display_list();	
 }
 
-//Affiche le formulaire de crÃ©ation de livraison depuis une commande
+//Affiche le formulaire de création de livraison depuis une commande
 function show_from_cde($id_bibli, $id_cde) {
 	global $msg, $charset;
 	global $livr_modif_form, $frame_show_from_cde, $form_search, $bt_enr;
@@ -77,7 +82,7 @@ function show_form_liv($id_bibli, $id_liv) {
 
 	$form = $livr_modif_form;
 	$form = str_replace('<!-- frame_show -->', $frame_show, $form);
-	if( ($cde->statut & STA_ACT_ARC) == STA_ACT_ARC ) { 	//La commande est archivÃ©e donc le bl non modifiable
+	if( ($cde->statut & STA_ACT_ARC) == STA_ACT_ARC ) { 	//La commande est archivée donc le bl non modifiable
 	} else {	//Le bl est modifiable
 		$form = str_replace('<!-- bouton_sup -->', $bt_sup, $form);
 		$form = str_replace('<!-- bouton_enr -->', $bt_enr, $form);
@@ -107,32 +112,14 @@ function show_form_liv($id_bibli, $id_liv) {
 //Supprime la livraison
 function sup_liv($id_liv, $id_cde) {
 	$cde = new actes($id_cde);
-	$cde->statut = ($cde->statut & (~STA_ACT_REC) | STA_ACT_ENC); //Statut commande = soldÃ©->en cours
+	$cde->statut = ($cde->statut & (~STA_ACT_REC) | STA_ACT_ENC); //Statut commande = soldé->en cours
 	$cde->update_statut();
 
 	actes::delete($id_liv);
 	liens_actes::delete($id_liv);
 }
 
-//Traitement des actions
-print "<h1>".htmlentities($msg['acquisition_ach_ges'],ENT_QUOTES, $charset)."&nbsp;:&nbsp;".htmlentities($msg['acquisition_ach_liv'],ENT_QUOTES, $charset)."</h1>";
+accounting_livraisons_controller::set_id_bibli($id_bibli);
+accounting_livraisons_controller::set_id_acte($id_liv);
+accounting_livraisons_controller::proceed($id);
 
-switch($action) {
-	case 'list' :
-		entites::setSessionBibliId($id_bibli);
-		show_list_liv($id_bibli);
-		break;
-	case 'from_cde' :
-		show_from_cde($id_bibli, $id_cde);
-		break;
-	case 'modif' :
-		show_form_liv($id_bibli, $id_liv);
-		break;
-	case 'delete' :
-		sup_liv($id_liv, $id_cde);
-		show_list_liv($id_bibli);
-		break;
-	default:
-		print entites::show_list_biblio('show_list_liv');
-		break;
-}

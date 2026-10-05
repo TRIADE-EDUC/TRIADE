@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubstFileContentUI.js,v 1.10 2018-12-19 14:49:39 dgoron Exp $
+// $Id: SubstFileContentUI.js,v 1.11 2019/11/07 12:52:36 dgoron Exp $
 
 define(["dojo/_base/declare", 
         "dojox/layout/ExpandoPane", 
@@ -114,7 +114,7 @@ define(["dojo/_base/declare",
 						if(misc_subst_file_content.getCursorPosition()) {
 							misc_subst_file_content.moveCursorTo(misc_subst_file_content.getCursorPosition().row-1);
 						}
-						this.loadButtons();
+//						this.loadButtons();
 					} else {
 						misc_subst_file_content.setReadOnly(true);
 					}

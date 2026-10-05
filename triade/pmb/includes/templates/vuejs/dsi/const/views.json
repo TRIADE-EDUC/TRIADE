@@ -1,0 +1,42 @@
+{
+    "aggregatedViewsIds" : [5, 6, 2],
+    "ignoredKeys" : ["id", "idView", "numModel", "name", "model"],
+    "vignetteMaxSize" : 100,
+    "blockImgMaxSize" : 200,
+    "blockBgImgMaxSize" : 200,
+    "viewsWithoutItemsIds" : [14],
+    "types" : {
+        "django" : 1,
+        "wysiwyg" : 2,
+        "simple" : 3,
+        "rawText" : 4,
+        "aggregatedDjango" : 5,
+        "aggregatedRawText" : 6,
+        "parserHtml" : 7,
+        "rss" : 8,
+        "wysiwygPdf" : 9,
+        "export" : 10,
+        "group" : 11,
+        "summary" : 12,
+        "cart" : 13,
+        "agnosticDjango" : 14,
+        "previousDSI" : 15,
+        "previousDSIPdf" : 16,
+        "simpleCart" : 17
+    },
+    "wysiwygControls" : {
+        "1" : "blockForm",
+        "2" : "textInputForm",
+        "3" : "imageInputForm",
+        "4" : "videoInputForm",
+        "5" : "listInputForm",
+        "6" : "textEditorInputForm",
+        "7" : "viewInputForm",
+        "8" : "viewImportInputForm"
+    },
+    "limit" : 5,
+    "editableViews" : [2],
+    "uneditableViews" : [7],
+    "dynamicGroupsKey" : "dynamicGroups",
+    "restrectedFields" : ["model", "numModel", "id", "name", "idView", "childs", "numParent", "viewModel", "parentView"]
+}

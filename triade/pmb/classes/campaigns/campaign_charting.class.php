@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_charting.class.php,v 1.4 2018-03-08 17:29:26 dgoron Exp $
+// $Id: campaign_charting.class.php,v 1.4 2018/03/08 17:29:26 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

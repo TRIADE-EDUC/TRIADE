@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1.4.2 2025/04/11 10:10:09 jparis Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Abonnements liste de diffusions</name>
+	<author>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2025-04-08</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_diffusionslistabon_datasource_diffusionslistabon</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_diffusionslistabon_view_diffusionslistabon</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

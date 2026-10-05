@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en neerlandais pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_search.xml,v 1.2 2019/12/30 14:11:24 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_search_admin_form_label'>Configuration de la destination de la recherche</entry>
+	<entry code='cms_module_search_add_search_dest'>Ajouter</entry>
+	<entry code='cms_module_search_search_dest_name'>Nom</entry>
+	<entry code='cms_module_search_search_dest_page'>Page de destination</entry>
+	<entry code='cms_module_search_classique_dest'>Recherche classique dans le catalogue</entry>
+	<entry code='cms_module_search_opac_views'>Vues OPAC</entry>
+	<entry code='cms_module_search_opac_view_any'>Toutes les vues</entry>
+	<entry code='cms_module_search_opac_view_current'>Vue courante</entry>
+	<entry code='cms_module_search_cms_pages'>Pages</entry>
+    <entry code='cms_module_search_search_dest_search'>Destination de la recherche</entry>
+    <entry code='cms_module_search_search_dest_search_opac'>Recherche OPAC</entry>
+</XMLlist>

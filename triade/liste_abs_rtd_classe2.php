@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -51,14 +51,14 @@ $idclasse=$_POST["saisie_classe"];
 $sql=<<<EOF
 
 SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere
-FROM ${prefixe}eleves
+FROM {$prefixe}eleves
 WHERE classe='$idclasse'
 ORDER BY nom,prenom
 EOF;
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if (count($data) <= 0) {
+if (countTriade($data) <= 0) {
         print("<BR><center>".LANGABS67."<BR><BR></center>");
 } else {
 ?>
@@ -69,12 +69,12 @@ if (count($data) <= 0) {
 <TD bgcolor=#FFFFFF width=30%><b>Abs/Rtd</b></TD>
 <TD bgcolor=#FFFFFF  align=center ><B>Détail</b></TD>
 <?php
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
 	$data_2=affRetard_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 	// $data : tab bidim - soustab 3 champ
 	// elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere,justifier,heure_saisie,creneaux
-	for($j=0;$j<count($data_2);$j++)
+	for($j=0;$j<countTriade($data_2);$j++)
         	{
 			$idmatiere=$data_2[$j][7];
 			list($creneau,$hC,$fC)=preg_split('/#/',$data_2[$j][10]);
@@ -85,7 +85,7 @@ for($i=0;$i<count($data);$i++)
 			$classe=chercheClasse($data[$i][2]);
 			$dataRattrapage=recupRattrappage($data_2[$j][11]); // date,heure_depart,duree,valider
 			$infoRattrapage="";
-			for($k=0;$k<count($dataRattrapage);$k++) {
+			for($k=0;$k<countTriade($dataRattrapage);$k++) {
 				$rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
 				$infoRattrapage.=dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." <i>Effectuer : $rattragefait</i><br>";
 			}
@@ -109,11 +109,11 @@ for($i=0;$i<count($data);$i++)
 	$data_3=affAbsence2_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 	// $data : tab bidim - soustab 3 champs
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier,creneaux,idrattrapage
-	for($j=0;$j<count($data_3);$j++) {
+	for($j=0;$j<countTriade($data_3);$j++) {
 		$classe=chercheClasse($data[$i][2]);
 		$dataRattrapage=recupRattrappage($data_3[$j][12]); // date,heure_depart,duree,valider
 		$infoRattrapage="";
-		for($k=0;$k<count($dataRattrapage);$k++) {
+		for($k=0;$k<countTriade($dataRattrapage);$k++) {
 			$rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
 			$infoRattrapage.=dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." <i>Effectuer : $rattragefait</i><br>";
 		}

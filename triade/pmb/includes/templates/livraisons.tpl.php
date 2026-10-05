@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: livraisons.tpl.php,v 1.31 2019-05-27 14:16:26 btafforeau Exp $
+// $Id: livraisons.tpl.php,v 1.33 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -49,7 +49,7 @@ $livlist_form = "
 
 
 //	------------------------------------------------------------------------------
-//	$livr_modif_form : template de crÃ©ation/modification pour les livraisons 
+//	$livr_modif_form : template de création/modification pour les livraisons 
 //	------------------------------------------------------------------------------
 $livr_modif_form = "
 <form class='form-".$current_module."' id='livr_modif' name='livr_modif' method='post' action=\"\" 
@@ -127,7 +127,7 @@ $livr_modif_form = "
 		<br /> 
 
 		<div class='row'>
-			<img id='comment_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('comment_', true);\"/>
+            ".get_expandBase_button('comment_')."
     		<label class='etiquette'>".htmlentities($msg['acquisition_commentaires'], ENT_QUOTES, $charset)."</label>&nbsp;
 		</div>
 		<div class='row' style='margin-left:30px'>
@@ -213,7 +213,7 @@ try {
 
 
 //	------------------------------------------------------------------------------
-//	template de crÃ©ation/modification pour les lignes de livraisons
+//	template de création/modification pour les lignes de livraisons
 //	------------------------------------------------------------------------------
 $frame_modif = " 
 <table frame='all' style='table-layout:fixed;background-color:inherit; width:100%' >
@@ -237,7 +237,7 @@ $frame_modif = "
 
 <script type='text/javascript' >
 
-//Mise Ã  jour de la fenetre parent
+//Mise à jour de la fenetre parent
 maj_parent();
 
 function complete_form() {
@@ -380,5 +380,3 @@ $form_search = "	<hr />
 			<div class='row'>&nbsp;</div>";
 
 $retour_liste = "<script type='text/javascript'>window.parent.location='../../../acquisition.php?categ=ach&sub=livr&action=list&id_bibli=".$id_bibli."'; </script></body></html>"; 
-
-?>

@@ -1,6 +1,8 @@
 <?php
 session_start();
+error_reporting(0);
 $anneeScolaire=$_COOKIE["anneeScolaire"];
+if (isset($_GET["anneeScolaire"])) $anneeScolaire=$_GET["anneeScolaire"];
 if (isset($_POST["anneeScolaire"])) {
         $anneeScolaire=$_POST["anneeScolaire"];
         setcookie("anneeScolaire",$anneeScolaire,time()+36000*24*30);
@@ -10,7 +12,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,6 +34,7 @@ if (isset($_POST["anneeScolaire"])) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css" type="text/css" media="screen">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -39,9 +42,8 @@ if (isset($_POST["anneeScolaire"])) {
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
-<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php
 // connexion (après include_once lib_licence.php obligatoirement)
@@ -57,11 +59,11 @@ if ($_SESSION["membre"] == "menupersonnel") {
 	$visu=1;
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'><?php print LANGTITRE29?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -100,45 +102,46 @@ if ($_SESSION["membre"] == "menupersonnel") {
 ?>
 
 <!-- // debut form  -->
-		<blockquote><BR>
-		<form method='post'>
-		<font class="T2"><?php print LANGBULL3 ?> :</font>
-                 <select name='anneeScolaire' onChange="this.form.submit()" >
-                 <?php
-                 filtreAnneeScolaireSelectNote($anneeScolaire,8);
-                 ?>
-                 </select>
-		 <input type='hidden' name='saisie_classe' value="<?php print $_POST["saisie_classe"]?>" />
+<div class="cc-filter-bar">
+		<form method='post' action="consult_classe.php" class="cc-filter-form">
+			<label class="cc-filter-label"><?php print LANGBULL3 ?> :</label>
+			<select name='anneeScolaire' onChange="this.form.submit()" class="cc-select">
+			<?php filtreAnneeScolaireSelectNote($anneeScolaire,8); ?>
+			</select>
+			<input type='hidden' name='saisie_classe' value="<?php print $_POST["saisie_classe"]?>" />
 		</form>
-	
-		<form method=post onsubmit="return valide_consul_classe()" name="formulaire">
-	       <font class=T2><?php print LANGPROFG?> :</font> <select id="saisie_classe" name="saisie_classe" onchange="this.form.submit()" >
+		<form method=post onsubmit="return valide_consul_classe()" name="formulaire" action="consult_classe.php" class="cc-filter-form">
+			<label class="cc-filter-label"><?php print LANGPROFG?> :</label>
+			<select id="saisie_classe" name="saisie_classe" onchange="this.form.submit()" class="cc-select">
 <?php
 if ($_POST["saisie_classe"] > "0") {
 	print "<option id='select1' value='".$_POST["saisie_classe"]."' >".chercheClasse_nom($_POST["saisie_classe"])."</option>";
 }
-print "<option id='select0' >".LANGCHOIX."</option>";
+print "<option id='select0' value='0' >".LANGCHOIX."</option>";
+print "<option id='select0' value='-1' >"."Toutes les classes"."</option>";
 select_classe(); // creation des options
 ?>
-</select> <BR>
-<UL>
+</select>
 <?php
-if ($_POST["saisie_classe"] >= 0) {
+if (($_POST["saisie_classe"] >= 0) || (isset($_GET['idc']))) {
+	
 	$saisie_classe=$_POST["saisie_classe"];
+	if (isset($_GET['idc'])) $saisie_classe=$_GET['idc'];
 
-	$sql=" SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' UNION ALL SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY s.nom";
 
-	//$sql="(SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire') UNION (SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire'  ORDER BY e.nom)";
+	$sql=" SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' UNION ALL SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY s.nom";
+
+	//$sql="(SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire') UNION (SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire'  ORDER BY e.nom)";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
 	/*
 	if ( (anneeScolaireViaIdClasse($saisie_classe) == $anneeScolaire) || (verifAnneeScolaireFuture($anneeScolaire))) {
-		$sql="SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
+		$sql="SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
 		$res=execSql($sql);
 		$data=chargeMat($res);
-		if (count($data) == 0) { 
-			$sql="SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire'  ORDER BY e.nom";
+		if (countTriade($data) == 0) { 
+			$sql="SELECT c.libelle,e.elev_id,e.nom,e.prenom,e.date_naissance,e.regime,e.numero_eleve,e.code_compta,e.nomtuteur,e.prenomtuteur,e.civ_1,e.telephone,e.email FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire'  ORDER BY e.nom";
 			$res=execSql($sql);
 			$data=chargeMat($res);
 		}
@@ -149,7 +152,7 @@ if ($_POST["saisie_classe"] >= 0) {
 	// nom classe
 	$cl=$data[0][0];
 
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		$fic=$_POST["saisie_classe"];
 		$fichierpdf="./data/pdf_certif/Classe_".suppCaracFichier($cl).".pdf";
 		$fichierpdf2="./data/pdf_certif/Classe2_".suppCaracFichier($cl).".pdf";
@@ -194,7 +197,7 @@ if ($_POST["saisie_classe"] >= 0) {
 		$xcoor20=10;
 		$ycoor20+=10;
 		$j=0;
-		for($i=0;$i<count($data);$i++) { // libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email,nom_resp2,prenom_resp2,civ_2
+		for($i=0;$i<countTriade($data);$i++) { // libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email,nom_resp2,prenom_resp2,civ_2
 			if ($ii == 45) {
 	                	$pdf->AddPage();
 				$ii=0;
@@ -277,144 +280,164 @@ if ($_POST["saisie_classe"] >= 0) {
 }
 
 ?>
-</UL>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-</blockquote>
-</form>
+		</form>
+</div>
 
 <!-- // fin form -->
  </td></tr></table>
 
 <?php
 // affichage de la classe
-if($_POST["saisie_classe"] > 0) { ?>
+if (($_POST["saisie_classe"] > 0) || (isset($_GET["idc"]))) { ?>
 	<BR><BR><BR>
 	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" >
 	<tr id='coulBar0' ><td height="2" colspan="3"><b><font   id='menumodule1' >
-	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b> </font>/ <?php print LANGBULL3 ?> : <b><font id="color2"><?php print $anneeScolaire ?></font></b></font></font></td>
+	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b> </font>/ <?php print LANGBULL3 ?> : <b><font id="color2"><?php print $anneeScolaire ?></font></b></font></font></td>
 	</tr>
 <?php 
-	if( count($data) <= 0 ) {
+	if( countTriade($data) <= 0 ) {
 		print("<tr><td align=center valign=center id='cadreCentral0'><font class=T2>".LANGRECH1."</font></td></tr>");
 	} else { ?>
-		<tr><td bgcolor="yellow" > <B><?php print ucwords(LANGIMP8)?></B></td><td bgcolor="yellow"><B><?php print ucwords(LANGIMP9)?></B></td></tr>
+		<tr class="cc-thead-row">
+			<td class="cc-th"><?php print ucwords(LANGIMP8)?></td>
+			<td class="cc-th"><?php print ucwords(LANGIMP9)?></td>
+			<td class="cc-th" style="width:90px">Consulter</td>
+		</tr>
 <?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	?>
-	<tr  class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
-	<td><?php if (getInactifEleve($data[$i][1])) { print "<img src='image/commun/img_ssl_mini.png' title='Inactif' />&nbsp;"; } ?>
-	    <?php infoBulleEleveSansLoupe($data[$i][1],strtoupper($data[$i][2])); ?></td>
-	<td><?php print trunchaine(ucwords($data[$i][3]),30)?></td>
+	<tr class="cc-tr-data">
+	<td class="cc-td">
+		<?php if (getInactifEleve($data[$i][1])) { print "&#128164;&nbsp;"; } ?>
+		<?php infoBulleEleveSansLoupe($data[$i][1],strtoupper(stripslashes($data[$i][2]))); ?>
+	</td>
+	<td class="cc-td"><?php print trunchaine(ucwords(stripslashes($data[$i][3])),30)?></td>
+	<td class="cc-td">
+		<a href="ficheeleve3.php?eid=<?php print $data[$i][1] ?>" class="cc-btn-consult">Consulter</a>
+	</td>
 	</tr>
 	<?php
 	}
       }
 print "</table>";
-}else{ ?>
-	<?php
+}else{ 
 
+	if ($_POST['saisie_classe'] == '-1') {
 	?>
 	<BR><BR>
 	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" >
 	<tr id='coulBar0' ><td height="2" colspan="3"><b><font   id='menumodule1' >Tableau de bord de toutes les classes. <span id='nbeleve'></span> <?php print LANGBULL3 ?> : <b><?php print $anneeScolaire ?></b></font></td></tr>
 	<tr id='cadreCentral0' >
 	<td valign='top'>
-	
-<table border=1 bordercolor=#000000" align=center width='100%' style="border-collapse: collapse;" >
-<TR>
-<td bgcolor="yellow" align=center><?php print ucwords(LANGPER25)?></td>
-<td bgcolor="yellow" align=center width=10><?php print "&nbsp;".LANGPER16."&nbsp;".ucwords(LANGBULL31)."&nbsp;"; ?></td>
 
-<td bgcolor="yellow" align=center width=10 title="<?php print LANGHOM ?>" ><?php print LANGSEXEH ?></td>
-<td bgcolor="yellow" align=center width=10 title="<?php print LANGFEM ?>" ><?php print LANGSEXEF ?></td>
-
-<td bgcolor="yellow" align=center width=10><?php print LANGMESS366 ?></td>
-<td bgcolor="yellow" align=center width=10><?php print LANGMESS365 ?></td>
-<td bgcolor="yellow" align=center width=10><?php print LANGMESS367 ?></td>
-<td bgcolor="yellow" align=center width=10><?php print LANGMESS368 ?></td>
-<td bgcolor="yellow" align=center width=10><?php print LANGTMESS433 ?></td>
-
+<table class="cc-data-table">
+<tr class="cc-thead-row">
+	<td class="cc-th"><?php print ucwords(LANGPER25)?></td>
+	<td class="cc-th cc-th-center"><?php print LANGPER16." ".ucwords(LANGBULL31) ?></td>
+	<td class="cc-th cc-th-center" title="<?php print LANGHOM ?>"><?php print LANGSEXEH ?></td>
+	<td class="cc-th cc-th-center" title="<?php print LANGFEM ?>"><?php print LANGSEXEF ?></td>
+	<td class="cc-th cc-th-center"><?php print LANGMESS366 ?></td>
+	<td class="cc-th cc-th-center"><?php print LANGMESS365 ?></td>
+	<td class="cc-th cc-th-center"><?php print LANGMESS367 ?></td>
+	<td class="cc-th cc-th-center"><?php print LANGMESS368 ?></td>
+	<td class="cc-th cc-th-center"><?php print LANGTMESS433 ?></td>
 </TR>
 
 <?php
-define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
-include_once('./librairie_pdf/fpdf/fpdf.php');
-include_once('./librairie_pdf/html2pdf.php');
+// UNE seule requête agrégée remplace N×15 requêtes individuelles (7 HTML + 8 PDF par classe)
+$sql = "SELECT c.code_class, c.libelle,
+	COUNT(DISTINCT s.elev_id) AS nb_total,
+	COUNT(DISTINCT CASE WHEN s.sexe='m' THEN s.elev_id END) AS nb_homme,
+	COUNT(DISTINCT CASE WHEN s.sexe='f' THEN s.elev_id END) AS nb_femme,
+	COUNT(DISTINCT CASE WHEN lower(s.regime)='interne' THEN s.elev_id END) AS nb_interne,
+	COUNT(DISTINCT CASE WHEN lower(s.regime) IN ('demi pension','demi-pension') THEN s.elev_id END) AS nb_demi_pension,
+	COUNT(DISTINCT CASE WHEN lower(s.regime)='externe' THEN s.elev_id END) AS nb_externe,
+	COUNT(DISTINCT CASE WHEN (s.regime IS NULL OR s.regime='') THEN s.elev_id END) AS nb_inconnu
+FROM {$prefixe}classes c
+LEFT JOIN (
+	SELECT elev_id, sexe, regime, classe AS code_class
+	FROM {$prefixe}eleves WHERE annee_scolaire='$anneeScolaire'
+	UNION
+	SELECT e.elev_id, e.sexe, e.regime, h.idclasse
+	FROM {$prefixe}eleves e JOIN {$prefixe}eleves_histo h ON e.elev_id=h.ideleve
+	WHERE h.annee_scolaire='$anneeScolaire'
+) s ON s.code_class=c.code_class
+GROUP BY c.code_class, c.libelle
+ORDER BY c.libelle";
+$res = execSql($sql);
+$statsClasses = chargeMat($res);
 
-$pdf=new PDF();  // declaration du constructeur
+// Totaux en un seul passage
+$nbelevetotal=$nbeleveHTotal=$nbeleveFTotal=0;
+$nbinternetotal=$nbdemipensiontotal=$nbexternetotal=$nbinconnutotal=$nblignetotal=0;
+foreach ($statsClasses as $row) {
+	$nbelevetotal       += (int)($row[2] ?? 0);
+	$nbeleveHTotal      += (int)($row[3] ?? 0);
+	$nbeleveFTotal      += (int)($row[4] ?? 0);
+	$nbinternetotal     += (int)($row[5] ?? 0);
+	$nbdemipensiontotal += (int)($row[6] ?? 0);
+	$nbexternetotal     += (int)($row[7] ?? 0);
+	$nbinconnutotal     += (int)($row[8] ?? 0);
+	$nblignetotal       += (int)($row[5]??0)+(int)($row[6]??0)+(int)($row[7]??0)+(int)($row[8]??0);
+}
+$nbeleveTotal = $nbelevetotal;
 
-$pdf->AddPage();
-$pdf->SetTitle("Emargement -");
-$pdf->SetCreator("T.R.I.A.D.E.");
-$pdf->SetSubject("Emargement "); 
-$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com"); 
-
-$_COOKIE["anneeScolaire"]=$anneeScolaire;
-
-
-$data=affClasseSansOffline();
-for($i=0;$i<count($data);$i++) {
-	$nbeleve=nbEleve($data[$i][0]);
-	$nbelevetotal+=$nbeleve;
-	$nbinterne=nbEleveInterne($data[$i][0]);
-	$nbinternetotal+=$nbinterne;
-	$nbligne=$nbinterne;
-	$nbdemipension=nbEleveDemiPension($data[$i][0]);
-	$nbdemipensiontotal+=$nbdemipension;
-	$nbligne+=$nbdemipension;
-	$nbexterne=nbEleveExterne($data[$i][0]);
-	$nbexternetotal+=$nbexterne;
-	$nbligne+=$nbexterne;
-	$nbinconnu=nbEleveRegimeInconnu($data[$i][0]);
-	$nbinconnutotal+=$nbinconnu;
-	$nbligne+=$nbinconnu;
-	$nbeleveTotal+=$nbeleve;
-	$nblignetotal+=$nbligne;
-
-	$nbeleveH=nbEleveSexeHomme($data[$i][0]);
-	$nbeleveF=nbEleveSexeFemme($data[$i][0]);
-	$nbeleveHTotal+=$nbeleveH;
-	$nbeleveFTotal+=$nbeleveF;
-
+// Lignes HTML tableau
+foreach ($statsClasses as $row) {
+	$idclasse      = $row[0];
+	$libelle       = $row[1];
+	$nbeleve       = (int)($row[2] ?? 0);
+	$nbeleveH      = (int)($row[3] ?? 0);
+	$nbeleveF      = (int)($row[4] ?? 0);
+	$nbinterne     = (int)($row[5] ?? 0);
+	$nbdemipension = (int)($row[6] ?? 0);
+	$nbexterne     = (int)($row[7] ?? 0);
+	$nbinconnu     = (int)($row[8] ?? 0);
+	$nbligne       = $nbinterne+$nbdemipension+$nbexterne+$nbinconnu;
+	?>
+	<tr class="cc-tr-data">
+	<td class="cc-td"><a href="consult_classe.php?idc=<?php echo $idclasse ?>&annescolaire=<?php echo $anneeScolaire ?>" class="cc-link-classe"><?php echo ucwords($libelle) ?></a></td>
+	<td class="cc-td cc-td-center"><?php echo $nbeleve ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbeleveH ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbeleveF ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbinterne ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbdemipension ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbexterne ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbinconnu ?></td>
+	<td class="cc-td cc-td-center"><?php echo $nbligne ?></td>
+	</tr>
+	<?php
+}
 ?>
-<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
-<td><?php $classe=chercheClasse($data[$i][0]);print ucwords($classe[0][1]);?></td>
-<td><?php print $nbeleve ?></td>
-
-<td><?php print $nbeleveH ?></td>
-<td><?php print $nbeleveF ?></td>
-
-<td><?php print $nbinterne ?></td>
-<td><?php print $nbdemipension ?></td>
-<td><?php print $nbexterne ?></td>
-<td><?php print $nbinconnu ?></td>
-<td><?php print $nbligne ?></td>
-
-</tr>
-<?php } ?>
-<tr>
-<td align='right'><b><?php print LANGTMESS433 ?> :</b> </td>
-<td><b><?php print $nbelevetotal ?></b></td>
-
-<td><b><?php print $nbeleveHTotal ?></b></td>
-<td><b><?php print $nbeleveFTotal ?></b></td>
-
-
-<td><b><?php print $nbinternetotal ?></b></td>
-<td><b><?php print $nbdemipensiontotal ?></b></td>
-<td><b><?php print $nbexternetotal ?></b></td>
-<td><b><?php print $nbinconnutotal ?></b></td>
-<td><b><?php print $nblignetotal ?></b></td>
+<tr class="cc-tr-total">
+<td class="cc-td cc-td-total-label"><?php print LANGTMESS433 ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbelevetotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbeleveHTotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbeleveFTotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbinternetotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbdemipensiontotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbexternetotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nbinconnutotal ?></td>
+<td class="cc-td cc-td-center cc-td-total"><?php print $nblignetotal ?></td>
 </tr>
 </table>
 
 </td></tr></table>
-<script>document.getElementById('nbeleve').innerHTML=" <font id='color2'><?php print $nbeleveTotal ?></font><font  id='menumodule1' > Elève(s) au total.</font>"; </script>
+<script>document.getElementById('nbeleve').innerHTML=" <font id='color2'><?php print $nbeleveTotal ?></font><font  id='menumodule1' > Elève(s) au total.</font>";</script>
 <?php
 
-$X=0;
-$Y=5;
+// PDF — réutilise $statsClasses, aucune requête supplémentaire
+define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
+include_once('./librairie_pdf/fpdf/fpdf.php');
+include_once('./librairie_pdf/html2pdf.php');
+$pdf = new PDF();
+$pdf->AddPage();
+$pdf->SetTitle("Emargement -");
+$pdf->SetCreator("T.R.I.A.D.E.");
+$pdf->SetSubject("Emargement ");
+$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.org");
+
+$X=0; $Y=5;
 $pdf->SetXY($X,$Y);
 $pdf->SetFont('Arial','B',12);
 $pdf->MultiCell(210,6,stripslashes("Tableau de bord de toutes les classes. $nbeleveTotal Elève(s) au total. Année Scolaire : $anneeScolaire "),0,'C',0);
@@ -424,128 +447,72 @@ $pdf->SetFillColor(255,255,0);
 $pdf->SetXY($X+=5,$Y+=10);
 $pdf->MultiCell(35,10,ucwords(LANGPER25),1,'C',1);
 $pdf->SetXY($X+=35,$Y);
-$text=stripslashes(LANGPER16." ".ucwords(LANGBULL31));
-$pdf->MultiCell(20,10," $text ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,LANGHOM,1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,LANGFEM,1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,"Interne",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,"Demi Pension",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,"Externe",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,"Inconnu",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10,"Total",1,'C',1);
+$pdf->MultiCell(20,10," ".stripslashes(LANGPER16." ".ucwords(LANGBULL31))." ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,LANGHOM,1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,LANGFEM,1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,"Interne",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,"Demi Pension",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,"Externe",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,"Inconnu",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10,"Total",1,'C',1);
 $pdf->SetFillColor(255);
 
-$data=affClasseSansOffline();
-
-$nbelevetotal="0";
-$nbinternetotal="0";
-$nbligne=$nbinterne="0";
-$nbdemipensiontotal="0";
-$nbdemipension=0;
-$nbexternetotal=$nbexterne=0;
-$nbinconnutotal=$nbinconnu=0;
-$nbeleveTotal="0";
-$nblignetotal="0";
-
-for($i=0;$i<count($data);$i++) {
-	$nbeleve=nbEleve($data[$i][0]);
-	$nbelevetotal+=$nbeleve;
-	$nbinterne=nbEleveInterne($data[$i][0]);
-	$nbinternetotal+=$nbinterne;
-	$nbligne=$nbinterne;
-	$nbdemipension=nbEleveDemiPension($data[$i][0]);
-	$nbdemipensiontotal+=$nbdemipension;
-	$nbligne+=$nbdemipension;
-	$nbexterne=nbEleveExterne($data[$i][0]);
-	$nbexternetotal+=$nbexterne;
-	$nbligne+=$nbexterne;
-	$nbinconnu=nbEleveRegimeInconnu($data[$i][0]);
-	$nbinconnutotal+=$nbinconnu;
-	$nbligne+=$nbinconnu;
-	$nbeleveTotal+=$nbeleve;
-	$nblignetotal+=$nbligne;
-	
-	$nbeleveH=nbEleveSexeHomme($data[$i][0]);
-	$nbeleveF=nbEleveSexeFemme($data[$i][0]);
-	$nbeleveHTotal+=$nbeleveH;
-	$nbeleveFTotal+=$nbeleveF;
-
-	$classe=chercheClasse($data[$i][0]);
+foreach ($statsClasses as $row) {
+	$libelle       = $row[1];
+	$nbeleve       = (int)($row[2] ?? 0);
+	$nbeleveH      = (int)($row[3] ?? 0);
+	$nbeleveF      = (int)($row[4] ?? 0);
+	$nbinterne     = (int)($row[5] ?? 0);
+	$nbdemipension = (int)($row[6] ?? 0);
+	$nbexterne     = (int)($row[7] ?? 0);
+	$nbinconnu     = (int)($row[8] ?? 0);
+	$nbligne       = $nbinterne+$nbdemipension+$nbexterne+$nbinconnu;
 
 	$pdf->SetXY($X=5,$Y+=10);
-	$pdf->MultiCell(35,10, ucwords($classe[0][1]),1,'L',1);
-	$pdf->SetXY($X+=35,$Y);
-	$pdf->MultiCell(20,10," $nbeleve ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbeleveH ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbeleveF ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbinterne ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbdemipension ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbexterne ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbinconnu ",1,'C',1);
-	$pdf->SetXY($X+=20,$Y);
-	$pdf->MultiCell(20,10," $nbligne ",1,'C',1);
+	$pdf->MultiCell(35,10,ucwords($libelle),1,'L',1);
+	$pdf->SetXY($X+=35,$Y); $pdf->MultiCell(20,10," $nbeleve ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbeleveH ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbeleveF ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbinterne ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbdemipension ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbexterne ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbinconnu ",1,'C',1);
+	$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbligne ",1,'C',1);
 
-
-	if ($Y >= 250) {
-		$Y=10;
-		$pdf->AddPage();
-	}
-
+	if ($Y >= 250) { $Y=10; $pdf->AddPage(); }
 }
 
 $pdf->SetFillColor(192,192,192);
 $pdf->SetFont('Arial','B',9);
 $pdf->SetXY($X=5,$Y+=10);
 $pdf->MultiCell(35,10," Total",1,'R',1);
-$pdf->SetXY($X+=35,$Y);
-$pdf->MultiCell(20,10," $nbelevetotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbeleveHTotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbeleveFTotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbinternetotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbdemipensiontotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbexternetotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nbinconnutotal ",1,'C',1);
-$pdf->SetXY($X+=20,$Y);
-$pdf->MultiCell(20,10," $nblignetotal ",1,'C',1);
-
+$pdf->SetXY($X+=35,$Y); $pdf->MultiCell(20,10," $nbelevetotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbeleveHTotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbeleveFTotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbinternetotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbdemipensiontotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbexternetotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nbinconnutotal ",1,'C',1);
+$pdf->SetXY($X+=20,$Y); $pdf->MultiCell(20,10," $nblignetotal ",1,'C',1);
 
 $fichier="./data/pdf_certif/tableau_de_bord_des_classes.pdf";
-@unlink($fichier); // destruction avant creation
+@unlink($fichier);
 $pdf->output("F",$fichier);
 $pdf->close();
 ?>
 
 <center>
-<?php 
+<?php
 $url="visu_pdf_scolaire.php";
-if ($_SESSION["membre"] == "menuprof") { $url="visu_pdf_prof.php"; }	
+if ($_SESSION["membre"] == "menuprof") { $url="visu_pdf_prof.php"; }
 ?>
 <br><br><input type=button onclick="open('<?php print $url?>?id=<?php print $fichier?>','_blank','');" value="<?php print LANGaffec_cre41 ?>"  class='button' >
 </center>
 
 <?php
+	}
 }
-?>
-<?php
+
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";

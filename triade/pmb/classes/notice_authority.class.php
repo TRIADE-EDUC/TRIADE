@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_authority.class.php,v 1.11 2019-02-18 13:45:53 arenou Exp $
+// $Id: notice_authority.class.php,v 1.12 2020/12/10 13:42:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,7 +16,7 @@ require_once($class_path.'/skos/skos_concept.class.php');
 
 
 /*
- * Classe pour les autoritÃ© classiques...
+ * Classe pour les autorité classiques...
  */
 class notice_authority extends iso2709_authorities implements notice_authority_generic{
 	public $type;
@@ -49,7 +49,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 			case "a" :
 				$this->type = "author"; 
 				break;
-			// nom de collectivitÃ©
+			// nom de collectivité
 			case "b" :
 				$this->type = "author";
 				break;
@@ -65,18 +65,18 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 			case "f" :
 				$this->type = "uniform_title";
 				break;
-			// nom de territoire ou nom gÃ©ographique	
+			// nom de territoire ou nom géographique	
 			case "c" :	
-			// matiÃ¨re nom commun
+			// matière nom commun
 			case "j" :
-			// forme, genre ou caractÃ©ristiques physiques	
+			// forme, genre ou caractéristiques physiques	
 			case "l" :	
 				$this->type = $this->get_concept_or_category();
 				break;
-			/*certaines autoritÃ©s ne sont pas traitables par PMB*/
+			/*certaines autorités ne sont pas traitables par PMB*/
 			// rubrique de classement
 			case "g" :
-			// lieu d'Ã©dition
+			// lieu d'édition
 			case "k" :
 			// auteur / titre
 			case "h" :
@@ -89,11 +89,11 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 	}
 	
 	/*
-	 * Pour avoir le numÃ©ro d'autoritÃ© 
+	 * Pour avoir le numéro d'autorité 
 	 */
 	public function format_authority_number($authority_number){
 		global $pmb_import_modele_authorities;
-		//appel Ã  la mÃ©thode statique de la classe d'import...
+		//appel à la méthode statique de la classe d'import...
 		if($pmb_import_modele_authorities!= ""){
 			return call_user_func(array($pmb_import_modele_authorities,"format_authority_number"),$authority_number);
 		}else{
@@ -132,7 +132,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 			case "a" :
 				$this->specifics_data = auteur::get_informations_from_unimarc($this->fields,"2",70);
 				break;
-			// nom de collectivitÃ©
+			// nom de collectivité
 			case "b" :
 				$this->specifics_data = auteur::get_informations_from_unimarc($this->fields,"2",71);				
 				break;
@@ -149,14 +149,14 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 				$this->specifics_data = titre_uniforme::get_informations_from_unimarc($this->fields,"2");
 				break;
 			case "j" :	
-			// matiÃ¨re nom commun
+			// matière nom commun
 				if ($this->get_concept_or_category() == 'category') {
 					$this->specifics_data = category::get_informations_from_unimarc($this->fields,false,"250");
 				} else {
 					$this->specifics_data = skos_concept::get_informations_from_unimarc($this->fields,false,"250");
 				}
 				break;
-			// nom de territoire ou nom gÃ©ographique	
+			// nom de territoire ou nom géographique	
 			case "c" :
 				if ($this->get_concept_or_category() == 'category') {
 					$this->specifics_data = category::get_informations_from_unimarc($this->fields,false,"215");
@@ -164,7 +164,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 					$this->specifics_data = skos_concept::get_informations_from_unimarc($this->fields,false,"215");
 				}
 				break;
-			// forme, genre ou caractÃ©ristiques physiques	
+			// forme, genre ou caractéristiques physiques	
 			case "l" :
 				if ($this->get_concept_or_category() == 'category') {
 					$this->specifics_data = category::get_informations_from_unimarc($this->fields,false,"280");
@@ -174,8 +174,8 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 				break;		
 			// rubrique de classement
 			case "g" :
-			/*certaines autoritÃ©s ne sont pas traitables par PMB*/
-			// lieu d'Ã©dition
+			/*certaines autorités ne sont pas traitables par PMB*/
+			// lieu d'édition
 			case "k" :
 			// auteur / titre
 			case "h" :
@@ -205,7 +205,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 		$data = array();
 		foreach($this->fields as $key => $field){
 			switch($key){
-				// Forme associÃ©e - Nom de Personne
+				// Forme associée - Nom de Personne
 				case $zone."00" :
 					for($i=0 ; $i<count($field) ; $i++){
 						$infos = array();
@@ -215,11 +215,11 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 						$data[] = $infos;
 					}
 					break;
-				// Forme associÃ©e - Nom de CollectivitÃ©
+				// Forme associée - Nom de Collectivité
 				case $zone."10" :
-				// Forme associÃ©e - Marque
+				// Forme associée - Marque
 				case $zone."16" :	
-				// Forme associÃ©e - Famille
+				// Forme associée - Famille
 				case $zone."20" :
 					for($i=0 ; $i<count($field) ; $i++){
 						$infos = array();
@@ -229,7 +229,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 						$data[] = $infos;
 					}
 					break;
-				// Forme associÃ©e - Titre Uniforme
+				// Forme associée - Titre Uniforme
 				case $zone."30" :
 					for($i=0 ; $i<count($field) ; $i++){
 						$infos = titre_uniforme::get_informations_from_unimarc($field[$i],$zone);
@@ -238,22 +238,22 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 						$data[] = $infos;
 					}
 					break;
-				// Forme rejetÃ©e - Rubrique de Classement
+				// Forme rejetée - Rubrique de Classement
 				case $zone."35" :
 					
 					break;
-				// Forme associÃ©e - Nom de territoire ou nom gÃ©ographique 
+				// Forme associée - Nom de territoire ou nom géographique 
 				case $zone."15" :
-				// Forme associÃ©e - Auteur / Titre 
+				// Forme associée - Auteur / Titre 
 				case $zone."40" :
-				// Forme associÃ©e - Auteur / Rubrique de Classement
+				// Forme associée - Auteur / Rubrique de Classement
 				case $zone."45" :
-				// Forme associÃ©e - Forme, genre ou caractÃ©ristiques physiques
+				// Forme associée - Forme, genre ou caractéristiques physiques
 				case $zone."80" :	
-				// Forme associÃ©e - MatiÃ¨re nom commun
+				// Forme associée - Matière nom commun
 				case $zone."50" :
 					if ($this->type == 'concept') {
-						// si on est sur un concept, on gÃ¨re les liens avec les autres concepts Ã  part 
+						// si on est sur un concept, on gère les liens avec les autres concepts à part 
 						break;
 					}
 					for($i=0 ; $i<count($field) ; $i++){
@@ -269,7 +269,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 						$data[] = $infos;
 					}
 					break;
-				// Forme associÃ©e - Lieu d'Ã©dition	
+				// Forme associée - Lieu d'édition	
 				case $zone."60" :
 				default :
 					break;
@@ -281,11 +281,11 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 	
 	public function check_if_exists($data,$id_thesaurus = 0){
 		switch($data['type_authority']){
-			// Forme associÃ©e - Nom de Personne
+			// Forme associée - Nom de Personne
 			case "author" :
 				$id = auteur::check_if_exists($data);
 				break;
-			// Forme associÃ©e - Titre Uniforme	
+			// Forme associée - Titre Uniforme	
 			case "uniform_title" :
 				$id = titre_uniforme::import_tu_exist($data);
 				break;
@@ -311,6 +311,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 						$this->guide_infos["et"] = "a";
 						break;
 					case "210" :
+					case "214" :
 						$this->guide_infos["et"] = "b";
 						break;
 					case "215" :
@@ -377,7 +378,7 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 			// nom de personne
 			case "a" :
 				break;
-			// nom de collectivitÃ©
+			// nom de collectivité
 			case "b" :
 				break;
 			// famille
@@ -389,21 +390,21 @@ class notice_authority extends iso2709_authorities implements notice_authority_g
 			// titre uniforme
 			case "f" :
 				break;
-			// matiÃ¨re nom commun
+			// matière nom commun
 			case "j" :
 				$scheme_uri = 'http://data.bnf.fr/vocabulary/scheme/r166';
 				break;
-			// nom de territoire ou nom gÃ©ographique
+			// nom de territoire ou nom géographique
 			case "c" :
 				$scheme_uri = 'http://data.bnf.fr/vocabulary/scheme/r167';
 				break;
-			// forme, genre ou caractÃ©ristiques physiques
+			// forme, genre ou caractéristiques physiques
 			case "l" :
 				break;
 			// rubrique de classement
 			case "g" :
-			/*certaines autoritÃ©s ne sont pas traitables par PMB*/
-			// lieu d'Ã©dition
+			/*certaines autorités ne sont pas traitables par PMB*/
+			// lieu d'édition
 			case "k" :
 			// auteur / titre
 			case "h" :

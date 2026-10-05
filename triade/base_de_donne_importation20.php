@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,129 +26,113 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'.js'?>"></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
-<div align='center'>
-<?php top_h(); ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'1.js'?>"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGbasededoni31 ?></font></b></td>
-</tr>
-<tr id='cadreCentral0' >
-<td valign=top>
-<br />
-<ul><font class="T2"><?php print LANGbasededoni32 ?></font></ul>
-<br />
-<ul><ul>
-<table height=150  >
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
-<form action='./base_de_donne_importation21.php'  method="post">
-<tr>
-<td align=right><font class="T2"><?php print LANGbasededoni33 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+<div class="dest-wrap">
 
-<form action='./base_de_donne_importation22.php'  method="get">
-<input type='hidden' name='id' value='profxls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGbasededoni34 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+<div style="background:#080A66;color:#fff;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;font-weight:700;"><?php print LANGbasededoni31 ?></div>
+<div class="dest-list" style="border-radius:0 0 8px 8px;margin-bottom:16px;">
 
-<form action='./base_de_donne_importation22.php'  method="get">
-<input type='hidden' name='id' value='scolairexls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGbasededoni35 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+  <form action="./base_de_donne_importation21.php" method="post" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGbasededoni33 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
-<form action='./base_de_donne_importation22.php'  method="get">
-<input type='hidden' name='id' value='administrationxls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGTMESS492 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+  <form action="./base_de_donne_importation22.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="profxls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGbasededoni34 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
+  <form action="./base_de_donne_importation22.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="scolairexls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGbasededoni35 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
-<form action='./base_de_donne_importation22.php'  method="get">
-<input type='hidden' name='id' value='personnelxls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGTMESS493 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+  <form action="./base_de_donne_importation22.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="administrationxls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGTMESS492 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
+  <form action="./base_de_donne_importation22.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="personnelxls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGTMESS493 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
-<form action='./base_de_donne_importation23.php'  method="get">
-<input type='hidden' name='id' value='matierexls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGTMESS496 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
+  <form action="./base_de_donne_importation23.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="matierexls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGTMESS496 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
+  <form action="./base_de_donne_importation72.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="entreprisexls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGTMESS494 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
+  <form action="./base_de_donne_importation22.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="tuteurstagexls">
+    <div class="dest-row">
+      <span class="dest-row-label">Import tuteur de stage</span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
-<form action='./base_de_donne_importation72.php'  method="get">
-<input type='hidden' name='id' value='entreprisexls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGTMESS494 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
+  <form action="./base_de_donne_importation82.php" method="get" style="display:contents">
+    <input type="hidden" name="id" value="entreprisexls">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGTMESS495 ?></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
 
-<tr><td height='10' ></td></tr>
+</div>
 
-<form action='./base_de_donne_importation22.php'  method="get">
-<input type='hidden' name='id' value='tuteurstagexls' />
-<tr>
-<td align=right><font class="T2"><?php print "Import tuteur de stage" ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
+</div>
 
-
-
-
-<tr><td height='10' ></td></tr>
-
-<form action='./base_de_donne_importation82.php'  method="get">
-<input type='hidden' name='id' value='entreprisexls' /> 
-<tr>
-<td align=right><font class="T2"><?php print LANGTMESS495 ?></font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print CLICKICI ?>","rien");</script></td>
-</tr>
-</form>
-<tr><td height='10' ></td></tr>
-
-</table>
-</ul></ul>
-<br><br>
-<!-- // fin  -->
-</td></tr></table>
-<BR>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'2.js'?>"> </SCRIPT>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 </BODY></HTML>

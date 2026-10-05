@@ -1,0 +1,16 @@
+{
+	"xerfi" : {
+		"language_text_to_language_code" : {
+			"English"		:	"eng",
+			"French"		:	"fre",
+			"German"		:	"ger",
+			"Italian"		:	"ita",
+			"Portuguese"	:	"por",
+			"Spanish"		:	"spa"
+		},
+		"TYPEDOCUMENT_to_bl_hl_dt" : {
+			"default"		: ["m", "0", "a"],
+			"ETUDE"			: ["m", "0", "a"]
+		}
+	}
+}

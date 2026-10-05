@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -29,7 +29,7 @@ if ((VIESCOLAIRENOTEENSEIGNANT == "oui") && ($_SESSION["membre"] != "menupersonn
 }else{
 	if (($_SESSION["membre"] != "menuadmin") && ($_SESSION["membre"] != "menuprof")) {
 		$cnx=cnx();
-		if (!verifDroit($_SESSION["id_pers"],"carnetnotes")) {
+		if ((!verifDroit($_SESSION["id_pers"],"carnetnotes"))  && (!verifDroit($_SESSION["id_pers"],"AESH")) )  {
 			accesNonReserveFen();
 			exit();
 		}
@@ -53,7 +53,7 @@ if(isset($_POST["create"])) {
 	$cgrp=explode(":",$cgrp);
 	$cid=$cgrp[0];
 	$gid=$cgrp[1];
-	$mid=$_GET[sMat];
+	$mid=$_GET['sMat'];
 	if (VISUTRIAUTO == "oui")  {
                 $choix_tri=recherche_trimestre_en_cours_via_classe($cid);
         }else{
@@ -80,7 +80,7 @@ if ($nomGrp != "") {
 // creation de la requete
 if ($choix_tri != "") {
 	$data=recherche_intervalle_trimestre_via_classe($choix_tri,$cid,$anneeScolaire);
-	for($i=0;$i<count($data);$i++){
+	for($i=0;$i<countTriade($data);$i++){
 		$date_debut=$data[$i][0];
 		$date_fin=$data[$i][1];
 		$sql2="date >= '$date_debut' AND date <= '$date_fin' ";
@@ -95,7 +95,7 @@ if ($choix_tri != "") {
 	if($HPV['gid']):
 	        $who="<font color=\"#FFFFFF\">- ".LANGPROF4." : </font> ".chercheGroupeNom($HPV['gid']);
 	else:
-	        $cl=chercheClasse($HPV[cid]);
+	        $cl=chercheClasse($HPV['cid']);
 	        $who="<font color=\"#FFFFFF\">- ".strtolower(LANGELE4)." : </font>".$cl[0][1];
 	        unset($cl);
 	endif;
@@ -196,13 +196,13 @@ function envoi() {
 <ul>
 <table  border=0 bordercolor="#000000" >
 <?php
-if($HPV[gid]){
-        $gid=$HPV[gid];
+if($HPV['gid']){
+        $gid=$HPV['gid'];
         $sqlIn=<<<SQL
         SELECT
         	liste_elev
         FROM
-        	${prefixe}groupes
+        	{$prefixe}groupes
         WHERE
         	group_id='$gid'
 SQL;
@@ -226,7 +226,7 @@ SQL;
 	}
 	$sql .= "
         FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	elev_id IN ($in)
         ORDER BY
@@ -234,7 +234,7 @@ SQL;
 	";
 		unset($in);
 } else {
-        $cid=$HPV[cid];
+        $cid=$HPV['cid'];
 	$sql="
         SELECT
         	elev_id,
@@ -249,7 +249,7 @@ SQL;
 	}
 	$sql .= "
 	FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	classe='$cid'
         ORDER BY
@@ -285,7 +285,7 @@ SQL;
 	$pdf->SetFillColor(220);
 	$ycoor+=7;
 
-	for($i=0;$i<count($mat);$i++){
+	for($i=0;$i<countTriade($mat);$i++){
 			$pdf->SetXY($xcoor,$ycoor); // placement du cadre du nom de l eleve
 			$nomprenom=trunchaine($mat[$i][1],20);
 			$pdf->MultiCell(60,5,"$nomprenom",1,'',1);
@@ -319,7 +319,7 @@ $pdf->output('F',$fichier);
 
 
 </table><br>
-<input type=hidden name=nb value="<?php print count($mat) ?>" >
+<input type=hidden name=nb value="<?php print countTriade($mat) ?>" >
 <input type=hidden name="saisie_classe" value="<?php print $idclasse ?>" >
 <input type=hidden name="anneeScolaire" value="<?php print $anneeScolaire ?>" >
 <input type=hidden name="saisie_matiere" value="<?php print $idMatiere ?>" >

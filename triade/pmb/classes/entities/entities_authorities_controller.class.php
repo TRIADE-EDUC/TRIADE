@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_authorities_controller.class.php,v 1.17 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: entities_authorities_controller.class.php,v 1.25.4.1 2025/04/24 09:50:00 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once ($class_path."/entities/entities_controller.class.php");
 global $pmb_indexation_lang;
 include($include_path."/marc_tables/".$pmb_indexation_lang."/empty_words");
@@ -16,19 +17,20 @@ require_once($class_path.'/entity_locking.class.php');
 require_once($class_path.'/authority.class.php');
 
 class entities_authorities_controller extends entities_controller {
-	
+
 	protected $user_input;
-	
+
 	protected $authority;
-	
+
 	protected $searcher_instance;
-	
+
 	protected $nbr_lignes;
-	
+
 	protected $page;
-	
+
 	protected $parity;
-	
+	protected $num_auth_present;
+
 	public function __construct($id) {
 		global $user_input;
 		if($user_input) {
@@ -38,40 +40,37 @@ class entities_authorities_controller extends entities_controller {
 		}
 		parent::__construct($id);
 	}
-	
+
 	protected function get_display_label_column($label='', $infobulle='') {
-		global $charset;
-		
-// 		htmlentities($label, ENT_QUOTES, $charset)
 		$display = "
 			<td style='vertical-align:top' onmousedown=\"document.location='".$this->get_edit_link($this->authority->get_num_object())."&user_input=".rawurlencode($this->user_input)."&nbr_lignes=".$this->nbr_lignes."&page=".$this->page."';\" title='".$infobulle."'>
 				".$this->authority->get_display_statut_class_html().$label."
 			</td>";
 		return $display;
 	}
-	
+
 	protected function get_display_line($authority_id=0) {
 		global $msg;
-		
+
 		$display = '';
-		
-		// On va chercher les infos spÃ©cifique Ã  l'autoritÃ©
+
+		// On va chercher les infos spécifique à l'autorité
 		$this->authority = new authority($authority_id);
-		
+
 		if ($this->parity % 2) {
 			$pair_impair = "even";
 		} else {
 			$pair_impair = "odd";
 		}
 		$this->parity += 1;
-		
+
 		if(static::class == 'entities_categories_controller') {
 			$notice_count = $this->get_query_notice_count();
 		} else {
 			$notice_count_sql = $this->get_query_notice_count();
 			$notice_count = pmb_mysql_result(pmb_mysql_query($notice_count_sql), 0, 0);
 		}
-		
+
 		$tr_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\"  ";
 		$display.= "<tr class='$pair_impair' $tr_javascript style='cursor: pointer'>";
 		$display.= "<td style='text-align:center; width:25px;'>
@@ -89,42 +88,42 @@ class entities_authorities_controller extends entities_controller {
 		$display .=  "</tr>";
 		return $display;
 	}
-	
+
 	protected function search_form() {
 		$model_class_name = $this->get_model_class_name();
 		$model_class_name::search_form();
 	}
-	
+
 	protected function get_pagination_link() {
 		global $authority_statut;
-		
+
 		return $this->url_base."&sub=reach&user_input=".rawurlencode($this->user_input).'&authority_statut='.$authority_statut;
 	}
-	
+
 	public function get_display_list() {
 		global $page, $nb_per_page_gestion, $categ;
 		global $last_param;
-		
+
 		$display = '';
-		
+
 		if(!$this->user_input) $this->user_input = '*';
-		
+
 		$this->search_form();
-		
+
 		$this->searcher_instance = $this->get_searcher_instance();
 		$this->nbr_lignes = $this->searcher_instance->get_nb_results();
-		
+
 		if(!$page) {
 			$page=1;
-			$this->page = $page; 
+			$this->page = $page;
 		} else {
 		    $this->page = (int) $page;
 		}
 		$debut =($this->page-1)*$nb_per_page_gestion;
-		
+
 		if($this->nbr_lignes) {
 			$display .= $this->get_display_header_list();
-		
+
 			$this->parity=1;
 			$sorted_objects = $this->searcher_instance->get_sorted_result('default', $debut, $nb_per_page_gestion);
 			$this->set_session_history($this->searcher_instance->get_human_query(), $categ, 'QUERY', 'classic');
@@ -136,15 +135,15 @@ class entities_authorities_controller extends entities_controller {
 			}
 			if (!$last_param) $nav_bar = aff_pagination ($this->get_pagination_link(), $this->nbr_lignes, $nb_per_page_gestion, $this->page, 10, false, true) ;
 			else $nav_bar="";
-		
-			// affichage du rÃ©sultat
+
+			// affichage du résultat
 			print $this->searcher_instance->get_results_list_from_search($this->get_results_title(), $this->user_input, $display, $nav_bar);
 		} else {
-			// la requÃªte n'a produit aucun rÃ©sultat
-			$this->display_no_results();		
+			// la requête n'a produit aucun résultat
+			$this->display_no_results();
 		}
 	}
-	
+
 	public function proceed() {
 		global $sub;
 		global $force_unlock;
@@ -168,7 +167,18 @@ class entities_authorities_controller extends entities_controller {
 			        print $entity_locking->get_locked_form();
 			        break;
 			    }
-			    $this->proceed_delete();
+			    // On déclenche un événement sur la supression
+			    $evt_handler = events_handler::get_instance();
+			    $event = new event_entity("entity", "has_deletion_rights");
+			    $event->set_entity_id($this->id);
+			    $event->set_entity_type($this->get_aut_const());
+			    $event->set_user_id($PMBuserid);
+			    $evt_handler->send($event);
+			    if($event->get_error_message()){
+			    	information_message('', $event->get_error_message(), 1, $this->get_permalink());
+			    } else {
+			    	$this->proceed_delete();
+			    }
 				break;
 			case 'replace':
 			    $entity_locking = new entity_locking($this->id, $this->get_aut_const());
@@ -186,13 +196,13 @@ class entities_authorities_controller extends entities_controller {
 				if ($this->id && $entity_locking->is_locked()) {
 				    if($PMBuserid == $entity_locking->get_locked_user_id()){
 				        $updated_id = $this->proceed_update();
-				        $entity_locking->unlock_entity();				        
+				        $entity_locking->unlock_entity();
 				    }else{
 				        print $entity_locking->get_save_error_message();
 				        break;
 				    }
 				} else{
-				    $updated_id = $this->proceed_update();				   
+				    $updated_id = $this->proceed_update();
 				}
 				if($updated_id) {
 				    if ($save_and_continue) {
@@ -225,8 +235,10 @@ class entities_authorities_controller extends entities_controller {
 				break;
 		}
 	}
-	
+
 	public function proceed_delete() {
+	    global $msg;
+
 		$object_instance = $this->get_object_instance();
 		$sup_result = $object_instance->delete();
 		if(!$sup_result) {
@@ -235,11 +247,11 @@ class entities_authorities_controller extends entities_controller {
 			error_message($msg[132], $sup_result, 1, $this->get_edit_link());
 		}
 	}
-	
+
 	public function proceed_replace() {
 		global $msg;
 		global $by, $aut_link_save;
-		
+
 		$object_instance = $this->get_object_instance();
 		if(!$by) {
 			$object_instance->replace_form();
@@ -253,16 +265,15 @@ class entities_authorities_controller extends entities_controller {
 			}
 		}
 	}
-	
+
 	public function proceed_duplicate() {
 		$object_instance = $this->get_object_instance();
-		$id = 0;
 		$object_instance->show_form(true);
 	}
-	
+
 	public function proceed_update() {
 	}
-	
+
 	public function proceed_form() {
 	    global $cataloging_scheme_id, $id;
 	    $unlock_unload_script = "";
@@ -284,14 +295,14 @@ class entities_authorities_controller extends entities_controller {
 		print $entity_form;
 		print $this->get_selector_js_script();
 		print $unlock_unload_script;
-	}	
-	
+	}
+
 	public function proceed_last() {
 		global $last_param;
 		global $tri_param, $limit_param;
 		global $pmb_nb_lastautorities;
 		global $clef, $nbr_lignes;
-		
+
 		$last_param=1;
 		$tri_param = $this->get_last_order();
 		$limit_param = 'limit 0, '.$pmb_nb_lastautorities;
@@ -299,21 +310,21 @@ class entities_authorities_controller extends entities_controller {
 		$nbr_lignes = 0 ;
 		print $this->get_display_list();
 	}
-	
+
 	public function proceed_default() {
 		global $pmb_allow_authorities_first_page;
-		
+
 		if(!$pmb_allow_authorities_first_page && (!isset($this->user_input) || $this->user_input == '')){
 			$this->search_form();
 		}else {
-			// affichage du dÃ©but de la liste
+			// affichage du début de la liste
 			print $this->get_display_list();
 		}
 	}
-	
+
 	public function get_display_view($id=0) {
 		print "<script type='text/javascript'>
-			document.location = '".$this->get_permalink($id)."';	
+			document.location = '".$this->get_permalink($id)."';
 			</script>";
 	}
 	/**
@@ -328,12 +339,55 @@ class entities_authorities_controller extends entities_controller {
 					});
 				</script>";
 	}
-	
+
 	public static function get_caddie_link() {
-		global $msg, $categ;
+		global $msg, $categ, $user_input;
+		//Pas de lien vers le panier si pas de recherche
+		if (!isset($user_input) || $user_input==='') {
+		    return '';
+		}
 		return "<a href='#' onClick=\"openPopUp('./print_cart.php?current_print=".$_SESSION['CURRENT']."&action=print_prepare&object_type=".self::get_type_from_categ($categ)."&authorities_caddie=1','print_cart'); return false;\"><img src='".get_url_icon('basket_small_20x20.gif')."' style='border:0px' class='center' alt=\"".$msg["histo_add_to_cart"]."\" title=\"".$msg["histo_add_to_cart"]."\"></a>";
 	}
-	
+
+	/**
+	 * Retourne le template pour appliquer un tri
+	 * @param int|string $nb_results nombre de résultat de la recherce
+	 * @param string $entity_type type de l'entité
+	 * @param boolean $popup utilisation d'une popup
+	 * @return string
+	 */
+	public static function get_sort_link($nb_results, $entity_type, $popup = false) {
+	    global $pmb_nb_max_tri, $msg;
+	    global $affich_authorities_tris_result_liste, $affich_authorities_popup_tris_result_liste;
+
+	    $display_icons = "";
+	    if ($nb_results <= $pmb_nb_max_tri) {
+	        $sort_index = "tri_".$entity_type;
+	        if ($popup) {
+	            $display_icons .= $affich_authorities_popup_tris_result_liste;
+	        } else {
+    	        $display_icons .= $affich_authorities_tris_result_liste;
+	        }
+	        $display_icons = str_replace('!!entity_type!!', $entity_type, $display_icons);
+	        $display_icons = str_replace('!!sort_params!!', static::get_sort_params_link(), $display_icons);
+	        if (!empty($_SESSION[$sort_index])) {
+	            $sort = new sort($entity_type,"base");
+	            $display_icons .= $msg['tri_par']." ".$sort->descriptionTriParId($_SESSION[$sort_index]);
+	        }
+
+	    }
+
+	    return $display_icons;
+	}
+
+	/**
+	 * parametres a ajouter sur l'url de tri
+	 * @return string
+	 */
+	protected static function get_sort_params_link() {
+	    return "";
+	}
+
 	/**
 	 *
 	 * @param string $human_query
@@ -343,7 +397,7 @@ class entities_authorities_controller extends entities_controller {
 	 */
 	protected function set_session_history($human_query, $categ, $type, $search_type = "extended") {
 		global $page, $msg, $id_authperso;
-		
+
 		if(!isset($_SESSION["session_history"])) $_SESSION["session_history"] = array();
 		switch ($type) {
 			case 'QUERY' :
@@ -372,10 +426,10 @@ class entities_authorities_controller extends entities_controller {
 				break;
 		}
 	}
-	
+
 	public function get_msg_from_categ($categ, $id_authperso = 0) {
-		global $msg, $search;
-		
+		global $msg;
+
 		switch ($categ) {
 			case 'auteurs' :
 				return $msg['133'];
@@ -384,7 +438,7 @@ class entities_authorities_controller extends entities_controller {
 			case 'editeurs' :
 				return $msg['135'];
 			case 'collections' :
-				return $msg['136'];			
+				return $msg['136'];
 			case 'souscollections' :
 				return $msg['137'];
 			case 'series' :
@@ -400,9 +454,9 @@ class entities_authorities_controller extends entities_controller {
 		}
 		return '';
 	}
-	
+
 	public static function get_type_from_categ($categ) {
-		
+
 		$type = "MIXED";
 		switch ($categ) {
 			case 'auteurs' :
@@ -438,12 +492,12 @@ class entities_authorities_controller extends entities_controller {
 		}
 		return $type;
 	}
-	
-	//A dÃ©river dans les enfants
+
+	//A dériver dans les enfants
 	protected function get_aut_const(){
 	    return '';
 	}
-	
+
 	public function get_type_const() {
 	    switch($this->get_model_class_name()) {
 	        case 'auteur':
@@ -467,5 +521,75 @@ class entities_authorities_controller extends entities_controller {
 	        case 'titre_uniforme':
 	            return TYPE_TITRE_UNIFORME;
 	    }
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_query_notice_count() {
+		return '';
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_display_columns() {
+		return '';
+	}
+
+	/**
+	 *
+	 * @return int
+	 */
+	protected function get_search_mode() {
+		return 0;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_aut_type() {
+		return "";
+	}
+
+	/**
+	 *
+	 * @return searcher_autorities|searcher_sphinx_authorities
+	 */
+	public function get_searcher_instance()	{
+		return searcher_factory::get_searcher('authorities', '', $this->user_input);
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_display_header_list() {
+		return '';
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_results_title() {
+		return '';
+	}
+
+	/**
+	 *
+	 * @return void
+	 */
+	protected function display_no_results() {}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function get_last_order() {
+		return '';
 	}
 }

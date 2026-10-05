@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_associate_svg.class.php,v 1.6 2017-11-30 10:00:36 dgoron Exp $
+// $Id: explnum_associate_svg.class.php,v 1.7 2023/11/30 11:07:35 qvarin Exp $
 
 
 if (stristr ($_SERVER['REQUEST_URI'], ".class.php"))
@@ -11,7 +11,7 @@ if (stristr ($_SERVER['REQUEST_URI'], ".class.php"))
 require_once($include_path."/templates/explnum_associate.tpl.php");
 
 /**
- * Classe pour la gÃ©nÃ©ration de la structure svg pour l'interface d'association des locuteurs
+ * Classe pour la génération de la structure svg pour l'interface d'association des locuteurs
  */
 class explnum_associate_svg {
 	/**
@@ -40,27 +40,27 @@ class explnum_associate_svg {
 	private $segments =  array();
 	
 	/**
-	 * Tableau des dimensions des Ã©lÃ©ments svg
+	 * Tableau des dimensions des éléments svg
 	 * @var array
 	 */
 	private $dimensions = array();
 	
 	/**
-	 * DurÃ©e du document
+	 * Durée du document
 	 * @var int
 	 */
 	private $duration = 0;
 	
 	/**
-	 * @param int explnum_id Identifiant du document numÃ©rique
+	 * @param int explnum_id Identifiant du document numérique
 	 */
 	public function __construct($explnum_id) {
-		$this->explnum_id = $explnum_id;
+		$this->explnum_id = intval($explnum_id);
 	}
 	
 	/**
-	 * Renvoie le code svg gÃ©nÃ©rÃ©
-	 * @param boolean edit true pour activer la possibilitÃ© d'Ã©dition
+	 * Renvoie le code svg généré
+	 * @param boolean edit true pour activer la possibilité d'édition
 	 * @return string
 	 */
 	public function getSvg($edit = false) {
@@ -76,7 +76,7 @@ class explnum_associate_svg {
 	}
 	
 	/**
-	 * DÃ©finit le tableau des dimensions
+	 * Définit le tableau des dimensions
 	 */
 	private function getDimensions() {
 		global $explnum_associate_speakers_svg_height;
@@ -86,21 +86,21 @@ class explnum_associate_svg {
 				// Dimensions fond
 				'backgroundPadding' => 2,											// Padding du background
 				// Dimensions de la barre de graduations
-				'scaleTextY' => 15,													// OrdonnÃ©e du texte de la barre de graduations
+				'scaleTextY' => 15,													// Ordonnée du texte de la barre de graduations
 				'scaleTextFontSize' => 12,											// Taille de police du texte de la barre de graduations
-				'scaleBottom' => 40,												// OrdonnÃ©e de la base de la barre de graduations
-				'scaleTop' => 20,													// OrdonnÃ©e du sommet des grandes barres
-				'scaleMiddle' => 30,												// OrdonnÃ©e du sommet des petites barres
+				'scaleBottom' => 40,												// Ordonnée de la base de la barre de graduations
+				'scaleTop' => 20,													// Ordonnée du sommet des grandes barres
+				'scaleMiddle' => 30,												// Ordonnée du sommet des petites barres
 				// Dimensions locuteurs
 				'speakerLeft' => 5,													// Abscisse de gauche de la colonne speaker
-				'speakerTop' => 42,													// OrdonnÃ©e du haut de la colonne speaker
+				'speakerTop' => 42,													// Ordonnée du haut de la colonne speaker
 				'speakerWidth' => 150,												// Largeur de la colonne speaker
 				'speakerHeight' => $explnum_associate_speakers_svg_height,			// Hauteur d'une case speaker
 				'speakerMarginBottom' => 2,											// Marge entre chaque speaker
 				'speakerTextFontSize' => 12,										// Taille de police de texte
-				'speakerTextX' => 3,												// Abscisse de dÃ©but de texte
-				'speakerTextY' => 17,												// OrdonnÃ©e du texte
-				'speakerMarginRight' => 2,											// Marge Ã  droite
+				'speakerTextX' => 3,												// Abscisse de début de texte
+				'speakerTextY' => 17,												// Ordonnée du texte
+				'speakerMarginRight' => 2,											// Marge à droite
 				);
 	}
 	
@@ -118,7 +118,7 @@ class explnum_associate_svg {
 		global $explnum_associate_timescale_svg_height;
 		global $msg;
 		
-		// Un champ texte pour donner l'unitÃ© de temps
+		// Un champ texte pour donner l'unité de temps
 		$this->svg .= '<text transform="matrix(1 0 0 1 '.($this->dimensions['speakerLeft'] + ($this->dimensions['speakerWidth'] / 2)).' '.$this->dimensions['scaleTextY'].')" font-family="\'LiberationSans-Regular\'" text-anchor="middle" font-size="'.$this->dimensions['scaleTextFontSize'].'">'.$msg['explnum_associate_minutes'].'</text>';
 		
 		$timescaleSvg = '<g transform="!!transform!!">'.$explnum_associate_timescale_svg.'</g>';
@@ -131,7 +131,7 @@ class explnum_associate_svg {
 		// Temps total
 		$duration = $this->duration;
 		
-		// On cherche l'intervalle idÃ©al
+		// On cherche l'intervalle idéal
 		$interval = 1;
 		// Calcul de la largeur pour l'intervalle
 		$widthForInterval = ($availableWidth*$interval*100) / $duration;
@@ -165,7 +165,7 @@ class explnum_associate_svg {
 	}
 	
 	/**
-	 * Renvoie une chaine correspondant au temps Ã  afficher (min:sec)
+	 * Renvoie une chaine correspondant au temps à afficher (min:sec)
 	 * 
 	 * @param int tps Temps en secondes
 	 */
@@ -179,7 +179,7 @@ class explnum_associate_svg {
 	
 	/**
 	 * Construit les blocs locuteurs
-	 * @param boolean edit true pour activer la possibilitÃ© d'Ã©dition
+	 * @param boolean edit true pour activer la possibilité d'édition
 	 */
 	private function getSpeakers($edit) {
 		if (!count($this->speakers)) {
@@ -260,7 +260,7 @@ class explnum_associate_svg {
 	}
 	
 	/**
-	 * Consulte la base de donnÃ©es
+	 * Consulte la base de données
 	 */
 	private function getDatas() {
 		$query = "select explnum_speaker_id, explnum_speaker_speaker_num, explnum_speaker_gender, explnum_speaker_author, author_name, author_rejete from explnum_speakers left join authors on explnum_speaker_author = author_id where explnum_speaker_explnum_num = ".$this->explnum_id;
@@ -346,7 +346,7 @@ class explnum_associate_svg {
 	
 	/**
 	 * Retourne la chaine Javascript
-	 * @param boolean edit true pour activer la possibilitÃ© d'Ã©dition
+	 * @param boolean edit true pour activer la possibilité d'édition
 	 * @return string
 	 */
 	public function getJs($edit = false) {
@@ -364,13 +364,13 @@ class explnum_associate_svg {
 		// Calcul ratio
 		$ratio = $availableWidth / $duration;
 		
-		// RÃ©cupÃ©ration des variables en js
+		// Récupération des variables en js
 		$this->js .= "
 		var ratio = ".$ratio.";
 		var player = videojs('videojs');
 		var segments = ".json_encode($this->segments).";";
 		
-		// DÃ©placement du curseur
+		// Déplacement du curseur
 		$this->js .= "
 		function update_cursor(){
 			document.getElementById('cursor_svg').transform.baseVal.getItem(0).setTranslate(".($this->dimensions['speakerWidth'] + $this->dimensions['speakerMarginRight'] + $this->dimensions['backgroundPadding'])." + (player.currentTime() * ratio), 0);
@@ -393,7 +393,7 @@ class explnum_associate_svg {
 		player.on('timeupdate', update_cursor);
 		";
 		
-		// AccÃ¨s au dÃ©but d'un segment en passant son id
+		// Accès au début d'un segment en passant son id
 		$this->js .= "
 		function move_cursor_on_segment(id) {
 			for (var i in segments) {
@@ -422,7 +422,7 @@ class explnum_associate_svg {
 		}
 		";
 		
-		// Mise Ã  jour de la vidÃ©o
+		// Mise à jour de la vidéo
 		$this->js .= "
 		function update_video_time(event) {
 			event.preventDefault();
@@ -458,7 +458,7 @@ class explnum_associate_svg {
 		global $base_path;
 		global $msg;
 		
-		// RÃ©cupÃ©ration du tableau de locuteurs en js
+		// Récupération du tableau de locuteurs en js
 		$this->js .= "
 		var speakers = ".json_encode($this->speakers).";";
 		
@@ -468,7 +468,7 @@ class explnum_associate_svg {
 			openPopUp('./select.php?what=auteur&callback=update_associate_author&caller=explnum_associate_speaker_' + id + '&param1=aut' + id + '_id&param2=aut' + id + '&deb_rech='+encodeURIComponent(document.getElementById('aut' + id).value), 'selector');
 		}";
 		
-		// RÃ©initialisation du formulaire
+		// Réinitialisation du formulaire
 		$this->js .= "
 		function clearAut(id) {
 			document.getElementById('aut' + id).value='';
@@ -499,7 +499,7 @@ class explnum_associate_svg {
 			document.getElementById('author_associate_form_' + id).style.display = 'none';
 		}";
 		
-		// CrÃ©ation des div de selection d'autoritÃ©
+		// Création des div de selection d'autorité
 		$this->js .= "
 		for (var i in speakers) {
 			if (!document.getElementById('author_associate_form_' + i)) {

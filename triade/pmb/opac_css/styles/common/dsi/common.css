@@ -1,7 +1,7 @@
  /* +--------------------------------------------------------------------------+
 // ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: common.css,v 1.1 2013-07-26 12:17:59 dgoron Exp $ */
+// $Id: common.css,v 1.2 2022/05/23 11:49:08 dgoron Exp $ */
 
 
 /* ---------------------------------------------------------------------------*/
@@ -21,4 +21,9 @@
 	-moz-box-shadow: 1px 1px 5px #666666;
 	-webkit-box-shadow: 1px 1px 5px #666666;
 	box-shadow: 1px 1px 5px #666666;
+}
+
+.img_notice {
+	max-width: 140px;
+	max-height: 200px;
 }

@@ -1,14 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // functions for conversion of SUTRS record
 // authors: Marco Vaninetti, Massimo Mancini
 // state: experimental ;-)
 // +-------------------------------------------------+
-// $Id: z3950_sutrs.inc.php,v 1.11 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: z3950_sutrs.inc.php,v 1.11.14.2 2025/04/04 08:57:25 dgoron Exp $
 
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $lang;
 
 //require_once ("$include_path/parser.inc.php");
 require_once ("$include_path/parser.inc.php");
@@ -32,21 +34,21 @@ function _item_($param) {
 	$i ++;
 }
 
-//RÃ©cupÃ©ration du nom de l'import
+//Récupération du nom de l'import
 function _import_name_($param) {
 	global $import_name;
 
 	$import_name = $param['value'];
 }
 
-//RÃ©cupÃ©ration du nombre de notices Ã  traiter par passe
+//Récupération du nombre de notices à traiter par passe
 function _n_per_pass_($param) {
 	global $n_per_pass;
 
 	$n_per_pass = $param['value'];
 }
 
-//RÃ©cupÃ©ration du type d'entrÃ©e
+//Récupération du type d'entrée
 function _input_($param) {
 	global $input_type;
 	global $input_params;
@@ -55,14 +57,14 @@ function _input_($param) {
 	$input_params = $param;
 }
 
-//RÃ©cupÃ©ration des Ã©tapes de conversion
+//Récupération des étapes de conversion
 function _step_($param) {
 	global $step;
 
 	$step[] = $param;
 }
 
-//RÃ©cupÃ©ration du paramÃ¨tre d'import
+//Récupération du paramètre d'import
 function _output_($param) {
 	global $output;
 	global $output_type;
@@ -116,23 +118,24 @@ function sutrs_record($ss,$sutrs_lang) {
 //	require_once ("$include_path/parser.inc.php");
 //	require_once("$class_path/XMLlist.class.php");
 
-	// functions server specific
-	require_once("$include_path/sutrs_zserver/$sutrs_lang/sutrs_func.php");
-
-	// localisation (fichier XML) (valeur par dÃ©faut)
-	$labels = new XMLlist("$include_path/sutrs_zserver/$sutrs_lang/sutrs.xml", 0);
-	$labels->analyser();
-	$campo = $labels->table;
-
-	//global $fun;
-	// resp.functions (fichier XML) (valeur par dÃ©faut)
-	$funcs = new XMLlist("$include_path/sutrs_zserver/$sutrs_lang/sutrs_authfun.xml", 0);
-	$funcs->analyser();
-	$fun = $funcs->table;
-
-	
-	$notice=from_sutrs($ss,$campo);
-	return $notice;
+	if (!empty($sutrs_lang)) {
+    	// functions server specific
+    	require_once("$include_path/sutrs_zserver/$sutrs_lang/sutrs_func.php");
+    
+    	// localisation (fichier XML) (valeur par défaut)
+    	$labels = new XMLlist("$include_path/sutrs_zserver/$sutrs_lang/sutrs.xml", 0);
+    	$labels->analyser();
+    	$campo = $labels->table;
+    
+    	//global $fun;
+    	// resp.functions (fichier XML) (valeur par défaut)
+    	$funcs = new XMLlist("$include_path/sutrs_zserver/$sutrs_lang/sutrs_authfun.xml", 0);
+    	$funcs->analyser();
+    	$fun = $funcs->table;
+	}
+	if (function_exists('from_sutrs')) {
+    	$notice=from_sutrs($ss,$campo);
+    	return $notice;
+	}
+	return '';
 }
-
-?>

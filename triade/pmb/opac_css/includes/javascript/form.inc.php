@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: form.inc.php,v 1.7 2017-02-07 12:00:24 dgoron Exp $
+// $Id: form.inc.php,v 1.8 2023/08/17 09:47:54 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -33,7 +33,7 @@ define('DIFFERENT',       5);
 // ----------------------------------------------------
 
 $script_test_form = "
-<script type='text/javascript'>
+<script>
 <!--
 	function test_form(form)
 	{
@@ -44,7 +44,7 @@ $script_test_form = "
 </script>";
 
 // ----------------------------------------------------
-// Fonction de crÃ©ation de test d'un champs contre une valeur
+// Fonction de création de test d'un champs contre une valeur
 // ----------------------------------------------------
 function test_field_value_comp($form, $el1, $condition, $val, $message) {
 	$script = "";
@@ -83,7 +83,7 @@ function test_field_value_comp($form, $el1, $condition, $val, $message) {
 }
 
 // ----------------------------------------------------
-// Fonction de crÃ©ation de test de deux champs de formulaire
+// Fonction de création de test de deux champs de formulaire
 // ----------------------------------------------------
 function test_field_el_comp($form, $el1, $condition, $el2, $message) {
 	$script = "";
@@ -121,7 +121,7 @@ function test_field_el_comp($form, $el1, $condition, $el2, $message) {
 }
 
 // ----------------------------------------------------
-// Fonction de crÃ©ation de test d'un champ de formulaire
+// Fonction de création de test d'un champ de formulaire
 // ----------------------------------------------------
 function test_field($form, $element, $field_name, $restrictions=ALLOW_ALL) {
 	$script = "";
@@ -142,7 +142,7 @@ function test_field($form, $element, $field_name, $restrictions=ALLOW_ALL) {
 		var exp = new RegExp('[a-zA-Z]','g');
 		if(exp.test($form.$element.value))
 		{
-			alert(\"Vous ne pouvez pas entrer de caractÃ¨res alphabÃ©tiques pour le champ $field_name\");
+			alert(\"Vous ne pouvez pas entrer de caractères alphabétiques pour le champ $field_name\");
 			$form.$element.focus();
 			return false;
 		}";
@@ -154,7 +154,7 @@ function test_field($form, $element, $field_name, $restrictions=ALLOW_ALL) {
 		var exp = new RegExp('[0-9]','g');
 		if(exp.test($form.$element.value))
 		{
-			alert(\"Vous ne pouvez pas entrer de caractÃ¨res numÃ©riques pour le champ $field_name\");
+			alert(\"Vous ne pouvez pas entrer de caractères numériques pour le champ $field_name\");
 			$form.$element.focus();
 			return false;
 		}";
@@ -174,7 +174,7 @@ function test_field($form, $element, $field_name, $restrictions=ALLOW_ALL) {
 function form_focus($form, $element)
 {
 	$script =
-"<script type='text/javascript'>
+"<script>
 <!--
 	document.$form.$element.focus();
 -->
@@ -185,4 +185,4 @@ function form_focus($form, $element)
 
 
 
-}	// fin de dÃ©finition
+}	// fin de définition

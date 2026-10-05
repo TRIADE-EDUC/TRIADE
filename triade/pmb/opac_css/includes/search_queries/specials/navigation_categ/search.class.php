@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.4 2017-07-12 15:15:01 tsamson Exp $
+// $Id: search.class.php,v 1.6 2023/08/23 10:25:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class navigation_categ_search {
 	public $id;
@@ -16,17 +16,17 @@ class navigation_categ_search {
 
 	//Constructeur
     public function __construct($id,$n_ligne,$params,&$search) {
-    	$this->id=$id;
+    	$this->id = intval($id);
     	$this->n_ligne=$n_ligne;
     	$this->params=$params;
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     }
     
@@ -34,7 +34,7 @@ class navigation_categ_search {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
 		global $opac_auto_postage_etendre_recherche,$opac_auto_postage_nb_descendant,$opac_auto_postage_nb_montant;
 		global $opac_auto_postage_descendant,$opac_auto_postage_montant,$opac_auto_postage_etendre_recherche;
@@ -46,11 +46,8 @@ class navigation_categ_search {
     	$nb_level_parents=$_SESSION["last_module_search"]["search_nb_level_parents"];
     	
     	//recuperation du thesaurus session
-    	if (!$id_thes) {
-    		$id_thes = thesaurus::getSessionThesaurusId();
-    	} else {
-    		thesaurus::setSessionThesaurusId($id_thes);
-    	}
+    	$id_thes = thesaurus::getSessionThesaurusId();
+    	
     	$thes = new thesaurus($id_thes);
     	$id_top = $thes->num_noeud_racine;
     	
@@ -58,10 +55,10 @@ class navigation_categ_search {
     	$ourCateg = new categorie($id);
     	
     	//LISTE DES NOTICES ASSOCIEES
-    	//Lire le champ path du noeud pour Ã©tendre la recherche Ã©ventuellement au fils et aux pÃ¨re de la catÃ©gorie
+    	//Lire le champ path du noeud pour étendre la recherche éventuellement au fils et aux père de la catégorie
     	// lien Etendre auto_postage
     	if (!$nb_level_enfants) {
-    		// non defini, prise des valeurs par dÃ©faut
+    		// non defini, prise des valeurs par défaut
     		if (isset($_SESSION["nb_level_enfants"]) && $opac_auto_postage_etendre_recherche) $nb_level_descendant=$_SESSION["nb_level_enfants"];
     		else $nb_level_descendant=$opac_auto_postage_nb_descendant;
     	} else {
@@ -70,7 +67,7 @@ class navigation_categ_search {
     	
     	// lien Etendre auto_postage
     	if(!isset($nb_level_parents)) {
-    		// non defini, prise des valeurs par dÃ©faut
+    		// non defini, prise des valeurs par défaut
     		if(isset($_SESSION["nb_level_parents"]) && $opac_auto_postage_etendre_recherche) $nb_level_montant=$_SESSION["nb_level_parents"];
     		else $nb_level_montant=$opac_auto_postage_nb_montant;
     	} else {
@@ -78,7 +75,7 @@ class navigation_categ_search {
     	}
     	
     	$q = "select path from noeuds where id_noeud = '".$id."' ";
-    	$r = pmb_mysql_query($q, $dbh);
+    	$r = pmb_mysql_query($q);
     	if($r && pmb_mysql_num_rows($r)){
     		$path=pmb_mysql_result($r, 0, 0);
     		$nb_pere=substr_count($path,'/');
@@ -108,7 +105,7 @@ class navigation_categ_search {
     		$statut_r.=" and ".$opac_view_restrict;
     	}
     	
-    	// Si un path est renseignÃ© et le paramÃ¨trage activÃ©
+    	// Si un path est renseigné et le paramètrage activé
     	if ($path && ($opac_auto_postage_descendant || $opac_auto_postage_montant || $opac_auto_postage_etendre_recherche) && ($nb_level_montant || $nb_level_descendant)){
     	
     		//Recherche des fils
@@ -122,12 +119,12 @@ class navigation_categ_search {
     			$liste_fils=" id_noeud='".$id."' ";
     		}
     	
-    		// recherche des pÃ¨res
+    		// recherche des pères
     		if(($opac_auto_postage_montant || $opac_auto_postage_etendre_recherche) && $nb_level_montant ) {
     	
     			$id_list_pere=explode('/',$path);
     			$stop_pere=0;
-    			if($nb_level_montant != '*' && is_numeric($nb_level_montant)) $stop_pere=$nb_pere-$nb_level_montant;
+    			if($nb_level_montant != '*' && is_numeric($nb_level_montant)) $stop_pere = $nb_pere - intval($nb_level_montant);
     			if($stop_pere<0) $stop_pere=0;
     			for($i=$nb_pere;$i>=$stop_pere; $i--) {
     				$liste_pere.= " or id_noeud='".$id_list_pere[$i]."' ";
@@ -152,12 +149,12 @@ class navigation_categ_search {
 		return "t_s_navigation_section"; 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {  
     }
     
     public function make_unimarc_query() {
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -166,7 +163,7 @@ class navigation_categ_search {
     
     
     
-	//fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	//fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="") return true;

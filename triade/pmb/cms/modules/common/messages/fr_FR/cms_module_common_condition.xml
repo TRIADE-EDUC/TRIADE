@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_condition.xml,v 1.2 2014-02-20 17:03:43 dbellamy Exp $ -->
+$Id: cms_module_common_condition.xml,v 1.2 2014/02/20 17:03:43 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_condition_selector_choice">Choisissez un sélecteur pour la condition</entry>

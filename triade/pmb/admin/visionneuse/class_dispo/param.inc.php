@@ -1,36 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: param.inc.php,v 1.10 2018-05-17 08:16:38 dgoron Exp $
+// $Id: param.inc.php,v 1.11.8.1 2025/03/04 15:50:02 dbellamy Exp $
 
-if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) {
+    die("no access");
+}
 
-require_once($visionneuse_path."/classes/mimetypes/".$quoi."/".$quoi.".class.php");	
+global $visionneuse_path, $quoi, $action, $submenu;
+
+require_once $visionneuse_path."/classes/mimetypes/".$quoi."/".$quoi.".class.php";
 
 $current_class = new $quoi();
 
 switch($action){
-	case "" :
-		$submenu.= show_form();
-		break;
 	case "update" :
-		if ($form_actif) update_params();
+	    if ($form_actif) {
+	        update_params();
+	    }
 		$submenu.= show_form($action);
 		break;
+	default :
+	    $submenu.= show_form('');
+	    break;
 }
 
 function show_form($action=''){
 	global $quoi,$msg;
 	global $current_class;
-	
+
 	$i = 0;
 	$message = '';
 	if($action=="update") {
 		$message = "<div class='erreur'>".$msg["visionneuse_admin_update"]."</div>";
 	}
-	
-	//on r√©cup les infos d√©j√† existantes
+
+	//on rÈcup les infos dÈj‡ existantes
 	$params = $params_values = array();
 	$rqt = "SELECT visionneuse_params_parameters FROM visionneuse_params WHERE visionneuse_params_class LIKE '".$quoi."'";
 	if($res = pmb_mysql_query($rqt)){
@@ -48,7 +54,7 @@ function show_form($action=''){
 					<th>Nom</th>
 					<th>Valeur</th>
 					<th>Description</th>
-				</tr>";	
+				</tr>";
 	foreach($current_class->tabParam as $key =>$tabParam){
 		$form.="
 				<tr class='".($i%2 ? "odd":"even")."'>
@@ -61,11 +67,11 @@ function show_form($action=''){
 			$form.="</td>";
 		} else {
 			$form.="
-					<td><input type='".$tabParam['type']."' name='".$tabParam['name']."' id='".$tabParam['name']."' value='".$tabParam['value']."' ".($tabParam['type'] == "checkbox" ? ($params_values[$key] == 1 ? "checked='checked'" : ""): "")."/></td>";
+					<td><input type='".$tabParam['type']."' name='".$tabParam['name']."' id='".$tabParam['name']."' value='".$tabParam['value']."' ".($tabParam['type'] == "checkbox" ? (isset($params_values[$key]) && $params_values[$key] == 1 ? "checked='checked'" : ""): "")."/></td>";
 		}
 			$form.="
 					<td>".$tabParam['desc']."</td>
-				</tr>";	
+				</tr>";
 		$i++;
 	}
 	$form.="
@@ -81,7 +87,7 @@ function update_params(){
 	global $quoi;
 	global $current_class;
 	global $charset;
-	
+
 	$paramsToSerialize =array();
 	$current_class->getTabParam();
 	foreach ($_POST as $key => $value){

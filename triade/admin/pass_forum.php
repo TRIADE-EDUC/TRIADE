@@ -1,113 +1,83 @@
 <?php
 session_start();
 if (empty($_SESSION["admin1"])) {
-    print "<script language='javascript'>";
-    print "location.href='./acces_refuse.php'";
-    print "</script>";
-    exit;
+    print "<script>location.href='./acces_refuse.php'</script>"; exit;
 }
-/***************************************************************************
- *                              T.R.I.A.D.E
- *                            ---------------
- *
- *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
- *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-?>
-<!-- /************************************************************
-Last updated: 05/08/2004    par Taesch  Eric
-*************************************************************/ -->
-<HTML>
-<HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
-<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
-<?php
+error_reporting(0);
 include_once("../common/lib_admin.php");
 include_once("../common/lib_ecole.php");
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade_admin.php");
-?>
 
-<script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
-<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script language="JavaScript" src="./librairie_js/function.js"></script>
-<title>Triade</title>
-</head>
-<body id='bodyfond2' text='#000000' >
+$erreur = "";
+$modif  = "oui";
 
-<?php
-
-$erreur="";
-$modif="non";
 if (isset($_POST["create"])) {
-	include_once("../common/mdep.php");
-
-	if (( crypt(md5($_POST["saisie_ancien"]),"T2") == $MDP) && ($_POST["saisie_new"] == $_POST["saisie_renew"] ) ) {
-		$mp=crypt(md5(trim(strtolower($_POST["saisie_new"]))),"T2");
-		$fichier=fopen("../common/mdep.php","w");
-		$donne="<?php\n";
-		$donne.="\$MDP=\"$mp\";\n";
-		$donne.="?>\n";
-		fwrite($fichier,"$donne");
-		fclose($fichier);
-		$modif="non";
-		$cnx=cnx();
-		history_cmd("Admin Triade","MODIF","Mot de passe Forum");
-		Pgclose($cnx);
-	?>
-		<center><font size=3>Mot de passe modifié</font></center>
-		<br><br>
-		<table align=center border=0>
-		<tr><td align=center>
-		<script language=JavaScript>buttonMagicFermeture(); //text,nomInput</script>
-		</td></tr></table>
-
-	<?php
-	}else {
-		$modif="oui";
-		$erreur="<center><FONT COLOR=red size=3>ERREUR MOT DE PASSE NON CHANGE</font></center><br>";
-	}
-
-}else {
-
-	$modif="oui";
-}
-
-if ($modif=="oui") {
-?>
-<form name=formulaire method=post>
-<?php print $erreur?>
-<table width=100% align=center border=0>
-<tr><td><font size=3>Ancien mot de passe</font> :</td><td><input type=password  name=saisie_ancien></td></tr>
-<tr><td><font size=3>Nouveau mot de passe</font> :</td><td> <input type=password  name=saisie_new></td></tr>
-<tr><td><font size=3>Confirme mot de passe</font> :</td><td> <input type=password  name=saisie_renew></td></tr>
-<tr><td colspan=2><br><br>
-<table align=center border=0>
-<tr><td align=center>
-<script language=JavaScript>buttonMagicSubmit("Enregistrer","create"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicFermeture(); //text,nomInput</script>&nbsp;&nbsp;
-</td></tr>
-</table>
-</td></tr>
-</table>
-</form>
-
-<?php
+    include_once("../common/mdep.php");
+    if (crypt(md5($_POST["saisie_ancien"]), "T2") == $MDP && $_POST["saisie_new"] == $_POST["saisie_renew"]) {
+        $mp      = crypt(md5(trim(strtolower($_POST["saisie_new"]))), "T2");
+        $fichier = fopen("../common/mdep.php", "w");
+        fwrite($fichier, "<?php\n\$MDP=\"$mp\";\n?>\n");
+        fclose($fichier);
+        $cnx = cnx();
+        history_cmd("Admin Triade", "MODIF", "Mot de passe Forum");
+        Pgclose($cnx);
+        $modif = "non";
+    } else {
+        $erreur = "error";
+    }
 }
 ?>
-</BODY>
+<HTML>
+<HEAD>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content="-1">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4-2.css">
+<script language="JavaScript" src="./librairie_js/function.js"></script>
+<style>* { box-sizing:border-box; } body { margin:0; padding:12px; background:#f0f2fa; font-family:Electrolize,Arial,sans-serif; } .pw-wrap { max-width:380px; margin:0 auto; }</style>
+<title>Triade — Mot de passe forum</title>
+</HEAD>
+<body>
+<div class="pw-wrap">
+<?php if ($modif == "non"): ?>
+  <div class="card">
+    <div class="card-header card-header-primary"><span><i class="bi bi-check-circle-fill" style="margin-right:6px;"></i>Mot de passe modifié</span></div>
+    <div class="card-body" style="text-align:center;">
+      <p style="color:#2e7d32;font-weight:700;margin-bottom:14px;"><i class="bi bi-check-circle-fill"></i> Mot de passe forum enregistré avec succès.</p>
+      <script language="JavaScript">buttonMagicFermeture();</script>
+    </div>
+  </div>
+<?php else: ?>
+  <div class="card">
+    <div class="card-header card-header-primary"><span><i class="bi bi-chat-dots-fill" style="margin-right:6px;"></i>Modifier le mot de passe du forum</span></div>
+    <div class="card-body">
+      <?php if ($erreur): ?>
+      <div class="alert alert-danger" style="margin-bottom:10px;font-size:12px;"><i class="bi bi-exclamation-triangle-fill"></i> Mot de passe incorrect ou confirmation ne correspond pas.</div>
+      <?php endif; ?>
+      <form name="formulaire" method="post">
+        <div class="form-row">
+          <label class="form-lbl">Ancien mot de passe :</label>
+          <input type="password" name="saisie_ancien" class="bouton2" autofocus>
+        </div>
+        <div class="form-row" style="margin-top:6px;">
+          <label class="form-lbl">Nouveau mot de passe :</label>
+          <input type="password" name="saisie_new" class="bouton2">
+        </div>
+        <div class="form-row" style="margin-top:6px;">
+          <label class="form-lbl">Confirmer :</label>
+          <input type="password" name="saisie_renew" class="bouton2">
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <script language="JavaScript">buttonMagicSubmit("Enregistrer","create");</script>
+          <script language="JavaScript">buttonMagicFermeture();</script>
+        </div>
+      </form>
+    </div>
+  </div>
+<?php endif; ?>
+</div>
+</body>
 </HTML>

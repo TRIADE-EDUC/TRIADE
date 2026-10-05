@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_authors.class.php,v 1.3 2017-04-26 07:43:59 tsamson Exp $
+// $Id: frbr_entity_authors.class.php,v 1.3 2017/04/26 07:43:59 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

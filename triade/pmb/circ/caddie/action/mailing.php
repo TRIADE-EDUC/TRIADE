@@ -1,13 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mailing.php,v 1.30 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: mailing.php,v 1.37 2023/09/04 14:53:06 tsamson Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../../..";
 $base_auth = "CIRCULATION_AUTH";
 $base_title = "";
+
+global $base_path, $class_path, $include_path, $msg, $charset, $current_module, $sub;
+global $pmb_javascript_office_editor;
+global $idemprcaddie, $f_objet_mail, $f_message, $files_post, $count_files, $deflt_associated_campaign, $associated_campaign, $associated_num_campaign;
+global $total_envoyes, $total;
+
 require_once ("$base_path/includes/init.inc.php");
 require_once($class_path."/mailtpl.class.php");
 require_once($class_path."/mailing_empr.class.php");
@@ -53,9 +59,14 @@ if($mailtpl->get_count_tpl()){
 	<div class='row'>
 		<label class='etiquette' >".$msg["admin_mailtpl_sel"]."</label>
 		<div class='row'>
-			".$mailtpl->get_sel('mailtpl_id',0)."							
-			<input type='button' class='bouton' value=\" ".$msg["admin_mailtpl_insert"]." \" 
-			onClick=\"insert_template(document.getElementById('mailtpl_id'), document.getElementById('f_objet_mail'), document.getElementById('f_message')); return false; \" />							
+			<div class='left'>
+				".$mailtpl->get_sel('mailtpl_id',0)."							
+				<input type='button' class='bouton' value=\" ".$msg["admin_mailtpl_insert"]." \" 
+				onClick=\"insert_template(document.getElementById('mailtpl_id'), document.getElementById('f_objet_mail'), document.getElementById('f_message')); return false; \" />
+			</div>
+			<div class='right'>
+				".(SESSrights & ADMINISTRATION_AUTH ? "<a onclick=\"parent.location='".$base_path."/admin.php?categ=mailtpl&sub=build'\" style='cursor:pointer;'>".$msg['admin_mailtpl_title']."</a>" : "")."
+			</div>							
 		</div>
 	</div>
 	";	
@@ -86,7 +97,9 @@ if (!$idemprcaddie) die();
 
 if($pmb_javascript_office_editor){
 	print $pmb_javascript_office_editor;
-	print "<script type='text/javascript' src='".$base_path."/javascript/tinyMCE_interface.js'></script>";
+	print "<script type='text/javascript'>
+        pmb_include('$base_path/javascript/tinyMCE_interface.js');
+    </script>";
 }
 
 if ((!isset($f_message) || !$f_message) && !$pmb_javascript_office_editor) {
@@ -94,7 +107,7 @@ if ((!isset($f_message) || !$f_message) && !$pmb_javascript_office_editor) {
 <body>
 </body>
 </html>";
-} else $f_message=stripslashes($f_message);
+} else $f_message=html_entity_decode(stripslashes($f_message), ENT_QUOTES, $charset);
 $f_objet_mail = (isset($f_objet_mail) ? stripslashes($f_objet_mail) : '');
 
 print "<div id='contenu-frame'>" ;
@@ -121,59 +134,10 @@ switch ($sub) {
 					</div>
 					$mailtpl_vars
 					$get_sel_img
-					<div class='row'>
-						<label class='etiquette' >".$msg["empr_mailing_form_message_piece_jointe"]." (".ini_get('upload_max_filesize').")</label>
-					</div>
-					<div id='add_pieces'>
-						<input type='hidden' id='nb_piece' value='1'/>
-						<div class='row' id='piece_1'>
-							<input type='file' id='pieces_jointes_mailing_1' name='pieces_jointes_mailing[]' class='saisie-80em' size='60'/><input class='bouton' type='button' value='X' onclick='document.getElementById(\"pieces_jointes_mailing_1\").value=\"\"'/>
-							<input class='bouton' type='button' value='+' onClick=\"add_pieces_jointes_mailing();\"/>
-		  				</div>
-		  			</div>
-		  			<script type='text/javascript'>
-		  				function add_pieces_jointes_mailing(){
-		  					var nb_piece=document.getElementById('nb_piece').value;
-		  					nb_piece= (nb_piece*1) + 1;
-		  					
-							var template = document.getElementById('add_pieces');
-							
-							var divpiece=document.createElement('div');
-				       		divpiece.className='row';
-				       		divpiece.setAttribute('id','piece_'+nb_piece);
-				       		template.appendChild(divpiece);
-				       		document.getElementById('nb_piece').value=nb_piece;
-				       		
-				       		var inputfile=document.createElement('input');
-				       		inputfile.setAttribute('type','file');
-				       		inputfile.setAttribute('name','pieces_jointes_mailing[]');
-				       		inputfile.setAttribute('id','pieces_jointes_mailing_'+nb_piece);
-				       		inputfile.setAttribute('class','saisie-80em');
-				       		inputfile.setAttribute('size','60');
-				       		divpiece.appendChild(inputfile);
-				       		
-				       		var inputfile=document.createElement('input');
-				       		inputfile.setAttribute('type','button');
-				       		inputfile.setAttribute('value','X');
-				       		inputfile.setAttribute('onclick','del_pieces_jointes_mailing('+nb_piece+');');
-				       		inputfile.setAttribute('class','bouton');
-				       		divpiece.appendChild(inputfile);
-						}
-						
-						function del_pieces_jointes_mailing(nb_piece){
-							var parent = document.getElementById('add_pieces');
-							var child = document.getElementById('piece_'+nb_piece);
-							parent.removeChild(child);
-							
-							var nb_piece=document.getElementById('nb_piece').value;
-		  					nb_piece= (nb_piece*1) - 1;
-		  					document.getElementById('nb_piece').value=nb_piece;
-							
-						}
-					</script>
+					".mailtpl::get_attachments_form()."
 					<div class='row'>
 						<label for='associated_campaign' class='etiquette'>".$msg["associated_campaign"]."</label>
-						<input type='checkbox' name='associated_campaign' value=\"1\" />
+						<input type='checkbox' name='associated_campaign' value=\"1\" ".($deflt_associated_campaign ? "checked='checked'" : "")."/>
 					</div>
 					<div class='row'></div>
 					</div>
@@ -237,6 +201,7 @@ switch ($sub) {
 		if(!$error){
 			$mailing = new mailing_empr($idemprcaddie);
 			$mailing->associated_campaign  = (isset($associated_campaign) ? $associated_campaign : 0);
+			$mailing->associated_num_campaign  = (isset($associated_num_campaign) ? $associated_num_campaign : 0);
  			if ($total_envoyes) $mailing->total_envoyes = $total_envoyes;
  			if ($total) $mailing->total = $total;
 			$mailing->send($f_objet_mail, $f_message, 20,$pieces_jointes);
@@ -244,7 +209,7 @@ switch ($sub) {
 			$sql = "select id_empr, empr_mail, empr_nom, empr_prenom from empr, empr_caddie_content where (flag='' or flag is null) and empr_caddie_id=$idemprcaddie and object_id=id_empr";
 			$sql_result = pmb_mysql_query($sql) or die ("Couldn't select compte reste mailing !");
 			$n_envoi_restant=pmb_mysql_num_rows($sql_result);
-		}else{//Todo: gÃ©rer proprement les ereurs
+		}else{//Todo: gérer proprement les ereurs
 			$n_envoi_restant=0;
 		}
 		
@@ -258,6 +223,8 @@ switch ($sub) {
 			$parametres['idemprcaddie']=$idemprcaddie;
 			$parametres['files_post']=urlencode(serialize($files));
 			$parametres['count_files']=count($files);
+			$parametres['associated_campaign']=$mailing->associated_campaign;
+			$parametres['associated_num_campaign']=$mailing->associated_num_campaign;
 			$msg['empr_mailing_recap_comptes_encours'] = str_replace("!!total_envoyes!!", $mailing->total_envoyes, $msg['empr_mailing_recap_comptes_encours']) ;
 			$msg['empr_mailing_recap_comptes_encours'] = str_replace("!!total!!", $mailing->total, $msg['empr_mailing_recap_comptes_encours']) ;
 			$msg['empr_mailing_recap_comptes_encours'] = str_replace("!!n_envoi_restant!!", $n_envoi_restant, $msg['empr_mailing_recap_comptes_encours']) ;
@@ -266,7 +233,7 @@ switch ($sub) {
 							</div>";
 			print construit_formulaire_recharge (1000, "./mailing.php", "envoi_mailing", $parametres, $f_objet_mail, $message_info) ;
 		} else {
-			//On enlÃ¨ve les fichiers temps des piÃ¨ces jointes
+			//On enlève les fichiers temps des pièces jointes
 			if(count($files)){
 				foreach ( $files as $key => $val ) {
 					@unlink($val["location"]);
@@ -287,7 +254,10 @@ switch ($sub) {
 				<hr />
 				<div class='row'>
 					<a href='../../../circ.php?categ=caddie&sub=gestion&quoi=razpointage&moyen=raz&action=&idemprcaddie=$idemprcaddie&item=' target=_top>".$msg['empr_mailing_raz_pointage']."</a>
-					</div>
+				</div>
+				<div class='row'>
+					<a href='../../../circ.php?categ=caddie&action=del_cart&idemprcaddie=$idemprcaddie' target=_top>".$msg['empr_mailing_del_cart']."</a>
+				</div>
 				";
 			$sql = "select id_empr, empr_mail, empr_nom, empr_prenom from empr, empr_caddie_content where flag='2' and empr_caddie_id=$idemprcaddie and object_id=id_empr ";
 			$sql_result = pmb_mysql_query($sql) ;
@@ -303,6 +273,8 @@ switch ($sub) {
 						";
 				}
 			}
+			//Reset du pointage les mails non envoyés
+			$mailing->reset_flag_not_sended();
 		}
 		break;
 	

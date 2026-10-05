@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,7 +18,7 @@ session_start();
  *   (at your option) any later version.
  *
  ***************************************************************************/
-error_reporting(0);
+//error_reporting(0);
 include_once("./librairie_php/lib_licence.php"); 
 include_once("./librairie_php/db_triade_admin.php");
 if (@file_exists("../../../../common/config-all-site.php")) {
@@ -32,11 +32,15 @@ if (@file_exists("../../../../common/config-all-site.php")) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4-2.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="../librairie_js/info-bulle.js"></script>
-<title>Triade</title>
+<title>Triade — Configuration</title>
 </head>
 <body id="bodyfond" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <SCRIPT language="JavaScript" src="librairie_js/menudepart.js"></SCRIPT>
@@ -152,6 +156,10 @@ $accesnoteeleveoui="";
 $accesnoteelevenon="";
 $accesnoteparentoui="";
 $accesnoteparentnon="";
+$accesmoyenneeleveoui="";
+$accesmoyenneelevenon="";
+$accesmoyenneparentoui="";
+$accesmoyenneparentnon="";
 $accesmessenvoieleveoui="";
 $accesmessenvoielevenon="";
 $accesmessenvoiparentoui="";
@@ -445,6 +453,9 @@ $examenvatelreunionoui="";
 $affichageIAOui="";
 $affichageIANon="";
 
+$googleauthenOui="";
+$googleauthenNon="";
+
 $fichier="../common/config2.inc.php";
 if ( file_exists($fichier)) {
 	if ( file_exists("../common/config6.inc.php")) {
@@ -459,7 +470,7 @@ if ( file_exists($fichier)) {
 	}else {
 		$tailleupload2="checked";
 	}
-	if ( file_exists("../common/config5.inc.php")) {
+	if (file_exists("../common/config5.inc.php")) {
 		include_once("../common/config5.inc.php");
 		$charset=CHARSET;
 	}else{
@@ -485,6 +496,8 @@ if ( file_exists($fichier)) {
 	}else{
 		$addressedulien2="http://";
 	}
+
+
 	if (defined("URLNOMCONTACT3")){$nomdulien3=URLNOMCONTACT3;}
 	if ((defined("URLCONTACT3")) && (URLCONTACT3 != "")) {
 		$addressedulien3=URLCONTACT3;
@@ -497,437 +510,416 @@ if ( file_exists($fichier)) {
 	}else{
 		$addressedulien4="http://";
 	}
-	if (LAN == "non") {$lannon="checked='checked'";}
-	if (LAN == "oui") {$lanoui="checked='checked'";}
-	if (PROXY == "non") {$proxynon="checked='checked'";}
-	if (PROXY == "oui") {$proxyoui="checked='checked'";}
-	if (FORWARDMAIL == "oui") {$checkoui="checked='checked'";}
-	if (FORWARDMAIL == "non") {$checknon="checked='checked'";}
-	if (MESSDEFIL == "oui") {$checkmessoui="checked='checked'";}
-	if (MESSDEFIL == "non") {$checkmessnon="checked='checked'";}
-	if (PUBHAUT == "oui") {$checkpubhautoui="checked='checked'";}
-	if (PUBHAUT == "non") {$checkpubhautnon="checked='checked'";}
-	if (UPLOADIMG == "oui") {$uploadimgoui="checked='checked'";}
-	if (UPLOADIMG == "non") {$uploadimgnon="checked='checked'";}
-	if (GRPMAILPARENT == "oui") {$grpmailparentoui="checked='checked'";}
-	if (GRPMAILPARENT == "non") {$grpmailparentnon="checked='checked'";}
-	if (METEOVALIDE == "oui") {$meteooui="checked='checked'";}
-	if (METEOVALIDE == "non") {$meteonon="checked='checked'";}
-	if (DSTPROF == "oui") {$dstprofoui="checked='checked'";}
-	if (DSTPROF == "non") {$dstprofnon="checked='checked'";}
-	if (CALPROF == "oui") {$calprofoui="checked='checked'";}
-	if (CALPROF == "non") {$calprofnon="checked='checked'";}
-	if (NOTEUSA == "non") {$noteusanon="checked='checked'";}
-	if (NOTEUSA == "oui") {$noteusaoui="checked='checked'";}
-	if (TRACE == "non") {$tracenon="checked='checked'";}
-	if (TRACE == "oui") {$traceoui="checked='checked'";}
-    	if (RESERV == "oui") {$resvprofoui="checked='checked'";}
-	if (RESERV == "non") {$resvprofnon="checked='checked'";}
-	if (RETENUPROF == "oui") {$retenuprofoui="checked='checked'";}
-	if (RETENUPROF == "non") {$retenuprofnon="checked='checked'";}
-	if (ABSPROF == "oui") {$absprofoui="checked='checked'";}
-	if (ABSPROF == "non") {$absprofnon="checked='checked'";}
-	if (NOTEPROF == "1") { $noteprof1="checked='checked'";}
-	if (NOTEPROF == "2") { $noteprof2="checked='checked'";}
-	if (NOTEPROF == "3") { $noteprof3="checked='checked'";}
-	if (VALIDPWD == "oui") {$pwdoui="checked='checked'";}
-	if (VALIDPWD == "non") {$pwdnon="checked='checked'";}
-	if (AUDIO == "oui") {$audiooui="checked='checked'";}
-	if (AUDIO == "non") {$audionon="checked='checked'";}
-	if (FETE == "oui") {$feteoui="checked='checked'";}
-	if (FETE == "non") {$fetenon="checked='checked'";}
-	if (INFOMEDIC == "oui") { $infomedicoui="checked='checked'"; }
-	if (INFOMEDIC == "non") { $infomedicnon="checked='checked'"; }
-	if (INFOMEDIC2 == "oui") { $infomedic2oui="checked='checked'"; }
-	if (INFOMEDIC2 == "non") { $infomedic2non="checked='checked'"; }
-	if (ACCESSTOCKAGE == "oui") { $accesstockageoui="checked='checked'"; }
-	if (ACCESSTOCKAGE == "non") { $accesstockagenon="checked='checked'"; }
-	if (VERIFPASS == "oui") { $verifpassoui="checked='checked'"; }
-	if (VERIFPASS == "non") { $verifpassnon="checked='checked'"; }
-	if (SUPPPASSMAIL == "oui") { $supppassmailoui="checked='checked'"; }
-	if (SUPPPASSMAIL == "non") { $supppassmailnon="checked='checked'"; }
-	if (MAILEXTERNE == "non") { $mailexternenon="checked='checked'"; }
-	if (MAILEXTERNE == "oui") { $mailexterneoui="checked='checked'"; }
-	if (NOTEELEVEVISU == "non") { $infonoteelevenon="checked='checked'"; }
-	if (NOTEELEVEVISU == "oui") { $infonoteeleveoui="checked='checked'"; }
-	if (NOTEEXAMEN == "non") { $noteexamennon="checked='checked'"; }
-	if (NOTEEXAMEN == "oui") { $noteexamenoui="checked='checked'"; }
-	if (DSTVISUACCUEIL == "non") { $dstvisuaccueilnon="checked='checked'"; }
-	if (DSTVISUACCUEIL == "oui") { $dstvisuaccueiloui="checked='checked'"; }
-	if (ACCESSTOCKAGEELEVE == "oui") { $accesstockageeleveoui="checked='checked'"; }
-	if (ACCESSTOCKAGEELEVE == "non") { $accesstockageelevenon="checked='checked'"; }
-	if (ACCESSTOCKAGEPARENT == "oui") { $accesstockageparentoui="checked='checked'"; }
-	if (ACCESSTOCKAGEPARENT == "non") { $accesstockageparentnon="checked='checked'"; }
-	if (ACCESSTOCKAGEPROF == "oui") { $accesstockageprofoui="checked='checked'"; }
-	if (ACCESSTOCKAGEPROF == "non") { $accesstockageprofnon="checked='checked'"; }
-	if (ACCESSTOCKAGECPE == "oui") { $accesstockagecpeoui="checked='checked'"; }
-	if (ACCESSTOCKAGECPE == "non") { $accesstockagecpenon="checked='checked'"; }
-	if (ACCESFORUMPARENT == "non") { $accesforumparentnon="checked='checked'"; }
-	if (ACCESFORUMPARENT == "oui") { $accesforumparentoui="checked='checked'"; }
-	if (ACCESFORUMPROF == "non") { $accesforumprofnon="checked='checked'"; }
-	if (ACCESFORUMPROF == "oui") { $accesforumprofoui="checked='checked'"; }
-	if (ACCESFORUMELEVE == "non") { $accesforumelevenon="checked='checked'"; }
-	if (ACCESFORUMELEVE == "oui") { $accesforumeleveoui="checked='checked'"; }
-	if (PWDELEVE == "oui") { $pwdeleveoui="checked='checked'"; }
-	if (PWDELEVE == "non") { $pwdelevenon="checked='checked'"; }
-	if (PWDPROF == "oui") { $pwdprofoui="checked='checked'"; }
-	if (PWDPROF == "non") { $pwdprofnon="checked='checked'"; }
-	if (PWDPARENT == "oui") { $pwdparentoui="checked='checked'"; }
-	if (PWDPARENT == "non") { $pwdparentnon="checked='checked'"; }
-	if (ACCESMESSPARENT == "non") { $accesmessparentnon="checked='checked'"; }
-	if (ACCESMESSPARENT == "oui") { $accesmessparentoui="checked='checked'"; }
-	if (ACCESMESSELEVE == "non") { $accesmesselevenon="checked='checked'"; }
-	if (ACCESMESSELEVE == "oui") { $accesmesseleveoui="checked='checked'"; }
-	if (ACCESNOTEPARENT == "non") { $accesnoteparentnon="checked='checked'"; }
-	if (ACCESNOTEPARENT == "oui") { $accesnoteparentoui="checked='checked'"; }
-	if (ACCESNOTEELEVE == "non") { $accesnoteelevenon="checked='checked'"; }
-	if (ACCESNOTEELEVE == "oui") { $accesnoteeleveoui="checked='checked'"; }
-	if (MODNAMUR0 == "non") { $cmpsocialnon="checked='checked'"; }
-	if (MODNAMUR0 == "oui") { $cmpsocialoui="checked='checked'"; }
-	if (ANI == "non") { $aniversairenon="checked='checked'"; }
-	if (ANI == "oui") { $aniversaireoui="checked='checked'"; }
-	if (MAILMESS == "non") { $mailmessnon="checked='checked'"; }
-	if (MAILMESS == "oui") { $mailmessoui="checked='checked'"; }
-	if (SECURITE == "1") { $securite1="checked='checked'"; }
-	if (SECURITE == "2") { $securite2="checked='checked'"; }
-	if (SECURITE == "3") { $securite3="checked='checked'"; }
-	if (ACCESMESSENVOIPARENT == "non") { $accesmessenvoiparentnon="checked='checked'"; }
-	if (ACCESMESSENVOIPARENT == "oui") { $accesmessenvoiparentoui="checked='checked'"; }
-	if (ACCESMESSENVOIELEVE == "non") { $accesmessenvoielevenon="checked='checked'"; }
-	if (ACCESMESSENVOIELEVE == "oui") { $accesmessenvoieleveoui="checked='checked'"; }
-	if (CALSAMEDIMATIN == "non") { $calsamedimatinnon="checked='checked'"; }
-	if (CALSAMEDIMATIN == "oui") { $calsamedimatinoui="checked='checked'"; }
-	if (CALSAMEDIAP == "non") { $calsamediapnon="checked='checked'"; }
-	if (CALSAMEDIAP == "oui") { $calsamediapoui="checked='checked'"; }
-	if (CALMERCREDIMATIN == "non") { $calmercredimatinnon="checked='checked'"; }
-	if (CALMERCREDIMATIN == "oui") { $calmercredimatinoui="checked='checked'"; }
-	if (CALMERCREDIAP == "non") { $calmercrediapnon="checked='checked'"; }
-	if (CALMERCREDIAP == "oui") { $calmercrediapoui="checked='checked'"; }
-	if (TROMBIPARENT == "oui") { $trombinoParentoui="checked='checked'"; }
-	if (TROMBIPARENT == "non") { $trombinoParentnon="checked='checked'"; }
-	if (TROMBIELEVE == "oui") { $trombinoEleveoui="checked='checked'"; }
-	if (TROMBIELEVE == "non") { $trombinoElevenon="checked='checked'"; }
-	if (MESSDELEGUEPARENT == "oui") { $messagedelegueparentoui="checked='checked'"; }
-	if (MESSDELEGUEPARENT == "non") { $messagedelegueparentnon="checked='checked'"; }
-	if (MESSDELEGUEELEVE == "oui") { $messagedelegueeleveoui="checked='checked'"; }
-	if (MESSDELEGUEELEVE == "non") { $messagedelegueelevenon="checked='checked'"; }
-	if (HTTPS == "oui") { $httpsoui="checked='checked'"; }
-	if (HTTPS == "non") { $httpsnon="checked='checked'"; }
-	if (PROFPBULLETIN == "oui") { $profpbulletinoui="checked='checked'"; }
-	if (PROFPBULLETIN == "non") { $profpbulletinnon="checked='checked'"; }
-	if (PROFPBULLETINVERIF == "oui") { $profpbulletinverifoui="checked='checked'"; }
-	if (PROFPBULLETINVERIF == "non") { $profpbulletinverifnon="checked='checked'"; }
-	if (PROFPRELEVE == "oui") { $profpreleveoui="checked='checked'"; }
-	if (PROFPRELEVE == "non") { $profprelevenon="checked='checked'"; }
-	if (ACCESPROFABSRTD == "oui") { $accesabsrtdprofoui="checked='checked'"; }
-	if (ACCESPROFABSRTD == "non") { $accesabsrtdprofnon="checked='checked'"; }
-	if (ACCESPROFVISUABSRTD == "oui") { $absvisuprofoui="checked='checked'"; }
-	if (ACCESPROFVISUABSRTD == "non") { $absvisuprofnon="checked='checked'"; }
-	if (VISUTRIAUTO == "oui") { $visutriautooui="checked='checked'"; }
-	if (VISUTRIAUTO == "non") { $visutriautonon="checked='checked'"; }
-	if (EMAILCHANGEELEVE == "oui") { $emailchangeeleveoui="checked='checked'"; }
-	if (EMAILCHANGEELEVE == "non") { $emailchangeelevenon="checked='checked'"; }
-	if (AGENDADIRECT == "oui") { $agendadirectoui="checked='checked'"; }
-	if (AGENDADIRECT == "non") { $agendadirectnon="checked='checked'"; }
-	if (GROUPEGESTIONPROF == "oui") { $groupeclasseprofpoui="checked='checked'"; }
-	if (GROUPEGESTIONPROF == "non") { $groupeclasseprofpnon="checked='checked'"; }
-	if (ARCHBIT == "32") { $bit32="checked='checked'"; }
-	if (ARCHBIT == "64") { $bit64="checked='checked'"; }
-	if (AGENTWEB == "oui") { $agentweboui="checked='checked'"; }
-	if (AGENTWEB == "non") { $agentwebnon="checked='checked'"; }
-	if (ELEVEENVOIELEVE == "oui")    { $eleveenvoieleveoui="checked='checked'"; }
-	if (ELEVEENVOIELEVE == "non")    { $eleveenvoielevenon="checked='checked'"; }
-	if (ELEVEENVOIPROF == "oui")     { $eleveenvoiprofoui="checked='checked'"; }
-	if (ELEVEENVOIPROF == "non")     { $eleveenvoiprofnon="checked='checked'"; }
-	if (ELEVEENVOIPARENT == "oui")   { $eleveenvoiparentoui="checked='checked'"; }
-	if (ELEVEENVOIPARENT == "non")   { $eleveenvoiparentnon="checked='checked'"; }
-	if (ELEVEENVOITUTEUR == "oui")   { $eleveenvoituteuroui="checked='checked'"; }
-	if (ELEVEENVOITUTEUR == "non")   { $eleveenvoituteurnon="checked='checked'"; }
-	if (ELEVEENVOIDIREC == "oui")    { $eleveenvoidirecoui="checked='checked'"; }
-	if (ELEVEENVOIDIREC == "non")    { $eleveenvoidirecnon="checked='checked'"; }
-	if (ELEVEENVOISCOLAIRE == "non") { $eleveenvoiscolairenon="checked='checked'"; }
-	if (ELEVEENVOISCOLAIRE == "oui") { $eleveenvoiscolaireoui="checked='checked'"; }
-	if (ELEVEENVOIEXT == "non") 	 { $eleveenvoiextnon="checked='checked'"; }
-	if (ELEVEENVOIEXT == "oui") 	 { $eleveenvoiextoui="checked='checked'"; }
-	if (PROFENVOIPROF == "oui")   { $profenvoiprofoui="checked='checked'"; }
-	if (PROFENVOIPROF == "non")   { $profenvoiprofnon="checked='checked'"; }
-	if (PROFENVOITUTEUR == "oui") { $profenvoituteuroui="checked='checked'"; }
-	if (PROFENVOITUTEUR == "non") { $profenvoituteurnon="checked='checked'"; }
-	if (PROFENVOIGROUPE == "oui") { $profenvoigroupeoui="checked='checked'"; }
-	if (PROFENVOIGROUPE == "non") { $profenvoigroupenon="checked='checked'"; }
-	if (PROFENVOIPARENT == "oui") { $profenvoiparentoui="checked='checked'"; }
-	if (PROFENVOIPARENT == "non") { $profenvoiparentnon="checked='checked'"; }
-	if (PROFENVOIELEVE == "oui")  { $profenvoieleveoui="checked='checked'"; }
-	if (PROFENVOIELEVE == "non")  { $profenvoielevenon="checked='checked'"; }
-	if (PROFENVOIDIREC == "oui")  { $profenvoidirecoui="checked='checked'"; }
-	if (PROFENVOIDIREC == "non")  { $profenvoidirecnon="checked='checked'"; }
-	if (PROFENVOISCOLAIRE == "non") { $profenvoiscolairenon="checked='checked'"; }
-	if (PROFENVOISCOLAIRE == "oui") { $profenvoiscolaireoui="checked='checked'"; }
-	if (PROFENVOIEXT == "non") { $profenvoiextnon="checked='checked'"; }
-	if (PROFENVOIEXT == "oui") { $profenvoiextoui="checked='checked'"; }
-	if (PARENTENVOIPROF == "oui")   { $parentenvoiprofoui="checked='checked'"; }
-	if (PARENTENVOIPROF == "non")   { $parentenvoiprofnon="checked='checked'"; }
-	if (PARENTENVOITUTEUR == "oui") { $parentenvoituteuroui="checked='checked'"; }
-	if (PARENTENVOITUTEUR == "non") { $parentenvoituteurnon="checked='checked'"; }
-	if (PARENTENVOIGROUPE == "oui") { $parentenvoigroupeoui="checked='checked'"; }
-	if (PARENTENVOIGROUPE == "non") { $parentenvoigroupenon="checked='checked'"; }
-	if (PARENTENVOIPARENT == "oui") { $parentenvoiparentoui="checked='checked'"; }
-	if (PARENTENVOIPARENT == "non") { $parentenvoiparentnon="checked='checked'"; }
-	if (PARENTENVOIELEVE == "oui")  { $parentenvoieleveoui="checked='checked'"; }
-	if (PARENTENVOIELEVE == "non")  { $parentenvoielevenon="checked='checked'"; }
-	if (PARENTENVOIDIREC == "oui")  { $parentenvoidirecoui="checked='checked'"; }
-	if (PARENTENVOIDIREC == "non")  { $parentenvoidirecnon="checked='checked'"; }
-	if (PARENTENVOISCOLAIRE == "non") { $parentenvoiscolairenon="checked='checked'"; }
-	if (PARENTENVOISCOLAIRE == "oui") { $parentenvoiscolaireoui="checked='checked'"; }
-	if (PARENTENVOIEXT == "non") { $parentenvoiextnon="checked='checked'"; }
-	if (PARENTENVOIEXT == "oui") { $parentenvoiextoui="checked='checked'"; }
-	if (EDTVISUPROF == "oui") { $edtvisuoui="checked='checked'"; }
-	if (EDTVISUPROF == "non") { $edtvisunon="checked='checked'"; }
-	if (EXAMENBLANC == "non") { $examenblancnon="checked='checked'"; }
-	if (EXAMENBLANC == "oui") { $examenblancoui="checked='checked'"; }
-	if (EXAMENDS == "non") 	  { $examendsnon="checked='checked'"; }
-	if (EXAMENDS == "oui")    { $examendsoui="checked='checked'"; }
-	if (EXAMENNAMUR == "non") { $examennamurnon="checked='checked'"; }
-	if (EXAMENNAMUR == "oui") { $examennamuroui="checked='checked'"; }
-	if (EXAMENKINSHASA == "non") { $examenkinshasanon="checked='checked'"; }
-        if (EXAMENKINSHASA == "oui") { $examenkinshasaoui="checked='checked'"; }
-	if (EXAMENISMAP == "non") { $examenismapnon="checked='checked'"; }
-	if (EXAMENISMAP == "oui") { $examenismapoui="checked='checked'"; }
-	if (EXAMEN == "non")      { $examennon="checked='checked'"; }
-	if (EXAMEN == "oui")      { $examenoui="checked='checked'"; }
-	if (EXAMENCIEFORMATION == "non") { $examencieformationnon="checked='checked'"; }
-	if (EXAMENCIEFORMATION == "oui") { $examencieformationoui="checked='checked'"; }
-	if (EXAMENEEPP == "non") { $exameneeppnon="checked='checked'"; }
-	if (EXAMENEEPP == "oui") { $exameneeppoui="checked='checked'"; }
-	if (EXAMENBREVETCOLLEGE == "non") { $examenbrevetcollegenon="checked='checked'"; }
-	if (EXAMENBREVETCOLLEGE == "oui") { $examenbrevetcollegeoui="checked='checked'"; }
-	if (VERIFSUJETNOTE == "oui") { $verifsujetnoteoui="checked='checked'"; }
-	if (VERIFSUJETNOTE == "non") { $verifsujetnotenon="checked='checked'"; }
-	if (NOMANI == "non") { $nomaniversairenon="checked='checked'"; }
-	if (NOMANI == "oui") { $nomaniversaireoui="checked='checked'"; }
-	if (PROFENVOIGRPELE == "oui") { $profenvoigrpelevoui="checked='checked'"; }
-	if (PROFENVOIGRPELE == "non") { $profenvoigrpelevnon="checked='checked'";  }
-	if (PROFENVOIDELEGUE == "oui") { $profenvoidelegueoui="checked='checked'";  }
-	if (PROFENVOIDELEGUE == "non") { $profenvoideleguenon="checked='checked'"; }
-	if (PARENTENVOIGRPELE == "oui") { $parentenvoigrpelevoui="checked='checked'"; }
-	if (PARENTENVOIGRPELE == "non") { $parentenvoigrpelevnon="checked='checked'";  }
-	if (PARENTENVOIDELEGUE == "oui") { $parentenvoidelegueoui="checked='checked'";  }
-	if (PARENTENVOIDELEGUE == "non") { $parentenvoideleguenon="checked='checked'"; }
-	if (ELEVEENVOIGRPELE == "oui") { $eleveenvoigrpelevoui="checked='checked'"; }
-	if (ELEVEENVOIGRPELE == "non") { $eleveenvoigrpelevnon="checked='checked'";  }
-	if (ELEVEENVOIDELEGUE == "oui") { $eleveenvoidelegueoui="checked='checked'";  }
-	if (ELEVEENVOIDELEGUE == "non") { $eleveenvoideleguenon="checked='checked'"; }
-	if (COMBULTINTYPE == "oui") { $combulltypeoui="checked='checked'"; }
-	if (COMBULTINTYPE == "non") { $combulltypenon="checked='checked'"; }
-	if (SEMAINEDIMANCHE == "oui") { $semainedimancheoui="checked='checked'"; }
-	if (SEMAINEDIMANCHE == "non") { $semainedimanchenon="checked='checked'"; }
+	if (defined('LAN') && LAN == "non") {$lannon="checked='checked'";}
+	if (defined('LAN') && LAN == "oui") {$lanoui="checked='checked'";}
+	if (defined('PROXY') && PROXY == "non") {$proxynon="checked='checked'";}
+	if (defined('PROXY') && PROXY == "oui") {$proxyoui="checked='checked'";}
+	if (defined('FORWARDMAIL') && FORWARDMAIL == "oui") {$checkoui="checked='checked'";}
+	if (defined('FORWARDMAIL') && FORWARDMAIL == "non") {$checknon="checked='checked'";}
+	if (defined('MESSDEFIL') && MESSDEFIL == "oui") {$checkmessoui="checked='checked'";}
+	if (defined('MESSDEFIL') && MESSDEFIL == "non") {$checkmessnon="checked='checked'";}
+	if (defined('PUBHAUT') && PUBHAUT == "oui") {$checkpubhautoui="checked='checked'";}
+	if (defined('PUBHAUT') && PUBHAUT == "non") {$checkpubhautnon="checked='checked'";}
+	if (defined('UPLOADIMG') && UPLOADIMG == "oui") {$uploadimgoui="checked='checked'";}
+	if (defined('UPLOADIMG') && UPLOADIMG == "non") {$uploadimgnon="checked='checked'";}
+	if (defined('GRPMAILPARENT') && GRPMAILPARENT == "oui") {$grpmailparentoui="checked='checked'";}
+	if (defined('GRPMAILPARENT') && GRPMAILPARENT == "non") {$grpmailparentnon="checked='checked'";}
+	if (defined('METEOVALIDE') && METEOVALIDE == "oui") {$meteooui="checked='checked'";}
+	if (defined('METEOVALIDE') && METEOVALIDE == "non") {$meteonon="checked='checked'";}
+	if (defined('DSTPROF') && DSTPROF == "oui") {$dstprofoui="checked='checked'";}
+	if (defined('DSTPROF') && DSTPROF == "non") {$dstprofnon="checked='checked'";}
+	if (defined('CALPROF') && CALPROF == "oui") {$calprofoui="checked='checked'";}
+	if (defined('CALPROF') && CALPROF == "non") {$calprofnon="checked='checked'";}
+	if (defined('NOTEUSA') && NOTEUSA == "non") {$noteusanon="checked='checked'";}
+	if (defined('NOTEUSA') && NOTEUSA == "oui") {$noteusaoui="checked='checked'";}
+	if (defined('TRACE') && TRACE == "non") {$tracenon="checked='checked'";}
+	if (defined('TRACE') && TRACE == "oui") {$traceoui="checked='checked'";}
+    	if (defined('RESERV') && RESERV == "oui") {$resvprofoui="checked='checked'";}
+	if (defined('RESERV') && RESERV == "non") {$resvprofnon="checked='checked'";}
+	if (defined('RETENUPROF') && RETENUPROF == "oui") {$retenuprofoui="checked='checked'";}
+	if (defined('RETENUPROF') && RETENUPROF == "non") {$retenuprofnon="checked='checked'";}
+	if (defined('ABSPROF') && ABSPROF == "oui") {$absprofoui="checked='checked'";}
+	if (defined('ABSPROF') && ABSPROF == "non") {$absprofnon="checked='checked'";}
+	if (defined('NOTEPROF') && NOTEPROF == "1") { $noteprof1="checked='checked'";}
+	if (defined('NOTEPROF') && NOTEPROF == "2") { $noteprof2="checked='checked'";}
+	if (defined('NOTEPROF') && NOTEPROF == "3") { $noteprof3="checked='checked'";}
+	if (defined('VALIDPWD') && VALIDPWD == "oui") {$pwdoui="checked='checked'";}
+	if (defined('VALIDPWD') && VALIDPWD == "non") {$pwdnon="checked='checked'";}
+	if (defined('AUDIO') && AUDIO == "oui") {$audiooui="checked='checked'";}
+	if (defined('AUDIO') && AUDIO == "non") {$audionon="checked='checked'";}
+	if (defined('FETE') && FETE == "oui") {$feteoui="checked='checked'";}
+	if (defined('FETE') && FETE == "non") {$fetenon="checked='checked'";}
+	if (defined('INFOMEDIC') && INFOMEDIC == "oui") { $infomedicoui="checked='checked'"; }
+	if (defined('INFOMEDIC') && INFOMEDIC == "non") { $infomedicnon="checked='checked'"; }
+	if (defined('INFOMEDIC2') && INFOMEDIC2 == "oui") { $infomedic2oui="checked='checked'"; }
+	if (defined('INFOMEDIC2') && INFOMEDIC2 == "non") { $infomedic2non="checked='checked'"; }
+	if (defined('ACCESSTOCKAGE') && ACCESSTOCKAGE == "oui") { $accesstockageoui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGE') && ACCESSTOCKAGE == "non") { $accesstockagenon="checked='checked'"; }
+	if (defined('VERIFPASS') && VERIFPASS == "oui") { $verifpassoui="checked='checked'"; }
+	if (defined('VERIFPASS') && VERIFPASS == "non") { $verifpassnon="checked='checked'"; }
+	if (defined('SUPPPASSMAIL') && SUPPPASSMAIL == "oui") { $supppassmailoui="checked='checked'"; }
+	if (defined('SUPPPASSMAIL') && SUPPPASSMAIL == "non") { $supppassmailnon="checked='checked'"; }
+	if (defined('MAILEXTERNE') && MAILEXTERNE == "non") { $mailexternenon="checked='checked'"; }
+	if (defined('MAILEXTERNE') && MAILEXTERNE == "oui") { $mailexterneoui="checked='checked'"; }
+	if (defined('NOTEELEVEVISU') && NOTEELEVEVISU == "non") { $infonoteelevenon="checked='checked'"; }
+	if (defined('NOTEELEVEVISU') && NOTEELEVEVISU == "oui") { $infonoteeleveoui="checked='checked'"; }
+	if (defined('NOTEEXAMEN') && NOTEEXAMEN == "non") { $noteexamennon="checked='checked'"; }
+	if (defined('NOTEEXAMEN') && NOTEEXAMEN == "oui") { $noteexamenoui="checked='checked'"; }
+	if (defined('DSTVISUACCUEIL') && DSTVISUACCUEIL == "non") { $dstvisuaccueilnon="checked='checked'"; }
+	if (defined('DSTVISUACCUEIL') && DSTVISUACCUEIL == "oui") { $dstvisuaccueiloui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEELEVE') && ACCESSTOCKAGEELEVE == "oui") { $accesstockageeleveoui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEELEVE') && ACCESSTOCKAGEELEVE == "non") { $accesstockageelevenon="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEPARENT') && ACCESSTOCKAGEPARENT == "oui") { $accesstockageparentoui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEPARENT') && ACCESSTOCKAGEPARENT == "non") { $accesstockageparentnon="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEPROF') && ACCESSTOCKAGEPROF == "oui") { $accesstockageprofoui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGEPROF') && ACCESSTOCKAGEPROF == "non") { $accesstockageprofnon="checked='checked'"; }
+	if (defined('ACCESSTOCKAGECPE') && ACCESSTOCKAGECPE == "oui") { $accesstockagecpeoui="checked='checked'"; }
+	if (defined('ACCESSTOCKAGECPE') && ACCESSTOCKAGECPE == "non") { $accesstockagecpenon="checked='checked'"; }
+	if (defined('ACCESFORUMPARENT') && ACCESFORUMPARENT == "non") { $accesforumparentnon="checked='checked'"; }
+	if (defined('ACCESFORUMPARENT') && ACCESFORUMPARENT == "oui") { $accesforumparentoui="checked='checked'"; }
+	if (defined('ACCESFORUMPROF') && ACCESFORUMPROF == "non") { $accesforumprofnon="checked='checked'"; }
+	if (defined('ACCESFORUMPROF') && ACCESFORUMPROF == "oui") { $accesforumprofoui="checked='checked'"; }
+	if (defined('ACCESFORUMELEVE') && ACCESFORUMELEVE == "non") { $accesforumelevenon="checked='checked'"; }
+	if (defined('ACCESFORUMELEVE') && ACCESFORUMELEVE == "oui") { $accesforumeleveoui="checked='checked'"; }
+	if (defined('PWDELEVE') && PWDELEVE == "oui") { $pwdeleveoui="checked='checked'"; }
+	if (defined('PWDELEVE') && PWDELEVE == "non") { $pwdelevenon="checked='checked'"; }
+	if (defined('PWDPROF') && PWDPROF == "oui") { $pwdprofoui="checked='checked'"; }
+	if (defined('PWDPROF') && PWDPROF == "non") { $pwdprofnon="checked='checked'"; }
+	if (defined('PWDPARENT') && PWDPARENT == "oui") { $pwdparentoui="checked='checked'"; }
+	if (defined('PWDPARENT') && PWDPARENT == "non") { $pwdparentnon="checked='checked'"; }
+	if (defined('ACCESMESSPARENT') && ACCESMESSPARENT == "non") { $accesmessparentnon="checked='checked'"; }
+	if (defined('ACCESMESSPARENT') && ACCESMESSPARENT == "oui") { $accesmessparentoui="checked='checked'"; }
+	if (defined('ACCESMESSELEVE') && ACCESMESSELEVE == "non") { $accesmesselevenon="checked='checked'"; }
+	if (defined('ACCESMESSELEVE') && ACCESMESSELEVE == "oui") { $accesmesseleveoui="checked='checked'"; }
+	if (defined('ACCESNOTEPARENT') && ACCESNOTEPARENT == "non") { $accesnoteparentnon="checked='checked'"; }
+	if (defined('ACCESNOTEPARENT') && ACCESNOTEPARENT == "oui") { $accesnoteparentoui="checked='checked'"; }
+	if (defined('ACCESNOTEELEVE') && ACCESNOTEELEVE == "non") { $accesnoteelevenon="checked='checked'"; }
+	if (defined('ACCESNOTEELEVE') && ACCESNOTEELEVE == "oui") { $accesnoteeleveoui="checked='checked'"; }
+	if (defined('ACCESMOYENNEPARENT') && ACCESMOYENNEPARENT == "non") { $accesmoyenneparentnon="checked='checked'"; }
+	if (defined('ACCESMOYENNEPARENT') && ACCESMOYENNEPARENT == "oui") { $accesmoyenneparentoui="checked='checked'"; }
+	if (defined('ACCESMOYENNEELEVE') && ACCESMOYENNEELEVE == "non") { $accesmoyenneelevenon="checked='checked'"; }
+	if (defined('ACCESMOYENNEELEVE') && ACCESMOYENNEELEVE == "oui") { $accesmoyenneeleveoui="checked='checked'"; }
+	if (defined('MODNAMUR0') && MODNAMUR0 == "non") { $cmpsocialnon="checked='checked'"; }
+	if (defined('MODNAMUR0') && MODNAMUR0 == "oui") { $cmpsocialoui="checked='checked'"; }
+	if (defined('ANI') && ANI == "non") { $aniversairenon="checked='checked'"; }
+	if (defined('ANI') && ANI == "oui") { $aniversaireoui="checked='checked'"; }
+	if (defined('MAILMESS') && MAILMESS == "non") { $mailmessnon="checked='checked'"; }
+	if (defined('MAILMESS') && MAILMESS == "oui") { $mailmessoui="checked='checked'"; }
+	if (defined('SECURITE') && SECURITE == "1") { $securite1="checked='checked'"; }
+	if (defined('SECURITE') && SECURITE == "2") { $securite2="checked='checked'"; }
+	if (defined('SECURITE') && SECURITE == "3") { $securite3="checked='checked'"; }
+	if (defined('ACCESMESSENVOIPARENT') && ACCESMESSENVOIPARENT == "non") { $accesmessenvoiparentnon="checked='checked'"; }
+	if (defined('ACCESMESSENVOIPARENT') && ACCESMESSENVOIPARENT == "oui") { $accesmessenvoiparentoui="checked='checked'"; }
+	if (defined('ACCESMESSENVOIELEVE') && ACCESMESSENVOIELEVE == "non") { $accesmessenvoielevenon="checked='checked'"; }
+	if (defined('ACCESMESSENVOIELEVE') && ACCESMESSENVOIELEVE == "oui") { $accesmessenvoieleveoui="checked='checked'"; }
+	if (defined('CALSAMEDIMATIN') && CALSAMEDIMATIN == "non") { $calsamedimatinnon="checked='checked'"; }
+	if (defined('CALSAMEDIMATIN') && CALSAMEDIMATIN == "oui") { $calsamedimatinoui="checked='checked'"; }
+	if (defined('CALSAMEDIAP') && CALSAMEDIAP == "non") { $calsamediapnon="checked='checked'"; }
+	if (defined('CALSAMEDIAP') && CALSAMEDIAP == "oui") { $calsamediapoui="checked='checked'"; }
+	if (defined('CALMERCREDIMATIN') && CALMERCREDIMATIN == "non") { $calmercredimatinnon="checked='checked'"; }
+	if (defined('CALMERCREDIMATIN') && CALMERCREDIMATIN == "oui") { $calmercredimatinoui="checked='checked'"; }
+	if (defined('CALMERCREDIAP') && CALMERCREDIAP == "non") { $calmercrediapnon="checked='checked'"; }
+	if (defined('CALMERCREDIAP') && CALMERCREDIAP == "oui") { $calmercrediapoui="checked='checked'"; }
+	if (defined('TROMBIPARENT') && TROMBIPARENT == "oui") { $trombinoParentoui="checked='checked'"; }
+	if (defined('TROMBIPARENT') && TROMBIPARENT == "non") { $trombinoParentnon="checked='checked'"; }
+	if (defined('TROMBIELEVE') && TROMBIELEVE == "oui") { $trombinoEleveoui="checked='checked'"; }
+	if (defined('TROMBIELEVE') && TROMBIELEVE == "non") { $trombinoElevenon="checked='checked'"; }
+	if (defined('MESSDELEGUEPARENT') && MESSDELEGUEPARENT == "oui") { $messagedelegueparentoui="checked='checked'"; }
+	if (defined('MESSDELEGUEPARENT') && MESSDELEGUEPARENT == "non") { $messagedelegueparentnon="checked='checked'"; }
+	if (defined('MESSDELEGUEELEVE') && MESSDELEGUEELEVE == "oui") { $messagedelegueeleveoui="checked='checked'"; }
+	if (defined('MESSDELEGUEELEVE') && MESSDELEGUEELEVE == "non") { $messagedelegueelevenon="checked='checked'"; }
+	if (defined('HTTPS') && HTTPS == "oui") { $httpsoui="checked='checked'"; }
+	if (defined('HTTPS') && HTTPS == "non") { $httpsnon="checked='checked'"; }
+	if (defined('PROFPBULLETIN') && PROFPBULLETIN == "oui") { $profpbulletinoui="checked='checked'"; }
+	if (defined('PROFPBULLETIN') && PROFPBULLETIN == "non") { $profpbulletinnon="checked='checked'"; }
+	if (defined('PROFPBULLETINVERIF') && PROFPBULLETINVERIF == "oui") { $profpbulletinverifoui="checked='checked'"; }
+	if (defined('PROFPBULLETINVERIF') && PROFPBULLETINVERIF == "non") { $profpbulletinverifnon="checked='checked'"; }
+	if (defined('PROFPRELEVE') && PROFPRELEVE == "oui") { $profpreleveoui="checked='checked'"; }
+	if (defined('PROFPRELEVE') && PROFPRELEVE == "non") { $profprelevenon="checked='checked'"; }
+	if (defined('ACCESPROFABSRTD') && ACCESPROFABSRTD == "oui") { $accesabsrtdprofoui="checked='checked'"; }
+	if (defined('ACCESPROFABSRTD') && ACCESPROFABSRTD == "non") { $accesabsrtdprofnon="checked='checked'"; }
+	if (defined('ACCESPROFVISUABSRTD') && ACCESPROFVISUABSRTD == "oui") { $absvisuprofoui="checked='checked'"; }
+	if (defined('ACCESPROFVISUABSRTD') && ACCESPROFVISUABSRTD == "non") { $absvisuprofnon="checked='checked'"; }
+	if (defined('VISUTRIAUTO') && VISUTRIAUTO == "oui") { $visutriautooui="checked='checked'"; }
+	if (defined('VISUTRIAUTO') && VISUTRIAUTO == "non") { $visutriautonon="checked='checked'"; }
+	if (defined('EMAILCHANGEELEVE') && EMAILCHANGEELEVE == "oui") { $emailchangeeleveoui="checked='checked'"; }
+	if (defined('EMAILCHANGEELEVE') && EMAILCHANGEELEVE == "non") { $emailchangeelevenon="checked='checked'"; }
+	if (defined('AGENDADIRECT') && AGENDADIRECT == "oui") { $agendadirectoui="checked='checked'"; }
+	if (defined('AGENDADIRECT') && AGENDADIRECT == "non") { $agendadirectnon="checked='checked'"; }
+	if (defined('GROUPEGESTIONPROF') && GROUPEGESTIONPROF == "oui") { $groupeclasseprofpoui="checked='checked'"; }
+	if (defined('GROUPEGESTIONPROF') && GROUPEGESTIONPROF == "non") { $groupeclasseprofpnon="checked='checked'"; }
+	if (defined('ARCHBIT') && ARCHBIT == "32") { $bit32="checked='checked'"; }
+	if (defined('ARCHBIT') && ARCHBIT == "64") { $bit64="checked='checked'"; }
+	if (defined('AGENTWEB') && AGENTWEB == "oui") { $agentweboui="checked='checked'"; }
+	if (defined('AGENTWEB') && AGENTWEB == "non") { $agentwebnon="checked='checked'"; }
+	if (defined('ELEVEENVOIELEVE') && ELEVEENVOIELEVE == "oui")    { $eleveenvoieleveoui="checked='checked'"; }
+	if (defined('ELEVEENVOIELEVE') && ELEVEENVOIELEVE == "non")    { $eleveenvoielevenon="checked='checked'"; }
+	if (defined('ELEVEENVOIPROF') && ELEVEENVOIPROF == "oui")     { $eleveenvoiprofoui="checked='checked'"; }
+	if (defined('ELEVEENVOIPROF') && ELEVEENVOIPROF == "non")     { $eleveenvoiprofnon="checked='checked'"; }
+	if (defined('ELEVEENVOIPARENT') && ELEVEENVOIPARENT == "oui")   { $eleveenvoiparentoui="checked='checked'"; }
+	if (defined('ELEVEENVOIPARENT') && ELEVEENVOIPARENT == "non")   { $eleveenvoiparentnon="checked='checked'"; }
+	if (defined('ELEVEENVOITUTEUR') && ELEVEENVOITUTEUR == "oui")   { $eleveenvoituteuroui="checked='checked'"; }
+	if (defined('ELEVEENVOITUTEUR') && ELEVEENVOITUTEUR == "non")   { $eleveenvoituteurnon="checked='checked'"; }
+	if (defined('ELEVEENVOIDIREC') && ELEVEENVOIDIREC == "oui")    { $eleveenvoidirecoui="checked='checked'"; }
+	if (defined('ELEVEENVOIDIREC') && ELEVEENVOIDIREC == "non")    { $eleveenvoidirecnon="checked='checked'"; }
+	if (defined('ELEVEENVOISCOLAIRE') && ELEVEENVOISCOLAIRE == "non") { $eleveenvoiscolairenon="checked='checked'"; }
+	if (defined('ELEVEENVOISCOLAIRE') && ELEVEENVOISCOLAIRE == "oui") { $eleveenvoiscolaireoui="checked='checked'"; }
+	if (defined('ELEVEENVOIEXT') && ELEVEENVOIEXT == "non") 	 { $eleveenvoiextnon="checked='checked'"; }
+	if (defined('ELEVEENVOIEXT') && ELEVEENVOIEXT == "oui") 	 { $eleveenvoiextoui="checked='checked'"; }
+	if (defined('PROFENVOIPROF') && PROFENVOIPROF == "oui")   { $profenvoiprofoui="checked='checked'"; }
+	if (defined('PROFENVOIPROF') && PROFENVOIPROF == "non")   { $profenvoiprofnon="checked='checked'"; }
+	if (defined('PROFENVOITUTEUR') && PROFENVOITUTEUR == "oui") { $profenvoituteuroui="checked='checked'"; }
+	if (defined('PROFENVOITUTEUR') && PROFENVOITUTEUR == "non") { $profenvoituteurnon="checked='checked'"; }
+	if (defined('PROFENVOIGROUPE') && PROFENVOIGROUPE == "oui") { $profenvoigroupeoui="checked='checked'"; }
+	if (defined('PROFENVOIGROUPE') && PROFENVOIGROUPE == "non") { $profenvoigroupenon="checked='checked'"; }
+	if (defined('PROFENVOIPARENT') && PROFENVOIPARENT == "oui") { $profenvoiparentoui="checked='checked'"; }
+	if (defined('PROFENVOIPARENT') && PROFENVOIPARENT == "non") { $profenvoiparentnon="checked='checked'"; }
+	if (defined('PROFENVOIELEVE') && PROFENVOIELEVE == "oui")  { $profenvoieleveoui="checked='checked'"; }
+	if (defined('PROFENVOIELEVE') && PROFENVOIELEVE == "non")  { $profenvoielevenon="checked='checked'"; }
+	if (defined('PROFENVOIDIREC') && PROFENVOIDIREC == "oui")  { $profenvoidirecoui="checked='checked'"; }
+	if (defined('PROFENVOIDIREC') && PROFENVOIDIREC == "non")  { $profenvoidirecnon="checked='checked'"; }
+	if (defined('PROFENVOISCOLAIRE') && PROFENVOISCOLAIRE == "non") { $profenvoiscolairenon="checked='checked'"; }
+	if (defined('PROFENVOISCOLAIRE') && PROFENVOISCOLAIRE == "oui") { $profenvoiscolaireoui="checked='checked'"; }
+	if (defined('PROFENVOIEXT') && PROFENVOIEXT == "non") { $profenvoiextnon="checked='checked'"; }
+	if (defined('PROFENVOIEXT') && PROFENVOIEXT == "oui") { $profenvoiextoui="checked='checked'"; }
+	if (defined('PARENTENVOIPROF') && PARENTENVOIPROF == "oui")   { $parentenvoiprofoui="checked='checked'"; }
+	if (defined('PARENTENVOIPROF') && PARENTENVOIPROF == "non")   { $parentenvoiprofnon="checked='checked'"; }
+	if (defined('PARENTENVOITUTEUR') && PARENTENVOITUTEUR == "oui") { $parentenvoituteuroui="checked='checked'"; }
+	if (defined('PARENTENVOITUTEUR') && PARENTENVOITUTEUR == "non") { $parentenvoituteurnon="checked='checked'"; }
+	if (defined('PARENTENVOIGROUPE') && PARENTENVOIGROUPE == "oui") { $parentenvoigroupeoui="checked='checked'"; }
+	if (defined('PARENTENVOIGROUPE') && PARENTENVOIGROUPE == "non") { $parentenvoigroupenon="checked='checked'"; }
+	if (defined('PARENTENVOIPARENT') && PARENTENVOIPARENT == "oui") { $parentenvoiparentoui="checked='checked'"; }
+	if (defined('PARENTENVOIPARENT') && PARENTENVOIPARENT == "non") { $parentenvoiparentnon="checked='checked'"; }
+	if (defined('PARENTENVOIELEVE') && PARENTENVOIELEVE == "oui")  { $parentenvoieleveoui="checked='checked'"; }
+	if (defined('PARENTENVOIELEVE') && PARENTENVOIELEVE == "non")  { $parentenvoielevenon="checked='checked'"; }
+	if (defined('PARENTENVOIDIREC') && PARENTENVOIDIREC == "oui")  { $parentenvoidirecoui="checked='checked'"; }
+	if (defined('PARENTENVOIDIREC') && PARENTENVOIDIREC == "non")  { $parentenvoidirecnon="checked='checked'"; }
+	if (defined('PARENTENVOISCOLAIRE') && PARENTENVOISCOLAIRE == "non") { $parentenvoiscolairenon="checked='checked'"; }
+	if (defined('PARENTENVOISCOLAIRE') && PARENTENVOISCOLAIRE == "oui") { $parentenvoiscolaireoui="checked='checked'"; }
+	if (defined('PARENTENVOIEXT') && PARENTENVOIEXT == "non") { $parentenvoiextnon="checked='checked'"; }
+	if (defined('PARENTENVOIEXT') && PARENTENVOIEXT == "oui") { $parentenvoiextoui="checked='checked'"; }
+	if (defined('EDTVISUPROF') && EDTVISUPROF == "oui") { $edtvisuoui="checked='checked'"; }
+	if (defined('EDTVISUPROF') && EDTVISUPROF == "non") { $edtvisunon="checked='checked'"; }
+	if (defined('EXAMENBLANC') && EXAMENBLANC == "non") { $examenblancnon="checked='checked'"; }
+	if (defined('EXAMENBLANC') && EXAMENBLANC == "oui") { $examenblancoui="checked='checked'"; }
+	if (defined('EXAMENDS') && EXAMENDS == "non") 	  { $examendsnon="checked='checked'"; }
+	if (defined('EXAMENDS') && EXAMENDS == "oui")    { $examendsoui="checked='checked'"; }
+	if (defined('EXAMENNAMUR') && EXAMENNAMUR == "non") { $examennamurnon="checked='checked'"; }
+	if (defined('EXAMENNAMUR') && EXAMENNAMUR == "oui") { $examennamuroui="checked='checked'"; }
+	if (defined('EXAMENKINSHASA') && EXAMENKINSHASA == "non") { $examenkinshasanon="checked='checked'"; }
+        if (defined('EXAMENKINSHASA') && EXAMENKINSHASA == "oui") { $examenkinshasaoui="checked='checked'"; }
+	if (defined('EXAMENISMAP') && EXAMENISMAP == "non") { $examenismapnon="checked='checked'"; }
+	if (defined('EXAMENISMAP') && EXAMENISMAP == "oui") { $examenismapoui="checked='checked'"; }
+	if (defined('EXAMEN') && EXAMEN == "non")      { $examennon="checked='checked'"; }
+	if (defined('EXAMEN') && EXAMEN == "oui")      { $examenoui="checked='checked'"; }
+	if (defined('EXAMENCIEFORMATION') && EXAMENCIEFORMATION == "non") { $examencieformationnon="checked='checked'"; }
+	if (defined('EXAMENCIEFORMATION') && EXAMENCIEFORMATION == "oui") { $examencieformationoui="checked='checked'"; }
+	if (defined('EXAMENEEPP') && EXAMENEEPP == "non") { $exameneeppnon="checked='checked'"; }
+	if (defined('EXAMENEEPP') && EXAMENEEPP == "oui") { $exameneeppoui="checked='checked'"; }
+	if (defined('EXAMENBREVETCOLLEGE') && EXAMENBREVETCOLLEGE == "non") { $examenbrevetcollegenon="checked='checked'"; }
+	if (defined('EXAMENBREVETCOLLEGE') && EXAMENBREVETCOLLEGE == "oui") { $examenbrevetcollegeoui="checked='checked'"; }
+	if (defined('VERIFSUJETNOTE') && VERIFSUJETNOTE == "oui") { $verifsujetnoteoui="checked='checked'"; }
+	if (defined('VERIFSUJETNOTE') && VERIFSUJETNOTE == "non") { $verifsujetnotenon="checked='checked'"; }
+	if (defined('NOMANI') && NOMANI == "non") { $nomaniversairenon="checked='checked'"; }
+	if (defined('NOMANI') && NOMANI == "oui") { $nomaniversaireoui="checked='checked'"; }
+	if (defined('PROFENVOIGRPELE') && PROFENVOIGRPELE == "oui") { $profenvoigrpelevoui="checked='checked'"; }
+	if (defined('PROFENVOIGRPELE') && PROFENVOIGRPELE == "non") { $profenvoigrpelevnon="checked='checked'";  }
+	if (defined('PROFENVOIDELEGUE') && PROFENVOIDELEGUE == "oui") { $profenvoidelegueoui="checked='checked'";  }
+	if (defined('PROFENVOIDELEGUE') && PROFENVOIDELEGUE == "non") { $profenvoideleguenon="checked='checked'"; }
+	if (defined('PARENTENVOIGRPELE') && PARENTENVOIGRPELE == "oui") { $parentenvoigrpelevoui="checked='checked'"; }
+	if (defined('PARENTENVOIGRPELE') && PARENTENVOIGRPELE == "non") { $parentenvoigrpelevnon="checked='checked'";  }
+	if (defined('PARENTENVOIDELEGUE') && PARENTENVOIDELEGUE == "oui") { $parentenvoidelegueoui="checked='checked'";  }
+	if (defined('PARENTENVOIDELEGUE') && PARENTENVOIDELEGUE == "non") { $parentenvoideleguenon="checked='checked'"; }
+	if (defined('ELEVEENVOIGRPELE') && ELEVEENVOIGRPELE == "oui") { $eleveenvoigrpelevoui="checked='checked'"; }
+	if (defined('ELEVEENVOIGRPELE') && ELEVEENVOIGRPELE == "non") { $eleveenvoigrpelevnon="checked='checked'";  }
+	if (defined('ELEVEENVOIDELEGUE') && ELEVEENVOIDELEGUE == "oui") { $eleveenvoidelegueoui="checked='checked'";  }
+	if (defined('ELEVEENVOIDELEGUE') && ELEVEENVOIDELEGUE == "non") { $eleveenvoideleguenon="checked='checked'"; }
+	if (defined('COMBULTINTYPE') && COMBULTINTYPE == "oui") { $combulltypeoui="checked='checked'"; }
+	if (defined('COMBULTINTYPE') && COMBULTINTYPE == "non") { $combulltypenon="checked='checked'"; }
+	if (defined('SEMAINEDIMANCHE') && SEMAINEDIMANCHE == "oui") { $semainedimancheoui="checked='checked'"; }
+	if (defined('SEMAINEDIMANCHE') && SEMAINEDIMANCHE == "non") { $semainedimanchenon="checked='checked'"; }
 	if (defined("TVAVACATIONTAUX")) { $tvavatationtaux=TVAVACATIONTAUX; }else{ $tvavatationtaux=""; }
-	if (TVAVACATION == "oui") { $tvavatationoui="checked='checked'"; }
-	if (TVAVACATION == "non") { $tvavatationnon="checked='checked'"; }
-	if (AUTOCOMPLETIONLOGIN == "oui") { $autocompletionloginoui="checked='checked'"; }
-	if (AUTOCOMPLETIONLOGIN == "non") { $autocompletionloginnon="checked='checked'"; }
-	if (CIVARMEE == "oui") { $civarmeeoui="checked='checked'"; }
-	if (CIVARMEE == "non") { $civarmeenon="checked='checked'"; }
-	if (EDTDIRECT == "oui") { $edtdirectoui="checked='checked'"; }
-	if (EDTDIRECT == "non") { $edtdirectnon="checked='checked'"; }
-	if (VIESCOLAIREHISTORYCMD == "oui") { $viescolairehistocmdoui="checked='checked'"; }
-	if (VIESCOLAIREHISTORYCMD == "non") { $viescolairehistocmdnon="checked='checked'"; }
-	if (AGENDAPDA == "oui") { $agendapdaoui="checked='checked'"; }
-	if (AGENDAPDA == "non") { $agendapdanon="checked='checked'"; }
-	if (PASSMODULEMEDICAL == "non") { $passmodulemedicalnon="checked='checked'"; }
-	if (PASSMODULEMEDICAL == "oui") { $passmodulemedicaloui="checked='checked'"; }
-	if (PASSMODULEINDIVIDUEL == "non") { $passmoduleindividuelnon="checked='checked'"; }
-	if (PASSMODULEINDIVIDUEL == "oui") { $passmoduleindividueloui="checked='checked'"; }
-	if (PARENTENVOIPERSONNEL == "oui") { $parentenvoipersonneloui="checked='checked'"; }
-	if (PARENTENVOIPERSONNEL == "non") { $parentenvoipersonnelnon="checked='checked'"; }
-	if (ELEVEENVOIPERSONNEL == "oui")  { $eleveenvoipersonneloui="checked='checked'"; }
-	if (ELEVEENVOIPERSONNEL == "non")  { $eleveenvoipersonnelnon="checked='checked'"; }
-	if (PROFENVOIPERSONNEL == "oui")   { $profenvoipersonneloui="checked='checked'"; }
-	if (PROFENVOIPERSONNEL == "non")   { $profenvoipersonnelnon="checked='checked'"; }
-	if (PERSONNELENVOIPROF == "oui")   { $personnelenvoiprofoui="checked='checked'"; }
-	if (PERSONNELENVOIPROF == "non")   { $personnelenvoiprofnon="checked='checked'"; }
-	if (PERSONNELENVOIGRPELE == "oui") { $personnelenvoigrpelevoui="checked='checked'"; }
-	if (PERSONNELENVOIGRPELE == "non") { $personnelenvoigrpelevnon="checked='checked'"; }
-	if (PERSONNELENVOIPARENT == "oui") { $personnelenvoiparentoui="checked='checked'"; }
-	if (PERSONNELENVOIPARENT == "non") { $personnelenvoiparentnon="checked='checked'"; }
-	if (PERSONNELENVOIELEVE == "oui")  { $personnelenvoieleveoui="checked='checked'"; }
-	if (PERSONNELENVOIELEVE == "non")  { $personnelenvoielevenon="checked='checked'"; }
-	if (PERSONNELENVOIEXT == "non")    { $personnelenvoiextnon="checked='checked'"; }
-	if (PERSONNELENVOIEXT == "oui")    { $personnelenvoiextoui="checked='checked'"; }
-	if (PLANCLASSEPARENT == "non")    { $planclasseParentnon="checked='checked'"; }
-	if (PLANCLASSEPARENT == "oui")    { $planclasseParentoui="checked='checked'"; }
-	if (PROFPGESTIONENTREPRISE == "non")    { $gestionentrepriseprofpnon="checked='checked'"; }
-	if (PROFPGESTIONENTREPRISE == "oui")    { $gestionentrepriseprofpoui="checked='checked'"; }
-	if (VIESCOLAIRESTAGEDATE == "non")    { $viescolairestagedatenon="checked='checked'"; }
-	if (VIESCOLAIRESTAGEDATE == "oui")    { $viescolairestagedateoui="checked='checked'"; }
-	if (VIESCOLAIRESTAGEENT == "non")    { $viescolairestageentnon="checked='checked'"; }
-	if (VIESCOLAIRESTAGEENT == "oui")    { $viescolairestageentoui="checked='checked'"; }
-	if (VIESCOLAIRESTAGEETUDIANT == "non")    { $viescolairestageetudiantnon="checked='checked'"; }
-	if (VIESCOLAIRESTAGEETUDIANT == "oui")    { $viescolairestageetudiantoui="checked='checked'"; }
-	if (PROFSTAGEENTR == "non")    { $profentrnon="checked='checked'"; }
-	if (PROFSTAGEENTR == "oui")    { $profentroui="checked='checked'"; }
-	if (PROFSTAGEETUDIANT == "non")    { $profstageetudiantnon="checked='checked'"; }
-	if (PROFSTAGEETUDIANT == "oui")    { $profstageetudiantoui="checked='checked'"; }
-	if (CREATENTRPARENT == "non")    { $createntrparentnon="checked='checked'"; }
-	if (CREATENTRPARENT == "oui")    { $createntrparentoui="checked='checked'"; }
-	if (CREATENTRELEVE == "non")    { $createntrelevenon="checked='checked'"; }
-	if (CREATENTRELEVE == "oui")    { $createntreleveoui="checked='checked'"; }
-	if (VIESCOLAIRENOTEENSEIGNANT == "non")    { $viescolairenoteenseignantnon="checked='checked'"; }
-	if (VIESCOLAIRENOTEENSEIGNANT == "oui")    { $viescolairenoteenseignantoui="checked='checked'"; }
-	if (EXAMENPIGIERNIMES == "non")    { $examenpigiernimesnon="checked='checked'"; }
-	if (EXAMENPIGIERNIMES == "oui")    { $examenpigiernimesoui="checked='checked'"; }
-	if (EXAMENISPACADEMIES == "non")    { $examenispacademiesnon="checked='checked'"; }
-	if (EXAMENISPACADEMIES == "oui")    { $examenispacademiesoui="checked='checked'"; }
-	if (FINANCIERVATEL == "oui")    { $modulefinanciervateloui="checked='checked'"; }
-	if (FINANCIERVATEL == "non")    { $modulefinanciervatelnon="checked='checked'"; }
-	if (PROFENTRCONVENTION == "oui")    { $profentrconventionoui="checked='checked'"; }
-	if (PROFENTRCONVENTION == "non")    { $profentrconventionnon="checked='checked'"; }
-	if (PROFPENTRCONVENTION == "oui")    { $profpentrconventionoui="checked='checked'"; }
-	if (PROFPENTRCONVENTION == "non")    { $profpentrconventionnon="checked='checked'"; }
-	if (PROFPCREATETUTEUR == "oui")    { $profpcreatetuteuroui="checked='checked'"; }
-	if (PROFPCREATETUTEUR == "non")    { $profpcreatetuteurnon="checked='checked'"; }
-	if (PRESENTPROF == "oui")    { $presentprofoui="checked='checked'"; }
-	if (PRESENTPROF == "non")    { $presentprofnon="checked='checked'"; }
-	if (NOTATION20 == "oui")    { $modulenote20oui="checked='checked'"; }
-	if (NOTATION20 == "non")    { $modulenote20non="checked='checked'"; }
-	if (NOTATION15 == "oui")    { $modulenote15oui="checked='checked'"; }
-	if (NOTATION15 == "non")    { $modulenote15non="checked='checked'"; }
-	if (NOTATION10 == "oui")    { $modulenote10oui="checked='checked'"; }
-	if (NOTATION10 == "non")    { $modulenote10non="checked='checked'"; }
-	if (NOTATION5 == "oui")    { $modulenote5oui="checked='checked'"; }
-	if (NOTATION5 == "non")    { $modulenote5non="checked='checked'"; }
-	if (NOTATION6 == "oui")    { $modulenote6oui="checked='checked'"; }
-	if (NOTATION6 == "non")    { $modulenote6non="checked='checked'"; }
-	if (NOTATION30 == "oui")    { $modulenote30oui="checked='checked'"; }
-	if (NOTATION30 == "non")    { $modulenote30non="checked='checked'"; }
-	if (NOTATION40 == "oui")    { $modulenote40oui="checked='checked'"; }
-	if (NOTATION40 == "non")    { $modulenote40non="checked='checked'"; }
-	if (SEMAINEVENDREDI == "oui")    { $semainevendredioui="checked='checked'"; }
-	if (SEMAINEVENDREDI == "non")    { $semainevendredinon="checked='checked'"; }
-	if (PROFMOTIFABSRTD == "oui")    { $absprofmotifoui="checked='checked'"; }
-	if (PROFMOTIFABSRTD == "non")    { $absprofmotifnon="checked='checked'"; }
-	if (ACCESMESSTUTEUR == "oui")    { $accesmesstuteuroui="checked='checked'"; }
-	if (ACCESMESSTUTEUR == "non")    { $accesmesstuteurnon="checked='checked'"; }
-	if (ACCESMESSENVOITUTEUR == "oui")    { $accesmessenvoituteuroui="checked='checked'"; }
-	if (ACCESMESSENVOITUTEUR == "non")    { $accesmessenvoituteurnon="checked='checked'"; }
-	if (TUTEURENVOIPROF == "oui")    { $tuteurenvoiprofoui="checked='checked'"; }
-	if (TUTEURENVOIPROF == "non")    { $tuteurenvoiprofnon="checked='checked'"; }
-	if (TUTEURENVOITUTEUR == "oui")    { $tuteurenvoituteuroui="checked='checked'"; }
-	if (TUTEURENVOITUTEUR == "non")    { $tuteurenvoituteurnon="checked='checked'"; }
-	if (TUTEURENVOIPARENT == "oui")    { $tuteurenvoiparentoui="checked='checked'"; }
-	if (TUTEURENVOIPARENT == "non")    { $tuteurenvoiparentnon="checked='checked'"; }
-	if (TUTEURENVOIELEVE == "oui")    { $tuteurenvoieleveoui="checked='checked'"; }
-	if (TUTEURENVOIELEVE == "non")    { $tuteurenvoielevenon="checked='checked'"; }
-	if (TUTEURENVOIDIREC == "oui")    { $tuteurenvoidirecoui="checked='checked'"; }
-	if (TUTEURENVOIDIREC == "non")    { $tuteurenvoidirecnon="checked='checked'"; }
-	if (TUTEURENVOISCOLAIRE == "oui")    { $tuteurenvoiscolaireoui="checked='checked'"; }
-	if (TUTEURENVOISCOLAIRE == "non")    { $tuteurenvoiscolairenon="checked='checked'"; }
-	if (TUTEURENVOIEXT == "oui")    { $tuteurenvoiextoui="checked='checked'"; }
-	if (TUTEURENVOIEXT == "non")    { $tuteurenvoiextnon="checked='checked'"; }
-	if (TUTEURENVOIGRPELEV == "oui")    { $tuteurenvoigrpelevoui="checked='checked'"; }
-	if (TUTEURENVOIGRPELEV == "non")    { $tuteurenvoigrpelevnon="checked='checked'"; }
-	if (TUTEURENVOIDELEGUE == "oui")    { $tuteurenvoidelegueoui="checked='checked'"; }
-	if (TUTEURENVOIDELEGUE == "non")    { $tuteurenvoideleguenon="checked='checked'"; }
-	if (TUTEURENVOIPERSONNEL == "oui")    { $tuteurenvoipersonneloui="checked='checked'"; }
-	if (TUTEURENVOIPERSONNEL == "non")    { $tuteurenvoipersonnelnon="checked='checked'"; }
-	if (CHOIXMATIEREPROF == "0")    { $choixmatiereprofoui="checked='checked'"; }
-	if (CHOIXMATIEREPROF == "1")    { $choixmatiereprofnon="checked='checked'"; }
-	if (CARNETSUIVIPROF == "oui")    { $carnetsuiviprofoui="checked='checked'"; }
-	if (CARNETSUIVIPROF == "non")    { $carnetsuiviprofnon="checked='checked'"; }
-	if (TROMBIALLCLASSEPROF == "oui")    { $tombiallclasseprofoui="checked='checked'"; }
-	if (TROMBIALLCLASSEPROF == "non")    { $tombiallclasseprofnon="checked='checked'"; }
-	if (PROFSTAGEETUDIANTADMIN == "oui")    { $stageetudiantadminprofoui="checked='checked'"; }
-	if (PROFSTAGEETUDIANTADMIN == "non")    { $stageetudiantadminprofnon="checked='checked'"; }
-	if (PASSMODULEBILANFINANCIER == "oui")    { $passmodulebilanfinancieroui="checked='checked'"; }
-	if (PASSMODULEBILANFINANCIER == "non")    { $passmodulebilanfinanciernon="checked='checked'"; }
-	if (MODULEELEARNING == "dokeos")    { $moduleeLearningdoekeos="checked='checked'"; }
-	if (MODULEELEARNING == "moodle")    { $moduleeLearningmoodle="checked='checked'"; }
-	if (INTITULEDIRECTION == "direction")         { $intitule_direction1="selected='selected'"; }
-	if (INTITULEDIRECTION == "administration")    { $intitule_direction2="selected='selected'"; }
-	if (INTITULEDIRECTION == "directeur")         { $intitule_direction3="selected='selected'"; }
-	if (INTITULEELEVE == "élève")         { $intitule_eleve1="selected='selected'"; }
-	if (INTITULEELEVE == "étudiant")    { $intitule_eleve2="selected='selected'"; }
-	if (INTITULEELEVE == "apprenant")    { $intitule_eleve3="selected='selected'"; }
-	
+	if (defined('TVAVACATION') && TVAVACATION == "oui") { $tvavatationoui="checked='checked'"; }
+	if (defined('TVAVACATION') && TVAVACATION == "non") { $tvavatationnon="checked='checked'"; }
+	if (defined('AUTOCOMPLETIONLOGIN') && AUTOCOMPLETIONLOGIN == "oui") { $autocompletionloginoui="checked='checked'"; }
+	if (defined('AUTOCOMPLETIONLOGIN') && AUTOCOMPLETIONLOGIN == "non") { $autocompletionloginnon="checked='checked'"; }
+	if (defined('CIVARMEE') && CIVARMEE == "oui") { $civarmeeoui="checked='checked'"; }
+	if (defined('CIVARMEE') && CIVARMEE == "non") { $civarmeenon="checked='checked'"; }
+	if (defined('EDTDIRECT') && EDTDIRECT == "oui") { $edtdirectoui="checked='checked'"; }
+	if (defined('EDTDIRECT') && EDTDIRECT == "non") { $edtdirectnon="checked='checked'"; }
+	if (defined('VIESCOLAIREHISTORYCMD') && VIESCOLAIREHISTORYCMD == "oui") { $viescolairehistocmdoui="checked='checked'"; }
+	if (defined('VIESCOLAIREHISTORYCMD') && VIESCOLAIREHISTORYCMD == "non") { $viescolairehistocmdnon="checked='checked'"; }
+	if (defined('AGENDAPDA') && AGENDAPDA == "oui") { $agendapdaoui="checked='checked'"; }
+	if (defined('AGENDAPDA') && AGENDAPDA == "non") { $agendapdanon="checked='checked'"; }
+	if (defined('PASSMODULEMEDICAL') && PASSMODULEMEDICAL == "non") { $passmodulemedicalnon="checked='checked'"; }
+	if (defined('PASSMODULEMEDICAL') && PASSMODULEMEDICAL == "oui") { $passmodulemedicaloui="checked='checked'"; }
+	if (defined('PASSMODULEINDIVIDUEL') && PASSMODULEINDIVIDUEL == "non") { $passmoduleindividuelnon="checked='checked'"; }
+	if (defined('PASSMODULEINDIVIDUEL') && PASSMODULEINDIVIDUEL == "oui") { $passmoduleindividueloui="checked='checked'"; }
+	if (defined('PARENTENVOIPERSONNEL') && PARENTENVOIPERSONNEL == "oui") { $parentenvoipersonneloui="checked='checked'"; }
+	if (defined('PARENTENVOIPERSONNEL') && PARENTENVOIPERSONNEL == "non") { $parentenvoipersonnelnon="checked='checked'"; }
+	if (defined('ELEVEENVOIPERSONNEL') && ELEVEENVOIPERSONNEL == "oui")  { $eleveenvoipersonneloui="checked='checked'"; }
+	if (defined('ELEVEENVOIPERSONNEL') && ELEVEENVOIPERSONNEL == "non")  { $eleveenvoipersonnelnon="checked='checked'"; }
+	if (defined('PROFENVOIPERSONNEL') && PROFENVOIPERSONNEL == "oui")   { $profenvoipersonneloui="checked='checked'"; }
+	if (defined('PROFENVOIPERSONNEL') && PROFENVOIPERSONNEL == "non")   { $profenvoipersonnelnon="checked='checked'"; }
+	if (defined('PERSONNELENVOIPROF') && PERSONNELENVOIPROF == "oui")   { $personnelenvoiprofoui="checked='checked'"; }
+	if (defined('PERSONNELENVOIPROF') && PERSONNELENVOIPROF == "non")   { $personnelenvoiprofnon="checked='checked'"; }
+	if (defined('PERSONNELENVOIGRPELE') && PERSONNELENVOIGRPELE == "oui") { $personnelenvoigrpelevoui="checked='checked'"; }
+	if (defined('PERSONNELENVOIGRPELE') && PERSONNELENVOIGRPELE == "non") { $personnelenvoigrpelevnon="checked='checked'"; }
+	if (defined('PERSONNELENVOIPARENT') && PERSONNELENVOIPARENT == "oui") { $personnelenvoiparentoui="checked='checked'"; }
+	if (defined('PERSONNELENVOIPARENT') && PERSONNELENVOIPARENT == "non") { $personnelenvoiparentnon="checked='checked'"; }
+	if (defined('PERSONNELENVOIELEVE') && PERSONNELENVOIELEVE == "oui")  { $personnelenvoieleveoui="checked='checked'"; }
+	if (defined('PERSONNELENVOIELEVE') && PERSONNELENVOIELEVE == "non")  { $personnelenvoielevenon="checked='checked'"; }
+	if (defined('PERSONNELENVOIEXT') && PERSONNELENVOIEXT == "non")    { $personnelenvoiextnon="checked='checked'"; }
+	if (defined('PERSONNELENVOIEXT') && PERSONNELENVOIEXT == "oui")    { $personnelenvoiextoui="checked='checked'"; }
+	if (defined('PLANCLASSEPARENT') && PLANCLASSEPARENT == "non")    { $planclasseParentnon="checked='checked'"; }
+	if (defined('PLANCLASSEPARENT') && PLANCLASSEPARENT == "oui")    { $planclasseParentoui="checked='checked'"; }
+	if (defined('PROFPGESTIONENTREPRISE') && PROFPGESTIONENTREPRISE == "non")    { $gestionentrepriseprofpnon="checked='checked'"; }
+	if (defined('PROFPGESTIONENTREPRISE') && PROFPGESTIONENTREPRISE == "oui")    { $gestionentrepriseprofpoui="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEDATE') && VIESCOLAIRESTAGEDATE == "non")    { $viescolairestagedatenon="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEDATE') && VIESCOLAIRESTAGEDATE == "oui")    { $viescolairestagedateoui="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEENT') && VIESCOLAIRESTAGEENT == "non")    { $viescolairestageentnon="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEENT') && VIESCOLAIRESTAGEENT == "oui")    { $viescolairestageentoui="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEETUDIANT') && VIESCOLAIRESTAGEETUDIANT == "non")    { $viescolairestageetudiantnon="checked='checked'"; }
+	if (defined('VIESCOLAIRESTAGEETUDIANT') && VIESCOLAIRESTAGEETUDIANT == "oui")    { $viescolairestageetudiantoui="checked='checked'"; }
+	if (defined('PROFSTAGEENTR') && PROFSTAGEENTR == "non")    { $profentrnon="checked='checked'"; }
+	if (defined('PROFSTAGEENTR') && PROFSTAGEENTR == "oui")    { $profentroui="checked='checked'"; }
+	if (defined('PROFSTAGEETUDIANT') && PROFSTAGEETUDIANT == "non")    { $profstageetudiantnon="checked='checked'"; }
+	if (defined('PROFSTAGEETUDIANT') && PROFSTAGEETUDIANT == "oui")    { $profstageetudiantoui="checked='checked'"; }
+	if (defined('CREATENTRPARENT') && CREATENTRPARENT == "non")    { $createntrparentnon="checked='checked'"; }
+	if (defined('CREATENTRPARENT') && CREATENTRPARENT == "oui")    { $createntrparentoui="checked='checked'"; }
+	if (defined('CREATENTRELEVE') && CREATENTRELEVE == "non")    { $createntrelevenon="checked='checked'"; }
+	if (defined('CREATENTRELEVE') && CREATENTRELEVE == "oui")    { $createntreleveoui="checked='checked'"; }
+	if (defined('VIESCOLAIRENOTEENSEIGNANT') && VIESCOLAIRENOTEENSEIGNANT == "non")    { $viescolairenoteenseignantnon="checked='checked'"; }
+	if (defined('VIESCOLAIRENOTEENSEIGNANT') && VIESCOLAIRENOTEENSEIGNANT == "oui")    { $viescolairenoteenseignantoui="checked='checked'"; }
+	if (defined('EXAMENPIGIERNIMES') && EXAMENPIGIERNIMES == "non")    { $examenpigiernimesnon="checked='checked'"; }
+	if (defined('EXAMENPIGIERNIMES') && EXAMENPIGIERNIMES == "oui")    { $examenpigiernimesoui="checked='checked'"; }
+	if (defined('EXAMENISPACADEMIES') && EXAMENISPACADEMIES == "non")    { $examenispacademiesnon="checked='checked'"; }
+	if (defined('EXAMENISPACADEMIES') && EXAMENISPACADEMIES == "oui")    { $examenispacademiesoui="checked='checked'"; }
+	if (defined('FINANCIERVATEL') && FINANCIERVATEL == "oui")    { $modulefinanciervateloui="checked='checked'"; }
+	if (defined('FINANCIERVATEL') && FINANCIERVATEL == "non")    { $modulefinanciervatelnon="checked='checked'"; }
+	if (defined('PROFENTRCONVENTION') && PROFENTRCONVENTION == "oui")    { $profentrconventionoui="checked='checked'"; }
+	if (defined('PROFENTRCONVENTION') && PROFENTRCONVENTION == "non")    { $profentrconventionnon="checked='checked'"; }
+	if (defined('PROFPENTRCONVENTION') && PROFPENTRCONVENTION == "oui")    { $profpentrconventionoui="checked='checked'"; }
+	if (defined('PROFPENTRCONVENTION') && PROFPENTRCONVENTION == "non")    { $profpentrconventionnon="checked='checked'"; }
+	if (defined('PROFPCREATETUTEUR') && PROFPCREATETUTEUR == "oui")    { $profpcreatetuteuroui="checked='checked'"; }
+	if (defined('PROFPCREATETUTEUR') && PROFPCREATETUTEUR == "non")    { $profpcreatetuteurnon="checked='checked'"; }
+	if (defined('PRESENTPROF') && PRESENTPROF == "oui")    { $presentprofoui="checked='checked'"; }
+	if (defined('PRESENTPROF') && PRESENTPROF == "non")    { $presentprofnon="checked='checked'"; }
+	if (defined('NOTATION20') && NOTATION20 == "oui")    { $modulenote20oui="checked='checked'"; }
+	if (defined('NOTATION20') && NOTATION20 == "non")    { $modulenote20non="checked='checked'"; }
+	if (defined('NOTATION15') && NOTATION15 == "oui")    { $modulenote15oui="checked='checked'"; }
+	if (defined('NOTATION15') && NOTATION15 == "non")    { $modulenote15non="checked='checked'"; }
+	if (defined('NOTATION10') && NOTATION10 == "oui")    { $modulenote10oui="checked='checked'"; }
+	if (defined('NOTATION10') && NOTATION10 == "non")    { $modulenote10non="checked='checked'"; }
+	if (defined('NOTATION5') && NOTATION5 == "oui")    { $modulenote5oui="checked='checked'"; }
+	if (defined('NOTATION5') && NOTATION5 == "non")    { $modulenote5non="checked='checked'"; }
+	if (defined('NOTATION6') && NOTATION6 == "oui")    { $modulenote6oui="checked='checked'"; }
+	if (defined('NOTATION6') && NOTATION6 == "non")    { $modulenote6non="checked='checked'"; }
+	if (defined('NOTATION30') && NOTATION30 == "oui")    { $modulenote30oui="checked='checked'"; }
+	if (defined('NOTATION30') && NOTATION30 == "non")    { $modulenote30non="checked='checked'"; }
+	if (defined('NOTATION40') && NOTATION40 == "oui")    { $modulenote40oui="checked='checked'"; }
+	if (defined('NOTATION40') && NOTATION40 == "non")    { $modulenote40non="checked='checked'"; }
+	if (defined('SEMAINEVENDREDI') && SEMAINEVENDREDI == "oui")    { $semainevendredioui="checked='checked'"; }
+	if (defined('SEMAINEVENDREDI') && SEMAINEVENDREDI == "non")    { $semainevendredinon="checked='checked'"; }
+	if (defined('PROFMOTIFABSRTD') && PROFMOTIFABSRTD == "oui")    { $absprofmotifoui="checked='checked'"; }
+	if (defined('PROFMOTIFABSRTD') && PROFMOTIFABSRTD == "non")    { $absprofmotifnon="checked='checked'"; }
+	if (defined('ACCESMESSTUTEUR') && ACCESMESSTUTEUR == "oui")    { $accesmesstuteuroui="checked='checked'"; }
+	if (defined('ACCESMESSTUTEUR') && ACCESMESSTUTEUR == "non")    { $accesmesstuteurnon="checked='checked'"; }
+	if (defined('ACCESMESSENVOITUTEUR') && ACCESMESSENVOITUTEUR == "oui")    { $accesmessenvoituteuroui="checked='checked'"; }
+	if (defined('ACCESMESSENVOITUTEUR') && ACCESMESSENVOITUTEUR == "non")    { $accesmessenvoituteurnon="checked='checked'"; }
+	if (defined('TUTEURENVOIPROF') && TUTEURENVOIPROF == "oui")    { $tuteurenvoiprofoui="checked='checked'"; }
+	if (defined('TUTEURENVOIPROF') && TUTEURENVOIPROF == "non")    { $tuteurenvoiprofnon="checked='checked'"; }
+	if (defined('TUTEURENVOITUTEUR') && TUTEURENVOITUTEUR == "oui")    { $tuteurenvoituteuroui="checked='checked'"; }
+	if (defined('TUTEURENVOITUTEUR') && TUTEURENVOITUTEUR == "non")    { $tuteurenvoituteurnon="checked='checked'"; }
+	if (defined('TUTEURENVOIPARENT') && TUTEURENVOIPARENT == "oui")    { $tuteurenvoiparentoui="checked='checked'"; }
+	if (defined('TUTEURENVOIPARENT') && TUTEURENVOIPARENT == "non")    { $tuteurenvoiparentnon="checked='checked'"; }
+	if (defined('TUTEURENVOIELEVE') && TUTEURENVOIELEVE == "oui")    { $tuteurenvoieleveoui="checked='checked'"; }
+	if (defined('TUTEURENVOIELEVE') && TUTEURENVOIELEVE == "non")    { $tuteurenvoielevenon="checked='checked'"; }
+	if (defined('TUTEURENVOIDIREC') && TUTEURENVOIDIREC == "oui")    { $tuteurenvoidirecoui="checked='checked'"; }
+	if (defined('TUTEURENVOIDIREC') && TUTEURENVOIDIREC == "non")    { $tuteurenvoidirecnon="checked='checked'"; }
+	if (defined('TUTEURENVOISCOLAIRE') && TUTEURENVOISCOLAIRE == "oui")    { $tuteurenvoiscolaireoui="checked='checked'"; }
+	if (defined('TUTEURENVOISCOLAIRE') && TUTEURENVOISCOLAIRE == "non")    { $tuteurenvoiscolairenon="checked='checked'"; }
+	if (defined('TUTEURENVOIEXT') && TUTEURENVOIEXT == "oui")    { $tuteurenvoiextoui="checked='checked'"; }
+	if (defined('TUTEURENVOIEXT') && TUTEURENVOIEXT == "non")    { $tuteurenvoiextnon="checked='checked'"; }
+	if (defined('TUTEURENVOIGRPELEV') && TUTEURENVOIGRPELEV == "oui")    { $tuteurenvoigrpelevoui="checked='checked'"; }
+	if (defined('TUTEURENVOIGRPELEV') && TUTEURENVOIGRPELEV == "non")    { $tuteurenvoigrpelevnon="checked='checked'"; }
+	if (defined('TUTEURENVOIDELEGUE') && TUTEURENVOIDELEGUE == "oui")    { $tuteurenvoidelegueoui="checked='checked'"; }
+	if (defined('TUTEURENVOIDELEGUE') && TUTEURENVOIDELEGUE == "non")    { $tuteurenvoideleguenon="checked='checked'"; }
+	if (defined('TUTEURENVOIPERSONNEL') && TUTEURENVOIPERSONNEL == "oui")    { $tuteurenvoipersonneloui="checked='checked'"; }
+	if (defined('TUTEURENVOIPERSONNEL') && TUTEURENVOIPERSONNEL == "non")    { $tuteurenvoipersonnelnon="checked='checked'"; }
+	if (defined('CHOIXMATIEREPROF') && CHOIXMATIEREPROF == "0")    { $choixmatiereprofoui="checked='checked'"; }
+	if (defined('CHOIXMATIEREPROF') && CHOIXMATIEREPROF == "1")    { $choixmatiereprofnon="checked='checked'"; }
+	if (defined('CARNETSUIVIPROF') && CARNETSUIVIPROF == "oui")    { $carnetsuiviprofoui="checked='checked'"; }
+	if (defined('CARNETSUIVIPROF') && CARNETSUIVIPROF == "non")    { $carnetsuiviprofnon="checked='checked'"; }
+	if (defined('TROMBIALLCLASSEPROF') && TROMBIALLCLASSEPROF == "oui")    { $tombiallclasseprofoui="checked='checked'"; }
+	if (defined('TROMBIALLCLASSEPROF') && TROMBIALLCLASSEPROF == "non")    { $tombiallclasseprofnon="checked='checked'"; }
+	if (defined('PROFSTAGEETUDIANTADMIN') && PROFSTAGEETUDIANTADMIN == "oui")    { $stageetudiantadminprofoui="checked='checked'"; }
+	if (defined('PROFSTAGEETUDIANTADMIN') && PROFSTAGEETUDIANTADMIN == "non")    { $stageetudiantadminprofnon="checked='checked'"; }
+	if (defined('PASSMODULEBILANFINANCIER') && PASSMODULEBILANFINANCIER == "oui")    { $passmodulebilanfinancieroui="checked='checked'"; }
+	if (defined('PASSMODULEBILANFINANCIER') && PASSMODULEBILANFINANCIER == "non")    { $passmodulebilanfinanciernon="checked='checked'"; }
+	if (defined('MODULEELEARNING') && MODULEELEARNING == "dokeos")    { $moduleeLearningdoekeos="checked='checked'"; }
+	if (defined('MODULEELEARNING') && MODULEELEARNING == "moodle")    { $moduleeLearningmoodle="checked='checked'"; }
+	if (defined('INTITULEDIRECTION') && INTITULEDIRECTION == "direction")         { $intitule_direction1="selected='selected'"; }
+	if (defined('INTITULEDIRECTION') && INTITULEDIRECTION == "administration")    { $intitule_direction2="selected='selected'"; }
+	if (defined('INTITULEDIRECTION') && INTITULEDIRECTION == "directeur")         { $intitule_direction3="selected='selected'"; }
+	if (defined('INTITULEELEVE') && INTITULEELEVE == "élève")         { $intitule_eleve1="selected='selected'"; }
+	if (defined('INTITULEELEVE') && INTITULEELEVE == "étudiant")    { $intitule_eleve2="selected='selected'"; }
+	if (defined('INTITULEELEVE') && INTITULEELEVE == "apprenant")    { $intitule_eleve3="selected='selected'"; }
 	$intitule_enseignant1="";
 	$intitule_enseignant2="";
-
-	if (INTITULEENSEIGNANT == "enseignant")    { $intitule_enseignant1="selected='selected'"; }
-	if (INTITULEENSEIGNANT == "formateur")    { $intitule_enseignant2="selected='selected'"; }
-
+	if (defined('INTITULEENSEIGNANT') && INTITULEENSEIGNANT == "enseignant")    { $intitule_enseignant1="selected='selected'"; }
+	if (defined('INTITULEENSEIGNANT') && INTITULEENSEIGNANT == "formateur")    { $intitule_enseignant2="selected='selected'"; }
 	$intitule_classe1="";
 	$intitule_classe2="";
-
-	if (INTITULECLASSE == "classe")    { $intitule_classe1="selected='selected'"; }
-	if (INTITULECLASSE == "section")    { $intitule_classe2="selected='selected'"; }
-	
-	if (PASSOUBLIE == "oui")         { $passoublieoui="checked='checked'"; }
-	if (PASSOUBLIE == "non")    { $passoublienon="checked='checked'"; }
-	if (DIRCAHIERTEXTE == "oui")         { $dircahiertexteoui="checked='checked'"; }
-	if (DIRCAHIERTEXTE == "non")    { $dircahiertextenon="checked='checked'"; }
-	if (VIESCOLAIREMODIFETUDIANT == "oui") { $viescolairemodifetudiantoui="checked='checked'"; }
-	if (VIESCOLAIREMODIFETUDIANT == "non") { $viescolairemodifetudiantnon="checked='checked'"; }
-	if (MODIFNOTEAPRESARRET == "oui")      { $modifnoteapresarretoui="checked='checked'"; }
-	if (MODIFNOTEAPRESARRET == "non")      { $modifnoteapresarretnon="checked='checked'"; }
-	if (PROFPVIDEOPROJO == "oui")          { $profpVideoProjooui="checked='checked'"; }
-	if (PROFPVIDEOPROJO == "non")          { $profpVideoProjonon="checked='checked'"; }
-	if (PROFPMODIFAFFECT == "oui")         { $profpmodifaffectoui="checked='checked'"; }
-	if (PROFPMODIFAFFECT == "non")         { $profpmodifaffectnon="checked='checked'"; }
-	if (PROFPACCESNOTE == "oui")           { $profpaccesnoteoui="checked='checked'"; }
-	if (PROFPACCESNOTE == "non")           { $profpaccesnotenon="checked='checked'"; }
-
-
-	if (EXAMENIPAC == "non")    { $examenipacnon="checked='checked'"; }
-	if (EXAMENIPAC == "oui")    { $examenipacoui="checked='checked'"; }
-
-	if (EXAMENVATELREUNION == "non")    { $examenvatelreunionnon="checked='checked'"; }
-	if (EXAMENVATELREUNION == "oui")    { $examenvatelreunionoui="checked='checked'"; }
-
-	if (AUTOINE == "non")    { $autoINEnon="checked='checked'"; }
-	if (AUTOINE == "oui")    { $autoINEoui="checked='checked'"; }
-
-
-	if (ENTRETIENPROF == "non")    { $entretienprofnon="checked='checked'"; }
-	if (ENTRETIENPROF == "oui")    { $entretienprofoui="checked='checked'"; }
-
-	if (EXAMENJTC == "oui")    { $examenjtcoui="checked='checked'"; }
-	if (EXAMENJTC == "non")    { $examenjtcnon="checked='checked'"; }
-
-	if (AUTODATEABSRTD == "oui")    { $autodateabsrtdoui="checked='checked'"; }
-	if (AUTODATEABSRTD == "non")    { $autodateabsrtdnon="checked='checked'"; }
-
-	if (DEFILMESSAGEHORI == "oui")    { $checkmesshorioui="checked='checked'"; }
-	if (DEFILMESSAGEHORI == "non")    { $checkmesshorinon="checked='checked'"; }
-
-	if (PROFPACCESVISADIRECTION == "oui")    { $profpaccesvisadirectionoui="checked='checked'"; }
-	if (PROFPACCESVISADIRECTION == "non")    { $profpaccesvisadirectionnon="checked='checked'"; }
-	if (PROFPACCESABSRTD == "oui")    { $profpaccesabsrtdoui="checked='checked'"; }
-	if (PROFPACCESABSRTD == "non")    { $profpaccesabsrtdnon="checked='checked'"; }
-
-	if (AFFICHAGEVATEL == "oui")    { $affichageVateloui="checked='checked'"; }
-	if (AFFICHAGEVATEL == "non")    { $affichageVatelnon="checked='checked'"; }
-
-	if (MODIFTROMBIELEVE == "oui")    { $modiftrombieleveoui="checked='checked'"; }
-	if (MODIFTROMBIELEVE == "non")    { $modiftrombielevenon="checked='checked'"; }
+	if (defined('INTITULECLASSE') && INTITULECLASSE == "classe")    { $intitule_classe1="selected='selected'"; }
+	if (defined('INTITULECLASSE') && INTITULECLASSE == "section")    { $intitule_classe2="selected='selected'"; }
+	if (defined('PASSOUBLIE') && PASSOUBLIE == "oui")         { $passoublieoui="checked='checked'"; }
+	if (defined('PASSOUBLIE') && PASSOUBLIE == "non")    { $passoublienon="checked='checked'"; }
+	if (defined('DIRCAHIERTEXTE') && DIRCAHIERTEXTE == "oui")         { $dircahiertexteoui="checked='checked'"; }
+	if (defined('DIRCAHIERTEXTE') && DIRCAHIERTEXTE == "non")    { $dircahiertextenon="checked='checked'"; }
+	if (defined('VIESCOLAIREMODIFETUDIANT') && VIESCOLAIREMODIFETUDIANT == "oui") { $viescolairemodifetudiantoui="checked='checked'"; }
+	if (defined('VIESCOLAIREMODIFETUDIANT') && VIESCOLAIREMODIFETUDIANT == "non") { $viescolairemodifetudiantnon="checked='checked'"; }
+	if (defined('MODIFNOTEAPRESARRET') && MODIFNOTEAPRESARRET == "oui")      { $modifnoteapresarretoui="checked='checked'"; }
+	if (defined('MODIFNOTEAPRESARRET') && MODIFNOTEAPRESARRET == "non")      { $modifnoteapresarretnon="checked='checked'"; }
+	if (defined('PROFPVIDEOPROJO') && PROFPVIDEOPROJO == "oui")          { $profpVideoProjooui="checked='checked'"; }
+	if (defined('PROFPVIDEOPROJO') && PROFPVIDEOPROJO == "non")          { $profpVideoProjonon="checked='checked'"; }
+	if (defined('PROFPMODIFAFFECT') && PROFPMODIFAFFECT == "oui")         { $profpmodifaffectoui="checked='checked'"; }
+	if (defined('PROFPMODIFAFFECT') && PROFPMODIFAFFECT == "non")         { $profpmodifaffectnon="checked='checked'"; }
+	if (defined('PROFPACCESNOTE') && PROFPACCESNOTE == "oui")           { $profpaccesnoteoui="checked='checked'"; }
+	if (defined('PROFPACCESNOTE') && PROFPACCESNOTE == "non")           { $profpaccesnotenon="checked='checked'"; }
+	if (defined('EXAMENIPAC') && EXAMENIPAC == "non")    { $examenipacnon="checked='checked'"; }
+	if (defined('EXAMENIPAC') && EXAMENIPAC == "oui")    { $examenipacoui="checked='checked'"; }
+	if (defined('EXAMENVATELREUNION') && EXAMENVATELREUNION == "non")    { $examenvatelreunionnon="checked='checked'"; }
+	if (defined('EXAMENVATELREUNION') && EXAMENVATELREUNION == "oui")    { $examenvatelreunionoui="checked='checked'"; }
+	if (defined('AUTOINE') && AUTOINE == "non")    { $autoINEnon="checked='checked'"; }
+	if (defined('AUTOINE') && AUTOINE == "oui")    { $autoINEoui="checked='checked'"; }
+	if (defined('ENTRETIENPROF') && ENTRETIENPROF == "non")    { $entretienprofnon="checked='checked'"; }
+	if (defined('ENTRETIENPROF') && ENTRETIENPROF == "oui")    { $entretienprofoui="checked='checked'"; }
+	if (defined('EXAMENJTC') && EXAMENJTC == "oui")    { $examenjtcoui="checked='checked'"; }
+	if (defined('EXAMENJTC') && EXAMENJTC == "non")    { $examenjtcnon="checked='checked'"; }
+	if (defined('AUTODATEABSRTD') && AUTODATEABSRTD == "oui")    { $autodateabsrtdoui="checked='checked'"; }
+	if (defined('AUTODATEABSRTD') && AUTODATEABSRTD == "non")    { $autodateabsrtdnon="checked='checked'"; }
+	if (defined('DEFILMESSAGEHORI') && DEFILMESSAGEHORI == "oui")    { $checkmesshorioui="checked='checked'"; }
+	if (defined('DEFILMESSAGEHORI') && DEFILMESSAGEHORI == "non")    { $checkmesshorinon="checked='checked'"; }
+	if (defined('PROFPACCESVISADIRECTION') && PROFPACCESVISADIRECTION == "oui")    { $profpaccesvisadirectionoui="checked='checked'"; }
+	if (defined('PROFPACCESVISADIRECTION') && PROFPACCESVISADIRECTION == "non")    { $profpaccesvisadirectionnon="checked='checked'"; }
+	if (defined('PROFPACCESABSRTD') && PROFPACCESABSRTD == "oui")    { $profpaccesabsrtdoui="checked='checked'"; }
+	if (defined('PROFPACCESABSRTD') && PROFPACCESABSRTD == "non")    { $profpaccesabsrtdnon="checked='checked'"; }
+	if (defined('AFFICHAGEVATEL') && AFFICHAGEVATEL == "oui")    { $affichageVateloui="checked='checked'"; }
+	if (defined('AFFICHAGEVATEL') && AFFICHAGEVATEL == "non")    { $affichageVatelnon="checked='checked'"; }
+	if (defined('MODIFTROMBIELEVE') && MODIFTROMBIELEVE == "oui")    { $modiftrombieleveoui="checked='checked'"; }
+	if (defined('MODIFTROMBIELEVE') && MODIFTROMBIELEVE == "non")    { $modiftrombielevenon="checked='checked'"; }
 	if (defined("CNILPROTECTEUR"))    { $cnilprotecteur=CNILPROTECTEUR; }
-
-	if (AFFICHAGEIA == "oui")    { $affichageIAOui="checked='checked'"; }
-	if (AFFICHAGEIA == "non")    { $affichageIANon="checked='checked'"; }
-	if (AFFICHAGESIGN == "oui")    { $affichageSIGNOui="checked='checked'"; }
-	if (AFFICHAGESIGN == "non")    { $affichageSIGNNon="checked='checked'"; }
-
-
-
-
-
-
-	
+	if (defined('AFFICHAGEIA') && AFFICHAGEIA == "oui")    { $affichageIAOui="checked='checked'"; }
+	if (defined('AFFICHAGEIA') && AFFICHAGEIA == "non")    { $affichageIANon="checked='checked'"; }
+	if (defined('AFFICHAGESIGN') && AFFICHAGESIGN == "oui")    { $affichageSIGNOui="checked='checked'"; }
+	if (defined('AFFICHAGESIGN') && AFFICHAGESIGN == "non")    { $affichageSIGNNon="checked='checked'"; }
+	if (defined('GOOGLEAUTHEN') && GOOGLEAUTHEN == "oui")    { $googleauthenOui="checked='checked'"; }
+	if (defined('GOOGLEAUTHEN') && GOOGLEAUTHEN == "non")    { $googleauthenNon="checked='checked'"; }
 	if (defined("DEFILMESSAGEHORIY")) $messdefilhoriY=DEFILMESSAGEHORIY;
 	if (defined("DEFILMESSAGEHORIX")) $messdefilhoriX=DEFILMESSAGEHORIX;
-
-	if (TITREBANNIERE != "TITREBANNIERE") $titrebanniere=stripslashes(TITREBANNIERE); 
-
-	if (!defined(MODULEELEARNING)) { $moduleeLearningdoekeos="checked='checked'"; }
+	if (defined('TITREBANNIERE') && TITREBANNIERE != "TITREBANNIERE") $titrebanniere=stripslashes(TITREBANNIERE); 
+	if (!defined('MODULEELEARNING')) { $moduleeLearningdoekeos="checked='checked'"; }
 
 	$urlsite=$_SERVER["SERVER_NAME"]."/".ECOLE."/"; 
 	if (defined("URLSITE")) {
@@ -943,194 +935,265 @@ if ( file_exists($fichier)) {
 	$cnil="";
 	if (defined("CNILNUM")) { $cnil=CNILNUM; }
 
+	if (defined('APIACCESS') && APIACCESS == "oui")    { $APIAccessOUI="checked='checked'"; }
+	if (defined('APIACCESS') && APIACCESS == "non")    { $APIAccessNON="checked='checked'"; }
+
 	$selected="<option  STYLE='color:#000066;background-color:#FCE4BA' value=\"".TIMEZONE."\" >".TIMEZONE." Heures</option>";
-	$selectedregion="<option  STYLE='color:#000066;background-color:#FCE4BA' value=\"".METEOID.":".METEOVILLE."\" > ".METEOVILLE." </option>";
+	$selectedregion="<option  selected='selected' STYLE='color:#000066;background-color:#FCE4BA' value=\"".METEOID.":".METEOVILLE."\" > ".METEOVILLE." </option>";
 }
 ?>
+<form name=formulaire method=post action="configuration2.php" ENCTYPE="multipart/form-data">
 
-<form name=formulaire  method=post action="configuration2.php" ENCTYPE="multipart/form-data" >
-<table border="0" align=center width=100% >
-
-<tr><td colspan=2 >&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Serveur</b></font> </td></tr>
-<tr height=30 align=right>
-<td>Y a t il un accès internet :  </td>
-		<td align=left>
-		<input type=radio <?php print $lanoui ?> name=lan value="oui" class=btradio1  > oui
-		&nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $lannon ?> name=lan value="non" class=btradio1  > non
-		</td>
-</tr>
-<tr height=30 align=right>
-<td>Le serveur Triade utilise un proxy Internet :  </td>
-<td align=left>
-		<input type=radio <?php print $proxyoui ?> name=proxy value="oui" class=btradio1  > oui
-		&nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $proxynon ?> name=proxy value="non" class=btradio1  > non
-</td>
-</tr>
-<tr height=30 align=right>
-<td>L'acc&egrave;s &agrave;  Triade utilise le protocole https :  </td>
-<td align=left>
-		<input type=radio <?php print $httpsoui ?> name=https value="oui" class=btradio1  > oui
-		&nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $httpsnon ?> name=https value="non" class=btradio1  > non
-</td>
-</tr>
-<tr height=30 align=right>
-<td>Serveur en architecture 32 ou 64 bits :  </td>
-<td align=left>
-		<input type=radio <?php print $bit32 ?> name=bit value="32" class=btradio1  > 32 bits
-		&nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $bit64 ?> name=bit value="64" class=btradio1  > 64 bits
-</td>
-</tr>
-
-<tr height=30 align=right>
-	<td valign=top>Modifier heure Triade : </td>
-	<td align=left valign=top>&nbsp;<select name="timezone">
-			<?php print $selected ?>
-			<option value="-12" class=bouton2  > -13 Heures</option>
-			<option value="-12"  class=bouton2 > -12 Heures</option>
-			<option value="-11" class=bouton2  > -11 Heures</option>
-			<option value="-10" class=bouton2  > -10 Heures</option>
-			<option value="-9" class=bouton2  > -9 Heures</option>
-			<option value="-8" class=bouton2  > -8 Heures</option>
-			<option value="-7" class=bouton2  > -7 Heures</option>
-			<option value="-6" class=bouton2  > -6 Heures</option>
-			<option value="-5" class=bouton2  > -5 Heures</option>
-			<option value="-4" class=bouton2  > -4 Heures</option>
-			<option value="-3" class=bouton2  > -3 Heures</option>
-			<option value="-2" class=bouton2  > -2 Heures</option>
-			<option value="-1" class=bouton2  > -1 Heure</option>
-			<option value="0" >0</option>
-			<option value="1" class=bouton2  > +1 Heure</option>
-			<option value="2" class=bouton2  > +2 Heures</option>
-			<option value="3" class=bouton2  > +3 Heures</option>
-			<option value="4"  class=bouton2 > +4 Heures</option>
-			<option value="5" class=bouton2  > +5 Heures</option>
-			<option value="6" class=bouton2  > +6 Heures</option>
-			<option value="7"  class=bouton2 > +7 Heures</option>
-			<option value="8"  class=bouton2 > +8 Heures</option>
-			<option value="9" class=bouton2  > +9 Heures</option>
-			<option value="10" class=bouton2  > +10 Heures</option>
-			<option value="11"  class=bouton2 > +11 Heures</option>
-			<option value="12" class=bouton2  > +12 Heures</option>
-			<option value="13"  class=bouton2 > +13 Heures</option>
-		</select> <input type=text value="<?php print TIMEZONEMINUTE ?>" size=2 name="minute" > mn
-</tr><tr><td colspan=2 align=center>
-		Heure du serveur :  <?php print date("d/m/Y")." ".date("H:i:s") ?>
-		<br>Heure de Triade&nbsp;:  <?php print dateDMY()." ".dateHIS() ?><br><br>
-</td>
-</tr>
-
-<tr><td align=right >Adresse Internet du Site TRIADE : </td>
-<td align=left><input type=text  name="urlsite" size=30 value="<?php print protohttps().$urlsite ?>" />
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>A</font>dresse Internet du site Triade http://.... </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</tr>
-
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Alerte Administrateur Triade</b></font> </td></tr>
-
-<tr><td align=right >Email du lien "Contact Triade" : </td>
-<td align=left><input type=text value="<?php print $mailcontact ?>"  name="mailcontact" size=30>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>E</font>mail se trouvant sur la page d\'accueil.</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-
-</tr>
-
-<tr><td align=right>Email de l'administrateur Triade 1 : </td>
-<td align=left><input type=text value="<?php print $mailadmin ?>"  name="mailadmin" size=30>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>E</font>mail permettant de recevoir les informations <br /> importantes de VOTRE Triade .</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</tr>
-
-<tr><td align=right valign=top>Email de l'administrateur Triade 2 : </td>
-<td align=left><input type=text value="<?php print $mailadmin2 ?>"  name="mailadmin2" size=30>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>E</font>mail permettant de recevoir les informations <br /> importantes de VOTRE Triade .</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-<br>
-<?php 
-if ($sendmail != 0) {
-	print "[<a href='configuration_mail.php'>Configuration mail</a>]";
+<!-- ===== Barre de recherche ===== -->
+<div style="background:#f0f2fa;border:1px solid #c5cae9;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+  <i class="bi bi-search" style="color:#080A66;font-size:14px;flex-shrink:0;"></i>
+  <input type="text" id="conf-search" placeholder="Rechercher un paramètre de configuration…"
+    autocomplete="off"
+    style="flex:1;border:1px solid #c5cae9;border-radius:6px;padding:6px 12px;font-size:13px;font-family:Electrolize,Trebuchet MS,Arial;color:#333;outline:none;background:#fff;">
+  <span id="conf-search-count" style="font-size:12px;color:#888;white-space:nowrap;display:none;"></span>
+  <button type="button" id="conf-search-clear" onclick="document.getElementById('conf-search').value='';confSearch();"
+    style="display:none;background:none;border:none;cursor:pointer;color:#c62828;font-size:16px;line-height:1;padding:0 2px;">&#x2715;</button>
+</div>
+<script>
+var _confInitOpen = null;
+function confSearch() {
+  var panels = document.querySelectorAll('.acc-panel');
+  if (!_confInitOpen) {
+    _confInitOpen = Array.from(panels).map(function(p) { return p.classList.contains('acc-open'); });
+  }
+  var q = document.getElementById('conf-search').value.trim().toLowerCase();
+  var total = 0;
+  document.getElementById('conf-search-clear').style.display = q ? 'block' : 'none';
+  panels.forEach(function(panel, i) {
+    var rows = panel.querySelectorAll('.conf-inner tr');
+    var hits = 0;
+    rows.forEach(function(row) {
+      if (!q) {
+        row.style.display = '';
+      } else {
+        var txt = (row.innerText || row.textContent || '').toLowerCase();
+        if (txt.indexOf(q) !== -1) { row.style.display = ''; hits++; total++; }
+        else { row.style.display = 'none'; }
+      }
+    });
+    if (!q) {
+      panel.style.display = '';
+      if (_confInitOpen[i]) { panel.classList.add('acc-open'); }
+      else { panel.classList.remove('acc-open'); }
+    } else if (hits > 0) {
+      panel.style.display = ''; panel.classList.add('acc-open');
+    } else {
+      panel.style.display = 'none';
+    }
+  });
+  var countEl = document.getElementById('conf-search-count');
+  if (q) {
+    countEl.style.display = 'inline';
+    countEl.textContent = total + ' résultat' + (total > 1 ? 's' : '');
+  } else {
+    countEl.style.display = 'none';
+  }
 }
-?>
-</tr>
+document.getElementById('conf-search').addEventListener('input', confSearch);
+document.getElementById('conf-search').addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { this.value = ''; confSearch(); }
+});
 
+</script>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" >  <font class="T2"><b>Configuration Graphique</b></font></td></tr>
+<!-- ===== Section 1 : Configuration Serveur ===== -->
+<div class="acc-panel">
+  <div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')">
+    <span>Configuration Serveur</span><span class="acc-arrow">&#9660;</span>
+  </div>
+  <div class="acc-body">
+<table class="conf-inner" width="100%">
 
-<!-- 
-<tr><td align=right >Activation de l'agent web  : </td>
-<td align=left><input type=radio <?php print $agentweboui ?> name="agentweb" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	       <input type=radio <?php print $agentwebnon ?> name="agentweb" value="non" class=btradio1  > non 
+<?php if(INTER != "oui"): ?>
+      <tr>
+        <td align="right">Y a t il un accès internet :</td>
+        <td align="left">
+          <label><input type=radio <?php print $lanoui ?> name=lan value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $lannon ?> name=lan value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	       <A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<iframe width=100 height=100 src=\'agentweb.php\'  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe><br><font face=Verdana size=1><font color=red>L</font>\'agent web Lise permettra de guider vos utilisateurs de façon interactif.<br><br> <i>Accès à l\'internet obligatoire</i> </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
--->
+      <tr>
+        <td align="right">Le serveur Triade utilise un proxy Internet :</td>
+        <td align="left">
+          <label><input type=radio <?php print $proxyoui ?> name=proxy value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $proxynon ?> name=proxy value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<?php 
+      <tr>
+        <td align="right">L'acc&egrave;s &agrave; Triade utilise-t-il le protocole https :</td>
+        <td align="left">
+          <label><input type=radio <?php print $httpsoui ?> name=https value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $httpsnon ?> name=https value="non" class=btradio1> non</label>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Activation de cette option est à faire SI et SEULEMENT SI vous avez du https de configurer sur votre serveur. Cette option ne configure pas le https de votre serveur. Activer cette option sans le protocole https déjà en place posera des erreurs de connexion.</span></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Serveur en architecture 32 ou 64 bits :</td>
+        <td align="left">
+          <label><input type=radio <?php print $bit32 ?> name=bit value="32" class=btradio1> 32 bits</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $bit64 ?> name=bit value="64" class=btradio1> 64 bits</label>
+        </td>
+      </tr>
+<?php endif; ?>
+
+      <tr>
+        <td align="right">Modifier heure Triade :</td>
+        <td align="left">
+          <select name="timezone" class="cc-select">
+            <?php print $selected ?>
+            <option value="-12" class=bouton2> -13 Heures</option>
+            <option value="-12" class=bouton2> -12 Heures</option>
+            <option value="-11" class=bouton2> -11 Heures</option>
+            <option value="-10" class=bouton2> -10 Heures</option>
+            <option value="-9" class=bouton2> -9 Heures</option>
+            <option value="-8" class=bouton2> -8 Heures</option>
+            <option value="-7" class=bouton2> -7 Heures</option>
+            <option value="-6" class=bouton2> -6 Heures</option>
+            <option value="-5" class=bouton2> -5 Heures</option>
+            <option value="-4" class=bouton2> -4 Heures</option>
+            <option value="-3" class=bouton2> -3 Heures</option>
+            <option value="-2" class=bouton2> -2 Heures</option>
+            <option value="-1" class=bouton2> -1 Heure</option>
+            <option value="0">0</option>
+            <option value="1" class=bouton2> +1 Heure</option>
+            <option value="2" class=bouton2> +2 Heures</option>
+            <option value="3" class=bouton2> +3 Heures</option>
+            <option value="4" class=bouton2> +4 Heures</option>
+            <option value="5" class=bouton2> +5 Heures</option>
+            <option value="6" class=bouton2> +6 Heures</option>
+            <option value="7" class=bouton2> +7 Heures</option>
+            <option value="8" class=bouton2> +8 Heures</option>
+            <option value="9" class=bouton2> +9 Heures</option>
+            <option value="10" class=bouton2> +10 Heures</option>
+            <option value="11" class=bouton2> +11 Heures</option>
+            <option value="12" class=bouton2> +12 Heures</option>
+            <option value="13" class=bouton2> +13 Heures</option>
+          </select>
+          <input type=text value="<?php print TIMEZONEMINUTE ?>" size=2 name="minute" class="cc-select"> mn
+          <br><small>Heure du serveur : <?php print date("d/m/Y")." ".date("H:i:s") ?></small>
+          <br><small>Heure de Triade : <?php print dateDMY()." ".dateHIS() ?></small>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Adresse Internet du Site TRIADE :</td>
+        <td align="left">
+          <input type=text name="urlsite" size=30 value="<?php print protohttps().$urlsite ?>" class="cc-select" />
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Adresse Internet du site Triade http://...</span></span>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</div>
+
+<!-- ===== Section 2 : Alerte Administrateur Triade ===== -->
+<div class="acc-panel">
+  <div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')">
+    <span>Alerte Administrateur Triade</span><span class="acc-arrow">&#9660;</span>
+  </div>
+  <div class="acc-body">
+<table class="conf-inner" width="100%">
+
+      <tr>
+        <td align="right">Email du lien "Contact Triade" :</td>
+        <td align="left">
+          <input type=text value="<?php print $mailcontact ?>" name="mailcontact" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Email se trouvant sur la page d'accueil.</span></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Email de l'administrateur Triade 1 :</td>
+        <td align="left">
+          <input type=text value="<?php print $mailadmin ?>" name="mailadmin" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Email permettant de recevoir les informations importantes de VOTRE Triade.</span></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Email de l'administrateur Triade 2 :</td>
+        <td align="left">
+          <input type=text value="<?php print $mailadmin2 ?>" name="mailadmin2" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Email permettant de recevoir les informations importantes de VOTRE Triade.</span></span>
+          <br><?php if ($sendmail != 0) { print "[<a href='configuration_mail.php'>Configuration mail</a>]"; } ?>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</div>
+
+<!-- ===== Section 3 : Configuration Graphique ===== -->
+<div class="acc-panel">
+  <div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')">
+    <span>Configuration Graphique</span><span class="acc-arrow">&#9660;</span>
+  </div>
+  <div class="acc-body">
+<table class="conf-inner" width="100%">
+
+<?php
 if (file_exists("../common/config8.inc.php")) {
 	include_once("../common/config8.inc.php");
 	$prenomagentweb=AGENTWEBPRENOM;
 }
-if (trim($prenomagentweb) == "") { $prenomagentweb="Lise"; } 
+if (trim($prenomagentweb) == "") { $prenomagentweb="Lise"; }
 ?>
-<!--
-<tr><td align=right >Prénom de l'agent web : </td>
-<td align=left><input  type=text value="<?php print $prenomagentweb ?>" name="prenomagentweb"  size=30 maxlength="15" ></td>
-</tr>
--->
 
-<tr><td align=right >Configuration jeux de caractères  :</td><td align=left >
-	<select name="charset" >
-		<?php
-		print "<option value='$charset' id='select0'  class=bouton2 checked='checked' >".$charset."</option>";
+      <tr>
+        <td align="right">Configuration jeux de caractères :</td>
+        <td align="left">
+          <select name="charset" class="cc-select">
+            <?php
+            print "<option value='$charset' id='select0' class=bouton2 checked='checked'>".$charset."</option>";
+            print "<option value='UTF-8' id='select1' class=bouton2>UTF-8</option>";
+            print "<option value='iso-8859-1' id='select1' class=bouton2>iso-8859-1</option>";
+            ?>
+          </select>
+        </td>
+      </tr>
 
-		print "<option value='UTF-8' id='select1' class=bouton2  >UTF-8</option>";
-		print "<option value='iso-8859-1' id='select1' class=bouton2  >iso-8859-1</option>";
-		?>
-	</select>
-</td></tr>
-
-
-<tr><td align=right >Supprimer le message défillant vertical : </td>
-<td align=left><input type=radio <?php print $checkmessoui ?> name=messdefil value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $checkmessnon ?> name=messdefil value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Supprimer le message défillant horizontal : </td>
-<td align=left><input type=radio <?php print $checkmesshorioui ?> name=messdefilhori value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $checkmesshorinon ?> name=messdefilhori value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Position du message horizontal : </td>
-<td align=left> X <input type='text' name='messdefilhoriX' value="<?php print $messdefilhoriX ?>" class='btradio1' size=2 > px / Y <input type='text' name='messdefilhoriY' value="<?php print $messdefilhoriY ?>" class=btradio1  size=2 > px </td>
-</tr>
-
-
-<tr><td align=right >Supprimer la bannière du haut : </td>
-<td align=left><input type=radio <?php print $checkpubhautoui ?> name=pubhaut value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $checkpubhautnon ?> name=pubhaut value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Bannière disponible : </td>
-<td align=left><select name='banniere_dispo' >
-		<?php 
-		if (defined("BANNIEREDISPO")) {
-			if (BANNIEREDISPO >= 1) {
-				print "<option value='".BANNIEREDISPO."' id='select1' >Bannière ".BANNIEREDISPO."</option>";
-				print "<option value='supprimer' id='select0' >Supprimer bannière</option>";
-			}else{
-				print "<option value='' id='select0' >Aucun</option>";
-			}
-		}else{
-			print "<option value='' id='select0' >Aucun</option>";
-		}	
-		
-		$nbimg=29;
-		for($i=1;$i<=$nbimg;$i++) {
-			print "<option value='$i' id='select1' >Bannière $i</option>";
-		}
-		?>
-	       </select>
-		&nbsp;&nbsp;[<a href='#' onclick="open('visubanniere.php','banniere','width=1100,height=700,scrollbars=yes');" >Consulter</a>]
-</tr>
+      <tr>
+        <td align="right">Bannière disponible :</td>
+        <td align="left">
+          <select name='banniere_dispo' class="cc-select">
+            <?php
+            if (defined("BANNIEREDISPO")) {
+              if (BANNIEREDISPO >= 0) {
+                print "<option value='".BANNIEREDISPO."' id='select1'>Bannière ".BANNIEREDISPO."</option>";
+                print "<option value='supprimer' id='select0'>Supprimer bannière</option>";
+              }else{
+                if (BANNIEREDISPO >= "online") {
+                  print "<option value='online' id='select0'>Banniere Online</option>";
+                }else{
+                  print "<option value='' id='select0'>Aucun</option>";
+                }
+              }
+            }else{
+              print "<option value='' id='select0'>Aucun</option>";
+            }
+            print "<option value='online' id='select1'>Banniere online</option>";
+            $nbimg=30;
+            for($i=0;$i<=$nbimg;$i++) {
+              print "<option value='$i' id='select1'>Bannière $i</option>";
+            }
+            ?>
+          </select>
+          &nbsp;&nbsp;[<a href='#' onclick="open('visubanniere.php','banniere','width=1100,height=700,scrollbars=yes');">Consulter</a>]
+        </td>
+      </tr>
 
 <?php
 $file1="../data/image_banniere/banniere000.jpg";
@@ -1153,407 +1216,427 @@ if (isset($_GET["Supp_ban"])) {
 	@unlink("../data/image_banniere/banniere000.gif");
 }
 
-
 if ((file_exists($file1)) || (file_exists($file2)) || (file_exists($file3))) {
 ?>
-	<tr><td align=right valign=top >Bannière de l'établissement :</td>
-	<td align=left >
-	<input type="button" value="Supprimer" class='bouton2' onclick="open('configuration.php?Supp_ban=1','_parent','')" >
-	<input type=hidden name="chg_ban" value='0'>
-	</td></tr>
+      <tr>
+        <td align="right">Bannière de l'établissement :</td>
+        <td align="left">
+          <input type="button" value="Supprimer" class='bouton2' onclick="open('configuration.php?Supp_ban=1','_parent','')">
+          <input type=hidden name="chg_ban" value='0'>
+        </td>
+      </tr>
 <?php
 }else{
 ?>
-	<tr><td align=right valign=top >Bannière de l'établissement :</td>
-	<td align=left >
-	<input type="file" name="fichier" size=20  > <br>
-	image au format jpg
-	<br><i>Hauteur :  <input type='text' name='hauteurbanniere' value='' size='2' > px <br>
-	       Largeur : 1020 px </i><br>
-	<input type=hidden name="chg_ban" value='1'>
-	</td></tr>
+      <tr>
+        <td align="right">Bannière de l'établissement :</td>
+        <td align="left">
+          <input type="file" name="fichier" size=20><br>
+          image au format jpg<br>
+          <i>Hauteur : <input type='text' name='hauteurbanniere' value='' size='2' class="cc-select"> px<br>Largeur : 1020 px</i><br>
+          <input type=hidden name="chg_ban" value='1'>
+        </td>
+      </tr>
 <?php } ?>
 
-<!-- <tr><td align=right > Titre de la banniere :</td><td align=left ><input type='text' name='titrebanniere' value="<?php print $titrebanniere ?>" size='30' maxlength=50'' /></tr> -->
+      <tr>
+        <td align="right">Configuration couleur :</td>
+        <td align="left">
+          <select name="graph" class="cc-select">
+            <?php
+            if (defined("GRAPH")) {
+              if (GRAPH == "0") { $val="Marine"; }
+              if (GRAPH == "1") { $val="Saumon"; }
+              if (GRAPH == "2") { $val="Corail"; }
+              if (GRAPH == "3") { $val="Algue"; }
+              if (GRAPH == "4") { $val="Citron (spécif. arabe)"; }
+              if (GRAPH == "5") { $val="Printemps"; }
+              if (GRAPH == "6") { $val="Rose"; }
+              if (GRAPH == "7") { $val="Classique"; }
+              if (GRAPH == "8") { $val="Figue"; }
+              if (GRAPH == "9") { $val="Groupe Vatel"; }
+              if (GRAPH == "10") { $val="ESAD (1)"; }
+              if (GRAPH == "11") { $val="Classeur"; }
+              if (GRAPH == "12") { $val="Numidia (1)"; }
+              if (GRAPH == "13") { $val="MongilSchool"; }
+              if (GRAPH == "14") { $val="Marine 2"; }
+              if (GRAPH == "15") { $val="Nuage"; }
+              if (GRAPH == "16") { $val="IPAC BTS"; }
+              if (GRAPH == "17") { $val="IPAC Factory"; }
+              if (GRAPH == "18") { $val="IPAC MBway"; }
+              if (GRAPH == "19") { $val="Design Genève"; }
+              if (GRAPH == "20") { $val="Pigier Performance"; }
+              if (GRAPH == "21") { $val="Pigier Création"; }
+              if (GRAPH == "22") { $val="Ecole-des-lys"; }
+              if (GRAPH == "23") { $val="CNEAP"; }
+              if (GRAPH == "24") { $val="LFMP"; }
+              if (GRAPH == "25") { $val="AFTEC"; }
+              if (GRAPH == "26") { $val="ESCO"; }
+              if (GRAPH == "27") { $val="Privé George Sand"; }
+              if (GRAPH == "28") { $val="La Source"; }
+              if (GRAPH == "29") { $val="EPICOM"; }
+              if (GRAPH == "30") { $val="WES'SUP"; }
+              if (GRAPH == "31") { $val="VPCONSULT"; }
+              if (GRAPH == "33") { $val="TRIADE 2026"; }
+              print "<option value='".GRAPH."' STYLE='color:#000066;background-color:#FCE4BA' class=bouton2 checked='checked'>".$val."</option>";
+            }
+            ?>
+            <optgroup label="OFFICIEL">
+            <option value='33' class=bouton2>TRIADE 2026</option>
+            <optgroup label="NON-SUPPORTE">
+            <option value='0' class=bouton2>Marine</option>
+            <option value='1' class=bouton2>Saumon</option>
+            <option value='2' class=bouton2>Corail</option>
+            <option value='3' class=bouton2>Algue</option>
+            <option value='4' class=bouton2>Citron (spécif. arabe)</option>
+            <option value='5' class=bouton2>Printemps</option>
+            <option value='6' class=bouton2>Rose</option>
+            <option value='7' class=bouton2>Classique</option>
+            <option value='8' class=bouton2>Figue</option>
+            <option value='11' class=bouton2>Classeur</option>
+            <option value='14' class=bouton2>Marine 2</option>
+            <option value='15' class=bouton2>Nuage</option>
+            <optgroup label="NON-OFFICIEL">
+            <option value='13' class=bouton2>MongilSchool</option>
+            <option value='22' class=bouton2>Ecole-des-lys</option>
+            <option value='23' class=bouton2>CNEAP</option>
+            <option value='24' class=bouton2>LFMP</option>
+            <option value='25' class=bouton2>AFTEC</option>
+            <option value='26' class=bouton2>ESCO</option>
+            <option value='27' class=bouton2>Privé George Sand</option>
+            <option value='28' class=bouton2>La Source</option>
+            <option value='29' class=bouton2>EPICOM</option>
+            <option value='30' class=bouton2>WES'SUP</option>
+            <option value='31' class=bouton2>VPCONSULT</option>
+            <option value='10' class=bouton2>ESAD</option>
+            <option value='16' class=bouton2>BTS</option>
+            <option value='17' class=bouton2>Factory</option>
+            <option value='18' class=bouton2>MBway</option>
+            <option value='19' class=bouton2>Design Genève</option>
+            <option value='12' class=bouton2>Numidia</option>
+            <option value='20' class=bouton2>Pigier Performance</option>
+            <option value='9' class=bouton2>Vatel</option>
+          </select>
+        </td>
+      </tr>
 
-<tr><td align=right >Configuration couleur :</td><td align=left >
-	<select name="graph" >
-		<?php
-			if (defined("GRAPH")) {
+      <tr>
+        <td align="right">Nom du lien 1 :</td>
+        <td align="left">
+          <input type=text value="<?php print stripslashes($nomdulien) ?>" name="nomdulien" size=30 maxlength="50" class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Ce lien apparaît dans la barre de menu de la page d'accueil.</span></span>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">Adresse web du lien 1 :</td>
+        <td align="left">
+          <input type=text value="<?php print $addressedulien ?>" name="adressedulien" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Cette adresse est la destination du lien précédent.</span></span>
+        </td>
+      </tr>
 
-				if (GRAPH == "0") { $val="Marine"; }
-				if (GRAPH == "1") { $val="Saumon"; }
-				if (GRAPH == "2") { $val="Corail"; }
-				if (GRAPH == "3") { $val="Algue"; }
-				if (GRAPH == "4") { $val="Citron (spécif. arabe)"; }
-				if (GRAPH == "5") { $val="Printemps"; }
-				if (GRAPH == "6") { $val="Rose"; }
-				if (GRAPH == "7") { $val="Classique"; }
-				if (GRAPH == "8") { $val="Figue"; }
-				if (GRAPH == "9") { $val="Groupe Vatel"; }
-				if (GRAPH == "10") { $val="ESAD (1)"; }
-				if (GRAPH == "11") { $val="Classeur"; }
-				if (GRAPH == "12") { $val="Numidia (1)"; }
-				if (GRAPH == "13") { $val="MongilSchool"; }
-				if (GRAPH == "14") { $val="Marine 2"; }
-				if (GRAPH == "15") { $val="Nuage"; }
-				if (GRAPH == "16") { $val="IPAC BTS"; }
-				if (GRAPH == "17") { $val="IPAC Factory"; }
-				if (GRAPH == "18") { $val="IPAC MBway"; }
-				if (GRAPH == "19") { $val="Design Genève"; }
-				if (GRAPH == "20") { $val="Pigier Performance"; }
-				if (GRAPH == "21") { $val="Pigier Création"; }
-				if (GRAPH == "22") { $val="Ecole-des-lys"; }
-				if (GRAPH == "23") { $val="CNEAP"; }
-				if (GRAPH == "24") { $val="LFMP"; }
-				if (GRAPH == "25") { $val="AFTEC"; }
-				if (GRAPH == "26") { $val="ESCO"; }
-				if (GRAPH == "27") { $val="Privé George Sand"; }
-				if (GRAPH == "28") { $val="La Source"; }
-				if (GRAPH == "29") { $val="EPICOM"; }
-				if (GRAPH == "30") { $val="WES'SUP"; }
-				if (GRAPH == "31") { $val="VPCONSULT"; }
+      <tr>
+        <td align="right">Nom du lien 2 :</td>
+        <td align="left">
+          <input type=text value="<?php print stripslashes($nomdulien2) ?>" name="nomdulien2" size=30 maxlength="50" class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Ce lien apparaît dans la barre de menu de la page d'accueil.</span></span>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">Adresse web du lien 2 :</td>
+        <td align="left">
+          <input type=text value="<?php print $addressedulien2 ?>" name="adressedulien2" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Cette adresse est la destination du lien précédent.</span></span>
+        </td>
+      </tr>
 
-				print "<option value='".GRAPH."' STYLE='color:#000066;background-color:#FCE4BA' class=bouton2 checked='checked' >".$val."</option>";
-			}
-?>
-		<optgroup label="TRIADE">
-		<option value='0' class=bouton2 >Marine</option>
-		<option value='1' class=bouton2 >Saumon</option>
-		<option value='2' class=bouton2 >Corail</option>
-		<option value='3' class=bouton2 >Algue</option>
-		<option value='4' class=bouton2 >Citron (spécif. arabe)</option>
-		<option value='5' class=bouton2 >Printemps</option>
-		<option value='6' class=bouton2 >Rose</option>
-		<option value='7' class=bouton2 >Classique</option>
-		<option value='8' class=bouton2 >Figue</option>
-		<option value='11' class=bouton2 >Classeur</option>
-		<option value='14' class=bouton2 >Marine 2</option>
-		<option value='15' class=bouton2 >Nuage</option>
-		<optgroup label="ECOLE">
-		<option value='13' class=bouton2 >MongilSchool</option>
-		<option value='22' class=bouton2 >Ecole-des-lys</option>
-		<option value='23' class=bouton2 >CNEAP</option>
-		<option value='24' class=bouton2 >LFMP</option>
-		<option value='25' class=bouton2 >AFTEC</option>
-		<option value='26' class=bouton2 >ESCO</option>
-		<option value='27' class=bouton2 >Privé George Sand</option>
-		<option value='28' class=bouton2 >La Source</option>
-		<option value='29' class=bouton2 >EPICOM</option>
-		<option value='30' class=bouton2 >WES'SUP</option>
-		<option value='31' class=bouton2 >VPCONSULT</option>
-		<optgroup label="ESAD">
-		<option value='10' class=bouton2 > ESAD (1)</option>
-		<optgroup label="IPAC">
-		<option value='16' class=bouton2 >BTS</option>
-		<option value='17' class=bouton2 >Factory</option>
-		<option value='18' class=bouton2 >MBway</option>
-		<option value='19' class=bouton2 >Design Genève</option>
-		<optgroup label="NUMIDIA">
-		<option value='12' class=bouton2 >Numidia (1)</option>
-		<optgroup label="PIGIER">
-		<option value='20' class=bouton2 >Pigier Performance</option>		
-		<option value='21' class=bouton2 >Pigier Création</option>		
-		<optgroup label="VATEL">
-		<option value='9' class=bouton2 >Groupe Vatel</option>
-	</select>
-</td></tr>
+      <tr>
+        <td align="right">Nom du lien 3 :</td>
+        <td align="left">
+          <input type=text value="<?php print stripslashes($nomdulien3) ?>" name="nomdulien3" size=30 maxlength="50" class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Ce lien apparaît dans la barre de menu de la page d'accueil.</span></span>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">Adresse web du lien 3 :</td>
+        <td align="left">
+          <input type=text value="<?php print $addressedulien3 ?>" name="adressedulien3" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Cette adresse est la destination du lien précédent.</span></span>
+        </td>
+      </tr>
 
-
-<tr><td align=right >Nom du lien 1 : </td>
-<td align=left><input type=text value="<?php print stripslashes($nomdulien) ?>" name="nomdulien" size=30 maxlength="50" >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>e lien apparaît dans la barre de menu de la page d\'accueil. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-<tr><td align=right >Adresse web du lien 1 : </td>
-<td align=left><input  type=text value="<?php print $addressedulien ?>" name="adressedulien"  size=30 >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>ette adresse est la destination du lien précédent. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-
-<tr><td align=right >Nom du lien 2 : </td>
-<td align=left><input type=text value="<?php print stripslashes($nomdulien2) ?>" name="nomdulien2" size=30 maxlength="50" >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>e lien apparaît dans la barre de menu de la page d\'accueil. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-<tr><td align=right >Adresse web du lien 2 : </td>
-<td align=left><input  type=text value="<?php print $addressedulien2 ?>" name="adressedulien2"  size=30 >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>ette adresse est la destination du lien précédent. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-
-<tr><td align=right >Nom du lien 3 : </td>
-<td align=left><input type=text value="<?php print stripslashes($nomdulien3) ?>" name="nomdulien3" size=30 maxlength="50" >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>e lien apparaît dans la barre de menu de la page d\'accueil. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-<tr><td align=right >Adresse web du lien 3 : </td>
-<td align=left><input  type=text value="<?php print $addressedulien3 ?>" name="adressedulien3"  size=30 >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>ette adresse est la destination du lien précédent. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-
-<tr><td align=right >Nom du lien 4 : </td>
-<td align=left><input type=text value="<?php print stripslashes($nomdulien4) ?>" name="nomdulien4" size=30 maxlength="50" >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>e lien apparaît dans la barre de menu de la page d\'accueil. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-<tr><td align=right >Adresse web du lien 4 : </td>
-<td align=left><input  type=text value="<?php print $addressedulien4 ?>" name="adressedulien4"  size=30 >
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>ette adresse est la destination du lien précédent. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A></td>
-</tr>
-
-
-
-
-
-
-<tr><td align=right >Activer le module météo : </td>
-<td align=left><input type=radio <?php print $meteooui ?> name=meteo value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $meteonon ?> name=meteo value="non" class=btradio1  > non
-</td>
-</tr>
-<tr><td align=right >Zone géographique : </td>
-<td align=left valign=top>&nbsp;<select name="meteoregion">
-		<?php print $selectedregion ?>
-
-		<optgroup label="France">
-		<?php
-		if (file_exists("./lib/weather_concept.fr")) {
-			$handle=fopen("./lib/weather_concept.fr","r");
-			while (!feof($handle)) {
-				$ligne=fgets($handle, 1000); 
-				list($code,$ville)= preg_split ("/:/", $ligne, 2);
-				$ville=trim($ville);
-				$ville2=trim(trunchaine($ville,15));
-				$code=trim($code);
-				if (($ville2 != "") && ($code != "")){
-					print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\"  >$ville2</option>";
-				}
-  			}
-			fclose($handle);
-		}
-		print "<optgroup label='Haiti' >";
-		if (file_exists("./lib/weather.haiti")) {
-			$handle=fopen("./lib/weather.haiti","r");
-			while (!feof($handle)) {
-				$ligne=fgets($handle, 1000); 
-				list($code,$ville)= preg_split ("/:/", $ligne, 2);
-				$ville=trim($ville);
-				$ville2=trim(trunchaine($ville,15));
-				$code=trim($code);
-				if (($ville2 != "") && ($code != "")){
-					print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\"  >$ville2</option>";
-				}
-  			}
-			fclose($handle);
-		}
-		print "<optgroup label='Tunisie' >";
-		if (file_exists("./lib/weather.tu")) {
-			$handle=fopen("./lib/weather.tu","r");
-			while (!feof($handle)) {
-				$ligne=fgets($handle, 1000); 
-				list($code,$ville)= preg_split ("/:/", $ligne, 2);
-				$ville=trim($ville);
-				$ville2=trim(trunchaine($ville,15));
-				$code=trim($code);
-				if (($ville2 != "") && ($code != "")){
-					print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\"  >$ville2</option>";
-				}
-  			}
-			fclose($handle);
-		}
-
-		
-	
-		?>
-
-		</select>
-
-</td></tr>
-
-<tr><td align=right >Activer la visualisation de connexion  : </td>
-<td align=left><input type=radio <?php print $traceoui ?> name="trace" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $tracenon ?> name="trace" value="non" class=btradio1  > non
-               <A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>P</font>ermet de visualiser les informations de connexion <br>des utilisateurs. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</td></tr>
-
-<tr><td align=right >Visualiser les jours de fête  : </td>
-<td align=left><input type=radio <?php print $feteoui ?> name="fete" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $fetenon ?> name="fete" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Visualiser les anniversaires  : </td>
-<td align=left><input type=radio <?php print $aniversaireoui ?> name="aniversaire" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $aniversairenon ?> name="aniversaire" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Indiquer le nom de famille pour les anniversaires  : </td>
-<td align=left><input type=radio <?php print $nomaniversaireoui ?> name="nomaniversaire" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $nomaniversairenon ?> name="nomaniversaire" value="non" class=btradio1  > non
-</td></tr>
-
-
-<tr><td align=right >Visualiser les informations D.S.T (accueil) : </td>
-<td align=left><input type=radio <?php print $dstvisuaccueiloui ?> name="dstvisuaccueil" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $dstvisuaccueilnon ?> name="dstvisuaccueil" value="non" class=btradio1  > non
-</td></tr>
-
-
-
-<tr><td align=right >Heure de départ (EDT) : </td><td align=left><input type="text" name="hd_edt" size="3" value="<?php print $hd_edt ?>" /></td></tr>
-<tr><td align=right >Heure de fin (EDT) : </td><td align=left><input type="text" name="hf_edt" size="3" value="<?php print $hf_edt ?>" /></td></tr>
-<tr><td align=right >Suffixe minutes (EDT) : </td><td align=left><input type="text" name="mf_edt" size="3"  value="<?php print $mf_edt ?>" /></td></tr>
-
-<tr><td align=right >Attribution&nbsp;des&nbsp;trimestres&nbsp;en&nbsp;mode&nbsp;automatique&nbsp;:&nbsp;</td>
-<td align=left><input type=radio <?php print $visutriautooui ?> name="visutriauto" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	       <input type=radio <?php print $visutriautonon ?> name="visutriauto" value="non" class=btradio1  > non 
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>P</font>ermet d\'indiquer le trimestre en cours, lors de la saisie des commentaires pour les bulletins. (Pour les enseignants, la vie scolaire, etc... )</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</td></tr>
+      <tr>
+        <td align="right">Nom du lien 4 :</td>
+        <td align="left">
+          <input type=text value="<?php print stripslashes($nomdulien4) ?>" name="nomdulien4" size=30 maxlength="50" class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Ce lien apparaît dans la barre de menu de la page d'accueil.</span></span>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">Adresse web du lien 4 :</td>
+        <td align="left">
+          <input type=text value="<?php print $addressedulien4 ?>" name="adressedulien4" size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Cette adresse est la destination du lien précédent.</span></span>
+        </td>
+      </tr>
 
 
 
 
-<?php //$sendmail=0 pas d'envoi de mail ?>
+      <tr>
+        <td align="right">Activer le module météo :</td>
+        <td align="left">
+          <label><input type=radio <?php print $meteooui ?> name=meteo value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $meteonon ?> name=meteo value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Zone géographique :</td>
+        <td align="left">
+          <select name="meteoregion" class="cc-select">
+            <?php print $selectedregion ?>
+            <optgroup label="France">
+            <?php
+            if (file_exists("./lib/weather_concept.fr")) {
+              $handle=fopen("./lib/weather_concept.fr","r");
+              while (!feof($handle)) {
+                $ligne=fgets($handle, 1000);
+                list($code,$ville)= preg_split ("/:/", $ligne, 2);
+                if ($ville !== null) { $ville=trim($ville); $ville2=trim(trunchaine($ville,15)); }
+                $code=trim($code);
+                if (($ville2 != "") && ($code != "")){ print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\">$ville2</option>"; }
+              }
+              fclose($handle);
+            }
+            print "<optgroup label='Haiti'>";
+            if (file_exists("./lib/weather.haiti")) {
+              $handle=fopen("./lib/weather.haiti","r");
+              while (!feof($handle)) {
+                $ligne=fgets($handle, 1000);
+                list($code,$ville)= preg_split ("/:/", $ligne, 2);
+                if ($ville !== null) { $ville=trim($ville); $ville2=trim(trunchaine($ville,15)); }
+                $code=trim($code);
+                if (($ville2 != "") && ($code != "")){ print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\">$ville2</option>"; }
+              }
+              fclose($handle);
+            }
+            print "<optgroup label='Burkina Fasp'>";
+            if (file_exists("./lib/weather.tu")) {
+              $handle=fopen("./lib/weather.burki","r");
+              while (!feof($handle)) {
+                $ligne=fgets($handle, 1000);
+                list($code,$ville)= preg_split ("/:/", $ligne, 2);
+                if ($ville !== null) { $ville=trim($ville); $ville2=trim(trunchaine($ville,15)); }
+                $code=trim($code);
+                if (($ville2 != "") && ($code != "")){ print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\">$ville2</option>"; }
+              }
+              fclose($handle);
+            }
+            print "<optgroup label='Tunisie'>";
+            if (file_exists("./lib/weather.tu")) {
+              $handle=fopen("./lib/weather.tu","r");
+              while (!feof($handle)) {
+                $ligne=fgets($handle, 1000);
+                list($code,$ville)= preg_split ("/:/", $ligne, 2);
+                if ($ville !== null) { $ville=trim($ville); $ville2=trim(trunchaine($ville,15)); }
+                $code=trim($code);
+                if (($ville2 != "") && ($code != "")){ print "<option value=\"$code:$ville\" class='bouton2' title=\"$ville\">$ville2</option>"; }
+              }
+              fclose($handle);
+            }
+            ?>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Activer la visualisation de connexion :</td>
+        <td align="left">
+          <label><input type=radio <?php print $traceoui ?> name="trace" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $tracenon ?> name="trace" value="non" class=btradio1> non</label>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Permet de visualiser les informations de connexion des utilisateurs.</span></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Visualiser les jours de fête :</td>
+        <td align="left">
+          <label><input type=radio <?php print $feteoui ?> name="fete" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $fetenon ?> name="fete" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Visualiser les anniversaires :</td>
+        <td align="left">
+          <label><input type=radio <?php print $aniversaireoui ?> name="aniversaire" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $aniversairenon ?> name="aniversaire" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Indiquer le nom de famille pour les anniversaires :</td>
+        <td align="left">
+          <label><input type=radio <?php print $nomaniversaireoui ?> name="nomaniversaire" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $nomaniversairenon ?> name="nomaniversaire" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Visualiser les informations D.S.T (accueil) :</td>
+        <td align="left">
+          <label><input type=radio <?php print $dstvisuaccueiloui ?> name="dstvisuaccueil" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $dstvisuaccueilnon ?> name="dstvisuaccueil" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Heure de départ (EDT) :</td>
+        <td align="left"><input type="text" name="hd_edt" size="3" value="<?php print $hd_edt ?>" class="cc-select" /></td>
+      </tr>
+      <tr>
+        <td align="right">Heure de fin (EDT) :</td>
+        <td align="left"><input type="text" name="hf_edt" size="3" value="<?php print $hf_edt ?>" class="cc-select" /></td>
+      </tr>
+      <tr>
+        <td align="right">Suffixe minutes (EDT) :</td>
+        <td align="left"><input type="text" name="mf_edt" size="3" value="<?php print $mf_edt ?>" class="cc-select" /></td>
+      </tr>
+
+      <tr>
+        <td align="right">Attribution des trimestres en mode automatique :</td>
+        <td align="left">
+          <label><input type=radio <?php print $visutriautooui ?> name="visutriauto" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $visutriautonon ?> name="visutriauto" value="non" class=btradio1> non</label>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Permet d'indiquer le trimestre en cours, lors de la saisie des commentaires pour les bulletins. (Pour les enseignants, la vie scolaire, etc...)</span></span>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</div>
+
+<!-- ===== Section 4 : Configuration email ===== -->
 <?php
-	$diseabled="";
-	$info="";
-	$champemailreply="text";
-	$infoemailreply="";
-	if (defined("EMAILREPLY")) { 
-		$mailreply=EMAILREPLY; 
-		$readonlyreplymail="readonly=readonly" ; 
-		$champemailreply="hidden";
-		$infoemailreply=EMAILREPLY;
-	}
+$diseabled="";
+$info="";
+$champemailreply="text";
+$infoemailreply="";
+if (defined("EMAILREPLY")) {
+  $mailreply=EMAILREPLY;
+  $readonlyreplymail="readonly=readonly";
+  $champemailreply="hidden";
+  $infoemailreply=EMAILREPLY;
+}
 if ( $sendmail == 0) {
-	$checkoui="";
-	$checknon="checked";
-	$mailmessoui="";
-	$mailmessnon="checked";
-	if (defined("EMAILREPLY")) { $mailreply="EMAILREPLY"; $readonlyreplymail="readonly=readonly" ; }
-	$mailnomreply="";
-	$mailexterneoui="";
-	$mailexternenon="checked";
-	$diseabled="disabled='diseabled'";
-	$info="<font color='red'>( Votre serveur ne peut envoyer d'email !! )</font>";
+  $checkoui="";
+  $checknon="checked";
+  $mailmessoui="";
+  $mailmessnon="checked";
+  if (defined("EMAILREPLY")) { $mailreply="EMAILREPLY"; $readonlyreplymail="readonly=readonly"; }
+  $mailnomreply="";
+  $mailexterneoui="";
+  $mailexternenon="checked";
+  $diseabled="disabled='diseabled'";
+  $info="<font color='red'>( Votre serveur ne peut envoyer d'email !! )</font>";
 }
 ?>
+<div class="acc-panel">
+  <div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')">
+    <span>Configuration email <?php print $info ?></span><span class="acc-arrow">&#9660;</span>
+  </div>
+  <div class="acc-body">
+<table class="conf-inner" width="100%">
 
-	<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration email</b></font> <?php print $info ?></td></tr>
+      <tr>
+        <td align="right">Autoriser le transfert de mail :</td>
+        <td align="left">
+          <label><input type=radio <?php print $checkoui." ".$diseabled ?> name=forward value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $checknon." ".$diseabled ?> name=forward value="non" class=btradio1> non</label>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Autorise la reception automatique de vos messages Triade internes sur votre messagerie personnelle.</span></span>
+        </td>
+      </tr>
 
-<tr height=30 align=right>
-<td>Autoriser le transfert de mail : </td>
-<td align=left>	<input type=radio <?php print $checkoui." ".$diseabled ?> name=forward value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $checknon." ".$diseabled ?> name=forward value="non" class=btradio1  > non
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>A</font>utorise la reception automatique de vos messages Triade internes sur votre messagerie personnelle.</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-		</td>
-</tr>
+      <tr>
+        <td align="right">Valider le forwarding automatiquement :</td>
+        <td align="left">
+          <label><input type=radio <?php print $mailmessoui." ".$diseabled ?> name=mailmess value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $mailmessnon." ".$diseabled ?> name=mailmess value="non" class=btradio1> non</label>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Le mail est automatiquement valider pour le forwarding pour tout nouveau compte créé.</span></span>
+        </td>
+      </tr>
 
-<!-- 
- savoir si le mail de la personne nouvellement créer est automatiquement validé pour la messagerie 
--->
-<tr height=30 align=right>
-<td>Valider le forwarding automatiquement  : </td>
-<td align=left>	<input type=radio <?php print $mailmessoui." ".$diseabled ?> name=mailmess value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-		<input type=radio <?php print $mailmessnon." ".$diseabled ?> name=mailmess value="non" class=btradio1  > non
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>e mail est automatiquement valider pour le forwarding pour tout nouveau compte créé.</FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-		</td>
-</tr>
+      <tr>
+        <td align="right">Interdire l'upload pour les parents :</td>
+        <td align="left">
+          <label><input type=radio <?php print $uploadimgoui ?> name=uploadimg value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $uploadimgnon ?> name=uploadimg value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Interdire l'upload pour les parents : </td>
-<td align=left><input type=radio <?php print $uploadimgoui ?> name=uploadimg value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $uploadimgnon ?> name=uploadimg value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Groupe mail pour les parents : </td>
-<td align=left><input type=radio <?php print $grpmailparentoui ?> name=grpmailparent value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $grpmailparentnon ?> name=grpmailparent value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Email servant à la messagerie extérieure.  : </td>
-<td align=left>
-<?php print $infoemailreply ?>
-<input type=<?php print $champemailreply ?> value="<?php print $mailreply ?>" <?php print $diseabled ?>  <?php print $readonlyreplymail ?> name=mailreply size=30>
-<?php if ($infoemailreply == "") { ?>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>E</font>mail servant à la gestion de  la messagerie <br /> permettant de transmettre les messages à  une <br /> messagerie externe. <br><font color=red>Un email valide doit être indiqué si vous souhaitez que triade envoi des mails vers l\'extérieur. </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-<?php } ?>
-</tr>
-
-<tr><td align=right >Intitulé du mail pour la messagerie extérieure.  : </td>
-<td align=left><input type=text value="<?php print $mailnomreply ?>"  <?php print $diseabled ?> name=mailnomreply size=30>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>e champs permet d\'indiqué le nom de l\'expéditeur des mails envoyés à l\'extérieur. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</tr>
-
-
-<tr><td align=right >Envoi de mail vers une messagerie externe  : </td>
-<td align=left><input type=radio <?php print $mailexterneoui." ".$diseabled ?> name=mailexterne value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $mailexternenon." ".$diseabled ?> name=mailexterne value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Enseignant</b></font></td></tr>
-
-<tr><td align=right >Autorise à valider les D.S.T : </td>
-<td align=left><input type=radio <?php print $dstprofoui ?> name=dstprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $dstprofnon ?> name=dstprof value="non" class=btradio1  > non </td>
-</tr>
-<tr><td align=right >Autorise&nbsp;à&nbsp;valider&nbsp;les&nbsp;réservations&nbsp;:</td>
-<td align=left><input type=radio <?php print $resvprofoui ?> name=resvprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $resvprofnon ?> name=resvprof value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise à valider le calendrier : </td>
-<td align=left><input type=radio <?php print $calprofoui ?> name=calprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $calprofnon ?> name=calprof value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autoriser la saisie des notes version U.S.A.  : </td>
-<td align=left><input type=radio <?php print $noteusaoui ?> name=noteusa value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $noteusanon ?> name=noteusa value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autoriser la saisie de retenue  : </td>
-<td align=left><input type=radio <?php print $retenuprofoui ?> name=retenuprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $retenuprofnon ?> name=retenuprof value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Groupe mail pour les parents :</td>
+        <td align="left">
+          <label><input type=radio <?php print $grpmailparentoui ?> name=grpmailparent value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $grpmailparentnon ?> name=grpmailparent value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
 
-<tr><td align=right >Autoriser la saisie des retards  : </td>
-<td align=left><input type=radio <?php print $accesabsrtdprofoui ?> name="accesabsrtdprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $accesabsrtdprofnon ?> name="accesabsrtdprof" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Email servant à la messagerie extérieure :</td>
+        <td align="left">
+          <?php print $infoemailreply ?>
+          <?php
+          $readonly2="";
+          if (INTER == "oui") { $mailreply="no-reply@triade-educ.net"; $readonly2="readonly='readonly' style='color:#999999'"; }
+          ?>
+          <input type=<?php print $champemailreply ?> value="<?php print $mailreply ?>" <?php print $diseabled ?> <?php print $readonly2 ?> <?php print $readonlyreplymail ?> name=mailreply size=30 class="cc-select">
+          <?php if ($infoemailreply == "") { ?>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Email servant à la gestion de la messagerie permettant de transmettre les messages à une messagerie externe. Un email valide doit être indiqué si vous souhaitez que triade envoi des mails vers l'extérieur.</span></span>
+          <?php } ?>
+        </td>
+      </tr>
 
-<tr><td align=right >Autoriser la saisie des absences : </td>
-<td align=left><input type=radio <?php print $absprofoui ?> name=absprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $absprofnon ?> name=absprof value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Intitulé du mail pour la messagerie extérieure :</td>
+        <td align="left">
+          <input type=text value="<?php print $mailnomreply ?>" <?php print $diseabled ?> name=mailnomreply size=30 class="cc-select">
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Ce champs permet d'indiqué le nom de l'expéditeur des mails envoyés à l'extérieur.</span></span>
+        </td>
+      </tr>
 
-<tr><td align=right >Autoriser la saisie des motifs : </td>
-<td align=left><input type=radio <?php print $absprofmotifoui ?> name=absprofmotif value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $absprofmotifnon ?> name=absprofmotif value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Envoi de mail vers une messagerie externe :</td>
+        <td align="left">
+          <label><input type=radio <?php print $mailexterneoui." ".$diseabled ?> name=mailexterne value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $mailexternenon." ".$diseabled ?> name=mailexterne value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
+    </table>
+  </div>
+</div>
 
-<tr><td align=right >Autoriser la saisie des présents : </td>
-<td align=left><input type=radio <?php print $presentprofoui ?> name=presentprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $presentprofnon ?> name=presentprof value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Accès aux informations d'absenteismes : </td>
-<td align=left><input type=radio <?php print $absvisuprofoui ?> name=absvisuprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $absvisuprofnon ?> name=absvisuprof value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Accès info. médicales : </td>
-<td align=left><input type=radio <?php print $infomedicoui ?> name=infomedic value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $infomedicnon ?> name=infomedic value="non" class=btradio1  > non </td>
-</tr>
-
-
-<tr><td align=right >Maximum de note saisie en même temps : </td>
-<td align=left><input type=radio <?php print $noteprof1 ?> name=noteprof value="1" class=btradio1  > 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $noteprof2 ?> name=noteprof value="2" class=btradio1  > 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $noteprof3 ?> name=noteprof value="3" class=btradio1  > 3 </td>
-</tr>
-
-<tr><td align=right >Accès aux informations des notes des élèves : </td>
-<td align=left><input type=radio <?php print $infonoteeleveoui ?> name="infonoteeleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $infonoteelevenon ?> name="infonoteeleve" value="non" class=btradio1  > non </td>
-</tr>
-
+<!-- ===== Section 5 : Configuration Enseignant ===== -->
+<div class="acc-panel">
+  <div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')">
+    <span>Configuration Enseignant</span><span class="acc-arrow">&#9660;</span>
+  </div>
+  <div class="acc-body">
 <script>
 function validexamen(etat) {
 	if (etat == '1') {
@@ -1590,281 +1673,504 @@ function validexamen(etat) {
 
 </script>
 
-<tr><td align=right >Possibilité de saisir des notes d'examens : </td>
-<td align=left><input type=radio <?php print $noteexamenoui ?> name="noteexamen" value="oui" class=btradio1 onclick="validexamen('1')"  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $noteexamennon ?> name="noteexamen" value="non" class=btradio1 onclick="validexamen('0')" > non </td>
-</tr>
+<table class="conf-inner" width="100%">
 
-<tr><td align=right >Configurer les types d'examen : </td>
-<?php 
+      <tr>
+        <td align="right">Autorise à valider les D.S.T :</td>
+        <td align="left">
+          <label><input type=radio <?php print $dstprofoui ?> name=dstprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $dstprofnon ?> name=dstprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autorise à valider les réservations :</td>
+        <td align="left">
+          <label><input type=radio <?php print $resvprofoui ?> name=resvprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $resvprofnon ?> name=resvprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autorise à valider le calendrier :</td>
+        <td align="left">
+          <label><input type=radio <?php print $calprofoui ?> name=calprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $calprofnon ?> name=calprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie des notes version U.S.A. :</td>
+        <td align="left">
+          <label><input type=radio <?php print $noteusaoui ?> name=noteusa value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $noteusanon ?> name=noteusa value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie de retenue :</td>
+        <td align="left">
+          <label><input type=radio <?php print $retenuprofoui ?> name=retenuprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $retenuprofnon ?> name=retenuprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie des retards :</td>
+        <td align="left">
+          <label><input type=radio <?php print $accesabsrtdprofoui ?> name="accesabsrtdprof" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $accesabsrtdprofnon ?> name="accesabsrtdprof" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie des absences :</td>
+        <td align="left">
+          <label><input type=radio <?php print $absprofoui ?> name=absprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $absprofnon ?> name=absprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie des motifs :</td>
+        <td align="left">
+          <label><input type=radio <?php print $absprofmotifoui ?> name=absprofmotif value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $absprofmotifnon ?> name=absprofmotif value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Autoriser la saisie des présents :</td>
+        <td align="left">
+          <label><input type=radio <?php print $presentprofoui ?> name=presentprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $presentprofnon ?> name=presentprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Accès aux informations d'absenteismes :</td>
+        <td align="left">
+          <label><input type=radio <?php print $absvisuprofoui ?> name=absvisuprof value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $absvisuprofnon ?> name=absvisuprof value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Accès info. médicales :</td>
+        <td align="left">
+          <label><input type=radio <?php print $infomedicoui ?> name=infomedic value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $infomedicnon ?> name=infomedic value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Maximum de note saisie en même temps :</td>
+        <td align="left">
+          <label><input type=radio <?php print $noteprof1 ?> name=noteprof value="1" class=btradio1> 1</label>
+          &nbsp;&nbsp;&nbsp;
+          <label><input type=radio <?php print $noteprof2 ?> name=noteprof value="2" class=btradio1> 2</label>
+          &nbsp;&nbsp;&nbsp;
+          <label><input type=radio <?php print $noteprof3 ?> name=noteprof value="3" class=btradio1> 3</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Accès aux informations des notes des élèves :</td>
+        <td align="left">
+          <label><input type=radio <?php print $infonoteeleveoui ?> name="infonoteeleve" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $infonoteelevenon ?> name="infonoteeleve" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
+
+
+      <tr>
+        <td align="right">Possibilité de saisir des notes d'examens :</td>
+        <td align="left">
+          <label><input type=radio <?php print $noteexamenoui ?> name="noteexamen" value="oui" class=btradio1 onclick="validexamen('1')"> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $noteexamennon ?> name="noteexamen" value="non" class=btradio1 onclick="validexamen('0')"> non</label>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Configurer les types d'examen :</td>
+        <td align="left">
+          <?php if ($noteexamennon == "checked") { $disabledexamen="disabled='disabled'"; } ?>
+          <input type='button' value='Acceder' class='bouton2' onclick="open('config-examen.php','_parent','')" <?php print $disabledexamen ?> id='config-examen' name='config-examen' />
+        </td>
+      </tr>
+
+<?php
 if ($noteexamennon == "checked") {
-	$disabledexamen="disabled='disabled'";
+  $disabledexamen="disabled='disabled'";
+  $examenblancnon="checked='checked'";
+  $examendsnon="checked='checked'";
+  $examendsnon="checked='checked'";
+  $examennamurnon="checked='checked'";
+  $examenkinshasanon="checked='checked'";
+  $examenismapnon="checked='checked'";
+  $examennon="checked='checked'";
+  $examencieformationnon="checked='checked'";
+  $exameneeppnon="checked='checked'";
+  $examenpigiernimesnon="checked='checked'";
+  $examenispacademiesnon="checked='checked'";
+  $examenbrevetcollegenon="checked='checked'";
+  $examenipacnon="checked='checked'";
+}else{
+  $disabledexamen="";
 }
 ?>
-<td align=left><input type='button' value='Acceder' class='bouton2' onclick="open('config-examen.php','_parent','')" <?php print $disabledexamen ?> id='config-examen' name='config-examen' /></td>
-</tr>
 
-	
-<?php 
-	if ($noteexamennon == "checked") {
-		$disabledexamen="disabled='disabled'";
-		$examenblancnon="checked='checked'";
-		$examendsnon="checked='checked'";
-		$examendsnon="checked='checked'";
-		$examennamurnon="checked='checked'";
-		$examenkinshasanon="checked='checked'";
-		$examenismapnon="checked='checked'";
-		$examennon="checked='checked'";
-		$examencieformationnon="checked='checked'";
-		$exameneeppnon="checked='checked'";
-		$examenpigiernimesnon="checked='checked'";
-		$examenispacademiesnon="checked='checked'";
-		$examenbrevetcollegenon="checked='checked'";
-		$examenipacnon="checked='checked'";
+      <tr>
+        <td align="right">Examen type : <i>brevet collège</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenbrevetcollegeoui ?> name="examenbrevetcollege" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenbrevetcollegenon ?> name="examenbrevetcollege" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	}else{
-		$disabledexamen="";
-	}
-?>
+      <tr>
+        <td align="right">Examen type : <i>Blanc</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenblancoui ?> name="examenblanc" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenblancnon ?> name="examenblanc" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr ><td align=right >Examen type : <i>brevet collège</i> : </td>
-	<td align=left><input type=radio <?php print $examenbrevetcollegeoui ?> name="examenbrevetcollege" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               	       <input type=radio <?php print $examenbrevetcollegenon ?> name="examenbrevetcollege" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif Kinshasa</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenkinshasaoui ?> name="examenkinshasa" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenkinshasanon ?> name="examenkinshasa" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr ><td align=right >Examen type : <i>Blanc</i> : </td>
-	<td align=left><input type=radio <?php print $examenblancoui ?> name="examenblanc" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               	       <input type=radio <?php print $examenblancnon ?> name="examenblanc" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>DS</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examendsoui ?> name="examends" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examendsnon ?> name="examends" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-        <tr ><td align=right >Examen type : <i>Spécif Kinshasa  </i> : </td>
-        <td align=left><input type=radio <?php print $examenkinshasaoui ?> name="examenkinshasa" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-                       <input type=radio <?php print $examenkinshasanon ?> name="examenkinshasa" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-        </tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif Namur</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examennamuroui ?> name="examennamur" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examennamurnon ?> name="examennamur" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr ><td align=right >Examen type : <i>DS </i> : </td>
-	<td align=left><input type=radio <?php print $examendsoui ?> name="examends" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examendsnon ?> name="examends" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif IPAC</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenipacoui ?> name="examenipac" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenipacnon ?> name="examenipac" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr ><td align=right >Examen type : <i>Spécif Namur </i> : </td>
-	<td align=left><input type=radio <?php print $examennamuroui ?> name="examennamur" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examennamurnon ?> name="examennamur" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif ISMAP</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenismapoui ?> name="examenismap" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenismapnon ?> name="examenismap" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr ><td align=right >Examen type : <i>Spécif IPAC </i> : </td>
-	<td align=left><input type=radio <?php print $examenipacoui ?> name="examenipac" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenipacnon ?> name="examenipac" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif ISP Academies</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenispacademiesoui ?> name="examenispacademies" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenispacademiesnon ?> name="examenispacademies" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif ISMAP</i> : </td>
-	<td align=left><input type=radio <?php print $examenismapoui ?> name="examenismap" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenismapnon ?> name="examenismap" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif Pigier</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenpigiernimesoui ?> name="examenpigiernimes" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenpigiernimesnon ?> name="examenpigiernimes" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
+      <tr>
+        <td align="right">Examen type : <i>Spécif Vatel Réunion</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenvatelreunionoui ?> name="examenvatelreunion" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenvatelreunionnon ?> name="examenvatelreunion" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif ISP Academies</i> : </td>
-	<td align=left><input type=radio <?php print $examenispacademiesoui ?> name="examenispacademies" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenispacademiesnon ?> name="examenispacademies" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>Spécif Cie. Formation</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examencieformationoui ?> name="examencieformation" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examencieformationnon ?> name="examencieformation" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
+      <tr>
+        <td align="right">Examen type : <i>Spécif EEPP</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $exameneeppoui ?> name="exameneepp" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $exameneeppnon ?> name="exameneepp" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif Pigier </i> : </td>
-	<td align=left><input type=radio <?php print $examenpigiernimesoui ?> name="examenpigiernimes" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenpigiernimesnon ?> name="examenpigiernimes" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Examen type : <i>JTC</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenjtcoui ?> name="examenjtc" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examenjtcnon ?> name="examenjtc" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif Vatel Réunion </i> : </td>
-	<td align=left><input type=radio <?php print $examenvatelreunionoui ?> name="examenvatelreunion" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenvatelreunionnon ?> name="examenvatelreunion" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
-	
+      <tr>
+        <td align="right">Examen type : <i>Examen</i> :</td>
+        <td align="left">
+          <label><input type=radio <?php print $examenoui ?> name="examen" <?php print $disabledexamen ?> value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $examennon ?> name="examen" <?php print $disabledexamen ?> value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif Cie. Formation</i> : </td>
-	<td align=left><input type=radio <?php print $examencieformationoui ?> name="examencieformation" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examencieformationnon ?> name="examencieformation" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Accès au module forum :</td>
+        <td align="left">
+          <label><input type=radio <?php print $accesforumprofoui ?> name="accesforumprof" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $accesforumprofnon ?> name="accesforumprof" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Spécif EEPP</i> : </td>
-	<td align=left><input type=radio <?php print $exameneeppoui ?> name="exameneepp" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $exameneeppnon ?> name="exameneepp" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à un enseignant :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoiprofoui ?> name="profenvoiprof" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoiprofnon ?> name="profenvoiprof" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>JTC</i> : </td>
-	<td align=left><input type=radio <?php print $examenjtcoui ?> name="examenjtc" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examenjtcnon ?> name="examenjtc" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à un tuteur de stage :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoituteuroui ?> name="profenvoituteur" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoituteurnon ?> name="profenvoituteur" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-	<tr><td align=right >Examen type : <i>Examen</i> : </td>
-	<td align=left><input type=radio <?php print $examenoui ?> name="examen" <?php print $disabledexamen ?> value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-	               <input type=radio <?php print $examennon ?> name="examen" <?php print $disabledexamen ?> value="non" class=btradio1  > non </td>
-	</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à un groupe :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoigroupeoui ?> name="profenvoigroupe" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoigroupenon ?> name="profenvoigroupe" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
+      <tr>
+        <td align="right">Autorise l'envoi de message à un parent :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoiparentoui ?> name="profenvoiparent" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoiparentnon ?> name="profenvoiparent" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-</tr></td>
+      <tr>
+        <td align="right">Autorise l'envoi de message à un élève :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoieleveoui ?> name="profenvoieleve" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoielevenon ?> name="profenvoieleve" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Accès au module forum  : </td>
-<td align=left><input type=radio <?php print $accesforumprofoui ?> name="accesforumprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $accesforumprofnon ?> name="accesforumprof" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à la direction :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoidirecoui ?> name="profenvoidirec" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoidirecnon ?> name="profenvoidirec" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à un enseignant  : </td>
-<td align=left><input type=radio <?php print $profenvoiprofoui ?> name="profenvoiprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoiprofnon ?> name="profenvoiprof" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à la vie scolaire :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoiscolaireoui ?> name="profenvoiscolaire" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoiscolairenon ?> name="profenvoiscolaire" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à un tuteur de stage  : </td>
-<td align=left><input type=radio <?php print $profenvoituteuroui ?> name="profenvoituteur" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoituteurnon ?> name="profenvoituteur" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message vers l'extérieur :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoiextoui ?> name="profenvoiext" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoiextnon ?> name="profenvoiext" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à un groupe  : </td>
-<td align=left><input type=radio <?php print $profenvoigroupeoui ?> name="profenvoigroupe" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoigroupenon ?> name="profenvoigroupe" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message à un groupe d'élève :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoigrpelevoui ?> name="profenvoigrpelev" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoigrpelevnon ?> name="profenvoigrpelev" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à un parent  : </td>
-<td align=left><input type=radio <?php print $profenvoiparentoui ?> name="profenvoiparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoiparentnon ?> name="profenvoiparent" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message aux délégués :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoidelegueoui ?> name="profenvoidelegue" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoideleguenon ?> name="profenvoidelegue" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à un élève  : </td>
-<td align=left><input type=radio <?php print $profenvoieleveoui ?> name="profenvoieleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoielevenon ?> name="profenvoieleve" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autorise l'envoi de message aux personnels :</td>
+        <td align="left">
+          <label><input type=radio <?php print $profenvoipersonneloui ?> name="profenvoipersonnel" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $profenvoipersonnelnon ?> name="profenvoipersonnel" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à la direction  : </td>
-<td align=left><input type=radio <?php print $profenvoidirecoui ?> name="profenvoidirec" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoidirecnon ?> name="profenvoidirec" value="non" class=btradio1  > non </td>
-</tr>
+      <tr>
+        <td align="right">Autoriser le changement de mot de passe :</td>
+        <td align="left">
+          <label><input type=radio <?php print $pwdprofoui ?> name="pwdprof" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $pwdprofnon ?> name="pwdprof" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
-<tr><td align=right >Autorise l'envoi de message à la vie scolaire  : </td>
-<td align=left><input type=radio <?php print $profenvoiscolaireoui ?> name="profenvoiscolaire" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoiscolairenon ?> name="profenvoiscolaire" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise l'envoi de message vers l'extérieur  : </td>
-<td align=left><input type=radio <?php print $profenvoiextoui ?> name="profenvoiext" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoiextnon ?> name="profenvoiext" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise l'envoi de message à un groupe d'élève  : </td>
-<td align=left><input type=radio <?php print $profenvoigrpelevoui ?> name="profenvoigrpelev" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoigrpelevnon ?> name="profenvoigrpelev" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise l'envoi de message aux délégués  : </td>
-<td align=left><input type=radio <?php print $profenvoidelegueoui ?> name="profenvoidelegue" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoideleguenon ?> name="profenvoidelegue" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise l'envoi de message aux personnels  : </td>
-<td align=left><input type=radio <?php print $profenvoipersonneloui ?> name="profenvoipersonnel" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profenvoipersonnelnon ?> name="profenvoipersonnel" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autoriser le changement de mot de passe : </td>
-<td align=left><input type=radio <?php print $pwdprofoui ?> name="pwdprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $pwdprofnon ?> name="pwdprof" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Visualisation de l'EDT de toutes les classes : </td>
-<td align=left><input type=radio <?php print $edtvisuoui ?> name="edtvisu" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $edtvisunon ?> name="edtvisu" value="non" class=btradio1  > non
-</td></tr>
-
-
-<tr><td align=right > Nbr max de caractère pour les bulletins : </td>
-<td align=left><select name="nbcarbull" >
-	<?php
-	if (defined("NBCARBULL")) {
-		print "<option value='".NBCARBULL."' STYLE='color:#000066;background-color:#FCE4BA' >".NBCARBULL."</option>";
-		$selected="";
-	}else{
-		$selected="selected='selected'"; 
-	}
-	?>
-		<option value="3000" class="bouton2" >3000</option>
-		<option value="2000" class="bouton2" >2000</option>
-		<option value="1200" class="bouton2" >1200</option>
-		<option value="1100" class="bouton2" >1100</option>
-		<option value="1000" class="bouton2" >1000</option>
-		<option value="900" class="bouton2" >900</option>
-		<option value="800" class="bouton2" >800</option>
-		<option value="700" class="bouton2" >700</option>
-		<option value="600" class="bouton2" >600</option>
-		<option value="500" class="bouton2" >500</option>
-		<option value="400" class="bouton2" <?php print $selected ?> >400</option>
-		<option value="350" class="bouton2" >350</option>
-		<option value="300" class="bouton2" >300</option>
-		<option value="280" class="bouton2" >280</option>
-		<option value="250" class="bouton2" >250</option>
-		<option value="200" class="bouton2" >200</option>
-		<option value="140" class="bouton2" >140</option>
-		</select>
-<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>C</font>hoisissez le nombre de caractère maximum pour les commentaires des bulletins trimestriels ou semestriels pour les enseignants. Au dela de 400 risque de chevauchement de commentaire lors de la sortie des bulletins. </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
-</td></tr>
-
-<tr><td align=right >Paiement avec TVA pour les vacations : </td>
-<td align=left><input type="radio" <?php print $tvavatationoui ?> name="tvavatation" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type="radio" <?php print $tvavatationnon ?> name="tvavatation" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Taux de la TVA pour les vacations : </td>
-<td align=left><input type="text"  name="tvavatationtaux" value="<?php print $tvavatationtaux ?>" size="6" ></td></tr>
-
-
-<tr><td align=right >Gestion des entreprises en stage pro : </td>
-<td align=left><input type="radio" <?php print $profentroui ?> name="profentr" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type="radio" <?php print $profentrnon ?> name="profentr" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Autorise la gestion des conventions de stage : </td>
-<td align=left><input type="radio" <?php print $profentrconventionoui ?> name="profentrconvention" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type="radio" <?php print $profentrconventionnon ?> name="profentrconvention" value="non" class=btradio1  > non
-</td></tr>
-
-<tr><td align=right >Gestion des élèves en entreprise : </td>
-<td align=left><input type=radio <?php print $profstageetudiantoui ?> name="profstageetudiant" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $profstageetudiantnon ?> name="profstageetudiant" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Gestion des affectations élèves aux entreprises : </td>
-<td align=left><input type=radio <?php print $stageetudiantadminprofoui ?> name="stageetudiantadminprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $stageetudiantadminprofnon ?> name="stageetudiantadminprof" value="non" class=btradio1  > non </td>
-</tr>
-
-
-<tr><td align=right >Choix de la matière par défaut (notes et abs) : </td>
-<td align=left><input type=radio <?php print $choixmatiereprofoui ?> name="choixmatiereprof" value="0" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $choixmatiereprofnon ?> name="choixmatiereprof" value="1" class=btradio1  > non </td>
-</tr>
-
-
-<tr><td align=right >Autorise l'accès au carnet de suivi : </td>
-<td align=left><input type=radio <?php print $carnetsuiviprofoui ?> name="carnetsuiviprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $carnetsuiviprofnon ?> name="carnetsuiviprof" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Accès au trombinoscope de toutes les classes : </td>
-<td align=left><input type=radio <?php print $tombiallclasseprofoui ?> name="tombiallclasseprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $tombiallclasseprofnon ?> name="tombiallclasseprof" value="non" class=btradio1  > non </td>
-</tr>
-
-
-<tr><td align=right >Accès au module d'entretien : </td>
-<td align=left><input type=radio <?php print $entretienprofoui ?> name="entretienprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-               <input type=radio <?php print $entretienprofnon ?> name="entretienprof" value="non" class=btradio1  > non </td>
-</tr>
-
-<tr><td align=right >Autorise la modif./Supp. des notes après Trimestre/Semestre  : </td>
-<td align=left>
-<input type=radio <?php print $modifnoteapresarretoui ?> name="modifnoteapresarret" value="oui" class=btradio1   > oui &nbsp;&nbsp;&nbsp;
-<input type=radio <?php print $modifnoteapresarretnon ?> name="modifnoteapresarret" value="non" class=btradio1   > non
-</tr>
+      <tr>
+        <td align="right">Visualisation de l'EDT de toutes les classes :</td>
+        <td align="left">
+          <label><input type=radio <?php print $edtvisuoui ?> name="edtvisu" value="oui" class=btradio1> oui</label>
+          &nbsp;&nbsp;
+          <label><input type=radio <?php print $edtvisunon ?> name="edtvisu" value="non" class=btradio1> non</label>
+        </td>
+      </tr>
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Professeur Principal</b></font></td></tr>
+
+      <tr>
+        <td align="right">Nbr max de caractère pour les bulletins :</td>
+        <td align="left">
+          <select name="nbcarbull" class="cc-select">
+            <?php
+            if (defined("NBCARBULL")) {
+              print "<option value='".NBCARBULL."' STYLE='color:#000066;background-color:#FCE4BA'>".NBCARBULL."</option>";
+              $selected="";
+            }else{ $selected="selected='selected'"; }
+            ?>
+            <option value="3000" class="bouton2">3000</option>
+            <option value="2000" class="bouton2">2000</option>
+            <option value="1200" class="bouton2">1200</option>
+            <option value="1100" class="bouton2">1100</option>
+            <option value="1000" class="bouton2">1000</option>
+            <option value="900" class="bouton2">900</option>
+            <option value="800" class="bouton2">800</option>
+            <option value="700" class="bouton2">700</option>
+            <option value="600" class="bouton2">600</option>
+            <option value="500" class="bouton2">500</option>
+            <option value="400" class="bouton2" <?php print $selected ?>>400</option>
+            <option value="350" class="bouton2">350</option>
+            <option value="300" class="bouton2">300</option>
+            <option value="280" class="bouton2">280</option>
+            <option value="250" class="bouton2">250</option>
+            <option value="200" class="bouton2">200</option>
+            <option value="140" class="bouton2">140</option>
+          </select>
+          <span class="htip-wrap"><img src='../image/help.gif' border=0><span class="htip">Choisissez le nombre de caractère maximum pour les commentaires des bulletins trimestriels ou semestriels pour les enseignants. Au dela de 400 risque de chevauchement de commentaire lors de la sortie des bulletins.</span></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">Paiement avec TVA pour les vacations :</td>
+        <td align="left"><label><input type="radio" <?php print $tvavatationoui ?> name="tvavatation" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type="radio" <?php print $tvavatationnon ?> name="tvavatation" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Taux de la TVA pour les vacations :</td>
+        <td align="left"><input type="text" name="tvavatationtaux" value="<?php print $tvavatationtaux ?>" size="6" class="cc-select"></td>
+      </tr>
+      <tr>
+        <td align="right">Gestion des entreprises en stage pro :</td>
+        <td align="left"><label><input type="radio" <?php print $profentroui ?> name="profentr" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type="radio" <?php print $profentrnon ?> name="profentr" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Autorise la gestion des conventions de stage :</td>
+        <td align="left"><label><input type="radio" <?php print $profentrconventionoui ?> name="profentrconvention" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type="radio" <?php print $profentrconventionnon ?> name="profentrconvention" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Gestion des élèves en entreprise :</td>
+        <td align="left"><label><input type=radio <?php print $profstageetudiantoui ?> name="profstageetudiant" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $profstageetudiantnon ?> name="profstageetudiant" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Gestion des affectations élèves aux entreprises :</td>
+        <td align="left"><label><input type=radio <?php print $stageetudiantadminprofoui ?> name="stageetudiantadminprof" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $stageetudiantadminprofnon ?> name="stageetudiantadminprof" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Choix de la matière par défaut (notes et abs) :</td>
+        <td align="left"><label><input type=radio <?php print $choixmatiereprofoui ?> name="choixmatiereprof" value="0" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $choixmatiereprofnon ?> name="choixmatiereprof" value="1" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Autorise l'accès au carnet de suivi :</td>
+        <td align="left"><label><input type=radio <?php print $carnetsuiviprofoui ?> name="carnetsuiviprof" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $carnetsuiviprofnon ?> name="carnetsuiviprof" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Accès au trombinoscope de toutes les classes :</td>
+        <td align="left"><label><input type=radio <?php print $tombiallclasseprofoui ?> name="tombiallclasseprof" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $tombiallclasseprofnon ?> name="tombiallclasseprof" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Accès au module d'entretien :</td>
+        <td align="left"><label><input type=radio <?php print $entretienprofoui ?> name="entretienprof" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $entretienprofnon ?> name="entretienprof" value="non" class="btradio1"> non</label></td>
+      </tr>
+      <tr>
+        <td align="right">Autorise la modif./Supp. des notes après Trimestre/Semestre :</td>
+        <td align="left"><label><input type=radio <?php print $modifnoteapresarretoui ?> name="modifnoteapresarret" value="oui" class="btradio1"> oui</label> &nbsp;&nbsp; <label><input type=radio <?php print $modifnoteapresarretnon ?> name="modifnoteapresarret" value="non" class="btradio1"> non</label></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== Section 6 : Configuration Professeur Principal ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Professeur Principal</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Autoriser à imprimer son bulletin classe : </td>
 <td align=left><input type=radio <?php print $profpbulletinoui ?> name="profpbulletin" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1960,7 +2266,11 @@ if ($noteexamennon == "checked") {
 </tr>
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Vie Scolaire</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 7 : Configuration Vie Scolaire ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Vie Scolaire</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Accès au module historique cmd  : </td>
 <td align=left><input type=radio <?php print $viescolairehistocmdoui ?> name="viescolairehistocmd" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1996,7 +2306,11 @@ if ($noteexamennon == "checked") {
 
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Tuteur de stage</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 8 : Configuration Tuteur de stage ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Tuteur de stage</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Peut recevoir des messages  : </td>
 <td align=left><input type=radio <?php print $accesmesstuteuroui ?> name="accesmesstuteur" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2066,7 +2380,11 @@ if ($noteexamennon == "checked") {
 
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Parent</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 9 : Configuration Parent ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Parent</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Peut recevoir des messages  : </td>
 <td align=left><input type=radio <?php print $accesmessparentoui ?> name="accesmessparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2135,6 +2453,11 @@ if ($noteexamennon == "checked") {
                <input type=radio <?php print $accesnoteparentnon ?> name="accesnoteparent" value="non" class=btradio1  > non </td>
 </tr>
 
+<tr><td align=right >Accès au module moyenne  : </td>
+<td align=left><input type=radio <?php print $accesmoyenneparentoui ?> name="accesmoyenneparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+               <input type=radio <?php print $accesmoyenneparentnon ?> name="accesmoyenneparent" value="non" class=btradio1  > non </td>
+</tr>
+
 <tr><td align=right >Accès au module forum  : </td>
 <td align=left><input type=radio <?php print $accesforumparentoui ?> name="accesforumparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $accesforumparentnon ?> name="accesforumparent" value="non" class=btradio1  > non </td>
@@ -2173,7 +2496,11 @@ if ($noteexamennon == "checked") {
 
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Elève</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 10 : Configuration Élève ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Élève</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Peut recevoir des messages : </td>
 <td align=left><input type=radio <?php print $accesmesseleveoui ?> name="accesmesseleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2243,6 +2570,10 @@ if ($noteexamennon == "checked") {
                <input type=radio <?php print $accesnoteelevenon ?> name="accesnoteeleve" value="non" class=btradio1  > non </td>
 </tr>
 
+<tr><td align=right >Accès au module moyenne  : </td>
+<td align=left><input type=radio <?php print $accesmoyenneeleveoui ?> name="accesmoyenneeleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+               <input type=radio <?php print $accesmoyenneelevenon ?> name="accesmoyenneeleve" value="non" class=btradio1  > non </td>
+</tr>
 
 <tr><td align=right >Accès au module forum  : </td>
 <td align=left><input type=radio <?php print $accesforumeleveoui ?> name="accesforumeleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2283,7 +2614,11 @@ if ($noteexamennon == "checked") {
 </td></tr>
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration des membres de type personnel</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 11 : Configuration Personnel ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Personnel</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Peut envoyer des messages à des enseignants : </td>
 <td align=left><input type=radio <?php print $personnelenvoiprofoui ?> name="personnelenvoiprof" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2318,7 +2653,26 @@ if ($noteexamennon == "checked") {
 
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Sécurité</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 12 : Configuration Sécurité ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Sécurité</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
+
+<tr><td align=right >Activation de la double connexion "Google Authentificator" pour tous : </td>
+<td align=left>
+<input type=radio <?php print $googleauthenOui ?> name="googleauthen" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+<input type=radio <?php print $googleauthenNon ?> name="googleauthen" value="non" class=btradio1  > non 
+</td></tr>
+
+
+<tr><td align=right >Activation des acc&egrave;s aux API Triade par des logiciels tiers : </td>
+<td align=left>
+<input type=radio <?php print $APIAccessOUI ?> name="APIAccess" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+<input type=radio <?php print $APIAccessNON ?> name="APIAccess" value="non" class=btradio1  > non 
+</td></tr>
+
+
 
 <tr><td align=right >Autoriser le changement de mot de passe : </td>
 <td align=left><input type=radio <?php print $pwdoui ?> name="pwd" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -2431,7 +2785,11 @@ if ($noteexamennon == "checked") {
 </td></tr>
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Générale</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 13 : Configuration Générale ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Configuration Générale</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 
 <tr><td align=right >Activer la vérification de saisie de notes  : </td>
@@ -2500,18 +2858,18 @@ if (MONNAIE == "FC") { $selectedFC="selected='selected'"; }
 
 <tr><td align=right >Activer l'accès à l'agenda en direct  : </td>
 <td align=left><input type=radio <?php print $agendadirectoui ?> name="agendadirect" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-<input type=radio <?php print $agendadirectnon ?> name="agendadirect" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'accès à l\'agenda en direct autorise aussi la création de compte lié à l\'agenda. L\'adresse d\'accès est <br /><b><?php print "${urlsite}agenda.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
+<input type=radio <?php print $agendadirectnon ?> name="agendadirect" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'accès à l\'agenda en direct autorise aussi la création de compte lié à l\'agenda. L\'adresse d\'accès est <br /><b><?php print $urlsite."agenda.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
 </td></tr>
 
 <tr><td align=right >Activer l'accès agenda pour téléphone portable  : </td>
 <td align=left><input type=radio <?php print $agendapdaoui ?> name="agendapda" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-<input type=radio <?php print $agendapdanon ?> name="agendapda" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'accès à l\'agenda via votre téléphone portable. <br> L\'adresse d\'accès est <br /><b><?php print "${urlsite}/agenda/phenix/ppx.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
+<input type=radio <?php print $agendapdanon ?> name="agendapda" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'accès à l\'agenda via votre téléphone portable. <br> L\'adresse d\'accès est <br /><b><?php print $urlsite."/agenda/phenix/ppx.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
 </td></tr>
 
 
 <tr><td align=right >Activer l'accès à E.D.T. en direct  : </td>
 <td align=left><input type=radio <?php print $edtdirectoui ?> name="edtdirect" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
-<input type=radio <?php print $edtdirectnon ?> name="edtdirect" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'E.D.T. est accessible en direct sans demande de connexion pour la consultation des ressources. L\'adresse d\'accès est <br /><b><?php print "${urlsite}edtressource.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
+<input type=radio <?php print $edtdirectnon ?> name="edtdirect" value="non" class=btradio1  > non &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle2('Information','../image/commun/info.jpg','<font face=Verdana size=1><font color=red>L</font>\'E.D.T. est accessible en direct sans demande de connexion pour la consultation des ressources. L\'adresse d\'accès est <br /><b><?php print $urlsite."edtressource.php" ?></b> </font></FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='../image/help.gif' align=center border=0></A>
 </td></tr>
 
 <tr><td align=right > Activer l'accès au stockage privé  : <?php // print "(".human_readable(diskfreespace("../"))." libre)"; ?>  </td>
@@ -2828,7 +3186,11 @@ if ($id != 1) {
 
 
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" ><font class="T2"><b>Module Spécifique</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 14 : Module Spécifique ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="this.parentElement.classList.toggle('acc-open')"><span>Module Spécifique</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 
 
@@ -2918,11 +3280,13 @@ if (file_exists("../common/config-messenger.php")) {
 <input type=radio <?php print $modulefinanciervatelnon ?> name="modulefinanciervatel" value="non" class=btradio1  > non 
 </tr>
 
+<!--
 <tr><td align=right >Affichage Vatel : </td>
 <td align=left>
 <input type=radio <?php print $affichageVateloui ?> name="affichageVatel" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
 <input type=radio <?php print $affichageVatelnon ?> name="affichageVatel" value="non" class=btradio1  > non 
 </tr>
+-->
 
 <tr><td align=right >Module eLearning : </td>
 <td align=left>
@@ -2943,15 +3307,81 @@ if (file_exists("../common/config-messenger.php")) {
 </tr>
 
 <!-------------------------------- -- -->
-<tr><td colspan=2><br>
-<br><br><br>
-<script language=JavaScript>buttonMagicSubmit("Enregistrer","create"); //text,nomInput</script>
-<script language=JavaScript>buttonMagic("Valeur par défaut","configuration-default.php","_parent","","") //text,nomInput</script>
-<br><br>
-</td></tr></table>
+</table></div></div>
 
-</td></tr></table>
+<br>
+<div class="na-foot">
+  <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("Enregistrer","create"); //text,nomInput</script></span>
+  &nbsp;&nbsp;
+  <script language=JavaScript>buttonMagic("Valeur par défaut","configuration-default.php","_parent","","") //text,nomInput</script>
+</div>
+<br>
+
+<script>
+function accToggle(panel) {
+  var o = panel.classList.contains('acc-open');
+  document.querySelectorAll('.acc-panel').forEach(function(p){ p.classList.remove('acc-open'); });
+  if (!o) panel.classList.add('acc-open');
+}
+
+function accCheckAlerts() {
+  document.querySelectorAll('.acc-panel').forEach(function(panel) {
+    var unset = false;
+    var groups = {};
+
+    // Collecte des groupes radio
+    panel.querySelectorAll('input[type="radio"]').forEach(function(r) {
+      if (!groups[r.name]) groups[r.name] = { checked: false, first: r };
+      if (r.checked) groups[r.name].checked = true;
+    });
+
+    // Badge inline sur chaque groupe non sélectionné
+    Object.keys(groups).forEach(function(name) {
+      var g = groups[name];
+      // Conteneur : <span> (sections 1-5 na-row) ou <td> (sections 6-14 table)
+      var container = g.first.closest('span') || g.first.closest('td');
+      var inlineBadge = container ? container.querySelector('.acc-inline-alert[data-group="' + CSS.escape(name) + '"]') : null;
+      if (!g.checked) {
+        unset = true;
+        if (container && !inlineBadge) {
+          inlineBadge = document.createElement('span');
+          inlineBadge.className = 'acc-inline-alert';
+          inlineBadge.setAttribute('data-group', name);
+          inlineBadge.title = 'Veuillez sélectionner une option';
+          inlineBadge.textContent = '!';
+          container.appendChild(inlineBadge);
+        }
+      } else {
+        if (inlineBadge) inlineBadge.remove();
+      }
+    });
+
+    // Badge en-tête panneau
+    var badge = panel.querySelector('.acc-alert');
+    if (unset) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'acc-alert';
+        badge.title = 'Option(s) non sélectionnée(s) dans cette section';
+        badge.textContent = '!';
+        panel.querySelector('.acc-arrow').insertAdjacentElement('beforebegin', badge);
+      }
+    } else {
+      if (badge) badge.remove();
+    }
+  });
+}
+
+accCheckAlerts();
+document.querySelectorAll('.acc-panel input[type="radio"]').forEach(function(r) {
+  r.addEventListener('change', accCheckAlerts);
+});
+
+document.querySelector('.acc-panel').classList.add('acc-open');
+</script>
+
 </form>
+</td></tr></table>
 <SCRIPT language="JavaScript">InitBulle("#000000","#FFFFFF","red",1);</SCRIPT>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>

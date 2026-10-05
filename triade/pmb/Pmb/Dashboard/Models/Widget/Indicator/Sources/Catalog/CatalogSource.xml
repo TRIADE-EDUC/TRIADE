@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: CatalogSource.xml,v 1.1 2024/02/26 14:28:53 dbellamy Exp $ -->
+
+<source>
+    
+    <methods>
+    
+        <!-- Nb de notices -->
+        <nb_records>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM notices WHERE 1</query>
+        </nb_records>
+        
+        <!-- Nb de périodiques -->
+        <nb_records_perio>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM notices WHERE niveau_biblio='s'</query>
+        </nb_records_perio>
+        
+        <!-- Nb d'articles -->
+        <nb_records_articles>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM notices WHERE niveau_biblio='a'</query>
+        </nb_records_articles>
+        
+        <!-- Nb de bulletins à recevoir -->
+        <nb_bulletins_to_receive>
+            <type>method</type>
+            <method>getBulletinsToReceive</method>
+        </nb_bulletins_to_receive>
+        
+        <!-- Nb prochains numéros -->
+        <nb_bulletins_next>
+            <type>method</type>
+            <method>getBulletinsNext</method>
+        </nb_bulletins_next>
+        
+        <!-- Nb de bulletins en retard -->
+        <nb_bulletins_late>
+            <type>method</type>
+            <method>getBulletinsLate</method>
+        </nb_bulletins_late>
+        
+        <!-- Nb de bulletins en alerte -->
+        <nb_bulletins_alert>
+            <type>method</type>
+            <method>getBulletinsAlert</method>
+        </nb_bulletins_alert>
+        
+        <!-- Nb d'abonnements à renouveler -->
+        <nb_abon_renouv>
+            <type>sql</type>
+            <query>SELECT count(*) as total FROM abts_abts WHERE date_fin BETWEEN CURDATE() AND  DATE_ADD(CURDATE(), INTERVAL 30 DAY)</query>
+        </nb_abon_renouv>  
+        
+        <!-- Nb d'abonnements dépassés -->
+        <nb_abon_depass>
+            <type>sql</type>
+            <query><![CDATA[SELECT count(*) as total FROM abts_abts WHERE date_fin > CURDATE()]]></query>    
+        </nb_abon_depass>
+    </methods>
+</source>

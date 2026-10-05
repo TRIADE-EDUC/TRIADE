@@ -2,9 +2,10 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes fonction en UNIMARC (français)
-$Id: function.xml,v 1.5 2017-04-05 14:11:49 ngantier Exp $ -->
+$Id: function.xml,v 1.6 2020/02/24 12:02:31 dgoron Exp $ -->
 
 <XMLlist>
+	<entry code="000">Fonction indéterminée</entry>
 	<entry code="005">C'hoarier</entry>
 	<entry code="010">Aozer</entry>
 	<entry code="020">Notenner</entry>
@@ -28,22 +29,31 @@ $Id: function.xml,v 1.5 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="170">Dornlizherenner</entry>
 	<entry code="180">Saver kartennoù</entry>
 	<entry code="190">Kontroller</entry>
+	<entry code="195">Chef de choeur</entry>
 	<entry code="200">Saver korollerezhioù</entry>
+	<entry code="202">Artiste de cirque</entry>
 	<entry code="205">Kenlabourer</entry>
+	<entry code="207">Humoriste</entry>
 	<entry code="210">Addispleger</entry>
 	<entry code="212">Addispleger un destenn skrivet</entry>
 	<entry code="220">Daspuner</entry>
 	<entry code="230">Kompozer</entry>
+	<entry code="233">Compositeur de l'oeuvre adaptée</entry>
+	<entry code="236">Compositeur de l'oeuvre principale</entry>
 	<entry code="240">Kompozer lizherenner</entry>
 	<entry code="245">Meizer</entry>
 	<entry code="250">Rener laz-seniñ</entry>
+	<entry code="255">Consultant de projet</entry>
+	<entry code="257">Continuateur</entry>
 	<entry code="260">Dalc'her ar gwir-eilañ</entry>
 	<entry code="270">Difazier</entry>
 	<entry code="273">Komiser an diskouezadeg</entry>
 	<entry code="275">Koroller</entry>
 	<entry code="280">Dedi savet en enor da</entry>
 	<entry code="290">Oberour an dedi</entry>
+	<entry code="295">Organisme de soutenance</entry>
 	<entry code="300">Rener arzel</entry>
+	<entry code="303">Disc jockey</entry>
 	<entry code="305">Doktorelezher</entry>
 	<entry code="310">Darbarer</entry>
 	<entry code="320">Donezoner</entry>
@@ -53,32 +63,61 @@ $Id: function.xml,v 1.5 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="360">Engraver gant dour kreñv</entry>
 	<entry code="365">Prizer</entry>
 	<entry code="370">Sevener ar film</entry>
+	<entry code="380">Faussaire</entry>
+	<entry code="390">Ancien possesseur</entry>
+	<entry code="395">Fondateur</entry>	
+	<entry code="400">Bailleur de fonds (obsolète)</entry>
+	<entry code="410">Technicien graphique</entry>
+	<entry code="420">Personne honorée</entry>
+	<entry code="430">Enlumineur</entry>
+	<entry code="440">Illustrateur</entry>
+	<entry code="445">Impresario</entry>
+	<entry code="450">Auteur de l'envoi</entry>
+	<entry code="460">Personne interviewée</entry>
+	<entry code="470">Intervieweur</entry>
+	<entry code="475">Collectivité éditrice</entry>
 	<entry code="480">Saver levrig an opera</entry>
 	<entry code="490">Perc'henn ar gwirioù</entry>
 	<entry code="500">Konseder</entry>
 	<entry code="510">Treser</entry>
 	<entry code="520">Saver komzoù</entry>
 	<entry code="530">Engraver war vetal</entry>
+	<entry code="535">Mime</entry>
 	<entry code="540">Kontroler</entry>
 	<entry code="545">Soner</entry>
 	<entry code="550">Daneveller</entry>
 	<entry code="560">Krouer</entry>
+	<entry code="555">Opposant</entry>
+	<entry code="557">Organisateur de réunion</entry>
+	<entry code="560">Instigateur</entry>
 	<entry code="570">Kargoù all</entry>
 	<entry code="580">Farder paper</entry>
+	<entry code="582">Demandeur de brevet</entry>
+	<entry code="584">Inventeur de brevet</entry>
+	<entry code="587">Titulaire de brevet</entry>
 	<entry code="590">C'hoarier</entry>
+	<entry code="595">Directeur de la recherche</entry>	
 	<entry code="600">Luc'hskeudenner</entry>
+	<entry code="605">Présentateur</entry>
 	<entry code="610">Mouler</entry>
 	<entry code="620">Mouler engravadurioù</entry>
 	<entry code="630">Produer</entry>
 	<entry code="632">Directeur artistique</entry>
+	<entry code="633">Membre de l'équipe de production</entry>
 	<entry code="635">Programmer</entry>
+	<entry code="637">Gestionnaire de projet</entry>
 	<entry code="640">Difazier amprou</entry>
 	<entry code="650">Embanner-koñvers</entry>
 	<entry code="651">Rener an embann</entry>
+	<entry code="655">Marionnettiste</entry>
 	<entry code="660">Degemerer</entry>
 	<entry code="660">Resever ar c'has lizhiri</entry>
+	<entry code="665">Producteur de phonogramme</entry>
 	<entry code="670">Ijinour war ar son</entry>
+	<entry code="672">Remixeur</entry>
+	<entry code="673">Responsable de l'équipe de recherche</entry>
 	<entry code="675">Buruteller</entry>
+	<entry code="677">Membre de l'équipe de recherche</entry>
 	<entry code="680">Rubrikenner</entry>
 	<entry code="690">Skriver senario</entry>
 	<entry code="695">Kuzulier skiantel</entry>
@@ -88,10 +127,14 @@ $Id: function.xml,v 1.5 2017-04-05 14:11:49 ngantier Exp $ -->
 	<entry code="720">Siner</entry>
 	<entry code="721">Kaner</entry>
 	<entry code="723">Arc'hanter</entry>
+	<entry code="725">Organisme de normalisation</entry>
+	<entry code="726">Cascadeur</entry>
 	<entry code="727">Rener an dezenn</entry>
 	<entry code="730">Troer</entry>
 	<entry code="740">Treser letrennioù-moulerezh</entry>
 	<entry code="750">Lizherenner</entry>
+	<entry code="753">Vendeur</entry>
+	<entry code="755">Exécutant vocal</entry>
 	<entry code="760">Engraver war goad</entry>
 	<entry code="770">Saver an dafar da heul</entry>
 </XMLlist>

@@ -1,12 +1,13 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_search_controler.class.php,v 1.33 2019-06-06 13:05:45 btafforeau Exp $
+// $Id: map_search_controler.class.php,v 1.35.4.1 2025/04/24 14:45:33 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
+global $class_path;
 require_once($class_path . "/map/map_hold.class.php");
 require_once($class_path . "/map/map_model.class.php");
 require_once($class_path . "/map/map_objects_controler.class.php");
@@ -20,9 +21,6 @@ require_once "$class_path/encoding_normalize.class.php";
  * Controlleur de notre super dev
  */
 class map_search_controler {
-    /** Aggregations: */
-    /** Compositions: */
-    /*     * * Attributes: ** */
 
     /**
      *
@@ -36,16 +34,18 @@ class map_search_controler {
      */
     protected $mode;
 
+    public $editable = false;
+    public $ajax = false;
+    public $objects = [];
+
     /**
      * Constructeur.
      *
-     * Il joue Ã Â  aller chercher les infos utiles pour le modÃ¨le (listes d'ids des
-     * objets liÃ©s,...)
+     * Il joue à  aller chercher les infos utiles pour le modèle (listes d'ids des
+     * objets liés,...)
      *
      * @param map_hold map_hold Emprise courante de la carte
-
-     * @param int mode Mode de rÃ©cupÃ©ration des Ã©lÃ©ments
-
+     * @param int mode Mode de récupération des éléments
      * @return void
      * @access public
      */
@@ -60,11 +60,10 @@ class map_search_controler {
             $this->model = new map_model($map_hold, $this->objects, $max_hold, $cluster);
             $this->model->set_mode("search");
         } else {
-            //la recherche n'est pas encore enregistrÃ©...
+            //la recherche n'est pas encore enregistré...
             $this->ajax = true;
         }
     }
-// end of member function __construct
 
     /**
      * Modifie le mode
@@ -76,7 +75,6 @@ class map_search_controler {
 
         $this->mode = $mode;
     }
-// end of member function get_mode
 
     /**
      * Retourne le mode
@@ -88,16 +86,13 @@ class map_search_controler {
 
         return $this->mode;
     }
-// end of member function get_mode
 
     /**
      *
-     *
-     * @return void
+     * @return array
      * @access public
      */
     public function get_objects() {
-        global $dbh;
         global $search;
 
         $objects = array();
@@ -115,7 +110,7 @@ class map_search_controler {
                 		}
                 	}
                     $requete = substr($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], 0, strpos($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], "limit"));
-                    $result = pmb_mysql_query($requete, $dbh);
+                    $result = pmb_mysql_query($requete);
                     $notices_ids = array();
                     while ($row = pmb_mysql_fetch_object($result)) {
                         $notices_ids[] = $row->notice_id;
@@ -126,7 +121,7 @@ class map_search_controler {
                     );
                     if (count($notices_ids)) {
                         $requete = "select distinct map_emprise_obj_num from map_emprises join notices_categories on map_emprises.map_emprise_obj_num = notices_categories.num_noeud where map_emprises.map_emprise_type=2 and notices_categories.notcateg_notice in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $categ_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -141,7 +136,7 @@ class map_search_controler {
                         $requete = "select distinct map_emprise_obj_num from map_emprises
                                 join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1
                                 where index_concept.type_object = 1 and index_concept.num_object in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $concept_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -166,7 +161,7 @@ class map_search_controler {
                         $requete = substr($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], 0, strpos($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], "limit"));
                         $notices_ids = array();
                         if($requete){
-	                        $result = pmb_mysql_query($requete, $dbh);
+	                        $result = pmb_mysql_query($requete);
 	                        while ($row = pmb_mysql_fetch_object($result)) {
 	                            $notices_ids[] = $row->notice_id;
 	                        }
@@ -177,7 +172,7 @@ class map_search_controler {
                         );
                         if (count($notices_ids)) {
                             $requete = "select distinct map_emprise_obj_num from map_emprises join notices_categories on map_emprises.map_emprise_obj_num = notices_categories.num_noeud where map_emprises.map_emprise_type=2 and notices_categories.notcateg_notice in (" . implode(",", $notices_ids) . ")";
-                            $result = pmb_mysql_query($requete, $dbh);
+                            $result = pmb_mysql_query($requete);
                             if (pmb_mysql_num_rows($result)) {
                                 $categ_ids = array();
                                 while ($row = pmb_mysql_fetch_object($result)) {
@@ -189,10 +184,10 @@ class map_search_controler {
                                     'ids' => $categ_ids
                                 );
                             }
-                            $requete = "select distinct map_emprise_obj_num from map_emprises 
-                                join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1 
+                            $requete = "select distinct map_emprise_obj_num from map_emprises
+                                join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1
                                 where index_concept.type_object = 1 and index_concept.num_object in (" . implode(",", $notices_ids) . ")";
-                            $result = pmb_mysql_query($requete, $dbh);
+                            $result = pmb_mysql_query($requete);
                             if (pmb_mysql_num_rows($result)) {
                                 $concept_ids = array();
                                 while ($row = pmb_mysql_fetch_object($result)) {
@@ -209,8 +204,7 @@ class map_search_controler {
                     break;
                 case 3 :
                     $requete = "SELECT object_id FROM caddie_content where caddie_id='" . $_SESSION["session_history"][$current_search]["NOTI"]["GET"]["idcaddie"] . "' ";
-                    $res = pmb_mysql_query($requete, $dbh);
-                    $result = pmb_mysql_query($requete, $dbh);
+                    $result = pmb_mysql_query($requete);
                     $notices_ids = array();
                     while ($row = pmb_mysql_fetch_object($result)) {
                         $notices_ids[] = $row->object_id;
@@ -221,7 +215,7 @@ class map_search_controler {
                     );
                     if (count($notices_ids)) {
                         $requete = "select distinct map_emprise_obj_num from map_emprises join notices_categories on map_emprises.map_emprise_obj_num = notices_categories.num_noeud where map_emprises.map_emprise_type=2 and notices_categories.notcateg_notice in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $categ_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -236,7 +230,7 @@ class map_search_controler {
                         $requete = "select distinct map_emprise_obj_num from map_emprises
                                 join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1
                                 where index_concept.type_object = 1 and index_concept.num_object in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $concept_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -251,30 +245,30 @@ class map_search_controler {
                     }
                     break;
                 case 6 :
-                    //RÃ©cupÃ©ration et mise en variables globales des valeurs de l'historique
+                    //Récupération et mise en variables globales des valeurs de l'historique
                     if ($_SESSION["session_history"][$current_search]["QUERY"]["POST"]["search"][0]) {
                         $search = $_SESSION["session_history"][$current_search]["QUERY"]["POST"]["search"];
                         //Pour chaque champ
                         for ($i = 0; $i < count($search); $i++) {
 
-                            //RÃ©cupÃ©ration de l'opÃ©rateur
+                            //Récupération de l'opérateur
                             $op = "op_" . $i . "_" . $search[$i];
                             global ${$op};
                             ${$op} = $_SESSION["session_history"][$current_search]["QUERY"]["POST"][$op];
 
-                            //RÃ©cupÃ©ration du contenu de la recherche
+                            //Récupération du contenu de la recherche
                             $field_ = "field_" . $i . "_" . $search[$i];
                             global ${$field_};
                             ${$field_} = $_SESSION["session_history"][$current_search]["QUERY"]["POST"][$field_];
                             $field = ${$field_};
 
-                            //RÃ©cupÃ©ration de l'opÃ©rateur inter-champ
+                            //Récupération de l'opérateur inter-champ
                             $inter = "inter_" . $i . "_" . $search[$i];
                             global ${$inter};
                             if(isset($_SESSION["session_history"][$current_search]["QUERY"]["POST"][$inter])) {
                             	${$inter} = $_SESSION["session_history"][$current_search]["QUERY"]["POST"][$inter];
                             }
-                            //RÃ©cupÃ©ration des variables auxiliaires
+                            //Récupération des variables auxiliaires
                             $fieldvar_ = "fieldvar_" . $i . "_" . $search[$i];
                             global ${$fieldvar_};
                             if(isset($_SESSION["session_history"][$current_search]["QUERY"]["POST"][$fieldvar_])) {
@@ -293,7 +287,7 @@ class map_search_controler {
 
                     $table_tempo = $sc->make_search("tempo_" . $current_search);
                     $requete = "select * from " . $table_tempo;
-                    $result = pmb_mysql_query($requete, $dbh);
+                    $result = pmb_mysql_query($requete);
                     $notices_ids = array();
                     while ($row = pmb_mysql_fetch_object($result)) {
                         $notices_ids[] = $row->notice_id;
@@ -304,7 +298,7 @@ class map_search_controler {
                     );
                     if (count($notices_ids)) {
                         $requete = "select distinct map_emprise_obj_num from map_emprises join notices_categories on map_emprises.map_emprise_obj_num = notices_categories.num_noeud where map_emprises.map_emprise_type=2 and notices_categories.notcateg_notice in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $categ_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -319,7 +313,7 @@ class map_search_controler {
                         $requete = "select distinct map_emprise_obj_num from map_emprises
                                 join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1
                                 where index_concept.type_object = 1 and index_concept.num_object in (" . implode(",", $notices_ids) . ")";
-                        $result = pmb_mysql_query($requete, $dbh);
+                        $result = pmb_mysql_query($requete);
                         if (pmb_mysql_num_rows($result)) {
                             $concept_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
@@ -343,7 +337,7 @@ class map_search_controler {
                         		}
                         	}
                             $requete = substr($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], 0, strpos($_SESSION["session_history"][$current_search]["NOTI"]["TEXT_QUERY"], "limit"));
-                            $result = pmb_mysql_query($requete, $dbh);
+                            $result = pmb_mysql_query($requete);
                             $notices_ids = array();
                             while ($row = pmb_mysql_fetch_object($result)) {
                                 $notices_ids[] = $row->notice_id;
@@ -354,7 +348,7 @@ class map_search_controler {
                             );
                             if (count($notices_ids)) {
                                 $requete = "select distinct map_emprise_obj_num from map_emprises join notices_categories on map_emprises.map_emprise_obj_num = notices_categories.num_noeud where map_emprises.map_emprise_type=2 and notices_categories.notcateg_notice in (" . implode(",", $notices_ids) . ")";
-                                $result = pmb_mysql_query($requete, $dbh);
+                                $result = pmb_mysql_query($requete);
                                 if (pmb_mysql_num_rows($result)) {
                                     $categ_ids = array();
                                     while ($row = pmb_mysql_fetch_object($result)) {
@@ -369,7 +363,7 @@ class map_search_controler {
                                 $requete = "select distinct map_emprise_obj_num from map_emprises
                                 join index_concept on map_emprises.map_emprise_obj_num=index_concept.num_concept and index_concept.type_object = 1
                                 where index_concept.type_object = 1 and index_concept.num_object in (" . implode(",", $notices_ids) . ")";
-                                $result = pmb_mysql_query($requete, $dbh);
+                                $result = pmb_mysql_query($requete);
                                 if (pmb_mysql_num_rows($result)) {
                                     $concept_ids = array();
                                     while ($row = pmb_mysql_fetch_object($result)) {
@@ -421,8 +415,8 @@ class map_search_controler {
                             $t_query = $aq->get_query_members("authors", "concat(author_name,', ',author_rejete)", "index_author", "author_id");
                             $requete = "select author_id," . $t_query["select"] . " as pert from authors where " . $t_query["where"] . " group by author_id order by pert desc,author_name, author_rejete, author_numero , author_subdivision ";
                         }
-
-                        $t_query = @pmb_mysql_query($requete, $dbh);
+                        $aut_ids = array();
+                        $t_query = pmb_mysql_query($requete);
                         while ($row = pmb_mysql_fetch_object($t_query)) {
                             $aut_ids[] = $row->author_id;
                         }
@@ -433,11 +427,9 @@ class map_search_controler {
                     }
                     break;
             }
-        }        
+        }
         return $objects;
     }
-
-// end of member function get_objects
 
     public function have_results() {
         if (!$this->model) {
@@ -448,8 +440,6 @@ class map_search_controler {
     }
 
     public function get_holds_json_informations($indice) {
-        global $dbh;
-
         $json = array();
         if ($this->model) {
             $json = $this->model->get_holds_informations($this->objects[$indice]['layer']);
@@ -461,8 +451,8 @@ class map_search_controler {
         global $pmb_url_base;
         global $pmb_map_base_layer_type;
         global $pmb_map_base_layer_params;
-        global $dbh, $pmb_map_bounding_box;
-        
+        global $pmb_map_bounding_box;
+
         $layer_params = json_decode($pmb_map_base_layer_params, true);
         $baselayer = "baseLayerType: dojox.geo.openlayers.BaseLayerType." . $pmb_map_base_layer_type;
         if (is_array($layer_params) && count($layer_params)) {
@@ -489,7 +479,7 @@ class map_search_controler {
             	if( $pmb_map_bounding_box) {
             		$map_bounding_box = $pmb_map_bounding_box;
             	} else {
-            		$map_bounding_box = '-5 50,9 50,9 40,-5 40,-5 50';            		
+            		$map_bounding_box = '-5 50,9 50,9 40,-5 40,-5 50';
             	}
             	$map_hold = new map_hold_polygon("bounding", 0, "polygon((".$map_bounding_box."))");
             	if ($map_hold) {
@@ -518,5 +508,3 @@ class map_search_controler {
         return $this->model->get_bounding_box();
     }
 }
-
-// end of map_search_controler

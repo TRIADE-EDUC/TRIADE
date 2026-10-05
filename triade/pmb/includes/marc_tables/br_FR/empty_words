@@ -1,4 +1,4 @@
-<?PHP
+<?php
 // $Id: empty_words,v 1.4 2007-06-06 22:16:38 touraine37 Exp $
 
 // tableau contenant les mots vides
@@ -22,7 +22,7 @@ $empty_word[] = 'd';
 $empty_word[] = 'ar';
 $empty_word[] = 'al';
 $empty_word[] = 'an';
-$empty_word[] = 'ur'; 
+$empty_word[] = 'ur';
 $empty_word[] = 'ul';
 $empty_word[] = 'un';
 ?>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ascodocpsy2uni_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: ascodocpsy2uni_input.class.php,v 1.2 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,29 +19,29 @@ class ascodocpsy2uni_input extends convert_input {
 		$content="";
 		$index=array();
 		$n=1;
-		//Lecture du fichier d'entrÃ©e
+		//Lecture du fichier d'entrée
 		while (($data = fgetcsv($fi,0,"\t",'"')) !== FALSE) {
 			$notice=implode("'^'",$data);
 			
-			if($_SESSION["encodage_fic_source"]){//On a forcÃ© l'encodage
+			if($_SESSION["encodage_fic_source"]){//On a forcé l'encodage
 				if(($charset == "utf-8") && ($_SESSION["encodage_fic_source"] == "iso8859")){
 					if(function_exists("mb_convert_encoding")){
 						$notice = mb_convert_encoding($notice,"UTF-8","Windows-1252");
 					}else{
-						$notice=utf8_encode($notice);
+						$notice=encoding_normalize::utf8_normalize($notice);
 					}
 				}elseif(($charset == "iso-8859-1" && ($_SESSION["encodage_fic_source"] == "utf8"))){
 					if(function_exists("mb_convert_encoding")){
 						$notice = mb_convert_encoding($notice,"Windows-1252","UTF-8");
 					}else{
-						$notice = utf8_decode($notice);
+						$notice = encoding_normalize::utf8_decode($notice);
 					}
 				}
 			}
 			
-			//Si c'est la premiÃ¨re notice, c'est la ligne d'intitulÃ©s !!
+			//Si c'est la première notice, c'est la ligne d'intitulés !!
 			if ($first) {
-				//les champs sont sÃ©parÃ©s par la tabulation
+				//les champs sont séparés par la tabulation
 				$cols=explode("'^'",$notice);
 				$fcols=fopen("$base_path/temp/".$origine."_cols.txt","w+");
 				if ($fcols) {

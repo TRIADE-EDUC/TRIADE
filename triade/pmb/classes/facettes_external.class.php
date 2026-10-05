@@ -1,11 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: facettes_external.class.php,v 1.14 2019-05-16 12:54:10 dgoron Exp $
+// $Id: facettes_external.class.php,v 1.22.2.2 2025/01/21 16:22:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/facettes_root.class.php");
 
 class facettes_external extends facettes_root {
@@ -21,6 +22,11 @@ class facettes_external extends facettes_root {
 	 * @var string
 	 */
 	public $mode = 'external';
+	
+	/**
+	 * Methode d'affinage (filter / search)
+	 */
+	public static $refining_method = 'search';
 	
 	/**
 	 * Nom de la classe de comparaison
@@ -53,8 +59,8 @@ class facettes_external extends facettes_root {
 	}
 	
 	public static function get_sub_queries($id_critere, $id_ss_critere, $values=array()) {
-		$id_critere += 0;
-		$id_ss_critere += 0;
+		$id_critere = intval($id_critere);
+		$id_ss_critere = intval($id_ss_critere);
 		$type='notices_externes';
 		self::parse_xml_file($type);
 		$unimarcFields = array();
@@ -91,13 +97,17 @@ class facettes_external extends facettes_root {
 		$sub_queries = array();
 		foreach ($unimarcFields as $unimarcField) {
 			$ufield = explode('$', $unimarcField);
-			if($ufield[1]) {
+			if(!empty($ufield[1])) {
 				$sub_queries[] = "ufield = '".$ufield[0]."' AND usubfield = '".$ufield[1]."'".$sub_query_values;
 			} else {
 				$sub_queries[] = "ufield = '".$ufield[0]."'".$sub_query_values;
 			}
 		}
 		return $sub_queries;
+	}
+	
+	protected function get_query() {
+	    return "SELECT * FROM ".static::$table_name." WHERE facette_visible_gestion=1 ORDER BY facette_order, facette_name";
 	}
 	
 	protected function get_query_by_facette($id_critere, $id_ss_critere) {
@@ -116,78 +126,6 @@ class facettes_external extends facettes_root {
 		return $query;
 	}
 	
-	public static function get_facette_wrapper(){
-		$script = parent::get_facette_wrapper();
-		$script .= "
-		<script type='text/javascript'>
-			function facettes_external_add_searchform(datas) {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'check_facette[]');
-				input_form_values.setAttribute('value', datas);
-				document.forms['search_form'].appendChild(input_form_values);
-			}	
-			function valid_facettes_multi(){
-				var facettes_checked = new Array();
-				var flag = false;
-				//on bloque si aucune case cochée
-				var form = document.facettes_multi;
-				for (i=0, n=form.elements.length; i<n; i++){
-					if ((form.elements[i].checked == true)) {
-						//copie le noeud vers search_form
-						facettes_external_add_searchform(form.elements[i].value);
-						flag = true;
-					}
-				}
-				if(flag) {
-					if(document.getElementById('filtre_compare_facette')) {
-						document.getElementById('filtre_compare_facette').value='filter';
-					}
-					if(document.getElementById('filtre_compare_form_values')) {
-						document.getElementById('filtre_compare_form_values').value='filter';
-					}
-					document.search_form.submit();
-					return true;
-				} else {
-					return false;
-				}
-			}
-			function facettes_external_valid_facette(datas){
-				facettes_external_add_searchform(JSON.stringify(datas));
-				document.search_form.submit();
-				return true;
-			}
-			function facettes_external_reinit() {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'reinit_facettes_external');
-				input_form_values.setAttribute('value', '1');
-				document.forms['search_form'].appendChild(input_form_values);
-				document.search_form.submit();
-				return true;
-			}
-			function facettes_external_delete_facette(indice) {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'param_delete_facette');
-				input_form_values.setAttribute('value', indice);
-				document.forms['search_form'].appendChild(input_form_values);
-				document.search_form.submit();
-				return true;
-			}
-			function facettes_external_reinit_compare() {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'reinit_compare');
-				input_form_values.setAttribute('value', '1');
-				document.forms['search_form'].appendChild(input_form_values);
-				document.search_form.submit();
-				return true;
-			}
-		</script>";
-		return $script;
-	}
-	
 	public static function make_facette_search_env() {
 		global $search;
 
@@ -199,7 +137,7 @@ class facettes_external extends facettes_root {
 			$search = array();
 		}
 		$nb_search = count($search);
-		if ($_SESSION['facettes_external']) {
+		if (!empty($_SESSION['facettes_external'])) {
 			for ($i=0;$i<count($_SESSION['facettes_external']);$i++) {
 				$search[] = "s_5";
 				$field = "field_".($i+$nb_search)."_s_5";
@@ -221,47 +159,6 @@ class facettes_external extends facettes_root {
 		}
 	}
 	
-	public static function destroy_global_search_element($indice) {
-		global $search;
-		
-		$nb_search = count($search);
-		for($i=$indice; $i<=$nb_search; $i++) {
-			$op="op_".$i."_".$search[$i];
-			$field_="field_".$i."_".$search[$i];
-			$inter="inter_".$i."_".$search[$i];
-			$fieldvar="fieldvar_".$i."_".$search[$i];
-			global ${$op};
-			global ${$field_};
-			global ${$inter};
-			global ${$fieldvar};
-			if($i == $nb_search) {
-				unset($GLOBALS[$op]);
-				unset($GLOBALS[$field_]);
-				unset($GLOBALS[$inter]);
-				unset($GLOBALS[$fieldvar]);
- 				unset($search[$i]);
- 				array_pop($search);
-			} else {
-				//on décale
-				$n = $i+1;
-				$search[$i]=$search[$n];
-				$op="op_".$n."_".$search[$n];
-				$field_="field_".$n."_".$search[$n];
-				$inter="inter_".$n."_".$search[$n];
-				$fieldvar="fieldvar_".$n."_".$search[$n];
-				global ${$op_next};
-				global ${$field_next};
-				global ${$inter_next};
-				global ${$fieldvar_next};
-					
-				${$op}=${$op_next};
-				${$field_}=${$field_next};
-				${$inter}=${$inter_next};
-				${$fieldvar}=${$fieldvar_next};
-			}
-		}
-	}
-	
 	public static function destroy_global_env($with_session=true){
 		global $search;
 		if(is_array($search) && count($search)){
@@ -270,47 +167,41 @@ class facettes_external extends facettes_root {
 			$nb_search = 0;
 		}
 		for ($i=$nb_search; $i>=0; $i--) {
-			if($search[$i] == 's_5') {
+		    if(!empty($search[$i]) && $search[$i] == 's_5') {
 				static::destroy_global_search_element($i);
 			}
 		}
-		if($with_session) unset($_SESSION['facettes_external']);
+		if($with_session) {
+		    unset($_SESSION['facettes_external']);
+		}
 	}
 	
 	protected static function get_link_delete_clicked($indice, $facettes_nb_applied) {
-		$id += 0;
 		if ($facettes_nb_applied==1) {
 			$link = "facettes_external_reinit();";
 		} else {
-			$link = "facettes_external_delete_facette(".$indice.");";
+			$link = "facettes_delete_facette(".$indice.");";
 		}
 		return $link;
 	}
 			
-	protected static function get_link_not_clicked($name, $label, $code_champ, $code_ss_champ, $id, $nb_result) {
-		$datas = array($name, $label, $code_champ, $code_ss_champ, $id, $nb_result);
-		$link = "facettes_external_valid_facette(".encoding_normalize::json_encode($datas).");"; 
-		return $link;
-	}
-	
 	protected static function get_link_reinit_facettes() {
 		$link = "facettes_external_reinit();";
 		return $link;
 	}
 	
 	protected static function get_link_back($reinit_compare=false) {
-		global $base_path;
 		if($reinit_compare) {
-			$link = "facettes_external_reinit_compare();";
+			$link = "facettes_reinit_compare();";
 		} else {
-			$link = "document.search_form.submit();";
+			$link = "document.".static::$hidden_form_name.".submit();";
 		}
 		return $link;
 	}
 	
 	public static function get_session_values() {
 		if(!isset($_SESSION['facettes_external'])) {
-			$_SESSION['facettes_external'] = '';
+		    $_SESSION['facettes_external'] = static::get_session_default_values;
 		}
 		return $_SESSION['facettes_external'];
 	}
@@ -339,6 +230,25 @@ class facettes_external extends facettes_root {
 			unset($_SESSION['facettes_external'][$param_delete_facette]);
 			$_SESSION['facettes_external'] = array_values($_SESSION['facettes_external']);
 		}
+	}
+	
+	public static function get_session_default_values() {
+	    $facet_type = static::get_facet_type();
+	    if(!isset($_SESSION['facettes_external_default'][$facet_type])) {
+	        $_SESSION['facettes_external_default'][$facet_type] = [];
+	    }
+	    return $_SESSION['facettes_external_default'][$facet_type];
+	}
+	
+	public static function set_session_default_values($session_default_values=[]) {
+	    if (empty($session_default_values)) {
+	        $session_default_values = static::get_session_values();
+	    }
+	    $_SESSION['facettes_external_default'][static::get_facet_type()] = $session_default_values;
+	}
+	
+	public static function delete_session_default_values() {
+        unset($_SESSION['facettes_external_default'][static::get_facet_type()]);
 	}
 	
 	public static function get_filter_query_by_facette($id_critere, $id_ss_critere, $values) {
@@ -371,13 +281,13 @@ class facettes_external extends facettes_root {
 	}
 	
 	public static function get_formatted_value($id_critere, $id_ss_critere, $value) {
-		$id_critere += 0;
-		$id_ss_critere += 0;
+		$id_critere = intval($id_critere);
+		$id_ss_critere = intval($id_ss_critere);
 		$fields = static::$fields['notices_externes']['FIELD'];
 		if(is_array($fields)) {
 			foreach ($fields as $field) {
 				if($field['ID'] == $id_critere) {
-					if($field['DATATYPE'] == 'marclist') {
+				    if(!empty($field['DATATYPE']) && $field['DATATYPE'] == 'marclist') {
 						$marctype = $field['TABLE'][0]['TABLEFIELD'][$id_ss_critere]['MARCTYPE'];
 						if($marctype) {
 							if(!isset(self::$marclist_instance[$marctype])) {

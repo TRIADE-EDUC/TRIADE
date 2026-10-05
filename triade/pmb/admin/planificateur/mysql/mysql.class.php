@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mysql.class.php,v 1.5 2018-09-18 11:33:29 dgoron Exp $
+// $Id: mysql.class.php,v 1.6 2024/04/11 08:26:23 dbellamy Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_task.class.php");
@@ -23,11 +23,11 @@ class mysql extends scheduler_task {
 					foreach($parameters["mySQL"] as $action) {
 						$this->listen_commande(array(&$this, 'traite_commande')); //fonction a rappeller (traite commande)
 			
-						if($this->statut == WAITING) {
-							$this->send_command(RUNNING);
+						if($this->statut == scheduler_task::WAITING) {
+						    $this->send_command(scheduler_task::RUNNING);
 						}
 
-						if($this->statut == RUNNING) {
+						if($this->statut == scheduler_task::RUNNING) {
 							$this->add_section_report($action);
 							$result = $this->proxy->pmbesMySQL_mysqlTable($action);
 							$maintenance_mysql = array();

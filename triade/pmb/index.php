@@ -1,67 +1,77 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-/* 
+/*
 
-Ce logiciel est un programme informatique servant √† g√©rer une biblioth√®que
+Ce logiciel est un programme informatique servant ‡ gÈrer une bibliothËque
 ou un centre de documentation et notamment le catalogue des ouvrages et le
-fichier des lecteurs. PMB est conforme √† la d√©claration simplifi√©e de la CNIL
-en ce qui concerne le respect de la Loi Informatique et Libert√©s applicable
+fichier des lecteurs. PMB est conforme ‡ la dÈclaration simplifiÈe de la CNIL
+en ce qui concerne le respect de la Loi Informatique et LibertÈs applicable
 en France.
 
-Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
+Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
+de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA
 sur le site "http://www.cecill.info".
 
-En contrepartie de l'accessibilit√© au code source et des droits de copie,
-de modification et de redistribution accord√©s par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
-seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les conc√©dants successifs.
+En contrepartie de l'accessibilitÈ au code source et des droits de copie,
+de modification et de redistribution accordÈs par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
+seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concÈdants successifs.
 
-A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
-associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
-d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
-donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
-manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
-avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
-logiciel √† leurs besoins dans des conditions permettant d'assurer la
-s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
-√† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
+A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
+associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
+dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant
+donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡
+manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
+avertis possÈdant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
+logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
+sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement,
+‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ.
 
-Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accept√© les
+Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez
+pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
 termes.
 
  */
 // +-------------------------------------------------+
-// $Id: index.php,v 1.20 2017-03-17 13:51:42 dgoron Exp $
+// $Id: index.php,v 1.25.4.1 2025/05/20 14:00:08 qvarin Exp $
 
-// d√©finition du minimum n√©c√©ssaire 
+// dÈfinition du minimum nÈcÈssaire
 $base_path=".";
 
-include_once ("./includes/error_report.inc.php") ;
-include_once ("./includes/global_vars.inc.php") ;
-include_once ("./includes/config.inc.php");
+use Pmb\Security\Library\Auth;
 
-if (file_exists("$include_path/db_param.inc.php")) require_once("$include_path/db_param.inc.php") ;
-require_once("$include_path/mysql_connect.inc.php");
-$dbh = connection_mysql(0);
+include_once $base_path."/includes/error_report.inc.php";
+require_once $base_path."/includes/pmb_cookie.inc.php";
+include_once $base_path."/includes/config.inc.php";
 
-require_once("$include_path/sessions.inc.php");
+if (!file_exists("$include_path/db_param.inc.php")) {
+    // Pas de fichier prÈsent, on s'assure quand mÍme qu'il n'y a pas dÈj‡ eu une installation
+    if(file_exists($base_path."/tables/install.php")){
+        // Fichier d'installation prÈsent, on renvoie dessus !
+        header("Location: $base_path/tables/install.php");
+    }
+    // Si on est encore la, on n'a pas ÈtÈ redirigÈ ;
+    die("Fichier db_param.inc.php absent / Missing file db_param.inc.php");
+}
+require_once "$include_path/db_param.inc.php";
+require_once "$include_path/mysql_connect.inc.php";
+$dbh = connection_mysql();
 
-require_once("$include_path/misc.inc.php");
-include_once("$javascript_path/misc.inc.php");
+require_once "$include_path/sessions.inc.php";
+
+require_once "$include_path/misc.inc.php";
+include_once "$javascript_path/misc.inc.php";
 
 
-// r√©cup√©ration des messages avec localisation
-
+// rÈcupÈration des messages avec localisation
 // localisation (fichier XML)
-include_once("$class_path/XMLlist.class.php");
+include_once "$class_path/XMLlist.class.php";
 
 $messages = new XMLlist("$include_path/messages/$lang.xml", 0);
 $messages->analyser();
@@ -70,10 +80,51 @@ $msg = $messages->table;
 // temporaire :
 $inst_language = "";
 $current_module = "";
-	
-require_once("$include_path/templates/common.tpl.php");
-require_once("$include_path/templates/index.tpl.php");
 
+// Chargement de l'autoload des librairies externes
+require_once $base_path.'/vendor/autoload.php';
+// Chargement de l'autoload back-office
+require_once __DIR__."/classes/autoloader/classLoader.class.php";
+$al = classLoader::getInstance();
+$al->register();
+
+// Definition et chargement des parametres necessaires
+// puis verification blocage acces / liste noire / liste blanche
+if(!defined('GESTION')) {
+    define('GESTION', 1);
+}
+
+global $user;
+if (empty($user) || !is_string($user)) {
+	$user = '';
+}
+
+$login_attempt_config = Auth::DEFAULT_CONFIG;
+foreach($login_attempt_config as $k=>$v) {
+    global ${'pmb_'.$k};
+    ${'pmb_'.$k} = $v;
+}
+
+$q = "select concat(type_param, '_', sstype_param) as param, valeur_param from parametres where type_param='pmb' and sstype_param in ('" . implode("','", array_keys($login_attempt_config)) . "') ";
+$r = pmb_mysql_query($q);
+
+$remainingAttemptsMessage = '';
+if(pmb_mysql_num_rows($r)) {
+    while ($row = pmb_mysql_fetch_assoc($r)) {
+        ${$row['param']} = $row['valeur_param'];
+    }
+
+    if (isset($pmb_active_log_login_attempts) && (1 == $pmb_active_log_login_attempts)) {
+        $auth_instance = Auth::getInstance($user);
+		if ($auth_instance->isRejected()) {
+			$remainingAttemptsMessage = '<h4 class="login_rejected erreur">' . $auth_instance->getRejectCause() . '</h4>';
+		} elseif ($auth_instance->getRemainingAttempts() != $pmb_block_after_failures) {
+			$remainingAttemptsMessage = '<h4 class="login_remaining_attempts">' . $auth_instance->getRemainingAttemptsMessage() . '</h4>';
+		}
+    }
+}
+
+require_once "$include_path/templates/index.tpl.php";
 if (!$dbh) {
 	header ("Content-Type: text/html; charset=".$charset);
 	print $index_header;
@@ -82,14 +133,17 @@ if (!$dbh) {
 	print $msg["cnx_base_err1"]." <a href='./tables".$inst_language."/install.php'>./tables/install.php</a> ? <br /><br />.".$msg["cnx_base_err2"];
 	print $index_footer;
 	exit ;
-	}
+}
+
+require_once "$include_path/templates/common.tpl.php";
 
 // affichage du form de login
 if (!isset($demo) || $demo=="") $demo = 0;
 header ("Content-Type: text/html; charset=$charset");
 
+
 if (!isset($login_error) || !$login_error) {
-	//Est-on d√©j√† authentifi√© ?
+	//Est-on dÈj‡ authentifiÈ ?
 	if (checkUser('PhpMyBibli')) {
 		header("Location: ./main.php");
 		exit();
@@ -106,14 +160,22 @@ if ($demo) {
 		$login_form_demo = str_replace("!!erreur!!", $login_form_error, $login_form_demo);
 		print $login_form_demo;
 	}
-} else { 
+} else {
+
+	$error = '';
 	if (!isset($login_error) || !$login_error) {
-		$login_form = str_replace("!!erreur!!", "&nbsp;", $login_form);
+		$error = "&nbsp;";
 	} else {
-		$login_form = str_replace("!!erreur!!", $login_form_error, $login_form);
+		$error = $login_form_error;
 	}
-	if (isset($login_message) && $login_message) { 
-		$login_form = str_replace("!!login_message!!", $login_message, $login_form); 
+
+	if (!empty($remainingAttemptsMessage)) {
+		$error .= $remainingAttemptsMessage;
+	}
+
+	$login_form = str_replace("!!erreur!!", $error, $login_form);
+	if (isset($login_message) && $login_message) {
+		$login_form = str_replace("!!login_message!!", $login_message, $login_form);
 	} else {
 		$login_form = str_replace("!!login_message!!", "", $login_form);
 	}

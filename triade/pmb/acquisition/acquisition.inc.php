@@ -1,12 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: acquisition.inc.php,v 1.24 2019-06-06 11:52:08 btafforeau Exp $
+// $Id: acquisition.inc.php,v 1.25.8.1 2024/07/19 07:01:24 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $acquisition_no_html, $database_window_title, $msg, $categ, $charset, $acquisition_gestion_tva, $sub, $plugin, $acquisition_sugg_to_cde, $error_msg;
+global $class_path, $msg, $categ, $charset, $acquisition_gestion_tva, $sub, $plugin, $acquisition_sugg_to_cde, $error_msg;
+global $acquisition_rent_requests_activate, $id;
 
 require_once("$class_path/entites.class.php");
 require_once("$class_path/paiements.class.php");
@@ -25,16 +26,10 @@ while ($row=pmb_mysql_fetch_object($list_bib)) {
 	$tab_bib[1][]=$row->raison_sociale;
 }		
 
-//si on arrive par print_acquisition.php, pas d'entÃªtes
-if(!isset($acquisition_no_html)) $acquisition_no_html = 0;
-if (!$acquisition_no_html) {
-	echo window_title($database_window_title.$msg['acquisition_menu'].$msg[1003].$msg[1001]);
-}
-
 switch($categ) {
 	case 'ach':
 		if(!$nb_bib) {
-			//Pas de bibliothÃ¨ques dÃ©finies pour l'utilisateur
+			//Pas de bibliothèques définies pour l'utilisateur
 			$error_msg.= htmlentities($msg["acquisition_err_coord"],ENT_QUOTES, $charset)."<div class='row'></div>";	
 			error_message($msg[321], $error_msg.htmlentities($msg["acquisition_err_par"],ENT_QUOTES, $charset), '1', './admin.php?categ=acquisition');
 			die;
@@ -44,7 +39,7 @@ switch($categ) {
 		if ($acquisition_gestion_tva) {
 			$nbr = tva_achats::countTva();
 			
-			//Gestion de TVA et pas de taux de tva dÃ©finis
+			//Gestion de TVA et pas de taux de tva définis
 			if (!$nbr) {
 				$error_msg.= htmlentities($msg["acquisition_err_tva"],ENT_QUOTES, $charset)."<div class='row'></div>";	
 				error_message($msg[321], $error_msg.htmlentities($msg["acquisition_err_par"],ENT_QUOTES, $charset), '1', './admin.php?categ=acquisition');
@@ -78,21 +73,12 @@ switch($categ) {
 		}		
 	break;
 
-	case 'rent':	
-		switch($sub) {
-			case 'requests':
-				include_once('./acquisition/rent/requests.inc.php');
-				break;
-			case 'accounts':
-				include_once('./acquisition/rent/accounts.inc.php');
-				break;
-			case 'invoices':
-				include_once('./acquisition/rent/invoices.inc.php');
-				break;
-			default:
-				include_once('./acquisition/rent/accounts.inc.php');
-				break;
-		}
+	case 'rent':
+	    if ($acquisition_rent_requests_activate) {
+            $module_acquisition = module_acquisition::get_instance();
+            $module_acquisition->set_object_id($id);
+            $module_acquisition->proceed_rent();
+	    }
 		break;
 	case 'plugin' :
 		$plugins = plugins::get_instance();
@@ -107,7 +93,7 @@ switch($categ) {
 			include_once('./acquisition/suggestions/suggestions.inc.php');
 		} else {
 			if(!$nb_bib) {
-				//Pas de bibliothÃ¨ques dÃ©finies pour l'utilisateur
+				//Pas de bibliothèques définies pour l'utilisateur
 				$error_msg.= htmlentities($msg["acquisition_err_coord"],ENT_QUOTES, $charset)."<div class='row'></div>";	
 				error_message($msg[321], $error_msg.htmlentities($msg["acquisition_err_par"],ENT_QUOTES, $charset), '1', './admin.php?categ=acquisition');
 				die;
@@ -116,7 +102,7 @@ switch($categ) {
 			//Gestion de la tva
 			if ($acquisition_gestion_tva) {
 				$nbr = tva_achats::countTva();
-				//Gestion de TVA et pas de taux de tva dÃ©finis
+				//Gestion de TVA et pas de taux de tva définis
 				if (!$nbr) {
 					$error_msg.= htmlentities($msg["acquisition_err_tva"],ENT_QUOTES, $charset)."<div class='row'></div>";	
 					error_message($msg[321], $error_msg.htmlentities($msg["acquisition_err_par"],ENT_QUOTES, $charset), '1', './admin.php?categ=acquisition');

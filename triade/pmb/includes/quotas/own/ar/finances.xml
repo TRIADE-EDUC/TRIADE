@@ -46,7 +46,7 @@ $Id$ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
-
+        
 		<element name="LOCATION_READER" id="16" comment="Borrower location">
             <linkedto>READER</linkedto>
             <tablelinked>empr</tablelinked>
@@ -56,6 +56,7 @@ $Id$ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
+
 	</elements>
 	
 	<types>
@@ -71,7 +72,7 @@ $Id$ -->
 			</quotas>
 		</type>
 		
-		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Quotas de montant d'amende par jour" short_comment="amende par jour" filter_id="amende">
+		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Quotas de montant d'amende par jour / période" short_comment="amende par jour / période" filter_id="amende">
 			<quotas>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG</on>

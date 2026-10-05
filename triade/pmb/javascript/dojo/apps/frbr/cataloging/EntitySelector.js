@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntitySelector.js,v 1.6 2018-03-19 14:49:42 vtouchard Exp $
+// $Id: EntitySelector.js,v 1.6 2018/03/19 14:49:42 vtouchard Exp $
 
 define(["dojo/_base/declare",  
         "dojo/dom-construct", 

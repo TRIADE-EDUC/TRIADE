@@ -1,0 +1,197 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: rgaa_genbib.css,v 1.10 2023/08/24 14:29:00 pmallambic Exp $ */
+
+:root {
+    --rgaa-body-font-family: Arial, Verdana, Helvetica, sans-serif;
+    --rgaa-body-font-size: 12px;
+    --rgaa-main-font-size: 1.33333em;
+    --rgaa-link-color: #58585c;
+    --rgaa-button-bg-color: #d0c6b4;
+    --rgaa-button-color: white;
+    --rgaa-button-text-decoration: none;
+    --rgaa-button-text-shadow: 1px 1px 2px #000;
+    --rgaa-button-padding: 1px;
+    --rgaa-button-margin-left: 5px;
+    --rgaa-button-border: 1px solid #58585c;
+    --rgaa-button-display: inline-block;
+    --rgaa-button-box-sizing: border-box;
+    --rgaa-bg-color-1 : #817565;
+    --rgaa-bg-color-2 : #D9CBCA;
+    --rgaa-bg-color-3 : #797676;
+    --rgaa-txt-color-1 : #58585c;
+    --rgaa-txt-color-2 : #fff;
+}
+
+input {
+    font: inherit;
+}
+
+#main h2 {
+    font-size: var(--rgaa-main-font-size);
+}
+
+/* -----------------------------------------------------*/
+/*        Transformation des buttons en lien            */
+/* -----------------------------------------------------*/
+
+ul.onglets_isbd_public li.isbd_public_active button {
+    font-weight: bold;
+}
+
+button:is(.perio-title, .search_result, .lvl1_list_btn),
+*:is(ul.onglets_isbd_public, #accessibility ul li) button {
+    color: var(--rgaa-link-color);
+    font-family: var(--rgaa-body-font-family);
+    font-size: var(--rgaa-body-font-size);
+}
+
+button.search_result,
+ul.onglets_isbd_public button {
+    text-decoration: none;
+    padding: 4px;
+    cursor: pointer;
+    height: 15px;
+}
+
+button.lvl1_list_btn {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#accessibility ul li button,
+button:is(.perio-title, .search_result, .lvl1_list_btn) {
+    text-decoration: underline;
+}
+
+button.lvl1_list_btn:is(:hover, :focus),
+button.search_result:is(:hover, :focus),
+#accessibility ul li button:is(:hover, :focus),
+button.perio-title:is(:hover, :focus) {
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------*/
+/*          bandeau title                               */
+/* -----------------------------------------------------*/
+
+#lang_select h2 {
+    color: #FFFFFF;
+}
+
+/* -----------------------------------------------------*/
+/*          intro_bibli                                 */
+/* -----------------------------------------------------*/
+#intro_bibli .p1 {
+	color: #FFFFFF;
+}
+
+
+
+/* -----------------------------------------------------*/
+/*          main_hors_footer title                      */
+/* -----------------------------------------------------*/
+
+*:is(#perio_a2z, #categories, #location, #etageres ) h2 span {
+    background-color: #FFFFFF;
+    margin-left: 10px;
+    margin-top: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+}
+
+#last_entries h2 {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    margin-left: -27px;
+}
+
+#last_entries h2 span {
+    background-color: #FFFFFF;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#perio_a2z h3 span {
+	position: static;
+	margin: 0;
+	padding: 0;
+}
+
+/* -----------------------------------------------------*/
+/*          actions de recherche                        */
+/* -----------------------------------------------------*/
+
+*:is(.addCart, .open_visionneuse, .short_url_permalink, .search_bt_sugg, .search_bt_external) button {
+    color: var(--rgaa-link-color);
+    font-family: var(--rgaa-body-font-family);
+    font-size: var(--rgaa-body-font-size);
+    text-decoration: underline;
+}
+
+*:is(.addCart, .open_visionneuse, .short_url_permalink, .search_bt_sugg, .search_bt_external) button:is(:hover, :focus) {
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------*/
+/*          actions dans le panier                      */
+/* -----------------------------------------------------*/
+
+#cart_action a.bouton {
+    text-decoration: var(--rgaa-button-text-decoration);
+    background-color: var(--rgaa-button-bg-color);
+    color: var(--rgaa-button-color);
+    text-shadow: var(--rgaa-button-text-shadow);
+    padding: var(--rgaa-button-padding);
+    margin-left: var(--rgaa-button-margin-left);
+    border: var(--rgaa-button-border);
+    display: var(--rgaa-button-display);
+    box-sizing: var(--rgaa-button-box-sizing);
+}
+
+/* -----------------------------------------------------*/
+/*          background-color                            */
+/* -----------------------------------------------------*/
+
+body#pmbopac,
+#intro #intro_bibli .p2 ul li, 
+.cms_menu_deep0 li,
+ul.search_tabs li,
+#onglets_list ul.list_tabs li, 
+#empr_onglet ul.empr_tabs li, 
+input.bouton,
+input.boutonrechercher, 
+#subs_form table td input, 
+.carroussel_bulletin .current_bull_carroussel,
+.carroussel_bulletin .active,
+th, ul.empr_subtabs li, .authorities {
+	background-color:  var(--rgaa-bg-color-1);
+}
+
+
+#footer,
+.notice-child,
+ul.onglets_isbd_public,
+#categories-container ul,
+#actualites .bloc_actu, #facette #facette_list a {
+    border-color: var(--rgaa-bg-color-1);
+}
+
+.even {
+	background-color: var(--rgaa-bg-color-2);
+}
+
+
+/* -----------------------------------------------------*/
+/*         color                            */
+/* -----------------------------------------------------*/
+
+th {
+	color: var(--rgaa-txt-color-2);
+}
+
+ul.empr_subtabs li a {
+	color: var(--rgaa-txt-color-2);
+}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_lvm.inc.php,v 1.3 2015-06-03 14:55:19 vtouchard Exp $
+// $Id: func_lvm.inc.php,v 1.4 2022/04/25 14:43:37 dgoron Exp $
 if (stristr ( $_SERVER ['REQUEST_URI'], ".inc.php" ))
 	die ( "no access" );
 	
@@ -13,8 +13,8 @@ function recup_noticeunimarc_suite($notice) {
 	$record = new iso2709_record ( $notice, AUTO_UPDATE );
 	$info_606 = $record->get_subfield ( "606", "a", "z" );
 } // fin recup_noticeunimarc_suite
+
 function import_new_notice_suite() {
-	global $dbh;
 	global $notice_id;
 	global $info_606;
 	
@@ -28,7 +28,7 @@ function import_new_notice_suite() {
 		$categ_id = categories::searchLibelle ( $libelle , 0, $lang);
 		if ($categ_id) {
 			$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) values($notice_id,$categ_id,$ordre_categ)";
-			pmb_mysql_query ( $requete, $dbh );
+			pmb_mysql_query($requete);
 			$ordre_categ ++;
 		}
 	}

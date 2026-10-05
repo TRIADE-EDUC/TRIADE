@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_commande.tpl.php,v 1.6 2019-03-06 11:46:55 dbellamy Exp $
+// $Id: sel_commande.tpl.php,v 1.7 2019/08/29 10:05:39 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -73,7 +73,7 @@ $commande_form = "
 	}
 </script>
 <form name='saisie_commande' method='post' action=\"$update_url\">
-	<h3>".htmlentities($msg['acquisition_ajout_commande'],ENT_QUOTES,$charset)."</h3>
+	<h3>".htmlentities($msg['acquisition_ajout_cde'],ENT_QUOTES,$charset)."</h3>
 	<div class='form-contenu'>
 		<div class='row'>
 			<label class='etiquette'>".htmlentities($msg['acquisition_coord_lib'],ENT_QUOTES,$charset)."</label>

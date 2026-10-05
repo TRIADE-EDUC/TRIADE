@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -45,11 +45,11 @@ if ($id != 1) {
 	set_time_limit(0);
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Export des données Triade vers Visual Timetabling" ?></font></b></td>
 </tr>
@@ -78,7 +78,7 @@ fwrite($xml,"\t".'</PARAMETRAGE>'."\n");
 $cnx=cnx();
 $data=affPers("ENS"); // pers_id, civ, nom, prenom, identifiant
 fwrite($xml,"\t".'<LES_ENSEIGNANTS>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][2];
 	$prenom=$data[$i][3];
@@ -97,7 +97,7 @@ fwrite($xml,"\t".'</LES_ENSEIGNANTS>'."\n");
 
 $data=affMatiere(); // code_mat,libelle,sous_matiere
 fwrite($xml,"\t".'<LES_MATIERES>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][1];
 	fwrite($xml,"\t\t".'<UNE_MATIERE>'."\n");
@@ -110,7 +110,7 @@ fwrite($xml,"\t".'</LES_MATIERES>'."\n");
 
 $data=affClasse(); // code_class,libelle
 fwrite($xml,"\t".'<LES_CLASSES>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][1];
 	fwrite($xml,"\t\t".'<UNE_CLASSE>'."\n");
@@ -122,7 +122,7 @@ fwrite($xml,"\t".'</LES_CLASSES>'."\n");
 
 $data=affGroupe(); // group_id,libelle
 fwrite($xml,"\t".'<LES_GROUPES>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][1];
 	fwrite($xml,"\t\t".'<UN_GROUPE>'."\n");
@@ -136,7 +136,7 @@ fwrite($xml,"\t".'</LES_GROUPES>'."\n");
 
 $data=affEleve(); //elev_id, nom, prenom, classe
 fwrite($xml,"\t".'<LES_ELEVES>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][1];
 	$prenom=$data[$i][2];
@@ -176,5 +176,5 @@ Pgclose();
 
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

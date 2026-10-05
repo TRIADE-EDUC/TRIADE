@@ -1,7 +1,7 @@
 /* +--------------------------------------------------------------------------+
 // � 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: layout.css,v 1.89 2017-10-30 16:09:35 mramage Exp $
+// $Id: layout.css,v 1.92 2020/06/22 07:28:31 dgoron Exp $
 */
 
 /* ---------------------------------------------------------------------------*/
@@ -172,7 +172,7 @@ iframe#alerte
 iframe#history {
 	width:40%;
 	height:97%;
-	position:absolute; 
+	position:fixed; 
 	top:1%; 
 	left:1%;
 	z-index:1000;
@@ -640,7 +640,7 @@ h3
 
 .erreur-child
 {
-	display:none;
+	display:block;
 	margin-left: 12%;
     padding:0;
     color:#000;
@@ -1411,4 +1411,10 @@ body.catalog #conteneur #contenu form #speech_timeline #speech_timeline_edit_men
     margin-top: 2px;
     cursor: pointer;
     list-style-type: none;
+}
+
+/* Correction d'un bug Drag & Drop dojo dans Firefox
+https://github.com/dojo/dijit/issues/161 */
+.dijitTree {
+    -moz-user-select: none;
 }

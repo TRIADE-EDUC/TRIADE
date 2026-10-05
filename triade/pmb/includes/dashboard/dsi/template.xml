@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: template.xml,v 1.5 2015-08-05 14:14:18 agiraud Exp $ -->
+$Id: template.xml,v 1.5 2015/08/05 14:14:18 agiraud Exp $ -->
 <template default_lang='fr_FR'>
 	<content lang='fr_FR'><![CDATA[
 		<h2>Bannettes</h2>

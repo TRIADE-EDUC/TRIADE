@@ -1,13 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: emergency.php,v 1.7 2017-10-23 10:13:34 ngantier Exp $
+// $Id: emergency.php,v 1.8 2023/03/02 08:45:38 dbellamy Exp $
 
 //Restauration d'urgence
 ?>
+
 <html>
-<head><title>Emergency restore database</title></head>
+<head>
+<meta charset="utf-8">
+<title>Emergency restore database</title>
+</head>
 <body>
 <h1>Emergency restore</h1>
 <br /><br />

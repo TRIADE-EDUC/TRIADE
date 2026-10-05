@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_editorial.tpl.php,v 1.45 2019-05-27 12:03:18 ngantier Exp $
+// $Id: cms_editorial.tpl.php,v 1.49.6.1 2024/07/01 14:39:04 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -149,27 +149,79 @@ $cms_dojo_plugins_editor=
 $cms_editorial_resume_field = "
 	<div id='el0Child_5' class='row' movable='yes' title=\"".htmlentities($msg['cms_editorial_form_resume'], ENT_QUOTES, $charset)."\">
 		<div class='row'>
-			<label for='cms_editorial_form_resume'>".$msg['cms_editorial_form_resume']."</label>
+			<label id='cms_editorial_form_resume_label' for='cms_editorial_form_resume'>".$msg['cms_editorial_form_resume']."</label>
 		</div> 
 		<div class='row'>
 			<input type='hidden' name='cms_editorial_form_resume' value=''/>
-			<div data-dojo-type='dijit/Editor' $cms_dojo_plugins_editor	id='cms_editorial_form_resume_form' rows='5' class='saisie-80em' wrap='virtual'>!!cms_editorial_form_resume!!</div>
+			<textarea data-dojo-type='dijit/Editor' $cms_dojo_plugins_editor id='cms_editorial_form_resume_form' rows='5' class='saisie-80em' wrap='virtual'>!!cms_editorial_form_resume!!</textarea>
 		</div>
+        !!cms_editorial_resume_field_javascript!!
 	</div>";
 $cms_editorial_resume_field_no_dojo = "
 	<div id='el0Child_5' class='row' movable='yes' title=\"".htmlentities($msg['cms_editorial_form_resume'], ENT_QUOTES, $charset)."\">		
 		<div class='row'>
-			<label for='cms_editorial_form_resume'>".$msg['cms_editorial_form_resume']."</label>
+			<label id='cms_editorial_form_resume_label' for='cms_editorial_form_resume'>".$msg['cms_editorial_form_resume']."</label>
 		</div>
 		<div class='row'>
 			<textarea id='cms_editorial_form_resume' name='cms_editorial_form_resume'>!!cms_editorial_form_resume!!</textarea>
 		</div>
+        !!cms_editorial_resume_field_javascript!!
 	</div>";
+
+$cms_editorial_field_javascript = "
+    <script type='text/javascript'>
+        function addEventOnField() {
+            let node = document.getElementById('!!field_id!!');
+            if (node) {
+                node.addEventListener('keydown', () => {
+                    console.log(checkTextSize(node.value));
+                });
+            } else {
+                setTimeout(function() {
+                    let frame = document.getElementById('!!field_id!!_form_iframe');
+                    let elt = frame.contentWindow.document.getElementById('dijitEditorBody');
+					if(elt) {
+	                    elt.addEventListener('keydown', () => {
+	                        let limitNode = document.getElementById('!!field_id!!_size_limit');
+	                        if (checkTextSize(elt.innerHTML) >= 16777215) {
+	                            if (!limitNode) {
+	                                let em = document.createElement('em');
+	                                em.id = '!!field_id!!_size_limit';
+	                                em.appendChild(document.createTextNode(' (" . $msg['cms_editorial_form_size_limit'] . ")'));
+	                                document.getElementById('!!field_id!!_label').appendChild(em);
+	                            }
+	                        } else {
+	                            if (limitNode) {
+	                                limitNode.remove();
+	                            }
+	                        }
+	                    });
+					}
+                }, 2000);
+            }
+        }
+
+        function checkTextSize(string) {
+            let escaped_string = encodeURI(string);
+            let count = 0;
+            if (escaped_string.indexOf('%') != -1) {
+                count = escaped_string.split('%').length - 1;
+                count = (count == 0 ? 1 : count);
+                count = count + (escaped_string.length - (count * 3));
+            } else {
+                count = escaped_string.length;
+            }
+            return count;
+        }
+
+        addEventOnField();
+    </script>
+";
 
 $cms_editorial_contenu_field = "
 	<div id='el0Child_6' class='row' movable='yes' title=\"".htmlentities($msg['cms_editorial_form_contenu'], ENT_QUOTES, $charset)."\">
 		<div class='row'>
-			<label for='cms_editorial_form_contenu'>".$msg['cms_editorial_form_contenu']."</label>
+			<label id='cms_editorial_form_contenu_label' for='cms_editorial_form_contenu'>".$msg['cms_editorial_form_contenu']."</label>
 		</div> 
 		<div class='row'>
 			<input type='hidden' name='cms_editorial_form_contenu' value=''/>
@@ -179,7 +231,7 @@ $cms_editorial_contenu_field = "
 $cms_editorial_contenu_field_no_dojo = "
 	<div id='el0Child_6' class='row' movable='yes' title=\"".htmlentities($msg['cms_editorial_form_contenu'], ENT_QUOTES, $charset)."\">
 		<div class='row'>
-			<label for='cms_editorial_form_contenu'>".$msg['cms_editorial_form_contenu']."</label>
+			<label id='cms_editorial_form_contenu_label' for='cms_editorial_form_contenu'>".$msg['cms_editorial_form_contenu']."</label>
 		</div>
 		<div class='row'>
 			<textarea id='cms_editorial_form_contenu' name='cms_editorial_form_contenu'>!!cms_editorial_form_contenu!!</textarea>
@@ -194,7 +246,7 @@ $cms_editorial_desc_field = "
 		</div>
 		<div class='row'>
 			!!cms_categs!!
-			<div id='addcateg'/></div>
+			<div id='addcateg'></div>
 		</div>
 		<link href='./javascript/dojo/dojox/editor/plugins/resources/editorPlugins.css' type='text/css' rel='stylesheet' />
 		<link href='./javascript/dojo/dojox/editor/plugins/resources/css/InsertEntity.css' type='text/css' rel='stylesheet' />
@@ -310,9 +362,7 @@ $cms_editorial_dates_field = "
 				<label for='cms_editorial_form_start_date'>".$msg['cms_editorial_form_start_date']."</label>
 			</div> 
 			<div class='row'>
-				<input type='text' style='width: 10em;' name='cms_editorial_form_start_date_value' id='cms_editorial_form_start_date_value'  value='!!cms_editorial_form_start_date_value!!'
-					data-dojo-type='dijit/form/DateTextBox' required='false' />
-				<input type='button' onclick=\"empty_dojo_calendar_by_id('cms_editorial_form_start_date_value');\"  value='X' class='bouton'>
+				<input type='date' name='cms_editorial_form_start_date_value' id='cms_editorial_form_start_date_value'  value='!!cms_editorial_form_start_date_value!!' />
 			</div>
 		</div>
 		<div class='row'>
@@ -320,9 +370,7 @@ $cms_editorial_dates_field = "
 				<label for='cms_editorial_form_end_date'>".$msg['cms_editorial_form_end_date']."</label>
 			</div> 
 			<div class='row'>
-				<input type='text' style='width: 10em;' name='cms_editorial_form_end_date_value' id='cms_editorial_form_end_date_value'  value='!!cms_editorial_form_end_date_value!!'
-					data-dojo-type='dijit/form/DateTextBox' required='false' />
-				<input type='button' onclick=\"empty_dojo_calendar_by_id('cms_editorial_form_end_date_value');\"  value='X' class='bouton'>
+				<input type='date' name='cms_editorial_form_end_date_value' id='cms_editorial_form_end_date_value'  value='!!cms_editorial_form_end_date_value!!' />
 			</div>
 		</div>
 	</div>

@@ -10,7 +10,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,11 +50,11 @@ $nom_carnet=chercheNomCarnet($idcarnet);
 $idclasse=$_POST["saisie_classe"];
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Consultation du carnet de suivi : <font id='color2'> $nom_carnet </font>" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -87,7 +87,7 @@ $fontPolice="Arial";
 /* 1er cadre */
 
 $data=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -283,14 +283,14 @@ $y=3;
 
 $largeurSection=$nbPeriode*6;
 //print $largeurSection."<br>";
-$nbSection=count($tabSection);
+$nbSection=countTriade($tabSection);
 //print $nbSection."<br>";
 $largeurSectionTotal=$nbSection*$largeurSection;
 //print $largeurSectionTotal."<br>";
 $largeurCommentaire=204-$largeurSectionTotal;
 //print $largeurCommentaire."<br>";
 
-for ($i=0;$i<count($tabCompetence);$i++) {
+for ($i=0;$i<countTriade($tabCompetence);$i++) {
 	$x=3;
 	$idcompetence=$tabCompetence[$i][0];
 	$tabDescriptif=rechercheDescriptif($idcompetence,$idcarnet); // id,libelle,bold,ordre
@@ -317,7 +317,7 @@ for ($i=0;$i<count($tabCompetence);$i++) {
 		}
 	}
 	$y+=5;
-	for($jjj=0;$jjj<count($tabDescriptif);$jjj++) {
+	for($jjj=0;$jjj<countTriade($tabDescriptif);$jjj++) {
 		$libelle=$tabDescriptif[$jjj][1];
 		$bold=$tabDescriptif[$jjj][2];
 		$x=3;
@@ -383,17 +383,17 @@ $pdf->close();
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

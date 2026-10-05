@@ -1,14 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_django.class.php,v 1.37 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_view_django.class.php,v 1.47.2.3 2025/01/17 10:40:45 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($include_path."/h2o/h2o.php");
 
 class cms_module_common_view_django extends cms_module_common_view{
 	protected $cadre_parent;
+	public $default_template;
+
+	public $managed_datas;
 
 	public function __construct($id=0){
 	    parent::__construct((int) $id);
@@ -16,10 +19,10 @@ class cms_module_common_view_django extends cms_module_common_view{
 
 	public function get_form(){
 		$form = '';
-		if(isset($this->managed_datas['templates']) && count($this->managed_datas['templates'])){
-			//sÃ©lection d'un template dÃ©finie en adminsitration
+		if(isset($this->managed_datas['templates']) && (is_countable($this->managed_datas['templates']) && count($this->managed_datas['templates']))){
+			//sélection d'un template définie en adminsitration
 			$form.="
-		<div clas='row'>
+		<div class='row'>
 			<div class='colonne3'>
 				<label for='cms_module_common_view_django_template_choice'>".$this->format_text($this->msg['cms_module_common_view_django_template_choice'])."</label>
 			</div>
@@ -44,15 +47,16 @@ class cms_module_common_view_django extends cms_module_common_view{
 									pmbDojo.aceManager.getEditor('cms_module_common_view_django_template_content').selectAll();
 									pmbDojo.aceManager.getEditor('cms_module_common_view_django_template_content').remove();
 								}else{
-									dojo.byId('cms_module_common_view_django_template_content').value='';		
+									dojo.byId('cms_module_common_view_django_template_content').value='';
 								}
 								";
-				foreach($contents as $content){
+				foreach ($contents as $content) {
+				    $content = str_replace(["\n", "\r", "</script>"], ["", "", "<\/script>"], addslashes($content));
 					$form.="
 							if(pmbDojo.aceManager.getEditor('cms_module_common_view_django_template_content')){
-								pmbDojo.aceManager.getEditor('cms_module_common_view_django_template_content').insert(\"".str_replace(array("\n","\r"),"",addslashes($content))."\"+\"\\n\")
+								pmbDojo.aceManager.getEditor('cms_module_common_view_django_template_content').insert(\"".$content."\"+\"\\n\")
 							}else{
-								dojo.byId('cms_module_common_view_django_template_content').value+= \"".str_replace(array("\n","\r"),"",addslashes($content)).'\n'."\"		
+								dojo.byId('cms_module_common_view_django_template_content').value+= \"".$content.'\n'."\"
 							}
 							";
 				}
@@ -69,11 +73,11 @@ class cms_module_common_view_django extends cms_module_common_view{
 			</div>
 		</div>";
 		}
-		
+
 		if(!isset($this->parameters['active_template']) || $this->parameters['active_template'] == ""){
 			$this->parameters['active_template'] = $this->default_template;
 		}
-	
+
 		$form.="
 		<div class='row'>
 			<div class='colonne3'>
@@ -89,7 +93,7 @@ class cms_module_common_view_django extends cms_module_common_view{
 	}
 
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $cms_module_common_view_template_choice;
@@ -101,7 +105,7 @@ class cms_module_common_view_django extends cms_module_common_view{
 	}
 
 	public function render($datas){
-	    
+
 	    if(!isset($datas) || !is_array($datas)){
 	    	$datas=array();
 	    }
@@ -114,11 +118,28 @@ class cms_module_common_view_django extends cms_module_common_view{
 		if(!isset($datas['post_vars']) || !$datas['post_vars']){
 			$datas['post_vars'] = $_POST;
 		}
+		if(isset($datas['paging']) && $datas['paging']['activate']){
+		    $url = $_SERVER["REQUEST_URI"];
+
+		    if(strpos($url, "page=") === false) {
+		        if(strpos($url, "?")) {
+		            $url .= "&page=!!page!!";
+		        }else {
+		            $url .= "?page=!!page!!";
+		        }
+		    }
+
+			$navbar = getNavbar($datas['paging']['page'], $datas['paging']['total'], $datas['paging']['nb_per_page'], $url, "&nb_per_page_custom=!!nb_per_page_custom!!", "", $datas['paging']['customs'], true);
+		    $datas['paginator'] = $navbar;
+		}
 		try{
 			$html = H2o::parseString($this->parameters['active_template'])->render($datas);
 			if (!empty($datas['css'])) $html.= '<style>'.$datas['css'].'</style>';
 		}catch(Exception $e){
-			$html = $this->msg["cms_module_common_view_error_template"];
+			$html = '<!-- '.$e->getMessage().' -->';
+			$html .= '<div class="error_on_template" title="' . htmlspecialchars($e->getMessage(), ENT_QUOTES) . '">';
+			$html .= $this->msg["cms_module_common_view_error_template"];
+			$html .= '</div>';
 		}
 		return $html;
 	}
@@ -148,7 +169,7 @@ class cms_module_common_view_django extends cms_module_common_view{
 			}
 		}
 			$form.="
-				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->module_class_name)."&quoi=views&elem=".$this->class_name."&cms_template=new&action=get_form'/>".$this->format_text($this->msg['cms_module_common_view_django_add_template'])."</a>
+				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->module_class_name)."&quoi=views&elem=".$this->class_name."&cms_template=new&action=get_form'>".$this->format_text($this->msg['cms_module_common_view_django_add_template'])."</a>
 			";
 		$form.="
 			</div>
@@ -202,33 +223,35 @@ class cms_module_common_view_django extends cms_module_common_view{
 
 	public function save_manage_form($managed_datas){
 		global $cms_template;
-		global $cms_template_delete;
-		global $cms_module_common_view_django_template_name,$cms_module_common_view_django_template_content;
+        global $cms_template_delete;
+        global $cms_module_common_view_django_template_name, $cms_module_common_view_django_template_content;
 
-		if($cms_template_delete){
-			unset($managed_datas['templates'][$cms_template_delete]);
-		}else{
-			if($cms_template == "new"){
-				$cms_template = "template".(cms_module_common_view_django::get_max_template_id($managed_datas['templates'])+1);
-			}
-			$managed_datas['templates'][$cms_template] = array(
-					'name' => stripslashes($cms_module_common_view_django_template_name),
-					'content' => stripslashes($cms_module_common_view_django_template_content)
-			);
-		}
-		return $managed_datas;
+        if ($cms_template_delete) {
+            unset($managed_datas['templates'][$cms_template_delete]);
+        } else {
+            if ($cms_template == "new") {
+                $cms_template = "template" . (cms_module_common_view_django::get_max_template_id($managed_datas['templates']) + 1);
+            }
+            $managed_datas['templates'][$cms_template] = array(
+                'name' => stripslashes($cms_module_common_view_django_template_name),
+                'content' => stripslashes($cms_module_common_view_django_template_content)
+            );
+        }
+        return $managed_datas;
 	}
 
-	protected function get_max_template_id($datas){
-		$max = 0;
-		if(count($datas)){
-			foreach	($datas as $key => $val){
-				$key = str_replace("template","",$key)*1;
-				if($key>$max) $max = $key;
-			}
-		}
-		return $max;
-	}
+	protected static function get_max_template_id($datas) {
+        $max = 0;
+        if (!empty($datas) && is_countable($datas)) {
+            foreach ($datas as $key => $val) {
+                $key = str_replace("template", "", $key) * 1;
+                if ($key > $max) {
+                    $max = $key;
+                }
+            }
+        }
+        return $max;
+    }
 
 	public function get_format_data_structure(){
 		$format_datas = array();
@@ -365,6 +388,14 @@ class cms_module_common_view_django extends cms_module_common_view{
 				array(
 						'var' => "env_vars.browser",
 						'desc' => $this->msg['cms_module_common_view_django_session_vars_browser_desc'],
+				),
+			    array(
+			        'var' => "env_vars.server_addr",
+			        'desc' => $this->msg['cms_module_common_view_django_session_vars_server_addr_desc'],
+			    ),
+				array(
+					'var' => "env_vars.remote_addr",
+					'desc' => $this->msg['cms_module_common_view_django_session_vars_remote_addr_desc'],
 				)
 			)
 		);
@@ -378,7 +409,7 @@ class cms_module_common_view_django extends cms_module_common_view{
 		<script type='text/javascript'>
 			require(['dojo/data/ItemFileReadStore', 'dijit/tree/ForestStoreModel', 'dijit/Tree','dijit/Tooltip'],function(Memory,ForestStoreModel,Tree,Tooltip){
 				var datas = {identifier:'var',label:'var'};
-				datas.items = ".json_encode($this->utf8_encode($this->get_format_data_structure())).";
+				datas.items = ".encoding_normalize::json_encode($this->get_format_data_structure()).";
 
 				var store = Memory({
 					data :datas
@@ -395,7 +426,7 @@ class cms_module_common_view_django extends cms_module_common_view{
 						if(pmbDojo.aceManager.getEditor('".$textarea."')){
 							pmbDojo.aceManager.getEditor('".$textarea."').insert('{{'+item.var[0]+'}}');
 						}else{
-							document.getElementById('".$textarea."').value = document.getElementById('".$textarea."').value + '{{'+item.var[0]+'}}';		
+							document.getElementById('".$textarea."').value = document.getElementById('".$textarea."').value + '{{'+item.var[0]+'}}';
 						}
 					},
 
@@ -414,5 +445,5 @@ class cms_module_common_view_django extends cms_module_common_view{
 
 		return $html;
 	}
-	
+
 }

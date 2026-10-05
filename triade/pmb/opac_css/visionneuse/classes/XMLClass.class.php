@@ -1,20 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: XMLClass.class.php,v 1.5 2019-04-30 14:36:31 ngantier Exp $
+// $Id: XMLClass.class.php,v 1.6 2020/04/24 07:32:34 dgoron Exp $
 
 class XMLClass {
-	public $defaultMimetypeFile;			//xml dÃ©crivant les classes Ã  utilisÃ© par dÃ©faut
-	public $defaultMimetype;				//tab rÃ©sultant du xml par defaut	
+	public $defaultMimetypeFile;			//xml décrivant les classes à utilisé par défaut
+	public $defaultMimetype;				//tab résultant du xml par defaut	
 	public $mimetypeFiles = array();		//tableau associatif des manisfest par classes d'affichage 
-	public $classMimetypes = array();		//tableau associatif rÃ©sultant des diffÃ©rents manifest, dÃ©crivant les mimetypes supportÃ©s par chaque classe
+	public $classMimetypes = array();		//tableau associatif résultant des différents manifest, décrivant les mimetypes supportés par chaque classe
 		
     public function __construct($file=""){
     	$this->file = $file;   	
 	}
     
- 	//MÃ©thodes
+ 	//Méthodes
  	public function defaultMimetypeParse($parser, $nom, $attributs){
 		global $_starttag; $_starttag=true;
 		if($nom == 'MIMETYPE' && $attributs['TYPE'] && $attributs['CLASS']){
@@ -25,7 +25,7 @@ class XMLClass {
 		}
 	}
 
-	//on fait tout dans la mÃ©thode dÃ©butBalise....
+	//on fait tout dans la méthode débutBalise....
 	public function finBalise($parser, $nom){//besoin de rien
 	}   
 	public function texte($parser, $data){//la non plus
@@ -56,12 +56,13 @@ class XMLClass {
 		fclose($fp);
 
 		if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-			die( sprintf( "erreur XML %s Ã  la ligne: %d ( $xmlToParse )\n\n",
+			die( sprintf( "erreur XML %s à la ligne: %d ( $xmlToParse )\n\n",
 			xml_error_string(xml_get_error_code( $this->analyseur ) ),
 			xml_get_current_line_number( $this->analyseur) ) );
 		}
 
 		xml_parser_free($this->analyseur);
+		unset($this->analyseur);
  	}
 }
 ?>

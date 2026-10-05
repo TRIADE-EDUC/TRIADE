@@ -1,44 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: statut.class.php,v 1.4 2017-06-30 14:08:17 dgoron Exp $
+// $Id: statut.class.php,v 1.6.8.1 2025/05/06 15:04:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/demandes_actions.class.php");
 
-class statut{
+class statut extends demande_dynamic_field{
 	
-	public $id_element = 0;
-	public $champ_entree = "";
-	public $champ_sortie = "";
-	public $display="";
-	public $idobjet = 0;
-	
-	public function __construct($id_elt,$fieldElt){
-		global $quoifaire;
-		
-		$this->id_element = $id_elt;
-		$format_affichage = explode('/',$fieldElt);
-		$this->champ_entree = $format_affichage[0];
-		if($format_affichage[1]) $this->champ_sortie = $format_affichage[1];		
-		$ids = explode("_",$id_elt);
-		$this->idobjet = $ids[1];
-		
-		switch($quoifaire){
-			
-			case 'edit':
-				$this->make_display();
-				break;
-			case 'save':
-				$this->update();
-				break;
-		}
-	}
-	
+    protected function get_query_display() {
+        return "";
+    }
+    
 	public function make_display(){
-		global $msg, $dbh,$charset;
+		global $msg,$charset;
 		
 		$display ="";
 		$submit = "<input type='submit' class='bouton' name='soumission' id='soumission' value='".$msg['demandes_valid_progression']."'/>";
@@ -56,12 +34,10 @@ class statut{
 	}
 	
 	public function update(){		
-		global $dbh, $statut;		
+		global $statut;		
 		
 		$req = "update demandes_actions set statut_action='".$statut."' where id_action='".$this->idobjet."'";
-		pmb_mysql_query($req,$dbh);
-		
-		
+		pmb_mysql_query($req);
 		$action = new demandes_actions($this->idobjet);
 		$display = "";
 		switch($this->champ_sortie){
@@ -74,8 +50,6 @@ class statut{
 				}
 			break;
 		}
-		
 		$this->display = $display;		
 	}
 }
-?>

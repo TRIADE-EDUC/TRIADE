@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_series.class.php,v 1.6 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: vedette_series.class.php,v 1.6 2018/12/04 10:26:44 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

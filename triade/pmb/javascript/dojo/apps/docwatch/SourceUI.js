@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SourceUI.js,v 1.19 2019-03-13 14:48:22 dgoron Exp $
+// $Id: SourceUI.js,v 1.19 2019/03/13 14:48:22 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/topic","dojo/_base/lang","dijit/registry","dijit/form/Button","dijit/form/CheckBox","dijit/form/ValidationTextBox"], function(declare, ContentPane, domConstruct, dom, on, topic, lang, registry, Button, CheckBox, ValidationTextBox){

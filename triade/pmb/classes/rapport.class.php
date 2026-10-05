@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rapport.class.php,v 1.14 2017-11-22 11:07:34 dgoron Exp $
+// $Id: rapport.class.php,v 1.16 2021/03/30 06:17:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -44,8 +44,8 @@ class rapport {
 			
 		}
 		
+		$liste_rap = "";
 		if($this->rapport_elements){
-			$liste_rap = "";
 			for($i=0;$i<count($this->rapport_elements);$i++){			
 				$id=$this->rapport_elements[$i]['id_item'];
 				$style="";
@@ -87,7 +87,7 @@ class rapport {
 		$form_rapport = str_replace('!!list_obj_rapport!!',$liste_rap,$form_rapport);
 		$form_rapport = str_replace('!!list_obj!!',$liste,$form_rapport);
 		
-		//DÃ©finition des boutons du format d'export
+		//Définition des boutons du format d'export
 		$file = $base_path."/demandes/export_format/catalog.xml";
 		$file_subst = $base_path."/demandes/export_format/catalog_subst.xml";		
 		if (file_exists($file_subst)) { 
@@ -107,12 +107,12 @@ class rapport {
 	}
 	
 	/*
-	 * Tableau des Ã©lÃ©ments exportables dans le rapport
+	 * Tableau des éléments exportables dans le rapport
 	 */
 	public function getListeExport(){}
 	
 	/*
-	 * Tableau des Ã©lÃ©ments composants le rapport
+	 * Tableau des éléments composants le rapport
 	 */
 	public function getListeRapport(){}
 	
@@ -125,7 +125,7 @@ class rapport {
 	}
 	
 	/*
-	 * CrÃ©ation du rapport au format XML
+	 * Création du rapport au format XML
 	 */
 	public function create_rapport(){
 		global $charset, $base_path;
@@ -170,7 +170,7 @@ class rapport_demandes extends rapport {
 	public function __construct($id=0){
 		global $msg, $form_rapport;
 		
-		$this->id_demande = $id+0;
+		$this->id_demande = intval($id);
 		$this->titre_gauche = $msg['demandes_liste_notes'];
 		$this->cancel_action = "document.location='./demandes.php?categ=gestion&act=see_dmde&iddemande=".$this->id_demande."'";
 		$this->form_action = "./demandes/get_rapport.php?iddemande=".$this->id_demande;
@@ -181,11 +181,9 @@ class rapport_demandes extends rapport {
 	}
 	
 	/*
-	 * Tableau des notes liÃ©es Ã  la demande
+	 * Tableau des notes liées à la demande
 	 */	 
 	public function getListeExport(){
-		global $dbh;	
-		
 		$req = "select id_note, CONCAT(SUBSTRING(contenu,1,20),'','...') as titre, contenu, date_note, num_note_parent, sujet_action as sujet from demandes_notes 
 			join demandes_actions on num_action=id_action
 			join demandes on (num_demande=id_demande and id_demande='".$this->id_demande."')
@@ -193,7 +191,7 @@ class rapport_demandes extends rapport {
 			and id_note not in (select num_note from rapport_demandes where num_demande='".$this->id_demande."' )
 			order by num_action, date_note
 			";
-		$res = pmb_mysql_query($req,$dbh);		
+		$res = pmb_mysql_query($req);		
 		$indice=0;
 		while(($note = pmb_mysql_fetch_object($res))){
 			$this->export_elements[$indice]['id'] = $note->id_note;
@@ -209,18 +207,15 @@ class rapport_demandes extends rapport {
 	}
 	
 	/*
-	 * Tableau des Ã©lÃ©ments composants le rapport des demandes
+	 * Tableau des éléments composants le rapport des demandes
 	 */
 	public function getListeRapport(){
-		
-		global $dbh;
-		
 		$req = "select id_item, num_note, r.num_demande, r.contenu, ordre, type, date_note, sujet_action 
 		from rapport_demandes r 
 		left join demandes_notes on num_note=id_note 
 		left join demandes_actions on num_action=id_action 
 		where r.num_demande='".$this->id_demande."' order by ordre";
-		$res = pmb_mysql_query($req,$dbh) or die(pmb_mysql_error()."<br/>".$req);
+		$res = pmb_mysql_query($req) or die(pmb_mysql_error()."<br/>".$req);
 		$indice=0;
 		while(($item = pmb_mysql_fetch_object($res))){
 			$this->rapport_elements[$indice]['id_item'] = $item->id_item;
@@ -237,10 +232,10 @@ class rapport_demandes extends rapport {
 	}
 	
 	/*
-	 * GÃ©nÃ©rer l'intro du rapport
+	 * Générer l'intro du rapport
 	 */
 	public function generer_intro(){
-		global $dbh, $charset;
+		global $charset;
 		
 		$req = " select titre_demande, date_demande, deadline_demande, sujet_demande, group_concat(distinct if(concat(prenom,' ',nom)!='',concat(prenom,' ',nom),username) separator '/ ') as docu, 
 			CONCAT(empr_prenom,' ',empr_nom) as demandeur, SUM(temps_passe) as temps, SUM(cout) as cout 
@@ -250,7 +245,7 @@ class rapport_demandes extends rapport {
 			left join demandes_users du on du.num_demande=id_demande
 			left join users on num_user=userid
 			where id_demande='".$this->id_demande."' group by id_demande ";
-		$res = pmb_mysql_query($req,$dbh) or die(pmb_mysql_error()."<br/>".$req);
+		$res = pmb_mysql_query($req) or die(pmb_mysql_error()."<br/>".$req);
 		while(($dmde = pmb_mysql_fetch_object($res))){
 			$this->intro .= "
 				<intro>
@@ -265,7 +260,6 @@ class rapport_demandes extends rapport {
 				</intro>			
 			";
 		}
-		
 		return $this->intro;
 	}
 }

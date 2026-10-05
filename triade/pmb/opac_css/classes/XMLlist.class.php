@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: XMLlist.class.php,v 1.37 2019-04-30 14:36:31 ngantier Exp $
+// $Id: XMLlist.class.php,v 1.45 2024/01/26 10:35:23 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,15 +16,15 @@ class XMLlist {
 	
 	public $analyseur;
 	public $fichierXml;
-	public $fichierXmlSubst; // nom du fichier XML de substitution au cas oÃ¹.
+	public $fichierXmlSubst; // nom du fichier XML de substitution au cas où.
 	public $current;
 	public $table;
 	public $table_js;
 	public $tablefav;
 	public $flag_fav;
 	public $s;
-	public $no_cache; // rechargement, mÃªme si cache
-	public $flag_elt ; // pour traitement des entrÃ©es supprimÃ©es
+	public $no_cache; // rechargement, même si cache
+	public $flag_elt ; // pour traitement des entrées supprimées
 	public $flag_order;
 	public $order;
 	public $js_group;
@@ -46,7 +46,7 @@ class XMLlist {
 	}
 		                
 
-	//MÃ©thodes
+	//Méthodes
 	public function debutBalise($parser, $nom, $attributs) {
 		global $_starttag; $_starttag=true;
 		if($nom == 'ENTRY' && $attributs['CODE'])
@@ -73,7 +73,7 @@ class XMLlist {
 	}
 	
 	/**
-	 * DÃ©finit une sÃ©rie d'attributs supplÃ©mentaires Ã  parser
+	 * Définit une série d'attributs supplémentaires à parser
 	 * @param array $attributes array('name','default_value')
 	 */
 	public function setAttributesToParse($attributes=array()){
@@ -84,7 +84,7 @@ class XMLlist {
 		return $this->attributes;
 	}
 	  
-	//MÃ©thodes
+	//Méthodes
 	public function debutBaliseSubst($parser, $nom, $attributs) {
 		global $_starttag; $_starttag=true;
 		if($nom == 'ENTRY' && $attributs['CODE']) {
@@ -102,7 +102,7 @@ class XMLlist {
 			if ($nom == 'ENTRY' && isset($attribute['default_value'])) {
 				$this->attributes[$attributs['CODE']][$attribute['name']] = $attribute['default_value'];
 			}
-			if ($nom == 'ENTRY' && $attributs[$attribute['name']]) {
+			if ($nom == 'ENTRY' && !empty($attributs[$attribute['name']])) {
 				$this->attributes[$attributs['CODE']][$attribute['name']] = $attributs[$attribute['name']];
 			}
 		}
@@ -112,26 +112,38 @@ class XMLlist {
 	}
 	
 	public function finBalise($parser, $nom) {
+	    global $check_messages;
+	    
 		// ICI pour affichage des codes des messages en dur
-		if(isset($_SESSION["CHECK-MESSAGES"])) {
-			if ($_SESSION["CHECK-MESSAGES"]==1 && strpos($this->fichierXml, "messages"))
-				$this->table[$this->current] = "__".$this->current."##".$this->table[$this->current]."**";
+	    $check_messages = intval($check_messages);
+	    if(isset($_SESSION["CHECK-MESSAGES"]) || $check_messages) {
+	        if (($_SESSION["CHECK-MESSAGES"]==1 || $check_messages==1) && strpos($this->fichierXml, "messages")) {
+	            if(isset($this->table[$this->current])) {
+	               $this->table[$this->current] = "__".$this->current."##".$this->table[$this->current]."**";
+	            }
+	        }
 		}
 		$this->current = '';
 		$this->js_group = "";
-		}
+	}
 
 	public function finBaliseSubst($parser, $nom) {
-		// ICI pour affichage des codes des messages en dur 
-		if(isset($_SESSION["CHECK-MESSAGES"])) {
-			if ($_SESSION["CHECK-MESSAGES"]==1 && strpos($this->fichierXml, "messages"))
-				$this->table[$this->current] = "__".$this->current."##".$this->table[$this->current]."**";
+	    global $check_messages;
+	    
+		// ICI pour affichage des codes des messages en dur
+	    $check_messages = intval($check_messages);
+	    if(isset($_SESSION["CHECK-MESSAGES"]) || $check_messages) {
+	        if (($_SESSION["CHECK-MESSAGES"]==1 || $check_messages==1) && strpos($this->fichierXml, "messages")) {
+	            if(isset($this->table[$this->current])) {
+	               $this->table[$this->current] = "__".$this->current."##".$this->table[$this->current]."**";
+	            }
+	        }
 		}
 		if ((!$this->flag_elt) && ($nom=='ENTRY')) unset($this->table[$this->current]) ;
 		$this->current = '';
 		$this->js_group = "";
 		$this->flag_fav =  false;
-		}
+	}
 	
 	public function texte($parser, $data) {
 		global $_starttag; 
@@ -180,10 +192,12 @@ class XMLlist {
  	{
  		global $charset, $KEY_CACHE_FILE_XML;
  		global $base_path, $class_path;
+ 		global $check_messages;
+ 		
 		if (!($fp = @fopen($this->fichierXml, "r"))) {
 			die(htmlentities("impossible d'ouvrir le fichier XML $this->fichierXml", ENT_QUOTES, $charset));
 		}
- 		//vÃ©rification fichier pseudo-cache dans les temporaires
+ 		//vérification fichier pseudo-cache dans les temporaires
 		$fileInfo = pathinfo($this->fichierXml);
 		$fileName = preg_replace("/[^a-z0-9]/i","",$fileInfo['dirname'].$fileInfo['filename'].$charset);
 		if($this->fichierXmlSubst && file_exists($this->fichierXmlSubst)){
@@ -194,9 +208,14 @@ class XMLlist {
 			$with_subst=false;
 		}
 		$dejaParse = false;
-		
 		if (!$this->no_cache){
-			$cache_php=cache_factory::getCache();
+		    $cache_php=cache_factory::getCache();
+		    if($check_messages == 1 || $check_messages == -1) {
+		        if(is_object($cache_php) && get_class($cache_php) == 'cache_apcu') {
+		            $cache_php->clearCache();
+		            $cache_php=false;
+		        }
+		    }
 			$key_file="";
 			if ($cache_php) {
 				$key_file=getcwd().$fileName.filemtime($this->fichierXml);
@@ -218,15 +237,15 @@ class XMLlist {
 				}
 			}else{
 				if (file_exists($tempFile)) {
-					//Le fichier XML original a-t-il Ã©tÃ© modifiÃ© ultÃ©rieurement ?
+					//Le fichier XML original a-t-il été modifié ultérieurement ?
 					if(filemtime($this->fichierXml)>filemtime($tempFile)){
-						//on va re-gÃ©nÃ©rer le pseudo-cache
+						//on va re-générer le pseudo-cache
 						unlink($tempFile);
 					} else {
-						//On regarde aussi si le fichier subst Ã  Ã©tÃ© modifiÃ© aprÃ¨s le fichier temp
+						//On regarde aussi si le fichier subst à été modifié après le fichier temp
 						if($with_subst){
 							if(filemtime($this->fichierXmlSubst)>filemtime($tempFile)){
-								//on va re-gÃ©nÃ©rer le pseudo-cache
+								//on va re-générer le pseudo-cache
 								unlink($tempFile);
 							} else {
 								$dejaParse = true;
@@ -235,6 +254,9 @@ class XMLlist {
 							$dejaParse = true;
 						}
 					}
+				}
+				if($check_messages == 1 || $check_messages == -1) {
+				    $dejaParse = false;
 				}
 				if($dejaParse){
 					$tmp = fopen($tempFile, "r");
@@ -277,14 +299,15 @@ class XMLlist {
 			fclose($fp);
 	
 			if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-				die( sprintf( "erreur XML %s Ã  la ligne: %d ( $this->fichierXml )\n\n",
+				die( sprintf( "erreur XML %s à la ligne: %d ( $this->fichierXml )\n\n",
 				xml_error_string(xml_get_error_code( $this->analyseur ) ),
 				xml_get_current_line_number( $this->analyseur) ) );
 			}
 	
 			xml_parser_free($this->analyseur);
+			unset($this->analyseur);
 	
-			if ($fp = @fopen($this->fichierXmlSubst, "r")) {
+			if (is_file($this->fichierXmlSubst) && $fp = @fopen($this->fichierXmlSubst, "r")) {
 				$file_sizeSubst=filesize ($this->fichierXmlSubst);
 				if($file_sizeSubst) {
 					$data = fread ($fp, $file_sizeSubst);
@@ -299,21 +322,22 @@ class XMLlist {
 					xml_set_element_handler($this->analyseur, "debutBaliseSubst", "finBaliseSubst");
 					xml_set_character_data_handler($this->analyseur, "texteSubst");
 					if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-						die( sprintf( "erreur XML %s Ã  la ligne: %d ( $this->fichierXmlSubst )\n\n",
+						die( sprintf( "erreur XML %s à la ligne: %d ( $this->fichierXmlSubst )\n\n",
 						xml_error_string(xml_get_error_code( $this->analyseur ) ),
 						xml_get_current_line_number( $this->analyseur) ) );
 						}
 					xml_parser_free($this->analyseur);
+					unset($this->analyseur);
 				}	
 			}
 			if ($this->s && is_array($this->table)) {
 				reset($this->table);
 				$tmp=array();
-				$tmp=array_map("convert_diacrit",$this->table);//On enlÃ¨ve les accents
+				$tmp=array_map("convert_diacrit",$this->table);//On enlève les accents
 				$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 				asort($tmp);//Tri sur les valeurs en majuscule sans accent
 				foreach ( $tmp as $key => $value ) {
-	       			$tmp[$key]=$this->table[$key];//On reprend les bons couples clÃ© / libellÃ©
+	       			$tmp[$key]=$this->table[$key];//On reprend les bons couples clé / libellé
 				}
 				$this->table=$tmp;
 			}
@@ -324,26 +348,26 @@ class XMLlist {
 				$misc_file_list = new misc_file_list($path, $filename);
 				$this->table = $misc_file_list->apply_substitution($this->table);
 			}
-			//MB: La table "table_js" est composÃ© de sous table, elle ne peut donc pas Ãªtre triÃ©e avec "strtoupper"
+			//MB: La table "table_js" est composé de sous table, elle ne peut donc pas être triée avec "strtoupper"
 			/*if ($this->s && is_array($this->table_js)) {
 				reset($this->table_js);
 				$tmp=array();
-				$tmp=array_map("convert_diacrit",$this->table_js);//On enlÃ¨ve les accents
+				$tmp=array_map("convert_diacrit",$this->table_js);//On enlève les accents
 				$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 				asort($tmp);//Tri sur les valeurs en majuscule sans accent
 				foreach ( $tmp as $key => $value ) {
-					$tmp[$key]=$this->table_js[$key];//On reprend les bons couples clÃ© / libellÃ©
+					$tmp[$key]=$this->table_js[$key];//On reprend les bons couples clé / libellé
 				}
 				$this->table_js=$tmp;
 			}*/
 			if ($this->s && is_array($this->tablefav) && count($this->tablefav)) {
 				reset($this->tablefav);
 				$tmp=array();
-				$tmp=array_map("convert_diacrit",$this->tablefav);//On enlÃ¨ve les accents
+				$tmp=array_map("convert_diacrit",$this->tablefav);//On enlève les accents
 				$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 				asort($tmp);//Tri sur les valeurs en majuscule sans accent
 				foreach ( $tmp as $key => $value ) {
-					$tmp[$key]=$this->tablefav[$key];//On reprend les bons couples clÃ© / libellÃ©
+					$tmp[$key]=$this->tablefav[$key];//On reprend les bons couples clé / libellé
 				}
 				$this->tablefav=$tmp;
 			}
@@ -352,7 +376,7 @@ class XMLlist {
 				$tmp=array();				
 				foreach ( $this->attributes as  $key => $attributes ) {		
 					$tmp_attributes=array();		
-					$tmp_attributes=array_map("convert_diacrit",$attributes);//On enlÃ¨ve les accents
+					$tmp_attributes=array_map("convert_diacrit",$attributes);//On enlève les accents
 					$tmp_attributes=array_map("strtoupper",$tmp_attributes);//On met en majuscule
 					asort($tmp);
 					$tmp[$key]=$tmp_attributes;
@@ -364,50 +388,52 @@ class XMLlist {
 				asort($this->order);
 				foreach ($this->order as $key =>$value){
 					if($this->table[$key]) {
-						$table_tmp[$key] = $this->table[$key];
+					    $table_tmp[$key] = $this->table[$key] ?? "";
 						unset($this->table[$key]);
 					}
 				}
-				$this->table = $table_tmp + $this->table;//array_merge rÃ©Ã©crivait les clÃ©s numÃ©riques donc problÃ¨me.
+				$this->table = $table_tmp + $this->table;//array_merge réécrivait les clés numériques donc problème.
 				$table_tmp = array();
 				asort($this->order);
 				foreach ($this->order as $key =>$value){
-					$table_tmp[$key] = $this->table_js[$key];
+					$table_tmp[$key] = $this->table_js[$key] ?? "";
 					unset($this->table_js[$key]);
 				}
-				$this->table_js = $table_tmp + $this->table_js;//array_merge rÃ©Ã©crivait les clÃ©s numÃ©riques donc problÃ¨me.
+				$this->table_js = $table_tmp + $this->table_js;//array_merge réécrivait les clés numériques donc problème.
 				if (count($this->tablefav)) {
 					$table_tmp = array();
 					asort($this->order);
 					foreach ($this->order as $key =>$value){
 						if (isset($this->tablefav[$key])) {
-							$table_tmp[$key] = $this->tablefav[$key];
+						    $table_tmp[$key] = $this->tablefav[$key] ?? "";
 							unset($this->tablefav[$key]);
 						}
 					}
-					$this->tablefav = $table_tmp + $this->tablefav;//array_merge rÃ©Ã©crivait les clÃ©s numÃ©riques donc problÃ¨me.
+					$this->tablefav = $table_tmp + $this->tablefav;//array_merge réécrivait les clés numériques donc problème.
 				}
 				$table_tmp = array();
 				asort($this->order);
 				foreach ($this->order as $key =>$value){
-					$table_tmp[$key] = $this->attributes[$key];
+					$table_tmp[$key] = $this->attributes[$key] ?? "";
 					unset($this->attributes[$key]);
 				}
-				$this->attributes = $table_tmp + $this->attributes;//array_merge rÃ©Ã©crivait les clÃ©s numÃ©riques donc problÃ¨me.
+				$this->attributes = $table_tmp + $this->attributes;//array_merge réécrivait les clés numériques donc problème.
 			}
 			
-			//on Ã©crit le temporaire
+			//on écrit le temporaire
 			if ($key_file) {
 				$key_file_content=$KEY_CACHE_FILE_XML.md5(serialize(array($this->table,$this->table_js,$this->tablefav,$this->attributes)));
 				$cache_php->setInCache($key_file_content, array($this->table,$this->table_js,$this->tablefav,$this->attributes));
 				$cache_php->setInCache($key_file,$key_file_content);
 			}else{
-				$tmp = fopen($tempFile, "wb");
-				fwrite($tmp,serialize(array($this->table,$this->table_js,$this->tablefav,$this->attributes)));
-				fclose($tmp);
+			    if (file_exists($tempFile)) {
+    				$tmp = fopen($tempFile, "wb");
+    				fwrite($tmp,serialize(array($this->table,$this->table_js,$this->tablefav,$this->attributes)));
+    				fclose($tmp);
+			    }
 			}
 		}
 	}
 }
 
-} # fin de dÃ©finition
+} # fin de définition

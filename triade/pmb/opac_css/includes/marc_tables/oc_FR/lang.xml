@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes langue en UNIMARC (occitan)
-$Id: lang.xml,v 1.6 2016-09-13 09:23:22 jpermanne Exp $ -->
+$Id: lang.xml,v 1.7 2021/08/02 15:06:50 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="ace">achinés (Aceh)</entry>
@@ -258,6 +258,7 @@ $Id: lang.xml,v 1.6 2016-09-13 09:23:22 jpermanne Exp $ -->
 	<entry code="new">newari</entry>
 	<entry code="nic">nigèrokordofanianas (lengas)</entry>
 	<entry code="niu">niuean</entry>
+	<entry code="nla">neerlandés</entry>
 	<entry code="nor">norvegian</entry>
 	<entry code="nso">sotho del nòrd</entry>
 	<entry code="nub">nubian</entry>

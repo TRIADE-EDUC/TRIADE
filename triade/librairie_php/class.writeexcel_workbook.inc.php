@@ -1,9 +1,9 @@
 <?php
 
-include_once("class.writeexcel_biffwriter.inc.php");
-include_once("class.writeexcel_format.inc.php");
-include_once("class.writeexcel_formula.inc.php");
-include_once("class.writeexcel_olewriter.inc.php");
+include_once(__DIR__ . "/class.writeexcel_biffwriter.inc.php");
+include_once(__DIR__ . "/class.writeexcel_format.inc.php");
+include_once(__DIR__ . "/class.writeexcel_formula.inc.php");
+include_once(__DIR__ . "/class.writeexcel_olewriter.inc.php");
 
 /**
  * This is free software; you can redistribute it and/or

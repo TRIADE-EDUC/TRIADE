@@ -160,7 +160,7 @@ class writeexcel_formula
 
         $this->_formula      = $formula;
         $this->_current_char = 0;
-        $this->_lookahead    = $this->_formula{1};
+        $this->_lookahead    = $this->_formula[1];
         $this->_advance($formula);
         $parsetree = $this->_condition();
 
@@ -253,12 +253,14 @@ class writeexcel_formula
             'ptgFuncCEV'   => 0x58,
             'ptgNameXV'    => 0x59,
             'ptgRef3dV'    => 0x5A,
-            'ptgArea3dV'   => 0x5B, 'ptgRefErr3dV' => 0x5C,
+	    'ptgArea3dV'   => 0x5B, 
+	    'ptgRefErr3dV' => 0x5C,
             'ptgAreaErr3d' => 0x5D,
             'ptgArrayA'    => 0x60,
             'ptgFuncA'     => 0x61,
             'ptgFuncVarA'  => 0x62,
-            'ptgNameA'     => 0x63, 'ptgRefA' => 0x64,
+	    'ptgNameA'     => 0x63, 
+	    'ptgRefA' 	   => 0x64,
             'ptgAreaA'     => 0x65,
             'ptgMemAreaA'  => 0x66,
             'ptgMemErrA'   => 0x67,
@@ -964,7 +966,7 @@ class writeexcel_formula
         $expn = strlen($col_ref) - 1;
         $col  = 0;
         for ($i = 0; $i < strlen($col_ref); ++$i) {
-            $col += (ord($col_ref{$i}) - ord('A') + 1) * pow(26, $expn);
+            $col += (ord($col_ref[$i]) - ord('A') + 1) * pow(26, $expn);
             --$expn;
         }
 
@@ -983,24 +985,24 @@ class writeexcel_formula
         $i = $this->_current_char;
         // eat up white spaces
         if ($i < strlen($this->_formula)) {
-            while ($this->_formula{$i} == ' ') {
+            while ($this->_formula[$i] == ' ') {
                 ++$i;
             }
             if ($i < strlen($this->_formula) - 1) {
-                $this->_lookahead = $this->_formula{$i + 1};
+                $this->_lookahead = $this->_formula[$i + 1];
             }
             $token = '';
         }
         while ($i < strlen($this->_formula)) {
-            $token .= $this->_formula{$i};
+            $token .= $this->_formula[$i];
             if ($i < strlen($this->_formula) - 1) {
-                $this->_lookahead = $this->_formula{$i + 1};
+                $this->_lookahead = $this->_formula[$i + 1];
             } else {
                 $this->_lookahead = '';
             }
             if ($this->_match($token) != '') {
                 //if ($i < strlen($this->_formula) - 1) {
-                //	$this->_lookahead = $this->_formula{$i+1};
+                //	$this->_lookahead = $this->_formula[$i+1];
                 //}
                 $this->_current_char  = $i + 1;
                 $this->_current_token = $token;
@@ -1008,7 +1010,7 @@ class writeexcel_formula
                 return 1;
             }
             if ($i < strlen($this->_formula) - 2) {
-                $this->_lookahead = $this->_formula{$i + 2};
+                $this->_lookahead = $this->_formula[$i + 2];
             } else {
                 // if we run out of characters _lookahead becomes empty
                 $this->_lookahead = '';
@@ -1130,7 +1132,7 @@ class writeexcel_formula
     {
         $this->_current_char = 0;
         $this->_formula      = $formula;
-        $this->_lookahead    = $formula{1};
+        $this->_lookahead    = $formula[1];
         $this->_advance();
         $this->_parse_tree = $this->_condition();
         if ($this->isError($this->_parse_tree)) {

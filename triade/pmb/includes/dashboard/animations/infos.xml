@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: infos.xml,v 1.1 2021/04/07 12:31:09 btafforeau Exp $ -->
+<informations>
+	<information>
+		<name>nb_registrations_to_validate</name>
+		<query>SELECT COUNT(*) AS total FROM anim_registrations WHERE num_registration_status = 1</query>	
+	</information>
+	<information>
+		<name>nb_animations</name>
+		<query>SELECT COUNT(*) AS total FROM anim_animations</query>	
+	</information>
+</informations>

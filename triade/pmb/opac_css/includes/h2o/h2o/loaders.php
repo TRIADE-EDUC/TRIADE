@@ -8,7 +8,7 @@ class H2o_Loader {
     public $parser;
     public $runtime;
     public $cached = false;
-    protected $cache = false;
+    protected $cache;
     public $searchpath = false;
     
     public function read($filename) {}
@@ -46,6 +46,7 @@ class H2o_File_Loader extends H2o_Loader {
 
         if (is_file($filename)) {
             $source = file_get_contents($filename);
+            $source = encoding_normalize::convert_encoding($source);
             return $this->runtime->parse($source);
         } else {
             throw new TemplateNotFound($filename);
@@ -97,12 +98,12 @@ class H2o_File_Loader extends H2o_Loader {
                 'content' => serialize($nodelist),
                 'created' => time(),
                 'templates' => $nodelist->parser->storage['templates'],
-                'included' => $nodelist->parser->storage['included'] + array_values(h2o::$extensions)
+                'included' => $nodelist->parser->storage['included'] + array_values(H2o::$extensions)
             );
             $this->cache->write($cache, $object);
         } else {
             foreach($object->included as $ext => $file) {
-                include_once (h2o::$extensions[$ext] = $file);
+                include_once (H2o::$extensions[$ext] = $file);
             }
         }
         return unserialize($object->content);
@@ -132,6 +133,9 @@ function file_loader($file) {
 }
 
 class H2o_Hash_Loader {
+
+    public $scope;
+    public $runtime;
 
     public function __construct($scope, $options = array()) {
         $this->scope = $scope;
@@ -169,6 +173,8 @@ function h2o_cache($options = array()) {
 }
 
 class H2o_File_Cache {
+    
+    public $path;
     public $ttl = 3600;
     public $prefix = 'h2o_';
     

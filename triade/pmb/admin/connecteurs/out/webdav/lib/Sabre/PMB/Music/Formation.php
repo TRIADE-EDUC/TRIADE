@@ -1,26 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Formation.php,v 1.7 2016-03-30 15:31:13 apetithomme Exp $
+// $Id: Formation.php,v 1.8 2019/07/05 13:25:14 btafforeau Exp $
 
 namespace Sabre\PMB\Music;
 
 class Formation extends Collection {
 	protected $formation;
 	
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		parent::__construct($config);
 		$this->formation = new \nomenclature_record_formation(substr($this->get_code_from_name($name),1));
 		$this->type = "formation";
 	}
 
-	function getName() {
+	public function getName() {
 		return $this->format_name($this->formation->get_label()." (F".$this->formation->get_id().")");
 	}
 	
 
-	function getChildren() {
+	public function getChildren() {
 		$children = array();
 		if(!$this->formation->get_nature()){
 			// Formation d'instruments
@@ -30,7 +30,7 @@ class Formation extends Collection {
 				foreach($family->get_musicstands() as $musicstand){
 					$child = $this->getChild("(P".$musicstand->get_id().")");
 					$child->get_musicstand()->set_family($family);
-					// On dÃ©commentera quand on voudra afficher tous les instruments pour crÃ©er dynamiquement les sous-manifs Ã  l'ajout de documents
+					// On décommentera quand on voudra afficher tous les instruments pour créer dynamiquement les sous-manifs à l'ajout de documents
 // 					if ($this->check_write_permission()) {
 // 						$children[] = $child;
 // 					} else {
@@ -66,7 +66,7 @@ class Formation extends Collection {
 		return $children;
 	}
 	
-	function get_submanifestations(){
+	public function get_submanifestations(){
 		$query = 'select child_record_num_record as notice_id from nomenclature_children_records where child_record_num_formation = '.$this->formation->get_num_formation().' and child_record_num_nomenclature = '.$this->formation->get_id();
 		$this->filter_sub_manifestations($query);
 		return $this->sub_manifestations;

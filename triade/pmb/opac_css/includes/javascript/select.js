@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: select.js,v 1.6 2017-04-11 09:13:55 ngantier Exp $
+// $Id: select.js,v 1.14.2.3.2.1 2025/02/27 14:05:54 dgoron Exp $
 
 function insertatcursor(myField, myValue) {
 	if (document.selection) {
@@ -60,7 +60,9 @@ function show_frame(url) {
 	var notice_view=document.createElement("iframe");
 	notice_view.setAttribute('id','frame_notice_preview');
 	notice_view.setAttribute('name','notice_preview');
-	notice_view.src=url; 
+	notice_view.setAttribute('aria-modal','true');
+	notice_view.setAttribute('role','dialog');
+	notice_view.src=url;
 	notice_view.style.visibility="hidden";
 	notice_view.style.display="block";
 	notice_view=att.appendChild(notice_view);
@@ -73,43 +75,48 @@ function show_frame(url) {
 	notice_view.style.top=posy+"px";
 	notice_view.style.visibility="visible";
 	document.onmousedown=clic;
+	if(!document.onkeyup) {
+		document.onkeyup=touch_keyboard;
+	}
 }
 
 function open_popup(popup_view,html) {
-	
+
 	var att=document.getElementById('att');
 	att.appendChild(popup_view);
-	
 	//le html
-	popup_view.innerHTML=html;
-	//la croix de fermeture
-	var notice_view_close=document.createElement('div');
-	notice_view_close.setAttribute('class','popup_preview_close');
-	notice_view_close.setAttribute('onclick','close_popup("'+popup_view.getAttribute('id')+'")');
-	notice_view_close.innerHTML="X";
-	
-	//on ajoute la croix
-	popup_view.appendChild(notice_view_close);
-	
+
+	var popup_content = '<div class="popup_preview_content modal">';
+	popup_content += '<div class="modal-header"><button type="button" class="popup_preview_close modal-close" onclick="close_popup(\''+popup_view.getAttribute('id')+'\')">Fermer <i aria-hidden="true" class="fa fa-times"></i></button></div>';
+	popup_content += '<div class="modal-content">' + html + '</div>';
+	popup_content += '</div>';
+
+	popup_view.innerHTML = popup_content;
+
 	//les attributs
-	popup_view.setAttribute('class','popup_preview');
-	popup_view.setAttribute('style','visibility:hidden;display:block;');
-	
+	popup_view.setAttribute('class','popup_preview modal-container');
+	popup_view.setAttribute('style','visibility:hidden;');
+
 	//la position
-	w=popup_view.clientWidth;
-	h=popup_view.clientHeight;
-	posx=(getWindowWidth()/2-(w/2))<0?0:(getWindowWidth()/2-(w/2));
-	posy=(getWindowHeight()/2-(h/2))<0?0:(getWindowHeight()/2-(h/2));
-	posy+=getScrollTop();
-	popup_view.style.left=posx+'px';
-	popup_view.style.top=posy+'px';
-	popup_view.style.visibility='visible';
+	popup_view.style.visibility = 'visible';
+
+	document.addEventListener('keydown', function (e) {
+		if (e.code === 'Escape') {
+			close_popup(popup_view.getAttribute('id'));
+		}
+	})
+
+	document.addEventListener('click', function (e) {
+		if (e.target.id === 'facettes_help') {
+			close_popup(popup_view.getAttribute('id'));
+		}
+	})
 }
 
 function close_popup(popup_view_id){
 	var popup_view=document.getElementById(popup_view_id);
 	if(popup_view){
-		
+
 		popup_view.innerHTML='';
 		popup_view.style.visibility='hidden';
 	}
@@ -130,24 +137,40 @@ function getScrollTop(){
 }
 
 function show_layer() {
-	var att=document.getElementById("att");
+	var att = document.getElementById("att");
+	var div_view_container = document.createElement("div");
+	div_view_container = att.appendChild(div_view_container);
+	div_view_container.setAttribute('id','frame_notice_preview_container');
+	div_view_container.setAttribute('class','modal-container');
 	var div_view=document.createElement("div");
 	div_view.setAttribute('id','frame_notice_preview');
 	div_view.setAttribute('name','layer_view');
+	div_view.setAttribute('aria-modal','true');
+	div_view.setAttribute('role','dialog');
 	div_view.style.visibility="hidden";
 	div_view.style.display="block";
 	div_view.style.position="fixed";
-	div_view=att.appendChild(div_view);
+	div_view.style.overflow="auto";
+	div_view=div_view_container.appendChild(div_view);
 	w=div_view.clientWidth;
 	h=div_view.clientHeight;
 	posx=(getWindowWidth()/2-(w/2))<0?0:(getWindowWidth()/2-(w/2))
 	posy=(getWindowHeight()/2-(h/2))<0?0:(getWindowHeight()/2-(h/2));
-	div_view.style.left=posx+"px";
-	div_view.style.top=posy+"px";
+	div_view.style.left= '50%';
+	div_view.style.top='50%';
 	div_view.style.visibility="visible";
 	div_view.style.zIndex="500";
-	
-	if (document.getElementById("container")) document.getElementById("container").onmousedown=clic_layer; 
+	div_view.style.maxWidth="100%";
+	div_view.style.transform="translate(-50%, -50%)";
+
+	if (document.getElementById("container")) {
+		document.getElementById("container").onmousedown=clic_layer;
+	}
+	if(!document.onkeyup) {
+		document.onkeyup=touch_keyboard_layer;
+	}
+
+	document.body.style.overflow="hidden";
 }
 
 function clic(e){
@@ -155,12 +178,26 @@ function clic(e){
 	if (e.stopPropagation) {
 		e.preventDefault();
 		e.stopPropagation();
-	} else { 
+	} else {
 		e.cancelBubble=true;
 		e.returnValue=false;
 	}
-  	kill_frame("frame_notice_preview");
+	kill_frame("frame_notice_preview_container");
   	document.onmousedown='';
+}
+
+function touch_keyboard(e){
+  	if (!e) var e=window.event;
+  	if (e.keyCode == 27) {
+  		if (e.stopPropagation) {
+  			e.preventDefault();
+  			e.stopPropagation();
+  		} else {
+  			e.cancelBubble=true;
+  			e.returnValue=false;
+  		}
+  	  	kill_frame("frame_notice_preview_container");
+  	}
 }
 
 function clic_layer(e){
@@ -168,12 +205,26 @@ function clic_layer(e){
 	if (e.stopPropagation) {
 		e.preventDefault();
 		e.stopPropagation();
-	} else { 
+	} else {
 		e.cancelBubble=true;
 		e.returnValue=false;
 	}
-  	kill_frame("frame_notice_preview");
+  	kill_frame("frame_notice_preview_container");
   	document.onmousedown='';
+}
+
+function touch_keyboard_layer(e){
+  	if (!e) var e=window.event;
+  	if (e.keyCode == 27) {
+  		if (e.stopPropagation) {
+  			e.preventDefault();
+  			e.stopPropagation();
+  		} else {
+  			e.cancelBubble=true;
+  			e.returnValue=false;
+  		}
+  	  	kill_frame("frame_notice_preview_container");
+  	}
 }
 
 function kill_frame(block_name) {
@@ -184,4 +235,12 @@ function kill_frame(block_name) {
 		});
 		notice_view.parentNode.removeChild(notice_view);
 	}
+	document.body.style.overflow = null;
+
+	const container = document.getElementById("container");
+	if(container) {
+		container.onmousedown = "";
+	}
+
+	document.onmousedown = "";
 }

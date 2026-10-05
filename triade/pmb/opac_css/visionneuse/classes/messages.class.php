@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: messages.class.php,v 1.9 2019-05-09 10:35:37 ngantier Exp $
+// $Id: messages.class.php,v 1.10 2020/04/24 07:32:34 dgoron Exp $
 
 
 require_once($class_path."/cache_factory.class.php");
@@ -11,13 +11,13 @@ class message {
 	
 	public $analyseur;
 	public $fichierXml;
-	public $fichierXmlSubst; // nom du fichier XML de substitution au cas oÃ¹.
+	public $fichierXmlSubst; // nom du fichier XML de substitution au cas où.
 	public $current;
 	public $table;
 	public $tablefav;
 	public $flag_fav;
 	public $s;
-	public $flag_elt ; // pour traitement des entrÃ©es supprimÃ©es
+	public $flag_elt ; // pour traitement des entrées supprimées
 	public $flag_order;
 	public $order;
 
@@ -30,7 +30,7 @@ class message {
 		$this->analyser();
 	}
 
-	//MÃ©thodes
+	//Méthodes
 	public function debutBalise($parser, $nom, $attributs) {
 		global $_starttag; $_starttag=true;
 		if($nom == 'ENTRY' && $attributs['CODE'])
@@ -45,7 +45,7 @@ class message {
 		}
 	}
 	
-	//MÃ©thodes
+	//Méthodes
 	public function debutBaliseSubst($parser, $nom, $attributs) {
 		global $_starttag; $_starttag=true;
 		if($nom == 'ENTRY' && $attributs['CODE']) {
@@ -132,15 +132,15 @@ class message {
  			}
  		}else{
 	 		if (file_exists($tempFile) ) {
-	 			//Le fichier XML original a-t-il Ã©tÃ© modifiÃ© ultÃ©rieurement ?
+	 			//Le fichier XML original a-t-il été modifié ultérieurement ?
 				if(filemtime($this->fichierXml)>filemtime($tempFile)){
-					//on va re-gÃ©nÃ©rer le pseudo-cache
+					//on va re-générer le pseudo-cache
 					unlink($tempFile);
 				} else {
-					//On regarde aussi si le fichier subst Ã  Ã©tÃ© modifiÃ© aprÃ¨s le fichier temp
+					//On regarde aussi si le fichier subst à été modifié après le fichier temp
 					if($with_subst){
 						if(filemtime($this->fichierXmlSubst)>filemtime($tempFile)){
-							//on va re-gÃ©nÃ©rer le pseudo-cache
+							//on va re-générer le pseudo-cache
 							unlink($tempFile);
 						} else {
 							$dejaParse = true;
@@ -184,12 +184,13 @@ class message {
 			fclose($fp);
 	
 			if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-				die( sprintf( "erreur XML %s Ã  la ligne: %d ( $this->fichierXml )\n\n",
+				die( sprintf( "erreur XML %s à la ligne: %d ( $this->fichierXml )\n\n",
 				xml_error_string(xml_get_error_code( $this->analyseur ) ),
 				xml_get_current_line_number( $this->analyseur) ) );
 			}
 	
 			xml_parser_free($this->analyseur);
+			unset($this->analyseur);
 	
 			if ($fp = @fopen($this->fichierXmlSubst, "r")) {
 				$file_sizeSubst=filesize ($this->fichierXmlSubst);
@@ -205,20 +206,21 @@ class message {
 				xml_set_element_handler($this->analyseur, "debutBaliseSubst", "finBaliseSubst");
 				xml_set_character_data_handler($this->analyseur, "texteSubst");
 				if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-					die( sprintf( "erreur XML %s Ã  la ligne: %d ( $this->fichierXmlSubst )\n\n",
+					die( sprintf( "erreur XML %s à la ligne: %d ( $this->fichierXmlSubst )\n\n",
 					xml_error_string(xml_get_error_code( $this->analyseur ) ),
 					xml_get_current_line_number( $this->analyseur) ) );
 					}
 				xml_parser_free($this->analyseur);
+				unset($this->analyseur);
 				}
 			if ($this->s) {
 				reset($this->table);
 				$tmp=array();
-				$tmp=array_map("convert_diacrit",$this->table);//On enlÃ¨ve les accents
+				$tmp=array_map("convert_diacrit",$this->table);//On enlève les accents
 				$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 				asort($tmp);//Tri sur les valeurs en majuscule sans accent
 				foreach ( $tmp as $key => $value ) {
-	       			$tmp[$key]=$this->table[$key];//On reprend les bons couples clÃ© / libellÃ©
+	       			$tmp[$key]=$this->table[$key];//On reprend les bons couples clé / libellé
 				}
 				$this->table=$tmp;
 			}
@@ -231,7 +233,7 @@ class message {
 				}
 				$this->table = array_merge($table_tmp,$this->table);
 			}
-			//on Ã©crit le temporaire
+			//on écrit le temporaire
 			if ($key_file) {
 				$key_file_content=$KEY_CACHE_FILE_XML.md5(serialize(array($this->table)));
 				$cache_php->setInCache($key_file_content, array($this->table));

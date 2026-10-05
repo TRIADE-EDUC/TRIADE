@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module liste de flux RSS
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_rsslist.xml,v 1.2 2021/04/29 13:49:16 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_datasource_rsslist_limit">Nombre maximum d'éléments à renvoyer</entry>
+	<entry code="cms_module_common_datasource_rsslist_title_desc">Titre</entry>
+	<entry code="cms_module_common_datasource_rsslist_subtitle_desc">Sous-titre</entry>
+	<entry code="cms_module_common_datasource_rsslist_description_desc">Description du flux</entry>
+	<entry code="cms_module_common_datasource_rsslist_generator_desc">Nom du générateur du flux</entry>
+	<entry code="cms_module_common_datasource_rsslist_link_desc">Lien vers le site</entry>
+	<entry code="cms_module_common_datasource_rsslist_items_desc">Tableau des éléments</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_title_desc">Titre de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_description_desc">Description de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_link_desc">Lien vers l'élément sur le site</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_guid_desc">Identifiant unique sur le site</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_date_desc">Date de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_creator_desc">Créateur de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_subject_desc">Sujets (sous forme de tableau) de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_format_desc">Format de l'élément</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_language_desc">Langue de l'élément</entry>
+	<entry code="cms_module_common_selector_type_article">Sélection depuis le champ d'un type de contenu d'un article</entry>
+	<entry code="cms_module_common_selector_type_section">Sélection depuis le champ d'un type de contenu d'une rubrique</entry>
+	<entry code="cms_module_common_datasource_rsslist_timeout">Time-out (En secondes)</entry>
+	<entry code="cms_module_common_datasource_rsslist_item_source_desc">Source de l'élément</entry>
+</XMLlist>

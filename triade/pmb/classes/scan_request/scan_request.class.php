@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_request.class.php,v 1.38 2019-06-07 10:03:59 dgoron Exp $
+// $Id: scan_request.class.php,v 1.57.4.1 2025/03/04 15:50:02 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path.'/scan_request/scan_request_status.class.php');
 require_once($class_path.'/scan_request/scan_request_priorities.class.php');
 require_once($class_path.'/scan_request/scan_request_priority.class.php');
@@ -21,9 +22,10 @@ require_once($class_path.'/encoding_normalize.class.php');
 require_once($class_path.'/concept.class.php');
 require_once($class_path.'/event/events/event_scan_request.class.php');
 require_once($class_path.'/mono_display.class.php');
+require_once($class_path.'/file_uploader.class.php');
 
 class scan_request {
-	
+
 	protected $id;
 
 	protected $title;
@@ -50,8 +52,10 @@ class scan_request {
 
 	protected $num_dest_empr;
 
+	protected $empr;
+
 	protected $num_creator;
-	
+
 	protected $creator_name;
 
 	protected $type_creator;
@@ -59,11 +63,11 @@ class scan_request {
 	protected $num_last_user;
 
 	protected $state;
-	
+
 	protected $linked_records;
-	
+
 	protected $linked_bulletin;
-	
+
 	protected $as_folder;
 
 	protected $formatted_update_date = null;
@@ -73,36 +77,34 @@ class scan_request {
 	protected $formatted_wish_date = null;
 
 	protected $formatted_deadline_date = null;
-	
+
 	protected $folder_num_notice;
-	
+
 	protected $explnum_number = 0;
-	
+
 	protected $concept_uri = '';
-	
+
 	protected $nb_scanned_pages = 0;
-	
+
 	protected $num_location = 0;
 	protected $location_name = '';
-	
+
 	protected $loc_updated = false;
-	
-	public function __construct($id) {
-		$this->id = $id*1;
+
+	public function __construct($id = 0) {
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
-	
+
 	protected function fetch_data() {
-		global $dbh;
-		
 		/**
-		 * TODO: Test sur les droits des documents numÃ©riques en gestion
+		 * TODO: Test sur les droits des documents numériques en gestion
 		 * Vu avec AR -> write as todo
 		 */
-		
+
 		if ($this->id) {
 			$query = 'select * from scan_requests where id_scan_request = '.$this->id;
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$this->title = $row->scan_request_title;
@@ -119,29 +121,29 @@ class scan_request {
 				$this->num_dest_empr = $row->scan_request_num_dest_empr;
 				$this->num_creator = $row->scan_request_num_creator;
 				$this->type_creator = $row->scan_request_type_creator;
-				
+
 				$creator_name = '';
 				if ($this->type_creator ==2){ // empr issu de l'opac
 					$query_creator = 'select empr_nom, empr_prenom from empr where id_empr = '.$this->num_creator;
-					$result_creator = pmb_mysql_query($query_creator, $dbh);
+					$result_creator = pmb_mysql_query($query_creator);
 					if (pmb_mysql_num_rows($result_creator)) {
 						$row_creator = pmb_mysql_fetch_object($result_creator);
 						$creator_name = $row_creator->empr_nom;
 						if($row_creator->empr_prenom) $creator_name .= ' '.$row_creator->empr_prenom;
 						$creator_name.= " (Opac)";
 					}
-				} else{ // user de gestion 
+				} else{ // user de gestion
 					$query_creator = 'select username, prenom, nom from users where userid = '.$this->num_creator;
-					$result_creator = pmb_mysql_query($query_creator, $dbh);
+					$result_creator = pmb_mysql_query($query_creator);
 					if (pmb_mysql_num_rows($result_creator)) {
 						$row_creator = pmb_mysql_fetch_object($result_creator);
 						$creator_name = $row_creator->username;
 						if($row_creator->nom) $creator_name .= ', '.$row_creator->nom;
 						if($row_creator->prenom) $creator_name .= ' '.$row_creator->prenom;
-					}					
+					}
 				}
 				$this->creator_name = $creator_name;
-								
+
 				$this->num_last_user = $row->scan_request_num_last_user;
 				$this->state = $row->scan_request_state;
 				$this->as_folder = $row->scan_request_as_folder;
@@ -158,7 +160,7 @@ class scan_request {
 				$this->location_name = '';
 				if($this->num_location) {
 					$query_loc = 'select location_libelle from docs_location where idlocation = '.$this->num_location;
-					$result_loc = pmb_mysql_query($query_loc, $dbh);
+					$result_loc = pmb_mysql_query($query_loc);
 					if (pmb_mysql_num_rows($result_loc)) {
 						$row_loc = pmb_mysql_fetch_object($result_loc);
 						$this->location_name = $row_loc->location_libelle;
@@ -167,7 +169,7 @@ class scan_request {
 					}
 				}
 				$linked_records_query = 'select * from scan_request_linked_records where scan_request_linked_record_num_request ='.$this->id.' order by scan_request_linked_record_order';
-				$query_result = pmb_mysql_query($linked_records_query, $dbh);
+				$query_result = pmb_mysql_query($linked_records_query);
 				if(pmb_mysql_num_rows($query_result)){
 					while($row = pmb_mysql_fetch_object($query_result)){
 						if($row->scan_request_linked_record_num_notice){
@@ -190,11 +192,11 @@ class scan_request {
 			}
 		}
 	}
-	
+
 /*
 	protected function get_rights_linked_record($notice_id = 0, $bulletin_id = 0) {
 		global $gestion_acces_active,$gestion_acces_empr_notice;
-	
+
 		$rights = array(
 				'visible' => false,
 				'scannable' => false
@@ -209,7 +211,7 @@ class scan_request {
 					//notice de bulletin
 					$id_for_right = $infos->num_notice;
 				}else{
-					//notice de pÃ©rio
+					//notice de pério
 					$id_for_right = $infos->bulletin_notice;
 				}
 			}
@@ -240,32 +242,31 @@ class scan_request {
 		}
 		return $rights;
 	}
-*/	
+*/
 
-	
+
 	public function get_selector_piece($id, $type, $comment, $explnum=array()){
-		global $charset;
-		$id = $id*1;
-		return array('id'=>$id, 
-		    'comment'=>$comment, 
-		    'label'=>(($type=='record')?$this->get_record_display_header($id):$this->get_bulletin_title($id)),
-		    'explnums'=>$explnum, 
+		$id = intval($id);
+		return array('id'=>$id,
+		    'comment'=>$comment,
+		    'label'=>(($type=='record')?strip_tags($this->get_record_display_header($id)):$this->get_bulletin_title($id)),
+		    'explnums'=>$explnum,
 		    'permalink'=>notice::get_gestion_link($id)
 		);
 	}
-	
+
 	public function preload_form_elements(){
 		global $from_record, $from_bulletin, $from_caddie;
 		global $elt_flag, $elt_no_flag;
-		
+
 		$form_elements=array();
 		$form_elements['title'] = '';
 		if($from_record) {
-			$form_elements['records'][]=$this->get_selector_piece($from_record, 'record', '');	
+			$form_elements['records'][]=$this->get_selector_piece($from_record, 'record', '');
 			$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');
-			$form_elements['title'] = $this->get_record_display_header($from_record);
+			$form_elements['title'] = strip_tags($this->get_record_display_header($from_record));
 		}elseif ($from_bulletin) {
-			$form_elements['bulletins'][]=$this->get_selector_piece($from_bulletin, 'bulletin', '');	
+			$form_elements['bulletins'][]=$this->get_selector_piece($from_bulletin, 'bulletin', '');
 			$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');
 			$form_elements['title'] = $this->get_bulletin_title($from_bulletin);
 		}elseif ($from_caddie) {
@@ -273,68 +274,66 @@ class scan_request {
 			$caddie = new caddie($from_caddie);
 			if ($elt_flag) {
 				$liste_0 = $caddie->get_cart("FLAG") ;
-				$nb_elements_flag=count($liste_0);
 			}
 			if ($elt_no_flag) {
 				$liste_1= $caddie->get_cart("NOFLAG") ;
-				$nb_elements_no_flag=count($liste_1);
 			}
 			$liste= array_merge($liste_0,$liste_1);
 			$nb_elements_total=count($liste);
 			if($caddie->type=='NOTI' && $nb_elements_total){
-				foreach ($liste as $record_id){				
+				foreach ($liste as $record_id){
 					$form_elements['records'][]=$this->get_selector_piece($record_id, 'record', '');
 				}
 				$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');
 			}elseif($caddie->type=='BULL' && $nb_elements_total){
-				foreach ($liste as $bulletin_id){			
+				foreach ($liste as $bulletin_id){
 					$form_elements['bulletins'][]=$this->get_selector_piece($bulletin_id, 'bulletin', '');
-				}			
-				$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');		
+				}
+				$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');
 			}elseif($caddie->type=='EXPL' && $nb_elements_total){
 				$count_notice=0;
 				$count_bulletin=0;
 				foreach ($liste as $expl_id){
-					$expl=new exemplaire('',$expl_id);					
+					$expl=new exemplaire('',$expl_id);
 					if($expl->id_notice){
 						$form_elements['records'][]=$this->get_selector_piece($expl->id_notice, 'record', '');
 						$count_notice++;
 					}else{
 						$form_elements['bulletins'][]=$this->get_selector_piece($expl->id_bulletin, 'bulletin', '');
 						$count_bulletin++;
-					}					
+					}
 				}
 				if(!$count_notice){
 					$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');
 				}elseif (!$count_bulletin){
-					$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');						
+					$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');
 				}
 			}else{
 				$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');
-				$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');				
-			}			
+				$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');
+			}
 		}else {
 			$form_elements['records'][]=$this->get_selector_piece(0, 'record', '');
 			$form_elements['bulletins'][]=$this->get_selector_piece(0, 'bulletin', '');
 		}
 		return $form_elements;
 	}
-	
+
 	public function get_form($url="./circ.php?categ=scan_request&sub=request",$cancel_action="./circ.php?categ=scan_request&sub=list"){
 		global $msg,$charset;
 		global $scan_request_form;
 		global $record_id;
 		global $bulletin_id;
-		global $scan_request_concept_part;
+		global $thesaurus_concepts_active, $scan_request_concept_part;
 		global $deflt_docs_location;
 		global $pmb_scan_request_location_activate;
-		
+
 		$form = str_replace("!!action!!",$url,$scan_request_form);
 		$status_list = new scan_request_admin_status();
 		$priorities_list = new scan_request_priorities();
-		
+
 		if($this->id){
-			
+
 			$form = str_replace("!!form_title!!",$msg['scan_request_edit'],$form);
 			$form = str_replace("!!title!!",htmlentities($this->title,ENT_QUOTES,$charset),$form);
 			$form = str_replace("!!scan_request_desc!!",htmlentities($this->desc,ENT_QUOTES,$charset),$form);
@@ -344,10 +343,10 @@ class scan_request {
 			$form = str_replace("!!scan_request_num_dest_empr!!",$this->num_dest_empr,$form);
 			$form = str_replace("!!scan_request_status!!",$this->status->get_workflow_options() ,$form);
 			$form = str_replace("!!scan_request_priority!!",$priorities_list->get_selector_options($this->priority->get_id()),$form);
-			
+
 			$form = str_replace("!!scan_request_as_folder!!",$this->as_folder?'checked':'',$form);
 			$form = str_replace("!!scan_request_as_folder_disabled!!",($this->explnum_number || $this->folder_num_notice)?'disabled':'',$form);
-			
+
 			$form = str_replace("!!scan_request_date!!",explode(' ', $this->date)[0],$form);
 			$form = str_replace("!!scan_request_wish_date!!",explode(' ', $this->wish_date)[0],$form);
 			$form = str_replace("!!scan_request_deadline_date!!",explode(' ', $this->deadline_date)[0],$form);
@@ -359,30 +358,30 @@ class scan_request {
 				$form = str_replace("!!scan_request_location_selector!!", "", $form);
 			}
 			$final_records_inputs = array();
-			foreach($this->linked_records as $record){								
+			foreach($this->linked_records as $record){
 				$final_records_inputs[] = $this->get_selector_piece($record['id'], 'record', $record['comment'], $record['explnum']);
 			}
 			$final_bulletin_inputs = array();
 			foreach($this->linked_bulletin as $bulletin){
 				$final_bulletin_inputs[] = $this->get_selector_piece($bulletin['id'], 'bulletin', $bulletin['comment'], $bulletin['explnum']);
 			}
-			$form = str_replace("!!associated_records!!",encoding_normalize::json_encode($final_records_inputs),$form );
-			$form = str_replace("!!associated_buls!!",encoding_normalize::json_encode($final_bulletin_inputs),$form);
-			$form = str_replace("!!all_explnum_datas!!",encoding_normalize::json_encode(array_merge($final_records_inputs,$final_bulletin_inputs)),$form);
+			$form = str_replace("!!associated_records!!",htmlentities(encoding_normalize::json_encode($final_records_inputs), ENT_QUOTES, "utf-8"),$form );
+			$form = str_replace("!!associated_buls!!",htmlentities(encoding_normalize::json_encode($final_bulletin_inputs), ENT_QUOTES, "utf-8"),$form);
+			$form = str_replace("!!all_explnum_datas!!",htmlentities(encoding_normalize::json_encode(array_merge($final_records_inputs,$final_bulletin_inputs)), ENT_QUOTES, "utf-8"),$form);
 			$form = str_replace("!!scan_request_status_editable!!",$this->status->is_infos_editable(),$form);
 			$form = str_replace("!!id!!",$this->id,$form);
-			if($this->status->is_cancelable()){
+			if($this->status->is_cancelable() || $this->status->is_closed()){
 				$form = str_replace("!!bouton_supprimer!!",	"<input type='button' class='bouton' value=' ".$msg[63]." ' onclick='confirmation_delete(\"&action=delete&id=".$this->id."\",\"".htmlentities($this->title,ENT_QUOTES,$charset)."\")'/>",$form);
 				$form.= confirmation_delete($url);
 			}else{
 				$form = str_replace("!!bouton_supprimer!!",	"",$form);
 			}
 		}else{
-			
-			$preloaded_elements=$this->preload_form_elements(); 			
-			$form = str_replace("!!form_title!!",$msg['scan_request_add'],$form);	
+
+			$preloaded_elements=$this->preload_form_elements();
+			$form = str_replace("!!form_title!!",$msg['scan_request_add'],$form);
 			$form = str_replace("!!title!!",htmlentities($preloaded_elements['title'],ENT_QUOTES,$charset),$form);
-			
+
 			$form = str_replace("!!scan_request_elapsed_time!!","",$form);
 			$form = str_replace("!!scan_request_nb_scanned_pages!!", "0", $form);
 			$form = str_replace("!!scan_request_lib_empr!!","",$form);
@@ -392,17 +391,17 @@ class scan_request {
 			$form = str_replace("!!scan_request_priority!!",$priorities_list->get_selector_options(),$form);
 			$form = str_replace("!!scan_request_as_folder!!","",$form);
 			$form = str_replace("!!scan_request_as_folder_disabled!!",'',$form);
-			
-			$form = str_replace("!!associated_records!!",encoding_normalize::json_encode($preloaded_elements['records']),$form );
-			$form = str_replace("!!associated_buls!!",encoding_normalize::json_encode($preloaded_elements['bulletins']),$form );
-			
+
+			$form = str_replace("!!associated_records!!",htmlentities(encoding_normalize::json_encode($preloaded_elements['records']), ENT_QUOTES, "utf-8"),$form );
+			$form = str_replace("!!associated_buls!!",htmlentities(encoding_normalize::json_encode($preloaded_elements['bulletins']), ENT_QUOTES, "utf-8"),$form );
+
 			$form = str_replace("!!all_explnum_datas!!",encoding_normalize::json_encode(array()),$form);
 
 			if($pmb_scan_request_location_activate) {
 				$form = str_replace("!!scan_request_location_selector!!",gen_liste ("select idlocation, location_libelle from docs_location order by location_libelle ", "idlocation", "location_libelle", 'scan_request_num_location', "", $deflt_docs_location, "", "", "" ,$msg['no_location'],0),$form);
 			}else {
 				$form = str_replace("!!scan_request_location_selector!!", "", $form);
-			}			
+			}
 			$form = str_replace("!!scan_request_desc!!","",$form);
 			$form = str_replace("!!scan_request_date!!",date('Y-m-d'),$form);
 			$form = str_replace("!!scan_request_wish_date!!",date('Y-m-d'),$form);
@@ -411,32 +410,36 @@ class scan_request {
 			$form = str_replace("!!id!!",0,$form);
 			$form = str_replace("!!bouton_supprimer!!","",$form);
 		}
-		
+
 		/**
 		 * TODO: generate the event here
 		 */
-		
-		
-		
-		//Evenement publiÃ© Ã  chaque fois que le formulaire admin scan_request est envoyÃ©
+
+
+
+		//Evenement publié à chaque fois que le formulaire admin scan_request est envoyé
 		$evt_handler = events_handler::get_instance();
 		$event = new event_scan_request("scan_request", "get_form");
-		if($this->concept_uri){ //cas de l'Ã©dition d'une demande de numÃ©risation
+		if($this->concept_uri){ //cas de l'édition d'une demande de numérisation
 			$event->set_concept_uri($this->concept_uri);
 		}
 		$evt_handler->send($event);
 		if($event->get_template_content()){
 			$form = str_replace("!!scan_request_concept_part!!", $event->get_template_content(),$form);
 		}else{
-			if($this->concept_uri){
-				$concept = new concept(0,$this->concept_uri);
-				$scan_request_concept_part = str_replace("!!scan_request_concept_label!!", htmlentities($concept->get_display_label(),ENT_QUOTES,$charset),$scan_request_concept_part);
-				$scan_request_concept_part = str_replace("!!scan_request_concept_uri_value!!", htmlentities($this->concept_uri,ENT_QUOTES,$charset),$scan_request_concept_part);
-			}else{
-				$scan_request_concept_part = str_replace("!!scan_request_concept_label!!", '',$scan_request_concept_part);
-				$scan_request_concept_part = str_replace("!!scan_request_concept_uri_value!!", '',$scan_request_concept_part);
-			}
-			$form = str_replace("!!scan_request_concept_part!!", $scan_request_concept_part, $form);
+		    if($thesaurus_concepts_active == 1){
+		        if($this->concept_uri){
+		            $concept = new concept(0,$this->concept_uri);
+		            $scan_request_concept_part = str_replace("!!scan_request_concept_label!!", htmlentities($concept->get_display_label(),ENT_QUOTES,$charset),$scan_request_concept_part);
+		            $scan_request_concept_part = str_replace("!!scan_request_concept_uri_value!!", htmlentities($this->concept_uri,ENT_QUOTES,$charset),$scan_request_concept_part);
+		        }else{
+		            $scan_request_concept_part = str_replace("!!scan_request_concept_label!!", '',$scan_request_concept_part);
+		            $scan_request_concept_part = str_replace("!!scan_request_concept_uri_value!!", '',$scan_request_concept_part);
+		        }
+		        $form = str_replace("!!scan_request_concept_part!!", $scan_request_concept_part, $form);
+		    } else {
+		        $form = str_replace("!!scan_request_concept_part!!", "", $form);
+		    }
 		}
 
 		$form = str_replace("!!cancel_action!!",$cancel_action,$form);
@@ -464,14 +467,14 @@ class scan_request {
 		global $scan_request_concept_uri_value;
 		global $scan_request_nb_scanned_pages;
 		global $scan_request_num_location;
-		
-		$scan_request_num_location+= 0;
-		
+
+		$scan_request_num_location = intval($scan_request_num_location);
+
 		if ($this->num_location != $scan_request_num_location && $this->id) {
 			$this->loc_updated = true;
 		}
-		
-		$this->title = stripslashes($scan_request_title);
+
+		$this->title = strip_tags(stripslashes($scan_request_title));
 		$this->elapsed_time = stripslashes($scan_request_elapsed_time);
 		$this->num_dest_empr = stripslashes($scan_request_num_dest_empr);
 		$this->priority = new scan_request_priority($scan_request_priority);
@@ -483,22 +486,22 @@ class scan_request {
 		$this->concept_uri = stripslashes($scan_request_concept_uri_value);
 		$this->nb_scanned_pages = stripslashes($scan_request_nb_scanned_pages);
 		$this->num_location = $scan_request_num_location;
-		
+
 		/**
-		 * Todo -> affectation des notices et des bulletins liÃ©s Ã  la demande 
+		 * Todo -> affectation des notices et des bulletins liés à la demande
 		 */
-		
+
 		if(isset($scan_request_as_folder)){
 			$this->as_folder = $scan_request_as_folder ? 1 : 0;
 		}
-		
+
 		$this->linked_records = $this->fetch_linked_elts($scan_request_record_code, $scan_request_record_comment);
 		$this->linked_bulletin = $this->fetch_linked_elts($scan_request_bul_code, $scan_request_bul_comment);
-		
+
 		$this->desc = stripslashes($scan_request_desc);
 	}
-	
-	
+
+
 	public function get_ajax_form($url="./circ.php?categ=scan_request&sub=request",$cancel_action="./circ.php?categ=scan_request&sub=list"){
 		global $msg,$charset;
 		global $scan_request_ajax_form;
@@ -507,24 +510,23 @@ class scan_request {
 		global $scan_request_associated_bulls_sub_template;
 		global $scan_request_associated_records_sub_template;
 		$form = str_replace("!!action!!",$url,$scan_request_ajax_form);
-		$status_list = new scan_request_admin_status();
-	
+
 		if(!$this->id)return;
-			
+
 		$form = str_replace("!!form_title!!",$msg['scan_request_edit'],$form);
 		$form = str_replace("!!scan_request_elapsed_time!!",htmlentities($this->elapsed_time,ENT_QUOTES,$charset),$form);
 		$form = str_replace("!!scan_request_nb_scanned_pages!!",htmlentities($this->nb_scanned_pages,ENT_QUOTES,$charset),$form);
 		$form = str_replace("!!scan_request_status!!",$this->status->get_workflow_options() ,$form);
 		$form = str_replace("!!scan_request_comment!!",htmlentities($this->comment,ENT_QUOTES,$charset),$form);
 		$form = str_replace("!!scan_request_concept_uri_value!!",($this->concept_uri?htmlentities($this->concept_uri,ENT_QUOTES,$charset):''),$form);
-		
+
 		if(count($this->linked_records)){
 			$final_records_inputs = array();
 			foreach($this->linked_records as $record){
 				$final_records_inputs[] = $this->get_selector_piece($record['id'], 'record', $record['comment'], $record['explnum']);
-			}	
+			}
 			$scan_request_associated_records_sub_template = str_replace("!!associated_records!!",encoding_normalize::json_encode($final_records_inputs),$scan_request_associated_records_sub_template);
-			$form = str_replace("!!scan_request_associated_records_sub_template!!",$scan_request_associated_records_sub_template,$form); 
+			$form = str_replace("!!scan_request_associated_records_sub_template!!",$scan_request_associated_records_sub_template,$form);
 		}else{
 			$form = str_replace("!!scan_request_associated_records_sub_template!!",'',$form);
 		}
@@ -538,40 +540,40 @@ class scan_request {
 		}else{
 			$form = str_replace("!!scan_request_associated_bulls_sub_template!!",'',$form);
 		}
-		
+
 		$form = str_replace("!!id!!",$this->id,$form);
-			
+
 		$form = str_replace("!!cancel_action!!",$cancel_action,$form);
-		if($charset != "utf-8"){ 
-			return utf8_encode($form);
+		if($charset != "utf-8"){
+			return encoding_normalize::utf8_normalize($form);
 		}
 		return $form;
 	}
 
 	public function save_ajax_form(){
-		global $dbh, $charset;
+		global $charset;
 		global $PMBuserid;
 		global $scan_request_elapsed_time;
 		global $scan_request_nb_scanned_pages;
 		global $scan_request_status;
 		global $scan_request_comment;
-		
-		if(!$this->id)return;		
+
+		if(!$this->id)return;
 		$query = "update scan_requests set ";
-		$where = " where id_scan_request = ".$this->id;		
+		$where = " where id_scan_request = ".$this->id;
 		$query.= "
 			scan_request_elapsed_time = '".$scan_request_elapsed_time."',
 			scan_request_nb_scanned_pages = '".$scan_request_nb_scanned_pages."',
 			scan_request_num_status = '".$scan_request_status."',
 			scan_request_update_date = now(),
 			scan_request_comment = '".$scan_request_comment."'
-			";	
-		$result = pmb_mysql_query($query.$where,$dbh);
-		
+			";
+		pmb_mysql_query($query.$where);
+
 		$this->purge_linked_elts();
 		$this->save_linked_elts();
 		$this->fetch_data();
-		
+
 		$data= array(
 			'id' => $this->id,
 			'statut_id' => $this->status->get_id(),
@@ -579,69 +581,46 @@ class scan_request {
 			'statut_class_html' => stripslashes($this->status->get_class_html()),
 			'elapsed_time' => stripslashes($scan_request_elapsed_time),
 			'nb_scanned_pages' => stripslashes($scan_request_nb_scanned_pages),
-			'comment' => stripslashes($scan_request_comment),				
+			'comment' => stripslashes($scan_request_comment),
 		);
-		
+
 		$this->send_mail(false);
-		
-		if($charset != "utf-8"){ 
-			return json_encode(pmb_utf8_encode($data));
+
+		if($charset != "utf-8"){
+			return json_encode(encoding_normalize::utf8_normalize($data));
 		}
 		return json_encode($data);
 	}
-	
+
 	public function send_mail($request_creation = false){
-		global $charset, $msg;
 		global $pmb_scan_request_location_activate, $opac_scan_request_send_mail_status;
-		global $PMBuserprenom, $PMBusernom, $PMBuseremail;
-		
-		$headers  = "MIME-Version: 1.0\n";
-		$headers .= "Content-type: text/html; charset=".$charset."\n";
-		
+
 		if ($request_creation || $this->loc_updated) {
-			//En crÃ©ation de demande ou changement de localisation, on envoie Ã  la localisation
+			//En création de demande ou changement de localisation, on envoie à la localisation
 			if ($pmb_scan_request_location_activate) {
-				$location = new docs_location($this->num_location);
-				if ($location->email) {		
-					if (!$request_creation) {
-						$title = $msg["scan_request_update_mail_title"];
-						$content = $msg["scan_request_update_mail_content"];
-					} else {
-						$title = $msg["scan_request_creation_mail_title"];
-						$content = $msg["scan_request_creation_mail_content"];
-					}
-					$content = str_replace("!!scan_title!!", $this->title, $content);
-					$content = str_replace("!!scan_desc!!", $this->desc, $content);
-					$content = str_replace("!!scan_dest!!", $this->get_lib_empr($this->num_dest_empr*1), $content);
-					$content = str_replace("!!scan_status!!", $this->status->get_label(), $content);
-					$content = str_replace("!!scan_comment!!", $this->comment, $content);						
-					mailpmb($location->libelle, $location->email, $title, $content, $PMBuserprenom." ".$PMBusernom, $PMBuseremail, $headers);
-				}
+				$mail_scan_request = new mail_scan_request();
+				$mail_scan_request->set_mail_to_id($this->num_location);
+				$mail_scan_request->set_scan_request($this);
+				$mail_scan_request->send_mail();
 			}
 		}
 		if (!$request_creation) {
-			//En modification, on envoie Ã  l'emprunteur
+			//En modification, on envoie à l'emprunteur
 			if (trim($opac_scan_request_send_mail_status)) {
 				$send_mail_status = json_decode($opac_scan_request_send_mail_status);
 				if (is_array($send_mail_status) && count($send_mail_status) && in_array($this->status->get_id(),$send_mail_status)) {
-					if ($email_dest = $this->get_mail_empr($this->num_dest_empr)) {
-						$title = $msg["scan_request_update_mail_title"];
-						$content = $msg["scan_request_update_mail_content"];
-						$content = str_replace("!!scan_title!!", $this->title, $content);
-						$content = str_replace("!!scan_desc!!", $this->desc, $content);
-						$content = str_replace("!!scan_status!!", $this->status->get_label(), $content);
-						$content = str_replace("!!scan_comment!!", $this->comment, $content);
-						mailpmb($this->get_lib_empr($this->num_dest_empr), $email_dest, $title, $content, $PMBuserprenom." ".$PMBusernom, $PMBuseremail, $headers);
-					}
+					$mail_scan_request = new mail_scan_request();
+					$mail_scan_request->set_scan_request($this);
+					$mail_scan_request->set_request_creation(false);
+					$mail_scan_request->send_mail();
 				}
 			}
 		}
 	}
-	
+
 	public function save(){
-		global $dbh;
 		global $PMBuserid;
-		
+
 		if($this->id){ //Faire la update date
 			$query = "update scan_requests set ";
 			$where = " where id_scan_request = ".$this->id;
@@ -670,11 +649,11 @@ class scan_request {
 			scan_request_concept_uri = '".$this->concept_uri."',
 			scan_request_date = '".addslashes($this->date)."',
 			scan_request_num_location = '".$this->num_location."'";
-		
-		$result = pmb_mysql_query($query.$where,$dbh);
+
+		pmb_mysql_query($query.$where);
 		$creation_for_send_mail = false;
 		if(!$this->id){
-			$this->id = pmb_mysql_insert_id($dbh);
+			$this->id = pmb_mysql_insert_id();
 			$creation_for_send_mail = true;
 		}
 		$this->purge_linked_elts();
@@ -682,29 +661,27 @@ class scan_request {
 		$this->fetch_data();
 		$this->send_mail($creation_for_send_mail);
 	}
-	
-	public function delete(){
-		global $dbh;
-		if($this->status->is_cancelable()){
+
+	public function delete($force=false){
+		if($this->status->is_cancelable() || $this->status->is_closed() || $force){
 			$this->purge_linked_elts();
 			$query = "delete from scan_requests where id_scan_request= ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			pmb_mysql_query($query);
 			$this->id = 0;
 		}
 	}
-	
+
 	protected function save_linked_elts(){
 		foreach($this->linked_records as $record){
 			$this->add_linked_elt($record, true);
 		}
 		foreach($this->linked_bulletin as $bulletin){
 			$this->add_linked_elt($bulletin, false);
-		}	
+		}
 	}
-	
+
 	protected function add_linked_elt($elt, $is_record){
-		global $dbh;
-		$start_query = 'insert into scan_request_linked_records set '; 
+		$start_query = 'insert into scan_request_linked_records set ';
 		$insert_query =' scan_request_linked_record_num_request = "'.$this->id.'",';
 		$insert_query.=(($is_record)?'scan_request_linked_record_num_notice = ':'scan_request_linked_record_num_bulletin = ');
 		$insert_query.='"'.$elt['id'].'",';
@@ -712,27 +689,26 @@ class scan_request {
 					scan_request_linked_record_comment = "'.$elt['comment'].'",
 					scan_request_linked_record_order = "'.$elt['order'].'"
 					';
-		pmb_mysql_query($start_query.$insert_query, $dbh);
+		pmb_mysql_query($start_query.$insert_query);
 	}
-	
+
 	protected function purge_linked_elts(){
-		global $dbh;
 		$delete_query = 'delete from scan_request_linked_records where scan_request_linked_record_num_request = '.$this->id;
-		pmb_mysql_query($delete_query, $dbh);
+		pmb_mysql_query($delete_query);
 	}
-	
+
 	public function get_list() {
 		return 'get_list';
 	}
-	
-	
+
+
 	public function get_display() {
 		return '';
 	}
-	
+
 	public function get_display_in_list() {
-		global $include_path, $dbh;
-		
+		global $include_path;
+
 		$tpl = $include_path.'/templates/scan_request/scan_request_in_list.tpl.html';
 		if (file_exists($include_path.'/templates/scan_request/scan_request_in_list_subst.tpl.html')) {
 			$tpl = $include_path.'/templates/scan_request/scan_request_in_list_subst.tpl.html';
@@ -741,7 +717,7 @@ class scan_request {
 		$empr = '';
 		if ($this->num_dest_empr) {
 			$query = 'select empr_nom, empr_prenom from empr where id_empr = '.$this->num_dest_empr;
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$empr = $row->empr_nom;
@@ -753,7 +729,7 @@ class scan_request {
 
 	public function get_special() {
 		global $include_path;
-	
+
 		$special_file = $include_path.'/templates/scan_request/special/scan_request_special.class.php';
 		if (file_exists($special_file)) {
 			require_once($special_file);
@@ -761,7 +737,7 @@ class scan_request {
 		}
 		return null;
 	}
-	
+
 	public function get_id() {
 		return $this->id;
 	}
@@ -805,19 +781,19 @@ class scan_request {
 	public function get_formatted_update_date() {
 		return $this->formatted_update_date;
 	}
-	
+
 	public function get_formatted_date() {
 		return $this->formatted_date;
 	}
-	
+
 	public function get_formatted_wish_date() {
 		return $this->formatted_wish_date;
 	}
-	
+
 	public function get_formatted_deadline_date() {
 		return $this->formatted_deadline_date;
 	}
-	
+
 	public function get_comment() {
 		return $this->comment;
 	}
@@ -828,6 +804,22 @@ class scan_request {
 
 	public function get_num_dest_empr() {
 		return $this->num_dest_empr;
+	}
+
+	public function get_empr() {
+	    if (!isset($this->empr)) {
+	        $this->empr = "";
+	        if (!empty($this->num_dest_empr)) {
+	            $query = 'select empr_nom, empr_prenom from empr where id_empr = '.$this->num_dest_empr;
+	            $result = pmb_mysql_query($query);
+	            if (pmb_mysql_num_rows($result)) {
+	                $row = pmb_mysql_fetch_object($result);
+	                $this->empr = $row->empr_nom;
+	                if($row->empr_prenom) $this->empr .= ', '.$row->empr_prenom;
+	            }
+	        }
+	    }
+		return $this->empr;
 	}
 
 	public function get_num_creator() {
@@ -841,7 +833,7 @@ class scan_request {
 	public function get_creator_name() {
 		return $this->creator_name;
 	}
-	
+
 	public function get_num_last_user() {
 		return $this->num_last_user;
 	}
@@ -853,34 +845,38 @@ class scan_request {
 	public function get_linked_records() {
 		return $this->linked_records;
 	}
-	
+
+	public function get_linked_bulletin() {
+		return $this->linked_bulletin;
+	}
+
 	public function get_display_link() {
 		global $base_path;
 		return $base_path.'/empr.php?tab=scan_requests&lvl=scan_request&sub=display&id='.$this->id;
 	}
-	
+
 	public function get_edit_link() {
 		global $base_path;
 		return $base_path.'/circ.php?categ=scan_request&sub=request&action=edit&id='.$this->id;
 	}
-	
+
 	public function get_cancel_link() {
 		global $base_path;
 		return $base_path.'/empr.php?tab=scan_requests&lvl=scan_request&sub=cancel&id='.$this->id;
 	}
-	
+
 	public function get_folder_num_notice() {
 		return $this->folder_num_notice;
 	}
-	
+
 	public function get_num_location() {
 		return $this->num_location;
-	}	
+	}
 
 	public function get_location_name() {
 		return $this->location_name;
 	}
-	
+
 	public function set_id($id) {
 		$this->id = $id;
 	}
@@ -952,16 +948,16 @@ class scan_request {
 	public function set_num_location($num_location) {
 		$this->num_location = $num_location;
 	}
-			
+
 	public function request_as_folder(){
 		return $this->as_folder;
 	}
-	
+
 	/**
-	 * Fonction de merge des Ã©lÃ©ments liÃ©s envoyÃ©s depuis le formulaire
-	 * @param array $elts_ids Tableau d'id d'Ã©lÃ©ments (notice ou bulletin) 
-	 * @param array $elts_comments Tableau de commentaires d'Ã©lÃ©ments (notice ou bulletin)
-	 * @return array Array reconstituÃ© Ã  partir des infos rÃ©cupÃ©rÃ©es du formulaire
+	 * Fonction de merge des éléments liés envoyés depuis le formulaire
+	 * @param array $elts_ids Tableau d'id d'éléments (notice ou bulletin)
+	 * @param array $elts_comments Tableau de commentaires d'éléments (notice ou bulletin)
+	 * @return array Array reconstitué à partir des infos récupérées du formulaire
 	 */
 	protected function fetch_linked_elts($elts_ids, $elts_comments){
 		$linked_elts = array();
@@ -972,16 +968,15 @@ class scan_request {
 				if(!$elt_id) continue;
 				$linked_elts[] = array("id" => $elt_id, "order"=>$i+1, "comment"=> stripslashes($elts_comments[$i]));
 				$i++;
-			}	
+			}
 		}
 		return $linked_elts;
 	}
-	
+
 	public function get_mail_empr($id_empr){
-		global $dbh;
 		if($id_empr){
 			$query = "select empr_mail from empr where id_empr= ".$id_empr;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
 				return $row->empr_mail;
@@ -989,22 +984,21 @@ class scan_request {
 		}
 		return '';
 	}
-	
+
 	public function get_lib_empr($id_empr){
-		global $dbh;
 		if($id_empr){
 			$query = "select empr_prenom, empr_nom from empr where id_empr= ".$id_empr;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
 				return $row->empr_nom.($row->empr_prenom?', '.$row->empr_prenom:'');
-			} 
+			}
 		}
 		return '';
 	}
-	
+
 	public function get_record_title($record_id){
-		$record_id = $record_id*1;
+		$record_id = intval($record_id);
 		$requete="select serie_name, tnvol, tit1, code from notices left join series on serie_id=tparent_id where notice_id=".$record_id;
 		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {
@@ -1013,9 +1007,9 @@ class scan_request {
 		}
 		return '';
 	}
-	
+
 	public function get_bulletin_title($bulletin_id){
-		$bulletin_id = $bulletin_id*1;
+		$bulletin_id = intval($bulletin_id);
 		$requete = "select tit1, if(bulletin_titre is not null and bulletin_titre!='',concat(bulletin_titre,' - ',bulletin_numero),bulletin_numero) as bulletin_numero, bulletin_id from bulletins, notices where bulletin_notice=notice_id and bulletin_id= ".$bulletin_id;
 		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {
@@ -1023,17 +1017,14 @@ class scan_request {
 			return $r->tit1.' / '.$r->bulletin_numero;
 		}
 		return '';
-	}	
-	
+	}
+
 	public function add_explnum(){
-		global $dbh;
 		global $fnc;
-		global $num_record;
-		global $num_bul;
-		
+
 		$protocol = $_SERVER["SERVER_PROTOCOL"];
 		$uploadDir = "./temp/";
-			
+
 		switch ($fnc){
 			case 'upl':
 				if (is_dir($uploadDir)) {
@@ -1056,77 +1047,24 @@ class scan_request {
 				break;
 		}
 	}
-	
-	public function getBytes($val) {
-		$val = trim($val);
-		$last = strtolower($val[strlen($val) - 1]);
-		switch ($last) {
-			// The 'G' modifier is available since PHP 5.1.0
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
-		return $val;
-	}
-	
+
 	protected function get_file(){
-		global $charset;
 		global $fnc;
 		global $num_record;
 		global $num_bul;
 		global $pmb_scan_request_explnum_folder;
 		global $id_rep;
 		global $concept_uri;
-		$headers = getallheaders();
-		if($charset == 'utf-8') {
-			$headers['X-File-Name'] = utf8_encode($headers['X-File-Name']);
-		}
+		global $deflt_scan_request_explnum_status;
+
 		$protocol = $_SERVER["SERVER_PROTOCOL"];
-		
-		if (!isset($headers['Content-Length'])) {
-	    	if (!isset($headers['CONTENT_LENGTH'])) {
-	    		if (!isset($headers['X-File-Size'])) {
-	    			header($protocol.' 411 Length Required');
-	    			exit('Header \'Content-Length\' not set.');
-	    		}else{
-	    			$headers['Content-Length']=preg_replace('/\D*/', '', $headers['X-File-Size']);
-	    		}
-	    	}else{
-	    		$headers['Content-Length']=$headers['CONTENT_LENGTH'];
-	    	}
-	    }
-		
-		if (isset($headers['X-File-Size'], $headers['X-File-Name'])) {
-	
-			$file = new stdClass();
-			$file->name = basename($headers['X-File-Name']);
-			$file->filename = preg_replace('/[^ \.\w_\-]*/', '', basename(reg_diacrit($headers['X-File-Name'])));
-			$file->size = preg_replace('/\D*/', '', $headers['X-File-Size']);
-				
-			$maxUpload = $this->getBytes(ini_get('upload_max_filesize')); // can only be set in php.ini and not by ini_set()
-			$maxPost = $this->getBytes(ini_get('post_max_size'));         // can only be set in php.ini and not by ini_set()
-			$memoryLimit = $this->getBytes(ini_get('memory_limit'));
-			$limit = min($maxUpload, $maxPost, $memoryLimit);
-			if ($headers['Content-Length'] > $limit) {
-				header($protocol.' 403 Forbidden');
-				exit('File size to big. Limit is '.$limit. ' bytes.');
-			}
-				
-			$i=1;
+
+		$file= file_uploader::get_file();
+		if(is_object($file)) {
 			$this->fileName = $file->filename;
-			while(file_exists("./temp/".$file->filename)){
-				if($i==1){
-					$file->filename = substr($file->filename,0,strrpos($file->filename,"."))."_".$i.substr($file->filename,strrpos($file->filename,"."));
-				}else{
-					$file->filename = substr($file->filename,0,strrpos($file->filename,($i-1).".")).$i.substr($file->filename,strrpos($file->filename,"."));
-				}
-				$i++;
-			}
 			$file->content = file_get_contents("php://input");
-			
+
+			$limit = file_uploader::get_limit();
 			if (mb_strlen($file->content) > $limit) {
 				header($protocol.' 403 Forbidden');
 				return false;
@@ -1136,19 +1074,19 @@ class scan_request {
 				header($protocol.' 201 Created');
 				$returned_num_record = 0;
 				$returned_num_bulletin = 0;
-				if($this->as_folder){ //C'est une demande groupÃ©e -> Les documents numÃ©riques doivent Ãªtre associÃ©s Ã  une notice crÃ©ee a la volÃ©e
-					if(!$this->folder_num_notice){// La notice de groupement n'est pas crÃ©ee
+				if($this->as_folder){ //C'est une demande groupée -> Les documents numériques doivent être associés à une notice créee a la volée
+					if(!$this->folder_num_notice){// La notice de groupement n'est pas créee
 						$this->create_folder_record();
 					}
 					$explnum = new explnum(0,$this->folder_num_notice,0);
 					$returned_num_record = $this->folder_num_notice;
 				}else{
 					if($num_bul){
-						$num_bul+=0;
+						$num_bul = intval($num_bul);
 						$explnum = new explnum(0,0,$num_bul);
 						$returned_num_bulletin = $num_bul;
 					}else if($num_record){
-						$num_record+=0;
+						$num_record = intval($num_record);
 						$explnum = new explnum(0,$num_record,0);
 						$returned_num_record = $num_record;
 					}else{
@@ -1157,6 +1095,9 @@ class scan_request {
 				}
 				$id_rep = $pmb_scan_request_explnum_folder;
 				$explnum->get_file_from_temp("./temp/".$file->filename, $file->name, true);
+				if($deflt_scan_request_explnum_status) {
+					$this->params["statut"] = $deflt_scan_request_explnum_status;
+				}
 				$explnum->update(false);
 				if($concept_uri){
 					$concept = new \concept(0,$concept_uri);
@@ -1171,27 +1112,23 @@ class scan_request {
 				header($protocol.' 505 Internal Server Error');
 				return false;
 			}
-		}else {
-			header($protocol.' 500 Internal Server Error');
-			exit('Correct headers are not set.');
 		}
 	}
-	
+
 	//Doit retourner un id de notice.
 	protected function create_folder_record(){
 		global $gestion_acces_active;
 		global $gestion_acces_user_notice;
-		global $dbh;
 		global $gestion_acces_active;
 		global $gestion_acces_user_notice;
 		global $gestion_acces_empr_notice;
 		global $xmlta_doctype_scan_request_folder_record;
-		
+
 		$record_title = $this->title.' - '.$this->formatted_date;
 		$query = 'INSERT INTO notices SET create_date = sysdate(), update_date = sysdate(),  typdoc="'.$xmlta_doctype_scan_request_folder_record.'", tit1="'.clean_string($record_title).'" ;';
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
-			$folder_record_id = pmb_mysql_insert_id($dbh);
+			$folder_record_id = pmb_mysql_insert_id();
 			$this->folder_num_notice = $folder_record_id;
 			$this->save();
 			audit::insert_creation(AUDIT_NOTICE, $folder_record_id);
@@ -1210,30 +1147,30 @@ class scan_request {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	protected function link_explnum($num_explnum){
 		global $num_record;
 		global $num_bul;
-		global $dbh;
-		
-		$query = 'insert into scan_request_explnum set scan_request_explnum_num_request = "'.$this->id.'", 
+
+		$query = 'insert into scan_request_explnum set scan_request_explnum_num_request = "'.$this->id.'",
 				scan_request_explnum_num_notice = "'.($num_record*1).'",  scan_request_explnum_num_bulletin = "'.($num_bul*1).'",
  				scan_request_explnum_num_explnum = "'.$num_explnum.'"';
- 		if(pmb_mysql_query($query, $dbh)){
+ 		if(pmb_mysql_query($query)){
  			return true;
  		}
  		return false;
 	}
-	
+
 	protected function fetch_explnum($record_id, $bulletin_id){
-		global $dbh;
+		$record_id = intval($record_id);
+		$bulletin_id = intval($bulletin_id);
 		$explnum_linked = array();
-		$query = 'select scan_request_explnum_num_explnum from scan_request_explnum where scan_request_explnum_num_notice = '.($record_id*1).'
-		and scan_request_explnum_num_bulletin = '.($bulletin_id*1).'
+		$query = 'select scan_request_explnum_num_explnum from scan_request_explnum where scan_request_explnum_num_notice = '.$record_id.'
+		and scan_request_explnum_num_bulletin = '.$bulletin_id.'
 		and scan_request_explnum_num_request= '.$this->id;
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			while($row = pmb_mysql_fetch_object($result)){
 				$explnum = new explnum($row->scan_request_explnum_num_explnum);
@@ -1243,13 +1180,12 @@ class scan_request {
 		}
 		return $explnum_linked;
 	}
-	
+
 	protected function get_record_display_header($record_id){
-		global $dbh;
-		
+		$record_id = intval($record_id);
 		if(!$record_id) return '';
-		$query = 'select niveau_biblio from notices where notice_id = '.($record_id*1);
-		$result = pmb_mysql_query($query, $dbh);
+		$query = 'select niveau_biblio from notices where notice_id = '.$record_id;
+		$result = pmb_mysql_query($query);
 		$row = pmb_mysql_fetch_object($result);
 		switch ($row->niveau_biblio) {
 			case 'm' :
@@ -1261,16 +1197,16 @@ class scan_request {
 				break;
 			case 'a' :
 				$displaying_class = new serial_display($record_id, 0, '', '', '', '', '', 0, 0, 0, 0, false, 0, 1, '', true, 0, 0, 0);
-				$displaying_class->header_texte.=$this->header." in ".$displaying_class->parent_title." (".$displaying_class->parent_numero." ".($displaying_class->parent_date?$displaying_class->parent_date:$displaying_class->parent_aff_date_date).")";
+				$displaying_class->header_texte.=" in ".$displaying_class->parent_title." (".$displaying_class->parent_numero." ".($displaying_class->parent_date?$displaying_class->parent_date:$displaying_class->parent_aff_date_date).")";
 				break;
 		}
 		return $displaying_class->header_texte;
 	}
-	
+
 	public function get_concept_uri(){
 		return $this->concept_uri;
 	}
-	
+
 	public function get_nb_scanned_pages(){
 		return $this->nb_scanned_pages;
 	}

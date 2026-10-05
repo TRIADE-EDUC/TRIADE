@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,11 +27,16 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/alertify.min.css">
+<link rel="stylesheet" href="./librairie_css/alertify.default.min.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/alertify.min.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
@@ -53,98 +58,89 @@ $nomVersement=chercheNomVersement($idversement);
 $modepaiement=chercheModePaiement($ideleve,$datevers,$idversement);
 $numcheque=chercheNumCheque($ideleve,$datevers,$idversement);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Supprimer un encaissement" ?></font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print "Supprimer un encaissement" ?></font></b></td></tr>
 <tr id='cadreCentral0' >
-<td >
+<td style="padding:8px 4px;">
 
 <?php
-if (!isset($_GET["ideleve"])) {
-	$nomEleve=$_POST["saisie_nom_eleve"];
-	$sql="SELECT elev_id,nom,prenom,classe FROM  ${prefixe}eleves  WHERE  nom='$nomEleve' ";
-	$res=execSql($sql);
-	$data=ChargeMat($res);
-	if (count($data) > 1) {
-		print "<table border='1' width='100%' bordercolor='#000000' >";
-		print "<tr><td bgcolor='yellow'>Nom Prénom</td><td bgcolor='yellow' >Classe</td>";
-		print "<td bgcolor='yellow' align='center' >Sélectionner</td>";
-		print "</tr>";
-		for($i=0;$i<count($data);$i++) {
-			print "<tr  class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\">";
-			print "<td>".$data[$i][1]." ".$data[$i][2]."</td><td>".chercheClasse_nom($data[$i][3])."</td>";
-			print "<td width='5%'><input type='button' onclick=\"open('compta_modif.php?ideleve=".$data[$i][0]."','_parent','')\" class='button' value='Sélectionner' /></td>";
-			print "</tr>";
-		}
-		print "</table>";
-	}else{
-		$ideleve=$data[0][0];
-	}
-}else{
-	$ideleve=$_GET["ideleve"];
-}
-
 if ($ideleve > 0) {
 	$nomeleve=recherche_eleve_nom($ideleve);
 	$prenomeleve=recherche_eleve_prenom($ideleve);
 	$idclasse=chercheClasseEleve($ideleve);
 	$classe=chercheClasse_nom($idclasse);
-
 ?>
-	<form name="formulaire" method="post" action='compta_supp4.php' >
-	<input type="hidden" name="ideleve" value="<?php print $ideleve ?>" />
-	<table>
-	<tr><td valign='top' ><img src="image_trombi.php?idE=<?php print $ideleve ?>" border=0 ></td>
-	<td valign="top">
-	&nbsp;&nbsp;<font class=T2>Nom : <?php print $nomeleve ?></font>
-	<br><br>
-	&nbsp;&nbsp;<font class=T2>Prénom : <?php print $prenomeleve ?></font>
-	<br><br>
-	&nbsp;&nbsp;<font class=T2>Classe : <?php print ucwords($classe) ?></font>
-	</td></tr>
-	</table>
-	<br><br>
-	<table width=100% >
-	<tr><td align='right' ><font class='T2'> Type de versement  : </font></td><td> <select name='typeversement' >
-							<option id='select1' value='<?php print $idversement ?>' ><?php print $nomVersement ?></option>
-							</select></td></tr>
-							<tr><td align='right' ><font class='T2'>Montant réglé : </font></td>
-							<td><?php print affichageFormatMonnaie($montant) ?><input type=hidden name='montant' readonly value='<?php print $montant ?>' ></td></tr>
-							<tr><td align='right' ><font class='T2'>N° chèque : </font></td>
-							<td><?php print $numcheque ?></td></tr>
-							<tr><td align='right' valign='top' ><font class='T2'>Mode de paiement : </font></td><td><textarea name='modepaiement' cols='50' rows='3' readonly ><?php print $modepaiement ?></textarea></td></tr>
-							<tr><td align='right' ><font class='T2'>Date d'encaissement : </font></td><td><?php print dateForm($datevers) ?><input type="hidden" name="dateversement" value="<?php print dateForm($datevers) ?>" size=12 readonly> 
-	</td></tr>
-	<tr><td height=20></td></tr>
-	<tr><td colspan=2 align=center ><table><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print "Confirmer suppression"?>","supp"); //text,nomInput</script></td></tr></table></td></tr>
-	</table>
-	</form>
+<form name="formulaire" method="post" action='compta_supp4.php' >
+<input type="hidden" name="ideleve" value="<?php print $ideleve ?>" />
+
+<div class="cc-form-wrap" style="max-width:520px; margin:0 auto;">
+
+  <div class="cc-form-row">
+    <label class="cc-form-label">?l?ve</label>
+    <span style="font-size:13px; color:#080A66; font-weight:600;"><?php print $nomeleve.' '.ucfirst(strtolower($prenomeleve)) ?> &mdash; <?php print ucwords($classe) ?></span>
+  </div>
+
+  <div class="cc-form-row">
+    <label class="cc-form-label">Type de versement</label>
+    <select name='typeversement' class="cc-form-select">
+      <option value='<?php print $idversement ?>'><?php print $nomVersement ?></option>
+    </select>
+  </div>
+
+  <div class="cc-form-row">
+    <label class="cc-form-label">Montant r?gl?</label>
+    <span style="font-size:13px; font-weight:600; color:#333;"><?php print affichageFormatMonnaie($montant) ?></span>
+    <input type=hidden name='montant' value='<?php print $montant ?>'>
+  </div>
+
+  <div class="cc-form-row">
+    <label class="cc-form-label">N&deg; ch?que</label>
+    <span style="font-size:13px; color:#333;"><?php print $numcheque ?></span>
+  </div>
+
+  <div class="cc-form-row" style="align-items:flex-start;">
+    <label class="cc-form-label">Mode de paiement</label>
+    <textarea name='modepaiement' cols='40' rows='3' readonly style="border:1px solid #e0e3ef; border-radius:6px; padding:6px; font-size:13px; resize:none;"><?php print $modepaiement ?></textarea>
+  </div>
+
+  <div class="cc-form-row">
+    <label class="cc-form-label">Date d'encaissement</label>
+    <span style="font-size:13px; color:#333;"><?php print dateForm($datevers) ?></span>
+    <input type="hidden" name="dateversement" value="<?php print dateForm($datevers) ?>">
+  </div>
+
+  <div class="cc-btn-row">
+    <script language=JavaScript>buttonMagicSubmit("<?php print "Confirmer suppression"?>","supp");</script>
+    <script language=JavaScript>buttonMagicRetour("compta_supp2.php?ideleve=<?php print $ideleve ?>","_self");</script>
+  </div>
+
+</div>
+</form>
 <?php
 }
 ?>
 
-
-<br /><br />
      </td></tr></table>
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

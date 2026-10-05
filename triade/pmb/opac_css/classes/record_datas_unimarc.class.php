@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: record_datas_unimarc.class.php,v 1.5 2019-02-21 11:03:40 ngantier Exp $
+// $Id: record_datas_unimarc.class.php,v 1.14.6.1.2.1 2025/03/25 10:21:10 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $base_path, $include_path, $class_path;
 
 require_once($class_path."/publisher.class.php");
 require_once($class_path."/serie.class.php");
@@ -38,472 +40,484 @@ class record_datas_unimarc {
      * @var int
      */
     private $id;
-    
+
     /**
      *
      * @var domain
      */
     private $dom_2 = null;
-    
+
     /**
      *
      * @var domain
      */
     private $dom_3 = null;
-    
+
     /**
-     * Droits d'accÃ¨s emprunteur/notice
+     * Droits d'accès emprunteur/notice
      * @var int
      */
     private $rights = 0;
-    
+
     /**
-     * Objet notice fetchÃ© en base
+     * Objet notice fetché en base
      * @var stdClass
      */
     private $notice;
-    
+
     /**
      * Tableau des informations du parent dans le cas d'un article
      * @var array
      */
     private $parent;
-    
+
     /**
-     * Carte associÃ©e
+     * Carte associée
      * @var map_objects_controler
      */
     private $map = null;
-    
+
     /**
-     * Carte associÃ©e de localisation des exemplaires
+     * Carte associée de localisation des exemplaires
      * @var map_objects_controler
      */
     private $map_location;
-    
+
     /**
-     * Info de la carte associÃ©e
+     * Info de la carte associée
      * @var map_info
      */
     private $map_info = null;
-    
+
     /**
-     * ParamÃ¨tres persos
+     * Paramètres persos
      * @var parametres_perso
      */
     private $p_perso = null;
-    
+
     /**
-     * LibellÃ© du statut de la notice
+     * Libellé du statut de la notice
      * @var string
      */
     private $statut_notice = "";
-    
+
     /**
-     * VisibilitÃ© de la notice Ã  tout le monde
+     * Visibilité de la notice à tout le monde
      * @var int
      */
     private $visu_notice = 1;
-    
+
     /**
-     * VisibilitÃ© de la notice aux abonnÃ©s uniquement
+     * Visibilité de la notice aux abonnés uniquement
      * @var int
      */
     private $visu_notice_abon = 0;
-    
+
     /**
-     * VisibilitÃ© des exemplaires de la notice Ã  tout le monde
+     * Visibilité des exemplaires de la notice à tout le monde
      * @var int
      */
     private $visu_expl = 1;
-    
+
     /**
-     * VisibilitÃ© des exemplaires de la notice aux abonnÃ©s uniquement
+     * Visibilité des exemplaires de la notice aux abonnés uniquement
      * @var int
      */
     private $visu_expl_abon = 0;
-    
+
     /**
-     * VisibilitÃ© des exemplaires numÃ©riques de la notice Ã  tout le monde
+     * Visibilité des exemplaires numériques de la notice à tout le monde
      * @var int
      */
     private $visu_explnum = 1;
-    
+
     /**
-     * VisibilitÃ© des exemplaires numÃ©riques de la notice aux abonnÃ©s uniquement
+     * Visibilité des exemplaires numériques de la notice aux abonnés uniquement
      * @var int
      */
     private $visu_explnum_abon = 0;
-    
+
     /**
-     * VisibilitÃ© du lien de demande de numÃ©risation
+     * Visibilité du lien de demande de numérisation
      * @var int
      */
     private $visu_scan_request = 1;
-    
+
     /**
-     * VisibilitÃ© du lien de demande de numÃ©risation aux abonnÃ©s uniquement
+     * Visibilité du lien de demande de numérisation aux abonnés uniquement
      * @var int
      */
     private $visu_scan_request_abon = 0;
-    
+
     /**
      * Tableau des auteurs
      * @var array
      */
     private $responsabilites = array();
-    
+
     /**
      * Auteurs principaux
      * @var string
      */
     private $auteurs_principaux;
-    
+
     /**
      * Auteurs auteurs_secondaires
      * @var string
      */
     private $auteurs_secondaires;
-    
+
     /**
-     * CatÃ©gories
+     * Catégories
      * @var categorie
      */
     private $categories;
-    
+
     /**
      * Titre uniforme
      * @var tu_notice
      */
     private $titres_uniformes = array();
-    
+
     /**
      * Avis
      * @var avis
      */
     private $avis = null;
-    
+
     /**
      * Langues
      * @var array
      */
     private $langues = array();
-    
+
     /**
-     * Nombre de bulletins associÃ©s
+     * Nombre de bulletins associés
      * @var int
      */
     private $nb_bulletins;
-    
+
     /**
-     * Tableau des bulletins associÃ©s
+     * Tableau des bulletins associés
      * @var array
      */
     private $bulletins = array();
-    
+
     /**
-     * Nombre de documents numÃ©riques associÃ©s aux bulletins
+     * Nombre de documents numériques associés aux bulletins
      * @var int
      */
     private $nb_bulletins_docnums;
-    
+
     /**
-     * Indique si le pÃ©rio est ouvert Ã  la recherche
+     * Indique si le pério est ouvert à la recherche
      * @var int
      */
     private $open_to_search;
-    
+
     /**
      * Editeurs
      * @var publisher
      */
     private $publishers = array();
-    
+
     /**
      * Etat de collections
      * @var collstate
      */
     private $collstate;
-    
+
     /**
-     * Tous les Ã©tats de collections
+     * Tous les états de collections
      * @var collstate
      */
     private $collstate_list;
-    
+
     /**
      * Autorisation des avis
      * @var int
      */
     private $avis_allowed;
-    
+
     /**
      * Autorisation des tags
      * @var int
      */
     private $tag_allowed;
-    
+
     /**
      * Autorisation des suggestions
      * @var int
      */
     private $sugg_allowed;
-    
+
     /**
      * Autorisation des listes de lecture
      * @var int
      */
     private $liste_lecture_allowed;
-    
+
     /**
      * Tableau des sources d'enrichissement actives pour cette notice
      * @var array
      */
     private $enrichment_sources;
-    
+
     /**
      * Icone du type de document
      * @var string
      */
     private $icon_doc;
-    
+
     /**
-     * LibellÃ© du niveau biblio
+     * Libellé du niveau biblio
      * @var string
      */
     private $biblio_doc;
-    
+
     /**
-     * LibellÃ© du type de document
+     * Libellé du type de document
      * @var string
      */
     private $tdoc;
-    
+
     /**
      * Liste de concepts qui indexent la notice
      * @var skos_concepts_list
      */
     private $concepts_list = null;
-    
+
     /**
-     * Tableau des mots clÃ©s
+     * Tableau des mots clés
      * @var array
      */
     private $mots_cles;
-    
+
     /**
-     * Indexation dÃ©cimale
+     * Indexation décimale
      * @var indexint
      */
     private $indexint = null;
-    
+
     /**
      * Collection
      * @var collection
      */
     private $collection = null;
-    
+
     /**
      * Sous-collection
      * @var subcollection
      */
     private $subcollection = null;
-    
+
     /**
      * Permalink
      * @var string
      */
     private $permalink;
-    
+
     /**
-     * Tableau des ids des notices du mÃªme auteur
+     * Tableau des ids des notices du même auteur
      * @var array
      */
     private $records_from_same_author;
-    
+
     /**
-     * Tableau des ids des notices du mÃªme Ã©diteur
+     * Tableau des ids des notices du même éditeur
      * @var array
      */
     private $records_from_same_publisher;
-    
+
     /**
-     * Tableau des ids des notices de la mÃªme collection
+     * Tableau des ids des notices de la même collection
      * @var array
      */
     private $records_from_same_collection;
-    
+
     /**
-     * Tableau des ids des notices dans la mÃªme sÃ©rie
+     * Tableau des ids des notices dans la même série
      * @var array
      */
     private $records_from_same_serie;
-    
+
     /**
-     * Tableau des ids des notices avec la mÃªme indexation dÃ©cimale
+     * Tableau des ids des notices avec la même indexation décimale
      * @var array
      */
     private $records_from_same_indexint;
-    
+
     /**
-     * Tableau des ids de notices avec des catÃ©gories communes
+     * Tableau des ids de notices avec des catégories communes
      * @var array
      */
     private $records_from_same_categories;
-    
+
     /**
      * URL vers l'image de la notice
      * @var string
      */
     private $picture_url;
-    
+
     /**
      * Message au survol de l'image de la notice
      * @var string
      */
     private $picture_title;
-    
+
     /**
-     * DisponibilitÃ©
+     * Disponibilité
      * @var array
      */
     private $availability;
-    
+
     /**
-     * ParamÃ¨tres de rÃ©servation
+     * Paramètres de réservation
      * @var array
      */
     private $resas_datas;
-    
+
     /**
-     * DonnÃ©es d'exemplaires
+     * Données d'exemplaires
      * @var array
      */
     private $expls_datas;
-    
+
     /**
-     * DonnÃ©es de sÃ©rie
+     * Données de série
      * @var array
      */
     private $serie;
-    
+
     /**
      * Tableau des relations parentes
      * @var array
      */
     private $relations_up;
-    
+
     /**
      * Tableau des relations enfants
      * @var array
      */
     private $relations_down;
-    
+
     /**
      * Tableau des relations horizontales
      * @var array
      */
     private $relations_both;
-    
+
     /**
-     * Tableau des dÃ©pouillements
+     * Tableau des dépouillements
      * @var array
      */
     private $articles;
-    
+
     /**
-     * DonnÃ©es de demandes
+     * Données de demandes
      * @var array
      */
     private $demands_datas;
-    
+
     /**
-     * Panier autorisÃ© selon paramÃ¨tres PMB et utilisateur connectÃ©
+     * Panier autorisé selon paramètres PMB et utilisateur connecté
      * @var boolean
      */
     private $cart_allow;
-    
+
     /**
-     * La notice est-elle dÃ©jÃ  dans le panier ?
+     * La notice est-elle déjà dans le panier ?
      * @var boolean
      */
     private $in_cart;
-    
+
     /**
-     * Informations de documents numÃ©riques associÃ©s
+     * Informations de documents numériques associés
      * @var array
      */
     private $explnums_datas;
-    
+
     /**
-     * Tableau des autoritÃ©s persos associÃ©es Ã  la notice
+     * Tableau des autorités persos associées à la notice
      * @var authority $authpersos
      */
     private $authpersos;
-    
+
     /**
-     * Tableau des autoritÃ©s persos classÃ©es associÃ©es Ã  la notice
+     * Tableau des autorités persos classées associées à la notice
      * @var authority $authpersos
      */
     private $authpersos_ranked;
-    
+
     /**
      * Tableau des informations externes de la notice
      * @var array $external_rec_id
      */
     private $external_rec_id;
-    
+
     /**
      * Tableau des informations des onglets perso de la notice
      * @var array $onglet_perso
      */
     private $onglet_perso;
-    
+
     /**
-     * Informations du pÃ©riodique
+     * Informations du périodique
      * @var record_datas
      */
     private $serial;
-    
+
     /**
      * Tableau parametres externes utilisable dans les templates ( issu d'un formulaire par exemple )
      * @var array $external_parameters
      */
     private $external_parameters;
-    
+
     /**
      * Lien vers ressource externe
      * @var string $lien
      */
     private $lien;
-    
+
     /**
      * Infos sur la source de la notice si elle est issue d'un connecteur (recid, connector, source_id et ref)
      * @var array
      */
     private $source;
-    
+
     /**
      * identifiant de la source
      */
     private $source_id;
-    
+
     /**
      * identifiant du connecteur
      */
     private $connector_id;
-    
+
     /**
      * nom de la source
      */
     private $source_name;
-    
+
     /**
      * entrepots des localisations
      */
     private $entrepots_localisations;
 
 	public $details = array();
+
+	public $year = '';
+	public $perio_issn = '';
+	public $auteurs_tous = '';
+
+	public $parent_title = '';
+	public $parent_numero = '';
+	public $parent_aff_date_date = '';
+	public $parent_date = '';
+
+	public $exemplaires = [];
+	public $docnums = [];
 
 	// constructeur------------------------------------------------------------
 	public function __construct($id, $entrepots_localisations = array()) {
@@ -516,27 +530,25 @@ class record_datas_unimarc {
 			$this->fetch_data();
 		}
 	}
-	
-	// rÃ©cupÃ©ration des valeurs en table---------------------------------------
+
+	// récupération des valeurs en table---------------------------------------
 	private function fetch_data() {
-		global $dbh;
-	
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->id);
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$source_id = pmb_mysql_result($myQuery, 0, 0);
-	
+
 		$requete="select * from entrepot_source_".$source_id." where recid='".addslashes($this->id)."' group by field_order,ufield,usubfield,subfield_order,value";
-		$myQuery = pmb_mysql_query($requete, $dbh);
-	
+		$myQuery = pmb_mysql_query($requete);
+
 		$notice= $this->get_notice_class();
 		$lpfo="";
 		$n_ed=-1;
-	
+
 		$exemplaires = array();
 		$doc_nums = array();
 		$cpt_notice_pperso=0;
 		$notice->notice_pperso= array();
-	
+
 		if(pmb_mysql_num_rows($myQuery)) {
 			$is_article = false;
 			while ($l=pmb_mysql_fetch_object($myQuery)) {
@@ -550,8 +562,8 @@ class record_datas_unimarc {
 						$this->connector_id = $row->id_connector;
 					}
 				}
-				
-				
+
+
 				if (!isset($this->details[$l->ufield])) {
 				    $this->details[$l->ufield] = array();
 				}
@@ -560,8 +572,8 @@ class record_datas_unimarc {
 				} else {
 				    $this->details[$l->ufield][$l->field_order][$l->usubfield][$l->subfield_order] = $l->value;
 				}
-				
-				
+
+
 // 				$this->unimarc[$l->ufield][$l->field_order][$l->usubfield][$l->subfield_order];
 				switch ($l->ufield) {
 					//dt
@@ -579,7 +591,7 @@ class record_datas_unimarc {
 					case "hl":
 						if($l->value == '2'){
 							$notice->niveau_hierar=$l->value;
-						} else $notice->niveau_hierar='0'; //On force le niveau Ã  zÃ©ro
+						} else $notice->niveau_hierar='0'; //On force le niveau à zéro
 						break;
 					//ISBN
 					case "010":
@@ -615,6 +627,7 @@ class record_datas_unimarc {
 						break;
 					//Editeur
 					case "210":
+					case "214":
 					case "219":
 						if($l->field_order!=$lpfo) {
 							$lpfo=$l->field_order;
@@ -669,17 +682,26 @@ class record_datas_unimarc {
 						break;
 					//Note generale
 					case "300":
+						if(empty($notice->n_gen)) {
+							$notice->n_gen = array();
+						}
 						$notice->n_gen[]=$l->value;
 						break;
 					//Note de contenu
 					case "327":
+						if(empty($notice->n_contenu)) {
+							$notice->n_contenu = array();
+						}
 						$notice->n_contenu[]=$l->value;
 						break;
 					//Note de resume
 					case "330":
+						if(empty($notice->n_resume)) {
+							$notice->n_resume = array();
+						}
 						$notice->n_resume[]=$l->value;
 						break;
-					//Serie ou PÃ©rio
+					//Serie ou Pério
 					case "461":
 						switch($l->usubfield){
 							case 'x':
@@ -733,7 +755,7 @@ class record_datas_unimarc {
 								break;
 						}
 						break;
-					//Indexations dÃ©cimales..;
+					//Indexations décimales..;
 					case "676":
 					case "686":
 						switch ($l->usubfield) {
@@ -742,7 +764,7 @@ class record_datas_unimarc {
 								break;
 						}
 						break;
-	
+
 					//URL
 					case "856":
 						switch ($l->usubfield) {
@@ -787,7 +809,7 @@ class record_datas_unimarc {
 								$notice->thumbnail_url=$l->value;
 						}
 						break;
-					//Documents numÃ©riques
+					//Documents numériques
 					case "897":
 						$doc_nums[$l->field_order][$l->usubfield] = $l->value;
 						break;
@@ -796,105 +818,109 @@ class record_datas_unimarc {
 		}
 		$this->exemplaires = $exemplaires;
 		$this->docnums = $doc_nums;
-	
+
 		$this->notice=$notice;
-		if (!$this->notice->typdoc) $this->notice->typdoc='a';		
+		if (!$this->notice->typdoc) $this->notice->typdoc='a';
 		return pmb_mysql_num_rows($myQuery);
 	} // fin fetch_data
-	
+
 
 	// recuperation des auteurs ---------------------------------------------------------------------
 	// retourne $this->auteurs_principaux = ce qu'on va afficher en titre du resultat
 	// retourne $this->auteurs_tous = ce qu'on va afficher dans l'isbd
 	// NOTE: now we have two functions:
 	// 		fetch_auteurs()  	the pmb-standard one
-	
+
 	public function fetch_auteurs() {
 		global $fonction_auteur;
-		global $dbh ;
-		global $opac_url_base ;
-	
+
 		$this->responsabilites  = array() ;
 		$auteurs = array() ;
-	
+		$responsabilites = array();
+
+		$res = array();
 		$res["responsabilites"] = array() ;
 		$res["auteurs"] = array() ;
-	
-		if(!$this->source_id){
+
+		if(empty($this->source_id)){
 			$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->id);
-			$myQuery = pmb_mysql_query($requete, $dbh);
-			$this->source_id = pmb_mysql_result($myQuery, 0, 0);
-		}
-	
-		$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '7%' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
-		$res_sql=pmb_mysql_query($rqt);
-	
-		$id_aut="";
-		$n_aut=-1;
-		while ($l=pmb_mysql_fetch_object($res_sql)) {
-			if ($l->field_order!=$id_aut) {
-				$n_aut++;
-				switch ($l->ufield) {
-					case "700":
-					case "710":
-						$responsabilites[]=0;
-						break;
-					case "701":
-					case "711":
-						$responsabilites[]=1;
-						break;
-					case "702":
-					case "712":
-						$responsabilites[]=2;
-						break;
-				}
-				switch (substr($l->ufield,0,2)) {
-					case "70":
-						$auteurs[$n_aut]["type"]=1;
-						break;
-					case "71":
-						$auteurs[$n_aut]["type"]=2;
-						break;
-				}
-				$auteurs[$n_aut]["id"]=(isset($l->recid) ? $l->recid : '').$l->field_order;
-				$id_aut=$l->field_order;
-			}
-			switch ($l->usubfield) {
-				case '4':
-					$auteurs[$n_aut]['fonction']=$l->value;
-					$auteurs[$n_aut]['fonction_aff']=$fonction_auteur[$l->value];
-					break;
-				case 'a':
-					$auteurs[$n_aut]['name']=$l->value;
-					break;
-				case 'b':
-					if ($auteurs[$n_aut]['type']==2) {
-						$auteurs[$n_aut]['subdivision']=$l->value;
-					} else {
-						$auteurs[$n_aut]['rejete']=$l->value;
-					}
-					break;
-				case 'd':
-					if ($auteurs[$n_aut]['type']==2) {
-						$auteurs[$n_aut]['numero']=$l->value;
-					}
-					break;
-				case 'e':
-					if ($auteurs[$n_aut]['type']==2) {
-						$auteurs[$n_aut]['lieu'].=(($auteurs[$n_aut]['lieu'])?'; ':'').$l->value;
-					}
-					break;
-				case 'f':
-					$auteurs[$n_aut]['date']=$l->value;
-					break;
-				case 'g':
-					if ($auteurs[$n_aut]['type']==2) {
-						$auteurs[$n_aut]['rejete']=$l->value;
-					}
-					break;
+			$myQuery = pmb_mysql_query($requete);
+			if(pmb_mysql_num_rows($myQuery)) {
+				$this->source_id = pmb_mysql_result($myQuery, 0, 0);
 			}
 		}
-	
+
+		if(!empty($this->source_id)){
+			$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '7%' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
+			$res_sql=pmb_mysql_query($rqt);
+
+			$id_aut="";
+			$n_aut=-1;
+			while ($l=pmb_mysql_fetch_object($res_sql)) {
+				if ($l->field_order!=$id_aut) {
+					$n_aut++;
+					switch ($l->ufield) {
+						case "700":
+						case "710":
+							$responsabilites[]=0;
+							break;
+						case "701":
+						case "711":
+							$responsabilites[]=1;
+							break;
+						case "702":
+						case "712":
+							$responsabilites[]=2;
+							break;
+					}
+					switch (substr($l->ufield,0,2)) {
+						case "70":
+							$auteurs[$n_aut]["type"]=1;
+							break;
+						case "71":
+							$auteurs[$n_aut]["type"]=2;
+							break;
+					}
+					$auteurs[$n_aut]["id"]=(isset($l->recid) ? $l->recid : '').$l->field_order;
+					$id_aut=$l->field_order;
+				}
+				switch ($l->usubfield) {
+					case '4':
+						$auteurs[$n_aut]['fonction']=$l->value;
+						$auteurs[$n_aut]['fonction_aff']=$fonction_auteur[$l->value];
+						break;
+					case 'a':
+						$auteurs[$n_aut]['name']=$l->value;
+						break;
+					case 'b':
+						if ($auteurs[$n_aut]['type']==2) {
+							$auteurs[$n_aut]['subdivision']=$l->value;
+						} else {
+							$auteurs[$n_aut]['rejete']=$l->value;
+						}
+						break;
+					case 'd':
+						if ($auteurs[$n_aut]['type']==2) {
+							$auteurs[$n_aut]['numero']=$l->value;
+						}
+						break;
+					case 'e':
+						if ($auteurs[$n_aut]['type']==2) {
+							$auteurs[$n_aut]['lieu'].=(($auteurs[$n_aut]['lieu'])?'; ':'').$l->value;
+						}
+						break;
+					case 'f':
+						$auteurs[$n_aut]['date']=$l->value;
+						break;
+					case 'g':
+						if ($auteurs[$n_aut]['type']==2) {
+							$auteurs[$n_aut]['rejete']=$l->value;
+						}
+						break;
+				}
+			}
+		}
+
 		foreach($auteurs as $n_aut=>$auteur) {
 			$auteurs[$n_aut]['auteur_titre']=(!empty($auteurs[$n_aut]['rejete'])? $auteurs[$n_aut]['rejete'].' ' : '').$auteurs[$n_aut]['name'];
 			if ($auteur['type']==2 && ($auteurs[$n_aut]['subdivision'] || $auteurs[$n_aut]['numero'] || $auteurs[$n_aut]['date'] || $auteurs[$n_aut]['lieu'])) {
@@ -907,13 +933,12 @@ class record_datas_unimarc {
 			}
 			$auteurs[$n_aut]['auteur_isbd']=$auteurs[$n_aut]['auteur_titre'].(!empty($auteurs[$n_aut]['fonction_aff'])?' ,':'').(isset($auteurs[$n_aut]['fonction_aff']) ? $auteurs[$n_aut]['fonction_aff'] : '');
 		}
-	
-		if (!isset($responsabilites)) $responsabilites = array();
+
 		if (!$auteurs) $auteurs = array();
 		$res["responsabilites"] = $responsabilites ;
 		$res["auteurs"] = $auteurs ;
 		$this->responsabilites = $res;
-	
+
 		// $this->auteurs_principaux
 		// on ne prend que le auteur_titre = "Prenom NOM"
 		$as = array_search ("0", $this->responsabilites["responsabilites"]) ;
@@ -931,7 +956,7 @@ class record_datas_unimarc {
 				$auteurs_liste = implode ("; ",$aut1_libelle) ;
 				if ($auteurs_liste) $this->auteurs_principaux = $auteurs_liste ;
 				}
-	
+
 		// $this->auteurs_tous
 		$mention_resp = array() ;
 		$as = array_search ("0", $this->responsabilites["responsabilites"]) ;
@@ -940,7 +965,7 @@ class record_datas_unimarc {
 			$mention_resp_lib = $auteur_0["auteur_isbd"];
 			$mention_resp[] = $mention_resp_lib ;
 			}
-	
+
 		$as = array_keys ($this->responsabilites["responsabilites"], "1" ) ;
 		for ($i = 0 ; $i < count($as) ; $i++) {
 			$indice = $as[$i] ;
@@ -948,7 +973,7 @@ class record_datas_unimarc {
 			$mention_resp_lib = $auteur_1["auteur_isbd"];
 			$mention_resp[] = $mention_resp_lib ;
 			}
-	
+
 		$as = array_keys ($this->responsabilites["responsabilites"], "2" ) ;
 		for ($i = 0 ; $i < count($as) ; $i++) {
 			$indice = $as[$i] ;
@@ -956,88 +981,93 @@ class record_datas_unimarc {
 			$mention_resp_lib = $auteur_2["auteur_isbd"];
 			$mention_resp[] = $mention_resp_lib ;
 			}
-	
+
 		$libelle_mention_resp = implode ("; ",$mention_resp) ;
 		if ($libelle_mention_resp) $this->auteurs_tous = $libelle_mention_resp ;
 			else $this->auteurs_tous ="" ;
 	} // fin fetch_auteurs
-	
-	
+
+
 	// recuperation des categories ------------------------------------------------------------------
 	private function fetch_categories() {
 		$this->categories = array();
-		if(!$this->source_id){
+		if(empty($this->source_id)){
 			$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->id);
 			$myQuery = pmb_mysql_query($requete);
-			$this->source_id = pmb_mysql_result($myQuery, 0, 0);
+			if(pmb_mysql_num_rows($myQuery)) {
+				$this->source_id = pmb_mysql_result($myQuery, 0, 0);
+			}
 		}
-		
-		$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '60%' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
-		$res_sql=pmb_mysql_query($rqt);
-		
-		$id_categ="";
-		$n_categ=-1;
-		$categ_l=array();
-		while ($l=pmb_mysql_fetch_object($res_sql)) {
-		    if ($l->field_order!=$id_categ) {
-		        if ($n_categ!=-1) {
-		            $categ_libelle = (!empty($categ_l["a"][0]) ? $categ_l["a"][0] : "").(!empty($categ_l["x"])?" - ".implode(" - ",$categ_l["x"]):"").(!empty($categ_l["y"]) ?" - ".implode(" - ",$categ_l["y"]):"").(!empty($categ_l["z"]) ?" - ".implode(" - ",$categ_l["z"]):"");
-		            $this->categories[] = $categ_libelle;
-		        }
-		        $categ_l=array();
-		        $n_categ++;
-		        $id_categ=$l->field_order;
-		    }
-		    $categ_l[$l->usubfield][]=$l->value;
-		}
-		if ($n_categ>=0) {
-		    $categ_libelle = (!empty($categ_l["a"][0]) ? $categ_l["a"][0] : "").(!empty($categ_l["x"])?" - ".implode(" - ",$categ_l["x"]):"").(!empty($categ_l["y"]) ?" - ".implode(" - ",$categ_l["y"]):"").(!empty($categ_l["z"]) ?" - ".implode(" - ",$categ_l["z"]):"");
-		    $this->categories[] =$categ_libelle;
+
+		if(!empty($this->source_id)){
+			$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '60%' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
+			$res_sql=pmb_mysql_query($rqt);
+
+			$id_categ="";
+			$n_categ=-1;
+			$categ_l=array();
+			while ($l=pmb_mysql_fetch_object($res_sql)) {
+				if ($l->field_order!=$id_categ) {
+					if ($n_categ!=-1) {
+						$categ_libelle = (!empty($categ_l["a"][0]) ? $categ_l["a"][0] : "").(!empty($categ_l["x"])?" - ".implode(" - ",$categ_l["x"]):"").(!empty($categ_l["y"]) ?" - ".implode(" - ",$categ_l["y"]):"").(!empty($categ_l["z"]) ?" - ".implode(" - ",$categ_l["z"]):"");
+						$this->categories[] = $categ_libelle;
+					}
+					$categ_l=array();
+					$n_categ++;
+					$id_categ=$l->field_order;
+				}
+				$categ_l[$l->usubfield][]=$l->value;
+			}
+			if ($n_categ>=0) {
+				$categ_libelle = (!empty($categ_l["a"][0]) ? $categ_l["a"][0] : "").(!empty($categ_l["x"])?" - ".implode(" - ",$categ_l["x"]):"").(!empty($categ_l["y"]) ?" - ".implode(" - ",$categ_l["y"]):"").(!empty($categ_l["z"]) ?" - ".implode(" - ",$categ_l["z"]):"");
+				$this->categories[] =$categ_libelle;
+			}
 		}
 	}
-	
+
 	private function fetch_langues() {
-		global $dbh;
-	
 		global $marc_liste_langues ;
 		if (!$marc_liste_langues) $marc_liste_langues=new marc_list('lang');
-	
-		if(!$this->source_id){
+
+		if(empty($this->source_id)){
 			$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->id);
-			$myQuery = pmb_mysql_query($requete, $dbh);
-			$this->source_id = pmb_mysql_result($myQuery, 0, 0);
+			$myQuery = pmb_mysql_query($requete);
+			if(pmb_mysql_num_rows($myQuery)) {
+				$this->source_id = pmb_mysql_result($myQuery, 0, 0);
+			}
 		}
-	
-		$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '101' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
-		$res_sql=pmb_mysql_query($rqt);
-	
+
 		$langues = array();
 		$languesorg = array();
-	
-		$subfield=array("0"=>"a","1"=>"c");
-	
-		while ($l=pmb_mysql_fetch_object($res_sql)) {
-			if ($l->usubfield == 'a') {
-				if ($marc_liste_langues->table[$l->value]) {
-					$langues[] = array(
-						'code' => $l->value,
-						'langue' => $marc_liste_langues->table[$l->value]
-					) ;
+		if(!empty($this->source_id)){
+			$rqt = "select ufield,field_order,usubfield,subfield_order,value from entrepot_source_".$this->source_id." where recid='".addslashes($this->id)."' and ufield like '101' group by ufield,usubfield,field_order,subfield_order,value order by recid,field_order,subfield_order";
+			$res_sql=pmb_mysql_query($rqt);
+
+			//$subfield=array("0"=>"a","1"=>"c");
+
+			while ($l=pmb_mysql_fetch_object($res_sql)) {
+				if ($l->usubfield == 'a') {
+					if (isset($marc_liste_langues->table[$l->value])) {
+						$langues[] = array(
+								'code' => $l->value,
+								'langue' => $marc_liste_langues->table[$l->value]
+						) ;
+					}
+				}
+				if ($l->usubfield == 'c') {
+					if (isset($marc_liste_langues->table[$l->value])) {
+						$languesorg[] = array(
+								'code' => $l->value,
+								'langue' => $marc_liste_langues->table[$l->value]
+						) ;
+					}
 				}
 			}
-			if ($l->usubfield == 'c') {
-				if ($marc_liste_langues->table[$l->value]) {
-					$languesorg[] = array(
-						'code' => $l->value,
-						'langue' => $marc_liste_langues->table[$l->value]
-					) ;
-				}
-			}
-		}	
+		}
 		$this->langues['langues'] = $langues;
 		$this->langues['languesorg'] = $languesorg;
 	}
-	
+
 	/**
 	 * Retourne l'identifiant de la notice
 	 * @return int
@@ -1045,7 +1075,7 @@ class record_datas_unimarc {
 	public function get_id() {
 	    return $this->id;
 	}
-	
+
 	/**
 	 * Retourne les infos de bulletinage
 	 *
@@ -1055,7 +1085,7 @@ class record_datas_unimarc {
 	public function get_bul_info() {
 	    return array();
 	}
-	
+
 	/**
 	 * Retourne le type de document
 	 *
@@ -1065,9 +1095,9 @@ class record_datas_unimarc {
 	    if (!$this->notice->typdoc) $this->notice->typdoc='a';
 	    return $this->notice->typdoc;
 	}
-	
+
 	/**
-	 * Retourne les donnÃ©es de la sÃ©rie si il y en a une
+	 * Retourne les données de la série si il y en a une
 	 *
 	 * @return array
 	 */
@@ -1077,28 +1107,28 @@ class record_datas_unimarc {
 	        if (!empty($this->notice->serie_name)) {
                 $this->serie = array(
                     'name' => $this->notice->serie_name
-                );	            
+                );
 	        }
 	    }
 	    return $this->serie;
 	}
-	
+
 	/**
 	 * Retourne un tableau des auteurs
-	 * @return array Tableaux des responsabilitÃ©s = array(
+	 * @return array Tableaux des responsabilités = array(
 	 'responsabilites' => array(),
 	 'auteurs' => array()
 	 );
 	 */
 	public function get_responsabilites() {
 	    global $fonction_auteur;
-	    
+
 	    if (!count($this->responsabilites)) {
 	        $this->fetch_auteurs();
 	    }
 	    return $this->responsabilites;
 	}
-	
+
 	/**
 	 * Retourne les auteurs principaux
 	 * @return string auteur1 ; auteur2 ...
@@ -1106,7 +1136,7 @@ class record_datas_unimarc {
 	public function get_auteurs_principaux() {
 	    if (!$this->auteurs_principaux) {
 	        $this->get_responsabilites();
-	        // on ne prend que le auteur_titre = "PrÃ©nom NOM"
+	        // on ne prend que le auteur_titre = "Prénom NOM"
 // 	        $as = array_search("0", $this->responsabilites["responsabilites"]);
 // 	        if (($as !== FALSE) && ($as !== NULL)) {
 // 	            $auteur_0 = $this->responsabilites["auteurs"][$as];
@@ -1130,7 +1160,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->auteurs_principaux;
 	}
-	
+
 	/**
 	 * Retourne les auteurs secondaires
 	 * @return string auteur1 ; auteur2 ...
@@ -1155,10 +1185,10 @@ class record_datas_unimarc {
 	    }
 	    return $this->auteurs_secondaires;
 	}
-	
+
 	/**
-	 * Retourne les catÃ©gories de la notice
-	 * @return categorie Tableau des catÃ©gories
+	 * Retourne les catégories de la notice
+	 * @return categorie Tableau des catégories
 	 */
 	public function get_categories() {
 	    if (!isset($this->categories)) {
@@ -1166,7 +1196,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->categories;
 	}
-	
+
 	/**
 	 * Retourne le titre uniforme
 	 * @return tu_notice
@@ -1174,7 +1204,7 @@ class record_datas_unimarc {
 	public function get_titres_uniformes() {
 	    return $this->titres_uniformes;
 	}
-	
+
 	/**
 	 * Retourne le tableau des langues de la notices
 	 * @return array $this->langues = array('langues' => array(), 'languesorg' => array())
@@ -1184,18 +1214,18 @@ class record_datas_unimarc {
 	        $this->fetch_langues();
 	    }
 	    return $this->langues;
-	}	
-	
+	}
+
 	/**
-	 * Retourne le nombre de bulletins associÃ©s
+	 * Retourne le nombre de bulletins associés
 	 * @return int
 	 */
 	public function get_nb_bulletins(){
 	    return 0;
 	}
-	
+
 	/**
-	 * Retourne le tableau des bulletins associÃ©s Ã  la notice
+	 * Retourne le tableau des bulletins associés à la notice
 	 * @return array $this->bulletins[] = array('id', 'numero', 'mention_date', 'date_date', 'bulletin_titre', 'num_notice')
 	 */
 	public function get_bulletins(){
@@ -1203,49 +1233,49 @@ class record_datas_unimarc {
 	    }
 	    return $this->bulletins;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->niveau_biblio
 	 */
 	public function get_niveau_biblio() {
 	    return $this->notice->niveau_biblio;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->niveau_hierar
 	 */
 	public function get_niveau_hierar() {
 	    return $this->notice->niveau_hierar;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->tit1
 	 */
 	public function get_tit1() {
 	    return $this->notice->tit1;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->tit2
 	 */
 	public function get_tit2() {
 	    return $this->notice->tit2;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->tit3
 	 */
 	public function get_tit3() {
 	    return $this->notice->tit3;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->tit4
 	 */
 	public function get_tit4() {
 	    return $this->notice->tit4;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->code
 	 */
@@ -1255,7 +1285,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->notice->code;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->npages
 	 */
@@ -1265,22 +1295,22 @@ class record_datas_unimarc {
 	    }
 	    return $this->notice->npages;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->year
 	 */
 	public function get_year() {
 	    return $this->notice->year;
 	}
-	
+
 	/**
-	 * Retourne un tableau des Ã©diteurs
-	 * @return publisher Tableau des instances d'Ã©diteurs
+	 * Retourne un tableau des éditeurs
+	 * @return publisher Tableau des instances d'éditeurs
 	 */
 	public function get_publishers() {
 	    return $this->publishers;
 	}
-	
+
 	/**
 	 * Retourne l'icone du type de document
 	 * @return string
@@ -1295,9 +1325,9 @@ class record_datas_unimarc {
 	    }
 	    return $this->icon_doc;
 	}
-	
+
 	/**
-	 * Retourne le libellÃ© du niveau biblio
+	 * Retourne le libellé du niveau biblio
 	 * @return string
 	 */
 	public function get_biblio_doc() {
@@ -1307,9 +1337,9 @@ class record_datas_unimarc {
 	    }
 	    return $this->biblio_doc;
 	}
-	
+
 	/**
-	 * Retourne le libellÃ© du type de document
+	 * Retourne le libellé du type de document
 	 * @return string
 	 */
 	public function get_tdoc() {
@@ -1319,42 +1349,42 @@ class record_datas_unimarc {
 	    }
 	    return $this->tdoc;
 	}
-	
+
 	/**
-	 * Retourne le tableau des mots clÃ©s
+	 * Retourne le tableau des mots clés
 	 * @return array
 	 */
 	public function get_mots_cles() {
 	    if (!isset($this->mots_cles)) {
 	        global $pmb_keyword_sep;
 	        if (!$pmb_keyword_sep) $pmb_keyword_sep=" ";
-	        
+
 	        if (!trim($this->notice->index_l)) return "";
-	        
+
 	        $this->mots_cles = explode($pmb_keyword_sep,trim($this->notice->index_l)) ;
 	    }
 	    return $this->mots_cles;
 	}
-	
+
 	/**
-	 * Retourne l'indexation dÃ©cimale
+	 * Retourne l'indexation décimale
 	 * @return indexint
 	 */
-	public function get_indexint() {	    
+	public function get_indexint() {
 	    if(!$this->indexint && $this->notice->indexint) {
 	        $this->indexint = $this->notice->indexint;
 	    }
 	    return $this->indexint;
 	}
-	
+
 	/**
-	 * Retourne le rÃ©sumÃ©
+	 * Retourne le résumé
 	 * @return string
 	 */
 	public function get_resume() {
 	    return $this->notice->n_resume;
 	}
-	
+
 	/**
 	 * Retourne le contenu
 	 * @return string
@@ -1362,19 +1392,60 @@ class record_datas_unimarc {
 	public function get_contenu() {
 	    return $this->notice->n_contenu;
 	}
-	
-	/**
-	 * Retourne $this->notice->lien
-	 * @return string
-	 */
-	public function get_lien() {
-	    if (isset($this->lien)) {
-	        return $this->lien;
-	    }
-	    $this->lien = $this->notice->lien;
-	    return $this->lien;
+
+    /**
+     * Retourne $this->notice->lien
+     *
+     * @return string
+     */
+    public function get_lien()
+    {
+        if (isset($this->lien)) {
+            return $this->lien;
+        }
+        $this->lien = $this->notice->lien;
+        $this->get_source();
+
+        switch (true) {
+
+            // Divercities
+            case ((! empty($_SESSION['id_empr_session'])) && (! empty($this->source)) && ($this->source['connector'] == 'divercities')):
+
+                $params = [
+                    'source_id' => $this->source['source_id'],
+                    'empr_id' => $_SESSION['id_empr_session'],
+                ];
+                $this->lien = divercities::get_resource_link($this->source['ref'], $params);
+                break;
+
+            // Cairn
+            case (((! empty($this->source)) && ($this->source['connector'] == 'cairn')) || (strpos($this->lien, "cairn.info") !== false)):
+
+                $cairn_connector = new cairn();
+                $cairn_sso_params = $cairn_connector->get_sso_params();
+                if ($cairn_sso_params && (strpos($this->lien, "?") === false)) {
+                    $this->lien .= "?";
+                    $cairn_sso_params = substr($cairn_sso_params, 1);
+                }
+                $this->lien .= $cairn_sso_params;
+                break;
+
+            // C3RB
+            case (((! empty($_SESSION['id_empr_session'])) && ! empty($this->source)) && ($this->source['connector'] == 'c3rb')):
+                $params = [
+                    'source_id' => $this->source['source_id'],
+                    'empr_id' => $_SESSION['id_empr_session'],
+                    'link' => $this->lien,
+                ];
+                $this->lien = c3rb::get_resource_link($this->source['ref'], $params);
+                break;
+
+            default:
+                break;
+        }
+        return $this->lien;
 	}
-	
+
 	public function get_source_label() {
 	    $label = '';
 	    $query = "SELECT connectors_sources.name FROM external_count
@@ -1386,12 +1457,12 @@ class record_datas_unimarc {
 	    }
 	    return $label;
 	}
-	
+
 	public function get_source() {
 	    if (isset($this->source)) {
 	        return $this->source;
 	    }
-	    $this->source = array();
+	    $this->source =[];
 	    $query = "SELECT recid FROM external_count WHERE rid = " . $this->id;
 	    $result = pmb_mysql_query($query);
 	    if (pmb_mysql_num_rows($result)) {
@@ -1407,7 +1478,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->source;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->eformat
 	 * @return string
@@ -1415,7 +1486,7 @@ class record_datas_unimarc {
 	public function get_eformat() {
 	    return $this->notice->eformat;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->tnvol
 	 * @return string
@@ -1423,7 +1494,7 @@ class record_datas_unimarc {
 	public function get_tnvol() {
 	    return $this->notice->tnvol;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->mention_edition
 	 * @return string
@@ -1431,18 +1502,18 @@ class record_datas_unimarc {
 	public function get_mention_edition() {
 	    return $this->notice->mention_edition;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->nocoll
 	 * @return string
 	 */
 	public function get_nocoll() {
-	    if (!$this->notice->nocoll && $this->notice->coll->num) {
+	    if (!$this->notice->nocoll && isset($this->notice->coll->num)) {
 	        $this->notice->nocoll = $this->notice->coll->num;
 	    }
 	    return $this->notice->nocoll;
 	}
-	
+
 	/**
 	 * Retourne la collection
 	 * @return collection
@@ -1453,7 +1524,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->collection;
 	}
-	
+
 	/**
 	 * Retourne la sous-collection
 	 * @return subcollection
@@ -1464,7 +1535,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->subcollection;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->ill
 	 * @return string
@@ -1472,7 +1543,7 @@ class record_datas_unimarc {
 	public function get_ill() {
 	    return $this->notice->ill;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->size
 	 * @return string
@@ -1480,7 +1551,7 @@ class record_datas_unimarc {
 	public function get_size() {
 	    return $this->notice->size;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->accomp
 	 * @return string
@@ -1488,7 +1559,7 @@ class record_datas_unimarc {
 	public function get_accomp() {
 	    return $this->notice->accomp;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->prix
 	 * @return string
@@ -1496,7 +1567,7 @@ class record_datas_unimarc {
 	public function get_prix() {
 	    return $this->notice->prix;
 	}
-	
+
 	/**
 	 * Retourne $this->notice->n_gen
 	 * @return string
@@ -1504,7 +1575,7 @@ class record_datas_unimarc {
 	public function get_n_gen() {
 	    return $this->notice->n_gen;
 	}
-	
+
 	/**
 	 * Retourne le permalink
 	 * @return string
@@ -1512,9 +1583,9 @@ class record_datas_unimarc {
 	public function get_permalink() {
 	    return "";
 	}
-	
+
 	/**
-	 * Retourne les donnÃ©es d'exemplaires
+	 * Retourne les données d'exemplaires
 	 * @return array
 	 */
 	public function get_expls_datas() {
@@ -1527,7 +1598,7 @@ class record_datas_unimarc {
             $final_location = array();
             foreach ($this->exemplaires as $expl) {
                 $alocation = array();
-                //Si on trouve une localisation, on la convertie en libelle et on l'oublie si spÃ©cifiÃ©
+                //Si on trouve une localisation, on la convertie en libelle et on l'oublie si spécifié
                 if (isset($expl["v"]) && preg_match("/\d{9}/", $expl["v"]) && $this->entrepots_localisations) {
                     if (isset($this->entrepots_localisations[$expl["v"]])) {
                         if (!$this->entrepots_localisations[$expl["v"]]["visible"]) {
@@ -1558,7 +1629,7 @@ class record_datas_unimarc {
 	}
 
 	/**
-	 * Retourne l'URL calculÃ©e de l'image
+	 * Retourne l'URL calculée de l'image
 	 * @return string
 	 */
 	public function get_picture_url() {
@@ -1572,7 +1643,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->picture_url;
 	}
-	
+
 	/**
 	 * Retourne le texte au survol de l'image
 	 * @return string
@@ -1586,7 +1657,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->picture_title;
 	}
-	
+
 	/**
 	 * Retourne le tableau des relations parentes
 	 * @return array
@@ -1597,7 +1668,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->relations_up;
 	}
-	
+
 	/**
 	 * Retourne le tableau des relations enfants
 	 * @return array
@@ -1608,7 +1679,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->relations_down;
 	}
-	
+
 	/**
 	 * Retourne le tableau des relations horizontales
 	 * @return array
@@ -1619,9 +1690,9 @@ class record_datas_unimarc {
 	    }
 	    return $this->relations_both;
 	}
-	
+
 	/**
-	 * Retourne les dÃ©pouillements
+	 * Retourne les dépouillements
 	 * @return string Tableau des affichage des articles
 	 */
 	public function get_articles() {
@@ -1630,7 +1701,7 @@ class record_datas_unimarc {
 	    }
 	    return $this->articles;
 	}
-	
+
 	/**
 	 * Retourne les informations de notice externe
 	 */
@@ -1652,42 +1723,42 @@ class record_datas_unimarc {
 	    }
 	    return $this->external_rec_id;
 	}
-	
+
 	/**
-	 * Retourne l'affichage rÃ©duit d'une notice
+	 * Retourne l'affichage réduit d'une notice
 	 */
-	public function get_aff_notice_reduit() {	    
+	public function get_aff_notice_reduit() {
 	    return aff_notice_unimarc($this->id, 0, array(), AFF_ETA_NOTICES_REDUIT);
 	}
-	
+
 	/**
 	 * Affecte $external_parameters
 	 */
 	public function set_external_parameters($external_parameters) {
 	    $this->external_parameters = $external_parameters;
 	}
-	
+
 	/**
 	 * Retourne $external_parameters
 	 */
 	public function get_external_parameters() {
 	    return $this->external_parameters;
 	}
-	
+
 	public static function format_url($url) {
 	    global $base_path;
 	    global $use_opac_url_base, $opac_url_base;
-	    
+
 	    if($use_opac_url_base) return $opac_url_base.$url;
 	    else return $base_path.'/'.$url;
 	}
-	
+
 	protected function get_parameter_value($name) {
 	    $parameter_name = 'opac_'.$name;
 	    global ${$parameter_name};
 	    return ${$parameter_name};
 	}
-	
+
 	/**
 	 * Renvoie le lien pour contribuer sur un exemplaire de la notice
 	 * @return string
@@ -1695,15 +1766,15 @@ class record_datas_unimarc {
 	public function get_expl_contribution_link() {
 	    return "";
 	}
-	
+
 	public function get_source_id() {
 	    return $this->source_id;
 	}
-	
+
 	public function get_connector_id() {
 	    return $this->connector_id;
 	}
-	
+
 	private function get_notice_class() {
 	    $notice = new stdClass();
 	    //$notice->id            = 0;   // id de la notice
@@ -1711,55 +1782,55 @@ class record_datas_unimarc {
 	    $notice->typdocdisplay = '';  // type du document
 	    $notice->tit1          = '';  // titre propre
 	    $notice->tit2          = '';  // titre propre 2
-	    $notice->tit3          = '';  // titre parallÃ¨le
-	    $notice->tit4          = '';  // complÃ©ment du titre
+	    $notice->tit3          = '';  // titre parallèle
+	    $notice->tit4          = '';  // complément du titre
 	    $notice->tparent_id    = 0;   // id du titre parent
-	    $notice->tparent       = '';  // libellÃ© du titre parent
-	    $notice->tnvol         = '';  // numÃ©ro de partie
+	    $notice->tparent       = '';  // libellé du titre parent
+	    $notice->tnvol         = '';  // numéro de partie
 	    $notice->responsabilites =    array("responsabilites" => array(),"auteurs" => array());  // les auteurs
-	    $notice->ed1_id        = 0;   // id Ã©diteur 1
-	    $notice->ed1           = '';  // libellÃ© Ã©diteur 1
+	    $notice->ed1_id        = 0;   // id éditeur 1
+	    $notice->ed1           = '';  // libellé éditeur 1
 	    $notice->coll_id       = 0;   // id collection
-	    $notice->coll          = '';  // libellÃ© collection
+	    $notice->coll          = '';  // libellé collection
 	    $notice->subcoll_id    = 0;   // id sous collection
-	    $notice->subcoll       = '';  // libellÃ© sous collection
-	    $notice->ed2_id        = 0;   // id Ã©diteur 2
-	    $notice->ed2           = '';  // libellÃ© Ã©diteur 2
+	    $notice->subcoll       = '';  // libellé sous collection
+	    $notice->ed2_id        = 0;   // id éditeur 2
+	    $notice->ed2           = '';  // libellé éditeur 2
 	    $notice->code          = '';  // ISBN, code barre commercial ou no. commercial
-	    $notice->npages        = '';  // importance matÃ©rielle (nombre de pages, d'Ã©lÃ©ments...)
+	    $notice->npages        = '';  // importance matérielle (nombre de pages, d'éléments...)
 	    $notice->ill           = '';  // mention d'illustration
 	    $notice->size          = '';  // format
 	    $notice->prix = '';            // prix du document
-	    $notice->year          = '';  // annÃ©e de publication
+	    $notice->year          = '';  // année de publication
 	    $notice->nocoll        = '';  // no. dans la collection
-	    $notice->accomp        = '';  // matÃ©riel d'accompagnement
-	    $notice->n_gen         = array();  // note gÃ©nÃ©rale
+	    $notice->accomp        = '';  // matériel d'accompagnement
+	    $notice->n_gen         = array();  // note générale
 	    $notice->n_contenu     = array();  // note de contenu
-	    $notice->n_resume      = array();  // resumÃ©/extrait
+	    $notice->n_resume      = array();  // resumé/extrait
 	    $notice->categories =array(); // les categories
 	    $notice->indexint =  array();        // indexation interne
 	    $notice->index_l       = '';  // indexation libre
-	    $notice->lien          = '';  // URL de la ressource Ã©lectronique associÃ©e
-	    $notice->eformat       = '';  // format de la ressource Ã©lectronique associÃ©e
-	    $notice->index_sew    = '';  // pseudo index titre strippÃ©
+	    $notice->lien          = '';  // URL de la ressource électronique associée
+	    $notice->eformat       = '';  // format de la ressource électronique associée
+	    $notice->index_sew    = '';  // pseudo index titre strippé
 	    $notice->index_wew    = '';  // pseudo index titre
 	    $notice->index_serie   = '';  // pseudo index serie
 	    $notice->statut         = ''; //statut de la notice
-	    $notice->niveau_biblio = 'm'; //niveau biblio utilisÃ© pour les pÃ©riodiques : 'm' monographie 'a' article
-	    $notice->niveau_hierar = '0'; //niveau hiÃ©rarchique utilisÃ© pour les pÃ©riodiques
-	    
+	    $notice->niveau_biblio = 'm'; //niveau biblio utilisé pour les périodiques : 'm' monographie 'a' article
+	    $notice->niveau_hierar = '0'; //niveau hiérarchique utilisé pour les périodiques
+
 	    $notice->validfields   = 0;   // champs valides
-	    $notice->create_date   = "0000-00-00 00:00:00"; // date crÃ©ation
+	    $notice->create_date   = "0000-00-00 00:00:00"; // date création
 	    $notice->date_parution = "0000-00-00 00:00:00"; // date parution
 	    $notice->thumbnail_url = '';
 	    $notice->bull_num = '';
 	    $notice->perio_title = '';
-	    
+
 	    return $notice;
 	}
-	
+
 	/**
-	 * Retourne les paramÃ¨tres persos
+	 * Retourne les paramètres persos
 	 * @return array
 	 */
 	public function get_p_perso() {
@@ -1806,5 +1877,15 @@ class record_datas_unimarc {
 	        return strcmp($c1, $c2);
 	    }
 	    return $c2-$c1;
+	}
+
+	/**
+	 * Retourne $this->notice->thumbnail_url
+	 */
+	public function get_thumbnail_url() {
+	    if (isset($this->notice->thumbnail_url)) {
+    	    return $this->notice->thumbnail_url;
+	    }
+	    return "";
 	}
 }

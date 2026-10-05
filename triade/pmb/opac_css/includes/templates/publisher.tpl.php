@@ -1,37 +1,37 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: publisher.tpl.php,v 1.13 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: publisher.tpl.php,v 1.13 2019/05/29 11:23:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// ce fichier contient des templates indiquant comment doit s'afficher un Ã©diteur
+// ce fichier contient des templates indiquant comment doit s'afficher un éditeur
 
 if ( ! defined( 'EDITEUR_TMPL' ) ) {
   define( 'EDITEUR_TMPL', 1 );
 
 //	----------------------------------
-//	$publisher_display : Ã©cran d'info pour un Ã©diteur
+//	$publisher_display : écran d'info pour un éditeur
 // Liste des variables statiques prises en charges :
-// !!id!!        identifiant de l'Ã©diteur
-// !!name!!      nom de l'Ã©diteur
-// !!adr1!!      champ 1 de l'adresse de l'Ã©diteur
-// !!adr2!!      champ 2 de l'adresse de l'Ã©diteur
-// !!cp!!        code postal de l'adresse de l'Ã©diteur
-// !!ville!!     ville de l'adresse de l'Ã©diteur
-// !!pays!!      pays de l'adresse de l'Ã©diteur
-// !!web!!       site web de l'Ã©diteur
-// !!isbd!!      affichage isbd de l'Ã©diteur
+// !!id!!        identifiant de l'éditeur
+// !!name!!      nom de l'éditeur
+// !!adr1!!      champ 1 de l'adresse de l'éditeur
+// !!adr2!!      champ 2 de l'adresse de l'éditeur
+// !!cp!!        code postal de l'adresse de l'éditeur
+// !!ville!!     ville de l'adresse de l'éditeur
+// !!pays!!      pays de l'adresse de l'éditeur
+// !!web!!       site web de l'éditeur
+// !!isbd!!      affichage isbd de l'éditeur
 
 // Liste des variables dynamiques prises en charges. Les affichages dynamiques sont cliquables le plus souvent
-// !!link!!      lien vers site web de l'Ã©diteur
-// !!colls!!     collections de l'Ã©diteur
-// !!address!!   adresse complÃ¨te
+// !!link!!      lien vers site web de l'éditeur
+// !!colls!!     collections de l'éditeur
+// !!address!!   adresse complète
 
 global $publisher_level2_display, $msg;
 
-// level 2 : affichage gÃ©nÃ©ral
+// level 2 : affichage général
 $publisher_level2_display = "
 <div class=publisherlevel2>
 <h3>".sprintf($msg["publisher_details_publisher"],"!!name!!")." !!site_web!!</h3>
@@ -46,4 +46,4 @@ $publisher_level2_display = "
 </div>
 ";
 
-} # fin de dÃ©finition
+} # fin de définition

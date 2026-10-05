@@ -15,7 +15,7 @@ if (isset($_POST['saisie_trimestre'])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -55,6 +55,12 @@ if ($id != 1) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<style>
+input.btn-primary{background:#080A66;color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:'Trebuchet MS',Arial}
+input.btn-primary:hover{background:#1a237e}
+input.btn-secondary{background:#fff;color:#080A66;border:1px solid #080A66;border-radius:5px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:'Trebuchet MS',Arial}
+input.btn-secondary:hover{background:#e8eaf6}
+</style>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
@@ -105,11 +111,11 @@ function prepEnvoi() {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();"  >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?> </font></b></td></tr>
 <tr  id='cadreCentral0' >
@@ -136,6 +142,11 @@ if ($_SESSION["membre"] == "menuprof") {
 		validerequete("2");
 	}
 }
+
+$previsu="non";
+if (isset($_POST['previsu'])) $previsu="oui";
+
+
 $idclasse=$_POST["saisie_classe"];
 $nbEleve=nbEleve($idclasse,$_POST["anneeScolaire"]);
 $typebull=trim($_POST["typebull"]);
@@ -247,11 +258,16 @@ if ($typebull == "bul9999i") { $bull="bulletin_construction_vatel_ilemaurice.php
 if ($typebull == "bull01001") { $bull="bulletin_construction01001.php"; }
 if ($typebull == "bullFr6eme") { $bull="bulletin_construction_bullFr6eme.php"; }
 if ($typebull == "bullFrCycle") { $bull="bulletin_construction_bullFrCycle.php"; }
-?>
 
+if ($previsu == "non") { ?>
 <form method=post action="<?php print $bull ?>" onSubmit="document.formulaire5.rien.disabled=true;"  name="formulaire5" >
+<input type='hidden' name="previsu" value="non" >
+<?php }else{ ?>
+<form method=post action="<?php print $bull ?>" name="formulaire5" >
+<?php } ?>
 <input type='hidden' name='examen' value='<?php print $typebull ?>' />
 <input type='hidden' name="type_pdf" value="pers" >
+<input type='hidden' name="previsu" value="<?php print $previsu ?>" >
 <center>
 
 <?php if ($typebull == "bullFr6eme") { ?>
@@ -287,6 +303,15 @@ if ($typebull == "bullFrCycle") { $bull="bulletin_construction_bullFrCycle.php";
 
 }
 
+
+if ("bull04UE4" == $typebull) {
+                $datap=config_param_visu("hauteurMarge");
+                $hauteurMarge=$datap[0][0];
+		if ($hauteurMarge == "") $hauteurMarge="10";
+                print "<font class='T2'>Hauteur de marge en haut de page :</font> <input type='text' name='hauteurMarge' value=\"$hauteurMarge\" size=2 /> <br />";
+
+}
+
  
 if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bull0109-2") || ($typebull == "bull0103") || ($typebull == "bull01022") || ($typebull == "bull03") ||  ($typebull == "bull01") ||  ($typebull == "bull01b")  || ($typebull == "bull01019") || ($typebull == "bull800")  || ($typebull == "bull0101") || ($typebull == "bull01001") || ($typebull == "bull0101a") || ($typebull == "bull0101b") || ($typebull == "bull01017") || ($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305c") || ($typebull == "bull113") || ($typebull == "bull12") || ($typebull == "bull12bis") || ($typebull == "bull12ter") || ($typebull == "bull503") || ($typebull == "bulllprb") ||  ($typebull == "bull01011" ) ||  ($typebull == "bull01012" ) ||  ($typebull == "bull01013" ) ||  ($typebull == "bull01014" ) ||  ($typebull == "bull01015" ) || ($typebull == "bull01015-2") ||  ($typebull == "bull700" ) || ($typebull == "bull01018" ) ||  ($typebull == "bull01016" ) || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2")||  ($typebull == "bull01UE") ||  ($typebull == "bull04UE") || ($typebull == "bull04UE3") || ($typebull == "bull04UE2") || ($typebull == "bull01XL") || ($typebull == "bull02XL")  || ($typebull == "bull02UE") || ($typebull == "bull03UE") || ($typebull == "bull05UE") || ($typebull == "bull0305d") || ($typebull == "bull099a")  ) {
 ?>
@@ -306,14 +331,18 @@ if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bul
 	<option value="40" id='select1'><?php print "Du 31 au 40ieme &eacute;l&egrave;ves" ?></option>
 	<option value="50" id='select1'><?php print "Du 41 au 50ieme &eacute;l&egrave;ves" ?></option>
 	<option value="60" id='select1'><?php print "Du 51 au 60ieme &eacute;l&egrave;ves" ?></option>
+	<option value="70" id='select1'><?php print "Du 61 au 70ieme &eacute;l&egrave;ves" ?></option>
+	<option value="80" id='select1'><?php print "Du 71 au 80ieme &eacute;l&egrave;ves" ?></option>
+	<option value="90" id='select1'><?php print "Du 81 au 90ieme &eacute;l&egrave;ves" ?></option>
+	<option value="100" id='select1'><?php print "Du 91 au 100ieme &eacute;l&egrave;ves" ?></option>
 	<?php 
 	if (($typebull == "bull0305") || ($typebull == "bull0305a") || ($typebull == "bull0305b") || ($typebull == "bull0305b-nv") || ($typebull == "bull0305b-2") || ($typebull == "bull0305c") || ($typebull == "bull0305d") ) { ?>
 		<optgroup label='Elève/Etudiant'>
 		<?php
-		$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe='$idclasse' AND b.code_class='$idclasse' ORDER BY nom";
+		$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe='$idclasse' AND b.code_class='$idclasse' ORDER BY nom";
 		$res=execSql($sql);
 		$data_eleve=chargeMat($res);
-		for($o=0;$o<count($data_eleve);$o++) {
+		for($o=0;$o<countTriade($data_eleve);$o++) {
 			print "<option value='E_".$data_eleve[$o][1]."' id='select1'>".$data_eleve[$o][2]." ".$data_eleve[$o][3]."</option>";
 		}
 		?>
@@ -392,7 +421,7 @@ if (($typebull == "bull0102") || ($typebull == "bull0109") || ($typebull == "bul
 			print "<br>";
 			print "<table>";
 			$eleveT=recupEleve($idclasse);
-			for($p=0;$p<count($eleveT);$p++) {
+			for($p=0;$p<countTriade($eleveT);$p++) {
 				unset($pt);
 				$ideleve=$eleveT[$p][4];
 				$pt=recupPtAbsBulletin($ideleve,$_POST["saisie_trimestre"],$anneeScolaire,$idclasse);
@@ -591,6 +620,7 @@ if ($typebull == "bull03UE") {
 
 if ($typebull == "bull02UE") {	
 	print "<br><br><br><font class='T2'>Document d'attestation : </font> <input type='checkbox' name='affdocattestation' value='oui' /> <i>(oui)</i>";
+	print "<br><br><br><font class='T2'>Prise en compte note rattrapage : </font> <input type='checkbox' name='recupNoteRattrapage' value='oui' /> <i>(oui)</i>";
 }
 
 if (($typebull == "bull01XL") || ($typebull == "bull02XL")) {
@@ -1280,13 +1310,18 @@ if (($typebull == "bul9999") ||  ($typebull == "bul9999en") || ($typebull == "bu
 
 <?php if (($_SESSION["membre"] != "menuadmin") && ($typebull != "bull03")) { print "</div><br><br><br>"; } ?>
 
-
+<?php
+if ($previsu == "oui") { ?>
+	<table align='center'><tr><td><script language=JavaScript>buttonMagicSubmit3("<?php print "Pré-visualiser" ?>","previsu1","onclick='this.value=\"<?php print LANGBT5 ?>\";AfficheAttente()'");</script></td></tr></table><br><br>
+<?php
+}
+?>
 
 <?php if (($typebull == "bull01015") || ($typebull == "bull01015-2"))    { ?> 
 	<table border=0 align=center width="250"><tr><td align="center">
 	<script language=JavaScript>buttonMagicRetour("imprimer_trimestre.php<?php print $url ?>","_parent")</script>
 	<?php if ($nbEleve > 0) { ?> <script language=JavaScript>buttonMagicSubmit3("<?php print LANGBULL6 ?>","rien","onclick='this.value=\"<?php print LANGBT5 ?>\";AfficheAttente()'");</script>&nbsp;&nbsp;
-	<?php }else{ print "<font id='color3' class='T2 shadow'>Aucun ".INTITULEELEVE." pour cette classe en $anneeScolaire</font>"; } ?>
+<?php }else{ print "<font id='color3' class='T2 shadow'>Aucun ".INTITULEELEVE." pour cette classe en $anneeScolaire</font>"; } ?>
 	</td></tr></table><br /><br />
 
 <?php if ($_SESSION["membre"] != "menuadmin") { print "<div style='display:none' >"; } ?>
@@ -1366,11 +1401,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1386,11 +1421,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1406,11 +1441,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1425,11 +1460,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1444,11 +1479,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1463,11 +1498,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1485,11 +1520,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1503,11 +1538,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1521,11 +1556,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1541,11 +1576,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1559,11 +1594,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1577,11 +1612,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1595,11 +1630,11 @@ $liste_matiere=preg_replace("/\{/","",$idliste[0][1]);
 $liste_matiere=preg_replace("/\}/","",$liste_matiere);
 if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1614,7 +1649,7 @@ EOF;
 <?php 
 
 $data=affMatiere();
-for($i=0;$i<count($data);$i++)  {
+for($i=0;$i<countTriade($data);$i++)  {
 	if ($data[$i][1] != "") {
 		print "<option  id='select1' value='".$data[$i][0]."' title=\"".$data[$a][1]." ".preg_replace("/0$/","",$data[$a][2])."\" >".$data[$i][1]." ".preg_replace("/0$/","",$data[$i][2])."</option>";
         }
@@ -1698,7 +1733,7 @@ if (($typebull == "bull0106") || ($typebull == "bull0107")  || (isset($_POST["fa
 	<?php 
 	
 	$data=affMatiere();
-	for($i=0;$i<count($data);$i++)  {
+	for($i=0;$i<countTriade($data);$i++)  {
 		if ($data[$i][1] != "") {
 			print "<option STYLE='color:#000066;background-color:#CCCCFF' value='".$data[$i][0]."' >".$data[$i][1]." ".preg_replace("/0$/","",$data[$i][2])."</option>";
 	        }
@@ -1742,11 +1777,11 @@ if (($typebull == "bull0106") || ($typebull == "bull0107")  || (isset($_POST["fa
 	$liste_matiere=preg_replace("/\}/","",$liste_matiere);
 	if ($liste_matiere != "") {
 $sql=<<<EOF
-SELECT  code_mat,libelle,sous_matiere FROM ${prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
+SELECT  code_mat,libelle,sous_matiere FROM {$prefixe}matieres WHERE  code_mat IN ($liste_matiere) ORDER BY libelle 
 EOF;
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print ucwords($data[$i][1]).",";
 	}
 }
@@ -1796,8 +1831,8 @@ if ( ($typebull == "bull401") || ($typebull == "bull0101b") || ($typebull == "bu
 	}else{
 		$data=ordre_matiere_visubull($_POST["saisie_classe"],$anneeScolaire); //code_mat,libelle,sous_matiere
 	}
-	$nbmatiere=count($data);
-	for($i=0;$i<count($data);$i++) {
+	$nbmatiere=countTriade($data);
+	for($i=0;$i<countTriade($data);$i++) {
 		$libelle=chercheMatiereNom($data[$i][0]);
 		//$sousmatiere=$data[$i][2];
 		$idmatiere=$data[$i][0];
@@ -1834,7 +1869,7 @@ if (($_POST["saisie_trimestre"] == "trimestre3" && $typebull == "bull02UE") || (
 }else{
 	if ( ($_POST["saisie_trimestre"] != "cycle1") && ($_POST["saisie_trimestre"] != "cycle2") && ($_POST["saisie_trimestre"] != "cycle3") && ($_POST["saisie_trimestre"] != "cycle4")) { 
 		$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-		if (count($dateRecup) == 0) {
+		if (countTriade($dateRecup) == 0) {
 			print "<center><font id='color2'><b>ATTENTION !! Aucune date trimestrielle n'est attribu&eacute;e pour la classe.</b></font></center>";
 		}
 	}

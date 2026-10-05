@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 <!-- 
-$Id: diacritique.xml,v 1.1 2010-12-01 20:06:36 touraine37 Exp $ -->
+$Id: diacritique.xml,v 1.1 2010/12/01 20:06:36 touraine37 Exp $ -->
 <XMLlist>
 	<entry code="a">àáâãäåÀÁÂÃÄÅA</entry>
 	<entry code="e">éèêëÈÉÊËE</entry>

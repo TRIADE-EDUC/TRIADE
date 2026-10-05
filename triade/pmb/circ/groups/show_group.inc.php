@@ -1,20 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: show_group.inc.php,v 1.31 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: show_group.inc.php,v 1.36 2023/07/26 15:07:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $current_module, $action, $msg, $groupID, $debit;
+global $empr_allow_prolong_members_group, $empr_abonnement_default_debit, $pmb_gestion_financiere, $pmb_gestion_abonnement;
+global $group_form_add_membre;
+
 // affichage de la liste des membres d'un groupe
-// rÃ©cupÃ©ration des infos du groupe
+// récupération des infos du groupe
 
 $myGroup = new group($groupID);
 
 if(SESSrights & CATALOGAGE_AUTH){
-	// propriÃ©tÃ©s pour le selecteur de panier 
+	// propriétés pour le selecteur de panier 
 	$cart_click = "onClick=\"openPopUp('".$base_path."/cart.php?object_type=GROUP&item=$groupID', 'cart')\"";
-	$caddie="<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click>";	
+	$caddie="<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click>";	
 }else{
 	$caddie="";	
 }
@@ -25,7 +29,7 @@ print pmb_bidi("
 		
 print pmb_bidi("
 	<div class='row'>
-		<a href=\"./circ.php?categ=groups\">${msg[929]}</a>&nbsp;
+		<a id='search_other_group' href=\"./circ.php?categ=groups\">{$msg[929]}</a>&nbsp;
 	</div>
 	<div class='row'>
 		<div class='colonne3'>
@@ -96,82 +100,13 @@ print "
 				<input type='button' name='group_prolonge_pret' class='bouton' value='".$msg["group_prolonge_pret"]."' onclick=\"if(group_prolonge_pret_test()){this.form.submit();}\" />
 			</div>
 			<div class='row'>
-				<input type='text' style='width: 10em;' name='group_prolonge_pret_date' id='group_prolonge_pret_date' value='' title='".$msg['group_prolonge_pret_date_title']."'
-						data-dojo-type='dijit/form/DateTextBox' required='false' />
+                " . get_input_date('group_prolonge_pret_date', 'group_prolonge_pret_date', '', false) . "
 			</div>				
 		</div>";
 
 if($myGroup->nb_members) {
-	print "<table >
-	<tr>
-		<th class='align_left'>".$msg["nom_prenom_empr"]."</th>
-		<th class='align_left'>".$msg["code_barre_empr"]."</th>
-		<th class='align_left'>".$msg["empr_nb_pret"]."</th>
-		<th class='align_left'>".$msg["groupes_nb_resa_dont_valides"]."</th>";
-	if ($empr_allow_prolong_members_group) {
-		print "<th class='align_left'>".$msg["group_empr_date_adhesion"]."</th>
-			<th class='align_left'>".$msg["group_empr_date_expiration"]."</th>
-			<th class='align_left'>".$msg["group_empr_date_prolong"]."</th>";
-	}
-	print "<th></th>
-	</tr>";
-	$parity=1;
-	foreach ($myGroup->members as $cle => $membre) {
-		if ($parity % 2) {
-			$pair_impair = "even";
-		} else {
-			$pair_impair = "odd";
-		}
-		$parity += 1;
-		$nb_pret=get_nombre_pret($membre['id']);
-		$nb_resa=get_aff_nb_resa_and_validees($membre['id']);
-     	$tr_javascript = "onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".$pair_impair."'\" ";
-     	$dn_javascript = "onmousedown=\"document.location='./circ.php?categ=pret&form_cb=".rawurlencode($membre['cb'])."&groupID=$groupID';\" style='cursor: pointer' ";
-		print pmb_bidi("<tr class='$pair_impair' $tr_javascript>
-			<td $dn_javascript><a href=\"./circ.php?categ=pret&form_cb=".rawurlencode($membre['cb'])."&groupID=$groupID\">".$membre['nom']);
-		if($membre['prenom'])print pmb_bidi(", ${membre['prenom']}");
-		print pmb_bidi("
-			</a></td>
-			<td $dn_javascript>${membre['cb']}</td>
-			<td $dn_javascript>".$nb_pret."</td>
-			<td $dn_javascript>".$nb_resa."</td>");
-		if ($empr_allow_prolong_members_group) {
-			$empr_temp = new emprunteur($membre['id'], '', FALSE, 0) ;
-
-			print pmb_bidi("
-				<td $dn_javascript>".$empr_temp->aff_date_adhesion."</td>
-				<td $dn_javascript>".$empr_temp->aff_date_expiration."</td>");
-
-			if ($empr_temp->adhesion_renouv_proche() || $empr_temp->adhesion_depassee()) {		
-				$rqt="select duree_adhesion from empr_categ where id_categ_empr='$empr_temp->categ'";
-				$res_dur_adhesion = pmb_mysql_query($rqt, $dbh);
-				$row = pmb_mysql_fetch_row($res_dur_adhesion);
-				$nb_jour_adhesion_categ = $row[0];
-			
-				if ($empr_prolong_calc_date_adhes_depassee && $empr_temp->adhesion_depassee()) {
-					$rqt_date = "select date_add(curdate(),INTERVAL 1 DAY) as nouv_date_debut,
-							date_add(curdate(),INTERVAL $nb_jour_adhesion_categ DAY) as nouv_date_fin ";
-				} else {
-					$rqt_date = "select date_add('$empr_temp->date_expiration',INTERVAL 1 DAY) as nouv_date_debut,
-							date_add('$empr_temp->date_expiration',INTERVAL $nb_jour_adhesion_categ DAY) as nouv_date_fin ";
-				}
-				$resultatdate=pmb_mysql_query($rqt_date) or die ("<br /> $rqt_date ".pmb_mysql_error());
-				$resdate=pmb_mysql_fetch_object($resultatdate);
-								
-				$expiration  = "<input type='text' style='width: 10em;' name='form_expiration_".$membre['id']."' id='form_expiration_".$membre['id']."' value='".$resdate->nouv_date_fin."'
-						data-dojo-type='dijit/form/DateTextBox' required='false' />";
-				print pmb_bidi("<td>".$expiration."</td>");
-			} else {
-				print pmb_bidi("<td>&nbsp;</td>");
-			}
-		}
-		print pmb_bidi("
-			<td><a href=\"./circ.php?categ=groups&action=delmember&groupID=$groupID&memberID=${membre['id']}\">
-				<img src='".get_url_icon('trash.gif')."' title=\"${msg[928]}\" border=\"0\" /></a>
-			</td>
-		</tr>");
-	}
-	print '</table><br />';	
+	$list_readers_group_ui = new list_readers_group_ui(array('group' => $groupID));
+	print $list_readers_group_ui->get_display_list();	
 } else {
 	print "<p>$msg[922]</p>";
 }
@@ -179,37 +114,6 @@ if($myGroup->nb_members) {
 print pmb_bidi("</form>");
 print $myGroup->get_solde_form();
 
-// pour que le formulaire soit OK juste aprÃ¨s la crÃ©ation du groupe 
+// pour que le formulaire soit OK juste après la création du groupe 
 $group_form_add_membre = str_replace("!!groupID!!", $groupID, $group_form_add_membre);
 print $group_form_add_membre ;
-
-function get_nombre_pret($id_empr) {
-	$requete = "SELECT count( pret_idempr ) as nb_pret FROM pret where pret_idempr = $id_empr";
-	$res_pret = pmb_mysql_query($requete);
-	if (pmb_mysql_num_rows($res_pret)) {
-		$rpret=pmb_mysql_fetch_object($res_pret);
-		$nb_pret=$rpret->nb_pret;	
-	}	
-	return $nb_pret;
-}
-
-function get_aff_nb_resa_and_validees($id_empr) {
-	$aff_nb_resa = '';
-	
-	$requete = "SELECT count( resa_idempr ) as nb_resa FROM resa where resa_idempr = ".$id_empr;
-	$res_resa = pmb_mysql_query($requete);
-	if (pmb_mysql_num_rows($res_resa)) {
-		$rresa = pmb_mysql_fetch_object($res_resa);
-		$aff_nb_resa = $rresa->nb_resa;
-		$requete = "SELECT count( resa_idempr ) as nb_resa_val FROM resa where resa_idempr = ".$id_empr." AND resa_cb<>''";
-		$res_resa = pmb_mysql_query($requete);
-		if (pmb_mysql_num_rows($res_resa)) {
-			$rresa = pmb_mysql_fetch_object($res_resa);
-			if ($rresa->nb_resa_val) {
-				$aff_nb_resa .= " (".$rresa->nb_resa_val.")";
-			}
-		}
-	}
-	
-	return $aff_nb_resa;
-}

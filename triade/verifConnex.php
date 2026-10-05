@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -22,5 +22,5 @@ error_reporting(0);
  ***************************************************************************/
 setcookie("CONNEXION","ok",time()+300);
 include_once("librairie_php/langue-librairie.php");
-print LANGMESS81 ;
+print "<i class='bi bi-shield-check' style='color:#2e7d32;font-size:11px'></i>&nbsp;".LANGMESS81;
 ?>

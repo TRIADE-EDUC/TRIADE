@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_show.php,v 1.5 2017-11-22 11:07:34 dgoron Exp $
+// $Id: term_show.php,v 1.5 2017/11/22 11:07:34 dgoron Exp $
 
 $base_path="../../..";                            
 $base_auth = ""; 
@@ -12,7 +12,7 @@ require_once("$class_path/term_show.class.php");
 require_once ("$javascript_path/misc.inc.php");
 
 
-//RÃ©cupÃ©ration des paramÃ¨tres du formulaire appellant
+//Récupération des paramètres du formulaire appellant
 $base_query = "id_empr=$id_empr&groupID=$groupID&unq=$unq&history=".rawurlencode(stripslashes($term))."&history_thes=".rawurlencode(stripslashes($id_thes));
 
 echo $jscript_term;

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.2 2017-05-18 15:14:32 dgoron Exp $
+// $Id: search.class.php,v 1.3 2023/08/30 14:32:32 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "doublons isbn depuis import"
+//Classe de gestion de la recherche spécial "doublons isbn depuis import"
 
 class last_import_isbn_doublons_search {
 	public $id;
@@ -22,14 +22,14 @@ class last_import_isbn_doublons_search {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
     	$operators["EQ"]="=";
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $msg;
     	
@@ -40,16 +40,18 @@ class last_import_isbn_doublons_search {
     	}
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
+        global $default_tmp_storage_engine;
+
     	$table_tempo = 'last_import_isbn_doublons_'.md5(microtime(true));
-    	$requete="create temporary table ".$table_tempo." ENGINE=MyISAM SELECT notice_id FROM notices WHERE code IN (".json_decode($_SESSION['last_import_isbn_doublons']).")";	
+    	$requete="create temporary table ".$table_tempo." ENGINE={$default_tmp_storage_engine} SELECT notice_id FROM notices WHERE code IN (".json_decode($_SESSION['last_import_isbn_doublons']).")";	
 		pmb_mysql_query($requete);
     	    	    	
     	return $table_tempo;
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
     	global $msg;
 

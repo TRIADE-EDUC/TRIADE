@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -62,7 +62,7 @@ if(isset($_POST["create"])):
 			$date=dateDMY2();
 			$heure=dateHIS();
 			$date_form=datedemandedst($_POST["saisie_id_$j"]);
-			$valeur=chercheval($_POST["saisie_id_$j"]);
+			$valeur=cherchevaleur($_POST["saisie_id_$j"]);
 			$classe=chercheClasseDemandeDst($_POST["saisie_id_$j"]);
 			$heure=$_POST["saisie_heure_$j"];
 			$duree=$_POST["saisie_duree_$j"];
@@ -105,7 +105,7 @@ endif;
 </tr>
 <?php
 $data=consult_demande_dst();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr  class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'" >
 	<td align=center valign=top><?php print recherche_personne($data[$i][1])?></td>
@@ -124,7 +124,7 @@ for($i=0;$i<count($data);$i++) {
 ?>
 </table>
 <br><center>
-<input type=hidden name="nb_demande" value="<?php print count($data)?>">
+<input type=hidden name="nb_demande" value="<?php print countTriade($data)?>">
 <table align=center><tr><td><script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script></td>
 <td><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT51?>","create"); //text,nomInput</script></td>
 </tr></table><br>

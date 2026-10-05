@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_menu.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+$Id: cms_module_menu.xml,v 1.2 2023/09/06 13:37:47 gneveu Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_menu_menu_name'>Menu name</entry>
@@ -29,4 +29,5 @@ $Id: cms_module_menu.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
 	<entry code='cms_module_menu_menu_entry_page'>Portal page</entry>
 	<entry code='cms_module_menu_menu_entry_page_choice'>Choose a page</entry>
 	<entry code='cms_module_menu_menu_entry_button_edit'>Edit</entry>
+    <entry code='cms_module_menu_menu_add'>Ajouter un menu</entry>
 </XMLlist>

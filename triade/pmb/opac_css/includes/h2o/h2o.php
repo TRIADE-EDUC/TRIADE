@@ -10,6 +10,7 @@ require H2O_ROOT.'h2o/tags.php';
 require H2O_ROOT.'h2o/errors.php';
 require H2O_ROOT.'h2o/filters.php';
 require H2O_ROOT.'h2o/context.php';
+require H2O_ROOT.'h2o/parser.php';
 
 /**
  * Example:
@@ -19,23 +20,28 @@ require H2O_ROOT.'h2o/context.php';
  *  $h2o = new H2O('template.html', array("loader"=>'hash'));
  */
 class H2o {
+    public $stream;
+    public $nodelist;
     public $searchpath;
     public $context;
-    public $loader = false;
+    public $loader;
+    public $options;
+    public $i18n;
 
-    static $tags = array();
-    static $filters = array();
-    static $extensions = array();
+    public static $tags = array();
+    public static $filters = array();
+    public static $extensions = array();
 
     static public function getOptions($options = array()) {
     	global $base_path;
-    	
+    	global $cms_active, $cms_cache_ttl;
+
         return array_merge(array(
             'loader'            =>       'file',
             'cache'             =>      'file',     // file | apc | memcache
         	'cache_dir'			=>		$base_path.'/temp',
             'cache_prefix'      =>      'h2o_',
-            'cache_ttl'         =>      3600,     // file | apc | memcache
+            'cache_ttl'         =>      ($cms_active ? $cms_cache_ttl : 3600),     // file | apc | memcache
             'searchpath'        =>      false,
             'autoescape'        =>      false,
 
@@ -80,8 +86,10 @@ class H2o {
         $this->loader->runtime = $this;
 
         if (isset($options['i18n'])) {
-            h2o::load('i18n');
-            $this->i18n = new H2o_I18n($this->searchpath, $options['i18n']);
+            H2o::load('i18n');
+            if (class_exists('H2o_I18n')) {
+            	$this->i18n = new H2o_I18n($this->searchpath, $options['i18n']);
+        	}
         }
 
         if ($file) {
@@ -146,7 +154,7 @@ class H2o {
         return $instance;
     }
 
-    static public function &createTag($tag, $args = null, $parser, $position = 0) {
+    static public function &createTag($tag, $args = null, $parser = null, $position = 0) {
         if (!isset(self::$tags[$tag])) {
             throw new H2o_Error($tag . " tag doesn't exist");
         }
@@ -159,16 +167,16 @@ class H2o {
      * Register a new tag
      *
      *
-     * h2o::addTag('tag_name', 'ClassName');
+     * H2o::addTag('tag_name', 'ClassName');
      *
-     * h2o::addTag(array(
+     * H2o::addTag(array(
      *      'tag_name' => 'MagClass',
      *      'tag_name2' => 'TagClass2'
      * ));
      *
-     *  h2o::addTag('tag_name');      // Tag_name_Tag
+     *  H2o::addTag('tag_name');      // Tag_name_Tag
      *
-     * h2o::addTag(array('tag_name',
+     * H2o::addTag(array('tag_name',
      * @param unknown_type $tag
      * @param unknown_type $class
      */
@@ -199,9 +207,9 @@ class H2o {
     /**
      * Register a new filter to h2o runtime
      *
-     * @param unknown_type $filter
-     * @param unknown_type $callback
-     * @return unknown
+     * @param mixed $filter
+     * @param mixed $callback
+     * @return void|bool
      */
     static public function addFilter($filter, $callback = null) {
         if (is_array($filter)) {
@@ -246,6 +254,30 @@ class H2o {
 
     public function defaultContext() {
         return array('h2o' => new H2o_Info);
+    }
+
+    static public function getFilenameWithGlobal($filename) {
+        $varGlobal = '';
+        $tempNeedle = '';
+        $needles = ["{{ global.", "{{global."];
+
+        foreach ($needles as $needle){
+            $haystack = $filename;
+            $nb_occurence = substr_count($haystack, $needle);
+            for ($i = 0; $i < $nb_occurence; $i++){
+                $firstChar = strpos($haystack,$needle);
+                $lastChar = strpos($haystack,'}}', $firstChar)+2;
+                $length = $lastChar-$firstChar;
+                $tempNeedle = substr($haystack, $firstChar, $length);
+                $varGlobal = trim(substr($haystack, $firstChar+strlen($needle), $length-strlen($needle)-2));
+                global ${$varGlobal};
+                if (!empty(${$varGlobal})){
+                    $filename = str_replace($tempNeedle, ${$varGlobal}, $filename);
+                }
+                $haystack = substr($haystack, $lastChar);
+            }
+        }
+        return $filename;
     }
 }
 

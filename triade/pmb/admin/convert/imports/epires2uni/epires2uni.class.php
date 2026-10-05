@@ -1,16 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epires2uni.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: epires2uni.class.php,v 1.7 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once("$class_path/marc_table.class.php");
 require_once($base_path."/admin/convert/convert.class.php");
 
 class epires2uni extends convert {
 
+	protected static $mois;
+	
+	protected static $mois_enrichis;
+	
 	protected static function make_index($descr,$tete) {
 		global $charset;
 		$data="";
@@ -31,16 +36,17 @@ class epires2uni extends convert {
 	public static function convert_data($notice, $s, $islast, $isfirst, $param_path) {
 		global $cols;
 		global $ty;
-		global $intitules;
 		global $base_path,$origine;
 		global $tab_functions;
 		global $lot;
 		global $charset;
 		
+		$notice = static::convert_encoding($notice);
+		
 		if (!$tab_functions) $tab_functions=new marc_list('function');
 		
 		if (!$cols) {
-			//On lit les intitulÃ©s dans le fichier temporaire
+			//On lit les intitulés dans le fichier temporaire
 			$fcols=fopen("$base_path/temp/".$origine."_cols.txt","r");
 			if ($fcols) {
 				$infos=fread($fcols,filesize("$base_path/temp/".$origine."_cols.txt"));
@@ -55,8 +61,8 @@ class epires2uni extends convert {
 			$ty=array("ARTICLE"=>"v","REVUE"=>"v","LIVRE"=>"a","MEMOIRE"=>"b","DOCUMENT AUDIOVISUEL"=>"g","CDROM"=>"m","CD-ROM"=>"m","DOCUMENT EN LIGNE"=>"l");
 		}
 		
-		if (!$mois) {
-			$mois=array(
+		if (empty(static::$mois)) {
+			static::$mois=array(
 				0=>"",
 				1=>"janvier",
 				2=>"fevrier",
@@ -72,10 +78,10 @@ class epires2uni extends convert {
 				12=>"decembre"
 			);
 			if($charset !="utf-8"){
-				$mois_enrichis=array(
+				static::$mois_enrichis=array(
 				0=>"",
 				1=>"janvier",
-				2=>"fÃ©vrier",
+				2=>"février",
 				3=>"mars",
 				4=>"avril",
 				5=>"mai",
@@ -85,13 +91,13 @@ class epires2uni extends convert {
 				9=>"septembre",
 				10=>"octobre",
 				11=>"novembre",
-				12=>"dÃ©cembre"
+				12=>"décembre"
 			);
 			}else{
-			      $mois_enrichis=array(
+				static::$mois_enrichis=array(
 				0=>"",
 				1=>"janvier",
-				2=>utf8_encode("fÃ©vrier"),
+				2=>encoding_normalize::utf8_normalize("février"),
 				3=>"mars",
 				4=>"avril",
 				5=>"mai",
@@ -101,7 +107,7 @@ class epires2uni extends convert {
 				9=>"septembre",
 				10=>"octobre",
 				11=>"novembre",
-				12=>utf8_encode("dÃ©cembre")
+				12=>encoding_normalize::utf8_normalize("décembre")
 			);
 			}
 		}
@@ -114,6 +120,7 @@ class epires2uni extends convert {
 		
 		$notice=strtr($notice,array("\r"=>"","\n"=>""));
 		
+		$ntable=array();
 		$fields=explode(";;",$notice);
 		for ($i=0; $i<count($fields); $i++) {
 			$ntable[$cols[$i]]=$fields[$i];
@@ -129,7 +136,7 @@ class epires2uni extends convert {
 			//si c'est des slashes on les remplaces par des tirets
 			$ntable["DP"] = str_replace("/","-",$ntable["DP"]);
 			
-			//SÃ©paration du type de document
+			//Séparation du type de document
 			$typdoc=explode(",",$ntable["TY"]);
 			$is_revue=false;
 			if (count($typdoc)>2) $n_max=2; else $n_max=count($typdoc);
@@ -141,7 +148,7 @@ class epires2uni extends convert {
 				}
 			}
 			
-			//EntÃªte
+			//Entête
 			$data.="  <rs>n</rs>\n";
 			$type = strtoupper($ntable["TY"]);
 			if ($ty[$type]) $dt=$ty[$type]; else $dt="a";
@@ -149,7 +156,7 @@ class epires2uni extends convert {
 			$data.="  <dt>".$dt."</dt>\n";
 			$data.="<bl>".$bl."</bl>\n";
 			$data.="<hl>*</hl>\n<el>1</el>\n<ru>i</ru>\n";
-			//NumÃ©ro d'enregistrement
+			//Numéro d'enregistrement
 			$data.="  <f c='001' ind='  '>".$ntable["REF"]."</f>\n";
 			
 			//Titre
@@ -157,7 +164,7 @@ class epires2uni extends convert {
 			$data.="  <f c='200' ind='  '>\n";
 			//Titre principal
 			$data.="    <s c='a'>".htmlspecialchars(trim($titres[0]),ENT_QUOTES,$charset)."</s>\n";
-			//Titre parallÃ¨le
+			//Titre parallèle
 			if ($ntable["COL"]) {
 				$data.="    <s c='d'>".htmlspecialchars(trim($ntable["COL"]),ENT_QUOTES,$charset)."</s>\n";
 			} else if ($ntable["ND"]) {
@@ -166,7 +173,7 @@ class epires2uni extends convert {
 					$data.="    <s c='d'>".htmlspecialchars(trim($diplome[0]),ENT_QUOTES,$charset)."</s>\n";
 				}
 			}
-			//Titre complÃ©mentaire
+			//Titre complémentaire
 			if ($titres[1])
 				$data.="    <s c='e'>".htmlspecialchars(trim($titres[1]),ENT_QUOTES,$charset)."</s>\n";
 			$data.="  </f>\n";
@@ -184,6 +191,7 @@ class epires2uni extends convert {
 				
 				$data_auteurs="";
 				for ($i=0; $i<count($auteurs); $i++) {
+					$matches = array();
 					preg_match_all("/([^\(]*)(\((.*)\))*( (.*))?/",trim($auteurs[$i]),$matches);
 					$entree=$matches[1][0];
 					$rejete=$matches[3][0];
@@ -214,6 +222,7 @@ class epires2uni extends convert {
 	
 				$data_auteurs="";
 				for ($i=0; $i<count($auteurs); $i++) {
+					$matches = array();
 					preg_match_all("/([^\(]*)(\((.*)\))*( (.*))?/",trim($auteurs[$i]),$matches);
 					$entree=$matches[1][0];
 					$rejete=$matches[3][0];
@@ -248,6 +257,7 @@ class epires2uni extends convert {
 				
 				$data_auteurs="";
 				for ($i=0; $i<count($auteurs); $i++) {
+					$matches = array();
 					preg_match_all("/([^\(]*)(\((.*)\))*( (.*))?/",trim($auteurs[$i]),$matches);
 					$entree=$matches[1][0];
 					$rejete=$matches[3][0];
@@ -278,13 +288,20 @@ class epires2uni extends convert {
 				$editeur=explode(":",$ntable["ED"]);
 				$lieu=$editeur[0];
 				$nom=$editeur[1];
+				$matches = array();
 				preg_match_all("/([^\(]*)(\((.*)\))*?/",trim($editeur[2]),$matches);
 				$annee=$matches[1][0];
 				$collection=$matches[3][2];
-			} else if ($diplome[2]) {
+			} else if (!empty($diplome[2])) {
 				$lieu=$diplome[1];
 				$nom=$diplome[2];
 				$annee=$diplome[3];
+				$collection='';
+			} else {
+				$lieu='';
+				$nom='';
+				$annee='';
+				$collection='';
 			}
 			$data_editeur="";
 			if ($nom) {
@@ -305,9 +322,7 @@ class epires2uni extends convert {
 			$dp=false;
 			if ($ntable["DP"]) {
 				if (!$editeur_present) {
-					$data.="  <f c='210' ind='  '>\n";
-					$data.="    <s c='d'>".htmlspecialchars($ntable["DP"],ENT_QUOTES,$charset)."</s>\n";
-					$data.="  </f>\n";
+					$data.=static::get_converted_field_uni('210', 'd', $ntable["DP"]);
 					$dp=true;
 				}
 			}
@@ -334,60 +349,48 @@ class epires2uni extends convert {
 				$data.="  </f>\n";
 			}	
 			
-			if ($collection) {
-				$data.="  <f c='225' ind='  '>\n";
-				$data.="    <s c='a'>".htmlspecialchars(trim($collection),ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			}
+			$data.=static::get_converted_field_uni('225', 'a', $collection);
 			
 			//Source
 			if (($ntable["SO"])&&(!$is_revue)) {
-				$data.="  <f c='300' ind='  '>\n";
-				$data.="    <s c='a'>".htmlspecialchars(trim($ntable["SO"]),ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>";
+				$data.=static::get_converted_field_uni('300', 'a', $ntable["SO"]);
 			}
 			
 			//Notes
 			if (($ntable["NO"])&&(!$is_revue)) {
-				$data.="  <f c='327' ind='  '>\n";
-				$data.="    <s c='a'>".htmlspecialchars(trim($ntable["NO"]),ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
+				$data.=static::get_converted_field_uni('327', 'a', $ntable["NO"]);
 			}
 			
-			//RÃ©sumÃ©
-			if ($ntable["RESU"]) {
-				$data.="  <f c='330' ind='  '>\n";
-				$data.="    <s c='a'>".htmlspecialchars(trim($ntable["RESU"]),ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			}
+			//Résumé
+			$data.=static::get_converted_field_uni('330', 'a', $ntable["RESU"]);
 			
-			//PÃ©riodiques
+			//Périodiques
 			if ($ntable["TP"]) {
 				$data.="  <f c='464' ind='  '>\n";
-				$data.="    <s c='t'>".htmlspecialchars($ntable["TP"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="    <s c='u'>".htmlspecialchars($ntable["TN"],ENT_QUOTES,$charset)."</s>\n";
+				$data.="    <s c='t'>".htmlspecialchars(trim($ntable["TP"]),ENT_QUOTES,$charset)."</s>\n";
+				$data.="    <s c='u'>".htmlspecialchars(trim($ntable["TN"]),ENT_QUOTES,$charset)."</s>\n";
 				$so=explode(",",$ntable["SO"]);
-				$data.="    <s c='d'>".htmlspecialchars($so[count($so)-1],ENT_QUOTES,$charset)."</s>\n";
+				$data.="    <s c='d'>".htmlspecialchars(trim($so[count($so)-1]),ENT_QUOTES,$charset)."</s>\n";
 				unset($so[count($so)-1]);
-				$data.="    <s c='v'>".htmlspecialchars(implode(",",$so),ENT_QUOTES,$charset)."</s>\n";
-				$data.="    <s c='p'>".htmlspecialchars($ntable["NO"],ENT_QUOTES,$charset)."</s>\n";
+				$data.="    <s c='v'>".htmlspecialchars(trim(implode(",",$so)),ENT_QUOTES,$charset)."</s>\n";
+				$data.="    <s c='p'>".htmlspecialchars(trim($ntable["NO"]),ENT_QUOTES,$charset)."</s>\n";
 				if ($ntable["DATRI"]) {
-					$data.="    <s c='e'>".htmlspecialchars($ntable["DATRI"],ENT_QUOTES,$charset)."</s>\n";
+					$data.="    <s c='e'>".htmlspecialchars(trim($ntable["DATRI"]),ENT_QUOTES,$charset)."</s>\n";
 				} else {
 					if ($ntable["DP"]) {
 						if (strlen($ntable["DP"])<=4) {	
-							//Recherche du mois Ã©ventuel
+							//Recherche du mois éventuel
 							$m=0;
 							for ($i=1; $i<13; $i++) {
-								$pm=strpos(strtolower($date_so),$mois[$i]);
+								$pm=strpos(strtolower($date_so),static::$mois[$i]);
 								if ($pm===false) {
-									$pm=strpos(strtolower($date_so),$mois_enrichis[$i]);
+									$pm=strpos(strtolower($date_so),static::$mois_enrichis[$i]);
 								}
 								if ($pm!==false) break;
 							}
 							if ($i<13) $m=$i; else $m=1;
 							$data.="    <s c='e'>".htmlspecialchars($ntable["DP"]."-".$m."-01",ENT_QUOTES,$charset)."</s>\n";
-						} else $data.="    <s c='e'>".htmlspecialchars($ntable["DP"],ENT_QUOTES,$charset)."</s>\n";
+						} else $data.="    <s c='e'>".htmlspecialchars(trim($ntable["DP"]),ENT_QUOTES,$charset)."</s>\n";
 					}
 				}
 				$data.="  </f>";
@@ -403,35 +406,20 @@ class epires2uni extends convert {
 			}
 			
 			//URL
-			if ($ntable["URL"]) {
-				$data.="  <f c='856' ind='  '>\n";
-				$data.="    <s c='u'>".htmlspecialchars($ntable["URL"],ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			}
+			$data.=static::get_converted_field_uni('856', 'u', $ntable["URL"]);
 			
 			//ISBN
-			if ($ntable["ISBN"]) {
-				$data.="  <f c='010' ind='  '>\n";
-				$data.="    <s c='a'>".htmlspecialchars(trim($ntable["ISBN"]),ENT_QUOTES,$charset)."</s>\n";
-				$data.="  </f>\n";
-			}
+			$data.=static::get_converted_field_uni('010', 'a', $ntable["ISBN"]);
 			
-			//Champs spÃ©ciaux
-			$data.="  <f c='900'>\n";
-			$data.="    <s c='a'>".htmlspecialchars(trim($ntable["OP"]),ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
-			$data.="  <f c='901'>\n";
-			$data.="    <s c='a'>".htmlspecialchars(trim($ntable["GEN"]),ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
-			$data.="  <f c='902'>\n";
-			$data.="    <s c='a'>".htmlspecialchars($ntable["DS"],ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
-			$data.="  <f c='903'>\n";
-			$data.="    <s c='a'>".htmlspecialchars($lot,ENT_QUOTES,$charset)."</s>\n";
-			$data.="  </f>\n";
+			//Champs spéciaux
+			$data.=static::get_converted_field_uni('900', 'a', $ntable["OP"]);
+			$data.=static::get_converted_field_uni('901', 'a', $ntable["GEN"]);
+			$data.=static::get_converted_field_uni('902', 'a', $ntable["DS"]);
+			$data.=static::get_converted_field_uni('903', 'a', $lot);
 			$data.="</notice>\n";
 		}
 		
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

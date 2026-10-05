@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: stats.class.php,v 1.7 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: stats.class.php,v 1.8 2020/08/18 01:15:48 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_task.class.php");
@@ -50,12 +50,24 @@ class stats extends scheduler_task {
 				$this->add_section_report($this->msg["stats_conso"]." ( ".$critere_title." )");
 				if (method_exists($this->proxy, "pmbesOPACStats_makeConsolidation")) {
 					if ((count($list_id_view) > 0) && (count($list_name_view) > 0)) {
-						$this->proxy->pmbesOPACStats_makeConsolidation($conso,$date_deb,$date_fin,$date_ech, $list_id_view);
-						foreach ($list_name_view as $elem) {
-							$this->add_content_report($elem);
+						$percent = 0;
+						//progression
+						$p_value = (int) 100/count($list_name_view);
+						$details = $this->proxy->pmbesOPACStats_makeConsolidation($conso,$date_deb,$date_fin,$date_ech, $list_id_view);
+						foreach ($details as $detail) {
+							$this->add_section_report($detail['nom_vue']);
+							$message = "<ul style='list-style-type:square'><li>";
+							if($detail['calculated']) {
+								$message .= $this->msg['planificateur_stats_consolidation_success'];
+								//mise à jour de la progression
+								$percent += $p_value;
+								$this->update_progression($percent);
+							} else {
+								$message .= $this->msg['planificateur_stats_consolidation_error'];
+							}
+							$message .= "</li></ul>";
+							$this->add_content_report($message);
 						}
-						//mise Ã  jour de la progression
-						$this->update_progression(100);
 					} else {
 						$this->add_content_report($this->msg["stats_select_view_unknown"]);
 					}

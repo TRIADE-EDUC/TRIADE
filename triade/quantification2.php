@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ $cnx=cnx();
 $datedebut=$_POST["saisie_date_debut"];
 $datefin=$_POST["saisie_date_fin"];
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Quantification des heures entre $datedebut et $datefin " ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -71,7 +71,7 @@ $annule=$_POST["annule"];
 if ($nature == "classe") {
 	
 	$data=listingQuantite($datedebut,$datefin,$prestation,$annule); // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere,coursannule
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$idclasse=$data[$i][7];
 		$duree=conv_en_seconde($data[$i][5]);
 		if ($idclasse > 0) {
@@ -96,7 +96,7 @@ if ($nature == "classe") {
 
 if ($nature == "enseignant") {
 	$data=listingQuantite($datedebut,$datefin,$prestation,$annule); // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$idprof=$data[$i][8];
 		if  (verifSiProfActif($idprof)) { continue; }
 		$duree=conv_en_seconde($data[$i][5]);
@@ -124,7 +124,7 @@ if ($nature == "enseignant") {
 if ($nature == "matiere") {
 	
 	$data=listingQuantite($datedebut,$datefin,$prestation,$annule); // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$idMatiere=$data[$i][10];
 		$duree=conv_en_seconde($data[$i][5]);
 		if ($idMatiere > 0) {
@@ -155,7 +155,7 @@ if ($nature == "matiere") {
 
 if ($nature == "prestation") {
 	$data=listingQuantite($datedebut,$datefin,$prestation,$annule); // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$idpresta=$data[$i][9];
 		$duree=conv_en_seconde($data[$i][5]);
 		if ($idpresta > 0) {
@@ -202,9 +202,9 @@ $fin=9;
 $deb2=0;
 $fin2=16;
 
-$nbProf=count(affPers("ENS"));
-$nbClasse=count(affClasse());
-$nbMatiere=count(affToutesLesMatieres());
+$nbProf=countTriade(affPers("ENS"));
+$nbClasse=countTriade(affClasse());
+$nbMatiere=countTriade(affToutesLesMatieres());
 
 while(true) {
 
@@ -224,7 +224,7 @@ while(true) {
 		$tabH=affMatiereLimit($deb,$fin); // code_mat,libelle,sous_matiere
 	}
 
-	if (count($tabH) == 0) { 
+	if (countTriade($tabH) == 0) { 
 		//
 	}else{ 
 		$idV="";
@@ -234,9 +234,9 @@ while(true) {
 	} 
 
 
-	for($i=0;$i<=count($tabV);$i++) { // code_class,libelle
+	for($i=0;$i<=countTriade($tabV);$i++) { // code_class,libelle
 		$pdf->SetXY($X+=$Largeur,$Y);
-		for($j=0;$j<count($tabH);$j++) { 	//code_mat,libelle,sous_matiere
+		for($j=0;$j<countTriade($tabH);$j++) { 	//code_mat,libelle,sous_matiere
 			$pdf->SetXY($X,$Y);
 			$idH=$tabH[$j][0];
 			if ($idV == "") {
@@ -271,7 +271,7 @@ while(true) {
 				}
 				//id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere,coursannule
 				$duree="";$seconde="";
-				for($a=0;$a<count($data);$a++) { 
+				for($a=0;$a<countTriade($data);$a++) { 
 					$idpresta=$data[$a][9];
 					$duree+=conv_en_seconde($data[$a][5]);
 					if ($idpresta > 0) { 

@@ -1,3 +1,7 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: contrib.css,v 1.10 2023/01/09 15:03:38 gneveu Exp $ */
 #empr_contribution_area {
 	background: #f7f9f9;
 	margin: 0;
@@ -5,6 +9,7 @@
 }
 
 .contribution_area_table_cell {
+	border : 5px solid white;
 	border-radius: 5px;
 	background: #e8e8e8;
 	box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.25) inset;
@@ -26,14 +31,8 @@
 	text-decoration: none;
 	font-weight: 500;
 	font-style: normal;
-	padding: 15px 0px 5px 0px;
+	padding: 10px 0px 5px 0px;
 	vertical-align: baseline;
-	margin-top: 20px;
-}
-
-.contributionDivContainer label {
-	display: block;
-	border-top: solid 1px #ccc;
 }
 
 .container-div.row+.container-div.row>div>div:last-child {}
@@ -78,4 +77,52 @@
 
 .contributionDivContainer .cancel_part {
 	margin-right: 10px;
+}
+
+.contributionDivContainer .form_row_content_resource_selector,
+.contributionDivContainer .form_row_content_small_text {
+	width: 75%;
+}
+
+.contributionDivContainer .contribution_comment {
+	margin-left: 10px;
+}
+
+.contributionRight {
+	text-align: right;
+}
+
+.contribution_drop_down_menu,
+.contribution_drop_down_menu_item {
+    background-color: #FFF !important;
+    color: black !important;
+}
+
+.contributon_datalist {
+	border: 1px solid rgb(0, 0, 0);
+	position: absolute;
+	background-color: rgb(255, 255, 255);
+	z-index: 1000;
+	overflow: hidden;
+}
+
+.contributon_datalist_option_surbrillance {
+	background: rgb(0, 0, 136) none repeat scroll 0% 0%;
+	color: rgb(255, 255, 255);
+}
+
+.contributon_datalist_option {
+	padding-left: 2px;
+}
+
+.field_container_loader {
+	position: relative;
+	display: flex;
+	align-items: center;
+	width : 100%;
+}
+
+.field_container_loader .loading_img {
+	position: absolute;
+	right: 10px;
 }

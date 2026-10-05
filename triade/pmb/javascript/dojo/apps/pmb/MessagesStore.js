@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: MessagesStore.js,v 1.4 2015-04-08 13:43:01 vtouchard Exp $
+// $Id: MessagesStore.js,v 1.7 2021/02/16 09:47:27 btafforeau Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang","dojo/request/xhr", "dojo/store/Memory"], function(declare, PMBStore, topic, lang, xhr, Memory){
@@ -12,10 +12,30 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang",
 		  allowAjaxLoading:true,
 		  groups:null,
 		  waiting:null,
-		  constructor:function(){
+		  constructor : function() {
 			  this.inherited(arguments);
 			  this.groups = new Memory();
 			  this.groups.idProperty = "group";
+			  if (arguments[0].messages) {
+				  let msg = {};
+				  let group = '';
+				  for (let i = 0; i < arguments[0].messages.length; i++) {
+					  group = arguments[0].messages[i].group;
+					  if (!msg[group]) {
+						  msg[group] = new Array();
+					  }
+					  msg[group].push(arguments[0].messages[i]);
+				  }
+				  for (group in msg) {
+					  if (this.groups.data.length == 0) {
+						  this.groups.setData([{group : group, loaded : false, loading : true}]);
+					  } else {
+						  this.groups.add({group : group, loaded : false, loading : true});
+					  }
+					  this.gotMessages(group, msg[group]);
+					  this.groups.query({group:group})[0].loaded = true;
+				  }
+			  }
 		  },
 		  getMessage:function(group, code){
 			  if(this.groups.query({group:group}).length == 0 || (this.groups.query({group:group}).length != 0 && this.groups.query({group:group})[0].loaded != true && this.groups.query({group:group})[0].loading != true)){

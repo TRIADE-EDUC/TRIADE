@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Datanode.js,v 1.2 2018-01-24 10:54:46 vtouchard Exp $
+// $Id: Datanode.js,v 1.2 2018/01/24 10:54:46 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "dojo/dom", "dijit/form/Form", "dojo/dom-form", "dojo/text!pmbBase/ajax.php?module=frbr&categ=cataloging&sub=forms&action=get_form&form=datanode_form_tpl", "dojo/query", "dojo/request/xhr"], function(declare, parser, topic, lang, dom, Form, domForm, template, query, xhr){

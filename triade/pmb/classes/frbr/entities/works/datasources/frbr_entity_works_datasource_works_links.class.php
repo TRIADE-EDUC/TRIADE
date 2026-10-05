@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_works_datasource_works_links.class.php,v 1.6 2018-06-13 15:06:29 tsamson Exp $
+// $Id: frbr_entity_works_datasource_works_links.class.php,v 1.8 2021/02/25 16:27:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -61,13 +61,6 @@ class frbr_entity_works_datasource_works_links extends frbr_entity_common_dataso
 		$selector.= '</select>';
 		return $selector;
 	}
-	
-        public function save_form() {
-            global $datanode_work_link_type;
-            
-            $this->parameters->work_link_type=$datanode_work_link_type;
-            return parent::save_form();
-        }
         
 	public function get_form() {
 		if (!isset($this->parameters->work_link_type)) {
@@ -85,5 +78,15 @@ class frbr_entity_works_datasource_works_links extends frbr_entity_common_dataso
 				</div>";
 		}
 		return $form;
+	}
+	
+	protected function get_label_from_group($group) {
+	    $oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
+	    foreach($oeuvre_link->table as $key => $types) {
+	        if (isset($types[$group])) {
+	            return $types[$group];
+	        }
+	    }
+	    return "";
 	}
 }

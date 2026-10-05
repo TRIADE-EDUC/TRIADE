@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes langue en UNIMARC (français)
-$Id: lang.xml,v 1.13 2016-09-13 09:22:22 jpermanne Exp $ -->
+$Id: lang.xml,v 1.14 2021/08/02 15:07:11 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="ace">Achinese</entry>
@@ -259,6 +259,7 @@ $Id: lang.xml,v 1.13 2016-09-13 09:22:22 jpermanne Exp $ -->
 	<entry code="new">Newari</entry>
 	<entry code="nic">Nigeriano-congoleño</entry>
 	<entry code="niu">Niuean</entry>
+	<entry code="nla">Neerlandés</entry>
 	<entry code="nor">Noruego</entry>
 	<entry code="nso">Sotho del norte</entry>
 	<entry code="nub">Nubien</entry>

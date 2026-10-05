@@ -1,30 +1,37 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sort.php,v 1.11 2012-08-31 15:09:12 ngantier Exp $
+// $Id: sort.php,v 1.18 2024/03/01 14:29:08 dgoron Exp $
 
 $base_path = ".";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[histo_title]";
 $base_nobody = 1;  
-$base_nodojo = 1;  
+$base_use_dojo = 1;
 
 require ($base_path . "/includes/init.inc.php");
+
+global $class_path, $include_path;
+global $origin, $num_segment;
 
 include ($include_path . "/error_report.inc.php");
 require_once ($class_path . "/sort.class.php");
 
-//permet de prÃ©ciser sur quoi vont s'appliquer les tris (par defaut:notices)
-if ($_REQUEST["type_tri"]) {
-	$triType = $_REQUEST["type_tri"];
+//permet de préciser sur quoi vont s'appliquer les tris (par defaut:notices)
+if (isset($_REQUEST["type_tri"])) {
+    if (is_numeric($_REQUEST["type_tri"])) {
+        $triType = entities::get_sort_string_from_const_type($_REQUEST["type_tri"]);
+    } else {
+    	$triType = $_REQUEST["type_tri"];
+    }
 } else {
 	//par defaut affichage de la liste des tris
 	$triType = "notices";
 }
 
 //action (par defaut:affliste)
-if ($_REQUEST["action_tri"]) {
+if (isset($_REQUEST["action_tri"])) {
 	$actionTri = $_REQUEST["action_tri"];
 } else {
 	//par defaut affichage de la liste des tris
@@ -33,12 +40,10 @@ if ($_REQUEST["action_tri"]) {
 
 //echo "action:".$actionTri."<br />";
 
-//dÃ©claration de la classe
+//déclaration de la classe
 $sort = new sort($triType,'base');
-$sort->caller = $_REQUEST['caller'];
+$sort->caller = $_REQUEST['caller'] ?? "";
 switch ($actionTri) {
-	
-	
 	case "enreg" :
 		//insertion ou modification d'un tri
 
@@ -65,25 +70,59 @@ switch ($actionTri) {
 			echo $affichage;
 		}
 		//apres la sauvegarde on affiche la liste
-		echo $sort->show_tris_form();
+		global $popup;
+		if (!empty($popup) && $popup) {
+		    echo $sort->show_popup_tris_form();
+		} else {
+		    echo $sort->show_tris_form();
+		}
 		break;
-	
-	
 	case "modif" :
 		//modification d'un tri
 		 
 		if ($_REQUEST['id_tri']) {
-			//modification du tri prÃ©cisÃ©
-			$id_tri = $_REQUEST['id_tri'];
+			//modification du tri précisé
+			$id_tri = intval($_REQUEST['id_tri']);
 		} else {
 			//ce n'est pas une modif mais un ajout
 			$id_tri = 0;
 		}
-		//affichage de l'Ã©cran de modification du tri
-		echo $sort->show_sel_formAdmin($id_tri);
+		//pour les segments de recherche
+		if ($_REQUEST['index_tri']) {
+		    //modification du tri précisé
+		    $index_tri = intval($_REQUEST['index_tri']);
+		} else {
+		    $index_tri = 0;
+		}
+		if ($_REQUEST['sort_string']) {
+		    $string_sort = $_REQUEST['sort_string'];
+		} else {
+		    $string_sort = "";
+		}
+		
+		//affichage de l'écran de modification du tri
+		echo $sort->show_sel_formAdmin($id_tri,$index_tri, $string_sort);
+		if (isset($origin) && "search_segment" == $origin) {
+		    $translation = new translation($num_segment, 'search_segments');
+		    if($index_tri !== null) {
+		        $data_translation = $translation->get_data();
+		        if (!empty($data_translation['segment_sort'])) {
+		            foreach ($data_translation['segment_sort'] as $translated_language=>$translated_text) {
+		                $translated_sorts = explode('||',$translated_text);
+		                if (!empty(explode('|',$translated_sorts[$index_tri])[1])){
+		                    $data_translation['segment_sort'][$translated_language] = trim(explode('|',$translated_sorts[$index_tri])[1]);
+		                } else {
+		                    $data_translation['segment_sort'][$translated_language] = '';
+		                }
+		            }
+		            $translation->set_data($data_translation);
+		        }
+		    }
+		} else {
+		    $translation = new translation($id_tri, 'tris');
+		}
+		echo $translation->connect('sort_form');
 		break;
-	
-	
 	case "supp" :
 		//suppression d'un tri
 		 
@@ -92,8 +131,8 @@ switch ($actionTri) {
 			$id_tri = $_REQUEST['id_tri'];
 			
 			//c'est le tri actif
-			if ($id_tri == $_SESSSION["tri"]) {
-				//on le dÃ©sactive
+			if ($id_tri == $_SESSION["tri"]) {
+				//on le désactive
 				$_SESSION["tri"] = "";
 			}
 			
@@ -103,13 +142,19 @@ switch ($actionTri) {
 		//apres la suppression on affiche la liste
 		echo $sort->show_tris_form();
 		break;
-	
-	
 	case "affliste" : 
 	default:
-		//affichage de la liste
-		echo $sort->show_tris_form();
+	    if (isset($_REQUEST['categ']) && "search_universes" == $_REQUEST['categ'] ) {
+	        echo $sort->show_popup_tris_form_segment();
+	        break;
+	    }
+	    
+	    //affichage de la liste
+	    global $popup;
+	    if (!empty($popup) && $popup) {
+    		echo $sort->show_popup_tris_form();
+	    } else {
+    		echo $sort->show_tris_form();
+	    }
 		break;
 }
-
-?>

@@ -2,17 +2,17 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_logo.class.php,v 1.2 2017-11-30 10:53:34 dgoron Exp $
+// $Id: docwatch_logo.class.php,v 1.3.8.1 2025/02/12 12:34:08 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class docwatch_logo {
 	public $id;		// identifiant de l'objet
 	public $type;	// type d'objet
-	public $data;	// donnÃ©e binaire du logo
+	public $data;	// donnée binaire du logo
 
 	public function __construct($id="",$type="watch"){
-		$this->id= $id*1;
+		$this->id= intval($id);
 		$this->type = $type;
 		if($this->id){
 			$this->fetch_data();
@@ -28,7 +28,7 @@ class docwatch_logo {
 			$this->data = pmb_mysql_result($res,0,0);
 		}
 	}
-	
+
 	protected function get_sql_table(){
 		switch ($this->type){
 			case "watch" :
@@ -45,7 +45,7 @@ class docwatch_logo {
    		header("Content-Type: image/png");
   		if(strpos($mode,"custom_") !== false){
 	  		$elems = explode("_",$mode);
-	  		$size = $elems[1]*1;
+	  		$size = intval($elems[1]);
 	  		if($size>0){
 	  			$this->resize($size,$size);
 	  		}else{

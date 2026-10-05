@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_contribution_datatype_merge_properties_ui.class.php,v 1.4 2019-06-04 08:09:06 btafforeau Exp $
+// $Id: onto_contribution_datatype_merge_properties_ui.class.php,v 1.7 2019/08/14 08:02:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	/**
 	 * 
 	 *
-	 * @param Array() class_uris URI des classes de l'ontologie listÃ©es dans le sÃ©lecteur
+	 * @param Array() class_uris URI des classes de l'ontologie listées dans le sélecteur
 
 	 * @return void
 	 * @access public
@@ -37,9 +37,9 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	/**
 	 * 
 	 *
-	 * @param string class_uri URI de la classe d'instances Ã  lister
+	 * @param string class_uri URI de la classe d'instances à lister
 
-	 * @param integer page NumÃ©ro de page Ã  afficher
+	 * @param integer page Numéro de page à afficher
 
 	 * @return Array()
 	 * @access public
@@ -54,7 +54,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 
 	 * @param string class_uri Rechercher iniquement les instances de la classe
 
-	 * @param integer page Page du rÃ©sultat de recherche Ã  afficher
+	 * @param integer page Page du résultat de recherche à afficher
 
 	 * @return Array()
 	 * @access public
@@ -66,8 +66,8 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	/**
 	 * 
 	 *
-	 * @param onto_common_property $property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param onto_common_property $property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -83,11 +83,11 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 		$item = new onto_contribution_item($class, '');
 		$item->set_contribution_area_form(contribution_area_form::get_contribution_area_form($sub,$form_id,$area_id,$form_uri));
 		/**
-		 * contruction du nom de l'instance utilisÃ© pour le sous champs
+		 * contruction du nom de l'instance utilisé pour le sous champs
 		 */
 		$sub_instance_name = $property->pmb_name.'_'.$class->pmb_name;
 		$form = $ontology_tpl['form_row_merge_properties'];				
-		$form = str_replace("!!onto_row_label!!",htmlentities($property->label ,ENT_QUOTES,$charset) , $form);
+		$form = str_replace("!!onto_row_label!!",htmlentities($property->get_label() ,ENT_QUOTES,$charset) , $form);
 					
 		$content='';
 		
@@ -96,7 +96,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 			$properties[] = $class->get_property($uri_property);
 		}
 		
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$new_element_order=max(array_keys($datas));
 				
 			$form=str_replace("!!onto_new_order!!",$new_element_order , $form);
@@ -137,8 +137,8 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	/**
 	 *
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 *
 	 * @return string
@@ -148,7 +148,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -170,12 +170,12 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 		
 		for ($i = 0; $i < count($properties); $i++) {
 			if ((!$flag || (in_array($flag,$properties[$i]->flags)))) {
-				if (!$valid_js) {
+				if (!empty($valid_js)) {
 					$valid_js.= ",";
 				}
 				$valid_js.= parent::get_validation_js($item_uri, $properties[$i], $restrictions, $datas, $instance_name, $flag);
 				
-				if ($i < (count($properties)-1) && $valid_js[0] != ",") {
+				if ($i < (count($properties) - 1) && substr($valid_js, 0, 1) != ",") {
 					$valid_js.= ",";
 				}
 			}			
@@ -185,7 +185,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 	
 	protected static function get_sub_properties($properties, $property, $item, $class, $data){
 		$content = "";
-		if(sizeof($properties)){
+		if (!empty($properties)) {
 			$content .= "<div style='border:1px solid black; border-color: #c5c5c5; border-radius:2px; padding:10px;'>";
 			$index = 0;
 			
@@ -196,7 +196,7 @@ class onto_contribution_datatype_merge_properties_ui extends onto_common_datatyp
 					
 				$datatype_ui_class_name=$item->resolve_datatype_ui_class_name($datatype_class_name,$prop,$item->onto_class->get_restriction($prop->uri));
 				
-				//on modifie la propiÃ©tÃ© avec le paramÃ©trage du formulaire
+				//on modifie la propiété avec le paramétrage du formulaire
 				if ($prop->pmb_extended['label']) {
 					$prop->label = $prop->pmb_extended['label'];
 				}

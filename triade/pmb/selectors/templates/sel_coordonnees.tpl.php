@@ -1,23 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_coordonnees.tpl.php,v 1.5 2017-01-19 10:25:19 dgoron Exp $
+// $Id: sel_coordonnees.tpl.php,v 1.5.18.1 2025/05/12 15:05:27 dbellamy Exp $
 
-if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
+if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) {
+    die("no access");
+}
 
-// templates du sÃ©lecteur adresses
+global $msg, $charset;
+global $jscript_common_selector_simple;
+
+// Variables definies dans l'appel
+global $param1, $param2;
+
+// templates du sélecteur adresses
 
 //-------------------------------------------
 //	$sel_header : header
 //-------------------------------------------
 $sel_header = "
 <div class='row'>
-	<label class='etiquette'>".htmlentities($msg['acquisition_sel_coord'], ENT_QUOTES, $charset)."</label>
+    <label class='etiquette'>".htmlentities($msg['acquisition_sel_coord'], ENT_QUOTES, $charset)."</label>
 </div>
 <div class='row'>&nbsp;</div>
-<div class='row'>
-";
+<div class='row'>";
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -31,5 +38,4 @@ $jscript = str_replace('!!infield!!', '', $jscript);
 //	$sel_footer : footer
 //-------------------------------------------
 $sel_footer = "
-</div>
-";
+</div>";

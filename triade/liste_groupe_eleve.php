@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,7 +42,7 @@ $cnx=cnx();
 
 $gid=$_GET["gid"];
 
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 $res=execSql($sql);
 $data=chargeMat($res);
 $nomgrp=$data[0][0];
@@ -50,7 +50,7 @@ $liste_eleves=preg_replace('/\{/',"",$data[0][1]);
 $liste_eleves=preg_replace('/\}/',"",$liste_eleves);
 
 $sql=<<<EOF
-SELECT nom,prenom,libelle FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves) ORDER BY nom 
+SELECT nom,prenom,libelle FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves) ORDER BY nom 
 EOF;
 $res=execSql($sql);
 $data=chargeMat($res);
@@ -67,7 +67,7 @@ $data=chargeMat($res);
 </tr>
 <?php
 // debut for
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr>
 	<td bgcolor="#FFFFFF"><?php print ucwords($data[$i][0])?></td>

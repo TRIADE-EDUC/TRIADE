@@ -1,44 +1,43 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_scd_lyon3.inc.php,v 1.15 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_scd_lyon3.inc.php,v 1.18 2022/01/12 07:49:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path; //N√©cessaire pour certaines inclusions
+global $class_path; //NÈcessaire pour certaines inclusions
 require_once($class_path."/thesaurus.class.php");
 require_once($class_path."/categories.class.php");
-global $thesaurus_defaut;
+global $thes, $thesaurus_defaut;
+global $id_rech_theme, $id_rech_geo, $id_rech_chrono;
 
-
-// Attention, dans le multithesaurus, on ins√®re les cat√©gories
+// Attention, dans le multithesaurus, on insËre les catÈgories
 // dans le thesaurus par defaut
 		$thes = new thesaurus($thesaurus_defaut);
 		$rac = $thes->num_noeud_racine;
     
 
-// DEBUT param√©trage propre √† la base de donn√©es d'importation :
-// r√©cup√©ration du 606 : r√©cup en cat√©gories en essayant de classer :
+// DEBUT paramÈtrage propre ‡ la base de donnÈes d'importation :
+// rÈcupÈration du 606 : rÈcup en catÈgories en essayant de classer :
 //	les sujets sous le terme "Recherche par terme" 
 	$id_rech_theme = categories::searchLibelle('Recherche par terme', $thes->id_thesaurus, 'fr_FR');
     if (!$id_rech_theme) $id_rech_theme = create_categ($rac, 'Recherche par terme', strip_empty_words('Recherche par terme', 'fr_FR'));
 		
-//	les pr√©cisions g√©ographiques sous le terme "Recherche g√©ographique" 
-	$id_rech_geo = categories::searchLibelle('Recherche g√©ographique', $thes->id_thesaurus, 'fr_FR');
-    if (!$id_rech_geo) 	$id_rech_geo = create_categ($rac, 'Recherche g√©ographique', strip_empty_words('Recherche g√©ographique', 'fr_FR'));
+//	les prÈcisions gÈographiques sous le terme "Recherche gÈographique" 
+	$id_rech_geo = categories::searchLibelle('Recherche gÈographique', $thes->id_thesaurus, 'fr_FR');
+    if (!$id_rech_geo) 	$id_rech_geo = create_categ($rac, 'Recherche gÈographique', strip_empty_words('Recherche gÈographique', 'fr_FR'));
 
-//	les pr√©cisions de p√©riode sous le terme "Recherche chronologique" 
+//	les prÈcisions de pÈriode sous le terme "Recherche chronologique" 
 	$id_rech_chrono = categories::searchLibelle('Recherche chronologique', $thes->id_thesaurus, 'fr_FR');
     if (!$id_rech_chrono) $id_rech_chrono = create_categ($rac, 'Recherche chronologique', strip_empty_words('Recherche chronologique', 'fr_FR'));
 
-// FIN param√©trage 
+// FIN paramÈtrage 
 
 function recup_noticeunimarc_suite($notice) {
-} // fin recup_noticeunimarc_suite = fin r√©cup√©ration des variables propres BDP : rien de plus
+} // fin recup_noticeunimarc_suite = fin rÈcupÈration des variables propres BDP : rien de plus
 	
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 	
 	global $info_606_a, $info_606_j, $info_606_x, $info_606_y, $info_606_z ;
@@ -46,44 +45,45 @@ function import_new_notice_suite() {
 	global $thesaurus_defaut;
 	global $thes;
 	
-	// les champs $606 sont stock√©s dans les cat√©gories
-	//	$a >> en sous cat√©gories de $id_rech_theme
-	// 		$j en compl√©ment de $a
-	//		$x en sous cat√©gories de $a
-	// $y >> en sous cat√©gories de $id_rech_geo
-	// $z >> en sous cat√©gories de $id_rech_chrono
+	// les champs $606 sont stockÈs dans les catÈgories
+	//	$a >> en sous catÈgories de $id_rech_theme
+	// 		$j en complÈment de $a
+	//		$x en sous catÈgories de $a
+	// $y >> en sous catÈgories de $id_rech_geo
+	// $z >> en sous catÈgories de $id_rech_chrono
 	// TRAITEMENT :
-	// pour $a=0 √† size_of $info_606_a
-	//	pour $j=0 √† size_of $info_606_j[$a]
-	//		concat√©ner $libelle_j .= $info_606_j[$a][$j]
+	// pour $a=0 ‡ size_of $info_606_a
+	//	pour $j=0 ‡ size_of $info_606_j[$a]
+	//		concatÈner $libelle_j .= $info_606_j[$a][$j]
 	//	$libelle_final = $info_606_a[0]." ** ".$libelle_j
-	//	Rechercher si l'enregistrement existe d√©j√† dans categories = 
+	//	Rechercher si l'enregistrement existe dÈj‡ dans categories = 
 	//	$categid = categories::searchLibelle(addslashes($libelle_final), $thesaurus_defaut, 'fr_FR', $id_rech_theme)
 
-	//	Cr√©er si besoin et r√©cup√©rer l'id $categid_a
+	//	CrÈer si besoin et rÈcupÈrer l'id $categid_a
 	//	$categid_parent =  $categid_a
-	//	pour $x=0 √† size_of $info_606_x[$a]
-	//		Rechercher si l'enregistrement existe d√©j√† dans categories = 
+	//	pour $x=0 ‡ size_of $info_606_x[$a]
+	//		Rechercher si l'enregistrement existe dÈj‡ dans categories = 
 	//	$categid = categories::searchLibelle(addslashes($info_606_x[$a][$x]), $thesaurus_defaut, 'fr_FR', $categ_parent)
 
-	//		Cr√©er si besoin et r√©cup√©rer l'id $categid_parent
+	//		CrÈer si besoin et rÈcupÈrer l'id $categid_parent
 	//
 	//	$categid_parent =  $id_rech_geo
-	//	pour $y=0 √† size_of $info_606_y[$a]
-	//		Rechercher si l'enregistrement existe d√©j√† dans categories = 
+	//	pour $y=0 ‡ size_of $info_606_y[$a]
+	//		Rechercher si l'enregistrement existe dÈj‡ dans categories = 
 	//	$categid = categories::searchLibelle(addslashes($info_606_y[$a][$y]), $thesaurus_defaut, 'fr_FR', $categ_parent)
 
-	//		Cr√©er si besoin et r√©cup√©rer l'id $categid_parent
+	//		CrÈer si besoin et rÈcupÈrer l'id $categid_parent
 	//
 	//	$categid_parent =  $id_rech_chrono
-	//	pour $y=0 √† size_of $info_606_z[$a]
-	//		Rechercher si l'enregistrement existe d√©j√† dans categories = 
+	//	pour $y=0 ‡ size_of $info_606_z[$a]
+	//		Rechercher si l'enregistrement existe dÈj‡ dans categories = 
 	//	$categid = categories::searchLibelle(addslashes($info_606_z[$a][$y]]), $thesaurus_defaut, 'fr_FR', $categ_parent)
 
-	//		Cr√©er si besoin et r√©cup√©rer l'id $categid_parent
+	//		CrÈer si besoin et rÈcupÈrer l'id $categid_parent
 	//
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
+	$libelle_j = '';
+	for ($a=0; $a<count($info_606_a); $a++) {
+		for ($j=0; $j<count($info_606_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= $info_606_j[$a][$j] ;
 				else $libelle_j .= " ** ".$info_606_j[$a][$j] ;
 		}
@@ -96,57 +96,55 @@ function import_new_notice_suite() {
 		} else {
 			$categid_a = create_categ($id_rech_theme, $libelle_final, strip_empty_words($libelle_final, 'fr_FR'));
 		}
-		// r√©cup des sous-categ en cascade sous $a
+		// rÈcup des sous-categ en cascade sous $a
 		$categ_parent =  $categid_a ;
-		for ($x=0 ; $x < sizeof($info_606_x[$a]) ; $x++) {
+		for ($x=0 ; $x < count($info_606_x[$a]) ; $x++) {
 			$res_x = categories::searchLibelle(addslashes($info_606_x[$a][$x]), $thesaurus_defaut, 'fr_FR', $categ_parent);
 			if ($res_x) {
 				$categ_parent = $res_x;
 			} else {
 				$categ_parent = create_categ($categ_parent, $info_606_x[$a][$x], strip_empty_words($info_606_x[$a][$x], 'fr_FR'));
 			}
-		} // fin r√©cup des $x en cascade sous l'id de la cat√©gorie 606$a
+		} // fin rÈcup des $x en cascade sous l'id de la catÈgorie 606$a
 		
 		if ($categ_parent != $id_rech_theme) {
 			// insertion dans la table notices_categories
 			$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$categ_parent."' " ;
-
-			$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+			pmb_mysql_query($rqt_ajout);
 		}
 				
-		// r√©cup des categ g√©o √† loger sous la categ g√©o principale
+		// rÈcup des categ gÈo ‡ loger sous la categ gÈo principale
 		$categ_parent =  $id_rech_geo ;
-		for ($y=0 ; $y < sizeof($info_606_y[$a]) ; $y++) {
+		for ($y=0 ; $y < count($info_606_y[$a]) ; $y++) {
 			$res_y = categories::searchLibelle(addslashes($info_606_y[$a][$y]), $thesaurus_defaut, 'fr_FR', $categ_parent);
 			if($res_y) {
 				$categ_parent = $res_y;
 			} else {
 				$categ_parent = create_categ($categ_parent, $info_606_y[$a][$y], strip_empty_words($info_606_y[$a][$y], 'fr_FR'));
 			}
-		} // fin r√©cup des $y en cascade sous l'id de la cat√©gorie principale th√®me g√©o
+		} // fin rÈcup des $y en cascade sous l'id de la catÈgorie principale thËme gÈo
 		
 		if ($categ_parent != $id_rech_geo) {
 			// insertion dans la table notices_categories
 			$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$categ_parent."' " ;
-			$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+			pmb_mysql_query($rqt_ajout);
 		}
 		
-		// r√©cup des categ chrono √† loger sous la categ chrono principale
+		// rÈcup des categ chrono ‡ loger sous la categ chrono principale
 		$categ_parent =  $id_rech_chrono ;
-		for ($z=0 ; $z < sizeof($info_606_z[$a]) ; $z++) {
+		for ($z=0 ; $z < count($info_606_z[$a]) ; $z++) {
 			$res_z = categories::searchLibelle(addslashes($info_606_z[$a][$z]), $thesaurus_defaut, 'fr_FR', $categ_parent);
 			if ($res_z) {
 				$categ_parent = $res_z;
 			} else {
 				$categ_parent = create_categ($categ_parent, $info_606_z[$a][$z], strip_empty_words($info_606_z[$a][$z], 'fr_FR'));
 			}
-		} // fin r√©cup des $z en cascade sous l'id de la cat√©gorie principale th√®me chrono
+		} // fin rÈcup des $z en cascade sous l'id de la catÈgorie principale thËme chrono
 		
 		if ($categ_parent != $id_rech_chrono) {
 			// insertion dans la table notices_categories
 			$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$categ_parent."' " ;
-
-			$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+			pmb_mysql_query($rqt_ajout);
 		}
 	}
 	
@@ -172,13 +170,12 @@ function create_categ($num_parent, $libelle, $index) {
 			
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
-	
+	global $nb_expl_ignores;
 	global $prix, $notice_id, $info_852, $tdoc_codage, $book_lender_id, 
-		$sdoc_codage, $book_statut_id, $locdoc_codage, $statisdoc_codage,
+		$sdoc_codage, $book_statut_id, $statisdoc_codage,
 		$cote_mandatory, $book_location_id ;
 	
-	// d√©buggage
+	// dÈbuggage
 	/*	echo "<pre>" ;
 	print_r($info_852) ;
 	echo "</pre>" ;
@@ -187,10 +184,10 @@ function traite_exemplaires () {
 
 	// lu en 010$d de la notice
 	$price = $prix[0];
-	// la zone 852 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_852); $nb_expl++) {
+	// la zone 852 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < count($info_852); $nb_expl++) {
 		if ($info_852[$nb_expl]['b']=="IDC") {
-			/* pr√©paration du tableau √† passer √† la m√©thode */
+			/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 			/* RAZ expl */
 			$expl = array();
 
@@ -198,7 +195,7 @@ function traite_exemplaires () {
 			$expl['cote'] 	    = $info_852[$nb_expl]['h'];
 			$expl['notice']     = $notice_id ;
 
-			// $expl['section']    = $info_852[$nb_expl]['h']; √† chercher dans docs_section
+			// $expl['section']    = $info_852[$nb_expl]['h']; ‡ chercher dans docs_section
 			$data_doc=array();
 			
 			$pos_section = strpos($info_852[$nb_expl]['h']," ") ;
@@ -206,7 +203,7 @@ function traite_exemplaires () {
 				else $section = "XXX" ;
 			
 			if ($section=="XXX") $data_doc['section_libelle'] = "SECTION INDETERMINEE";
-				else $data_doc['section_libelle'] = "Libell√© pour ".$section;
+				else $data_doc['section_libelle'] = "LibellÈ pour ".$section;
 			$data_doc['sdoc_codage_import'] = $section;
 			if ($sdoc_codage) $data_doc['sdoc_owner'] = $book_lender_id ;
 				else $data_doc['sdoc_owner'] = 0 ;
@@ -214,8 +211,8 @@ function traite_exemplaires () {
 
 			// $expl['typdoc'] 
 			$data_doc=array();
-			$data_doc['tdoc_libelle'] = "Type doc ind√©termin√©";
-			$data_doc['duree_pret'] = 15 ; /* valeur par d√©faut */
+			$data_doc['tdoc_libelle'] = "Type doc indÈterminÈ";
+			$data_doc['duree_pret'] = 15 ; /* valeur par dÈfaut */
 			$data_doc['tdoc_codage_import'] = "XXX" ;
 			if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
 				else $data_doc['tdoc_owner'] = 0 ;
@@ -241,14 +238,12 @@ function traite_exemplaires () {
 			$expl_id = exemplaire::import($expl);
 			if ($expl_id == 0) {
 				$nb_expl_ignores++;
-				}
-                      	
 			}
-		
-		} // fin for
-	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
+		}
+	} // fin for
+} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

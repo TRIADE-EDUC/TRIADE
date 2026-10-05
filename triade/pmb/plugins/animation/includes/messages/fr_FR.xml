@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisé en français pour mon plugin
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.9 2023/12/06 15:40:51 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code="animation_menu_title">Animations</entry>
+	<entry code="animation_conf_sub_menu_title">Configuration du contenu éditorial</entry>
+	<entry code="animation_choose_calendar">Associer un calendrier</entry>
+	<entry code="animation_state_publication">Statut de publication</entry>
+	<entry code="animation_create">Création de l'article</entry>
+    <entry code="animation_update">Mise à jour de l'article</entry>
+	<entry code="animation_section_parent">Rubrique parente</entry>
+	<entry code="animation_conf_state_auto_1">Automatique</entry>
+	<entry code="animation_conf_state_manuel_0">Manuelle</entry>
+	<entry code="animation_conf_select_state">Sélectionner le statut</entry>
+	<entry code="animation_conf_select_parent">Sélectionner une rubrique parente</entry>
+	<entry code="animation_conf_select_calendar">Aucun calendrier</entry>
+	<entry code="animation_conf_successfully_saved">Sauvegarde réussie</entry>
+	<entry code="animation_editorial_button">Éditorialiser</entry>
+	<entry code="animation_error_calendar">Aucun calendrier choisi</entry>
+	<entry code="animation_error_publication_state">Aucun statut de publication choisi</entry>
+	<entry code="animation_error_section_parent">Aucune rubrique parente choisie</entry>
+	<entry code="animation_error_no_article_id">Aucun article lié à l'animation</entry>
+	<entry code="animation_view_editorial_article">Voir l'article</entry>
+	<entry code="animation_update_manuel_editorial_article">Mettre à jour l'article</entry>
+	<entry code="animation_editorial_updated">Contenu éditorial mis à jour le</entry>
+	<entry code="animation_editorial_created">Contenu éditorial créé le</entry>
+	<entry code="animation_cp_title">Identifiant de l'animation</entry>
+	<entry code="animation_do_not_exist">L'animation n'existe pas</entry>
+	<entry code="animation_type_not_configurate">Le type d'animation n'est pas configuré</entry>
+	<entry code="animation_not_activate">Les animations ne sont pas activées</entry>
+	<entry code="animation_type">Type d'évènement</entry>
+	<entry code="animation_init_cms_article">Initialisation du contenu éditorial</entry>
+	<entry code="animation_conf_init_manuel">Initialisation</entry>
+	<entry code="animation_conf_init_done">Initialisation terminée</entry>
+	<entry code="animation_yes">Oui</entry>
+	<entry code="animation_no">Non</entry>
+	<entry code="animation_enddate_article">Remplir la date de fin de l'article</entry>
+	<entry code="audit_create_article">[Plugin animation] Création</entry>
+	<entry code="audit_update_article">[Plugin animation] Mise à jour</entry>
+</XMLlist>

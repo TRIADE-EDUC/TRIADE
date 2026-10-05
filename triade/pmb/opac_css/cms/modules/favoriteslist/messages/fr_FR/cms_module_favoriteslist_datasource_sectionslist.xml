@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_favoriteslist_datasource_sectionslist.xml,v 1.4 2023/09/20 08:45:29 rtigero Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_sections_sections'>Rubriques Parentes</entry>
+	<entry code='cms_module_common_datasource_all_sections'>Toutes les rubriques</entry>
+	<entry code='cms_module_common_datasource_sections'>Rubriques</entry>
+	<entry code='cms_module_common_datasource_sections_categories'>Rubriques des catégories d'une notice</entry>
+	<entry code='cms_module_common_datasource_searchsections'>Recherche dans les rubriques</entry>
+	<entry code='cms_module_common_view_sectionslist'>Liste de rubriques - template Django avec lien</entry>
+	<entry code='cms_module_sectionslist_view_carousel'>Vue en Carrousel</entry>
+	<entry code='cms_module_sectionslist_view_carousel_responsive'>Vue en Carrousel responsive</entry>
+	<entry code='cms_module_sectionslist_view_carousel_uikit'>Vue en Carrousel UIkit</entry>
+	<entry code='cms_module_sectionslist_view_slideshow'>Vue en Slideshow</entry>
+	<entry code='cms_module_common_datasource_sections_by_concepts'>Rubriques indexées par des concepts</entry>
+	<entry code='cms_module_common_datasource_sections_by_categories'>Rubriques indexées par des catégories</entry>
+	<entry code='cms_module_common_datasource_sections_by_section_categories'>Rubriques des catégories d'une rubrique</entry>
+	<entry code='cms_module_sectionslist_filter_sections_has_article'>Contient un ou des article(s)</entry>
+	<entry code='cms_module_sectionslist_view_dynamic_grid'>Vue en Dynamic Grid</entry>
+	<entry code='cms_module_favoriteslist_datasource_sectionslist_default'>Identifiant de la rubrique parente pour afficher les rubriques par défaut</entry>
+	<entry code='cms_module_common_datasource_sections_by_section_cp'>Rubriques citées en champ perso d'une rubrique</entry>
+</XMLlist>

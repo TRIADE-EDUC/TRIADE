@@ -9,6 +9,7 @@ require('class/FColor.php');
 require('class/BarCode.php');
 require('class/FDrawing.php');
 
+include_once("../common/config2.inc.php");
 
 $texte=$_GET["text"];
 $code=$_GET["code"];
@@ -29,21 +30,21 @@ $color_white = new FColor(255,255,255);
 6 - Text Font */
 if ($code == "code39") {
 	include('class/code39.barcode.php');
-	$code = new code39(30,$color_black,$color_white,1,$texte,$font);
+	$code = new code39('30',$color_black,$color_white,1,$texte,$font);
 }
 if ($code == "EAN13-ISBN") {
 	include('class/ean13.barcode.php');
-	$code = new ean13(30,$color_black,$color_white,1,$texte,$font);
+	$code = new ean13('30',$color_black,$color_white,1,$texte,$font);
 }
 
 if ($code == "codabar") {
 	include('class/codabar.barcode.php');
-	$code = new codabar(30,$color_black,$color_white,1,$texte,$font);
+	$code = new codabar('30',$color_black,$color_white,1,$texte,$font);
 }
 
 if ($code == "qcode") {
 	include_once('../qrcode/qrlib.php');
-	echo QRcode::png("http://test-dev.triade-educ.net/triade/codeQR.php?cd=$texte");
+	echo QRcode::png(URLSITE."/codeQR.php?cd=$texte");
 }
 
 if ($code != "qcode") {

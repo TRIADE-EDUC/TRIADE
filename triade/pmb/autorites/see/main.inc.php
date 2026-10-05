@@ -1,18 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.4 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: main.inc.php,v 1.6 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $id, $link, $link_expl, $link_explnum, $link_serial, $link_analysis, $link_bulletin, $link_explnum_serial, $link_explnum_analysis, $link_explnum_bulletin;
+global $id;
 global $liens_gestion, $sub, $class_path;
 
+require_once($class_path."/notice.class.php");
+
 /**
- * Page de consultation d'une autoritÃ©
+ * Page de consultation d'une autorité
  */
-//TODO - RedÃ©finir ce tableau selon les droits de l'utilisateur
+//TODO - Redéfinir ce tableau selon les droits de l'utilisateur
 $allowed_authorities = array(
 	"author",
 	"category",
@@ -26,19 +28,10 @@ $allowed_authorities = array(
 	"authperso"
 );
 
-$id+=0;
+$id = intval($id);
 $authority_page = null;
 
-$link = './catalog.php?categ=isbd&id=!!id!!';
-$link_expl = './catalog.php?categ=edit_expl&id=!!notice_id!!&cb=!!expl_cb!!&expl_id=!!expl_id!!';
-$link_explnum = './catalog.php?categ=edit_explnum&id=!!notice_id!!&explnum_id=!!explnum_id!!';
-
-$link_serial = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
-$link_analysis = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!';
-$link_bulletin = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!';
-$link_explnum_serial = "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!";
-$link_explnum_analysis = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!";
-$link_explnum_bulletin = "./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id=!!bul_id!!&explnum_id=!!explnum_id!!";
+notice::init_globals_patterns_links();
 
 $liens_gestion = array(
 		'lien_auteur' => "./autorites.php?categ=see&sub=author&id=!!id!!",
@@ -52,7 +45,7 @@ $liens_gestion = array(
 		'lien_authperso' => "./autorites.php?categ=see&sub=authperso&id=!!id!!"
  );
 
-//On s'assure que l'on peut afficher l'autoritÃ© demandÃ©e
+//On s'assure que l'on peut afficher l'autorité demandée
 if(!empty($sub) && in_array($sub, $allowed_authorities) && $id>0){
 	switch ($sub){
 		case "author":
@@ -102,6 +95,6 @@ if(!empty($sub) && in_array($sub, $allowed_authorities) && $id>0){
 if(is_object($authority_page)){
 	$authority_page->proceed();
 }else{
-	//AutoritÃ© non existante ou pas autorisÃ©e pour l'usager
+	//Autorité non existante ou pas autorisée pour l'usager
 	include('./autorites/authors/authors.inc.php');
 }

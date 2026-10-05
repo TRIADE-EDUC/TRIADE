@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_reviewslist_selector_reviews_by_empr.xml,v 1.2 2022/12/23 10:19:56 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_reviewslist_selector_reviews_by_empr_filter'>Filtrez sur les avis d'un lecteur</entry>
+	<entry code='cms_module_common_selector_env_var'>Choix du lecteur via une variable d'environnement</entry>
+	<entry code='cms_module_common_selector_global_var'>Choix du lecteur via une variable globale</entry>
+	<entry code='cms_module_reviewslist_selector_empr_by_article_cp'>Choix du lecteur via un champ perso d'article</entry>
+</XMLlist>

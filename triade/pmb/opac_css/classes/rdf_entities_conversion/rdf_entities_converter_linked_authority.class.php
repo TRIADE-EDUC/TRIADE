@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_converter_linked_authority.class.php,v 1.1 2018-09-24 13:39:22 tsamson Exp $
+// $Id: rdf_entities_converter_linked_authority.class.php,v 1.4 2023/07/26 12:49:31 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,15 +10,15 @@ require_once($class_path.'/rdf_entities_conversion/rdf_entities_converter.class.
 
 class rdf_entities_converter_linked_authority extends rdf_entities_converter {
     protected $table_name = 'aut_link';
-    
+
     protected $table_key = 'aut_link_from_num';
-    
+
     private $authority_type;
-    
+
     private $authority_id;
-    
+
     public $abstract_entity = true;
-    
+
     public function __construct($entity_id, $entity_type, $depth = 1) {
         $this->entity_id = $entity_id;
         if (strpos($entity_id, "_") !== false) {
@@ -31,14 +31,14 @@ class rdf_entities_converter_linked_authority extends rdf_entities_converter {
             $this->depth = -1;
         }
     }
-    
+
     protected function init_map_fields() {
         $this->map_fields = array_merge(parent::init_map_fields(), array(
             'aut_link_type' => 'http://www.pmbservices.fr/ontology#relation_type_authority',
         ));
         return $this->map_fields;
     }
-    
+
     protected function init_special_fields() {
         $this->special_fields = array_merge(parent::init_special_fields(), array(
             'http://www.pmbservices.fr/ontology#has_authority' => array(
@@ -52,24 +52,24 @@ class rdf_entities_converter_linked_authority extends rdf_entities_converter {
         ));
         return $this->special_fields;
     }
-    
+
     public function get_assertions_from_authority() {
         $type = $this->get_string_from_type_object($this->authority_type);
         $subject = $this->prefix_rdf."/".$this->entity_type."#".$this->entity_id;
-        $object = $this->prefix_rdf."/".$type."#".$this->authority_id;
+        $object = onto_common_uri::get_new_uri($this->prefix_rdf.$this->entity_type.'#');
         $object_type = $this->get_object_type_from_type($type);
         $object_properties = $this->get_object_properties($this->authority_id, $type);
-        $object_properties['assertions'] = rdf_entities_converter_controller::convert($this->authority_id, $type, $this->depth);
+        $object_properties['assertions'] = rdf_entities_converter_controller::convert($this->authority_id, $type, $object, $this->depth);
         $assertion = new onto_assertion($subject, "http://www.pmbservices.fr/ontology#has_authority", $object , $object_type, $object_properties);
         return $assertion;
     }
-    
+
     public function get_relation_type_authority() {
         $subject = $this->prefix_rdf."/".$this->entity_type."#".$this->entity_id;
         $query = "
-            SELECT aut_link_type 
-            FROM aut_link 
-            WHERE aut_link_to_num = ".$this->authority_id." 
+            SELECT aut_link_type
+            FROM aut_link
+            WHERE aut_link_to_num = ".$this->authority_id."
             AND aut_link_to = ".$this->authority_type;
         $result = pmb_mysql_query($query);
         if (pmb_mysql_num_rows($result)) {
@@ -78,7 +78,7 @@ class rdf_entities_converter_linked_authority extends rdf_entities_converter {
         $assertion = new onto_assertion($subject, "http://www.pmbservices.fr/ontology#relation_type_authority", $row[0] , 'http://www.w3.org/2000/01/rdf-schema#Literal', array('type' => 'literal'));
         return $assertion;
     }
-    
+
     private function get_string_from_type_object($type_object) {
         switch ($type_object) {
             case AUT_TABLE_AUTHORS :
@@ -105,52 +105,49 @@ class rdf_entities_converter_linked_authority extends rdf_entities_converter {
                 return "";
         }
     }
-    
+
     public static function get_entity_isbd($id, $type) {
         $isbd = parent::get_entity_isbd($id, $type);
-        $isbd = sprintf(static::get_prefixe_entity($type) ,$isbd);
+        $isbd = sprintf(static::get_prefixe_entity($type, $id) ,$isbd);
         return $isbd;
     }
-    
-    private static function get_prefixe_entity($type_object) {
+
+    private static function get_prefixe_entity($type_object, $id = '') {
         global $msg;
         switch($type_object){
             case 'author' :
-            case AUT_TABLE_AUTHORS :
+            case (string) AUT_TABLE_AUTHORS :
                 return $msg['aut_link_author'];
             case 'category' :
-            case AUT_TABLE_CATEG :
+            case (string) AUT_TABLE_CATEG :
                 return $msg['aut_link_categ'];
             case 'publisher' :
-            case AUT_TABLE_PUBLISHERS :
+            case (string) AUT_TABLE_PUBLISHERS :
                 return $msg['aut_link_publisher'];
             case 'collection' :
-            case AUT_TABLE_COLLECTIONS :
+            case (string) AUT_TABLE_COLLECTIONS :
                 return $msg['aut_link_coll'];
             case 'subcollection' :
-            case AUT_TABLE_SUB_COLLECTIONS :
+            case (string) AUT_TABLE_SUB_COLLECTIONS :
                 return $msg['aut_link_subcoll'];
             case 'serie' :
-            case AUT_TABLE_SERIES :
+            case (string) AUT_TABLE_SERIES :
                 return $msg['aut_link_serie'];
             case 'work' :
-            case AUT_TABLE_TITRES_UNIFORMES :
+            case (string) AUT_TABLE_TITRES_UNIFORMES :
                 return $msg['aut_link_tu'];
             case 'indexint' :
-            case AUT_TABLE_INDEXINT :
+            case (string) AUT_TABLE_INDEXINT :
                 return $msg['aut_link_indexint'];
             case 'concept' :
-            case AUT_TABLE_CONCEPT :
+            case (string) AUT_TABLE_CONCEPT :
                 return $msg['aut_link_concept'];
             case 'authperso' :
-            case AUT_TABLE_AUTHPERSO :
-                if($this->aut_list[$i]['to']>1000){
-                    // authperso
-                    $authperso = new authperso($this->aut_list[$i]['to']-1000);
-                    return '['.$authperso->info['name'].'] %1s';
-                }
+            case (string) AUT_TABLE_AUTHPERSO :
+                $authperso = new authperso($id - 1000);
+                return '['.$authperso->info['name'].'] %1s';
             default :
                 return '%1s';
-        }   
+        }
     }
 }

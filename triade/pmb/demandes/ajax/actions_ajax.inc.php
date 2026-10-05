@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: actions_ajax.inc.php,v 1.6 2014-04-02 08:50:38 mhoestlandt Exp $
+// $Id: actions_ajax.inc.php,v 1.7 2021/08/06 11:50:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $action, $quoifaire;
+global $id_action;
 
 require_once("$class_path/demandes_actions.class.php");
 require_once("$include_path/templates/demandes_actions.tpl.php");

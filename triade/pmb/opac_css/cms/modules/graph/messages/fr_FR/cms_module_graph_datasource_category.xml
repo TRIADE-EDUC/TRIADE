@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Graph
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_graph_datasource_category.xml,v 1.1 2023/10/24 10:46:25 dbellamy Exp $ -->
+
+<XMLlist>
+    <entry code='cms_module_graph_datasource_category_generic_levels_to_load'>Nombre de niveaux génériques à charger :</entry>
+    <entry code='cms_module_graph_datasource_category_specific_levels_to_load'>Nombre de niveaux spécifiques à charger :</entry>
+    <entry code='cms_module_graph_datasource_category_fake_root_name'>Thésaurus</entry>
+</XMLlist>

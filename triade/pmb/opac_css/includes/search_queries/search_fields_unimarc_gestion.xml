@@ -1,0 +1,1420 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: search_fields_unimarc_gestion.xml,v 1.10 2024/03/26 11:03:40 dbellamy Exp $ -->
+<pmbfields>
+	<!-- Zone fixedFields :
+		Liste des champs de recherche possibles de la base de données
+		Chaque champ est modélisé par le tag <field> :
+		<field @att=id,title> 
+			-id : numéro unique arbitraire
+			-title : Texte qui sera affiché dans l'écran de recherche
+			<field> contient les sous tags :
+				<input @type> : type de saisie
+					-type (text|list) : 
+						@type=list (dans le cas d'une saisie par liste), input contient les sous champs :
+						 	<queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
+										  -la première donne le code à retourner
+										  -la deuxième donne le libellé dans la liste
+										  
+				<query> : requete associée au champ et à l'opérateur
+				<query @att=for,multipleWords,regDiacrit>
+					-for : nom de l'opérateur auquel correspond la requete 
+					 (les opérateurs non listés ne seront pas pris en compte), 
+					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
+					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
+			 		<query> contient les sous tags :
+					
+						<main> : Corps principal de la requete, 
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série 
+							 de tests de la clause where pour chaque mot saisi
+						
+						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
+						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+	-->
+	
+	<fixedFields>
+		<field title="msg:233" id="1" separator="msg:champs_principaux_query" unimarcField="200$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='200' and usubfield in ('a','b','c','d')) and source_id in (!!selected_sources!!) group by notice_id ]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and source_id in (!!selected_sources!!) ]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and source_id in (!!selected_sources!!) ]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value=' !!p!! ') and source_id in (!!selected_sources!!) ]]></main>
+			</query>
+		</field>
+		<field title="msg:global_search" id="42" unimarcField="XXX">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and source_id in (!!selected_sources!!) group by notice_id]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+		</field>
+		<field title="msg:234" id="2" unimarcField="7XX">
+			<input type="authoritie_external" selector="auteur" />
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '7%' and usubfield in ('a','b')) and source_id in (!!selected_sources!!) group by notice_id]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!!%' and ufield like '7%' and usubfield in ('a','b') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like '%!!p!! ' and ufield like '7%' and usubfield in ('a','b') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value=' !!p!! ' and ufield like '7%' and usubfield in ('a','b') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:searcher_publisher" id="3" unimarcField="210$c214$c">
+			<input type="authoritie_external" selector="editeur"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='210' and usubfield in ('c')) OR (ufield='214' and usubfield in ('c'))) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and ((ufield='210' and usubfield in ('c')) OR (ufield='214' and usubfield in ('c'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and ((ufield='210' and usubfield in ('c')) OR (ufield='214' and usubfield in ('c'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and ((ufield='210' and usubfield in ('c')) OR (ufield='214' and usubfield in ('c'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:annee_edition" id="23" unimarcField="210$d214$d">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS_AT_LEAST" multipleWords="yes" regdiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (!!multiple_term!!) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+				<multipleTerm>i_value like '%!!p!!%'</multipleTerm>
+				<multipleOperator>or</multipleOperator>
+			</query>
+			<query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (!!multiple_term!!) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+				<multipleTerm>i_value like '%!!p!!%'</multipleTerm>
+				<multipleOperator>and</multipleOperator>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value=' !!p!! ') and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EQ" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1<'!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1>'!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1<='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1>='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:searcher_coll" id="4" unimarcField="225$a410$t">
+			<input type="authoritie_external" selector="collection"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='225' and usubfield in ('a')) OR (ufield='410' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!!%' and ((ufield='225' and usubfield in ('a')) OR (ufield='410' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like '%!!p!! ' and ((ufield='225' and usubfield in ('a')) OR (ufield='410' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!! ' and ((ufield='225' and usubfield in ('a')) OR (ufield='410' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:searcher_subcoll" id="5" unimarcField="225$i411$t">
+			<input type="authoritie_external" selector="subcollection"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='225' and usubfield in ('i')) OR (ufield='411' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!!%' and ((ufield='225' and usubfield in ('i')) OR (ufield='411' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like '%!!p!! ' and ((ufield='225' and usubfield in ('i')) OR (ufield='411' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!! ' and ((ufield='225' and usubfield in ('i')) OR (ufield='411' and usubfield in ('t'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:serie_query" id="6" unimarcField="461$t">
+			<input type="authoritie_external" selector="serie"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='461' and usubfield in ('t')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield='461' and usubfield in ('t')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield='461' and usubfield in ('t')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield='461' and usubfield in ('t')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:isbn_query" id="22" unimarcField="010$a">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH" isbnSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union"/>
+				<main><![CDATA[SELECT distinct recid as notice_id from entrepot_source_!!current_source!! where (ufield='010' or ufield='011' or ufield='345' or ufield='073') and usubfield='a' and !!multiple_term!! and source_id in (!!selected_sources!!)]]></main>
+				<multipleTerm>value like '!!p!!%'</multipleTerm>
+				<multipleOperator>or</multipleOperator>
+			</query>
+		</field>
+		<field title="msg:titre_uniforme_search" id="51" unimarcField="500$a">
+			<var name="use_uniform_title" visibility="yes">
+				<value visibility="no">0</value>
+			</var>
+			<input type="authoritie_external" selector="titre_uniforme" />
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ufield='500' and usubfield='a' and source_id in (!!selected_sources!!) group by notice_id]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like ' !!p!!%' and ufield='500' and usubfield='a' and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value like '%!!p!! ' and ufield='500' and usubfield='a' and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where i_value=' !!p!! ' and ufield='500' and usubfield='a' and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:external_search_analysis_id" id="37" unimarcField="014$a" >
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH" isbnSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm=""/>
+				<main><![CDATA[select distinct recid as notice_id from entrepot_source_!!current_source!! where (ufield='014') and usubfield='a' and !!multiple_term!! group by notice_id]]></main>
+				<multipleTerm>value like '!!p!!%'</multipleTerm>
+				<multipleOperator>or</multipleOperator>
+			</query>
+		</field>
+		<field title="msg:265" id="7" separator="msg:notes_search" unimarcField="300">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='300' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield='300' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield='300' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield='300' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:266" id="8" unimarcField="327">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='327' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield='327' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield='327' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield='327' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:note_resume_query" id="9" unimarcField="330">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='330' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield='330' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield='330' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield='330' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:toutes_notes_query" id="10" unimarcField="3XX">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '3%' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield like '3%' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield like '3%' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield like '3%' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:134" id="11" separator="msg:indexations_query" unimarcField="60X">
+			<input type="authoritie_external" selector="categorie" />
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:search_autopostage_multicritere" id="54" unimarcField="60X">
+			<var name="thesaurus_auto_postage_search" visibility="yes">
+				<value visibility="no">0</value>
+			</var>
+			<input type="authoritie_external" selector="categorie" />
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield like '60%') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:indexint_menu_title" id="12" unimarcField="676$a686$a">
+			<input type="authoritie_external" selector="indexint"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and ((ufield='676' or ufield='686') and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and ((ufield='676' or ufield='686') and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query> 
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and ((ufield='676' or ufield='686') and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and ((ufield='676' or ufield='686') and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:324" id="13" unimarcField="610">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="BOOLEAN" booleanSearch="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="pert desc"/>
+				<main><![CDATA[select distinct recid as notice_id, !!pert_term!! as pert from entrepot_source_!!current_source!! where (!!where_term!!) and (ufield='610') and source_id in (!!selected_sources!!)]]></main>
+				<table>entrepots</table>
+				<index_l>value</index_l>
+				<index_i>i_value</index_i>
+				<id_field>recid</id_field>
+			</query>
+			<query for="STARTWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, ivalue from entrepot_source_!!current_source!! where (i_value like ' !!p!!%') and (ufield='610') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like '%!!p!! ') and (ufield='610') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (i_value like ' !!p!! ') and (ufield='610') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:langue_publication_query" id="20" separator='msg:537' unimarcField="101$a">
+			<input type="marc_list">
+				<name>lang</name>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='101' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:langue_originale_query" id="21" unimarcField="101$c">
+			<input type="marc_list">
+				<name>lang</name>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='101' and usubfield in ('c')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:doc_perio_art_query" id="14" separator="msg:130" unimarcField="bl">
+			<input type="list">
+				<options>
+					<option value="m">msg:4057</option>
+					<option value="s">msg:4010</option>
+					<option value="a">msg:articles_query</option>
+				</options>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='bl') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:type_doc_sort" id="15" unimarcField="dt">
+			<input type="marc_list">
+				<name>doctype</name>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value='!!p!!') and (ufield='dt') and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:origine_notice_query" id="36" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select orinot_id, orinot_nom from origine_notice</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:statut_notice_sort" id="31" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select id_notice_statut, gestion_libelle from notice_statut</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:comment_gestion_query" id="33" unimarcField="FORBIDDEN" visibility="no">
+			<input type='text'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:date_creation_query" id="41" unimarcField="100$a">
+			<input type='date'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where concat(SUBSTR(value, 1, 4), '-', SUBSTR(value, 5, 2), '-', SUBSTR(value, 7, 2)) = '!!p!!' and (ufield='100' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where concat(SUBSTR(value, 1, 4), '-', SUBSTR(value, 5, 2), '-', SUBSTR(value, 7, 2)) < '!!p!!' and (ufield='100' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where concat(SUBSTR(value, 1, 4), '-', SUBSTR(value, 5, 2), '-', SUBSTR(value, 7, 2)) > '!!p!!' and (ufield='100' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where concat(SUBSTR(value, 1, 4), '-', SUBSTR(value, 5, 2), '-', SUBSTR(value, 7, 2)) <= '!!p!!' and (ufield='100' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where concat(SUBSTR(value, 1, 4), '-', SUBSTR(value, 5, 2), '-', SUBSTR(value, 7, 2)) >= '!!p!!' and (ufield='100' and usubfield in ('a')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:print_numeric_ex_title" id="44" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select distinct(explnum_mimetype), if(explnum_mimetype!='', explnum_mimetype, 'Undefined') from explnum order by 2</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:274" id="45" unimarcField="856$u">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="value"/>
+				<main><![CDATA[select distinct recid as notice_id, value from entrepot_source_!!current_source!! where (value like '%!!p!!%') and (ufield='856' and usubfield in ('u')) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:in_catalog" id="111">
+			<input type="list">
+				<options>
+					<option value="not in">msg:39</option>
+					<option value="in">msg:40</option>
+				</options>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+			<repeat name="current_source" on="selected_sources" separator="," operator="union"/>
+				<main><![CDATA[select distinct recid as notice_id from entrepot_source_!!current_source!! where concat(connector_id,' ',source_id,' ',ref) !!p!! (select recid from notices_externes)]]></main>			
+			</query>
+		</field>
+		<field title="msg:localisation_sort" id="16" separator="msg:exemplaires_query" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query translationTablename='docs_location' translationFieldname='location_libelle'>select idlocation,location_libelle from docs_location where location_visible_opac=1</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		
+		<field title="msg:sur_location_sort" id="55" unimarcField="FORBIDDEN" visibility="no">
+			<var name="pmb_sur_location_activate" visibility="yes">
+				<value visibility="no">0</value>
+			</var>
+			<var name="opac_show_exemplaires" visibility="yes">
+				<value visibility="no">-1</value>
+			</var>
+			<input type="query_list">
+				<query>select surloc_id,surloc_libelle from sur_location where surloc_visible_opac=1  order by surloc_libelle </query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		
+		<field title="msg:4018" id="17" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query translationTablename='docs_section' translationFieldname='section_libelle'>select idsection,section_libelle from docs_section where section_visible_opac=1 order by section_libelle</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:651" id="18" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select idlender,lender_libelle from lenders order by lender_libelle</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:294" id="19" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query translationTablename='docs_type' translationFieldname='tdoc_libelle'>select idtyp_doc,tdoc_libelle from docs_type order by tdoc_libelle</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:296" id="24" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:codes_barres_query" id="29" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:297" id="30" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query translationTablename='docs_statut' translationFieldname='statut_libelle'>select idstatut,statut_libelle from docs_statut</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:299" id="32" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query translationTablename='docs_codestat' translationFieldname='codestat_libelle'>select idcode,codestat_libelle from docs_codestat</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:expl_message" id="43" unimarcField="FORBIDDEN" visibility="no">
+			<input type='text'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="no">
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS_AT_LEAST" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS_ALL" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:expl_zone_comment" id="53" unimarcField="FORBIDDEN" visibility="no">
+			<input type='text'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="STARTWITH" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH" regDiacrit="no">
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS_AT_LEAST" regDiacrit="yes">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="CONTAINS_ALL" regDiacrit="no">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:date_creation_query" id="50" unimarcField="FORBIDDEN" visibility="no">
+			<input type='date'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:filing_date" id="68" unimarcField="FORBIDDEN" visibility="no">
+			<input type='date'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:return_date" id="69" unimarcField="FORBIDDEN" visibility="no">
+			<input type='date'/>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:date_parution_bulletin_query" id="28" separator="msg:4010" unimarcField="210$d214$d">
+			<input type="date"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ" regDiacrit="yes">
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+			</query>
+			<query for="LT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1<'!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1>'!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="LTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1<='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="GTEQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id, i_value from entrepot_source_!!current_source!! where (value*1>='!!p!!'*1) and ((ufield='210' and usubfield in ('d')) OR (ufield='214' and usubfield in ('d'))) and source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:titre_perio_query" id="34" unimarcField="461$t">
+			<input type="query_list" completion="yes">
+				<query>select notice_id, tit1 from notices where niveau_biblio='s' order by index_sew</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">				
+				<repeat name="current_source" on="selected_sources" separator="," operator="union"/>
+				<main><![CDATA[SELECT distinct a0.recid AS notice_id FROM entrepot_source_!!current_source!! AS a0 JOIN notices on a0.value=notices.tit1 AND notices.notice_id='!!p!!' JOIN entrepot_source_!!current_source!! AS a1 ON a1.recid = a0.recid AND a1.ufield='bl' AND a1.value='a' WHERE a0.ufield='461' AND a0.usubfield='t' AND a0.source_id in (!!selected_sources!!)
+				UNION
+				SELECT distinct a1.recid AS notice_id FROM entrepot_source_!!current_source!! AS a0 JOIN notices on a0.value=notices.tit1 AND notices.notice_id='!!p!!' JOIN entrepot_source_!!current_source!! AS a1 ON a1.recid = a0.recid AND a1.ufield='bl' AND a1.value='s' WHERE a0.ufield='200' AND a0.usubfield='a' AND a0.source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:num_bull_query" id="35" unimarcField="463$v">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union"/>
+				<main><![CDATA[select distinct recid as notice_id from entrepot_source_!!current_source!! where (i_value like ' %!!p!!% ') and (ufield='463' and usubfield in ('v')) and source_id in (!!selected_sources!!) group by notice_id]]></main>
+			</query>
+		</field>
+		<field title="msg:collection_state_search_loc" id="56" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select idlocation,location_libelle from docs_location order by location_libelle</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:collection_state_search_surloc" id="57" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select surloc_id,surloc_libelle from sur_location order by surloc_libelle</query>	
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		
+		<field title="msg:collection_state_search_emp" id="58" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select archempla_id, archempla_libelle from arch_emplacement order by archempla_libelle</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		
+		<field title="msg:collection_state_search_sup" id="59" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select archtype_id, archtype_libelle from arch_type order by archtype_libelle</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_sta" id="60" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select archstatut_id, archstatut_gestion_libelle from arch_statut order by archstatut_gestion_libelle</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_col" id="61" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_cote" id="62" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_arc" id="63" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_org" id="64" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_note" id="65" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">	
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+
+		<field title="msg:collection_state_search_lac" id="66" unimarcField="FORBIDDEN" visibility="no">
+			<input type="text"/>
+			<variable name="selected_sources" type="global"/>
+			<query for="CONTAINS">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="STARTWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="ENDWITH">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+			<query for="EXACT">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		
+		<field title="msg:caddie_de_NOTI" id="25" separator="msg:caddie_menu" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select idcaddie,name from caddie where type='NOTI'</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:caddie_de_EXPL" id="26" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select idcaddie,name from caddie where type='EXPL'</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+		<field title="msg:caddie_de_BULL" id="27" unimarcField="FORBIDDEN" visibility="no">
+			<input type="query_list">
+				<query>select idcaddie,name from caddie where type='BULL'</query>
+			</input>
+			<variable name="selected_sources" type="global"/>
+			<query for="EQ">
+				<repeat name="current_source" on="selected_sources" separator="," operator="union" orderTerm="i_value"/>
+				<main><![CDATA[select distinct recid as notice_id,i_value from entrepot_source_!!current_source!! where source_id in (!!selected_sources!!)]]></main>
+			</query>
+		</field>
+	</fixedFields>
+	
+	<!-- Zone dynamicFields :
+		Liste des champs personalisés par type de données
+			<field @att=id,dataType> 
+			-id : numéro unique arbitraire
+			-dataType : type de données du champ personalisé
+			<field> contient les sous tags :
+			
+				<query> : requete associée au champ et à l'opérateur
+				<query @att=for,multipleWords,regDiacrit>
+					-for : nom de l'opérateur auquel correspond la requete 
+					 (les opérateurs non listés ne seront pas pris en compte), 
+					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
+					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
+			 		<query> contient les sous tags :
+					
+						<main> : Corps principal de la requete, 
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série  
+							 de tests de la clause where pour chaque mot saisi
+							-!!field!! sera remplacé par le numéro de champ personalisé
+						
+						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
+						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+	-->
+	
+	<dynamicFields visible="no">
+		<fieldType type="notices" prefix="d">
+			<field dataType="small_text" id="1">
+				<query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where !!multiple_term!! order by index_serie, tnvol, index_sew]]></main>
+					<multipleTerm>notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>or</multipleOperator>
+				</query>
+				<query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where !!multiple_term!! order by index_serie, tnvol, index_sew]]></main>
+					<multipleTerm>notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>and</multipleOperator>
+				</query>
+				<query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text like '!!p!!%' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text like '%!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="EQ">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[select distinct notice_id from notices left join notices_custom_values on notices_custom_origine=notice_id and notices_custom_champ=!!field!! where (notices_custom_small_text='' or notices_custom_small_text is null) order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_small_text!='' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="text" id="2">
+				<query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where !!multiple_term!! order by index_serie, tnvol, index_sew]]></main>
+					<multipleTerm>notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>or</multipleOperator>
+				</query>
+				<query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where !!multiple_term!! order by index_serie, tnvol, index_sew]]></main>
+					<multipleTerm>notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>and</multipleOperator>
+				</query>
+				<query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text like '!!p!!%' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text like '%!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="EQ">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[select distinct notice_id from notices left join notices_custom_values on notices_custom_origine=notice_id and notices_custom_champ=!!field!! where (notices_custom_text='' or notices_custom_text is null) order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text!='' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="integer" id="3">
+				<query for="EQ">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer<'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer>'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer<='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer>='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[select distinct notice_id from notices left join notices_custom_values on notices_custom_origine=notice_id and notices_custom_champ=!!field!! where (notices_custom_integer='' or notices_custom_integer is null) order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_integer!='' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="float" id="4">
+				<query for="EQ">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and round(notices_custom_float,LENGTH(SUBSTRING_INDEX('!!p!!','.',-1)))='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and round(notices_custom_float,LENGTH(SUBSTRING_INDEX('!!p!!','.',-1)))<'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and round(notices_custom_float,LENGTH(SUBSTRING_INDEX('!!p!!','.',-1)))>'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and round(notices_custom_float,LENGTH(SUBSTRING_INDEX('!!p!!','.',-1)))<='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and round(notices_custom_float,LENGTH(SUBSTRING_INDEX('!!p!!','.',-1)))>='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[select distinct notice_id from notices left join notices_custom_values on notices_custom_origine=notice_id and notices_custom_champ=!!field!! where (notices_custom_float='' or notices_custom_float is null) order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_float!='' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="date" id="5">
+				<query for="EQ">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date<'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date>'!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date<='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date>='!!p!!' order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[select distinct notice_id from notices left join notices_custom_values on notices_custom_origine=notice_id and notices_custom_champ=!!field!! where (notices_custom_date='' or notices_custom_date='0000-00-00' or notices_custom_date is null) order by index_serie, tnvol, index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[select distinct notice_id from notices,notices_custom_values where notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_date!='' and notices_custom_date!=0 order by index_serie, tnvol, index_sew]]></main>
+				</query>
+			</field>
+		</fieldType>
+		<fieldType type="expl" prefix="e">
+			<field dataType="small_text" id="1">
+				<query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND (!!multiple_term!!) AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+					<multipleTerm>expl_custom_small_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>or</multipleOperator>
+				</query>
+				<query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND (!!multiple_term!!) AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+					<multipleTerm>expl_custom_small_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>and</multipleOperator>
+				</query>
+				<query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_small_text like '!!p!!%' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_small_text like '%!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_small_text = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="EQ">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_small_text = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires LEFT JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) WHERE (expl_custom_small_text='' or expl_custom_small_text is null) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id AND expl_custom_small_text!='') LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="text" id="2">
+				<query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND (!!multiple_term!!) AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+					<multipleTerm>expl_custom_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>or</multipleOperator>
+				</query>
+				<query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND (!!multiple_term!!) AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+					<multipleTerm>expl_custom_text like '%!!p!!%'</multipleTerm>
+					<multipleOperator>and</multipleOperator>
+				</query>
+				<query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_text like '!!p!!%' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_text like '%!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_text = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="EQ">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_text = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires LEFT JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) WHERE (expl_custom_text='' or expl_custom_text is null) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id AND expl_custom_text !='') LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="integer" id="3">
+				<query for="EQ">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_integer = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_integer < '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_integer > '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_integer <= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_integer >= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires LEFT JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) WHERE (expl_custom_integer='' or expl_custom_integer is null) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id AND expl_custom_integer !='') LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="float" id="4">
+				<query for="EQ">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_float = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_float < '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_float > '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_float <= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_float >= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires LEFT JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) WHERE (expl_custom_float='' or expl_custom_float is null) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id AND expl_custom_float !='') LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+			</field>
+			<field dataType="date" id="5">
+				<query for="EQ">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_date = '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_date < '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_date > '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_date <= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_date >= '!!p!!' AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires LEFT JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) WHERE (expl_custom_date='' or expl_custom_date is null OR expl_custom_date ='0000-00-00') GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+				<query for="ISNOTEMPTY">
+					<main><![CDATA[SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_values ON expl_custom_champ=!!field!! AND expl_custom_origine=expl_id AND expl_custom_date !='' AND expl_custom_date !='0000-00-00') LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew]]></main>
+				</query>
+			</field>
+		</fieldType>
+	</dynamicFields>
+	
+	<specialFields>
+		<field type="external_sources" title="msg:connecteurs_source_label" id="2" delnotallowed="yes" separator="Autres"/>	
+		<field type="serials_list" title="msg:external_serials" id="3"/>
+		<field type="remote_serials_list" title="msg:remote_external_serials" id="4"/>
+		<field type="facette" title="msg:search_facette" id="5" opacVisibility="no"/>
+		<field type="search_segment" title="msg:search_segment" id="10" opacVisibility="no" visible="no"/>
+		<field type="combine_extended_search" title="msg:combine_extended_search" id="11" opacVisibility="no"/>
+	</specialFields>
+	
+	<operators>
+		<operator name="BOOLEAN">msg:expr_bool_query</operator>
+		<operator name="CONTAINS">msg:contient_search</operator>
+		<operator name="CONTAINS_ALL">msg:contient_tous_mots_query</operator>
+		<operator name="CONTAINS_AT_LEAST">msg:contient_plus_un_mot_query</operator>
+		<operator name="STARTWITH">msg:commence_par_query</operator>
+		<operator name="ENDWITH">msg:finit_par_query</operator>
+		<operator name="EXACT">msg:exactement_comme_query</operator>
+		<operator name="EQ">msg:eq_query</operator>
+		<operator name="GT">msg:gt_query</operator>
+		<operator name="LT">msg:lt_query</operator>
+		<operator name="GTEQ">msg:gteq_query</operator>
+		<operator name="LTEQ">msg:lteq_query</operator>
+		<operator name="ISEMPTY" emptyAllowed="yes">msg:est_vide_query</operator>
+		<operator name="ISNOTEMPTY" emptyAllowed="yes">msg:pas_vide_query</operator>
+	</operators>
+</pmbfields>

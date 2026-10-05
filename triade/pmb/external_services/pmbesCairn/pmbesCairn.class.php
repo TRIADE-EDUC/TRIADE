@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmbesCairn.class.php,v 1.3 2017-05-15 12:15:47 apetithomme Exp $
+// $Id: pmbesCairn.class.php,v 1.5 2023/03/16 10:49:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once($class_path."/external_services.class.php");
 require_once($class_path."/external_services_caches.class.php");
 require_once($class_path."/sessions_tokens.class.php");
@@ -13,12 +14,6 @@ require_once($base_path."/admin/connecteurs/in/cairn/cairn.class.php");
 require_once($class_path."/encoding_normalize.class.php");
 
 class pmbesCairn extends external_services_api_class{
-	public $error=false;		//Y-a-t-il eu une erreur
-	public $error_message="";	//Message correspondant Ã  l'erreur
-	
-	function form_general_config() {
-		return false;
-	}
 	
 	public function check_token($token) {
 		/**
@@ -43,7 +38,7 @@ class pmbesCairn extends external_services_api_class{
 			$response['error_message'] = $this->error_message.' : '.$token;
 			return encoding_normalize::utf8_normalize($response);
 		}
-		// La rÃ©cupÃ©ration du login suffit Ã  valider le token et la session	
+		// La récupération du login suffit à valider le token et la session	
 		$sessid =  md5($sessions_token->get_SESSID());
 		$session_expiration = $sessions_token->get_expiration();
 		$empr_login = $sessions_token->get_login();

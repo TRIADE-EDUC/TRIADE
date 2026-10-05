@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categ_see.inc.php,v 1.113 2019-05-29 13:24:55 ngantier Exp $
+// $Id: categ_see.inc.php,v 1.114 2021/12/28 10:28:12 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path, $msg;
+global $opac_auto_postage_etendre_recherche, $opac_auto_postage_nb_montant, $opac_auto_postage_nb_descendant;
 
 require_once ($class_path . "/categories.class.php");
 
@@ -23,10 +26,10 @@ if ($id) {
 	}
 	
 	//LISTE DES NOTICES ASSOCIEES
-	//Lire le champ path du noeud pour Ã©tendre la recherche Ã©ventuellement au fils et aux pÃ¨re de la catÃ©gorie
+	//Lire le champ path du noeud pour étendre la recherche éventuellement au fils et aux père de la catégorie
 	// lien Etendre auto_postage
 	if (!isset($nb_level_enfants)) {
-		// non defini, prise des valeurs par dÃ©faut
+		// non defini, prise des valeurs par défaut
 		if (isset($_SESSION["nb_level_enfants"]) && $opac_auto_postage_etendre_recherche) $nb_level_descendant=$_SESSION["nb_level_enfants"];
 		else $nb_level_descendant=$opac_auto_postage_nb_descendant;
 	} else {
@@ -35,7 +38,7 @@ if ($id) {
 	
 	// lien Etendre auto_postage
 	if(!isset($nb_level_parents)) {
-		// non defini, prise des valeurs par dÃ©faut
+		// non defini, prise des valeurs par défaut
 		if(isset($_SESSION["nb_level_parents"]) && $opac_auto_postage_etendre_recherche) $nb_level_montant=$_SESSION["nb_level_parents"];
 		else $nb_level_montant=$opac_auto_postage_nb_montant;
 	} else {
@@ -46,7 +49,7 @@ if ($id) {
 	$_SESSION["nb_level_parents"]=	$nb_level_montant;
 	
 	$q = "select path from noeuds where id_noeud = '".$id."' ";
-	$r = pmb_mysql_query($q, $dbh);
+	$r = pmb_mysql_query($q);
 	if($r && pmb_mysql_num_rows($r)){
 		$path=pmb_mysql_result($r, 0, 0);
 		$nb_pere=substr_count($path,'/');

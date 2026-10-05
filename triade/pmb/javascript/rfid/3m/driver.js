@@ -3,7 +3,7 @@ var httpcom = function(url) {
 	//URL du webservice
 	this.url=url;
 	
-	//Focntion de rappel avec la rÃ©posne ou l'erreur !
+	//Focntion de rappel avec la réposne ou l'erreur !
 	this.callback="";
 	//Envoi d'une trame
 	this.send=function(frame,callback,timeout) {
@@ -14,7 +14,7 @@ var httpcom = function(url) {
 		req_rfid.request(getUrl,0,"",1,pmbtk.c(this,"response"),pmbtk.c(this,"error"),0);	
 	}
 	
-	//RÃ©ponse tout va bien !
+	//Réponse tout va bien !
 	this.response=function(rawResponse) {
 		var ret={
 				response:rawResponse,
@@ -118,17 +118,17 @@ var rfid_3m_810 = function(url) {
 					this.params.uidList[this.params.cpt]['type']=this.h2d(data.substr(6,2)) & 3;
 					this.params.uidList[this.params.cpt]['error']=0;
 				} else{
-					// etiquette en limite de portÃ©, les data ne sont pas lues
+					// etiquette en limite de porté, les data ne sont pas lues
 					this.params.uidList[this.params.cpt]['error']=1;
 				}
 				this.params.cpt++;
 				if(this.params.cpt < this.params.nb){
-					// on va lire l'Ã©tiquette suivante
+					// on va lire l'étiquette suivante
 					this.params.status="read_data";
 					var uid=this.params.uidList[this.params.cpt]['uid'];	
 					this.sendCmd("D6","02"+uid+"0008",pmbtk.c(this,"cmd_inventory"));									
 				}else{
-					// plus d'Ã©tiquette Ã  lire. on s'occupe de lire les AFI ?
+					// plus d'étiquette à lire. on s'occupe de lire les AFI ?
 					if (this.params.params.getAFI){						
 						this.params.status="afi";
 						// lecture du registre AFI ( antivol)
@@ -218,12 +218,12 @@ var rfid_3m_810 = function(url) {
 						this.params.uidList[i]['uid']= this.params.response.substring((i*16)+10,(i*16)+10+16);			
 					}			
 				}else {
-					// pas d'Ã©tiquette
+					// pas d'étiquette
 					this.callback({"nb":nb, "info":"no tags"});
 					return;
 				}			
 				if(this.params.params.type==1 && nb>1)	{
-					// carte lecteur Ã  programmer: trop dÃ©tiquette 
+					// carte lecteur à programmer: trop détiquette 
 					this.callback({"nb":nb, "info":"too many tags"});
 					return;
 				}
@@ -250,7 +250,7 @@ var rfid_3m_810 = function(url) {
 			case "write":
 				this.params.cpt++;
 				if(this.params.cpt < this.params.nb){
-					// on va ecrire l'Ã©tiquette suivante
+					// on va ecrire l'étiquette suivante
 					this.params.status="write";
 
 					var uid=this.params.uidList[this.params.cpt]['uid'];	
@@ -262,10 +262,10 @@ var rfid_3m_810 = function(url) {
 					}				
 					this.sendCmd("D6","04"+uid+"000800"+data_blocks, pmbtk.c(this,"cmd_encode"));									
 				}else{
-					// plus d'Ã©tiquette Ã  Ã©crire. on s'occupe des antivol AFI pour les type document 
+					// plus d'étiquette à écrire. on s'occupe des antivol AFI pour les type document 
 					if (this.params.params.type != 1 && this.params.params.afi){
 						this.params.status="afi";
-						// Ã©criture du registre AFI ( antivol)
+						// écriture du registre AFI ( antivol)
 						var driver3m=new rfid_3m_810(this.url);
 						driver3m.cmd("writeAFI",{'uidList':this.params.uidList,'afi':this.params.params.afi},pmbtk.c(this,"cmd_encode"));
 					}						
@@ -311,11 +311,11 @@ var rfid_3m_810 = function(url) {
 	
 	/*
 	 * params = {
-	 * 	cmd: commande Ã  appeler
+	 * 	cmd: commande à appeler
 	 *  status : statut pour la commande
-	 *  params : paramÃ¨tres pour la commande en cours (structure libre)
-	 *  response : rÃ©ponse du webservice
-	 *  finalResponse : rÃ©ponse finale
+	 *  params : paramètres pour la commande en cours (structure libre)
+	 *  response : réponse du webservice
+	 *  finalResponse : réponse finale
 	 * }
 	 */
 	this.cmd=function(cmd,params,callback,callbackError) {
@@ -337,7 +337,7 @@ var rfid_3m_810 = function(url) {
 		this.httpcom.send(this.build_frame(header,cmd),pmbtk.c(this,"getResponse"),10);
 	}
 	
-	//RÃ©cupÃ©ration de la rÃ©ponse
+	//Récupération de la réponse
 	this.getResponse=function(response) {
 		if (!response.error) {
 			//Nettoyage de la frame
@@ -345,11 +345,11 @@ var rfid_3m_810 = function(url) {
 			var size = ack.substring(4,6);
 			size=this.h2d(size);	
 			var frame = ack.substring(6,6+(size *2)-4);
-			//On renvoie la rÃ©ponse nettoyÃ©e
+			//On renvoie la réponse nettoyée
 			this.params.response=frame;
 			this.sendCallback();
 		} else {
-			//Arguments Ã  dÃ©finir
+			//Arguments à définir
 			this.callbackError();
 		}
 	}
@@ -363,7 +363,7 @@ var rfid_3m_810 = function(url) {
 		return frame+crc;
 	}
 	
-	//DÃ©cimal to hexa
+	//Décimal to hexa
 	this.d2h=function(d) {	
 		var val=d.toString(16);
 		if(val.length==1){
@@ -372,12 +372,12 @@ var rfid_3m_810 = function(url) {
 		return val;
 	}
 
-	//Hexa to dÃ©cimal
+	//Hexa to décimal
 	this.h2d=function(h) {
 		return parseInt(h,16);
 	}
 
-	//Conversion d'une chaine binaire en HexadÃ©cimal lisible
+	//Conversion d'une chaine binaire en Hexadécimal lisible
 	this.str2hex=function(str){
 	    var r="";
 	    var e=str.length;
@@ -389,7 +389,7 @@ var rfid_3m_810 = function(url) {
 	    return r;
 	}
 
-	//Concersion hexadÃ©cimal lisible en chaine binaire
+	//Concersion hexadécimal lisible en chaine binaire
 	this.hex2str=function(str){
 	    var r="";
 	    var e=str.length;

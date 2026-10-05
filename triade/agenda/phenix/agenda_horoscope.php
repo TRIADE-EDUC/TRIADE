@@ -6,10 +6,10 @@ if (!isset($sid)) {
   // MOD horoscope
   $err = 0;
   $signe = "";
-  $DB_CX->DbQuery("SELECT util_horo FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("SELECT util_horo FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
   $signe = $DB_CX->DbResult(0,0);
   if ($signe) {
-    $DB_CX->DbQuery("SELECT horo_detail FROM ${PREFIX_TABLE}horoscope WHERE horo_signe='".$signe."'");
+    $DB_CX->DbQuery("SELECT horo_detail FROM {$PREFIX_TABLE}horoscope WHERE horo_signe='".$signe."'");
   if ($DB_CX->DbResult(0,0)!=NULL) {
     $signe_detail = $DB_CX->DbResult(0,0);
     $signe_detail = str_replace("\r\n","",$signe_detail);

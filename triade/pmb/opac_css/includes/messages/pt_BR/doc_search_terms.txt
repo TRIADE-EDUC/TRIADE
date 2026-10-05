@@ -12,6 +12,6 @@ exibe as informações da <b>parte inferior mais as informações</b> da categor
 <hr />
 <p>Ao clicar em um dos links da parte inferior, você muda de categoria em categoria.</p>
 <hr />
-<p>Para selecionar uma categoria e exibir as obras correspondentes, clique na lupa <img src='images/search.gif' align='absmiddle'>situada no início da linha.</p>
+<p>Para selecionar uma categoria e exibir as obras correspondentes, clique na lupa <img src='images/search.gif' >situada no início da linha.</p>
 <hr />
 <p>Se a lupa não estiver visível, nenhuma obra corresponde à categoria.</p>

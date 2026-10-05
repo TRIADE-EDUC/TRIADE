@@ -2,10 +2,18 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_view.class.php,v 1.21 2019-04-15 13:48:40 ccraig Exp $
+// $Id: search_view.class.php,v 1.65.2.4 2024/12/23 15:43:49 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $include_path;
+
+use Pmb\AI\Models\AiSessionSemanticModel;
+use Pmb\AI\Opac\Views\AiView;
+use Pmb\AI\Orm\AiSessionSemanticOrm;
+use Pmb\AI\Orm\AISettingsOrm;
+use Pmb\Common\Orm\EmprOrm;
+use Pmb\Searchform\Views\SearchAutocompleteView;
 require_once($base_path."/includes/simple_search.inc.php");
 
 global $opac_search_other_function;
@@ -14,18 +22,18 @@ if ($opac_search_other_function) require_once($include_path."/".$opac_search_oth
 class search_view {
 
 	protected static $search_type;
-	
+
 	protected static $url_base;
-	
+
 	protected static $user_query;
-	
+
 	public function __construct(){
 	}
 
 	public static function get_search_others_tab($search_type_asked, $label) {
-		return "<li ".(static::$search_type == $search_type_asked ? "id='current'" : "")."><a href=\"".static::format_url("search_type_asked=".$search_type_asked)."\">".$label."</a></li>";
+		return "<li ".(static::$search_type == $search_type_asked ? "id='current' aria-current='page'" : "")."><a href=\"".static::format_url("search_type_asked=".$search_type_asked)."\">".$label."</a></li>";
 	}
-	
+
 	public static function get_search_others_tabs() {
 		global $msg;
 		global $opac_allow_personal_search;
@@ -38,24 +46,28 @@ class search_view {
 		global $opac_allow_external_search;
 		global $opac_show_onglet_map, $opac_map_activate;
 		global $onglet_persopac;
-		
+		global $ai_active, $ai_allow_semantic_search;
+
 		$search_others_tabs = "";
 		$search_others_tabs .= static::get_search_others_tab('simple_search', $msg["simple_search"]);
-		
+
 		if ($opac_allow_personal_search) {
 			$search_others_tabs .= static::get_search_others_tab('search_perso', $msg["search_perso_menu"]);
 		}
 		$search_persopac = new search_persopac();
 		$search_others_tabs .= $search_persopac->directlink_user;
+		
+		$onglet_persopac = intval($onglet_persopac);
+
 		if ($opac_allow_extended_search) {
-			if($onglet_persopac*1) {
+			if($onglet_persopac) {
 				$search_others_tabs .= "<li><a href=\"".static::format_url("search_type_asked=extended_search")."\">".$msg["extended_search"]."</a></li>";
 			} else {
 				$search_others_tabs .= static::get_search_others_tab('extended_search', $msg["extended_search"]);
 			}
 		}
 		if ($opac_allow_extended_search_authorities) {
-			if($onglet_persopac*1) {
+			if($onglet_persopac) {
 				$search_others_tabs .= "<li><a href=\"".static::format_url("search_type_asked=extended_search_authorities")."\">".$msg["extended_search_authorities"]."</a></li>";
 			} else {
 				$search_others_tabs .= static::get_search_others_tab('extended_search_authorities', $msg["extended_search_authorities"]);
@@ -86,28 +98,33 @@ class search_view {
 			}
 		}
 		if ($opac_allow_external_search) {
-			$search_others_tabs .= "<li ".(static::$search_type == 'external_search' ? "id='current'" : "")."><a href=\"".static::format_url("search_type_asked=external_search&external_type=simple")."\">".$msg["connecteurs_external_search"]."</a></li>";
+			$search_others_tabs .= "<li ".(static::$search_type == 'external_search' ? "id='current' aria-current='page'" : "")."><a href=\"".static::format_url("search_type_asked=external_search&external_type=simple")."\">".$msg["connecteurs_external_search"]."</a></li>";
 		}
 		if ($opac_show_onglet_map && $opac_map_activate) {
 			$search_others_tabs .= static::get_search_others_tab('map', $msg["search_by_map"]);
 		}
+		if ($ai_active) {
+			if (!$ai_allow_semantic_search || EmprOrm::exist(intval($_SESSION["id_empr_session"]))) {
+				$search_others_tabs .= static::get_search_others_tab('ai_search', $msg["ia_search_ia"]);
+			}
+		}
 		return $search_others_tabs;
 	}
-	
+
 	public static function get_search_tabs() {
 		global $msg;
 		global $opac_show_onglet_help;
-		
+
 		$search_tabs = "<ul class='search_tabs'>";
 		$search_tabs .= static::get_search_others_tabs();
 		$search_tabs .= ($opac_show_onglet_help ? "<li><a href=\"".static::$url_base."lvl=infopages&pagesid=$opac_show_onglet_help\">".$msg["search_help"]."</a></li>": '');
 		$search_tabs .= "</ul>";
 		return $search_tabs;
 	}
-	
+
 	public static function get_display_info() {
 		global $msg;
-		
+
 		$display = "<p class='p1'><span>";
 		switch (static::$search_type) {
 			case "simple_search":
@@ -123,22 +140,23 @@ class search_view {
 		$display .= "</span></p>";
 		return $display;
 	}
-	
+
 	public static function get_typdoc_field() {
 		global $opac_search_show_typdoc;
 		global $msg, $charset;
 		global $typdoc;
-		
+
 		// les typ_doc
 		if ($opac_search_show_typdoc) {
 			$query = "SELECT typdoc FROM notices where typdoc!='' GROUP BY typdoc";
 			$result = pmb_mysql_query($query);
-			$toprint_typdocfield = " <select name='typdoc'>";
+			$toprint_typdocfield = "<label for='typdoc_select' class='visually-hidden'>".htmlentities($msg['rgaa_typdoc_select'], ENT_QUOTES, $charset)."</label><select name='typdoc' id='typdoc_select' title='".htmlentities($msg['rgaa_typdoc_select'], ENT_QUOTES, $charset)."'>";
 			$toprint_typdocfield .= "  <option ";
 			$toprint_typdocfield .=" value=''";
 			if ($typdoc=='') $toprint_typdocfield .=" selected";
 			$toprint_typdocfield .=">".$msg["simple_search_all_doc_type"]."</option>\n";
 			$doctype = new marc_list('doctype');
+			$obj=array();
 			while (($rt = pmb_mysql_fetch_row($result))) {
 				$obj[$rt[0]]=1;
 			}
@@ -154,7 +172,7 @@ class search_view {
 		} else $toprint_typdocfield="";
 		return $toprint_typdocfield;
 	}
-	
+
 	public static function get_display_simple_search_form() {
 		global $msg;
 		global $opac_autolevel2;
@@ -166,6 +184,8 @@ class search_view {
 		global $opac_focus_user_query;
 		global $opac_search_other_function;
 		global $opac_recherches_pliables, $charset;
+		global $opac_search_autocomplete;
+		global $opac_rgaa_active;
 
 		$form = "
 		<form name='search_input' action='".($opac_autolevel2 ? static::format_url("lvl=more_results&autolevel1=1") : static::format_url("lvl=search_result"))."' method='post' onSubmit=\"if (search_input.user_query.value.length == 0) { search_input.user_query.value='*'; return true; }\">
@@ -173,17 +193,27 @@ class search_view {
 			".($opac_search_other_function ? search_other_function_filters() : '')."
 			<br />
 			<input type='hidden' name='surligne' value='!!surligne!!'/>";
-		if($opac_simple_search_suggestions){
-			$form .= "
-				<input type='text' name='user_query' id='user_query_lib' class='text_query' value=\"" . htmlentities(stripslashes(static::$user_query),ENT_QUOTES,$charset) . "\" size='65' expand_mode='2' completion='suggestions' word_only='no'/>\n";
-		}else{
-			$form .= "
-				<input type='text' name='user_query' class='text_query' value=\"". htmlentities(stripslashes(static::$user_query),ENT_QUOTES,$charset) ."\" size='65' />\n";
-		}
-		$form .= "
-				<input type='submit' name='ok' value='".$msg["142"]."' class='boutonrechercher'/>\n";
+			$help_button = "";
 		if ($opac_show_help) {
-			$form .= "<input type='button' value='$msg[search_help]' class='bouton' onClick='window.open(\"$base_path/help.php?whatis=simple_search\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
+			if($opac_rgaa_active){
+				$help_button = "<a href='#' class='bouton button_search_help' onClick='window.open(\"$base_path/help.php?whatis=simple_search\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' >$msg[search_help]</a>\n";
+			}else{
+				$help_button = "<input type='button' value='$msg[search_help]' class='bouton button_search_help' onClick='window.open(\"$base_path/help.php?whatis=simple_search\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
+			}
+		}
+		$submit_button = "<input type='submit' name='ok' value='".htmlentities($msg["142"], ENT_QUOTES, $charset)."' class='boutonrechercher'/>\n";
+		if($opac_search_autocomplete) {
+			$form .= static::get_autocomplete_input($submit_button . $help_button);
+		} else {
+			$form .= "
+				<label for='user_query_lib' class='visually-hidden'>".htmlentities($msg['autolevel1_search'], ENT_QUOTES, $charset)."</label>
+				<input type='text' name='user_query' title='".htmlentities($msg['autolevel1_search_title'], ENT_QUOTES, $charset)."' ";
+			if($opac_simple_search_suggestions){
+				$form .= "id='user_query_lib' class='text_query' value=\"" . htmlentities(stripslashes(static::$user_query),ENT_QUOTES,$charset) . "\" size='65' expand_mode='2' completion='suggestions' word_only='no'/>\n";
+			}else{
+				$form .= "id='user_query_lib' class='text_query' value=\"". htmlentities(stripslashes(static::$user_query),ENT_QUOTES,$charset) ."\" size='65' />\n";
+			}
+			$form .= $submit_button . $help_button;
 		}
 		switch ($opac_recherches_pliables) {
 			case '1':
@@ -199,7 +229,7 @@ class search_view {
 				$form .= "<div id='simple_search_zone'>".static::do_ou_chercher()."</div>";
 				break;
 		}
-		
+
 		if($opac_map_activate==1 || $opac_map_activate==2) {
 			$form .= "
 				<div class='row'>
@@ -210,14 +240,16 @@ class search_view {
 				</div>";
 		}
 		$form .= "</form>
-		<script type='text/javascript' src='".$include_path."/javascript/ajax.js'></script>
-		<script type='text/javascript'>\n
-			".($opac_focus_user_query ? 'document.forms["search_input"].elements["user_query"].focus();' : '')."
-			".($opac_simple_search_suggestions ? "ajax_parse_dom();" : "")."
+		<script src='".$include_path."/javascript/ajax.js'></script>
+		<script>\n
+                if (document.forms['search_input'] && document.forms['search_input'].elements['user_query']) {
+                    ".($opac_focus_user_query ? 'document.forms["search_input"].elements["user_query"].focus();' : '')."
+					".($opac_simple_search_suggestions ? 'ajax_pack_element(document.forms["search_input"].elements["user_query"]);' : '')."
+                }
 		</script>";
 		return $form;
 	}
-	
+
 	public static function get_display_extended_search_form() {
 		global $base_path;
 		global $msg, $charset;
@@ -227,7 +259,10 @@ class search_view {
 		global $onglet_persopac;
 		global $limitsearch;
 		global $external_type;
-		
+		global $no_search;
+
+		$onglet_persopac = intval($onglet_persopac);
+
 		$form ="
 		<script src=\"".$base_path."/includes/javascript/ajax.js\"></script>
 		<script>var operators_to_enable = new Array();</script>";
@@ -243,7 +278,7 @@ class search_view {
 			$form .= "<input type='button' class='bouton' value='".$msg["925"]."' onClick=\"if (this.form.add_field.value!='') { this.form.action='!!url!!'; this.form.target=''; this.form.submit();} else { alert('".htmlentities($msg["multi_select_champ"],ENT_QUOTES,$charset)."'); }\"/>";
 		}
 		if ($opac_show_help) {
-			$form.="<input type='button' class='bouton' name='?' value='$msg[search_help]' onClick='window.open(\"$base_path/help.php?whatis=search_multi\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />";
+			$form.="<input type='button' class='bouton button_search_help' name='?' value='$msg[search_help]' onClick='window.open(\"$base_path/help.php?whatis=search_multi\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />";
 		}
 		$form.="<br /><br />
 				<div class='row ".($onglet_persopac ? 'search_perso' : '')."'>
@@ -253,35 +288,59 @@ class search_view {
 			<input type='hidden' name='delete_field' value=''/>
 			<input type='hidden' name='launch_search' value=''/>
 			<input type='hidden' name='page' value='!!page!!'/>
-			".($onglet_persopac ? "<input type='hidden' name='onglet_persopac' value='".$onglet_persopac."'/>" : "")."
+			<input type='hidden' name='no_search' value='".(!empty($no_search) ? 1 : 0)."'/>
+			".($onglet_persopac ? "<input type='hidden' name='onglet_persopac' value='".htmlentities($onglet_persopac, ENT_QUOTES, $charset)."'/>" : "")."
 		</form>
 		<script>ajax_parse_dom();</script>";
 		return $form;
 	}
-	
+
 	public static function get_display_external_search_form() {
 		global $msg;
 		global $include_path;
 		global $opac_show_help;
-		global $base_path, $charset;
-		
+		global $base_path, $charset, $opac_rgaa_active;
+
 		$form = "
 		<form name='search_input' action='".static::format_url("lvl=search_result&search_type_asked=external_search")."' method='post' onSubmit=\"if (search_input.user_query.value.length == 0) { search_input.user_query.value='*'; return true; }\">
 			".static::get_typdoc_field()."<br />
 			<input type='hidden' name='surligne' value='!!surligne!!'/>
-			<input type='text' name='user_query' class='text_query' value=\"" . htmlentities(static::$user_query,ENT_QUOTES,$charset) . "\" size='65' />
+			<input type='text' name='user_query' class='text_query' value=\"" . htmlentities(static::$user_query,ENT_QUOTES,$charset) . "\" size='65' title='{$msg['autolevel1_search']}' />
 			<input type='submit' name='ok' value='".$msg["142"]."' class='boutonrechercher'/>";
 		if ($opac_show_help) {
-			$form .= "<input type='button' value='$msg[search_help]' class='bouton' onClick='window.open(\"$base_path/help.php?whatis=simple_search\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
+			$form .= "<input type='button' title='".$msg['search_help']."' value='".$msg['search_help']."' class='bouton button_search_help' onClick='window.open(\"$base_path/help.php?whatis=simple_search\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
 		}
-		$form .= static::do_ou_chercher();
-		$form .= "
-			<br /><a href='javascript:expandAll()'><img class='img_plusplus' src='".get_url_icon("expand_all.gif")."' style='border:0px' id='expandall'></a>&nbsp;<a href='javascript:collapseAll()'><img class='img_moinsmoins' src='".get_url_icon("collapse_all.gif")."' style='border:0px' id='collapseall'></a>
-			<div id='external_simple_search_zone'><!--!!sources!!--></div>
+		$form .= "<div id='external_search_zone'>".static::do_ou_chercher()."</div>";
+
+		if ($opac_rgaa_active) {
+			$form .= "
+				<button type='button' aria-controls='external_simple_search_zone' aria-label='" . htmlentities($msg['expandall'], ENT_QUOTES, $charset) . "' onclick='expandAll()' title='" . htmlentities($msg['expandall'], ENT_QUOTES, $charset) . "'>
+					<img id='expandall' class='img_plusplus' src='" . get_url_icon("expand_all.gif") . "' alt='" . htmlentities($msg['expandall'], ENT_QUOTES, $charset) . "'>
+					<span class='visually-hidden'>" . htmlentities($msg['expandall'], ENT_QUOTES, $charset) . "</span>
+				</button>
+				<button type='button' aria-controls='external_simple_search_zone' aria-label='" . htmlentities($msg['collapseall'], ENT_QUOTES, $charset) . "' onclick='collapseAll()' title='" . htmlentities($msg['collapseall'], ENT_QUOTES, $charset) . "'>
+					<img id='collapseall' class='img_moinsmoins' src='" . get_url_icon("collapse_all.gif") . "' alt='" . htmlentities($msg['collapseall'], ENT_QUOTES, $charset) . "'>
+					<span class='visually-hidden'>" . htmlentities($msg['collapseall'], ENT_QUOTES, $charset) . "</span>
+				</button>
+			";
+
+		} else {
+			$form .= "<br />
+				<a href='javascript:expandAll()' title='".htmlentities($msg['expand'], ENT_QUOTES, $charset)."'>
+					<img class='img_plusplus' src='".get_url_icon("expand_all.gif")."' style='border:0px' id='expandall'>
+				</a>&nbsp;
+				<a href='javascript:collapseAll()' title='".htmlentities($msg['collapse'], ENT_QUOTES, $charset)."'>
+					<img class='img_moinsmoins' src='".get_url_icon("collapse_all.gif")."' style='border:0px' id='collapseall' />
+				</a>\n
+			";
+		}
+
+
+		$form .= "<div id='external_simple_search_zone'><!--!!sources!!--></div>
 		</form>
-		<script type='text/javascript'>\n
+		<script>\n
 			document.search_input.user_query.focus();\n
-	
+
 			function change_source_checkbox(changing_control, source_id) {
 				var i=0; var count=0;
 				onoff = changing_control.checked;
@@ -296,48 +355,46 @@ class search_view {
 		</script>";
 		return $form;
 	}
-	
+
 	public static function get_display_tags_search_form() {
-		global $msg;
-		
+		global $msg, $charset;
+
 		$form = "
 		<form name='search_input' action='".static::format_url("lvl=search_result&search_type_asked=tags_search")."' method='post' onSubmit=\"if (search_input.user_query.value.length == 0) { search_input.user_query.value='*'; return true; }\">\n
 			".static::get_typdoc_field()."<br />\n
-			<input type='text' name='user_query' class='text_query' value=\"" . htmlentities(static::$user_query,ENT_QUOTES,$charset) . "\" size='65' />\n
+			<input type='text' name='user_query' class='text_query' value=\"" . htmlentities(static::$user_query,ENT_QUOTES,$charset) . "\" size='65' title='".htmlentities($msg['autolevel1_search'], ENT_QUOTES, $charset)."' />\n
 			<input type='submit' name='ok' value='".$msg["142"]."' class='boutonrechercher'/>\n
 		</form>
-		<script type='text/javascript'>
+		<script>
 			document.search_input.user_query.focus();\n
 		</script>
 		";
 		return $form;
 	}
-	
+
 	public static function get_display_term_search_form() {
-		global $msg, $charset, $base_path;
+	    global $msg, $charset, $base_path, $current_module;
 		global $lvl;
 		global $opac_show_help;
 		global $search_term;
 		global $term_click;
 		global $page_search;
-		global $opac_term_search_height;
 		global $opac_thesaurus;
 		global $id_thes;
-			
-		if (!$opac_term_search_height) $height=300;
-		else $height=$opac_term_search_height;
-		
+
+		$page_search = intval($page_search);
+
 		//recuperation du thesaurus session
 		if(!$id_thes) $id_thes = thesaurus::getSessionThesaurusId();
 		else thesaurus::setSessionThesaurusId($id_thes);
-			
+
 		//affichage du selectionneur de thesaurus et du lien vers les thesaurus
 		$liste_thesaurus = thesaurus::getThesaurusList();
 		$sel_thesaurus = '';
-			
-		if ($opac_thesaurus != 0) {	 //la liste des thesaurus n'est pas affichÃ©e en mode monothesaurus
-			$sel_thesaurus = "<select class='saisie-30em' id='id_thes' name='id_thes' ";
-			$sel_thesaurus.= "onchange = \"document.location = '".static::$url_base."lvl=index&search_type_asked=term_search&id_thes='+document.getElementById('id_thes').value; \">" ;
+
+		if ($opac_thesaurus != 0) {	 //la liste des thesaurus n'est pas affichée en mode monothesaurus
+			$sel_thesaurus = "<select class='saisie-30em' name='id_thes' ";
+			$sel_thesaurus.= "onchange = \"document.location = '".static::$url_base."lvl=index&search_type_asked=term_search&id_thes='+this.value; \">" ;
 			foreach($liste_thesaurus as $id_thesaurus=>$libelle_thesaurus) {
 				$sel_thesaurus.= "<option value='".$id_thesaurus."' "; ;
 				if ($id_thesaurus == $id_thes) $sel_thesaurus.= " selected";
@@ -348,39 +405,38 @@ class search_view {
 			$sel_thesaurus.= ">".htmlentities($msg['thes_all'],ENT_QUOTES, $charset)."</option>";
 			$sel_thesaurus.= "</select>&nbsp;";
 		}
-		
-		$form ="
+
+		$form = "
 		<form class='form-$current_module' name='term_search_form' method='post' action='".static::format_url("lvl=$lvl&search_type_asked=term_search")."'>
 			<div class='form-contenu'>
 			".$sel_thesaurus."
 			<span class='libSearchTermes'>".$msg["term_search_search_for"]."</span>
-			<input type='text' class='saisie-50em' id='search_term' name='search_term' completion='categories' autfield='search_term_id' linkfield='id_thes'  value='".htmlentities(stripslashes($search_term),ENT_QUOTES,$charset)."' />
+			<input type='text' class='saisie-50em' id='search_term' name='search_term' completion='categories' autfield='search_term_id' linkfield='id_thes'  value='".htmlentities(stripslashes($search_term ?? ""), ENT_QUOTES, $charset)."' title='".htmlentities($msg['term_search_search_for'], ENT_QUOTES, $charset)."' />
 			<input type='hidden' id='search_term_id' name='search_term_id' value='' />
 			<!--	Bouton Rechercher -->
 			<input type='submit' class='boutonrechercher' value='$msg[142]' onClick=\"this.form.page_search.value=''; this.form.term_click.value='';\"/>\n";
-		if ($opac_show_help) $form .= "<input type='submit' class='bouton' value='$msg[search_help]' onClick='window.open(\"help.php?whatis=search_terms\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
-		$form .= "<input type='hidden' name='term_click' value='".htmlentities(stripslashes($term_click),ENT_QUOTES,$charset)."'/>
+		if ($opac_show_help) $form .= "<input type='submit' class='bouton button_search_help' title='".$msg['search_help']."' value='$msg[search_help]' onClick='window.open(\"help.php?whatis=search_terms\", \"search_help\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' />\n";
+		$form .= "<input type='hidden' name='term_click' value='".htmlentities(stripslashes($term_click ?? ""),ENT_QUOTES,$charset)."'/>
 			<input type='hidden' name='page_search' value='".$page_search."'/>
 			</div>
 		</form>
-		<script type='text/javascript' src='".$base_path."/includes/javascript/ajax.js'></script>
-		<script type='text/javascript'>
+		<script src='".$base_path."/includes/javascript/ajax.js'></script>
+		<script>
 			ajax_pack_element(document.forms['term_search_form'].elements['search_term']);
 			document.forms['term_search_form'].elements['search_term'].focus();
-			</script>
-		</div>";
+		</script>";
 		return $form;
 	}
-	
+
 	public static function get_display_search() {
-		$display_search = "<div id='search'>";
+		$display_search = "<div id='search' role='search'>";
 		$display_search .= static::get_search_tabs();
 		$display_search .= "<div id='search_crl'></div>";
 		if(isset($_SESSION["ext_type"]) && ($_SESSION["ext_type"] != "multi")) $display_search .= static::get_display_info();
 		$display_search .= "<div class='row'>";
-		
+
 		switch (static::$search_type) {
-			// Ã©lÃ©ments pour la recherche simple
+			// éléments pour la recherche simple
 			case "search_universes":
 			    $display_search .= static::get_display_search_universe_form();
 			    break;
@@ -392,7 +448,7 @@ class search_view {
 				global $es;
 				global $lvl;
 // 				$display_search .= static::get_display_extended_search_form();
-				$es=new search();				
+				$es=new search();
 				if($opac_autolevel2==2){
 					$display_search .= $es->show_form(static::format_url("lvl=".$lvl."&search_type_asked=extended_search"), static::format_url("lvl=more_results&mode=extended"));
 				}else{
@@ -416,7 +472,7 @@ class search_view {
 				global $lvl;
 				if ($_SESSION["ext_type"]!="multi") {
 					$display_search .= static::get_display_external_search_form();
-				} else { 
+				} else {
 					$display_search .= $es->show_form("./index.php?lvl=$lvl&search_type_asked=external_search","./index.php?lvl=search_result&search_type_asked=external_search");
 				}
 				break;
@@ -436,14 +492,17 @@ class search_view {
 			case "perio_a2z":
 				global $opac_perio_a2z_abc_search;
 				global $opac_perio_a2z_max_per_onglet;
-				
+
 				// affichage des _perio_a2z
 				$a2z=new perio_a2z(0,$opac_perio_a2z_abc_search,$opac_perio_a2z_max_per_onglet);
 				$display_search .= $a2z->get_form();
 				break;
 			case "map":
-				//GÃ©olocalisation
+				//Géolocalisation
 				$display_search .= static::get_search_form_map();
+				break;
+			case "ai_search":
+				$display_search .= static::get_search_form_ai_search();
 				break;
 		}
 		$display_search .= "</div>";
@@ -451,16 +510,16 @@ class search_view {
 		$display_search .= "</div>";
 		return $display_search;
 	}
-	
+
 	public static function get_display_search_perso() {
 		$search_p= new search_persopac();
 		$onglets_search_perso=$search_p->directlink_user;
 		return $search_p->directlink_user_form;
 	}
-	
+
 	public static function get_search_label($id, $mode, $location = '') {
 		global $msg;
-		
+
 		$search_label = '';
 		switch ($mode) {
 			case 'etagere_see':
@@ -500,16 +559,14 @@ class search_view {
 				$search_label = $msg['skos_concept'];
 				break;
 			case "authperso_see" :
-				$ourAuth = new authperso_authority($id);
-				$search_label = $ourAuth->info['authperso']['name'];
+				$authperso = new authperso_data($id);
+				$search_label = $authperso->get_name();
 				break;
 		}
 		return $search_label;
 	}
-	
+
 	public static function get_search_isbd($id, $mode) {
-		global $msg;
-	
 		$search_isbd = '';
 		switch ($mode) {
 			case 'etagere_see':
@@ -560,34 +617,34 @@ class search_view {
 				$search_isbd = $ourConcept->get_display_label();
 				break;
 			case "authperso_see" :
-				$ourAuth = new authperso_authority($id);
-				$search_isbd = $ourAuth->info['isbd'];
+				$authperso = new authperso_data($id);
+				$search_isbd = $authperso->get_isbd();
 				break;
 		}
 		return $search_isbd;
 	}
-	
+
 	public static function get_last_human_query() {
 		$human_query = static::get_search_label($_SESSION["last_module_search"]["search_id"], $_SESSION["last_module_search"]["search_mod"], $_SESSION["last_module_search"]["search_location"]);
 		$human_query .= " '".static::get_search_isbd($_SESSION["last_module_search"]["search_id"], $_SESSION["last_module_search"]["search_mod"])."'";
 		return $human_query;
 	}
-	
+
 	public static function set_search_type($search_type) {
 		static::$search_type = $search_type;
 	}
-	
+
 	public static function set_url_base($url_base) {
 		static::$url_base = $url_base;
 	}
-	
+
 	public static function get_display_map() {
 		global $opac_map_activate;
 		global $opac_map_base_layer_params;
 		global $opac_map_base_layer_type;
 		global $opac_map_size_search_edition;
 		global $opac_map_bounding_box;
-		
+
 		$display = '';
 		if($opac_map_activate){
 			$layer_params = json_decode($opac_map_base_layer_params,true);
@@ -619,7 +676,7 @@ class search_view {
 			} else{
 				$initialFit = array(0, 0, 0, 0);
 			}
-		
+
 			$map_holds=array();
 			foreach($map_emprises_query as $map_hold){
 				$map_holds[] = array(
@@ -633,16 +690,18 @@ class search_view {
 		}
 		return $display;
 	}
-	
+
 	public static function get_options_typdoc_field() {
 		global $msg, $charset;
 		global $typdoc;
-		
+
 		$query = "SELECT count(typdoc), typdoc ";
 		$query .= "FROM notices where typdoc!='' GROUP BY typdoc";
 		$result = pmb_mysql_query($query);
 		$toprint_typdocfield = "  <option value=''>".$msg['tous_types_docs']."</option>\n";
 		$doctype = new marc_list('doctype');
+		$obj=array();
+		$qte=array();
 		while (($rt = pmb_mysql_fetch_row($result))) {
 			$obj[$rt[1]]=1;
 			$qte[$rt[1]]=$rt[0];
@@ -657,12 +716,12 @@ class search_view {
 		}
 		return $toprint_typdocfield;
 	}
-	
+
 	public static function get_options_status_field() {
 		global $msg, $charset;
 		global $statut_query;
-		
-		// rÃ©cupÃ©ration des statuts de documents utilisÃ©s.
+
+		// récupération des statuts de documents utilisés.
 		$query = "SELECT count(statut), id_notice_statut, gestion_libelle ";
 		$query .= "FROM notices, notice_statut where id_notice_statut=statut GROUP BY id_notice_statut order by gestion_libelle";
 		$result = pmb_mysql_query($query);
@@ -674,7 +733,7 @@ class search_view {
 		}
 		return $toprint_statutfield;
 	}
-	
+
 	public static function do_ou_chercher() {
 		global $look_TITLE,
 		$look_AUTHOR,
@@ -690,9 +749,9 @@ class search_view {
 		$look_DOCNUM,
 		$look_CONTENT,
 		$look_CONCEPT;
-	
+
 		global $look_FIRSTACCESS ; // si 0 alors premier Acces : la rech par defaut est cochee
-	
+
 		// pour mise en service de cette precision de recherche : commenter cette partie
 		/*
 		$look_TITLE = "1" ;
@@ -708,7 +767,7 @@ class search_view {
 		return "";
 		*/
 		// pour mise en service de cette precision de recherche : commenter jusque la
-	
+
 		// on recupere les globales de ce qui est autorise en recherche dans le parametrage de l'OPAC
 		global	$opac_modules_search_title,
 		$opac_modules_search_author,
@@ -727,9 +786,9 @@ class search_view {
 		$opac_allow_tags_search,
 		$opac_autolevel2;
 		// $opac_modules_search_content; inutilise pour l'instant, le search_abstract cherche aussi dans les notes de contenu
-	
+
 		global $msg,$get_query;
-	
+
 		if (!$look_FIRSTACCESS && !$get_query ) {
 			// premier acces :
 			if ($opac_modules_search_title==2) $look_TITLE=1;
@@ -759,24 +818,24 @@ class search_view {
 		if ($look_ALL)				$checked_ALL = "checked" ;				else $checked_ALL = "";
 		if ($look_DOCNUM) 			$checked_DOCNUM = "checked";			else $checked_DOCNUM = "";
 		if ($look_CONCEPT) 			$checked_CONCEPT = "checked";			else $checked_CONCEPT = "";
-	
+
 		$authpersos=authpersos::get_instance();
 		$ou_chercher_authperso_tab=$authpersos->get_simple_seach_list_tpl();
-	
+
 		if (!($look_TITLE || $look_AUTHOR || $look_PUBLISHER || $look_TITRE_UNIFORME || $look_COLLECTION || $look_SUBCOLLECTION || $look_CATEGORY || $look_INDEXINT || $look_KEYWORDS || $look_ABSTRACT || $look_ALL || $look_DOCNUM || $look_CONCEPT || $authpersos->simple_seach_list_checked)) {
 			$checked_TITLE = "checked" ;
 			$look_TITLE = "1" ;
 			$checked_AUTHOR = "checked" ;
 			$look_AUTHOR = "1" ;
 		}
-	
+
 		$cant_uncheck_look_all = "";
 		if ($opac_autolevel2) {
 		    // Prioritaire sur $opac_modules_search_all
-		    $checked_ALL = "checked";	
+		    $checked_ALL = "checked";
 			$cant_uncheck_look_all = "onclick='return false;' title='".$msg['cant_uncheck_look_all']."'";
 		}
-	
+
 		$ou_chercher_tab=array();
 		if ($opac_modules_search_title>0) $ou_chercher_tab[] = "\n<span style='width: 30%; float: left;'><input type='checkbox' name='look_TITLE' id='look_TITLE' value='1' $checked_TITLE /><label for='look_TITLE'> $msg[titles] </label></span>";
 		if ($opac_modules_search_author>0) $ou_chercher_tab[] = "\n<span style='width: 30%; float: left;'><input type='checkbox' name='look_AUTHOR' id='look_AUTHOR' value='1' $checked_AUTHOR /><label for='look_AUTHOR'> $msg[authors] </label></span>";
@@ -797,23 +856,23 @@ class search_view {
 		if ($opac_modules_search_all>0) $ou_chercher_tab[] = "\n<span style='width: 30%; float: left;'><input type='checkbox' name='look_ALL' id='look_ALL' value='1' $checked_ALL $cant_uncheck_look_all /><label for='look_ALL'> ".$msg['tous']." </label></span>";
 		if (($pmb_indexation_docnum && $opac_modules_search_docnum)>0) $ou_chercher_tab[] = "\n<span style='width: 30%; float: left;'><input type='checkbox' name='look_DOCNUM' id='look_DOCNUM' value='1' $checked_DOCNUM /><label for='look_DOCNUM'> ".$msg['docnum']." </label></span>";
 		if ($opac_modules_search_concept>0) $ou_chercher_tab[] = "\n<span style='width: 30%; float: left;'><input type='checkbox' name='look_CONCEPT' id='look_CONCEPT' value='1' $checked_CONCEPT /><label for='look_CONCEPT'> ".$msg['skos_view_concepts_concepts']." </label></span>";
-	
+
 		$ou_chercher_tab=array_merge($ou_chercher_tab,$ou_chercher_authperso_tab);
-	
+
 		$ou_chercher = "<div class='row'>" ;
 		for ($nbopac_smodules=0;$nbopac_smodules<count($ou_chercher_tab);$nbopac_smodules++) {
 			if ((($nbopac_smodules+1)/3)==(($nbopac_smodules+1) % 3)) $ou_chercher .= "</div><div class='row'>" ;
 			$ou_chercher .= $ou_chercher_tab[$nbopac_smodules];
 		}
-	
+
 		$ou_chercher .= "</div><div style='clear: both;'><input type='hidden' name='look_FIRSTACCESS' value='1' /></div>" ;
 		$ou_chercher = str_replace ("<div class='row'></div>", "", $ou_chercher ) ;
 		return $ou_chercher;
 	}
-	
+
 	public static function do_ou_chercher_hidden() {
-	
-		// on rÃ©cupÃ¨re les globales de ce qui est autorisÃ© en recherche dans le paramÃ©trage de l'OPAC
+
+		// on récupère les globales de ce qui est autorisé en recherche dans le paramétrage de l'OPAC
 		global	$opac_modules_search_title,
 		$opac_modules_search_author,
 		$opac_modules_search_publisher,
@@ -827,7 +886,7 @@ class search_view {
 		$opac_modules_search_docnum,
 		$opac_modules_search_all,
 		$opac_modules_search_concept;
-	
+
 		$ou_chercher_hidden = '' ;
 		if ($opac_modules_search_title>1) $ou_chercher_hidden .= "<input type='hidden' name='look_TITLE' id='look_TITLE' value='1' />";
 		if ($opac_modules_search_author>1) $ou_chercher_hidden .= "<input type='hidden' name='look_AUTHOR' id='look_AUTHOR' value='1' />";
@@ -842,12 +901,12 @@ class search_view {
 		if ($opac_modules_search_all>1) $ou_chercher_hidden .= "<input type='hidden' name='look_ALL' id='look_ALL' value='1' />";
 		if ($opac_modules_search_docnum>1) $ou_chercher_hidden .= "<input type='hidden' name='look_DOCNUM' id='look_DOCNUM' value='1' />";
 		if ($opac_modules_search_concept>1) $ou_chercher_hidden .= "<input type='hidden' name='look_CONCEPT' id='look_CONCEPT' value='1' />";
-	
+
 		$authpersos=authpersos::get_instance();
 		$ou_chercher_hidden.=$authpersos->get_simple_seach_list_tpl_hiden();
 		return $ou_chercher_hidden;
 	}
-	
+
 	public static function get_field_text($n) {
 		$typ_search=$_SESSION["notice_view".$n]["search_mod"];
 		switch($_SESSION["notice_view".$n]["search_mod"]) {
@@ -886,8 +945,8 @@ class search_view {
 					$valeur_champ=pmb_mysql_result($r_cat,0,0);
 				}
 				$typ_search="look_CATEGORY";
-			break;		
-			case 'indexint_see':	
+			break;
+			case 'indexint_see':
 				//Recherche de l'indexation
 				$indexint_id=$_SESSION["notice_view".$n]["search_id"];
 				$requete="select indexint_name from indexint where indexint_id='".addslashes($indexint_id)."'";
@@ -896,8 +955,8 @@ class search_view {
 					$valeur_champ=pmb_mysql_result($r_indexint,0,0);
 				}
 				$typ_search="look_INDEXINT";
-			break;		
-			case 'coll_see':	
+			break;
+			case 'coll_see':
 				//Recherche de l'indexation
 				$coll_id=$_SESSION["notice_view".$n]["search_id"];
 				$requete="select collection_name from collections where collection_id='".addslashes($coll_id)."'";
@@ -906,8 +965,8 @@ class search_view {
 					$valeur_champ=pmb_mysql_result($r_coll,0,0);
 				}
 				$typ_search="look_COLLECTION";
-			break;		
-			case 'publisher_see':	
+			break;
+			case 'publisher_see':
 				//Recherche de l'editeur
 				$publisher_id=$_SESSION["notice_view".$n]["search_id"];
 				$requete="select ed_name from publishers where ed_id='".addslashes($publisher_id)."'";
@@ -916,8 +975,8 @@ class search_view {
 					$valeur_champ=pmb_mysql_result($r_pub,0,0);
 				}
 				$typ_search="look_PUBLISHER";
-			break;		
-			case 'titre_uniforme_see':	
+			break;
+			case 'titre_uniforme_see':
 				//Recherche de titre uniforme
 				$tu_id=$_SESSION["notice_view".$n]["search_id"];
 				$requete="select tu_name from titres_uniformes where ed_id='".addslashes($tu_id)."'";
@@ -926,8 +985,8 @@ class search_view {
 					$valeur_champ=pmb_mysql_result($r_tu,0,0);
 				}
 				$typ_search="look_TITRE_UNIFORME";
-			break;				
-			case 'subcoll_see':	
+			break;
+			case 'subcoll_see':
 				//Recherche de l'editeur
 				$subcoll_id=$_SESSION["notice_view".$n]["search_id"];
 				$requete="select sub_coll_name from sub_collections where sub_coll_id='".addslashes($subcoll_id)."'";
@@ -948,7 +1007,7 @@ class search_view {
 				$valeur_champ=$concept->get_display_label();
 				$typ_search="look_CONCEPT";
 			break;
-				
+
 		}
 		return array($valeur_champ,$typ_search);
 	}
@@ -966,10 +1025,10 @@ class search_view {
 		global $map_projection_query;
 		global $map_ref_query;
 		global $map_equinoxe_query;
-		
+
 		$search_form_map = "
 			<script src='javascript/ajax.js'></script>
-			<script type='text/javascript'>
+			<script>
 				function test_form(form) {
 					if ((form.categ_query.value.length == 0) && (form.all_query.value.length == 0) && ((form.concept_query && form.concept_query.value.length == 0) || (!form.concept_query)) ) {
 						//	form.all_query.value='*';
@@ -979,7 +1038,7 @@ class search_view {
 			</script>
 			<form class='form-$current_module' id='search_form_map' name='search_form_map' method='post' action='".static::format_url("lvl=search_result&search_type_asked=tags_search")."' onSubmit='return test_form(this)'>
 			<div class='form-contenu'>
-				<table class='map_search'><tr><td>
+				<table class='map_search' role='presentation'><tr><td>
 					<div class='row'>
 						<label class='etiquette' for='all_query'>$msg[global_search]</label>
 					</div>
@@ -1013,7 +1072,7 @@ class search_view {
 							<input type='checkbox' ".(($auto_postage_query) ? 'checked' : '')." id='auto_postage_query' name='auto_postage_query'/><label for='auto_postage_query'>".$msg["search_autopostage_check"]."</label>
 						</div>
 					</div>
-					";		
+					";
 		}
 		if($thesaurus_concepts_active){
 			$search_form_map .= "
@@ -1026,7 +1085,7 @@ class search_view {
 				</div>
 			</div>";
 		}
-		
+
 		$search_form_map .= "
 			<div class='row'>
 				<label class='etiquette' for='map_echelle_query'>".$msg["map_echelle"]."</label>
@@ -1092,16 +1151,17 @@ class search_view {
 		</div>
 		<input type='hidden' name='etat' value='first_search'/>
 		</form>
-		<script type='text/javascript'>
+		<script>
 		document.forms['search_form_map'].elements['all_query'].focus();
 		ajax_parse_dom();
 		</script>";
 		return $search_form_map;
 	}
-	
+
 	public static function get_search_section_complement_isbd($id, $mode) {
 		global $msg;
-		
+
+		$complement = '';
 		$search_plettreaut = $_SESSION["last_module_search"]["search_plettreaut"];
 		$search_dcote = $_SESSION["last_module_search"]["search_dcote"];
 		$search_lcote = $_SESSION["last_module_search"]["search_lcote"];
@@ -1158,8 +1218,8 @@ class search_view {
 		}
 		return $complement;
 	}
-	
-	public static function get_display_search_tabs_form($value='',$css) {
+
+	public static function get_display_search_tabs_form($value='', $css = "") {
 		global $msg, $charset;
 		global $css;
 		global $es;
@@ -1170,13 +1230,12 @@ class search_view {
 		global $external_env;
 		global $user_query;
 		global $source;
-		global $opac_recherches_pliables;
+		global $opac_term_search_height;
 		global $onglet_persopac;
 		global $search_in_perio;
 		global $get_query;
-		global $opac_autolevel2;
-		global $opac_simple_search_suggestions;
-	
+		global $search_term, $term_click, $page_search;
+
 		// pour la DSI
 		global $opac_allow_bannette_priv ; // bannettes privees autorisees ?
 		global $bt_cree_bannette_priv ;
@@ -1190,26 +1249,27 @@ class search_view {
 			if($bt_edit_bannette_priv) {
 				global $id_bannette;
 				$_SESSION['abon_edit_bannette_id'] = $id_bannette;
+				$_SESSION['abon_edit_bannette_priv'] = 1 ;
+				$_SESSION['abon_edit_bannette_priv_visibility_until'] = (time()+180); //Validité 3 min
 			}
-			$_SESSION['abon_edit_bannette_priv'] = 1 ;
 		} else {
 			$_SESSION['abon_edit_bannette_priv'] = 0 ;
 			$_SESSION['abon_edit_bannette_id'] = 0;
 		}
-	
+
 		global $script_test_form;
-	
+
 		switch (static::$search_type) {
 			case "simple_search":
 				// les tests de formulaire
 				$result = $script_test_form;
 				$tests = test_field("search_input", "query", "recherche");
 				$result = str_replace("!!tests!!", $tests, $result);
-	
+
 				// le contenu
 				static::set_user_query($value);
 				$result .= static::get_display_search();
-	
+
 				// map
 				$result = str_replace("!!map!!", static::get_display_map(),  $result);
 				break;
@@ -1220,7 +1280,7 @@ class search_view {
 				if ($mode_aff) {
 					if ($mode_aff=="aff_module") {
 						//ajout de la recherche dans l'historique
-						$_SESSION["nb_queries"]=$_SESSION["nb_queries"]+1;
+						$_SESSION["nb_queries"] = intval($_SESSION["nb_queries"]) + 1;
 						$n=$_SESSION["nb_queries"];
 						$_SESSION["notice_view".$n]=$_SESSION["last_module_search"];
 						$_SESSION["human_query".$n]=static::get_last_human_query();
@@ -1233,8 +1293,8 @@ class search_view {
 							$n=$_SESSION["nb_queries"];
 						}
 					}
-					//gÃ©nÃ©rer les critÃ¨res de la multi_critÃ¨res
-					//Attention ! si on est dÃ©jÃ  dans une facette !
+					//générer les critères de la multi_critères
+					//Attention ! si on est déjà dans une facette !
 					if ($facette) {
 					    $es->unserialize_search($_SESSION["lq_facette_search"]["lq_search"]);
 					} else {
@@ -1244,24 +1304,24 @@ class search_view {
 						}
 						$search[0]="s_1";
 						$op_="EQ";
-						 
+
 						//operateur
 						$op="op_0_".$search[0];
 						global ${$op};
 						${$op}=$op_;
-	    		
+
 						//contenu de la recherche
 						$field="field_0_".$search[0];
 						$field_=array();
 						$field_[0]=$n;
 						global ${$field};
 						${$field}=$field_;
-							
-						//opÃ©rateur inter-champ
+
+						//opérateur inter-champ
 						$inter="inter_0_".$search[0];
 						global ${$inter};
 						${$inter}="";
-	    		
+
 						//variables auxiliaires
 						$fieldvar_="fieldvar_0_".$search[0];
 						global ${$fieldvar_};
@@ -1269,14 +1329,14 @@ class search_view {
 						$fieldvar=${$fieldvar_};
 					}
 				}
-					
+
 				if($search_in_perio){
 					global $search;
 					if(empty($search)) {
 						$search=array();
 					}
 					$search[0]="f_34";
-					//opÃ©rateur
+					//opérateur
 					$op="op_0_".$search[0];
 					global ${$op};
 					$op_ ="EQ";
@@ -1287,16 +1347,16 @@ class search_view {
 					$field_[0]=$search_in_perio;
 					global ${$field};
 					${$field}=$field_;
-					 
+
 					$search[1]="f_42";
-					//opÃ©rateur
+					//opérateur
 					$op="op_1_".$search[0];
 					global ${$op};
 					$op_ ="BOOLEAN";
 					${$op}=$op_;
 				} else {
 					if ($get_query) {
-						if (($_SESSION["last_query"]==$get_query)&&($_SESSION["lq_facette_test"])) {
+						if (($_SESSION["last_query"]==$get_query)&&(!empty($_SESSION["lq_facette_test"]))) {
 							$es->unserialize_search($_SESSION["lq_facette_search"]["lq_search"]);
 						} else get_history($get_query);
 					}
@@ -1304,14 +1364,14 @@ class search_view {
 				if($onglet_persopac){
 					global $search;
 					if (empty($search) && ($_GET['onglet_persopac'] || $_SERVER['REQUEST_METHOD'] == "GET")) {
-						//On ne charge les champs de la prÃ©dÃ©finie que si l'on vient de cliquer sur le lien
-						//EDIT 13/12/17 - AR : ou si on y accÃ¨de pas via un formulaire (utilisation du paramÃ¨tres first_page_params)
+						//On ne charge les champs de la prédéfinie que si l'on vient de cliquer sur le lien
+						//EDIT 13/12/17 - AR : ou si on y accède pas via un formulaire (utilisation du paramètres first_page_params)
 						$search_p_direct= new search_persopac($onglet_persopac);
 						$es->unserialize_search($search_p_direct->query);
 					}
 				}
 				if (($onglet_persopac)&&($lvl=="search_result")) $es->reduct_search();
-				
+
 				$result = static::get_display_search();
 				break;
 				//Recherche avancee
@@ -1337,10 +1397,10 @@ class search_view {
 						}
 					}
 				}
-					
+
 				if ($_SESSION["ext_type"]=="multi") {
 					global $search;
-	
+
 					if (!$search) {
 						$search=array();
 						$search[0]="s_2";
@@ -1371,27 +1431,27 @@ class search_view {
 						}
 					}
 					if ($mode_aff) {
-						//gÃ©nÃ©rer les critÃ¨res de la multi_critÃ¨res
+						//générer les critères de la multi_critères
 						$search[1]="s_1";
 						$op_="EQ";
-						 
-						//opÃ©rateur
+
+						//opérateur
 						$op="op_1_".$search[1];
 						global ${$op};
 						${$op}=$op_;
-							
+
 						//contenu de la recherche
 						$field="field_1_".$search[1];
 						$field_=array();
 						$field_[0]=$n;
 						global ${$field};
 						${$field}=$field_;
-		    	
-						//opÃ©rateur inter-champ
+
+						//opérateur inter-champ
 						$inter="inter_1_".$search[1];
 						global ${$inter};
 						${$inter}="and";
-							
+
 						//variables auxiliaires
 						$fieldvar_="fieldvar_1_".$search[1];
 						global ${$fieldvar_};
@@ -1399,10 +1459,10 @@ class search_view {
 						$fieldvar=${$fieldvar_};
 					}
 					$es = new search("search_fields_unimarc");
-					$result.= static::get_display_search();
+					$result = static::get_display_search();
 				} else {
 					global $mode_aff;
-					//Si il y a une mode d'affichage demandÃ©, on construit l'Ã©cran correspondant
+					//Si il y a une mode d'affichage demandé, on construit l'écran correspondant
 					if ($mode_aff) {
 						$f=static::get_field_text($n);
 						$user_query=$f[0];
@@ -1428,22 +1488,27 @@ class search_view {
 				//Recherche par termes
 			case "term_search":
 				$result .= static::get_display_search();
-	
+
+				if (!$opac_term_search_height) {
+				    $height=300;
+				} else {
+				    $height=$opac_term_search_height;
+				}
 				$result.="
-			<a name='search_frame'/>
-			<iframe style='border: solid 1px black;' name='term_search' id='frame_term_search' class='frame_term_search' src='".$base_path."/term_browse.php?search_term=".rawurlencode(stripslashes($search_term))."&term_click=".rawurlencode(stripslashes($term_click))."&page_search=$page_search&id_thes=$id_thes' width='100%' height='".$height."'></iframe>
-			<br /><br />";
+					<a name='search_frame'/>
+					<iframe style='border: solid 1px black; width : 100%; height : $height;' name='term_search' id='frame_term_search' class='frame_term_search' src='".$base_path."/term_browse.php?search_term=".rawurlencode(stripslashes($search_term ?? ""))."&term_click=".rawurlencode(stripslashes($term_click ?? ""))."&page_search=$page_search&id_thes=$id_thes' title='".htmlentities($msg['term_search_search_for'], ENT_QUOTES, $charset)."'></iframe>
+					<br /><br />";
 				break;
 			case "tags_search":
 				// les tests de formulaire
 				$result = $script_test_form;
 				$tests = test_field("search_input", "query", "recherche");
 				$result = str_replace("!!tests!!", $tests, $result);
-					
+
 				// le contenu
 				static::set_user_query($value);
 				$result .= static::get_display_search();
-	
+
 				// Ajout de la liste des tags
 				if($user_query=="") {
 					$result.= "<h3><span>$msg[search_result_for]<b>".htmlentities(stripslashes($user_query),ENT_QUOTES,$charset)."</b></span></h3>";
@@ -1476,32 +1541,32 @@ class search_view {
 							$n=$_SESSION["nb_queries"];
 						}
 					}
-					//gÃ©nÃ©rer les critÃ¨res de la multi_critÃ¨res
-					//Attention ! si on est dÃ©jÃ  dans une facette !
+					//générer les critères de la multi_critères
+					//Attention ! si on est déjà dans une facette !
 					if ($facette)
 						$es->unserialize_search($_SESSION["lq_facette_search"]["lq_search"]);
 						else {
 							global $search;
 							$search[0]="s_1";
 							$op_="EQ";
-				
+
 							//operateur
 							$op="op_0_".$search[0];
 							global ${$op};
 							${$op}=$op_;
-				
+
 							//contenu de la recherche
 							$field="field_0_".$search[0];
 							$field_=array();
 							$field_[0]=$n;
 							global ${$field};
 							${$field}=$field_;
-				
-							//opÃ©rateur inter-champ
+
+							//opérateur inter-champ
 							$inter="inter_0_".$search[0];
 							global ${$inter};
 							${$inter}="";
-				
+
 							//variables auxiliaires
 							$fieldvar_="fieldvar_0_".$search[0];
 							global ${$fieldvar_};
@@ -1509,14 +1574,14 @@ class search_view {
 							$fieldvar=${$fieldvar_};
 						}
 				}
-					
+
 				if($search_in_perio){
 					global $search;
 					if(empty($search)) {
 						$search=array();
 					}
 					$search[0]="f_34";
-					//opÃ©rateur
+					//opérateur
 					$op="op_0_".$search[0];
 					global ${$op};
 					$op_ ="EQ";
@@ -1527,9 +1592,9 @@ class search_view {
 					$field_[0]=$search_in_perio;
 					global ${$field};
 					${$field}=$field_;
-				
+
 					$search[1]="f_42";
-					//opÃ©rateur
+					//opérateur
 					$op="op_1_".$search[0];
 					global ${$op};
 					$op_ ="BOOLEAN";
@@ -1544,20 +1609,23 @@ class search_view {
 				if($onglet_persopac){
 					global $search;
 					if (!$search && ($_GET['onglet_persopac'] || $_SERVER['REQUEST_METHOD'] == "GET")) {
-						//On ne charge les champs de la prÃ©dÃ©finie que si l'on vient de cliquer sur le lien
-						//EDIT 13/12/17 - AR : ou si on y accÃ¨de pas via un formulaire (utilisation du paramÃ¨tres first_page_params)
+						//On ne charge les champs de la prédéfinie que si l'on vient de cliquer sur le lien
+						//EDIT 13/12/17 - AR : ou si on y accède pas via un formulaire (utilisation du paramètres first_page_params)
 						$search_p_direct= new search_persopac($onglet_persopac);
 						$es->unserialize_search($search_p_direct->query);
 					}
 				}
 				if (($onglet_persopac)&&($lvl=="search_result")) $es->reduct_search();
-				
+
+				$result = static::get_display_search();
+				break;
+			case "ai_search":
 				$result = static::get_display_search();
 				break;
 		}
 		return $result;
 	}
-	
+
 	public static function format_url($url) {
 		if(strpos(static::$url_base, "lvl=search_segment")) {
 			return static::$url_base.str_replace('lvl', 'action', $url);
@@ -1565,29 +1633,30 @@ class search_view {
 			return static::$url_base.$url;
 		}
 	}
-	
+
 	public static function set_user_query($user_query) {
 		static::$user_query = $user_query;
 	}
-	
+
 	public static function get_display_search_universe_form() {
-	    global $msg;
+	    global $msg, $charset;
 	    global $opac_autolevel2;
 	    global $include_path;
 	    global $base_path;
 	    global $opac_map_activate;
 	    global $opac_focus_user_query;
-	    
+	    global $opac_simple_search_suggestions;
+
 	    $form = "
 		<form name='search_input' action='".($opac_autolevel2 ? static::format_url("lvl=more_results&autolevel1=1") : static::format_url("lvl=search_result"))."' method='post' onSubmit=\"if (search_input.user_query.value.length == 0) { search_input.user_query.value='*'; return true; }\">
 			".static::get_typdoc_field()."
 			<br />
 			<input type='hidden' name='surligne' value='!!surligne!!'/>";
         $form .= "
-				<input type='text' name='user_query' class='text_query' value=\"".static::$user_query."\" size='65' />\n";
+				<input type='text' name='user_query' class='text_query' value=\"".static::$user_query."\" size='65' title='".htmlentities($msg['autolevel1_search'], ENT_QUOTES, $charset)."' />\n";
 	    $form .= "
 				<input type='submit' name='ok' value='".$msg["142"]."' class='boutonrechercher'/>\n";
-	    
+
 	    if($opac_map_activate==1 || $opac_map_activate==2) {
 	        $form .= "
 				<div class='row'>
@@ -1598,11 +1667,85 @@ class search_view {
 				</div>";
 	    }
 	    $form .= "</form>
-		<script type='text/javascript' src='".$include_path."/javascript/ajax.js'></script>
-		<script type='text/javascript'>\n
-			".($opac_focus_user_query ? 'document.forms["search_input"].elements["user_query"].focus();' : '')."
-			".($opac_simple_search_suggestions ? "ajax_parse_dom();" : "")."
+		<script src='".$include_path."/javascript/ajax.js'></script>
+		<script>\n
+			if (document.forms['search_input'] && document.forms['search_input'].elements['user_query']) {
+				".($opac_focus_user_query ? 'document.forms["search_input"].elements["user_query"].focus();' : '')."
+				".($opac_simple_search_suggestions ? 'ajax_pack_element(document.forms["search_input"].elements["user_query"]);' : '')."
+			}
 		</script>";
 	    return $form;
+	}
+	private static function get_autocomplete_input($html = "")
+	{
+		global $msg, $charset;
+	    $searchView = new SearchAutocompleteView("searchform/searchautocomplete", [
+	        "input_id" => "user_query_lib",
+			"input_name" => "user_query",
+	        "input_value" => htmlentities(stripslashes(static::$user_query),ENT_QUOTES,$charset),
+	        "input_class" => "text_query",
+	        "input_size" => "65",
+	        "input_placeholder" => $msg["autolevel1_search"],
+	        "show_entities" => 1,
+			"form_id" => "search_input",
+			"html" => $html
+	    ]);
+	    return $searchView->render();
+	}
+
+	protected static function get_search_form_ai_search() {
+		global $opac_url_base, $msg, $get_query, $user_query;
+		global $ai_allow_semantic_search, $ai_active;
+
+		$aiSettings = AISettingsOrm::getAiSettingActive();
+		if(empty($aiSettings)) {
+			return "";
+		}
+
+		if ($ai_active) {
+			if ($ai_allow_semantic_search && !EmprOrm::exist(intval($_SESSION["id_empr_session"]))) {
+				http_response_code(403);
+				header("Location: " . $opac_url_base . "index.php");
+				exit;
+			}
+		}
+
+		if ($get_query) {
+			AiSessionSemanticModel::get_history($get_query);
+		}
+
+		global $retry_query, $wait;
+		if (
+            !$wait &&
+			$retry_query &&
+			!empty($_SESSION["ai_search_history_{$_SESSION["nb_queries"]}"]) &&
+			true === $_SESSION["ai_search_history_{$_SESSION["nb_queries"]}"]["retry"]
+		) {
+            // On a eu une 429, on rejoue une recherche. Donc on redefinit la user_query
+			// !! Attention, ici $wait ne doit pas être defini. (Si c'est le cas, c'est l'affichage d'attente)
+			unset($_SESSION["ai_search_history_{$_SESSION["nb_queries"]}"]["retry"]);
+			$user_query = $_SESSION["ai_search_history_{$_SESSION["nb_queries"]}"]["user_query"];
+		}
+
+		$fetch_text_generation = false;
+		if ($user_query && !$get_query) {
+			$fetch_text_generation = true;
+		}
+
+		// Ne pas mettre ces globals au debut de la fonction,
+		// car elle peut être redéfini dans "AiSessionSemanticModel::get_history"
+		global $ai_session, $ai_session_index_question;
+		if ($ai_session && !AiSessionSemanticModel::exist($ai_session)) {
+			$ai_session = 0;
+		}
+
+		$iaView = new AiView("ai/search", [
+            "webservice_url" => $opac_url_base . "rest.php/aiapi/",
+            "welcome_message" => sprintf($msg["ia_search_welcome"], $aiSettings->settings_ai_settings->name),
+            "ai_session" => $ai_session ?? null,
+            "ai_session_index_question" => $ai_session_index_question ?? null,
+			"fetch_text_generation" => $fetch_text_generation
+        ]);
+		return $iaView->render();
 	}
 }

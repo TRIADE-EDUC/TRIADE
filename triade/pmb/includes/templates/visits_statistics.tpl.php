@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: visits_statistics.tpl.php,v 1.4 2019-05-27 09:10:38 ngantier Exp $
+// $Id: visits_statistics.tpl.php,v 1.5.8.1 2024/10/15 14:31:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 global $visits_statistics_form, $visits_statistics_main_line, $visits_statistics_service_line, $visits_statistics_form_counter, $visits_statistics_shortcut_button, $msg;
@@ -53,9 +53,8 @@ $visits_statistics_service_line = '
 
 $visits_statistics_form_counter = '
 		<input type="button" class="bouton visits_statistics_button" value="-" id="visits_statistics_!!counter_type!!_remove_button" counter_type="!!counter_type!!" action="remove"/>
-		<input type="text" class="visits_statistics_input" value="!!count!!" size="2" id="visits_statistics_!!counter_type!!_input" counter_type="!!counter_type!!" style="text-align: right;"/>
+		<input type="text" class="visits_statistics_input" value="!!count!!" size="2" maxlength="4" id="visits_statistics_!!counter_type!!_input" counter_type="!!counter_type!!" style="text-align: right;"/>
 		<input type="button" class="bouton visits_statistics_button" value="+" id="visits_statistics_!!counter_type!!_add_button" counter_type="!!counter_type!!" action="add"/>';
 
 $visits_statistics_shortcut_button = '
 		<input type="button" id="visits_statistics_shortcut_button_!!counter_type!!" class="visits_statistics_button" value="" counter_type="!!counter_type!!" action="add" style="width: 40px; height: 40px; background-color:!!visits_statistics_color!!; cursor: pointer;" title="!!visits_statistics_title!!"/>';
-?>

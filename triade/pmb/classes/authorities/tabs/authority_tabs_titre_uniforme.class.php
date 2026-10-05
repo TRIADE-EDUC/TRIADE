@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_tabs_titre_uniforme.class.php,v 1.10 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: authority_tabs_titre_uniforme.class.php,v 1.11 2021/12/28 08:46:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/authorities/tabs/authority_tabs.class.php');
 require_once($class_path.'/vedette/vedette_composee.class.php');
 require_once($class_path.'/onto/common/onto_common_uri.class.php');
@@ -14,12 +15,12 @@ require_once($class_path."/skos/skos_concept.class.php");
 class authority_tabs_titre_uniforme extends authority_tabs {
 
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les autoritÃ©s indexÃ©es avec ce concept
+	 * Méthode permettant de récupérer les autorités indexées avec ce concept
 	 * @param elements_list_tab $tab
 	 * @param authority_tabs $authority_tabs
 	 */
 	protected static function get_tab_titre_uniforme_execution_nomenclature_docnums($tab, $authority) {
-		global $pmb_nomenclature_activate, $dbh, $msg;
+		global $pmb_nomenclature_activate, $msg;
 		global $pmb_nomenclature_music_concept_before, $pmb_nomenclature_music_concept_after;
 		global $quoi;
 		
@@ -79,18 +80,18 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 					where (nomenclature_notices_nomenclatures.id_notice_nomenclature is not null or nomenclature_children_records.child_record_num_nomenclature is not null)';
 		
 			$query.= 'and num_concept in ('.implode(',', array_merge($concept_ids['before'], $concept_ids['after'])).')';
-			$nb_results = pmb_mysql_result(pmb_mysql_query($query, $dbh), 0, 0);
+			$nb_results = pmb_mysql_result(pmb_mysql_query($query), 0, 0);
 		}
 		
 		$tab->set_nb_results($nb_results);
 		
 		if (!$quoi && $nb_results) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		$elements_ids = array();
 		if ($nb_results && ($quoi == $tab->get_name())) {
-			// On dÃ©finit les filtres
+			// On définit les filtres
 			$filters = array(
 					array(
 							'name' => 'titre_uniforme_execution_nomenclature_docnums_by_temporality',
@@ -144,8 +145,8 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 					$query.= ' and num_concept in ('.implode(',', array_merge($concept_ids['before'], $concept_ids['after'])).')';
 				}
 				$query.= ' order by formations.notice_nomenclature_order, exotic_instrument_order, workshop_order, family_order, musicstand_order, child_record_order, voice_order';
-				// on lance la requÃªte
-				$result = pmb_mysql_query($query, $dbh);
+				// on lance la requête
+				$result = pmb_mysql_query($query);
 				if($result && pmb_mysql_num_rows($result)){
 					while($row = pmb_mysql_fetch_object($result)){
 						$elements_ids[] = $row->num_object;
@@ -164,14 +165,12 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 	 * @param elements_list_tab $tab 
 	 */
 	protected static function get_titre_uniforme_execution_nomenclature_docnums_filters($tab, $concept_ids = array()) {
-		global $dbh, $msg;
-	
 		$filters = $tab->get_filters();
 		$elements_ids = array();
 	
 		foreach ($filters as $filter) {
 			if ($filter['name'] == 'titre_uniforme_execution_nomenclature_docnums_by_temporality') {
-				// On traite le cas particulier du filtre de temporalitÃ©
+				// On traite le cas particulier du filtre de temporalité
 				$result_ids = self::get_titre_uniforme_execution_nomenclature_docnums_temporality_filter($tab, $concept_ids, $filter);
 				if (count($elements_ids) && count($result_ids)) {
 					$elements_ids = array_intersect($elements_ids, $result_ids);
@@ -180,7 +179,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 				}
 				continue;
 			}
-			// On n'a plus besoin de la distinction avant/aprÃ¨s
+			// On n'a plus besoin de la distinction avant/après
 			$result_ids = array();
 			$groups = array();
 
@@ -204,7 +203,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 				$query.= ' order by '.$query_clauses['order'];
 			}
 			
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					if(!isset($groups[$row->group_id])){
@@ -217,7 +216,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 			}
 			if (count($groups)) {
 				if (!$query_clauses['order']) {
-					// On trie le tableau uniquement si on n'a pas dÃ©fini d'ordre dans la requÃªte
+					// On trie le tableau uniquement si on n'a pas défini d'ordre dans la requête
 					uasort($groups, array('authority_tabs', '_sort_groups_by_label'));
 				}
 				$tab->add_groups($filter['name'], array(
@@ -227,7 +226,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 				
 				$filter_values = $tab->get_filter_values($filter['name']);
 
-				//Si on a des rÃ©sultats; on passe Ã  la suite
+				//Si on a des résultats; on passe à la suite
 				if($filter_values && count($filter_values)){
 					$query = 'select distinct explnum.explnum_id as element_id';
 					$query.= ' from explnum '.$query_clauses['from'];
@@ -239,7 +238,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 					}
 					$query.= ' where (manifs.id_notice_nomenclature is not null or nomenclature_children_records.child_record_num_nomenclature is not null)';
 					$query.= ' and '.$query_clauses['select_group_id'].' in ("'.implode('","', $filter_values).'")';
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
 							$result_ids[] = $row->element_id;
@@ -320,7 +319,6 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 	}
 	
 	protected static function get_titre_uniforme_execution_nomenclature_docnums_temporality_filter($tab, $concept_ids, $filter) {
-		global $dbh, $msg;
 		global $pmb_nomenclature_music_concept_before, $pmb_nomenclature_music_concept_after;
 		
 		$concept_before = new skos_concept(0, $pmb_nomenclature_music_concept_before);
@@ -359,7 +357,7 @@ class authority_tabs_titre_uniforme extends authority_tabs {
 				$query.= ' and num_concept in ('.implode(',', $concepts[$i]['concept_ids']).')';
 			}
 			
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$groups[$concepts[$i]['group_id']] = array(
 						'label' => $concepts[$i]['group_label'],

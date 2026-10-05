@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur Mir@bel
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2023/02/08 11:17:42 dbellamy Exp $ -->
+
+<XMLlist>
+    <entry code="mirabel">Mir@bel</entry>
+    <entry code="mirabel_ws">Web service</entry>
+    <entry code="mirabel_api_url">API URL</entry>
+    <entry code="mirabel_api_key">Partner ID</entry>
+    <entry code="mirabel_access_list">Access list :</entry>
+    <entry code="mirabel_content">Content</entry>
+    <entry code="mirabel_resource">Resource</entry>
+    <entry code="mirabel_diffusion">Diffusion</entry>
+    <entry code="mirabel_numbers">Numbers</entry>
+    <entry code="mirabel_content_aria-labelledby">Access online content in a new tab</entry>
+</XMLlist>

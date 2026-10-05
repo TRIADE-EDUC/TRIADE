@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: search_fields_empr.xml,v 1.23 2019-03-13 11:00:46 dgoron Exp $ -->
+<!-- $Id: search_fields_empr.xml,v 1.31 2024/04/17 07:53:30 rtigero Exp $ -->
 <pmbfields>
 
 	<!-- Zone fixedFields :
 		Liste des champs de recherche possibles de la base de données
 		Chaque champ est modélisé par le tag <field> :
-		<field @att=id,title> 
+		<field @att=id,title>
 			-id : numéro unique arbitraire
 			-title : Texte qui sera affiché dans l'écran de recherche
 			<field> contient les sous tags :
 				<input @type> : type de saisie
-					-type (text|list) : 
+					-type (text|list) :
 						@type=list (dans le cas d'une saisie par liste), input contient les sous champs :
 						 	<queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
 										  -la première donne le code à retourner
 										  -la deuxième donne le libellé dans la liste
-										  
+
 				<query> : requete associée au champ et à l'opérateur
 				<query @att=for,multipleWords,regDiacrit>
-					-for : nom de l'opérateur auquel correspond la requete 
-					 (les opérateurs non listés ne seront pas pris en compte), 
+					-for : nom de l'opérateur auquel correspond la requete
+					 (les opérateurs non listés ne seront pas pris en compte),
 					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
 					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
 			 		<query> contient les sous tags :
-					
-						<main> : Corps principal de la requete, 
-							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
-							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série 
+
+						<main> : Corps principal de la requete,
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche,
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série
 							 de tests de la clause where pour chaque mot saisi
-						
+
 						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
-						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+						<multipleOperator> : opérateur utilisé entre les termes de conditions
 	-->
 
 	<fixedFields>
 		<field title="msg:67" id="1" separator="msg:champs_principaux_query">
 			<input type="text"/>
-			<query for="STARTWITH" regDiacrit="no"> 
+			<query for="STARTWITH" regDiacrit="no">
 				<main><![CDATA[select distinct id_empr  from empr where empr_nom like '!!p!!%']]></main>
 			</query>
 			<query for="ENDWITH" regDiacrit="no">
@@ -225,10 +225,10 @@
 				<options>
 					<option value="0">msg:39</option>
 					<option value="1">msg:40</option>
-				</options>	
+				</options>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where (empr_sms='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where (empr_sms='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:75" id="4">
@@ -267,28 +267,28 @@
 		<field title="msg:empr_date_adhesion" id="5">
 			<input type='date' placeholder='msg:format_date_input_placeholder'/>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion='!!p!!']]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion='!!p!!']]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion<'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion<'!!p!!' ]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion>'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion>'!!p!!' ]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion<='!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion<='!!p!!' ]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion>='!!p!!' ]]></main>		
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion>='!!p!!' ]]></main>
 			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_date_adhesion < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_date_adhesion,1) = WEEK(NOW()) AND YEAR(empr_date_adhesion) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_date_adhesion,1) = WEEK(NOW(),1) AND YEAR(empr_date_adhesion) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct id_empr from empr where MONTH(empr_date_adhesion) = MONTH(NOW()) AND YEAR(empr_date_adhesion) = YEAR(NOW())]]></main>
@@ -303,28 +303,28 @@
 		<field title="msg:readerlist_dateexpiration" id="6">
 			<input type='date' placeholder='msg:format_date_input_placeholder'/>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration='!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration='!!p!!' ]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<'!!p!!' ]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>'!!p!!' ]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<='!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<='!!p!!' ]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>='!!p!!' ]]></main>		
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>='!!p!!' ]]></main>
 			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_date_expiration,1) = WEEK(NOW()) AND YEAR(empr_date_expiration) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_date_expiration,1) = WEEK(NOW(),1) AND YEAR(empr_date_expiration) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct id_empr from empr where MONTH(empr_date_expiration) = MONTH(NOW()) AND YEAR(empr_date_expiration) = YEAR(NOW())]]></main>
@@ -339,46 +339,46 @@
 		<field title="msg:readerlist_dateexpiration_days" id="54">
 			<input type='text' />
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration=DATE_ADD(CURDATE(), INTERVAL !!p!! DAY) ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration=DATE_ADD(CURDATE(), INTERVAL '!!p!!' DAY) ]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<DATE_ADD(CURDATE(), INTERVAL !!p!! DAY) ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<DATE_ADD(CURDATE(), INTERVAL '!!p!!' DAY) ]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>DATE_ADD(CURDATE(), INTERVAL !!p!! DAY) ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>DATE_ADD(CURDATE(), INTERVAL '!!p!!' DAY) ]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<=DATE_ADD(CURDATE(), INTERVAL !!p!! DAY) ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration<=DATE_ADD(CURDATE(), INTERVAL '!!p!!' DAY) ]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>=DATE_ADD(CURDATE(), INTERVAL !!p!! DAY) ]]></main>		
+				<main><![CDATA[select distinct id_empr from empr where empr_date_expiration>=DATE_ADD(CURDATE(), INTERVAL '!!p!!' DAY) ]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_date_create" id="52">
 			<input type='date' placeholder='msg:format_date_input_placeholder'/>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation like '!!p!! %' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_creation like '!!p!! %' ]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation<'!!p!! 00:00:00' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_creation<'!!p!! 00:00:00' ]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation>'!!p!! 23:59:59' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_creation>'!!p!! 23:59:59' ]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation<='!!p!! 23:59:59' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_creation<='!!p!! 23:59:59' ]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation>='!!p!! 00:00:00' ]]></main>		
+				<main><![CDATA[select distinct id_empr from empr where empr_creation>='!!p!! 00:00:00' ]]></main>
 			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_creation > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_creation < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_creation < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_creation,1) = WEEK(NOW()) AND YEAR(empr_creation) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_creation,1) = WEEK(NOW(),1) AND YEAR(empr_creation) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct id_empr from empr where MONTH(empr_creation) = MONTH(NOW()) AND YEAR(empr_creation) = YEAR(NOW())]]></main>
@@ -393,28 +393,28 @@
 		<field title="msg:empr_date_update" id="7">
 			<input type='date' placeholder='msg:format_date_input_placeholder'/>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif='!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_modif='!!p!!' ]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif<'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_modif<'!!p!!' ]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif>'!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_modif>'!!p!!' ]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif<='!!p!!' ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_modif<='!!p!!' ]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif>='!!p!!' ]]></main>		
+				<main><![CDATA[select distinct id_empr from empr where empr_modif>='!!p!!' ]]></main>
 			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_modif > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where empr_modif < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where empr_modif < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_modif,1) = WEEK(NOW()) AND YEAR(empr_modif) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct id_empr from empr where WEEK(empr_modif,1) = WEEK(NOW(),1) AND YEAR(empr_modif) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct id_empr from empr where MONTH(empr_modif) = MONTH(NOW()) AND YEAR(empr_modif) = YEAR(NOW())]]></main>
@@ -431,12 +431,12 @@
 				<query>select idstatut, statut_libelle from empr_statut order by statut_libelle</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where (empr_statut='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where (empr_statut='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:localisation_sort" id="9">
 			<input type="query_list">
-				<query>select idlocation,location_libelle from docs_location order by location_libelle</query>	
+				<query>select idlocation,location_libelle from docs_location order by location_libelle</query>
 			</input>
 			<query for="EQ">
 				<main><![CDATA[select distinct id_empr from empr where empr_location='!!p!!']]></main>
@@ -447,7 +447,7 @@
 				<query>select id_categ_empr, libelle from empr_categ order by libelle</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where (empr_categ='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where (empr_categ='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:codestat_empr" id="11">
@@ -455,7 +455,7 @@
 				<query>select idcode, libelle from empr_codestat order by libelle</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where (empr_codestat='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where (empr_codestat='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:74" id="37">
@@ -492,10 +492,10 @@
 					<option value="1">msg:126</option>
 					<option value="2">msg:127</option>
 					<option value="0">msg:128</option>
-				</options>	
+				</options>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where (empr_sexe='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where (empr_sexe='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:groupe_empr" id="13">
@@ -503,31 +503,31 @@
 				<query>select id_groupe, libelle_groupe from groupe order by libelle_groupe</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr left join empr_groupe on empr_id=id_empr left join groupe on id_groupe=groupe_id where (groupe_id='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr left join empr_groupe on empr_id=id_empr left join groupe on id_groupe=groupe_id where (groupe_id='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_type_abt" id="14">
 			<var name="pmb_gestion_abonnement" visibility="yes">
 				<value visibility="no">0</value>
-			</var> 
+			</var>
 			<input type="query_list">
 				<name>doctype</name>
 				<query>SELECT id_type_abt, type_abt_libelle FROM type_abts ORDER BY type_abt_libelle</query>
 			</input>
 			<query for="EQ">
-				 <main><![CDATA[select distinct id_empr from empr where (type_abt='!!p!!') ]]></main>					
+				 <main><![CDATA[select distinct id_empr from empr where (type_abt='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:codes_barres_query" id="15">
 			<input type="text"/>
 			<query for="STARTWITH">
-				<main><![CDATA[select distinct id_empr from empr where empr_cb like '!!p!!%']]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_cb like '!!p!!%']]></main>
 			</query>
 			<query for="CONTAINS">
-				<main><![CDATA[select distinct id_empr from empr where empr_cb like '%!!p!!%']]></main>			
+				<main><![CDATA[select distinct id_empr from empr where empr_cb like '%!!p!!%']]></main>
 			</query>
-			<query for="ENDWITH">	
-				<main><![CDATA[select distinct id_empr from empr where empr_cb like '%!!p!!']]></main>									
+			<query for="ENDWITH">
+				<main><![CDATA[select distinct id_empr from empr where empr_cb like '%!!p!!']]></main>
 			</query>
 		</field>
 		<field title="msg:empr_login" id="45">
@@ -570,13 +570,24 @@
 				<main><![CDATA[select distinct id_empr from empr where empr_msg!='']]></main>
 			</query>
 		</field>
+		<field title="msg:empr_validated_subscription" id="55">
+			<input type="list">
+				<options>
+					<option value="0">msg:39</option>
+					<option value="1">msg:40</option>
+				</options>
+			</input>
+			<query for="EQ">
+				<main><![CDATA[select distinct id_empr from empr where if(!!p!!=0,cle_validation<>'',cle_validation='')]]></main>
+			</query>
+		</field>
 		<field title="msg:empr_langue_opac" id="16" separator='msg:537'>
 			<input type="marc_list">
 				<name>languages</name>
 				<restrictquery>SELECT group_concat(distinct empr_lang SEPARATOR ',') as all_languages from empr</restrictquery>
 			</input>
 			<query for="EQ">
-				 <main><![CDATA[select distinct id_empr from empr where (empr_lang='!!p!!') ]]></main>						
+				 <main><![CDATA[select distinct id_empr from empr where (empr_lang='!!p!!') ]]></main>
 			</query>
 			<query for="ISEMPTY">
 				<main><![CDATA[select distinct id_empr from empr where empr_lang is null ]]></main>
@@ -588,19 +599,42 @@
 		<field title="msg:empr_nb_prets_encours_query" id="17" separator="msg:circulation_query">
 			<input type="text" />
 			<query for="EQ" regDiacrit="no">
-				<main><![CDATA[select pret_idempr as id_empr from pret group by id_empr having count(1) = !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 in (!!p!!), id_empr not in (select pret_idempr as id_empr from pret),
+					id_empr in (select pret_idempr as id_empr from pret group by id_empr having count(1) = !!p!!))
+				]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select pret_idempr as id_empr from pret group by id_empr having count(1) < !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 < (!!p!!), id_empr not in (select pret_idempr as id_empr from pret), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret group by id_empr having count(1) < !!p!!)
+				]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select pret_idempr as id_empr from pret group by id_empr having count(1) > !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 > (!!p!!), id_empr not in (select pret_idempr as id_empr from pret), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret group by id_empr having count(1) > !!p!!)
+				]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select pret_idempr as id_empr from pret group by id_empr having count(1) <= !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 <= (!!p!!), id_empr not in (select pret_idempr as id_empr from pret), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret group by id_empr having count(1) <= !!p!!)
+				]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select pret_idempr as id_empr from pret group by id_empr having count(1) >= !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 >= (!!p!!), id_empr not in (select pret_idempr as id_empr from pret), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret group by id_empr having count(1) >= !!p!!)
+				]]></main>
 			</query>
 			<query for="ISEMPTY" regDiacrit="no">
 				<main><![CDATA[select id_empr, pret_idexpl from empr left join pret on pret_idempr=id_empr where pret_idexpl is null]]></main>
@@ -609,19 +643,45 @@
 		<field title="msg:empr_nb_prets_enretard_query" id="18">
 			<input type="text" />
 			<query for="EQ" regDiacrit="no">
-				<main><![CDATA[select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) = !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 in (!!p!!), id_empr not in (select pret_idempr as id_empr from pret where pret_retour < curdate()),
+					id_empr in (select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) = !!p!!))
+				]]></main>
 			</query>
 			<query for="LT">
-				<main><![CDATA[select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) < !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 < (!!p!!), id_empr not in (select pret_idempr as id_empr from pret where pret_retour < curdate()), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) < !!p!!)
+				]]></main>
 			</query>
 			<query for="GT">
-				<main><![CDATA[select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) > !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 > (!!p!!), id_empr not in (select pret_idempr as id_empr from pret where pret_retour < curdate()), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) > !!p!!)
+				]]></main>
 			</query>
 			<query for="LTEQ">
-				<main><![CDATA[select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) <= !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 <= (!!p!!), id_empr not in (select pret_idempr as id_empr from pret where pret_retour < curdate()), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) >= !!p!!)
+				]]></main>
 			</query>
 			<query for="GTEQ">
-				<main><![CDATA[select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) >= !!p!!]]></main>
+				<main><![CDATA[select distinct id_empr from empr where
+					if(0 >= (!!p!!), id_empr not in (select pret_idempr as id_empr from pret where pret_retour < curdate()), 0)
+					union
+					select distinct id_empr from empr where
+					id_empr in (select pret_idempr as id_empr from pret where pret_retour < curdate() group by id_empr having count(1) >= !!p!!)
+				]]></main>
+			</query>
+			<query for="ISEMPTY" regDiacrit="no">
+				<main><![CDATA[select id_empr, pret_idexpl from empr left join pret on pret_idempr=id_empr where pret_retour < curdate() and pret_idexpl is null]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_date_pret_query" id="19">
@@ -641,14 +701,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_date>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where
+				if('!!p!!', pret_date>='!!p!!', 1) and if('!!p1!!', pret_date<='!!p1!! 23:59:59', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_date > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_date < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(pret_date,1) = WEEK(NOW()) AND YEAR(pret_date) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(pret_date,1) = WEEK(NOW(),1) AND YEAR(pret_date) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where MONTH(pret_date) = MONTH(NOW()) AND YEAR(pret_date) = YEAR(NOW())]]></main>
@@ -678,13 +742,13 @@
 				<main><![CDATA[select distinct id_empr from empr where last_loan_date>='!!p!!']]></main>
 			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where last_loan_date > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where last_loan_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct id_empr from empr where last_loan_date < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct id_empr from empr where last_loan_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct id_empr from empr where WEEK(last_loan_date,1) = WEEK(NOW()) AND YEAR(last_loan_date) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct id_empr from empr where WEEK(last_loan_date,1) = WEEK(NOW(),1) AND YEAR(last_loan_date) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct id_empr from empr where MONTH(last_loan_date) = MONTH(NOW()) AND YEAR(last_loan_date) = YEAR(NOW())]]></main>
@@ -713,14 +777,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_retour>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where
+				if('!!p!!', pret_retour>='!!p!!', 1) and if('!!p1!!', pret_retour<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_retour > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_retour > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_retour < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where pret_retour < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(pret_retour,1) = WEEK(NOW()) AND YEAR(pret_retour) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(pret_retour,1) = WEEK(NOW(),1) AND YEAR(pret_retour) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where MONTH(pret_retour) = MONTH(NOW()) AND YEAR(pret_retour) = YEAR(NOW())]]></main>
@@ -749,14 +817,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where date_relance>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where
+				if('!!p!!', date_relance>='!!p!!', 1) and if('!!p1!!', date_relance<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where date_relance > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where date_relance > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where date_relance < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where date_relance < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(date_relance,1) = WEEK(NOW()) AND YEAR(date_relance) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct pret_idempr as id_empr from pret where WEEK(date_relance,1) = WEEK(NOW(),1) AND YEAR(date_relance) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where MONTH(date_relance) = MONTH(NOW()) AND YEAR(date_relance) = YEAR(NOW())]]></main>
@@ -767,7 +839,7 @@
 			<query for="THIS_YEAR">
 				<main><![CDATA[select distinct pret_idempr as id_empr from pret where YEAR(date_relance) = YEAR(NOW())]]></main>
 			</query>
-		</field>			
+		</field>
 		<field title="msg:empr_nb_resas_encours_query" id="22">
 			<input type="text" />
 			<query for="EQ" regDiacrit="no">
@@ -811,10 +883,10 @@
 					<option value="2">msg:resa_show_invalidees</option>
 					<option value="3">msg:resa_show_non_confirmees</option>
 					<option value="4">msg:resa_confirmee</option>
-				</options>	
+				</options>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select resa_idempr as id_empr from resa where if(!!p!!=1,resa_cb<>'',if(!!p!!=2,resa_cb='',if(!!p!!=3,resa_confirmee=0,if(!!p!!=4,resa_confirmee=1,'')))) ]]></main>			
+				<main><![CDATA[select resa_idempr as id_empr from resa where if(!!p!!=1,resa_cb<>'',if(!!p!!=2,resa_cb='',if(!!p!!=3,resa_confirmee=0,if(!!p!!=4,resa_confirmee=1,'')))) ]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_date_resa_query" id="25">
@@ -834,14 +906,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where
+				if('!!p!!', resa_date>='!!p!!', 1) and if('!!p1!!', resa_date<='!!p1!! 23:59:59', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date,1) = WEEK(NOW()) AND YEAR(resa_date) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date,1) = WEEK(NOW(),1) AND YEAR(resa_date) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where MONTH(resa_date) = MONTH(NOW()) AND YEAR(resa_date) = YEAR(NOW())]]></main>
@@ -870,14 +946,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_debut>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where
+				if('!!p!!', resa_date_debut>='!!p!!', 1) and if('!!p1!!', resa_date_debut<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_debut > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_debut > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_debut < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_debut < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date_debut,1) = WEEK(NOW()) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date_debut,1) = WEEK(NOW(),1) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where MONTH(resa_date_debut) = MONTH(NOW()) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
@@ -906,14 +986,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_fin>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where
+				if('!!p!!', resa_date_fin>='!!p!!', 1) and if('!!p1!!', resa_date_fin<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_fin > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_fin > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_fin < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where resa_date_fin < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date_fin,1) = WEEK(NOW()) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa where WEEK(resa_date_fin,1) = WEEK(NOW(),1) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where MONTH(resa_date_fin) = MONTH(NOW()) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
@@ -924,7 +1008,7 @@
 			<query for="THIS_YEAR">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa where YEAR(resa_date_fin) = YEAR(NOW())]]></main>
 			</query>
-		</field>		
+		</field>
 		<field title="msg:empr_nb_resas_planning_query" id="28">
 			<var name="pmb_resa_planning" visibility="yes">
 				<value visibility="no">0</value>
@@ -956,10 +1040,10 @@
 					<option value="2">msg:resa_show_invalidees</option>
 					<option value="3">msg:resa_show_non_confirmees</option>
 					<option value="4">msg:resa_confirmee</option>
-				</options>	
+				</options>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select resa_idempr as id_empr from resa_planning where if(!!p!!=1,resa_validee=1,if(!!p!!=2,resa_validee=0,if(!!p!!=3,resa_confirmee=0,if(!!p!!=4,resa_confirmee=1,'')))) ]]></main>			
+				<main><![CDATA[select resa_idempr as id_empr from resa_planning where if(!!p!!=1,resa_validee=1,if(!!p!!=2,resa_validee=0,if(!!p!!=3,resa_confirmee=0,if(!!p!!=4,resa_confirmee=1,'')))) ]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_date_resa_planning_query" id="30">
@@ -982,14 +1066,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where
+				if('!!p!!', resa_date>='!!p!!', 1) and if('!!p1!!', resa_date<='!!p1!! 23:59:59', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date,1) = WEEK(NOW()) AND YEAR(resa_date) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date,1) = WEEK(NOW(),1) AND YEAR(resa_date) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where MONTH(resa_date) = MONTH(NOW()) AND YEAR(resa_date) = YEAR(NOW())]]></main>
@@ -1021,14 +1109,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_debut>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where
+				if('!!p!!', resa_date_debut>='!!p!!', 1) and if('!!p1!!', resa_date_debut<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_debut > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_debut > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_debut < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_debut < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date_debut,1) = WEEK(NOW()) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date_debut,1) = WEEK(NOW(),1) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where MONTH(resa_date_debut) = MONTH(NOW()) AND YEAR(resa_date_debut) = YEAR(NOW())]]></main>
@@ -1060,14 +1152,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_fin>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where
+				if('!!p!!', resa_date_fin>='!!p!!', 1) and if('!!p1!!', resa_date_fin<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_fin > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_fin > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_fin < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where resa_date_fin < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date_fin,1) = WEEK(NOW()) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where WEEK(resa_date_fin,1) = WEEK(NOW(),1) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct resa_idempr as id_empr from resa_planning where MONTH(resa_date_fin) = MONTH(NOW()) AND YEAR(resa_date_fin) = YEAR(NOW())]]></main>
@@ -1126,14 +1222,18 @@
 			<query for="GTEQ">
 				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where date_rec>='!!p!!']]></main>
 			</query>
+			<query for="BETWEEN">
+				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where
+				if('!!p!!', date_rec>='!!p!!', 1) and if('!!p1!!', date_rec<='!!p1!!', 1)]]></main>
+			</query>
 			<query for="LESS_THAN_DAYS">
-				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where date_rec > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where date_rec > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="MORE_THAN_DAYS">
-				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where date_rec < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where date_rec < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 			</query>
 			<query for="THIS_WEEK">
-				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where WEEK(date_rec,1) = WEEK(NOW()) AND YEAR(date_rec) = YEAR(NOW())]]></main>
+				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where WEEK(date_rec,1) = WEEK(NOW(),1) AND YEAR(date_rec) = YEAR(NOW())]]></main>
 			</query>
 			<query for="THIS_MONTH">
 				<main><![CDATA[select distinct empr_id as id_empr from recouvrements where MONTH(date_rec) = MONTH(NOW()) AND YEAR(date_rec) = YEAR(NOW())]]></main>
@@ -1204,10 +1304,34 @@
 				<options>
 					<option value="0">msg:empr_transactions_no_validate</option>
 					<option value="1">msg:empr_transactions_validate</option>
-				</options>	
+				</options>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct id_empr from empr where id_empr in (select distinct proprio_id as id_empr from comptes left join transactions on id_compte=compte_id where (realisee='!!p!!' and montant <> '0.00')) ]]></main>			
+				<main><![CDATA[select distinct id_empr from empr where id_empr in (select distinct proprio_id as id_empr from comptes left join transactions on id_compte=compte_id where (realisee='!!p!!' and montant <> '0.00')) ]]></main>
+			</query>
+		</field>
+		<field title="msg:empr_nb_prets_numeric_encours_query" id="56">
+			<input type="text" />
+			<query for="EQ" regDiacrit="no">
+				<main><![CDATA[select pret_idempr as id_empr from pret where pret_pnb_flag=1 group by id_empr having count(1) = !!p!!]]></main>
+			</query>
+			<query for="LT">
+				<main><![CDATA[select pret_idempr as id_empr from pret where pret_pnb_flag=1 group by id_empr having count(1) < !!p!!]]></main>
+			</query>
+			<query for="GT">
+				<main><![CDATA[select pret_idempr as id_empr from pret where pret_pnb_flag=1 group by id_empr having count(1) > !!p!!]]></main>
+			</query>
+			<query for="LTEQ">
+				<main><![CDATA[select pret_idempr as id_empr from pret where pret_pnb_flag=1 group by id_empr having count(1) <= !!p!!]]></main>
+			</query>
+			<query for="GTEQ">
+				<main><![CDATA[select pret_idempr as id_empr from pret where pret_pnb_flag=1 group by id_empr having count(1) >= !!p!!]]></main>
+			</query>
+			<query for="ISEMPTY" regDiacrit="no">
+				<main><![CDATA[select id_empr, pret_idexpl from empr left join pret on pret_idempr=id_empr and pret_pnb_flag=1 where pret_idexpl is null]]></main>
+			</query>
+			<query for="ISNOTEMPTY" regDiacrit="no">
+				<main><![CDATA[select id_empr, pret_idexpl from empr join pret on pret_idempr=id_empr and pret_pnb_flag=1]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_dsi_ban_abo_query" id="50" separator="msg:dsi_menu">
@@ -1215,7 +1339,7 @@
 				<query>select id_bannette, nom_bannette from bannettes where proprio_bannette=0 order by nom_bannette</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct num_empr as id_empr from bannette_abon where (num_bannette='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct num_empr as id_empr from bannette_abon where (num_bannette='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:empr_dsi_ban_pro_query" id="51">
@@ -1223,44 +1347,44 @@
 				<query>select id_bannette, nom_bannette from bannettes where proprio_bannette!=0 order by nom_bannette</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct num_empr as id_empr from bannette_abon where (num_bannette='!!p!!') ]]></main>			
+				<main><![CDATA[select distinct num_empr as id_empr from bannette_abon where (num_bannette='!!p!!') ]]></main>
 			</query>
 		</field>
 		<field title="msg:caddie_de_EMPR" id="41" separator="msg:caddie_menu">
 			<input type="query_list">
-				<query use_global='PMBuserid'>select idemprcaddie,name from empr_caddie where autorisations like '!!PMBuserid!! %' or autorisations like '% !!PMBuserid!!' or autorisations like '% !!PMBuserid!! %' or autorisations like '!!PMBuserid!!' order by name</query>
+				<query use_global='PMBuserid' group_by='empr_caddie_classement'>select idemprcaddie,name,empr_caddie_classement from empr_caddie where autorisations like '!!PMBuserid!! %' or autorisations like '% !!PMBuserid!!' or autorisations like '% !!PMBuserid!! %' or autorisations like '!!PMBuserid!!' or autorisations_all=1 order by empr_caddie_classement,name</query>
 			</input>
 			<query for="EQ">
-			<main><![CDATA[select id_empr from empr where id_empr in (select distinct object_id as id_empr from empr_caddie_content where empr_caddie_id='!!p!!')]]></main>	
+			<main><![CDATA[select id_empr from empr where id_empr in (select distinct object_id as id_empr from empr_caddie_content where empr_caddie_id='!!p!!')]]></main>
 			</query>
 		</field>
 	</fixedFields>
-	
+
 	<!-- Zone dynamicFields :
 		Liste des champs personalisés par type de données
-			<field @att=id,dataType> 
+			<field @att=id,dataType>
 			-id : numéro unique arbitraire
 			-dataType : type de données du champ personalisé
 			<field> contient les sous tags :
-			
+
 				<query> : requete associée au champ et à l'opérateur
 				<query @att=for,multipleWords,regDiacrit>
-					-for : nom de l'opérateur auquel correspond la requete 
-					 (les opérateurs non listés ne seront pas pris en compte), 
+					-for : nom de l'opérateur auquel correspond la requete
+					 (les opérateurs non listés ne seront pas pris en compte),
 					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
 					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
 			 		<query> contient les sous tags :
-					
-						<main> : Corps principal de la requete, 
-							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
-							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série  
+
+						<main> : Corps principal de la requete,
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche,
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série
 							 de tests de la clause where pour chaque mot saisi
 							-!!field!! sera remplacé par le numéro de champ personalisé
-						
+
 						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
-						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+						<multipleOperator> : opérateur utilisé entre les termes de conditions
 	-->
-	
+
 	<dynamicFields>
 		<fieldType type="empr" prefix="empr">
 			<field dataType="small_text" id="1">
@@ -1394,13 +1518,13 @@
 					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND empr_custom_date >= '!!p!!']]></main>
 				</query>
 				<query for="LESS_THAN_DAYS">
-					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND empr_custom_date > DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND empr_custom_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 				</query>
 				<query for="MORE_THAN_DAYS">
-					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND empr_custom_date < DATE_SUB(NOW(), INTERVAL !!p!! DAY)]]></main>
+					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND empr_custom_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)]]></main>
 				</query>
 				<query for="THIS_WEEK">
-					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND WEEK(empr_custom_date,1) = WEEK(NOW()) and YEAR(empr_custom_date) = YEAR(NOW())]]></main>
+					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND WEEK(empr_custom_date,1) = WEEK(NOW(),1) and YEAR(empr_custom_date) = YEAR(NOW())]]></main>
 				</query>
 				<query for="THIS_MONTH">
 					<main><![CDATA[SELECT DISTINCT empr_custom_origine AS id_empr FROM empr_custom_values WHERE empr_custom_champ=!!field!! AND MONTH(empr_custom_date) = MONTH(NOW()) and YEAR(empr_custom_date) = YEAR(NOW())]]></main>
@@ -1420,9 +1544,9 @@
 			</field>
 		</fieldType>
 	</dynamicFields>
-  
+
 	<specialFields>
-		<field type="combine_empr" title="msg:histo_title" id="1" separator="msg:recherches_query"/>	
+		<field type="combine_empr" title="msg:histo_title" id="1" separator="msg:recherches_query"/>
 	</specialFields>
 
 	<keyName>id_empr</keyName>

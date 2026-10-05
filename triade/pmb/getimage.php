@@ -1,8 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: getimage.php,v 1.33 2018-08-27 14:45:29 ngantier Exp $
+// $Id: getimage.php,v 1.41 2023/02/20 13:33:14 dgoron Exp $
+
+global $class_path, $pmb_curl_available, $empr_pics_max_size;
+global $notice_id, $etagere_id, $authority_id;
+global $no_caching;
 
 if(isset($_GET['noticecode'])){
 	$noticecode=$_GET['noticecode'];
@@ -39,43 +43,37 @@ require_once($base_path."/admin/connecteurs/in/amazon/amazon.class.php");
 
 session_write_close();
 
-$poids_fichier_max=1024*1024;//Limite la taille de l'image Ã  1 Mo
+$poids_fichier_max=1024*1024;//Limite la taille de l'image à 1 Mo
 
-if(!isset($notice_id)){
-	$notice_id = 0;
-}
-
-if(!isset($etagere_id)){
-	$etagere_id = 0;
-}
-
-if(!isset($authority_id)){
-	$authority_id = 0;
-}
+$notice_id = intval($notice_id);
+$etagere_id = intval($etagere_id);
+$authority_id = intval($authority_id);
 
 $img_disk="";
 
-$manag_cache=getimage_cache($notice_id, $etagere_id, $authority_id, $vigurl, $noticecode, $url_image, $empr_pic);
-if($manag_cache["location"]){
-    $img_disk=$manag_cache["location"];
-    if($manag_cache["hash_location"]){
-        copy($img_disk,$manag_cache["hash_location"]);
-    }
-    send_img_disk($img_disk);
-}   
+if(empty($no_caching)) {
+	$manag_cache=getimage_cache($notice_id, $etagere_id, $authority_id, $vigurl, $noticecode, $url_image, $empr_pic);
+	if (!empty($manag_cache['location'])) {
+		$img_disk=$manag_cache["location"];
+		if(!empty($manag_cache["hash_location"])){
+			copy($img_disk,$manag_cache["hash_location"]);
+		}
+		send_img_disk($img_disk);
+	}
+}
 
 $list_images=array();
 if($vigurl){
-    $list_images[]=$vigurl;
-} 
+	$list_images[]=$vigurl;
+}
 
 if (strlen($noticecode)==12) {
     // code UPC -> EAN
     $noticecode = '0' . $noticecode;
-} 
+}
 $url_images  = explode(";", urldecode($url_image));
-foreach ($url_images as $url_image) {  
-    if ($noticecode) {         
+foreach ($url_images as $url_image) {
+	if ($noticecode) {
     	if (isEAN($noticecode)) {
     		if (isISBN($noticecode)) {
     			if (isISBN10($noticecode)) {
@@ -99,8 +97,8 @@ $list_images = array_unique($list_images);
 $image="";
 if ($pmb_curl_available) {
 	$aCurl = new Curl();
-	$aCurl->limit=$poids_fichier_max;//Limite la taille de l'image Ã  1 Mo
-	$aCurl->timeout=15;
+	$aCurl->limit=$poids_fichier_max;//Limite la taille de l'image à 1 Mo
+	$aCurl->timeout=5;
 	$aCurl->options["CURLOPT_SSL_VERIFYPEER"]="0";
 	$aCurl->options["CURLOPT_ENCODING"]="";
 	
@@ -122,16 +120,18 @@ if ($pmb_curl_available) {
 			break;
 		}
 	}
-	if ($image == '' || file_get_contents($base_path.'/images/white_pixel.jpg') == $image) {
-	    $amazon = new amazon();
-	    $data = $amazon->get_images_by_code($noticecode);
-	    if(isset($data['MediumImage'])) {
-	        $content = $aCurl->get($data['MediumImage']);
-	        $image = $content->body;
-	    }
+	if (!empty($noticecode) && ($image == '' || file_get_contents($base_path.'/images/white_pixel.jpg') == $image || file_get_contents($base_path.'/images/white_pixel_2x2.png') == $image)) {
+		$amazon = new amazon();
+		$data = $amazon->get_images_by_code($noticecode);
+		if (isset($data['MediumImage'])) {
+			$content = $aCurl->get($data['MediumImage']);
+			$image = $content->body;
+		} else {
+			$image = '';
+		}
 	}
 } else {
-	// prioritÃ© Ã  vigurl si fournie
+	// priorité à vigurl si fournie
 	$fp="";
 	if (count($list_images)) foreach ($list_images as $current_url) {
 		if($fp=@fopen(rawurldecode(stripslashes($current_url)), "rb")){
@@ -140,7 +140,7 @@ if ($pmb_curl_available) {
 	}
 	
 	if ($fp) {
-		//Lecture et vÃ©rification de l'image
+		//Lecture et vérification de l'image
 		$image="";
 		$size=0;
 		$flag=true;
@@ -201,11 +201,13 @@ if ($image && ($img=imagecreatefromstring($image))) {
 	}
 	
 	$copy_ok=false;
-	if($manag_cache["hash_location"]){
+	if(empty($no_caching) && $manag_cache["hash_location"]){
 		$copy_ok=imagepng($dest, $manag_cache["hash_location"]);
 	}
-	if($copy_ok){
-		send_img_disk($manag_cache["hash_location"]);
+	if(empty($no_caching) && $copy_ok){
+		if(!empty($manag_cache["hash_location"])) {
+			send_img_disk($manag_cache["hash_location"]);
+		}
 	}else{
 		header('Content-Type: image/png');
 		imagepng($dest);
@@ -214,10 +216,12 @@ if ($image && ($img=imagecreatefromstring($image))) {
 	}
 }else{
 	$img_disk=get_url_icon('vide.png');
-	if($manag_cache["hash_location_empty"]){
-		copy($img_disk,$manag_cache["hash_location_empty"]);
-	}elseif($manag_cache["hash_location"]){
-		copy($img_disk,$manag_cache["hash_location"]);
+	if(empty($no_caching)) {
+		if($manag_cache["hash_location_empty"]){
+			copy($img_disk,$manag_cache["hash_location_empty"]);
+		}elseif($manag_cache["hash_location"]){
+			copy($img_disk,$manag_cache["hash_location"]);
+		}
 	}
 	send_img_disk($img_disk);
 }

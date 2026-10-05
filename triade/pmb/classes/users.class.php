@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: users.class.php,v 1.4 2019-04-09 06:51:50 dgoron Exp $
+// $Id: users.class.php,v 1.6 2023/09/02 07:27:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -71,7 +71,7 @@ class users {
 						<span class='grouplabelcheckbox'>".$label."</span>
 						<input type='button' class='bouton_small align_middle' value='".$msg['tout_cocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list_group_".$i."\").value,1);'>
 						<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list_group_".$i."\").value,0);'>
-					<div class='child groupuserscheckbox ui-clearfix ui-flex ui-flex-1-5 ui-flex-top'>
+					<div class='groupuserschild groupuserscheckbox ui-clearfix ui-flex ui-flex-1-5 ui-flex-top'>
 						".static::get_form_autorisations_group($group, $autorisations_donnees)."
 						<input type='hidden' id='auto_id_list_group_".$i."' name='auto_id_list_group_".$i."' value='".static::format_id_list(static::$all_users[$label], false)."' />
 					</div>
@@ -82,7 +82,7 @@ class users {
 			foreach (static::$all_users as $label=>$group) {
 				$autorisations_users .= "
 				<div class='groupcheckbox'>
-					<div class='child groupuserscheckbox ui-clearfix ui-flex ui-flex-1-5 ui-flex-top'>
+					<div class='groupuserschild groupuserscheckbox ui-clearfix ui-flex ui-flex-1-5 ui-flex-top'>
 						".static::get_form_autorisations_group($group, $autorisations_donnees)."
 					</div>
 				</div>";
@@ -94,4 +94,13 @@ class users {
 		return $autorisations_users;
 	}
 	
-} // fin de dÃ©claration de la classe users
+	public static function get_users_from_mail($mail) {
+		$users = array();
+		$query = "SELECT userid FROM users WHERE user_email = '".addslashes($mail)."'";
+		$result = pmb_mysql_query($query);
+		while ($row = pmb_mysql_fetch_object($result)) {
+			$users[$row->userid] = new user($row->userid);
+		}
+		return $users;
+	}
+} // fin de déclaration de la classe users

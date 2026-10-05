@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: actes.js,v 1.27 2019-04-26 15:15:55 dgoron Exp $
+// $Id: actes.js,v 1.32 2020/07/07 07:06:43 dgoron Exp $
 
 
 /*
@@ -131,6 +131,7 @@ function act_addRow(lig){
 
 	var tr=document.createElement('TR');
 	tr.setAttribute('id','R_'+lig);
+	tr.setAttribute('class','act_typ_lig_0');
 	return tr;
 }
 
@@ -447,13 +448,17 @@ function act_delType(elt) {
 	if('del_typ_for_checked' == elt.id) {		
 		document.getElementById('typ_for_checked').value='0';
 		document.getElementById('lib_typ_for_checked').value='';
-		document.getElementById('tva_for_checked').value='0.00';
+		if(document.getElementById('tva_for_checked')) {
+			document.getElementById('tva_for_checked').value='0.00';
+		}
 		document.getElementById('rem_for_checked').value='0.00';
 	} else {
 		var cr=elt.parentNode.parentNode.getAttribute('id').substring(2);
 		document.getElementById('typ['+cr+']').value='0';
 		document.getElementById('lib_typ['+cr+']').value='';
-		document.getElementById('tva['+cr+']').value='0.00';
+		if (gestion_tva!=0) {
+			document.getElementById('tva['+cr+']').value='0.00';
+		}
 		document.getElementById('rem['+cr+']').value='0.00';
 		if (document.getElementById('convert_ht_ttc_'+cr)) document.getElementById('convert_ht_ttc_'+cr).innerHTML=document.getElementById('prix['+cr+']').value;
 		act_calc();
@@ -1105,6 +1110,9 @@ function expandRow(el, unexpand) {
 	    whichEl.style.display  = 'none';
 	    whichIm.src            = imgClosed.src;
 	  }
+	  if(typeof ajax_resize_elements == "function"){
+		  ajax_resize_elements();
+	  }
 }
 
 function expandAllCommentsRows(context) {
@@ -1260,6 +1268,11 @@ function get_thresholds() {
 }
 
 function typeSwitched(num_ligne){
+	var rowContainer = document.getElementById('R_'+num_ligne);
+	if(rowContainer && document.getElementById('typ_lig['+num_ligne+']')) {
+		rowContainer.setAttribute('class', 'act_typ_lig_'+document.getElementById('typ_lig['+num_ligne+']').value);
+		
+	}
 	var applicantsContainer = document.getElementById("C_"+num_ligne+"_applicants_container");
 	if(!applicantsContainer) return;
 	var nbApplicantsLine = applicantsContainer.children.length;
@@ -1268,13 +1281,90 @@ function typeSwitched(num_ligne){
 		trParent.setAttribute('style', 'display:table-row;');
 	}else{
 		for(var i=0 ; i<nbApplicantsLine ; i++){
-			document.getElementById('C_'+num_ligne+'_empr_label_'+nbApplicantsLine).value=''; 
-			document.getElementById('C_'+num_ligne+'_applicants_'+nbApplicantsLine).value=0;	
+			if(document.getElementById('C_'+num_ligne+'_empr_label_'+nbApplicantsLine)) {
+				document.getElementById('C_'+num_ligne+'_empr_label_'+nbApplicantsLine).value='';
+			}
+			if(document.getElementById('C_'+num_ligne+'_applicants_'+nbApplicantsLine)) {
+				document.getElementById('C_'+num_ligne+'_applicants_'+nbApplicantsLine).value=0;
+			}
 		}
 		trParent.setAttribute('style', 'display:none;');
 	}
 }
 
+//Copie lignes cochees
+function act_copyLines(){
+	
+	var ac=act_curline;
+	var i,c;
+	var cur_row,new_row;
+	
+	for (i=1;i<=ac;i++) {
+		
+		c=document.getElementById('chk['+i+']');
+		try {
+			if(c.checked) {
+
+				cur_row=document.getElementById('R_'+i);
+				if(cur_row) {
+					act_addLine();
+					document.getElementById('code['+act_curline+']').value = document.getElementById('code['+i+']').value;
+					document.getElementById('lib['+act_curline+']').value = document.getElementById('lib['+i+']').value;
+					document.getElementById('qte['+act_curline+']').value = document.getElementById('qte['+i+']').value;
+					document.getElementById('prix['+act_curline+']').value = document.getElementById('prix['+i+']').value;
+					document.getElementById('typ['+act_curline+']').value = document.getElementById('typ['+i+']').value;
+					document.getElementById('lib_typ['+act_curline+']').value = document.getElementById('lib_typ['+i+']').value;
+					if(gestion_tva>0){
+						document.getElementById('tva['+act_curline+']').value = document.getElementById('tva['+i+']').value;
+						document.getElementById('force_debit['+act_curline+']').value = document.getElementById('force_debit['+i+']').value;
+						document.getElementById('force_ht_ttc_'+act_curline).innerHTML = document.getElementById('force_ht_ttc_'+i).innerHTML;
+					}
+					document.getElementById('rem['+act_curline+']').value = document.getElementById('rem['+i+']').value;
+					document.getElementById('rub['+act_curline+']').value = document.getElementById('rub['+i+']').value;
+					document.getElementById('lib_rub['+act_curline+']').value = document.getElementById('lib_rub['+i+']').value;
+					document.getElementById('lg_statut['+act_curline+']').value = document.getElementById('lg_statut['+i+']').value;
+					document.getElementById('id_sug['+act_curline+']').value = document.getElementById('id_sug['+i+']').value;
+					document.getElementById('id_lig['+act_curline+']').value = document.getElementById('id_lig['+i+']').value;
+					document.getElementById('typ_lig['+act_curline+']').value = document.getElementById('typ_lig['+i+']').value;
+					document.getElementById('id_prod['+act_curline+']').value = document.getElementById('id_prod['+i+']').value;
+				}
+	
+			}
+		}catch(err) {
+		}
+	}
+	act_calc();
+	thresholds_notification();
+	return false;	
+}
+
+//Augmentation lignes cochees
+function act_increaseRate(){
+
+	var n=act_curline;
+	var increase_rate_percent=document.getElementById('increase_rate_percent').value;
+	if(isNaN(increase_rate_percent)) {
+		return false;
+	}
+	var i,j,c,p;
+	
+	for (i=1;i<=n;i++) {
+		c=document.getElementById('chk['+i+']');
+		try {
+			if(c.checked) {
+				p = document.getElementById('prix['+i+']').value;
+				if(!isNaN(p)) {
+					p = p * (1 + (increase_rate_percent / 100));
+					p = p.toFixed(precision);
+					document.getElementById('prix['+i+']').value = p;
+				}
+			}
+		}catch(err) {}
+	}
+	act_calc();
+	thresholds_notification();
+	return false;
+}
 
 function act_applyTypeToChecked() {
 
@@ -1318,5 +1408,13 @@ function act_applyBudgetToChecked() {
 	return false;
 }
 
+function callbackUpdateType() {
+	var typ_for_checked = document.getElementById('typ_for_checked').value;
+	var tab = typ_for_checked.split(',');
+	var rem_for_checked = tab[1];
+	var tva_for_checked = tab[2];
+	document.getElementById('rem_for_checked').value = tab[1];
+	document.getElementById('tva_for_checked').value = tab[2];
+}
 
 window.onload = function () {thresholds_notification(true);}

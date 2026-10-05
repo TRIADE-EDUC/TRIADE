@@ -1,21 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: alert_see.inc.php,v 1.8 2019-01-16 16:57:14 dgoron Exp $
+// $Id: alert_see.inc.php,v 1.11 2024/04/16 06:55:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $include_path;
+global $include_path, $lvl, $search_type, $id;
 global $search;
 global $es;
 
 // fonctions de conversion simple2mc
 require_once($include_path."/search_queries/specials/combine/search.class.php");
 
-// Gestion des alertes Ã  partir de la recherche simple
-$mc=combine_search::simple2mc($_SESSION['last_query']);
+if($lvl == 'etagere_see') {
+	// Gestion des alertes à partir d'une étagère
+	$mc=combine_search::etagere2mc($id);
+} else {
+	// Gestion des alertes à partir de la recherche simple
+	$mc=combine_search::simple2mc($_SESSION['last_query']);
+}
+
 global $field_0_s_4;
+if(!is_array($field_0_s_4)) {
+    $field_0_s_4 = array();
+}
 $field_0_s_4[]=serialize(array(
 		'serialized_search' => $mc['serialized_search'],
 		'search_type' => $mc['search_type']
@@ -23,7 +32,7 @@ $field_0_s_4[]=serialize(array(
 
 unset($search);
 
-global $search; //On redÃ©clare $search en globale pour la suite
+global $search; //On redéclare $search en globale pour la suite
 global $op_0_s_4;
 $op_0_s_4="EQ";
 global $inter_0_s_4;
@@ -32,7 +41,14 @@ $search=array();
 $search[0]="s_4";
 
 if (isset($_SESSION['opac_view']) && $_SESSION['opac_view']) {
-	$query = "select opac_view_query from opac_views where opac_view_id = ".$_SESSION['opac_view'];
+    
+    if (!isset($_SESSION['opac_view']) || $_SESSION['opac_view'] == "default_opac" || $_SESSION['opac_view'] == "default") {
+        $id_opac = 0;
+    } else {
+        $id_opac = intval($_SESSION['opac_view']);
+    }
+    
+    $query = "select opac_view_query from opac_views where opac_view_id = ".$id_opac;
 	$result = pmb_mysql_query($query);
 
 	if ($result && pmb_mysql_num_rows($result)) {
@@ -40,7 +56,7 @@ if (isset($_SESSION['opac_view']) && $_SESSION['opac_view']) {
 		$serialized = $row->opac_view_query;
 	}
 
-	if ($serialized) {
+	if (!empty($serialized)) {
 		global $field_1_s_4;
 		$field_1_s_4[]=serialize(array(
 				'serialized_search' => $serialized,

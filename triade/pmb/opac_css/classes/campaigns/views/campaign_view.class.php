@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_view.class.php,v 1.5 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: campaign_view.class.php,v 1.6 2022/01/19 11:44:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/campaigns/campaign_charting.class.php");
 require_once($class_path."/campaigns/campaign_stats.class.php");
 require_once($class_path."/campaigns/campaign.class.php");
@@ -33,13 +34,13 @@ class campaign_view {
 	protected static $campaigns;
 	
 	/**
-	 * Instances des vues dÃ©rivÃ©es
+	 * Instances des vues dérivées
 	 * @var campaign_view
 	 */
 	protected static $instances;
 	
 	public function __construct($id=0, $type='') {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		if($type) {
 			$this->type = $type;
 		} else {

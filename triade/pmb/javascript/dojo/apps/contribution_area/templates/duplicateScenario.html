@@ -1,0 +1,57 @@
+<form data-dojo-type='dijit/form/Form' id='scenarioDuplicateForm' encType='multipart/form-data' action='' method=''> 
+	<label for='contributionArea'>!!msg_contribution_area_list!!</label>
+	<br/>
+		!!contribution_area_options_list!!
+	<br/>
+	<label for='duplicateForms'>!!msg_duplicate_forms!!</label>
+	<input type="checkbox" id="duplicateForms" name="duplicateForms">
+	<input type="hidden" id="scenarioId" name="scenarioId" value="!!scenarioId!!">
+	<p>!!msg_contribution_area_duplication!!</p>
+	<br/>
+	<button data-dojo-type="dijit/form/Button" id="scenarioCreationValidate" data-dojo-id="scenarioCreationValidate" data-dojo-props="" type="button">
+    	!!msg_scenario_validate!!
+    	<script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+    		require(["dojo/dom", "dijit/registry", "dojo/topic"], function(dom, registry, topic){
+     			var popup = registry.byId('duplicateScenarioPopup');
+
+        		const data = Object.fromEntries(new FormData(scenarioDuplicateForm).entries());
+
+        		if(popup.callback){
+       	   	  		popup.callback();
+       			}
+
+        		var contributionAreaId = dom.byId("contributionArea").value;
+        		if (contributionAreaId) {
+           	 		topic.publish("Dialog", "duplicateScenarioToOtherContributionArea", data);
+        		}
+	
+        		popup.hide();
+       			popup.destroyRecursive();
+        		popup.destroy();
+    		});
+		</script>
+	</button>
+	<button data-dojo-type="dijit/form/Button" id="scenarioCreationValidateAndGo" data-dojo-id="scenarioCreationValidateAndGo" data-dojo-props="" type="button">
+    	!!msg_scenario_validate_and_go!!
+    	<script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+    		require(["dojo/dom", "dijit/registry", "dojo/topic"], function(dom, registry, topic){
+     			var popup = registry.byId('duplicateScenarioPopup');
+
+        		const data = Object.fromEntries(new FormData(scenarioDuplicateForm).entries());
+
+        		if(popup.callback){
+       	   	  		popup.callback();
+       			}
+
+        		var contributionAreaId = dom.byId("contributionArea").value;
+        		if (contributionAreaId) {
+           	 		topic.publish("Dialog", "duplicateScenarioToOthercontributionAreaAndGo", data);
+        		}
+	
+        		popup.hide();
+       			popup.destroyRecursive();
+        		popup.destroy();
+    		});
+		</script>
+	</button>
+</form>

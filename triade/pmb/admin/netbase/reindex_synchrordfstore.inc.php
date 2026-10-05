@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: reindex_synchrordfstore.inc.php,v 1.7 2017-11-22 11:07:34 dgoron Exp $
+// $Id: reindex_synchrordfstore.inc.php,v 1.10 2024/04/17 13:55:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg;
+global $start, $v_state, $spec, $count;
 
 require_once($class_path.'/synchro_rdf.class.php');
 require_once($class_path.'/notice.class.php');
@@ -15,7 +18,7 @@ $lot = REINDEX_PAQUET_SIZE; // defini dans ./params.inc.php
 
 $synchro_rdf = new synchro_rdf();
 
-// initialisation de la borne de dÃ©part
+// initialisation de la borne de départ
 if (empty($start)) {
 	$start=0;
 	//remise a zero des tables de synchro rdf
@@ -25,13 +28,11 @@ if (empty($start)) {
 $v_state=urldecode($v_state);
 
 if (!$count) {
-	$notices = pmb_mysql_query("SELECT count(1) FROM notices", $dbh);
+	$notices = pmb_mysql_query("SELECT count(1) FROM notices");
 	$count = pmb_mysql_result($notices, 0, 0);
 }
 	
-print "<br /><br /><h2 class='center'>".htmlentities($msg["nettoyage_synchrordfstore_reindexation"], ENT_QUOTES, $charset)."</h2>";
-
-$NoIndex = 1;
+print netbase::get_display_progress_title($msg["nettoyage_synchrordfstore_reindexation"]);
 
 $query = pmb_mysql_query("select notice_id from notices order by notice_id LIMIT $start, $lot");
 if(pmb_mysql_num_rows($query)) {
@@ -41,7 +42,7 @@ if(pmb_mysql_num_rows($query)) {
 		$synchro_rdf->addRdf($mesNotices['notice_id'],0); 
 		$notice=new notice($mesNotices['notice_id']);
 		$niveauB=strtolower($notice->biblio_level);
-		//Si c'est un article, il faut rÃ©indexer son bulletin
+		//Si c'est un article, il faut réindexer son bulletin
 		if($niveauB=='a'){
 			$bulletin=analysis::getBulletinIdFromAnalysisId($mesNotices['notice_id']);
 			$synchro_rdf->addRdf(0,$bulletin);
@@ -63,7 +64,6 @@ if(pmb_mysql_num_rows($query)) {
 	if (is_array($r['result']['rows'])) {
 		$compte=count($r['result']['rows']);
 	}
-	$v_state .= "<br /><img src='".get_url_icon('d.gif')."' hspace=3>".htmlentities($msg["nettoyage_synchrordfstore_reindexation"], ENT_QUOTES, $charset)." :";
-	$v_state .= $compte." ".htmlentities($msg["nettoyage_synchrordfstore_reindex_total"], ENT_QUOTES, $charset);
+	$v_state .= netbase::get_display_progress_v_state($msg["nettoyage_synchrordfstore_reindexation"], $compte." ".$msg["nettoyage_synchrordfstore_reindex_total"]);
 	print netbase::get_process_state_form($v_state, $spec);
 }

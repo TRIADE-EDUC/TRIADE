@@ -1,8 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: blocage.php,v 1.8 2017-09-28 09:23:37 dgoron Exp $
+// $Id: blocage.php,v 1.10 2020/12/16 15:01:57 dgoron Exp $
+
+global $act, $id_empr, $date_prolong, $msg;
 
 $base_path="..";
 $base_auth = "CIRCULATION_AUTH";
@@ -33,8 +35,7 @@ if (!$act) {
 	print pmb_bidi("<h3>".$empr->empr_prenom." ".$empr->empr_nom."</h3>
 	<div class='form-contenu'>
 		<div class='row'>
-			<input type='radio' name='act' value='prolong' id='prolong' checked><label for='prolong'>".sprintf($msg["blocage_params_jusque"],"<input type='button' value='".formatdate($empr->date_fin_blocage)."' name='date_prolong_lib' class='bouton' onClick=\"openPopUp('../select.php?what=calendrier&caller=blocage_form&date_caller=".str_replace("-","",$empr->date_fin_blocage)."&param1=date_prolong&param2=date_prolong_lib&auto_submit=NO', 'calendar');\"/>")."</label>
-			<input type='hidden' name='date_prolong' value='".$empr->date_fin_blocage."'/>
+			<input type='radio' name='act' value='prolong' id='prolong' checked><label for='prolong'>".sprintf($msg["blocage_params_jusque"], get_input_date('date_prolong', 'date_prolong', $empr->date_fin_blocage))."</label>
 		</div>
 		<div class='row'>
 			<input type='radio' name='act' value='annul' id='annul'><label for='annul'>".$msg["blocage_params_deblocage"]."</label>

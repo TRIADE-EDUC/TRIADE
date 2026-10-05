@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_notices_orinot_ui.class.php,v 1.1 2018-10-12 11:59:35 dgoron Exp $
+// $Id: list_configuration_notices_orinot_ui.class.php,v 1.4 2023/03/24 07:44:39 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/notices/list_configuration_notices_ui.class.php");
 
 class list_configuration_notices_orinot_ui extends list_configuration_notices_ui {
 	
@@ -15,10 +13,7 @@ class list_configuration_notices_orinot_ui extends list_configuration_notices_ui
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'orinot_nom',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('orinot_nom');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -29,23 +24,14 @@ class list_configuration_notices_orinot_ui extends list_configuration_notices_ui
 		);
 	}
 	
-	protected function get_cell_content($object, $property) {
+	protected function _get_object_property_orinot_diffusion($object) {
 		global $msg;
-	
-		$content = '';
-		switch($property) {
-			case 'orinot_diffusion':
-				if ($object->orinot_diffusion) {
-					$content .= $msg['orinot_diffusable_oui'];
-				} else {
-					$content .= $msg['orinot_diffusable_non'];
-				}
-				break;
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
+		
+		if ($object->orinot_diffusion) {
+			return $msg['orinot_diffusable_oui'];
+		} else {
+			return $msg['orinot_diffusable_non'];
 		}
-		return $content;
 	}
 	
 	protected function get_edition_link($object) {

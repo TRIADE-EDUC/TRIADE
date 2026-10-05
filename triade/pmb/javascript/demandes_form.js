@@ -1,10 +1,10 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: demandes_form.js,v 1.2 2015-05-22 07:13:11 dgoron Exp $
+// $Id: demandes_form.js,v 1.2.22.1 2025/04/16 08:15:53 rtigero Exp $
 
 /*
-variables a dÃ©clarer dans le formulaire appelant:
+variables a déclarer dans le formulaire appelant:
 
  msg_demandes_note_confirm_demande_end					//
  msg_demandes_actions_nocheck							//
@@ -13,7 +13,7 @@ variables a dÃ©clarer dans le formulaire appelant:
 */
 
 /*
- * Gestion des Ã©vÃ¨nements dans les formulaires
+ * Gestion des évènements dans les formulaires
  */
 
 function expand_action(el, id_demande , unexpand) {
@@ -257,10 +257,26 @@ function verifChkAction(form_name, id_demande) {
 	return true;
 }
 
-function confirm_delete_note() {
+function confirm_delete_note(id_action) {
 	result = confirm(msg_demandes_note_confirm_suppr);
 	if(result){
+		//Dans le cas d'une suppression de note depuis la liste des actions on passe l'action en cours au formulaire
+		if(document.forms['liste_action']) {
+			document.forms['liste_action'].idaction.value = id_action;
+		}
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Fonction permettant de remplir le formulaire de la liste des actions avec l'action en cours de modif
+ */
+function setup_note_form_from_dialog(form, id_action) {
+	form.idaction.value = id_action;
+	form.contenu_note.value = form['contenu_note_' + id_action].value;
+	form.redirectto.value = form['redirectto_' + id_action].value;
+	form.ck_prive.value = form['ck_prive_' + id_action].checked ? 1 : 0;
+	form.ck_vue.value = form['ck_vue_' + id_action].checked ? 1 : 0;
+	form.ck_rapport.value = form['ck_rapport_' + id_action].checked ? 1 : 0;
 }

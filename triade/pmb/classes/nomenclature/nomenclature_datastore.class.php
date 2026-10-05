@@ -1,23 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_datastore.class.php,v 1.14 2016-02-18 09:40:02 apetithomme Exp $
+// $Id: nomenclature_datastore.class.php,v 1.15 2021/12/27 07:35:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/encoding_normalize.class.php');
 
 class nomenclature_datastore {
 		
 	protected static function get_datas(){
-		global $dbh;
-		
 		$datas = array();
-				
 		$datas_formations = array();
 		$query = "select id_formation, formation_name, formation_nature, formation_order from nomenclature_formations order by formation_order";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			while($row = pmb_mysql_fetch_object($result)){
 				$data = array();
@@ -26,9 +24,9 @@ class nomenclature_datastore {
 				$data["nature"] = $row->formation_nature;
 				$data["order"] = $row->formation_order;
 				$data["types"]=array();
-				//rÃ©cupÃ©ration des types
+				//récupération des types
 				$query_types = "select id_type, type_name, type_formation_num, type_order from nomenclature_types where type_formation_num = ".$row->id_formation." order by type_order asc";
-				$result_types = pmb_mysql_query($query_types,$dbh);
+				$result_types = pmb_mysql_query($query_types);
 				if($result_types){
 					while($row_types = pmb_mysql_fetch_object($result_types)){
 						$data_types = array();
@@ -45,16 +43,16 @@ class nomenclature_datastore {
 		
 		$datas_families = array();
 		$query = "select id_family, family_name from nomenclature_families order by family_order asc";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			while($row = pmb_mysql_fetch_object($result)){
 				$data = array();
 				$data["id"] = $row->id_family;
 				$data["name"] = $row->family_name;
-				//rÃ©cupÃ©ration des pupitres
+				//récupération des pupitres
 				$data["musicstands"]=array();
 				$query_musicstands = "select id_musicstand, musicstand_name, musicstand_division, musicstand_workshop, id_instrument, instrument_code, instrument_name from nomenclature_musicstands left join nomenclature_instruments on nomenclature_musicstands.id_musicstand = nomenclature_instruments.instrument_musicstand_num and instrument_standard = 1 where musicstand_famille_num = ".$row->id_family." order by musicstand_order asc";
-				$result_musicstands = pmb_mysql_query($query_musicstands,$dbh);
+				$result_musicstands = pmb_mysql_query($query_musicstands);
 				if($result_musicstands){
 					while($row_musicstands = pmb_mysql_fetch_object($result_musicstands)){
 						$data_musicstand = array();
@@ -76,7 +74,7 @@ class nomenclature_datastore {
 		
 		$datas_instruments = array();
 		$query = "select id_instrument, instrument_code, instrument_name, instrument_musicstand_num, instrument_standard from nomenclature_instruments order by instrument_name";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				$data = array();
@@ -90,7 +88,7 @@ class nomenclature_datastore {
 		}
 		$datas_voices = array();
 		$query = "select * from nomenclature_voices order by voice_order, voice_code, voice_name";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				$data = array();

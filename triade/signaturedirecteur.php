@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,7 +42,7 @@ $idsite=$_GET["id"];
 if (isset($_GET["supp"])) {
 	$idsite=$_POST["idsite"];
 	$photo=recup_photo_signature_idsite($idsite);
-	if (count($photo) > 0) { 
+	if (countTriade($photo) > 0) { 
 		supp_photo_bulletin($idsite);
 		@unlink("./data/image_pers/".$photo[0][0]);
 	}
@@ -52,7 +52,7 @@ if (isset($_POST["create"])) {
 	$idsite=$_POST["idsite"];
 	if ($idsite == 1) $idsite="";
 	$photo=recup_photo_signature_idsite($idsite);
-	if (count($photo) > 0) { 
+	if (countTriade($photo) > 0) { 
 		supp_photo_signature($idsite);
 		@unlink("./data/image_pers/".$photo[0][0]);
 	}
@@ -88,7 +88,7 @@ if (isset($_POST["create"])) {
 <?php
 	if ($idsite == 1) $idsite="";	
 	$photo=recup_photo_signature_idsite($idsite);
-	if ((count($photo) > 0 ) && (file_exists("./data/image_pers/logo_signature$idsite.jpg"))) {
+	if ((countTriade($photo) > 0 ) && (file_exists("./data/image_pers/logo_signature$idsite.jpg"))) {
 		if (file_exists("./data/image_pers/".$photo[0][0])) {
 			$logo="<img src='image.php?id=./data/image_pers/".$photo[0][0]."' width='96' height='96' ><br>[<a href='signaturedirecteur.php?supp=logo'>".LANGacce21."</a>]";
 			$alert="<div style=\"position:absolute;top:10;left:140;color:red;z-index:1;width:200;height:30 \" ><i>Information : Image réduite </i></div>";

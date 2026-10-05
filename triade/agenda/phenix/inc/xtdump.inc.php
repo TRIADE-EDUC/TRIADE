@@ -54,15 +54,15 @@
     $tabledump = array();
     $iCel = 0;
     $tabledump[0] = "";
-    $champs = mysql_query("SHOW FIELDS FROM $table");
-    if (@mysql_num_rows($champs)) {
+    $champs = mysqli_query("SHOW FIELDS FROM $table");
+    if (@mysqli_num_rows($champs)) {
       if ($sv_s) {
         if ($drptbl) {
           $tabledump[0] .= "DROP TABLE IF EXISTS $table;\n";
         }
         $tabledump[0] .= "CREATE TABLE $table (\n";
         $firstfield = 1;
-        while ($champ = mysql_fetch_array($champs)) {
+        while ($champ = mysqli_fetch_array($champs)) {
           if (!$firstfield) {
             $tabledump[0] .= ",\n";
           } else {
@@ -80,8 +80,8 @@
           }
         }
 
-        $keys = mysql_query("SHOW KEYS FROM $table");
-        while ($key = mysql_fetch_array($keys)) {
+        $keys = mysqli_query("SHOW KEYS FROM $table");
+        while ($key = mysqli_fetch_array($keys)) {
           $kname = $key['Key_name'];
           if ($kname != "PRIMARY" and $key['Non_unique'] == 0) {
             $kname = "UNIQUE|$kname";
@@ -91,9 +91,9 @@
           }
           $index[$kname][] = $key['Column_name'];
         }
-        @mysql_free_result($keys);
+        @mysqli_free_result($keys);
 
-        while(list($kname, $columns) = @each($index)) {
+	foreach ($index as $kname => $columns) {
           $tabledump[0] .= ",\n";
           $colnames = implode($columns,",");
           if($kname == "PRIMARY") {
@@ -108,13 +108,13 @@
         $tabledump[0] .= "\n);\n\n";
         $iCel++;
       }
-      @mysql_free_result($champs);
+      @mysqli_free_result($champs);
 
       // Donnees - Data
       if ($sv_d) {
-        $rows = mysql_query("SELECT * FROM $table");
-        if (mysql_num_rows($rows)) {
-          $numfields = mysql_num_fields($rows);
+        $rows = mysqli_query("SELECT * FROM $table");
+        if (mysqli_num_rows($rows)) {
+          $numfields = mysqli_num_fields($rows);
           $insertinstruction .= "INSERT INTO $table (";
           $cptchamp = -1;
           $firstfield = 1;
@@ -124,12 +124,13 @@
             } else {
               $firstfield = 0;
             }
-            $insertinstruction .= mysql_field_name($rows,$cptchamp);
+	    	$fieldInfo = $rows->fetch_field_direct($cptchamp);
+		$insertinstruction .= $fieldInfo->name;
           }
           $insertinstruction .= ") VALUES \n";
           $insertline = $insertinstruction;
           $cpt = 1;
-          while ($row = mysql_fetch_array($rows)) {
+          while ($row = mysqli_fetch_array($rows)) {
             if (strlen($insertline)>50000) {
               $tabledump[$iCel++] .= $insertline.";\n";
               $insertline = $insertinstruction;
@@ -149,7 +150,7 @@
               if (!isset($row[$cptchamp])) {
                 $insertline .= "NULL";
               } else {
-                $insertline .= "'".mysql_escape_string($row[$cptchamp])."'";
+		$insertline .= "'" . $conn->real_escape_string($row[$cptchamp]) . "'";
               }
             }
             $insertline .= ")";
@@ -157,7 +158,7 @@
           }
           $tabledump[$iCel] .= $insertline.";\n\n";
         }
-        @mysql_free_result($rows);
+        @mysqli_free_result($rows);
       }
     }
     return $tabledump;
@@ -170,29 +171,29 @@
     $csvdump = array();
     $iCel = 0;
     $csvdump[0] = "";
-    $champs = mysql_query("SHOW FIELDS FROM $table");
-    if (@mysql_num_rows($champs)) {
+    $champs = mysqli_query("SHOW FIELDS FROM $table");
+    if (@mysqli_num_rows($champs)) {
       $csvdump[0] .= "\n\n## Table : ".$table."\n";
       if ($sv_s) {
         $firstfield = 1;
-        while ($champ = mysql_fetch_array($champs)) {
+        while ($champ = mysqli_fetch_array($champs)) {
           if (!$firstfield) {
             $csvdump[0] .= ",";
           } else {
             $firstfield = 0;
           }
-          $csvdump[0] .= "'" . $champ[Field] . "'";
+          $csvdump[0] .= "'" . $champ['Field'] . "'";
         }
         $csvdump[0] .= "\n";
       }
-      @mysql_free_result($champs);
+      @mysqli_free_result($champs);
       $iCel++;
 
       // Donnees - Data
       if ($sv_d) {
-        $rows = mysql_query("SELECT * FROM $table");
-        $numfields = mysql_num_fields($rows);
-        while ($row = mysql_fetch_array($rows)) {
+        $rows = mysqli_query("SELECT * FROM $table");
+        $numfields = mysqli_num_fields($rows);
+        while ($row = mysqli_fetch_array($rows)) {
           $cptchamp = -1;
           $firstfield = 1;
           while (++$cptchamp<$numfields) {
@@ -210,7 +211,7 @@
           $csvdump[$iCel++] .= "\n";
         }
       }
-      @mysql_free_result($rows);
+      @mysqli_free_result($rows);
     }
     return $csvdump;
   }
@@ -277,9 +278,9 @@
     if ($fext == ".sql") {
       // Cas un fichier par table
       if ($ftbl) {
-        while (list($i) = each($tbl)) {
+	foreach ($tbl as $i => $val) {
           // On ne traite que les tables "Phenix"
-          if (preg_match("/^${prefixe}/",$tbl[$i])) {
+          if (preg_match("/^{$prefixe}/",$tbl[$i])) {
             $temp = sqldumptable($tbl[$i],$droptable);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -315,9 +316,11 @@
       }
       // Cas un fichier pour la base
       else {
-        while (list($i) = each($tbl)) {
+	     
+	foreach ($tbl as $i => $val) {
+	
           // On ne traite que les tables "Phenix"
-          if (preg_match("/^${prefixe}/",$tbl[$i])) {
+          if (preg_match("/^{$prefixe}/",$tbl[$i])) {
             $temp = sqldumptable($tbl[$i],$droptable);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -349,9 +352,9 @@
     else if ($fext == ".csv") {
       // Cas un fichier par table
       if ($ftbl) {
-        while (list($i) = each($tbl)) {
+	foreach ($tbl as $key => $val) {
           // On ne traite que les tables "Phenix"
-          if (preg_match("/^${prefixe}/",$tbl[$i])) {
+          if (preg_match("/^{$prefixe}/",$tbl[$i])) {
             $temp = csvdumptable($tbl[$i]);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -387,9 +390,9 @@
       }
       // Cas un fichier pour la base
       else {
-        while (list($i) = each($tbl)) {
+	foreach ($tbl as $key => $val) {
           // On ne traite que les tables "Phenix"
-          if (preg_match("/^${prefixe}/",$tbl[$i])) {
+          if (preg_match("/^{$prefixe}/",$tbl[$i])) {
             $temp = csvdumptable($tbl[$i]);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {

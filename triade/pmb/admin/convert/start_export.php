@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: start_export.php,v 1.26 2019-01-21 11:45:10 dgoron Exp $
+// $Id: start_export.php,v 1.27.12.1 2025/03/13 16:27:12 qvarin Exp $
 
-//ExÃ©cution de l'export
+//Exécution de l'export
 $base_path = "../..";
 $base_auth = "ADMINISTRATION_AUTH";
 $base_title = "\$msg[export_title_only]";
@@ -16,7 +16,7 @@ require_once ("$base_path/admin/convert/convert_output.class.php");
 require_once($class_path."/export_param.class.php");
 require_once ($base_path."/admin/convert/start_export.class.php");
 
-//RÃ©cupÃ©ration du chemin du fichier de paramÃ©trage de l'import
+//Récupération du chemin du fichier de paramétrage de l'import
 function _item_($param) {
 	global $export_type;
 	global $i;
@@ -30,7 +30,7 @@ function _item_($param) {
 	$i ++;
 }
 
-//RÃ©cupÃ©ration du paramÃ¨tre d'import
+//Récupération du paramètre d'import
 function _output_($param) {
 	global $output;
 	global $output_type;
@@ -43,9 +43,9 @@ function _output_($param) {
 
 function _input_($param) {
 	global $specialexport;
-	
+
 	if ($param["SPECIALEXPORT"]=="yes") {
-		$specialexport=true; 
+		$specialexport=true;
 	} else $specialexport=false;
 }
 
@@ -54,7 +54,7 @@ if (file_exists("imports/catalog_subst.xml"))
 else
 	$fic_catal = "imports/catalog.xml";
 
-//Initialisation si premiÃ¨re fois
+//Initialisation si première fois
 if(!isset($first)) $first = '';
 if ($first != 1) {
 	//pmb_mysql_query("delete from import_marc");
@@ -62,15 +62,15 @@ if ($first != 1) {
 	$origine=str_replace(" ","",microtime());
 	$origine=str_replace("0.","",$origine);
 
-	//RÃ©cupÃ©ration du rÃ©pertoire
+	//Récupération du répertoire
 	$i = 0;
 	$param_path = "";
 	_parser_($fic_catal, array("ITEM" => "_item_"), "CATALOG");
 
-	//Lecture des paramÃ¨tres
+	//Lecture des paramètres
 	_parser_("imports/".$param_path."/params.xml", array("OUTPUT" => "_output_","INPUT" => "_input_"), "PARAMS");
 
-	//Si l'export est spÃ©cial, on charge la fonction d'export
+	//Si l'export est spécial, on charge la fonction d'export
 	if(file_exists($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php")) {
 		require_once($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php");
 	} else {
@@ -80,18 +80,18 @@ if ($first != 1) {
 	//En fonction du type de fichier de sortie, inclusion du script de gestion des sorties
 	$output_instance = start_export::get_instance_from_output_type($output_type);
 
-	//CrÃ©ation du fichier de sortie
+	//Création du fichier de sortie
 	$file_out = "export".$origine.".".$output_params['SUFFIX']."~";
 } else {
-	//RÃ©cupÃ©ration du rÃ©pertoire
+	//Récupération du répertoire
 	$i = 0;
 	$param_path == "";
 	_parser_($fic_catal, array("ITEM" => "_item_"), "CATALOG");
 
-	//Lecture des paramÃ¨tres
+	//Lecture des paramètres
 	_parser_("imports/".$param_path."/params.xml", array("OUTPUT" => "_output_", "INPUT" => "_input_"), "PARAMS");
-	
-	//Si l'export est spÃ©cial, on charge la fonction d'export
+
+	//Si l'export est spécial, on charge la fonction d'export
 	if(file_exists($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php")) {
 		require_once($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php");
 	} else {
@@ -99,7 +99,7 @@ if ($first != 1) {
 	}
 }
 
-//RequÃªte de sÃ©lection et de comptage des notices
+//Requête de sélection et de comptage des notices
 if (empty($n_current))
 	$n_current = 0;
 
@@ -139,34 +139,34 @@ if ($requete_where != "") {
 
 $requete.= " group by notice_id limit $n_current,200";
 
-//Nombre de notices correspondantes aux critÃ¨res
+//Nombre de notices correspondantes aux critères
 $resultat = pmb_mysql_query($requete_count);
 $n_notices = pmb_mysql_result($resultat, 0, 0);
 
 if ($first!=1) {
 	if (isset($output_params["SPECIALDOCTYPE"]) && $output_params["SPECIALDOCTYPE"] == "yes") {
 		if (pmb_mysql_num_rows($resultat) > 0) {
-			$id_notice = pmb_mysql_result(pmb_mysql_query($requete),0,"notice_id");	
+			$id_notice = pmb_mysql_result(pmb_mysql_query($requete),0,"notice_id");
 			$output_params["DOCTYPE"] = pmb_mysql_result(pmb_mysql_query("select typdoc from notices where notice_id='".$id_notice."'"),0,0);
 		}
 	}
 	$_SESSION["param_export"]["notice_exporte"]="";
-	//On enregistre les variables postÃ©es dans la session
+	//On enregistre les variables postées dans la session
 	export_param::init_session();
 	$fo = fopen("$base_path/temp/".$file_out, "w+");
-	//EntÃªte
+	//Entête
 	if(isset($output_params['SCRIPT'])) {
 		$class_name = str_replace('.class.php', '', $output_params['SCRIPT']);
 		if(class_exists($class_name)) {
 			$export_instance = new $class_name();
 			fwrite($fo, $export_instance->_get_header_($output_params));
-		} else {
+		} elseif (function_exists('_get_header_')) {
 			fwrite($fo, _get_header_($output_params));
 		}
 	} else {
 		if(is_object($output_instance)) {
 			fwrite($fo, $output_instance->_get_header_($output_params));
-		} else {
+		} elseif (function_exists('_get_header_')) {
 			fwrite($fo, _get_header_($output_params));
 		}
 	}
@@ -186,7 +186,7 @@ echo "<h3>".$msg["export_running"]."</h3></center><br />\n";
 echo "<table class='' width=100%><tr><td style=\"border-width:1px;border-style:solid;border-color:#FFFFFF;\" width=100%><div class='jauge'><img src='".get_url_icon('jauge.png')."' width=\"".$percent."%\" height=\"16\"></div></td></tr><tr><td >".round($percent)."%</td></tr></table>\n";
 echo "<span class='center'>".sprintf($msg["export_progress"],$n_current,$n_notices,($n_notices - $n_current))."</span>";
 
-//DÃ©but d'export du lot
+//Début d'export du lot
 $resultat = pmb_mysql_query($requete);
 
 //Recherche du no_notice le plus grand
@@ -195,19 +195,19 @@ $resultat_max=pmb_mysql_query($requete_max);
 $no_notice=pmb_mysql_result($resultat_max,0,0)*1+1;
 
 $z = 0;
-if($_SESSION["param_export"]["notice_exporte"]) $notice_exporte = $_SESSION["param_export"]["notice_exporte"]; 
+if($_SESSION["param_export"]["notice_exporte"]) $notice_exporte = $_SESSION["param_export"]["notice_exporte"];
 else $notice_exporte=array();
-if($_SESSION["param_export"]["bulletin_exporte"]) $bulletin_exporte = $_SESSION["param_export"]["bulletin_exporte"]; 
+if($_SESSION["param_export"]["bulletin_exporte"]) $bulletin_exporte = $_SESSION["param_export"]["bulletin_exporte"];
 else $bulletin_exporte=array();
 while (list ($id) = pmb_mysql_fetch_row($resultat)) {
 	if (!$specialexport) {
 		$e_notice=array();
-		$param = new export_param(EXP_SESSION_CONTEXT);	
+		$param = new export_param(EXP_SESSION_CONTEXT);
 		$params = $param->get_parametres($param->context);
 		if ($keep_explnum) {
 			$params['explnum'] = 1;
 		}
-		$e = new export(array($id),$notice_exporte, $bulletin_exporte);		
+		$e = new export(array($id),$notice_exporte, $bulletin_exporte);
 		do {
 			$nn=$e -> get_next_notice($lender, $td, $sd, $keep_expl, $params);
 			if ($e->notice) $e_notice[]=$e->notice;
@@ -217,7 +217,7 @@ while (list ($id) = pmb_mysql_fetch_row($resultat)) {
 		do {
 			$nn=$e -> get_next_bulletin($lender, $td, $sd, $keep_expl,$params);
 			if ($e->notice) $e_notice[]=$e->notice;
-		} while ($nn);		
+		} while ($nn);
 		$bulletin_exporte=$e->bulletins_exporte;
 	} else {
 		if(class_exists($param_path) && method_exists($param_path, '_export_notice_')) {
@@ -230,19 +230,20 @@ while (list ($id) = pmb_mysql_fetch_row($resultat)) {
 		$requete = "insert into import_marc (no_notice, notice, origine) values($no_notice,'".addslashes($e_notice)."', '$origine')";
 		pmb_mysql_query($requete);
 		$no_notice++;
-		$z ++;
+		$z++;
 	} else {
-		for($i=0; $i<sizeof($e_notice);$i++) {
+	    $nb_notices = count($e_notice);
+	    for ($i = 0; $i < $nb_notices; $i++) {
 			$requete = "insert into import_marc (no_notice, notice, origine) values($no_notice,'".addslashes($e_notice[$i])."', '$origine')";
 			pmb_mysql_query($requete);
 			$no_notice++;
 		}
-		$z ++;
+		$z++;
 	}
 }
 
 
-//ParamÃ¨tres passÃ©s pour l'appel suivant
+//Paramètres passés pour l'appel suivant
 $query = "n_current=". ($n_current + $z);
 for ($i = 0; $i < count($td); $i ++) {
 	$query.= "&".$typdoc."[$i]=".$td[$i];

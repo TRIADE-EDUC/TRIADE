@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_instruments_list.js,v 1.7 2015-02-02 16:33:32 dgoron Exp $
+// $Id: nomenclature_instruments_list.js,v 1.7 2015/02/02 16:33:32 dgoron Exp $
 
 define(["dojo/_base/declare"], function(declare){
 	/*

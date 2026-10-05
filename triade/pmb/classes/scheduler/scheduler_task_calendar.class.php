@@ -1,20 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scheduler_task_calendar.class.php,v 1.2 2018-03-07 15:01:04 dgoron Exp $
+// $Id: scheduler_task_calendar.class.php,v 1.5 2022/03/10 15:19:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class scheduler_task_calendar {
 	public $new_date = array();					//nouvelle date
-	public $nouvelle_date;						// valeur de la date en chaÃ®ne de caractÃ¨res
+	public $nouvelle_date;						// valeur de la date en chaîne de caractères
 	public $defaut_min;
 	
 	public function __construct($num_planificateur) {
-		global $base_path;
-
-		$num_planificateur += 0;
+		$num_planificateur = intval($num_planificateur);
 		if ($num_planificateur) {
 			//renseignements Jour J
 			$date_du_jour = getdate();
@@ -26,11 +24,9 @@ class scheduler_task_calendar {
 	}
 	
 	public function calcul_next_exec($num_planificateur) {
-		global $dbh;
-		
 		$sql = "SELECT id_planificateur, num_type_tache, libelle_tache, perio_heure, perio_minute, perio_jour_mois, perio_jour, perio_mois 
 				FROM planificateur WHERE id_planificateur=".$num_planificateur;
-		$res = pmb_mysql_query($sql, $dbh);
+		$res = pmb_mysql_query($sql);
 		if ($res) {
 			while ($obj_sql=pmb_mysql_fetch_object($res)) {
 				//renseignements Jour J
@@ -39,7 +35,7 @@ class scheduler_task_calendar {
 				//utile pour le calcul de l'heure et de la minute
 				$date_today = $date_du_jour["year"]."-".$date_du_jour["mon"]."-".$date_du_jour["mday"];					
 				
-				//renvoit 1 si annÃ©e bissextile, 0 sinon
+				//renvoit 1 si année bissextile, 0 sinon
 				$annee_bissextile = date('L');
 				//Valeurs bdd
 				$jour_mois_bdd = explode(',',$obj_sql->perio_jour_mois);
@@ -56,16 +52,16 @@ class scheduler_task_calendar {
 				//calcul de l'heure
 				$this->calcul_heure_exec($heure_bdd,$date_today,$date_du_jour,$jour_semaine_bdd, $mois_bdd, $jour_mois_bdd);
 				
-				//la date calculÃ©e est identique Ã  la date du jour
+				//la date calculée est identique à la date du jour
 				if (($date_du_jour["year"] == $this->new_date["ANNEE"]) && ($date_du_jour["mon"] == $this->new_date["MOIS"]) && ($date_du_jour["mday"] == $this->new_date["JOUR"])) {
-					//formatage de l'heure calculÃ©e
+					//formatage de l'heure calculée
 					$this->new_date["HEURE"] = (strlen($this->new_date["HEURE"]) == "1" ? "0".$this->new_date["HEURE"] : $this->new_date["HEURE"]);
 					$this->new_date["MINUTE"] = (strlen($this->new_date["MINUTE"]) == "1" ? "0".$this->new_date["MINUTE"] : $this->new_date["MINUTE"]);
 					if (($this->new_date["HEURE"] == $date_du_jour["hours"]) && ($this->new_date["MINUTE"] == $date_du_jour["minutes"])) {
 						$this->recalcule_date($jour_semaine_bdd, $mois_bdd, $jour_mois_bdd);
 					}
 				}
-				//formatage de l'heure calculÃ©e
+				//formatage de l'heure calculée
 				$this->new_date["HEURE"] = (strlen($this->new_date["HEURE"]) == "1" ? "0".$this->new_date["HEURE"] : $this->new_date["HEURE"]);
 				$this->new_date["MINUTE"] = (strlen($this->new_date["MINUTE"]) == "1" ? "0".$this->new_date["MINUTE"] : $this->new_date["MINUTE"]);
 			}
@@ -79,7 +75,7 @@ class scheduler_task_calendar {
  			'8' => '31','9' => '30','10' => '31','11' => '30','12' => '31'
 		);
 		
-		//VÃ©rification de la pÃ©riodicitÃ© pour Ã©viter la boucle infinie
+		//Vérification de la périodicité pour éviter la boucle infinie
 		$check_periodicite = false;
 		if (($days_of_month[0] != '*') && ($month_of_year[0] != '*')) {
 			foreach ($month_of_year as $month) {
@@ -103,7 +99,8 @@ class scheduler_task_calendar {
 		/* Calcul du mois */
 		if ($month_of_year[0] != '*') {
 			$annee_courante = false;
-			for ($i=0; $i<sizeof($month_of_year); $i++) {
+			$nb_months_of_year = count($month_of_year);
+			for ($i = 0; $i < $nb_months_of_year; $i++) {
 				if (($month_of_year[$i] >= $this->new_date["MOIS"]) && (!$annee_courante)) {
 					$annee_courante = true;
 					$this->new_date["MOIS"] = $month_of_year[$i];
@@ -217,11 +214,11 @@ class scheduler_task_calendar {
 	}
 	
 	
-	/* Calcul de la minute de la prochaine exÃ©cution
-	 * ParamÃ¨tre $minute_bdd qui est une chÃ¢ine de caractÃ¨res de la base qui doit Ãªtre analysÃ©e
+	/* Calcul de la minute de la prochaine exécution
+	 * Paramètre $minute_bdd qui est une châine de caractères de la base qui doit être analysée
 	 */
 	public function calcul_minute_exec($minute_bdd,$date_today,$date_du_jour,$jour_semaine_bdd, $mois_bdd, $jour_mois_bdd) {
-		//calcul de la minute, analyse de la chaÃ®ne
+		//calcul de la minute, analyse de la chaîne
 		if ($minute_bdd != '*') {
 			// heure saisie au format statique, exemple: 3 ou 03 pour 3h
 			if (preg_match("#^([0-9]{1})$#", $minute_bdd) || preg_match("#^([0-9]{2})$#", $minute_bdd)) {
@@ -232,13 +229,13 @@ class scheduler_task_calendar {
 			if (strstr($minute_bdd,"-")) {
 				$tab_m = explode("-", $minute_bdd);
 				$value = "1";
-				// action rÃ©pÃ©titive diffÃ©rente de l'heure, ex: toutes les 2 heures
+				// action répétitive différente de l'heure, ex: toutes les 2 heures
 				if (preg_match("#(\{[0-9]{1}\})$#", $minute_bdd) || preg_match("#(\{[0-9]{2}\})$#", $minute_bdd)) {
-					//valeur de l'incrÃ©mentation
+					//valeur de l'incrémentation
 					$value = substr($minute_bdd, strpos($minute_bdd, "{")+1, -1);
 					$tab_m = explode("-", substr($minute_bdd, 0, strpos($minute_bdd, "{")));
 				}
-				// mÃªme date, intervalle croissant ou dÃ©croissant ?
+				// même date, intervalle croissant ou décroissant ?
 				if ($date_today == $this->nouvelle_date) {
 					$this->defaut_min = $tab_m[0];
 					$val = $tab_m[0];
@@ -257,7 +254,7 @@ class scheduler_task_calendar {
 						}
 					} else if ($tab_m[0] > $tab_m[1]) {
 						$tab_m[1] = "59";
-						// Pas trÃ¨s simple Ã  gÃ©rer ??
+						// Pas très simple à gérer ??
 						if (($val > $tab_m[0]) && ($val < $tab_m[1])) {
 							$this->new_date["MINUTE"] = $val;
 						} else {
@@ -285,11 +282,11 @@ class scheduler_task_calendar {
 	}
 	
 	public function calcul_heure_exec($heure_bdd,$date_today,$date_du_jour,$jour_semaine_bdd, $mois_bdd, $jour_mois_bdd) {
-	//calcul de l'heure, analyse de la chaÃ®ne
+	//calcul de l'heure, analyse de la chaîne
 		if ($heure_bdd != '*') {
 			// heure saisie au format statique, exemple: 3 ou 03 pour 3h
 			if (preg_match("#^([0-9]{1})$#", $heure_bdd) || preg_match("#^([0-9]{2})$#", $heure_bdd)) {
-				// date identique, (heure courante > heure planifiÃ©e ? recalcule la date : heure planifiÃ©e)
+				// date identique, (heure courante > heure planifiée ? recalcule la date : heure planifiée)
 				if ($date_today == $this->nouvelle_date) {
 					if ($date_du_jour["hours"] > $heure_bdd) {
 						//il faut recalculer la date...
@@ -308,12 +305,12 @@ class scheduler_task_calendar {
 				//cela veut dire qu'il s'agit d'un intervalle
 				$tab_h = explode("-", $heure_bdd);
 				$value = "1";
-				// action rÃ©pÃ©titive diffÃ©rente de l'heure, ex: toutes les 2 heures
+				// action répétitive différente de l'heure, ex: toutes les 2 heures
 				if (preg_match("#(\{[0-9]{1}\})$#", $heure_bdd) || preg_match("#(\{[0-9]{2}\})$#", $heure_bdd)) {
 					$value = substr($heure_bdd, strpos($heure_bdd, "{")+1, -1);
 					$tab_h = explode("-", substr($heure_bdd, 0, strpos($heure_bdd, "{")));
 				}
-				//mÃªme date, intervalle croissant ou dÃ©croissant ?
+				//même date, intervalle croissant ou décroissant ?
  				if ($date_today == $this->nouvelle_date) {
  					$val = $tab_h[0];
  					if ($value != "") {
@@ -341,7 +338,7 @@ class scheduler_task_calendar {
  							$this->new_date["HEURE"] = $val;
  							$this->new_date["MINUTE"] = ($this->defaut_min == "*" ? "00" : $this->defaut_min);
  						} else if ($date_du_jour["hours"] < $tab_h[0]){
- 							//elle doit rÃ©cupÃ©rer la valeur courante ...
+ 							//elle doit récupérer la valeur courante ...
  							$this->new_date["HEURE"] = $tab_h[0]; 							
 						} else {
 							$this->new_date["HEURE"] = $date_du_jour["hours"];
@@ -353,7 +350,7 @@ class scheduler_task_calendar {
  						} else {
  							// il faut recalculer la date...
 							$this->recalcule_date($jour_semaine_bdd, $mois_bdd, $jour_mois_bdd);
-							// on initialise l'heure Ã  00h
+							// on initialise l'heure à 00h
 							$this->new_date["HEURE"] = "00";
  						}
 						if (($date_du_jour["minutes"] >= $this->new_date["MINUTE"]) 
@@ -379,14 +376,14 @@ class scheduler_task_calendar {
 					} else {
 						// il faut recalculer la date...
 						$this->recalcule_date($jour_semaine_bdd, $mois_bdd, $jour_mois_bdd);
-						// on initialise l'heure Ã  00h
+						// on initialise l'heure à 00h
 						$this->new_date["HEURE"] = "00";
 					}
 				} else {
 					$this->new_date["HEURE"] = $date_du_jour["hours"];
 				}
 			} else {
-				// on initialise l'heure Ã  00h
+				// on initialise l'heure à 00h
 				$this->new_date["HEURE"] = "00";
 			}
 		}

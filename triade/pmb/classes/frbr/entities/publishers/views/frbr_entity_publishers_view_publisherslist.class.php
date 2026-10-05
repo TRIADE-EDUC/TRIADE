@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_publishers_view_publisherslist.class.php,v 1.3 2018-06-13 10:34:01 vtouchard Exp $
+// $Id: frbr_entity_publishers_view_publisherslist.class.php,v 1.4 2021/03/01 11:04:07 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,16 +19,32 @@ class frbr_entity_publishers_view_publisherslist extends frbr_entity_common_view
 </div>";
 	}
 		
-	public function render($datas){	
-		//on rajoute nos Ã©lÃ©ments...
+	public function render($datas, $grouped_datas = []){	
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
 		$render_datas['title'] = $this->msg["frbr_entity_publishers_view_publisherslist_title"];
 		$render_datas['publishers'] = array();
 		if(is_array($datas)){
 			foreach($datas as $publisher_id){
-				$render_datas['publishers'][]= new authority(0, $publisher_id, AUT_TABLE_PUBLISHERS);
+				$render_datas['publishers'][]= authorities_collection::get_authority('authority', 0, ['num_object' => $publisher_id, 'type_object' => AUT_TABLE_PUBLISHERS]);
 			}
+		}
+		if(!empty($grouped_datas)){
+		    $render_datas['grouped_publishers'] = [];
+		    foreach($grouped_datas as $key => $group){
+		        if (!isset($render_datas['grouped_publishers'][$key])) {
+		            $render_datas['grouped_publishers'][$key] = [];
+		        }
+		        $render_datas['grouped_publishers'][$key]['label'] = $group["label"];
+		        $render_datas['grouped_publishers'][$key]["values"] = [];
+		        foreach ($group["values"] as $publisher_id) {
+		            $render_datas['grouped_publishers'][$key]["values"][] = authorities_collection::get_authority('authority', 0, ['num_object' => $publisher_id, 'type_object' => AUT_TABLE_PUBLISHERS]);
+		        }
+		    }
+		    usort($render_datas['grouped_publishers'], function ($item1, $item2) {
+		        return $item1['label'] <=> $item2['label'];
+		    });
 		}
 		//on rappelle le tout...
 		return parent::render($render_datas);
@@ -46,6 +62,22 @@ class frbr_entity_publishers_view_publisherslist extends frbr_entity_common_view
 			'children' => authority::get_properties(AUT_TABLE_PUBLISHERS,"publishers[i]")
 		);
 		$format[] = $publishers;
+		$format[] = array(
+		    'var' => "grouped_publishers",
+		    'desc' => $this->msg['frbr_entity_publishers_view_grouped_publishers'],
+		    'children' => [
+		        [
+		            'var' => "grouped_publishers.key.label",
+		            'desc' => $this->msg['frbr_entity_publishers_view_grouped_publishers_label']
+		            
+		        ],
+		        [
+		            'var' => "grouped_publishers.key.values",
+		            'desc' => $this->msg['frbr_entity_publishers_view_grouped_publishers_values']
+		            
+		        ]
+		    ]
+		);
 		$format = array_merge($format,parent::get_format_data_structure());
 		return $format;
 	}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch.tpl.php,v 1.29 2019-05-27 14:34:56 ngantier Exp $
+// $Id: docwatch.tpl.php,v 1.31 2023/05/17 07:42:30 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -69,7 +69,7 @@ $docwatch_watch_form_tpl = '
 			<label>'.encoding_normalize::utf8_normalize($msg['dsi_docwatch_watch_form_libelle']).'</label>
 		</div>	
 		<div class="row">		
-			<input type="text" id="title" name="title" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
+			<input type="text" style="width: 35em;" id="title" name="title" required="true" data-dojo-type="dijit/form/ValidationTextBox"/>
 		</div>
 		<div class="row">
 			<label>'.encoding_normalize::utf8_normalize($msg['dsi_docwatch_watch_form_ttl']).'</label>
@@ -88,7 +88,7 @@ $docwatch_watch_form_tpl = '
 			<label>'.encoding_normalize::utf8_normalize($msg['dsi_docwatch_watch_form_logo_url']).'</label>
 		</div>
 		<div class="row">		
-			<input type="text" id="logo_url" name="logo_url" data-dojo-type="dijit/form/TextBox"/>
+			<input type="text" style="width: 35em;" id="logo_url" name="logo_url" data-dojo-type="dijit/form/TextBox"/>
 		</div>
 		<div class="row">!!options_rss!!</div>
 		<div class="row">
@@ -127,9 +127,10 @@ $docwatch_watch_form_tpl = '
 		<div class="row">!!options_section!!</div>
 		<div class="row">
 			<label>'.encoding_normalize::utf8_normalize($msg['dsi_docwatch_watch_form_boolean_expression']).'</label>
+            <img  class="aide" onclick="aide_regex();return false;" height="14px" width="14px" title="'.htmlentities($msg['dsi_docwatch_watch_form_boolean_expression'],ENT_QUOTES,$charset).'" alt="'.htmlentities($msg['dsi_docwatch_watch_form_boolean_expression'],ENT_QUOTES,$charset).'" src="'.get_url_icon('info.png').'"/>
 		</div>
 		<div class="row">
-			<input type="text" id="boolean_expression" name="boolean_expression" data-dojo-type="dijit/form/TextBox" /> 
+			<input type="text" style="width: 35em;" id="boolean_expression" name="boolean_expression" data-dojo-type="dijit/form/TextBox" /> 
 		</div>
 		</div>
 	<div class="row">	

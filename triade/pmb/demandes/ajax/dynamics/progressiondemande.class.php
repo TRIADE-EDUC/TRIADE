@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: progressiondemande.class.php,v 1.5 2017-11-22 11:07:34 dgoron Exp $
+// $Id: progressiondemande.class.php,v 1.6.8.1 2025/05/06 15:04:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-class progressiondemande{
+class progressiondemande extends demande_dynamic_field {
 	
 	public $id_element = 0;
 	public $champ_entree = "";
@@ -15,8 +15,6 @@ class progressiondemande{
 	public $idobjet = 0;
 	
 	public function __construct($id_elt,$fieldElt){
-		global $quoifaire;
-		
 		$this->id_element = $id_elt;
 		$format_affichage = explode('/',$fieldElt);
 		$this->champ_entree = $format_affichage[0];
@@ -26,35 +24,19 @@ class progressiondemande{
 		
 	}
 	
-	public function make_display(){
-		global $msg, $dbh,$charset;
-		
-		$rqt = "select progression from demandes where id_demande='".$this->idobjet."'";
-		$res = pmb_mysql_query($rqt,$dbh);
-		$act = pmb_mysql_fetch_object($res);
-		
-		$display ="";
-		$submit = "<input type='submit' class='bouton' name='soumission' id='soumission' value='".$msg['demandes_valid_progression']."'/>";
-		switch($this->champ_entree){			
-			case 'text':
-				$display = "<form method='post'><input type='text' class='saisie-5em' id='save_".$this->id_element."' name='save_".$this->id_element."' value='".htmlentities($act->progression,ENT_QUOTES,$charset)."' />$submit</form>";
-				break;
-			case 'img';
-				$display = "<form method='post'><input type='text' class='saisie-5em' id='save_".$this->id_element."' name='save_".$this->id_element."' value='".htmlentities($act->progression,ENT_QUOTES,$charset)."' />$submit</form>";
-				break;
-			default:
-				$display = "<label id='".$this->id_element."' />".htmlentities($act->progression,ENT_QUOTES,$charset)."</label>";
-				break;
-		}		
-		$this->display = $display;
+	protected function get_query_display() {
+	    return "select progression from demandes where id_demande='".$this->idobjet."'";
+	}
+	
+	protected function get_value($row) {
+	    return $row->progression;
 	}
 	
 	public function update(){
-		
-		global $dbh, $progressiondemande;		
+		global $progressiondemande;		
 		
 		$req = "update demandes set progression='".$progressiondemande."' where id_demande='".$this->idobjet."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		
 		switch($this->champ_sortie){
 			case 'img':
@@ -64,7 +46,5 @@ class progressiondemande{
 				$this->display = $progressiondemande."%";
 				break;
 		}
-				
 	}
 }
-?>

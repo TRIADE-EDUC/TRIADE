@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : PMB Services                                                   |
 // +-------------------------------------------------+
-// $Id: tache_docnum.php,v 1.7 2018-02-26 17:01:59 apetithomme Exp $
+// $Id: tache_docnum.php,v 1.7 2018/02/26 17:01:59 apetithomme Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path     = ".";                            
 $base_auth     = ADMINISTRATION_AUTH; //"CIRCULATION_AUTH";  
 $base_title    = "";    

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_lvl.xml,v 1.13 2019-03-21 14:29:29 dgoron Exp $ -->
+$Id: cms_module_common_selector_lvl.xml,v 1.16 2021/03/16 13:12:46 qvarin Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_lvl">Type de page de l'OPAC</entry>
@@ -64,4 +64,8 @@ $Id: cms_module_common_selector_lvl.xml,v 1.13 2019-03-21 14:29:29 dgoron Exp $ 
 	<entry code="cms_module_common_selector_lvl_simple_search_mode_souscollection">Recherche simple dans les sous-collections</entry>
 	<entry code="cms_module_common_selector_lvl_simple_search_mode_title">Recherche simple dans les titres</entry>
 	<entry code="cms_module_common_selector_lvl_simple_search_mode_titre_uniforme">Recherche simple dans les titres uniformes</entry>
+	<entry code="cms_module_common_selector_lvl_search_universe">Univers de recherche</entry>
+	<entry code="cms_module_common_selector_lvl_search_segment">Segment de recherche</entry>
+	<entry code="cms_module_common_selector_lvl_animation_see">Animation</entry>
+	<entry code="cms_module_common_selector_lvl_animations_see">Liste des animations</entry>
 </XMLlist>

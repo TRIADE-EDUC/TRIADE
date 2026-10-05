@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_tagcloud_datasource_tagcloud_records.xml,v 1.1 2015-06-16 10:24:56 pmbs Exp $ -->
+$Id: cms_module_tagcloud_datasource_tagcloud_records.xml,v 1.1 2015/06/16 10:24:56 pmbs Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_tagcloud_datasource_tagcloud_no_parameters'>No parameter found for this source.</entry>

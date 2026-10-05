@@ -1,16 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: faq.class.php,v 1.14 2019-01-15 14:14:59 mbertin Exp $
+// $Id: faq.class.php,v 1.20.2.1 2024/09/13 12:01:54 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/faq_question.class.php");
 require_once($include_path."/navbar.inc.php");
 require_once($class_path."/analyse_query.class.php");
 
-//classe gÃ©rant la visualisation du module FAQ Ã  l'OPAC...
+//classe gérant la visualisation du module FAQ à l'OPAC...
 class faq {
 	public $themes = array();
 	public $types = array();
@@ -37,18 +38,25 @@ class faq {
 		$this->fetch_datas();
 	}
 	
+	protected static function int_caster(&$item)
+	{
+	    return intval($item);
+	}
+	
 	protected function fetch_datas(){
-		global $dbh;
 		$query = "select id_faq_question from faq_questions !!join!!!!where!! order by faq_question_question_date desc, faq_question_answer_date desc, faq_question_question asc";
 		$join = $where= array();
 		$where[] = ($_SESSION["id_empr_session"] ? "faq_question_statut in (2,3)" : "faq_question_statut = 2");
 		if(count($this->themes)){
+		    array_walk($this->themes, 'static::int_caster');
 			$where[] = "faq_question_num_theme in (".implode(",",$this->themes).")";
 		}
 		if(count($this->types)){
+		    array_walk($this->types, 'static::int_caster');
 			$where[] = "faq_question_num_type in (".implode(",",$this->types).")";
 		}
 		if(count($this->descriptors)){
+		    array_walk($this->descriptors, 'static::int_caster');
 			$join[] = "join faq_questions_categories on id_faq_question=num_faq_question ";
 			$where[] = "num_categ in (".implode(",",$this->descriptors).")";
 		}
@@ -84,19 +92,25 @@ class faq {
 	}
 	
 	protected function get_page_title(){
-		global $msg,$charset;
-		$title = sprintf($msg['faq_question_page_title'],count($this->questions_ids));
-
-		
-		return $title;
+		global $msg;
+		return sprintf($msg['faq_question_page_title'],count($this->questions_ids));
 	}
 	
 	public function show(){
-		global $include_path;		
+	    global $include_path, $msg, $opac_rgaa_active;
+		
+		if ($opac_rgaa_active) {
+		    $title = "<h1>".$msg['faq']."</h1>";
+		    $title .= "<h2>".$this->get_page_title()."</h2>";
+		} else {
+		    $title = "<h3>".$this->get_page_title()."</h3>";
+		}
+		
+		
 		$html="
-		<script type='text/javascript' src='".$include_path."/javascript/faq.js'></script>
-		<div class='faq' id=faq'>
-			<h3>".$this->get_page_title()."</h3>
+		<script src='".$include_path."/javascript/faq.js'></script>
+		<div class='faq' id='faq'>
+			".$title."
 			<div class='row'>&nbsp;</div>
 			<div class='faq_content'>";
 		$start = $this->page * $this->nb_questions_by_page;
@@ -130,9 +144,9 @@ class faq {
 	}
 	
 	protected function init_filters_infos(){
-		global $dbh,$msg;
+		global $msg;
 
-		//thÃ¨mes
+		//thèmes
 		$themes = $this->get_facette_informations(3,1);
 		if(count($themes)) $this->filters['themes'] = $themes;
 		//types
@@ -145,7 +159,7 @@ class faq {
 		$years = $this->get_facette_informations(9,0);
 		if(count($years)){
 			foreach($years as $key =>$values){
-				if($years[$key]['label'] == 0){
+			    if($values['label'] == 0){
 					$years[$key]['label'] = $msg['faq_facette_no_date'];
 				}
 			}
@@ -155,7 +169,7 @@ class faq {
 	}
 	
 	protected function get_facette_informations($code_champ,$code_ss_champ=0){
-		global $dbh, $msg, $charset,$lang;
+		global $lang;
 		$informations = array();
 		$query = "select distinct value as label ,authority_num as id,lang,count(id_faq_question) as nb_questions from faq_questions_fields_global_index where id_faq_question in (".implode(",",$this->questions_ids).") and code_champ = '".$code_champ."'";
 		if($code_ss_champ){
@@ -179,10 +193,10 @@ class faq {
 	}
 	
 	protected function get_actives_facettes(){
-		global $dbh,$msg,$charset;
+		global $msg,$charset;
 		$filter_actives = $facettes_filter = "";
 
-		//thÃ¨mes
+		//thèmes
 		if(count($this->themes)){
 			$themes=new faq_themes("faq_themes", "id_theme", "libelle_theme");
 			foreach($this->themes as $theme){
@@ -254,7 +268,7 @@ class faq {
 			$facettes_filter.="
 				<div class='faq_filters_actives'>
 					<h3>".htmlentities($msg['faq_facettes_actives'],ENT_QUOTES,$charset)."</h3>
-					<table id='active_facette'>".$filter_actives."
+					<table id='active_facette' role='presentation'>".$filter_actives."
 					</table>
 				</div>
 				<div class='row'>&nbsp;</div>";
@@ -269,7 +283,7 @@ class faq {
 			foreach($this->filters as $filter => $filter_values){
 				if(count($filter_values)>1){
 					$allowed_facettes.="
-					<table>
+					<table role='presentation'>
 						<tr>
 							<th>".htmlentities($msg['faq_filter_'.$filter],ENT_QUOTES,$charset)."</th>
 						</tr>";
@@ -308,7 +322,7 @@ class faq {
 	}
 	
 	public function get_facettes_filter(){
-		global $msg,$charset;
+		global $charset;
 		global $nb_per_page_custom;
 		$this->init_filters_infos();
 		

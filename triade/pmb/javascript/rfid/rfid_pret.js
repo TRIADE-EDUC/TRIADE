@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rfid_pret.js,v 1.23 2012-05-25 12:21:59 ngantier Exp $
+// $Id: rfid_pret.js,v 1.33 2022/10/26 09:30:33 qvarin Exp $
 var count = 0;
 var this_param=new Array();	
 var key_this_param=new Array();	
@@ -47,7 +47,7 @@ function f_read_empr(cb) {
 	} else if(cb.length == 1) {
 		// il y a une carte lecteur
 		var cb_read= cb[0];
-		if(cb_empr != cb_read ) alert('La carte lecteur a changé '+cb_read+ '  ' +cb_empr);		
+		if(cb_empr != cb_read ) alert('La carte lecteur a chang� '+cb_read+ '  ' +cb_empr);		
 	} else {
 		//la carte du lecteur absente
 	}			
@@ -58,7 +58,6 @@ function disable_obj(id,level) {
 	var obj=document.getElementById('disable_'+id);	
 	if(obj)document.getElementById('att').removeChild(obj);
 	if(!level) {
-
 		document.getElementById('indicateur').src="./images/sauv_succeed.png";
 		return;
 	}
@@ -90,7 +89,7 @@ function disable_obj(id,level) {
 	obj_att.appendChild(div_disable);
 }
 
-function f_read_expl(cb,index,indexcount,antivol) {
+function f_read_expl(cb,index,indexcount,antivol, cb_valid = []) {
 	var j,i,found=0,instable,nb_parties=0;
 	serveur_rfid_actif=1;
 	
@@ -147,7 +146,7 @@ function f_read_expl(cb,index,indexcount,antivol) {
 				
 			}	
 		}	
-		// vérif des parties
+		// verif des parties
 		var info_cb_list=new Array();
 		var info_cb_count_verif=new Array();
 		var info_cb_count=new Array();
@@ -205,11 +204,42 @@ function f_read_expl(cb,index,indexcount,antivol) {
 		}
 	}
 	var indication='';
-	if(cb.length-nb_parties) indication="<font size='2'>( "+(cb.length-nb_parties)+" )</font>";
+	if(cb.length-nb_parties) {
+		indication="<font size='2'>( "+(cb.length-nb_parties)+" )</font>";	
+	}
+	
+	// cas particulier pour Bibliotheca
+	var errorBibliotheca = false;
+	if(this.bibliotheca && this.bibliotheca.isBibliotheca) {
+		for(var obj_cb in cb_valid){
+			if(false == cb_valid[obj_cb]) {
+				errorBibliotheca = true;
+				indication = "Il manque des &eacute;l&eacute;ments";
+				if(document.getElementById('confirm_pret')){
+					document.getElementById('confirm_pret').setAttribute("disabled", true);
+					document.getElementById('confirm_pret').style = "display :none ";
+				}
+			} else if (cb_valid[obj_cb]) {
+				if(document.getElementById('confirm_pret')){
+					document.getElementById('confirm_pret').removeAttribute("disabled");
+					document.getElementById('confirm_pret').style = "display : ''";
+				}
+			}
+		}
+	}
+	
 	document.getElementById('indicateur_nb_doc').innerHTML=indication;
-	disable_obj('table_pret_tmp',0);	
-	if(flag_confirm_button) document.getElementById('div_confirm_pret').style.display='inline';
-	else document.getElementById('div_confirm_pret').style.display='none';
+	disable_obj('table_pret_tmp',0);
+	
+	if (flag_confirm_button) {
+		if (this.bibliotheca && this.bibliotheca.isBibliotheca) {
+			if (!errorBibliotheca) Ajax_confirm_pret()
+		} else {
+			document.getElementById('div_confirm_pret').style.display='inline';
+		}
+	} else {
+		 document.getElementById('div_confirm_pret').style.display='none';
+	}
 }
 
 function init_rfid_retour()	{
@@ -235,7 +265,7 @@ function XMl2array(cb_expl,xml, NodeName) {
 			if (param.childNodes[j].firstChild) {
 				var val = param.childNodes[j].firstChild.nodeValue;
 			} else val='';
-			// Memorise les paramètres
+			// Memorise les parametres
 			this_param[cb_expl][key] = val;	
 		}
 	}	
@@ -289,13 +319,17 @@ function one_more_ligne_erreur_suite (cb_expl,data) {
 	document.getElementById('table_pret_tmp').appendChild(tr);
 }
 
-function addslashes(ch) {
-	ch = ch.replace(/\\/g,"\\\\")
-	ch = ch.replace(/\'/g,"\\'")
-	ch = ch.replace(/\"/g,"\\\"")
-return ch
+function IsNumeric(val) {
+    return Number(parseFloat(val)) === val;
 }
 
+function addslashes(ch) {
+	if (IsNumeric(ch)) return ch;
+	ch = ch.replace(/\\/g, "\\\\");
+	ch = ch.replace(/\'/g, "\\'");
+	ch = ch.replace(/\"/g, "\\\"");
+	return ch;
+}
 	
 function one_more_ligne (cb_expl,data) {
 	count++;
@@ -382,12 +416,12 @@ function one_more_ligne (cb_expl,data) {
 	if(list_erreur_cb_count[cb_expl]) {
 		td_4.setAttribute('class','erreur');
 		if(this_param[cb_expl]['error_message']) this_param[cb_expl]['error_message']+=". ";
-		this_param[cb_expl]['error_message']+="Nombre d'éléments manquants: "+list_erreur_cb_count[cb_expl];		
+		this_param[cb_expl]['error_message']+="Nombre d'�l�ments manquants: "+list_erreur_cb_count[cb_expl];		
 	}	
 	td_4.appendChild(document.createTextNode(this_param[cb_expl]['error_message']));	
 	tr.appendChild(td_4);
 
-	//Boutton d'annulation du pret effectué (ou pas, si erreur)
+	//Boutton d'annulation du pret effectue (ou pas, si erreur)
 	var td_5 = document.createElement('TD');
 	if(mode_lecture_cb[cb_expl]!='rfid') {	
 		td_5.setAttribute('style','text-align:center');		
@@ -423,7 +457,7 @@ function one_more_ligne (cb_expl,data) {
 
 	//byId('table_pret_tmp').getElementsByTagName('tbody')[0].appendChild(tr);
 	document.getElementById('table_pret_tmp').appendChild(tr);
-	//Si erreur on désactive la possibilité d'ajout de document
+	//Si erreur on desactive la possibilite d'ajout de document
 	pret_erreur='';
 	if(this_param[cb_expl]['status']!=0){		
 		pret_erreur='force_pret(\"'+addslashes(cb_expl) +'\",'+ count +',\'' + this_param[cb_expl]['id_expl'] +'\',\'\');'
@@ -454,9 +488,9 @@ function force_pret(cb_expl,count,id_expl,forcage) {
 	del_pret(cb_expl,count,id_expl,1);
 	// Construction de la requette 			
 	var url= "./ajax.php?module=circ&categ=pret_ajax&sub=add_cb&id_expl=" + id_expl + "&id_empr=" + id_empr + "&forcage=" + forcage;	
-	// Exécution de la requette
+	// Execution de la requette
 	if(req.request(url,1)){
-		// Il y a une erreur. Afficher le message retourné
+		// Il y a une erreur. Afficher le message retourne
 		alert ( req.get_text() );			
 	}else { 
 		// commit				
@@ -489,10 +523,10 @@ function del_pret(cb_expl,count,id_expl,status){
 		// Supression du pret dans la base	
 		var url= "./ajax.php?module=circ&categ=pret_ajax&sub=del_pret&id_expl=" + id_expl;
 		if(req.request(url,1)){
-			// Il y a une erreur. Afficher le message retourné
+			// Il y a une erreur. Afficher le message retourne
 			alert ( req.get_text() );			
 		} else { 
-			// Le pret est supprimé		
+			// Le pret est supprime	
 		}
 	}
 	// Supression du pret dans l'affichage	
@@ -544,7 +578,7 @@ function del_ligne_erreur(cb_expl,count,id_expl,status){
 	}	
 }
 function Ajax_add_cb(cb_doc) {	
-	// Récupération de la valeur de l'objet 			
+	// Recuperation de la valeur de l'objet 			
 	if(!cb_doc || !id_empr)return 1;	
 	// Construction de la requette 			
 	var url= "./ajax.php?module=circ&categ=pret_ajax&sub=add_cb&cb_doc=" + cb_doc + "&id_empr=" + id_empr;
@@ -553,9 +587,9 @@ function Ajax_add_cb(cb_doc) {
 		short_loan = document.getElementById('short_loan').value;
 	} catch (err) {}
 	url=url+"&short_loan="+short_loan;
-	// Exécution de la requette POST
+	// Execution de la requette POST
 	if(req.request(url,1)){
-		// Il y a une erreur. Afficher le message retourné
+		// Il y a une erreur. Afficher le message retourne
 		alert ( req.get_text() );			
 	}else { 
 		// commit
@@ -575,7 +609,7 @@ function Ajax_add_cb(cb_doc) {
 }
 
 function Ajax_get_info_expl(cb_doc) {
-	// Récupération de la valeur de l'objet 			
+	// Recuperation de la valeur de l'objet 			
 	if(!cb_doc )return 1;
 	
 	if(memo_cb_doc[cb_doc]) {	
@@ -595,9 +629,9 @@ function Ajax_get_info_expl(cb_doc) {
 	}
 	// Construction de la requette 			
 	var url= "./ajax.php?module=circ&categ=pret_ajax&sub=get_info_expl&cb_doc=" + cb_doc;
-	// Exécution de la requette POST
+	// Execution de la requette POST
 	if(req.request(url,1)){
-		// Il y a une erreur. Afficher le message retourné
+		// Il y a une erreur. Afficher le message retourne
 		alert ( req.get_text() );			
 	}else { 
 		// commit
@@ -642,7 +676,7 @@ function confirm_pret() {
 	}
 	if(liste_pret_url) {
 		if(req.request(url+liste_pret_url,1)) {
-			// Il y a une erreur. Afficher le message retourné
+			// Il y a une erreur. Afficher le message retourne
 			alert ( req.get_text() );			
 		}else { 	
 			// ok
@@ -650,25 +684,26 @@ function confirm_pret() {
 		}
 	}
 	flag_disable_antivol=1;
-	init_rfid_antivol (cb_pret_liste[ptr_cb_pret_liste],0,ack_antivol_pret);	
-	setTimeout('no_ack_antivol_pret()',6000*key_this_param.length);	
+	init_rfid_antivol (cb_pret_liste[ptr_cb_pret_liste],0,ack_antivol_pret).then(function() {
+		var delay = (this.bibliotheca && this.bibliotheca.isBibliotheca) ? 0 : 6000;
+		setTimeout('no_ack_antivol_pret()', delay*key_this_param.length);
+	});
 }
 
 function no_ack_antivol_pret(retVal) {
-		alert ('La commande de l\'antivol n\'a pas répondu !');
 		var url = "./circ.php?&categ=pret&id_empr="+id_empr;
-		if (document.getElementById('short_loan').value==1) url+= "&short_loan=1";
+		if (document.getElementById('short_loan') && document.getElementById('short_loan').value==1) url+= "&short_loan=1";
 		document.location=url;	
 }
 
 function ack_antivol_pret(retVal) {
 	if(!retVal && mode_lecture_cb[cb_pret_liste[ptr_cb_pret_liste]]=='rfid') 
-		alert ('L\'antivol de l\'exemplaire '+cb_pret_liste[ptr_cb_pret_liste]+' n\'a pas été désactivé !');
+		alert ('L\'antivol de l\'exemplaire '+cb_pret_liste[ptr_cb_pret_liste]+' n\'a pas �t� d�sactiv� !');
 	if(cb_pret_liste[++ptr_cb_pret_liste]) {
-	// suivant	
-		init_rfid_antivol (cb_pret_liste[ptr_cb_pret_liste],0,ack_antivol_pret);		
+		// suivant	
+		init_rfid_antivol(cb_pret_liste[ptr_cb_pret_liste],0,ack_antivol_pret);		
 	} else {
-		// fin des désactiv	ation antivol, on ferme l'iframe 
+		// fin des desactivation antivol, on ferme l'iframe 
 		document.location="./circ.php?&categ=pret&id_empr="+id_empr;
 	}		
 }
@@ -782,7 +817,7 @@ function one_more_ligne_retour (cb_expl) {
 
 	if(list_erreur_cb_count[cb_expl]) {
 		if(this_param[cb_expl]['error_message']) this_param[cb_expl]['error_message']+=". ";
-		this_param[cb_expl]['error_message']+="Nombre d'éléments manquants: "+list_erreur_cb_count[cb_expl];		
+		this_param[cb_expl]['error_message']+="Nombre d'�l�ments manquants: "+list_erreur_cb_count[cb_expl];		
 	}	
 	//error_message
 	var td_4 = document.createElement('TD');
@@ -796,12 +831,12 @@ function one_more_ligne_retour (cb_expl) {
 }
 
 function Ajax_do_retour(cb_doc) {
-	// Récupération de la valeur de l'objet 			
+	// Recuperation de la valeur de l'objet 			
 	if(!cb_doc )return 1;			
 	// Construction de la requette 			
 	var url= "./ajax.php?module=circ&categ=pret_ajax&sub=do_retour&cb_doc=" + cb_doc;
 	if(req.request(url,1)){
-		// Il y a une erreur. Afficher le message retourné
+		// Il y a une erreur. Afficher le message retourne
 		alert ( req.get_text() );			
 	}else { 		
 		// commit
@@ -816,7 +851,7 @@ function read_retour(cb,index,indexcount,antivol) {
 	var j,i,found;
 	var flag_antivol=0;
 
-	// vérif des parties
+	// verif des parties
 	var info_cb_list=new Array();
 	var info_cb_count_verif=new Array();
 	var info_cb_count=new Array();
@@ -842,7 +877,7 @@ function read_retour(cb,index,indexcount,antivol) {
 		found=0;
 		for (i=0; i<key_this_param.length; i++) {	
 			if(key_this_param[i] == cb_expl){
-				// Déjà lu et retour effectué
+				// Deja lu et retour effectue
 				found=1;
 				break;
 			}
@@ -882,7 +917,7 @@ var mode1_liste_expl_id=new Array();
 var mode1_liste_uid=new Array();
 var mode1_liste_cb_forcage=new Array();
 var mode1_liste_cb_read_type=new Array();// (rfid ou douchette?)
-var mode1_liste_cb_echec_antivol=new Array();// liste des cb dont la désactivation de l'antivol a échoué
+var mode1_liste_cb_echec_antivol=new Array();// liste des cb dont la desactivation de l'antivol a echoue
 var mode1_flag_rfid_activite=0;
 var mode1_flag_pmb_activite=0;
 var mode1_flag_pmb_erreur=0; 
@@ -896,12 +931,12 @@ var mode1_list_erreur_cb_count=new Array();
 
 function is_in_array(tableau,chaine) {
 	for (var i=0; i<tableau.length; i++) {	
-		if(tableau[i] == chaine)	return 1;
+		if(tableau[i] == chaine) return 1;
 	}
 	return 0;
 }
 	
-function mode1_f_read_expl(cb,index,indexcount,antivol,uid) {	
+function mode1_f_read_expl(cb, index, indexcount, antivol, uid, cb_valid = []) {
 	
 	if( mode1_flag_pmb_erreur==1)return;
 	if(mode1_flag_rfid_activite) return;
@@ -911,45 +946,38 @@ function mode1_f_read_expl(cb,index,indexcount,antivol,uid) {
 	var nb_parties=0;
 	
 	mode1_tab_cb_antivol = new Array();
-	
-	// Montrer le bouton supprimer si pas présent sur la platine
-	for (var i=0; i<mode1_liste_cb.length; i++) {
-		if(!is_in_array(cb,mode1_liste_cb[i])){
-			document.getElementById('suppr_pret_'+mode1_liste_cb[i]).style.display='inline';			
-		}	
-	}	
 		
-	if (cb.length) { 
-		// affecter liste cb déjà traité (présent dans  liste_cb et lu sur la platine)
-		for (var i=0; i<cb.length; i++) {
+	if (cb.length) {
+		// affecter liste cb deja traite (present dans  liste_cb et lu sur la platine)
+		for (let i = 0; i < cb.length; i++) {
 			if(is_in_array(mode1_liste_cb,cb[i])){
-				tab_cb_deja_traite[tab_cb_deja_traite.length]=cb[i];		
-				document.getElementById('suppr_pret_'+cb[i]).style.display='none';
+				tab_cb_deja_traite[tab_cb_deja_traite.length]=cb[i];
 			}	
 		}
+		
 		// affecter liste nouveau cb (pas dans  mode1_liste_cb)
-		for (var i=0; i<cb.length; i++) {
-			if(!is_in_array(mode1_liste_cb,cb[i])){
-				tab_cb_nouveau[tab_cb_nouveau.length]=cb[i];
-				mode1_liste_cb[mode1_liste_cb.length]=cb[i];
-				mode1_liste_uid[mode1_liste_uid.length]=uid[i];			
+		for (let i = 0; i < cb.length; i++) {
+			if (!is_in_array(mode1_liste_cb, cb[i])) {
+				tab_cb_nouveau[tab_cb_nouveau.length] = cb[i];
+				mode1_liste_cb[mode1_liste_cb.length] = cb[i];
+				mode1_liste_uid[mode1_liste_uid.length] = uid[i];			
 			} 
 		}
 	}	
 	
-	// vérif des parties
+	// verif des parties
 	var info_cb_count_verif=new Array();
 	var info_cb_count=new Array();
 	mode1_list_erreur_cb_count=new Array();
 	if(indexcount) {
-		for (var j=0; j<cb.length; j++) {			
+		for (let j = 0; j < cb.length; j++) {			
 			if(	indexcount[j]>1) {
 				if(!info_cb_count_verif[cb[j]]) info_cb_count_verif[cb[j]]=0;
 				info_cb_count_verif[cb[j]]++;
 				info_cb_count[cb[j]]=indexcount[j];
 			}	
 		}		
-		for(var obj_cb in info_cb_count_verif){			
+		for(let obj_cb in info_cb_count_verif){			
 			nb_parties+=info_cb_count_verif[obj_cb]-1;
 			if(info_cb_count[obj_cb] !=	info_cb_count_verif[obj_cb]) {
 				mode1_list_erreur_cb_count[obj_cb]=info_cb_count[obj_cb] - info_cb_count_verif[obj_cb];
@@ -957,90 +985,122 @@ function mode1_f_read_expl(cb,index,indexcount,antivol,uid) {
 		}		
 	}
 	
+	
 	// pour tous les nouveaux cb
-	for (var i=0; i<tab_cb_nouveau.length; i++) {
-		// créer nouveaux objects dans le tableau de prêt
-		mode1_one_more_ligne(tab_cb_nouveau[i]);
-		// Ajout dans liste pmb à interroger
+	for (let i = 0; i < tab_cb_nouveau.length; i++) {
+		// creer nouveaux objects dans le tableau de pret
+		mode1_one_more_ligne(tab_cb_nouveau[i], {});
+		// Ajout dans liste pmb a interroger
 		tab_cb_pmb_request[i]=tab_cb_nouveau[i];
-		// Ajout dans liste antivol à désactiver
+		// Ajout dans liste antivol a desactiver
 		mode1_tab_cb_antivol[mode1_tab_cb_antivol.length]=tab_cb_nouveau[i];
 	} // fin  des nouveaux cb
 	
+	// cas particulier pour Bibliotheca
+	if (this.bibliotheca && this.bibliotheca.isBibliotheca) {
+		for (let obj_cb in cb_valid) {
+			const errorNode = document.getElementById('erreur_'+obj_cb);
+			const confirmNode = document.getElementById('confirm_pret');
+			
+			if (!cb_valid[obj_cb]) {
+				if (errorNode) {
+					errorNode.innerHTML = "Il manque des &eacute;l&eacute;ments";
+				}
+				
+				if (confirmNode) {
+					confirmNode.setAttribute("disabled", true);
+					confirmNode.style = "display :none ";
+				}
+			} else if (cb_valid[obj_cb]) {
+				if (errorNode) {
+					errorNode.innerHTML = "";
+				}
+				
+				if (confirmNode) {
+					confirmNode.removeAttribute("disabled");
+					confirmNode.style = "display : 'inline'";
+				}
+			}
+		}
+	}
+	
 	// Erreur du nombre de parties
-	for (var i=0; i<mode1_liste_cb.length; i++) {
-		if(is_in_array(cb,mode1_liste_cb[i])){
-			if(mode1_list_erreur_cb_count[mode1_liste_cb[i]]) {
-				if(!document.getElementById('erreur_'+mode1_liste_cb[i]).innerHTML )
-					document.getElementById('erreur_'+mode1_liste_cb[i]).innerHTML = "Nombre d'éléments manquants: "+mode1_list_erreur_cb_count[mode1_liste_cb[i]];		;
-			}		
-		}	
+	for (let i = 0; i < mode1_liste_cb.length; i++) {
+		if (is_in_array(cb, mode1_liste_cb[i])) {
+			if (mode1_list_erreur_cb_count[mode1_liste_cb[i]]) {
+				if(!document.getElementById('erreur_'+mode1_liste_cb[i]).innerHTML ) {					
+					document.getElementById('erreur_'+mode1_liste_cb[i]).innerHTML = "Nombre d'&eacute;l&eacute;ments manquants: "+mode1_list_erreur_cb_count[mode1_liste_cb[i]];
+				}
+			}
+		}
 	}
 		
-	// pour tous les cb déjà traités (présent dans  mode1_liste_cb et lu sur la platine)
-	for (var i=0; i<tab_cb_deja_traite.length; i++) {
-		if(is_in_array(mode1_liste_cb_echec_antivol,tab_cb_deja_traite[i])){
-			// Ajout dans liste antivol à désactiver
-			mode1_tab_cb_antivol[mode1_tab_cb_antivol.length]=tab_cb_deja_traite[i];	
+	// pour tous les cb deja traites (present dans  mode1_liste_cb et lu sur la platine)
+	for (let i = 0; i < tab_cb_deja_traite.length; i++) {
+		if (is_in_array(mode1_liste_cb_echec_antivol, tab_cb_deja_traite[i])) {
+			// Ajout dans liste antivol a desactiver
+			mode1_tab_cb_antivol[mode1_tab_cb_antivol.length] = tab_cb_deja_traite[i];	
 		} 
 	}	
 		
-	// Si liste pmb à interroger non vide
-	if(tab_cb_pmb_request.length){
-		// Alerte activité pmb
+	// Si liste pmb a interroger non vide
+	if (tab_cb_pmb_request.length) {
+		// Alerte activite pmb
 		mode1_activite_level++;
-		flag_pmb_activite =1;
+		flag_pmb_activite = 1;
 		mode1_flag_pmb_erreur = 0;
-		// Requête serveur PMB pour lire infos expl et effectuer prêts temporaires de cette liste	
+		// Requete serveur PMB pour lire infos expl et effectuer prets temporaires de cette liste	
 		mode1_do_pret_liste(tab_cb_pmb_request);
 	}	
 	
-	// Si  liste antivol à désactiver non vide			
-	if(mode1_tab_cb_antivol.length){					
-		// Alerte activité rfid		
+	
+	if(this.bibliotheca && this.bibliotheca.isBibliotheca) {
+		mode1_flag_rfid_activite = 0
+	} else if(mode1_tab_cb_antivol.length) {					
+		// Alerte activite rfid		
 		mode1_activite_level++;
 		mode1_flag_rfid_activite = 1;
 		mode1_flag_rfid_erreur = 0;
-		// désactiver les antivols de cette liste
+		// desactiver les antivols de cette liste
 		mode1_desactive_antivol_liste();
 	}
-			
+	
 	if(!mode1_flag_pmb_activite && !mode1_flag_pmb_erreur && !mode1_flag_rfid_activite && !mode1_flag_rfid_erreur &&  mode1_liste_cb.length) {
 		//Afficher bouton confirm
 		document.getElementById('div_confirm_pret').style.display='inline';
 		document.getElementById('confirm_pret').setAttribute('onclick','mode1_confirm_pret();' );	
-		
-	}	else document.getElementById('div_confirm_pret').style.display='none';
+	} else {
+		document.getElementById('div_confirm_pret').style.display='none';
+	}
+	
 	if(!mode1_flag_pmb_activite && !mode1_flag_rfid_activite ) {
 		// armer nouvelle lecture rfid			
-		mode1_timeout_read=setTimeout('mode1_read_cb()',1500); 	
+		mode1_timeout_read=setTimeout('mode1_read_cb()',3500); 	
 	}		
 			
 }
 function mode1_desactive_antivol_liste(){
-	mode1_ptr_cb_pret_liste=0;
-	mode1_flag_rfid_erreur=0;
-	init_rfid_antivol (mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste],0,mode1_ack_antivol_pret);	
-	mode1_timeout_antivol=setTimeout('mode1_no_ack_antivol_pret()',4000*mode1_tab_cb_antivol.length);	
+	mode1_ptr_cb_pret_liste = 0;
+	mode1_flag_rfid_erreur = 0;
+	init_rfid_antivol(mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste], 0, mode1_ack_antivol_pret);	
+	mode1_timeout_antivol = setTimeout('mode1_no_ack_antivol_pret()',4000*mode1_tab_cb_antivol.length);	
 	document.getElementById('indicateur').src="./images/orange.png";
 }
 
 function mode1_no_ack_antivol_pret(retVal) {
-	alert ('La commande de l\'antivol n\'a pas répondu !');
-	mode1_timeout_read=setTimeout('mode1_read_cb()',0);
+	mode1_timeout_read=setTimeout('mode1_read_cb()',2000);
 	mode1_flag_rfid_activite=0;
 }
 
 function mode1_ack_antivol_pret(retVal) {
 	
 	if(!retVal ) {
-		//	alert ('L\'antivol de l\'exemplaire '+mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste]+' n\'a pas été désactivé !');
 		if(!is_in_array(mode1_liste_cb_echec_antivol,mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste])){
 			mode1_liste_cb_echec_antivol[mode1_liste_cb_echec_antivol.length]=mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste];
 		}	
 		mode1_flag_rfid_erreur=1;
 	}else {
-		// Antivol bien désactivé
+		// Antivol bien desactive
 		var antivol = document.getElementById('antivol_'+mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste]);	
 		if(antivol)document.getElementById('td_1_'+mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste]).removeChild(antivol);	
 		for (var i=0; i<mode1_liste_cb_echec_antivol.length; i++) {
@@ -1049,28 +1109,28 @@ function mode1_ack_antivol_pret(retVal) {
 				break;
 			}
 		}
-	}	
+	}
 	if(mode1_tab_cb_antivol[++mode1_ptr_cb_pret_liste]) {
 		// suivant	
 		init_rfid_antivol (mode1_tab_cb_antivol[mode1_ptr_cb_pret_liste],0,mode1_ack_antivol_pret);		
 	} else {
-		// fin des désactiv	ation antivol on relance les lecture
+		// fin des desactivation antivol on relance les lecture
 		mode1_flag_rfid_activite=0;
 		clearTimeout(mode1_timeout_antivol);
-		if(!mode1_flag_pmb_activite && !mode1_flag_pmb_erreur || mode1_flag_rfid_erreur) mode1_timeout_read=setTimeout('mode1_read_cb()',0);
+		if(!mode1_flag_pmb_activite && !mode1_flag_pmb_erreur || mode1_flag_rfid_erreur) mode1_timeout_read=setTimeout('mode1_read_cb()',2000);
 		
 		if (mode1_flag_pmb_activite)document.getElementById('indicateur').src="./images/sauv_failed.png";
 		else document.getElementById('indicateur').src="./images/sauv_succeed.png";
 	}		
 }
 
-// Ajout de prêt en saisie manuelle
+// Ajout de pret en saisie manuelle
 function mode1_add_cb(cb_expl){
 	if(is_in_array(mode1_liste_cb,cb_expl)) return;
 	
 	mode1_liste_cb[mode1_liste_cb.length]=cb_expl;
 	mode1_liste_cb_read_type[cb_expl]=1;
-	
+	flag_confirm_button = 1;
 	mode1_one_more_ligne (cb_expl);
 	var antivol = document.getElementById('antivol_'+cb_expl);	
 	if(antivol)document.getElementById('td_1_'+cb_expl).removeChild(antivol);	
@@ -1091,7 +1151,7 @@ function mode1_do_pret_liste(cb_list,del_pret){
 		}	
 	}
 	if(del_pret)url+="&del_pret=1";
-	// Exécution de la requette 
+	// Execution de la requette 
 	req.request(url,1,"",1,mode1_do_pret_callback,mode1_do_pret_callback_error);
 }
 
@@ -1109,7 +1169,7 @@ function mode1_XMl2array(xml, NodeName) {
 				if (param.childNodes[j].firstChild) {
 					var val = param.childNodes[j].firstChild.nodeValue;
 				} else val='';
-				// Memorise les paramètres
+				// Memorise les parametres
 				info[key]= val;
 				if(key=="cb_expl") cb_expl=val;
 			}
@@ -1141,7 +1201,10 @@ function mode1_XMl2array(xml, NodeName) {
 				mode1_flag_pmb_erreur=1;
 				document.getElementById('suppr_pret_'+cb_expl).style.display='inline';
 				document.getElementById('div_confirm_pret').style.display='none';
-			}	
+			} else if (flag_confirm_button) {
+		 		document.getElementById('div_confirm_pret').style.display='inline';
+ 				document.getElementById('confirm_pret').setAttribute('onclick','mode1_confirm_pret();');
+			}
 		}	
 	}
 } 
@@ -1152,7 +1215,7 @@ function mode1_do_pret_callback(infopmb,el){
 	//alert (req.get_text());
 	mode1_XMl2array(xml, 'param');
 	mode1_flag_pmb_activite=0;
-	if(!mode1_flag_rfid_activite && !mode1_flag_pmb_erreur && !flag_semaphore_rfid_read) mode1_timeout_read=setTimeout('mode1_read_cb()',0);
+	if(!mode1_flag_rfid_activite && !mode1_flag_pmb_erreur && !flag_semaphore_rfid_read) mode1_timeout_read=setTimeout('mode1_read_cb()',2000);
 	
 	if (mode1_flag_rfid_activite)document.getElementById('indicateur').src="./images/orange.png";
 	else document.getElementById('indicateur').src="./images/sauv_succeed.png";
@@ -1185,19 +1248,37 @@ function mode1_del_pret(cb_expl){
 
 }	
 
-function mode1_confirm_pret() {		
+async function mode1_confirm_pret() {
 	var url= "./circ.php?module=circ&categ=pret&confirm_pret=1&id_empr="+id_empr;
-	if (document.getElementById('short_loan') && (document.getElementById('short_loan').value==1)) url+= "&short_loan=1";
-	for (i=0; i<mode1_liste_cb.length; i++) {
-		if(mode1_liste_expl_id[mode1_liste_cb[i]]>0){
-			url+="&id_expl[]=" + mode1_liste_expl_id[mode1_liste_cb[i]];
-		}	
+	if (document.getElementById('short_loan') && (document.getElementById('short_loan').value==1)) {
+		url+= "&short_loan=1";
 	}
-	document.location=url;
+	
+	for (let i = 0; i < mode1_liste_cb.length; i++) {
+		if (mode1_liste_expl_id[mode1_liste_cb[i]] > 0) {
+			url+="&id_expl[]=" + mode1_liste_expl_id[mode1_liste_cb[i]];
+		}
+	}
+	
+	if(this.bibliotheca && this.bibliotheca.isBibliotheca) {
+		init_rfid_antivol("", 0, ack_antivol_pret).then(function(result) {
+			for (let cb in result) {
+				var node = document.getElementById('antivol_'+cb);
+				if(result[cb] === true) {
+					node.setAttribute('src', './images/sauv_succeed.png');
+				} else {
+					node.setAttribute('src', './images/error.png');
+				}
+			}
+			setTimeout(()=> document.location=url, 500);
+		});
+	} else {
+		document.location=url;
+	}
 }
 
 
-function mode1_one_more_ligne (cb_expl,data) {	
+function mode1_one_more_ligne (cb_expl, data) {	
 	mode1_tableau_expl_count++;
 	tr = document.createElement('TR');
 	if(mode1_tableau_expl_count==1) {			
@@ -1248,7 +1329,7 @@ function mode1_one_more_ligne (cb_expl,data) {
 	oImg.setAttribute('src', './images/orange_small.png');
 	oImg.setAttribute('align', 'top');
 	oImg.id = 'antivol_'+cb_expl;
-	//oImg.setAttribute('alt', 'Antivol non désactivé');
+	//oImg.setAttribute('alt', 'Antivol non desactive');
 	// software-update-urgent.png
 	// ./images/sauv_succeed.png
 	
@@ -1291,7 +1372,7 @@ function mode1_one_more_ligne (cb_expl,data) {
 	td_4.innerHTML = '&nbsp';		
 	tr.appendChild(td_4);
 
-	//Boutton d'annulation du pret effectué (ou pas, si erreur)
+	//Boutton d'annulation du pret effectue (ou pas, si erreur)
 	var td_5 = document.createElement('TD');
 
 	td_5.setAttribute('style','text-align:center');		
@@ -1301,7 +1382,7 @@ function mode1_one_more_ligne (cb_expl,data) {
 	obj_5.setAttribute('name', 'suppr_pret_'+cb_expl);
 	obj_5.setAttribute('id', 'suppr_pret_'+cb_expl);
 	obj_5.setAttribute('value', 'X');
-	obj_5.setAttribute('style', 'display:none');	
+	obj_5.setAttribute('style', 'display:inline	');
 	obj_5.setAttribute('onclick','mode1_del_pret(\"'+addslashes(cb_expl)+'\");' );		
 	obj_5.appendChild(document.createTextNode(cb_expl)); 
 	td_5.appendChild(obj_5);

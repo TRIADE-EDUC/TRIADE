@@ -608,10 +608,10 @@
 			<range>6000-9999</range>
 		</zone>
 		<zone id="981">
-			<range>00-11</range>
+			<range>00-16</range>
 			<range>17000-19999</range>
-			<range>200-289</range>
-			<range>290-299</range>
+			<range>18-19</range>
+			<range>200-299</range>
 			<range>3000-3099</range>
 			<range>310-399</range>
 			<range>4000-9999</range>

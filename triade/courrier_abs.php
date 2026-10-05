@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,7 +47,7 @@ if (isset($_GET["eid"])) {
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);

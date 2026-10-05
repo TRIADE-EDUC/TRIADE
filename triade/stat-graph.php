@@ -10,7 +10,7 @@ if ($id == "classe") {
 	$cnx=cnx();
 	$max=0;
 	$data=affClasse(); // code_class,libelle,
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$nb=nbabstotalClasse($data[$i][0]);
 		if ($nb > 0) {
 			$listInfoX.=$data[$i][1]."###";
@@ -23,7 +23,7 @@ if ($id == "classe") {
 	Pgclose();
 }
 
-$height=10+count($data)*17;
+$height=10+countTriade($data)*17;
 $width=550;
 
 if ($height < 250 ) $height=250 ;

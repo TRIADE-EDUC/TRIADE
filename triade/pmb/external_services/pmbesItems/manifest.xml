@@ -2,7 +2,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
+$Id: manifest.xml,v 1.10 2021/03/11 13:34:41 dbellamy Exp $ -->
 <manifest>
 	<name>pmbesItems</name>
 	<description>msg:pmbesItems_description</description>
@@ -21,7 +21,7 @@ $Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
 			<inputs>
 				<description>msg:fetch_notice_items_input_description</description>
 				<param name="noticeid" type="scalar" dataType="integer" description="msg:fetch_notice_items_noticeid"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId" optional = "yes"  default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_notice_items_output_description</description>
@@ -37,10 +37,10 @@ $Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:fetch_notices_items_input_description</description>
-				<param name="noticesid" type="array" description="msg:fetch_notices_items_noticesid">
+				<param name="noticesid" type="array" description="msg:fetch_notices_items_noticesid" >
 					<param name="anoticeid" type="scalar" dataType="integer" description="msg:fetch_notices_items_noticesid_anoticeid"/>
 				</param>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notices_items_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notices_items_OPACUserId" optional = "yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_notices_items_output_description</description>
@@ -59,10 +59,10 @@ $Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:fetch_bulletins_items_input_description</description>
-				<param name="bulletinids" type="scalar" description="msg:fetch_bulletins_items_bulletinids">
+				<param name="bulletinids" type="array" description="msg:fetch_bulletins_items_bulletinids">
 					<param name="abulletinid" type="scalar" dataType="integer" description="msg:fetch_bulletins_items_bulletinids_abulletinid"/>
 				</param>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_bulletins_items_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_bulletins_items_OPACUserId" optional = "yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_bulletins_items_output_description</description>
@@ -80,9 +80,9 @@ $Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:fetch_item_input_description</description>
-				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb"/>
-				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId"/>
+				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb" optional = "yes"/>
+				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id" optional = "yes"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId" optional = "yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_item_output_description</description>
@@ -95,9 +95,9 @@ $Id: manifest.xml,v 1.7 2015-06-08 08:14:31 ngantier Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:fetch_item_input_description</description>
-				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb"/>
-				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId"/>
+				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb" optional = "yes"/>
+				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id" optional = "yes"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:fetch_notice_items_OPACUserId" optional = "yes" default_value = "-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_item_output_description</description>

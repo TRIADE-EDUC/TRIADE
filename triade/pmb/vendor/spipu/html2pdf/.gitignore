@@ -8,13 +8,14 @@
 /.idea
 
 # Examples
-/test/*
-!/test/generate.sh
+/test/*.pdf
 
 # PhpUnit
 /build/
+/.phpunit.result.cache
 
 # Composer
 /bin/
 /vendor/
 /composer.lock
+/composer.phar

@@ -711,8 +711,32 @@ iframe {
   .uk-grid-width-small-1-6 > * {
     width: 16.666%;
   }
+  .uk-grid-width-small-1-7 > * {
+    width: 14.285%;
+  }
+  .uk-grid-width-small-1-8 > * {
+    width: 12.5%;
+  }
+  .uk-grid-width-small-1-9 > * {
+    width: 11.111%;
+  }
   .uk-grid-width-small-1-10 > * {
     width: 10%;
+  }
+  .uk-grid-width-small-1-11 > * {
+    width: 9.090%;
+  }
+  .uk-grid-width-small-1-12 > * {
+    width: 8.333%;
+  }
+  .uk-grid-width-small-1-13 > * {
+    width: 7.692%;
+  }
+  .uk-grid-width-small-1-14 > * {
+    width: 7.142%;
+  }
+  .uk-grid-width-small-1-15 > * {
+    width: 6.666%;
   }
 }
 /* Tablet and bigger */
@@ -735,8 +759,32 @@ iframe {
   .uk-grid-width-medium-1-6 > * {
     width: 16.666%;
   }
+  .uk-grid-width-medium-1-7 > * {
+    width: 14.285%;
+  }
+  .uk-grid-width-medium-1-8 > * {
+    width: 12.5%;
+  }
+  .uk-grid-width-medium-1-9 > * {
+    width: 11.111%;
+  }
   .uk-grid-width-medium-1-10 > * {
     width: 10%;
+  }
+  .uk-grid-width-medium-1-11 > * {
+    width: 9.090%;
+  }
+  .uk-grid-width-medium-1-12 > * {
+    width: 8.333%;
+  }
+  .uk-grid-width-medium-1-13 > * {
+    width: 7.692%;
+  }
+  .uk-grid-width-medium-1-14 > * {
+    width: 7.142%;
+  }
+  .uk-grid-width-medium-1-15 > * {
+    width: 6.666%;
   }
 }
 /* Desktop and bigger */
@@ -759,8 +807,32 @@ iframe {
   .uk-grid-width-large-1-6 > * {
     width: 16.666%;
   }
+  .uk-grid-width-large-1-7 > * {
+    width: 14.285%;
+  }
+  .uk-grid-width-large-1-8 > * {
+    width: 12.5%;
+  }
+  .uk-grid-width-large-1-9 > * {
+    width: 11.111%;
+  }
   .uk-grid-width-large-1-10 > * {
     width: 10%;
+  }
+  .uk-grid-width-large-1-11 > * {
+    width: 9.090%;
+  }
+  .uk-grid-width-large-1-12 > * {
+    width: 8.333%;
+  }
+  .uk-grid-width-large-1-13 > * {
+    width: 7.692%;
+  }
+  .uk-grid-width-large-1-14 > * {
+    width: 7.142%;
+  }
+  .uk-grid-width-large-1-15 > * {
+    width: 6.666%;
   }
 }
 /* Large screen and bigger */
@@ -783,8 +855,32 @@ iframe {
   .uk-grid-width-xlarge-1-6 > * {
     width: 16.666%;
   }
+  .uk-grid-width-xlarge-1-7 > * {
+    width: 14.285%;
+  }
+  .uk-grid-width-xlarge-1-8 > * {
+    width: 12.5%;
+  }
+  .uk-grid-width-xlarge-1-9 > * {
+    width: 11.111%;
+  }
   .uk-grid-width-xlarge-1-10 > * {
     width: 10%;
+  }
+  .uk-grid-width-xlarge-1-11 > * {
+    width: 9.090%;
+  }
+  .uk-grid-width-xlarge-1-12 > * {
+    width: 8.333%;
+  }
+  .uk-grid-width-xlarge-1-13 > * {
+    width: 7.692%;
+  }
+  .uk-grid-width-xlarge-1-14 > * {
+    width: 7.142%;
+  }
+  .uk-grid-width-xlarge-1-15 > * {
+    width: 6.666%;
   }
 }
 /* Sub-objects: `uk-width-*`

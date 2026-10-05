@@ -1,0 +1,78 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_extended_display_b.tpl.html,v 1.2.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
+
+{% block css_style %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_aside_content %}
+	{{ block.super }}
+{% endblock %}	
+
+{% block record_tit1 %}
+	<tr class="record_tit1">
+		<td class="labelNot">
+			<span>{{ msg.tit1display_start }}</span>
+		</td>
+		<td class="labelContent">
+			<span id="exempl_titleNot">
+				<a href="{{ record.liens_opac.lien_rech_notice | replace '!!id!!' record.bul_info.id }}" title="{{ record.bul_info.title }}">{{ record.bul_info.title }}</a>, {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}
+			</span>
+		</td>
+	</tr>
+{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.aff_date_date %}
+		<tr class="record_bul_info">
+			<td class="labelNot">
+				<span>{{ msg.bull_date_date }}</span> <!-- Paru le -->
+			</td>
+			<td class="labelContent">
+				<span>{{ record.bul_info.aff_date_date }}</span>
+			</td>
+		</tr>
+	{% endif %}
+{% endblock %}
+
+{% block record_avis_detail %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_simili_search %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_serialcirc_form_actions %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_lien_content %}
+	{{ block.super }}
+{% endblock %}
+
+{% block articles %}
+	<!-- Depouillements -->
+	{% for article in record.articles %}
+		{% if loop.first %}
+			<div id="zone_depouillements">
+				<h3>
+					<span id="titre_depouillements">{{ msg.bull_dep }}</span>
+				</h3>
+				{% if record.cart_allow %}
+					{% if global.opac_cart_only_for_subscriber == "1" %}
+					      {% if session_vars.id_empr %}
+						      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
+					      {% endif %}
+					{% else %}
+					      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
+					{% endif %}
+				{% endif %}
+		{% endif %}
+		{{ article }}
+		{% if loop.last %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock articles %}

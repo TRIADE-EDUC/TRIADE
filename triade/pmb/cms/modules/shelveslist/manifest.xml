@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2015-06-22 14:38:24 pmbs Exp $ -->
+$Id: manifest.xml,v 1.4 2021/10/13 12:46:29 qvarin Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Liste d'étagères</name>
@@ -23,6 +23,8 @@ $Id: manifest.xml,v 1.2 2015-06-22 14:38:24 pmbs Exp $ -->
 		</datasources>
 		<views>
 			<view>cms_module_common_view_shelveslist</view>
+			<view>cms_module_shelveslist_view_django</view>
+			<view>cms_module_shelveslist_view_dynamic_grid</view>
 		</views>
 		<conditions>
 			<condition>cms_module_common_condition_global_var</condition>

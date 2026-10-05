@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bul_func.inc.php,v 1.75 2019-06-07 07:03:23 ngantier Exp $
+// $Id: bul_func.inc.php,v 1.84.2.1.2.1 2025/05/13 09:54:26 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path;
 
 require_once ($include_path."/avis_notice.inc.php");
 require_once ($include_path.'/h2o/pmb_h2o.inc.php');
@@ -18,12 +20,12 @@ require_once ($class_path."/caddie/caddie_controller.class.php");
 $cart_click_bull = "onClick=\"openPopUp('./cart.php?object_type=BULL&item=!!item!!', 'cart')\"";
 $cart_click_expl = "onClick=\"openPopUp('./cart.php?object_type=EXPL&item=!!item!!', 'cart')\"";
 
-// affichage d'informations pour une entrÃ©e de bulletinage
+// affichage d'informations pour une entrée de bulletinage
 function show_bulletinage_info_catalogage(	$bul_id,
 											$show_in_receptions=false
 											) {
 
-	global $dbh, $msg, $charset, $base_path;
+	global $msg, $charset, $base_path;
 	global $liste_script;
 	global $liste_debut;
 	global $liste_fin;
@@ -35,10 +37,9 @@ function show_bulletinage_info_catalogage(	$bul_id,
 	global $flag_no_delete_bulletin;
 	global $pmb_resa_planning;
 	global $categ, $quoi, $action, $sub;
-	global $pmb_etat_collections_localise;
 	global $pmb_map_activate;
 	global $pmb_url_base;
-	
+
 	$form ='';
 
 	if ($bul_id) {
@@ -71,33 +72,32 @@ function show_bulletinage_info_catalogage(	$bul_id,
 			$link_parent = "<a href=\"./catalog.php?categ=serials\">";
 			$link_parent .= $msg[4010]."</a>";
 			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
-			$link_parent .= "<a href=\"./catalog.php?categ=serials&sub=view&serial_id=";
-			$link_parent .= $myBul->bulletin_notice."\">".$myBul->get_serial()->tit1.'</a>';
+			$link_parent .= "<a href=\"".serial::get_permalink($myBul->bulletin_notice)."\">".htmlentities($myBul->get_serial()->tit1, ENT_QUOTES, $charset).'</a>';
 			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
 
 			$link_parent.=$txt_drag;
 			if ($bul_titre) $link_parent .= " : ".htmlentities($bul_titre,ENT_QUOTES, $charset) ;
 
 			// Titre de la page
-			$form.= '<script type="text/javascript">document.title = "'.addslashes($txt_drag.($bul_titre ? ' : '.$bul_titre : '')).'";</script>';
-			
+			$form.= '<script type="text/javascript">document.title = "'.addslashes($txt_drag.($bul_titre ? ' : '.strip_tags($bul_titre) : '')).'";</script>';
+
 			$form.= "<div class='row'><div class='perio-barre'>".$link_parent."</div></div>";
 
 			$cart_over_out = "onMouseOver=\"show_div_access_carts(event,".$bul_id.",'BULL');\" onMouseOut=\"set_flag_info_div(false);\"";
-			$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_bull $cart_over_out>";
+			$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_bull $cart_over_out>";
 			$cart_link = str_replace('!!item!!', $bul_id, $cart_link);
-			$cart_link.="<span id='BULL_drag_".$bul_id."'  dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=\"".htmlentities($txt_drag,ENT_QUOTES, $charset)."\" draggable=\"yes\" dragtype=\"notice\" callback_before=\"show_carts\" callback_after=\"\" style=\"padding-left:7px\"><img src=\"".get_url_icon('notice_drag.png')."\"/></span>";
+// 			$cart_link.="<span id='BULL_drag_".$bul_id."'  dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=\"".htmlentities($txt_drag,ENT_QUOTES, $charset)."\" draggable=\"yes\" dragtype=\"notice\" callback_before=\"show_carts\" callback_after=\"\" style=\"padding-left:7px\"><img src=\"".get_url_icon('notice_drag.png')."\"/></span>";
 
 			$bul_action_bar = str_replace('!!bul_id!!', $bul_id, $bul_action_bar);
 			$bul_action_bar = str_replace('!!serial_id!!', $myBul->bulletin_notice, $bul_action_bar);
-			$bul_action_bar = str_replace('!!nb_expl!!', sizeof($myBul->expl), $bul_action_bar);
+			$bul_action_bar = str_replace('!!nb_expl!!', count($myBul->expl), $bul_action_bar);
 
 			global $avis_quoifaire,$valid_id_avis;
 			if($myBul->bull_num_notice) {
 				$bul_isbd = str_replace('<!-- !!avis_notice!! -->', avis_notice($myBul->bull_num_notice,$avis_quoifaire,$valid_id_avis), $bul_isbd);
 				$bul_isbd = str_replace('<!-- !!caddies_notice!! -->', caddie_controller::get_display_list_from_item('display', 'NOTI', $myBul->bull_num_notice), $bul_isbd);
-			}	
-			
+			}
+
 			if(!$flag_no_delete_bulletin)$bul_action_bar = str_replace("!!bulletin_delete_button!!", "<input type='button' class='bouton' onclick=\"confirm_bul_delete();\" value='$msg[63]' />", $bul_action_bar);
 			else $bul_action_bar = str_replace("!!bulletin_delete_button!!", "", $bul_action_bar);
 
@@ -114,33 +114,28 @@ function show_bulletinage_info_catalogage(	$bul_id,
 					".$bul_action_bar."
 				</div>
 			</div>";
-			
+
 			$form.= '<div id="expl_area_' . $bul_id . '">';
 			// map
 			if($pmb_map_activate){
 				$form.= map_locations_controler::get_map_location(0, $bul_id);
 			}
 			$form.= caddie_controller::get_display_list_from_item('display', 'BULL', $bul_id);
-			
-			// affichage des exemplaires associÃ©s
+
+			// affichage des exemplaires associés
 			$list_expl  = "<div class='exemplaires-perio'>";
 			$list_expl .= "<h3>".$msg[4012]." (".$cpt_expl.")</h3>";
 
 			$list_expl .= "<div class='row'>".$affichage_expl."</div></div>";
 			$form.= $list_expl;
 
-			//Ã©tat des collections
-			$collstate = new collstate(0,0,$bul_id);
-			if($pmb_etat_collections_localise) {
-				$collstate->get_display_list("",0,0,0,1,0,true);
-			} else {
-				$collstate->get_display_list("",0,0,0,0,0,true);
+			//état des collections
+			$list_collstate_ui = new list_collstate_ui(array('serial_id' => 0, 'bulletin_id' => $bul_id), array('all_on_page' => true));
+			if(count($list_collstate_ui->get_objects())) {
+				$form.= "<br /><h3>".$msg["abts_onglet_collstate"]." (".count($list_collstate_ui->get_objects()).")</h3>";
+				$form.= $list_collstate_ui->get_display_list();
 			}
-			if($collstate->nbr) {
-				$form.= "<br /><h3>".$msg["abts_onglet_collstate"]." (".$collstate->nbr.")</h3>";
-				$form.= $collstate->liste;
-			}
-			
+
 			if ($aff_expl_num) {
 				$list_expl = "<div class='exemplaires-perio'><h3>".$msg['explnum_docs_associes']." (".$myBul->nbexplnum.")</h3>";
 				$list_expl .= "<div class='row'>".$aff_expl_num."</div></div>";
@@ -180,7 +175,6 @@ function show_bulletinage_info_catalogage(	$bul_id,
 			}
 			$req="select * from serialcirc_copy, bulletins where num_serialcirc_copy_bulletin=bulletin_id and bulletin_id= $bul_id";
 			$resultat=pmb_mysql_query($req);
-			$i=0;
 			if (pmb_mysql_num_rows($resultat)) {
 				$btn_print_ask="<input type='button' class='bouton' value=' ".$msg["serialcirc_circ_list_reproduction_isdone_bt"]." ' onClick=\"document.location='./catalog.php?categ=serials&sub=bulletinage&action=copy_isdone&bul_id=".$bul_id."';\" />";
 			} else {
@@ -194,9 +188,14 @@ function show_bulletinage_info_catalogage(	$bul_id,
 			$bul_cb_form = str_replace('!!btn_print_ask!!', $btn_print_ask, $bul_cb_form);
 			$form.= "<div class='row'>".$bul_cb_form."</div>";
 
-			// zone d'affichage des dÃ©pouillements
+			// zone d'affichage des dépouillements
 			$liste = get_analysis($bul_id);
 			if ($liste) {
+				//Au dela de 6 depouillements on passe en ajax
+				//6 est un choix defini dans la classe elements_list_ui dans la methode generate_elements_list
+				if(intval($myBul->nb_analysis) > 6) {
+					$liste_debut = str_replace("expandAll", "expandAll_ajax", $liste_debut);
+				}
 				$icones_exp = $liste_debut."&nbsp;<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title='".$msg[400]."' onClick=\"openPopUp('./cart.php?object_type=BULL&item=".$bul_id."&what=DEP', 'cart')\">";
 				$liste_dep = $liste;
 				$liste_dep .= $liste_fin;
@@ -211,7 +210,7 @@ function show_bulletinage_info_catalogage(	$bul_id,
 			$form.="
 				<div class='depouillements-perio'>
 					<h3>".$msg[4013].$icones_exp." $link_new_dep</h3>
-					<div class='row'>
+					<div id='bulletin_analysis_list' class='row'>
 						$liste_dep
 						</div>
 					</div>";
@@ -221,7 +220,7 @@ function show_bulletinage_info_catalogage(	$bul_id,
 					JOIN docs_statut ON exemplaires.expl_statut=docs_statut.idstatut
 					JOIN bulletins ON exemplaires.expl_bulletin=bulletins.bulletin_id
 					WHERE statut_allow_resa=1 and bulletins.bulletin_id=".$bul_id;
-			$result = pmb_mysql_query($rqt_nt, $dbh) or die ($rqt_nt. " ".pmb_mysql_error()) ;
+			$result = pmb_mysql_query($rqt_nt) or die ($rqt_nt. " ".pmb_mysql_error()) ;
 			$nb_expl_reservables = pmb_mysql_result($result,0,0);
 
 			$aff_resa=resa_list(0, $bul_id, 0) ;
@@ -251,7 +250,7 @@ function show_bulletinage_info_catalogage(	$bul_id,
 		} else {
 
 			$form.= "<div class='notice-parent' id='_bull_'>
-						<img style='border:0px; margin:3px 3px' onclick=\"expandBase('_bull_', true); return false;\" title='".$msg['plus_detail']."' id='_bull_Img' name='imEx' class='img_plus' src='".get_url_icon('minus.gif')."' />
+						<img onclick=\"expandBase('_bull_', true); return false;\" title='".htmlentities($msg['plus_detail'], ENT_QUOTES, $charset)."' alt='".htmlentities($msg['plus_detail'], ENT_QUOTES, $charset)."' id='_bull_Img' name='imEx' class='img_plus' src='".get_url_icon('minus.gif')."' />
 						<span class='notice-heada'>".htmlentities($myBul->get_serial()->tit1.'.'.$txt_drag, ENT_QUOTES, $charset);
 			if ($bul_titre) $form.= " : ".htmlentities($bul_titre, ENT_QUOTES,$charset);
 			$form.= "	</span>
@@ -263,9 +262,9 @@ function show_bulletinage_info_catalogage(	$bul_id,
 						$aff_expl_num;
 					</div>";
 		}
-		
+
 		/**
-		 * TODO : onglets 
+		 * TODO : onglets
 		 */
 		if($myBul->bull_num_notice){
 			$template_path_records_tabs =  "./includes/templates/records/records_elements_tabs.html";
@@ -280,7 +279,7 @@ function show_bulletinage_info_catalogage(	$bul_id,
 				$form.= $h2o_record_tabs->render(array('records_tabs' => $records_tabs, 'bulletin_id' => $myBul->bulletin_id));
 			}
 		}
-		
+
 	}
 	return $form;
 }

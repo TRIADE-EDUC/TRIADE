@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.5 2018-09-20 13:14:23 dgoron Exp $ -->
+$Id: manifest.xml,v 1.6 2019/08/28 06:48:51 ngantier Exp $ -->
 <manifest>
 	<name>pmbesSync</name>
 	<description>msg:Sync_functions_description</description>
@@ -32,14 +32,14 @@ $Id: manifest.xml,v 1.5 2018-09-20 13:14:23 dgoron Exp $ -->
 				<description>msg:doSync_input_description</description>
 				<param name="id_connector" type="scalar" dataType="integer" description="msg:doSync_id_connector"/>
 				<param name="id_source" type="scalar" dataType="integer" description="msg:doSync_id_source"/>
-				<param name="auto_import" type="scalar" dataType="boolean" description="msg:doSync_auto_import"/>
-				<param name="id_tache" type="scalar" dataType="integer" description="msg:doSync_id_tache"/>
-				<param name="callback_listen" type="scalar" dataType="array" description="msg:doSync_callback_listen"/>
-				<param name="callback_command" type="scalar" dataType="array" description="msg:doSync_callback_command"/>
-				<param name="auto_delete" type="scalar" dataType="boolean" description="msg:doSync_auto_delete"/>
-				<param name="not_in_notices_externes" type="scalar" dataType="boolean" description="msg:doSync_not_in_notices_externes"/>
-				<param name="date_start" type="scalar" dataType="string" description="msg:doSync_date_start"/>
-				<param name="date_end" type="scalar" dataType="string" description="msg:doSync_date_end"/>
+				<param name="auto_import" type="scalar" dataType="boolean" description="msg:doSync_auto_import" optional="yes"  default_value="false"/>
+				<param name="id_tache" type="scalar" dataType="integer" description="msg:doSync_id_tache" optional="yes"/>
+				<param name="callback_listen" type="scalar" dataType="array" description="msg:doSync_callback_listen" optional="yes"  default_value="NULL"/>
+				<param name="callback_command" type="scalar" dataType="array" description="msg:doSync_callback_command" optional="yes"  default_value="NULL"/>
+				<param name="auto_delete" type="scalar" dataType="boolean" description="msg:doSync_auto_delete" optional="yes"  default_value="false"/>
+				<param name="not_in_notices_externes" type="scalar" dataType="boolean" description="msg:doSync_not_in_notices_externes" optional="yes"  default_value="false"/>
+				<param name="date_start" type="scalar" dataType="string" description="msg:doSync_date_start" optional="yes"/>
+				<param name="date_end" type="scalar" dataType="string" description="msg:doSync_date_end" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:doSync_output_description</description>

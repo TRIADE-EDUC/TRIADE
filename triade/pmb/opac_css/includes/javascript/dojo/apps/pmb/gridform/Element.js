@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Element.js,v 1.1 2017-01-06 16:10:52 tsamson Exp $
+// $Id: Element.js,v 1.2 2021/11/16 15:48:32 dgoron Exp $
 
 
 define(['dojo/_base/declare', 
@@ -59,6 +59,12 @@ define(['dojo/_base/declare',
 		  switchClass: function(newClass){
 			  this.domNode.className = this.domNode.className.replace(this.className, newClass);
 			  this.className = newClass;
+		  },
+		  switchWidth: function(nb_columns) {
+			  nb_columns = parseInt(nb_columns);
+			  if(nb_columns) {
+				  domStyle.set(this.domNode, 'width', (100/nb_columns)+'%');
+			  }
 		  },
 		  scrollToElementParent: function(){
 			  this.domNode.parentNode.scrollIntoView();

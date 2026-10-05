@@ -1,23 +1,25 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_doc.php,v 1.10 2018-02-26 17:01:59 apetithomme Exp $
+// $Id: explnum_doc.php,v 1.11 2022/01/05 15:25:28 dgoron Exp $
 
 $base_path=".";
 require_once($base_path."/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+global $explnumdoc_id, $_mimetypes_bymimetype_, $css, $charset;
+
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 if ($css=="") $css=1;
 
 require_once ("./includes/explnum.inc.php");  
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
-$explnumdoc_id=$explnumdoc_id+0;
-$resultat = pmb_mysql_query("SELECT * FROM explnum_doc WHERE id_explnum_doc = '$explnumdoc_id' ", $dbh);
+$explnumdoc_id = intval($explnumdoc_id);
+$resultat = pmb_mysql_query("SELECT * FROM explnum_doc WHERE id_explnum_doc = '$explnumdoc_id' ");
 $nb_res = pmb_mysql_num_rows($resultat) ;
 
 if (!$nb_res) {

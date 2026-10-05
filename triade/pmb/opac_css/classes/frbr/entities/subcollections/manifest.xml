@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.5 2018-09-14 15:43:22 tsamson Exp $ -->
+$Id: manifest.xml,v 1.5.16.1 2025/04/29 12:27:40 rtigero Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Sous-collections</name>
@@ -24,6 +24,7 @@ $Id: manifest.xml,v 1.5 2018-09-14 15:43:22 tsamson Exp $ -->
 			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
 			<datasource>frbr_entity_common_datasource_aut_link</datasource>
 			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+			<datasource>frbr_entity_subcollections_datasource_collection</datasource>
 		</datasources>
 		<views>
 			<view>frbr_entity_subcollections_view_subcollectionslist</view>

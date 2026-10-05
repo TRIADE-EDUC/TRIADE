@@ -1,9 +1,9 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_voice.js,v 1.5 2015-02-05 13:03:02 vtouchard Exp $
+// $Id: nomenclature_voice.js,v 1.5 2015/02/05 13:03:02 vtouchard Exp $
 
-// Ajout du dijit registry pour rÃ©cupÃ©rer le nom des voices
+// Ajout du dijit registry pour récupérer le nom des voices
 define(["dojo/_base/declare", "dijit/registry"], function(declare, registry){
 	/*
 	 *Classe nomenclature_voice. Classe representant une voix
@@ -11,7 +11,7 @@ define(["dojo/_base/declare", "dijit/registry"], function(declare, registry){
 	  return declare(null, {
 			    
 		  	abbreviation:null,
-		  	voices_list:null, /** Lien au niveau supÃ©rieur, instance de voice list **/
+		  	voices_list:null, /** Lien au niveau supérieur, instance de voice list **/
 		  	hash:null,
 		  	code:"",
 		  	name:"",

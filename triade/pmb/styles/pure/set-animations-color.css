@@ -1,0 +1,224 @@
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: set-animations-color.css,v 1.3 2023/03/10 08:47:37 gneveu Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+/* ========================================================================
+   Animations
+   base : #0D9B7A
+   hover : #08B189
+   active/focus : #0A8064
+ ==========================================================================  */
+
+.uk-navbar-nav li#navbar-animations a:after,
+.animations .hmenu.uk-tab > *:hover > a {
+	border-bottom-color: #0D9B7A;
+}
+
+li#navbar-animations.current,
+.animations input[type="checkbox"]:checked, 
+.animations input[type="checkbox"]:indeterminate, 
+.animations input[type="radio"]:checked,
+.animations input[type="checkbox"]:checked:focus, 
+.animations input[type="checkbox"]:indeterminate:focus, 
+.animations input[type="radio"]:checked:focus,
+.animations div#extra2 span.uk-icon,
+.animations div#extra2 .notification.ui-active {
+	background-color: #0D9B7A;	
+}
+
+.animations input:focus, 
+.animations select:focus, 
+.animations textarea:focus,
+.animations input[type="checkbox"]:focus, 
+.animations input[type="radio"]:focus,
+.animations.claro.pure .dijitButtonHover .dijitButtonNode,
+.animations.claro.pure .dijitDropDownButtonHover .dijitButtonNode,
+.animations.claro.pure .dijitComboButton .dijitButtonNodeHover,
+.animations.claro.pure .dijitComboButton .dijitDownArrowButtonHover,
+.animations.claro.pure .dijitToggleButtonHover .dijitButtonNode,
+.animations.claro.pure .dijitTextBoxHover,
+.animations #contenu .uk-button-default:focus,
+.animations #contenu .uk-button-default:hover,
+.animations .hmenu.uk-tab>.uk-active>a,
+.animations iframe {
+	border-color: #0D9B7A;
+}
+
+.uk-navbar-nav li#navbar-animations a:hover,
+.animations h1.section-title i,
+.animations h1.section-sub-title,
+.animations .uk-link,
+.animations a,
+.animations .uk-link:hover,
+.animations a:hover,
+.animations h3:not(.section-sub-title),
+.animations .article-title i,
+.animations #menu .uk-nav>li>a i,
+.animations #menu .uk-nav>li.uk-active>a,
+.animations #menu .uk-nav>li>a i,
+.animations #menu .uk-nav>li.uk-active>a,
+.animations #menu .uk-nav>li>a:hover,
+.animations .h2-like i,
+.animations #extra span.uk-icon:hover,
+.animations #extra i:hover,
+.animations #navbar .dashboard:hover,
+.pure .animations .uk-tab > * > a:hover,
+.pure .animations .uk-tab > * > a:focus,
+.animations .categ_browser a,
+.animations .categ_browser a:hover,
+.animations .categ_browser a:focus,
+.animations .categ_browser a:active,
+.animations .hmenu.uk-tab>.uk-active>a {
+	color: #0D9B7A;
+}
+
+.animations #contenu input.wyr-input[type='file']:focus {
+	outline-color: #0D9B7A;
+}
+
+.animations .stat-child .uk-table th {
+	color: #0D9B7A;
+	font-weight: 500;
+}
+
+.animations #menu ul.uk-nav {		
+	border-top: solid 2px #0D9B7A;		
+}
+
+.animations #menu>h3 .uk-icon {		
+	background: #0D9B7A;		
+}
+
+.animations.claro.pure .dijitMenu .dijitMenuItemHover td, 
+.animations.claro.pure .dijitMenu .dijitMenuItemSelected td, 
+.animations.claro.pure .dijitMenuItemHover, 
+.animations.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.animations.claro.pure .dijitMenuItemSelected,
+.animations.claro.pure .dojoDndItemOver {
+    background-color: rgba(70, 157, 225, 0.3);
+    border-color: #0D9B7A;
+    background-image: none;
+}
+
+.animations form .form-contenu,
+.animations .row.bkg-grey {
+	border-color: #08B189;
+}
+
+.animations input.wyr-input[type='submit'],
+.animations .uk-button,
+.animations .search_cancel>input,
+.animations.claro.pure .dijitButton .dijitButtonNode,
+.animations.claro.pure .dijitDropDownButton .dijitButtonNode,
+.animations.claro.pure .dijitComboButton .dijitButtonNode,
+.animations.claro.pure .dijitToggleButton .dijitButtonNode {
+	background-color: #0D9B7A;
+}
+
+.animations input.wyr-input[type='submit']:hover,
+.animations .uk-button:hover,
+.animations .search_cancel>input:hover,
+.animations.claro.pure .dijitButton .dijitButtonNode:hover,
+.animations.claro.pure .dijitDropDownButton .dijitButtonNode:hover,
+.animations.claro.pure .dijitComboButton .dijitButtonNode:hover,
+.animations.claro.pure .dijitToggleButton .dijitButtonNode:hover {
+	background-color: #0D9B7A;
+}
+
+.animations input.wyr-input[type='submit']:focus,
+.animations input.wyr-input[type='submit']:active,
+.animations .uk-button:focus,
+.animations .uk-button:active,
+.animations .search_cancel>input:focus,
+.animations .search_cancel>input:active,
+.animations.claro.pure .dijitButton .dijitButtonNode:focus,
+.animations.claro.pure .dijitDropDownButton .dijitButtonNode:focus,
+.animations.claro.pure .dijitComboButton .dijitButtonNode:focus,
+.animations.claro.pure .dijitToggleButton .dijitButtonNode:focus,
+.animations.claro.pure .dijitButton .dijitButtonNode:active,
+.animations.claro.pure .dijitDropDownButton .dijitButtonNode:active,
+.animations.claro.pure .dijitComboButton .dijitButtonNode:active,
+.animations.claro.pure .dijitToggleButton .dijitButtonNode:active {
+	background-color: #0A8064;
+}
+
+.animations .uk-label,
+.animations .uk-label:hover {
+	background: #0D9B7A;
+	color: #fff;
+}
+
+.animations .search-result-item.notice-child[style*='block'],
+.animations .child[style*='block'],
+.animations div[startopen="Yes"] {
+	border-color: #0D9B7A;
+}
+
+.animations select:focus {
+	outline-color: #0A8064;
+}
+
+.animations .saisie-5emr,
+.animations .saisie-10emr,
+.animations .saisie-15emr,
+.animations .saisie-20emr,
+.animations .saisie-30emr,
+.animations .saisie-50emr,
+.animations .saisie-80emr.pure,
+.animations input[class^='saisie'][class*='emr']:hover,
+.pure .animations input[class^='saisie'][class*='emr']:active,
+.pure .animations input[class^='saisie'][class*='emr']:focus {
+	background: #0D9B7A;
+	color: #000;
+}
+
+.animations .form-retour-expl .row {
+	background-color: rgb(229, 248, 255);
+	border: solid 1px #0D9B7A;
+}
+
+.animations #contenu .form-retour-expl input.wyr-input {
+	border: solid 1px #0D9B7A;
+}
+
+.pure.animations .hmenu .wui-button.uk-active {
+    background: #0D9B7A;
+    border-color: #0D9B7A;
+}
+
+.pure.animations .hmenu .wui-button.uk-active:hover a,
+.pure.animations .hmenu .wui-button:hover a,
+.pure.animations .hmenu .wui-button.uk-active:hover,
+.pure.animations .hmenu .wui-button:hover,
+.pure.animations .hmenu .wui-button.uk-active:active,
+.pure.animations .hmenu .wui-button:active,
+.pure.animations .hmenu .wui-button.uk-active:focus,
+.pure.animations .hmenu .wui-button:focus,
+.animations #empr-name,
+.pure.animations .hmenu .wui-button {
+    border-color: #0D9B7A;
+}
+ 
+.animations input[type='submit'],
+.animations input[type='button'],
+.animations .bouton {
+	background-color: #0D9B7A;
+}
+
+.animations input[type='submit']:hover,
+.animations input[type='button']:hover,
+.animations .bouton:hover {
+	background-color: #08B189;
+}
+
+.animations input[type='submit']:focus,
+.animations input[type='button']:focus,
+.animations .bouton:focus,
+.animations input[type='submit']:active,
+.animations input[type='button']:active,
+.animations .bouton:active,
+.animations .pagination button.bouton-page.active{
+	background-color: #0A8064;
+}

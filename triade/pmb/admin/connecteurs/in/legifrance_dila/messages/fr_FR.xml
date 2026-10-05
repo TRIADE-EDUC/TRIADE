@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur Legifrance DILA
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2020/11/06 13:24:34 dbellamy Exp $ -->
+
+<XMLlist>
+    <entry code="legifrance_dila_ws">Web Service</entry>
+	<entry code="legifrance_dila_ws_url">URL du Web service</entry>
+	<entry code="legifrance_dila_oauth_token_endpoint">URL de demande de jeton OAUTH</entry>
+    <entry code="legifrance_dila_client_id">Identifiant client</entry>
+    <entry code="legifrance_dila_client_secret">Secret client</entry>
+    <entry code="legifrance_dila_search_params">Paramétrage de la recherche</entry>
+    <entry code="legifrance_dila_limit">Nombre maximum de résultats renvoyés (par fonds)</entry>
+    <entry code="legifrance_dila_fonds">Fonds à interroger</entry>
+    <entry code="legifrance_dila_fonds_name">Nom du Fonds</entry>
+    <entry code="legifrance_dila_fonds_sort">Tri</entry>
+    <entry code="legifrance_dila_fonds_filter">Filtre</entry>
+    
+    <entry code="legifrance_dila_sort_">Aucun</entry>
+    <entry code="legifrance_dila_sort_PERTINENCE">Pertinence</entry>
+    <entry code="legifrance_dila_sort_DATE_DESC">Date décroissante</entry>
+    <entry code="legifrance_dila_sort_DATE_ASC">Date croissante</entry>
+    <entry code="legifrance_dila_sort_SIGNATURE_DATE_DESC">Date de signature croissante</entry>
+    <entry code="legifrance_dila_sort_SIGNATURE_DATE_ASC">Date de signature décroissante</entry>
+    <entry code="legifrance_dila_sort_PUBLICATION_DATE_DESC">Date de publication croissante</entry>
+    <entry code="legifrance_dila_sort_PUBLICATION_DATE_ASC">Date de publication décroissante</entry>
+    <entry code="legifrance_dila_sort_MODIFICATION_DATE_DESC">Date de modification décroissante</entry>
+    
+    <entry code="legifrance_dila_fonds_ALL">ALL : Tous les fonds</entry>
+    <entry code="legifrance_dila_fonds_ACCO">ACCO : Accords d'entreprise</entry>
+    <entry code="legifrance_dila_fonds_CETAT">CETAT : Jurisprudence administrative</entry>
+    <entry code="legifrance_dila_fonds_CIRC">CIRC : Circulaires et instructions</entry>
+    <entry code="legifrance_dila_fonds_CNIL">CNIL</entry>
+    <entry code="legifrance_dila_fonds_CODE_DATE">CODE_DATE : Codes par date</entry>
+    <entry code="legifrance_dila_fonds_CODE_ETAT">CODE_ETAT : Codes par état</entry>
+    <entry code="legifrance_dila_fonds_CONSTIT">CONSTIT : Jurisprudence constitutionnelle</entry>
+    <entry code="legifrance_dila_fonds_JORF">JORF : Journal officiel</entry>
+    <entry code="legifrance_dila_fonds_JURI">JURI : Jurisprudence judiciaire</entry>
+    <entry code="legifrance_dila_fonds_KALI">KALI : Accords de branche et conventions collectives</entry>    
+    <entry code="legifrance_dila_fonds_LODA_DATE">LODA_DATE : Lois et décrets par date</entry>
+    <entry code="legifrance_dila_fonds_LODA_ETAT">LODA_ETAT : Lois et décrets par état</entry>
+    
+    <entry code="legifrance_dila_search_facette_all_fond_ACCO">ACCO : Accords d'entreprise</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_CETAT">CETAT : Jurisprudence administrative</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_CIRC">CIRC : Circulaires et instructions</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_CNIL">CNIL</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_CODE">CODE : Codes</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_CONSTIT">CONSTIT : Jurisprudence constitutionnelle</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_JORF">JORF : Journal officiel</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_JUFI">JUFI : Jurisprudence financière</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_JURI">JURI : Jurisprudence judiciaire</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_KALI">KALI : Accords de branche et conventions collectives</entry>
+    <entry code="legifrance_dila_search_facette_all_fond_LEGI">LEGI : Textes</entry>
+    
+    <entry code="legifrance_dila_typdoc_ACCO">Accords d'entreprise</entry>
+    <entry code="legifrance_dila_typdoc_CETAT">Jurisprudence administrative</entry>
+    <entry code="legifrance_dila_typdoc_CONSTIT">Jurisprudence constitutionnelle</entry>
+    <entry code="legifrance_dila_typdoc_CIRC">Circulaires et instructions</entry>
+    <entry code="legifrance_dila_typdoc_CNIL">CNIL</entry>
+    <entry code="legifrance_dila_typdoc_JORF">Journal officiel</entry>
+    <entry code="legifrance_dila_typdoc_JUFI">Jurisprudence financière</entry>
+    <entry code="legifrance_dila_typdoc_JURI">Jurisprudence judiciaire</entry>
+    <entry code="legifrance_dila_typdoc_KALI">Accords de branche et conventions collectives</entry>
+    <entry code="legifrance_dila_typdoc_LEGI">Textes</entry> 
+</XMLlist>

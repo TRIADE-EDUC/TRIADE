@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mysql_planning.class.php,v 1.1 2017-07-10 15:50:02 dgoron Exp $
+// $Id: mysql_planning.class.php,v 1.1 2017/07/10 15:50:02 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
 
 class mysql_planning extends scheduler_planning {
 	
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {		
-		//paramÃ¨tres prÃ©-enregistrÃ©
+		//paramètres pré-enregistré
 		$tab_maintenance = array('CHECK' => '', 'ANALYZE' => '', 'REPAIR' => '', 'OPTIMIZE' => '');
 		if (isset($param['mySQL'])) {
 			foreach ($param['mySQL'] as $elem) {

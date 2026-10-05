@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: restore.inc.php,v 1.12 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: restore.inc.php,v 1.14 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $msg, $file;
 
 print "<table >";
 print "<tr><th>";
@@ -18,7 +20,7 @@ if(file_exists($tmp_dump))
 
 if($file)
 {
-	// procÃ©dure de restauration
+	// procédure de restauration
 	$file = urldecode($file);
 	$fp = @fopen($file, 'r');
 	if($fp) {
@@ -26,24 +28,24 @@ if($file)
 		$sql_dump = fread($fp, filesize($file));
 		fclose($fp);
 
-		// on enlÃ¨ve les commentaires et lignes vides
+		// on enlève les commentaires et lignes vides
 
 		$sql_dump = preg_replace("/#.*?\n/msi", "", $sql_dump);
 
-		// Ã©clate le truc en requÃªtes distinctes
+		// éclate le truc en requêtes distinctes
 
 		$req_table = explode(";", $sql_dump);
 
 		$error_flag = FALSE;
 
 		foreach ($req_table as $cle => $valeur) {
-			// exÃ©cution du lot de requÃªtes
+			// exécution du lot de requêtes
 
 			// on nettoie les retours chariot
 
 			$valeur = preg_replace("/\n/m", "", $valeur);
 			if($valeur) {
-				$result = pmb_mysql_query($valeur, $dbh);
+				$result = pmb_mysql_query($valeur);
 				if(!$result) {
 					print "<span style='color:#ff0000'><strong>".$msg[540]."</strong></span> ".$msg['admin_misc_requete']." $cle&nbsp;: $valeur<hr />";
 					$error_flag = TRUE;
@@ -60,17 +62,17 @@ if($file)
 	}
 } else {
 	print "<strong>$msg[534]&nbsp;:</strong><br /><br />";
-    /* affichage des fichiers du rÃ©pertoire */
+    /* affichage des fichiers du répertoire */
 
 	$sav_path = "./tables/";
 
-    /* ouverture du rÃ©pertoire courant */
+    /* ouverture du répertoire courant */
 
     $handle = @opendir($sav_path);
 
-    /* lecture des entrÃ©es du rÃ©pertoire */
+    /* lecture des entrées du répertoire */
 	if($handle) {
-		print "<table cellspacing='3'>";
+		print "<table style='border-spacing: 3px'>";
 		while($file = readdir($handle)) {
 			$sav = $sav_path.$file;
 			if (is_file("$sav") && preg_match("/sql$/si", $sav)) {

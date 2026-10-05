@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa_caddie_controller.class.php,v 1.3 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: resa_caddie_controller.class.php,v 1.4 2019/08/01 13:16:34 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -53,7 +53,7 @@ class resa_caddie_controller extends caddie_controller {
 		static::aff_cart_notices($myCart->get_cart(), $myCart->type, $idcaddie);
 	}
 	
-	// affichage du contenu du caddie Ã  partir de $liste qui contient les object_id
+	// affichage du contenu du caddie à partir de $liste qui contient les object_id
 	protected static function aff_cart_notices($liste, $caddie_type="", $idcaddie=0) {
 		global $msg;
 		global $begin_result_liste, $end_result_liste;
@@ -61,13 +61,13 @@ class resa_caddie_controller extends caddie_controller {
 		global $id_empr;
 		global $groupID;
 	
-		if(!sizeof($liste) || !is_array($liste)) {
+		if ((empty($liste) && !is_array($liste)) || !is_array($liste)) {
 			print $msg[399];
 			return;
 		} else {
-			// boucle de parcours des notices trouvÃ©es
-			// inclusion du javascript de gestion des listes dÃ©pliables
-			// dÃ©but de liste
+			// boucle de parcours des notices trouvées
+			// inclusion du javascript de gestion des listes dépliables
+			// début de liste
 			print $begin_result_liste;
 	
 			$elements_records_list_ui = new elements_records_list_ui($liste, count($liste), false);
@@ -86,4 +86,4 @@ class resa_caddie_controller extends caddie_controller {
 			print $end_result_liste;
 		}
 	}
-} // fin de dÃ©claration de la classe resa_caddie_controller
+} // fin de déclaration de la classe resa_caddie_controller

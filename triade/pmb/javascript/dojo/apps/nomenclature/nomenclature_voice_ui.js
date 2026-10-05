@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_voice_ui.js,v 1.14 2017-11-30 10:53:34 dgoron Exp $
+// $Id: nomenclature_voice_ui.js,v 1.17 2022/06/08 14:45:16 rtigero Exp $
 
 define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic", "dijit/_WidgetBase", "dojo/on", "dojo/_base/lang","dijit/registry", "dojo/request/xhr"], function(declare, domConstruct, topic, _WidgetBase, on, lang, registry, xhr){
 	/*
@@ -63,6 +63,11 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic", "dijit/_WidgetB
 		    	 			this.init_actions();
 		    	 		}
 		    	 		break;
+					case "sync_and_save_end":
+						if (this.voice.get_hash().indexOf(evt_args.hash) != -1) {
+							this.update_record();
+						}
+						break;
 		    	 	
 		    	}	
 		    },
@@ -106,7 +111,7 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic", "dijit/_WidgetB
 		    		autocomplete:'off',
 		    		completion:'voices',
 		    		callback:"nomenclature_input_callback",
-		    		autfield:this.get_id()+'_input_voice'
+		    		//autfield:this.get_id()+'_input_voice'
 		    	},td_main_instr);
 		    	this.own(on(this.input_main_voice, 'change', callback_change));
 		    	
@@ -125,7 +130,6 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic", "dijit/_WidgetB
 		    	var bouton_delete = domConstruct.create('input', {type:'button', value:'X', class:'bouton'}, this.td_suppression);
 		    	this.own(on(bouton_delete, "click", lang.hitch(this, function(){
 		    		this.delete_record_child();
-		    		this.publish_event('voice_delete');	
 		    	})));
 		    	this.ajax_parse();	
 		    	
@@ -341,11 +345,24 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic", "dijit/_WidgetB
 			},
 			delete_record_child: function(){
 				if(this.record_id){
-					xhr("./ajax.php?module=ajax&categ=nomenclature&sub=record_child&action=delete_record&id="+this.record_id, {
+					xhr("./ajax.php?module=ajax&categ=nomenclature&sub=record_child&action=get_explnums&id="+this.record_id, {
 						handleAs: "json",
-						method:"POST",
-						data:this.ajax_prepare_args()
+						method:"GET",
+					}).then((explnums)=>{
+						if(explnums && explnums.length) {
+							var message = registry.byId('nomenclature_datastore').get_message('nomenclature_js_explnum_confirm');
+							if(!confirm(message)){
+								return;
+							}
+						}
+						xhr("./ajax.php?module=ajax&categ=nomenclature&sub=record_child&action=delete_record&id="+this.record_id, {
+							handleAs: "json",
+							method:"POST",
+							data:this.ajax_prepare_args()
+						}).then(() => this.publish_event('voice_delete'));
 					});
+				} else {
+					this.publish_event('voice_delete');	
 				}
 			}
 	    });

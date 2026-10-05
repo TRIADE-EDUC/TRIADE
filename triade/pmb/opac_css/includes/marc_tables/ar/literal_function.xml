@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes fonction en UNIMARC (français)
-$Id: literal_function.xml,v 1.2 2017-04-05 14:16:55 ngantier Exp $ -->
+$Id: literal_function.xml,v 1.2 2017/04/05 14:16:55 ngantier Exp $ -->
 
 <XMLlist>
 	<entry code="005">Attore-esecutore</entry>

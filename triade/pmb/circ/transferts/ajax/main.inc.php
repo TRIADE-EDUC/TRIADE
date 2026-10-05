@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.8 2018-12-27 14:36:21 dgoron Exp $
+// $Id: main.inc.php,v 1.9 2020/11/05 10:22:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -40,7 +40,6 @@ switch ($action) {
 		break;
 	
 	case "list":
-		require_once($class_path.'/list/lists_controller.class.php');
 		lists_controller::proceed_ajax($object_type, 'transferts');
 		break;
 	default:

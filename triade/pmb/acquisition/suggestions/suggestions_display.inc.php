@@ -1,19 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_display.inc.php,v 1.58 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: suggestions_display.inc.php,v 1.65.8.1 2025/01/30 09:08:07 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $class_path, $include_path;
 
+require_once($class_path.'/suggestions/suggestions_controller.class.php');
 require_once($class_path.'/suggestions.class.php');
 require_once($class_path.'/suggestions_origine.class.php');
 require_once($class_path.'/suggestions_categ.class.php');
 require_once($class_path.'/suggestions_map.class.php');
 require_once($class_path.'/suggestion_source.class.php');
 require_once($include_path.'/templates/suggestions.tpl.php');
+require_once($class_path.'/serials.class.php');
 require_once($class_path.'/notice.class.php');
 require_once($class_path.'/author.class.php');
 require_once($class_path.'/docs_location.class.php');
@@ -22,353 +24,14 @@ require_once($include_path.'/parser.inc.php');
 
 //Affiche la liste des suggestions
 function show_list_sug($id_bibli=0) {
-	
-	global $dbh,$base_path;
-	global $msg, $charset;
-	global $sug_map;
-	global $sug_search_form, $sug_list_form, $filtre_src, $user_txt, $user_id, $user_statut;
-	global $nb_per_page;
-	global $class_path;
-	global $user_input, $statut, $num_categ, $page, $nbr_lignes, $last_param;
-	global $script, $bt_chk, $bt_imp, $bt_exporter, $bt_export_tableau;
-	global $acquisition_sugg_categ;
-	global $acquisition_sugg_localises,$sugg_location_id;
-	global $deflt_docs_location;
-	global $sel_orig_form;
-	global $sel_date_form, $date_inf, $date_sup;
-	global $nb_per_page_search;
-
-	if ($acquisition_sugg_localises) {	
-		 $sugg_location_id=((string)$sugg_location_id==""?$deflt_docs_location:$sugg_location_id);
-	}else{
-		$sugg_location_id=0;
-	}
-	// nombre de r√©f√©rences par pages
-	if (!$nb_per_page) $nb_per_page = $nb_per_page_search;		
-		
-	//Affichage form de recherche
-	$titre = htmlentities($msg['recherche'].' : '.$msg['acquisition_sug'], ENT_QUOTES, $charset);
-	$action ="./acquisition.php?categ=sug&action=list&id_bibli=".$id_bibli."&user_input=&nb_per_page=".$nb_per_page;
-	$bouton_add = "<input class='bouton' type='button' value='".$msg['acquisition_ajout_sug']."' onClick=\"document.location='./acquisition.php?categ=sug&sub=todo&action=modif&id_bibli=".$id_bibli."&sugg_location_id=$sugg_location_id';\" />";
-	$lien_last_sug = "";
-	$sug_search_form = str_replace('!!form_title!!', $titre, $sug_search_form);
-	$sug_search_form = str_replace('!!action!!', $action, $sug_search_form);
-	$sug_search_form = str_replace('<!-- sel_state -->', $sug_map->getStateSelector(), $sug_search_form);
-	$sug_search_form = str_replace('<!-- bouton_add -->', $bouton_add, $sug_search_form);
-	$sug_search_form = str_replace('<!-- lien_last -->', $lien_last_sug, $sug_search_form);
-
-	//Selecteur de localisation
-	$list_locs='';
-	if ($acquisition_sugg_localises) {
-		if ($sugg_location_id) $temp_location=$sugg_location_id;
-		else $temp_location=0;
-		$locs=new docs_location();
-		$list_locs=$locs->gen_combo_box_sugg($temp_location,1,"submit();");
-	}
-	$sug_search_form = str_replace('<!-- sel_location -->', $list_locs, $sug_search_form);
-	
-	//Selecteur de categories
-	if ($acquisition_sugg_categ != '1') {
-		$sel_categ="";
-	} else {
-		$tab_categ = suggestions_categ::getCategList();
-		$sel_categ = "<select class='saisie-25em' id='num_categ' name='num_categ' onchange=\"submit();\">";
-		$sel_categ.= "<option value='-1'>".htmlentities($msg['acquisition_sug_tous'],ENT_QUOTES, $charset)."</option>";
-		foreach($tab_categ as $id_categ=>$lib_categ){
-			$sel_categ.= "<option value='".$id_categ."' > ";
-			$sel_categ.= htmlentities($lib_categ,ENT_QUOTES, $charset)."</option>";
-		}
-		$sel_categ.= "</select>";
-	}
-	$sug_search_form = str_replace('<!-- sel_categ -->', $sel_categ, $sug_search_form);
-	
-	//Affichage du filtre par source
-	$req = "select * from suggestions_source order by libelle_source";
-	$res= pmb_mysql_query($req,$dbh);
-	$selected ="";
-	$option = "<option value='0'>".htmlentities($msg['acquisition_sugg_all_sources'],ENT_QUOTES,$charset)."</option>";
-	while(($src=pmb_mysql_fetch_object($res))){
-		($src->id_source == $filtre_src) ? $selected = "selected" : $selected="";
-		$option .= "<option value='".$src->id_source."' $selected>".htmlentities($src->libelle_source,ENT_QUOTES,$charset)."</option>";
-	}
-	$selecteur = "&nbsp;<select id='filtre_src' name='filtre_src' onchange=\"this.form.submit();\">".$option."</select>";
-	$sug_search_form = str_replace('!!sug_filtre_src!!',$selecteur, $sug_search_form);
-	
-	//Affichage origine
-	$i=0;
-	if (is_array($user_id) && count($user_id) && is_array($user_statut) && count($user_statut)) {
-		foreach($user_id as $k=>$v) {
- 			if ($user_id[$k]) {
-				$user_name = $user_txt[$k];
-				if(!$user_txt[$k]){
-					if ($user_statut[$k]==='0') {
-						$req = "select nom, prenom from users where userid='".$user_id[$k]."'";
-						$res = pmb_mysql_query($req,$dbh);
-						$user = pmb_mysql_fetch_object($res);
-						$user_name = $user->nom.($user->prenom ? ", ".$user->prenom : "");
-					} else {
-						$req = "select concat(empr_nom,', ',empr_prenom) as nom from empr where id_empr='".$user_id[$k]."'";
-						$res = pmb_mysql_query($req,$dbh);
-						$empr = pmb_mysql_fetch_object($res);
-						$user_name = $empr->nom;
-					}
-				}
-				if($i>0) {
-					$sug_search_form=str_replace('<!-- sel_orig -->',$sel_orig_form.'<!-- sel_orig -->',$sug_search_form);
-	 				$sug_search_form=str_replace('!!i!!',$i,$sug_search_form);
-				}
-				$sug_search_form = str_replace('!!user_txt!!',htmlentities($user_name,ENT_QUOTES,$charset), $sug_search_form);
-				$sug_search_form = str_replace('!!user_id!!',htmlentities($user_id[$k],ENT_QUOTES,$charset), $sug_search_form);
-				$sug_search_form = str_replace('!!user_statut!!',htmlentities($user_statut[$k],ENT_QUOTES,$charset), $sug_search_form);
-				$i++;
- 			}
-		}
-		$sug_search_form=str_replace('!!max_orig!!',$i,$sug_search_form);
-	}
-	if (!$i) {
-		$sug_search_form=str_replace('!!user_id!!','',$sug_search_form);
-		$sug_search_form=str_replace('!!user_statut!!','',$sug_search_form);
-		$sug_search_form=str_replace('!!user_txt!!','',$sug_search_form);
-		$sug_search_form=str_replace('!!max_orig!!','1',$sug_search_form);
-	}
-	
-	$sug_search_form = str_replace('!!user_input!!',htmlentities($user_input,ENT_QUOTES,$charset), $sug_search_form);
-	
-	//Affichage selecteur dates
-	$sel_date_form[0] = str_replace('!!msg!!', htmlentities($msg['acquisition_sugg_date'],ENT_QUOTES,$charset), $sel_date_form[0]);
-	if($date_inf) {
-		$date_inf_lib = formatdate($date_inf);
-	} else {
-		$date_inf_lib=$msg['parperso_nodate'];
-	}
-	$sel_date_form[1] = str_replace('!!date_inf!!',$date_inf,$sel_date_form[1]);
-	$sel_date_form[1] = str_replace('!!date_inf_lib!!',$date_inf_lib,$sel_date_form[1]);
-	if($date_sup) {
-		$date_sup_lib = formatdate($date_sup);
-	} else {
-		$date_sup_lib=$msg['parperso_nodate'];
-	}
-	$sel_date_form[2] = str_replace('!!date_sup!!',$date_sup,$sel_date_form[2]);
-	$sel_date_form[2] = str_replace('!!date_sup_lib!!',$date_sup_lib,$sel_date_form[2]);
-	$sel_date_form[0] = sprintf($sel_date_form[0], $sel_date_form[1],$sel_date_form[2]);
-	$sug_search_form = str_replace('!!sel_date!!', $sel_date_form[0], $sug_search_form);
-	
-	print $sug_search_form;
-	
-	//Affiche par defaut toutes les categories de suggestions
-	if ($acquisition_sugg_categ != '1') {
-		$num_categ = "-1";
-	} else {
-		if (!$num_categ) $num_categ = '-1';
-		print "<script type='text/javascript' >document.forms['search'].elements['num_categ'].value = '".$num_categ."';</script>";
-	}
-	
-	if (!$statut) {
-		$statut = getSessionSugState(); //Recuperation du statut courant
-	} else {
-		setSessionSugState($statut);	
-	}
-	print "<script type='text/javascript' >document.forms['search'].elements['statut'].value = '".$statut."';document.forms['search'].elements['user_input'].focus();
-	document.forms['search'].elements['user_input'].select();</script>";
-	
-	
-	//Prise en compte du formulaire de recherche
-	$mask=$sug_map->getMask_FILED();
-	
-	// traitement de la saisie utilisateur
-
-	require_once($class_path."/analyse_query.class.php");
-	
-	//comptage
-	if(!$nbr_lignes) {
-		if(!$user_input) {
-			$nbr_lignes = suggestions::getNbSuggestions($id_bibli, $statut, $num_categ, $mask ,0,$sugg_location_id,'',$filtre_src,$user_id,$user_statut,$date_inf,$date_sup);
-		} else {
-			$aq=new analyse_query(stripslashes($user_input),0,0,0,0);
-			if ($aq->error) {
-				error_message($msg["searcher_syntax_error"],sprintf($msg["searcher_syntax_error_desc"],$aq->current_car,$aq->input_html,$aq->error_message));
-				exit;
-			}
-			$nbr_lignes = suggestions::getNbSuggestions($id_bibli, $statut, $num_categ, $mask, $aq,$sugg_location_id, $user_input,$filtre_src,$user_id,$user_statut,$date_inf,$date_sup);
-		}
-
-	} else {
-		$aq=new analyse_query(stripslashes($user_input),0,0,0,0);
-	}
-	
-	if(!$page) $page=1;
-	$debut =($page-1)*$nb_per_page;
-
-	if($nbr_lignes) {
-	
-		$url_base = "acquisition.php?categ=sug&action=list&id_bibli=$id_bibli&user_input=".rawurlencode(stripslashes($user_input))."&statut=$statut&num_categ=$num_categ&sugg_location_id=$sugg_location_id&filtre_src=$filtre_src&date_inf=$date_inf&date_sup=$date_sup";
-		if (is_array($user_id) && count($user_id) && is_array($user_statut) && count($user_statut)) {
-			foreach($user_id as $k=>$v) {
-				if ($user_id[$k] && (isset($user_statut[$k]))) {
-					$url_base.="&user_id[]=".$user_id[$k]."&user_statut[]=".$user_statut[$k];
-				}
-			}
-		}else{
-			$url_base.="&user_id=".$user_id."&user_statut=".$user_statut;
-		}
-		
-		//affichage
-		if(!$user_input) {
-			$q = suggestions::listSuggestions($id_bibli, $statut, $num_categ, $mask, $debut, $nb_per_page,0,'',$sugg_location_id,'', $filtre_src, $user_id, $user_statut, $date_inf, $date_sup);
-		} else {
-			$q = suggestions::listSuggestions($id_bibli, $statut, $num_categ, $mask, $debut, $nb_per_page, $aq,'',$sugg_location_id, $user_input, $filtre_src, $user_id, $user_statut, $date_inf, $date_sup);
-		}
-		$res = pmb_mysql_query($q, $dbh);
-	
-		//Affichage liste des suggestions
-		$nbr = pmb_mysql_num_rows($res);
-		$aff_row="";
-		$parity=1;
-		for($i=0;$i<$nbr;$i++) {
-			$row=pmb_mysql_fetch_object($res);
-			
-			$lib_statut=$sug_map->getHtmlComment($row->statut);
-	
-			
-			if ($parity % 2) {
-				$pair_impair = "even";
-			} else {
-				$pair_impair = "odd";
-			}
-			$parity += 1;
-			$tr_javascript = "onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".$pair_impair."'\" ";
-			$dn_javascript = "onmousedown=\"document.location='./acquisition.php?categ=sug&action=modif&id_bibli=".$id_bibli."&id_sug=".$row->id_suggestion."' \" ";
-	        $aff_row.=	"<tr class='".$pair_impair."' ".$tr_javascript." style='cursor: pointer' >
-						<td ".$dn_javascript." ><i>".formatdate($row->date_creation)."</i></td>
-						<td ".$dn_javascript." ><i>".htmlentities($row->titre, ENT_QUOTES, $charset)."</i></td>
-						<td ".$dn_javascript." ><i>".htmlentities($row->editeur, ENT_QUOTES, $charset)."</i></td>
-						<td ".$dn_javascript." ><i>".htmlentities($row->auteur, ENT_QUOTES, $charset)."</i></td>
-						<td ".$dn_javascript." ><i>$lib_statut</i></td>";
-	        if(!$row->num_notice) {
-				$aff_row.="<td ".$dn_javascript." ></td>";
-			} else {
-				$req_ana = "select analysis_bulletin as bull , analysis_notice as noti from analysis where analysis_notice ='".$row->num_notice."'";	
-				$res_ana = pmb_mysql_query($req_ana,$dbh);
-				$num_rows_ana = pmb_mysql_num_rows($res_ana);			
-				if($num_rows_ana){
-					$ana = pmb_mysql_fetch_object($res_ana);
-					$url_view = "catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$ana->bull&art_to_show=".$ana->noti;
-				} else $url_view = "./catalog.php?categ=isbd&id=".$row->num_notice;
-				$aff_row.="<td class='center'><a href=\"".$url_view."\"><img border=\"0\" class='align_middle' title=\"".$msg['acquisition_sug_view_not']."\" alt=\"".$msg['acquisition_sug_view_not']."\" src=\"".get_url_icon('notice.gif')."\" /></a></td>";
-			}
-			$aff_row.="<td class='center'>";
-			if($row->url_suggestion) {
-				$aff_row.="<a href='".$row->url_suggestion."' target='_blank'><img src='".get_url_icon('globe.gif')."' title='".htmlentities($row->url_suggestion, ENT_QUOTES, $charset)."' alt='".htmlentities($row->url_suggestion, ENT_QUOTES, $charset)."' hspace='3' />";
-			}
-			$aff_row.="</td>";
-	        if ($acquisition_sugg_categ == '1') {
-				$categ = new suggestions_categ($row->num_categ);
-				$aff_row.="<td ".$dn_javascript." ><i>".htmlentities($categ->libelle_categ, ENT_QUOTES, $charset)."</i></td>";
-			}	
-			
-			$source = new suggestion_source($row->sugg_source);
-			$aff_row .="<td ".$dn_javascript." ><i>".htmlentities($source->libelle_source, ENT_QUOTES, $charset)."</i></td>";
-			$aff_row .="<td ".$dn_javascript." ><i>".htmlentities($row->date_publication, ENT_QUOTES, $charset)."</i></td>";
-			$sug = new suggestions($row->id_suggestion);
-			$img_pj = "<a href=\"$base_path/explnum_doc.php?explnumdoc_id=".$sug->get_explnum('id')."\" target=\"_blank\" title='".$msg['download']."'><i class='fa fa-download' style='font-size:17px; margin:2px; color:black;' aria-hidden='true' alt='".$msg['download']."'></i></a>";
-			$img_import = "<a href=\"$base_path/acquisition.php?categ=sug&sub=import&explnumdoc_id=".$sug->get_explnum('id')."\" title='".$msg['acquisition_menu_sug_import']."'\"><img src='$base_path/images/file_import.png' style='height:17px; margin:2px; margin-top: -3px;' aria-hidden='true' alt='".$msg['acquisition_menu_sug_import']."'></img></a>";
-			$aff_row .="<td class='center'><i>".($sug->get_explnum('id') ? "$img_pj&nbsp;$img_import" : '' )."</i></td>";
-			$aff_row.= "<td><input type='checkbox' id='chk[".$row->id_suggestion."]' name='chk[]' value='".$row->id_suggestion."' /></td>
-					</tr>";
-		}
-		$sug_list_form = str_replace('<!-- sug_list -->',$aff_row, $sug_list_form); 
-		
-		//Affichage des boutons
-		
-		//Bouton Imprimer
-		$url_print="./pdf.php?pdfdoc=listsug&user_input=".urlencode(stripslashes($user_input))."&statut=".$statut."&num_categ=".$num_categ."&sugg_location_id=".$sugg_location_id."&date_inf=".$date_inf."&date_sup=".$date_sup."&filtre_src=".$filtre_src;
-		if (is_array($user_id) && count($user_id) && is_array($user_statut) && count($user_statut)) {
-			foreach($user_id as $k=>$v) {
-				if ($user_id[$k] && (isset($user_statut[$k]))) {
-					$url_print.="&origine_id[]=".$user_id[$k]."&type_origine[]=".$user_statut[$k];
-				}
-			}
-		}else{
-			$url_print.="&origine_id=".$user_id."&type_origine=".$user_statut;
-		}
-		
-		$imp = "openPopUp('".$url_print."' ,'print_PDF');" ;
-		$bt_imp = str_replace('!!imp!!', $imp, $bt_imp);
-		$sug_list_form=str_replace('<!-- bt_imp -->', $bt_imp,$sug_list_form);
-
-		//G√©n√©ration de la liste des conversions possibles
-		$catalog=_parser_text_no_function_(file_get_contents($base_path."/admin/convert/imports/catalog.xml"),"CATALOG");
-		$list_export="<select name='export_list'>";
-		for ($i=0; $i<count($catalog["ITEM"]); $i++) {
-			$item=$catalog["ITEM"][$i];
-			if (isset($item["EXPORT"]) && $item["EXPORT"]=="yes") {
-				$list_export.="<option value='".$i."'>".htmlentities($item["EXPORTNAME"],ENT_QUOTES,$charset)."</option>\n";
-			}
-		}
-		$list_export.="</select>";
-		$bt_exporter=str_replace("<!-- list_export -->",$list_export,$bt_exporter);
-		$link_export="document.sug_list_form.action='acquisition.php?categ=sug&sub=export'; document.sug_list_form.submit();";
-		$bt_exporter=str_replace("!!exp!!",$link_export,$bt_exporter);
-		$sug_list_form=str_replace('<!-- bt_exporter -->', $bt_exporter,$sug_list_form);
-		
-		//Export tableau
-		$link_export_tableau="document.sug_list_form.action='acquisition.php?categ=sug&sub=export_tableau'; document.sug_list_form.submit();";
-		$bt_export_tableau=str_replace("!!exp!!",$link_export_tableau,$bt_export_tableau);
-		$sug_list_form=str_replace('<!-- bt_export_tableau -->', $bt_export_tableau,$sug_list_form);
-	
-		//Bouton S√©lectionner
-		$sug_list_form=str_replace('<!-- bt_chk -->', $bt_chk,$sug_list_form);
-		
-		
-		//Liste Boutons
-		$button_list=$sug_map->getButtonList($statut);
-		$sug_list_form = str_replace('<!-- bt_list -->', $button_list,$sug_list_form);
-	
-	
-		//Bouton Reprendre
-		$bt_todo=$sug_map->getButtonList_TODO($statut);
-		$sug_list_form=str_replace('<!-- bt_todo -->', $bt_todo,$sug_list_form);
-
-		if ($acquisition_sugg_categ == '1' ) { 	
-			//Selecteur Affecter a une categorie
-			$to_categ=$sug_map->getCategModifier($statut, $num_categ, $nb_per_page);
-		} else {
-			$to_categ = "";
-		}
-		$sug_list_form=str_replace('<!-- to_categ -->', $to_categ,$sug_list_form);
-		
-		
-		//Bouton Supprimer
-		$button_sup = $sug_map->getButtonList_DELETED($statut);
-		$sug_list_form = str_replace('<!-- bt_sup -->', $button_sup, $sug_list_form);
-		
-		//JavaScript
-		$script_list = $sug_map->getScriptList($statut,$num_categ,$nb_per_page);
-		$script = str_replace('<!-- script_list -->', $script_list, $script);
-		$sug_list_form=str_replace('<!-- script -->', $script,$sug_list_form);
-		
-		//Barre de navigation
-		if (!$last_param) {
-			$nav_bar = aff_pagination ($url_base, $nbr_lignes, $nb_per_page, $page, 10, true, true) ;
-	    } else {
-	    	$nav_bar = "";
-	    }
-	    $sug_list_form=str_replace('<!-- nav_bar -->', $nav_bar,$sug_list_form);
-		
-		print $sug_list_form;		
-	
-	} else {
-		// la requ√™te n'a produit aucun r√©sultat
-		error_message($msg['acquisition_sug_rech'], str_replace('!!sug_cle!!', stripslashes($user_input), $msg['acquisition_sug_rech_error']), 0, './categ=sug&sub=todo&action=list&id_bibli='.$id_bibli);
-	}
-	
+    suggestions_controller::set_id_bibli($id_bibli);
+    suggestions_controller::proceed();
 }
 
 
 //Affiche le formulaire de modification de suggestion
 function show_form_sug($update_action) {
-	
-	global $dbh, $msg, $charset;
+	global $msg, $charset;
 	global $id_bibli, $id_sug;
 	global $sug_map;
 	global $sug_modif_form;
@@ -385,19 +48,19 @@ function show_form_sug($update_action) {
 	
 	$form = $sug_modif_form;
 
-	//R√©cup√©ration des pond√©rations de suggestions
+	//RÈcupÈration des pondÈrations de suggestions
 	$tab_poids = explode(",", $acquisition_poids_sugg);
 	$tab_poids[0] = substr($tab_poids[0], 2); //utilisateur
-	$tab_poids[1] = substr($tab_poids[1], 2); //abonn√©
+	$tab_poids[1] = substr($tab_poids[1], 2); //abonnÈ
 	$tab_poids[2] = substr($tab_poids[2], 2); //visiteur
 
-	if(!$id_sug) {	//Cr√©ation de suggestion
+	if(!$id_sug) {	//CrÈation de suggestion
 	
 		$titre = htmlentities($msg['acquisition_sug_cre'], ENT_QUOTES, $charset);
 		
-		//R√©cup√©ration de l'utilisateur
+		//RÈcupÈration de l'utilisateur
 	 	$requete_user = "SELECT userid, nom, prenom FROM users where username='".SESSlogin."' limit 1 ";
-		$res_user = pmb_mysql_query($requete_user, $dbh);
+		$res_user = pmb_mysql_query($requete_user);
 		$row_user=pmb_mysql_fetch_row($res_user);
 		$orig = $row_user[0];
 		$lib_orig = $row_user[1];
@@ -492,7 +155,7 @@ function show_form_sug($update_action) {
 		
 		//Affichage du selecteur de source
 		$req = "select * from suggestions_source order by libelle_source";
-		$res= pmb_mysql_query($req,$dbh);
+		$res= pmb_mysql_query($req);
 		
 		$option = "<option value='0' selected>".htmlentities($msg['acquisition_sugg_no_src'],ENT_QUOTES,$charset)."</option>";
 		while(($src=pmb_mysql_fetch_object($res))){
@@ -513,7 +176,7 @@ function show_form_sug($update_action) {
 
 		$sug = new suggestions($id_sug);
 		$q = suggestions_origine::listOccurences($id_sug);
-		$list_orig = pmb_mysql_query($q, $dbh);
+		$list_orig = pmb_mysql_query($q);
 		
 		$orig = 0;
 		$poids_tot = 0;
@@ -524,23 +187,22 @@ function show_form_sug($update_action) {
 				$typ = $row_orig->type_origine;
 				$poids = $tab_poids[$row_orig->type_origine]; 
 			}
-			array_push($users,$row_orig);
+			$users[] = $row_orig;
 			$poids_tot = $poids_tot + $tab_poids[$row_orig->type_origine];
 		}
 		$list_user = '';
-		//On parcourt tous les cr√©ateurs de suggestions
+		//On parcourt tous les crÈateurs de suggestions
 		for($i=0;$i<sizeof($users);$i++){
-   			
 			$orig = $users[$i]->origine;
 			$typ = $users[$i]->type_origine;
 			$suppr_click = "onClick=\"if(confirm('".$msg['confirm_suppr_origine']."')){ ajax_suppr_origine('".$orig."','".$typ."');}\"";
 
-			//R√©cup√©ration du nom du cr√©ateur de la suggestion
+			//RÈcupÈration du nom du crÈateur de la suggestion
 			switch($typ){
 				default:
 				case '0' :
 				 	$requete_user = "SELECT userid, nom, prenom FROM users where userid = '".$orig."'";
-					$res_user = pmb_mysql_query($requete_user, $dbh);
+					$res_user = pmb_mysql_query($requete_user);
 					$row_user=pmb_mysql_fetch_row($res_user);
 					$lib_orig = $row_user[1];
 					if ($row_user[2]) $lib_orig.= ", ".$row_user[2];					
@@ -549,7 +211,7 @@ function show_form_sug($update_action) {
 					break;
 				case '1' :
 				 	$requete_empr = "SELECT id_empr, empr_nom, empr_prenom FROM empr where id_empr = '".$orig."'";
-					$res_empr = pmb_mysql_query($requete_empr, $dbh);
+					$res_empr = pmb_mysql_query($requete_empr);
 					$row_empr=pmb_mysql_fetch_row($res_empr);
 					$lib_orig = $row_empr[1];
 					if ($row_empr[2]) $lib_orig.= ", ".$row_empr[2];
@@ -565,25 +227,25 @@ function show_form_sug($update_action) {
 			}	
 		}
 		
-		//R√©cup√©ration du statut de la suggestion
+		//RÈcupÈration du statut de la suggestion
 		$lib_statut=$sug_map->getHtmlComment($sug->statut);
 	
 		$form = str_replace('!!dat_cre!!', formatdate($sug->date_creation), $form);
 		$form = str_replace('!!orig!!', $orig, $form);
 		
-		//Ajout du champ de saisie du nouveau cr√©ateur
+		//Ajout du champ de saisie du nouveau crÈateur
 		$ajout_create = "
 		<input type='text' id='creator_lib_orig' name='creator_lib_orig' class='saisie-10emr'/>
 		<input type='button' id='creator_btn_orig' class='bouton_small' value='...' onclick=\"openPopUp('./select.php?what=origine&caller=sug_modif_form&param1=orig&param2=creator_lib_orig&param3=typ&param4=&param5=&param6=&callback=ajax_origine&deb_rech='+".pmb_escape()."(document.getElementById('creator_lib_orig').value), 'selector')\" />";
 
 		$form = str_replace('!!id_sug!!', $id_sug, $form);
 		if(sizeof($users)>1) {
-			//on ajoute le champ √† la liste
+			//on ajoute le champ ‡ la liste
 			$list_user.=$ajout_create;
 			$form = str_replace('!!creator_ajout!!', '', $form);
 		} else $form = str_replace('!!creator_ajout!!', "<br />".$ajout_create, $form);
 		
-		//Menu d√©pliant
+		//Menu dÈpliant
 		$deroul_user=gen_plus('ori',$msg['suggest_creator']. " (".(sizeof($users)-1).")",$list_user,0);
 		
 		if ($lib_orig) {
@@ -638,12 +300,12 @@ function show_form_sug($update_action) {
 		
 		if($sug->num_notice && $sug->num_notice !=0){
 			$req_ana = "select analysis_bulletin as bull , analysis_notice as noti from analysis where analysis_notice ='".$sug->num_notice."'";	
-			$res_ana = pmb_mysql_query($req_ana,$dbh);
+			$res_ana = pmb_mysql_query($req_ana);
 			$num_rows_ana = pmb_mysql_num_rows($res_ana);			
 			if($num_rows_ana){
 				$ana = pmb_mysql_fetch_object($res_ana);
-				$url_view = "catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$ana->bull&art_to_show=".$ana->noti;
-			} else $url_view = "./catalog.php?categ=isbd&id=".$sug->num_notice;
+				$url_view = analysis::get_permalink($ana->noti, $ana->bull);
+			} else $url_view = notice::get_permalink($sug->num_notice);
 			$lien = "<a href='$url_view'> ".$msg['acquisition_sug_view_not']."</a>";
 			$form = str_replace('!!lien!!',$lien, $form);
 		} else $form = str_replace('!!lien!!','', $form);
@@ -658,7 +320,7 @@ function show_form_sug($update_action) {
 		$form = str_replace('!!com_gestion!!', htmlentities($sug->commentaires_gestion, ENT_QUOTES, $charset), $form);
 		
 		$req = "select * from suggestions_source order by libelle_source";
-		$res= pmb_mysql_query($req,$dbh);
+		$res= pmb_mysql_query($req);
 		$selected = "";
 		$option = "<option value='0' selected>".htmlentities($msg['acquisition_sugg_no_src'],ENT_QUOTES,$charset)."</option>";
 		while(($src=pmb_mysql_fetch_object($res))){
@@ -720,6 +382,4 @@ function show_form_sug($update_action) {
 	print "<script type=\"text/javascript\" src=\"".$javascript_path."/tablist.js\"></script>";
 	print $form;
 }
-
 ?>
-

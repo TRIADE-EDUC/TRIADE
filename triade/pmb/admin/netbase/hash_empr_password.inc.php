@@ -1,40 +1,43 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: hash_empr_password.inc.php,v 1.7 2017-11-22 11:07:34 dgoron Exp $
+// $Id: hash_empr_password.inc.php,v 1.9 2024/04/17 13:55:26 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path, $msg, $charset;
+global $start, $v_state, $spec, $count;
 
 require_once($class_path."/emprunteur.class.php");
 
 // la taille d'un paquet de lecteurs
 $lot = EMPR_PAQUET_SIZE*10; // defini dans ./params.inc.php
 
-// initialisation de la borne de dÃ©part
+// initialisation de la borne de départ
 if(!isset($start)) $start=0;
 
 $v_state=urldecode($v_state);
 
 if(!$count) {
-	$empr = pmb_mysql_query("SELECT count(1) FROM empr where empr_password_is_encrypted=0", $dbh);
+	$empr = pmb_mysql_query("SELECT count(1) FROM empr where empr_password_is_encrypted=0");
 	$count = pmb_mysql_result($empr, 0, 0);
 }
 
-print "<br /><br /><h2 class='center'>".htmlentities($msg["hash_empr_password"], ENT_QUOTES, $charset)."</h2>";
+print netbase::get_display_progress_title($msg["hash_empr_password"]);
 
 $query = pmb_mysql_query("SELECT id_empr, empr_password, empr_login FROM empr where empr_password_is_encrypted=0 LIMIT $lot");
-// start <= count : test supplÃ©mentaire pour s'assurer de ne pas boucler Ã  l'infini
-// problÃ¨me rencontrÃ© : login vide et 2 login identiques (en thÃ©orie impossible)
+// start <= count : test supplémentaire pour s'assurer de ne pas boucler à l'infini
+// problème rencontré : login vide et 2 login identiques (en théorie impossible)
 if(pmb_mysql_num_rows($query) && ($start <= $count)) {
 
 	if (!$start) {
 		$requete = "CREATE TABLE if not exists empr_passwords (
 			id_empr INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 			empr_password VARCHAR( 255 ) NOT NULL default '')";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "INSERT IGNORE INTO empr_passwords SELECT id_empr, empr_password FROM empr where empr_password_is_encrypted=0";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 	}
 	
 	print netbase::get_display_progress($start, $count);
@@ -51,12 +54,12 @@ if(pmb_mysql_num_rows($query) && ($start <= $count)) {
 	$v_state .= $count." ".htmlentities($msg["hash_empr_password_status_end"], ENT_QUOTES, $charset);
 	
 	$requete = "show tables like 'empr_passwords'";
-	if (pmb_mysql_num_rows(pmb_mysql_query($requete,$dbh))) {
+	if (pmb_mysql_num_rows(pmb_mysql_query($requete))) {
 		$v_state .=  "<br><a href='".$base_path."/admin.php?categ=netbase' target='_parent'>".htmlentities($msg["need_to_clean_empr_passwords"], ENT_QUOTES, $charset)."</a>";
 	}
 	
-	$opt = pmb_mysql_query('OPTIMIZE TABLE empr');
-	// mise Ã  jour de l'affichage de la jauge
+	pmb_mysql_query('OPTIMIZE TABLE empr');
+	// mise à jour de l'affichage de la jauge
 	print netbase::get_display_final_progress();
 
 	print netbase::get_process_state_form($v_state, $spec);

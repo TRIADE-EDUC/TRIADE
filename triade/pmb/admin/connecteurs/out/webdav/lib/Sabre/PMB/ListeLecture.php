@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ListeLecture.php,v 1.2 2019-04-03 13:34:40 ngantier Exp $
+// $Id: ListeLecture.php,v 1.3 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB;
 
 class ListeLecture extends Collection {
 	protected $liste_lecture;
 
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		parent::__construct($config);
 		$this->type = "liste_lecture";
 		$code = $this->get_code_from_name($name);
@@ -18,11 +18,11 @@ class ListeLecture extends Collection {
 		}
 	}
 	
-	function getName() {
+	public function getName() {
 		return $this->format_name($this->liste_lecture->nom_liste." (L".$this->liste_lecture->id_liste.")");
 	}
 	
-	function getNotices() {
+	public function getNotices() {
 		$this->notices = array();
 		if ($this->liste_lecture->id_liste) {
 		    $liste = new \liste_lecture($this->liste_lecture->id_liste);

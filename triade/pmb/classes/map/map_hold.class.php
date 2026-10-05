@@ -1,19 +1,20 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_hold.class.php,v 1.12 2019-02-26 15:58:50 tsamson Exp $
+// $Id: map_hold.class.php,v 1.14.8.1 2025/04/24 14:45:33 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
+
+global $class_path;
 require_once($class_path . "/map/map_hold.class.php");
 require_once($class_path . "/map/map_coord.class.php");
-;
 
 /**
  * class map_hold
- * 
+ *
  */
 abstract class map_hold {
     /** Aggregations: */
@@ -21,19 +22,19 @@ abstract class map_hold {
     /*     * * Attributes: ** */
 
     /**
-     * Tableau des coordonnÃ©es de l'emprise
+     * Tableau des coordonnées de l'emprise
      * @access protected
      */
     protected $coords = array();
 
     /**
-     * Type de l'objet associÃ©
+     * Type de l'objet associé
      * @access protected
      */
     protected $object_type;
 
     /**
-     * Identifiant de l'objet associÃ©
+     * Identifiant de l'objet associé
      * @access protected
      */
     protected $num_object;
@@ -45,47 +46,51 @@ abstract class map_hold {
     protected $wkt = "";
 
     /**
-     * map_hold bounding box 
+     * map_hold bounding box
      * @access protected
      */
     protected $bounding_box;
 
     /**
-     * Tableau des coordonnÃ©es Ã  jour (BoolÃ©en)
+     * Tableau des coordonnées à jour (Booléen)
      * @access protected
      */
     protected $coords_uptodate = true;
 
     /**
-     * WKT Ã  jour (BoolÃ©en)
+     * WKT à jour (Booléen)
      * @access protected
      */
     protected $wkt_uptodate = true;
 
     /**
-     * Transcription de la bounding box 
+     * Transcription de la bounding box
      * @access protected
      */
     protected $transcription = "";
 
     /**
-     * Aire de la boite normalisÃ©e de l'emprise
+     * Aire de la boite normalisée de l'emprise
      * @access protected
      */
     protected $normalized_bbox_area;
 
     /**
-     * centre de la boite normalisÃ©e de l'emprise
+     * centre de la boite normalisée de l'emprise
      * @access protected
      */
     protected $center;
 
+    protected $record;
+
+    protected $color;
+
     /**
      *
      *
-     * @param string object_type Type de l'objet associÃ©
+     * @param string object_type Type de l'objet associé
 
-     * @param int num_object Identifiant de l'objet associÃ©
+     * @param int num_object Identifiant de l'objet associé
 
      * @return void
      * @access public
@@ -102,12 +107,12 @@ abstract class map_hold {
     protected function build_coords() {
         $coords_string = substr($this->wkt, strpos($this->wkt, "(") + 2, -2);
         $coords = explode(",", $coords_string);
-        $coordonnees = array();
+        $this->coords = array();
         for ($i = 0; $i < count($coords); $i++) {
             $infos = array();
             $coord = $coords[$i];
             $infos = explode(" ", $coord);
-            //on ne met pas la derniÃ¨re coordonnÃ©e, c'est la mÃªme que la 1ere
+            //on ne met pas la dernière coordonnée, c'est la même que la 1ere
             if (0 == $i || $coords[0] != $coords[$i]) {
                 $this->coords[] = new map_coord($infos[0], $infos[1]);
             }
@@ -124,7 +129,7 @@ abstract class map_hold {
     }
 
     protected function build_transcription() {
-        $this->transcription = ""; // dÃ©pend du type 
+        $this->transcription = ""; // dépend du type
     }
 
     public function get_transcription() {
@@ -136,20 +141,18 @@ abstract class map_hold {
     }
 
     /**
-     * Retourne une emprise normalisÃ©e contenant l'emprise courante
+     * Retourne une emprise normalisée contenant l'emprise courante
      *
      * @return map_hold
      * @access public
      */
     public function get_bounding_box() {
-        global $dbh;
-
         if (!$this->bounding_box) {
             if (!$this->wkt_uptodate) {
                 $this->build_wkt();
             }
             $query = " select astext(envelope(geomfromtext('" . $this->wkt . "'))) as bounding_box";
-            $result = pmb_mysql_query($query, $dbh);
+            $result = pmb_mysql_query($query);
             if (pmb_mysql_num_rows($result)) {
                 $this->bounding_box = new map_hold_polygon($this->object_type, $this->num_object, pmb_mysql_result($result, 0, 0));
             }
@@ -161,7 +164,7 @@ abstract class map_hold {
     /**
      *
      *
-     * @param Array() coords Tableau de coordonnÃ©e map_coord reprÃ©sentant l'emprise
+     * @param Array() coords Tableau de coordonnée map_coord représentant l'emprise
 
      * @return void
      * @access public
@@ -174,9 +177,9 @@ abstract class map_hold {
 // end of member function set_coords
 
     /**
-     * Permet d'ajouter une coordonnÃ©e dans l'emprise  dans la propriÃ©tÃ© coords
+     * Permet d'ajouter une coordonnée dans l'emprise  dans la propriété coords
      *
-     * @param map_coord coord CoordonnÃ©e Ã Â  ajouter dans l'emprise
+     * @param map_coord coord Coordonnée à  ajouter dans l'emprise
 
      * @param map_coord after
 
@@ -189,7 +192,7 @@ abstract class map_hold {
         }
         $coords = array();
         if ($after) {
-            foreach ($this->coords as $i => $object) {
+            foreach ($this->coords as $object) {
                 $coords[] = $object;
                 if (($object->get_decimal_lat() == $after->get_decimal_lat()) && ($object->get_decimal_long() == $after->get_decimal_long())) {
                     $coords[] = $coord;
@@ -204,9 +207,9 @@ abstract class map_hold {
 // end of member function add_coord
 
     /**
-     * Permet de supprimer une coordonnÃ©e dans la propriÃ©tÃ© coords
+     * Permet de supprimer une coordonnée dans la propriété coords
      *
-     * @param map_coord coord CoordonnÃ©e Ã Â  supprimer de l'emprise
+     * @param map_coord coord Coordonnée à  supprimer de l'emprise
 
      * @return void
      * @access public
@@ -216,7 +219,7 @@ abstract class map_hold {
             $this->build_coords();
         }
         $coords = array();
-        foreach ($this->coords as $i => $object) {
+        foreach ($this->coords as $object) {
             if (($object->get_decimal_lat() != $coord->get_decimal_lat()) && ($object->get_decimal_long() != $coord->get_decimal_long())) {
                 $coords[] = $object;
             }
@@ -227,7 +230,7 @@ abstract class map_hold {
 // end of member function delete_coord
 
     /**
-     * Retourne le tableau des coordonnÃ©es
+     * Retourne le tableau des coordonnées
      *
      * @return Array()
      * @access public
@@ -247,13 +250,13 @@ abstract class map_hold {
      * @access public
      */
     public function save() {
-        
+        return false;
     }
 // end of member function save
 
     /**
-     * MÃ©thode abstraite. A voir si on peut jouer avec les fonctions PHP de
-     * manipulations de classes pour ne pas avoir Ã Â  dÃ©river cette mÃ©thode...
+     * Méthode abstraite. A voir si on peut jouer avec les fonctions PHP de
+     * manipulations de classes pour ne pas avoir à  dériver cette méthode...
      *
      * @return string
      * @abstract
@@ -268,7 +271,7 @@ abstract class map_hold {
      * @access public
      */
     public function export() {
-        
+        return '';
     }
 
 // end of member function export
@@ -279,6 +282,14 @@ abstract class map_hold {
 
     public function set_num_object($num_object) {
         $this->num_object = $num_object;
+    }
+
+    public function set_record($ids) {
+        $this->record = $ids;
+    }
+
+    public function get_record() {
+        return $this->record;
     }
 
     public function set_wkt($wkt) {
@@ -308,6 +319,10 @@ abstract class map_hold {
 
     public function set_center($center) {
         $this->center = $center;
+    }
+
+    public function set_color($color) {
+        $this->color = $color;
     }
 }
 

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: filter_list.class.php,v 1.49 2019-05-20 11:56:09 dgoron Exp $
+// $Id: filter_list.class.php,v 1.53 2023/08/30 14:32:32 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/parser.inc.php");
 
 class filter_list {
@@ -13,29 +14,29 @@ class filter_list {
 	public $filter_source; //source xml (texte xml ou fichier)
 	public $params; //tableau xml
 	public $fixedfields; //tableau des champs fixes du xml
-	public $specialfields; //tableau des champs spÃ©ciaux du xml
-	public $fixedcolumns; //colonnes fixes (ids sÃ©parÃ©s par des virgules)
-	public $sortablecolumns; //liste des champs dans l'ordre oÃ¹ s'effectuera le tri 
+	public $specialfields; //tableau des champs spéciaux du xml
+	public $fixedcolumns; //colonnes fixes (ids séparés par des virgules)
+	public $sortablecolumns; //liste des champs dans l'ordre où s'effectuera le tri 
 	public $filtercolumns; //liste des champs sur lesquels filtrer
-	public $displaycolumns; //liste des champs Ã  afficher
-	public $specialcolumns; //liste des champs spÃ©ciaux Ã  afficher (ids sÃ©parÃ©s par des virgules)
+	public $displaycolumns; //liste des champs à afficher
+	public $specialcolumns; //liste des champs spéciaux à afficher (ids séparés par des virgules)
 	public $multiple; //option multiple de la liste des filtres
-	public $error; //boolÃ©en d'erreur
+	public $error; //booléen d'erreur
 	public $error_message; //message de l'erreur
-	public $css=""; //style d'affichage
-	public $scripts=""; //scripts sur les lignes de rÃ©sultat
+	public $css = array(); //style d'affichage
+	public $scripts = array(); //scripts sur les lignes de résultat
 	public $page; //page en cours
 	public $nb_per_page; //nombre d'enregistrements par page
-	public $query; //texte de la requÃªte finale
-	public $t_query; //ressource id de la requÃªte finale
-	public $no_filter; //boolÃ©en de filtrage ou non
-	public $original_query; //requÃªte d'origine
+	public $query; //texte de la requête finale
+	public $t_query; //ressource id de la requête finale
+	public $no_filter; //booléen de filtrage ou non
+	public $original_query; //requête d'origine
 	public $select_original=""; //select d'origine
 	public $where_original=""; //where d'origine
 	public $from_original=""; //from d'origine
-	public $filtered_query=""; //rÃ©sultat de filters_query
+	public $filtered_query=""; //résultat de filters_query
 	
-    public function __construct($filter_name,$filter_source="",$display,$filter,$sort) {
+    public function __construct($filter_name,$filter_source="",$display="",$filter="",$sort="") {
     	$this->filter_name=$filter_name;
     	$this->filter_source=$filter_source;
     	$this->parse();	
@@ -50,8 +51,9 @@ class filter_list {
     
     //fonction d'activation du filtre
     public function activate_filters() {
-    	global $msg;
-    	global $charset;
+    	global $msg, $charset;
+    	global $default_tmp_storage_engine;
+
     	$requete=$this->display_query();
     	if (!$this->no_filter) {
     		if ($this->original_query) {
@@ -78,11 +80,12 @@ class filter_list {
     		}
     	}
     	if (($this->original_query)&&(!$this->error)) {
-    		//crÃ©ation d'une table temporaire
-    		$creer_table_tempo="CREATE TEMPORARY TABLE table_filter_tempo ENGINE=MyISAM (".$this->original_query.")";
-    		@pmb_mysql_query($creer_table_tempo);
+    		//création d'une table temporaire
+    		pmb_mysql_query("drop table if exists table_filter_tempo");
+    		$creer_table_tempo="CREATE TEMPORARY TABLE table_filter_tempo ENGINE={$default_tmp_storage_engine} (".$this->original_query.")";
+    		pmb_mysql_query($creer_table_tempo);
     		$modif_primaire="ALTER TABLE table_filter_tempo add PRIMARY KEY (".$this->params["REFERENCEKEY"][0]['value'].")";
-    		@pmb_mysql_query($modif_primaire);  
+    		pmb_mysql_query($modif_primaire);  
     		$requete.=" and ".$this->params["REFERENCE"][0]['value'].".".$this->params["REFERENCEKEY"][0]['value']."=table_filter_tempo.".$this->params["REFERENCEKEY"][0]['value'];
     		$requete.=" group by ".$this->params["REFERENCE"][0]['value'].".".$this->params["REFERENCEKEY"][0]['value'];
     	}
@@ -115,7 +118,7 @@ class filter_list {
     		if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
     		if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -125,7 +128,7 @@ class filter_list {
     				$v=array();
     				if (${$valeurs_post}) $v=${$valeurs_post};
     				if(count($v) > 1 || (is_array($v) && isset($v[0]) && $v[0] != "-1" && $v[0] != "")){
-    					//RÃ©cupÃ©ration du champ
+    					//Récupération du champ
 	    				$field=array();
 						$field['ID']=$id;
 						$field['NAME']=$cp->t_fields[$id]['NAME'];
@@ -162,6 +165,7 @@ class filter_list {
     				global ${$nom_valeur_post};
     				$valeur_post=${$nom_valeur_post};
     				if (is_array($valeur_post)) {
+    					$t=array();
     					$t[0]=-1;
     					$v=array_diff($valeur_post,$t);
     					if (count($v)) {
@@ -225,7 +229,7 @@ class filter_list {
     				else $cp_ref = 0;
     				if (${$sort_list}==$s[$i]) {
     					if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    						//champs personnalisÃ©s
+    						//champs personnalisés
     						require_once($class_path."/parametres_perso.class.php");
     						$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     						if (!$cp->no_special_fields) {
@@ -256,7 +260,7 @@ class filter_list {
     	return $ret;
     }
     
-    //fonction de manipulation de donnÃ©es pour le contenu du select et du from dans la requÃªte
+    //fonction de manipulation de données pour le contenu du select et du from dans la requête
     public function display_query() {
     	global $class_path;
     	global $msg, $charset;
@@ -277,7 +281,7 @@ class filter_list {
     		if(substr($total[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
     		if ((substr($total[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -356,7 +360,7 @@ class filter_list {
     	return $ret; 	
     }
     
-    //fonction de manipulation de donnÃ©es pour le contenu de l'order by dans la requÃªte
+    //fonction de manipulation de données pour le contenu de l'order by dans la requête
     public function sort_query() {
     	 global $class_path;
     	 global $msg, $charset;
@@ -376,7 +380,7 @@ class filter_list {
     					if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     					else $cp_ref = 0;
     					if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    						//champs personnalisÃ©s
+    						//champs personnalisés
     						require_once($class_path."/parametres_perso.class.php");
     						$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     						if (!$cp->no_special_fields) {
@@ -433,7 +437,7 @@ class filter_list {
     	return $ret; 	
     }
     
-    //fonction de manipulation de donnÃ©es pour le contenu du where dans la requÃªte
+    //fonction de manipulation de données pour le contenu du where dans la requête
     public function filters_query() {
     	global $class_path;
     	global $msg, $charset;
@@ -453,7 +457,7 @@ class filter_list {
     		if(substr($total[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
     		if ((substr($total[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -462,7 +466,7 @@ class filter_list {
     				$v=array();
     				global ${$valeurs_post};
     				if (${$valeurs_post}) $v=${$valeurs_post};
-    				//RÃ©cupÃ©ration du champ
+    				//Récupération du champ
     				$field=array();
 					$field['ID']=$id;
 					$field['NAME']=$cp->t_fields[$id]['NAME'];
@@ -520,7 +524,7 @@ class filter_list {
     	return $ret;	
     }
     
-    //fonction de manipulation de donnÃ©es pour la limitation des rÃ©sultats
+    //fonction de manipulation de données pour la limitation des résultats
     public function pager_query() {
     	$ret="";
     	if (($this->page)&&($this->nb_per_page)) {
@@ -530,13 +534,13 @@ class filter_list {
     	return $ret;	
     }
     
-    //fonction de crÃ©ation du lien de la page
+    //fonction de création du lien de la page
     public function display_pager() {
     	global $class_path;
     	global $msg;
     	
     	$ret="";
-    	//On calcul les page en fonction du rÃ©sultat de la requte total et pas de la recherche de dÃ©part
+    	//On calcul les page en fonction du résultat de la requte total et pas de la recherche de départ
     	$requete=preg_replace("/limit [0-9]*,[0-9]*/i","",$this->query);
     	$res=pmb_mysql_query($requete);
     	$nb_lignes=pmb_mysql_num_rows($res);
@@ -573,7 +577,7 @@ class filter_list {
     	return $ret;	
     }
     
-    //fonction de rÃ©cupÃ©ration du nombre de lignes de la requÃªte
+    //fonction de récupération du nombre de lignes de la requête
     public function nb_lines_query() {
     	if (!$this->no_filter) {
     		if ($this->t_query) {
@@ -589,7 +593,7 @@ class filter_list {
     	}
     }
     
-    //fonction de rÃ©cupÃ©ration d'une ligne de la requÃªte
+    //fonction de récupération d'une ligne de la requête
     public function extract_line_query($n_line) {
     	if (!$this->no_filter) {
     		if ($this->t_query) {
@@ -617,7 +621,7 @@ class filter_list {
     	}	
     } 
     
-    //fonction d'affichage des entÃªtes de colonnes de la requÃªte
+    //fonction d'affichage des entêtes de colonnes de la requête
     public function display_columns() {
     	global $class_path;
     	global $msg;
@@ -629,9 +633,9 @@ class filter_list {
     	for ($i=0;$i<count($s);$i++) {
     		if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
-    		//dÃ©termination d'un champ personnalisÃ©
+    		//détermination d'un champ personnalisé
     		if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -658,7 +662,7 @@ class filter_list {
     	return $aff;    				
     }
     
-    //fonction d'affichage du rÃ©sultat
+    //fonction d'affichage du résultat
     public function display_result() {
     	global $class_path, $charset, $msg;
     	$aff="";
@@ -690,7 +694,7 @@ class filter_list {
     				//champs fixes
     				$header.="<th>".$msg[str_replace("msg:","",$this->fixedfields[$s[$n]]["NAME"])]."</th>";
 				} elseif (array_key_exists($s[$n],$this->specialfields)) {
-					//champs spÃ©ciaux
+					//champs spéciaux
 					$header.="<th>".$msg[str_replace("msg:","",$this->specialfields[$s[$n]]["NAME"])]."</th>";
 				} else {
 					$header.="<th>&nbsp;</th>";
@@ -721,7 +725,7 @@ class filter_list {
     			for ($i=0;$i<count($s);$i++) {
     				if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     				else $cp_ref = 0;
-    				//dÃ©termination de la valeur
+    				//détermination de la valeur
     				if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
     					//champs perso
     					require_once($class_path."/parametres_perso.class.php");
@@ -821,9 +825,9 @@ class filter_list {
     	for ($i=0;$i<count($s);$i++) {
     		if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
-    		//dÃ©termination d'un champ personnalisÃ©
+    		//détermination d'un champ personnalisé
     		if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -833,7 +837,7 @@ class filter_list {
     				global ${$valeurs_post};
     				if (${$valeurs_post}) $v=${$valeurs_post};
     				$aff.="<div class='left'><div style='vertical-align: middle'>".htmlentities($cp->t_fields[$id]['TITRE'],ENT_QUOTES,$charset)."</div>&nbsp;&nbsp;";
-					//RÃ©cupÃ©ration du champ
+					//Récupération du champ
     				$field=array();
 					$field['ID']=$id;
 					$field['NAME']=$cp->t_fields[$id]['NAME'];
@@ -866,7 +870,7 @@ class filter_list {
     				
     				$aff.="<div class='left'><div style='vertical-align: middle'>".htmlentities($nom,ENT_QUOTES,$charset)."</div>&nbsp;&nbsp;";
     				$requete="select ";
-    				//dÃ©termination d'une table Ã©trangÃ¨re
+    				//détermination d'une table étrangère
     				if ($this->fixedfields[$s[$i]]["TABLE"][0]['value']) {
     					$requete.=$this->fixedfields[$s[$i]]["TABLEKEY"][0]['value'].",";
     					$from=$this->fixedfields[$s[$i]]["TABLE"][0]['value'];
@@ -1003,9 +1007,9 @@ class filter_list {
     		for ($i=0;$i<count($s);$i++) {
     			if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     			else $cp_ref = 0;
-    			//dÃ©termination d'un champ personnalisÃ©
+    			//détermination d'un champ personnalisé
     			if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    				//champs personnalisÃ©s
+    				//champs personnalisés
     				require_once($class_path."/parametres_perso.class.php");
     				$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     				if (!$cp->no_special_fields) {
@@ -1056,9 +1060,9 @@ class filter_list {
     	for ($i=0;$i<=count($s)-1;$i++) {
     		if(substr($s[$i],0,2) == "#p") $cp_ref = 1;
     		else $cp_ref = 0;
-    		//dÃ©termination d'un champ personnalisÃ©
+    		//détermination d'un champ personnalisé
     		if ((substr($s[$i],0,1)=="#")&&($this->params["REFERENCE"][$cp_ref]["DYNAMICFIELDS"]=="yes")) {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			require_once($class_path."/parametres_perso.class.php");
     			$cp=new parametres_perso($this->params["REFERENCE"][$cp_ref]["PREFIXNAME"]);
     			if (!$cp->no_special_fields) {
@@ -1099,9 +1103,9 @@ class filter_list {
     	return $aff;
     }
     
-    //fonction de gÃ©nÃ©ration du xml par rapport Ã  une requÃªte
-    //Cette fonction n'est jamais utilisÃ©e Matthieu 17/04/20013
-    //Si Ã§a devait Ãªtre le cas voir la gestion de l'encodage
+    //fonction de génération du xml par rapport à une requête
+    //Cette fonction n'est jamais utilisée Matthieu 17/04/20013
+    //Si ça devait être le cas voir la gestion de l'encodage
     public function gen_xml($requete,$champ_pivot) {
     	global $msg;
     	$execute_query=pmb_mysql_query($requete);
@@ -1179,7 +1183,7 @@ class filter_list {
     			$this->fixedfields[$params["FIXEDFIELDS"][0]["FIELD"][$i]["VALUE"]]["LINK"] = '';
     		}
     	}
-    	//lecture des champs spÃ©ciaux
+    	//lecture des champs spéciaux
     	for ($i=0;$i<count($params["SPECIALFIELDS"][0]["FIELD"]);$i++) {
     		$this->specialfields[$params["SPECIALFIELDS"][0]["FIELD"][$i]["ID"]]=$params["SPECIALFIELDS"][0]["FIELD"][$i];
     		if(!isset($this->specialfields[$params["SPECIALFIELDS"][0]["FIELD"][$i]["ID"]]["TABLEALIAS"][0]['value'])) {

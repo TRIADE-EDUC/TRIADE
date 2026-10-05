@@ -1,12 +1,11 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rss_controller.class.php,v 1.1 2019-02-12 08:28:19 dgoron Exp $
+// $Id: rss_controller.class.php,v 1.2 2020/11/05 09:39:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/lists_controller.class.php");
 require_once($class_path."/rss_flux.class.php");
 
 class rss_controller extends lists_controller {

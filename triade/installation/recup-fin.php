@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -24,8 +24,8 @@
 	$fichier = "../data/install_log/install.inc";
 
 	if (file_exists($fichier)) {
-	//	header('Location: index.php?inst=1');
-	//	exit;
+		header('Location: index.php?inst=1');
+		exit;
 	}
 
 	include_once("../common/lib_admin.php");
@@ -37,6 +37,7 @@
 //------------------------------------------------------------------------------------//
 
 	$text = '<?php'."\n";
+	$text.= '	error_reporting(0);'."\n";
 	$text.= '	if ( $_SESSION["langue"] == "fr") {'."\n";
 	$text.= '		define("LANGUE", "french");'."\n";
 	$text.= '	}'."\n";
@@ -54,6 +55,9 @@
 	$text.= '	}'."\n";
 	$text.= '	elseif( $_SESSION["langue"] == "it") {'."\n";
 	$text.= '		define("LANGUE", "italien");'."\n";
+	$text.= '	}'."\n";
+	$text.= '	elseif( $_SESSION["langue"] == "de") {'."\n";
+	$text.= '		define("LANGUE", "allemand");'."\n";
 	$text.= '	}'."\n";
 	$text.= '	else {'."\n";
 	$text.= '		define("LANGUE", "french");'."\n";
@@ -118,9 +122,11 @@
 	//-----------------------------
 	// Lib_access_inc.php
 	$fp=fopen("../common/lib_acces_inc.php","w");
+	$initPassHash = password_hash("admin", PASSWORD_DEFAULT);
 	$text3 = '<?php'."\n";
-	$text3.= '$LOGIN="administrateur";'."\n";
-	$text3.= '$PASSWORD="T2FCyiQz0KthE";'."\n";   // mdp : admin
+	$text3.= '$LOGIN = "administrateur";'."\n";
+	$text3.= '$PASSWORD = \'' . addcslashes($initPassHash, "'\\") . '\';' . "\n";   // mdp par défaut : admin
+	$text3.= '$ADMIN_PIN = "";' . "\n";
 	$text3.= '?>'."\n";
 	fwrite($fp,"$text3");
 	fclose($fp);
@@ -187,7 +193,7 @@
 	@unlink("../common/config-sign.php"); // suppression patch du SMS
 	@unlink("../common/config-ia.php"); // suppression patch du SMS
 	@copy("./librairie/lib_stockage.php","../common/lib_stockage.php");
-	@copy("../librairie_css/css.css-31","../librairie_css/css.css");
+	@copy("../librairie_css/css.css-33","../librairie_css/css.css");
 
 // -----------------------------------------------------------------------------------//
 // gestion du fichier robots.txt
@@ -249,7 +255,18 @@
 	fwrite($fp,$text);
 	fclose($fp);
 	
-	
+	if (file_exists('../common/config-rgpd.php')) @unlink('../common/config-rgpd.php');
+
+	if (file_exists('../moodle')) unlink("../moodle");
+	touch("../admin/no-install-moodle");
+
+	if (!is_dir('../IAimg')) mkdir('../IAimg');
+	$fp=fopen("../IAimg/index.php","w");
+	$text3 = '<?php'."\n";
+	$text3.= 'header("Location:../index1.php"); exit;'."\n";
+	$text3.= '?>'."\n";
+	fwrite($fp,"$text3");
+	fclose($fp);
 
 
 ?>
@@ -276,8 +293,7 @@
 		<div style="text-align: center;">
 
 			<div id="mainInst">
-				<img src="./image/logo_triade_licence.gif"
-				     alt="logo_triade_licence" />
+				<img src="./image/logo_triade_licence.png" width='300' alt="logo_triade_licence" />
 
 <?php
 	include_once("../common/version.php");
@@ -325,7 +341,7 @@
 
 	$chaine = "&nbsp;Triade est maintenant opérationnel.<br><br>Nous vous invitons à  consulter le menu de gauche, afin de modifier votre mot de passe d'admistrateur, mais aussi le choix de la configuration de Triade et ne pas oublier de vous enregistrer afin de limiter l'accès à  la mise en place des affectation ou de l'importation d'une base<br><br>";
         $chaine .= "&nbsp;Pour toutes informations complémentaires consulter ";
-        $chaine .= "<a href='http://forum.triade-educ.com' target='_blank'><b>le forum technique</b></a> du site officiel.<br>";
+        $chaine .= "<a href='https://www.triade-educ.org/fr/discord.php' target='_blank'><b>notre discord</b></a> du site officiel.<br>";
         $chaine .= "<br><br>";
 	$fp=fopen("../data/fic_opinion.txt","w");
 	fwrite($fp,$chaine);
@@ -369,7 +385,7 @@
 	
 	if (!is_dir("../data/image_banniere")) @mkdir("../data/image_banniere");
 
-	@copy("data/banniere-4.jpg","../data/image_banniere/banniere000.jpg");
+	@copy("data/banniere-0.jpg","../data/image_banniere/banniere000.jpg");
 	@copy("data/librairie_js/menuadmin.js","../librairie_js/menuadmin.js");
 	@copy("data/librairie_js/menudepart.js","../librairie_js/menudepart.js");
 	@copy("data/librairie_js/menueleve.js","../librairie_js/menueleve.js");

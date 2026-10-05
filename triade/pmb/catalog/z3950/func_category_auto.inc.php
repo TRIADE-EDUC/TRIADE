@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: func_category_auto.inc.php,v 1.4 2016-09-07 08:35:37 mbertin Exp $
+// $Id: func_category_auto.inc.php,v 1.7 2023/10/11 10:09:01 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// enregistrement de la notices dans les cat√©gories
+// enregistrement de la notices dans les catÈgories
 require_once($class_path."/thesaurus.class.php");
 require_once($class_path."/categories.class.php");
 global $thesaurus_defaut;
@@ -18,26 +18,8 @@ $thes = new thesaurus($thesaurus_defaut);
 $rac = $thes->num_noeud_racine;*/
 
 function traite_categories_enreg($notice_retour,$categories,$thesaurus_traite=0) {
-
-	global $dbh;
-	
-	// si $thesaurus_traite fourni, on ne delete que les cat√©gories de ce thesaurus, sinon on efface toutes
-	//  les indexations de la notice sans distinction de thesaurus
-	if (!$thesaurus_traite) $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' ";
-	else $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' and num_noeud in (select id_noeud from noeuds where num_thesaurus='$thesaurus_traite' and id_noeud=notices_categories.num_noeud) ";
-	$res_del = @pmb_mysql_query($rqt_del, $dbh);
-	
-	$rqt_ins = "insert into notices_categories (notcateg_notice, num_noeud,ordre_categorie) VALUES ";
-	
-	for($i=0 ; $i< sizeof($categories) ; $i++) {
-		$id_categ=$categories[$i]['categ_id'];
-		if ($id_categ) {
-			$rqt = $rqt_ins . " ('$notice_retour','$id_categ',$i) " ; 
-			$res_ins = @pmb_mysql_query($rqt, $dbh);
-		}
-	}
+	z3950_notice::traite_categories_enreg($notice_retour, $categories, $thesaurus_traite);
 }
-
 
 function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602="",$tableau_605="",$tableau_606="",$tableau_607="",$tableau_608="") {
 	
@@ -84,8 +66,8 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 					while(($pile[count($pile)-1] != $value["word_parent"]) && (count($pile))){
 						array_pop($pile);
 					}
-					array_push($pile,":");
-					array_push($pile,$value["wording"]);
+					$pile[] = ":";
+					$pile[] = $value["wording"];
 				}
 			}
 		}else{
@@ -120,8 +102,8 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	//$champ_rameau.="<pre>".print_r($tabl_categ_lib,true)."</pre>";
 	$rameau_form = serialize($tabl_build) ;
 	
-	// $rameau est la variable trait√©e par la fonction traite_categories_from_form, 
-	// $rameau est normalement POST√©e, afin de pouvoir √™tre trait√©e en lot, donc hors 
+	// $rameau est la variable traitÈe par la fonction traite_categories_from_form, 
+	// $rameau est normalement POSTÈe, afin de pouvoir Ítre traitÈe en lot, donc hors 
 	// formulaire, il faut l'affecter.
 	$rameau = addslashes(serialize($tabl_build)) ;
 
@@ -133,9 +115,7 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 
 
 function traite_categories_from_form() {
-		
 	global $rameau ;
-	global $dbh;
 	
 	$tabl_build = unserialize(stripslashes($rameau)) ;
 	
@@ -171,7 +151,7 @@ function create_categ_z3950($tab_categ,$id_thes,$id_parent,$create_node=true){
 	if(trim($tab_categ)){
 		$resultat = categories::searchLibelle(addslashes($tab_categ), $id_thes, $lang,$id_parent);				
 		if (!$resultat && $id_parent && $create_node){
-			// cr√©ation de la cat√©gorie
+			// crÈation de la catÈgorie
 			$n=new noeuds();
 			$n->num_parent=$id_parent;
 			$n->num_thesaurus=$id_thes;

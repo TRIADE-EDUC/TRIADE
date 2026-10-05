@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_thesaurus.php,v 1.27 2018-10-08 12:11:32 tsamson Exp $
+// $Id: print_thesaurus.php,v 1.42.4.1 2025/03/13 09:36:01 tsamson Exp $
 
 $base_path = ".";
 $base_auth = "AUTORITES_AUTH";
-$base_title = "\$msg['print_thes_title']";
+$base_title = "\$msg[print_thes_title]";
 
 if ($_GET['action'] != "print") {
 	$base_nobody = 0;
@@ -17,50 +17,63 @@ if ($_GET['action'] != "print") {
 }
 require($base_path."/includes/init.inc.php");
 @set_time_limit(0);
+
+global $class_path, $msg, $charset, $action, $output;
+global $id_noeud_origine, $aff_num_thesaurus, $typeimpression;
+global $include_path, $pmb_opac_url, $uri_thes_skos, $empty_word_thesaurus, $aff_tg_num_aut, $lang;
+
 require_once("$class_path/thesaurus.class.php");
 require_once("$class_path/noeuds.class.php");
 require_once("$class_path/categories.class.php");
 require_once($class_path."/synchro_rdf.class.php");
+
 // constantes
-			$color[1]="black";
-			$color[2]="#c9e9ff"; // bleu
-			$color[3]="#c6ffc5"; // vert
-			$color[4]="#ffedc5"; // saumon
-			$color[5]="#fcffc5"; // jaune
-			$color[6]="#d7d8ff"; // violet
-		
-			$fontsize[1]=" font-size:1.2em; ";
-			$fontsize[2]=" font-size:1.0em; ";
-			$fontsize[3]=" font-size:0.9em; "; 
-			$fontsize[4]=" font-size:0.8em; "; 
-			$fontsize[5]=" font-size:0.8em; "; 
-			$fontsize[6]=" font-size:0.8em; "; 
-			$fontsize[7]=" font-size:0.8em; "; 
-			$fontsize[8]=" font-size:0.8em; "; 
-			$fontsize[9]=" font-size:0.8em; "; 
+$color=array();
+$color[1]="black";
+$color[2]="#c9e9ff"; // bleu
+$color[3]="#c6ffc5"; // vert
+$color[4]="#ffedc5"; // saumon
+$color[5]="#fcffc5"; // jaune
+$color[6]="#d7d8ff"; // violet
 
-			$paddingmargin[0]=" padding-bottom: 10px; ";
-			$paddingmargin[1]=" padding-bottom: 10px; ";
-			$paddingmargin[2]=" padding-bottom: 8px; ";
-			$paddingmargin[3]=" padding-bottom: 6px; ";
-			$paddingmargin[4]=" ";
-			$paddingmargin[5]=" ";
-			$paddingmargin[6]=" ";
-			$paddingmargin[7]=" ";
-			$paddingmargin[8]=" ";
-			$paddingmargin[9]=" ";
+$fontsize=array();
+$fontsize[1]=" font-size:1.2em; ";
+$fontsize[2]=" font-size:1.0em; ";
+$fontsize[3]=" font-size:0.9em; "; 
+$fontsize[4]=" font-size:0.8em; "; 
+$fontsize[5]=" font-size:0.8em; "; 
+$fontsize[6]=" font-size:0.8em; "; 
+$fontsize[7]=" font-size:0.8em; "; 
+$fontsize[8]=" font-size:0.8em; "; 
+$fontsize[9]=" font-size:0.8em; "; 
 
+$paddingmargin=array();
+$paddingmargin[0]=" padding-bottom: 10px; ";
+$paddingmargin[1]=" padding-bottom: 10px; ";
+$paddingmargin[2]=" padding-bottom: 8px; ";
+$paddingmargin[3]=" padding-bottom: 6px; ";
+$paddingmargin[4]=" ";
+$paddingmargin[5]=" ";
+$paddingmargin[6]=" ";
+$paddingmargin[7]=" ";
+$paddingmargin[8]=" ";
+$paddingmargin[9]=" ";
 
+$id_noeud_origine = intval($id_noeud_origine);
 if ($action != "print") {
+	$form_action = "./print_thesaurus.php?action=print";
+	if ($id_noeud_origine){
+		$form_action .= "&aff_num_thesaurus=".$aff_num_thesaurus."&id_noeud_origine=".$id_noeud_origine;
+	}
 	print "<h3>".$msg['print_thes_title']."</h3>\n";
-	print "<form name='print_options' action='print_thesaurus.php?action=print' method='post'>
+	print "<form name='print_options' action='".$form_action."' method='post'>
 		<b>".$msg['print_thes_options']."</b>
 		<blockquote>".$msg['print_thes_list_type']."
 			<select name='typeimpression'>";
 	if ($id_noeud_origine){
 		print "\n<option value='arbo' selected>".$msg['print_thes_arbo']."</option>
-				<option value='alph' disabled>".$msg['print_thes_alph']."</option>
-				<option value='rota' disabled>".$msg['print_thes_rota']."</option>";
+				<option value='alph' >".$msg['print_thes_alph']."</option>
+				<option value='rota' >".$msg['print_thes_rota']."</option>";
 		$val_enable="document.getElementById(\"options_xmlskos\").style.visibility=\"hidden\";";
 	}else{
 		print "\n<option value='arbo' selected>".$msg['print_thes_arbo']."</option>
@@ -72,23 +85,27 @@ if ($action != "print") {
 	print "\n</select>
 		</blockquote>
 		<blockquote>
-			<input type='checkbox' name='aff_note_application' CHECKED value='1' />&nbsp;".$msg['print_thes_na']."<br />
-			<input type='checkbox' name='aff_commentaire' CHECKED value='1' />&nbsp;".$msg['print_thes_comment']."<br />
-			<input type='checkbox' name='aff_voir' CHECKED value='1'/>&nbsp;".$msg['print_thes_voir']."<br />
-			<input type='checkbox' name='aff_voir_aussi' CHECKED value='1'/>&nbsp;".$msg['print_thes_ta']."<br />
-			<input type='checkbox' name='aff_tg' CHECKED value='1'/>&nbsp;".$msg['print_thes_tg']."<br />
-			<input type='checkbox' name='aff_ts' CHECKED value='1'/>&nbsp;".$msg['print_thes_ts']."<br />
-			<input type='checkbox' name='aff_no_trad' value='1'/>&nbsp;".$msg['print_thes_no_trad']."
+			<input type='checkbox' name='aff_note_application' id='aff_note_application' CHECKED value='1'/>&nbsp;<label for='aff_note_application'>".$msg['print_thes_na']."</label><br />
+			<input type='checkbox' name='aff_commentaire' id='aff_commentaire' CHECKED value='1'/>&nbsp;<label for='aff_commentaire'>".$msg['print_thes_comment']."</label><br />
+			<input type='checkbox' name='aff_voir' id='aff_voir' CHECKED value='1'/>&nbsp;<label for='aff_voir'>".$msg['print_thes_voir']."</label><br />
+			<input type='checkbox' name='aff_voir_aussi' id='aff_voir_aussi' CHECKED value='1'/>&nbsp;<label for='aff_voir_aussi'>".$msg['print_thes_ta']."</label><br />
+			<input type='checkbox' name='aff_tg' id='aff_tg' CHECKED value='1'/>&nbsp;<label for='aff_tg'>".$msg['print_thes_tg']."</label><br />
+			<input type='checkbox' name='aff_ts' id='aff_ts' CHECKED value='1'/>&nbsp;<label for='aff_ts'>".$msg['print_thes_ts']."</label><br />
+			<input type='checkbox' name='aff_no_trad' id='aff_no_trad' value='1'/>&nbsp;<label for='aff_no_trad'>".$msg['print_thes_no_trad']."</label><br />
+			<input type='checkbox' name='aff_num_aut' id='aff_num_aut' value='1'/>&nbsp;<label for='aff_num_aut'>".$msg['print_thes_num_aut']."</label><br />
+			<input type='checkbox' name='aff_tg_num_aut' id='aff_tg_num_aut' value='1'/>&nbsp;<label for='aff_tg_num_aut'>".$msg['print_thes_tg_num_aut']."</label><br />
+			<input type='checkbox' name='aff_geometry' id='aff_geometry' value='1'/>&nbsp;<label for='aff_geometry'>".$msg['print_thes_geometry']."</label><br />
+			<input type='checkbox' name='aff_cp' id='aff_cp' value='1'/>&nbsp;<label for='aff_cp'>".$msg['print_thes_cp']."</label><br />
 		</blockquote>
 		<b>".$msg["print_output_title"]."</b>
 		<blockquote>
-			<input type='radio' name='output' value='printer' checked onClick='".$val_enable."'/>&nbsp;".$msg["print_output_printer"]."<br />
-			<input type='radio' name='output' value='tt' onClick='".$val_enable."'/>&nbsp;".$msg["print_output_writer"]."<br />
-			<input type='radio' name='output' value='xml' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1; document.getElementById(\"options_xmlskos\").style.visibility=\"hidden\";' />&nbsp;".$msg["print_output_xml"]."<br/>
-			<input type='radio' name='output' value='xmlent' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1; document.getElementById(\"options_xmlskos\").style.visibility=\"hidden\";' />&nbsp;".$msg["print_output_ent"]."
+			<input type='radio' name='output' id='output_printer' value='printer' checked onClick='".$val_enable."'/>&nbsp;<label for='output_printer'>".$msg["print_output_printer"]."</label><br />
+			<input type='radio' name='output' id='output_tt' value='tt' onClick='".$val_enable."'/>&nbsp;<label for='output_tt'>".$msg["print_output_writer"]."</label><br />
+			<input type='radio' name='output' id='output_xml' value='xml' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1; document.getElementById(\"options_xmlskos\").style.visibility=\"hidden\";' />&nbsp;<label for='output_xml'>".$msg["print_output_xml"]."</label><br/>
+			<input type='radio' name='output' id='output_xmlent' value='xmlent' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1; document.getElementById(\"options_xmlskos\").style.visibility=\"hidden\";' />&nbsp;<label for='output_xmlent'>".$msg["print_output_ent"]."</label>
 		";
 		if(!$id_noeud_origine){
-			print "<br /><input type='radio' name='output' value='xmlskos' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1;document.getElementById(\"options_xmlskos\").style.visibility=\"visible\";' />&nbsp;".$msg["print_output_skos"] ;
+			print "<br /><input type='radio' name='output' id='output_xmlskos' value='xmlskos' onClick='document.print_options.typeimpression.selectedIndex= 0;document.print_options.typeimpression.options[1].disabled = 1;print_options.typeimpression.options[2].disabled = 1;document.getElementById(\"options_xmlskos\").style.visibility=\"visible\";' />&nbsp;<label for='output_xmlskos'>".$msg["print_output_skos"]."</label>";
 			print "<div id='options_xmlskos' name='options_xmlskos' style='visibility:hidden;'>".$msg["print_output_skos_uri"]."&nbsp;<input type='text' name='uri_thes_skos' value='".$pmb_opac_url."thesaurus/".$aff_num_thesaurus."'/><br/>";
 			print "<input type='checkbox' name='do_polyhierarchie' CHECKED value='1' />&nbsp;".$msg['print_output_skos_polyhierarchie'];
 			print "</div";
@@ -129,7 +146,7 @@ if ($action == "print") {
 				$id_noeud_debut=$thes->num_noeud_racine;
 			}
 			
-			//Je peux commencer le thÃ©saurus
+			//Je peux commencer le thésaurus
 			$dom = new DOMDocument('1.0', 'UTF-8');
 			//$dom->preserveWhiteSpace = false;
 		    $dom->formatOutput = true;
@@ -144,7 +161,7 @@ if ($action == "print") {
 			    if($res && pmb_mysql_num_rows($res)){
 			    	while ($categ=pmb_mysql_fetch_object($res)) {
 						if(trim($categ->libelle_categorie)){
-							creer_categ_xml($dom,$noeudthes,0,$categ->num_noeud,$categ->libelle_categorie,$categ->note_application,$categ->comment_public,$categ->num_parent);
+						    creer_categ_xml($dom,$noeudthes,0,$categ->num_noeud,$categ->libelle_categorie,$categ->note_application,$categ->comment_public,$categ->num_parent, $categ->autorite,$categ->not_use_in_indexation);
 						}
 					}
 			    }
@@ -181,7 +198,7 @@ if ($action == "print") {
 		    	$filename=str_replace(" ","",$filename);
 		    	$filename=$base_path."/temp/".$filename.".xml";
 		    	$dom->save($filename);
-		    	//on fait le mÃ©nage dans le store
+		    	//on fait le ménage dans le store
 		    	$synchro_rdf->deleteTriple("<".$uri_thes_skos.">",'?p','?o');
 		    	$requete="SELECT id_noeud FROM noeuds WHERE num_thesaurus='".$aff_num_thesaurus."'";
 		    	$res=pmb_mysql_query($requete);
@@ -208,10 +225,8 @@ if ($action == "print") {
 		print "<h2>".affiche_text($msg["print_thes_titre_".$typeimpression])."</h2>";
 		switch($typeimpression) {
 			case "arbo":
-				$res.="<td style='width:10%' bgcolor='".$color[$niveau-9]."'> </td>";
-				
 				if ($id_noeud_origine) {
-					// un noeud Ã©tait fourni pour n'imprimer que cette branche
+					// un noeud était fourni pour n'imprimer que cette branche
 					$id_noeud_top = $id_noeud_origine ;
 				} else {
 					$rqt_id_noeud_top = "select id_noeud from noeuds where autorite='TOP' and num_thesaurus=".$aff_num_thesaurus ;
@@ -220,20 +235,25 @@ if ($action == "print") {
 					$id_noeud_top = $obj_id_noeud_top->id_noeud;
 				}
 				
-				// premier parcours pour calculer la profondeur du thÃ©saurus : $profondeurmax
+				// premier parcours pour calculer la profondeur du thésaurus : $profondeurmax
 				$niveau=0;
 				$resultat="";
 				$profondeurmax=0;
 				enfants($id_noeud_top, $niveau, $resultat, $profondeurmax, false);
-				/// deuxiÃ¨me parcours, cette fois-ci on imprime
+				/// deuxième parcours, cette fois-ci on imprime
 				$niveau=0;
 				$resultat="";
-				echo "<table width=100% cellspacing=0 cellpadding=3>";
+				echo "<table style='border-spacing: 0px; padding: 3px; width: 100%'>";
 				enfants($id_noeud_top, $niveau, $resultat, $profondeurmax, true);
 				echo "</table>" ;
 				break;
 			case "alph":
-				$rqt = "select id_noeud from noeuds n, categories c where c.num_thesaurus=$aff_num_thesaurus and n.num_thesaurus=$aff_num_thesaurus and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				if ($id_noeud_origine) {
+					// un noeud était fourni pour n'imprimer que cette branche
+					$rqt = "select id_noeud from noeuds n, categories c where n.num_parent='".$id_noeud_origine."' and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				} else {
+					$rqt = "select id_noeud from noeuds n, categories c where c.num_thesaurus=$aff_num_thesaurus and n.num_thesaurus=$aff_num_thesaurus and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				}
 				$result = pmb_mysql_query($rqt) or die("Query alpha failed");
 				while ($obj_id_noeud = pmb_mysql_fetch_object($result)){
 					echo infos_categorie($obj_id_noeud->id_noeud);
@@ -244,19 +264,24 @@ if ($action == "print") {
 				if (file_exists("$include_path/marc_tables/$aff_langue/empty_words_thesaurus")) {
 					$mots_vides_thesaurus=true;
 					include("$include_path/marc_tables/$aff_langue/empty_words_thesaurus");
-				} else $mots_vides_thesaurus=false;  
-				$rqt = "select id_noeud, libelle_categorie, index_categorie from noeuds n, categories c where c.num_thesaurus=$aff_num_thesaurus and n.num_thesaurus=$aff_num_thesaurus and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				} else $mots_vides_thesaurus=false;
+				if ($id_noeud_origine) {
+					// un noeud était fourni pour n'imprimer que cette branche
+					$rqt = "select id_noeud, libelle_categorie, index_categorie from noeuds n, categories c where n.num_parent='".$id_noeud_origine."' and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				} else {
+					$rqt = "select id_noeud, libelle_categorie, index_categorie from noeuds n, categories c where c.num_thesaurus=$aff_num_thesaurus and n.num_thesaurus=$aff_num_thesaurus and id_noeud=num_noeud and langue='$aff_langue' and autorite!='TOP' and autorite!='ORPHELINS' and autorite!='NONCLASSES' order by libelle_categorie ";
+				}
 				$result = pmb_mysql_query($rqt) or die("Query rota failed");
 				while ($obj = pmb_mysql_fetch_object($result)) {
-					// rÃ©cupÃ©ration de l'index du libellÃ©, nettoyage
+					// récupération de l'index du libellé, nettoyage
 					$icat=$obj->index_categorie ;
-					// si mots vides supplÃ©mentaires
+					// si mots vides supplémentaires
 					if ($mots_vides_thesaurus) {
 						// suppression des mots vides
 						if (is_array($empty_word_thesaurus)) {
-							foreach($empty_word_thesaurus as $dummykey=>$word) {
+							foreach($empty_word_thesaurus as $word) {
 								$word = convert_diacrit($word);
-								$icat = pmb_preg_replace("/^${word}$|^${word}\s|\s${word}\s|\s${word}\$/i", ' ', $icat);
+								$icat = pmb_preg_replace("/^{$word}$|^{$word}\s|\s{$word}\s|\s{$word}\$/i", ' ', $icat);
 							}
 						}
 					}
@@ -266,7 +291,7 @@ if ($action == "print") {
 	
 					// l'index est propre, on va pouvoir exploser sur espace.
 					$mot=array();
-					// index non vide (des fois que le mÃ©nage prÃ©cÃ©dent l'aie vidÃ© complÃ¨tement)
+					// index non vide (des fois que le ménage précédent l'aie vidé complètement)
 					if ($icat) {
 						$mot = explode(' ',$icat);
 						for ($imot=0;$imot<count($mot);$imot++) {
@@ -280,11 +305,11 @@ if ($action == "print") {
 				ksort($mots, SORT_STRING);
 				echo "<table>";
 				foreach ($mots as $mot=>$idiz) {
-					// on parcourt tous les mots trouvÃ©s
+					// on parcourt tous les mots trouvés
 					$rqt="select libelle_categorie, num_noeud from categories where num_noeud in(".implode(",",$idiz).") and langue='".$aff_langue."' order by index_categorie";
 					$ressql = pmb_mysql_query($rqt) or die ($rqt."<br /><br />".pmb_mysql_error());
 					while ($data=pmb_mysql_fetch_object($ressql)) {
-						// on parcourt toutes les catÃ©gories utilisant ce mot pour chercher la position d'utilisation du mot
+						// on parcourt toutes les catégories utilisant ce mot pour chercher la position d'utilisation du mot
 						$catnette = " ".str_replace(" - ","   ",strtolower(strip_empty_chars_thesaurus($data->libelle_categorie)))." ";
 						$catnette = str_replace(" -","  ",$catnette);
 						$catnette = str_replace("- ","  ",$catnette);
@@ -293,9 +318,13 @@ if ($action == "print") {
 						// echo "<br /><br />deb $posdeb - fin: $posfin mot: $mot LIB: ".$data->libelle_categorie ;
 						echo "
 							<tr>
-								<td class='align_right' style='vertical-align:top'>".affiche_text(substr($data->libelle_categorie,0,$posdeb))."</td>
-								<td class='align_left' style='vertical-align:top'><b>".affiche_text(substr($data->libelle_categorie,$posdeb,$posfin-$posdeb))."</b>".affiche_text(substr($data->libelle_categorie,$posfin));
-						echo infos_categorie($data->num_noeud, false, true)."</td></tr>";
+								<td class='align_right' valign='top' style='vertical-align:top; text-align:right'>".($posdeb ? affiche_text(pmb_substr($data->libelle_categorie,0,$posdeb)) : '')."</td>
+								<td class='align_left' valign='bottom' style='vertical-align:bottom'><b>".affiche_text(pmb_substr($data->libelle_categorie,$posdeb,($posfin-$posdeb)))."</b>".affiche_text(pmb_substr($data->libelle_categorie,$posfin))."</td>
+							</tr>
+							<tr>
+								<td class='align_right' valign='top' style='vertical-align:top; text-align:right'></td>
+								<td class='align_left' valign='top' style='vertical-align:top'>".infos_categorie($data->num_noeud, false, true)."</td>
+							</tr>";
 					}
 				}
 				// print_r($mots);
@@ -303,27 +332,32 @@ if ($action == "print") {
 				break;
 		}
 		// pied de page
+		if ($output=="printer") {
+			print '<script type="text/javascript">self.print();</script>';
+		}
 		print "</body></html>";
 	}
 	
 }
 
-pmb_mysql_close($dbh);
+pmb_mysql_close();
 
 function infos_noeud($idnoeud, $niveau, $profondeurmax) {
 
-	global $dbh, $aff_langue;
-	global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_tg, $aff_ts, $aff_no_trad;
+	global $aff_langue;
+	global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_no_trad;
 	global $color, $fontsize, $paddingmargin ;
-	global $id_noeud_origine;
+	global $id_noeud_origine, $msg;
+	global $aff_cp, $aff_geometry;
 	
-	// rÃ©cupÃ©ration info du noeud
+	// récupération info du noeud
 	$restrict_lang = '';
 	if ($aff_no_trad) {
 		$restrict_lang = " and langue='".$aff_langue."'";
 	}
-	$rqt = "select num_noeud, libelle_categorie, num_parent, note_application, comment_public, case when langue='$aff_langue' then '' else langue end as trad, langue from categories,noeuds where num_noeud = id_noeud and num_noeud='$idnoeud' ".$restrict_lang." order by trad ";
+	$rqt = "select num_noeud, libelle_categorie, num_parent, note_application, comment_public, case when langue='$aff_langue' then '' else langue end as trad, langue, autorite from categories,noeuds where num_noeud = id_noeud and num_noeud='$idnoeud' ".$restrict_lang." order by trad ";
 	$ressql = pmb_mysql_query($rqt) or die ($rqt."<br /><br />".pmb_mysql_error());
+	$res='';
 	while ($data=pmb_mysql_fetch_object($ressql)) {
 		$res.= "\n<tr>";
 		$niv=$niveau-1;
@@ -355,29 +389,31 @@ function infos_noeud($idnoeud, $niveau, $profondeurmax) {
 		if ($id_noeud_origine==$idnoeud){
 			$niveau=$niveau+1 ;
 			$printingBranche = true;
-		} 
+		}
 
+		$extra_td = 0;
+		$style="style='";
+		$largeur="70%";
 		if (($data->note_application || $data->comment_public) && ($aff_note_application || $aff_commentaire)) {
+			$extra_td = 1;
 			$style="style='border-top: 1px dotted gray;border-bottom: 1px dotted gray; ";
 			$largeur="40%";
-		} else {
-			$style="style='";
-			$largeur="70%";
 		}
-		$style.=" ".$fontsize[$niveau]." ".$paddingmargin[$niveau]." '";
-		if ($data->trad) $res.="<td colspan='".($profondeurmax-($niveau-1))."' width=$largeur valign=top $style><span style='color:blue'>".affiche_text($data->trad)."</span> ".affiche_text($data->libelle_categorie)."";
-		else $res.="<td colspan='".($profondeurmax-($niveau-1))."' width=$largeur valign=top $style>".affiche_text($data->libelle_categorie);
 
-		//TERME GÃ‰NÃ‰RAL DANS LE CAS DE L'IMPRESSION D'UNE BRANCHE
+		$style.=" ".$fontsize[$niveau]." ".$paddingmargin[$niveau]." '";
+		if ($data->trad) $res.="<td colspan='".($profondeurmax-($niveau-1)-$extra_td)."' width=$largeur valign=top $style><span style='color:blue'>".affiche_text($data->trad)."</span> ".affiche_text($data->libelle_categorie)."";
+		else $res.="<td colspan='".($profondeurmax-($niveau-1)-$extra_td)."' width=$largeur valign=top $style>".affiche_text($data->libelle_categorie);
+
+		//TERME GÉNÉRAL DANS LE CAS DE L'IMPRESSION D'UNE BRANCHE
 		if ($printingBranche){
 			$rqttg = "select libelle_categorie from categories where num_noeud = '".$data->num_parent."'";
 			$restg = pmb_mysql_query($rqttg) or die ($rqttg."<br /><br />".pmb_mysql_error());
 			if (pmb_mysql_num_rows($restg)) {
 				$datatg=pmb_mysql_fetch_object($restg);
 				$res.= "<br /><span style='color:blue'>".$msg['thesaurus_printing_broad_term_code']." ".affiche_text($datatg->libelle_categorie)."</span>";
-			}		
-		} 
-			
+			}
+		}
+
 		if ($aff_voir_aussi) {
 			$rqtva = "select libelle_categorie from categories, voir_aussi where num_noeud_orig=$idnoeud and num_noeud=num_noeud_dest and categories.langue='".$data->langue."' and voir_aussi.langue='".$data->langue."' order by libelle_categorie " ;
 			$resva = pmb_mysql_query($rqtva) or die ($rqtva."<br /><br />".pmb_mysql_error());
@@ -386,7 +422,6 @@ function infos_noeud($idnoeud, $niveau, $profondeurmax) {
 				while ($datava=pmb_mysql_fetch_object($resva)) $res.= "<br />".$msg['thesaurus_printing_related_term_code']." ".affiche_text($datava->libelle_categorie);
 				$res.= "</span>";
 			}
-			
 		}
 		if ($aff_voir) {
 			$rqtva = "select libelle_categorie from categories, noeuds where num_renvoi_voir=$idnoeud and num_noeud=id_noeud and categories.langue='".$data->langue."' order by libelle_categorie " ;
@@ -396,31 +431,83 @@ function infos_noeud($idnoeud, $niveau, $profondeurmax) {
 				while ($datava=pmb_mysql_fetch_object($resva)) $res.= "<br />".$msg['thesaurus_printing_use_for_code']." <i>".affiche_text($datava->libelle_categorie)."</i>";
 			}
 		}
+		//geometry
+		if($aff_geometry){
+			$query = "SELECT  AsText(map_emprise_data) AS map_data_text FROM map_emprises WHERE map_emprise_obj_num = ".intval($idnoeud)." AND map_emprise_type = ".AUT_TABLE_CATEG;
+			$result = pmb_mysql_query($query);
+			if (pmb_mysql_num_rows($result)) {
+				$row = pmb_mysql_fetch_assoc($result);
+				$res.="<br/><span style='color:black'>".$msg['thesaurus_printing_geometry']." ".affiche_text($row['map_data_text'])."</span>";
+			}
+		}
+		//champs perso
+		if ($aff_cp) {
+			$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [
+				"type_object" => AUT_TABLE_CATEG,
+				"num_object" => $idnoeud
+			]);
+			if (!empty($authority->get_p_perso())) {
+				foreach ($authority->get_p_perso() as $p_perso) {
+					if (!empty($p_perso["AFF"])) {
+						$res.="<br/><span style='color:black'>".$p_perso["NAME"]." ".affiche_text($p_perso["AFF"])."</span>";
+					}
+				}
+			}
+		}
 		$res.="</td>";
-		if ($aff_note_application && $data->note_application) $res.="<td style='width:30%' valign=top $style><span style='color:#ff706d'>".affiche_text($data->note_application)."</span></td>";
-		if ($aff_commentaire && $data->comment_public) $res.="<td style='width:30%' valign=top $style><span style='color:black'>".affiche_text($data->comment_public)."</span></td>";
+		if ($extra_td) {
+			$extra_content = "";
+			if ($aff_note_application && $data->note_application) {
+				$extra_content.="<span style='color:#ff706d'>".affiche_text($data->note_application)."</span>";
+			}
+			if ($aff_commentaire && $data->comment_public) {
+				if (!empty($extra_content)) {
+					$extra_content.= "<br/>";
+				}
+				$extra_content.="<span style='color:black'>".affiche_text($data->comment_public)."</span>";
+			}
+			$res.="<td style='width:30%' valign=top $style>$extra_content</td>";
+		}
 		$res.="\n</tr>";
 	}
 	return $res ;
 }
 
 function infos_categorie($idnoeud, $printcategnoeud=true, $forcer_em=false) {
-
-	global $dbh, $aff_langue;
-	global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_tg, $aff_ts, $aff_no_trad;
+    global $aff_langue, $msg;
+    global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_tg, $aff_ts, $aff_no_trad, $aff_num_aut, $aff_tg_num_aut, $lang;
 	
-	// rÃ©cupÃ©ration info du noeud
+	$res = '';
+	// récupération info du noeud
 	$restrict_lang = '';
 	if ($aff_no_trad) {
 		$restrict_lang = " and langue='".$aff_langue."'";
 	}
-	$rqt = "select num_noeud, num_parent, libelle_categorie, note_application, comment_public, case when langue='$aff_langue' then '' else langue end as trad, langue from categories join noeuds on num_noeud=id_noeud where num_noeud='$idnoeud' ".$restrict_lang." order by trad ";
+	$rqt = "select num_noeud, num_parent, libelle_categorie, note_application, comment_public, case when langue='$aff_langue' then '' else langue end as trad, langue, autorite from categories join noeuds on num_noeud=id_noeud where num_noeud='$idnoeud' ".$restrict_lang." order by trad ";
 	$ressql = pmb_mysql_query($rqt) or die ($rqt."<br /><br />".pmb_mysql_error());
 	while ($data=pmb_mysql_fetch_object($ressql)) {
 
 		if ($data->trad) $res.="<br /><span style='color:blue'>".affiche_text($data->trad)."</span> ".affiche_text($data->libelle_categorie)."";
 		elseif ($printcategnoeud) $res.="<br /><br /><b>".affiche_text($data->libelle_categorie)."</b>";
 
+		//NUM AUTORITE TG
+		if ($aff_tg_num_aut) {
+			$ancestors = categories::listAncestors($data->num_noeud, $lang);
+			reset($ancestors);
+			if(!empty($ancestors) && count($ancestors) > 1) {
+				$noeud_tg = array_key_first($ancestors);
+				if(!empty($ancestors[$noeud_tg]['autorite']) && !in_array($ancestors[$noeud_tg]['autorite'], array('TOP', 'ORPHELINS', 'NONCLASSES'))) {
+					$res.= "\n<span style='color:red'>";
+					$res.= " (".$msg['thesaurus_printing_broad_term_autorite']." ".affiche_text($ancestors[$noeud_tg]['autorite']).")";
+					$res.= "</span>";
+				}
+			} elseif(!empty($data->autorite)) {
+				$res.= "\n<span style='color:red'>";
+				$res.= " (".$msg['thesaurus_printing_broad_term_autorite']." ".affiche_text($data->autorite).")";
+				$res.= "</span>";
+			}
+		}
+		
 		// EP et EM
 		if ($aff_voir) {
 			$rqtva = "select libelle_categorie from categories, noeuds where num_renvoi_voir=$idnoeud and num_noeud=id_noeud and categories.langue='".$data->langue."' order by libelle_categorie " ;
@@ -474,13 +561,13 @@ function infos_categorie($idnoeud, $printcategnoeud=true, $forcer_em=false) {
 		
 		if ($aff_note_application && $data->note_application) $res.="<br /><span style='color:#ff706d'>".$msg['thesaurus_printing_scope_note_code']." ".affiche_text($data->note_application)."</span>";
 		if ($aff_commentaire && $data->comment_public) $res.="<br /><span style='color:black'>".$msg['thesaurus_printing_public_comment_code']." ".affiche_text($data->comment_public)."</span>";
+		if ($aff_num_aut && $data->autorite) $res.="<br /><span style='color:black'>".$msg['thesaurus_printing_num_aut']." ".affiche_text($data->autorite)."</span>";
 	}
 	return $res ;
 }
 
 function enfants($id, $niveau, &$resultat, &$profondeurmax, $imprimer=false) {
-
-	global $dbh, $aff_langue;
+	global $aff_langue;
 
 	if ($imprimer) {
 		$resultat=infos_noeud($id, $niveau, $profondeurmax) ;
@@ -503,14 +590,14 @@ function strip_empty_chars_thesaurus($string) {
 	// traitement des diacritiques
 	$string = convert_diacrit($string);
 
-	// Mis en commentaire : qu'en est-il des caractÃ¨res non latins ???
-	// SUPPRIME DU COMMENTAIRE : ER : 12/05/2004 : Ã§a fait tout merder...
-	// RECH_14 : Attention : ici suppression des Ã©ventuels "
-	//          les " ne sont plus supprimÃ©s 
+	// Mis en commentaire : qu'en est-il des caractères non latins ???
+	// SUPPRIME DU COMMENTAIRE : ER : 12/05/2004 : ça fait tout merder...
+	// RECH_14 : Attention : ici suppression des éventuels "
+	//          les " ne sont plus supprimés 
 	$string = stripslashes($string) ;
 	$string = pmb_alphabetic('^a-z0-9\s', ' ',pmb_strtolower($string));
 	
-	// espaces en dÃ©but et fin
+	// espaces en début et fin
 	$string = pmb_preg_replace('/^\s+|\s+$/', '', $string);
 	
 	return $string;
@@ -528,11 +615,12 @@ function affiche_text($string){
 }
 
 
-//Fonctions utilisÃ©es pour l'export du thÃ©saurus en xml
+//Fonctions utilisées pour l'export du thésaurus en xml
 
-function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$note_application,$comment_public,$num_parent){
-	global $dbh, $aff_langue;
-	global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_tg, $aff_ts;
+function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$note_application,$comment_public,$num_parent, $autorite,$not_use_in_indexation=0){
+	global $aff_langue;
+	global $aff_note_application, $aff_commentaire, $aff_voir, $aff_voir_aussi, $aff_tg, $aff_ts, $aff_num_aut, $aff_cp, $aff_geometry;
+	global $msg;
 	
 	
 	$noeud_categ=creer_noeud_xml($dom,$parent,"DE");
@@ -540,7 +628,7 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
 	//ID
 	creer_noeud_xml($dom,$noeud_categ,"ID",$num_noeud);
 
-    //LibellÃ©
+    //Libellé
     creer_noeud_xml($dom,$noeud_categ,"LIB_DE",$libelle_categorie);
 
     //Note application
@@ -551,6 +639,11 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
      //Commentaire public
     if($comment_public && $aff_commentaire){
     	creer_noeud_xml($dom,$noeud_categ,"NOTE",$comment_public);
+    }
+    
+     //numero d'autorite
+    if($autorite && $aff_num_aut){
+        creer_noeud_xml($dom,$noeud_categ,$msg['thesaurus_printing_num_aut'],$autorite);
     }
     
     //Voir aussi
@@ -566,7 +659,7 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
 	    }
     }
    
-    //EmployÃ© pour
+    //Employé pour
     if($aff_voir){
     	$requete="SELECT libelle_categorie,id_noeud FROM noeuds JOIN categories ON id_noeud=num_noeud AND categories.langue='".$aff_langue."' WHERE num_renvoi_voir='".$num_noeud."' ORDER BY libelle_categorie";
 	    $res=pmb_mysql_query($requete);
@@ -579,7 +672,7 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
 	    }
     }
     
-    //Terme gÃ©nÃ©rique
+    //Terme générique
     if($aff_tg && $num_parent){
     	$requete="SELECT libelle_categorie FROM categories WHERE langue='".$aff_langue."' AND num_noeud='".$num_parent."'";
 	    $res=pmb_mysql_query($requete);
@@ -591,7 +684,6 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
 			}
 	    }
     }
-    
     //TS
     if($aff_ts){
     	$res=categories::listChilds($num_noeud, $aff_langue,0, "libelle_categorie");
@@ -599,12 +691,39 @@ function creer_categ_xml($dom,$parent,$niveau, $num_noeud,$libelle_categorie,$no
 	        $noeud_ts=creer_noeud_xml($dom,$noeud_categ,$msg['thesaurus_printing_narrower_term_code'].$niveau);
 	    	while ($categ=pmb_mysql_fetch_object($res)) {
 				if(trim($categ->libelle_categorie)){
-					creer_categ_xml($dom,$noeud_ts,($niveau+1),$categ->num_noeud,$categ->libelle_categorie,$categ->note_application,$categ->comment_public,$categ->num_parent);
+				    creer_categ_xml($dom,$noeud_ts,($niveau+1),$categ->num_noeud,$categ->libelle_categorie,$categ->note_application,$categ->comment_public,$categ->num_parent, $categ->autorite,$categ->not_use_in_indexation);
 				}
 			}
 	    }
-    } 
-    
+    }
+    //Utilisable en indexation
+    creer_noeud_xml($dom,$noeud_categ,"INDEXATION",($not_use_in_indexation*1 != 1 ? "OUI" : "NON"));
+	//geometry
+	if($aff_geometry){
+		$query = "SELECT  AsText(map_emprise_data) AS map_data_text FROM map_emprises WHERE map_emprise_obj_num = ".intval($num_noeud)." AND map_emprise_type = ".AUT_TABLE_CATEG;
+		$result = pmb_mysql_query($query);
+		if (pmb_mysql_num_rows($result)) {
+			$row = pmb_mysql_fetch_assoc($result);
+			creer_noeud_xml($dom,$noeud_categ,$msg['thesaurus_printing_geometry'],$row["map_data_text"]);
+		}
+	}
+	//champs perso
+	if ($aff_cp) {
+		$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [
+			"type_object" => AUT_TABLE_CATEG,
+			"num_object" => $num_noeud
+		]);
+		if (!empty($authority->get_p_perso())) {
+			foreach ($authority->get_p_perso() as $p_perso) {
+				if (!empty($p_perso["AFF"])) {
+					if (empty($noeud_cp)) {
+						$noeud_cp=creer_noeud_xml($dom,$noeud_categ,$msg['thesaurus_printing_cp']);
+					}
+					creer_noeud_xml($dom,$noeud_cp,$p_perso["NAME"],$p_perso["AFF"]);
+				}
+			}
+		}
+	}
 }
 
 function encode_libelle_xml($val){
@@ -613,7 +732,7 @@ function encode_libelle_xml($val){
 	if($charset == "utf-8"){
 		return htmlspecialchars($val,ENT_QUOTES,$charset);
 	}else{
-		return htmlspecialchars(utf8_encode($val),ENT_QUOTES,$charset);
+		return htmlspecialchars(encoding_normalize::utf8_normalize($val),ENT_QUOTES,$charset);
 	}
 }
 
@@ -639,11 +758,11 @@ function do_att_xml(&$dom,&$noeud_parent,$att=array()){
 		$noeud_parent->appendChild($element_att);
 	}
 }
-//Fin des fonctions utilisÃ©es pour l'export du thÃ©saurus en xml
+//Fin des fonctions utilisées pour l'export du thésaurus en xml
 
 function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins){
 	global $aff_num_thesaurus,$uri_thes_skos,$uri_noeud_skos,$do_polyhierarchie,$aff_voir_aussi;
-	global $aff_note_application, $aff_commentaire,$aff_tg, $aff_ts,$aff_voir, $aff_langue, $aff_no_trad;
+	global $aff_note_application, $aff_commentaire,$aff_tg, $aff_ts,$aff_voir, $aff_langue, $aff_no_trad, $aff_num_aut;
 	
 	//On corrige les renvoies de renvoies dans les noeuds si il y en a
 	$arrayId=array();
@@ -663,7 +782,7 @@ function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins)
 		}
 	}
 	
-	//Je rÃ©cupÃ¨re les ids de tous les noeuds qui n'ont pas de renvoie
+	//Je récupère les ids de tous les noeuds qui n'ont pas de renvoie
 	$requete="SELECT * FROM noeuds WHERE num_thesaurus='".$aff_num_thesaurus."' AND num_renvoi_voir='0' AND id_noeud != ".$num_noeud_racine." AND autorite != 'ORPHELINS'";
 	$res=pmb_mysql_query($requete);
 	if($res && pmb_mysql_num_rows($res)){
@@ -687,15 +806,15 @@ function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins)
 			
 			//Les renvois
 			if($aff_voir){
-				$requete="SELECT id_noeud, num_parent, libelle_categorie, langue FROM noeuds JOIN categories ON id_noeud=num_noeud AND noeuds.num_thesaurus=categories.num_thesaurus WHERE num_renvoi_voir='".$noeud->id_noeud."' AND noeuds.num_thesaurus='".$aff_num_thesaurus."'";
+				$requete="SELECT id_noeud, num_parent, libelle_categorie, langue FROM noeuds JOIN categories ON id_noeud=num_noeud AND noeuds.num_thesaurus=categories.num_thesaurus WHERE num_renvoi_voir='".$noeud->id_noeud."' AND noeuds.num_thesaurus='".$aff_num_thesaurus."' ORDER BY libelle_categorie";
 				$res_renvoi=pmb_mysql_query($requete);
 				if($res_renvoi && pmb_mysql_num_rows($res_renvoi)){
 					while ($renvoi=pmb_mysql_fetch_object($res_renvoi)) {
 						if($do_polyhierarchie){
-							//Je regarde si le libellÃ© du renvoie est le mÃªme que celui du noeuds
+							//Je regarde si le libellé du renvoie est le même que celui du noeuds
 							$requete="SELECT * FROM categories WHERE num_noeud='".$noeud->id_noeud."' AND num_thesaurus='".$aff_num_thesaurus."' AND libelle_categorie='".addslashes($renvoi->libelle_categorie)."' AND langue='".addslashes($renvoi->langue)."'";
 							$res2=pmb_mysql_query($requete);
-							if($res2 && pmb_mysql_num_rows($res2)){//Dans ce cas il s'agit de la mÃªme categ qui a Ã©tÃ© duppliquÃ© pour la polyhierarchie
+							if($res2 && pmb_mysql_num_rows($res2)){//Dans ce cas il s'agit de la même categ qui a été duppliqué pour la polyhierarchie
 								if(!$noeud_liee[$renvoi->num_parent]){
 									creer_noeud_xml($dom,$concept,"skos:broader","",array("rdf:resource"=>$uri_noeud_skos.$renvoi->num_parent));
 									$noeud_liee[$renvoi->num_parent]=1;
@@ -734,7 +853,7 @@ function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins)
 			}
 			
 			
-			//Je vais chercher les informations des catÃ©gories
+			//Je vais chercher les informations des catégories
 			$restrict_lang = '';
 			if ($aff_no_trad) {
 				$restrict_lang = " and langue='".$aff_langue."'";
@@ -743,24 +862,27 @@ function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins)
 			$res_cat=pmb_mysql_query($requete);
 			if($res_cat && pmb_mysql_num_rows($res_cat)){
 				while ($categ=pmb_mysql_fetch_object($res_cat)) {
-					//Appartenance au schÃ©ma
+					//Appartenance au schéma
 					creer_noeud_xml($dom,$concept,"skos:inScheme","",array("rdf:resource"=>$uri_thes_skos));
 					
-					//LibellÃ©
-					if($tmp = trim($categ->libelle_categorie)){
+					//Libellé
+					$tmp = trim($categ->libelle_categorie);
+					if($tmp){
 						creer_noeud_xml($dom,$concept,"skos:prefLabel",$categ->libelle_categorie,array("xml:lang"=>substr($categ->langue,0,2)));
 					}
 					
 					 //Note application
 				    if($aff_note_application){
-				    	if($tmp = trim($categ->note_application)){
+				        $tmp = trim($categ->note_application);
+				        if($tmp){
 							creer_noeud_xml($dom,$concept,"skos:scopeNote",$categ->note_application,array("xml:lang"=>substr($categ->langue,0,2)));
 						}
 				    }
 				    
 				     //Commentaire public
 				    if($aff_commentaire){
-				    	if($tmp = trim($categ->comment_public)){
+				        $tmp = trim($categ->comment_public);
+				        if($tmp){
 							creer_noeud_xml($dom,$concept,"skos:note",$categ->comment_public,array("xml:lang"=>substr($categ->langue,0,2)));
 						}
 				    }
@@ -779,6 +901,13 @@ function cree_export_skos(&$dom,&$racine,$num_noeud_racine,$num_noeud_orphelins)
 						}
 					}
 				}
+			}
+			
+			//numero d'autorite
+			if($aff_num_aut){
+			    if($noeud->autorite){
+			        creer_noeud_xml($dom,$concept,"skos:notation",$noeud->autorite,array("xml:lang"=>substr($categ->langue,0,2)));
+			    }
 			}
 		}
 	}

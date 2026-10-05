@@ -2,7 +2,7 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pure.css,v 1.41 2019-03-19 08:32:14 mramage Exp $ */
+// $Id: pure.css,v 1.93.2.1 2024/09/11 05:22:18 dgoron Exp $ */
 
 /*------------------------------------------------------------------------------------------*/
 
@@ -155,8 +155,27 @@ textarea+textarea {
     font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
+.pure .dijitLayoutContainer h1{
+	font-size:16px;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+.pure .dijitLayoutContainer .align_top{
+	height: 25px;
+}
+
+.pure .dijitLayoutContainer .expl-list tr {
+    background-color: #dadada;
+}
+
+.pure .dijitLayoutContainer .expl-list tr td {
+    text-align: center;
+}
+
 .notice-heada {
     font-weight: 600;
+    vertical-align: super;
 }
 
 div[id^="elbulChild"].child>div:last-child {
@@ -189,29 +208,32 @@ div[class^='dijit'] {
     box-sizing: initial;
 }
 
-.pure.dsi div[class^='dijit'].dijitPopup {
+.pure.dsi div[class^='dijit'].dijitPopup, #att [style*='z-index: 1000'] {
     z-index: 1600!important;
 }
 
-.pure.claro.dsi .dijitTextBox#widget_categ {
+.pure.claro.dsi .dijitTextBox#widget_categ,
+.pure.claro.dsi .dijitTextBox#widget_concept {
     max-height: initial;
     border: 0px;
 }
 
-.pure.claro.dsi .dijitTextBox#widget_categ form[name="form_categ"] {
+.pure.claro.dsi .dijitTextBox#widget_categ form[name="form_categ"],
+.pure.claro.dsi .dijitTextBox#widget_concept form[name="form_concept"] {
     margin: 0;
 }
 
 .pure.claro.dsi .dijitContentPane form[name="docwatch_datasource"] {
-    height:auto!important;   
+    height:auto!important;
 }
 
-.pure.claro.dsi .dijitTextBox#widget_categ .dijitButton {
+.pure.claro.dsi .dijitTextBox#widget_categ .dijitButton,
+.pure.claro.dsi .dijitTextBox#widget_concept .dijitButton {
     vertical-align: top;
 }
 
 div[class^='dijit'][style*='z-index: 950'] {
-    z-index: 1500 !important;
+    z-index: 950 !important;
 }
 
 /* ========================================================================
@@ -306,13 +328,13 @@ li.current {
     display: block;
     flex: none;
     position: absolute;
-    top: -34px;
+    top: -35px;
     left: 50px;
     background-color: #fff;
     border: solid 1px #b9b9b9;
     padding: 0px;
     border-radius: 2px;
-    height: 28px;
+    height: 30px;
 }
 
 .uk-navbar-nav li#navbar-dashboard a {
@@ -367,7 +389,7 @@ div#extra2 {}
 
 #extra2 .notification {
     background-color: #fff;
-    /* border: solid 1px #b9b9b9; */
+    border: solid 1px #b9b9b9;
     padding: 3px 5px 3px 2px;
     border-radius: 2px;
     width: auto;
@@ -401,10 +423,6 @@ div#extra.uk-active {
     height: 40px;
     text-align: right;
     z-index: 1000;
-}
-
-div#extra2.uk-active {
-    z-index: 990;
 }
 
 /* ========================================================================
@@ -499,7 +517,7 @@ div#contenu {
 
 #menu .uk-link {}
 
-/* 
+/*
 ///alertes
 */
 
@@ -580,6 +598,10 @@ img.img-cart-o {
     margin: 0 5px 0 0px;
 }
 
+#contenu .olMap img {
+	margin: 0px;
+}
+
 /* ========================================================================
    Notification ico
  ==========================================================================  */
@@ -620,8 +642,8 @@ body.ready div[style="visibility: visible;"] {
     height: 0px;
 }
 
-#extra2 .notification.ui-active {
-    background-color: #999;
+.catalog #extra2 .notification.ui-active, div#extra2 .notification.ui-active span.uk-icon {
+	background-color: #ef3f3f;
 }
 
 /* ========================================================================
@@ -655,7 +677,7 @@ Notifications
 }
 
 /* ========================================================================
-inside menu //   Tab 
+inside menu //   Tab
  ==========================================================================  */
 
 #contenu .hmenu.uk-tab {
@@ -797,7 +819,7 @@ inside menu //  button
 }
 
 /* ========================================================================
-input button Section 
+input button Section
  ==========================================================================  */
 
 /* Focus */
@@ -814,6 +836,7 @@ textarea:focus {
 /* Disabled */
 
 input:disabled,
+input[type="date"]:disabled,
 select:disabled,
 textarea:disabled {
     background-color: #f8f8f8;
@@ -961,6 +984,8 @@ div[class^='dijit'] input[class^='bouton']:focus,
  ==========================================================================  */
 
 #contenu>h1.section-title,
+#contenu>div>.section-title,
+#contenu>div>div>.section-title,
 #contenu>.row>h1.section-title,
 #empr-name,
 #make_mul_sugg>h1.section-title,
@@ -970,7 +995,7 @@ div[class^='dijit'] input[class^='bouton']:focus,
     color: #666;
     font-size: 22px;
     min-height: 60px;
-    padding: 14px;
+    padding: 12px;
     border: solid 1px #b8b8b8;
     box-shadow: 0px 2px 1px 0px rgba(0, 0, 0, 0.06);
     margin-bottom: 25px;
@@ -1000,7 +1025,7 @@ h1.section-title span.uk-margin-small-right.uk-icon {
     background: transparent;
 }
 
-span[style^="width"] {
+/* span[style^="width"] {
     display: inline-block;
 }
 
@@ -1015,6 +1040,10 @@ span[style^="width"]>input {
 
 .search_value>span[style^="width"] {
     width: 100% !important;
+} */
+
+#act_modif span[style^="width"] > input {
+	width: calc(100% - 5px);
 }
 
 /* ========================================================================
@@ -1074,7 +1103,7 @@ form {
 }
 
 .pure.claro .dijitTextBox {
-    
+
 }
 
 .pure .label {
@@ -1115,6 +1144,21 @@ input.wyr-input:hover {
     margin-right: 5px;
 }
 
+#contenu #act_modif.form-acquisition input:first-child,
+#contenu #act_modif.form-acquisition input {
+    margin-right: 5px;
+    width: auto;
+    padding: 2px;
+}
+
+#contenu input[type="checkbox"]#chk\[1\] {
+	width: 16px;
+}
+
+#contenu #act_modif.form-acquisition input[type="checkbox"] {
+    width: 16px;
+}
+
 .pure .uk-button-default:focus,
 .pure .uk-button-default:hover {
     border-color: #b2b2b2;
@@ -1132,6 +1176,10 @@ label {
     font-weight: 500;
     margin-right: 10px;
     font-size: 0.875rem;
+}
+
+.etiquette {
+    margin-right: 0;
 }
 
 #contenu form[name="navbar"] {
@@ -1178,6 +1226,12 @@ input[name="limite_page"] {
     display: none;
 }
 
+#conteneur.dsi .form-contenu > br,
+#conteneur.catalog #contenu .form-contenu > br {
+	display: block;
+	margin: 10px 0;
+}
+
 .form-contenu.wyr-flex-item {
     flex-direction: column;
     flex: 1 1 100%;
@@ -1206,6 +1260,18 @@ div[class^="colonne"]+div[class^="colonne"] {
 
 div[class^="colonne"][class$="suite"] {
     overflow: hidden;
+}
+
+#group_form div[class^="colonne"][class$="suite"] {
+    display:flex;
+}
+
+#widget_group_prolonge_pret_date {
+    margin-right: 10px;
+}
+
+#group_form .colonne3 {
+    width: 50%;
 }
 
 .icon-form {
@@ -1324,6 +1390,11 @@ input[type="radio"] {
     transition-property: background-color, border;
 }
 
+.pure .dijitLayoutContainer .expl-list input[type="checkbox"],.pure .dijitLayoutContainer .expl-list input[type="radio"]{
+	margin-top: 0px;
+	border: 1px solid #000;
+}
+
 input[type="radio"] {
     border-radius: 50%;
 }
@@ -1427,7 +1498,12 @@ select:not([multiple]):not([size]):disabled {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23999%22%20points%3D%2212%201%209%206%2015%206%22%3E%3C%2Fpolygon%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23999%22%20points%3D%2212%2013%209%208%2015%208%22%3E%3C%2Fpolygon%3E%0A%3C%2Fsvg%3E%0A");
 }
 
+input[type="password"],
 input[type="text"],
+input[type="number"],
+input[type="time"],
+input[type="date"],
+input[type="email"],
 select:not([size]) {
     box-sizing: border-box;
     margin: 0;
@@ -1630,34 +1706,62 @@ div[class^='dijit'] input[class^='bouton']:focus,
     box-shadow: inset 0 2px 1px rgba(0, 0, 0, 0.27);
     outline-color: transparent;
 }
-input[value*='Annuler'][type="button"].bouton{
-    background:#999;
+
+button.btnCancel,
+input[type="button"].btnCancel,
+input[value*='Annuler'][type="button"].bouton {
+    background: #999 !important;
 }
-input[value*='Annuler'][type="button"].bouton:hover{
-    background:#a0a0a0;
+button.btnCancel:hover,
+input[type="button"].btnCancel:hover,
+input[value*='Annuler'][type="button"].bouton:hover {
+    background: #a0a0a0 !important;
 }
-input[value*='Annuler'][type="button"].bouton:focus{
-    background:#777;
+
+button.btnCancel:focus,
+input[type="button"].btnCancel:focus,
+input[value*='Annuler'][type="button"].bouton:focus {
+    background: #777 !important;
 }
-input[value*='Annuler'][type="button"].bouton:active{
-    background:#777;
+
+button.btnCancel:active,
+input[type="button"].btnCancel:active,
+input[value*='Annuler'][type="button"].bouton:active {
+    background: #777 !important;
 }
+
+button.btnDelete,
+input[type="button"].btnDelete,
+input[type="submit"].btnDelete,
 input[type="button"][value="Supprimer"].bouton,
-input[type="submit"][value="Supprimer"].bouton{
-    background: #FF5722;
+input[type="submit"][value="Supprimer"].bouton {
+    background: #FF5722 !important;
 }
+
+button.btnDelete:hover,
+input[type="button"].btnDelete:hover,
+input[type="submit"].btnDelete:hover,
 input[type="button"][value="Supprimer"].bouton:hover,
-input[type="submit"][value="Supprimer"].bouton:hover{
-    background: rgb(252, 100, 54);
+input[type="submit"][value="Supprimer"].bouton:hover {
+    background: #FC6436 !important;
 }
+
+button.btnDelete:focus,
+input[type="button"].btnDelete:focus,
+input[type="submit"].btnDelete:focus,
 input[type="button"][value="Supprimer"].bouton:focus,
-input[type="submit"][value="Supprimer"].bouton:focus{
-    background: rgb(240, 76, 26);
+input[type="submit"][value="Supprimer"].bouton:focus {
+    background: #F04C1A !important;
 }
+
+button.btnDelete:active,
+input[type="button"].btnDelete:active,
+input[type="submit"].btnDelete:active,
 input[type="button"][value="Supprimer"].bouton:active,
-input[type="submit"][value="Supprimer"].bouton:active{
-    background: rgb(240, 76, 26);
+input[type="submit"][value="Supprimer"].bouton:active {
+    background: #F04C1A !important;
 }
+
 /* value basics
  ========================================================================== */
 
@@ -1731,6 +1835,8 @@ Input autorite */
 
 /* Disabled */
 
+button[disabled=""],
+button[disabled=""]:disabled,
 input[disabled=""],
 input[disabled=""]:disabled {
     background-color: #f8f8f8;
@@ -1743,6 +1849,11 @@ input[disabled=""]:disabled {
 #tableau_multi_sugg {
     display: flex;
     flex-direction: column;
+}
+
+.acquisition #tableau_multi_sugg{
+	display:block;
+	flex-direction: column;
 }
 
 #tableau_multi_sugg tr:first-child {
@@ -1833,6 +1944,11 @@ span[id^="concept"]>i {
     margin: 10px 0 10px 30px;
 }
 
+#contenu ul.notice_rel.li_draggable{
+    margin: 0;
+    padding-left: 0;
+}
+
 #contenu li {
     padding: 5px 2px;
 }
@@ -1842,7 +1958,7 @@ span[id^="concept"]>i {
 }
 
 /* ========================================================================
-   Table display 
+   Table display
  ==========================================================================  */
 
 table {}
@@ -1939,6 +2055,13 @@ table th {
     /* background-color: rgb(246, 246, 246); */
 }
 
+.dijitLayoutContainer .form-contenu table th, .dijitLayoutContainer .form-contenu table td {
+    background-color: rgb(246, 246, 246);
+    text-align: center;
+    border: 2px solid #dadada;
+    padding: 5px;
+}
+
 .pure .ui-table-Xsmall td {
     padding: 10px 4px;
     font-size: 90%;
@@ -1965,6 +2088,12 @@ div[class^="dom_cell"] table {
     color: #595959;
 }
 
+/*bannettes publiques liste de lecteur*/
+.readers_bannette_ui_list .list_ui_list_cell_header {
+    text-align: center !important;
+}
+/*fin*/
+
 table.table-bkg form[class^='form'] {
     background-color: #f6f6f6;
 }
@@ -1987,7 +2116,7 @@ font[color="RED"] b {
     border: solid 1px;
     border-radius: 2px;
     padding: 2px 8px;
-    margin: 20px 10px 0px 10px;
+    margin: 20px 10px 10px 10px;
 }
 
 a font[color="RED"] b {
@@ -2047,6 +2176,12 @@ table thead tr.actions-thead th {
     color: #333;
 }
 
+.pure .bulletins-perio .uk-table-striped{
+	overflow-x: auto;
+	display: block;
+	white-space: nowrap;
+}
+
 .pure .uk-table-striped thead {
     background-color: #e4e4e4;
 }
@@ -2076,9 +2211,33 @@ tr.odd {
     box-shadow: 0px -1px 1px -1px rgba(45, 45, 45, 0.61) inset;
 }
 
+.pure .exemplaires-perio .uk-table-striped tbody tr:nth-of-type(odd),
+.pure .exemplaires-perio .uk-table-striped>tr:nth-of-type(odd),
+.pure .exemplaires-perio tr.odd {
+    background-color: #fbfbfb;
+    box-shadow:  none;
+}
+
+.pure .exemplaires-perio .uk-table-striped tbody tr:nth-of-type(odd) td,
+.pure .exemplaires-perio .uk-table-striped>tr:nth-of-type(odd) td,
+.pure .exemplaires-perio tr.odd td{
+    background-color: #fbfbfb;
+    box-shadow:  0px 2px 1px -2px rgba(45, 45, 45, 0.61) inset;
+}
+
 .pure .uk-table-striped tbody tr:nth-of-type(even) {
     background-color: #f3f3f3;
     box-shadow: 0px -1px 1px -1px rgba(45, 45, 45, 0.61) inset;
+}
+
+.pure .exemplaires-perio .uk-table-striped tbody tr:nth-of-type(even){
+    background-color: #f3f3f3;
+    box-shadow: none;
+}
+
+.pure .exemplaires-perio .uk-table-striped tbody tr:nth-of-type(even) td{
+    background-color: #f3f3f3;
+    box-shadow: 0px 2px 1px -2px rgba(45, 45, 45, 0.61) inset;
 }
 
 .pure tr.even,
@@ -2318,6 +2477,7 @@ div[id^="el"][id$="Child"][style*='block'].notice-child {
     float: right;
     clear: none;
     max-width: 30%;
+    font-size:16px;
 }
 
 span.empr-name.h3-like {
@@ -2382,9 +2542,7 @@ gestion_financiere strong {
 }
 
 a[onclick^="expandAll"],
-a[onclick^="collapseAll"],
-a[href*="expandAll"],
-a[href*="collapseAll"] {
+a[onclick^="collapseAll"] {
     margin: 10px 0px 5px;
     display: inline-block;
 }
@@ -2624,7 +2782,7 @@ user param
     border-color: #0b66cd;
 }
 
-/* 
+/*
 inside menu //  button
 */
 
@@ -2796,6 +2954,7 @@ span[class^='statutnot'] img {
 #contenu-frame img {
     vertical-align: initial;
     margin-right: 5px;
+    width:20px;
 }
 
 #contenu-frame>div {
@@ -3017,8 +3176,10 @@ td[class^="lien_date"][class$="_hs_p"] {
 }
 
 .catalog [id$="Parent"] {
-    border-top: solid 1px #e0e0e0;
-    padding-top: 5px;
+    border-top: solid 0px #e0e0e0;
+    padding-top: 0;
+    margin-bottom: inherit;
+    margin-top: inherit;
 }
 
 #map_search {
@@ -3178,8 +3339,16 @@ span.ui-panel-display {
     padding: 10px 10px 10px 20px;
 }
 
+#extended-search-container .vider {
+    background-color: #0280cc;
+}
+
+#extended-search-container .vider:hover {
+    background-color: #0c8dda;
+}
+
 /*
-Periodique 
+Periodique
 *
 ------------------*/
 
@@ -3688,7 +3857,7 @@ a[onclick*="get_form_duplicate"]:focus {
     background-color: #e9e9e9;
 }
 
-/*CMS  dijit 
+/*CMS  dijit
 -----------*/
 
 #cms_portail_cadres_list tr .dijitButtonNode,
@@ -3705,7 +3874,7 @@ a[onclick*="get_form_duplicate"]:focus {
     color: #595959;
 }
 
-/* rubs select size 
+/* rubs select size
  ==========================================================================  */
 
 div[id$="selector_form"] select[name$="_sections_ids[]"] {
@@ -3751,7 +3920,7 @@ iframe#alerte {
 iframe#history {
     width: 40%;
     height: 97%;
-    position: absolute;
+    position: fixed;
     top: 1%;
     left: 1%;
     z-index: 1000;
@@ -3762,15 +3931,14 @@ iframe#history {
 }
 
 #frame_notice_preview {
-    z-Index: 1000;
-    position: absolute;
-    border: 2px solid #aaa;
-    background-color: #f8f8f8;
-    width: 680px;
-    max-max-height: 500px;
-    padding: 10px;
-    border-radius: 6px;
-    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.2);
+	position: absolute;
+	border: 2px solid #aaa;
+	background-color: #f8f8f8;
+	width: 50%;
+	height: 350px;
+	padding: 10px;
+	border-radius: 6px;
+	box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.2);
 }
 
 #up_frame {
@@ -3789,6 +3957,7 @@ iframe#history {
     border: 2px solid #E1A202;
     position: absolute;
     left: 415px !important;
+    z-index: 1;
 }
 
 #expl-form {
@@ -3813,7 +3982,7 @@ body.abonnement_parution_edition .left {
     margin-top: 10px;
 }
 
-#div_alert{
+#div_alert > ul {
     font-size: 14px;
     background-color: rgba(239, 63, 63, 0.15);
     padding: 0px 0px;
@@ -3836,3 +4005,269 @@ body.abonnement_parution_edition .left {
 
 #frame_trans_expls,
 #frame_abts {}
+
+/* Correction d'un bug Drag & Drop dojo dans Firefox
+https://github.com/dojo/dijit/issues/161 */
+.dijitTree {
+    -moz-user-select: none;
+}
+
+.graph_menu > button {
+	cursor: pointer;
+}
+
+/* ========================================================================
+   Animations
+   ========================================================================  */
+ 
+.animations [id$="Parent"] {
+    border-top: solid 1px #e0e0e0;
+    padding-top: 5px;
+}
+
+#animationView ul {
+	margin: 0 0 0 0;
+	list-style-type: none;
+}
+
+#animationView b {
+	font-weight: 600;
+}
+
+#animationView li {
+	padding : 2px;
+}
+/*FIN ANIMATIONS*/
+
+div#conteneur.acquisition .colonne10 {
+	width: 10%;
+}
+
+#importWkt #valideImport {
+	margin-left: 10px;
+}
+
+#coordform .colonne5 {
+	width: auto;
+}
+
+/* #84424 Catalogue édition avancée */
+
+#caddie_ui_EXPL_options_content .list_ui_options_columns {
+    display: flex;
+}
+
+.list_ui_options_columns_change {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.list_ui_options_columns_selected_buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-left: 10px;
+}
+
+.statutnot2 {
+background-color: #dd5143;
+}
+
+.statutnot3 {
+background-color: #7cb82f;
+}
+
+.statutnot4 {
+background-color: #008cc9;
+}
+
+.statutnot5 {
+background-color: #c73774;
+}
+
+.statutnot6 {
+background-color: #219aa0;
+}
+
+.statutnot7 {
+background-color: #8d6cab;
+}
+
+.statutnot8 {
+background-color: #9ebf9a;
+}
+
+.statutnot9 {
+background-color: #edb220;
+}
+
+.statutnot10 {
+background-color: #e68523;
+}
+
+.statutnot11 {
+background-color: #e5efc7;
+}
+
+.statutnot12 {
+background-color: #98041b;
+}
+
+.statutnot13 {
+background-color: #3f652d;
+}
+
+.statutnot14 {
+background-color: #0b4971;
+}
+
+.statutnot15 {
+background-color: #951343;
+}
+
+.statutnot16 {
+background-color: #0e5c68;
+}
+
+.statutnot17 {
+background-color: #593482;
+}
+
+.notice-parent input {
+    margin-right: 15px;
+    margin-top: -12px;
+}
+
+/*=============================================
+	DSI BANNETTE PUBLIQUE
+===============================================*/
+#list_ui_selection_actions .list_ui_selection_action_save.readers_bannette_ui_selection_action_save {
+    background-color: #d970a9;
+    padding: 8px;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 3px;
+    border: none;
+}
+
+#list_ui_selection_actions .list_ui_selection_action_save.readers_bannette_ui_selection_action_save a {
+    color: #fff;
+    font-weight: 500;
+    border-radius: 3px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.list_ui_selection_action_save img {
+    display: none;
+}
+
+#list_ui_selection_actions .list_ui_selection_action_save.readers_bannette_ui_selection_action_save:hover {
+    background-color: #f35bad;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.27);
+}
+
+#list_ui_selection_actions .list_ui_selection_action_save.readers_bannette_ui_selection_action_save a:hover{
+	text-decoration:none;
+}
+
+#search_other_group {
+    float: right;
+    margin: 10px 0px;
+    font-size: 1.1em;
+}
+
+#list_ui_selection_actions img {
+    vertical-align: middle;
+}
+
+.form-admin .form-contenu .dom_tab2 .dom_col2 {
+vertical-align: top;
+}
+
+/* ------------------ Vignette Administration ------------------ */
+.admin .accordion-trigger:focus, 
+.admin .accordion-trigger:hover {
+	background: #df115c !important;
+	color: white;
+}
+
+/* ------------------ Refonte Dsi ------------------ */
+#views .accordion .accordion-trigger,
+#views .accordion .accordion-trigger:focus,
+#views .accordion .accordion-trigger:hover,
+#diffusionsPending .accordion .accordion-trigger,
+#diffusionsPending .accordion .accordion-trigger:focus,
+#diffusionsPending .accordion .accordion-trigger:hover,
+#subscriberList .accordion .accordion-trigger,
+#subscriberList .accordion .accordion-trigger:focus,
+#subscriberList .accordion .accordion-trigger:hover,
+#products .accordion .accordion-trigger,
+#products .accordion .accordion-trigger:focus,
+#products .accordion .accordion-trigger:hover,
+#diffusions .accordion .accordion-trigger,
+#diffusions .accordion .accordion-trigger:focus,
+#diffusions .accordion .accordion-trigger:hover {
+    background: #d970a9 !important;
+    color: white;
+}
+
+.dsi-tabs .dsi-tab-registers button.active-tab {
+    background: #bd4385;
+}
+
+.source-list .source-item::before {
+	content: "\2022"; 
+	color: #df115c;
+	display: inline-block; 
+	width: 1em;
+	margin-left: -1em
+}
+
+.pagination button.bouton-page.active {
+	background-color: #d970a9;
+	color: white;
+}
+
+.dsi-scroll-up {
+    top: 100px;
+}
+
+/*                      Planificateur de taches                        		  */
+/* ---------------------------------------------------------------------------*/
+
+div.scheduler_progress_bar {
+	height:35px;
+}
+
+.scheduler_progress_bar_img {
+	height:25px;
+}
+
+div.scheduler_progress_bar_percent {
+	top: -23px; 
+}
+
+/* ------------------ Refonte Dashboard ------------------ */
+#dashboard .bouton {
+	background: #0280cc;
+}
+
+/* ---------------------------------------------------------------------------*/
+/*					  Artificial Intelligence                                 */
+/* ---------------------------------------------------------------------------*/
+
+.ai_slider {
+	width: 100%;
+	height: 25px;
+	background: #d3d3d3;
+	accent-color: #a8a8a8;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}

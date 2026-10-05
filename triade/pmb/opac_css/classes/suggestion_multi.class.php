@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_multi.class.php,v 1.20 2019-06-04 14:21:32 ngantier Exp $
+// $Id: suggestion_multi.class.php,v 1.27 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $include_path;
 require_once($include_path."/templates/suggestion_multi.tpl.php");
 require_once($base_path."/classes/notice.class.php");
 require_once($base_path."/classes/suggestions_origine.class.php");
@@ -16,6 +17,8 @@ require_once($base_path."/classes/suggestions_unimarc.class.php");
 class suggestion_multi{
 	
 	public $liste_sugg=array();
+	
+	public $from_cart=0;
 	
 	/**
 	 * Constructeur
@@ -28,17 +31,19 @@ class suggestion_multi{
 	 * Formulaire de saisie des suggestions multiples
 	 */
 	public function display_form(){
-		global $dbh, $multi_sug_form,$charset, $msg, $sug_src;
+		global $multi_sug_form,$charset, $msg, $sug_src;
 		
+		$ligne = '';
 		//On charge la liste des sources
 		$req = "select * from suggestions_source order by libelle_source";
-			$res= pmb_mysql_query($req,$dbh);
+			$res= pmb_mysql_query($req);
 		
 		$option = "<option value='0' selected>".htmlentities($msg['empr_sugg_no_src'],ENT_QUOTES,$charset)."</option>";
 		while(($src=pmb_mysql_fetch_object($res))){
 			$option .= "<option value='".$src->id_source."' ".($sug_src==$src->id_source ? 'selected' : '').">".htmlentities($src->libelle_source,ENT_QUOTES,$charset)."</option>";
 		}
 		
+		$multi_sug_form = str_replace('!!title!!',common::format_title($msg['empr_make_mul_sugg']),$multi_sug_form);
 		if(!$this->liste_sugg){
 			$nb_lignes=1;
 			$multi_sug_form = str_replace('!!max_ligne!!',$nb_lignes,$multi_sug_form);
@@ -97,7 +102,7 @@ class suggestion_multi{
 					FROM notices LEFT JOIN responsability ON responsability_notice=notice_id 
 					LEFT JOIN authors ON responsability_author=author_id LEFT JOIN publishers ON ed1_id=ed_id
 					WHERE notice_id=".$liste[$i];
-					$result = pmb_mysql_query($requete,$dbh);
+					$result = pmb_mysql_query($requete);
 					$sug = pmb_mysql_fetch_object($result);
 					$titre = $sug->titre;
 					$auteur = $sug->auteur;
@@ -138,7 +143,8 @@ class suggestion_multi{
 			$multi_sug_form = str_replace('!!max_ligne!!',$i,$multi_sug_form);
 		}
 		$multi_sug_form = str_replace('!!ligne!!',$ligne,$multi_sug_form);
-		$multi_sug_form.= "<script type='text/javascript'>add_line(0);</script>";
+		$multi_sug_form = str_replace('!!from_cart!!',$this->from_cart,$multi_sug_form);
+		$multi_sug_form.= "<script>add_line(0);</script>";
 		return $multi_sug_form;		
 	}
 	
@@ -146,15 +152,14 @@ class suggestion_multi{
 	 * Enregistrement d'une suggestion multiple
 	 */
 	public function save(){
-		
-		global $dbh, $max_nblignes, $msg, $id_empr, $empr_location, $num_categ;
+		global $max_nblignes, $msg, $id_empr, $empr_location, $num_categ;
 		
 		for($i=0;$i<$max_nblignes;$i++){		
 			$tit = "sugg_tit_".$i;	$aut = "sugg_aut_".$i;	$edi = "sugg_edi_".$i;
 			$code = "sugg_code_".$i; $prix = "sugg_prix_".$i; $com = "sugg_com_".$i;
 			$url = "sugg_url_".$i; $qte = "sugg_qte_".$i; $src = "sugg_src_".$i;
 			$date = "sugg_date_".$i; $unimarc = "id_unimarc_".$i; $notice =  "id_notice_".$i;
-			global $sug_tr, ${$tit}, ${$aut}, ${$edi}, ${$code}, ${$com}, ${$prix}, ${$url}, ${$qte}, ${$src}, ${$date}, ${$unimarc}, ${$notice};
+			global ${$tit}, ${$aut}, ${$edi}, ${$code}, ${$com}, ${$prix}, ${$url}, ${$qte}, ${$src}, ${$date}, ${$unimarc}, ${$notice};
 				
 			if(isset(${$tit})){
 				if(!is_numeric(${$qte})){
@@ -172,6 +177,7 @@ class suggestion_multi{
 							code='".${$code}."',
 							prix='".${$prix}."',
 							commentaires='".${$com}."',
+							index_suggestion = ' ".strip_empty_words(${$tit})." ".strip_empty_words(${$edi})." ".strip_empty_words(${$aut})." ".${$code}." ".strip_empty_words(${$com})." ',
 							url_suggestion='".${$url}."',
 							nb='".${$qte}."',
 							sugg_source='".${$src}."',
@@ -188,7 +194,7 @@ class suggestion_multi{
 					if(${$notice}){
 						$req .= ", num_notice ='".${$notice}."'";
 					}
-					pmb_mysql_query($req,$dbh);
+					pmb_mysql_query($req);
 					$idSugg = pmb_mysql_insert_id();
 						
 					if (isset($uni) && is_object($uni)) $uni->delete();
@@ -201,10 +207,27 @@ class suggestion_multi{
 					$su = new suggestions($idSugg);
 					suggestions::alert_mail_sugg_users_pmb(1, $id_empr, $su->get_table(), $su->sugg_location) ;
 						
+					//On retire la notice du panier ?
+					$this->delete_cart_record(${$notice});
+					
 					print $msg['empr_sugg_ok'] . ' : <span>' . stripslashes(${$tit}) . '</span><br/>';
 				} else {
 					print $msg['empr_sugg_already_exist'] . ' : <span>' . stripslashes(${$tit}) . '</span><br/>';
 				}
+			}
+		}
+	}
+	
+	public function delete_cart_record($notice_id) {
+		global $opac_cart_records_remove, $from_cart;
+		
+		if(!$this->from_cart && !empty($from_cart)) {
+			$this->from_cart = $from_cart;
+		}
+		if($opac_cart_records_remove && $this->from_cart) {
+			$as=array_search($notice_id,$_SESSION["cart"]);
+			if (($as!==null)&&($as!==false)) {
+				unset($_SESSION["cart"][$as]);
 			}
 		}
 	}

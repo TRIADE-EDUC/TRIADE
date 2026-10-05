@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: session.class.php,v 1.1 2015-08-10 10:32:51 dgoron Exp $
+// $Id: session.class.php,v 1.3 2024/03/21 11:06:01 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,15 +11,15 @@ class session {
 	// ---------------------------------------------------------------
 	//		constructeur
 	// ---------------------------------------------------------------
-	function __construct() {
+	public function __construct() {
 
 	}
 	
-	static function get_last_used($type) {
+	public static function get_last_used($type) {
 		return $_SESSION["last_".$type."_used"];
 	}
 	
-	static function set_last_used($type, $value) {
+	public static function set_last_used($type, $value) {
 		$_SESSION["last_".$type."_used"] = $value;
 	}
 	
@@ -27,9 +27,9 @@ class session {
 // 		return $_SESSION[$name];
 // 	}
 	
-// 	static function set_value($name, $value) {
-// 		$_SESSION[$name] = $value;
-// 	}
+	public static function set_value($name, $value) {
+		$_SESSION[$name] = $value;
+	}
 	
 } // class session
 

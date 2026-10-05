@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
+$Id: en_US.xml,v 1.15.6.1 2024/08/30 13:40:25 rtigero Exp $ -->
 <pmbquotas>
 	<elements>
 
@@ -57,11 +57,20 @@ $Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
 			<label>concat(empr_nom,' ',empr_prenom)</label>
 		</element>
 
+		<element name="NOTICENOUVEAUTE" id="32" comment="Nouveauté">
+            <linkedto>NOTI</linkedto>
+            <tablelinked>notices</tablelinked>
+            <linkedfield>notice_is_new</linkedfield>
+            <linkedid>notice_id</linkedid>
+            <table>notices</table>
+            <field>notice_is_new</field>
+            <label>IF(notice_is_new=1, "Nouveauté = Oui", "Nouveauté = Non")</label>
+        </element>
 	</elements>
 	
 	<types>
 
-		<type name="LEND_NMBR_QUOTA" id="1" max="yes" min="no" forcelend="yes" commentForcelend="du prêt" comment="Quotas de nombre de prêts" short_comment="nombre de documents">
+		<type name="LEND_NMBR_QUOTA" id="1" max="yes" min="no" forcelend="yes" mostfavourable="no" commentForcelend="du prêt" comment="Quotas de nombre de prêts" short_comment="nombre de documents">
 			<entity name="READER_CATEG" maxquota="yes">
 				<counttable>pret</counttable>
 				<countfield>pret_idempr</countfield>
@@ -76,40 +85,44 @@ $Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
 				<on countfields="pret_idempr,pret_idexpl">READER_CATEG,DOCTYPE</on>
 				<on countfields="pret_idempr">READER_ALONE</on>
 				<on countfields="pret_idempr,pret_idexpl">READER_ALONE,DOCTYPE</on>
+				<on countfields="notice_id">NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 	
-		<type name="LEND_TIME_QUOTA" id="2" max="no" min="no" forcelend="no" comment="Quotas de durée de prêt" short_comment="durée d'emprunt">
+		<type name="LEND_TIME_QUOTA" id="2" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de prêt" short_comment="durée d'emprunt">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG,DOCTYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,DOCTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 		
-		<type name="PROLONG_NMBR_QUOTA" id="64" max="no" min="no" forcelend="yes" commentForcelend="de la prolongation" comment="Quotas de nombre de prolongations" short_comment="nombre de prolongations">
+		<type name="PROLONG_NMBR_QUOTA" id="64" max="no" min="no" forcelend="yes" mostfavourable="no" commentForcelend="de la prolongation" comment="Quotas de nombre de prolongations" short_comment="nombre de prolongations">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG,DOCTYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,DOCTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 		
-		<type name="PROLONG_TIME_QUOTA" id="128" max="no" min="no" forcelend="no" comment="Quotas de durée de prolongation" short_comment="durée de prolongation">
+		<type name="PROLONG_TIME_QUOTA" id="128" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de prolongation" short_comment="durée de prolongation">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG,DOCTYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,DOCTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>							
 		
-		<type name="BOOK_NMBR_QUOTA" id="4" max="yes" min="no" forcelend="yes" commentForcelend="de la réservation" comment="Quotas de nombre de réservations" short_comment="nombre de réservations">
+		<type name="BOOK_NMBR_QUOTA" id="4" max="yes" min="no" forcelend="yes" mostfavourable="yes" commentForcelend="de la réservation" comment="Quotas de nombre de réservations" short_comment="nombre de réservations">
 			<entity name="READER_CATEG" maxquota="yes">
 				<counttable>resa</counttable>
 				<countfield>resa_idempr</countfield>
@@ -124,20 +137,22 @@ $Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
 				<on countfields="resa_idempr,resa_idnotice">READER_CATEG,NOTICETYPE</on>
 				<on countfields="resa_idempr">READER_ALONE</on>
 				<on countfields="resa_idempr,resa_idnotice">READER_ALONE,NOTICETYPE</on>
+				<on countfields="resa_idnotice">NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 	
-		<type name="BOOK_TIME_QUOTA" id="8" max="no" min="no" forcelend="no" comment="Quotas de durée de réservation" short_comment="durée de réservation">
+		<type name="BOOK_TIME_QUOTA" id="8" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de réservation" short_comment="durée de réservation">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>NOTICETYPE</on>
 				<on>READER_CATEG,NOTICETYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,NOTICETYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 		
-		<type name="BOOK_NMBR_SERIAL_QUOTA" id="16" max="yes" min="no" forcelend="yes" commentForcelend="de la réservation" comment="Quotas de nombre de réservations des périodiques" short_comment="nombre de réservations des périodiques">
+		<type name="BOOK_NMBR_SERIAL_QUOTA" id="16" max="yes" min="no" forcelend="yes" mostfavourable="yes" commentForcelend="de la réservation" comment="Quotas de nombre de réservations des périodiques" short_comment="nombre de réservations des périodiques">
 			<entity name="READER_CATEG" maxquota="yes">
 				<counttable>resa</counttable>
 				<countfield>resa_idempr</countfield>
@@ -152,20 +167,22 @@ $Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
 				<on countfields="resa_idempr,resa_idbulletin">READER_CATEG,BULLETINTYPE</on>
 				<on countfields="resa_idempr">READER_ALONE</on>
 				<on countfields="resa_idempr,resa_idbulletin">READER_ALONE,BULLETINTYPE</on>
+				<on countfields="resa_idbulletin">NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 	
-		<type name="BOOK_TIME_SERIAL_QUOTA" id="32" max="no" min="no" forcelend="no" comment="Quotas de durée de réservation des périodiques" short_comment="durée de réservation des périodiques">
+		<type name="BOOK_TIME_SERIAL_QUOTA" id="32" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de réservation des périodiques" short_comment="durée de réservation des périodiques">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>BULLETINTYPE</on>
 				<on>READER_CATEG,BULLETINTYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,BULLETINTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 		
-		<type name="SHORT_LOAN_NMBR_QUOTA" id="512" max="yes" min="no" forcelend="yes" commentForcelend="du prêt court" comment="Quotas de nombre de prêts courts" short_comment="nombre de documents en emprunt court">
+		<type name="SHORT_LOAN_NMBR_QUOTA" id="512" max="yes" min="no" forcelend="yes" mostfavourable="no" commentForcelend="du prêt court" comment="Quotas de nombre de prêts courts" short_comment="nombre de documents en emprunt court">
 			<entity name="READER_CATEG" maxquota="yes">
 				<counttable>pret</counttable>
 				<countfield>pret_idempr</countfield>
@@ -180,18 +197,72 @@ $Id: en_US.xml,v 1.12 2016-06-13 16:55:56 mbertin Exp $ -->
 				<on countfields="pret_idempr,pret_idexpl">READER_CATEG,DOCTYPE</on>
 				<on countfields="pret_idempr">READER_ALONE</on>
 				<on countfields="pret_idempr,pret_idexpl">READER_ALONE,DOCTYPE</on>
+				<on countfields="notice_id">NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 
-		<type name="SHORT_LOAN_TIME_QUOTA" id="256" max="no" min="no" forcelend="no" comment="Quotas de durée de prêt court" short_comment="durée d'emprunt court">
+		<type name="SHORT_LOAN_TIME_QUOTA" id="256" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de prêt court" short_comment="durée d'emprunt court">
 			<quotas>
 				<on>READER_CATEG</on>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG,DOCTYPE</on>
 				<on>READER_ALONE</on>
 				<on>READER_ALONE,DOCTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
 			</quotas>
 		</type>
 		
-	</types>
+		<type name="PNB_LOAN_NMBR_QUOTA" id="1024" max="yes" min="no" forcelend="no" mostfavourable="no" comment="Quotas de nombre de prêts PNB" short_comment="nombre de documents PNB">
+			<entity name="READER_CATEG" maxquota="yes">
+				<counttable>pret</counttable>
+				<countfield>pret_idempr</countfield>
+				<countfilter>pret_pnb_flag=1</countfilter>
+				<max_error_message>Le nombre total de prêts PNB %s est atteint (%s)</max_error_message>
+				<partial_error_message>Le nombre de prêts PNB par %s est atteint (%s)</partial_error_message>
+				<default_error_message>Le nombre de prêts PNB par défaut est atteint (%s)</default_error_message>
+			</entity>
+			<quotas>
+				<on countfields="pret_idempr">READER_CATEG</on>
+				<on countfields="pret_idexpl">DOCTYPE</on>
+				<on countfields="pret_idempr,pret_idexpl">READER_CATEG,DOCTYPE</on>
+				<on countfields="pret_idempr">READER_ALONE</on>
+				<on countfields="pret_idempr,pret_idexpl">READER_ALONE,DOCTYPE</on>
+				<on countfields="notice_id">NOTICENOUVEAUTE</on>
+			</quotas>
+		</type>
+
+		<type name="PNB_LOAN_TIME_QUOTA" id="2048" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de prêt PNB" short_comment="durée d'emprunt PNB">
+			<quotas>
+				<on>READER_CATEG</on>
+				<on>DOCTYPE</on>
+				<on>READER_CATEG,DOCTYPE</on>
+				<on>READER_ALONE</on>
+				<on>READER_ALONE,DOCTYPE</on>
+				<on>NOTICENOUVEAUTE</on>
+			</quotas>
+		</type>
+
+        <type name="PNB_LOAN_PROLONG_NMBR_QUOTA" id="4096" max="no" min="no" forcelend="no" mostfavourable="no" commentForcelend="de la prolongation" comment="Quotas de nombre de prolongations PNB" short_comment="nombre de prolongations PNB">
+            <quotas>
+                <on>READER_CATEG</on>
+                <on>DOCTYPE</on>
+                <on>READER_CATEG,DOCTYPE</on>
+                <on>READER_ALONE</on>
+                <on>READER_ALONE,DOCTYPE</on>
+                <on>NOTICENOUVEAUTE</on>
+            </quotas>
+        </type>
+        
+        <type name="PNB_LOAN_PROLONG_TIME_QUOTA" id="8192" max="no" min="no" forcelend="no" mostfavourable="no" comment="Quotas de durée de prolongation PNB" short_comment="durée de prolongation PNB">
+            <quotas>
+                <on>READER_CATEG</on>
+                <on>DOCTYPE</on>
+                <on>READER_CATEG,DOCTYPE</on>
+                <on>READER_ALONE</on>
+                <on>READER_ALONE,DOCTYPE</on>
+                <on>NOTICENOUVEAUTE</on>
+            </quotas>
+        </type>
+
+    </types>
 </pmbquotas>

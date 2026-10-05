@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_sectionslist.class.php,v 1.1 2012-10-05 09:00:37 arenou Exp $
+// $Id: cms_module_sectionslist.class.php,v 1.1 2012/10/05 09:00:37 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

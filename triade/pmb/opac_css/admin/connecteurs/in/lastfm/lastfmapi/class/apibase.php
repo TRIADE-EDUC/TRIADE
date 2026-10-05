@@ -203,7 +203,7 @@ class lastfmApi {
 	 * @access protected
 	 * @return void
 	 */
-	protected function handleError($error = '', $customDesc = '') {
+	protected function handleError($error = array(), $customDesc = '') {
 		if ( !empty($error) && is_object($error) ) {
 			// Fail with error code
 			$this->error['code'] = $error['code'];

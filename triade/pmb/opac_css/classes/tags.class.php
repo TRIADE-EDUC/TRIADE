@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
-// Â© 2006 mental works / www.mental-works.com contact@mental-works.com
-// 	repris et corrigÃ© par PMB Services 
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2006 mental works / www.mental-works.com contact@mental-works.com
+// 	repris et corrigé par PMB Services 
 // +-------------------------------------------------+
-// $Id: tags.class.php,v 1.19 2018-05-26 09:31:48 dgoron Exp $
+// $Id: tags.class.php,v 1.21 2022/01/12 07:49:29 dgoron Exp $
 
-// dÃ©finition de la classe d'affichage des 'tags'
+// définition de la classe d'affichage des 'tags'
 
 class tags {
 
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------
 
 	protected $url_base;
@@ -24,12 +24,11 @@ class tags {
 
 	public function listeAlphabetique(){
 		//renvoie la liste des tags existants
-		global $dbh;
 		global $pmb_keyword_sep;
 		
 		$requete = "select index_l from notices where index_l is not null and index_l!=''";
 		$arr=array();
-		$r = pmb_mysql_query($requete, $dbh);
+		$r = pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($r)){
 			while ($loc = pmb_mysql_fetch_object($r)) {
 				$liste = explode($pmb_keyword_sep,$loc->index_l);
@@ -50,12 +49,11 @@ class tags {
 		}
 		ksort($arr);
 		$count=0;
-		$max=$somme=0;
-		//les seuils permettent de sÃ©parer les valeurs en 4 groupes pour afficher les tags dans 4 tailles diffÃ©rentes en fct de leur frÃ©quence 
+		$max=0;
+		//les seuils permettent de séparer les valeurs en 4 groupes pour afficher les tags dans 4 tailles différentes en fct de leur fréquence 
 		if(is_array($arr) && count($arr)){
 			foreach ($arr as $key => $value){
 				$count++;
-				$somme+=$value;
 				if ($max<$value) $max=$value;
 			}
 			$seuil2 = array_sum($arr)/count($arr);//moyenne des valeurs
@@ -72,8 +70,8 @@ class tags {
 		$lettre="a";
 		$reponse="";
 		foreach ($arr as $key => $value) {
-			if ($key{0}!=$lettre) {
-				$lettre=$key{0};
+			if ($key[0]!=$lettre) {
+			    $lettre=$key[0];
 				if($reponse) 
 					$reponse.="<br /><br />";
 			} else if($reponse) $reponse.=", ";
@@ -99,14 +97,13 @@ class tags {
 	}
 
 	public function chercheTag($user_query){
-		global $dbh;
 		global $msg;
 		global $pmb_keyword_sep ;
 		$user_query=trim($user_query); 
 		$requete = "select index_l from notices where index_l like '%$user_query%'";
 		$user_query=stripslashes($user_query);
 		$arr=array();
-		$r = pmb_mysql_query($requete,$dbh);
+		$r = pmb_mysql_query($requete);
 		
 		while ($loc = pmb_mysql_fetch_object($r)) {
 			$liste = explode($pmb_keyword_sep,$loc->index_l);
@@ -116,7 +113,7 @@ class tags {
 			}
 		}	
 		ksort($arr);
-		//les seuils permettent de sÃ©parer les valeurs en 4 groupes pour afficher les tags dans 4 tailles diffÃ©rentes en fct de leur frÃ©quence 
+		//les seuils permettent de séparer les valeurs en 4 groupes pour afficher les tags dans 4 tailles différentes en fct de leur fréquence 
 		$count=0;
 		$max=$somme=0;
 		if(is_array($arr) && count($arr)){

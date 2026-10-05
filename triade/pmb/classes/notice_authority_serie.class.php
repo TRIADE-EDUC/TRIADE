@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_authority_serie.class.php,v 1.6 2017-04-25 15:22:13 dgoron Exp $
+// $Id: notice_authority_serie.class.php,v 1.6 2017/04/25 15:22:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ require_once($class_path."/subcollection.class.php");
 require_once($class_path."/serie.class.php");
 
 /*
- * Classe pour les autoritÃ© classiques...
+ * Classe pour les autorité classiques...
  */
 class notice_authority_serie extends iso2709_notices implements notice_authority_generic{
 	public $is_utf8;
@@ -55,11 +55,11 @@ class notice_authority_serie extends iso2709_notices implements notice_authority
 	}
 
 	/*
-	 * Pour avoir le numÃ©ro d'autoritÃ© 
+	 * Pour avoir le numéro d'autorité 
 	 */
 	public function format_authority_number($authority_number){
 		global $pmb_import_modele_authorities;
-		//appel Ã  la mÃ©thode statique de la classe d'import...
+		//appel à la méthode statique de la classe d'import...
 		if($pmb_import_modele_authorities!= 0){
 			return call_user_func(array($pmb_import_modele_authorities,"format_authority_number"),$authority_number,20);
 		}else{
@@ -109,7 +109,7 @@ class notice_authority_serie extends iso2709_notices implements notice_authority
 	}
 
 	public function get_rejected_forms(){
-		//n'existe pas sur ces types d'autoritÃ©s
+		//n'existe pas sur ces types d'autorités
 	}
 
 	public function get_associated_forms(){
@@ -117,7 +117,7 @@ class notice_authority_serie extends iso2709_notices implements notice_authority
 	}
 
 	public function get_parallel_forms(){
-		//non gÃ©rÃ© dans PMB
+		//non géré dans PMB
 	}
 
 	public function check_if_exists($data){

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_root.class.php,v 1.8 2017-03-21 13:13:29 tsamson Exp $
+// $Id: onto_common_root.class.php,v 1.8 2017/03/21 13:13:29 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -56,7 +56,7 @@ class onto_common_root {
 	public $onto_name;
 	
 	/**
-	 * Store de donnÃ©es
+	 * Store de données
 	 * @var onto_store
 	 * @access private
 	 */

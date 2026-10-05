@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
+$Id: manifest.xml,v 1.49.2.1 2024/07/24 14:10:10 dbellamy Exp $ -->
 
 <manifest>
 	<name>pmbesOPACEmpr</name>
@@ -11,6 +11,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 	<requirements>
 		<requirement group="pmbesTypes"/>
   		<requirement group="pmbesSearch"/>
+  		<requirement group="pmbesNotices"/>
   		<requirement group="pmbesItems"/>
   		<requirement group="pmbesOPACGeneric"/>
   		<requirement group="pmbesSelfServices"/>
@@ -30,15 +31,15 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 		<type name="unimarc_notice" imported="true" imported_from="pmbesSpecialTypes"/>
 		<type name="thesaurus" imported="true" imported_from="pmbesTypes"/>
 		<type name="reading_list" imported="true" imported_from="pmbesTypes"/>
-        <type name="collstate" imported="true" imported_from="pmbesTypes" description=""/> 
-		<type name="noticeAdministrative" imported="true" imported_from="pmbesTypes"/>  
+        <type name="collstate" imported="true" imported_from="pmbesTypes" description=""/>
+		<type name="noticeAdministrative" imported="true" imported_from="pmbesTypes"/>
 	</types>
 	<methods>
-	<!--
- 
-	Méthodes relative au compte du lecteur
- 
-	-->
+
+    	<!--
+     	   Méthodes relatives au compte du lecteur
+     	-->
+
 		<method name="login" comment="msg:login_description" rights="" version="1.0" language_independant="true">
 			<inputs>
 				<description>msg:login_input_description</description>
@@ -59,6 +60,31 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<outputs>
 				<description>msg:login_md5_output_description</description>
 				<result name="session_id" type="scalar" dataType="string" description="msg:login_md5_session_id"/>
+			</outputs>
+		</method>
+		<method name="login_aes" rights="" version="1.0" comment="msg:login_aes_description" language_independant="true">
+			<inputs>
+				<description>msg:login_aes_input_description</description>
+				<param name="empr_login" type="scalar" dataType="string" description="msg:login_aes_empr_login"/>
+				<param name="empr_password" type="scalar" dataType="string" description="msg:login_aes_empr_password"/>
+				<param name="iv" type="scalar" dataType="string" description="msg:login_aes_iv"/>
+			</inputs>
+			<outputs>
+				<description>msg:login_aes_output_description</description>
+				<result name="session_id" type="scalar" dataType="string" description="msg:login_aes_session_id"/>
+			</outputs>
+		</method>
+		<method name="login_token" rights="" version="1.0" comment="msg:login_token_description" language_independant="true">
+			<inputs>
+				<description>msg:login_token_input_description</description>
+				<param name="login_scope" type="scalar" dataType="string" description="msg:login_token_login_scope"/>
+				<param name="login_date" type="scalar" dataType="string" description="msg:login_token_login_date"/>
+				<param name="login_value" type="scalar" dataType="string" description="msg:login_token_login_value"/>
+				<param name="login_token" type="scalar" dataType="string" description="msg:login_token_login_token"/>
+			</inputs>
+			<outputs>
+				<description>msg:login_mail_token_output_description</description>
+				<result name="session_id" type="scalar" dataType="string" description="msg:login_token_session_id"/>
 			</outputs>
 		</method>
 		<method name="logout" comment="msg:logout_description" rights="" version="1.0" language_independant="true">
@@ -158,7 +184,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<outputs>
 				<result name="success" type="scalar" dataType="boolean"/>
 			</outputs>
-		</method>		
+		</method>
 		<method name="add_review" comment="msg:add_review_description" rights="" version="1.0" language_independant="true">
 			<inputs>
 				<description>msg:add_review_input_description</description>
@@ -223,7 +249,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<requirements>
 		  		<requirement group="pmbesOPACEmpr" name="list_suggestion_sources" version="1.0"/>
 		  		<requirement group="pmbesOPACEmpr" name="list_suggestion_categories" version="1.0"/>
-			</requirements>		
+			</requirements>
 			<inputs>
 				<param name="session_id" type="scalar" dataType="string"/>
 			</inputs>
@@ -289,7 +315,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<outputs>
 				<result name="success" type="scalar" dataType="boolean"/>
 			</outputs>
-		</method>		
+		</method>
 		<method name="delete_suggestion" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="suggestions.class.php"/>
@@ -325,8 +351,6 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 		<method name="list_resa_locations" comment="msg:list_resa_locations_description" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
-			</pmb_requirements>
-			<pmb_requirements>
 				<pmb_requirement start_path="class" file="resa.class.php"/>
 				<pmb_requirement start_path="include" file="resa_func.inc.php"/>
 			</pmb_requirements>
@@ -344,8 +368,6 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 		<method name="can_reserve_notice" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
-			</pmb_requirements>
-			<pmb_requirements>
 				<pmb_requirement start_path="class" file="resa.class.php"/>
 				<pmb_requirement start_path="include" file="resa_func.inc.php"/>
 			</pmb_requirements>
@@ -358,11 +380,9 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<result name="can_reserve" type="scalar" dataType="boolean"/>
 			</outputs>
 		</method>
-		<method name="add_resa" comment="msg:add_resa_description" rights="" version="1.0" language_independant="true">
+		<method name="add_resa" comment="msg:add_resa_description" rights="" version="1.0" language_independant="false">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
-			</pmb_requirements>
-			<pmb_requirements>
 				<pmb_requirement start_path="class" file="resa.class.php"/>
 				<pmb_requirement start_path="include" file="resa_func.inc.php"/>
 			</pmb_requirements>
@@ -377,12 +397,13 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<description>msg:add_resa_output_description</description>
 					<result name="success" type="scalar" dataType="boolean" description="msg:add_resa_success"/>
 					<result name="error"  type="scalar" dataType="string" description="msg:add_resa_error"/>
-					<result name="message" type="scalar" dataType="string" description="msg:add_resa_message"/>	
+					<result name="message" type="scalar" dataType="string" description="msg:add_resa_message"/>
 			</outputs>
 		</method>
 		<method name="list_abonnements" comment="msg:list_abonnements_description" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
+				<pmb_requirement start_path="class" file="bannette_abon.class.php"/>
 			</pmb_requirements>
 			<inputs>
 				<description>msg:list_abonnements_input_description</description>
@@ -395,8 +416,8 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</result>
 			</outputs>
 		</method>
-		
-		
+
+
 		<method name="list_cart_content" rights="" version="1.0" comment="msg:list_cart_content_description" language_independant="true">
 			<inputs>
 				<description>msg:list_cart_content_input_description</description>
@@ -447,7 +468,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<description>msg:empty_cart_output_description</description>
 			</outputs>
 		</method>
-		
+
 		<method name="list_shelves" rights="" version="1.0" comment="msg:list_shelves_description" language_independant="true">
 			<requirements>
 		  		<requirement group="pmbesOPACGeneric" name="list_shelves" version="1.0"/>
@@ -455,6 +476,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<inputs>
 				<description>msg:list_shelves_input_description</description>
 				<param name="session_id" type="scalar" dataType="string" description="msg:list_shelves_session_id"/>
+				<param name="filter" type="scalar" dataType="integer" description="msg:list_shelves_filter" optional="yes" default_value="0" />
 			</inputs>
 			<outputs>
 				<description>msg:list_shelves_output_description</description>
@@ -479,13 +501,12 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</result>
 			</outputs>
 		</method>
-		
-	<!--
 
-		Méthodes relative aux recherches de notices
+    	<!--
+    		Méthodes relatives aux recherches de notices
+    		Ces fonctions servent de proxy à celles du groupe pmbesSearch
+    	-->
 
-			Ces fonctions servent de proxy à celle du groupe pmbesSearch
-	-->
 		<method name="simpleSearch" comment="msg:simple_search_description" rights="" version="1.0" language_independant="true">
 			<requirements>
 		  		<requirement group="pmbesSearch" name="simpleSearch" version="1.0"/>
@@ -493,14 +514,35 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<inputs>
 				<description>msg:simple_search_inputs_description</description>
 				<param name="session_id" type="scalar" dataType="string" description="msg:simpleSearchsession_id"/>
-				<param name="searchType" type="scalar" dataType="integer" description="msg:simpleSearchsearchType"/>
-				<param name="searchTerm" type="scalar" dataType="string" description="msg:simpleSearchsearchTerm"/>
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simpleSearchsearchType" optional="yes" default_value="0"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simpleSearchsearchTerm" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:simple_search_outputs_description</description>
 				<result name="searchId"  type="scalar" dataType="string" description="msg:simpleSearch_searchId"/>
 				<result name="nbResults" type="scalar" dataType="integer" description="msg:simpleSearch_nbResults"/>
 				<result name="typdocs" type="array" description="msg:simpleSearch_typdocs">
+					<result name="typdoc" type="scalar" dataType="string" description=""/>
+				</result>
+			</outputs>
+		</method>
+		<method name="simpleSearchLocalise" comment="msg:simple_search_localise_description" rights="" version="1.0" language_independant="true">
+			<requirements>
+				<requirement group="pmbesSearch" name="simpleSearchLocalise" version="1.0"/>
+			</requirements>
+			<inputs>
+				<description>msg:simple_search_localise_inputs_description</description>
+				<param name="session_id" type="scalar" dataType="string" description=""/>
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_searchType" optional="yes" default_value="0"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_localise_inputs_description_searchTerm" optional="yes"/>
+				<param name="localisation" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_localisation" optional="yes" default_value="0"/>
+				<param name="section" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_section" optional="yes" default_value="0"/>
+			</inputs>
+			<outputs>
+				<description>msg:simple_search_localise_outputs_description</description>
+				<result name="searchId"  type="scalar" dataType="string" description="msg:simple_search_localise_outputs_description_searchId"/>
+				<result name="nbResults" type="scalar" dataType="integer" description="msg:simple_search_localise_outputs_description_nbResults"/>
+				<result name="typdocs" type="array" description="msg:advancedSearch_typdocs">
 					<result name="typdoc" type="scalar" dataType="string" description=""/>
 				</result>
 			</outputs>
@@ -515,7 +557,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<inputs>
 				<description>msg:getAdvancedSearchFields_inputs_description</description>
 				<param name="session_id" type="scalar" dataType="string" description="msg:getAdvancedSearchFieldssession_id"/>
-				<param name="fetch_values" type="scalar" dataType="boolean" description="msg:getAdvancedSearchFieldsfetch_values"/>
+				<param name="fetch_values" type="scalar" dataType="boolean" description="msg:getAdvancedSearchFieldsfetch_values" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:getAdvancedSearchFields_outputs_description</description>
@@ -530,7 +572,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			</requirements>
 			<inputs>
 				<param name="session_id" type="scalar" dataType="string"/>
-				<param name="fetch_values" type="scalar" dataType="boolean"/>
+				<param name="fetch_values" type="scalar" dataType="boolean" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<result name="results" type="array">
@@ -613,7 +655,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsfirstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsrecordCount"/>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordFormat"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset" optional="yes" default_value="'iso-8859-1'"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecords_outputs_description</description>
@@ -629,12 +671,13 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			</requirements>
 			<inputs>
 				<description>msg:fetchSearchRecordsSorted_input_description</description>
+				<param name="session_id" type="scalar" dataType="string" description="msg:fetchSearchRecords_session_id"/>
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_recordCount"/>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordFormat"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsSorted_output_description</description>
@@ -654,7 +697,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_recordCharset"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsArray_output_description</description>
@@ -669,13 +712,14 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			</requirements>
 			<inputs>
 				<description>msg:fetchSearchRecordsArraySorted_input_description</description>
+				<param name="session_id" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_session_id"/>
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_recordCount"/>
 				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_recordCharset"/>
 				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeLinks"/>
 				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeItems"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsArraySorted_output_description</description>
@@ -707,8 +751,8 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			<inputs>
 				<description>msg:fetch_item_input_description</description>
 				<param name="session_id" type="scalar" dataType="string"/>
-				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb"/>
-				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id"/>
+				<param name="item_cb" type="scalar" dataType="string" description="msg:fetch_item_item_cb" optional="yes"/>
+				<param name="item_id" type="scalar" dataType="integer" description="msg:fetch_item_item_id" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_item_output_description</description>
@@ -762,6 +806,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</param>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchNoticeListrecordFormat"/>
 				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchNoticeListrecordCharset"/>
+				<param name="nbResa" type="scalar" dataType="boolean" description="msg:getNbResa" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchNoticeList_outputs_description</description>
@@ -786,82 +831,61 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="recordFormat" type="scalar" dataType="string"/>
 				<param name="recordCharset" type="scalar" dataType="string"/>
 				<param name="includeLinks" type="scalar" dataType="boolean"/>
+				<param name="nbResa" type="scalar" dataType="boolean" description="msg:getNbResa" optional="yes"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
 					<result name="noticeBulletins" type="array" >
-						<result name="aBulletin" type="scalar" dataType="bulletin"/>	
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>
 					</result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeCollstates">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
 					</result>
 					<result type="array" name="noticeAdministrative" description="msg:fetchNoticeListFull_results_noticeAdministrative">
 		          		 <result name="aNoticeAdministrative" type="scalar" dataType="noticeAdministrative"/>
-				   </result>    			
+				   </result>
 				</result>
 			</outputs>
 		</method>
-        <method name="fetchExternalNoticeList" rights="" version="1.0" language_independant="false">                                                                                                            
+        <method name="fetchExternalNoticeList" rights="" version="1.0" language_independant="false">
 				<requirements>
 		  			<requirement group="pmbesNotices" name="fetchExternalNoticeList" version="1.0"/>
 				</requirements>
-                <inputs>                                                                                             
+                <inputs>
                     	<param name="session_id" type="scalar" dataType="string"/>
-                        <param name="noticelist" type="array">          
-                                <param name="notice_id" type="scalar" dataType="integer"/>                           
-                        </param>                                                                                     
-                        <param name="recordFormat" type="scalar" dataType="string" description="msg:fetchNoticeList_recordFormat"/>                                                                                                               
-                        <param name="recordCharset" type="scalar" dataType="string" description="msg:fetchNoticeList_recordCharset"/>                                                                                                             
-                </inputs>                                                                                            
-                <outputs>                                                                                            
+                        <param name="noticelist" type="array">
+                                <param name="notice_id" type="scalar" dataType="integer"/>
+                        </param>
+                        <param name="recordFormat" type="scalar" dataType="string" description="msg:fetchNoticeList_recordFormat"/>
+                        <param name="recordCharset" type="scalar" dataType="string" description="msg:fetchNoticeList_recordCharset"/>
+                </inputs>
+                <outputs>
                         <result type="array" name="results">
-                                <result name="noticeId" type="scalar" dataType="integer"/>                                                                                                     
-                                <result name="noticeContent" type="scalar" dataType="string"/>                                                                                            
-                        </result>                                                                                    
-                </outputs>                                                                                           
+                                <result name="noticeId" type="scalar" dataType="integer"/>
+                                <result name="noticeContent" type="scalar" dataType="string"/>
+                        </result>
+                </outputs>
         </method>
         <method name="findNoticeBulletinId" rights="" version="1.0" language_independant="false">
 			<requirements>
 		  		<requirement group="pmbesNotices" name="findNoticeBulletinId" version="1.0"/>
-			</requirements>        
+			</requirements>
             <inputs>
             	<param name="session_id" type="scalar" dataType="string"/>
-                <param name="noticeId" type="scalar" dataType="integer"/> 
+                <param name="noticeId" type="scalar" dataType="integer"/>
             </inputs>
             <outputs>
              	<result name="bulletinId" type="scalar" dataType="integer"/>
             </outputs>
         </method>
-		<method name="simpleSearchLocalise" comment="msg:simple_search_localise_description" rights="" version="1.0" language_independant="true">
-			<pmb_requirements>
-				<pmb_requirement start_path="class" file="external_services_searchcache.class.php"/>
-			</pmb_requirements>
-			<inputs>
-				<description>msg:simple_search_localise_inputs_description</description>
-				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_searchType"/>
-				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_localise_inputs_description_searchTerm"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_pmbUserId"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_OPACUserId"/>
-				<param name="localisation" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_localisation"/>
-				<param name="section" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_section"/>				
-			</inputs>
-			<outputs>
-				<description>msg:simple_search_localise_outputs_description</description>
-				<result name="searchId"  type="scalar" dataType="string" description="msg:simple_search_localise_outputs_description_searchId"/>
-				<result name="nbResults" type="scalar" dataType="integer" description="msg:simple_search_localise_outputs_description_nbResults"/>
-				<result name="typdocs" type="array" description="msg:advancedSearch_typdocs">
-					<result name="typdoc" type="scalar" dataType="string" description=""/>
-				</result>			
-			</outputs>
-		</method>
 		<method name="fetchNoticeByExplCb" comment="" rights="" version="1.0">
 			<requirements>
 		  		<requirement group="pmbesNotices" name="fetchNoticeByExplCb" version="1.0"/>
@@ -881,14 +905,13 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</result>
 			</outputs>
 		</method>
-		
-		
-			<!--
 
-		Méthodes relative aux prêt/retour de document
 
-			Ces fonctions servent de proxy à celle du groupe pmbesSelfServices
-	-->
+		<!--
+    		Méthodes relatives aux prêts/retours de documents
+			Ces fonctions servent de proxy à celles du groupe pmbesSelfServices
+	   -->
+
 		<method name="self_checkout" comment="msg:self_checkout_description" rights="" version="1.0" language_independant="false">
 			<requirements>
 		  		<requirement group="pmbesSelfServices" name="self_checkout" version="1.0"/>
@@ -905,14 +928,17 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<result name="title" type="scalar" dataType="string" description="msg:self_checkout_title"/>
 				<result name="transaction_date" type="scalar" dataType="string" description="msg:self_checkout_transaction_date"/>
 				<result name="due_date" type="scalar" dataType="string" description="msg:self_checkout_due_date"/>
-				<result name="message_quota" type="scalar" dataType="string" description="msg:self_checkout_message_quota"/>		
+				<result name="message_quota" type="scalar" dataType="string" description="msg:self_checkout_message_quota"/>
 			</outputs>
 		</method>
-		<method name="self_checkin" comment="msg:self_checkin_description" rights="" version="1.0" language_independant="false">		
+		<method name="self_checkin" comment="msg:self_checkin_description" rights="" version="1.0" language_independant="false">
+			<requirements>
+		  		<requirement group="pmbesSelfServices" name="self_checkin" version="1.0"/>
+			</requirements>
 			<inputs>
 				<description>msg:self_checkin_input_description</description>
+				<param name="session_id" type="scalar" dataType="string" description="msg:self_checkin_session_id"/>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_checkin_expl_cb"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_checkin_pmbUserId"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_checkin_output_description</description>
@@ -923,14 +949,17 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<result name="message_loc" type="scalar" dataType="string" description="msg:self_checkin_message_loc"/>
 				<result name="message_resa" type="scalar" dataType="string" description="msg:self_checkin_message_resa"/>
 				<result name="message_retard" type="scalar" dataType="string" description="msg:self_checkin_message_retard"/>
-				<result name="message_amende" type="scalar" dataType="string" description="msg:self_checkin_message_amende"/>						
+				<result name="message_amende" type="scalar" dataType="string" description="msg:self_checkin_message_amende"/>
 			</outputs>
 		</method>
-		<method name="self_renew" comment="msg:self_renew_description" rights="" version="1.0" language_independant="false">	
+		<method name="self_renew" comment="msg:self_renew_description" rights="" version="1.0" language_independant="false">
+			<requirements>
+		  		<requirement group="pmbesSelfServices" name="self_renew" version="1.0"/>
+			</requirements>
 			<inputs>
 				<description>msg:self_renew_input_description</description>
+				<param name="session_id" type="scalar" dataType="string" description="msg:self_renew_session_id"/>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_renew_expl_cb"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_renew_pmbUserId"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_renew_output_description</description>
@@ -938,9 +967,9 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<result name="message"  type="scalar" dataType="string" description="msg:self_renew_message"/>
 				<result name="title" type="scalar" dataType="string" description="msg:self_renew_title"/>
 				<result name="transaction_date" type="scalar" dataType="string" description="msg:self_renew_transaction_date"/>
-				<result name="due_date" type="scalar" dataType="string" description="msg:self_renew_due_date"/>				
+				<result name="due_date" type="scalar" dataType="string" description="msg:self_renew_due_date"/>
 			</outputs>
-		</method>		
+		</method>
 		<method name="get_author_information_and_notices" rights="" version="1.0" language_independant="false" comment="msg:get_author_information_and_notices_description">
 			<requirements>
 		  		<requirement group="pmbesAuthors" name="get_author_information_and_notices" version="1.0"/>
@@ -1052,32 +1081,32 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</result>
 			</outputs>
 		</method>
-		<method name="fetch_notices_bulletins" rights="" version="1.0" language_independant="false" comment="msg:fetch_notices_bulletins_description">                                                                                            
+		<method name="fetch_notices_bulletins" rights="" version="1.0" language_independant="false" comment="msg:fetch_notices_bulletins_description">
 			<requirements>
 		  		<requirement group="pmbesNotices" name="fetch_notices_bulletins" version="1.0"/>
 			</requirements>
-			<inputs>                                                                                             
-				<description>msg:fetch_notices_bulletins_input_description</description>                     
+			<inputs>
+				<description>msg:fetch_notices_bulletins_input_description</description>
 				<param name="session_id" type="scalar" dataType="string" description=""/>
-				<param name="noticesid" type="scalar" description="msg:fetch_notices_bulletins_noticesid">   
-					<param name="anoticeid" type="scalar" dataType="inteteger" description="msg:fetch_notices_bulletins_noticesid_anoticeid"/>                                                                                        
-				</param>                                                                                     
-				                                                                                                          
-			</inputs>                                                                                            
-			<outputs>                                                                                            
-				<description>msg:fetch_notices_bulletins_output_description</description>                    
-				<result type="array" name="result" description="msg:fetch_notices_bulletins_result">                                                                                
-					<result name="noticeid" type="scalar" dataType="integer" description="msg:fetch_notices_bulletins_result_noticeid"/>                                                                                              
-					<result type="array" name="bulletins" description="msg:fetch_notices_bulletins_result_bulletins">                                                                                                                 
-						<result name="bulletin" type="scalar" dataType="bulletin"/>               
-					</result>                                                                            
-				</result>                                                                                    
-			</outputs>                                                                                           
+				<param name="noticesid" type="scalar" description="msg:fetch_notices_bulletins_noticesid">
+					<param name="anoticeid" type="scalar" dataType="inteteger" description="msg:fetch_notices_bulletins_noticesid_anoticeid"/>
+				</param>
+
+			</inputs>
+			<outputs>
+				<description>msg:fetch_notices_bulletins_output_description</description>
+				<result type="array" name="result" description="msg:fetch_notices_bulletins_result">
+					<result name="noticeid" type="scalar" dataType="integer" description="msg:fetch_notices_bulletins_result_noticeid"/>
+					<result type="array" name="bulletins" description="msg:fetch_notices_bulletins_result_bulletins">
+						<result name="bulletin" type="scalar" dataType="bulletin"/>
+					</result>
+				</result>
+			</outputs>
 		</method>
          <method name="fetchSerialList" rights="" version="1.0" language_independant="true">
 			<requirements>
 		  		<requirement group="pmbesNotices" name="fetchSerialList" version="1.0"/>
-			</requirements>         
+			</requirements>
             <inputs>
             	<param name="session_id" type="scalar" dataType="string"/>
             </inputs>
@@ -1090,7 +1119,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 		<method name="listExternalSources" rights="" version="1.0" language_independant="false">
 			<requirements>
 		  		<requirement group="pmbesSearch" name="listExternalSources" version="1.0"/>
-			</requirements>		
+			</requirements>
 			<inputs>
 				<param name="session_id" type="scalar" dataType="string"/>
 			</inputs>
@@ -1101,7 +1130,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 						<result name="source_id" type="scalar" dataType="string"/>
 						<result name="source_caption" type="scalar" dataType="string"/>
 						<result name="source_comment" type="scalar" dataType="string"/>
-					</result>					
+					</result>
 				</result>
 			</outputs>
 		</method>
@@ -1119,49 +1148,50 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</param>
 				<param name="recordFormat" type="scalar" dataType="string"/>
 				<param name="recordCharset" type="scalar" dataType="string"/>
-				<param name="includeLinks" type="scalar" dataType="boolean"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" optional="yes" default_value="true"/>
+				<param name="nbResa" type="scalar" dataType="boolean" description="msg:getNbResa" optional="yes"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
-                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
-                    	<result name="bulletinId" type="scalar" dataType="integer"/>                 
+                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">
+                    	<result name="bulletinId" type="scalar" dataType="integer"/>
                     </result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
 					</result>
 					<result type="array" name="noticeAdministrative" description="msg:fetchNoticeListFull_results_noticeAdministrative">
 		          		 <result name="aNoticeAdministrative" type="scalar" dataType="noticeAdministrative"/>
-				   </result>                
+				   </result>
 				</result>
 			</outputs>
-		</method>	
-		<method name="fetchNoticesBulletinsList" rights="" version="1.0" language_independant="false" comment="msg:fetch_bulletin_list_description">                                                                                                    
+		</method>
+		<method name="fetchNoticesBulletinsList" rights="" version="1.0" language_independant="false" comment="msg:fetch_bulletin_list_description">
 			<requirements>
 				<requirement group="pmbesNotices" name="fetchNoticesBulletinsList" version="1.0"/>
 			</requirements>
-			<inputs>                                                                                             
-				<description></description>                         
+			<inputs>
+				<description></description>
 				<param name="session_id" type="scalar" dataType="string"/>
-				<param name="noticelist" type="array" description="msg:fetchNoticeListFull_noticelist">      
-					<param name="notice_id" type="scalar" dataType="integer"/>                           
-				</param>                                                                                   
-			</inputs>                                                                                            
-			<outputs>                                                                                            
-				<description>msg:fetch_bulletin_list_output_description</description>                        
-				<result type="array" name="bulletinIds" description="msg:fetch_bulletin_list_result">             
-					<result name="bulletinId" type="scalar" dataType="integer"/>                          
-				</result>                                                                                    
-			</outputs>                                                                                           
-		</method> 
-		
+				<param name="noticelist" type="array" description="msg:fetchNoticeListFull_noticelist">
+					<param name="notice_id" type="scalar" dataType="integer"/>
+				</param>
+			</inputs>
+			<outputs>
+				<description>msg:fetch_bulletin_list_output_description</description>
+				<result type="array" name="bulletinIds" description="msg:fetch_bulletin_list_result">
+					<result name="bulletinId" type="scalar" dataType="integer"/>
+				</result>
+			</outputs>
+		</method>
+
 		<method name="fetchSearchRecordsFull" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
 			<requirements>
 		  		<requirement group="pmbesSearch" name="fetchSearchRecordsFull" version="1.0"/>
@@ -1172,24 +1202,24 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordssearchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsfirstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsrecordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset" optional="yes" default_value="'iso-8859-1'"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
 					<result name="noticeBulletins" type="array" >
-						<result name="aBulletin" type="scalar" dataType="bulletin"/>	
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>
 					</result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
-					</result>   				
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
+					</result>
 				</result>
 			</outputs>
 		</method>
@@ -1203,27 +1233,27 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
 					<result name="noticeBulletins" type="array" >
-						<result name="aBulletin" type="scalar" dataType="bulletin"/>	
+						<result name="aBulletin" type="scalar" dataType="bulletin"/>
 					</result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
-					</result>   				
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
+					</result>
 				</result>
-			</outputs>	
+			</outputs>
 		</method>
 		<method name="fetchSearchRecordsFullWithBullId" comment="msg:fetchSearchRecords_description" rights="" version="1.0" language_independant="true">
 			<requirements>
@@ -1235,24 +1265,24 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordssearchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsfirstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsrecordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsrecordCharset" optional="yes" default_value="'iso-8859-1'"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
-                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
-                    	<result name="bulletinId" type="scalar" dataType="integer"/>                 
+                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">
+                    	<result name="bulletinId" type="scalar" dataType="integer"/>
                     </result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
-					</result>                     
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
+					</result>
 				</result>
 			</outputs>
 		</method>
@@ -1266,27 +1296,27 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
 					<result name="noticeId" type="scalar" dataType="integer"/>
 					<result name="noticeContent" type="scalar" dataType="string"/>
 					<result name="noticeItems" type="array">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="noticeExplNums" type="array">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
-                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">                                                                                                        
-                    	<result name="bulletinId" type="scalar" dataType="integer"/>                 
+                    <result name="noticeBulletinIds" type="array" description="msg:fetchNoticeListFull_results_noticeBulletins">
+                    	<result name="bulletinId" type="scalar" dataType="integer"/>
                     </result>
 					<result name="noticeCollstates" type="array" description="msg:fetchNoticeListFull_results_noticeDocNums">
-						<result name="aCollstate" type="scalar" dataType="collstate"/>	
-					</result>                      
+						<result name="aCollstate" type="scalar" dataType="collstate"/>
+					</result>
 				</result>
-			</outputs>	
+			</outputs>
 		</method>
 		<method name="fetchBulletinListFull" rights="" version="1.0" language_independant="false" comment="msg:fetchBulletinListFull_description">
 			<requirements>
@@ -1303,6 +1333,7 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				</param>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchBulletinListFull_recordFormat"/>
 				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchBulletinListFull_recordCharset"/>
+				<param name="nbResa" type="scalar" dataType="boolean" description="msg:getNbResa" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchBulletinListFull_output_description</description>
@@ -1311,17 +1342,17 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 					<result name="bulletin_bulletin" type="scalar" dataType="bulletin" description="msg:fetchBulletinListFull_results_bulletin_bulletin"/>
 					<result name="bulletin_notice" type="scalar" dataType="string" description="msg:fetchBulletinListFull_results_bulletin_notice"/>
 					<result name="bulletin_items" type="array" description="msg:fetchBulletinListFull_results_bulletin_items">
-						<result name="aItem" type="scalar" dataType="item"/>	
+						<result name="aItem" type="scalar" dataType="item"/>
 					</result>
 					<result name="bulletin_doc_nums" type="array" description="msg:fetchBulletinListFull_results_bulletin_doc_nums">
-						<result name="aExplNum" type="scalar" dataType="explNum"/>	
+						<result name="aExplNum" type="scalar" dataType="explNum"/>
 					</result>
 	                <result name="bulletin_analysis_notice_ids" type="array">
 	                    <result name="anotice_id" type="scalar" dataType="integer"/>
 	                </result>
 				</result>
 			</outputs>
-		</method>	
+		</method>
 		<method name="getReadingLists" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
 				<pmb_requirement start_path="class" file="emprunteur.class.php"/>
@@ -1331,9 +1362,9 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
-					<result name="areadinglist" type="scalar" dataType="reading_list"/>	
-				</result>                      
-			</outputs>	
+					<result name="areadinglist" type="scalar" dataType="reading_list"/>
+				</result>
+			</outputs>
 		</method>
 		<method name="getPublicReadingLists" rights="" version="1.0" language_independant="true">
 			<inputs>
@@ -1341,9 +1372,9 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
-					<result name="areadinglist" type="scalar" dataType="reading_list"/>	
-				</result>                      
-			</outputs>	
+					<result name="areadinglist" type="scalar" dataType="reading_list"/>
+				</result>
+			</outputs>
 		</method>
 		<method name="addNoticesToReadingList" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
@@ -1354,11 +1385,11 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="session_id" type="scalar" dataType="string"/>
 				<param name="list_id" type="scalar" dataType="integer"/>
 				<param type="array" name="notice_ids">
-					<param name="areadinglist" type="scalar" dataType="integer"/>	
-				</param>                      				
+					<param name="areadinglist" type="scalar" dataType="integer"/>
+				</param>
 			</inputs>
 			<outputs>
-			</outputs>	
+			</outputs>
 		</method>
 		<method name="removeNoticesFromReadingList" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
@@ -1368,11 +1399,11 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="session_id" type="scalar" dataType="string"/>
 				<param name="list_id" type="scalar" dataType="integer"/>
 				<param type="array" name="notice_ids">
-					<param name="areadinglist" type="scalar" dataType="integer"/>	
-				</param>                      				
+					<param name="areadinglist" type="scalar" dataType="integer"/>
+				</param>
 			</inputs>
 			<outputs>
-			</outputs>	
+			</outputs>
 		</method>
 		<method name="emptyReadingList" rights="" version="1.0" language_independant="true">
 			<pmb_requirements>
@@ -1383,50 +1414,68 @@ $Id: manifest.xml,v 1.37 2016-09-21 15:53:37 dgoron Exp $ -->
 				<param name="list_id" type="scalar" dataType="integer"/>
 			</inputs>
 			<outputs>
-			</outputs>	
+			</outputs>
 		</method>
 		<method name="listFacets" comment="msg:listFacets_description" rights="" version="1.0" language_independant="true">
-			<inputs>
+			<requirements>
+                <requirement group="pmbesSearch" name="listFacets" version="1.0"/>
+            </requirements>
+            <inputs>
 				<description>msg:listFacets_inputs_description</description>
 				<param name="session_id" type="scalar" dataType="string"/>
 				<param name="searchId" type="scalar" dataType="string" description="msg:listFacets_searchId"/>
-				<param name="fields" type="array" description="msg:listFacets_inputs_description_fields">
+				<param name="fields" type="array" description="msg:listFacets_inputs_description_fields" optional="yes" default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_ss_champ"/>
 				</param>
-				<param name="filters" type="array" description="msg:listFacets_inputs_description_filters">
+				<param name="filters" type="array" description="msg:listFacets_inputs_description_filters" optional="yes" default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_ss_champ"/>
 					<param name="value" type="scalar" dataType="string" description="msg:listFacets_inputs_description_filter_value"/>
 				</param>
 			</inputs>
-			<outputs>                                                                                            
-				<description>msg:listFacets_output_description</description>                        
+			<outputs>
+				<description>msg:listFacets_output_description</description>
 				<result type="array" name="results" description="msg:listFacets_results">
 					<result name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_results_code_champ"/>
 					<result name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_results_code_ss_champ"/>
 					<result name="value" type="scalar" dataType="string" description="msg:listFacets_results_value"/>
-					<result name="count" type="scalar" dataType="integer" description="msg:listFacets_results_count"/>                                                                                                                
-				</result>                                                                                    
-			</outputs> 
+					<result name="count" type="scalar" dataType="integer" description="msg:listFacets_results_count"/>
+				</result>
+			</outputs>
 		</method>
 		<method name="listRecordsFromFacets" comment="msg:listRecordsFromFacets_description" rights="" version="1.0" language_independant="true">
-			<inputs>
+			<requirements>
+                <requirement group="pmbesSearch" name="listRecordsFromFacets" version="1.0"/>
+            </requirements>
+            <inputs>
 				<description>msg:listRecordsFromFacets_inputs_description</description>
 				<param name="session_id" type="scalar" dataType="string"/>
 				<param name="searchId" type="scalar" dataType="string" description="msg:listRecordsFromFacets_searchId"/>
-				<param name="filters" type="array" description="msg:listRecordsFromFacets_inputs_description_filters">
+				<param name="filters" type="array" description="msg:listRecordsFromFacets_inputs_description_filters" optional="yes" default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_ss_champ"/>
 					<param name="value" type="scalar" dataType="string" description="msg:listRecordsFromFacets_inputs_description_filter_value"/>
 				</param>
 			</inputs>
-			<outputs>                                                                                            
-				<description>msg:listRecordsFromFacets_output_description</description>                        
+			<outputs>
+				<description>msg:listRecordsFromFacets_output_description</description>
 				<result type="array" name="results" description="msg:listRecordsFromFacets_results">
 					<result name="noticeId"  type="scalar" dataType="integer" description="msg:listRecordsFromFacets_outputs_description_noticeId"/>
-				</result>                                                                                       
-			</outputs> 
+				</result>
+			</outputs>
+		</method>
+		<method name="checkExternalAuthentication" comment="msg:checkExternalAuthentication_description" rights="" version="1.0" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="password/password.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:checkExternalAuthentication_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:checkExternalAuthentication_output_description</description>
+				<result name="result" type="scalar" dataType="boolean" description="msg:checkExternalAuthentication_result"/>
+			</outputs>
 		</method>
 	</methods>
 </manifest>

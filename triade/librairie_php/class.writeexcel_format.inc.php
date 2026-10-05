@@ -120,7 +120,7 @@ class writeexcel_format
     public function copy($other)
     {
         $xf = $this->_xf_index;   // Backup XF index
-        foreach ($other as $key->$value) {
+        foreach (get_object_vars($other) as $key => $value) {
             $this->{$key} = $value;
         }
         $this->_xf_index = $xf;   // Restore XF index

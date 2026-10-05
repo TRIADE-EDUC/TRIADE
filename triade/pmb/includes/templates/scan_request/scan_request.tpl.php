@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_request.tpl.php,v 1.27 2019-05-27 10:29:14 ngantier Exp $
+// $Id: scan_request.tpl.php,v 1.32 2024/02/14 08:55:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $scan_request_location_form, $pmb_scan_request_location_activate, $current_module, $msg, $scan_request_form, $scan_request_ajax_form;
-global $scan_request_associated_bulls_sub_template, $scan_request_concept_part;
+global $scan_request_associated_bulls_sub_template, $scan_request_concept_part, $pmb_scan_request_empr_mandatory;
 
 $scan_request_location_form='';
 if(isset($pmb_scan_request_location_activate) && $pmb_scan_request_location_activate){	
@@ -25,8 +25,6 @@ if(isset($pmb_scan_request_location_activate) && $pmb_scan_request_location_acti
 $scan_request_form ='
 <script type="text/javascript" src="javascript/ajax.js"></script>
 <link type="text/css" rel="stylesheet" href="./javascript/dojo/snet/fileUploader/resources/uploader.css">
-<h1>'.$msg["scan_request_list"].'</h1>	
-
 <form method="post" class="form-'.$current_module.'" name="scan_request_form" action="!!action!!&action=save">
 	<h3>!!form_title!!</h3>
 	<div class="form-contenu">
@@ -70,7 +68,7 @@ $scan_request_form ='
 		
 		!!scan_request_concept_part!!
 							
-		<! -- Demande regroupÃ©e dans un dossier -->
+		<! -- Demande regroupée dans un dossier -->
 		<div class="row">
 			<input type="checkbox" id="scan_request_as_folder" name="scan_request_as_folder" !!scan_request_as_folder!!  !!scan_request_as_folder_disabled!!/>
 			<label for="scan_request_as_folder">'.$msg["scan_request_form_as_folder"].'</label>			
@@ -111,14 +109,14 @@ $scan_request_form ='
 			</div>
 		</div>
 		
-		<!--- DiffÃ©rentes dates associÃ©es Ã  la demande -->
+		<!--- Différentes dates associées à la demande -->
 		<div class="row">
 			<div class="colonne3">
 				<div class="row">		
 					<label for="scan_request_date">'.$msg["scan_request_form_date"].'</label>
 				</div>
 				<div class="row">
-					<input type="text" name="scan_request_date" id="scan_request_date" value="!!scan_request_date!!"  data-dojo-type="dijit/form/DateTextBox" required="true" />
+					<input type="date" name="scan_request_date" id="scan_request_date" value="!!scan_request_date!!" required />
 				</div>
 			</div>
 			<div class="colonne3">
@@ -126,7 +124,7 @@ $scan_request_form ='
 					<label for="scan_request_wish_date">'.$msg["scan_request_form_wish_date"].'</label>
 				</div>
 				<div class="row">
-					<input type="text" name="scan_request_wish_date" id="scan_request_wish_date" value="!!scan_request_wish_date!!"  data-dojo-type="dijit/form/DateTextBox" required="true" />
+					<input type="date" name="scan_request_wish_date" id="scan_request_wish_date" value="!!scan_request_wish_date!!" required />
 				</div>
 			</div>
 			<div class="colonne3">
@@ -134,12 +132,12 @@ $scan_request_form ='
 					<label for="scan_request_deadline_date">'.$msg["scan_request_form_deadline_date"].'</label>
 				</div>
 				<div class="row">
-					<input type="text" name="scan_request_deadline_date" id="scan_request_deadline_date" value="!!scan_request_deadline_date!!"  data-dojo-type="dijit/form/DateTextBox" required="true" />
+					<input type="date" name="scan_request_deadline_date" id="scan_request_deadline_date" value="!!scan_request_deadline_date!!" required />
 				</div>
 			</div>
 		</div>
 		<input type="hidden" value="!!scan_request_status_editable!!" id="records_editable"/>
-		<!-- Notices associÃ©es -->						
+		<!-- Notices associées -->						
 		<div id="associated_record_label_container" class="row">
 			<label>'.$msg["scan_request_form_associated_records"].'</label>
 		</div>
@@ -147,7 +145,7 @@ $scan_request_form ='
 			<div data-dojo-props=\'mode:"record", elementsToLoad:!!associated_records!!\' data-dojo-type="apps/scan_request/ElementsContainer"></div>
 		</div>
 					
-		<!-- Bulletins associÃ©s -->
+		<!-- Bulletins associés -->
 		<div id="associated_bulletin_label_container" class="row">
 			<label>'.$msg["scan_request_form_associated_buls"].'</label>
 		</div>
@@ -180,35 +178,48 @@ $scan_request_form ='
 	<div class="row">&nbsp;</div>
 </form>
 <script type="text/javascript">
-					
-	function test_form(form){
+	function test_form(form) {
    		var parentDiv = document.getElementById("record_container");
-		var flag=false;							
-		for(var i=0;i< parentDiv.children.length; i++){								
-			if(parseInt(document.getElementById("scan_request_record_code_"+i).value)>0) flag=true;				 
+		var flag = false;
+		for (var i = 0; i < parentDiv.children.length; i++) {
+			if (parseInt(document.getElementById("scan_request_record_code_"+i).value) > 0) {
+                flag = true;
+            }
 		}
-   		var parentDiv = document.getElementById("bul_container");	
-		for(var i=0;i< parentDiv.children.length; i++){					
-			if(parseInt(document.getElementById("scan_request_bul_code_"+i).value)>0) flag=true;			 
+
+   		var parentDiv2 = document.getElementById("bul_container");
+		for (var i = 0; i < parentDiv2.children.length; i++) {
+			if (parseInt(document.getElementById("scan_request_bul_code_"+i).value) > 0) {
+                flag = true;
+            }
 		}
-		if(flag==false){
+
+		if (flag == false) {
 			alert("'.$msg["scan_request_form_empty_linked_elements_error"].'");
-			return false;		
+			return false;
 		}
-		if(form.scan_request_title.value.length == 0){
+
+		if (form.scan_request_title.value.length == 0) {
 			alert("'.$msg[98].'");
 			return false;
-		}					
-		if(document.getElementsByName("scan_request_wish_date")[0].value.split("-").join("") < document.getElementsByName("scan_request_date")[0].value.split("-").join("")){
+		}
+
+		if (document.getElementsByName("scan_request_wish_date")[0].value.split("-").join("") < document.getElementsByName("scan_request_date")[0].value.split("-").join("")) {
 			alert("'.$msg['scan_request_wish_date_error'].'");
-			return false;					
+			return false;
 		}
-		if(document.getElementsByName("scan_request_deadline_date")[0].value.split("-").join("") < document.getElementsByName("scan_request_wish_date")[0].value.split("-").join("") ){
+
+		if (document.getElementsByName("scan_request_deadline_date")[0].value.split("-").join("") < document.getElementsByName("scan_request_wish_date")[0].value.split("-").join("")) {
 			alert("'.$msg['scan_request_deadline_date_error'].'");
-			return false;					
+			return false;
 		}
+        if ('.intval($pmb_scan_request_empr_mandatory).' && !parseInt(document.getElementById("scan_request_num_dest_empr").value)) {
+            alert("'.$msg['scan_request_empr_mandatory_error'].'");
+            return false;
+        }
+
 		return true;
-	}			
+	}
 	
 	if((typeof ajax_parse_dom == "function")) ajax_parse_dom();
 </script>
@@ -287,7 +298,7 @@ $scan_request_ajax_form ='
 </script>';
 
 $scan_request_associated_bulls_sub_template = 
-'<!-- Bulletins associÃ©s -->
+'<!-- Bulletins associés -->
 <div class="row">
 	<label>'.$msg["scan_request_form_associated_buls"].'</label>
 	<a href="javascript:expandAll(document.getElementById(\'bul_container\'))"><img src="'.get_url_icon('expand_all.gif').'" id="expandall" style="border:0px"></a>
@@ -298,7 +309,7 @@ $scan_request_associated_bulls_sub_template =
 </div>';
 
 $scan_request_associated_records_sub_template = 
-'<!-- Notices associÃ©es -->
+'<!-- Notices associées -->
 <div class="row">
 	<label>'.$msg["scan_request_form_associated_records"].'</label>
 	<a href="javascript:expandAll(document.getElementById(\'record_container\'))"><img src="'.get_url_icon('expand_all.gif').'" id="expandall" style="border:0px"></a>

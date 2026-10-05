@@ -1,8 +1,8 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_recipient.class.php,v 1.4 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: campaign_recipient.class.php,v 1.6 2023/05/04 09:22:14 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,6 +11,7 @@ class campaign_recipient{
 	protected $hash;
 	protected $num_campaign;
 	protected $details;
+	public $recipients;
 	
 	public function __construct($id=0) {
 	    $this->id = (int) $id;
@@ -97,6 +98,8 @@ class campaign_recipient{
 	
 	public function get_detail_label($key) {
 		global $msg;
+		
+		if (empty($this->details[$key])) return $msg["campaign_empr_not_defined"];
 		
 		switch($key) {
 			case 'categ':

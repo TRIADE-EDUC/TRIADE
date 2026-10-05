@@ -1,8 +1,8 @@
 <?php
-/* GÃ©nÃ©ration automatique de la structure de la bases de donnÃ©es
+/* Génération automatique de la structure de la bases de données
 * Le script a besoin de deux fichiers  :
-* Fichier scheme.xml : contient les donnÃ©es exploitÃ©es. Il est obtenu en appliquant req_schema.xsl a pmb34_db445_20130711.xml ce dernier provient d'une conversion de de pmb34_db445_20130711.dez qui est le fichier gÃ©nÃ©rÃ© par DeZign en xml.
-* Fichier scheme.gif : export image du schÃ©ma de base de donnÃ©es (File->Export->Export diagram to image)
+* Fichier scheme.xml : contient les données exploitées. Il est obtenu en appliquant req_schema.xsl a pmb34_db445_20130711.xml ce dernier provient d'une conversion de de pmb34_db445_20130711.dez qui est le fichier généré par DeZign en xml.
+* Fichier scheme.gif : export image du schéma de base de données (File->Export->Export diagram to image)
 */
 
 error_reporting(E_ALL & ~E_NOTICE);
@@ -69,13 +69,13 @@ class db_doc {
 	public function debutBalise($parser, $tag, $att=array()) {
 		
 
-		//complÃ¨te $t_table avec son nom, sa description et la table de toutes ses relations
+		//complète $t_table avec son nom, sa description et la table de toutes ses relations
 		if ($tag=='TABLE' && count($att) && $att['NAME'] ) {
 			$this->ID=$att['ID'];
 			$this->t_table[$att['ID']]=array('NAME'=>$att['NAME'],'DESC'=>$att['DESC'],'LIENS'=>array(),'KEY'=>$att['PKID']);
 			$this->t_parcours[$att['ID']]=$att['NAME'];
 		}
-		//complÃ¨te $t_relation qui lie les indices de deux tables et dÃ©crit ce lien.
+		//complète $t_relation qui lie les indices de deux tables et décrit ce lien.
 		if ($tag=='LIEN'&& count($att) && $att['NAME']) {
 			$t_lienF=explode('-',$att['CHILD']);
 			$t_lienP=explode('-',$att['PARENT']);
@@ -86,7 +86,7 @@ class db_doc {
 			if (empty($this->t_table[$t_lienF[0]]['ATTRS'][$att['CHILD']]['KEY'])){
 			$this->t_table[$t_lienF[0]]['ATTRS'][$att['CHILD']]['KEY']="Cl&eacute; &eacute;trang&egrave;re";}
 		}
-		//complÃ¨te 'Lien' de $t_table afin de regrouper le informations Ã  afficher
+		//complète 'Lien' de $t_table afin de regrouper le informations à afficher
 		if ($tag=='FIELD'&& count($att) && $this->ID!=-1) {
 			$cle="Sign&eacute";
 			if($att['UNSIGNED']=="1"){$cle="Non sign&eacute;";}

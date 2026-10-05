@@ -9,12 +9,13 @@
 * Vous pouvez utiliser et modifier ce logiciel comme vous le souhaitez.        *
 *******************************************************************************/
 
-if(!class_exists('FPDF'))
-{
+if(!class_exists('FPDF')) {
+
 define('FPDF_VERSION','1.53');
 
-class FPDF
-{
+
+class FPDF  {
+
 //Private properties
 var $page;               //current page number
 var $n;                  //current object number
@@ -463,8 +464,9 @@ function GetStringWidth($s)
 	$cw=&$this->CurrentFont['cw'];
 	$w=0;
 	$l=strlen($s);
-	for($i=0;$i<$l;$i++)
-		$w+=$cw[$s{$i}];
+	for ($i = 0; $i < $l; $i++) {
+    		$w += $cw[$s[$i]];
+	}
 	return $w*$this->FontSize/1000;
 }
 
@@ -772,7 +774,7 @@ function MultiCell($w,$h,$txt,$border=0,$align='J',$fill=0)
 	while($i<$nb)
 	{
 		//Get next character
-		$c=$s{$i};
+		$c=$s[$i];
 		if($c=="\n")
 		{
 			//Explicit line break
@@ -862,7 +864,7 @@ function Write($h,$txt,$link='')
 	while($i<$nb)
 	{
 		//Get next character
-		$c=$s{$i};
+		$c=$s[$i];
 		if($c=="\n")
 		{
 			//Explicit line break
@@ -1186,6 +1188,9 @@ function _putpages()
 	$this->_out('endobj');
 }
 
+
+
+
 function _putfonts()
 {
 	$nf=$this->n;
@@ -1196,7 +1201,7 @@ function _putfonts()
 		$this->_out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences ['.$diff.']>>');
 		$this->_out('endobj');
 	}
-	$mqr=get_magic_quotes_runtime();
+	//$mqr=get_magic_quotes_runtime();
 	//set_magic_quotes_runtime(0);
 	foreach($this->FontFiles as $file=>$info)
 	{
@@ -1213,13 +1218,14 @@ function _putfonts()
 		$compressed=(substr($file,-2)=='.z');
 		if(!$compressed && isset($info['length2']))
 		{
-			$header=(ord($font{0})==128);
+			$header=(ord($font[0])==128);
 			if($header)
 			{
 				//Strip first binary header
 				$font=substr($font,6);
 			}
-			if($header && ord($font{$info['length1']})==128)
+//			if($header && ord($font{$info['length1']})==128)
+			if ($header && ord($font[$info['length1']]) == 128)
 			{
 				//Strip second binary header
 				$font=substr($font,0,$info['length1']).substr($font,$info['length1']+6);
@@ -1307,8 +1313,7 @@ function _putimages()
 {
 	$filter=($this->compress) ? '/Filter /FlateDecode ' : '';
 	reset($this->images);
-	while(list($file,$info)=each($this->images))
-	{
+	foreach ($this->images as $file => $info) {
 		$this->_newobj();
 		$this->images[$file]['n']=$this->n;
 		$this->_out('<</Type /XObject');
@@ -1478,7 +1483,7 @@ function _beginpage($orientation)
 		$orientation=$this->DefOrientation;
 	else
 	{
-		$orientation=strtoupper($orientation{0});
+		$orientation=strtoupper($orientation[0]);
 		if($orientation!=$this->DefOrientation)
 			$this->OrientationChanges[$this->page]=true;
 	}

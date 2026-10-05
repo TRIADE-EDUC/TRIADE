@@ -1,0 +1,15 @@
+{% extends 'gabarit.html' %}
+{% comment %}
+$Id: entity.html,v 1.1 2023/02/07 15:31:40 arenou Exp $
+{% endcomment %}
+{% block element_link %}
+	{% if global.caller | substr_count "concept" %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.uri }}', '{{list_element.get_object_instance.isbd | escape true }}', '{{global.type}}', '{{ global.callback }}', '{{ global.element_name}}')">
+			{{ list_element.get_object_instance.header | safe }}
+		</a>
+	{% else %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.id }}', '{{list_element.get_object_instance.isbd |  escape true }}', '{{global.type}}', '{{ global.callback }}', '{{ global.element_name}}')">
+			{{ list_element.get_object_instance.header | safe }}
+		</a>
+	{% endif %}
+{% endblock %}

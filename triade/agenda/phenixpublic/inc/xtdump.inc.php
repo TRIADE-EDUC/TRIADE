@@ -279,7 +279,7 @@
       if ($ftbl) {
         while (list($i) = each($tbl)) {
           // On ne traite que les tables "Phenix"
-          if (ereg("^${prefixe}",$tbl[$i])) {
+          if (ereg("^{$prefixe}",$tbl[$i])) {
             $temp = sqldumptable($tbl[$i],$droptable);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -317,7 +317,7 @@
       else {
         while (list($i) = each($tbl)) {
           // On ne traite que les tables "Phenix"
-          if (ereg("^${prefixe}",$tbl[$i])) {
+          if (ereg("^{$prefixe}",$tbl[$i])) {
             $temp = sqldumptable($tbl[$i],$droptable);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -351,7 +351,7 @@
       if ($ftbl) {
         while (list($i) = each($tbl)) {
           // On ne traite que les tables "Phenix"
-          if (ereg("^${prefixe}",$tbl[$i])) {
+          if (ereg("^{$prefixe}",$tbl[$i])) {
             $temp = csvdumptable($tbl[$i]);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {
@@ -389,7 +389,7 @@
       else {
         while (list($i) = each($tbl)) {
           // On ne traite que les tables "Phenix"
-          if (ereg("^${prefixe}",$tbl[$i])) {
+          if (ereg("^{$prefixe}",$tbl[$i])) {
             $temp = csvdumptable($tbl[$i]);
             $sz_t = get_length_sql($temp);
             if ($sz_t>0) {

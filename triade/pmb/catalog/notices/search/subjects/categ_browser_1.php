@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categ_browser_1.php,v 1.5 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: categ_browser_1.php,v 1.5 2019/06/07 08:05:39 btafforeau Exp $
 
 global $base_path, $base_auth, $base_title, $include_path;
 
-// affichage du browser de catÃ©gories
+// affichage du browser de catégories
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../../../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[6]";

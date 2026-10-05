@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_titres_uniformes.class.php,v 1.2 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: searcher_authorities_titres_uniformes.class.php,v 1.3.8.1 2024/10/17 08:22:50 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -43,5 +43,51 @@ class searcher_authorities_titres_uniformes extends searcher_autorities {
 	
 	public function get_authority_tri() {
 		return ' index_tu ';
+	}
+	
+	public function explain($display, $mode = 'records',$mini=false){
+		global $begin_result_liste, $end_result_liste;
+		
+		error_reporting(E_ALL & ~E_NOTICE);
+		print '<div style="margin-left:10px;width:49%;overflow:hidden;float:left">';
+		print '<h1>Recherche Native</h1>';
+		print '<p>QUERY : '.$this->user_query.'</p>';
+		$start = microtime(true);
+ 		print '<p>Nombre de resultats trouves: '.$this->get_nb_results().'</p>';
+ 		$result = $this->get_sorted_result();
+		if($this->get_nb_results()>0 && $result){
+	 		$inter = microtime(true);
+		 	print '<p>Temps de calcul (en seconde) : '.($inter - $start).'</p>';
+		 	$elements_authorities_list_ui = new elements_authorities_list_ui($result, 20, 7);
+		 	$elements = $elements_authorities_list_ui->get_elements_list();
+		 	print $begin_result_liste;
+		 	print $elements;
+		 	print $end_result_liste;
+	 		print '<p>Temps de gen page (en seconde) : '.(microtime(true) - $inter).'</p>';
+ 		}	
+ 		print '<p>Temps Total (en seconde) : '.(microtime(true) - $start).'</p></div>';
+	}
+	
+	protected function _get_human_queries() {
+		global $msg;
+		global $oeuvre_nature_selector, $oeuvre_type_selector;
+		
+		$human_queries = parent::_get_human_queries();
+		if ($oeuvre_nature_selector) {
+			$marc = marc_list_collection::get_instance('oeuvre_nature');
+			$human_queries[] = array(
+					'name' => $msg['search_extended_titre_uniforme_oeuvre_nature'],
+					'value' => $marc->table[$oeuvre_nature_selector]
+			);
+		}
+		if ($oeuvre_type_selector) {
+			$marc = marc_list_collection::get_instance('oeuvre_type');
+			$human_queries[] = array(
+					'name' => $msg['search_extended_titre_uniforme_oeuvre_type'],
+					'value' => $marc->table[$oeuvre_type_selector]
+			);
+		}
+		
+		return $human_queries;
 	}
 }

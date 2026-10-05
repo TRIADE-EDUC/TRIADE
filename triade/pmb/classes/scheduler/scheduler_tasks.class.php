@@ -1,15 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scheduler_tasks.class.php,v 1.7 2018-11-23 13:58:14 dgoron Exp $
+// $Id: scheduler_tasks.class.php,v 1.10 2023/03/28 13:02:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $class_path, $include_path;
 
 require_once($include_path."/parser.inc.php");
 require_once($include_path."/templates/taches.tpl.php");
 require_once($include_path."/connecteurs_out_common.inc.php");
-require_once($class_path."/scheduler/scheduler_task_docnum.class.php");
 require_once($class_path."/upload_folder.class.php");
 require_once($class_path."/xml_dom.class.php");
 require_once($class_path."/scheduler/scheduler_task.class.php");
@@ -18,7 +19,7 @@ require_once($class_path."/scheduler/scheduler_tasks_type.class.php");
 class scheduler_tasks {
 	
 	public static $xml_catalog;
-	public $tasks=array();								// liste des types de tâches
+	public $types = array();								// liste des types de t�ches
 	
 	public function __construct() {
 		$this->fetch_data();
@@ -39,7 +40,7 @@ class scheduler_tasks {
 	}
 	
 	public static function get_catalog_element($id=0, $attribute='') {
-		$id += 0;
+		$id = intval($id);
 		if($id) {
 			static::parse_catalog();
 			foreach (static::$xml_catalog["ACTION"] as $anitem) {
@@ -53,10 +54,10 @@ class scheduler_tasks {
 	protected function fetch_data() {
 		static::parse_catalog();
 		foreach (static::$xml_catalog["ACTION"] as $anitem) {
-			$this->tasks[$anitem['NAME']] = new scheduler_tasks_type($anitem['ID']);
-			$this->tasks[$anitem['NAME']]->set_name($anitem['NAME']);
-			$this->tasks[$anitem['NAME']]->set_path($anitem['PATH']);
-			$this->tasks[$anitem['NAME']]->set_comment($anitem['COMMENT']);
+			$this->types[$anitem['NAME']] = new scheduler_tasks_type($anitem['ID']);
+			$this->types[$anitem['NAME']]->set_name($anitem['NAME']);
+			$this->types[$anitem['NAME']]->set_path($anitem['PATH']);
+			$this->types[$anitem['NAME']]->set_comment($anitem['COMMENT']);
 		}
 	}
 	
@@ -65,25 +66,24 @@ class scheduler_tasks {
 		
 		$display = "
 			<script type='text/javascript'>
-				function show_taches(id) {
-					if (document.getElementById(id).style.display=='none') {
-						document.getElementById(id).style.display='';
-					} else {
-						document.getElementById(id).style.display='none';
-					}
-				}
 				function expand_taches_all() {";
-		foreach ($this->tasks as $name=>$tasks_type) {
-			$display .= "if (document.getElementById('".$name."').style.display=='none') {
-						document.getElementById('".$name."').style.display='';
+		foreach ($this->types as $type) {
+			$display .= "
+					if (document.getElementById('".$type->get_name()."')) {
+						if (document.getElementById('".$type->get_name()."').style.display=='none') {
+							document.getElementById('".$type->get_name()."').style.display='';
+						}
 					}";
 		}
 		$display .= "}
 			function collapse_taches_all() {";
-		foreach ($this->tasks as $name=>$tasks_type) {
-			$display .= "if (document.getElementById('".$name."').style.display=='') {
-						document.getElementById('".$name."').style.display='none';
-					} ";
+		foreach ($this->types as $type) {
+			$display .= "
+					if (document.getElementById('".$type->get_name()."')) {
+						if (document.getElementById('".$type->get_name()."').style.display=='') {
+							document.getElementById('".$type->get_name()."').style.display='none';
+						} 
+					}";
 		}
 		$display .= "}
 			</script>
@@ -92,42 +92,16 @@ class scheduler_tasks {
 	}
 	
 	public function get_display_list () {
-		global $base_path, $msg, $charset, $type_task_id;
-	
 		$display = $this->get_js_display_list();
 		$display .= "<a href='javascript:expand_taches_all()'><img style='border:0px' id='expandall' src='".get_url_icon('expand_all.gif')."'></a>
-		<a href='javascript:collapse_taches_all()'><img style='border:0px' id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>
-		<table>
-			<tr>
-				<th>&nbsp;</th>
-				<th>".$msg["planificateur_type_task"]."</th>
-				<th>".$msg["planificateur_task"]."</th>
-				<th>&nbsp;</th>
-			</tr>";
-	
-		$pair_impair=0;
-		$parity=0;
-	
-		//on affiche chaque type de tache
-		foreach($this->tasks as $name=>$tasks_type) {
-			$pair_impair = $parity++ % 2 ? "even" : "odd";
-			//recherche du nombre de tâches planifiées
-			$n_taches = $tasks_type->get_number();
-			
-			$tr_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\" onmousedown=\"if (event) e=event; else e=window.event; if (e.srcElement) target=e.srcElement; else target=e.target; if ((target.nodeName!='IMG')&&(target.nodeName!='INPUT')) document.location='./admin.php?categ=planificateur&sub=manager&act=modif&type_task_id=".$tasks_type->get_id()."';\" ";
-			$display .= "<tr class='$pair_impair' $tr_javascript style='cursor: pointer' title='".htmlentities($tasks_type->get_comment(),ENT_QUOTES,$charset)."' alter='".htmlentities($tasks_type->get_comment(),ENT_QUOTES,$charset)."' id='tr".$tasks_type->get_id()."'><td>".($n_taches?"<img src='".get_url_icon('plus.gif')."' class='img_plus' onClick='if (event) e=event; else e=window.event; e.cancelBubble=true; if (e.stopPropagation) e.stopPropagation(); show_taches(\"".addslashes($name)."\"); '/>":"&nbsp;")."</td><td>".htmlentities($tasks_type->get_comment(),ENT_QUOTES,$charset)."</td>
-			<td>".$n_taches." ".$msg["planificateur_count_tasks"]."</td><td style='text-align:right'><input type='button' value='".$msg["planificateur_task_add"]."' class='bouton_small' onClick='document.location=\"admin.php?categ=planificateur&sub=manager&act=task&type_task_id=".$tasks_type->get_id()."\"'/></td></tr>\n";
-			
-			$display .= "<tr class='$pair_impair' style='display:none' id='".$name."'><td>&nbsp;</td><td colspan='3'><table style='border:1px solid'>";
-			$display .= $tasks_type->get_display_list();
-			$display .= "</table></td></tr>";
-			
-		}
-		$display .= "</table>";
+		<a href='javascript:collapse_taches_all()'><img style='border:0px' id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>";
+		$display .= list_configuration_planificateur_manager_ui::get_instance()->get_display_list();
 		return $display;
 	}
 	
 	public static function get_selector_options($type, $selected) {
+		global $charset;
+		
 		$options = '';
 		static::parse_catalog();
 		$num_type_tache = 0;
@@ -142,5 +116,9 @@ class scheduler_tasks {
 			$options .= "<option value='".$row->id_planificateur."' ".($row->id_planificateur == $selected ? "selected='selected'" : "")."> ".htmlentities($row->libelle_tache, ENT_QUOTES, $charset)."</option>";
 		}
 		return $options;
+	}
+	
+	public function get_types() {
+		return $this->types;
 	}
 }

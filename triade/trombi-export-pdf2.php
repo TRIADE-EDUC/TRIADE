@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ session_start();
 include_once("librairie_php/db_triade.php");
 validerequete("2");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Export des données vers Photographe de France"?></font></b></td></tr>
 <tr id='cadreCentral0'  >
@@ -99,7 +99,7 @@ if (LAN == "oui") {
 <?php
 $data=affEleve(); //elev_id, nom, prenom, classe
 print("\t".'<LES_ELEVES>'."\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$nom=$data[$i][1];
 	$prenom=$data[$i][2];
@@ -117,7 +117,7 @@ for($i=0;$i<count($data);$i++) {
 print("\t".'<LES_PERSONNELS>'."\n");
 
 $data=affPers("ADM"); // pers_id, civ, nom, prenom
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$civ=civ($data[$i][1]);
 	$nom=$data[$i][2];
@@ -133,7 +133,7 @@ for($i=0;$i<count($data);$i++) {
 }
 
 $data=affPers("MVS"); // pers_id, civ, nom, prenom
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$civ=civ($data[$i][1]);
 	$nom=$data[$i][2];
@@ -149,7 +149,7 @@ for($i=0;$i<count($data);$i++) {
 }
 
 $data=affPers("ENS"); // pers_id, civ, nom, prenom
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$id=$data[$i][0];
 	$civ=civ($data[$i][1]);
 	$nom=$data[$i][2];
@@ -188,6 +188,6 @@ print("\t".'</LES_PERSONNELS>'."\n");
 
 
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

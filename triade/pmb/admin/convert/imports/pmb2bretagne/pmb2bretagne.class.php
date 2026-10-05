@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmb2bretagne.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: pmb2bretagne.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -74,7 +74,7 @@ class pmb2bretagne extends convert {
 			$notice.="  </f>\n";
 		}
 		
-		//Mention d'Ã©dition
+		//Mention d'édition
 		if ($rn->mention_edition) {
 			$notice.="  <f c='205' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->mention_edition,ENT_QUOTES,$charset)."</s>\n";
@@ -133,7 +133,7 @@ class pmb2bretagne extends convert {
 		}
 		
 		//Notes
-		//GÃ©nÃ©rale
+		//Générale
 		if ($rn->n_gen) {
 		    $notice.="  <f c='300' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_gen,ENT_QUOTES,$charset)."</s>\n";
@@ -145,7 +145,7 @@ class pmb2bretagne extends convert {
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_contenu,ENT_QUOTES,$charset)."</s>\n";
 			$notice.="  </f>\n";
 		}
-		//RÃ©sumÃ©
+		//Résumé
 		if ($rn->n_resume) {
 		    $notice.="  <f c='330' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_resume,ENT_QUOTES,$charset)."</s>\n";
@@ -164,7 +164,7 @@ class pmb2bretagne extends convert {
 				}
 		}
 		
-		//Titre de sÃ©rie
+		//Titre de série
 		$serie="";
 		if ($rn->tparent_id!=0 || $rn->tnvol!==false) {
 			$requete="select serie_name from series where serie_id=".$rn->tparent_id;
@@ -237,9 +237,9 @@ class pmb2bretagne extends convert {
 		}
 		
 		
-		//PÃ©riodique
+		//Périodique
 		if ($rn->niveau_biblio=="a") {
-			//RÃ©cupÃ©ration du titre du pÃ©riodique
+			//Récupération du titre du périodique
 			$requete="select tit1,bulletin_numero,bulletin_notice,mention_date, date_date, bulletin_titre from notices, bulletins, analysis where analysis_notice=$id and analysis_bulletin=bulletin_id and bulletin_notice=notice_id";
 			$resultat=pmb_mysql_query($requete);
 			$r_bull=@pmb_mysql_fetch_object($resultat);
@@ -255,7 +255,7 @@ class pmb2bretagne extends convert {
 			if ($data_bull) $notice.="  <f c='464' ind='  '>\n".$data_bull."  </f>\n";
 		}
 		
-		//Mots_clÃ©s
+		//Mots_clés
 		if ($rn->index_l) {
 			global $pmb_keyword_sep;
 			$tmp=explode($pmb_keyword_sep,$rn->index_l);
@@ -282,7 +282,7 @@ class pmb2bretagne extends convert {
 			}
 		}
 			
-		//ThÃ¨me(s) 
+		//Thème(s) 
 		$requete="select ncl.notices_custom_list_lib from notices_custom_lists ncl, notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=$id and ncv.notices_custom_champ=nc.idchamp and name='theme' and ncv.notices_custom_champ=ncl.notices_custom_champ and ncv.notices_custom_integer=ncl.notices_custom_list_value";
 		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {
@@ -322,7 +322,7 @@ class pmb2bretagne extends convert {
 				$notice.="  </f>\n";
 			}
 		}
-		//AnnÃ©e de pÃ©remption
+		//Année de péremption
 		$requete="select ncv.notices_custom_integer from notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=$id and ncv.notices_custom_champ=nc.idchamp and name='annee_peremption'";
 		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {

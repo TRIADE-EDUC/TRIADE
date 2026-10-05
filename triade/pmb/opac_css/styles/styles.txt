@@ -3,7 +3,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: styles.txt,v 1.5 2004-12-14 10:17:55 gautier Exp $
+// $Id: styles.txt,v 1.5 2004/12/14 10:17:55 gautier Exp $
 
 CSS : Classes et IDs utilisés dans l'OPAC
 -----------------------------------------

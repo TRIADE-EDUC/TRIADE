@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,7 +42,7 @@ $cnx=cnx();
 error($cnx);
 verif_profp_eleve($_GET['eid'],$_SESSION["id_pers"],$_SESSION["membre"]);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
@@ -52,7 +52,7 @@ $nomE=recherche_eleve_nom($id_eleve);
 $prenomE=recherche_eleve_prenom($id_eleve);
 $idClasse=chercheIdClasseDunEleve($id_eleve);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2" colspan=2 ><b><font   id='menumodule1' >
 <B><?php print LANGPROFP5 ?> <font id="color2"><?php print recherche_eleve($id_eleve);?></font></B></font></td></tr>
@@ -116,17 +116,17 @@ $idClasse=chercheIdClasseDunEleve($id_eleve);
 </td></tr></table>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

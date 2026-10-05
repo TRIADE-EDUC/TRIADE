@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: history_functions.inc.php,v 1.2 2018-08-17 10:33:03 ccraig Exp $
+// $Id: history_functions.inc.php,v 1.3 2020/11/04 11:09:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -53,4 +53,3 @@ function reorg_tableau_suppr($tableau_suppr) {
 	}
 	return $t;	
 }
-?>

@@ -1,0 +1,13 @@
+{% extends 'record_in_result_display.tpl.html' %}
+
+<!-- $Id: record_in_result_display_s.tpl.html,v 1.1.2.1 2025/04/22 14:15:08 jdupuy Exp $ -->
+
+{% block record_tit1 %}
+	<div class="title_notCourte">
+		<h3>
+			{% block record_title %}
+				<span class="tit1_notCourte"><a href="{{ record.permalink }}" title="{{ record.tit1 }} {% if record.tit4 %} : {{record.tit4}}{% endif %}"> {{ record.tit1 }} {% if record.tit4 %} : {{record.tit4}}{% endif %}</a></span>
+			{% endblock %}
+		</h3>
+	</div>
+{% endblock %}

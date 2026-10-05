@@ -51,7 +51,7 @@ $fichiercsv="./data/edt/edtgoogle_".$_SESSION["id_pers"].".csv";
 unlink($fichiercsv);
 $fp=fopen("$fichiercsv", "w");
 fwrite($fp,"Subject,StartDate,StartTime,EndDate,EndTime,Alldayevent,Reminderonoff,ReminderDate,Reminder­Time,Description,Priority\n");
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$inf["ID"]=$data[$i][0];
 	$inf["description"]=$data[$i][1];
 	$heuredep=date($data[$i][2]." ".$data[$i][3]);

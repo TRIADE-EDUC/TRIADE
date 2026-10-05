@@ -1,0 +1,40 @@
+<!-- $Id: gabarit.html,v 1.3 2023/08/30 09:23:47 rtigero Exp $ -->
+
+<div class="notice-parent" id="el{{ list_element.id }}Parent">
+		<!-- {% if list_element.context_parameters.in_search %}
+			<span class='notice-selection'><input type='checkbox' id='object_selection_{{ list_element.id }}' name='objects_selection' value='{{ list_element.id }}' /></span>
+		{% endif %}-->
+  		<img style="border:0px; margin:3px 3px" onclick="expandBase('el{{ list_element.id }}', true); return false;" id="el{{list_element.id}}Img" name="imEx" class="img_plus" src="{{ img.plus.gif }}">
+		<span class="notice-heada">
+			<img class="align_top" src="./images/{{ list_element.icon_doc }}" title="{{ msg.notice }}" alt="{{ msg.notice }}"/>
+			<div id="zoom_statut{{ list_element.id }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;" >
+				<b>
+					{{ list_element.statut_notice }}
+				</b>
+			</div>
+			{% block element_link %}
+			<a href="#" data-element-id="{{ list_element.id }}" data-element-type="record" onclick="set_parent('{{ global.caller }}', '{{ list_element.id }}', '{{ isbd | escape true }}','{{ global.callback }}')">
+				{% block element_selector_header %}
+					<span class='record_isbd'>
+						{{ isbd | safe }}
+					</span>
+				{% endblock %}
+			</a>
+			{% endblock %}
+		</span>
+  		<br>
+</div>
+
+<div style="margin-bottom: 6px; display: block;" class="notice-child" startOpen="no" id="el{{ list_element.id }}Child">
+	<img class="align_middle" href="#"/>
+	<h3>{{ msg.notice }}</h3>
+	<div style="overflow:hidden;">
+	<table style='width:100%;' role='presentation'>
+		<tr>
+			{% block element_content %}
+				{{ detail | safe }}
+			{% endblock element_content %}
+		</tr>
+	</table></div>
+	<div class="clear"></div>
+</div>

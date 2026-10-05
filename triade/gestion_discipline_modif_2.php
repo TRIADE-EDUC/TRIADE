@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,11 +41,11 @@ include_once("librairie_php/db_triade.php");
 validerequete("3");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGDISC28?></font></b></td></tr>
 <tr  id='cadreCentral0' >
@@ -54,14 +54,14 @@ $cnx=cnx();
 <?php
 // affichage de la liste d'élèves trouvées
 $motif=strtolower($_POST["saisie_nom_eleve"]);
-$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id FROM ${prefixe}eleves e, ${prefixe}classes c WHERE e.elev_id='$motif' AND c.code_class=e.classe ORDER BY c.libelle, e.nom, e.prenom";
+$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id FROM {$prefixe}eleves e, {$prefixe}classes c WHERE e.elev_id='$motif' AND c.code_class=e.classe ORDER BY c.libelle, e.nom, e.prenom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if (count($data) <= 0) {
+if (countTriade($data) <= 0) {
         print("<BR><center>".LANGDISP1."<BR><BR></center>");
 }else{
-	for ($i=0;$i<count($data);$i++) {
+	for ($i=0;$i<countTriade($data);$i++) {
         ?>
 <table border="1" bordercolor="#000000" width="100%" style="border-collapse: collapse;" >
 <tr>
@@ -83,7 +83,7 @@ if (count($data) <= 0) {
 <?php
 $data_2=affSanction_par_eleve($data[$i][3]);
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data_2);$j++) {
+for($j=0;$j<countTriade($data_2);$j++) {
 	$raison=$data_2[$j][8];	
 	$raison=preg_replace('/\r\n/',"<br />",$raison);
 	$raison=preg_replace('/\n/',"<br />",$raison);
@@ -122,17 +122,17 @@ for($j=0;$j<count($data_2);$j++) {
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

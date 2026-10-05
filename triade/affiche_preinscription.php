@@ -1,14 +1,16 @@
 <?php
-//error_reporting(0);
+error_reporting(0);
 include_once("./librairie_php/fonction.inc.php");
 include_once("./common/config.inc.php");
+include_once("./common/config2.inc.php");
+include_once("./librairie_php/db_triade.php");
 $prefixe=PREFIXE;
 $id=db_connect();
 
 if (!isset($_GET["ok"])) {
 	$email=$_POST["mail"];
 	$passwd=$_POST["password"];
-	$sql = "SELECT elev_id,nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,decision,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve,boursier FROM ${prefixe}preinscription_eleves WHERE email_eleve = '$email'  AND passwd_eleve='$passwd'; ";
+	$sql = "SELECT elev_id,nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,decision,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve,boursier FROM {$prefixe}preinscription_eleves WHERE email_eleve = '$email'  AND passwd_eleve='$passwd'; ";
 	$res = mysqli_query($id,$sql); 
 	$data = mysqli_fetch_assoc($res);
 }
@@ -17,7 +19,7 @@ if (!isset($_GET["ok"])) {
 
 $nomClasse="";
 if ($data['classe'] > 0) {
-	$sql="SELECT code_class,libelle FROM ${prefixe}classes WHERE code_class='".$data['classe']."'";
+	$sql="SELECT code_class,libelle FROM {$prefixe}classes WHERE code_class='".$data['classe']."'";
 	$res = mysqli_query($id,$sql); 
 	$data2 = mysqli_fetch_assoc($res);
 	$nomClasse=$data2['libelle'];
@@ -45,13 +47,13 @@ if (trim($data['nom'])!= "") {
 	<noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
 	<script type="text/javascript" src="./librairie_js/clickdroit.js"></script>
 	<script type="text/javascript" src="./librairie_js/function.js"></script>
+	<script type="text/javascript" src="./librairie_js/logo.js"></script>
 	<script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
   	<script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
   	<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 	<?php
 	include_once("./librairie_php/lib_netscape.php");
 	include_once("./librairie_php/lib_licence2.php");
-	include_once("./librairie_php/db_triade.php");
 	include_once("./common/lib_ecole.php");
 	include_once("./common/version.php");
 	if ($_COOKIE["langue-triade"] == "fr") {
@@ -79,11 +81,7 @@ if (trim($data['nom'])!= "") {
 	        print "<script type=text/javascript src='librairie_js/languefrfunction-depart.js'></script>\n";
         	include_once("./librairie_php/langue-text-fr.php");
 	}
-	if (POPUP == "non") {
-		print "<script type='text/javascript'>var popup='non';</script>\n";
-	}else {
-		print "<script type='text/javascript'>var popup='oui';</script>\n";
-	}
+	print "<script type='text/javascript'>var popup='non';</script>\n";
 	if (HTTPS == "non") {
 		print "<script type='text/javascript'>var http='http://';</script>\n";
 	}else{

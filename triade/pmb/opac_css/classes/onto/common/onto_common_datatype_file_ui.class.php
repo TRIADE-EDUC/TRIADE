@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_file_ui.class.php,v 1.5 2019-01-03 16:10:38 apetithomme Exp $
+// $Id: onto_common_datatype_file_ui.class.php,v 1.8 2021/07/26 13:55:39 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,8 +23,8 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -37,10 +37,10 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 		global $msg,$charset,$ontology_tpl;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset), $form);
+		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset), $form);
 		
 		$content='';
-		if(sizeof($datas)){
+		if(!empty($datas) && sizeof($datas)){
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -57,9 +57,9 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 				}
 				$inside_row=$ontology_tpl['form_row_content_file'];
 				$inside_row .= $ontology_tpl['form_row_content_type'];
-				//test sur le nom du prÃ©cÃ©dent fichier uploadÃ©
-				//par dÃ©faut $data->get_value() est un tableau
-				//Ã  voir si cela est nÃ©cessaire
+				//test sur le nom du précédent fichier uploadé
+				//par défaut $data->get_value() est un tableau
+				//à voir si cela est nécessaire
 				if ($data->get_value() && !is_array($data->get_value())) {
 					$inside_row=str_replace("!!onto_contribution_last_file!!", $ontology_tpl['form_row_content_last_file'],$inside_row);
 					$inside_row=str_replace("!!onto_row_content_file_value!!", $data->get_value(),$inside_row);
@@ -122,8 +122,8 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -133,7 +133,7 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -143,5 +143,76 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 		
 	} // end of member function get_display
 	
+	
+	/**
+	 * Retourne un object JSON avec 2 méthodes check et get_error_message
+	 *
+	 * @param onto_property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété
+	 * @param array datas le tableau des datatypes
+	 * @param string instance_uri URI de l'instance
+	 * @param string flag Flag
+	 *
+	 * @return string
+	 * @static
+	 * @access public
+	 */
+	public static function get_validation_js($item_uri,$property, $restrictions,$datas, $instance_name,$flag){
+	    global $msg;
+	    
+	    return '{
+			"message": "'.addslashes($property->get_label()).'",
+			"valid" : true,
+			"nb_values": 0,
+			"error": "",
+			"values": new Array(),
+			"check": function(){
+				this.values = new Array();
+				this.nb_values = 0;
+				this.valid = true;
+				var nodeOrder = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order");
+                if (nodeOrder) {
+                    var order = nodeOrder.value;
+    				for (var i=0; i<=order ; i++){
+    					var label = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
+    					var defaultLabel = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_default_value");
+                        if(!label && !defaultLabel) continue;
+    					var key = 0;
+    					if((label.value != "") || (defaultLabel.value != "")){
+    						if(!this.values[key]){
+    							this.values[key] = 0;
+    						}
+    						this.values[key]++;
+    					    
+    						if(this.nb_values < this.values[key]) {
+    							this.nb_values = this.values[key];
+    						}
+    					}
+    				}
+                }
+				if(this.nb_values < '.$restrictions->get_min().'){
+					this.valid = false;
+					this.error = "min";
+				}
+				if('.$restrictions->get_max().' != -1 && this.nb_values > '.$restrictions->get_max().'){
+					this.valid = false;
+					this.error = "max";
+				}
+				return this.valid;
+			},
+			"get_error_message": function(){
+ 				switch(this.error){
+ 					case "min" :
+						this.message = "'.addslashes($msg['onto_error_no_minima']).'";
+						break;
+					case "max" :
+						this.message = "'.addslashes($msg['onto_error_too_much_values']).'";
+						break;
+ 				}
+				this.message = this.message.replace("%s","'.addslashes($property->get_label()).'");
+				return this.message;
+			}
+		}';
+	}
 	
 } // end of onto_common_datatype_ui

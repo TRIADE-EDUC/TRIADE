@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: category.tpl.php,v 1.75 2019-05-27 14:55:51 btafforeau Exp $
+// $Id: category.tpl.php,v 1.82 2022/04/12 14:26:40 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $category_form, $add_see_also, $categ0, $categ1, $form_categ_parent, $form_renvoivoir, $form_renvoivoiraussi, $form_num_aut, $form_categ_replace, $categories_liaison_tpl, $charset;
+global $category_form, $add_see_also, $categ0, $categ1, $form_categ_parent, $form_renvoivoir, $form_renvoivoiraussi, $form_num_aut, $categ_replace_content_form, $categories_liaison_tpl, $charset;
 global $traduction_na_tpl, $traduction_cm_tpl, $pmb_form_authorities_editables, $PMBuserid, $pmb_autorites_verif_js, $base_path, $include_path, $categ_browser, $msg, $current_module;
+global $thesaurus_mode_pmb, $categ_add_button;
 
-// templates pour la gestion des catÃ©gories
+// templates pour la gestion des catégories
 require_once("$base_path/javascript/misc.inc.php");
 require_once("$include_path/misc.inc.php"); 
 
-// $categ_browser : template du browser de catÃ©gories
+// $categ_browser : template du browser de catégories
 
 
 $categ_browser = "
@@ -30,7 +31,7 @@ $categ_browser = "
 	</table>
 </div>";
 
-// $category_form : template du form de catÃ©gories
+// $category_form : template du form de catégories
 $category_form = jscript_unload_question();
 
 $category_form.= $pmb_autorites_verif_js!= "" ? "<script type='text/javascript' src='$base_path/javascript/$pmb_autorites_verif_js'></script>":"";
@@ -107,8 +108,19 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 		<a onclick='expandAll();return false;' href='#'><img border='0' id='expandall' src='".get_url_icon('expand_all.gif')."'></a>
 		<a onclick='collapseAll();return false;' href='#'><img border='0' id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>
 	</div>
-	<div id='zone-container'>
-		<!-- libelle defaut -->
+	<div id='zone-container'>";
+	if($thesaurus_mode_pmb != 0) {
+	    $category_form .= "
+        <div id='el0Child_9' class='row' movable='yes' title=\"".htmlentities($msg['thesaurus'], ENT_QUOTES, $charset)."\">
+            <div class='row'>
+				<label class='etiquette' >".htmlentities($msg['thesaurus'], ENT_QUOTES, $charset)."</label>
+			</div>
+            <div class='row'>
+                <!-- sel_thesaurus -->
+            </div>
+        </div>";
+	}
+$category_form .= "<!-- libelle defaut -->
 		<div id='el0Child_0' class='row'>
 			<div id='el0Child_0_a' class='colonne2' movable='yes' title=\"".htmlentities($msg[103], ENT_QUOTES, $charset)."\">
 				<div class='row'>
@@ -177,9 +189,6 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 					<!-- numero_autorite -->
 				</div>
 			</div>
-			<div id='el0Child_5_b' class='colonne_suite' movable='yes' title=\"".htmlentities($msg['print_thesaurus'], ENT_QUOTES, $charset)."\">
-				<!-- imprimer_thesaurus -->
-			</div>
 		</div>
 		!!concept_form!!
 		!!thumbnail_url_form!!
@@ -200,10 +209,11 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 		<input type='button' id='btcancel' class='bouton' value='$msg[76]' onClick=\"unload_off();document.location='!!cancel_action!!'\" />
 		<input type='submit' id='btsubmit' class='bouton' value='$msg[77]' onClick=\"document.getElementById('save_and_continue').value=0;return test_form(this.form)\" />
 		<input type='hidden' name='save_and_continue' id='save_and_continue' value='' />
-		<input type='submit' id='update_continue' class='bouton' value='" . $msg['save_and_continue'] . "' onClick=\"document.getElementById('save_and_continue').value=1;return test_form(this.form)\" />
+		<input type='button' id='update_continue' class='bouton' value='" . $msg['save_and_continue'] . "' onClick=\"document.getElementById('save_and_continue').value=1;if(test_form(this.form)) {this.form.submit();}\" />
 		<!-- remplace_categ -->
 		!!voir_notices!!
 		!!audit_bt!!
+		<!-- imprimer_thesaurus -->
 		<input type='hidden' name='page' value='!!page!!' />
 		<input type='hidden' name='nbr_lignes' value='!!nbr_lignes!!' />
 		<input type='hidden' name='user_input' value=\"!!user_input!!\" />
@@ -240,14 +250,43 @@ $add_see_also="
 		document.getElementById(name).value='';
 		document.getElementById(name_rec).checked=false;
 	}
-	function add_categ() {
+	function get_selector_categ() {
 		template = document.getElementById('addcateg');
-		categ=document.createElement('div');
-		categ.className='row';
+		selector = '';
+		for (let i = 0; i < template.childNodes.length; i++) {
+		    if (template.childNodes[i].tagName == 'DIV') {
+		        row = template.childNodes[i];
+		        for (let j = 0; j < row.childNodes.length; j++) {
+		            if (row.childNodes[j].tagName == 'INPUT' && row.childNodes[j].value == '...') {
+		                selector = row.childNodes[j].cloneNode();
+		                break;
+                    }
+                }
+            }
+            if (selector) {
+                break;
+            }
+		}
+		if (!selector) {
+		    row = template.previousElementSibling;
+	        for (let j = 0; j < row.childNodes.length; j++) {
+	            if (row.childNodes[j].tagName == 'INPUT' && row.childNodes[j].value == '...') {
+	                selector = row.childNodes[j].cloneNode();
+	                break;
+                }
+            }
+		}
+		return selector;
+    }
+	function add_categ() {
+		let template = document.getElementById('addcateg');
+		let f_categ_selector = get_selector_categ();
+		let categ = document.createElement('div');
+		categ.className = 'row';
 
-		suffixe = eval('document.categ_form.max_categ.value')
-		nom_id = 'f_categ'+suffixe
-		f_categ = document.createElement('input');
+		let suffixe = eval('document.categ_form.max_categ.value');
+		let nom_id = 'f_categ'+suffixe;
+		let f_categ = document.createElement('input');
 		f_categ.setAttribute('name',nom_id);
 		f_categ.setAttribute('id',nom_id);
 		f_categ.setAttribute('type','text');
@@ -257,13 +296,13 @@ $add_see_also="
 		f_categ.setAttribute('autfield','f_categ_id'+suffixe);
 		f_categ.setAttribute('autocomplete','off');
 		
-		f_categ_rec = document.createElement('input');
+		let f_categ_rec = document.createElement('input');
 		f_categ_rec.name = 'f_categ_rec'+suffixe;
 		f_categ_rec.setAttribute('id','f_categ_rec'+suffixe);
 		f_categ_rec.setAttribute('type','checkbox');
 		f_categ_rec.setAttribute('value','1');		
 
-		del_f_categ = document.createElement('input');
+		let del_f_categ = document.createElement('input');
 		del_f_categ.setAttribute('id','del_f_categ'+suffixe);
 		del_f_categ.onclick=fonction_raz_categ;
 		del_f_categ.setAttribute('type','button');
@@ -271,19 +310,24 @@ $add_see_also="
 		del_f_categ.setAttribute('readonly','');
 		del_f_categ.setAttribute('value','$msg[raz]');
 		
-		f_categ_id = document.createElement('input');
+		let f_categ_id = document.createElement('input');
 		f_categ_id.name='f_categ_id'+suffixe;
 		f_categ_id.setAttribute('type','hidden');
 		f_categ_id.setAttribute('id','f_categ_id'+suffixe);
 		f_categ_id.setAttribute('value','');
+
+		let buttonAdd = document.getElementById('button_add_categ');
 		
 		categ.appendChild(f_categ);
-		space=document.createTextNode(' ');
-		categ.appendChild(space);
+		categ.appendChild(document.createTextNode(' '));
 		categ.appendChild(f_categ_rec);
-		categ.appendChild(space);
+		categ.appendChild(document.createTextNode(' '));
+		categ.appendChild(f_categ_selector);
+		categ.appendChild(document.createTextNode(' '));
 		categ.appendChild(del_f_categ);
 		categ.appendChild(f_categ_id);
+		categ.appendChild(document.createTextNode(' '));
+		categ.appendChild(buttonAdd);
 
 		template.appendChild(categ);
 		
@@ -304,17 +348,12 @@ $categ0 = "
         <input type='checkbox' id='f_categ_rec!!icateg!!' name='f_categ_rec!!icateg!!' !!chk!! />
 		<input type='button' class='bouton_small' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=categorie&caller=categ_form&p1=f_categ_id!!icateg!!&p2=f_categ!!icateg!!&dyn=1&parent=!!parent!!&id2=!!id!!', 'selector_category')\" />
 		<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; this.form.f_categ_rec!!icateg!!.checked=false; \" />
-		<input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' /><input type='button' class='bouton_small' value='+' onClick=\"add_categ();\"/>
+		<input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
+		!!categ_add_button!!
 	</div>";
-	
-$categ1 = "
-	<div class='row'>
-		<input type='text' class='saisie-80emr' id='f_categ!!icateg!!' name='f_categ!!icateg!!' value=\"!!categ_libelle!!\" 
-            completion='categories_mul' autfield='f_categ_id!!icateg!!' autocomplete='off'/>
-        <input type='checkbox' id='f_categ_rec!!icateg!!' name='f_categ_rec!!icateg!!' !!chk!! />&nbsp;
-        <input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; \" />
-        <input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
-	</div>";
+
+$categ_add_button = "
+	<input id='button_add_categ' type='button' class='bouton_small' value='+' onClick=\"add_categ();\"/>";
 
 $form_categ_parent = "
 	<div id='el0Child_2' class='row' movable='yes' title=\"".htmlentities($msg['categ_parent'], ENT_QUOTES, $charset)."\">
@@ -323,7 +362,7 @@ $form_categ_parent = "
 		</div>
 		<div class='row'>
 			<input type='text' class='saisie-80emr' id='category_parent' name='category_parent' value=\"!!parent_libelle!!\"
-                completion='categories_mul' autfield='category_parent_id' autocomplete='off'/>
+                completion='categories_mul' autfield='category_parent_id' autocomplete='off' autexclude='!!id_noeud!!' att_id_filter='!!id_thes!!'/>
 			<input type='button' class='bouton_small' onclick=\"openPopUp('./select.php?what=categorie&caller=categ_form&p1=category_parent_id&p2=category_parent&keep_tilde=1&parent=!!parent!!&id2='+document.categ_form.category_parent_id.value, 'selector_category')\" title='$msg[157]' value='$msg[parcourir]' />
 			<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.category_parent.value=''; this.form.category_parent_id.value='0'; \" />
 			<input type='hidden' id='category_parent_id' name='category_parent_id' value='!!parent_value!!' />
@@ -355,34 +394,20 @@ $form_renvoivoiraussi = "
 $form_num_aut = "
 	<input type='text' class='saisie-20em' id='num_aut' name='num_aut' value=\"!!num_aut!!\" />";
 	
-// $categ_replace : form remplacement categorie
-$form_categ_replace = "
-<script src='javascript/ajax.js'></script>
-<form class='form-$current_module' name='categ_replace' method='post' action='!!controller_url_base!!&sub=categ_replace&id=!!id!!&parent=!!parent!!' onSubmit=\"return false\" >
-<h3>$msg[159] !!old_categ_libelle!! </h3>
-<div class='form-contenu'>
-	<div class='row'>
-		<label class='etiquette' for='par'>".htmlentities($msg[160], ENT_QUOTES, $charset)."</label>
-	</div>
-	<div class='row'>
-		<input type='text' class='saisie-80emr' name='by_libelle' id='by_libelle' value=\"\" completion=\"categories_mul\" autfield=\"by\" />
-		<input type='button' class='bouton_small' onclick=\"openPopUp('./select.php?what=categorie&caller=categ_replace&p1=by&p2=by_libelle&keep_tilde=1&parent=0&deb_rech='+".pmb_escape()."(this.form.by_libelle.value), 'selector_category')\" value='$msg[parcourir]' />
-		<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.by_libelle.value=''; this.form.by.value='0'; \" />
-		<input type='hidden' name='by' id='by' value='0'>
-	</div>
-	<div class='row'>		
-		<input id='aut_link_save' name='aut_link_save' type='checkbox' checked='checked' value='1'>".$msg["aut_replace_link_save"]."
-	</div>	
+// $categ_replace_content_form : form remplacement categorie
+$categ_replace_content_form = "
+<div class='row'>
+	<label class='etiquette' for='par'>".htmlentities($msg[160], ENT_QUOTES, $charset)."</label>
 </div>
 <div class='row'>
-	<input type='button' class='bouton' value='$msg[76]' id='btcancel' onClick=\"document.location='!!cancel_action!!';\">
-	<input type='button' class='bouton' value='$msg[159]' id='btsubmit' onClick=\"this.form.submit();\" >
+	<input type='text' class='saisie-80emr' name='by_libelle' id='by_libelle' value=\"\" completion=\"categories_mul\" autfield=\"by\" />
+	<input type='button' class='bouton_small' onclick=\"openPopUp('./select.php?what=categorie&caller=categ_replace&p1=by&p2=by_libelle&keep_tilde=1&parent=0&deb_rech='+".pmb_escape()."(this.form.by_libelle.value), 'selector_category')\" value='$msg[parcourir]' />
+	<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.by_libelle.value=''; this.form.by.value='0'; \" />
+	<input type='hidden' name='by' id='by' value='0'>
 </div>
-</form>
-<script type='text/javascript'>
-	ajax_parse_dom();
-	document.forms['categ_replace'].elements['by_libelle'].focus();
-</script>
+<div class='row'>		
+	<input id='aut_link_save' name='aut_link_save' type='checkbox' checked='checked' value='1'>".$msg["aut_replace_link_save"]."
+</div>
 ";
 
 $categories_liaison_tpl = "

@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: finances.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
+$Id: finances.xml,v 1.3.16.1 2024/11/21 10:02:23 jparis Exp $ -->
 <pmbquotas table="quotas_finance">
 	<elements>
 
@@ -46,7 +46,7 @@ $Id: finances.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
-
+        
 		<element name="LOCATION_READER" id="16" comment="Borrower location">
             <linkedto>READER</linkedto>
             <tablelinked>empr</tablelinked>
@@ -56,6 +56,7 @@ $Id: finances.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
+
 	</elements>
 	
 	<types>
@@ -71,7 +72,7 @@ $Id: finances.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
 			</quotas>
 		</type>
 		
-		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Fines per day" short_comment="fines/day" filter_id="amende">
+		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Fines per day / period" short_comment="fines/day/period" filter_id="amende">
 			<quotas>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG</on>

@@ -29,7 +29,7 @@
   if ($USER_SUBSTITUE) {
     if ($idAdmin!=0)
       $admin_PROFILS = $droit_PROFILS;
-    $DB_CX->DbQuery("SELECT *, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil  FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+    $DB_CX->DbQuery("SELECT *, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil  FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
     $rsProfil = $DB_CX->DbNextRow();
     $ztAction = "UPDATE";
     $nouveau = trad("PROFIL_LIB_NV_PASSWD");
@@ -45,7 +45,7 @@
       $titrePage = sprintf(trad("PROFIL_TITRE_MODIFIER_AUTRE"), $genre, $rsProfil['nomUtil']);
     }
     $btnAnnul = "btAnnul()";
-    $DB_CX->DbQuery("SELECT droit_profils, droit_agendas, droit_notes, droit_aff FROM ${PREFIX_TABLE}droit WHERE droit_util_id=".$USER_SUBSTITUE."");
+    $DB_CX->DbQuery("SELECT droit_profils, droit_agendas, droit_notes, droit_aff FROM {$PREFIX_TABLE}droit WHERE droit_util_id=".$USER_SUBSTITUE."");
     if ($DB_CX->DbNumRows() && (($droit_PROFILS >= _DROIT_PROFIL_AUTRE_PARAM_BASE) || ($USER_SUBSTITUE==$idUser))) {
       $dr_PROFILS = $DB_CX->DbResult(0,0);
       $dr_AGENDAS = $DB_CX->DbResult(0,1);
@@ -182,18 +182,7 @@
 
     var vPartage = '<?php echo $rsProfil['util_partage_planning']; ?>';
     var vAffecte = '<?php echo $rsProfil['util_autorise_affect']; ?>';
-<?php
-    if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-      $DB_CX->DbQuery("SELECT aff_util_id FROM ${PREFIX_TABLE}planning_affichage WHERE (aff_consultant_id=".$idUser." AND aff_type_planning ='4')");
-      if ($DB_CX->DbNumRows()) $affTotal = 1;
-      if ($affTotal==1) {
-        echo "    var JaffTotal = 1;\n";
-      } else {
-        $affTotal=0;
-        echo "    var JaffTotal = 0;\n";
-      }
-    }
- ?>
+
     function selectUtil(_listeSource, _listeDest) {
       var i,j;
       var ok = false;
@@ -270,7 +259,7 @@
   if (($droit_PROFILS >= _DROIT_PROFIL_AUTRE_PARAM_PARTAGE) or (($droit_PROFILS >= _DROIT_PROFIL_PARAM_PARTAGE) and ($idUser==$USER_SUBSTITUE))) {
       echo "      recupSelection(theForm.zlPartage, theForm.ztPartage);\n";
       echo "      recupSelection(theForm.zlAffecte, theForm.ztAffecte);\n";
-    $DB_CX->DbQuery("SELECT gr_util_id FROM ${PREFIX_TABLE}groupe_util");
+    $DB_CX->DbQuery("SELECT gr_util_id FROM {$PREFIX_TABLE}groupe_util");
     if ($DB_CX->DbNumRows()>0) {
       $NoGroupe=true;
       echo "      recupSelection(theForm.zlPrtGroupe, theForm.ztPrtGroupe);\n";
@@ -573,7 +562,7 @@ if ($droit_Aff_THEME=="0") {
   }
   closedir($rep);
   clearstatcache();
-  ksort($tabInterface);
+  if (is_array($tabInterface)) ksort($tabInterface);
   if (!file_exists("skins/".$rsProfil['util_interface'].".php")) {
     $rsProfil['util_interface'] = $APPLI_STYLE;
   }
@@ -696,7 +685,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
       <SELECT name="zlFuseauHoraire" size="1" tabindex="<?php echo $tabIndex++; ?>">
 <?php
   // On recupere la liste des fuseaux horaires
-  $DB_CX->DbQuery("SELECT tzn_zone, tzn_libelle, tzn_gmt FROM ${PREFIX_TABLE}timezone ORDER BY tzn_gmt, tzn_libelle");
+  $DB_CX->DbQuery("SELECT tzn_zone, tzn_libelle, tzn_gmt FROM {$PREFIX_TABLE}timezone ORDER BY tzn_gmt, tzn_libelle");
   while ($enr = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_timezone'] == $enr['tzn_zone']) ? " selected" : "";
     $signe = ($enr['tzn_gmt']<0) ? "-" : "+";
@@ -924,7 +913,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPartage = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr='0'");
+    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPartage[] = $enr['ppl_consultant_id'];
   } else {
@@ -932,7 +921,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_partage_planning'] == "1") ? " selected" : "";
     for ($i=0; $i<count($tabPartage) && empty($selected); $i++) {
@@ -970,7 +959,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPrtGroupe = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT DISTINCT ppl_gr FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr!='0'");
+    $DB_CX->DbQuery("SELECT DISTINCT ppl_gr FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$USER_SUBSTITUE." AND ppl_consultant_id!=".$USER_SUBSTITUE." AND ppl_gr!='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPrtGroupe[] = $enr['ppl_gr'];
   } else {
@@ -978,7 +967,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM ${PREFIX_TABLE}groupe_util");
+  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM {$PREFIX_TABLE}groupe_util");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = "";
     for ($i=0; $i<count($tabPrtGroupe) && empty($selected); $i++) {
@@ -1059,7 +1048,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabPartage = array();
   // On recupere la liste des personnes concernees par l'affectation sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT paf_consultant_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr='0'");
+    $DB_CX->DbQuery("SELECT paf_consultant_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabPartage[] = $enr['paf_consultant_id'];
   } else {
@@ -1067,7 +1056,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id!=".$USER_SUBSTITUE." ORDER BY nomUtil");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = ($rsProfil['util_autorise_affect'] == "1") ? " selected" : "";
     for ($i=0; $i<count($tabPartage) && empty($selected); $i++) {
@@ -1106,7 +1095,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   $tabAffGroupe = array();
   // On recupere la liste des personnes concernees par le partage sauf l'utilisateur courant
   if ($ztAction=="UPDATE") { // On n'est pas dans le cas d'une creation de compte
-    $DB_CX->DbQuery("SELECT DISTINCT paf_gr FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr!='0'");
+    $DB_CX->DbQuery("SELECT DISTINCT paf_gr FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$USER_SUBSTITUE." AND paf_consultant_id!=".$USER_SUBSTITUE." AND paf_gr!='0'");
     while ($enr = $DB_CX->DbNextRow())
       $tabAffGroupe[] = $enr['paf_gr'];
   } else {
@@ -1114,7 +1103,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
   }
 
   // On recupere la liste des utilisateurs sauf l'utilisateur courant
-  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM ${PREFIX_TABLE}groupe_util");
+  $DB_CX->DbQuery("SELECT gr_util_id, gr_util_nom, gr_util_liste FROM {$PREFIX_TABLE}groupe_util");
   while ($rsUtil = $DB_CX->DbNextRow()) {
     $selected = "";
     for ($i=0; $i<count($tabAffGroupe) && empty($selected); $i++) {
@@ -1172,7 +1161,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
           <TD><SELECT size="6" style="width:200px; border:<?php echo $FormulaireBordureInput; ?>; background-color:<?php echo $FormulaireFondInput; ?>;">
 <?php
     // Liste des utilisateurs dont on peut consulter le planning
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
     while ($enr=$DB_CX->DbNextRow()) {
       echo "            <OPTION value=\"".$enr['util_id']."\" disabled>".htmlspecialchars($enr['nomUtil'])."</OPTION>\n";
     }
@@ -1182,7 +1171,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
           <TD align="right"><SELECT size="6" style="width:200px; border:<?php echo $FormulaireBordureInput; ?>; background-color:<?php echo $FormulaireFondInput; ?>;">
 <?php
     // Liste des utilisateurs a qui l'on peut affecter une note
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_autorise_affect ='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id!=".$USER_SUBSTITUE." AND (util_autorise_affect ='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$USER_SUBSTITUE.")) ORDER BY nomUtil");
     while ($enr=$DB_CX->DbNextRow()) {
       echo "            <OPTION value=\"".$enr['util_id']."\" disabled>".htmlspecialchars($enr['nomUtil'])."</OPTION>\n";
     }
@@ -1203,7 +1192,7 @@ if ($AUTORISE_FCKE_CFG && $AUTORISE_HTML) {
     $idRand = md5(uniqid(rand()));
     if ($USER_SUBSTITUE) {
       // Si on n'est pas dans la creation d'un nouveau compte => on met a jour dans la bdd
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}utilisateur SET util_url_export='".$idRand."' WHERE util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}utilisateur SET util_url_export='".$idRand."' WHERE util_id=".$USER_SUBSTITUE);
     }
     $rsProfil['util_url_export']=$idRand;
   }

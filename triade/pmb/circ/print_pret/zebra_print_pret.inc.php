@@ -1,14 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: zebra_print_pret.inc.php,v 1.12 2019-01-04 13:54:51 ccraig Exp $
+// $Id: zebra_print_pret.inc.php,v 1.14 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $class_path, $sub, $charset;
+global $id_empr, $cb_doc, $pmb_printer_name, $printer_type, $transacash_id;
+
 require_once($class_path."/printer.class.php");
 
-$id_empr+=0;
+$id_empr = intval($id_empr);
 $printer= new printer();
 
 if($pmb_printer_name) {
@@ -32,7 +35,7 @@ switch($sub) {
 		if ((substr($pmb_printer_name,0,9) == 'raspberry') && (isset($printer_type))) {
  			header("Content-Type: text/html; charset=utf-8");
 			if ($charset != 'utf-8') {
-				print utf8_encode($r[$printer_type]);
+				print encoding_normalize::utf8_normalize($r[$printer_type]);
 			} else {
 				print $r[$printer_type];
 			}
@@ -49,7 +52,7 @@ switch($sub) {
 		if ((substr($pmb_printer_name,0,9) == 'raspberry') && (isset($printer_type))) {
 			header("Content-Type: text/html; charset=utf-8");
 			if ($charset != 'utf-8') {
-				print utf8_encode($r[$printer_type]);
+				print encoding_normalize::utf8_normalize($r[$printer_type]);
 			} else {
 				print $r[$printer_type];
 			}

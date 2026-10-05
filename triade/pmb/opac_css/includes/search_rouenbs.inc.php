@@ -1,10 +1,9 @@
 <?php
-require_once($base_path."/classes/marc_table.class.php");
 
 function search_other_function_filters() {
 	global $typdoc_multi, $rbs_bibli;
 	global $charset;
-	global $msg,$dbh;
+	global $msg;
 
 	global $gestion_acces_active,$gestion_acces_empr_notice;
 	global $class_path;
@@ -26,7 +25,7 @@ function search_other_function_filters() {
 	}
 	
 	$requete = "SELECT typdoc FROM notices $acces_j $statut_j where typdoc!='' $statut_r GROUP BY typdoc";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	$r .= " <span><table style='width:30%'><tr><td>";
 	$r .= " <select name='typdoc_multi[]' multiple size='3'>";
 	$r .= "  <option ";
@@ -36,6 +35,7 @@ function search_other_function_filters() {
 	}
 	$r .=">".$msg["simple_search_all_doc_type"]."</option>\n";
 	$doctype = new marc_list('doctype');
+	$obj=array();
 	while (($rt = pmb_mysql_fetch_row($result))) {
 		$obj[$rt[0]]=1;
 	}	
@@ -53,7 +53,7 @@ function search_other_function_filters() {
 	$r.="<select name='rbs_bibli'>";
 	$r.="<option value=''>".htmlentities($msg["search_loc_all_site"],ENT_QUOTES,$charset)."</option>";
 	$requete="select location_libelle,idlocation from docs_location where location_visible_opac=1";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($result)){
 		while ($loc = pmb_mysql_fetch_object($result)) {
 			$selected="";
@@ -79,9 +79,9 @@ function search_other_function_clause() {
 	$where = "";
 	$t_m_tab = array();
 	$t_m = "";
-	if (count($typdoc_multi)) {
+	if (!empty($typdoc_multi) && is_array($typdoc_multi) && count($typdoc_multi)) {
 		reset($typdoc_multi);
-		// on ne remplit pas le tableau si la valeur 'tout type de document' est sÃ©lectionnÃ©e
+		// on ne remplit pas le tableau si la valeur 'tout type de document' est sélectionnée
 		if (!in_array('', $typdoc_multi)) {
 			$typdoc_multi = array_flip($typdoc_multi);
 			foreach ($typdoc_multi as $key => $val) {
@@ -106,8 +106,11 @@ function search_other_function_clause() {
 
 function search_other_function_has_values() {
 	global $typdoc_multi, $rbs_bibli;
-	if ((count($typdoc_multi))||($rbs_bibli)) return true; 
-	else return false;
+	if ((!empty($typdoc_multi) && count($typdoc_multi))||($rbs_bibli)) {
+	    return true; 
+	} else {
+	    return false;
+	}
 }
 
 function search_other_function_rec_history($n) {
@@ -125,23 +128,22 @@ function search_other_function_get_history($n) {
 }
 
 function search_other_function_human_query($n) {
-	global $dbh;
 	global $typdoc_multi;
 	global $rbs_bibli;
 	
 	$r="";
 	$typdoc_multi=$_SESSION["typdoc_multi".$n];
-	if (count($typdoc_multi)) {
+	if (!empty($typdoc_multi) && is_array($typdoc_multi) && count($typdoc_multi)) {
 		$r.="pour les types de documents ";
 		$doctype = new marc_list('doctype');
 		reset($typdoc_multi);
 		$t_d=array();
-		foreach ($typdoc_multi as $key => $val) {
+		foreach ($typdoc_multi as $val) {
 			$t_d[]=$doctype->table[$val];
 		}
 		$r.=implode(", ",$t_d);
 	}
-	$cnl_bibli=$_SESSION["rbs_bibli".$n];
+	$rbs_bibli = intval($_SESSION["rbs_bibli".$n]);
 	if ($rbs_bibli) {
 		$r.="bibliotheque : ";
 		$requete="select location_libelle from docs_location where idlocation='".$rbs_bibli."' limit 1";
@@ -152,17 +154,15 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $typdoc_multi;
+	global $typdoc_multi, $charset;
 	global $rbs_bibli;
 	$retour = "";
 	if (is_array($typdoc_multi) && count($typdoc_multi)) {
 		foreach($typdoc_multi as $v) {
-			$retour.= "<input type='hidden' name='typdoc_multi[]' value='".$v."' />\n";
+		    $retour.= "<input type='hidden' name='typdoc_multi[]' value='".htmlentities($v, ENT_QUOTES, $charset)."' />\n";
 		}
 	}
-	$retour .= "<input type=\"hidden\" name=\"rbs_bibli\" value=\"$rbs_bibli\">\n";
+	$retour .= "<input type=\"hidden\" name=\"rbs_bibli\" value=\"".htmlentities($rbs_bibli, ENT_QUOTES, $charset)."\">\n";
 	
 	return $retour;
 }
-
-?>

@@ -6,7 +6,7 @@ PMB
 table des langues supportées
 PMB est sous licence GPL, la réutilisation du code est cadrée
 modified: Armelle Nedelec - Ajout Français unicode
-$Id: languages.xml,v 1.1 2006-11-15 08:50:25 vvilaythong Exp $
+$Id: languages.xml,v 1.1 2006/11/15 08:50:25 vvilaythong Exp $
 -->
 
 <XMLlist>

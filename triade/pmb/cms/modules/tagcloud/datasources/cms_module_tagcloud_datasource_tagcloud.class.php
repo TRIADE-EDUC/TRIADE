@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_tagcloud_datasource_tagcloud.class.php,v 1.3 2014-06-27 15:13:49 arenou Exp $
+// $Id: cms_module_tagcloud_datasource_tagcloud.class.php,v 1.3 2014/06/27 15:13:49 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ class cms_module_tagcloud_datasource_tagcloud extends cms_module_common_datasour
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -27,7 +27,7 @@ class cms_module_tagcloud_datasource_tagcloud extends cms_module_common_datasour
 	}
 
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -38,10 +38,10 @@ class cms_module_tagcloud_datasource_tagcloud extends cms_module_common_datasour
 
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 // 	$selector = $this->get_selected_selector();
 // 		if($selector){
 // 			$article_id = $selector->get_value();

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pret_parametres_perso.class.php,v 1.25 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: pret_parametres_perso.class.php,v 1.28.10.1 2025/03/12 17:27:47 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,18 +10,18 @@ require_once($class_path."/parametres_perso.class.php");
 require_once($include_path."/templates/pret_parametres_perso.tpl.php");
 
 class pret_parametres_perso extends parametres_perso {
-	
-	//CrÃ©ateur : passer dans $prefix le type de champs persos et dans $base_url l'url a appeller pour les formulaires de gestion	
+
+	//Créateur : passer dans $prefix le type de champs persos et dans $base_url l'url a appeller pour les formulaires de gestion
 	public function __construct($prefix,$base_url="",$option_visibilite=array()) {
 		global $_custom_prefixe_;
 		global $charset;
-		
+
 		$this->option_visibilite=$option_visibilite;
-		
+
 		$this->prefix=$prefix;
 		$this->base_url=$base_url;
 		$_custom_prefixe_=$prefix;
-		
+
 		//Lecture des champs
 		$this->no_special_fields=0;
 		$this->t_fields=array();
@@ -50,17 +50,16 @@ class pret_parametres_perso extends parametres_perso {
 			$this->t_fields=self::$st_fields[$this->prefix];
 		}
 	}
-	
-	//Affichage de l'Ã©cran de gestion des paramÃ¨tres perso (la liste de tous les champs dÃ©finis)
+
+	//Affichage de l'écran de gestion des paramètres perso (la liste de tous les champs définis)
 	public function show_field_list() {
-		$this->load_class('/list/custom_fields/list_custom_fields_loans_ui.class.php');
 		list_custom_fields_loans_ui::set_prefix($this->prefix);
 		list_custom_fields_loans_ui::set_option_visibilite($this->option_visibilite);
 		$list_custom_fields_loans_ui = new list_custom_fields_loans_ui();
 		return $list_custom_fields_loans_ui->get_display_list();
 	}
-	
-	//Affichage du formulaire d'Ã©dition d'un champ perso
+
+	//Affichage du formulaire d'édition d'un champ perso
 	public function show_edit_form($idchamp=0) {
 		global $charset;
 		global $type_list_empr;
@@ -68,12 +67,12 @@ class pret_parametres_perso extends parametres_perso {
 		global $form_loan_edit;
 		global $include_path;
 		global $msg;
-				
+
 		if ($idchamp!=0 and $idchamp!="") {
 			$requete="select idchamp, name, titre, type, datatype, options, multiple, obligatoire, ordre, search, export, filters, exclusion_obligatoire, pond, comment, opac_sort from ".$this->prefix."_custom where idchamp=$idchamp";
 			$resultat=pmb_mysql_query($requete) or die(pmb_mysql_error());
 			$r=pmb_mysql_fetch_object($resultat);
-			
+
 			$name=$r->name;
 			$titre=htmlentities($r->titre,ENT_QUOTES,$charset);
 			$type=$r->type;
@@ -87,7 +86,7 @@ class pret_parametres_perso extends parametres_perso {
 			$opac_sort=$r->opac_sort;
 			$form_loan_edit=str_replace("!!form_titre!!",sprintf($msg["parperso_field_edition"],$name),$form_loan_edit);
 			$form_loan_edit=str_replace("!!action!!","update",$form_loan_edit);
-			
+
 			if ($r->options!="") {
 				$param=_parser_text_no_function_("<?xml version='1.0' encoding='".$charset."'?>\n".$r->options, "OPTIONS");
 				$form_loan_edit=str_replace("!!for!!",$param["FOR"],$form_loan_edit);
@@ -112,16 +111,16 @@ class pret_parametres_perso extends parametres_perso {
 			$form_loan_edit=str_replace("!!for!!","",$form_loan_edit);
 			$form_loan_edit=str_replace("!!supprimer!!","",$form_loan_edit);
 		}
-		
+
 		$onclick="openPopUp('".$include_path."/options_empr/options.php?name=&type='+this.form.type.options[this.form.type.selectedIndex].value+'&_custom_prefixe_=".$this->prefix."','options');";
 		$form_loan_edit=str_replace("!!onclick!!",$onclick,$form_loan_edit);
-		
+
 		$form_loan_edit=str_replace("!!idchamp!!",$idchamp,$form_loan_edit);
 		$form_loan_edit=str_replace("!!name!!",$name,$form_loan_edit);
 		$form_loan_edit=str_replace("!!titre!!",htmlentities($titre, ENT_QUOTES, $charset),$form_loan_edit);
-		$form_loan_edit=str_replace("!!pond!!",$pond,$form_loan_edit);	
+		$form_loan_edit=str_replace("!!pond!!",$pond,$form_loan_edit);
 		$form_loan_edit=str_replace("!!comment!!",$comment,$form_loan_edit);
-		
+
 		//Liste des types
 		$t_list="<select name='type'>\n";
 		reset($type_list_empr);
@@ -132,8 +131,8 @@ class pret_parametres_perso extends parametres_perso {
 		}
 		$t_list.="</select>\n";
 		$form_loan_edit=str_replace("!!type_list!!",$t_list,$form_loan_edit);
-		
-		//Liste des types de donnÃ©es
+
+		//Liste des types de données
 		$t_list="<select name='datatype'>\n";
 		reset($datatype_list);
 		foreach ($datatype_list as $key => $val) {
@@ -143,32 +142,32 @@ class pret_parametres_perso extends parametres_perso {
 		}
 		$t_list.="</select>\n";
 		$form_loan_edit=str_replace("!!datatype_list!!",$t_list,$form_loan_edit);
-		
+
 		$form_loan_edit=str_replace("!!options!!",$options,$form_loan_edit);
-		
+
 		if ($obligatoire==1) $f_obligatoire="checked"; else $f_obligatoire="";
 		$form_loan_edit=str_replace("!!obligatoire_checked!!",$f_obligatoire,$form_loan_edit);
-		
+
 		if ($filters==1) $f_filters="checked"; else $f_filters="";
 		$form_loan_edit=str_replace("!!filters_checked!!",$f_filters,$form_loan_edit);
-		
+
 		foreach ( $this->option_visibilite as $key => $value ) {
        		$form_loan_edit=str_replace("!!".$key."_visible!!",$value,$form_loan_edit);
 		}
-		
+
 		$form_loan_edit=str_replace("!!ordre!!",$ordre,$form_loan_edit);
 		$form_loan_edit=str_replace("!!base_url!!",$this->base_url,$form_loan_edit);
-		
+
 		echo $form_loan_edit;
 	}
 
-	//Validation du formulaire de crÃ©ation
+	//Validation du formulaire de création
 	public function check_form() {
 		global $action,$idchamp;
 		global $name,$titre,$type,$_for,$multiple,$obligatoire,$exclusion,$msg,$search,$export,$filters,$pond,$opac_sort;
-		//VÃ©rification conformitÃ© du champ name
+		//Vérification conformité du champ name
 		if (!preg_match("/^[A-Za-z][A-Za-z0-9_]*$/",$name)) $this->make_error(sprintf($msg["parperso_check_field_name"],$name));
-		//On vÃ©rifie que le champ name ne soit pas dÃ©jÃ  existant
+		//On vérifie que le champ name ne soit pas déjà existant
 		if ($action == "update") $requete="select idchamp from ".$this->prefix."_custom where name='$name' and idchamp<>$idchamp";
 		else $requete="select idchamp from ".$this->prefix."_custom where name='$name'";
 		$resultat=pmb_mysql_query($requete);
@@ -184,14 +183,14 @@ class pret_parametres_perso extends parametres_perso {
 		if($pond=="") $pond=1;
 		if($opac_sort=="") $opac_sort=0;
 	}
-	
+
 	//Validation des valeurs des champs soumis lors de la saisie d'une fichie emprunteur ou autre...
 	public function check_submited_fields() {
 		global $chk_list_empr,$charset;
-		
+
 		$nberrors=0;
 		$this->error_message="";
-		
+
 		if (!$this->no_special_fields) {
 			reset($this->t_fields);
 			foreach ($this->t_fields as $key => $val) {
@@ -217,12 +216,12 @@ class pret_parametres_perso extends parametres_perso {
 		}
 		return $nberrors;
 	}
-	
-	//Affichage des champs Ã  saisir dans le formulaire de modification/crÃ©ation d'un emprunteur ou autre
+
+	//Affichage des champs à saisir dans le formulaire de modification/création d'un emprunteur ou autre
 	public function show_editable_fields($id,$from_z3950=false) {
 		global $aff_list_empr,$charset;
 		$perso=array();
-		
+
 		if (!$this->no_special_fields) {
 			if(!$from_z3950){
 				$this->get_values($id);
@@ -236,7 +235,7 @@ class pret_parametres_perso extends parametres_perso {
 				$t["TITRE"]=$val["TITRE"];
 				$t["COMMENT"]=$val["COMMENT"];
 				if($t["COMMENT"]){
-					$t["COMMENT_DISPLAY"]="&nbsp;<span class='pperso_comment' title='".htmlentities($t["COMMENT"],ENT_QUOTES, $charset)."' >".htmlentities($t["COMMENT"],ENT_QUOTES, $charset)."</span>";
+					$t["COMMENT_DISPLAY"]="&nbsp;<span class='pperso_comment' title='".htmlentities($t["COMMENT"],ENT_QUOTES, $charset)."' >".nl2br(htmlentities($t["COMMENT"],ENT_QUOTES, $charset))."</span>";
 				} else {
 					$t["COMMENT_DISPLAY"]="";
 				}
@@ -244,7 +243,7 @@ class pret_parametres_perso extends parametres_perso {
 				$field["ID"]=$key;
 				$field["NAME"]=$this->t_fields[$key]["NAME"];
 				$field["COMMENT"]=$this->t_fields[$key]["COMMENT"];
-				$field["MANDATORY"]=$this->t_fields[$key]["MANDATORY"];				
+				$field["MANDATORY"]=$this->t_fields[$key]["MANDATORY"];
 				$field["FILTERS"]=$this->t_fields[$key]["FILTERS"];
 				$field["ALIAS"]=$this->t_fields[$key]["TITRE"];
 				$field["DATATYPE"]=$this->t_fields[$key]["DATATYPE"];
@@ -259,21 +258,21 @@ class pret_parametres_perso extends parametres_perso {
 				$t["MANDATORY"]=$field["MANDATORY"];
 				$perso["FIELDS"][]=$t;
 			}
-		
-			//Compilation des javascripts de validitÃ© renvoyÃ©s par les fonctions d'affichage
+
+			//Compilation des javascripts de validité renvoyés par les fonctions d'affichage
 			$check_scripts="<script>function cancel_submit(message) { alert(message); return false;}\nfunction check_form() {\n".$check_scripts."\nreturn true;\n}\n</script>";
 			$perso["CHECK_SCRIPTS"]=$check_scripts;
-		} else 
+		} else
 			$perso["CHECK_SCRIPTS"]="<script>function check_form() { return true; }</script>";
 		return $perso;
 	}
-	
+
 	//Affichage des champs en lecture seule pour visualisation d'un fiche emprunteur ou autre...
 	public function show_fields($id) {
 		global $val_list_empr;
 		global $charset;
 		$perso=array();
-		//RÃ©cupÃ©ration des valeurs stockÃ©es pour l'emprunteur
+		//Récupération des valeurs stockées pour l'emprunteur
 		$this->get_values($id);
 		if (!$this->no_special_fields) {
 			//Affichage champs persos
@@ -299,7 +298,7 @@ class pret_parametres_perso extends parametres_perso {
 					static::$fields[$this->prefix][$key]["PREFIX"]=$this->prefix;
 				}
 				$aff=$val_list_empr[$this->t_fields[$key]["TYPE"]](static::$fields[$this->prefix][$key],$this->values[$key]);
-				
+
 				if (is_array($aff) && $aff['ishtml'] == true)$t["AFF"] = $aff["value"];
 				else $t["AFF"]=htmlentities($aff,ENT_QUOTES,$charset);
 				$t["NAME"]=$this->t_fields[$key]["NAME"];
@@ -310,10 +309,10 @@ class pret_parametres_perso extends parametres_perso {
 		}
 		return $perso;
 	}
-	
+
 	public function get_formatted_output($values,$field_id) {
 		global $val_list_empr,$charset;
-		
+
 		if(!isset(static::$fields[$this->prefix][$field_id])){
 		    if(!empty($this->t_fields[$field_id])){
     			static::$fields[$this->prefix][$field_id]=array();
@@ -329,20 +328,23 @@ class pret_parametres_perso extends parametres_perso {
     			static::$fields[$this->prefix][$field_id]["PREFIX"]=$this->prefix;
 		    }
 	    }
-	    if(!empty($this->t_fields[$field_id])){
-    		$aff=$val_list_empr[$this->t_fields[$field_id]["TYPE"]](static::$fields[$this->prefix][$field_id],$values);
-	    }else {
-	        $aff='';
+	    if (!empty($this->t_fields[$field_id])) {
+    		$aff = $val_list_empr[$this->t_fields[$field_id]["TYPE"]](static::$fields[$this->prefix][$field_id],$values);
 	    }
-		if(is_array($aff)) return $aff['withoutHTML']; 
-		else return $aff;
+	    if (isset($aff)) {
+    	    if (is_array($aff)) {
+    	        return $aff['withoutHTML'];
+    	    }
+    		return $aff;
+	    }
+	    return '';
 	}
 
 	//Gestion des actions en administration
 	public function proceed() {
 		global $action;
 		global $name,$titre,$type,$datatype,$_options,$multiple,$obligatoire,$search,$export,$filters,$exclusion,$ordre,$idchamp,$id,$pond,$opac_sort, $comment;
-		
+
 		switch ($action) {
 			case "nouv":
 				$this->show_edit_form();
@@ -358,14 +360,14 @@ class pret_parametres_perso extends parametres_perso {
 					$ordre=pmb_mysql_result($resultat,0,0)+1;
 				else
 					$ordre=1;
-	
-				$requete="insert into ".$this->prefix."_custom set name='$name', titre='$titre', type='$type', datatype='$datatype', options='$_options', multiple=$multiple, obligatoire=$obligatoire, ordre=$ordre, search=$search, export=$export, filters=$filters, exclusion_obligatoire=$exclusion, opac_sort=$opac_sort, comment='".$comment."' ";
+
+				$requete="insert into ".$this->prefix."_custom set name='$name', titre='$titre', type='$type', datatype='$datatype', options='$_options', multiple=$multiple, obligatoire=$obligatoire, ordre=".intval($ordre).", search=$search, export=$export, filters=$filters, exclusion_obligatoire=$exclusion, opac_sort=$opac_sort, comment='".$comment."' ";
 				pmb_mysql_query($requete);
 				echo $this->show_field_list();
 				break;
 			case "update":
 				$this->check_form();
-				$requete="update ".$this->prefix."_custom set name='$name', titre='$titre', type='$type', datatype='$datatype', options='$_options', multiple=$multiple, obligatoire=$obligatoire, ordre=$ordre, search=$search, export=$export, filters=$filters, exclusion_obligatoire=$exclusion, pond=$pond, opac_sort=$opac_sort, comment='".$comment."' where idchamp=$idchamp";
+				$requete="update ".$this->prefix."_custom set name='$name', titre='$titre', type='$type', datatype='$datatype', options='$_options', multiple=$multiple, obligatoire=$obligatoire, ordre=".intval($ordre).", search=$search, export=$export, filters=$filters, exclusion_obligatoire=$exclusion, pond=$pond, opac_sort=$opac_sort, comment='".$comment."' where idchamp=$idchamp";
 				pmb_mysql_query($requete);
 				echo $this->show_field_list();
 				break;

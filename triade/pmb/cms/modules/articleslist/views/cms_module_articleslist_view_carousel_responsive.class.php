@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_articleslist_view_carousel_responsive.class.php,v 1.3 2016-09-20 10:25:41 apetithomme Exp $
+// $Id: cms_module_articleslist_view_carousel_responsive.class.php,v 1.8.2.1 2025/01/17 10:40:46 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -45,16 +45,17 @@ class cms_module_articleslist_view_carousel_responsive extends cms_module_common
 		return parent::save_form();
 	}
 	
-	public function render($ids){
-		$datas = array();
-		$datas['records']=array();
-		for($i=0 ; $i<count($ids) ; $i++){
-			$article = new cms_article($ids[$i]);
-			$infos = $article->format_datas();
-			$infos['link'] = $this->get_constructed_link("article",$infos['id']);
-			$datas['records'][]=$infos;
+	public function render($datas) {
+		$render_datas = array();
+		$render_datas['records']=array();
+		$links = ["article" => $this->get_constructed_link("article", "!!id!!")];
+		if (is_countable($datas['articles'])) {
+    		for($i=0; $i < count($datas['articles']); $i++) {
+    			$article = cms_provider::get_instance("article", $datas['articles'][$i]);
+    			$render_datas['records'][] = $article->format_datas($links);
+    		}
 		}
-		return parent::render($datas);
+		return parent::render($render_datas);
 	}
 	
 	public function get_format_data_structure(){

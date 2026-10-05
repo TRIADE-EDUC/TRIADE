@@ -1,18 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: common.tpl.php,v 1.182 2019-05-27 14:55:51 btafforeau Exp $
+// $Id: common.tpl.php,v 1.209 2024/04/02 10:59:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $pmb_recherche_ajax_mode, $fiches_active, $cms_active, $pmb_scan_request_activate, $semantic_active, $acquisition_active, $demandes_active, $dsi_active, $pmb_show_help;
 global $pmb_extension_tab, $current, $frbr_active, $modelling_active, $param_chat_activate, $class_path, $pmb_default_style_addon, $css_addon, $std_header, $charset, $msg, $stylesheet;
 global $base_path, $src_maps_dojo, $pmb_map_activate, $pmb_map_base_layer_type, $javascript_path, $base_use_dojo, $pmb_dojo_gestion_style, $lang, $base_title, $base_noheader;
-global $base_nobody, $base_nochat, $selector_header, $selector_header_no_cache, $extra2, $menu_bar, $dash_icon_path, $notification_empty, $notification_icon, $notification_zone;
-global $dashboard_module_name, $dashboard_class_name, $dash, $styles_path, $notif_icon_path, $pmb_dashboard_quick_params_activate, $extra, $request_uri, $doc_params_explode, $doc_params;
+global $base_nobody, $base_nochat, $selector_header, $selector_header_no_cache, $extra2, $menu_bar, $notification_empty, $notification_icon;
+global $dashboard_module_name, $dashboard_class_name, $extra, $request_uri, $doc_params_explode, $doc_params;
 global $pos, $script_name, $pmb_opac_url, $pmb_show_rtl, $timeout_start_alert, $categ, $url_active, $presence_chaine, $extra_info, $footer, $begin_result_liste, $affich_tris_result_liste;
-global $sort, $expand_result, $end_result_list, $cms_dojo_plugins_editor;
+global $sort, $expand_result, $end_result_list, $cms_dojo_plugins_editor, $affich_external_tris_result_liste, $affich_authorities_tris_result_liste;
+global $affich_authorities_popup_tris_result_liste, $current_module;
+
+require_once $class_path."/html_helper.class.php";
 
 if(!isset($pmb_recherche_ajax_mode)) $pmb_recherche_ajax_mode = 0;
 if(!isset($fiches_active)) $fiches_active = 0;
@@ -28,125 +31,7 @@ if(!isset($current)) $current = '';
 if(!isset($frbr_active)) $frbr_active = 0;
 if(!isset($modelling_active)) $modelling_active = 0;
 if(!isset($param_chat_activate)) $param_chat_activate = 0;
-
-require_once($class_path."/sort.class.php");
-
-function link_styles($style) {
-    // oÃ¹ $rep = rÃ©pertoire de stockage des feuilles
-    
-    global $feuilles_style_deja_lu;
-    if ($feuilles_style_deja_lu) return $feuilles_style_deja_lu ;
-    
-    // mise en forme du rÃ©pertoire
-    global $styles_path;
-    global $charset;
-    
-    if($styles_path) $rep = $styles_path;
-    else $rep = './styles/';
-    
-    if(!preg_match('/\/$/', $rep)) $rep .= '/';
-    
-    /** classement des feuilles de style communes **/
-    $feuilles_style="";
-    $handle = @opendir($rep."common");
-    $css_filenames = array();
-    if($handle) {
-        while($css = readdir($handle)) {
-            if(is_file($rep."common/".$css) && preg_match('/css$/', $css)) {
-                $css_filenames[] = $css;
-            }
-        }
-        closedir($handle);
-    }
-    //Tri alpha
-    sort($css_filenames);
-    
-    foreach($css_filenames as $css_file){
-        $feuilles_style.="\n\t<link rel='stylesheet' type='text/css' href='".$rep."common/".$css_file."' title='lefttoright' />";
-    }
-    /** fin classement des feuilles de style communes **/
-    
-    
-    /** classement des fichiers javascript communs**/
-    //Un peu de JS Ã  la rigueur, on inclut tout dans l'ordre alpha
-    $jsfiles = array();
-    $handle = @opendir($rep."common/javascript");
-    if($handle) {
-        while($js = readdir($handle)) {
-            $jsfiles[] = $js;
-        }
-        closedir($handle);
-    }
-    sort($jsfiles);
-    
-    foreach($jsfiles as $js) {
-        if(is_file($rep."common/javascript/".$js) && preg_match('/js$/', $js)) {
-            $vide_cache=@filemtime($rep."common/javascript/".$js);
-            $feuilles_style.="\n\t<script type='text/javascript' src='".$rep."common/javascript/".$js."?".$vide_cache."' ></script>";
-        }
-    }
-    /** fin classement des fichiers javascript communs**/
-    
-    
-    /** classement des feuilles de style issues des thÃ¨mes **/
-    $handle = @opendir($rep.$style);
-    if(!$handle) {
-        $result = array();
-        return $result;
-    }
-    $css_style_filenames = array();
-    while($css = readdir($handle)) {
-        if(is_file($rep.$style."/".$css) && preg_match('/css$/', $css)) {
-            $css_style_filenames[] = $css;
-            
-        }
-    }
-    closedir($handle);
-    
-    sort($css_style_filenames);
-    foreach($css_style_filenames as $css_style_filename){
-        $feuilles_style.="\n\t<link rel='stylesheet' type='text/css' href='".$rep.$style."/".$css_style_filename."' title='lefttoright' />";
-    }
-    /** fin classement des feuilles de style issues des thÃ¨mes **/
-    
-    /** classement des fichiers javascript issus des thÃ¨mes **/
-    //Un peu de JS Ã  la rigueur, on inclut tout dans l'ordre alpha
-    $jsfiles = array();
-    $handle = @opendir($rep.$style."/javascript");
-    if($handle) {
-        while($js = readdir($handle)) {
-            $jsfiles[] = $js;
-        }
-        closedir($handle);
-    }
-    sort($jsfiles);
-    foreach($jsfiles as $js) {
-        if(is_file($rep.$style."/javascript/".$js) && preg_match('/js$/', $js)) {
-            $vide_cache=@filemtime($rep.$style."/javascript/".$js);
-            $feuilles_style.="\n\t<script type='text/javascript' src='".$rep.$style."/javascript/".$js."?".$vide_cache."' ></script>";
-        }
-    }
-    /** fin classement des fichiers javascript issus des thÃ¨mes **/
-    
-    
-    // RTL / LTR
-    global $pmb_show_rtl;
-    if ($pmb_show_rtl) {
-        $handlertl = @opendir($rep.$style."/rtl/");
-        if($handlertl) {
-            while($css = readdir($handlertl)) {
-                if(is_file($rep.$style."/rtl/".$css) && preg_match('/css$/', $css)) {
-                    $result[] = $css;
-                    $feuilles_style.="\n\t<link rel='alternate stylesheet' type='text/css' href='".$rep.$style."/rtl/".$css."' title='righttoleft' />";
-                }
-            }
-            $feuilles_style.="\n\t<script type='text/javascript' src='./javascript/styleswitcher.js'></script>";
-            closedir($handlertl);
-        }
-    }
-    $feuilles_style_deja_lu = $feuilles_style;
-    return $feuilles_style;
-}
+if(!isset($stylesheet)) $stylesheet = '';
 
 if (isset($pmb_default_style_addon) && $pmb_default_style_addon) {
     $css_addon = "
@@ -159,7 +44,7 @@ if (isset($pmb_default_style_addon) && $pmb_default_style_addon) {
 
 //	----------------------------------
 // $std_header : template header standard
-// attention : il n'y a plus le <body> : est envoyÃ© par le fichier init.inc.php, c'est bien un header
+// attention : il n'y a plus le <body> : est envoyé par le fichier init.inc.php, c'est bien un header
 $std_header = "<!DOCTYPE html>
 <html lang='".get_iso_lang_code()."'>
 <head>
@@ -168,15 +53,15 @@ $std_header = "<!DOCTYPE html>
       $msg[1001]
     </title>
 	<meta name='author' content='PMB Group' />
-	<meta name='description' content='Logiciel libre de gestion de mÃ©diathÃ¨que' />
-	<meta name='keywords' content='logiciel, gestion, bibliothÃ¨que, mÃ©diathÃ¨que, libre, free, software, mysql, php, linux, windows, mac' />
+	<meta name='description' content='Logiciel libre de gestion de médiathèque' />
+	<meta name='keywords' content='logiciel, gestion, bibliothèque, médiathèque, libre, free, software, mysql, php, linux, windows, mac' />
 	<!--<meta http-equiv='Pragma' content='no-cache' />
 	<meta http-equiv='Cache-Control' content='no-cache' />-->
 	";
-      $std_header.= link_styles($stylesheet);
+      $std_header.= HtmlHelper::getInstance()->getStyle($stylesheet);
       $std_header.= $css_addon;
       $std_header.="
-	<link rel=\"SHORTCUT ICON\" href=\"images/favicon.ico\" />
+	<link rel=\"SHORTCUT ICON\" href=\"".$base_path."/images/favicon.ico\" />
 	<script src=\"".$base_path."/javascript/popup.js\" type=\"text/javascript\"></script>
 	<script src=\"".$base_path."/javascript/drag_n_drop.js\" type=\"text/javascript\"></script>
 	<script src=\"".$base_path."/javascript/handle_drop.js\" type=\"text/javascript\"></script>
@@ -230,6 +115,23 @@ $std_header = "<!DOCTYPE html>
       
       
       if(isset($base_use_dojo)){
+          if ($param_chat_activate) {
+              $std_header.="<script type='text/javascript' src='".$base_path."/javascript/chat_dragable.js'></script>";
+          }
+          
+          global $messages;
+          $array_message_retourne = array();
+          foreach ($messages->table_js as $group => $msgs) {
+              foreach ($msgs as $key => $value) {
+                  $array_message_retourne[] = array(
+                      'code' => $key,
+                      'message' => $value,
+                      'group' => $group
+                  );
+              }
+          }
+          $json_message_retourne = encoding_normalize::json_encode($array_message_retourne);
+          
           $std_header.="
 		<link rel='stylesheet' type='text/css' href='".$base_path."/javascript/dojo/dijit/themes/".$pmb_dojo_gestion_style."/".$pmb_dojo_gestion_style.".css' />
 		<script type='text/javascript'>
@@ -244,12 +146,15 @@ $std_header = "<!DOCTYPE html>
 				},{
 					name: 'd3',
 					location:'../../d3'
+				},{
+					name: 'ace',
+					location:'../../ace'
 				}],
 				deps: ['apps/pmb/MessagesStore', 'apps/pmb/AceManager', 'dgrowl/dGrowl', 'dojo/ready', 'apps/pmb/IndexationInfos', 'apps/pmb/ImagesStore'],
 				callback:function(MessagesStore, AceManager, dGrowl, ready, IndexationInfos, ImagesStore){
 					window.pmbDojo = {};
 					pmbDojo.uploadMaxFileSize = ".(get_upload_max_filesize()/1024).",
-					pmbDojo.messages = new MessagesStore({url:'".$base_path."/ajax.php?module=ajax&categ=messages', directInit:false});
+					pmbDojo.messages = new MessagesStore({url : '$base_path/ajax.php?module=ajax&categ=messages', directInit : false, messages : $json_message_retourne});
 					pmbDojo.images = new ImagesStore({url:'".$base_path."/ajax.php?module=ajax&categ=images', directInit:false});
 					pmbDojo.aceManager = new AceManager();
 					ready(function(){
@@ -304,8 +209,8 @@ $std_header = "<!DOCTYPE html>
 <head>
 	<meta charset=\"".$charset."\" />
   	<meta name='author' content='PMB Group' />
-	<meta name='description' content='Logiciel libre de gestion de mÃ©diathÃ¨que' />
-	<meta name='keywords' content='logiciel, gestion, bibliothÃ¨que, mÃ©diathÃ¨que, libre, free, software, mysql, php, linux, windows, mac' />
+	<meta name='description' content='Logiciel libre de gestion de médiathèque' />
+	<meta name='keywords' content='logiciel, gestion, bibliothèque, médiathèque, libre, free, software, mysql, php, linux, windows, mac' />
   	<script type=\"text/javascript\">
 		var base_path='".$base_path."';
 		var pmb_img_minus = '".get_url_icon('minus.gif')."';
@@ -315,7 +220,7 @@ $std_header = "<!DOCTYPE html>
     <title>
       PMB-Selector
     </title>";
-      $selector_header.= link_styles($stylesheet); //"    <link rel='stylesheet' type='text/css' href='./styles/$stylesheet'>";
+      $selector_header.= HtmlHelper::getInstance()->getStyle($stylesheet);
       $selector_header.= $css_addon;
       $src_maps_dojo = '';
       if($pmb_map_activate){
@@ -400,8 +305,8 @@ $std_header = "<!DOCTYPE html>
       PMB-selector
     </title>
 	<meta name='author' content='PMB Group' />
-	<meta name='description' content='Logiciel libre de gestion de mÃ©diathÃ¨que' />
-	<meta name='keywords' content='logiciel, gestion, bibliothÃ¨que, mÃ©diathÃ¨que, libre, free, software, mysql, php, linux, windows, mac' />
+	<meta name='description' content='Logiciel libre de gestion de médiathèque' />
+	<meta name='keywords' content='logiciel, gestion, bibliothèque, médiathèque, libre, free, software, mysql, php, linux, windows, mac' />
 	<!--<meta http-equiv='Pragma' content='no-cache'>
     <meta http-equiv='Cache-Control' content='no-cache'>-->
 	<script type=\"text/javascript\">
@@ -410,7 +315,7 @@ $std_header = "<!DOCTYPE html>
 		var pmb_img_plus = '".get_url_icon('plus.gif')."';
 		var pmb_img_patience = '".get_url_icon('patience.gif')."';
 	</script>";
-      $selector_header_no_cache.= link_styles($stylesheet);
+      $selector_header_no_cache.= HtmlHelper::getInstance()->getStyle($stylesheet);
       $selector_header_no_cache.= $css_addon;
       $selector_header_no_cache.="
   </head>
@@ -428,245 +333,116 @@ $std_header = "<!DOCTYPE html>
 </div>
 ";
       
-      //	----------------------------------
-      // $menu_bar : template menu bar
-      //	GÃ©nÃ©rer le $menu_bar selon les droits...
-      //	Par dÃ©faut : la page d'accueil.
-      
-      $menu_bar = "
-<!--	Menu bar	-->
-!!notification_zone!!
-<div id='navbar'>
-<h3><span>$msg[1913]</span></h3>
-	<ul>
-";
-      
-      $menu_bar = $menu_bar."\n<li id='navbar-dashboard' ";
-      $dash_icon_path = get_url_icon('dashboard.png');
-      if ("$current" == "dashboard.php"){
-          $menu_bar = $menu_bar." class='current'><a class='current' ";
-      }else $menu_bar = $menu_bar."><a ";
-      $menu_bar.= "title='".$msg['dashboard']."' href='./dashboard.php?categ=' accesskey='$msg[2001]'><img title='".$msg['dashboard']."' alt='".$msg['dashboard']."' src='".$dash_icon_path."'/></a></li>";
-      
-      //	L'utilisateur fait la CIRCULATION ?
-      if (defined('SESSrights') && SESSrights & CIRCULATION_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-circ' ";
-          if ("$current" == "circ.php"){
-              $menu_bar = $menu_bar." class='current'><a class='current' ";
-          }else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='$msg[742]' href='./circ.php?categ=' accesskey='$msg[2001]'>$msg[5]</a></li>";
-      }
-      
-      //	L'utilisateur fait le CATALOGAGE ?
-      if (defined('SESSrights') && SESSrights & CATALOGAGE_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-catalog'";
-          if ("$current" == "catalog.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='$msg[743]' href='./catalog.php' accesskey='$msg[2002]'>$msg[6]</a></li>";
-      }
-      
-      //	L'utilisateur fait les AUTORITÃ‰S ?
-      if (defined('SESSrights') && SESSrights & AUTORITES_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-autorites'";
-          if ("$current" == "autorites.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='$msg[744]' href='./autorites.php?categ=search' accesskey='$msg[2003]'>$msg[132]</a></li>";
-      }
-      
-      //	L'utilisateur fait l'Ã‰DITIONS ?
-      if (defined('SESSrights') && SESSrights & EDIT_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-edit'";
-          if ("$current" == "edit.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='$msg[745]' href='./edit.php?categ=procs' accesskey='$msg[2004]'>$msg[1100]</a></li>";
-      }
-      
-      //	L'utilisateur fait la DSI ?
-      if ($dsi_active && (defined('SESSrights') && SESSrights & DSI_AUTH)) {
-          $menu_bar = $menu_bar."\n<li id='navbar-dsi'";
-          if ("$current" == "dsi.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['dsi_menu_title'],ENT_QUOTES, $charset)."' href='./dsi.php' >$msg[dsi_menu]</a></li>";
-      }
-      
-      //	L'utilisateur fait l'ACQUISITION ?
-      if ($acquisition_active && (defined('SESSrights') && SESSrights & ACQUISITION_AUTH)) {
-          $menu_bar = $menu_bar."\n<li id='navbar-acquisition'";
-          if ("$current" == "acquisition.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['acquisition_menu_title'],ENT_QUOTES, $charset)."' href='./acquisition.php' >$msg[acquisition_menu]</a></li>";
-      }
-      
-      //	L'utilisateur accÃ¨de aux extensions ?
-      if ($pmb_extension_tab && (defined('SESSrights') && SESSrights & EXTENSIONS_AUTH)) {
-          $menu_bar = $menu_bar."\n<li id='navbar-extensions'";
-          if ("$current" == "extensions.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['extensions_menu_title'],ENT_QUOTES, $charset)."' href='./extensions.php' >$msg[extensions_menu]</a></li>";
-      }
-      
-      //	L'utilisateur fait les DEMANDES ?
-      if ($demandes_active && (defined('SESSrights') && SESSrights & DEMANDES_AUTH)) {
-          $menu_bar = $menu_bar."\n<li id='navbar-demandes'";
-          if ("$current" == "demandes.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['demandes_menu_title'],ENT_QUOTES, $charset)."' href='./demandes.php' >$msg[demandes_menu]</a></li>";
-      }
-      
-      //	L'utilisateur fait l'onglet FICHES ?
-      if ($fiches_active && (defined('SESSrights') && SESSrights & FICHES_AUTH)) {
-          $menu_bar = $menu_bar."\n<li id='navbar-fichier'";
-          if ("$current" == "fichier.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['onglet_fichier'],ENT_QUOTES, $charset)."' href='./fichier.php' >".$msg['onglet_fichier']."</a></li>";
-      }
-      
-      //	L'utilisateur fait l'onglet SEMANTIC ?
-      if ($semantic_active==true && ((defined('SESSrights') && SESSrights & SEMANTIC_AUTH))) {
-          $menu_bar.= "\n<li id='navbar-semantic'";
-          if ("$current" == "semantic.php") $menu_bar.= " class='current'><a class='current' ";
-          else $menu_bar.= "><a ";
-          $menu_bar.= "title='".htmlentities($msg['semantic_onglet_title'],ENT_QUOTES, $charset)."' href='./semantic.php' >".$msg['semantic_onglet_title']."</a></li>";
-      }
-      
-      //	L'utilisateur fait l'onglet CMS ?
-      if (defined('SESSrights') && SESSrights & CMS_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-cms'";
-          if ("$current" == "cms.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['cms_onglet_title'],ENT_QUOTES, $charset)."' href='".($cms_active ? "./cms.php?categ=editorial&sub=list" : "./cms.php?categ=frbr_pages&sub=list")."' >".$msg['cms_onglet_title']."</a></li>";
-      }
-      
-      //	L'utilisateur fait l'onglet FRBR ?
-      if ($frbr_active==true && defined('SESSrights') && SESSrights & FRBR_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-frbr'";
-          if ("$current" == "frbr.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['frbr'],ENT_QUOTES, $charset)."' href='./frbr.php' >".$msg['frbr']."</a></li>";
-      }
-      
-      //	L'utilisateur fait l'onglet modÃ©lisation ?
-      if ($modelling_active==true && defined('SESSrights') && SESSrights & MODELLING_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-modelling'";
-          if ("$current" == "modelling.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='".htmlentities($msg['modelling'],ENT_QUOTES, $charset)."' href='modelling.php' >".$msg['modelling']."</a></li>";
-      }
-      //	L'utilisateur fait l'ADMINISTRATION ?
-      if (defined('SESSrights') && SESSrights & ADMINISTRATION_AUTH) {
-          $menu_bar = $menu_bar."\n<li id='navbar-admin'";
-          if ("$current" == "admin.php") $menu_bar = $menu_bar." class='current'><a class='current' ";
-          else $menu_bar = $menu_bar."><a ";
-          $menu_bar.= "title='$msg[746]' href='./admin.php?categ=' accesskey='$msg[2005]'>$msg[7]</a></li>";
-      }
-      
-      $menu_bar = $menu_bar."
-	</ul>
-</div>";
-      
       $notification_empty=get_url_icon('notification_empty.png');
       $notification_icon = "
-		<div class='notification' id='notification'>
-			<img src='".$notification_empty."' title='".$msg['empty_notification']."' alt='".$msg['empty_notification']."'>
-		</div>";
-      $notification_zone = "
-		<div id='notification_zone'>
-			<div class='row ui-flex ui-flex-between '>
-				<div class='ui-flex-grow'>
-					!!visits_statistics!!
-					<div class='row' id='plugins'>!!plugins!!</div>
-					<div class='row' id='quick_actions'>!!quick_actions!!</div>
-					<div class='row' id='indexation_infos'></div>
-				</div>
-				<div class='ui-flex-shrink' id='alert_zone'></div>
-			</div>
-			<div class='row' id='notifications'></div>
+		<div class='notification' id='notification' title='".$msg['empty_notification']."'>
+			<img src='".$notification_empty."' alt='".$msg['empty_notification']."'>
 		</div>";
       
       //chargement du tableau de board du module...
       $dashboard_module_name = substr($current,0,strpos($current,"."));
       $dashboard_class_name = '';
       if(file_exists($class_path."/dashboard/dashboard_module_".$dashboard_module_name.".class.php")){
-          //on rÃ©cupÃ¨re la classe;
-          require_once($class_path."/dashboard/dashboard_module_".$dashboard_module_name.".class.php");
-          $dashboard_class_name = "dashboard_module_".$dashboard_module_name;
-          $dash = new $dashboard_class_name();
-          //Dans certains cas, l'affichage change...
-          switch($dashboard_module_name){
-              case "dashboard" :
-                  //dans le tableau de bord, on n'affiche rien en notification...
-                  $menu_bar = str_replace("!!notification_zone!!","",$menu_bar);
-                  $extra2 = str_replace("!!notification_icon!!","",$extra2);
-                  break;
-              default :
-                  if(file_exists($styles_path."/".$stylesheet."/images/notification_new.png")){
-                      $notif_icon_path = $styles_path."/".$stylesheet."/images";
-                  }else{
-                      $notif_icon_path = "./images";
-                  }
-                  $notification_zone.="
-			<script type='text/javascript'>var notif = new notification('".$dashboard_module_name."','".addslashes($msg['empty_notification'])."','".addslashes($msg['new_notification'])."','".$notif_icon_path."/notification_new.png','".$notif_icon_path."/notification_empty.png')</script>";
-                  
-                  $menu_bar = str_replace("!!notification_zone!!",$notification_zone,$menu_bar);
-                  $extra2 = str_replace("!!notification_icon!!",$notification_icon,$extra2);
-                  $menu_bar = str_replace("!!visits_statistics!!", $dash->get_visits_statistics_form(), $menu_bar);
-                  $menu_bar = str_replace("!!plugins!!", $dash->get_plugins_form(), $menu_bar);
-                  $menu_bar = str_replace("!!quick_actions!!", ($pmb_dashboard_quick_params_activate?$dash->get_quick_params_form():''), $menu_bar);
-                  break;
-          }
+      	//on récupère la classe;
+      	require_once($class_path."/dashboard/dashboard_module_".$dashboard_module_name.".class.php");
+      	//Dans certains cas, l'affichage change...
+      	switch($dashboard_module_name){
+      		case "dashboard" :
+      			//dans le tableau de bord, on n'affiche rien en notification...
+      			$extra2 = str_replace("!!notification_icon!!","",$extra2);
+      			break;
+      		default :
+      			$extra2 = str_replace("!!notification_icon!!",$notification_icon,$extra2);
+      			break;
+      	}
       }else{
-          $menu_bar = str_replace("!!notification_zone!!","",$menu_bar);
-          $extra2 = str_replace("!!notification_icon!!","",$extra2);
+      	$extra2 = str_replace("!!notification_icon!!","",$extra2);
       }
       
-      if(!isset($extra)) $extra = '';
-      if (defined('SESSrights') && SESSrights & CATALOGAGE_AUTH) {
-          $extra.="<iframe id='history' style='display:none;'></iframe>";
-      }
-      $extra.="
+//	----------------------------------
+// $menu_bar : template menu bar
+//	Générer le $menu_bar selon les droits...
+//	Par défaut : la page d'accueil.
+require_once($class_path."/list/modules/list_modules_ui.class.php");
+$menu_bar = list_modules_ui::get_instance()->get_display();
+      
+if(!isset($extra)) $extra = '';
+if (defined('SESSrights') && SESSrights & CATALOGAGE_AUTH) {
+  $extra.="<iframe id='history' style='display:none;'></iframe>";
+}
+$extra.="
 <div id='extra'>
 <span id=\"keystatus\">&nbsp;</span>&nbsp;&nbsp;&nbsp;";
-      if (defined('SESSrights') && SESSrights & CATALOGAGE_AUTH)
-          $extra.="<a class=\"icon_history\" href=\"#\" onClick=\"document.getElementById('history').style.display=''; document.getElementById('history').src='./history.php'; return false;\" alt=\"".$msg["menu_bar_title_histo"]."\" title=\"".$msg["menu_bar_title_histo"]."\"><img src='".get_url_icon('historique.gif')."' class='align_middle' hspace='3' alt='' /></a>";
+if (defined('SESSrights') && SESSrights & CATALOGAGE_AUTH) {
+  $extra.="<a class=\"icon_history\" href=\"#\" onClick=\"document.getElementById('history').style.display=''; document.getElementById('history').src='./history.php'; return false;\" title=\"".htmlentities($msg["menu_bar_title_histo"], ENT_QUOTES, $charset)."\">
+    <img src='".get_url_icon('historique.gif')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["menu_bar_title_histo"], ENT_QUOTES, $charset)."</span>
+    </a>";
+}
           
-          
-          //affichage du lien d'aide, c'est un "?" pour l'instant
-          if ($pmb_show_help) {
-              // remplacement de !!help_link!! par le lien correspondant
-              $request_uri  = $_SERVER["REQUEST_URI"];
-              $doc_params_explode = explode("?", $request_uri);
-              if(isset($doc_params_explode[1])) {
-                  $doc_params = $doc_params_explode[1];
-              } else {
-                  $doc_params = '';
-              }
-              $pos = strrpos($doc_params_explode[0], "/") + 1;
-              $script_name=substr($doc_params_explode[0],$pos);
-              $extra .= '<a class="icon_help" href="./doc/index.php?script_name='.$script_name.'&'.$doc_params.'&lang='.$lang.'" alt="'.$msg['1900'].'" title="'.$msg['1900'].'" target="__blank" >';
-              $extra .= "<img src='".get_url_icon('aide.gif')."' class='align_middle' hspace='3' alt='' /></a>";
-          }
-          if (defined('SESSrights') && SESSrights & PREF_AUTH)
-              $extra .="<a class=\"icon_param\" href='./account.php' accesskey='$msg[2006]' alt=\"${msg[934]} ".SESSlogin."\" title=\"${msg[934]} ".SESSlogin."\"><img src='".get_url_icon('parametres.gif')."' class='align_middle' hspace='3' alt='' /></a>";
+//affichage du lien d'aide, c'est un "?" pour l'instant
+if ($pmb_show_help) {
+  // remplacement de !!help_link!! par le lien correspondant
+  $request_uri  = $_SERVER["REQUEST_URI"];
+  $doc_params_explode = explode("?", $request_uri);
+  if(isset($doc_params_explode[1])) {
+      $doc_params = $doc_params_explode[1];
+  } else {
+      $doc_params = '';
+  }
+
+  $pos = strrpos($doc_params_explode[0], "/") + 1;
+  $script_name = substr($doc_params_explode[0], $pos);
+  
+  // On évite la vulnérabilités xss
+  $help_url = sprintf("./doc/index.php?script_name=%s", urlencode($script_name));
+  if (!empty($doc_params)) {       	
+  	$help_url = "{$help_url}&" . htmlentities($doc_params, ENT_QUOTES, $charset);
+  }
+  $help_url .= "&lang={$lang}";
+  
+  $extra .= '<a class="icon_help" href="'. $help_url .'" title="'.$msg['1900'].'" target="_blank" >';
+  $extra .= "<img src='".get_url_icon('aide.gif')."' class='align_middle' style='margin:0px 3px' alt='' />";
+  $extra .= "<span class='visually-hidden'>".htmlentities($msg['1900'], ENT_QUOTES, $charset)."</span>";
+  $extra .= "</a>";
+}
+if (defined('SESSrights') && SESSrights & PREF_AUTH) {
+    $extra .="<a class=\"icon_param\" href='./account.php' accesskey='$msg[2006]' title=\"{$msg[934]} ".SESSlogin."\">
+    <img src='".get_url_icon('parametres.gif')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["934"], ENT_QUOTES, $charset)."</span>
+    </a>";
+}
+$extra .="<a class=\"icon_opac\" title='$msg[1027]' href='".$pmb_opac_url."index.php?database=".LOCATION."' target='_opac_' accesskey='$msg[2007]'>
+    <img src='".get_url_icon('opac2.gif')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["1027"], ENT_QUOTES, $charset)."</span>
+    </a>";
               
-              $extra .="<a class=\"icon_opac\" title='$msg[1027]' href='".$pmb_opac_url."index.php?database=".LOCATION."' target='_opac_' accesskey='$msg[2007]'><img src='".get_url_icon('opac2.gif')."' class='align_middle' hspace='3' alt='' /></a>";
-              
-              if (defined('SESSrights') && SESSrights & SAUV_AUTH)
-                  $extra .="<a class=\"icon_sauv\" title='$msg[sauv_shortcuts_title]' href='#' onClick='openPopUp(\"./admin/sauvegarde/launch.php\",\"sauv_launch\",600,500,-2,-2,\"menubar=no,scrollbars=yes\"); w.focus(); return false;'><img src='".get_url_icon('sauv.gif')."' class='align_middle' hspace='3' alt='' /></a>";
+if (defined('SESSrights') && SESSrights & SAUV_AUTH) {
+  $extra .="<a class=\"icon_sauv\" title='$msg[sauv_shortcuts_title]' href='#' onClick='openPopUp(\"./admin/sauvegarde/launch.php\",\"sauv_launch\",600,500,-2,-2,\"menubar=no,scrollbars=yes\"); w.focus(); return false;'>
+    <img src='".get_url_icon('sauv.gif')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["sauv_shortcuts_title"], ENT_QUOTES, $charset)."</span>
+    </a>";
+}
+if ($pmb_show_rtl) {
+  $extra .= "<a title='".$msg['rtl']."' href='#' onclick=\"setActiveStyleSheet('lefttoright'); window.location.reload(false); return false;\">
+    <img src='".get_url_icon('rtl.gif')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["rtl"], ENT_QUOTES, $charset)."</span>
+    </a>";
+  $extra .= "<a title='".$msg['ltr']."' href='#' onclick=\"setActiveStyleSheet('righttoleft'); window.location.reload(false); return false;\"><img src='".get_url_icon('ltr.gif')."' class='align_middle' style='margin:0px 3px' alt='' /></a>";
+}
                   
-                  if ($pmb_show_rtl) {
-                      $extra .= "<a title='".$msg['rtl']."' href='#' onclick=\"setActiveStyleSheet('lefttoright'); window.location.reload(false); return false;\"><img src='".get_url_icon('rtl.gif')."' class='align_middle' hspace='3' alt='' /></a>";
-                      $extra .= "<a title='".$msg['ltr']."' href='#' onclick=\"setActiveStyleSheet('righttoleft'); window.location.reload(false); return false;\"><img src='".get_url_icon('ltr.gif')."' class='align_middle' hspace='3' alt='' /></a>";
-                  }
-                  
-                  $extra .= "<a class=\"icon_quit\" title='$msg[747] : ".LOCATION."' href='./logout.php' accesskey='$msg[2008]'><img src='".get_url_icon('close.png')."' class='align_middle' hspace='3' alt='' /></a>";
+$extra .= "<a class=\"icon_quit\" title='$msg[747] : ".LOCATION."' href='./logout.php' accesskey='$msg[2008]'>
+    <img src='".get_url_icon('close.png')."' class='align_middle' style='margin:0px 3px' alt='' />
+    <span class='visually-hidden'>".htmlentities($msg["747"], ENT_QUOTES, $charset)."</span>
+    </a>";
                   
                   $extra .= "</div>";
                   
-                  $timeout_start_alert = 5000; // 5s pour dÃ©clancher la requette des alertes / tableau de bord
+                  $timeout_start_alert = 5000; // 5s pour déclancher la requette des alertes / tableau de bord
                   if(isset($categ) && (($categ=='pret') || $categ=='retour')){
-                      $timeout_start_alert = 30000; // 30s pour les phases de prÃªt / retour
+                      $timeout_start_alert = 30000; // 30s pour les phases de prêt / retour
                   }
-                  // RÃ©cupÃ©ration de l'url active et test de prÃ©sence sur la chaine cir.php'
+                  // Récupération de l'url active et test de présence sur la chaine cir.php'
                   $url_active = $_SERVER['PHP_SELF'];
                   $presence_chaine = strpos($url_active,'circ.php');
                   
@@ -754,32 +530,61 @@ $std_header = "<!DOCTYPE html>
 </html>
 ";
                   
-                  /* listes dÃ©pliables et tris */
-                  // ici, templates de gestion des listes dÃ©pliables et tris en rÃ©sultat de recherche catalogage ou autres
+                  /* listes dépliables et tris */
+                  // ici, templates de gestion des listes dépliables et tris en résultat de recherche catalogage ou autres
                   if($pmb_recherche_ajax_mode){
                       $begin_result_liste = "
 <script type=\"text/javascript\" src=\"".$javascript_path."/tablist.js\"></script>
 <span class='item-expand'>
-<a href=\"javascript:expandAll_ajax()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>
+".get_expandCollapseAll_ajax_buttons()."
 </span>
 ";
                   }else{
                       $begin_result_liste = "
 <script type=\"text/javascript\" src=\"".$javascript_path."/tablist.js\"></script>
 <span class='item-expand'>
-<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>
+".get_expandCollapseAll_buttons()."
 </span>
 ";
                   }
                   
-                  $affich_tris_result_liste = "<a href=# onClick=\"document.getElementById('history').src='./sort.php?action=0'; document.getElementById('history').style.display='';return false;\" alt=\"".$msg['tris_dispos']."\" title=\"".$msg['tris_dispos']."\"><img src='".get_url_icon('orderby_az.gif')."' class='align_middle' hspace='3'></a>";
-                  
+                  $affich_tris_result_liste = "<a href='#' class='sort' onClick=\"document.getElementById('history').src='./sort.php?action=0&module=$current_module'; document.getElementById('history').style.display='';return false;\" alt=\"".$msg['tris_dispos']."\" title=\"".$msg['tris_dispos']."\"><img src='".get_url_icon('orderby_az.gif')."' class='align_middle' style='margin:0px 3px'></a>";
+                  $affich_external_tris_result_liste = "<a href='#' class='sort' onClick=\"document.getElementById('history').src='./sort.php?action=0&caller=external&type_tri=external&module=$current_module'; document.getElementById('history').style.display='';return false;\" alt=\"".$msg['tris_dispos']."\" title=\"".$msg['tris_dispos']."\"><img src='".get_url_icon('orderby_az.gif')."' class='align_middle' style='margin:0px 3px'></a>";
                   if (isset($_SESSION["tri"]) && $_SESSION["tri"]) {
+                      require_once($class_path."/sort.class.php");
                       $sort = new sort("notices","base");
                       $affich_tris_result_liste .= $msg['tri_par']." ".$sort->descriptionTriParId($_SESSION["tri"]);
+                      $affich_external_tris_result_liste .= $msg['tri_par']." ".$sort->descriptionTriParId($_SESSION["tri"]);
                   }
+                  $affich_authorities_tris_result_liste = "<a href='#' class='sort' onClick=\"document.getElementById('history').src='./sort.php?action=0&type_tri=!!entity_type!!&module=$current_module!!sort_params!!'; document.getElementById('history').style.display='';return false;\" alt=\"".$msg['tris_dispos']."\" title=\"".$msg['tris_dispos']."\"><img src='".get_url_icon('orderby_az.gif')."' class='align_middle' style='margin:0px 3px'></a>";
+                  $affich_authorities_popup_tris_result_liste = "<a href='#' id='iframeSort' class='sort' alt=\"".$msg['tris_dispos']."\" title=\"".$msg['tris_dispos']."\">
+                                                                    <img src='".get_url_icon('orderby_az.gif')."' class='align_middle' style='margin:0px 3px'>
+                                                                  </a>
+                                                                    <script>
+                                                                        if (!window.sortIframe) {
+                                                                            require([
+                                                                                'dojo/ready', 
+                                                                                'dojo/topic',
+                                                                                'dojo/dom',
+                                                                                'apps/pmb/SortIframe'
+                                                                            ], function(ready, topic, dom, SortIframe){
+                                                                                ready(function(){
+                                                                                    // le current_module est récupérer en JS
+                                                                                    window.sortIframe = new SortIframe({
+                                                                                        btnNode: dom.byId('iframeSort'),
+                                                                                        sortLink: './sort.php?action=0&type_tri=!!entity_type!!&popup=1&base_noheader=1',
+                                                                                        msgSuppr: '" . $msg['tri_confirm_supp'] . "'
+                                                                                    })
+                                                                               });
+                                                                            });
+                                                                        } else {
+                                                                            // Page reload ou nouvelle recherche
+                                                                            var btnNode = document.getElementById('iframeSort');
+                                                                            if (btnNode) {
+				                                                                window.sortIframe.parse(btnNode);
+                                                                            }
+                                                                        }
+                                                                    </script>";
                   
                   $expand_result="
 <script type=\"text/javascript\" src=\"./javascript/tablist.js\"></script>
@@ -789,7 +594,7 @@ $std_header = "<!DOCTYPE html>
 ";
                   
                   
-                  /* /listes dÃ©pliables et tris */
+                  /* /listes dépliables et tris */
                   
                   /* Editeur HTML DOJO */
                   $cms_dojo_plugins_editor=

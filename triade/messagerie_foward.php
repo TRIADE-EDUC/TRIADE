@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,15 +32,16 @@ session_start();
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
+<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS17 ?></font></b></td>
 </tr>
@@ -129,22 +130,75 @@ if (VERIFEMAIL != "non") { $onblur=" onblur='verifEmail(this)' "; }
 <font class='T2'>&nbsp;&nbsp;Supprimer tous vos messages reçus jusqu'au <input type='text' name='datesupp' value='<?php print dateDMY() ?>' size='12' onKeyPress="onlyChar(event)"  /> 
 <input type='submit' name='supp' value='OK' class='BUTTON' /> </font>
 </form><br><br>
+
+<?php
+if (isset($_POST['gestionabs'])) {
+	$cnx=cnx();
+	$datefin=$_POST['datefin'];
+	$messageabs=$_POST['resultat'];
+	deleteMessageAbs($_SESSION['membre'],$_SESSION['id_pers'],$_SESSION['idparent']);
+	enrMessageAbs($_SESSION['membre'],$_SESSION['id_pers'],$_SESSION['idparent'],$datefin,$messageabs);
+	$message="Message d'absence enregistr&eacute;";
+	Pgclose();
+}
+
+if (isset($_POST['suppgestionabs'])) {
+	$cnx=cnx();
+	deleteMessageAbs($_SESSION['membre'],$_SESSION['id_pers'],$_SESSION['idparent']);
+	$message="Message d'absence supprim&eacute;";
+	Pgclose();
+}
+
+$cnx=cnx();
+$data=recupMessageAbs($_SESSION['membre'],$_SESSION['id_pers'],$_SESSION['idparent']);
+Pgclose();
+// datefin,message
+$datefin=$data[0][0];
+$messageabs=$data[0][1];
+$messageabs=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', ' ',$messageabs);
+$messageabs=stripslashes($messageabs);
+?>
+
+<hr>
+<br><br>
+<form method='post' >
+<font class='T2'>&nbsp;&nbsp;Message d'absence à envoyer jusqu'au <input type='date' name='datefin' size='10' value="<?php print $datefin ?>" /> <br /><br />
+&nbsp;&nbsp;Message à transmettre : <br><br>
+<textarea id="editor" name="resultat" ><?php print stripslashes($messageabs) ?></textarea>
+<script type="text/javascript">
+var colorGRAPH='<?php print GRAPH ?>';
+//<![CDATA[
+CKEDITOR.replace( 'editor', {
+        height: '300px' , language:'<?php print ($_SESSION["langue"] == "fr") ? "fr" : "en";  ?>'
+        } );
+//]]>
+</script>
+<br><br>
+&nbsp;&nbsp;<input type='submit' name='gestionabs' value='Valider' class='BUTTON' /> </font>
+&nbsp;&nbsp;<input type='submit' name='suppgestionabs' value="Supprimer le message d'absence" class='BUTTON' /> </font>
+</form><br>
+<center><font color=red><?php print $message ?></font></center>
+<br>
+
+
+
+
 <!-- // fin  -->
 </td></tr></table>
 <?php
      // Test du membre pour savoir quel fichier JS je dois executer
      if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
      else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
       top_d();
 
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
        print "</SCRIPT>";
 
        endif ;

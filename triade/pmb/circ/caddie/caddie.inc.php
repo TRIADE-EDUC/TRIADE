@@ -1,15 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: caddie.inc.php,v 1.7 2017-06-21 09:13:22 dgoron Exp $
+// $Id: caddie.inc.php,v 1.9 2021/05/03 07:59:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path, $include_path, $sub;
+global $idcaddie, $idemprcaddie;
 
 if(!isset($idcaddie)) $idcaddie = 0;
 if(!isset($idemprcaddie)) $idemprcaddie = 0;
 
-// functions particuliÃ¨res Ã  ce module
+// functions particulières à ce module
 require_once("$include_path/templates/cart.tpl.php");
 require_once("$include_path/templates/empr_cart.tpl.php");
 require_once("$class_path/empr_caddie.class.php");

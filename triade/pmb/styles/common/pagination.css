@@ -1,0 +1,51 @@
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: pagination.css,v 1.1.2.2 2025/01/24 08:23:15 dgoron Exp $ */
+/*------------------------------------------------------------------------------------------*/
+.navbar {
+}
+
+.navbar>form>*,
+.navbar>form>span>* {
+	display: inline-block;
+	min-width: 16px;
+	padding: 3px 5px;
+	line-height: 20px;
+	text-decoration: none;
+	box-sizing: border-box;
+	text-align: center;
+	background: #eee;
+	color: #444;
+	font-style: normal;
+	margin: 0;
+	max-height: 26px;
+	margin: 0 5px;
+	max-height: 26px;
+}
+.navbar img{
+	max-height: 16px;
+	vertical-align: sub;
+}
+.navbar>form>span,
+.navbar>form>span:hover,
+.navbar>form>span:focus{
+	background:transparent;
+}
+.navbar>form>*:hover,
+.navbar>form>span>*:focus,
+.navbar>form>span>*:hover {
+	background: #f5f5f5;	
+}
+
+.navbar>form>img {
+	vertical-align: middle;
+	padding: 5px 5px;
+	margin:0px 4px;
+}
+.navbar>form{
+	font-style: italic;
+	font-weight: 400;
+	color: #999;
+	vertical-align: middle;
+}

@@ -1,16 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_config.inc.php,v 1.16 2017-06-15 12:25:23 mbertin Exp $
+// $Id: opac_config.inc.php,v 1.19.2.1.2.1 2025/02/19 10:35:36 dbellamy Exp $
 
 // fichier de configuration de l'OPAC PMB
 // the lang is set in start.inc.php why this piece of code?
 
-// Character set = encodage des donnÃ©es. Attention ne pas modifier en cours d'utilisation, votre base de donnÃ©es serait pleine de caracteres bizarre !!!
-$charset = "iso-8859-1";
+// Character set = encodage des données. Attention ne pas modifier en cours d'utilisation, votre base de données serait pleine de caracteres bizarre !!!
+$charset = "utf-8";
 
-// dÃ©finition des types d'audit
+// définition des types d'audit
 define('AUDIT_NOTICE'	,    1);
 define('AUDIT_EXPL'		,    2);
 define('AUDIT_BULLETIN'	,    3);
@@ -32,8 +32,16 @@ define('AUDIT_EDITORIAL_SECTION',21);
 define('AUDIT_EXPLNUM',22);
 define('AUDIT_CONCEPT', 23);
 
-$CACHE_ENGINE = 'apcu';//Type de moteur de cache php utilisÃ©
+$CACHE_ENGINE = 'apcu';//Type de moteur de cache php utilisé
 $CACHE_MAXTIME = 86400;//Duree de mise en cache
-$KEY_CACHE_FILE_XML = 'key_cache_file_xml';//Prefix pour la cle des variables en cache pour les fichiers XML
-		
-@include_once("includes/opac_config_local.inc.php") ;
+$KEY_CACHE_FILE_XML = 'key_cache_file_xml'.md5(str_replace('/opac_css', '', getcwd()));//Prefix pour la cle des variables en cache pour les fichiers XML
+
+//Variables MYSQL / PHP
+$SQL_MOTOR_TYPE = '';
+$SQL_VARIABLES = "sql_mode=''";
+$time_zone_mysql = '';
+$time_zone = '';
+
+if (is_file("includes/opac_config_local.inc.php")) {
+    @include_once("includes/opac_config_local.inc.php") ;
+}

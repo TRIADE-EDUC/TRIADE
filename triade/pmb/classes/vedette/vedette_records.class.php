@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_records.class.php,v 1.6 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: vedette_records.class.php,v 1.7 2020/12/17 13:54:55 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,8 +16,7 @@ class vedette_records extends vedette_element{
 
 	public function set_vedette_element_from_database(){
 		$this->entity = new notice($this->id);
-		$display_class = new mono_display($this->entity->id, 0, '', 0, '', '', '',0, 0, 0, 0,"", 0, false, true);
- 		$this->isbd = trim(strip_tags($display_class->result));
+		$this->isbd = notice::get_notice_title($this->id);
 	}
 	
 	public function get_link_see(){

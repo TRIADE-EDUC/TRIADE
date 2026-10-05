@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_expor_import_erreur_pmb.inc.php,v 1.6 2018-01-09 08:54:31 jpermanne Exp $
+// $Id: func_expor_import_erreur_pmb.inc.php,v 1.11 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path; //N√©cessaire pour certaines inclusions
+global $class_path; //NÈcessaire pour certaines inclusions
 require_once("$class_path/thesaurus.class.php");
 require_once("$class_path/noeuds.class.php");
 require_once("$class_path/categories.class.php");
@@ -14,93 +14,94 @@ require_once($class_path."/serials.class.php");
 
 
 if($action == "beforeupload"){
-	$var_lib="<h2 class='center'>ATTENTION : Cette fonction d'import est destin√©e  √† l'import/export en cas de suppression par erreur de notices</h2> 
+	$var_lib="<h2 class='center'>ATTENTION : Cette fonction d'import est destinÈe  ‡ l'import/export en cas de suppression par erreur de notices</h2> 
             	<div class='form-contenu'> 
             		<div class='row'> 
-                        <h3>R√©cup√©rer et installer sur un autre PMB une sauvegarde de la base datant d'avant la suppression, puis faire l'un des exports (iso-2709) ci-dessous et proc√©der √† l'import avec cette fonction en cochant bien \"G√©n√©rer les liens entre notices ?\" du fichier obtenu pr√©c√©demment.<br/> Affecter un statut particulier aux notices import√©es afin de les retrouver plus facilement.</h3>
+                        <h3>RÈcupÈrer et installer sur un autre PMB une sauvegarde de la base datant d'avant la suppression, puis faire l'un des exports (iso-2709) ci-dessous et procÈder ‡ l'import avec cette fonction en cochant bien \"GÈnÈrer les liens entre notices ?\" du fichier obtenu prÈcÈdemment.<br/> Affecter un statut particulier aux notices importÈes afin de les retrouver plus facilement.</h3>
 						<br/>
                     </div> 
                     <div class='row'> 
-                        <h3>Pour la suppression par erreur d'un p√©riodique, de ses bulletins, ses articles et ses exemplaires : </h3>
-                        <p>(Avec le d√©doublonage √† l'import cette m√©thode est aussi valable pour la suppression d'un bulletin de p√©riodique)</p>
-                        <h3 style='margin-left:2em;'>    Mettre la notice du p√©riodique dans un panier de notice et faire un export du panier avec les options suivantes : <br/></h3>
+                        <h3>Pour la suppression par erreur d'un pÈriodique, de ses bulletins, ses articles et ses exemplaires : </h3>
+                        <p>(Avec le dÈdoublonage ‡ l'import cette mÈthode est aussi valable pour la suppression d'un bulletin de pÈriodique)</p>
+                        <h3 style='margin-left:2em;'>    Mettre la notice du pÈriodique dans un panier de notice et faire un export du panier avec les options suivantes : <br/></h3>
                         <h3 style='margin-left:4em;'>        - Conserver les informations des exemplaires dans la zone 995 (export des exemplaires)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - G√©n√©rer les liens (pour la reconstruction du bulletinage)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - Exporter les notices li√©es : Tout cocher (pour avoir les notices de bulletin)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - Exporter les structures de p√©riodique: Tout cocher (pour pouvoir reconstruire correctement les liens entre le p√©riodique, ses bulletins et ses articles)<br/></h3>
+                        <h3 style='margin-left:4em;'>        - GÈnÈrer les liens (pour la reconstruction du bulletinage)<br/></h3>
+                        <h3 style='margin-left:4em;'>        - Exporter les notices liÈes : Tout cocher (pour avoir les notices de bulletin)<br/></h3>
+                        <h3 style='margin-left:4em;'>        - Exporter les structures de pÈriodique: Tout cocher (pour pouvoir reconstruire correctement les liens entre le pÈriodique, ses bulletins et ses articles)<br/></h3>
                     	<br/>
                    </div>
                    	<div class='row'> 
                         <h3>Pour la suppression par erreur d'articles :</h3>
-                        <h3 style='margin-left:2em;'>    Deux possibilit√©s : mettre les articles dans un panier de notices ou mettre le/les bulletins avec les articles √† reprendre dans un panier de bulletins puis faire un export du panier avec les options suivantes : <br/></h3>
-                        <h3 style='margin-left:4em;'>    Si le bulletin et ses exemplaires ont √©t√© supprim√©s : <br/></h3>
+                        <h3 style='margin-left:2em;'>    Deux possibilitÈs : mettre les articles dans un panier de notices ou mettre le/les bulletins avec les articles ‡ reprendre dans un panier de bulletins puis faire un export du panier avec les options suivantes : <br/></h3>
+                        <h3 style='margin-left:4em;'>    Si le bulletin et ses exemplaires ont ÈtÈ supprimÈs : <br/></h3>
                         <h3 style='margin-left:6em;'>        - Conserver les informations des exemplaires dans la zone 995 (export des exemplaires)<br/></h3>
-                        <h3 style='margin-left:4em;'>    Dans tous les cas : cocher que ce qui est cit√© ci-dessous<br/></h3>
-                        <h3 style='margin-left:6em;'>        - G√©n√©rer les liens (pour la reconstruction du bulletinage)<br/></h3>
+                        <h3 style='margin-left:4em;'>    Dans tous les cas : cocher que ce qui est citÈ ci-dessous<br/></h3>
+                        <h3 style='margin-left:6em;'>        - GÈnÈrer les liens (pour la reconstruction du bulletinage)<br/></h3>
                         <h3 style='margin-left:6em;'>        - Liens vers les bulletins pour les notices d'article<br/></h3>
-                        <h3 style='margin-left:6em;'>        - Liens vers les p√©riodiques pour les notices d'article<br/></h3>
+                        <h3 style='margin-left:6em;'>        - Liens vers les pÈriodiques pour les notices d'article<br/></h3>
                     	<br/>
                    </div>
                      <div class='row'> 
                         <h3>Pour la suppression par erreur d'une ou plusieurs notices :</h3>
-                        <h3 style='margin-left:2em;'>    Mettre la/les notices supprim√©e(s) dans un panier de notices et faire un export du panier avec les options suivantes : <br/></h3>
+                        <h3 style='margin-left:2em;'>    Mettre la/les notices supprimÈe(s) dans un panier de notices et faire un export du panier avec les options suivantes : <br/></h3>
                         <h3 style='margin-left:4em;'>        - Conserver les informations des exemplaires dans la zone 995 (export des exemplaires)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - G√©n√©rer les liens (si vos notices √©taient reli√©es √† d'autres notices et que ces autres notices ont aussi √©t√© supprim√©es sinon cela risque de cr√©er des doublons)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - Exporter les notices li√©es : Tout cocher (pour avoir les notices li√©es)<br/></h3>
-                        <h3 style='margin-left:4em;'>        - Exporter les structures de p√©riodique : Ne rien cocher<br/></h3>
+                        <h3 style='margin-left:4em;'>        - GÈnÈrer les liens (si vos notices Ètaient reliÈes ‡ d'autres notices et que ces autres notices ont aussi ÈtÈ supprimÈes sinon cela risque de crÈer des doublons)<br/></h3>
+                        <h3 style='margin-left:4em;'>        - Exporter les notices liÈes : Tout cocher (pour avoir les notices liÈes)<br/></h3>
+                        <h3 style='margin-left:4em;'>        - Exporter les structures de pÈriodique : Ne rien cocher<br/></h3>
                     </div>
 				</div>";
 	if($charset == "utf-8"){
-		echo utf8_encode($var_lib);
+		echo encoding_normalize::utf8_normalize($var_lib);
 	}else{
 		echo $var_lib;
 	}
 }
 
-
-function decoupe_date($date_nom_formate,$annee_seule=false){
-	$date="";
-	$tab=preg_split("/\D/",$date_nom_formate);
-	
-	switch(count($tab)){
-		case 3 :
-			if(strlen($tab[0]) == 4){
-				$date=$tab[0]."-".$tab[1]."-".$tab[2];
-			}elseif(strlen($tab[2]) == 4){
-				$date=$tab[2]."-".$tab[1]."-".$tab[0];
-			}elseif($tab[0] > 31){
-				$date="19".$tab[0]."-".$tab[1]."-".$tab[2];
-			}elseif($tab[2] > 31){
-				$date="19".$tab[2]."-".$tab[1]."-".$tab[0];
-			}
-			break;
-		case 2 :
-			if(strlen($tab[0]) == 4){
-				$date=$tab[0]."-".$tab[1]."-01";
-			}elseif(strlen($tab[1]) == 4){
-				$date=$tab[1]."-".$tab[0]."-01";
-			}elseif($tab[0] > 31){
-				$date="19".$tab[0]."-".$tab[1]."-01";
-			}elseif($tab[1] > 31){
-				$date="19".$tab[1]."-".$tab[0]."-01";
-			}
-			break;
-		case 1 :
-			if(strlen($tab[0]) == 8){
-				$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".substr($tab[0],6,2);
-			}elseif(strlen($tab[0]) == 6){
-				$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-01";
-			}elseif(strlen($tab[0]) == 4){
-				$date=substr($tab[0],0,4)."-01-01";
-			}
+if(!function_exists('decoupe_date')) {
+	function decoupe_date($date_nom_formate,$annee_seule=false){
+		$date="";
+		$tab=preg_split("/\D/",$date_nom_formate);
+		
+		switch(count($tab)){
+			case 3 :
+				if(strlen($tab[0]) == 4){
+					$date=$tab[0]."-".$tab[1]."-".$tab[2];
+				}elseif(strlen($tab[2]) == 4){
+					$date=$tab[2]."-".$tab[1]."-".$tab[0];
+				}elseif($tab[0] > 31){
+					$date="19".$tab[0]."-".$tab[1]."-".$tab[2];
+				}elseif($tab[2] > 31){
+					$date="19".$tab[2]."-".$tab[1]."-".$tab[0];
+				}
+				break;
+			case 2 :
+				if(strlen($tab[0]) == 4){
+					$date=$tab[0]."-".$tab[1]."-01";
+				}elseif(strlen($tab[1]) == 4){
+					$date=$tab[1]."-".$tab[0]."-01";
+				}elseif($tab[0] > 31){
+					$date="19".$tab[0]."-".$tab[1]."-01";
+				}elseif($tab[1] > 31){
+					$date="19".$tab[1]."-".$tab[0]."-01";
+				}
+				break;
+			case 1 :
+				if(strlen($tab[0]) == 8){
+					$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".substr($tab[0],6,2);
+				}elseif(strlen($tab[0]) == 6){
+					$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-01";
+				}elseif(strlen($tab[0]) == 4){
+					$date=substr($tab[0],0,4)."-01-01";
+				}
+		}
+		
+		if($annee_seule){
+			return substr($date,0,4);
+		}else{
+			return $date;
+		}
+		
 	}
-	
-	if($annee_seule){
-		return substr($date,0,4);
-	}else{
-		return $date;
-	}
-	
 }
 
 function renseigne_cp($nom,$valeur,$notice_id,$type="notices"){
@@ -192,7 +193,7 @@ function recup_noticeunimarc_suite($notice) {
 	$info_900=$record->get_subfield("900","a","l","n");
 	$info_999=$record->get_subfield("999","a","l","n","f");
 
-} // fin recup_noticeunimarc_suite = fin r√©cup√©ration des variables propres BDP : rien de plus
+} // fin recup_noticeunimarc_suite = fin rÈcupÈration des variables propres BDP : rien de plus
 	
 function import_new_notice_suite() {
 	global $id_unimarc,$info_100,$notice_id, $info_606_a, $info_606_9,$info_900;
@@ -203,7 +204,7 @@ function import_new_notice_suite() {
 		$requete="update notices set create_date = '".addslashes($date)."' where notice_id='".$notice_id."' ";
 		pmb_mysql_query($requete);
 		/*if(!pmb_mysql_query($requete)){
-			echo "requete echou√© : ".$requete."<br>";
+			echo "requete echouÈ : ".$requete."<br>";
 		}*/
 	}
 	$incr_categ=0;
@@ -224,7 +225,7 @@ function import_new_notice_suite() {
 					$categ = new categories($id_noeud,"fr_FR");
 					if($categ->libelle_categorie == $info_606_a[$i][0]){
 						//echo "ou la : ".$info_606[$i]["a"]."<br>";
-						// ajout de l'indexation √† la notice dans la table notices_categories
+						// ajout de l'indexation ‡ la notice dans la table notices_categories
 						$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$categ->num_noeud."', ordre_categorie='".$incr_categ."' " ;
 						$res_ajout = @pmb_mysql_query($rqt_ajout);
 						$incr_categ++;
@@ -234,7 +235,7 @@ function import_new_notice_suite() {
 			}
 			
 			if(!$trouve){
-				$mon_msg= "Cat√©gorie non reprise car l'identifant n'existe pas dans PMB : ".$info_606_a[$i][0];
+				$mon_msg= "CatÈgorie non reprise car l'identifant n'existe pas dans PMB : ".$info_606_a[$i][0];
 				pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".addslashes($mon_msg)."') ") ;
 			}
 		}
@@ -243,9 +244,9 @@ function import_new_notice_suite() {
 	for($i=0;$i<count($info_900);$i++){
 		if(trim($info_900[$i]["a"])){
 			if(!renseigne_cp($info_900[$i]["n"], $info_900[$i]["a"],$notice_id)){
-				$mon_msg= "La valeur  : ".$info_900[$i]["a"]." n'a pas √©t√© reprise dans le champ personalis√© : ".$info_900[$i]["n"]." car le champ n'existe pas";
+				$mon_msg= "La valeur  : ".$info_900[$i]["a"]." n'a pas ÈtÈ reprise dans le champ personalisÈ : ".$info_900[$i]["n"]." car le champ n'existe pas";
 				pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".addslashes($mon_msg)."') ") ;
-				/*echo "Erreur √† l'enregistrement du champ perso<br>";
+				/*echo "Erreur ‡ l'enregistrement du champ perso<br>";
 				echo "<pre>";
 				print_r($info_900[$i]);
 				echo "</pre>";*/
@@ -266,17 +267,18 @@ function traite_exemplaires () {
 	// lu en 010$d de la notice
 	$price = $prix[0];
 	
-	// la zone 995 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_996); $nb_expl++) {
+	$nb_infos_996 = count($info_996);
+	// la zone 995 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_996; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 		
 		$data=array();
-		/*if(!$info_996[$nb_expl]['a'])$info_996[$nb_expl]['a'] ="Ind√©termin√©";
+		/*if(!$info_996[$nb_expl]['a'])$info_996[$nb_expl]['a'] ="IndÈterminÈ";
 		$data['lender_libelle']=$info_996[$nb_expl]['a'];
 		$book_lender_id=lender::import($data);*/
 		
-		//Propri√©taire
+		//PropriÈtaire
 		if(trim($info_996[$nb_expl]['a'])){
 			$requete="SELECT idlender FROM lenders WHERE lender_libelle LIKE '".addslashes($info_996[$nb_expl]['a'])."'";
 			$res=pmb_mysql_query($requete);
@@ -289,7 +291,7 @@ function traite_exemplaires () {
 			$local_book_lender_id=$book_lender_id;
 		}
 		
-		/* pr√©paration du tableau √† passer √† la m√©thode */
+		/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 		$cbarre = $info_996[$nb_expl]['f'];
 		if(!$cbarre)$cbarre= "ind";
 		$pb = 1 ;
@@ -306,7 +308,7 @@ function traite_exemplaires () {
 		}
 		
 		if($info_996[$nb_expl]['f'] != $expl['cb']){
-			$mon_msg= "ERREUR : l'exemplaire avec le code barres : ".$info_996[$nb_expl]['f']." existe d√©j√† donc il ne sera pas cr√©√©";
+			$mon_msg= "ERREUR : l'exemplaire avec le code barres : ".$info_996[$nb_expl]['f']." existe dÈj‡ donc il ne sera pas crÈÈ";
 			pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".addslashes($mon_msg)."') ") ;
 			continue;
 		}
@@ -321,14 +323,14 @@ function traite_exemplaires () {
 		
 		$data_doc=array();
 		$data_doc['tdoc_libelle'] = $info_996[$nb_expl]['e'];
-		if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "Ind√©termin√©" ;
+		if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "IndÈterminÈ" ;
 		
 		$requete="SELECT idtyp_doc FROM docs_type WHERE tdoc_libelle LIKE '".addslashes($data_doc['tdoc_libelle'])."'";
 		$res=pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($res) && $id=pmb_mysql_result($res,0,0)){
 			$expl['typdoc'] = $id;
 		}else{
-			$data_doc['duree_pret'] = 0 ; /* valeur par d√©faut */
+			$data_doc['duree_pret'] = 0 ; /* valeur par dÈfaut */
 			$data_doc['tdoc_codage_import'] = $data_doc['tdoc_libelle'] ;
 			if ($tdoc_codage) $data_doc['tdoc_owner'] = $local_book_lender_id ;
 				else $data_doc['tdoc_owner'] = 0 ;
@@ -340,7 +342,7 @@ function traite_exemplaires () {
 
 		
 		if (!$info_996[$nb_expl]['x']) 
-			$info_996[$nb_expl]['x'] = "Ind√©termin√©";
+			$info_996[$nb_expl]['x'] = "IndÈterminÈ";
 			
 		$requete="SELECT idsection FROM docs_section WHERE section_libelle LIKE '".addslashes($info_996[$nb_expl]['x'])."'";
 		$res=pmb_mysql_query($requete);
@@ -357,7 +359,7 @@ function traite_exemplaires () {
 		
 		
 		
-		if (!$info_996[$nb_expl]['1']) $info_996[$nb_expl]['1'] = "Ind√©termin√©";
+		if (!$info_996[$nb_expl]['1']) $info_996[$nb_expl]['1'] = "IndÈterminÈ";
 		
 		$requete="SELECT  idstatut FROM docs_statut WHERE statut_libelle LIKE '".addslashes($info_996[$nb_expl]['1'])."'";
 		$res=pmb_mysql_query($requete);
@@ -381,7 +383,7 @@ function traite_exemplaires () {
 			$expl['location'] = $book_location_id;
 		}		
 		
-		if (!$info_996[$nb_expl]['c']) $info_996[$nb_expl]['c'] = "Ind√©termin√©";
+		if (!$info_996[$nb_expl]['c']) $info_996[$nb_expl]['c'] = "IndÈterminÈ";
 		
 		$requete="SELECT idcode FROM docs_codestat WHERE codestat_libelle  LIKE '".addslashes($info_996[$nb_expl]['c'])."'";
 		$res=pmb_mysql_query($requete);
@@ -406,8 +408,12 @@ function traite_exemplaires () {
 		$expl['expl_owner'] = $local_book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 		
-		$expl['date_depot'] = substr($info_996[$nb_expl]['m'],0,4)."-".substr($info_996[$nb_expl]['m'],4,2)."-".substr($info_996[$nb_expl]['m'],6,2) ;      
-		$expl['date_retour'] = substr($info_996[$nb_expl]['n'],0,4)."-".substr($info_996[$nb_expl]['n'],4,2)."-".substr($info_996[$nb_expl]['n'],6,2) ;
+		if (!empty($info_996[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_996[$nb_expl]['m'],0,4)."-".substr($info_996[$nb_expl]['m'],4,2)."-".substr($info_996[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_996[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_996[$nb_expl]['n'],0,4)."-".substr($info_996[$nb_expl]['n'],4,2)."-".substr($info_996[$nb_expl]['n'],6,2) ;
+		}
 		
 		// quoi_faire
 		$expl['quoi_faire'] = 2 ;
@@ -422,7 +428,7 @@ function traite_exemplaires () {
        			if($value["f"] == $info_996[$nb_expl]['f']){
        				//Je suis bien sur un cp de cet exemplaire
        				if(!renseigne_cp($value["n"], $value["a"],$expl_id,"expl")){
-						$mon_msg= "La valeur  : ".$value["a"]." n'a pas √©t√© reprise dans le champ personalis√© : ".$value["n"]." car le champ n'existe pas";
+						$mon_msg= "La valeur  : ".$value["a"]." n'a pas ÈtÈ reprise dans le champ personalisÈ : ".$value["n"]." car le champ n'existe pas";
 						pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".addslashes($mon_msg)."') ") ;
 					}else{
 						unset($info_999[$key]);
@@ -434,7 +440,7 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	
 	$subfields=array();
@@ -468,7 +474,7 @@ function export_traite_exemplaires ($ex=array()) {
 	$export996['d'] = $ex -> expl_codestat;
 
 	$export996['v'] = $ex -> location_libelle;
-	$export996['w'] = $ex -> ldoc_codage_import;
+	$export996['w'] = $ex -> locdoc_codage_import;
 
 	$export996['x'] = $ex -> section_libelle;
 	$export996['y'] = $ex -> sdoc_codage_import;

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: sort.xml,v 1.24 2018-12-12 13:01:10 dgoron Exp $ -->
-<sort reference="notices" referencekey="notice_id">
+<!-- $Id: sort.xml,v 1.27 2023/04/14 08:31:46 tsamson Exp $ -->
+<sort reference="notices" referencekey="notice_id" ppersoprefix="notices">
 	
 	<field name="712" type="text" typefield="select" id="1">
-		<table>
-			<tablefield>index_sew</tablefield>
-		</table>
-	</field>
+        <table>
+            <filter>notices.niveau_biblio!='b'</filter>
+            <tablefield>index_sew</tablefield>
+        </table>
+        <table name="bulletins">
+            <filter>notices.niveau_biblio='b'</filter>
+            <tablefield>index_titre</tablefield>
+            <tablekey>num_notice</tablekey>
+            <link type="1n">
+                <referencefield>notice_id</referencefield>
+            </link>
+        </table>
+    </field>
 	
 	<field name="indexint_menu_title" type="num" typefield="select" id="2">
 		<table name="indexint">
-			<tablefield>indexint_name</tablefield>
+			<tablefield >indexint_name</tablefield>
 			<tablekey>indexint_id</tablekey>
 			<link type="1n">
 				<referencefield>indexint</referencefield>
@@ -170,7 +179,7 @@
 	
 	<field name="type_doc_sort" type="text" typefield="select" id="13">
 		<table>
-			<tablefield>typdoc</tablefield>
+			<tablefield marctype="doctype">typdoc</tablefield>
 		</table>
 	</field>
 	

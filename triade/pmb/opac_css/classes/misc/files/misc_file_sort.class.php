@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_sort.class.php,v 1.1 2018-11-27 08:49:16 dgoron Exp $
+// $Id: misc_file_sort.class.php,v 1.4 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -57,7 +57,7 @@ class misc_file_sort extends misc_file {
 	}
 	
 	public function get_display_list() {
-		$display = "<table id='file_sort_list'>";
+		$display = "<table id='misc_file_sort_list'>";
 		$display .= $this->get_display_header_list();
 		if(count(static::$xml_sort['FIELD'])) {
 			$display .= $this->get_display_content_list();
@@ -75,10 +75,10 @@ class misc_file_sort extends misc_file {
 		$is_subst = strpos($this->filename, '_subst.xml');
 		if(file_exists($this->path.'/'.$this->filename)) {
 			$contents = file_get_contents($this->path.'/'.$this->filename);
-			return utf8_encode($contents);
+			return encoding_normalize::utf8_normalize($contents);
 		} elseif($is_subst) {
 			$contents = file_get_contents($this->path.'/'.str_replace('_subst.xml', '.xml', $this->filename));
-			return utf8_encode($contents);
+			return encoding_normalize::utf8_normalize($contents);
 		}
 	}
 	
@@ -108,7 +108,7 @@ class misc_file_sort extends misc_file {
 	}
 	
 	public function apply_substitution($fields) {
-		if(count($this->data)) {
+		if(!empty($this->data)) {
 			$substitution = array();
 			foreach ($fields as $field) {
 				if(!isset($this->data[$field['ID']]['visible']) || $this->data[$field['ID']]['visible']) {

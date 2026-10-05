@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: remote_procedure.class.php,v 1.5 2017-12-06 10:25:30 jpermanne Exp $
+// $Id: remote_procedure.class.php,v 1.6 2024/03/22 15:31:03 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($class_path."/remote_procedure_client.class.php");
 require_once($class_path."/parameters.class.php");
 
-// dÃ©finition de la classe de gestion d'une procÃ©dure distante
+// définition de la classe de gestion d'une procédure distante
 
 class remote_procedure {
 	
@@ -176,7 +176,7 @@ class remote_procedure {
 		if($this->instanciate_procedure()) {
 			$the_procedure = $this->get_the_procedure();
 			
-			//Regardons si on a dÃ©jÃ  une procÃ©dure avec ce nom lÃ  dans la base de donnÃ©e
+			//Regardons si on a déjà une procédure avec ce nom là dans la base de donnée
 			switch ($this->module) {
 				case 'admin':
 					break;
@@ -260,7 +260,7 @@ class remote_procedure {
 		if ($this->instanciate_procedure()) {
 			$the_procedure = $this->get_the_procedure();
 			
-			$proc_classement += 0;
+			$proc_classement = intval($proc_classement);
 			
 			if (is_array($userautorisation)) $autorisations=implode(" ",$userautorisation);
 			else $autorisations='';
@@ -275,7 +275,7 @@ class remote_procedure {
 				$the_procedure->comment = pmb_mysql_escape_string($the_procedure->comment);
 				
 			$parameters=$the_procedure->params;
-			//mise Ã  jour de l'encodage de l'entÃªte
+			//mise à jour de l'encodage de l'entête
 			if($charset == 'utf-8') {
 				$parameters = str_replace('<?xml version="1.0" encoding="iso-8859-1"?>', '<?xml version="1.0" encoding="utf-8"?>', $parameters) ;
 			}
@@ -381,7 +381,7 @@ class remote_procedure {
 			if (preg_match_all("|!!(.*)!!|U",$hp->proc->requete,$query_parameters)) {
 				$hp->get_final_query();
 				$the_procedure->sql = $hp->final_query;
-				$param_proc_hidden=$hp->get_hidden_values();//ParamÃªtres en champ cachÃ© en cas de forÃ§age
+				$param_proc_hidden=$hp->get_hidden_values();//Paramêtres en champ caché en cas de forçage
 			}
 			
 			$execute_external = true;

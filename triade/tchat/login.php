@@ -9,7 +9,7 @@
 <body>
   <div class="wrapper">
     <section class="form login">
-      <header>INTRA-MSN</header>
+      <header>TRIADE-MSN</header>
         <div class="field input">
           <label><br><center>Connection possible via votre compte Triade</center></label>
         </div>

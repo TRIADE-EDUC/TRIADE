@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_records_datasource_linked_records.class.php,v 1.1 2019-01-09 15:55:35 apetithomme Exp $
+// $Id: frbr_entity_records_datasource_linked_records.class.php,v 1.1 2019/01/09 15:55:35 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,7 +16,7 @@ class frbr_entity_records_datasource_linked_records extends frbr_entity_common_d
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
 		

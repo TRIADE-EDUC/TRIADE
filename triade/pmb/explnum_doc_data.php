@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Yves PRATTER                                                   |
 // +-------------------------------------------------+
-// $Id: explnum_doc_data.php,v 1.5 2015-04-03 11:16:23 jpermanne Exp $
+// $Id: explnum_doc_data.php,v 1.5 2015/04/03 11:16:23 jpermanne Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path     = ".";                            
 $base_auth     = ""; //"CIRCULATION_AUTH";  
 $base_title    = "";    

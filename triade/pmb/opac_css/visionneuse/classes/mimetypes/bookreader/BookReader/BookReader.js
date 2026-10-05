@@ -18,7 +18,7 @@ This file is part of BookReader.
     
     The BookReader source is hosted at http://github.com/openlibrary/bookreader/
 
-// $Id: BookReader.js,v 1.7 2017-05-10 17:16:13 arenou Exp $ */
+// $Id: BookReader.js,v 1.7 2017/05/10 17:16:13 arenou Exp $ */
 
 // BookReader()
 //______________________________________________________________________________

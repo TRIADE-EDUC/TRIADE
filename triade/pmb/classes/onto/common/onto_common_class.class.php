@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_class.class.php,v 1.11 2018-09-06 10:12:16 apetithomme Exp $
+// $Id: onto_common_class.class.php,v 1.13 2022/11/25 14:59:27 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -37,8 +37,8 @@ class onto_common_class extends onto_common_root {
 	protected $sub_class_of;
 
 	/**
-	 * Tableau associatif des restrictions associÃ©es Ã  chaque propriÃ©tÃ© de la classe.
-	 * L'Ã©tiquette du tableau est l'URI de la propriÃ©tÃ© concernÃ©e
+	 * Tableau associatif des restrictions associées à chaque propriété de la classe.
+	 * L'étiquette du tableau est l'URI de la propriété concernée
 	 * @access private
 	 */
 	private $onto_restrictions;
@@ -54,6 +54,8 @@ class onto_common_class extends onto_common_root {
 	
 	public $pmb_name; 
 	
+	public $field;
+	
 	public function __construct($uri,$ontology) {
 		parent::__construct($uri,$ontology);
 		$this->get_properties();
@@ -62,7 +64,7 @@ class onto_common_class extends onto_common_root {
 	} // end of member function __construct
 
 	/**
-	 * Retourne la liste des URI de propriÃ©tÃ©s liÃ©es Ã  la classe
+	 * Retourne la liste des URI de propriétés liées à la classe
 	 *
 	 * @return array()
 	 * @access public
@@ -76,9 +78,9 @@ class onto_common_class extends onto_common_root {
 	} // end of member function get_properties
 
 	/**
-	 * Retourne une instance de la propriÃ©tÃ©
+	 * Retourne une instance de la propriété
 	 *
-	 * @param string uri_property uri de la propriÃ©tÃ©
+	 * @param string uri_property uri de la propriété
 
 	 * @return onto_common_property
 	 * @access public
@@ -90,7 +92,7 @@ class onto_common_class extends onto_common_root {
 	/**
 	 * 
 	 *
-	 * @param onto_common_property property objet reprÃ©sentant une propriÃ©tÃ©
+	 * @param onto_common_property property objet représentant une propriété
 
 	 * @return void
 	 * @access public
@@ -103,14 +105,20 @@ class onto_common_class extends onto_common_root {
 		$this->pmb_name = $pmb_name;
 	}
 	
+	public function set_field($field){
+	    $this->field = $field;
+	}
+	
 	protected function fetch_label(){
 		$this->label = $this->ontology->get_class_label($this->uri);
 	}
 	
 	public function get_restrictions(){
-		foreach($this->properties as $property){
-			$this->onto_restrictions[$property->uri] = $this->ontology->get_restriction($this->uri,$property->uri);
-		}
+	    if (is_array($this->properties)) {
+    		foreach($this->properties as $property){
+    			$this->onto_restrictions[$property->uri] = $this->ontology->get_restriction($this->uri,$property->uri);
+    		}
+	    }
 	}
 	
 	public function get_property_range($uri_property) {
@@ -131,7 +139,7 @@ class onto_common_class extends onto_common_root {
 	/**
 	 *
 	 *
-	 * @param string  uri_property URI d'une propriÃ©tÃ©
+	 * @param string  uri_property URI d'une propriété
 	
 	 * @return onto_restriction
 	 * @access public

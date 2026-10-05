@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: crypt.php,v 1.8 2017-10-23 10:13:00 ngantier Exp $
+// $Id: crypt.php,v 1.8 2017/10/23 10:13:00 ngantier Exp $
 
 //Cryptage d'un fichier
 $base_path="../..";
@@ -13,14 +13,14 @@ require($base_path."/includes/init.inc.php");
 require_once("lib/api.inc.php");
 require_once("$class_path/crypt.class.php");
 
-//EntÃªte
+//Entête
 print "<div id=\"contenu-frame\">\n";
 echo "<h1>".$msg["sauv_misc_export_running"]."</h1>\n";
 echo "<form class='form-$current_module' name=\"sauv\" action=\"\" method=\"post\">\n";
 echo "<br /><br />";
 echo "<input type=\"button\" value=\"".$msg["sauv_annuler"]."\" onClick=\"document.location='launch.php';\" class=bouton>\n";
 
-//Jeux Ã  venir
+//Jeux à venir
 for ($i=0; $i<count($sauvegardes); $i++) {
 	echo "<input type=\"hidden\" name=\"sauvegardes[]\" value=\"".$sauvegardes[$i]."\">\n";
 }
@@ -28,13 +28,13 @@ for ($i=0; $i<count($sauvegardes); $i++) {
 //Jeu courant
 echo "<input type=\"hidden\" name=\"currentSauv\" value=\"".$currentSauv."\">\n";
 
-//Recherche des paramÃ¨tres de cryptage
+//Recherche des paramètres de cryptage
 $requete="select sauv_sauvegarde_key1, sauv_sauvegarde_key2 from sauv_sauvegardes where sauv_sauvegarde_id=".$currentSauv;
 $resultat=pmb_mysql_query($requete);
 
 $res=pmb_mysql_fetch_object($resultat);
 
-//CrÃ©ation du log dans la base log
+//Création du log dans la base log
 
 echo "<input type=\"hidden\" name=\"filename\" value=\"".$filename."\">\n";
 echo "<input type=\"hidden\" name=\"logid\" value=\"".$logid."\">\n";

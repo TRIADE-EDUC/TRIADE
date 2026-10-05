@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_articles_by_sections.class.php,v 1.3 2015-12-16 11:50:56 dgoron Exp $
+// $Id: docwatch_selector_articles_by_sections.class.php,v 1.4 2022/01/18 07:36:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/docwatch/selectors/docwatch_selector_notices.class.php");
 
 /**
@@ -15,16 +16,15 @@ require_once($class_path."/docwatch/selectors/docwatch_selector_notices.class.ph
 class docwatch_selector_articles_by_sections extends docwatch_selector {
 	
 	/*
-	 * On récupère via le formulaire un tableau de panier de notices
+	 * On r�cup�re via le formulaire un tableau de panier de notices
 	 * $this->parameters['caddies']
 	 */
 	
 	public function get_value(){
-		global $dbh;
 		if(!count($this->value) && count($this->parameters['sections'])){
 			$this->value = array();
 			$query = "select distinct id_article from cms_articles where num_section in(".implode(",",$this->parameters['sections']).")"; 
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row=pmb_mysql_fetch_object($result)){
 					$this->value[] = $row->id_article;

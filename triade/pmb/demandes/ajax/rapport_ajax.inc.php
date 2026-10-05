@@ -1,13 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rapport_ajax.inc.php,v 1.7 2017-11-22 11:07:34 dgoron Exp $
+// $Id: rapport_ajax.inc.php,v 1.8 2021/08/06 11:50:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $quoifaire;
+global $idnote, $id, $id_item;
+
 switch($quoifaire){
-	
 	case 'add_note';
 		add_note($idnote);
 	break;
@@ -29,7 +31,7 @@ switch($quoifaire){
  * Ajout d'une note au rapport
  */
 function add_note($idnote=0){
-	global $dbh, $idtype, $idobject, $comment, $ordre_cible;
+	global $idtype, $idobject, $comment, $ordre_cible;
 	
 	$iddemande = $idobject;
 	$commentaire = trim($comment);
@@ -38,7 +40,7 @@ function add_note($idnote=0){
 		$ordre = $ordre_cible;
 	} else {
 		$req = "select max(ordre)+1 from rapport_demandes where num_demande='".$iddemande."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		$ordre = pmb_mysql_result($res,0,0);
 	}
 	
@@ -49,12 +51,12 @@ function add_note($idnote=0){
 		ordre = '".$ordre."',
 		type='".$idtype."'
 		";
-	pmb_mysql_query($req,$dbh);
+	pmb_mysql_query($req);
 	
 	if($ordre_cible) update_order(pmb_mysql_insert_id());
 	
 	$req = "select rd.id_item, rd.contenu, rd.ordre, rd.type, rd.num_note, sujet_action from rapport_demandes rd left join demandes_notes on num_note=id_note left join demandes_actions on num_action=id_action where rd.num_demande='".$iddemande."' order by ordre";
-	$res = pmb_mysql_query($req,$dbh);
+	$res = pmb_mysql_query($req);
 	$display = "";
 	while(($item = pmb_mysql_fetch_object($res))){
 		$titre = substr($item->contenu,0,15)."...";	
@@ -93,28 +95,27 @@ function add_note($idnote=0){
 
 
 /*
- * Mise Ã  jour de l'ordre des notes
+ * Mise à jour de l'ordre des notes
  */
 function update_order($idinsert=0){
-	
-	global $dbh,$idsource,$ordre_source,$ordre_cible;
+	global $idsource,$ordre_source,$ordre_cible;
 
 	if(($ordre_source > $ordre_cible) && !$idinsert) {
 		$req = "update rapport_demandes set ordre='".$ordre_cible."' where id_item='".$idsource."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		$req = "update rapport_demandes set ordre=ordre+1 where (ordre <= '".$ordre_source."' and ordre >='".$ordre_cible."') and id_item!='".$idsource."' ";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	} else if(($ordre_source < $ordre_cible) && !$idinsert){
 		$req = "update rapport_demandes set ordre='".($ordre_cible-1)."' where id_item='".$idsource."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		$req = "update rapport_demandes set ordre=ordre-1 where (ordre >= '".$ordre_source."' and ordre <='".($ordre_cible-1)."') and id_item!='".$idsource."' ";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	} else if($idinsert && $ordre_cible && $idinsert){
-		//Insertion d'un Ã©lÃ©ment nouveau dans la liste donc on a idinsert et pas idsource
+		//Insertion d'un élément nouveau dans la liste donc on a idinsert et pas idsource
 		$req = "update rapport_demandes set ordre='".$ordre_cible."' where id_item='".$idinsert."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		$req = "update rapport_demandes set ordre=ordre+1 where ordre >='".$ordre_cible."' and id_item!='".$idinsert."' ";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 	
 }
@@ -123,12 +124,12 @@ function update_order($idinsert=0){
  * Affiche le formulaire de saisie d'un titre ou d'une note
  */
 function show_addcom($id=0){
-	global $msg, $dbh;
+	global $msg;
 	
 	$contenu="";
 	if($id){
 		$req = "select contenu from rapport_demandes where id_item='".$id."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		$rap = pmb_mysql_fetch_object($res);
 		
 		$contenu = $rap->contenu;
@@ -148,30 +149,28 @@ function show_addcom($id=0){
 }
 
 /*
- * Suppression d'un Ã©lÃ©ment du rapport
+ * Suppression d'un élément du rapport
  */
 function del_item($id=0){
-	global $dbh;
-	
 	if($id){
 		$req = "delete from rapport_demandes where id_item='".$id."'";
-		pmb_mysql_query($req,$dbh); 
+		pmb_mysql_query($req); 
 	}
 }
 
 /*
- * Mis Ã  jour de la note du rapport
+ * Mis à jour de la note du rapport
  */
 function update_contenu($id){
-	global $dbh, $comment, $idobject, $charset;
+	global $comment, $idobject;
 	
 	if($id){
 		$req = "update rapport_demandes set contenu='".$comment."' where id_item='".$id."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	
 		//$req = "select id_item, contenu, ordre, type, num_note from rapport_demandes where num_demande='".$idobject."' order by ordre";
 		$req = "select rd.id_item, rd.contenu, rd.ordre, rd.type, rd.num_note, sujet_action from rapport_demandes rd left join demandes_notes on num_note=id_note left join demandes_actions on num_action=id_action where rd.num_demande='".$idobject."' order by ordre";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		$display = "";
 		while(($item = pmb_mysql_fetch_object($res))){
 			$titre = substr($item->contenu,0,15)."...";	
@@ -204,7 +203,6 @@ function update_contenu($id){
 							handler=\"rap_handle_$item->id_item\" recepttype=\"rapport\" recept=\"yes\" highlight=\"rap_highlight\" downlight=\"rap_downlight\" iditem='$item->id_item' order='$ordre'>".$contenu.$drag.$modif.$del."</div>			
 					";
 		}
-		
 		ajax_http_send_response($display);
 	}				
 }

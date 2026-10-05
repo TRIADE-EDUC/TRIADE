@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if ( (empty($_SESSION["nom"])) && (empty($_SESSION["membre"]) ) ) {
 	header('Location: ./acces_refuse.php');
 	exit;
@@ -26,7 +27,7 @@ $cnx=cnx();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -70,15 +71,15 @@ $cnx=cnx();
 <!-- "text-align: center" à cause du bug centrage d'IE :( -->
 <div style="text-align: center;">
 <div id="mainInst"><?php $photo=recup_photo_bulletin(); 
-			if (count($photo) > 0) {
+			if (countTriade($photo) > 0) {
 				if (file_exists("./data/image_pers/".$photo[0][0])) {
 //					$logo="<img src='image.php?id=./data/image_pers/".$photo[0][0]."' >";
-					$logo="<img src='./image/logo_triade_licence.gif' />";						
+					$logo="<img src='./image/commun/logo_triade_licence.png' width='50%' alt='logo_triade_licence' />";
 				}else{
-					$logo="<img src='./image/logo_triade_licence.gif' />";						
+					$logo="<img src='./image/commun/logo_triade_licence.png' width='50%' alt='logo_triade_licence' />";
 				}
 			}else{
-				$logo="<img src='./image/logo_triade_licence.gif' />";
+				$logo="<img src='./image/commun/logo_triade_licence.png' width='50%' alt='logo_triade_licence' />";
 			}
 			?>
 <?php print $logo ?><br /><br />
@@ -86,7 +87,7 @@ $cnx=cnx();
 
 <?php
 $data2=visu_param();
-for($i=0;$i<count($data2);$i++) {
+for($i=0;$i<countTriade($data2);$i++) {
        $nom_etablissement=trim($data2[$i][0]);
        $adresse=trim($data2[$i][1]);
        $postal=trim($data2[$i][2]);
@@ -113,7 +114,7 @@ $validation=1;
 if ($_SESSION["membre"] == "menuprof") {
 		$accepte=LANGMESS69;
 		$data2=reglementAffProf(1);
-		for($i=0;$i<count($data2);$i++) {
+		for($i=0;$i<countTriade($data2);$i++) {
 			$validation=0;
 		?>
 			<tr >
@@ -128,7 +129,7 @@ if (($_SESSION["membre"] == "menuparent") || ($_SESSION["membre"] == "menueleve"
 		$accepte=LANGMESS68;
 		$id_classe=chercheClasseEleve($_SESSION["id_pers"]);
 		$data=reglementAffParent(); // id, sujet, refence, file, date, enseignant, classe
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$ok=0;
 			$ligne=$data[$i][6];
 		       	$ligne=substr("$ligne", 1); // retire le "{"

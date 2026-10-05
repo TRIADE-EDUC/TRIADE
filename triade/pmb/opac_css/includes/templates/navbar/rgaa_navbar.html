@@ -1,0 +1,36 @@
+{% extends "rgaa_paginator.html" %}
+<!-- $Id: rgaa_navbar.html,v 1.1.2.2 2024/10/15 12:39:30 rtigero Exp $ -->
+{% comment %}
+
+Template pour charter le paginateur
+La structure de données est la suivante :
+current => [
+	page => Page courante,
+    nbPerPage=> Nombre d'élements par page
+	previous=> Numéro de la page précédente
+	next=> Numéro de la page suivante
+	elems => [
+	    first => Numéro du premier élément de la page courante,
+	    last=> Numéro du dernier élément de la page courante
+	]
+]
+total=> Nombre d'éléments total de la liste
+nbPages=> Nombre de pages
+url => Url à  utiliser pour changer de page (ex : {{url | replace "!!page!!" current.previous}} )
+action=> Action du formulaire
+script => JS de controle
+pages=> Tableau des numéros de pages à  afficher
+custom => [
+	url => URL à  utiliser pour changer le nombre d'éléments par page ( ex : {{custom.url | replace "!!nb_per_page_custom!!" 10}} )
+	customs => Tableau des nombres éléments par page possible
+]
+from_cms => Vaut 1 si on est sur un module de portail / Sinon on est sur un résultat de recherche
+
+{% endcomment  %}
+{% block selector %}
+	{% if from_cms %}
+		{% include "selector.html" with custom=custom current=current %}
+	{% else %}
+		{% include "selector_in_result.html" with custom=custom current=current %}
+	{% endif %}
+{% endblock %}

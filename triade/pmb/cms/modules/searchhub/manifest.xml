@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1.2.1.2.1 2025/04/10 06:56:04 tsamson Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Hub de Recherche</name>
+	<name lang="en_UK">Research Hub</name>
+	<author>
+		<name>Quentin VARIN</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<author>
+		<name>Thomas SAMSON</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2024-12-24</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<managedWithoutBuild>true</managedWithoutBuild>
+	<use>
+		<datasources>
+			<datasource>cms_module_searchhub_datasource_profile</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_searchhub_view_django</view>
+		</views>
+	</use>
+</manifest>

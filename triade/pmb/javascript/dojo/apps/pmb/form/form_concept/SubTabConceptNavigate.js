@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabConceptNavigate.js,v 1.3 2019-01-14 15:34:20 arenou Exp $
+// $Id: SubTabConceptNavigate.js,v 1.3.16.1 2025/02/14 10:47:58 dgoron Exp $
 
 
 define([
@@ -98,7 +98,7 @@ define([
 		//pour le redimensionnement de la frame
 		resizeIframe: function(noresize=false){
 			if(window.parent.location.href != window.location.href){
-			    window.frameElement.height = (window.frameElement.contentWindow.document.body.scrollHeight)+'px';
+			    window.frameElement.style.height = (window.frameElement.contentWindow.document.body.scrollHeight)+'px';
 			}
 			this.resize();
 		},
@@ -114,7 +114,7 @@ define([
 		},
 		resizeIframe: function(noresize=false){
 			if(window.parent.location.href != window.location.href){
-			    window.frameElement.height = (window.frameElement.contentWindow.document.body.scrollHeight)+'px';
+			    window.frameElement.style.height = (window.frameElement.contentWindow.document.body.scrollHeight)+'px';
 			}
 			this.resize();
 		},

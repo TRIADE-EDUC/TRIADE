@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormConceptSelector.js,v 1.16 2019-02-06 07:51:50 arenou Exp $
+// $Id: FormConceptSelector.js,v 1.19 2021/02/09 11:09:53 qvarin Exp $
 
 /*****
  * 
@@ -119,6 +119,13 @@ define([
 				  				break;
 				  		}
 				  		break;
+				  	case 'SortIframe':
+				  		switch(evtType){
+				  			case 'reloadResult':
+					  			this.reloadResults();
+				  				break;
+				  		}
+				  		break;
 				  }
 			},
 			createTabs: function(){
@@ -188,7 +195,8 @@ define([
 						topic.subscribe('SubTabConceptAdvancedSearch', lang.hitch(this, this.handleEvents)),
 						topic.subscribe('SubTabConceptResults', lang.hitch(this, this.handleEvents)),
 						topic.subscribe('SubTabConceptAdd', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('tablist', lang.hitch(this, this.handleEvents))
+						topic.subscribe('tablist', lang.hitch(this, this.handleEvents)),
+						topic.subscribe('SortIframe', lang.hitch(this, this.handleEvents))
 				);
 			},
 			getCurrentMode: function(){ //Le parent est toujours un FormConceptContainer
@@ -238,7 +246,11 @@ define([
 				}
 			},
 			getSelectedTab: function(){
-				return domAttr.get(query('span[class="selected"][data-pmb-object-type]')[0], 'data-pmb-object-type');
+				var nodesList = query('span.selected[data-pmb-object-type]');
+				if (nodesList[0]) {
+					return domAttr.get(nodesList[0], 'data-pmb-object-type');
+				}
+				return "";
 			},
 		})
 });

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 $dateDebut=$_POST["saisie_date_debut"];
 $dateFin=$_POST["saisie_date_fin"];
@@ -10,7 +10,7 @@ setcookie("date_paiem_fin",$dateFin,time()+3600*24*2);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -31,6 +31,9 @@ setcookie("date_paiem_fin",$dateFin,time()+3600*24*2);
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -49,11 +52,11 @@ validerequete("menuadmin");
 $cnx=cnx();
 nettoyage_EDT();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="125">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Relevé vacation enseignant" ?></font></b></td>
 </tr>
@@ -78,12 +81,12 @@ if (isset($_POST["sClasseGrp"])) {
 		$selectcss="select1";
 	}
 }
-$sql="SELECT a.code_classe,trim(c.libelle),a.code_matiere, CONCAT( trim(m.libelle),' ',trim(m.sous_matiere),' ',trim(langue) ), a.code_groupe,trim(g.libelle) FROM ${prefixe}affectations a, ${prefixe}matieres m, ${prefixe}classes c, ${prefixe}groupes g WHERE code_prof='$idpers' AND a.code_classe = c.code_class AND a.code_matiere = m.code_mat AND a.code_groupe = group_id ORDER BY c.libelle,m.libelle";
+$sql="SELECT a.code_classe,trim(c.libelle),a.code_matiere, CONCAT( trim(m.libelle),' ',trim(m.sous_matiere),' ',trim(langue) ), a.code_groupe,trim(g.libelle) FROM {$prefixe}affectations a, {$prefixe}matieres m, {$prefixe}classes c, {$prefixe}groupes g WHERE code_prof='$idpers' AND a.code_classe = c.code_class AND a.code_matiere = m.code_mat AND a.code_groupe = group_id ORDER BY c.libelle,m.libelle";
 $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
 // patch pour problème sous-matière à 0
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
 }
@@ -105,7 +108,7 @@ if (isset($_POST["create2"])) {
 <?php print $option ?>
 <option value="tous" id="<?php print $selectcss?>" > <?php print "Cumul" ?> </option>
 <?php
-for($i=1;$i<count($data);$i++){
+for($i=1;$i<countTriade($data);$i++){
  	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
 		continue;
 	}else {
@@ -135,7 +138,7 @@ $data=listingMatiereProf($idpers,$idClasse);
 $pe=preg_replace('/"/',"'",rechercheInfoPerso($idpers,0));
 $lieuenseignant=preg_replace('/"/',"'",rechercheInfoPerso($idpers,1));
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$matiere=chercheMatiereNom3($data[$i][0]);
 	$tablisteMatiere[$matiere]=ucwords($matiere);
 	$sousmatiere=chercheSousMatiereNom($data[$i][0]);
@@ -167,11 +170,13 @@ if ($totalUnite == 1) { $totalUnite="NET"; } else {  $totalUnite="BRUT"; }
 &nbsp;&nbsp;<input type="submit" class="button" value="Autre période" /><input type=hidden name="idprof" value="<?php print $idpers ?>" /></form>
 <hr>
 
-<table width="100%" border=1 bordercolor="#000000" bgcolor="#FFFFFF" >
-<tr>	<td id="bordure" bgcolor="yellow"  ><font class=T1>PRESTATION</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class=T1>Nb HEURES</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class=T1>BASE</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class=T1>TOTAL <?php print $totalUnite?></font></td>
+<div style="overflow-x:auto;margin:8px 0">
+<table style="width:100%;border-collapse:collapse">
+<tr>
+	<th class="cc-th">Prestation</th>
+	<th class="cc-th" style="text-align:center">Nb heures</th>
+	<th class="cc-th" style="text-align:center">Base</th>
+	<th class="cc-th" style="text-align:center">Total <?php print $totalUnite ?></th>
 </tr>
 
 <?php 
@@ -255,13 +260,13 @@ $Y+=10;
 $data=affEvalHoraire();  //  id,libelle,taux,type_prestation
 $pdf->SetFont('Arial','',10);
 $ii=0;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$taux=$data[$i][2];
 	/* -------------------------------- */
 	$TabnbHeureTOTAL=nbHeureVacation($idpers,$data[$i][0],$dateDebut,$dateFin);
 	$secondeTOTAL=0;
 	$nbSeanceTOTAL=0;
-	for($j=0;$j<count($TabnbHeureTOTAL);$j++) {
+	for($j=0;$j<countTriade($TabnbHeureTOTAL);$j++) {
 		$ok=0;
 		if (($TabnbHeureTOTAL[$j][7] == $idClasse) || ($idClasse == "tous")) {
 			if ($TabnbHeureTOTAL[$j][12] != 1) { 
@@ -294,7 +299,7 @@ for($i=0;$i<count($data);$i++) {
 	// id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,type_prestation,idmatiere,s.coursannule
 	$seconde=0;
 	$nbSeance=0;
-	for($j=0;$j<count($TabnbHeure);$j++) {
+	for($j=0;$j<countTriade($TabnbHeure);$j++) {
 		$ok=0;
 		if (($TabnbHeure[$j][7] == $idClasse) || ($idClasse == "tous")) {
 			if ($TabnbHeure[$j][12] != 1) { 
@@ -443,7 +448,7 @@ $X=100;
 
 
 $dataP=paiementEffectue($idpers); // montant_ht,montant_tc,montant_tv
-for($j=0;$j<count($data);$j++) {
+for($j=0;$j<countTriade($data);$j++) {
 	$montantverseht+=$dataP[$j][0];
 	$paiementeffectue+=$dataP[$j][1];
 }
@@ -525,7 +530,7 @@ $pdf->SetFont('Arial','',12);
 $X=20;$Y+=10;
 
 $uu=0;
-for($i=0;$i<count($liste);$i++) {
+for($i=0;$i<countTriade($liste);$i++) {
 
 	$dateDuCours=dateForm($liste[$i][3]);
 	$heureDuCours=timeForm($liste[$i][4]);
@@ -570,7 +575,7 @@ $pdf->MultiCell(60,8,"* Date des évaluations",0,'L',0);
 $pdf->SetFont('Arial','',12);
 $X=20;$Y+=10;
 $pdf->SetXY($X,$Y);
-for($i=0;$i<count($liste);$i++) {
+for($i=0;$i<countTriade($liste);$i++) {
 	$dateDuCours=dateForm($liste[$i][3]);
 	$heureDuCours=timeForm($liste[$i][4]);
 	$duree=timeForm($liste[$i][5]);$duree=preg_replace('/:/',"h",$duree);
@@ -621,9 +626,9 @@ $pdf->output('F',$fichier);
 $pdf->close();
 
 ?>
-</table>
+</table></div>
 
-<?php 
+<?php
 $BRUT="";
 if (defined("TVAVACATION")) {
 	if (TVAVACATION == "oui") {
@@ -633,16 +638,13 @@ if (defined("TVAVACATION")) {
 ?>
 
 <br /><br />
-<table width="60%" border=1 bordercolor="#000000" bgcolor="#FFFFFF" align="center" >
-<tr><td align='right' id=bordure ><font class="T2">TOTAL <?php print $BRUT." ".$totalUnite ?> REGLE : </font></td><td align='right' bgcolor="#CCCCCC" ><?php print $totalRegler ?>&nbsp;</td></tr>
-<?php 
-if (defined("TVAVACATION")) {
-	if (TVAVACATION == "oui") {
-?>
-<tr><td align='right' id=bordure ><font class="T2">TOTAL TTC REGLE : </font></td><td align='right' bgcolor="#CCCCCC" ><b><?php print $totalReglerTTC ?></b>&nbsp;</td></tr>
-<tr><td align='right' id=bordure ><font class="T1">TVA (<?php print TVAVACATIONTAUX ?>) : </font></td><td align='right' bgcolor="#CCCCCC" ><?php print $totalTVA ?>&nbsp;</td></tr>
-<?php } } ?>
-</table>
+<div style="text-align:right;padding:8px 12px;background:#f0f2fa;border:1px solid #c5cae9;border-radius:4px;margin:8px 0">
+  <div>Total <?php print $BRUT." ".$totalUnite ?> réglé : <b><?php print $totalRegler ?></b></div>
+  <?php if (defined("TVAVACATION") && TVAVACATION == "oui"): ?>
+  <div>Total TTC réglé : <b><?php print $totalReglerTTC ?></b></div>
+  <div>TVA (<?php print TVAVACATIONTAUX ?>) : <?php print $totalTVA ?></div>
+  <?php endif; ?>
+</div>
 <br /><br />
 
 
@@ -701,7 +703,7 @@ function bul2(form) {
 
 <!-- // fin form -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
 </BODY>
 </HTML>

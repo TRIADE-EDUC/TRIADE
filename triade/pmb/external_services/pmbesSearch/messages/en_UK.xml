@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
+$Id: en_UK.xml,v 1.6 2021/03/04 09:48:47 dbellamy Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -18,7 +18,7 @@ $Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
   2 (SEARCH_AUTHOR)=author, 
   3 (SEARCH_EDITOR)=editor, 
   4 (SEARCH_COLLECTION)=collection,
-  6 (SEARCH_CATEGORIES)=categories/subject heading words</entry>
+  5 (SEARCH_CATEGORIES)=categories/subject heading words</entry>
   <entry code="simple_search_inputs_description_searchTerm">string to search</entry>
   <entry code="simple_search_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on the access rights. 
 -1: Do not take into account</entry>
@@ -46,6 +46,8 @@ $Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
   <entry code="get_advanced_sfone_inputs_description_lang">The language in which we want to see the result</entry>
   <entry code="get_advanced_sfone_inputs_description_fetch_values">if we also want the different possible values of the field (for the fields for example)</entry>
   <entry code="get_advanced_sfone_outputs_description"></entry>
+  <entry code="get_advanced_sfone_inputs_description_nocache"></entry>
+  <entry code="get_advanced_sfone_inputs_description_search_object"></entry>
   <entry code="get_advanced_sfone_outputs_description_search_field">a search field</entry>
 
   <entry code="advancedSearch_description">Make an advanced search</entry>
@@ -57,7 +59,7 @@ $Id: en_UK.xml,v 1.4 2016-09-20 15:17:15 dgoron Exp $ -->
   <entry code="advancedSearch_inputs_description_search_operator">the search operator</entry>
   <entry code="advancedSearch_inputs_description_search_value">the search values</entry>
   <entry code="advancedSearch_inputs_description_pmbUserId">the id of a pmb user, to filter the results depending on the access rights. -1: do not take into account.</entry>
-  <entry code="advancedSearch_inputs_description_OPACUserId">the id of a borrower, to filter the results, depending on the access rights
+  <entry code="advancedSearch_inputs_description_OPACEmprId">the id of a borrower, to filter the results, depending on the access rights
 	-1: Do not take into account
 	0: anonymous borrower
 	x: id of the borrower</entry>

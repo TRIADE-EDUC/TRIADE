@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: factures.tpl.php,v 1.36 2019-05-27 12:11:00 btafforeau Exp $
+// $Id: factures.tpl.php,v 1.37 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -60,7 +60,7 @@ $faclist_form = "
 
 
 //	------------------------------------------------------------------------------
-//	$fact_modif_form : template de crÃ©ation/modification pour les factures 
+//	$fact_modif_form : template de création/modification pour les factures 
 //	------------------------------------------------------------------------------
 $fact_modif_form = "
 <form class='form-".$current_module."' id='fact_modif' name='fact_modif' method='post' action=\"\" 
@@ -139,7 +139,7 @@ $fact_modif_form = "
 		<br /> 
 
 		<div class='row'>
-			<img id='comment_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('comment_', true);\"/>
+            ".get_expandBase_button('comment_')."
     		<label class='etiquette'>".htmlentities($msg['acquisition_commentaires'], ENT_QUOTES, $charset)."</label>&nbsp;
 		</div>
 		<div class='row' style='margin-left:30px'>
@@ -339,7 +339,7 @@ try {
 
 
 //	------------------------------------------------------------------------------
-//	template de crÃ©ation/modification pour les lignes de factures
+//	template de création/modification pour les lignes de factures
 //	------------------------------------------------------------------------------
 $frame_modif = " 
 <table frame='all' style='table-layout:fixed;background-color:inherit; width:100%'>
@@ -369,7 +369,7 @@ $frame_modif = "
 
 <script type='text/javascript' >
 
-//Mise Ã  jour de la fenetre parent
+//Mise à jour de la fenetre parent
 maj();
 
 function complete_form() {

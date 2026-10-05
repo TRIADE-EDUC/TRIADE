@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sync.inc.php,v 1.13 2017-11-30 10:00:36 dgoron Exp $
+// $Id: sync.inc.php,v 1.15.4.1 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -11,7 +11,7 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 //ignore_user_abort(true);
 
 /*
-Cette page ne fait pas la synchro, elle gÃ©nÃ¨re une requete ajax qui elle la fera
+Cette page ne fait pas la synchro, elle génère une requete ajax qui elle la fera
 * */
 $conn->get_sources();
 print "<div style='width:710px'>
@@ -24,7 +24,7 @@ print "<div style='width:710px'>
 <div id='erreurpos'></div>
 </div>";
 
-//VÃ©rification qu'il n'y a pas de synchronisation en cours...
+//Vérification qu'il n'y a pas de synchronisation en cours...
 $is_already_sync=false;
 $recover_env="";
 $recover=false;
@@ -44,10 +44,12 @@ if (pmb_mysql_num_rows($resultat)) {
 	}
 } else {
 	if (isset($_GET["env"])) {
-		$env = unserialize($_GET["env"]);
+	    $env = unserialize($_GET["env"], ['allowed_classes' => false]);
+		$env = $conn->check_environnement($source_id, $env);
 	} else {
 		$env = $conn->get_maj_environnement($source_id);
 	}
+
 	if (isset($_GET["converted"])) {
 		$env["converted"] = 1;
 	}
@@ -58,13 +60,15 @@ if (pmb_mysql_num_rows($resultat)) {
 		$env["suffix"] = $_GET["suffix"];
 	}
 }
-//Le bouton annuler abort la requÃ¨te de synchro et en gÃ©nÃ¨re une autre synchrone cette fois qui fait l'annulation.
+
+//Le bouton annuler abort la requète de synchro et en génère une autre synchrone cette fois qui fait l'annulation.
 print "<div class='row' style='text-align:center'><input type='button' id='cancel_sync' class='bouton' value ='".htmlentities($msg["76"],ENT_QUOTES,$charset)."' onClick='document.getElementById(\"sync_message\").innerHTML=\"<blink>".htmlentities($msg["connecteurs_sync_annulation"],ENT_QUOTES,$charset)."</blink>\"; request.abort();abort_request(); document.location=\"admin.php?categ=connecteurs&sub=in\";'/><br /><input type='button' style='visibility:hidden;' id='get_back' class='bouton' value ='".htmlentities($msg["654"],ENT_QUOTES,$charset)."' onClick='document.location=\"admin.php?categ=connecteurs&sub=in\";'/></div>
 </div>";
 
 //highlight_string(print_r($env, true));
 
 ?>
+
 <script type="text/javascript">
 	function abort_request() {
 		//Envoi une requete synchrone pour annuler la synchro en cours
@@ -79,7 +83,7 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
 		         request = new ActiveXObject("Microsoft.XMLHTTP");
 		       } catch (failed) {
 		         request = false;
-		       }  
+		       }
 		     }
 		   }
 
@@ -91,8 +95,8 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
 	     request.send(null);
 	}
 
-	//GÃ©nÃ¨re la requete de synchronisation:
-	
+	//Génère la requete de synchronisation:
+
 	var request = false;
 	try {
     	request = new XMLHttpRequest();
@@ -104,7 +108,7 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
         		request = new ActiveXObject("Microsoft.XMLHTTP");
        		} catch (failed) {
         		request = false;
-       		}  
+       		}
 		}
 	}
 
@@ -113,7 +117,7 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
    		if (IE6 && (request.readyState == 3)) {
 	   		return;
    		}
-   		
+
    		if ((request.readyState > 2)) {
 	        if (request.status == 200) {
 		 		var serverResponse = request.responseText;
@@ -122,7 +126,7 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
 	        }
 	   	}
    }
-   
+
    if (!request) {
      alert("Error initializing XMLHttpRequest!");
    }
@@ -135,7 +139,7 @@ print "<div class='row' style='text-align:center'><input type='button' id='cance
    }
    request.send(null);
 </script>
-<?
+<?php
 
 
 

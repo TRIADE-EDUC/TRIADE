@@ -1,13 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_view_django.class.php,v 1.11 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_view_django.class.php,v 1.17.8.1.2.1 2025/04/24 12:37:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($include_path."/h2o/h2o.php");
 
 class frbr_entity_common_view_django extends frbr_entity_common_view{
+
+	public $default_template = '';
 
 	public function __construct($id=0){
 	    parent::__construct((int) $id);
@@ -20,7 +22,7 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 		if(!isset($this->parameters->active_template) || $this->parameters->active_template == ""){
 			$this->parameters->active_template = $this->default_template;
 		}
-		
+
 		$form.="
 		<div class='row'>
 			<div class='colonne3'>
@@ -31,7 +33,7 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 				<textarea name='frbr_entity_common_view_django_template_content' id='frbr_entity_common_view_django_template_content'>".htmlentities($this->parameters->active_template, ENT_QUOTES, $charset)."</textarea>
 				<script src='./javascript/ace/ace.js' type='text/javascript' charset='utf-8'></script>
 				<script>
-				 	pmbDojo.aceManager.initEditor('frbr_entity_common_view_django_template_content');						
+				 	pmbDojo.aceManager.initEditor('frbr_entity_common_view_django_template_content');
 				</script>
 			</div>
 		</div>";
@@ -39,7 +41,7 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 	}
 
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $frbr_entity_common_view_django_template_content;
@@ -48,7 +50,7 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 		return parent::save_form();
 	}
 
-	public function render($datas){
+	public function render($datas, $grouped_datas = []){
 		if(!isset($datas['id']) || !$datas['id']){
 			$datas['id'] = $this->get_entity_dom_id();
 		}
@@ -61,7 +63,10 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 		try{
 			$html = H2o::parseString($this->parameters->active_template)->render($datas);
 		}catch(Exception $e){
-			$html = $this->msg["frbr_entity_common_view_error_template"];
+		    $html = '<!-- '.$e->getMessage().' -->';
+		    $html .= '<div class="error_on_template" title="' .htmlspecialchars($e->getMessage(), ENT_QUOTES). '">';
+		    $html .= $this->msg["frbr_entity_common_view_error_template"];
+		    $html .= '</div>';
 		}
 		return $html;
 	}
@@ -197,8 +202,28 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 				array(
 						'var' => "env_vars.browser",
 						'desc' => $this->msg['frbr_entity_common_view_django_session_vars_browser_desc'],
+				),
+			    array(
+			        'var' => "env_vars.server_addr",
+			        'desc' => $this->msg['frbr_entity_common_view_django_session_vars_server_addr_desc'],
+			    ),
+				array(
+					'var' => "env_vars.remote_addr",
+					'desc' => $this->msg['frbr_entity_common_view_django_session_vars_remote_addr_desc'],
 				)
 			)
+		);
+		$format_datas[] = array(
+		    'var' => "frbrcadre",
+		    'tpl' => "frbrcadre get_vars.id 'entity_type' 'id_cadre'",
+		    'desc' => $this->msg['frbr_entity_common_view_django_frbrcadre_tag'],
+		    'tag' => '1'
+		);
+		$format_datas[] = array(
+		    'var' => "frbrgraph",
+		    'tpl' => "frbrgraph get_vars.id 'entity_type'",
+		    'desc' => $this->msg['frbr_entity_common_view_django_frbrgraph_tag'],
+		    'tag' => '1'
 		);
 		return $format_datas;
 	}
@@ -224,10 +249,18 @@ class frbr_entity_common_view_django extends frbr_entity_common_view{
 					model: model,
 					showRoot: false,
 					onDblClick: function(item){
+                        var itemVar = item.var[0];
+                        if (item.tpl && item.tpl[0]) {
+                            itemVar = item.tpl[0];
+                        }
+                        var tpl = '{{'+itemVar+'}}';
+                        if (item.tag && item.tag[0]) {
+                            tpl = '{%'+itemVar+'%}';
+                        }
 						if(pmbDojo.aceManager.getEditor('".$textarea."')){
-							pmbDojo.aceManager.getEditor('".$textarea."').insert('{{'+item.var[0]+'}}');
+							pmbDojo.aceManager.getEditor('".$textarea."').insert(tpl);
 						}else{
-							document.getElementById('".$textarea."').value = document.getElementById('".$textarea."').value + '{{'+item.var[0]+'}}';		
+							document.getElementById('".$textarea."').value = document.getElementById('".$textarea."').value + tpl;
 						}
 					},
 				},'struct_tree');

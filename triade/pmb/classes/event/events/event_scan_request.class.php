@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: event_scan_request.class.php,v 1.1 2016-05-10 10:07:59 vtouchard Exp $
+// $Id: event_scan_request.class.php,v 1.1 2016/05/10 10:07:59 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

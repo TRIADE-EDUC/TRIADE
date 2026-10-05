@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_location_facette_controler.js,v 1.3 2017-09-12 09:48:22 jpermanne Exp $
+// $Id: map_location_facette_controler.js,v 1.3 2017/09/12 09:48:22 jpermanne Exp $
 
 const TYPE_RECORD = 11;
 const TYPE_LOCATION = 15;

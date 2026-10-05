@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: newrecords_rss.php,v 1.1 2015-04-16 12:31:00 ngantier Exp $
+// $Id: newrecords_rss.php,v 1.1 2015/04/16 12:31:00 ngantier Exp $
 
 $base_path=".";
 $include_path=$base_path."/includes";

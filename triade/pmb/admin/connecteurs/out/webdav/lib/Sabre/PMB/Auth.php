@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Auth.php,v 1.6 2015-06-02 13:48:57 dgoron Exp $
+// $Id: Auth.php,v 1.8 2022/01/10 08:31:27 dgoron Exp $
 namespace Sabre\PMB;
 
 use Sabre\DAV;
@@ -30,7 +30,7 @@ use Sabre\DAV;
 //				}	
 //			break;
 //			case "opac" :
-//				//TODO vÃ©rification abonnement...
+//				//TODO vérification abonnement...
 //				if($username && $password){
 //					$query ="select id_empr, concat(empr_nom,' ',empr_prenom) from empr where empr_login='".$username."' and empr_password='".$password."'";
 //					$result = pmb_mysql_query($query);
@@ -50,18 +50,20 @@ class Auth extends DAV\Auth\Backend\AbstractDigest {
 	protected $mode;
 	
 	public function __construct($mode){
+	    global $pmb_url_base;
 		$this->mode = $mode;
+		$this->realm = md5($pmb_url_base);
 	}
 	
     public function getDigestHash($realm,$username) {
 		global $webdav_current_user_id,$webdav_current_user_name;
-		global $base_path,$charset,$dbh;
+		global $base_path;
 		
 		switch($this->mode){
 			
 			case "gestion" :
 				$query = "SELECT user_digest, userid, username FROM users WHERE username='$username'";
-				$result = pmb_mysql_query($query,$dbh);
+				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result)){
 					$webdav_current_user_id= pmb_mysql_result($result,0,1);
 					$webdav_current_user_name = pmb_mysql_result($result,0,2);
@@ -72,7 +74,7 @@ class Auth extends DAV\Auth\Backend\AbstractDigest {
 				$ext_auth=false;				
 				if(file_exists($base_path.'/opac_css/includes/ext_auth.inc.php')) {
 					$q ="select empr_digest, id_empr, concat(empr_nom,' ',empr_prenom) as empr_name from empr where empr_login='".$username."'";
-					$r = pmb_mysql_query($q,$dbh);
+					$r = pmb_mysql_query($q);
 					if(pmb_mysql_num_rows($r)){
 						$row = pmb_mysql_fetch_object($r);
 						if ($row->empr_digest) {
@@ -85,7 +87,7 @@ class Auth extends DAV\Auth\Backend\AbstractDigest {
 				} 
 				if ($ext_auth==false) {
 					$q ="select empr_digest, id_empr, concat(empr_nom,' ',empr_prenom) as empr_name from empr where empr_login='".$username."'";
-					$r = pmb_mysql_query($q,$dbh);
+					$r = pmb_mysql_query($q);
 					if(pmb_mysql_num_rows($r)){
 						$row = pmb_mysql_fetch_object($r);
 						if ($row->empr_digest) {

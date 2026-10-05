@@ -1,20 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_ui.class.php,v 1.11 2018-03-21 15:42:14 apetithomme Exp $
+// $Id: nomenclature_record_ui.class.php,v 1.13 2023/05/04 09:22:14 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 
 /**
  * class nomenclature_record_ui
- * ReprÃ©sente la nomenclature d'une notice
+ * Représente la nomenclature d'une notice
  */
-
+global $class_path;
 require_once($class_path."/nomenclature/nomenclature_record_formations_ui.class.php");
 require_once($class_path."/nomenclature/nomenclature_record_child_ui.class.php");
-
 require_once($class_path."/nomenclature/nomenclature_datastore.class.php");
 require_once($class_path."/notice_relations_collection.class.php");
 
@@ -32,6 +31,8 @@ class nomenclature_record_ui {
 	 */
 
 	public $nomenclature_record;
+	public $id;
+	public $id_parent;
 		
 	/**
 	 * Constructeur
@@ -42,10 +43,9 @@ class nomenclature_record_ui {
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		global $dbh;
 		global $pmb_nomenclature_record_children_link;
 		
-		$this->id=$id*1;	
+		$this->id = intval($id);	
 		$this->id_parent=0;
 		
 		$notice_relations = notice_relations_collection::get_object_instance($this->id);

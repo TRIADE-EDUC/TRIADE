@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_authpersos.class.php,v 1.3 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: searcher_authorities_authpersos.class.php,v 1.6 2021/01/14 13:58:49 jlaurent Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -39,6 +39,19 @@ class searcher_authorities_authpersos extends searcher_autorities {
 		return ' authperso_index_infos_global';
 	}
 	
+	public function add_fields_restrict($fields_restrict = array()) {
+	    if (!empty($this->var_table)) {
+	        for ($i = 0; $i < count($fields_restrict) ; $i++) {
+	            for ($j = 0; $j < count($fields_restrict[$i]["values"]); $j++) {
+	                if ($fields_restrict[$i]["values"][$j]) {
+	                    $fields_restrict[$i]["values"][$j] = str_replace("!!id_authperso!!", $this->var_table['authperso_num'], $fields_restrict[$i]["values"][$j]);
+	                }
+	            }
+	        }
+	    }
+	    parent::add_fields_restrict($fields_restrict);
+	}
+	
 	protected function get_full_results_query(){
 	    global $id_authperso;
 	    
@@ -49,6 +62,15 @@ class searcher_authorities_authpersos extends searcher_autorities {
 	        $query .= ' and authperso_authority_authperso_num ='.($id_authperso);
 	    }
 	    return $query;
+	}
+	
+	public function init_fields_restrict($mode) {
+	    $mode = intval($mode);
+	    if ($mode > 1000){
+	        $mode -= 1000;
+	        $this->id_authperso = $mode;
+	    }
+	    return true;
 	}
 	
 }

@@ -1,10 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: doc_command.inc.php,v 1.7 2017-11-07 15:44:52 ngantier Exp $
+// $Id: doc_command.inc.php,v 1.10 2023/11/21 14:50:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $include_path, $msg, $charset;
+global $pmb_url_base, $id_empr, $id;
+global $opac_rgaa_active;
+global $nom, $telephone, $mail, $nbre, $commentaire;
+global $opac_photo_email_form;
+global $opac_biblio_name, $opac_biblio_email;
 
 require_once("$include_path/mail.inc.php");
 
@@ -24,9 +31,17 @@ $form_mailing="
 		return true;
 	}
 </script>
-<form name='mailing' action='index.php?lvl=doc_command&id=$id&mode_phototeque=1' method='post'>
-	<h3>".htmlentities($msg["command_phototeque_coord"],ENT_QUOTES,$charset)."</h3>
-	<table style='width:100%'>
+<form name='mailing' action='index.php?lvl=doc_command&id=$id&mode_phototeque=1' method='post'>";
+
+if ($opac_rgaa_active) {
+    $form_mailing .= "<h1>".htmlentities($msg["command_phototeque_command"],ENT_QUOTES,$charset)."</h1>";
+    $form_mailing .= "<h2>".htmlentities($msg["command_phototeque_coord"],ENT_QUOTES,$charset)."</h2>";
+} else {
+    $form_mailing .= "<h3>".htmlentities($msg["command_phototeque_coord"],ENT_QUOTES,$charset)."</h3>";
+}
+
+//<h3>".htmlentities($msg["command_phototeque_coord"],ENT_QUOTES,$charset)."</h3>
+$form_mailing .="<table style='width:100%' role='presentation'>
 		<tr>
 			<td>".htmlentities($msg["command_phototeque_name"],ENT_QUOTES,$charset)."</td><td><input type='text' name='nom' id='nom' size='40' value='!!nom!!'></td>
 		</tr>
@@ -49,7 +64,7 @@ $form_mailing="
 		</tr>
 	</table>
 </form>";
-
+$id_empr = intval($id_empr);
 if ($nom) {
 	$corps="";
 	if ($id_empr) {
@@ -61,11 +76,11 @@ if ($nom) {
 		}
 	}
 	$corps.="<a href='".$pmb_url_base."catalog.php?categ=isbd&id=$id'>".htmlentities(sprintf($msg["command_phototeque_doc_id"],$id),ENT_QUOTES,$charset)."</a><br />";
-	$corps.=htmlentities($msg["command_phototeque_name"],ENT_QUOTES,$charset)." : ".$nom."<br />";
-	$corps.=htmlentities($msg["command_phototeque_phone"],ENT_QUOTES,$charset)." : ".$telephone."<br />";
-	$corps.=htmlentities($msg["command_phototeque_email"],ENT_QUOTES,$charset)." : ".$mail."<br />";
-	$corps.=htmlentities($msg["command_phototeque_nbre"],ENT_QUOTES,$charset)." : ".$nbre."<br />";
-	$corps.=htmlentities($msg["command_phototeque_comment"],ENT_QUOTES,$charset)." : ".$commentaire."<br />";
+	$corps.=htmlentities($msg["command_phototeque_name"]." : ".$nom,ENT_QUOTES,$charset)."<br />";
+	$corps.=htmlentities($msg["command_phototeque_phone"]." : ".$telephone,ENT_QUOTES,$charset)."<br />";
+	$corps.=htmlentities($msg["command_phototeque_email"]." : ".$mail,ENT_QUOTES,$charset)."<br />";
+	$corps.=htmlentities($msg["command_phototeque_nbre"]." : ".$nbre,ENT_QUOTES,$charset)."<br />";
+	$corps.=htmlentities($msg["command_phototeque_comment"]." : ".$commentaire,ENT_QUOTES,$charset)."<br />";
 	//Envoi du mail
 	$mails=explode(" ",$opac_photo_email_form);
 	$headers  = "MIME-Version: 1.0\n";
@@ -99,4 +114,3 @@ if ($nom) {
 	}
 	print $form_mailing;
 }
-?>

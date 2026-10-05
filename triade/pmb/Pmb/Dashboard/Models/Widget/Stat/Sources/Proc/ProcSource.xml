@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: ProcSource.xml,v 1.1 2024/02/26 15:08:53 dbellamy Exp $ -->
+
+<source>
+    
+    <methods>
+
+        <test>
+            <type>sql</type>
+            <query>select libelle as "x", count(*) as "y" from empr join empr_categ on empr_categ=id_categ_empr group by empr_categ</query>
+        </test>
+<!-- 
+        <proc>
+            <type>method</type>
+        </proc> -->
+
+    </methods>
+    
+</source>

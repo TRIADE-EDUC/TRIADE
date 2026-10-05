@@ -1,20 +1,20 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: drag_n_drop.js,v 1.27 2016-12-13 10:54:34 jpermanne Exp $
+// $Id: drag_n_drop.js,v 1.30.8.1 2024/05/28 13:47:58 jparis Exp $
 
 
 /*
  * Utilisation :
  * 
- * Definition des elements pouvant être deplaces :
+ * Definition des elements pouvant �tre deplaces :
  *	
- * Les éléments draggable doivent avoir obligatoirement un id !
+ * Les �l�ments draggable doivent avoir obligatoirement un id !
  * Attribut draggable="yes" (obligatoire)
  * Attribut dragtype="$TXT" (obligatoire= Type d'element a deplacer)
  * Attribut callback_before="$FCT" (Nom de la fonction appelee sur clic avant deplacement)
- * Attribut callback_after="$FCT" (Nom de la fonction appelee sur relache apres deplaçement)
- * Attribut dragflash="yes"  (Affichage d'un symbole au survol d'un element deplaçable)
+ * Attribut callback_after="$FCT" (Nom de la fonction appelee sur relache apres depla�ement)
+ * Attribut dragflash="yes"  (Affichage d'un symbole au survol d'un element depla�able)
  * Attribut dragicon="$IMG" (Image affichee lors du deplacement)	
  * Attribut dragtext="$TEXT" (Texte affiche lors du deplacement)
  * Attribut draghand="$ID" (ID de la poignee utilisee pour deplacer l'element)
@@ -26,7 +26,7 @@
  * Attribut highlight=$FCT" (Nom de la fonction appelee au survol du recepteur)
  * Attribut downlight=$FCT" (Nom de la fonction apres au survol du recepteur)
  * 
- * Appeller la fonction "init_drag()" pour rechercher tous les elements deplaçables de la page
+ * Appeller la fonction "init_drag()" pour rechercher tous les elements depla�ables de la page
  * 
  * La fonction "dragtype_recepttype(dragged,target)" est appelee pour associer l'element deplace et l'element cible (si elle existe)
  * 
@@ -34,7 +34,7 @@
  */ 
  
 
-var	draggable=new Array(); 	//Elements deplaçables
+var	draggable=new Array(); 	//Elements depla�ables
 var recept=new Array();		//Elements recepteurs
 var handler=new Array();	//Poignees
 var is_down=false;
@@ -106,6 +106,12 @@ allow_drag['instru']=new Array();
 allow_drag['instru']['instru']=true;
 allow_drag['search_perso']=new Array();
 allow_drag['search_perso']['search_perso']=true;
+allow_drag['oeuvre_expression']=new Array();
+allow_drag['oeuvre_expression']['oeuvre_expression']=true;
+allow_drag['oeuvre_expression_from']=new Array();
+allow_drag['oeuvre_expression_from']['oeuvre_expression_from']=true;
+allow_drag['other_link']=new Array();
+allow_drag['other_link']['other_link']=true;
 
 var r_x=new Array();
 var r_y=new Array();
@@ -162,9 +168,9 @@ function mouse_down_draggable(e) {
 		e.cancelBubble=true;
 		e.returnValue=false;
 	}
-	//On commence par recalculer les récepteurs.
+	//On commence par recalculer les r�cepteurs.
 	recalc_recept();
-	//Recuperation de l'element d'origine qui a reçu l'evenement
+	//Recuperation de l'element d'origine qui a re�u l'evenement
 	if (e.target) var targ=e.target; else var targ=e.srcElement;
 
 	//On nettoie tout drag en cours
@@ -314,7 +320,7 @@ function up_dragged(e) {
 	// appelle la fonction qui gere le drag si elle existe et qu'il y a un recepteur en dessous 
 	
 	if (current_drag!=null) {
-		//Y-a-t-il un recepteur en dessous du lâche ?
+		//Y-a-t-il un recepteur en dessous du l�che ?
 		try{
 			target=is_on();
 		} catch(e){
@@ -337,6 +343,11 @@ function up_dragged(e) {
 		if (dragged && dragged.getAttribute("callback_after")) {
 			eval(dragged.getAttribute("callback_after")+"(dragged,e,'"+target+"')");
 		}
+
+		if(dragged) {
+			document.body.dispatchEvent(new CustomEvent("dragged_" + dragged.getAttribute("id")));
+		}
+
 		//On nettoie la reference a l'element d'origine
 		dragged=null;
 	}
@@ -359,7 +370,7 @@ function move_dragged(e) {
 		var pos=getCoordinate(e);
 
 		//Positionnement du clone pour que le pointeur de la souris soit au milieu !
-		// On gère le cas de la présence d'un handler
+		// On g�re le cas de la pr�sence d'un handler
 		var current_drag_handler = document.getElementById(current_drag.getAttribute("handler"));
 		if (current_drag_handler) {
 			var encx=current_drag_handler.offsetWidth;
@@ -425,7 +436,7 @@ function create_dragged(targ) {
 				clone=t;
 			} else {
 				clone=targ.cloneNode(true);
-				clone.style.width=targ.offsetWidth+'px';
+//				clone.style.width=targ.offsetWidth+'px';
 //				clone.style.height=targ.offsetHeight+'px';
 			}
 		}
@@ -436,10 +447,10 @@ function create_dragged(targ) {
 		current_drag.appendChild(clone);
 		current_drag.style.position="absolute";
 		current_drag.style.visibility="hidden";
-		current_drag=document.getElementById("att").appendChild(current_drag);
 		current_drag.style.width=targ.offsetWidth;
+		current_drag=document.getElementById("att").appendChild(current_drag);
 
-		// On gère le cas de la présence d'un handler
+		// On g�re le cas de la pr�sence d'un handler
 		var current_drag_handler = document.getElementById(current_drag.getAttribute("handler"));
 		if (current_drag_handler) {
 			var encx=current_drag_handler.offsetWidth;
@@ -473,7 +484,7 @@ function parse_drag(n) {
 			recept[l]=n.getAttribute("id");
 			calc_recept(l);
 		} 
-		//C'est un element deplaçable
+		//C'est un element depla�able
 		if (n.getAttribute("draggable")=="yes") {
 
 			draggable[draggable.length]=n.getAttribute("id");
@@ -486,7 +497,7 @@ function parse_drag(n) {
 			} else {
 				tmp=n;
 			}
-			//Implementation des gestionnaires d'evenement pour les elements deplaçables
+			//Implementation des gestionnaires d'evenement pour les elements depla�ables
 			tmp.onmousedown=function(e) {
 				mouse_down_draggable(e);
 			}
@@ -550,7 +561,7 @@ function init_recept() {
 function init_drag() {
 
 	//Reinitialisation des tableaux et variables
-	draggable=new Array(); 	//Elements deplaçables
+	draggable=new Array(); 	//Elements depla�ables
 	recept=new Array();		//Elements recepteurs
 	handler=new Array();	//Poignees
 	is_down=false;
@@ -566,7 +577,7 @@ function init_drag() {
 	r_height=new Array();
 	r_highlight="";
 
-	//Recherche de tous les elements deplaçables et des recepteurs
+	//Recherche de tous les elements depla�ables et des recepteurs
 	parse_drag(document.body);
 
 	//On surveille tout ce qui se passe dans le document au niveau de la souris (sauf click down !)

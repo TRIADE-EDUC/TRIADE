@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_ontopmb_item.tpl.php,v 1.1 2017-01-06 16:10:52 tsamson Exp $
+// $Id: onto_ontopmb_item.tpl.php,v 1.4 2023/08/17 09:47:55 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $ontology_tpl,$msg,$base_path,$ontology_id;
 
 $ontology_tpl['form_scripts'] = '
-<script type="text/javascript">
+<script>
 	!!onto_datasource_validation!!
 	function submit_onto_form(){
 		var error_message = "";
@@ -20,9 +20,11 @@ $ontology_tpl['form_scripts'] = '
 		}
 		if(error_message != ""){
 			alert(error_message);
+			return false;
 		}else{
 			document.forms["!!onto_form_name!!"].submit();
 		}
+		return true;
 	}	
 		
 	!!onto_form_del_script!!
@@ -112,7 +114,7 @@ $ontology_tpl['form_scripts'] = '
 		}
 		input_available_lang.value=JSON.stringify(available_lang);
 		
-		//on modifi le combobox lang pour vÃ©rifier et ajouter si besoin la langue de la ligne supprimÃ©e
+		//on modifi le combobox lang pour vérifier et ajouter si besoin la langue de la ligne supprimée
 		for(var i in available_lang){
 			var add=true;
 			for(var j in combobox_lang.options){
@@ -189,6 +191,9 @@ $ontology_tpl['form_scripts'] = '
 	
 	function onto_remove_selector_value(element_name,element_order){
 		document.getElementById(element_name+"_"+element_order+"_value").value = "";
+        if (document.getElementById(element_name+"_"+element_order+"_is_draft")) {
+            document.getElementById(element_name+"_"+element_order+"_is_draft").value = "0";
+        }
 		document.getElementById(element_name+"_"+element_order+"_type").value = "";
 		document.getElementById(element_name+"_"+element_order+"_display_label").value = "";
 	}

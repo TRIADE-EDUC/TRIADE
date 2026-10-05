@@ -2,17 +2,18 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_articles.class.php,v 1.5 2016-09-21 09:22:57 apetithomme Exp $
+// $Id: cms_articles.class.php,v 1.6 2022/02/24 14:55:24 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/cms/cms_articles.tpl.php");
 
-//gÃ¨re une liste d'articles
+//gère une liste d'articles
 class cms_articles {
 	public $num_section;	// id de la rubrique parente
-	protected $recursive;	// bolÃ©en dÃ©finissant si on veut aussi les articles des rubriques filles...
-	public $list;			// tableau contenant les ids des articles Ã  lister...
+	protected $recursive;	// boléen définissant si on veut aussi les articles des rubriques filles...
+	public $list;			// tableau contenant les ids des articles à lister...
 	public $section_title;	// titre de la rubrique 
 	
 	public function __construct($num_section=0,$recursive = false){
@@ -28,8 +29,9 @@ class cms_articles {
 	}
 	
 	protected function _recursive_fetch_data($num_parent=0){
+		$num_parent = intval($num_parent);
 		if($num_parent != 0){
-			$rqt = "select id_article from cms_articles where num_section='".($num_parent*1)."'";
+			$rqt = "select id_article from cms_articles where num_section='".$num_parent."'";
 			$res = pmb_mysql_query($rqt);
 			if(pmb_mysql_num_rows($res)){
 				while($row = pmb_mysql_fetch_object($res)){
@@ -38,7 +40,7 @@ class cms_articles {
 			}
 		}
 		if($this->recursive){
-			$rqt = "select id_section from cms_sections where section_num_parent = '".($num_parent*1)."'";
+			$rqt = "select id_section from cms_sections where section_num_parent = '".$num_parent."'";
 			$res = pmb_mysql_query($rqt);
 			if(pmb_mysql_num_rows($res)){
 				while($row = pmb_mysql_fetch_object($res)){

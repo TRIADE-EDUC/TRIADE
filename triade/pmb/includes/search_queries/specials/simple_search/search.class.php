@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.5 2019-01-16 16:57:14 dgoron Exp $
+// $Id: search.class.php,v 1.5 2019/01/16 16:57:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class simple_search_search {
 	public $id;
@@ -22,7 +22,7 @@ class simple_search_search {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
     	if ($_SESSION["nb_queries"]!=0) {
@@ -31,11 +31,11 @@ class simple_search_search {
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $charset;
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -48,7 +48,7 @@ class simple_search_search {
     	$es = new search(false,$mc["search_type"]);
     	$es->unserialize_search($mc["serialized_search"]);
 
-    	//on gÃ©nÃ¨re une human_query
+    	//on génère une human_query
     	$r.=$es->make_human_query();
     	$r.="<span><input type='hidden' name='field_".$this->n_ligne."_s_".$this->id."[]' value='".htmlentities($valeur[0],ENT_QUOTES,$charset)."'/></span>";
     	
@@ -62,14 +62,14 @@ class simple_search_search {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	global $opac_search_other_function;
     	
-    	//TODO VÃ©rifier avec $opac_search_other_function
+    	//TODO Vérifier avec $opac_search_other_function
 //     	if ($opac_search_other_function) search_other_function_get_history($valeur[0]);
 
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -91,12 +91,12 @@ class simple_search_search {
     	return $table_tempo;
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
     	
     	$litteral=array();
     			
-    	//RÃ©cupÃ©ration de la valeur de saisie 
+    	//Récupération de la valeur de saisie 
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -109,7 +109,7 @@ class simple_search_search {
     	$es = new search(false, $mc["search_type"]);
     	$es->unserialize_search($mc["serialized_search"]);
     	
-    	//on rÃ©cupÃ¨re le human query...
+    	//on récupère le human query...
     	$litteral[0]=$es->make_human_query();
     	
 		//restauration de l'environnement courant
@@ -118,7 +118,7 @@ class simple_search_search {
     }
     
     public function make_unimarc_query() {
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -192,7 +192,7 @@ class simple_search_search {
 					$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				break;		
 				}
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -204,7 +204,7 @@ class simple_search_search {
     			global ${$field};
     			${$field}=$field_;
     	    	    	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -230,7 +230,7 @@ class simple_search_search {
 				$op_="EQ";
 				$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -242,7 +242,7 @@ class simple_search_search {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -280,7 +280,7 @@ class simple_search_search {
 				$op_="EQ";
 				$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -292,7 +292,7 @@ class simple_search_search {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -318,7 +318,7 @@ class simple_search_search {
 		return $mt; 
     }
     
-    //fonction de dÃ©coupage d'une chaine trop longue
+    //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur) {
     	if (strlen($valeur)>=50) {
     		$pos=strrpos(substr($valeur,0,50)," ");
@@ -330,7 +330,7 @@ class simple_search_search {
     }
     
 	/**
-	 * Fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	 * Fonction de vérification du champ saisi ou sélectionné
 	 * @param array $valeur
 	 * @return boolean true si vide, false sinon
 	 */

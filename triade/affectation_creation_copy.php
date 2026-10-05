@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -45,11 +45,11 @@ if (empty($_SESSION["adminplus"])) {
         print "</script>";
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE17?> <font id="color2"><?php print $cnom?></font></font></b>
 <font   id='menumodule1' >pour l'ann&eacute;e scolaire </font><font id="color2"><?php print $_POST["anneeScolaireDest"] ?></font></b>
@@ -82,7 +82,7 @@ if (!empty($_SESSION["adminplus"])) {
 
 		// la fonction initcap n'existe pas en MySQL (sous cette forme en tout cas)
 		// CONCAT remplace ||
-		$sql="SELECT a.trim,CONCAT(trim(m.libelle),' ',trim(m.sous_matiere)),CONCAT(upper(trim(p.nom)),' ',trim(p.prenom)),a.coef,trim(g.libelle),langue,visubull,nb_heure,ects FROM ${prefixe}matieres m,${prefixe}personnel p,${prefixe}affectations a,${prefixe}groupes g WHERE a.code_matiere = m.code_mat  AND a.code_prof = p.pers_id AND a.code_groupe = g.group_id AND p.type_pers = 'ENS' AND a.code_classe = '$cidDest' AND  a.annee_scolaire='$anneeScolaireDest' ORDER BY a.trim,a.ordre_affichage";
+		$sql="SELECT a.trim,CONCAT(trim(m.libelle),' ',trim(m.sous_matiere)),CONCAT(upper(trim(p.nom)),' ',trim(p.prenom)),a.coef,trim(g.libelle),langue,visubull,nb_heure,ects FROM {$prefixe}matieres m,{$prefixe}personnel p,{$prefixe}affectations a,{$prefixe}groupes g WHERE a.code_matiere = m.code_mat  AND a.code_prof = p.pers_id AND a.code_groupe = g.group_id AND p.type_pers = 'ENS' AND a.code_classe = '$cidDest' AND  a.annee_scolaire='$anneeScolaireDest' ORDER BY a.trim,a.ordre_affichage";
 		//print $sql;
 		$curs=execSql($sql);
 		$data=chargeMat($curs);
@@ -161,6 +161,6 @@ if (!empty($_SESSION["adminplus"])) {
 <?php Pgclose() ?>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

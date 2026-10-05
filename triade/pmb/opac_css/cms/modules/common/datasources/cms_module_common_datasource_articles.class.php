@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_articles.class.php,v 1.8 2016-09-20 14:33:53 vtouchard Exp $
+// $Id: cms_module_common_datasource_articles.class.php,v 1.10.6.2 2025/01/21 15:29:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class cms_module_common_datasource_articles extends cms_module_common_datasource
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = false;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -23,25 +24,26 @@ class cms_module_common_datasource_articles extends cms_module_common_datasource
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
 			"publication_date",
 			"id_article",
 			"article_title",
-			"article_order"
+			"article_order",
+		    "rand()"
 		);
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$selector = $this->get_selected_selector();
 		if ($selector) {
 			$return = array();
-			if (count($selector->get_value()) > 0) {
+			if (is_countable($selector->get_value()) && count($selector->get_value()) > 0) {
 				foreach ($selector->get_value() as $value) {
 					$return[] = $value;
 				}
@@ -57,10 +59,18 @@ class cms_module_common_datasource_articles extends cms_module_common_datasource
 				if(pmb_mysql_num_rows($result)){
 					$return = array();
 					while($row=pmb_mysql_fetch_object($result)){
-						$return[] = $row->id_article;
+					    $return['articles'][] = $row->id_article;
 					}
 				}
 			}
+			// Pagination
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($return['articles']);
+			    $return['articles'] = $this->cut_paging_list($return['articles'], $return["paging"]);
+			}else if ($this->parameters["nb_max_elements"] > 0) {
+				$return["articles"] = array_slice($return['articles'], 0, $this->parameters["nb_max_elements"]);
+			}
+			
 			return $return;
 		}
 		return false;

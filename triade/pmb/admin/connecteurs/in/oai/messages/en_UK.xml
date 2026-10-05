@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
 <!-- messages localisés en français pour le connecteur OAI
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.11 2018-08-01 15:17:06 dgoron Exp $ -->
+$Id: en_UK.xml,v 1.13 2024/02/09 10:00:14 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="rec_addr">Register an address to be able to access the repository properties</entry>
 	<entry code="error_contact_server">Error accessing the OAI server: %s</entry>
+    <entry code="oai_url">URL</entry>
 	<entry code="oai_desc">Description</entry>
 	<entry code="oai_older_metatdatas">Earliest date of metadata</entry>
 	<entry code="oai_email_admin">Admin email</entry>
@@ -36,4 +37,6 @@ $Id: en_UK.xml,v 1.11 2018-08-01 15:17:06 dgoron Exp $ -->
 	<entry code="oai_last_sync">Since the last synchronization</entry>
 	<entry code="oai_clean_html">Clean HTML in records ?</entry>
 	<entry code="oai_all_notices">Toutes les notices</entry>
+	<entry code="oai_sets_to_sync_completion_format">Affichage des sets sous forme d'autorité</entry>
+    <entry code="oai_preserve_base_url">Conserver l'URL de base de l'OAI (Ne pas tenir compte de l'URL précisée dans la réponse)</entry>
 </XMLlist>

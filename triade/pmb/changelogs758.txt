@@ -1,0 +1,161 @@
+
+# CHANGE LOG
+## [V7.5.8] - 2025-01-28
+
+## Amélioration / Évolution
+
+- #171753 Acquisitions Modification des budgets maximums par section
+- #172555 Administration Vérification de l'encodage des données unimarc lors des conversions/imports
+- #171676 Administration [Traductions] Transfert des traductions
+- #170259 Administration [Règles de saisie des mots de passe] Messages
+- #170130 Administration [Indexation] Amélioration dans l'indexation globale et sphinx
+- #167002 Administration [Formulaire de contact] Message de consentement (RGPD)
+- #166678 Administration Ajout d'une option pour éviter l'indexation lors de l'import
+- #166119 Administration [conversions] Amélioration de la conversion vers ris zotero
+- #165955 Administration [Gestion des fichiers / Indexation] Masquage de sous-champs
+- #160076 Administration [Optimisations] Réindexation des concepts
+- #153348 Administration [Récolteur] Refonte du formulaire
+- #166141 Animation [Animation] Affichage des prix dans l'impression.
+- #166096 Animation [Animations] Affiner la recherche sur les types de communication
+- #172077 Autorités [Thésaurus] Paramètre thesaurus_defaut
+- #170103 Autorités Création / mise à jour de catégorie
+- #166881 Autorités [Editions avancées de paniers] Créateur de l'autorité
+- #168448 Bibloto [bibloto] Paramétrage du temps d'ouverture de l'onglet de déconnexion externe.
+- #171791 Catalogue [RMC / Critères de recherche] Recherche imbriquée de notices
+- #168332 Catalogue Gestion de l'orientation des vignettes de documents numériques
+- #166321 Catalogue [Bulletin] Ajout d'un paramètre pour le préremplissage de la date de parution
+- #165926 Catalogue [Editions avancées de paniers] Ajout de l'information "Titre du périodique" pour les notices de bulletins et les bulletins
+- #160000 Catalogue Optimisation indexation sphinx
+- #170102 Circulation [Mail de demande de numérisation] Ajout d'un motif affichant le nombre de pages numérisées
+- #167462 Circulation [Lettres / Mails de retards] Distinction des niveaux de relance
+- #166313 Circulation [Transactions] Etat compte - optimisations
+- #172946 Divers [Univers de recherche] Ajout d'un critère sur les concepts
+- #172865 Divers [Borne SIP2] Acceptation d'une charte d'utilisation Open+
+- #172833 Divers Correction : prise en compte de l' extension exif dans la génération des vignettes de documents numériques
+- #172504 Divers [Borne SIP2] Acceptation d'une charte d'utilisation Open+
+- #171874 Divers [Templates de notices] Fonction #extract_explode
+- #170240 Divers [Mails / PDF] Traduction du support
+- #169236 Divers [imports] Ajout de la récupération de la vignette dans la fonction d'import ascodocpsy
+- #168591 Divers [Circulation] Ajout du paramétrage du piège en prêt par catégorie de lecteur
+- #168333 Divers [Vulnérabilité] SSRF - Exécution de requêtes arbitraires dans le fichier chklnk
+- #167596 Divers Indexation des autorités liées de type "Catégories"
+- #167419 Divers Mise à jour DOJO 1.17.3
+- #166940 Divers Ajout de l'attribut samesite=Lax sur les cookies
+- #166197 Editions [Caisses] Optimisations
+- #173387 OPAC [Univers de recherche] Optimisation de la recherche avancée avec un segment par défaut
+- #172477 OPAC [OPAC] Ajout d'une méthode get_responsabilities pour les autorités personnalisées
+- #172317 OPAC Ajout des régimes de licence des documents numériques dans les templates de notices
+- #171707 OPAC [Recherche multi-critères] Ajout du type de document dans les univers de recherche.
+- #171611 OPAC [RMC responsive] Prise en compte des renvois dans les champs de sélection d'autorités
+- #171596 OPAC [Popup - Sélection d'une date] Vulnérabilité XSS 
+- #171371 OPAC [RMC responsive] Filtre sur l'autocomplétion des champs de sélection d'autorités
+- #169969 OPAC [Paginateur] Prise en compte du nombre d'éléments par page pour les périodiques
+- #168568 OPAC [Univers de recherche] Optimisation de la recherche avec un segment par défaut
+- #168373 OPAC [Affichage de notices] Ajout d'une propriété pour connaître la source de la vignette
+- #167868 OPAC [Univers de recherche] AJout d'une case à cocher pour masquer la barre de recherche d'un segment
+- #166915 OPAC Validation des entrées du formulaire de connexion OPAC
+- #166072 OPAC [Univers de recherche] Optimisation de la recherche
+- #170319 Portail [Module portail / Veilles] Ajout d'informations dans l'arbre
+- #169440 Portail [Pages FRBR] Ajout du tag django frbrgraph
+- #166282 Portail [Portail] Modification du script de détection de contenu dans le bandeau
+- #158395 Portail [RGAA] Prise en compte des cadres de métadonnées du portail
+
+## Anomalie
+
+- #171607 Acquisitions [Mails] Paramètres PMB avec le suffixe "_print"
+- #172375 Administration [Conversion / Export] Correction d'un problème d'accentuation dans la transformation texte vers XML
+- #171769 Administration [Sphinx] Indexation des concepts
+- #169897 Administration [Univers de recherche] Création d'un segment de type notices externes
+- #169515 Administration Correction erreur fatale sur le test ftp des lieux de sauvegarde
+- #169430 Administration [Gestion des locations] Suppression de filtres
+- #168513 Administration [Nettoyage de base] Verrou de session
+- #166932 Administration [Gestionnaire de tâches] Mailing
+- #166440 Administration [Arte Campus] Revue de l'import de notices
+- #166124 Administration [Segment de recherche] Paramétrage des tris
+- #166101 Administration [Epub / Warning] Node no longer exists
+- #166061 Administration Vérification de la politique de mot de passe
+- #165989 Administration Affichage de la politique de mot de passe
+- #165972 Administration [plugins] Correction dans l'affichage personnalisé du formulaire de groupe d'utilisateurs 
+- #154417 Administration [Récolteur] Correction sur la sélection des sources
+- #172640 Animation [Animations] Correction de l'export excel de la liste des inscriptions
+- #172081 Animation [Animations] Correction de la validation d'inscription en lots
+- #172013 Animation [Animations] Correction de l'affichage du bouton d'inscription
+- #171811 Animation [Animations] Imprimer la liste des inscriptions
+- #166091 Animation [Animations] Correction des champs personnalisés répétables
+- #165675 Animation [Animations] Correction d'un problème d'inscription à l'OPAC
+- #169548 Autorités Correction erreur  de fermeture de fichier 
+- #173141 Catalogue [Catalogue] Implémentation du téléchargement des documents numériques sélectionnés
+- #172716 Catalogue [Vignettes] Recalcul de la vignette de la notice lors de la suppression d'un document numérique
+- #172369 Catalogue [Résultats de recherche externe] Tri par défaut
+- #172051 Catalogue [Bulletinage automatique] Vérification des CP d'exemplaires
+- #171881 Catalogue [Gestion des avis] Valider / Invalider
+- #171806 Catalogue [Z3950] Compatibilités PHP8
+- #167492 Catalogue [Source de vignettes] URL paramétrée -   Prise en compte des paramètres "bulletin_thumbnail_url_article" et "serial_thumbnail_url_article" sur les dépouillements lorsqu'ils n'ont pas de vignette.
+- #166879 Catalogue [Editions avancées de paniers] Correction intervalles
+- #171851 Circulation [Prêts de documents] Correction quotas de nouveautés
+- #169796 Circulation [Circulation] Affichage de la liste des animations sur la page lecteur
+- #168547 Circulation Correction dans la génération de mot de passe en circulation
+- #168537 Circulation [Mailing] Correction création campagne de mails sans destinataires
+- #166941 Circulation [Fiche lecteur] Correction notification de retour d'envoi de mail en échec
+- #172093 Demandes [Affichage des demandes] Correction suppression en lot
+- #172905 Divers WS : Correction de la fonction pmbesOPACAnonymous_fetch_notice_items
+- #172804 Divers [Install] Ajout de php-exif dans les prérequis
+- #172669 Divers [Amélioration] Chargement des images
+- #172628 Divers Correction de l'affichage des vignettes en SVG
+- #171112 Divers [vignettes] Affichage de la vignette du document numérique en fonction d'un champ personnalisé
+- #170675 Divers [Indexation] Correction réactivation des clés de tables
+- #170213 Divers Correction encodage fichier ontologie PMB
+- #170047 Divers Correction de l'encodage UTF8 avec un PMB en ISO
+- #169936 Divers [Segment de recherche] Récupération des parametres additionnels pour le formulaire
+- #169439 Divers Correction création tables temporaires
+- #168423 Divers [Statistiques de visites] Optimisations sur le module
+- #168360 Divers Correction d'erreurs de génération de pdf (502)
+- #167524 Divers Correction erreur 500 
+- #166689 Divers Correction coquilles
+- #163028 Divers Corrections PHP8
+- #168518 DSI [Bannettes] Correction choix expéditeur (utilisateur)
+- #171612 Editions  [Statistiques de visites] Correction suppression de visites
+- #167339 Editions [Templates de notices] Ajout documentation fonction #concepts
+- #173109 OPAC [Notice] Ajout d'un tag
+- #172346 OPAC [Contenu éditorial] Correction dépassement de mémoire 
+- #172319 OPAC [RMC responsive] Correction de l'affinage de la recherche
+- #172309 OPAC [Recherches] Limitation au premier tri si le nombre de résultats est trop important
+- #172133 OPAC [Segment] Le tri sur le résultat de recherche
+- #172083 OPAC [Affichage des prêts] Correction affichage des exemplaires de bulletin
+- #172071 OPAC Correction personnalisation de l'export tableur des prêts en cours d'un groupe
+- #172019 OPAC [Connecteur sortant OAI] Correction fonction personnalisée
+- #171951 OPAC [Visionneuse] Correction de l'ouverture de la visionneuse
+- #171940 OPAC [Shorturls] Correction dans le partage de recherche
+- #171890 OPAC [RMC / critères autocomplétables] Correction de la prise en compte de la touche Echap 
+- #171687 OPAC [Visionneuse] Récupération d'une page avec Bookreader
+- #171528 OPAC Correction de la visibilité des cadres inclus dans d'autres cadres d'une page frbr + correction de l'affichage des liens dans le graphe
+- #171418 OPAC [Univers de Recherche] Corrrection perte de la recherche en venant d'un cadre de recherche
+- #171131 OPAC Correction de la déconnexion opac
+- #170674 OPAC [Alertes Privées] Correction impossibilité d'enregistrer l'équation de recherche
+- #170460 OPAC [Segment de recherche] Non prise en compte des droits d'accès
+- #170342 OPAC [Authentification externe + réservations localisées]  Correction sur l'affichage du bouton de réservation lorsque le module de location est activé
+- #170323 OPAC [Suggestions] Correction d'encodage sur l'affichage des états
+- #169815 OPAC [Univers/Segments] Correction d'erreur 403, vulnérabilité XSS et optimisation des recherches
+- #169149 OPAC [Univers de recherche] Correction des facettes sous chrome (Chromium)
+- #168834 OPAC Correction de la traduction des commentaires d'univers
+- #168668 OPAC [Panier] Correction JavaScript
+- #168569 OPAC [Visionneuse] Correction d'une erreur fatale sur image vide + ajout d'une vérification sur l'extension imagick. 
+- #167528 OPAC Correction erreur fatale
+- #166883 OPAC Correction mot de passe oublié
+- #166744 OPAC Correction de l'affichage des résultats de recherche sous Firefox
+- #166720 OPAC [Contributions] Correction dans la création du lien entre le bulletin et le périodique
+- #166559 OPAC [Contribution] Correction dans les vignettes
+- #165943 OPAC [Géoréférencement] Zone d'affichage par défaut de la carte.
+- #165059 OPAC [RMC / Titre du périodique] Auto-complétion
+- #164072 OPAC Correction visionneuse en PHP8
+- #171498 Portail [Porail] Le tri par "date de l'agenda" n'était pas fonctionnelle dans le cadre "liste d'articles"
+- #170272 Portail [Liste de rubriques] Correction sélecteur de rubriques citées en champ personnalisé d'une rubrique
+- #168298 Portail [Module agenda] Correction du tri par date de publication des articles
+- #167358 Portail [Vulnérabilité] Validation des documents téléversés
+
+## Nouvelle fonctionnalité
+
+- #142563 Administration [Notices / Autorités] Indexation globale
+- #167555 DSI [refonte dsi] Ajout bouton de réinitialisation de la liste d'abonnés
+- #166611 DSI [DSI] Outil de migration vers la nouvelle D.S.I.
+

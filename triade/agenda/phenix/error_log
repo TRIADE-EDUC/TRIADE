@@ -1,0 +1,303 @@
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:38:57 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[20-Mar-2026 23:38:57 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 343
+[20-Mar-2026 23:38:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '2026-03-20 23:38:57','2026-03-20 23:38:57',1,'' OR 1=1 --',0,0,'')' at line 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php:86
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php(86): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(344): Db->DbQuery()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php on line 86
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:48:04 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[20-Mar-2026 23:48:04 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[20-Mar-2026 23:48:04 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function esc(), 1 passed in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 349 and exactly 2 expected in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:341
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(349): esc()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 341
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:48:56 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[20-Mar-2026 23:48:56 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[20-Mar-2026 23:48:56 UTC] PHP Fatal error:  Uncaught TypeError: mysqli_real_escape_string(): Argument #1 ($mysql) must be of type mysqli, Db given in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:342
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(342): mysqli_real_escape_string()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(349): esc()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:50:21 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[20-Mar-2026 23:50:21 UTC] PHP Warning:  Undefined variable $DB_CX in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:50:21 UTC] PHP Fatal error:  Uncaught TypeError: mysqli_real_escape_string(): Argument #1 ($mysql) must be of type mysqli, null given in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:342
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(342): mysqli_real_escape_string()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(349): esc()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $DB_CX in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $DB_CX in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[20-Mar-2026 23:52:34 UTC] PHP Warning:  Undefined variable $DB_CX in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Deprecated:  addslashes(): Passing null to parameter #1 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[20-Mar-2026 23:52:34 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '','',0,'')' at line 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php:86
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php(86): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(351): Db->DbQuery()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php on line 86
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:05:46 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:05:46 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:05:46 UTC] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:342
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(350): esc()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 342
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:07:05 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:07:05 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:07:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\' OR 1=1 --'','''',0,1,0,0,'',1,1,0,'2026-03-21 00:07:05','2026-03-21 00:07:...' at line 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php:86
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php(86): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(351): Db->DbQuery()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php on line 86
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:08:40 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:08:40 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:10:22 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:10:22 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:10:22 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function esc(), 1 passed in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350 and exactly 2 expected in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:341
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(350): esc()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 341
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:10:53 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:10:53 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:11:24 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:11:24 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:11:24 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\' OR 1=1 --'',''\' OR 1=1 -'',0,1,0,0,'',1,1,0,'2026-03-21 00:11:24','2026-0...' at line 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php:86
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php(86): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(351): Db->DbQuery()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php on line 86
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:11:57 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:11:57 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:15:34 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:15:34 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  preg_replace(): Unknown modifier 'e' in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 861
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 862
+[21-Mar-2026 00:15:56 UTC] PHP Warning:  preg_replace(): Unknown modifier 'e' in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 862
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 863
+[21-Mar-2026 00:15:56 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #2 ($replace) of type array|string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 1417
+[21-Mar-2026 00:15:57 UTC] PHP Warning:  Undefined variable $tabSupDestMail in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 631
+[21-Mar-2026 00:15:57 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 639
+[21-Mar-2026 00:15:57 UTC] PHP Warning:  Undefined variable $RetConsul in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 1484
+[21-Mar-2026 00:15:57 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:1484) in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 1497
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:21:54 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $flag in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 315
+[21-Mar-2026 00:21:54 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 420
+[21-Mar-2026 00:21:54 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'dqsdqs', age_rappel=0, age_rappel_coeff=1, age_email=0, age_email_contact=0, ...' at line 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php:86
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php(86): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php(433): Db->DbQuery()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/db_class.inc.php on line 86
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $dateJour in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $dateCrt in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $dateModif in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 66
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 479
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 480
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 494
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 497
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined array key 1 in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 498
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  Function strftime() is deprecated since 8.1, use IntlDateFormatter::format() instead in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/fonctions.inc.php on line 512
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $zlContactAssocie in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 74
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $ckTypeNote in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 149
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 350
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  preg_replace(): Unknown modifier 'e' in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 861
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 862
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  preg_replace(): Unknown modifier 'e' in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 862
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 863
+[21-Mar-2026 00:26:28 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #2 ($replace) of type array|string is deprecated in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/inc/class.mailer.php on line 1417
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $tabSupDestMail in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 631
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $zlCouleur in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 639
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Undefined variable $RetConsul in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 1484
+[21-Mar-2026 00:26:28 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php:1484) in /home/taer5511/dev.triade-v4.net/triade/agenda/phenix/agenda_traitement.php on line 1497

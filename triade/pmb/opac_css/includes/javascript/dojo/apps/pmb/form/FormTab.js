@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormTab.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: FormTab.js,v 1.3.6.1.2.1 2025/02/14 10:47:58 dgoron Exp $
 
 
 define([
@@ -57,7 +57,7 @@ define([
 				this.parameters.ghostContainerId = this.ghostContainer.id;
 				
 				this.selectorContainer = new ContentPane({region: 'bottom', doLayout: false, style: 'width:98%; height:100%;', parameters: this.parameters});
-				this.iframe = domConstruct.create('iframe', {seamless: '', frameborder: 0, 'class': 'selectorsIframe', scrolling: 'no', style:{ width: '100%'}, src: this.parameters.selectorURL});
+				this.iframe = domConstruct.create('iframe', {seamless: '', 'class': 'selectorsIframe', scrolling: 'no', style:{ width: '100%'}, src: this.parameters.selectorURL});
 				
 				this.selectorContainer.startup();
 				this.selectorContainer.resize();
@@ -71,19 +71,36 @@ define([
 				this.resize();
 				
 				on(this.iframe, 'load', lang.hitch(this, function(){
-					this.iframe.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+					if(this.iframe.contentWindow != null) {
+						this.iframe.style.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+					}
 				}));
 			},
 			resizeIframe: function(){
-			    this.iframe.height = parseInt(this.iframe.contentWindow.document.body.scrollHeight)+35+'px';
+				if(this.iframe.contentWindow != null) {
+					this.iframe.style.height = parseInt(this.iframe.contentWindow.document.body.scrollHeight)+35+'px';
+				}
 			},
 			onFocus: function(){
 				this.inherited(arguments);
-				this.iframe.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+				if(this.iframe.contentWindow != null) {
+					this.iframe.style.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+				}
 			},
 			onShow: function(){
 				this.inherited(arguments);
-				this.iframe.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+				if(this.iframe.contentWindow != null) {
+					this.iframe.style.height = this.iframe.contentWindow.document.body.scrollHeight+50+'px';
+				}
+			},
+			onClose: function() {
+				var button = this.parameters.field.querySelector('input.'+this.id);
+				if (button) {
+					button.removeAttribute('disabled')
+					button.classList.remove('disabled')
+					button.classList.remove(this.id)
+				}
+				return true;
 			}
 		})
 });

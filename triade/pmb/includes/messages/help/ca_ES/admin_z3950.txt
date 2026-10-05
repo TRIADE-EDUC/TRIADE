@@ -1,6 +1,6 @@
 <h2>Z 39.50</h2>
 <div>
-<p>Configuració del client Z39.50 per l'importació de registres.</p>
+<p>Configuraci&oacute; del client Z39.50 per l'importaci&oacute; de registres.</p>
 
 <b>Servidors</b> llistat dels servidors Z39.50 i opcions d'afegir o eliminar.</p>
 </div>

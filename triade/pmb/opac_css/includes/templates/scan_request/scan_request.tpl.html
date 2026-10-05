@@ -1,4 +1,4 @@
-<!-- $Id: scan_request.tpl.html,v 1.6 2017-10-27 14:10:57 ngantier Exp $ -->
+<!-- $Id: scan_request.tpl.html,v 1.9 2023/11/21 14:50:08 dgoron Exp $ -->
 <div class='row scan_request_title'>
 	<h3>{{ scan_request.title }}</h3>
 </div>
@@ -10,6 +10,16 @@
 		</div>
 		<div class='colonne'>
 			{{ scan_request.desc | escape true | nl2br }}
+		</div>
+	</div>
+{% endif %}
+{% if scan_request.nb_scanned_pages %}
+	<div class='row scan_request_nb_scanned_pages'>
+		<div class='colonne25'>
+			{{ msg.scan_request_nb_scanned_pages }} :
+		</div>
+		<div class='colonne'>
+			{{ scan_request.nb_scanned_pages }}
 		</div>
 	</div>
 {% endif %}
@@ -108,7 +118,13 @@
 {% if scan_request.nb_explnums %}
 	{{ scan_request.linked_records.0.explnums_datas.visionneuse_script }}
 	<div class='row scan_request_linked_records_explnums'>
-		<a name="docnum"><h3><span id="titre_explnum">{{ msg.explnum }}</span></h3></a>
+		<a name="docnum"><h3>
+	        {% if global.opac_rgaa_active  == 1 %}
+	            <span class="titre_explnum">{{ msg.explnum }}</span>
+	        {% else %}
+			    <span id="titre_explnum">{{ msg.explnum }}</span>
+			{% endif %}
+		</h3></a>
 {% endif %}
 {% for record in scan_request.linked_records %}
 	{% if record.explnums_datas.nb_explnums %}

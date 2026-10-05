@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_collection.tpl.php,v 1.3 2019-05-27 11:57:15 ngantier Exp $
+// $Id: cms_collection.tpl.php,v 1.4 2020/06/22 07:41:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -47,6 +47,10 @@ $cms_collection_form ="
 	function test_form(form){
 		if(form.cms_collection_title.value.length == 0){
 			alert(\"".$msg[98]."\");
+			return false;
+		}
+		if(form.storage_method.value == 0){
+			alert(pmbDojo.messages.getMessage('cms', 'storage_method_not_selected'));
 			return false;
 		}
 		return true;

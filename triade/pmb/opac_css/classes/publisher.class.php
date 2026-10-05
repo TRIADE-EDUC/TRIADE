@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: publisher.class.php,v 1.46 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: publisher.class.php,v 1.51 2024/03/21 09:15:00 pmallambic Exp $
 
-// dÃ©finition de la classe de gestion des 'editeurs'
+// définition de la classe de gestion des 'editeurs'
 
 if ( ! defined( 'PUBLISHER_CLASS' ) ) {
   define( 'PUBLISHER_CLASS', 1 );
@@ -12,11 +12,11 @@ if ( ! defined( 'PUBLISHER_CLASS' ) ) {
 class publisher {
 
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------
 
-	// note : '//' signifie appartenant Ã  la table concernÃ©e
-	//        '////' signifie devinÃ© avec des requÃªtes sur d'autres tables
+	// note : '//' signifie appartenant à la table concernée
+	//        '////' signifie deviné avec des requêtes sur d'autres tables
 	public $id;          // MySQL id in table 'publishers'
 	public $name;        // publisher name
 	public $adr1;        // adress line 1
@@ -30,7 +30,7 @@ class publisher {
 	public $isbd_entry; //// isbd like version ( _ville_ (_country ?_) : _name_ )
 	public $isbd_tpl; 
 	public $ed_comment;
-	public $num_statut = 1;    //Identifiant du statut affectÃ© Ã  l'Ã©diteur
+	public $num_statut = 1;    //Identifiant du statut affecté à l'éditeur
 	public $authority;	// Instance de authority
 	protected $p_perso;	
 	
@@ -46,7 +46,7 @@ class publisher {
 	// ---------------------------------------------------------------
 
 	public function __construct($id) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
@@ -84,7 +84,7 @@ class publisher {
 				if ($this->web) {
 					$this->link = "<a href='".$this->web."' target='_new'>$this->web</a>";
 				}
-				// DÃ©termine le lieu de publication
+				// Détermine le lieu de publication
 				$l = '';
 				if ($this->adr1)  $l = $this->adr1;
 				if ($this->adr2)  $l = ($l=='') ? $this->adr2 : $l.', '.$this->adr2;
@@ -93,13 +93,13 @@ class publisher {
 				if ($this->ville) $l = ($l=='') ? $this->ville : $this->ville.' ('.$l.')';
 				if ($l=='')       $l = '[S.l.]';
 				
-				// DÃ©termine le nom de l'Ã©diteur
+				// Détermine le nom de l'éditeur
 				if ($this->name) $n = $this->name; else $n = '[S.n.]';
 				
-				// Constitue l'ISBD pour le coupe lieu/Ã©diteur
+				// Constitue l'ISBD pour le coupe lieu/éditeur
 				if ($l == '[S.l.]' AND $n == '[S.n.]') $this->isbd_entry = '[S.l.&nbsp;: s.n.]';
 				else $this->isbd_entry = $l.'&nbsp;: '.$n;
-				//On fait en sorte que le &nbsp; ne nous embÃªte pas Ã  l'affichage
+				//On fait en sorte que le &nbsp; ne nous embête pas à l'affichage
 				global $charset;
 				$this->isbd_entry = html_entity_decode($this->isbd_entry,ENT_QUOTES, $charset);
 				
@@ -118,11 +118,11 @@ class publisher {
 	// ---------------------------------------------------------------
 
 	public function print_resume($level = 2,$css='') {
-		global $css,$msg;
+		global $css, $msg, $charset;
 		if(!$this->id)
 			return;
 
-		// adaptation par rapport au niveau de dÃ©tail souhaitÃ©
+		// adaptation par rapport au niveau de détail souhaité
 		switch ($level) {
 			// case x :
 			case 2 :
@@ -143,16 +143,15 @@ class publisher {
 		$print = str_replace("!!cp!!", $this->cp, $print);
 		$print = str_replace("!!ville!!", $this->ville, $print);
 		$print = str_replace("!!pays!!", $this->pays, $print);
-		if ($this->web) $print = str_replace("!!site_web!!", "<a href='$this->web' target='_blank' type='external_url_autor'><img src='".get_url_icon("globe.gif")."' style='border:0px' /></a>", $print);
+		if ($this->web) $print = str_replace("!!site_web!!", "<a href='$this->web' target='_blank' type='external_url_autor' title='".htmlentities($msg['rgaa_author_field_link'], ENT_QUOTES, $charset)."'><img src='".get_url_icon("globe.gif")."' style='border:0px' /></a>", $print);
 		else $print = str_replace("!!site_web!!", "", $print);
 		$print = str_replace("!!isbd!!", $this->isbd_entry, $print);
 		$print = str_replace("!!aut_comment!!", $this->ed_comment, $print);
 
 
 		if (preg_match("#!!colls!!#", $print)) {
-			global $dbh;
 			$query = "select collection_id, collection_name from collections where collection_parent='".$this->id."' order by index_coll";
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)) {
 				$remplacement = $msg['publishers_collections']."\n<ul>\n";
 				while ($obj = pmb_mysql_fetch_object($result)) {
@@ -186,17 +185,9 @@ class publisher {
 	}
 	
 	public function get_isbd() {
-		global $msg, $include_path, $opac_authorities_templates_folder;
-		
-		if(!$this->isbd_tpl && $opac_authorities_templates_folder){
-			if(!$opac_authorities_templates_folder){
-				$opac_authorities_templates_folder = 'common';
-			}
-			$template_path =  $include_path.'/templates/authorities/common/isbd/publisher.html';
-			if(file_exists($include_path.'/templates/authorities/'.$opac_authorities_templates_folder."/isbd/publisher_subst.html")){
-				$template_path =  $include_path.'/templates/authorities/'.$opac_authorities_templates_folder."/isbd/publisher_subst.html";
-			}
-			
+		if(!$this->isbd_tpl ){
+			$authority = $this->get_authority();
+			$template_path =  $authority->find_template("isbd");				
 			if(file_exists($template_path)){
 				$h2o = H2o_collection::get_instance($template_path);
 				$this->isbd_tpl = str_replace(array("\n", "\t", "\r"), '', strip_tags($h2o->render(array('publisher' => $this->get_authority()))));
@@ -218,15 +209,13 @@ class publisher {
 	}
 	
 	public function get_collections() {
-		global $dbh;
-		
 		if (isset($this->collections)) {
 			return $this->collections;
 		}
 		$this->collections = array();
 	
 		$query = "select collection_id from collections where collection_parent = '".$this->id."' order by index_coll";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				//$this->collections[] = new authority(0, $row->collection_id, AUT_TABLE_COLLECTIONS);
@@ -266,7 +255,7 @@ class publisher {
 		$this->authority = authorities_collection::get_authority('authority', 0, ['num_object' => $this->id, 'type_object' => AUT_TABLE_PUBLISHERS]);
 		return $this->authority;
 	}
-} # fin de dÃ©finition de la classe Ã©diteur
+} # fin de définition de la classe éditeur
 
-} # fin de dÃ©laration
+} # fin de délaration
 

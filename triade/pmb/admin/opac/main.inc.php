@@ -1,12 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.9 2018-04-27 10:18:26 dgoron Exp $
+// $Id: main.inc.php,v 1.13 2024/01/31 07:35:39 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 // page de switch recherche notice
+global $base_path, $class_path, $include_path, $sub, $lang, $id;
 
 // inclusions principales
 
@@ -17,17 +18,13 @@ switch($sub) {
 	break;	
 	case "search_persopac":
 		// affichage de la liste des recherches en opac
-		$admin_layout = str_replace('!!menu_sous_rub!!', $msg["admin_menu_search_persopac"], $admin_layout);
 		include("./admin/opac/search_persopac/main.inc.php");
 	break;	
 	case "stat":
 		//affichage des statistiques pour l'opac
-		$admin_layout = str_replace('!!menu_sous_rub!!', $msg["stat_opac_menu"], $admin_layout);	
 		include("./admin/opac/stat/main.inc.php");
 		break;
 	case 'navigopac':
-		$admin_layout = str_replace('!!menu_sous_rub!!', $msg["exemplaire_admin_navigopac"], $admin_layout);
-		print $admin_layout;
 		include("./admin/opac/navigation_opac.inc.php");
 		break;
 	case "facettes":
@@ -37,18 +34,19 @@ switch($sub) {
 		require_once($class_path.'/modules/module_admin.class.php');
 		$module_admin = new module_admin();
 		$module_admin->set_url_base($base_path."/admin.php?categ=opac");
-	    if(!isset($id)) $id = 0;
+		$id = intval($id);
 	    $module_admin->set_object_id($id);
-		$module_admin->proceed_facets();
+		$module_admin->proceed_opac_facets();
 		break;
 	case "maintenance":
-		// dÃ©finition de la page de maintenance
-		$admin_layout = str_replace('!!menu_sous_rub!!', $msg["admin_menu_opac_maintenance"], $admin_layout);
+		// définition de la page de maintenance
 		include("./admin/opac/maintenance/main.inc.php");
 		break;
+	case "analytics_services":
+		// gestion des services web analytiques
+		include("./admin/opac/analytics_services/main.inc.php");
+		break;
 	default :
-		$admin_layout = str_replace('!!menu_sous_rub!!', "", $admin_layout);
-        print $admin_layout;
         include("$include_path/messages/help/$lang/admin_opac.txt");
 	break;
 }

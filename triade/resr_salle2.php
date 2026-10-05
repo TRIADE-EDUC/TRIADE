@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -91,7 +91,7 @@ if (isset($_POST["supp"])) {
 	}else{
 		$rowspan="";
 	}
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$res="";
 		$id=$data[$i][0];
 		$refcommun=$data[$i][10];

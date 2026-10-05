@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edition_func.inc.php,v 1.13 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: edition_func.inc.php,v 1.15 2022/03/21 12:54:54 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/parametres_perso.class.php");
 require_once($class_path."/editions_datasource.class.php");
 
 // Affichage tabulaire du contenu d'un caddie
 function afftab_empr_cart_objects ($idcaddie=0, $flag="" , $no_flag = "" ) {
 global $msg;
-global $dbh;
 global $worksheet ;
 global $myCart ;
 global $dest ;
@@ -21,7 +21,7 @@ global $max_aut ;
 global $max_perso;
 global $res_compte1 ;
 
-global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermï¿½s
+global $etat_table ; // permet de savoir si les tag table sont ouverts ou ferm�s
 
 if (($flag=="") && ($no_flag=="")) {
 	$no_flag = 1;
@@ -30,13 +30,13 @@ if (($flag=="") && ($no_flag=="")) {
 
 $requete = "SELECT empr_caddie_content.* FROM empr_caddie_content where empr_caddie_id='".$idcaddie."' ";
 if ($flag && $no_flag ) $complement_clause = "";
-if (!$flag && $no_flag ) $complement_clause = " and flag is null ";
+if (!$flag && $no_flag ) $complement_clause = " and (flag is null or flag='') ";
 if ($flag && !$no_flag ) $complement_clause = " and flag is not null ";
 if (!$flag && !$no_flag ) return ;
 $requete .= $complement_clause." order by object_id";
 
 $liste=array();
-$result = pmb_mysql_query($requete, $dbh) or die($requete."<br />".pmb_mysql_error($dbh));
+$result = pmb_mysql_query($requete) or die($requete."<br />".pmb_mysql_error());
 if(pmb_mysql_num_rows($result)) {
 	while ($temp = pmb_mysql_fetch_object($result)) 
 		$liste[] = array('object_id' => $temp->object_id, 'flag' => $temp->flag ) ;
@@ -55,10 +55,10 @@ switch($dest) {
 
 	// calcul du nombre max de colonnes pour les champs perso
 	$rqt_compte1 = "select idchamp, titre from empr_custom order by ordre " ;
-	$res_compte1 = pmb_mysql_query($rqt_compte1, $dbh) ; 
+	$res_compte1 = pmb_mysql_query($rqt_compte1) ; 
 	$max_perso = pmb_mysql_num_rows($res_compte1) ;
 		
-	// boucle de parcours des exemplaires trouvés
+	// boucle de parcours des exemplaires trouv�s
 	$entete=0;
 	foreach ($liste as $cle => $empr) {
 		$rqt_tout = "select id_empr,empr_cb,empr_nom,empr_prenom,empr_adr1,empr_adr2,empr_cp,empr_ville,empr_pays,empr_mail,empr_tel1,empr_tel2,empr_prof,empr_year,";
@@ -76,25 +76,25 @@ return;
 }
 
 function extrait_info_empr ($sql="", $entete=1, $flag="") {
-	global $dbh ;
 	global $dest ;
 	global $worksheet ;
 	global $entete_bloc;
 	global $msg;
 	global $charset;
 	global $debligne_excel;
-	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermés
+	global $etat_table ; // permet de savoir si les tag table sont ouverts ou ferm�s
 	
 	global $max_perso;
 	global $res_compte1 ;
 	
 	if (!$debligne_excel) $debligne_excel = 0 ;
 	
-	$res = @pmb_mysql_query($sql, $dbh);
-	$nbr_lignes = @pmb_mysql_num_rows($res);
-	$nbr_champs = @pmb_mysql_num_fields($res);
+	$res = pmb_mysql_query($sql);
+	$nbr_lignes = pmb_mysql_num_rows($res);
+	$nbr_champs = pmb_mysql_num_fields($res);
              		
 	if ($nbr_lignes) {
+		$editions_datasource = array();
 		if($nbr_lignes) {
 			$editions_datasource['lenders'] = new editions_datasource('lenders');
 		}
@@ -105,7 +105,7 @@ function extrait_info_empr ($sql="", $entete=1, $flag="") {
 					$debligne_excel++ ;
 					$worksheet->write_string((1+$debligne_excel),0,$msg['caddie_action_marque']);
 					for($i=0; $i < $nbr_champs; $i++) {
-						// entête de colonnes
+						// ent�te de colonnes
 						$fieldname = pmb_mysql_field_name($res, $i);
 						if(isset($editions_datasource['lenders']->struct_format['empr_'.$fieldname])) {
 							$worksheet->write_string((1+$debligne_excel),($i+1),$editions_datasource['lenders']->struct_format['empr_'.$fieldname]['label']);
@@ -126,13 +126,13 @@ function extrait_info_empr ($sql="", $entete=1, $flag="") {
 					$id_notice = $row[0] ;
 					if ($flag) $worksheet->write_string(($i+$debligne_excel),0,"X");
 					$j=0;
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col=" ";
 						$worksheet->write_string(($i+$debligne_excel),($j+1),$col);
 						$j++;
 					}
 					$p_perso=new parametres_perso("empr");
-					//Champs personalisés
+					//Champs personalis�s
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields($id_notice);
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {
@@ -167,7 +167,7 @@ function extrait_info_empr ($sql="", $entete=1, $flag="") {
 					$id_notice = $row[0] ;
 					echo "<tr>";
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if (is_numeric($col)){
  							$col = "'".$col ;
 							}
@@ -176,7 +176,7 @@ function extrait_info_empr ($sql="", $entete=1, $flag="") {
 					}
 					print "<td>&nbsp;</td>" ;
 					$p_perso=new parametres_perso("empr");
-					//Champs personalisés
+					//Champs personalis�s
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields($id_notice);
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {
@@ -219,13 +219,13 @@ function extrait_info_empr ($sql="", $entete=1, $flag="") {
 						$odd_even=0;
 					}
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col="&nbsp;";
 						print pmb_bidi("<td>$col</td>");
 					}
 					print "<td>&nbsp;</td>" ;
 					$p_perso=new parametres_perso("empr");
-					//Champs personalisés
+					//Champs personalis�s
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields($id_notice);
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {

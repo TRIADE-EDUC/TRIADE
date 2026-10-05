@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_list_tab.class.php,v 1.6 2017-12-08 10:19:24 tsamson Exp $
+// $Id: elements_list_tab.class.php,v 1.8 2022/02/21 08:12:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,7 +15,7 @@ class elements_list_tab {
 	private $name;
 	
 	/**
-	 * LibellÃ© de l'onglet
+	 * Libellé de l'onglet
 	 * @var string
 	 */
 	private $label; 
@@ -27,19 +27,19 @@ class elements_list_tab {
 	private $content_type;
 	
 	/**
-	 * Indique si les Ã©lÃ©ments de l'onglet doivent Ãªtre regroupÃ©s
+	 * Indique si les éléments de l'onglet doivent être regroupés
 	 * @var array
 	 */
 	private $groups;
 	
 	/**
-	 * Liste des ids des Ã©lÃ©ments de l'onglet
+	 * Liste des ids des éléments de l'onglet
 	 * @var array
 	 */
 	private $contents;
 	
 	/**
-	 * Nombre de rÃ©sultats total
+	 * Nombre de résultats total
 	 * @var int
 	 */
 	private $nb_results;
@@ -51,47 +51,47 @@ class elements_list_tab {
 	private $mixed;
 	
 	/**
-	 * Filtres appliquÃ©s sur le contenu de l'onglet
+	 * Filtres appliqués sur le contenu de l'onglet
 	 * @var array
 	 */
 	private $filters = array();
 	
 	/**
-	 * Tableau des Ã©lÃ©ments pour construire les requÃªtes
+	 * Tableau des éléments pour construire les requêtes
 	 * @var array
 	 */
 	private $query_elements = array();
 	
 	/**
-	 * Callable Ã  appeler pour gÃ©nÃ©rer l'onglet
+	 * Callable à appeler pour générer l'onglet
 	 * @var callable
 	 */
 	private $callable = array();
 	
 	/**
-	 * Dans le cas d'un onglet d'un seul type d'autoritÃ©, on spÃ©cifie ici le type de l'autoritÃ©
+	 * Dans le cas d'un onglet d'un seul type d'autorité, on spécifie ici le type de l'autorité
 	 * @var int
 	 */
 	private $content_authority_type;
 	
 	/**
-	 * Nombre de rÃ©sultats aprÃ¨s passage des filtres
+	 * Nombre de résultats après passage des filtres
 	 * @var int
 	 */
 	private $nb_filtered_results = 0;
 	
 	/**
-	 * Nombre de rÃ©sultats potentiels avec les filtres
+	 * Nombre de résultats potentiels avec les filtres
 	 * @var int
 	 */
 	private $nb_prefiltered_results = 0;
 	
 	/**
-	 * Constructeur d'un onglet de page autoritÃ©
+	 * Constructeur d'un onglet de page autorité
 	 * @param string $name Nom de l'onglet
 	 * @param string $label Label de l'onglet
 	 * @param string $content_type Type du contenu d'un onglet
-	 * @param int $nb_results Nombre de rÃ©sultats contenu dans l'onglet
+	 * @param int $nb_results Nombre de résultats contenu dans l'onglet
 	 * @param array $contents Contenu de l'onglet
 	 */
 	public function __construct($name, $label, $content_type, $mixed = false) {
@@ -126,40 +126,40 @@ class elements_list_tab {
 	}
 
 	/**
-	 * Retourne le nombre de rÃ©sultats contenu dans l'onglet
-	 * @return int Nombre de rÃ©sultats contenu dans l'onglet
+	 * Retourne le nombre de résultats contenu dans l'onglet
+	 * @return int Nombre de résultats contenu dans l'onglet
 	 */
 	public function get_nb_results(){
 		return $this->nb_results;
 	}
 	
 	/**
-	 * DÃ©fini le nombre de rÃ©sultats contenu dans l'onglet
-	 * @param int $nb_results Nombre de rÃ©sultats Ã  affecter
+	 * Défini le nombre de résultats contenu dans l'onglet
+	 * @param int $nb_results Nombre de résultats à affecter
 	 */
 	public function set_nb_results($nb_results){
-		$this->nb_results = $nb_results*1;
+		$this->nb_results = intval($nb_results);
 	}
 	
 	/**
 	 * Retourne le contenu de l'onglet
-	 * @return array Tableau des rÃ©sultats 
+	 * @return array Tableau des résultats 
 	 */
 	public function get_contents(){
 		return $this->contents;
 	}
 	
 	/**
-	 * Permet de dÃ©finir le contenu de l'onglet
-	 * @param array $contents Contenu Ã  affecter
+	 * Permet de définir le contenu de l'onglet
+	 * @param array $contents Contenu à affecter
 	 */
 	public function set_contents($contents){
 		$this->contents = $contents;
 	}
 	
 	/**
-	 * Permet de dÃ©finir le groupement appliquÃ© au contenu de l'onglet
-	 * @param array $groups Contenu Ã  affecter
+	 * Permet de définir le groupement appliqué au contenu de l'onglet
+	 * @param array $groups Contenu à affecter
 	 */
 	public function set_groups($groups){
 		$this->groups = $groups;
@@ -182,9 +182,9 @@ class elements_list_tab {
 	}
 	
 	/**
-	 * Ajoute un groupement Ã  appliquer au contenu de l'onglet
-	 * @param string $groups_parent Type des groupes Ã  affecter
-	 * @param array $groups Contenu Ã  affecter
+	 * Ajoute un groupement à appliquer au contenu de l'onglet
+	 * @param string $groups_parent Type des groupes à affecter
+	 * @param array $groups Contenu à affecter
 	 */
 	public function add_groups($groups_parent, $groups) {
 		$this->groups[$groups_parent] = $groups;
@@ -210,12 +210,12 @@ class elements_list_tab {
 	}
 	
 	/**
-	 * Indique si des filtres sont cochÃ©s
+	 * Indique si des filtres sont cochés
 	 * @return boolean
 	 */
 	public function has_filters_values() {
 		foreach ($this->filters as $filter) {
-			// On vÃ©rifie que les filtres prÃ©sents en session sont prÃ©sents dans les filtres de l'Ã©lÃ©ment sur lequel on est
+			// On vérifie que les filtres présents en session sont présents dans les filtres de l'élément sur lequel on est
 			if (isset($this->groups[$filter['name']]['elements']) && is_array($this->groups[$filter['name']]['elements']) && count(array_intersect($this->get_filter_values($filter['name']), array_keys($this->groups[$filter['name']]['elements'])))) {
 				return true;
 			}
@@ -248,34 +248,42 @@ class elements_list_tab {
 	}
 	
 	/**
-	 * DÃ©finit le nombre de rÃ©sultats aprÃ¨s passage des filtres
-	 * @param int $nb_filtered_results Nombre de rÃ©sultats aprÃ¨s passage des filtres
+	 * Définit le nombre de résultats après passage des filtres
+	 * @param int $nb_filtered_results Nombre de résultats après passage des filtres
 	 */
 	public function set_nb_filtered_results($nb_filtered_results) {
-		$this->nb_filtered_results = $nb_filtered_results*1;
+		$this->nb_filtered_results = intval($nb_filtered_results);
 	}
 	
 	/**
-	 * Retourne le nombre de rÃ©sultats aprÃ¨s passage des filtres
-	 * @return int Nombre de rÃ©sultats aprÃ¨s passage des filtres
+	 * Retourne le nombre de résultats après passage des filtres
+	 * @return int Nombre de résultats après passage des filtres
 	 */
 	public function get_nb_filtered_results() {
 		return $this->nb_filtered_results;
 	}
 	
 	/**
-	 * DÃ©finit le nombre de rÃ©sultats aprÃ¨s passage des filtres
-	 * @param int $nb_filtered_results Nombre de rÃ©sultats aprÃ¨s passage des filtres
+	 * Définit le nombre de résultats après passage des filtres
+	 * @param int $nb_filtered_results Nombre de résultats après passage des filtres
 	 */
 	public function set_nb_prefiltered_results($nb_prefiltered_results) {
-		$this->nb_prefiltered_results = $nb_prefiltered_results*1;
+		$this->nb_prefiltered_results = intval($nb_prefiltered_results);
 	}
 	
 	/**
-	 * Retourne le nombre de rÃ©sultats aprÃ¨s passage des filtres
-	 * @return int Nombre de rÃ©sultats aprÃ¨s passage des filtres
+	 * Retourne le nombre de résultats après passage des filtres
+	 * @return int Nombre de résultats après passage des filtres
 	 */
 	public function get_nb_prefiltered_results() {
 		return $this->nb_prefiltered_results;
+	}
+	
+	public function can_display_tab() {
+	    global $pmb_entity_graph_activate;
+	    if ($this->content_type == "graph") {
+	        return $pmb_entity_graph_activate;
+	    }
+	    return ($this->nb_results != 0);
 	}
 }

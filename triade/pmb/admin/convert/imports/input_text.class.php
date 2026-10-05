@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: input_text.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: input_text.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,11 +23,11 @@ class input_text extends convert_input {
 			$flag_head=1;
 		}
 		
-		//Ajout du saut de ligne pour la derniÃ¨re 
+		//Ajout du saut de ligne pour la dernière 
 		$fcontents.="\r\n";
 		
 		while ($fcontents!="") {
-			//Recherche de l'Ã©lÃ©ment de fin de ligne
+			//Recherche de l'élément de fin de ligne
 			$i2=strpos($fcontents,"\r\n");
 			$i1=strpos($fcontents,"\n");
 			if (($i1)&&($i2)){
@@ -48,9 +48,9 @@ class input_text extends convert_input {
 				}
 			}
 			if ($i!==false) {
-				//Si trouvÃ©
+				//Si trouvé
 				
-				//Si 1Ã¨re ligne passÃ©e
+				//Si 1ère ligne passée
 				if (!$flag_head) {
 					$sub=substr($fcontents,0,$i);
 					if (trim($sub)!="") {

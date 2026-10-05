@@ -1,14 +1,35 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: datatype.inc.php,v 1.7 2019-06-06 12:07:04 ngantier Exp $
+// $Id: datatype.inc.php,v 1.8.4.1 2025/04/02 09:44:26 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-$datatype_list=array("small_text"=>$msg["parperso_datatype_text"],"text"=>$msg["parperso_datatype_huge_text"],"integer"=>$msg["parperso_datatype_integer"],"date"=>$msg["parperso_datatype_date"],"float"=>$msg["parperso_datatype_float"]);
-$chk_type_list=array("small_text"=>"chk_type_small_text","text"=>"chk_type_text","integer"=>"chk_type_integer","date"=>"chk_type_date","float"=>"chk_type_float");
-$format_list=array("small_text"=>"format_small_text","text"=>"format_text","integer"=>"format_integer","date"=>"format_date","float"=>"format_float");
+global $msg;
+global $datatype_list, $chk_type_list, $format_list;
+
+$datatype_list = array(
+        "small_text" => (isset($msg["parperso_datatype_text"]) ? $msg["parperso_datatype_text"] : ''),
+        "text" => (isset($msg["parperso_datatype_huge_text"]) ? $msg["parperso_datatype_huge_text"] : ''),
+        "integer" => (isset($msg["parperso_datatype_integer"]) ? $msg["parperso_datatype_integer"] : ''),
+        "date" => (isset($msg["parperso_datatype_date"]) ? $msg["parperso_datatype_date"] : ''),
+        "float" => (isset($msg["parperso_datatype_float"]) ? $msg["parperso_datatype_float"] : '')
+);
+$chk_type_list = array(
+        "small_text"=>"chk_type_small_text",
+        "text"=>"chk_type_text",
+        "integer"=>"chk_type_integer",
+        "date"=>"chk_type_date",
+        "float"=>"chk_type_float"
+);
+$format_list = array(
+        "small_text"=>"format_small_text",
+        "text"=>"format_text",
+        "integer"=>"format_integer",
+        "date"=>"format_date",
+        "float"=>"format_float"
+);
 
 function chk_type_small_text($value,&$chk_message) {
 	$chk_message="";

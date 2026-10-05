@@ -29,12 +29,12 @@ define([
 			'<div id="${id}_text" class="pbwTxt data-dojo-attach-point="text">${text}</div>' + template +
 			'<div id="${id}_msg" class="pbwMsg"></div>' +
 			'<div id="${id}_errMsg" class="pbwMsg"></div>' +
-			'<div id="${id}_abort" class="pbwButton">Annuler</div>' +
-			'<div id="${id}_pause" class="pbwButton">Pause</div>' +
-			'<div id="${id}_resume" class="pbwButton">Reprise</div>' +
-			'<div id="${id}_retry" class="pbwButton">Réessayer</div>' +
-			'<div id="${id}_del" class="pbwButton">Supprimer</div>' +
-			'<div id="${id}_remove" class="pbwButton">remove</div>' +
+			'<div id="${id}_abort" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_cancel') +'</div>' +
+			'<div id="${id}_pause" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_pause') +'</div>' +
+			'<div id="${id}_resume" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_resume') +'</div>' +
+			'<div id="${id}_retry" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_retry') +'</div>' +
+			'<div id="${id}_del" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_delete') +'</div>' +
+			'<div id="${id}_remove" class="pbwButton">'+ pmbDojo.messages.getMessage('upload', 'transfert_delete') +'</div>' +
 			'</div>' +
 			'</div>',
 
@@ -201,13 +201,19 @@ define([
 
 		complete: function() {
 			this.set('value', this.maximum);
-			dom.byId(this.id + '_msg').innerHTML = 'OK. Fichier sur le serveur.';
+			const msgNode = dom.byId(this.id + '_msg');
+			if (msgNode) {
+				msgNode.innerHTML = pmbDojo.messages.getMessage('upload', 'transfert_complete');
+			}
 			this.setState('completed');
 			this.onComplete();
 		},
 
 		upload: function() {
-			dom.byId(this.id + '_msg').innerHTML = 'Transfert en cours...';
+			const msgNode = dom.byId(this.id + '_msg');
+			if (msgNode) {
+				msgNode.innerHTML = pmbDojo.messages.getMessage('upload', 'transfert_uploading');
+			}
 			this.setState('uploading');
 		},
 
@@ -216,8 +222,19 @@ define([
 		 * @param {object} err error
 		 */
 		error: function(err) {
-			var msg = err.statusCode + ' ' + err.statusText + ': <span class="errMsg">' + err.responseText + '</span>';
-			dom.byId(this.id + '_errMsg').innerHTML = msg;
+			const text = document.createTextNode(err.statusCode + ' ' + err.statusText + ': ');
+
+			const errorMessage = document.createElement('span');
+			errorMessage.classList.add('errMsg');
+			errorMessage.innerText = err.responseText;
+
+			const errorMessageNode = dom.byId(this.id + '_errMsg');
+			if (errorMessageNode) {
+				errorMessageNode.innerHTML = '';
+				errorMessageNode.appendChild(text);
+				errorMessageNode.appendChild(errorMessage);
+			}
+
 			this.setState('error');
 			this.onError(err);
 		},
@@ -227,7 +244,10 @@ define([
 		 */
 		abort: function() {
 			this.aborted = true;
-			dom.byId(this.id + '_msg').innerHTML = '<span class="errMsg">Transfert annulé.</span>';
+			const msgNode = dom.byId(this.id + '_msg');
+			if (msgNode) {
+				msgNode.innerHTML = pmbDojo.messages.getMessage('upload', 'transfert_abort');
+			}
 			this.setState('aborted');
 			this.onAbort();
 		},
@@ -237,7 +257,10 @@ define([
 		 */
 		pause: function() {
 			this.paused = true;
-			dom.byId(this.id + '_msg').innerHTML = 'Pause';
+			const msgNode = dom.byId(this.id + '_msg');
+			if (msgNode) {
+				msgNode.innerHTML = pmbDojo.messages.getMessage('upload', 'pause');
+			}
 			this.setState('paused');
 			this.onPause();
 		},
@@ -256,7 +279,10 @@ define([
 
 		wait: function() {
 			this.set('value', Infinity);
-			dom.byId(this.id + '_msg').innerHTML = 'Transfert terminé, sauvergarde sur le serveur.';
+			const msgNode = dom.byId(this.id + '_msg');
+			if (msgNode) {
+				msgNode.innerHTML = pmbDojo.messages.getMessage('upload', 'transfert_wait');
+			}
 			this.setState('indeterminated');
 		},
 

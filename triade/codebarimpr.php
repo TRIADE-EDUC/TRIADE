@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,10 +40,10 @@ $cnx=cnx();
 
 if (($_GET["membre"] != "menueleve") && (isset($_GET['membre']))) {
 	$membre=renvoiTypePersonne($_GET["membre"]);	
-	$sql="SELECT type_pers,pers_id,nom,prenom FROM ${prefixe}personnel WHERE type_pers='$membre'  ORDER BY nom";
+	$sql="SELECT type_pers,pers_id,nom,prenom FROM {$prefixe}personnel WHERE type_pers='$membre'  ORDER BY nom";
 }else{
 	$saisie_classe=$_GET["idclasse"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves,${prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves,{$prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 }
 $res=execSql($sql);
 $data=chargeMat($res);
@@ -55,7 +55,7 @@ if ($_GET["membre"] != "menueleve") {
 print "<table width='100%'  border='0' align='left' >";
 print "<tr>";
 $j=0;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$texte=recupIdCodeBar($data[$i][1],"menueleve");
 	print "<td align='center' valign='top' >";
 	print "<img id='codeim$i' src=\"./codebar/image-impr.php?code=".$_GET["codebase"]."&text=".$texte."\"><br><br>";

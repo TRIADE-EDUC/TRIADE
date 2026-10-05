@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: templates.class.php,v 1.6 2019-05-11 15:09:10 dgoron Exp $
+// $Id: templates.class.php,v 1.9 2024/04/02 14:15:26 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ class templates {
 	protected static $selection_attributes;
 	
 	/**
-	 * Fonction de gÃ©nÃ©ration de champs autocomplÃ©tÃ©
+	 * Fonction de génération de champs autocomplété
 	 * @param string $name
 	 * @param integer $id
 	 * @param integer $index
@@ -22,11 +22,11 @@ class templates {
 	 * @param string $completion
 	 */
 	public static function get_input_completion($name, $id, $index, $value, $label, $completion){
-		global $msg;
+		global $msg, $charset;
 		
 		$template = "
 			<input type='text' completion='".$completion."' autfield='".$id."_".$index."' id='".$name."_".$index."' class='saisie-30emr' name='".$name."[".$index."][label]' data-form-name='".$name."[".$index."][label]' value=\"".$label."\" ".static::get_string_completion_attributes()." />
-			<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"document.getElementById('".$name."_".$index."').value=''; document.getElementById('".$id."_".$index."').value='0'; \" />
+			<input type='button' class='bouton' value='".htmlentities($msg['raz'], ENT_QUOTES, $charset)."' onclick=\"document.getElementById('".$name."_".$index."').value=''; document.getElementById('".$id."_".$index."').value='0'; \" />
 			<input type='hidden' name='".$name."[".$index."][id]' data-form-name='".$name."[".$index."][id]' id='".$id."_".$index."' value=\"".$value."\" />
 			<script type='text/javascript'>
 				ajax_pack_element(document.getElementById('".$name."_".$index."'));
@@ -76,6 +76,13 @@ class templates {
 		return $template;
 	}
 	
+	public static function get_button_clear_values($name, $id) {
+	    $template = "
+			<input type='button' class='bouton' value='X' onclick=\"templates.clear_values('".$name."', '".$id."');\" />
+		";
+	    return $template;
+	}
+	
 	public static function get_input_hidden($name, $value) {
 		$template = "<input type='hidden' id='".$name."' name='".$name."' value=\"".$value."\" />";
 		return $template;
@@ -90,7 +97,7 @@ class templates {
 		$display .= templates::get_button_add_completion_field($element_name, $element_id, $completion);
 		
 		if(count($elements)) {
-			foreach ($elements as $i=>$element) {
+			foreach ($elements as $i => $element) {
 				$display .= "<div id='".$caller."_".$element_name."_".$i."'>";
 				$display .= templates::get_input_completion($element_name, $element_id, $i, $element['id'], $element['name'], $completion);
 				$display .= "</div>";
@@ -104,7 +111,7 @@ class templates {
 		}
 		$display.= "<div id='add".$element_name."' data-completion-attributes='".encoding_normalize::json_encode(static::get_completion_attributes())."'></div>";
 		
-		// RÃ©-initialisation des propriÃ©tÃ©s statiques
+		// Ré-initialisation des propriétés statiques
 		templates::reset_completion_attributes();
 		templates::reset_selection_attributes();
 		
@@ -115,9 +122,11 @@ class templates {
 		$values = array();
 		global ${$element_name};
 		$values_from_form = ${$element_name};
-		foreach ($values_from_form as $value_from_form) {
-			if($value_from_form['id']) {
-				$values[] = $value_from_form['id'];
+		if(!empty($values_from_form) && is_array($values_from_form)) {
+			foreach ($values_from_form as $value_from_form) {
+				if($value_from_form['id']) {
+					$values[] = $value_from_form['id'];
+				}
 			}
 		}
 		return $values;

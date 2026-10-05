@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: enrichment.js,v 1.19 2018-11-19 16:25:17 dgoron Exp $
+// $Id: enrichment.js,v 1.19 2018/11/19 16:25:17 dgoron Exp $
 
 function getEnrichment(notice_id){
 	var ul = findNoticeElement(notice_id);

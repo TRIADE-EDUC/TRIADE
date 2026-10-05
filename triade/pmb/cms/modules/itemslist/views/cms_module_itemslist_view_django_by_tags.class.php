@@ -1,16 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_itemslist_view_django_by_tags.class.php,v 1.2 2016-02-12 10:13:45 jpermanne Exp $
+// $Id: cms_module_itemslist_view_django_by_tags.class.php,v 1.3.2.2 2025/01/21 15:29:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_django{
-	
+
 	public function __construct($id=0){
 		global $charset;
-		
+
 		parent::__construct($id);
 		$this->default_template = "
 {% for tag in tags %}
@@ -21,8 +21,8 @@ class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_dj
     {% if item.status!=2 %}
     <div>
         <a href='{{item.url}}' title='Source' target='_blank'><h4>{{item.title}}</h4></a>
-        <blockquote>{{item.publication_date}} / {{item.source.title}}</blockquote>
-        <blockquote>{{item.summary}}</blockquote>
+        <div>{{item.publication_date}} / {{item.source.title}}</div>
+        <div>{{item.summary}}</div>
     </div>
     {% endif %}
     {% endif %}
@@ -31,14 +31,14 @@ class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_dj
 {% endfor %}
 {% if items %}
 <div>
-    <h3>Non classÃ©s</h3>
+    <h3>Non classés</h3>
     {% for item in items %}
     {% if item.interesting %}
     {% if item.status!=2 %}
     <div>
         <a href='{{item.url}}' title='Source' target='_blank'><h4>{{item.title}}</h4></a>
-        <blockquote>{{item.publication_date}} / {{item.source.title}}</blockquote>
-        <blockquote>{{item.summary}}</blockquote>
+        <div>{{item.publication_date}} / {{item.source.title}}</div>
+        <div>{{item.summary}}</div>
     </div>
     {% endif %}
     {% endif %}
@@ -46,10 +46,10 @@ class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_dj
 </div>
 {% endif %}";
 		if ($charset=="utf-8") {
-			$this->default_template = utf8_encode($this->default_template);
+			$this->default_template = encoding_normalize::utf8_normalize($this->default_template);
 		}
 	}
-	
+
 	public function get_form(){
 		$form="
 		<div class='row'>
@@ -73,37 +73,39 @@ class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_dj
 		$form.= parent::get_form();
 		return $form;
 	}
-	
+
 	public function save_form(){
 		$this->save_constructor_link_form("item");
 		$this->save_constructor_link_form("tag");
 		return parent::save_form();
 	}
-	
+
 	public function render($datas){
 		$newdatas = array();
 		$tags = array();
-		for($i=0 ; $i<count($datas['items']) ; $i++){
-			$datas['items'][$i]['link'] = $this->get_constructed_link('item',$datas['items'][$i]['id']);
-			if(count($datas['items'][$i]['tags'])) {
-				for($j=0 ; $j<count($datas['items'][$i]['tags']) ; $j++){
-					$datas['items'][$i]['tags'][$j]['link'] = $this->get_constructed_link('tag',$datas['items'][$i]['tags'][$j]['id']);
-					$tags[$datas['items'][$i]['tags'][$j]['label']]['items'][] = $datas['items'][$i];
-					$tags[$datas['items'][$i]['tags'][$j]['label']]['label'] = $datas['items'][$i]['tags'][$j]['label'];
-					$tags[$datas['items'][$i]['tags'][$j]['label']]['link'] = $datas['items'][$i]['tags'][$j]['link'];
+		if (is_countable($datas['items'])) {
+			for($i=0 ; $i<count($datas['items']) ; $i++){
+				$datas['items'][$i]['link'] = $this->get_constructed_link('item',$datas['items'][$i]['id']);
+				if (is_countable($datas['items'][$i]['tags']) && count($datas['items'][$i]['tags'])) {
+					for($j=0 ; $j<count($datas['items'][$i]['tags']) ; $j++){
+						$datas['items'][$i]['tags'][$j]['link'] = $this->get_constructed_link('tag',$datas['items'][$i]['tags'][$j]['id']);
+						$tags[$datas['items'][$i]['tags'][$j]['label']]['items'][] = $datas['items'][$i];
+						$tags[$datas['items'][$i]['tags'][$j]['label']]['label'] = $datas['items'][$i]['tags'][$j]['label'];
+						$tags[$datas['items'][$i]['tags'][$j]['label']]['link'] = $datas['items'][$i]['tags'][$j]['link'];
+					}
+				} else {
+					$newdatas['items'][] = $datas['items'][$i];
 				}
-			} else {
-				$newdatas['items'][] = $datas['items'][$i];
 			}
 		}
+
 		ksort($tags);
 		$newdatas['tags'] = $tags;
+
 		return parent::render($newdatas);
 	}
-	
+
 	public function get_format_data_structure(){
-	
-		$datasource_item = new cms_module_item_datasource_item();
 		$datas = array(
 				array(
 						'var' => "tags",
@@ -112,7 +114,7 @@ class cms_module_itemslist_view_django_by_tags extends cms_module_common_view_dj
 								array(
 										'var' => "tags[i].id",
 										'desc' => $this->msg['cms_module_itemslist_view_django_by_tags_tags_id_desc'],
-											
+
 								),
 								array(
 										'var' => "tags[i].label",

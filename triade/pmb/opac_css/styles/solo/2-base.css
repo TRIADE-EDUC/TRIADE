@@ -3,7 +3,7 @@
 /* +--------------------------------------------------------------------------+
 // 2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: 2-base.css,v 1.3 2019-03-21 09:03:09 mramage Exp $ */
+// $Id: 2-base.css,v 1.5 2021/09/22 09:44:41 lbeguin Exp $ */
 /*------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -1194,7 +1194,7 @@ input[type="button"].bouton:hover,
 /*image solo 
 ========================================================================== */
 .solo-picture img{
-    min-height:100%;
+
 }
 .solo-picture .uk-grid-width-1-3 li{
 	border: solid 6px #5487cb;
@@ -1277,4 +1277,25 @@ ul.empr_subtabs li.subTabCurrent{
   background-color:#ffa;
   text-decoration: underline;
   display: inline-block;
+}
+
+.resa_notice {
+float: right;
+}
+
+.resa_notice a{
+text-decoration: none;
+}
+
+.resa_notice a::before {
+content: "\f064";
+font-size: 120%;
+vertical-align: middle;
+margin-right: 7px;
+text-align: center;
+font-family: FontAwesome;
+font-weight: normal;
+font-style: normal;
+display: inline-block;
+text-decoration: inherit;
 }

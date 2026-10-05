@@ -1,151 +1,209 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: restaure_act.php,v 1.11 2017-10-23 10:13:00 ngantier Exp $
+// $Id: restaure_act.php,v 1.12 2023/03/02 08:45:38 dbellamy Exp $
 
 //Restauration d'un jeu
 
-//Est-ce une restauration critique (dans ce cas, pas de v√©rification d'utilisateur)?
+global $msg;
 
-if ($_POST["critical"]) {
-	include("emergency/messages_env_ract.inc.php");
-	include('../../includes/mysql_functions.inc.php');
+$base_path = "../..";
+$base_auth = "SAUV_AUTH|ADMINISTRATION_AUTH";
+
+$base_title = $msg['sauv_misc_ract_title'];
+
+//Initialisation variables
+$critical = !empty($_POST["critical"]) ? 1 : 0;
+$logid = 0;
+$filename = '';
+$displayed_filename = '';
+$tables = [];
+$host = '';
+$db_user = '';
+$db_password = '';
+$db = '';
+$charset = 'iso-8859-1';
+
+//Est-ce une restauration critique (dans ce cas, pas de vÈrification d'utilisateur)?
+if ($critical) {
+    
+    if ( is_readable("../backup/backups/critical_upload.php") ) {
+        $fc = file_get_contents("../backup/backups/critical_upload.php");
+        if(false !== $fc) {
+            $filename = trim(explode('//', $fc)[1]);
+        }
+    }
+    include "emergency/messages_env_ract.inc.php";
+    $class_path = "../../classes";
+    include '../../includes/mysql_functions.inc.php';
+    
+    $displayed_filename = isset($_POST['filename']) ? $_POST['filename'] : '';
+    $tables = isset($_POST["tables"]) ? $_POST["tables"] : [];
+    $host = isset($_POST["host"]) ? $_POST["host"] : '';
+    $db_user = isset($_POST["db_user"]) ? $_POST["db_user"] : '';;
+    $db_password = isset($_POST["db_password"]) ? $_POST["db_password"] : '';
+    $db = isset($_POST["db"]) ? $_POST["db"] : '';
+    
 } else {
-	$base_path="../..";
-    $base_auth="SAUV_AUTH|ADMINISTRATION_AUTH";
-    $base_title="\$msg[sauv_misc_ract_title]";
-    require($base_path."/includes/init.inc.php");
+    require $base_path."/includes/init.inc.php";
+    $critical = 0;
+    $displayed_filename = $filename;
 }
 
-//R√©cup√©ration du nom de fichier
+require "lib/api.inc.php";
 
-$tFilename=explode("/",$filename);
-$file_name=$tFilename[count($tFilename)-1];
-
-$user=$db_user;
-$password=$db_password;
-
-
-
-require_once("../../classes/crypt.class.php");
-
-function abort($message) {
-	echo "<script>alert(\"$message\"); history.go(-1);</script>";
-	exit();
+//En mode restauration critique on verifie la connexion a la base de donnees
+if($critical) {
+    $dbh = pmb_mysql_connect($host, $db_user, $db_password) or abort_critical($msg["sauv_misc_ract_cant_connect"]);
+    pmb_mysql_select_db($db, $dbh) or abort_critical(sprintf($msg["sauv_misc_ract_db_dont_exists"], $db));
 }
 
-print "<div id=\"contenu-frame\">\n";
-echo "<h1>".sprintf($msg["sauv_misc_restaure"],$file_name)."</h1>\n";
-
-if ($critical==1) {
-	$dbh=pmb_mysql_connect($host,$user,$password) or abort($msg["sauv_misc_ract_cant_connect"]);
-	pmb_mysql_select_db($db, $dbh) or abort(sprintf($msg["sauv_misc_ract_db_dont_exists"],$db));
+//Verification du fichier
+$infos = read_infos("../backup/backups/".$filename);
+if ( !empty($infos['error']) ) {
+    @unlink ( "../backup/backups/".$filename);
+    abort_critical($msg['sauv_misc_ract_no_sauv']);
+    exit();
 }
 
-//R√©cup√©ration de la partie data
-$f=fopen($filename,"r") or abort($msg["sauv_misc_ract_cant_open_file"]);
-$line=fgets($f,4096);
-$line=rtrim($line);
-while ((!feof($f))&&($line!="#data-section")) {
-	$line=fgets($f,4096);
-	$line=rtrim($line);
+//Info compression/decompression
+$compress = $infos['Compress'];
+$compress_type = $infos['compress_type'];
+$decompress_cmd = $infos['decompress_cmd'];
+$decompress_ext = $infos['decompress_ext'];
+
+/*
+ require_once "../../classes/crypt.class.php";
+ 
+ $datas=fread($f,filesize($filename));
+ 
+ fclose($f);
+ 
+ //Si cryptÈ
+ if ($crypt==1) {
+ echo "<b>".$msg["sauv_misc_ract_decryt_msg"]."</b><br />";
+ flush();
+ $c=new Crypt(md5($phrase1),md5($phrase2));
+ $sign=substr($datas,0,8);
+ $dSign=$c->getDecrypt($sign);
+ if ($dSign!="PMBCrypt") abort($msg["sauv_misc_ract_bad_keys"]);
+ $datas=substr($datas,8);
+ $datas=$c->getDecrypt($datas);
+ }
+ */
+if($critical) {
+    echo '<!DOCTYPE html><html><head><meta charset="'.$charset.'" ></head><body>';
+}
+echo '<div id="contenu-frame">
+    <h1>'.htmlentities(sprintf($msg["sauv_misc_restaure"], $displayed_filename), ENT_QUOTES, $charset).'</h1>';
+
+//Nom du fichier temporaire
+$tempfile = "../backup/backups/temp_restaure";
+if( $compress == 1 ) {
+    if ($compress_type == 'internal') {
+        $tempfile.= '.bz2';
+    }
+    if ($compress_type == 'external') {
+        $tempfile.=".sql".(!empty($decompress_ext) ? '.'.$decompress_ext : '');
+    }
+}  else {
+    $tempfile.=".sql";
 }
 
-if ($line!="#data-section") abort($msg["sauv_misc_ract_no_sauv"]);
+//Ouverture fichier temporaire
+$ftemp = fopen($tempfile, "w+") or abort_critical($msg["sauv_misc_ract_create"]);
 
-/*$datas=fread($f,filesize($filename));
+//Ouverture fichier sauvegarde
+$f = fopen( "../backup/backups/".$filename, "r") or abort_critical($msg["sauv_misc_ract_cant_open_file"]);
 
-fclose($f);
-
-//Si crypt√©
-if ($crypt==1) {
-	echo "<b>".$msg["sauv_misc_ract_decryt_msg"]."</b><br />";
-	flush();
-	$c=new Crypt(md5($phrase1),md5($phrase2));
-	$sign=substr($datas,0,8);
-	$dSign=$c->getDecrypt($sign);
-	if ($dSign!="PMBCrypt") abort($msg["sauv_misc_ract_bad_keys"]);
-	$datas=substr($datas,8);
-	$datas=$c->getDecrypt($datas);
+//Recuperation partie data et copie dans le fichier temporaire
+$line = rtrim(fgets($f,8192));
+while ( (!feof($f)) && ($line != "#data-section") ) {
+    $line = rtrim(fgets($f, 8192));
 }
-*/
-
-//Copie des donn√©es dans un fichier temporaire
-$tempfile="temp_restaure";
-$tempfiledest="../backup/backups/temp_restaure.sql";
-
-//Si compress√©
-if ($compress==1) {
-	if ($decompress_type=="internal") $tempfile.=".bz2"; else $tempfile.=".sql.".$decompress_ext;
-} else $tempfile.=".sql";
-
-$tempfile="../backup/backups/".$tempfile;
-$ftemp=fopen($tempfile,"w+") or abort($msg["sauv_misc_ract_create"]);
-
-while (!feof($f)) {
-	fwrite($ftemp,fread($f,4096));
+while (!feof($f) ) {
+    fwrite($ftemp, fread($f, 8192));
 }
-
-//fwrite($ftemp,$datas);
 fclose($ftemp);
 fclose($f);
 
-//D√©compression √©ventuelle
-if ($compress==1) {
-	echo "<b>".$msg["sauv_misc_ract_decompress"]."</b><br />";
-	flush();
-	if ($decompress_type=="external") {
-		$decompress=str_replace("%s",$tempfile,$decompress);
-		$decompress=str_replace("%sd",$tempfiledest,$decompress);
-		exec($decompress);
-	} else {
-		$ftempin=bzopen($tempfile,"r") or abort($msg["sauv_misc_ract_not_bz2"]);
-		$ftempout=fopen($tempfiledest,"w+") or abort($msg["sauv_misc_ract_create"]);
-		while (!feof($ftempin)) {
-			$datas=bzread($ftempin,2048);
-			fwrite($ftempout,$datas);
-		}
-		bzclose($ftempin);
-		fclose($ftempout);
-		@unlink($tempfile);
-	}
+//Decompression fichier temporaire vers fichier sql
+$tempfiledest = "../backup/backups/temp_restaure.sql";
+if ( $compress == 1 ) {
+    echo "<b>".htmlentities($msg["sauv_misc_ract_decompress"], ENT_QUOTES, $charset)."</b><br />";
+    flush();
+    
+    if ( $compress_type == "external" ) {
+        $decompress_cmd = str_replace("%sd", $tempfiledest, $decompress_cmd);
+        $decompress_cmd = str_replace("%s", $tempfile, $decompress_cmd);
+        exec($decompress_cmd);
+    }
+    if( $compress_type == 'internal' ) {
+        
+        $ftempin = bzopen($tempfile, "r") or abort_critical($msg["sauv_misc_ract_not_bz2"]);
+        $ftempout = fopen($tempfiledest, "w+") or abort_critical($msg["sauv_misc_ract_create"]);
+        while (!feof($ftempin)) {
+            $datas = bzread($ftempin, 2048);
+            fwrite($ftempout ,$datas);
+        }
+        bzclose($ftempin);
+        fclose($ftempout);
+        @unlink($tempfile);
+    }
 }
 
-//Application des requ√™tes
-echo "<b>".$msg["sauv_misc_ract_restaure_tables"]."</b><br /><br />";
-if (!is_array($tables)) $tables=array();
-$fsql=fopen($tempfiledest,"r") or abort($msg["sauv_misc_ract_open_failed"]);
-$mod_query=0;
-while (!feof($fsql)) {
-	$line="";
-	while ((substr($line,strlen($line)-1,1)!="\n")&&(!feof($fsql))) { 
-		$line.=fgets($fsql,4096);
-	}
-	$line=rtrim($line);
-	if ($line!="") {
-		if (substr($line,0,1)=="#") {
-			if (($currentTable!="")&&($mod_query==1)) { echo sprintf($msg["sauv_misc_ract_restaured_t"],$currentTable)."<br />"; flush(); }
-			$currentTable=substr($line,1);
-			$as=array_search($currentTable,$tables);
-			if (($as!==false)&&($as!==null)) { $mod_query=1; echo sprintf($msg["sauv_misc_ract_start_restaure"],$currentTable)."<br />"; } else { $mod_query=0; echo sprintf($msg["sauv_misc_ract_ignore"],$currentTable)."<br />"; }
-			flush();
-		} else {
-			if ($mod_query==1) { pmb_mysql_query($line) or abort(sprintf($msg["sauv_misc_ract_invalid_request"],$line)); }
-		}
-	}
+//Application des requetes
+echo "<b>".htmlentities($msg["sauv_misc_ract_restaure_tables"], ENT_QUOTES, $charset)."</b><br /><br />";
+
+//Ouverture fichier SQL
+$fsql=fopen($tempfiledest, "r") or abort_critical($msg["sauv_misc_ract_open_failed"]);
+
+$mod_query = 0;
+$currentTable = "";
+
+while ( !feof($fsql )) {
+    $line = "";
+    while ( (substr($line, strlen($line)-1, 1) != "\n") && (!feof($fsql)) ) {
+        $line.= fgets($fsql,4096);
+    }
+    $line = rtrim($line);
+    if ($line != "") {
+        if (substr($line, 0, 1) == "#") {
+            if ( ($currentTable != "") && ($mod_query == 1) ) {
+                echo htmlentities(sprintf($msg["sauv_misc_ract_restaured_t"], $currentTable), ENT_QUOTES, $charset)."<br />";
+                flush();
+            }
+            $currentTable = substr($line, 1);
+            $as=array_search($currentTable, $tables);
+            if ( ($as !== false) && ($as !== null) ) {
+                $mod_query = 1;
+                echo htmlentities(sprintf($msg["sauv_misc_ract_start_restaure"], $currentTable), ENT_QUOTES, $charset)."<br />";
+            } else {
+                $mod_query = 0;
+                echo sprintf($msg["sauv_misc_ract_ignore"], $currentTable)."<br />";
+            }
+            flush();
+        } else {
+            if ($mod_query == 1) {
+                pmb_mysql_query($line) or abort_critical(sprintf($msg["sauv_misc_ract_invalid_request"], $line));
+            }
+        }
+    }
 }
 fclose($fsql);
 @unlink($tempfiledest);
 
 /* Succeed - Gestion du cas particulier :
- * Derni√®re sauvegarde effectu√©e <=> sauv_log_succeed valoris√© √† 1 apr√®s sauvegarde
- * Lors de la restauration, on r√©cup√®re la valeur 0, enregistr√©e avant la fin de la sauvegarde.
+ * DerniËre sauvegarde effectuÈe <=> sauv_log_succeed valorisÈ ‡ 1 aprËs sauvegarde
+ * Lors de la restauration, on rÈcupËre la valeur 0, enregistrÈe avant la fin de la sauvegarde.
  */
-$requete="update sauv_log set sauv_log_succeed=1 where sauv_log_id=".$logid;
+$requete = "update sauv_log set sauv_log_succeed=1 where sauv_log_id=".$logid;
 @pmb_mysql_query($requete);
 
-echo "<h2>".$msg["sauv_misc_ract_correct"]."</h2>";
+echo "<h2>".htmlentities($msg["sauv_misc_ract_correct"], ENT_QUOTES, $charset)."</h2>";
 echo "</div>";
-if ($critical==1) unlink($filename);
-?>
+if ( $critical ) {
+    echo '</body></html>';
+    unlink( "../backup/backups/".$filename);
+}

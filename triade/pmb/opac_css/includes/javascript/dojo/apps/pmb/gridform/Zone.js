@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Zone.js,v 1.2 2017-11-30 10:53:34 dgoron Exp $
+// $Id: Zone.js,v 1.2 2017/11/30 10:53:34 dgoron Exp $
 
 
 define([

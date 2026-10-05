@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice.tpl.php,v 1.20 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: notice.tpl.php,v 1.20 2019/05/29 11:23:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -15,17 +15,17 @@ if ( ! defined( 'NOTICE_TMPL' ) ) {
   define( 'NOTICE_TMPL', 1 );
 
 //	----------------------------------
-//	$notice_resume : Ã©cran de liste des exemplaires pour une notice
+//	$notice_resume : écran de liste des exemplaires pour une notice
 // Liste des variables statiques prises en charges :
-// !!notice_id!! numÃ©ro de notice
+// !!notice_id!! numéro de notice
 // !!notice_id_only!!
 // !!typdoc!!    type du document
 // !!tit1!!      titre propre
 // !!tit2!!      titre propre 2
-// !!tit3!!      titre parallÃ¨le
-// !!tit4!!      complÃ©ment du titre
-// !!tparent!!   libellÃ© du titre parent (nom de la sÃ©rie)
-// !!tnvol!!     numÃ©ro de partie (numÃ©ro de volume dans une sÃ©rie par exemple)
+// !!tit3!!      titre parallèle
+// !!tit4!!      complément du titre
+// !!tparent!!   libellé du titre parent (nom de la série)
+// !!tnvol!!     numéro de partie (numéro de volume dans une série par exemple)
 // !!aut1!!      auteur principal
 // !!f1!!        fonction de l'auteur principal
 // !!aut2!!      coauteur
@@ -34,41 +34,41 @@ if ( ! defined( 'NOTICE_TMPL' ) ) {
 // !!f3!!        fonction auteur secondaire 1
 // !!aut4!!      auteur secondaire 2
 // !!f4!!        fonction auteur secondaire 2
-// !!ed1!!       Ã©diteur principal
-// !!ed2!!       autre Ã©diteur
+// !!ed1!!       éditeur principal
+// !!ed2!!       autre éditeur
 // !!coll!!      collection
 // !!subcoll!!   sous-collection
-// !!year!!      annÃ©e de publication
-// !!nocoll!!    numÃ©ro dans la collection
-// !!code!!      isbn, code barre commercial ou nÂ° commercial
+// !!year!!      année de publication
+// !!nocoll!!    numéro dans la collection
+// !!code!!      isbn, code barre commercial ou n° commercial
 // !!npages!!    nombre de pages
 // !!ill!!       mention d'illustration
 // !!size!!      format
 // !!prix!!      prix
-// !!accomp!!    matÃ©riel d'accompagnement
-// !!n_gen!!     note gÃ©nÃ©rale
+// !!accomp!!    matériel d'accompagnement
+// !!n_gen!!     note générale
 // !!n_contenu!! note de contenu
-// !!n_resume!!  rÃ©sumÃ©/extrait
-// !!index_l!!   indexation libre / mots-clÃ©s
+// !!n_resume!!  résumé/extrait
+// !!index_l!!   indexation libre / mots-clés
 // !!lang!!      langue du document
 // !!org_lang!!  langue originale du document
-// !!lien!!      URL de la ressource Ã©lectronique associÃ©e
-// !!eformat!!   format de la ressource Ã©lectronique associÃ©e
+// !!lien!!      URL de la ressource électronique associée
+// !!eformat!!   format de la ressource électronique associée
 
 // Liste des variables dynamiques prises en charges. Les affichages sont cliquables le plus souvent
-// !!auteur!!    nom de l'auteur principal. S'il n'existe pas, affiche le premier auteur trouvÃ© et sa fonction.
-// !!auteurs!!   noms des auteurs sÃ©parÃ©s par des virgules. La fonction des auteurs secondaire est prÃ©cisÃ©e
-//               entre parenthÃ¨ses
-// !!editeur!!   nom de l'Ã©diteur principal
+// !!auteur!!    nom de l'auteur principal. S'il n'existe pas, affiche le premier auteur trouvé et sa fonction.
+// !!auteurs!!   noms des auteurs séparés par des virgules. La fonction des auteurs secondaire est précisée
+//               entre parenthèses
+// !!editeur!!   nom de l'éditeur principal
 // !!collection!! nom de la collection et de la sous collection si elle existe
-// !!level1!!    affichage de niveau 1 (affichage rÃ©duit)
+// !!level1!!    affichage de niveau 1 (affichage réduit)
 //
-// !!prix!! prix du document (dÃ©fini dans la notice et non dans les exemplaires)
+// !!prix!! prix du document (défini dans la notice et non dans les exemplaires)
 //
-// A ajouter Ã  ces variables, les variables de localisation qui permettent de fixer des termes d'intro et de fin
+// A ajouter à ces variables, les variables de localisation qui permettent de fixer des termes d'intro et de fin
 // ex : !!notice_id_start!! ou !!notice_id_end!!
 
-// level 1 : affichage sur une ligne titre, auteur principal, disponibilitÃ©
+// level 1 : affichage sur une ligne titre, auteur principal, disponibilité
 
 global $notice_level1_display;
 global $notice_level1_no_coll_info;
@@ -96,7 +96,7 @@ $notice_level1_no_publisher_info = "";
 
 
 
-// level 2 : affichage rÃ©duit mais gÃ©nÃ©ral
+// level 2 : affichage réduit mais général
 $notice_level2_display = "
 <h3>!!tit1_ico!! <a href='index.php?lvl=notice_display&id=!!notice_id_only!!'>!!tit1!!</a></h3>
 <ul>
@@ -168,4 +168,4 @@ $notice_level5_display = "
 				";
 
 
-} # fin de dÃ©finition
+} # fin de définition

@@ -17,8 +17,13 @@
  *   (at your option) any later version.
  *
  ***************************************************************************/
-//
 
+
+
+if (!stream_resolve_include_path('DB.php')) {
+    $pearDir = __DIR__ . '/../../common/pear';
+    if (is_dir($pearDir)) set_include_path(get_include_path() . PATH_SEPARATOR . $pearDir);
+}
 include_once 'DB.php';
 
 include_once 'conf_error.php';
@@ -30,43 +35,60 @@ include_once '../common/config.inc.php';
 $gestionMDP=GESTIONMDP;
 global $gestionMDP;
 
+if (!function_exists('get_magic_quotes_gpc')) {
+    function get_magic_quotes_gpc() {
+        return false;
+    }
+}
+
+function countTriade($val) {
+	if (is_countable($val)) {
+		return(count($val));
+        }else{
+                return(0);
+        }
+}
+
 function cnx() {
 	global $dsn;
-	$cnx =& DB::connect($dsn);
-        if(DB::isError($cnx))
-        {
-		// exit($cnx->getMessage());
-        }
-        else
-        {
-		if (!file_exists("../data/install_log/noaccess.inc")) {
-			if (!get_magic_quotes_gpc()) {
-				$_GET = array_map('trim', $_GET); 
-				$_POST = array_map('trim', $_POST); 
-				$_COOKIE = array_map('trim', $_COOKIE); 
-				$_REQUEST = array_map('trim', $_REQUEST); 
+	global $prefixe;
+	if (!isset($cnx)) {
+		$cnx = DB::connect($dsn);
+	        if(DB::isError($cnx))
+        	{
+			 exit($cnx->getMessage());
+        	}else{
+			if (!file_exists("../data/install_log/noaccess.inc")) {
+				if (!get_magic_quotes_gpc()) {
+					$_GET = array_map('trim', $_GET); 
+					$_POST = array_map('trim', $_POST); 
+					$_COOKIE = array_map('trim', $_COOKIE); 
+					$_REQUEST = array_map('trim', $_REQUEST); 
 
-				foreach($_GET as $key=>$value){ $_GET[$key] = $cnx->escapeSimple($value);  }
-                                foreach($_POST as $key=>$value){ $_POST[$key] = $cnx->escapeSimple($value);  }
-                                foreach($_COOKIE as $key=>$value){ $_COOKIE[$key] = $cnx->escapeSimple($value);  }
-                                foreach($_REQUEST as $key=>$value){ $_REQUEST[$key] = $cnx->escapeSimple($value);  }
+					foreach($_GET as $key=>$value){ $_GET[$key] = $cnx->escapeSimple($value);  }
+       		                        foreach($_POST as $key=>$value){ $_POST[$key] = $cnx->escapeSimple($value);  }
+       	        	                foreach($_COOKIE as $key=>$value){ $_COOKIE[$key] = $cnx->escapeSimple($value);  }
+                                	foreach($_REQUEST as $key=>$value){ $_REQUEST[$key] = $cnx->escapeSimple($value);  }
 
 
-			/*	$_GET = @array_map('mysql_real_escape_string', $_GET); 
-				$_POST = @array_map('mysql_real_escape_string', $_POST); 
-				$_COOKIE = @array_map('mysql_real_escape_string', $_COOKIE); 
-				$_REQUEST = @array_map('mysql_real_escape_string', $_REQUEST); */
+				/*	$_GET = @array_map('mysql_real_escape_string', $_GET); 
+					$_POST = @array_map('mysql_real_escape_string', $_POST); 
+					$_COOKIE = @array_map('mysql_real_escape_string', $_COOKIE); 
+					$_REQUEST = @array_map('mysql_real_escape_string', $_REQUEST); */
+				}
+	                	return $cnx;
 			}
-	                return $cnx;
-		}
-        }
+        	}
+	}else{
+		return $cnx;
+	}
 }
 
 function execSql($sql) {
         global $cnx;
 	global $ERROR;
+        $res = $cnx->query($sql);
 
-        $res =& $cnx->query($sql);
         if(DB::isError($res)) {
 		if (preg_match('/restobase/i',$_SERVER['SCRIPT_NAME'])) {
 			//Pgclose();
@@ -107,10 +129,10 @@ function execSql($sql) {
 		if (file_exists("./data/parametrage/analyse.triade")) {
                         if (filesize("./data/parametrage/analyse.log") > 8000000) {
                                 $suffixe=date("H");
-                                if (filesize("./data/parametrage/analyse_${suffixe}.log")) {
-                                        @unlink("./data/parametrage/analyse_${suffixe}.log");
+                                if (filesize("./data/parametrage/analyse_{$suffixe}.log")) {
+                                        @unlink("./data/parametrage/analyse_{$suffixe}.log");
                                 }
-                                copy("./data/parametrage/analyse.log","./data/parametrage/analyse_${suffixe}.log");
+                                copy("./data/parametrage/analyse.log","./data/parametrage/analyse_{$suffixe}.log");
                                 @unlink("./data/parametrage/analyse.log");
                         }
                         $fichier=fopen("./data/parametrage/analyse.log","a");
@@ -126,7 +148,7 @@ function execSql($sql) {
 
 function execSql2($sql) {
         global $cnx;
-        $res =& $cnx->query($sql);
+        $res = $cnx->query($sql);
         if(DB::isError($res))
         {
                 //print "<br>$sql</br>";
@@ -170,11 +192,13 @@ function reload_page($page) {
 
 
 function MyAddSlashes($chaine) {
-	if (PHPMAGICQUOTE == "auto") {      
+	$PHPMAGICQUOTE="";
+	if (defined('PHPMAGICQUOTE')) $PHPMAGICQUOTE=PHPMAGICQUOTE; 
+	if ($PHPMAGICQUOTE == "auto") {      
 		return( get_magic_quotes_gpc() == 1 ? $chaine : addslashes($chaine) );
-	}elseif(PHPMAGICQUOTE == "off") {
+	}elseif($PHPMAGICQUOTE == "off") {
 		return(addslashes($chaine));
-	}elseif(PHPMAGICQUOTE == "on") {
+	}elseif($PHPMAGICQUOTE == "on") {
 		return($chaine);
 	}else{
 		return($chaine);
@@ -182,14 +206,18 @@ function MyAddSlashes($chaine) {
 }
 
 function MyStripSlashes($chaine) {
-	if (PHPMAGICQUOTE == "auto") { 
-		return( get_magic_quotes_gpc() == 1 ? stripslashes($chaine) : $chaine);
-	}elseif(PHPMAGICQUOTE == "off") {
-		return($chaine);
-	}elseif(PHPMAGICQUOTE == "on") {
-		return(stripslashes($chaine));
-	}else{
-		return(stripslashes($chaine));
+	if ($chaine !== null) {
+		$PHPMAGICQUOTE="";
+		if (defined('PHPMAGICQUOTE')) $PHPMAGICQUOTE=PHPMAGICQUOTE; 
+		if ($PHPMAGICQUOTE == "auto") { 
+			return( get_magic_quotes_gpc() == 1 ? stripslashes($chaine) : $chaine);
+		}elseif($PHPMAGICQUOTE == "off") {
+			return($chaine);
+		}elseif($PHPMAGICQUOTE == "on") {
+			return(stripslashes($chaine));
+		}else{
+			return(stripslashes($chaine));
+		}
 	}
 }
 
@@ -207,6 +235,7 @@ function chargeMat($res) {
                         $mat[$i][$j] = $ligne[$j];
                 }
         }
+	if ($mat == NULL) return(array());
         return $mat;
 }
 
@@ -232,34 +261,34 @@ function error($code){
 function delete_global() {
         global $cnx;
         global $prefixe;
-	$sql="DELETE  FROM ${prefixe}personnel";
+	$sql="DELETE  FROM {$prefixe}personnel";
 	$ins=execSql($sql);
 	unset($sql);
-	$sql="DELETE  FROM ${prefixe}groupes";
+	$sql="DELETE  FROM {$prefixe}groupes";
         $ins=execSql($sql);
 	unset($sql);
-	$sql="DELETE  FROM ${prefixe}types_personnel";
+	$sql="DELETE  FROM {$prefixe}types_personnel";
         $ins=execSql($sql);
 	unset($sql);
-	$sql="DELETE  FROM ${prefixe}retards";
+	$sql="DELETE  FROM {$prefixe}retards";
 	$ins=execSql($sql);
 	unset($sql);
-	$sql="DELETE  FROM ${prefixe}absences";
+	$sql="DELETE  FROM {$prefixe}absences";
 	$ins=execSql($sql);
 }
 
 function validperson() {
         global $cnx;
         global $prefixe;
-	$sql="INSERT INTO ${prefixe}types_personnel(type_pers,libelle,membre) VALUES ('ADM','administrateur','menuadmin')";
+	$sql="INSERT INTO {$prefixe}types_personnel(type_pers,libelle,membre) VALUES ('ADM','administrateur','menuadmin')";
         $ins=@execSql($sql);
-	$sql="INSERT INTO ${prefixe}types_personnel(type_pers,libelle,membre) VALUES ('ENS','enseignant','menuprof')";
+	$sql="INSERT INTO {$prefixe}types_personnel(type_pers,libelle,membre) VALUES ('ENS','enseignant','menuprof')";
         $ins=@execSql($sql);
-	$sql="INSERT INTO ${prefixe}types_personnel(type_pers,libelle,membre) VALUES ('MVS','Vie Scolaire','menuscolaire')";
+	$sql="INSERT INTO {$prefixe}types_personnel(type_pers,libelle,membre) VALUES ('MVS','Vie Scolaire','menuscolaire')";
         $ins=@execSql($sql);
-	$sql="INSERT INTO ${prefixe}types_personnel(type_pers,libelle,membre) VALUES ('TUT','Tuteur de stage','menututeur')";
+	$sql="INSERT INTO {$prefixe}types_personnel(type_pers,libelle,membre) VALUES ('TUT','Tuteur de stage','menututeur')";
         $ins=@execSql($sql);
-	$sql="INSERT INTO ${prefixe}types_personnel(type_pers,libelle,membre) VALUES ('PER','Personnel','menupersonnel')";
+	$sql="INSERT INTO {$prefixe}types_personnel(type_pers,libelle,membre) VALUES ('PER','Personnel','menupersonnel')";
         $ins=@execSql($sql);
 	return $ins;
 }
@@ -268,9 +297,9 @@ function validabsretard() {
         global $cnx;
         global $prefixe;
 	if (DBTYPE=="mysql") {
-		$sql="INSERT INTO ${prefixe}absences (elev_id,date_ab,date_saisie,duree_ab) VALUES ('-4', '0000-00-00', '0000-00-00', '0')";
+		$sql="INSERT INTO {$prefixe}absences (elev_id,date_ab,date_saisie,duree_ab) VALUES ('-4', '0000-00-00', '0000-00-00', '0')";
         //	$ins=@execSql($sql);
-		$sql="INSERT INTO ${prefixe}retards (elev_id,heure_ret,date_ret,date_saisie) VALUES ('-4', '00:00:00', '0000-00-00', '0000-00-00')";
+		$sql="INSERT INTO {$prefixe}retards (elev_id,heure_ret,date_ret,date_saisie) VALUES ('-4', '00:00:00', '0000-00-00', '0000-00-00')";
         //	$ins=@execSql($sql);
 	//	return $ins;
 		return true;
@@ -283,7 +312,7 @@ function validabsretard() {
 function delete_groupe_null() {
 	global $cnx;
     global $prefixe;
-	$sql="DELETE  FROM ${prefixe}groupes WHERE group_id='0' ";
+	$sql="DELETE  FROM {$prefixe}groupes WHERE group_id='0' ";
     $ins=execSql($sql);
 }
 
@@ -291,7 +320,7 @@ function delete_groupe_null() {
 function delete_retard_null() {
 	global $cnx;
 	global $prefixe;
-	$sql="DELETE  FROM ${prefixe}retards  WHERE elev_id='-4' ";
+	$sql="DELETE  FROM {$prefixe}retards  WHERE elev_id='-4' ";
     	$ins=execSql($sql);
 }
 
@@ -299,10 +328,10 @@ function delete_retard_null() {
 function validGroup() {
 	global $cnx;
     	global $prefixe;
-	$sql="INSERT INTO ${prefixe}groupes(group_id,liste_elev,commentaire,libelle) VALUES ('0',NULL,NULL,NULL)";
+	$sql="INSERT INTO {$prefixe}groupes(group_id,liste_elev,commentaire,libelle) VALUES ('0',NULL,NULL,NULL)";
 	$ins=@execSql($sql);
 	if (DBTYPE=="mysql") {
-		$sql="UPDATE ${prefixe}groupes SET group_id='0',liste_elev=NULL,commentaire=NULL,libelle=NULL WHERE liste_elev IS NULL AND libelle IS NULL";
+		$sql="UPDATE {$prefixe}groupes SET group_id='0',liste_elev=NULL,commentaire=NULL,libelle=NULL WHERE liste_elev IS NULL AND libelle IS NULL";
 		$ins=@execSql($sql);
 	}
 	return $ins;
@@ -325,7 +354,7 @@ function validtriade($nom,$pren,$mdp) {
 	$mdp=cryptage($mdp);
 	$nom=MyAddSlashes($nom);
 	$pren=MyAddSlashes($pren);
-	$sql="INSERT INTO ${prefixe}personnel(nom,prenom,mdp,type_pers,civ) VALUES ('$nom','$pren','$mdp','$tp',$civ)";
+	$sql="INSERT INTO {$prefixe}personnel(nom,prenom,mdp,type_pers,civ) VALUES ('$nom','$pren','$mdp','$tp',$civ)";
     	$ins=@execSql($sql);
 	return $ins;
 }
@@ -350,7 +379,7 @@ function create_fichier($titre,$fichier,$date,$type) {
 	global $prefixe;
 	$titre=MyAddSlashes($titre);
 	$fichier=MyAddSlashes($fichier);
-        $sql="INSERT INTO ${prefixe}fichier (titre,fichier,date,type) VALUES ('$titre','$fichier','$date','$type')";
+        $sql="INSERT INTO {$prefixe}fichier (titre,fichier,date,type) VALUES ('$titre','$fichier','$date','$type')";
         $ins=@execSql($sql);
         if($ins) {
                 return 1;
@@ -362,7 +391,7 @@ function create_fichier($titre,$fichier,$date,$type) {
 function affiche_fichier() {
         global $cnx;
         global $prefixe;
-        $sql="SELECT * FROM ${prefixe}fichier ORDER BY 1 ";
+        $sql="SELECT * FROM {$prefixe}fichier ORDER BY 1 ";
         $res=execSql($sql);
         $data=ChargeMat($res);
         return $data;
@@ -380,7 +409,7 @@ function dateForm($date) {
 function aff_bug() {
         global $cnx;
         global $prefixe;
-        $sql="SELECT id, nom, prenom, date, membre, action, service, commentaire  FROM ${prefixe}bug ";
+        $sql="SELECT id, nom, prenom, date, membre, action, service, commentaire  FROM {$prefixe}bug ";
         $res=execSql($sql);
         $data=chargeMat($res);
         return $data;
@@ -389,14 +418,14 @@ function aff_bug() {
 function supp_bug() {
         global $cnx;
         global $prefixe;
-	$sql="DELETE FROM ${prefixe}bug";
+	$sql="DELETE FROM {$prefixe}bug";
         $ins=execSql($sql);
 }
 
 function listeblacklistetotal() {
         global $cnx;
         global $prefixe;
-        $sql="SELECT id,nom,prenom,date,ip,nb_tentative,cause,membre FROM ${prefixe}blacklist ORDER BY date DESC  ";
+        $sql="SELECT id,nom,prenom,date,ip,nb_tentative,cause,membre FROM {$prefixe}blacklist ORDER BY date DESC  ";
         $res=execSql($sql);
         $data=chargeMat($res);
         return $data;
@@ -405,7 +434,7 @@ function listeblacklistetotal() {
 function  blacklistsupp($supp) {
         global $cnx;
         global $prefixe;
-	$sql="DELETE FROM ${prefixe}blacklist WHERE id='$supp' ";
+	$sql="DELETE FROM {$prefixe}blacklist WHERE id='$supp' ";
         $ins=execSql($sql);
 
 }
@@ -427,24 +456,24 @@ function verif_table_groupe() {
         global $cnx;
         global $prefixe;
 
-        $sql="SELECT group_id,liste_elev,libelle FROM ${prefixe}groupes WHERE group_id='0' AND liste_elev IS NULL AND libelle IS NULL";
+        $sql="SELECT group_id,liste_elev,libelle FROM {$prefixe}groupes WHERE group_id='0' AND liste_elev IS NULL AND libelle IS NULL";
         $res=execSql($sql);
         $data=chargeMat($res);
-        if (count($data) > 0) {
+        if (countTriade($data) > 0) {
                 return 1 ;
         }
-        $sql="SELECT group_id,liste_elev,libelle FROM ${prefixe}groupes WHERE liste_elev IS  NULL AND libelle IS NULL";
+        $sql="SELECT group_id,liste_elev,libelle FROM {$prefixe}groupes WHERE liste_elev IS  NULL AND libelle IS NULL";
         $res=execSql($sql);
         $data=chargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$del=MyAddSlashes($data[$i][0]);
-                $sql="DELETE FROM ${prefixe}groupes WHERE group_id='$del'";
+                $sql="DELETE FROM {$prefixe}groupes WHERE group_id='$del'";
                 execSql($sql);
         }
-        $sql="INSERT INTO ${prefixe}groupes (group_id,liste_elev,commentaire,libelle) VALUES ('0',NULL,NULL,NULL)";
+        $sql="INSERT INTO {$prefixe}groupes (group_id,liste_elev,commentaire,libelle) VALUES ('0',NULL,NULL,NULL)";
         execSql($sql);
         if (DBTYPE=="mysql") {
-                $sql="UPDATE ${prefixe}groupes SET group_id='0',liste_elev=NULL,commentaire=NULL,libelle=NULL WHERE libelle IS NULL AND liste_elev IS NULL ";
+                $sql="UPDATE {$prefixe}groupes SET group_id='0',liste_elev=NULL,commentaire=NULL,libelle=NULL WHERE libelle IS NULL AND liste_elev IS NULL ";
                 execSql($sql);
         }
 	return 0 ;
@@ -457,7 +486,7 @@ function verif_table() {
 	$date=date("Y")-1;
 	$date2=date("-m-d");
 	$date=$date.$date2;
-	$sql="DELETE FROM ${prefixe}history_cmd WHERE date_cmd < '$date'";
+	$sql="DELETE FROM {$prefixe}history_cmd WHERE date_cmd < '$date'";
 	execSql($sql);
 	return 1;
 }
@@ -466,11 +495,11 @@ function verif_matiere() {
 	global $cnx;
 	global $prefixe;
 	if (DBTYPE=="mysql") {
-		$sql="SELECT code_mat FROM ${prefixe}matieres WHERE sous_matiere IS NULL ";
+		$sql="SELECT code_mat FROM {$prefixe}matieres WHERE sous_matiere IS NULL ";
 		$res=execSql($sql);
 	        $data=chargeMat($res);
-		if (count($data) > 0) {
-	                $sql="UPDATE ${prefixe}matieres SET sous_matiere=' ' WHERE sous_matiere IS NULL ";
+		if (countTriade($data) > 0) {
+	                $sql="UPDATE {$prefixe}matieres SET sous_matiere=' ' WHERE sous_matiere IS NULL ";
 			execSql($sql);
 			return 0;
 		}else{
@@ -494,11 +523,11 @@ function verif_secu_rep() {
 	htaccess("../data/pdf_certif");
 	htaccess("../data/pdf_abs");
 	htaccess("../data/stockage/");
-	htaccess("../data/stockage/menuadmin");
-	htaccess("../data/stockage/menuparent");
-	htaccess("../data/stockage/menuprof");
-	htaccess("../data/stockage/menuscolaire");
-	htaccess("../data/stockage/menueleve");
+	htaccessStockage("../data/stockage/menuadmin");
+	htaccessStockage("../data/stockage/menuparent");
+	htaccessStockage("../data/stockage/menuprof");
+	htaccessStockage("../data/stockage/menuscolaire");
+	htaccessStockage("../data/stockage/menueleve");
 	htaccess("../data/DevoirScolaire");
 	htaccess("../data/forum");
 	htaccess("../data/compteur");
@@ -531,19 +560,19 @@ function verif_piece_jointe() {
         global $cnx;
         global $prefixe;
 
-        $sql="DELETE FROM ${prefixe}piecejointe WHERE md5='' OR idpiecejointe=''";
+        $sql="DELETE FROM {$prefixe}piecejointe WHERE md5='' OR idpiecejointe=''";
         execSql($sql);
 
-        $sql="SELECT idpiecejointe FROM ${prefixe}piecejointe";
+        $sql="SELECT idpiecejointe FROM {$prefixe}piecejointe";
         $res=execSql($sql);
         $data=chargeMat($res);
-        for($i=0;$i<count($data);$i++) {
+        for($i=0;$i<countTriade($data);$i++) {
                 $idpiecejointe=$data[$i][0];
-                $sql="SELECT idpiecejointe FROM ${prefixe}messageries WHERE idpiecejointe='$idpiecejointe'";
+                $sql="SELECT idpiecejointe FROM {$prefixe}messageries WHERE idpiecejointe='$idpiecejointe'";
                 $res2=execSql($sql);
                 $data2=chargeMat($res2);
-                if (count($data2) == 0) {
-                        $sql="DELETE FROM ${prefixe}piecejointe WHERE idpiecejointe='$idpiecejointe'";
+                if (countTriade($data2) == 0) {
+                        $sql="DELETE FROM {$prefixe}piecejointe WHERE idpiecejointe='$idpiecejointe'";
                         execSql($sql);
                 }
         }
@@ -556,10 +585,10 @@ function verif_piece_jointe() {
         while($file = $O -> read()) {
             if($file != '.' && $file != '..') {
                 if(is_file($path.'/'.$file)) {
-                        $sql="SELECT * FROM ${prefixe}piecejointe WHERE md5='$file'";
+                        $sql="SELECT * FROM {$prefixe}piecejointe WHERE md5='$file'";
                         $res=execSql($sql);
                         $data=chargeMat($res);
-                        if (count($data) == 0) {
+                        if (countTriade($data) == 0) {
                                 unlink("../data/fichiersj/$file");
                         }
                 }
@@ -589,13 +618,30 @@ function htaccess($rep) {
 		$text.="Order Deny,Allow\n";
 		$text.="Deny from all\n";
 		$text.="</Files>";
-		@unlink("$rep/.htaccess");
+		if (file_exists("$rep/.htaccess")) unlink("$rep/.htaccess"); 
 		$fp = fopen("$rep/.htaccess", "w");
 		fwrite($fp,$text);
 		fclose($fp);
 	}
 	return true;
 }
+
+
+function htaccessStockage($rep) {
+	if (is_dir($rep)) {
+		$text="<FilesMatch \"\.(pdf|docx|odt|pptx|ods|odp)$\">\n";
+		$text.="Order Deny,Allow\n";
+		$text.="Deny from all\n";
+		$text.="Allow from all\n";
+		$text.="</FilesMatch>";
+		if (file_exists("$rep/.htaccess")) unlink("$rep/.htaccess"); 
+		$fp = fopen("$rep/.htaccess", "w");
+		fwrite($fp,$text);
+		fclose($fp);
+	}
+	return true;
+}
+
 
 
 function htaccessRacine() {
@@ -755,14 +801,14 @@ function ajout_patch($idpatch,$info) {
 	$time=dateHIS();
 	$info=MyAddSlashes($info);
 	$idpatch=MyAddSlashes($idpatch);
- 	$sql="INSERT INTO ${prefixe}patch (idpatch,date,heure,info) VALUES ('$idpatch','$date','$time','$info')";
+ 	$sql="INSERT INTO {$prefixe}patch (idpatch,date,heure,info) VALUES ('$idpatch','$date','$time','$info')";
     	execSql($sql);
 }
 
 function list_patch() {
 	global $cnx;
         global $prefixe;
- 	$sql="SELECT idpatch,date,heure,info FROM ${prefixe}patch ORDER BY idpatch DESC ";
+ 	$sql="SELECT idpatch,date,heure,info FROM {$prefixe}patch ORDER BY idpatch DESC ";
     	$res=execSql($sql);
     	$data=chargeMat($res);
     	return $data ;
@@ -772,7 +818,7 @@ function info_patch($idpatch) {
 	global $cnx;
 	global $prefixe;
 	$idpatch=MyAddSlashes($idpatch);
- 	$sql="SELECT idpatch,info FROM ${prefixe}patch WHERE idpatch='$idpatch' ";
+ 	$sql="SELECT idpatch,info FROM {$prefixe}patch WHERE idpatch='$idpatch' ";
     	$res=execSql($sql);
     	$data=chargeMat($res);
     	return $data[0][1] ;
@@ -783,11 +829,11 @@ function verifpatchinstall($idpatch) {
 	global $prefixe;
 	$idpatch=MyAddSlashes($idpatch);
 	$idpatch=preg_replace('/.zip/i','',$idpatch);
- 	$sql="SELECT idpatch,info FROM ${prefixe}patch WHERE idpatch='$idpatch' ";
+ 	$sql="SELECT idpatch,info FROM {$prefixe}patch WHERE idpatch='$idpatch' ";
     	$res=execSql($sql);
 	$data=chargeMat($res);
     	unset($sql);
-    	if (count($data) > 0) {
+    	if (countTriade($data) > 0) {
     		return true;
     	}else{
     		return false;
@@ -803,12 +849,12 @@ function verif_affectation() {
 
 	global $cnx;
         global $prefixe;
-	$sql="SELECT ordre_affichage,code_matiere,code_prof,code_classe,coef,code_groupe,langue,avec_sous_matiere FROM ${prefixe}affectations WHERE langue IS NULL ";
+	$sql="SELECT ordre_affichage,code_matiere,code_prof,code_classe,coef,code_groupe,langue,avec_sous_matiere FROM {$prefixe}affectations WHERE langue IS NULL ";
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	if (count($data) > 0) {
-		for($i=0;$i<count($data);$i++) {
-			$sql="UPDATE ${prefixe}affectations SET langue=' ' WHERE ordre_affichage='".$data[$i][0]."'  AND code_matiere='".$data[$i][1]."' AND code_prof='".$data[$i][2]."' AND code_classe='".$data[$i][3]."' AND coef='".$data[$i][4]."' AND code_groupe='".$data[$i][5]."' AND avec_sous_matiere='".$data[$i][7]."'";
+	if (countTriade($data) > 0) {
+		for($i=0;$i<countTriade($data);$i++) {
+			$sql="UPDATE {$prefixe}affectations SET langue=' ' WHERE ordre_affichage='".$data[$i][0]."'  AND code_matiere='".$data[$i][1]."' AND code_prof='".$data[$i][2]."' AND code_classe='".$data[$i][3]."' AND coef='".$data[$i][4]."' AND code_groupe='".$data[$i][5]."' AND avec_sous_matiere='".$data[$i][7]."'";
 			$cr=execSql($sql);
 			if (!$cr) {
 				return 2;
@@ -824,7 +870,7 @@ function supprimer_patch($idpatch) {
     	global $cnx;
 	global $prefixe;
 	$idpatch=MyAddSlashes($idpatch);
-	$sql="DELETE FROM ${prefixe}patch WHERE  idpatch='$idpatch' ";
+	$sql="DELETE FROM {$prefixe}patch WHERE  idpatch='$idpatch' ";
     	$ins=execSql($sql);
     	unset($sql);
 }
@@ -832,7 +878,7 @@ function supprimer_patch($idpatch) {
 function supprimerTousLesPatchs() {
     	global $cnx;
 	global $prefixe;
-	$sql="DELETE FROM ${prefixe}patch ";
+	$sql="DELETE FROM {$prefixe}patch ";
     	$ins=execSql($sql);
     	unset($sql);
 }
@@ -857,24 +903,39 @@ function restodump($sql) {
 }
 
 function recursive_delete($path) {
-    $O = dir($path);
-    if(!is_object($O))
-    return false;
-    while($file = $O -> read()) {
-	    if($file != '.' && $file != '..') {
-            	if(is_file($path.'/'.$file)) {
-		    	$cr=unlink($path.'/'.$file);
-		}else{
-                	if(is_dir($path.'/'.$file)) {
-				recursive_delete($path.'/'.$file);
-			}
-		}
-            }
+	// V�rifie que le chemin est un r�pertoire valide
+    if (!is_dir($path)) {
+        return false;
+    }
+
+
+    // Tente d'ouvrir le dossier
+    $O = @dir($path); // @ pour �viter un warning si le dossier est inaccessible
+    if (!is_object($O)) {
+        return false;
+    }
+
+    // Parcours des fichiers et sous-dossiers
+    while (false !== ($file = $O->read())) {
+        if ($file === '.' || $file === '..') {
+            continue;
         }
-    // !!!! il faut bien appeler 2 fois la méthode close() !!!
-    $O -> close();
-    if (SERVEURTYPE != "SERVEURFREE") { $O -> close(); }
-    rmdir($path);
+
+        $fullPath = $path . DIRECTORY_SEPARATOR . $file;
+
+        if (is_file($fullPath)) {
+            // Supprime les fichiers
+            @unlink($fullPath);
+        } elseif (is_dir($fullPath)) {
+            // Appel r�cursif pour les sous-dossiers
+            recursive_delete($fullPath);
+        }
+    }
+
+    // Ferme le handle du r�pertoire
+    $O->close(); 
+    // Supprime le r�pertoire une fois vide
+    @rmdir($path);
     return true;
 }
 
@@ -891,140 +952,140 @@ function optimize_mysql() {
 	global $cnx;
 	global $prefixe;
 	$sql = "OPTIMIZE TABLE 
-		${prefixe}absences, 
-		${prefixe}abs_rtd_aucun, 
-		${prefixe}affectations, 
-		${prefixe}alerteabsrtd, 
-		${prefixe}avertissement, 
-		${prefixe}b2ia2notation, 
-		${prefixe}blacklist, 
-		${prefixe}brevetcoef, 
-		${prefixe}brevetconfig,
-		${prefixe}brevetnote,
-		${prefixe}bug, 
-		${prefixe}bulletin_direction_com, 
-		${prefixe}bulletin_profp_com, 
-		${prefixe}bulletin_prof_com, 
-		${prefixe}bulletin_prof_param, 
-		${prefixe}bulletin_scolaire_com, 
-		${prefixe}calendrier_dst,
-		${prefixe}calend_evenement, 
-		${prefixe}carnet_competence, 
-		${prefixe}carnet_descriptif, 
-		${prefixe}carnet_evaluation,
-		${prefixe}carnet_section,
-		${prefixe}carnet_suivi,
-		${prefixe}checksum, 
-		${prefixe}circulaire, 
-		${prefixe}classes, 
-		${prefixe}code_postal, 
-		${prefixe}comptaconfig,
-		${prefixe}comptaconfigmodele, 
-		${prefixe}comptaversement, 
-		${prefixe}config_creneau, 
-		${prefixe}config_note_usa,
-		${prefixe}config_rtd_abs, 
-		${prefixe}date_trimestrielle, 
-		${prefixe}delegue, 
-		${prefixe}demande_dst,
-		${prefixe}devoir_scolaire, 
-		${prefixe}diaporama, 
-		${prefixe}discipline_prof, 
-		${prefixe}discipline_retenue,
-		${prefixe}discipline_sanction,
-		${prefixe}dispenses, 
-		${prefixe}edt_enseignement,
-		${prefixe}edt_seances,
-		${prefixe}eleves,
-		${prefixe}elevessansclasse, 
-		${prefixe}emploi, 
-		${prefixe}entretieneleve, 
-		${prefixe}etude_affect, 
-		${prefixe}etude_param,
-		${prefixe}ficheliaison,
-		${prefixe}fiche_info,
-		${prefixe}fiche_med,
-		${prefixe}fichier, 
-		${prefixe}gep_classe,
-		${prefixe}groupes,
-		${prefixe}history_bulletin,
-		${prefixe}history_cmd,
-		${prefixe}history_periode,
-		${prefixe}info_ecole,
-		${prefixe}ip_timeout,
-		${prefixe}mail_grp,
-		${prefixe}matieres, 
-		${prefixe}messageries, 
-		${prefixe}messagerie_envoyer, 
-		${prefixe}messagerie_repertoire, 
-		${prefixe}news_admin, 
-		${prefixe}news_prof_p, 
-		${prefixe}notes,
-		${prefixe}notes_scolaire,
-		${prefixe}notes_scolaire_param,
-		${prefixe}parametrage,
-		${prefixe}patch, 
-		${prefixe}personnel, 
-		${prefixe}piecejointe,
-		${prefixe}planclasse, 
-		${prefixe}preinscription_eleves, 
-		${prefixe}present,
-		${prefixe}prof_p, 
-		${prefixe}px_admin, 
-		${prefixe}px_agenda, 
-		${prefixe}px_agenda_concerne, 
-		${prefixe}px_agenda_export, 
-		${prefixe}px_calepin, 
-		${prefixe}px_calepin_appartient, 
-		${prefixe}px_calepin_groupe,
-		${prefixe}px_configuration,
-		${prefixe}px_couleurs, 
-		${prefixe}px_droit,
-		${prefixe}px_emplacement,
-		${prefixe}px_evenement,
-		${prefixe}px_favoris, 
-		${prefixe}px_favoris_groupe, 
-		${prefixe}px_fetes,
-		${prefixe}px_global_groupe,
-		${prefixe}px_groupe_util, 
-		${prefixe}px_horoscope, 
-		${prefixe}px_information,
-		${prefixe}px_libelle,
-		${prefixe}px_memo,
-		${prefixe}px_meteo, 
-		${prefixe}px_mods,
-		${prefixe}px_planning_affecte,
-		${prefixe}px_planning_affichage,
-		${prefixe}px_planning_partage,
-		${prefixe}px_rss_reader, 
-		${prefixe}px_sid,
-		${prefixe}px_timezone,
-		${prefixe}px_tria2phenix,
-		${prefixe}px_utilisateur,
-		${prefixe}reglement, 
-		${prefixe}resa_liste, 
-		${prefixe}resa_matos,
-		${prefixe}retards,
-		${prefixe}rss, 
-		${prefixe}rssgen, 
-		${prefixe}sanctions,
-		${prefixe}stage_activite,
-		${prefixe}stage_date,
-		${prefixe}stage_eleve,
-		${prefixe}stage_entreprise,
-		${prefixe}statconxparheure, 
-		${prefixe}statdebit,
-		${prefixe}statexecution, 
-		${prefixe}statnavigateur,
-		${prefixe}statscreen, 
-		${prefixe}statutilisateur,
-		${prefixe}stat_trace,
-		${prefixe}types_personnel,
-		${prefixe}type_category, 
-		${prefixe}type_nb_sanction, 
-		${prefixe}type_sanction, 
-		${prefixe}vacataires,
-		${prefixe}vacation_config";
+		{$prefixe}absences, 
+		{$prefixe}abs_rtd_aucun, 
+		{$prefixe}affectations, 
+		{$prefixe}alerteabsrtd, 
+		{$prefixe}avertissement, 
+		{$prefixe}b2ia2notation, 
+		{$prefixe}blacklist, 
+		{$prefixe}brevetcoef, 
+		{$prefixe}brevetconfig,
+		{$prefixe}brevetnote,
+		{$prefixe}bug, 
+		{$prefixe}bulletin_direction_com, 
+		{$prefixe}bulletin_profp_com, 
+		{$prefixe}bulletin_prof_com, 
+		{$prefixe}bulletin_prof_param, 
+		{$prefixe}bulletin_scolaire_com, 
+		{$prefixe}calendrier_dst,
+		{$prefixe}calend_evenement, 
+		{$prefixe}carnet_competence, 
+		{$prefixe}carnet_descriptif, 
+		{$prefixe}carnet_evaluation,
+		{$prefixe}carnet_section,
+		{$prefixe}carnet_suivi,
+		{$prefixe}checksum, 
+		{$prefixe}circulaire, 
+		{$prefixe}classes, 
+		{$prefixe}code_postal, 
+		{$prefixe}comptaconfig,
+		{$prefixe}comptaconfigmodele, 
+		{$prefixe}comptaversement, 
+		{$prefixe}config_creneau, 
+		{$prefixe}config_note_usa,
+		{$prefixe}config_rtd_abs, 
+		{$prefixe}date_trimestrielle, 
+		{$prefixe}delegue, 
+		{$prefixe}demande_dst,
+		{$prefixe}devoir_scolaire, 
+		{$prefixe}diaporama, 
+		{$prefixe}discipline_prof, 
+		{$prefixe}discipline_retenue,
+		{$prefixe}discipline_sanction,
+		{$prefixe}dispenses, 
+		{$prefixe}edt_enseignement,
+		{$prefixe}edt_seances,
+		{$prefixe}eleves,
+		{$prefixe}elevessansclasse, 
+		{$prefixe}emploi, 
+		{$prefixe}entretieneleve, 
+		{$prefixe}etude_affect, 
+		{$prefixe}etude_param,
+		{$prefixe}ficheliaison,
+		{$prefixe}fiche_info,
+		{$prefixe}fiche_med,
+		{$prefixe}fichier, 
+		{$prefixe}gep_classe,
+		{$prefixe}groupes,
+		{$prefixe}history_bulletin,
+		{$prefixe}history_cmd,
+		{$prefixe}history_periode,
+		{$prefixe}info_ecole,
+		{$prefixe}ip_timeout,
+		{$prefixe}mail_grp,
+		{$prefixe}matieres, 
+		{$prefixe}messageries, 
+		{$prefixe}messagerie_envoyer, 
+		{$prefixe}messagerie_repertoire, 
+		{$prefixe}news_admin, 
+		{$prefixe}news_prof_p, 
+		{$prefixe}notes,
+		{$prefixe}notes_scolaire,
+		{$prefixe}notes_scolaire_param,
+		{$prefixe}parametrage,
+		{$prefixe}patch, 
+		{$prefixe}personnel, 
+		{$prefixe}piecejointe,
+		{$prefixe}planclasse, 
+		{$prefixe}preinscription_eleves, 
+		{$prefixe}present,
+		{$prefixe}prof_p, 
+		{$prefixe}px_admin, 
+		{$prefixe}px_agenda, 
+		{$prefixe}px_agenda_concerne, 
+		{$prefixe}px_agenda_export, 
+		{$prefixe}px_calepin, 
+		{$prefixe}px_calepin_appartient, 
+		{$prefixe}px_calepin_groupe,
+		{$prefixe}px_configuration,
+		{$prefixe}px_couleurs, 
+		{$prefixe}px_droit,
+		{$prefixe}px_emplacement,
+		{$prefixe}px_evenement,
+		{$prefixe}px_favoris, 
+		{$prefixe}px_favoris_groupe, 
+		{$prefixe}px_fetes,
+		{$prefixe}px_global_groupe,
+		{$prefixe}px_groupe_util, 
+		{$prefixe}px_horoscope, 
+		{$prefixe}px_information,
+		{$prefixe}px_libelle,
+		{$prefixe}px_memo,
+		{$prefixe}px_meteo, 
+		{$prefixe}px_mods,
+		{$prefixe}px_planning_affecte,
+		{$prefixe}px_planning_affichage,
+		{$prefixe}px_planning_partage,
+		{$prefixe}px_rss_reader, 
+		{$prefixe}px_sid,
+		{$prefixe}px_timezone,
+		{$prefixe}px_tria2phenix,
+		{$prefixe}px_utilisateur,
+		{$prefixe}reglement, 
+		{$prefixe}resa_liste, 
+		{$prefixe}resa_matos,
+		{$prefixe}retards,
+		{$prefixe}rss, 
+		{$prefixe}rssgen, 
+		{$prefixe}sanctions,
+		{$prefixe}stage_activite,
+		{$prefixe}stage_date,
+		{$prefixe}stage_eleve,
+		{$prefixe}stage_entreprise,
+		{$prefixe}statconxparheure, 
+		{$prefixe}statdebit,
+		{$prefixe}statexecution, 
+		{$prefixe}statnavigateur,
+		{$prefixe}statscreen, 
+		{$prefixe}statutilisateur,
+		{$prefixe}stat_trace,
+		{$prefixe}types_personnel,
+		{$prefixe}type_category, 
+		{$prefixe}type_nb_sanction, 
+		{$prefixe}type_sanction, 
+		{$prefixe}vacataires,
+		{$prefixe}vacation_config";
 
 	$res=execSql($sql);
 	if ($res) {
@@ -1044,7 +1105,7 @@ function optimize_pgsql() {
 function analyse_page() {
 	global $cnx;
     	global $prefixe;
-	$sql="SELECT file,time_max,time_min FROM ${prefixe}statexecution ORDER BY time_max DESC";
+	$sql="SELECT file,time_max,time_min FROM {$prefixe}statexecution ORDER BY time_max DESC";
 	$res=execSql($sql);
     	$data=ChargeMat($res);
 	return $data;
@@ -1172,18 +1233,19 @@ function updateMd5($md5,$fichier) {
 	global $cnx;
 	global $prefixe;
 	$fichier=MyAddSlashes($fichier);
-	$sql="SELECT fichier FROM ${prefixe}checksum WHERE fichier='$fichier' ";
+	$sql="SELECT fichier FROM {$prefixe}checksum WHERE fichier='$fichier' ";
 	$res=execSql($sql);
     	$data=ChargeMat($res);
-	if (count($data) > 0) {
-		$sql="UPDATE ${prefixe}checksum SET sum='$md5', etat='0' WHERE fichier='$fichier'";
+	if (countTriade($data) > 0) {
+		$sql="UPDATE {$prefixe}checksum SET sum='$md5', etat='0' WHERE fichier='$fichier'";
 		execSql($sql);
 	}else{
-		$sql="INSERT INTO ${prefixe}checksum (sum,fichier,etat) VALUES ('$md5','$fichier','0')";
+		$sql="INSERT INTO {$prefixe}checksum (sum,fichier,etat) VALUES ('$md5','$fichier','0')";
     		execSql($sql);
 	}
 
 }
+
 function history_cmd($user_cmd,$cmd,$com){
 	global $cnx;
 	global $prefixe;
@@ -1192,7 +1254,7 @@ function history_cmd($user_cmd,$cmd,$com){
 	$com=MyAddSlashes($com);
 	$user_cmd=MyAddSlashes($user_cmd);
 	$cmd=MyAddSlashes($cmd);
-	$sql="INSERT INTO ${prefixe}history_cmd (time_cmd,date_cmd,user_cmd,cmd,commentaire) VALUES ('$time_cmd','$date_cmd','$user_cmd','$cmd','$com')";
+	$sql="INSERT INTO {$prefixe}history_cmd (time_cmd,date_cmd,user_cmd,cmd,commentaire) VALUES ('$time_cmd','$date_cmd','$user_cmd','$cmd','$com')";
 	$com=strip_tags($com);
 	$com=preg_replace('/\'/',"\'",$com);
 	$info=$user_cmd."##".$cmd."##".$com;
@@ -1250,11 +1312,11 @@ function verif_fichier($repadmin) {
 	}
 
 
-	$sql="SELECT sum,etat,fichier FROM ${prefixe}checksum";
+	$sql="SELECT sum,etat,fichier FROM {$prefixe}checksum";
 	$res=execSql($sql);
 	$data=ChargeMat($res);
-	if (count($data) > 0) {
-		for($i=0;$i<count($data);$i++) {
+	if (countTriade($data) > 0) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$sum=trim($data[$i][0]);
 			$fichierorig=$data[$i][2];
 			$fichier=trim($data[$i][2]);
@@ -1267,7 +1329,7 @@ function verif_fichier($repadmin) {
 			}
 			$fichierorig=MyAddSlashes($fichierorig);
 			if ($val == $sum) {
-				$sql="UPDATE ${prefixe}checksum SET etat='0' WHERE fichier='$fichierorig'";
+				$sql="UPDATE {$prefixe}checksum SET etat='0' WHERE fichier='$fichierorig'";
 				execSql($sql);
 			}else{
 				// voir aussi recup_liste_check2.php, db_triade-admin.php - serveur
@@ -1300,18 +1362,18 @@ function verif_fichier($repadmin) {
 					(preg_match('/^.*\/messenger\/public\/intra-msn-triade.zip$/i',$fichier)) ||
 					(preg_match('/^.*\/livreor\/identif\/logins.php$/i',$fichier))
 				) {
-					$sql="DELETE FROM ${prefixe}checksum WHERE fichier='$fichierorig'";
+					$sql="DELETE FROM {$prefixe}checksum WHERE fichier='$fichierorig'";
 					execSql($sql);
 				}else{
-					$sql="UPDATE ${prefixe}checksum SET etat='1' WHERE fichier='$fichierorig'";
+					$sql="UPDATE {$prefixe}checksum SET etat='1' WHERE fichier='$fichierorig'";
 					execSql($sql);
 				}
 			}
 		}
-		$sql="SELECT etat FROM ${prefixe}checksum WHERE etat='1' LIMIT 1 ";
+		$sql="SELECT etat FROM {$prefixe}checksum WHERE etat='1' LIMIT 1 ";
 		$res=execSql($sql);
 		$data=ChargeMat($res);
-		if (count($data) > 0) {
+		if (countTriade($data) > 0) {
 		    return 3;
 		}else{
 		    return 1;
@@ -1325,7 +1387,7 @@ function verif_fichier($repadmin) {
 function listeFichierMd5() {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT sum,etat,fichier FROM ${prefixe}checksum WHERE etat='1' ";
+	$sql="SELECT sum,etat,fichier FROM {$prefixe}checksum WHERE etat='1' ";
 	$res=execSql($sql);
 	$data=ChargeMat($res);
 	return $data;
@@ -1352,7 +1414,7 @@ function acceslog($message) {
 function vider_checksum() {
 	global $cnx;
         global $prefixe;
-	$sql="TRUNCATE TABLE ${prefixe}checksum";
+	$sql="TRUNCATE TABLE {$prefixe}checksum";
 	execSql($sql);
 }
 
@@ -1446,59 +1508,87 @@ function couleurFont($graphe) {
 
 }
 
+function verifDbb()
+{
+    global $prefixe;
 
-function verifDbb() {
-	global $cnx;
-	global $prefixe;
+    $dumpFile = "../data/dump/structure.sql";
+    @unlink($dumpFile);
 
-	@unlink("../data/dump/structure.sql");
+    $host     = HOST;
+    $base     = DB;
+    $login    = USER;
+    $password = PWD;
 
-	$host=HOST;
-	$base=DB;
-	$login=USER;
-	$password=PWD;
+    $lignesql = '';
+    $NbTables = 0;
 
-	$bdd=$base;	
-	@mysqli_connect($host, $login, $password);
-	
-	$sql="SHOW TABLES FROM `$base`";
-	$result=execSql($sql);
+    /* Connexion mysqli */
+    $link = mysqli_connect($host, $login, $password, $base);
+    if (!$link) {
+        return false;
+    }
 
-	/* Tant qu'il y a des tables */
-	while ($row = mysqli_fetch_row($result))
-	{
-		//$lignesql.="\n#\n# Table `".$row[0]."`\n#\n";
-		//$lignesql.= "DROP TABLE IF EXISTS `$row[0]`;\n";
-		/* Se connecte à la base à sauvegarder */
-		mysqli_select_db($bdd);
-		/* Enregistre sa structure */
-		$req = mysqli_query("SHOW CREATE TABLE ".$row[0]);
-		if (preg_match('/statutilisateur/i',$row[0])) {	continue; }
-		$res = mysqli_fetch_array($req);
-		$partern="/$prefixe/";
-		$res[1]=preg_replace($partern,'',$res[1]);
-		$res[1]=preg_replace('/ENGINE=.*$/','',$res[1]);
-		$res[1]=preg_replace('/collate [A-Za-z0-9_]+/',' ',$res[1]);
-		$res[1]=preg_replace('/[ \t]/','',$res[1]);
-		$res[1]=strtolower($res[1]);
-		$lignesql.= $res[1].";\n\n";
-		/* Compteur du nombre de tables */
-		$NbTables ++;
-	}		
-	@mysqli_close();
-	
-	$fp = fopen("../data/dump/structure.sql", "w");
-	fwrite($fp,$lignesql);
-	fclose($fp);
+    /* R�cup�ration des tables */
+    $sql = "SHOW TABLES FROM `$base`";
+    $result = mysqli_query($link, $sql);
+    if (!$result) {
+        mysqli_close($link);
+        return false;
+    }
 
-	return md5_file("../data/dump/structure.sql");
+    /* Parcours des tables */
+    while ($row = mysqli_fetch_row($result)) {
 
+        $table = $row[0];
+
+        /* Exclusion */
+        if (preg_match('/statutilisateur/i', $table)) {
+            continue;
+        }
+
+        /* Structure de la table */
+        $req = mysqli_query($link, "SHOW CREATE TABLE `$table`");
+        if (!$req) {
+            continue;
+        }
+
+        $res = mysqli_fetch_array($req, MYSQLI_NUM);
+        if (!isset($res[1])) {
+            continue;
+        }
+
+        $pattern = '/' . preg_quote($prefixe, '/') . '/';
+
+        $structure = $res[1];
+        $structure = preg_replace($pattern, '', $structure);
+        $structure = preg_replace('/ENGINE=.*$/i', '', $structure);
+        $structure = preg_replace('/collate [A-Za-z0-9_]+/i', ' ', $structure);
+        $structure = preg_replace('/[ \t]+/', ' ', $structure);
+        $structure = strtolower(trim($structure));
+
+        $lignesql .= $structure . ";\n\n";
+
+        $NbTables++;
+    }
+
+    mysqli_free_result($result);
+    mysqli_close($link);
+
+    /* �criture du fichier */
+    if ($fp = fopen($dumpFile, "w")) {
+        fwrite($fp, $lignesql);
+        fclose($fp);
+    }
+
+    return md5_file($dumpFile);
 }
+
 
 function verifMessagerie() {
 	global $cnx;
 	global $prefixe;
-	$sql="DELETE FROM ${prefixe}piecejointe WHERE nom='application/octet-stream'";
+	$sql="DELETE FROM {$prefixe}piecejointe WHERE nom='application/octet-stream'";
 	execSql($sql);
 	return 1;
 }	
@@ -1509,21 +1599,21 @@ function verifMessagerie() {
 function verifAgenda() {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT idtriade,idphenix,membre  FROM  ${prefixe}px_tria2phenix";
+	$sql="SELECT idtriade,idphenix,membre  FROM  {$prefixe}px_tria2phenix";
 	$res=execSql($sql);
 	$data=ChargeMat($res);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$idtriade=$data[$i][0];
 		$idphenix=$data[$i][1];
 		$membre=$data[$i][2];
 		$utillogin="$membre$idtriade";
-		$sql="SELECT util_id FROM  ${prefixe}px_utilisateur WHERE util_login='$utillogin' AND util_id='$idphenix' ";
+		$sql="SELECT util_id FROM  {$prefixe}px_utilisateur WHERE util_login='$utillogin' AND util_id='$idphenix' ";
 		$res=execSql($sql);
 		$data2=ChargeMat($res);
-		if (count($data2) > 0) {
+		if (countTriade($data2) > 0) {
 			continue;
 		}else{
-			$sql="DELETE FROM  ${prefixe}px_tria2phenix WHERE idtriade='$idtriade'";
+			$sql="DELETE FROM  {$prefixe}px_tria2phenix WHERE idtriade='$idtriade'";
 			execSql($sql);
 		}
 	}
@@ -1543,19 +1633,19 @@ function protohttps() {
 function enr_googleAnalytics($idref) {
 	global $cnx;
         global $prefixe;
-	$sql="DELETE FROM ${prefixe}parametrage WHERE libelle='googleanalytic'";
+	$sql="DELETE FROM {$prefixe}parametrage WHERE libelle='googleanalytic'";
 	execSql($sql);
-	$sql="INSERT INTO ${prefixe}parametrage (libelle,text) VALUES ('googleanalytic','$idref')";
+	$sql="INSERT INTO {$prefixe}parametrage (libelle,text) VALUES ('googleanalytic','$idref')";
 	execSql($sql);
 }
 
 function verifcomptegoogleanalytic() {
 	global $cnx;
         global $prefixe;
-	$sql="SELECT text FROM ${prefixe}parametrage WHERE libelle='googleanalytic' ";
+	$sql="SELECT text FROM {$prefixe}parametrage WHERE libelle='googleanalytic' ";
 	$res=execSql($sql);
 	$data=ChargeMat($res);
-	if (count($data) > 0) {
+	if (countTriade($data) > 0) {
 		return true;
 	}else{
 		return false;
@@ -1597,10 +1687,10 @@ function intraMSN(){
 function recupcomptegoogleanalytic() {
         global $cnx;
         global $prefixe;
-        $sql="SELECT text FROM ${prefixe}parametrage WHERE libelle='googleanalytic' ";
+        $sql="SELECT text FROM {$prefixe}parametrage WHERE libelle='googleanalytic' ";
         $res=execSql($sql);
         $data=ChargeMat($res);
-        if (count($data) > 0) {
+        if (countTriade($data) > 0) {
                 return $data[0][0];
         }else{
                 return "";
@@ -1616,7 +1706,7 @@ function verifMoodle($host,$user,$pass,$db,$type) {
 	$sql="SELECT * FROM mdl_config_plugins WHERE plugin='auth/db' ";
         $res=execSql($sql);
         $data=ChargeMat($res);
-	if (count($data) == 0) {
+	if (countTriade($data) == 0) {
 		$sql="INSERT INTO `mdl_config_plugins` (`plugin`, `name`, `value`) VALUES
 			('auth/db', 'host', '$host'),
 			('auth/db', 'type', 'mysql'),
@@ -1624,7 +1714,7 @@ function verifMoodle($host,$user,$pass,$db,$type) {
 			('auth/db', 'name', '$db'),
 			('auth/db', 'user', '$user'),
 			('auth/db', 'pass', '$pass'),
-			('auth/db', 'table', '${prefixe}eleves'),
+			('auth/db', 'table', '{$prefixe}eleves'),
 			('auth/db', 'fielduser', 'nom'),
 			('auth/db', 'fieldpass', 'mdp_moodle'),
 			('auth/db', 'passtype', 'md5')";
@@ -1669,6 +1759,105 @@ function modifPasseAdminMoodle($pwd) {
         global $prefixe;
 	$sql="UPDATE mdl_user SET password=MD5($pwd) WHERE username='administrateur'";
 	execSql($requete);
+}
+
+function listingPersGoogAuth() {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT pers_id,nom,prenom FROM {$prefixe}personnel WHERE googleAuthen='1'";
+        $res=execSql($sql);
+        $data=ChargeMat($res);
+	return($data);
+}
+
+function listingEtudiantGoogAuth() {
+	global $cnx;
+        global $prefixe;
+	$sql="SELECT elev_id,nom,prenom FROM {$prefixe}eleves WHERE googleAuthenEleve='1' OR googleAuthenTuteur1='1' OR googleAuthenTuteur2='1'";
+        $res=execSql($sql);
+        $data=ChargeMat($res);
+	return($data);
+}
+
+function suppGoogleAuthenPers($idpers) {
+	global $cnx;
+        global $prefixe;
+	if ($idpers > 0) {
+		$sql="UPDATE {$prefixe}personnel SET googleAuthen='0'  WHERE pers_id='$idpers'";
+		execSql($sql);
+		$sql="DELETE FROM {$prefixe}authenticator WHERE idpers='$idpers' AND membre != 'menueleve'";
+		execSql($sql);
+	}
+}
+
+function suppGoogleAuthenEleve($idpers) {
+	global $cnx;
+        global $prefixe;
+	if ($idpers > 0) {
+		$sql="UPDATE {$prefixe}eleves SET googleAuthenEleve='0', googleAuthenTuteur1='0', googleAuthenTuteur2='0'  WHERE elev_id='$idpers'";
+		execSql($sql);
+		$sql="DELETE FROM {$prefixe}authenticator WHERE idpers='$idpers' AND membre = 'menueleve'";
+		execSql($sql);
+	}
+}
+
+function enr_parametrage($libelle,$valeur,$info='') {
+        global $cnx;
+        global $prefixe;
+        $sql="DELETE FROM {$prefixe}parametrage WHERE libelle='$libelle'";
+        execSql($sql);
+        $sql="INSERT INTO {$prefixe}parametrage(libelle,text,info) VALUES ('$libelle','$valeur','$info')";
+        execSql($sql);
+}
+
+function aff_structure($libelle) {
+        global $cnx;
+        global $prefixe;
+        $sql="SELECT libelle,text,info FROM {$prefixe}parametrage WHERE libelle like '$libelle%' ";
+        $res=execSql($sql);
+        $data=chargeMat($res);
+        return $data;
+}
+
+
+function supp_parametrage($libelle) {
+        global $cnx;
+        global $prefixe;
+        $sql="DELETE FROM {$prefixe}parametrage WHERE libelle='$libelle'";
+        execSql($sql);
+}
+
+function isValidTime($time) {
+    return preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $time) === 1;
+}
+
+function estAdresseIP($texte) {
+    return filter_var($texte, FILTER_VALIDATE_IP) !== false;
+}
+
+function engApiClient($clef,$nom,$ip) {
+        global $cnx;
+        global $prefixe;
+	if ((trim($nom) != "") && ($ip === '*' || estAdresseIP($ip)))  {
+		$sql="INSERT INTO {$prefixe}api_access (nom,clef,ip,date_creation,active) VALUES ('$nom','$clef','$ip',NOW(),1)";
+        	execSql($sql);
+	}
+}
+
+function listingApiClient() {
+        global $cnx;
+        global $prefixe;
+	$sql="SELECT nom,clef,ip,date_creation,active,id FROM {$prefixe}api_access";	
+        $res=execSql($sql);
+        $data=chargeMat($res);
+        return $data;
+}
+
+function suppApiClient($id) {
+        global $cnx;
+        global $prefixe;
+        $sql="DELETE FROM {$prefixe}api_access WHERE id='$id'";
+        execSql($sql);
 }
 
 

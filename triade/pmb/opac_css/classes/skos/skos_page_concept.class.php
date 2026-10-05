@@ -2,25 +2,26 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_page_concept.class.php,v 1.13 2017-10-11 14:22:16 tsamson Exp $
+// $Id: skos_page_concept.class.php,v 1.15 2022/03/10 15:19:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/authorities/page/authority_page.class.php");
 
 /**
  * class skos_page_concept
- * Controler d'une Page OPAC reprÃ©sentant un concept de SKOS
+ * Controler d'une Page OPAC représentant un concept de SKOS
  */
 class skos_page_concept extends authority_page {
 	
 	/**
 	 * Constructeur d'une page concept
-	 * @param int $concept_id Identifiant du concept Ã  reprÃ©senter
+	 * @param int $concept_id Identifiant du concept à représenter
 	 * @return void
 	 */
 	public function __construct($concept_id) {
-		$this->id = $concept_id*1;
+		$this->id = intval($concept_id);
 		$this->authority = new authority(0, $this->id, AUT_TABLE_CONCEPT);
 	}
 
@@ -38,6 +39,7 @@ class skos_page_concept extends authority_page {
 	
 	protected function get_title_recordslist() {
 		global $msg, $charset;
+		return htmlentities($msg['authperso_doc_auth_title'], ENT_QUOTES, $charset);
 		return "";
 	}
 }

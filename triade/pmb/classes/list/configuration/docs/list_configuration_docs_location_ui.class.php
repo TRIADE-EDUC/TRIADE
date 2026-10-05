@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_docs_location_ui.class.php,v 1.1 2018-10-12 11:59:35 dgoron Exp $
+// $Id: list_configuration_docs_location_ui.class.php,v 1.5 2023/03/24 07:44:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/docs/list_configuration_docs_ui.class.php");
 
 class list_configuration_docs_location_ui extends list_configuration_docs_ui {
 	
@@ -15,10 +13,7 @@ class list_configuration_docs_location_ui extends list_configuration_docs_ui {
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'location_libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('location_libelle');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -31,26 +26,26 @@ class list_configuration_docs_location_ui extends list_configuration_docs_ui {
 		);
 	}
 	
-	protected function get_cell_content($object, $property) {
-		global $msg, $charset;
-		
-		$content = '';
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('location_visible_opac', 'align', 'center');
+		$this->set_setting_column('location_visible_opac', 'datatype', 'boolean');
+	}
+	
+	protected function get_default_attributes_format_cell($object, $property) {
 		switch($property) {
 			case 'location_libelle':
 				if ($object->locdoc_owner) {
-					$content .= "<i>".$object->location_libelle."</i>";
+					return array(
+							'style' => 'font-style:italic;'
+					);
 				} else {
-					$content .= "<strong>".$object->location_libelle."</strong>";
+					return array(
+							'style' => 'font-weight:bold;'
+					);
 				}
-				break;
-			case 'location_visible_opac':
-				$content .= $this->get_cell_visible_flag($object, $property);
-				break;
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
 		}
-		return $content;
+		return parent::get_default_attributes_format_cell($object, $property);
 	}
 	
 	protected function get_edition_link($object) {

@@ -1,45 +1,41 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.7 2019-02-19 10:39:13 dgoron Exp $
+// $Id: main.inc.php,v 1.11 2023/03/07 14:51:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($suite)) $suite = '';
+global $class_path, $suite, $id_bannette, $liste_bannette, $num_notice, $id;
+global $msg, $charset, $base_path, $categ, $sub;
+
 if(!isset($liste_bannette)) $liste_bannette = array();
-if(!isset($id_bannette)) $id_bannette = 0;
+$id_bannette = intval($id_bannette);
+$num_notice = intval($num_notice);
 
-require_once($class_path."/dsi/bannettes_controller.class.php") ;
-
-echo window_title($database_window_title.$msg['dsi_menu_title']);
-
-// en visualisation, possibilitÃ© de supprimer des notices Ã  la demande
+// en visualisation, possibilité de supprimer des notices à la demande
 if ($suite=="suppr_notice") {
 	$bannette = new bannette($id_bannette) ;
 	$bannette->suppr_notice($num_notice);
-	// on rÃ©affiche la bannette de laquelle on a supprimÃ© une notice
+	// on réaffiche la bannette de laquelle on a supprimé une notice
 	$liste_bannette[] = $id_bannette ;
 	$suite = "visualiser";
 }
 
+switch($suite) {
+	case 'visualiser':
+		print "<div class='row dsi_dif_visualiser_buttons'><input type='button' class='bouton' value='".htmlentities($msg["654"], ENT_QUOTES, $charset)."' onclick=\"document.location='".$base_path."/dsi.php?categ=".$categ."&sub=".$sub."'\" />" ;
+		break;
+}
 switch($sub) {
-	case 'lancer':
-		print "<h1>".$msg['dsi_dif_auto_titre']."</h1>" ;
-		break;
-	case 'auto':
-		print "<h1>".$msg['dsi_dif_auto']."</h1>" ;
-		break;
-	case 'manu':
-		print "<h1>".$msg['dsi_dif_manu']."</h1>" ;
+	case 'history':
+		require_once($class_path."/dsi/bannettes_diffusions_controller.class.php");
+		bannettes_diffusions_controller::proceed($id);
 		break;
 	default:
+		require_once($class_path."/dsi/bannettes_diffusion_controller.class.php") ;
+		bannettes_diffusion_controller::proceed();
 		break;
 }
 
-switch($suite) {
-	case 'visualiser':
-		print "<div class='row dsi_dif_visualiser_buttons'><input type='button' class='bouton' value='".htmlentities($msg["654"], ENT_QUOTES, $charset)."' onclick=\"history.go(-1);\" />" ;
-		break;
-}
-bannettes_controller::proceed_module_diffusion($suite);
+

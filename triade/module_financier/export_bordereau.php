@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -111,7 +111,7 @@ if(autorisation_module()) {
 		?>
 		<?php //********** GENERATION DU DEBUT DE LA PAGE ET DES MENUS PRINCIPAUX ********** ?>
 		
-			<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+			<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 		
 			<?php include("./librairie_php/lib_defilement.php"); ?>
 			</td>
@@ -119,7 +119,7 @@ if(autorisation_module()) {
 				<div align='center'>
 					<?php top_h(); ?>
 					
-					<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+					<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 		
 
 		<?php
@@ -319,7 +319,7 @@ if(autorisation_module()) {
 
 		
 		<?php //********** GENERATION DES MENUS ADMINISTRATEUR ********** ?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></script>
 		
 
 		<?php //********** INITIALISATION DES BULLES D'AIDE ********** ?>

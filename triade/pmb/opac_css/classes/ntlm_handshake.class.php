@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ntlm_handshake.class.php,v 1.4 2015-11-30 09:04:47 mbertin Exp $
+// $Id: ntlm_handshake.class.php,v 1.6 2019/07/11 13:01:58 btafforeau Exp $
 
 require_once('log.class.php');
 
@@ -47,24 +47,24 @@ class ntlm_handshake {
 	
 	public $ntlm_hosts = array();		//plages d'adresses IP pour lesquelles une authentification NTLM est possible
 	public $http_proxies = array();		//proxies http
-	public $ntlm_check=true;			//vÃ©rification NTLM ?
-	public $ntlm_check_ip = false;		//vÃ©rification de l'adresse IP
+	public $ntlm_check=true;			//vérification NTLM ?
+	public $ntlm_check_ip = false;		//vérification de l'adresse IP
 	public $log = false;
 		
 	
-	function __construct () {
+	public function __construct () {
 	}
 	
 	
-	function run() {
+	public function run() {
 		$this->ntlm_prompt();		
 		return $this->auth['authenticated'];	
 	
 	}
 	
 	
-	//dÃ©finition d'un log.
-	function set_log($log=false, $log_file='', $log_format='text', $log_now=false, $log_reset=true) {
+	//définition d'un log.
+	public function set_log($log=false, $log_file='', $log_format='text', $log_now=false, $log_reset=true) {
 		$this->log = $log;
 		if ($this->log) {
 			log::$log_file=$log_file;
@@ -75,14 +75,14 @@ class ntlm_handshake {
 	}
 	
 	
-	function set_ntlm_hosts($ntlm_hosts=array(), $http_proxies=array()) {
+	public function set_ntlm_hosts($ntlm_hosts=array(), $http_proxies=array()) {
 		$this->ntlm_hosts = $ntlm_hosts;
 		$this->http_proxies = $http_proxies;	
 		$this->ntlm_check_ip = true;
 	}
 	
 	
-	function check_ip() {
+	public function check_ip() {
 		
 		if ($this->ntlm_check_ip) {
 			$remote_addr = $_SERVER['REMOTE_ADDR'];
@@ -100,7 +100,7 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_prompt() {
+	public function ntlm_prompt() {
 		
 		$this->check_ip();
 		if (!$this->ntlm_check) return;	
@@ -108,7 +108,7 @@ class ntlm_handshake {
 		$this->auth_header = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
 		if ($this->log) {
 			if ($this->auth_header == null) {
-				log::print_message('HTTP_AUTHORIZATION non dÃ©fini.');
+				log::print_message('HTTP_AUTHORIZATION non défini.');
 			} else {
 				log::print_message('HTTP_AUTHORIZATION = ');
 				log::print_message($this->auth_header);
@@ -121,7 +121,7 @@ class ntlm_handshake {
 		}
 		if ($this->log) {
 			if ($this->auth_header == null) {
-				log::print_message('Apache headers non dÃ©finis.');
+				log::print_message('Apache headers non définis.');
 			} else {
 				log::print_message('Apache headers = ');
 				log::print_message($this->headers);
@@ -164,7 +164,7 @@ class ntlm_handshake {
 				die();
 			}
 
-			if ($this->msg[8] == "\x01") {
+			if (substr($this->msg, 8, 1) == "\x01") {
 				
 				if ($this->version==1) {
 					$this->msg2 = "NTLMSSP\x00\x02\x00\x00\x00\x00\x00\x00";
@@ -192,7 +192,7 @@ class ntlm_handshake {
 				}
 				exit;
 				
-			} else if ($this->msg[8] == "\x03") {
+			} else if (substr($this->msg, 8, 1) == "\x03") {
 				if ($this->version==1) {
 					$this->auth = $this->ntlm_parse_response_msg();
 				} else if ($this->version==2) {
@@ -224,12 +224,12 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_utf8_to_utf16le($str) {
+	public function ntlm_utf8_to_utf16le($str) {
 		return iconv('UTF-8', 'UTF-16LE', $str);
 	}
 
 	
-	function ntlm_md4($s) {
+	public function ntlm_md4($s) {
 		if (function_exists('mhash')) {
 			return mhash(MHASH_MD4, $s);
 		}
@@ -237,14 +237,14 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_av_pair($type, $utf16) {
+	public function ntlm_av_pair($type, $utf16) {
 		return pack('v', $type).pack('v', strlen($utf16)).$utf16;
 	}
 	
 	
-	function ntlm_field_value($start, $decode_utf16 = true) {
-		$len = (ord($this->msg[$start+1]) * 256) + ord($this->msg[$start]);
-		$off = (ord($this->msg[$start+5]) * 256) + ord($this->msg[$start+4]);
+	public function ntlm_field_value($start, $decode_utf16 = true) {
+		$len = (ord(substr($this->msg, $start+1, 1)) * 256) + ord(substr($this->msg, $start, 1));
+		$off = (ord(substr($this->msg, $start+5, 1)) * 256) + ord(substr($this->msg, $start+4, 1));
 		$result = substr($this->msg, $off, $len);
 		if ($decode_utf16) {
 			$result = iconv('UTF-16LE', 'UTF-8', $result);
@@ -253,7 +253,7 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_hmac_md5($key) {
+	public function ntlm_hmac_md5($key) {
 		$blocksize = 64;
 		if (strlen($key) > $blocksize) {
 			$key = pack('H*', md5($key));
@@ -265,7 +265,7 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_get_random_bytes($length) {
+	public function ntlm_get_random_bytes($length) {
 		$result = '';
 		for ($i = 0; $i < $length; $i++) {
 			$result .= chr(rand(0, 255));
@@ -274,7 +274,7 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_get_challenge_msg($challenge='') {
+	public function ntlm_get_challenge_msg($challenge='') {
 		
 		$this->domain = $this->ntlm_field_value(16);
 		$ws = $this->ntlm_field_value(24);
@@ -292,7 +292,7 @@ class ntlm_handshake {
 	}
 		
 	
-	function ntlm_verify_hash($challenge) {
+	public function ntlm_verify_hash($challenge) {
 		
 		//	$md4hash = $this->get_ntlm_user_hash($this->user);
 		//	if (!$md4hash) {
@@ -318,7 +318,7 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_parse_response_msg($challenge='') {
+	public function ntlm_parse_response_msg($challenge='') {
 		
 		if ($this->version==1) {
 			
@@ -350,12 +350,12 @@ class ntlm_handshake {
 	}
 	
 	
-	function ntlm_unset_auth() {
+	public function ntlm_unset_auth() {
 		unset ($_SESSION['_ntlm_auth']);
 	}
 	
 
-	function get_ntlm_user_hash() {
+	public function get_ntlm_user_hash() {
 		//$userdb = array('loune'=>'test', 'user1'=>'password');
 		//if (!isset($userdb[strtolower($this->user)]))
 		//return false;

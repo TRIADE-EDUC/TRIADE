@@ -1,8 +1,8 @@
 <?php
  // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: options_q_txt_i18n.php,v 1.7 2019-05-22 12:34:47 arenou Exp $
+// $Id: options_q_txt_i18n.php,v 1.8 2020/07/02 13:30:29 qvarin Exp $
 
 //Gestion des options de type q_txt_i18n
 $base_path = "../..";
@@ -21,14 +21,21 @@ $options = stripslashes($options);
 //Si enregistrer
 if ($first == 1) {
 	$param['FOR'] = 'q_txt_i18n';
-	$param['SIZE'][0]['value'] = stripslashes($SIZE*1);
-	$param['MAXSIZE'][0]['value'] = stripslashes($MAXSIZE*1);
+	$param['SIZE'][0]['value'] = stripslashes(intval($SIZE));
+	$param['MAXSIZE'][0]['value'] = stripslashes(intval($MAXSIZE));
 	$param['REPEATABLE'][0]['value'] = $REPEATABLE ? 1 : 0;
 	$param['ISHTML'][0]['value'] = $ISHTML ? 1 : 0;
 	$param['NUM_AUTO'][0]['value'] = ($NUM_AUTO=='yes' ? 'yes' : 'no');
 	$param['UNSELECT_ITEM'][0]['VALUE']=stripslashes($UNSELECT_ITEM_VALUE);
 	$param['UNSELECT_ITEM'][0]['value']="<![CDATA[".stripslashes($UNSELECT_ITEM_LIB)."]]>";
 	$param['DEFAULT_VALUE'][0]['value']=stripslashes($DEFAULT_VALUE);
+	$param['TYPE'][0]['value'] = empty($TYPE) ? "text" : stripslashes($TYPE);
+	
+	if ($param['TYPE'][0]['value'] == "textarea") {
+	    $param['MAXSIZE'][0]['value'] = 65535;
+	    $param['SIZE'][0]['value'] = 255;
+	}
+	
 	
 	if($idchamp) {
 		$merge_items = array();
@@ -89,8 +96,9 @@ if ($first == 1) {
  			$param['UNSELECT_ITEM'][0]['value']='';
  			$param['DEFAULT_VALUE'][0]['value']='';
  			$param['DEFAULT_LANG'][0]['value']='';
+ 			$param['TYPE'][0]['value'] = "text";
  		}
- 		//RÃ©cupÃ©ration des valeurs de la liste
+ 		//Récupération des valeurs de la liste
  		if ($idchamp) {
  			$requete="select ".$_custom_prefixe_."_custom_list_value, ".$_custom_prefixe_."_custom_list_lib, ordre from ".$_custom_prefixe_."_custom_lists where ".$_custom_prefixe_."_custom_champ=$idchamp order by ordre";
  			$resultat=pmb_mysql_query($requete);
@@ -115,7 +123,7 @@ if ($first == 1) {
  		$param['UNSELECT_ITEM'][0]['value']=stripslashes($UNSELECT_ITEM_LIB);
  		$param['DEFAULT_VALUE'][0]['value']=stripslashes($DEFAULT_VALUE);
  		$param['DEFAULT_LANG'][0]['value']=stripslashes($DEFAULT_LANG);
- 		
+ 		$param['TYPE'][0]['value'] = empty($TYPE) ? "text" : stripslashes($TYPE);
  		$options = array_to_xml($param, "OPTIONS");
  		
  		if($first == 2) {
@@ -153,13 +161,14 @@ if ($first == 1) {
  		$langue_doc = new marc_list('lang');
  		$langue_doc = $langue_doc->table;
  	}
-	
+ 	if (empty($param['TYPE'][0]['value'])) {
+ 	    $param['TYPE'][0]['value'] = "text";
+ 	}
 	//Formulaire
 	?> 
 	
 	<form class='form-<?php echo $current_module ?>' name="formulaire" action="options_q_txt_i18n.php" method="post">
-	<h3><?php  echo $type_list_empr[$type];
-	?> </h3>
+	<h3><?php  echo $type_list_empr[$type]; ?></h3>
 	<div class='form-contenu'>
 	<input type="hidden" name="first" value="1">
 	<input type="hidden" name="_custom_prefixe_" value="<?php echo $_custom_prefixe_;?>">
@@ -168,21 +177,41 @@ if ($first == 1) {
 	<input type="hidden" name="name" value="<?php  echo htmlentities($name, ENT_QUOTES, $charset);
 	?>">
 	<table class='table-no-border' width=100%>
-	<tr><td><?php  echo $msg["procs_options_text_taille"];
-	?> </td><td><input class='saisie-10em' type="text" name="SIZE" value="<?php  echo htmlentities($param['SIZE'][0]['value'],ENT_QUOTES,$charset);
-	?>"></td></tr>
-	<tr><td><?php  echo $msg["procs_options_text_max"]."<br /><span style='font-size: 0.8em'>".$msg['procs_options_text_max_help']."</span>";
-	?> </td><td><input type="text" class='saisie-10em' name="MAXSIZE" value="<?php  echo htmlentities($param['MAXSIZE'][0]['value'],ENT_QUOTES,$charset);
-	?>"></td></tr>
-	<tr><td><?php  echo $msg["persofield_textrepeat"];
-	?> </td><td><input type="checkbox" name="REPEATABLE" <?php  echo $param['REPEATABLE'][0]['value'] ? ' checked ' : "";
-	?>></td></tr>
-	<tr><td><?php  echo $msg["persofield_textishtml"];
-	?> </td><td><input type="checkbox" name="ISHTML" <?php  echo $param['ISHTML'][0]['value'] ? ' checked ' : "";
-	?>></td></tr>
+    	<tr>
+    		<td><?= $msg["procs_options_text_type"]; ?></td>
+    		<td>
+    			<input type="radio" id="text" name="TYPE" value="text" onChange="changeType(this)" <?= ($param['TYPE'][0]['value'] == "text" ? "checked" : "") ?>>
+    			<label for="text"><?= $msg["procs_options_text_type_text"]; ?></label>
+        		<input type="radio" id="textarea" name="TYPE" value="textarea" onChange="changeType(this)" <?= ($param['TYPE'][0]['value'] == "textarea" ? "checked" : "") ?>>
+        		<label for="textarea"><?= $msg["procs_options_text_type_textarea"]; ?></label>
+    		</td>
+    	</tr>
+		<tr class="paramType" <?= ($param['TYPE'][0]['value'] == 'text' ? '' : 'style="visibility:collapse;"') ?>>
+			<td><?php  echo $msg["procs_options_text_taille"];?> </td>
+			<td>
+				<input class='saisie-10em' id="size" type="text" name="SIZE" value="<?php  echo htmlentities($param['SIZE'][0]['value'],ENT_QUOTES,$charset);?>" <?= ($param['TYPE'][0]['value'] == 'textarea' ? 'readonly' : '') ?>>
+			</td>
+		</tr>
+		<tr class="paramType" <?= ($param['TYPE'][0]['value'] == 'text' ? '' : 'style="visibility:collapse;"') ?>>
+			<td><?php  echo $msg["procs_options_text_max"]."<br /><span style='font-size: 0.8em'>".$msg['procs_options_text_max_help']."</span>";?> </td>
+			<td>
+				<input type="text" id="maxsize" class='saisie-10em' name="MAXSIZE" value="<?php  echo htmlentities($param['MAXSIZE'][0]['value'],ENT_QUOTES,$charset);?>" <?= ($param['TYPE'][0]['value'] == 'textarea' ? 'readonly' : '') ?>>
+			</td>
+		</tr>
+		<tr>
+			<td><?php  echo $msg["persofield_textrepeat"];?> </td>
+			<td>
+				<input type="checkbox" name="REPEATABLE" <?php  echo $param['REPEATABLE'][0]['value'] ? ' checked ' : "";?>>
+			</td>
+		</tr>
+		<tr>
+			<td><?php  echo $msg["persofield_textishtml"];?> </td>
+			<td>
+				<input type="checkbox" name="ISHTML" <?php  echo $param['ISHTML'][0]['value'] ? ' checked ' : "";?>>
+			</td>
+		</tr>
 	</table>
-	<h3><?php echo $msg["procs_options_qualification_options"];
-		?></h3>
+	<h3><?php echo $msg["procs_options_qualification_options"];?></h3>
 	<table class='table-no-border' width=100%>
 		<tr><td><?php echo $msg["num_auto_list"]; 
 		?></td><td><input type="checkbox" value="yes" id="NUM_AUTO" name="NUM_AUTO" <?php if ($param['NUM_AUTO'][0]['value']=="yes") echo "checked"; ?>/>
@@ -256,8 +285,7 @@ if ($first == 1) {
 		<?php 
 	}
 	?>
-	<input class="bouton" type="submit" value="<?php  echo $msg[77];
-	?>">
+	<input class="bouton" type="submit" value="<?php  echo $msg[77]; ?>">
 	</form>
 	<script type="text/javascript">
 		var tab = new Array();
@@ -311,6 +339,45 @@ if ($first == 1) {
 			order.setAttribute("name","ITEMS["+key+"][order]");
 			order.setAttribute("size","10");
 			cell3.appendChild(order);
+		}
+		function changeType(typeNode) {
+			if (!typeNode.checked) {
+				return;
+			}
+
+			var paramTypeList = document.querySelectorAll("tr.paramType");
+			var maxsize = document.getElementById("maxsize");
+			var size = document.getElementById("size");
+			if (paramTypeList.length <= 0) {
+				return;
+			}
+			
+			switch (typeNode.value) {
+    			case "textarea":
+        			for(i=0; i < paramTypeList.length; i++) {
+        				paramTypeList[i].style.visibility = "collapse";
+        			}
+        			if (size && !size.readOnly) {
+        				size.readOnly = true;
+        			}
+        			if (maxsize && !maxsize.readOnly) {
+        				maxsize.readOnly = true;
+        			}
+    				break;
+
+    			default:
+    			case "text":
+        			if (size && size.readOnly) {
+        				size.readOnly = false;
+        			}
+        			if (maxsize && maxsize.readOnly) {
+        				maxsize.readOnly = false;
+        			}
+    				for(i=0; i < paramTypeList.length; i++) {
+        				paramTypeList[i].style.visibility = "";
+        			}
+    				break;
+			}
 		}
 	</script>
 	<?php

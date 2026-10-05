@@ -1,0 +1,31 @@
+{% extends 'contribution_areas_list.tpl.html' %}
+
+{% block group_action %}
+	<!-- pas d'action en lot pour les contributions validées -->
+{% endblock %}
+
+{% block line_form %}	
+<div style='border-left: 5px solid {{ form.area.color }};width:5%' class='contribution_form_table_cell'>
+</div>
+
+<div style='width:10%;' class='contribution_form_table_cell'>
+	{% if form.icon %}
+		<img  src="{{ form.icon }}" style="max-height:30px"></img>
+	{% endif %}
+</div>
+<a  class='contribution_form_table_cell' href='{% if form.link %}{{ form.link }}{% else %}#{% endif %}'>
+	{{ form.displayLabel }}
+</a>
+<div class='contribution_form_table_cell'>
+	{{ form.last_edit }}
+</div>
+<div class='contribution_form_table_cell'>
+	{% if form.can_edit  %}
+		<a href='./index.php?lvl=contribution_area&sub=convert&action=edit_entity&entity_type={{ form.entity_type }}&entity_id={{ form.identifier }}'>
+			<button class="contrib_list_button bouton" type="button" value="{{ msg.contribution_edit_draft }}" title="{{ msg.contribution_edit_draft }}" class="bouton">
+				<i class="fas fa-pencil-alt"></i>
+			</button>
+		</a>
+	{% endif %}
+</div>
+{% endblock %}

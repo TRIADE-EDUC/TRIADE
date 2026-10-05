@@ -9,9 +9,12 @@
 <body>
 <center>
 <b>
+<img src='https://www.triade-educ.org/banniere_triade/banniere000.jpg' />
+<br />Bannière Online
+<br/><br/> 
 <?php
-$nbimg=29;
-for($i=1;$i<=$nbimg;$i++) {
+$nbimg=30;
+for($i=0;$i<=$nbimg;$i++) {
 	print "<img src='../image/banniere_triade/banniere-$i.jpg' /><br />Bannière $i<br /><br />";
 }
 ?>	

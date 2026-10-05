@@ -1,13 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: chg_loc_retrait.inc.php,v 1.2 2015-04-03 11:16:27 jpermanne Exp $
+// $Id: chg_loc_retrait.inc.php,v 1.3 2020/06/19 12:31:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-$rqt = "UPDATE resa SET resa_loc_retrait=".$loc." WHERE id_resa=".$id;
+global $id, $loc, $msg;
 
+$id = intval($id);
+$loc = intval($loc);
+$rqt = "UPDATE resa SET resa_loc_retrait=".$loc." WHERE id_resa=".$id;
+pmb_mysql_query($rqt);
+
+$rqt = "UPDATE resa_archive, resa SET resarc_loc_retrait=".$loc." WHERE id_resa = ".$id." AND resa_arc = resarc_id";
 pmb_mysql_query($rqt);
 
 $rqt = "SELECT trim(concat(ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date, concat(' (',mention_date,')') ,''))) as tit ".

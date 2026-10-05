@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: interface_date.class.php,v 1.1 2018-05-18 12:24:50 dgoron Exp $
+// $Id: interface_date.class.php,v 1.1 2018/05/18 12:24:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

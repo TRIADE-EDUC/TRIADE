@@ -1,31 +1,36 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_docnumslist_view_docnumslist.class.php,v 1.9 2015-12-31 15:06:52 arenou Exp $
+// $Id: cms_module_docnumslist_view_docnumslist.class.php,v 1.11 2023/08/28 14:01:11 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_docnumslist_view_docnumslist extends cms_module_common_view {
+	
 	protected static $nb_row=0;
+	
 	
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->use_dojo = true;
 	}
 	
+	
 	public static function format_datas_from_source($datas){
 		$datastore = array();
 		foreach($datas as $data){
 			$datastore = array_merge($datastore,self::recurse_datas($data));
 		}
-		return self::utf8_normalize($datastore);
+		return encoding_normalize::utf8_normalize($datastore);
 	}
 	
+	
 	public function get_headers($datas=array()){
+		
 		$headers = parent::get_headers($datas);
 
-		$headers[] = '<script type="text/javascript">
+		$headers[] = '<script>
 		require(["dojo/_base/declare", "dojo/_base/window", "dojo/store/Memory", "dojo/store/JsonRest", "dijit/tree/ObjectStoreModel", "dijit/Tree", "dijit/registry", "dojo/topic", "dijit/Tooltip", "dojo/domReady!"], function(declare, win, Memory, JsonRest, ObjectStoreModel, Tree, registry, topic, Tooltip){
 		var myStore = new JsonRest({
 			target: "'.$datas['jsonstore'].'",
@@ -78,7 +83,7 @@ class cms_module_docnumslist_view_docnumslist extends cms_module_common_view {
 		});
 	});	
 </script>';
-		$headers[] = '<script type="text/javascript">
+		$headers[] = '<script>
 	require(["dojo/_base/declare", "dojo/_base/lang", "dijit/registry", "dojo/dom", "dojo/on", "dojo/ready", "dojo/dom-style", "dojo/topic", "dojo/window"], function(declare, lang, registry, dom, on, ready, domStyle, topic, win){
 		ready(function(){
 			var Pager = declare(null, {
@@ -214,6 +219,7 @@ class cms_module_docnumslist_view_docnumslist extends cms_module_common_view {
 </script>';
 		return $headers;
 	}
+	
 	
 	public function render($datas){
 		$html  = '';

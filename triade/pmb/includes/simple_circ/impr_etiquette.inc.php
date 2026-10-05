@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: impr_etiquette.inc.php,v 1.3 2017-06-23 08:53:15 dgoron Exp $
+// $Id: impr_etiquette.inc.php,v 1.5 2023/11/02 15:33:28 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -43,10 +43,10 @@ function aff_choix_quoi_impr_cote($action = "", $action_redo="", $action_cancel 
 	global $cart_choix_quoi_impr_cote;
 	global $msg, $charset;
 	global $pmb_label_construct_script;
-	
+
 	global $id_caddie, $elt_flag, $elt_no_flag;
 	global $label_id;
-	
+
 	$cart_choix_quoi_impr_cote = str_replace('!!action!!', $action, $cart_choix_quoi_impr_cote);
 	$cart_choix_quoi_impr_cote = str_replace('!!action_cancel!!', $action_cancel, $cart_choix_quoi_impr_cote);
 	$cart_choix_quoi_impr_cote = str_replace('!!titre_form!!', $titre_form, $cart_choix_quoi_impr_cote);
@@ -57,13 +57,13 @@ function aff_choix_quoi_impr_cote($action = "", $action_redo="", $action_cancel 
 	$cart_choix_quoi_impr_cote = str_replace('!!elt_flag_chk!!', $elt_flag_chk, $cart_choix_quoi_impr_cote);
 	$cart_choix_quoi_impr_cote = str_replace('!!elt_no_flag_chk!!', $elt_no_flag_chk, $cart_choix_quoi_impr_cote);
 
-	//Lecture des formats de planches d'Ã©tiquettes
+	//Lecture des formats de planches d'étiquettes
 	$label_fmt_sel = "";
 	$label_fmt_sel .= "<label class='etiquette'>" . htmlentities($msg['label_format'], ENT_QUOTES, $charset) . "</label>&nbsp;";
 	$label_fmt_sel .= "<select id='label_id' name='label_id' onchange=\"this.form.setAttribute('action', '".$action_redo."');this.form.submit(); \">";
 
 	//Formats disponibles
-	$label_fmt_list = getLabelFormatList();	
+	$label_fmt_list = getLabelFormatList();
 	foreach ($label_fmt_list as $key => $value) {
 		$label_fmt_sel .= "<option value=\"" . $key . "\" ";
 		if (!$label_id || ($label_id==$key) ) {
@@ -71,7 +71,7 @@ function aff_choix_quoi_impr_cote($action = "", $action_redo="", $action_cancel 
 			$label_id = $key;
 		}
 		if($charset=='utf-8'){
-			$value['label_name'] = utf8_encode($value['label_name']);
+			$value['label_name'] = encoding_normalize::utf8_normalize($value['label_name']);
 		}
 		$label_fmt_sel .= ">" .htmlentities($value['label_name'], ENT_QUOTES, $charset) . "</option>";
 	}

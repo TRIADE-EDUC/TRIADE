@@ -1,6 +1,15 @@
 <?php
+// Vérifier que l'accès provient de index1.php (cookie posé à la génération de la page)
+if (!isset($_COOKIE['triade_from_index1'])) {
+    header('Location: index.html');
+    exit;
+}
+
 session_start();
 error_reporting(0);
+if (empty($_SESSION['csrf_login'])) {
+    $_SESSION['csrf_login'] = bin2hex(random_bytes(16));
+}
 include_once("./common/config.inc.php");
 include_once("./common/config2.inc.php");
 if (AFFICHAGEVATEL == "oui") header("Location:./vatel/");
@@ -44,6 +53,9 @@ if (isset($_COOKIE["langue-triade"])) {
 	if ($_COOKIE["langue-triade"] == "occitan") {
 			$choix="<option value='occitan' id='select0' >Occitan</option>";
 	}
+	if ($_COOKIE["langue-triade"] == "de") {
+			$choix="<option value='de' id='select0' >Allemand</option>";
+	}
 }
 
 
@@ -52,7 +64,7 @@ if (isset($_COOKIE["langue-triade"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -76,14 +88,24 @@ if (isset($_COOKIE["langue-triade"])) {
 <meta name="Copyright" content="Triade©, 2001">
 <LINK REL="SHORTCUT ICON" href="./favicon.ico">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<style>
+.ad-msg{margin:8px 6px;padding:9px 14px;border-radius:7px;font-size:12px;font-weight:600}
+.ad-msg.error{background:#fce4ec;border:1px solid #f48fb1;color:#c62828}
+.ad-msg.info{background:#e3f2fd;border:1px solid #90caf9;color:#1565c0}
+.ad-msg.warn{background:#fff8e1;border:1px solid #ffe082;color:#e65100}
+.ad-demo{font-size:11px;color:#555;font-style:italic;text-align:center;margin:6px 0;padding:5px 10px;background:#eef0f8;border-radius:6px}
+</style>
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_type_navigateur.js"></script>
 <title>Triade</title>
 </head>
 <body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+<a href="#contenu-principal" class="sr-only sr-only-focusable">Passer au contenu principal</a>
 <noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
 
 <?php
@@ -119,6 +141,10 @@ include_once("./common/lib_ecole.php");
         	print "<script type=text/javascript src='librairie_js/langueocmenu-depart.js'></script>\n";
 	        print "<script type=text/javascript src='librairie_js/langueocfunction-depart.js'></script>\n";
         	include_once("./librairie_php/langue-text-oc.php");		
+	}elseif ($_COOKIE["langue-triade"] == "de") {
+        	print "<script type=text/javascript src='librairie_js/languedemenu-depart.js'></script>\n";
+	        print "<script type=text/javascript src='librairie_js/languedefunction-depart.js'></script>\n";
+        	include_once("./librairie_php/langue-text-de.php");		
 	}else {
         	print "<script type=text/javascript src='librairie_js/languefrmenu-depart.js'></script>\n";
 	        print "<script type=text/javascript src='librairie_js/languefrfunction-depart.js'></script>\n";
@@ -225,8 +251,9 @@ var	contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellp
 <?php
 }
 ?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTTITRE1?> <?php print ucfirst($titre3) ?></font> &nbsp;&nbsp;&nbsp;&nbsp;</b><font id="color2"><?php print htmlspecialchars($_GET["message"]) ?></FONT></td>
+<main id="contenu-principal" tabindex="-1">
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" role="presentation">
+<tr class='coulBar0'><td height="2"><b><span class='menumodule1'><?php print LANGTTITRE1?> <?php print ucfirst($titre3) ?></span> &nbsp;&nbsp;&nbsp;&nbsp;</b><font id="color2"><?php print htmlspecialchars($_GET["message"]) ?></FONT></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
@@ -250,6 +277,9 @@ include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 adsens();
 
+$disabledacces="";
+$acces_info="";
+
 if (file_exists("./data/install_log/noaccess.inc")) {   // Interruption du service unique
 	$verif=2;
 	$disabled="disabled";
@@ -261,6 +291,19 @@ if (file_exists("./data/install_log/noaccess.inc")) {   // Interruption du servi
 		$disabled="disabled";
 		$action="acces_depart.php";
 		$codeErreur="<i>(Code : 0A01)</i>" ;
+	}else{
+		if ($_GET['saisie_membre'] == "eleve") {
+			$data1=aff_structure("debut_acces"); // libelle,text,info
+			$data2=aff_structure("fin_acces"); // libelle,text,info
+			$debut_acces=$data1[0][1];
+			$fin_acces=$data2[0][1];	
+			$heureNow=dateHI();
+			$verifConnect=isTimeOutsideInterval($heureNow,$debut_acces,$fin_acces);
+			if ($verifConnect == 0) {
+				$acces_info="<font id='color3' ><b>Information :</b> Votre accès n'est pas autorisé entre $debut_acces et $fin_acces.</font>";
+				$disabledacces="disabled='disabled'";
+			}
+		}
 	}
 }
 
@@ -289,7 +332,9 @@ if ($_GET["saisie_titre"] == "Elèves") {
 	$titre1=LANGNA1;
 	$titre2=LANGNA2;
 }
- 
+
+$verif="";
+
 if ($_GET["bl"] == "1") {
 	$verif2=1;
 	$text=LANGTBLAKLIST0;
@@ -303,7 +348,7 @@ if (ini_get('register_globals')) {
 //	$disabled="disabled";
 }
 
-
+$messageaccueil="";
 if ((file_exists("./data/parametrage/noacces.ete")) && ($_GET["saisie_membre"] != "administrateur")) {
         $verif=3;
         $disabled="disabled";
@@ -330,20 +375,21 @@ if ((file_exists("./data/parametrage/noacces.eleve")) && ($_GET["saisie_membre"]
 $autocomplete="autocomplete='off'";
 if (defined("AUTOCOMPLETIONLOGIN")) { if (AUTOCOMPLETIONLOGIN == "oui") { $autocomplete=""; } }
 
+if ($disabledacces != "") $action="";
 ?>
 <form action='<?php print $action ?>' method='POST' name='inscripform' onsubmit="return Validate()"  >
 <p align="center"><font color="#000000">
-<TABLE border=0 width="400">
+<TABLE border=0 width="100%" role="presentation" style="background:#f8f9ff;border:2px solid #c5cae9;border-radius:8px;box-shadow:0 2px 8px rgba(8,10,102,.10)">
 <TR>
 <TR>
-<TD align=right><font class="T2"><?php print $titre1 ?> : </font></TD>
-<TD ><input type=text name=saisienom size=30 <?php print $efface ?> class="idAccesNom" <?php print $autocomplete ?> onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'"  ></TD></TR>
+<TD align=right><label for="saisienom" class="T2"><?php print $titre1 ?> : </label></TD>
+<TD ><input id="saisienom" type=text name=saisienom size=30 <?php print $efface ?> class="idAccesNom" style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:200px" <?php print $autocomplete ?> onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'"></TD></TR>
 <TR>
-<TD align=right ><font class="T2"><?php print $titre2 ?> : </font></TD>
-<TD ><input type=text name=saisieprenom size=30 <?php print $efface ?> class="idAccesNom" <?php print $autocomplete ?> onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'" >   </TD>
+<TD align=right ><label for="saisieprenom" class="T2"><?php print $titre2 ?> : </label></TD>
+<TD ><input id="saisieprenom" type=text name=saisieprenom size=30 <?php print $efface ?> class="idAccesNom" style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:200px" <?php print $autocomplete ?> onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'"></TD>
 <TD align=center  valign="middle" >
 <?php
-if (trim($disabled) == "") {
+if ((trim($disabled) == "") && (trim($disabledacces) == ""))  {
 	print "<script language=JavaScript>buttonMagicSubmitAtt(\"".LANGTCONNEXION."\",'rien',\" $disabled \");</script>";
 }else{
 	print "<script language=JavaScript>buttonMagicAlert(\"".LANGTCONNEXION."\",\"Connexion impossible pour le moment.\\\\n\\\\nMerci de revenir plus tard.\\\\n\\\\nEquipe Triade.\");</script>";
@@ -351,10 +397,11 @@ if (trim($disabled) == "") {
 ?>
 </TD></TR>
 <TR>
-<TD align=right ><font class="T2"><?php print LANGNA3?> : </font></TD>
-<TD width="2"><input type=password name=saisiepasswd size=20 <?php print $efface ?>  class="idAccesNom" onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'" >
+<TD align=right ><label for="saisiepasswd" class="T2"><?php print LANGNA3?> : </label></TD>
+<TD width="2"><input id="saisiepasswd" type=password name=saisiepasswd size=20 <?php print $efface ?> class="idAccesNom" style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:200px" onblur="this.className='idAccesNom'" onfocus="this.className='idAccesNom2'">
 <input type=hidden name='saisie_membre' value="<?php print htmlspecialchars($_GET["saisie_membre"]) ?>" >
 <input type=hidden name='saisie_titre' value="<?php print htmlspecialchars($_GET["saisie_titre"]) ?>" >
+<input type=hidden name='csrf_token' value="<?php print $_SESSION['csrf_login'] ?>" >
 <input type=hidden name='saisiewidth' id='saisiewidth' >
 <script>
 if (screen.width >= 800) { document.getElementById('saisiewidth').value='780'; }
@@ -364,96 +411,80 @@ if (screen.width >= 1024) { document.getElementById('saisiewidth').value='1020';
 <script language=JavaScript>document.inscripform.info_nav.value=nom;</script>
 </TD></TR>
 <TR>
-<TD align=right><font class="T2"><?php print LANGPER21?> :</font></TD>
+<TD align=right><label for="saisielangue" class="T2"><?php print LANGPER21?> :</label></TD>
 <TD >
-<select name='saisielangue'>
+<select id="saisielangue" name='saisielangue' style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:210px">
 <?php print $choix ?>
-<option value='fr'   id='select1' >Fran&ccedil;ais</option>
-<option value='en'   id='select1'  >Anglais</option>
-<option value='arabe'  id='select1'  >Arabe</option>
-<option value='es'  id='select1'  >Espagnol</option>
-<option value='it'   id='select1'  >Italien</option>
+<option value='fr' >Fran&ccedil;ais</option>
+<option value='en' >Anglais</option>
+<option value='de' >Allemand</option>
+<option value='arabe' >Arabe</option>
+<option value='es' >Espagnol</option>
+<option value='it' >Italien</option>
 <optgroup label="---------------------">
-<option value='bret' id='select1'  >Breton</option> 
-<option value='occitan' id='select1'  >Occitan</option> 
+<option value='bret' >Breton</option>
+<option value='occitan' >Occitan</option>
 </select>
 <div name="erreur"  id="erreur" style="POSITION:absolute;z-index:2"><script>document.write(contenu);</script></div>
-
 </TD></TR></TABLE></font></p></FORM>
+
+<?php if ($acces_info): ?>
+<div class="ad-msg info"><?php print $acces_info ?></div>
+<?php endif; ?>
+
 <?php
-if (preg_match('/demo.triade-educ.net/',WEBROOT)) {
-        print "<br>";
-        if ($_GET["saisie_membre"] == "administrateur") print "&nbsp;&nbsp;&nbsp;<i>Nom : neo - Pr&eacute;nom : neo - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "parent")         print "&nbsp;&nbsp;&nbsp;<i>Nom : merovingien - Pr&eacute;nom : merovingien - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "eleve") print "&nbsp;&nbsp;&nbsp;<i>Nom : merovingien - Pr&eacute;nom : merovingien - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "enseignant") print "&nbsp;&nbsp;&nbsp;<i>Nom : trinity - Pr&eacute;nom : trinity - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "vie scolaire") print "&nbsp;&nbsp;&nbsp;<i>Nom : smith - Pr&eacute;nom : smith - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "tuteurstage") print "&nbsp;&nbsp;&nbsp;<i>Nom : oracle - Pr&eacute;nom : oracle - mot de passe : matrix</i>";
-        if ($_GET["saisie_membre"] == "personnel") print "&nbsp;&nbsp;&nbsp;<i>Nom : sati - Pr&eacute;nom : sati - mot de passe : matrix</i>";
+if (preg_match('/demo.triade-educ.net/', WEBROOT)) {
+    $demotext = "";
+    if ($_GET["saisie_membre"] == "administrateur") $demotext = "Nom : neo &mdash; Pr&eacute;nom : neo &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "parent")         $demotext = "Nom : merovingien &mdash; Pr&eacute;nom : merovingien &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "eleve")          $demotext = "Nom : merovingien &mdash; Pr&eacute;nom : merovingien &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "enseignant")     $demotext = "Nom : trinity &mdash; Pr&eacute;nom : trinity &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "vie scolaire")   $demotext = "Nom : smith &mdash; Pr&eacute;nom : smith &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "tuteurstage")    $demotext = "Nom : oracle &mdash; Pr&eacute;nom : oracle &mdash; mot de passe : matrix";
+    if ($_GET["saisie_membre"] == "personnel")      $demotext = "Nom : sati &mdash; Pr&eacute;nom : sati &mdash; mot de passe : matrix";
+    if ($demotext) print "<div class='ad-demo'>$demotext</div>";
 }
 ?>
 
-<br />
-<?php
-if (isset($_GET["securite"])) {
-	print "<br><center><font class=T2 id=color2 >Connexion en mode sécurisée,<br>merci de renouveler votre demande'authentification.</font></center><br><br>";
-}
+<?php if (isset($_GET["securite"])): ?>
+<div class="ad-msg info" style="text-align:center">Connexion en mode s&eacute;curis&eacute;e,<br>merci de renouveler votre demande d'authentification.</div>
+<?php endif; ?>
 
-if ($messageaccueil != "") print "<p align=center><font class=T2 color=red><b>$messageaccueil</b></font></p><br/>";
-?>
+<?php if ($messageaccueil != ""): ?>
+<div class="ad-msg error"><?php print $messageaccueil ?></div>
+<?php endif; ?>
 
 <!-- // fin  -->
 </td>
 </tr></table>
 <?php
 if ($verif == 1) {
-	print "<br>";
-	print "<img src='image/commun/kitwarning.gif' align=left><font class='T2' color='red'>";
-	print "<b>".LANGDEPART3."</b> ";
-	print LANGDEPART4 ;
-	print $codeErreur."<br>";
+    print "<div class='ad-msg error'><b>".LANGDEPART3."</b> ".LANGDEPART4." ".$codeErreur."</div>";
 }
-
 if ($verif == 2) {
-	print "<br>";
-	print "<img src='image/commun/warning.png' align=left><font class='T2' color='red'>";
-	print "<b>".LANGDEPART3bis."</b> ";
-	print LANGDEPART4bis ;
-	print "<br>";
+    print "<div class='ad-msg warn'><b>".LANGDEPART3bis."</b> ".LANGDEPART4bis."</div>";
 }
-
 if ($verif == 3) {
-	if (file_exists("./data/parametrage/acces.commentaire")) {
-		$fp=fopen("./data/parametrage/acces.commentaire","r");
-		$donne=fread($fp,9000000);
-		$donne=preg_replace("/&lt;br \/&gt;/","<br />",$donne);
-		fclose($fp);
-		print "<br>";
-		print "<img src='image/commun/info2.gif' align=left><font class='T2'>";
-		if ($donne == "") $donne=LANGTMESS503;
-		print stripslashes($donne) ;
-		print "<br>";
-	}
+    if (file_exists("./data/parametrage/acces.commentaire")) {
+        $fp = fopen("./data/parametrage/acces.commentaire","r");
+        $donne = fread($fp, 9000000);
+        $donne = preg_replace("/&lt;br \/&gt;/","<br />",$donne);
+        fclose($fp);
+        if ($donne == "") $donne = LANGTMESS503;
+        print "<div class='ad-msg info'>".stripslashes($donne)."</div>";
+    }
 }
-
-
 if ($verif2 == 1) {
-	print "<br>";
-	print "<img src='image/commun/kitwarning.gif' align=left> $text ";
+    print "<div class='ad-msg error'>$text</div>";
 }
-
 if ($verif2 == 2) {
-	print "<br>";
-	print "<img src='image/commun/kitwarning.gif' align=left> $text2 ";
+    print "<div class='ad-msg error'>$text2</div>";
 }
-
 if (isset($_GET["expire"])) {
-	print "<br>";
-	print "<img src='image/commun/warning.png' align=left><font class='T2' color='red'>";
-	print "<font color='red' class='T2'><b>Votre compte suppléant est expiré !!</b> <br>Merci de contacter la direction afin de revalider votre compte.</font>";
+    print "<div class='ad-msg error'><b>Votre compte suppl&eacute;ant est expir&eacute; !</b><br>Merci de contacter la direction afin de revalider votre compte.</div>";
 }
 ?>
-</font>
+</main>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart22.js"></SCRIPT>

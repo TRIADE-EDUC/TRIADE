@@ -29,4 +29,10 @@
 	<section name="map">Options pour le géoréférencement</section>
 	<section name="debug">Options pour le débogage</section>
 	<section name="e_display_authorities">Affichage des autorités</section>		
+	<section name="animations">Options pour les animations</section>	
+	<section name="ark">ARK</section>
+	<section name="relance_1">Relances de niveau 1</section>
+	<section name="relance_2">Relances de niveau 2</section>
+	<section name="relance_3">Relances de niveau 3</section>
+    <section name="security">Options de sécurité</section>
 </pmbsections>

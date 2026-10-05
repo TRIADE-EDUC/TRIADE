@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_opacitem_view_opacitem.class.php,v 1.8 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_opacitem_view_opacitem.class.php,v 1.12.4.1 2025/04/25 14:16:44 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 	protected $cadre_parent;
-	
+
 	public function __construct($id=0){
 	    parent::__construct((int) $id);
 	}
-	
+
 	public function render($datas){
 		global $opac_url_base;
 		global $base_path;
@@ -21,7 +21,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		global $msg;
 		global $dbh;
 		global $charset;
-		
+
 		if(is_array($datas['globals'])) {
 			foreach($datas['globals'] as $globalName=>$globalValue){
 				global ${$globalName};
@@ -29,10 +29,10 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				${$globalName}=$globalValue['value'];
 			}
 		}
-		
+
 		//utiles dans le contexte
 		//cms_module_opacitem_item_infopage
-		
+
 		//cms_module_opacitem_item_navperio
 		global $a2z_perio_display;
 		global $onglet_a2z;
@@ -74,12 +74,11 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		//cms_module_opacitem_item_section
 		global $opac_view_filter_class;
 		//cms_module_opacitem_item_margueritte
-		
+
 		//cms_module_opacitem_item_centcases
-		
+
 		//cms_module_opacitem_item_dernotices
-		global $last_records_header;
-		global $last_records_footer;
+
 		//cms_module_opacitem_item_etageres
 		global $etageres_header;
 		global $etageres_footer;
@@ -95,7 +94,6 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		global $new_tab;
 		global $search_terms;
 		global $show_tris_form;
-		global $ligne_tableau_tris;
 		global $sort;
 		global $show_sel_form;
 		global $liste_criteres_tri;
@@ -107,7 +105,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		//cms_module_opacitem_item_collstate_bulletins_display
 		global $pmb_collstate_advanced;
 		global $id, $serial_id, $bulletin_id;
-		
+
 		$return='';
 		switch ($datas['opacitem']){
 			case 'cms_module_opacitem_item_infopage':
@@ -120,11 +118,12 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				$return=$a2z->get_form();
 				break;
 			case 'cms_module_opacitem_item_categ':
+				global $opac_show_categ_browser;
+
 				$opac_show_categ_browser_tab=explode(" ",$opac_show_categ_browser);
-				
 				if ($opac_show_categ_browser_tab[1]){
 					$opac_show_categ_browser_home_id_thes=$opac_show_categ_browser_tab[1];
-				}	
+				}
 				require_once ($base_path.'/classes/categorie.class.php');
 				require_once ($base_path.'/includes/templates/categories.tpl.php');
 				ob_start();
@@ -140,7 +139,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				</div>
 				";
 				$aff = pmb_bidi(affiche_bannettes($opac_bannette_nb_liste, "./empr.php?lvl=bannette&id_bannette=!!id_bannette!!","bannettes_private-container_2", "")) ;
-				if($aff){	
+				if($aff){
 					$bannettes= "<div id='bannettes_subscribed'>\n";
 					$bannettes.= "<h3><span>".$msg['accueil_bannette_privee']."</span></h3>";
 					$bannettes.= "<div id='bannettes_private-container'>";
@@ -177,6 +176,8 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				}
 				break;
 			case 'cms_module_opacitem_item_section':
+				global $opac_sur_location_activate;
+
 				ob_start();
 				if ($opac_sur_location_activate==1){
 					require_once($base_path."/includes/enter_sur_location.inc.php");
@@ -201,7 +202,6 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				$return= $centcases;
 				break;
 			case 'cms_module_opacitem_item_dernotices':
-				require_once ($base_path.'/includes/templates/last_records.tpl.php');
 				ob_start();
 				require_once ($base_path.'/includes/last_records.inc.php');
 				$return=ob_get_contents();
@@ -223,8 +223,9 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				break;
 			case 'cms_module_opacitem_item_contact_form':
 				if($opac_contact_form) {
-					require_once ($class_path.'/contact_form/contact_form.class.php');
-					$contact_form = new contact_form();
+					require_once ($class_path.'/contact_forms/contact_form.class.php');
+					if(empty($id)) $id = 1;
+					$contact_form = new contact_form($id);
 					$return=$contact_form->get_form();
 				} else {
 					$return='';
@@ -238,13 +239,13 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				}
 				break;
 		}
-		
+
 		if(is_array($savGlobals)) {
 			foreach($savGlobals as $globalName=>$globalValue){
 				${$globalName}=$globalValue;
-			}	
+			}
 		}
-		
+
 		if($return){
 			return $return;
 		}

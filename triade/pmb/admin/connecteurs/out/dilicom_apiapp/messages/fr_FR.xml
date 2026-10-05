@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2021/02/17 09:42:54 jlaurent Exp $ -->
+
+<XMLlist>
+    <entry code="pmb_ws_url">Adresse du web service PMB</entry>
+    <entry code="pmb_ws_url_unrecorded">Enregistrer la source pour pouvoir modifier l'adresse du Web Service PMB</entry>
+    <entry code="pmb_ws_url_comment">L'accès à ce web service nécessite une réécriture pour éliminer les paramètres de la requête.</entry>    
+    <entry code="apiapp_ws_url">Adresse du web service DILICOM API APP</entry>
+    <entry code="user_agent">Identifiant utilisateur</entry>
+    <entry code="hmac_key">Clé HMAC</entry>
+    <entry code="company">Nom de l'établissement</entry>
+    <entry code="email">Email du contact technique</entry>
+    <entry code="token_is_not_ok">Le token d'authentification n'a pas été reconnu par Dilicom</entry>
+    <entry code="empr_is_not_ok">Les identifiants de connexion n'ont pas été reconnus par PMB</entry>
+    <entry code="save_token_is_not_ok">Un problème est survenu lors du traitement de votre demande</entry>
+</XMLlist>

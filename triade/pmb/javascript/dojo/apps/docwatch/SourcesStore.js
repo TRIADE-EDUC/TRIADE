@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SourcesStore.js,v 1.10 2019-03-13 14:48:22 dgoron Exp $
+// $Id: SourcesStore.js,v 1.10 2019/03/13 14:48:22 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang","dojo/request/xhr"], function(declare, PMBStore, topic, lang, xhr){

@@ -92,6 +92,6 @@ fpxc=80;toclose=1;
 return false;
 }
 function CreerFenetreBe() {
-	if ((abrege=="Mi") || (navigateur=="Netscape")) {beWindow(0,0,740,580," <---  Quitter","./attente_messagerie.php");slidebe();}
+	if ((abrege=="Mi") || (navigateur=="Netscape")) {beWindow(0,0,740,580," Quitter","./attente_messagerie.php");slidebe();}
 }
 //  Fin script -->

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: view.php,v 1.11 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: view.php,v 1.11 2019/06/10 08:57:12 btafforeau Exp $
 
 // -----------------------------------------
 // ATTENTION CE FICHIER EST EN UTF-8

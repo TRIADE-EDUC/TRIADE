@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,6 +28,8 @@ setcookie("anneeScolaire",$anneeScolaire,time()+3600*24*30);
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="librairie_css/css-v4-2.css">
 <script language="JavaScript" src="librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="librairie_js/function.js"></script>
@@ -43,23 +45,22 @@ setcookie("anneeScolaire",$anneeScolaire,time()+3600*24*30);
 <div align='center'><?php top_h(); ?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/menuprof1.js"></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-	<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROFB1 ?> </font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGPROFB1 ?> </font></b></td></tr>
 <tr id='cadreCentral0'>
 <td>
-<?php 
+<?php
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 validerequete("profadmin");
 include_once('librairie_php/recupnoteperiode.php');
-$cnx=cnx();
 
 $tri=$_POST["choix_trimestre"];
 $idclasse=$_POST["sClasseGrp"];
 
 $listTmp=explode(":",$idclasse);
-unset($HPV[cgrp]);
+unset($HPV['cgrp']);
 $idclasse=$listTmp[0];
-$HPV[gid]=$listTmp[1];
+$HPV['gid']=$listTmp[1];
 unset($listTmp);
 
 if (isset($_POST["valide"])) {
@@ -71,154 +72,158 @@ if (isset($_POST["valide"])) {
 	$nb=$_POST["nb"];
 
 	$listTmp=explode(":",$idclasse);
-	unset($HPV[cgrp]);
+	unset($HPV['cgrp']);
 	$idclasse=$listTmp[0];
-	$HPV[gid]=$listTmp[1];
+	$HPV['gid']=$listTmp[1];
 	unset($listTmp);
 
 	for($i=0;$i<$nb;$i++) {
+		if (!array_key_exists("saisie_text_$i",$_POST)) continue;
 		$value=$_POST["saisie_text_$i"];
 		$saisie_matiere=$_POST["saisie_matiere_$i"];
 		enr_commentaire_classe($value,$saisie_matiere,$tri,$idclasse,$anneeScolaire);
 	}
-	$message="<br><center><font class='T2' id='color2' >".LANGABS28."</font></center>";
+	$message=LANGABS28;
 }
 
-/***************************************************************************/
-
-
-// recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$idclasse,$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
-       	 $dateFin=$dateRecup[$j][1];
+	$dateFin=$dateRecup[$j][1];
 }
 $dateDebutT1=dateForm($dateDebut);
 $dateFinT1=dateForm($dateFin);
-//-----/
+
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$idclasse,$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
-       	 $dateDebut=$dateRecup[$j][0];
-       	$dateFin=$dateRecup[$j][1];	
+for($j=0;$j<countTriade($dateRecup);$j++) {
+	$dateDebut=$dateRecup[$j][0];
+	$dateFin=$dateRecup[$j][1];
 }
 $dateDebutT2=dateForm($dateDebut);
 $dateFinT2=dateForm($dateFin);
-//-----/
+
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$idclasse,$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
-       	$dateDebut=$dateRecup[$j][0];
-        $dateFin=$dateRecup[$j][1];
+for($j=0;$j<countTriade($dateRecup);$j++) {
+	$dateDebut=$dateRecup[$j][0];
+	$dateFin=$dateRecup[$j][1];
 }
 $dateDebutT3=dateForm($dateDebut);
 $dateFinT3=dateForm($dateFin);
-//-----/
-
 ?>
-<?php
-print $message 
-?>
-<br>
-<ul><font class='T2'>Trimestre / Semestre : <?php print preg_replace('/trimestre/','',$tri); ?>
-<?php print " - ".LANGBULL3." : $anneeScolaire" ?>
-</font>
-</ul>
-<br>
-<table border=0>
-<td valign="top"><font class=T2>Moy. classe : </font></td>
-<td><font class=T2><b><div id="m1"></div></b> (Premier Trimestre)</font></td>
-<td><font class=T2><b><div id="m2"></div></b> (Deuxième Trimestre)</font></td>
-<td><font class=T2><b><div id="m3"></div></b> (Troisième Trimestre)</font></td>
-</tr></table>
 
-<table>
-<tr><td valign=top  ><br>
-<form method=post name="form" >
-<table border='1' >
+<?php if ($message): ?>
+<div style="text-align:center;font-size:13px;font-weight:700;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;margin:8px 0;">
+  <?php print $message ?>
+</div>
+<?php endif ?>
+
+<div class="na-card" style="margin-bottom:8px;">
+  <div class="na-row">
+    <span class="na-lbl">Trimestre / Semestre :</span>
+    <b><?php print preg_replace('/trimestre/','',$tri) ?></b>
+    &nbsp;&mdash;&nbsp;
+    <span class="na-lbl"><?php print LANGBULL3 ?> :</span>
+    <b><?php print $anneeScolaire ?></b>
+  </div>
+  <div class="na-row" style="gap:16px;flex-wrap:wrap;">
+    <span style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;color:#333;">
+      Moy. classe :
+      <b><span id="m1"></span></b> <span style="color:#888;">(1er trim.)</span>
+      &nbsp;
+      <b><span id="m2"></span></b> <span style="color:#888;">(2e trim.)</span>
+      &nbsp;
+      <b><span id="m3"></span></b> <span style="color:#888;">(3e trim.)</span>
+    </span>
+  </div>
+</div>
+
+<form method=post name="form">
+<div class="na-card">
+<table border='1' width='100%' style="border-collapse:collapse;">
 <?php
 
 include_once('librairie_php/recupnoteperiode.php');
-
-
 
 $ordre=ordre_matiere_visubull($idclasse);
 $idEleve=$ideleve;
 $idClasse=$idclasse;
 
-for($i=0;$i<count($ordre);$i++) {
+for($i=0;$i<countTriade($ordre);$i++) {
 	$matiere=chercheMatiereNom($ordre[$i][0]);
 	$nomprof=recherche_personne($ordre[$i][1]);
 	$idMatiere=$ordre[$i][0];
-	// mise en place du nom du prof
-        $idprof=recherche_prof($idMatiere,$idClasse,$ordre[$i][2]);
-        $profAff=recherche_personne($ordre[$i][1]);
+	$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$i][2]);
+	$profAff=recherche_personne($ordre[$i][1]);
 
-	if (verifsousmatierebull($idMatiere)) { continue; } // verif pour l'eleve de l'affichage de la matiere
+	if (verifsousmatierebull($idMatiere)) { continue; }
 
-	// mise en place des matieres
 	print "<tr>";
-	print "<td bordercolor='#cccccc' valign=top ><font size=2><input type=text readonly value='".trunchaine(strtoupper($matiere),50)."' size=40 title=\"$matiere\"></font>";
-	print "<br><i><font size=1> ".trunchaine(trim($profAff),50)." </font></i></td>";	
+	print "<td style='padding:6px;vertical-align:top;'><input type=text readonly value='".trunchaine(strtoupper($matiere),50)."' size=40 title=\"$matiere\" class='bouton2'>";
+	print "<br><br><i style='font-size:11px;color:#555;'> ".trunchaine(trim($profAff),50)." </i></td>";
 
 	$commentaire=cherche_com_classe_matiere($idMatiere,$tri,$idclasse,$anneeScolaire);
 	$commentaire=preg_replace('/"/',"&rdquo;",$commentaire);
 
-	print "<td align=left bgcolor='#FFFFFF'>";
+	print "<td style='padding:6px;'>";
 	print "<input type=hidden name='saisie_matiere_$i' value='$idMatiere' >";
-	
+
 	if (defined("NBCARBULL")) { $nbcar=NBCARBULL; }else{ $nbcar=400; }
 	if ($typecom > 0) { $nbcar=150; }
 	print "<input type='text' name='CharRestant_$i' size='2' disabled='disabled'> ($nbcar caractères maximum)<br>";
 	$disabled="";
 	if ($idprof != $_SESSION["id_pers"]) $disabled="disabled='disabled'";
-	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" cols='48' rows='5' name='saisie_text_$i' $disabled >$commentaire</textarea></td>";
+	print "<textarea onkeypress=\"compter(this,'$nbcar', this.form.CharRestant_$i)\" rows='5' name='saisie_text_$i' $disabled style='width:100%;box-sizing:border-box;'>$commentaire</textarea></td>";
 	print "</tr>";
-	
 }
 
 ?>
 </table>
-<br><br>
-<input type='hidden' name="saisie_classe" value="<?php print $idclasse?>" />
-<input type='hidden' name="anneeScolaire" value="<?php print $anneeScolaire?>" />
-<input type='hidden' name="saisie_trimestre" value="<?php print $tri?>" />
-<input type='hidden' name="nb" value="<?php print count($ordre) ?>" />
-<table><tr><td>&nbsp;&nbsp;<input type=submit value="Enregistrer" class="bouton2" name="valide" onclick="this.value='Veuillez patientez'">
-</td><td><script  language="JavaScript" >buttonMagicRetour('bulletin_comm_classe.php','_self')</script></td></tr></table>
-</form>
-</tr></td>
 
-</td></tr></table>
-<img src="image/commun/indicator.gif" style="visibility:hidden" />
+<input type='hidden' name="saisie_classe" value="<?php print $idclasse ?>">
+<input type='hidden' name="anneeScolaire" value="<?php print $anneeScolaire ?>">
+<input type='hidden' name="saisie_trimestre" value="<?php print $tri ?>">
+<input type='hidden' name="nb" value="<?php print countTriade($ordre) ?>">
+
+<div class="na-foot">
+  <button type="submit" name="valide" value="1" class="btn-enr" onclick="this.value='Veuillez patienter'">Enregistrer</button>
+</div>
+</div>
+<br>
+<script language="JavaScript">buttonMagicRetour('bulletin_comm_classe.php','_self')</script>
+<br>
+</form>
+
+<img src="image/commun/indicator.gif" style="visibility:hidden">
 <?php Pgclose(); ?>
-<script>RecupMoyenne('<?php print "trimestre1" ?>','<?php print $idclasse?>','m1')</script>
-<script>RecupMoyenne('<?php print "trimestre2"?>','<?php print $idclasse?>','m2')</script>
-<script>RecupMoyenne('<?php print "trimestre3"?>','<?php print $idclasse?>','m3')</script>
-<?php 
+<script>RecupMoyenne('<?php print "trimestre1" ?>','<?php print $idclasse?>','m1','<?php print $anneeScolaire ?>')</script>
+<script>RecupMoyenne('<?php print "trimestre2"?>','<?php print $idclasse?>','m2','<?php print $anneeScolaire ?>')</script>
+<script>RecupMoyenne('<?php print "trimestre3"?>','<?php print $idclasse?>','m3','<?php print $anneeScolaire ?>')</script>
+<?php
 if ($okenr == 1) {
 	alertJs(LANGDONENR);
 }
 ?>
-<br><br>
-     <!-- // fin  -->
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+
+<br>
+<!-- // fin  -->
+</td></tr></table>
+<?php
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
-       endif ;
-     ?>
-   </BODY>
-   </HTML>
+       endif;
+?>
+</BODY>
+</HTML>

@@ -12,7 +12,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,6 +33,8 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -42,11 +44,11 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'>
 <?php print LANGSTAGE18 ?></font></b></td>
@@ -74,7 +76,7 @@ if ($_SESSION["membre"] == "menuprof") {
 $cnx=cnx();
 if ($_SESSION["membre"] != "menupersonnel") { validerequete("3"); }
 $data=listestagenum();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$data22=$data[$i][0];
 	$nomstage=$data[$i][1];
 	$datanum[$data22]=$nomstage;
@@ -89,7 +91,7 @@ foreach($datanum as $key => $value) {
 }
 print "</tr>";
 $data=listestageclasse();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         $data22=$data[$i][0];
         $dataclasse[$data22]=$data22;
 }
@@ -103,7 +105,7 @@ foreach($dataclasse as $key => $value) {
 			$nb++;
 			if ($nb == 5) { break; }
 			$datestage=listestageclassenum($key2,$key);
-			print "<td align=center class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\" bordercolor='#000000' >";
+			print "<td align=center class='cc-tr-data' style='cursor:pointer' bordercolor='#000000' >";
 			if (($_SESSION["membre"] != "menupersonnel") && ($_SESSION["membre"] != "menuprof")) { 
 				print "<a href='gestion_stage_date_modif2.php?id=$key2'>";
 			}		
@@ -123,19 +125,19 @@ foreach($dataclasse as $key => $value) {
 
 <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

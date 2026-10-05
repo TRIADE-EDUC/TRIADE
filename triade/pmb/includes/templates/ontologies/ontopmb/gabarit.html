@@ -1,0 +1,87 @@
+{% comment %}
+$Id: gabarit.html,v 1.1 2022/11/17 15:20:52 arenou Exp $
+{% endcomment %}
+
+<style type="text/css">
+.aut_display_table {
+	display: table;
+}
+
+.aut_display_row {
+	display: table-row;
+}
+
+.aut_display_cell {
+	display: table-cell;
+	padding-right: 5px;
+}
+</style>
+
+{% block header %}
+	<h1><span>{{ msg.detail_authority_title }}</span></h1>
+{% endblock %}
+
+
+<!-- Details de lautorite courante -->
+<div id="aut_details" class='notice-perio'> <!-- Classe a faire sauter (En ajouter une speciale pour les autorites) -->
+{% block detail %}
+<div id="aut_details_container">	
+	{% block title %}
+		<h3 style='display:inline'>{{ entity.displayLabel }}</h3>
+		<script type="text/javascript">
+			document.title = "{{entity.displayLabel}}";
+		</script>
+	{% endblock %}
+	
+	<div id="aut_see" style="overflow:hidden;">
+		<table>
+			<tr id="authority_container" style="display:none;">
+				<td>
+					<div id="authority_display_table" class="aut_display_table">
+						{% block aut_see %}
+							{% block details %}
+							 {{entity.detail}}
+							{% endblock %}							
+						{% endblock %}
+					</div>
+					{% block map %}
+					{% endblock %}
+				</td>
+			</tr>
+		</table>
+		<hr>
+		{% block aut_buttons %}
+		<div class='row'>
+			<div class='left'>
+				<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./{{params.base_resource}}?ontology_id={{get_vars.ontology_id}}&categ=ontologies&sub={{params.sub}}&action=edit&id={{entity.id}}'"/>
+			</div>
+			<div class='right'>
+				<input type='button' class='bouton' value='{{msg.63}}' onclick="confirm_delete();" />
+			</div>
+		</div>
+		{% endblock %}
+		<div class="row">&nbsp;</div>
+	</div>
+	<script type="text/javascript">
+		//Control Script
+		var display_table = document.getElementById('authority_display_table');
+		var tr_container = document.getElementById('authority_container');
+		var content = display_table.innerHTML;
+		if(content.trim() != ""){
+			tr_container.setAttribute('style', 'display:block;');
+		}
+	</script>
+</div>
+<div class="clear"></div>
+{% endblock %}
+</div>
+<script type="text/javascript">
+	function confirm_delete() {
+  		result = confirm("{{ msg.confirm_suppr }}");
+		if(result) {
+			{% block aut_link_delete %}
+			document.location='./{{params.base_resource}}?ontology_id={{get_vars.ontology_id}}&categ=ontologies&sub={{params.sub}}&action=delete&id={{entity.id}}';
+			{% endblock %}
+		}
+    }
+</script>

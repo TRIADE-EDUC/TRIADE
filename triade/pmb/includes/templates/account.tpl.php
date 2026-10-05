@@ -1,31 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: account.tpl.php,v 1.24 2019-05-27 16:55:44 btafforeau Exp $
+// $Id: account.tpl.php,v 1.32 2024/01/05 11:17:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $account_layout, $msg, $account_form, $current_module, $user_acquisition_adr_form, $charset, $account_menu;
+global $account_js_script_layout, $msg, $account_form, $current_module, $user_acquisition_adr_form, $charset;
 
-// $account_menu : menu page 'edit your account'
-$account_menu = "
-<div id='menu'>
-		<h3 onclick='menuHide(this,event)'>$msg[33]</h3>
-	<ul>
-		<li><a href='./account.php'>$msg[933]</a></li>
-	</ul>
-</div>
-";
-
-//----------------------------------
-// $account_layout : layout page 'edit your account'
-$account_layout = "
-<div id='conteneur'>
-$account_menu
-<div id='contenu'>
-
-<h1>${msg[934]} ".SESSlogin."</h1>
+$account_js_script_layout = "
 <script type=\"text/javascript\">
 <!--
 function setValue(f_element, factor) {
@@ -68,49 +51,20 @@ $account_form ="
 <form class='form-$current_module' id='account_form' name=\"account_form\" method=\"post\" action=\"./account.php\">
 <!--	Form contenu	-->
 <div class='form-contenu'>
-
-<!--	Mot de passe	-->
-<div class='row'>
-	<div class='colonne4'>
-		<div class='row'>
-			<label class='etiquette' for='form_pwd'>$msg[87]</label>
-		</div>
-	</div>
-	<div class='colonne_suite'>
-		<div class='row'>
-			<input class='saisie-20em' type='password' id='form_pwd' name='form_pwd' value='' autocomplete='off'>
-		</div>
-	</div>
-</div>
-<div class='row'>
-	<!--	Confirmation	-->
-	<div class='colonne4'>
-		<div class='row'>
-			<label class='etiquette' for='passw2'>$msg[88]</label>
-		</div>
-	</div>
-	<div class='colonne_suite'>
-		<div class='row'>
-			<input type='password' id='passw2' name='passw2' value='' class='saisie-20em'>
-		</div>
-	</div>
-	<hr />
-</div>
-
 <!--	Langue	-->
 <div class='row'>
 	<div class='colonne3'>
 		<div class='row'>
-			<label for='' class='etiquette'>$msg[user_langue]</label>
+			<label for='user_lang' class='etiquette'>$msg[user_langue]</label>
 		</div>
 		<div class='row'>
 			!!combo_user_lang!!
 		</div>
 	</div>
 	<div class='colonne_suite'>
-	<!--	Style/thÃ¨me	-->
+	<!--	Style/thème	-->
 		<div class='row'>
-			<label class='etiquette' for=''>$msg[935]</label>
+			<label class='etiquette' for='form_style'>$msg[935]</label>
 		</div>
 		<div class='row'>
 			!!combo_user_style!!
@@ -118,10 +72,20 @@ $account_form ="
 	</div>
 	<hr />
 </div>
+
+<!-- email -->
+<div class='row'>
+	<div class='colonne3'>
+		<label class='etiquette' for='form_user_email'>".$msg['email']." &nbsp;</label><br />
+		<input type='text' class='saisie-20em' id='form_user_email' name='form_user_email' value='!!user_email!!' autocomplete='off' />
+	</div>
+    <hr />
+</div>
+
 <div class='row'>
 	<div class='colonne4'>
 		<div class='row'>
-			<label class='etiquette' for='form_nb_per_page_search'>$msg[nb_enreg_par_page]</label>
+			<label class='etiquette'>$msg[nb_enreg_par_page]</label>
 		</div>
 	</div>
 	<div class='colonne4'>
@@ -130,13 +94,13 @@ $account_form ="
 			<label class='etiquette' for='form_nb_per_page_search'>$msg[900]</label>
 		</div>
 		<div class='row'>
-			<input type='text' class='saisie-5em' name='form_nb_per_page_search' value='!!nb_per_page_search!!' size='4' />
+			<input type='text' class='saisie-5em' id='form_nb_per_page_search' name='form_nb_per_page_search' value='!!nb_per_page_search!!' size='4' />
 		</div>
 	</div>	
 	<div class='colonne4'>
-		<!--	Nombre d'enregistrements par page en sÃ©lection d'autoritÃ©s	-->
+		<!--	Nombre d'enregistrements par page en sélection d'autorités	-->
 		<div class='row'>
-			<label class='etiquette'>${msg[901]}</label>
+			<label class='etiquette' for='form_nb_per_page_select'>{$msg[901]}</label>
 		</div>
 		<div class='row'>
 			<input class='saisie-5em' type='text' id='form_nb_per_page_select' name='form_nb_per_page_select' value='!!nb_per_page_select!!' size='4' />
@@ -144,7 +108,7 @@ $account_form ="
 	</div>	
 	<div class='colonne4'>
 		<div class='row'>
-			<label class='etiquette' for='form_nb_per_page_gestion'>${msg[902]}</label>
+			<label class='etiquette' for='form_nb_per_page_gestion'>{$msg[902]}</label>
 		</div>
 		<div class='row'>
 			<input type='text' class='saisie-5em' id='form_nb_per_page_gestion' name='form_nb_per_page_gestion' value='!!nb_per_page_gestion!!' size='4' />
@@ -177,8 +141,8 @@ $account_form ="
 $user_acquisition_adr_form = "
 <div class='row'>
 	<div class='child'>
-		<div class='colonne2'>".htmlentities($msg['acquisition_adr_liv'], ENT_QUOTES, $charset)."</div>
-		<div class='colonne2'>".htmlentities($msg['acquisition_adr_fac'], ENT_QUOTES, $charset)."</div>
+		<div class='colonne2'><label for='adr_liv[!!id_bibli!!]' style='all:unset'>".htmlentities($msg['acquisition_adr_liv'], ENT_QUOTES, $charset)."</label></div>
+		<div class='colonne2'><label for='adr_fac[!!id_bibli!!]' style='all:unset'>".htmlentities($msg['acquisition_adr_fac'], ENT_QUOTES, $charset)."</label></div>
 	</div>
 </div>
 <div class='row'>

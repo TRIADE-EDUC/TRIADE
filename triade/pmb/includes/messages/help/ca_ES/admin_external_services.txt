@@ -1,6 +1,6 @@
 <h2>Administration des services externes</h2>
 
-<p>The external services are function aimed to be used by other programs in order to interac with PMB</p>
+<p>The external services are function aimed to be used by other programs in order to interact with PMB</p>
 
 <p>You can manage these functions :</p>
 <ul>

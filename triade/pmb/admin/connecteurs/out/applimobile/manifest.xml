@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2021/03/04 09:48:47 dbellamy Exp $ -->
+
+<manifest>
+	<name>AppliMobile</name>
+	<comment>Connecteur de paramétrage Appli Mobile</comment>
+	<author><![CDATA[Didier BELLAMY & Romain TIGERO]]></author>
+	<org>PMB Services</org>
+	<date>2021-03-01</date>
+	<url>http://www.sigb.net</url>
+	<api_requirements/>
+</manifest>

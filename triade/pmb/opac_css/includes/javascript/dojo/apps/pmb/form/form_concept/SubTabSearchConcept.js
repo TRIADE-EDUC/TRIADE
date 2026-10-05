@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabSearchConcept.js,v 1.1 2018-10-08 13:59:40 vtouchard Exp $
+// $Id: SubTabSearchConcept.js,v 1.1.16.1 2025/02/14 10:47:58 dgoron Exp $
 
 
 define([
@@ -130,7 +130,7 @@ define([
 			},
 			resizeIframe: function(){
 				if(window.parent.location.href != window.location.href){
-				    window.frameElement.height = window.frameElement.contentWindow.document.body.scrollHeight+50+'px';
+				    window.frameElement.style.height = window.frameElement.contentWindow.document.body.scrollHeight+50+'px';
 				}
 				this.resize();
 			},

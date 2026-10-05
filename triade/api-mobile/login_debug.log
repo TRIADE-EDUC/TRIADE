@@ -1,0 +1,27 @@
+2026-06-18T22:38:13+00:00 [2] Undefined variable $idparent IN /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php:175
+2026-06-18T22:38:13+00:00 SHUTDOWN: Array
+(
+    [type] => 2
+    [message] => Undefined variable $idparent
+    [file] => /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php
+    [line] => 175
+)
+
+2026-06-18T22:39:26+00:00 [2] Undefined variable $idparent IN /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php:175
+2026-06-18T22:39:26+00:00 SHUTDOWN: Array
+(
+    [type] => 2
+    [message] => Undefined variable $idparent
+    [file] => /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php
+    [line] => 175
+)
+
+2026-06-18T22:39:46+00:00 [2] Undefined variable $idparent IN /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php:175
+2026-06-18T22:39:46+00:00 SHUTDOWN: Array
+(
+    [type] => 2
+    [message] => Undefined variable $idparent
+    [file] => /home/taer5511/dev.triade-v4.net/triade/api-mobile/login.php
+    [line] => 175
+)
+

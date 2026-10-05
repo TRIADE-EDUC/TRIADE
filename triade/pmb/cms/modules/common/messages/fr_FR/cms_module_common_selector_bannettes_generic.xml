@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_bannettes_generic.xml,v 1.2 2015-09-16 14:31:37 jpermanne Exp $ -->
+$Id: cms_module_common_selector_bannettes_generic.xml,v 1.2 2015/09/16 14:31:37 jpermanne Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_bannettes">Sélection manuelle</entry>

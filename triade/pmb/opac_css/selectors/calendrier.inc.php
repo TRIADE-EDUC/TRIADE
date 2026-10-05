@@ -1,9 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: calendrier.inc.php,v 1.11 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: calendrier.inc.php,v 1.13.2.1 2024/12/16 14:39:52 qvarin Exp $
 
+global $auto_submit, $date_anterieure, $format_return, $func_to_call, $after, $func_other_to_call;
+global $sub_param1, $date, $act;
+global $popup_header, $caller, $date_caller, $param1, $param2;
 
 if(!isset($auto_submit)) $auto_submit='';
 if(!isset($date_anterieure)) $date_anterieure='';
@@ -16,22 +19,33 @@ if(!isset($date)) $date='';
 if(!isset($act)) $act='';
 
 print $popup_header;
-// deux parametres ajoutÃ©s avec initialisation de faÃ§on Ã  ne pas perturber la prolongation du prÃªt
+// deux parametres ajoutés avec initialisation de façon à ne pas perturber la prolongation du prêt
 // ajouter un param auto_submit Oui ou non automatique...
-if ($auto_submit=="") $auto_submit="YES"; 
-// ajouter un param date_anterieure Oui ou non pour prÃ©ciser si les dates antÃ©rieures Ã  celle fournie ($date) sont autorisÃ©es
+if ($auto_submit=="") $auto_submit="YES";
+// ajouter un param date_anterieure Oui ou non pour préciser si les dates antérieures à celle fournie ($date) sont autorisées
 if ($date_anterieure=="") $date_anterieure="NO";
-// dÃ©finir le format de retour : IN pour le format de saisie ou OUT pour le format d'affichage. OUT par dÃ©faut
+// définir le format de retour : IN pour le format de saisie ou OUT pour le format d'affichage. OUT par défaut
 if ($format_return=="") $format_return = "OUT";
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
-$base_url = "./select.php?what=calendrier&caller=$caller&date_caller=$date_caller&param1=$param1&param2=$param2&after=$after&auto_submit=$auto_submit&date_anterieure=$date_anterieure&format_return=$format_return";
+// la variable $caller, passée par l'URL, contient le nom du form appelant
+$base_url = './select.php?' . http_build_query([
+	'what' => 'calendrier',
+	'caller' => $caller,
+	'date_caller' => $date_caller,
+	'param1' => $param1,
+	'param2' => $param2,
+	'after' => $after,
+	'auto_submit' => $auto_submit,
+	'date_anterieure' => $date_anterieure,
+	'format_return' => $format_return
+]);
+
 $date_caller=str_replace('-','',$date_caller);
 if (($date_caller=="")||($date_caller=="00000000")||($date_caller=="00000000 00:00:00")) $date_caller = date ("Ymd", time());
 if ($date=="") $date=$date_caller;
 
 echo "
-<script type='text/javascript'>
+<script>
 <!--
 function set_parent(f_caller, id_value, libelle_value)
 {
@@ -51,52 +65,67 @@ function set_parent(f_caller, id_value, libelle_value)
 
 // issu de la saisie directe de la date.
 if($act == "calc_date"){
-	// Mettre le parent appelant Ã  jour, et sortir.
+	// Mettre le parent appelant à jour, et sortir.
 	$mysql_date= extraitdate($date);
 	if ($format_return == "IN") {
 		$date_aff_formatee = formatdate_input($mysql_date);
 	} else {
 		$date_aff_formatee = formatdate($mysql_date);
 	}
-	print"<script type='text/javascript'>set_parent('$caller','$mysql_date','".$date_aff_formatee."')</script>";
-}else {		
-	
-	$params['calendar_id'] = 1 ; 				
-	$params['calendar_columns'] = 7 ; 			
-	$params['show_day'] = 1 ; 				
-	$params['show_month'] = 1 ; 				
-	$params['nav_link'] = 1 ; 				
-	$params['link_after_date'] = 1 ; 			
-	if ($date_anterieure=="YES") $params['link_before_date'] = 1 ; 	else  $params['link_before_date'] = 0 ; 
-	$params['link_on_day'] = $base_url ; 		
-	$params['font_face'] = "Verdana, Arial, Helvetica" ; 	
-	$params['font_size'] = 10 ; 				
-	$params['bg_color'] = "#FFFFFF" ; 			
-	$params['today_bg_color'] = "#FF0000" ; 		
-	$params['font_today_color'] = "#000000" ; 		
-	$params['font_color'] = "#000000" ; 			
-	$params['font_nav_bg_color'] = "#AAAAAA" ; 		
-	$params['font_nav_color'] = "#000000" ; 		
-	$params['font_header_color'] = "#00FF00" ; 		
-	$params['border_color'] = "#000000" ; 			
-	$params['use_img'] = 1 ; 
-	
+	print"<script>set_parent('$caller','$mysql_date','".$date_aff_formatee."')</script>";
+}else {
+    $params = array();
+	$params['calendar_id'] = 1 ;
+	$params['calendar_columns'] = 7 ;
+	$params['show_day'] = 1 ;
+	$params['show_month'] = 1 ;
+	$params['nav_link'] = 1 ;
+	$params['link_after_date'] = 1 ;
+	if ($date_anterieure=="YES") {
+	    $params['link_before_date'] = 1 ;
+	} else  {
+	    $params['link_before_date'] = 0 ;
+	}
+	$params['link_on_day'] = $base_url ;
+	$params['font_face'] = "Verdana, Arial, Helvetica" ;
+	$params['font_size'] = 10 ;
+	$params['bg_color'] = "#FFFFFF" ;
+	$params['today_bg_color'] = "#FF0000" ;
+	$params['font_today_color'] = "#000000" ;
+	$params['font_color'] = "#000000" ;
+	$params['font_nav_bg_color'] = "#AAAAAA" ;
+	$params['font_nav_color'] = "#000000" ;
+	$params['font_header_color'] = "#00FF00" ;
+	$params['border_color'] = "#000000" ;
+	$params['use_img'] = 1 ;
+
 	echo "<div class='row'>";
-	echo calendar($date);	
-	$form_action ="./select.php?what=calendrier&caller=$caller&date_caller=$date_caller&param1=$param1&param2=$param2&after=$after&date_anterieure=$date_anterieure&format_return=$format_return&auto_submit=$auto_submit";
-	$date= formatdate_input($date_caller);
-	$form_directe_date=date_directe($date,$form_action,$format_return);
-	echo "$form_directe_date";
+	echo calendar($date);
+
+
+	$form_action = './select.php?' . http_build_query([
+		'what' => 'calendrier',
+		'caller' => $caller,
+		'date_caller' => $date_caller,
+		'param1' => $param1,
+		'param2' => $param2,
+		'after' => $after,
+		'date_anterieure' => $date_anterieure,
+		'format_return' => $format_return,
+		'auto_submit' => $auto_submit
+	]);
+
+	$date = formatdate_input($date_caller);
+	echo date_directe($date,$form_action,$format_return);
 	echo "</div>";
 }
 
 function date_directe($date,$post_url,$format_return="OUT"){
 	global $link_on_day, $params, $base_url, $caller, $msg, $date_caller;
-	global $dbh ;
 	global $msg ;
 
 $calend= <<<ENDOFTEXT
-	<script type='text/javascript' src='./includes/javascript/http_request.js'></script>
+	<script src='./includes/javascript/http_request.js'></script>
 	<script language="JavaScript">
 
 	function CheckDataAjax() {
@@ -104,39 +133,40 @@ $calend= <<<ENDOFTEXT
 		var url= "./ajax.php?module=ajax&categ=misc&fname=verifdate&p1=" + DirectDate;
 		var test_date = new http_request();
 		if(test_date.request(url)) alert ( test_date.get_text() );
-		else { 
+		else {
 			document.getElementById('date_directe').value = DirectDate;
-			return 1;	
+			return 1;
 		}
 	}
 	</script>
-		
+
 	<form name="Cal" id="Cal" method='post' action='!!post_url!!'><span style='text-align:center'>
 	<input type='text' name='DirectDate' size=10 value='!!date_caller!!'>
 	<input type='hidden' name='act' value='calc_date'>
-	<input type='hidden' id='date_directe' name='date' value='!!date_caller!!'>	
+	<input type='hidden' id='date_directe' name='date' value='!!date_caller!!'>
 	<input type='hidden' id='format_return' name='format_return' value='!!format_return!!'>
 	<input type='submit' class="bouton_small" value="!!commit_button!!" style="font-weight: bold" onClick="if(CheckDataAjax()) submit();">
-	</span></form>	
+	</span></form>
 ENDOFTEXT;
-	
-	$calend = str_replace("!!commit_button!!" ,$msg["calendrier_date_submit"], $calend);	
+
+	global $charset;
+	$calend = str_replace("!!commit_button!!" ,$msg["calendrier_date_submit"], $calend);
 	$calend = str_replace("!!date_caller!!" , $date, $calend);
-	$calend = str_replace("!!format_return!!" , $format_return, $calend);
-	$calend = str_replace("!!post_url!!" , $post_url, $calend);		
+	$calend = str_replace("!!format_return!!" , htmlentities($format_return, ENT_QUOTES, $charset), $calend);
+	$calend = str_replace("!!post_url!!" , $post_url, $calend);
 	return $calend;
 }
 
-/* ce sÃ©lecteur est basÃ© sur le calendrier dont la description et 
-   l'auteur initial sont mentionnÃ©s ci-dessous.
-   Il a Ã©tÃ© modifiÃ© afin d'Ãªtre utilisable dans notre application */
+/* ce sélecteur est basé sur le calendrier dont la description et
+   l'auteur initial sont mentionnés ci-dessous.
+   Il a été modifié afin d'être utilisable dans notre application */
 /***************************************************************************
              ____  _   _ ____  _              _     _  _   _   _
             |  _ \| | | |  _ \| |_ ___   ___ | |___| || | | | | |
             | |_) | |_| | |_) | __/ _ \ / _ \| / __| || |_| | | |
             |  __/|  _  |  __/| || (_) | (_) | \__ \__   _| |_| |
             |_|   |_| |_|_|    \__\___/ \___/|_|___/  |_|  \___/
-            
+
                        calendrier.php  -  A calendar
                              -------------------
     begin                : June 2002
@@ -153,33 +183,35 @@ ENDOFTEXT;
  *   (at your option) any later version.
  *
  ***************************************************************************/
-/* 
-- $params['calendar_id'] :  Par dÃ©faut Ã  1, incrÃ©menter cette valeur pour utiliser plusieurs calendriers sur la mÃªme page.  
-- $params['calendar_columns'] :  Par dÃ©faut Ã  7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes. 
-- $params['show_day'] :  Par dÃ©faut Ã  1, permet d'afficher les jours (L M M J V S D) 
-- $params['show_month'] :  Par dÃ©faut Ã  1, permet d'afficher le nom du mois et l'annÃ©e en haut 
-- $params['nav_link'] :  Par dÃ©faut Ã  1, affiche les liens pour les jours et mois prÃ©cÃ©dents / suivants 
-- $params['link_after_date'] :  Par dÃ©faut Ã  0, si activÃ©, affiche les liens de la navigation (cf ci-dessus) pour les dates supÃ©rieures au jour en cours 
-- $params['link_on_day'] :  Lien Ã  attribuer sur les jours du calendrier. A chaque lien est rajoutÃ© la date en argument. PrÃ©voir de mettre '?argument=' en fin de lien 
-- $params['font_face'] :  Police a utiliser (par dÃ©faut : 'Verdana, Arial, Helvetica') 
-- $params['font_size'] :  Taille de la police moyenne en pixels (10 par dÃ©faut) 
-- $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par dÃ©faut) 
-- $params['today_bg_color'] :  Couleur de fond de la case du jour en cours 
-- $params['font_today_color'] :  Couleur de la police pour le jour en cours 
-- $params['font_color'] :  Couleur de la police 
-- $params['font_nav_bg_color'] :  Couleur de fond pour la barre des jours (L M M J V S D) 
-- $params['font_nav_color'] :  Couleur de la police pour la barre des jours (L M M J V S D) 
-- $params['font_header_color'] :  Couleur de la police pour le nom du mois 
-- $params['border_color'] :  Couleur pour les sÃ©paration des cases et des bordures 
-- $params['use_img'] :  Utilise des fichiers gif Ã  cÃ´tÃ© du nom du mois et pour la barre de navigation en bas. Si dÃ©fini Ã  '0', affiche les liens textes. 
+/*
+- $params['calendar_id'] :  Par défaut à 1, incrémenter cette valeur pour utiliser plusieurs calendriers sur la même page.
+- $params['calendar_columns'] :  Par défaut à 7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes.
+- $params['show_day'] :  Par défaut à 1, permet d'afficher les jours (L M M J V S D)
+- $params['show_month'] :  Par défaut à 1, permet d'afficher le nom du mois et l'année en haut
+- $params['nav_link'] :  Par défaut à 1, affiche les liens pour les jours et mois précédents / suivants
+- $params['link_after_date'] :  Par défaut à 0, si activé, affiche les liens de la navigation (cf ci-dessus) pour les dates supérieures au jour en cours
+- $params['link_on_day'] :  Lien à attribuer sur les jours du calendrier. A chaque lien est rajouté la date en argument. Prévoir de mettre '?argument=' en fin de lien
+- $params['font_face'] :  Police a utiliser (par défaut : 'Verdana, Arial, Helvetica')
+- $params['font_size'] :  Taille de la police moyenne en pixels (10 par défaut)
+- $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par défaut)
+- $params['today_bg_color'] :  Couleur de fond de la case du jour en cours
+- $params['font_today_color'] :  Couleur de la police pour le jour en cours
+- $params['font_color'] :  Couleur de la police
+- $params['font_nav_bg_color'] :  Couleur de fond pour la barre des jours (L M M J V S D)
+- $params['font_nav_color'] :  Couleur de la police pour la barre des jours (L M M J V S D)
+- $params['font_header_color'] :  Couleur de la police pour le nom du mois
+- $params['border_color'] :  Couleur pour les séparation des cases et des bordures
+- $params['use_img'] :  Utilise des fichiers gif à côté du nom du mois et pour la barre de navigation en bas. Si défini à '0', affiche les liens textes.
 */
 
 function calendar($date = '') {
 	global $link_on_day, $params, $base_url, $caller, $msg, $date_caller, $format_return, $PHP_SELF;
-	global $dbh ;
 	global $msg ;
 
+	$param = array();
+
 	// Default Params
+	$param_d = array();
 	$param_d['calendar_id']		= 1; // Calendar ID
 	$param_d['calendar_columns'] 	= 5; // Nb of columns
 	$param_d['show_day'] 		= 1; // Show the day bar
@@ -190,7 +222,7 @@ function calendar($date = '') {
 	$param_d['link_on_day']		= $PHP_SELF.'?date='; // Link to put on each day
 	$param_d['font_face']		= 'Verdana, Arial, Helvetica'; // Default font to use
 	$param_d['font_size']		= 10; // Font size in px
-	$param_d['bg_color']		= '#FFFFFF'; 
+	$param_d['bg_color']		= '#FFFFFF';
 	$param_d['today_bg_color']	= '#A0C0C0';
 	$param_d['font_today_color']	= '#990000';
 	$param_d['font_color']		= '#000000';
@@ -199,17 +231,17 @@ function calendar($date = '') {
 	$param_d['font_header_color']	= '#FFFFFF';
 	$param_d['border_color']	= '#3f6551';
 	$param_d['use_img']		= 1; // Use gif for nav bar on the bottom
-	
+
 	// Params
 	$monthes_name = array('',$msg[1006],$msg[1007],$msg[1008],$msg[1009],$msg[1010],$msg[1011],$msg[1012],$msg[1013],$msg[1014],$msg[1015],$msg[1016],$msg[1017]);
 	$days_name = array('',$msg[1018],$msg[1019],$msg[1020],$msg[1021],$msg[1022],$msg[1023],$msg[1024]);
-	
+
 	foreach ($param_d as $key => $val) {
 		if (isset($params[$key])) $param[$key] = $params[$key];
 		else $param[$key] = $param_d[$key];
 	}
 	$param['calendar_columns'] = ($param['show_day']) ? 7 : $param['calendar_columns'];
-	
+
 	if ($date == '') {
 		$date_MySQL = " CURDATE() ";
 	} else {
@@ -221,12 +253,12 @@ function calendar($date = '') {
 	$rqt_date = "select date_format(".$date_MySQL.", '%d') as current_day, date_format(".$date_MySQL.", '%m') as current_month_2, date_format(".$date_MySQL.", '%c') as current_month, date_format(".$date_MySQL.", '%Y') as current_year " ;
 	$resultatdate=pmb_mysql_query($rqt_date);
 	$resdate=pmb_mysql_fetch_object($resultatdate);
-	
+
 	$current_day 		= $resdate->current_day;
 	$current_month 		= $resdate->current_month;
 	$current_month_2	= $resdate->current_month_2;
 	$current_year 		= $resdate->current_year;
-	
+
 	$date_MySQL_firstday = "'$year-$current_month_2-01'";
 	$rqt_date = "select date_format(".$date_MySQL_firstday.", '%w') as first_day_pos,
 				date_format(DATE_SUB(DATE_ADD(".$date_MySQL_firstday.", INTERVAL 1 MONTH),INTERVAL 1 DAY), '%d') as nb_days_month " ;
@@ -236,23 +268,23 @@ function calendar($date = '') {
 	$first_day_pos 		= ($first_day_pos == 0) ? 7 : $first_day_pos;
 
 	$nb_days_month 		= $resdate->nb_days_month ;
-	
+
 	$current_month_name = $monthes_name[$current_month];
-	
-	/* Ajout ER : dÃ©tection si date en cours du calendrier correspond ou pas Ã  la date de l'appelant 
-		Sans ce test, le lien sur tous les jours identiques d'un autre mois n'Ã©taient pas affichÃ©s, exemple :
+
+	/* Ajout ER : détection si date en cours du calendrier correspond ou pas à la date de l'appelant
+		Sans ce test, le lien sur tous les jours identiques d'un autre mois n'étaient pas affichés, exemple :
 			appelant avec date au 04/10/2003 >> lien du 04/11/2003 absent */
 	$date_MySQL_caller = "'".substr($date_caller, 0 ,4)."-".substr($date_caller, 4 ,2)."-".substr($date_caller, 6 ,2)."'";
 	$rqt_date = "select date_format(".$date_MySQL_caller.", '%d') as current_day, date_format(".$date_MySQL_caller.", '%c') as current_month, date_format(".$date_MySQL_caller.", '%Y') as current_year ";
 	$resultatdate=pmb_mysql_query($rqt_date);
 	$resdate=pmb_mysql_fetch_object($resultatdate);
-	
+
 	$caller_day 		= $resdate->current_day;
 	$caller_month 		= $resdate->current_month;
 	$caller_year 		= $resdate->current_year;
-	
+
 	if (($caller_month==$current_month) && ($caller_year==$current_year) && ($caller_day==$current_day)) $same_date=1; else $same_date=0;
-	
+
 	$output = '<style type="text/css">
 		<!--
 		.calendarNav'.$param['calendar_id'].' 	{  font-family: '.$param['font_face'].'; font-size: '.($param['font_size']-1).'px; font-style: normal; background-color: '.$param['border_color'].'}
@@ -263,9 +295,9 @@ function calendar($date = '') {
 		.calendarTable'.$param['calendar_id'].' {  background-color: '.$param['border_color'].'; border: 1px '.$param['border_color'].' solid}
 		-->
 		</style>';
-	$output .= '<TABLE style="width:180px; border:0px" class="calendarTable'.$param['calendar_id'].'" cellpadding="2" cellspacing="1">'."\n";
+	$output .= '<TABLE style="width:180px; border:0px; padding: 2px; border-spacing: 1px" class="calendarTable'.$param['calendar_id'].'">'."\n";
 	$output .= '!!fleches!!' ;
-	
+
 	// Displaying the current month/year
 	if ($param['show_month'] == 1) {
 		$output .= '<TR>'."\n";
@@ -278,7 +310,7 @@ function calendar($date = '') {
 		$output .= '	</TD>'."\n";
 		$output .= '</TR>'."\n";
 	}
-		
+
 	// Building the table row with the days
 	if ($param['show_day'] == 1) {
 		$output .= '<TR class="center">'."\n";
@@ -289,11 +321,11 @@ function calendar($date = '') {
 		$output .= '	<TD class="calendarHeader'.$param['calendar_id'].'"><B>'.$msg[1022].'</B></TD>'."\n";
 		$output .= '	<TD class="calendarHeader'.$param['calendar_id'].'"><B>'.$msg[1023].'</B></TD>'."\n";
 		$output .= '	<TD class="calendarHeader'.$param['calendar_id'].'"><B>'.$msg[1024].'</B></TD>'."\n";
-		$output .= '</TR>'."\n";	
+		$output .= '</TR>'."\n";
 	}else {
-		$first_day_pos = 1;	
+		$first_day_pos = 1;
 	}
-	
+
 	$output .= '<TR class="center">';
 	$int_counter = 0;
 	for ($i = 1; $i < $first_day_pos; $i++) {
@@ -302,7 +334,7 @@ function calendar($date = '') {
 	}
 	// Building the table
 	for ($i = 1; $i <= $nb_days_month; $i++) {
-		$i_2 = ($i < 10) ? '0'.$i : $i;		
+		$i_2 = ($i < 10) ? '0'.$i : $i;
 		### Row start
 		if ((($i + $first_day_pos-1) % $param['calendar_columns']) == 1 && $i != 1) {
 			$output .= '<TR class="center">'."\n";
@@ -315,15 +347,15 @@ function calendar($date = '') {
 				$output .= '<TD class="calendarToday'.$param['calendar_id'].' center"><A href="#" onclick="set_parent(\''.$caller.'\', \''.$current_year.'-'.$current_month_2.'-'.$i_2.'\', \''.formatdate($current_year.'-'.$current_month_2.'-'.$i_2).'\')">'.$i.'</A></TD>'."\n";
 			}
 		}elseif ($param['link_on_day'] != '') {
-				
+
 			$date_MySQL_loop = "'".$current_year."-".$current_month."-".$i."'";
-			
+
 			$rqt_date = "select case when CURDATE() < ".$date_MySQL_loop." then 1 ELSE 0 END as test_loop ";
 			$resultatdate=pmb_mysql_query($rqt_date);
 			$resdate=pmb_mysql_fetch_object($resultatdate);
-			
+
 			$test_loop = $resdate->test_loop;
-			
+
 			if ($test_loop){
 				if ($param['link_after_date'] == 0) {
 					$output .= '<TD class="calendarDays'.$param['calendar_id'].'">'.$i.'</TD>'."\n";
@@ -347,38 +379,38 @@ function calendar($date = '') {
 			}
 		} else {
 			$output .= '<TD class="calendarDays'.$param['calendar_id'].'">'.$i.'</TD>'."\n";
-		}	
-		$int_counter++;	
+		}
+		$int_counter++;
 		// Row end
 		if ( (($i+$first_day_pos-1) % $param['calendar_columns']) == 0 ) {
-			$output .= '</TR>'."\n";	
+			$output .= '</TR>'."\n";
 		}
 	}
 	$cell_missing = $param['calendar_columns'] - $int_counter;
-	
+
 	for ($i = 0; $i < $cell_missing; $i++) {
 		$output .= '<TD class="calendarDays'.$param['calendar_id'].'">&nbsp;</TD>'."\n";
 	}
 	$output .= '</TR>'."\n";
 	// Display the nav links on the bottom of the table
-	if ($param['nav_link'] == 1) {	
+	if ($param['nav_link'] == 1) {
 		$date_MySQL = "'$current_year-$current_month-$current_day'";
-		$rqt_date = "select 
-			date_format(DATE_SUB(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') as previous_month, 
-			date_format(DATE_SUB(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') as previous_day, 
-			date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') as next_month, 
-			date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') as next_day, 
-			case when CURDATE() < date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') then 1 else 0 END as test_next_year, 
+		$rqt_date = "select
+			date_format(DATE_SUB(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') as previous_month,
+			date_format(DATE_SUB(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') as previous_day,
+			date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') as next_month,
+			date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') as next_day,
+			case when CURDATE() < date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') then 1 else 0 END as test_next_year,
 			case when CURDATE() < date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') then 1 else 0 END as test_next_month ";
 		$resultatdate=pmb_mysql_query($rqt_date);
 		$resdate=pmb_mysql_fetch_object($resultatdate);
-	
+
 		$previous_month	= $resdate->previous_month;
 		$next_month    	= $resdate->next_month;
 		$previous_day  	= $resdate->previous_day;
 		$next_day      	= $resdate->next_day;
 		$test_next_month = $resdate->test_next_month;
-		$test_next_year  = $resdate->test_next_year;	
+		$test_next_year  = $resdate->test_next_year;
 		if ($param['use_img']) {
 			$g 	= '<IMG src="'.get_url_icon('g.gif').'" style="border:0px" title="'.$msg['calendrier_mois_prececent'].'">';
 			$gg = '<IMG src="'.get_url_icon('gg.gif').'" style="border:0px" title="'.$msg['calendrier_annee_prececente'].'">';
@@ -396,11 +428,11 @@ function calendar($date = '') {
 			$next_day_link 		= '<A href="'.$base_url.'&date='.$next_day.'">'.$d.'</A>'."\n";
 		}
 		if ( ($param['link_after_date'] == 0) && ($test_next_year) ) {
-			$next_month_link = '&nbsp;';		
+			$next_month_link = '&nbsp;';
 		}else {
 			$next_month_link 	= '<A href="'.$base_url.'&date='.$next_month.'">'.$dd.'</A>'."\n";
 		}
-		
+
 		$output_fleches  = '<TR>'."\n";
 		$output_fleches .= '	<TD colspan="'.$param['calendar_columns'].'" class="calendarDays'.$param['calendar_id'].'">'."\n";
 		$output_fleches .= "
@@ -419,8 +451,8 @@ function calendar($date = '') {
 					</div>
 			</div>";
 		$output_fleches .= '	</TD>'."\n";
-		$output_fleches .= '</TR>'."\n";		
-	}	
+		$output_fleches .= '</TR>'."\n";
+	}
 	$output.= '</TABLE>'."\n";
 	$output = str_replace("!!fleches!!",$output_fleches,$output);
 

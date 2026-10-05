@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_articles_type_article.class.php,v 1.1 2019-03-19 14:38:56 dgoron Exp $
+// $Id: docwatch_selector_articles_type_article.class.php,v 1.1 2019/03/19 14:38:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,10 +26,10 @@ if (file_exists("./common/lib_triade_interne.php")) {
 }
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
-$cr=verifEmailEnregistrer($_SESSION["id_pers"],$_SESSION["membre"],$_SESSION["idparent"]);
+$cr=@verifEmailEnregistrer($_SESSION["id_pers"],$_SESSION["membre"],$_SESSION["idparent"]);
+Pgclose();
 if ($cr == 0) {
 	header("Location:./gescompte.php?alerte");
 	exit;
 }
-Pgclose();
 ?>

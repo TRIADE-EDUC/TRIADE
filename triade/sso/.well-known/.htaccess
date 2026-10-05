@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^openid-configuration$ openid-configuration.php [L]
+RewriteRule ^jwks\.json$           jwks.json.php           [L]

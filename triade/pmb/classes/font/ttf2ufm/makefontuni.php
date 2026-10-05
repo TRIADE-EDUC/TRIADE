@@ -9,7 +9,7 @@ function ReadUFM($file, &$cidtogidmap)
 {
   //Prepare empty CIDToGIDMap
   $cidtogidmap = str_pad('', 256*256*2, "\x00");
-  
+
   //Read a font metric file
   $a=file($file);
   if(empty($a))
@@ -18,7 +18,7 @@ function ReadUFM($file, &$cidtogidmap)
   $fm=array();
   foreach($a as $l)
   {
-    $e=explode(' ',chop($l));
+    $e=explode(' ',rtrim($l));
     if(count($e)<2)
       continue;
     $code=$e[0];
@@ -35,12 +35,12 @@ function ReadUFM($file, &$cidtogidmap)
         $widths[$cc] = $w;
         if($cc == ord('X'))
           $fm['CapXHeight'] = $e[13];
-          
+
         // Set GID
         if ($cc >= 0 && $cc < 0xFFFF && $glyph) {
-          $cidtogidmap{$cc*2} = chr($glyph >> 8);
-          $cidtogidmap{$cc*2 + 1} = chr($glyph & 0xFF);
-        }        
+          $cidtogidmap[$cc*2] = chr($glyph >> 8);
+          $cidtogidmap[$cc*2 + 1] = chr($glyph & 0xFF);
+        }
       }
       if($gn=='.notdef' && !isset($fm['MissingWidth']))
         $fm['MissingWidth']=$w;
@@ -75,7 +75,7 @@ function ReadUFM($file, &$cidtogidmap)
     die('FontName not found');
 
   $fm['Widths']=$widths;
-  
+
   return $fm;
 }
 
@@ -211,7 +211,6 @@ function CheckTTF($file)
 function MakeFont($fontfile,$ufmfile)
 {
   //Generate a font definition file
-  set_magic_quotes_runtime(0);
   if(!file_exists($ufmfile))
     die('<B>Error:</B> UFM file not found: '.$ufmfile);
   $cidtogidmap = '';
@@ -267,14 +266,14 @@ function MakeFont($fontfile,$ufmfile)
 
       $cmp=$basename.'.ctg.z';
       SaveToFile($cmp,gzcompress($cidtogidmap),'b');
-      echo 'CIDToGIDMap created and compressed ('.$cmp.')<BR>';     
+      echo 'CIDToGIDMap created and compressed ('.$cmp.')<BR>';
       $s.='$ctg=\''.$cmp."';\n";
     }
     else
     {
       $s.='$file=\''.basename($fontfile)."';\n";
       echo '<B>Notice:</B> font file could not be compressed (gzcompress not available)<BR>';
-      
+
       $cmp=$basename.'.ctg';
       $f = fopen($cmp, 'wb');
       fwrite($f, $cidtogidmap);

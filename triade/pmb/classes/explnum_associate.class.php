@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_associate.class.php,v 1.4 2015-04-03 11:16:19 jpermanne Exp $
+// $Id: explnum_associate.class.php,v 1.6 2023/10/24 09:57:08 gneveu Exp $
 
 
 if (stristr ($_SERVER['REQUEST_URI'], ".class.php"))
@@ -19,7 +19,6 @@ class explnum_associate {
 	}
 	
 	public function getPlayer(&$tpl) {
-		$visionneuse_path = "./opac_css/visionneuse";
 		if (in_array($this->explnum->explnum_mimetype, array("audio/mpeg", "audio/mp3"))) {
 			$player = $this->getPlayerAudio();
 		} else {
@@ -115,26 +114,25 @@ class explnum_associate {
 	
 	public function getReturnLink(&$tpl) {
 		global $base_path;
-		global $dbh;
 		
 		$returnLink = "";
 		if ($this->explnum->explnum_bulletin) { // Cas d'un bulletin
-			$returnLink = $base_path."/catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=".$this->explnum->explnum_bulletin;
+			$returnLink = $base_path."/catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=" . intval($this->explnum->explnum_bulletin);
 		} else {
-			$query = "select notice_id, niveau_biblio from notices where notice_id = ".$this->explnum->explnum_notice;
-			$result = pmb_mysql_query($query, $dbh);
+			$query = "select notice_id, niveau_biblio from notices where notice_id = " . intval($this->explnum->explnum_notice);
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				if ($notice = pmb_mysql_fetch_object($result)) {
-					if ($notice->niveau_biblio == 's') { // Cas d'une sÃ©rie
-						$returnLink = $base_path."/catalog.php?categ=serials&sub=view&serial_id=".$notice->notice_id;
+					if ($notice->niveau_biblio == 's') { // Cas d'une série
+					    $returnLink = $base_path."/catalog.php?categ=serials&sub=view&serial_id=" . intval($notice->notice_id);
 					} else if ($notice->niveau_biblio == 'm') { // Cas d'une monographie
-						$returnLink = $base_path."/catalog.php?categ=isbd&id=".$notice->notice_id;
+					    $returnLink = $base_path."/catalog.php?categ=isbd&id=" . intval($notice->notice_id);
 					} else if ($notice->niveau_biblio == 'a') { // Cas d'un article
-						$query = "select analysis_bulletin from analysis where analysis_notice = ".$notice->notice_id;
-						$result = pmb_mysql_query($query, $dbh);
+					    $query = "select analysis_bulletin from analysis where analysis_notice = " . intval($notice->notice_id);
+						$result = pmb_mysql_query($query);
 						if ($result && pmb_mysql_num_rows($result)) {
 							if ($analysis = pmb_mysql_fetch_object($result)) {
-								$returnLink = $base_path."/catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=".$analysis->analysis_bulletin."&art_to_show=".$notice->notice_id."#anchor_".$notice->notice_id;
+							    $returnLink = $base_path."/catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=" . intval($analysis->analysis_bulletin) . "&art_to_show=" . intval($notice->notice_id) . "#anchor_" . intval($notice->notice_id);
 							}
 						}
 					}

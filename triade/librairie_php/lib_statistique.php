@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,20 +26,18 @@ function count_saisie($fichier,$name_cook,$time,$fichier2) {
 
 	// Fr: Chemin absolu (complet) et Nom du fichier compteur.
 	$COUNT_FILE="$fichier";
-
 	$EXPIRE_DATE= $time ;  // soit 4 minutes
 	// Fr: Date d'expiration du cookies (en seconde);
 
 	// End  Necessary Variables section
 	/******************************************************************************/
-	if ( ! file_exists($COUNT_FILE)) {
+	if (!file_exists($COUNT_FILE)) {
 		$fp = fopen("$COUNT_FILE", "w+");
 		if (PHP_OS != "WINNT") { flock($fp, 1); }
 		fwrite($fp,"");
 		if (PHP_OS != "WINNT") { flock($fp, 3); }
 		fclose($fp);
 	}
-
 	if (file_exists($COUNT_FILE)) {
         	// Fr: Ouvre, lit, incrémente, sauve et ferme le fichier.
         	$fp = fopen("$COUNT_FILE", "r+");
@@ -55,13 +53,25 @@ function count_saisie($fichier,$name_cook,$time,$fichier2) {
        		fclose($fp);
 	}
 
-$today=dateDMY();
-$heure=dateHI();
-if (file_exists("./data/compteur/$fichier2")) $fichier=fopen("./data/compteur/$fichier2","w+");
-if (file_exists("../data/compteur/$fichier2")) $fichier=fopen("../data/compteur/$fichier2","w+");
-if (PHP_OS != "WINNT") { flock($fichier, 1); }
-fwrite($fichier,"<font color=red>$today</font> à $heure");
-if (PHP_OS != "WINNT") { flock($fichier, 3); }
-fclose($fichier);
+	$today=dateDMY();
+	$heure=dateHI();
+	if (is_dir("./data")) {
+		if (!file_exists("./data/compteur/$fichier2")) touch("./data/compteur/$fichier2");
+		$fichier=fopen("./data/compteur/$fichier2","w+");
+		$fic="./data/compteur/$fichier2";
+	}
+
+	if (is_dir("../data")) {
+		if (!file_exists("../data/compteur/$fichier2")) touch("../data/compteur/$fichier2");
+		$fichier=fopen("../data/compteur/$fichier2","w+");
+		$fic="../data/compteur/$fichier2";
+	}
+	
+	if (file_exists($fic)) {
+		if (PHP_OS != "WINNT") { flock($fichier, 1); }
+		fwrite($fichier,"<font color=red>$today</font> à $heure");
+		if (PHP_OS != "WINNT") { flock($fichier, 3); }
+		fclose($fichier);
+	}
 }
 ?>

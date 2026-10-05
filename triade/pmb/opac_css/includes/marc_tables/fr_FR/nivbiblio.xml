@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes type enregistrement (français)
-$Id: nivbiblio.xml,v 1.2 2010-05-07 12:23:47 mbertin Exp $ -->
+$Id: nivbiblio.xml,v 1.2 2010/05/07 12:23:47 mbertin Exp $ -->
 
 <XMLlist>
 	<entry code="m">Document</entry>

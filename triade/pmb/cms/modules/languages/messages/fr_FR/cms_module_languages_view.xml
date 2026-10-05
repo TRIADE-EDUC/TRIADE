@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_languages_view.xml,v 1.2 2022/01/05 09:03:43 moble Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_languages_view_text_type">Type de texte</entry>
+	<entry code="cms_module_languages_view_lang_abr">Abrégé</entry>
+	<entry code="cms_module_languages_view_lang_complet">Complet</entry>
+	<entry code="cms_module_languages_view_display_type">Type d'affichage</entry>
+	<entry code="cms_module_languages_view_list">Liste</entry>
+	<entry code="cms_module_languages_view_selector">Sélecteur</entry>
+</XMLlist>

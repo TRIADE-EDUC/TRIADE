@@ -2,19 +2,20 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_logo.class.php,v 1.2 2017-11-22 11:07:34 dgoron Exp $
+// $Id: docwatch_logo.class.php,v 1.3.8.1 2025/02/12 12:34:07 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/docwatch_logo.tpl.php");
 
 class docwatch_logo {
 	public $id;		// identifiant de l'objet
 	public $type;	// type d'objet
-	public $data;	// donnÃ©e binaire du logo
+	public $data;	// donnée binaire du logo
 
 	public function __construct($id="",$type="watch"){
-		$this->id= $id*1;
+		$this->id= intval($id);
 		$this->type = $type;
 		if($this->id){
 			$this->fetch_data();
@@ -32,8 +33,6 @@ class docwatch_logo {
 	}
 
 	public function get_form(){
-		global $msg;
-		global $charset;
 		global $docwatch_logo_form_tpl;
 		global $docwatch_logo_form_exist_obj_tpl;
 		global $docwatch_logo_form_new_obj_tpl;
@@ -51,8 +50,6 @@ class docwatch_logo {
 	}
 
 	public function get_field(){
-		global $msg;
-		global $charset;
 		global $docwatch_logo_field_tpl;
 		global $docwatch_logo_delete;
 
@@ -99,8 +96,10 @@ class docwatch_logo {
 		$field = str_replace("!!js!!",$js,$field);
 		return $field;
 	}
-	
+
 	public function delete(){
+		global $msg;
+
 		$table=$this->get_sql_table();
 		if(!$table) return $msg['dsi_docwatch_form_logo_cant_delete'];
 		$rqt = "update ".$table." set ".$this->type."_logo='' where id_".$this->type." = '".$this->id."'";
@@ -114,8 +113,8 @@ class docwatch_logo {
 
 	public function save(){
 		global $msg;
-		
-		//on commence par regarder ce qu'on nous a donnÃ©...
+
+		//on commence par regarder ce qu'on nous a donné...
 		$mimetype = $_FILES['docwatch_logo_file']['type'];
 		//on ne veut que les images
 		if(substr($mimetype,0,5) != "image"){
@@ -172,7 +171,7 @@ class docwatch_logo {
    		header("Content-Type: image/png");
   		if(strpos($mode,"custom_") !== false){
 	  		$elems = explode("_",$mode);
-	  		$size = $elems[1]*1;
+	  		$size = intval($elems[1]);
 	  		if($size>0){
 	  			$this->resize($size,$size);
 	  		}else{
@@ -202,7 +201,7 @@ class docwatch_logo {
 	  		}
   		}
 	}
-	
+
 	public function get_vign(){
 	   $this->resize(100,100);
 	}

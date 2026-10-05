@@ -19,7 +19,7 @@ in the same directory. The files can be in subdirectories on your website,
 or right in the root of the site, as in these examples. 
 To include the OpenLayers library in your web page from the root of the site, use:
 
-    <script type="text/javascript" src="/OpenLayers.js" />
+    <script src="/OpenLayers.js" />
 
 As an example, using bash (with the release files in ~/openlayers):
 
@@ -33,7 +33,7 @@ debugging or development purposes), copy the lib/ directory up to your
 webserver in the same directory you put the img/ folder. Then add
 the following to your web page instead:
 
-    <script type="text/javascript" src="/lib/OpenLayers.js" />
+    <script src="/lib/OpenLayers.js" />
 
 As an example, using bash (with the release files in ~/openlayers):
 

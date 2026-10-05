@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.5 2019-01-09 15:55:35 apetithomme Exp $ -->
+$Id: manifest.xml,v 1.11 2022/08/31 08:05:17 rtigero Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Notices</name>
@@ -28,11 +28,19 @@ $Id: manifest.xml,v 1.5 2019-01-09 15:55:35 apetithomme Exp $ -->
 			<datasource>frbr_entity_records_datasource_works</datasource>
             <datasource>frbr_entity_records_datasource_parent_works</datasource>
 			<datasource>frbr_entity_records_datasource_linked_records</datasource>
+			<datasource>frbr_entity_records_datasource_linked_bulletins</datasource>
+			<datasource>frbr_entity_records_datasource_bulletins</datasource>
+			<datasource>frbr_entity_records_datasource_serials</datasource>
+			<datasource>frbr_entity_records_datasource_analysis</datasource>
 			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
 			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+			<datasource>frbr_entity_common_datasource_used_in_qualification</datasource>
+			<datasource>frbr_entity_common_datasource_merge_data</datasource>
+			<datasource>frbr_entity_records_datasource_authperso</datasource>
 		</datasources>
 		<views>
 			<view>frbr_entity_records_view_recordslist</view>
+			<view>frbr_entity_records_view_timeline</view>
 		</views>
 	</use>
 </manifest>

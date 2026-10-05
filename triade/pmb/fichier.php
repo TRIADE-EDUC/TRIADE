@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fichier.php,v 1.8 2019-02-04 08:31:10 dgoron Exp $
+// $Id: fichier.php,v 1.13 2021/04/28 06:52:35 dgoron Exp $
 
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";                            
 $base_auth = "FICHES_AUTH";  
 $base_title = "\$msg[onglet_fichier]";
@@ -17,37 +17,23 @@ if ((isset($_POST["dest"])) && ($_POST["dest"]=="TABLEAU")) {
 }
 
 require_once ("$base_path/includes/init.inc.php");  
-// modules propres Ã  demandes.php ou Ã  ses sous-modules
+// modules propres à fichier.php ou à ses sous-modules
+require_once($class_path."/modules/module_fichier.class.php");
 require("$include_path/templates/fichier.tpl.php");
 
-
-// crÃ©ation de la page
-if(!isset($dest)) $dest = '';
+// création de la page
+module_fichier::get_instance()->proceed_header();
+global $dest;
 switch($dest) {
 	case "TABLEAU":
-	
+		
 		break;
 	case "TABLEAUHTML":
-		header("Content-Type: application/download\n");
-		header("Content-Disposition: atttachement; filename=\"tableau.html\"");
-		print "<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><meta charset=\"".$charset."\" /></head><body>";
-		echo "<h1>".htmlentities($msg['onglet_fichier'].$msg[1003].$msg[1001],ENT_QUOTES,$charset)."</h1>";  
+		echo "<h1>".htmlentities($msg['onglet_fichier'].$msg[1003].$msg[1001],ENT_QUOTES,$charset)."</h1>";
 		break;
 	default:
-        print "<div id='att' style='z-Index:1000'></div>";
-  		print $menu_bar;
-		print $extra;
-		print $extra2;
-		print $extra_info;
-		if($use_shortcuts) {
-			include("$include_path/shortcuts/circ.sht");
-		}
-		echo window_title($database_window_title.$msg['onglet_fichier'].$msg[1003].$msg[1001]);
-		print $fichier_layout;
 		break;
 }
-
-
 
 switch($categ){
 	case 'consult':
@@ -74,21 +60,17 @@ switch($categ){
 		break;
 }
 
+module_fichier::get_instance()->proceed_footer();
 switch($dest) {
 	case "TABLEAU":
-	
 		break;
 	case "TABLEAUHTML":
-		print $footer;
 		print "</body>" ;
 		break;
 	default:
-		print $fichier_layout_end;
-		// pied de page
-		print $footer;
 		print "</body>" ;
 		break;
 }
 
 // deconnection MYSql
-pmb_mysql_close($dbh);
+pmb_mysql_close();

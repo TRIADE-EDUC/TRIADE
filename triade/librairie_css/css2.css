@@ -2,13 +2,13 @@
 
 body {
 	margin: 2em 0;
-	background-image:url('../image/inc/01/bg.png');
+	background-color:#EEEEEE;
 }
 
 div#mainInst {
 	text-align: left;
 	border: 1px solid #000000;
-	background-image:url('../image/inc/01/bg.png');
+	background-color:#CACCEF;
 	width: 600px;
 	height: 400px;
 	margin-left: auto;
@@ -20,7 +20,7 @@ div#mainInst {
 div#mainInst2 {
 	text-align: left;
 	border: 1px solid #000000;
-	background-image:url('../image/inc/01/bg.png');
+	background-color:#CACCEF;
 	width: 500px;
 	height: 500px;
 	margin-left: auto;
@@ -32,7 +32,7 @@ div#mainInst2 {
 div#mainInst3 {
 	text-align: left;
 	border: 1px solid #000000;
-	background-image:url('../image/inc/01/bg.png');
+	background-color:#CACCEF;
 	width: 400px;
 	height: 430px;
 	margin-left: auto;

@@ -9,21 +9,24 @@ class H2o_Context implements ArrayAccess {
     public $scopes;
     public $options;
     public $autoescape = true;
-    
+
     private $arrayMethods = array('first'=> 0, 'last'=> 1, 'length'=> 2, 'size'=> 3);
-    static $lookupTable = array();
-    
+    public static $lookupTable = array();
+
+    public const GLOBAL_CONTEXT = true;
+    public const CURRENT_CONTEXT = false;
+
     public function __construct($context = array(), $options = array()){
         if (is_object($context))
            $context = get_object_vars($context);
         $this->scopes = array($context);
-        
-        if (isset($options['safeClass'])) 
+
+        if (isset($options['safeClass']))
             $this->safeClass = array_merge($this->safeClass, $options['safeClass']);
-            
-        if (isset($options['autoescape'])) 
+
+        if (isset($options['autoescape']))
             $this->autoescape = $options['autoescape'];
-            
+
         $this->options = $options;
     }
 
@@ -40,13 +43,15 @@ class H2o_Context implements ArrayAccess {
         return array_shift($this->scopes);
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset): bool
+    {
         foreach ($this->scopes as $layer) {
             if (isset($layer[$offset])) return true;
         }
         return false;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($key) {
         foreach ($this->scopes as $layer) {
             if (isset($layer[$key]))
@@ -54,13 +59,30 @@ class H2o_Context implements ArrayAccess {
         }
         return;
     }
-    
-    public function offsetSet($key, $value) {
-        if (strpos($key, '.') > -1)
+
+    /**
+     * Set a variable
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param bool $context
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value, bool $context = self::CURRENT_CONTEXT) {
+        if (strpos($key, '.') > -1) {
             throw new Exception('cannot set non local variable');
-        return $this->scopes[0][$key] = $value;
+        }
+
+        $index = 0;
+        if ($context === self::GLOBAL_CONTEXT && count($this->scopes) > 1) {
+            $index = count($this->scopes) -1;
+        }
+
+        return $this->scopes[$index][$key] = $value;
     }
-    
+
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key) {
         foreach ($this->scopes as $layer) {
             if (isset($layer[$key])) unset($layer[$key]);
@@ -71,8 +93,8 @@ class H2o_Context implements ArrayAccess {
         $this->scopes[0] = array_merge($this->scopes[0], $context);
     }
 
-    public function set($key, $value) {
-        return $this->offsetSet($key, $value);
+    public function set($key, $value, bool $context = self::CURRENT_CONTEXT) {
+        return $this->offsetSet($key, $value, $context);
     }
 
     public function get($key) {
@@ -83,45 +105,37 @@ class H2o_Context implements ArrayAccess {
         return $this->offsetExists($key);
     }
     /**
-     * 
-     * 
-     * 
-     *  Variable name
-     * 
-     * @param $var variable name or array(0 => variable name, 'filters' => filters array)
-     * @return unknown_type
+     *
+     * @param $var string|array Variable name or array(0 => variable name, 'filters' => filters array)
      */
     public function resolve($var) {
 
         # if $var is array - it contains filters to apply
         $filters = array();
         if ( is_array($var) ) {
-        	
+
             $name = array_shift($var);
             $filters = isset($var['filters'])? $var['filters'] : array();
-        
-        } 
+
+        }
         else $name = $var;
-        
+
         $result = null;
-	
+
         # Lookup basic types, null, boolean, numeric and string
         # Variable starts with : (:users.name) to short-circuit lookup
-        if ($name[0] === ':') {
+        if (!empty($name) && is_string($name) && $name[0] === ':') {
             $object =  $this->getVariable(substr($name, 1));
             if (!is_null($object)) $result = $object;
         } else {
+            $matches = [];
             if ($name === 'true') {
                 $result = true;
-            }
-            elseif ($name === 'false') {
+            } elseif ($name === 'false') {
                 $result = false;
-            } 
-            elseif (preg_match('/^-?\d+(\.\d+)?$/', $name, $matches)) {
+            } elseif (preg_match('/^-?\d+(\.\d+)?$/', $name, $matches)) {
                 $result = isset($matches[1])? floatval($name) : intval($name);
-            }
-            elseif (preg_match('/^"([^"\\\\]*(?:\\.[^"\\\\]*)*)"|' .
-                           '\'([^\'\\\\]*(?:\\.[^\'\\\\]*)*)\'$/', $name)) {            
+            } elseif (preg_match('/^"([^"\\\\]*(?:\\.[^"\\\\]*)*)"|' . '\'([^\'\\\\]*(?:\\.[^\'\\\\]*)*)\'$/', $name)) {
                 $result = stripcslashes(substr($name, 1, -1));
             }
         }
@@ -131,7 +145,7 @@ class H2o_Context implements ArrayAccess {
         $result = $this->applyFilters($result,$filters);
         return $result;
     }
-        
+
     public function getVariable($name) {
         # Local variables. this gives as a bit of performance improvement
         if (!strpos($name, '.'))
@@ -156,32 +170,35 @@ class H2o_Context implements ArrayAccess {
                 } else {
                     return null;
                 }
-            }
-            elseif (is_object($object)) {
-                if (isset($object->$part))
+            } elseif (is_object($object)) {
+                if (isset($object->$part)) {
                     $object = $object->$part;
-                elseif (is_callable(array($object, $part))) {
-                    $methodAllowed = in_array(get_class($object), $this->safeClass) || 
+                } elseif (method_exists($object, '__get')) {
+                    $object = $object->__get($part);
+                } elseif (is_callable(array($object, $part))) {
+                    $methodAllowed = in_array(get_class($object), $this->safeClass) ||
                         (isset($object->h2o_safe) && (
                             $object->h2o_safe === true || in_array($part, $object->h2o_safe)
                         )
                     );
                     $object = $methodAllowed ? $object->$part() : null;
+                } else {
+                    return null;
                 }
-                else return null;
+            } else {
+                return null;
             }
-            else return null;
         }
         return $object;
     }
 
     public function applyFilters($object, $filters) {
-        
+
         foreach ($filters as $filter) {
             $name = substr(array_shift($filter), 1);
             $args = $filter;
-            
-            if (isset(h2o::$filters[$name])) {                
+
+            if (isset(H2o::$filters[$name])) {
                 foreach ($args as $i => $argument) {
                     # name args
                     if (is_array($argument)) {
@@ -194,7 +211,7 @@ class H2o_Context implements ArrayAccess {
                     }
                 }
                 array_unshift($args, $object);
-                $object = call_user_func_array(h2o::$filters[$name], $args);
+                $object = call_user_func_array(H2o::$filters[$name], $args);
             }
         }
         return $object;
@@ -202,24 +219,24 @@ class H2o_Context implements ArrayAccess {
 
     public function escape($value, $var) {
     	global $charset;
-		
+
         $safe = false;
         $filters = (is_array($var) && isset($var['filters']))? $var['filters'] : array();
 
         foreach ( $filters as $filter ) {
-        	
+
             $name = substr(array_shift($filter), 1);
             $safe = !$safe && ($name === 'safe');
-        
+
             $escaped = $name === 'escape';
         }
-        
+
         $should_escape = $this->autoescape || isset($escaped) && $escaped;
-        
+
         if ( ($should_escape && !$safe)) {
             $value = htmlspecialchars($value, ENT_QUOTES, $charset);
         }
-        
+
         return $value;
 	}
 
@@ -233,13 +250,29 @@ class H2o_Context implements ArrayAccess {
         }
         return null;
     }
+
+    /**
+     * Retourne le contexte d'une variable
+     * @param string $var_name nom de la variable
+     * @return bool
+     */
+    public function getContext($var_name)
+    {
+        if(count($this->scopes) > 1) {
+            $index = count($this->scopes) -1;
+            if(array_key_exists($var_name, $this->scopes[$index])) {
+                return self::GLOBAL_CONTEXT;
+            }
+        }
+        return self::CURRENT_CONTEXT;
+    }
 }
 
 class BlockContext {
     public $h2o_safe = array('name', 'depth', 'super');
     public $block, $index;
     private $context;
-    
+
     public function __construct($block, $context, $index) {
         $this->block =& $block;
         $this->context = $context;
@@ -247,7 +280,10 @@ class BlockContext {
     }
 
     public function name() {
-        return $this->block->name;
+        if (is_object($this->block)) {
+            return $this->block->name;
+        }
+        return '';
     }
 
     public function depth() {
@@ -256,10 +292,12 @@ class BlockContext {
 
     public function super() {
         $stream = new StreamWriter;
-        $this->block->parent->render($this->context, $stream, $this->index+1);
-        return $stream->close(); 
+        if (!empty($this->block) && is_object($this->block->parent)) {
+            $this->block->parent->render($this->context, $stream, $this->index+1);
+        }
+        return $stream->close();
     }
-    
+
     public function __toString() {
         return "[BlockContext : {$this->block->name}, {$this->block->filename}]";
     }

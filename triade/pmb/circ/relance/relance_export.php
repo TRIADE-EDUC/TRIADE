@@ -1,18 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: relance_export.php,v 1.6 2017-11-23 09:02:32 ngantier Exp $
+// $Id: relance_export.php,v 1.10 2022/09/30 13:59:42 dgoron Exp $
 
 //Affichage des recouvrements pour un lecteur, format Excel HTML
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path="../..";                            
 $base_auth = "CIRCULATION_AUTH";  
 $base_noheader=1;
 $base_nosession=1;
 //$base_nocheck = 1 ;
 require_once ("$base_path/includes/init.inc.php");  
+
+global $class_path, $msg, $charset, $pmb_lecteurs_localises, $empr_export;
 
 header("Content-Type: application/download\n");
 header("Content-Disposition: atachement; filename=\"tableau.xls\"");
@@ -47,6 +49,9 @@ $export_relance_tpl="<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><
 			<th>".$msg["relance_export_empr_frais_relance"]."</th>
 			<th>".$msg["relance_export_expl_titre"]."</th>
 			<th>".$msg["relance_export_expl_cb"]."</th>
+			<th>".$msg["relance_export_expl_cote"]."</th>
+			<th>".$msg["relance_export_expl_codestat"]."</th>
+			<th>".$msg["relance_export_expl_section"]."</th>
 			<th>".$msg["relance_export_expl_pret_date"]."</th>
 			<th>".$msg["relance_export_expl_pret_retour"]."</th>
 			<th>".$msg["relance_export_expl_niveau_relance"]."</th>
@@ -60,8 +65,13 @@ $export_relance_tpl="<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><
 </body>
 </html>";
 
+$relance_liste = "";
 $req ="select id_empr  from empr, pret, exemplaires, empr_categ where 1 ";
-$req.= "and pret_retour<CURDATE() and pret_idempr=id_empr and pret_idexpl=expl_id and id_categ_empr=empr_categ group by id_empr";
+$req.= "and pret_retour<CURDATE() and pret_idempr=id_empr and pret_idexpl=expl_id and id_categ_empr=empr_categ ";
+if(isset($empr_export) && is_array($empr_export)) {
+    $req.= "and id_empr in (".implode(",",$empr_export).") ";
+}
+$req.= "group by id_empr";
 $res=pmb_mysql_query($req);
 while ($r=pmb_mysql_fetch_object($res)) {
 	$relance_liste.=get_relance($r->id_empr);
@@ -70,9 +80,10 @@ while ($r=pmb_mysql_fetch_object($res)) {
 print str_replace("!!relance_liste!!",$relance_liste,$export_relance_tpl);
 
 function get_relance($id_empr){
-	global $dbh,$charset, $msg, $pmb_gestion_financiere, $pmb_gestion_amende;
+	global $charset, $msg, $pmb_gestion_financiere, $pmb_gestion_amende;
 	global $pmb_lecteurs_localises;
 
+	$info = "";
 	// liste des relances
 	if (($pmb_gestion_financiere)&&($pmb_gestion_amende)) {
 		$amende=new amende($id_empr);
@@ -86,7 +97,7 @@ function get_relance($id_empr){
 	$cpt_id=comptes::get_compte_id_from_empr($id_empr,2);
 	$cpt=new comptes($cpt_id);
 
-	$frais_relance=$cpt->summarize_transactions("","",0,$realisee=-1);
+	$frais_relance=$cpt->summarize_transactions("","",0,-1);
 	if ($frais_relance<0) $frais_relance=-$frais_relance; else $frais_relance=0;
 	
 	$empr=new emprunteur($id_empr,'', FALSE, 0);	
@@ -120,7 +131,7 @@ function get_relance($id_empr){
 	
 	$reqexpl = "select pret_idexpl as expl from pret where pret_retour<CURDATE() and pret_idempr=$id_empr";
 	
-	$resexple=pmb_mysql_query($reqexpl,$dbh);
+	$resexple=pmb_mysql_query($reqexpl);
 	while(($liste = pmb_mysql_fetch_object($resexple))){			
 		$dates_resa_sql = " date_format(pret_date, '".$msg["format_date"]."') as aff_pret_date, date_format(pret_retour, '".$msg["format_date"]."') as aff_pret_retour " ;
 		
@@ -128,10 +139,10 @@ function get_relance($id_empr){
 		niveau_relance,
 		date_relance,
 		printed,		
-		tdoc_libelle, section_libelle, location_libelle, trim(concat(ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date!='', concat(' (',mention_date,')') ,''))) as tit, ".$dates_resa_sql.", " ;
+		tdoc_libelle, section_libelle, location_libelle, codestat_libelle, trim(concat(ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date!='', concat(' (',mention_date,')') ,''))) as tit, ".$dates_resa_sql.", " ;
 		$requete.= " notices_m.tparent_id, notices_m.tnvol " ; 
-		$requete.= " FROM (((exemplaires LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id), docs_type, docs_section, docs_location, pret ";
-		$requete.= " WHERE expl_id='".$liste->expl."' and expl_typdoc = idtyp_doc and expl_section = idsection and expl_location = idlocation and pret_idexpl = expl_id  ";
+		$requete.= " FROM (((exemplaires LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id), docs_type, docs_section, docs_location, docs_codestat, pret ";
+		$requete.= " WHERE expl_id='".$liste->expl."' and expl_typdoc = idtyp_doc and expl_section = idsection and expl_location = idlocation and expl_codestat = idcode and pret_idexpl = expl_id  ";
 		$res_det_expl = pmb_mysql_query($requete) ;
 		$expl = pmb_mysql_fetch_object($res_det_expl);
 				
@@ -155,6 +166,9 @@ function get_relance($id_empr){
 			$info_empr
 			<td>".htmlentities($expl->tit,ENT_QUOTES,$charset)."</td>
 			<td>".htmlentities($expl->expl_cb,ENT_QUOTES,$charset)."</td>
+			<td>".htmlentities($expl->expl_cote,ENT_QUOTES,$charset)."</td>
+			<td>".htmlentities($expl->codestat_libelle,ENT_QUOTES,$charset)."</td>
+			<td>".htmlentities($expl->section_libelle,ENT_QUOTES,$charset)."</td>
 			<td>".format_date($expl->pret_date)."</td>
 			<td>".format_date($expl->pret_retour)."</td>
 			<td>".$expl->niveau_relance."</td>

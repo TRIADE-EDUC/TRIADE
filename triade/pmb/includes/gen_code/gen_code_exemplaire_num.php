@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: gen_code_exemplaire_num.php,v 1.1 2018-07-24 11:19:18 dgoron Exp $
+// $Id: gen_code_exemplaire_num.php,v 1.2 2019/12/17 07:49:27 dbellamy Exp $
 
 function init_gen_code_exemplaire($notice_id,$bull_id) {
-	$query="select max(expl_cb)as cb from exemplaires WHERE expl_cb REGEXP '^[0-9]*$'";
+	$query="select max(expl_cb)as cb from exemplaires WHERE expl_pnb_flag=0 and expl_cb REGEXP '^[0-9]*$'";
 	$result = pmb_mysql_query($query);
 	$code_exemplaire = pmb_mysql_result($result, 0, 0);
 	if(!$code_exemplaire) {

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -61,9 +61,9 @@ $date=$_GET["id"];
 
 $data=recup_abs_rtd_aucun($date);
 // id,classe,date,heure,matiere
-if (count($data) > 0) {
+if (countTriade($data) > 0) {
 	print "<br><br><b>".LANGABS75." :</b> <br><br><ul>";
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		print ucwords(LANGABS33)." ". $data[$j][1]." (".$data[$j][4].") ".LANGABS76." ".timeForm($data[$j][3])."<br>" ;
 	}
 	print "</ul><br><hr width=50%>";
@@ -83,7 +83,7 @@ if (count($data) > 0) {
 $data_2=affRetarddujour3($date);
 //  elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere, justifier, heure_saisie,  creneaux
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data_2);$j++) {
+for($j=0;$j<countTriade($data_2);$j++) {
 	if (($inconnu == "1") && ($data_2[$j][6] != "inconnu")) { continue; }
 	$ideleve=$data_2[$j][0];
 	$idmatiere=$data_2[$j][7];
@@ -137,7 +137,7 @@ for($j=0;$j<count($data_2);$j++) {
 $data_3=affAbsence4($date);
 //  elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere,heure_saisie,justifier,heuredabsence,creneaux
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data_3);$j++) {
+for($j=0;$j<countTriade($data_3);$j++) {
 	if ( ($inconnu == "1") && ($data_3[$j][6] != "inconnu") && ($data_3[$j][6] != "0") ) { continue; }
 	//if (($inconnu == "1") && ($data_3[$j][6] != "inconnu") && ($data_3[$j][10] != "1")) { continue; }
 	$couleur="class=\"tabnormal\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\"";

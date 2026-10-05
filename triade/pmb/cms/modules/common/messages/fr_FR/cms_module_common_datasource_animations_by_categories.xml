@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_datasource_animations_by_categories.xml,v 1.1 2021/03/26 13:47:45 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_category">Sélecteur depuis l'dentifiant de la catégorie</entry>
+	<entry code="cms_module_common_selector_category_permalink">Sélecteur depuis un permalink</entry>
+	<entry code="cms_module_common_selector_env_var">Sélecteur depuis une variable d'environnement</entry>
+</XMLlist>

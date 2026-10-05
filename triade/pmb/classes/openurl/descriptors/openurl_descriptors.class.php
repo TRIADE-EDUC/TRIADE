@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_descriptors.class.php,v 1.3 2017-07-12 09:07:56 dgoron Exp $
+// $Id: openurl_descriptors.class.php,v 1.3 2017/07/12 09:07:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,9 +11,9 @@ require_once($class_path."/openurl/openurl.class.php");
 class openurl_descriptor extends openurl_root {
 	public $notice=array();		//	infos sur la notice
 	public $infos = array();		//	descripteur
-	public $entityType = "";		//	type d'entitÃ© associÃ©e
+	public $entityType = "";		//	type d'entité associée
 	public $search_infos =array();	//	Infos pour la recherche dans le catalogue
-	//on dÃ©finit une bonne fois pour toute ce tableau!
+	//on définit une bonne fois pour toute ce tableau!
 	public $crit_id = array(
 		'publisher' => 1,
 		'collection' => 2,
@@ -97,7 +97,7 @@ class openurl_descriptor_byval extends openurl_descriptor{
 }
 
 /*
- * Description via une rÃ©fÃ©rence Ã  un jeu de valeur
+ * Description via une référence à un jeu de valeur
  */
 class openurl_descriptor_byref extends openurl_descriptor{
 
@@ -108,7 +108,7 @@ class openurl_descriptor_byref extends openurl_descriptor{
 }
 
 /*
- * Description via donnÃ©es privÃ©es
+ * Description via données privées
  */
 class openurl_descriptor_private extends openurl_descriptor{
 

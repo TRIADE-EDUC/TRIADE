@@ -1,0 +1,84 @@
+<div id="animations">
+	<loader />
+
+	<template v-if="action == 'add' || action == 'edit' || action == 'duplicate'">
+		<h1 class="section-title">
+			<template v-if="action == 'add'">{{ pmb.getMessage("animation", "add_animation_title") }}</template>
+			<template v-else>{{ pmb.getMessage("animation", "update_animation_title") }}</template>
+		</h1>
+		<animationsform :animation="animations" :pmb="pmb" :formdata="formdata" :csrftokens="csrftokens"></animationsform>
+	</template>
+
+	<template v-else-if="action == 'view'">
+		<h1 class="section-title">
+			{{ pmb.getMessage("animation", "animation_view_title") }}
+		</h1>
+		<div class="animations-perio">
+			<animationsview :animation="animations" :pmb="pmb" :img="formdata.img" :formdata="formdata" :registrationlist="registrationList"></animationsview>
+
+			<animationsdaughterlist
+				:parent-animation="animations"
+				:pagination-childrens="animations.childrens"
+				:img="formdata.img"
+				:pmb="pmb"
+				:action="action"
+				:formdata="formdata"
+			/>
+
+			<div id="registrationList" class="notice-parent">
+				<img id="registrationListImg" class="img_plus" name="imEx" :src='(registrationList.length) ? formdata.img.minus : formdata.img.plus' onClick="expandBase('registrationList', true); return false;">
+				<span class="notice-heada">{{ pmb.getMessage("animation", "animation_registration_list") }} ({{ registrationList.length }})</span>
+			</div>
+
+			<div id="registrationListChild" class="child" v-show="registrationList.length">
+				<registration :registrationlist="registrationList" :animationlist="animationList" :pmb="pmb" :numanimation="animations.id" ></registration>
+			</div>
+
+			<div v-if="registrationWaitingList.length" id="registrationWaitingList" class="notice-parent">
+				<img id="registrationWaitingListImg" class="img_plus" name="imEx" :src='(registrationWaitingList.length) ? formdata.img.minus : formdata.img.plus' onClick="expandBase('registrationWaitingList', true); return false;">
+				<span class="notice-heada">{{ pmb.getMessage("animation", "anim_waiting_list") }} ({{ registrationWaitingList.length }})</span>
+			</div>
+
+			<div v-if="registrationWaitingList.length" id="registrationWaitingListChild" class="child" v-show="registrationWaitingList.length">
+				<registration :registrationlist="registrationWaitingList" :animationlist="animationList" :pmb="pmb" :numanimation="animations.id" ></registration>
+			</div>
+
+			<div id="mailingSendList" class="notice-parent">
+				<img id="mailingSendListImg" class="img_plus" name="imEx" :src='formdata.img.plus' onClick="expandBase('mailingSendList', true); return false;">
+				<span class="notice-heada">{{ pmb.getMessage("animation", "mailing_communication") }} ({{ mailingSendList.length }})</span>
+			</div>
+
+			<div id="mailingSendListChild" class="child" style="display: none;">
+				<mailingsendlist v-if="mailingSendList.length" :mailingsendlist="mailingSendList" :pmb="pmb"></mailingsendlist>
+			</div>
+
+            <!-- Il faut tester si l'animation est sur la journee et qu'elle peut �tre parente -->
+            <div v-if="
+                0 == registrationList.length &&
+                0 == animations.event.duringDay &&
+                '0000-00-00 00:00:00' != animations.event.rawEndDate &&
+                animations.event.startDate != animations.event.endDate
+              " id="calendarAnimation" class="notice-parent">
+                <img id="calendarAnimationImg" class="img_plus" name="imEx" :src='formdata.img.plus' onClick="expandBase('calendarAnimation', true); return false;">
+                <span class="notice-heada">{{ pmb.getMessage("animation", "calendar_repetition_animation") }}</span>
+            </div>
+
+            <div id="calendarAnimationChild" class="child" style="display: none;">
+                <animationCalendar :pmb="pmb" :idanimation="animations.id" :startdate="animations.event.rawStartDate" :enddate="animations.event.rawEndDate" :locations="formdata.locations"></animationCalendar>
+            </div>
+		</div>
+	</template>
+	<template v-else-if="action == 'gestionAnimation'">
+		<h1 class="section-title">
+			{{ pmb.getMessage("animation", "list_animation_dndAnimation") }}
+		</h1>
+		<animationsdnd :animations="animations" :pmb="pmb"></animationsdnd>
+	</template>
+	<template v-else>
+		<h1 class="section-title">
+			{{ pmb.getMessage("animation", "animation_list") }}
+		</h1>
+		<h3>{{ pmb.getMessage("animation", "list_animation_title") }}</h3>
+		<animations :pagination="pagination" :pmb="pmb" :action="action" :formdata="formdata"></animations>
+	</template>
+</div>

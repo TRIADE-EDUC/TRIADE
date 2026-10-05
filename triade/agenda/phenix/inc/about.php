@@ -19,12 +19,10 @@
   <TABLE style="width:100%;" border="0" cellpadding="0" cellspacing="0">
   <TR>
     <TD valign="top" class="about"><?php echo trad("ABOUT_DESCRIPTION"); ?>
-      <BR><BR><?php echo trad("ABOUT_VERSION"); ?> <A href="http://phenix.gapi.fr/" target="pxSite" title="<?php echo trad("ABOUT_SITE"); ?>" class="about">http://phenix.gapi.fr/</A>
-      <BR><?php echo trad("ABOUT_QUESTION"); ?> <A href="http://phenix.gapi.fr/forum/" target="pxForum" title="<?php echo trad("ABOUT_FORUM"); ?>" class="about">http://phenix.gapi.fr/forum/</A>
       <BR><BR><?php echo trad("ABOUT_LICENCE"); ?> <A  href="http://www.gnu.org/copyleft/gpl.html" target="_blank" class="about">GNU/GPL</A>
       <BR>(<A href="http://www.gnu.org/licenses/translations.html" target="_blank" class="about"><?php echo trad("ABOUT_TRADUCTION"); ?></A>).
     </TD>
-    <TD width="170" valign="middle" class="about" align="center"><A href="http://phenix.gapi.fr/" target="pxSite" class="about"><IMG src="image/about/logo.png" title="<?php echo trad("ABOUT_PHENIX"); ?>" border="0"></A><BR>
+    <TD width="170" valign="middle" class="about" align="center"><IMG src="image/about/logo.png" title="<?php echo trad("ABOUT_PHENIX"); ?>" border="0"><BR>
       <A href="http://www.php.net/" target="_blank" class="about"><IMG src="image/about/debug_php.gif" title="<?php echo trad("ABOUT_PHP"); ?>" border="0"></A>&nbsp;
       <A href="http://www.mysql.com/" target="_blank" class="about"><IMG src="image/about/debug_mysql.gif"title="<?php echo trad("ABOUT_MYSQL"); ?>" border="0"></A>
     </TD>

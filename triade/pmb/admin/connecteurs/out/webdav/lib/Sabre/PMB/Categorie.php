@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Categorie.php,v 1.10 2016-01-26 15:36:15 dgoron Exp $
+// $Id: Categorie.php,v 1.11 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB;
 
 class Categorie extends Collection {
@@ -10,7 +10,7 @@ class Categorie extends Collection {
 	public $config;
 	public $type;
 	
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		$this->config = $config;
 		$this->type = "categorie";
 		$code = $this->get_code_from_name($name);
@@ -20,16 +20,16 @@ class Categorie extends Collection {
 		}
 	}
 	
-	function getChildren() {
-		//les enfants attendus par le paramÃ©trage du connecteur
-		//sauf pour le noeud racine d'un thÃ©saurus...
+	public function getChildren() {
+		//les enfants attendus par le paramétrage du connecteur
+		//sauf pour le noeud racine d'un thésaurus...
 		$current_children=array();
 		if($this->categ->id != $this->categ->thes->num_noeud_racine){
 			$children = parent::getChildren();
 		}else{
 			$children = array();
 		}
-		//les enfants de la catÃ©gorie (navigation thÃ©saurus)
+		//les enfants de la catégorie (navigation thésaurus)
 		$query = "select id_noeud from noeuds where num_parent=".$this->categ->id;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -43,13 +43,13 @@ class Categorie extends Collection {
 		return array_merge($children,$current_children);
 	}
 
-	function getName() {
+	public function getName() {
 		return $this->format_name($this->categ->libelle." (C".$this->categ->id.")");
 	}
 	
-	function need_to_display($categ_id){
+	public function need_to_display($categ_id){
 		if($categ_id){
-			//on va cherchÃ© le libellÃ©...
+			//on va cherché le libellé...
 			$categ = new \category($categ_id);
 			if(substr($categ->libelle,0,1) == "~"){
 				return false;
@@ -73,7 +73,7 @@ class Categorie extends Collection {
 		return false;
 	}
 	
-	function getNotices(){
+	public function getNotices(){
 		
 		$this->notices = array();		
 		if($this->categ->id){
@@ -84,7 +84,7 @@ class Categorie extends Collection {
 		return $this->notices;
 	}
     
-	function update_notice_infos($notice_id){
+	public function update_notice_infos($notice_id){
 		if($notice_id*1 >0){
 			$query = "select * from notices_categories where notcateg_notice = ".$notice_id." and num_noeud = ".$this->categ->id;
 			$result = pmb_mysql_query($query);

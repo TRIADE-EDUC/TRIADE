@@ -252,7 +252,7 @@ var initDateToShow="<?php echo dateFormBase($dateJ) ?>"	// Initial date to show
 <?php
 $data=affClasse(); //code_class,libelle
 $edtimage=0;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if (file_exists("./data/image_pers/".$data[$i][0]."_edt.jpg")) {
 		$edtimage=1;
 		$id=$data[$i][0];

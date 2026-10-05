@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,11 +27,16 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/alertify.min.css">
+<link rel="stylesheet" href="./librairie_css/alertify.default.min.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/alertify.min.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
@@ -54,11 +59,11 @@ $modepaiement=chercheModePaiement($ideleve,$datevers,$idversement);
 $numcheque=chercheNumCheque($ideleve,$datevers,$idversement);
 $banque=html_quotes(chercheEtabBancaire($ideleve,$datevers,$idversement));
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Gestion encaissement" ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -67,16 +72,16 @@ $banque=html_quotes(chercheEtabBancaire($ideleve,$datevers,$idversement));
 <?php
 if (!isset($_GET["ideleve"])) {
 	$nomEleve=$_POST["saisie_nom_eleve"];
-	$sql="SELECT elev_id,nom,prenom,classe FROM  ${prefixe}eleves  WHERE  nom='$nomEleve' ";
+	$sql="SELECT elev_id,nom,prenom,classe FROM  {$prefixe}eleves  WHERE  nom='$nomEleve' ";
 	$res=execSql($sql);
 	$data=ChargeMat($res);
-	if (count($data) > 1) {
-		print "<table border='1' width='100%' bordercolor='#000000' >";
-		print "<tr><td bgcolor='yellow'>Nom Prénom</td><td bgcolor='yellow' >Classe</td>";
-		print "<td bgcolor='yellow' align='center' >Sélectionner</td>";
+	if (countTriade($data) > 1) {
+		print "<table border='1' width='100%' bordercolor='#000000' style='border-collapse:collapse;'>";
+		print "<tr><td class='cc-th'>Nom Prénom</td><td class='cc-th'>Classe</td>";
+		print "<td class='cc-th' align='center'>Sélectionner</td>";
 		print "</tr>";
-		for($i=0;$i<count($data);$i++) {
-			print "<tr  class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\">";
+		for($i=0;$i<countTriade($data);$i++) {
+			print "<tr class='cc-tr-data'>";
 			print "<td>".$data[$i][1]." ".$data[$i][2]."</td><td>".chercheClasse_nom($data[$i][3])."</td>";
 			print "<td width='5%'><input type='button' onclick=\"open('compta_modif.php?ideleve=".$data[$i][0]."','_parent','')\" class='button' value='Sélectionner' /></td>";
 			print "</tr>";
@@ -103,36 +108,36 @@ if ($ideleve > 0) {
 	<table>
 	<tr><td valign='top' ><img src="image_trombi.php?idE=<?php print $ideleve ?>" border=0 ></td>
 	<td valign="top">
-	&nbsp;&nbsp;<font class=T2>Nom : <?php print $nomeleve ?></font>
+	&nbsp;&nbsp;Nom : <?php print $nomeleve ?>
 	<br><br>
-	&nbsp;&nbsp;<font class=T2>Prénom : <?php print $prenomeleve ?></font>
+	&nbsp;&nbsp;Prénom : <?php print $prenomeleve ?>
 	<br><br>
-	&nbsp;&nbsp;<font class=T2>Classe : <?php print ucwords($classe) ?></font>
+	&nbsp;&nbsp;Classe : <?php print ucwords($classe) ?>
 	</td></tr>
 	</table>
 	<br><br>
-	<table width=100% >
-	<tr><td align='right' ><font class='T2'> Type&nbsp;de&nbsp;versement&nbsp;:&nbsp;</font></td><td> <select name='typeversement' >
-				<option id='select1' value='<?php print $idversement ?>' ><?php print $nomVersement ?></option>
-				<?php 
+	<table width=100%>
+	<tr><td align='right'>Type&nbsp;de&nbsp;versement&nbsp;:&nbsp;</td><td> <select name='typeversement'>
+				<option id='select1' value='<?php print $idversement ?>'><?php print $nomVersement ?></option>
+				<?php
 					if (trim($idversement) == "") {
 						print selectVersement($idclasse);
 						print selectVersementEleve($ideleve);
 					} ?>
 				</select></td></tr>
-							<tr><td align='right' ><font class='T2'>Montant&nbsp;réglé&nbsp;:&nbsp;</font></td>
-							<td><input type=text name='montant' value='<?php print preg_replace('/ /','',affichageFormatMonnaie($montant)) ?>' ></td></tr>
-							<tr><td align='right' ><font class='T2'>N°&nbsp;chèque&nbsp;:&nbsp;</font></td>
-							<td><input type=text name='numcheque' value="<?php print $numcheque ?>" ></td></tr>
+							<tr><td align='right'>Montant&nbsp;réglé&nbsp;:&nbsp;</td>
+							<td><input type=text name='montant' value='<?php print preg_replace('/ /','',affichageFormatMonnaie($montant)) ?>'></td></tr>
+							<tr><td align='right'>N°&nbsp;chèque&nbsp;:&nbsp;</td>
+							<td><input type=text name='numcheque' value="<?php print $numcheque ?>"></td></tr>
 
-							<tr><td align='right' ><font class='T2'>Etablissement&nbsp;bancaire&nbsp;:&nbsp;</font></td>
-							<td><input type=text name='banque' value="<?php print $banque ?>" ></td></tr>
+							<tr><td align='right'>Etablissement&nbsp;bancaire&nbsp;:&nbsp;</td>
+							<td><input type=text name='banque' value="<?php print $banque ?>"></td></tr>
 
-							<tr><td align='right' valign='top' ><font class='T2'>Mode&nbsp;de&nbsp;paiement&nbsp;:&nbsp;</font></td>
-							<td><textarea name='modepaiement' cols='50' rows='3' onkeypress="compter(this,'145', this.form.CharRestant)"  ><?php print $modepaiement ?></textarea>&nbsp;
+							<tr><td align='right' valign='top'>Mode&nbsp;de&nbsp;paiement&nbsp;:&nbsp;</td>
+							<td><textarea name='modepaiement' cols='50' rows='3' onkeypress="compter(this,'145', this.form.CharRestant)"><?php print $modepaiement ?></textarea>&nbsp;
 							<?php $nbcar=strlen($modepaiement) ?>
-							<input type=text name='CharRestant' size=3 disabled='disabled' value='<?php print $nbcar ?>' /></td></tr>
-							<tr><td align='right' ><font class='T2'>Date&nbsp;d'encaissement&nbsp;:&nbsp;</font></td><td><input type="text" name="dateversement" value="<?php print dateForm($datevers) ?>" size=12 readonly> 
+							<input type=text name='CharRestant' size=3 disabled='disabled' value='<?php print $nbcar ?>'></td></tr>
+							<tr><td align='right'>Date&nbsp;d'encaissement&nbsp;:&nbsp;</td><td><input type="text" name="dateversement" value="<?php print dateForm($datevers) ?>" size=12 readonly> 
 	<?php include_once("librairie_php/calendar.php"); calendarDim('id1','document.formulaire.dateversement',$_SESSION["langue"],"0","0");?>
 	</td></tr>
 	<tr><td height=20></td></tr>

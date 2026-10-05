@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: txt2pmbxml_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: txt2pmbxml_input.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,13 +14,13 @@ class txt2pmbxml_input extends convert_input {
 		//$fcontents=fread($fi,filesize($file_in));
 		$index=array();
 		$n=0;
-		$deb_notice="#*#NumÃ©ro";
+		$deb_notice="#*#Numéro";
 		$en_cours=false;	
 		while (!feof($fi)) {
 			$line=fgets($fi,4096);
 			$line=rtrim($line);
 			if (substr($line,0,9)==$deb_notice) {
-				//Accrochage dÃ©but de notice
+				//Accrochage début de notice
 				if ($en_cours) {
 					$n++;
 					$requete="insert into import_marc (no_notice, notice, origine) values($n,'".addslashes($notice)."','$origine')";

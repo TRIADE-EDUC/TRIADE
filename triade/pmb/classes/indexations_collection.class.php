@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: indexations_collection.class.php,v 1.2 2017-12-04 14:00:31 vtouchard Exp $
+// $Id: indexations_collection.class.php,v 1.5 2023/05/05 13:38:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/indexation.class.php");
 require_once($class_path."/indexation_authority.class.php");
 
@@ -13,10 +14,39 @@ class indexations_collection {
 	
 	static private $indexations = array();
 	
-	static public function get_indexation($object_type) {
+	static public function get_xml_file_path($object_type) {
 		global $include_path;
 		
-		$object_type = $object_type*1;
+		switch($object_type){
+			case AUT_TABLE_AUTHORS :
+				return $include_path."/indexation/authorities/authors/champs_base.xml";
+			case AUT_TABLE_CATEG :
+				return $include_path."/indexation/authorities/categories/champs_base.xml";
+			case AUT_TABLE_PUBLISHERS :
+				return $include_path."/indexation/authorities/publishers/champs_base.xml";
+			case AUT_TABLE_COLLECTIONS :
+				return $include_path."/indexation/authorities/collections/champs_base.xml";
+			case AUT_TABLE_SUB_COLLECTIONS :
+				return $include_path."/indexation/authorities/subcollections/champs_base.xml";
+			case AUT_TABLE_SERIES :
+				return $include_path."/indexation/authorities/series/champs_base.xml";
+			case AUT_TABLE_INDEXINT :
+				return $include_path."/indexation/authorities/indexint/champs_base.xml";
+			case AUT_TABLE_TITRES_UNIFORMES :
+				return $include_path."/indexation/authorities/titres_uniformes/champs_base.xml";
+			case AUT_TABLE_FAQ :
+				return $include_path."/indexation/faq/question.xml";
+			case AUT_TABLE_INDEX_CONCEPT :
+				return '';
+			case AUT_TABLE_AUTHPERSO :
+				return '';
+			default :
+				return null;
+		}
+	}
+	
+	static public function get_indexation($object_type) {
+		$object_type = intval($object_type);
 		if (!$object_type) {
 			return null;
 		}
@@ -31,32 +61,18 @@ class indexations_collection {
 		
 		switch($object_type){
 			case AUT_TABLE_AUTHORS :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/authors/champs_base.xml", "authorities", AUT_TABLE_AUTHORS);
-				break;
 			case AUT_TABLE_CATEG :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/categories/champs_base.xml", "authorities", AUT_TABLE_CATEG);
-				break;
 			case AUT_TABLE_PUBLISHERS :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/publishers/champs_base.xml", "authorities", AUT_TABLE_PUBLISHERS);
-				break;
 			case AUT_TABLE_COLLECTIONS :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/collections/champs_base.xml", "authorities", AUT_TABLE_COLLECTIONS);
-				break;
 			case AUT_TABLE_SUB_COLLECTIONS :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/subcollections/champs_base.xml", "authorities", AUT_TABLE_SUB_COLLECTIONS);
-				break;
 			case AUT_TABLE_SERIES :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/series/champs_base.xml", "authorities", AUT_TABLE_SERIES);
-				break;
 			case AUT_TABLE_INDEXINT :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/indexint/champs_base.xml", "authorities", AUT_TABLE_INDEXINT);
-				break;
 			case AUT_TABLE_TITRES_UNIFORMES :
-				self::$indexations[$object_type] = new indexation_authority($include_path."/indexation/authorities/titres_uniformes/champs_base.xml", "authorities", AUT_TABLE_TITRES_UNIFORMES);
+				self::$indexations[$object_type] = new indexation_authority(static::get_xml_file_path($object_type), "authorities", $object_type);
 				break;
-// 			case AUT_TABLE_CONCEPT :
-// 				self::$indexations[$object_type] = 
-// 				break;
+			case AUT_TABLE_FAQ :
+				self::$indexations[$object_type] =  new indexation(static::get_xml_file_path($object_type), "faq_questions", AUT_TABLE_FAQ);
+				break;
 // 			case AUT_TABLE_INDEX_CONCEPT :
 // 				self::$indexations[$object_type] = 
 // 				break;

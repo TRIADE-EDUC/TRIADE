@@ -1,11 +1,11 @@
-<?php
+﻿<?php
       session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,17 +41,17 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 // affichage de la classe
 if(isset($_GET["sClasseGrp"])) {
 	$saisie_classe=$_GET["sClasseGrp"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
@@ -65,7 +65,7 @@ if(isset($_GET["sClasseGrp"])) {
 	</font></td>
 	</tr>
 	<?php
-	if( count($data) <= 0 )	{
+	if( countTriade($data) <= 0 )	{
 		print("<tr id='cadreCentral0' ><td align=center height='100%' valign=center><br><br>".LANGRECH1."<br><br></td></tr></table>");
 	}else {
 	?>
@@ -73,14 +73,14 @@ if(isset($_GET["sClasseGrp"])) {
 	<form method=post onsubmit="return valide_consul_classe3()" name="formulaire" action="profpcombulletin2.php">
 	<br /><ul>
 	<font class=T2><?php print LANGBULL3 ?> : <?php print $_COOKIE["anneeScolaire"] ?><br><br>
-	<font class=T2><?php print LANGBASE40 ?> <select name="typetrisem" onchange="trimes2();" >
+	<font class=T2><?php print LANGBASE40 ?> <select id="tt_pcb" name="typetrisem">
      	<option value='0' STYLE='color:#000066;background-color:#FCE4BA' ><?php print LANGCHOIX?></option>
      	<option value="trimestre" STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM28?></option>
      	<option value="semestre"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM29?></option>
      	<option value="periode"  STYLE='color:#000066;background-color:#CCCCFF'><?php print strtolower(LANGASS26) ?></option>
      	<option value="examen"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGGRP55 ?></option>
-     	</select>  : 
-     	<select name="saisie_trimestre">
+     	</select>  :
+     	<select id="st_pcb" name="saisie_trimestre">
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
 	<option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
@@ -91,6 +91,7 @@ if(isset($_GET["sClasseGrp"])) {
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
      	</Select>
+     	<script>(function(){var src=document.getElementById('tt_pcb'),dst=document.getElementById('st_pcb'),d={trimestre:[['Trimestre 1','trimestre1'],['Trimestre 2','trimestre2'],['Trimestre 3','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],semestre:[['Semestre 1','trimestre1'],['Semestre 2','trimestre2'],['        ','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],examen:[['Examen Juin','exam_juin'],['Examen Décembre','exam_dec'],[' ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],periode:[['1er','periode1'],['2ieme','periode2'],['3ieme','periode3'],['4ieme','periode4'],['5ieme','periode5'],['6ieme','periode6'],['7ieme','periode7'],['8ieme','periode8'],['9ieme','periode9']]};src.onchange=function(){var o=d[this.value]||[];for(var i=0;i<dst.options.length;i++){dst.options[i].text=o[i]?o[i][0]:'        ';dst.options[i].value=o[i]?o[i][1]:'0';}dst.selectedIndex=0;};})()</script>
 	<input type=hidden name="saisie_classe" value="<?php print $_GET["sClasseGrp"]?>" >
 
 
@@ -126,7 +127,7 @@ if(isset($_GET["sClasseGrp"])) {
         <form method=post onsubmit="return valide_consul_classe1()" name="formulaire1" action="profpcomScolaireBulletin.php">
         <br /><ul>
         <font class=T2><?php print LANGBULL3 ?> : <?php print $_COOKIE["anneeScolaire"] ?><br><br>
-        <font class=T2><?php print LANGBASE40 ?> <select name="typetrisem" onchange="trimes22();" >
+        <font class=T2><?php print LANGBASE40 ?> <select id="tt_pcb1" name="typetrisem">
         <option value='0' STYLE='color:#000066;background-color:#FCE4BA' ><?php print LANGCHOIX?></option>
         <option value="trimestre" STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM28?></option>
         <option value="semestre"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM29?></option>
@@ -134,7 +135,7 @@ if(isset($_GET["sClasseGrp"])) {
         <option value="examen"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGGRP55 ?></option>
 	<option value="cycle"  STYLE='color:#000066;background-color:#CCCCFF'><?php print "Cycle" ?></option>
         </select>  :
-        <select name="saisie_trimestre">
+        <select id="st_pcb1" name="saisie_trimestre">
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
@@ -145,6 +146,7 @@ if(isset($_GET["sClasseGrp"])) {
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
         </Select>
+        <script>(function(){var src=document.getElementById('tt_pcb1'),dst=document.getElementById('st_pcb1'),d={trimestre:[['Trimestre 1','trimestre1'],['Trimestre 2','trimestre2'],['Trimestre 3','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],semestre:[['Semestre 1','trimestre1'],['Semestre 2','trimestre2'],['        ','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],examen:[['Examen Juin','exam_juin'],['Examen Décembre','exam_dec'],[' ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],periode:[['1er','periode1'],['2ieme','periode2'],['3ieme','periode3'],['4ieme','periode4'],['5ieme','periode5'],['6ieme','periode6'],['7ieme','periode7'],['8ieme','periode8'],['9ieme','periode9']],cycle:[['Cycle 1','cycle1'],['Cycle 2','cycle2'],['Cycle 3','cycle3'],['Cycle 4','cycle4'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']]};src.onchange=function(){var o=d[this.value]||[];for(var i=0;i<dst.options.length;i++){dst.options[i].text=o[i]?o[i][0]:'        ';dst.options[i].value=o[i]?o[i][1]:'0';}dst.selectedIndex=0;};})()</script>
         <input type=hidden name="saisie_classe" value="<?php print $_GET["sClasseGrp"]?>" >
 
         <br /><br />
@@ -178,17 +180,17 @@ if(isset($_GET["sClasseGrp"])) {
 ?>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

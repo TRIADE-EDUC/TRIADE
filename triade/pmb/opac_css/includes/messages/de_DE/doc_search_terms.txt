@@ -8,6 +8,6 @@ for example <i>history</i>. The search results are displayed under a two-section
 <hr />
 <p>When clicking on one of the entries in the lower section, you will move from one heading to another one.</p>
 <hr />
-<p>To select a heading and display the related references, click on the magnifying glass <img src='images/search.gif' align='absmiddle'> located at the start of the line.</p>
+<p>To select a heading and display the related references, click on the magnifying glass <img src='images/search.gif' > located at the start of the line.</p>
 <hr />
 <p>If the magnifying glass is not displayed, no item is related to the subject.</p>

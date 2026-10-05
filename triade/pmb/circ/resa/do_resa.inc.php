@@ -1,14 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: do_resa.inc.php,v 1.18 2017-11-21 12:01:00 dgoron Exp $
+// $Id: do_resa.inc.php,v 1.20 2023/12/08 13:48:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// page de crÃ©ation d'une rÃ©servation
-// toute la mÃ©canique doit Ãªtre ici
+// page de création d'une réservation
+// toute la mécanique doit être ici
 // on dispose des variables $id_empr et $id_notice || $id_bulletin
+
+global $class_path, $msg, $id_empr, $id_notice, $id_bulletin, $groupID;
+global $delete, $force_resa;
+
+global $pmb_resa_records_no_expl;
+
+$id_empr = intval($id_empr);
+$id_notice = intval($id_notice);
+$id_bulletin = intval($id_bulletin);
+$groupID = intval($groupID);
 
 require_once("$class_path/emprunteur.class.php");
 require_once("$class_path/resa.class.php");
@@ -20,7 +30,7 @@ if(!isset($force_resa)) $force_resa = '';
 if($id_empr && ($id_notice || $id_bulletin)) {
 	// on teste si c'est une suppression
 	if(!$delete) {
-		// on tente d'effectuer la rÃ©servation
+		// on tente d'effectuer la réservation
 		if($id_notice) {
 			$resa = new reservation($id_empr, $id_notice, 0);
 		} else {
@@ -65,7 +75,7 @@ if($id_empr && ($id_notice || $id_bulletin)) {
 			$resa = new reservation($id_empr, 0, $id_bulletin);
 		}
 		$resa->delete();
-		$erreur_affichage="<table border='0' cellpadding='1' height='40' border='1'><tr><td style='width:33px'><span><img src='".get_url_icon('info.png')."' /></span></td>
+		$erreur_affichage="<table style='border:0px; padding:1px' height='40' role='presentation'><tr><td style='width:33px'><span><img src='".get_url_icon('info.png')."' /></span></td>
 					<td style='width:100%'>";
 		$erreur_affichage.="<span class='erreur'>".$resa->message."</span>";
 		$erreur_affichage.="</td></tr></table>";

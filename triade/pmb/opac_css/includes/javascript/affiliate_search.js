@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: affiliate_search.js,v 1.1 2011-05-18 14:42:58 arenou Exp $
+// $Id: affiliate_search.js,v 1.1 2011/05/18 14:42:58 arenou Exp $
 
 function showSearchTab(tab,extended){
 	if(extended){

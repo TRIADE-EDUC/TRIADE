@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_contribution_datatype_docnum_file.class.php,v 1.5 2018-02-26 16:16:28 apetithomme Exp $
+// $Id: onto_contribution_datatype_docnum_file.class.php,v 1.6 2022/05/09 10:26:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,8 +13,8 @@ require_once $class_path.'/explnum.class.php';
 
 /**
  * class onto_common_datatype_small_text
- * Les mÃ©thodes get_form,get_value,check_value,get_formated_value,get_raw_value
- * sont Ã©ventuellement Ã  redÃ©finir pour le type de donnÃ©es
+ * Les méthodes get_form,get_value,check_value,get_formated_value,get_raw_value
+ * sont éventuellement à redéfinir pour le type de données
  */
 class onto_contribution_datatype_docnum_file extends onto_common_datatype_file {
 
@@ -46,7 +46,7 @@ class onto_contribution_datatype_docnum_file extends onto_common_datatype_file {
 				$upload_directory = ${$var_directory}[0]['value'];
 				
 				$slash_pos = strpos($upload_directory, '/');
-				// Si il y a un slash dans la valeur, alors c'est un rÃ©pertoire navigable
+				// Si il y a un slash dans la valeur, alors c'est un répertoire navigable
 				if ($slash_pos !== false) {
 					$path = substr($upload_directory, $slash_pos);
 					$upload_directory = substr($upload_directory, 0, $slash_pos);
@@ -61,9 +61,13 @@ class onto_contribution_datatype_docnum_file extends onto_common_datatype_file {
 				${$var_name} = $values;
 			}
 		}		
-		if (${$var_name}[0]['value'] == '' && $_POST[$var_name][0]['default_value']) {
-			${$var_name}[0]['value'] = $_POST[$var_name][0]['default_value'];
-			${$var_name}[0]['type'] = $_POST[$var_name][0]['type'];
+		if ((empty(${$var_name})) || (${$var_name}[0]['value'] == '' && $_POST[$var_name][0]['default_value'])) {
+			${$var_name} = [
+			    [
+			        'value' => $_POST[$var_name][0]['default_value'],
+                    'type' => $_POST[$var_name][0]['type'],
+		        ],
+			];
 		}
 		return parent::get_values_from_form($instance_name, $property, $uri_item);
 	}

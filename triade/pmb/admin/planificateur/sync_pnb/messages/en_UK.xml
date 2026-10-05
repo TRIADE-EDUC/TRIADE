@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour les procédures
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.5 2021/07/06 12:34:21 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="pnb_sync_type">Type de synchronisation</entry>
+	<entry code="pnb_sync_full">Complète</entry>
+	<entry code="pnb_sync_diff">Différentielle</entry>
+	<entry code="pnb_check_only_ended_loans">Vérifier uniquement les prêts expirés</entry>
+	<entry code="pnb_import_error_pmbesConvertImport_convert">Erreur, la méthode pmbesConvertImport_convert n'existe pas dans la classe proxy.</entry>	
+	<entry code="pnb_get_db_data">Lecture des données en base</entry>
+	<entry code="pnb_get_loan_status">Récupération des statuts de prêts</entry>
+	<entry code="pnb_get_offer_files">Récupération des fichiers d'offres</entry>
+	<entry code="pnb_ftp_error">Erreur de connection FTP.</entry>
+	<entry code="pnb_files_downloaded">Fichiers transférés : </entry>
+	<entry code="pnb_no_file">Aucun fichier récupéré.</entry>		
+	<entry code="pnb_import_onix_files">Import des fichiers d'offres</entry>
+	<entry code="pnb_order_still_imported">Commande existante, orderlineid = %s</entry>
+	<entry code="pnb_expired_order">Commande ignorée, plus de jetons disponibles (nta=0), orderlineid = %s</entry>
+	<entry code="pnb_add_order">Ajout commande : %s</entry>
+	<entry code="pnb_ignore_order_without_product_number">Commande ignorée, pas de N° de produit, orderlineid = %s</entry>
+	<entry code="pnb_nb_imported_records">Nb de notice(s) importée(s) : %s</entry>
+	<entry code="pnb_no_record_imported">Aucune notice importée.</entry>
+	<entry code="pnb_del_ended_loans">Suppression des prêts expirés</entry>
+	<entry code="pnb_loan_deleted">Prêt n° %s supprimé</entry>
+	<entry code="pnb_del_ended_orders">Suppression des commandes expirées</entry>
+	<entry code="pnb_order_deleted">Commande n° %s supprimée</entry>
+	<entry code="pnb_check_items">Vérification des exemplaires</entry>
+	<entry code="pnb_check_order_items">Vérification exemplaires commande : %s</entry>
+	<entry code="pnb_add_item">Ajout exemplaire : %s</entry>
+	<entry code="pnb_add_order_error">Erreur lors de la création de la commande : %s</entry>
+    <entry code="pnb_prior_checks">Vérifications et corrections préalables</entry>
+</XMLlist>

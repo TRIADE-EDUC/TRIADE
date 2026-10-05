@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_tpl_gen.class.php,v 1.14 2018-10-10 12:15:10 dgoron Exp $
+// $Id: notice_tpl_gen.class.php,v 1.17.8.1 2025/01/30 09:08:06 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path . "/parse_format.class.php");
 require_once ($class_path . "/notice_info.class.php");
 
 class notice_tpl_gen {
 	
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------	
 	public $id;		// MySQL id in table 'notice_tpl'
 	public $name;		// nom du template
@@ -25,39 +26,37 @@ class notice_tpl_gen {
 	//		constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0,$data=null) {			
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData($data);
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos 
+	//		getData() : récupération infos 
 	// ---------------------------------------------------------------
-	function getData($data) {
-		global $dbh;
-
+	public function getData($data) {
 		$this->name = '';			
 		$this->comment = '';
 		$this->code =array();
 		if($this->id) {
 			$requete = "SELECT * FROM notice_tpl WHERE notpl_id='".$this->id."' LIMIT 1 ";
-			$result = @pmb_mysql_query($requete, $dbh);
+			$result = @pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$temp = pmb_mysql_fetch_object($result);				
 				$this->name	= $temp->notpl_name;
 				$this->comment	= $temp->notpl_comment	;
-				// rÃ©cup code		
+				// récup code		
 				$requete = "SELECT * FROM notice_tplcode  WHERE num_notpl='".$this->id."' ";
-				$result_code = @pmb_mysql_query($requete, $dbh);
+				$result_code = @pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($result_code)) {
 					while(($temp_code= pmb_mysql_fetch_object($result_code))) {
 						$this->code[$temp_code->notplcode_localisation][$temp_code->notplcode_niveau_biblio] [$temp_code->notplcode_typdoc]=$temp_code->nottplcode_code;	
 					}
 				}			
 			} else {
-				// pas trouvÃ© avec cette clÃ©
+				// pas trouvé avec cette clé
 				$this->id = 0;								
 			}
-		}elseif(sizeof($data)){
+		}elseif(is_countable($data) && sizeof($data)){
 			//en provenance du selecteur de mode d'affichage
 			$this->name	= $data['NAME'];
 			$this->comment	= $data['COMMENT']	;
@@ -68,13 +67,13 @@ class notice_tpl_gen {
 	}
 	
 	public function build_notice($id_notice,$location=0,$in_relation=false, $id_bannette = 0){
-		global $dbh,$parser_environnement;
+		global $parser_environnement;
 		
 		$parser_environnement['id_template'] = $this->id;
 		$parser=parse_format::get_instance('notice_tpl.inc.php', $in_relation);			
 		
 		$requete = "SELECT typdoc, niveau_biblio FROM notices WHERE notice_id='".$id_notice."' LIMIT 1 ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($result)) {
 			$temp = pmb_mysql_fetch_object($result);				
 			$typdoc	= $temp->typdoc;			
@@ -82,18 +81,18 @@ class notice_tpl_gen {
 			//$niveau_hierar	= $temp->niveau_hierar;		
 		} else return "";
 		
-		// Recherche du code Ã  appliquer (du particulier au gÃ©nÃ©ral)
-		if(isset($this->code[$location][$niveau_biblio][$typdoc])) {
+		// Recherche du code à appliquer (du particulier au général)
+		if(!empty($this->code[$location][$niveau_biblio][$typdoc])) {
 			$code=$this->code[$location][$niveau_biblio][$typdoc];
-		} elseif (isset($this->code[$location][$niveau_biblio][0])) {
+		} elseif (!empty($this->code[$location][$niveau_biblio][0])) {
 			$code=$this->code[$location][$niveau_biblio][0];
-		} elseif (isset($this->code[0][$niveau_biblio][$typdoc])) {
+		} elseif (!empty($this->code[0][$niveau_biblio][$typdoc])) {
 			$code=$this->code[0][$niveau_biblio][$typdoc];
-		} elseif (isset($this->code[0][$niveau_biblio][0])) {
+		} elseif (!empty($this->code[0][$niveau_biblio][0])) {
 			$code=$this->code[0][$niveau_biblio][0];
-		} elseif (isset($this->code[0][0][$typdoc])) {
+		} elseif (!empty($this->code[0][0][$typdoc])) {
 			$code=$this->code[0][0][$typdoc];
-		} elseif (isset($this->code[0][0][0])) {
+		} elseif (!empty($this->code[0][0][0])) {
 			$code=$this->code[0][0][0];
 		} else return "";
 		
@@ -121,11 +120,11 @@ class notice_tpl_gen {
 		return $css_style;
 	}
 	
-	static public function gen_tpl_select($select_name="notice_tpl", $selected_id=0, $onchange="",$no_affempty=0,$no_aff_defaut=0) {		
-		global $msg,$dbh;
-		// 
+	public static function gen_tpl_select($select_name="notice_tpl", $selected_id=0, $onchange="",$no_affempty=0,$no_aff_defaut=0) {		
+		global $msg;
+
 		$requete = "SELECT notpl_id, if(notpl_comment!='',concat(notpl_name,'. ',notpl_comment),notpl_name) as nom FROM notice_tpl where notpl_show_opac=1 ORDER BY notpl_name ";
-		$result = pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		if(!pmb_mysql_num_rows($result) && !$no_affempty) return '';	
 		if(!$no_aff_defaut)
 			return gen_liste ($requete, "notpl_id", "nom", $select_name, $onchange, $selected_id, 0, $msg["notice_tpl_list_default"], 0,$msg["notice_tpl_list_default"], 0) ;
@@ -136,7 +135,7 @@ class notice_tpl_gen {
 	}
 	
 	public static function get_instance($id=0) {
-		$id += 0;
+		$id = intval($id);
 		if(!isset(static::$instances[$id])) {
 			static::$instances[$id] = new notice_tpl_gen($id);
 		}

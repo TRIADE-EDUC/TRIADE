@@ -1,0 +1,22 @@
+<div id="diffusionsHistory">
+	<loader></loader>
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<div class="dsi-tabs">
+		<div class="dsi-tab-registers" v-show="countTab > 1">
+			<template v-for="(tab, key) in displayedTabs">
+				<button type="button" :key="key"
+					@click.self="switchTab(tab.name)" :class="['bouton', tabActive == tab.name ? 'active-tab' : '']">
+					{{ messages.get('dsi', tab.title) }}
+					<span role="button" type="button" class="dsi-close-tab" @click.stop="tab.close" v-if="tab.close">
+						<i class="fa fa-times" aria-hidden="true"></i>
+					</span>
+				</button>
+				<!-- Hack pour avoir un espace entre les tabs -->
+				{{ &#32; }}
+			</template>
+		</div>
+		<keep-alive include="list">
+			<component :is="currentTab.component" v-bind="currentTab.props()" :class="['dsi-content', countTab > 1 ? 'dsi-tab-bodies' : '']" />
+		</keep-alive>
+	</div>
+</div>

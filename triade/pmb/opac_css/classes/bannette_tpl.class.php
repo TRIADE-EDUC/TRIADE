@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bannette_tpl.class.php,v 1.6 2019-06-03 12:11:23 ngantier Exp $
+// $Id: bannette_tpl.class.php,v 1.9 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-@ini_set('zend.ze1_compatibility_mode',0);
+global $include_path;
 require_once($include_path."/h2o/pmb_h2o.inc.php");
 
 class bannette_tpl {
 	
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------	
 	public $id = 0;		// MySQL id in table 'bannette_tpl'
 	public $name = "";		// nom du template
@@ -23,19 +23,17 @@ class bannette_tpl {
 	//		constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {			
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos 
+	//		getData() : récupération infos 
 	// ---------------------------------------------------------------
 	public function getData() {
-		global $dbh,$msg;
-	
 		if($this->id) {
 			$requete = "SELECT * FROM bannette_tpl WHERE bannettetpl_id='".$this->id."' LIMIT 1 ";
-			$result = @pmb_mysql_query($requete, $dbh);
+			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$temp = pmb_mysql_fetch_object($result);				
 				$this->name	= $temp->bannettetpl_name;
@@ -46,9 +44,9 @@ class bannette_tpl {
 	}
 	
 	public static function render($id, $data) {	
-	    global $dbh, $charset, $base_path;
+	    global $charset, $base_path;
 		$requete = "SELECT * FROM bannette_tpl WHERE bannettetpl_id='".$id."' LIMIT 1 ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($result)) {
 			$temp = pmb_mysql_fetch_object($result);
 			$data=encoding_normalize::utf8_normalize($data);
@@ -60,7 +58,7 @@ class bannette_tpl {
 			$data_to_return = $H2o->render($data);
 			
 			if ($charset !="utf-8") {
-				$data_to_return = utf8_decode($data_to_return);
+				$data_to_return = encoding_normalize::utf8_decode($data_to_return);
 			}
 			return $data_to_return;			
 		}

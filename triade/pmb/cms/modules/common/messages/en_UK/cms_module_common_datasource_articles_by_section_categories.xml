@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_articles_by_section_categories.xml,v 1.1 2018-03-20 10:00:40 dgoron Exp $ -->
+$Id: cms_module_common_datasource_articles_by_section_categories.xml,v 1.1 2018/03/20 10:00:40 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_section">Sélection manuelle d'une rubrique</entry>

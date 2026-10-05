@@ -1,17 +1,15 @@
 <?php
 function search_other_function_filters() {
 	global $section_public,$typ_notice;
-	global $charset;
-	global $dbh;
 	
-	$r.="<select name='section_public'>";
+	$r ="<select name='section_public'>";
 	$r.="<option value=''>tout public</option>" .
 	/*	"<option value='a'>adultes</option>" .
 		"<option value='j'>jeunes</option>" .
 		"<option value='e'>enfants</option>" .
-		"<option value='pl'>premiÃ¨res lectures</option>";*/
+		"<option value='pl'>premières lectures</option>";*/
 	$requete="select section_libelle, sdoc_codage_import from docs_section where section_visible_opac=1 and sdoc_codage_import != '' group by sdoc_codage_import order by sdoc_codage_import";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	$option_section_public_libelle="";
 	if (pmb_mysql_num_rows($result)){
 		while ($sec = pmb_mysql_fetch_object($result)) {
@@ -28,7 +26,7 @@ function search_other_function_filters() {
 						$option_section_public_libelle="enfants";
 						break;
 				case "pl" :
-						$option_section_public_libelle="premiÃ¨res lectures";
+						$option_section_public_libelle="premières lectures";
 						break;
 				default :
 						$option_section_public_libelle=$sec->section_libelle;
@@ -37,26 +35,27 @@ function search_other_function_filters() {
 		}
 	} 
 	$r.="</select>";
-	$r.="Restreindre Ã  <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles de revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
+	$r.="Restreindre à <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles de revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
 	return $r;
 }
 
 function search_other_function_clause(&$clause) {
-	global $dbh;
 	global $section_public;
 	global $typ_notice;
 	
-	reset($typ_notice);
 	$t_n_tab = array();
-	foreach ($typ_notice as $key => $val) {
-	    $t_n_tab[]=$key;
+	if (is_array($typ_notice)) {
+	    reset($typ_notice);
+    	foreach ($typ_notice as $key => $val) {
+    	    $t_n_tab[]=$key;
+    	}
 	}
 	$t_n=implode("','",$t_n_tab);
 	
 	if ($section_public || $t_n) {
 		if ($section_public) {
 			$requete="select distinct idsection from docs_section where section_visible_opac=1 and sdoc_codage_import = '".$section_public."' order by sdoc_codage_import";
-			$result = pmb_mysql_query($requete, $dbh);
+			$result = pmb_mysql_query($requete);
 			$public="";
 			if (pmb_mysql_num_rows($result)){
 				while ($sect = pmb_mysql_fetch_object($result)) {
@@ -100,7 +99,6 @@ function search_other_function_get_history($n) {
 }
 
 function search_other_function_human_query($n) {
-	global $dbh;
 	global $section_public;
 	$r="";
 	$section_public=$_SESSION["section_bibli".$n];
@@ -117,7 +115,7 @@ function search_other_function_human_query($n) {
 					$section_public_human_value="enfants";
 					break;
 			case "pl" :
-					$section_public_human_value="premiÃ¨res lectures";
+					$section_public_human_value="premières lectures";
 					break;
 			default :
 					$section_public_human_value=$section_public;
@@ -125,9 +123,9 @@ function search_other_function_human_query($n) {
 		$r="public : ".$section_public_human_value;
 	}
 	
-	$notices_t=array("m"=>"Monographies","s"=>"PÃ©riodiques","a"=>"Articles");
+	$notices_t=array("m"=>"Monographies","s"=>"Périodiques","a"=>"Articles");
 	$typ_notice=$_SESSION["typ_notice".$n];
-	if (count($typ_notice)) {
+	if (is_array($typ_notice) && count($typ_notice)) {
 		$r.="pour les types de notices ";
 		reset($typ_notice);
 		$t_l=array();
@@ -141,8 +139,8 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $section_public;
-	return "<input type=\"hidden\" name=\"section_public\" value=\"$section_public\">\n";
+	global $section_public, $charset;
+	return "<input type=\"hidden\" name=\"section_public\" value=\"".htmlentities($section_public, ENT_QUOTES, $charset)."\">\n";
 }
 
 ?>

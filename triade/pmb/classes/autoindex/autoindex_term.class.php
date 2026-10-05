@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: autoindex_term.class.php,v 1.7 2017-10-24 10:39:05 dgoron Exp $
+// $Id: autoindex_term.class.php,v 1.8 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$class_path/autoindex/autoindex_word.class.php");
-
 require_once("$include_path/misc.inc.php");
 require_once("$class_path/XMLlist.class.php");
 
@@ -27,7 +27,7 @@ class autoindex_term {
 	public $raw_relevancy=0;
 	
 	/**
-	 * LibellÃ© du terme
+	 * Libellé du terme
 	 * @access protected
 	 */
 	public $label='';
@@ -72,8 +72,6 @@ class autoindex_term {
 	 */
 	
 	public function __construct($id, $label, $see=0, $path='', $relevancy=0) {
-		
-		global $dbh;
 		global $autoindex_deep_ratio;
 		
 		$this->id=$id;
@@ -85,7 +83,7 @@ class autoindex_term {
 		
 		//Recherche des termes voir_aussi vers ce terme
 		$q = "select num_noeud_orig from voir_aussi where num_noeud_dest=".$this->id;
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		if(pmb_mysql_num_rows($r)) {
 			while($row = pmb_mysql_fetch_object($r)) {
 				if($row->num_noeud_orig) {
@@ -102,8 +100,8 @@ class autoindex_term {
 	
 	
 	/**
-	 * Pertinence brute + (pertinence des termes de la branche pondÃ©rÃ© par la distance)
-	 * + Pertinence voir aussi pondÃ©rÃ©
+	 * Pertinence brute + (pertinence des termes de la branche pondéré par la distance)
+	 * + Pertinence voir aussi pondéré
 	 * 
 	 * PS :Plus un terme est profond dans l'arbre, plus il est pertinent
 	 * 
@@ -123,7 +121,7 @@ class autoindex_term {
 		$tr = 0;
 		$tr+= $this->raw_relevancy;
 
-		//Ajout des pertinences des termes de la mÃªme branche pondÃ©rÃ©s par la distance
+		//Ajout des pertinences des termes de la même branche pondérés par la distance
 		foreach($terms as $term) {
 			if($this->id != $term->id && $this->path) {
 				if( (strpos($term->path, $this->path)!==false) ) {
@@ -144,7 +142,7 @@ class autoindex_term {
 			}
 		}		
 		
-		//Ajout des pertinences des termes renvoyant vers ce terme + pondÃ©ration 
+		//Ajout des pertinences des termes renvoyant vers ce terme + pondération 
 		foreach($terms as $term) {
 			if($this->id != $term->id) {
 				if (in_array($this->id, $term->see_also)) {
@@ -166,8 +164,8 @@ class autoindex_term {
 	 * 
 	 * Elle est pourrie mais claire... (m1(\w)*m2(\w)*m3)
 	 *
-	 * @param char $full_clean_text
-	 * @param char $lang
+	 * @param string $full_clean_text
+	 * @param string $lang
 	 * 	
 	 * @return void
 	 * 
@@ -186,7 +184,7 @@ class autoindex_term {
 			default :
 					
 				// Distance tenant compte du nombre de mots non vides entre les mots du terme dans le texte
-				//$expr = str_replace(' ', "(\/w)", "/(\/w)".$clean_label."/");	>> ne marche pas si les mots sont accollÃ©s !!
+				//$expr = str_replace(' ', "(\/w)", "/(\/w)".$clean_label."/");	>> ne marche pas si les mots sont accollés !!
 				$expr = str_replace(' ', "(\s+.*?)", "/".$clean_label."\s+.*?"."/");
 				$dmax = str_word_count($full_clean_text, 0, "0123456789");
 				$this->document_distance = $dmax;
@@ -211,7 +209,7 @@ class autoindex_term {
 		
 			case '2' :
 		
-				// Distance tenant compte du nombre de caractÃ¨res entre les mots du terme dans le texte
+				// Distance tenant compte du nombre de caractères entre les mots du terme dans le texte
 				$dmax = strlen($full_clean_text);
 				$this->document_distance = $dmax;
 				$dterm = 0;

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: backup.inc.php,v 1.15 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: backup.inc.php,v 1.16 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $msg;
+global $msg, $file, $current_module;
 
 print "<table border=\"0\">";
 print "<tr><td class=\"formtitle\">";
@@ -18,7 +18,7 @@ print "</td></tr><td>";
 if(!empty($file)) {
 	@set_time_limit(0);
 	$dump_buffer = '';
-	// dÃ©finition du retour chariot
+	// définition du retour chariot
 	$crlf = "\n";
 	$db = "bibli";
 	$today = date("d/m/Y H:i:s");
@@ -26,35 +26,38 @@ if(!empty($file)) {
 	
 	// construction du dump
 	$tables = pmb_mysql_list_tables($db);
-	$num_tables = @pmb_mysql_num_rows($tables);
+	$num_tables = pmb_mysql_num_rows($tables);
 	
-	// en-tÃªte
+	// en-tête
 	$dump_buffer .= "$separator# pmb MySQL-Dump$crlf";
 	$dump_buffer .= "# $today$crlf";
 	$dump_buffer .= "# backup base \"$db\"$crlf";
 	$dump_buffer .= $separator.$crlf;
 	
 	$i = 0;
-	while($i < pmb_mysql_num_rows($tables)) {
-		$table[$i] = pmb_mysql_tablename($tables, $i);
-		$i++;
+	$table = array();
+	if($num_tables) {
+		while($i < pmb_mysql_num_rows($tables)) {
+			$table[$i] = pmb_mysql_tablename($tables, $i);
+			$i++;
+		}
 	}
 	
-	foreach ($table as $cle => $valeur) {
+	foreach ($table as $valeur) {
 	
 		$requete = "SHOW CREATE TABLE $valeur";
-		$result = pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		$create = pmb_mysql_fetch_row($result);
 	
-		// Ã©criture de la mÃ©thode de crÃ©ation
+		// écriture de la méthode de création
 		$dump_buffer .= "$crlf$separator# structure de la table $valeur$crlf$separator$crlf";
 		$dump_buffer .= "DROP TABLE IF EXISTS ".$valeur.";$crlf";
 		$dump_buffer .= $create[1].";$crlf";
 		$dump_buffer .= "$crlf$separator# contenu de la table $valeur$crlf$separator$crlf";
 	
-		// Ã©criture des donnÃ©es
+		// écriture des données
 	    $requete = "SELECT * FROM $valeur";
-		$result = pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_num_rows($result);
 	
 		$field_set = array();
@@ -82,15 +85,15 @@ if(!empty($file)) {
 	
 	$file = "./tables/".$file.".sql";
 	
-	@set_time_limit(0); // timeout illimitÃ©
+	@set_time_limit(0); // timeout illimité
 	
-	// Ã©criture du fichier
+	// écriture du fichier
 	$fp = @fopen($file, 'wb');
 	if($fp) {
 		$result = @fwrite($fp, $dump_buffer);
 		if($result) {
 			$size = number_format($result/1024,2);
-			print "<strong><font color=#ff0000>$msg[528]</font></strong><br />$file&nbsp;: $size Ko Ã©crits";
+			print "<strong><font color=#ff0000>$msg[528]</font></strong><br />$file&nbsp;: $size Ko écrits";
 		} else {
 			user_error_message(2);
 		}

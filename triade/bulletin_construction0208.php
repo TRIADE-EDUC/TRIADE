@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,7 +33,7 @@ if ($id != 1) {
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
+<meta name="Copyright" content="Triadeï¿½, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -43,11 +43,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -74,7 +74,7 @@ if ($_SESSION["membre"] == "menuprof") {
 config_param_ajout($_POST["hauteurmatiere"],"hauteurMatBull208");
 $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 	if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -96,7 +96,7 @@ config_param_ajout($afficheRemplacant,"afficheRemplacant");
 $uneseuledecimale=$_POST["uneseuledecimale"];
 config_param_ajout($afficheRemplacant,"uneseuledecimale");
 
-// recup année scolaire
+// recup annï¿½e scolaire
 $anneeScolaire=$_POST["annee_scolaire"];
 ?>
 <ul>
@@ -110,10 +110,10 @@ $anneeScolaire=$_POST["annee_scolaire"];
 <?php
 include_once('librairie_php/recupnoteperiode.php');
 
-// recuperation des coordonnées
+// recuperation des coordonnï¿½es
 // de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim(TextNoAccent($data[$i][0]));
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -137,7 +137,7 @@ if (MODNAMUR0 == "oui") {
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim($_POST["saisie_trimestre"]);
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -182,14 +182,14 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 //-------------------------
 	$max="";
 	$min=1000;
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$noteMoyEleG=0;
 		$coefEleG=0;
 		$moyenEleve2="";
 	
-		for($t=0;$t<count($ordre);$t++) {
+		for($t=0;$t<countTriade($ordre);$t++) {
 			$idMatiere=$ordre[$t][0];
 			$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$t][2]);
 			
@@ -237,17 +237,17 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 
 if (isset($_POST["plageEleve"])) {
 	$plageEleve=$_POST["plageEleve"];
-	if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+	if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 	if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 	if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 	if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 	if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 	if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 	if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-	if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+	if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 }else{
 	$dep=0;
-	$nbEleveT=count($eleveT);
+	$nbEleveT=countTriade($eleveT);
 }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
@@ -265,11 +265,11 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$nbjoursabs=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	$nbretard=count($nbretard);
+	$nbretard=countTriade($nbretard);
 	// recherche le nombre d absence
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	for($o=0;$o<=count($nbabs);$o++) {
+	for($o=0;$o<=countTriade($nbabs);$o++) {
 		if ($nbabs[$o][4] > 0) {
 	       		$nbjoursabs = $nbjoursabs + $nbabs[$o][4];
 		}else{
@@ -292,7 +292,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$coordonne0=strtoupper($nom_etablissement);
 	$coordonne1=$adresse;
 	$coordonne2=$postal." - ".ucwords($ville);
-	$coordonne3="Téléphone : ".$tel;
+	$coordonne3="Tï¿½lï¿½phone : ".$tel;
 	$coordonne4="E-mail : ".$mail;
 
 
@@ -310,7 +310,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$titrenote1=LANGBULL32;
 	$titrenote2=LANGBULL31;
 	$titrenote3=LANGBULL33;
-	$titrenote4="Appréciations";
+	$titrenote4="Apprï¿½ciations";
 	$soustitre5=LANGBULL35;
 	$soustitre6=LANGBULL36;
 	$soustitre7=LANGBULL37;
@@ -319,7 +319,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$appreciation=LANGBULL39;
 
-	$appreciationbis="($nbretard retard(s) / $nbabs demi-journée d'absence(s) / $nbheureabs heure(s) d'absence(s) ) " ;
+	$appreciationbis="($nbretard retard(s) / $nbabs demi-journï¿½e d'absence(s) / $nbheureabs heure(s) d'absence(s) ) " ;
 
 	$barre="____________________________________________________________________________________________";
 	$appreciation2=LANGBULL40;
@@ -337,8 +337,8 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$profp=recherche_personne2($idprofp);
 
 
-	// Debut création PDF
-	// mise en place des coordonnées
+	// Debut crï¿½ation PDF
+	// mise en place des coordonnï¿½es
 	$pdf->SetFont('Arial','',12);
 	$pdf->SetXY($xcoor0,$ycoor0);
 	$pdf->WriteHTML($coordonne0);
@@ -397,10 +397,10 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$pdf->SetFillColor(220);
 
-	// adresse de l'élève
+	// adresse de l'ï¿½lï¿½ve
 	// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 	$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -415,11 +415,11 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 		$pdf->SetXY($Xv1,41); 
 		$pdf->SetFont('Arial','',8);
-		$pdf->WriteHTML("N°: $numero_eleve ");
+		$pdf->WriteHTML("Nï¿½: $numero_eleve ");
 		$pdf->SetXY($Xv1,46);
-		$pdf->WriteHTML("Né(e) le $datenaissance");
+		$pdf->WriteHTML("Nï¿½(e) le $datenaissance");
 		$pdf->SetXY($Xv1,51); 
-		$pdf->WriteHTML("Régime: $regime ");
+		$pdf->WriteHTML("Rï¿½gime: $regime ");
 	//	$pdf->SetXY($Xv1+80,44);
 	//	$class_ant=trunchaine($class_ant,40);
 	//	$pdf->WriteHTML("Classe ant.: $class_ant ");
@@ -542,7 +542,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$coeffGen=0;
 
 	$tmatiere="";
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$pdf->SetFont($police,'',$policeT+2);
 		
 		$idMatiere=$ordre[$i][0];
@@ -684,7 +684,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		   $nbVal=0;
 		   $max="";
    		   $min=1000;
-		   for($g=0;$g<count($eleveT);$g++) {
+		   for($g=0;$g<countTriade($eleveT);$g++) {
 	  		   $idEleveMoyen=$eleveT[$g][4];
 			   foreach($tmatiere as $ordre1=>$idmatiere1) {
 				      	$idprof=recherche_prof($idmatiere1,$idClasse,$ordre1);
@@ -734,7 +734,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				$notetype=recherchetypenote($ordre[$i][0],$dateDebut,$dateFin,$idClasse);
 				$max="";
 				$min=1000;
-				for($g=0;$g<count($eleveT);$g++) {
+				for($g=0;$g<countTriade($eleveT);$g++) {
 					// variable eleve
 					$idEleveMoyen=$eleveT[$g][4];
 					$valeur=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -754,7 +754,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				$max="";
 				$min=1000;
 				$eleveTg=listeEleveDansGroupe($idgroupe);
-				for($g=0;$g<count($eleveTg);$g++) {
+				for($g=0;$g<countTriade($eleveTg);$g++) {
 					$idEleveMoyen=$eleveTg[$g];
 					$valeur=moyenneEleveMatiereGroupe($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 					if (trim($valeur) != "") {	
@@ -1019,7 +1019,7 @@ if (MODNAMUR0 == "oui") {
 	// calcul du min et du max
 	$max="";
 	$min=1000;
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$valeur=calculNoteVieScolaire($idEleveMoyen,$coefProf,$coefVieScol,$_POST["saisie_trimestre"]);
@@ -1170,7 +1170,7 @@ $pdf->WriteHTML($moyenClasseMaxaff);
 // fin affichage
 
 
-// cadre appréciation
+// cadre apprï¿½ciation
 $Ycom=$YMoyGE + 12;
 $EpaisCom=30;
 $YcomP1=$Ycom + 1;
@@ -1246,7 +1246,7 @@ bulletin_archivage($_POST["saisie_trimestre"],$anneeScolaire,$fichier,$idEleve,$
 if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') { $merge->add("$fichier"); }
 $listing.="$fichier ";
 $pdf=new PDF();
-} // fin du for on passe à l'eleve suivant
+} // fin du for on passe ï¿½ l'eleve suivant
 $merge->output("./data/pdf_bull/$classe_nom/liste_complete.pdf");
 if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
 	$cmd="gs -q -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=./data/pdf_bull/$classe_nom/liste_complete.pdf -dBATCH $listing";
@@ -1257,13 +1257,13 @@ include_once('./librairie_php/pclzip.lib.php');
 $archive = new PclZip('./data/pdf_bull/'.$classe_nom.'.zip');
 $archive->create('./data/pdf_bull/'.$classe_nom,PCLZIP_OPT_REMOVE_PATH, 'data/pdf_bull/');
 $fichier='./data/pdf_bull/'.$classe_nom.'.zip';
-$bttexte="Récupérer le fichier ZIP des bulletins";
+$bttexte="Rï¿½cupï¿½rer le fichier ZIP des bulletins";
 @nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
 @rmdir('./data/pdf_bull/'.$classe_nom);
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -1277,7 +1277,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 $cr=historyBulletin($fichier,$classe_nom,$_POST["saisie_trimestre"],$dateDebut,$dateFin);
 if($cr == 1){
 		history_cmd($_SESSION["nom"],"CREATION BULLETIN","Classe : $classe_nom");
-        	// alertJs("Bulletin créé -- Service Triade");
+        	// alertJs("Bulletin crï¿½ï¿½ -- Service Triade");
 }else{
 	error(0);
 }

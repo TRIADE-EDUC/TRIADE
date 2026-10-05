@@ -1,18 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cbgenlibre.inc.php,v 1.21 2017-12-06 08:49:39 dgoron Exp $
+// $Id: cbgenlibre.inc.php,v 1.25 2024/01/05 10:12:04 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($sel_type)) $sel_type = '';
+global $msg, $charset, $sub, $action, $current_module, $sel_type, $pmb_param_etiq_codes_barres, $biblio_name;
+global $type_cb_libelle, $type_cb_name, $type_cb_libelle, $bibli_name, $nbr_cb;
+global $ORIENTATION, $CBG_NBR_X_CELLS, $CBG_NBR_Y_CELLS, $CBG_LEFT_MARGIN, $CBG_RIGHT_MARGIN, $CBG_TOP_MARGIN, $CBG_BOTTOM_MARGIN;
+global $CBG_INNER_LEFT_MARGIN, $CBG_INNER_RIGHT_MARGIN, $CBG_INNER_TOP_MARGIN, $CBG_INNER_BOTTOM_MARGIN;
+global $CBG_TEXT_HEIGHT, $CBG_TEXT_FONT_SIZE, $CBG_CB_TEXT_SIZE, $CBG_CB_RES;
 
-// rÃ©cupÃ©ration des valeurs par dÃ©faut:
+// récupération des valeurs par défaut:
 if ($pmb_param_etiq_codes_barres) $mep_etiq_cb=unserialize($pmb_param_etiq_codes_barres);
 	else $mep_etiq_cb=array();
 
-$sel_type=stripslashes($sel_type);
+$sel_type = (isset($sel_type) ? stripslashes($sel_type) : '');
 
 if($action =="delete" && $sel_type!="default" && $sel_type!="new" && $mep_etiq_cb[$sel_type]) {
 	unset($mep_etiq_cb[$sel_type]);
@@ -23,7 +27,7 @@ if($action =="delete" && $sel_type!="default" && $sel_type!="new" && $mep_etiq_c
 	$sel_type="default";
 }
 
-// cas de mÃ©morisation du formulaire 
+// cas de mémorisation du formulaire 
 if($action =="memo") {
 	$sel_type=stripslashes($type_cb_libelle);
 	$mep_etiq_cb[$sel_type]=array();
@@ -118,7 +122,7 @@ if( $sel_type != 'default' && $sel_type != 'new' ) {
 	$button_delete="";
 }
 
-// $cbgen_query : form de demande d'info pour gÃ©nÃ©ration
+// $cbgen_query : form de demande d'info pour génération
 $cbgen_query = "
 <script type='text/javascript'>
 <!--
@@ -169,7 +173,7 @@ $cbgen_query = "
 	}
 	function type_change(selectBox) {
 		id=selectBox.options[selectBox.selectedIndex].value;
-		document.location='./edit.php?categ=cbgen&sub=$sub&sel_type='+".pmb_escape()."(id);
+		document.location='./edit.php?categ=cbgen&sub=$sub&sel_type='+".pmb_escape(false)."(id);
 	}	
 	function submit_genere() {
 		if(test_form(document.forms['cbgen_query'])) {
@@ -225,25 +229,25 @@ $cbgen_query = "
 	$sel_type_tpl
 	<input type='button' class='bouton' value='$msg[edit_cbgen_mep_afficher]' onClick=\"javascript:document.getElementById('layout_mep').style.display='block';document.getElementById('show_layout_button').style.display='none'\">
 	</div>
-<!-- A dÃ©placer dans le fichier langue -->
+<!-- A déplacer dans le fichier langue -->
 <div id='layout_mep' style='display:none;'>$msg[edit_cbgen_mep_etiq]
 <input type='button' class='bouton' value='$msg[edit_cbgen_mep_masquer]' onClick=\"javascript:document.getElementById('layout_mep').style.display='none';document.getElementById('show_layout_button').style.display='block'\"><br />
 <hr />
 <!-- Ajout du changement possible de format de page -->
-<label class='etiquette'>$msg[edit_cbgen_type_cb_label] </label>
+<label class='etiquette' for='type_cb_name'>$msg[edit_cbgen_type_cb_label] </label>
 <input class='saisie-20em' id='type_cb_name' type='text' class='text' name='type_cb_name' value=\"".(isset($mep_etiq_cb[$sel_type]['type_cb_name']) ? htmlentities($mep_etiq_cb[$sel_type]['type_cb_name'],ENT_QUOTES,$charset) : '')."\" />
-<label class='etiquette'>$msg[edit_cbgen_type_cb_libelle] </label> 
+<label class='etiquette' for='type_cb_libelle'>$msg[edit_cbgen_type_cb_libelle] </label> 
 <input class='saisie-20em' id='type_cb_libelle' type='text' class='text' name='type_cb_libelle' value=\"".(isset($mep_etiq_cb[$sel_type]['type_cb_libelle']) ? htmlentities($mep_etiq_cb[$sel_type]['type_cb_libelle'],ENT_QUOTES,$charset) : '')."\" />
 <br /><br />
-<label class='etiquette'>$msg[edit_cbgen_mep_orientation] </label>
-<select name='ORIENTATION' size='1'>
+<label class='etiquette' for='ORIENTATION'>$msg[edit_cbgen_mep_orientation] </label>
+<select id='ORIENTATION' name='ORIENTATION' size='1'>
   <option value='P' $selected_mep_orientation_P>$msg[edit_cbgen_mep_portrait]</option>
   <option value='L' $selected_mep_orientation_L>$msg[edit_cbgen_mep_paysage]</option>
 </select><br />
-<label class='etiquette'>$msg[edit_cbgen_mep_nbr_x_cells]</label><br />
+<label class='etiquette' for='CBG_NBR_X_CELLS'>$msg[edit_cbgen_mep_nbr_x_cells]</label><br />
 <input class='saisie-20em' id='CBG_NBR_X_CELLS' type='text' class='text' name='CBG_NBR_X_CELLS' value=\"".$mep_etiq_cb[$sel_type]['CBG_NBR_X_CELLS']."\"/><br />
 
-<label class='etiquette'>$msg[edit_cbgen_mep_nbr_y_cells]</label><br />
+<label class='etiquette' for='CBG_NBR_Y_CELLS'>$msg[edit_cbgen_mep_nbr_y_cells]</label><br />
 <input class='saisie-20em' id='CBG_NBR_Y_CELLS' type='text' class='text' name='CBG_NBR_Y_CELLS' value=\"".$mep_etiq_cb[$sel_type]['CBG_NBR_Y_CELLS']."\" /><br />
 
 <label class='etiquette'>$msg[edit_cbgen_mep_margin]</label><br />
@@ -258,13 +262,13 @@ $cbgen_query = "
 <input class='saisie-20em' id='CBG_INNER_TOP_MARGIN' type='text' class='text' name='CBG_INNER_TOP_MARGIN' value=\"".$mep_etiq_cb[$sel_type]['CBG_INNER_TOP_MARGIN']."\" /> $msg[edit_cbgen_mep_top]<br />
 <input class='saisie-20em' id='CBG_INNER_BOTTOM_MARGIN' type='text' class='text' name='CBG_INNER_BOTTOM_MARGIN' value=\"".$mep_etiq_cb[$sel_type]['CBG_INNER_BOTTOM_MARGIN']."\" /> $msg[edit_cbgen_mep_bottom]<br />
 
-<label class='etiquette'>$msg[edit_cbgen_mep_text_height]</label><br />
+<label class='etiquette' for='CBG_TEXT_HEIGHT'>$msg[edit_cbgen_mep_text_height]</label><br />
 <input class='saisie-20em' id='CBG_TEXT_HEIGHT' type='text' class='text' name='CBG_TEXT_HEIGHT' value=\"".$mep_etiq_cb[$sel_type]['CBG_TEXT_HEIGHT']."\" /><br />
-<label class='etiquette'>$msg[edit_cbgen_mep_text_font_size]</label><br />
+<label class='etiquette' for='CBG_TEXT_FONT_SIZE'>$msg[edit_cbgen_mep_text_font_size]</label><br />
 <input class='saisie-20em' id='CBG_TEXT_FONT_SIZE' type='text' class='text' name='CBG_TEXT_FONT_SIZE' value=\"".$mep_etiq_cb[$sel_type]['CBG_TEXT_FONT_SIZE']."\" /><br />
-<label class='etiquette'>$msg[edit_cbgen_mep_text_size]</label><br />
+<label class='etiquette' for='CBG_CB_TEXT_SIZE'>$msg[edit_cbgen_mep_text_size]</label><br />
 <input class='saisie-20em' id='CBG_CB_TEXT_SIZE' type='text' class='text' name='CBG_CB_TEXT_SIZE' value=\"".$mep_etiq_cb[$sel_type]['CBG_CB_TEXT_SIZE']."\" /><br />
-<label class='etiquette'>$msg[edit_cbgen_mep_cb_res]</label><br />
+<label class='etiquette' for='CBG_CB_RES'>$msg[edit_cbgen_mep_cb_res]</label><br />
 $msg[edit_cbgen_mep_cb_res_details]<br />
 <input class='saisie-20em' id='CBG_CB_RES' type='text' class='text' name='CBG_CB_RES' value=\"".$mep_etiq_cb[$sel_type]['CBG_CB_RES']."\" /><br />
 $msg[edit_cbgen_mep_cb_res_note]<br />
@@ -289,5 +293,3 @@ $msg[edit_cbgen_mep_cb_res_note]<br />
 ";
 
 print $cbgen_query;
-
-?>

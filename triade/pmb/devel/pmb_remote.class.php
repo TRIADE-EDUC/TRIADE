@@ -1,7 +1,7 @@
 <?php
 /**
- * \brief Class pmb_remote permet de se connecter Ã  un PMB client et d'effectuer des GET et POST tel un navigateur 
- * Voir l'exemple en fin de fichier pour s'initier Ã  la classe
+ * \brief Class pmb_remote permet de se connecter à un PMB client et d'effectuer des GET et POST tel un navigateur 
+ * Voir l'exemple en fin de fichier pour s'initier à la classe
  * @author ngantier
  * \date mars 2008
  * \ingroup server
@@ -14,30 +14,30 @@ class pmb_remote {
 	private $http_proxy='';					// pour utilisation d'un proxy 	
 	private $http_use_cookie=true;			// Gestion d'une session par cookie sur le serveur : false=non, true=oui 
 	private $http_cookie_login=array();		// memo cookie 
-	private $http_cookie_renew_pattern="";	// Expression rÃ©guliÃ¨re qui permet de dÃ©tecter qu'une session par cookie a expirÃ© 
-	private $http_use_ssl=false;				// Utiliser une connexion sÃ©curisÃ©e par ssl : false=non, true=oui 
-	private $http_ssl_key="";				// ClÃ© privÃ©e pour la connexion ssl
-	private $http_ssl_crt="";				// ClÃ© publique pour l'autentification 
+	private $http_cookie_renew_pattern="";	// Expression régulière qui permet de détecter qu'une session par cookie a expiré 
+	private $http_use_ssl=false;				// Utiliser une connexion sécurisée par ssl : false=non, true=oui 
+	private $http_ssl_key="";				// Clé privée pour la connexion ssl
+	private $http_ssl_crt="";				// Clé publique pour l'autentification 
 	private $http_renew_pattern="/login-box/"; // detection d'une erreur de connection de PMB
 	private $http_cookies=array();
-	private $http_core="";		// Corps de la rÃ©ponse http 
-	private $http_header="";	// Hearder de la rÃ©ponse http
+	private $http_core="";		// Corps de la réponse http 
+	private $http_header="";	// Hearder de la réponse http
 	private $curl_link; 		// Lien curl courant
 	private $error=false;		// Si true, il y a eu une erreur lors d'un traitement
 	
 	public $error_message="";	// Si ::error = true, message d'explication de l'erreur 
-	public $response=""; // contenue de la rÃ©ponse: la page html demandÃ©e
+	public $response=""; // contenue de la réponse: la page html demandée
 	/**
 	 * Constructeur
-	 * @param string $pmb_url url de PMB avec / Ã  la fin. Exemple: "https://gestion.bibli.fr/compte_client/"
+	 * @param string $pmb_url url de PMB avec / à la fin. Exemple: "https://gestion.bibli.fr/compte_client/"
 	 * @param string $port Port http du serveur 
-	 * @param string $proxy pour utilisation Ã©ventuel d'un proxy 	
+	 * @param string $proxy pour utilisation éventuel d'un proxy 	
 	 * @param string $user user de la connection
 	 * @param string $password password de la connection
-	 * @param string $database Base de donnÃ©e utilisÃ©e
-	 * @param string $ssl_path path des clÃ©s numÃ©rique avec / Ã  la fin. Exemple: "/home/xxxxxx/.ssl/"
+	 * @param string $database Base de donnée utilisée
+	 * @param string $ssl_path path des clés numérique avec / à la fin. Exemple: "/home/xxxxxx/.ssl/"
 	 */
-    function pmb_remote($pmb_url,$port,$proxy,$user,$password,$database,$ssl_path="") {
+    public function __construct($pmb_url,$port,$proxy,$user,$password,$database,$ssl_path="") {
 		$this->http_url=$pmb_url;
 		$this->http_url_login=$pmb_url."main.php";
 		$this->http_port=$port;
@@ -51,14 +51,14 @@ class pmb_remote {
     }
     
 
-	// fonction appeler par curl pour mÃ©moriser la rÃ©ponse
-	function get_http_core($curl_ressource,$data) {
+	// fonction appeler par curl pour mémoriser la réponse
+	public function get_http_core($curl_ressource,$data) {
 		$this->http_core.=$data;
 		return strlen($data);
 	}
 	
-	// fonction appeler par curl pour mÃ©moriserles entÃªtes de la rÃ©ponse http dans ::http_header
-	function get_http_header($curl_ressource,$data) {
+	// fonction appeler par curl pour mémoriserles entêtes de la réponse http dans ::http_header
+	public function get_http_header($curl_ressource,$data) {
 		if (strpos($data,"Set-Cookie:")!==false) {
 			$this->http_cookies[]=trim(substr($data,12));
 		}
@@ -66,8 +66,8 @@ class pmb_remote {
 		return strlen($data);
 	}
 
-	// Intialise et prÃ©pare les options curl pour la connexion http
-	function prepare_http($http_params) {
+	// Intialise et prépare les options curl pour la connexion http
+	public function prepare_http($http_params) {
 		//Initialisation de la connexion
     	$this->curl_link = curl_init();
 		curl_setopt($this->curl_link, CURLOPT_WRITEFUNCTION,array(&$this,"get_http_core"));
@@ -90,14 +90,14 @@ class pmb_remote {
 	}
 
 	//brief Fermeture de la connexion curl
-	function close_http() {
+	public function close_http() {
 		curl_close($this->curl_link);
 	}
 
 	
-	// fait une requÃªte http par GET ou POST en vÃ©rifiant la session par cookie
-	function make_logged_http_request($url,$post=0,$post_data="") {
-		//Initialisation de la requÃªte
+	// fait une requête http par GET ou POST en vérifiant la session par cookie
+	public function make_logged_http_request($url,$post=0,$post_data="") {
+		//Initialisation de la requête
 		if($post) {
 			$http_params=array(
 				"URL"=>$this->http_url.$url,
@@ -117,24 +117,24 @@ class pmb_remote {
 			if ($this->http_use_cookie) {
 				//Recherche du pattern erreur
 				$p=preg_match($this->http_renew_pattern,$this->http_core);
-				// Si session expirÃ©e, reconnexion
+				// Si session expirée, reconnexion
 				if ($p) {
 					//Reconnexion
 					if ($this->http_do_login()) {
 						$this->prepare_http($http_params);
 						if ($this->make_http_request()) {
-							//On s'est reconnectÃ©, OK !
+							//On s'est reconnecté, OK !
 							return true;
 						} else {
 							//Erreur !
 							$this->error=true;
-							$this->error_message="Impossible d'obtenir une rÃ©ponse Ã  l'URL : ".$this->http_url.$url;
+							$this->error_message="Impossible d'obtenir une réponse à l'URL : ".$this->http_url.$url;
 							return false;
 						}	
 					} else {
 						//Erreur !
 						$this->error=true;
-						$this->error_message="Impossible de recrÃ©er une session valide";
+						$this->error_message="Impossible de recréer une session valide";
 						return false;
 					}
 				}
@@ -142,14 +142,14 @@ class pmb_remote {
 		} else {
 			//Requete pas OK
 			$this->error=true;
-			$this->error_message="Impossible d'obtenir une rÃ©ponse Ã  l'URL : ".$this->http_url.$url;
+			$this->error_message="Impossible d'obtenir une réponse à l'URL : ".$this->http_url.$url;
 			return false;
 		}
 		return true;
 	}
 	
-	// ExÃ©cute la requÃªte http prÃ©parÃ©e par ::http_prepare()
-	function make_http_request() {
+	// Exécute la requête http préparée par ::http_prepare()
+	public function make_http_request() {
 		$this->http_headers="";
 		$this->http_core="";
 		$cexec=curl_exec($this->curl_link);
@@ -158,37 +158,37 @@ class pmb_remote {
 	}
     
     // Login pour une session cookie
-    function http_do_login() {
+    public function http_do_login() {
     	//Y-a-t-il une autentification par cookies ?
 		if ($this->http_use_cookie) {
-			//PrÃ©paration de la requÃªte POST avec les Ã©lÃ©ments de login
+			//Préparation de la requête POST avec les éléments de login
 			$post_vars=array();
 			foreach($this->http_cookie_login as $key=>$val) {
 				$post_vars[]=$key."=".rawurlencode($val);
 			}				
-			//Initialisation de la requÃªte http
+			//Initialisation de la requête http
 			$http_params=array(
 				"POST"=>true,
 				"URL"=>$this->http_url_login,
 				"POSTFIELDS"=>implode("&",$post_vars)
 			);
 			$this->prepare_http($http_params);
-			//Remise Ã  zero des cookies
+			//Remise à zero des cookies
 			$this->http_cookies=array();
 			
 			//Autentification
 			if ($this->make_http_request()) {
-				//A-t-on reÃ§u des cookies ?
+				//A-t-on reçu des cookies ?
 				if (count($this->http_cookies)) {			
 					return true;
 				} else {
-					//L'autentification a Ã©chouÃ©
+					//L'autentification a échoué
 					$this->error=true;
-					$this->error_message="La session http n'a pÃ» Ãªtre crÃ©Ã©e";
+					$this->error_message="La session http n'a pû être créée";
 					return false;
 				}
 			} else {
-				//La requÃªte POST n'a pas marchÃ©
+				//La requête POST n'a pas marché
 				$this->error=true;
 				$this->error_message="Impossible de s'autentifier sur le serveur http !";
 				return false;
@@ -197,13 +197,13 @@ class pmb_remote {
     }
  
     // Effectue l'ouverture de session de pmb
-    function connection() {
+    public function connection() {
  		if(!$this->http_do_login()) return false; 
     	return true;  
     } 
        
-    // Effectue la dÃ©connection
-	function disconnection() {
+    // Effectue la déconnection
+	public function disconnection() {
 		 $this->response='';
   		if(!$this->make_logged_http_request("logout.php",1,"")) {
   			return false;
@@ -212,8 +212,8 @@ class pmb_remote {
   		return true;				
     }   
     
-    // requÃªte http GET
-    function http_get($url) {
+    // requête http GET
+    public function http_get($url) {
     	$this->response='';
   		if(!$this->make_logged_http_request($url)) {
   			return false;
@@ -222,8 +222,8 @@ class pmb_remote {
   		return true;		
     } 
     
-    // requÃªte http POST   
-    function http_post($url,$param) {
+    // requête http POST   
+    public function http_post($url,$param) {
     	$this->response='';
     	$postparam="";
     	foreach($param as $key=>$val) {
@@ -246,7 +246,7 @@ class pmb_remote {
 // instancier la classe pmb_remote
 $pmb=new pmb_remote("https://gestion.bibli.fr/!!client!!/",443,'',"admin","admin","calyon","/home/!!compte_utilisateur!!/.ssl/");
 
-// connection Ã  PMB
+// connection à PMB
 if (!$pmb->connection()) {
 	print $pmb->error_message."\n";
 	exit;

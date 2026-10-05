@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ if ($id != 1) {
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript"<?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print LANGbasededoni91 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -61,9 +61,9 @@ function eclair($x,$y){
 	if (!is_array($x) || !is_array($y)){
 		echo "<br><br><center>".LANGbasededoni92;
 	}
-	array_pad($x,count($y),"");
-	array_pad($y,count($x),"");
-	while(count($x) > 0){
+	array_pad($x,countTriade($y),"");
+	array_pad($y,countTriade($x),"");
+	while(countTriade($x) > 0){
 		$in=gep_classe(array_shift($x),array_shift($y));
 		if ($in == 0) {
 			alertJs(LANGbasededoni93);
@@ -91,7 +91,7 @@ if ($_POST["typefichier"] == "excel" ) {
 		$fp = fopen ("$fic_ascii","r");
 		$str=file_get_contents("$fic_ascii");
 		$rows=CSV2Array($str);
-		for($i=0;$i<count($rows);$i++)  {
+		for($i=0;$i<countTriade($rows);$i++)  {
 				/* 
 1) nom  2) prénom  3) classe  
 4) régime 5) date naissance  6) Lieu de naissance  
@@ -153,54 +153,54 @@ if ($_POST["typefichier"] == "excel" ) {
 
 
 					// création du tableau de hash contenant les paramètres de la fonction create_eleve
-					$params[ne]=            strtolower(trim(addslashes($rows[$i][0])));
-					$params[pe]=            strtolower(trim(addslashes($rows[$i][1])));
-					$params[ce]=            $classe;
-					$params[regime]=        $regime;
-					$params[naiss]=         $date_naissance;   // attend jj/mm/aaaa
-					$params[lieunais]=	strtolower(trim(addslashes($rows[$i][5])));
-					$params[nat]=           strtolower(trim(addslashes($rows[$i][6])));
-					$params[civ_1]=  	civ2($rows[$i][7]);
-					$params[nt]=            strtolower(trim(addslashes($rows[$i][8])));
-					$params[pt]=		strtolower(trim(addslashes($rows[$i][9])));
-					$params[adr1]=        	strtolower(trim(addslashes($rows[$i][10])));
-					$params[cpadr1]=      	strtolower(trim(addslashes($rows[$i][11])));
-					$params[commadr1]=     	strtolower(trim(addslashes($rows[$i][12])));
-					$params[tel_port_1]=   	strtolower(trim(addslashes($rows[$i][13])));
-					$params[civ_2]=  	civ2($rows[$i][14]);
-					$params[nom_resp2]=	strtolower(trim(addslashes($rows[$i][15])));
-					$params[prenom_resp2]=	strtolower(trim(addslashes($rows[$i][16])));
-					$params[adr2]=          strtolower(trim(addslashes($rows[$i][17])));
-					$params[cpadr2]=       	strtolower(trim(addslashes($rows[$i][18])));
-					$params[commadr2]=     	strtolower(trim(addslashes($rows[$i][19])));
-					$params[tel_port_2]=   	strtolower(trim(addslashes($rows[$i][20])));
-					$params[tel]=          	strtolower(trim(addslashes($rows[$i][21])));
-					$params[tel_eleve]=	trim($rows[$i][22]);
-					$params[profp]=        	strtolower(trim(addslashes($rows[$i][23])));
-					$params[telprofp]=     	strtolower(trim(addslashes($rows[$i][24])));
-					$params[profm]=        	strtolower(trim(addslashes($rows[$i][25])));
-					$params[telprofm]=     	strtolower(trim(addslashes($rows[$i][26])));
-					$params[nomet]=        	strtolower(trim(addslashes($rows[$i][27])));
-					$params[numet]=        	strtolower(trim(addslashes($rows[$i][28])));
-					$params[cpet]=         	"";
-					$params[commet]=    	"";
-					$params[lv1]=        	strtolower(trim(addslashes($rows[$i][29])));
-					$params[lv2]=        	strtolower(trim(addslashes($rows[$i][30])));
-					$params[option]=        strtolower(trim(addslashes($rows[$i][31])));
-					$params[numero_eleve]=  trim(addslashes($rows[$i][32]));
-					$params[mdp]=           $passwd;
-					$params[email]=  	trim(addslashes($rows[$i][34]));
-					$params[mail_eleve]=  	trim(addslashes($rows[$i][35]));
-					$params[classe_ant]=  	strtolower(trim($rows[$i][36]));
-					$params[annee_ant]=  	trim(addslashes($rows[$i][37]));
-					$params[mdpeleve]=	$passwd_eleve;
-					$params[adr_eleve]=  	trim(addslashes($rows[$i][40]));
-					$params[commune_eleve]= trim(addslashes($rows[$i][41]));
-					$params[ccp_eleve]=  	trim(addslashes($rows[$i][42]));
-					$params[tel_fixe_eleve]=trim(addslashes($rows[$i][43]));
-					$params[mailpro_eleve]=	trim(addslashes($rows[$i][44]));
-					$params[sexe]=		strtolower(trim(addslashes($rows[$i][45])));
-					$params[annee_scolaire] = $_POST["annee_scolaire"];
+					$params['ne']=            strtolower(trim(addslashes($rows[$i][0])));
+					$params['pe']=            strtolower(trim(addslashes($rows[$i][1])));
+					$params['ce']=            $classe;
+					$params['regime']=        $regime;
+					$params['naiss']=         $date_naissance;   // attend jj/mm/aaaa
+					$params['lieunais']=	strtolower(trim(addslashes($rows[$i][5])));
+					$params['nat']=           strtolower(trim(addslashes($rows[$i][6])));
+					$params['civ_1']=  	civ2($rows[$i][7]);
+					$params['nt']=            strtolower(trim(addslashes($rows[$i][8])));
+					$params['pt']=		strtolower(trim(addslashes($rows[$i][9])));
+					$params['adr1']=        	strtolower(trim(addslashes($rows[$i][10])));
+					$params['cpadr1']=      	strtolower(trim(addslashes($rows[$i][11])));
+					$params['commadr1']=     	strtolower(trim(addslashes($rows[$i][12])));
+					$params['tel_port_1']=   	strtolower(trim(addslashes($rows[$i][13])));
+					$params['civ_2']=  	civ2($rows[$i][14]);
+					$params['nom_resp2']=	strtolower(trim(addslashes($rows[$i][15])));
+					$params['prenom_resp2']=	strtolower(trim(addslashes($rows[$i][16])));
+					$params['adr2']=          strtolower(trim(addslashes($rows[$i][17])));
+					$params['cpadr2']=       	strtolower(trim(addslashes($rows[$i][18])));
+					$params['commadr2']=     	strtolower(trim(addslashes($rows[$i][19])));
+					$params['tel_port_2']=   	strtolower(trim(addslashes($rows[$i][20])));
+					$params['tel']=          	strtolower(trim(addslashes($rows[$i][21])));
+					$params['tel_eleve']=	trim($rows[$i][22]);
+					$params['profp']=        	strtolower(trim(addslashes($rows[$i][23])));
+					$params['telprofp']=     	strtolower(trim(addslashes($rows[$i][24])));
+					$params['profm']=        	strtolower(trim(addslashes($rows[$i][25])));
+					$params['telprofm']=     	strtolower(trim(addslashes($rows[$i][26])));
+					$params['nomet']=        	strtolower(trim(addslashes($rows[$i][27])));
+					$params['numet']=        	strtolower(trim(addslashes($rows[$i][28])));
+					$params['cpet']=         	"";
+					$params['commet']=    	"";
+					$params['lv1']=        	strtolower(trim(addslashes($rows[$i][29])));
+					$params['lv2']=        	strtolower(trim(addslashes($rows[$i][30])));
+					$params['option']=        strtolower(trim(addslashes($rows[$i][31])));
+					$params['numero_eleve']=  trim(addslashes($rows[$i][32]));
+					$params['mdp']=           $passwd;
+					$params['email']=  	trim(addslashes($rows[$i][34]));
+					$params['mail_eleve']=  	trim(addslashes($rows[$i][35]));
+					$params['classe_ant']=  	strtolower(trim($rows[$i][36]));
+					$params['annee_ant']=  	trim(addslashes($rows[$i][37]));
+					$params['mdpeleve']=	$passwd_eleve;
+					$params['adr_eleve']=  	trim(addslashes($rows[$i][40]));
+					$params['commune_eleve']= trim(addslashes($rows[$i][41]));
+					$params['ccp_eleve']=  	trim(addslashes($rows[$i][42]));
+					$params['tel_fixe_eleve']=trim(addslashes($rows[$i][43]));
+					$params['mailpro_eleve']=	trim(addslashes($rows[$i][44]));
+					$params['sexe']=		strtolower(trim(addslashes($rows[$i][45])));
+					$params['annee_scolaire'] = $_POST["annee_scolaire"];
 
 					// nouvelle version de create_eleve()
 					$ascii=1;
@@ -218,54 +218,54 @@ if ($_POST["typefichier"] == "excel" ) {
 		}else{
 					$nbelevetotal++;
 					// création du tableau de hash contenant les paramètres de la fonction create_eleve
-					$params[ne]=            strtolower(trim(addslashes($rows[$i][0])));
-					$params[pe]=            strtolower(trim(addslashes($rows[$i][1])));
-					$params[ce]=            $classe;
-					$params[regime]=        $regime;
-					$params[naiss]=         $date_naissance;   // attend jj/mm/aaaa
-					$params[lieunais]=	strtolower(trim(addslashes($rows[$i][5])));
-					$params[nat]=           strtolower(trim(addslashes($rows[$i][6])));
-					$params[civ_1]=  	civ2($rows[$i][7]);
-					$params[nt]=            strtolower(trim(addslashes($rows[$i][8])));
-					$params[pt]=		strtolower(trim(addslashes($rows[$i][9])));
-					$params[adr1]=        	strtolower(trim(addslashes($rows[$i][10])));
-					$params[cpadr1]=      	strtolower(trim(addslashes($rows[$i][11])));
-					$params[commadr1]=     	strtolower(trim(addslashes($rows[$i][12])));
-					$params[tel_port_1]=   	strtolower(trim(addslashes($rows[$i][13])));
-					$params[civ_2]=  	civ2($rows[$i][14]);
-					$params[nom_resp2]=	strtolower(trim(addslashes($rows[$i][15])));
-					$params[prenom_resp2]=	strtolower(trim(addslashes($rows[$i][16])));
-					$params[adr2]=          strtolower(trim(addslashes($rows[$i][17])));
-					$params[cpadr2]=       	strtolower(trim(addslashes($rows[$i][18])));
-					$params[commadr2]=     	strtolower(trim(addslashes($rows[$i][19])));
-					$params[tel_port_2]=   	strtolower(trim(addslashes($rows[$i][20])));
-					$params[tel]=          	strtolower(trim(addslashes($rows[$i][21])));
-					$params[tel_eleve]=	trim($rows[$i][22]);
-					$params[profp]=        	strtolower(trim(addslashes($rows[$i][23])));
-					$params[telprofp]=     	strtolower(trim(addslashes($rows[$i][24])));
-					$params[profm]=        	strtolower(trim(addslashes($rows[$i][25])));
-					$params[telprofm]=     	strtolower(trim(addslashes($rows[$i][26])));
-					$params[nomet]=        	strtolower(trim(addslashes($rows[$i][27])));
-					$params[numet]=        	strtolower(trim(addslashes($rows[$i][28])));
-					$params[cpet]=         	"";
-					$params[commet]=    	"";
-					$params[lv1]=        	strtolower(trim(addslashes($rows[$i][29])));
-					$params[lv2]=        	strtolower(trim(addslashes($rows[$i][30])));
-					$params[option]=        strtolower(trim(addslashes($rows[$i][31])));
-					$params[numero_eleve]=  trim(addslashes($rows[$i][32]));
-					$params[mdp]=           $passwd;
-					$params[email]=  	trim(addslashes($rows[$i][34]));
-					$params[mail_eleve]=  	trim(addslashes($rows[$i][35]));
-					$params[classe_ant]=  	strtolower(trim($rows[$i][36]));
-					$params[annee_ant]=  	trim(addslashes($rows[$i][37]));
-					$params[mdpeleve]=	$passwd_eleve;
-					$params[adr_eleve]=  	trim(addslashes($rows[$i][40]));
-					$params[commune_eleve]= trim(addslashes($rows[$i][41]));
-					$params[ccp_eleve]=  	trim(addslashes($rows[$i][42]));
-					$params[tel_fixe_eleve]=trim(addslashes($rows[$i][43]));
-					$params[mailpro_eleve]=	trim(addslashes($rows[$i][44]));
-					$params[sexe]=		strtolower(trim(addslashes($rows[$i][45])));
-					$params[annee_scolaire] = $_POST["annee_scolaire"];
+					$params['ne']=            strtolower(trim(addslashes($rows[$i][0])));
+					$params['pe']=            strtolower(trim(addslashes($rows[$i][1])));
+					$params['ce']=            $classe;
+					$params['regime']=        $regime;
+					$params['naiss']=         $date_naissance;   // attend jj/mm/aaaa
+					$params['lieunais']=	strtolower(trim(addslashes($rows[$i][5])));
+					$params['nat']=           strtolower(trim(addslashes($rows[$i][6])));
+					$params['civ_1']=  	civ2($rows[$i][7]);
+					$params['nt']=            strtolower(trim(addslashes($rows[$i][8])));
+					$params['pt']=		strtolower(trim(addslashes($rows[$i][9])));
+					$params['adr1']=        	strtolower(trim(addslashes($rows[$i][10])));
+					$params['cpadr1']=      	strtolower(trim(addslashes($rows[$i][11])));
+					$params['commadr1']=     	strtolower(trim(addslashes($rows[$i][12])));
+					$params['tel_port_1']=   	strtolower(trim(addslashes($rows[$i][13])));
+					$params['civ_2']=  	civ2($rows[$i][14]);
+					$params['nom_resp2']=	strtolower(trim(addslashes($rows[$i][15])));
+					$params['prenom_resp2']=	strtolower(trim(addslashes($rows[$i][16])));
+					$params['adr2']=          strtolower(trim(addslashes($rows[$i][17])));
+					$params['cpadr2']=       	strtolower(trim(addslashes($rows[$i][18])));
+					$params['commadr2']=     	strtolower(trim(addslashes($rows[$i][19])));
+					$params['tel_port_2']=   	strtolower(trim(addslashes($rows[$i][20])));
+					$params['tel']=          	strtolower(trim(addslashes($rows[$i][21])));
+					$params['tel_eleve']=	trim($rows[$i][22]);
+					$params['profp']=        	strtolower(trim(addslashes($rows[$i][23])));
+					$params['telprofp']=     	strtolower(trim(addslashes($rows[$i][24])));
+					$params['profm']=        	strtolower(trim(addslashes($rows[$i][25])));
+					$params['telprofm']=     	strtolower(trim(addslashes($rows[$i][26])));
+					$params['nomet']=        	strtolower(trim(addslashes($rows[$i][27])));
+					$params['numet']=        	strtolower(trim(addslashes($rows[$i][28])));
+					$params['cpet']=         	"";
+					$params['commet']=    	"";
+					$params['lv1']=        	strtolower(trim(addslashes($rows[$i][29])));
+					$params['lv2']=        	strtolower(trim(addslashes($rows[$i][30])));
+					$params['option']=        strtolower(trim(addslashes($rows[$i][31])));
+					$params['numero_eleve']=  trim(addslashes($rows[$i][32]));
+					$params['mdp']=           $passwd;
+					$params['email']=  	trim(addslashes($rows[$i][34]));
+					$params['mail_eleve']=  	trim(addslashes($rows[$i][35]));
+					$params['classe_ant']=  	strtolower(trim($rows[$i][36]));
+					$params['annee_ant']=  	trim(addslashes($rows[$i][37]));
+					$params['mdpeleve']=	$passwd_eleve;
+					$params['adr_eleve']=  	trim(addslashes($rows[$i][40]));
+					$params['commune_eleve']= trim(addslashes($rows[$i][41]));
+					$params['ccp_eleve']=  	trim(addslashes($rows[$i][42]));
+					$params['tel_fixe_eleve']=trim(addslashes($rows[$i][43]));
+					$params['mailpro_eleve']=	trim(addslashes($rows[$i][44]));
+					$params['sexe']=		strtolower(trim(addslashes($rows[$i][45])));
+					$params['annee_scolaire'] = $_POST["annee_scolaire"];
 					// nouvelle create eleve sans classe
 					$ascii=1;
 					$cr=@create_eleve_sans_classe($params,$ascii);
@@ -284,7 +284,7 @@ if ($_POST["typefichier"] == "excel" ) {
 			// creation ou mise a jour du fichier log  avec prise en
 			$today=dateDMY();
 			$fichier_s=fopen("./data/fic_opinion.txt","a+");
-			$donnee=fwrite($fichier_s,"<BR>Message du : <FONT color=red>$today</font> De :<FONT color=red> $_SESSION[nom] $_SESSION[prenom]</FONT> <BR>Membre : <font color=red> $_SESSION[membre] </FONT><BR> <B>Message :</B> <font color=red> NOUVELLE BASE </font> - avec fichier EXCEL <BR>  Etablissement : <font color=red>".REPECOLE."</font> ");
+			$donnee=fwrite($fichier_s,"<BR>Message du : <FONT color=red>$today</font> De :<FONT color=red> $_SESSION[nom] $_SESSION[prenom]</FONT> <BR>Membre : <font color=red> ".$_SESSION['membre']." </FONT><BR> <B>Message :</B> <font color=red> NOUVELLE BASE </font> - avec fichier EXCEL <BR>  Etablissement : <font color=red>".REPECOLE."</font> ");
 			fclose($fichier_s);
 
 			// suppression du fichier ASCII
@@ -353,57 +353,54 @@ if ($_POST["typefichier"] == "txt" ) {
 					$nbelevetotal++;
 
 					// création du tableau de hash contenant les paramètres de la fonction create_eleve
-					$params[ne]=            strtolower(trim(addslashes($nomE)));
-					$params[pe]=            strtolower(trim(addslashes($prenomE)));
-					$params[ce]=            $classe;
-					$params[lv1]=           strtolower(trim(addslashes($lv1)));
-					$params[lv2]=           strtolower(trim(addslashes($lv2)));
-					$params[option]=        $option;
+					$params['ne']=            strtolower(trim(addslashes($nomE)));
+					$params['pe']=            strtolower(trim(addslashes($prenomE)));
+					$params['ce']=            $classe;
+					$params['lv1']=           strtolower(trim(addslashes($lv1)));
+					$params['lv2']=           strtolower(trim(addslashes($lv2)));
+					$params['option']=        $option;
 					// faire un module pour le regime valeur possible 0,1,2,3
-					$params[regime]=        $regime;
-					$params[naiss]=         $date_naissance;
-					$params[lieunais]=	strtolower(trim(addslashes($lieunaissance)));
-					$params[nat]=           strtolower(trim(addslashes($nationalite)));
-					$params[mdp]=           $passwd;
-					$params[mdpeleve]=	$passwd_eleve;
-					$params[nt]=            strtolower(trim(addslashes($nom_tuteur)));
-					$params[pt]=		strtolower(trim(addslashes($prenom_tuteur)));
-					$params[adr1]=        	strtolower(trim(addslashes($adr1)));
-					$params[cpadr1]=      	strtolower(trim(addslashes($code_postal)));
-					$params[commadr1]=     	strtolower(trim(addslashes($commune)));
-					$params[tel_port_1]=   	strtolower(trim(addslashes($telportable1)));
-					$params[adr2]=          strtolower(trim(addslashes($adr2)));
-					$params[cpadr2]=       	strtolower(trim(addslashes($code_postal2)));
-					$params[commadr2]=     	strtolower(trim(addslashes($commune2)));
-					$params[tel_port_2]=   	strtolower(trim(addslashes($telportable2)));
-					$params[tel]=          	strtolower(trim(addslashes($tel)));
-					$params[profp]=        	strtolower(trim(addslashes($prof_pere)));
-					$params[telprofp]=     	strtolower(trim(addslashes($tel_prof_pere)));
-					$params[profm]=        	strtolower(trim(addslashes($prof_mere)));
-					$params[telprofm]=     	strtolower(trim(addslashes($tel_prof_mere)));
-					$params[nomet]=        	$nom_etablissement;
-					$params[numet]=        	strtolower(trim(addslashes($num_etablissement)));
-					$params[cpet]=         	"";
-					$params[commet]=    	"";
-					$params[numero_eleve]=  trim(addslashes($numeleve));
-					$params[email]=  	trim(addslashes($email));
-					$params[classe_ant]=  	strtolower(trim(addslashes($classe_ant)));
-					$params[annee_ant]=  	$annee_ant;
-
-
-					$params[civ_1]=  	civ2($civ1);
-					$params[civ_2]=  	civ2($civ2);
-					$params[nom_resp2]=	strtolower(trim($nom2));
-					$params[prenom_resp2]=	strtolower(trim($prenom2));
-					$params[mail_eleve]=  	trim(addslashes($email_eleve));
-					$params[tel_eleve]=	trim($tel_eleve);
-
-					$params[adr_eleve]=  	trim(addslashes($adr_eleve));
-					$params[commune_eleve]= trim(addslashes($commune_eleve));
-					$params[ccp_eleve]=  	trim(addslashes($ccp_eleve));
-					$params[tel_fixe_eleve]=trim(addslashes($tel_fixe_eleve));
-					$params[mailpro_eleve]=trim(addslashes($email_universitaire));
-					$params[annee_scolaire] = $_POST["annee_scolaire"];
+					$params['regime']=        $regime;
+					$params['naiss']=         $date_naissance;
+					$params['lieunais']=	strtolower(trim(addslashes($lieunaissance)));
+					$params['nat']=           strtolower(trim(addslashes($nationalite)));
+					$params['mdp']=           $passwd;
+					$params['mdpeleve']=	$passwd_eleve;
+					$params['nt']=            strtolower(trim(addslashes($nom_tuteur)));
+					$params['pt']=		strtolower(trim(addslashes($prenom_tuteur)));
+					$params['adr1']=        	strtolower(trim(addslashes($adr1)));
+					$params['cpadr1']=      	strtolower(trim(addslashes($code_postal)));
+					$params['commadr1']=     	strtolower(trim(addslashes($commune)));
+					$params['tel_port_1']=   	strtolower(trim(addslashes($telportable1)));
+					$params['adr2']=          strtolower(trim(addslashes($adr2)));
+					$params['cpadr2']=       	strtolower(trim(addslashes($code_postal2)));
+					$params['commadr2']=     	strtolower(trim(addslashes($commune2)));
+					$params['tel_port_2']=   	strtolower(trim(addslashes($telportable2)));
+					$params['tel']=          	strtolower(trim(addslashes($tel)));
+					$params['profp']=        	strtolower(trim(addslashes($prof_pere)));
+					$params['telprofp']=     	strtolower(trim(addslashes($tel_prof_pere)));
+					$params['profm']=        	strtolower(trim(addslashes($prof_mere)));
+					$params['telprofm']=     	strtolower(trim(addslashes($tel_prof_mere)));
+					$params['nomet']=        	$nom_etablissement;
+					$params['numet']=        	strtolower(trim(addslashes($num_etablissement)));
+					$params['cpet']=         	"";
+					$params['commet']=    	"";
+					$params['numero_eleve']=  trim(addslashes($numeleve));
+					$params['email']=  	trim(addslashes($email));
+					$params['classe_ant']=  	strtolower(trim(addslashes($classe_ant)));
+					$params['annee_ant']=  	$annee_ant;
+					$params['civ_1']=  	civ2($civ1);
+					$params['civ_2']=  	civ2($civ2);
+					$params['nom_resp2']=	strtolower(trim($nom2));
+					$params['prenom_resp2']=	strtolower(trim($prenom2));
+					$params['mail_eleve']=  	trim(addslashes($email_eleve));
+					$params['tel_eleve']=	trim($tel_eleve);
+					$params['adr_eleve']=  	trim(addslashes($adr_eleve));
+					$params['commune_eleve']= trim(addslashes($commune_eleve));
+					$params['ccp_eleve']=  	trim(addslashes($ccp_eleve));
+					$params['tel_fixe_eleve']=trim(addslashes($tel_fixe_eleve));
+					$params['mailpro_eleve']=trim(addslashes($email_universitaire));
+					$params['annee_scolaire'] = $_POST["annee_scolaire"];
 
 					// nouvelle version de create_eleve()
 					$ascii=1;
@@ -421,55 +418,55 @@ if ($_POST["typefichier"] == "txt" ) {
 			}else{
 					$nbelevetotal++;
 					// création du tableau de hash contenant les paramètres de la fonction create_eleve
-					$params[ne]=            strtolower(trim(addslashes($nomE)));
-					$params[pe]=            strtolower(trim(addslashes($prenomE)));
-					$params[lv1]=           strtolower(trim($lv1));
-					$params[lv2]=           strtolower(trim($lv2));
-					$params[option]=        	$option;
+					$params['ne']=            strtolower(trim(addslashes($nomE)));
+					$params['pe']=            strtolower(trim(addslashes($prenomE)));
+					$params['lv1']=           strtolower(trim($lv1));
+					$params['lv2']=           strtolower(trim($lv2));
+					$params['option']=        	$option;
 					// faire un module pour le regime valeur possible 0,1,2,3
-					$params[regime]=        $regime;
-					$params[naiss]=         $date_naissance;
-					$params[lieunais]=	strtolower(trim(addslashes($lieunaissance)));
-					$params[nat]=           strtolower(trim(addslashes($nationalite)));
-					$params[mdp]=           $passwd;
-					$params[mdpeleve]=	$passwd_eleve;
-					$params[nt]=            strtolower(trim(addslashes($nom_tuteur)));
-					$params[pt]=		strtolower(trim(addslashes($prenom_tuteur)));
-					$params[adr1]=        	strtolower(trim(addslashes($adr1)));
-					$params[cpadr1]=      	strtolower(trim(addslashes($code_postal)));
-					$params[commadr1]=     	strtolower(trim(addslashes($commune)));
-					$params[adr2]=          strtolower(trim(addslashes($adr2)));
-					$params[tel_port_2]=   	strtolower(trim(addslashes($telportable2)));
-					$params[tel_port_1]=   	strtolower(trim(addslashes($telportable1)));
-					$params[cpadr2]=       	strtolower(trim(addslashes($code_postal2)));
-					$params[commadr2]=     	strtolower(trim(addslashes($commune2)));
-					$params[tel]=          	strtolower(trim(addslashes($tel)));
-					$params[profp]=        	strtolower(trim(addslashes($prof_pere)));
-					$params[telprofp]=     	strtolower(trim(addslashes($tel_prof_pere)));
-					$params[profm]=        	strtolower(trim(addslashes($prof_mere)));
-					$params[telprofm]=     	strtolower(trim(addslashes($tel_prof_mere)));
-					$params[nomet]=        	$nom_etablissement;
-					$params[numet]=        	strtolower(trim(addslashes($num_etablissement)));
-					$params[cpet]=         	"";
-					$params[commet]=    	"";
-					$params[numero_eleve]=  trim(addslashes($numeleve));
-					$params[email]=  	trim(addslashes($email));
-					$params[classe_ant]=  	strtolower(trim(addslashes($classe_ant)));
-					$params[annee_ant]=  	$annee_ant;
+					$params['regime']=        $regime;
+					$params['naiss']=         $date_naissance;
+					$params['lieunais']=	strtolower(trim(addslashes($lieunaissance)));
+					$params['nat']=           strtolower(trim(addslashes($nationalite)));
+					$params['mdp']=           $passwd;
+					$params['mdpeleve']=	$passwd_eleve;
+					$params['nt']=            strtolower(trim(addslashes($nom_tuteur)));
+					$params['pt']=		strtolower(trim(addslashes($prenom_tuteur)));
+					$params['adr1']=        	strtolower(trim(addslashes($adr1)));
+					$params['cpadr1']=      	strtolower(trim(addslashes($code_postal)));
+					$params['commadr1']=     	strtolower(trim(addslashes($commune)));
+					$params['adr2']=          strtolower(trim(addslashes($adr2)));
+					$params['tel_port_2']=   	strtolower(trim(addslashes($telportable2)));
+					$params['tel_port_1']=   	strtolower(trim(addslashes($telportable1)));
+					$params['cpadr2']=       	strtolower(trim(addslashes($code_postal2)));
+					$params['commadr2']=     	strtolower(trim(addslashes($commune2)));
+					$params['tel']=          	strtolower(trim(addslashes($tel)));
+					$params['profp']=        	strtolower(trim(addslashes($prof_pere)));
+					$params['telprofp']=     	strtolower(trim(addslashes($tel_prof_pere)));
+					$params['profm']=        	strtolower(trim(addslashes($prof_mere)));
+					$params['telprofm']=     	strtolower(trim(addslashes($tel_prof_mere)));
+					$params['nomet']=        	$nom_etablissement;
+					$params['numet']=        	strtolower(trim(addslashes($num_etablissement)));
+					$params['cpet']=         	"";
+					$params['commet']=    	"";
+					$params['numero_eleve']=  trim(addslashes($numeleve));
+					$params['email']=  	trim(addslashes($email));
+					$params['classe_ant']=  	strtolower(trim(addslashes($classe_ant)));
+					$params['annee_ant']=  	$annee_ant;
 
-					$params[civ_1]=  	civ2($civ1);
-					$params[civ_2]=  	civ2($civ2);
-					$params[nom_resp2]=	strtolower(trim($nom2));
-					$params[prenom_resp2]=	strtolower(trim($prenom2));
-					$params[mail_eleve]=  	trim(addslashes($email_eleve));
-					$params[tel_eleve]=	trim($tel_eleve);
+					$params['civ_1']=  	civ2($civ1);
+					$params['civ_2']=  	civ2($civ2);
+					$params['nom_resp2']=	strtolower(trim($nom2));
+					$params['prenom_resp2']=	strtolower(trim($prenom2));
+					$params['mail_eleve']=  	trim(addslashes($email_eleve));
+					$params['tel_eleve']=	trim($tel_eleve);
 
-					$params[adr_eleve]=  	trim(addslashes($adr_eleve));
-					$params[commune_eleve]= trim(addslashes($commune_eleve));
-					$params[ccp_eleve]=  	trim(addslashes($ccp_eleve));
-					$params[tel_fixe_eleve]=trim(addslashes($tel_fixe_eleve));
-					$params[mailpro_eleve]=trim(addslashes($email_universitaire));
-					$params[annee_scolaire] = $_POST["annee_scolaire"];
+					$params['adr_eleve']=  	trim(addslashes($adr_eleve));
+					$params['commune_eleve']= trim(addslashes($commune_eleve));
+					$params['ccp_eleve']=  	trim(addslashes($ccp_eleve));
+					$params['tel_fixe_eleve']=trim(addslashes($tel_fixe_eleve));
+					$params['mailpro_eleve']=trim(addslashes($email_universitaire));
+					$params['annee_scolaire'] = $_POST["annee_scolaire"];
 
 					// nouvelle create eleve sans classe
 					$ascii=1;
@@ -522,5 +519,5 @@ if (file_exists("./data/fic_pass.txt")) {
 </font></ul>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

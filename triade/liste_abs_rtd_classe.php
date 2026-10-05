@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,18 +26,19 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtd3.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtdplanifier.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Vie Scolaire - Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
+<title>Vie Scolaire - Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php
 include_once("./librairie_php/lib_licence.php");
-// connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 	$profpclasse=$_SESSION["profpclasse"];
@@ -47,68 +48,50 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 }
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGDISC46 ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td ><br><br>
-     <!-- // fin  -->
-<form method=post name=formulaire target="_blank" action="liste_abs_rtd_classe2.php">
-<table width="100%" border="0" align="center">
-<tr>
-<td align="right"><font class='T2'><?php print LANGDISC47 ?> :</font></td>
-<td colspan="2"   align="left"><input type="text" value="" name="saisie_date_debut" TYPE="text" size=13  class=bouton2 readonly>
-<?php
- include_once("librairie_php/calendar.php");
- calendar("id1","document.formulaire.saisie_date_debut",$_SESSION["langue"],"0");
-?>
-</td>
-</tr>
-<tr>
-<td  align="right"><br><font class='T2'><?php print LANGDISC48 ?> : </font></td>
-<td colspan="2"  align="left"><br><input type="text" value="" name="saisie_date_fin" TYPE="text" size=13 class=bouton2 readonly>
-<?php
- calendar("id2","document.formulaire.saisie_date_fin",$_SESSION["langue"],"0");
-?>
-</td>
-</tr>
-<tr>
-<td ><div align="right"><br><font class='T2'><?php print LANGDISC49 ?> : </font></div></td>
-<td colspan="2" ><br>
-<select name="saisie_classe">
-<option selected value=0 selected   STYLE='color:#000066;background-color:#FCE4BA' ><?php print LANGCHOIX ?></option>
-<?php select_classe2(25);?>
-</select>
-</td></tr>
-</table>
-<br>
-<table border=0 align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit3("<?php print LANGPER27 ?>","rien",""); //text,nomInput</script></td></tr></table>
-</form>
-<br>
-     <!-- // fin  -->
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-   if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-       print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-       print "</SCRIPT>";
-   else :
-      print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-      print "</SCRIPT>";
-      top_d();
-      print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-      print "</SCRIPT>";
-    endif ;
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGDISC46 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 
-// deconnexion en fin de fichier
+<form method="post" name="formulaire" target="_blank" action="liste_abs_rtd_classe2.php">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC47 ?> :</span>
+    <input type="text" value="" name="saisie_date_debut" class="cc-select" style="width:90px;" readonly>
+    <?php include_once("librairie_php/calendar.php"); calendar("id1","document.formulaire.saisie_date_debut",$_SESSION["langue"],"0"); ?>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC48 ?> :</span>
+    <input type="text" value="" name="saisie_date_fin" class="cc-select" style="width:90px;" readonly>
+    <?php calendar("id2","document.formulaire.saisie_date_fin",$_SESSION["langue"],"0"); ?>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC49 ?> :</span>
+    <select name="saisie_classe" class="cc-select">
+      <option value=0 style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_classe2(25); ?>
+    </select>
+  </div>
+</div>
+<br>
+<span style="display:flex;margin:0 5px;"><script language=JavaScript>buttonMagicSubmit3("<?php print LANGPER27 ?>","rien","");</script></span>
+<br><br>
+</form>
+
+</td></tr></table>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
 Pgclose();
 ?>
 </BODY></HTML>

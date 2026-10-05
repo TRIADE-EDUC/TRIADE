@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: AdminSource.xml,v 1.1 2024/02/26 14:28:55 dbellamy Exp $ -->
+
+<source>
+    
+    <methods>
+    
+        <!-- Nb de tâches arrêtées -->
+        <nb_task_stopped>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM taches WHERE status=5</query>
+        </nb_task_stopped>
+        
+        <!-- Nb de tâches en échec -->
+        <nb_task_failed>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM taches WHERE status=6</query>
+        </nb_task_failed>
+        
+        <!-- Nb de tâches en attente -->
+        <nb_task_pending>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM taches WHERE status=1</query>
+        </nb_task_pending>
+        
+        <!-- Statut sphinx -->
+        <sphinx_status>
+            <type>method</type>
+            <method>getSphinxStatus</method>
+        </sphinx_status>
+        
+    </methods>
+</source>

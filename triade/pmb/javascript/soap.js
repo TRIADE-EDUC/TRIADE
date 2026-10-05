@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: soap.js,v 1.4 2016-12-27 16:26:28 dgoron Exp $
+// $Id: soap.js,v 1.4 2016/12/27 16:26:28 dgoron Exp $
 /// Ajax = Asynchronous JavaScript + XML (+ HTML)
 /// Ajax framework for Internet Explorer (6.0, ...) and Firefox (1.0, ...)
 /// by Matthias Hertel

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,35 +34,31 @@ session_start();
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 validerequete("menuadmin");
-$cnx=cnx();
 
-if (!isset($_POST["aucun_eleve"])) {
-	if (count($_POST["saisie_liste"]) <= 0 ) {
-?>
-		<script language=JavaScript>
-		alert("<?php print LANGGRP22?>");
-		location.href="creat_groupe.php";
-		</script>
-
-<?php
-	}
-}else{
-
-	if ((count($_POST["saisie_liste"]) <= 0 ) && ($_POST["aucun_eleve"] != "1") ) {
+if (!isset($_POST["saisie_choix_eleve"])) {
+	if ((countTriade($_POST["saisie_liste"]) <= 0 ) && ($_POST["aucun_eleve"] != "1") ) {
+		if (!isset($_POST["aucun_eleve"])) { ?>
+			<script language=JavaScript>
+			alert("<?php print LANGGRP22?>");
+			location.href="creat_groupe.php";
+			</script>
+	<?php
+		}else{
+			if ((countTriade($_POST["saisie_liste"]) <= 0 ) && ($_POST["aucun_eleve"] != "1") ) {
 	?>
-		<script language=JavaScript>
-		alert("<?php print LANGGRP22?>");
-		location.href="creat_groupe.php";
-		</script>
-
+				<script language=JavaScript>
+				alert("<?php print LANGGRP22?>");
+				location.href="creat_groupe.php";
+				</script>
 <?php
+			}	
+		}
 	}
 }
-
 
 
 if (GROUPEGESTIONPROF == "oui") {
@@ -72,11 +68,11 @@ if (GROUPEGESTIONPROF == "oui") {
 }
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return <?php print $JS ?>" name="formulaire" action='./creat_groupe_suite.php' >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGGRP15?></font></b></td></tr>
@@ -89,7 +85,7 @@ if (GROUPEGESTIONPROF == "oui") {
   if (! isset($_POST["create"])) :
 ?>
 
-<font class=T2><?php print "Année Scolaire" ?> : <?php print $_POST["annee_scolaire"] ?><br><br>
+<font class=T2><?php print "Ann&eacute;e Scolaire" ?> : <?php print $_POST["annee_scolaire"] ?><br><br>
 
 <font class=T2><?php print LANGGRP1?> </font> : <input type=text name='saisie_intitule' size=25 onfocus="this.blur()" value="<?php print stripslashes($_POST["saisie_intitule"]) ?>"><BR>
 <BR>                <BR><font class=T2><?php print LANGGRP16?></font><BR><BR></UL>
@@ -109,7 +105,6 @@ $in=join(",",$classes);
 if (trim($in) != "") {
 
 $sql=<<<EOF
-
 SELECT
 	c.libelle,
 	e.nom,
@@ -118,15 +113,14 @@ SELECT
 	e.lv1,
 	e.lv2
 FROM
-	${prefixe}classes c,
-	${prefixe}eleves e
+	{$prefixe}classes c,
+	{$prefixe}eleves e
 WHERE
 	c.code_class = e.classe
 AND 	e.classe IN ($in)
 ORDER BY
 	e.nom,
 	e.prenom
-
 EOF;
 
 $res=execSql($sql);
@@ -145,7 +139,7 @@ $data=chargeMat($res);
 <TD bgcolor="yellow" align=center width=20%><b><?php print LANGGRP17?> </b></TD>
 </TR>
 <?php
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
         ?>
 	<TR id="tr<?php print $i ?>" class="tabnormal" onmouseover="this.className='tabover2'" onmouseout="this.className='tabnormal'">
@@ -166,11 +160,11 @@ for($i=0;$i<count($data);$i++)
 ?>
 </TABLE>
 </TD></TR></TABLE></center>
-<input type=hidden name=saisie_eleve >
-<input type=hidden name=saisie_liste value='1'>
-<input type=hidden name=annee_scolaire value='<?php print $_POST["annee_scolaire"] ?>'>
+<input type="hidden" name="saisie_eleve" >
+<input type="hidden" name="saisie_liste" value='1'>
+<input type="hidden" name="annee_scolaire" value='<?php print $_POST["annee_scolaire"] ?>'>
 <?php if (GROUPEGESTIONPROF == "oui") { ?>
-<br>&nbsp;&nbsp;&nbsp;<input type=checkbox name=aucun_eleve value='1' /> Création du groupe sans élève. 
+<br>&nbsp;&nbsp;&nbsp;<input type=checkbox name=aucun_eleve value='1' /> Cr&eacute;ation du groupe sans &eacute;l&egrave;ve. 
 <?php } ?>
 <BR><BR><UL>
 <script language=JavaScript>buttonMagic("<?php print LANGBT20?>","creat_groupe.php","_parent","","");</script>
@@ -184,29 +178,26 @@ endif;  // fin de la premiere procedure
 
 if (isset($_POST["create"])) {
 
-$anneeScolaire=$_POST["annee_scolaire"];
-$params[liste_eleve]=join(",",$_POST["saisie_choix_eleve"]);
-$params[comment]=$_POST["saisie_commentaire"];
-$params[nomgr]=trim($_POST["saisie_intitule"]);
+	$anneeScolaire=$_POST["annee_scolaire"];
+	$params['liste_eleve']=join(",",$_POST["saisie_choix_eleve"]);
+	$params['comment']=$_POST["saisie_commentaire"];
+	$params['nomgr']=trim($_POST["saisie_intitule"]);
 
-if(create_groupe($params,$anneeScolaire)):
-	alertJs("Groupe créé \n\n Service Triade ");
-	history_cmd($_SESSION["nom"],"CREATION","groupe ".$_POST["saisie_intitule"]." ");
-else:
-	error(0);
-endif;
-?>
-</UL><center><font class=T2><?php print LANGGRP19?></font><BR><BR><br>
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagic("<?php print LANGGRP20?>","creat_groupe.php","_parent","","");</script>
-<script language=JavaScript>buttonMagic("<?php print LANGGRP21?>","liste_groupe.php","_parent","","");</script>&nbsp;&nbsp;
-</td><tr></table>
-<bR><bR><br>
+	if(create_groupe($params,$anneeScolaire)) {
+		alertJs("Groupe créé \n\n Service Triade ");
+		history_cmd($_SESSION["nom"],"CREATION","groupe ".$_POST["saisie_intitule"]." ");
+	} ?>
+	</UL><center><font class=T2><?php print LANGGRP19?></font><BR><BR><br>
+	<table align=center><tr><td>
+	<script language=JavaScript>buttonMagic("<?php print LANGGRP20?>","creat_groupe.php","_parent","","");</script>
+	<script language=JavaScript>buttonMagic("<?php print LANGGRP21?>","liste_groupe.php","_parent","","");</script>&nbsp;&nbsp;
+	</td><tr></table>
+	<bR><bR><br>
 <?php
 }
 ?>
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 Pgclose();
 ?>

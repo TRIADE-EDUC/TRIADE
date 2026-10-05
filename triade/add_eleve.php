@@ -1,9 +1,10 @@
 <?php
 error_reporting(0);
 include_once("./common/config.inc.php");
-include_once("./librairie_php/db_triade.php");
+include_once("./common/config2.inc.php");
 include_once("./librairie_php/timezone.php");
-
+include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
 $nom = trim($_POST['saisie_nom']);
 $prenom = trim($_POST['saisie_prenom']);
 $classe = trim($_POST['saisie_classe']);
@@ -64,18 +65,17 @@ $tel_fixe_eleve=$_POST["saisie_tel_fixe_eleve"];
 if (($nom == "") ||  ($prenom == "" ) ||  ($email_eleve == "" ) || ($passwd_eleve == "" ) || ($date_naissance == "") ) { 
 	header("Location:preinscription_eleve.php?error");
 }else{ 
-	$cnx=cnx();
 	// on ecris la requete sql 
-	$sql = "SELECT * FROM ${prefixe}preinscription_eleves WHERE nom='$nom' AND prenom='$prenom' AND email_eleve='$email_eleve' ";
+	$sql = "SELECT * FROM {$prefixe}preinscription_eleves WHERE nom='$nom' AND prenom='$prenom' AND email_eleve='$email_eleve' ";
 	$data=ChargeMat(execSql($sql));
-	if (count($data) > 0) {
+	if (countTriade($data) > 0) {
 		$text="Candidature d&eacute;j&agrave; enregistr&eacute;e";
 	}else{
-		$sql = "INSERT INTO ${prefixe}preinscription_eleves (nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,date_demande,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve,annee_scolaire,boursier) VALUES ('$nom','$prenom','$classe','$lv1','$lv2','$regime','$date_naissance','$lieu_naissance','$nationalite','$passwd','$passwd_eleve','$civ_1','$nomtuteur','$prenomtuteur','$adr1','$code_post_adr1','$commune_adr1','$tel_port_1','$civ_2','$nom_resp_2','$prenom_resp_2','$adr2','$code_post_adr2','$commune_adr2','$tel_port_2','$telephone','$profession_pere','$tel_prof_pere','$profession_mere','$tel_prof_mere','$nom_etablissement','$numero_etablissement','$code_postal_etablissement','$commune_etablissement','$numero_eleve','$photo','$email','$email_eleve','$email_resp_2','$class_ant','$annee_ant','$tel_eleve','$sexe','$option2','$datedemande','$adresse_eleve','$code_post_adr_eleve','$commune_adr_eleve','$tel_fixe_eleve','$pays_eleve','$annee_scolaire','$boursier');";
+		$sql = "INSERT INTO {$prefixe}preinscription_eleves (nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,date_demande,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve,annee_scolaire,boursier) VALUES ('$nom','$prenom','$classe','$lv1','$lv2','$regime','$date_naissance','$lieu_naissance','$nationalite','$passwd','$passwd_eleve','$civ_1','$nomtuteur','$prenomtuteur','$adr1','$code_post_adr1','$commune_adr1','$tel_port_1','$civ_2','$nom_resp_2','$prenom_resp_2','$adr2','$code_post_adr2','$commune_adr2','$tel_port_2','$telephone','$profession_pere','$tel_prof_pere','$profession_mere','$tel_prof_mere','$nom_etablissement','$numero_etablissement','$code_postal_etablissement','$commune_etablissement','$numero_eleve','$photo','$email','$email_eleve','$email_resp_2','$class_ant','$annee_ant','$tel_eleve','$sexe','$option2','$datedemande','$adresse_eleve','$code_post_adr_eleve','$commune_adr_eleve','$tel_fixe_eleve','$pays_eleve','$annee_scolaire','$boursier');";
 		$cr=execSql($sql);
 		if ($cr) {
 			$tab=affPersActif("ADM"); // pers_id, civ, nom, prenom, identifiant, offline, email 
-			for($k=0;$k<count($tab);$k++){
+			for($k=0;$k<countTriade($tab);$k++){
 				$destinataire=$tab[$k][0];
 				$objet="Nouvel inscription";
 				$message="Une nouvelle inscription vient d'être effectu&eacute;e.";
@@ -109,6 +109,7 @@ if (($nom == "") ||  ($prenom == "" ) ||  ($email_eleve == "" ) || ($passwd_elev
 	<script type="text/javascript" src="./librairie_js/clickdroit.js"></script>
 	<script type="text/javascript" src="./librairie_js/function.js"></script>
 	<script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
+	<script type="text/javascript" src="./librairie_js/logo.js"></script>
   	<script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
   	<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 	<?php
@@ -142,12 +143,12 @@ if (($nom == "") ||  ($prenom == "" ) ||  ($email_eleve == "" ) || ($passwd_elev
 	        print "<script type=text/javascript src='librairie_js/languefrfunction-depart.js'></script>\n";
         	include_once("./librairie_php/langue-text-fr.php");
 	}
-	if (POPUP == "non") {
+	if ((defined("POPUP")) && (POPUP == "non")) {
 		print "<script type='text/javascript'>var popup='non';</script>\n";
 	}else {
 		print "<script type='text/javascript'>var popup='oui';</script>\n";
 	}
-	if (HTTPS == "non") {
+	if ((defined("HTTPS")) && (HTTPS == "non")) {
 		print "<script type='text/javascript'>var http='http://';</script>\n";
 	}else{
 		print "<script type='text/javascript'>var http='https://';</script>\n";

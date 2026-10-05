@@ -1,5 +1,5 @@
 /*! UIkit 3.0.0-beta.42 | http://www.getuikit.com | (c) 2014 - 2017 YOOtheme | MIT License */
-// $Id: uikit.js,v 1.7 2018-04-18 08:40:19 wlair Exp $ 
+// $Id: uikit.js,v 1.7 2018/04/18 08:40:19 wlair Exp $ 
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define('uikit', factory) :

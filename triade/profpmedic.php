@@ -13,7 +13,7 @@ if (!isset($_SESSION['adminplusprofp'])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,123 +34,110 @@ if (!isset($_SESSION['adminplusprofp'])) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<style>
+.medic-entry        { background:#fff; border:1px solid #c5cae9; border-radius:8px; margin:8px 5px; padding:10px 14px; }
+.medic-entry-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.medic-entry-date   { font-weight:700; color:#080A66; font-size:13px; }
+.medic-entry-del    { font-size:11px; color:#c00; text-decoration:none; }
+.medic-entry-del:hover { text-decoration:underline; }
+.medic-entry-body   { color:#333; font-size:13px; white-space:pre-wrap; padding:4px 0 8px; border-top:1px solid #e8eaf6; }
+.medic-entry-author { text-align:right; font-size:11px; color:#666; font-style:italic; margin-top:4px; }
+</style>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 verif_profp_eleve($_GET["eid"],$_SESSION["id_pers"],$_SESSION["membre"]);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
-// affichage de l'élève (lecture seule)
 $idEleve=$_GET["eid"];
 if (isset($_POST["create"])) {
 	$idEleve=$_POST["idEleve"];
 	profPmed(date("d/m/Y"),$_POST["commentaire"],$_SESSION["nom"],$_POST["idEleve"]);
 }
-?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROFP21 ?>  <font id="color2"><?php print couperchaine(recherche_eleve($idEleve),27);?></font></B></font>
-</td>
-</tr><tr id='cadreCentral0' >
-<td colspan=2>
-<br>
-<?php
-if ($_SESSION["membre"] == "menuprof") {
-?>
-	&nbsp;&nbsp;<input type=button class=BUTTON value="<-- <?php print LANGPRECE ?>" onClick="open('profp3.php?eid=<?php print $_GET["eid"]?>','_parent','')"><br><br>
-<?php
-}
-	if (((defined("INFOMEDIC2")) && (INFOMEDIC2 == "oui")) || ($_SESSION["membre"] == "menuadmin")) {
-?>
-<form method="post">
-<table bordercolor="#CCCC00"  width=95% align=center border=0 bgcolor="#FFFFFF">
-<tr>
-<td width=50% align=right id='bordure'><font class="T2 shadow" >Information du : </td><td id='bordure'> <?php print date("d/m/Y")?></font></td>
-</tr>
-<tr>
-<td  colspan=2 align=left  id='bordure'><font class='shadow'>Commentaire : </font><br><br>
-<textarea name="commentaire" cols=90 rows=8 ></textarea>
-</td>
-</tr>
-<tr>
-<td  colspan=2 align=center id='bordure'><br><br>
-<input type=hidden name=idEleve value="<?php print $idEleve?>" >
-<script language=JavaScript>buttonMagicSubmit("Enregistrer Information","create"); //text,nomInput</script>
-<br><br>
-</td>
-</tr>
-</table>
-</form>
-<br /><br />
-<table bordercolor="#CCCC00"  width=95% align=center border=1 bgcolor="#FFFFFF" >
-
-<?php
 if (isset($_GET["supp"])) {
 	profPmedsupp($_GET["supp"]);
 }
+?>
 
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGPROFP21 ?>
+  <font id="color2"><?php print couperchaine(recherche_eleve($idEleve),27) ?></font>
+</font></b></td></tr>
+<tr id='cadreCentral0'>
+<td colspan="2">
 
+<?php if ($_SESSION["membre"] == "menuprof") { ?>
+<div style="margin:6px 5px;">
+  <a class="btn-retour" href="profp3.php?eid=<?php print $_GET['eid'] ?>">&larr; <?php print LANGPRECE ?></a>
+</div>
+<?php } ?>
 
+<?php if (((defined("INFOMEDIC2")) && (INFOMEDIC2 == "oui")) || ($_SESSION["membre"] == "menuadmin")) { ?>
+
+<form method="post">
+<input type="hidden" name="idEleve" value="<?php print $idEleve ?>">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROF30 ?> :</span>
+    <span><?php print date("d/m/Y") ?></span>
+  </div>
+  <div class="na-row" style="align-items:flex-start;">
+    <span class="na-lbl"><?php print LANGASS27 ?> :</span>
+    <textarea name="commentaire" rows="6" class="cc-select" style="width:100%;resize:vertical;font-family:Arial;font-size:13px;"></textarea>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGAGENDA28 ?>","create");</script>
+<br><br>
+</form>
+
+<?php
 $data=profPmedAff($idEleve);
-// id,date,idEleve,nomProf,commentaire
-for($i=0;$i<count($data);$i++) {
-?>
-	<tr><td id="bordure2" ><br />&nbsp;&nbsp;<font class="T2 shadow" >
-	Information du </font><b><?php print $data[$i][1]?></b> &nbsp;&nbsp;&nbsp;[<a href="profpmedic.php?supp=<?php print $data[$i][0]?>&eid=<?php print $idEleve?>" >supprimer</a>]
-	<br><br>
-	&nbsp;<?php print stripslashes(strip_tags($data[$i][4]))?>
-
-	<br>
-	<div align=right>De : <?php print $data[$i][3]?> &nbsp;&nbsp;</div>
-	<br />
-	</td>
-	</tr>
+// id, date, idEleve, nomProf, commentaire
+if (countTriade($data) > 0) {
+	for ($i=0; $i<countTriade($data); $i++) { ?>
+<div class="medic-entry">
+  <div class="medic-entry-header">
+    <span class="medic-entry-date"><?php print LANGPROF30 ?> : <?php print $data[$i][1] ?></span>
+    <a class="medic-entry-del" href="profpmedic.php?supp=<?php print $data[$i][0] ?>&eid=<?php print $idEleve ?>"><?php print LANGAGENDA26 ?></a>
+  </div>
+  <div class="medic-entry-body"><?php print stripslashes(strip_tags($data[$i][4])) ?></div>
+  <div class="medic-entry-author"><?php print LANGNOTEUSA4 ?> : <?php print $data[$i][3] ?></div>
+</div>
 <?php
+	}
 }
 ?>
 
-
-</table>
-<br /><br />
-<?php
-}
-?>
-
+<?php } ?>
 
 </td></tr></table>
-<?php
-// Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION["membre"] == "menuadmin") :
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-print "</SCRIPT>";
-else :
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-print "</SCRIPT>";
-top_d();
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-print "</SCRIPT>";
-endif ;
-?>
 
 <?php
-// deconnexion en fin de fichier
+if ($_SESSION["membre"] == "menuadmin") {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+} else {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+}
 Pgclose();
 ?>
 </BODY>

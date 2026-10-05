@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -37,11 +39,11 @@ session_start();
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php
@@ -58,31 +60,32 @@ if ($_POST["type_notation"] == "A2R") {
 ?>
 </tr>
 <tr id='cadreCentral0'>
-<td >
+<td valign="top">
 <!-- // debut form  -->
 <?php
-// connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<form method=post onsubmit="return valide_consul_classe()" name="formulaire" action="gestion_examen_b2i_2.php">
-<blockquote><BR>
-<font class=T2><?php print LANGPROFG?> :</font> <select id="saisie_classe" name="saisie_classe">
-<option id='select0' ><?php print LANGCHOIX?></option>
-<?php
-select_classe(); // creation des options
-?>
-</select> <br /><br />
-<UL><UL><UL>
-<script language=JavaScript>buttonMagicSubmit("<?php print VALIDER?>","consult"); //text,nomInput</script>
-</UL></UL></UL>
-</blockquote>
-<input type=hidden name="type_notation" value="<?php print $_POST["type_notation"] ?>" />
+<form method="post" onsubmit="return valide_consul_classe()" name="formulaire" action="gestion_examen_b2i_2.php">
+<input type="hidden" name="type_notation" value="<?php print $_POST["type_notation"] ?>">
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFG ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_classe(); ?>
+    </select>
+  </div>
+</div>
+<br>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagicSubmit("<?php print VALIDER ?>","consult");</script>
+</div>
+<br>
 </form>
-<br><br><br>
 <!-- // fin form -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

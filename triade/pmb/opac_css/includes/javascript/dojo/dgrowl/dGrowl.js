@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dGrowl.js,v 1.2 2017-10-16 09:49:06 dgoron Exp $
+// $Id: dGrowl.js,v 1.2 2017/10/16 09:49:06 dgoron Exp $
 
 define([ "dojo/text", "dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo/topic", "dojo/dom-construct", "dgrowl/NotificationNode", "dojo/query", "dojo/_base/lang", "dojo/dom-class", "dojo/text!./main.html"],
 	   function(t, declare, base, templated, topic, domCon, NotificationNode, query, lang, domClass, templateString)

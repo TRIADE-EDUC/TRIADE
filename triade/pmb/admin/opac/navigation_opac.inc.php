@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: navigation_opac.inc.php,v 1.7 2017-07-12 15:15:01 tsamson Exp $
+// $Id: navigation_opac.inc.php,v 1.8 2021/03/15 09:02:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $action, $msg, $charset, $a2z;
 // gestion du lien entre la localisation et la section et le type de navigation
 
 $admin_expl_nagopac_ligne_loc="
@@ -32,24 +33,14 @@ $admin_expl_nagopac_new_ligne="
 		<!-- nouvelle ligne -->";
 
 $admin_expl_nagopac="
-<form class='form-".$current_module."' name='navigopac' method='post' action=\"./admin.php?categ=opac&sub=navigopac&action=save\">
-	<h3>".$msg["exemplaire_admin_navigopac_entete_form"]."</h3>
-	<div class='form-contenu'>
-	<!-- info_enregistrÃ©e -->
-	<table>
-		<!-- nouvelle ligne -->
-	</table>
-	</div>
-	<div class='row'>
-		<input class='bouton' type='submit' value='".$msg[77]."'/>
-	</div>
-	<div class='row'></div>
-</form>";
+<table>
+<!-- nouvelle ligne -->
+</table>";
 
 function show_navigopac(){
 	global $msg,$thesaurus_classement_mode_pmb,$thesaurus_classement_defaut;
 	global $charset;
-	global $admin_expl_nagopac,$admin_expl_nagopac_new_ligne,$admin_expl_nagopac_ligne_loc;// les templates utilisÃ©s
+	global $admin_expl_nagopac,$admin_expl_nagopac_new_ligne,$admin_expl_nagopac_ligne_loc;// les templates utilisés
 
 	$requete = "SELECT location_libelle,section_libelle,num_pclass,idsection,idlocation,show_a2z FROM docsloc_section JOIN docs_location ON num_location=idlocation JOIN docs_section ON num_section=idsection ORDER BY location_libelle,section_libelle";
 	$res = pmb_mysql_query($requete);
@@ -68,19 +59,19 @@ function show_navigopac(){
 	for($i=0;$i<$nbr;$i++) {
 		$row=pmb_mysql_fetch_object($res);
 
-		//on met dans le formulaire les champs cachÃ©
+		//on met dans le formulaire les champs caché
 		$new_ligne=$admin_expl_nagopac_new_ligne;
 		$new_ligne=str_replace("!!num_ligne!!",$i,$new_ligne);
 		$new_ligne=str_replace("!!location_id!!",$row->idlocation,$new_ligne);
 		$new_ligne=str_replace("!!section_id!!",$row->idsection,$new_ligne);
 
 		//Localisation
-		if($row->location_libelle != $old_localisation){//Si on a changÃ© de localisation
+		if($row->location_libelle != $old_localisation){//Si on a changé de localisation
 			$new_ligne=str_replace("<!-- ligne_loc -->",$admin_expl_nagopac_ligne_loc,$new_ligne);
 			$new_ligne=str_replace("!!libelle_localisation!!",htmlentities($row->location_libelle,ENT_QUOTES,$charset),$new_ligne);
 			$new_ligne=str_replace("!!location_id!!",$row->idlocation,$new_ligne);
 			$new_ligne=str_replace("!!checked!!",(($row->show_a2z)?'checked="checked"':''),$new_ligne);
-			$old_localisation=$row->location_libelle;//On enregistre le dernier libellÃ©
+			$old_localisation=$row->location_libelle;//On enregistre le dernier libellé
 	    	$parity=1;
 	    }
 
@@ -132,10 +123,14 @@ function show_navigopac(){
 		//On ajoute la nouvelle ligne au formulaire
 		$admin_expl_nagopac=str_replace("<!-- nouvelle ligne -->",$new_ligne,$admin_expl_nagopac);
 	}
-	print pmb_bidi($admin_expl_nagopac);
+	$interface_form = new interface_admin_form('navigopac');
+	$interface_form->set_label($msg["exemplaire_admin_navigopac_entete_form"]);
+	$interface_form->set_content_form($admin_expl_nagopac);
+	print $interface_form->get_display_parameters();
 }
 
 switch($action) {
+	case 'update':
 	case 'save':
 		$i=0;
 		$id_pclass="pclass_".$i;
@@ -156,7 +151,7 @@ switch($action) {
 			$q = "update docs_location set show_a2z='1' where idlocation in (".implode(',',array_keys($a2z)).")";
 			pmb_mysql_query($q);
 		}
-		$admin_expl_nagopac=str_replace("<!-- info_enregistrÃ©e -->","<div class='erreur'>".$msg["exemplaire_admin_navigopac_modif_sauv"]."</div>",$admin_expl_nagopac);
+		$admin_expl_nagopac=str_replace("<!-- info_enregistrée -->","<div class='erreur'>".$msg["exemplaire_admin_navigopac_modif_sauv"]."</div>",$admin_expl_nagopac);
 		show_navigopac();
 		break;
 	default:

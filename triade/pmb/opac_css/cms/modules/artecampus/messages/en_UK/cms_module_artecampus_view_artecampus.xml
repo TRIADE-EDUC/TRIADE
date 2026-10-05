@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_artecampus_view_artecampus.xml,v 1.1.2.1.2.1 2025/02/27 14:05:55 dgoron Exp $ -->
+
+<XMLlist>
+    <entry code="connector_vars_view_desc">Connecteur</entry>
+    <entry code="connector_url_vars_view_desc">URL de connexion </entry>
+    <entry code="connector_empr_data_vars_view_desc">Données de l'emprunteur</entry>
+    <entry code="connector_button_connection_vars_view_desc">Bouton de connexion</entry>
+    <entry code="connector_access_link_vars_view_desc">Lien pour accéder au site</entry>
+</XMLlist>

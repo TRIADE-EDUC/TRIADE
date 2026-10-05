@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_favoriteslist_datasource.xml,v 1.4 2022/07/20 10:06:07 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_favoriteslist_datasource_selector_item'>Liste de favoris</entry>
+	<entry code='cms_module_favoriteslist_datasource_select_source'>Sélectionnez une source</entry>
+	<entry code='cms_module_favoriteslist_datasource_add_source'>Ajoutez une source</entry>
+	<entry code='cms_module_favoriteslist_datasource_display_mode'>Mode d'affichage</entry>
+	<entry code='cms_module_favoriteslist_datasource_display_mode_readonly'>Visualisation</entry>
+	<entry code='cms_module_favoriteslist_datasource_display_mode_admin'>Administration</entry>
+	<entry code='cms_module_favoriteslist_datasource_display_mode_admin_disabled'>un cadre utilise déjà cet item en administration</entry>
+	<entry code='cms_module_favoriteslist_datasource_tooltip'>Cette liste a été définie dans le cadre</entry>
+</XMLlist>

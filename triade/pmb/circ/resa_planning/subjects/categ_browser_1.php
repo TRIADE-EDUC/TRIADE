@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categ_browser_1.php,v 1.2 2007-03-10 09:03:17 touraine37 Exp $
+// $Id: categ_browser_1.php,v 1.2 2007/03/10 09:03:17 touraine37 Exp $
 
-// affichage du browser de catÃ©gories
+// affichage du browser de catégories
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../../..";
 $base_auth = "CIRCULATION_AUTH";
 $base_title = "\$msg[6]";

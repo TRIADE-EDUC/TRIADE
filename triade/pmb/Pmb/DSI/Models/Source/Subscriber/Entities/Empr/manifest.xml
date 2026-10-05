@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.5 2023/10/25 15:10:13 rtigero Exp $ 
+-->
+
+<manifest>
+	<id>1</id>
+	<type>subscriberlist</type>
+	<namespace>Pmb\DSI\Models\Source\Subscriber\Entities\Empr\EmprList</namespace>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<selector>Pmb\DSI\Models\Selector\Subscriber\Empr\RMC\EmprRMCSelector</selector>
+		<selector>Pmb\DSI\Models\Selector\Subscriber\Empr\SimpleSearch\EmprSimpleSearchSelector</selector>
+		<selector>Pmb\DSI\Models\Selector\Subscriber\Empr\EmptySourceSubscribers\EmprEmptySourceSubscribersSelector</selector>
+		<selector>Pmb\DSI\Models\Selector\Subscriber\Empr\SearchById\SearchByIdSelector</selector>
+	</compatibility>
+</manifest>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watch_selector_watch.class.php,v 1.2 2015-04-03 11:16:26 jpermanne Exp $
+// $Id: cms_module_watch_selector_watch.class.php,v 1.3 2022/03/10 08:22:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -33,9 +33,8 @@ class cms_module_watch_selector_watch extends cms_module_common_selector{
 	}
 	
 	protected function gen_select(){
-		global $dbh;
 		$query= "select id_watch, watch_title from docwatch_watches order by watch_title";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		$select = "
 					<select name='".$this->get_form_value_name("id_watch")."'>";
 		if(pmb_mysql_num_rows($result)){
@@ -53,7 +52,7 @@ class cms_module_watch_selector_watch extends cms_module_common_selector{
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

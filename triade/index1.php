@@ -1,8 +1,47 @@
 <?php
-error_reporting(0);
-include_once("./common/config.inc.php");
-include_once("./common/config2.inc.php");
-if (AFFICHAGEVATEL == "oui") header("Location:./vatel/"); 
+// Vérifier que l'accès provient de index.html (sauf en cas de déconnexion)
+if (!isset($_GET['deconnexion'])) {
+    if (!isset($_COOKIE['triade_from_index'])) {
+        header('Location: index.html');
+        exit;
+    }
+    // Proof-of-work : si un cookie triade_pow est présent, valider la solution.
+    // Si absent (ex. pow_challenge.php indisponible), on laisse passer.
+    if (isset($_COOKIE['triade_pow'])) {
+        if (file_exists('./common/config.inc.php')) include_once('./common/config.inc.php');
+        $_pow_secret = defined('POW_SECRET') ? POW_SECRET : 'triade_pow_Kx9mP2vQ8rL5wN3j';
+        $pow_ok   = false;
+        $pow_parts = explode(':', $_COOKIE['triade_pow']);
+        if (count($pow_parts) === 5) {
+            [$_pn, $_pe, $_pd, $_ps, $_pc] = $pow_parts;
+            $_challenge = "$_pn:$_pe:$_pd";
+            $_prefix    = str_repeat('0', (int)floor((int)$_pd / 4));
+            if (hash_equals(hash_hmac('sha256', $_challenge, $_pow_secret), $_ps)
+                && (int)$_pe > time()
+                && ctype_digit($_pc)
+                && substr(hash('sha256', $_challenge . ':' . $_pc), 0, strlen($_prefix)) === $_prefix
+            ) {
+                $pow_ok = true;
+            }
+        }
+        if (!$pow_ok) {
+            setcookie('triade_pow', '', time() - 3600, '/');
+            header('Location: index.html');
+            exit;
+        }
+    }
+}
+// Invalider le cookie immédiatement pour qu'il ne puisse pas être réutilisé
+setcookie('triade_from_index', '', time() - 3600, '/', '', false, false);
+// Poser le cookie de passage pour acces_depart.php (15 min)
+setcookie('triade_from_index1', '1', time() + 900, '/', '', false, false);
+
+//error_reporting(0);
+if (file_exists("./common/config.inc.php")) include_once("./common/config.inc.php");
+if (file_exists("./common/config2.inc.php")) include_once("./common/config2.inc.php");
+if (defined("AFFICHAGEVATEL")) {
+	if (AFFICHAGEVATEL == "oui") header("Location:./vatel/");
+}
 
 if (defined("HTTPS")) {
 	if (HTTPS == "oui") {
@@ -18,6 +57,8 @@ if (!isset($_COOKIE["agentwebecole"])) {
         setcookie("agentwebecole","actu",time()+3600*24*2);
         $ecoute=1;
 }
+
+if (!file_exists("../favicon.ico")) @copy("./favicon.ico","../favicon.ico");
 
 
 if (isset($_GET["deconnexion"])) {
@@ -47,7 +88,7 @@ if (isset($_GET["deconnexion"])) {
 	session_destroy();
 }
 
-if (!file_exists("./common/config-module.php")) { 
+if (!file_exists("./common/config-module.php")) {
 	$fp = fopen("./common/config-module.php", "w");
 	fwrite($fp,"");
 	fclose($fp);
@@ -63,7 +104,7 @@ if (! file_exists($fichier)) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH 
+ *   copyright            : (C) 2000 E. TAESCH
  *   Site                 : http://www.triade-educ.org
  *
  *
@@ -88,12 +129,15 @@ if (! file_exists($fichier)) {
    <meta name="Copyright" content="Triade©, 2001" />
    <meta http-equiv="imagetoolbar" content="no" />
      <link rel="stylesheet" type="text/CSS" href="./librairie_css/css.css" media="screen" />
+     <link rel="stylesheet" href="./librairie_css/css-v4.css" />
      <link rel="shortcut icon" href="./favicon.ico" type="image/icon" />
    <title>Triade</title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+	<a href="#contenu-principal" class="sr-only sr-only-focusable">Passer au contenu principal</a>
 	<noscript><meta http-equiv="Refresh" content="0; URL=noscript.php"></noscript>
 	<script type="text/javascript" src="./librairie_js/clickdroit.js"></script>
+	<script type="text/javascript" src="./librairie_js/logo.js"></script>
 	<script type="text/javascript" src="./librairie_js/function.js"></script>
 	<?php
 	include_once("./librairie_php/lib_netscape.php");
@@ -135,7 +179,7 @@ if (! file_exists($fichier)) {
         	include_once("./librairie_php/langue-text-fr.php");
 	}
 	print "<script type='text/javascript'>var http='http://';</script>\n";
-	if (POPUP == "non") {
+	if (defined('POPUP') &&  POPUP == "non") {
 		print "<script type='text/javascript'>var popup='non';</script>\n";
 	}else {
 		print "<script type='text/javascript'>var popup='oui';</script>\n";
@@ -147,24 +191,24 @@ if (! file_exists($fichier)) {
 	}
 	print "<script type='text/javascript'>var inc='".GRAPH."';</script>\n";
 	?>
-	<script type="text/javascript" >var mailcontact="<?php 
-		if ((MAILCONTACT != "") && (defined("MAILCONTACT")) ) { 
-			print MAILCONTACT; 
-		}else{ 
-			print ""; 
+	<script type="text/javascript" >var mailcontact="<?php
+		if ((MAILCONTACT != "") && (defined("MAILCONTACT")) ) {
+			print MAILCONTACT;
+		}else{
+			print "";
 		} ?>";</script>
-	<script type="text/javascript" >var urlcontact="<?php 
-		if ((URLCONTACT != "") && (defined("URLCONTACT"))) { 
-			print URLCONTACT; 
-		}else{ 
-			print ""; 
+	<script type="text/javascript" >var urlcontact="<?php
+		if ((URLCONTACT != "") && (defined("URLCONTACT"))) {
+			print URLCONTACT;
+		}else{
+			print "";
 		}  ?>"; </script>
-	<script type="text/javascript" >var urlnomcontact="<?php 
-		if ((URLNOMCONTACT != "") && (defined("URLNOMCONTACT"))) { 
+	<script type="text/javascript" >var urlnomcontact="<?php
+		if ((URLNOMCONTACT != "") && (defined("URLNOMCONTACT"))) {
 			$urlnomcontact=preg_replace('/ /',"&nbsp;",URLNOMCONTACT);
-			print URLNOMCONTACT; 
-		}else{ 
-			print ""; 
+			print URLNOMCONTACT;
+		}else{
+			print "";
 		} ?>"; </script>
 	<script type="text/javascript" >var urlcontact2="<?php if (URLCONTACT2 != "") { print URLCONTACT2; }else{ print ""; }  ?>"; </script>
 	<script type="text/javascript" >var urlnomcontact2="<?php if (URLNOMCONTACT2 != "") { print URLNOMCONTACT2; }else{ print ""; } ?>"; </script>
@@ -176,11 +220,13 @@ if (! file_exists($fichier)) {
 	<?php include("./librairie_php/lib_defilement.php"); ?>
 	</TD><td width="472" valign="middle" rowspan="3" align="center" >
 
-	<div align='center'><?php top_h(); ?>
+	<div align='center' style='overflow:hidden;height:<?php echo defined("BANNIEREHAUTEUR") ? (int)BANNIEREHAUTEUR : 150; ?>px'><?php top_h(); ?></div>
 	<script type="text/javascript" src="./librairie_js/menudepart1.js"></script>
-	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-	<tr id='coulBar0' ><td height="2" align="center"><b><font id='menumodule1'><?php print LANGTMESS482 ?></font></b></td></tr>
+	<main id="contenu-principal" tabindex="-1">
+	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" role="presentation">
+	<tr class='coulBar0'><td height="2" align="center"><b><span class='menumodule1'><?php print LANGTMESS482 ?></span></b></td></tr>
 	<tr id='cadreCentral0'><td bgcolor='#FFFFFF'  >
+<br>
 	<?php  if ((LAN == "non") || (preg_match('/demo.triade-educ.net/',WEBROOT))) { ?>
 	<div id="introduction"><br>
       	<p class="center" style="color: #000; font-size:12px;">TRIADE
@@ -189,15 +235,15 @@ if (! file_exists($fichier)) {
        C'est une plateforme internet qui vous permet, <strong style="color: #003399;">au jour le jour</strong>, d'acc&eacute;der aux informations relatives &agrave; la vie de votre l'&eacute;tablissement, que vous soyez une &eacute;cole primaire, un coll&egrave;ge, un lyc&eacute;e ou une universit&eacute;,  &agrave; savoir : </p>
        <ul>
 	<table border="0" width="90%"><tr><td>
-         <li>les notes quotidiennes des &eacute;l&egrave;ves,</li>
-         <li>les bulletins trimestriels, semestriels ou p&eacute;riodiques, </li>
-         <li>les circulaires administratives envoy&eacute;es aux parents, </li>
-         <li>les circulaires administratives envoy&eacute;es aux professeurs,</li>
-         <li>les informations sur la vie scolaire (retards, absences),</li>
-         <li>l'envoi de messages personnels aux parents, aux enseignants, </li>
-	 <li>l'envoi de SMS aux parents pour les absences et retards, </li>
-	 <li>le carnet de suivi, l'emploi du temps, </li>
-	 <li>etc... </li>
+         <li>&nbsp;les notes quotidiennes des &eacute;l&egrave;ves,</li>
+         <li>&nbsp;les bulletins trimestriels, semestriels ou p&eacute;riodiques, </li>
+         <li>&nbsp;les circulaires administratives envoy&eacute;es aux parents, </li>
+         <li>&nbsp;les circulaires administratives envoy&eacute;es aux professeurs,</li>
+         <li>&nbsp;les informations sur la vie scolaire (retards, absences),</li>
+         <li>&nbsp;l'envoi de messages personnels aux parents, aux enseignants, </li>
+	 <li>&nbsp;l'envoi de SMS aux parents pour les absences et retards, </li>
+	 <li>&nbsp;le carnet de suivi, l'emploi du temps, </li>
+	 <li>&nbsp;etc... </li>
 
 	<br /><br />
 	De <em style="color:#003399">n'importe quel ordinateur</em>
@@ -206,7 +252,7 @@ if (! file_exists($fichier)) {
         peuvent transmettre leurs notes et &nbsp;les parents peuvent
 	consulter les r&eacute;sultats scolaires de leur enfant.
 	<br />
-	<br />Notre site s'efforce de r&eacute;pondre au mieux aux exigences engendr&eacute;es 
+	<br />Notre site s'efforce de r&eacute;pondre au mieux aux exigences engendr&eacute;es
 	par les nouvelles technologies, nous esp&eacute;rons qu'il vous donnera satisfaction.
 
 	</td></tr></table>
@@ -217,7 +263,7 @@ if (! file_exists($fichier)) {
 }else{
 	error_reporting(0);
 	if (file_exists("./data/fic_news_page_contenu.txt")) {
-		
+
 		$fic=fopen("./data/fic_news_page_contenu.txt","r");
     		$text=fread($fic,filesize("./data/fic_news_page_contenu.txt"));
 		fclose($fic);
@@ -240,7 +286,7 @@ if (! file_exists($fichier)) {
         <table align='center' width='98%' border='0' height='80%' bordercolor='#000000' >
         <tr><td width=90% height=15 id='bordure' >&nbsp;&nbsp;<font size=2><b><?php print stripslashes($titre) ?></b></font></td>
         <td align=center id='bordure' >&nbsp;<i></i>&nbsp;</td></tr>
-        <tr><td colspan=2 valign=top id='bordure' > 
+        <tr><td colspan=2 valign=top id='bordure' >
 		<?php
 		$text=preg_replace('#(\\\\r|\\\\r\\\\n|\\\\n)#', "\n",$text);
 	//	$text=preg_replace('#\n\n\n\n#', "<br />",$text);
@@ -256,9 +302,10 @@ if (! file_exists($fichier)) {
 	}else{
 		print "<script type='text/javascript' src='https://www.triade-educ.org/sponsor/accueil_js.php?aff=tous'></script>\n";
 	}
-} 
+}
 ?>
 </td></tr></table>
+</main>
 <script type="text/javascript" src="./librairie_js/menudepart22.js"></script>
 <?php
 if ((POPUP == "non") && (LAN == "oui") && (HTTPS != "oui") ) { include_once('librairie_php/xiti.php'); }

@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -51,7 +51,7 @@ if ($_SESSION["membre"] == "menuprof") {
 
 
 $gid=$_POST["gid"];
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 $res=execSql($sql);
 $data=chargeMat($res);
 $nomgrp=$data[0][0];
@@ -73,7 +73,7 @@ if(isset($_POST["create"])) {
 
 
 $gid=$_POST["gid"];
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 $res=execSql($sql);
 $data=chargeMat($res);
 $nomgrp=$data[0][0];
@@ -81,7 +81,7 @@ $liste_eleves=preg_replace('/\{/',"",$data[0][1]);
 $liste_eleves=preg_replace('/\}/',"",$liste_eleves);
 if ($liste_eleves != "") {
 
-	$sql="SELECT nom,prenom,libelle,elev_id FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
+	$sql="SELECT nom,prenom,libelle,elev_id FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$pasdeleve="non";
@@ -105,7 +105,7 @@ if ($liste_eleves != "") {
 <?php
 // debut for
 if ( $pasdeleve != "oui" ) {
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr class="tabnormal" onmouseover="this.className='tabover2'" onmouseout="this.className='tabnormal'">
 	<td ><?php print ucwords($data[$i][0])?></td>

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_tagcloud.xml,v 1.4 2014-06-27 15:27:05 arenou Exp $ -->
+$Id: cms_module_tagcloud.xml,v 1.4 2014/06/27 15:27:05 arenou Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_tagcloud_view_tagcloud'>Vue statique</entry>

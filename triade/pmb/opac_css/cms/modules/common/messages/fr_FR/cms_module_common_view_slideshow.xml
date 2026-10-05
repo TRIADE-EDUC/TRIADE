@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_slideshow.xml,v 1.1 2019/12/12 15:49:07 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_slideshow_record_content_desc'>Rendu d'un template de notice</entry>
+	<entry code='cms_module_common_view_slideshow_advanced_parameters'>Paramétrage avancé</entry>
+	<entry code='cms_module_common_view_slideshow_general_parameters'>Paramétrage Général</entry>
+	
+	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+	<entry code='cms_module_common_view_template_item'>Template d'un item</entry>
+	
+	<entry code='cms_module_common_view_slideshow_no_image'>Image à utiliser par défaut</entry>
+	<entry code='cms_module_common_view_slideshow_no_image_desc'>Lien vers l'image "no-image"</entry>
+	
+	<entry code='cms_module_common_view_slideshow_arrows'>Activer les flèches au survol</entry>
+	<entry code='cms_module_common_view_slideshow_dotnav'>Activer les boutons de navigation</entry>
+	
+	<entry code='cms_module_common_view_slideshow_animation'>Effet des transitions</entry>
+	<entry code='cms_module_common_view_slideshow_duration'>Durée des transitions</entry>
+	<entry code='cms_module_common_view_slideshow_height'>Hauteur du slideshow</entry>
+	<entry code='cms_module_common_view_slideshow_start'>Position de l'image de départ</entry>
+	<entry code='cms_module_common_view_slideshow_autoplay'>Défilement automatique</entry>
+	<entry code='cms_module_common_view_slideshow_pauseonhover'>Arrête le défilement lors du survol</entry>
+	<entry code='cms_module_common_view_slideshow_autoplayinterval'>Temps en ms entre chaque défilement</entry>
+	<entry code='cms_module_common_view_slideshow_videoautoplay'>Lecture de vidéo automatique</entry>
+	<entry code='cms_module_common_view_slideshow_videomute'>Vidéo sans son</entry>
+	<entry code='cms_module_common_view_slideshow_kenburns'>Afficher un effet de zoom</entry>
+	<entry code='cms_module_common_view_slideshow_kenburnsanimations'>Type d'animation pour l'effet de zoom</entry>
+	<entry code='cms_module_common_view_slideshow_slices'>Nombre de slices si celui-ci est selectionné</entry>
+	
+	<entry code='cms_module_common_view_slideshow_fade'>Fade</entry>
+	<entry code='cms_module_common_view_slideshow_scroll'>Scroll</entry>
+	<entry code='cms_module_common_view_slideshow_scale'>Scale</entry>
+	<entry code='cms_module_common_view_slideshow_swipe'>Swipe</entry>
+	<entry code='cms_module_common_view_slideshow_slice-down'>Slice down</entry>
+	<entry code='cms_module_common_view_slideshow_slice-up'>Slice up</entry>
+	<entry code='cms_module_common_view_slideshow_slice-up-down'>Slice up-down</entry>
+	<entry code='cms_module_common_view_slideshow_fold'>Fold</entry>
+	<entry code='cms_module_common_view_slideshow_puzzle'>Puzzle</entry>
+	<entry code='cms_module_common_view_slideshow_boxes'>Boxes</entry>
+	<entry code='cms_module_common_view_slideshow_boxes-reverse'>Reverse boxes</entry>
+	<entry code='cms_module_common_view_slideshow_random-fx'>Aléatoire</entry>
+	
+	<entry code='cms_module_common_view_slideshow_yes'>Oui</entry>
+	<entry code='cms_module_common_view_slideshow_no'>Non</entry>
+</XMLlist>

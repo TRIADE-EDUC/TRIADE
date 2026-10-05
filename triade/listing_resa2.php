@@ -13,7 +13,7 @@ if ($_SESSION["membre"] != "menupersonnel") { validerequete("2"); }
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -60,7 +60,7 @@ $idclasse=$_POST["saisie_classe"];
 
 $data=affResaEquip($_POST["type"],dateFormBase($_POST["saisie_date_debut"]),dateFormBase($_POST["saisie_date_fin"]));
 // n.id,n.idmatos,n.idqui,n.quand,n.heure_depart,n.heure_fin,n.info,n.valider,m.type,m.id //  resa_matos m, resa_liste n 
-if (count($data) <= 0) {
+if (countTriade($data) <= 0) {
         print("<BR><center>"."Aucune réservation pour cette période"."<BR><BR></center>");
 } else {
 ?>
@@ -73,7 +73,7 @@ if (count($data) <= 0) {
 	<TD bgcolor=yellow width=5 align=center >&nbsp;<B>Accepté</b>&nbsp;</TD>
 
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "<tr>";
 		print "<td bgcolor=#FFFFFF>&nbsp;".recherche_equip($data[$i][1])."</td>";
 		print "<td bgcolor=#FFFFFF>&nbsp; ".dateForm($data[$i][3])." de ".$data[$i][4]." à ".$data[$i][5]."</td>";

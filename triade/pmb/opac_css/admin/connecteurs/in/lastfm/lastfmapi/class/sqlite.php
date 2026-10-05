@@ -12,7 +12,7 @@ class lastfmApiDatabase {
 	 * Stores the path to the database
 	 * @var string
 	 */
-	var $path;
+	public $path;
 	/**
 	 * Stores the connection status
 	 * @var boolean
@@ -29,7 +29,7 @@ class lastfmApiDatabase {
 	 * @param string $path The path to the database
 	 * @return void
 	 */
-	function __construct($path) {
+	public function __construct($path) {
 		$this->path = $path;
 		$this->connectToDb();
 	}
@@ -38,7 +38,7 @@ class lastfmApiDatabase {
 	 * Internal command to connect to the database
 	 * @return void
 	 */
-	function connectToDb () {
+	public function connectToDb () {
 		if (!$this->dbConn = @sqlite_open($this->path, 0666, $this->error)) {
 			return false;
 		}
@@ -47,16 +47,15 @@ class lastfmApiDatabase {
 	/**
 	 * Method which runs queries. Returns a class on success and false on error
 	 * @param string $sql The SQL query to run
-	 * @return class
+	 * @return object
 	 * @uses lastfmApiDatabase_result
 	 */
-	function & query($sql) {
+	public function & query($sql) {
 		if ( !$queryResource = sqlite_query($this->dbConn, $sql, SQLITE_BOTH, $this->error) ) {
 			return false;
 		}
 		else {
-			$return = new lastfmApiDatabase_result($this, $queryResource);
-			return $return;
+			return new lastfmApiDatabase_result($this, $queryResource);
 		}
 	}
 }
@@ -68,22 +67,22 @@ class lastfmApiDatabase {
 class lastfmApiDatabase_result {
 	/**
 	 * Stores the sqlite class
-	 * @var class
+	 * @var object
 	 */
-	var $sqlite;
+	public $sqlite;
 	/**
 	 * Stores the query
-	 * @var class
+	 * @var object
 	 */
-	var $query;
+	public $query;
 	
 	/**
 	 * Run when the class is created. Sets up the variables
-	 * @param class $sqlite The sqlite class
-	 * @param class $query The query
+	 * @param object $sqlite The sqlite class
+	 * @param object $query The query
 	 * @return void
 	 */
-	function lastfmApiDatabase_result(&$sqlite, $query) {
+	public function __construct(&$sqlite, $query) {
 		$this->sqlite = &$sqlite;
 		$this->query = $query;
 	}
@@ -92,7 +91,7 @@ class lastfmApiDatabase_result {
 	 * Fetches the next result
 	 * @return array
 	 */
-	function fetch () {
+	public function fetch () {
 		if ( $row = sqlite_fetch_array($this->query) ) {
 			return $row;
 		}
@@ -109,7 +108,7 @@ class lastfmApiDatabase_result {
 	 * Fetches all the results
 	 * @return array
 	 */
-	function fetchAll() {
+	public function fetchAll() {
 		$result = array();
 		while ( $row = sqlite_fetch_array($this->query) ) {
 			$result[] = $row;
@@ -121,7 +120,7 @@ class lastfmApiDatabase_result {
 	 * Shows the number of results
 	 * @return integer
 	 */
-	function size () {
+	public function size () {
 		return sqlite_num_rows($this->query);
 	}
 }

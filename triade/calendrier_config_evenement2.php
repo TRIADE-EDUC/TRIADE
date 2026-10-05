@@ -1,11 +1,11 @@
 <?php
-      session_start();
+session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,9 +32,9 @@
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Administration du calendrier</title>
 </head>
-<body id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php include("./librairie_php/lib_licence.php"); ?>
-<?php
+<body id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+<?php 
+include_once("./librairie_php/lib_licence.php"); 
 include_once('librairie_php/db_triade.php');
 if (CALPROF == "oui") {
         validerequete("3");
@@ -54,12 +54,11 @@ $saisieannee=$_GET["saisieannee"];
         <BR><BR><UL>
 <form method=post name=formulaire onSubmit="return valid_cal_evnt()" >
              <?php
-                   $jour="$saisiejour";
-                   if ($saisiejour < 10) :
-                        $jour="0$saisiejour";
-                   endif ;
-		   $saisiemois=stripslashes($saisiemois);
-
+             $jour="$saisiejour";
+             if ($saisiejour < 10) {
+	             $jour="0$saisiejour";
+             } 
+	     $saisiemois=stripslashes($saisiemois);
              if ($saisiemois == LANGMOIS1 ) : $date="$jour/01/$saisieannee"; endif ;
              if (($saisiemois == "C hwevrer")  ||   ($saisiemois == LANGMOIS2 )) : $date="$jour/02/$saisieannee"; endif ;
              if ($saisiemois == LANGMOIS3 ) : $date="$jour/03/$saisieannee"; endif ;
@@ -88,11 +87,9 @@ $saisieannee=$_GET["saisieannee"];
  <BR>&nbsp;&nbsp;
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGENR?>","creat"); //text,nomInput</script>
 <script language=JavaScript>buttonMagicFermeture()</script>
-
-             </FORM>
+</form>
 <?php
-$cnx=cnx();
-if (isset($_POST[creat])) {
+if (isset($_POST['creat'])) {
         $nb=1;
         while ($nb < 10 ) {
                 $valeur="saisieevenement".$nb;
@@ -100,11 +97,11 @@ if (isset($_POST[creat])) {
                 $valeur=preg_replace('/script/i','',$valeur);
                 $valeur=preg_replace('/SCRIPT/i','',$valeur);
                 if  (strlen($valeur) >= 2) {
-                        $date_form=dateFormBase($_POST[saisiedate]);
+                        $date_form=dateFormBase($_POST['saisiedate']);
                         $cr=calend_evenement($date_form,$valeur);
                         if($cr == 1){
-                            //     alertJs("Evenement Enregistré -- Service Triade");
-				history_cmd($_SESSION[nom],"AJOUT","EVENEMENT");
+                            //  alertJs("Evenement Enregistré -- Service Triade");
+				history_cmd($_SESSION['nom'],"AJOUT","EVENEMENT");
                         }
                         else {
                                 error(0);
@@ -113,9 +110,7 @@ if (isset($_POST[creat])) {
                 $nb=$nb+1;
         }
         print "<script>parent.window.close();</script>" ;
-
 }
-
 Pgclose();
 ?>
-        </BODY></HTML>
+</BODY></HTML>

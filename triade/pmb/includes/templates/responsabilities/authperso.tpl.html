@@ -1,0 +1,336 @@
+<!-- $Id: authperso.tpl.html,v 1.2 2020/10/22 14:51:44 gneveu Exp $ -->
+
+<div id='el8Child_0' class='row' movable='yes' title='{{ msg.aut_responsability_form_responsability_authperso }}'> 
+	{% for key, value in responsabilities %}
+	<div class='row'>
+	    <!--	Auteurs de l'oeuvre	-->
+	    <div style='float:left;margin-right:10px;'>
+	    	{% if key == 0   %}
+		        <div class='row'>
+		            <label for='f_aut0' class='etiquette'>{{ msg.aut_responsability_form_responsability_authperso }}</label>	
+		            <input id='button_add_responsability_authperso_aut_composed_default' type='button' class='bouton' value='+' onClick="add_aut(0);"/>
+		        </div>
+	        {% endif %}
+	        <div class='row'>
+	            <input type='text' class='saisie-30emr' completion='authors' autfield='f_aut0_id{{ key }}' id='f_aut0{{ key }}' name='responsabilities[{{ key }}][authors]' data-form-name='f_aut0' value="{{ value.isbd }}" />
+	            <input type='button' class='bouton' value='{{ msg.parcourir }}' onclick="openPopUp('./select.php?what=auteur&caller=saisie_authperso&param1=f_aut0_id{{ key }}&param2=f_aut0{{ key }}&deb_rech='+{{ pmb_escape }}(this.form.f_aut0{{ key }}.value), 'selector')" />
+	            <input type='button' class='bouton' value='{{ msg.raz }}' onclick="this.form.f_aut0{{ key }}.value=''; this.form.f_aut0_id{{ key }}.value='0'; " />
+	            <input type='hidden' name='responsabilities[{{ key }}][authors_id]' data-form-name='f_aut0_id' id='f_aut0_id{{ key }}' value='{{ value.id }}' />
+	        </div>
+	    </div>
+	    <!--    Fonction    -->
+	    <div style='float:left;margin-right:10px;'>
+	   {% if key == 0   %}
+	        <div class='row'>
+	            <label class='etiquette'>{{ msg.245 }}</label>
+	        </div>
+        {% endif %}
+	        <div class='row'>
+	            <input type='text' class='saisie-15emr' id='f_f0{{ key }}' name='responsabilities[{{ key }}][fonction_name]' data-form-name='responsabilities[{{ key }}][fonction_name]' completion='fonction' autfield='f_f0_code{{ key }}' value='{{ value.fonction_name }}' />
+	            <input type='button' class='bouton' value='{{ msg.parcourir }}' onclick="openPopUp('./select.php?what=function&caller=saisie_authperso&p1=f_f0_code{{ key }}&p2=f_f0{{ key }}', 'selector')" />
+	            <input type='button' class='bouton' value='{{ msg.raz }}' onclick="this.form.f_f0{{ key }}.value=''; this.form.f_f0_code{{ key }}.value='0'; " />
+	            <input type='hidden' name='responsabilities[{{ key }}][fonction_code]' data-form-name='responsabilities[{{ key }}][fonction_code]' id='f_f0_code{{ key }}' value="{{ value.fonction_id }}" />
+			    {% if !qualification %}
+		            <input id="button_add_responsability_authperso_aut_composed_0" type="button" class="bouton" value="+" onClick="add_aut(0);"/>
+	            {% endif %}
+	        </div>
+	    </div>
+	    <!--    Qualification    -->
+	    {% if qualification %}
+	    <div style='float:left;margin-right:10px;'>
+	    {% if key == 0   %}
+	        <div class='row'>
+	            <label for='f_aut0' class='etiquette'>{{ msg.notice_vedette_composee_author }}</label>	
+	        </div>
+        {% endif %}
+	        <div class='row'>
+	            <img class='img_plus' hspace='3' border='0' onclick="expand_vedette(this,'vedette{{ key }}_role'); return false;" title='{{ msg.plus_detail}}' name='imEx' src='{{ icone.plusgif }}'>
+	            <input type='text' class='saisie-30emr'  readonly='readonly'  name='responsabilities[{{ key }}][qualification]' id='saisie_authperso_role_composed_{{ key }}_vedette_composee_apercu_autre'  data-form-name='vedette_composee_role' value="{{ value.qualification }}"/>		
+	            <input type='button' class='bouton' value='{{ msg.raz }}' onclick="del_vedette('role',{{ key }});" />	
+	            <input class='bouton' type='button' onclick='duplicate(0,{{ key }});' value='{{ msg.duplicate }}'>
+            	<input id="button_add_responsability_authperso_aut_composed_0" type="button" class="bouton" value="+" onClick="add_aut(0);"/>
+	        </div>	
+	    </div>	
+	    <div class='row' id='vedette{{ key }}_role' style='margin-bottom:6px;display:none'>
+	    	{{ value.vedette_author|safe }}
+	    </div>
+ 	    <script type='text/javascript'>
+	        vedette_composee_update_all('saisie_authperso_role_composed_{{ key }}_vedette_composee_subdivisions');
+	    </script>
+	    {% endif %}
+		<div class="row"></div>
+	</div>
+	{% endfor %}
+	<div id="addaut0" class="row"></div>
+	<input type="hidden" id="max_aut0" name="max_aut0" value="{{ max_aut0 }}" />
+</div>
+
+<script>
+	function add_aut(n) {
+		var template = document.getElementById('addaut'+n);
+		var aut=document.createElement('div');
+		aut.className='row';
+		
+		// auteur
+		var colonne=document.createElement('div');
+		//colonne.className='colonne2';
+        colonne.style.cssFloat = 'left';
+        colonne.style.marginRight = '10px';
+		var row=document.createElement('div');
+		row.className='row';
+		var suffixe = eval('document.saisie_authperso.max_aut'+n+'.value')
+		var name = 'responsabilities['+suffixe+'][authors]';
+		var nom_id = 'f_aut'+n+suffixe
+		var f_aut0 = document.createElement('input');
+		f_aut0.setAttribute('name',name);
+		f_aut0.setAttribute('id',nom_id);
+		f_aut0.setAttribute('type','text');
+		f_aut0.className='saisie-30emr';
+		f_aut0.setAttribute('value','');
+		f_aut0.setAttribute('completion','authors');
+		f_aut0.setAttribute('autfield','f_aut'+n+'_id'+suffixe);
+		
+		var sel_f_aut0 = document.createElement('input');
+		sel_f_aut0.setAttribute('id','sel_f_aut'+n+suffixe);
+		sel_f_aut0.setAttribute('type','button');
+		sel_f_aut0.className='bouton';
+		sel_f_aut0.setAttribute('readonly','');
+		sel_f_aut0.setAttribute('value','{{ msg.parcourir }}');
+		sel_f_aut0.onclick=fonction_selecteur_auteur;
+		
+		var del_f_aut0 = document.createElement('input');
+		del_f_aut0.setAttribute('id','del_f_aut'+n+suffixe);
+		del_f_aut0.onclick=fonction_raz_auteur;
+		del_f_aut0.setAttribute('type','button');
+		del_f_aut0.className='bouton';
+		del_f_aut0.setAttribute('readonly','');
+		del_f_aut0.setAttribute('value','{{ msg.raz }}');
+		
+		var f_aut0_id = document.createElement('input');
+		f_aut0_id.name = 'responsabilities['+suffixe+'][authors_id]';
+		f_aut0_id.setAttribute('type','hidden');
+		f_aut0_id.setAttribute('id','f_aut'+n+'_id'+suffixe);
+		f_aut0_id.setAttribute('value','');
+		
+		var duplicate = document.createElement('input');
+		duplicate.setAttribute('onclick','duplicate('+n+','+suffixe+')');			
+		duplicate.setAttribute('type','button');
+		duplicate.className='bouton';
+		duplicate.setAttribute('readonly','readonly');
+		duplicate.setAttribute('value','{{ msg.duplicate }}');
+				
+		//f_aut0_content.appendChild(f_aut0);
+		row.appendChild(f_aut0);
+		space=document.createTextNode(' ');
+		row.appendChild(space);
+		row.appendChild(sel_f_aut0);
+		space=document.createTextNode(' ');
+		row.appendChild(space);
+		row.appendChild(del_f_aut0);
+		row.appendChild(f_aut0_id);
+		colonne.appendChild(row);
+		aut.appendChild(colonne);
+				
+		// fonction	
+		var colonne=document.createElement('div');
+		//colonne.className='colonne_suite';
+        colonne.style.cssFloat = 'left';
+        colonne.style.marginRight = '10px';
+		row=document.createElement('div');
+		row.className='row';
+		suffixe = eval('document.saisie_authperso.max_aut'+n+'.value');
+		var name = 'responsabilities['+suffixe+'][fonction_name]';
+		nom_id = 'f_f'+n+suffixe;
+		f_f0 = document.createElement('input');
+		f_f0.setAttribute('name',name);
+		f_f0.setAttribute('id',nom_id);
+		f_f0.setAttribute('type','text');
+		f_f0.className='saisie-15emr';
+		f_f0.setAttribute('value','{{ default_fonction_name }}');
+		f_f0.setAttribute('completion','fonction');
+		f_f0.setAttribute('autfield','f_f'+n+'_code'+suffixe);
+		
+		sel_f_f0 = document.createElement('input');
+		sel_f_f0.setAttribute('id','sel_f_f'+n+suffixe);
+		sel_f_f0.setAttribute('type','button');
+		sel_f_f0.className='bouton';
+		sel_f_f0.setAttribute('readonly','');
+		sel_f_f0.setAttribute('value','{{ msg.parcourir }}');
+		sel_f_f0.onclick=fonction_selecteur_fonction;
+		
+		del_f_f0 = document.createElement('input');
+		del_f_f0.setAttribute('id','del_f_f'+n+suffixe);
+		del_f_f0.onclick=fonction_raz_fonction;
+		del_f_f0.setAttribute('type','button');
+		del_f_f0.className='bouton';
+		del_f_f0.setAttribute('readonly','readonly');
+		del_f_f0.setAttribute('value','{{ msg.raz }}');
+				
+		f_f0_code = document.createElement('input');
+		f_f0_code.name = 'responsabilities['+suffixe+'][fonction_code]';
+		f_f0_code.setAttribute('type','hidden');
+		f_f0_code.setAttribute('id','f_f'+n+'_code'+suffixe);
+		f_f0_code.setAttribute('value','{{ default_fonction_id }}');
+		
+		row.appendChild(f_f0);
+		space=document.createTextNode(' ');
+		row.appendChild(space);
+		row.appendChild(sel_f_f0);
+		space=document.createTextNode(' ');
+		row.appendChild(space);
+		row.appendChild(del_f_f0);
+		row.appendChild(f_f0_code);				
+		if(!('{{ qualification }}'*1)){					
+			space=document.createTextNode(' ');
+			row.appendChild(space);
+			row.appendChild(duplicate);		
+		}		
+		colonne.appendChild(row);		
+		aut.appendChild(colonne);
+	
+		if('{{ qualification }}'*1){		
+	        var role_field='role';
+	        if(n==1) role_field='role_autre';
+	        if(n==2) role_field='role_secondaire';
+	        
+			var req = new http_request();	
+			if(req.request('./ajax.php?module=autorites&categ=get_authperso_form_vedette&role_field='+role_field+'&index='+suffixe,1)){
+				// Il y a une erreur
+				alert ( req.get_text() );			
+			}else {
+			 	vedette_form=req.get_text();
+			 	var row_vedette=document.createElement('div');
+				row_vedette.className='row';
+				row_vedette.innerHTML=vedette_form;
+			}
+			row_vedette.setAttribute('id','vedette'+suffixe+'_'+role_field);		
+			row_vedette.style.display='none';		
+			
+			colonne=document.createElement('div');
+			//colonne.className='colonne_suite';
+       		colonne.style.cssFloat = 'left';
+			row=document.createElement('div');
+			row.className='row';
+			
+			var img_plus = document.createElement('img');
+			img_plus.name='img_plus'+suffixe;
+			img_plus.setAttribute('id','img_plus'+suffixe+'_'+role_field);		
+			img_plus.className='img_plus';
+			img_plus.setAttribute('hspace','3');	
+			img_plus.setAttribute('border','0');	
+			img_plus.setAttribute('title','{{ msg.plus_detail}}');
+			img_plus.setAttribute('src','{{ icone.plusgif }}');
+			img_plus.setAttribute('onclick','expand_vedette(this, "vedette'+suffixe+'_'+role_field+'")');			
+			var name = 'responsabilities['+suffixe+'][qualification]';
+			var nom_id = 'saisie_authperso_'+role_field+'_composed_'+suffixe+'_vedette_composee_apercu_autre';
+			apercu = document.createElement('input');
+			apercu.setAttribute('name',name);
+			apercu.setAttribute('id',nom_id);
+			apercu.setAttribute('type','text');
+			apercu.className='saisie-30emr';
+			apercu.setAttribute('readonly','readonly');
+				
+			var del_vedette = document.createElement('input');
+			del_vedette.setAttribute('onclick','del_vedette("'+role_field+'",'+suffixe+')');
+			del_vedette.setAttribute('type','button');
+			del_vedette.className='bouton';
+			del_vedette.setAttribute('readonly','readonly');
+			del_vedette.setAttribute('value','{{ msg.raz }}');		
+				
+			var duplicate = document.createElement('input');
+			duplicate.setAttribute('onclick','duplicate('+n+','+suffixe+')');			
+			duplicate.setAttribute('type','button');
+			duplicate.className='bouton';
+			duplicate.setAttribute('readonly','readonly');
+			duplicate.setAttribute('value','{{ msg.duplicate }}');
+		
+			var buttonAdd = document.getElementById('button_add_responsability_authperso_aut_composed_' + n);
+
+			row.appendChild(img_plus);
+			space=document.createTextNode(' ');
+			row.appendChild(space);
+			row.appendChild(apercu);
+			space=document.createTextNode(' ');
+			row.appendChild(space);
+			row.appendChild(del_vedette);
+			space=document.createTextNode(' ');
+			row.appendChild(space);
+			row.appendChild(duplicate);
+			row.appendChild(buttonAdd);
+			colonne.appendChild(row);
+			aut.appendChild(colonne);		
+			
+			template.appendChild(aut);
+			template.appendChild(row_vedette);
+			eval(document.getElementById('vedette_script_'+role_field+'_composed_'+suffixe).innerHTML);
+		}else{		
+			template.appendChild(aut);
+		}		
+		eval('document.saisie_authperso.max_aut'+n+'.value=suffixe*1+1*1');
+		ajax_pack_element(f_aut0);
+		ajax_pack_element(f_f0);
+		init_drag();
+	}
+	
+	function duplicate(n,suffixe){
+		add_aut(n);		
+		new_suffixe = eval('document.saisie_authperso.max_aut'+n+'.value')-1;
+        document.getElementById('f_aut'+n+new_suffixe).value = document.getElementById('f_aut'+n+suffixe).value;
+        document.getElementById('f_aut'+n+'_id'+new_suffixe).value = document.getElementById('f_aut'+n+'_id'+suffixe).value;
+        document.getElementById('f_f'+n+new_suffixe).value = '';
+        document.getElementById('f_f'+n+'_code'+new_suffixe).value = '';
+	}
+	
+	function expand_vedette(el,what) {
+		var obj=document.getElementById(what);
+		if(obj.style.display=='none'){
+			obj.style.display='block';
+	    	el.src = '{{ icone.minusgif }}';	    	
+			init_drag();
+		}else{
+			obj.style.display='none';
+	    	el.src =  '{{ icone.plusgif }}';
+		}
+	}
+	
+	function del_vedette(role,index) {
+		vedette_composee_delete_all('saisie_authperso_'+role+'_composed_'+index+'_vedette_composee_subdivisions');		
+		init_drag();
+	}
+	
+	function fonction_raz_fonction() {
+        var name=this.getAttribute('id').substring(4);
+        var name_code = name.substr(0,4)+'_code'+name.substr(4);
+        document.getElementById(name_code).value=0;
+        document.getElementById(name).value='';
+    }
+    
+    function fonction_selecteur_auteur() {
+        var name=this.getAttribute('id').substring(4);
+        var name_id = name.substr(0,6)+'_id'+name.substr(6);
+        openPopUp('./select.php?what=auteur&caller=saisie_authperso&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+{{ pmb_escape }}(document.getElementById(name).value), 'selector');
+    }
+    
+    function fonction_selecteur_auteur_change(field) {
+    	// id champ text = 'f_aut'+n+suffixe
+    	// id champ hidden = 'f_aut'+n+'_id'+suffixe; 
+    	// select.php?what=auteur&caller=saisie_authperso&param1=f_aut0_id&param2=f_aut0&deb_rech='+t
+        var name=field.getAttribute('id');
+        var name_id = name.substr(0,6)+'_id'+name.substr(6);
+        openPopUp('./select.php?what=auteur&caller=saisie_authperso&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+{{ pmb_escape }}(document.getElementById(name).value), 'selector');
+    }
+    
+    function fonction_raz_auteur() {
+        var name=this.getAttribute('id').substring(4);
+        var name_id = name.substr(0,6)+'_id'+name.substr(6);
+        document.getElementById(name_id).value=0;
+        document.getElementById(name).value='';
+    }
+    
+    function fonction_selecteur_fonction() {
+        var name=this.getAttribute('id').substring(4);
+        var name_code = name.substr(0,4)+'_code'+name.substr(4);
+        openPopUp('./select.php?what=function&caller=saisie_authperso&param1='+name_code+'&param2='+name+'&dyn=1', 'selector');
+    }
+    
+</script>

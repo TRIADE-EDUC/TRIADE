@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: proxy.js,v 1.2 2009-07-21 09:36:35 ngantier Exp $
+// $Id: proxy.js,v 1.2 2009/07/21 09:36:35 ngantier Exp $
 
     // javascript proxy for webservices
     // by Matthias Hertel

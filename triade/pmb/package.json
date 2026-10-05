@@ -1,0 +1,35 @@
+{
+  "name": "pmb",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "PMB Services",
+  "contributors": [],
+  "dependencies": {
+    "@tinymce/tinymce-vue": "^3.2.8",
+    "chart.js": "^3.7.1",
+    "regenerator-runtime": "^0.13.11",
+    "splitpanes": "^2.4.1",
+    "tinymce": "^6.3.1",
+    "vue-chartjs": "^4.1.2",
+    "vue-grid-layout": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "babel-loader": "^8.0.5",
+    "babel-polyfill": "^6.26.0",
+    "css-loader": "*",
+    "vue": "*",
+    "vue-loader": "^15.9.1",
+    "vue-nestable": "*",
+    "vue-template-compiler": "^2.0.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "scripts": {
+    "dev": "webpack -w --config ./webpack.config.dev.js",
+    "prod": "webpack --config ./webpack.config.prod.js",
+    "watch": "webpack -w --config ./webpack.config.watch.js"
+  }
+}

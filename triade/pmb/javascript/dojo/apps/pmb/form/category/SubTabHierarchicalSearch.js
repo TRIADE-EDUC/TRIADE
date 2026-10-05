@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabHierarchicalSearch.js,v 1.1 2017-10-25 11:43:06 dgoron Exp $
+// $Id: SubTabHierarchicalSearch.js,v 1.1 2017/10/25 11:43:06 dgoron Exp $
 
 
 define([

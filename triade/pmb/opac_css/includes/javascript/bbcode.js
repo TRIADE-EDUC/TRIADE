@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bbcode.js,v 1.2 2011-08-09 15:52:00 ngantier Exp $
+// $Id: bbcode.js,v 1.2 2011/08/09 15:52:00 ngantier Exp $
 
 function insert_text(field, open, close)	{
 	msgfield=document.getElementById(field);

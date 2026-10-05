@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mono_display_expl.class.php,v 1.24 2019-06-06 15:04:24 btafforeau Exp $
+// $Id: mono_display_expl.class.php,v 1.31.4.2 2025/01/30 09:08:06 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$class_path/author.class.php");
 require_once("$class_path/editor.class.php");
@@ -26,28 +27,29 @@ require_once($class_path."/mono_display.class.php");
 require_once($class_path."/serial_display.class.php");
 require_once($include_path."/templates/expl.tpl.php");
 
-if (!isset($tdoc)) $tdoc = marc_list_collection::get_instance('doctype');
-// propriÃ©tÃ©s pour le selecteur de panier 
+global $tdoc;
+if (empty($tdoc)) $tdoc = marc_list_collection::get_instance('doctype');
+// propriétés pour le selecteur de panier 
 $cart_click = "onClick=\"openPopUp('./cart.php?object_type=NOTI&item=!!id!!&unq=!!unique!!', 'cart')\"";
 
 
-// dÃ©finition de la classe d'affichage des monographies en liste
+// définition de la classe d'affichage des monographies en liste
 class mono_display_expl {
-	public $notice_id		= 0;	// id de la notice Ã  afficher
-	public $isbn		= 0;	// isbn ou code EAN de la notice Ã  afficher
-  	public $notice;			// objet notice (tel que fetchÃ© dans la table 'notices'
+	public $notice_id		= 0;	// id de la notice à afficher
+	public $isbn		= 0;	// isbn ou code EAN de la notice à afficher
+  	public $notice;			// objet notice (tel que fetché dans la table 'notices'
 	public $langues = array();
 	public $languesorg = array();
-  	public $action		= '';	// URL Ã  associer au header
-	public $header		= '';	// chaine accueillant le chapeau de notice (peut-Ãªtre cliquable)
-	public $tit_serie		= '';	// titre de sÃ©rie si applicable
+  	public $action		= '';	// URL à associer au header
+	public $header		= '';	// chaine accueillant le chapeau de notice (peut-être cliquable)
+	public $tit_serie		= '';	// titre de série si applicable
 	public $tit1		= '';	// valeur du titre 1
 	public $result		= '';	// affichage final
 	public $level		= 1;	// niveau d'affichage
-	public $isbd		= '';	// isbd de la notice en fonction du level dÃ©fini
+	public $isbd		= '';	// isbd de la notice en fonction du level défini
 	public $expl		= 0;	// flag indiquant si on affiche les infos d'exemplaire
 	public $nb_expl	= 0;	//nombre d'exemplaires
-	public $link_expl		= '';	// lien associÃ© Ã  un exemplaire
+	public $link_expl		= '';	// lien associé à un exemplaire
 	public $responsabilites =	array("responsabilites" => array(),"auteurs" => array());  // les auteurs
 	public $categories =	array();// les categories
 	public $show_resa		= 0;	// flag indiquant si on affiche les infos de resa
@@ -55,7 +57,7 @@ class mono_display_expl {
 	public $print_mode=0;
 	public $show_explnum=1;
 	public $show_statut=0;
-	public $aff_statut = '' ; // carrÃ© de couleur pour signaler le statut de la notice
+	public $aff_statut = '' ; // carré de couleur pour signaler le statut de la notice
 	public $tit_serie_lien_gestion ;
 	public $childs=array(); //Filles de la notice
 	public $anti_loop="";
@@ -66,28 +68,28 @@ class mono_display_expl {
 	public $id_bulletin;
 	public $ajax_mode = 0;
 	public $lien_suppr_cart = '';
+	public $expl_data;
 	
 	// constructeur------------------------------------------------------------
 	public function __construct($cb,$expl_id=0, $level=1, $action='', $expl=1, $expl_link='', $lien_suppr_cart="", $explnum_link='', $show_resa=0, $print=0, $show_explnum=1, $no_link=true,$ajax_mode=0 ) {
-	  	// $id = id de la notice Ã  afficher
-	  	// $action	 = URL associÃ©e au header
+	  	// $id = id de la notice à afficher
+	  	// $action	 = URL associée au header
 		// $level :
 		//		0 : juste le header (titre  / auteur principal avec le lien si applicable) 
 		// 			suppression des niveaux entre 1 et 6, seul reste level
-		//		1 : ISBD seul, pas de note, bouton modif, expl, explnum et rÃ©sas
-		// 		6 : cas gÃ©nÃ©ral dÃ©taillÃ© avec notes, categ, langues, indexation... + boutons
-		// $expl -> affiche ou non les exemplaires associÃ©s
-		// $expl_link -> lien associÃ© Ã  l'exemplaire avec !!expl_id!!, !!notice_id!! et !!expl_cb!! Ã  mettre Ã  jour
+		//		1 : ISBD seul, pas de note, bouton modif, expl, explnum et résas
+		// 		6 : cas général détaillé avec notes, categ, langues, indexation... + boutons
+		// $expl -> affiche ou non les exemplaires associés
+		// $expl_link -> lien associé à l'exemplaire avec !!expl_id!!, !!notice_id!! et !!expl_cb!! à mettre à jour
 	  	// $lien_suppr_cart -> lien de suppression de la notice d'un caddie
 	  	//
 	  	// $show_resa = affichage des resa ou pas
-	  	global $pmb_recherche_ajax_mode;
-		global $explr_visible_mod,$pmb_droits_explr_localises, $dbh;
+		global $explr_visible_mod,$pmb_droits_explr_localises;
 		
-		$expl_id += 0;
+		$expl_id = intval($expl_id);
 		if(!$expl_id && $cb) {
 			$query = " select expl_id from exemplaires where expl_cb='".$cb."'";
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)) {
 				$expl = pmb_mysql_fetch_object($result);
 				$expl_id = $expl->expl_id;		
@@ -128,7 +130,7 @@ class mono_display_expl {
 		$this->isbd.= "<a href='$link_notice'>".$display->header."</a>";
 //		$this->isbd.= $display->isbd;
 	
-		//visibilitÃ© des exemplaires
+		//visibilité des exemplaires
 		if ($pmb_droits_explr_localises) {
 			$explr_tab_modif=explode(",",$explr_visible_mod);
 			$as_modif = array_search($this->expl_data->idlocation,$explr_tab_modif);
@@ -146,11 +148,11 @@ class mono_display_expl {
 		
 		switch($level) {
 		case 0:
-			// lÃ , c'est le niveau 0 : juste le header
+			// là, c'est le niveau 0 : juste le header
 			$this->result = $this->header;
 			break;
 		default:
-			// niveau 1 et plus : header + isbd Ã  gÃ©nÃ©rer
+			// niveau 1 et plus : header + isbd à générer
 			$this->init_javascript();
 			$this->finalize();
 			break;
@@ -159,10 +161,10 @@ class mono_display_expl {
 
 	public function expl_titre_diplay() {
 		global $charset;
-		global $msg;
 		global $pmb_expl_title_display_format,$p_perso, $perso_, $nb_param;
 		
 		if(!$pmb_expl_title_display_format) return'';
+		$liste_aff = array();
 		$liste_format=explode(",",$pmb_expl_title_display_format);
 		
 		foreach($liste_format as $format) {
@@ -178,7 +180,7 @@ class mono_display_expl {
 				case "expl_codestat":$liste_aff[]=htmlentities($this->expl_data->codestat,ENT_QUOTES,$charset);break;
 				case "expl_note":$liste_aff[]=htmlentities($this->expl_data->note,ENT_QUOTES,$charset);break;
 				case "expl_prix":$liste_aff[]=htmlentities($this->expl_data->prix,ENT_QUOTES,$charset);break;
-				case "expl_owner":$liste_aff[]=htmlentities($this->expl_data->lender_id,ENT_QUOTES,$charset);break;
+				case "expl_owner":$liste_aff[]=htmlentities($this->expl_data->lender_libelle,ENT_QUOTES,$charset);break;
 				case "expl_lastempr":$liste_aff[]=htmlentities($this->expl_data->lastempr,ENT_QUOTES,$charset);break;
 				case "last_loan_date":$liste_aff[]=htmlentities(format_date($this->expl_data->last_loan_date),ENT_QUOTES,$charset);break;
 				case "create_date":$liste_aff[]=htmlentities(format_date($this->expl_data->create_date),ENT_QUOTES,$charset);break;
@@ -209,16 +211,14 @@ class mono_display_expl {
 				break;
 			}
 		}
-		if(!$liste_aff) return'';	
-		
+		if(empty($liste_aff)) {
+			return'';
+		}
 		return implode(", ", $liste_aff);	
 	}
 	
-	// rÃ©cupÃ©ration des infos exemplaires
+	// récupération des infos exemplaires
 	public function get_expl_info($cb, $id, $lien_notice=1) {
-		global $dbh;
-		global $cart_link_non;
-		
 		if ($cb && !$id) $clause_where = " WHERE expl_cb = '$cb' ";
 		if ( (!$cb && $id) || ($cb && $id) ) $clause_where = " WHERE expl_id = '$id' ";
 		
@@ -232,7 +232,7 @@ class mono_display_expl {
 			$query .= " and dtype.idtyp_doc=expl.expl_typdoc";
 			$query .= " and idcode=expl.expl_codestat";
 			$query .= " and idlender=expl.expl_owner";
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)) {
 				$expl = pmb_mysql_fetch_object($result);
 				if ($expl->expl_lastempr) {
@@ -268,7 +268,7 @@ class mono_display_expl {
 		$nb_prets = pmb_mysql_result($res,0,0);
 		$expl_aff=str_replace('!!nb_prets!!', $nb_prets, $expl_aff);
 		
-		//Date de crÃ©ation / modification
+		//Date de création / modification
 		if($pmb_expl_show_dates=='1' || $pmb_expl_show_dates=='3') {
 			$tmp="<tr>
 				<td class='align_right'><label class='etiquette'>".htmlentities($msg['exp_cre_date'],ENT_QUOTES,$charset)."</label></td>
@@ -279,7 +279,7 @@ class mono_display_expl {
 			$expl_aff=str_replace('<!-- exp_date_admin -->', $tmp, $expl_aff);
 		}
 		
-		//Date de dÃ©pÃ´t / retour
+		//Date de dépôt / retour
 		if($pmb_expl_show_dates=='2' || $pmb_expl_show_dates=='3') {
 			$tmp="<tr>
 				<td class='align_right'><label class='etiquette'>".htmlentities($msg['filing_date'],ENT_QUOTES,$charset)."</label></td>
@@ -290,13 +290,11 @@ class mono_display_expl {
 			$expl_aff=str_replace('<!-- exp_date_filing -->', $tmp, $expl_aff);
 		}
 		
+		$perso_aff='';
 		$p_perso=new parametres_perso("expl");
 		if (!$p_perso->no_special_fields) {
-			$c=0;
-			$perso="";
 			$perso_=$p_perso->show_fields($this->expl_data->expl_id);		
 			$nb_param=count($perso_["FIELDS"]);
-			$perso_aff='';
 			for ($i=0; $i<$nb_param; $i++) {				
 				$nb_colonne=2;	
 				$perso_aff.="<tr>\n";
@@ -315,33 +313,33 @@ class mono_display_expl {
 	
 	}
 	
-	// finalisation du rÃ©sultat (Ã©criture de l'isbd)
+	// finalisation du résultat (écriture de l'isbd)
 	public function finalize() {
 		$this->result = str_replace('!!ISBD!!', $this->isbd, $this->result);
 	}
 	
-	// gÃ©nÃ©ration du template javascript---------------------------------------
+	// génération du template javascript---------------------------------------
 	public function init_javascript() {
-		global $msg,$pmb_recherche_ajax_mode, $categ;
+	    global $msg, $charset, $pmb_recherche_ajax_mode, $categ;
 		
-		// propriÃ©tÃ©s pour le selecteur de panier 
+		// propriétés pour le selecteur de panier 
 		$cart_click = "onClick=\"openPopUp('./cart.php?object_type=EXPL&item=!!id!!', 'cart')\"";
 		$cart_over_out = "onMouseOver=\"show_div_access_carts(event,!!id!!,'EXPL');\" onMouseOut=\"set_flag_info_div(false);\"";
 		$checkbox = '';
 		if(isset($categ) && $categ == 'search') {
-		    $checkbox = "<span class='notice-selection'><input type='checkbox' id='object_selection_!!id!!' name='objects_selection' value='!!id!!' /></span>";
+		    $checkbox = "<span class='notice-selection'><input type='checkbox' id='object_selection_!!id!!' name='objects_selection' value='!!id!!' title='".htmlentities($msg['list_ui_selection_checkbox'], ENT_QUOTES, $charset)."' /></span>";
 		}
 		if($pmb_recherche_ajax_mode && $this->ajax_mode){	
 		   
 			$javascript_template ="
 			<div id=\"el!!id!!Parent\" class=\"notice-parent\">
                 " . $checkbox . "
-	    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el!!id!!Img\" param='".rawurlencode($this->mono_display_cmd)."' title=\"".$msg['admin_param_detail']."\" border=\"0\" onClick=\"expandBase_ajax('el!!id!!', true,this.getAttribute('param')); return false;\" hspace=\"3\">
+	    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el!!id!!Img\" param='".rawurlencode($this->mono_display_cmd)."' title=\"".$msg['admin_param_detail']."\" onClick=\"expandBase_ajax('el!!id!!', true,this.getAttribute('param')); return false;\" />
 	    		<span class=\"notice-heada\">!!heada!!</span>
 	    		<br />
 			</div>
 			<div id=\"el!!id!!Child\" class=\"notice-child\" style=\"margin-bottom:6px;display:none;\">
-	        <img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click $cart_over_out>
+	        <img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click $cart_over_out>
 	        !!ISBD!!
 	 		</div>";
 		
@@ -349,16 +347,20 @@ class mono_display_expl {
 			$javascript_template ="
 			<div id=\"el!!id!!Parent\" class=\"notice-parent\">
                 " . $checkbox . "
-	    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el!!id!!Img\" title=\"".$msg['admin_param_detail']."\" border=\"0\" onClick=\"expandBase('el!!id!!', true); return false;\" hspace=\"3\">
+	    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el!!id!!Img\" title=\"".$msg['admin_param_detail']."\" onClick=\"expandBase('el!!id!!', true); return false;\" />
 	    		<span class=\"notice-heada\">!!heada!!</span>
 	    		<br />
 			</div>
 			<div id=\"el!!id!!Child\" class=\"notice-child\" style=\"margin-bottom:6px;display:none;\">
-	        <img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click $cart_over_out>
+	        <img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click $cart_over_out>
 	        !!ISBD!!
 	 		</div>";
-		}	
-		$this->result = str_replace('!!id!!', $this->expl_data->expl_id.($this->anti_loop?"_p".$this->anti_loop[count($this->anti_loop)-1]:""), $javascript_template);
+		}
+		$id_part = "";
+		if ($this->anti_loop) {
+		    $id_part = "_p" . substr($this->anti_loop, count($this->anti_loop)-1, 1);
+		}
+		$this->result = str_replace('!!id!!', $this->expl_data->expl_id . $id_part, $javascript_template);
 		$this->result = str_replace('!!heada!!', $this->lien_suppr_cart.$this->header, $this->result);
 	}
 

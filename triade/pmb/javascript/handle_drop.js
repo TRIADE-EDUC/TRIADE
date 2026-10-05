@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: handle_drop.js,v 1.9 2017-10-04 14:52:33 jpermanne Exp $ */
+// $Id: handle_drop.js,v 1.10 2021/10/04 09:24:39 dgoron Exp $ */
 
 requete=new Array();
 
@@ -138,7 +138,7 @@ function affichage_clignotant(objet,cpt){
 
 /**********************************
  *								  *				
- *      Tri des notices liées     *
+ *      Tri des notices li�es     *
  *                                * 
  **********************************/
 /*
@@ -160,7 +160,11 @@ function link_link(dragged,target){
 	}
 	
 	var pere=target.parentNode;
-	pere.insertBefore(dragged,target);
+	let nodeTarget = target;
+	if (dragged.getAttribute('order') < target.getAttribute('order')) {
+		nodeTarget = target.nextSibling;
+	}
+	pere.insertBefore(dragged, nodeTarget);
 	
 	noti_downlight(target);
 	
@@ -181,7 +185,7 @@ function childs_childs(dragged,target) {
 }
 
 /*
- * Mis à jour de l'ordre
+ * Mis � jour de l'ordre
  */
 function update_order(source,cible){
 	var pere = source.parentNode.parentNode;

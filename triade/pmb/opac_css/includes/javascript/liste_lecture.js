@@ -1,10 +1,10 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: liste_lecture.js,v 1.7 2016-03-18 14:02:03 dgoron Exp $
+// $Id: liste_lecture.js,v 1.7 2016/03/18 14:02:03 dgoron Exp $
 
 /*
- * CrÃ©ation du formulaire de saisie d'envoi d'une demande
+ * Création du formulaire de saisie d'envoi d'une demande
  */
 function make_mail_form(id){
 	
@@ -23,7 +23,7 @@ function make_mail_form(id){
 }
 
 /*
- * CrÃ©ation du formulaire de saisie d'un refus demande
+ * Création du formulaire de saisie d'un refus demande
  */
 function make_refus_form(list){
 	
@@ -59,7 +59,7 @@ function cancel_refus(){
 }
 
 /*
- * Envoi du mail de demande d'accÃ¨s
+ * Envoi du mail de demande d'accès
  */
 function send_mail(id){
 	var action = new http_request();

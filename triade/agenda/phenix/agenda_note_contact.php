@@ -33,7 +33,7 @@
 
   include("lang/$APPLI_LANGUE.php");
 
-  $DB_CX->DbQuery("SELECT CONCAT($FORMAT_NOM_CONTACT) AS nom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax  FROM ${PREFIX_TABLE}calepin WHERE cal_id=".$id);
+  $DB_CX->DbQuery("SELECT CONCAT($FORMAT_NOM_CONTACT) AS nom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax  FROM {$PREFIX_TABLE}calepin WHERE cal_id=".$id);
   $nomCtt = $adresseCtt = $villeCtt = "";
   if ($enr = $DB_CX->DbNextRow()) {
     $nomCtt = addslashes($enr['nom']);  // Nom

@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: taberror.php,v 1.3 2015-04-03 11:16:23 jpermanne Exp $
+// $Id: taberror.php,v 1.4 2022/07/28 12:35:46 jparis Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";                            
 $base_auth = "";  
 $base_title = "";
@@ -30,4 +30,7 @@ print "</div>
 </div>";
 
 print $footer;
+
+html_builder();
+
 pmb_mysql_close($dbh);

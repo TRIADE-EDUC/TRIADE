@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities.inc.php,v 1.3 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: entities.inc.php,v 1.4 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -12,7 +12,7 @@ require_once($class_path."/encoding_normalize.class.php");
 require_once($class_path."/entities.class.php");
 require_once($class_path."/authorities_collection.class.php");
 
-if(!isset($id)) $id = 0; else $id += 0;
+if(!isset($id)) $id = 0; else $id = intval($id);
 
 $entity_id = 0;
 $entity_label = '';

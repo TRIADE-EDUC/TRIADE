@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_filter.class.php,v 1.5 2017-07-12 15:15:00 tsamson Exp $
+// $Id: editions_state_filter.class.php,v 1.6 2023/02/23 09:00:11 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -31,7 +31,27 @@ class editions_state_filter {
 		}
 	}
 	
-	public function get_form(){
+	protected function get_inherited_form(){
+		
+	}
+	
+	public function get_form($draggable=false){
+		global $charset;
+		
+		$form= "
+			<div class='row'>&nbsp;</div>
+			<div class='row'>";
+		if($draggable){
+			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."_drag' draggable='yes' dragtype='editionsstatefilterslist'>";
+		}else{
+			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."' >";
+		}
+		$form.= "
+					<label style='cursor: pointer;'>".htmlentities($this->elem['label'],ENT_QUOTES,$charset)."</label>
+				</div>
+				".$this->get_inherited_form()."
+			</div>";
+		return $form;
 	}
 	
 	public function get_params(){

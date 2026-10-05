@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: simili_search.js,v 1.4 2017-11-30 12:50:43 dgoron Exp $
+// $Id: simili_search.js,v 1.5 2023/08/16 14:02:17 dbellamy Exp $
 
 var tab_notices_simili_search_all=new Array();
 				
@@ -14,7 +14,7 @@ function show_simili_search(id_notice){
 			return;
 		}
 		// patience
-		simili_id.innerHTML =  '<div style=\"width:100%; height:30px;text-align:center\"><img style=\"padding 0 auto;\" src=\"'+pmb_img_patience+'\" id=\"collapseall\" border=\"0\"><\/div>' ;			
+		simili_id.innerHTML =  '<div style=\"width:100%; height:30px;text-align:center\"><img style=\"padding 0 auto;\" src=\"'+pmb_img_patience+'\" id=\"collapseall\" ><\/div>' ;			
 		
 	}else return;		
 	var url= './ajax.php?module=ajax&categ=simili&sub=search';		
@@ -55,7 +55,7 @@ function show_expl_voisin_search(id_notice){
 		if(div_contens.length >0) {
 			return;
 		}
-		expl_voisin_id.innerHTML =  '<div style=\"width:100%; height:30px;text-align:center\"><img style=\"padding 0 auto;\" src=\"'+pmb_img_patience+'\" id=\"collapseall\" border=\"0\"><\/div>' ;
+		expl_voisin_id.innerHTML =  '<div style=\"width:100%; height:30px;text-align:center\"><img style=\"padding 0 auto;\" src=\"'+pmb_img_patience+'\" id=\"collapseall\" ><\/div>' ;
 	}else return;	
 	var url= './ajax.php?module=ajax&categ=expl_voisin&sub=search';		
 	url+='&id_notice='+id_notice;	

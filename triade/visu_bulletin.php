@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -56,11 +56,11 @@ if (isset($_SESSION["idelevetuteur"])) {
 
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method='post'>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Visualisation des bulletins" ?></font></b>
@@ -116,7 +116,7 @@ $classe_nom=preg_replace('/\//',"_",$classe_nom);
 $classe_nom=preg_replace('/,/',"_",$classe_nom);
 $anneeScolaire=preg_replace('/ /','',$anneeScolaire);
 print "<table width='80%' border='1' style='border-collapse: collapse;' >";
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$trimestre=$data[$i][0];
 	$id=$data[$i][1];
 	$rep="./data/archive/bulletin/$anneeScolaire/_$Seid/";

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,7 +18,7 @@
  *
  ***************************************************************************/
 
-// int(10) unsigned
+//
 
 include_once("../common/config.inc.php");
 include_once("DB.php");
@@ -100,4 +100,16 @@ function MyAddSlashes($chaine ) {
 
 function MyStripSlashes($chaine) {
   return( get_magic_quotes_gpc() == 1 ? stripslashes($chaine) : $chaine );
+}
+
+
+function hasInternet() {
+    $ch = curl_init("http://www.google.com/");
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $data = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return ($httpcode >= 200 && $httpcode < 300);
 }

@@ -1,22 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice.inc.php,v 1.38 2017-10-19 14:04:50 ngantier Exp $
+// $Id: notice.inc.php,v 1.40 2022/01/10 10:57:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($typdoc_query)) $typdoc_query = '';
-if(!isset($callback)) $callback = '';
-if(!isset($id_restrict)) $id_restrict = '';
+global $msg, $charset;
+global $typdoc_query, $id_restrict, $callback, $caller, $user_input, $bt_ajouter, $param1, $param2, $p1, $p2;
+global $niveau_biblio, $no_display, $infield, $modele_id, $serial_id;
+global $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid;
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
+if(empty($param1) && empty($param2)) {
+    if(!empty($p1)) $param1 = $p1;
+    if(!empty($p2)) $param2 = $p2;
+}
+// la variable $caller, passée par l'URL, contient le nom du form appelant
 $base_url = "./select.php?what=notice&caller=$caller&param1=$param1&param2=$param2&no_display=$no_display&bt_ajouter=$bt_ajouter&callback=$callback&infield=$infield&typdoc_query=$typdoc_query&id_restrict=$id_restrict";
 if(isset($niveau_biblio) && $niveau_biblio){ 
 	$filtre_notice=" and niveau_biblio='$niveau_biblio' ";
 	$base_url="./select.php?what=notice&niveau_biblio=$niveau_biblio&modele_id=$modele_id&serial_id=$serial_id&caller=$caller&param1=$param1&param2=$param2&no_display=$no_display&bt_ajouter=$bt_ajouter&callback=$callback&infield=$infield&typdoc_query=$typdoc_query&id_restrict=$id_restrict";
 }
-// contenu popup sÃ©lection notice
+// contenu popup sélection notice
 require_once('./selectors/templates/sel_notice.tpl.php');
 include_once('./includes/isbn.inc.php');
 require_once("./classes/mono_display.class.php");
@@ -30,7 +35,7 @@ if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 	$acces_j = $dom_1->getJoin($PMBuserid,4,'notice_id');
 } 
 
-// classe pour la gestion du sÃ©lecteur
+// classe pour la gestion du sélecteur
 require("./selectors/classes/selector_notice.class.php");
 
 $selector_notice = new selector_notice(stripslashes($user_input));
@@ -60,7 +65,7 @@ function show_results($user_input, $nbr_lignes=0, $page=0) {
 		$filtre_notice_type_doc="";
 	}
 	
-	// on rÃ©cupÃ©re le nombre de lignes qui vont bien
+	// on récupére le nombre de lignes qui vont bien
 	if($user_input=="") {
 		$requete_count = "SELECT COUNT(1) FROM notices ";
 		$requete_count.= $acces_j;
@@ -94,14 +99,14 @@ function show_results($user_input, $nbr_lignes=0, $page=0) {
 	if($id_restrict>0){
 		$requete_count="SELECT COUNT(1) FROM notices ".$acces_j." WHERE notice_id='$id_restrict' AND notice_id!='".$no_display."'";
 	}
-	$res = pmb_mysql_query($requete_count, $dbh);
-	$nbr_lignes = @pmb_mysql_result($res, 0, 0);
+	$res = pmb_mysql_query($requete_count);
+	$nbr_lignes = pmb_mysql_result($res, 0, 0);
 
 	if(!$page) $page=1;
 	$debut =($page-1)*$nb_per_page;
 
 	if($nbr_lignes) {
-		// on lance la vraie requÃªte
+		// on lance la vraie requête
 		if($user_input=="") {
 			$requete = "SELECT notice_id, tit1, serie_name, tnvol, code FROM notices ";
 			$requete.= $acces_j;
@@ -132,7 +137,7 @@ function show_results($user_input, $nbr_lignes=0, $page=0) {
 			$requete="SELECT notice_id, tit1, serie_name, tnvol, code FROM notices ".$acces_j."LEFT JOIN series ON serie_id=tparent_id  WHERE notice_id='$id_restrict' AND notice_id!='".$no_display."'";
 		}
 
-		$res = @pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		while(($notice=pmb_mysql_fetch_object($res))) {
 			if($niveau_biblio){
 				$location="./catalog.php?categ=serials&sub=modele&act=copy&modele_id=$modele_id&serial_id=$serial_id&new_serial_id=$notice->notice_id";

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: semantique.class.php,v 1.9 2017-07-13 12:14:17 tsamson Exp $
+// $Id: semantique.class.php,v 1.10 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,7 +11,7 @@ class semantique {
     public function __construct() {
     }
     
-    //fonction qui rÃ©cupÃ©re les synonymes d'un mot
+    //fonction qui récupére les synonymes d'un mot
     public static function list_synonyms($mot) {
     	$t=array();
     	$rqt="select id_mot from mots where mot='".$mot."'";
@@ -32,9 +32,9 @@ class semantique {
     	return $t;
     }
         
-    //fonction qui rÃ©cupÃ©re le code php en base des mots vides du dernier calcul
+    //fonction qui récupére le code php en base des mots vides du dernier calcul
     public static function add_empty_words() {
-    	//ajout des mots vides calculÃ©s
+    	//ajout des mots vides calculés
 		$rqt="select php_empty_words from empty_words_calculs where archive_calcul=1";
 		$execute_query=pmb_mysql_query($rqt);
 		if ($execute_query&&pmb_mysql_num_rows($execute_query)) {
@@ -43,34 +43,34 @@ class semantique {
 		}
     }
     
-	//fonction qui calcule les mots vides par rapport Ã  l'index globale des mots
+	//fonction qui calcule les mots vides par rapport à l'index globale des mots
 	public static function calculate_empty_words($nb_notices_calcul=0) {
 				
 		//si mot pas de lien suppression du mot
 		@pmb_mysql_query("delete from mots where id_mot in (select num_mot from linked_mots where linked_mots.type_lien=2 group by num_mot) and id_mot not in (select num_linked_mot from linked_mots group by num_linked_mot)");
-		//vidage des mots vides calculÃ©s de la table linked_mots
+		//vidage des mots vides calculés de la table linked_mots
 		@pmb_mysql_query("delete from linked_mots where type_lien=2");
 					
-		//si le paramÃ¨tre de nombre de notices pour lequel le mot est considÃ©rÃ© vide est vide, on considÃ¨re que ce nombre est la moitiÃ© des notices 
-		//si le nombre de notices pour lequel le mot est prÃ©sent est supÃ©rieur au paramÃ¨tre 		
-		$nb_notices_calcul += 0;
+		//si le paramètre de nombre de notices pour lequel le mot est considéré vide est vide, on considère que ce nombre est la moitié des notices 
+		//si le nombre de notices pour lequel le mot est présent est supérieur au paramètre 		
+		$nb_notices_calcul = intval($nb_notices_calcul);
 		if (!$nb_notices_calcul) $nb_noti="*2>nb";
 			else  $nb_noti=">".$nb_notices_calcul;
 		
 		$rqt1="select word, count(id_notice) as cm,(select count(*) from notices) as nb from notices_mots_global_index join words on num_word = id_word group by num_word having cm$nb_noti";
 		$execute_query1=pmb_mysql_query($rqt1);
-		//parcours de tous les mots trouvÃ©s afin de gÃ©nÃ©rer le code php
+		//parcours de tous les mots trouvés afin de générer le code php
 		while ($r1=pmb_mysql_fetch_object($execute_query1)) {			
-			//vÃ©rification de l'existence du mot dans la table mots
+			//vérification de l'existence du mot dans la table mots
 			$rqt_select="select id_mot from mots where mot='".$r1->word."'";
 			$query_select=pmb_mysql_query($rqt_select);
 			if ($r_mot=pmb_mysql_num_rows($query_select)) {
 				$id_mot=$r_mot->id_mot;
-				// Verifier de l'existance en mot vide (type_lien Ã  3)
+				// Verifier de l'existance en mot vide (type_lien à 3)
 				$rqt_words_created="select mot from mots,linked_mots where mots.id_mot=linked_mots.num_mot and linked_mots.type_lien=3";
 				$query_select=pmb_mysql_query($rqt_select);
 				if (!pmb_mysql_num_rows($query_select)) {
-					// Le mot est aussi un synonyme, donc insertion information mot vide calculÃ©
+					// Le mot est aussi un synonyme, donc insertion information mot vide calculé
 					pmb_mysql_query("insert into linked_mots (num_mot,num_linked_mot, type_lien) values (".$id_mot.",0,2)");
 				}	
 			} else {			
@@ -96,11 +96,11 @@ class semantique {
 			$words = pmb_alphabetic('^a-z0-9\s\*', ' ',pmb_strtolower($mot));
 			$words=explode(" ",$words);
 			
-			//Variable de stockage des mots restants aprÃ¨s supression des mots vides
+			//Variable de stockage des mots restants après supression des mots vides
 			//Pour chaque mot
 			for ($i=0; $i<count($words); $i++) {
 				$words[$i]=trim($words[$i]);
-				//VÃ©rification que ce n'est pas un mot vide
+				//Vérification que ce n'est pas un mot vide
 				if (in_array($words[$i],$empty_word)===false) {
 					//Si ce n'est pas un mot vide, on stoque
 					if ($words[$i]) $temp.="\$empty_word[] = \"".$words[$i]."\";";

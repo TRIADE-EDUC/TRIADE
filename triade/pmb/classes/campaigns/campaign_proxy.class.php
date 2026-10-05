@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_proxy.class.php,v 1.2 2019-02-20 14:18:55 dgoron Exp $
+// $Id: campaign_proxy.class.php,v 1.6 2024/01/15 14:14:54 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/campaigns/campaign_recipient.class.php");
 
 class campaign_proxy {
@@ -25,7 +26,8 @@ class campaign_proxy {
 		if(count($matches[1])) {
 			for($j=0; $j<count($matches[1]); $j++) {
 				if(substr($matches[1][$j], 0, 1) != '#') {
-					$html = str_replace($matches[1][$j], static::get_builded_url($recipient_hash, $matches[1][$j], $id), $html);
+					$html = str_replace("'".$matches[1][$j]."'", "'".static::get_builded_url($recipient_hash, $matches[1][$j], $id)."'", $html);
+					$html = str_replace('"'.$matches[1][$j].'"', '"'.static::get_builded_url($recipient_hash, $matches[1][$j], $id).'"', $html);
 				}
 			}
 		}
@@ -44,11 +46,15 @@ class campaign_proxy {
 		global $opac_url_base;
 		
 		$image_url = $opac_url_base."pixel.php";
-		return "<img src='".static::get_builded_url($campaign_recipient->get_hash(), $image_url, $campaign_recipient->get_id())."' />";
+		return "<img src='".static::get_builded_url($campaign_recipient->get_hash(), $image_url, $campaign_recipient->get_id())."' alt='' />";
 	}
 	
 	protected static function gen_hash($recipient_hash, $url) {
-		return md5($recipient_hash."_".$url);
+	    global $opac_empr_password_salt;
+	    if ('' == $opac_empr_password_salt) {
+	        password::gen_salt_base();
+	    }
+	    return md5("{$opac_empr_password_salt}_{$recipient_hash}_{$url}");
 	}
 	
 	public static function check($hash, $url, $id) {
@@ -61,6 +67,6 @@ class campaign_proxy {
 	}
 	
 	public static function redirect($url) {
-		header('Location: '.$url);
+		header('Location: '.html_entity_decode($url));
 	}
 }

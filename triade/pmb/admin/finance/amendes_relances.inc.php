@@ -1,17 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: amendes_relances.inc.php,v 1.12 2017-02-20 19:04:07 dgoron Exp $
+// $Id: amendes_relances.inc.php,v 1.16 2023/07/10 12:49:49 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($quota)) $quota = '';
-if(!isset($elements)) $elements = '';
+global $class_path, $include_path, $msg, $charset, $action, $lang;
+global $pmb_gestion_amende;
+global $quota, $elements;
+global $relance_1, $relance_2, $relance_3, $statut_perdu;
+global $finance_relance_1, $finance_relance_2, $finance_relance_3, $finance_statut_perdu;
 
 //Gestion des amendes
 require_once("$include_path/templates/finance.tpl.php");
 require_once($class_path."/quotas.class.php");
+require_once($class_path."/parameters/parameter.class.php");
 
 function show_amende_parameters() {
 	global $msg;
@@ -41,7 +45,7 @@ function show_amende_parameters() {
 }
 
 function show_lost_status_form() {
-	global $dbh,$msg,$charset;
+	global $msg,$charset;
 	global $finance_statut_perdu,$finance_recouvrement_lecteur_statut;
 	$result ="
 	<form method='POST' action='admin.php?categ=finance&sub=amendes_relance&action=updateloststatus'>
@@ -73,7 +77,7 @@ function show_lost_status_form() {
 	";	
 	
 	$requete="select idstatut,statut_libelle from docs_statut order by statut_libelle";
-	$resultat=pmb_mysql_query($requete, $dbh);
+	$resultat=pmb_mysql_query($requete);
 	$list_statut="<select name='statut_perdu' id='statut_perdu'>\n";
 	while ($r=pmb_mysql_fetch_object($resultat)) {
 		$list_statut.="<option value='".$r->idstatut."' ";
@@ -85,7 +89,7 @@ function show_lost_status_form() {
 	
 	
 	$requete="select idstatut,statut_libelle from empr_statut";
-	$resultat=pmb_mysql_query($requete, $dbh);
+	$resultat=pmb_mysql_query($requete);
 	$list_statut="<select name='statut_empr' id='statut_empr'>\n<option value='0' ";
 	if(!$finance_recouvrement_lecteur_statut)$list_statut.="selected='selected' ";
 	$list_statut.=">".htmlentities($msg["finance_statut_lecteur_no_change"],ENT_QUOTES,$charset)."</option>\n";
@@ -100,15 +104,10 @@ function show_lost_status_form() {
 }
 
 function update_loststatus_fromform() {
-	global $statut_perdu, $dbh, $finance_statut_perdu,$statut_empr, $finance_recouvrement_lecteur_statut;
+	global $statut_perdu, $statut_empr;
 	
-	$requete="update parametres set valeur_param='".$statut_perdu."' where type_param='finance' and sstype_param='statut_perdu'";
-	pmb_mysql_query($requete, $dbh);
-	$finance_statut_perdu=stripslashes($statut_perdu);
-	
-	$requete="update parametres set valeur_param='".$statut_empr."' where type_param='finance' and sstype_param='recouvrement_lecteur_statut'";
-	pmb_mysql_query($requete, $dbh);
-	$finance_recouvrement_lecteur_statut=stripslashes($statut_empr);
+	parameter::update('finance', 'statut_perdu', stripslashes($statut_perdu));
+	parameter::update('finance', 'recouvrement_lecteur_statut', stripslashes($statut_empr));
 }
 
 if ($pmb_gestion_amende==1) {
@@ -116,37 +115,29 @@ if ($pmb_gestion_amende==1) {
 	  print $admin_layout;
 		switch ($action) {
 			case 'update':
-				//Mise Ã  jour !!
-				$requete="update parametres set valeur_param='".$relance_1."' where type_param='finance' and sstype_param='relance_1'";
-				pmb_mysql_query($requete);
-				$finance_relance_1=stripslashes($relance_1);
-				$requete="update parametres set valeur_param='".$relance_2."' where type_param='finance' and sstype_param='relance_2'";
-				pmb_mysql_query($requete);
-				$finance_relance_2=stripslashes($relance_2);
-				$requete="update parametres set valeur_param='".$relance_3."' where type_param='finance' and sstype_param='relance_3'";
-				pmb_mysql_query($requete);
-				$finance_relance_3=stripslashes($relance_3);
-				$requete="update parametres set valeur_param='".$statut_perdu."' where type_param='finance' and sstype_param='statut_perdu'";
-				pmb_mysql_query($requete);
-				$finance_statut_perdu=stripslashes($statut_perdu);
+				//Mise à jour !!
+				parameter::update('finance', 'relance_1', stripslashes($relance_1));
+				parameter::update('finance', 'relance_2', stripslashes($relance_2));
+				parameter::update('finance', 'relance_3', stripslashes($relance_3));
+				parameter::update('finance', 'statut_perdu', stripslashes($statut_perdu));
 				show_amende_parameters();
 				break;
 			case 'modif':
-				//Formulaire de mise Ã  jour
-				$finance_amende_relance_form=str_replace("!!relance_1!!",htmlentities($finance_relance_1,ENT_QUOTES,$charset),$finance_amende_relance_form);
-				$finance_amende_relance_form=str_replace("!!relance_2!!",htmlentities($finance_relance_2,ENT_QUOTES,$charset),$finance_amende_relance_form);
-				$finance_amende_relance_form=str_replace("!!relance_3!!",htmlentities($finance_relance_3,ENT_QUOTES,$charset),$finance_amende_relance_form);
-				$requete="select idstatut,statut_libelle from docs_statut order by statut_libelle";
-				$resultat=pmb_mysql_query($requete);
-				$list_statut="<select name='statut_perdu' id='statut_perdu'>\n";
-				while ($r=pmb_mysql_fetch_object($resultat)) {
-					$list_statut.="<option value='".$r->idstatut."' ";
-					if ($r->idstatut==$finance_statut_perdu) $list_statut.="selected='selected' ";
-					$list_statut.=">".htmlentities($r->statut_libelle,ENT_QUOTES,$charset)."</option>\n";
-				}
-				$list_statut.="</select>\n";
-				$finance_amende_relance_form=str_replace("!!statut_perdu!!",$list_statut,$finance_amende_relance_form);
-				print $finance_amende_relance_form;
+				//Formulaire de mise à jour
+				$interface_form = new interface_admin_form('finance_amende_form');
+				$interface_form->set_label($msg["finance_amende_relance_parameters"]);
+				
+				$interface_content_form = new interface_content_form();
+				$interface_content_form->add_element('relance_1', 'finance_relance_1')
+				->add_input_node('float', $finance_relance_1);
+				$interface_content_form->add_element('relance_2', 'finance_relance_2')
+				->add_input_node('float', $finance_relance_2);
+				$interface_content_form->add_element('relance_3', 'finance_relance_3')
+				->add_input_node('float', $finance_relance_3);
+				$interface_content_form->add_element('statut_perdu', 'finance_statut_perdu')
+				->add_query_node('select', 'select idstatut as id,statut_libelle as label from docs_statut order by label', $finance_statut_perdu);
+				$interface_form->set_content_form($interface_content_form->get_display());
+				print $interface_form->get_display_parameters();
 				break;
 			default:
 				//Gestion simple
@@ -157,8 +148,10 @@ if ($pmb_gestion_amende==1) {
 	$menu_sous_rub=$msg["finance_amendes"];
 	
 	//Gestion par quotas
-	if ($quota) $qt=new quota($quota,"$include_path/quotas/own/$lang/finances.xml"); else quota::parse_quotas("$include_path/quotas/own/$lang/finances.xml");
+	$descriptor = "$include_path/quotas/own/$lang/finances.xml";
+	if ($quota) $qt=new quota($quota,$descriptor); else quota::parse_quotas($descriptor);
 	$admin_menu_quotas="<span><a href='./admin.php?categ=finance&sub=amendes_relance&action=edit_loststatus'>".$msg["finance_statut_perdu_expl_empr"]."</a></span>&nbsp;";
+	$_quotas_types_ = quota::$_quotas_[$descriptor]['_types_'];
 	for ($i=0; $i<count($_quotas_types_); $i++) {	
 		if ($_quotas_types_[$i]["FILTER_ID"]=="amende_relance") {
 			$admin_menu_quotas.="<span><a href='./admin.php?categ=finance&sub=amendes_relance&quota=".$_quotas_types_[$i]["ID"]."'>".$_quotas_types_[$i]["SHORT_COMMENT"]."</a></span>\n";

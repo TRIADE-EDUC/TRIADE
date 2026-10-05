@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmbesThesauri.class.php,v 1.6 2017-06-22 08:49:22 dgoron Exp $
+// $Id: pmbesThesauri.class.php,v 1.10 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/external_services.class.php");
 
 class pmbesThesauri extends external_services_api_class {
@@ -20,7 +21,7 @@ class pmbesThesauri extends external_services_api_class {
 			$athesaurus = new thesaurus($id);
 			$results[] = array(
 				'thesaurus_id' => $id,
-				'thesaurus_caption' => utf8_normalize($caption),
+				'thesaurus_caption' => encoding_normalize::utf8_normalize($caption),
 				'thesaurus_num_root_node' => $athesaurus->num_noeud_racine,
 				'thesaurus_num_unclassed_node' => $athesaurus->num_noeud_nonclasses,
 				'thesaurus_num_orphans_node' => $athesaurus->num_noeud_orphelins,
@@ -31,7 +32,7 @@ class pmbesThesauri extends external_services_api_class {
 	}
 
 	public function fetch_node_notice_ids($node_id, $OPACUserId=-1) {
-		$node_id += 0;
+		$node_id = intval($node_id);
 		if (!$node_id)
 			return FALSE;
 
@@ -42,15 +43,14 @@ class pmbesThesauri extends external_services_api_class {
 		$_SESSION["nb_level_enfants"]=	$nb_level_descendant;
 		$_SESSION["nb_level_parents"]=	$nb_level_montant;
 		
-		global $dbh;
 		$q = "select path from noeuds where id_noeud = '".$node_id."' ";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		$path=pmb_mysql_result($r, 0, 0);
 		$nb_pere=substr_count($path,'/');
 
 			
-		// Si un path est renseignÃ© et le paramÃ¨trage activÃ©
-		global $opac_auto_postage_descendant, $opac_auto_postage_montant, $auto_postage_etendre_recherche;
+		// Si un path est renseigné et le paramètrage activé
+		global $opac_auto_postage_descendant, $opac_auto_postage_montant;
 		if ($path && ($opac_auto_postage_descendant || $opac_auto_postage_montant) && ($nb_level_montant || $nb_level_descendant)){
 			//Recherche des fils 
 			if(($opac_auto_postage_descendant)&& $nb_level_descendant) {
@@ -62,18 +62,18 @@ class pmbesThesauri extends external_services_api_class {
 				$liste_fils=" id_noeud='".$node_id."' ";
 			}
 					
-			// recherche des pÃ¨res
+			// recherche des pères
 			if(($opac_auto_postage_montant) && $nb_level_montant ) {
 				
 				$id_list_pere=explode('/',$path);	
 				$stop_pere=0;
-				if($nb_level_montant != '*' && is_numeric($nb_level_montant)) $stop_pere=$nb_pere-$nb_level_montant;
+				if($nb_level_montant != '*' && is_numeric($nb_level_montant)) $stop_pere = $nb_pere - intval($nb_level_montant);
 				if($stop_pere<0) $stop_pere=0;
 				for($i=$nb_pere;$i>=$stop_pere; $i--) {
 					$liste_pere.= " or id_noeud='".$id_list_pere[$i]."' ";
 				}
 			}			
-			// requete permettant de remonter les notices associÃ©es Ã  la liste des catÃ©gories trouvÃ©es;
+			// requete permettant de remonter les notices associées à la liste des catégories trouvées;
 			//$suite_req = " FROM noeuds inner join notices_categories on id_noeud=num_noeud inner join notices on notcateg_notice=notice_id, notice_statut 
 			//	WHERE ($liste_fils $liste_pere)	and (notices.statut = notice_statut.id_notice_statut 
 			//	and ((notice_statut.notice_visible_opac = 1 and notice_statut.notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_statut.notice_visible_opac_abon=1 and notice_statut.notice_visible_opac = 1)":"").")) ";
@@ -88,7 +88,7 @@ class pmbesThesauri extends external_services_api_class {
 		}
 
 		$requete = "SELECT distinct notice_id ".str_replace("!!opac_phototeque!!","",$suite_req);
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$results = array();
 		while($row = pmb_mysql_fetch_row($res)) {
 			$results[] = $row[0];
@@ -109,7 +109,7 @@ class pmbesThesauri extends external_services_api_class {
 	}
 	
 	public function fetch_node($node_id, $OPACUserId=-1) {
-		$node_id += 0;
+		$node_id = intval($node_id);
 		if (!$node_id)
 			return FALSE;
 		$node = new noeuds($node_id);
@@ -119,29 +119,28 @@ class pmbesThesauri extends external_services_api_class {
 			'node_target_id' => 0,
 			'node_target_categories' => array()
 		);
-		global $dbh;
 		if ($node->num_renvoi_voir) {
 			$result['node_target_id'] = $node->num_renvoi_voir;
 			$q = "select * from categories where num_noeud = '".$node->num_renvoi_voir."'";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			$result['node_target_categories'] = array();
 			while($obj = pmb_mysql_fetch_object($r)) {
 				$categ = array();
 				$categ['node_id'] = $node_id;
-				$categ['category_caption'] = utf8_normalize($obj->libelle_categorie);
-				$categ['category_lang'] = utf8_normalize($obj->langue);
+				$categ['category_caption'] = encoding_normalize::utf8_normalize($obj->libelle_categorie);
+				$categ['category_lang'] = encoding_normalize::utf8_normalize($obj->langue);
 				$result['node_target_categories'][] = $categ;
 			}
 		}
 
 		$q = "select * from categories where num_noeud = '".$node_id."'";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		$result['node_categories'] = array();
 		while($obj = pmb_mysql_fetch_object($r)) {
 			$categ = array();
 			$categ['node_id'] = $node_id;
-			$categ['category_caption'] = utf8_normalize($obj->libelle_categorie);
-			$categ['category_lang'] = utf8_normalize($obj->langue);
+			$categ['category_caption'] = encoding_normalize::utf8_normalize($obj->libelle_categorie);
+			$categ['category_lang'] = encoding_normalize::utf8_normalize($obj->langue);
 			$result['node_categories'][] = $categ;
 		}
 
@@ -149,7 +148,7 @@ class pmbesThesauri extends external_services_api_class {
 		$result['node_path'] = array();
 		if ($path_ids) {
 			$q = "select * from categories where num_noeud IN(".implode(',', $path_ids).") order by num_noeud";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			$result['node_path'] = array();
 			$current_node_id = 0;
 			$categs = array();
@@ -166,8 +165,8 @@ class pmbesThesauri extends external_services_api_class {
 				}
 				$categ = array();
 				$categ['node_id'] = $current_node_id;
-				$categ['category_caption'] = utf8_normalize($obj->libelle_categorie);
-				$categ['category_lang'] = utf8_normalize($obj->langue);
+				$categ['category_caption'] = encoding_normalize::utf8_normalize($obj->libelle_categorie);
+				$categ['category_lang'] = encoding_normalize::utf8_normalize($obj->langue);
 				$categs[] = $categ;
 			}
 			if ($current_node_id)
@@ -185,7 +184,7 @@ class pmbesThesauri extends external_services_api_class {
 		$result['node_children'] = array();
 		if ($children) {
 			$q = "select noeuds.id_noeud, noeuds.num_renvoi_voir, categories.* from categories left join noeuds on (noeuds.id_noeud = categories.num_noeud) where noeuds.id_noeud IN(".implode(',', $children).") order by num_noeud, libelle_categorie";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			$result['node_children'] = array();
 			$current_node_id = 0;
 			$current_islink = false;
@@ -205,8 +204,8 @@ class pmbesThesauri extends external_services_api_class {
 				}
 				$categ = array();
 				$categ['node_id'] = $current_node_id;
-				$categ['category_caption'] = utf8_normalize($obj->libelle_categorie);
-				$categ['category_lang'] = utf8_normalize($obj->langue);
+				$categ['category_caption'] = encoding_normalize::utf8_normalize($obj->libelle_categorie);
+				$categ['category_lang'] = encoding_normalize::utf8_normalize($obj->langue);
 				$categs[] = $categ;
 			}
 			if ($current_node_id)
@@ -219,7 +218,7 @@ class pmbesThesauri extends external_services_api_class {
 		
 		$result['node_seealso'] = array();
 		$q = "select voir_aussi.num_noeud_dest, categories.* from voir_aussi left join categories on (voir_aussi.num_noeud_dest = categories.num_noeud) where num_noeud_orig = ".$node_id." order by voir_aussi.num_noeud_dest";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		$current_node_id = 0;
 		$categs = array();
 		while($obj = pmb_mysql_fetch_object($r)) {
@@ -235,8 +234,8 @@ class pmbesThesauri extends external_services_api_class {
 			}
 			$categ = array();
 			$categ['node_id'] = $current_node_id;
-			$categ['category_caption'] = utf8_normalize($obj->libelle_categorie);
-			$categ['category_lang'] = utf8_normalize($obj->langue);
+			$categ['category_caption'] = encoding_normalize::utf8_normalize($obj->libelle_categorie);
+			$categ['category_lang'] = encoding_normalize::utf8_normalize($obj->langue);
 			$categs[] = $categ;
 		}
 		if ($current_node_id)

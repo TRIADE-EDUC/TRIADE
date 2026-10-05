@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_itemslist_selector_items_generic.xml,v 1.1 2015-02-26 16:02:03 dgoron Exp $ -->
+$Id: cms_module_itemslist_selector_items_generic.xml,v 1.1 2015/02/26 16:02:03 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_watcheslist_selector_watches_generic">Sélection depuis une liste de veilles</entry>

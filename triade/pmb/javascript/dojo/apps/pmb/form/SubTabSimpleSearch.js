@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabSimpleSearch.js,v 1.6 2018-12-17 23:09:30 ccraig Exp $
+// $Id: SubTabSimpleSearch.js,v 1.6 2018/12/17 23:09:30 ccraig Exp $
 
 
 define([

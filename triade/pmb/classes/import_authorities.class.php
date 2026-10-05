@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_authorities.class.php,v 1.1 2011-12-20 13:12:44 arenou Exp $
+// $Id: import_authorities.class.php,v 1.1 2011/12/20 13:12:44 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

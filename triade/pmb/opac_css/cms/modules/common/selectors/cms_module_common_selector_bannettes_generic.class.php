@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_bannettes_generic.class.php,v 1.2 2015-09-16 14:31:37 jpermanne Exp $
+// $Id: cms_module_common_selector_bannettes_generic.class.php,v 1.2 2015/09/16 14:31:37 jpermanne Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -28,7 +28,7 @@ class cms_module_common_selector_bannettes_generic extends cms_module_common_sel
 			"cms_module_common_selector_bannettes_private"
 */	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if($this->parameters['sub_selector']){

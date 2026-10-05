@@ -1,24 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: create_form.inc.php,v 1.16 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: create_form.inc.php,v 1.17 2021/03/18 08:32:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $saisieISBN, $code, $code10, $temp_nb_notice, $id, $msg, $acces_m, $gestion_acces_active, $gestion_acces_user_notice, $class_path;
 global $PMBuserid, $notice;
 
-// page de crÃ©ation d'une notice
+// page de création d'une notice
 
-// affichage du form de crÃ©ation/modification d'une notice
+// affichage du form de création/modification d'une notice
 
-// dÃ©doublonnage par le code-barre ou l'ISBN
+// dédoublonnage par le code-barre ou l'ISBN
 if(isset($saisieISBN) && $saisieISBN) {
 	if(isEAN($saisieISBN)) {
 		// la saisie est un EAN -> on tente de le formater en ISBN
 		$code = EANtoISBN($saisieISBN);
-		// si Ã©chec, on prend l'EAN comme il vient
+		// si échec, on prend l'EAN comme il vient
 		if(!$code) {
 			$code = $saisieISBN;
 		} else {
@@ -30,11 +30,11 @@ if(isset($saisieISBN) && $saisieISBN) {
 		if(isISBN($saisieISBN)) {
 			// si la saisie est un ISBN
 			$code10 = formatISBN($saisieISBN);
-			// si Ã©chec, ISBN erronÃ© on le prend sous cette forme
+			// si échec, ISBN erroné on le prend sous cette forme
 			if(!$code10) $code = $saisieISBN;
 			else $code = formatISBN($code10,13);
 		} else {
-			// ce n'est rien de tout Ã§a, on prend la saisie telle quelle
+			// ce n'est rien de tout ça, on prend la saisie telle quelle
 			$code = $saisieISBN;
 		}
 	}
@@ -79,7 +79,7 @@ if(!$temp_nb_notice) {
 		
 		// isbn connu et droits ok -> on redirige vers la page de la notice
 		print "<script type=\"text/javascript\">
-				document.location = './catalog.php?categ=isbd&id=$notice->notice_id';
+				document.location = '".notice::get_permalink($notice->notice_id)."';
 				</script>";
 	}
 }

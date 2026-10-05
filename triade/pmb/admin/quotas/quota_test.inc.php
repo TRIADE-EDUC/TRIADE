@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: quota_test.inc.php,v 1.9 2009-05-16 11:11:52 dbellamy Exp $
+// $Id: quota_test.inc.php,v 1.10 2021/02/19 08:54:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $qt;
 
 $struct=array("READER"=>"7","BULL"=>"1"); 
 echo "Quota=<pre>";

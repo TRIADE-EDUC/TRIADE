@@ -1,19 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauvegarde_list.class.php,v 1.17 2017-11-07 15:20:00 ngantier Exp $
+// $Id: sauvegarde_list.class.php,v 1.19 2023/04/28 10:07:54 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $include_path;
 
 //Formulaire de gestion des listes de sauvegardes
 include ($include_path."/templates/sauvegarde_list.tpl.php");
 
 class sauvegarde_list {
 	
-	//DonnÃ©es
+	//Données
 	public $date_saving; //Liste des dates de sauvegarde
-	public $logid; //Liste des fichiers Ã  supprimer ou a restaurer
+	public $logid; //Liste des fichiers à supprimer ou a restaurer
 	public $act; //Action
 
     public function __construct() {
@@ -29,8 +31,8 @@ class sauvegarde_list {
     public function proceed() {
     	global $msg;
     	//Actions possibles :
-    	//delete : suppression des jeux cochÃ©s
-    	//restore : restoration immÃ©diate des jeux cochÃ©s
+    	//delete : suppression des jeux cochés
+    	//restore : restoration immédiate des jeux cochés
     	//chaine vide : affichage
     	switch ($this->act) {
     		
@@ -67,6 +69,7 @@ class sauvegarde_list {
     		$line=fgets($f,4096);
     		$line=rtrim($line);
     	}
+    	fclose($f);
     	return $tInfo;    	
     }
     
@@ -74,7 +77,7 @@ class sauvegarde_list {
     	global $form;
     	global $msg;
     	
-    	//RÃ©cupÃ©ration des dates prÃ©sentes dans la base
+    	//Récupération des dates présentes dans la base
     	if (!is_array($this->date_saving)) $this->date_saving=array();
     	$date_list="<select name=\"date_saving[]\" multiple>\n";
     	$requete="select sauv_log_start_date from sauv_log group by sauv_log_start_date order by sauv_log_start_date desc";
@@ -100,7 +103,6 @@ class sauvegarde_list {
     	$resultat=pmb_mysql_query($requete);
     	
 		$sty="class='brd center'";
-		$sty0="class='brd2 center'";
     	
     	$sauvegarde_list="<table class='center' celpadding=0 cellspacing=0>\n";
 		$sauvegarde_list.="<th $sty>&nbsp;</th><th $sty>&nbsp;</th>";
@@ -161,7 +163,7 @@ class sauvegarde_list {
     				else $sauvegarde_list.="<img src=\"images/sauv_noncrypted.png\">";
     			$sauvegarde_list.="</td>";
     			$sauvegarde_list.="<td $sty><input type=\"button\" value=\"".$msg["sauv_list_download"]."\" class=\"bouton\" onClick=\"document.location='admin/sauvegarde/download.php?logid=".$res->sauv_log_id."'\"></td>";
-    			$sauvegarde_list.="<td $sty><input type=\"button\" value=\"".$msg["sauv_list_restaure"]."\" class=\"bouton\" onClick=\"openPopUp('admin/sauvegarde/restaure.php?filename=".rawurlencode("../backup/backups/".$res->sauv_log_file)."&logid=".$res->sauv_log_id."&critical=','restore_win',700,500,-2,-2,'menubar=no,resizable=yes,scrollbars=yes');\"></td>";    			
+    			$sauvegarde_list.="<td $sty><input type=\"button\" value=\"".$msg["sauv_list_restaure"]."\" class=\"bouton\" onClick=\"openPopUp('admin/sauvegarde/restaure.php?filename=".rawurlencode($res->sauv_log_file)."&logid=".$res->sauv_log_id."&critical=','restore_win',700,500,-2,-2,'menubar=no,resizable=yes,scrollbars=yes');\"></td>";    			
     		} else {
     			$sauvegarde_list.="<td $sty colspan=4>".$msg["sauv_list_fnodisp"]."</td>";
     			$sauvegarde_list.="<td $sty>&nbsp;</td>";
@@ -175,4 +177,3 @@ class sauvegarde_list {
     	return $form;
     }
 }
-?>

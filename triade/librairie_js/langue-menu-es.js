@@ -177,7 +177,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Para visualizar este sitio de manera optima : resolucion minima : 800x600  <br>"; 
 }else{
-	langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Para visualizar este sitio de manera optima : resolucion minima : 800x600 <br>  T.R.I.A.D.E. © - 2024 - Todo derecho reservado";
+	langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Para visualizar este sitio de manera optima : resolucion minima : 800x600 <br>  T.R.I.A.D.E. © - 2026 - Todo derecho reservado";
 }
 
 

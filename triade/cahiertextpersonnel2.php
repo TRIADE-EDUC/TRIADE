@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,10 +50,10 @@ $sql .= "
 	a.code_groupe,
 	trim(g.libelle)
 FROM
-	${prefixe}affectations a,
-	${prefixe}matieres m,
-	${prefixe}classes c,
-	${prefixe}groupes g
+	{$prefixe}affectations a,
+	{$prefixe}matieres m,
+	{$prefixe}classes c,
+	{$prefixe}groupes g
 WHERE
 	code_prof='$idprof'
 AND a.code_classe = c.code_class
@@ -66,7 +66,7 @@ $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
 // patch pour problème sous-matière à 0
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
 }
@@ -78,7 +78,7 @@ unset($curs);
 ?>
 <HTML>
 <HEAD>
-<title>Personnel - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Personnel - Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -146,7 +146,7 @@ if ($visu == 0) {
  <select name="sClasseGrp" size="1" onChange="upSelectMat(this)">
  <option value="0" STYLE="color:#000066;background-color:#FCE4BA"> <?php print LANGCHOIX3 ?> </option>
 		 <?php
-			 for($i=1;$i<count($data);$i++){
+			 for($i=1;$i<countTriade($data);$i++){
 				 	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
 						continue;
 						}
@@ -189,19 +189,19 @@ if ($visu == 0) {
      </td></tr></table>
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

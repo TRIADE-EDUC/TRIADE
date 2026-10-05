@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export.class.php,v 1.46 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: export.class.php,v 1.52.2.1.2.1 2025/06/04 14:02:12 tsamson Exp $
 
 //Export d'une notice PMB en XML PMB MARC
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// le fichier spÃ©cifique d'import contient la fonction d'export spÃ©cifique des exemplaires
+// le fichier spécifique d'import contient la fonction d'export spécifique des exemplaires
 //if (!$pmb_import_modele)  $pmb_import_modele= "func_bdp.inc.php" ;
 //require_once ("$base_path/admin/import/$pmb_import_modele") ;
 require_once($class_path."/parametres_perso.class.php");
@@ -22,9 +22,9 @@ class export {
 	public $notice_list = array();
 	public $current_notice = 0;
 	public $notice_exporte=array();
-	//Enregistre les bulletins dÃ©ja exportÃ©
+	//Enregistre les bulletins déja exporté
 	public $bulletins_exporte=array();
-	//Pour savoir si il y des bulletins Ã  exporter
+	//Pour savoir si il y des bulletins à exporter
 	public $expl_bulletin_a_exporter=array();
 	
 	//Initialisation avec une liste de numeros de notices (si liste vide alors on prend toute la base)
@@ -49,6 +49,13 @@ class export {
 	//Conversion au format XML du tableau de donnees
 	public function toxml() {
 		global $charset;
+		
+		$charset_encoding = strtolower($charset);
+		if($charset_encoding == 'iso-8859-1') {
+			//Necessaire pour le flag ENT_DISALLOWED
+			$charset_encoding = 'iso-8859-15';
+		}
+		
 		$this -> notice = "<notice>\n";
 		//Record descriptor
 		$desc=array("rs","dt","bl","hl","el","ru");
@@ -61,7 +68,7 @@ class export {
 			$this -> notice.= "  <f";
 			foreach ( $this -> xml_array["f"][$i] as $key => $value ) { //Pour chaque attribut
 				if((!is_array($value)) && ($key!="ind") && ($key!="value")){ // Si c'est un attr et pas l'indicateur "ind"
-       				$this -> notice.= " ".$key."=\"".htmlspecialchars($value,ENT_QUOTES,$charset)."\""; //On construit le champ f avec nom de l'attribut = sa valeur
+					$this -> notice.= " ".$key."=\"".htmlspecialchars($value, ENT_NOQUOTES|ENT_DISALLOWED, $charset_encoding)."\""; //On construit le champ f avec nom de l'attribut = sa valeur
 				}
 			}
 			if (!isset($this -> xml_array["f"][$i]["value"]) || $this -> xml_array["f"][$i]["value"] == "") {
@@ -71,11 +78,11 @@ class export {
 			if (!isset($this -> xml_array["f"][$i]["value"]) || $this -> xml_array["f"][$i]["value"] == "") {
 				$this->notice.="\n";
 				for ($j = 0; $j < count($this -> xml_array["f"][$i]["s"]); $j ++) {
-					$this -> notice.= "    <s c=\"".$this -> xml_array["f"][$i]["s"][$j]["c"]."\">".htmlspecialchars($this -> xml_array["f"][$i]["s"][$j]["value"],ENT_QUOTES,$charset)."</s>\n";
+					$this -> notice.= "    <s c=\"".$this -> xml_array["f"][$i]["s"][$j]["c"]."\">".htmlspecialchars($this -> xml_array["f"][$i]["s"][$j]["value"], ENT_NOQUOTES|ENT_DISALLOWED, $charset_encoding)."</s>\n";
 				}
 				$this->notice.="  ";
 			} else {
-				$this -> notice.=htmlspecialchars($this -> xml_array["f"][$i]["value"],ENT_QUOTES,$charset);
+				$this -> notice.=htmlspecialchars($this -> xml_array["f"][$i]["value"], ENT_NOQUOTES|ENT_DISALLOWED, $charset_encoding);
 			}
 
 			$this -> notice.= "</f>\n";
@@ -178,7 +185,7 @@ class export {
 			$c100=substr($res -> create_date, 0, 4).substr($res -> create_date, 5, 2).substr($res -> create_date, 8, 2)."u        u  u0frey".$encodage."    ba";
 			$this-> add_field("100","  ",array("a"=>$c100),"");
 			
-			//date de parution en zone de donnÃ©e locale, si calculÃ©e
+			//date de parution en zone de donnée locale, si calculée
 			if ((trim($res->date_parution)) && ($res->date_parution!='0000-00-00')) {
 				$this -> add_field("009", "  ", array("a"=>$res->date_parution));
 			}
@@ -247,7 +254,7 @@ class export {
 				}
 			}
 			
-			//Titre du pÃ©rio pour les notices de bulletin
+			//Titre du pério pour les notices de bulletin
 			$subfields=array();
 			if($res->niveau_biblio == 'b' && $res->niveau_hierar == '2'){				
 				$req_bulletin = "SELECT bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, bulletin_numero, tit1 as titre from bulletins, notices WHERE bulletin_notice=notice_id AND num_notice=".$res->notice_id;
@@ -269,6 +276,7 @@ class export {
 				}				
 			}
 			$this -> add_field("210", "  ", $subfields);
+			$this -> add_field("214", "  ", $subfields);
 
 			//isbn
 			$subfields = array();
@@ -326,9 +334,13 @@ class export {
 			//Auteurs
 			
 			//Recherche des auteurs;
-			$requete = "select author_id, author_type, author_name, author_rejete, author_date, responsability_fonction, responsability_type 
-			,author_subdivision, author_lieu,author_ville, author_pays,author_numero,author_web, author_comment
-			from authors, responsability where responsability_notice=".$res->notice_id." and responsability_author=author_id order by responsability_ordre asc";
+            $requete = "SELECT author_id, author_type, author_name, author_rejete, author_date, responsability_fonction, responsability_type, author_subdivision, author_lieu,author_ville, author_pays,author_numero,author_web, author_comment, authority_number
+            FROM responsability, authors
+            JOIN authorities ON num_object = author_id AND type_object = 1
+            LEFT JOIN authorities_sources ON num_authority = id_authority
+            WHERE responsability_notice =  $res->notice_id
+            AND responsability_author = author_id 
+            ORDER BY responsability_ordre ASC;";
 			$resultat = pmb_mysql_query($requete);
 
 			while (($auth=pmb_mysql_fetch_object($resultat))) {				
@@ -352,9 +364,13 @@ class export {
 					}
 					$subfields["N"] = $auth->author_web;
 					$subfields["9"] = "id:".$auth->author_id;
+                    //numero d'autorite
+                    if (!empty($auth->authority_number)) {
+                        $subfields["3"] = $auth->authority_number ;
+                    }
 					$this->add_field($auth_code," 1", $subfields, "", $attrs);
 				} elseif (($auth->author_type == "71") || ($auth->author_type == "72")) {
-					//CollectivitÃ©
+					//Collectivité
 					$auth_code = $auth->author_type.$auth->responsability_type;
 					$subfields["a"] = $auth->author_name;
 					$subfields["b"] = $auth->author_subdivision;
@@ -367,6 +383,10 @@ class export {
 					if ($auth->author_date!="") {
 						$subfields["f"] = $auth->author_date ;
 					}
+                    //numero d'autorite
+                    if (!empty($auth->authority_number)) {
+                        $subfields["3"] = $auth->authority_number ;
+                    }
 					$lieu=$auth->author_lieu;
 					if($auth->author_ville) {
 						if($lieu) $lieu.="; ";
@@ -394,7 +414,7 @@ class export {
 			}
 			
 			//Editeurs et date de la notice
-			$c102_export=false;//Le champ 102 n'est pas rÃ©pÃ©table
+			$c102_export=false;//Le champ 102 n'est pas répétable
 			$requete = "select * from publishers where ed_id =".$res -> ed1_id;
 			$resultat = pmb_mysql_query($requete);
 			$subfields = array();
@@ -424,6 +444,7 @@ class export {
 				$subfields["d"] = $res -> year;
 			}
 			$this -> add_field("210", "  ", $subfields, "", $attrs);
+			$this -> add_field("214", "  ", $subfields, "", $attrs);
 
 			$requete = "select * from publishers where ed_id =".$res -> ed2_id;
 			$resultat = pmb_mysql_query($requete);
@@ -451,6 +472,7 @@ class export {
 				if(trim($ed1->ed_comment)) $subfields["9"][] = "comment:".$ed1->ed_comment;
 			}
 			$this->add_field("210", "  ", $subfields, "", $attrs);
+			$this->add_field("214", "  ", $subfields, "", $attrs);
 			
 			//Collections
 			$requete = "select * from collections where collection_id=".$res -> coll_id;
@@ -518,7 +540,7 @@ class export {
 
 			//Vignette
 			if ($opac_show_book_pics) {
-				$vignette=get_vignette($this -> notice_list[$this -> current_notice], true);
+				$vignette=get_vignette($this -> notice_list[$this -> current_notice], true, true);
 				if ($vignette) {
 					$this->add_field("896","  ",array("a"=>$vignette));
 				}
@@ -580,10 +602,10 @@ class export {
 			//Champs perso de notice traite par la table notice_custom
 			$this->processing_cp("notices",$res->notice_id);
 
-			//Notices liÃ©es, relations entre notices
+			//Notices liées, relations entre notices
 			if($params["exp_generer_liens"]){
 				$notice_relations = notice_relations_collection::get_object_instance($res->notice_id);
-				//On choisit d'exporter les notices mÃ¨res
+				//On choisit d'exporter les notices mères
 				if($params["exp_export_mere"]){
 					$parents = $notice_relations->get_parents();
 					foreach ($parents as $rel_type=>$parents_relations) {
@@ -612,7 +634,7 @@ class export {
 							}
 							$list_options[] = "bl:".$notice_mere->niveau_biblio.$notice_mere->niveau_hierar;
 							$list_options[] = "id:".$notice_mere->notice_id;
-							if($parent->get_rank()) $list_options[] = "rank:".$parent->get_rank();
+							if($parent->get_ranking()) $list_options[] = "rank:".$parent->get_ranking();
 							if($parent->get_relation_type()) $list_options[] = "type_lnk:".$parent->get_relation_type();
 							$list_options[] = 'lnk:parent';
 							$subfields["9"] = $list_options;
@@ -622,7 +644,7 @@ class export {
 								$subfields["t"] = $list_titre;
 								$subfields["a"] = $list_auteurs;
 							}
-							//Relation avec pÃ©rio = ISSN
+							//Relation avec pério = ISSN
 							if($notice_mere->niveau_biblio == 's' && $notice_mere->niveau_hierar == '1'){
 								if($notice_mere->code) $subfields["x"] = $notice_mere->code;
 								$subfields["t"] = $list_titre;
@@ -666,13 +688,13 @@ class export {
 							$list_attribut = new XMLlist("$include_path/marc_tables/$lang/relationtypeup_unimarc.xml");
 							$list_attribut->analyser();
 							$table_attribut = $list_attribut->table;
-							//On teste si la relation est spÃ©ciale, de type contient dans une boite
+							//On teste si la relation est spéciale, de type contient dans une boite
 							if($parent->get_relation_type()=='d')
 								$indicateur="d0";
 							else $indicateur="  ";
 							$this->add_field($table_attribut[$parent->get_relation_type()],$indicateur,$subfields);
 								
-							//On exporte les notices mÃ¨res liÃ©es
+							//On exporte les notices mères liées
 							if($params["exp_export_notice_mere_link"] && (array_search($notice_mere->notice_id,$this->notice_exporte)===false) && (array_search($notice_mere->notice_id,$this->notice_list)===false) && $diffusable){
 								$this->notice_list[]=$notice_mere->notice_id;
 							}
@@ -699,7 +721,7 @@ class export {
 							$list_titre[] = ($notice_fille->tit1) ? $notice_fille->tit1 : " ";
 							$list_options[] = "bl:".$notice_fille->niveau_biblio.$notice_fille->niveau_hierar;
 							$list_options[] = "id:".$notice_fille->notice_id;
-							if($child->get_rank()) $list_options[] = "rank:".$child->get_rank();
+							if($child->get_ranking()) $list_options[] = "rank:".$child->get_ranking();
 							if($child->get_relation_type()) $list_options[] = "type_lnk:".$child->get_relation_type();
 							$list_options[] = 'lnk:child';
 							$subfields["9"] = $list_options;
@@ -708,7 +730,7 @@ class export {
 								if($notice_fille->code) $subfields["y"] = $notice_fille->code;
 								$subfields["t"] = $list_titre;
 							}	
-							//Relation avec pÃ©rio = ISSN
+							//Relation avec pério = ISSN
 							if($notice_fille->niveau_biblio == 's' && $notice_fille->niveau_hierar == '1'){
 								if($notice_fille->code) $subfields["x"] = $notice_fille->code;
 								$subfields["t"] = $list_titre;
@@ -752,13 +774,13 @@ class export {
 							$list_attribut = new XMLlist("$include_path/marc_tables/$lang/relationtypedown_unimarc.xml");
 							$list_attribut->analyser();
 							$table_attribut = $list_attribut->table;
-							//On teste si la relation est spÃ©ciale, de type contient dans une boite
+							//On teste si la relation est spéciale, de type contient dans une boite
 							if($notice_fille->relation_type=='d')
 								$indicateur="d0";
 							else $indicateur="  ";
 							$this->add_field($table_attribut[$child->get_relation_type()],$indicateur,$subfields);
 							
-							//On exporte les notices filles liÃ©es
+							//On exporte les notices filles liées
 							if($params["exp_export_notice_fille_link"] && (array_search($notice_fille->notice_id,$this->notice_exporte)===false) && (array_search($notice_fille->notice_id,$this->notice_list)===false) && $diffusable){
 								$this->notice_list[]=$notice_fille->notice_id;
 							}
@@ -766,7 +788,7 @@ class export {
 					}
 				}
 				
-				//On choisit d'exporter les liens vers les pÃ©riodiques pour les notices d'article
+				//On choisit d'exporter les liens vers les périodiques pour les notices d'article
 				if($params["exp_export_perio_link"]){
 					$req_perio_link = "SELECT notice_id, tit1, code from bulletins,analysis,notices WHERE bulletin_notice=notice_id and bulletin_id=analysis_bulletin and analysis_notice=".$res->notice_id;
 					$result_perio_link=pmb_mysql_query($req_perio_link);
@@ -784,14 +806,14 @@ class export {
 						$list_options[] = 'lnk:perio';
 						$subfields_461["9"] = $list_options;
 						$this->add_field("461","  ",$subfields_461);
-						//On exporte les notices de pÃ©rio liÃ©es
+						//On exporte les notices de pério liées
 						if($params["exp_export_notice_perio_link"] && (array_search($notice_perio_link->notice_id,$this->notice_exporte)===false) && (array_search($notice_perio_link->notice_id,$this->notice_list)===false) && $diffusable){
 							$this->notice_list[]=$notice_perio_link->notice_id;			
 						}
 					}
 				}
 				
-				//On gÃ©nÃ¨re le bulletinage pour les notices de pÃ©rio
+				//On génère le bulletinage pour les notices de pério
 				if($params["exp_export_bulletinage"]){					
 					$req_bulletinage = "SELECT bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, bulletin_numero from bulletins, notices WHERE bulletin_notice = notice_id AND notice_id=".$res->notice_id;
 					$result_bulletinage=pmb_mysql_query($req_bulletinage);					
@@ -835,7 +857,7 @@ class export {
 					}					
 				 }
 				
-				//On choisit d'exporter les liens vers les articles pour les notices de pÃ©rio
+				//On choisit d'exporter les liens vers les articles pour les notices de pério
 				if($params["exp_export_art_link"]){
 					$req_art_link = "SELECT bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, analysis_notice, a.tit1 as titre, a.npages as page from notices p left join bulletins on bulletin_notice=p.notice_id left join analysis on analysis_bulletin=bulletin_id join notices a on a.notice_id=analysis_notice WHERE p.notice_id=".$res->notice_id;
 					$result_art_link=pmb_mysql_query($req_art_link);					
@@ -863,7 +885,7 @@ class export {
 					    	//Si on exporte les exemplaires on garde l'ID du bulletin pour exporter ses exemplaires
 					    	$this->expl_bulletin_a_exporter[]=$notice_art_link->bulletin_id;
 					    }
-						//On exporte les notices d'articles liÃ©es
+						//On exporte les notices d'articles liées
 						if($params["exp_export_notice_art_link"] && (array_search($notice_art_link->analysis_notice,$this->notice_exporte)===false) && (array_search($notice_art_link->analysis_notice,$this->notice_list)===false) && $diffusable){
 							$this->notice_list[]=$notice_art_link->analysis_notice;			
 						}					
@@ -963,6 +985,7 @@ class export {
 				$subfields_897['f']=$explnum['filename'];
 				$subfields_897['p']='';
 				$subfields_897['t']=$explnum['mimetype'];
+				$subfields_897['u']=$opac_url_base."vig_num.php?explnum_id=".$row->explnum_id;
 				
 				if($explnum['url']) { //URL
 				    $subfields_897['b']=basename(($dn->explnum_nom)?$dn->explnum_nom:$dn->explnum_url);
@@ -997,7 +1020,7 @@ class export {
 		$res=pmb_mysql_query($requete);
 		
 		if(pmb_mysql_num_rows($res)){
-			//Si le bulletin a des exemplaires on crÃ©er une notice d'article bidon pour crÃ©er les exemplaires
+			//Si le bulletin a des exemplaires on créer une notice d'article bidon pour créer les exemplaires
 
 			if (!$is_expl_caddie)  {
 				$requete_panier="SHOW TABLES LIKE 'expl_cart_id'";
@@ -1029,7 +1052,7 @@ class export {
 			$req_art = "SELECT bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, bulletin_numero, tit1, code, notice_id from bulletins join notices on bulletin_notice=notice_id where bulletin_id=".$id_bulletin;
 			$result_art=pmb_mysql_query($req_art);
 			while(($notice_art=pmb_mysql_fetch_object($result_art))){
-				//Pour le cas ou l'article est rÃ©cupÃ©rÃ© en temps que monographie
+				//Pour le cas ou l'article est récupéré en temps que monographie
 				$subfields=array();
 				$subfields["a"] = $notice_art->bulletin_titre ? $notice_art->bulletin_titre.", ".$notice_art->mention_date : $notice_art->mention_date;
 				if(!$subfields["a"]) $subfields["a"] = "Notice de bulletin";
@@ -1042,6 +1065,7 @@ class export {
 				$date=explode("-",$notice_art->date_date);
 				$subfields["d"] = $date[0];
 				$this -> add_field("210", "  ", $subfields);
+				$this -> add_field("214", "  ", $subfields);
 				
 				$subfields_463 = array();
 				$list_options = array();
@@ -1093,7 +1117,7 @@ class export {
 			$export996 = array() ;
 			if(function_exists('export_traite_exemplaires')) $subfields = export_traite_exemplaires ($ex);
 			$this -> add_field("995", "  ", $subfields);
-			//J'ajoute dans le sous champs 996 tous ce qu'il faut Ã  l'exemlaire pour le reconstruire
+			//J'ajoute dans le sous champs 996 tous ce qu'il faut à l'exemlaire pour le reconstruire
 			foreach($ex as $key => $value) {
 				if((trim($value) !== "" ) && ( $value !=  "0000-00-00")){
 					$export996["9"][]=$key.":".$value;
@@ -1110,9 +1134,9 @@ class export {
 		$mes_pp->get_values($id);
 		$values = $mes_pp->values;
 		foreach ( $values as $field_id => $vals ) {
-			//si on peut on exporte les infos du rÃ©solveur (DOI / PMID)
+			//si on peut on exporte les infos du résolveur (DOI / PMID)
 			if(($type == "notices") && ($mes_pp->t_fields[$field_id]['TYPE'] == "resolve")){
-				//les ids sont fixÃ© en dur, on c'est traitÃ© : DOI = 2 , PMID = 1
+				//les ids sont fixé en dur, on c'est traité : DOI = 2 , PMID = 1
 				foreach ( $vals as $value ) {
 					$id_infos = explode('|',$value);
 				 	switch($id_infos[1]){

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cababstract2pmbxml_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: cababstract2pmbxml_input.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class cababstract2pmbxml_input extends convert_input {
 		$content="";
 		$index=array();
 		$n=1;
-		//Lecture du fichier d'entrÃ©e
+		//Lecture du fichier d'entrée
 		while (!$stop) {
 			//Recherche de PT
 			if ($content) $pos_deb=strpos($content,"PT ",1);
@@ -27,9 +27,9 @@ class cababstract2pmbxml_input extends convert_input {
 				$pos_deb=strpos($content,"PT ",1);
 			}
 			
-			//DÃ©but accrochÃ©
+			//Début accroché
 			if ($pos_deb!==false) {
-				//Notice = dÃ©but jusqu'au PT 
+				//Notice = début jusqu'au PT 
 				$notice=substr($content,0,$pos_deb);
 				$content=substr($content,$pos_deb);
 			} else {

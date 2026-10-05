@@ -1,22 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docnum.inc.php,v 1.31 2019-03-12 10:59:25 tsamson Exp $
+// $Id: docnum.inc.php,v 1.34 2023/08/08 08:00:28 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// second niveau de recherche OPAC sur document numÃ©rique
+// second niveau de recherche OPAC sur document numérique
 require_once($class_path."/suggest.class.php");
 require_once($class_path."/sort.class.php");
 
 global $begin_result_liste, $count, $charset, $typdoc, $limiter, $page;
 global $add_cart_link, $gestion_acces_active, $link_to_print_search_result;
-global $opac_search_other_function, $opac_nb_max_tri, $opac_stemming_active, $opac_notices_depliable, $opac_search_allow_refinement, $opac_visionneuse_allow; 
-global $opac_allow_external_search, $opac_search_cache_duration, $opac_photo_filtre_mimetype;
+global $opac_search_other_function, $opac_nb_max_tri, $opac_stemming_active, $opac_notices_depliable, $opac_search_allow_refinement, $opac_visionneuse_allow;
+global $opac_allow_external_search, $opac_search_cache_duration, $opac_photo_filtre_mimetype, $pmb_logs_activate;
 
 //Enregistrement des stats
-if($pmb_logs_activate){
+if ($pmb_logs_activate) {
 	global $nb_results_tab;
 	$nb_results_tab['docnum'] = $count;
 }
@@ -26,8 +26,8 @@ print "	<div id=\"resultatrech\"><h3>".$msg['resultat_recherche']."</h3>\n
 		<div id=\"resultatrech_see\">
 ";
 
-// requÃªte de recherche sur les titres
-print pmb_bidi("<h3 class='searchResult-search'><span class='searchResult-equation'>$count ".$msg['docnum_found']." '".htmlentities(stripslashes($user_query),ENT_QUOTES,$charset)."'");
+// requête de recherche sur les titres
+print pmb_bidi("<h3 class='searchResult-search' id='searchResult-search' ><span class='searchResult-equation'>$count ".$msg['docnum_found']." '".htmlentities(stripslashes($user_query),ENT_QUOTES,$charset)."'");
 
 //calcul restriction
 if ($opac_search_other_function) {
@@ -39,7 +39,7 @@ print activation_surlignage();
 print "</h3>";
 
 $restrict_opac_view='';
-if($_SESSION["opac_view"] && $_SESSION["opac_view_query"] ){
+if (isset($_SESSION["opac_view"]) && isset($_SESSION["opac_view_query"])) {
 	$restrict_opac_view=" notice_id in (select opac_view_num_notice from  opac_view_notices_".$_SESSION["opac_view"].") ";
 }
 
@@ -67,22 +67,22 @@ if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
 	$ac= new acces();
 	$dom_2= $ac->setDomain(2);
 	$acces_j= $dom_2->getJoin($_SESSION['id_empr_session'],16,'notice_id');
-} 
+}
 
 if ($acces_j) {
 
 	$q_restrict = "select notice_id from notices ".$acces_j." where ".(($restrict_typdoc)?$restrict_typdoc:'1 ');
 	$q_restrict.= (($restrict_opac_view)?'and '.$restrict_opac_view:'');
-	
+
 	//Pour rester compatible avec l'ancienne version
 	$statut_j='';
 
 } else {
-	
+
 	$q_restrict = "select notice_id from notices where ".(($restrict_typdoc)?$restrict_typdoc:'1 ');
 	$q_restrict.= (($restrict_opac_view)?'and '.$restrict_opac_view:'');
 	$q_restrict.= "and statut in (select id_notice_statut from notice_statut where (((notice_visible_opac=1 and notice_visible_opac_abon=0) and (explnum_visible_opac=1 and explnum_visible_opac_abon=0))".($_SESSION["user_code"]?" or ((notice_visible_opac_abon=1 and notice_visible_opac=1) and (explnum_visible_opac=1 and explnum_visible_opac_abon=1)) or ((notice_visible_opac_abon=0 and notice_visible_opac=1) and (explnum_visible_opac=1 and explnum_visible_opac_abon=1))":"")."))";
-	
+
 	//Pour rester compatible avec l'ancienne version
 	$statut_j=',notice_statut';
 
@@ -101,7 +101,7 @@ if ($opac_search_other_function) {
 }
 
 //creation table tempo search_result_notices_ contenant les ids des notices visibles pour le lecteur courant.
-$tx = session_id();
+$tx = substr(preg_replace("/[^a-z0-9]/i","", session_id()),0, 32);
 $table_tempo_notices = "search_result_notices_".$tx;
 pmb_mysql_query("drop table if exists $table_tempo_notices");
 $q_table_tempo_notices = "create temporary table ".$table_tempo_notices." engine=memory ".$q_restrict;
@@ -111,11 +111,11 @@ $res_table_tempo_notices = pmb_mysql_query($q_table_tempo_notices);
 $q_index_tempo_notices = "alter table ".$table_tempo_notices." add index i_id(notice_id)";
 pmb_mysql_query($q_index_tempo_notices);
 
-//creation table tempo search_result_explnum_ contenant les ids des documents numÃ©riques et les ids de notices pour monographies/articles.
+//creation table tempo search_result_explnum_ contenant les ids des documents numériques et les ids de notices pour monographies/articles.
 $table_tempo_explnum = "search_result_explnum_".$tx;
 pmb_mysql_query("drop table if exists $table_tempo_explnum");
 
-//droits d'acces emprunteur/document numÃ©rique
+//droits d'acces emprunteur/document numérique
 $acces_j='';
 $q_restrict = '';
 if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
@@ -134,17 +134,19 @@ $res_table_tempo_explnum = pmb_mysql_query($q_table_tempo_explnum);
 $q_index_tempo_explnum = "alter table ".$table_tempo_explnum." add primary key i_id(explnum_id)";
 pmb_mysql_query($q_index_tempo_explnum);
 
-//ajout dans la table tempo search_result_explnum_ des ids des documents numÃ©riques et des ids de notices pour les notices de periodique des bulletins.
+//ajout dans la table tempo search_result_explnum_ des ids des documents numériques et des ids de notices pour les notices de periodique des bulletins.
 $q_in_tempo_explnum = "insert ignore into $table_tempo_explnum select explnum_id, bulletin_notice as notice_id, explnum_mimetype, 1.00 as pert from explnum join bulletins on explnum_bulletin=bulletin_id $acces_j where num_notice=0 and bulletin_notice in (select notice_id from $table_tempo_notices) $q_restrict";
 $res_in_tempo_explnum = pmb_mysql_query($q_in_tempo_explnum);
 
-//ajout dans la table tempo search_result_explnum_ des ids des documents numÃ©riques et des ids de notices pour les notices de bulletins.
+//ajout dans la table tempo search_result_explnum_ des ids des documents numériques et des ids de notices pour les notices de bulletins.
 $q_in_tempo_explnum = "insert ignore into $table_tempo_explnum select explnum_id, num_notice as notice_id, explnum_mimetype, 1.00 as pert from explnum join bulletins on explnum_bulletin=bulletin_id $acces_j where num_notice in (select notice_id from $table_tempo_notices) $q_restrict";
 $res_in_tempo_explnum = pmb_mysql_query($q_in_tempo_explnum);
 
 $search_terms = $aq->get_positive_terms($aq->tree);
-//On enlÃ¨ve le dernier terme car il s'agit de la recherche boolÃ©enne complÃ¨te
-unset($search_terms[count($search_terms)-1]);
+// On enlève le dernier terme car il s'agit de la recherche booléenne complète
+if (!empty($search_terms)) {
+    unset($search_terms[count($search_terms)-1]);
+}
 
 if(!isset($tri)) {
 	$tri="order by pert desc, index_serie, tnvol, index_sew";
@@ -206,7 +208,7 @@ if($new_clause) {
 		//restriction des resultats
 		$q_result_docnum = "delete from $table_tempo_explnum where explnum_id not in (".$s_explnum.") " ;
 		$r_result_docnum = pmb_mysql_query($q_result_docnum);
-	
+
 		//Ajout pertinence dans $table_tempo_explnum
 		$t_pert = array();
 		foreach($t_explnum as $t_id=>$t_pert) {
@@ -214,7 +216,7 @@ if($new_clause) {
 			$r_pert =  pmb_mysql_query($q_pert);
 		}
 	}
-	
+
 }
 
 $requete = "select explnum_id, uni.notice_id,explnum_mimetype, pert from $table_tempo_explnum as uni join notices n on uni.notice_id=n.notice_id" ;
@@ -229,15 +231,15 @@ if($opac_photo_filtre_mimetype){
 }
 
 //gestion du tri
-if (isset($_GET["sort"])) {	
+if (isset($_GET["sort"])) {
 	$_SESSION["last_sortnotices"]=$_GET["sort"];
 }
-if ($count>$opac_nb_max_tri) {
+if ($count > $opac_nb_max_tri) {
 	$_SESSION["last_sortnotices"]="";
 }
-if ($_SESSION["last_sortnotices"]!="") {
+if (!empty($_SESSION["last_sortnotices"])) {
 	$sort=new sort('notices','session');
-	$requete=$sort->appliquer_tri($_SESSION["last_sortnotices"],$requete,"notice_id",$debut,$opac_search_results_per_page);		
+	$requete=$sort->appliquer_tri($_SESSION["last_sortnotices"],$requete,"notice_id",$debut,$opac_search_results_per_page);
 } else {
 	$requete .= " ".$tri;
 	$requete .= " ".$limiter;
@@ -259,8 +261,9 @@ print sort::show_tris_in_result_list($count);
 
 print $add_cart_link;
 if($opac_visionneuse_allow && $nbexplnum){
+    global $link_to_visionneuse, $sendToVisionneuseByPost;
 	print "<span class=\"espaceResultSearch\">&nbsp;&nbsp;&nbsp;</span>".$link_to_visionneuse;
-	print $sendToVisionneuseByPost; 
+	print $sendToVisionneuseByPost;
 }
 
 //affinage
@@ -272,7 +275,7 @@ $_SESSION["notice_view".$n]["search_page"]=$page;
 
 //affichage
 if($opac_search_allow_refinement){
-	print "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"affiner_recherche\"><a href='$base_path/index.php?search_type_asked=extended_search&mode_aff=aff_simple_search' title='".$msg["affiner_recherche"]."'>".$msg["affiner_recherche"]."</a></span>";	
+	print "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"affiner_recherche\"><a href='$base_path/index.php?search_type_asked=extended_search&mode_aff=aff_simple_search' title='".$msg["affiner_recherche"]."'>".$msg["affiner_recherche"]."</a></span>";
 }
 
 //fin affinage
@@ -284,7 +287,7 @@ if ($opac_allow_external_search) print "<span class=\"espaceResultSearch\">&nbsp
 print suggest::get_add_link();
 
 require_once("$class_path/explnum_affichage.class.php");
-// Ancienne version 
+// Ancienne version
 $list_explnum = array();
 $list_notices_associated = array();
 while(($mesNotices = pmb_mysql_fetch_array($found))){

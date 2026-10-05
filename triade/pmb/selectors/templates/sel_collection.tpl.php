@@ -1,9 +1,9 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_collection.tpl.php,v 1.30 2019-01-03 09:52:17 ngantier Exp $
+// $Id: sel_collection.tpl.php,v 1.31 2021/04/06 14:23:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -25,23 +25,29 @@ if($selfrom=="rmc") {
 } else {
 	if ($dyn==3) {
 		$jscript = $jscript_common_authorities_unique;
-	}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+	}elseif ($dyn==2) { // Pour les liens entre autorités
 		$jscript = $jscript_common_authorities_link;
 	}else {
+	    //(f_caller=='formulaire') : particularité pour les appels depuis les procédures (./includes/fields.inc.php)
 		$jscript = "
 		<script type='text/javascript'>
 		<!--
 		function set_parent(f_caller, id_coll, libelle_coll, callback, id_ed, libelle_ed){
-            if (callback == 'vedette_composee_callback') {
-    			set_parent_value(f_caller, '".$p1."', id_coll);
-    			set_parent_value(f_caller, '".$p2."', libelle_coll ? reverse_html_entities(libelle_coll) : '');
-			} else {
-                set_parent_value(f_caller, '".$p1."', id_ed);
-    			set_parent_value(f_caller, '".$p2."', libelle_ed ? reverse_html_entities(libelle_ed) : '');
-    			set_parent_value(f_caller, '".$p3."', id_coll);
-    			set_parent_value(f_caller, '".$p4."', libelle_coll ? reverse_html_entities(libelle_coll) : '');
-    			set_parent_value(f_caller, '".$p5."', '');
-    			set_parent_value(f_caller, '".$p6."', '');
+            if(f_caller=='formulaire'){
+                set_parent_value(f_caller, '".$p1."', id_coll);
+        		set_parent_value(f_caller, '".$p2."', libelle_coll ? reverse_html_entities(libelle_coll) : '');
+            } else {
+                if (callback == 'vedette_composee_callback') {
+        			set_parent_value(f_caller, '".$p1."', id_coll);
+        			set_parent_value(f_caller, '".$p2."', libelle_coll ? reverse_html_entities(libelle_coll) : '');
+    			} else {
+                    set_parent_value(f_caller, '".$p1."', id_ed);
+        			set_parent_value(f_caller, '".$p2."', libelle_ed ? reverse_html_entities(libelle_ed) : '');
+        			set_parent_value(f_caller, '".$p3."', id_coll);
+        			set_parent_value(f_caller, '".$p4."', libelle_coll ? reverse_html_entities(libelle_coll) : '');
+        			set_parent_value(f_caller, '".$p5."', '');
+        			set_parent_value(f_caller, '".$p6."', '');
+                }
             }		
 			closeCurrentEnv();
 		}

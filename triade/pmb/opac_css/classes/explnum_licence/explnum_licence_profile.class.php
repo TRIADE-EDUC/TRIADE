@@ -1,17 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_licence_profile.class.php,v 1.4 2019-01-31 14:28:08 ngantier Exp $
+// $Id: explnum_licence_profile.class.php,v 1.6 2023/11/21 14:50:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/explnum_licence/explnum_licence.class.php');
 require_once($class_path.'/explnum_licence/explnum_licence_right.class.php');
 require_once($class_path.'/translation.class.php');
 
 /**
- * Classe de gestion des profils de rÃ©gimes de licence
+ * Classe de gestion des profils de régimes de licence
  * @author apetithomme, vtouchard
  *
  */
@@ -23,7 +24,7 @@ class explnum_licence_profile {
 	protected $id;
 	
 	/**
-	 * LibellÃ© du profil de rÃ©gime de licence
+	 * Libellé du profil de régime de licence
 	 * @var string
 	 */
 	protected $label;
@@ -35,13 +36,13 @@ class explnum_licence_profile {
 	protected $uri;
 	
 	/**
-	 * Droits associÃ©s
+	 * Droits associés
 	 * @var explnum_licence_right
 	 */
 	protected $rights;
 	
 	/**
-	 * Identifiant du rÃ©gime de licence
+	 * Identifiant du régime de licence
 	 * @var int $explnum_licence_num
 	 */
 	protected $explnum_licence_num;
@@ -65,7 +66,7 @@ class explnum_licence_profile {
 	protected $quotation_rights;
 	
 	public function __construct($id = 0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 	}
 	
 	public function fetch_data() {
@@ -95,7 +96,7 @@ class explnum_licence_profile {
 	}
 	
 	public function set_explnum_licence_num($explnum_licence_num) {
-		$this->explnum_licence_num = $explnum_licence_num*1;
+		$this->explnum_licence_num = intval($explnum_licence_num);
 		return $this;
 	}
 	

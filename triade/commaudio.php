@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,10 +26,15 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
+<script language="JavaScript" src="./librairie_js/ajaxIA.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./framaplayer/framaplayer.js"></script>
 <script>
@@ -75,16 +80,35 @@ function abortHandler(event) {
 }
 
 </script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title> </head>
+<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+<script>
+window.alert = function(msg) { if (msg) alertify.error(msg); };
+function valideAudio() {
+    var titre   = document.querySelector('[name=saisie_titre]').value.trim();
+    var fichier = document.getElementById('Filedata').value;
+    if (titre === '' && !fichier) {
+        alertify.error('Veuillez saisir un titre et sélectionner un fichier audio.');
+        return false;
+    }
+    if (titre === '') {
+        alertify.error('Veuillez saisir un titre.');
+        return false;
+    }
+    if (!fichier) {
+        alertify.error('Veuillez sélectionner un fichier audio.');
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
 <body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onunload="attente_close()" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "News audio" ?></font></b></td>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
@@ -145,107 +169,157 @@ if (isset($_POST["supp"])) {
 	@unlink("./data/audio/actu.mp3");
 }
 ?>
-<tr id='cadreCentral0'>
-<td >
-<br />
-<form method="post"   name=formulaire ENCTYPE="multipart/form-data">
-<table  width=100%  border="0" align="center" >
-<tr>
-<td align="right"><font class="T2"><?php print LANGMESS241 ?></font></TD>
-<TD align="left"><input type="text" name="saisie_titre" size=30 maxlength=28 ></td>
-</tr>
-<tr>
-<td align="right"  valign=top ><font class="T2"><?php print LANGMESS242 ?></font></TD>
-<TD  align="left" >
-<input type="file" name="Filedata" id="Filedata" onChange="uploadFile()"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print preg_replace('/000000/','M',$taille)."o" ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
-<progress id="progressBar" value="0" max="100" style="width:300px;">
-</progress>
-<h3 id="status"></h3>
-<p id="loaded_n_total"></p>
-<br>
-</td>
-</tr>
-</table>
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit3("<?php print LANGAUDIO4 ?>","create","onclick='attente();'"); //text,nomInput</script>
-<A href='#' onMouseOver="AffBulle3('Information','./image/commun/info.jpg','<font face=Verdana size=1><B><font color=red><?php print LANGAUDIO3?></font></B><?php print LANGAUDIO3bis." <b>$taille2</b> . </font>" ?> '); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A> <br /><br />
-</td></tr></table>
-</form>
 <?php
-$fic="./data/parametrage/audio.txt";
-if (file_exists($fic)) {
-	$fichier=fopen("./data/parametrage/audio.txt","r");
-	$donnee=fread($fichier,90000);
-	$tab=explode("#||#",$donnee);
-	fclose($fichier);
-?>
-<!-- <input type="button" value="Stop" id="btnPlayStop" onclick="Playa.doPlayStop();" /> -->
-<center><a href='#'  onMouseOver="AffBulle3('Information','./image/commun/info.jpg','<?php print $tab[0]; ?>');"  onMouseOut="HideBulle()";><img src="./image/commun/son.gif" border=0 align=center></a> : <font class=T1 color=#000000><b><?php print LANGAUDIO1 ?></b></font>
-<br><br>
-<audio src="./data/audio/actu.mp3" controls ></audio>
-<br><br>
-<form method=post>
-<font class=T1><?php print LANGAUDIO6 ?> :</font> <input name="supp" type=submit value="<?php print LANGBT50?>" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
-</center>
-</form>
-<?php
+$fic = "./data/parametrage/audio.txt";
+if (file_exists("./common/config-ia.php")) {
+    include_once("common/productId.php");
+    include_once("common/config-ia.php");
+    $productID = PRODUCTID;
+    $iakey     = IAKEY;
+    $lienIA    = "apitext2speak(document.getElementById('texte').value);";
+} else {
+    $lienIA = "alertify.warning('Votre Triade n\\'est pas configuré pour utiliser l\\'IA. Contacter votre administrateur Triade')";
 }
 ?>
 
-<br><br><hr><br><br>
-<center>
-<?php
-echo "<font class='T2 shadow'><b>Enregistrer votre annonce !!!</b></font>";
-echo "<br/>";
-echo "<br/>";
-echo "<center>";
-echo "<br><b><font color='red'>Mimimun 15 secondes - Maximum 45 secondes</b></font>";
-?>
-<br><br>
+<div class="audio-wrap">
 
-<div style="max-width: 28em;">
-                <select id="encodingTypeSelect" style='display:none' >
-                  <option value="mp3">MP3 (MPEG-1 Audio Layer III) (.mp3)</option>
-                </select>
-                <div id="controls">
-                        <button id="recordButton" >Enregistrer</button>
-                        <button id="stopButton" disabled >Arreter</button>
+    <!-- ── Section 1 : Upload ── -->
+    <div class="audio-card">
+        <div class="audio-card-header">
+            <img src="./image/commun/son.gif" style="height:16px"> <?php print LANGAUDIO4 ?>
+        </div>
+        <div class="audio-card-body">
+        <form method="post" name="formulaire" enctype="multipart/form-data" onsubmit="return valideAudio()">
+            <div class="audio-field">
+                <span class="audio-label"><?php print LANGMESS241 ?></span>
+                <input type="text" class="audio-input" name="saisie_titre" maxlength="28">
+            </div>
+            <div class="audio-field">
+                <span class="audio-label"><?php print LANGMESS242 ?></span>
+                <div style="flex:1">
+                    <input type="file" name="Filedata" id="Filedata" onchange="uploadFile()" style="font-size:12px">
+                    <a href="#" onclick="document.getElementById('help-upload').style.display=(document.getElementById('help-upload').style.display=='none'?'block':'none'); return false;">
+                        <img src="./image/help.gif" border="0" style="width:15px;height:15px;vertical-align:middle;margin-top:4px">
+                    </a>
+                    <div id="help-upload" style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; line-height:1.6;">
+                        Taille maximale autorisée : <strong><?php print preg_replace('/000000/', 'M', $taille)."o" ?></strong>.<br>
+                        Sélectionnez un fichier MP3 — l'envoi démarre automatiquement.
+                    </div>
+                    <div class="audio-progress-wrap">
+                        <progress id="progressBar" value="0" max="100"></progress>
+                        <div class="audio-status" id="status"></div>
+                        <div class="audio-status" id="loaded_n_total"></div>
+                    </div>
                 </div>
-                <div id="formats" style='display:none'  ></div>
-                <pre style='display:none'  >Log</pre>
-                <pre id="log" style='display:none'  ></pre>
+            </div>
+            <div class="audio-submit-row">
+                <script language="JavaScript">buttonMagicSubmit3("<?php print LANGAUDIO4 ?>","create","onclick='attente();'");</script>
+            </div>
+        </form>
+        </div>
+    </div>
 
-                <ol id="recordingsList"></ol>
-</div>
+    <!-- ── Section 2 : Annonce en cours ── -->
+    <?php if (file_exists($fic)) {
+        $fichier = fopen($fic, "r");
+        $donnee  = fread($fichier, 90000);
+        $tab     = explode("#||#", $donnee);
+        fclose($fichier);
+    ?>
+    <div class="audio-card">
+        <div class="audio-card-header">
+            <img src="./image/commun/son.gif" style="height:16px"> <?php print LANGAUDIO1 ?>
+        </div>
+        <div class="audio-card-body">
+            <div class="audio-player-wrap">
+                <div class="audio-info-badge">
+                    <img src="./image/commun/son.gif" style="height:16px;vertical-align:middle">
+                    <?php print LANGAUDIO1 ?>
+                </div>
+                <audio src="./data/audio/actu.mp3" controls style="flex:1;min-width:200px"></audio>
+            </div>
+            <a href="#" onclick="document.getElementById('help-audio').style.display=(document.getElementById('help-audio').style.display=='none'?'block':'none'); return false;" style="font-size:11px;color:#080A66;text-decoration:none;">
+                <img src="./image/help.gif" border="0" style="width:15px;height:15px;vertical-align:middle"> Informations
+            </a>
+            <div id="help-audio" style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; line-height:1.6;">
+                <?php print $tab[0]; ?>
+            </div>
+            <form method="post">
+                <div class="audio-submit-row">
+                    <span style="font-size:13px;font-weight:600;color:#444"><?php print LANGAUDIO6 ?> :</span>
+                    <button type="submit" name="supp" class="audio-delete-btn"><?php print LANGBT50 ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php } ?>
+
+    <!-- ── Section 3 : Enregistrement oral ── -->
+    <div class="audio-card">
+        <div class="audio-card-header">
+            🎙 Enregistrer votre annonce oralement
+        </div>
+        <div class="audio-card-body">
+            <div class="audio-hint">Minimum 15 secondes — Maximum 45 secondes</div>
+            <select id="encodingTypeSelect" style="display:none">
+                <option value="mp3">MP3 (MPEG-1 Audio Layer III) (.mp3)</option>
+            </select>
+            <div class="audio-record-btns">
+                <button id="recordButton">Enregistrer</button>
+                <button id="stopButton" disabled>Arrêter</button>
+            </div>
+            <div id="formats" style="display:none"></div>
+            <pre id="log" style="display:none"></pre>
+            <ol id="recordingsList" class="audio-recordings"></ol>
+            <p style="font-size:12px;color:#555;margin-top:8px">
+                Sauvegardez votre message MP3 puis ajoutez-le à l'annonce ci-dessus.
+            </p>
+        </div>
+    </div>
+
+    <!-- ── Section 4 : Enregistrement écrit (IA) ── -->
+    <div class="audio-card">
+        <div class="audio-card-header">
+            ✍ Enregistrer votre annonce par écrit
+        </div>
+        <div class="audio-card-body">
+            <textarea id="texte" class="audio-textarea" rows="6" placeholder="Saisissez votre texte ici..."></textarea>
+            <div class="audio-submit-row">
+                <script language="JavaScript">buttonMagicSubmit4("Enregistrer le message","btmp3","<?php print $lienIA ?>");</script>
+            </div>
+            <div id="retourmp3" style="margin-top:8px;font-size:12px;text-align:center"></div>
+        </div>
+    </div>
+
+</div><!-- /.audio-wrap -->
 
 <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
-<script src="js/WebAudioRecorder.min.js" ></script>
-<script src="js/app.js" ></script>
+<script src="js/WebAudioRecorder.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+function apitext2speak(message) {
+    ajaxAudioMessageFichier(message,'<?php print $productID ?>','<?php print $iakey ?>');
+}
+</script>
 
-<br>
-<font color='blue'>&nbsp;Sauvegarder votre message MP3, et ajouter le fichier &agrave; l'annonce.</font></center>
-<br><br>
 
-
-
-</td>
-</tr></table>
 <SCRIPT language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
 <?php
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

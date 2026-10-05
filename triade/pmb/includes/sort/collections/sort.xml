@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.3 2020/08/05 12:37:36 jlaurent Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="collection" typeobject="4">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="714" type="text" typefield="select" id="2">
+		<table name="collections">
+			<tablefield>index_coll</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=4</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="collections">
+			<tablefield>collection_id</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=4</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--ISSN-->
+	<field name="165" type="text" typefield="select" id="4">
+		<table name="collections">
+			<tablefield>collection_issn</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=4</referencefield>
+			</link>
+		</table>
+	</field>
+			
+	<!--Editeurs-->
+	<field name="publishers" type="text" typefield="select" id="5">
+		<table name="collections">
+			<tablefield>index_publisher</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=4</referencefield>
+			</link>
+			<link type="n1">
+				<table>publishers</table>
+				<tablekey>ed_id</tablekey>
+				<externalfield>collection_parent</externalfield>
+			</link>
+		</table>
+	</field>
+	
+</sort>

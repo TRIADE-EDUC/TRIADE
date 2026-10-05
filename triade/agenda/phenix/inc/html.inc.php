@@ -1,13 +1,8 @@
 <?php // Mod applied : 2008-08-04 * Mod_Phenix_V5_fcke_aff_outils.txt ?>
 <?php
   /**************************************************************************\
-  * Phenix Agenda                                                            *
-  * http://phenix.gapi.fr                                                    *
-  * Written by    Stephane TEIL            <phenix-agenda@laposte.net>       *
-  * Contributors  Christian AUDEON (Omega) <christian.audeon@gmail.com>      *
-  *               Maxime CORMAU (MaxWho17) <maxwho17@free.fr>                *
-  *               Mathieu RUE (Frognico)   <matt_rue@yahoo.fr>               *
-  *               Bernard CHAIX (Berni69)  <ber123456@free.fr>               *
+  * Phenix Agenda pour Triade                                                *
+  * Nouvelle version pour php 8						     *
   * --------------------------------------------                             *
   *  This program is free software; you can redistribute it and/or modify it *
   *  under the terms of the GNU General Public License as published by the   *
@@ -26,13 +21,8 @@ function entete_page() {
   global $APPLI_STYLE, $RELOAD_PLANNING, $sid, $tcMenu, $tcType, $sd, $APPLI_LANGUE, $PageIndex;
   echo ("<!--
   /**************************************************************************\
-  * Phenix Agenda                                                            *
-  * http://phenix.gapi.fr                                                    *
-  * Written by    Stephane TEIL            <phenix-agenda@laposte.net>       *
-  * Contributors  Christian AUDEON (Omega) <christian.audeon@gmail.com>      *
-  *               Maxime CORMAU (MaxWho17) <maxwho17@free.fr>                *
-  *               Mathieu RUE (Frognico)   <matt_rue@yahoo.fr>               *
-  *               Bernard CHAIX (Berni69)  <ber123456@free.fr>               *
+  * Phenix Agenda remasterisé pour Triade                                                *
+  * Nouvelle version pour php 8						     *
   * --------------------------------------------                             *
   *  This program is free software; you can redistribute it and/or modify it *
   *  under the terms of the GNU General Public License as published by the   *
@@ -45,12 +35,11 @@ function entete_page() {
 <HEAD>
   <META http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
   <META http-equiv=\"Cache-Control\" content=\"no-cache\">
-  <META name=\"Author\" content=\"Stephane TEIL (phenix-agenda@laposte.net)\">
   <META name=\"robots\" content=\"noindex\">
   <NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=inc/noscript.php?lg=$APPLI_LANGUE\"></NOSCRIPT>\n");
   if ($tcMenu<_MENU_PLG_ANNUEL && !$tcType && $RELOAD_PLANNING && $sid)
-    echo "  <META http-equiv=\"REFRESH\" content=\"${RELOAD_PLANNING}; url=agenda.php?sid=$sid&tcMenu=$tcMenu&sd=$sd\">\n";
-  echo ("  <TITLE>Phenix</TITLE>
+    echo "  <META http-equiv=\"REFRESH\" content=\"{$RELOAD_PLANNING}; url=agenda.php?sid=$sid&tcMenu=$tcMenu&sd=$sd\">\n";
+  echo ("  <TITLE>TRIADE - Agenda</TITLE>
   <LINK rel=\"stylesheet\" type=\"text/css\" href=\"css/agenda_css.php?id=".$APPLI_STYLE."&vu=".$tcMenu."&IP=".$PageIndex."\">\n");
 }
 
@@ -112,7 +101,7 @@ function genereTextArea($name,$value,$width,$height) {
       case  "Basic" : $height++; break;
     }
     // Si le skin n'existe pas, on prend celui par defaut
-    if ($FCKE_SKIN!="") {
+   if ($FCKE_SKIN!="") {
       if (!is_dir("FCKeditor/editor/skins/".$FCKE_SKIN)) {
         $FCKE_SKIN = "default";
       }
@@ -120,7 +109,7 @@ function genereTextArea($name,$value,$width,$height) {
       $FCKE_SKIN = "default";
     }
 
-    echo ("<SCRIPT type=\"text/javascript\" src=\"FCKeditor/fckeditor.js\"></SCRIPT>
+echo ("<SCRIPT type=\"text/javascript\" src=\"FCKeditor/fckeditor.js\"></SCRIPT>
   <DIV id=\"_Textarea\" style=\"display:none\">
     <INPUT type=\"button\" class=\"Bouton\" value=\"Retour en HTML\" onclick=\"javascript: ToggleFck()\" /><BR />
     <TEXTAREA id=\"".$name."\" name=\"".$name."\".cols=\"52\" rows=\"".$height."\" wrap=\"soft\" style=\"width:".$width."px;\"></TEXTAREA>
@@ -210,7 +199,7 @@ function genereListeCouleur($avecToutesNotes=true, $avecCouleurDefaut=true, $ave
   //Construction de la liste des couleurs/categories de notes
   reset($tabCouleur);
   $liste = "<SELECT name=\"zlFiltreCouleur\" style=\"background-color:".(($FILTRE_COULEUR!="ALL") ? $FILTRE_COULEUR : $FormulaireFondInput).";\" onchange=\"javascript: changeCouleurListe(this,false);\">\n";
-  while (list($key, $val) = each($tabCouleur)) {
+  foreach ($tabCouleur as $key => $val) {
     $selected = ($val==$FILTRE_COULEUR) ? " selected" : "";
     $liste .= "        <OPTION value=\"".$val."\" style=\"background-color:".(($val!="ALL") ? $val : $FormulaireFondInput).";\"".$selected.">".$key."</OPTION>\n";
   }

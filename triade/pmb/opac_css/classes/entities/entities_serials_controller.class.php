@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_serials_controller.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: entities_serials_controller.class.php,v 1.1 2018/10/08 13:59:39 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -38,9 +38,9 @@ class entities_serials_controller extends entities_records_controller {
 		global $msg;
 		global $serial_header;
 		
-		// affichage d'un form pour crÃ©ation, modification d'un pÃ©riodique
+		// affichage d'un form pour création, modification d'un périodique
 		if(!$this->id) {
-			// pas d'id, c'est une crÃ©ation
+			// pas d'id, c'est une création
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4003], $serial_header);
 		} else {
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4004], $serial_header);

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.7 2017-07-12 15:15:02 tsamson Exp $
+// $Id: search.class.php,v 1.9 2022/10/18 07:04:46 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "avis"
+//Classe de gestion de la recherche spécial "avis"
 
 class avis_search {
 	public $id;
@@ -22,69 +22,99 @@ class avis_search {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
+    	global $msg;
+    	
     	$operators = array();
    		$operators["EQ"]="=";
+   		$operators["ISNOTEMPTY"]=$msg['pas_vide_query'];
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
-    	global $msg;
     	global $charset;
 
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
 
     	$user_query="<span class='search_value'><input type='text' name='field_".$this->n_ligne."_s_".$this->id."[]' value='".htmlentities($valeur[0],ENT_QUOTES,$charset)."' /></span>";
-    	return $select.$user_query;
+    	return $user_query;
     }
     
     //fonction de conversion de la saisie en quelque chose de compatible avec l'environnement
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de l'opérateur choisi
+    	$op_="op_".$this->n_ligne."_s_".$this->id;
+    	global ${$op_};
+    	$op=${$op_};
+    	
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
-
-    	if (!$this->is_empty($valeur)) {
-			$req = "select distinct num_notice as notice_id from avis where valide=1 and type_object=1 and (sujet like '%".$valeur[0]."%' or commentaire like '%".$valeur[0]."%') ";		
-			if($_SESSION['id_empr_session']) {
-				$req .= "
-				and (
-					avis_private = 0
-					or (avis_private = 1 and num_empr='".$_SESSION['id_empr_session']."')
-					or (avis_private = 1 and avis_num_liste_lecture <> 0
-							and avis_num_liste_lecture in (
-							select num_liste from abo_liste_lecture
-							where abo_liste_lecture.num_empr='".$_SESSION['id_empr_session']."' and abo_liste_lecture.etat=2
+    	
+    	$req='';
+    	switch ($op) {
+    		case 'ISNOTEMPTY':
+    			$req = "select distinct num_notice as notice_id from avis where valide=1 and type_object=1 ";
+    			if($_SESSION['id_empr_session']) {
+    				$req .= "
+						and (
+							avis_private = 0
+							or (avis_private = 1 and num_empr='".$_SESSION['id_empr_session']."')
+							or (avis_private = 1 and avis_num_liste_lecture <> 0
+								and avis_num_liste_lecture in (
+									select num_liste from abo_liste_lecture
+									where abo_liste_lecture.num_empr='".$_SESSION['id_empr_session']."' and abo_liste_lecture.etat=2
+								)
 							)
-						)
-					)";
-			} else {
-				$req .= " and avis_private = 0";
-			}
-			pmb_mysql_query("create temporary table t_s_avis (notice_id integer unsigned not null)");
-    		$requete="insert into t_s_avis ".$req;
-	    	$res = pmb_mysql_query($requete);    		
-	 		pmb_mysql_query("alter table t_s_avis add primary key(notice_id)");
+						)";
+    			} else {
+    				$req .= " and avis_private = 0";
+    			}
+    			break;
+    		default:
+    			if (!$this->is_empty($valeur)) {
+    				$req = "select distinct num_notice as notice_id from avis where valide=1 and type_object=1 and (sujet like '%".$valeur[0]."%' or commentaire like '%".$valeur[0]."%') ";
+    				if($_SESSION['id_empr_session']) {
+    					$req .= "
+							and (
+								avis_private = 0
+								or (avis_private = 1 and num_empr='".$_SESSION['id_empr_session']."')
+								or (avis_private = 1 and avis_num_liste_lecture <> 0
+									and avis_num_liste_lecture in (
+										select num_liste from abo_liste_lecture
+										where abo_liste_lecture.num_empr='".$_SESSION['id_empr_session']."' and abo_liste_lecture.etat=2
+									)
+								)
+							)";
+    				} else {
+    					$req .= " and avis_private = 0";
+    				}
+    			}
+    			break;
+    	}
+    	if($req) {
+	    	pmb_mysql_query("create temporary table t_s_avis (notice_id integer unsigned not null)");
+	    	$requete="insert into t_s_avis ".$req;
+	    	pmb_mysql_query($requete);
+	    	pmb_mysql_query("alter table t_s_avis add primary key(notice_id)");
     	}
 		return "t_s_avis"; 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
-    	global $msg;
-    	global $include_path;
-    			
-    	//RÃ©cupÃ©ration de la valeur de saisie 
+    	$tit=array();
+    	//Récupération de la valeur de saisie 
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -95,7 +125,7 @@ class avis_search {
     public function make_unimarc_query() {
     }    
     
-	//fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	//fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="") return true;

@@ -14,7 +14,7 @@ if (!isset($_POST["passwd"]) && (SUPPPASSMAIL != "oui") ) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -105,7 +105,7 @@ if (!isset($_POST["passwd"]) && (SUPPPASSMAIL != "oui") ) {
 		<br><br><br>
 		<center>
 		<form method='post' action='consult.php' >
-		<table width=300><tr><td><img src="./image/commun/logo_triade_licence.gif"></td></tr></table>
+		<table width=300><tr><td><img src="./image/commun/logo_triade_licence.png" width='90%' ></td></tr></table>
 		<br><br>
 		<table border=1 bordercolor="#000000" cellPadding="0" cellSpacing="0"><tr><td  bordercolor="#FCE4BA" >
 		<table bordercolor="#000000" border="0" id='bodyfond2' height="100" width="300" cellPadding="0" cellSpacing="0" >
@@ -169,7 +169,7 @@ if (!isset($_POST["passwd"]) && (SUPPPASSMAIL != "oui") ) {
 
 				}
 
-				if (count($data) > 0 ) {
+				if (countTriade($data) > 0 ) {
 					$number=$data[0][10];
 		?>
 					<HTML>
@@ -210,9 +210,9 @@ if (!isset($_POST["passwd"]) && (SUPPPASSMAIL != "oui") ) {
 					<table  width='100%'  border='0' bordercolor='#000000' ><tr><td>
 					<?php
 					$tabficJ=fichierJointExiste($data[0][13]); // md5,nom
-					if (count($tabficJ) > 0) {
+					if (countTriade($tabficJ) > 0) {
 					        $listingdll="<font class=T1>";
-					        for($j=0;$j<count($tabficJ);$j++) {
+					        for($j=0;$j<countTriade($tabficJ);$j++) {
 					                $nom=$tabficJ[$j][1];
 					                $md5=$tabficJ[$j][0];
 					                $listingdll.=" - <a href=\'accessfichier.php?id=$md5\' target=\'_blank\'>".$nom."</a><br />";

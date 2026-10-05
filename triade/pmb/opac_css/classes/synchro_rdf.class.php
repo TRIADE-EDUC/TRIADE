@@ -2,11 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: synchro_rdf.class.php,v 1.9 2019-03-04 16:44:45 arenou Exp $
+// $Id: synchro_rdf.class.php,v 1.12.8.1 2025/04/30 08:32:19 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/rdf/arc2/ARC2.php");
+global $class_path;
 require_once($class_path."/thesaurus.class.php");
 require_once($class_path."/noeuds.class.php");
 require_once($class_path."/categories.class.php");
@@ -60,7 +60,7 @@ class synchro_rdf{
 	public function __construct($session_id=0,$activateEndpoint=false,$altBaseUri='') {
 		global $charset;
 		
-		//Pour crÃ©er des tables temporaires
+		//Pour créer des tables temporaires
 		if($session_id){
 			$this->config['store_name']=$session_id.$this->config['store_name'];
 		}
@@ -141,7 +141,7 @@ class synchro_rdf{
 				$this->$arrayName=$object;
 			}
 		}
-		//DeuxiÃ¨me passe pour les mÃªmes entitÃ©s mais en cas particuliers
+		//Deuxième passe pour les mêmes entités mais en cas particuliers
 		foreach($mapping['OBJECTBIS'] as $object){
 			$target=$object['TARGET'];
 			$targetList=explode(",",$target);
@@ -191,7 +191,7 @@ class synchro_rdf{
 	}
 	
 	public function exportStoreXml(){
-		//RÃ©cupÃ©ration des prÃ©fixes
+		//Récupération des préfixes
 		$ns = array();
 		$tmpArray=explode("\n",$this->prefix);
 		foreach($tmpArray as $prefix){
@@ -288,10 +288,10 @@ class synchro_rdf{
 	}
 	
 	public function updateTripleLinks($uri1,$uri2){
-		//DELETE-INSERT-WHERE ne fonctionnant pas sur notre version actuelle de sparql, on est obligÃ©s de faire une procÃ©dure au lieu d'une simple requÃªte
+		//DELETE-INSERT-WHERE ne fonctionnant pas sur notre version actuelle de sparql, on est obligés de faire une procédure au lieu d'une simple requête
 		
 		$arrayTriples=array();
-		//Pour la premiÃ¨re passe, on distingue les URI ou non en objet
+		//Pour la première passe, on distingue les URI ou non en objet
 		$q ="SELECT * WHERE {
   				".$uri1." ?p ?o .
   			   FILTER ( !isIRI(?o) )
@@ -366,8 +366,6 @@ class synchro_rdf{
 	}
 	
 	public function updateAuthority($id,$typeAuthority){
-		global $dbh;
-	
 		if($typeAuthority=='oeuvre'){
 			$query="SELECT ntu_num_notice as idNotice FROM notices_titres_uniformes WHERE ntu_num_tu=".$id." LIMIT 1";
 			$baseUri=$this->baseUriOeuvre;
@@ -375,8 +373,8 @@ class synchro_rdf{
 			$query="SELECT responsability_notice as idNotice FROM responsability WHERE responsability_author=".$id." LIMIT 1";
 			$baseUri=$this->baseUriAuteur;
 		}elseif($typeAuthority=='editeur'){
-			//cas spÃ©cifique des Ã©diteurs : on met Ã  jour le contenu de chaque notice l'utilisant
-			$res=pmb_mysql_query("SELECT notice_id FROM notices WHERE ed1_id=".$id,$dbh);
+			//cas spécifique des éditeurs : on met à jour le contenu de chaque notice l'utilisant
+			$res=pmb_mysql_query("SELECT notice_id FROM notices WHERE ed1_id=".$id);
 			while($row=pmb_mysql_fetch_object($res)){
 				$this->delRdf($row->notice_id,0);
 				$this->addRdf($row->notice_id,0);
@@ -390,11 +388,11 @@ class synchro_rdf{
 			return;
 		}
 	
-		//S'il y a une notice avec le titre uniforme ou l'auteur, l'oeuvre ou l'auteur est dans le graphe rdf : on met Ã  jour
-		$res=pmb_mysql_query($query,$dbh);
+		//S'il y a une notice avec le titre uniforme ou l'auteur, l'oeuvre ou l'auteur est dans le graphe rdf : on met à jour
+		$res=pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($res)){
 			$row=pmb_mysql_fetch_object($res);
-			//On rÃ©cupÃ¨re le rdf de la notice
+			//On récupère le rdf de la notice
 			$arrayRdfNotice=$this->getRdfNotice($row->idNotice);
 			$okTrouve=false;
 			foreach($arrayRdfNotice as $typeObject=>$objects){
@@ -419,8 +417,6 @@ class synchro_rdf{
 	}
 	
 	public function replaceAuthority($fromId,$toId,$typeAuthority){
-		global $dbh;
-	
 		if($typeAuthority=='oeuvre'){
 			$query="SELECT ntu_num_notice as idNotice FROM notices_titres_uniformes WHERE ntu_num_tu=".$toId." LIMIT 1";
 			$baseUri=$this->baseUriOeuvre;
@@ -428,8 +424,8 @@ class synchro_rdf{
 			$query="SELECT responsability_notice as idNotice FROM responsability WHERE responsability_author=".$toId." LIMIT 1";
 			$baseUri=$this->baseUriAuteur;
 		}elseif($typeAuthority=='editeur'){
-			//cas spÃ©cifique des Ã©diteurs : on met Ã  jour le contenu de chaque notice l'utilisant
-			$res=pmb_mysql_query("SELECT notice_id FROM notices WHERE ed1_id=".$toId,$dbh);
+			//cas spécifique des éditeurs : on met à jour le contenu de chaque notice l'utilisant
+			$res=pmb_mysql_query("SELECT notice_id FROM notices WHERE ed1_id=".$toId);
 			while($row=pmb_mysql_fetch_object($res)){
 				$this->delRdf($row->notice_id,0);
 				$this->addRdf($row->notice_id,0);
@@ -439,17 +435,17 @@ class synchro_rdf{
 			return;
 		}
 	
-		//L'autoritÃ© est prÃ©sente dans le graphe ?
+		//L'autorité est présente dans le graphe ?
 		$uriFrom=$baseUri.$fromId;
 		$uriTo=$baseUri.$toId;
 		if($this->existsUri("<".$uriFrom.">")){
-			//On efface la dÃ©finition et les datas
+			//On efface la définition et les datas
 			$this->deleteTriple("<".$uriFrom.">","rdf:type","?o");
 			$this->deleteTriple("<".$uriFrom.">","?p","?o","!isIRI(?o)");
-			//Il reste Ã  mettre Ã  jour les liens concernÃ©s avec la nouvelle autoritÃ©
+			//Il reste à mettre à jour les liens concernés avec la nouvelle autorité
 			if(!$this->existsUri("<".$uriTo.">")){
-				//La nouvelle autoritÃ© n'est pas dans le graphe : on rÃ©cupÃ¨re son contenu depuis une notice liÃ©e
-				$res=pmb_mysql_query($query,$dbh);
+				//La nouvelle autorité n'est pas dans le graphe : on récupère son contenu depuis une notice liée
+				$res=pmb_mysql_query($query);
 				$row=pmb_mysql_fetch_object($res);
 				$arrayRdfNotice=$this->getRdfNotice($row->idNotice);
 				$okTrouve=false;
@@ -476,13 +472,11 @@ class synchro_rdf{
 	}
 	
 	public function getRdfNotice($idNotice){
-		global $dbh;
-		
 		$arrayTriples=array();
 		$arrayNotice=array();
 		$exportedUris=array();
 		
-		$res=pmb_mysql_query("SELECT * FROM notices_fields_global_index WHERE id_notice=".$idNotice." ORDER BY id_notice, code_champ, code_ss_champ, ordre",$dbh) or die();
+		$res=pmb_mysql_query("SELECT * FROM notices_fields_global_index WHERE id_notice=".$idNotice." ORDER BY id_notice, code_champ, code_ss_champ, ordre") or die();
 		while($row=pmb_mysql_fetch_object($res)){
 			$arrayNotice[$row->code_champ][$row->code_ss_champ][$row->ordre]=array(
 					'lang'=>$row->lang,
@@ -492,12 +486,12 @@ class synchro_rdf{
 		}
 		
 		$notice=new notice($idNotice);
-		$niveauB=strtolower($notice->biblio_level);
+		$niveauB=strtolower($notice->niveau_biblio);
 		
 		$titreManifestation='';
 		//On parcourt les objets du mapping
 		foreach($this->entiteMapping[$niveauB] as $entiteName=>$entiteDetail){
-			//L'entitÃ© est rÃ©pÃ©table ? (oeuvres)
+			//L'entité est répétable ? (oeuvres)
 			$tmpArray=explode("_",$entiteDetail['definition']['IDROW']);
 			if(trim($tmpArray[2])){
 				$maxOrdre=(int)$tmpArray[2];
@@ -506,7 +500,7 @@ class synchro_rdf{
 			}
 			//Pour chaque occurence
 			for($ordre=1;$ordre<=$maxOrdre;$ordre++){
-				//on crÃ©e l'uri de l'entitÃ©
+				//on crée l'uri de l'entité
 				$baseNameEntite="baseUri".ucfirst($entiteName);
 				if($entiteDetail['definition']['IDFIELD']=='id_notice'){
 					$uri=$this->$baseNameEntite.$idNotice;
@@ -519,10 +513,10 @@ class synchro_rdf{
 					}
 				}
 				$uriManifestation=$this->baseUriManifestation.$idNotice;
-				//on vÃ©rifie que l'entitÃ© n'a pas dÃ©jÃ  Ã©tÃ© exportÃ©e
+				//on vérifie que l'entité n'a pas déjà été exportée
 				if((!count($exportedUris))||(!in_array($uri,$exportedUris))){
-					//on crÃ©e l'entitÃ©
-					//1-dÃ©finition
+					//on crée l'entité
+					//1-définition
 					$triplet=array();
 					$triplet[0]='<'.$uri.'>';
 					$triplet[1]=$entiteDetail['definition']['DT1'];
@@ -578,13 +572,13 @@ class synchro_rdf{
 							}
 							$arrayTriples[$entiteName][$uri]['data'][]=$triplet;
 						}
-						//On rÃ©cupÃ¨re le titre de la manifestation en cas de notice sans titre uniforme (donc sans oeuvre)
+						//On récupère le titre de la manifestation en cas de notice sans titre uniforme (donc sans oeuvre)
 						if(($entiteName=='manifestation') && ($triplet[1]=='dc:title')){
 							$titreManifestation=$triplet[2];
 						}
 					}
 				}
-				//on crÃ©e les liens
+				//on crée les liens
 				if(is_array($entiteDetail['links']) && count($entiteDetail['links'])){
 					foreach($entiteDetail['links'] as $link){
 						$triplet=array();
@@ -594,12 +588,12 @@ class synchro_rdf{
 						$arrayTriples[$entiteName][$uri]['links'][]=$triplet;
 					}
 				}
-				//on enregistre le fait que l'entitÃ© a dÃ©jÃ  Ã©tÃ© crÃ©Ã©e
+				//on enregistre le fait que l'entité a déjà été créée
 				$exportedUris[]=$uri;
-				//cas particulier des auteurs liÃ©s
+				//cas particulier des auteurs liés
 				if(is_array($entiteDetail['authors']) && count($entiteDetail['authors'])){
 					foreach($entiteDetail['authors'][0]['FIELD'] as $author){
-						if(count($arrayNotice[$author['CODE_CHAMP']][$author['CODE_SS_CHAMP']])){
+						if(!empty($arrayNotice[$author['CODE_CHAMP']][$author['CODE_SS_CHAMP']])){
 							foreach($arrayNotice[$author['CODE_CHAMP']][$author['CODE_SS_CHAMP']] as $auteurNotice){
 								$uriAuteur=$this->baseUriAuteur.$auteurNotice[$author['IDFIELD']];
 								$triplet=array();
@@ -608,19 +602,19 @@ class synchro_rdf{
 								$triplet[2]='<'.$uriAuteur.'>';
 								$arrayTriples['author'][$uriAuteur]['links'][]=$triplet;
 								if((!count($exportedUris))||(!in_array($uriAuteur,$exportedUris))){
-									//L'auteur n'a pas encore Ã©tÃ© dÃ©fini
+									//L'auteur n'a pas encore été défini
 									$res=pmb_mysql_query("SELECT * FROM ".$this->auteurMapping['TABLE']." WHERE ".$this->auteurMapping['KEY']."=".$auteurNotice[$author['IDFIELD']]) or die();
 									if(pmb_mysql_num_rows($res)){
 										$row=pmb_mysql_fetch_object($res);
 										$authorType=$row->{$this->auteurMapping['AUTHORTYPE']};
 										if(count($this->auteurMapping['DEFINITIONTRIPLET'.$authorType])){
-											//dÃ©finition
+											//définition
 											$triplet=array();
 											$triplet[0]='<'.$uriAuteur.'>';
 											$triplet[1]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT1'];
 											$triplet[2]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT2'];
 											$arrayTriples['author'][$uriAuteur]['definition'][]=$triplet;
-											//propriÃ©tÃ©s
+											//propriétés
 											foreach($this->auteurMapping['RDFFIELD'.$authorType] as $field){
 												$ajoutTriplet=true;
 												$triplet=array();
@@ -648,7 +642,7 @@ class synchro_rdf{
 											}
 										}
 									}
-									//on enregistre le fait que l'entitÃ© a dÃ©jÃ  Ã©tÃ© crÃ©Ã©e
+									//on enregistre le fait que l'entité a déjà été créée
 									$exportedUris[]=$uriAuteur;
 								}
 							}
@@ -657,11 +651,11 @@ class synchro_rdf{
 				}
 			}
 		}
-		//Cas des pÃ©riodiques : pas de lien vers la manifestation !
+		//Cas des périodiques : pas de lien vers la manifestation !
 		unset($arrayTriples['oeuvre'][$uri]['links']);
 		//Cas des articles
 		if($niveauB=='a'){
-			$res=pmb_mysql_query("SELECT analysis_bulletin FROM analysis WHERE analysis_notice=".$idNotice,$dbh);
+			$res=pmb_mysql_query("SELECT analysis_bulletin FROM analysis WHERE analysis_notice=".$idNotice);
 			$row=pmb_mysql_fetch_object($res);
 			//liens
 			$triplet=array();
@@ -678,9 +672,9 @@ class synchro_rdf{
 		//Cas des monographies sans titre uniforme
 		if($niveauB=='m'){
 			if(!isset($arrayTriples['oeuvre'])){
-				//On crÃ©e une oeuvre de toutes piÃ¨ces
+				//On crée une oeuvre de toutes pièces
 				$uriOeuvre=$this->baseUriOeuvre."fromNotice".$idNotice;
-				//DÃ©finition
+				//Définition
 				$triplet=array();
 				$triplet[0]='<'.$uriOeuvre.'>';
 				$triplet[1]='rdf:type';
@@ -698,8 +692,8 @@ class synchro_rdf{
 				$triplet[1]='rdarelationships:workManifested';
 				$triplet[2]='<'.$uriOeuvre.'>';
 				$arrayTriples['oeuvre'][$uriOeuvre]['links'][]=$triplet;
-				//auteurs liÃ©s Ã  l'oeuvre
-				$resAuteurs=pmb_mysql_query("SELECT DISTINCT responsability_author FROM responsability WHERE responsability_notice=".$idNotice." AND responsability_type IN (0,1)",$dbh);
+				//auteurs liés à l'oeuvre
+				$resAuteurs=pmb_mysql_query("SELECT DISTINCT responsability_author FROM responsability WHERE responsability_notice=".$idNotice." AND responsability_type IN (0,1)");
 				while($rowAuteurs=pmb_mysql_fetch_object($resAuteurs)){
 					$uriAuteur=$this->baseUriAuteur.$rowAuteurs->responsability_author;
 					$triplet=array();
@@ -712,13 +706,13 @@ class synchro_rdf{
 						$rowAuteur=pmb_mysql_fetch_object($resAuteur);
 						$authorType=$rowAuteur->{$this->auteurMapping['AUTHORTYPE']};
 						if(count($this->auteurMapping['DEFINITIONTRIPLET'.$authorType])){
-							//dÃ©finition
+							//définition
 							$triplet=array();
 							$triplet[0]='<'.$uriAuteur.'>';
 							$triplet[1]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT1'];
 							$triplet[2]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT2'];
 							$arrayTriples['author'][$uriAuteur]['definition'][]=$triplet;
-							//propriÃ©tÃ©s
+							//propriétés
 							foreach($this->auteurMapping['RDFFIELD'.$authorType] as $field){
 								$ajoutTriplet=true;
 								$triplet=array();
@@ -754,21 +748,19 @@ class synchro_rdf{
 	}
 	
 	public function getRdfBulletin($idBulletin){
-		global $dbh;
-		
 		$arrayTriples=array();
 		
-		$res=pmb_mysql_query("SELECT * FROM bulletins WHERE bulletin_id=".$idBulletin,$dbh);
+		$res=pmb_mysql_query("SELECT * FROM bulletins WHERE bulletin_id=".$idBulletin);
 		$row=pmb_mysql_fetch_object($res);
 		$uriOeuvreBulletin=$this->baseUriOeuvreBulletin.$idBulletin;
 		//1-oeuvre
-			//dÃ©finition
+			//définition
 			$triplet=array();
 			$triplet[0]='<'.$uriOeuvreBulletin.'>';
 			$triplet[1]=$this->bulletinMapping['DEFINITIONTRIPLET'][0]['DT1'];
 			$triplet[2]=$this->bulletinMapping['DEFINITIONTRIPLET'][0]['DT2'];
 			$arrayTriples['oeuvre'][$uriOeuvreBulletin]['definition'][]=$triplet;
-			//propriÃ©tÃ©s
+			//propriétés
 			foreach($this->bulletinMapping['RDFFIELD'] as $field){
 				$triplet=array();
 				$triplet[0]='<'.$uriOeuvreBulletin.'>';
@@ -789,8 +781,8 @@ class synchro_rdf{
 					$arrayTriples['oeuvre'][$uriOeuvreBulletin]['data'][]=$triplet;
 				}
 			}
-		//2-auteurs liÃ©s Ã  l'oeuvre
-			$resAuteurs=pmb_mysql_query("SELECT DISTINCT responsability_author FROM responsability WHERE responsability_notice=".$row->num_notice." AND responsability_type IN (0,1)",$dbh);
+		//2-auteurs liés à l'oeuvre
+			$resAuteurs=pmb_mysql_query("SELECT DISTINCT responsability_author FROM responsability WHERE responsability_notice=".$row->num_notice." AND responsability_type IN (0,1)");
 			while($rowAuteurs=pmb_mysql_fetch_object($resAuteurs)){
 				$uriAuteur=$this->baseUriAuteur.$rowAuteurs->responsability_author;
 				$triplet=array();
@@ -803,13 +795,13 @@ class synchro_rdf{
 					$rowAuteur=pmb_mysql_fetch_object($resAuteur);
 					$authorType=$rowAuteur->{$this->auteurMapping['AUTHORTYPE']};
 					if(count($this->auteurMapping['DEFINITIONTRIPLET'.$authorType])){
-						//dÃ©finition
+						//définition
 						$triplet=array();
 						$triplet[0]='<'.$uriAuteur.'>';
 						$triplet[1]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT1'];
 						$triplet[2]=$this->auteurMapping['DEFINITIONTRIPLET'.$authorType][0]['DT2'];
 						$arrayTriples['author'][$uriAuteur]['definition'][]=$triplet;
-						//propriÃ©tÃ©s
+						//propriétés
 						foreach($this->auteurMapping['RDFFIELD'.$authorType] as $field){
 							$ajoutTriplet=true;
 							$triplet=array();
@@ -849,7 +841,7 @@ class synchro_rdf{
 			$triplet[2]='<'.$uriOeuvreBulletin.'>';
 			$arrayTriples['oeuvre'][$uriOeuvreBulletin]['links'][]=$triplet;
 		}
-		//4-pÃ©riodique : liens
+		//4-périodique : liens
 			$triplet=array();
 			$triplet[0]='<'.$this->baseUriOeuvre.$row->bulletin_notice.'>';
 			$triplet[1]='ore:aggregates';
@@ -870,7 +862,7 @@ class synchro_rdf{
 		}else{
 			$arrayRdf=$this->getRdfBulletin($idBulletin);
 		}
-		//le rdf est composÃ© de types d'objet (oeuvre, manifestation, expression, auteur)
+		//le rdf est composé de types d'objet (oeuvre, manifestation, expression, auteur)
 		foreach($arrayRdf as $typeObject=>$objects){
 			//pour chaque objet
 			foreach($objects as $uri=>$detail){
@@ -891,8 +883,6 @@ class synchro_rdf{
 	}
 	
 	public function getUris($idNotice,$idBulletin){
-		global $dbh;
-		
 		$arrayUris=array();
 		if($idNotice){
 			$arrayUris['oeuvre'][]=$this->baseUriOeuvre."fromNotice".$idNotice;
@@ -901,7 +891,7 @@ class synchro_rdf{
 			$notice=new notice($idNotice);
 			$niveauB=strtolower($notice->biblio_level);
 			if($niveauB=="m"){
-				$res=pmb_mysql_query("SELECT ntu_num_tu FROM notices_titres_uniformes WHERE ntu_num_notice=".$idNotice,$dbh);
+				$res=pmb_mysql_query("SELECT ntu_num_tu FROM notices_titres_uniformes WHERE ntu_num_notice=".$idNotice);
 				if(pmb_mysql_num_rows($res)){
 					while($row=pmb_mysql_fetch_object($res)){
 						$arrayUris['oeuvre'][]=$this->baseUriOeuvre.$row->ntu_num_tu;
@@ -912,7 +902,7 @@ class synchro_rdf{
 			}
 		}else{
 			$arrayUris['oeuvre'][]=$this->baseUriOeuvre."fromBulletin".$idBulletin;
-			$res=pmb_mysql_query("SELECT num_notice FROM bulletins WHERE bulletin_id=".$idBulletin,$dbh);
+			$res=pmb_mysql_query("SELECT num_notice FROM bulletins WHERE bulletin_id=".$idBulletin);
 			$row=pmb_mysql_fetch_object($res);
 			if($row->num_notice){
 				$arrayUris['manifestation'][]=$this->baseUriManifestation.$row->num_notice;
@@ -924,20 +914,18 @@ class synchro_rdf{
 	}
 	
 	public function delRdf($idNotice,$idBulletin){
-		global $dbh;
-		
 		if($idNotice){
 			$arrayListUri=$this->getUris($idNotice,0);
 		}else{
 			$arrayListUri=$this->getUris(0,$idBulletin);
 		}
-		//On supprime les manifestations (les liens sont automatiquement supprimÃ©s)
+		//On supprime les manifestations (les liens sont automatiquement supprimés)
 		if(count($arrayListUri['manifestation'])){
 			foreach($arrayListUri['manifestation'] as $uri){
 				$this->deleteTriple('<'.$uri.'>', '?p', '?o');
 			}
 		}
-		//On supprime les expressions (les liens sont automatiquement supprimÃ©s)
+		//On supprime les expressions (les liens sont automatiquement supprimés)
 		if(count($arrayListUri['expression'])){
 			foreach($arrayListUri['expression'] as $uri){
 				$this->deleteTriple('<'.$uri.'>', '?p', '?o');
@@ -977,22 +965,22 @@ class synchro_rdf{
 					}
 					break;
 				case "m" :
-					//Cas trÃ¨s particulier : on ne supprime que si le titre uniforme n'est pas utilisÃ© par une autre notice
-					//sinon, on ne supprime que les liens de tous les auteurs de la notice qui ne sont plus utilisÃ©s
+					//Cas très particulier : on ne supprime que si le titre uniforme n'est pas utilisé par une autre notice
+					//sinon, on ne supprime que les liens de tous les auteurs de la notice qui ne sont plus utilisés
 					if(count($arrayListUri['oeuvre'])){
 						foreach($arrayListUri['oeuvre'] as $uri){
 							preg_match('`^'.str_replace('/','\/',$this->baseUriOeuvre).'(.+)$`',$uri,$tmpArray);
 							$idOeuvre=$tmpArray[1];
-							//Il est important de laisser les apostrophes sur la requÃªte car on peut avoir soit un id=X, soit un id=fromNoticeX
-							$res=pmb_mysql_query("SELECT ntu_num_notice FROM notices_titres_uniformes WHERE ntu_num_tu='".$idOeuvre."' AND ntu_num_notice<>".$idNotice,$dbh) or die("SELECT ntu_num_notice FROM notices_titres_uniformes WHERE ntu_num_tu='".$idOeuvre."' AND ntu_num_notices<>".$idNotice);
+							//Il est important de laisser les apostrophes sur la requête car on peut avoir soit un id=X, soit un id=fromNoticeX
+							$res=pmb_mysql_query("SELECT ntu_num_notice FROM notices_titres_uniformes WHERE ntu_num_tu='".$idOeuvre."' AND ntu_num_notice<>".$idNotice) or die("SELECT ntu_num_notice FROM notices_titres_uniformes WHERE ntu_num_tu='".$idOeuvre."' AND ntu_num_notices<>".$idNotice);
 							if(!pmb_mysql_num_rows($res)){
-								//Pas d'autre notice liÃ©e
+								//Pas d'autre notice liée
 								//on efface l'oeuvre
 								$this->deleteTriple('<'.$uri.'>', '?p', '?o');
 								//on efface aussi les liens
 								$this->deleteTriple('?s', '?p', '<'.$uri.'>');
 							}else{
-								//On va chercher tous les auteurs liÃ©s Ã  l'oeuvre dans le graphe
+								//On va chercher tous les auteurs liés à l'oeuvre dans le graphe
 								$arrayAuteursOeuvre=array();
 								$q =$this->prefix."SELECT ?o WHERE {
 									   { <".$uri."> dc:contributor ?o . }
@@ -1008,16 +996,16 @@ class synchro_rdf{
 										}
 									}
 								}
-								//On va chercher tous les auteurs liÃ©s aux autres notices liÃ©es Ã  l'oeuvre
+								//On va chercher tous les auteurs liés aux autres notices liées à l'oeuvre
 								$arrayAuteursNotices=array();
 								$res=pmb_mysql_query("SELECT DISTINCT responsability_author FROM responsability WHERE responsability_notice IN (
 										SELECT DISTINCT ntu_num_notice FROM notices_titres_uniformes
 											WHERE ntu_num_tu=".$idOeuvre." AND ntu_num_notice<>".$idNotice."
-										)",$dbh);
+										)");
 								while($row=pmb_mysql_fetch_object($res)){
 									$arrayAuteursNotices[]=$row->responsability_author;
 								}
-								//Pour chaque auteur prÃ©sent dans $arrayAuteursOeuvre et non prÃ©sent dans $arrayAuteursNotices : on supprime le lien
+								//Pour chaque auteur présent dans $arrayAuteursOeuvre et non présent dans $arrayAuteursNotices : on supprime le lien
 								$diff = array_diff($arrayAuteursOeuvre,$arrayAuteursNotices);
 								if(count($diff)){
 									foreach($diff as $idAuteur){
@@ -1042,13 +1030,13 @@ class synchro_rdf{
 				}
 			}
 		}
-		//on efface les auteurs n'Ã©tant plus utilisÃ©s
+		//on efface les auteurs n'étant plus utilisés
 		$this->cleanAuthors();
 		return;
 	}
 	
 	public function cleanAuthors(){
-		//on va chercher tous les auteurs du graphe non utilisÃ©s
+		//on va chercher tous les auteurs du graphe non utilisés
 		$q =$this->prefix."SELECT ?s WHERE {
 				{ 
 					{ ?s rdf:type foaf:Person. }
@@ -1073,7 +1061,7 @@ class synchro_rdf{
 	}
 
 	/*
-	 * MÃ©thodes thÃ©saurus
+	 * Méthodes thésaurus
 	 */
 	
 	public function storeThesaurusDefinition($idThes){
@@ -1140,7 +1128,7 @@ class synchro_rdf{
 		$uriConcept=$this->baseUriConcept.$idNoeud;
 		$uriThes=$this->baseUriThesaurus.$noeud->num_thesaurus;
 		
-		//Si le noeud possÃ¨de un renvoi-voir, la catÃ©gorie n'est pas dans le graphe, il n'y a que son libellÃ© en altLabel sur le renvoi
+		//Si le noeud possède un renvoi-voir, la catégorie n'est pas dans le graphe, il n'y a que son libellé en altLabel sur le renvoi
 		if($noeud->num_renvoi_voir){
 			return $arrayTriples;
 		}
@@ -1151,13 +1139,13 @@ class synchro_rdf{
 		$triple[1]="rdf:type";
 		$triple[2]="skos:Concept";
 		$arrayTriples[]=$triple;
-		//Appartenance au schÃ©ma
+		//Appartenance au schéma
 		$triple=array();
 		$triple[0]='<'.$uriConcept.'>';
 		$triple[1]="skos:inScheme";
 		$triple[2]='<'.$uriThes.'>';
 		$arrayTriples[]=$triple;
-		//CatÃ©gorie
+		//Catégorie
 		$categ=new categories($idNoeud,$thes->langue_defaut);
 		//Label
 		$triple=array();
@@ -1210,7 +1198,7 @@ class synchro_rdf{
 			}
 		}
 			
-		//Gestion des enfants : on veut les enfants, mÃªme avec renvois (poly-hiÃ©rarchie)
+		//Gestion des enfants : on veut les enfants, même avec renvois (poly-hiérarchie)
 		$res=noeuds::listChilds($idNoeud,1);
 		if(pmb_mysql_num_rows($res)){
 			while($row=pmb_mysql_fetch_array($res)){
@@ -1247,7 +1235,7 @@ class synchro_rdf{
 	}
 	
 	/*
-	 * MÃ©thodes de traitement des champs
+	 * Méthodes de traitement des champs
 	 */
 	
 	private function dateIso8601($arrayValues){

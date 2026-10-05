@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: form.inc.php,v 1.42 2019-04-29 11:04:20 dgoron Exp $
+// $Id: form.inc.php,v 1.45 2021/12/15 08:47:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $charset, $current_module;
 
 require_once($class_path."/netbase/netbase.class.php");
 
@@ -22,7 +24,7 @@ function check_clean_form(form) {
 	if(form.clean_subcollections.checked) flag += 32;
 	if(form.clean_categories.checked) flag += 64;
 	if(form.clean_series.checked) flag += 128;
-	// if(form.clean_relations.checked) clean_relations est forcÃ© ! 
+	// if(form.clean_relations.checked) clean_relations est forcé ! 
 	flag += 256;
 	if(form.clean_notices.checked) flag += 512;
 	if(form.index_acquisitions) {
@@ -44,6 +46,12 @@ function check_clean_form(form) {
 	}
 	if(form.clean_cache_temporary_files) {
 		if(form.clean_cache_temporary_files.checked) flag += 8589934592;
+	}
+	if(form.clean_cache_apcu) {
+		if(form.clean_cache_apcu.checked) flag += 34359738368;
+	}
+	if(form.clean_entities_data) {
+		if(form.clean_entities_data.checked) flag += 68719476736;
 	}
 	if(form.clean_titres_uniformes.checked) flag += 524288;
 	if(flag == 0) {

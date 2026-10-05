@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabSimpleSearch.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabSimpleSearch.js,v 1.9 2022/05/17 07:31:52 gneveu Exp $
 
 
 define([
@@ -45,15 +45,35 @@ define([
 			},
 			onDownloadEnd: function(){
 				var searchButton = query('input[id="launch_search_button"]', this.containerNode)[0];
-				searchButton.setAttribute('type', 'submit'); 
-				this.form = searchButton.form;
-				
-				on(this.form, 'submit', lang.hitch(this, this.postForm));				
-				this.getParent().resizeIframe();
+				if(searchButton) {
+					searchButton.setAttribute('type', 'submit'); 
+					this.form = searchButton.form;
+	
+			    	domAttr.remove(this.form, "onSubmit");
+			    	
+					on(this.form, 'submit', lang.hitch(this, this.postForm));
+					if(typeof this.getParent().resizeIframe == "function"){
+						if(typeof this.getParent().resizeIframe == "function"){
+							this.getParent().resizeIframe();
+						} else {
+							this.getParent().getParent().resizeIframe();
+						}
+					} else {
+						this.getParent().getParent().resizeIframe();
+					}
+				}
 			},
 			checkSize: function(){
 				if(this.currentHeight < this.containerNode.clientHeight){				
-					this.getParent().resizeIframe();
+					if(typeof this.getParent().resizeIframe == "function"){
+						if(typeof this.getParent().resizeIframe == "function"){
+							this.getParent().resizeIframe();
+						} else {
+							this.getParent().getParent().resizeIframe();
+						}
+					} else {
+						this.getParent().getParent().resizeIframe();
+					}
 					this.currentHeight = this.containerNode.clientHeight;
 					if(typeof ajax_resize_elements == "function"){
 						ajax_resize_elements();
@@ -66,6 +86,7 @@ define([
 			},
 			postForm: function(e){
 				e.preventDefault();
+				
 				topic.publish('SubTabSimpleSearch', 'SubTabSimpleSearch', 'initStandby');
 				request(this.parameters.selectorURL+"&action=results_search", {
 					data: domForm.toObject(this.form),

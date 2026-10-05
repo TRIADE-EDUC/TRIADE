@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_voisin.inc.php,v 1.1 2012-10-25 13:15:19 ngantier Exp $
+// $Id: expl_voisin.inc.php,v 1.1 2012/10/25 13:15:19 ngantier Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 require_once($class_path.'/facette_search.class.php');

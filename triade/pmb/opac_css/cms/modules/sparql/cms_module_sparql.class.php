@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_sparql.class.php,v 1.1 2013-09-26 10:15:57 arenou Exp $
+// $Id: cms_module_sparql.class.php,v 1.1 2013/09/26 10:15:57 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

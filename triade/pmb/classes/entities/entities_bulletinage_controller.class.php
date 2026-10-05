@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_bulletinage_controller.class.php,v 1.6 2019-06-13 15:26:51 btafforeau Exp $
-
-if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+// $Id: entities_bulletinage_controller.class.php,v 1.11 2024/03/22 15:31:03 qvarin Exp $
+if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
+    die("no access");
 
 require_once ($class_path."/entities/entities_records_controller.class.php");
 
-class entities_bulletinage_controller extends entities_records_controller {
+class entities_bulletinage_controller extends entities_records_controller
+{
 		
 	protected $url_base = './catalog.php?categ=serials&sub=bulletinage';
 	
@@ -16,7 +17,8 @@ class entities_bulletinage_controller extends entities_records_controller {
 	
 	protected $model_class_name = 'bulletinage';
 	
-	public function get_object_instance() {
+    public function get_object_instance()
+    {
 		$model_class_name = $this->get_model_class_name();
 		$object_instance = new $model_class_name($this->id, $this->serial_id);
 		if(method_exists($model_class_name, 'set_controller')) {
@@ -28,7 +30,8 @@ class entities_bulletinage_controller extends entities_records_controller {
 	/**
 	 * 8 = droits de modification
 	 */
-	protected function get_acces_m() {
+    protected function get_acces_m()
+    {
 		global $PMBuserid;
 		$acces_m=1;
 		if(!$this->id) {
@@ -48,20 +51,21 @@ class entities_bulletinage_controller extends entities_records_controller {
 		return $acces_m;
 	}
 	
-	public function proceed_form() {
+    public function proceed_form()
+    {
 		global $msg;
 		global $serial_header;
 	
-		// affichage d'un form pour crÃ©ation, modification d'un pÃ©riodique
+		// affichage d'un form pour création, modification d'un périodique
 		if(!$this->id) {
-			// pas d'id, c'est une crÃ©ation
+			// pas d'id, c'est une création
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4005], $serial_header);
 		} else {
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4006], $serial_header);
 		}
 		$myBulletinage = $this->get_object_instance();
 		$perio = new serial_display($myBulletinage->get_serial()->id, 1);
-		// titre gÃ©nÃ©ral du pÃ©riodique
+		// titre général du périodique
 		print "
 			<div class='notice-perio'>
 				<div class='row'>
@@ -75,13 +79,14 @@ class entities_bulletinage_controller extends entities_records_controller {
 		print "<div class=\"row\">".$myBulletinage->do_form().'</div>';
 	}
 	
-	public function proceed_duplicate() {
+    public function proceed_duplicate()
+    {
 		global $msg;
 		global $serial_header;
 	
-		// affichage d'un form pour crÃ©ation, modification d'un pÃ©riodique
+		// affichage d'un form pour création, modification d'un périodique
 		if(!$this->id) {
-			// pas d'id, c'est une crÃ©ation
+			// pas d'id, c'est une création
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4005], $serial_header);
 		} else {
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg['bull_duplicate'], $serial_header);
@@ -90,7 +95,7 @@ class entities_bulletinage_controller extends entities_records_controller {
 		$perio = new serial_display($myBulletinage->get_serial()->id, 1);
 		$myBulletinage->bulletin_id = 0;
 		
-		// titre gÃ©nÃ©ral du pÃ©riodique
+		// titre général du périodique
 		print "
 			<div class='notice-perio'>
 				<div class='row'>
@@ -104,13 +109,14 @@ class entities_bulletinage_controller extends entities_records_controller {
 		print "<div class=\"row\">".$myBulletinage->do_form().'</div>';
 	}
 	
-	public function proceed_replace() {
+    public function proceed_replace()
+    {
 		global $msg;
 		global $by;
 		global $del;
 	
 		$myBul = $this->get_object_instance();
-		$by += 0;
+		$by = intval($by);
 		if(!$by) {
 			$myBul->replace_form();
 		} else {
@@ -125,12 +131,51 @@ class entities_bulletinage_controller extends entities_records_controller {
 		}
 	}
 	
-	protected function get_permalink($id=0) {
-		if(!$id) $id = $this->id;
-		return $this->url_base."&action=view&bul_id=".$id;
+	protected function get_permalink($id=0)
+	{
+	    if(!$id) {
+	        $id = $this->id;
+	    }
+		return $this->url_base."&action=view&bul_id=" . intval($id);
 	}
 	
-	public function set_serial_id($serial_id=0) {
+    public function set_serial_id($serial_id = 0)
+    {
 	    $this->serial_id = (int) $serial_id;
+	}
+	
+    public function proceed_update()
+    {
+	    global $create_notice_bul;
+	    if(!isset($this->serial_id)){
+	        global $serial_id;
+	        $this->serial_id = $serial_id;
+	    }
+	    $myBull = $this->get_object_instance();
+	    $myBull->set_properties_from_form();
+	    if($create_notice_bul){
+    	    $sign = new notice_doublon();
+	        $myBull->signature = $sign->gen_signature();
+	    }
+	    $myBull->save();
+	    return $myBull->bulletin_id;
+	}
+
+    /**
+     *
+     * @param int $id
+     * @see entities_records_controller::get_display_view()
+     */
+    public function get_display_view($id = 0)
+    {
+	    global $msg, $current_module, $id_form;
+	    $return = "<div class='row'><div class='msg-perio'>".$msg["maj_encours"]."</div></div>";
+        $retour = bulletinage::get_permalink(intval($id));
+	    $return .= "
+                <form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"$retour\" style=\"display:none\">
+    				<input type=\"hidden\" name=\"id_form\" value=\"$id_form\">
+    			</form>
+    			<script type=\"text/javascript\">document.dummy.submit();</script>";
+	    return $return;
 	}
 }

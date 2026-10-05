@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
 <!-- messages localisés en français pour le module Article
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_bannetteslistabon_view_bannetteslistabon.xml,v 1.2 2019-06-13 14:00:53 dgoron Exp $ -->
+$Id: cms_module_bannetteslistabon_view_bannetteslistabon.xml,v 1.4 2024/03/06 14:19:43 jparis Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_bannetteslistabon_build_bannette_link">Construction du lien vers une bannette</entry>
 	<entry code="cms_module_common_view_bannetteslistabon_build_record_link">Construction du lien vers une notice</entry>
-	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le contenu</entry>
 	<entry code="cms_module_common_view_bannetteslistabon_build_bannette_nb_notices">Nombre de notices à afficher par bannette</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannetteslistabon_css">CSS associée</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannettes_desc">Liste des bannettes</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannettes_id_desc">ID de la bannette</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannettes_name_desc">Titre</entry>
-	<entry code="cms_module_bannetteslistabon_view_bannettes_comment_desc">Commentaire publique</entry>
+	<entry code="cms_module_bannetteslistabon_view_bannettes_comment_desc">Commentaire public</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannettes_record_number_desc">Nombre de notices</entry>
 	<entry code="cms_module_bannetteslistabon_view_bannettes_link_desc">Lien vers la bannette</entry>
 	<entry code="cms_module_bannetteslistabon_view_records_desc">Liste des notices</entry>
@@ -43,9 +43,6 @@ $Id: cms_module_bannetteslistabon_view_bannetteslistabon.xml,v 1.2 2019-06-13 14
 	<entry code="cms_module_bannetteslistabon_view_flux_rss_date_last_desc">Date</entry>
 	<entry code="cms_module_bannetteslistabon_view_flux_rss_export_court_desc">Export court</entry>
 	<entry code="cms_module_bannetteslistabon_view_flux_rss_template_desc">Template</entry>
-	<entry code="cms_module_bannetteslistabon_view_incomplete_filling_js">Saisie incomplète, vous devez renseigner tous les champs.</entry>
-	<entry code="cms_module_bannetteslistabon_view_incorrect_mail_filling_js">Le format de l\'email n\'est pas correct.</entry>
-	<entry code="cms_module_bannetteslistabon_view_no_concording_pwd">Les mots de passe ne concordent pas.</entry>
 	<entry code="cms_module_bannetteslistabon_view_manage_abo">Gérer ses abonnements</entry>
 	<entry code="cms_module_bannetteslistabon_view_receive_by_mail">Recevoir par mail les alertes</entry>
 	<entry code="cms_module_bannetteslistabon_view_rss_abo">S'abonner au flux RSS</entry>
@@ -63,15 +60,25 @@ $Id: cms_module_bannetteslistabon_view_bannetteslistabon.xml,v 1.2 2019-06-13 14
 	<entry code="cms_module_bannetteslistabon_view_subscribe_login">Identifiant :</entry>
 	<entry code="cms_module_bannetteslistabon_view_subscribe_pwd">Mot de passe :</entry>
 	<entry code="cms_module_bannetteslistabon_view_subscribe_pwd_verif">Mot de passe (vérification) :</entry>
-	<entry code="cms_module_bannetteslistabon_view_subscribe_captcha_msg">Afin de limiter les robots vous devez renseigner le code figurant sur cette image :</entry>
 	<entry code="cms_module_bannetteslistabon_view_subscribe_captcha">Code de vérification :</entry>
 	<entry code="cms_module_bannetteslistabon_view_subscribe_btn">S'inscrire et s'abonner aux alertes cochées</entry>
+	
 	<entry code="cms_module_bannetteslistabon_view_email_sent">Un email de confirmation vient de vous être envoyé, merci de consulter votre messagerie.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_subscribe_1">Inscription impossible, l\'email existe déjà dans la base.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_subscribe_2">Inscription impossible, l\'identifiant existe déjà dans la base.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_subscribe_3">Erreur à l\'inscription, veuillez contacter l\'administrateur de la base.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_subscribe_8">Inscription impossible, veuillez contacter l\'administrateur de la base : erreur de configuration du module.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_subscribe_9">Inscription impossible, le code de vérification n\'est pas valide.</entry>
-	<entry code="cms_module_bannetteslistabon_view_error_connect_1">Identifiant ou mot de passe incorrect.</entry>
 	<entry code="cms_module_bannetteslistabon_view_subscribe_consent_message">J'accepte la conservation et l'utilisation à but non commercial de mes données personnelles</entry>
+	
+    <entry code="cms_module_bannetteslistabon_view_no_selection_error" >Vous devez sélectionner au moins un abonnement.</entry>
+	<entry code="cms_module_bannetteslistabon_view_no_login_pwd_error" >Vous devez renseigner un identifiant et un mot de passe.</entry>
+	<entry code="cms_module_bannetteslistabon_view_connect_error" >Identifiant ou mot de passe incorrect.</entry>
+	<entry code="cms_module_bannetteslistabon_view_form_error">Votre saisie est incomplète ou erronée.</entry>
+	
+	<entry code="cms_module_bannetteslistabon_view_error_bad_password">Votre mot de passe n'est pas assez sécurisé.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_consent_message">Vous devez accepter la conservation de vos données.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_tags_not_allowed">Les champs de saisie ne doivent pas contenir de tags HTML.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_mail_used">Cet email est déjà utilisé.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_login_used">Ce login est déjà utilisé.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_login_invalid">Ce login n'est pas valide.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_mail_not_sent">Votre inscription est prise en compte mais le mail de validation d'inscription n'a pu être envoyé.\nContactez l'administrateur.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_unknown">Une erreur technique est survenue.\nContactez l'administrateur.</entry>
+	<entry code="cms_module_bannetteslistabon_view_error_code">le code de vérification n'est plus valide.</entry>
+	<entry code="cms_module_bannetteslistabon_view_categories_desc">Liste des classements</entry>
 </XMLlist>

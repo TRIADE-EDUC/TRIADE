@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_htmlcode.xml,v 1.4 2016-09-20 10:25:41 apetithomme Exp $ -->
+$Id: cms_module_htmlcode.xml,v 1.4 2016/09/20 10:25:41 apetithomme Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_htmlcode_view_htmlcode'>Edition de code HTML</entry>

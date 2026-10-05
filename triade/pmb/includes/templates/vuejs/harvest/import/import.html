@@ -1,0 +1,4 @@
+<div id="harvest-import">
+    <form-harvest-import v-if="action == 'modif' || action == 'add'" :profil="profil" :flags="flags" :url="url"></form-harvest-import>
+    <list v-else :list="list" :caption="messages.get('harvest', 'harvest_list_profile_import_caption')" :url="url"></list>
+</div>

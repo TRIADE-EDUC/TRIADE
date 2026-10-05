@@ -23,13 +23,13 @@ header("Content-Disposition: attachement; filename=\"tables_export.txt\"");
 		$t=$t_table[$key]['ATTRS'];
 		print "Table".$sep.$sep.$t_table[$key]['NAME'].$ln;
 		print "Description".$sep.$t_table[$key]['DESC'].$ln.$ln;
-		print "Nom champ".$sep."Type".$sep."Signe".$sep."Infos. complÃ©mentaires".$sep."RÃ©f. Ã  d'autres tables".$sep."Valeur par dÃ©faut".$sep."Description".$sep.$ln.$ln;
+		print "Nom champ".$sep."Type".$sep."Signe".$sep."Infos. complémentaires".$sep."Réf. à d'autres tables".$sep."Valeur par défaut".$sep."Description".$sep.$ln.$ln;
 		
 		foreach ($t as $k=>$v)
 		{
-			if(strlen($v['SIGNE'])<12){$sign="SignÃ©";}else{ $sign="Non signÃ©";}
-			$cle="ClÃ© primaire";
-			if(strlen($v['KEY'])==0){$cle="";}elseif(strlen($v['KEY'])>20){$cle="ClÃ© Ã©trangÃ¨re";}
+			if(strlen($v['SIGNE'])<12){$sign="Signé";}else{ $sign="Non signé";}
+			$cle="Clé primaire";
+			if(strlen($v['KEY'])==0){$cle="";}elseif(strlen($v['KEY'])>20){$cle="Clé étrangère";}
 			print $v['NAME'].$sep.$v['TYPE'].$sep.$sign.$sep.$cle.$sep.$t_table[$v['REF']]['NAME'].$sep.$v['DEFVAL'].$sep.$v['DESC'].$ln;
 		}
 		

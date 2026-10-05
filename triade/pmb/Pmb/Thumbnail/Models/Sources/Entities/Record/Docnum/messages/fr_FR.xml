@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.5 2023/02/07 15:13:01 qvarin Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Document numérique</entry>
+	<entry code="description">Récupèration d'une vignette à partir d'un document numérique. Il est possible de définir le choix du document numérique en fonction de la valeur d'un champ personnalisable de type liste.
+    Ou, c'est la vignette du premier document numérique qui est récupérée.</entry>
+	<entry code="activate_custom_field_selection">Activer la sélection sur champ personnalisable :</entry>
+	<entry code="custom_field_select">Champ personnalisable :</entry>
+	<entry code="custom_field_select_default_value">Aucun</entry>
+	<entry code="custom_field_display">Valeur du champ personnalisable :</entry>
+	<entry code="active_found_first_thumbnail">Récupérer la vignette du premier document numérique :</entry>
+</XMLlist>

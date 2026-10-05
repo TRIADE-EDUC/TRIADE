@@ -1,15 +1,39 @@
-<!-- $Id: pnb_parameters.tpl.html,v 1.1 2018-06-05 08:31:02 vtouchard Exp $ -->
+<!-- $Id: pnb_parameters.tpl.html,v 1.5 2021/02/09 15:30:46 jlaurent Exp $ -->
 
-<form method="post" name="parameters_list" action="./empr.php?tab=pnb_loan&lvl=pnb_parameters&sub=save">
-	<h3 id="empr_pnb_parameters_list_title">{{ msg.empr_pnb_parameters_list }}</h3>
-	
-	<div class="row">
-		<label for="password_hint">{{ msg.empr_pnb_parameters_hint }}</label>
-		<input type="text" name="password_hint" value="{{parameters.pnb_password_hint}}"/>
-	</div>	
-	<div class="row">
-		<label for="pnb_password">{{ msg.empr_pnb_parameters_password }}</label>
-		<input type="password" name="pnb_password" value="" required/>
+<form method="post" id="parameters_list" name="parameters_list" action="./empr.php?tab=pnb&lvl=pnb_parameters&sub=save">
+    {%if parameters.pnb_password !='' %} 
+	    <div class="row pnb_info">
+	    	<span>{{ msg.empr_pnb_password_set }}</span>
+	    </div>
+   	{% else %}
+	    {{ msg.empr_pnb_parameters_comment }}
+   	{% endif %}
+    <div class="row pnb_alert" id="pnb_error"></div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="colonne2">
+            <label for="pnb_password">{{ msg.empr_pnb_parameters_password }} </label>
+        </div>
+        <div class="colonne_suite">
+            <input type="password" id="pnb_password" name="pnb_password" value="" required />
+            <span class="fa fa-eye" onclick="toggle_password(this, 'pnb_password');toggle_password(this, 'pnb_password_confirm');"></span>
+        </div>
+    </div>
+  	<div class="row">
+		<div class="colonne2">
+		    <label for="pnb_password_confirm">{{ msg.pnb_verif_parameters_password }}</label>
+		</div>
+		<div class="colonne_suite">
+		 <input id="pnb_password_confirm" type="password" name="pnb_password_confirm" required/>
+		</div>
 	</div>
-	<input type="submit" class="bouton" value="{{ msg.77 }}"/>
+	<div class="row">
+        <div class="colonne2">
+            <label for="pnb_password_hint">{{ msg.empr_pnb_parameters_hint }}</label>
+        </div>
+        <div class="colonne_suite">
+            <input type="text" id="pnb_password_hint" name="pnb_password_hint" value="{{ parameters.pnb_password_hint }}" />
+        </div>
+	</div>	
+	<input type="submit" onclick="check_passform(document.forms['parameters_list'])" class="bouton" value="{{ msg.77 }}" />
 </form>

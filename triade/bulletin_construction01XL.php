@@ -1,12 +1,12 @@
 <?php
 session_start();
-error_reporting(0);
+//error_reporting(0);
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,13 +40,13 @@ if ($id != 1) {
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -74,7 +74,7 @@ $affmoyengeneralexls=$_POST["affmoyengeneralexls"];
 config_param_ajout($affmoyengeneralexls,"affmoyengeneralexls");
 
 $valeur=visu_affectation_detail_bulletin($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	
 	if ($_POST["typetrisem"] == "trimestre") {
 		if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; $triabsconet="T1"; $sem=1; }
@@ -88,7 +88,7 @@ if (count($valeur)) {
 	}
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebutP1=$dateRecup[$j][0];
 		$dateFinP1=$dateRecup[$j][1];
 		$dateDebut=$dateDebutP1;
@@ -98,7 +98,7 @@ if (count($valeur)) {
 	$dateFinP1=dateForm($dateFinP1);
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebutP2=$dateRecup[$j][0];
 		$dateFinP2=$dateRecup[$j][1];
 		$dateDebut=$dateDebutP2;
@@ -108,7 +108,7 @@ if (count($valeur)) {
 	$dateFinP2=dateForm($dateFinP2);
 	
 	$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebutP3=$dateRecup[$j][0];
 		$dateFinP3=$dateRecup[$j][1];
 		$dateDebut=$dateDebutP3;
@@ -141,100 +141,99 @@ if (count($valeur)) {
 
 	/* --------------------------------------------------------------------------------------------------------- */
 	/* ---------------------------------- */
-	$titre1 = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 1, 
-						underline => 0,  
-						color => 'black', 
-						size => 15, 
-						font => 'Trebuchet MS'));
+	$titre1 = $workbook->addformat(array(  "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 1, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 15, 
+						"font" => 'Trebuchet MS'));
 	$titre1->set_align('left');
 	$titre1->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 0, 
-						underline => 0,  
-						color => 'black', 
-						size => 11, 
-						font => 'Trebuchet MS'));
+	$normal = $workbook->addformat(array(   "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 0, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 11, 
+						"font" => 'Trebuchet MS'));
 	$normal->set_align('left');
 	$normal->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal2 = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 1, 
-						underline => 0,  
-						color => 'black', 
-						size => 12, 
-						font => 'Trebuchet MS'));
+	$normal2 = $workbook->addformat(array(  "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 1, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 12, 
+						"font" => 'Trebuchet MS'));
 	$normal2->set_align('right');
 	$normal2->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal3 = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 0, 
-						underline => 0,  
-						color => 'black', 
-						size => 12, 
-						font => 'Trebuchet MS'));
+	$normal3 = $workbook->addformat(array(  "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 0, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 12, 
+						"font" => 'Trebuchet MS'));
 	$normal3->set_align('right');
 	$normal3->set_align('vcenter');
 	/* ---------------------------------- */
-	$normal4 = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 1, 
-						underline => 0,  
-						color => 'black', 
-						size => 15, 
-						font => 'Trebuchet MS'));
+	$normal4 = $workbook->addformat(array(  "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 1, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 15, 
+						"font" => 'Trebuchet MS'));
 	$normal4->set_align('right');
 	$normal4->set_align('vcenter');
 	/* ---------------------------------- */
-	$titre2 = $workbook->addformat(array(  border => 0, 
-						fg_color => 'white', 
-						pattern => 1,  
-						italic => 0, 
-						bold => 1, 
-						underline => 0,  
-						color => 'black', 
-						size => 15, 
-						font => 'Trebuchet MS'));
+	$titre2 = $workbook->addformat(array(  "border" => 0, 
+						"fg_color" => 'white', 
+						"pattern" => 1,  
+						"italic" => 0, 
+						"bold" => 1, 
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 15, 
+						"font" => 'Trebuchet MS'));
 	$titre2->set_align('right');
 	$titre2->set_align('vcenter');
 	/* ---------------------------------- */
-	$colonne1 = $workbook->addformat(array(  border => 1, 
-						fg_color => 'white', 
-						pattern => 2,  
-						italic => 0, 
-						bold => 0,
-					    
-						underline => 0,  
-						color => 'black', 
-						size => 11, 
-						font => 'Trebuchet MS'));
+	$colonne1 = $workbook->addformat(array(  "border" => 1, 
+						"fg_color" => 'white', 
+						"pattern" => 2,  
+						"italic" => 0, 
+						"bold" => 0,
+					   	"underline" => 0,  
+						"color" => 'black', 
+						"size" => 11, 
+						"font" => 'Trebuchet MS'));
 	$colonne1->set_align('center');
 	$colonne1->set_align('vcenter');
 	/* ---------------------------------- */
-	$colonne2 = $workbook->addformat(array(  border => 1, 
-						fg_color => 'white', 
-						pattern => 2,  
-						italic => 0, 
-						bold => 0,	
-						underline => 0,  
-						color => 'black', 
-						size => 9, 
-						font => 'Trebuchet MS'));
+	$colonne2 = $workbook->addformat(array( "border" => 1, 
+						"fg_color" => 'white', 
+						"pattern" => 2,  
+						"italic" => 0, 
+						"bold" => 0,	
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 9, 
+						"font" => 'Trebuchet MS'));
 	$colonne2->set_align('center');
 	$colonne2->set_align('vcenter');
 	/* ---------------------------------- */
@@ -355,46 +354,45 @@ if (count($valeur)) {
 	$M3->set_bold(1);
 	$M3->set_border(1);
 	/* ---------------------------------- */
-	$commentaire1 = $workbook->addformat(array(  border => 1, 
-						fg_color => 'white', 
-						pattern => 2,  
-						italic => 0, 
-						bold => 0,	
-						underline => 0,  
-						color => 'black', 
-						size => 9, 
-						font => 'Trebuchet MS'));
+	$commentaire1 = $workbook->addformat(array(  "border" => 1, 
+						"fg_color" => 'white', 
+						"pattern" => 2,  
+						"italic" => 0, 
+						"bold" => 0,	
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 9, 
+						"font" => 'Trebuchet MS'));
 	$commentaire1->set_align('left'); // ESAD center
 	$commentaire1->set_align('vcenter');
 	$commentaire1->set_merge();
 	$commentaire1->set_text_wrap();
 	/* ---------------------------------- */
 	/* ---------------------------------- */
-	$commentaire2 = $workbook->addformat(array(  border => 1, 
-						fg_color => 'white', 
-						pattern => 2,  
-						italic => 0, 
-						bold => 0,
-					
-						underline => 0,  
-						color => 'black', 
-						size => 9, 
-						font => 'Trebuchet MS'));
+	$commentaire2 = $workbook->addformat(array(  "border" => 1, 
+						"fg_color" => 'white', 
+						"pattern" => 2,  
+						"italic" => 0, 
+						"bold" => 0,
+						"underline" => 0,  
+						"color" => 'black', 
+						"size" => 9, 
+						"font" => 'Trebuchet MS'));
 	$commentaire2->set_align('left');
 	$commentaire2->set_align('top');
 	$commentaire2->set_merge();
 	$commentaire2->set_text_wrap();
 	/* ---------------------------------- */
-	$commentaireDirection = $workbook->addformat(array(  border => 1, 
-						fg_color => 'white', 
-						pattern => 2,  
-						italic => 0, 
-						bold => 0,
-						underline => 0,  
-						align=> 'left',
-						color => 'black', 
-						size => 9, 
-						font => 'Trebuchet MS'));
+	$commentaireDirection = $workbook->addformat(array(  "border" => 1, 
+						"fg_color" => 'white', 
+						"pattern" => 2,  
+						"italic" => 0, 
+						"bold" => 0,
+						"underline" => 0,  
+						"align" => 'left',
+						"color" => 'black', 
+						"size" => 9, 
+						"font" => 'Trebuchet MS'));
 	$commentaireDirection->set_align('left');
 //	$commentaireDirection->set_valign('top');
 	$commentaireDirection->set_merge();
@@ -408,7 +406,7 @@ if (count($valeur)) {
 	// recuperation des coordonnées
 	// de l etablissement
 	$data=visu_paramViaIdSite(chercheIdSite($_POST["saisie_classe"]));
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	       $nom_etablissement=trim(TextNoAccent($data[$i][0]));
 	       $adresse=trim($data[$i][1]);
 	       $postal=trim($data[$i][2]);
@@ -421,7 +419,7 @@ if (count($valeur)) {
 	// fin de la recup
 	// recherche des dates de debut et fin
 	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -448,14 +446,14 @@ if (count($valeur)) {
 	if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 
 	$plageEleve=$_POST["plageEleve"];
-	if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+	if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 	if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 	if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 	if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 	if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 	if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 	if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-	if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+	if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 	for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		
 		// variable eleve
@@ -495,7 +493,7 @@ if (count($valeur)) {
 		// FIN variables
 		// mise en place du logo
 		$photo=recup_photo_bulletin_idsite(chercheIdSite($_POST["saisie_classe"]));
-		if (count($photo) > 0) {
+		if (countTriade($photo) > 0) {
 			$logo="./data/image_pers/".$photo[0][0];
 			if (file_exists($logo)) {
 			}
@@ -525,7 +523,7 @@ if (count($valeur)) {
 
 
 	/*	$dataadresse=chercheadresse($idEleve);
-		for($ik=0;$ik<=count($dataadresse);$ik++) {
+		for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 			$nomtuteur=$dataadresse[$ik][1];
 			$prenomtuteur=$dataadresse[$ik][2];
 			$adr1=$dataadresse[$ik][3];
@@ -599,7 +597,7 @@ if (count($valeur)) {
 
 		$ligne=11;
 		$ligneN=$ligne-1;
-		for($f=0;$f<count($recupUE);$f++) {
+		for($f=0;$f<countTriade($recupUE);$f++) {
 			$code_ue=$recupUE[$f][0];
 			$nom_ue=$recupUE[$f][1];
 			$coef_ue=$recupUE[$f][2];
@@ -626,7 +624,7 @@ if (count($valeur)) {
 			$ligne++;
 			$ligneN++;
 
-			for($i=0;$i<count($listeMatiere);$i++) {
+			for($i=0;$i<countTriade($listeMatiere);$i++) {
 				$idmatiere=$listeMatiere[$i][0];
 				$idMatiere=$listeMatiere[$i][0];
 				$matiere=$listeMatiere[$i][1];
@@ -685,7 +683,7 @@ if (count($valeur)) {
 				if (($noteaffP1 < 10) && ($noteaffP1 != "")) { $noteaffP11="0".$noteaffP1; }
 
 				$nbabs=nombre_abs_matiere($idEleve,$dateDebut,$dateFin,$idmatiere);
-				$nbabs=count($nbabs);
+				$nbabs=countTriade($nbabs);
 				if ($nbabs > 0) { $nbabs="($nbabs Abs)"; }else{ $nbabs=""; }
 
 					
@@ -736,7 +734,7 @@ if (count($valeur)) {
 				if (($idgroupe == "0") || (trim($idgroupe) == "")) {    // non matiere affectée à un groupe
 					$max="";
 					$min=1000;
-					for($g=0;$g<count($eleveT);$g++) {
+					for($g=0;$g<countTriade($eleveT);$g++) {
 						// variable eleve
 						$idEleveMoyen=$eleveT[$g][4];
 						$valeur=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -752,7 +750,7 @@ if (count($valeur)) {
 					$max="";
 					$min=1000;
 					$eleveTg=listeEleveDansGroupe($idgroupe);
-					for($g=0;$g<count($eleveTg);$g++) {
+					for($g=0;$g<countTriade($eleveTg);$g++) {
 						$idEleveMoyen=$eleveTg[$g];
 						$valeur=moyenneEleveMatiereGroupe($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 						if (trim($valeur) != "") {	
@@ -908,10 +906,11 @@ if (count($valeur)) {
 	      <?php print LANGBULL28?> : <?php print $classe_nom?><br> <br>
 	      <?php print LANGBULL29?> : <?php print $anneeScolaire?><br /><br />
 	</font>
-	</ul>
-	
-	
+	<br>	
+	<ul>	
 	<input type=button onClick="open('telecharger.php?fichier=<?php print $fichier?>&fichiername=<?php print $fichiername ?>','_blank','');" value="<?php print "Récupération de l'exportation" ?>"  class="bouton2">
+	</ul>
+	</ul>
 
 <?php 
 }else{

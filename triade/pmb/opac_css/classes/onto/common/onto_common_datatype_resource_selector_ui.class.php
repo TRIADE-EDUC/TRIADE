@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_resource_selector_ui.class.php,v 1.10 2019-01-03 16:10:38 apetithomme Exp $
+// $Id: onto_common_datatype_resource_selector_ui.class.php,v 1.14 2023/07/26 12:12:58 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,7 +11,7 @@ require_once $class_path.'/authority.class.php';
 require_once $class_path.'/notice.class.php';
 /**
  * class onto_common_datatype_resource_selector_ui
- * 
+ *
  */
 class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui {
 
@@ -23,9 +23,9 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 
 
 	/**
-	 * 
 	 *
-	 * @param Array() class_uris URI des classes de l'ontologie list√©es dans le s√©lecteur
+	 *
+	 * @param Array() class_uris URI des classes de l'ontologie listÈes dans le sÈlecteur
 
 	 * @return void
 	 * @access public
@@ -34,11 +34,11 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 	} // end of member function __construct
 
 	/**
-	 * 
 	 *
-	 * @param string class_uri URI de la classe d'instances √† lister
+	 *
+	 * @param string class_uri URI de la classe d'instances ‡ lister
 
-	 * @param integer page Num√©ro de page √† afficher
+	 * @param integer page NumÈro de page ‡ afficher
 
 	 * @return Array()
 	 * @access public
@@ -53,7 +53,7 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 
 	 * @param string class_uri Rechercher iniquement les instances de la classe
 
-	 * @param integer page Page du r√©sultat de recherche √† afficher
+	 * @param integer page Page du rÈsultat de recherche ‡ afficher
 
 	 * @return Array()
 	 * @access public
@@ -63,10 +63,9 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 
 
 	/**
-	 * 
 	 *
-	 * @param onto_common_property $property la propri√©t√© concern√©e
-	 * @param restriction $restrictions le tableau des restrictions associ√©es √† la propri√©t√© 
+	 * @param onto_common_property $property la propriÈtÈ concernÈe
+	 * @param array $restrictions le tableau des restrictions associÈes ‡ la propriÈtÈ
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -77,47 +76,41 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 	 */
 	public static function get_form($item_uri,$property, $restrictions,$datas, $instance_name,$flag) {
 		global $msg,$charset,$ontology_tpl;
-		
+
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset), $form);
-		
-		/** **/
-		
-		/** TODO: √† revoir avec le chef ** / 
-		/** On part du principe que l'on a qu'un range **/
-// 		$selector_url = $this->get_resource_selector_url($property->range[0]);
-		
-		$content='';
-		$content.=$ontology_tpl['form_row_content_input_sel'];
-		if($restrictions->get_max()<$i || $restrictions->get_max()===-1){
-			$content.=$ontology_tpl['form_row_content_input_add_resource_selector'];
+		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset), $form);
+
+		$content = $ontology_tpl['form_row_content_input_sel'];
+		if ($restrictions->get_max() === -1) {
+			$add_button = $ontology_tpl['form_row_content_input_add_resource_selector'];
 		}
 		$content = str_replace("!!property_name!!", rawurlencode($property->pmb_name), $content);
-		if(sizeof($datas)){
-			$i=1;
-			$first=true;
-			$new_element_order=max(array_keys($datas));
-			
-			$form=str_replace("!!onto_new_order!!",$new_element_order , $form);
-			
+
+		if ( !empty($datas) && is_array($datas) ) {
+			$i = 1;
+			$first = true;
+			$new_element_order = max(array_keys($datas));
+
+			$form = str_replace("!!onto_new_order!!", $new_element_order, $form);
+
 			foreach($datas as $key=>$data){
 				$row=$ontology_tpl['form_row_content'];
-				
+
 				if($data->get_order()){
 					$order=$data->get_order();
 				}else{
 					$order=$key;
 				}
-				 
+
 				$inside_row=$ontology_tpl['form_row_content_resource_selector'];
 				$inside_row .= $ontology_tpl['form_row_content_type'];
 				$inside_row=str_replace("!!form_row_content_resource_selector_display_label!!",htmlentities($data->get_formated_value(),ENT_QUOTES,$charset) , $inside_row);
 				$inside_row=str_replace("!!form_row_content_resource_selector_value!!",$data->get_raw_value() , $inside_row);
 				$inside_row=str_replace("!!form_row_content_range!!",$data->get_value_type() , $inside_row);
 				$inside_row=str_replace("!!onto_current_element!!",onto_common_uri::get_id($item_uri),$inside_row);
-				
+
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
-				
+
 				$input='';
 				if($first){
 					$input.=$ontology_tpl['form_row_content_input_remove'];
@@ -125,52 +118,54 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 					$input.=$ontology_tpl['form_row_content_input_del'];
 				}
 				$input = str_replace("!!property_name!!", rawurlencode($property->pmb_name), $input);
-				
-				$row=str_replace("!!onto_row_inputs!!",$input , $row);
-				$row=str_replace("!!onto_row_order!!",$order , $row);
-				
-				$content.=$row;
-				$first=false;
+				$input .= $add_button;
+
+				$row = str_replace("!!onto_row_inputs!!", $input, $row);
+				$row = str_replace("!!onto_row_order!!", $order, $row);
+
+				$content .= $row;
+				$first = false;
 				$i++;
 			}
-		}else{
+		} else {
 			$form=str_replace("!!onto_new_order!!","0" , $form);
-			
+
 			$row=$ontology_tpl['form_row_content'];
-			
+
 			$inside_row=$ontology_tpl['form_row_content_resource_selector'];
 			$inside_row .= $ontology_tpl['form_row_content_type'];
 			$inside_row=str_replace("!!form_row_content_resource_selector_display_label!!","" , $inside_row);
 			$inside_row=str_replace("!!form_row_content_resource_selector_value!!","" , $inside_row);
 			$inside_row=str_replace("!!form_row_content_range!!","" , $inside_row);
 			$inside_row=str_replace("!!onto_current_element!!",onto_common_uri::get_id($item_uri),$inside_row);
-			
+
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
-			
+
 			$input='';
 			$input.=$ontology_tpl['form_row_content_input_remove'];
 			$input = str_replace("!!property_name!!", rawurlencode($property->pmb_name), $input);
-			$row=str_replace("!!onto_row_inputs!!",$input , $row);
-				
-			$row=str_replace("!!onto_row_order!!","0" , $row);
-				
-			$content.=$row;
+			$input .= $add_button;
+
+			$row = str_replace("!!onto_row_inputs!!", $input, $row);
+			$row = str_replace("!!onto_row_order!!", "0", $row);
+
+			$content .= $row;
 		}
-		
+
 		$form = str_replace("!!onto_rows!!", $content, $form);
 		$form = str_replace("!!onto_row_scripts!!", static::get_scripts(), $form);
 		$form = self::get_form_with_special_properties($property, $datas, $instance_name, $form);
 		$form = str_replace("!!onto_row_id!!", $instance_name.'_'.$property->pmb_name, $form);
-		
+
 		return $form;
 	} // end of member function get_form
-	
-	/**
-	 * 
-	 *
-	 * @param onto_common_datatype datas Tableau des valeurs √† afficher associ√©es √† la propri√©t√©
 
-	 * @param property property la propri√©t√© √† utiliser
+	/**
+	 *
+	 *
+	 * @param onto_common_datatype datas Tableau des valeurs ‡ afficher associÈes ‡ la propriÈtÈ
+
+	 * @param property property la propriÈtÈ ‡ utiliser
 
 	 * @param string instance_name nom de l'instance
 
@@ -178,10 +173,10 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 	 * @access public
 	 */
 	public function get_display($datas, $property, $instance_name) {
-		
+
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -190,17 +185,17 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 		return $display;
 	}
 
-	
+
 	protected function get_resource_selector_url($resource_uri){
 		/**
-		 * TODO: 
+		 * TODO:
 		 * Deux solutions possibles ?
-		 * G√©n√©rer Les urls c√¥t√© php et concatener avec les variables sp√©ciales issues du formulaire dans les fonctions JS ? 
-		 * 	Ex: transmetre './select.php?what=notice&caller='; et passer les params directement dans la fonction js appel√©e √† l'appui sur ajouter
-		 *   -> Si l'on a qu'une fonction JS, √ßa impose de ressortir un type depuis le php ?!
-		 *   	  
-		 * 
-		 *  
+		 * GÈnÈrer Les urls cÙtÈ php et concatener avec les variables spÈciales issues du formulaire dans les fonctions JS ?
+		 * 	Ex: transmetre './select.php?what=notice&caller='; et passer les params directement dans la fonction js appelÈe ‡ l'appui sur ajouter
+		 *   -> Si l'on a qu'une fonction JS, Áa impose de ressortir un type depuis le php ?!
+		 *
+		 *
+		 *
 		 */
 		switch($resource_uri){
 			case 'http://www.pmbservices.fr/ontology#record':
@@ -230,69 +225,22 @@ class onto_common_datatype_resource_selector_ui extends onto_common_datatype_ui 
 			case 'http://www.pmbservices.fr/ontology#indexint':
 				$selector_url = './select.php?what=indexint&caller=';
 				break;
-			default: 
+			default:
 				$selector_url = './select.php?what=ontologies&caller=';
-				//concept par d√©faut
-				break; 
+				//concept par dÈfaut
+				break;
 		}
 		return $selector_url;
 	}
-	
+
 	/**
-	 * R√©cup√©ration de la valeur de l'input texte suivant le type de resource utilis√©
+	 * RÈcupÈration de la valeur de l'input texte suivant le type de resource utilisÈ
 	 */
 	protected function get_resource_label(){
-		//Ca revient √† insdtancier l'entit√© et √† faire un getisbd ou un gettitle	
+		//Ca revient ‡ insdtancier l'entitÈ et ‡ faire un getisbd ou un gettitle
 	}
-	
-	protected static function get_completion_from_range($range) {
-		$completion = '';		
-		//on r√©cup√®re le type de range en enlevant le pr√©fixe propre √† l'ontologie
-		switch ($range) {
-			case 'http://www.pmbservices.fr/ontology#linked_record' :
-			case 'http://www.pmbservices.fr/ontology#record' :
-				$completion = 'notice';
-				break;
-			case 'http://www.pmbservices.fr/ontology#author' :
-			case 'http://www.pmbservices.fr/ontology#responsability' :
-				$completion = 'authors';
-				break;
-			case 'http://www.pmbservices.fr/ontology#category' :
-				$completion = 'categories';
-				break;
-			case 'http://www.pmbservices.fr/ontology#publisher' :
-				$completion = 'publishers';
-				break;
-			case 'http://www.pmbservices.fr/ontology#collection' :
-				$completion = 'collections';
-				break;
-			case 'http://www.pmbservices.fr/ontology#sub_collection' :
-				$completion = 'subcollections';
-				break;
-			case 'http://www.pmbservices.fr/ontology#serie' :
-				$completion = 'serie';
-				break;
-			case 'http://www.pmbservices.fr/ontology#work' :
-				$completion = 'titres_uniformes';
-				break;
-			case 'http://www.pmbservices.fr/ontology#indexint' :
-				$completion = 'indexint';
-				break;
-			case 'http://www.w3.org/2004/02/skos/core#Concept' :
-				$completion = 'concepts';
-				break;
-			case 'http://www.pmbservices.fr/ontology#bulletin':
-				$completion = 'bull';
-				break;
-			default:
-				$completion ='';
-				break;
-		}
-		
-		return $completion;
-	}
-	
-	protected static function get_equation_query($property) {		
+
+	protected static function get_equation_query($property) {
 		return '';
 	}
 

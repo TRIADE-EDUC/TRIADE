@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa.tpl.php,v 1.17 2019-05-27 12:11:00 btafforeau Exp $
+// $Id: resa.tpl.php,v 1.17 2019/05/27 12:11:00 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -12,7 +12,7 @@ global $nb_per_page_a_search, $resa_liste_jscript_GESTION_INFO_GESTION, $ajout_r
 if(!isset($id_empr)) $id_empr = 0;
 if(!isset($groupID)) $groupID = 0;
 
-// en-tÃªte et pied de page
+// en-tête et pied de page
 $layout_begin = "
 <div class=\"row\">
 	<h1>$msg[350]</h1>
@@ -40,7 +40,7 @@ $menu_search[3] = $menu_search_commun;
 $menu_search[4] = $menu_search_commun;
 $menu_search[6] = $menu_search_commun;
 
-// le menu de recherche pour la visu pÃ©riodique
+// le menu de recherche pour la visu périodique
 $menu_search[5] = "<div class=\"row\">
 	<h1>!!nom_serial!!</h1></div>
 ".$menu_search_commun;
@@ -52,7 +52,7 @@ $unq = md5(microtime());
 $RESA_other_search ="
 <script type='text/javascript'>
 	function test_form(form) {
-		// on checke si le champ de saisie est renseignÃ©
+		// on checke si le champ de saisie est renseigné
 		if(form.other_query.value.length == 0) {
 			alert(\"$msg[414]\");
 			document.forms['other_search_form'].elements['other_query'].focus();
@@ -103,7 +103,7 @@ $RESA_other_search ="
 			<input type='checkbox' id='n_matieres_flag' name='n_matieres_flag' checked='checked' value='1' />$msg[1911]
 			</div>
 		</div>
-<!--	Formes flÃ©chies
+<!--	Formes fléchies
 <div class='row'>
 	<label for='etiquette'>$msg[1906]$msg[1907]</label>
 	</div>
@@ -116,7 +116,7 @@ $RESA_other_search ="
 -->
 <hr class='spacer' />
 
-<!--	RÃ©sultats par page	-->
+<!--	Résultats par page	-->
 <div class='row'>
 	<label class='etiquette' for='res_per_page'>$msg[1905]$msg[1901]</label>
 	<select id='res_per_page' name='res_per_page'>
@@ -200,7 +200,7 @@ $ajout_resa_jscript_choix_loc_retrait = "
 			var url= './ajax.php?module=circ&categ=transferts&action=loc_retrait&id=' + idResa + '&loc=' + idLoc;
 			var maj_loc = new http_request();
 			if(maj_loc.request(url,false,'',false)){
-				// Il y a une erreur. Afficher le message retournÃ©
+				// Il y a une erreur. Afficher le message retourné
 				alert ( '" . $msg["540"] . " : ' + maj_loc.get_text() );			
 			} else {
 				document.getElementById('msg_chg_loc').innerHTML = maj_loc.get_text();

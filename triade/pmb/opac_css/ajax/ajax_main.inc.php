@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.38 2018-06-05 08:31:02 vtouchard Exp $
+// $Id: ajax_main.inc.php,v 1.52 2024/01/03 11:24:14 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $categ, $opac_scan_request_activate, $allow_scan_request;
 
 //En fonction de $categ, il inclut les fichiers correspondants
 
@@ -121,9 +123,42 @@ switch($categ):
 	case 'search_universes':
 		include('./ajax/search_universes.inc.php');
 		break;
+	case 'search_segment':
+		include('./ajax/search_segment.inc.php');
+		break;
 	case 'pnb':
 		include('./ajax/pnb.inc.php');
 		break;
+	case 'empr' :
+		require_once './ajax/ajax_empr.inc.php';
+		break;
+	case 'connector_in' :
+		require_once './ajax/misc/connector_in.inc.php';
+		break;
+	case 'chklnk':
+	    include('./ajax/misc/chklnk.inc.php');
+	    break;
+	case 'get_notice_form_vedette':
+	    include './ajax/notice_form_vedette.inc.php';
+	    break;
+	case 'session':
+	    include './ajax/session.inc.php';
+	    break;
+	case "search_field" :
+	    include './ajax/search/search_field.inc.php';
+	    break;
+	case "authentication":
+		require_once './ajax/ajax_authentication.inc.php';
+		break;
+	case 'list':
+		include('./ajax/misc/list.inc.php');
+		break;
+	case "collstate":
+	    require_once './ajax/ajax_collstate.inc.php';
+	    break;
+	case "payments":
+	    require_once './ajax/ajax_payments.inc.php';
+	    break;
 	default:
 		break;
 endswitch;

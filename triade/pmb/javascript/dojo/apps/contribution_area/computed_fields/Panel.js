@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Panel.js,v 1.13 2019-02-20 13:26:14 apetithomme Exp $
+// $Id: Panel.js,v 1.16 2022/05/24 08:53:14 rtigero Exp $
 
 define(['dojo/_base/declare', 
         'dijit/layout/ContentPane', 
@@ -60,6 +60,13 @@ define(['dojo/_base/declare',
 						value: pmbDojo.messages.getMessage('contribution_area', 'contribution_area_computed_fields_save')
 					}, container);
 					this.own(on(saveButton, 'click', lang.hitch(this, this.save, item.uniqueId)));
+					
+					var deleteButton = domConstruct.create('input', {type: 'button',
+						"class": 'bouton',
+						value: pmbDojo.messages.getMessage('contribution_area', 'contribution_area_computed_fields_delete')
+					}, container);
+					this.own(on(deleteButton, 'click', lang.hitch(this, this.deleteField, item.uniqueId)));
+					
 					this.startup();
 				}));
 			}
@@ -116,11 +123,30 @@ define(['dojo/_base/declare',
 					computed_field_template: dom.byId('computed_fields_template').value,
 					computed_field_fields_used: dojoJson.stringify(fields_used)
 				}
-			}).then(function(data) {
+			}).then(lang.hitch(this, function(data) {
+				var data = JSON.parse(data);
+				this.field.id = data.id;
+				if(dom.byId('computed_fields_id')){
+					dom.byId('computed_fields_id').value = data.id;
+				}
 				this.modified = false;
 				topic.publish("dGrowl", pmbDojo.messages.getMessage('frbr', 'frbr_save_done'), {'sticky' : false, 'duration' : 5000, 'channel' : 'info'});
-			})
+			}))
 			
+		},
+		
+		deleteField : function(field_num) {
+			if (confirm(pmbDojo.messages.getMessage('contribution_area', 'contribution_area_computed_fields_confirm_delete'))) {
+				xhr.post('./ajax.php?module=modelling&categ=computed_fields&sub=delete&field_num=' + field_num, {
+					data: {
+						computed_field_id: dom.byId('computed_fields_id').value,
+					}
+				}).then(lang.hitch(this, function() {
+					this.modified = false;
+					topic.publish("dGrowl", pmbDojo.messages.getMessage('contribution_area', 'contribution_area_computed_fields_deleted'), {'sticky' : false, 'duration' : 5000, 'channel' : 'info'});
+					this.destroyDescendants(false);
+				}))
+			}
 		},
 		
 		setDndTarget: function (field) {

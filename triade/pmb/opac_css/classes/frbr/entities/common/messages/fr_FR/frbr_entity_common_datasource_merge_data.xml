@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe racine d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_datasource_merge_data.xml,v 1.2 2021/02/24 13:25:49 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_common_datasource_merge_data_authors">Auteurs</entry>
+	<entry code="frbr_entity_common_datasource_merge_data_concepts">Concepts</entry>
+	<entry code="frbr_entity_common_datasource_merge_data_records">Notices</entry>
+	<entry code="frbr_entity_common_datasource_merge_data_works">Oeuvres</entry>
+	<entry code="frbr_entity_common_datasource_merge_data_datanodes">Jeux de données regroupés</entry>
+	<entry code="frbr_entity_common_datasource_merge_data_all_datanodes">Tous les jeux de données</entry>
+</XMLlist>

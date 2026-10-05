@@ -1,44 +1,29 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: func_z3950_cpt_rameau_first_level_mba.inc.php,v 1.8 2019-02-18 15:10:49 dgoron Exp $
+// $Id: func_z3950_cpt_rameau_first_level_mba.inc.php,v 1.12 2023/10/11 10:09:01 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// enregistrement de la notices dans les catÃ©gories
+global $class_path, $include_path;
+global $thesaurus_defaut, $thes;
+
+// enregistrement de la notices dans les catégories
 require_once "$include_path/misc.inc.php" ;
 require_once($class_path."/thesaurus.class.php");
 require_once($class_path."/categories.class.php");
-global $thesaurus_defaut;
 
 //Attention, dans le multithesaurus, le thesaurus dans lequel on importe est le thesaurus par defaut
 $thes = new thesaurus($thesaurus_defaut);
  
 function traite_categories_enreg($notice_retour,$categories,$thesaurus_traite=0) {
-
-	global $dbh;
-	// si $thesaurus_traite fourni, on ne delete que les catÃ©gories de ce thesaurus, sinon on efface toutes
-	//  les indexations de la notice sans distinction de thesaurus
-	if (!$thesaurus_traite) $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' ";
-	else $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' and num_noeud in (select id_noeud from noeuds where num_thesaurus='$thesaurus_traite' and id_noeud=notices_categories.num_noeud) ";
-	$res_del = @pmb_mysql_query($rqt_del, $dbh);
-	
-	$rqt_ins = "insert into notices_categories (notcateg_notice, num_noeud, ordre_categorie) VALUES ";
-	
-	for($i=0 ; $i< sizeof($categories) ; $i++) {
-		$id_categ=$categories[$i]['categ_id'];
-		if ($id_categ) {
-			$rqt = $rqt_ins . " ('$notice_retour','$id_categ', $i) " ; 
-			$res_ins = @pmb_mysql_query($rqt, $dbh);
-		}
-	}
+	z3950_notice::traite_categories_enreg($notice_retour, $categories, $thesaurus_traite);
 }
 
-
-function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602="",$tableau_605="",$tableau_606="",$tableau_607="",$tableau_608="") {
+function traite_categories_for_form($tableau_600 = array(), $tableau_601 = array(), $tableau_602 = array(), $tableau_605 = array(), $tableau_606 = array(), $tableau_607 = array(), $tableau_608 = array()) {
 	global $charset, $rameau,$pmb_keyword_sep;
 	$champ_rameau="";
 	if(!$pmb_keyword_sep){
@@ -53,10 +38,10 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	$info_600_x = $tableau_600["info_600_x"] ;
 	$info_600_y = $tableau_600["info_600_y"] ;
 	$info_600_z = $tableau_600["info_600_z"] ;
-	for ($a=0; $a<sizeof($info_600_a); $a++) {
+	for ($a=0; $a<count($info_600_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_600_j[$a]); $j++) {
+		for ($j=0; $j<count($info_600_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_600_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_600_j[$a][$j]) ;
 		}
@@ -65,13 +50,13 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 		
 		if (!$libelle_j) $libelle_final = trim($info_600_a[$a][0]).$libelle_final ; else $libelle_final = trim($info_600_a[$a][0]).$libelle_final." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_600_x[$a]); $j++) {
+		for ($j=0; $j<count($info_600_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_600_y[$a]); $j++) {
+		for ($j=0; $j<count($info_600_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_600_z[$a]); $j++) {
+		for ($j=0; $j<count($info_600_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_z[$a][$j]) ;
 		}
 		//if($info_600_3[$a][0])$libelle_final.=" @@3 ".trim($info_600_3[$a][0]);		
@@ -85,22 +70,22 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	$info_601_x = $tableau_601["info_601_x"] ;
 	$info_601_y = $tableau_601["info_601_y"] ;
 	$info_601_z = $tableau_601["info_601_z"] ;
-	for ($a=0; $a<sizeof($info_601_a); $a++) {
+	for ($a=0; $a<count($info_601_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_601_j[$a]); $j++) {
+		for ($j=0; $j<count($info_601_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_601_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_601_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_601_a[$a][0]) ; else $libelle_final = trim($info_601_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_601_x[$a]); $j++) {
+		for ($j=0; $j<count($info_601_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_601_y[$a]); $j++) {
+		for ($j=0; $j<count($info_601_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_601_z[$a]); $j++) {
+		for ($j=0; $j<count($info_601_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_z[$a][$j]) ;
 		}
 		//if($info_601_3[$a][0])$libelle_final.=" @@3 ".trim($info_601_3[$a][0]);
@@ -114,22 +99,22 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	$info_606_x = $tableau_606["info_606_x"] ;
 	$info_606_y = $tableau_606["info_606_y"] ;
 	$info_606_z = $tableau_606["info_606_z"] ;
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
+	for ($a=0; $a<count($info_606_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
+		for ($j=0; $j<count($info_606_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_606_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_606_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_606_a[$a][0]) ; else $libelle_final = trim($info_606_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_606_x[$a]); $j++) {
+		for ($j=0; $j<count($info_606_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_606_y[$a]); $j++) {
+		for ($j=0; $j<count($info_606_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_606_z[$a]); $j++) {
+		for ($j=0; $j<count($info_606_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_z[$a][$j]) ;
 		}
 		//if($info_606_3[$a][0])$libelle_final.=" @@3 ".trim($info_606_3[$a][0]);
@@ -143,22 +128,22 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	$info_607_x = $tableau_607["info_607_x"] ;
 	$info_607_y = $tableau_607["info_607_y"] ;
 	$info_607_z = $tableau_607["info_607_z"] ;
-	for ($a=0; $a<sizeof($info_607_a); $a++) {
+	for ($a=0; $a<count($info_607_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_607_j[$a]); $j++) {
+		for ($j=0; $j<count($info_607_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_607_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_607_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_607_a[$a][0]) ; else $libelle_final = trim($info_607_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_607_x[$a]); $j++) {
+		for ($j=0; $j<count($info_607_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_607_y[$a]); $j++) {
+		for ($j=0; $j<count($info_607_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_607_z[$a]); $j++) {
+		for ($j=0; $j<count($info_607_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_z[$a][$j]) ;
 		}
 		//if($info_607_3[$a][0])$libelle_final.=" @@3 ".trim($info_607_3[$a][0]);
@@ -172,22 +157,22 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 	$info_608_x = $tableau_608["info_608_x"] ;
 	$info_608_y = $tableau_608["info_608_y"] ;
 	$info_608_z = $tableau_608["info_608_z"] ;
-	for ($a=0; $a<sizeof($info_608_a); $a++) {
+	for ($a=0; $a<count($info_608_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_608_j[$a]); $j++) {
+		for ($j=0; $j<count($info_608_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_608_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_608_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_608_a[$a][0]) ; else $libelle_final = trim($info_608_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_608_x[$a]); $j++) {
+		for ($j=0; $j<count($info_608_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_608_y[$a]); $j++) {
+		for ($j=0; $j<count($info_608_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_608_z[$a]); $j++) {
+		for ($j=0; $j<count($info_608_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_z[$a][$j]) ;
 		}
 	//	if($info_608_3[$a][0])$libelle_final.=" @@3 ".trim($info_608_3[$a][0]);
@@ -195,8 +180,8 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 		$champ_rameau.=$libelle_final;
 	} 	
 	
-	// $rameau est la variable traitÃ©e par la fonction traite_categories_from_form, 
-	// $rameau est normalement POSTÃ©e, afin de pouvoir Ãªtre traitÃ©e en lot, donc hors 
+	// $rameau est la variable traitée par la fonction traite_categories_from_form, 
+	// $rameau est normalement POSTée, afin de pouvoir être traitée en lot, donc hors 
 	// formulaire, il faut l'affecter.
 	$rameau = addslashes($champ_rameau) ;
 
@@ -208,23 +193,18 @@ function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602
 
 function traite_categories_from_form() {
 	global $rameau ;
-	global $max_categ ;
 	global $f_free_index ;
 	global $pmb_keyword_sep ;
 	if (!$pmb_keyword_sep) $pmb_keyword_sep=" ; ";
 	if(trim($rameau)){
-		if (trim($f_free_index)) $f_free_index=$f_free_index.$pmb_keyword_sep.$rameau;
-			else $f_free_index=$rameau;
+		if (trim($f_free_index)) {
+			$f_free_index=$f_free_index.$pmb_keyword_sep.$rameau;
+		} else {
+			$f_free_index=$rameau;
+		}
 	}
 	
-	$categories = array () ;
-	for ($i=0; $i< $max_categ ; $i++) {
-		$var_categ = "f_categ_id$i" ;
-		global ${$var_categ} ;
-		if (${$var_categ}) 
-			$categories[] = array('categ_id' => ${$var_categ} );
-	}
-	return $categories ;
+	return z3950_notice::traite_categories_from_form();
 }
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2023/06/19 13:31:07 qvarin Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Vue export</entry>
+	<entry code="export_format">Exporter vers le format :</entry>
+	<entry code="export_links">Gestion des liens</entry>
+	<entry code="export_generate_link">Générer les liens</entry>
+	<entry code="export_record_links">Exporter les notices liées</entry>
+	<entry code="export_series_links">Exporter les structures de périodique</entry>
+	<entry code="export_record_link_mere">Liens vers les notices mères</entry>
+	<entry code="export_record_link_fille">Liens vers les notices filles</entry>
+	<entry code="export_record_link_horizontale">Liens vers les notices horizontales</entry>
+	<entry code="export_record_link_notice_mere">Exporter les notices liées mères</entry>
+	<entry code="export_record_link_notice_fille">Exporter les notices liées filles</entry>
+	<entry code="export_record_link_notice_horizontale">Exporter les notices liées horizontales</entry>
+	<entry code="export_record_link_bull_link">Liens vers les bulletins pour les notices d'article</entry>
+	<entry code="export_record_link_art_link">Liens vers les périodiques pour les notices d'article</entry>
+	<entry code="export_record_link_perio_link">Liens vers les articles pour les notices de périodique</entry>
+	<entry code="export_record_link_bulletinage">Générer le bulletinage pour les notices de périodique</entry>
+	<entry code="export_record_link_notice_perio">Exporter les notices liées de périodique</entry>
+	<entry code="export_record_link_notice_art">Exporter les notices liées d'article</entry>
+</XMLlist>

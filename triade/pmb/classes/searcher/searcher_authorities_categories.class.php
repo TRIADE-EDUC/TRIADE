@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_categories.class.php,v 1.8 2018-08-17 10:33:02 ccraig Exp $
+// $Id: searcher_authorities_categories.class.php,v 1.10 2022/03/17 12:15:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/searcher/searcher_autorities.class.php');
 
 class searcher_authorities_categories extends searcher_autorities {
@@ -21,12 +22,27 @@ class searcher_authorities_categories extends searcher_autorities {
 		return parent::_get_search_type()."_categories";
 	}
 	
+	/**
+	 * Jointure externes SQL pour les besoins des filtres
+	 */
+	protected function _get_query_join_filters() {
+		$filter_join_query = '';
+		if(!empty($this->context_parameters['in_selector'])) {
+			$filter_join_query .= " JOIN thesaurus ON thesaurus.id_thesaurus = noeuds.num_thesaurus";
+			$filter_join_query .= " LEFT JOIN categories AS catdef ON ".$this->object_table.".id_noeud=catdef.num_noeud and thesaurus.langue_defaut = catdef.langue";
+		}
+		return $filter_join_query;
+	}
+	
 	protected function _get_authorities_filters(){
 		global $id_thes;
 		
 		$filters = parent::_get_authorities_filters();
 		if ($id_thes && ($id_thes != '-1')) {
 			$filters[] = $this->object_table.'.num_thesaurus = "'.$id_thes.'"';
+		}
+		if(!empty($this->context_parameters['in_selector'])) {
+			$filters[] = 'catdef.libelle_categorie NOT LIKE "~%"';
 		}
 		return $filters;
 	}
@@ -38,15 +54,13 @@ class searcher_authorities_categories extends searcher_autorities {
 		return $str_to_hash;
 	}
 	
-	// Ã  rÃ©Ã©crire au besoin...
+	// à réécrire au besoin...
 	protected function _sort($start,$number){
-		global $dbh;
-		global $last_param, $tri_param, $limit_param;
 		global $lang;
 		
 		if($this->table_tempo != ""){
 			$query = "select * from ".$this->table_tempo." order by pert desc limit ".$start.",".$number;
-			$res = pmb_mysql_query($query,$dbh);
+			$res = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($res)){
 				$this->result = array();
 				while($row = pmb_mysql_fetch_object($res)){
@@ -57,9 +71,9 @@ class searcher_authorities_categories extends searcher_autorities {
 			$query = $this->get_full_results_query();
 			// On va chercher le thesaurus
 			$query .= ' join thesaurus on '.$this->object_table.'.num_thesaurus = thesaurus.id_thesaurus';
-			// On va chercher le libellÃ© dans la langue par dÃ©faut du thesaurus
+			// On va chercher le libellé dans la langue par défaut du thesaurus
 			$query .= ' left join categories as defcateg on '.$this->object_table.'.id_noeud = defcateg.num_noeud and thesaurus.langue_defaut = defcateg.langue';
-			// On va chercher le libellÃ© dans la langue de l'interface
+			// On va chercher le libellé dans la langue de l'interface
 			$query .= ' left join categories as lgcateg on '.$this->object_table.'.id_noeud = lgcateg.num_noeud and lgcateg.langue = "'.$lang.'"';
 			// On va chercher les filtres
 			$query .= ' where '.implode(' and ', $this->_get_authorities_filters());
@@ -69,7 +83,7 @@ class searcher_authorities_categories extends searcher_autorities {
 			$query .= ' order by lgcateg.index_categorie, defcateg.index_categorie';
 			// On limite
 			$query .= ' limit '.$start.', '.$number;
-			$res = pmb_mysql_query($query,$dbh);
+			$res = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($res)){
 				$this->result=array();
 				while($row = pmb_mysql_fetch_object($res)){

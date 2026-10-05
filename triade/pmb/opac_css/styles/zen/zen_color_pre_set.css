@@ -22,7 +22,8 @@
 .listeSameArticle .itemAbrege>h3,
 .listItemsEvent .itemAbrege>h3,
 .listResultArticles .itemAbrege>h3,
-.listArticlesGen .itemAbrege>a>h3 {
+.listArticlesGen .itemAbrege>a>h3,
+#ai_search .session .user_query_container button[type="submit"] {
     background-color: #83c7d4!important;
 }
 
@@ -54,7 +55,9 @@ ul.empr_tabs li.subTabCurrent:hover,
 #location h3,
 #last_entries h3,
 #etageres h3,
-.notice_contenu {
+.notice_contenu,
+#ai_search .session .question.active,
+.reading_list_search_tabs li.active {
     border-color: #83c7d4!important;
 }
 /*=========================================================================*/
@@ -110,7 +113,7 @@ ul.empr_tabs #current,
     color: #3598c1;
 }
 
-/*Couleur liens 
+/*Couleur liens
 ------------------------------------- */
 
 .uk-link,
@@ -129,7 +132,7 @@ a,
     color: #3598c1!important;
 }
 /* ========================================================================*/
-/* Couleur complémentaire
+/* Couleur complï¿½mentaire
 ===========================================================================*/
 
 .tundra .dijitCalendarMonthContainer th,
@@ -191,6 +194,7 @@ body,
 #cart_info_iframe_content a,
 .searchbox input[value="Aide"],
 #cart_info_iframe_content a,
-#cart_info_iframe_content a:hover {
+#cart_info_iframe_content a:hover,
+#ai_search .session .user_query_container button[type="submit"] {
     color: #fff!important;
 }

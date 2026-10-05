@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_pmb_entities_store.class.php,v 1.1 2018-01-22 09:16:28 tsamson Exp $
+// $Id: onto_pmb_entities_store.class.php,v 1.1 2018/01/22 09:16:28 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,11 +10,11 @@ require_once($class_path."/onto/onto_store_arc2.class.php");
 
 /**
  * class skos_onto
- * Classe gÃ©rant un accÃ¨s au store de l'ontologie SKOS
+ * Classe gérant un accès au store de l'ontologie SKOS
 */
 class onto_pmb_entities_store {
 	/**
-	 * Tableau des labels des propriÃ©tÃ©s des classes de l'ontologie SKOS
+	 * Tableau des labels des propriétés des classes de l'ontologie SKOS
 	 * @var array
 	 * @access private
 	 */
@@ -72,8 +72,8 @@ class onto_pmb_entities_store {
 	}
 	
 	/**
-	 * ExÃ©cute une nouvelle requÃªte SPARQL sur le store de l'ontologie SKOS
-	 * @param query string  <p>RequÃªte SPARQL a lancer sur le store ARC2</p>
+	 * Exécute une nouvelle requête SPARQL sur le store de l'ontologie SKOS
+	 * @param query string  <p>Requête SPARQL a lancer sur le store ARC2</p>
 	 * @return bool
 	 * @access public
 	 */
@@ -83,8 +83,8 @@ class onto_pmb_entities_store {
 	}
 	
 	/**
-	 * Retourne le nombre de lignes de la derniÃ¨re requete SPARQL sur le store de l'ontologie SKOS
-	 * @return <p>Nombre de lignes pour la derniÃ¨re requete<br>FALSE si le store n'est pas initialisÃ©</p>
+	 * Retourne le nombre de lignes de la dernière requete SPARQL sur le store de l'ontologie SKOS
+	 * @return <p>Nombre de lignes pour la dernière requete<br>FALSE si le store n'est pas initialisé</p>
 	 * @access public
 	 */
 	public static function num_rows(){
@@ -95,8 +95,8 @@ class onto_pmb_entities_store {
 	}
 	
 	/**
-	 * Retourne le rÃ©sulat de la derniÃ¨re requete SPARQL sur le store de l'ontologie SKOS
-	 * @return <p>Tableau du rÃ©sultat pour la derniÃ¨re requete<br>FALSE si le store n'est pas initialisÃ©</p>
+	 * Retourne le résulat de la dernière requete SPARQL sur le store de l'ontologie SKOS
+	 * @return <p>Tableau du résultat pour la dernière requete<br>FALSE si le store n'est pas initialisé</p>
 	 * @access public
 	 */
 	public static function get_result(){
@@ -107,10 +107,10 @@ class onto_pmb_entities_store {
 	}
 	
 	/**
-	 * Retoune le label PMB d'une propriÃ©tÃ© d'une classe de l'ontologie SKOS. Interroge le store si nÃ©cessaire
-	 * @param class_uri string  <p>URI de la classe associÃ©e</p>
-	 * @param property_uri string  <p>URI de la propriÃ©te dont on veut le label PMB</p>
-	 * @return <p>Retourne le label associÃ©</p>
+	 * Retoune le label PMB d'une propriété d'une classe de l'ontologie SKOS. Interroge le store si nécessaire
+	 * @param class_uri string  <p>URI de la classe associée</p>
+	 * @param property_uri string  <p>URI de la propriéte dont on veut le label PMB</p>
+	 * @return <p>Retourne le label associé</p>
 	 * @access public
 	 */
 	public static function get_property_label($class_uri,$property_uri){
@@ -125,15 +125,15 @@ class onto_pmb_entities_store {
 	}
 		
 	/**
-	 * Retoune les labels PMB des propriÃ©tÃ©s d'une classe de l'ontologie SKOS. Interroge le store si nÃ©cessaire
-	 * @param class_uri string  <p>URI de la classe associÃ©e</p>
-	 * @return <p>Retourne le tableau de labels associÃ©s</p>
+	 * Retoune les labels PMB des propriétés d'une classe de l'ontologie SKOS. Interroge le store si nécessaire
+	 * @param class_uri string  <p>URI de la classe associée</p>
+	 * @return <p>Retourne le tableau de labels associés</p>
 	 * @access public
 	 */
 	public static function get_properties_labels($class_uri){
-		// on trouve les libellÃ©s?
+		// on trouve les libellés?
 		if(!isset(self::$labels[$class_uri])){
-			//on recherche toutes les propriÃ©tÃ©s associÃ©s
+			//on recherche toutes les propriétés associés
 			$query  = "select * where {
 				?property rdf:type <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
 				?property rdfs:label ?label .
@@ -145,7 +145,7 @@ class onto_pmb_entities_store {
 			self::query($query);
 			if(self::$store->num_rows()){
 				$result = self::$store->get_result();
-				//init de la static pour la classe concernÃ©e
+				//init de la static pour la classe concernée
 				self::$labels[$class_uri] = array();
 				foreach ($result as $property){
 					if(!isset($property->domain) || $property->domain == $class_uri){
@@ -161,20 +161,20 @@ class onto_pmb_entities_store {
 	}
 
 	/**
-	 * RÃ©cupÃ¨re le libellÃ© appropriÃ© d'une propriÃ©tÃ© d'une classe d'ontologie dans les messages PMB.
-	 * @param class_uri string  <p>URI de la classe associÃ©e</p>
-	 * @param property_uri string  <p>URI de la propriÃ©te dont on veut le label PMB</p>
-	 * @param default_label string  <p>LibellÃ© rÃ©cupÃ©rÃ© dans le store de l'ontologie</p>
-	 * @return <p>Retourne le libellÃ© le plus appropriÃ© pour la propriÃ©tÃ© d'une classe de l'ontologie</p>
+	 * Récupère le libellé approprié d'une propriété d'une classe d'ontologie dans les messages PMB.
+	 * @param class_uri string  <p>URI de la classe associée</p>
+	 * @param property_uri string  <p>URI de la propriéte dont on veut le label PMB</p>
+	 * @param default_label string  <p>Libellé récupéré dans le store de l'ontologie</p>
+	 * @return <p>Retourne le libellé le plus approprié pour la propriété d'une classe de l'ontologie</p>
 	 * @access private
 	 */
 	private static function calc_label($class_uri, $property_uri,$default_label = ""){
 		global $msg;
 		if(isset($msg['onto_skos_'.self::$labels[$class_uri][$property_uri]['pmb_name']])){
-			//le message PMB spÃ©cifique pour l'ontologie courante
+			//le message PMB spécifique pour l'ontologie courante
 			$label = $msg['onto_skos_'.self::$labels[$class_uri][$property_uri]['pmb_name']];
 		}else if (isset($msg['onto_common_'.self::$labels[$class_uri][$property_uri]['pmb_name']])){
-			//le message PMB gÃ©nÃ©rique
+			//le message PMB générique
 			$label = $msg['onto_common_'.self::$labels[$class_uri][$property_uri]['pmb_name']];
 		}else {
 			$label = $default_label;

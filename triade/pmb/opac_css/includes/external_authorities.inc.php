@@ -1,15 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external_authorities.inc.php,v 1.5 2017-12-22 10:04:52 arenou Exp $
+// $Id: external_authorities.inc.php,v 1.7 2024/01/03 14:38:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// rÃ©cupÃ©ration configuration
+global $base_path, $class_path, $include_path, $charset;
+global $opac_allow_affiliate_search, $opac_search_results_per_page;
+global $user_query;
+global $search_type, $mode, $count, $clause, $clause_bull, $clause_bull_num_notice;
+global $join, $tri, $pert, $l_typdoc, $id_thes;
+global $opac_cart_allow, $opac_cart_only_for_subscriber, $opac_cart_allow;
+
+// récupération configuration
 	require_once($base_path."/includes/opac_config.inc.php");
 
-	// rÃ©cupÃ©ration paramÃ¨tres MySQL et connection Ã  la base
+	// récupération paramètres MySQL et connection à la base
 	require_once($base_path."/includes/opac_db_param.inc.php");
 	require_once($base_path."/includes/opac_mysql_connect.inc.php");
 	if(!$dbh){
@@ -18,15 +25,15 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 	
 	require_once($base_path."/includes/start.inc.php");
 
-	// rÃ©cupÃ©ration localisation
+	// récupération localisation
 	require_once($base_path."/includes/localisation.inc.php");
-	// les mots vides sont importants pour la requÃªte Ã  appliquer
+	// les mots vides sont importants pour la requête à appliquer
 	require_once($base_path."/includes/marc_tables/$pmb_indexation_lang/empty_words");
 	
 	// version actuelle de l'opac
 	require_once($base_path."/includes/opac_version.inc.php");
 
-	// fonctions de formattage requÃªtes
+	// fonctions de formattage requêtes
 	require_once($base_path."/includes/misc.inc.php");
 
 
@@ -72,7 +79,7 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 switch($type){
 	case "author" :
 		$as=new affiliate_search_author($user_query,"notices_authority");
-		//un peu crade, mais dans l'immÃ©diat ca fait ce qu'on lui demande...
+		//un peu crade, mais dans l'immédiat ca fait ce qu'on lui demande...
 		$as->filter = $filter;
 		break;
 	case "collection" :
@@ -111,8 +118,8 @@ switch ($search_type) {
 		$form .= "<input type=\"hidden\" name=\"tri\" value=\"".htmlentities($tri,ENT_QUOTES,$charset)."\">\n";
 		$form .= "<input type=\"hidden\" name=\"pert\" value=\"".htmlentities($pert,ENT_QUOTES,$charset)."\">\n";
 		$form .= "<input type=\"hidden\" name=\"l_typdoc\" value=\"".htmlentities($l_typdoc,ENT_QUOTES,$charset)."\">\n";
-		$form .= "<input type=\"hidden\" id=author_type name=\"author_type\" value=\"$author_type\">\n";		
-		$form .= "<input type=\"hidden\" id=\"id_thes\" name=\"id_thes\" value=\"".$id_thes."\">\n";
+		$form .= "<input type=\"hidden\" name=\"author_type\" value=\"$author_type\">\n";		
+		$form .= "<input type=\"hidden\" name=\"id_thes\" value=\"".$id_thes."\">\n";
 		$form .= "<input type=\"hidden\" name=\"surligne\" value=\"".(isset($surligne) ? $surligne : '')."\">\n";
 		$form .= "<input type=\"hidden\" name=\"tags\" value=\"".(isset($tags) ? $tags : '')."\">\n";
 		$f_values=$form;
@@ -147,6 +154,3 @@ switch ($search_type) {
 		break;
 }
 print pmb_bidi($form);
-
-?>
-

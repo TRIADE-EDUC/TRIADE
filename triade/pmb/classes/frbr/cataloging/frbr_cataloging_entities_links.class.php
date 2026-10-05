@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_entities_links.class.php,v 1.15 2018-08-30 14:09:07 apetithomme Exp $
+// $Id: frbr_cataloging_entities_links.class.php,v 1.16 2024/03/22 15:31:04 qvarin Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -238,7 +238,7 @@ class frbr_cataloging_entities_links {
 				case 'authperso' :
 					$auhtperso = $entity->get_object_instance(); 
 					if ($auhtperso->is_event()) {
-						//TODO : cas particulier Ã  revoir, pas propre
+						//TODO : cas particulier à revoir, pas propre
 						if ($destination_type == 'work') {
 							return 'event';
 						}
@@ -253,7 +253,7 @@ class frbr_cataloging_entities_links {
 	}
 	
 	static protected function get_node_label($id, $type){
-		$id+= 0;
+		$id = intval($id);
 		if($type != 'record'){
 			$entity = new authority($id);
 			return $entity->get_isbd(); 

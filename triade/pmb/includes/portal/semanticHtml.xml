@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE semantic>
+
+<semantic>
+	<tag>div</tag>
+	<tag>header</tag>
+	<tag>nav</tag>
+	<tag>main</tag>
+	<tag>section</tag>
+	<tag>article</tag>
+	<tag>aside</tag>
+	<tag>footer</tag>
+	<tag>ul</tag>
+	<tag>ol</tag>
+	<tag>li</tag>
+	<tag>h1</tag>
+	<tag>h2</tag>
+	<tag>h3</tag>
+	<tag>h4</tag>
+	<tag>iframe</tag>
+</semantic>

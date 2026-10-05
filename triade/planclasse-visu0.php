@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,12 +50,12 @@ if ($_POST["format"] == "portrait") {
 
 
 
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 $cl=$data[0][0];
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 
 	$x=cherchePlanX($data[$i][1],$idclasse);
 	$y=cherchePlanY($data[$i][1],$idclasse);
@@ -73,7 +73,7 @@ for($i=0;$i<count($data);$i++) {
 	if ($width >= 110) { $width="width='96'"; $height="height='96'"; }
 ?>
 	<div align="center" id="E<?php print $data[$i][1] ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;<?php print $visibility ?>">
-	<img <?php print "$width $height" ?> src="image_trombi.php?idE=<?php print $data[$i][1]?>"<br><br><?php print strtoupper($data[$i][2])."<br>".ucwords($data[$i][3])?>
+	<img <?php print "$width $height" ?> src="image_trombi.php?idE=<?php print $data[$i][1]?>" style='box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;' /> <br><br><?php print strtoupper($data[$i][2])."<br>".ucwords($data[$i][3])?>
 	</div>
 <?php 
 }
@@ -87,7 +87,7 @@ if ($y == "-1") {
 }
 $idid="B".$idclasse;
 ?>
-	<div id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:130px;height:50px;background-color:#CCCCCC; border: solid #000 1px; text-align: center;text-valign: center;font-weight: bold;" ><br>BUREAU</div>
+	<div id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:130px;height:50px;background-color:#CCCCCC; border: solid #000 1px; text-align: center;text-valign: center;font-weight: bold; box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;" ><br>BUREAU</div>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

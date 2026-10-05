@@ -1,19 +1,19 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | PMB est sous licence GPL, la rÃ©utilisation du code est cadrÃ©e            |
+// | PMB est sous licence GPL, la réutilisation du code est cadrée            |
 // +--------------------------------------------------------------------------+
-// $Id: unapi.php,v 1.4 2018-02-08 15:18:05 dgoron Exp $
+// $Id: unapi.php,v 1.4 2018/02/08 15:18:05 dgoron Exp $
 
 $base_path=".";
 require_once($base_path."/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once('./includes/templates/common.tpl.php');
 require_once('./includes/notice_categories.inc.php');
 
-// classe de gestion des catÃ©gories
+// classe de gestion des catégories
 require_once($base_path.'/classes/categorie.class.php');
 require_once($base_path.'/classes/notice.class.php');
 require_once($base_path.'/classes/notice_display.class.php');
@@ -41,7 +41,7 @@ require_once ($include_path."/export_notices.inc.php");
 
 require_once($class_path."/unapi.class.php");
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
 
 $unapi = new unapi($format,$id);

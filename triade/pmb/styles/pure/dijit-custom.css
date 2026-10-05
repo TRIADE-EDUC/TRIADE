@@ -1,4 +1,4 @@
-/* $Id: dijit-custom.css,v 1.5 2018-04-18 08:40:19 wlair Exp $ */
+/* $Id: dijit-custom.css,v 1.6 2021/12/28 15:32:24 lbeguin Exp $ */
 .dijitEditor{
     min-width: 100%;
 }
@@ -56,4 +56,14 @@
 }
 .pure.claro  .dijitCalendarArrow.dijitCalendarIncrementArrow {	
 	float: right;
+}
+
+form#scenarioCreationForm {
+	display: table;
+}
+form#scenarioCreationForm .dijitArrowButtonContainer {
+	width: 15px;
+}
+.dijitMenuPopup {
+	z-index: 2000 !important;
 }

@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.16 2019-05-31 12:44:11 ngantier Exp $
+// $Id: search.class.php,v 1.19.2.1 2024/09/06 10:40:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 global $msg,$lang,$charset,$base_path,$class_path,$include_path;
 require_once($class_path."/searcher.class.php");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class combine_search {
 	public $id;
@@ -25,35 +25,35 @@ class combine_search {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
-    	if (count($_SESSION["session_history"])!=0) {
+    	if (is_countable($_SESSION["session_history"]) && count($_SESSION["session_history"])!=0) {
     		$operators["EQ"]="=";
     	}
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $msg;
     	global $charset;
     	global $get_input_box_id;
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
 
     	//parcours de l'historique des recherches
-    	if (count($_SESSION["session_history"])) {
+    	if (is_countable($_SESSION["session_history"]) && count($_SESSION["session_history"])) {
 	    	if(!$get_input_box_id)$get_input_box_id="input_box_id_0";
 	    	else	$get_input_box_id++;
 	    	   	
 	    	//$r="&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td colspan='3'>";
 	    	$r = "<script type='text/javascript' src='./javascript/tablist.js'></script>
-	    	<div id='$get_input_box_id' class='notice-parent'>	    	
-			<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='$get_input_box_id"."Img' title='".addslashes($msg['plus_detail'])."' style='border:0px; margin:3px 3px' onClick=\"expandBase('$get_input_box_id', true); return false;\">
+	    	<div id='$get_input_box_id' class='notice-parent'>
+            ".get_expandBase_button($get_input_box_id)."
 			<span class='notice-heada'>		
 				<input type='hidden' name='field_".$this->n_ligne."_s_".$this->id."[]'  id='".$get_input_box_id."_value' value='!!value_selected!!'/>	
 				<label id='".$get_input_box_id."_label' >!!label_selected!!</label>
@@ -90,9 +90,12 @@ class combine_search {
     	        if ((!empty($_SESSION["session_history"][$i]["NOTI"]) && $_SESSION["session_history"][$i]["NOTI"]) || (!empty($_SESSION["session_history"][$i]["EXPL"]) && $_SESSION["session_history"][$i]["EXPL"])) {
     				$temp=html_entity_decode(strip_tags(($i+1).") ".$_SESSION["session_history"][$i]["QUERY"]["HUMAN_QUERY"]),ENT_QUOTES,$charset);
     				$onclick="onClick=\"document.getElementById('".$get_input_box_id."_label').innerHTML=this.innerHTML;document.getElementById('".$get_input_box_id."_value').value='$i';expandBase('$get_input_box_id', true); return false;\"";
-    				
-    				if(($pair=1-$pair)) $style=$style_odd;
-    				else $style=$style_even;
+    				$pair = 1 - $pair;
+    				if ($pair) {
+    				    $style = $style_odd;
+    				} else {
+    				    $style = $style_even;
+    				}
     				$liste.="<tr $style><td $onclick >$temp</td></tr>";
 
     				if ($valeur) {
@@ -114,11 +117,11 @@ class combine_search {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	global $search;
     	    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -127,29 +130,29 @@ class combine_search {
     		
     		//enregistrement de l'environnement courant
     		$this->search->push();
-    		//RÃ©cupÃ©ration et mise en variables globales des valeurs de l'historique
+    		//Récupération et mise en variables globales des valeurs de l'historique
     		if ($_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"]["search"][0]) {
     			$search=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"]["search"];
     			//Pour chaque champ
     			for ($i=0; $i<count($search); $i++) {
     			
-    				//RÃ©cupÃ©ration de l'opÃ©rateur
+    				//Récupération de l'opérateur
     				$op="op_".$i."_".$search[$i];
     				global ${$op};
     				${$op}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$op];
     			    			
-    				//RÃ©cupÃ©ration du contenu de la recherche
+    				//Récupération du contenu de la recherche
     				$field_="field_".$i."_".$search[$i];
     				global ${$field_};
     				${$field_}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$field_];
     				$field=${$field_};
     		
-    				//RÃ©cupÃ©ration de l'opÃ©rateur inter-champ
+    				//Récupération de l'opérateur inter-champ
     				$inter="inter_".$i."_".$search[$i];
     				global ${$inter};
     				${$inter}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$inter];
     			    		
-    				//RÃ©cupÃ©ration des variables auxiliaires
+    				//Récupération des variables auxiliaires
     				$fieldvar_="fieldvar_".$i."_".$search[$i];
     				global ${$fieldvar_};
     				${$fieldvar_}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$fieldvar_];
@@ -179,19 +182,19 @@ class combine_search {
     					$search=array();
     				}
     				$search[0]="f_11";
-					//opÃ©rateur
+					//opérateur
     				$op="op_0_".$search[0];
     				global ${$op};
     				${$op}=$op_;
     		    			
     				//contenu de la recherche
-    				$field="field_0_".$search[0];
-    				$field_=array();
-    				$field_[0]=$valeur_champ;
+    				$field = "field_0_".$search[0];
+    				$field_array_ = array();
+    				$field_array_[0] = $valeur_champ;
     				global ${$field};
-    				${$field}=$field_;
+    				${$field} = $field_array_;
     	    	
-    				//opÃ©rateur inter-champ
+    				//opérateur inter-champ
     				$inter="inter_0_".$search[0];
     				global ${$inter};
     				${$inter}="";
@@ -224,7 +227,7 @@ class combine_search {
     public function make_unimarc_query() {
     	global $search;
     	    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -233,29 +236,29 @@ class combine_search {
     		
     		//enregistrement de l'environnement courant
     		$this->search->push();
-    		//RÃ©cupÃ©ration et mise en variables globales des valeurs de l'historique
+    		//Récupération et mise en variables globales des valeurs de l'historique
     		if ($_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"]["search"][0]) {
     			$search=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"]["search"];
     			//Pour chaque champ
     			for ($i=0; $i<count($search); $i++) {
     			
-    				//RÃ©cupÃ©ration de l'opÃ©rateur
+    				//Récupération de l'opérateur
     				$op="op_".$i."_".$search[$i];
     				global ${$op};
     				${$op}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$op];
     			    			
-    				//RÃ©cupÃ©ration du contenu de la recherche
+    				//Récupération du contenu de la recherche
     				$field_="field_".$i."_".$search[$i];
     				global ${$field_};
     				${$field_}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$field_];
     				$field=${$field_};
     		
-    				//RÃ©cupÃ©ration de l'opÃ©rateur inter-champ
+    				//Récupération de l'opérateur inter-champ
     				$inter="inter_".$i."_".$search[$i];
     				global ${$inter};
     				${$inter}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$inter];
     			    		
-    				//RÃ©cupÃ©ration des variables auxiliaires
+    				//Récupération des variables auxiliaires
     				$fieldvar_="fieldvar_".$i."_".$search[$i];
     				global ${$fieldvar_};
     				${$fieldvar_}=$_SESSION["session_history"][$valeur[0]]["QUERY"]["POST"][$fieldvar_];
@@ -282,19 +285,19 @@ class combine_search {
     					$search=array();
     				}
     				$search[0]="f_11";
-					//opÃ©rateur
+					//opérateur
     				$op="op_0_".$search[0];
     				global ${$op};
     				${$op}=$op_;
     		    			
     				//contenu de la recherche
-    				$field="field_0_".$search[0];
-    				$field_=array();
-    				$field_[0]=$valeur_champ;
+    				$field = "field_0_".$search[0];
+    				$field_array_ = array();
+    				$field_array_[0] = $valeur_champ;
     				global ${$field};
-    				${$field}=$field_;
+    				${$field} = $field_array_;
     	    	
-    				//opÃ©rateur inter-champ
+    				//opérateur inter-champ
     				$inter="inter_0_".$search[0];
     				global ${$inter};
     				${$inter}="";
@@ -322,12 +325,12 @@ class combine_search {
     	} 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
     	
     	$litteral=array();
     			
-    	//RÃ©cupÃ©ration de la valeur de saisie 
+    	//Récupération de la valeur de saisie 
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -341,7 +344,7 @@ class combine_search {
 		return $litteral;    
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="-1") return true;
@@ -351,7 +354,7 @@ class combine_search {
     	}
     }
     
-     //fonction de dÃ©coupage d'une chaine trop longue
+     //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur,$size=50) {
     	if (strlen($valeur)>=$size) {
     		$pos=strrpos(substr($valeur,0,$size)," ");

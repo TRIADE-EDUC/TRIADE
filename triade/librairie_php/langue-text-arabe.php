@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Ø¬Ø§ÙÙÙ 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,9 +18,9 @@
  *
  ***************************************************************************/
 
-if (!defined(INTITULEDIRECTION)) { define("INTITULEDIRECTION","direction"); }
-if (!defined(INTITULEELEVE)) { define("INTITULEELEVE","élève"); }
-if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
+if (!defined("INTITULEDIRECTION")) { define("INTITULEDIRECTION","direction"); }
+if (!defined("INTITULEELEVE")) { define("INTITULEELEVE","élève"); }
+if (!defined("INTITULEELEVES")) { define("INTITULEELEVES","élèves"); }
 
 
 // fichier pour langue cote admin.
@@ -29,7 +29,7 @@ if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
 define("CLICKICI","Ø§Ø¸ØºØ· ÙÙØ§");
 define("VALIDER","Ø§Ø¨Ø¹Ø«");
 define("LANGTP22"," Ø­Ø°Ø§Ø± - Ø·ÙØ¨ ÙØ±Ø¶ Ø¹ÙÙ Ø§ÙØ·Ø§ÙÙØ© - Ø¹ÙÙØ§Ù");
-define("LANGTP3"," Ø±Ø²ÙØ§ÙØ© DST ");
+define("LANGTP33"," Ø±Ø²ÙØ§ÙØ© DST ");
 define("LANGCHOIX","Ø§Ø®ØªÙØ§Ø± ...");
 define("LANGCHOIX2","ÙØ§ ÙÙØ¬Ø¯ Ø§Ù ÙØ³Ù");
 define("LANGCHOIX3","--- Ø§Ø®ØªÙØ§Ø± ---");
@@ -2795,7 +2795,7 @@ define("LANGMESS258","Search");
 //--------------------newsactualite.php
 define("LANGMESS299","    Titre : ");
 define("LANGMESS300","Votre TRIADE n'est pas configuré en accès Internet, veuillez consulter votre compte administrateur Triade pour valider l'option de la connexion Internet.");
-define("LANGMESS365","Actualités  de la 1er page");
+define("LANGMESS3655","Actualités  de la 1er page");
 //--------------------actualiteetablissement.php
 //--------------------newsdefil.php
 //--------------------commaudio.php // Bouton Parcourir
@@ -3250,4 +3250,43 @@ define("LANGMESSE02","Gestion des SMS");
 define("LANGNEW100","Sanction(s)");
 define("LANGNEW101","Prévision sur ");
 
+define("LANGTT2","Impression du tableau de bulletin");
+
+
+// --- SIECLE-BEE Export ---
+define('LANG_SIECLE_EXPORT_TITRE', 'تصدير SIECLE-BEE (XML / ZIP)');
+define('LANG_SIECLE_EXPORT_DESC', 'إنشاء أرشيف ZIP متوافق مع المعايير الوطنية للاستيراد في SIECLE-BEE.');
+define('LANG_SIECLE_PROFIL', 'ملف تعريف مخطط SIECLE');
+define('LANG_SIECLE_PROFIL_STANDARD', 'قياسي (تحت عقد - XSD 4.0)');
+define('LANG_SIECLE_PROFIL_EPHC', 'خاص بدون عقد (EPHC - XSD 1.1)');
+define('LANG_SIECLE_UAI', 'رمز UAI للمؤسسة');
+define('LANG_SIECLE_ANNEE', 'السنة الدراسية');
+define('LANG_SIECLE_VALIDATION_XSD', 'التحقق من صحة XSD قبل التصدير');
+define('LANG_SIECLE_PERIMETRE', 'نطاق التصدير');
+define('LANG_SIECLE_BTN_EXPORTER', 'إنشاء وتنزيل ملف ZIP');
+
+define('LANG_CODE_MEF', 'رمز MEF (SIECLE)');
+
+// --- تعديل كلمة المرور (الفضاء الخاص) ---
+define('LANG_CHG_PASS_TITLE', 'كلمة المرور');
+define('LANG_CHG_PASS_ACTUEL', 'كلمة المرور الحالية');
+define('LANG_CHG_PASS_NOUVEAU', 'كلمة المرور الجديدة');
+define('LANG_CHG_PASS_CONFIRM', 'تأكيد كلمة المرور الجديدة');
+define('LANG_CHG_PASS_BTN', 'تعديل كلمة المرور');
+define('LANG_CHG_PASS_OK', 'تم تعديل كلمة المرور بنجاح.');
+define('LANG_CHG_PASS_ERR_ACTUEL', 'كلمة المرور الحالية غير صحيحة.');
+define('LANG_CHG_PASS_ERR_CONFIRM', 'كلمة المرور الجديدة وتأكيدها غير متطابقين.');
+define('LANG_CHG_PASS_ERR_EMPTY', 'يرجى ملء جميع حقول كلمة المرور.');
+define('LANG_CHG_PASS_ERR_SECURITY', 'كلمة المرور الجديدة لا تستوفي معايير الأمان الخاصة بالمؤسسة.');
+define('LANG_CHG_PASS_DISABLED', 'تم تعطيل تعديل كلمة المرور من قبل المؤسسة.');
+define('LANG_CHG_PASS_STRENGTH_LABEL', 'قوة كلمة المرور:');
+define('LANG_CHG_PASS_STRENGTH_1', 'ضعيفة جدا');
+define('LANG_CHG_PASS_STRENGTH_2', 'ضعيفة');
+define('LANG_CHG_PASS_STRENGTH_3', 'متوسطة');
+define('LANG_CHG_PASS_STRENGTH_4', 'قوية');
+define('LANG_CHG_PASS_MAIL_SUBJECT', 'TRIADE: تأكيد تعديل كلمة المرور');
+define('LANG_CHG_PASS_MAIL_BODY1', 'مرحبا');
+define('LANG_CHG_PASS_MAIL_BODY2', 'نؤكد لكم أنه تم تعديل كلمة المرور لحسابكم TRIADE بنجاح في');
+define('LANG_CHG_PASS_MAIL_BODY3', 'على الساعة');
+define('LANG_CHG_PASS_MAIL_BODY4', 'إذا لم تكن أنت صاحب هذا التعديل، يرجى الاتصال بإدارة المؤسسة فورا.');
 ?>

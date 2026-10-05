@@ -1,9 +1,16 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: concept.html,v 1.2 2019-05-22 10:01:41 ngantier Exp $ -->
+<!-- $Id: concept.html,v 1.3 2023/09/20 14:30:38 dgoron Exp $ -->
 
 {% block detail %}
-	<b>{{ msg.ontology_object_uri }} :</b> {{ element.uri }}<br />
+	<div class="aut_display_row">
+		<div class="aut_display_cell">
+			<b>{{ msg.ontology_object_uri }} :</b>
+		</div>
+		<div class="aut_display_cell">
+			{{ element.uri }}
+		</div>
+	</div>
 	{{ element.schemes_list }}
 	{{ element.broaders_list }} 
 	{{ element.narrowers_list }} 

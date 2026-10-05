@@ -56,6 +56,7 @@ else
 			echo "ficher $liste[0] fini <br />";
 		}
    }
+   fclose($pointeurliste);
    echo "c'est fini";
    		
 ?>

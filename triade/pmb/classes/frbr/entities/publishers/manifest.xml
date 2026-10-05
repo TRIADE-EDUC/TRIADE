@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.5 2018-06-11 14:18:45 vtouchard Exp $ -->
+$Id: manifest.xml,v 1.6 2021/02/24 13:25:49 tsamson Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Editeurs</name>
@@ -24,6 +24,7 @@ $Id: manifest.xml,v 1.5 2018-06-11 14:18:45 vtouchard Exp $ -->
 			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
 			<datasource>frbr_entity_common_datasource_aut_link</datasource>
 			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+			<datasource>frbr_entity_common_datasource_merge_data</datasource>
 		</datasources>
 		<views>
 			<view>frbr_entity_publishers_view_publisherslist</view>

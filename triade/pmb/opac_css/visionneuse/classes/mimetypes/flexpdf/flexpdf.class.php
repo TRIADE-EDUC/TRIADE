@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: flexpdf.class.php,v 1.10 2017-07-03 09:07:10 dgoron Exp $
+// $Id: flexpdf.class.php,v 1.13 2023/08/17 09:47:55 dbellamy Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 require_once($visionneuse_path."/classes/mimetypes/converter_factory.class.php");
 
 class flexpdf extends affichage{
-	public $doc;					//le document numÃ©rique Ã  afficher
+	public $doc;					//le document numérique à afficher
 	public $driver;				//class driver de la visionneuse
-	public $params;				//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();	//tableau des infos Ã  afficher	
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;				//paramètres éventuels
+	public $toDisplay= array();	//tableau des infos à afficher	
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
  
     public function __construct($doc=0) {
     	if($doc){
@@ -25,22 +26,22 @@ class flexpdf extends affichage{
     }
     
     public function fetchDisplay(){
-    	global $visionneuse_path,$base_path;
+    	global $visionneuse_path;
      	//le titre
     	$this->toDisplay["titre"] = $this->doc->titre;
     	//la visionneuse pdf
     	$this->toDisplay["doc"]="
-    	<script type='text/javascript' src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/jquery.min.js'></script>
-    	<script type='text/javascript' src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/flexpaper.js'></script>
-    	<script type='text/javascript' src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/flexpaper_handlers.js'></script>
+    	<script src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/jquery.min.js'></script>
+    	<script src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/flexpaper.js'></script>
+    	<script src='visionneuse/classes/mimetypes/flexpdf/flexpaper/js/flexpaper_handlers.js'></script>
     	<div id='flexpaperFrameViewer' class='flexpaper_viewer' style='margin:auto;display:block'></div>
-    	<script type='text/javascript'> 
+    	<script> 
     			window.onload = function(){
 					var iframe= document.getElementById('flexpaperFrameViewer');
 					iframe.style.width = '".$this->parameters["size_x"]."%';
 					iframe.style.height = ((getFrameHeight()-40-80)*".($this->parameters["size_y"]/100).")+'px';				
 					$('#flexpaperFrameViewer').FlexPaperViewer({ config : {
-							 SWFFile : ".pmb_escape()."('".$this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id)."'),
+							 SWFFile : ".pmb_escape(false)."('".$this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id)."'),
 							 jsDirectory : 'visionneuse/classes/mimetypes/flexpdf/flexpaper/js/',
 							 Scale : 0.6, 
 							 ZoomTransition : 'easeOut',
@@ -103,7 +104,13 @@ class flexpdf extends affichage{
     }
     
     public function getTabParam(){
-
+    	if(!isset($this->parameters['size_x'])) $this->parameters['size_x'] = '';
+    	if(!isset($this->parameters['size_y'])) $this->parameters['size_y'] = '';
+    	if(!isset($this->parameters['pdftotext_cmd'])) $this->parameters['pdftotext_cmd'] = '';
+    	if(!isset($this->parameters['pdf2swf_cmd'])) $this->parameters['pdf2swf_cmd'] = '';
+    	if(!isset($this->parameters['pyodconverter_cmd'])) $this->parameters['pyodconverter_cmd'] = '';
+    	if(!isset($this->parameters['jodconverter_cmd'])) $this->parameters['jodconverter_cmd'] = '';
+    	if(!isset($this->parameters['jodconverter_url'])) $this->parameters['jodconverter_url'] = '';
     	$this->tabParam = array(
 			"size_x"=>array("type"=>"text","name"=>"size_x","value"=>$this->parameters['size_x'],"desc"=>"Largeur du document en % de l'espace visible"),
 			"size_y"=>array("type"=>"text","name"=>"size_y","value"=>$this->parameters['size_y'],"desc"=>"Hauteur du document en % de l'espace visible"),

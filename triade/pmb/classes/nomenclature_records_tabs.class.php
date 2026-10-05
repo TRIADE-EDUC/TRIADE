@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_records_tabs.class.php,v 1.9 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: nomenclature_records_tabs.class.php,v 1.11 2023/05/05 13:38:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/elements_list_tab.class.php');
 require_once($class_path.'/skos/skos_concept.class.php');
 require_once($class_path.'/indexation.class.php');
@@ -15,14 +16,14 @@ require_once($class_path."/notice_relations_collection.class.php");
 class nomenclature_records_tabs extends records_tabs {
 	
 	/**
-	 * Tableau des ids de notice pour lesquelles il faut chercher les documents numÃ©riques
+	 * Tableau des ids de notice pour lesquelles il faut chercher les documents numériques
 	 * @var array
 	 */
 	protected $manifs_ids;
 	
 	/**
 	 * Constructeur
-	 * @param notice $notice Instance de la classe notice associÃ©e
+	 * @param notice $notice Instance de la classe notice associée
 	 */
 	public function __construct($record){
 		$this->record = $record;
@@ -38,7 +39,7 @@ class nomenclature_records_tabs extends records_tabs {
 	protected function get_manifs_ids() {
 		global $pmb_nomenclature_record_children_link;
 		
-		if (count($this->manifs_ids)) {
+		if (is_array($this->manifs_ids) && count($this->manifs_ids)) {
 			return $this->manifs_ids;
 		}
 		$this->manifs_ids = array($this->record->id);
@@ -53,14 +54,14 @@ class nomenclature_records_tabs extends records_tabs {
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les documents numÃ©riques des sous-manifs de cette manifestation
-	 * @return authority_tab Onglet
+	 * Méthode permettant de récupérer les documents numériques des sous-manifs de cette manifestation
+	 * @return elements_list_tab Onglet
 	 */
 	protected function get_tab_submanifestations_docnums(){
-		global $dbh, $msg, $pmb_nomenclature_activate, $pmb_nomenclature_music_concept_blank;
+		global $msg, $pmb_nomenclature_activate, $pmb_nomenclature_music_concept_blank, $quoi;
 
 		if (!$pmb_nomenclature_activate || !$pmb_nomenclature_music_concept_blank || !$this->record->get_nomenclature_record_formations() || !count($this->record->get_nomenclature_record_formations()->get_record_formations())) {
-			// Si on n'a pas de nomenclature associÃ©e, on s'arrÃ¨te lÃ 
+			// Si on n'a pas de nomenclature associée, on s'arrète là
 			return null;
 		}
 		if($pmb_nomenclature_music_concept_blank){
@@ -82,17 +83,17 @@ class nomenclature_records_tabs extends records_tabs {
 		if(count($concept_ids)){
 			$query = 'select count(distinct num_object, type_object) from index_concept join explnum on index_concept.num_object = explnum.explnum_id and type_object = '.TYPE_EXPLNUM.'
 				where explnum.explnum_notice in ('.implode(',', $this->get_manifs_ids()).') and num_concept in ('.implode(',', $concept_ids).') and type_object = '.TYPE_EXPLNUM;
-			$nb_results = pmb_mysql_result(pmb_mysql_query($query, $dbh), 0, 0);
+			$nb_results = pmb_mysql_result(pmb_mysql_query($query), 0, 0);
 		}
 		$tab->set_nb_results($nb_results);
 		
-		if (!isset($quoi) && $nb_results) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+		if (empty($quoi) && $nb_results) {
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		$elements_ids = array();
 		if ($nb_results && ($quoi == $tab->get_name())) {
-			// On dÃ©finit les filtres
+			// On définit les filtres
 			$filters = array(
 					array(
 							'name' => 'records_submanifestations_docnums_by_formation',
@@ -141,8 +142,8 @@ class nomenclature_records_tabs extends records_tabs {
 					and type_object = '.TYPE_EXPLNUM;
 				$query.= ' order by notice_nomenclature_order, exotic_instrument_order, workshop_order, family_order, musicstand_order, child_record_order, voice_order';
 				$query.= $this->get_limit();
-				// on lance la requÃªte
-				$result = pmb_mysql_query($query, $dbh);
+				// on lance la requête
+				$result = pmb_mysql_query($query);
 				if($result && pmb_mysql_num_rows($result)){
 					while($row = pmb_mysql_fetch_object($result)){
 						$elements_ids[] = $row->num_object;
@@ -161,8 +162,6 @@ class nomenclature_records_tabs extends records_tabs {
 	 * @param elements_list_tab $tab 
 	 */
 	protected function get_submanifestations_docnums_filters($tab, $concept_ids = array()) {
-		global $dbh, $msg;
-	
 		$filters = $tab->get_filters();
 		$elements_ids = array();
 	
@@ -183,7 +182,7 @@ class nomenclature_records_tabs extends records_tabs {
 				$query.= ' order by '.$query_clauses['order'];
 			}
 			
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					if(!isset($groups[$row->group_id])){
@@ -196,7 +195,7 @@ class nomenclature_records_tabs extends records_tabs {
 			}
 			if (count($groups)) {
 				if (!$query_clauses['order']) {
-					// On trie le tableau uniquement si on n'a pas dÃ©fini d'ordre dans la requÃªte
+					// On trie le tableau uniquement si on n'a pas défini d'ordre dans la requête
 					uasort($groups, array($this, '_sort_groups_by_label'));
 				}
 				$tab->add_groups($filter['name'], array(
@@ -206,13 +205,13 @@ class nomenclature_records_tabs extends records_tabs {
 				
 				$filter_values = $tab->get_filter_values($filter['name']);
 
-				//Si on a des rÃ©sultats; on passe Ã  la suite
+				//Si on a des résultats; on passe à la suite
 				if($filter_values && count($filter_values)){
 					$query = 'select distinct explnum.explnum_id as element_id';
 					$query.= ' from explnum '.$query_clauses['from'];
 					$query.= ' where explnum.explnum_notice in ('.implode(',', $this->get_manifs_ids()).')';
 					$query.= ' and '.$query_clauses['select_group_id'].' in ("'.implode('","', $filter_values).'")';
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
 							$result_ids[] = $row->element_id;

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_sectionslist.class.php,v 1.13 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_common_view_sectionslist.class.php,v 1.20 2023/12/07 15:02:47 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,9 +14,9 @@ class cms_module_common_view_sectionslist extends cms_module_common_view_django{
 		$this->default_template = "<div>
 {% for section in sections %}
 <h3>{{section.title}}</h3>
-<img src='{{section.logo.large}}' alt=''/>
-<blockquote>{{section.resume}}</blockquote>
-<blockquote>{{section.content}}</blockquote>
+<img src='{{section.logo.large}}'/>
+<div>{{section.resume}}</div>
+<div>{{section.content}}</div>
 {% endfor %}
 </div>";
 	}
@@ -63,46 +63,40 @@ class cms_module_common_view_sectionslist extends cms_module_common_view_django{
 		
 		$this->save_constructor_link_form("section");
 		$this->save_constructor_link_form('article');
-		$this->parameters['load_articles_data'] = $cms_module_common_view_sectionslist_load_articles_data+0;
+		$this->parameters['load_articles_data'] = (int) $cms_module_common_view_sectionslist_load_articles_data;
 		return parent::save_form();
 	}
 	
 	public function render($datas){
 		if(!isset($this->parameters['load_articles_data'])) $this->parameters['load_articles_data'] = 0;
 		
-		//on rajoute nos Ã©lÃ©ments...
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
 		$render_datas['title'] = "Liste de rubriques";
+		
+		// Données de la pagination
+		if(isset($datas['paging']) && $datas['paging']['activate']) {
+		    $render_datas['paging'] = $datas['paging'];
+		}
+		
 		$render_datas['sections'] = array();
+		$links = [
+		    "article" => $this->get_constructed_link("article", "!!id!!"),
+		    "section" => $this->get_constructed_link("section", "!!id!!")
+		];
+		
 		if(is_array($datas) && count($datas)){
-			foreach($datas as $section){
+		    $sections = isset($datas["sections"]) ? $datas["sections"] : $datas;
+		    foreach($sections as $section){
 				$cms_section = cms_provider::get_instance("section",$section);
-				//Dans le cas d'une liste de rubriques affichÃ©e via un template django, on Ã©crase les valeurs de lien dÃ©finies par celles du module
+				//Dans le cas d'une liste de rubriques affichée via un template django, on écrase les valeurs de lien définies par celles du module
 				if($this->parameters['links']['section']['var'] && $this->parameters['links']['section']['page']){
 					$cms_section->set_var_name($this->parameters['links']['section']['var']);
 					$cms_section->set_num_page($this->parameters['links']['section']['page']);
 					$cms_section->update_permalink();
 				}
-				if($this->parameters['load_articles_data']) {
-					$infos= $cms_section->format_datas(true, true, true, true);
-				} else {
-					$infos= $cms_section->format_datas(true, false, true, true);
-				}
-				$infos['link'] = $this->get_constructed_link("section",$section);
-				if (!empty($infos['articles'])) {
-					foreach ($infos['articles'] as $i=>$article) {
-						$infos['articles'][$i]['link'] = $this->get_constructed_link("article",$article["id"]);
-					}
-				}
-				if($cms_section->num_parent) {
-					$infos['parent']['link'] = $this->get_constructed_link("section",$infos['parent']["id"]);
-				}
-				if(count($infos['children'])) {
-					foreach ($infos['children'] as $i=>$child) {
-						$infos['children'][$i]['link'] = $this->get_constructed_link("section",$child["id"]);
-					}
-				}
+				$infos= $cms_section->format_datas($links);
 				$render_datas['sections'][]=$infos;
 			}
 		}
@@ -146,6 +140,24 @@ class cms_module_common_view_sectionslist extends cms_module_common_view_django{
 			}
 		}
 		$format[] = $sections;
+		$format[] = array(
+		    'var' => "paginator",
+		    'desc' => $this->msg['cms_module_common_view_list_paging_title'],
+		    'children' => array(
+		        array(
+		            'var' => "paginator.paginator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_paginator_title']
+		        ),
+		        array(
+		            'var' => "paginator.nbPerPageSelector",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_nb_per_page_title']
+		        ),
+		        array(
+		            'var' => "paginator.navigator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_navigator_title']
+		        )
+		    )
+		);
 		$format = array_merge($format,parent::get_format_data_structure());
 		return $format;
 	}

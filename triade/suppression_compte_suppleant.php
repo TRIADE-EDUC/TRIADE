@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,11 +41,11 @@ validerequete("menuadmin");
 $cnx=cnx();
 error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 if(!isset($_POST["deleteSupp"])) {
 ?>
@@ -93,9 +93,9 @@ SELECT
 	p1.nom,
 	p1.prenom
 FROM
-	${prefixe}personnel p,
-	${prefixe}personnel p1,
-	${prefixe}vacataires v
+	{$prefixe}personnel p,
+	{$prefixe}personnel p1,
+	{$prefixe}vacataires v
 WHERE
 	p.pers_id = v.pers_id
 AND	p.pers_id = '$pid'
@@ -174,5 +174,5 @@ endif;
 // fin if affichage 3
 Pgclose()
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

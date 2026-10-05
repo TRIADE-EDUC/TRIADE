@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_view_inra.class.php,v 1.4 2017-03-21 11:32:17 dgoron Exp $
+// $Id: opac_view_inra.class.php,v 1.5 2021/08/12 13:34:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/opac_view.class.php");
 
 class opac_view_inra extends opac_view {
@@ -37,18 +38,16 @@ class opac_view_inra extends opac_view {
 	}
 
     public function list_views(){
-    	global $dbh;
-    	      	
     	//A l'INRA, 2 vues de base par utilisateur...
     	//	- celle de son centre
     	//  - la vue nationale
        	
-    	//Vue nationale par dÃ©faut
+    	//Vue nationale par défaut
     	$this->opac_views_list[]=21;
     	$this->view_list_empr_default = 21;
     	
     	
-		//RÃ©cupÃ©ration du centre de l'emprunteur
+		//Récupération du centre de l'emprunteur
 		if($this->id_empr){
 			$myQuery=pmb_mysql_query("select empr_custom_integer from empr_custom_values where empr_custom_origine=".$this->id_empr." and empr_custom_champ=15");
 			if(pmb_mysql_num_rows($myQuery)){		
@@ -63,7 +62,7 @@ class opac_view_inra extends opac_view {
 		}
 		
 		//+ les vues publiques
-		$myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1", $dbh);
+		$myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1");
 		if(pmb_mysql_num_rows($myQuery)){
 			while(($r=pmb_mysql_fetch_object($myQuery))) {
 				$this->opac_views_list[]=$r->opac_view_id;
@@ -73,11 +72,11 @@ class opac_view_inra extends opac_view {
     }
     
 	public function get_list($name='', $value_selected=0) {
-		global $dbh,$charset;
+		global $charset;
 		global $opac_url_base;
 
-		if ($this->id_empr) $myQuery = pmb_mysql_query("SELECT * FROM opac_views left join opac_views_empr on (emprview_view_num=opac_view_id and emprview_empr_num=$this->id_empr) where opac_view_visible!=0 and opac_view_id in (".implode(",",$this->opac_views_list).") order by opac_view_name ", $dbh);
-		else $myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1 order by opac_view_name ", $dbh);
+		if ($this->id_empr) $myQuery = pmb_mysql_query("SELECT * FROM opac_views left join opac_views_empr on (emprview_view_num=opac_view_id and emprview_empr_num=$this->id_empr) where opac_view_visible!=0 and opac_view_id in (".implode(",",$this->opac_views_list).") order by opac_view_name ");
+		else $myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1 order by opac_view_name ");
 		
 		$selector = "
 		<select name='$name' id='$name' onchange='document.location=\"".$opac_url_base."?opac_view=\"+this.value;'>";
@@ -95,4 +94,4 @@ class opac_view_inra extends opac_view {
 
 		return $selector;
 	}
-} // fin dÃ©finition classe
+} // fin définition classe

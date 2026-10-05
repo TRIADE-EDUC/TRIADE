@@ -1,9 +1,9 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
 // $Id: http_request.js,v 1.8 2008/02/19 17:25:04 dbellamy Exp $
 
-//Class javascript permettant d'effectuer les requêtes Http (Ajax) vers le serveur
+//Class javascript permettant d'effectuer les requ�tes Http (Ajax) vers le serveur
 function http_request() {
 	
 	this.request = http_send_request;
@@ -17,31 +17,32 @@ function http_request() {
 	/* 
 	* Fonction http_send_request
 	* Traitement:
-	* 	Permet d'envoyer une requête http vers le serveur
-	*  	Le status de la requête est mémorisé dans req_status, interrogeable par la méthode get_status
-	*  	La réponse est mémorisée dans text, interrogeable par la méthode get_text 
-	* 	Par defaut, si seul url est renseigné, la requête est exécutée en GET, synchrone.
+	* 	Permet d'envoyer une requ�te http vers le serveur
+	*  	Le status de la requ�te est m�moris� dans req_status, interrogeable par la m�thode get_status
+	*  	La r�ponse est m�moris�e dans text, interrogeable par la m�thode get_text 
+	* 	Par defaut, si seul url est renseign�, la requ�te est ex�cut�e en GET, synchrone.
 	* 
-	* Paramètres d'entrée:
+	* Param�tres d'entr�e:
 	* 
 	*	url, est l'url du serveur 
-	*	post_flag, méthode d'envoi des paramètres: true pour POST, false pour GET.
-	*	post_param, texte des paramètres passés par la methode POST: &p1=value1&p2=value2 ...
+	*	post_flag, m�thode d'envoi des param�tres: true pour POST, false pour GET.
+	*	post_param, texte des param�tres pass�s par la methode POST: &p1=value1&p2=value2 ...
 	*	async_flag, true pour asynchrone ou false pour synchrone 
-	*	f_return, fonction de callback si pas d'erreur d'exécution de la requête Http
+	*	f_return, fonction de callback si pas d'erreur d'ex�cution de la requ�te Http
 	*	f_error, fonction de callback si erreur
 	* 	 
-	* Paramètres de sortie:
+	* Param�tres de sortie:
 	* 	retourne 
 	* 		0 ,	pas d'erreur 
 	* 		>200, erreur http
 	*    	-1 , autre erreur  
 	*/
 
-	function http_send_request(url, post_flag ,post_param, async_flag, func_return, func_error,ident_req) {
+	function http_send_request(url, post_flag ,post_param, async_flag, func_return, func_error,ident_req,on_download_end) {
 		// If these inputs are not defined
 		if (!post_flag) post_flag = false;
 		if (!async_flag) async_flag = false;
+		if(!on_download_end) on_download_end = false;
 		if(ident_req)id_req=ident_req;
 		f_return = func_return;
 		f_error = func_error;
@@ -55,7 +56,13 @@ function http_request() {
 				req.open("GET", url, async_flag);			
 			}
 			if (async_flag) req.onreadystatechange = http_callback;	
-			req.send(post_param);
+			if (async_flag && on_download_end) {
+				addLoadEvent(function() {
+					req.send(post_param);
+				});
+			} else {
+				req.send(post_param);
+			}
 			if(async_flag == false){
 				http_callback();
 			}
@@ -98,7 +105,7 @@ function http_request() {
 		return request;
 	}
 	
-	// Fonction qui traite la réponse Http
+	// Fonction qui traite la r�ponse Http
 	function http_callback() {			
 		if(req.readyState == 4)	{
 			if(req.status == 200) { // No error
@@ -114,7 +121,7 @@ function http_request() {
 					else f_error(req.status,req.responseText);
 				}			
 	       	}
-		} //else, le statut reste à -1;
+		} //else, le statut reste � -1;
 	}
 
 }// End class
@@ -130,7 +137,7 @@ function XMl_to_array(xml, NodeName) {
 			if (param.childNodes[j].firstChild) {
 				var val = param.childNodes[j].firstChild.nodeValue;
 			} else val='';
-			// Mémorise les paramètres
+			// M�morise les param�tres
 			this_param[key] = val;	
 		}
 	}

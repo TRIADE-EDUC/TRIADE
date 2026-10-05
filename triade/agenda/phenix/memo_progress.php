@@ -15,7 +15,7 @@
   }
 
 if ( isset($_GET['memid']) ) {
-	$DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}memo SET mem_pcent=".$_GET['memval']." WHERE mem_id=".$_GET['memid']." Limit 1");
+	$DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}memo SET mem_pcent=".$_GET['memval']." WHERE mem_id=".$_GET['memid']." Limit 1");
 }
 
 $memid = $_GET['memid'];

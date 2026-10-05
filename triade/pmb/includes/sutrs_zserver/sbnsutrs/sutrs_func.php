@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // server specific functions for conversion of SUTRS record
 // authors: Marco Vaninetti, Massimo Mancini
 // state: higly experimental ;-)
 // +-------------------------------------------------+
-// $Id: sutrs_func.php,v 1.12 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: sutrs_func.php,v 1.12 2019/06/10 08:57:12 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "sutrs_func.php")) die("no access");
 
@@ -105,8 +105,8 @@ typical ITALIAN SUTR record (| and :: are NOT in original record):
 |Titolo:: I *persuasori occulti / Vance Packard ; traduzione di Carlo Fruttero. - Milano : Il saggiatore, 1968. - 336 p. ; 18 cm . 
 |Numeri_standard:: BNI 688653 |Collana:: I gabbiani 
 |Autore:: Packard, Vance |Autore:: Fruttero, Carlo 
-|Soggetto:: F PubblicitÃ  - Aspetti psicologici 
-|Classificazione:: D 659.1019 PubblicitÃ . Principi psicologici
+|Soggetto:: F Pubblicità - Aspetti psicologici 
+|Classificazione:: D 659.1019 Pubblicità. Principi psicologici
 ---------------------------------------------------------------------------------------------*/
 
 function from_sutrs($ss,$campo){
@@ -190,14 +190,14 @@ function from_sutrs($ss,$campo){
 	//printr($campi,'','CAMPI');
 	//print "$ss<br /><hr />$notice";
 	
-	//Lecture des paramÃ¨tres d'import
+	//Lecture des paramètres d'import
 
 	$param_path = "sutrs2unimarciso";
 
-	//Lecture des paramÃ¨tres
+	//Lecture des paramètres
 	_parser_("$base_path/admin/convert/imports/".$param_path."/params.xml", array("IMPORTNAME" => "_import_name_", "NPERPASS" => "_n_per_pass_", "INPUT" => "_input_", "STEP" => "_step_", "OUTPUT" => "_output_"), "PARAMS");
 	require_once ("$base_path/admin/convert/xmltransform.php");
-	//En fonction du type de fichier d'entrÃ©e, inclusion du script de gestion des entrÃ©es
+	//En fonction du type de fichier d'entrée, inclusion du script de gestion des entrées
 	require_once("$base_path/admin/convert/imports/input_text.inc.php");
 	//En fonction du type de fichier de sortie, inclusion du script de gestion des sorties
 	require_once("$base_path/admin/convert/imports/output_iso_2709.inc.php");

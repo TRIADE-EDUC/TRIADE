@@ -178,299 +178,162 @@ function imprimer() {
 ////////////////////////////////////////////////////////
 // Fonction quitter session
 function quitter_session() {
-         var confirmation=confirm(langfunc1+langfunc0)
-         if (confirmation) {
-             location.href='index1.php?deconnexion';
-             //parent.window.close();
-         }
+    if (confirm(langfunc1)) {
+        location.href = 'index1.php?deconnexion';
+    }
 }
 
 ////////////////////////////////////////////////////////
 // Fonction quitter avant session
 function quitter_avant_session() {
-         var confirmation=confirm(langfunc1+langfunc0)
-         if (confirmation) {
-             parent.window.close();
-         }
+    if (confirm(langfunc1)) {
+        parent.window.close();
+    }
 }
 
 //////////////////////////////////////////////////////
 // function pour les bouton
 function buttonMagic(value,lien,name,option,actionpossible) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><a href='#' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\"  style='font-weight:bold;color:#000080'  >"+value+"</a></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\">");
 }
 
 function buttonMagicVATEL(value,lien,name,option,actionpossible) {
-	document.write("<input type='button' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\"    value=\""+value+"\" class='btn btn-primary btn-sm  vat-btn-footer' />");
+	document.write("<input type='button' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\" value=\""+value+"\" class='btn btn-primary'>");
 }
 
 
 function buttonMagic2(value,lien,name,option,disabled) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
 	if (disabled == 1) {
-		document.write("<div class='btncenter1'><a href='javascript:return(true)' disabled='disabled'   style='font-weight:bold;color:#000080' >"+value+"</a></div>");
-	}else{
-		document.write("<div class='btncenter1'><a href='#' onclick=\"open('"+lien+"','"+name+"','"+option+"');\"   style='font-weight:bold;color:#000080' >"+value+"</a></div>");
+		document.write("<input type='button' class='btn btn-primary' disabled value=\""+value+"\">");
+	} else {
+		document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" onclick=\"open('"+lien+"','"+name+"','"+option+"');\">");
 	}
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
 }
 
 function buttonMagic2VATEL(value,lien,name,option,disabled) {
 	if (disabled == 1) {
-		document.write("<input type='button' disabled='disabled' class='btn btn-primary btn-sm  vat-btn-footer' value=\""+value+"\" ");
-	}else{
-		document.write("<input type='button' onclick=\"open('"+lien+"','"+name+"','"+option+"');\"   value=\""+value+"\" class='btn btn-primary btn-sm  vat-btn-footer' />");
+		document.write("<input type='button' disabled class='btn btn-primary' value=\""+value+"\">");
+	} else {
+		document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" onclick=\"open('"+lien+"','"+name+"','"+option+"');\">");
 	}
 }
 
 
 function buttonMagicSubmitAtt(value,name,attribut,bt) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'>");
-	var color="#000080";
-	if (bt == 'ok') {
-		document.write("&nbsp;&nbsp;<img src='./image/commun/ok.png' />");
-		var color="blue";
-	}
-	if (bt == 'annul') {
-		document.write("<img src='./image/commun/annul.png' />");
-	}
-	document.write("<input type='submit' style='font-weight:bold;color:"+color+"' "+attribut+" value='"+value+"' name='"+name+"' ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' "+attribut+" value='"+value+"' name='"+name+"'>");
 }
 
 
 function buttonMagicSubmitAttVATEL(value,name,attribut,bt) {
-	document.write("<input type='submit' class='btn btn-primary btn-sm  vat-btn-footer' "+attribut+" value='"+value+"' name='"+name+"' ></div>");
+	document.write("<input type='submit' class='btn btn-primary' "+attribut+" value='"+value+"' name='"+name+"'>");
 }
 
 
-
 function buttonMagicSubmit(value,name,bt) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'>");
-	var color="#000080";
-	if (bt == 'ok') {
-		document.write("<img src='./image/commun/ok.png' />");
-		var color="blue";
-	}
-	if (bt == 'annul') {
-		document.write("<img src='./image/commun/annul.png' />");
-	}		
-	document.write("<input type='submit' style='font-weight:bold;color:"+color+"' value='"+value+"' name='"+name+"' ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"'>");
 }
 
 
 function buttonMagicSubmitVATEL(value,name,bt) {
-	var color="#000080";
-	if (bt == 'ok') {
-		// document.write("<img src='../image/commun/ok.png' />");
-		var color="blue";
-	}
-	if (bt == 'annul') {
-		// document.write("<img src='../image/commun/annul.png' />");
-	}		
-	document.write("<input type='submit' value='"+value+"' name='"+name+"' class='btn btn-primary btn-sm  vat-btn-footer' >");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"'>");
 }
 
 function buttonMagicSubmitIdDivVATEL(value,name,bt,id,disabled) {
-	var color="#000080";
-	if (bt == 'ok') {
-//		document.write("<img src='./image/commun/ok.png' />");
-		var color="blue";
-	}
-	if (bt == 'annul') {
-//		document.write("<img src='./image/commun/annul.png' />");
-	}
-	if (disabled == 1) {
-		disabled="disabled='disabled'";
-	}else{
-		disabled="";
-	}
-	document.write("<input id='"+id+"' type='submit'  class='btn btn-primary btn-sm  vat-btn-footer' value='"+value+"' name='"+name+"' "+disabled+" />");
+	var dis = (disabled == 1) ? "disabled" : "";
+	document.write("<input id='"+id+"' type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' "+dis+">");
 }
 
-
-
 function buttonMagicSubmitIdDiv(value,name,bt,id,disabled) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'>");
-	var color="#000080";
-	if (bt == 'ok') {
-		document.write("<img src='./image/commun/ok.png' />");
-		var color="blue";
-	}
-	if (bt == 'annul') {
-		document.write("<img src='./image/commun/annul.png' />");
-	}
-	if (disabled == 1) {
-		disabled="disabled='disabled'";
-	}else{
-		disabled="";
-	}
-	document.write("<input id='"+id+"' type='submit' style='font-weight:bold;color:"+color+"' value='"+value+"' name='"+name+"' "+disabled+" ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	var dis = (disabled == 1) ? "disabled" : "";
+	document.write("<input id='"+id+"' type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' "+dis+">");
 }
 
 function buttonMagicSubmit2VATEL(value,name,action) {
-	document.write("<input type='submit' class='btn btn-primary btn-sm  vat-btn-footer' value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\" >");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\">");
 }
 
 function buttonMagicSubmit2(value,name,action) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='submit' style='font-weight:bold;color:#000080' value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\" ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\">");
 }
 
 function buttonMagicSubmit3VATEL(value,name,action) {
-	document.write("<input type='submit' value='"+value+"' name='"+name+"' "+action+" class='btn btn-primary btn-sm  vat-btn-footer' />");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' "+action+">");
 }
 
-
 function buttonMagicSubmit3(value,name,action) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='submit' style='font-weight:bold;color:#000080' value='"+value+"' name='"+name+"' "+action+"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' "+action+">");
 }
 
 function buttonMagicSubmit4(value,name,action) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value=\""+value+"\" name='"+name+"' onclick=\""+action+"\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" name='"+name+"' onclick=\""+action+"\">");
 }
 
 function buttonMagicSubmit4VATEL(value,name,action) {
-	document.write("<input type='button' class='btn btn-primary btn-sm  vat-btn-footer' value=\""+value+"\" name='"+name+"' onclick=\""+action+"\" />");
+	document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" name='"+name+"' onclick=\""+action+"\">");
 }
 
 
 function buttonMagicReactualise() {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc66+"' onclick=\"history.go(0);\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc66+"' onclick=\"history.go(0);\">");
 }
-
 
 function buttonMagicReactualiseVATEL() {
-	document.write("<input type='button' class='btn btn-primary btn-sm  vat-btn-footer'  value='"+langfunc66+"' onclick=\"history.go(0);\">");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc66+"' onclick=\"history.go(0);\">");
 }
 
-// test dans le boutont "Modifier" 
+// test dans le boutont "Modifier"
 function buttonMagicPrecedent() {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc65+"' onclick=\"history.go(-1);\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc65+"' onclick=\"history.go(-1);\">");
 }
 
-// test dans le boutont "Retour" 
+// test dans le boutont "Retour"
 function buttonMagicPrecedent2() {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc63+"' onclick=\"history.go(-1);\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc63+"' onclick=\"history.go(-1);\">");
 }
 
-// test dans le boutont "Retour" 
+// test dans le boutont "Retour"
 function buttonMagicPrecedentNbSaut(nb) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc63+"' onclick=\"history.go("+nb+");\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc63+"' onclick=\"history.go("+nb+");\">");
 }
 
 function buttonMagicImprimer() {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc64+"' onclick=\"imprimer();\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc64+"' onclick=\"imprimer();\">");
 }
 
-
 function buttonMagicFermeture() {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc62+"' onclick=\"parent.window.close();\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc62+"' onclick=\"parent.window.close();\">");
 }
 
 function buttonMagicFermetureVATEL() {
-	document.write("<input type='button' value='"+langfunc62+"' onclick=\"parent.window.close();\" class='btn btn-primary btn-sm  vat-btn-footer' />");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc62+"' onclick=\"parent.window.close();\">");
 }
 
 function buttonMagicRetour(lien,fen) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+langfunc63+"' onclick=\"open('"+lien+"','"+fen+"','');\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc63+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
 }
 
 function buttonMagicRetourVATEL(lien,fen) {
-	document.write("<input type='button' class='btn btn-primary btn-sm  vat-btn-footer'  value='"+langfunc63+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
+	document.write("<input type='button' class='btn btn-secondary' value='"+langfunc63+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
 }
 
-
 function buttonMagicRetour2(lien,fen,nom) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+nom+"' onclick=\"open('"+lien+"','"+fen+"','');\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+nom+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
 }
 
 function buttonMagicRetour2VATEL(lien,fen,nom) {
-	document.write("<input type='button'  class='btn btn-primary btn-sm  vat-btn-footer' value='"+nom+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
+	document.write("<input type='button' class='btn btn-secondary' value='"+nom+"' onclick=\"open('"+lien+"','"+fen+"','');\">");
 }
-
 
 function buttonMagic3(nom,lien) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+nom+"' onclick=\""+lien+"\"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-primary' value='"+nom+"' onclick=\""+lien+"\">");
 }
-
 
 function buttonMagic3VATEL(nom,lien) {
-        document.write("<input type='button' value='"+nom+"' onclick=\""+lien+"\"   class='btn btn-primary btn-sm  vat-btn-footer'  >");
+	document.write("<input type='button' class='btn btn-primary' value='"+nom+"' onclick=\""+lien+"\">");
 }
 
-
-
 function buttonMagicAlert(nom,commentaire) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type='button' style='font-weight:bold;color:#000080' value='"+nom+"' onclick='alert(\""+commentaire+"\")' ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='"+nom+"' onclick='alert(\""+commentaire+"\")'>");
 }
 
 
@@ -1189,41 +1052,12 @@ function pos(evt) {
 }
 
 function AffBulleRadioAvecQuit(strTitre,strIcone,texte) {
-	// image/commun/stop.jpg 
-	// image/commun/info.jpg 
-	// image/commun/warning.jpg 
-
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(./image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(./image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td>';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
-	}
-
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(./image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px">';
+	contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+	contenu += '<span style="font-size:10px;font-weight:700;color:#080A66;text-transform:uppercase;letter-spacing:.07em">&#127925; Triade Radio</span>';
+	contenu += '</div>';
+	contenu += '<div style="padding:8px">' + texte + '</div>';
+	contenu += '</div>';
 
 	var finalPosX = posX - xOffset;
 
@@ -1318,6 +1152,48 @@ function getCookie(cname) {
 	return "";
 }
 
+function markdownParser(markdown) {
+	const htmlText = markdown
+		.replace(/^# (.*$)/gim, '<h1>$1</h1>')
+		.replace(/^## (.*$)/gim, '<h2>$1</h2>')
+		.replace(/^### (.*$)/gim, '<h3>$1</h3>')
+		.replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+		.replace(/^##### (.*$)/gim, '<h5>$1</h5>')
+		.replace(/^###### (.*$)/gim, '<h6>$1</h6>')
+	return htmlText.trim()
+}
 
 
+function addslashes(str) {
+    return str.replace(/['"\\]/g, '\\$&');
+}
 
+function addslashesnl(str) {
+    return str.replace(/['"\\\n\r]/g, '\\$&');
+}
+
+
+function htmlToMarkdown(htmlString) {
+  // Replace HTML tags with Markdown equivalents
+  const markdown = htmlString
+    .replace(/<h1>(.*?)<\/h1>/g, "# $1\n")
+    .replace(/<h2>(.*?)<\/h2>/g, "## $1\n")
+    .replace(/<h3>(.*?)<\/h3>/g, "### $1\n")
+    .replace(/<p>(.*?)<\/p>/g, "$1\n\n")
+    .replace(/<b>(.*?)<\/b>/g, "**$1**")
+    .replace(/<i>(.*?)<\/i>/g, "*$1*")
+    .replace(/<ul>(.*?)<\/ul>/g, function(match, content) {
+      return content.replace(/<li>(.*?)<\/li>/g, "- $1\n");
+    })
+    .replace(/<a href="(.*?)">(.*?)<\/a>/g, "[$2]($1)");
+  return markdown;
+}
+/*
+const htmlString = `<h1>Heading 1</h1><p>This is a paragraph.</p>`;
+const markdown = htmlToMarkdown(htmlString);
+console.log(markdown);
+*/
+
+if (typeof alertify !== 'undefined') {
+    alertify.set('notifier', 'position', 'bottom-right');
+}

@@ -6,7 +6,7 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,17 +26,15 @@ include_once("./common/config2.inc.php"); // futur : auto_prepend_file
 include_once("./librairie_php/db_triade.php");
 include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/calendar.php");
+$cnx=cnx();
 if ($_SESSION["membre"] == "menupersonnel") {
-	$cnx=cnx();
 	if (!verifDroit($_SESSION["id_pers"],"cahiertextes")) {
 		accesNonReserveFen();
 		exit();
 	}
-	Pgclose();
 }else{
 	validerequete("profadmin");	
 }
-$cnx=cnx();
 // Sn : variable de Session nom
 // Sp : variable de Session prenom
 // Sm : variable de Session membre
@@ -52,20 +50,20 @@ if (isset($_GET["sClasseGrp"])) {
 	$sMat=$_POST["sMat"];
 }
 $listTmp=explode(":",$sClasseGrp);
-$HPV[cid]=$listTmp[0];
-$HPV[gid]=$listTmp[1];
+$HPV['cid']=$listTmp[0];
+$HPV['gid']=$listTmp[1];
 $list2=$listTmp[1];
 $list1=$listTmp[0];
 unset($listTmp);
 //print_r($HPV);
-if($HPV[gid]):
+if($HPV['gid']):
 	$val=LANGDEVOIR1;
-    	$who="<b><font id='menumodule1'> $val : </b></font> ".ucwords(trunchaine(chercheGroupeNom($HPV[gid]),14));
+    	$who="<b><font id='menumodule1'> $val : </b></font> ".ucwords(trunchaine(chercheGroupeNom($HPV['gid']),14));
 	$classorgrp=1;
-	$classe=$HPV[gid];
+	$classe=$HPV['gid'];
 else:
 	$val=LANGDEVOIR2;
-	$cl=chercheClasse($HPV[cid]);
+	$cl=chercheClasse($HPV['cid']);
 	$classorgrp=0;
     	$who="<b><font id='menumodule1'> $val : </b></font>".ucwords(trunchaine($cl[0][1],14));
 	$classe=$cl[0][1];
@@ -94,7 +92,7 @@ elseif(DBTYPE=='mysql')
 {
 	$sql .= " CONCAT( trim(m.libelle) , ' ' , trim(m.sous_matiere) , ' ' , trim(langue) ) , ";
 }
-$Spid=$mySession[Spid];
+$Spid=$mySession['Spid'];
 
 if ($_SESSION["idprofAdminCdT"] != '')  { $Spid=$_SESSION["idprofAdminCdT"];  }
 
@@ -102,10 +100,10 @@ $sql .= "
 	a.code_groupe,
 	trim(g.libelle)
 FROM
-	${prefixe}affectations a,
-	${prefixe}matieres m,
-	${prefixe}classes c,
-	${prefixe}groupes g
+	{$prefixe}affectations a,
+	{$prefixe}matieres m,
+	{$prefixe}classes c,
+	{$prefixe}groupes g
 WHERE
 	code_prof='$Spid'
 AND a.code_classe = c.code_class
@@ -119,8 +117,8 @@ ORDER BY
 $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
-// patch pour problème sous-matièr
-for($i=0;$i<count($data);$i++){
+// patch pour problème sous-matiere
+for($i=0;$i<countTriade($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
 }
@@ -134,13 +132,43 @@ unset($curs);
 <?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/menu-tab.css">
+<style>
+.na-card  { background:#fff !important; border:1px solid #c5cae9 !important; border-radius:8px !important; padding:14px 16px !important; margin:10px 0 10px !important; }
+.na-row   { display:flex !important; align-items:center !important; margin-bottom:8px !important; gap:8px !important; flex-wrap:wrap !important; }
+.na-lbl   { font-size:12px !important; font-weight:600 !important; color:#333 !important; min-width:140px !important; flex-shrink:0 !important; }
+.na-foot  { margin-top:8px !important; overflow:hidden !important; }
+.btn-action {
+    font-family:Arial; font-size:11px; font-weight:bold;
+    color:#080A66; background:#CACCEF;
+    border:none; border-radius:5px; padding:5px 12px;
+    cursor:pointer; white-space:nowrap;
+}
+.btn-action:hover { background:#b0b4e8; }
+.btn-view-grid {
+    display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 6px;
+}
+.btn-view {
+    font-family: Electrolize, Arial, sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: #fff; border: none; border-radius: 7px;
+    padding: 10px 18px; cursor: pointer;
+    white-space: nowrap; transition: filter .15s;
+    letter-spacing: .3px;
+}
+.btn-view:hover { filter: brightness(1.12); }
+.btn-view-semaine  { background: #1565c0; }
+.btn-view-matiere  { background: #283593; }
+.btn-view-complet  { background: #4527a0; }
+.btn-view-ia       { background: #2e7d32; }
+</style>
 <script language="JavaScript" src="./librairie_js/lib_note.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_devoir_scolaire.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -292,95 +320,100 @@ function upSelectMat(arg) {
 <div align='center'><?php top_h(); ?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/<?php print $_SESSION["membre"]?>1.js"></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="945" >
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS89 ?> </b><font id=color2><b><?php print trunchaine(chercheMatiereNom($sMat),15)." ".$who?></b></font></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print LANGMESS89 ?> </b><font id=color2><b><?php print trunchaine(chercheMatiereNom($sMat),15)." ".$who?></b></font></td></tr>
 <tr id='cadreCentral0' >
 <td valign='top' width="100%"  >
 <!-- // fin  -->
-<br /><form method="POST" onsubmit="return verifAccesNote()" name="formulaire" action="cahiertext2.php" >
-    <font class="T2">&nbsp;&nbsp;<?php print LANGELE4 ?> : </font>
- 	<select name="sClasseGrp" size="1" onChange="upSelectMat(this)">
- 	<option value="0" STYLE="color:#000066;background-color:#FCE4BA"> <?php print LANGCHOIX3 ?> </option>
-		 <?php
-			 for($i=1;$i<count($data);$i++){
-				 	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
-						continue;
-					}else{
-						// utilisation de l'opérateur ternaire expr1?expr2:expr3;
-						$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
-						print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
-					}
-					$gtmp=$data[$i][4];
-					$ctmp=$data[$i][0];
-				 }
-				 unset($gtmp);
-				 unset($ctmp);
-				 unset($libelle);
-				 ?>
-				 </select>&nbsp;&nbsp;<select name="sMat" size="1"> <!-- saisie_matiere -->
-                <option value="0" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
-                	<!--
-				<option></option>
-				<option></option>
-				<option></option>
-				<option></option>
-				-->
-				</select>
-&nbsp;&nbsp;<input type='submit' name='rien' value='OK' class="BUTTON" />
-<?php if ($_SESSION["membre"] == "menuadmin") { print "<input type='hidden' name='saisie_pers' value='$Spid' />"; } ?>
+<form method="POST" onsubmit="return verifAccesNote()" name="formulaire" action="cahiertext2.php">
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGELE4 ?> :</span>
+    <select name="sClasseGrp" class="cc-select" onChange="upSelectMat(this)">
+      <option value="0" style="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX3 ?></option>
+      <?php
+      for($i=1;$i<countTriade($data);$i++){
+          if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
+              continue;
+          }else{
+              $libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+              $selCgrp=($data[$i][0].":".$data[$i][4]==$sClasseGrp)?" selected":"";
+              print "<option$selCgrp style='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
+          }
+          $gtmp=$data[$i][4];
+          $ctmp=$data[$i][0];
+      }
+      unset($gtmp); unset($ctmp); unset($libelle);
+      ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Matière :</span>
+    <select name="sMat" class="cc-select">
+      <option value="0" style="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
+    </select>
+  </div>
+  <?php if ($_SESSION["membre"] == "menuadmin") { print "<input type='hidden' name='saisie_pers' value='$Spid' />"; } ?>
+</div>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagicSubmit("Sélectionner","rien");</script>
+</div>
 </form>
+<?php if ($sClasseGrp && $sClasseGrp != "0" && $sMat && $sMat != "0"): ?>
+<script>
+window.addEventListener('load', function(){
+    var sel = document.formulaire.sClasseGrp;
+    if (sel && sel.value !== '0') {
+        upSelectMat(sel);
+        document.formulaire.sMat.value = '<?php print $sMat ?>';
+    }
+});
+</script>
+<?php endif ?>
 <br />
-<form method=post name="form11" id='form11' action="cahiertext2enr.php" enctype="multipart/form-data" >
-<input type=hidden id="saisie_date1" value="<?php print dateDMY()?>" size=12  >
+<form method=post name="form11" id='form11' action="cahiertext2enr.php" enctype="multipart/form-data">
+<input type=hidden id="saisie_date1" value="<?php print dateDMY()?>">
 <?php
 if (isset($_GET["date_convenu"])) {
 	$datepour=$_GET["date_convenu"];
 }else{
 	$datepour=dateDMY();
 }
-?>
-&nbsp;&nbsp;
-<input type=text name="date_contenu" id='date_contenu1' value="<?php print $datepour ?>"  size=12  class='bouton2' onKeyPress="onlyChar(event)"  >
-<?php
-calendar("id1","document.form11.date_contenu",$_SESSION["langue"],"0");
-?>
-<input type=submit name="accesdate" value="<?php print VALIDER ?>" class='button' >
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type=button value="<?php print LANGMESS91 ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" onclick="open('cahiertext_visu_global.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&classorgrp=<?php print $classorgrp?>','devoir','width=1050,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')" >
-
-<?php
 if(file_exists("./common/config-ia.php")) {
 	include_once("common/productId.php");
-        include_once("common/config-ia.php");
-        $productID=PRODUCTID;
-        $iakey=IAKEY;
-        $prenom=recherche_eleve_prenom($idEleve);
+	include_once("common/config-ia.php");
+	$productID=PRODUCTID;
+	$iakey=IAKEY;
+	$prenom=recherche_eleve_prenom($idEleve);
 	$matiere=trim(chercheMatiereNom($sMat));
-        $lienIA="open('devoirAcomposer.php?matiere=$matiere&classe=$classe','','width=600,height=500')";
+	$lienIA="open('devoirAcomposer.php?matiere=$matiere&classe=$classe','','width=600,height=500')";
 }else{
-        $lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
+	$lienIA="alert('Votre Triade n\'est pas configur&eacute; pour utiliser l\'IA. Contacter votre administrateur Triade')";
 }
+$btnMatClass = ($_SESSION["membre"] == "menuadmin") ? "btn-action btn-action-white" : "btn-action";
+$bouton = ($_SESSION["membre"] == "menuadmin") ? LANGMESS101." " : LANGMESS102." ";
 ?>
-&nbsp;&nbsp;&nbsp;<input type='button' value='TRIADE-COPILOT' class='BUTTON' onClick="<?php print $lienIA ?>" >
-
-
-<br><br>
-<?php
-if ($_SESSION["membre"] == "menuadmin") {
-	$bouton=LANGMESS101." ";
-	$css="STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#FFFFFF;font-weight:bold;'";
-}else{
-	$bouton=LANGMESS102." ";
-	$css="STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'";
-}
-?>
-<input type='button' value="<?php print "$bouton ".trunchaine(chercheMatiereNom($sMat),15)." " ?>"  <?php print $css ?> onclick="open('cahiertext_visu_matiere.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&idmat=<?php print $sMat?>&classorgrp=<?php print $classorgrp?>&sClasseGrp=<?php print $sClasseGrp ?>','devoirmatiere','width=850,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')" >
-<input type=button value="<?php print LANGMESS100 ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" onclick="open('cahiertext_visu_complet.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&idmat=tous','devoirtous','width=850,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')" >
-<input type='hidden' name="saisie_idmatiere" value="<?php print $sMat?>" >
-<input type='hidden' name="saisie_idclsorgrp" value="<?php print $list1?>" >
-<input type='hidden' name="saisie_clsorgrp" value="<?php print $list2?>" >
-<input type='hidden' name="sClasseGrp" value="<?php print $sClasseGrp?>" >
-<input type='hidden' name="sMat" value="<?php print $sMat?>" >
-<input type='hidden' name="idpersProf" value="<?php print $idpersProf ?>" >
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl">Date :</span>
+    <div style="display:inline-flex;align-items:center;gap:4px;">
+      <input type=text name="date_contenu" id='date_contenu1' value="<?php print $datepour ?>" size=13 class='bouton2' onKeyPress="onlyChar(event)">
+      <?php calendar("id1","document.form11.date_contenu",$_SESSION["langue"],"0"); ?>
+    </div>
+    <button type="submit" name="accesdate" value="<?php print VALIDER ?>" class="btn-action"><?php print VALIDER ?></button>
+  </div>
+</div>
+<div class="btn-view-grid">
+  <button type="button" class="btn-view btn-view-semaine" onclick="open('cahiertext_visu_global.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&classorgrp=<?php print $classorgrp?>','devoir','width=1050,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')"><?php print LANGMESS91 ?></button>
+  <button type="button" class="btn-view btn-view-matiere" onclick="open('cahiertext_visu_matiere.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&idmat=<?php print $sMat?>&classorgrp=<?php print $classorgrp?>&sClasseGrp=<?php print $sClasseGrp ?>','devoirmatiere','width=850,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')"><?php print $bouton.trunchaine(chercheMatiereNom($sMat),15) ?></button>
+  <button type="button" class="btn-view btn-view-complet" onclick="open('cahiertext_visu_complet.php?iddate=<?php print dateFormBase($datepour) ?>&id=<?php print $list1?>&idmat=tous','devoirtous','width=850,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes')"><?php print LANGMESS100 ?></button>
+  <button type="button" class="btn-view btn-view-ia" onclick="<?php print $lienIA ?>">TRIADE-COPILOT</button>
+</div>
+<input type='hidden' name="saisie_idmatiere" value="<?php print $sMat?>">
+<input type='hidden' name="saisie_idclsorgrp" value="<?php print $list1?>">
+<input type='hidden' name="saisie_clsorgrp" value="<?php print $list2?>">
+<input type='hidden' name="sClasseGrp" value="<?php print $sClasseGrp?>">
+<input type='hidden' name="sMat" value="<?php print $sMat?>">
+<input type='hidden' name="idpersProf" value="<?php print $idpersProf ?>">
 </form>
 
 
@@ -388,7 +421,7 @@ if ($_SESSION["membre"] == "menuadmin") {
 
 
 <div id="dhtmlgoodies_tabView1">
-  <div class="dhtmlgoodies_aTab">
+  <div class="dhtmlgoodies_aTab" style="border:0px" >
 	<form method=post name="form111" >
 <?php
 if ( ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel")) {
@@ -458,11 +491,15 @@ if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) {
 <table><tr><td valign=top>
 <input type='text' size='60' placeholder="Indiquer des mots cl&eacute;s" id="questioncontenucours"  />&nbsp;&nbsp;
 <input type='button' value='TRIADE-COPILOT' class='button' 
-	onClick="ajaxContenuCours(document.getElementById('questioncontenucours').value,'<?php print $productID ?>','<?php print $iakey ?>','<?php print $matiere ?>','<?php print $classe ?>');" id="btq" />&nbsp;
-<a href='#'  onMouseOver="AffBulle('TRIADE-COPILOT vous aide &agrave; r&eacute;diger<br/>votre contenu de cours &agrave; partir<br/>de quelques mots cl&eacute;s ');"  onMouseOut="HideBulle()";><img src='./image/help.gif' border=0 align=center /></a>
+	onClick="ajaxContenuCours(document.getElementById('questioncontenucours').value,'<?php print $productID ?>','<?php print $iakey ?>','<?php print $matiere ?>','<?php print $classe ?>',document.getElementById('number1').value);" id="btq" />&nbsp;
+<a href="#" onclick="document.getElementById('cahier-ia-help').style.display=(document.getElementById('cahier-ia-help').style.display=='none'?'block':'none'); return false;"><img src="./image/help.gif" border="0" align="center"></a>
+<div id="cahier-ia-help" style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; max-width:500px; line-height:1.6;">
+  <strong>TRIADE-COPILOT</strong><br>
+  Indiquez des mots clés décrivant le contenu de cours à rédiger, puis cliquez sur <strong>TRIADE-COPILOT</strong>.
+</div>
 <br/><br>
 
-<input type="file" name="Filedata1" id="Filedata1" onChange="uploadFile('<?php print trim($idpiecejointe1) ?>','1')"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
+<input type="file" name="Filedata1" id="Filedata1" onChange="uploadFile('<?php print trim($idpiecejointe1) ?>','1')"> <a href="#" onclick="this.nextSibling.style.display=(this.nextSibling.style.display=='none'?'block':'none'); return false;"><img src="./image/help.gif" border="0" align="center"></a><div style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; line-height:1.6;">Fichier Taille Max : <?php print $taille ?></div><br><br>
 <progress id="progressBar1" value="0" max="100" style="width:300px;">
 </progress>
 <h3 id="status1"></h3>
@@ -486,7 +523,7 @@ if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) {
 
   </div>
 
-  <div class="dhtmlgoodies_aTab">
+  <div class="dhtmlgoodies_aTab" style="border:0px" >
 	<form method=post name="form112" >
 <script type="text/javascript">
 
@@ -532,7 +569,7 @@ if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) {
 <table><tr><td valign=top><br/>
 
 
-<input type="file" name="Filedata2" id="Filedata2" onChange="uploadFile('<?php print trim($idpiecejointe2) ?>','2')"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
+<input type="file" name="Filedata2" id="Filedata2" onChange="uploadFile('<?php print trim($idpiecejointe2) ?>','2')"> <a href="#" onclick="this.nextSibling.style.display=(this.nextSibling.style.display=='none'?'block':'none'); return false;"><img src="./image/help.gif" border="0" align="center"></a><div style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; line-height:1.6;">Fichier Taille Max : <?php print $taille ?></div><br><br>
 <progress id="progressBar2" value="0" max="100" style="width:300px;">
 </progress>
 <h3 id="status2"></h3>
@@ -558,7 +595,7 @@ if (($_SESSION["membre"] == "menuprof") || (DIRCAHIERTEXTE == "oui")) {
 
   
   </div>
-  <div class="dhtmlgoodies_aTab">
+  <div class="dhtmlgoodies_aTab" style="border:0px" >
 <?php
 print "<form method=post name='form12' enctype='multipart/form-data'  >";
 $data=recherche_devoir_scolaire_2($datepour,$list2,$sMat,$list1,$idPers);
@@ -678,7 +715,7 @@ print "<br><br>";
 
 
 
-<input type="file" name="Filedata3" id="Filedata3" onChange="uploadFile('<?php print trim($idpiecejointe3) ?>','3')"> <a href='#'  onMouseOver="AffBulle('Fichier Taille Max : <?php print $taille ?>');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a><br><br>
+<input type="file" name="Filedata3" id="Filedata3" onChange="uploadFile('<?php print trim($idpiecejointe3) ?>','3')"> <a href="#" onclick="this.nextSibling.style.display=(this.nextSibling.style.display=='none'?'block':'none'); return false;"><img src="./image/help.gif" border="0" align="center"></a><div style="display:none; margin-top:6px; padding:10px 14px; background:#fffbe6; border:1px solid #f5c842; border-radius:6px; font-size:12px; color:#5a4000; line-height:1.6;">Fichier Taille Max : <?php print $taille ?></div><br><br>
 <progress id="progressBar3" value="0" max="100" style="width:300px;">
 </progress>
 <h3 id="status3"></h3>
@@ -702,7 +739,7 @@ print "<br><br>";
 
   
   </div>
-<div class="dhtmlgoodies_aTab">
+<div class="dhtmlgoodies_aTab" style="border:0px" >
 <form method=post name="form112" >
 <script type="text/javascript">
 tinymce.init({

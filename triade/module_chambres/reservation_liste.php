@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -158,13 +158,13 @@ if(autorisation_module()) {
 		// Verification droits acces groupe
 		validerequete("2");
 		?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 		<?php include("./librairie_php/lib_defilement.php"); ?>
 		</td>
 		<td width="472" valign="middle" rowspan="3" align="center">
 			<div align='center'>
 				<?php top_h(); ?>
-				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 
 
 		<?php
@@ -287,7 +287,7 @@ if(autorisation_module()) {
 				<table width='100%'>
 					<?php
 					// Afficher les actions seulement si on a trouve au moins un eleve
-					if(count($tab_eleves) > 0) {
+					if(countTriade($tab_eleves) > 0) {
 					?>
 					<tr>
 						<td align="left" valign="top">
@@ -318,7 +318,7 @@ if(autorisation_module()) {
 													// Pour indiquer combien d'eleves ont ete trouves
 													$trouves = '';
 													if($au_moins_un_de_critere) {
-														$trouves = '&nbsp;-&nbsp;' .LANG_CHA_GENE_024 . '&nbsp;:&nbsp;' . count($tab_eleves);
+														$trouves = '&nbsp;-&nbsp;' .LANG_CHA_GENE_024 . '&nbsp;:&nbsp;' . countTriade($tab_eleves);
 													}
 													?>
 													<b><font id="menumodule1"><?php echo LANG_CHA_GENE_066; ?> :<font id="color2">&nbsp;<?php echo $recherche_de; ?></font><?php echo $trouves; ?></font></b>
@@ -335,10 +335,10 @@ if(autorisation_module()) {
 								</tr>
 								<tr bgcolor="#ffffff"></tr>
 								<?php
-								if(count($tab_eleves) > 0) {
-									for($i=0; $i<count($tab_eleves); $i++) {
+								if(countTriade($tab_eleves) > 0) {
+									for($i=0; $i<countTriade($tab_eleves); $i++) {
 										$ligne = $tab_eleves[$i];
-										$nombre_lignes_eleve = count($ligne['inscriptions']);
+										$nombre_lignes_eleve = countTriade($ligne['inscriptions']);
 								?>
 									<tr bgcolor="#ffffff">
 										<?php
@@ -381,7 +381,7 @@ if(autorisation_module()) {
 					</tr>
 					<?php
 					// Afficher les actions seulement si on a trouve au moins un eleve
-					if(count($tab_eleves) > 0) {
+					if(countTriade($tab_eleves) > 0) {
 					?>
 					<tr>
 						<td align="left" valign="top">
@@ -653,24 +653,6 @@ if(autorisation_module()) {
 		}
 				
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 			
 			// Pour remplacer les liens '#'
 			function maj_liens() {
@@ -702,7 +684,7 @@ if(autorisation_module()) {
 		</form>
 
 		<?php //********** GENERATION DES MENUS ADMINISTRATEUR ********** ?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></script>
 		
 
 		<?php //********** INITIALISATION DES BULLES D'AIDE ********** ?>

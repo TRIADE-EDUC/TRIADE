@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_root.class.php,v 1.5 2019-01-07 13:38:40 tsamson Exp $
+// $Id: frbr_entity_root.class.php,v 1.10 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -29,7 +29,7 @@ class frbr_entity_root {
 			global $lang;
 			global $class_path;
 	
-			//on regarde si on doit intÃ©grer des fichiers de messages de parents
+			//on regarde si on doit intégrer des fichiers de messages de parents
 			$parents = $this->get_parent_classes();
 			for($i=count($parents)-1 ; $i>=0 ; $i--){
 				if($parents[$i] != "frbr_entity_root"){
@@ -39,15 +39,15 @@ class frbr_entity_root {
 					}else{
 						$module_rep = $parent;
 					}
-					//on regarde la langue par dÃ©faut du module
+					//on regarde la langue par défaut du module
 					$default_language = $this->get_default_language($module_rep);
-					//si elle est diffÃ©rente de celle de l'interface, on l'intÃ¨gre
-					// la langue par dÃ©faut donne l'assurance d'avoir tous les messages...
+					//si elle est différente de celle de l'interface, on l'intègre
+					// la langue par défaut donne l'assurance d'avoir tous les messages...
 					if($default_language != $lang){
 						$file = $class_path."/frbr/entities/".$module_rep."/messages/".$default_language."/".$parents[$i].".xml";
 						$this->load_msg_file($file);
 					}				
-					//on commence par charger les messages de la langue par dÃ©faut du module...
+					//on commence par charger les messages de la langue par défaut du module...
 					$file = $class_path."/frbr/entities/".$module_rep."/messages/".$lang."/".$parents[$i].".xml";
 					$this->load_msg_file($file);
 				}else{
@@ -61,10 +61,10 @@ class frbr_entity_root {
 			}else{
 				$module_rep = $var;
 			}
-			//on regarde la langue par dÃ©faut du module
+			//on regarde la langue par défaut du module
 			$default_language = $this->get_default_language($module_rep);
-			//si elle est diffÃ©rente de celle de l'interface, on l'intÃ¨gre
-			// la langue par dÃ©faut donne l'assurance d'avoir tous les messages...
+			//si elle est différente de celle de l'interface, on l'intègre
+			// la langue par défaut donne l'assurance d'avoir tous les messages...
 			if($default_language != $lang){
 				$file = $class_path."/frbr/entities/".$module_rep."/messages/".$default_language."/".$this->class_name.".xml";
 				$this->load_msg_file($file);
@@ -122,11 +122,11 @@ class frbr_entity_root {
 			
 	public function get_default_language($module){
 		global $class_path;
-		//si c'est un module, on a dÃ©jÃ  lu le manifest...
+		//si c'est un module, on a déjà lu le manifest...
 		if(isset($this->manifest)){
 			$default_language = $this->informations['default_language'];
 		}else{
-			//sinon, le cas des common est Ã  part, on sait que c'est en franÃ§ais...
+			//sinon, le cas des common est à part, on sait que c'est en français...
 			if($module == "common"){
 				$default_language = "fr_FR";
 			}else{
@@ -138,7 +138,6 @@ class frbr_entity_root {
 	}
 	
 	public static function get_module_default_language($xml){
-		@ini_set("zend.ze1_compatibility_mode", "0");
 		if(!is_object($xml)){
 			$dom = new domDocument();
 			$dom->load($xml);
@@ -146,7 +145,6 @@ class frbr_entity_root {
 			
 		}	
 		$default_language = $xml->getElementsByTagName("default_language")->item(0)->nodeValue;
-		@ini_set("zend.ze1_compatibility_mode", "1");
 		return $default_language;
 	}
 	
@@ -266,6 +264,10 @@ class frbr_entity_root {
 		return $this->parameters;
 	}
 	
+	public function set_parameters($parameters) {
+	    $this->parameters = $parameters;
+	}
+	
 	public function stripslashes($data) {
 		if (is_array($data)) {
 			foreach ($data as $key => $adata) {
@@ -273,11 +275,11 @@ class frbr_entity_root {
 			}
 			return $data;
 		}
-		return stripslashes($data);
+		return isset($data)? stripslashes($data) : "";
 	}
 	
 	public static function get_num_page_from_num_datanode($num_datanode=0) {
-		$num_datanode += 0;
+		$num_datanode = intval($num_datanode);
 		$query = "select datanode_num_page from frbr_datanodes where id_datanode = ".$num_datanode;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)) {
@@ -285,5 +287,16 @@ class frbr_entity_root {
 		} else {
 			return 0;
 		}
+	}
+	
+	public function add_parameter($name, $value) {
+	    $this->parameters->{$name} = $value;
+	}
+	
+	public function get_parameter($name) {
+	    if (isset($this->parameters->{$name})) {
+	        return $this->parameters->{$name};
+	    }
+	    return null;
 	}
 }

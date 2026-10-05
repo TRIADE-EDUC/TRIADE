@@ -1,18 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_filter_date.class.php,v 1.6 2017-07-12 15:15:00 tsamson Exp $
+// $Id: editions_state_filter_date.class.php,v 1.7 2023/02/23 09:00:12 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/editions_state_filter.class.php");
 
 class editions_state_filter_date extends editions_state_filter {
-	
-	public function __construct($elem,$params=array()){
-		parent::__construct($elem,$params);
-	}
 	
 	public function get_from_form(){
 		$filter_value = $this->elem['id']."_filter";
@@ -22,28 +19,21 @@ class editions_state_filter_date extends editions_state_filter {
 		}
 	}
 	
+	protected function get_inherited_form(){
+		global $msg, $charset;
+		
+		return "
+		<div class='colonne_suite'>
+			".$msg['editions_state_filter_date_start']."&nbsp;<input type='text' name='".$this->elem['id']."_filter[start]' value ='".htmlentities(stripslashes($this->value['start']),ENT_QUOTES,$charset)."'/>
+				&nbsp;".$msg['editions_state_filter_date_end']."&nbsp;
+				<input type='text' name='".$this->elem['id']."_filter[end]' value ='".htmlentities(stripslashes($this->value['end']),ENT_QUOTES,$charset)."'/>
+		</div>";
+	}
 	
 	public function get_form($draggable=false){
-		global $msg,$charset;
-		
-		$form= "
-			<div class='row'>&nbsp;</div>
-			<div class='row' >";
-		if($draggable){
-			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."_drag' draggable='yes' dragtype='editionsstatefilterslist'>";
-		}else{
-			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."' >";
-		}
-		$form.= "<label style='cursor: pointer;'>".htmlentities($this->elem['label'],ENT_QUOTES,$charset)."</label>
-				</div>
-				<div class='colonne_suite'>
-					".$msg['editions_state_filter_date_start']."&nbsp;<input type='text' name='".$this->elem['id']."_filter[start]' value ='".htmlentities(stripslashes($this->value['start']),ENT_QUOTES,$charset)."'/>
-						&nbsp;".$msg['editions_state_filter_date_end']."&nbsp;
-						<input type='text' name='".$this->elem['id']."_filter[end]' value ='".htmlentities(stripslashes($this->value['end']),ENT_QUOTES,$charset)."'/>
-				</div>
-			</div>
+		$form = parent::get_form($draggable);
+		$form .="
 			<!--<script type='text/javascript'>
-					
 				function filter_date_change_form_".$this->elem['id']."(op){
 				document.getElementById('filters_pret_archive_arc_debut').setAttribute('draggable', 'no');
 					var div = document.getElementById('filter_date_".$this->elem['id']."');
@@ -54,8 +44,8 @@ class editions_state_filter_date extends editions_state_filter {
 					}
 				}
 			</script>-->
-			";	
-		return $form;		
+		";
+		return $form;
 	}
 	
 	public function get_sql_filter(){

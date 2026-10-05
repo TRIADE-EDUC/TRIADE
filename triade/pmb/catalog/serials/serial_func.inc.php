@@ -1,41 +1,41 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serial_func.inc.php,v 1.101 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: serial_func.inc.php,v 1.111 2023/07/26 15:07:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$class_path/docs_location.class.php");
 require_once ($include_path."/avis_notice.inc.php");
 require_once($include_path.'/h2o/pmb_h2o.inc.php');
 require_once($class_path.'/records_tabs.class.php');
 require_once($class_path.'/notice.class.php');
 require_once ($class_path."/caddie/caddie_controller.class.php");
+require_once($class_path."/abts_modeles.class.php");
+require_once($class_path."/abts_abonnements.class.php");
 
-// rÃ©sultat de recherche pour gestion des pÃ©riodiques
+// résultat de recherche pour gestion des périodiques
 function show_serial_info($serial_id, $page, $nbr_lignes) {
 	global $serial_action_bar;
-	global $dbh;
 	global $msg;
 	global $nb_per_page_a_search;
 	global $charset;
 	global $deflt_collstate_location,$deflt_bulletinage_location,$location;
 	global $pmb_etat_collections_localise,$pmb_droits_explr_localises,$explr_invisible,$explr_visible_unmod;
-	// barre de restriction des bulletins affichÃ©s
+	// barre de restriction des bulletins affichés
 	global $aff_bulletins_restrict_numero, $aff_bulletins_restrict_date, $aff_bulletins_restrict_periode ;
 	global $sort_children;
-	global $pmb_opac_url;
 	global $pmb_url_base, $categ, $sub, $quoi, $view, $tab_page, $tab_nb_per_page;
 	global $bull_date_start,$bull_date_end;
-	global $pmb_collstate_advanced;
 	global $current;
 	
 	
 	if($view == "collstate"){
 	    if ($pmb_etat_collections_localise) {
 	        global $id;
-	        if((isset($id) && $id) && $deflt_collstate_location === "0"){//Affiche tous les Ã©tats de collection aprÃ¨s crÃ©ation/modification
+	        if((isset($id) && $id) && $deflt_collstate_location === "0"){//Affiche tous les états de collection après création/modification
 	            $location=$deflt_collstate_location;
 	        }else{
 	            $location=((string)$location==""?$deflt_collstate_location:$location);
@@ -48,9 +48,9 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 	$url_suffix = "";
 	if ($quoi) $url_suffix .= "&quoi=".$quoi;
 	if ($tab_page) $url_suffix .= "&tab_page=".$tab_page."&tab_nb_per_page=".$tab_nb_per_page;
-	// lien d'ajout d'une notice mÃ¨re Ã  un caddie
+	// lien d'ajout d'une notice mère à un caddie
 	$cart_click_noti = "onClick=\"openPopUp('./cart.php?object_type=NOTI&item=!!item!!', 'cart')\"";
-	$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_noti>";
+	$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_noti>";
 	
 	if ($current!==false) {
 		$print_action = "&nbsp;<a href='#' onClick=\"openPopUp('./print.php?current_print=$current&notice_id=".$serial_id."&action_print=print_prepare','print'); w.focus(); return false;\"><img src='".get_url_icon('print.gif')."' style='border:0px' class='center' alt=\"".$msg["histo_print"]."\" title=\"".$msg["histo_print"]."\"/></a>";
@@ -59,11 +59,11 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 	$visualise_click_notice="
 	<script type=\"text/javascript\" src='./javascript/select.js'></script>
 	
-	<a href='#' onClick='show_frame(\"$pmb_opac_url"."notice_view.php?id=$serial_id\")'><img src='".get_url_icon('search.gif')."' class='align_middle' title=\"${msg["noti_see_gestion"]}\" style='border:0px' /></a>";
+	<a href='#' onClick='show_frame(\"".$pmb_url_base."opac_css/notice_view.php?id=$serial_id\")'><img src='".get_url_icon('search.gif')."' class='align_middle' title=\"{$msg["noti_see_gestion"]}\" style='border:0px' /></a>";
 	 
-	$base_url = "./catalog.php?categ=serials&sub=view&serial_id=$serial_id";
+	$base_url = serial::get_permalink($serial_id);
 	$serial_action_bar = str_replace('!!serial_id!!', $serial_id, $serial_action_bar);
-	if ($serial_id) $myQuery = pmb_mysql_query("SELECT * FROM notices WHERE notice_id=$serial_id ", $dbh);
+	if ($serial_id) $myQuery = pmb_mysql_query("SELECT * FROM notices WHERE notice_id=$serial_id ");
 	
 	if ($serial_id && pmb_mysql_num_rows($myQuery)) {
 		//Bulletins
@@ -72,7 +72,7 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 		$isbd = new serial_display($myPerio, 5, "",                      "",                 "",                  "",                  "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!");
 		$perio_header = $isbd->header;
 	
-		// isbd du pÃ©riodique
+		// isbd du périodique
 		$perio_isbd = $isbd->isbd;
 		$isbd->get_etat_periodique();
 		$perio_isbd.=$isbd->print_etat_periodique();
@@ -84,21 +84,34 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 		
 		if (!$page) $page=1;
 		$debut = ($page-1)*$nb_per_page_a_search;
-		$nb_bull_loc = 0;
 		switch ($view) {
 			case "abon":
-				$base_url = "./catalog.php?categ=serials&sub=view&serial_id=$serial_id&view=abon".$url_suffix;
-				require_once("views/view_abon.inc.php");
+				$base_url = serial::get_permalink($serial_id)."&view=abon".$url_suffix;
+				
+				$abonnements=new abts_abonnements($serial_id,$location);
+				
+				$bulletins= "<form action='".$base_url."' method='post' name='filter_form'><input type='hidden' name='location' value='$location'/>" ;
+				$bulletins.=$abonnements->show_list();
+				$bulletins.= "</form>" ;
 				break;
 			case "modele":
-				require_once("views/view_modeles.inc.php");
+				$modeles=new abts_modeles($serial_id);
+				$bulletins=$modeles->show_list();
 				break;
 			case "collstate":
-				$base_url = "./catalog.php?categ=serials&sub=view&serial_id=$serial_id&view=collstate".$url_suffix;
-				require_once("views/view_collstate.inc.php");
+				$base_url = serial::get_permalink($serial_id)."&view=collstate".$url_suffix;
+				
+				if($pmb_etat_collections_localise) {
+					$list_collstate_ui = new list_collstate_ui(array('serial_id' => $serial_id, 'bulletin_id' => 0, 'location' => $location));
+				} else {
+					$list_collstate_ui = new list_collstate_ui(array('serial_id' => $serial_id, 'bulletin_id' => 0));
+				}
+				$bulletins = $list_collstate_ui->get_display_list();
+				
+				$pages_display = $list_collstate_ui->get_collstate_pagination();
 				break;				
 			default:
-				// barre de restriction des bulletins affichÃ©s
+				// barre de restriction des bulletins affichés
 				$clause="";
 				if ($aff_bulletins_restrict_numero) {
 					$clause = " and bulletin_numero like '%".str_replace("*","%",$aff_bulletins_restrict_numero)."%' ";
@@ -122,28 +135,22 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 
 				$filter_date=compare_date($bull_date_start,$bull_date_end);
 				//On compte les expl de la localisation
-				$rqt="SELECT COUNT(1) FROM bulletins ".($location?", exemplaires":"")." WHERE ".($location?"(expl_bulletin=bulletin_id and expl_location='$location' or expl_location is null) and ":"")." bulletin_notice='$serial_id' $filter_date ";
-				$myQuery = pmb_mysql_query($rqt, $dbh);
-				$nb_expl_loc = pmb_mysql_result($myQuery,0,0);
+// 				$rqt="SELECT COUNT(1) FROM bulletins ".($location?", exemplaires":"")." WHERE ".($location?"(expl_bulletin=bulletin_id and expl_location='$location' or expl_location is null) and ":"")." bulletin_notice='$serial_id' $filter_date ";
+// 				$myQuery = pmb_mysql_query($rqt);
+// 				$nb_expl_loc = pmb_mysql_result($myQuery,0,0);
 		
-				//On compte les bulletins de la localisation
-				$rqt="SELECT count(distinct bulletin_id) FROM bulletins ".($location?",exemplaires ":"")." WHERE ".($location?"(expl_bulletin=bulletin_id and expl_location='$location') and ":"")." bulletin_notice='$serial_id' $filter_date ";
-				$myQuery = pmb_mysql_query($rqt, $dbh);
-				if ($myQuery && pmb_mysql_num_rows($myQuery)) {
-					$nb_bull_loc = pmb_mysql_result($myQuery,0,0);
-				}
-				//On compte les bulletinsÃ  afficher
+				//On compte les bulletinsà afficher
 				$rqt="SELECT count(distinct bulletin_id) FROM bulletins ".($location?", exemplaires":"")." WHERE ".($location?"(expl_bulletin=bulletin_id and expl_location='$location' or expl_location is null) and ":"")." bulletin_notice='$serial_id' $clause $filter_date ";
-				$myQuery = pmb_mysql_query($rqt, $dbh);
+				$myQuery = pmb_mysql_query($rqt);
 				$nbr_lignes = pmb_mysql_result($myQuery,0,0);
 				
 				require_once("views/view_bulletins.inc.php");
 				break;
 		}
 		
-		// Gestion de la supression de la notice si les droits de modification des exemplaires sont localisÃ©s.  	
+		// Gestion de la supression de la notice si les droits de modification des exemplaires sont localisés.  	
 		$flag_no_delete_notice=0;
-		//visibilitÃ© des exemplaires
+		//visibilité des exemplaires
 		if ($pmb_droits_explr_localises) {
 			global $explr_visible_mod;
 			$explr_tab_modif=explode(",",$explr_visible_mod);			
@@ -161,7 +168,7 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 		$serial_action_bar = str_replace('!!issn!!', $myPerio->code, $serial_action_bar);
 	  	
 		// action_bar : serials.tpl.php...
-	  	// mise Ã  jour des info du javascript	  	
+	  	// mise à jour des info du javascript	  	
 	  	$serial_action_bar = str_replace('!!nb_bulletins!!', $isbd->serial_nb_bulletins, $serial_action_bar);
 	  	$serial_action_bar = str_replace('!!nb_articles!!', $isbd->serial_nb_articles, $serial_action_bar);
 	  	$serial_action_bar = str_replace('!!nb_expl!!', $isbd->serial_nb_exemplaires, $serial_action_bar);
@@ -169,9 +176,9 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 	  	$serial_action_bar = str_replace('!!nb_abo!!', $isbd->serial_nb_abo_actif, $serial_action_bar);
 
 	  	// Titre de la page
-	  	print '<script type="text/javascript">document.title = "'.addslashes(pmb_bidi($isbd->notice->tit1)).'";</script>';
+	  	print '<script type="text/javascript">document.title = "'.addslashes(pmb_bidi(strip_tags($isbd->notice->tit1))).'";</script>';
 	  	
-	    // titre gÃ©nÃ©ral du pÃ©riodique
+	    // titre général du périodique
 	  	print pmb_bidi("
 	  			<div class='row'>
 	  				<div class='notice-perio'>
@@ -185,10 +192,10 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 		// bulletinage
 		$onglets = "
 		<div id='content_onglet_perio'>
-			<span class='".((!$view)?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\" onClick=\"document.location='catalog.php?categ=serials&sub=view&serial_id=".$serial_id.$url_suffix."'\">".$msg["abts_onglet_bull"]."</a></span>
-			<span class='".(($view=="abon")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\" onClick=\"document.location='catalog.php?categ=serials&sub=view&serial_id=".$serial_id."&view=abon".$url_suffix."'\">".$msg["abts_onglet_abt"]."</a></span>
-			<span class='".(($view=="modele")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\"  onClick=\"document.location='catalog.php?categ=serials&sub=view&serial_id=".$serial_id."&view=modele".$url_suffix."'\">".$msg["abts_onglet_modele"]."</a></span>
-			<span class='".(($view=="collstate")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\"  onClick=\"document.location='catalog.php?categ=serials&sub=view&serial_id=".$serial_id."&view=collstate".$url_suffix."'\">".$msg["abts_onglet_collstate"]."</a></span>
+			<span class='".((!$view)?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\" onClick=\"document.location='".serial::get_permalink($serial_id).$url_suffix."'\">".$msg["abts_onglet_bull"]."</a></span>
+			<span class='".(($view=="abon")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\" onClick=\"document.location='".serial::get_permalink($serial_id)."&view=abon".$url_suffix."'\">".$msg["abts_onglet_abt"]."</a></span>
+			<span class='".(($view=="modele")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\"  onClick=\"document.location='".serial::get_permalink($serial_id)."&view=modele".$url_suffix."'\">".$msg["abts_onglet_modele"]."</a></span>
+			<span class='".(($view=="collstate")?"onglet-perio-selected'>":"onglets-perio'>")."<a href=\"#\"  onClick=\"document.location='".serial::get_permalink($serial_id)."&view=collstate".$url_suffix."'\">".$msg["abts_onglet_collstate"]."</a></span>
 		</div>
 		";
 		print $onglets;
@@ -201,12 +208,12 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 			case "modele":
 				$list_locs="";
 				$link_bulletinage = "";
-			break;
+				break;
 			case "abon":
 				if ($location) $temp_location=$location;
 				$list_locs=docs_location::gen_combo_box_empr($temp_location,1,"document.filter_form.location.value=this.options[this.selectedIndex].value; document.filter_form.submit();");
 				$link_bulletinage = "<a href='./catalog.php?categ=serials&sub=pointage&serial_id=$serial_id&location_view=$location'>".$msg["link_notice_to_bulletinage"]."</a>"; 				
-			break;
+				break;
 			case "collstate":
 				if($pmb_etat_collections_localise) {
 					if (($location)) $temp_location=$location;
@@ -214,42 +221,48 @@ function show_serial_info($serial_id, $page, $nbr_lignes) {
 				}				
 				$link_bulletinage = "<input type='button' class='bouton' value='".$msg["collstate_add_collstate"]."' 
 				onClick=\"document.location='./catalog.php?categ=serials&sub=collstate_form&serial_id=$serial_id&id=';\">";				
-			break;
+				break;
 			default:
-				if ($location) $temp_location=$location;	
-				$list_locs=docs_location::gen_combo_box_empr($temp_location,1,"document.filter_form.location.value=this.options[this.selectedIndex].value; document.filter_form.submit();");
-				$link_bulletinage = "<a href='./catalog.php?categ=serials&sub=pointage&serial_id=$serial_id&location_view=$location'>".$msg["link_notice_to_bulletinage"]."</a>";
-				if($nb_bull_loc) {
+				$link_bulletinage = "";
+				/*if($nb_bull_loc) {
 					if($temp_location && $list_locs) {
 						$totaux_loc="<strong>$nb_bull_loc</strong> ".$msg["serial_nb_bulletin"]."
 						<strong>$nb_expl_loc</strong> ".$msg["bulletin_nb_ex"];
 					}
-				}
-			break;			
+				}*/
+				break;			
 		}	
-
-		print pmb_bidi("
-		<div class='bulletins-perio'>
-			<div class='row'>
-				<h3>".($view=="abon"?$msg["perio_abts_title"]:($view=="modele"?$msg["perio_modeles_title"]:($view=="collstate"?$msg["abts_onglet_collstate"]:$msg["4001"])))."&nbsp;$list_locs
-				$link_bulletinage
-				</h3>
-				$totaux_loc
-			</div>
-			<div class='row'>
-				<div class='center'>
-					$pages_display
+		if(empty($view)) {
+			print pmb_bidi("
+			<div class='bulletins-perio'>
+				<div class='row'>
+					<div class='center'>
+						".$pages_display."
+					</div>
 				</div>
-			</div>
-			<div class='row'>
-				$bulletins
-			</div>
-			<div class='row'>
-				<div class='center'>
-					$pages_display
+				<div class='row'>
+					$bulletins
 				</div>
-			</div>
-		</div>");
+			</div>");
+		} else {
+			print pmb_bidi("
+			<div class='bulletins-perio'>
+				<div class='row'>
+					<h3>".($view=="abon"?$msg["perio_abts_title"]:($view=="modele"?$msg["perio_modeles_title"]:($view=="collstate"?$msg["abts_onglet_collstate"]:"")))."&nbsp;$list_locs
+					$link_bulletinage
+					</h3>
+					$totaux_loc
+				</div>
+				<div class='row'>
+					<div class='center'>
+						".($view!="abon" && $view!="modele" ? $pages_display : "")."
+					</div>
+				</div>
+				<div class='row'>
+					$bulletins
+				</div>
+			</div>");
+		}
 		$template_path_serial_tabs =  "./includes/templates/records/records_elements_tabs.html";
 		if(file_exists("./includes/templates/records/records_elements_tabs_subst.html")){
 			$template_path_serial_tabs =  "./includes/templates/records/records_elements_tabs_subst.html";
@@ -282,7 +295,7 @@ function compare_date($date_debut="", $date_fin="") {
 	return $restrict;
 }
 
-// affichage de la liste utilisateurs pour sÃ©lection
+// affichage de la liste utilisateurs pour sélection
 function list_serial($cb, $serial_list, $nav_bar) {
 	global $serial_list_tmpl;
 	$serial_list_tmpl = str_replace("!!cle!!", $cb, $serial_list_tmpl);

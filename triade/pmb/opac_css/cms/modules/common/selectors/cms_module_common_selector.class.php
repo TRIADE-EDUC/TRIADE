@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector.class.php,v 1.19 2017-03-30 14:48:15 dgoron Exp $
+// $Id: cms_module_common_selector.class.php,v 1.23.2.3 2025/01/21 15:29:49 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class cms_module_common_selector extends cms_module_root{
 	protected $sub_selectors = array();
 	protected $value;
 	protected $once_sub_selector=false;
+	public $pages;
 	
 	public function __construct($id=0){
-		$this->id = $id+0;
+		$this->id = intval($id);
 		parent::__construct();
 	}
 	
@@ -23,26 +24,25 @@ class cms_module_common_selector extends cms_module_root{
 	}
 	
 	protected function fetch_datas(){
-		global $dbh;
 		if($this->id){
 			//on commence par aller chercher ses infos
 			$query = " select id_cadre_content, cadre_content_hash, cadre_content_num_cadre, cadre_content_data from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
-				$this->id = $row->id_cadre_content+0;
+				$this->id = (int) $row->id_cadre_content;
 				$this->hash = $row->cadre_content_hash;
-				$this->cadre_parent = $row->cadre_content_num_cadre+0;
+				$this->cadre_parent = (int) $row->cadre_content_num_cadre;
 				$this->unserialize($row->cadre_content_data);
 			}
-			//on va chercher les infos des sous-sÃ©lecteurs...
+			//on va chercher les infos des sous-sélecteurs...
 			$query = "select id_cadre_content, cadre_content_object from cms_cadre_content where cadre_content_type='selector' and cadre_content_num_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row=pmb_mysql_fetch_object($result)){
-				//	$this->sub_selectors[$row->cadre_content_object] = $row->id_cadre_content+0;				
+				    //	$this->sub_selectors[$row->cadre_content_object] = (int) $row->id_cadre_content;				
 					$this->sub_selectors[] = array(
-						'id' => $row->id_cadre_content+0,
+					    'id' => (int) $row->id_cadre_content,
 						'name' => $row->cadre_content_object
 					);	
 				}
@@ -55,7 +55,7 @@ class cms_module_common_selector extends cms_module_root{
 		$form.=$this->get_hash_form();
 		if($this->once_sub_selector==true){
 			$sub_selectors = $this->get_sub_selectors();
-			if(count($sub_selectors)){
+			if(is_countable($sub_selectors) && count($sub_selectors)){
 				$form.= "
 				<div class='row'>				
 					<div class='colonne3'>
@@ -80,7 +80,7 @@ class cms_module_common_selector extends cms_module_root{
 									var tab_sub_selector_js = new Array();
 									$tab_sub_selector_js
 									
-									//on Ã©vite un message d'alerter si le il n'y a encore rien de fait...
+									//on évite un message d'alerter si le il n'y a encore rien de fait...
 									if(document.getElementById('".$this->get_form_value_name("sub_selector_choice_last_value")."').value != ''){
 										var confirmed = confirm('".addslashes($this->msg['cms_module_common_selector_confirm_change_selector'])."');
 									}else{
@@ -111,7 +111,7 @@ class cms_module_common_selector extends cms_module_root{
 					</script>";
 			}else{
 				$form.= "
-					<input type='hidden' name='".$this->get_form_value_name("sub_selector_choice")."' value='".$sub_selectors[0]."'/>";
+					<input type='hidden' name='".$this->get_form_value_name("sub_selector_choice")."' value='".array_key_exists(0, $sub_selectors) ? $sub_selectors[0] : ''."'/>";
 			}
 		}else{
 			if(!$this->id){
@@ -135,15 +135,16 @@ class cms_module_common_selector extends cms_module_root{
 	}
 	public function get_sub_selector_id($name){
 		
-		for($i=0 ; $i<count($this->sub_selectors) ; $i++){
-			if($this->sub_selectors[$i]['name'] ==$name){
-				return $this->sub_selectors[$i]['id'];
-			}
-		}
+	    if (is_countable($this->sub_selectors)) {
+    		for($i=0 ; $i<count($this->sub_selectors) ; $i++){
+    			if($this->sub_selectors[$i]['name'] ==$name){
+    				return $this->sub_selectors[$i]['id'];
+    			}
+    		}
+	    }
 		return 0;
 	}	
 	public function save_form(){
-		global $dbh;
 		$sub_selector_choice = $this->get_value_from_form("sub_selector_choice");	
 		if($sub_selector_choice && $this->once_sub_selector) $this->parameters['sub_selector'] = $sub_selector_choice;
 		$this->get_hash();
@@ -162,41 +163,42 @@ class cms_module_common_selector extends cms_module_root{
 			cadre_content_data = '".addslashes($this->serialize())."'".
 			($this->num_cadre_content ? ",cadre_content_num_cadre_content = '".$this->num_cadre_content."'" : "")."			 
 		".$clause;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			if(!$this->id){
 				$this->id = pmb_mysql_insert_id();
 			}
 			//on enregistre les sous-selecteurs...
 			foreach($this->get_sub_selectors() as $sub_selector_class){
-				$id=$this->get_sub_selector_id($sub_selector_class);
-				$sub_selector = new $sub_selector_class($id);
-				$sub_selector->set_parent($this->id);
-				$sub_selector->set_cadre_parent($this->cadre_parent);
-				$sub_selector->save_form();
+				if(($sub_selector_choice && $this->once_sub_selector && $sub_selector_class == $sub_selector_choice) || !$this->once_sub_selector){
+					$id=$this->get_sub_selector_id($sub_selector_class);
+					$sub_selector = new $sub_selector_class($id);
+					$sub_selector->set_parent($this->id);
+					$sub_selector->set_cadre_parent($this->cadre_parent);
+					$sub_selector->save_form();
+				}
 			}
 			return true;
 		}else{
-			//crÃ©ation du sÃ©lecteur ratÃ©e, on supprime le hash de la table...
+			//création du sélecteur ratée, on supprime le hash de la table...
 			$this->delete_hash();
 			return false;
-		}				
+		}
 	}
 
 	public function set_parent($id){
-		$this->num_cadre_content = $id+0;
+		$this->num_cadre_content = intval($id);
 	}
 	
 	public function set_cadre_parent($id){
-		$this->cadre_parent = $id+0;
+		$this->cadre_parent = intval($id);
 	}
 	
 	public function delete(){
-		global $dbh;
 		if($this->id){
 			//on commence par supprimer les sous-selecteurs
 			$query = "select id_cadre_content, cadre_content_object from cms_cadre_content where cadre_content_num_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$sub_selector = new $row->cadre_content_object($row->id_cadre_content);
@@ -207,9 +209,9 @@ class cms_module_common_selector extends cms_module_root{
 					}
 				}
 			}
-			//plus de sous-sÃ©lecteurs, Ã©liminons-nous !
+			//plus de sous-sélecteurs, éliminons-nous !
 			$query = "delete from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				$this->delete_hash();
 				return true;
@@ -242,7 +244,7 @@ class cms_module_common_selector extends cms_module_root{
 	}
 	
 	/**
-	 * Permet de remonter des Ã©lÃ©ments Ã  exclure du rÃ©sultat
+	 * Permet de remonter des éléments à exclure du résultat
 	 */
 	public function get_excluded_elements() {
 		$selected_sub_selector = $this->get_selected_sub_selector();
@@ -259,7 +261,7 @@ class cms_module_common_selector extends cms_module_root{
 		}else{
 			$description .= print_r($this->parameters,true);
 		}
-		$description .= "</span>";				
+		$description .= "</span>";
 		return $description;
 	}
 }

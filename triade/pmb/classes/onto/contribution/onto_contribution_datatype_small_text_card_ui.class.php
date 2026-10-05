@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_contribution_datatype_small_text_card_ui.class.php,v 1.4 2018-09-24 13:39:22 tsamson Exp $
+// $Id: onto_contribution_datatype_small_text_card_ui.class.php,v 1.9 2021/07/02 14:31:45 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -24,8 +24,8 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param onto_restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -40,12 +40,26 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 		$max = $restrictions->get_max();
 		
 		$form=$ontology_contribution_tpl['form_row_card'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
 		$form=str_replace("!!onto_input_type!!",htmlentities(self::$default_type ,ENT_QUOTES,$charset) , $form);
 		
-		$content='';
 		
-		if(sizeof($datas)){
+		$tab_lang = array();
+		if ($property->multilingue && $property->is_cp()) {
+		    // Champ perso multilingue
+		    $lang = new marc_list('lang');
+		    if (!empty($lang->table)) {
+		        $tab_lang = $lang->table;
+		    }
+		    // Sans langue
+		    $tab_lang[''] = htmlentities($msg['onto_common_datatype_ui_no_lang'], ENT_QUOTES, $charset);
+		}
+		
+		
+		$content='';
+		$multilingue = "";
+		
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -53,7 +67,7 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 			$form=str_replace("!!onto_new_order!!",$new_element_order , $form);
 			
 			foreach($datas as $key=>$data){
-				// On dÃ©crÃ©mente le tableau des langues disponibles
+				// On décrémente le tableau des langues disponibles
 				
 				$row=$ontology_contribution_tpl['form_row_content'];
 				
@@ -65,6 +79,10 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 				$inside_row=$ontology_contribution_tpl['form_row_content_small_text_card'];
 				
 				$inside_row=str_replace("!!onto_row_content_small_text_value!!",htmlentities($data->get_formated_value(), ENT_QUOTES, $charset) ,$inside_row);
+				if ($property->multilingue) {
+				    $multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'['.$order.'][lang]',$instance_name.'_'.$property->pmb_name.'_'.$order.'_lang',$data->get_lang(), 1, '', $tab_lang);
+				}
+				$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 				$inside_row=str_replace("!!onto_row_content_small_text_range!!",$property->range[0] , $inside_row);
 				
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -82,12 +100,16 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 		}else{
 			$form=str_replace("!!onto_new_order!!","0" , $form);
 			
-			// Un champ sans langue par dÃ©faut
+			// Un champ sans langue par défaut
 			$row=$ontology_contribution_tpl['form_row_content'];
 			
 			$inside_row=$ontology_contribution_tpl['form_row_content_small_text_card'];
 			
 			$inside_row=str_replace("!!onto_row_content_small_text_value!!", "", $inside_row);
+			if ($property->multilingue) {
+			    $multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'[0][lang]',$instance_name.'_'.$property->pmb_name.'_'.$order.'_lang', '', 1, '', $tab_lang);
+			}
+			$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 			$inside_row=str_replace("!!onto_row_content_small_text_range!!",$property->range[0] , $inside_row);
 			
 			
@@ -121,8 +143,8 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -132,7 +154,7 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -145,8 +167,8 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 	/**
 	 *
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param onto_restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ©
+	 * @param property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -158,7 +180,7 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 	public static function get_validation_js($item_uri,$property, $restrictions,$datas, $instance_name,$flag){
 		global $msg;
 		return '{
-			"message": "'.addslashes($property->label).'",
+			"message": "'.addslashes($property->get_label()).'",
 			"valid" : true,
 			"nb_values": 0,
 			"error": "",
@@ -167,22 +189,24 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 				this.values = new Array();
 				this.nb_values = 0;
 				this.valid = true;
-				var order = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order").value;
-				for (var i=0; i<=order ; i++){
-					var label = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
-					var lang = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_lang");
-					if (!lang) {
-						lang = {value : ""};
-					}
-					if(label.value != ""){
-						if(!this.values[lang.value]){
-							this.values[lang.value] = 0;
-						}
-						this.values[lang.value]++;
-						if(this.nb_values < this.values[lang.value]) {
-							this.nb_values = this.values[lang.value];
-						}
-					}
+				var order = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order");
+                if (order) {
+    				for (var i=0; i<=order.value ; i++){
+    					var label = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
+    					var lang = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_lang");
+    					if (!lang) {
+    						lang = {value : ""};
+    					}
+    					if(label.value != ""){
+    						if(!this.values[lang.value]){
+    							this.values[lang.value] = 0;
+    						}
+    						this.values[lang.value]++;
+    						if(this.nb_values < this.values[lang.value]) {
+    							this.nb_values = this.values[lang.value];
+    						}
+    					}
+                    }
 				}
 							
 				if(this.nb_values < '.$restrictions->get_min().'){
@@ -204,7 +228,7 @@ class onto_contribution_datatype_small_text_card_ui extends onto_common_datatype
 						this.message = "'.addslashes($msg['onto_error_too_much_values']).'";
 						break;
  				}
-				this.message = this.message.replace("%s","'.addslashes($property->label).'");			
+				this.message = this.message.replace("%s","'.addslashes($property->get_label()).'");			
 				return this.message;	
 			} 	
 		}';	

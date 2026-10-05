@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: surligner.js,v 1.7 2019-05-29 10:59:42 ccraig Exp $
+// $Id: surligner.js,v 1.9 2024/04/26 13:06:45 jparis Exp $
 var surlignage_reg_exp = {};
 
 function surlignage_get_regexp(mot){
@@ -25,7 +25,6 @@ function trouver_mots_f(obj,mot,couleur,litteral,onoff) {
 		
 		var reg_mot = surlignage_get_regexp(mot);	
 		for (i=0; i<childs.length; i++) {
-		
 			if (childs[i].nodeType==3 && childs[i].data.trim() !== "") {
 				if (litteral==0){
 					chaine=childs[i].data.toLowerCase();
@@ -43,7 +42,7 @@ function trouver_mots_f(obj,mot,couleur,litteral,onoff) {
 						reg = chaine.indexOf(elt_found[k],reg); 
 						if (onoff==1) {
 							after_shave=chaine_display.substring(reg+elt_found[k].length);
-							sp=document.createElement('span');
+							sp=document.createElement('mark');
 							if (couleur % 6!=0) {
 								sp.className='text_search'+couleur;
 							} else {
@@ -72,7 +71,10 @@ function trouver_mots_f(obj,mot,couleur,litteral,onoff) {
 					}
 				}
 			} else if (childs[i].nodeType==1 && (childs[i].nodeName != "SCRIPT" && childs[i].nodeName != "IMG")){
-				trouver_mots_f(childs[i],mot,couleur,litteral,onoff);
+				var highlight = childs[i].getAttribute('data-highlight');
+				if(!highlight || (highlight && highlight != 'off')) {
+					trouver_mots_f(childs[i],mot,couleur,litteral,onoff);
+				}
 			}
 		}
 	}

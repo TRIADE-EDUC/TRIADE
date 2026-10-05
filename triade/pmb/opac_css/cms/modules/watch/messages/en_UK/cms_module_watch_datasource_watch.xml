@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_watch_datasource_watch.xml,v 1.3.12.1 2025/04/29 09:37:29 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_watch_datasource_watch_load_items_data">A t-on besoin des informations sur les items associés ?</entry>
+	<entry code="cms_module_watch_datasource_watch_load_items_interesting">Seulement les items intéressants ?</entry>
+	<entry code="cms_module_watch_datasource_watch_load_items_limit">Nombre maximum d'items à renvoyer</entry>
+</XMLlist>

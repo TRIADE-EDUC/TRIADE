@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.4 2016-01-06 15:16:25 apetithomme Exp $ -->
+$Id: en_UK.xml,v 1.4.18.1 2024/07/25 14:42:20 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="long_name">Borrowers access rights - Records</entry>
@@ -17,9 +17,9 @@ $Id: en_UK.xml,v 1.4 2016-01-06 15:16:25 apetithomme Exp $ -->
 	<entry code="user_prf_used_list_lib">Established borrowers roles</entry>
 	<entry code="user_prf_unused_list_lib">Previous borrowers roles to reassign</entry>
 	<entry code="user_prf_calc_lib">Borrower role</entry>
-	<entry code="user_prf_def_lib">Borrower role by default (not precised)</entry>
+	<entry code="user_prf_def_lib">Default borrower role (not precised)</entry>
 	
-	<entry code="res_prf_lib">Records profiles</entry>
+	<entry code="res_prf_lib">Record profiles</entry>
 	<entry code="res_prf_bt_add">Add a profile</entry>
 	<entry code="res_prf_bt_calc">Automatic profiles calculation</entry>
 	<entry code="res_prf_calc_list_lib">Calculated record profiles</entry>

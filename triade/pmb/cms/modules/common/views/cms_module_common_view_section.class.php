@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_section.class.php,v 1.16 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_view_section.class.php,v 1.19.2.2 2025/01/17 10:40:45 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -54,7 +54,7 @@ class cms_module_common_view_section extends cms_module_common_view_django{
 	}
 	
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 // 		global $cms_module_common_view_section_page_section;
@@ -109,7 +109,7 @@ class cms_module_common_view_section extends cms_module_common_view_django{
 	}
 	
 	public function get_page_env_select($pageid,$name,$var=""){
-		$pageid+=0;
+		$pageid = intval($pageid);
 		$page = new cms_page($pageid);
 		$form="
 		<div class='row'>
@@ -129,53 +129,52 @@ class cms_module_common_view_section extends cms_module_common_view_django{
 		return $form;		
 	}
 	
-	public function render($datas){
-		$datas = $this->add_links($datas);
-		return parent::render($datas);
-	}
-	
-	protected function add_links($data,$type='section'){
-		global $opac_url_base;
-		$data['link'] = $opac_url_base."?lvl=cmspage&pageid=".$this->parameters['links'][$type]['page']."&".$this->parameters['links'][$type]['var']."=".$data['id'];
-		if(isset($data['parent']['id'])) {
-			$data['parent'] = $this->add_links($data['parent']);
-		}
-		if(isset($data['children'])) {
-			for ($i=0; $i<count($data['children']) ; $i++){
-				$data['children'][$i] = $this->add_links($data['children'][$i]);
-			}
-		}
-		if(isset($data['articles'])) {
-			for ($i=0; $i<count($data['articles']) ; $i++){
-				$data['articles'][$i] = $this->add_links($data['articles'][$i],'article');
-			}
-		}
-		return $data;
+	public function render($datas) {
+	    $render_datas = [];
+	    $links = [
+	        "article" => $this->get_constructed_link("article", "!!id!!"),
+	        "section" => $this->get_constructed_link("section", "!!id!!")
+	    ];
+	    if (!$datas) {
+	        return parent::render($render_datas);
+	    }
+	    $cms_section = cms_provider::get_instance("section", $datas->id ?? 0);
+	    // Dans le cas d'une liste de rubriques affichée via un template django, on écrase les valeurs de lien définies par celles du module
+	    if ($this->parameters['links']['section']['var'] && $this->parameters['links']['section']['page']) {
+	        $cms_section->set_var_name($this->parameters['links']['section']['var']);
+	        $cms_section->set_num_page($this->parameters['links']['section']['page']);
+	        $cms_section->update_permalink();
+	    }
+	    $render_datas = $cms_section->format_datas($links);
+	    
+	    return parent::render($render_datas);
 	}
 	
 	public function get_format_data_structure(){
 		$format = array();
 		$datasource = new cms_module_common_datasource_section();
 		$format = $datasource->get_format_data_structure();
-		for ($i=0; $i<count($format) ; $i++){
-			if($format[$i]['var'] == 'parent') {
-				$format[$i]['children'][] = array(
-						'var' => "parent.link",
-						'desc'=> $this->msg['cms_module_common_view_section_link_desc']
-				);
-			}
-			if($format[$i]['var'] == 'children') {
-				$format[$i]['children'][] = array(
-						'var' => "children[i].link",
-						'desc'=> $this->msg['cms_module_common_view_section_link_desc']
-				);
-			}
-			if($format[$i]['var'] == 'articles') {
-				$format[$i]['children'][] = array(
-						'var' => "articles[i].link",
-						'desc'=> $this->msg['cms_module_common_view_article_link_desc']
-				);
-			}
+		if (is_countable($format)) {
+    		for ($i=0; $i<count($format) ; $i++){
+    			if($format[$i]['var'] == 'parent') {
+    				$format[$i]['children'][] = array(
+    						'var' => "parent.link",
+    						'desc'=> $this->msg['cms_module_common_view_section_link_desc']
+    				);
+    			}
+    			if($format[$i]['var'] == 'children') {
+    				$format[$i]['children'][] = array(
+    						'var' => "children[i].link",
+    						'desc'=> $this->msg['cms_module_common_view_section_link_desc']
+    				);
+    			}
+    			if($format[$i]['var'] == 'articles') {
+    				$format[$i]['children'][] = array(
+    						'var' => "articles[i].link",
+    						'desc'=> $this->msg['cms_module_common_view_article_link_desc']
+    				);
+    			}
+    		}
 		}
 		$format[] = array(
 				'var' => "link",

@@ -1,6 +1,6 @@
 {% extends 'record_extended_display_b.tpl.html' %}
 
-<!-- $Id: record_for_pdf_extended_b.tpl.html,v 1.2 2017-03-16 12:27:21 dgoron Exp $ -->
+<!-- $Id: record_for_pdf_extended_b.tpl.html,v 1.3 2021/03/23 13:34:59 dgoron Exp $ -->
 
 {% block css_style %}
 	<style type="text/css">
@@ -38,6 +38,10 @@
 {% endblock %}
 
 {% block record_serialcirc_form_actions %}
+{% endblock %}
+
+{% block record_lien_content %}
+	{{ record.lien | limitstring 50 }}
 {% endblock %}
 
 {% block articles %}

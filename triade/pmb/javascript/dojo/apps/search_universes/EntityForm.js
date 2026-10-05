@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntityForm.js,v 1.8 2018-04-18 13:26:37 ngantier Exp $
+// $Id: EntityForm.js,v 1.12 2023/09/08 09:31:56 rtigero Exp $
 
 
 define([
@@ -89,6 +89,22 @@ define([
 			if (cancelButton) {
 			    domStyle.set(cancelButton,'display','none');
 			}
+
+			var duplicateButton = dom.byId('duplicate_button');
+			const universeType = "universe";
+			
+			if(duplicateButton) {
+				this.signals.push(on(duplicateButton,'click', lang.hitch(this, function(evt) {
+					//il faut savoir si on duplique un segment ou un univers
+					if(this.type == universeType) {
+						topic.publish('formButton', 'startDuplicateUniverse', {id : this.id, type : this.type});
+					} else {
+						topic.publish('formButton', 'startDuplicateSegment', {id : this.id, type : this.type});
+					}
+					evt.preventDefault();
+					return false;
+				})));
+			}
 		
 			pmbEventsHandler.initEvents(this);
 		},
@@ -125,7 +141,12 @@ define([
 		},
 		loadDialog : function(params, evt, path) {
 			var dijitId = params.entity_type+"_"+params.entity_id+"_dialog";
-			if(!this.dijits[dijitId]){				
+			if(!this.dijits[dijitId]){
+				var myDijit = registry.byId(dijitId);
+				if (myDijit) {
+					myDijit.destroyDescendants();
+					myDijit.destroy();
+				}
 				this.dijits[dijitId] = new DialogSimple({title: pmbDojo.messages.getMessage('search_universes', 'search_'+params.entity_type+'_'+params.action), executeScripts:true, id : dijitId, style:{width:'85%'}});				
 				this.dijits[dijitId].attr('href', path);
 				this.dijits[dijitId].startup();				
@@ -145,14 +166,16 @@ define([
 			this.dijits[dijitId].show();
 			return this.dijits[dijitId];
 		},
+		
 		hideDialog : function(params) {
 			if (!params.className) {
 				params.className = this.className;
 			}
-			var dijitId = params.entity_type+"_"+params.entity_id+"_dialog";
-			if(this.dijits[dijitId]){
+			var dijitId = params.entity_type + "_" + params.entity_id + "_dialog";
+			if (this.dijits[dijitId]) {
 				this.dijits[dijitId].hide();
-//				this.dijits[dijitId].destroy();
+				this.dijits[dijitId].destroyRecursive();
+				this.dijits = [];
 			}
 		},
 		

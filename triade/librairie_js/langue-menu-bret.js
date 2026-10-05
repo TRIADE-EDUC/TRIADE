@@ -170,7 +170,7 @@ langmenuscolaire15="Merañ kelc'hlizheroù";
 langmenuscolaire16="Merañ prouadoù";
 // #########################
 // pied de page
-langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidit&eacute; de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>A-benn gwelet al lec'hienn-mañ ar gwellañ ma c'haller : spister izelañ : 800x600 <br>  T.R.I.A.D.E.  2024 - Holl wirioù miret";
+langmenupied="<p> La <b>T</b>ransparence et la <b>R</b>apidit&eacute; de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>A-benn gwelet al lec'hienn-mañ ar gwellañ ma c'haller : spister izelañ : 800x600 <br>  T.R.I.A.D.E.  2026 - Holl wirioù miret";
 img_logo_pied="<img src='./image/commun/triade-xhtml.jpg' alt='XHTML'>  <img src='./image/commun/triade-w3C.jpg' alt='w3C'> <img src='./image/commun/triade-css.png' alt='css' > <a href='http://www.triade-educ.com/accueil/don-triade.php' target='_blank' ><img border='0' src='./image/commun/triade_paypal.png' alt='Paypal' ></a><br /><br />";
 // --------------
 // #########################

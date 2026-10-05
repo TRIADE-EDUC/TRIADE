@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_aiss.inc.php,v 1.4 2018-01-09 08:54:31 jpermanne Exp $
+// $Id: func_aiss.inc.php,v 1.5 2020/09/29 14:33:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// DEBUT paramÃ©trage propre Ã  la base de donnÃ©es d'importation :
-global $class_path; //NÃ©cessaire pour certaines inclusions
+// DEBUT paramétrage propre à la base de données d'importation :
+global $class_path; //Nécessaire pour certaines inclusions
 require_once($class_path."/serials.class.php");
 require_once($class_path."/categories.class.php");
 require_once($class_path."/noeuds.class.php");
@@ -52,7 +52,7 @@ function recup_noticeunimarc_suite($notice) {
 	}else{
 	}
 
-} // fin recup_noticeunimarc_suite = fin rÃ©cupÃ©ration des variables propres Ã  la bretagne
+} // fin recup_noticeunimarc_suite = fin récupération des variables propres à la bretagne
 	
 function import_new_notice_suite() {
 	global $info_461,$info_463,$info_530;
@@ -69,7 +69,7 @@ function import_new_notice_suite() {
 	
 	//cas d'un article
 	if ($bl == "a" && $hl == "2"){
-		//on peut pas dÃ©couper une date, on a pas de date mais une mention
+		//on peut pas découper une date, on a pas de date mais une mention
 		if(decoupe_date($info_463[0]["d"]) == 0 && clean_string($info_463[0]["e"]) == ""){
 			$info_463[0]["e"] = $info_463[0]["d"];
 			$info_463[0]["d"] = "";
@@ -126,7 +126,7 @@ function import_new_notice_suite() {
 					$categ_to_index = $categ_id;
 				}
 			}else{
-				//le terme est Ã  crÃ©Ã©
+				//le terme est à créé
 				$n = new noeuds();
 				$n->num_thesaurus = $id_thesaurus;
 				$n->num_parent = $non_classes;
@@ -149,7 +149,7 @@ function import_new_notice_suite() {
 	pmb_mysql_query($up);
 	
 	//traitement des Champs perso
-	//classique on commence par cherchÃ© l'id
+	//classique on commence par cherché l'id
 	foreach ($info_900 as $champperso){ 
 		$champ = array(
 			'libelle' => $champperso['l'],
@@ -183,7 +183,7 @@ function import_new_notice_suite() {
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction spÃ©cifique d'export de la zone 995
+// fonction spécifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {}	
 
 
@@ -205,7 +205,7 @@ function genere_perio($perio_info){
 	$search = "select notice_id from notices where tit1 LIKE '".addslashes($perio_info['titre'])."' and niveau_biblio = 's' and niveau_hierar = '1'";
 	$res = pmb_mysql_query($search);
 	if(pmb_mysql_num_rows($res) == 0){
-		//il existe pas, faut le crÃ©er
+		//il existe pas, faut le créer
 		$insert = "insert into notices set tit1 = '".addslashes($perio_info['titre'])."', code = '".$perio_info['code']."', niveau_biblio = 's', niveau_hierar = '1'";
 		$result = pmb_mysql_query($insert);
 		$perio_id = pmb_mysql_insert_id();
@@ -215,7 +215,7 @@ function genere_perio($perio_info){
 
 function genere_bulletin($perio_info,$bull_info,$isbull=true){
 	global $bl,$hl,$notice_id;
-	//on rÃ©cup et/ou gÃ©nÃ¨re le pÃ©rio
+	//on récup et/ou génère le pério
 	$perio_id = genere_perio($perio_info);
 	//on s'occupe du cas ou on a pas de titre pour le bulletin
 	// num (mention) [date]
@@ -234,7 +234,7 @@ function genere_bulletin($perio_info,$bull_info,$isbull=true){
 		$bull_id = pmb_mysql_insert_id();
 	}else {
 		$bull_id = pmb_mysql_result($res,0,0);
-		//on regarde si une notice n'existe pas dÃ©jÃ  pour ce bulletin
+		//on regarde si une notice n'existe pas déjà pour ce bulletin
 		$req = "select num_notice from bulletins where bulletin_id = $bull_id and num_notice != 0";
 		$res = pmb_mysql_query($req);
 		//si oui on retire l'enregistrement en cours, et on continue sur la notice existante...
@@ -295,13 +295,13 @@ function checkIfExist($path,$file){
 function recup_champ_perso($champ,$table,$notice_id,$create=false){
 	$id_champ = trouve_champ_perso($champ['nom'],$table);
 	if ($id_champ){
-		//on rÃ©cup de le type de champ
+		//on récup de le type de champ
 		$type = "select type from ".$table."_custom where idchamp=$id_champ";
 		$res = pmb_mysql_query($type);
 		$type = pmb_mysql_result($res,0,0);
 		renseigne_champ_perso($champ['nom'],$type,$champ['value'],$notice_id,$table);
 	}else if($create){
-		//on l'a pas, on crÃ©e
+		//on l'a pas, on crée
 		//enfin on verra ca plus tard...
 	}
 }
@@ -379,47 +379,49 @@ function renseigne_champ_perso($nom,$type,$value,$notice_id,$table="notices") {
 }	
 
 //Pour le formatage de la date
-function decoupe_date($date_nom_formate,$annee_seule=false){
-	$date="";
-	$tab=preg_split("/\D/",$date_nom_formate);
-	
-	switch(count($tab)){
-		case 3 :
-			if(strlen($tab[0]) == 4){
-				$date=$tab[0]."-".$tab[1]."-".$tab[2];
-			}elseif(strlen($tab[2]) == 4){
-				$date=$tab[2]."-".$tab[1]."-".$tab[0];
-			}elseif($tab[0] > 31){
-				$date="19".$tab[0]."-".$tab[1]."-".$tab[2];
-			}elseif($tab[2] > 31){
-				$date="19".$tab[2]."-".$tab[1]."-".$tab[0];
-			}
-			break;
-		case 2 :
-			if(strlen($tab[0]) == 4){
-				$date=$tab[0]."-".$tab[1]."-01";
-			}elseif(strlen($tab[1]) == 4){
-				$date=$tab[1]."-".$tab[0]."-01";
-			}elseif($tab[0] > 31){
-				$date="19".$tab[0]."-".$tab[1]."-01";
-			}elseif($tab[1] > 31){
-				$date="19".$tab[1]."-".$tab[0]."-01";
-			}
-			break;
-		case 1 :
-			if(strlen($tab[0]) == 8){
-				$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".substr($tab[0],6,2);
-			}elseif(strlen($tab[0]) == 6){
-				$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-01";
-			}elseif(strlen($tab[0]) == 4){
-				$date=substr($tab[0],0,4)."-01-01";
-			}
+if(!function_exists('decoupe_date')) {
+	function decoupe_date($date_nom_formate,$annee_seule=false){
+		$date="";
+		$tab=preg_split("/\D/",$date_nom_formate);
+		
+		switch(count($tab)){
+			case 3 :
+				if(strlen($tab[0]) == 4){
+					$date=$tab[0]."-".$tab[1]."-".$tab[2];
+				}elseif(strlen($tab[2]) == 4){
+					$date=$tab[2]."-".$tab[1]."-".$tab[0];
+				}elseif($tab[0] > 31){
+					$date="19".$tab[0]."-".$tab[1]."-".$tab[2];
+				}elseif($tab[2] > 31){
+					$date="19".$tab[2]."-".$tab[1]."-".$tab[0];
+				}
+				break;
+			case 2 :
+				if(strlen($tab[0]) == 4){
+					$date=$tab[0]."-".$tab[1]."-01";
+				}elseif(strlen($tab[1]) == 4){
+					$date=$tab[1]."-".$tab[0]."-01";
+				}elseif($tab[0] > 31){
+					$date="19".$tab[0]."-".$tab[1]."-01";
+				}elseif($tab[1] > 31){
+					$date="19".$tab[1]."-".$tab[0]."-01";
+				}
+				break;
+			case 1 :
+				if(strlen($tab[0]) == 8){
+					$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-".substr($tab[0],6,2);
+				}elseif(strlen($tab[0]) == 6){
+					$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-01";
+				}elseif(strlen($tab[0]) == 4){
+					$date=substr($tab[0],0,4)."-01-01";
+				}
+		}
+		
+		if($annee_seule){
+			return substr($date,0,4);
+		}else{
+			return $date;
+		}
+		
 	}
-	
-	if($annee_seule){
-		return substr($date,0,4);
-	}else{
-		return $date;
-	}
-	
 }

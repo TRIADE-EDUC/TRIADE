@@ -1,9 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
 
 function forbidden($image_path='../images') {
+  global $charset;
 
 print "<!DOCTYPE html>
 <html>
@@ -16,7 +17,7 @@ print "<!DOCTYPE html>
     </title>
   </head>
   <body bgcolor=\"#ffffff\">
-  	
+
     <br />
 
     <br />

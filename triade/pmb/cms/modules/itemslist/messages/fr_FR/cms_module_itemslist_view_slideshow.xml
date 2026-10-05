@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_itemslist_view_slideshow.xml,v 1.1 2019/12/12 15:49:07 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_itemslist_view_django_build_item_link">Construction du lien vers un item</entry>
+	<entry code="cms_module_itemslist_view_django_item_link_desc">Lien vers l'item</entry>
+	<entry code="cms_module_itemslist_view_django_build_tag_link">Construction du lien vers un tag</entry>
+	<entry code="cms_module_itemslist_view_django_tag_link_desc">Lien vers le tag</entry>
+</XMLlist>

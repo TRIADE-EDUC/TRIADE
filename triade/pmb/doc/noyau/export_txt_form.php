@@ -21,13 +21,13 @@ header("Content-Disposition: attachement; filename=\"tables_export.txt\"");
 		$t=$t_table[$key]['ATTRS'];
 		print "Table".sep(2).$t_table[$key]['NAME'].$ln;
 		print "Description".sep(1).$t_table[$key]['DESC'].$ln.$ln;
-		print sep(13)."   RÃ©fÃ©rences".$ln.sep(1)."Nom champ".sep(2)."Type".sep(3)."Signe".sep(2)."Infos. complÃ©mentaires".sep(2)."Ã  d'autres tables".sep(1)."Valeur par dÃ©faut".sep(1)."Description".$ln.$ln;
+		print sep(13)."   Références".$ln.sep(1)."Nom champ".sep(2)."Type".sep(3)."Signe".sep(2)."Infos. complémentaires".sep(2)."à d'autres tables".sep(1)."Valeur par défaut".sep(1)."Description".$ln.$ln;
 		
 		foreach ($t as $k=>$v)
 		{
-			if(strlen($v['SIGNE'])<12){$sign="SignÃ©";}else{ $sign="Non signÃ©";}
-			$cle="ClÃ© primaire";
-			if(strlen($v['KEY'])==0){$cle="";}elseif(strlen($v['KEY'])>20){$cle="ClÃ© Ã©trangÃ¨re";}
+			if(strlen($v['SIGNE'])<12){$sign="Signé";}else{ $sign="Non signé";}
+			$cle="Clé primaire";
+			if(strlen($v['KEY'])==0){$cle="";}elseif(strlen($v['KEY'])>20){$cle="Clé étrangère";}
 			print sep(1).elt($v['NAME']).elt($v['TYPE']).elt($sign).elt($cle).elt($t_table[$v['REF']]['NAME']).elt($v['DEFVAL']).elt($v['DESC']).$ln;
 		}
 		

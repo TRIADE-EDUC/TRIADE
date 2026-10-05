@@ -1,40 +1,43 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_root.class.php,v 1.15 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: docwatch_root.class.php,v 1.18.4.1 2025/03/17 08:15:42 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/cms/cms_pages.class.php");
 
 /**
  * class docwatch_root
- * 
+ *
  */
 class docwatch_root{
 
 	protected $msg = array();
-	
+
+	protected $parameters;
+
 	/** Aggregations: */
 
 	/** Compositions: */
 
 	/** Fonctions: */
-	
+
 	public function __construct($id=0) {
 		$this->load_msg();
 	} // end of member function __construct
-	
+
 	protected function load_msg(){
 		if (!count($this->msg)) {
 			global $lang;
 			global $class_path;
-	
-			//on regarde la langue par dÃ©faut du module
+
+			//on regarde la langue par défaut du module
 			$default_language = "fr_FR";
-			//si elle est diffÃ©rente de celle de l'interface, on l'intÃ¨gre
-			// la langue par dÃ©faut donne l'assurance d'avoir tous les messages...
+			//si elle est différente de celle de l'interface, on l'intègre
+			// la langue par défaut donne l'assurance d'avoir tous les messages...
 			if($default_language != $lang){
 			    $file = $class_path."/docwatch/messages/".$default_language."/".static::class.".xml";
 				$this->load_msg_file($file);
@@ -43,9 +46,8 @@ class docwatch_root{
 			$this->load_msg_file($file);
 		}
 	}
-	
+
 	protected function load_msg_file($file){
-		global $charset;
 		global $cache_msg_file;
 		if(!$cache_msg_file || !is_array($cache_msg_file)){
 			$cache_msg_file=array();
@@ -62,27 +64,27 @@ class docwatch_root{
 			return false;
 		}
 	}
-	
+
 	public function serialize(){
 		return serialize($this->parameters);
 	} // end of member function serialize
-	
+
 	public function unserialize($parameters){
 		$this->parameters = unserialize($parameters);
 	} // end of member function unserialize
-		
+
 	protected function get_form_value_name($name){
 		//calcule le hash si pas encore fait...
 		return $name;
 // 		return $this->get_hash()."_".$name;
 	}
-	
+
 	protected function get_value_from_form($name){
 		$var_name = $this->get_form_value_name($name);
 		global ${$var_name};
 		return ${$var_name};
 	}
-	
+
 	protected static function charset_normalize($elem,$input_charset){
 		global $charset;
 		if(is_array($elem)){
@@ -93,12 +95,12 @@ class docwatch_root{
 			//PMB dans un autre charset, on converti la chaine...
 			$elem = self::clean_cp1252($elem, $input_charset);
 			if($charset != $input_charset){
-				$elem = iconv($input_charset,$charset,$elem);
+				$elem = iconv($input_charset,$charset . '//IGNORE',$elem);
 			}
 		}
 		return $elem;
 	}
-	
+
 	protected static function clean_cp1252($str,$charset){
 		$cp1252_map = array();
 		switch($charset){
@@ -168,8 +170,8 @@ class docwatch_root{
 		}
 		return strtr($str, $cp1252_map);
 	}
-	
-	
+
+
 	public static function prefix_var_tree($tree,$prefix){
 		for($i=0 ; $i<count($tree) ; $i++){
 			$tree[$i]['var'] = $prefix.".".$tree[$i]['var'];
@@ -179,18 +181,18 @@ class docwatch_root{
 		}
 		return $tree;
 	}
-	
+
 	protected function save_constructor_link_form($type,$class_name){
 		$method = $class_name."_link_".$type."_method";
 		$page = $class_name."_link_".$type;
 		$var = $class_name."_page_".$type."_var";
 		$url = $class_name."_link_".$type."_url";
-	
+
 		global ${$method};
 		global ${$page};
 		global ${$var};
 		global ${$url};
-		
+
 		$this->parameters['links'][$type] = array();
 		switch(${$method}) {
 			case $page."_select_cms_page":
@@ -208,16 +210,16 @@ class docwatch_root{
 				break;
 		}
 	}
-	
+
 	public function get_constructor_link_form($type,$class_name=""){
-		global $dbh,$msg,$charset;
-		
+		global $msg,$charset;
+
 		if(!isset($this->parameters['links'][$type]['method'])) $this->parameters['links'][$type]['method'] = '';
 		if(!isset($this->parameters['links'][$type]['url'])) $this->parameters['links'][$type]['url'] = '';
 		if(!isset($this->parameters['links'][$type]['page'])) $this->parameters['links'][$type]['page'] = '';
-		
+
 		$name = $class_name."_link_".$type;
-	
+
 		$form = "
 				<select id='".$name."_method' name='".$name."_method' onChange='".$class_name."_load_".$type."_method_env(this);'>
 					<option value=''>".htmlentities($msg['dsi_docwatch_datasource_link_constructor_method'], ENT_QUOTES, $charset)."</option>
@@ -238,7 +240,7 @@ class docwatch_root{
 								document.getElementById('".$name."_select_cms_page').setAttribute('style','display:none;');
 								if(document.getElementById('".$name."_env')) {
 									document.getElementById('".$name."_env').setAttribute('style','display:none;');
-								}		
+								}
 								document.getElementById('".$name."_input_url').setAttribute('style','');
 								break;
 							default:
@@ -252,7 +254,7 @@ class docwatch_root{
 					}
 				</script>
 					";
-		
+
 		$form .= "
 				<br />
 				<div id='".$name."_select_cms_page' name='".$name."_select_cms_page' ".(!$this->parameters['links'][$type]['page'] ? "style='display:none;'" : "").">
@@ -262,11 +264,11 @@ class docwatch_root{
 			 		<div class='row'>
 						<select id='".$name."' name='".$name."' onChange='".$class_name."_load_".$type."_page_env();'>
 							<option value='0'>".htmlentities($msg['dsi_docwatch_datasource_link_constructor_page'], ENT_QUOTES, $charset)."</option>";
-	
+
 		$query = "select id_page,page_name from cms_pages order by 2";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
-				
+
 			while( $row = pmb_mysql_fetch_object($result)){
 				$form.= "
 							<option value='".$row->id_page."' ".($row->id_page == $this->parameters['links'][$type]['page'] ? "selected='selected'" : "").">".htmlentities($row->page_name,ENT_QUOTES,$charset)."</option>";
@@ -302,8 +304,8 @@ class docwatch_root{
 
 	public function get_page_env_select($pageid,$name,$var=""){
 		global $msg,$charset;
-		
-		$pageid+=0;
+
+		$pageid = intval($pageid);
 		$page = new cms_page($pageid);
 		$form="
 		<div class='row'>
@@ -320,7 +322,7 @@ class docwatch_root{
 		</div>";
 		return $form;
 	}
-	
+
 	protected function get_constructed_link($type,$value,$is_bulletin = false){
 		global $pmb_opac_url;
 		$link = "";
@@ -355,10 +357,10 @@ class docwatch_root{
 		}
 		return $link;
 	}
-	
+
 	protected function format_text($text){
 		global $charset;
 		return htmlentities($text,ENT_QUOTES,$charset);
 	}
-	
+
 } // end of docwatch_root

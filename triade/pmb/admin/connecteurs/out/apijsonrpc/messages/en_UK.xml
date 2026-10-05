@@ -5,11 +5,12 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.2 2019/08/01 13:52:00 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="apijsonrpc_exported_functions">Exported API functions</entry>
 	<entry code="apijsonrpc_no_configuration_required">Nothing to configure</entry>
     <entry code="apijsonrpc_service_endpoint">Address of the webservice</entry>
     <entry code="apijsonrpc_service_endpoint_unrecorded">Register the source to have it</entry>
+    <entry code="apijsonrpc_auth_connexion_phrase">Phrase de connexion utilisée pour l'authentification</entry>
 </XMLlist>

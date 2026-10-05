@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.1 2022/12/09 11:49:12 qvarin Exp $ 
+-->
+
+<manifest>
+	<type>entity</type>
+	<namespace>Pmb\Thumbnail\Models\Entities\Record\Record</namespace>
+	<entity_type>record</entity_type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+</manifest>

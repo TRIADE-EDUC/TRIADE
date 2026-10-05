@@ -1,103 +1,35 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: procs.class.php,v 1.21 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: procs.class.php,v 1.33.2.2.2.3 2025/03/25 10:24:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des procÃ©dures
-
+// définition de la classe de gestion des procédures
+global $class_path, $include_path;
 require_once($class_path."/remote_procedure_client.class.php");
 require_once($class_path."/remote_procedure.class.php");
 require_once($include_path."/templates/procs_exp_imp.tpl.php");
 
 class procs {
 	
-	static $module = 'admin';
-	static $table = 'procs';
+	public static $module = 'admin';
+	public static $table = 'procs';
 	
 	public function __construct() {
 	}
 	
-	public static function get_display_list() {
-		global $base_path, $msg;
-		global $javascript_path;
-		global $PMBuserid;
-		
-		$display = "
-		<script type=\"text/javascript\" src=\"".$javascript_path."/tablist.js\"></script>
-		<span class='item-expand'>
-			<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' style='border:0px' id=\"expandall\"></a>
-			<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' style='border:0px' id=\"collapseall\"></a>
-		</span>
-		";
-		// affichage du tableau des procÃ©dures
-		$query = "SELECT idproc, name, requete, comment, autorisations, autorisations_all, libproc_classement, num_classement FROM procs left join procs_classements on idproc_classement=num_classement ORDER BY libproc_classement,name ";
-		$result = pmb_mysql_query($query);
-		$class_prec=$msg['proc_clas_aucun'];
-		$buf_tit="";
-		$buf_contenu="";
-		$buf_class=0;
-		$parity=1;
-		while($row = pmb_mysql_fetch_object($result)) {
-			$rqt_autorisation=explode(" ",$row->autorisations);
-			if ((static::$module=='admin' && ($PMBuserid==1 || $row->autorisations_all || array_search ($PMBuserid, $rqt_autorisation)!==FALSE))
-				|| (static::$module=='edit' && ($PMBuserid==1 || $row->autorisations_all || array_search ($PMBuserid, $rqt_autorisation)!==FALSE) && pmb_strtolower(pmb_substr(trim($row->requete),0,6))=='select')) {
-				$classement=$row->libproc_classement;
-				if ($class_prec!=$classement) {
-					if (!$row->libproc_classement) $row->libproc_classement=$msg['proc_clas_aucun'];
-					if ($buf_tit) {
-						$buf_contenu="<table><tr><th colspan=4>".$buf_tit."</th></tr>".$buf_contenu."</table>";
-						$display .= gen_plus("procclass".$buf_class,$buf_tit,$buf_contenu);
-						$buf_contenu="";
-					}
-					$buf_tit=$row->libproc_classement;
-					$buf_class=$row->num_classement;
-					$class_prec=$classement;
-				}
-				if ($parity % 2) {
-					$pair_impair = "even";
-				} else {
-					$pair_impair = "odd";
-				}
-				$parity += 1;
-				$tr_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\"  ";
-				$buf_contenu.="\n<tr class='$pair_impair' $tr_javascript style='cursor: pointer'>";
-				
-				if(static::$module=='edit') {
-					$action = "onmousedown=\"document.location='./edit.php?categ=procs&sub=&action=execute&id_proc=".$row->idproc."';\"";
-					$buf_contenu.="
-						<td $action>
-							<strong>".$row->name."</strong><br />
-							<small>".$row->comment."&nbsp;</small>
-						</td>";
-				} else {
-					$action = "onmousedown=\"document.location='".static::format_url("&action=modif&id=".$row->idproc)."';\"";
-					$buf_contenu.="
-						<td style='width:10px'>
-						<input class='bouton' type='button' value=' $msg[708] ' onClick=\"document.location='".static::format_url("&action=execute&id=".$row->idproc)."'\" />
-						</td>
-						<td $action>
-							<strong>".$row->name."</strong><br />
-							<small>".$row->comment."&nbsp;</small>
-						</td>";
-					if (preg_match_all("|!!(.*)!!|U",$row->requete,$query_parameters)) {
-						$buf_contenu.="<td>
-									<a href='admin.php?categ=proc&sub=proc&action=configure&id_query=".$row->idproc."'>".$msg["procs_options_config_param"]."</a>";
-					} else {
-						$buf_contenu.="<td $action>";
-					}
-					$buf_contenu.="</td>";
-					$buf_contenu.="<td><input class='bouton' type='button' value=\"".$msg['procs_bt_export']."\" onClick=\"document.location='./export.php?quoi=procs&sub=actionsperso&id=".$row->idproc."'\" /></td>";
-				}
-				$buf_contenu.="</tr>";
-			}
+	protected static function get_list_ui_instance($filters=array(), $pager=array(), $applied_sort=array()) {
+		if(static::$module=='edit') {
+			return list_procs_edition_ui::get_instance($filters, $pager, $applied_sort);
+		} else {
+			return list_procs_ui::get_instance($filters, $pager, $applied_sort);
 		}
-		$buf_contenu="<table><tr><th colspan=4>".$buf_tit."</th></tr>".$buf_contenu."</table>";
-		$display .= gen_plus("procclass".$buf_class,$buf_tit,$buf_contenu);
-		
-		return $display;
+	}
+	
+	public static function get_display_list() {
+		return static::get_list_ui_instance()->get_display_list();
 	}
 	
 	public static function create() {
@@ -105,7 +37,7 @@ class procs {
 		global $f_proc_name;
 		global $f_proc_code;
 		global $f_proc_comment;
-		global $userautorisation;
+		global $autorisations;
 		global $autorisations_all;
 		global $form_classement;
 		global $form_notice_tpl;
@@ -116,12 +48,12 @@ class procs {
 			$result = pmb_mysql_query($query);
 			$nbr_lignes = pmb_mysql_result($result, 0, 0);
 			if(!$nbr_lignes) {
-				if (is_array($userautorisation)) {
-					$autorisations=implode(" ",$userautorisation);
+				if (is_array($autorisations)) {
+					$autorisations=implode(" ",$autorisations);
 				} else {
 					$autorisations='';
 				}
-				$autorisations_all += 0;
+				$autorisations_all = intval($autorisations_all);
 				$param_name=parameters::check_param($f_proc_code);
 				if ($param_name!==true) {
 					error_message_history($param_name, sprintf($msg["proc_param_check_field_name"],$param_name), 1);
@@ -141,20 +73,20 @@ class procs {
 		global $f_proc_name;
 		global $f_proc_code;
 		global $f_proc_comment;
-		global $userautorisation;
+		global $autorisations;
 		global $autorisations_all;
 		global $form_classement;
 		global $form_notice_tpl;
 		global $form_notice_tpl_field;
 		
-		$id += 0;
+		$id = intval($id);
 		if($id) {
-			if (is_array($userautorisation)) {
-				$autorisations=implode(" ",$userautorisation);
+			if (is_array($autorisations)) {
+				$autorisations=implode(" ",$autorisations);
 			} else {
 				$autorisations="";
 			}
-			$autorisations_all += 0;
+			$autorisations_all = intval($autorisations_all);
 			$param_name=parameters::check_param($f_proc_code);
 			if ($param_name!==true) {
 				error_message_history($param_name, sprintf($msg["proc_param_check_field_name"],$param_name), 1);
@@ -167,93 +99,113 @@ class procs {
 		return false;
 	}
 	
+	public static function get_query_data($id=0) {
+	    return "SELECT idproc, name, requete, comment, autorisations, autorisations_all, num_classement, 
+            proc_notice_tpl, proc_notice_tpl_field 
+            FROM ".static::$table." WHERE idproc=".$id;
+	}
+	
+	public static function get_data($id=0) {
+	    $id = intval($id);
+	    $data = ['type' => '', 'name' => '', 'requete' => '', 'comment' => '',
+	        'autorisations' => '', 'autorisations_all' => 1,
+	        'num_classement' => 0, 'notice_tpl_field' => ''
+	    ];
+	    if($id) {
+	        $query = static::get_query_data($id);
+	        $result = pmb_mysql_query($query);
+	        if(pmb_mysql_num_rows($result)) {
+	            $row = pmb_mysql_fetch_object($result);
+	            if (isset($row->type)) {
+	                $data['type'] = $row->type;
+	            }
+	            $data['name'] = $row->name;
+	            if (isset($row->num_classement)) {
+	               $data['num_classement'] = $row->num_classement;
+	            }
+	            $data['requete'] = $row->requete;
+	            $data['comment'] = $row->comment;
+	            if (isset($row->proc_notice_tpl_field)) {
+                    $data['notice_tpl_field'] = $row->proc_notice_tpl_field;
+	            }
+	            $data['autorisations_all'] = $row->autorisations_all;
+	            $data['autorisations'] = $row->autorisations;
+	        }
+	    }
+	    return $data;
+	}
+	
+	public static function get_proc_content_form($id=0, $data=[]) {
+	    global $msg;
+	    global $num_classement;
+	    
+	    $interface_content_form = new interface_content_form(static::class);
+	    $interface_content_form->add_element('f_proc_name', '705')
+	    ->set_class('colonne2')
+	    ->add_input_node('text', $data['name'])
+	    ->set_maxlength(255);
+	    
+	    if($id) {
+	        $num_classement = $data['num_classement'];
+	    } else {
+	        $num_classement = intval($num_classement);
+	    }
+	    $combo_clas= gen_liste ("SELECT idproc_classement,libproc_classement FROM procs_classements ORDER BY libproc_classement ", "idproc_classement", "libproc_classement", "form_classement", "", $num_classement, 0, $msg['proc_clas_aucun'],0, $msg['proc_clas_aucun']) ;
+	    $interface_content_form->add_element('classement', 'proc_clas_proc')
+	    ->set_class('colonne_suite')
+	    ->add_html_node($combo_clas);
+	    $interface_content_form->add_element('f_proc_code', '706')
+	    ->add_textarea_node($data['requete'], 80, 8);
+	    $interface_content_form->add_element('f_proc_comment', '707')
+	    ->add_input_node('text', $data['comment'])
+	    ->set_maxlength(255);
+	    $interface_content_form->add_element('form_notice_tpl_field', 'notice_tpl_notice_id')
+	    ->add_input_node('text', $data['notice_tpl_field'])
+	    ->set_class('saisie-15em');
+	    $interface_content_form->add_element('autorisations_all', 'procs_autorisations_all', 'flat')
+	    ->add_input_node('boolean', $data['autorisations_all']);
+	    $interface_content_form->add_inherited_element('permissions_users', 'tab_autorisations', 'procs_autorisations')
+	    ->set_autorisations($data['autorisations'])
+	    ->set_on_create(($id ? 0 : 1));
+	    
+	    return $interface_content_form->get_display();
+	}
+	
+	protected static function get_interface_form_instance() {
+	    return new interface_admin_form('maj_proc');
+	}
+	
+	protected static function has_form_execute_button($id=0, $type='ACTION') {
+	    return true;
+	}
+	
 	public static function get_proc_form($id=0) {
-		global $base_path, $msg;
-		global $admin_proc_form;
-		global $charset;
-		global $PMBuserid;
-	
-		$id += 0;
-		$form = $admin_proc_form;
-		$autorisations = array();
-		$num_classement = 0;
-		if($id) {
-			$query = "SELECT idproc, name, requete, comment, autorisations, autorisations_all, num_classement, proc_notice_tpl, proc_notice_tpl_field FROM ".static::$table." WHERE idproc=".$id;
-			$result = pmb_mysql_query($query);
-			if(pmb_mysql_num_rows($result)) {
-				$row = pmb_mysql_fetch_object($result);
-				$autorisations_donnees=explode(" ",$row->autorisations);
-				$query_users = "SELECT userid, username FROM users order by username ";
-				$result_users = pmb_mysql_query($query_users);
-				$all_users=array();
-				while (list($all_userid,$all_username)=pmb_mysql_fetch_row($result_users)) {
-					$all_users[]=array($all_userid,$all_username);
-				}
-				for ($i=0 ; $i<count($all_users) ; $i++) {
-					if (array_search ($all_users[$i][0], $autorisations_donnees)!==FALSE) $autorisations[$i][0]=1;
-					else $autorisations[$i][0]=0;
-					$autorisations[$i][1]= $all_users[$i][0];
-					$autorisations[$i][2]= $all_users[$i][1];
-				}
-				$form = str_replace('!!form_title!!', $msg["procs_modification"], $form);
-				$form = str_replace('!!action!!', static::format_url("&action=modif&id=".$id), $form);
-	
-				$form = str_replace('!!name!!', htmlentities($row->name,ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!name_suppr!!', htmlentities(addslashes($row->name),ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!code!!', htmlentities($row->requete,ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!comment!!', htmlentities($row->comment,ENT_QUOTES, $charset), $form);
-				$sel_notice_tpl="<input type='text' class='saisie-15em' name='form_notice_tpl_field' value='".$row->proc_notice_tpl_field."' >";
-				$form = str_replace('!!notice_tpl!!',$sel_notice_tpl, $form);
-				$num_classement = $row->num_classement;
-			}
-		} else {
-			$query_users = "SELECT userid, username FROM users order by username ";
-			$result_users = pmb_mysql_query($query_users);
-			$all_users=array();
-			while (list($all_userid,$all_username)=pmb_mysql_fetch_row($result_users)) {
-				if($all_userid == $PMBuserid) {
-					//On autorise l'utilisateur courant par dÃ©faut
-					$autorisations[]=array(1, $all_userid,$all_username);
-				} else {
-					$autorisations[]=array(0, $all_userid,$all_username);
-				}
-			}
-			
-			$form = str_replace('!!form_title!!', $msg[704], $form);
-			$form = str_replace('!!action!!', static::format_url("&action=add"), $form);
-				
-			$form = str_replace('!!name!!', '', $form);
-			$form = str_replace('!!name_suppr!!', '', $form);
-			$form = str_replace('!!code!!', '', $form);
-			$form = str_replace('!!comment!!', '', $form);
-			$sel_notice_tpl="<input type='text' class='saisie-15em' name='form_notice_tpl_field' value='' >";
-			$form = str_replace('!!notice_tpl!!',$sel_notice_tpl, $form);
-		}
-		$form = str_replace('!!id!!', $id, $form);
-	
-		$autorisations_users="";
-		$id_check_list='';
-		foreach ($autorisations as $row_number => $row_data) {
-			$id_check="auto_".$row_data[1];
-			if($id_check_list)$id_check_list.='|';
-			$id_check_list.=$id_check;
-			if ($row_data[0]) $autorisations_users.="<span class='usercheckbox'><input type='checkbox' name='userautorisation[]' id='$id_check' value='".$row_data[1]."' checked class='checkbox'><label for='$id_check' class='normlabel'>&nbsp;".$row_data[2]."</label></span>&nbsp;&nbsp;";
-			else $autorisations_users.="<span class='usercheckbox'><input type='checkbox' name='userautorisation[]' id='$id_check' value='".$row_data[1]."' class='checkbox'><label for='$id_check' class='normlabel'>&nbsp;".$row_data[2]."</label></span>&nbsp;&nbsp;";
-		}
-		$autorisations_users.="<input type='hidden' id='auto_id_list' name='auto_id_list' value='$id_check_list' >";
-		$form = str_replace('!!autorisations_users!!', $autorisations_users, $form);
+		global $msg;
 		
-		$form = str_replace('!!autorisations_all!!', ($row->autorisations_all ? "checked='checked'" : ""), $form);
-	
-		$combo_clas= gen_liste ("SELECT idproc_classement,libproc_classement FROM procs_classements ORDER BY libproc_classement ", "idproc_classement", "libproc_classement", "form_classement", "", $num_classement, 0, $msg['proc_clas_aucun'],0, $msg['proc_clas_aucun']) ;
-		$form = str_replace('!!classement!!', $combo_clas, $form);
+		$id = intval($id);
+		$interface_form = static::get_interface_form_instance();
+		$interface_form->set_url_base(static::format_url());
+		if(!$id){
+			$interface_form->set_label($msg['704']);
+		}else{
+			$interface_form->set_label($msg['procs_modification']);
+		}
+		$data = static::get_data($id);
+		$content_form = static::get_proc_content_form($id, $data);
 		
-		$form .= confirmation_delete(static::format_url("&action=del&id="));
-		return $form;
+		$interface_form->set_object_id($id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$data['name']." ?")
+		->set_content_form($content_form)
+		->set_table_name(static::$table)
+		->set_field_focus('f_proc_name');
+		if (static::has_form_execute_button($id, $data['type'])) {
+            $interface_form->add_action_extension('execute_button', $msg['708'], static::format_url('&action=execute&id='.$id));
+		}
+		return $interface_form->get_display();
 	}
 	
 	public static function delete($id) {
-		$id += 0;
+		$id = intval($id);
 		if($id) {
 			$query = "DELETE FROM ".static::$table." WHERE idproc=".$id;
 			pmb_mysql_query($query);
@@ -268,10 +220,9 @@ class procs {
 	}
 	
 	public static function run_form($id) {
-		global $msg;
-		global $charset;
 		global $force_exec;
 		$hp=new parameters($id,static::$table);
+		$query_parameters = [];
 		if (preg_match_all("|!!(.*)!!|U",$hp->proc->requete,$query_parameters))
 			$hp->gen_form(static::format_url("&action=final&id=".$id."&force_exec=".$force_exec));
 		else echo "<script>document.location='".static::format_url("&action=final&id=".$id."&force_exec=".$force_exec)."'</script>";
@@ -306,105 +257,129 @@ class procs {
 		global $erreur_explain_rqt;
 		global $sortfield;
 		
+		$line = array();
 		$linetemp = explode(";", $query_code);
-		for ($i=0;$i<count($linetemp);$i++) if (trim($linetemp[$i])) $line[]=trim($linetemp[$i]);
+		for ($i=0;$i<count($linetemp);$i++) {
+		    if (trim($linetemp[$i])) {
+		        $line[]=trim($linetemp[$i]);
+		    }
+		}
 		$do_reindexation=false;
-		foreach ($line as $cle => $valeur) {
-			if($valeur) {
-				// traitement tri des colonnes
-				if ($sortfield != "") {
-					// on cherche Ã  trier sur le champ $trifield
-					// compose la chaÃ®ne de tri
-					$tri = $sortfield;
-					if ($desc == 1) $tri .= " DESC";
-					else $tri .= " ASC";
-					// on enlÃ¨ve les doubles espaces dans la procÃ©dure
-					$valeur = preg_replace("/\s+/", " ", $valeur);
-					// supprime un Ã©ventuel ; Ã  la fin de la requÃªte
-					$valeur = preg_replace("/;$/", "", $valeur);
-					// on recherche la premiÃ¨re occurence de ORDER BY
-					$s = stristr($valeur, "order by");
-					if ($s) {
-						// y'a dÃ©jÃ  une clause order by... moins facile...
-						// il faut qu'on sache si on aura besoin de mettre une virgule ou pas
-						if ( preg_match("#,#", $s) ) {
-							$virgule = true;
-						} else if ( ! preg_match("${sortfield}", $s)) {
-							$virgule = true;
-						} else {
-							$virgule = false;
-						}
-						if ($virgule) {
-							$tri .= ", ";
-						}
-						// regarde si le champ est dÃ©jÃ  dans la liste des champs Ã  trier et le remplace si besoin
-						$new_s = preg_replace("/$sortfield, /", "", $s);
-						$new_s = preg_replace("/$sortfield/", "", $new_s);
-						// ajoute la clause order by correcte
-						$new_s = preg_replace("/order\s+by\s+/i", "order by $tri", $new_s);
-						// replace l'ancienne chaÃ®ne par la nouvelle
-						$valeur = str_replace($s, $new_s, $valeur);
-					} else {
-						$valeur .= " order by $tri";
-					}
-				}
-	
-				print "<strong>".$msg['procs_ligne']." ".$cle." </strong>:&nbsp;".$valeur."<br /><br />";
-				
-				if(static::$module != 'admin') {
-					if ( (pmb_strtolower(pmb_substr($valeur,0,6))=="select") || (pmb_strtolower(pmb_substr($valeur,0,6))=="create") ) {
-					} else {
-						print "rqt=".$valeur."=<br />" ;
-						error_message_history("RequÃªte invalide","Vous ne pouvez tester que des requÃªtes de sÃ©lection",1);
-						return array('state' => false, 'message' => 'invalid_query');
-					}
-				}
-				
-				if (($pmb_procs_force_execution && $force_exec) || (($PMBuserid == 1) && $force_exec) || explain_requete($valeur)) {
-					$res = @pmb_mysql_query($valeur);
-					print pmb_mysql_error();
-					$nbr_lignes = @pmb_mysql_num_rows($res);
-					$nbr_champs = @pmb_mysql_num_fields($res);
-						
-					if($nbr_lignes) {
-						print "<table >";
-						for($i=0; $i < $nbr_champs; $i++) {
-							// ajout de liens pour trier les pages
-							$fieldname = pmb_mysql_field_name($res, $i);
-							$sortasc = "<a href='${urlbase}&sortfield=".($i+1)."&desc=0'>asc</a>";
-							$sortdesc = "<a href='${urlbase}&sortfield=".($i+1)."&desc=1'>desc</a>";
-							print("<th>${fieldname}</th>");
-						}
-			
-						for($i=0; $i < $nbr_lignes; $i++) {
-							$row = pmb_mysql_fetch_row($res);
-							print "<tr>";
-							foreach($row as $dummykey=>$col) {
-								if(trim($col)=='') $col="&nbsp;";
-								print "<td>".$col."</td>";
-							}
-							print "</tr>";
-						}
-						print "</table><hr />";
-					} else {
-						$ligne_affected=pmb_mysql_affected_rows();
-						print "<br /><span style='color:#ff0000'>".$msg['admin_misc_lignes']." ".$ligne_affected;
-						$err = pmb_mysql_error();
-						if ($err){
-							print "<br />$err";
-						}else{
-							if($ligne_affected){
-								$do_reindexation=true;
-							}
-						}
-						print "</span><hr />";
-					}
-				} else {
-					print "<br /><br />".$valeur."<br /><br />".$msg["proc_param_explain_failed"]."<br /><br />".$erreur_explain_rqt;
-					return array('state' => false, 'message' => 'explain_failed');
-				}
-			}
-		} // fin while
+		if (!empty($line)) {
+    		foreach ($line as $cle => $valeur) {
+    			if($valeur) {
+    				// traitement tri des colonnes
+    				if ($sortfield != "") {
+    					// on cherche à trier sur le champ $trifield
+    					// compose la chaîne de tri
+    					$tri = $sortfield;
+    					if ($desc == 1) $tri .= " DESC";
+    					else $tri .= " ASC";
+    					// on enlève les doubles espaces dans la procédure
+    					$valeur = preg_replace("/\s+/", " ", $valeur);
+    					// supprime un éventuel ; à la fin de la requête
+    					$valeur = preg_replace("/;$/", "", $valeur);
+    					// on recherche la première occurence de ORDER BY
+    					$s = stristr($valeur, "order by");
+    					if ($s) {
+    						// y'a déjà une clause order by... moins facile...
+    						// il faut qu'on sache si on aura besoin de mettre une virgule ou pas
+    						if ( preg_match("#,#", $s) ) {
+    							$virgule = true;
+    						} else if ( ! preg_match("{$sortfield}", $s)) {
+    							$virgule = true;
+    						} else {
+    							$virgule = false;
+    						}
+    						if ($virgule) {
+    							$tri .= ", ";
+    						}
+    						// regarde si le champ est déjà dans la liste des champs à trier et le remplace si besoin
+    						$new_s = preg_replace("/$sortfield, /", "", $s);
+    						$new_s = preg_replace("/$sortfield/", "", $new_s);
+    						// ajoute la clause order by correcte
+    						$new_s = preg_replace("/order\s+by\s+/i", "order by $tri", $new_s);
+    						// replace l'ancienne chaîne par la nouvelle
+    						$valeur = str_replace($s, $new_s, $valeur);
+    					} else {
+    						$valeur .= " order by $tri";
+    					}
+    				}
+    	
+    				print "<strong>".$msg['procs_ligne']." ".$cle." </strong>:&nbsp;".$valeur."<br /><br />";
+    				
+    				if(static::$module != 'admin') {
+    					if ( (pmb_strtolower(pmb_substr($valeur,0,6))=="select") || (pmb_strtolower(pmb_substr($valeur,0,6))=="create") ) {
+    					} else {
+    						print "rqt=".$valeur."=<br />" ;
+    						error_message_history("Requête invalide","Vous ne pouvez tester que des requêtes de sélection",1);
+    						return array('state' => false, 'message' => 'invalid_query');
+    					}
+    				}
+    				
+    				if (($pmb_procs_force_execution && $force_exec) || (($PMBuserid == 1) && $force_exec) || explain_requete($valeur)) {
+    				    
+    				    if (strpos(pmb_strtoupper(trim($valeur)), 'INSERT') === 0
+    				        || strpos(pmb_strtoupper(trim($valeur)), 'UPDATE') === 0
+    				        || strpos(pmb_strtoupper(trim($valeur)), 'DELETE') === 0
+    				        || strpos(pmb_strtoupper(trim($valeur)), 'CREATE') === 0) {
+    				        $res = pmb_mysql_query($valeur);
+    				        print pmb_mysql_error();
+    				        $ligne_affected=pmb_mysql_affected_rows();
+    				        print "<br /><span style='color:#ff0000'>".$msg['admin_misc_lignes']." ".$ligne_affected;
+    				        $err = pmb_mysql_error();
+    				        if ($err){
+    				            print "<br />$err";
+    				        }else{
+    				            if($ligne_affected){
+    				                $do_reindexation=true;
+    				            }
+    				        }
+    				        print "</span>";
+    				    } else {
+    				        if(static::$module == 'admin' && static::$table == 'procs') {
+    				            list_query_proc_admin_ui::set_SQL_query($valeur);
+    				            print list_query_proc_admin_ui::get_instance()->get_display_list();
+    				        } elseif(static::$module == 'admin' && static::$table == 'statopac_request') {
+    				            list_query_statopac_admin_ui::set_SQL_query($valeur);
+    				            print list_query_statopac_admin_ui::get_instance()->get_display_list();
+    				        } else {
+    				            $res = pmb_mysql_query($valeur);
+    				            print pmb_mysql_error();
+    				            $nbr_lignes = pmb_mysql_num_rows($res);
+    				            $nbr_champs = pmb_mysql_num_fields($res);
+    				            
+    				            if($nbr_lignes) {
+    				                print "<table >";
+    				                for($i=0; $i < $nbr_champs; $i++) {
+    				                    // ajout de liens pour trier les pages
+    				                    $fieldname = pmb_mysql_field_name($res, $i);
+    				                    $sortasc = "<a href='{$urlbase}&sortfield=".($i+1)."&desc=0'>asc</a>";
+    				                    $sortdesc = "<a href='{$urlbase}&sortfield=".($i+1)."&desc=1'>desc</a>";
+    				                    print("<th>{$fieldname}</th>");
+    				                }
+    				                
+    				                for($i=0; $i < $nbr_lignes; $i++) {
+    				                    $row = pmb_mysql_fetch_row($res);
+    				                    print "<tr>";
+    				                    foreach($row as $col) {
+    				                        if(trim($col)=='') $col="&nbsp;";
+    				                        print "<td>".$col."</td>";
+    				                    }
+    				                    print "</tr>";
+    				                }
+    				                print "</table>";
+    				            }
+    				        }
+    				    }
+    				    print "<hr />";
+    				} else {
+    					print "<br /><br />".$valeur."<br /><br />".$msg["proc_param_explain_failed"]."<br /><br />".$erreur_explain_rqt;
+    					return array('state' => false, 'message' => 'explain_failed');
+    				}
+    			}
+    		} // fin while
+		}
 		if((static::$module == 'admin') && $do_reindexation){
 			print "<span style='color:#ff0000'><h2>".$msg['admin_proc_reindex']."</h2></span><br/>";
 		}
@@ -419,6 +394,8 @@ class procs {
 		global $f_proc_name;
 		global $f_proc_code;
 		global $import_proc_tmpl;
+		global $num_classement;
+		global $dest;
 		
 		print "
 		<script type='text/javascript'>
@@ -475,8 +452,19 @@ class procs {
 					print static::get_proc_form();
 				}
 				break;
+			case 'update':
+				if($f_proc_name && $f_proc_code) {
+					if($id) {
+						// faire la modification
+						static::update($id);
+					} else {
+						static::create();
+					}
+					show_procs();
+				}
+				break;
 			case 'import':
-				$import_proc_tmpl = str_replace("!!action!!", static::format_url("&action=importsuite"), $import_proc_tmpl);
+				$import_proc_tmpl = str_replace("!!action!!", static::format_url("&action=importsuite".(!empty($num_classement) ? "&num_classement=".$num_classement : "")), $import_proc_tmpl);
 				print $import_proc_tmpl ;
 				break;
 			case 'importsuite':
@@ -490,7 +478,21 @@ class procs {
 				show_procs();
 				break;
 			default:
-				show_procs();
+				$list_ui_instance = static::get_list_ui_instance();
+				switch($dest) {
+					case "TABLEAU":
+						$list_ui_instance->get_display_spreadsheet_list();
+						break;
+					case "TABLEAUHTML":
+						print $list_ui_instance->get_display_html_list();
+						break;
+					case "TABLEAUCSV":
+						print $list_ui_instance->get_display_csv_list();
+						break;
+					default:
+						show_procs();
+						break;
+				}
 				break;
 		}
 	}
@@ -538,7 +540,7 @@ class procs {
 						
 					//$execute_external <=> globale dans remote_procedure->final_execution
 					//$execute_external_procedure <=> globale dans remote_procedure->final_execution
-					//$param_proc_hidden <=> paramÃªtres en champ cachÃ© en cas de forÃ§age
+					//$param_proc_hidden <=> paramêtres en champ caché en cas de forçage
 					static::final_execute();
 				}
 				break;
@@ -558,7 +560,7 @@ class procs {
 	
 	public static function importsuite($retour, $retour_erreur) {
 		global $msg, $current_module, $charset;
-		global $PMBuserid;
+		global $PMBuserid, $num_classement;
 	
 		print "<div class=\"row\">
 		<h1>".$msg['procs_title_form_import']."</h1>";
@@ -570,40 +572,46 @@ class procs {
 	
 		$userfile_name = preg_replace("/ |'|\\|\"|\//m", "_", $userfile_name);
 	
-		// crÃ©ation
+		// création
 		if (move_uploaded_file($userfile_temp,'./temp/'.$userfile_moved)) {
 			$fic=1;
 		}
 	
-		if (!$fic) {
+		if (empty($fic)) {
 			$erreur=$erreur+10;
 		}
 	
-		if ($fic) {
+		if (!empty($fic)) {
 			$fp = fopen('./temp/'.$userfile_moved , "r" );
 			$contenu = fread ($fp, filesize('./temp/'.$userfile_moved));
 			if (!$fp || $contenu=="") $erreur=$erreur+100; ;
 			fclose ($fp) ;
 		}
 	
-		//import avec encodage taggÃ©
-		if(strpos($contenu,'#charset=iso-8859-1')!==false && $charset=='utf-8'){
-			//mise Ã  jour de l'encodage du contenu
-			$contenu = utf8_encode($contenu);
-			//mise Ã  jour de l'entÃªte des paramÃ¨tres
-			$contenu = str_replace('<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>', '<?xml version=\"1.0\" encoding=\"utf-8\"?>', $contenu) ;
-		}elseif(strpos($contenu,'#charset=utf-8')!==false && $charset=='iso-8859-1'){
-			//mise Ã  jour de l'encodage du contenu
-			$contenu = utf8_decode($contenu);
-			//mise Ã  jour de l'entÃªte des paramÃ¨tres
-			$contenu = str_replace('<?xml version=\"1.0\" encoding=\"utf-8\"?>', '<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>', $contenu) ;
+		//import avec encodage taggé
+		if(!empty($contenu)) {
+			if(strpos($contenu,'#charset=iso-8859-1')!==false && $charset=='utf-8'){
+				//mise à jour de l'encodage du contenu
+				$contenu = encoding_normalize::utf8_normalize($contenu);
+				//mise à jour de l'entête des paramètres
+				$contenu = str_replace('<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>', '<?xml version=\"1.0\" encoding=\"utf-8\"?>', $contenu) ;
+			}elseif(strpos($contenu,'#charset=utf-8')!==false && $charset=='iso-8859-1'){
+				//mise à jour de l'encodage du contenu
+				$contenu = encoding_normalize::utf8_decode($contenu);
+				//mise à jour de l'entête des paramètres
+				$contenu = str_replace('<?xml version=\"1.0\" encoding=\"utf-8\"?>', '<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>', $contenu) ;
+			}
 		}
-	
+		
 		if ($userfile_name) {
 			unlink('./temp/'.$userfile_moved);
 		}
 	
-		$pos = strpos($contenu,'INSERT INTO '.static::$table.' set ');
+		if(!empty($contenu)) {
+			$pos = strpos($contenu,'INSERT INTO '.static::$table.' set ');
+		} else {
+			$pos = false;
+		}
 		if (($pos === false) || ($pos>0)) {
 			$erreur=$erreur+1000; ;
 		}
@@ -619,6 +627,13 @@ class procs {
 			}
 	
 			$new_proc_id = pmb_mysql_insert_id();
+			
+			//on importe au sein d'un classement
+			$num_classement = intval($num_classement);
+			if($num_classement) {
+				pmb_mysql_query('UPDATE '.static::$table.' SET num_classement = "'.$num_classement.'" WHERE idproc = '.$new_proc_id);
+			}
+			
 			$retour = str_replace("!!id!!",$new_proc_id,$retour);
 			print "<form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"$retour\" >
 			<input type='submit' class='bouton' name=\"id_form\" value=\"Ok\" />
@@ -636,7 +651,7 @@ class procs {
 	}
 	
 	public static function final_execute() {
-		global $msg, $charset;
+		global $msg;
 		global $id_query;
 		global $query_parameters;
 		global $execute_external;
@@ -660,7 +675,7 @@ class procs {
 				$hp->get_final_query();
 				$code=$hp->final_query;
 				$id=$id_query;
-				$param_proc_hidden=$hp->get_hidden_values();//Je mets les paramÃªtres en champ cachÃ© en cas de forÃ§age
+				$param_proc_hidden=$hp->get_hidden_values();//Je mets les paramêtres en champ caché en cas de forçage
 				$param_proc_hidden.="<input type='hidden' name='id_query'  value='".$id_query."' />";
 			} else {
 				$code = '';
@@ -678,13 +693,14 @@ class procs {
 			$urlbase = static::format_url("&action=final&id=$id");
 		}
 		if($nbr_lignes) {
-			// rÃ©cupÃ©ration du rÃ©sultat
+			// récupération du résultat
 			print "<form class='form-".$current_module."' id='formulaire' name='formulaire' action='' method='post'>";
 			print $param_proc_hidden;
 			if($force_exec){
-				print "<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forcÃ© la requete
+				print "<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forcé la requete
 			}
 			print static::get_form_after_execution($idp, $name, $code, $commentaire, $is_external);
+			list_query_proc_admin_ui::set_id_proc($id);
 			$report = static::run_query($code);
 			if($report['state'] == false && $report['message'] == 'explain_failed') {
 				static::final_explain_failed($id);

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_datastore.class.php,v 1.1 2018-01-22 09:16:28 tsamson Exp $
+// $Id: frbr_cataloging_datastore.class.php,v 1.1 2018/01/22 09:16:28 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,7 +10,7 @@ require_once($class_path."/onto/onto_store_arc2.class.php");
 
 /**
  * class skos_onto
- * Classe gÃ©rant un accÃ¨s au store de donnÃ©es SKOS
+ * Classe gérant un accès au store de données SKOS
 */
 class frbr_cataloging_datastore {
 	/**
@@ -58,8 +58,8 @@ class frbr_cataloging_datastore {
 	}
 	
 	/**
-	 * ExÃ©cute une nouvelle requÃªte SPARQL sur le store de donnÃ©es SKOS
-	 * @param query string  <p>RequÃªte SPARQL a lancer sur le store ARC2</p>
+	 * Exécute une nouvelle requête SPARQL sur le store de données SKOS
+	 * @param query string  <p>Requête SPARQL a lancer sur le store ARC2</p>
 	 * @return bool
 	 * @access public
 	 */
@@ -69,8 +69,8 @@ class frbr_cataloging_datastore {
 	}
 	
 	/**
-	 * Retourne le nombre de lignes de la derniÃ¨re requete SPARQL sur le store de donnÃ©es SKOS
-	 * @return <p>Nombre de lignes pour la derniÃ¨re requete<br>FALSE si le store n'est pas initialisÃ©</p>
+	 * Retourne le nombre de lignes de la dernière requete SPARQL sur le store de données SKOS
+	 * @return <p>Nombre de lignes pour la dernière requete<br>FALSE si le store n'est pas initialisé</p>
 	 * @access public
 	 */
 	public static function num_rows(){
@@ -81,8 +81,8 @@ class frbr_cataloging_datastore {
 	}
 	
 	/**
-	 * Retourne le rÃ©sulat de la derniÃ¨re requete SPARQL sur le store de donnÃ©es SKOS
-	 * @return <p>Tableau du rÃ©sultat pour la derniÃ¨re requete<br>FALSE si le store n'est pas initialisÃ©</p>
+	 * Retourne le résulat de la dernière requete SPARQL sur le store de données SKOS
+	 * @return <p>Tableau du résultat pour la dernière requete<br>FALSE si le store n'est pas initialisé</p>
 	 * @access public
 	 */
 	public static function get_result(){
@@ -93,7 +93,7 @@ class frbr_cataloging_datastore {
 	}
 	
 	/**
-	 * Retourne les erreurs de la derniÃ¨re requete SPARQL sur le store de donnÃ©es SKOS
+	 * Retourne les erreurs de la dernière requete SPARQL sur le store de données SKOS
 	 * @return <p>ERREURS</p>
 	 * @access public
 	 */

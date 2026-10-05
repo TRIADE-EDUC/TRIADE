@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fiche_fantome.inc.php,v 1.3 2017-09-18 13:20:21 dgoron Exp $
+// $Id: fiche_fantome.inc.php,v 1.4 2020/11/04 10:40:46 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// popup d'impression PDF pour la fiche fantome, crÃ©Ã© pour les Archives Nationales du Monde du Travail   
-// reÃ§oit : id_empr et cb_doc
+// popup d'impression PDF pour la fiche fantome, créé pour les Archives Nationales du Monde du Travail   
+// reçoit : id_empr et cb_doc
 
 $ourPDF = new $fpdf('P', 'mm', 'A4');
 $ourPDF->Open();
@@ -50,7 +50,7 @@ $responsabilites = get_notice_authors(($expl->m_id+$expl->s_id)) ;
 $header_aut= gen_authors_header($responsabilites);
 $header_aut ? $auteur=" / ".$header_aut : $auteur="";
 
-// rÃ©cupÃ©ration du titre de sÃ©rie
+// récupération du titre de série
 if ($expl->tparent_id && $expl->m_id) {
 	$parent = new serie($expl->tparent_id);
 	$tit_serie = $parent->name;
@@ -68,10 +68,8 @@ if(!$cote)	$cote=$p_perso->read_base_fields_perso("ancienne_cote",$expl->s_id);
 $ourPDF->SetY (50);
 add_line("Titre",$expl->tit );
 add_line("No. exemplaire",$cote);
-if($expl->bulletin_numero) add_line("NumÃ©ro",$numero);
+if($expl->bulletin_numero) add_line("Numéro",$numero);
 add_line("Code",$cb_doc);
 add_line("Date",$expl->aff_pret_date.' '. date("H:i"));
 add_line("Emprunteur",$emprunteur);
 $ourPDF->OutPut();
-
-?>

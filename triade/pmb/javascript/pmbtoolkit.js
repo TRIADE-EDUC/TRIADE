@@ -8,14 +8,14 @@ var pmbtk={
 		},
 		defineClass:function(className,heritedFrom,definition) {
 			var classe=function() {
-				//Copie de la dÃ©finition
+				//Copie de la définition
 				for (var m in definition) {
 					this[m]=definition[m];
 				}
 
-				//HÃ©ritage ?
+				//Héritage ?
 				if (heritedFrom) {
-					//CrÃ©ation de la mÃ©thode parent : elle renvoie une mÃ©thode du parent dans le contexte de l'instance et non du prototype
+					//Création de la méthode parent : elle renvoie une méthode du parent dans le contexte de l'instance et non du prototype
 					this.parent=function(parentMethod) {
 						return pmbtk.c(this,window[className].prototype[parentMethod]);
 					}
@@ -23,15 +23,15 @@ var pmbtk={
 				
 				this.construct.apply(this,arguments);
 			}
-			//CrÃ©ation de la fonction dans l'espace global
+			//Création de la fonction dans l'espace global
 			window[className]=classe;
 			
-			//HÃ©ritage ? Si oui, on charge le prototype !
+			//Héritage ? Si oui, on charge le prototype !
 			if (heritedFrom) {
 				parentClass=window[heritedFrom];
-				//Ajout des mÃ©thodes du parent au prototype
+				//Ajout des méthodes du parent au prototype
 				window[className].prototype=new parentClass();
-				//Ajout des mÃ©thodes du prototype du parent au prototype
+				//Ajout des méthodes du prototype du parent au prototype
 				for (var p in parentClass.prototype){
 					if((typeof(parentClass.prototype[p]=="function"))&&(!window[className].prototype[p])) {
 						window[className].prototype[p]=parentClass.prototype[p];

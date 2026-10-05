@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records_by_categories.class.php,v 1.1 2017-07-27 12:51:28 ngantier Exp $
+// $Id: cms_module_common_datasource_records_by_categories.class.php,v 1.2.6.1.2.1 2025/02/10 15:45:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,10 +12,11 @@ class cms_module_common_datasource_records_by_categories extends cms_module_comm
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -25,13 +26,13 @@ class cms_module_common_datasource_records_by_categories extends cms_module_comm
 	}
 		
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$selector = $this->get_selected_selector();
 		if ($selector && $selector->get_value()) {
-			
-			$query = "select distinct notcateg_notice from notices_categories where num_noeud = '".($selector->get_value()*1)."' ";			
+		    $num_noeud = intval($selector->get_value());
+		    $query = "select distinct notcateg_notice from notices_categories where num_noeud = '".$num_noeud."' ";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result) > 0){
 				$records = array();
@@ -40,11 +41,20 @@ class cms_module_common_datasource_records_by_categories extends cms_module_comm
 				}
 			
 				$return['records'] = $this->filter_datas("notices",$records);
-	
-				if(!count($return['records'])) return false;
+				
+				if(!is_countable($return['records']) || !count($return['records'])) {
+				    return false;
+				}
 				
 				$return = $this->sort_records($return['records']);
 				$return["title"] = "";
+				
+				// Pagination
+				if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+				    $return["paging"] = $this->inject_paginator($return['records']);
+				    $return['records'] = $this->cut_paging_list($return['records'], $return["paging"]);
+				}
+				
 				return $return;
 			}
 		}

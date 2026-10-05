@@ -24,11 +24,11 @@
     //Enregistrement d'un groupe depuis le popup
     if ($groupe != "0") {
       //UPDATE
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}favoris_groupe SET fgr_nom='".htmlspecialchars($ztNomGroupe)."' WHERE fgr_id=".$groupe);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}favoris_groupe SET fgr_nom='".htmlspecialchars($ztNomGroupe)."' WHERE fgr_id=".$groupe);
       $labelBouton = trad("FAVORIS_BT_MODIFIER");
     } else {
       //INSERT
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}favoris_groupe (fgr_util_id, fgr_nom) VALUES (".$idUser.", '".htmlspecialchars($ztNomGroupe)."')");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}favoris_groupe (fgr_util_id, fgr_nom) VALUES (".$idUser.", '".htmlspecialchars($ztNomGroupe)."')");
       $groupe = $DB_CX->DbInsertID();
       $labelBouton = trad("FAVORIS_BT_MODIFIER");
     }
@@ -48,7 +48,7 @@
     $labelBouton = trad("FAVORIS_BT_AJOUTER");
     if ($id) {
       // Edition d'un favori
-      $DB_CX->DbQuery("SELECT fav_nom, fav_url, fav_commentaire, fav_partage, fav_util_id, fav_fgr_id FROM ${PREFIX_TABLE}favoris WHERE fav_id=".$id);
+      $DB_CX->DbQuery("SELECT fav_nom, fav_url, fav_commentaire, fav_partage, fav_util_id, fav_fgr_id FROM {$PREFIX_TABLE}favoris WHERE fav_id=".$id);
       if ($enr = $DB_CX->DbNextRow()) {
         $nom = $enr['fav_nom'];
         $url = $enr['fav_url'];
@@ -158,7 +158,7 @@
       <TD class=\"tabIntitule\">".trad("FAVORIS_LIB_GROUPE")."</TD>
       <TD class=\"tabInput\"><SELECT name=\"zlGroupe\" size=\"1\" onChange=\"javascript: changeLabel(document.FormFavoris);\">
         <OPTION value=\"0\">".trad("FAVORIS_NOUVEAU_GROUPE")."</OPTION>\n");
-    $DB_CX->DbQuery("SELECT fgr_id, fgr_nom FROM ${PREFIX_TABLE}favoris_groupe WHERE fgr_util_id=".$idUser." ORDER BY fgr_nom");
+    $DB_CX->DbQuery("SELECT fgr_id, fgr_nom FROM {$PREFIX_TABLE}favoris_groupe WHERE fgr_util_id=".$idUser." ORDER BY fgr_nom");
     while ($enr = $DB_CX->DbNextRow()) {
       $selected = ($groupe == $enr['fgr_id']) ? " selected" : "";
       echo "        <OPTION value=\"".$enr['fgr_id']."\"".$selected.">".$enr['fgr_nom']."</OPTION>\n";
@@ -179,7 +179,7 @@
     <TABLE width="560" border="0" cellspacing="1" cellpadding="0" bgcolor="<?php echo $AgendaBordureTableau; ?>" style="border-collapse:separate;">
 <?php
   //Liste des differents favoris
-  $DB_CX->DbQuery("SELECT DISTINCT fav_id, fav_nom, fav_url, fav_commentaire, fav_util_id, fav_fgr_id, fgr_nom FROM ${PREFIX_TABLE}favoris, ${PREFIX_TABLE}favoris_groupe WHERE (fav_util_id=".$idUser." OR (fav_util_id!=".$idUser." AND fav_partage='O')) AND fgr_id=fav_fgr_id ORDER BY fgr_nom, fav_nom ASC");
+  $DB_CX->DbQuery("SELECT DISTINCT fav_id, fav_nom, fav_url, fav_commentaire, fav_util_id, fav_fgr_id, fgr_nom FROM {$PREFIX_TABLE}favoris, {$PREFIX_TABLE}favoris_groupe WHERE (fav_util_id=".$idUser." OR (fav_util_id!=".$idUser." AND fav_partage='O')) AND fgr_id=fav_fgr_id ORDER BY fgr_nom, fav_nom ASC");
   $index = 0;
   $idGroupeCrt = 0;
   $nomGroupeCrt = "";

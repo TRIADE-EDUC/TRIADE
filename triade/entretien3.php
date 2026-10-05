@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -58,11 +58,10 @@ if (defined("PASSMODULEINDIVIDUEL")) {
 	}
 }
 
-$cnx=cnx(); 
 if (isset($_GET["eid"])) {
 	$eid=$_GET["eid"];
 	if($eid) {
-		$sql="SELECT elev_id,nom,prenom FROM ${prefixe}eleves WHERE elev_id='$eid'";
+		$sql="SELECT elev_id,nom,prenom FROM {$prefixe}eleves WHERE elev_id='$eid'";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 		$nomEleve=ucwords($data[0][1]);
@@ -72,7 +71,7 @@ if (isset($_GET["eid"])) {
 if (isset($_POST["create"])) {
 	$eid=$_POST["ideleve"];
 	if($eid) {
-		$sql="SELECT elev_id,nom,prenom FROM ${prefixe}eleves WHERE elev_id='$eid'";
+		$sql="SELECT elev_id,nom,prenom FROM {$prefixe}eleves WHERE elev_id='$eid'";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 		$nomEleve=ucwords($data[0][1]);

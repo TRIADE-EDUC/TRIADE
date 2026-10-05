@@ -316,7 +316,7 @@ class ProgressBar
         if (!$return) {
             return $nowText;
         }
-        return $prefix . implode(array_slice($return, 0, 2), ', ');
+        return $prefix . implode(', ', array_slice($return, 0, 2));
     }
 
     /**

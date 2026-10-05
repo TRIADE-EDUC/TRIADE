@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Store.js,v 1.3 2015-02-17 16:43:37 vtouchard Exp $
+// $Id: Store.js,v 1.3 2015/02/17 16:43:37 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dojo/store/Memory", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic"], function(declare,Memory, xhr, lang, topic){

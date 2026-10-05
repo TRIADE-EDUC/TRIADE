@@ -1,0 +1,17 @@
+<h2>Module de Diffusion Selective de l&rsquo;Information</h2>
+<p>La diffusion s&eacute;lective de l&rsquo;information est un service qui consiste &agrave; diffuser un ensemble d&rsquo;informations internes ou externes au logiciel sur diff&eacute;rents supports et &agrave; diff&eacute;rents destinataires.</p>
+
+<h2>Diffusions</h2>
+<p>Permet de combiner une s&eacute;lection d&rsquo;informations et les moyens de sa diffusion.</p>
+
+<h2>Mod&egrave;les</h2>
+<p>Permet de param&eacute;trer &agrave; l&rsquo;avance les &eacute;l&eacute;ments qui constituent une diffusion.</p>
+
+<h2>Statuts</h2>
+<p>Les statuts permettent d&rsquo;indiquer si une diffusion est active ou non et si elle peut &ecirc;tre envoy&eacute;e automatiquement ou non.</p>
+
+<h2>Flux RSS</h2>
+<p>Permet de cr&eacute;er des flux RSS &agrave; partir des informations contenues dans le logiciel.</p>
+
+<h2>Veilles</h2>
+<p>Permet d&rsquo;agr&eacute;ger des sources comme des sites externes, des connecteurs, ou des contenus internes &agrave; PMB afin de rediffuser les informations s&eacute;lectionn&eacute;es, notamment sur le portail.</p>

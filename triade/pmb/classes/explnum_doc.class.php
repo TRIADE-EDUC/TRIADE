@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_doc.class.php,v 1.6 2017-06-30 14:08:17 dgoron Exp $
+// $Id: explnum_doc.class.php,v 1.8 2021/12/28 08:46:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path.'/explnum.inc.php');
 
 class explnum_doc{
@@ -22,9 +23,7 @@ class explnum_doc{
 	 * Constructeur
 	 */
 	public function __construct($id_expl=0){
-		global $dbh;
-		
-		$this->explnum_doc_id = $id_expl;
+		$this->explnum_doc_id = intval($id_expl);
 		if(!$this->explnum_doc_id){
 			$this->explnum_doc_nomfichier = '';
 	 		$this->explnum_doc_contenu = '';
@@ -33,7 +32,7 @@ class explnum_doc{
 			$this->explnum_doc_url = '';
 		} else {
 			$req = "select * from explnum_doc where id_explnum_doc='".$this->explnum_doc_id."'";
-			$res=pmb_mysql_query($req,$dbh);
+			$res=pmb_mysql_query($req);
 			if(pmb_mysql_num_rows($res)){
 				$expl = pmb_mysql_fetch_object($res);
 				$this->explnum_doc_nomfichier = $expl->explnum_doc_nomfichier;
@@ -56,21 +55,16 @@ class explnum_doc{
 	 * Suppression
 	 */
 	public function delete(){
-		global $dbh;
-
 		$req = "delete from explnum_doc where id_explnum_doc='".$this->explnum_doc_id."'";
-		pmb_mysql_query($req,$dbh);
-		
+		pmb_mysql_query($req);
 	}
 	
 	/*
 	 * Enregistrement
 	 */
 	public function save(){
-		global $dbh;
-		
 		if(!$this->explnum_doc_id){
-			//CrÃ©ation
+			//Création
 			$req = "insert into explnum_doc set  
 					 explnum_doc_nomfichier='".addslashes($this->explnum_doc_nomfichier)."',
 					 explnum_doc_mimetype='".addslashes($this->explnum_doc_mime)."',
@@ -78,7 +72,7 @@ class explnum_doc{
 					 explnum_doc_data='".addslashes($this->explnum_doc_contenu)."',
 					 explnum_doc_url='".addslashes($this->explnum_doc_url)."'
 					 ";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 			$this->explnum_doc_id = pmb_mysql_insert_id();
 					 
 		} else{
@@ -90,7 +84,7 @@ class explnum_doc{
 					 explnum_doc_data='".addslashes($this->explnum_doc_contenu)."',
 					 explnum_doc_url='".addslashes($this->explnum_doc_url)."'
 					 where id_explnum_doc='".$this->explnum_doc_id."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
 	}
 	
@@ -98,7 +92,6 @@ class explnum_doc{
 	 * Charge le fichier
 	 */
 	public function load_file($file_info=array()){
-		
 		if($file_info){
 			$this->explnum_doc_file = $file_info;
 		}
@@ -106,13 +99,11 @@ class explnum_doc{
 	
 	
 	/*
-	 * Analyse du fichier pour en rÃ©cupÃ©rer le contenu et les infos
+	 * Analyse du fichier pour en récupérer le contenu et les infos
 	 */
 	
 	public function analyse_file(){
-		
 		if($this->explnum_doc_file){
-			
 			create_tableau_mimetype();
 			$userfile_name = $this->explnum_doc_file['name'] ;
 			$userfile_temp = $this->explnum_doc_file['tmp_name'] ;
@@ -140,7 +131,7 @@ class explnum_doc{
 	}
 	
 	/*
-	 * Affecte un nom de fichier si il a Ã©tÃ© dÃ©fini
+	 * Affecte un nom de fichier si il a été défini
 	 */
 	public function setName($nom=''){
 		if($nom)
@@ -148,9 +139,9 @@ class explnum_doc{
 	}
 	
 	/*
-	 * Affiche les documents numÃ©riques dans un tableau
+	 * Affiche les documents numériques dans un tableau
 	 */
-	public function show_docnum_table($docnum_tab=array(),$action){
+	public function show_docnum_table($docnum_tab=array(),$action=''){
 		global $charset;
 		
 		create_tableau_mimetype();

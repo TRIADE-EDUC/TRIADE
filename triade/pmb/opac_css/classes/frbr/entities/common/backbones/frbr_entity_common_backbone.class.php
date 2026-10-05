@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_backbone.class.php,v 1.4 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: frbr_entity_common_backbone.class.php,v 1.5 2022/02/14 13:41:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,16 +13,16 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	protected $indexation_path;
 	
 	public function __construct($id=0){
-		$this->id = $id+0;
+		$this->id = intval($id);
 		parent::__construct();
 	}
 	
 	public function set_num_page($num_page){
-		$this->num_page = $num_page+0;
+		$this->num_page = intval($num_page);
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_data(){
 		$this->parameters = new stdClass();
@@ -31,8 +31,8 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
-				$this->id = $row->id_page_content+0;
-				$this->num_page = $row->page_content_num_page+0;
+				$this->id = intval($row->id_page_content);
+				$this->num_page = intval($row->page_content_num_page);
 				$this->json_decode($row->page_content_data);
 			}
 		}
@@ -72,9 +72,11 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	}
 	
 	/*
-	 * MÃ©thode de gÃ©nÃ©ration du formulaire... 
+	 * Méthode de génération du formulaire... 
 	 */
 	public function get_form(){
+		global $msg;
+		
 		$form = "";
 		if (isset($this->manage_id) && $this->manage_id) {		
 			$form = $this->get_human_query();
@@ -119,7 +121,7 @@ class frbr_entity_common_backbone extends frbr_entity_root{
 	}
 
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
 		if($this->id){

@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: concept.html,v 1.13 2019-05-22 08:03:41 ngantier Exp $ -->
+<!-- $Id: concept.html,v 1.15 2023/03/10 15:55:15 tsamson Exp $ -->
 
 {% block header %}
 	<h1><span>{{ msg.detail_concept }}</span></h1>
@@ -25,7 +25,7 @@
 {% endblock %}
 {% block map %}
 	{% if authority.map.map %}
-		<div class="map_notice">
+		<div id="map_notice" class="map_notice">
 			{{ authority.map.map }}
 		</div>
 	{% endif %}
@@ -36,6 +36,7 @@
 		<div class='left'>
 			<input type='button' class='bouton' value='{{msg.62}}' onclick="document.location='./autorites.php?categ=concepts&sub=concept&action=edit&id={{authority.num_object}}'"/>
 			<input type='button' class='bouton' value='{{msg.158}}' onclick="document.location='./autorites.php?categ=concepts&sub=concept&action=replace&id={{authority.num_object}}'"/>
+			<input type='button' class='bouton' value='{{msg.merge}}' onclick="document.location='./autorites.php?categ=concepts&sub=concept&action=merge&id={{authority.num_object}}'"/>
 			<input type='button' class='bouton' value='{{msg.duplicate}}' onclick="document.location='./autorites.php?categ=concepts&sub=concept&action=duplicate&id={{authority.num_object}}'"/>
 			{% if global.pmb_type_audit %}
 				<input type='button' class='bouton' value='{{msg.audit_button}}' onclick="openPopUp('./audit.php?type_obj={{authority.audit_type}}&object_id={{authority.num_object}}', 'audit_popup')"/>

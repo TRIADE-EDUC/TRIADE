@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_formations.class.php,v 1.22 2018-03-21 15:42:14 apetithomme Exp $
+// $Id: nomenclature_record_formations.class.php,v 1.28 2023/11/09 10:26:14 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $class_path;
 require_once($class_path."/nomenclature/nomenclature_record_formation.class.php");
 require_once($class_path."/notice_relations.class.php");
 
 /**
  * class nomenclature_record_formations
- * ReprÃ©sente les formations de la nomenclature d'une notice
+ * Représente les formations de la nomenclature d'une notice
  */
 class nomenclature_record_formations{
 
@@ -30,6 +30,10 @@ class nomenclature_record_formations{
 	public $record_formations;
 	
 	protected $id;
+	
+	protected static $instruments_index_data = array();
+	
+	protected static $voices_index_data = array();
 		
 	/**
 	 * Constructeur
@@ -40,20 +44,20 @@ class nomenclature_record_formations{
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_datas();
 	} // end of member function __construct
 
 	protected function fetch_datas(){
-		global $dbh;
 		$this->record_formations = array();
 		if($this->id){
 			$query = "select id_notice_nomenclature from nomenclature_notices_nomenclatures where notice_nomenclature_num_notice = ".$this->id." order by notice_nomenclature_order, notice_nomenclature_label";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$this->add_record_formation( new nomenclature_record_formation($row->id_notice_nomenclature));	
 				}
+				pmb_mysql_free_result($result);
 			}
 		}
 	}
@@ -81,8 +85,8 @@ class nomenclature_record_formations{
 	}
 	
 	/**
-	 * Supprime les formations qui ne sont plus prÃ©sentes dans la notice
-	 * @param array $formations_list Tableau des formations Ã  conserver
+	 * Supprime les formations qui ne sont plus présentes dans la notice
+	 * @param array $formations_list Tableau des formations à conserver
 	 */
 	protected function delete_old_formations($formations_list) {
 		$formations_ids = array();
@@ -109,8 +113,6 @@ class nomenclature_record_formations{
 	}
 	
 	public static function get_index($id) {
-		global $dbh;
-		
 		$mots="";
 		$req="
 		select formation_name, notice_nomenclature_label, notice_nomenclature_notes,type_name 
@@ -122,7 +124,7 @@ class nomenclature_record_formations{
 			where id_formation=notice_nomenclature_num_formation and notice_nomenclature_num_type=0 and notice_nomenclature_num_notice='".$id."'
 		";
 		
-		$result = pmb_mysql_query($req, $dbh);
+		$result = pmb_mysql_query($req);
 		if($result){
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
@@ -139,7 +141,6 @@ class nomenclature_record_formations{
 	
 	public function reorder_children() {
 		global $pmb_nomenclature_record_children_link;
-		global $dbh;
 		
 		$rank = 0;
 		
@@ -153,12 +154,95 @@ class nomenclature_record_formations{
 		$query.= ' where nomenclature_notices_nomenclatures.notice_nomenclature_num_notice = '.$this->id;
 		$query.= ' order by notice_nomenclature_order, notice_nomenclature_label, exotic_instrument_order, workshop_order, family_order, musicstand_order, child_record_order, voice_order';
 
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			while ($row = pmb_mysql_fetch_object($result)) {
-				notice_relations::update_nomenclature_rank($row->child_record_num_record, $this->id, $pmb_nomenclature_record_children_link, $rank);
+			    notice_relations::update_nomenclature_ranking($row->child_record_num_record, $this->id, $pmb_nomenclature_record_children_link, $rank);
 				$rank++;
 			}
 		}
+	}
+	
+	protected static function get_instruments_index_data($notice_id){
+		if (empty(static::$instruments_index_data[$notice_id])) {
+			if(isset(static::$instruments_index_data) && count(static::$instruments_index_data) > 500) {
+				// Parade pour éviter le dépassement de mémoire
+				static::$instruments_index_data = array();
+			}
+			
+    	    $formations = new nomenclature_record_formations($notice_id);
+    	    $nb = count($formations->record_formations);
+    	    $index_data = [];
+    	    $data = [];
+    	    for($i=0 ; $i<$nb ; $i++){
+    	        if ($formations->record_formations[$i]->get_nature() == 0) {
+    	        	$data = $formations->record_formations[$i]->get_instruments_index_data();
+    	        	for($j=0 ; $j<count($data) ; $j++){
+    	            	$index = [];
+    	            	foreach($data[$j] as $info => $value){
+    	                	$index[$info] =$value;
+    	            	}
+    	            	$index_data[] =	 $index;
+    	        	}
+    	    	}
+    	    }
+    	    static::$instruments_index_data[$notice_id] = $index_data;
+    	    $formations = null;
+    	    $index_data = null;
+    	    $data = null;
+	    }
+	    return static::$instruments_index_data[$notice_id];
+	}
+	
+	public static function get_instruments_index($notice_id, $property, $family) {
+	    $data = static::get_instruments_index_data($notice_id);
+	    $return_data = [];
+	    foreach ($data as $infos) {
+	        if (!empty($infos[$property]) && $infos["family"] == $family) {
+	            $return_data[] = $infos[$property];
+	        }
+	    }
+	    return $return_data;
+	}
+	
+	protected static function get_voices_index_data($notice_id){
+		if (empty(static::$voices_index_data[$notice_id])) {
+			if(isset(static::$voices_index_data) && count(static::$voices_index_data) > 500) {
+				// Parade pour éviter le dépassement de mémoire
+				static::$voices_index_data = array();
+			}
+	        $formations = new nomenclature_record_formations($notice_id);
+	        $nb = (is_countable($formations->record_formations) ? count($formations->record_formations) : 0);
+	        $index_data = [];
+	        $data = [];
+	        for($i=0 ; $i<$nb ; $i++){
+	            if ($formations->record_formations[$i]->get_nature() == 1) {
+    	            $data = $formations->record_formations[$i]->get_voices_index_data();
+    	            for($j=0 ; $j<count($data) ; $j++){
+    	                $index = [];
+    	                foreach($data[$j] as $info => $value){
+    	                    $index[$info] =$value;
+    	                }
+    	                $index_data[] =	 $index;
+    	            }
+	            }
+	        }
+	        static::$voices_index_data[$notice_id] = $index_data;
+	        $formations = null;
+	        $index_data = null;
+	        $data = null;
+	    }
+	    return static::$voices_index_data[$notice_id];
+	}
+	
+	public static function get_voices_index($notice_id, $property) {
+	    $data = static::get_voices_index_data($notice_id);
+	    $return_data = [];
+	    foreach ($data as $infos) {
+	        if (!empty($infos[$property])) {
+	            $return_data[] = $infos[$property];
+	        }
+	    }
+	    return $return_data;
 	}
 } // end of nomenclature_record_formations

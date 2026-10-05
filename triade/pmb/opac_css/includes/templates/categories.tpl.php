@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categories.tpl.php,v 1.19 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: categories.tpl.php,v 1.20 2023/08/03 12:51:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -13,14 +13,14 @@ global $tpl_subcategory;
 
 // template for PMB OPAC
 
-// Ã©lÃ©ments pour la recherche simple
+// éléments pour la recherche simple
 
-// tpl_div_categories : le bloc qui contient toutes les catÃ©gories, prÃ©sentÃ©es correctement
-//   !!root_categories!! : sera remplacÃ© par autant de blocs $tpl_div_category qu'ils y a
-//                         de catÃ©gories de niveau 0.
+// tpl_div_categories : le bloc qui contient toutes les catégories, présentées correctement
+//   !!root_categories!! : sera remplacé par autant de blocs $tpl_div_category qu'ils y a
+//                         de catégories de niveau 0.
 $tpl_div_categories = "
 <div id='categories'>
-<h3><span id='titre_categories'>$msg[categories]</span></h3>
+<!-- title -->
 <!-- liens_thesaurus -->
 <div id='categories-container'>
 !!root_categories!!
@@ -29,9 +29,9 @@ $tpl_div_categories = "
 </div>
 ";
 
-// tpl_div_category : le bloc qui contient une catÃ©gorie et ses fils de premier niveau.
-//   !!categoryname!! : sera remplacÃ© par le nom de la catÃ©gorie de niveau 0
-//   !!subcategories!! : sera rempalcÃ© par autant de blocs $tpl_subcategory qu'il y a
+// tpl_div_category : le bloc qui contient une catégorie et ses fils de premier niveau.
+//   !!categoryname!! : sera remplacé par le nom de la catégorie de niveau 0
+//   !!subcategories!! : sera rempalcé par autant de blocs $tpl_subcategory qu'il y a
 //                       de fils de premiers niveau
 $tpl_div_category =
 "<div class='category' >
@@ -43,8 +43,8 @@ $tpl_div_category =
 </div>
 ";
 
-// tpl_subcategory : le petit bloc qui contient le fils de premier niveau d'une catÃ©gorie
-//   !!subcategory!! : sera remplacÃ© par le nom du fils de premier niveau de la catÃ©gorie.
+// tpl_subcategory : le petit bloc qui contient le fils de premier niveau d'une catégorie
+//   !!subcategory!! : sera remplacé par le nom du fils de premier niveau de la catégorie.
 $tpl_subcategory =
 "<li>!!sub_category!!</li>
 ";

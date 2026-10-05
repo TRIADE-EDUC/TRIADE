@@ -1,12 +1,13 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_layer_model.class.php,v 1.13 2019-04-12 15:24:06 tsamson Exp $
+// $Id: map_layer_model.class.php,v 1.14.8.2 2025/04/25 12:05:30 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
+global $class_path;
 require_once($class_path . "/map/map_hold.class.php");
 require_once($class_path . "/map/map_hold_polygon.class.php");
 require_once($class_path . "/map/map_hold_point.class.php");
@@ -17,15 +18,11 @@ require_once($class_path . "/map/map_coord.class.php");
 
 /**
  * class map_layer_model
- * 
  */
 class map_layer_model {
-    /** Aggregations: */
-    /** Compositions: */
-    /*     * * Attributes: ** */
 
     /**
-     * Tableau des emprises, l'identifiant de l'objet est la clÃ©
+     * Tableau des emprises, l'identifiant de l'objet est la clé
      * @access protected
      */
     protected $holds;
@@ -37,7 +34,7 @@ class map_layer_model {
     protected $ids = array();
 
     /**
-     * 
+     *
      * @access protected
      */
     protected $bounding_box;
@@ -49,34 +46,31 @@ class map_layer_model {
     protected $color = "";
 
     /**
-     * 
      *
-     * @param Array() ids Tableau des identifiants des objets contenant des emprises
-
+     *
+     * @param array ids Tableau des identifiants des objets contenant des emprises
      * @return void
      * @access public
      */
     public function __construct($ids) {
-
-        if (!isset($ids[0]))
+        if (!isset($ids[0])) {
             $ids = array();
+        }
         $this->ids = $ids;
-
         $this->fetch_datas();
     }
-// end of member function __construct
+
+    public function fetch_datas() {}
 
     /**
-     * Retourne l'emprise normalisÃ© minimal pour afficher toutes les emprises
+     * Retourne l'emprise normalisé minimal pour afficher toutes les emprises
      *
      * @return map_hold
      * @access public
      */
     public function get_bounding_box() {
-        global $dbh;
-
         if (!$this->bounding_box) {
-            //on teste la maniÃ¨re forte !
+            //on teste la manière forte !
             $collection = $global_collection = "";
             $i = 0;
             foreach ($this->holds as $hold) {
@@ -86,7 +80,7 @@ class map_layer_model {
                 $i++;
                 if ($i == 500) {
                     $query = "select astext(envelope(geomfromtext('geometrycollection(" . $collection . ")'))) as bounding_box";
-                    $result = pmb_mysql_query($query, $dbh) or die(pmb_mysql_error());
+                    $result = pmb_mysql_query($query) or die(pmb_mysql_error());
                     if (pmb_mysql_num_rows($result)) {
                         if ($global_collection)
                             $global_collection.=",";
@@ -99,7 +93,7 @@ class map_layer_model {
 
             if ($collection) {
                 $query = "select astext(envelope(geomfromtext('geometrycollection(" . $collection . ")'))) as bounding_box";
-                $result = pmb_mysql_query($query, $dbh) or die(pmb_mysql_error());
+                $result = pmb_mysql_query($query) or die(pmb_mysql_error());
                 if (pmb_mysql_num_rows($result)) {
                     if ($global_collection)
                         $global_collection.=",";
@@ -109,7 +103,7 @@ class map_layer_model {
 
             if ($global_collection) {
                 $query = "select astext(envelope(geomfromtext('geometrycollection(" . $global_collection . ")'))) as bounding_box";
-                $result = pmb_mysql_query($query, $dbh) or die(pmb_mysql_error());
+                $result = pmb_mysql_query($query) or die(pmb_mysql_error());
                 if (pmb_mysql_num_rows($result)) {
                     $this->bounding_box = new map_hold_polygon("bounding", 0, pmb_mysql_result($result, 0, 0));
                 }
@@ -124,15 +118,15 @@ class map_layer_model {
 // end of member function get_bounding_box
 
     /**
-     * appelle toutes les emprises normalisÃ©e des emprises courantes pour calculer
-     * l'emprise minimum nÃ©cessaire pour afficher toutes les emprises associÃ©es aux
+     * appelle toutes les emprises normalisée des emprises courantes pour calculer
+     * l'emprise minimum nécessaire pour afficher toutes les emprises associées aux
      * objets courants
      *
      * @return void
      * @access protected
      */
     protected function calc_bounding_box() {
-        
+
     }
 
 // end of member function calc_bounding_box
@@ -156,6 +150,13 @@ class map_layer_model {
         }
         return false;
     }
-}
 
-// end of map_layer_model
+
+    public function get_layer_model_type() {
+        return '';
+    }
+
+    public function get_layer_model_name() {
+        return '';
+    }
+}

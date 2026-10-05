@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: input_xml.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: input_xml.class.php,v 1.2 2023/08/23 10:25:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,7 +21,7 @@ class input_xml extends convert_input {
 			$i=strpos($fcontents,"<".$input_params['NOTICEELEMENT'].">");
 			if ($i===false) $i=strpos($fcontents,"<".$input_params['NOTICEELEMENT']." ");
 			if ($i!==false) {
-				//on pense Ã  rÃ©cup le charset du xml
+				//on pense à récup le charset du xml
 				if($encoding === ""){
 					$s=strpos($fcontents,"<?xml");
 					$e=strpos($fcontents,"?>");
@@ -37,7 +37,7 @@ class input_xml extends convert_input {
 					$i1=strpos($fcontents,"</".$input_params['NOTICEELEMENT'].">");
 				}
 				if ($i1!==false) {
-					$notice=substr($fcontents,$i,$i1+strlen("</".$input_params['NOTICEELEMENT'].">")-$i);
+					$notice=substr($fcontents,intval($i),intval($i1) + strlen("</".$input_params['NOTICEELEMENT'].">") - intval($i));
 					$requete="insert into import_marc (no_notice, notice, origine, encoding) values($n,'".addslashes($notice)."','$origine','$encoding')";
 					pmb_mysql_query($requete);
 					$n++;

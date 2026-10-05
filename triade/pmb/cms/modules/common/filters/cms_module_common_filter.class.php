@@ -1,24 +1,25 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_filter.class.php,v 1.9 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_filter.class.php,v 1.14.4.1.2.4 2025/04/30 08:33:13 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_filter extends cms_module_root{
 	protected $cadre_parent;
 	protected $selectors=array();
-		
+	protected $generic_type;
+
 	public function __construct($id=0){
 	    $this->id = (int) $id;
 		parent::__construct();
 	}
-	
+
 	public function get_available_selectors(){
 		return array();
 	}
-	
+
 	public function get_filter_from_selectors(){
 		return array();
 	}
@@ -26,13 +27,13 @@ class cms_module_common_filter extends cms_module_root{
 	public function get_filter_by_selectors(){
 		return array();
 	}
-	
+
 	public function set_cadre_parent($id){
 	    $this->cadre_parent = (int) $id;
 	}
-	
+
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_datas(){
 		if($this->id){
@@ -49,115 +50,151 @@ class cms_module_common_filter extends cms_module_root{
 			$this->selectors = $this->parameters['selectors'];
 		}
 	}
-	
+
 	/*
-	 * MÃ©thode de gÃ©nÃ©ration du formulaire... 
+	 * Méthode de génération du formulaire...
 	 */
 	public function get_form(){
 		$selectors_by = $this->get_filter_by_selectors();
 		$selectors_from = $this->get_filter_from_selectors();
-		$form=$this->get_hash_form();
-		//on commence avec la valeur Ã  comparer (filter_from)
-		$form.= "
+		$selector_from_form_value_name = $this->get_form_value_name('selector_from_form');
+		$selector_by_form_value_name = $this->get_form_value_name("selector_by_form");
+		$form = $this->get_hash_form();
+
+		$form .= "
+        <input type='hidden' name='cms_module_common_module_filters[]' value='$this->class_name'/>
 		<div class='row'>";
-		$form.= $this->get_selectors_form("from");
-		if($this->parameters['selector']['from']!= "" || count($selectors_from)==1){
+
+		// On commence avec la valeur à comparer (filter_from)
+		$form .= $this->get_selectors_form("from");
+		if (!empty($this->parameters['selector']['from']) || (is_countable($selectors_from) && count($selectors_from) == 1)) {
 			$selector_id = 0;
-			$current_selector_id = 0;
-			if($this->parameters['selector']['from']!= ""){
-				for($i=0 ; $i<count($this->selectors['from']) ; $i++){
-					if($this->selectors['from'][$i]['name'] == $this->parameters['selector']['from']){
+			if (isset($this->selectors['from']) && is_countable($this->selectors['from']) && !empty($this->parameters['selector']['from'])) {
+			    $nb_selector_from = count($this->selectors['from']);
+				for ($i = 0; $i < $nb_selector_from; $i++) {
+					if ($this->selectors['from'][$i]['name'] == $this->parameters['selector']['from']) {
 						$selector_id = $this->selectors['from'][$i]['id'];
 						break;
 					}
 				}
-				$selector_name= $this->parameters['selector']['from'];
-			}else if(count($selectors_from)==1){
-				$selector_name= $selectors_from[0];
+				$selector_name = $this->parameters['selector']['from'];
+			} elseif (count($selectors_from) == 1) {
+				$selector_name = $selectors_from[0];
 			}
-			$form.="
+			$form .= "
 			<script type='text/javacsript'>
-			cms_module_load_elem_form('".$selector_name."','".$selector_id."','".$this->get_form_value_name("selector_from_form")."');
+			    cms_module_load_elem_form('$selector_name', '$selector_id', '$selector_from_form_value_name');
 			</script>";
 		}
-		$form.="
+		$form .= "
 		</div>
 		<div class='row'>
-		<label>".$this->format_text($this->msg['cms_module_common_filter_compare_from'])."</label>
+            <div class='colonne3'>
+                <label>".$this->format_text($this->msg['cms_module_common_filter_compare_from'])."</label>
+            </div>
+            <div class='colonne3'>&nbsp;</div>
+            <div class='colonne-suite'>
+                <input type='button' class='bouton' value='X' onclick=\"destroy_filter(this, ".$this->id.", '".$this->class_name."');\"/>
+            </div>
+            <script type='text/javascript'>
+    			if (typeof destroy_filter != 'function') {
+    				function destroy_filter(node, id, class_name) {
+    					dojo.xhrGet({
+    						url : './ajax.php?module=cms&categ=module&elem=' + class_name + '&action=delete&id=' + id
+    					});
+    					var content = dijit.byId(node.parentNode.parentNode.parentNode.id);
+    					if (content) {
+    						content.destroyRecursive(false);
+    					}
+    				}
+    			}
+		    </script>
 		</div>
 		<div class='row'>
-		<div id='".$this->get_form_value_name("selector_from_form")."' dojoType='dojox.layout.ContentPane'></div>
+		    <div id='$selector_from_form_value_name' dojoType='dojox.layout.ContentPane'></div>
 		</div>";
-		
-		//on continue avec la valeur Ã  laquelle comparer (filter_by)!
-		$form.= "
-			<div class='row'>
-				<div class='colonne3'>	
-					<label>".$this->format_text($this->msg['cms_module_common_filter_compare_with'])."</label>
-				</div>
-	  			<div class='colonne-suite'>";
-		$form.= $this->get_selectors_form("by");
-		if($this->parameters['selector']['by']!= "" || count($selectors_by)==1){
-			$current_selector_id = 0;
-			if($this->parameters['selector']['by']!= ""){
-				for($i=0 ; $i<count($this->selectors['by']) ; $i++){
-					if($this->selectors['by'][$i]['name'] == $this->parameters['selector']['by']){
+
+		// On continue avec la valeur à laquelle comparer (filter_by)
+		$form .= "
+		<div class='row'>
+			<div class='colonne3'>
+				<label>".$this->format_text($this->msg['cms_module_common_filter_compare_with'])."</label>
+			</div>
+  			<div class='colonne-suite'>";
+		$form .= $this->get_selectors_form("by");
+		if (!empty($this->parameters['selector']['by']) || (is_countable($selectors_by) && count($selectors_by) == 1)) {
+		    if (is_countable($this->selectors['by']) && !empty($this->parameters['selector']['by'])) {
+			    $nb_selector_by = count($this->selectors['by']);
+			    for ($i = 0; $i < $nb_selector_by; $i++) {
+					if ($this->selectors['by'][$i]['name'] == $this->parameters['selector']['by']) {
 						$selector_id = $this->selectors['by'][$i]['id'];
-							break;
+						break;
 					}
 				}
-				$selector_name= $this->parameters['selector']['by'];
-			}else if(count($selectors_by)==1){
- 				$selector_name= $selectors_by[0];
+				$selector_name = $this->parameters['selector']['by'];
+			} elseif (count($selectors_by) == 1) {
+ 				$selector_name = $selectors_by[0];
  			}
- 			$form.="
-	 			 	<script type='text/javacsript'>
-	 			 		cms_module_load_elem_form('".$selector_name."','".$selector_id."','".$this->get_form_value_name("selector_by_form")."');
-	 			 	</script>";
+ 			$form .= "
+ 			 	<script type='text/javacsript'>
+ 			 		cms_module_load_elem_form('$selector_name', '$selector_id', '$selector_by_form_value_name');
+ 			 	</script>";
 		}
 		$form.="
-				</div>
 			</div>
-			<div class='row'>
- 				<div id='".$this->get_form_value_name("selector_by_form")."' dojoType='dojox.layout.ContentPane'></div>
- 			</div>";
+		</div>
+		<div class='row'>
+			<div id='$selector_by_form_value_name' dojoType='dojox.layout.ContentPane'></div>
+		</div>";
+
 		return $form;
-	}	
-	
-	protected function get_selectors_form($type){
-		switch($type){
-			case "from" :
+	}
+
+	protected function get_selectors_form($type) {
+		switch ($type) {
+			case "from":
 				$selectors = $this->get_filter_from_selectors();
 				break;
-			case "by" :
+			case "by":
 				$selectors = $this->get_filter_by_selectors();
 				break;
 		}
-		
-		if(count($selectors)>1){
+
+		if (is_countable($selectors) && count($selectors) > 1) {
 			$form = "
-			<select name='".$this->get_form_value_name("selector_".$type."_choice")."' onchange='cms_module_load_elem_form(this.value,0,\"".$this->get_form_value_name("selector_by_form")."\");'>";
-			foreach($selectors as $selector){
-				$form.= "
-				<option value='".$selector."' ".($this->parameters['selector'][$type] == $selector ? "selected='selected'" : "").">".$this->format_text($this->msg[$selector])."</option>";
+			<select name='".$this->get_form_value_name("selector_".$type."_choice")."' onchange='cms_module_load_elem_form(this.value,0,\"".$this->get_form_value_name("selector_by_form")."\");'>
+                <option value=''>" . $this->msg['cms_module_common_filter_selector_by_choice_default'] . "</option>";
+			foreach ($selectors as $selector) {
+			    $selected = "";
+			    if (
+			        !empty($this->parameters) &&
+			        !empty($this->parameters['selector']) &&
+			        !empty($this->parameters['selector'][$type]) &&
+			        $this->parameters['selector'][$type] == $selector
+			    ) {
+    			    $selected = "selected='selected'";
+			    }
+
+			    $form .= sprintf('<option value="%s" %s>%s</option>', $selector, $selected, $this->format_text($this->msg[$selector]));
 			}
-			$form.= "
+			$form .= "
 			</select>";
-		}else{
+		} else {
 			$form = "
 			<input type='hidden' name='".$this->get_form_value_name("selector_".$type."_choice")."' value='".$selectors[0]."'/>";
 		}
+
 		return $form;
 	}
-		
+
 	/*
 	 * Sauvegarde des infos depuis un formulaire...
 	 */
 	public function save_form(){
-		
+
 		$this->parameters['selector']['by'] = $this->get_value_from_form("selector_by_choice");
 		$this->parameters['selector']['from'] = $this->get_value_from_form("selector_from_choice");
-				
+
 		$this->get_hash();
 		if($this->id){
 			$query = "update cms_cadre_content set";
@@ -166,35 +203,37 @@ class cms_module_common_filter extends cms_module_root{
 			$query = "insert into cms_cadre_content set";
 			$clause = "";
 		}
-		$query.= " 
+		$query.= "
 			cadre_content_hash = '".$this->hash."',
 			cadre_content_type = 'filter',
 			cadre_content_object = '".$this->class_name."',".
-			($this->cadre_parent ? "cadre_content_num_cadre = '".$this->cadre_parent."'," : "")."		
+			($this->cadre_parent ? "cadre_content_num_cadre = '".$this->cadre_parent."'," : "")."
 			cadre_content_data = '".addslashes($this->serialize())."'
 			".$clause;
 		$result = pmb_mysql_query($query);
-		
+
 		if($result){
 			if(!$this->id){
 				$this->id = pmb_mysql_insert_id();
 			}
-			//on supprime les anciens filtres
-			$query = "delete from cms_cadre_content where id_cadre_content != '".$this->id."' and cadre_content_type='filter' and cadre_content_num_cadre = '".$this->cadre_parent."'";
-			pmb_mysql_query($query);
-			//sÃ©lecteur
+
+			//sélecteur
 			$selector_by_id = $selector_from_id = 0;
-			for($i=0 ; $i<count($this->selectors['by']) ; $i++){
-				if($this->parameters['selector']['by'] == $this->selectors['by'][$i]['name']){
-					$selector_by_id = $this->selectors['by'][$i]['id'];
-					break;
-				}
+			if (is_countable($this->selectors['by']) && !empty($this->selectors['by'])){
+    			for($i=0 ; $i<count($this->selectors['by']) ; $i++){
+    				if($this->parameters['selector']['by'] == $this->selectors['by'][$i]['name']){
+    					$selector_by_id = $this->selectors['by'][$i]['id'];
+    					break;
+    				}
+    			}
 			}
-			for($i=0 ; $i<count($this->selectors['from']) ; $i++){
-				if($this->parameters['selector']['from'] == $this->selectors['from'][$i]['name']){
-					$selector_from_id = $this->selectors['from'][$i]['id'];
-					break;
-				}
+			if (is_countable($this->selectors['from']) && !empty($this->selectors['from'])){
+    			for($i=0 ; $i<count($this->selectors['from']) ; $i++){
+    				if($this->parameters['selector']['from'] == $this->selectors['from'][$i]['name']){
+    					$selector_from_id = $this->selectors['from'][$i]['id'];
+    					break;
+    				}
+    			}
 			}
 			if($this->parameters['selector']['by'] && $this->parameters['selector']['from']){
 				$selector_from = new $this->parameters['selector']['from']($selector_from_id);
@@ -219,8 +258,8 @@ class cms_module_common_filter extends cms_module_root{
 									'name' => $this->parameters['selector']['by']
 							);
 						}
-						
-						//on a tout sauvegardÃ©, on garde la trace dans le filtre pour pas tout chamboulÃ© dans les sÃ©lecteurs...
+
+						//on a tout sauvegardé, on garde la trace dans le filtre pour pas tout chamboulé dans les sélecteurs...
 						$this->parameters['selectors'] = $this->selectors;
 						pmb_mysql_query("update cms_cadre_content set cadre_content_data = '".addslashes($this->serialize())."' where id_cadre_content='".$this->id."'");
 						return true;
@@ -236,22 +275,22 @@ class cms_module_common_filter extends cms_module_root{
 				return true;
 			}
 		}else{
-			//crÃ©ation de la source de donnÃ©e ratÃ©e, on supprime le hash de la table...
+			//création de la source de donnée ratée, on supprime le hash de la table...
 			$this->delete_hash();
 			return false;
 		}
 	}
 
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
 		if($this->id){
-			//on commence par Ã©liminer le sÃ©lecteur associÃ©...
+			//on commence par éliminer le sélecteur associé...
 			$query = "select id_cadre_content,cadre_content_object from cms_cadre_content where cadre_content_num_cadre_content = '".$this->id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
-				//la logique voudrait qu'il n'y ai qu'un seul sÃ©lecteur (enfin sous-Ã©lÃ©ment, la conception peut Ã©voluer...), mais sauvons les brebis Ã©garÃ©es...
+				//la logique voudrait qu'il n'y ai qu'un seul sélecteur (enfin sous-élément, la conception peut évoluer...), mais sauvons les brebis égarées...
 				while($row = pmb_mysql_fetch_object($result)){
 					$sub_elem = new $row->cadre_content_object($row->id_cadre_content);
 					$success = $sub_elem->delete();
@@ -261,7 +300,7 @@ class cms_module_common_filter extends cms_module_root{
 					}
 				}
 			}
-			//on est tout seul, Ã©liminons-nous !
+			//on est tout seul, éliminons-nous !
 			$query = "delete from cms_cadre_content where id_cadre_content = '".$this->id."'";
 			$result = pmb_mysql_query($query);
 			if($result){
@@ -272,27 +311,27 @@ class cms_module_common_filter extends cms_module_root{
 			}
 		}
 	}
-	
+
 	public function get_headers($datas=array()){
 		$headers=array();
 		if($this->parameters['selector']){
-			$selector = $this->get_selected_selector();
+			$selector = $this->get_selected_selector('none');
 			$headers = array_merge($headers,$selector->get_headers($datas));
 			$headers = array_unique($headers);
-		}	
+		}
 		return $headers;
 	}
-	
+
 	protected function get_selected_selector($origin){
 		//on va chercher
-		if($this->parameters['selector'][$origin]!= ""){
+	    if(is_countable($this->selectors) && is_countable($this->selectors[$origin]) && $this->parameters['selector'][$origin]!= ""){
 			$current_selector_id = 0;
-			for($i=0 ; $i<count($this->selectors) ; $i++){
+			for($i=0; $i<count($this->selectors[$origin]); $i++){
 				if($this->selectors[$origin][$i]['name'] == $this->parameters['selector'][$origin]){
 					return new $this->selectors[$origin][$i]['name']($this->selectors[$origin][$i]['id']);
 				}
 			}
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -309,12 +348,18 @@ class cms_module_common_filter extends cms_module_root{
 
 	public function filter($datas){
 		$filtered_datas= array();
-		//on rÃ©cupÃ¨re le champ Ã  tester...
+		//on récupère le champ à tester...
+		$field_from = '';
 		$selector_from = $this->get_selected_selector("from");
-		$field_from = $selector_from->get_value();
+		if(!empty($selector_from)) {
+			$field_from = $selector_from->get_value();
+		}
 		//a quoi...
+		$field_by = '';
 		$selector_by = $this->get_selected_selector("by");
-		$field_by = $selector_by->get_value();
+		if(!empty($selector_by)) {
+			$field_by = $selector_by->get_value();
+		}
 		if($field_by){
 			$fields = new cms_editorial_parametres_perso($field_from['type']);
 			if(!isset($fields->t_fields[$field_from['field']])){

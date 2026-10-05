@@ -1,23 +1,22 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_vedette.class.php,v 1.1 2017-09-12 13:19:22 dgoron Exp $
-  
+// $Id: selector_vedette.class.php,v 1.3.4.1 2025/01/16 10:24:11 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 require($base_path."/selectors/templates/sel_vedette.tpl.php");
 
 class selector_vedette extends selector {
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 	}
-	
+
 	public function proceed() {
-		global $page;
-	
 		print $this->get_sel_header_template();
 		print $this->get_search_form();
 		print $this->get_js_script();
@@ -27,25 +26,18 @@ class selector_vedette extends selector {
 		print $this->get_display_list();
 		print $this->get_sel_footer_template();
 	}
-	
+
 	protected function get_display_list() {
-		global $nb_per_page;
-		global $page;
 		global $grammars;
-	
+
 		$display_list = '';
-		if(!$page) {
-			$debut = 0;
-		} else {
-			$debut = ($page-1)*$nb_per_page;
-		}
 		if(!$grammars) {
 			$grammars_in = "'notice_authors'";
 		} else {
 			$grammars_in = "'".implode("','", explode(',', $grammars))."'";
 		}
 		$user_input = str_replace('*','',$this->user_input);
-		// on rÃ©cupÃ©re le nombre de lignes
+		// on récupére le nombre de lignes
 		if($user_input=="") {
 			$query = "SELECT COUNT(1) FROM vedette where grammar in (".$grammars_in.")";
 		} else {
@@ -54,12 +46,13 @@ class selector_vedette extends selector {
 		$result = pmb_mysql_query($query);
 		$this->nbr_lignes = pmb_mysql_result($result, 0, 0);
 		if($this->nbr_lignes) {
-			// on lance la vraie requÃªte
+			// on lance la vraie requête
 			if($user_input=="") {
-				$query = "SELECT id_vedette, label FROM vedette where grammar in (".$grammars_in.") ORDER BY label LIMIT $debut,$nb_per_page ";
+				$query = "SELECT id_vedette, label FROM vedette where grammar in (".$grammars_in.") ";
 			} else {
-				$query = "SELECT id_vedette, label FROM vedette where label like '%".$user_input."%' and  grammar in (".$grammars_in.") ORDER BY label limit $debut,$nb_per_page";
+				$query = "SELECT id_vedette, label FROM vedette where label like '%".$user_input."%' and  grammar in (".$grammars_in.") ";
 			}
+			$query .= " ORDER BY label LIMIT ".$this->get_start_list().",".$this->get_nb_per_page_list()." ";
 			$result = pmb_mysql_query($query);
 			$display_list .= "<table><tr>";
 			while($vedette=pmb_mysql_fetch_object($result)) {
@@ -70,12 +63,12 @@ class selector_vedette extends selector {
 		}
 		return $display_list;
 	}
-	
+
 	protected function get_display_element($index='', $value='') {
 		global $charset;
 		global $caller;
 		global $callback;
-	
+
 		$display = "
 		<tr>
 		<td>
@@ -84,15 +77,15 @@ class selector_vedette extends selector {
 		</tr>";
 		return $display;
 	}
-	
+
 	public function get_title() {
 		global $msg;
 		return $msg["notice_vedette_composee_author"];
 	}
-	
+
 	public static function get_params_url() {
 		global $grammars, $mode;
-	
+
 		$params_url = parent::get_params_url();
 		$params_url .= ($grammars ? "&grammars=".$grammars : "").($mode ? "&mode=".$mode : "");
 		return $params_url;

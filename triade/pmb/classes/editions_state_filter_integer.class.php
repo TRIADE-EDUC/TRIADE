@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_filter_integer.class.php,v 1.6 2014-10-28 18:03:42 mbertin Exp $
+// $Id: editions_state_filter_integer.class.php,v 1.8 2023/02/23 09:00:11 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/editions_state_filter.class.php");
 
 class editions_state_filter_integer extends editions_state_filter {
@@ -14,38 +15,26 @@ class editions_state_filter_integer extends editions_state_filter {
 		parent::__construct($elem,$params);
 		//on s'assure d'avoir un nombre !
 		if($this->value !== ""){
-			$this->value+=0;
+			$this->value = intval($this->value);
 		}
 	}
 	
-	public function get_form($draggable=false){
-		global $msg,$charset;
-		$form= "
-			<div class='row'>&nbsp;</div>
-			<div class='row' >";
-		if($draggable){
-			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."_drag' draggable='yes' dragtype='editionsstatefilterslist'>";
-		}else{
-			$form.= "<div class='colonne3' id='filters_".$this->elem['id']."' >";
-		}
-		$form.= "
-					
-				<label style='cursor: pointer;'>".htmlentities($this->elem['label'],ENT_QUOTES,$charset)."</label>
-				</div>
-				<div class='colonne3'>
-					<select name='".$this->elem['id']."_filter_op'>
-						<option value='='".($this->op == "=" ? " selected='selected'" : "").">=</option>
-						<option value='>'".($this->op == ">" ? " selected='selected'" : "").">></option>
-						<option value='>='".($this->op == ">=" ? " selected='selected'" : "").">>=</option>
-						<option value='<'".($this->op == "<" ? " selected='selected'" : "")."><</option>
-						<option value='<='".($this->op == "<=" ? " selected='selected'" : "")."><=</option>
-					</select>
-				</div>
-				<div class='colonne_suite'>
-					<input type='text' name='".$this->elem['id']."_filter' value ='".htmlentities($this->value,ENT_QUOTES,$charset)."'/>
-				</div>
-			</div>";	
-		return $form;
+	protected function get_inherited_form(){
+		global $charset;
+		
+		return "
+		<div class='colonne3'>
+			<select name='".$this->elem['id']."_filter_op'>
+				<option value='='".($this->op == "=" ? " selected='selected'" : "").">=</option>
+				<option value='>'".($this->op == ">" ? " selected='selected'" : "").">></option>
+				<option value='>='".($this->op == ">=" ? " selected='selected'" : "").">>=</option>
+				<option value='<'".($this->op == "<" ? " selected='selected'" : "")."><</option>
+				<option value='<='".($this->op == "<=" ? " selected='selected'" : "")."><=</option>
+			</select>
+		</div>
+		<div class='colonne_suite'>
+			<input type='text' name='".$this->elem['id']."_filter' value ='".htmlentities($this->value,ENT_QUOTES,$charset)."'/>
+		</div>";
 	}
 	
 	public function get_sql_filter(){

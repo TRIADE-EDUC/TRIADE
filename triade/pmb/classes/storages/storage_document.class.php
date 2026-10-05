@@ -3,11 +3,12 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: storage_document.class.php,v 1.4 2018-02-26 17:01:59 apetithomme Exp $
+// $Id: storage_document.class.php,v 1.10.2.1.2.1 2025/03/21 10:28:24 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
 
+global $class_path, $include_path;
 require_once($include_path . "/explnum.inc.php");
 require_once($class_path . "/storages/storages.class.php");
 create_tableau_mimetype();
@@ -32,6 +33,8 @@ class storage_document {
     protected static $table;
     protected static $prefix;
     protected $used = array();
+
+    public $num_object;
 
     public function __construct($id = 0) {
         $this->id = $id * 1;
@@ -111,7 +114,7 @@ class storage_document {
     }
 
     public function get_vignette_url() {
-        global $opac_url_base, $pmb_url_base;
+        global $pmb_url_base;
        	$vign_url =  "./ajax.php?module=cms&categ=document&action=thumbnail&id=" . $this->id;
 		//On prend l'URL absolu pour avoir un hash de l'image correcte
 		$img = getimage_cache(0,0,0,$pmb_url_base.$vign_url);
@@ -122,7 +125,6 @@ class storage_document {
     }
 
     public function get_document_url() {
-        global $opac_url_base;
         return "./ajax.php?module=cms&categ=document&action=render&id=" . $this->id;
     }
 
@@ -138,10 +140,11 @@ class storage_document {
         return round($this->human_size, 1) . " " . $units[$i];
     }
 
-    function delete() {
-        global $msg;
+    public function delete() {
+        global $msg, $force_delete;
         //suppression physique
-        if ($this->storage->delete($this->path . $this->filename)) {
+        //On ajoute un moyen de forcer la suppression en base, dans les cas de bases polluées
+        if ((!empty($this->storage) && $this->storage->delete($this->path . $this->filename)) || $force_delete) {
             //il ne reste plus que la base
             if (pmb_mysql_query("delete from " . static::$table . " where id_" . static::$prefix . " = " . $this->id)) {
                 return true;
@@ -152,7 +155,7 @@ class storage_document {
         return false;
     }
 
-    function calculate_vignette() {
+    public function calculate_vignette() {
         error_reporting(null);
         global $base_path, $include_path, $class_path;
         $path = $this->get_document_in_tmp();
@@ -177,12 +180,12 @@ class storage_document {
         }
     }
 
-    function regen_vign() {
+    public function regen_vign() {
         $this->calculate_vignette();
         pmb_mysql_query("update " . static::$table . " set " . static::$prefix . "_vignette = '" . addslashes($this->vignette) . "' where id_" . static::$prefix . " = " . $this->id);
     }
 
-    function get_document_in_tmp() {
+    public function get_document_in_tmp() {
         $this->clean_tmp();
         global $base_path;
         $path = tempnam($base_path . "/temp/", static::$table . '_');
@@ -205,9 +208,8 @@ class storage_document {
             }
         }
         closedir($dh);
-        $deleteList = array();
         foreach ($files as $file => $stat) {
-            //si le dernier accÃ¨s au fichier est de plus de 3h, on vide...
+            //si le dernier accès au fichier est de plus de 3h, on vide...
             if (time() - $stat["mtime"] > (3600 * 3)) {
                 if (is_dir($base_path . "/temp/" . $file)) {
                     $this->rrmdir($base_path . "/temp/" . $file);
@@ -218,7 +220,7 @@ class storage_document {
         }
     }
 
-    function rrmdir($dir) {
+    public function rrmdir($dir) {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
@@ -273,7 +275,7 @@ class storage_document {
             } else {
             	$tmpprefix_url_image = "./";
             }
-            $vign = file_get_contents($tmpprefix_url_image . "images/mimetype/" . icone_mimetype($this->mimetype, substr($this->filename, strrpos($this->filename, ".") + 1)));
+            $vign = file_get_contents($tmpprefix_url_image . "images/mimetype/" . icone_mimetype($this->mimetype, extension_fichier($this->filename)));
         }        
         if ($img['hash_location']) {
         	file_put_contents($img['hash_location'], $vign);
@@ -282,13 +284,15 @@ class storage_document {
     }
 
     public function render_doc() {
-        $content = $this->storage->get_content($this->path . $this->filename);
-        if ($content) {
-            header('Content-Type: ' . $this->mimetype);
-            header('Content-Disposition: inline; filename="' . $this->filename . '"');
-            if ($this->filesize)
-                header("Content-Length: " . $this->filesize);
-            print $content;
+        if (is_object($this->storage)) {
+            $content = $this->storage->get_content($this->path . $this->filename);
+            if ($content) {
+                header('Content-Type: ' . $this->mimetype);
+                header('Content-Disposition: inline; filename="' . $this->filename . '"');
+                if ($this->filesize)
+                    header("Content-Length: " . $this->filesize);
+                print $content;
+            }
         }
     }
 
@@ -296,12 +300,14 @@ class storage_document {
         global $used;
 
         $elem = array();
-        for ($i = 0; $i < count($used); $i++) {
-            $tmp = explode("_", $used[$i]);
-            $elem[$tmp[0]][] = $tmp[1];
+        if (!empty($used) && is_countable($used)) {
+            for ($i = 0; $i < count($used); $i++) {
+                $tmp = explode("_", $used[$i]);
+                $elem[$tmp[0]][] = $tmp[1];
+            }
         }
         foreach ($elem as $type => $elem) {
-            //TODO, vÃ©rifier utilisation du document dans l'association
+            //TODO, vérifier utilisation du document dans l'association
             $query = "delete from cms_documents_links where document_link_type_object = '" . $type . "' and document_link_num_object in (" . implode(",", $elem) . ") and document_link_num_document = " . $this->id;
             $result = pmb_mysql_query($query);
             if (!$result)

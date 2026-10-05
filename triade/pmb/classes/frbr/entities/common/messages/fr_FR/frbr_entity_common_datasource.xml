@@ -5,10 +5,13 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_common_datasource.xml,v 1.4 2017-09-19 09:15:30 vtouchard Exp $ -->
+$Id: frbr_entity_common_datasource.xml,v 1.7 2021/03/08 15:39:09 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_common_datasource_sub_datasource_choice">Sous-sélecteur</entry>
-	<entry code="frbr_entity_common_datasource_nb_max_elements">Nombres d'éléments maximum à renvoyer</entry>
+	<entry code="frbr_entity_common_datasource_nb_max_elements">Nombre maximum d'éléments à renvoyer</entry>
 	<entry code="frbr_entity_common_datasource_link_type">Type de lien</entry>
+	<entry code="frbr_entity_common_datasource_expl_choice">Sélectionnez un champ perso</entry>
+	<entry code="frbr_entity_common_datasource_authors_without_function">Sans fonction</entry>
+	<entry code="frbr_entity_common_datasource_concepts_without_scheme">Sans schéma</entry>
 </XMLlist>

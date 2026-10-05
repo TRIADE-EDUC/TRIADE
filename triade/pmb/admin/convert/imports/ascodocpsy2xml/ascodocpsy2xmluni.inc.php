@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ascodocpsy2xmluni.inc.php,v 1.10 2018-06-27 08:45:13 plmrozowski Exp $
+// $Id: ascodocpsy2xmluni.inc.php,v 1.12 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/marc_table.class.php");
 
 function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
@@ -22,11 +23,11 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	
 	if (!$authors_function) {
 		$authors_function=array("Collab."=>"Collaborateur","Coord."=>"Coordinateur","Dir."=>"Directeur de publication","Ed."=>"Editeur scientifique",
-				"Ill."=>"Illustrateur","PrÃ©f."=>"PrÃ©facier","Trad."=>"Traducteur","Postf."=>"Postfacier");
+				"Ill."=>"Illustrateur","Préf."=>"Préfacier","Trad."=>"Traducteur","Postf."=>"Postfacier");
 	}
 	
 	if (!$cols) {
-		//On lit les intitulÃ©s dans le fichier temporaire
+		//On lit les intitulés dans le fichier temporaire
 		$fcols=fopen("$base_path/temp/".$origine."_cols.txt","r");
 		if ($fcols) {
 			$cols=fread($fcols,filesize("$base_path/temp/".$origine."_cols.txt"));
@@ -44,9 +45,9 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	if (!$ty) {
 		$tab_type=new marc_list('doctype');
 		$ty=array_flip($tab_type->table);
-		/*$ty=array("Livre"=>"a","CongrÃ¨s"=>"h","MÃ©moire"=>"r",
-				"ThÃ¨se"=>"o","Rapport"=>"q","Texte officiel"=>"t",
-				"PÃ©riodique"=>"p","Article"=>"s","Document multimÃ©dia"=>"m");*/
+		/*$ty=array("Livre"=>"a","Congrès"=>"h","Mémoire"=>"r",
+				"Thèse"=>"o","Rapport"=>"q","Texte officiel"=>"t",
+				"Périodique"=>"p","Article"=>"s","Document multimédia"=>"m");*/
 	}
 	
 	$fields=explode("'^'",$notice);
@@ -55,7 +56,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 		$error.="Pas le bon nombre de champs<br />\n";
 		$data="";
 	}
-	
+	$ntable=array();
 	for ($i=0; $i<count($fields); $i++) {
 		$ntable[$cols[$i]]=trim($fields[$i]);
 	}
@@ -83,9 +84,9 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	$obligatoire["a"][]="MOTCLE";
 	$obligatoire["a"][]="LOC";
 	$obligatoire["a"][]="ISBNISSN";
-	//CongrÃ¨s
+	//Congrès
 	$obligatoire["h"]=$obligatoire["a"];
-	//PÃ©riodique
+	//Périodique
 	$obligatoire["p"][]="TYPE";
 	$obligatoire["p"][]="PRODFICH";
 	$obligatoire["p"][]="SUPPORTPERIO";
@@ -93,7 +94,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	$obligatoire["p"][]="REV";
 	$obligatoire["p"][]="VIEPERIO";
 	$obligatoire["p"][]="ETATCOL";
-	//ThÃ©se
+	//Thése
 	$obligatoire["o"][]="TYPE";
 	$obligatoire["o"][]="PRODFICH";
 	$obligatoire["o"][]="AUT";
@@ -105,7 +106,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	$obligatoire["o"][]="MOTCLE";
 	$obligatoire["o"][]="LOC";
 	$obligatoire["o"][]="DIPSPE";
-	//MÃ©moire
+	//Mémoire
 	$obligatoire["r"]=$obligatoire["o"];
 	//Texte officiel
 	$obligatoire["t"][]="TYPE";
@@ -128,7 +129,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 	$obligatoire["q"][]="THEME";
 	$obligatoire["q"][]="LIEN";
 	$obligatoire["q"][]="DATESAIS";
-	//Document multimÃ©dia
+	//Document multimédia
 	$obligatoire["m"][]="TYPE";
 	$obligatoire["m"][]="PRODFICH";
 	$obligatoire["m"][]="AUT";
@@ -156,12 +157,12 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 		$error="";
 		$data="<notice>\n";
 		
-		//EntÃªte
+		//Entête
 		$data.="  <rs>n</rs>\n";
 		if ($ty[$ntable["TYPE"]]) $dt=$ty[$ntable["TYPE"]]; else $dt="a";
 		
 		switch ($dt) {
-			case "p"://PÃ©riodique
+			case "p"://Périodique
 				$bl = "s";
 				$hl = "1";
 				break;
@@ -203,10 +204,10 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 
-		//Titre de revue (pÃ©riodique)
+		//Titre de revue (périodique)
 		if($ntable["REV"]){
 			$tmp_titre="";
-			if ($ntable["TYPE"] == (($charset == "utf-8")?utf8_encode("PÃ©riodique"):"PÃ©riodique")) {
+			if ($ntable["TYPE"] == (($charset == "utf-8")?encoding_normalize::utf8_normalize("Périodique"):"Périodique")) {
 				$code = '200';
 				$ss_code = 'a';
 				$tmp_titre=htmlspecialchars($ntable["REV"],ENT_QUOTES,$charset);
@@ -246,14 +247,14 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 		
-		//Date de vie et de mort du pÃ©riodique -> Que pour les pÃ©riodiques
+		//Date de vie et de mort du périodique -> Que pour les périodiques
 		if (($ntable["VIEPERIO"])/* && ($ntable["VIEPERIO"] != "[s.d.]")*/) {
 			$data.="  <f c='210' ind='  '>\n";
 			$data.="    <s c='d'>".htmlspecialchars($ntable["VIEPERIO"],ENT_QUOTES,$charset)."</s>\n";
 			$data.="  </f>\n";
 		}
 		
-		//Editeurs -> Pas prÃ©sent pour les textes officiel et les pÃ©riodiques
+		//Editeurs -> Pas présent pour les textes officiel et les périodiques
 		if (($ntable["EDIT"])/* && ($ntable["EDIT"] != "[s.n.]")*/) {
 			$editeurs = explode("/", $ntable["EDIT"]);
 			$data.="  <f c='210' ind='  '>\n";
@@ -285,8 +286,8 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 				//preg_match_all('~\b[[:upper:]]+\b~', trim($auteurs[$i]),$matches);
 				$fonction = "";
 				$func_author = "";
-				if (pmb_substr($auteurs[$i], strlen($auteurs[$i])-1,strlen($auteurs[$i])) == ".") {
-					$func_author = trim(pmb_substr($auteurs[$i], strrpos($auteurs[$i], " "),strlen($auteurs[$i])));
+				if (pmb_substr($auteurs[$i], pmb_strlen($auteurs[$i])-1,pmb_strlen($auteurs[$i])) == ".") {
+					$func_author = trim(pmb_substr($auteurs[$i], strrpos($auteurs[$i], " "),pmb_strlen($auteurs[$i])));
 				}
 				
 				$entree=trim(str_replace($func_author, "", $auteurs[$i]));
@@ -317,7 +318,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			}
 		}
 		
-		//NumÃ©ro - infos bulletin
+		//Numéro - infos bulletin
 		if (($ntable["NUM"])/* && ($ntable["NUM"] != "[s.n.]")*/) {
 			//infos bulletin
 			$with_bull_info=true;
@@ -326,29 +327,29 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="</f>\n";
 		}
 		
-		//CongrÃ¨s
+		//Congrès
 		if (($ntable["CONGRTIT"]) || ($ntable["CONGRNUM"]) || ($ntable["CONGRLIE"]) || ($ntable["CONGRDAT"])) {
 			$data.="  <f c='712' ind='1 '>\n";
-			//IntitulÃ© du congrÃ¨s
+			//Intitulé du congrès
 			if ($ntable["CONGRTIT"]) {
 				$data.="    <s c='a'>".htmlspecialchars($ntable["CONGRTIT"],ENT_QUOTES,$charset)."</s>\n";
 			}
-			//NumÃ©ro du congrÃ¨s
+			//Numéro du congrès
 			if ($ntable["CONGRNUM"]) {
 				$data.="    <s c='d'>".htmlspecialchars($ntable["CONGRNUM"],ENT_QUOTES,$charset)."</s>\n";
 			}	
-			//Lieu du congrÃ¨s
+			//Lieu du congrès
 			if ($ntable["CONGRLIE"]) {
 				$data.="    <s c='e'>".htmlspecialchars($ntable["CONGRLIE"],ENT_QUOTES,$charset)."</s>\n";
 			}
-			//Date du congrÃ¨s
+			//Date du congrès
 			if ($ntable["CONGRDAT"]) {
 				$data.="    <s c='f'>".htmlspecialchars($ntable["CONGRDAT"],ENT_QUOTES,$charset)."</s>\n";
 			}
 			$data.="  </f>\n";
 		}
 		
-		//RÃ©Ã©dition
+		//Réédition
 		if ($ntable["REED"]) {
 			$data.="  <f c='205' ind='  '>\n";
 			$data.="    <s c='a'>".htmlspecialchars($ntable["REED"],ENT_QUOTES,$charset)."</s>\n";
@@ -383,7 +384,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 		
-		//Traitement des Mots-clÃ©s
+		//Traitement des Mots-clés
 		if ($ntable["MOTCLE"]) {
 			$motcles = explode("/",$ntable["MOTCLE"]);
 			for ($i=0; $i<count($motcles); $i++) {
@@ -393,7 +394,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			}
 		}
 
-		//RÃ©sumÃ©
+		//Résumé
 		if ($ntable["RESU"]) {
 			$data.="  <f c='330' ind='  '>\n";
 			$data.="    <s c='a'>".htmlspecialchars($ntable["RESU"],ENT_QUOTES,$charset)."</s>\n";
@@ -422,7 +423,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 		
-		//Champs spÃ©ciaux
+		//Champs spéciaux
 		//Candidat-descripteur
 		if ($ntable["CANDES"]) {
 			$candes = explode("/", $ntable["CANDES"]);
@@ -432,7 +433,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 				$data.="  </f>\n";
 			}
 		}
-		//ThÃ¨me
+		//Thème
 		if ($ntable["THEME"]) {
 		    $candes = explode("/", $ntable["THEME"]);
 		    for ($i=0; $i < count($candes); $i++) {
@@ -538,14 +539,14 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 		
-		//NumÃ©ro du texte officiel
+		//Numéro du texte officiel
 		if ($ntable["NUMTEXOF"]) {
 			$data.="  <f c='910'>\n";
 			$data.="    <s c='a'>".htmlspecialchars($ntable["NUMTEXOF"],ENT_QUOTES,$charset)."</s>\n";
 			$data.="  </f>\n";
 		}
 		
-		//Date de fin de validitÃ©
+		//Date de fin de validité
 		if ($ntable["DATEVALI"]) {
 			$data.="  <f c='911'>\n";
 			$data.="    <s c='a'>".htmlspecialchars($ntable["DATEVALI"],ENT_QUOTES,$charset)."</s>\n";
@@ -569,7 +570,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 			$data.="  </f>\n";
 		}
 		
-		//Support pour les documents multimÃ©dia
+		//Support pour les documents multimédia
 		if ($ntable["SUPPORT"]) {
 			$data.="  <f c='914'>\n";
 			$data.="    <s c='a'>".htmlspecialchars($ntable["SUPPORT"],ENT_QUOTES,$charset)."</s>\n";
@@ -592,6 +593,7 @@ function convert_ascodocpsy($notice, $s, $islast, $isfirst, $param_path) {
 		
 	}
 	
+	$r = array();
 	if(!$error) {
 		$r['VALID'] = true; 
 	}else {

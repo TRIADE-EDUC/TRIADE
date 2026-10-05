@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lieux_form.tpl.php,v 1.10 2019-05-27 16:19:33 btafforeau Exp $
+// $Id: lieux_form.tpl.php,v 1.10 2019/05/27 16:19:33 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -39,7 +39,7 @@ function callFtpTest()
 	openPopUp("admin/sauvegarde/lib/test_ftp.php?url="+encodeURI(f.sauv_lieu_host.value)+"&user="+encodeURI(f.sauv_lieu_login.value)+"&password="+encodeURI(f.sauv_lieu_password.value)+"&chemin="+encodeURI(f.sauv_lieu_url.value),"test_ftp", 100, 100, -2, -2, "width=100,height=100,menubar=no,resizable=yes");
 }
 
-//VÃ©rification de la saisie du formulaire
+//Vérification de la saisie du formulaire
 function checkForm()
 {
 	f=document.sauv_lieux;

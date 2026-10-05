@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_index.class.php,v 1.7 2019-01-16 10:58:36 dbellamy Exp $
+// $Id: onto_skos_index.class.php,v 1.10.2.1 2024/05/16 12:31:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/onto/onto_index.class.php");
 require_once($class_path."/onto/common/onto_common_index.class.php");
 require_once($class_path.'/onto/onto_handler.class.php');
@@ -66,10 +67,10 @@ class onto_skos_index extends onto_common_index {
 						}
 						//fields (contenu brut)
 						//TODO : on stocke l'id du concept dans la colonne skos_field_global_index.authority_num
-						//a voir s'il faut pas stocker l'id de l'autoritÃ© Ã  la place
+						//a voir s'il faut pas stocker l'id de l'autorité à la place
 						$tab_fields_insert[] = "('".$id_item."','".$this->paths_infos[$type]['code_champ']."','".$this->paths_infos[$type]['code_ss_champ']."','".$field_order."','".addslashes($preflabel['preflabel'])."','".$lang."','".$this->paths_infos[$type]['pond']."','".$preflabel['id']."')";
 
-						//words (contenu Ã©clatÃ©)
+						//words (contenu éclaté)
 						$tab_tmp=explode(' ',strip_empty_words($preflabel['preflabel']));
 						$word_position = 1;
 						foreach($tab_tmp as $word){
@@ -98,7 +99,7 @@ class onto_skos_index extends onto_common_index {
 		$req_del="DELETE FROM skos_words_global_index WHERE id_item ='".$id_item."' AND code_champ='".$this->paths_infos['broad']['code_champ']."'";
 		pmb_mysql_query($req_del);
 		$req_del="DELETE FROM skos_fields_global_index WHERE id_item ='".$id_item."' AND code_champ='".$this->paths_infos['broad']['code_champ']."'";
-		$authority_num *= 1;
+		$authority_num = intval($authority_num);
 		if ($authority_num) {
 		    $req_del .= " AND authority_num = ".$authority_num;
 		}
@@ -109,7 +110,7 @@ class onto_skos_index extends onto_common_index {
 		$req_del="DELETE FROM skos_words_global_index WHERE id_item ='".$id_item."' AND code_champ='".$this->paths_infos['narrow']['code_champ']."'";
 		pmb_mysql_query($req_del);
 		$req_del="DELETE FROM skos_fields_global_index WHERE id_item ='".$id_item."' AND code_champ='".$this->paths_infos['narrow']['code_champ']."'";
-		$authority_num *= 1;
+		$authority_num = intval($authority_num);
 		if ($authority_num) {
 		    $req_del .= " AND authority_num = ".$authority_num;
 		}
@@ -118,6 +119,7 @@ class onto_skos_index extends onto_common_index {
 
 	public function maj($object_id, $object_uri="",$datatype="all"){
 	    global $thesaurus_concepts_autopostage;
+	    global $sphinx_active;
 
 	    if($object_id == 0 && $object_uri != ""){
 	        $object_id = onto_common_uri::get_id($object_uri);
@@ -127,7 +129,7 @@ class onto_skos_index extends onto_common_index {
 	    }
 
 	    if ($datatype == 'autoposting') {
-	        //on ne rÃ©indexe que les chemins des termes gÃ©nÃ©riques ou spÃ©cifiques
+	        //on ne réindexe que les chemins des termes génériques ou spécifiques
 	        return $this->maj_autospoting($object_id, $object_uri);
 	    }
 
@@ -144,25 +146,35 @@ class onto_skos_index extends onto_common_index {
                 $old_narowers_id = static::$onto_skos_autoposting->get_ids_from_paths(static::$onto_skos_autoposting->get_paths(true));
             }
         }
-        //indexation du conept
+        //indexation du concept
         parent::maj($object_id,$object_uri,$datatype);
-
+        $this->index_cp($object_id);
         if ($thesaurus_concepts_autopostage) {
             $this->update_paths($object_id);
 
             if (!$this->netbase) {
-                //reindexation des termes gÃ©nÃ©riques
+                //reindexation des termes génériques
                 if (isset($old_broaders_id) && count($old_broaders_id)) {
                     foreach($old_broaders_id as $broader_id) {
                         indexation_stack::push($broader_id, TYPE_CONCEPT, 'autoposting');
                     }
                 }
-                //reindexation des termes spÃ©cifiques
+                //reindexation des termes spécifiques
                 if (isset($old_narowers_id) && count($old_narowers_id)) {
                     foreach($old_narowers_id as $narrower_id) {
                         indexation_stack::push($narrower_id, TYPE_CONCEPT, 'autoposting');
                     }
                 }
+            }
+        }
+        
+        //SPHINX
+        if($sphinx_active){
+            if(!isset(self::$sphinx_indexer)){
+                self::$sphinx_indexer = new sphinx_concepts_indexer();
+            }
+            if(is_object(self::$sphinx_indexer)) {
+                self::$sphinx_indexer->fillIndex($object_id);
             }
         }
 	    return true;
@@ -171,6 +183,8 @@ class onto_skos_index extends onto_common_index {
 	protected function init_onto_skos_autoposting() {
 	    if (!isset(static::$onto_skos_autoposting)) {
 	        static::$onto_skos_autoposting = new onto_skos_autoposting($this->handler);
+		    $this->table_prefix = $this->handler->get_onto_name();
+		    $this->reference_key = "id_item";
 	    }
 	    return static::$onto_skos_autoposting;
 	}
@@ -183,7 +197,7 @@ class onto_skos_index extends onto_common_index {
 
 	        $this->update_paths($object_id);
 
-            //rÃ©indexation des notices indexÃ©s avec le concepts
+            //réindexation des notices indexés avec le concepts
             index_concept::update_linked_elements($object_id);
 	    }
 	    return true;
@@ -200,6 +214,53 @@ class onto_skos_index extends onto_common_index {
 	    }
 	}
 
+	protected function index_cp($object_id)
+	{
+	    $tab_fields_insert = [];
+	    $tab_words_insert = [];
+	    // Champs persos
+	    $p_perso=$this->get_parametres_perso_class('skos');
+	    $data=$p_perso->get_fields_recherche_mot_array($object_id);
+	    $j=0;
+	    $order_fields=1;
+	    foreach ( $data as $code_ss_champ => $value ) {
+	        $tab_mots=array();
+	        //la table pour les recherche exacte
+	        $infos = array(
+	            'champ' => '1100',
+	            'ss_champ' => $code_ss_champ,
+	            'pond' => $p_perso->get_pond($code_ss_champ)
+	        );
+	        foreach($value as $val) {
+	            $val = strip_empty_words($val);
+	            if($val != ''){
+	                $tab_tmp=explode(' ',$val);
+	                
+	                $tab_fields_insert[] = $this->get_tab_field_insert($object_id, $infos, $j, $val);
+	                $j++;
+	                foreach($tab_tmp as $mot) {
+	                    if(trim($mot)){
+	                        $tab_mots[$mot]= "";
+	                    }
+	                }
+	            }
+	        }
+	        $pos=1;
+	        foreach ( $tab_mots as $mot => $langage ) {
+	            $num_word = indexation::add_word($mot, $langage);
+	            $infos = array(
+	                'champ' => '1100',
+	                'ss_champ' => $code_ss_champ,
+	                'pond' => $p_perso->get_pond($code_ss_champ)
+	            );
+	            $tab_words_insert[] = $this->get_tab_insert($object_id, $infos, $num_word, $order_fields, $pos);
+	            $pos++;
+	        }
+	        $order_fields++;
+	    }
+	    $this->save_elements($tab_words_insert,$tab_fields_insert);
+	}
+	
 	public function get_tab_code_champ() {
 	    if(empty($this->tab_code_champ)) {
 	        $this->init();

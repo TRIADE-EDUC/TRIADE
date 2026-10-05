@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1.6.1 2025/04/11 09:35:11 jparis Exp $
+-->
+
+<manifest>
+	<namespace>Pmb\DSI\Models\Channel\RSS\RssChannel</namespace>
+	<type>channel</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<view>Pmb\DSI\Models\View\RssView\RssView</view>
+	</compatibility>
+	<manually>0</manually>
+	<bypass_send_queue>1</bypass_send_queue>
+</manifest>

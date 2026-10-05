@@ -1,32 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: priorities.inc.php,v 1.1 2016-01-07 07:48:53 ngantier Exp $
+// $Id: priorities.inc.php,v 1.3 2021/01/21 08:52:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-//dÃ©pendances
+global $class_path, $id;
+
+//dépendances
+require_once($class_path.'/scan_request/scan_request_priority.class.php');
 require_once($class_path.'/scan_request/scan_request_priorities.class.php');
+require_once($class_path."/configuration/configuration_controller.class.php");
+require_once($class_path."/list/configuration/scan_request/list_configuration_scan_request_priorities_ui.class.php");
 
-$scan_request_priorities=new scan_request_priorities();
-
-switch($action) {
-	case 'save':
-		$scan_request_priorities->save();
-		print $scan_request_priorities->get_list();
-		break;
-	case 'add':
-		print $scan_request_priorities->get_form(0);
-		break;
-	case 'edit':
-		print $scan_request_priorities->get_form($id);
-		break;
-	case 'delete':
-		$scan_request_priorities->delete($id);
-		print $scan_request_priorities->get_list();
-		break;
-	default:
-		print $scan_request_priorities->get_list();
-		break;
-}
+configuration_controller::set_model_class_name('scan_request_priority');
+configuration_controller::set_list_ui_class_name('list_configuration_scan_request_priorities_ui');
+configuration_controller::proceed($id);

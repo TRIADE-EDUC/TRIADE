@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: coordonnees.class.php,v 1.11 2018-03-30 07:37:46 dgoron Exp $
+// $Id: coordonnees.class.php,v 1.12 2021/12/22 11:22:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class coordonnees{
 	
 	public $id_contact = 0;			//Identifiant du contact	
-	public $num_entite = 0;			//Identifiant de l'entitÃ© Ã  laquelle est rattachÃ© le contact
-	public $type_coord = 0;			//type de coordonnÃ©es (0=non prÃ©cisÃ©, 1=principale/facturation, 2=livraison)
-	public $libelle = '';				//LibellÃ© adresse si <> de raison sociale entitÃ©
+	public $num_entite = 0;			//Identifiant de l'entité à laquelle est rattaché le contact
+	public $type_coord = 0;			//type de coordonnées (0=non précisé, 1=principale/facturation, 2=livraison)
+	public $libelle = '';				//Libellé adresse si <> de raison sociale entité
 	public $contact = '';				//Genre, Nom, Prenom du contact
 	public $adr1 = '';					//Ligne 1 adresse
 	public $adr2 = '';					//Ligne 2 adresse
@@ -19,21 +19,21 @@ class coordonnees{
 	public $ville = '';				//Ville
 	public $etat = '';					//Etat
 	public $pays = '';					//Pays
-	public $tel1 = '';					//NumÃ©ro de tÃ©l 1
-	public $tel2 = '';					//NumÃ©ro de tÃ©l 2
-	public $fax = '';					//NumÃ©ro de fax
+	public $tel1 = '';					//Numéro de tél 1
+	public $tel2 = '';					//Numéro de tél 2
+	public $fax = '';					//Numéro de fax
 	public $email = '';				//Email
 	public $commentaires = '';			//Commentaires sur le contact			
 	 
 	//Constructeur.	 
 	public function __construct($id_contact= 0) {
-		$this->id_contact = $id_contact+0;
+		$this->id_contact = intval($id_contact);
 		if ($this->id_contact) {
 			$this->load();	
 		} 
 	}	
 	
-	// charge un contact Ã  partir de la base.
+	// charge un contact à partir de la base.
 	public function load(){
 		$q = "select * from coordonnees where id_contact = '".$this->id_contact."' ";
 		$r = pmb_mysql_query($q) ;
@@ -55,9 +55,25 @@ class coordonnees{
 		$this->commentaires = $obj->commentaires;
 	}
 	
+	public function set_properties_from_form($i) {
+		global $lib_, $cta_, $ad1_, $ad2_, $cpo_, $vil_, $eta_, $pay_, $te1_, $te2_, $fax_, $ema_;
+		$this->libelle = $lib_[$i];
+		$this->contact = $cta_[$i];
+		$this->adr1 = $ad1_[$i];
+		$this->adr2 = $ad2_[$i];
+		$this->cp = $cpo_[$i];
+		$this->ville = $vil_[$i];
+		$this->etat = $eta_[$i];
+		$this->pays = $pay_[$i];
+		$this->tel1 = $te1_[$i];
+		$this->tel2 = $te2_[$i];
+		$this->fax = $fax_[$i];
+		$this->email = $ema_[$i];
+	}
+	
 	// enregistre un contact en base.
 	public function save(){
-		if( !$this->num_entite ) die ("Erreur de crÃ©ation coordonnÃ©es");
+		if( !$this->num_entite ) die ("Erreur de création coordonnées");
 		
 		if ($this->id_contact) {
 		
@@ -66,7 +82,7 @@ class coordonnees{
 			$q.= "etat = '".$this->etat."', pays = '".$this->pays."', tel1 = '".$this->tel1."', tel2 = '".$this->tel2."', ";
 			$q.= "fax = '".$this->fax."', email = '".$this->email."', commentaires = '".$this->commentaires."' ";
 			$q.= "where id_contact = '".$this->id_contact."' ";
-			$r = pmb_mysql_query($q);
+			pmb_mysql_query($q);
 
 		} else {
 			
@@ -74,28 +90,27 @@ class coordonnees{
 			$q.= "adr1 = '".$this->adr1."', adr2 = '".$this->adr2."', cp = '".$this->cp."', ville = '".$this->ville."', ";
 			$q.= "etat = '".$this->etat."', pays = '".$this->pays."', tel1 = '".$this->tel1."', tel2 = '".$this->tel2."', ";
 			$q.= "fax = '".$this->fax."', email = '".$this->email."', commentaires = '".$this->commentaires."' "; 
-			$r = pmb_mysql_query($q);
+			pmb_mysql_query($q);
 			$this->id_contact = pmb_mysql_insert_id();
 		}
 	}
 
 	//supprime un contact de la base
 	public function delete($id_contact= 0) {
-
+		$id_contact = intval($id_contact);
 		if(!$id_contact) $id_contact = $this->id_contact; 	
 
 		$q = "delete from coordonnees where id_contact = '".$id_contact."' ";
-		$r = pmb_mysql_query($q);
-				
+		pmb_mysql_query($q);
 	}
 
-	//Recherche si un contact existe dÃ©jÃ  dans la base Ã  partir de son identifiant
+	//Recherche si un contact existe déjà dans la base à partir de son identifiant
 	public function exists($id_contact=0) {
+		$id_contact = intval($id_contact);
 		if (!$id_contact) $id_contact = $this->id_contact;
 		$q = "select count(1) from coordonnees where id_contact = '".$id_contact."' ";
 		$r = pmb_mysql_query($q); 
 		return pmb_mysql_result($r, 0, 0);
-		
 	}
 	
 	//optimization de la table coordonnees

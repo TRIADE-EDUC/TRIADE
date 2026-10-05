@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa.class.php,v 1.5 2017-07-10 15:50:02 dgoron Exp $
+// $Id: resa.class.php,v 1.6 2022/01/03 10:20:17 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_task.class.php");
@@ -11,7 +11,7 @@ require_once($class_path."/docs_location.class.php");
 class resa extends scheduler_task {
 		
 	public function execution() {
-		global $dbh, $msg;
+		global $msg;
 		global $pdflettreresa_priorite_email;
 
 		if ((SESSrights & CIRCULATION_AUTH)) {
@@ -20,7 +20,7 @@ class resa extends scheduler_task {
 				left join taches t on t.num_planificateur = p.id_planificateur
 				left join tache_docnum tdn on tdn.tache_docnum_repertoire=p.rep_upload
 				where t.id_tache=".$this->id_tache;
-			$res_query = pmb_mysql_query($rqt, $dbh);
+			pmb_mysql_query($rqt);
 			
 			$parameters = $this->unserialize_task_params();
 	
@@ -29,7 +29,7 @@ class resa extends scheduler_task {
 			$empr_location_id = ($parameters["empr_location_id"] ? $parameters["empr_location_id"] : "0");
 			if ($empr_location_id != "0") {
 				$query = "select name from docs_location where idlocation=".$empr_location_id;
-				$res = pmb_mysql_query($query, $dbh);
+				$res = pmb_mysql_query($query);
 				if ($res) {
 					$location_name = pmb_mysql_result($res,0,"name");
 				}
@@ -43,17 +43,17 @@ class resa extends scheduler_task {
 					//traitement des options choisies
 					/**
 					 * Seulement utile pour la premiere requete
-					 * Si un emprunteur a une rÃ©sa en cours et une rÃ©sa dÃ©passÃ©e,
+					 * Si un emprunteur a une résa en cours et une résa dépassée,
 					 * les deux seront prises en comptes
 					 */
 					switch ($elem) {
 						case "resa_en_cours_noconf":
-							//Resas en cours non confirmÃ©e
+							//Resas en cours non confirmée
 							$title = $this->msg["resa_en_cours_noconf"]." ".($location_name ? "(".$msg[298]." : ".$location_name.")" : "");
 							$cl_where = " and (resa_date_fin >= CURDATE() or resa_date_fin='0000-00-00')";
 							break;
 						case "resa_depassee_noconf":
-							//Resas dÃ©passÃ©es non confirmÃ©e
+							//Resas dépassées non confirmée
 							$title = $this->msg["resa_depassee_noconf"]." ".($location_name ? "(".$msg[298]." : ".$location_name.")" : "");
 							$cl_where = " and resa_date_fin < CURDATE() and resa_date_fin<>'0000-00-00' ";	
 							break;
@@ -96,20 +96,20 @@ class resa extends scheduler_task {
 														$tab_letter_empr_resas[$id_empr_concerne] = explode(",",$list_letter_resa);
 														$object_fpdf = $this->proxy->pmbesResas_generatePdfResasReaders($tab_letter_empr_resas);	
 														if ($object_fpdf) {
-															//pb Ã  corriger :
-															//si le fichier n'est pas gÃ©nÃ©rÃ©, la rÃ©sa est confirmÃ© mais sans confirmation de lettre
+															//pb à corriger :
+															//si le fichier n'est pas généré, la résa est confirmé mais sans confirmation de lettre
 															$succeed = $this->generate_docnum($object_fpdf);
 															if (!$succeed) {
-																//erreur de crÃ©ation du pdf
+																//erreur de création du pdf
 																$rqt_maj = "update resa set resa_confirmee=0 where id_resa in (".$list_letter_resa.") AND resa_cb is not null and resa_cb!=''" ;
 																if ($id_empr_concerne) $rqt_maj .= " and resa_idempr=$id_empr_concerne ";
-																pmb_mysql_query($rqt_maj, $dbh);
+																pmb_mysql_query($rqt_maj);
 															}
 														} else {
-															//erreur de crÃ©ation du pdf
+															//erreur de création du pdf
 															$rqt_maj = "update resa set resa_confirmee=0 where id_resa in (".$list_letter_resa.") AND resa_cb is not null and resa_cb!=''" ;
 															if ($id_empr_concerne) $rqt_maj .= " and resa_idempr=$id_empr_concerne ";
-															pmb_mysql_query($rqt_maj, $dbh);
+															pmb_mysql_query($rqt_maj);
 														}
 													}
 												} else {

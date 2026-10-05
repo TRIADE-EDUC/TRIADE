@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dailymotion.class.php,v 1.7 2017-09-18 13:20:21 dgoron Exp $
+// $Id: dailymotion.class.php,v 1.9.4.1 2025/04/16 12:16:51 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,25 +12,22 @@ require_once($class_path."/connecteurs.class.php");
 require_once("sdk/Dailymotion.php");
 
 class dailymotion extends connector {
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "dailymotion";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
 		global $charset;
 		global $pmb_url_base;
 		global $code;
-		
+
 //		$params=$this->get_source_params($source_id);
 //		if ($params["PARAMETERS"]) {
 //			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -38,7 +35,7 @@ class dailymotion extends connector {
 //			foreach ($vars as $key=>$val) {
 //				global ${$key};
 //				${$key}=$val;
-//			}	
+//			}
 //		}
 //
 //  	  if($source_id!=0){
@@ -46,8 +43,8 @@ class dailymotion extends connector {
 //		}else{
 //			$url = $this->msg['dailymotion_no_source'];
 //		}
-//			
-//		
+//
+//
 //		$form="<div class='row'>
 //				<div class='colonne3'><label for='api_key'>".$this->msg["dailymotion_api_key"]."</label></div>
 //				<div class='colonne-suite'><input type='text' name='api_key' value='".htmlentities($api_key,ENT_QUOTES,$charset)."'/></div>
@@ -83,42 +80,49 @@ class dailymotion extends connector {
 //				<a href='https://api.dailymotion.com/oauth/authorize?response_type=code&client_id=".$api_key."&redirect_uri=".rawurlencode($url)."' >".$this->msg['dailymotion_link_allow_ws']."</a>";
 //		}else{
 //			$form.="
-//				<span>".$this->msg['dailymotion_allow_need_api_key']."</span>";	
+//				<span>".$this->msg['dailymotion_allow_need_api_key']."</span>";
 //		}
 //		$form.="
 //			</div>
 //		</div>
 //		<div class='row'>&nbsp;</div>";
-		return $form;
+//		return $form;
+		return "";
     }
 
-	public function enrichment_is_allow(){
-		return true;
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::enrichment_is_allow()
+     */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader(){
 		$header= array();
 		$header[]= "<!-- Script d'enrichissement pour Dailymotion-->";
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($source_id){
 		$type['type'] = array(
 			array(
 				'code' => "dailymotion",
 				'label' => $this->msg['dailymotion']
 			)
-			
-		);		
+
+		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array(),$page=1){
 		global $lang;
-		
+
 		$this->noticeToEnrich= $notice_id;
-		
+
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -126,24 +130,24 @@ class dailymotion extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$enrichment= array();
-		
+
 		$infos = $this->get_notice_infos();
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
 			case "dailymotion" :
 				$api = new Dailymotion_api();
 				$vars = array(
-					'search' => utf8_encode($infos['title']." ".$infos['author']),
+					'search' => encoding_normalize::utf8_normalize($infos['title']." ".$infos['author']),
 					'language' => substr($lang,0,2),
 					'fields' => array(
 						'embed_html'
 					)
 				);
 				$result = $api->call('/videos', $vars);
-				
+
 				if($result['has_more'] == 1){
 					$aff_result = sprintf($this->msg['dailymotion_partial_results'],$result['limit'],$result['total']);
 					$aff_result.= "<br/>
@@ -156,7 +160,7 @@ class dailymotion extends connector {
 					$enrichment['dailymotion']['content'].= "<span style='margin-right : 4px;'>".$elem['embed_html']."</span>";
 				}
 				break;
-		}		
+		}
 		$enrichment['source_label']=$this->msg['dailymotion_enrichment_source'];
 		return $enrichment;
 	}
@@ -177,7 +181,7 @@ class dailymotion extends connector {
 			$author = new auteur($author_id);
 			$infos['author'] = $author->get_isbd();
 		}
-		return $infos; 		
+		return $infos;
 	}
 }
 

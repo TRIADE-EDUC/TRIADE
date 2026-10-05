@@ -1,0 +1,6 @@
+<div id="triggers">
+    <loader></loader>
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<add v-if="action == 'add' || action == 'edit'" :types="types" :event="event" :is_model="true"></add>
+	<list v-else :list="list" :types="types"></list>
+</div>

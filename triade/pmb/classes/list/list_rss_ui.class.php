@@ -2,34 +2,28 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_rss_ui.class.php,v 1.2 2019-05-17 10:59:17 dgoron Exp $
+// $Id: list_rss_ui.class.php,v 1.18.4.1 2025/02/20 09:18:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path.'/list/list_ui.class.php');
+global $class_path;
 require_once($class_path.'/rss_flux.class.php');
 
 class list_rss_ui extends list_ui {
-	
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
 	
 	protected function _get_query_base() {
 		$query = 'SELECT id_rss_flux FROM rss_flux';
 		return $query;
 	}
 	
-	protected function add_object($row) {
-		$this->objects[] = new rss_flux($row->id_rss_flux);
+	protected function get_object_instance($row) {
+		return new rss_flux($row->id_rss_flux);
 	}
 	
 	/**
 	 * Initialisation des filtres disponibles
 	 */
 	protected function init_available_filters() {
-		global $pmb_lecteurs_localises;
-	
 		$this->available_filters =
 		array('main_fields' =>
 				array(
@@ -70,41 +64,24 @@ class list_rss_ui extends list_ui {
 	}
 	
 	/**
-	 * Initialisation du tri par dÃ©faut appliquÃ©
+	 * Initialisation du tri par défaut appliqué
 	 */
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'nom_rss_flux',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('nom_rss_flux');
 	}
 	
 	/**
-	 * Tri SQL
+	 * Champ(s) du tri SQL
 	 */
-	protected function _get_query_order() {
-		
-		if($this->applied_sort['by']) {
-			$order = '';
-			$sort_by = $this->applied_sort['by'];
-			switch($sort_by) {
-				case 'id':
-					$order .= 'id_rss_flux';
-					break;
-				case 'name' :
-					$order .= $sort_by;
-					break;
-				default :
-					$order .= parent::_get_query_order();
-					break;
-			}
-			if($order) {
-				$this->applied_sort_type = 'SQL';
-				return " order by ".$order." ".$this->applied_sort['asc_desc']; 
-			} else {
-				return "";
-			}
-		}	
+	protected function _get_query_field_order($sort_by) {
+	    switch($sort_by) {
+	        case 'id':
+	            return 'id_rss_flux';
+	        case 'name' :
+	            return $sort_by;
+	        default :
+	            return parent::_get_query_field_order($sort_by);
+	    }
 	}
 	
 	protected function get_form_title() {
@@ -112,35 +89,17 @@ class list_rss_ui extends list_ui {
 		return htmlentities($msg['dsi_flux_search'], ENT_QUOTES, $charset);
 	}
 	
-	public function get_export_icons() {
-		return "
-		";
-	}
-	
 	protected function get_button_add() {
 		global $msg;
 		
-		return "<input type='button' class='bouton' value='".$msg['ajouter']."' onClick=\"document.location='".static::get_controller_url_base().'&suite=add'."';\" />";
-	}
-	
-	/**
-	 * Affichage du formulaire de recherche
-	 */
-	public function get_search_form() {
-		$search_form = parent::get_search_form();
-		$search_form = str_replace('!!action!!', static::get_controller_url_base(), $search_form);
-		return $search_form;
+		return $this->get_interface_button($msg['ajouter'], ['location' => static::get_controller_url_base().'&suite=add']);
 	}
 	
 	/**
 	 * Filtres provenant du formulaire
 	 */
 	public function set_filters_from_form() {
-		$nom_rss_flux = $this->objects_type.'_nom_rss_flux';
-		global ${$nom_rss_flux};
-		if(isset(${$nom_rss_flux})) {
-			$this->filters['nom_rss_flux'] = stripslashes(${$nom_rss_flux});
-		}
+		$this->set_filter_from_form('nom_rss_flux');
 		parent::set_filters_from_form();
 	}
 	
@@ -151,49 +110,22 @@ class list_rss_ui extends list_ui {
 		$this->add_column('permalink');
 	}
 	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_display('search_form', 'export_icons', false);
+		$this->set_setting_column('nom_rss_flux', 'align', 'left');
+		$this->set_setting_column('permalink', 'align', 'left');
+		$this->set_setting_column('nom_rss_flux', 'text', array('strong' => true));
+	}
+	
 	protected function get_search_filter_nom_rss_flux() {
-		global $msg, $charset;
-	
-		return "<input class='saisie-30em' id='".$this->objects_type."_name' type='text' name='".$this->objects_type."_nom_rss_flux' value=\"".htmlentities($this->filters['nom_rss_flux'], ENT_QUOTES, $charset)."\" title='".$msg['3000']."' />";
+		return $this->get_search_filter_simple_text('nom_rss_flux');
 	}
 	
-	/**
-	 * Filtre SQL
-	 */
-	protected function _get_query_filters() {
-		$filter_query = '';
-		
-		$this->set_filters_from_form();
-		
-		$filters = array();
+	protected function _add_query_filters() {
 		if($this->filters['nom_rss_flux']) {
-			$filters [] = 'nom_rss_flux like "%'.str_replace("*", "%", $this->filters['nom_rss_flux']).'%"';
+			$this->query_filters [] = 'nom_rss_flux like "%'.str_replace("*", "%", $this->filters['nom_rss_flux']).'%"';
 		}
-		if(count($filters)) {
-			$filter_query .= ' where '.implode(' and ', $filters);
-		}
-		return $filter_query;
-	}
-	
-	protected function _get_query_human() {
-		global $msg, $charset;
-	
-		$humans = array();
-		if($this->filters['nom_rss_flux']) {
-			$humans[] = $this->_get_label_query_human($msg['dsi_flux_search_nom'], $this->filters['nom_rss_flux']);
-		}
-		if(!count($humans)) {
-			$humans[] = "<b>".htmlentities($msg['list_ui_no_filter'], ENT_QUOTES, $charset)."</b>";
-		}
-		return $this->get_display_query_human($humans);;
-	}
-	
-	protected function get_js_sort_script_sort() {
-		$display = parent::get_js_sort_script_sort();
-		$display = str_replace('!!categ!!', 'fluxrss', $display);
-		$display = str_replace('!!sub!!', '', $display);
-		$display = str_replace('!!action!!', 'list', $display);
-		return $display;
 	}
 	
 	protected function get_cell_content($object, $property) {
@@ -201,9 +133,6 @@ class list_rss_ui extends list_ui {
 		
 		$content = '';
 		switch($property) {
-			case 'nom_rss_flux':
-				$content .= "<strong>".parent::get_cell_content($object, $property)."</strong>";
-				break;
 			case 'permalink':
 				$content .= "<a href='".$opac_url_base."rss.php?id=".$object->id_rss_flux."' target='_blank'>".$opac_url_base."rss.php?id=".$object->id_rss_flux."</a>";
 				break;
@@ -214,21 +143,15 @@ class list_rss_ui extends list_ui {
 		return $content;
 	}
 	
-	protected function get_display_cell($object, $property) {
+	protected function get_default_attributes_format_cell($object, $property) {
+		$attributes = array();
 		switch($property) {
 			case 'permalink':
-				$display = "<td>".$this->get_cell_content($object, $property)."</td>";
 				break;
 			default:
-				$display = "<td class='center' onclick=\"window.location='".static::get_controller_url_base()."&action=view&suite=acces&id_rss_flux=".$object->id_rss_flux."'\" style='cursor:pointer;'>".$this->get_cell_content($object, $property)."</td>";
+				$attributes['onclick'] = "window.location=\"".static::get_controller_url_base()."&action=view&suite=acces&id_rss_flux=".$object->id_rss_flux."\"";
 				break;
 		}
-		return $display;
-	}
-	
-	public static function get_controller_url_base() {
-		global $base_path;
-		
-		return $base_path.'/dsi.php?categ=fluxrss&sub=definition';
+		return $attributes;
 	}
 }

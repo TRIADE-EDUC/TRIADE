@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes type enregistrement en UNIMARC (japonais)
-$Id: recordtype.xml,v 1.4 2011-07-04 14:24:30 dbellamy Exp $ -->
+$Id: recordtype.xml,v 1.4 2011/07/04 14:24:30 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="m">単行本</entry>

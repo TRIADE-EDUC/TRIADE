@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.5 2018-10-12 12:28:34 vtouchard Exp $ -->
+$Id: en_UK.xml,v 1.7.10.1 2025/05/13 10:04:45 tsamson Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -18,14 +18,15 @@ pmbesEmpr
 fetch_empr
 -->
 	<entry code="fetch_empr">Returns the informations of a reader by one of its identifiers</entry>
-	<entry code="fetch_empr_input_description">You choose: empr_cb ou empr_id</entry>
+	<entry code="fetch_empr_input_description">You choose: empr_cb, empr_id, empr_cb + empr_cp</entry>
 	<entry code="fetch_empr_output_description"></entry>
 	<entry code="result">Answer</entry>
 	<entry code="status">0: error. 1: ok</entry>
 	<entry code="status_msg">Information message related to the status</entry>	
 	<entry code="fetch_empr_empr_data">Table of returned data</entry>
-	<entry code="fetch_empr_empr_id">The id of the reader</entry>
-	<entry code="fetch_empr_empr_cb">The barcode</entry>
+	<entry code="fetch_empr_empr_id">Identifier</entry>
+	<entry code="fetch_empr_empr_cb">Barcode</entry>
+	<entry code="fetch_empr_empr_cp">Name of custom field containing identifier</entry>
 	<entry code="fetch_empr_nom">Name</entry>
 	<entry code="fetch_empr_prenom">First name</entry>
 	<entry code="fetch_empr_sexe">Gender. Not precised: 0, Male: 1, Female: 2</entry>
@@ -98,6 +99,7 @@ fetch_empr
 	<entry code="fetch_empr_nb_retard">Number of overdues</entry>
 	<entry code="fetch_empr_nb_resa">Number of reservations</entry>
 	<entry code="fetch_empr_nb_previsions">Number of previsions</entry>
+	<entry code="fetch_empr_empty_parameters">empr_id, empr_cb and empr_cp are empty.</entry>
 	
 <!--
 delete_empr
@@ -126,7 +128,7 @@ empr_list
 update_empr
 -->	
 	<entry code="update_empr">Modification of a reader</entry>
-	<entry code="update_empr_empr_data">Table of a reader's informations. The fields 'nom', 'location', 'categ', 'statut', 'cstat' have to exist and to be consistent with the database</entry>
+	<entry code="update_empr_empr_data">Table of a reader's informations. The fields 'location', 'categ', 'statut', 'cstat' have to be consistent with the database</entry>
 	
 <!--
 statut_list
@@ -297,4 +299,11 @@ bibloto_empr_list
 -->	
 	<entry code="bibloto_empr_list">Bibloto readers list</entry>	
 
+<!--
+send_mail_pret_info_to_empr
+-->	
+	<entry code="send_mail_pret_info_to_empr">Envoi de mail</entry>	
+	<entry code="send_mail_pret_info_to_empr_input_description">Paramètre d'entrée</entry>	
+	<entry code="send_mail_pret_info_to_empr_output_description">Statut de l'envoi de mail</entry>	
+			
 </XMLlist>

@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.8 2018-01-23 15:13:18 shamel Exp $ -->
+$Id: fr_FR.xml,v 1.10 2024/04/15 13:06:44 rtigero Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -23,6 +23,7 @@ fetchNoticeList
   <entry code="fetchNoticeList_recordCharset">le charset dans lequel on souhaite les résultats</entry>
   <entry code="fetchNoticeList_includeLinks">inclure les liens entre notices, bulletins et articles</entry>
   <entry code="fetchNoticeList_includeItems">inclure les exemplaires dans la zone 995</entry>
+  <entry code="fetchNoticeList_cleanHTML">nettoyer le code HTML</entry>
   <entry code="fetchNoticeList_results">Les différentes notices</entry>
   <entry code="fetchNoticeList_results_noticeId">l'id de la notice</entry>
   <entry code="fetchNoticeList_results_noticeContent">la notice dans le format demandé</entry>
@@ -36,6 +37,7 @@ fetchNoticeListArray
 	<entry code="fetchNoticeListArray_recordCharset">le charset dans lequel on souhaite les résultats</entry>
 	<entry code="fetchNoticeListArray_includeLinks">inclure les liens entre notices, bulletins et articles</entry>
 	<entry code="fetchNoticeListArray_includeItems">inclure les exemplaires dans la zone 995</entry>
+	<entry code="fetchNoticeListArray_cleanHTML">nettoyer le code HTML</entry>
 	<entry code="fetchNoticeListArray_results">Les différentes notices</entry>
   <!--
 listNoticeExplNums
@@ -150,7 +152,7 @@ fetchBulletinListFull
 	<entry code="fetchBulletinListFull_results_bulletin_notice">La notice associée au bulletin, si elle existe</entry>
 	<entry code="fetchBulletinListFull_results_bulletin_items">Les exemplaires du bulletin</entry>
 	<entry code="fetchBulletinListFull_results_bulletin_doc_nums">Les documents numériques du bulletin</entry>
- 
+
   <!--
 fetchNoticeCollstates
 -->
@@ -182,7 +184,6 @@ deleteNotices
 check_del_notice
 -->
 	<entry code="check_del_notice_description">On vérifie que la notice peut être supprimer</entry>
-	
 
-		
+	<entry code="getNbResa">Récupérer le nombre de réservations associées</entry>
 </XMLlist>

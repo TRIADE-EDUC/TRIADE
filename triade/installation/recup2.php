@@ -4,8 +4,8 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -33,7 +33,9 @@
 	include_once("sql/db-triade.php");
 	include_once("../common/config.inc.php");
 	include_once("./install_base.php");
-	
+
+	$cr=hasInternet();
+	if ($cr) sleep(12);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -47,7 +49,7 @@
 		<meta http-equiv="CacheControl" content="no-cache" />
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="expires" content="-1" />
-		<meta name="Copyright" content="Triade©, 2001" />
+		<meta name="Copyright" content="Triade�, 2001" />
 		<link rel="SHORTCUT ICON" href="../favicon.ico" />
 		<link title="style" type="text/css" rel="stylesheet"
 		      href="librairie/css.css" />
@@ -59,8 +61,7 @@
 		<!-- "text-align: center" à cause du bug centrage d'IE :( -->
 		<div style="text-align: center;">
 			<div id="mainInst3">
-				<img src="./image/logo_triade_licence.gif"
-				     alt="logo_triade_licence" />
+				<img src="./image/logo_triade_licence.png" width='300' alt="logo_triade_licence" />
 
 <?php
 	include_once("../common/version.php");
@@ -100,5 +101,6 @@
 		</div>
 
 <?php	include_once("./librairie/pied_page.php"); ?>
+
 	</body>
 </html>

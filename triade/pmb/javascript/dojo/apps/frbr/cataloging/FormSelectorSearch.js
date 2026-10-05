@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormSelectorSearch.js,v 1.1 2018-01-26 16:16:20 vtouchard Exp $
+// $Id: FormSelectorSearch.js,v 1.1 2018/01/26 16:16:20 vtouchard Exp $
 
 /*****
  * 

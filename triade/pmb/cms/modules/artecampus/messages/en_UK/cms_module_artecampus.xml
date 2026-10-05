@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_artecampus.xml,v 1.1.2.1 2024/07/18 12:38:19 qvarin Exp $ -->
+
+<XMLlist>
+    <entry code="cms_module_artecampus_datasource_artecampus">Connecteur Arte Campus</entry>
+    <entry code="cms_module_artecampus_view_artecampus">Vue Arte Campus</entry>
+</XMLlist>

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmb2webprisme.class.php,v 1.2 2018-08-10 12:52:52 dgoron Exp $
+// $Id: pmb2webprisme.class.php,v 1.3 2022/05/05 06:44:02 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$class_path/category.class.php");
 require_once($base_path."/admin/convert/convert.class.php");
@@ -21,7 +22,7 @@ class pmb2webprisme extends convert {
 		
 		$rn=pmb_mysql_fetch_object($resultat);
 		
-		//RÃ©fÃ©rence
+		//Référence
 		//$notice.="  <REF>".htmlspecialchars($id)."</REF>\n";
 		
 		//Organisme (OP)
@@ -86,7 +87,7 @@ class pmb2webprisme extends convert {
 			sort($doc);
 			$notice.="<DOC>".htmlspecialchars(strtoupper(implode(",",$doc)),ENT_QUOTES,$charset)."</DOC>\n";
 		}
-		//ResumÃ© (COMMENT)
+		//Resumé (COMMENT)
 		if ($rn->n_resume) {
 			$notice.="<COMMENT>".htmlspecialchars($rn->n_resume,ENT_QUOTES,$charset)."</COMMENT>\n";
 		}
@@ -118,6 +119,7 @@ class pmb2webprisme extends convert {
 		$r_.=$nt["NOM"][0]["value"].";;".$nt["SITE"][0]["value"].";;".$nt["MEL"][0]["value"].";;".$nt["DE"][0]["value"].";;";
 		$r_.=$nt["COMMENT"][0]["value"].";;".$nt["DOC"][0]["value"].";;".$nt["LI"][0]["value"];
 		
+		$r = array();
 		$r['VALID'] = true;
 		$r['ERROR'] = "";
 		$r['DATA'] = $r_;

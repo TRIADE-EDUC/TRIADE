@@ -1,0 +1,19 @@
+<div id="portal" style="display:none;">
+	<loader></loader>
+	<aside id="banner">
+		<accordion></accordion>
+	</aside>
+	<div id="container">
+		<navigation></navigation>
+		<main id="page">
+			<h3 v-if="container.title">{{ container.title }} <span v-if="container.data.name">({{ container.data.name }})</span></h3>
+			
+			<page_form v-if="container.component == 'prop-page'" :data="container.data"></page_form>
+			<frame_form v-else-if="container.component == 'prop-frame'" :data="container.data"></frame_form>
+			<gabarit_form v-else-if="container.component == 'prop-gabarit'" :data="container.data"></gabarit_form>
+			<layout v-else-if="container.component == 'layout'" :data="container.data"></layout>
+			<preview v-else-if="container.component == 'prev'" :data="container.data"></preview>
+			<page_type_form v-else-if="container.component == 'prop-page-type'" :data="container.data"></page_type_form>
+		</main>
+	</div>
+</div>

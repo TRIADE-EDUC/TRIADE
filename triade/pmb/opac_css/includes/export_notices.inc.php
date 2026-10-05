@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export_notices.inc.php,v 1.7 2018-07-30 14:20:31 dgoron Exp $
+// $Id: export_notices.inc.php,v 1.8 2020/08/06 09:08:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-//ExÃ©cution de l'export
+//Exécution de l'export
+global $base_path;
 require_once("$base_path/admin/convert/start_export.class.php");
 
 function cree_export_notices($liste=array(), $typeexport='pmbxml2marciso', $expl=1) {
 	global $base_path;
 	global $keep_expl, $dbh;
 	$keep_expl = $expl ;
-	// RÃ©cupÃ©ration des notices
+	// Récupération des notices
 	$n_notices=count($liste);
 
 	if ($n_notices == 0) {

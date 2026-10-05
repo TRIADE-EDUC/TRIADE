@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: DsiSource.xml,v 1.1 2024/02/26 14:28:55 dbellamy Exp $ -->
+
+<source>
+   <methods>
+    
+        <!-- Nb de bannettes -->
+        <nb_bannette>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM bannettes</query>
+        </nb_bannette>
+        
+        <!-- Nb de bannettes privées -->
+        <nb_bannette_priv>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM bannettes  WHERE proprio_bannette!=0</query>
+        </nb_bannette_priv>
+        
+        <!-- Nb de bannettes publiques automatiques -->
+        <nb_bannette_pub_auto>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM bannettes  WHERE proprio_bannette=0 AND bannette_auto=1</query>
+        </nb_bannette_pub_auto>
+        
+        <!-- Nb de bannettes publiques manuelles -->
+        <nb_bannette_pub_manu>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM bannettes  WHERE proprio_bannette=0 AND bannette_auto=0</query>
+        </nb_bannette_pub_manu>
+        
+        <!-- Nb de bannettes privées à diffuser -->
+        <nb_bannette_priv_auto_to_emit>
+            <type>sql</type>
+            <query><![CDATA[SELECT COUNT(*) FROM bannettes  WHERE proprio_bannette!=0 AND bannette_auto=1 AND DATE_ADD(date_last_envoi, INTERVAL periodicite DAY > now()]]></query>
+        </nb_bannette_priv_auto_to_emit>
+        
+        <!-- Nb de bannettes publiques à diffuser -->
+        <nb_bannette_pub_auto_to_emit>
+            <type>sql</type>
+            <query><![CDATA[SELECT COUNT(*) FROM bannettes  WHERE proprio_bannette=0 AND bannette_auto=1 AND DATE_ADD(date_last_envoi, INTERVAL periodicite DAY > now()]]></query>
+        </nb_bannette_pub_auto_to_emit>
+        
+        
+    </methods>
+</source>

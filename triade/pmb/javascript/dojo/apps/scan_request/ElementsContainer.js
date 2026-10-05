@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ElementsContainer.js,v 1.8 2016-02-19 10:41:22 vtouchard Exp $
+// $Id: ElementsContainer.js,v 1.8 2016/02/19 10:41:22 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", "dojo/dom-attr", "dijit/registry", "dojo/on", "apps/scan_request/RecordLine","apps/scan_request/BulletinLine", "dojo/dom"], function(declare, WidgetBase, xhr, lang, topic, domConstruct, domAttr, registry, on, RecordLine, BulletinLine, dom){
@@ -33,11 +33,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 				  on(this.addElementButton, 'click', lang.hitch(this, this.addElement,{id: '', label:'', comment:'', explnums:{}}));
 			  }
 			  
-			  if(this.params.elementsToLoad && this.params.elementsToLoad.length){//On affiche une demande qui existe dÃ©jÃ  en base et des Ã©lÃ©ments lui on Ã©tÃ© associÃ©
+			  if(this.params.elementsToLoad && this.params.elementsToLoad.length){//On affiche une demande qui existe déjà en base et des éléments lui on été associé
 				  for(var i=0 ; i<this.params.elementsToLoad.length ; i++){
 					  this.addElement(this.params.elementsToLoad[i]);
 				  }
-			  }else{ //Nouvelle demande on crÃ©e au moins une ligne vide
+			  }else{ //Nouvelle demande on crée au moins une ligne vide
 				  if(this.params.readOnly){
 					this.destroy();
 				  }else{

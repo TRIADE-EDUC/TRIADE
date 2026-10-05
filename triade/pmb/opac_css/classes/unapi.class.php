@@ -1,15 +1,15 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | PMB est sous licence GPL, la rÃ©utilisation du code est cadrÃ©e            |
+// | PMB est sous licence GPL, la réutilisation du code est cadrée            |
 // +--------------------------------------------------------------------------+
-// $Id: unapi.class.php,v 1.3 2017-07-03 13:07:42 dgoron Exp $
+// $Id: unapi.class.php,v 1.3 2017/07/03 13:07:42 dgoron Exp $
 
 require_once ($include_path."/parser.inc.php");
 
 class unapi {
 	public $id = 0;	//id de la notice
-	public $format;	//format demandÃ©
-	public $notice;	//notice dans le format demandÃ©
+	public $format;	//format demandé
+	public $notice;	//notice dans le format demandé
 	public $formats;	//tableau regroupant les infos du XML
 
     public function __construct($format,$id) {
@@ -60,10 +60,10 @@ class unapi {
     public function getNotice(){
     	global $charset;
 
-		//on rÃ©cupÃ¨re l'identifiant du l'export associÃ© au format
+		//on récupère l'identifiant du l'export associé au format
 		$this->typeExport = start_export::get_id_by_path($this->formats[$this->format]['TRANSFORM']);
 		
-		//on a ce qu'il faut, on rÃ©cupÃ¨re la notice dans le bon format
+		//on a ce qu'il faut, on récupère la notice dans le bon format
     	$this->notice = cree_export_notices(array($this->id),$this->typeExport,1);
 	
 		//on envoi le bon mimetype

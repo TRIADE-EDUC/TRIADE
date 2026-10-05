@@ -2,18 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_build.class.php,v 1.87 2019-06-11 06:53:05 btafforeau Exp $
+// $Id: cms_build.class.php,v 1.108.2.1.2.1 2025/02/11 11:11:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-if (PHP_MAJOR_VERSION == "5") @ini_set("zend.ze1_compatibility_mode", "0");
-
-require_once($class_path."/autoloader.class.php");
-$autoloader = new autoloader();
-$autoloader->add_register("cms_modules",true);		
+global $class_path;
 require_once($class_path."/cms/cms_modules_parser.class.php");
 
-class cms_build{	
+class cms_build{
+    public $cadre_portail_list = [];
+    public $cadre_no_in_page = [];
 	public $dom;
 	public $headers = array(
 		'add' => array(),
@@ -21,7 +19,10 @@ class cms_build{
 	);
 	public $id_version; // version du portail
 	public $fixed_cadres = array();
-	public static $hash_cache_cadres = array();
+	public $next_node_id_recursive_antiloop = array();
+	
+	// Utilisation pour le placement hasardeux des cadres
+	const OFFPAGE_FRAME = "offpage_frame";
 	
 	//Constructeur	 
 	public function __construct(){
@@ -40,8 +41,14 @@ class cms_build{
 		'|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/',
 		'?', $html );
 
-		$pageid+=0;
-		@ini_set("zend.ze1_compatibility_mode", "0");
+		// On modifie cms_build_activate pour contourner le placement hasardeux
+		if (empty($_SESSION['cms_build_activate'])) {
+			global $old_cms_build_activate;
+			$old_cms_build_activate = $_SESSION['cms_build_activate'];
+		    $_SESSION['cms_build_activate'] = 2;
+		}
+		
+		$pageid = intval($pageid);
 		$this->cadre_portail_list=array();
 		$this->dom = new DomDocument();
 		$this->dom->encoding = $charset;
@@ -50,21 +57,29 @@ class cms_build{
 		if($is_opac_included) {
 			$html = '<meta http-equiv="content-type" content="text/html; charset='.$charset.'" />'.$html;
 		}
-		if(!@$this->dom->loadHTML($html)) return $html;
+		if(!@$this->dom->loadHTML($html)) {
+			// recherche toute les spans hidden dans le dom et on supprime
+			$this->remove_hidden_frames();
+			return $html;
+		}
 
-		//bon, l'histoire se rÃ©pÃ¨te, c'est quand on pense que c'est simple que c'est vraiment complexe...
-		// on commence par rÃ©cupÃ©rer les zones...
+		//bon, l'histoire se répète, c'est quand on pense que c'est simple que c'est vraiment complexe...
+		// on commence par récupérer les zones...
 		$this->id_version=$this->get_version_public();
-		if(!$this->id_version) return $html;
+		if(!$this->id_version) {
+			// recherche toute les spans hidden dans le dom et on supprime
+			$this->remove_hidden_frames();
+			return $html;
+		}
 		//On vide ce qui est trop vieux dans la table de cache des cadres
 		$this->manage_cache_cadres("clean");
-		$cache_cadre_object=array();//Tableau qui sert Ã  stocker les objets gÃ©nÃ©rÃ©s pour les cadres.
+		$cache_cadre_object=array();//Tableau qui sert à stocker les objets générés pour les cadres.
 		$query_zones = "select distinct build_parent from cms_build where build_type='cadre' and build_version_num= '".$this->id_version."'";
 		$result_zones = pmb_mysql_query($query_zones);
 		if(pmb_mysql_num_rows($result_zones)){
 			while($row_zones = pmb_mysql_fetch_object($result_zones)){
 				
-				//pour chaque zone, on rÃ©cupÃ¨re les cadres fixes...
+				//pour chaque zone, on récupère les cadres fixes...
 				$query_cadres = "select cms_build.*,cadre_url from cms_build 
 				LEFT JOIN cms_cadres ON build_obj=CONCAT(cadre_object,'_',id_cadre) AND cadre_memo_url=1
 				where build_parent = '".$row_zones->build_parent."'
@@ -74,7 +89,7 @@ class cms_build{
 					$cadres = array();
 					//on place les cadres dans un tableau
 					while($row_cadres = pmb_mysql_fetch_object($result_cadres)){
-						//Si on a rÃ©cupÃ©rÃ© un cadre_url
+						//Si on a récupéré un cadre_url
 						$cadreOk=true;
 						if($row_cadres->cadre_url){
 							$url=substr($row_cadres->cadre_url, strpos($row_cadres->cadre_url, '?')+1);
@@ -83,7 +98,7 @@ class cms_build{
 								$tmp=explode('=', $param);
 								if(sizeof($tmp)==2){
 									if(${$tmp[0]}!=$tmp[1] && ($tmp[0]=="lvl" || $tmp[0]=="search_type_asked" || $tmp[0]=="pageid")){
-										//si le cadre rentre dans le cas ou il n'appartient pas Ã  la page courante.
+										//si le cadre rentre dans le cas ou il n'appartient pas à la page courante.
 										$cadreOk=false;
 									}
 								}
@@ -114,7 +129,7 @@ class cms_build{
 				if(pmb_mysql_num_rows($result_dynamics)){
 					$cadres = array();
 					while($row_dynamics = pmb_mysql_fetch_object($result_dynamics)){
-						//Si on a rÃ©cupÃ©rÃ© un cadre_url
+						//Si on a récupéré un cadre_url
 						$cadreOk=true;
 						if($row_dynamics->cadre_url){
 							$url=substr($row_dynamics->cadre_url, strpos($row_dynamics->cadre_url, '?')+1);
@@ -124,7 +139,7 @@ class cms_build{
 								if(sizeof($tmp)==2){
 									global ${$tmp[0]};
 									if(${$tmp[0]} != $tmp[1] && ($tmp[0]=="lvl" || $tmp[0]=="search_type_asked" || $tmp[0]=="pageid")){
-										//si le cadre rentre dans le cas ou il n'appartient pas Ã  la page courante.
+										//si le cadre rentre dans le cas ou il n'appartient pas à la page courante.
 										$cadreOk=false;
 									}
 								}
@@ -177,10 +192,10 @@ class cms_build{
 				}
 			}
 		}				
-		//on insÃ¨re les entÃªtes des modules dans le head
+		//on insère les entêtes des modules dans le head
 		$this->insert_headers();
 		
-		//compression de la CSS si activÃ©!
+		//compression de la CSS si activé!
 		if($opac_compress_css == 1){
 			$compressed_file_exist = file_exists("./temp/full.css");
 			$links = $this->dom->getElementsByTagName("link");
@@ -212,9 +227,11 @@ class cms_build{
 		}else if (file_exists("./temp/full.css")){
 			unlink("./temp/full.css");
 		}
+		
+		// recherche toute les spans hidden dans le dom et on supprime
+		$this->remove_hidden_frames();
+		
 		$html = $this->dom->saveHTML();
-		@ini_set("zend.ze1_compatibility_mode", "1");
-
 		return $html;
 	}
 	
@@ -234,8 +251,10 @@ class cms_build{
 	}
 	
 	public function get_version_public(){
-		global $dbh,$opac_cms;
+		global $opac_cms;
 		global $build_id_version; // passer en get si constrution de l'opac en cours
+		
+		$opac_cms = intval($opac_cms);
 		if($build_id_version){
 			$_SESSION["build_id_version"]=$build_id_version;
 		} else{
@@ -244,19 +263,19 @@ class cms_build{
 		if($build_id_version ) {			
 			// mode opac en constuction
 			$requete = "select * from cms_version where 
-			id_version='".($build_id_version*1)."'
+			id_version='".intval($build_id_version)."'
 			order by version_date desc 
 			";	
 		} elseif($opac_cms){
-			// mode opac, on prend la derniÃ¨re version
+			// mode opac, on prend la dernière version
 			$requete = "select * from cms_version where 
-			version_cms_num= '".($opac_cms*1)."'
+			version_cms_num= '".$opac_cms."'
 			order by version_date desc 
 			";		
 		}else{
 			return"";
 		}	
-		$res = pmb_mysql_query($requete, $dbh);				
+		$res = pmb_mysql_query($requete);				
 		if($row = pmb_mysql_fetch_object($res)){	
 			return $row->id_version;
 		} else {
@@ -266,31 +285,45 @@ class cms_build{
 
 	public function apply_change($cadre,&$cache_cadre_object){
 		global $charset,$opac_parse_html;
-		
-		if(!is_object($cadre)) return false;
+
+		// Pour le traitement du placement hasardeux des cadres, on a defini $_SESSION["cms_build_activate"])
+
+		if (!is_object($cadre)) {
+		    return false;
+		}
+
 		if(substr($cadre->build_obj,0,strlen("cms_module_"))=="cms_module_"){
-			if($cadre->empty && $_SESSION["cms_build_activate"]){
-				$id_cadre= substr($cadre->build_obj,strrpos($cadre->build_obj,"_")+1);
+			if($cadre->empty && !empty($_SESSION["cms_build_activate"])){
+				$id_cadre = intval(substr($cadre->build_obj,strrpos($cadre->build_obj,"_")+1));
 				$obj=cms_modules_parser::get_module_class_by_id($id_cadre);
-				if($obj){
-					$query = "select cadre_name from cms_cadres where id_cadre = '".($id_cadre*1)."'";
-					$result = pmb_mysql_query($query);
-					$row = pmb_mysql_fetch_object($result);
-					
-					$html ="<span id='".$cadre->build_obj."' class='cmsNoStyles' type='cms_module_hidden' cadre_style='".$cadre->build_css."'><div id='".$cadre->build_obj."_conteneur' class='cms_module_hidden' style='display:none'>".$obj->get_human_description()."<div style='".$cadre->build_css."'></div></div></span>";
+				if ($obj) {
+
+					$description = method_exists($obj, "get_human_description") ? $obj->get_human_description() : "";
+
+					$html = "
+				    <span id='".$cadre->build_obj."' class='cmsNoStyles' data-type='cms_module_hidden' data-cadre-style='".$cadre->build_css."'>
+                        <span id='".$cadre->build_obj."_conteneur' class='cms_module_hidden' style='display:none'>
+                            ".$description."<span style='".$cadre->build_css."'></span>
+                        </span>
+                    </span>";
+
 					$tmp_dom = new domDocument();
-					if($charset == "utf-8"){
+					if ($charset == "utf-8") {
 						@$tmp_dom->loadHTML("<?xml version='1.0' encoding='$charset'>".$html);
-					}else{
+					} else {
 						@$tmp_dom->loadHTML($html);
 					}
-					if (!$tmp_dom->getElementById($obj->get_dom_id())) $this->setAllId($tmp_dom);
-					if($this->dom->getElementById($cadre->build_parent) ){
+
+					if (!$tmp_dom->getElementById($obj->get_dom_id())) {
+					    $this->setAllId($tmp_dom);
+					}
+
+					if ($this->dom->getElementById($cadre->build_parent)) {
 						$this->dom->getElementById($cadre->build_parent)->appendChild($this->dom->importNode($tmp_dom->getElementById($obj->get_dom_id()),true));
-					}	
-					$dom_id =$obj->get_dom_id();
-					//on rappelle le tout histoire de rÃ©cupÃ©rer les CSS and co...
-					$this->apply_dom_change($obj->get_dom_id(),$cadre);	
+					}
+
+					//on rappelle le tout histoire de récupérer les CSS and co...
+					$this->apply_dom_change($obj->get_dom_id(), $cadre);
 				}
 			}else if(!$cadre->empty){
 				$id_cadre= substr($cadre->build_obj,strrpos($cadre->build_obj,"_")+1);
@@ -302,19 +335,32 @@ class cms_build{
 				}
 				if($obj){
 					//on va chercher ses entetes...
-					$headers = $obj->get_headers();
-					$this->headers['add'] = array_merge($this->headers['add'],$headers['add']);
-					$this->headers['replace'] = array_merge($this->headers['replace'],$headers['replace']);
+					//on récupère le contenu du cadre
+				    $res = $this->manage_cache_cadres("select_header",$cadre->build_obj,"array");
+				    if($res["select_header"]){
+				        $headers = $res["value"];
+				    }else{
+				        $headers = $obj->get_headers();
+				        
+				        //on regarde si une condition n'empeche pas la mise en cache !
+				        if($obj->check_for_cache()){
+				            $this->manage_cache_cadres("insert_header",$cadre->build_obj,"array",$headers);
+				        }
+				    }
+					$this->headers['add'] = array_merge($this->headers['add'],$headers['add'] ?? []);
+					$this->headers['replace'] = array_merge($this->headers['replace'],$headers['replace'] ?? []);
 					$this->headers['add'] = array_unique($this->headers['add']);
 					$this->headers['replace'] = array_unique($this->headers['replace']);
 					
-					//on s'occupe du cadre en lui-mÃªme
-					//on rÃ©cupÃ¨re le contenu du cadre
+					//on s'occupe du cadre en lui-même
+					//on récupère le contenu du cadre
 					$res = $this->manage_cache_cadres("select",$cadre->build_obj,"html");
 					if($res["select"]){
 						$html = $res["value"];
 					}else{
+						$uniqid = PHP_log::prepare_time($obj->name, 'cms');
 						$html = $obj->show_cadre();
+						PHP_log::register($uniqid);
 						if($opac_parse_html){
 							$html = parseHTML($html);
 						}
@@ -323,7 +369,7 @@ class cms_build{
 							$this->manage_cache_cadres("insert",$cadre->build_obj,"html",$html);
 						}
 					}
-					//ca a peut-Ãªtre l'air complexe, mais c'est logique...
+					//ca a peut-être l'air complexe, mais c'est logique...
 					$tmp_dom = new domDocument();
 					if($charset == "utf-8"){
 						@$tmp_dom->loadHTML("<?xml version='1.0' encoding='$charset'>".$html);
@@ -331,18 +377,18 @@ class cms_build{
 						@$tmp_dom->loadHTML($html);
 					}
 					if (!$tmp_dom->getElementById($obj->get_dom_id())) $this->setAllId($tmp_dom);
-					if($this->dom->getElementById($cadre->build_parent) ){
+					if(!empty($this->dom->getElementById($cadre->build_parent)) && !empty($tmp_dom->getElementById($obj->get_dom_id()))){
 						$this->dom->getElementById($cadre->build_parent)->appendChild($this->dom->importNode($tmp_dom->getElementById($obj->get_dom_id()),true));
 					}	
 					$dom_id =$obj->get_dom_id();
-					//on rappelle le tout histoire de rÃ©cupÃ©rer les CSS and co...
+					//on rappelle le tout histoire de récupérer les CSS and co...
 					$this->apply_dom_change($obj->get_dom_id(),$cadre);	
 				}					
 			}
 		}else{
-			if($cadre->build_type == "cadre" && $cadre->empty == 1 && $_SESSION["cms_build_activate"]){
+			if($cadre->build_type == "cadre" && $cadre->empty == 1 && !empty($_SESSION["cms_build_activate"])){
 				
-				$html ="<span id='".$cadre->build_obj."' class='cmsNoStyles' type='cms_module_hidden' cadre_style='".$cadre->build_css."'><div id='".$cadre->build_obj."_conteneur' class='cms_module_hidden' style='display:none'>".$cadre->build_obj."<div style='".$cadre->build_css."'></div></div></span>";
+				$html ="<span id='".$cadre->build_obj."' class='cmsNoStyles' data-type='cms_module_hidden' data-cadre-style='".$cadre->build_css."'><span id='".$cadre->build_obj."_conteneur' class='cms_module_hidden' style='display:none'>".$cadre->build_obj."<span style='".$cadre->build_css."'></span></span></span>";
 				$tmp_dom = new domDocument();
 				if($charset == "utf-8"){
 					@$tmp_dom->loadHTML("<?xml version='1.0' encoding='$charset'>".$html);
@@ -365,12 +411,17 @@ class cms_build{
 		$ordered_cadres = array();
 		$cadres_dom = array();
 		$zone = "";
-		//on Ã©limine ce qui n'est pas dans le dom (ou ne va pas l'Ãªtre)
+		//on élimine ce qui n'est pas dans le dom (ou ne va pas l'être)
 		for($i=0 ; $i<count($cadres) ; $i++){
 			$cadres[$i]->empty=0;
 			if(!$zone) $zone = $cadres[$i]->build_parent;
 			if(substr($cadres[$i]->build_obj,0,strlen("cms_module_"))=="cms_module_"){
-				$id_cadre= substr($cadres[$i]->build_obj,strrpos($cadres[$i]->build_obj,"_")+1);
+				$id_cadre = substr($cadres[$i]->build_obj, strrpos($cadres[$i]->build_obj, "_") + 1);
+				if (intval($id_cadre) == 0) {
+				    // Cas ou on a un cms_module_sectionslist_16_conteneur par exemple
+				    $splitted_cadre = explode('_', $cadres[$i]->build_obj);
+				    $id_cadre = $splitted_cadre[count($splitted_cadre) - 2];
+				}
 				$res = $this->manage_cache_cadres("select",$cadres[$i]->build_obj,"object");
 				if($res["select"] == true){
 					if($res["value"]){
@@ -392,7 +443,8 @@ class cms_build{
 						$cadres[$i]->empty=1;
 						$cadres_dom[] = $cadres[$i];
 						$this->cadre_no_in_page[]=$cadres[$i];
-						$this->manage_cache_cadres("insert",$cadres[$i]->build_obj,"object","");
+						// On evite d'avoir un contenu vide dans les cadres
+						$this->manage_cache_cadres("insert",$cadres[$i]->build_obj,"object",self::OFFPAGE_FRAME);
 					}else{
 						$cadres[$i]->empty=1;
 						$cadres_dom[] = $cadres[$i];
@@ -408,7 +460,7 @@ class cms_build{
 			}
 		}		
 		$cadres = $cadres_dom;
-		//aprÃ¨s ce petit tour de passe passe, il nous reste ques les Ã©lÃ©ments prÃ©sent sur la page...
+		//après ce petit tour de passe passe, il nous reste ques les éléments présent sur la page...
 		$ordered_cadres[] =$this->get_next_cadre($cadres,$zone);
 		$i=0;
 		$nb =count($cadres);
@@ -418,7 +470,7 @@ class cms_build{
 			$i++;
 		}
 		
-		//le reste, c'est que l'on Ã  jamais pu placer (perte de chainage via supression de cadres)...
+		//le reste, c'est que l'on à jamais pu placer (perte de chainage via supression de cadres)...
 		foreach($cadres as $cadre){
 			$ordered_cadres[] = $cadre;
 		}
@@ -429,68 +481,50 @@ class cms_build{
 	 * Permets la gestion du cache pour les cadres du portail dans l'opac
 	 */
 	protected function manage_cache_cadres($todo,$build_object_name="",$content_type="",$content=""){
-		global $cms_cache_ttl;//Variable en seconde
+		global $base_path;
 		
 		$return = array($todo=>false,"value"=>"");
-		
-		if($_SESSION["cms_build_activate"]){
+		if($_SESSION["cms_build_activate"] == 1){
 			return $return;
-		}		
-		if($todo == "clean"){
-			$requete="DELETE FROM cms_cache_cadres WHERE DATE_SUB(NOW(), INTERVAL ".($cms_cache_ttl*1)." SECOND) > cache_cadre_create_date";
-			$res = pmb_mysql_query($requete);
-			if(pmb_mysql_affected_rows()) {
-				cms_build::$hash_cache_cadres = array();
-			}
-			return array($todo=>true,"value"=>"");
+		}
+		
+		// On utilise un fichier pour faire verrou et eviter de faire trop de nettoyage de cms cache
+		$filepath = $base_path."/temp/cms_cache_cadre_tmp.txt";
+		if($todo == "clean" && $this->can_clean_cache($filepath)){
+		    $this->lock_clean_cache($filepath);
+		    // On vide le cache dépassé
+		    cms_cache::clean_outdated_cache();
+		    
+		    $this->unlock_clean_cache($filepath);
+		    
+		    return array($todo=>true,"value"=>"");
 		}
 		
 		$elems = explode("_",$build_object_name);
 		$id = array_pop($elems);
-		$id+=0;
+		if (intval($id) == 0) {
+    		// Cas ou on a un cms_module_sectionslist_16_conteneur par exemple
+    		$id = array_pop($elems);
+		}
+		$id = (int) $id;
 		$cadre_name = implode("_",$elems);
-		$my_hash_cadre = call_user_func(array($cadre_name,"get_hash_cache"), $build_object_name,$id);
-		//il est possible que la mÃ©thode ne nous retourne pas de cache, cela signifie que l'on ne doit pas cacher les Ã©lÃ©ments associÃ©s
+		
+		$my_hash_cadre = '';
+		if(method_exists($cadre_name, 'get_hash_cache')) {
+		    $my_hash_cadre = call_user_func(array($cadre_name,"get_hash_cache"), $build_object_name,$id);
+		}
+		//il est possible que la méthode ne nous retourne pas de cache, cela signifie que l'on ne doit pas cacher les éléments associés
 		if(!$my_hash_cadre){
 			return array($todo=>false,"value"=>"");
 		}
 		
 		switch ($todo) {
 			case "select":
-				$requete="SELECT cache_cadre_hash,cache_cadre_content  FROM cms_cache_cadres WHERE cache_cadre_hash='".addslashes($my_hash_cadre)."' AND cache_cadre_type_content='".addslashes($content_type)."'";
-				$res=pmb_mysql_query($requete);
-				if($res && pmb_mysql_num_rows($res)){
-					cms_build::$hash_cache_cadres[] = $my_hash_cadre.$content_type;					
-					$html = pmb_mysql_result($res,0,1);
-					if($html){
-						if($content_type == "object"){
-							$value = unserialize($html);
-						}else{
-							$value = $html;
-						}
-					}else{
-						$value = "";
-					}
-					return array($todo=>true,"value"=>$value);
-				}
-				break;
+			case "select_header":
+			    return cms_cache::get_cadre($todo, $my_hash_cadre, $content_type);
 			case "insert":
-				if(in_array($my_hash_cadre.$content_type, cms_build::$hash_cache_cadres)) return array($todo=>true,"value"=>"");
-				$cache_cadre_content="";
-				if($content_type == "object"){
-					if($content){
-						$cache_cadre_content=serialize($content);
-					}
-				}else{
-					$cache_cadre_content=$content;
-				}
-				cms_build::$hash_cache_cadres[] = $my_hash_cadre.$content_type;
-				$requete="INSERT INTO cms_cache_cadres(cache_cadre_hash,cache_cadre_type_content,cache_cadre_content) VALUES('".addslashes($my_hash_cadre)."','".addslashes($content_type)."','".addslashes($cache_cadre_content)."')";
-				$res2=pmb_mysql_query($requete);
-				if($res2){
-					return array($todo=>true,"value"=>""); 
-				}
-				break;
+			case "insert_header":
+			    return cms_cache::insert_cadre($todo, $my_hash_cadre, $content_type, $content);
 		}
 		return $return;
 	}
@@ -500,13 +534,13 @@ class cms_build{
 		//on commence par aller par rapport au dynamiques
 		
 		foreach($cadres as $key => $cadre){
-			if($cadre->build_child_before == $before){
+		    if(isset($cadre->build_child_before) && $cadre->build_child_before == $before){
 				$next = $cadre;
 				unset($cadres[$key]);
 				return $next;
 			}
 		}
-		// on perd le fil, on reprend les valeurs sures, les Ã©lÃ©ments fixe
+		// on perd le fil, on reprend les valeurs sures, les éléments fixe
 		if (!empty($this->fixed_cadres[$zone])) {
     		for($i=0 ; $i<count($this->fixed_cadres[$zone]) ; $i++){
     			foreach($cadres as $key => $cadre){
@@ -536,6 +570,7 @@ class cms_build{
 	}
 	
 	public function apply_dom_change($id,$infos){	
+		global $opac_rgaa_active;
 		//on s'assure que la zone existe !
 		$parent = $this->dom->getElementById($infos->build_parent);
 		if($parent){
@@ -543,11 +578,16 @@ class cms_build{
 			if($node){
 				if(!isset($infos->empty)) $infos->empty = '';
 				if(!$infos->empty){
-					//on ajoute l'attribut fixed si on est sur un Ã©lÃ©ment fixÃ©!
+					//on ajoute l'attribut fixed si on est sur un élément fixé!
 					if($infos->build_fixed){
-						$node->setAttribute("fixed","yes");
+						if($opac_rgaa_active){
+							$node->setAttribute("data-fixed","yes");
+						}else{
+							$node->setAttribute("fixed","yes");
+						}
+						
 					}
-					//on lui ajoute les Ã©lÃ©ments de la CSS
+					//on lui ajoute les éléments de la CSS
 					$node = $this->add_css($node,$infos->build_css);
 				}
 				//on le place dans la bonne zone
@@ -615,7 +655,7 @@ class cms_build{
 		$previous_brother = $this->get_previous_node_id($infos);
 		if($previous_brother!== false){
 			if($previous_brother!= ""){
-				//un prÃ©cÃ©dent connu, on insÃ¨re le noeud juste avant le prÃ©cÃ©dent, puis on remet le prÃ©cÃ©dent au dessus...
+				//un précédent connu, on insère le noeud juste avant le précédent, puis on remet le précédent au dessus...
 				$node_next= $this->get_nextSibling($parent,$this->dom->getElementById($previous_brother));
 				if($node_next && ($node->getAttribute("id") !=$node_next->getAttribute("id"))){
 					$parent->insertBefore($node,$node_next);
@@ -680,6 +720,7 @@ class cms_build{
 	}
 
 	public function get_next_node_id($infos){
+	    $this->next_node_id_recursive_antiloop = array();
 		return $this->_get_next_node_id($infos->build_obj);
 	}
 	
@@ -695,7 +736,12 @@ class cms_build{
 					if($this->dom->getElementById($next)){
 						return $next;
 					}else{
-						return $this->_get_next_node_id($next);
+						if(in_array($node_id, $this->next_node_id_recursive_antiloop)) {
+							return false;
+						} else {
+							$this->next_node_id_recursive_antiloop[] = $node_id;
+							return $this->_get_next_node_id($next);
+						}
 					}
 				} else return false;	
 			//}else{
@@ -724,7 +770,7 @@ class cms_build{
 		if(count($this->headers['replace'])){
 			$tmp_dom = new domDocument();
 			foreach($this->headers['replace'] as $header){
-				if($charset == "utf-8"){
+				if ($charset == "utf-8"){
 					@$tmp_dom->loadHTML("<?xml version='1.0' encoding='$charset'>".$header);
 				}else{
 					@$tmp_dom->loadHTML($header);
@@ -747,7 +793,6 @@ class cms_build{
  										}
  									}
  								}
-								
 							}
  							if ($to_replace){
 	   							$to_check->item($j)->parentNode->removeChild($to_check->item($j));
@@ -755,10 +800,76 @@ class cms_build{
  							}
 						}
 					}
-					$this->dom->getElementsByTagName("head")->item(0)->appendChild($this->dom->importNode($new_item,true));
+					if (is_object($this->dom->getElementsByTagName("head")->item(0))) {
+					    $this->dom->getElementsByTagName("head")->item(0)->appendChild($this->dom->importNode($new_item,true));
+					}
 				}
 			}
 		}
 	}
-// class end
+	
+	/**
+	 * Suppression des span[type='cms_module_hidden'] utilisées pour le placement des cadres
+	 */
+	protected function remove_hidden_frames() {
+		global $old_cms_build_activate;
+		
+		// TODO a reprendre lors d'un prochain DEV sur le placement des cadres...
+		if (!empty($_SESSION['cms_build_activate']) && $_SESSION['cms_build_activate'] == 2) {
+			$tab_spans = array();
+			$spans = $this->dom->getElementsByTagName("span");
+			for($i = 0 ; $i < $spans->length; $i++) {
+				$span = $spans->item($i);
+				if ($span && "cms_module_hidden" == $span->getAttribute("data-type")) {
+					$tab_spans[] = $span;
+				}
+			}
+			
+			foreach ($tab_spans as $span){
+				$span->parentNode->removeChild($span);
+			}
+			
+			$_SESSION['cms_build_activate'] = $old_cms_build_activate;
+		}
+	}
+
+	protected function can_clean_cache($filepath)
+	{
+	    global $KEY_CACHE_FILE_XML;
+	    
+	    $cache_php = cache_factory::getCache();
+	    $key_file = $KEY_CACHE_FILE_XML.md5($filepath);
+	    if ($cache_php) {
+	        return !$cache_php->getFromCache($key_file);
+        } else {
+            return !file_exists($filepath);
+        }
+	}
+	
+	protected function lock_clean_cache($filepath)
+	{
+	    global $KEY_CACHE_FILE_XML;
+	    
+	    $cache_php = cache_factory::getCache();
+	    $key_file = $KEY_CACHE_FILE_XML.md5($filepath);
+	    if ($cache_php) {
+	        $cache_php->setInCache($key_file, true);
+        } else {
+            file_put_contents($filepath, '');
+        }
+	}
+	
+	protected function unlock_clean_cache($filepath)
+	{
+	    global $KEY_CACHE_FILE_XML;
+	    
+	    $cache_php = cache_factory::getCache();
+	    $key_file = $KEY_CACHE_FILE_XML.md5($filepath);
+	    if ($cache_php) {
+	        $cache_php->setInCache($key_file, false);
+        } else {
+            unlink($filepath);
+        }
+	}
+	// class end
 }

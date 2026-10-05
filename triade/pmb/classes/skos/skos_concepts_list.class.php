@@ -1,42 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_concepts_list.class.php,v 1.4 2018-05-18 10:14:00 ngantier Exp $
+// $Id: skos_concepts_list.class.php,v 1.5 2022/01/07 11:40:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/skos/skos_concept.class.php");
 require_once($class_path."/vedette/vedette_composee.class.php");
 
 /**
  * class skos_concepts_list
- * Controlleur d'une liste de concepts qui indexent un Ã©lÃ©ment
+ * Controlleur d'une liste de concepts qui indexent un élément
  */
 class skos_concepts_list {
 	
 	/**
-	 * Tableau des concepts associÃ©s Ã  l'objet
+	 * Tableau des concepts associés à l'objet
 	 * @var skos_concept
 	 */
 	private $concepts = array();
 	
 	/**
-	 * Tablea des concepts triÃ©s par schÃ©mas
+	 * Tablea des concepts triés par schémas
 	 * @var array
 	 */
 	protected $concepts_by_schemes;
 	
 	/**
-	 * DÃ©finit les concepts depuis les concepts qui indexent un objet
-	 * @param int $object_type Constante reprÃ©sentant le type de l'objet indexÃ©
-	 * @param int $object_id Identifiant de l'objet indexÃ©
-	 * @return boolean true si des concepts ont Ã©tÃ© trouvÃ©s, false sinon
+	 * Définit les concepts depuis les concepts qui indexent un objet
+	 * @param int $object_type Constante représentant le type de l'objet indexé
+	 * @param int $object_id Identifiant de l'objet indexé
+	 * @return boolean true si des concepts ont été trouvés, false sinon
 	 */
 	public function set_concepts_from_object($object_type, $object_id) {
-		global $dbh;
 		$query = "select num_concept, order_concept from index_concept where num_object = ".$object_id." and type_object = ".$object_type." order by order_concept";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if ($result && pmb_mysql_num_rows($result)) {
 			while ($row = pmb_mysql_fetch_object($result)){
 				$this->concepts[$row->order_concept] = new skos_concept($row->num_concept);
@@ -47,7 +47,7 @@ class skos_concepts_list {
 	}
 	
 	/**
-	 * DÃ©finit les concepts depuis un tableau de concepts passÃ© en paramÃ¨tre
+	 * Définit les concepts depuis un tableau de concepts passé en paramètre
 	 * @param skos_concept $concepts
 	 */
 	public function set_concepts($concepts) {
@@ -71,7 +71,7 @@ class skos_concepts_list {
 	}
 	
 	/**
-	 * Retourne le tableau des concepts de la liste triÃ©s par schÃ©mas
+	 * Retourne le tableau des concepts de la liste triés par schémas
 	 * @return skos_concept Tableau des concepts de la liste
 	 */
 	public function get_concepts_by_schemes() {
@@ -93,7 +93,7 @@ class skos_concepts_list {
 	}
 
 	/**
-	 * Retourne le tableau des concepts de la liste sans schÃ©mas
+	 * Retourne le tableau des concepts de la liste sans schémas
 	 * @return skos_concept Tableau des concepts de la liste
 	 */
 	public function get_concepts_without_sheme() {
@@ -107,16 +107,16 @@ class skos_concepts_list {
 	}
 	
 	/**
-	 * Retourne les concepts composÃ©s qui utilisent un Ã©lÃ©ment
-	 * @param int $element_id Identifiant de l'Ã©lÃ©ment
-	 * @param string $element_type Type de l'Ã©lÃ©ment (Disponible dans vedette.xml)
-	 * @return skos_concept Tableau de concepts composÃ©s
+	 * Retourne les concepts composés qui utilisent un élément
+	 * @param int $element_id Identifiant de l'élément
+	 * @param string $element_type Type de l'élément (Disponible dans vedette.xml)
+	 * @return skos_concept Tableau de concepts composés
 	 */
 	public function set_composed_concepts_built_with_element($element_id, $element_type) {
-		// On va chercher les vedettes construites avec l'Ã©lÃ©ment
+		// On va chercher les vedettes construites avec l'élément
 		$vedettes_ids = vedette_composee::get_vedettes_built_with_element($element_id, $element_type);
 		foreach ($vedettes_ids as $vedette_id) {
-			// On va chercher les concepts correspondant Ã  chaque vedette
+			// On va chercher les concepts correspondant à chaque vedette
 			if ($concept_id = vedette_composee::get_object_id_from_vedette_id($vedette_id, TYPE_CONCEPT_PREFLABEL)) {
 				$this->concepts[] = new skos_concept($concept_id);
 			}
@@ -128,8 +128,8 @@ class skos_concepts_list {
 	}
 	
 	/**
-	 * Retourne les concepts utilisÃ©s dans un schÃ©ma par libellÃ© de schÃ©ma
-	 * @param string $label Label du schÃ©ma
+	 * Retourne les concepts utilisés dans un schéma par libellé de schéma
+	 * @param string $label Label du schéma
 	 * @return skos_concept Tableau de concepts
 	 */
 	public function set_concepts_from_scheme_label($label) {
@@ -141,15 +141,15 @@ class skos_concepts_list {
 		skos_datastore::query($query);
 		if(skos_datastore::num_rows()){
 			$results = skos_datastore::get_result();
-			foreach($results as $key=>$result){
+			foreach($results as $result){
 				$this->concepts[] = new skos_concept(0,$result->concept);
 			}
 		}
 	}
 	
 	/**
-	 * Retourne les concepts utilisÃ©s dans un schÃ©ma par uri de schÃ©ma
-	 * @param string $uri URI du schÃ©ma
+	 * Retourne les concepts utilisés dans un schéma par uri de schéma
+	 * @param string $uri URI du schéma
 	 * @return skos_concept Tableau de concepts
 	 */
 	public function set_concepts_from_scheme_uri($uri) {
@@ -160,9 +160,9 @@ class skos_concepts_list {
 		skos_datastore::query($query);
 		if(skos_datastore::num_rows()){
 			$results = skos_datastore::get_result();
-			foreach($results as $key=>$result){
+			foreach($results as $result){
 				$this->concepts[] = new skos_concept(0,$result->concept);
 			}
 		}
 	}
-} // fin de dÃ©finition de la classe index_concept
+} // fin de définition de la classe index_concept

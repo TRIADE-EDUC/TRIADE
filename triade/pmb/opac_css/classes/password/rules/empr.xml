@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!-- Regles de verification de mot de passe lecteur -->
+<!--
+Structure :
+
+<rules>
+    <rule>
+
+        <id>Nom de la regle</id>
+        <type>Type de regle (regexp|class)</type>
+        <regexp>Expression reguliere (si type=regexp), pouvant contenir des variables</regexp>
+        <class>Classe associee (si type=class)</class>
+        <var>
+            <id>Identifiant du champ html</id>
+            <type>Type de variable (integer|string|textarea)</type>
+            <name>Nom de la variable (dans le cas ou vous avez plusieurs **toujours mettre "size" pour indiquer la longueur**)</name>
+            <default>Valeur par defaut</default>
+            <mandatory>Obligatoire (oui=1)</mandatory>
+        </var>
+        ...
+    </rule>
+    ...
+</rules
+ -->
+<rules>
+    <rule>
+        <id>min_length</id>
+        <type>regexp</type>
+        <regexp>^.{VAR,}$</regexp>
+        <var>
+            <type>integer</type>
+            <default>2</default>
+        </var>
+    </rule>
+    <rule>
+        <id>min_uppercase_chars</id>
+        <type>regexp</type>
+        <regexp>(?=(?:.*[A-Z]){VAR,}).*</regexp>
+        <var>
+            <type>integer</type>
+            <default>1</default>
+        </var>
+    </rule>
+    <rule>
+        <id>min_lowercase_chars</id>
+        <type>regexp</type>
+        <regexp>(?=(?:.*[a-z]){VAR,}).*</regexp>
+        <var>
+            <type>integer</type>
+            <default>1</default>
+        </var>
+    </rule>
+    <rule>
+        <id>min_numbers</id>
+        <type>regexp</type>
+        <regexp>(?=(?:.*[0-9]){VAR,}).*</regexp>
+        <var>
+            <type>integer</type>
+            <default>1</default>
+        </var>
+    </rule>
+    <rule>
+        <id>min_special_chars</id>
+        <type>regexp</type>
+        <regexp><![CDATA[(?=(?:.*[VAR:chars]){VAR:size,}).*]]></regexp>
+        <var>
+            <type>integer</type>
+            <name>size</name>
+            <default>1</default>
+        </var>
+        <var>
+            <type>string</type>
+            <name>chars</name>
+            <default><![CDATA[=?@#$_{}()!&.,/*+%;|~-<>]]></default>
+            <mandatory>1</mandatory>
+        </var>
+    </rule>
+    <rule>
+        <id>is_different_from_login</id>
+        <type>class</type>
+        <class>is_different_from_login</class>
+    </rule>
+    <rule>
+        <id>is_different_from_year</id>
+        <type>class</type>
+        <class>is_different_from_year</class>
+    </rule>
+    <!-- <rule>
+        <id>custom_regexp</id>
+        <type>regexp</type>
+        <regexp>VAR</regexp>
+        <var>
+            <type>textarea</type>
+            <default></default>
+        </var>
+    </rule> -->
+</rules>

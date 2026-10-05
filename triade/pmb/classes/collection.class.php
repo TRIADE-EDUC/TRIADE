@@ -1,16 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: collection.class.php,v 1.96 2019-06-06 11:51:06 ngantier Exp $
+// $Id: collection.class.php,v 1.108.4.1 2025/02/28 13:38:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des collections
+use Pmb\Ark\Entities\ArkEntityPmb;
+// définition de la classe de gestion des collections
 
 if ( ! defined( 'COLLECTION_CLASS' ) ) {
   define( 'COLLECTION_CLASS', 1 );
 
+  global $class_path, $include_path;
+  
 require_once($class_path."/notice.class.php");
 require_once("$class_path/aut_link.class.php");
 require_once("$class_path/aut_pperso.class.php");
@@ -25,11 +28,12 @@ require_once($class_path."/authority.class.php");
 require_once ($class_path.'/indexations_collection.class.php');
 require_once ($class_path.'/authorities_collection.class.php');
 require_once ($class_path.'/indexation_stack.class.php');
+require_once ($class_path.'/interface/entity/interface_entity_collection_form.class.php');
 
 class collection {
 
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------
 
 	public $id;		// MySQL id in table 'collections'
@@ -53,12 +57,12 @@ class collection {
 	//		collection($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {
-		$this->id = $id+0;
+	    $this->id = intval($id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos collection
+	//		getData() : récupération infos collection
 	// ---------------------------------------------------------------
 	public function getData() {
 		global $charset;
@@ -77,6 +81,8 @@ class collection {
 			$result = @pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
+				pmb_mysql_free_result($result);
+				
 				$this->id = $row->collection_id;
 				$this->name = $row->collection_name;
 				$this->parent = $row->collection_parent;
@@ -86,17 +92,21 @@ class collection {
 				$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_COLLECTIONS]);
 				$this->num_statut = $authority->get_num_statut();
 				if($row->collection_web) 
-					$this->collection_web_link = " <a href='$row->collection_web' target=_blank title='".htmlentities($row->collection_web,ENT_QUOTES,$charset)."' alt='".htmlentities($row->collection_web,ENT_QUOTES,$charset)."'><img src='".get_url_icon("globe.gif")."' border=0 /></a>";
+					$this->collection_web_link = " <a href='$row->collection_web' target=_blank title='".htmlentities($row->collection_web,ENT_QUOTES,$charset)."' alt='".htmlentities($row->collection_web,ENT_QUOTES,$charset)."'><img src='".get_url_icon("globe.gif")."' style='border:0px;' /></a>";
 				$editeur = authorities_collection::get_authority(AUT_TABLE_PUBLISHERS, $row->collection_parent);
 				$this->editor_isbd = $editeur->get_isbd();
 				$this->issn ? $this->isbd_entry = $this->name.', ISSN '.$this->issn : $this->isbd_entry = $this->name;
 				$this->editeur = $editeur->name;
 				$this->display = $this->name.' ('.$this->editeur.')';
-				// Ajoute un lien sur la fiche collection si l'utilisateur Ã  accÃ¨s aux autoritÃ©s
-				if (SESSrights & AUTORITES_AUTH){
-				    $this->isbd_entry_lien_gestion = "<a href='./autorites.php?categ=see&sub=collection&id=".$this->id."' class='lien_gestion'>".$this->name."</a>";
+				if($this->editeur) {
+					$this->isbd_entry .= ' ('.$this->editeur.')';
 				}
-				else{
+				
+				// Ajoute un lien sur la fiche collection si l'utilisateur à accès aux autorités
+				// defined('SESSrights') dans le cas de l'indexation il 'y a pas de AUTH ni de session
+				if (defined('SESSrights') && ( intval(SESSrights) & AUTORITES_AUTH) ){
+				    $this->isbd_entry_lien_gestion = "<a href='./autorites.php?categ=see&sub=collection&id=".$this->id."' class='lien_gestion'>".$this->name."</a>";
+				} else {
 				    $this->isbd_entry_lien_gestion = $this->name;
 				}
 			}
@@ -133,44 +143,43 @@ class collection {
 	//		delete() : suppression de la collection
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
 		global $msg;
 	
 		if(!$this->id)
-			// impossible d'accÃ©der Ã  cette notice de collection
+			// impossible d'accéder à cette notice de collection
 			return $msg[406];
 
 		if(($usage=aut_pperso::delete_pperso(AUT_TABLE_COLLECTIONS, $this->id,0) )){
-			// Cette autoritÃ© est utilisÃ©e dans des champs perso, impossible de supprimer
+			// Cette autorité est utilisée dans des champs perso, impossible de supprimer
 			return '<strong>'.$this->display.'</strong><br />'.$msg['autority_delete_error'].'<br /><br />'.$usage['display'];
 		}
 		
-		// rÃ©cupÃ©ration du nombre de notices affectÃ©es
+		// récupération du nombre de notices affectées
 		$requete = "SELECT COUNT(1) FROM notices WHERE ";
 		$requete .= "coll_id=$this->id";
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 		if(!$nbr_lignes) {
 			// on regarde si la collection a des collections enfants 
 			$requete = "SELECT COUNT(1) FROM sub_collections WHERE ";
 			$requete .= "sub_coll_parent=".$this->id;
-			$res = pmb_mysql_query($requete, $dbh);
+			$res = pmb_mysql_query($requete);
 			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 			if(!$nbr_lignes) {
 
-				// On regarde si l'autoritÃ© est utilisÃ©e dans des vedettes composÃ©es
+				// On regarde si l'autorité est utilisée dans des vedettes composées
 				$attached_vedettes = vedette_composee::get_vedettes_built_with_element($this->id, TYPE_COLLECTION);
 				if (count($attached_vedettes)) {
-					// Cette autoritÃ© est utilisÃ©e dans des vedettes composÃ©es, impossible de la supprimer
+					// Cette autorité est utilisée dans des vedettes composées, impossible de la supprimer
 					return '<strong>'.$this->display."</strong><br />".$msg["vedette_dont_del_autority"].'<br/>'.vedette_composee::get_vedettes_display($attached_vedettes);
 				}
 				
 				// effacement dans la table des collections
 				$requete = "DELETE FROM collections WHERE collection_id=".$this->id;
-				$result = pmb_mysql_query($requete, $dbh);
-				//Import d'autoritÃ©
+				pmb_mysql_query($requete);
+				//Import d'autorité
 				collection::delete_autority_sources($this->id);
-				// liens entre autoritÃ©s
+				// liens entre autorités
 				$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
 				$aut_link->delete();
 				$aut_pperso= new aut_pperso("collection",$this->id);
@@ -183,7 +192,7 @@ class collection {
 				// nettoyage indexation
 				indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_COLLECTIONS);
 				
-				// effacement de l'identifiant unique d'autoritÃ©
+				// effacement de l'identifiant unique d'autorité
 				$authority = new authority(0, $this->id, AUT_TABLE_COLLECTIONS);
 				$authority->delete();
 				
@@ -191,16 +200,16 @@ class collection {
 				return false;
 			} else {
 				// Cet collection a des sous-collections, impossible de la supprimer
-				return '<strong>'.$this->display."</strong><br />${msg[408]}";
+				return '<strong>'.$this->display."</strong><br />{$msg[408]}";
 			}
 		} else {
-			// Cette collection est utilisÃ© dans des notices, impossible de la supprimer
-			return '<strong>'.$this->display."</strong><br />${msg[407]}";
+			// Cette collection est utilisé dans des notices, impossible de la supprimer
+			return '<strong>'.$this->display."</strong><br />{$msg[407]}";
 		}
 	}
 	
 	// ---------------------------------------------------------------
-	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autoritÃ©
+	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autorité
 	// ---------------------------------------------------------------
 	public static function delete_autority_sources($idcol=0){
 		$tabl_id=array();
@@ -216,7 +225,7 @@ class collection {
 			$tabl_id[]=$idcol;
 		}
 		foreach ( $tabl_id as $value ) {
-	       //suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
+	       //suppression dans la table de stockage des numéros d'autorités...
 			$query = "select id_authority_source from authorities_sources where num_authority = ".$value." and authority_type = 'collection'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -234,9 +243,8 @@ class collection {
 	//		replace($by) : remplacement de la collection
 	// ---------------------------------------------------------------
 	public function replace($by,$link_save=0) {
-	
 		global $msg;
-		global $dbh;
+		global $pmb_ark_activate;
 	
 		if(!$by) {
 			// pas de valeur de remplacement !!!
@@ -244,7 +252,7 @@ class collection {
 		}
 	
 		if (($this->id == $by) || (!$this->id))  {
-			// impossible de remplacer une collection par elle-mÃªme
+			// impossible de remplacer une collection par elle-même
 			return $msg[226];
 		}
 		// a) remplacement dans les notices
@@ -256,9 +264,9 @@ class collection {
 		}
 		
 		$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
-		// "Conserver les liens entre autoritÃ©s" est demandÃ©
+		// "Conserver les liens entre autorités" est demandé
 		if($link_save) {
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link->add_link_to(AUT_TABLE_COLLECTIONS,$by);		
 		}
 		$aut_link->delete();
@@ -266,141 +274,162 @@ class collection {
 		vedette_composee::replace(TYPE_COLLECTION, $this->id, $by);
 		
 		$requete = "UPDATE notices SET ed1_id=".$n_collection->parent.", coll_id=$by WHERE coll_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 	
 		// b) remplacement dans la table des sous-collections
 		$requete = "UPDATE sub_collections SET sub_coll_parent=$by WHERE sub_coll_parent=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
-	
-		// c) suppression de la collection
-		$requete = "DELETE FROM collections WHERE collection_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
-		
+		pmb_mysql_query($requete);
+			
 		//nettoyage d'autorities_sources
 		$query = "select * from authorities_sources where num_authority = ".$this->id." and authority_type = 'collection'";
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				if($row->authority_favorite == 1){
-					//on suprime les rÃ©fÃ©rences si l'autoritÃ© a Ã©tÃ© importÃ©e...
+					//on suprime les références si l'autorité a été importée...
 					$query = "delete from notices_authorities_sources where num_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 					$query = "delete from authorities_sources where id_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 				}else{
 					//on fait suivre le reste
-					$query = "update authorities_sources set num_authority = ".$by." where num_authority_source = ".$row->id_authority_source;
+					$query = "update authorities_sources set num_authority = ".$by." where id_authority_source = ".$row->id_authority_source;
 					pmb_mysql_query($query);
 				}
 			}
-		}
+		}		
+		// nettoyage indexation concepts
+		$index_concept = new index_concept($this->id, TYPE_COLLECTION);
+		$index_concept->delete();
 		
-		//Remplacement dans les champs persos sÃ©lecteur d'autoritÃ©
+		//Remplacement dans les champs persos sélecteur d'autorité
 		aut_pperso::replace_pperso(AUT_TABLE_COLLECTIONS, $this->id, $by);
 		
 		audit::delete_audit (AUDIT_COLLECTION, $this->id);
 		
 		// nettoyage indexation
 		indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_COLLECTIONS);
-		
-		// effacement de l'identifiant unique d'autoritÃ©
+		if ($pmb_ark_activate) {
+		    $idReplaced = authority::get_authority_id_from_entity($this->id, AUT_TABLE_COLLECTIONS);
+		    $idReplacing = authority::get_authority_id_from_entity($by, AUT_TABLE_COLLECTIONS);
+		    if ($idReplaced && $idReplacing) {
+		        $arkEntityReplaced = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplaced);
+		        $arkEntityReplacing = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplacing);
+		        $arkEntityReplaced->markAsReplaced($arkEntityReplacing);
+		    }
+		}
+		// effacement de l'identifiant unique d'autorité
 		$authority = new authority(0, $this->id, AUT_TABLE_COLLECTIONS);
 		$authority->delete();
+		
+		// c) suppression de la collection
+		$requete = "DELETE FROM collections WHERE collection_id=".$this->id;
+		pmb_mysql_query($requete);
 		
 		collection::update_index($by);
 	
 		return false;
 	}
 	
+	protected function get_content_form() {
+		global $charset, $thesaurus_concepts_active;
+		global $collection_content_form;
+		
+		$content_form = $collection_content_form;
+		
+		//Nom
+		$element = interface_entity_element::get_instance('el0Child_0_a', 'collection_nom', '714');
+		$element->set_class('colonne2');
+		$element->add_input_node('text', $this->name, ['data-pmb-deb-rech' => '1'])
+		->set_class('saisie-30em');
+		$content_form = str_replace('!!element_collection_nom!!', $element->get_display(), $content_form);
+		
+		//ISSN
+		$element = interface_entity_element::get_instance('el0Child_0_b', 'issn', '165');
+		$element->set_class('colonne2');
+		$element->add_input_node('text', $this->issn)
+		->set_class('saisie-20em')
+		->set_maxlength(50);
+		$content_form = str_replace('!!element_issn!!', $element->get_display(), $content_form);
+		
+		//Editeur
+		$content_form = str_replace('!!ed_libelle!!', htmlentities($this->editeur,ENT_QUOTES, $charset), $content_form);
+		$content_form = str_replace('!!ed_id!!', $this->parent, $content_form);
+		
+		// Web
+		$element = interface_entity_element::get_instance('el0Child_2', 'collection_web', '147');
+		$element->add_input_node('url', $this->collection_web)
+		->set_maxlength(255);
+		$content_form = str_replace('!!element_collection_web!!', $element->get_display(), $content_form);
+		
+		//Commentaire
+		$element = interface_entity_element::get_instance('el0Child_3', 'comment', 'collection_comment');
+		$element->add_textarea_node($this->comment, 62, 4)
+		->set_class('saisie-80em')
+		->set_attributes(array('wrap' => 'virtual'));
+		$content_form = str_replace('!!element_comment!!', $element->get_display(), $content_form);
+
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
+		$content_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_collection') , $content_form);
+		
+		$aut_pperso= new aut_pperso("collection",$this->id);
+		$content_form = str_replace('!!aut_pperso!!', $aut_pperso->get_form(), $content_form);
+		
+		if($thesaurus_concepts_active == 1){
+			$index_concept = new index_concept($this->id, TYPE_COLLECTION);
+			$content_form = str_replace('!!concept_form!!',	$index_concept->get_form('saisie_collection'),$content_form);
+		}else{
+			$content_form = str_replace('!!concept_form!!', "", $content_form);
+		}
+		$authority = new authority(0, $this->id, AUT_TABLE_COLLECTIONS);
+		$content_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $content_form);
+		
+		return $content_form;
+	}
+	
+	public function get_form($duplicate = false) {
+		global $msg;
+		global $user_input, $nbr_lignes, $page;
+		
+		$interface_form = new interface_entity_collection_form('saisie_collection');
+		if(isset(static::$controller) && is_object(static::$controller)) {
+			$interface_form->set_controller(static::$controller);
+		}
+		$interface_form->set_enctype('multipart/form-data');
+		if($this->id && !$duplicate) {
+			$interface_form->set_label($msg['168']);
+			$interface_form->set_document_title($this->name.' - '.$msg['168']);
+		} else {
+			$interface_form->set_label($msg['167']);
+			$interface_form->set_document_title($msg['167']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_num_statut($this->num_statut)
+		->set_content_form($this->get_content_form())
+		->set_table_name('collections')
+		->set_field_focus('collection_nom')
+		->set_url_base(static::format_url());
+		
+		$interface_form->set_page($page)
+		->set_nbr_lignes($nbr_lignes)
+		->set_user_input($user_input);
+		return $interface_form->get_display();
+	}
+	
 	// ---------------------------------------------------------------
 	//		show_form : affichage du formulaire de saisie
 	// ---------------------------------------------------------------
 	public function show_form($duplicate = false) {
-	
-		global $msg;
-		global $collection_form;
-	 	global $charset;
-		global $pmb_type_audit;
-		global $thesaurus_concepts_active;
-	
-		if($this->id && !$duplicate) {
-			$action = static::format_url("&sub=update&id=".$this->id);
-			$libelle = $msg[168];
-			$button_remplace = "<input type='button' class='bouton' value='$msg[158]' ";
-			$button_remplace .= "onclick='unload_off();document.location=\"".$this->format_url("&sub=replace&id=".$this->id)."\"'>";
-	
-			$button_voir = "<input type='button' class='bouton' value='$msg[voir_notices_assoc]' ";
-			$button_voir .= "onclick='unload_off();document.location=\"./catalog.php?categ=search&mode=2&etat=aut_search&aut_type=collection&aut_id=$this->id\"'>";
-	
-			$button_delete = "<input type='button' class='bouton' value='$msg[63]' ";
-			$button_delete .= "onClick=\"confirm_delete();\">";
-		} else {
-			$action = static::format_url('&sub=update&id=');
-			$libelle = $msg[167];
-			$button_remplace = '';
-			$button_voir = '';
-			$button_delete ='';
-		}
-		
-		$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
-		$collection_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_collection') , $collection_form);
-		
-		$aut_pperso= new aut_pperso("collection",$this->id);		
-		$collection_form = str_replace('!!aut_pperso!!',		$aut_pperso->get_form(),								$collection_form);
-		
-		$collection_form = str_replace('!!id!!', 					$this->id, 											$collection_form);
-		$collection_form = str_replace('!!libelle!!', 				$libelle, 											$collection_form);
-		$collection_form = str_replace('!!action!!', 				$action, 											$collection_form);
-		$collection_form = str_replace('!!cancel_action!!', 		static::format_back_url(), 							$collection_form);
-		$collection_form = str_replace('!!collection_nom!!', 		htmlentities($this->name,ENT_QUOTES, $charset), 	$collection_form);
-	 	$collection_form = str_replace('!!ed_libelle!!', 			htmlentities($this->editeur,ENT_QUOTES, $charset), 	$collection_form);
-		$collection_form = str_replace('!!ed_id!!', 				$this->parent, 										$collection_form);
-		$collection_form = str_replace('!!issn!!', 					$this->issn, 										$collection_form);
-		$collection_form = str_replace('!!delete!!', 				$button_delete, 									$collection_form);
-		$collection_form = str_replace('!!delete_action!!', 		static::format_delete_url("&id=".$this->id), 		$collection_form);
-		$collection_form = str_replace('!!remplace!!', 				$button_remplace, 									$collection_form);
-		$collection_form = str_replace('!!voir_notices!!', 			$button_voir, 										$collection_form);
-		$collection_form = str_replace('!!collection_web!!',		htmlentities($this->collection_web,ENT_QUOTES, $charset),	$collection_form);
-		$collection_form = str_replace('!!comment!!',				htmlentities($this->comment,ENT_QUOTES, $charset),	$collection_form);
-		/**
-		 * Gestion du selecteur de statut d'autoritÃ©
-		 */
-		$collection_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_COLLECTIONS, $this->num_statut), $collection_form);
-		
-		// pour retour Ã  la bonne page en gestion d'autoritÃ©s
-		// &user_input=".rawurlencode(stripslashes($user_input))."&nbr_lignes=$nbr_lignes&page=$page
-		global $user_input, $nbr_lignes, $page ;
-		$collection_form = str_replace('!!user_input!!',			htmlentities($user_input,ENT_QUOTES, $charset),		$collection_form);
-		$collection_form = str_replace('!!nbr_lignes!!',			$nbr_lignes,										$collection_form);
-		$collection_form = str_replace('!!page!!',					$page,												$collection_form);		
-		if($thesaurus_concepts_active == 1){
-			$index_concept = new index_concept($this->id, TYPE_COLLECTION);
-			$collection_form = str_replace('!!concept_form!!',		$index_concept->get_form('saisie_collection'),		$collection_form);
-		}else{
-			$collection_form = str_replace('!!concept_form!!',		"",													$collection_form);
-		}
-		if ($this->name) {
-			$collection_form = str_replace('!!document_title!!', addslashes($this->name.' - '.$libelle), $collection_form);
-		} else {
-			$collection_form = str_replace('!!document_title!!', addslashes($libelle), $collection_form);
-		}
-		$authority = new authority(0, $this->id, AUT_TABLE_COLLECTIONS);
-		$collection_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $collection_form);
-		if ($pmb_type_audit && $this->id && !$duplicate) {
-			$bouton_audit= audit::get_dialog_button($this->id, AUDIT_COLLECTION);
-		} else {
-			$bouton_audit= "";
-		}
-		$collection_form = str_replace('!!audit_bt!!',				$bouton_audit,												$collection_form);
-		$collection_form = str_replace('!!controller_url_base!!', static::format_url(), $collection_form);
-		print $collection_form;
+		print $this->get_form($duplicate);
 	}
 	
 	// ---------------------------------------------------------------
 	//		replace_form : affichage du formulaire de remplacement
 	// ---------------------------------------------------------------
 	public function replace_form()	{
-		global $collection_replace_form;
+		global $collection_replace_content_form;
 		global $msg;
 		global $include_path;
 	
@@ -410,12 +439,17 @@ class collection {
 			return false;
 		}
 	
-		$collection_replace_form=str_replace('!!id!!', $this->id, $collection_replace_form);
-		$collection_replace_form=str_replace('!!coll_name!!', $this->name, $collection_replace_form);
-		$collection_replace_form=str_replace('!!coll_editeur!!', $this->editeur, $collection_replace_form);
-		$collection_replace_form=str_replace('!!controller_url_base!!', static::format_url(), $collection_replace_form);
-		$collection_replace_form=str_replace('!!cancel_action!!', static::format_back_url(), $collection_replace_form);
-		print $collection_replace_form;
+		$content_form = $collection_replace_content_form;
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$interface_form = new interface_autorites_replace_form('coll_replace');
+		$interface_form->set_object_id($this->id)
+		->set_label($msg["159"]." ".$this->name." (".$this->editeur.")")
+		->set_content_form($content_form)
+		->set_table_name('collections')
+		->set_field_focus('coll_libelle')
+		->set_url_base(static::format_url());
+		print $interface_form->get_display();
 	}
 
 	/**
@@ -436,24 +470,23 @@ class collection {
 	}
 	
 	// ---------------------------------------------------------------
-	//		update($value) : mise Ã  jour de la collection
+	//		update($value) : mise à jour de la collection
 	// ---------------------------------------------------------------
 	public function update($value,$force_creation = false) {
-		global $dbh;
 		global $msg,$charset;
 		global $include_path;
 		global $thesaurus_concepts_active;
 		
 		$value = array_merge(static::get_default_data(), $value);
 		
-		// nettoyage des valeurs en entrÃ©e
+		// nettoyage des valeurs en entrée
 		$value['name'] = clean_string($value['name']);
 		$value['issn'] = clean_string($value['issn']);
 		
 		if(!$value['parent']){
 			if($value['publisher']){
-				//on les a, on crÃ©e l'Ã©diteur
-				$value['publisher']=stripslashes_array($value['publisher']);//La fonction d'import fait les addslashes contrairement Ã  l'update
+				//on les a, on crée l'éditeur
+				$value['publisher']=stripslashes_array($value['publisher']);//La fonction d'import fait les addslashes contrairement à l'update
 				$value['parent'] = editeur::import($value['publisher']);
 			}
 		}
@@ -461,7 +494,7 @@ class collection {
 		if ((!$value['name']) || (!$value['parent'])) 
 			return false;
 		
-		// construction de la requÃªte
+		// construction de la requête
 		$requete = 'SET collection_name="'.$value['name'].'", ';
 		$requete .= 'collection_parent="'.$value['parent'].'", ';
 		$requete .= 'collection_issn="'.$value['issn'].'", ';
@@ -473,13 +506,13 @@ class collection {
 			// update
 			$requete = 'UPDATE collections '.$requete;
 			$requete .= ' WHERE collection_id='.$this->id.' ;';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$requete = "update notices set ed1_id='".$value['parent']."' WHERE coll_id='".$this->id."' ";
-				$res = pmb_mysql_query($requete, $dbh) ;
+				pmb_mysql_query($requete) ;
 				
 				audit::insert_modif (AUDIT_COLLECTION, $this->id) ;
 				
-				// liens entre autoritÃ©s
+				// liens entre autorités
 				$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
 				$aut_link->save_form();			
 				$aut_pperso= new aut_pperso("collection",$this->id);
@@ -494,21 +527,21 @@ class collection {
 			}
 		} else {
 			if(!$force_creation){
-				// crÃ©ation : s'assurer que la collection n'existe pas dÃ©jÃ 
+				// création : s'assurer que la collection n'existe pas déjà
 				if ($id_collection_exists = collection::check_if_exists($value, 1)) {
 					$collection_exists = new collection($id_collection_exists);
 	 				require_once("$include_path/user_error.inc.php");
-					warning($msg[167],htmlentities($msg[171]." -> ".$collection_exists->display,ENT_QUOTES, $charset));
+					print $this->warning_already_exist($msg[167], $msg[171]." -> ".$collection_exists->display, $value);
 					return FALSE;
 				}
 			}
 			$requete = 'INSERT INTO collections '.$requete.';';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$this->id=pmb_mysql_insert_id();
 				
 				audit::insert_creation (AUDIT_COLLECTION, $this->id) ;
 				
-				// liens entre autoritÃ©s
+				// liens entre autorités
 				$aut_link= new aut_link(AUT_TABLE_COLLECTIONS,$this->id);
 				$aut_link->save_form();
 				$aut_pperso= new aut_pperso("collection",$this->id);
@@ -528,12 +561,12 @@ class collection {
 			$index_concept->save();
 		}
 
-		// Mise Ã  jour des vedettes composÃ©es contenant cette autoritÃ©
+		// Mise à jour des vedettes composées contenant cette autorité
 		vedette_composee::update_vedettes_built_with_element($this->id, TYPE_COLLECTION);
 		
 		if(isset($value['subcollections']) && is_array($value['subcollections'])){
 			for ( $i=0 ; $i<count($value['subcollections']) ; $i++){
-				$subcoll=stripslashes_array($value['subcollections'][$i]);//La fonction d'import fait les addslashes contrairement Ã  l'update
+				$subcoll=stripslashes_array($value['subcollections'][$i]);//La fonction d'import fait les addslashes contrairement à l'update
 				$subcoll['coll_parent'] = $this->id;
 				subcollection::import($subcoll);
 			}
@@ -557,76 +590,81 @@ class collection {
 	// fonction d'import de collection (membre de la classe 'collection');
 	
 	public static function import($data) {
-	
-		// cette mÃ©thode prend en entrÃ©e un tableau constituÃ© des informations Ã©diteurs suivantes :
+		// cette méthode prend en entrée un tableau constitué des informations éditeurs suivantes :
 		//	$data['name'] 	Nom de la collection
-		//	$data['parent']	id de l'Ã©diteur parent de la collection
-		//	$data['issn']	numÃ©ro ISSN de la collection
+		//	$data['parent']	id de l'éditeur parent de la collection
+		//	$data['issn']	numéro ISSN de la collection
 	
-		global $dbh;
-	
-		// check sur le type de  la variable passÃ©e en paramÃ¨tre
-		if(!sizeof($data) || !is_array($data)) {
+		// check sur le type de  la variable passée en paramètre
+		if ((empty($data) && !is_array($data)) || !is_array($data)) {
 			// si ce n'est pas un tableau ou un tableau vide, on retourne 0
 			return 0;
 		}
 	
 		$data = array_merge(static::get_default_data(), $data);
 		
-		// check sur les Ã©lÃ©ments du tableau (data['name'] est requis).
-		if(!isset(static::$long_maxi_name)) {
-			static::$long_maxi_name = pmb_mysql_field_len(pmb_mysql_query("SELECT collection_name FROM collections limit 1"),0);
+		// check sur les éléments du tableau (data['name'] est requis).
+		if (!isset(static::$long_maxi_name)) {
+			static::$long_maxi_name = pmb_mysql_field_len(pmb_mysql_query("SELECT collection_name FROM collections limit 1"), 0);
 		}
-		$data['name'] = rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['name']))),0,static::$long_maxi_name));
+		$data['name'] = rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['name']))), 0, static::$long_maxi_name));
 	
-		//si on a pas d'id, on peut avoir les infos de l'Ã©diteur 
-		if(!$data['parent']){
-			if($data['publisher']){
-				//on les a, on crÃ©e l'Ã©diteur
+		//si on a pas d'id, on peut avoir les infos de l'éditeur 
+		if (empty($data['parent'])) {
+			if (!empty($data['publisher'])) {
+				//on les a, on crée l'éditeur
 				$data['parent'] = editeur::import($data['publisher']);
 			}
 		}
 		
-		if(($data['name']=="") || ($data['parent']==0)) /* il nous faut impÃ©rativement un Ã©diteur */
+		if ($data['name'] == "" || $data['parent'] == 0) { /* il nous faut impérativement un éditeur */
 			return 0;
+		}
 	
-	
-		// prÃ©paration de la requÃªte
+		// préparation de la requête
 		$key0 = addslashes($data['name']);
 		$key1 = $data['parent'];
 		$key2 = addslashes($data['issn']);
 		
-		/* vÃ©rification que l'Ã©diteur existe bien ! */
-		$query = "SELECT ed_id FROM publishers WHERE ed_id='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
-		if(!$result) 
-			die("can't SELECT publishers ".$query);
-		if (pmb_mysql_num_rows($result)==0) 
+		/* vérification que l'éditeur existe bien ! */
+		$query = "SELECT ed_id FROM publishers WHERE ed_id='$key1' LIMIT 1 ";
+		$result = @pmb_mysql_query($query);
+		if (empty($result)) {
+			die("can't SELECT publishers $query");
+		}
+		if (pmb_mysql_num_rows($result) == 0) {
 			return 0;
+		}
 	
-		/* vÃ©rification que la collection existe */
-		$query = "SELECT collection_id FROM collections WHERE collection_name='${key0}' AND collection_parent='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
-		if(!$result) die("can't SELECT collections ".$query);
-		$collection  = pmb_mysql_fetch_object($result);
+		/* vérification que la collection existe */
+		$query = "SELECT collection_id FROM collections WHERE collection_name='$key0' AND collection_parent='$key1' LIMIT 1 ";
+		$result = @pmb_mysql_query($query);
+		if (empty($result)) {
+		    die("can't SELECT collections $query");
+		}
+		$collection = pmb_mysql_fetch_object($result);
 	
 		/* la collection existe, on retourne l'ID */
-		if($collection->collection_id)
+		if (!empty($collection->collection_id)) {
 			return $collection->collection_id;
+		}
 	
-		// id non-rÃ©cupÃ©rÃ©e, il faut crÃ©er la forme.
-		$query = 'INSERT INTO collections SET collection_name="'.$key0.'", ';
-		$query .= 'collection_parent="'.$key1.'", ';
-		$query .= 'collection_issn="'.$key2.'", ';
-		$query .= 'index_coll=" '.strip_empty_words($key0).' '.strip_empty_words($key2).' ", ';
-		$query .= 'collection_comment = "'.addslashes($data['comment']).'" ';
-		$result = @pmb_mysql_query($query, $dbh);
-		if(!$result) die("can't INSERT into database");
+		// id non-récupérée, il faut créer la forme.
+		$query = "INSERT INTO collections SET collection_name='$key0', ";
+		$query .= "collection_parent='$key1', ";
+		$query .= "collection_issn='$key2', ";
+		$query .= "index_coll='".strip_empty_words($key0)." ".strip_empty_words($key2)."', ";
+		$query .= "collection_comment = '".addslashes($data['comment'])."'";
+		$result = @pmb_mysql_query($query);
+		if (empty($result)) {
+		    die("can't INSERT into database");
+		}
 		
-		$id = pmb_mysql_insert_id($dbh);
+		$id = pmb_mysql_insert_id();
 		
-		if($data['subcollections']){
-			for ( $i=0 ; $i<count($data['subcollections']) ; $i++){
+		if (!empty($data['subcollections'])) {
+		    $nb_subcollections = count($data['subcollections']);
+		    for ($i = 0; $i < $nb_subcollections; $i++) {
 				$subcoll = $data['subcollections'][$i];
 				$subcoll['coll_parent'] = $id;
 				subcollection::import($subcoll);
@@ -671,7 +709,7 @@ class collection {
 	public static function update_index($id, $datatype = 'all') {
 		indexation_stack::push($id, TYPE_COLLECTION, $datatype);
 		
-		// On cherche tous les n-uplet de la table notice correspondant Ã  cette collection.
+		// On cherche tous les n-uplet de la table notice correspondant à cette collection.
 		$query = "select distinct notice_id from notices where coll_id='".$id."'";
 		authority::update_records_index($query, 'collection');
 	}
@@ -717,17 +755,15 @@ class collection {
 	}
 	
 	public static function check_if_exists($data, $from_form = 0){
-		global $dbh;
-		
-		//si on a pas d'id, on peut avoir les infos de l'Ã©diteur 
+		//si on a pas d'id, on peut avoir les infos de l'éditeur 
 		if(!$data['parent']){
 			if($data['publisher']){
-				//on les a, on crÃ©e l'Ã©diteur
+				//on les a, on crée l'éditeur
 				$data['parent'] = editeur::check_if_exists($data['publisher']);
 			}
 		}
 	
-		// prÃ©paration de la requÃªte
+		// préparation de la requête
 		if ($from_form) {
     		$key0 = $data['name'];
     		$key1 = $data['parent'];
@@ -738,9 +774,9 @@ class collection {
 		    $key2 = addslashes($data['issn']);
 		}
 		
-		/* vÃ©rification que la collection existe */
-		$query = "SELECT collection_id FROM collections WHERE collection_name='${key0}' AND collection_parent='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vérification que la collection existe */
+		$query = "SELECT collection_id FROM collections WHERE collection_name='{$key0}' AND collection_parent='{$key1}' LIMIT 1 ";
+		$result = @pmb_mysql_query($query);
 		if(!$result) die("can't SELECT collections ".$query);
 		if(pmb_mysql_num_rows($result)) {
 			$collection  = pmb_mysql_fetch_object($result);
@@ -844,14 +880,26 @@ class collection {
 	}
 	
 	protected static function format_delete_url($url='') {
-		global $base_path;
-			
 		if(isset(static::$controller) && is_object(static::$controller)) {
 			return 	static::$controller->get_delete_url();
 		} else {
 			return static::format_url("&sub=delete".$url);
 		}
 	}
-} # fin de dÃ©finition de la classe collection
+	
+	protected function warning_already_exist($error_title, $error_message, $values=array())  {
+		global $msg;
+		
+		$authority = new authority(0, $this->id, AUT_TABLE_COLLECTIONS);
+		$display = $authority->get_display_authority_already_exist($error_title, $error_message, $values);
+		$display = str_replace("!!action!!", static::format_url('&sub=update&id='.$this->id.'&forcing=1'), $display);
+		$label = (empty($this->id) ? $msg[287] : $msg['force_modification']);
+		$display = str_replace("!!forcing_button!!", $authority->get_display_forcing_button($label) , $display);
+		$hidden_specific_values = $authority->put_global_in_hidden_field("collection_nom");
+		$hidden_specific_values .= $authority->put_global_in_hidden_field("ed_id");
+		$display = str_replace('!!hidden_specific_values!!', $hidden_specific_values, $display);
+		return $display;
+	}
+} # fin de définition de la classe collection
 
-} # fin de dÃ©laration
+} # fin de délaration

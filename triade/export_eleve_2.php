@@ -1,164 +1,182 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
  *
  ***************************************************************************/
 ?>
+<?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
-<script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
+<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
-</head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php 
-include("./librairie_php/lib_licence.php"); 
+</HEAD>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<?php
+include("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
-?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'.js'?>"></SCRIPT>
-<?php include("./librairie_php/lib_defilement.php"); ?>
-<?php  $today= date ("j M, Y");  ?>
-</TD><td width="472" valign="middle" rowspan="3" align="center">
-<div align='center'>
-<?php top_h(); ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'1.js'?>"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Exportation des données élèves" ?>  </font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td valign=top>
-<br />
-<ul><font class=T2><?php print "Indiquer l'ordre des colonnes dans votre fichier excel" ?></font></ul>
-<br />
-<form method="post" action="export_eleve_3.php" >
-<font class="T2">
-<?php
-$nbordre=count($_POST['liste']);
-$nbcolplus=$_POST['nbcolplus'];
 
-if (isset($_POST['create'])) {
-	print "<table width='100%' border=0  style='border-collapse: collapse;'  >";
-	print "<tr>";
-	$j=0;
-	$tab=$_POST['liste'];
-	if ($nbcolplus > 0) {
-		for($i=0;$i<$nbcolplus;$i++) {
-			$tab[]="$i";
-			$nbordre++;
-		}
-	}
+$nbordre   = countTriade($_POST['liste']);
+$nbcolplus = (int)$_POST['nbcolplus'];
 
-	foreach($tab as $key=>$value) {
-		print "<td width='33%'>";
-		print "<select name='ordre[]'>";
-		print "<option value='' >N°</option>";
-		for($i=1;$i<=$nbordre;$i++) {
-			print "<option value='$i' >$i</option>";
-		}
-		print "</select>&nbsp;";
-		$name="";
-		if ($value == "nom") { $name="nom&nbsp;".INTITULEELEVE; }
-		if ($value == "prenom") { $name="prenom&nbsp;".INTITULEELEVE; }
-		if ($value == "classe") { $name="classe"; }
-		if ($value == "lv1") { $name="LV1"; }
-		if ($value == "lv2") { $name="LV2"; }
-		if ($value == "option") { $name="Option"; }
-		if ($value == "regime") { $name="Régime"; }
-		if ($value == "date_naissance") { $name="date&nbsp;naissance"; }
-		if ($value == "lieu_naissance") { $name="lieu&nbsp;naissance"; }
-		if ($value == "nationalite") { $name="nationalité"; }
-		if ($value == "civ_1") { $name="Civ.&nbsp;tuteur&nbsp;1"; }
-		if ($value == "nomtuteur") { $name="nom&nbsp;tuteur&nbsp;1"; }
-		if ($value == "nomtuteur_2") { $name="nom&nbsp;tuteur&nbsp;2"; }
-		if ($value == "prenomtuteur") { $name="prénom&nbsp;tuteur&nbsp;1"; }
-		if ($value == "prenomtuteur_2") { $name="prénom&nbsp;tuteur&nbsp;2"; }
-		if ($value == "adr1") { $name="adr.&nbsp;tuteur&nbsp;1"; }
-		if ($value == "adr2") { $name="adr.&nbsp;tuteur&nbsp;2"; }
-		if ($value == "code_post_adr1") { $name="CCP&nbsp;tuteur&nbsp;1"; }
-		if ($value == "commune_adr1") { $name="Commune&nbsp;tuteur&nbsp; 1"; }
-		if ($value == "tel_port_1") { $name="Tél.&nbsp;port.&nbsp;tuteur&nbsp;1"; }
-		if ($value == "civ_2") { $name="Civ.&nbsp;tuteur&nbsp;2"; }
-		if ($value == "nom_resp_2") { $name="nom&nbsp;tuteur&nbsp;2"; }
-		if ($value == "prenom_resp_2") { $name="prénom&nbsp;tuteur&nbsp;2"; }
-		if ($value == "code_post_adr2") { $name="CCP&nbsp;tuteur&nbsp;2"; }
-		if ($value == "commune_adr2") { $name="Commune&nbsp;tuteur&nbsp;2"; }
-		if ($value == "tel_port_2") { $name="Tél.&nbsp;port.&nbsp;tuteur&nbsp;2"; }
-		if ($value == "telephone") { $name="Téléphone"; }
-		if ($value == "profession_pere") { $name="Prof.&nbsp;père"; }
-		if ($value == "tel_prof_pere") { $name="Tél.&nbsp;prof.&nbsp;père"; }
-		if ($value == "profession_mere") { $name="Prof.&nbsp;mère"; }
-		if ($value == "tel_prof_mere") { $name="Tél.&nbsp;prof.&nbsp;mère"; }
-		if ($value == "nom_etablissement") { $name="Nom&nbsp;établissement"; }
-		if ($value == "numero_etablissement") { $name="N°&nbsp;établissement"; }
-		if ($value == "code_postal_etablissement") { $name="CCP&nbsp;établissement"; }
-		if ($value == "commune_etablissement") { $name="Commune&nbsp;établissement"; }
-		if ($value == "numero_eleve") { $name="INE&nbsp;-&nbsp;N°&nbsp;".INTITULEELEVE; }
-		if ($value == "email_eleve") { $name="Email&nbsp;".INTITULEELEVE; }
-		if ($value == "email_resp_2") { $name="Email&nbsp;Tuteur&nbsp;2"; }
-		if ($value == "email") { $name="Email&nbsp;Tuteur&nbsp;1"; }
-		if ($value == "class_ant") { $name="Classe&nbsp;antérieur"; }
-		if ($value == "annee_ant") { $name="Année&nbsp;antérieur"; }
-		if ($value == "tel_eleve") { $name="Tél.&nbsp;".INTITULEELEVE; }
-		if ($value == "sexe") { $name="sexe"; }
-		if ($value == "code_barre") { $name="Code&nbsp;barre"; }
-		if ($value == "email_eleve") { $name="Email&nbsp;".INTITULEELEVE; }
-		if ($value == "email_eleve_pro") { $name="Email&nbsp;".INTITULEELEVE."&nbsp;Univ."; }
-		if ($value == "annee_scolaire") { $name="Année&nbsp;scolaire."; }
-		if ($value == "tel_fixe_eleve") { $name="Tél.&nbsp;fixe&nbsp;".INTITULEELEVE; }
-		if ($value == "information") { $name="Informations"; }
-		if ($value == "adresse_eleve") { $name="adresse&nbsp;".INTITULEELEVE; }
-                if ($value == "ccp_eleve") { $name="CCP&nbsp;".INTITULEELEVE; }
-                if ($value == "commune_eleve") { $name="Commnune&nbsp;".INTITULEELEVE; }
-                if ($value == "pays_eleve") { $name="Pays&nbsp;".INTITULEELEVE; }
-
-
-		if ($name == "") { $name="<input type=text name='nbcolname[]' size='20' />"; }
-
-		print "<font class='T2'>$name </font></td>";
-		$j++;
-		if ($j == 3) { print "</tr><tr>"; $j=0; }
-		$liste.= $value."%##%";
-
-	}
-	print "</tr></table>";
-	print "<br>";
-	$liste=preg_replace('/%##%$/',"",$liste);
-	print "<input type='hidden' name='liste' value=\"$liste\" />";
+$tab = isset($_POST['liste']) ? $_POST['liste'] : [];
+if ($nbcolplus > 0) {
+    for ($i = 0; $i < $nbcolplus; $i++) {
+        $tab[] = "$i";
+        $nbordre++;
+    }
 }
-?>
-</font>
-<br>
-<center><input type="submit" value="Suivant -->" class="BUTTON" name="create" /> </center>
-</form>
-<br>
 
-<br />
-<!-- // fin  -->
+$labelMap = [
+    'nom'                          => 'Nom '.INTITULEELEVE,
+    'prenom'                       => 'Prénom '.INTITULEELEVE,
+    'classe'                       => 'Classe',
+    'lv1'                          => 'LV1',
+    'lv2'                          => 'LV2',
+    'option'                       => 'Option',
+    'regime'                       => 'Régime',
+    'date_naissance'               => 'Date naissance',
+    'lieu_naissance'               => 'Lieu naissance',
+    'nationalite'                  => 'Nationalité',
+    'civ_1'                        => 'Civ. tuteur 1',
+    'nomtuteur'                    => 'Nom tuteur 1',
+    'nomtuteur_2'                  => 'Nom tuteur 2',
+    'prenomtuteur'                 => 'Prénom tuteur 1',
+    'prenomtuteur_2'               => 'Prénom tuteur 2',
+    'adr1'                         => 'Adr. tuteur 1',
+    'adr2'                         => 'Adr. tuteur 2',
+    'code_post_adr1'               => 'Code postal tuteur 1',
+    'commune_adr1'                 => 'Commune tuteur 1',
+    'tel_port_1'                   => 'Tél. port. tuteur 1',
+    'civ_2'                        => 'Civ. tuteur 2',
+    'nom_resp_2'                   => 'Nom tuteur 2',
+    'prenom_resp_2'                => 'Prénom tuteur 2',
+    'code_post_adr2'               => 'Code postal tuteur 2',
+    'commune_adr2'                 => 'Commune tuteur 2',
+    'tel_port_2'                   => 'Tél. port. tuteur 2',
+    'telephone'                    => 'Téléphone',
+    'profession_pere'              => 'Profession père',
+    'tel_prof_pere'                => 'Tél. prof. père',
+    'profession_mere'              => 'Profession mère',
+    'tel_prof_mere'                => 'Tél. prof. mère',
+    'nom_etablissement'            => 'Nom établissement',
+    'numero_etablissement'         => 'N° établissement',
+    'code_postal_etablissement'    => 'Code postal étab.',
+    'commune_etablissement'        => 'Commune étab.',
+    'numero_eleve'                 => 'INE - N° '.INTITULEELEVE,
+    'email_eleve'                  => 'Email '.INTITULEELEVE,
+    'email_resp_2'                 => 'Email tuteur 2',
+    'email'                        => 'Email tuteur 1',
+    'class_ant'                    => 'Classe antérieure',
+    'annee_ant'                    => 'Année antérieure',
+    'tel_eleve'                    => 'Tél. '.INTITULEELEVE,
+    'sexe'                         => 'Sexe',
+    'code_barre'                   => 'Code barre',
+    'email_eleve_pro'              => 'Email '.INTITULEELEVE.' Univ.',
+    'annee_scolaire'               => 'Année scolaire',
+    'tel_fixe_eleve'               => 'Tél. fixe '.INTITULEELEVE,
+    'information'                  => 'Informations',
+    'adresse_eleve'                => 'Adresse '.INTITULEELEVE,
+    'ccp_eleve'                    => 'Code postal '.INTITULEELEVE,
+    'commune_eleve'                => 'Commune '.INTITULEELEVE,
+    'pays_eleve'                   => 'Pays '.INTITULEELEVE,
+];
+
+// Build items list
+$items = [];
+$liste = '';
+foreach ($tab as $key => $value) {
+    $label = isset($labelMap[$value]) ? $labelMap[$value] : null;
+    $items[] = ['value' => $value, 'label' => $label];
+    $liste .= $value.'%##%';
+}
+$liste = preg_replace('/%##%$/', '', $liste);
+?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
+<?php include("./librairie_php/lib_defilement.php"); ?>
+</TD><td width="472" valign="middle" rowspan="3" align="center">
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2">
+  <b><font id='menumodule1'>Exportation des données <?php print INTITULEELEVE ?> — Ordre des colonnes</font></b>
+</td></tr>
+<tr id='cadreCentral0'>
+<td>
+<!-- // debut -->
+
+<div style="display:flex;flex-direction:column;gap:12px;padding:10px 6px">
+
+<?php if (!empty($items)): ?>
+<form method="post" action="export_eleve_3.php">
+  <input type="hidden" name="liste" value="<?php print htmlspecialchars($liste) ?>">
+
+  <div class="card">
+    <div class="card-header" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#080A66">
+      <i class="bi bi-sort-numeric-down"></i> Définir l'ordre des colonnes dans le fichier Excel
+    </div>
+    <div class="card-body" style="padding:10px 14px">
+      <p style="font-size:11px;color:#888;margin:0 0 10px;font-style:italic">Sélectionnez le numéro de position pour chaque colonne.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+        <?php foreach ($items as $item):
+          $isCustom = ($item['label'] === null);
+        ?>
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#f5f7ff;border:1px solid #e4e9f8;border-radius:5px;font-size:11px">
+          <select name="ordre[]" style="border:1px solid #c5cae9;border-radius:4px;padding:2px 4px;font-size:11px;accent-color:#080A66;flex-shrink:0">
+            <option value="">N°</option>
+            <?php for ($i = 1; $i <= $nbordre; $i++) print "<option value='$i'>$i</option>"; ?>
+          </select>
+          <?php if ($isCustom): ?>
+          <input type="text" name="nbcolname[]" placeholder="Nom colonne" style="border:1px solid #c5cae9;border-radius:4px;padding:2px 6px;font-size:11px;flex:1;min-width:0">
+          <?php else: ?>
+          <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php print htmlspecialchars($item['label']) ?></span>
+          <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;padding:4px 0">
+    <button type="submit" name="create" class="btn btn-primary">
+      Générer le fichier <i class="bi bi-file-earmark-excel"></i>
+    </button>
+    <script language=JavaScript>buttonMagicRetour("export_eleve.php","_self")</script>
+  </div>
+
+</form>
+<?php else: ?>
+<div class="alert" style="background:#fff3e0;border:1px solid #ffcc80;border-radius:6px;padding:10px 14px;font-size:12px;color:#e65100">
+  <i class="bi bi-exclamation-triangle"></i> Aucune colonne sélectionnée. <a href="export_eleve.php" style="color:#080A66">Retour</a>
+</div>
+<?php endif; ?>
+
+</div>
+
+<!-- // fin -->
+<?php Pgclose(); ?>
 </td></tr></table>
-<BR>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'2.js'?>"> </SCRIPT>
-<SCRIPT language="JavaScript">InitBulle("#000000","#FFFFFF","red",1);</SCRIPT>
+
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

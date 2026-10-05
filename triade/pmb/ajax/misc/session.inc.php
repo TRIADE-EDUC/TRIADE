@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: session.inc.php,v 1.2 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: session.inc.php,v 1.2 2019/05/29 12:03:09 btafforeau Exp $
 
 global $class_path, $sub, $action, $type, $value;
 

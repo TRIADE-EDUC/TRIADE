@@ -1,18 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_info.class.php,v 1.5 2017-10-27 14:07:40 ngantier Exp $
+// $Id: map_info.class.php,v 1.8 2023/05/04 12:18:50 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/map/map_objects_controler.class.php");
 
 class map_info {
 
-	
+	public $id;
+
+	public $map;
+
+	public $isbd;
+
+	public $public;
+
 	public function __construct($id) {
-		$this->id=$id+0;
+		$this->id=intval($id);
 	   	$this->fetch_datas();
   	} // end of member function __construct
 
@@ -29,7 +37,7 @@ class map_info {
   		return $this->map;
   	}
   	public function fetch_datas() {
-  		global $dbh,$msg;
+  		global $msg;
   	
   		$this->map=array();
   		$this->isbd="";
@@ -78,7 +86,7 @@ class map_info {
   						$this->public.="<tr><td class='align_right bg-grey'><span class='etiq_champ'>".$msg["map_notice_ref"]."</span></td><td>".$this->map['ref']."</td></tr>";
   					}
   				} 
-  								
+  				$ids=array();
   				$ids[]=$this->id;
   				$map=new map_objects_controler(TYPE_RECORD,$ids);
 				$bounding_box=$map->get_bounding_box();
@@ -97,13 +105,10 @@ class map_info {
   	}
 	
 	public function get_form() {
-		global $dbh,$msg;
-		global $map_edition_tpl;
-		global $map_edition_all_tpl;
-		
-		$form_map="";
-		
-		$map_edition_tpl="
+		global $msg;
+				
+		$form_map = "
+		        <div id='map_extended_fields'>
 					<div class='row'>
 						<label class='etiquette' for='f_map_echelle'>".$msg["map_echelle"]."</label>
 					</div>
@@ -128,30 +133,30 @@ class map_info {
 					<div class='row'>
 						<input id='f_map_equinoxe' class='saisie-80em' type='text' value='!!map_equinoxe_value!!' name='f_map_equinoxe'>
 					</div>
+				</div>
+				<div class='row'>
+					<input id='f_polygon_address_0' name='f_polygon_address_0' type='hidden'>
+				</div>
 				";
 				
-		$form_map=$map_edition_tpl;
-				
 		$requete = "SELECT map_echelle_id, map_echelle_name FROM map_echelles ORDER BY map_echelle_name ";
-		$projections=gen_liste($requete,"map_echelle_id","map_echelle_name","f_map_echelle","",$this->map['echelle_num'],0,"",0,$msg['map_echelle_vide']);		
-		$form_map=str_replace("!!map_echelle_list!!",$projections,$form_map);
+	    $echelles = gen_liste($requete, "map_echelle_id", "map_echelle_name", "f_map_echelle", "", $this->map['echelle_num'], 0, $msg['map_echelle_vide'], 0, $msg['map_echelle_vide']);
+	    $form_map = str_replace("!!map_echelle_list!!", $echelles, $form_map);
 		
 		$requete = "SELECT map_projection_id, map_projection_name FROM map_projections ORDER BY map_projection_name ";
-		$projections=gen_liste($requete,"map_projection_id","map_projection_name","f_map_projection","",$this->map['projection_num'],0,"",0,$msg['map_projection_vide']);				
-		$form_map=str_replace("!!map_projection_list!!",$projections,$form_map);
+	    $projections = gen_liste($requete, "map_projection_id", "map_projection_name", "f_map_projection", "", $this->map['projection_num'], 0, $msg['map_projection_vide'], 0, $msg['map_projection_vide']);
+	    $form_map = str_replace("!!map_projection_list!!", $projections, $form_map);
 		
 		$requete = "SELECT map_ref_id, map_ref_name FROM map_refs ORDER BY map_ref_name ";
-		$refs=gen_liste($requete,"map_ref_id","map_ref_name","f_map_ref","",$this->map['ref_num'],0,"",0,$msg['map_ref_vide']);			
-		$form_map=str_replace("!!map_ref_list!!",$refs,$form_map);
+		$refs = gen_liste($requete, "map_ref_id", "map_ref_name", "f_map_ref", "", $this->map['ref_num'], 0, $msg['map_ref_vide'], 0, $msg['map_ref_vide']);
+		$form_map = str_replace("!!map_ref_list!!", $refs, $form_map);
 		
-		$form_map=str_replace("!!map_equinoxe_value!!",$this->map['equinoxe'],$form_map);
-		$form_map=str_replace("!!id!!",$this->id,$form_map);
-			
+		$form_map = str_replace("!!map_equinoxe_value!!", $this->map['equinoxe'], $form_map);
+		$form_map = str_replace("!!id!!", $this->id, $form_map);
 		return $form_map;
 	}
 	
 	public function save_form() {
-		global $dbh;
 		global $f_map_echelle;
 		global $f_map_projection;
 		global $f_map_ref;

@@ -3,7 +3,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- attributes labels for z3950 servers 
-$Id: z3950attributes.xml,v 1.2 2018-05-23 08:57:08 plmrozowski Exp $ -->
+$Id: z3950attributes.xml,v 1.2 2018/05/23 08:57:08 plmrozowski Exp $ -->
 
 <XMLlist>
 <entry code="auteur">auteur</entry>

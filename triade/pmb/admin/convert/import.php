@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import.php,v 1.8 2017-02-17 15:34:01 dgoron Exp $
+// $Id: import.php,v 1.8 2017/02/17 15:34:01 dgoron Exp $
 
 
 //Interface de lancement de l'import
@@ -22,7 +22,7 @@ function _item_($param) {
 	$catalog_visible[]=(isset($param['VISIBLE']) ? $param['VISIBLE'] : '');
 }
 
-//Lecture des diffÃ©rents imports possibles
+//Lecture des différents imports possibles
 if (file_exists("imports/catalog_subst.xml"))
 	$fic_catal = "imports/catalog_subst.xml";
 else
@@ -31,7 +31,7 @@ else
 $catalog=array();
 _parser_($fic_catal,array("ITEM"=>"_item_"),"CATALOG");
 
-//CrÃ©ation de la liste des types d'import
+//Création de la liste des types d'import
 $import_type="<select name=\"import_type\">\n";
 for ($i=0; $i<count($catalog); $i++) {
 	if ($catalog_visible[$i]!="no") {

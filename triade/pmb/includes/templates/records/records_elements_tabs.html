@@ -1,12 +1,12 @@
-<!-- $Id: records_elements_tabs.html,v 1.9 2017-11-22 14:47:47 dgoron Exp $ -->
+<!-- $Id: records_elements_tabs.html,v 1.10 2021/11/05 11:05:18 qvarin Exp $ -->
 
 <br/>
 <div class="hmenu" id="record_tabs">
 	{% for element_list_tab in records_tabs.tabs %}
-		{% if element_list_tab.nb_results %}
+		{% if element_list_tab.can_display_tab %}
 			<span{% if global.quoi == element_list_tab.name %} class='selected' {% endif %}>
 				<a href="./catalog.php?categ={{ global.categ }}&sub={{ global.sub }}{% if global.id %}&id={{ records_tabs.record.id }}{% endif %}{% if global.serial_id %}&serial_id={{ records_tabs.record.id }}{% endif %}{% if bulletin_id %}&bul_id={{ bulletin_id }}{% endif %}{% if global.action %}&action={{ global.action }}{% endif %}&quoi={{ element_list_tab.name }}{% if global.view %}&view={{ global.view }}{% endif %}{% if global.tab_nb_per_page %}&tab_nb_per_page={{ global.tab_nb_per_page }}{% endif %}#record_tabs">
-					{{ element_list_tab.label }} ({{ element_list_tab.nb_results }})
+					{{ element_list_tab.label }} {% if element_list_tab.content_type != "graph" %}({{ element_list_tab.nb_results }}){% endif %}
 				</a>
 			</span>
 		{% endif %}
@@ -43,7 +43,7 @@
 	{% endif %}
 {% endfor %}
 
-{% if records_tabs.record.records_list_ui.elements_list %}
+{% if records_tabs.record.records_list_ui.can_display_content %}
 	{% if records_tabs.record.records_list_ui.expandable %}
 		<a href="javascript:expandAll_ajax(0, document.getElementById('elements_list'))"><img style="border:0px" id="expandall" src="{{ img.expand_all.gif }}"></a>
 		<a href="javascript:collapseAll(document.getElementById('elements_list'))"><img style="border:0px" id="collapseall" src="{{ img.collapse_all.gif }}"></a>

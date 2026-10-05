@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.7 2018-09-14 15:43:22 tsamson Exp $ -->
+$Id: manifest.xml,v 1.10 2021/02/24 13:25:49 tsamson Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Oeuvres</name>
@@ -30,6 +30,9 @@ $Id: manifest.xml,v 1.7 2018-09-14 15:43:22 tsamson Exp $ -->
 			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
 			<datasource>frbr_entity_common_datasource_aut_link</datasource>
 			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
+			<datasource>frbr_entity_common_datasource_used_in_qualification</datasource>
+			<datasource>frbr_entity_common_datasource_merge_data</datasource>
+			<datasource>frbr_entity_works_datasource_authperso</datasource>
 		</datasources>		
 		<views>
 			<view>frbr_entity_works_view_workslist</view>

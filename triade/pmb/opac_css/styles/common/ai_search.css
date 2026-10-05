@@ -1,0 +1,313 @@
+#ai_search {
+  position: relative;
+  min-height: 388px;
+}
+
+
+#ai_search .v-enter-active,
+#ai_search .v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+#ai_search .v-enter-from,
+#ai_search .v-leave-to {
+    opacity: 0;
+}
+
+#ai_search .ai_search_loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  z-index: 9999;
+}
+
+#ai_search .ai_search_loader .ai_search_loader_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+
+#ai_search .ai_sessions {
+  margin: 15px 10px;
+}
+
+#ai_search .ai_sessions .ai_sessions_modal .modal {
+  width: 25% !important;
+  min-width: 25% !important;
+  min-height: 30%;
+}
+
+#ai_search .ai_sessions .ai_sessions_modal .modal .modal-content  input {
+  width: 100%
+}
+
+
+#ai_search .ai_sessions_list {
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+#ai_search .ai_sessions_list .ai_sessions_list_item {
+  position: relative;
+  display: flex;
+  gap: 5px;
+  color: #787878;
+  padding: 0px 5px;
+  border: 3px solid transparent;
+  background: rgb(239, 239, 239);
+}
+
+#ai_search .ai_sessions_list .ai_sessions_list_item button,
+#shared_docnums_list .docnumsList .list .docnum button,
+.form_liste_lecture blockquote button.button-see {
+  padding: 5px;
+  background: transparent;
+  border: transparent;
+  cursor: pointer;
+}
+
+#ai_search .ai_sessions_list .ai_sessions_list_item a {
+  padding: 5px 10px;
+  width: 150px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-decoration: none;
+  color: #787878;
+}
+
+#ai_search .ai_sessions_list .ai_sessions_list_item:hover {
+  background-color: rgb(244, 244, 244);
+  border-top: solid 3px #d7d7d7;
+}
+
+#ai_search .ai_sessions_list .ai_sessions_list_item.active {
+  background-color: #f9f9f9;
+  border-top: solid 3px #d7d7d7;
+}
+
+#ai_search .session {
+  border-top: 1px solid #e5e5e5;
+}
+
+#ai_search .session_fieldset {
+  border: 0px;
+  margin: 0;
+  padding: 5px;
+}
+
+#ai_search .session_fieldset legend {
+  margin: 0;
+}
+
+#ai_search .questions {
+  margin: 0;
+  padding: 25px;
+  padding-bottom: 5px;
+  height: 400px;
+  overflow: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  box-shadow: inset rgba(0, 0, 0, 0.05) 0px 4px 20px 3px;
+}
+
+#ai_search .questions .tips,
+#ai_search .questions .question,
+#ai_search .questions .answer {
+  position: relative;
+  background-color: white;
+  width: 90%;
+  border: 1px solid #e5e5e5;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  box-shadow: 0 0 5px #e5e5e5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#ai_search .questions .tips {
+  background-color: #faf7f7;
+}
+
+#ai_search .questions .question {
+  margin-left: auto;
+}
+
+#ai_search .questions .question .question_text,
+#ai_search .questions .answer .answer_text {
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+#ai_search .questions .tips .tips_text {
+  font-size: 0.9em;
+}
+
+#ai_search .questions .tips .tips_text,
+#ai_search .questions .answer .answer_text {
+  margin: 0;
+}
+
+#ai_search .questions .tips .tips_text .writing,
+#ai_search .questions .answer .answer_text .writing {
+  position: relative;
+  display: block;
+  display: flex;
+  gap: 5px;
+}
+
+#ai_search .questions .tips .tips_text .writing span,
+#ai_search .questions .answer .answer_text .writing span {
+  content: "\a0";
+  width: 5px;
+  height: 5px;
+  display: block;
+  border-radius: 4px;
+  background-color: #d7d7d7;
+}
+
+#ai_search .questions .tips .tips_text .writing span:nth-child(even),
+#ai_search .questions .answer .answer_text .writing span:nth-child(even) {
+  animation: 0.5s linear 1s infinite alternate none running writing_ai;
+}
+
+#ai_search .questions .tips .tips_text .writing span:nth-child(odd),
+#ai_search .questions .answer .answer_text .writing span:nth-child(odd) {
+  animation: 0.5s linear 1s infinite alternate-reverse none running writing_ai;
+}
+
+@keyframes writing_ai {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0.5;
+    }
+}
+
+#ai_search .questions .question .question_see_more,
+#ai_search .questions .answer .answer_information {
+  border-top: 1px solid #e5e5e5;
+  display: block;
+  width: 100%;
+  text-align: end;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+#ai_search .questions .answer .answer_tips {
+  border-top: 1px solid #e5e5e5;
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+#ai_search .questions .answer .answer_tips {
+  text-align: start;
+}
+
+#ai_search .questions .answer .answer_information {
+  font-style: italic;
+  text-align: start;
+  padding-bottom: 10px;
+}
+
+#ai_search .ai_search_form {
+  height: 40px;
+}
+
+#ai_search .user_query_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: stretch;
+  align-content: stretch;
+}
+
+#ai_search .user_query_container input {
+  border: 1px solid #e9e9ed;
+  width: 100%;
+  margin: 0;
+}
+
+#ai_search .answer_buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  column-gap: 5px;
+}
+
+#ai_search .tips_buttons {
+  margin-top: 10px;
+}
+
+#ai_search .tips_buttons button,
+#ai_search .user_query_container button[type="submit"] {
+  border: 1px solid #e9e9ed;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+#ai_search .questions .tips .tips_container_text,
+#ai_search .questions .tips .tips_container_other_question {
+  margin: 5px;
+}
+
+
+/*=========================================================================*/
+/* Liste de lecture                                                        */
+/*=========================================================================*/
+
+#ai_shared_list .ai_shared_buttons {
+  display: inline-block;
+}
+
+ul.reading_list_search_tabs {
+  list-style: none;
+  display: flex;
+}
+
+.ai_sharedlist_upload_modal .modal-content form {
+  text-align: left;
+  width: 100%;
+}
+
+.ai_sharedlist_upload_modal .modal-content form .ai_sharedlist_upload_field {
+  width: 100%;
+}
+
+.ai_sharedlist_upload_modal .modal-content form .ai_sharedlist_upload_drag_area {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #e9e9ed;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.ai_sharedlist_upload_modal .modal-content .ai_sharedlist_upload_title {
+  text-align: center;
+}
+
+#shared_docnums_list .docnumsList .list .docnum {
+  margin-bottom: 5px;
+}

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Category.js,v 1.6 2015-02-20 16:14:58 vtouchard Exp $
+// $Id: Category.js,v 1.6 2015/02/20 16:14:58 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "dojo/dom", "dijit/form/Form", "dojo/dom-form", "dojo/text!pmbBase/ajax.php?module=dsi&categ=docwatch&sub=forms&action=get_form&form=docwatch_category_form_tpl", "dojo/dom-construct"], function(declare, parser, topic, lang, dom, Form, domForm, template, domConstruct){
@@ -65,7 +65,7 @@ define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "d
 		},
 		
 		onSubmit: function(){
-			//on met l'id si dÃ©fini...
+			//on met l'id si défini...
 			if(this.values.id){
 				dom.byId("id").value = this.values.id;
 			}

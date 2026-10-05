@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: category_auto.class.php,v 1.5 2017-07-13 12:14:17 tsamson Exp $
+// $Id: category_auto.class.php,v 1.9 2019/12/30 15:40:43 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -34,13 +34,13 @@ class category_auto {
 				    foreach ( $thes["CATEGORY"] as $root_field ) {
 					    foreach ( $root_field["FIELD"] as $field_val ) {
 							$name_field=$field_val["CODE"];
-							if($field_val["AUTHORITY_NUMBER"]){
+							if(!empty($field_val["AUTHORITY_NUMBER"])){
 								$tmp=array();
 								$tmp["field"]=$name_field;
 								$tmp["subfield"]=$field_val["AUTHORITY_NUMBER"];
 								$tabl_categ_has_recovered[]=$tmp;
 							}
-							if($field_val["ORDER"] == "import"){
+							if(!empty($field_val["ORDER"]) && $field_val["ORDER"] == "import"){
 								$tmp=array();
 								$tmp["field"]=$name_field;
 								$tmp["subfield"]="";
@@ -61,18 +61,23 @@ class category_auto {
 		}
     }
     
-    /*Si $tabl_categ_lib est un tableau alors les catÃ©gories ne seront pas crÃ©es mais elles seront enregistrÃ©es dans ce tableau
-    Retourne un tableau de la forme suivante quelque soit les paramÃ¨tres Ã  l'import :
+    /*Si $tabl_categ_lib est un tableau alors les catégories ne seront pas crées mais elles seront enregistrées dans ce tableau
+    Retourne un tableau de la forme suivante quelque soit les paramètres à l'import :
     Array(
     [0] => Array(
-            [wording] => libellÃ© de la catÃ©gorie // Vide dans le cas de la reprise hiÃ©rarchisÃ©e sinon toujours renseignÃ©
-            [id_authority] => numÃ©ro d'autoritÃ© // PrÃ©sent si dans le fichier import_category.xml on a dÃ©finit le paramÃ¨re authority_number pour le tag field et que l'on a autant de authority_number dans le champ unimarc que de catÃ©gorie reliÃ©e Ã  la notice dans PMB
-            				  Dans le cas d'une reprise d'un champ de faÃ§on hiÃ©rarchique authority_number sera associÃ© au terme de plus bas niveau
-            [id_pmb] => id_noeud de PMB // PrÃ©sent si le noeud a Ã©tÃ© crÃ©Ã© dans la base (si fonction appelÃ©e sans paramÃ¨tre)
+            [wording] => libellé de la catégorie // Vide dans le cas de la reprise hiérarchisée sinon toujours renseigné
+            [id_authority] => numéro d'autorité // Présent si dans le fichier import_category.xml on a définit le paramère authority_number pour le tag field et que l'on a autant de authority_number dans le champ unimarc que de catégorie reliée à la notice dans PMB
+            				  Dans le cas d'une reprise d'un champ de façon hiérarchique authority_number sera associé au terme de plus bas niveau
+            [id_pmb] => id_noeud de PMB // Présent si le noeud a été créé dans la base (si fonction appelée sans paramètre)
         )
     )
-    Dans le cas d'une reprise hiÃ©rarchique sans crÃ©atation direct (Z-3950) la gestion des autoritÃ©s n'est pas encore rÃ©alisÃ©e
+    Dans le cas d'une reprise hiérarchique sans créatation direct (Z-3950) la gestion des autorités n'est pas encore réalisée
     */
+    /*
+     * DG (05/12/2019)
+     * Non conforme Exakat mais le passage en tableau change le passage des conditions
+     * On est d'accord que le code est mauvais à la base mais je ne vois pas comment le corriger
+     */
     public static function save_info_categ(&$tabl_categ_lib=""){
     	global $tabl_categ_recovery,$tabl_categ_recovered;
     	$tabl_link_authority=array();
@@ -85,7 +90,7 @@ class category_auto {
 			foreach ( $tabl_categ_recovery as $root ) {
 				foreach ( $root as $thes ) {
 					$obj_thes= new thesaurus($thes["ID"]);
-					if($obj_thes ->num_noeud_racine){//Test pour savoir si le thÃ©saurus existe
+					if($obj_thes ->num_noeud_racine){//Test pour savoir si le thésaurus existe
 					    foreach ( $thes["CATEGORY"] as $field_root ) {
 					    	$root_node_object="";
 					    	switch ($field_root["ID"]) {
@@ -118,9 +123,9 @@ class category_auto {
 									foreach ( $field_val["SUBFIELD"] as $subfield_root ) {
 										$subfield[$subfield_root["CODE"]]=$subfield_root;
 									}
-									for ($_1=0; $_1<sizeof($tabl_categ_recovered[$name_field]); $_1++) {
+									for ($_1=0; $_1<count($tabl_categ_recovered[$name_field]); $_1++) {
 										$wording="";
-										for ($_2=0; $_2<sizeof($tabl_categ_recovered[$name_field][$_1]); $_2++) {
+										for ($_2=0; $_2<count($tabl_categ_recovered[$name_field][$_1]); $_2++) {
 											if(($info_subfield=$subfield[$tabl_categ_recovered[$name_field][$_1][$_2]["label"]]) && ($tmp=$tabl_categ_recovered[$name_field][$_1][$_2]["content"])){
 												if($wording)$wording.=$info_subfield["PREFIX"];
 												$wording.=$tmp;
@@ -148,21 +153,21 @@ class category_auto {
 									//on reprend la liste des sous champs
 									$subfield=array();
 									$subfield=$field_val["SUBFIELD"];
-									//On parcours les champs de la notice pour crÃ©er les catÃ©gories
-									for ($_1=0; $_1<sizeof($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]]); $_1++) {
+									//On parcours les champs de la notice pour créer les catégories
+									for ($_1=0; $_1<count($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]]); $_1++) {
 										//$tabl_libelle=array();
 										if($subfield[0]["REPEAT"] == "1"){
-											//Le premier sous champ est aussi rÃ©pÃ©table et on procÃ¨de Ã  une association 1-1 avec les sous champs suivant si il y en a
-											for ($_2=0; $_2<sizeof($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1]); $_2++) {
+											//Le premier sous champ est aussi répétable et on procède à une association 1-1 avec les sous champs suivant si il y en a
+											for ($_2=0; $_2<count($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1]); $_2++) {
 												if($wording=trim($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1][$_2])){
-													for($_pos_subfiel=1;$_pos_subfiel<sizeof($subfield);$_pos_subfiel++){//Parcour des autres sous champs
+													for($_pos_subfiel=1;$_pos_subfiel<count($subfield);$_pos_subfiel++){//Parcour des autres sous champs
 														if($tmp=trim($tabl_categ_recovered[$name_field.$subfield[$_pos_subfiel]["CODE"]][$_1][$_2])){
 															if($wording)$wording.=$subfield[$_pos_subfiel]["PREFIX"];
 															$wording.=$tmp;
 															if($subfield[$_pos_subfiel]["SUFFIX"])$wording.=$subfield[$_pos_subfiel]["SUFFIX"];
 														}
 													}
-													//Construction des catÃ©gories terminÃ©e
+													//Construction des catégories terminée
 													$tabl_autho_temp=array();
 													$tabl_autho_temp["wording"]=$wording;
 													if($field_val["AUTHORITY_NUMBER"] && (count($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1]) == count($tabl_categ_recovered[$name_field.$field_val["AUTHORITY_NUMBER"]][$_1]))){
@@ -183,11 +188,11 @@ class category_auto {
 										}else{
 											$wording="";
 											if(!$subfield[0]["REPEAT"]){
-												//Pas de rÃ©pÃ©tion
+												//Pas de répétion
 												$wording=trim($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1][0]);
 											}elseif($subfield[0]["REPEAT"] == "2"){
-												//On rÃ©pette le premier sous champs dans le libellÃ©
-												for ($_2=0; $_2<sizeof($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1]); $_2++) {
+												//On répette le premier sous champs dans le libellé
+												for ($_2=0; $_2<count($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1]); $_2++) {
 													if($tmp=trim($tabl_categ_recovered[$name_field.$subfield[0]["CODE"]][$_1][$_2])){
 														if($wording)$wording.=$subfield[0]["PREFIX"];
 														$wording.=$tmp;
@@ -197,8 +202,8 @@ class category_auto {
 											}
 											
 											if(!$subfield[0]["SUBFIELD"]){//Si pas fils
-												for($_pos_subfiel=1;$_pos_subfiel<sizeof($subfield);$_pos_subfiel++){
-													for ($_2=0; $_2<sizeof($tabl_categ_recovered[$name_field.$subfield[$_pos_subfiel]["CODE"]][$_1]); $_2++) {
+												for($_pos_subfiel=1;$_pos_subfiel<count($subfield);$_pos_subfiel++){
+													for ($_2=0; $_2<count($tabl_categ_recovered[$name_field.$subfield[$_pos_subfiel]["CODE"]][$_1]); $_2++) {
 														if($tmp=trim($tabl_categ_recovered[$name_field.$subfield[$_pos_subfiel]["CODE"]][$_1][$_2])){
 															if($wording)$wording.=$subfield[$_pos_subfiel]["PREFIX"];
 															$wording.=$tmp;
@@ -206,7 +211,7 @@ class category_auto {
 														}
 													}
 												}
-												//Construction des catÃ©gories terminÃ©e
+												//Construction des catégories terminée
 												$tabl_autho_temp=array();
 												$tabl_autho_temp["wording"]=$wording;
 												if($field_val["AUTHORITY_NUMBER"] && (count($tabl_categ_recovered[$name_field.$field_val["AUTHORITY_NUMBER"]][$_1]) == 1)){
@@ -273,7 +278,7 @@ class category_auto {
 			$tmp["subfield"]=$subfield_root["CODE"];
 			$tabl_categ_has_recovered[]=$tmp;
 	       
-			if($subfield_root["SUBFIELD"]){
+			if(!empty($subfield_root["SUBFIELD"])) {
 				category_auto::browse_subfields($subfield_root["SUBFIELD"],$name_field,$tabl_categ_has_recovered);
 			}
 		}
@@ -285,10 +290,10 @@ class category_auto {
 		$id_noeud=$root_node_number;
 		foreach ( $subfield as $key => $subfield_root ) {
 			//Je parcours les sous-champs	
-			for ($_2=0; $_2<sizeof($tabl_categ_recovered[$name_field.$subfield_root["CODE"]][$counter_field]); $_2++) {
+			for ($_2=0; $_2<count($tabl_categ_recovered[$name_field.$subfield_root["CODE"]][$counter_field]); $_2++) {
 				if($tmp=trim($tabl_categ_recovered[$name_field.$subfield_root["CODE"]][$counter_field][$_2])){
 					if($creation){
-						//Si j'ai dans un mÃªme champ plusieurs fois le mÃªme sous champ je lie la notice Ã  tous sauf le dernier si il a des enfants
+						//Si j'ai dans un même champ plusieurs fois le même sous champ je lie la notice à tous sauf le dernier si il a des enfants
 						if(!is_array($tabl_categ_lib)){
 							if($notice_id && $id_noeud){
 								$incr_categ++;
@@ -326,7 +331,7 @@ class category_auto {
 			if($subfield_root["SUBFIELD"]){
 				 $nb_creation=category_auto::browse_category($subfield_root["SUBFIELD"],$tabl_categ_recovered,$name_field,$counter_field,$id_thes,$id_noeud,$tabl_categ_lib,$create_node);
 				 if(!$nb_creation){
-				 	//Si je n'ai trouvÃ© aucun fils je fait le lien avec le pÃ¨re
+				 	//Si je n'ai trouvé aucun fils je fait le lien avec le père
 				 	if(!is_array($tabl_categ_lib)){
 				 		if($notice_id && $id_noeud){
 							$incr_categ++;
@@ -348,7 +353,7 @@ class category_auto {
 				 	$creation+=$nb_creation;
 				 }
 			}elseif($id_noeud){
-				//Si je n'ai pas de sous champs Ã  reprendre je lie la notice
+				//Si je n'ai pas de sous champs à reprendre je lie la notice
 				if(!is_array($tabl_categ_lib)){
 					if($notice_id && $id_noeud){
 						$incr_categ++;
@@ -377,7 +382,7 @@ class category_auto {
 		if(trim($tab_categ)){
 			$resultat = categories::searchLibelle(addslashes($tab_categ), $id_thes, $lang,$id_parent);				
 			if (!$resultat && $id_parent && $do_create){
-				// crÃ©ation de la catÃ©gorie
+				// création de la catégorie
 				$n=new noeuds();
 				$n->num_parent=$id_parent;
 				$n->num_thesaurus=$id_thes;
@@ -387,7 +392,7 @@ class category_auto {
 				$c->libelle_categorie=$tab_categ;
 				$c->save();
 			}
-			// ajout de l'indexation Ã  la notice dans la table notices_categories
+			// ajout de l'indexation à la notice dans la table notices_categories
 			if($do_lien && $resultat && $notice_id){
 				$incr_categ++;
 				$rqt_ajout = "insert IGNORE into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$resultat."', ordre_categorie='".$incr_categ."' " ;

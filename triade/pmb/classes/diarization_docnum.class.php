@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: diarization_docnum.class.php,v 1.3 2017-08-10 09:19:18 dgoron Exp $
+// $Id: diarization_docnum.class.php,v 1.3 2017/08/10 09:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,7 +10,7 @@ require_once $class_path."/voxilab/voxilabDiarization.class.php";
 require_once $class_path.'/progress_bar.class.php';
 
 /**
- * Classe de gestion de la segmentation des documents numÃ©riques
+ * Classe de gestion de la segmentation des documents numériques
  */
 class diarization_docnum {
 	/**
@@ -20,7 +20,7 @@ class diarization_docnum {
 	private $explnum;
 	
 	/**
-	 * Chemin du fichier Ã  envoyer au serveur
+	 * Chemin du fichier à envoyer au serveur
 	 * @var string
 	 */
 	private $file = "";
@@ -32,7 +32,7 @@ class diarization_docnum {
 	private $diarization;
 	
 	/**
-	 * Instance de fichier segmentÃ©
+	 * Instance de fichier segmenté
 	 * @var voxilabSpeechfile
 	 */
 	private $speechFile;
@@ -51,14 +51,14 @@ class diarization_docnum {
 	}
 	
 	/**
-	 * Renvoie le chemin du fichier Ã  envoyer au serveur
+	 * Renvoie le chemin du fichier à envoyer au serveur
 	 * @return string
 	 */
 	public function getFile() {
 		global $base_path;
 		if (!$this->file) {
 			if ($this->explnum->infos_docnum['contenu'] || $this->explnum->explnum_data) {
-				// Si c'est un nouveau document ou un document stockÃ© en base, on dÃ©finit un nom unique dans le dossier temporaire
+				// Si c'est un nouveau document ou un document stocké en base, on définit un nom unique dans le dossier temporaire
 				if ($this->explnum->infos_docnum['userfile_name']) {
 					$nom_temp = session_id().microtime(true).".".$this->explnum->infos_docnum['userfile_name'];
 				} else {
@@ -80,7 +80,7 @@ class diarization_docnum {
 	}
 	
 	/**
-	 * Segmente le document numÃ©rique et stocke le rÃ©sultat en base de donnÃ©es
+	 * Segmente le document numérique et stocke le résultat en base de données
 	 */
 	public function diarize() {
 		// On commence par supprimer

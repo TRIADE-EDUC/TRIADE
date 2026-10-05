@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabAdd.js,v 1.4 2019-01-24 10:12:49 dgoron Exp $
+// $Id: SubTabAdd.js,v 1.8 2023/08/17 09:47:55 dbellamy Exp $
 
 
 define([
@@ -48,8 +48,12 @@ define([
 				this.currentHeight = this.containerNode.clientHeight; 
 			},
 			checkSize: function(){
-				if(this.currentHeight < this.containerNode.clientHeight){				
-					this.getParent().resizeIframe();
+				if(this.currentHeight < this.containerNode.clientHeight){	
+					if(typeof this.getParent().resizeIframe == "function"){
+						this.getParent().resizeIframe();
+					} else {
+						this.getParent().getParent().resizeIframe();
+					}
 					this.currentHeight = this.containerNode.clientHeight;
 					if(typeof ajax_resize_elements == "function"){
 						ajax_resize_elements();
@@ -84,7 +88,6 @@ define([
 			  		domConstruct.destroy(queryPrevious[0]);
 			  	}
 			  	var querySubmit = query('input[onclick="submit_onto_form();"]', this.containerNode);
-//			  	console.log(querySubmit);
 			  	if(querySubmit.length){
 			  		this.setSubmitEvent(querySubmit);
 			  	}
@@ -117,8 +120,11 @@ define([
 //				};
 //				
 //				observer.observe(this.containerNode, config);
-//				
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			resize: function(){
 				this.inherited(arguments);
@@ -152,7 +158,7 @@ define([
 							pattern = 'function (domXML)';
 						}
 						html = html.replace('new FormEdit();', '');
-						html+= '<script type="text/javascript">'+Function.prototype.toString.call(self.moveFields).replace(pattern, 'function move_fields(domXML)')+'</script>';
+						html+= '<script>'+Function.prototype.toString.call(self.moveFields).replace(pattern, 'function move_fields(domXML)')+'</script>';
 						returnedHtml = html;
 						try{
 							self._isDownloaded = true;
@@ -186,38 +192,48 @@ define([
 			postForm: function(buttonClicked, forcing){
 				var form = buttonClicked.form;
 				var forcing = forcing || false;
+				var verified = false;
 				if(domAttr.get(form, 'action').indexOf('select.php') != -1){
 					domAttr.set(form, 'action', domAttr.get(form, 'action').replace('select.php?', 'ajax.php?module=selectors&is_iframe=1&'));
 				}
 				if(forcing){
 					domAttr.set(form, 'action', domAttr.get(form, 'action')+'&forcing=1');
 				}
-				iframe(domAttr.get(buttonClicked.form, 'action'),{
-					form: buttonClicked.form,
-					handleAs: 'json',
-				}).then(lang.hitch(this, function(data){
-					if(parseInt(data.id) && (parseInt(data.id) !=0)){
-						this.set('href', this.href);
-						data.ghostContainerId = this.parameters.ghostContainerId;
-						topic.publish('SubTabAdd', 'SubTabAdd', 'elementAdded', data);	
-					}else if(data.html){
-						var dialog = PMBDojoxDialogSimple({
-							title: "",
-							content: data.html,
-						});
-						var forcingForm = query('form', dialog.containerNode)[0];
-						domAttr.remove(forcingForm, 'action');
-						var button = query('#forcing_button', dialog.containerNode)[0];
-						domAttr.set(button, 'type', 'button');
-						on(button, 'click', lang.hitch(this, 
-							function(){
-								this.postForm(buttonClicked, 1);
-								dialog.hide();
-							} ,
-						buttonClicked));
-						dialog.show();
-					}
-				}));
+				if (typeof test_notice === 'function' && test_notice(form) || typeof test_form === 'function' && test_form(form)) {
+					verified = true;
+				}
+				if (verified) {
+					iframe(domAttr.get(buttonClicked.form, 'action'),{
+						form: buttonClicked.form,
+						handleAs: 'json',
+					}).then(lang.hitch(this, function(data){
+						if(parseInt(data.id) && (parseInt(data.id) !=0)){
+							this.set('href', this.href);
+							data.ghostContainerId = this.parameters.ghostContainerId;
+							topic.publish('SubTabAdd', 'SubTabAdd', 'elementAdded', data);	
+						}else if(data.html){
+							var dialog = PMBDojoxDialogSimple({
+								title: "",
+								content: data.html,
+							});
+							var forcingForm = query('form', dialog.containerNode)[0];
+							domAttr.remove(forcingForm, 'action');
+							if(query('#forcing_button', dialog.containerNode)[0]) {
+								var button = query('#forcing_button', dialog.containerNode)[0];
+								domAttr.set(button, 'type', 'button');
+								on(button, 'click', lang.hitch(this, 
+									function(){
+										this.postForm(buttonClicked, 1);
+										dialog.hide();
+									} ,
+								buttonClicked));
+							}
+							dialog.show();
+						} else {
+							test_form(form);
+						}
+					}));
+				}
 				return false;
 			},
 			getGridTypeEntity: function(type){

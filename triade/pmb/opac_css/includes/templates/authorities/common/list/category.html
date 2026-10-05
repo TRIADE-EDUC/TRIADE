@@ -1,3 +1,33 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: category.html,v 1.1 2018-04-05 10:39:42 dgoron Exp $ -->
+<!-- $Id: category.html,v 1.2 2023/05/05 09:16:56 tsamson Exp $ -->
+{% block element_link %}
+	{% if list_element.context_parameters.in_selector %}
+		{% if list_element.voir %}
+			<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.voir }}', '{{ list_element.categ_see.libelle | strip_tags | escape true }}','{{ global.callback }}')">
+		{% else %}
+			<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}','{{ global.callback }}')">
+		{% endif %}
+	{% else %}
+		<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+	{% endif %}
+{% endblock %}
+{% block element_title %}
+	{% if list_element.type_icon %}
+		<img class="align_top" src="{{ list_element.type_icon }}" title="{{ list_element.type_label }}" alt="{{ list_element.type_label }}"/>
+	{% endif %}
+	<div id="zoom_statut{{ list_element.id }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;">
+		<b>
+			{{ list_element.statut_label }}
+		</b>
+	</div>
+	{% if list_element.display %}
+		{{ list_element.display | safe }}
+	{% else %}
+		{% if list_element.voir %}
+			{{ list_element.libelle | strip_tags | safe }} -&gt; <i>{{ list_element.categ_see.libelle | strip_tags | safe }}@</i>
+		{% else %}
+			{{list_element.isbd | safe}}
+		{% endif %}
+	{% endif %}
+{% endblock %}

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ListDatasets.js,v 1.5 2018-11-09 08:57:54 dgoron Exp $
+// $Id: ListDatasets.js,v 1.6 2019/11/27 12:58:50 dgoron Exp $
 
 define([
         "dojo/_base/declare",
@@ -70,7 +70,7 @@ define([
 		},
 		deleteDataset: function(id) {
 			if(confirm(pmbDojo.messages.getMessage('list', 'list_delete_confirm'))) {
-				xhr('./ajax.php?module=ajax&categ=list&action=delete&id='+id, {
+				xhr('./ajax.php?module=ajax&categ=list&action=delete&id='+id+'&objects_type='+this.objects_type, {
 					sync: false,
 					handleAs: 'JSON',
 				}).then(lang.hitch(this, 

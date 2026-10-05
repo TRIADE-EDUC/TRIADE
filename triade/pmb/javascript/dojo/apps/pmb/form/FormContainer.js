@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormContainer.js,v 1.4 2017-10-20 15:38:14 vtouchard Exp $
+// $Id: FormContainer.js,v 1.6 2021/01/05 14:45:21 gneveu Exp $
 
 
 define([
@@ -28,7 +28,10 @@ define([
 			standby : null,
 			overlayDiv: null,
 			constructor: function() {
-				this.own(topic.subscribe('SelectorTab', lang.hitch(this, this.handleEvents)));
+				this.own(
+					topic.subscribe('SelectorTab', lang.hitch(this, this.handleEvents)),
+					topic.subscribe('GhostContainer', lang.hitch(this, this.handleEvents))
+				);
 			},
 			handleEvents: function(evtClass, evtType, evtArgs){
 				switch(evtClass){
@@ -39,7 +42,13 @@ define([
 								break;
 						}
 						break;
-						
+					case 'GhostContainer':
+						switch(evtType){
+							case 'validatedSelection':
+								this.closeChild(this.selectedChildWidget);
+								break;
+						}
+						break;
 				}
 			},
 			postCreate: function() {
@@ -127,6 +136,12 @@ define([
 				var field = this.findFieldClicked(evtData.button);
 				
 				var tab = new FormTab({field: field, doLayout: false,style: 'width:100%; height:100%;', selectorURL: evtData.url});
+				
+				// On désactive le bouton pour éviter d'ouvrir plusieurs fois la même page
+				evtData.button.setAttribute('disabled', 'true')
+				evtData.button.classList.add("disabled")
+				evtData.button.classList.add(tab.id)
+				
 				this.addChild(tab);
 				this.setClosableTab();
 				//Sélection du dernier onglet ajouté

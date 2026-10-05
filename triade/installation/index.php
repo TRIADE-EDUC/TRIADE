@@ -4,8 +4,8 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -21,22 +21,20 @@
 <!--
 /************************************************************
 Last updated: 01/12/2004    par Taesch  Eric
-
 Last updated: 31/07/2006    par Pirio Mikaël
   - Correction du code pour la validation XHTML 1.0 - strict
+Last updated: 20/10/2025    par Taesch Eric
 *************************************************************/
 -->
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">	
 <html xml:lang="fr" lang="fr" xmlns="http://www.w3.org/1999/xhtml">
-
 	<head>
 		<?php define("CHARSET","iso-8859-1"); ?>
 		<meta http-equiv="Content-type" content="text/html; charset=<?php print CHARSET; ?>" />
 		<meta http-equiv="CacheControl" content="no-cache" />
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="expires" content="-1" />
-		<meta name="Copyright" content="Triade©, 2001" />
+		<meta name="Copyright" content="Triade, 2001" />
 		<link rel="SHORTCUT ICON" href="../favicon.ico" />
 		<link title="style" type="text/css" rel="stylesheet" href="librairie/css.css" />
 		<title>Triade Installation</title>
@@ -48,12 +46,13 @@ Last updated: 31/07/2006    par Pirio Mikaël
 		<div style="text-align: center;">
 
 			<div id="mainInst2">
-				<img src="./image/logo_triade_licence.gif"
+				<img src="./image/logo_triade_licence.png" width='300'
 				     alt="logo_triade_licence" />
 
 <?php
 	include_once("../common/version.php");
 	include_once("./librairie/licence.php");
+	if (file_exists('../common/productId.php')) include_once("../common/productId.php");
 
 	$disable="";
 
@@ -61,7 +60,6 @@ Last updated: 31/07/2006    par Pirio Mikaël
 		$disable="disabled=\"disabled\"";
 	}
 ?>
-
 				<p>
 				<font class=T2>Version : <b><?php print VERSION; ?></b><br />
 				Licence d'utilisation  : <?php print LICENCE; ?> <br />
@@ -88,10 +86,10 @@ Last updated: 31/07/2006    par Pirio Mikaël
 				 }
 				?>							
 				<div style="text-align: right;
-		  		          padding-right: 100px;
-		  	  	        margin-bottom: 1em;" >
+		  			        padding-right: 100px;
+		  	  	        	margin-bottom: 1em;" >
 					<input type="submit" onclick="open('suite0.php','_parent','')"
-				  	     value="Accepter" class="BUTTON" <?php print $disable; ?> /><br><br>
+				  	     	value="Accepter" class="BUTTON" <?php print $disable; ?> /><br><br>
 					     <?php if (file_exists($fichier)) { ?>  <b><font class=T2 color='red' >Triade est d&eacute;j&agrave; install&eacute; !</font></b> <?php } ?>
 				</div>
 			</div>

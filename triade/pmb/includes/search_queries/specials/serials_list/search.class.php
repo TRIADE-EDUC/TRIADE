@@ -1,15 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.8 2017-07-12 15:15:01 tsamson Exp $
+// $Id: search.class.php,v 1.10 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-global $msg,$lang,$charset,$base_path,$class_path,$include_path;
-
-
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class serials_list{
 	public $id;
@@ -25,27 +22,24 @@ class serials_list{
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
     	$operators["EQ"]="=";
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
-    	global $msg;
-    	global $charset;
-    	global $get_input_box_id;
     	global $base_path;
 
     	//$this->s = new search(false,"search_simple_fields.xml");
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
-    	$r.="
+    	$r ="
    			<script type='text/javascript'>
    				if(typeof(seriallist_fields)=='undefined'){
    					var seriallist_fields = new Array();
@@ -215,6 +209,8 @@ class serials_list{
 		    		$query = "select * from (".implode(" union ",$queries).") as uni order by date,num,val";
 		    	}else if(count($queries)==1){
 		    		$query = $queries[0]. "order by date,num,val";
+		    	} else {
+		    		$query = "";
 		    	}
    				if($query){
 		    		$result = pmb_mysql_query($query);
@@ -223,8 +219,8 @@ class serials_list{
 						while($row = pmb_mysql_fetch_object($result)){
 							if($charset!="utf-8"){
 								$list[] = array(
-									'value' => utf8_encode($row->num."|||".$row->date),
-									'text' =>  utf8_encode($row->val)
+									'value' => encoding_normalize::utf8_normalize($row->num."|||".$row->date),
+									'text' =>  encoding_normalize::utf8_normalize($row->val)
 								);
 							}else $list[] = array(
 								'value' => $row->num."|||".$row->date,
@@ -247,14 +243,16 @@ class serials_list{
 		    		$query = "select * from (".implode(" union ",$queries).") as uni order by val";
 		    	}else if(count($queries)==1){
 		    		$query = $queries[0]. "order by val";
-		    	} 
+		    	} else {
+		    		$query = "";
+		    	}
 		    	if($query){
 		    		$result = pmb_mysql_query($query);
 					$list=array();
 					if(pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
 							if($charset!="utf-8"){
-								$list[] = utf8_encode($row->val);
+								$list[] = encoding_normalize::utf8_normalize($row->val);
 							}else $list[] = $row->val;
 						}
 					}
@@ -271,12 +269,12 @@ class serials_list{
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	global $search;
     	global $source;
     	    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$serial_="field_".$this->n_ligne."_s_".$this->id;
     	$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     	global ${$serial_};
@@ -319,7 +317,7 @@ class serials_list{
     	global $search;
     	global $source;
     	    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$serial_="field_".$this->n_ligne."_s_".$this->id;
     	$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     	global ${$serial_};
@@ -359,12 +357,12 @@ class serials_list{
     	}
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
 		global $search;
     	global $source;
     	    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$serial_="field_".$this->n_ligne."_s_".$this->id;
     	$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     	global ${$serial_};
@@ -386,7 +384,7 @@ class serials_list{
 	    } 
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if($valeur[0]!= ""){
     		$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
@@ -398,7 +396,7 @@ class serials_list{
     	return true;
     }
     
-     //fonction de dÃ©coupage d'une chaine trop longue
+     //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur,$size=50) {
     	if (strlen($valeur)>=$size) {
     		$pos=strrpos(substr($valeur,0,$size)," ");

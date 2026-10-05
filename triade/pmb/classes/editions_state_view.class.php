@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_view.class.php,v 1.4 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: editions_state_view.class.php,v 1.5 2023/05/04 14:15:47 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once ($class_path."/spreadsheetPMB.class.php");
 
 class editions_state_view {
-	public $datas =array();		//tableau de donnÃ©es
+	public $datas =array();		//tableau de données
 	public $editions_state_id;
-	public $my_param=array(); //ParamÃ¨tre propre Ã  la vue
+	public $my_param=array(); //Paramètre propre à la vue
 	
 	public function __construct($datas,$id,$param=array()){
 		$this->datas = $datas;
@@ -27,7 +27,7 @@ class editions_state_view {
 		return $this->my_param;
 	}
 	
-	//un simple tableau pour la classe gÃ©nÃ©rique...
+	//un simple tableau pour la classe générique...
 	public function show(){
 		global $charset,$msg,$base_path;
 		global $javascript_path;
@@ -48,7 +48,7 @@ class editions_state_view {
 			for($j=0 ; $j<count($this->datas[$i]) ; $j++){
 				$html.="
 					<".($i==0 ? "th" : 'td').">
-					".htmlentities($this->datas[$i][$j],ENT_QUOTES,$charset)."
+					".htmlentities($this->datas[$i][$j] ?? "",ENT_QUOTES,$charset)."
 					</".($i==0 ? "th" : 'td').">";
 			}
 			$html.="

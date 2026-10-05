@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.4 2015-12-15 16:31:26 dbellamy Exp $
+// $Id: ajax_main.inc.php,v 1.4.20.1 2025/02/07 13:49:04 qvarin Exp $
 
-if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) {
+    die("no access");
+}
 
 //En fonction de $categ, il inclut les fichiers correspondants
 
@@ -14,10 +16,13 @@ require_once($base_path."/includes/init.inc.php");
 require_once($base_path."/includes/error_report.inc.php") ;
 require_once($base_path."/includes/global_vars.inc.php");
 require_once($base_path.'/includes/opac_config.inc.php');
-	
-if (file_exists($base_path.'/includes/opac_db_param.inc.php')) require_once($base_path.'/includes/opac_db_param.inc.php');
-	else die("Fichier opac_db_param.inc.php absent / Missing file Fichier opac_db_param.inc.php");
-	
+
+if (file_exists($base_path.'/includes/opac_db_param.inc.php')) {
+    require_once($base_path.'/includes/opac_db_param.inc.php');
+} else {
+    die("Fichier opac_db_param.inc.php absent / Missing file Fichier opac_db_param.inc.php");
+}
+
 require_once($base_path.'/includes/opac_mysql_connect.inc.php');
 $dbh = connection_mysql();
 
@@ -31,12 +36,15 @@ require_once($base_path.'/includes/opac_version.inc.php');
 require_once($base_path."/includes/notice_affichage.inc.php");
 
 switch($categ) {
-	case 'expand':
-		include('expand_ajax.inc.php');
-	break;
-	case 'expand_block':
-		include('expand_block_ajax.inc.php');
-	break;
-	default:
-	break;		
+    case 'expand':
+        include('expand_ajax.inc.php');
+        break;
+
+    case 'expand_block':
+        include('expand_block_ajax.inc.php');
+        break;
+
+    default:
+        http_response_code(404);
+        break;
 }

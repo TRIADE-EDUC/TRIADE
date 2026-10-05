@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_indexint.class.php,v 1.8 2018-08-17 10:33:02 ccraig Exp $
+// $Id: searcher_authorities_indexint.class.php,v 1.8 2018/08/17 10:33:02 ccraig Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

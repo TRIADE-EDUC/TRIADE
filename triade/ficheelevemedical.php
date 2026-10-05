@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,131 +26,116 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
-<script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script language="JavaScript" src="./librairie_js/jquery-min.js" ></script>
+<script language="JavaScript" src="./librairie_js/jquery-min.js"></script>
 <style>
-ul { style-type:none;list-style: none; cursor:pointer;margin-left: 3px;padding-left: 0; }
-li { padding:7x; }
+#userList li { cursor:pointer; padding:3px 6px; }
 </style>
-
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMEDIC1 ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMEDIC1 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
-<td >
-<!-- // debut form  -->
-<blockquote>
-<img src="image/commun/inf1.png" style='position:relative;top:20px;left:-10px' />
-<form method=post onsubmit="return valide_recherche_eleve()" name="formulaire">
-<table border=0 cellspacing=0><tr><td style="padding-top:0px;" nowrap>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class="T2"><?php print LANGABS3?> : </font>
-
 <td>
-<input type="text" name="saisie_nom_eleve" size="20" id="search" autocomplete="off" style="width:15em;"  />
-</td></tr>
-<tr><td></td><td style="padding-top:0px;"><div id="userList" style="width:13.5em;border-style:none; background-color:#EEEEEE;"></div></td></tr>
-</table><br><br>
-<UL><UL><UL><script language=JavaScript>buttonMagicSubmit("<?php print LANGMEDIC2 ?>","create"); //text,nomInput</script></UL></UL></UL>
-<br /><br /><br />
+<form method="post" onsubmit="return valide_recherche_eleve()" name="formulaire">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGABS3 ?> :</span>
+    <div>
+      <input type="text" name="saisie_nom_eleve" id="search" size="20" autocomplete="off" class="cc-select" style="width:15em;">
+      <div id="userList" style="width:15em;border-style:none;background-color:#EEEEEE;"></div>
+    </div>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGMEDIC2 ?>","create");</script>
+<br><br>
 </form>
-</blockquote>
-<!-- // fin form -->
 </td></tr></table>
-<br /><br />
+<br>
 <?php
-//alertJs(empty($create));
-// affichage de la liste d'élèves trouvées
-if(isset($_POST["saisie_nom_eleve"])) {
-$saisie_nom_eleve=$_POST["saisie_nom_eleve"];
-$motif=strtolower($saisie_nom_eleve);
-$sql=<<<EOF
-
+if (isset($_POST["saisie_nom_eleve"])) {
+  $saisie_nom_eleve=$_POST["saisie_nom_eleve"];
+  $motif=strtolower($saisie_nom_eleve);
+  $sql=<<<EOF
 SELECT c.libelle,e.nom,e.prenom,e.elev_id
-FROM ${prefixe}eleves e, ${prefixe}classes c
+FROM {$prefixe}eleves e, {$prefixe}classes c
 WHERE lower(e.nom) LIKE '%$motif%'
 AND c.code_class = e.classe
 ORDER BY c.libelle, e.nom, e.prenom
-
 EOF;
-
-$res=execSql($sql);
-$data=chargeMat($res);
-
+  $res=execSql($sql);
+  $data=chargeMat($res);
 ?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" >
-<tr id='coulBar0' ><td height="2" colspan=3><b><font   id='menumodule1' >
-		<?php print LANGRECH2 ?> : <font id="color2"><B><?php print ucwords($motif)?></font>
-	</font></td>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C">
+<tr id='coulBar0'><td height="2" colspan="3"><b><font id='menumodule1'>
+  <?php print LANGRECH2 ?> : <font id="color2"><b><?php print ucwords($motif) ?></b></font>
+</font></b></td></tr>
+<?php
+if (countTriade($data) <= 0) {
+  print "<tr id='cadreCentral0'><td align='center' valign='center'>".LANGRECH3."</td></tr>";
+} else {
+?>
+<tr>
+  <td style="background:#ffffd5;font-weight:700;padding:4px 6px;"><?php print LANGELE4 ?></td>
+  <td style="background:#ffffd5;font-weight:700;padding:4px 6px;"><?php print LANGELE2 ?></td>
+  <td style="background:#ffffd5;font-weight:700;padding:4px 6px;"><?php print LANGELE3 ?></td>
 </tr>
 <?php
-if( count($data) <= 0 )
-	{
-	print("<tr id='cadreCentral0' ><td align=center valign=center>".LANGRECH3."</td></tr>");
-	}
-else {
-?>
-
-<tr id='cadreCentral0' ><td><b><?php print LANGELE4 ?></b></td><td><B><?php print LANGELE2 ?></B></td><td><B><?php print LANGELE3 ?></B></td></tr>
+for ($i=0; $i<countTriade($data); $i++) { ?>
+<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
+  <td><?php print $data[$i][0] ?></td>
+  <td><a href="profpmedic.php?eid=<?php print $data[$i][3] ?>"><span class="htip-wrap"><?php print strtoupper($data[$i][1]) ?><span class="htip"><?php print LANGMEDIC3 ?></span></span></a></td>
+  <td><?php print ucwords($data[$i][2]) ?></td>
+</tr>
 <?php
-for($i=0;$i<count($data);$i++)
-	{
-	?>
-	<tr>
-	<td bgcolor="#FFFFFF"><?php print $data[$i][0]?></td>
-	<td bgcolor="#FFFFFF"><a  href="profpmedic.php?eid=<?php print $data[$i][3]?>" onMouseOver="AffBulle('<font face=Verdana size=1><?php print LANGMEDIC3 ?> </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><?php print strtoupper($data[$i][1])?></a></td>
-	<td bgcolor="#FFFFFF"><?php print ucwords($data[$i][2])?></td>
-	</tr>
-	<?php
-	}
-      }
+}
+}
 ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
 </table>
-<script type="text/JavaScript">InitBulle('#000000','#CCCCFF','red',1);</script>
 <?php
 }
 ?>
-     <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
-<?php
-// deconnexion en fin de fichier
-Pgclose();
-?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
+<?php Pgclose(); ?>
 </BODY>
 </HTML>
 <script>
-    $(document).ready(function(){
-        $('#search').keyup(function(){
-            var query = $(this).val();
-            if(query != '')            {                $.ajax({
-                    url:"librairie_php/search_eleve.php",
-                    method:"POST",
-                    data:{query:query}, success:function(data)
-                    {                        $('#userList').fadeIn();
-                        $('#userList').html(data);
-                    }
-                });
-            }
-        });
-        $(document).on('click', 'li', function(){
-            $('#search').val($(this).text());
-            $('#userList').fadeOut();
-        });
-    });
+$(document).ready(function(){
+  $('#search').keyup(function(){
+    var query = $(this).val();
+    if (query != '') {
+      $.ajax({
+        url: "librairie_php/search_eleve.php",
+        method: "POST",
+        data: {query: query},
+        success: function(data){
+          $('#userList').fadeIn();
+          $('#userList').html(data);
+        }
+      });
+    }
+  });
+  $(document).on('click', 'li', function(){
+    $('#search').val($(this).text());
+    $('#userList').fadeOut();
+  });
+});
 </script>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,66 +26,90 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
-<script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
-<?php include("./librairie_php/googleanalyse.php"); ?>
+<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'.js'?>"></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
-<?php  $today= date ("j M, Y");  ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
-<div align='center'>
-<?php top_h(); ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'1.js'?>"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGIMP1 ?></font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td valign=top>
-<br />
-<ul><font class=T2><?php print LANGIMP2?></font></ul>
-<br />
-<ul><ul>
-<font class=T2>
-<!-- <img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation01.php"><?php print LANGIMP3?>, (txt ou csv) </A> <br /> -->
-<br />
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation20.php"><?php print LANGMESS225.", (xls - office 2003)"?></A> <br />
-<br />
-<!-- <img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation50.php"><s><?php print LANGMESS226 ?></s></A> <br /> -->
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation700.php" ><?php print LANGMESS226 ?> (SIECLE absences)</A> <br />
-<br />
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation200.php"><?php print "SIECLE, (xls - office 2003)"?></A> <br />
-<br />
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation400.php"><?php print "CTI, (xls - office 2003)"?></A> <br />
-<br>
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation600.php"><?php print "STSweb, (XML)"?></A> <br />
-<br />
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation800.php"><?php print LANGMESS227.", (xls - office 2003)"?></A> <br />
-<br />
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+
+<div class="dest-wrap">
+
+<!-- ── Excel (XLS) ── -->
+<div style="background:#080A66;color:#fff;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;font-weight:700;"><?php print LANGIMP1 ?> — Excel</div>
+<div class="dest-list" style="border-radius:0 0 8px 8px;margin-bottom:16px;">
+  <form action="base_de_donne_importation20.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGMESS225 ?> <small style="color:#888;">(xls - office 2003)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+  <form action="base_de_donne_importation200.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">SIECLE <small style="color:#888;">(xls - office 2003)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+  <form action="base_de_donne_importation400.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">CTI <small style="color:#888;">(xls - office 2003)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+  <form action="base_de_donne_importation800.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label"><?php print LANGMESS227 ?> <small style="color:#888;">(xls - office 2003)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+</div>
+
+<!-- ── XML ── -->
+<div style="background:#080A66;color:#fff;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;font-weight:700;"><?php print LANGIMP1 ?> — XML</div>
+<div class="dest-list" style="border-radius:0 0 8px 8px;margin-bottom:16px;">
+  <form action="base_de_donne_importation600.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">STSweb <small style="color:#888;">(XML)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+  <form action="base_de_donne_importation1100.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">SIECLE BEE <small style="color:#888;">(XML)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+</div>
+
+<!-- ── Absences ── -->
+<div style="background:#080A66;color:#fff;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;font-weight:700;"><?php print LANGMESS226 ?></div>
+<div class="dest-list" style="border-radius:0 0 8px 8px;margin-bottom:16px;">
+  <form action="base_de_donne_importation700.php" method="get" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">SIECLE <small style="color:#888;">(absences)</small></span>
+      <button type="submit" class="btn-dest">Importer</button>
+    </div>
+  </form>
+</div>
+
+</div>
+
 <?php
-/*
-include_once("./librairie_php/lib_get_init.php");
-if (php_module_load("dbase") != 1) {
-<img src="./image/commun/on1.gif" width="8" height="8"> <s><?php print LANGIMP4?></s> &nbsp;&nbsp;<A href='#' onMouseOver="AffBulle3(<?php print LANGbasededoni11?></i> </FONT>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center border=0></A>
-<br /><br />
-<?php
-}else{
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
 ?>
-<img src="./image/commun/on1.gif" width="8" height="8"> <a href="./base_de_donne_importation_gep.php"><?php print "GEP" ?></A> <br /><br />
-<?php 
-} 
-*/
-?>
-</ul></ul>
-</font>
-<!-- // fin  -->
-</td></tr></table>
-<BR>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'2.js'?>"> </SCRIPT>
-<SCRIPT language="JavaScript">InitBulle("#000000","#FFFFFF","red",1);</SCRIPT>
 </BODY></HTML>

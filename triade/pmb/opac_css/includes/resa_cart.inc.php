@@ -1,10 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa_cart.inc.php,v 1.9 2018-03-27 09:49:07 arenou Exp $
+// $Id: resa_cart.inc.php,v 1.19 2024/03/22 15:31:02 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $include_path, $msg;
+global $opac_resa, $opac_resa_planning, $pmb_location_reservation, $opac_resa_popup;
+global $pmb_transferts_actif, $transferts_choix_lieu_opac;
 
 require_once($base_path.'/includes/resa_func.inc.php');
 require_once($include_path.'/mail.inc.php');
@@ -20,12 +24,14 @@ if($opac_resa && $_SESSION['user_code']) {
 	$resa_cart_display='';
 	$notices=array();
 	$bulletins=array();
+	$from_cart=0;
 	
-	//RÃ©cupÃ©ration des notices
+	//Récupération des notices
 	switch($sub){
 		case 'resa_cart' :
 		case 'resa_planning_cart' :
 			$notices = $_SESSION['cart'];
+			$from_cart = 1;
 			break;
 		case 'resa_cart_checked':
 		case 'resa_planning_cart_checked':
@@ -34,9 +40,10 @@ if($opac_resa && $_SESSION['user_code']) {
 			} else if(isset($resa_notices)) {
 				$notices = $resa_notices;
 			}
+			$from_cart = 1;
 			break;
 		default:
-			print '<script type="text/javascript">document.location="./index.php"</script>';
+			print '<script>document.location="./index.php"</script>';
 			break;
 	}
 	$id_empr=$_SESSION['id_empr_session'];
@@ -73,68 +80,78 @@ if($opac_resa && $_SESSION['user_code']) {
     				if(pmb_mysql_num_rows($res_loc_list)){
     					while ($r = pmb_mysql_fetch_object($res_loc_list)){
     						$loc_list[]=$r->expl_location;
-    						// au moins un expl transfÃ©rable
+    						// au moins un expl transférable
     						$flag_transferable=1;
     					}
     				}
     				$res = pmb_mysql_query($loc_req);
-    				$tmpHtml = '<form method="post" action="do_resa.php?lvl='.$lvl.'&sub='.$sub.'">';
-    				$tmpHtml .= $msg['reservation_selection_localisation'].'<br /><select name="idloc">';
-    
     				//on parcours la liste des localisations
+    				$optionsHtml = '';
     				while ($value = pmb_mysql_fetch_array($res)) {
-    					if(!$flag_transferable){
-    						// il y en a un ici?
-    						$req= "select expl_id from exemplaires, docs_statut where expl_notice IN (".implode(",",$notices).") AND expl_bulletin='0' and expl_location = " . $value[0] . "
+    				    if(!$flag_transferable){
+    				        // il y en a un ici?
+    				        $req= "select expl_id from exemplaires, docs_statut where expl_notice IN (".implode(",",$notices).") AND expl_bulletin='0' and expl_location = " . $value[0] . "
     							and expl_statut=idstatut and statut_allow_resa=1 ";
-    						$res_expl = pmb_mysql_query($req);
-    						if(!pmb_mysql_num_rows($res_expl)){
-    							continue;
-    						}
-    					}
-    					if($value[0]==$empr_location) {
-    						$selected=' selected="selected" ';
-    					} else {
-    						$selected='';
-    					}
-    					$tmpHtml .= "<option value='" . $value[0] . "' $selected >" . $value[1] . "</option>";
+    				        $res_expl = pmb_mysql_query($req);
+    				        if(!pmb_mysql_num_rows($res_expl)){
+    				            continue;
+    				        }
+    				    }
+    				    if($value[0]==$empr_location) {
+    				        $selected=' selected="selected" ';
+    				    } else {
+    				        $selected='';
+    				    }
+    				    $optionsHtml .= "<option value='" . $value[0] . "' $selected >" . translation::get_translated_text($value[0], "docs_location", "location_libelle", $value[1]) . "</option>";
     				}
-    				$tmpHtml .= "</select><input type='hidden' name='listeNotices' value='".implode(",",$notices)."'><br /><br /><input class='bouton' type='submit' value='" . $msg['reservation_bt_choisir_localisation'] . "'></form>";
-    				echo $tmpHtml;
+    				if($optionsHtml) {
+    				    $tmpHtml = '<form method="post" action="do_resa.php?lvl='.$lvl.'&sub='.$sub.'">';
+    				    $tmpHtml .= $msg['reservation_selection_localisation'].'<br />';
+    				    $tmpHtml .= '<select name="idloc">';
+    				    $tmpHtml .= $optionsHtml;
+    				    $tmpHtml .= "</select><input type='hidden' name='listeNotices' value='".implode(",",$notices)."'><br /><br /><input class='bouton' type='submit' value='" . $msg['reservation_bt_choisir_localisation'] . "'></form>";
+    				    echo $tmpHtml;
+    				} else {
+    				    $resa_cart_display = '<table><tr><th colspan="2">'.$msg['empr_menu_resa'].' : </th></tr>';
+    				    foreach($notices as $notice_id){
+    				        $resa_cart_display.= '<tr>';
+    				        $resa = reservation::get_instance_from_empr_and_notice($id_empr, $notice_id);
+    				        $resa_cart_display.= '<td>'.$resa->notice.'</td><td><strong>'.$msg['resa_no_expl'].'</strong></td>';
+    				        $resa_cart_display.= '</tr>';
+    				    }
+    				    $resa_cart_display.='</table>';
+    				    if(!$opac_resa_popup){
+    				        require_once $base_path.'/includes/show_cart.inc.php';
+    				    }
+    				    print '<br/><br/>'.$resa_cart_display;
+    				}
     			}else{
     			    $notices=explode(',',$listeNotices);
     				$resa_cart_display = '<table><tr><th colspan="2">'.$msg['empr_menu_resa'].' : </th></tr>';
     				foreach($notices as $notice_id){
     					$resa_cart_display.= '<tr>';
-    					$bulletin_id=0;
-    					//On vÃ©rifie que notre notice n'est pas une notice de bulletin.
-    					$query='SELECT bulletin_id FROM bulletins WHERE num_notice='.$notice_id;
-    					$result = pmb_mysql_query($query, $dbh);
-    					if(pmb_mysql_num_rows($result)){
-    						while($line=pmb_mysql_fetch_array($result,PMB_MYSQL_ASSOC)){
-    							$bulletin_id=$line['bulletin_id'];
-    						}
-    					}
-                       
-    					$resa=new reservation($id_empr, $notice_id, $bulletin_id);
+    					$resa = reservation::get_instance_from_empr_and_notice($id_empr, $notice_id);
     					
     					$event = new event_resa_mutiple('resa_multiple','before_validate');
     					$event->set_empr_id($_SESSION["id_empr_session"]);
-    					$event->set_notice($notice_id);
-    					$event->set_bulletin($bulletin_id);
+    					$event->set_notice($resa->id_notice);
+    					$event->set_bulletin($resa->id_bulletin);
     					$evth->send($event);
-    					if($event->get_id_loc() !== false){
+    					if($event->get_id_loc() !== false && $event->get_id_loc()){
     					    $idloc = $event->get_id_loc();
     					}
     					if($resa->add($idloc)){
     						$resa_cart_display.= '<td>'.$resa->notice.'</td><td>'.$resa->message.'</td>';
+    						reservation::alert_mail_users_pmb($resa->id_notice, $resa->id_bulletin, $_SESSION["id_empr_session"]);
+    						//On retire la notice du panier ?
+    						delete_cart_record($notice_id);
     					}else{
     						$resa_cart_display.= '<td>'.$resa->notice.'</td><td>'.$resa->message.'</td>';
     					}
     					$event = new event_resa_mutiple('resa_multiple','validate_resa');
     					$event->set_empr_id($_SESSION["id_empr_session"]);
-    					$event->set_notice($notice_id);
-    					$event->set_bulletin($bulletin_id);
+    					$event->set_notice($resa->id_notice);
+    					$event->set_bulletin($resa->id_bulletin);
     					$event->set_resa_id($resa->id);
     					$evth->send($event);    					
     					$resa_cart_display.= '</tr>';
@@ -155,19 +172,12 @@ if($opac_resa && $_SESSION['user_code']) {
 			$resa_cart_display='<table><tr><th colspan="2">'.$msg['empr_menu_resa'].' : </th></tr>';
 			foreach($notices as $notice_id){
 				$resa_cart_display.='<tr>';
-				$bulletin_id=0;
-				//On verifie que notre notice n'est pas une notice de bulletin.
-				$query='SELECT bulletin_id FROM bulletins WHERE num_notice='.$notice_id;
-				$result = pmb_mysql_query($query, $dbh);
-				if(pmb_mysql_num_rows($result)){
-					while($line=pmb_mysql_fetch_array($result,PMB_MYSQL_ASSOC)){
-						$bulletin_id=$line['bulletin_id'];
-					}
-				}
-
-				$resa=new reservation($id_empr, $notice_id, $bulletin_id);
+				$resa = reservation::get_instance_from_empr_and_notice($id_empr, $notice_id);
 				if($resa->add($_SESSION['empr_location'])){
 					$resa_cart_display.= '<td>'.$resa->notice.'</td><td>'.$resa->message.'</td>';
+					reservation::alert_mail_users_pmb($resa->id_notice, $resa->id_bulletin, $_SESSION["id_empr_session"]);
+					//On retire la notice du panier ?
+					delete_cart_record($notice_id);
 				}else{
 					$resa_cart_display.= '<td>'.$resa->notice.'</td><td>'.$resa->message.'</td>';
 				}
@@ -190,7 +200,7 @@ if($opac_resa && $_SESSION['user_code']) {
 		if (is_array($notices) && count($notices)) {
 
 			foreach($notices as $k=>$id_notice){
-				$id_notice+= 0;
+				$id_notice = intval($id_notice);
 				$id_bulletin = 0;
 				//On regarde le type de la notice.
 				if(($id_notice)) {
@@ -265,6 +275,8 @@ if($opac_resa && $_SESSION['user_code']) {
 							$r->resa_remaining_qty = $qte;
 							$r->resa_loc_retrait = $loc;
 							$r->save();
+							//On retire la notice du panier ?
+							delete_cart_record($v['save'][0]);
 						}
 					}
 				}
@@ -345,7 +357,7 @@ if($opac_resa && $_SESSION['user_code']) {
 						$resa_date_debut = formatdate($resa['resa_date_debut']);
 						$resa_date_fin = formatdate($resa['resa_date_fin']);
 						$resa_qty =$resa['resa_qty'];
-						$resa_loc_retrait = $resa['location_libelle'];
+						$resa_loc_retrait = translation::get_translated_text($resa['resa_loc_retrait'], "docs_location", "location_libelle", $resa['location_libelle']);
 						$txt_dates = $msg['resa_planning_date_debut'].$resa_date_debut.'<br />';
 						$txt_dates.= $msg['resa_planning_date_fin'].$resa_date_fin.'<br />';
 						if ($resa['resa_perimee']) {
@@ -378,5 +390,5 @@ if($opac_resa && $_SESSION['user_code']) {
 	}
 
 } else {
-	print '<script type="text/javascript">document.location="./index.php";</script>';
+	print '<script>document.location="./index.php";</script>';
 }

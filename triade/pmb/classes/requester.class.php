@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requester.class.php,v 1.12 2017-06-22 10:19:48 dgoron Exp $
+// $Id: requester.class.php,v 1.15 2023/04/26 14:10:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once ($include_path.'/templates/requests.tpl.php');
 
 class requester {
@@ -33,110 +34,158 @@ class requester {
 		$this->t_fct_grp = $tmp['REQ_FUNCTION_GROUP'];
 	}
 
-
+	public function getForm() {
+		global $req_add_content_form, $msg;
+		
+		$content_form = $req_add_content_form;
+		
+		$interface_form = new interface_admin_form('req_modif');
+		$interface_form->set_label($msg['req_form_tit_add']);
+		
+		$num_classement=0;
+		$combo_clas= gen_liste ("SELECT idproc_classement,libproc_classement FROM procs_classements ORDER BY libproc_classement ", "idproc_classement", "libproc_classement", "form_classement", "", $num_classement, 0, $msg['proc_clas_aucun'],0, $msg['proc_clas_aucun']) ;
+		$content_form = str_replace('!!classement!!', $combo_clas, $content_form);
+		
+		$content_form = str_replace('!!req_name!!', '', $content_form);
+		$content_form = str_replace('!!req_type!!',$this->getTypeSelector('1','req_typeChg();'), $content_form);
+		$content_form = str_replace('!!req_univ!!',$this->getUnivSelector('1','req_univChg();'), $content_form);
+		$content_form = str_replace('!!req_comm!!','', $content_form);
+		$content_form = str_replace('!!req_code!!','', $content_form);
+		$content_form = str_replace('!!req_auth!!', request::getAutorisationsForm(), $content_form);
+		
+		//Seulement de l'ajout
+		$interface_form->set_object_id(0)
+		->set_content_form($content_form)
+		->set_table_name('procs')
+		->set_field_focus('req_name');
+		return $interface_form->get_display();
+	}
+	
 	//Retourne un selecteur pour choix des univers
 	public function getUnivSelector($selected=0, $change='') {
-		
 		global $charset;
 		
 		$form = "<select id='req_univ' name='req_univ' onChange=\"".$change."\">";
 		foreach($this->t_univ as $id=>$value) {
 			$form.= "<option value='$id'";
-			if($id==$selected) $form.= " selected='selected'";
+			if($id==$selected) {
+				$form.= " selected='selected'";
+			}
 			$form.= " >".htmlentities($value['name'], ENT_QUOTES, $charset)."</option>";
 		}
 		$form.= "</select>";
 		return $form;
 	}
 
-
 	//Retourne un selecteur pour choix du type de requete
 	public function getTypeSelector($selected=0, $change='') {
-		
 		global $charset;
 		
 		$form = "<select id='req_type' name='req_type' onChange=\"".$change."\" >";
 		foreach($this->t_type as $id=>$value) {
 			$form.="<option value='$id'";
-			if($id==$selected) $form.= " selected='selected'";
+			if($id==$selected) {
+				$form.= " selected='selected'";
+			}
 			$form.=" >".htmlentities($value['name'], ENT_QUOTES, $charset)."</option>";
 		}
 		$form.= "</select>";
 		return $form;
 	}
-
 	
 	//Retourne le nom de la table de reference d'un univers
 	public function getReferenceTableName($univ_id=0){
-		if (!$univ_id) return '';
+		$univ_id = intval($univ_id);
+		if (!$univ_id) {
+			return '';
+		}
 		$itr=$this->t_univ[$univ_id]['ref'];
 		return $itr;
 	}
-
 	
 	//Retourne l'id de la table de reference d'un univers
 	public function getReferenceTableID($univ_id=0){
-		if (!$univ_id) return 0;
+		$univ_id = intval($univ_id);
+		if (!$univ_id) {
+			return 0;
+		}
 		$tr=$this->getReferenceTableName($univ_id);
 		$itr=$this->t_schema[$tr];
 		return $itr;
 	}
 
-
 	//Retourne l'id d'une table a partir de son nom 
 	public function getTableID($table_name=''){
-		if (!$table_name) return 0;
+		if (!$table_name) {
+			return 0;
+		}
 		$table_id=$this->t_schema[$table_name];
 		return $table_id;
 	}
 
-
 	//Retourne les informations sur une table a partir de son id
 	public function getTableInfo($table_id=0){
-		if (!$table_id) return false;
+		$table_id = intval($table_id);
+		if (!$table_id) {
+			return false;
+		}
 		return $this->t_schema[$table_id];
 	}
 
-
 	//Retourne la cle primaire d'une table
 	public function getPrimaryKeyID($table_id=0){
-		if (!$table_id) return false;
+		$table_id = intval($table_id);
+		if (!$table_id) {
+			return false;
+		}
 		$pkid=$this->t_schema[$table_id]['pkid'];
 		return $pkid;
 	}
-
 	
 	//Retourne les cles etrangeres d'une table
 	public function getForeignKeys($table_id=0){
-		if (!$table_id) return false;
+		$table_id = intval($table_id);
+		if (!$table_id) {
+			return false;
+		}
 		$t=array();
 		foreach($this->t_schema[$table_id]['fields'] as $k=>$v){
-			if ($this->isForeignKey($k)) $t[]=$k;
+			if ($this->isForeignKey($k)) {
+				$t[]=$k;
+			}
 		}
 		return $t; 
 	}
 
-
 	//Retourne l'Id de la table accessible depuis une cle etrangere
 	public function getForeignTableID($foreign_key=0) {
-		if(!$foreign_key) return false;
+		if(!$foreign_key) {
+			return false;
+		}
 		$pk=$this->t_schema['cp_links'][$foreign_key];
 		$tmp=explode('-',$pk);
 		return $tmp[0];
 	}
 
-
 	//Retourne true si le champ fait partie d'une relation enfant-parent
 	public function isForeignKey($field_id=0){
-		if(!$field_id) return false;
-		if(array_key_exists($field_id,$this->t_schema['cp_links'])) return true;
-			else return false;
+		$field_id = intval($field_id);
+		if(!$field_id) {
+			return false;
+		}
+		if(is_array($this->t_schema['cp_links']) && array_key_exists($field_id,$this->t_schema['cp_links'])) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
 
 	//Retourne la liste des id des champs d'une table
 	public function getTableFieldIDList($table_id=0, $with_FK='true'){
-		if(!$table_id) return false;
+		$table_id = intval($table_id);
+		if(!$table_id) {
+			return false;
+		}
 		$t = array();
 		foreach($this->t_schema[$table_id]['fields'] as $k=>$v) {
 			if ($with_FK){
@@ -148,10 +197,12 @@ class requester {
 		return $t;
 	}
 
-
 	//Retourne la liste des informations pour les champs d'une table
 	public function getTableFieldInfo($table_id=0, $with_FK='true'){
-		if(!$table_id) return false;
+		$table_id = intval($table_id);
+		if(!$table_id) {
+			return false;
+		}
 		$t = array();
 		foreach($this->t_schema[$table_id]['fields'] as $k=>$v) {
 			if ($with_FK){
@@ -162,17 +213,16 @@ class requester {
 		}
 		return $t;
 	}
-
 	
  	//Construit un selecteur avec la liste des tables accessibles a partir d'un Univers
 	public function getTableSelector($univ_id=0 ,$selected=0){
-		
 		global $charset;
 
-		if (!$univ_id) return false;
+		$univ_id = intval($univ_id);
+		if (!$univ_id) {
+			return false;
+		}
 
-		$u_info=$this->t_univ[$univ_id];
-		
 		$sel = "<select>\n";
 		
 		//Creation racine liens depuis les champs de la table de reference
@@ -197,13 +247,14 @@ class requester {
 		return $sel;
 	}
 	
-	
 	//Construit l'arbre des champs accessibles a partir d'un Univers
 	public function getFielTree($univ_id=0 ){
-		
 		global $msg;
 
-		if (!$univ_id) return false;
+		$univ_id = intval($univ_id);
+		if (!$univ_id) {
+			return false;
+		}
 
 		$dtree = "<script type='text/javascript'>\n";
 		$dtree.= "_dt_fiel_ = new dTree('_dt_fiel_');\n";
@@ -228,11 +279,9 @@ class requester {
 		return $dtree;
 	}
 
-
 	//Construit les noeuds de l'arbre des champs accessibles a partir d'un univers
 	public function getNodesTree($univ_id, $table_id, $prev_node_id=0, $prev_rel_id=0, $prev_desc=''){
-		
-		global $msg, $charset;
+		global $charset;
 		
 		//Info univers
 		$u_info=$this->t_univ[$univ_id];
@@ -240,7 +289,6 @@ class requester {
 		//Info table
 		$t_info=$this->getTableInfo($table_id);
 		$t_name=$t_info['name'];
-		$t_desc=$t_info['desc'];
 		
 		//Info champs
 		$f_info=$t_info['fields'];
@@ -265,7 +313,7 @@ class requester {
 				
 				//Est-ce un champ lie?
 				if (is_array($u_info['relations']['from'][$t_name.'.'.$f_name])) {
-					foreach ($u_info['relations']['from'][$t_name.'.'.$f_name] as $k=>$rel_id) {
+					foreach ($u_info['relations']['from'][$t_name.'.'.$f_name] as $rel_id) {
 						$rel_to=explode('.',$u_info[$rel_id]['to']);
 						$rel_type=$u_info[$rel_id]['type'];
 						$rel_desc=$u_info[$rel_id]['desc'];
@@ -314,7 +362,6 @@ class requester {
 		return $dtree;
 	}	
 	
-	
 	//Ajout relations a la table des jointures
 	public function addJoin($univ_id,$rel_id,$n=0) {
 
@@ -348,10 +395,8 @@ class requester {
 		return;
 	}
 	
-	
 	//Retourne un formulaire pour la table des jointures
 	public function getJoinTab() {
-		
 		global $charset,$joi_tab_line_select;
 		
 		$tpl='';
@@ -391,11 +436,9 @@ class requester {
 		}
 		return $tpl;
 	}
-
 	
 	//Construit l'arbre des fonctions SQL
 	public function getFuncTree(){
-
 		global $msg, $charset;
 
 		$dtree = "<script type='text/javascript'>\n";
@@ -421,19 +464,17 @@ class requester {
 		$dtree.= "</script>\n";
 		return $dtree;
 	}
-		
 
 	//Construit l'arbre des sous-requetes SQL
 	public function getSubrTree(){
-
-		global $msg,$charset,$dbh;
+		global $msg,$charset;
 
 		$dtree='';
 		$q = "select idproc, name, comment, libproc_classement, num_classement from procs left join procs_classements on idproc_classement=num_classement ";
 		$q.= "where trim(requete) like('select %') ";
 		$q.= "order by libproc_classement,name ";
 		
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		if(pmb_mysql_num_rows($r)) {
 
 			$dtree = "<script type='text/javascript'>\n";
@@ -457,14 +498,11 @@ class requester {
 			$dtree.= "document.getElementById('req_subr_tree').innerHTML = _dt_subr_;\n";
 			$dtree.= "</script>\n";
 		}
-		
 		return $dtree;
 	}
 	
-	
 	//Construction requete a partir du formulaire poste
 	public function buildRequest($req_type,$req_univ,$req_nb_lines,$req_datas) {
-
 		global $msg;
 		if (!$req_type || !$req_univ || !$req_nb_lines || !is_array($req_datas)) return;
 
@@ -474,7 +512,7 @@ class requester {
 		//donnees de la requete
 		$t_da=$req_datas['DA'];	//donnees
 		$t_fi=$req_datas['FI']; //filtres
-		$t_va=$req_datas['VA']; //valeurs
+		//$t_va=$req_datas['VA']; //valeurs
 		$t_al=$req_datas['AL']; //alias
 		$t_vi=$req_datas['VI']; //visibilites
 		$t_gr=$req_datas['GR']; //regroupements
@@ -501,8 +539,8 @@ class requester {
 			}
 			
 			//recuperation valeurs
-			if (is_array($t_va[$lig])) {
-			}
+			//if (is_array($t_va[$lig])) {
+			//}
 
 			//recuperation filtres
 			if(is_array($t_fi[$i]) && count($t_fi[$i])) {
@@ -733,11 +771,10 @@ class requester {
 	//Extraction d'une sous-requete
 	//$r_id	= id de requete
 	public function getSubRequest($r_id) {
-		
-		global $dbh;
+		$r_id = intval($r_id);
 		$sub='';
 		$q = "select requete from procs where idproc='".$r_id."'";
-		$r = pmb_mysql_query($q,$dbh);
+		$r = pmb_mysql_query($q);
 		if(pmb_mysql_num_rows($r)) {
 			$sub = '('.pmb_mysql_result($r,0,0).')';
 		}
@@ -748,7 +785,6 @@ class requester {
 	//Extraction des infos de champ et de relation a partir de l'identifiant poste
 	//$f_id	= id de champ
 	public function getField($f_id) {
-		
 		$data=array();
 		$data['D']='';		//Stockage donnees calculees
 		$data['R']='';		//Stockage relations trouvees
@@ -777,7 +813,6 @@ class requester {
 	
 	//Extraction des jointures multiples 
 	public function getFullJoin($univ_id, $rel, $t_jo) {
-		
 		$rel_id=substr($rel,1);
 		$join=array();
 		$tf_from=array();
@@ -854,12 +889,9 @@ class requester {
 		return $xml;
 	}
 
-	
 	//construit la partie data d'une ligne de requete
 	public function buildDataContent($t_da) {
-
 		$t_ret=array();
-		
 		$t_fct=array();	//table de stockage de l'expression sql pour une fonction
 		$tab_fu=array(); //table de stockage des fonctions en cours de traitement
 		$n_fu=0;
@@ -976,12 +1008,9 @@ class requester {
 		return $t_ret;
 	}
 	
-	
 	//construit la partie filtre d'une ligne de requete (where)
 	public function buildFilterContent($t_fi) {
-
 		$t_ret=array();
-
 		$t_fct=array();	//table de stockage de l'expression sql pour une fonction
 		$tab_fu=array(); //table de stockage des fonctions en cours de traitement
 		$n_fu=0;
@@ -1097,9 +1126,6 @@ class requester {
 		}
 		return $t_ret;
 	}	
-	
-	
-
 }
 
 
@@ -1115,7 +1141,6 @@ class reqParser {
 	}
 	
 	public function run($file) {
-		
 		global $include_path;
 		global $charset;
 		
@@ -1126,6 +1151,7 @@ class reqParser {
 		unset($this->t);
 		$this->cur_id=0;
 		
+		$m = array();
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $xml, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
@@ -1137,7 +1163,7 @@ class reqParser {
 		xml_parser_set_option($this->parser, XML_OPTION_SKIP_WHITE, TRUE);
 		xml_set_element_handler($this->parser, "tagStart", "tagEnd");
 		if (!xml_parse($this->parser, $xml, TRUE)) {
-			die( sprintf( "erreur XML %s Ã  la ligne: %d", 
+			die( sprintf( "erreur XML %s à la ligne: %d", 
 				xml_error_string(xml_get_error_code($this->parser ) ),
 				xml_get_current_line_number($this->parser) ) );
 		}
@@ -1145,13 +1171,10 @@ class reqParser {
 		return ($this->t);
 	}
 
-
 	public function tagStart($parser, $tag, $att) {
-		
 		global $msg;
 		
 		switch ($tag) {
-			
 			case 'table':
 				$this->t[$att['id']]['name']= $att['name'];
 				$this->t[$att['id']]['desc']= $att['desc'];
@@ -1210,25 +1233,24 @@ class reqParser {
 			case 'REQ_FUNCTION':
 				$this->t['REQ_FUNCTION'][$att['id']]['name']=$att['name'];
 				$this->t['REQ_FUNCTION'][$att['id']]['group']=$att['group'];
-				$this->t['REQ_FUNCTION'][$att['id']]['parenthesis']= $att['parenthesis'];
+				$this->t['REQ_FUNCTION'][$att['id']]['parenthesis']= (isset($att['parenthesis']) ? $att['parenthesis'] : '');
 				$this->t['REQ_FUNCTION'][$att['id']]['remove']= $att['remove'];
-				$this->t['REQ_FUNCTION'][$att['id']]['filter']= $att['filter'];
+				$this->t['REQ_FUNCTION'][$att['id']]['filter']= (isset($att['filter']) ? $att['filter'] : '');
 				$this->cur_fct=$att['id'];
 				break;
 			case 'FCT_PARAM':
 				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['order']= $att['order'];
 				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['content']= $att['content'];
-				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['optional']= $att['optional'];
-				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['value']= $att['value'];
-				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['before_sep']= $att['before_sep'];
-				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['repeat_from']= $att['repeat_from'];
+				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['optional']= (isset($att['optional']) ? $att['optional'] : '');
+				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['value']= (isset($att['value']) ? $att['value'] : '');
+				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['before_sep']= (isset($att['before_sep']) ? $att['before_sep'] : '');
+				$this->t['REQ_FUNCTION'][$this->cur_fct]['param'][$att['order']]['repeat_from']= (isset($att['repeat_from']) ? $att['repeat_from'] : '');
 				break;				
 			default :
 				break;
 		}
 		return;
 	}
-	
 	
 	public function tagEnd($parser, $tag) {
 		return;

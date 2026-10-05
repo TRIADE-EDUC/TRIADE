@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_opac_search_persopac_ui.class.php,v 1.1 2018-10-12 12:18:37 dgoron Exp $
+// $Id: list_configuration_opac_search_persopac_ui.class.php,v 1.13 2023/03/24 09:26:45 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/opac/list_configuration_opac_ui.class.php");
 
 class list_configuration_opac_search_persopac_ui extends list_configuration_opac_ui {
 	
@@ -17,10 +15,7 @@ class list_configuration_opac_search_persopac_ui extends list_configuration_opac
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'search_order',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('search_order');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -30,28 +25,45 @@ class list_configuration_opac_search_persopac_ui extends list_configuration_opac
 				'search_name' => 'search_persopac_table_name',
 				'search_shortname' => 'search_persopac_table_shortname',
 				'search_human' => 'search_persopac_table_humanquery',
-				'search__type' => 'search_persopac_type'		);
+				'search_type' => 'search_persopac_type'		
+		);
 	}
 	
 	protected function add_column_edit() {
-		global $msg, $charset;
+		global $msg;
 		
-		$this->columns[] = array(
-				'property' => '',
-				'label' => $msg['search_persopac_table_edit'],
-				'html' => "<input class='bouton_small' value='".$msg["search_persopac_modifier"]."' type='button'  onClick=\"document.location='".static::get_controller_url_base()."&action=form&id=!!id!!'\" />"
+		$html_properties = array(
+				'value' => $msg['search_persopac_modifier'],
+				'link' => static::get_controller_url_base()."&action=form&id=!!id!!"
 		);
+		$this->add_column_simple_action('', $msg['search_persopac_table_edit'], $html_properties);
+	}
+	
+	protected function init_available_columns() {
+		parent::init_available_columns();
+		$this->available_columns['main_fields']['id'] = '1601';
 	}
 	
 	protected function init_default_columns() {
 		foreach ($this->available_columns['main_fields'] as $name=>$label) {
-			$this->add_column($name);
+			if($name != 'id') {
+				$this->add_column($name);
+			}
 		}
 		$this->add_column_edit();
 	}
 	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('id', 'datatype', 'integer');
+		$this->set_setting_column('id', 'align', 'center');
+		$this->set_setting_column('id', 'text', array('bold' => true));
+		$this->set_setting_column('search_order', 'datatype', 'integer');
+		$this->set_setting_column('search_order', 'align', 'center');
+	}
+	
 	protected function get_entities($entitie = '') {
-		global $msg, $charset;
+		global $msg;
 	
 		if(!isset($this->entities)) {
 			$authpersos=authpersos::get_instance();
@@ -79,6 +91,11 @@ class list_configuration_opac_search_persopac_ui extends list_configuration_opac
 		return $this->entities;
 	}
 	
+	protected function _get_object_property_search_type($object) {
+		$entities = $this->get_entities();
+		return $entities[$object->search_type];
+	}
+	
 	protected function get_cell_content($object, $property) {
 		global $msg, $charset;
 		
@@ -86,22 +103,33 @@ class list_configuration_opac_search_persopac_ui extends list_configuration_opac
 		switch($property) {
 			case 'search_order':
 				$content .= "
-					<input type='button' class='bouton_small' value='-' onClick=\"document.location='".static::get_controller_url_base()."&action=up&id=".$object->search_id."'\"/></a>
-					<input type='button' class='bouton_small' value='+' onClick=\"document.location='".static::get_controller_url_base()."&action=down&id=".$object->search_id."'\"/>
+					<img src='".get_url_icon('bottom-arrow.png')."' title='".htmlentities($msg['move_bottom_arrow'], ENT_QUOTES, $charset)."' alt='".htmlentities($msg['move_bottom_arrow'], ENT_QUOTES, $charset)."' onClick=\"document.location='".static::get_controller_url_base()."&action=down&id=".$object->search_id."'\" style='cursor:pointer;'/>
+					<img src='".get_url_icon('top-arrow.png')."' title='".htmlentities($msg['move_top_arrow'], ENT_QUOTES, $charset)."' alt='".htmlentities($msg['move_top_arrow'], ENT_QUOTES, $charset)."' onClick=\"document.location='".static::get_controller_url_base()."&action=up&id=".$object->search_id."'\" style='cursor:pointer;'/>
 				";
 				break;
 			case 'search_directlink':
 				$content .= $this->get_cell_visible_flag($object, $property);
 				break;
-			case 'search_type':
-				$entities = $this->get_entities();
-				$content .= $entities[$object->search_type];
+			case 'search_human':
+				$content .= $object->search_human; // on conserve l'interprétation du HTML
 				break;
 			default :
 				$content .= parent::get_cell_content($object, $property);
 				break;
 		}
 		return $content;
+	}
+	
+	protected function get_button_order() {
+		global $msg;
+		
+		return $this->get_button('save_order', $msg['list_ui_save_order']);
+	}
+	
+	protected function get_display_left_actions() {
+		$display = parent::get_display_left_actions();
+		$display .= $this->get_button_order();
+		return $display;
 	}
 	
 	protected function get_label_button_add() {

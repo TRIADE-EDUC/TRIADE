@@ -1,8 +1,8 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | PMB est sous licence GPL, la rÃ©utilisation du code est cadrÃ©e            |
+// | PMB est sous licence GPL, la réutilisation du code est cadrée            |
 // +--------------------------------------------------------------------------+
-// $Id: print_doc_dsi.php,v 1.7 2017-11-13 10:24:05 dgoron Exp $
+// $Id: print_doc_dsi.php,v 1.8 2021/12/01 13:09:43 dgoron Exp $
 
 //Impression DSI
 
@@ -13,6 +13,8 @@ $base_nobody=1;
 $base_noheader=1;
 
 require($base_path."/includes/init.inc.php");
+
+global $class_path, $include_path, $id_bannette, $suite;
 
 require_once($class_path."/mono_display.class.php");
 require_once($include_path."/notice_authors.inc.php");
@@ -33,12 +35,8 @@ include_once("$class_path/bannette.class.php");
 include_once("$class_path/equation.class.php");
 include_once("$class_path/classements.class.php");
 require_once("$class_path/docs_location.class.php");
-require_once("./dsi/func_abo.inc.php");
 require_once("./dsi/func_pro.inc.php");
 require_once("./dsi/func_common.inc.php");
-require_once("./dsi/func_clas.inc.php");
-require_once("./dsi/func_equ.inc.php");
-require_once("./dsi/func_diff.inc.php");
 
 if (!$id_bannette) die( "<script>self.close();</script>" );
 

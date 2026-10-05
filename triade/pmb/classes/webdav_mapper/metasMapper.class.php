@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: metasMapper.class.php,v 1.6 2019-02-18 14:29:35 arenou Exp $
+// $Id: metasMapper.class.php,v 1.7 2022/01/14 13:51:45 dgoron Exp $
 
 
 class metasMapper {
@@ -126,7 +126,7 @@ class metasMapper {
 		$this->data['year'] = $this->data['index_l'] = $this->data['url'] = $this->data['thumbnail_content'] = $this->data['publisher'] = $this->data['n_resume'] = "";
 		
 		if($this->mimetype == "application/epub+zip"){
-			//pour les ebook, on gÃ¨re ca directement ici !
+			//pour les ebook, on gère ca directement ici !
 
 			$this->data['tit1'] = $this->metas['title'][0];
 			$this->data['authors'] = $this->metas['creator'];
@@ -200,7 +200,7 @@ class metasMapper {
 			$res = pmb_mysql_query($q);
 			if (pmb_mysql_num_rows($res)) {
 				$r=pmb_mysql_fetch_object($res);
-				// doublon existe, on supprime la notice crÃ©Ã©e
+				// doublon existe, on supprime la notice créée
 				\notice::del_notice($notice_id);
 				return $r->notice_id;
 			}
@@ -211,7 +211,6 @@ class metasMapper {
 	}
 		
 	protected function create_notice(){
-		global $pmb_keyword_sep;
 		global $pmb_type_audit;
 		global $webdav_current_user_name,$webdav_current_user_id;
 		
@@ -264,7 +263,7 @@ class metasMapper {
 			$query .= "user_id='$webdav_current_user_id', ";
 			$query .= "user_name='$webdav_current_user_name', ";
 			$query .= "type_modif=1 ";
-			$result = @pmb_mysql_query($query);
+			pmb_mysql_query($query);
 		}
 			
 		if(count($this->data['authors'])){
@@ -341,9 +340,8 @@ class metasMapper {
 	}
 	
 	protected function import_cp($notice_id,$cp_name,$val){
-		global $dbh;
 		$req = " select idchamp, type, datatype from notices_custom where name='".$cp_name."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			$perso = pmb_mysql_fetch_object($res);
 			if($perso->idchamp){
@@ -362,13 +360,13 @@ class metasMapper {
 						$value=$n;
 					}
 					$req="SELECT 1 FROM notices_custom_values WHERE notices_custom_champ='".$perso->idchamp."' AND notices_custom_origine='".$notice_id."' AND notices_custom_".$perso->datatype."='".$value."'";
-					if(($res=pmb_mysql_query($req)) && !pmb_mysql_num_rows($res)){//Pour Ã©viter d'importer deux fois la mÃªme chose (c'Ã©tait le cas en z39.50 ou connecteur lorsque l'on importe les notices une Ã  une
+					if(($res=pmb_mysql_query($req)) && !pmb_mysql_num_rows($res)){//Pour éviter d'importer deux fois la même chose (c'était le cas en z39.50 ou connecteur lorsque l'on importe les notices une à une
 						$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_".$perso->datatype.") values($perso->idchamp,$notice_id,'".$value."')";
 						pmb_mysql_query($requete);
 					}
 				} else {
 					$req="SELECT 1 FROM notices_custom_values WHERE notices_custom_champ='".$perso->idchamp."' AND notices_custom_origine='".$notice_id."' AND notices_custom_".$perso->datatype."='".addslashes($val)."'";
-					if(($res=pmb_mysql_query($req)) && !pmb_mysql_num_rows($res)){//Pour Ã©viter d'importer deux fois la mÃªme chose (c'Ã©tait le cas en z39.50 ou connecteur lorsque l'on importe les notices une Ã  une
+					if(($res=pmb_mysql_query($req)) && !pmb_mysql_num_rows($res)){//Pour éviter d'importer deux fois la même chose (c'était le cas en z39.50 ou connecteur lorsque l'on importe les notices une à une
 						$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_".$perso->datatype.") values($perso->idchamp,$notice_id,'".addslashes($val)."')";
 						pmb_mysql_query($requete);
 					}
@@ -377,8 +375,8 @@ class metasMapper {
 		}
 	}
 	protected function clean($str){
-		$str = strtr($str, 'Ã¡Ã Ã¢Ã¤Ã£Ã¥Ã§Ã©Ã¨ÃªÃ«Ã­Ã¬Ã®Ã¯Ã±Ã³Ã²Ã´Ã¶ÃµÃºÃ¹Ã»Ã¼Ã½Ã¿', 'aaaaaaceeeeiiiinooooouuuuyy');
-		return mb_strtoupper(strtr($str, 'ÃÃ€Ã‚Ã„ÃƒÃ…Ã‡Ã‰ÃˆÃŠÃ‹ÃÃÃÃŒÃ‘Ã“Ã’Ã”Ã–Ã•ÃšÃ™Ã›ÃœÃ', 'AAAAAACEEEEEIIIINOOOOOUUUUY'));
+		$str = strtr($str, 'áàâäãåçéèêëíìîïñóòôöõúùûüıÿ', 'aaaaaaceeeeiiiinooooouuuuyy');
+		return mb_strtoupper(strtr($str, 'ÁÀÂÄÃÅÇÉÈÊËÍÏÎÌÑÓÒÔÖÕÚÙÛÜİ', 'AAAAAACEEEEEIIIINOOOOOUUUUY'));
 	}
 
 }

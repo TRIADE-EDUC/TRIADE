@@ -1,9 +1,9 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_hold_circle.class.php,v 1.3 2018-12-14 13:38:18 ngantier Exp $
+// $Id: map_hold_circle.class.php,v 1.4.4.1 2025/04/24 14:45:33 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
@@ -13,7 +13,7 @@ require_once($class_path . "/map/map_coord.class.php");
 
 /**
  * class map_hold_circle
- * 
+ *
  */
 class map_hold_circle extends map_hold_polygon {
     /** Aggregations: */
@@ -39,65 +39,50 @@ class map_hold_circle extends map_hold_polygon {
     protected $nb_points;
 
     /**
-     * 
      *
-     * @param map_coord coord CoordonnÃ©es du centre
-
+     * @param map_coord coord Coordonnées du centre
      * @return void
      * @access public
      */
-    public function set_center($coord) {
-        
-    }
-// end of member function set_center
+    public function set_center($center) {}
 
     /**
-     * 
      *
      * @param int nb_points Nombre de points pour le calcul du polygone approchant
-
      * @return void
      * @access public
      */
-    public function set_nb_points($nb_points) {
-        
-    }
-// end of member function set_nb_points
+    public function set_nb_points($nb_points) {}
 
     /**
-     * Retourne de nombre de points utilisÃ©s pour le polygone approchant
+     * Retourne de nombre de points utilisés pour le polygone approchant
      *
      * @return int
      * @access public
      */
     public function get_nb_points() {
-        
+        return 0;
     }
-// end of member function get_nb_points
 
     /**
-     * Retourne la classe reprÃ©sentant les coordonnÃ©es du centre du cercle
+     * Retourne la classe représentant les coordonnées du centre du cercle
      *
      * @return map_coord
      * @access public
      */
     public function get_center() {
-        
+        $this->center;
     }
-// end of member function get_center
 
     /**
-     * 
+     *
      *
      * @param float radius Rayon du cercle
 
      * @return void
      * @access public
      */
-    public function set_radius($radius) {
-        
-    }
-// end of member function set_radius
+    public function set_radius($radius) {}
 
     /**
      * Retourne le rayon du cercle
@@ -106,49 +91,37 @@ class map_hold_circle extends map_hold_polygon {
      * @access public
      */
     public function get_radius() {
-        
+        return $this->radius;
     }
-// end of member function get_radius
 
     /**
      * Constructeur
      *
      * @param map_coord center Centre du cercle
-
      * @param float radius Rayon du cercle
-
-     * @param int nb_points Nombre de points pour gÃ©nÃ©rer le polygone approchant
-
+     * @param int nb_points Nombre de points pour générer le polygone approchant
      * @return void
      * @access public
      */
-    public function __construct($center, $radius, $nb_points) {
-        
-    }
-// end of member function __construct
+    public function __construct($center, $radius, $nb_points) {}
 
     /**
-     * 
      *
      * @return string
      * @access public
      */
     public function get_hold_type() {
-        
+        return "";
     }
-// end of member function get_hold_type
 
     /**
-     * MÃ©thode qui calcule les points du polygone approchant
+     * Méthode qui calcule les points du polygone approchant
      *
      * @return void
      * @access protected
      */
-    protected function fill_coords() {
-        
-    }
-// end of member function fill_coords
-    
+    protected function fill_coords() {}
+
     static public function createRegularPolygon ($origin, $radius, $sides) {
         $angle = pi() * ((1/$sides) - (1/2));
         $rotatedAngle = 0;
@@ -157,7 +130,7 @@ class map_hold_circle extends map_hold_polygon {
         $lat = $radius/111.32;
         for($i=0; $i<$sides; $i++) {
             $rotatedAngle = $angle + ($i * 2 * pi() / $sides);
-            
+
             $point=[ 'x'=>0,'y'=>0];
             $point['x'] = $origin['x'] + ($lon * cos($rotatedAngle));
             $point['y'] = $origin['y'] + ($lat * sin($rotatedAngle));
@@ -165,7 +138,7 @@ class map_hold_circle extends map_hold_polygon {
         }
         return $points;
     }
-    
+
     static public function getWKT($points){
         $wkt='';
         foreach($points as $point){

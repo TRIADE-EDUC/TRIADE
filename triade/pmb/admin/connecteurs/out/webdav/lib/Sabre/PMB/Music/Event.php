@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Event.php,v 1.5 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: Event.php,v 1.6 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB\Music;
 
 class Event extends Collection {
 	protected $authperso;
 
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		$this->config = $config;
 		$this->type = "event";
 		$code = $this->get_code_from_name($name);
@@ -18,11 +18,11 @@ class Event extends Collection {
 		}
 	}
 	
-	function getName() {
+	public function getName() {
 		return $this->format_name($this->authperso->info['isbd']." (K".$this->authperso->id.")");
 	}
 
-	function getNotices(){
+	public function getNotices(){
 		$this->notices = array();
 		if($this->authperso->id){
 			$concepts_ids = array();

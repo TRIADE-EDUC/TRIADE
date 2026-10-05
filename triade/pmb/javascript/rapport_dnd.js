@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rapport_dnd.js,v 1.4 2016-09-29 13:44:41 dgoron Exp $ */
+// $Id: rapport_dnd.js,v 1.4 2016/09/29 13:44:41 dgoron Exp $ */
 
 /****************************************
  * 	Fonctions pour le D&D du rapport	*	
@@ -31,7 +31,7 @@ function export_dropzone(dragged,target){
 
 
 /*
- * Ajout d'un Ã©lÃ©ment du rapport en fin de liste
+ * Ajout d'un élément du rapport en fin de liste
  */
 function rapport_dropzone(dragged,target){
 	
@@ -88,7 +88,7 @@ function rapport_rapport(dragged,target){
 
 
 /*
- * Mis Ã  jour de l'ordre
+ * Mis à jour de l'ordre
  */
 function rapport_update_order(source,cible){
 	
@@ -103,7 +103,7 @@ function rapport_update_order(source,cible){
 			index++;
 		}
 	}
-	//On ajoute en fin de ligne donc pas de cible, on prend l'ordre du plus grand Ã©lÃ©ment
+	//On ajoute en fin de ligne donc pas de cible, on prend l'ordre du plus grand élément
 	if(!target_order)
 		target_order = index;
 	
@@ -134,7 +134,7 @@ function export_rapport(dragged,target){
 }
 
 /*
- * Initialise la fonction de controle clic pour l'ajout d'Ã©lÃ©ments
+ * Initialise la fonction de controle clic pour l'ajout d'éléments
  */
 function init_action(){
 	var div = document.getElementById("col_rapport");
@@ -178,7 +178,7 @@ function init_action(){
 }
 
 /*
- * Ajout d'un Ã©lÃ©ment au rapport
+ * Ajout d'un élément au rapport
  *  type = 0 : Commentaire
  *  type = 1 : Titre
  */

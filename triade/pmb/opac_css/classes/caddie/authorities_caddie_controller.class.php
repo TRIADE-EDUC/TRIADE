@@ -1,9 +1,9 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authorities_caddie_controller.class.php,v 1.2 2019-04-24 13:48:49 dgoron Exp $
+// $Id: authorities_caddie_controller.class.php,v 1.2 2019/04/24 13:48:49 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
@@ -19,4 +19,4 @@ class authorities_caddie_controller extends caddie_root_controller {
     
 }
 
-// fin de dÃ©claration de la classe authorities_caddie_controller
+// fin de déclaration de la classe authorities_caddie_controller

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,9 +18,9 @@
  *
  ***************************************************************************/
 
-if (!defined(INTITULEDIRECTION)) { define("INTITULEDIRECTION","direction"); }
-if (!defined(INTITULEELEVE)) { define("INTITULEELEVE","élève"); }
-if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
+if (!defined("INTITULEDIRECTION")) { define("INTITULEDIRECTION","direction"); }
+if (!defined("INTITULEELEVE")) { define("INTITULEELEVE","élève"); }
+if (!defined("INTITULEELEVES")) { define("INTITULEELEVES","élèves"); }
 
 
 // fichier pour langue cote admin.
@@ -29,7 +29,7 @@ if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
 define("CLICKICI","Cliquez ici");
 define("VALIDER","Valider");
 define("LANGTP22"," ATTENTION - Demande de devoir sur table - RUBRIQUE");
-define("LANGTP3"," calendrier DST ");
+define("LANGTP33"," calendrier DST ");
 define("LANGCHOIX","Choix ...");
 define("LANGCHOIX2","aucune classe");
 define("LANGCHOIX3","--- Choix ---");
@@ -2170,7 +2170,7 @@ define("LANGMODIF26","Modifier sous-matière");
 define("LANGPROF38","Note Trimestrielle");
 define("LANGPROF39","Complément d'information");
 
-define("LANGCIRCU21","Disp. pour"); // abréviation de "Disponible pour" 
+define("LANGCIRCU211","Disp. pour"); // abréviation de "Disponible pour" 
 
 define("LANGTELECHARGE","Télécharger"); //  downloader
 
@@ -2370,7 +2370,7 @@ define("LANGDISP23","Intitulé du motif ");
 define("LANGDISP24","Liste des motifs ");
 define("LANGDISP25","Nombre d'".INTITULEELEVE."s mis à jour");
 define("LANGDISP26","Le fichier doit être au format xls");
-define("LANGCARNET63","Import Carnet de Suivi terminé");
+define("LANGCARNET633","Import Carnet de Suivi terminé");
 define("LANGCARNET64","Liste des sanctions");
 // News 2
 define("LANGCARNET67","Ajout d'une sanction disciplinaire");
@@ -2819,7 +2819,7 @@ define("LANGMESS258","Search");
 //--------------------newsactualite.php
 define("LANGMESS299","    Titre : ");
 define("LANGMESS300","Votre TRIADE n'est pas configuré en accès Internet, veuillez consulter votre compte administrateur Triade pour valider l'option de la connexion Internet.");
-define("LANGMESS365","Actualités  de la 1er page");
+define("LANGMESS3655","Actualités  de la 1er page");
 //--------------------actualiteetablissement.php
 //--------------------newsdefil.php
 //--------------------commaudio.php // Bouton Parcourir
@@ -3268,12 +3268,49 @@ define("LANGVATEL37","Problème d'enregistrement");
 define("LANGVATEL38","Indiquer la date");
 
 
-
 define("LANGMESSE01","Accès à votre compte SMS");
 define("LANGMESSE02","Gestion des SMS"); 
 
 define("LANGNEW100","Sanction(s)");
 define("LANGNEW101","Prévision sur ");
 
+define("LANGTT2","Impression du tableau de bulletin");
 
+
+// --- SIECLE-BEE Export ---
+define('LANG_SIECLE_EXPORT_TITRE', 'Exportação SIECLE-BEE (XML / ZIP)');
+define('LANG_SIECLE_EXPORT_DESC', 'Geração do arquivo ZIP em conformidade com as normas nacionais para importação no SIECLE-BEE.');
+define('LANG_SIECLE_PROFIL', 'Perfil do esquema SIECLE');
+define('LANG_SIECLE_PROFIL_STANDARD', 'Padrão (Com contrato - XSD 4.0)');
+define('LANG_SIECLE_PROFIL_EPHC', 'Privado sem contrato (EPHC - XSD 1.1)');
+define('LANG_SIECLE_UAI', 'Código UAI (RNE) da escola');
+define('LANG_SIECLE_ANNEE', 'Ano letivo');
+define('LANG_SIECLE_VALIDATION_XSD', 'Validar conformidade XSD antes da exportação');
+define('LANG_SIECLE_PERIMETRE', 'Âmbito da exportação');
+define('LANG_SIECLE_BTN_EXPORTER', 'Gerar e baixar arquivo ZIP');
+
+define('LANG_CODE_MEF', 'Código MEF (SIECLE)');
+
+// --- Modificação da palavra-passe (Espaço Privado) ---
+define('LANG_CHG_PASS_TITLE', 'Palavra-passe');
+define('LANG_CHG_PASS_ACTUEL', 'Palavra-passe atual');
+define('LANG_CHG_PASS_NOUVEAU', 'Nova palavra-passe');
+define('LANG_CHG_PASS_CONFIRM', 'Confirmar nova palavra-passe');
+define('LANG_CHG_PASS_BTN', 'Modificar palavra-passe');
+define('LANG_CHG_PASS_OK', 'A sua palavra-passe foi modificada com sucesso.');
+define('LANG_CHG_PASS_ERR_ACTUEL', 'A palavra-passe atual está incorreta.');
+define('LANG_CHG_PASS_ERR_CONFIRM', 'A nova palavra-passe e a confirmação não coincidem.');
+define('LANG_CHG_PASS_ERR_EMPTY', 'Por favor, preencha todos os campos da palavra-passe.');
+define('LANG_CHG_PASS_ERR_SECURITY', 'A nova palavra-passe não cumpre os critérios de segurança do estabelecimento.');
+define('LANG_CHG_PASS_DISABLED', 'A modificação da palavra-passe está desativada pelo seu estabelecimento.');
+define('LANG_CHG_PASS_STRENGTH_LABEL', 'Força da palavra-passe:');
+define('LANG_CHG_PASS_STRENGTH_1', 'Muito fraca');
+define('LANG_CHG_PASS_STRENGTH_2', 'Fraca');
+define('LANG_CHG_PASS_STRENGTH_3', 'Média');
+define('LANG_CHG_PASS_STRENGTH_4', 'Forte');
+define('LANG_CHG_PASS_MAIL_SUBJECT', 'TRIADE: Confirmação de alteração da palavra-passe');
+define('LANG_CHG_PASS_MAIL_BODY1', 'Olá');
+define('LANG_CHG_PASS_MAIL_BODY2', 'Confirmamos que a palavra-passe da sua conta TRIADE foi alterada com sucesso em');
+define('LANG_CHG_PASS_MAIL_BODY3', 'às');
+define('LANG_CHG_PASS_MAIL_BODY4', 'Se não foi o autor desta alteração, contacte imediatamente a administração do seu estabelecimento.');
 ?>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: level2_search.class.php,v 1.7 2019-02-12 11:30:44 dgoron Exp $
+// $Id: level2_search.class.php,v 1.11 2023/12/08 15:25:27 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,25 +14,25 @@ if ($opac_search_other_function) require_once($include_path."/".$opac_search_oth
 class level2_search {
 	public $user_query;
 	public $type;
-	
+
 	protected $elements_ids;
-	
+
     public function __construct($user_query, $type) {
     	$this->user_query = $user_query;
     	$this->type = $type;
     }
-    
+
     protected function get_title() {
     	global $msg;
-    	
+
     	return $msg[$this->type.'_found'];
     }
-    
+
     protected function get_query() {
     	$query = '';
     	return $query;
     }
-    
+
 //     protected function get_display_element($element) {
 //     	$display = '';
 //     	switch($this->type) {
@@ -46,21 +46,22 @@ class level2_search {
 //     	}
 //     	return $display;
 //     }
-    
+
     /**
      * Enregistrement des stats
      */
     protected function search_log($count) {
     	global $nb_results_tab;
-    	
+
 		$nb_results_tab[$this->type] = $count;
     }
-    
+
 	public function proceed() {
 		global $msg, $charset;
 		global $include_path;
 		global $opac_allow_affiliate_search;
 		global $search_result_affiliate_lvl2_head;
+		global $search_result_affiliate_lvl2_footer;
 		global $opac_search_other_function;
 		global $catal_navbar;
 		global $pmb_logs_activate;
@@ -68,22 +69,24 @@ class level2_search {
 		global $tab;
 
 	    if($opac_allow_affiliate_search){
-			print $search_result_affiliate_lvl2_head;
+	        print str_replace('!!title!!', common::format_title($msg['resultat_recherche']), $search_result_affiliate_lvl2_head);
 		}else {
-			print "	
-            <div id=\"resultatrech\"><h3 class='searchResult-title'>".$msg['resultat_recherche']."</h3>
+			print "
+            <div id=\"resultatrech\">".common::format_title($msg['resultat_recherche'])."
 				<div id=\"resultatrech_container\">
 				    <div id=\"resultatrech_see\">";
 		}
-		
-		//le contenu du catalogue est calculÃ© dans 2 cas  :
-		// 1- la recherche affiliÃ©e n'est pas activÃ©e, c'est donc le seul rÃ©sultat affichable
-		// 2- la recherche affiliÃ©e est active et on demande l'onglet catalog...
+
+		//le contenu du catalogue est calculé dans 2 cas  :
+		// 1- la recherche affiliée n'est pas activée, c'est donc le seul résultat affichable
+		// 2- la recherche affiliée est active et on demande l'onglet catalog...
 		if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "catalog")){
 		    $display = $this->get_display_elements_list();
 		    print $this->get_search_title();
 			print '<div id="resultatrech_liste">' . $display . '</div>';
-			if($opac_allow_affiliate_search) print $catal_navbar;
+			if($opac_allow_affiliate_search) {
+			    print $catal_navbar . $search_result_affiliate_lvl2_footer;
+			}
 			else print "</div></div>";
 			if ($this->type == 'extended') print "</div>"; // un div en +
 		}else{
@@ -94,32 +97,32 @@ class level2_search {
 			$this->search_log($count);
 		}
     }
-    
+
     public function get_elements_ids() {
     	if(!isset($this->elements_ids)) {
     		$this->elements_ids = array();
     	}
     	return $this->elements_ids;
     }
-    
+
     public function get_search_title(){
     	global $charset, $count, $opac_search_other_function, $opac_allow_affiliate_search;
-    	$search_title = "<h3 class='searchResult-search'>
+    	$search_title = "<h3 class='searchResult-search' id='searchResult-search' >
 				<span class='searchResult-equation'>
 					<b>".$count."</b> ".$this->get_title()." <b>
 					'".htmlentities($this->user_query,ENT_QUOTES,$charset)."'";
-    	
+
     	if ($opac_search_other_function) {
     		$search_title.= " ".search_other_function_human_query($_SESSION["last_query"]);
     	}
     	$search_title.= "</b></span>";
     	$search_title.= activation_surlignage();
     	$search_title.= "</h3>\n";
-    		
-    	if(!$opac_allow_affiliate_search) 
+
+    	if(!$opac_allow_affiliate_search)
     		$search_title.= "
 					</div>";
-    	
+
     	return $search_title;
     }
 }

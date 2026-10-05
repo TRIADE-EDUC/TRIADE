@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: driver.js,v 1.8 2013-12-02 09:07:25 dbellamy Exp $
+// $Id: driver.js,v 1.8 2013/12/02 09:07:25 dbellamy Exp $
 
 var f_empr_client;
 var f_expl_client;
@@ -110,7 +110,7 @@ function result_read_cb (retVal) {
 	flag_semaphore_rfid_read=0;
 }
 
-// Detect prÃ©sence d'Ã©lement rfid
+// Detect présence d'élement rfid
 function init_rfid_detect(ack_detect) {
 	if(!flag_rfid_active) return;
 	f_ack_detect=ack_detect;
@@ -131,8 +131,8 @@ function rfid_erase_suite(retVal) {
 	if(!flag_rfid_active) return;
 	
 	if(proxies_response_xml.length != 1) {
-		if(proxies_response_xml.length > 1) alert('Il y a plusieurs Ã©tiquettes !');
-		else if(proxies_response_xml.length == 0) alert('Aucune Ã©tiquette dÃ©tectÃ©e!');
+		if(proxies_response_xml.length > 1) alert('Il y a plusieurs étiquettes !');
+		else if(proxies_response_xml.length == 0) alert('Aucune étiquette détectée!');
 		return;
 	}	
 	var uid=proxies_response_xml[0]['UID'];
@@ -150,7 +150,7 @@ var write_etiquette_data=new Array();
 	
 
 
-// Programme une Ã©tiquette
+// Programme une étiquette
 function init_rfid_write_etiquette (cb,nbtags,ack_write) {
 
 	if(!flag_rfid_active) return;
@@ -205,11 +205,11 @@ function rfid_write_patron_suite1 (retVal) {
 	f_ack_write_empr=write_patron_data.ack_write;
 	
 	if(!retVal.length) {
-		alert('Aucune Ã©tiquette dÃ©tectÃ©e!');
+		alert('Aucune étiquette détectée!');
 		return;
 	} 
 	if(retVal.length>1) {
-		alert('Il n\'y a pas le nombre requis d\'Ã©tiquettes: '+retVal.length+' dÃ©tectÃ©es pour une seule nÃ©cessaire !');
+		alert('Il n\'y a pas le nombre requis d\'étiquettes: '+retVal.length+' détectées pour une seule nécessaire !');
 		return;
 	}	
 	//alert('xxxxxxxxxxxxxx');
@@ -232,7 +232,7 @@ function result_write_empr(retVal) {
 	if(f_ack_write_empr)f_ack_write_empr(ret.error);
 }     
 
-// Active / dÃ©sactive un antivol
+// Active / désactive un antivol
 function init_rfid_antivol (cb,level,ack_antivol) {
 	if(!flag_rfid_active) return;
 	f_ack_antivol=ack_antivol;
@@ -259,7 +259,7 @@ function result_ack_antivol(retVal) {
 }  
 
 
-// Active / dÃ©sactive tous les antivols
+// Active / désactive tous les antivols
 var rfid_antivol_all_data=new Array();
 function init_rfid_antivol_all (level,ack_antivol) {
 	f_ack_antivol_all=ack_antivol;
@@ -320,7 +320,7 @@ function mode1_init_rfid_read_cb(empr_client,expl_client){
 
 
 
-// Pour le prÃªt a la chaine mode1
+// Pour le prêt a la chaine mode1
 var flag_read_mode1=0;
 
 function mode1_read_cb() {		

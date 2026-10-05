@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: remote_procedure_client.class.php,v 1.8 2019-03-25 15:26:00 arenou Exp $
+// $Id: remote_procedure_client.class.php,v 1.10 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -36,6 +36,7 @@ class remote_procedure_client {
 		global $msg;
 		global $pmb_curl_proxy;
 
+		$result = false;
 		$params = array("credentials" => array("user"=>$this->server_username, "key" => $this->server_key));
 		if ($set)
 			$params["set"] = $set;
@@ -85,16 +86,16 @@ class remote_procedure_client {
 						$result->elements = array($result->elements);
 						
 					foreach ($result->elements as $index => $aprocedure) {
-						$result->elements[$index]->name = utf8_decode($aprocedure->name);
-						$result->elements[$index]->comment = utf8_decode($aprocedure->comment);
-						$result->elements[$index]->sql = utf8_decode($aprocedure->sql);
-						$result->elements[$index]->params = utf8_decode($aprocedure->params);
-						$result->elements[$index]->current_attached_set = utf8_decode($aprocedure->current_attached_set);
+						$result->elements[$index]->name = encoding_normalize::utf8_decode($aprocedure->name);
+						$result->elements[$index]->comment = encoding_normalize::utf8_decode($aprocedure->comment);
+						$result->elements[$index]->sql = encoding_normalize::utf8_decode($aprocedure->sql);
+						$result->elements[$index]->params = encoding_normalize::utf8_decode($aprocedure->params);
+						$result->elements[$index]->current_attached_set = encoding_normalize::utf8_decode($aprocedure->current_attached_set);
 						if (isset($aprocedure->sets)) {
 							if (!is_array($aprocedure->sets))
 								$result->elements[$index]->sets = array($result->elements[$index]->sets);
 							foreach($result->elements[$index]->sets as $set_index => $aset) {
-								$result->elements[$index]->sets[$set_index]->set_caption = utf8_decode($result->elements[$index]->sets[$set_index]->set_caption);
+								$result->elements[$index]->sets[$set_index]->set_caption = encoding_normalize::utf8_decode($result->elements[$index]->sets[$set_index]->set_caption);
 							}
 						}
 					}

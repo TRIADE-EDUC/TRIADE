@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Yves PRATTER                                                   |
 // +-------------------------------------------------+
-// $Id: doc_num_data.php,v 1.19 2018-06-15 13:21:33 dgoron Exp $
+// $Id: doc_num_data.php,v 1.20 2023/01/03 15:10:03 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path     = ".";                            
 $base_auth     = ""; //"CIRCULATION_AUTH";  
 $base_title    = "";    
@@ -14,6 +14,8 @@ $base_noheader = 1;
 $base_nobody   = 1;
 $base_nosession   = 1;
 
+global $class_path, $msg, $explnum_id, $force_download;
+global $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid;
 
 require_once ("$base_path/includes/init.inc.php");  
 require_once ($class_path."/explnum.class.php"); 
@@ -21,6 +23,7 @@ require_once ($class_path."/explnum.class.php");
 //gestion des droits
 require_once($class_path."/acces.class.php");
 
+$explnum_id = intval($explnum_id);
 $explnum = new explnum($explnum_id);
 
 if (!$explnum->explnum_id) {
@@ -29,7 +32,7 @@ if (!$explnum->explnum_id) {
 
 $id_for_rigths = $explnum->explnum_notice;
 if($explnum->explnum_bulletin != 0){
-	//si bulletin, les droits sont rattachÃ©s Ã  la notice du bulletin, Ã  dÃ©faut du pÃ©rio...
+	//si bulletin, les droits sont rattachés à la notice du bulletin, à défaut du pério...
 	$req = "select bulletin_notice,num_notice from bulletins where bulletin_id =".$explnum->explnum_bulletin;
 	$res = pmb_mysql_query($req);
 	if(pmb_mysql_num_rows($res)){
@@ -71,7 +74,7 @@ if( $rights & 4 || (is_null($dom_1))){
 			if ($file_name) header('Content-Disposition: inline; filename="'.$file_name.'"');
 		}
 		session_write_close();
-		pmb_mysql_close($dbh);
+		pmb_mysql_close();
 		header("Content-Type: ".$explnum->explnum_mimetype);
 		header("Content-Length: ".$size);
 		if($content){

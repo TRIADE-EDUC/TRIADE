@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax.js,v 1.34 2018-06-14 07:36:49 dgoron Exp $
+// $Id: ajax.js,v 1.44.2.2.2.3 2025/04/07 14:59:15 dgoron Exp $
 
 requete=new Array();
 line=new Array();
@@ -11,13 +11,18 @@ ids=new Array();
 dontblur=false;
 timers=new Array();
 ajax_stat=new Array();//Permet de savoir si une requete Ajax est d�j� en cours
+var pmb_dom_content_loaded = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+	pmb_dom_content_loaded = true;
+});
 
 function isFirefox1() {
 	if(navigator.userAgent.indexOf("Firefox")!=-1){
 		var versionindex=navigator.userAgent.indexOf("Firefox")+8
 		if (parseInt(navigator.userAgent.substr(versionindex))>1) {
 			if (parseInt(navigator.userAgent.substr(versionindex))==2) {
-				if (navigator.userAgent.substr(versionindex,7)=="2.0.0.2") 
+				if (navigator.userAgent.substr(versionindex,7)=="2.0.0.2")
 					return false;
 				else
 					return true;
@@ -37,7 +42,7 @@ function findPos(obj) {
 				curtop += obj.offsetTop;
 		      }else{
 			    break;
-		      }	
+		      }
 		}
 	}
 	return [curleft,curtop];
@@ -63,7 +68,7 @@ function simulate_event(id) {
 		if (document.getElementById(id).value=="") {
 			document.getElementById(id).value="*";
 		}
-		setTimeout("show_simulate('"+id+"')",400);		
+		setTimeout("show_simulate('"+id+"')",400);
 	}
 }
 
@@ -72,7 +77,7 @@ function ajax_resize_element(input){
 	n=ids.length;
 	if (input.getAttribute("completion")) {
 		if (((input.getAttribute("type")=="text")||(input.nodeName=="TEXTAREA"))&&(input.getAttribute("id"))) {
-			ids[n]=input.getAttribute("id");		
+			ids[n]=input.getAttribute("id");
 			id=ids[n];
 			w=input.clientWidth
 			if(w) {
@@ -94,11 +99,11 @@ function ajax_resize_elements(){
 	}
 }
 
-function ajax_pack_element(inputs) {
+function ajax_parse_element(inputs) {
 	var id="";
 	n=ids.length;
 	if (inputs.getAttribute("completion")) {
-		if (((inputs.getAttribute("type")=="text")||(inputs.nodeName=="TEXTAREA"))&&(inputs.getAttribute("id"))) {
+		if (((inputs.getAttribute("type")=="text")||inputs.getAttribute("type")=="email"||(inputs.nodeName=="TEXTAREA"))&&(inputs.getAttribute("id"))) {
 			ids[n]=inputs.getAttribute("id");
 			id=ids[n];
 			//Insertion d'un div parent
@@ -122,7 +127,10 @@ function ajax_pack_element(inputs) {
 			d1.style.position="absolute";
 			d1.style.backgroundColor="#FFFFFF";
 			d1.style.zIndex=1000;
-			document.getElementById('att').appendChild(d1);
+			var att = document.getElementById('att');
+			if (att) {
+				att.appendChild(d1);
+			}
 			if (input.addEventListener) {
 				input.addEventListener("keyup",function(e) { ajax_update_info(e,'up'); },false);
 				input.addEventListener("blur",function(e) { ajax_hide_list(e); },false);
@@ -139,38 +147,62 @@ function ajax_pack_element(inputs) {
 	requete[id]="";
 	line[id]=0;
 	not_show[id]=true;
-	last_word[id]="";	
+	last_word[id]="";
+}
+
+function ajax_pack_element(inputs, domContentLoaded) {
+	if (domContentLoaded || pmb_dom_content_loaded) {
+		ajax_parse_element(inputs);
+	} else {
+		addLoadEvent(
+			function() {
+				ajax_parse_element(inputs);
+            }
+        );
+	}
 }
 
 function active_autocomplete(inputs) {
 	var inputs=document.getElementsByTagName("input");
 	for (i=0; i<inputs.length; i++) {
 		if (inputs[i].getAttribute("completion")) {
-			if (((inputs[i].getAttribute("type")=="text")||(inputs[i].nodeName=="TEXTAREA"))&&(inputs[i].getAttribute("id"))) {			
+			if (((inputs[i].getAttribute("type")=="text")||(inputs[i].nodeName=="TEXTAREA"))&&(inputs[i].getAttribute("id"))) {
 				//on remet l'autocomplete du navigateur...
-				inputs[i].setAttribute("autocomplete","on");	
+				inputs[i].setAttribute("autocomplete","on");
 			}
 		}
 	}
 }
 
 function ajax_parse_dom() {
-	var inputs=document.getElementsByTagName("input");
-	for (i=0; i<inputs.length; i++) {
-		ajax_pack_element(inputs[i]);
+    document.addEventListener('DOMContentLoaded', function() {
+        ajax_parse_elements();
+    });
+}
+
+function ajax_parse_elements() {
+	var inputs = document.getElementsByTagName("input");
+	for (i = 0; i < inputs.length; i++) {
+		ajax_pack_element(inputs[i], true);
 	}
 	var textareas=document.getElementsByTagName("textarea");
-	for (i=0; i<textareas.length; i++) {
-		ajax_pack_element(textareas[i]);
+	for (i = 0; i < textareas.length; i++) {
+		ajax_pack_element(textareas[i], true);
 	}
 }
 
 function ajax_hide_list(e) {
 	if (!dontblur) {
-		if (e.target) var id=e.target.getAttribute("id"); else var id=e.srcElement.getAttribute("id");
-		setTimeout("document.getElementById('d"+id+"').style.display='none'; not_show['"+id+"']=true;",500);
+		if (e.target) {
+			var id=e.target.getAttribute("id");
+		} else {
+			var id=e.srcElement.getAttribute("id");
+		}
+		if(document.getElementById('d'+id)) {
+			setTimeout("document.getElementById('d"+id+"').style.display='none'; not_show['"+id+"']=true;",500);
+		}
 	} else dontblur=false;
-}		
+}
 
 function ajax_set_datas(sp_name,id) {
 	var sp=document.getElementById(sp_name);
@@ -203,22 +235,22 @@ function ajax_set_datas(sp_name,id) {
 	not_show[id]=true;
 	if(callback) window[callback](id);
 }
-		
+
 function ajax_update_info(e,code) {
 	if(e.target) {
 		var id=e.target.getAttribute("id");
 	} else {
 		var id=e.srcElement.getAttribute("id");
 	}
-	
+
 	if((code == "down") && (e.keyCode != 13)){
 		return;
 	}
-	
+
 	if (document.getElementById(id).getAttribute("disableCompletion")=='true') {
 		return;
 	}
-	
+
 	switch (e.keyCode) {
 		case 27:	//Echap
 			if (document.getElementById("d"+id).style.display=="block") {
@@ -256,7 +288,7 @@ function ajax_update_info(e,code) {
 					document.getElementById("d"+id).style.left=poss[0]+"px";
 					document.getElementById("d"+id).style.top=poss[1]+"px";
 					document.getElementById("d"+id).style.display='block';
-					
+
 					not_show[id]=false;
 					if (timers[id]) {
 						clearTimeout(timers[id]);
@@ -311,9 +343,9 @@ function ajax_update_info(e,code) {
 				document.getElementById("d"+id).style.display='none';
 				not_show[id]=true;
 				if(e.preventDefault){
-					e.preventDefault();//Firefox : Si je suis dans une liste je ne veux pas valider le formulaire quand je clic sur entr�e 
+					e.preventDefault();//Firefox : Si je suis dans une liste je ne veux pas valider le formulaire quand je clic sur entr�e
 				}else{
-					e.returnValue = false;//IE : Si je suis dans une liste je ne veux pas valider le formulaire quand je clic sur entr�e 
+					e.returnValue = false;//IE : Si je suis dans une liste je ne veux pas valider le formulaire quand je clic sur entr�e
 				}
 			}
 
@@ -357,7 +389,7 @@ function ajax_update_info(e,code) {
 						clearTimeout(timers[id]);
 					}
 				}
-				if (document.getElementById(id).value!=""){				
+				if (document.getElementById(id).value!=""){
 					if (timers[id]) {
 						clearTimeout(timers[id]);
 					}
@@ -425,26 +457,31 @@ function ajax_get_info(id) {
 	var autfield = '' ;
 	var linkfield = '' ;
 	var listfield = '';
-	var param1 = '';
-	var param2 = '';
-	
-	requete[id].open("POST","ajax_selector.php",true);
+	var att_id_filter = '' ;
+	var param1 = '' ;
+	var param2 = '' ;
+	var from_contrib = '';
+
+	if(!base_path) var base_path = '.';
+	requete[id].open("POST",base_path+"/ajax_selector.php",true);
 	requete[id].onreadystatechange=function() { ajax_show_info(id) };
 	requete[id].setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	
-	if (document.getElementById(id).getAttribute("autexclude")) autexclude = document.getElementById(id).getAttribute("autexclude") ;
-	if (document.getElementById(id).getAttribute("linkfield")) linkfield = document.getElementById(document.getElementById(id).getAttribute("linkfield")).value ;
-	if (document.getElementById(id).getAttribute("autfield")) autfield = document.getElementById(id).getAttribute("autfield") ;
-	if (document.getElementById(id).getAttribute("param1")) param1 = document.getElementById(id).getAttribute("param1") ;
-	if (document.getElementById(id).getAttribute("param2")) param2 = document.getElementById(id).getAttribute("param2") ;
+
+	if (document.getElementById(id).getAttribute("autexclude")) autexclude = document.getElementById(id).getAttribute("autexclude");
+	if (document.getElementById(id).getAttribute("linkfield") && document.getElementById(document.getElementById(id).getAttribute("linkfield"))) linkfield = document.getElementById(document.getElementById(id).getAttribute("linkfield")).value;
+	if (document.getElementById(id).getAttribute("autfield")) autfield = document.getElementById(id).getAttribute("autfield");
+	if (document.getElementById(id).getAttribute("param1")) param1 = document.getElementById(id).getAttribute("param1");
+	if (document.getElementById(id).getAttribute("param2")) param2 = document.getElementById(id).getAttribute("param2");
+	if (document.getElementById(id).getAttribute("att_id_filter")) att_id_filter = document.getElementById(id).getAttribute("att_id_filter");
+	if (document.getElementById(id).getAttribute("from_contrib")) from_contrib = document.getElementById(id).getAttribute("from_contrib");
 	if (document.getElementById(id).getAttribute("listfield")){
 		var reg = new RegExp("[,]","g");
-		var tab = (document.getElementById(id).getAttribute("listfield")).split(reg);		
+		var tab = (document.getElementById(id).getAttribute("listfield")).split(reg);
 		for(var k=0;k<tab.length;k++){
 			listfield = listfield + "&"+tab[k]+"="+(document.getElementById(tab[k]).value);
 		}
 	}
-	requete[id].send("datas="+encode_URL(document.getElementById(id).value)+"&id="+encode_URL(id)+"&completion="+encode_URL(document.getElementById(id).getAttribute("completion"))+"&persofield="+encode_URL(document.getElementById(id).getAttribute("persofield"))+"&autfield="+encode_URL(autfield)+"&autexclude="+encode_URL(autexclude)+"&linkfield="+encode_URL(linkfield)+listfield+"&param1="+encode_URL(param1)+"&param2="+encode_URL(param2));
+	requete[id].send("datas="+encode_URL(document.getElementById(id).value)+"&id="+encode_URL(id)+"&completion="+encode_URL(document.getElementById(id).getAttribute("completion"))+"&persofield="+encode_URL(document.getElementById(id).getAttribute("persofield"))+"&autfield="+encode_URL(autfield)+"&autexclude="+encode_URL(autexclude)+"&linkfield="+encode_URL(linkfield)+listfield+"&att_id_filter="+encode_URL(att_id_filter)+"&param1="+encode_URL(param1)+"&param2="+encode_URL(param2)+"&from_contrib="+encode_URL(from_contrib));
 }
 
 function ajax_requete_wait(id) {
@@ -467,7 +504,7 @@ function ajax_requete_wait_remove(id) {
 		wait=document.getElementById("patience_"+id);
 		wait.parentNode.removeChild(wait);
 	} catch(err){}
-	
+
 	//Controle du statut des requetes ajax
 	if(ajax_stat[id] == "InProgress"){
 		ajax_stat[id] = "End";
@@ -477,7 +514,7 @@ function ajax_requete_wait_remove(id) {
 }
 
 function ajax_timer_creerRequete(id) {
-	
+
 	if(ajax_stat[id] == "Start" || ajax_stat[id] == "InProgress"){
 		ajax_stat[id] = "InProgress";
 		return;//Pas d'appel ajax temps qu'il y en a une en cours
@@ -493,19 +530,23 @@ function ajax_timer_creerRequete(id) {
 
 function ajax_control_submit_form(id){
 	var node = document.getElementById(id);
-	while(node.parentNode!=null){
-		if(node.nodeName.toUpperCase() == "FORM" ){
-			break;
-		}else{
-			node = node.parentNode;
+	if (node) {
+		while (node.parentNode!=null) {
+			if (node.nodeName.toUpperCase() == "FORM" ) {
+				break;
+			} else {
+				node = node.parentNode;
+			}
 		}
-	}
-	var onsubmit = node.onsubmit;
-	node.onsubmit = function(event){
-		if(document.getElementById("d"+id).style.display == "block"){
-			return false;
-		}else{
-			return onsubmit();
+
+		var onsubmit = node.onsubmit;
+		node.onsubmit = function(event) {
+			const node = document.getElementById("d"+id);
+			if (node && node.style.display == "block") {
+				return false;
+			} else {
+				return onsubmit();
+			}
 		}
 	}
 }

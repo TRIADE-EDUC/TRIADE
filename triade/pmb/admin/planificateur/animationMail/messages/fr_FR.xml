@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le mailing
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2021/03/12 10:21:49 gneveu Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_animation">Type de communication</entry>
+	<entry code="planificateur_mailing_email_cc">Destinataire supplémentaire en copie cachée</entry>
+	<entry code="animation_mailing_send_success">Envoi effectué</entry>
+	<entry code="animation_mailing_send_fail">Échec de l'envoi</entry>
+	<entry code="animation_mailing_no_send">Pas de communication à envoyer</entry>
+	<entry code="planificateur_mailing_list_choice">Choix du type de communication</entry>
+</XMLlist>

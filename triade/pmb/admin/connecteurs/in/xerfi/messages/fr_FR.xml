@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2020/06/10 12:49:20 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="xerfi_ws">Web Service</entry>
+	<entry code="xerfi_wsdl_url">URL du WSDL</entry>
+	<entry code="xerfi_login">Identifiant</entry>
+	<entry code="xerfi_pwd">Mot de passe</entry>
+	<entry code="xerfi_search_params">Paramétrage de la recherche</entry>
+	<entry code="xerfi_maxCount">Nombre maximum de résultats renvoyés</entry>
+</XMLlist>

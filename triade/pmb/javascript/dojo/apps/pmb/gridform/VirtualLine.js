@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: VirtualLine.js,v 1.4 2015-12-10 10:04:11 vtouchard Exp $
+// $Id: VirtualLine.js,v 1.4 2015/12/10 10:04:11 vtouchard Exp $
 
 
 define(['dojo/_base/declare', 

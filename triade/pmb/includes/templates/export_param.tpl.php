@@ -1,27 +1,13 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export_param.tpl.php,v 1.7 2019-05-27 09:24:47 ngantier Exp $
+// $Id: export_param.tpl.php,v 1.8 2021/03/15 09:02:51 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $form_entete_param, $form_param, $pmb_map_activate, $msg, $current_module;
-
-$form_entete_param="
-<form class='form-$current_module'  name=\"export_param_form\" action=\"!!action!!\" method=\"post\">
-	<h3>!!param_title!!</h3>
-	<div class='form-contenu'>
-		!!form_param!!
-		<div class='row'>
-			<input class=\"bouton\" type=\"button\" onclick=\"document.location='./admin.php?categ=convert';\" value=$msg[76] />
-			<input id=\"btnsubmit\"class=\"bouton\" type=\"submit\" onclick=\"this.form.act.value='update';this.form.submit();\" value=$msg[77] />
-			<input type='hidden'  name='act' value=''>
-		</div>
-	</div>
-</form>
-";
+global $form_param, $pmb_map_activate, $msg;
 	
 $form_param ="
 <div class='row'>

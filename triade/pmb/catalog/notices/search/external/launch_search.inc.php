@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: launch_search.inc.php,v 1.12 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: launch_search.inc.php,v 1.13.10.2 2025/03/04 11:05:37 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -32,11 +32,11 @@ if ($_SESSION["ext_type"]=="simple") {
 	}
 	if (!$flag_found) {
 		//Pas trouve, on verifie qu'il y a au moins une source
-		if (!count($source)) {
+		if (!is_countable($source) || !count($source)) {
 			print "<script type='text/javascript' >alert(\"".$msg["connecteurs_no_source"]."\"); history.go(-1);</script>";
 			exit();
 		}
-		//Pas trouve, on dÃ©cale tout !!
+		//Pas trouve, on décale tout !!
 		for ($i=count($search)-1; $i>=0; $i--) {
 			$search[$i+1]=$search[$i];
 			decale("field_".$i."_".$search[$i],"field_".($i+1)."_".$search[$i]);
@@ -64,6 +64,25 @@ if (isset($notice_id)) {
 } else {
 	$notice_id_info = "";
 }
+
+if ($sc->rec_history) {
+    if (!isset($_SESSION["session_history"])) $_SESSION["session_history"] = array();
+    if ((string)$page=="" || $page==0) {
+        $_SESSION["CURRENT"]=count($_SESSION["session_history"]);
+        $_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["serialized_search"]=$sc->serialize_search();
+        $_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["GET"]=$_GET;
+        $_POST["page"]=1;
+        $page=1;
+    }
+}
 //Effectue la recherche et l'affiche
 $sc->show_results_unimarc("./catalog.php?categ=search&mode=7&sub=launch".$notice_id_info,"./catalog.php?categ=search&mode=7".$notice_id_info,true);
+
+if ($sc->rec_history) {
+    if (!isset($_SESSION["session_history"])) $_SESSION["session_history"] = array();
+    if ($_SESSION["CURRENT"]!==false) {
+        $_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["serialized_search"]=$sc->serialize_search();
+        $_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["GET"]=$_GET;
+    }
+}
 ?>

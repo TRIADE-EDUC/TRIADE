@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_workshop_ui.js,v 1.23 2017-11-30 10:53:34 dgoron Exp $
+// $Id: nomenclature_workshop_ui.js,v 1.23 2017/11/30 10:53:34 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instruments_list_ui", "apps/nomenclature/nomenclature_instruments_list", "dojo/on", "dojo/dom-construct", "dojo/topic", "dojo/_base/lang", "dijit/registry","dijit/_WidgetBase", "dojo/dom-attr"], function(declare, Instruments_list_ui, Instruments_list, on, domConstruct, topic, lang, registry, _WidgetBase, domAttr){

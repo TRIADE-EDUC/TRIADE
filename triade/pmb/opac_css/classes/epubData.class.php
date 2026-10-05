@@ -1,23 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epubData.class.php,v 1.5 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: epubData.class.php,v 1.6 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class epubData {
 	
 	public $filename = ''; //Fichier source de l'eBook
-	public $opfFile = ''; //Fichier d'entrÃ©e de l'eBook
-	public $opfDir = ''; //RÃ©pertoire d'entrÃ©e de l'eBook
-	public $metas = array(); //Tableau des mÃ©tadatas de l'eBook
+	public $opfFile = ''; //Fichier d'entrée de l'eBook
+	public $opfDir = ''; //Répertoire d'entrée de l'eBook
+	public $metas = array(); //Tableau des métadatas de l'eBook
 	public $items = array(); //Liste des fichiers composant l'eBook
 	public $spine = array(); //Ordre d'affichage des fichiers
-	public $spineToc = ''; //Fichier table des matiÃ¨res
+	public $spineToc = ''; //Fichier table des matières
 	public $spinePageMap = ''; //Fichier liste des pages
 	public $pages = array(); //Liste des pages
-	public $toc = array(); //Table des matiÃ¨res
+	public $toc = array(); //Table des matières
 	public $charset = ''; //Charset de l'epub
 	
 	//Constructeur
@@ -34,11 +34,11 @@ class epubData {
 				print ("Fichier eBook non valide : ".$this->filename.".\n");
 			}
 		} else {
-			print ("Fichier non trouvÃ© : '".$filename."'.\n");
+			print ("Fichier non trouvé : '".$filename."'.\n");
 		}
 	}
 	
-	//RÃ©cupÃ©ration du contenu texte en vue d'indexation de l'eBook
+	//Récupération du contenu texte en vue d'indexation de l'eBook
 	public function getFullTextContent($otherCharset='utf-8') {
 		$chaineRetour = '';
 		foreach ($this->spine as $spinId) {
@@ -48,12 +48,12 @@ class epubData {
 			$chaineRetour .= strip_tags($contents);			
 		}
 		if ($otherCharset != "utf-8") {
-			$chaineRetour = utf8_decode($chaineRetour);
+			$chaineRetour = encoding_normalize::utf8_decode($chaineRetour);
 		}
 		return $chaineRetour;
 	}
 	
-	//RÃ©cupÃ©ration du contenu d'une page
+	//Récupération du contenu d'une page
 	public function getPageContent($page) {
 		$chaineRetour = $this->getContentFile($this->opfDir.$page);
 		if (!preg_match('`meta charset`',$chaineRetour)) {
@@ -64,7 +64,7 @@ class epubData {
 	
 	private function isValidEpub() {
 		$isValid = true;
-		//On vÃ©rifie le fichier "mimetype" et son contenu
+		//On vérifie le fichier "mimetype" et son contenu
 		$mime = $this->getContentFile("mimetype");
 		if (!preg_match('(application\/epub\+zip)', $mime)) {
 			$isValid = false;
@@ -72,7 +72,7 @@ class epubData {
 		return $isValid;
 	}
 	
-	//RÃ©cupÃ©ration des mÃ©tadatas
+	//Récupération des métadatas
 	private function fetchMetadatas() {
 		//On ouvre le container.xml
 		$contents = $this->getContentFile("META-INF/container.xml");
@@ -90,7 +90,7 @@ class epubData {
 			//On cherche le charset
 			$this->charset = strtolower(mb_detect_encoding($contents));
 			$xml = simplexml_load_string($contents);		
-			//on dÃ©clare les namespaces
+			//on déclare les namespaces
 			$namespaces = $xml->getNamespaces(true);
 			foreach ($namespaces as $k=>$v) {
 				if (trim($k)) {
@@ -105,7 +105,7 @@ class epubData {
 		}
 	}
 	
-	//RÃ©cupÃ©ration des items de l'eBook
+	//Récupération des items de l'eBook
 	private function fetchItems() {
 		$contents = $this->getContentFile($this->opfDir.$this->opfFile);
 		if (trim($contents)) {
@@ -117,7 +117,7 @@ class epubData {
 		}
 	}
 	
-	//RÃ©cupÃ©ration de l'ordre d'affichage des fichiers
+	//Récupération de l'ordre d'affichage des fichiers
 	private function fetchSpine() {
 		$contents = $this->getContentFile($this->opfDir.$this->opfFile);
 		if (trim($contents)) {
@@ -130,7 +130,7 @@ class epubData {
 		}
 	}
 	
-	//RÃ©cupÃ©ration des pages de l'eBook
+	//Récupération des pages de l'eBook
 	private function fetchPages() {
 		$contents = $this->getContentFile($this->opfDir.$this->items[$this->spinePageMap]["href"]);
 		if (trim($contents)) {
@@ -154,7 +154,7 @@ class epubData {
 		}
 	}
 	
-	//RÃ©cupÃ©ration de la table des matiÃ¨res
+	//Récupération de la table des matières
 	private function fetchToc() {
 		$contents = $this->getContentFile($this->opfDir.$this->items[$this->spineToc]["href"]);
 			if (trim($contents)) {
@@ -165,7 +165,7 @@ class epubData {
 		}
 	}
 	
-	//mÃ©thode pour retrouver de faÃ§on rÃ©currente les points de navigation
+	//méthode pour retrouver de façon récurrente les points de navigation
 	private function readNavPoint($simpleXmlObject,$level){
 		$tmpArray = array();
 		$tmpArray['playOrder'] = $this->decodeCharset($simpleXmlObject->attributes()->{'playOrder'});
@@ -197,7 +197,7 @@ class epubData {
 		}
 	}
 	
-	//Fonction de dÃ©codage selon l'environnement
+	//Fonction de décodage selon l'environnement
 	private function decodeCharset($string) {	
 		$string = htmlentities($string,ENT_QUOTES,$this->charset);
 		return $string;

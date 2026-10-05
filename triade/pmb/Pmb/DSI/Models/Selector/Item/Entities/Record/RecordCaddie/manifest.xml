@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.2 2023/11/13 08:21:06 rtigero Exp $ 
+-->
+
+<manifest>
+	<namespace>Pmb\DSI\Models\Selector\Item\Entities\Record\RecordCaddie\RecordCaddieSelector</namespace>
+	<type>subselector</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2023-11-03</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortName\RecordSortName</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortPert\RecordSortPert</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortPublicationYear\RecordSortPublicationYear</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortTypdoc\RecordSortTypdoc</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortCustomField\RecordSortCustomField</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Record\RecordSortAuthor\RecordSortAuthor</sort>
+	</compatibility>
+</manifest>

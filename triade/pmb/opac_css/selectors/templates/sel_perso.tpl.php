@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_perso.tpl.php,v 1.1 2018-07-27 08:54:03 dgoron Exp $
+// $Id: sel_perso.tpl.php,v 1.4 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
+
+global $msg, $perso_name, $dyn, $p1, $p2, $base_url;
+global $sel_header, $jscript, $sel_search_form, $sel_footer;
 
 //-------------------------------------------
 //	$sel_header : header
@@ -22,7 +25,7 @@ $sel_header = "
 //-------------------------------------------
 
 $jscript_ = "
-<script type='text/javascript'>
+<script>
 <!--
 function set_parent_w(f_caller, id_value, libelle_value,w)
 {
@@ -31,9 +34,15 @@ function set_parent_w(f_caller, id_value, libelle_value,w)
 	if (dyn) {
 		n_chp=get_parent_value(f_caller, 'n_'+nomchamp);
 		flag = 1;
-		//VÃ©rification que la valeur du champ perso n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que la valeur du champ perso n'est pas déjà sélectionnée
 		for (i=0; i<n_chp; i++) {	
-			if (w.opener.document.getElementById('f_'+nomchamp+'_'+i).value==libelle_value) {
+            if (w.opener != null) {
+    			node = w.opener.document.getElementById('f_'+nomchamp+'_'+i);
+			} else {
+    			node = parent.document.getElementById('f_'+nomchamp+'_'+i);
+            }
+
+			if (node.value==libelle_value) {
 				alert('".$msg["persovalue_already_in_use"]."');
 				flag = 0;
 				break;
@@ -41,18 +50,43 @@ function set_parent_w(f_caller, id_value, libelle_value,w)
 		}
 		if (flag) {
 			for (i=0; i<n_chp; i++) {
-				if ((w.opener.document.getElementById('f_'+nomchamp+'_'+i).value==0)||(w.opener.document.getElementById('f_'+nomchamp+'_'+i).value=='')) break;
+                if (w.opener != null) {
+        			node = w.opener.document.getElementById('f_'+nomchamp+'_'+i);
+    			} else {
+        			node = parent.document.getElementById('f_'+nomchamp+'_'+i);
+                }
+				if ((node.value==0)||(node.value=='')) break;
 			}
 
 			try{
-				if (i==n_chp) w.opener.add_$perso_name();
+				if (i==n_chp) {
+
+                    if (w.opener != null) {
+            			w.opener.add_$perso_name();
+        			} else {
+                        parent.add_$perso_name();
+                    }
+                    
+                }
 			} catch(e){
 				i=0;
-				w.opener.document.getElementById('f_'+nomchamp+'_'+i).value=reverse_html_entities(libelle_value);
+                if (w.opener != null) {
+        			node = w.opener.document.getElementById('f_'+nomchamp+'_'+i);
+    			} else {
+        			node = parent.document.getElementById('f_'+nomchamp+'_'+i);
+                }
+				node.value=reverse_html_entities(libelle_value);
 				closeCurrentEnv();
 			}
-			w.opener.document.getElementById(nomchamp+'_'+i).value = id_value;
-			w.opener.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
+
+
+            if (w.opener != null) {
+    			w.opener.document.getElementById(nomchamp+'_'+i).value = id_value;
+    			w.opener.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
+			} else {
+    			parent.document.getElementById(nomchamp+'_'+i).value = id_value;
+    			parent.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
+            }
 		}
 	} else {
 		set_parent_value(f_caller, '".$p1."', id_value);
@@ -65,7 +99,7 @@ function set_parent_w(f_caller, id_value, libelle_value,w)
 ";
 
 $jscript = $jscript_."
-<script type='text/javascript'>
+<script>
 <!--
 function set_parent(f_caller, id_value, libelle_value)
 {
@@ -84,7 +118,7 @@ $sel_search_form ="
 &nbsp;
 <input type='submit' class='bouton_small' value='$msg[142]' /><br />
 </form>
-<script type='text/javascript'>
+<script>
 <!--
 	document.forms['search_form'].elements['f_user_input'].focus();
 -->

@@ -1,6 +1,6 @@
 /******************************************************************* 
 * 
-* File    : JSFX_Browser.js Â© JavaScript-FX.com
+* File    : JSFX_Browser.js © JavaScript-FX.com
 * 
 * Created : 2000/07/15 
 * 
@@ -15,7 +15,7 @@
 * 2001-03-17	2.0		Converted for javascript-fx
 ***********************************************************************/  
 // +-------------------------------------------------+
-// $Id: JSFX_Browser.js,v 1.2 2008-11-10 13:26:06 touraine37 Exp $
+// $Id: JSFX_Browser.js,v 1.2 2008/11/10 13:26:06 touraine37 Exp $
 
 if(!window.JSFX)
 	JSFX=new Object();

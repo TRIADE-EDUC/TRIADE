@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: marc.xsl,v 1.4 2017-02-09 13:55:40 jpermanne Exp $ -->
+$Id: marc.xsl,v 1.4 2017/02/09 13:55:40 jpermanne Exp $ -->
 
 <xsl:stylesheet version = '1.0'
      xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>

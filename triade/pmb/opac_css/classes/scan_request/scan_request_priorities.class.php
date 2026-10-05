@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_request_priorities.class.php,v 1.1 2016-01-07 15:34:16 apetithomme Exp $
+// $Id: scan_request_priorities.class.php,v 1.1 2016/01/07 15:34:16 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,10 +11,10 @@ require_once($class_path.'/scan_request/scan_request_priority.class.php');
 class scan_request_priorities {
 	
 	/**
-	 * Tableau des prioritÃ©s
+	 * Tableau des priorités
 	 * @var scan_request_priority
 	 */
-	protected $scan_request_priorities;	//tableau des prioritÃ©s 
+	protected $scan_request_priorities;	//tableau des priorités 
 	
 	public function __construct(){
 		$this->fetch_data();

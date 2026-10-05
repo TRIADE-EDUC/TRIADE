@@ -1,54 +1,55 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauv_sauvegarde.class.php,v 1.11 2017-11-07 15:20:00 ngantier Exp $
+// $Id: sauv_sauvegarde.class.php,v 1.13 2022/07/27 10:31:44 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 //Formulaire de gestion des lieux
+global $include_path;
 include ($include_path."/templates/sauvegardes_form.tpl.php");
 class sauv_sauvegarde {
 
-	//DonnÃ©es
+	//Données
 	public $sauv_sauvegarde_id; //Identifiant
 	public $sauv_sauvegarde_nom; //Nom de la sauvegarde
-	public $sauv_sauvegarde_file_prefix; //PÃ©fixe du fichier de sauvegarde
+	public $sauv_sauvegarde_file_prefix; //Péfixe du fichier de sauvegarde
 	public $sauv_sauvegarde_tables; //Groupes de tables
 	public $sauv_sauvegarde_lieux; //Lieux de sauvegarde
-	public $sauv_sauvegarde_users; //Utilisateurs autorisÃ©s
+	public $sauv_sauvegarde_users; //Utilisateurs autorisés
 	public $sauv_sauvegarde_compress; //Compression
-	public $sauv_sauvegarde_compress_method; //MÃ©thode de compression
+	public $sauv_sauvegarde_compress_method; //Méthode de compression
 	public $sauv_sauvegarde_zip_command; //Commande compression
-	public $sauv_sauvegarde_unzip_command; //Commande de dÃ©compression
-	public $sauv_sauvegarde_zip_ext; //Extension du fichier zippÃ©
+	public $sauv_sauvegarde_unzip_command; //Commande de décompression
+	public $sauv_sauvegarde_zip_ext; //Extension du fichier zippé
 	public $sauv_sauvegarde_crypt; //Cryptage
-	public $sauv_sauvegarde_key1; //ClÃ© de cryptage 1
-	public $sauv_sauvegarde_key2; //ClÃ© de cryptage 2
-	public $sauv_sauvegarde_erase_keys; //Ecraser les clÃ©s
+	public $sauv_sauvegarde_key1; //Clé de cryptage 1
+	public $sauv_sauvegarde_key2; //Clé de cryptage 2
+	public $sauv_sauvegarde_erase_keys; //Ecraser les clés
 	public $act; //Action
 
 	public function __construct() {
 		global $sauv_sauvegarde_id; //Identifiant
 		global $sauv_sauvegarde_nom; //Nom de la sauvegarde
-		global $sauv_sauvegarde_file_prefix; //PÃ©fixe du fichier de sauvegarde
+		global $sauv_sauvegarde_file_prefix; //Péfixe du fichier de sauvegarde
 		global $sauv_sauvegarde_tables; //Groupes de tables
 		global $sauv_sauvegarde_lieux; //Lieux de sauvegarde
-		global $sauv_sauvegarde_users; //Utilisateurs autorisÃ©s
+		global $sauv_sauvegarde_users; //Utilisateurs autorisés
 		global $sauv_sauvegarde_compress; //Compression
-		global $sauv_sauvegarde_compress_method; //MÃ©thode de compression
+		global $sauv_sauvegarde_compress_method; //Méthode de compression
 		global $sauv_sauvegarde_zip_command; //Commande compression
-		global $sauv_sauvegarde_unzip_command; //Commande de dÃ©compression
-		global $sauv_sauvegarde_zip_ext; //Extension du fichier zippÃ©
+		global $sauv_sauvegarde_unzip_command; //Commande de décompression
+		global $sauv_sauvegarde_zip_ext; //Extension du fichier zippé
 		global $sauv_sauvegarde_crypt; //Cryptage
-		global $sauv_sauvegarde_key1; //ClÃ© de cryptage 1
-		global $sauv_sauvegarde_key2; //ClÃ© de cryptage 2
-		global $sauv_sauvegarde_erase_keys; //Ecraser les clÃ©s
+		global $sauv_sauvegarde_key1; //Clé de cryptage 1
+		global $sauv_sauvegarde_key2; //Clé de cryptage 2
+		global $sauv_sauvegarde_erase_keys; //Ecraser les clés
 		global $act; //Action
 
 
-		//Stockage des donnÃ©es reÃ§ues
-		$this-> sauv_sauvegarde_id = $sauv_sauvegarde_id;
+		//Stockage des données reçues
+		$this-> sauv_sauvegarde_id = intval($sauv_sauvegarde_id);
 		$this-> sauv_sauvegarde_nom = $sauv_sauvegarde_nom;
 		$this-> sauv_sauvegarde_file_prefix = $sauv_sauvegarde_file_prefix;
 		$this-> sauv_sauvegarde_tables = $sauv_sauvegarde_tables;
@@ -95,8 +96,7 @@ class sauv_sauvegarde {
 		
 	}
 	
-	public function makeUpdateQuery()
-	{
+	public function makeUpdateQuery() {
 		$r_tables=@implode(",",$this->sauv_sauvegarde_tables);
 		$r_lieux=@implode(",",$this->sauv_sauvegarde_lieux);
 		$r_users=@implode(",",$this->sauv_sauvegarde_users);
@@ -126,17 +126,16 @@ class sauv_sauvegarde {
 		return $requete;
 	}
 	
-	//Traitement de l'action reÃ§ue du formulaire (Ã  appeller juste aprÃ¨s l'instanciation de la classe)
-	//Renvoie le formulaire Ã  afficher
+	//Traitement de l'action reçue du formulaire (à appeller juste après l'instanciation de la classe)
+	//Renvoie le formulaire à afficher
 	public function proceed() {
-		
 		global $first;
 		
 		switch ($this -> act) {
 			//Enregistrer
 			case "update" :
 				$this->verifGeneral();
-				//Si sauv_sauvegarde_id vide alors crÃ©ation
+				//Si sauv_sauvegarde_id vide alors création
 				if ($this -> sauv_sauvegarde_id == "") {
 					$this->verifName();
 					$requete = "insert into sauv_sauvegardes (sauv_sauvegarde_nom) values('')";
@@ -145,7 +144,7 @@ class sauv_sauvegarde {
 					$first="";
 					$this->sauv_sauvegarde_erase_keys=1;
 				}
-				//Update avec les donnÃ©es reÃ§ues
+				//Update avec les données reçues
 				$requete = $this->makeUpdateQuery();
 				pmb_mysql_query($requete) or die(pmb_mysql_error());
 				$first="";
@@ -164,7 +163,7 @@ class sauv_sauvegarde {
 				break;
 				//Visualiser
 			default :
-				//Ne rien faire, le numÃ©ro de la fiche est dÃ©jÃ  dans $this->sauv_lieu_id
+				//Ne rien faire, le numéro de la fiche est déjà dans $this->sauv_lieu_id
 		}
 		return $this -> showForm();
 	}
@@ -187,24 +186,22 @@ class sauv_sauvegarde {
 	}
 	
 
-	//PrÃ©aparation du formulaire pour affichage
+	//Préaparation du formulaire pour affichage
 	public function showForm() {
-		global $form;
-		global $first;
-		global $msg;
+		global $form, $first, $msg, $charset;
 		
-		//Si premiÃ¨re connexion
+		//Si première connexion
 		if (!$first) {
 			$form = "<h3>".$msg["sauv_sauvegardes_sel_or_add"]."</h3>";
 		} else {
 			//Si identifiant non vide
 			if ($this -> sauv_sauvegarde_id) {
-				//RÃ©cupÃ©ration des donnÃ©es de la fiche
+				//Récupération des données de la fiche
 				$requete="select sauv_sauvegarde_nom,sauv_sauvegarde_file_prefix,sauv_sauvegarde_tables,sauv_sauvegarde_lieux,sauv_sauvegarde_users,sauv_sauvegarde_compress,sauv_sauvegarde_compress_command,sauv_sauvegarde_crypt,sauv_sauvegarde_key1,sauv_sauvegarde_key2 from sauv_sauvegardes where sauv_sauvegarde_id=".$this -> sauv_sauvegarde_id;
 				$resultat = pmb_mysql_query($requete);
 				if (pmb_mysql_num_rows($resultat) != 0)
 					$r = pmb_mysql_fetch_object($resultat);
-				$form = str_replace("!!quel_proc!!", $r -> sauv_sauvegarde_nom, $form);
+				$form = str_replace("!!quel_proc!!", htmlentities($r->sauv_sauvegarde_nom, ENT_QUOTES, $charset), $form);
 				$form = str_replace("!!delete!!", "<input type=\"submit\" value=\"".$msg["sauv_supprimer"]."\" onClick=\"if (confirm('".$msg["sauv_sauvegardes_confirm_delete"]."')) { this.form.act.value='delete'; return true; } else { return false; }\" class=\"bouton\">", $form);
 			} else {
 				//Sinon : Nouvelle fiche
@@ -223,8 +220,8 @@ class sauv_sauvegarde {
 				$r->sauv_sauvegarde_key2 = '';
 			}
 			$form = str_replace("!!sauv_sauvegarde_id!!", $this -> sauv_sauvegarde_id, $form);
-			$form = str_replace("!!sauv_sauvegarde_nom!!", $r -> sauv_sauvegarde_nom, $form);
-			$form = str_replace("!!sauv_sauvegarde_file_prefix!!", $r->sauv_sauvegarde_file_prefix, $form);
+			$form = str_replace("!!sauv_sauvegarde_nom!!", htmlentities($r->sauv_sauvegarde_nom, ENT_QUOTES, $charset), $form);
+			$form = str_replace("!!sauv_sauvegarde_file_prefix!!", htmlentities($r->sauv_sauvegarde_file_prefix, ENT_QUOTES, $charset), $form);
 			$form = str_replace("!!sauv_sauvegarde_tables!!", $this->showSelectList($r->sauv_sauvegarde_tables,"sauv_tables","sauv_table_id","sauv_table_nom","sauv_sauvegarde_tables"), $form);
 			$form = str_replace("!!sauv_sauvegarde_lieux!!", $this->showSelectList($r->sauv_sauvegarde_lieux,"sauv_lieux","sauv_lieu_id","sauv_lieu_nom","sauv_sauvegarde_lieux"), $form);
 			$form = str_replace("!!sauv_sauvegarde_users!!", $this->showSelectList($r->sauv_sauvegarde_users,"users","userid","username","sauv_sauvegarde_users"), $form);
@@ -277,21 +274,22 @@ class sauv_sauvegarde {
 	//Affichage de la liste des lieux existants dans la base
 	//linkToForm : true = rend la liste interactive avec le formulaire
 	public function showTree($linkToForm = true) {
-		global $dbh;
-		global $msg;
+		global $msg, $charset;
 		
 		$tree = "<form><table class='nobrd'>\n";
 		$tree.= "<th class='brd' ".$msg["sauv_sauvegardes_tree_title"]."</th>\n";
-		//RÃ©cupÃ©ration de la liste
+		//Récupération de la liste
 		$requete = "select sauv_sauvegarde_id, sauv_sauvegarde_nom from sauv_sauvegardes order by sauv_sauvegarde_nom";
-		$resultat = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error());
+		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 		while ($res = pmb_mysql_fetch_object($resultat)) {
+			$res->sauv_sauvegarde_id = intval($res->sauv_sauvegarde_id);
+			
 			$tree.= "<tr><td class='nobrd'>";
 			$tree.= "<img src=\"images/file.png\" border=0 class='center'>&nbsp;";
 			if ($linkToForm == true) {
-				$tree.= "<a href=\"admin.php?categ=sauvegarde&sub=gestsauv&act=show&sauv_sauvegarde_id=".$res -> sauv_sauvegarde_id."&first=1\">";
+				$tree.= "<a href=\"admin.php?categ=sauvegarde&sub=gestsauv&act=show&sauv_sauvegarde_id=".$res->sauv_sauvegarde_id."&first=1\">";
 			}
-			$tree.= $res -> sauv_sauvegarde_nom;
+			$tree.= htmlentities($res->sauv_sauvegarde_nom, ENT_QUOTES, $charset);
 			if ($linkToForm == true) {
 				$tree.= "</a>";
 			}

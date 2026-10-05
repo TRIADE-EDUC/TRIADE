@@ -2,46 +2,40 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_build.class.php,v 1.5 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_build.class.php,v 1.10 2024/03/13 10:43:13 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/autoloader.class.php");
-if(!isset($autoloader)) {
-	$autoloader = new autoloader();
-}
-$autoloader->add_register("frbr_entities",true);
 
 require_once($class_path."/frbr/frbr_pages.class.php");
 
 class frbr_build {
-	
+
 	protected $object_id;
-	
+
 	protected $object_type;
-	
+
 	protected $page;
-	
+
 	protected $cadres;
-	
+
 	protected $datanodes_data;
-	
+
 	protected $datanodes_tree;
-	
+
 	protected static $instances = array();
-	
+
 	/**
-	 * 
+	 *
 	 * @var array frbr_entity_common_entity_datanode
 	 */
 	protected $datanodes;
-	
+
 	public function __construct($object_id=0, $object_type='') {
 	    $this->object_id = (int) $object_id;
 		$this->object_type = $object_type;
 		$this->fetch_data();
 	}
-	
+
 	protected function fetch_data() {
 		$this->cadres = array();
 		if($this->object_id && $this->object_type) {
@@ -68,12 +62,14 @@ class frbr_build {
 			$this->page = new frbr_entity_common_entity_page($num_page);
 			if($this->page->get_id()) {
 				$query = 'SELECT * FROM frbr_place
-					LEFT JOIN frbr_cadres ON place_num_cadre = id_cadre 
+					LEFT JOIN frbr_cadres ON place_num_cadre = id_cadre
 					LEFT JOIN frbr_cadres_content ON cadre_content_num_cadre = id_cadre
 					WHERE place_num_page = "'.$this->page->get_id().'" AND (place_visibility=1 OR cadre_visible_in_graph = 1) ORDER BY place_order';
 				$result = pmb_mysql_query($query);
 				while ($row = pmb_mysql_fetch_object($result)) {
-					$this->cadres[] = array(
+				    // les cadres de bases (graph, ISBD et records_list) n'ont pas d'identifiant
+				    $index = $row->id_cadre ?? $row->place_cadre_type;
+				    $this->cadres[$index] = array(
 							'id' => $row->id_cadre,
 							'name' => $row->cadre_name,
 							'cadre_object' => $row->cadre_object,
@@ -85,9 +81,9 @@ class frbr_build {
 							'cadre_visible_in_graph' => $row->cadre_visible_in_graph
 					);
 				}
-				
+
 				$query = '
-				    SELECT id_datanode 
+				    SELECT id_datanode
 				    FROM frbr_datanodes
 					WHERE datanode_num_page = "'.$this->page->get_id().'"';
 				$result = pmb_mysql_query($query);
@@ -99,7 +95,7 @@ class frbr_build {
 			}
 		}
 	}
-	
+
 	public function has_page() {
 		if(isset($this->page) && $this->page->get_id()) {
 			return true;
@@ -107,7 +103,7 @@ class frbr_build {
 			return false;
 		}
 	}
-	
+
 	public function has_cadres() {
 		if(count($this->cadres)) {
 			return true;
@@ -115,11 +111,11 @@ class frbr_build {
 			return false;
 		}
 	}
-	
+
 	public function get_object_id() {
 		return $this->object_id;
 	}
-	
+
 	public function get_object_type() {
 		return $this->object_type;
 	}
@@ -127,10 +123,10 @@ class frbr_build {
 	public function get_page() {
 		return $this->page;
 	}
-	
+
 	public function get_cadres() {
 		return $this->cadres;
-	}	
+	}
 
 	public function get_datanodes_data() {
 		if (isset($this->datanodes_data)) {
@@ -149,17 +145,8 @@ class frbr_build {
 			if ($cadre['cadre_datanodes_path']) {
 				$datanode_ids = explode('/',$cadre['cadre_datanodes_path']);
 				for ($i = 0; $i < count($datanode_ids); $i++) {
-					if (!isset($this->datanodes_data[$datanode_ids[$i]])) {
-						$datanode = frbr_entity_common_entity_datanode::get_instance($datanode_ids[$i]);
-						$raw_data = $datanode->get_datanode_datas($parent_data);
-						$filter_data = $datanode->filter_data($raw_data);
-						if ($datanode->has_children_filter()) {
-						    $operator = $datanode->get_children_filter()['data']->children_filter_operator;
-						    //$this->filter_by_children_data($datanode_ids[$i], $this->datanodes_data[$datanode_ids[$i]][0]);
-						    $children_filter_data = $this->filter_by_children_data($datanode_ids[$i], ($operator == "and" ? $filter_data : $raw_data));
-						    $filter_data = $this->merge_datanode_data($filter_data, $children_filter_data, $operator);
-						}						
-						$this->datanodes_data[$datanode_ids[$i]] = $datanode->sort_data($filter_data);
+				    if (!isset($this->datanodes_data[$datanode_ids[$i]])) {
+				        $datanode = $this->compute_datanode_data($datanode_ids[$i], $parent_data);
 					}
 					if (isset($this->datanodes_data[$datanode_ids[$i]][0])) {
 						$parent_data = $this->datanodes_data[$datanode_ids[$i]][0];
@@ -185,18 +172,32 @@ class frbr_build {
 		$this->set_graph_data();
 		return $this->datanodes_data;
 	}
-	
+
+	private function compute_datanode_data($id_datanode, $parent_data) {
+	    $datanode = frbr_entity_common_entity_datanode::get_instance($id_datanode);
+	    $raw_data = $datanode->get_datanode_datas($parent_data);
+	    $filter_data = $datanode->filter_data($raw_data);
+	    if ($datanode->has_children_filter()) {
+	        $operator = $datanode->get_children_filter()['data']->children_filter_operator;
+	        //$this->filter_by_children_data($datanode_ids[$i], $this->datanodes_data[$datanode_ids[$i]][0]);
+	        $children_filter_data = $this->filter_by_children_data($id_datanode, ($operator == "and" ? $filter_data : $raw_data));
+	        $filter_data = $this->merge_datanode_data($filter_data, $children_filter_data, $operator);
+	    }
+	    $this->datanodes_data[$id_datanode] = $datanode->sort_data($filter_data);
+	    return $datanode;
+	}
+
 	protected function set_graph_data($parent_datanode = 0, $parent_type = '', $parent_id = '', $parent_node_id= '') {
 		$flag = false;
 		if (!$parent_id) {
 			$parent_id = $this->object_id;
-		}		
+		}
 		if ($parent_datanode) {
 			foreach($this->datanodes_tree[$parent_datanode]['cadres'] as $cadre) {
-				$flag = true;				
+				$flag = true;
 				if (isset($this->datanodes_data[$parent_datanode][$parent_id])) {
 					$children_data = $this->datanodes_data[$parent_datanode][$parent_id];
-					if ($cadre['cadre_visible_in_graph']) {												
+					if ($cadre['cadre_visible_in_graph']) {
 						$type = $this->get_type_from_class_name($cadre['cadre_object']);
 						$cadre_id = $cadre['id'].($parent_id ? '_'.$parent_id : '');
 						frbr_entity_graph::add_nodes($children_data, $cadre_id, $cadre['name'], $type, $parent_node_id, $parent_type);
@@ -233,7 +234,7 @@ class frbr_build {
 			}
 		}
 	}
-	
+
 	protected function filter_by_children_data($datanode_id, $parent_data) {
 	    if (isset($this->datanodes[$datanode_id])) {
 	        //$operator = $this->datanodes[$datanode_id]->get_children_filter()['data']->children_filter_operator;
@@ -244,7 +245,7 @@ class frbr_build {
     	                continue;
     	            }
     	            if (!isset($this->datanodes_data[$id])) {
-                        $child_raw_data = $this->datanodes[$id]->get_datanode_datas($parent_data[0]);
+    	            	$child_raw_data = $this->datanodes[$id]->get_datanode_datas($parent_data[0] ?? []);
                         $child_data = $this->datanodes[$id]->filter_data($child_raw_data);
                         if ($this->datanodes[$id]->has_children_filter()) {
                             $operator = $this->datanodes[$id]->get_children_filter()['data']->children_filter_operator;
@@ -255,7 +256,7 @@ class frbr_build {
     	            } else {
     	                $child_data = $this->datanodes_data[$id];
     	            }
-    	            
+
     	            if ($value == 1) { //ne doit pas etre vide
     	                if (count($child_data) == 0) {
     	                    //le jeu de donnees n'a pas de donnees, donc on reset
@@ -264,7 +265,7 @@ class frbr_build {
     	                } else {
     	                    foreach ($child_data as $sub_id => $sub_value) {
     	                        if ($sub_id && count($sub_value) == 0) {
-    	                            foreach ($parent_data as $key => $tab) {    	                                
+    	                            foreach ($parent_data as $key => $tab) {
     	                                $ind = array_search($sub_id, $tab);
     	                                if ($ind !== false) {
     	                                    unset($parent_data[$key][$ind]);
@@ -294,9 +295,9 @@ class frbr_build {
 	    }
 	    return $parent_data;
 	}
-	
+
 	protected function get_type_from_class_name($class_name) {
-		
+
 		if ($class_name) {
 			$node_type = explode('_', $class_name);
 			if (is_array($node_type) && isset($node_type[2]) && $node_type[2]) {
@@ -305,7 +306,7 @@ class frbr_build {
 		}
 		return '';
 	}
-	
+
 	public static function get_instance($object_id=0, $object_type='') {
 	    if (!isset(static::$instances[$object_type])) {
 	        static::$instances[$object_type] = array();
@@ -315,7 +316,7 @@ class frbr_build {
 	    }
 	    return static::$instances[$object_type][$object_id];
 	}
-	
+
 	protected function merge_datanode_data($data1, $data2, $operator) {
 	    $data_merged = array();
 	    foreach($data1 as $id => $results) {
@@ -332,5 +333,40 @@ class frbr_build {
 	        }
 	    }
 	    return $data_merged;
+	}
+
+	public function get_datanode_data($id_datanode) {
+	    if (isset($this->datanodes_data[$id_datanode])) {
+	        return $this->datanodes_data[$id_datanode];
+	    }
+	    $path = $this->get_datanode_path($id_datanode);
+
+	    $parent_data = array($this->object_id);
+	    $datanode_ids = explode('/',$path);
+	    for ($i = 0; $i < count($datanode_ids); $i++) {
+	        if (!isset($this->datanodes_data[$datanode_ids[$i]])) {
+	            $this->compute_datanode_data($datanode_ids[$i], $parent_data);
+	        }
+	        if (isset($this->datanodes_data[$datanode_ids[$i]][0])) {
+	            $parent_data = $this->datanodes_data[$datanode_ids[$i]][0];
+	        } else {
+	            $parent_data = array();
+	        }
+	    }
+	    return $this->datanodes_data[$id_datanode];
+	}
+
+	private function get_datanode_path($id_datanode, $path = "") {
+	    $query = "SELECT datanode_num_parent FROM frbr_datanodes WHERE id_datanode = ".$id_datanode;
+	    $result = pmb_mysql_query($query);
+	    if(pmb_mysql_num_rows($result)) {
+	        $row = pmb_mysql_fetch_assoc($result);
+	        if ($row["datanode_num_parent"]) {
+	            $path .= $this->get_datanode_path($row["datanode_num_parent"], $path)."/".$id_datanode;
+	        } else {
+	            $path .= $id_datanode.$path;
+	        }
+	    }
+	    return $path;
 	}
 }

@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,17 +41,17 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 // affichage de la classe
 if(isset($_POST["sClasseGrp"])) {
 	$saisie_classe=$_POST["sClasseGrp"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
@@ -65,20 +65,20 @@ if(isset($_POST["sClasseGrp"])) {
 	</font></td>
 	</tr>
 	<?php
-	if( count($data) <= 0 )	{
+	if( countTriade($data) <= 0 )	{
 		print("<tr id='cadreCentral0' ><td align=center valign=center>".LANGRECH1."</td></tr>");
 	}else {
 	?>
 	<tr id='cadreCentral0' ><td valign=top>
 	<form method=post onsubmit="return valide_consul_classe3()" name="formulaire" action="profpUE3.php">
-	<br /><ul><font class=T2><?php print LANGBASE40 ?> <select name="typetrisem" onchange="trimes2();" >
+	<br /><ul><font class=T2><?php print LANGBASE40 ?> <select id="tt_ue2" name="typetrisem">
      	<option value=0   STYLE='color:#000066;background-color:#FCE4BA' ><?php print LANGCHOIX?></option>
      	<option value="trimestre" STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM28?></option>
      	<option value="semestre"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPARAM29?></option>
      	<option value="periode"  STYLE='color:#000066;background-color:#CCCCFF'><?php print strtolower(LANGASS26) ?></option>
      	<option value="examen"  STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGGRP55 ?></option>
-     	</select>  : 
-     	<select name="saisie_trimestre">
+     	</select>  :
+     	<select id="st_ue2" name="saisie_trimestre">
          <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
          <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
 	 <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
@@ -89,6 +89,7 @@ if(isset($_POST["sClasseGrp"])) {
          <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
          <option STYLE='color:#000066;background-color:#CCCCFF'>        </option>
      	</Select>
+     	<script>(function(){var src=document.getElementById('tt_ue2'),dst=document.getElementById('st_ue2'),d={trimestre:[['Trimestre 1','trimestre1'],['Trimestre 2','trimestre2'],['Trimestre 3','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],semestre:[['Semestre 1','trimestre1'],['Semestre 2','trimestre2'],['        ','trimestre3'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],examen:[['Examen Juin','exam_juin'],['Examen Décembre','exam_dec'],[' ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0'],['        ','0']],periode:[['1er','periode1'],['2ieme','periode2'],['3ieme','periode3'],['4ieme','periode4'],['5ieme','periode5'],['6ieme','periode6'],['7ieme','periode7'],['8ieme','periode8'],['9ieme','periode9']]};src.onchange=function(){var o=d[this.value]||[];for(var i=0;i<dst.options.length;i++){dst.options[i].text=o[i]?o[i][0]:'        ';dst.options[i].value=o[i]?o[i][1]:'0';}dst.selectedIndex=0;};})()</script>
 	<input type=hidden name="saisie_classe" value="<?php print $_POST["sClasseGrp"]?>" >
 	</ul>
 	<UL><UL><UL>
@@ -104,17 +105,17 @@ if(isset($_POST["sClasseGrp"])) {
 ?>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

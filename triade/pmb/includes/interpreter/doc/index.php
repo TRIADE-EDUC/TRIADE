@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index.php,v 1.1 2015-07-02 07:47:24 mbertin Exp $
+// $Id: index.php,v 1.1 2015/07/02 07:47:24 mbertin Exp $
 
-//Ce script nÃ©cÃ©ssite php5
+//Ce script nécéssite php5
 
 if (phpversion() < 5) {
 	die("PHP5 required");

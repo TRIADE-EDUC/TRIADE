@@ -1,12 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bretagne.inc.php,v 1.9 2018-06-14 12:59:43 dgoron Exp $
+// $Id: bretagne.inc.php,v 1.9.16.1 2025/03/25 07:32:24 dgoron Exp $
 
 function search_other_function_filters() {
 	global $bretagne_section,$charset;
-	if ($bretagne_section=="") $bretagne_section=array();
+	if (empty($bretagne_section)) {
+	    $bretagne_section=array();
+	}
 	$requete="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ=6";
 	$resultat=pmb_mysql_query($requete);
 	while ($res=pmb_mysql_fetch_object($resultat)) {
@@ -20,7 +22,9 @@ function search_other_function_filters() {
 
 function search_other_function_clause() {
 	global $bretagne_section;
-	if ($bretagne_section=="") $bretagne_section=array();
+	if (empty($bretagne_section)) {
+	    $bretagne_section=array();
+	}
 	$section=implode(",",$bretagne_section);
 	$r='';
 	if ($section) {
@@ -31,7 +35,9 @@ function search_other_function_clause() {
 
 function search_other_function_has_values() {
 	global $bretagne_section;
-	if ($bretagne_section=="") $bretagne_section=array();
+	if (empty($bretagne_section)) {
+	    $bretagne_section=array();
+	}
 	if (count($bretagne_section)) return true; else return false;
 }
 
@@ -62,9 +68,12 @@ function search_other_function_human_query($n) {
 	if ($section) {
 		$requete="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ=6 and notices_custom_list_value in ($section)";
 		$resultat=pmb_mysql_query($requete);
+		$sect = array();
 		while ($res=pmb_mysql_fetch_object($resultat)) $sect[]=$res->notices_custom_list_lib;
 		$r=implode(" ou ",$sect);
-		if ($r) $r="section(s) : ".$r;
+		if ($r) {
+		    $r="section(s) : ".$r;
+		}
 	}
 	return $r;
 }
@@ -72,7 +81,7 @@ function search_other_function_human_query($n) {
 function search_other_function_post_values() {
 	global $bretagne_section;
 	$r = "";
-	if ($bretagne_section) {
+	if ($bretagne_section && is_array($bretagne_section)) {
 		$section=implode(",",$bretagne_section);
 		if ($section) {
 			$requete="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ=6 and notices_custom_list_value in ($section)";
@@ -84,4 +93,3 @@ function search_other_function_post_values() {
 	}
 	return $r;
 }
-?>

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ include_once("./common/productId.php");
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // syxtaxe d'utilisation
-// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuparent",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuprof",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menudeux",$_SESSION[id_pers],$_SESSION[membre]);
+// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuparent",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuprof",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menudeux",$_SESSION[id_pers],$_SESSION['membre']);
 // scolaire et admin
 function verifplus($verifplus,$idpers,$idmembre) {
 	if ($verifplus == "menudeux") {
@@ -90,29 +90,6 @@ function brmozilla($navig) {
 }
 
 
-
-//------------------------------------------------------------------------------
-// construction de la license
-// pour Internet explorer
-if (preg_match('/msie/i', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/opera/i', $_SERVER['HTTP_USER_AGENT']))
-{
-print "<div id='menu' class='fond' style='background-image:url(./image/commun/fond_inscrip.jpg);position:absolute;z-index:2;' >";
-print "<div class='intitules' url='' align=left>";
-print "<br /><img src='./image/commun/logo_triade_licence.gif'>";
-print "        <br /><br />Version : <strong>".VERSION."</strong>";
-print "        <br /> Tous droits réservés <br />";
-print "                Licence d'utilisation : ".LICENCE."<br />";
-print "                Product ID = <b>".PRODUCTID ."</b>";
-print "        <br /><br />";
-print "        <textarea cols=55 rows=3 STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>";
-droit();
-print "</textarea>";
-print "        <HR><table width=95%><tr><TD align=left> <font size=2 >Triade©, 2000 - 2006 </font></td><td align=right><input type=button value='Fermer Fenêtre' onclick='masque_menu()' class='bouton2'></td></tr></table>";
-print "<br /></div></div>";
-print "<script type=\"text/javascript\">";
-print "document.getElementById('menu').style.visibility='hidden'";
-print "</script>";
-}
 
 
 //------------------------------------------------------------------------------

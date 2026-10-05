@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: de_DE.xml,v 1.1 2011-10-11 17:57:47 touraine37 Exp $ -->
+$Id: de_DE.xml,v 1.1 2011/10/11 17:57:47 touraine37 Exp $ -->
 
 <XMLlist>
 	<entry code="rec_addr">Register an address to be able to access the server properties</entry>

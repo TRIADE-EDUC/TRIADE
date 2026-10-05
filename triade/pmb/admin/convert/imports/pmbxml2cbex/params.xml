@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.2.40.1 2024/08/28 14:10:16 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>PMB XML UNIMARC -&gt; Codes barres</importname>
@@ -10,7 +16,7 @@
 	<!--<input type="xml" rootelement="unimarc" noticeelement="notice"/>-->
 	<!-- Type de la sortie -->
 	<output importable="no" type="txt" suffix="txt"/>
-	
+
 	<step type="xmltransform">
 		<!-- Conversion en xml -->
 		<xslfile>uni2cbex.xsl</xslfile>

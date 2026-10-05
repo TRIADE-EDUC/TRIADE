@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -39,10 +39,10 @@
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 $cnx=cnx();
-$data=affichage_messagerie_message($_GET["saisie_id_message"]); 
+$data=affichage_messagerie_message($_GET["saisie_id_message"],$_SESSION['id_pers']); 
 // id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest,idforward_mail,idpiecejointe,idgroupe
 // $data : tab bidim - soustab 3 champs
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 {
 	$number=$data[$i][10];
 	$idgroupe=$data[$i][12];

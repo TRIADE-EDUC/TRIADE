@@ -1,9 +1,14 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: indexint.html,v 1.3 2016-05-11 15:59:45 dgoron Exp $ -->
+<!-- $Id: indexint.html,v 1.5 2023/08/08 15:36:21 qvarin Exp $ -->
 
-{% block header %}
-	<h3><span>{{ msg.detail_indexint }}</span></h3>
+{% block title %}
+	{% title authority_isbd %}
+		{{ msg.indexint_tpl_indexint }} {{ authority.name }}
+		{% if authority.comment %}
+			: {{ authority.comment }}
+		{% endif %}
+	{% endtitle %}
 {% endblock %}
 
 {% block aut_see %}
@@ -12,15 +17,6 @@
 	</div>
 {% endblock %}
 	
-{% block title %}
-	<h3>
-		{{ authority.name }}
-		{% if authority.comment %}
-			: {{ authority.comment }}
-		{% endif %}
-	</h3>
-{% endblock %} 
-
 {% block details %}
 	{% if authority.has_child %}
 		{{ authority.child_list }}

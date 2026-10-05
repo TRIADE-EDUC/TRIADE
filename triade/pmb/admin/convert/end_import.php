@@ -1,14 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: end_import.php,v 1.20 2019-01-17 13:44:06 dgoron Exp $
+// $Id: end_import.php,v 1.20.14.1.2.1 2025/04/16 12:16:50 dbellamy Exp $
 
 //Fin de la conversion
 $base_path = "../..";
 $base_auth = "ADMINISTRATION_AUTH|CATALOGAGE_AUTH";
 $base_title = "\$msg[ie_import_running]";
 require ($base_path."/includes/init.inc.php");
+
+global $class_path, $include_path, $msg, $charset, $n_errors;
+global $admin_convert_end, $pmb_import_modele;
 
 require_once($class_path."/import/import_entities.class.php");
 require_once ($class_path."/import/import_records.class.php");
@@ -30,6 +33,7 @@ print "
 
 print $n_current." ".$msg["admin_conversion_end3"];
 
+$n_errors = intval($n_errors);
 if ($n_errors!=0) {
     print ", ".$n_errors." ".$msg["admin_conversion_end4"];
     $requete="select error_text from error_log where error_origin='convert.log ".$origine."'";
@@ -48,10 +52,10 @@ if (preg_match("#<!--select_func_import-->#",$admin_convert_end)) {
     	$table_list_func_import=_parser_text_no_function_(file_get_contents($base_path."/admin/import/func_import_subst.xml"),"CATALOG");
     }elseif(file_exists($base_path."/admin/import/func_import.xml")){
     	$table_list_func_import=_parser_text_no_function_(file_get_contents($base_path."/admin/import/func_import.xml"),"CATALOG");
-	}     
+	}
     $code_js="";
    	if(is_array($table_list_func_import["ITEM"]) && count($table_list_func_import["ITEM"])){
-   		if($_SESSION["func_import_model"]){
+   		if(!empty($_SESSION["func_import_model"])){
 			$func_import_model=$_SESSION["func_import_model"];
 		}elseif(!$pmb_import_modele) {
 			$func_import_model="func_bdp.inc.php";
@@ -69,7 +73,7 @@ if (preg_match("#<!--select_func_import-->#",$admin_convert_end)) {
    		foreach ( $table_list_func_import["ITEM"] as $value ) {
    			$code_js.="func_import_desc[$incr] = \"".htmlentities($value["DESCRIPTION"],ENT_QUOTES,$charset)."\";\n";
    			$code_js.="func_import_value[$incr] = \"".htmlentities(substr($value["FUNCTION"],0,-4),ENT_QUOTES,$charset)."\";\n";
-   			
+
    			$selecteur_fic.="<option value=\"".htmlentities(substr($value["FUNCTION"],0,-4),ENT_QUOTES,$charset)."\" ";
    			if($func_import_model == $value["FUNCTION"]){
    				$selecteur_fic.="selected=\"selected\" ";
@@ -86,11 +90,11 @@ if (preg_match("#<!--select_func_import-->#",$admin_convert_end)) {
 			if(!$selected_trouve){
 				$selecteur_fic.="selected=\"selected\" ";
 			}
-			
+
 			$selecteur_fic.=">".htmlentities($msg["admin_import_notice_defaut"],ENT_QUOTES,$charset)."</option>\n";
 		}
    		$selecteur_fic.="</select>&nbsp;&nbsp;&nbsp;\n";
-   		
+
    		$code_js.="function affiche_description(){
         	var func_import=document.destfic.".$name_func.";
 			var mon_select=false;
@@ -106,9 +110,9 @@ if (preg_match("#<!--select_func_import-->#",$admin_convert_end)) {
         $formulaire=$selecteur_fic;
    		$formulaire.="<label class=\"etiquette\" for=\"".$name_func."\" id=\"text_desc_func_import\" name=\"text_desc_func_import\">".htmlentities($text_desc_func_import,ENT_QUOTES,$charset)."</label>\n";
     	$formulaire.=$code_js;
-		$admin_convert_end=str_replace("<!--select_func_import-->",$formulaire,$admin_convert_end);	
+		$admin_convert_end=str_replace("<!--select_func_import-->",$formulaire,$admin_convert_end);
    	}
-   	
+
 }
 
 print $admin_convert_end;

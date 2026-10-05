@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_records_datasource_parent_works.class.php,v 1.1 2018-05-09 14:10:45 pmbs Exp $
+// $Id: frbr_entity_records_datasource_parent_works.class.php,v 1.1 2018/05/09 14:10:45 pmbs Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,7 +15,7 @@ class frbr_entity_records_datasource_parent_works extends frbr_entity_works_data
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
 		$query = "select distinct oeuvre_link_from as id, ntu_num_notice as parent FROM notices_titres_uniformes join tu_oeuvres_links

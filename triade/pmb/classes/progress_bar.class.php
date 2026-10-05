@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: progress_bar.class.php,v 1.6 2017-11-30 10:00:36 dgoron Exp $
+// $Id: progress_bar.class.php,v 1.6 2017/11/30 10:00:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,9 +13,9 @@ class progress_bar{
 	public $count;		//Valeur maximum de l'indicateur
 	public $pas;		//On affiche la progression tous les pas
 	public $nb_progress_call;	//Nombre d'appels 
-	public $finish;			//On a dÃ©passÃ© 100% (c.a.d. $nb_progress_call>$count)
+	public $finish;			//On a dépassé 100% (c.a.d. $nb_progress_call>$count)
 	
-	//L'Ã©chelle de valeur est de 0 Ã  $count
+	//L'échelle de valeur est de 0 à $count
 	//Le pourcentage est de $nb_progress_call/$count
 	//L'affichage est rafraichi tous les $pas appels
 	

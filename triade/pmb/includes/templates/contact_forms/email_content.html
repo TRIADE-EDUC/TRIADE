@@ -1,0 +1,43 @@
+<!-- $Id: email_content.html,v 1.1 2020/08/11 08:57:52 dgoron Exp $ -->
+
+{% block header %}
+	<h3><span>{{msg.contact_form_title}}</span></h3>
+{% endblock %}
+
+{% block content %}
+<div class='contact_form'>
+	{% if contact_form.contact_form_parameter_name %}
+	<div class='contact_form_parameter_name'>
+		<b>{{ msg.contact_form_parameter_name }}</b> {{ contact_form.contact_form_parameter_name }}
+	</div>
+	{% endif %}
+	{% if contact_form.contact_form_parameter_firstname %}
+		<div class='contact_form_parameter_firstname'>
+			<b>{{ msg.contact_form_parameter_firstname }}</b> {{ contact_form.contact_form_parameter_firstname }}
+		</div>
+	{% endif %}
+	{% if contact_form.contact_form_parameter_group %}
+		<div class='contact_form_parameter_group'>
+			<b>{{ msg.contact_form_parameter_group }}</b> {{ contact_form.contact_form_parameter_group }}
+		</div>
+	{% endif %}
+	{% if contact_form.contact_form_parameter_email %}
+		<div class='contact_form_parameter_email'>
+			<b>{{ msg.contact_form_parameter_email }}</b> {{ contact_form.contact_form_parameter_email }}
+		</div>
+	{% endif %}
+	{% if contact_form.contact_form_parameter_tel %}
+		<div class='contact_form_parameter_tel'>
+			<b>{{ msg.contact_form_parameter_tel }}</b> {{ contact_form.contact_form_parameter_tel }}
+		</div>
+	{% endif %}	
+	<br /><br />
+	<div class='contact_form_text'>
+		<b>{{ msg.contact_form_text }}</b>
+		<p class='align_justify'>{{ contact_form.contact_form_text | nl2br }}</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block sign %}
+{% endblock %}

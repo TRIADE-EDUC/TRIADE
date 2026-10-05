@@ -1,0 +1,79 @@
+{
+	"search_fields" : {
+		"TX"	: "Texte",
+		"AU"	: "Auteur",
+		"TI"	: "Titre",
+		"SU"	: "Sujets",
+		"SO"	: "Source",
+		"AB"	: "Résumé",
+		"IS"	: "ISSN",
+		"IB" 	: "ISBN"
+	},
+	"limiters"  : {
+		"FT"	: "Disponible en ligne",
+		"RV"	: "Relu par un comité de lecture",
+		"FC1"	: "Dépôt d'archives institutionnel uniquement",
+		"LA99"	: "Language"
+	},
+	"eds" : {
+		"search_fields" : {
+			"XXX"	: ["TX"],
+			"010$a"	: ["IS","IB"],
+			"200$a"	: ["TI"],
+			"60X"	: ["SU"],
+			"7XX"	: ["AU"]
+		},
+		"language_limiters" : [
+			["LA99", "English,French", "0"]
+		],
+		"languages" : {
+			"en_UK" : "English",
+			"fr_FR" : "French",
+			"de_DE" : "German",
+			"it_IT" : "Italian",
+			"pt_PT" : "Portuguese",
+			"es_ES" : "Spanish"
+		},
+		"publication_type_id_to_bl_hl_dt" : {
+			"default"			: ["a", "2", "a"],
+
+			"academicJournal"		: ["a", "2", "a"],
+			"audio"					: ["m", "0", "a"],
+			"biography"				: ["m", "0", "a"],
+			"book" 	 				: ["m", "0", "a"],
+			"conference"			: ["m", "0", "a"],
+			"dissertation"			: ["m", "0", "a"],
+			"ebook"					: ["m", "0", "a"],
+			"electronicResource"	: ["m", "0", "a"],
+			"editorialOpinion"		: ["a", "2", "a"],
+			"governmentDocument"	: ["m", "0", "a"],
+			"image"					: ["m", "0", "a"],
+			"kitObject"				: ["m", "0", "a"],
+			"map"					: ["m", "0", "a"],
+			"newspaperArticle"		: ["a", "2", "a"],
+			"patent"				: ["m", "0", "a"],
+			"primarySource"			: ["m", "0", "a"],
+			"reference"				: ["m", "0", "a"],
+			"report"				: ["m", "0", "a"],
+			"review"				: ["m", "0", "a"],
+			"score"					: ["m", "0", "a"],
+			"serialPeriodical"		: ["a", "2", "a"],
+			"shortStory"			: ["m", "0", "a"],
+			"transcript"			: ["m", "0", "a"],
+			"videoRecording"		: ["m", "0", "a"]
+		},
+		"language_text_to_language_code" : {
+			"English"		:	"eng",
+			"French"		:	"fre",
+			"German"		:	"ger",
+			"Italian"		:	"ita",
+			"Portuguese"	:	"por",
+			"Spanish"		:	"spa"
+		},
+		"field_to_cp" : {
+			"Header_DbLabel"	: "cp_eds_source",
+			"Header_PubType"	: "cp_eds_publication_type",
+			"DOI" 				: "cp_eds_doi"
+		}
+	}
+}

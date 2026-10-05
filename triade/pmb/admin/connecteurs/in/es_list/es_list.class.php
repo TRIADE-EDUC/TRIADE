@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: es_list.class.php,v 1.7 2019-03-25 15:26:00 arenou Exp $
+// $Id: es_list.class.php,v 1.9.4.3 2025/05/12 15:05:28 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,37 +11,34 @@ require_once($class_path."/connecteurs.class.php");
 require_once($class_path."/curl.class.php");
 
 class es_list extends connector {
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $del_old;				//Supression ou non des notices dejÃ  existantes
-	
+	//Variables internes pour la progression de la récupération des notices
+	public $del_old;				//Supression ou non des notices dejà existantes
+
 	public $profile;				//Profil Amazon
-	public $match;					//Tableau des critÃ¨res UNIMARC / AMAZON
-	public $current_site;			//Site courant du profile (nÂ°)
+	public $match;					//Tableau des critères UNIMARC / AMAZON
+	public $current_site;			//Site courant du profile (n°)
 	public $searchindexes;			//Liste des indexes de recherche possibles pour le site
-	public $current_searchindex;	//NumÃ©ro de l'index de recherche de la classe
+	public $current_searchindex;	//Numéro de l'index de recherche de la classe
 	public $match_index;			//Type de recherche (power ou simple)
 	public $types;					//Types de documents pour la conversino des notices
-	
-	//RÃ©sultat de la synchro
-	public $error;					//Y-a-t-il eu une erreur	
+
+	//Résultat de la synchro
+	public $error;					//Y-a-t-il eu une erreur
 	public $error_message;			//Si oui, message correspondant
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "es_list";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
 		global $charset;
-		
+
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -49,9 +46,9 @@ class es_list extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
-		
+
 		if (!isset($es_selected)) $es_selected = array();
 		if (!isset($use_in_a2z)) $use_in_a2z = 0;
 		if (!isset($libelle)) $libelle = "External";
@@ -90,8 +87,8 @@ class es_list extends connector {
 			<div class='colonne3'><label for='es_selected'>".$this->msg["es_list_list"]."</label></div>
 			<div class='colonne-suite'>
 				<select name='es_selected[]' multiple='yes' size='6' class='saisie-30em'>";
-	
-		
+
+
 		// on regarde les connecteurs existants !
 		$query = "select source_id, name from connectors_sources where id_connector != 'es_list' order by name";
 		$result = pmb_mysql_query($query);
@@ -108,7 +105,7 @@ class es_list extends connector {
 
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $es_selected;
     	global $use_in_a2z;
@@ -123,16 +120,23 @@ class es_list extends connector {
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader(){
 		$header= array();
 		return $header;
 	}
-	
-	public function getTypeOfEnrichment($source_id){		
+
+	public function getTypeOfEnrichment($source_id){
+	    global $libelle, $infobulle;
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -140,20 +144,21 @@ class es_list extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$type['type'] = array(
 			array(
-				'code' => str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle))),
+				'code' => str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle ?? ""))),
 				'label' => $libelle,
 				'infobulle' => $infobulle
-			) 
+			)
 		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
-	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array(),$page=1){
+
+	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array(),$page=1)
+	{
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -161,11 +166,11 @@ class es_list extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$enrichment= array();
-		
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
 			case "external" :
 			default :
@@ -174,23 +179,26 @@ class es_list extends connector {
 				if(pmb_mysql_num_rows($res)){
 					$code = pmb_mysql_result($res,0,0);
 					$queries = array();
-					for($i=0 ; $i<count($es_selected) ; $i++){
-						$queries[] = "select recid from entrepot_source_".$es_selected[$i]." where (ufield = '011' or ufield ='010')  and usubfield = 'a' and value = '".addslashes($code)."'";
+					if (isset($es_selected) && is_countable($es_selected)) {
+						for($i=0 ; $i<count($es_selected) ; $i++){
+							$queries[] = "select recid from entrepot_source_".$es_selected[$i]." where (ufield = '011' or ufield ='010')  and usubfield = 'a' and value = '".addslashes($code)."'";
+						}
 					}
 					$query = "select recid from ((".implode(") union (",$queries).")) as subs";
 					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
-						while($row = pmb_mysql_fetch_object($result)){
-							$enrichment['external']['content'].= aff_notice_unimarc($row->recid);
+						while($row = pmb_mysql_fetch_object($result)) {
+							if (function_exists('aff_notice_unimarc')) {
+								$enrichment['external']['content'] .= aff_notice_unimarc($row->recid);
+							}
 						}
 					}else{
 						$enrichment['external']['content'] = $query."<span>".$this->msg["es_list_no_preview"]."</span>";
 					}
 				}
 				break;
-		}		
+		}
 		$enrichment['source_label']=$this->msg['es_list_enrichment_source'];
 		return $enrichment;
 	}
 }
-?>

@@ -1,14 +1,25 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: show_localisation.inc.php,v 1.91 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: show_localisation.inc.php,v 1.106.4.2 2025/01/30 11:42:35 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $class_path, $msg, $charset;
+global $opac_nb_sections_per_line, $opac_categories_nb_col_subcat;
+global $location, $id;
+global $back_surloc, $back_loc, $back_section_see, $opac_sur_location_activate;
+global $opac_perio_a2z_abc_search,$opac_perio_a2z_max_per_onglet, $opac_rgaa_active;
+global $default_tmp_storage_engine;
+global $nc, $lcote, $ssub, $plettreaut, $dcote;
+
+require_once($class_path."/translation.class.php");
+require_once($class_path."/show_localisation.class.php");
+
 if (!$opac_nb_sections_per_line) $opac_nb_sections_per_line=6;
 
-/* Param√®tres optionnels dans l'url
+/* ParamËtres optionnels dans l'url
  * back_surloc => Lien de retour sur la sur-localisation
  * back_loc => Lien de retour sur la localisation
  * back_section_see => Lien de retour sur image (home)
@@ -16,13 +27,13 @@ if (!$opac_nb_sections_per_line) $opac_nb_sections_per_line=6;
 
 //Attaques XSS et injection SQL
 if(isset($nc)){
-	$nc+=0;
+	$nc = intval($nc);
 }
 if(isset($lcote)){
-	$lcote+=0;
+    $lcote = intval($lcote);
 }
 if(isset($ssub)){
-	$ssub+=0;
+    $ssub = intval($ssub);
 }
 if(isset($plettreaut)){
 	$plettreaut=pmb_alphabetic("^a-z0-9A-Z\-\s","",$plettreaut);
@@ -34,139 +45,19 @@ if(isset($dcote)){
 		$dcote="";
 	}
 }
-
-function affiche_notice_navigopac($requete){
-	global $page, $nbr_lignes, $id, $location, $dcote, $lcote, $nc, $main, $ssub,$plettreaut ;
-	global $opac_nb_aut_rec_per_page,$opac_section_notices_order, $msg, $dbh, $opac_notices_depliable, $begin_result_liste, $add_cart_link_spe,$base_path;
-	global $back_surloc,$back_loc,$back_section_see;
-	global $opac_perio_a2z_abc_search,$opac_perio_a2z_max_per_onglet;
-	global $facettes_tpl,$opac_facettes_ajax;
-	global $opac_search_allow_refinement;
-	global $nb_per_page_custom;
-	
-	if(!$page) $page=1;
-	$debut =($page-1)*$opac_nb_aut_rec_per_page;
-	//On controle param√®tre de tri
-	if(!trim($opac_section_notices_order)){
-		$opac_section_notices_order= "index_serie, tnvol, index_sew";
-	}
-	if($plettreaut && $plettreaut !="vide"){
-		$opac_section_notices_order= "index_author, ".$opac_section_notices_order;
-	}
-	$requete_initiale = $requete;
-	$requete.= " ORDER BY ".$opac_section_notices_order." LIMIT $debut,$opac_nb_aut_rec_per_page";
-	$res = @pmb_mysql_query($requete, $dbh);
-	print $nbr_lignes." ".$msg["results"]."<br />";
-
-	if ($opac_notices_depliable) print $begin_result_liste;
-	if ($add_cart_link_spe)
-		print pmb_bidi(str_replace("!!spe!!","&location=$location&dcote=$dcote&lcote=$lcote&ssub=$ssub&nc=$nc&plettreaut=$plettreaut",$add_cart_link_spe));
-	/*//affinage
-	//enregistrement de l'endroit actuel dans la session
-	$_SESSION["last_module_search"]["search_mod"]="section_see";
-	$_SESSION["last_module_search"]["search_id"]=$id;
-	*/	
-
-	//affinage
-	if(($dcote == "") && ($plettreaut == "") && ($nc == "") && ($opac_search_allow_refinement)){
-		print "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"affiner_recherche\"><a href='$base_path/index.php?search_type_asked=extended_search&mode_aff=aff_module' title='".$msg["affiner_recherche"]."'>".$msg["affiner_recherche"]."</a></span>";
-	}
-	//fin affinage
-
-	print "<blockquote>";
-	print aff_notice(-1);
-	while ($obj=pmb_mysql_fetch_object($res)) {
-		print pmb_bidi(aff_notice($obj->notice_id));
-	}
-	print aff_notice(-2);
-	print "</blockquote>";
-	pmb_mysql_free_result($res);
-	print '<div id="navbar"><hr /><div style="text-align:center">'.printnavbar($page, $nbr_lignes, $opac_nb_aut_rec_per_page, './index.php?lvl=section_see&id='.$id.'&location='.$location.(($back_surloc)?'&back_surloc='.urlencode($back_surloc):'').(($back_loc)?'&back_loc='.urlencode($back_loc):'').(($back_section_see)?'&back_section_see='.urlencode($back_section_see):'').'&page=!!page!!&nbr_lignes='.$nbr_lignes.'&dcote='.$dcote.'&lcote='.$lcote.'&nc='.$nc.'&main='.$main.'&ssub='.$ssub.'&plettreaut='.$plettreaut.($nb_per_page_custom ? "&nb_per_page_custom=".$nb_per_page_custom : '')).'</div></div>';
-	
-	//FACETTES
-	$facettes_tpl = '';
-	//comparateur de facettes : on r√©-initialise
-	$_SESSION['facette']=array();
-	if($nbr_lignes){
-		require_once($base_path.'/classes/facette_search.class.php');
-		$facettes_tpl .= facettes::get_display_list_from_query($requete_initiale);
-	}
-}
-
+$location = intval($location);
+show_localisation::set_num_location($location);
 if (!$location) {
-	//Il n'y a pas de localisation selectionn√©e, afficher les localisations
+	//Il n'y a pas de localisation selectionnÈe, afficher les localisations
 	print "<div id='aut_details'>\n";
-	print "<h3><span>".htmlentities($msg["l_browse_bibliotheques"],ENT_QUOTES,$charset)."</span></h3>";
+	print common::format_title($msg["l_browse_bibliotheques"]);
 
 	print "<div id='aut_details_container'>\n";
-	if($opac_view_filter_class){
-		$requete="select idlocation, location_libelle, location_pic, css_style from docs_location where location_visible_opac=1
-		  and idlocation in(". implode(",",$opac_view_filter_class->params["nav_sections"]).")  order by location_libelle ";
-	}
-	else
-		$requete="select idlocation, location_libelle, location_pic from docs_location where location_visible_opac=1 order by location_libelle ";
-	$resultat=pmb_mysql_query($requete);
-	if (pmb_mysql_num_rows($resultat)>1) {
-		print "<table class='center' style='width:100%'>";
-		$npl=0;
-		while ($r=pmb_mysql_fetch_object($resultat)) {
-			if ($npl==0) print "<tr>";
-			if ($r->location_pic) $image_src = $r->location_pic ;
-			else  $image_src = "images/bibli-small.png" ;
-			if ($back_section_see) $param_section_see="&back_section_see=".$back_section_see;
-			else $param_section_see="";
-			print "<td class='center'>
-					<a href='./index.php?lvl=section_see&location=".$r->idlocation."".$param_section_see."'><img src='$image_src' style='border:0px' alt='".$r->location_libelle."' title='".$r->location_libelle."'/></a>
-					<br /><a href='./index.php?lvl=section_see&location=".$r->idlocation."'><b>".$r->location_libelle."</b></a></td>";
-			$npl++;
-			if ($npl==$opac_nb_localisations_per_line) {
-				print "</tr>";
-				$npl=0;
-			}
-		}
-		if ($npl!=0) {
-			while ($npl<$opac_nb_localisations_per_line) {
-				print "<td></td>";
-				$npl++;
-			}
-			print "</tr>";
-		}
-		print "</table>";
-	} else {
-		// z√©ro ou une seule localisation
-		if (pmb_mysql_num_rows($resultat)) {
-			$location=pmb_mysql_result($resultat,0,0);
-			$requete="select idsection, section_libelle, section_pic from docs_section, exemplaires where expl_location=$location and section_visible_opac=1 and expl_section=idsection group by idsection order by section_libelle ";
-			$resultat=pmb_mysql_query($requete);
-			print "<table class='center' style='width:100%'>";
-			$npl=0;
-			while ($r=pmb_mysql_fetch_object($resultat)) {
-				if ($npl==0) print "<tr>";
-				if ($r->section_pic) $image_src = $r->section_pic ;
-				else  $image_src = get_url_icon("rayonnage-small.png") ;
-				print "<td class='center'>
-						<a href='./index.php?lvl=section_see&location=".$location."&id=".$r->idsection."'><img src='$image_src' style='border:0px' alt='".$r->section_libelle."' title='".$r->section_libelle."'/></a>
-						<br /><a href='./index.php?lvl=section_see&location=".$location."&id=".$r->idsection."'><b>".$r->section_libelle."</b></a></td>";
-				$npl++;
-				if ($npl==$opac_nb_localisations_per_line) {
-					print "</tr>";
-					$npl=0;
-				}
-			}
-			if ($npl!=0) {
-				while ($npl<$opac_nb_localisations_per_line) {
-					print "<td></td>";
-					$npl++;
-				}
-				print "</tr>";
-			}
-			print "</table>";
-		}
-	}
+
+	print show_localisation::get_display_list();
 } else {
 	// id localisation fournie
-	$location+=0;
-	$requete="select location_libelle,surloc_num, location_pic, name, adr1, adr2, cp, town, state, country, phone, email, website, commentaire, show_a2z from docs_location where idlocation='$location' and location_visible_opac=1";
+	$requete="select idlocation, location_libelle,surloc_num, location_pic, name, adr1, adr2, cp, town, state, country, phone, email, website, commentaire, show_a2z from docs_location where idlocation='$location' and location_visible_opac=1";
 	$resultat=pmb_mysql_query($requete);
 	$objloc=pmb_mysql_fetch_object($resultat);
 
@@ -176,8 +67,8 @@ if (!$location) {
 	if (isset($back_section_see) && $back_section_see) $param_section_see = "&back_section_see=".$back_section_see;
 	else $param_section_see="";
 
-	if (isset($back_loc) && $back_loc) $location_link="<span class=\"espaceResultSearch\">&nbsp;</span><a href=\"".$url_loc.$param_surloc.$param_section_see."\">". htmlentities($objloc->location_libelle,ENT_QUOTES,$charset)."</a>";
-	else $location_link="<span class=\"espaceResultSearch\">&nbsp;</span>".htmlentities($objloc->location_libelle,ENT_QUOTES,$charset);
+	if (isset($back_loc) && $back_loc) $location_link="<span class=\"espaceResultSearch\">&nbsp;</span><a href=\"".$url_loc.$param_surloc.$param_section_see."\">". htmlentities(translation::get_translated_text($objloc->idlocation, "docs_location", "location_libelle",$objloc->location_libelle),ENT_QUOTES,$charset)."</a>";
+	else $location_link="<span class=\"espaceResultSearch\">&nbsp;</span>".htmlentities(translation::get_translated_text($objloc->idlocation, "docs_location", "location_libelle",$objloc->location_libelle),ENT_QUOTES,$charset);
 
 	$sur_location_link="";
 	if ($opac_sur_location_activate==1){
@@ -193,12 +84,19 @@ if (!$location) {
 	}
 	print "<div id='aut_details'>\n";
 
-	if (isset($back_section_see) && $back_section_see) $url_section_see = $back_section_see;
-	else $url_section_see = "index.php?lvl=section_see";
+	if (isset($back_section_see) && $back_section_see) {
+	    $url_section_see = $back_section_see;
+	} else {
+	    $url_section_see = "index.php?lvl=section_see";
+	}
 
-	print "<h3 class='loc_title'><span><a href=\"".$url_section_see."\"><img src='".get_url_icon("home.gif")."' alt='home' style='border:0px' class='align_bottom'/></a>$sur_location_link.$location_link</span></h3>";
+	if ($opac_rgaa_active) {
+    	print "<h1 class='loc_title'><span><a href=\"".$url_section_see."\"><img src='".get_url_icon("home.gif")."' alt='home' style='border:0px' class='align_bottom'/></a>".$sur_location_link.$location_link."</span></h1>";
+	} else {
+    print "<h3 class='loc_title'><span><a href=\"".$url_section_see."\"><img src='".get_url_icon("home.gif")."' alt='home' style='border:0px' class='align_bottom'/></a>".$sur_location_link.$location_link."</span></h3>";
+	}
 	if ($objloc->commentaire || $objloc->location_pic) {
-		print "<table class='loc_comment'><tr><td class='location_pic'>";
+		print "<table class='loc_comment' role='presentation'><tr><td class='location_pic'>";
 		if ($objloc->location_pic)
 			print "<span class=\"espaceResultSearch\">&nbsp;</span><img src='".$objloc->location_pic."' alt='location' style='border:0px' class='center' />";
 		else
@@ -215,39 +113,11 @@ if (!$location) {
 
 	print "<div id='aut_details_container'>\n";
 
-	//Il n'y a pas de section s√©lectionn√©e
+	//Il n'y a pas de section sÈlectionnÈe
+	$id = intval($id);
+	show_localisation::set_num_section($id);
 	if (!$id) {
-		$location+=0;
-		$requete="select idsection, section_libelle, section_pic from docs_section, exemplaires where expl_location=$location and section_visible_opac=1 and expl_section=idsection group by idsection order by section_libelle ";
-		$resultat=pmb_mysql_query($requete);
-		print "<b>".sprintf($msg["l_title_search"],"<a href='index.php?'>","</a>")."</b><br /><br />";
-		print "<table class='center' style='width:100%'>";
-		$n=0;
-		while ($r=pmb_mysql_fetch_object($resultat)) {
-			if ($n==0) print "<tr>";
-			if ($r->section_pic) $image_src = $r->section_pic ;
-			else  $image_src = get_url_icon("rayonnage-small.png") ;
-			if (isset($back_section_see) && $back_section_see) $param_section_see = "&back_section_see=index.php";
-			else $param_section_see = "";
-			if (isset($back_surloc) && $back_surloc) {
-				$url = "./index.php?lvl=section_see&location=".$location."&id=".$r->idsection."&back_surloc=".rawurlencode($back_surloc)."&back_loc=".rawurlencode($url_loc).$param_section_see;
-			} else {
-				$url = "./index.php?lvl=section_see&location=".$location."&id=".$r->idsection;
-			}
-			print "<td class='center' style='width:120px'>
-					<a href='".$url."'><img src='$image_src' style='border:0px'/></a>
-					<br /><a href='".$url."'><b>".htmlentities($r->section_libelle,ENT_QUOTES,$charset)."</b></a></td>";
-			$n++;
-			if ($n==$opac_nb_sections_per_line) { print "</tr>"; $n=0; }
-		}
-		if ($n!=0) {
-			while ($n<$opac_nb_sections_per_line) {
-				print "<td></td>";
-				$n++;
-			}
-			print "</tr>";
-		}
-		print "</table>";
+	    print show_localisation::get_display_sections_list();
 
 		if ($objloc->show_a2z) {
 			require_once($base_path."/classes/perio_a2z.class.php");
@@ -258,18 +128,22 @@ if (!$location) {
 	} else {
 		//enregistrement de l'endroit actuel dans la session
 		rec_last_authorities();
-		
-		$id+=0;
-		$location+=0;
+
+		$location = intval($location);
 		if (!empty($back_surloc)) {
 			$ajout_back = "&back_surloc=".rawurlencode($back_surloc)."&back_loc=".rawurlencode($url_loc).$param_section_see;
 		} else {
 			$ajout_back = "";
 		}
-		$requete="select section_libelle, section_pic from docs_section where idsection=$id";
-		$section_libelle=pmb_mysql_result(pmb_mysql_query($requete),0,0);
-		$section_pic=pmb_mysql_result(pmb_mysql_query($requete),0,1);
-		if ($section_pic) $image_src = $section_pic ;
+		$requete="select idsection, section_libelle, section_libelle_opac, section_pic from docs_section where idsection=$id";
+		$result = pmb_mysql_query($requete);
+		$row = pmb_mysql_fetch_object($result);
+		if ($row->section_libelle_opac) {
+			$section_libelle = translation::get_translated_text($row->idsection, 'docs_section', 'section_libelle_opac', $row->section_libelle_opac);
+		} else {
+			$section_libelle = translation::get_translated_text($row->idsection, 'docs_section', 'section_libelle', $row->section_libelle);
+		}
+		if ($row->section_pic) $image_src = $row->section_pic ;
 		else  $image_src = get_url_icon("rayonnage-small.png") ;
 		print "<div id='aut_see'><h3>";
 		if (!file_exists($Fnm))	{
@@ -284,50 +158,41 @@ if (!$location) {
 		}
 
 		//droits d'acces emprunteur/notice
-		$acces_j='';
-		if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
-			require_once("$class_path/acces.class.php");
-			$ac= new acces();
-			$dom_2= $ac->setDomain(2);
-			$acces_j = $dom_2->getJoin($_SESSION['id_empr_session'],4,'notice_id');
-		}
+		show_localisation::init_query_restricts();
 
-		if($acces_j) {
-			$statut_j='';
-			$statut_r='';
-		} else {
-			$statut_j=',notice_statut';
-			$statut_r="and statut=id_notice_statut and ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
-		}
-		if(isset($_SESSION["opac_view"]) && $_SESSION["opac_view"] && $_SESSION["opac_view_query"] ){
-			$opac_view_restrict=" notice_id in (select opac_view_num_notice from  opac_view_notices_".$_SESSION["opac_view"].") ";
-			$statut_r.=" and ".$opac_view_restrict;
-		}
 		if($type_aff_navigopac == 0){//Pas de navigation
 			print pmb_bidi($section_libelle);
 			print "</h3>\n";
 			print "</div>";
-			//On r√©cup√®re les notices de monographie avec au moins un exemplaire dans la localisation et la section
-			$requete="create temporary table temp_n_id ENGINE=MyISAM ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+			//On rÈcupËre les notices de monographie avec au moins un exemplaire dans la localisation et la section
+			$requete="create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} (
+                ".show_localisation::get_query_records_items('notice_id', '', 'notice_id')."
+            )";
 			pmb_mysql_query($requete);
-			//On r√©cup√®re les notices de p√©riodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
-			$requete="INSERT INTO temp_n_id (SELECT notice_id FROM exemplaires JOIN bulletins ON expl_section='".$id."' and expl_location='".$location."' and expl_bulletin=bulletin_id JOIN notices ON notice_id=bulletin_notice ".$acces_j." ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+			//On rÈcupËre les notices de pÈriodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
+			$requete="INSERT INTO temp_n_id (
+                ".show_localisation::get_query_serials_items('notice_id', '', 'notice_id')."
+            )";
 			pmb_mysql_query($requete);
 			@pmb_mysql_query("alter table temp_n_id add index(notice_id)");
 			$requete = "SELECT notices.notice_id FROM temp_n_id JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
 			$nbr_lignes=pmb_mysql_num_rows(pmb_mysql_query($requete));
-			affiche_notice_navigopac($requete);
+			show_localisation::affiche_notice_navigopac($requete);
 		}elseif($type_aff_navigopac == -1){//Navigation par auteurs
-			//On r√©cup√®re les notices de monographie avec au moins un exemplaire dans la localisation et la section
-			$requete="create temporary table temp_n_id ENGINE=MyISAM ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+			//On rÈcupËre les notices de monographie avec au moins un exemplaire dans la localisation et la section
+			$requete="create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} (
+                ".show_localisation::get_query_records_items('notice_id', '', 'notice_id')."
+            )";
 			pmb_mysql_query($requete);
-			//On r√©cup√®re les notices de p√©riodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
-			$requete="INSERT INTO temp_n_id (SELECT notice_id FROM exemplaires JOIN bulletins ON expl_section='".$id."' and expl_location='".$location."' and expl_bulletin=bulletin_id JOIN notices ON notice_id=bulletin_notice ".$acces_j." ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+			//On rÈcupËre les notices de pÈriodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
+			$requete="INSERT INTO temp_n_id (
+                ".show_localisation::get_query_serials_items('notice_id', '', 'notice_id')."
+            )";
 			pmb_mysql_query($requete);
 			@pmb_mysql_query("alter table temp_n_id add index(notice_id)");
 			if(!$plettreaut){
 				$nb_auteur_max=18;
-				//On a pas encore choisi de premi√®re lettre d'auteur
+				//On a pas encore choisi de premiËre lettre d'auteur
 				print pmb_bidi($section_libelle);
 				print " > ".$msg["navigopac_aut"];
 				print "</h3>\n";
@@ -356,8 +221,8 @@ if (!$location) {
 						$tab_aut[mb_strtoupper($ligne->plettre)]=array($ligne->nb,mb_strtoupper($ligne->plettre));
 					}
 				}
-				while(count($tab_aut) > $nb_auteur_max){//Pour minimiser le nombre d'√©tag√®re √† afficher
-					//Je vais chercher deux valeurs qui peuvent √™tre regroup√©es
+				while(count($tab_aut) > $nb_auteur_max){//Pour minimiser le nombre d'ÈtagËre ‡ afficher
+					//Je vais chercher deux valeurs qui peuvent Ítre regroupÈes
 					$coupl_plus_petit=10000000;
 					$ancienne_valeur=0;
 					$ancienne_lettre="";
@@ -379,7 +244,7 @@ if (!$location) {
 					unset($tab_aut[$lettre_a_regoupe[1]]);
 					ksort($tab_aut);
 				}
-				print "<table class='center' style='width:100%'>";
+				print "<table class='center' style='width:100%' role='presentation'>";
 				$n=0;
 				foreach ( $tab_aut as $key => $value ) {
 					if ($n==0) print "<tr>";
@@ -398,7 +263,7 @@ if (!$location) {
 				print "</div>";
 				$requete = "SELECT notices.notice_id FROM temp_n_id JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
 				$nbr_lignes=pmb_mysql_num_rows(pmb_mysql_query($requete));
-				affiche_notice_navigopac($requete);
+				show_localisation::affiche_notice_navigopac($requete);
 			}else{
 				//On sait par quoi doit commencer le nom de l'auteur
 				print "<a href='index.php?lvl=section_see&location=".$location."&id=".$id.$ajout_back."'>";
@@ -418,18 +283,14 @@ if (!$location) {
 				$nbr_lignes=pmb_mysql_num_rows(pmb_mysql_query($requete));
 				print "</h3>\n";
 				print "</div>";
-				affiche_notice_navigopac($requete);
+				show_localisation::affiche_notice_navigopac($requete);
 			}
 		}else{//Navigation par un plan de classement
 
 			if(!isset($dcote) || !$dcote) {
-				$query = "SELECT distinct SUBSTR(expl_cote,1,1) as dcote  FROM notices $acces_j ,exemplaires $statut_j ";
-				$query.= "where expl_location=$location and expl_section=$id and notice_id=expl_notice ";
-				$query.= $statut_r;
-				$query.= " UNION ";
-				$query .= "SELECT distinct SUBSTR(expl_cote,1,1) as dcote FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
-				$query.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
-				$query.= $statut_r;
+			    $query = show_localisation::get_query_records_items('distinct SUBSTR(expl_cote,1,1) as dcote');
+				$query .= " UNION ";
+				$query .= show_localisation::get_query_serials_items('distinct SUBSTR(expl_cote,1,1) as dcote');
 				$result = pmb_mysql_query($query);
 				if($result && pmb_mysql_num_rows($result) == 1) {
 					//Afin d'afficher les sous-niveaux du premier niveau
@@ -446,10 +307,17 @@ if (!$location) {
 					for ($i=0; $i<strlen($dcote); $i++) {
 						$chemin="";
 						$ccote=substr($dcote,0,$i+1);
-						$ccote=$ccote.str_repeat("0",$lcote-$i-1);
+						$ccote_times = $lcote-$i-1;
+						if($ccote_times >= 0) {
+							$ccote=$ccote.str_repeat("0",$ccote_times);
+						}
 						if ($i>0) {
 							$cote_n_1=substr($dcote,0,$i);
-							$compl_n_1=str_repeat("0",$lcote-$i);
+							$compl_n_1="";
+							$compl_n_1_times = $lcote-$i;
+							if($compl_n_1_times >= 0) {
+								$compl_n_1=str_repeat("0",$compl_n_1_times);
+							}
 							if (($ccote)==($cote_n_1.$compl_n_1)) $chemin=$msg["l_general"];
 						}
 						if (!$chemin) {
@@ -480,8 +348,10 @@ if (!$location) {
 			print "</h3>\n";
 			if ($ssub) {
 				$t_expl_cote_cond=array();
-				for ($i=0; $i<count($t_dcote); $i++) {
-					$t_expl_cote_cond[]="expl_cote regexp '(^".$t_dcote[$i]." )|(^".$t_dcote[$i]."[0-9])|(^".$t_dcote[$i]."$)|(^".$t_dcote[$i].".)'";
+				if (is_countable($t_dcote)) {
+					for ($i=0; $i<count($t_dcote); $i++) {
+						$t_expl_cote_cond[]="expl_cote regexp '(^".$t_dcote[$i]." )|(^".$t_dcote[$i]."[0-9])|(^".$t_dcote[$i]."$)|(^".$t_dcote[$i].".)'";
+					}
 				}
 				$expl_cote_cond="(".implode(" or ",$t_expl_cote_cond).")";
 			}
@@ -489,81 +359,66 @@ if (!$location) {
 			if(!$nbr_lignes) {
 
 				if (!$ssub) {
-					$requete = "SELECT COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires $statut_j ";
-					$requete.= "where expl_location=$location and expl_section=$id and notice_id=expl_notice ";
-					if (strlen($dcote)) {
-						$requete.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
-					}
-					$requete.= $statut_r;
-					$res = pmb_mysql_query($requete, $dbh);
+				    $clause = '';
+				    if (strlen($dcote)) {
+						$dcote_times = $lcote-strlen($dcote);
+						if($dcote_times >= 0) {
+				        	$clause .= "expl_cote regexp '".$dcote.str_repeat("[0-9]",$dcote_times)."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$dcote_times).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$dcote_times).")' ";
+						}
+				    }
+				    $requete = show_localisation::get_query_records_items('COUNT(distinct notice_id)', $clause);
+					$res = pmb_mysql_query($requete);
 					$nbr_lignes = @pmb_mysql_result($res, 0, 0);
 
-					$requete2 = "SELECT COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
-					$requete2.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
-					if (strlen($dcote)) {
-						$requete2.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
-					}
-					$requete2.= $statut_r;
-					$res = pmb_mysql_query($requete2, $dbh);
+					$requete2 = show_localisation::get_query_serials_items('COUNT(distinct notice_id)', $clause);
+					$res = pmb_mysql_query($requete2);
 					$nbr_lignes += @pmb_mysql_result($res, 0, 0);
 
 				} else {
-					$requete = "select COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires $statut_j ";
-					$requete.= "where expl_location=$location and expl_section=$id and notice_id=expl_notice ";
-					if (strlen($dcote)) {
-						$requete.= " and $expl_cote_cond ";
-					}
-					$requete.= $statut_r;
-					$res = pmb_mysql_query($requete, $dbh);
+				    $clause = '';
+				    if (strlen($dcote)) {
+				        $clause.= $expl_cote_cond;
+				    }
+				    $requete = show_localisation::get_query_records_items('COUNT(distinct notice_id)', $clause);
+					$res = pmb_mysql_query($requete);
 					$nbr_lignes = @pmb_mysql_result($res, 0, 0);
 
-					$requete2 = "SELECT COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
-					$requete2.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
-					if (strlen($dcote)) {
-						$requete2.= "and $expl_cote_cond ";
-					}
-					$requete2.= $statut_r;
-					$res = pmb_mysql_query($requete2, $dbh);
+					$requete2 = show_localisation::get_query_serials_items('COUNT(distinct notice_id)', $clause);
+					$res = pmb_mysql_query($requete2);
 					$nbr_lignes += @pmb_mysql_result($res, 0, 0);
-
 				}
 			}
 
 			if($nbr_lignes) {
+			    $clause = '';
+			    if (strlen($dcote)) {
+			        if (!$ssub) {
+						$dcote_times = $lcote-strlen($dcote);
+						if($dcote_times >= 0) {
+			            	$clause .= "expl_cote regexp '".$dcote.str_repeat("[0-9]",$dcote_times)."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$dcote_times).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$dcote_times).")' ";
+						}
+			        } else {
+			            $clause.= $expl_cote_cond;
+			        }
+			    }
 				//Table temporaire de tous les id
-				$requete = "create temporary table temp_n_id ENGINE=MyISAM (select notice_id, expl_id FROM notices $acces_j ,exemplaires $statut_j ";
-				$requete.= "WHERE expl_location=$location and expl_section=$id and notice_id=expl_notice ";
-				if (strlen($dcote)) {
-					if (!$ssub) {
-						$requete.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
-						$level_ref=strlen($dcote)+1;
-					} else {
-						$requete.= "and $expl_cote_cond ";
-					}
-				}
-				$requete.= "$statut_r ";
-				$requete.= "group by notice_id, expl_id) ";
+				$requete = "create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} (
+                    ".show_localisation::get_query_records_items('notice_id, expl_id', $clause, 'notice_id, expl_id')."
+                )";
 				pmb_mysql_query($requete);
 
-				$requete2 = "insert into temp_n_id (SELECT notice_id, expl_id FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
-				$requete2.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
-				if (strlen($dcote)) {
-					if (!$ssub) {
-						$requete2.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
-					} else {
-						$requete2.= "and $expl_cote_cond ";
-					}
-				}
-				$requete2.= "$statut_r ";
-				$requete2.= "group by notice_id, expl_id) ";
+				$requete2 = "insert into temp_n_id (
+                    ".show_localisation::get_query_serials_items('notice_id, expl_id', $clause, 'notice_id, expl_id')."
+                )";
 				@pmb_mysql_query($requete2);
 				@pmb_mysql_query("alter table temp_n_id add index(notice_id, expl_id)");
 				//Calcul du classement
+				$index=array();
 				if (!$ssub) {
-					$rq1_index="create temporary table union1 ENGINE=MyISAM (select distinct expl_cote from exemplaires, temp_n_id where expl_location='".$location."' and expl_section='".$id."' and expl_notice=temp_n_id.notice_id) ";
-					$res1_index=pmb_mysql_query($rq1_index);
-					$rq2_index="create temporary table union2 ENGINE=MyISAM (select distinct expl_cote from exemplaires join (select distinct bulletin_id from bulletins join temp_n_id where bulletin_notice=notice_id) as sub on (bulletin_id=expl_bulletin) where expl_location='".$location."' and expl_section='".$id."') ";
-					$res2_index=pmb_mysql_query($rq2_index);
+					$rq1_index="create temporary table union1 ENGINE={$default_tmp_storage_engine} (select distinct expl_cote from exemplaires, temp_n_id where expl_location='".$location."' and expl_section='".$id."' and expl_notice=temp_n_id.notice_id) ";
+					pmb_mysql_query($rq1_index);
+					$rq2_index="create temporary table union2 ENGINE={$default_tmp_storage_engine} (select distinct expl_cote from exemplaires join (select distinct bulletin_id from bulletins join temp_n_id where bulletin_notice=notice_id) as sub on (bulletin_id=expl_bulletin) where expl_location='".$location."' and expl_section='".$id."') ";
+					pmb_mysql_query($rq2_index);
 					$req_index="select distinct expl_cote from union1 union select distinct expl_cote from union2";
 					$res_index=pmb_mysql_query($req_index);
 
@@ -579,7 +434,7 @@ if (!$location) {
 					}
 					// Zend
 					while ($ct=pmb_mysql_fetch_object($res_index)) {
-						//Je regarde si le d√©but existe dans indexint
+						//Je regarde si le dÈbut existe dans indexint
 						$lf=5;
 						$t=array();
 						while ($lf>0) {
@@ -592,8 +447,8 @@ if (!$location) {
 									$index[$t["dcote"]]=$t;
 									break;
 								} else {
-									$rq_del="select distinct notice_id from notices, exemplaires where expl_cote='".$ct->expl_cote."' and expl_notice=notice_id ";
-									$rq_del.=" union select distinct notice_id from notices, exemplaires, bulletins where expl_cote='".$ct->expl_cote."' and expl_bulletin=bulletin_id and bulletin_notice=notice_id ";
+									$rq_del="select distinct notice_id, expl_id from notices, exemplaires where expl_cote='".$ct->expl_cote."' and expl_notice=notice_id ";
+									$rq_del.=" union select distinct notice_id, expl_id from notices, exemplaires, bulletins where expl_cote='".$ct->expl_cote."' and expl_bulletin=bulletin_id and bulletin_notice=notice_id ";
 									$res_del=pmb_mysql_query($rq_del) ;
 									if (pmb_mysql_num_rows($res_del)) {
 										while ($n_id=pmb_mysql_fetch_object($res_del)) {
@@ -608,10 +463,14 @@ if (!$location) {
 							if (preg_match("/[0-9][0-9][0-9]/",$ct->expl_cote,$c)) {
 								$found=false;
 								$lcote=3;
-								$level=$level_ref;
+								$level= intval($level_ref);
 								while ((!$found)&&($level<=$lcote)) {
 									$cote=substr($c[0],0,$level);
-									$compl=str_repeat("0",$lcote-$level);
+									$compl = "";
+									$compl_times = $lcote-$level;
+									if($compl_times >= 0) {
+										$compl=str_repeat("0",$compl_times);
+									}
 									$rq_index="select indexint_name,indexint_comment from indexint where indexint_name='".$cote.$compl."' and length(indexint_name)>=$lcote and indexint_comment!='' and num_pclass='".$type_aff_navigopac."' order by indexint_name limit 1 ";
 									$res_index_1=pmb_mysql_query($rq_index);
 									if (pmb_mysql_num_rows($res_index_1)) {
@@ -621,9 +480,13 @@ if (!$location) {
 												$t["comment"]=pmb_mysql_result($res_index_1,0,1);
 												if ($level>1) {
 													$cote_n_1=substr($c[0],0,$level-1);
-													$compl_n_1=str_repeat("0",$lcote-$level+1);
+													$compl_n_1="";
+													$compl_n_1_times = $lcote-$level+1;
+													if($compl_n_1_times >= 0) {
+														$compl_n_1=str_repeat("0",$compl_n_1_times);
+													}
 													if (($cote.$compl)==($cote_n_1.$compl_n_1))
-														$t["comment"]="G√©n√©ralit√©s";
+														$t["comment"]="GÈnÈralitÈs";
 												}
 												$t["lcote"]=$lcote;
 												$t["dcote"]=$cote;
@@ -664,7 +527,7 @@ if (!$location) {
 					$nbr_lignes=pmb_mysql_result(pmb_mysql_query("select count(1) from temp_n_id"),0,0);
 				}
 				if ($nbr_lignes) {
-					//Affichage des sous cat√©gories
+					//Affichage des sous catÈgories
 					if (count($index)>1) {
 						if (!strlen($dcote))
 							print pmb_bidi(sprintf($msg["l_etageres"],htmlentities($section_libelle,ENT_QUOTES,$charset)));
@@ -674,7 +537,7 @@ if (!$location) {
 							pmb_bidi(print sprintf($msg["l_sub_themes"],htmlentities($theme,ENT_QUOTES,$charset)));
 						reset($index);
 						$ssub_val=array();
-						//Regroupement des libell√©s identiques hors dewey
+						//Regroupement des libellÈs identiques hors dewey
 						foreach ($index as $key => $val) {
 							if ($val["ssub"]) {
 								if ($ssub_val[$val["comment"]]) {
@@ -686,7 +549,7 @@ if (!$location) {
 								$ssub_val[$val["comment"]."@ssub"]=$val;
 							}
 						}
-						//Affichage du classement si il reste suffisamment de cat√©gories
+						//Affichage du classement si il reste suffisamment de catÈgories
 						if (count($ssub_val)>1) {
 							$opac_categories_nb_col_subcat;
 							$cur_col=0;
@@ -704,7 +567,7 @@ if (!$location) {
 								}
 							}
 							if ($cur_col<$opac_categories_nb_col_subcat) {
-								for ($i=$curl_col; $i<$opac_categories_nb_col_subcat; $i++) {
+								for ($i=$cur_col; $i<$opac_categories_nb_col_subcat; $i++) {
 									print "<td><span class=\"espaceResultSearch\">&nbsp;</span></td>";
 								}
 								print "</tr>";
@@ -714,12 +577,12 @@ if (!$location) {
 					}
 					print "</div>";
 					$requete = "SELECT DISTINCT notices.notice_id FROM temp_n_id JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
-					affiche_notice_navigopac($requete);
+					show_localisation::affiche_notice_navigopac($requete);
 				} else {
-					print "</div><br /><blockquote>$msg[categ_empty]</blockquote><br />";
+					print "</div><br /><blockquote role='presentation'>$msg[categ_empty]</blockquote><br />";
 				}
 			} else {
-				print "</div><br /><blockquote>$msg[categ_empty]</blockquote><br />";
+				print "</div><br /><blockquote role='presentation'>$msg[categ_empty]</blockquote><br />";
 			}
 		}
 	}

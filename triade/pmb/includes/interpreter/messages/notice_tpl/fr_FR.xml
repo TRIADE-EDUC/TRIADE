@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.27 2019-05-21 10:26:29 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.39.2.3.2.1 2025/05/21 06:52:24 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -52,6 +52,7 @@ param4 = afficher la fonction : 0=non, 1=toujours
 param5 = afficher "et al." si le nb d'auteurs est supérieur au param1, 1=oui 0=non
 param6 = 0, l'affichage de la fonction se fait après une virgule. 1, la fonction s'affiche entre parenthèse.
 param7 = filtrage des auteurs par leur fonction. Inscrire le code de la fonction disponible dans le fichier includes/marc_tables/fr_FR/function.xml
+param8 = séparateur pour le dernier auteur
   </entry>
   <entry code="authors_output_description"></entry>
   
@@ -65,6 +66,7 @@ param3 = séparateur entre principal/autres/secondaires
 param4 = afficher la fonction : 0=non, 1=toujours
 param5 = afficher "et al." si le nb d'auteurs est supérieur au param1, 1=oui 0=non
 param6 = 70=physique, 71=collectivités, 72=congrès (séparé par une virgule)
+param7 = séparateur pour le dernier auteur
   </entry>
   <entry code="authors_by_type_output_description"></entry>
   
@@ -78,6 +80,7 @@ param3 = séparateur entre principal/autres/secondaires
 param4 = afficher la fonction : 0=non, 1=toujours
 param5 = afficher "et al." si le nb d'auteurs est supérieur au param1, 1=oui 0=non
 param6 = 70=physique, 71=collectivités, 72=congrès (séparé par une virgule...)
+param7 = séparateur pour le dernier auteur
   </entry>
   <entry code="authors_by_type_dir_output_description"></entry>
 
@@ -99,6 +102,7 @@ param7 = template pour l'affichage des auteurs, à mettre entre #{}; s'il contien
 	{p_perso|cp_name|VALUE} permet d'afficher un champ perso avec cp_name=nom du champ perso et la troisième valeur =TITRE ou VALUE
 param8 = filtrage des auteurs par leur fonction (optionnel).
 Inscrire le code de la fonction disponible dans le fichier includes/marc_tables/fr_FR/function.xml
+param9 = séparateur pour le dernier auteur
   </entry>
   <entry code="authors_by_type_with_tpl_output_description">
 Exemple :
@@ -219,13 +223,18 @@ Pour obtenir l'URL de la page collection :
   <entry code="date_publication_description">Affiche la date de publication de la notice (au format JJ/MM/AAAA).</entry>
   <entry code="date_publication_input_description"></entry>
   <entry code="date_publication_output_description"></entry>
-  
+
+<!--#expl_number();-->
+  <entry code="expl_number_description">Retourne le nombre d'exemplaires.</entry>
+  <entry code="expl_number_input_description"></entry>
+  <entry code="expl_number_output_description"></entry>
+    
 <!--#expl();-->
   <entry code="expl_description">Affiche un tableau HTML contenant les informations des exemplaires de la notice : support, surlocalisation,localisation, section, cote, code-barres, statut.</entry>
   <entry code="expl_input_description"></entry>
   <entry code="expl_output_description"></entry>
   
-<!--#expl_by_field(param0,param1,param2,param3);-->
+<!--#expl_by_field(param0,param1,param2,param3,param4);-->
   <entry code="expl_by_field_description">Affiche un champ des exemplaires selon les paramètres :</entry>
   <entry code="expl_by_field_input_description">
 param0 = nombre maxi d'exemplaires à afficher, 0=tous
@@ -255,6 +264,8 @@ Liste des champs et des valeurs possibles pour les paramètres 2 et 3 :
 	expl_date_depot : date de dépôt
 	pret_flag : 1 = exemplaire empruntable, 0 =exemplaire non empruntable
 	nom_du_champ_perso : affiche la valeur de ce champ
+	caddies : identifiants de paniers
+param4 = valeurs d'exemplaires (0 = toutes, 1 = dédoublonnage)
   </entry>
   <entry code="expl_by_field_output_description">
 Exemples :
@@ -262,7 +273,7 @@ Exemples :
 #expl_by_field(0, / ,expl_cb,[expl_location=1]); = affiche les codes-barres de tous les exemplaire de la localisation avec identifiant = 1
   </entry>
   
-<!--#expl_with_tpl(param0,param1,param2,param3);-->
+<!--#expl_with_tpl(param0,param1,param2,param3,param4);-->
   <entry code="expl_with_tpl_description">Affiche les exemplaires associés à la notice, selon une mise en forme à définir</entry>
   <entry code="expl_with_tpl_input_description">
 param0 = nombre d'élément maximum
@@ -291,6 +302,8 @@ param3 = critères de filtrage des exemplaires
 	expl_date_retour : date de retour
 	expl_date_depot : date de dépôt
 	pret_flag : 1 = exemplaire empruntable, 0 =exemplaire non empruntable
+	caddies : identifiants de paniers
+param4 = valeurs d'exemplaires (0 = toutes, 1 = dédoublonnage)
   </entry>
   <entry code="expl_with_tpl_output_description">
 Exemple :
@@ -319,7 +332,7 @@ param5 = filtre par identifiant de statut de document numérique (séparer par une
   </entry>
   <entry code="expl_num_vign_reduit_output_description"></entry>
  
-<!--#expl_num_by_field(param0,param1,param2,param3);-->
+<!--#expl_num_by_field(param0,param1,param2,param3,param4);-->
   <entry code="expl_num_by_field_description">Affiche un champ des documents numériques selon les paramètres :</entry>
   <entry code="expl_num_by_field_input_description">
 param0 = nombre maxi de documents numériques à afficher, 0=tous
@@ -336,6 +349,7 @@ Liste des champs et des valeurs possibles pour les paramètres 2 et 3 :
 	explnum_nomfichier : nom du fichier
 	explnum_extfichier : extension du fichier
 	nom_du_champ_perso : affiche la valeur de ce champ
+param4 = gestion des droits OPAC : 0=non, 1=oui
   </entry>
   <entry code="expl_num_by_field_output_description">
 Exemples :
@@ -388,6 +402,18 @@ Pour obtenir les noms des fichiers PDF :
   <entry code="img_url_description">Affiche le lien vers la vignette de couverture de la notice.</entry>
   <entry code="img_url_input_description"></entry>
   <entry code="img_url_output_description"></entry>
+
+<!--#img_base64();-->
+  <entry code="img_base64_description">Affiche la vignette de couverture de la notice en base64.</entry>
+  <entry code="img_base64_input_description">
+    param0 = lien de l'image
+      - exemple: "./images/no_image.jpg"</entry>
+  <entry code="img_base64_output_description">data:image/png;base64,cXZhcmlu</entry>
+
+<!--#no_image();-->
+  <entry code="no_image_description">Affiche la no_image en fonction du niveau bibliographique et du type de document.</entry>
+  <entry code="no_image_input_description"></entry>
+  <entry code="no_image_output_description"></entry>
   
 <!--#indexint(param0,param1,param2,param3,param4,param5);-->
   <entry code="indexint_description">Affiche l'indexation décimale de la notice</entry>
@@ -709,6 +735,14 @@ param4 : template d'affichage du TU à définir à partir des éléments suivants :
   <entry code="year_publication_input_description"></entry>
   <entry code="year_publication_output_description"></entry>
   
+<!--concepts();-->
+  <entry code="concepts_description">Affiche les concepts de la notice.</entry>
+  <entry code="concepts_input_description">
+param0 = Identifiant du schéma à utiliser. Saisir la valeur "no_scheme" pour récupérer ceux sans schéma ou laisser vide pour récupérer ne pas filtrer sur un schéma.
+param1 = Liens vers les concepts composés : 0=non, 1=oui. Valeur par défaut = 1.
+  </entry>
+  <entry code="concepts_output_description"></entry>
+  
 <!--keywords();-->
   <entry code="keywords_description">Affiche les mots-clés de la notice.</entry>
   <entry code="keywords_input_description">
@@ -791,6 +825,12 @@ param0 :
   </entry>
   <entry code="date_bulletin_output_description"></entry>
   
+ <!--#bulletin_id();-->
+  <entry code="bulletin_id_description">
+Affiche l'identifiant du bulletin à partir d'un article.</entry>
+  <entry code="bulletin_id_input_description"></entry>
+  <entry code="bulletin_id_output_description"></entry>
+  
 <!--#issn();-->
   <entry code="issn_description">Affiche l'ISSN de la notice.</entry>
   <entry code="issn_input_description"></entry>
@@ -850,6 +890,21 @@ Exemple :
 &lt;i&gt;#title();#a_empty(#complement_title();, : );&lt;/i&gt;};,...);
   </entry>
 
+<!--#filter_from_notice_info(param0,param1,param2);-->
+  <entry code="filter_from_notice_info_description">Filtrer une liste de notices selon la valeur d'une propriété de l'objet notice_info</entry>
+  <entry code="filter_from_notice_info_input_description">
+param0 : tableau d'identifiants des notices ou identifiants séparés par une virgule 
+param1 : nom de la propriété pour le filtrage
+param2 : valeur de comparaison pour le filtrage
+  </entry>
+  <entry code="filter_from_notice_info_output_description">
+Exemple :
+#filter_from_notice_info(#linked_id(up,a,d);,0,&lt;br
+ /&gt;,#{In
+ :
+&lt;i&gt;#title();#a_empty(#complement_title();, : );&lt;/i&gt;};,memo_lang,en_UK);
+  </entry>
+  
 <!--#linked_id(param0,param1);-->
   <entry code="linked_id_description">(À utiliser avec la fonction #group();)Renvoie un tableau d'identifiants de notices liées selon les paramètres :</entry>
   <entry code="linked_id_input_description">
@@ -1027,6 +1082,15 @@ param1 = expression
   </entry>
   <entry code="extract_path_output_description"></entry>
   
+  <!--#extract_explode(param0,param1,param2);-->
+  <entry code="extract_explode_description">Extrait une valeur dans une chaîne de caractères à partir d'un découpage sur un séparateur.</entry>
+  <entry code="extract_explode_input_description">
+param0 = chaine
+param1 = séparateur
+param2 = position : 0 par défaut
+  </entry>
+  <entry code="extract_explode_output_description"></entry>
+  
 <!--#format_date(param0,param1);-->
   <entry code="format_date_description">Formate une date</entry>
   <entry code="format_date_input_description">
@@ -1119,6 +1183,15 @@ param2 = expression
   <entry code="strtolower_input_description"></entry>
   <entry code="strtolower_output_description"></entry>
   
+  <!--#strpos(param0,param1,param2);-->
+  <entry code="strpos_description">Retourne la position de la première occurrence dans la chaîne param0</entry>
+  <entry code="strpos_input_description">
+param0 : la chaîne dans laquelle on doit chercher
+param1 : la chaîne à rechercher
+param2 : si spécifié, la recherche commencera à partir de ce nombre de caractères compté depuis le début de la chaîne.
+  </entry>
+  <entry code="strpos_output_description"></entry>
+  
 <!--#substr(param0,param1,param2);-->
   <entry code="substr_description">Affiche une partie de la chaîne param0</entry>
   <entry code="substr_input_description">
@@ -1127,6 +1200,16 @@ param1 : numéro du caractère de début de la sous-chaîne à extraire
 param2 : numéro du caractère de fin de la sous-chaîne à extraire. param2 est facultatif, si absent la sous-chaîne aura pour fin le dernier caractère de param0.
   </entry>
   <entry code="substr_output_description"></entry>
+  
+<!--#limitstring(param0,param1,param2);-->
+  <entry code="limitstring_description">Limitation d'une partie de la chaîne param0 avec un suffixe</entry>
+  <entry code="limitstring_input_description">
+param0 : chaîne de caractères
+param1 : affichage des n premiers caractères. Valeur par défaut : 50
+param2 : chaîne de caractères pour le suffixe. Valeur par défaut : [...]
+  </entry>
+  <entry code="limitstring_output_description"></entry>
+    
 <!--#trim(param0);-->
   <entry code="trim_description">Affiche param0 après avoir supprimé les espaces avant et après la chaîne de caractères.</entry>
   <entry code="trim_input_description">param0 : chaîne de caractères</entry>
@@ -1136,6 +1219,14 @@ param2 : numéro du caractère de fin de la sous-chaîne à extraire. param2 est fac
   <entry code="ucfirst_description">Affiche la chaîne de caractères param0 avec la 1e lettre en majuscules.</entry>
   <entry code="ucfirst_input_description"></entry>
   <entry code="ucfirst_output_description"></entry>
+  
+<!-- #ucwords($param); -->
+  <entry code="ucwords_description">Affiche un texte avec les premières lettres des mots en majuscule</entry>
+  <entry code="ucwords_input_description">
+  param[0] = texte
+  param[1] = séparateurs. Valeur par défaut : " \t\r\n\f\v"
+  </entry>
+  <entry code="ucwords_output_description">Exemple : Si param[0]="logiciel pmb", on aura "Logiciel Pmb"</entry>
   
 <!--#set_variable(param0);-->
   <entry code="set_variable_description">Affecte une valeur à une variable.</entry>

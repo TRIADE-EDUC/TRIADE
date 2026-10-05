@@ -1,30 +1,31 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_view_tcd.class.php,v 1.5 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: editions_state_view_tcd.class.php,v 1.7 2023/03/07 07:36:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/editions_state_view.class.php");
 
 class editions_state_view_tcd extends editions_state_view {
 	public $datas_tcd =array(
 		'values' => array(),
 		'cols' => array()
-	);		//tableau de donnÃ©es
+	);		//tableau de données
 	
 	public function __construct($datas,$id,$param=array()){
-		//on gÃ¨re les propriÃ©tÃ©s communes dans la classe parente
+		//on gère les propriétés communes dans la classe parente
 		parent::__construct($datas,$id,$param);
-		$this->set_param_tcd($param["tcd"]);
+		$this->set_param_tcd($param["tcd"] ?? array());
 		$this->get_datas();
 	}
 	
 	public function get_datas(){
 
 		if(count($this->datas_tcd) && count($this->datas_tcd["values"])){
-			//Le calcule est dÃ©jÃ  fait	
+			//Le calcule est déjà fait	
 		}elseif(!$this->my_param["tcd"]){
 			$this->datas_tcd=array(
 				'values' => array(),
@@ -86,7 +87,7 @@ class editions_state_view_tcd extends editions_state_view {
 	
 	
 	
-	//un simple tableau pour la classe gÃ©nÃ©rique...
+	//un simple tableau pour la classe générique...
 	public function show(){
 		global $charset,$msg;
 		global $javascript_path;

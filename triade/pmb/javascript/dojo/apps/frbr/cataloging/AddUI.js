@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: AddUI.js,v 1.8 2018-03-21 14:05:42 tsamson Exp $
+// $Id: AddUI.js,v 1.8 2018/03/21 14:05:42 tsamson Exp $
 
 define(["dojo/_base/declare", 
         "dojox/layout/ExpandoPane", 

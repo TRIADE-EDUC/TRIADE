@@ -12,7 +12,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
  *                            ---------------
  *
  *   begin                : Janvier 2000 
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -67,14 +67,14 @@ $periode=recherchedatestage2($idnumstage,$idclasse);
 	<td bgcolor="#CCCCCC" align=center width=5% ><b>&nbsp;Enseignant&nbsp;Visiteur&nbsp;2&nbsp;</b></td>
 </tr>
 <?php
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$ideleve=$data[$i][1];
 	$data2=rechercheEntreStageElecomplet($ideleve,$idnumstage) ;
 	// id_eleve,id_entreprise,num_stage,lieu_stage,ville_stage,tuteur_stage,id_prof_visite,date_visite_prof,tel,date_visite_prof2,id_prof_visite2,compte_tuteur_stage,info_plus,dateDebutAlternance,dateFinAlternance
-	for($j=0;$j<count($data2);$j++) {
+	for($j=0;$j<countTriade($data2);$j++) {
 
 		$entreprise="&nbsp;";
 		$lieu="&nbsp;";

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.2 2021/02/01 14:17:56 qvarin Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="" typeobject="">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="internal" id="2">
+		<tablefield>id_authority</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="103" type="text" typefield="select" id="3">
+		<table name="authors">
+			<tablefield>index_author</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+		<table name="categories">
+			<tablefield>index_categorie</tablefield>
+			<tablekey>num_noeud</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=2</referencefield>
+			</link>
+		</table>
+		<table name="authperso_authorities">
+			<tablefield>authperso_index_infos_global</tablefield>
+			<tablekey>id_authperso_authority</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=9</referencefield>
+			</link>
+		</table>
+		<table name="collections">
+			<tablefield>index_coll</tablefield>
+			<tablekey>collection_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=4</referencefield>
+			</link>
+		</table>
+		<table name="skos_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=1 and code_ss_champ=1 and ordre=1</referencefield>
+			</link>
+		</table>
+		<table name="indexint">
+			<tablefield>index_indexint</tablefield>
+			<tablekey>indexint_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=8</referencefield>
+			</link>
+		</table>
+		<table name="publishers">
+			<tablefield>index_publisher</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+		<table name="series">
+			<tablefield>serie_index</tablefield>
+			<tablekey>serie_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=6</referencefield>
+			</link>
+		</table>
+		<table name="sub_collections">
+			<tablefield>index_sub_coll</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+			<link type="n1">
+				<table>collections</table>
+				<tablekey>collection_id</tablekey>
+				<externalfield>sub_coll_parent</externalfield>
+			</link>
+		</table>
+		<table name="titres_uniformes">
+			<tablefield>index_tu</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+		</table>
+	</field>
+
+</sort>

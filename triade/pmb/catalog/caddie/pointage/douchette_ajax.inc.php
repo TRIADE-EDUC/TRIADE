@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: douchette_ajax.inc.php,v 1.5 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: douchette_ajax.inc.php,v 1.7 2022/03/08 13:45:41 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -13,6 +13,7 @@ if($idcaddie) {
 	$myCart = new caddie($idcaddie);
 	switch ($action) {
 		case 'add_item':
+		    $form_cb_expl=trim($form_cb_expl);
 			$param = $myCart->get_item_info_from_expl_cb($form_cb_expl, 1);
 			$param->form_cb_expl=$form_cb_expl;
 			$res_ajout = $myCart->pointe_item($param->expl_id,"EXPL", $form_cb_expl, "EXPL_CB" );
@@ -42,7 +43,8 @@ if($idcaddie) {
 	$param->nb_item_base_pointe=$myCart->nb_item_base_pointe;
 	$param->nb_item_blob=$myCart->nb_item_blob;
 	$param->nb_item_blob_pointe=$myCart->nb_item_blob_pointe;
-} 
+}
+$array=array();
 $array[0]=$param;
 $buf_xml = array2xml($array);		
 ajax_http_send_response("$buf_xml","text/xml");

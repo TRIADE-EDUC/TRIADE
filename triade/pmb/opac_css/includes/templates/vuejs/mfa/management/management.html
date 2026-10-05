@@ -1,0 +1,14 @@
+<div id="mfa-init">
+    <h3 ref="mfa-title"></h3>
+    <div class="row">&nbsp;</div>
+    <before_initialization v-if="!empr.mfa_secret_code && !init"></before_initialization>
+    <initialization v-if="!empr.mfa_secret_code && init"
+        :empr="empr"
+        :suggest="suggest_message"
+        :sms_activate="sms_activate">
+    </initialization>
+    <after_initialization v-if="empr.mfa_secret_code"
+        :empr="empr"
+        :sms_activate="sms_activate">
+    </after_initialization>
+</div>

@@ -6,7 +6,7 @@ $idpiecejointe=$_POST["idpiecejointe"];
 $cnx=cnx();
 $data=recupPieceJointeMessagerie($idpiecejointe); //md5,nom,etat,idpiecejointe
 print "&nbsp;&nbsp;";
-for ($i=0;$i<count($data);$i++) {
+for ($i=0;$i<countTriade($data);$i++) {
 	$ficName=$data[$i][1];
 	$md5=$data[$i][0];
 	$ficJ="./data/fichiersj/".$data[$i][0];

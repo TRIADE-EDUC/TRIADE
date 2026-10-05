@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_agenda_view_carousel_responsive.class.php,v 1.1 2017-02-02 10:59:48 ngantier Exp $
+// $Id: cms_module_agenda_view_carousel_responsive.class.php,v 1.2 2019/09/17 09:44:35 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -47,10 +47,10 @@ class cms_module_agenda_view_carousel_responsive extends cms_module_common_view_
 
 	public function render($datas){
 		$render_datas = array();
-		$render_datas['title'] = "Liste d'Ã©vÃ¨nements";
+		$render_datas['title'] = "Liste d'évènements";
 		$render_datas['events'] = array();
 		foreach($datas['events'] as $event){
-			$event['link'] = $this->get_constructed_link("article",$event['id']);
+			$event->link = $this->get_constructed_link("article",$event->id);
 			$render_datas['records'][]=$event;
 		}
 		return parent::render($render_datas);

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_menu_datasource_menu.xml,v 1.2 2014-11-20 08:44:16 arenou Exp $ -->
+$Id: cms_module_menu_datasource_menu.xml,v 1.2 2014/11/20 08:44:16 arenou Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_menu_datasource_menu_items_desc'>Tableau des éléments du menu</entry>

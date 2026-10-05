@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Tree.js,v 1.6 2019-02-05 15:01:13 apetithomme Exp $
+// $Id: Tree.js,v 1.6 2019/02/05 15:01:13 apetithomme Exp $
 
 define(['dojo/_base/declare',
         'dijit/Tree',

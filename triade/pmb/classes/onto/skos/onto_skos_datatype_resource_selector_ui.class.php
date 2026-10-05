@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_datatype_resource_selector_ui.class.php,v 1.8 2019-01-10 13:53:37 arenou Exp $
+// $Id: onto_skos_datatype_resource_selector_ui.class.php,v 1.10 2019/08/14 08:02:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,8 +18,8 @@ class onto_skos_datatype_resource_selector_ui extends onto_common_datatype_resou
 	/**
 	 * 
 	 *
-	 * @param onto_common_property $property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param onto_common_property $property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -31,7 +31,7 @@ class onto_skos_datatype_resource_selector_ui extends onto_common_datatype_resou
 	public static function get_form($item_uri,$property, $restrictions,$datas, $instance_name,$flag) {
 		global $msg,$charset,$ontology_tpl;
 
-		//on regarde si le flag change quelque chose pour notre sÃ©lecteur 
+		//on regarde si le flag change quelque chose pour notre sélecteur 
 		$fixed = false;
 		/* Pourquoi plus de bouton de selection ??
 		if(strpos($flag, "_selector_form") !== false){
@@ -39,7 +39,7 @@ class onto_skos_datatype_resource_selector_ui extends onto_common_datatype_resou
 		}
 		*/
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities($property->label ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities($property->get_label() ,ENT_QUOTES,$charset) , $form);
 		
 		$range_for_form = "";
 		foreach($property->range as $range){
@@ -50,12 +50,12 @@ class onto_skos_datatype_resource_selector_ui extends onto_common_datatype_resou
 		if(!$fixed){
 			
 			$content.=$ontology_tpl['form_row_content_input_sel'];
-// 			if($restrictions->get_max()<$i || c$restrictions->get_max()===-1){ //Edit VT 16/10/17 pour moi la condition n'a plus lieu d'Ãªtre
+// 			if($restrictions->get_max()<$i || c$restrictions->get_max()===-1){ //Edit VT 16/10/17 pour moi la condition n'a plus lieu d'être
 				$content.=$ontology_tpl['form_row_content_input_add_ressource_selector'];
 // 			}
 		}
 		$content = str_replace("!!property_name!!", rawurlencode($property->pmb_name), $content);
-		if($datas && sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));

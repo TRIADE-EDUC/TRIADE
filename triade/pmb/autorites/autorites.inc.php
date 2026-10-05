@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: autorites.inc.php,v 1.25 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: autorites.inc.php,v 1.28 2023/12/27 08:04:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $database_window_title, $msg, $user_input, $pmb_javascript_office_editor, $base_path, $categ, $plugin, $sub, $file;
 
-echo window_title($database_window_title.$msg[132].$msg[1003].$msg[1001]);
-
-//initialisation pour toutes les autoritÃ©s
+//initialisation pour toutes les autorités
 if (!isset($user_input)) $user_input = '';
 
 if($pmb_javascript_office_editor){
 	print $pmb_javascript_office_editor;
-	print "<script type='text/javascript' src='".$base_path."/javascript/tinyMCE_interface.js'></script>";
+	print "<script type='text/javascript'>
+        pmb_include('$base_path/javascript/tinyMCE_interface.js');
+    </script>";
 }
 
 switch($categ) {
@@ -44,7 +44,7 @@ switch($categ) {
 		if (SESSrights & CONCEPTS_AUTH) include('./autorites/onto/main.inc.php');
 		break;
 	case 'semantique':
-		if (SESSrights & THESAURUS_AUTH) include('./autorites/semantique/semantique_main.inc.php');
+		include('./autorites/semantique/semantique_main.inc.php');
 		break;
 	case 'titres_uniformes':
 		include('./autorites/titres_uniformes/titres_uniformes.inc.php');

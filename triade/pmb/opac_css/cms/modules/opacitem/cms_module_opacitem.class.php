@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_opacitem.class.php,v 1.1 2014-02-17 14:18:03 abacarisse Exp $
+// $Id: cms_module_opacitem.class.php,v 1.1 2014/02/17 14:18:03 abacarisse Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

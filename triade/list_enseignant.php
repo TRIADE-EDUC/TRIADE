@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,11 +34,11 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post action="creat_scolaire.php" onsubmit="return verifcommun()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGVIES5 ?></font></b></td>
@@ -54,17 +54,17 @@ validerequete("menuadmin");
 $data=affPers('ENS');
 // $data : tab bidim - soustab 3 champs 
 //pers_id, civ, nom, prenom, identifiant, offline, email
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 	{
 	$photopers="image_trombi.php?idP=".$data[$i][0];
 	print "<tr class='tabnormal2' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >\n";
 	print "<td >";
 	if ($data[$i][5] == 1) {
-		print "<img src='./image/commun/img_ssl_mini.png' alt='Inactif' /> ";
+		print "&#128164;";
 	}
 
-	print "<a href='#' onMouseOver=\"AffBulle('<img src=\'$photopers\' > ')\"  onMouseOut='HideBulle()'>".civ($data[$i][1])."  ".strtoupper($data[$i][2])."</a></td>\n";
-	print "<td >".ucfirst($data[$i][3])."</td>\n";
+	print "<a href='#' onMouseOver=\"AffBulle('<img src=\'$photopers\' > ')\"  onMouseOut='HideBulle()'>".civ($data[$i][1])."  ".strtoupper(stripslashes($data[$i][2]))."</a></td>\n";
+	print "<td >".ucfirst(stripslashes($data[$i][3]))."</td>\n";
 	$imgmail="";
 	if (trim($data[$i][6]) != "") {
 		$imgmail="<a href='mailto:".$data[$i][6]."' target='_blank' title='".$data[$i][6]."' ><img src='image/commun/email.gif' border='0' /></a>";
@@ -79,6 +79,6 @@ for($i=0;$i<count($data);$i++)
 </table>
 </td></tr></table>
 </form>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <SCRIPT type="text/javascript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
 </BODY></HTML>

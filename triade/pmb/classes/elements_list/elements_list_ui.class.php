@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_list_ui.class.php,v 1.21 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: elements_list_ui.class.php,v 1.22.8.1 2025/01/29 13:16:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path.'/h2o/pmb_h2o.inc.php');
 
 class elements_list_ui {
@@ -17,7 +18,7 @@ class elements_list_ui {
 	protected $mixed;
 	protected $current_url;
 	/**
-	 * Nombre d'Ã©lÃ©ments total de la liste aprÃ¨s passage des filtres
+	 * Nombre d'éléments total de la liste après passage des filtres
 	 * @var int
 	 */
 	protected $nb_filtered_results;
@@ -62,7 +63,7 @@ class elements_list_ui {
 	}
 	
 	protected function generate_element($element_id, $recherche_ajax_mode=0){
-		//Surcharge dans les classes dÃ©rivÃ©es
+		//Surcharge dans les classes dérivées
 	}
 	
 	protected static function render($template_path, $context, $context_parameters=array()) {
@@ -77,19 +78,15 @@ class elements_list_ui {
 		if (!$this->elements_list) {
 			$this->elements_list = array();
 			$recherche_ajax_mode=0;
-			$nb=0;
 			$this->elements_list = $this->generate_elements_list();
 		}
 		return $this->elements_list;
 	}
 		
 	public function get_elements_list_nav(){
-		global $pmb_url_base, $categ, $sub, $id, $quoi;
 		global $tab_page;
 		global $pmb_nb_elems_per_tab;
 		global $tab_nb_per_page;
-		global $msg,$charset, $base_path;
-		global $tab_nb_results;
 		
 		if(!$tab_page){
 			$tab_page = 1;
@@ -136,7 +133,7 @@ class elements_list_ui {
 		} else {
 			$nb_results = $this->nb_results;
 		}
-		// Si on n'a pas de rÃ©sultats, pas la peine d'aller plus loin
+		// Si on n'a pas de résultats, pas la peine d'aller plus loin
 		if (!$nb_results) return '';
 		$nbepages = ceil($nb_results/$tab_nb_per_page);
 		$suivante = $tab_page+1;
@@ -216,5 +213,9 @@ class elements_list_ui {
 	
 	public function delete_context_parameter($key) {
 		unset($this->context_parameters[$key]);
+	}
+	
+	public function can_display_content() {
+	    return ($this->nb_results != 0);
 	}
 }

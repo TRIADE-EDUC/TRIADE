@@ -12,7 +12,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,11 +47,11 @@ if ($id != 1) { set_time_limit(9000); }
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSTAGE115 ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -90,7 +90,7 @@ if (isset($_POST["eid"])) {
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -119,7 +119,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 
 	if ($laclasse == 1) {
 		$eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_eleve
-		for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+		for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 			// variable eleve
 			$nomEleve=trim(strtoupper($eleveT[$j][0]));
 			$prenomEleve=trim(ucwords(strtolower($eleveT[$j][1])));
@@ -174,7 +174,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 
 
 
- 			for($h=0;$h<count($dataEnt);$h++) {
+ 			for($h=0;$h<countTriade($dataEnt);$h++) {
 				$responsable2=trim($dataEnt[$h][36]);
 
 				$ent_nom=$dataEnt[$h][3];
@@ -262,7 +262,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 			$periode="";
 			$date_debut="";
 			$date_fin="";
-			for($h=0;$h<count($dataEnt);$h++) {
+			for($h=0;$h<countTriade($dataEnt);$h++) {
 				$num_stage=$dataEnt[$h][15];
 				if ($dataEnt[$h][35] == 1) {
 					$date_debut=dateForm($dataEnt[$h][36]);
@@ -335,7 +335,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 		$bouton="<input type=button onclick=\"open('telecharger.php?fichier=./data/pdf_certif/courrierstageconvention/$classeNom.zip','_blank','');\" value=\"".LANGTMESS530."\"  STYLE=\"font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;\">";
 	}else{
 		$idEleve=$ideleve;
-		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve, tel_fixe_eleve FROM ${prefixe}eleves WHERE elev_id='$idEleve'" ;
+		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve, tel_fixe_eleve FROM {$prefixe}eleves WHERE elev_id='$idEleve'" ;
 		$res=execSql($sql);
 		$eleveT=chargeMat($res);
 		// nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve,tel_eleve
@@ -369,7 +369,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 		//  e.indemnitestage,e.pays_stage
 		//  e.alternance,e.dateDebutAlternance,e.dateFinAlternance
 	//35	//  e.autre_responsable
-		for($h=0;$h<count($dataEnt);$h++) {
+		for($h=0;$h<countTriade($dataEnt);$h++) {
 			$responsable2=trim($dataEnt[$h][35]);
 
 			$ent_nom=$dataEnt[$h][3];
@@ -460,7 +460,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 			$date_debut="";
 			$date_fin="";
 
-		for($h=0;$h<count($dataEnt);$h++) {
+		for($h=0;$h<countTriade($dataEnt);$h++) {
 			$num_stage=$dataEnt[$h][20];
 			if ($dataEnt[$h][32] == 1) {
 				$date_debut=dateForm($dataEnt[$h][33]);
@@ -536,7 +536,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 
 		$eleveT=recupEleve($idClasse); // recup liste eleve
 		// nom,prenom,lv1,lv2,elev_id,date_naissance
-		for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+		for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 			// variable eleve
 			$nomEleve=trim(strtoupper($eleveT[$j][0]));
 			$prenomEleve=trim(ucwords(strtolower($eleveT[$j][1])));
@@ -567,7 +567,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 			// 30 e.dateDebutAlternance,e.dateFinAlternance,e.autre_responsable,
 			// 33 
 	
-			for($h=0;$h<count($dataEnt);$h++) {
+			for($h=0;$h<countTriade($dataEnt);$h++) {
 				$responsable2=trim($dataEnt[$h][32]);
 
 				$ent_nom=$dataEnt[$h][3];
@@ -606,7 +606,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 				$periode="";
 				$date_debut="";
 				$date_fin="";
-				for($h=0;$h<count($dataEnt);$h++) {
+				for($h=0;$h<countTriade($dataEnt);$h++) {
 					$num_stage=$dataEnt[$h][15];
 					if ($dataEnt[$h][29] == 1) {
 						$date_debut=dateForm($dataEnt[$h][30]);
@@ -791,7 +791,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 	// 33 	   g.datedebut,g.datefin
 
 		$okconv=0;
-		for($h=0;$h<count($dataEnt);$h++) {
+		for($h=0;$h<countTriade($dataEnt);$h++) {
 			$responsable2=trim($dataEnt[$h][32]);
 
 			$ent_nom=$dataEnt[$h][3];
@@ -827,7 +827,7 @@ if ($texte ==  "{FICHIERRTFSTAGE}") {
 			$periode="";
 			$date_debut="";
 			$date_fin="";
-			for($h=0;$h<count($dataEnt);$h++) {
+			for($h=0;$h<countTriade($dataEnt);$h++) {
 				$num_stage=$dataEnt[$h][15];
 				if ($dataEnt[$h][29] == 1) {
 					$date_debut=dateForm($dataEnt[$h][30]);
@@ -1038,15 +1038,15 @@ print "</td></tr></table>";
 // Test du membre pour savoir quel fichier JS je dois executer
 if ($_SESSION["membre"] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

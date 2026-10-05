@@ -1,52 +1,144 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts_status.class.php,v 1.2 2019-06-07 13:48:35 ngantier Exp $
+// $Id: abts_status.class.php,v 1.6 2024/03/22 15:31:03 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once ($include_path . '/templates/abts_abonnements.tpl.php');
 
 class abts_status{
+	/* ---------------------------------------------------------------
+	 propriétés de la classe
+	 --------------------------------------------------------------- */
+	
+	public $id=0;
+	public $gestion_libelle='';
+	public $opac_libelle='';
+	public $class_html='statutnot1';
+	public $bulletinage_active=0;
+	
 	protected static $status = array();
 	private static $status_fetched = false;
 	
+	public function __construct($id=0) {
+		$this->id = intval($id);
+		$this->getData();
+	}
 	
-	public static function show_list(){
-		global $msg;
-		global $charset;
+	/* ---------------------------------------------------------------
+	 getData() : récupération des propriétés
+	 --------------------------------------------------------------- */
+	public function getData() {
+		if(!$this->id) return;
 		
-		static::get_list();
-		
-		print "
-		<table>
-			<tr>
-				<th>".$msg['noti_statut_libelle']."</th>
-			</tr>";
-		$i=0;
-		foreach(static::$status as $id => $statut){
-			if ($i % 2) {
-				$pair_impair = "even";
-			} else {
-				$pair_impair = "odd";
-			}
-			print "
-			<tr  class='$pair_impair' style='cursor: pointer' onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\">
-				<td onclick='document.location=\"./admin.php?categ=abonnements&sub=status&action=edit&id=".$id."\"'><span class='".$statut['class_html']."' style='margin-right:3px;'><img width='10' height='10' src='".get_url_icon('spacer.gif')."'/></span>".htmlentities($statut['label'], ENT_QUOTES, $charset)."</td>
-			</tr>";
-			$i++;
+		$query = 'SELECT * FROM abts_status WHERE abts_status_id='.$this->id;
+		$result = pmb_mysql_query($query);
+		if(!pmb_mysql_num_rows($result)) {
+			pmb_error::get_instance(static::class)->add_message("not_found", "not_found_object");
+			return;
 		}
-		print "
-		</table>
-		<div class='row'>
-			<input type='button' class='bouton' value='".$msg['115']."' onclick='document.location=\"./admin.php?categ=abonnements&sub=status&action=add\"'/>		
-		</div>";
+		
+		$data = pmb_mysql_fetch_object($result);
+		$this->gestion_libelle = $data->abts_status_gestion_libelle;
+		$this->opac_libelle = $data->abts_status_opac_libelle;
+		$this->class_html = $data->abts_status_class_html;
+		$this->bulletinage_active = $data->abts_status_bulletinage_active;
+	}
+	
+	public function get_content_form() {
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('form_gestion_libelle', 'docnum_statut_libelle')
+		->add_input_node('text', $this->gestion_libelle);
+		$interface_content_form->add_inherited_element('display_colors', 'form_class_html', 'docnum_statut_class_html')
+		->init_nodes([$this->class_html]);
+		$interface_content_form->add_element('form_bulletinage_active', 'docnum_statut_bulletinage_active', 'flat')
+		->add_input_node('boolean', $this->bulletinage_active);
+		return $interface_content_form->get_display();
+	}
+	
+	public function get_form() {
+		global $msg;
+		
+		$interface_form = new interface_admin_form('statusform');
+		if($this->id){
+			$interface_form->set_label($msg['118']);
+		}else{
+			$interface_form->set_label($msg['115']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->gestion_libelle." ?")
+		->set_content_form($this->get_content_form())
+		->set_table_name('abts_status')
+		->set_field_focus('form_gestion_libelle');
+		return $interface_form->get_display();
+	}
+	
+	public function set_properties_from_form() {
+		global $form_gestion_libelle,$form_class_html, $form_bulletinage_active;
+		
+		$this->gestion_libelle = stripslashes($form_gestion_libelle);
+		$this->opac_libelle = stripslashes($form_gestion_libelle);
+		$this->class_html = stripslashes($form_class_html);
+		$this->bulletinage_active = intval($form_bulletinage_active);
+	}
+	
+	public function save() {
+		if($this->gestion_libelle){
+			if($this->id){
+				$query = " update abts_status set ";
+				$where = "where abts_status_id = ".$this->id;
+			}else{
+				$query = " insert into abts_status set ";
+				$where = "";
+			}
+			$query.="
+				abts_status_gestion_libelle = '".addslashes($this->gestion_libelle)."',
+				abts_status_opac_libelle = '".addslashes($this->opac_libelle)."',
+				abts_status_class_html = '".addslashes($this->class_html)."',
+				abts_status_bulletinage_active = '".addslashes($this->bulletinage_active)."'
+			";
+			$result = pmb_mysql_query($query.$where);
+			if(!$result){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static function check_data_from_form() {
+		global $form_gestion_libelle;
+		
+		if(empty($form_gestion_libelle)) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static function delete($id) {
+		global $msg;
+		
+		$id=intval($id);
+		if($id==1) return true;
+		
+		$used = static::check_used($id);
+		if(!count($used)){
+			$query = "delete from abts_status where abts_status_id = ".$id;
+			pmb_mysql_query($query);
+			return true;
+		} else {
+			$msg_suppr_err= $msg['abts_status_used'].'<br/>';
+			foreach($used as $auth){
+				$msg_suppr_err.=$auth['link'].'<br/>';
+			}
+			pmb_error::get_instance(static::class)->add_message('abts_status_used', $msg_suppr_err);
+			return false;
+		}
 	}
 	
 	public static function get_list(){
-		global $dbh;
-		
 		if(!static::$status_fetched){
 			static::$status = array();
 			$query = "select abts_status_id, abts_status_gestion_libelle,abts_status_class_html,abts_status_bulletinage_active					
@@ -64,71 +156,6 @@ class abts_status{
 			static::$status_fetched = true;
 		}
 	}
-	
-	public static function show_form($id){
-		global $msg,$charset;	
-		global $admin_abts_status_form;
-		
-		static::get_list();
-		$id+=0;
-		$form = $admin_abts_status_form;
-		
-		if(isset(static::$status[$id])){
-			$form_title = $msg['118'];
-			$statut = static::$status[$id];
-		}else{
-			$form_title = $msg['115'];
-			$statut = array(
-				'label' =>	"",
-				'class_html' => "statutnot1"
-			);
-		}
-		
-		$couleur = array();
-		$form = str_replace("!!form_title!!", $form_title, $form);
-		for ($i=1;$i<=20; $i++) {
-			if ($statut['class_html'] == "statutnot".$i){
-			    $checked = "checked";
-			}
-			else {
-			    $checked = "";
-			}
-			$couleur[$i]="<span for='statutnot".$i."' class='statutnot".$i."' style='margin: 7px;'><img src='".get_url_icon('spacer.gif')."' width='10' height='10' />
-					<input id='statutnot".$i."' type=radio name='form_class_html' value='statutnot".$i."' $checked class='checkbox' /></span>";
-			if ($i==10) $couleur[10].="<br />";
-			elseif ($i!=20) $couleur[$i].="<b>|</b>";
-		}
-		
-		$couleurs=implode("",$couleur);
-		$form = str_replace("!!class_html!!", $couleurs, $form);
-		
-		if(empty($statut['bulletinage_active'])) $statut['bulletinage_active'] = '';
-		$form = str_replace("!!bulletinage_active_checked!!", ($statut['bulletinage_active'] ? 'checked=checked' : ''), $form);
-		
-		$form = str_replace("!!gestion_libelle!!", htmlentities($statut['label'],ENT_QUOTES,$charset),$form);
-		if($id == 1 || !isset(static::$status[$id])){
-			$form = str_replace("!!bouton_supprimer!!","",$form);
-		}else{
-			$form = str_replace("!!bouton_supprimer!!","<input class='bouton' type='button' value=' $msg[supprimer] ' onClick=\"javascript:confirmation_delete(!!id!!,'!!libelle_suppr!!')\" />",$form); ;
-		}
-				
-		$form.=confirmation_delete("./admin.php?categ=abonnements&sub=status&action=del&id=");
-		$form = str_replace('!!libelle_suppr!!', addslashes($statut['label']), $form);
-		$form = str_replace("!!id!!",$id,$form);
-		print $form;
-	}
-	
-	
-	public static function get_from_from(){
-		global $id, $form_gestion_libelle, $form_class_html, $form_bulletinage_active;
-		
-		return array(
-			'id' => stripslashes($id),
-			'label' => stripslashes($form_gestion_libelle),
-			'class_html' => stripslashes($form_class_html),
-			'bulletinage_active' => stripslashes($form_bulletinage_active),
-		);
-	}
 
 	public static function get_ids_bulletinage_active(){
 		static::get_list();
@@ -142,57 +169,13 @@ class abts_status{
 		return $ids;
 	}
 	
-	public static function save($statut){
-		global $dbh;
-		
-		$statut['id'] += 0; 
-		if($statut['label'] != ""){ 
-			if($statut['id'] != 0){
-				$query = " update abts_status set ";
-				$where = "where abts_status_id = ".$statut['id'];
-			}else{
-				$query = " insert into abts_status set ";
-				$where = "";
-			}
-			$query.="
-				abts_status_gestion_libelle = '".addslashes($statut['label'])."',
-				abts_status_class_html = '".addslashes($statut['class_html'])."',
-				abts_status_bulletinage_active = '".addslashes($statut['bulletinage_active'])."'
-			";
-			$result = pmb_mysql_query($query.$where,$dbh);
-			if($result){
-				static::$status_fetched = false;
-			}else{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static function delete($id) {
-		global $dbh;
-		$id+=0;
-		if($id==1) return true;
-		
-		if(!count($used = static::check_used($id))){
-			$query = "delete from abts_status where abts_status_id = ".$id;
-			pmb_mysql_query($query,$dbh);
-			return true;
-		}
-		return false;	
-			
-	}
-	
 	/**
-	 * Fonction qui controle si le status est utilisÃ©
+	 * Fonction qui controle si le status est utilisé
 	 * @param integer $id du statut
 	 * @return array: ids des abonnemets
 	 */
 	public static function check_used($id){
-		global $dbh,$msg;
-		global $base_path;
-		
-		$id+=0;
+		$id = intval($id);
 		$used = array();
 		$query="select abt_id from abts_abts where abt_status=".$id;
 		$res = pmb_mysql_query($query);
@@ -206,15 +189,15 @@ class abts_status{
 	
 	
 	/**
-	 * Fonction permettant de gÃ©nÃ©rer le selecteur des statuts
-	 * @param integer $id du statut sÃ©lectionnÃ©  
-	 * @param boolean $selector_search SÃ©lÃ©cteur affichÃ© dans la page de recherche
+	 * Fonction permettant de générer le selecteur des statuts
+	 * @param integer $id du statut sélectionné  
+	 * @param boolean $selector_search Sélécteur affiché dans la page de recherche
 	 * @return string
 	 */
 	public static function get_form_for($id, $search=false){
 	    global $msg;
 	    
-	    $id+=0;
+	    $id=intval($id);
 	    static::get_list();
 	    
         $on_change='';
@@ -238,9 +221,9 @@ class abts_status{
 	 * @return string
 	 */
 	public static function get_display($id){
-		global $msg, $charset;
+		global $charset;
 		 
-		$id+=0;
+		$id=intval($id);
 		static::get_list();
 		$statut = static::$status[$id];
 		$display = "<small><span class='".$statut['class_html']."' style='margin-right: 3px;'><a href=# onmouseover=\"z=document.getElementById('zoom_statut".$id."'); z.style.display=''; \" onmouseout=\"z=document.getElementById('zoom_statut".$id."'); z.style.display='none'; \"><img src='".get_url_icon('spacer.gif')."' width='10' height='10' /></a></span></small>";

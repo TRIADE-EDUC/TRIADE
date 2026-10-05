@@ -1,9 +1,10 @@
-<!-- $Id: record_in_result_display.tpl.html,v 1.61 2019-02-18 14:06:31 ngantier Exp $ -->
+<!-- $Id: record_in_result_display.tpl.html,v 1.66.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
 
-<div id="record_container_{{ record.id }}" class="parentNotCourte uk-clearfix">
+
+<div id="record_container_{{ record.id }}" class="parentNotCourte uk-clearfix" data-template="{{ global.opac_notices_format_django_directory | default 'common' }} - {{ record.niveau_biblio }} - {{ record.typdoc }}">
 	{% block record_case_traitement %}
 		{% if global.cart_aff_case_traitement %}
-			<input type='checkbox' class='checkboxNot' value='{{ record.id }}' name='notice[]'/>
+			<input id='record-selection-{{record.id}}' type='checkbox' class='checkboxNot' aria-labelledby='record-selection-accessibility-label-{{record.id}}' value='{{ record.id }}' name='notice[]'/>
 		{% endif %}
 	{% endblock %}
 
@@ -13,7 +14,7 @@
 					{% if record.get_picture_url %}
 						<!-- Vignette de la notice -->
 						<div class="vignetteDocNot">
-							<img class="vignetteNot" src= "{{ record.get_picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+							<img class="vignetteNot" src= "{{ record.get_picture_url }}" alt="" />
 						</div>						
 					{% endif %}	
 			{% endblock %}
@@ -40,7 +41,7 @@
 					
 					{% block record_tit1 %}
 						<div class="title_notCourte">
-							<h3><a href="{{ record.permalink }}">
+							<h3 id='record-selection-accessibility-label-{{record.id}}'><a href="{{ record.permalink }}">
 								{% block record_serie %}
 									{% if record.serie.id %}
 										<!-- Serie -->
@@ -124,12 +125,12 @@
 	{% endblock %}
 	
 	{% block record_aside_content %}
-		<div class="panier_avis_notCourte">
+		<div class="panier_avis_notCourte" data-highlight="off">
 			{% block record_new %}
 				{% if record.new %}
 					<!-- Statut particulier (nouveaute)-->
 					<div class="statutPartN">
-						<span class="imgStatutPartN"><img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.record_display_new }}"/></span><span class="StatutPartN">{{ msg.record_display_new }}</span>
+						<span class="imgStatutPartN"><img class="imgStatutPartN" src="{{ img.new_w.png }}" alt="{{ msg.record_display_new }}"/></span><span class="StatutPartN">{{ msg.record_display_new }}</span>
 					</div>
 				{% endif %}
 			{% endblock %}
@@ -141,17 +142,17 @@
 						<div class="onglet_basketNoticeCourte ui-panel-basket-item">
 							<div id="record_container_{{ record.id }}_cart" class="ui-flex ui-flex-middle">
 								{% if record.in_cart %}
-									<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove }}" target="cart_info" class="img_basketNotCourte">
-										<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" style="border:0px" alt="{{ msg.notice_basket_remove }}" /></span>
+									<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove | escape }}" target="cart_info" class="img_basketNotCourte" aria-hidden="true" tabindex="-1" role="button">
+										<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" alt="" /></span>
 									</a>
-									<a href="./index.php?lvl=show_cart" class="label_basketNotCourte" title="{{ msg.notice_title_basket_exist }}">
-										<span class="label_basketNot">{{ msg.notice_title_basket_exist }}</span>
+									<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte" aria-label="{{ msg.notice_basket_remove  | escape  }} : {{ record.tit1 | escape }}" role="button">
+										<span class="label_basketNot">{{ msg.notice_basket_remove }}</span>
 									</a>
 								{% else %}
-									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" >
-										<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" style="border:0px" alt="{{ msg.record_display_add_to_cart }}"/></span>
+									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.record_display_add_to_cart | escape }}" target="cart_info" class="img_basketNotCourte" aria-hidden="true" tabindex="-1" role="button">
+										<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" alt=""/></span>
 									</a>
-									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" >
+									<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte" aria-label="{{ msg.record_display_add_to_cart | escape  }} : {{ record.tit1  | escape }}" role="button">
 										<span class="label_basketNot">{{ msg.record_display_add_to_cart }}</span>
 									</a>
 								{% endif %}
@@ -165,7 +166,7 @@
 				{% if record.avis_allowed %}
 					<!-- Avis sur la notice -->
 					<div class="avisNCourte">
-						<span class="imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" style="border:0px" alt="Commentaires"/></span><span class="only_stars">{{ record.display_avis }}</span>
+						<span class="imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" alt=""/></span><span class="only_stars">{{ record.display_avis }}</span>
 					</div>
 				{% endif %}
 			{% endblock %}
@@ -174,7 +175,7 @@
 				{% if record.tag_allowed %}
 					<!--  Tag sur la notice -->
 					<div class="tagsNCourte">
-						<span class="imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" style="border:0px" alt="Tags"/></span><span class="tagsN">{{ record.display_tag }}</span>
+						<span class="imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" alt=""/></span><span class="tagsN">{{ record.display_tag }}</span>
 					</div>
 				{% endif %}
 			{% endblock %}
@@ -183,7 +184,7 @@
 				{% if record.sugg_allowed %}
 					<!--  Suggestion sur la notice -->
 					<div class="suggestNCourte">
-						<span class="imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" style="border:0px" alt="Suggestions"/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
+						<span class="imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" alt=""/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
 					</div>
 				{% endif %}
 			{% endblock %}
@@ -200,8 +201,8 @@
 			{% block record_lien %}
 				{% if record.lien %}
 				    <div class="lienNCourte avisNCourte">
-					<span class="imgLienN imgComment"><img src="{{img.globe_w.png}}" alt="open_link_url_notice"/></span>
-					<span class="lienN "><a href="{{record.lien}}" target="_blank">{{msg.lien_start | replace, " : ",""}}</a></span>
+					<span class="imgLienN imgComment"><img src="{{img.globe_w.png}}" alt=""/></span>
+					<span class="lienN "><a href="{{record.lien}}" target="_blank" aria-label="{{ msg.lien_start | escape  }}{{ record.tit1 | escape }}">{{msg.lien_start | replace, " : ",""}}</a></span>
 				    </div>
 				{% endif %}
 			{% endblock %}
@@ -214,18 +215,18 @@
 						{% if record.explnums_datas.explnums.0.consultation %}
 							{{ record.explnums_datas.explnums.0.access_datas.script }}
 							<div class="docnumNCourte">
-								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" alt=""/></span>
 								<span class="docNumN">
-									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" title="{{ msg.explnum_singular_label }}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %} aria-label="{{ msg.explnum_singular_label  | escape  }} : {{ record.tit1 | escape }}">
 										{{ msg.explnum_singular_label }}
 									</a>
 								</span>
 							</div>
 						{% else %}
 							<div class="docnumNCourte docnumNCourtePermalink">
-								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+								<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" alt=""/></span>
 								<span class="docNumN">
-									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" title="{{ msg.explnum_singular_label }}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+									<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" target="_blank" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %} aria-label="{{ msg.explnum_singular_label  | escape  }} : {{ record.tit1 | escape }}">
 										{{ msg.explnum_singular_label }}
 									</a>
 								</span>
@@ -233,8 +234,8 @@
 						{% endif %}
 					{% else %}
 						<div class="docnumNCourte docnumNCourtePermalink">
-							<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
-							<span class="docNumN"><a href="{{ record.permalink }}#docnum" title="{{ msg.explnum }}">{{ msg.explnum }}</a></span>
+							<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" alt=""/></span>
+							<span class="docNumN"><a href="{{ record.permalink }}#docnum" aria-label="{{ msg.explnum  | escape  }} : {{ record.tit1 | escape }}">{{ msg.explnum }}</a></span>
 						</div>
 					{% endif %}
 				{% endif %}
@@ -244,7 +245,25 @@
 	{% endblock %}
 
 	{% block record_footer %}
-		<div class="footer_notice">
+		<div class="footer_notice" data-highlight="off">
+			{% block record_pnb_availability %}
+				{% if record.availability.availability != 'none' %}
+					{% if record.availability.availability != 'empty' %}
+						{% block record_pnb %}
+							<!-- Bouton de pnb -->
+							{% if record.pnb_datas.flag_pnb_visible %}
+								<div id="pnb_notice-{{ record.id }}" class="pnb_notice">
+									<h3>
+										<a href="#" id="bt_pnb_NotCourte-{{ record.id }}" onclick="{{ record.pnb_datas.onclick }}" class="bt_pnb_NotCourte" aria-label="{{ msg.empr_bt_checkout  | escape  }} : {{ record.tit1 | escape }}">{{ msg.empr_bt_checkout }}</a>
+									</h3> 									
+					                <div id="response_pnb_pret_{{ record.id }}">
+					                </div>
+					            </div>   
+							{% endif %}						
+						{% endblock %}
+					{% endif %}
+				{% endif %}
+			{% endblock %}
 			{% block record_resa_availability %}
 				{% if record.availability.availability != 'none' %}
 					{% if record.availability.availability != 'empty' %}
@@ -255,7 +274,7 @@
 									{% if !record.resas_datas.flag_max_resa %}
 										<div id="resa_notice-{{ record.id }}" class="resa_notice">
 											<h3>
-												<a href="{{ record.resas_datas.href }}" onclick="{{ record.resas_datas.onclick }}" id="bt_resa_NotCourte-{{ record.id }}" class="bt_resa_NotCourte">{{ msg.record_display_expl_reserve }}</a>
+												<a href="{{ record.resas_datas.href }}" onclick="{{ record.resas_datas.onclick }}" id="bt_resa_NotCourte-{{ record.id }}" class="bt_resa_NotCourte" aria-label="{{ msg.record_display_expl_reserve  | escape  }} : {{ record.tit1 | escape }}">{{ msg.record_display_expl_reserve }}</a>
 											</h3>
 										</div>
 									{% endif %}

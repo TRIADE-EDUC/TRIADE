@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: animations.xml,v 1.1 2023/04/19 07:42:13 gneveu Exp $ -->
+<pmbtabs>
+    <url_target>animations.php</url_target>
+    <default_mode>0</default_mode>
+    <tabs>
+        <tab title="msg:search_extended" mode="6" multiSearchCriteria="yes" />
+    </tabs>
+</pmbtabs>

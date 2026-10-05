@@ -1,10 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_model.class.php,v 1.11 2019-05-29 08:25:56 ngantier Exp $
+// $Id: map_model.class.php,v 1.13.2.1 2024/11/21 09:20:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+global $class_path;
 require_once($class_path."/map/map_hold.class.php");
 require_once($class_path."/map/map_layer_model_record.class.php");
 require_once($class_path."/map/map_layer_model_authority.class.php");
@@ -46,13 +47,13 @@ class map_model {
 	protected $models;
 
   	/**
-   	 * Tableau de boolÃ©en sur la visibilitÃ© des modÃ¨les (clÃ©s identiques)
+   	 * Tableau de booléen sur la visibilité des modèles (clés identiques)
    	 * @access protected
      */
   	protected $visibility;
 
   	/**
- 	 * Nombre maximum d'emprises prÃ©sentes sur une couche de la carte.
+ 	 * Nombre maximum d'emprises présentes sur une couche de la carte.
  	 * Si= 0, pas de limitation
 	 * @access protected
 	 */
@@ -63,7 +64,7 @@ class map_model {
 	/**
 	 *  @param map_hold_polygon map_hold Emprise courante de la carte
 	 *  @param Array() ids Liste des identifiants des objets
-	 *  @param int hold_max Nombre maximum d'emprise prÃ©sentes sur une couche de la carte
+	 *  @param int hold_max Nombre maximum d'emprise présentes sur une couche de la carte
   
 	 * @return void
 	 * @access public
@@ -81,6 +82,8 @@ class map_model {
 	 *	)
 	 * 
 	*/
+	public $mode;
+
 	public function __construct( $map_hold,  $ids,  $hold_max=0,$cluster="true") {
   		$this->map_hold=$map_hold;
   		$this->hold_max = $hold_max;
@@ -106,15 +109,14 @@ class map_model {
   
   
   	/**
-     * Calcul l'emprise minimal pour afficher toutes les emprises de tous les modÃ¨les
+     * Calcul l'emprise minimal pour afficher toutes les emprises de tous les modèles
      *
      * @return map_hold
      * @access public
      */
   	public function get_bounding_box() {
-  		global $dbh;
   		$collection ="";
-  		foreach($this->models as $key => $layer_model){
+  		foreach($this->models as $layer_model){
   			if($collection) $collection.= ",";
   			$layer_bounding_box = $layer_model->get_bounding_box();
   			if($layer_bounding_box){
@@ -123,7 +125,7 @@ class map_model {
   		}
   		if($collection){
   			$query = "select astext(envelope(geomfromtext('geometrycollection(".$collection.")'))) as bounding_box";
-			$result = pmb_mysql_query($query,$dbh) or die(pmb_mysql_error());
+			$result = pmb_mysql_query($query) or die(pmb_mysql_error());
 			if(pmb_mysql_num_rows($result)){
 			  	$bounding_box = new map_hold_polygon("bounding", 0,pmb_mysql_result($result,0,0));
 			}
@@ -144,8 +146,8 @@ class map_model {
   	} // end of member function get_layers	
 
  	/**
- 	 * Retourne les objets Ã Â  afficher sur la carte.
-	 * La mÃ©thode fait appel Ã Â  l'algo de rÃ©duction si besoin
+ 	 * Retourne les objets à  afficher sur la carte.
+	 * La méthode fait appel à  l'algo de réduction si besoin
    	 *
      * @param int id_layer Identifiant du layer
 
@@ -153,15 +155,21 @@ class map_model {
      * @access public
      */
  	public function get_objects( $id_layer) {
-  		$objects = $this->models[$id_layer]->get_holds();
-  		if($this->get_mode() == "edition" || $this->get_mode() == "visualisation" || $this->cluster === "false"){
-  			uasort($objects, array('map_holds_reducer', 'cmp_area'));
-  			return $objects;
-  		}else{
-  			$holds_reducer = new map_holds_reducer($this->map_hold,$objects);
-  			$objects = $holds_reducer->get_reduction();
-  			return $objects;
-  		}
+ 	    if (empty($id_layer)) {
+ 	        return;
+ 	    }
+ 	    if (!empty($this->models[$id_layer])) {
+      		$objects = $this->models[$id_layer]->get_holds();
+      		if($this->get_mode() == "edition" || $this->get_mode() == "visualisation" || $this->cluster === "false"){
+      			uasort($objects, array('map_holds_reducer', 'cmp_area'));
+      			return $objects;
+      		}else{
+      			$holds_reducer = new map_holds_reducer($this->map_hold,$objects);
+      			$objects = $holds_reducer->get_reduction();
+      			return $objects;
+      		}
+ 	    }
+ 	    return [];
 	} // end of member function get_objects
 
     /**
@@ -180,12 +188,12 @@ class map_model {
 
 
 	/**
-	 * Retourne une structure JS au format JSON,contenant les informations du modÃ¨le
+	 * Retourne une structure JS au format JSON,contenant les informations du modèle
 	 * courant.
-	 * Soit les donnÃ©es (les diffÃ©rentes emprises typÃ©es avec la rÃ©duction si
-	 * nÃ©cessaire), soit l'URL Ã Â  appeler en AJAX pour les rÃ©cupÃ©rer
+	 * Soit les données (les différentes emprises typées avec la réduction si
+	 * nécessaire), soit l'URL à  appeler en AJAX pour les récupérer
 	 *
-	 * @param bool mode_ajax DÃ©fini si on passe la structure complÃ¨te ou les infos pour rÃ©cupÃ©rer en AJAX
+	 * @param bool mode_ajax Défini si on passe la structure complète ou les infos pour récupérer en AJAX
 	
 	 * @param string url_base URL de base fournie par le controler
 	
@@ -225,10 +233,9 @@ class map_model {
 	}
 	
 	public function get_holds_informations($id_layer){
-		global $dbh;
 		$informations = array();
 		$holds_layer = $this->get_objects($id_layer);
-		foreach($holds_layer as $id => $hold){
+		foreach($holds_layer as $hold){
 			$infos = array(
 				'wkt' => $hold->get_wkt(),
 				'type' => $hold->get_hold_type(),
@@ -251,7 +258,7 @@ class map_model {
                         $requete.= " and num_object in (" . implode(",", $notices_ids) . ")";
                     }
                 }
-                $result = pmb_mysql_query($requete, $dbh);
+                $result = pmb_mysql_query($requete);
                 $notice_ids = array();
                 while ($row = pmb_mysql_fetch_object($result)) {
                     $notice_ids[] = $row->notice_id;

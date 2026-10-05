@@ -1,34 +1,35 @@
-<?php 
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: xmltransform.php,v 1.16 2019-06-06 09:56:29 btafforeau Exp $
+// $Id: xmltransform.php,v 1.19.2.1 2024/08/14 12:39:08 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "xmltransform.php")) die("no access");
 
-if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) {
-    if (PHP_MAJOR_VERSION == "5") @ini_set("zend.ze1_compatibility_mode", "0");
-	require_once($include_path.'/xslt-php4-to-php5.inc.php');
-	}
+global $base_path, $include_path;
 
-//BibliothÃ¨que des transformations par dÃ©faut
+if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) {
+	require_once($include_path.'/xslt-php4-to-php5.inc.php');
+}
+
+//Bibliothèque des transformations par défaut
 
 require_once ("$base_path/admin/convert/xml_unimarc.class.php");
 
 //Conversion par une feuille de style XSLT
 function perform_xslt($xml, $s, $islast, $isfirst, $param_path) {
-	global $base_path, $charset;
+	global $base_path, $charset, $opac_url_base;
 	$transform="$base_path/admin/convert/imports/".$param_path."/".$s['XSLFILE'][0]['value'];
-	
-	//Si c'est la premiÃ¨re transformation, on rajoute les entÃªtes
+
+	//Si c'est la première transformation, on rajoute les entêtes
 	if ($isfirst) {
 		if(isset($s['ENCODING']) && $s['ENCODING']){
 			$xml1 = "<?xml version=\"1.0\" encoding=\"".$s['ENCODING']."\"?>\n<".$s['ROOTELEMENT'][0]["value"];
 		}else{
 			$xml1 = "<?xml version=\"1.0\" encoding=\"$charset\"?>\n<".$s['ROOTELEMENT'][0]["value"];
 		}
-		
-		if ($s["NAMESPACE"]) {
+
+		if (isset($s["NAMESPACE"]) && $s["NAMESPACE"]) {
 			$xml1.=" xmlns:".$s["NAMESPACE"][0]["ID"]."='".$s["NAMESPACE"][0]["value"]."' ";
 		}
 		$xml1.=">\n".$xml."\n</".$s['ROOTELEMENT'][0]['value'].">";
@@ -39,21 +40,23 @@ function perform_xslt($xml, $s, $islast, $isfirst, $param_path) {
 	fclose($f);
 	$xsl = str_replace('!!charset!!',$charset,$xsl);
 
-	//CrÃ©ation du processeur
+	//Création du processeur
 	$xh = xslt_create();
 
 	//Encodage = $charset
 	if (defined("ICONV_IMPL")) {
-		xslt_set_encoding($xh, "$charset");	
+		xslt_set_encoding($xh, "$charset");
 	}
 
 	// Traite le document
-	if ($result = @xslt_process($xh, 'arg:/_xml', 'arg:/_xsl', NULL, array("/_xml" => $xml, "/_xsl" => $xsl))) {
+	$r=array();
+	if ($result = @xslt_process($xh, 'arg:/_xml', 'arg:/_xsl', NULL, array("/_xml" => $xml, "/_xsl" => $xsl), array("opac_url_base" => $opac_url_base))) {
 		$r['VALID']=true;
 		$r['DATA']=$result;
 		$r['ERROR']="";
-		//Si c'est la derniÃ¨re transformation, on supprime les entÃªtes et l'Ã©lÃ©ment root
+		//Si c'est la dernière transformation, on supprime les entêtes et l'élément root
 		if ($islast) {
+			$m = array();
 			$p = preg_match("/<".$s['TNOTICEELEMENT'][0]['value']."(?:\ [^>]*|)>/", $r["DATA"], $m, PREG_OFFSET_CAPTURE);
 			if ($p) {
 				$r['DATA'] = "  ".substr($r['DATA'], $m[0][1]);
@@ -80,12 +83,13 @@ function perform_xslt($xml, $s, $islast, $isfirst, $param_path) {
 
 //Conversion XML en iso2709
 function toiso($notice, $s, $islast, $isfirst, $param_path) {
+	$r = array();
 	$x2i = new xml_unimarc();
 	$x2i -> XMLtoiso2709_notice($notice,(isset($s['ENCODING']) ? $s['ENCODING'] : ''));
-	if($x2i->warning_msg[0]){
+	if(!empty($x2i->warning_msg[0])){
 		$r['WARNING']=$x2i->warning_msg[0];
 	}
-	if ($x2i->n_valid==0) {
+	if (!empty($x2i->n_valid==0)) {
 		$r['VALID']=false;
 		$r['DATA']="";
 		$r['ERROR']=$x2i->error_msg[0];
@@ -97,12 +101,15 @@ function toiso($notice, $s, $islast, $isfirst, $param_path) {
 	return $r;
 }
 
-//Consersion iso2709 en XML
+//Conversion iso2709 en XML
 function isotoxml($notice, $s, $islast, $isfirst, $param_path) {
 	global $charset;
 	global $output_params;
+
+	$r = array();
 	$i2x = new xml_unimarc();
-	$i2x->iso2709toXML_notice($notice,$s['FORMAT']);
+	$format = $s['FORMAT'] ?? 'unimarc';
+	$i2x->iso2709toXML_notice($notice, $format);
 	if ($i2x->n_valid == 0) {
 		$r['VALID']=false;
 		$r['DATA']="";
@@ -111,7 +118,7 @@ function isotoxml($notice, $s, $islast, $isfirst, $param_path) {
 		$r['VALID']=true;
 		$r['DATA']=$i2x->notices_xml_[0];
 		$r['ERROR']="";
-		//Si ce n'est pas la derniÃ¨re transformation, on rajoute des tags root et l'entÃªte
+		//Si ce n'est pas la dernière transformation, on rajoute des tags root et l'entête
 		if (!$islast) {
 			$r['DATA'] = "<".$s['TROOTELEMENT'][0]['value'].">\n".$r['DATA'];
 			$r['DATA'].= "</".$s['TROOTELEMENT'][0]['value'].">";
@@ -124,10 +131,17 @@ function isotoxml($notice, $s, $islast, $isfirst, $param_path) {
 //Conversion texte en XML
 function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 	global $cols, $charset;
-	
+
+	//initialisations de tableaux utilisés plus loin
+	$rep_field = array();
+	$rep_subfield = array();
+	$vput = array();
+	$sep = array();
+	$vpt = array();
+
 	eval("\$spt=\"".$s["SEPARATOR"][0]["value"]."\";");
 	$fields=explode($spt,$notice);
-	
+
 	//Recherche du type doc
 	if ($s["COLS"][0]["DT"]) {
 		if ($s["COLS"][0]["DT"][0]["CORRESP"][0]) {
@@ -144,7 +158,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 			}
 		} else $dt=$s["COLS"][0]["DT"][0]["value"];
 	}
-	
+
 	//Recherche du bl
 	if ($s["COLS"][0]["BL"]) {
 		if ($s["COLS"][0]["BL"][0]["CORRESP"][0]) {
@@ -163,7 +177,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 			$bl=$s["COLS"][0]["BL"][0]["value"];
 		}
 	}
-	
+
 	//Recherche du type hl
 	if ($s["COLS"][0]["HL"]) {
 		if ($s["COLS"][0]["HL"][0]["CORRESP"][0]) {
@@ -182,7 +196,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 			$hl=$s["COLS"][0]["HL"][0]["value"];
 		}
 	}
-	
+
 	if (!$cols) {
 		for ($j=0; $j<count($s["COLS"][0]["COL"]); $j++) {
 			$cols[$j]=$s["COLS"][0]["COL"][$j];
@@ -199,9 +213,9 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 
 	//Pour chaque colonne
 	for ($i=0; $i<count($cols); $i++) {
-		//RÃ©cupÃ©ration des id
+		//Récupération des id
 		$ids=explode(",",$cols[$i]["ID"]);
-		
+
 		//Correspondances
 		for ($j=0; $j<count($cols[$i]["CORRESP"]); $j++) {
 			$corresp[$cols[$i]["CORRESP"][$j]["ID"]]=array();
@@ -210,10 +224,10 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 				$corresp[$cols[$i]["CORRESP"][$j]["ID"]][$corresp_table[$k]["ID"]]=$corresp_table[$k]["value"];
 			}
 		}
-		
+
 		//print_r($corresp);
-		
-		//SÃ©parateurs pour rÃ©pÃ©tition
+
+		//Séparateurs pour répétition
 		for ($j=0; $j<count($cols[$i]["REP"]); $j++) {
 			if ($cols[$i]["REP"][$j]["FOR"]=="field")
 				$rep_field[$cols[$i]["REP"][$j]["ID"]]=$cols[$i]["REP"][$j]["value"];
@@ -222,7 +236,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 		}
 		$max=1;
 		for ($j=0; $j<count($ids); $j++) {
-			if ($ids[$j][0]=="'") 
+			if ($ids[$j][0]=="'")
 				$vpte=trim($ids[$j],"'");
 			else {
 				if ($s["DELIMITEDBY"][0]["value"]) {
@@ -277,7 +291,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 										$f["s"][$nf]["value"]=htmlspecialchars(trim($sfv[$k]),ENT_QUOTES,$charset);
 									}
 								}
-							}	
+							}
 						}
 					} else {
 						if ($rep_subfield[$ids[$j]]) {
@@ -287,7 +301,7 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 						}
 						for ($x=0; $x<count($vprsf) ;$x++) {
 							if ($vprsf[$x]) {
-						
+
 								if ($corresp[$ids[$j]]) $vprsf[$x]=$corresp[$ids[$j]][trim($vprsf[$x])];
 								$nf=count($f["s"]);
 								$f["s"][$nf]["c"]=$subfields[$j];
@@ -324,9 +338,10 @@ function texttoxml($notice, $s, $islast, $isfirst, $param_path) {
 		}
 		$param["f"][]=$f;
 	}*/
+	$r=array();
 	$r['DATA']=@array_to_xml($param,"notice");
 	if ($r['DATA']) {
-		//Si ce n'est pas la derniÃ¨re transformation, on rajoute des tags root et l'entÃªte
+		//Si ce n'est pas la dernière transformation, on rajoute des tags root et l'entête
 		if (!$islast) {
 			$r['DATA'] = "<".$s['TROOTELEMENT'][0]['value'].">\n".$r['DATA'];
 			$r['DATA'].= "</".$s['TROOTELEMENT'][0]['value'].">";

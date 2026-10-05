@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2021/03/23 09:26:18 jlaurent Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste d'espaces de contributions</name>
+	<name lang="en_UK">Areas contributions list (Documentary watch)</name>
+	<author>
+		<name>Julien LAURENT</name>
+		<name>Grégor NEVEU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2021-03-22</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_contributionareaslist_datasource_areas</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_contributionareaslist_view_django</view>
+		</views>
+		<filters>
+		</filters>
+		<conditions>
+		</conditions>
+	</use>
+</manifest>

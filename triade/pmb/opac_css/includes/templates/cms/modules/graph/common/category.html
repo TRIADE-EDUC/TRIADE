@@ -1,0 +1,35 @@
+<p>{{ authority.libelle }}</p>
+<p> <a href="./index.php?lvl=categ_see&id={{ authority.db_id }}">{{ msg.link_more }}</a></p>
+
+{% if authority.categ_see %}
+<div id="categ_see_renvoi_voir" class="categ_see_title">
+    <h2><span>{{ msg.term_show_see }}</span></h2>
+    <a href="./index.php?lvl=categ_see&id={{ authority.categ_see.db_id }}">{{ authority.categ_see.libelle }}</a>
+</div>
+{% endif %}
+
+{% if authority.see_also %}
+<div id="categ_see_also" class="categ_see_also">
+    <h5><span>{{ msg.term_show_see_also }}</span></h5>
+    {% for see_also in authority.see_also %}
+    {% if loop.first %}
+    <ul>
+        {% endif %}
+        <li>
+            <a href="./index.php?lvl=categ_see&id={{ see_also.num_noeud }}">
+                {% if see_also.has_notice %}
+                <img src="{{ img.folder_search.gif }}">
+                {% else %}
+                <img src="{{ img.folder_search.gif }}">
+                {% endif %}
+            </a>
+            <a href="./index.php?lvl=categ_see&id={{ see_also.num_noeud }}{{ see_also.zoom.java_com }}">{{
+                see_also.libelle_categorie }}</a>
+            {{ see_also.zoom.zoom }}
+        </li>
+        {% if loop.last %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign.class.php,v 1.5 2018-03-13 12:38:12 dgoron Exp $
+// $Id: campaign.class.php,v 1.15 2023/11/14 17:01:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/campaigns/campaign_proxy.class.php");
 require_once($class_path."/campaigns/campaign_recipients.class.php");
 require_once($include_path."/templates/campaigns/campaign.tpl.php");
@@ -26,37 +27,37 @@ class campaign {
 	protected $type;
 	
 	/**
-	 * LibellÃ© de la campagne
+	 * Libellé de la campagne
 	 * @var string
 	 */
 	protected $label;
 	
 	/**
 	 * Date
-	 * @var date
+	 * @var DateTime
 	 */
 	protected $date;
 	
 	/**
-	 * Date formatÃ©e
+	 * Date formatée
 	 * @var string
 	 */
 	protected $formatted_date;
 	
 	/**
-	 * Utilisateur PMB associÃ©
+	 * Utilisateur PMB associé
 	 * @var integer
 	 */
 	protected $num_user;
 	
 	/**
-	 * Descripteurs / CatÃ©gories
+	 * Descripteurs / Catégories
 	 * @var array
 	 */
 	protected $descriptors;
 	
 	/**
-	 * Tags / Mots-clÃ©s
+	 * Tags / Mots-clés
 	 * @var array
 	 */
 	protected $tags;
@@ -70,7 +71,7 @@ class campaign {
 	protected $campaign_view;
 	
 	public function __construct($id=0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -103,16 +104,10 @@ class campaign {
 	 * Formulaire
 	 */
 	public function get_form(){
-		global $msg,$charset;
 		global $campaign_form_tpl;
 		
 		$form = $campaign_form_tpl;
-		if($this->id) {
-			$form = str_replace("!!button_delete!!",$button_delete,$form);
-		} else {			
-			$form = str_replace("!!button_delete!!",'',$form);
-		}
-		
+		$form = str_replace("!!button_delete!!",'',$form);
 		$form = str_replace("!!id!!",$this->id,$form);
 		return $form;
 	}
@@ -162,34 +157,38 @@ class campaign {
 	
 	public function save_descriptors() {
 		static::delete_descriptors($this->id);
-		for($i=0 ; $i<count($this->descriptors) ; $i++){
-			$rqt = "insert into campaigns_descriptors set num_campaign = '".$this->id."', num_noeud = '".$this->descriptors[$i]."', campaign_descriptor_order='".$i."'";
-			pmb_mysql_query($rqt);
+		if (!empty($this->descriptors)){
+    		for($i=0 ; $i<count($this->descriptors) ; $i++){
+    			$rqt = "insert into campaigns_descriptors set num_campaign = '".$this->id."', num_noeud = '".$this->descriptors[$i]."', campaign_descriptor_order='".$i."'";
+    			pmb_mysql_query($rqt);
+    		}
 		}
 	}
 	
 	public function save_tags() {
 		static::delete_tags($this->id);
-		for($i=0 ; $i<count($this->tags) ; $i++){
-			$rqt = "insert into campaigns_tags set num_campaign = '".$this->id."', num_tag = '".$this->tags[$i]."', campaign_tag_order='".$i."'";
-			pmb_mysql_query($rqt);
+		if (!empty($this->tags)){
+    		for($i=0 ; $i<count($this->tags) ; $i++){
+    			$rqt = "insert into campaigns_tags set num_campaign = '".$this->id."', num_tag = '".$this->tags[$i]."', campaign_tag_order='".$i."'";
+    			pmb_mysql_query($rqt);
+    		}
 		}
 	}
 	
-	public function send_mail($id_empr, $to_nom="", $to_mail, $obj="", $corps="", $from_name="", $from_mail, $headers, $copie_CC="", $copie_BCC="", $faire_nl2br=0, $pieces_jointes=array()) {
+	public function send_mail($id_empr, $to_nom="", $to_mail="", $obj="", $corps="", $from_name="", $from_mail="", $headers="", $copie_CC="", $copie_BCC="", $faire_nl2br=0, $pieces_jointes=array(), $reply_name="", $reply_mail="", $is_mailing=false, $type="") {
 		$campaign_recipients = $this->get_recipients();
 		$recipient_instance = $campaign_recipients->add($id_empr, $to_mail, $corps);
 		
 		$corps = campaign_proxy::proxyfication($recipient_instance, $corps);
 	
-		return mailpmb($to_nom, $to_mail, $obj, $corps, $from_name, $from_mail, $headers, $copie_CC, $copie_BCC, $faire_nl2br, $pieces_jointes);
+		return mailpmb($to_nom, $to_mail, $obj, $corps, $from_name, $from_mail, $headers, $copie_CC, $copie_BCC, $faire_nl2br, $pieces_jointes, $reply_name, $reply_mail, $is_mailing, $type, $this->get_id());
 	}
 	
 	/**
 	 * Suppression
 	 */
 	public static function delete($id){
-		$id += 0; 
+		$id = intval($id); 
 		if($id) {
 			static::delete_descriptors($id);
 			static::delete_tags($id);
@@ -201,13 +200,13 @@ class campaign {
 	}
 	
 	public static function delete_descriptors($id) {
-		$id += 0;
+		$id = intval($id);
 		$query = "delete from campaigns_descriptors where num_campaign = '".$id."'";
 		pmb_mysql_query($query);
 	}
 	
 	public static function delete_tags($id) {
-		$id += 0;
+		$id = intval($id);
 		$query = "delete from campaigns_tags where num_campaign = '".$id."'";
 		pmb_mysql_query($query);
 	}
@@ -224,6 +223,10 @@ class campaign {
 		return $this->label;
 	}
 
+	public function get_date() {
+		return $this->date;
+	}
+	
 	public function get_formatted_date() {
 		return $this->formatted_date;
 	}
@@ -272,7 +275,7 @@ class campaign {
 	}
 	
 	public function get_view() {
-		global $msg, $charset;
+		global $charset;
 		global $campaign_view_tpl;
 		
 		$view = $campaign_view_tpl;
@@ -343,7 +346,7 @@ class campaign {
 				".$campaign_view->get_instance('Pie')->get_opening_by_recipients('location')."
 			</div>";
 		
-		//Affichage du nombre d'ouverture par catÃ©gorie
+		//Affichage du nombre d'ouverture par catégorie
 		$content_view .= "
 			<div class='campaign_view_graph'>
 				".$campaign_view->get_instance('Pie')->get_opening_by_recipients('categ')."
@@ -359,7 +362,7 @@ class campaign {
 	}
 	
 	public function set_id($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 	}
 	
 	public function set_type($type) {

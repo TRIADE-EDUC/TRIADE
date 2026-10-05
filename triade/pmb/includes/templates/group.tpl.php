@@ -1,20 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: group.tpl.php,v 1.24 2019-05-27 14:05:40 btafforeau Exp $
+// $Id: group.tpl.php,v 1.30 2023/07/26 15:07:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $group_header, $msg, $group_footer, $group_search, $current_module, $group_form, $base_path, $group_list_tmpl, $group_form_add_membre;
+global $group_header, $msg, $group_footer, $group_search, $current_module, $group_content_form, $base_path, $group_list_tmpl, $group_form_add_membre;
 
 // template pour la gestion des groupes
 
-// propriÃ©tÃ©s du sÃ©lecteur d'emprunteur
+// propriétés du sélecteur d'emprunteur
 
 // header de la zone de groupe
 $group_header = "
-<h1>$msg[907]</h1>
 <div class='row'>
 ";
 
@@ -57,98 +56,66 @@ document.forms['groupsearch'].elements['group_query'].focus();
 //";
 
 // form edition/modification du group
-$group_form = "
-<script src='".$base_path."/javascript/ajax.js' type='text/javascript'></script>
-<script type='text/javascript'>
-<!--
-	function test_form(form) {
-		if(form.group_name.value.replace(/^\s+|\s+$/g,'').length == 0) {
-			alert(\"$msg[915]\");
-		    form.group_name.focus();
-			return false;
-		}
-	return true;
-	}
-    function confirm_delete() {
-        result = confirm(\"${msg[931]}\");
-        if(result) document.location = \"./circ.php?categ=groups&action=delgroup&groupID=!!groupID!!\";
-    }
--->
-</script>
-<form class='form-$current_module' name='group_form' method='post' action='./circ.php?categ=groups&action=update'>
-<h3>!!titre!!</h3>
-<div class='form-contenu'>
-	<div class='row'>
-		<div class=colonne2>
-			<div class='row'>	
-				<label class='etiquette' for='group_name'>$msg[911]</label>
-			</div>
-			<div class='row'>
-				<input class='saisie-50em' type='text' id='group_name' name='group_name' value='!!group_name!!' />
-			</div>
+$group_content_form = "
+<div class='row'>
+	<label class='etiquette' for='group_name'>$msg[911]</label>
+</div>
+<div class='row'>
+	<input class='saisie-50em' type='text' id='group_name' name='group_name' value='!!group_name!!' />
+</div>
+<div class='row'>
+	<div class=colonne2>
+		<div class='row'>
+			<input type='checkbox' id='lettre_rappel' name='lettre_rappel' !!lettre_rappel!! value='1' />
+			<label class='etiquette' for='lettre_rappel'>$msg[group_lettre_rappel]</label>
 		</div>
-		<div class=colonne_suite>
-			<div class='row'>
-				<input type='checkbox' id='lettre_rappel' name='lettre_rappel' !!lettre_rappel!! value='1' />	
-				<label class='etiquette' for='lettre_rappel'>$msg[group_lettre_rappel]</label>
-			</div>
-			<div class='row'>
-				<input type='checkbox' id='mail_rappel' name='mail_rappel' !!mail_rappel!! value='1' />	
-				<label class='etiquette' for='mail_rappel'>$msg[group_mail_rappel]</label>
-			</div>
-			<div class='row'>&nbsp;</div>
-			<div class='row'>
-				<input type='checkbox' id='lettre_rappel_show_nomgroup' name='lettre_rappel_show_nomgroup' !!lettre_rappel_show_nomgroup!! value='1' />	
-				<label class='etiquette' for='lettre_rappel_show_nomgroup'>$msg[group_lettre_rappel_show_nomgroup]</label>
-			</div>
+		<div class='row'>
+			<input type='checkbox' id='mail_rappel' name='mail_rappel' !!mail_rappel!! value='1' />
+			<label class='etiquette' for='mail_rappel'>$msg[group_mail_rappel]</label>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<div class='row'>
+			<input type='checkbox' id='lettre_rappel_show_nomgroup' name='lettre_rappel_show_nomgroup' !!lettre_rappel_show_nomgroup!! value='1' />
+			<label class='etiquette' for='lettre_rappel_show_nomgroup'>$msg[group_lettre_rappel_show_nomgroup]</label>
 		</div>
 	</div>
-	<div class='row'>
-		<label class='etiquette' for='libelle_resp'>$msg[913]</label>
-	</div>
-	<div class='row'>
-		<input class='saisie-50emr' type='text' id='libelle_resp' name='libelle_resp' value='!!nom_resp!!' size='33' completion='empr' autfield='respID' autocomplete='off' />
-		<input class='bouton' type='button' onclick=\"openPopUp('./select.php?what=emprunteur&caller=group_form&param1=respID&param2=libelle_resp', 'selector')\" title=\"$msg[grp_liste]\" value='$msg[parcourir]' />
-		<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.libelle_resp.value=''; this.form.respID.value='0'; \" /><br>
-		<label class='etiquette' for='group_add_resp'>".$msg['group_add_resp']."</label>&nbsp;<input type='checkbox' id='group_add_resp' name='group_add_resp' value='1' />
+	<div class=colonne_suite>
+		<div class='row'>
+			<input type='checkbox' id='lettre_resa' name='lettre_resa' !!lettre_resa!! value='1' />
+			<label class='etiquette' for='lettre_resa'>$msg[group_lettre_resa]</label>
+		</div>
+		<div class='row'>
+			<input type='checkbox' id='mail_resa' name='mail_resa' !!mail_resa!! value='1' />
+			<label class='etiquette' for='mail_resa'>$msg[group_mail_resa]</label>
+		</div>
+		<div class='row'>&nbsp;</div>
+		<div class='row'>
+			<input type='checkbox' id='lettre_resa_show_nomgroup' name='lettre_resa_show_nomgroup' !!lettre_resa_show_nomgroup!! value='1' />
+			<label class='etiquette' for='lettre_resa_show_nomgroup'>$msg[group_lettre_resa_show_nomgroup]</label>
+		</div>
 	</div>
 </div>
 <div class='row'>
-	<div class='left'>
-		<input type='hidden' value='!!respID!!' name='respID' id='respID' />
-		<input type='hidden' value='!!groupID!!' name='groupID' id='groupID' />
-		<input type=\"button\" class=\"bouton\" value=\"${msg[76]}\" onClick=\"document.location='!!link_annul!!';\">
-		<input type=\"submit\" class=\"bouton\" value=\"${msg[77]}\" onClick=\"return test_form(this.form)\">
-	</div>
-	<div class='right'>
-		<!-- bouton_suppression -->
-	</div>
-</div>
-<div class='row'></div>
-</form>
-<script type=\"text/javascript\">
-ajax_parse_dom();
-document.forms['group_form'].elements['group_name'].focus();
-</script>
-";
-
-// $group_list_tmpl : template pour la liste des groupes
-$group_list_tmpl = "
-<div class='row'>
-	$msg[916] <b>!!cle!!</b> <!--!!nb_total!!-->
+	<label class='etiquette' for='libelle_resp'>$msg[913]</label>
 </div>
 <div class='row'>
-	!!filter_list!!
+	<input class='saisie-50emr' type='text' id='libelle_resp' name='libelle_resp' value='!!nom_resp!!' size='33' completion='empr' autfield='respID' autocomplete='off' />
+	<input class='bouton' type='button' onclick=\"openPopUp('./select.php?what=emprunteur&caller=group_form&param1=respID&param2=libelle_resp', 'selector')\" title=\"$msg[grp_liste]\" value='$msg[parcourir]' />
+	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.libelle_resp.value=''; this.form.respID.value='0'; \" /><br>
+	<label class='etiquette' for='group_add_resp'>".$msg['group_add_resp']."</label>&nbsp;<input type='checkbox' id='group_add_resp' name='group_add_resp' value='1' />
+	<input type='hidden' value='!!respID!!' name='respID' id='respID' />
 </div>
 <div class='row'>
-	<table border='0' width='100%'>
-		!!list!!
-	</table>
+	<label class='etiquette' for='comment_gestion'>".$msg['groupe_comment_gestion']."</label>
 </div>
 <div class='row'>
-	<div class='center'>
-		!!nav_bar!!
-	</div>
+	<textarea class='saisie-80em' id='comment_gestion' name='comment_gestion' cols='62' rows='4' wrap='virtual'>!!comment_gestion!!</textarea>
+</div>
+<div class='row'>
+	<label class='etiquette' for='comment_opac'>".$msg['groupe_comment_opac']."</label>
+</div>
+<div class='row'>
+	<textarea class='saisie-80em' id='comment_opac' name='comment_opac' cols='62' rows='4' wrap='virtual'>!!comment_opac!!</textarea>
 </div>
 ";
 
@@ -178,7 +145,7 @@ $group_form_add_membre = "
 	</div>
 </div>
 <div class='row'>
-	<input type=\"submit\" class=\"bouton\" value=\"${msg[925]}\" onClick=\"return test_form(this.form)\" />
+	<input type=\"submit\" class=\"bouton\" value=\"{$msg[925]}\" onClick=\"return test_form(this.form)\" />
 </div>
 </form>
 <script type=\"text/javascript\">

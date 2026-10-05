@@ -1,11 +1,11 @@
-<?php
+﻿<?php
       session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,13 +27,33 @@
 <META http-equiv="expires" content ="-1">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/prevwong/drooltip.js@master/package/css/drooltip.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg) { alertify.error(msg); };</script>
+<style>
+#aff-table select {
+  width:100%; box-sizing:border-box;
+  border:1px solid #c5cae9; border-radius:4px;
+  padding:2px 4px; font-size:11px; background:#fff;
+}
+#aff-table input[type=text] {
+  width:100%; box-sizing:border-box;
+  border:1px solid #c5cae9; border-radius:4px;
+  padding:2px 4px; font-size:11px; text-align:center;
+}
+#aff-table input[type=checkbox] { accent-color:#080A66; width:15px; height:15px; cursor:pointer; }
+#aff-table td { vertical-align:middle; padding:4px 5px; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/prevwong/drooltip.js@master/package/js/build/drooltip.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_affectation.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>
-Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"]?>
-</title>
+<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"]?></title>
 </head>
 <body id='bodyfond2' onScroll="openPopup()" >
 <?php
@@ -42,27 +62,20 @@ include_once('librairie_php/db_triade.php');
 validerequete("menuadmin");
 $cnx=cnx();
 
-
-//variables utiles
-// code_class(classes) de la classe concernée par l'affectation
 $cid=$_GET["saisie_classe_envoi"];
 $anneeScolaire=$_GET["anneeScolaire"];
-// tableau 2 valeurs : id,libelle pour classe
 $dataClasse=chercheClasse($_GET["saisie_classe_envoi"]);
 $nom_classe=$dataClasse[0][1];
 $matGroup=matGroup($nom_classe,$anneeScolaire);
 
-// création de la matrice pour le select matiere
-// 	sql
-//		code_mat,libelle,sous_matiere
 $sql=<<<SQL
 SELECT
 	code_mat,
 	libelle,
 	sous_matiere
 FROM
-	${prefixe}matieres
-WHERE 
+	{$prefixe}matieres
+WHERE
 	offline = '0'
 ORDER BY
 	libelle
@@ -71,8 +84,8 @@ SQL;
 $cursor=execSql($sql);
 $data=chargeMat($cursor);
 freeResult($cursor);
-for($l=0;$l<count($data);$l++){
-	for($c=0;$c<count($data);$c++){
+for($l=0;$l<countTriade($data);$l++){
+	for($c=0;$c<countTriade($data);$c++){
 		if(empty($data[$l][2])):
 			$bool=0;
 		else:
@@ -85,109 +98,104 @@ for($l=0;$l<count($data);$l++){
 }
 ?>
 
+<form method="post" onsubmit="return valide();" action="affectation_creation4.php" name="formulaire">
 
-<form method=post onsubmit="return valide();" action="affectation_creation4.php" name="formulaire">
-<table border="1" cellpadding="3" cellspacing="1" bordercolor='#000000' height="85" align="center"  style="border-collapse: collapse;"  >
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPER15?> <font id="color2"><?php print $nom_classe?></font></font></b> 
-<b><font   id='menumodule1' >pour l'ann&eacute;e scolaire </font><font id="color2"><?php print $anneeScolaire ?></font></b> </td></tr>
-<tr  id='cadreCentral0' >
-<td >
-<!-- //  debut -->
-<table border="0" bgcolor="#ffffff" width=100%>
-<TR><TD>
-<TABLE border="1"  width=100%  style="border-collapse: collapse;"  >
-<tr bgcolor="yellow" >
-<td align=center><?php print LANGPER16?></td><TD align=center><?php print LANGPER17?></TD><TD align=center><?php print LANGPER18?></TD><TD align=center>&nbsp;&nbsp;<?php print LANGPER19?>&nbsp;&nbsp;</TD><TD align=center>&nbsp;&nbsp;<?php print LANGPER20?>&nbsp;&nbsp;</TD><TD align=center><?php print LANGPER21bis?></TD><TD align=center>&nbsp;<?php print "Visu.<i>*</i>"?>&nbsp;</TD><TD align=center>&nbsp;<?php print "Visu BTS Blanc.<i>***</i>"?>&nbsp;</TD><TD align=center>&nbsp;<?php print "Nbr&nbsp;d'heure&nbsp;**"?>&nbsp;</TD><TD align=center>&nbsp;<?php print "ECTS"?>&nbsp;</TD><td>&nbsp;Info sem.&nbsp;</td><td>Coef Certif</td><td>Note plancher</td>
-<?php
-for ($a=0;$a<$_GET["saisie_nb_matiere"];$a++) {
-?>
-<TR   >
-	<TD>
-		<input type="text" name="ordre" value="<?php print $a?>" size="3" onfocus='this.blur()'>
-	</TD>
-<TD>
-<?php
-$nameSelectMat="saisie_matiere_".$a;
-print(selectHtml($nameSelectMat,1,false,$matMat));
-?>
-</TD>
-<TD>
-<select name="saisie_prof_<?php print $a?>">
-<option value="0" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX?></option>
-<?php
-select_personne_2('ENS','30');
-// creation des options
-// optimisation indispensable
-?>
-</select></TD>
-<TD align=center><input type=text size=2 name=saisie_coef_<?php print $a?> ></TD>
-<TD>
-    <?php
-    $nameSelectGrp="saisie_groupe_".$a;
-    print(selectHtml($nameSelectGrp,1,false,$matGroup));
-    ?>
-</TD>
-<TD align='center'><select name="saisie_langue_<?php print $a?>" >
-<option id='select0' value=''><?php print LANGCHOIX?></option>
-<option id='select1' value='LV1'>LV1</option>
-<option id='select1' value='LV2'>LV2</option>
-<option id='select1' value='LV3'>LV3</option>
-<option id='select1' value='LV4'>LV4</option>
-<option id='select1' value='OPT1'>OPT1</option>
-<option id='select1' value='OPT2'>OPT2</option>
-<option id='select1' value='OPT3'>OPT3</option>
-<option id='select1' value='OPT4'>OPT4</option>
-<option id='select1' value='DP3'>DP3</option>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" style="table-layout:fixed">
+<tr id='coulBar0'><td height="2">
+  <b><font id='menumodule1'><?php print LANGPER15?> <font id="color2"><?php print $nom_classe?></font></font></b>
+  &nbsp;
+  <b><font id='menumodule1'>pour l'ann&eacute;e scolaire </font><font id="color2"><?php print $anneeScolaire?></font></b>
+</td></tr>
+<tr id='cadreCentral0'>
+<td>
+<div style="overflow:hidden">
 
-</select></TD>
+<div style="overflow-x:auto;min-width:0;padding:8px 4px">
+<table id="aff-table" class="table" style="min-width:960px;margin:0">
+  <thead>
+    <tr>
+      <th class="cc-th" style="min-width:44px"><?php print LANGPER16?></th>
+      <th class="cc-th" style="min-width:150px"><?php print LANGPER17?></th>
+      <th class="cc-th" style="min-width:150px"><?php print LANGPER18?></th>
+      <th class="cc-th" style="min-width:46px"><?php print LANGPER19?></th>
+      <th class="cc-th" style="min-width:110px"><?php print LANGPER20?></th>
+      <th class="cc-th" style="min-width:70px"><?php print LANGPER21bis?></th>
+      <th class="cc-th" style="min-width:46px">Visu.<i>*</i></th>
+      <th class="cc-th" style="min-width:56px">Visu&nbsp;BTS&nbsp;Blanc<i>***</i></th>
+      <th class="cc-th" style="min-width:56px">Nbr&nbsp;h.<i>**</i></th>
+      <th class="cc-th" style="min-width:46px">ECTS</th>
+      <th class="cc-th" style="min-width:56px">Info sem. <i class="bi bi-info-circle dtt" title="Numéro de semestre (1 à 10)" style="font-size:11px;color:#3949ab;cursor:pointer"></i></th>
+      <th class="cc-th" style="min-width:56px">Coef&nbsp;Certif</th>
+      <th class="cc-th" style="min-width:66px">Note&nbsp;plancher</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php for ($a=0;$a<$_GET["saisie_nb_matiere"];$a++) { ?>
+    <tr class="cc-tr-data">
+      <td style="text-align:center">
+        <input type="text" name="ordre" value="<?php print $a?>" size="3" onfocus="this.blur()">
+      </td>
+      <td><?php $nameSelectMat="saisie_matiere_".$a; print(selectHtml($nameSelectMat,1,false,$matMat)); ?></td>
+      <td>
+        <select name="saisie_prof_<?php print $a?>">
+          <option value="0" style="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX?></option>
+          <?php select_personne_2('ENS','30'); ?>
+        </select>
+      </td>
+      <td><input type="text" name="saisie_coef_<?php print $a?>" size="2"></td>
+      <td><?php $nameSelectGrp="saisie_groupe_".$a; print(selectHtml($nameSelectGrp,1,false,$matGroup)); ?></td>
+      <td>
+        <select name="saisie_langue_<?php print $a?>">
+          <option value=""><?php print LANGCHOIX?></option>
+          <option value="LV1">LV1</option>
+          <option value="LV2">LV2</option>
+          <option value="LV3">LV3</option>
+          <option value="LV4">LV4</option>
+          <option value="OPT1">OPT1</option>
+          <option value="OPT2">OPT2</option>
+          <option value="OPT3">OPT3</option>
+          <option value="OPT4">OPT4</option>
+          <option value="DP3">DP3</option>
+        </select>
+      </td>
+      <td style="text-align:center"><input type="checkbox" name="saisie_visubull_<?php print $a?>" value="1" checked="checked"></td>
+      <td style="text-align:center"><input type="checkbox" name="saisie_visubull_btsblanc_<?php print $a?>" value="1"></td>
+      <td><input type="text" name="saisie_nbheure_<?php print $a?>" value="" size="3"></td>
+      <td><input type="text" name="saisie_ects_<?php print $a?>" value="" size="3"></td>
+      <td>
+        <select name="info_semestre_<?php print $a?>">
+          <option value="0"></option>
+          <?php for($s=1;$s<=10;$s++) print "<option value='$s'>$s</option>"; ?>
+        </select>
+      </td>
+      <td><input type="text" size="2" name="saisie_coef_certif_<?php print $a?>"></td>
+      <td><input type="text" size="2" name="saisie_note_planche_<?php print $a?>"></td>
+    </tr>
+  <?php } ?>
+  </tbody>
+</table>
+</div>
 
+<input type="hidden" name="saisie_nb_matiere"   value="<?php print $a-1?>">
+<input type="hidden" name="saisie_classe_envoi" value="<?php print $_GET["saisie_classe_envoi"]?>">
+<input type="hidden" name="anneeScolaire"       value="<?php print $anneeScolaire?>">
+<input type="hidden" name="saisie_tri"          value="<?php print $_GET["tri"]?>">
 
-<td><input type='checkbox' name="saisie_visubull_<?php print $a?>" value='1' checked='checked' ></td>
-<td><input type='checkbox' name="saisie_visubull_btsblanc_<?php print $a?>" value='1' ></td>
-<td><input type='text' name="saisie_nbheure_<?php print $a?>" value='' size=3 ></td>
-<td><input type='text' name="saisie_ects_<?php print $a?>" value='' size=3 ></td>
-<td><select name='info_semestre_<?php print $a?>'>
-<option id='select0' value='0'></option>
-<option id='select1' value='1'>1</option>
-<option id='select1' value='2'>2</option>
-<option id='select1' value='3'>3</option>
-<option id='select1' value='4'>4</option>
-<option id='select1' value='5'>5</option>
-<option id='select1' value='6'>6</option>
-<option id='select1' value='7'>7</option>
-<option id='select1' value='8'>8</option>
-<option id='select1' value='9'>9</option>
-<option id='select1' value='10'>10</option>
-</select></td>
+<div style="font-style:italic;font-size:11px;color:#888;padding:4px 8px 8px">
+  * Visu. : Visualiser au sein du bulletin &nbsp;/&nbsp; ** Nombre d'heure annuelle &nbsp;/&nbsp; *** Visu. : Visualiser au sein du bulletin AFTEC BTS BLANC
+</div>
 
+<div style="display:flex;gap:8px;padding:6px 8px 10px">
+  <script language=JavaScript>buttonMagic("<?php print LANGBT20?>","./affectation_creation.php","_top","",";parent.window.close();");</script>
+  <script language=JavaScript>buttonMagicSubmit("<?php print LANGBT21?>","rien");</script>
+</div>
 
-<td><input type='text' size='2' name="saisie_coef_certif_<?php print $a?>" /></td>
-<td><input type='text' size='2' name="saisie_note_planche_<?php print $a?>" /></td>
-
-</TR>
-<?php	} ?>
-</TD></TR>
-</td></tr></table><BR>
-
-<table width='100%' border='0' align='center' ><tr><td>
-<input type='hidden' name='saisie_classe_envoi' value="<?php print $_GET["saisie_classe_envoi"]?>" >
-<input type='hidden' name='saisie_nb_matiere' value="<?php print $a-1?>">
-<input type='hidden'  name='anneeScolaire' value="<?php print $anneeScolaire?>">
-<input type='hidden' name='saisie_tri' value="<?php print $_GET["tri"] ?>">
-<script language=JavaScript>buttonMagic("<?php print LANGBT20?>","./affectation_creation.php","_top","",";parent.window.close();");</script>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT21?>","rien"); //text,nomInput</script><br><br>
+</div>
 </td></tr></table>
-<br>
-<i>* Visu. : Visualiser au sein du bulletin / ** Nombre d'heure annuelle / *** Visu. : Visualiser au sein du bulletin AFTEC BTS BLANC</i>
-</TD></TR></TABLE>
-     <!-- // fin  -->
-     </td></tr></table>
-     </form>
+</form>
 
-<!-- verif saisie -->
+<script>new Drooltip({element:".dtt",position:"top",animation:"fade"});</script>
 <script language=JavaScript>
-
-// validation d'un champ de select
 function Validselect(item){
  if (item == 0) {
         return (false) ;
@@ -196,15 +204,12 @@ function Validselect(item){
         }
 }
 
-//fonction de validation d'après la longueur de la chaîne
 function ValidLongueur(item,len) {
    drapeau = 1;
    return (item.length >= len);
 }
 
-// affiche un message d'alerte
 function error5(elem, text) {
-// abandon si erreur déjà signalée
    if (flag) return;
    window.alert(text);
    elem.select();
@@ -212,9 +217,7 @@ function error5(elem, text) {
    flag = true;
 }
 
-// affiche un message d'alerte
 function error6(text) {
-// abandon si erreur déjà signalée
    if (flag) return;
    window.alert(text);
    flag=true;

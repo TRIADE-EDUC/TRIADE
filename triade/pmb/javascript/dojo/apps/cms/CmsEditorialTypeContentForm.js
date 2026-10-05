@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: CmsEditorialTypeContentForm.js,v 1.5 2019-05-17 12:39:05 dgoron Exp $
+// $Id: CmsEditorialTypeContentForm.js,v 1.6 2019/08/08 08:22:37 dgoron Exp $
 
 
 define([
@@ -20,6 +20,7 @@ define([
 				this.activated_tinymce = data.activated_tinymce;
 			},
 			onLoad: function(){
+				document.body.dispatchEvent(new Event('movestart'));
 				if(this.activated_grid && !this.formCMSEdit) {
 					this.formCMSEdit = new FormCMSEdit('cms', this.type);
 					if(this.activated_tinymce) {
@@ -29,6 +30,7 @@ define([
 				}
 				ajax_parse_dom();
 				init_drag();
+				document.body.dispatchEvent(new Event('moveend'));
 			},
 		})
 });

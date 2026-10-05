@@ -1,17 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export.inc.php,v 1.11 2019-04-03 14:46:00 arenou Exp $
+// $Id: export.inc.php,v 1.12.8.1 2025/03/04 13:50:22 krocheron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/marc_table.class.php");
 
 function _export_($id,$keep_expl=0,$params=array()) {
 	global $tab_type;
 	
-	//Pour les pÃ©riodiques avec multi-support au niveau des Ã©tats de collection
+	//Pour les périodiques avec multi-support au niveau des états de collection
 	$notice_suppl="";
 	
 	if(!is_array($tab_type)){
@@ -27,23 +28,23 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	$notice["TYPE"]=$tab_type[$rn->typdoc];
 	
 	$notice["AUT"]=_make_export_authors($rn);
-	if(($rn->typdoc == "p") || ($rn->typdoc == "t")){//Titre de pÃ©riodique et Texte officiel le champs est vide
+	if(($rn->typdoc == "p") || ($rn->typdoc == "t")){//Titre de périodique et Texte officiel le champs est vide
 		$notice["AUT"]="";
 	}
 	
-	if($rn->typdoc == "p"){//Titre de pÃ©riodique le champs est vide
+	if($rn->typdoc == "p"){//Titre de périodique le champs est vide
 		$notice["TIT"]="";
 	}else{
 		$notice["TIT"]=_make_export_title($rn);
 	}
 	
 	$notice["EDIT"]=_make_export_publishers_name($rn);
-	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t")){//Article, Titre de pÃ©riodique et Texte officiel le champs est vide
+	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t")){//Article, Titre de périodique et Texte officiel le champs est vide
 		$notice["EDIT"]="";
 	}
 	
 	$notice["LIEU"]= _make_export_publishers_lieu($rn);
-	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t")){//Article, Titre de pÃ©riodique et Texte officiel le champs est vide
+	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t")){//Article, Titre de périodique et Texte officiel le champs est vide
 		$notice["LIEU"]="";
 	}elseif(($rn->typdoc == "q") && ($notice["LIEU"] == "[s.n.]")){//Document en ligne = Rapport
 		$notice["LIEU"]="";
@@ -54,7 +55,7 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	} else {
 		$notice["PAGE"]= "[s.p.]";
 	}
-	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t") || ($rn->typdoc == "m")){//Article, Titre de pÃ©riodique, Texte officiel et Document multimÃ©dia  le champs est vide
+	if(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t") || ($rn->typdoc == "m")){//Article, Titre de périodique, Texte officiel et Document multimédia  le champs est vide
 		$notice["PAGE"]="";
 	}
 	
@@ -63,17 +64,17 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	} else {
 		$notice["DATE"]= "[s.d.]";
 	}
-	if(($rn->typdoc == "p") || ($rn->typdoc == "t")){//Titre de pÃ©riodique et Texte officiel le champs est vide
+	if(($rn->typdoc == "p") || ($rn->typdoc == "t")){//Titre de périodique et Texte officiel le champs est vide
 		$notice["DATE"]="";
 	}
 	
 	$notice["MOTCLE"]=_make_export_branch_thesaurus($rn, "MOTCLE");
-	if(($rn->typdoc == "p")){//Titre de pÃ©riodique le champs est vide
+	if(($rn->typdoc == "p")){//Titre de périodique le champs est vide
 		$notice["MOTCLE"]="";
 	}
 	
 	$notice["NOMP"]=_make_export_branch_thesaurus($rn, "NOMP");
-	if(($rn->typdoc == "p")){//Titre de pÃ©riodique le champs est vide
+	if(($rn->typdoc == "p")){//Titre de périodique le champs est vide
 		$notice["NOMP"]="";
 	}
 	
@@ -82,6 +83,13 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}else{
 		$notice["NOTES"]="";
 	}
+	
+	if ($rn->n_contenu && !empty(trim($notice["NOTES"]))) {
+	    $notice["NOTES"].=" | ".$rn->n_contenu;
+	} elseif($rn->n_contenu && empty(trim($notice["NOTES"]))) {
+	    $notice["NOTES"].=$rn->n_contenu;
+	}
+	
 	if($rn->typdoc == "t"){//Texte officiel le champs est vide
 		$notice["NOTES"]="";
 	}
@@ -89,13 +97,13 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	$notice["PRODFICH"]=_make_export_cp_prodfich($rn);
 	
 	$notice["LOC"]=_make_export_cp_loc($rn);
-	if((($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "o")|| ($rn->typdoc == "r")) && (!$notice["LOC"])){// Ouvrage CongrÃ¨s, ThÃ¨se et mÃ©moire le champs ne doit pas Ãªtre vide
+	if((($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "o")|| ($rn->typdoc == "r")) && (!$notice["LOC"])){// Ouvrage Congrès, Thèse et mémoire le champs ne doit pas être vide
 		$notice["LOC"]="[vide]";
-	}elseif(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t") || ($rn->typdoc == "q")){//Article, Titre de pÃ©riodique, Texte officiel et Rapport le champs est vide
+	}elseif(($rn->typdoc == "s") || ($rn->typdoc == "p") || ($rn->typdoc == "t") || ($rn->typdoc == "q")){//Article, Titre de périodique, Texte officiel et Rapport le champs est vide
 		$notice["LOC"]="";
 	}
 	
-	if ($rn->coll_id && (($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "q"))) {//N'est renseignÃ© que pour Ouvrage, CongrÃ¨s et Rapport
+	if ($rn->coll_id && (($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "q") || ($rn->typdoc == "m"))) {//N'est renseigné que pour Ouvrage, Congrès , Rapport et Multimédia
 		$requete="select collection_name from collections where collection_id=".$rn->coll_id;
 		$resultat=pmb_mysql_query($requete);
 		$notice["COL"]=pmb_mysql_result($resultat,0,0);
@@ -105,7 +113,7 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}
 	
 	$notice["THEME"]=_make_export_branch_thesaurus($rn, "THEME");
-	if(($rn->typdoc == "p")){//Titre de pÃ©riodique le champs est vide
+	if(($rn->typdoc == "p")){//Titre de périodique le champs est vide
 		$notice["THEME"]="";
 	}
 	
@@ -114,17 +122,17 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}else{
 		$notice["RESU"]="";
 	}
-	if($rn->typdoc == "p"){//Titre de pÃ©riodique le champs est vide
+	if($rn->typdoc == "p"){//Titre de périodique le champs est vide
 		$notice["RESU"]="";
 	}
 	
 	$notice["SUPPORT"]="";
-	if($rn->typdoc == "m"){//Document multimÃ©dia
+	if($rn->typdoc == "m"){//Document multimédia
 		$notice["SUPPORT"]=_make_export_cp_support($rn);
 	}
 	
 	$notice["SUPPORTPERIO"]="";
-	if($rn->typdoc == "p"){// Titre de pÃ©riodique
+	if($rn->typdoc == "p"){// Titre de périodique
 		if($params["ascodoc_supportperio"]){
 			$notice["SUPPORTPERIO"]=$params["ascodoc_supportperio"];
 		}else{
@@ -167,7 +175,7 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}
 	
 	$notice["CANDES"]=_make_export_branch_thesaurus($rn, "CANDES");
-	if($rn->typdoc == "p"){// Titre de pÃ©riodique
+	if($rn->typdoc == "p"){// Titre de périodique
 		$notice["CANDES"]="";
 	}
 	
@@ -176,8 +184,8 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	$notice["CONGRLIE"]="";
 	$notice["CONGRDAT"]="";
 	$notice["CONGRNUM"]="";
-	if(($rn->typdoc == "a") || ($rn->typdoc == "h")){// Ouvrage ou CongrÃ¨s
-		//CongrÃ¨s
+	if(($rn->typdoc == "a") || ($rn->typdoc == "h")){// Ouvrage ou Congrès
+		//Congrès
 		$requete = "SELECT author_name, author_rejete, author_numero, author_lieu, author_date ";
 		$requete .= "FROM authors, responsability where responsability_notice=".$rn->notice_id." and responsability_author=author_id ";
 		$requete .= "and author_type='72' ";
@@ -195,7 +203,7 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}
 	
 	$notice["ISBNISSN"]="";
-	if(($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "p")){//Ouvrage ou CongrÃ¨s ou Titre de pÃ©riodique
+	if(($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "p")){//Ouvrage ou Congrès ou Titre de périodique
 		if ($rn->code) {
 			$notice["ISBNISSN"]=$rn->code;
 		}else{
@@ -206,24 +214,24 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}
 	
 	$notice["REED"]="";
-	if(($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "q")){//Ouvrage ou CongrÃ¨s ou Rapport
+	if(($rn->typdoc == "a") || ($rn->typdoc == "h") || ($rn->typdoc == "q")){//Ouvrage ou Congrès ou Rapport
 		$notice["REED"]=$rn->mention_edition;
 	}
 	
 	$notice["DIPSPE"]="";
 	if(($rn->typdoc == "o") || ($rn->typdoc == "r")){
-		$notice["DIPSPE"]=_make_export_cp_dipspe($rn);//ThÃ¨se ou mÃ©moire
+		$notice["DIPSPE"]=_make_export_cp_dipspe($rn);//Thèse ou mémoire
 	}
 	
 	$notice["REV"]="";
-	if(($rn->typdoc == "s") || ($rn->typdoc == "t") || ($rn->typdoc == "q")){//Article ou Titre de pÃ©riodique ou Texte officiel ou Document en ligne = Rapport
+	if(($rn->typdoc == "s") || ($rn->typdoc == "t") || ($rn->typdoc == "q")){//Article ou Titre de périodique ou Texte officiel ou Document en ligne = Rapport
 		$notice["REV"]=_make_export_title_rev($rn);
-	}elseif($rn->typdoc == "p"){//Titre de pÃ©riodique
+	}elseif($rn->typdoc == "p"){//Titre de périodique
 		$notice["REV"]=_make_export_title($rn);
 	}
 	
 	$notice["VIEPERIO"]="";
-	if($rn->typdoc == "p"){//Titre de pÃ©riodique
+	if($rn->typdoc == "p"){//Titre de périodique
 		if ($rn->year) {
 			$notice["VIEPERIO"]=$rn->year;
 		}else{
@@ -232,7 +240,7 @@ function _export_($id,$keep_expl=0,$params=array()) {
 	}
 	
 	$notice["ETATCOL"]="";
-	if($rn->typdoc == "p"){//Titre de pÃ©riodique
+	if($rn->typdoc == "p"){//Titre de périodique
 		$val_tmp="";
 		$requete = "select collections_state.*, archempla_libelle from collections_state JOIN arch_type ON archtype_id=collstate_type JOIN arch_emplacement ON archempla_id=collstate_emplacement where id_serial=".$rn->notice_id." AND archtype_libelle='".addslashes($notice["SUPPORTPERIO"])."'";
 		$resultat = pmb_mysql_query($requete);
@@ -356,7 +364,7 @@ function _make_export_authors($rn) {
 	
 	$notice = "";
 	
-	//Auteurs (sauf congrÃ¨s : exportÃ©s dans la fonction _make_export_congres)
+	//Auteurs (sauf congrès : exportés dans la fonction _make_export_congres)
 	$requete = "SELECT author_name, author_rejete, author_type, responsability_fonction, responsability_type ";
 	$requete .= "FROM authors, responsability where responsability_notice=".$rn->notice_id." and responsability_author=author_id ";
 	$requete .= "and author_type<>'72' ";
@@ -364,7 +372,7 @@ function _make_export_authors($rn) {
 	$resultat=pmb_mysql_query($requete);
 	if (!$authors_function) {
 		/*$authors_function=array("205"=>"Collab.","901"=>"Coord.","651"=>"Dir.","340"=>"Ed.",
-			"440"=>"Ill.","080"=>"PrÃ©f.","730"=>"Trad.","075"=>"Postf.");*/
+			"440"=>"Ill.","080"=>"Préf.","730"=>"Trad.","075"=>"Postf.");*/
 		$func=new marc_list("function");
 		$authors_function=$func->table;
 	}
@@ -408,9 +416,9 @@ function _make_export_title($rn) {
 function _make_export_title_rev($rn) {
 	global $charset;
 	$notice = "";
-	//Titre du pÃ©riodique
+	//Titre du périodique
 	if ($rn->niveau_biblio=="a") {
-		//RÃ©cupÃ©ration du titre du pÃ©riodique
+		//Récupération du titre du périodique
 		$requete="select tit1 from notices, bulletins, analysis where analysis_notice=".$rn->notice_id." and analysis_bulletin=bulletin_id and bulletin_notice=notice_id";
 		$resultat=pmb_mysql_query($requete);
 		$r_perio=@pmb_mysql_fetch_object($resultat);
@@ -420,22 +428,22 @@ function _make_export_title_rev($rn) {
 	}
 	return $notice;
 }
-//$dem == 0 -> Le champ numÃ©ro
-//$dem == 1 -> Le numÃ©ro si possible sinon le champ numÃ©ro
+//$dem == 0 -> Le champ numéro
+//$dem == 1 -> Le numéro si possible sinon le champ numéro
 //$dem == 2 -> Le volume si possible sinon rien
 function _make_export_numero_bull($rn,$dem=0) {
 	
 	$notice = "";
-	//NumÃ©ro de bulletin
+	//Numéro de bulletin
 	if ($rn->niveau_biblio=="a") {
-		//RÃ©cupÃ©ration du numÃ©ro de bulletin
+		//Récupération du numéro de bulletin
 		$requete="select bulletin_numero from notices, bulletins, analysis where analysis_notice=".$rn->notice_id." and analysis_bulletin=bulletin_id and bulletin_notice=notice_id";
 		$resultat=pmb_mysql_query($requete);
 		$r_bull=@pmb_mysql_fetch_object($resultat);
 		if (($r_bull)&&($r_bull->bulletin_numero)) {
 		    $matches=[];
 			if(($dem != 0) && preg_match("/^(.+) vol (.+)$/i",$r_bull->bulletin_numero,$matches)){
-				if($dem == 1){//NumÃ©ro
+				if($dem == 1){//Numéro
 					$notice .=trim($matches[1]);
 				}else{//Volume
 					$notice .=trim($matches[2]);
@@ -468,7 +476,7 @@ function _make_export_publishers_name($rn) {
 			if ($rn->ed1_id) $notice.= "/"; 
 			$notice.= ucfirst($red->ed_name);
 		}
-		//CP Editeurs supplÃ©mentaires
+		//CP Editeurs supplémentaires
 		$requete="SELECT ncv.notices_custom_integer FROM notices_custom_values ncv
 				JOIN notices_custom nc ON nc.idchamp=ncv.notices_custom_champ
 				WHERE ncv.notices_custom_origine=".$rn->notice_id." and nc.name='cp_editeur'";
@@ -518,7 +526,7 @@ function _make_export_publishers_lieu($rn) {
 				$notice.= "[s.l.]";
 			}
 		}
-		//CP Editeurs supplÃ©mentaires
+		//CP Editeurs supplémentaires
 		$requete="SELECT ncv.notices_custom_integer FROM notices_custom_values ncv
 				JOIN notices_custom nc ON nc.idchamp=ncv.notices_custom_champ
 				WHERE ncv.notices_custom_origine=".$rn->notice_id." and nc.name='cp_editeur'";
@@ -626,7 +634,6 @@ function _make_export_cp_annexe($rn) {
 function _make_export_cp_dipspe($rn) {
 	
 	$notice = "";
-	$tmp_array = array();
 	$requete="select ncv.notices_custom_small_text from notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=".$rn->notice_id." and ncv.notices_custom_champ=nc.idchamp and nc.name='cp_dipspe'";
 	$resultat=pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($resultat)) {
@@ -715,7 +722,6 @@ function _make_export_cp_nattext($rn) {
 
 function _make_export_cp_datetext($rn) {
 	$notice = "";
-	$tmp_array = array();
 	$requete="select ncv.notices_custom_date from notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=".$rn->notice_id." and ncv.notices_custom_champ=nc.idchamp and nc.name='cp_datetext'";
 	$resultat=pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($resultat)) {
@@ -727,7 +733,6 @@ function _make_export_cp_datetext($rn) {
 
 function _make_export_cp_datevali($rn) {
 	$notice = "";
-	$tmp_array = array();
 	$requete="select ncv.notices_custom_date from notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=".$rn->notice_id." and ncv.notices_custom_champ=nc.idchamp and nc.name='cp_datevali'";
 	$resultat=pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($resultat)) {
@@ -739,7 +744,6 @@ function _make_export_cp_datevali($rn) {
 
 function _make_export_cp_numtexof($rn) {
 	$notice = "";
-	$tmp_array = array();
 	$requete="select ncv.notices_custom_small_text from notices_custom_values ncv, notices_custom nc where ncv.notices_custom_origine=".$rn->notice_id." and ncv.notices_custom_champ=nc.idchamp and nc.name='cp_numtexof'";
 	$resultat=pmb_mysql_query($requete);
 	if (pmb_mysql_num_rows($resultat)) {
@@ -750,7 +754,7 @@ function _make_export_cp_numtexof($rn) {
 }
 
 function _make_export_branch_thesaurus($rn, $name) {
-	global $dbh,$charset;
+	global $charset;
 	//Ancien fonctionnement
 	$tmp_array=array();
 	$notice = "";
@@ -759,7 +763,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 	$requete .= "AND notices_categories.num_noeud = noeuds.id_noeud ";
 	$requete .= "AND noeuds.num_parent IN (select num_noeud from categories where libelle_categorie='".$name."') ";
 	$requete .= "ORDER BY ordre_categorie, libelle_categorie ";
-	$resultat=pmb_mysql_query($requete, $dbh);
+	$resultat=pmb_mysql_query($requete);
 	
 	if (pmb_mysql_num_rows($resultat)) {
 	    for ($i=0; $i<pmb_mysql_num_rows($resultat); $i++) {
@@ -769,9 +773,9 @@ function _make_export_branch_thesaurus($rn, $name) {
 	
 	//Nouveau fonctionnement
 	switch ($name){
-		case "MOTCLE"://thÃ©saurus santÃ©spy
+		case "MOTCLE"://thésaurus santéspy
 			$req="SELECT id_thesaurus FROM thesaurus WHERE libelle_thesaurus LIKE '%SANTEPSY%'";
-			$res=pmb_mysql_query($req, $dbh);
+			$res=pmb_mysql_query($req);
 			if($res && (pmb_mysql_num_rows($res) == 1)){
 				$id_thes=pmb_mysql_result($res, 0,0);
 				$restrict="";
@@ -780,7 +784,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 					WHERE noeuds.num_thesaurus=".$id_thes." AND libelle_categorie='CANDES'";*/
 				$req="SELECT noeuds.id_noeud FROM noeuds
 					WHERE noeuds.num_thesaurus=".$id_thes." AND autorite='CANDES'";
-				$res=pmb_mysql_query($req, $dbh);
+				$res=pmb_mysql_query($req);
 				if($res && (pmb_mysql_num_rows($res) == 1)){
 					$restrict=" AND num_parent != ".pmb_mysql_result($res, 0,0);
 				}
@@ -790,7 +794,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 						JOIN noeuds ON notices_categories.num_noeud=noeuds.id_noeud
 						WHERE notcateg_notice=".$rn->notice_id." AND categories.num_thesaurus=".$id_thes." ".$restrict."
 						ORDER BY ordre_categorie, libelle_categorie ";
-				$resultat=pmb_mysql_query($requete, $dbh);
+				$resultat=pmb_mysql_query($requete);
 				
 				if ($resultat && pmb_mysql_num_rows($resultat)) {
 					for ($i=0; $i<pmb_mysql_num_rows($resultat); $i++) {
@@ -801,7 +805,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 			break;
 		case "THEME":
 			$req="SELECT id_thesaurus FROM thesaurus WHERE libelle_thesaurus LIKE '%THEMES%'";
-			$res=pmb_mysql_query($req, $dbh);
+			$res=pmb_mysql_query($req);
 			if($res && (pmb_mysql_num_rows($res) == 1)){
 				$id_thes=pmb_mysql_result($res, 0,0);
 				
@@ -809,7 +813,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 						JOIN categories ON notices_categories.num_noeud=categories.num_noeud
 						WHERE notcateg_notice=".$rn->notice_id." AND categories.num_thesaurus=".$id_thes." 
 						ORDER BY ordre_categorie, libelle_categorie ";
-				$resultat=pmb_mysql_query($requete, $dbh);
+				$resultat=pmb_mysql_query($requete);
 				
 				if ($resultat && pmb_mysql_num_rows($resultat)) {
 					for ($i=0; $i<pmb_mysql_num_rows($resultat); $i++) {
@@ -824,7 +828,7 @@ function _make_export_branch_thesaurus($rn, $name) {
 			$requete .= "AND notices_categories.num_noeud = noeuds.id_noeud ";
 			$requete .= "AND noeuds.num_parent IN (select num_noeud from categories where libelle_categorie='LISTE NOMS PROPRES') ";
 			$requete .= "ORDER BY ordre_categorie, libelle_categorie ";
-			$resultat=pmb_mysql_query($requete, $dbh);
+			$resultat=pmb_mysql_query($requete);
 			
 			if (pmb_mysql_num_rows($resultat)) {
 				for ($i=0; $i<pmb_mysql_num_rows($resultat); $i++) {

@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: infos.xml,v 1.4 2015-08-05 14:14:18 agiraud Exp $ -->
+$Id: infos.xml,v 1.4 2015/08/05 14:14:18 agiraud Exp $ -->
 <informations>
 	<information>
 		<name>nb_bannettes</name>

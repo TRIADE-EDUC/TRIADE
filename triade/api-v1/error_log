@@ -1,0 +1,163 @@
+[14-Mar-2026 14:55:28 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'taer5511_ecole_install.tria_cwjeton_mobile' doesn't exist in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php:400
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php(400): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/common.php(1215): DB_mysqli->simpleQuery()
+#2 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(304): DB_common->query()
+#3 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(28924): execSql()
+#4 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-notes.php(18): verifAccess()
+#5 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php on line 400
+[14-Mar-2026 14:59:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'taer5511_ecole_install.tria_cwjeton_mobile' doesn't exist in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php:400
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php(400): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/common.php(1215): DB_mysqli->simpleQuery()
+#2 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(304): DB_common->query()
+#3 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(28924): execSql()
+#4 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-notes.php(18): verifAccess()
+#5 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php on line 400
+[14-Mar-2026 15:09:44 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'taer5511_ecole_install.tria_cwjeton_mobile' doesn't exist in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php:400
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php(400): mysqli_query()
+#1 /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/common.php(1215): DB_mysqli->simpleQuery()
+#2 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(304): DB_common->query()
+#3 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(28924): execSql()
+#4 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-notes.php(18): verifAccess()
+#5 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/common/pear/DB/mysqli.php on line 400
+[04-Apr-2026 23:55:15 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:55:40 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:55:59 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:01 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:03 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:05 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:07 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:08 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:36 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:56:40 UTC] PHP Warning:  Undefined variable $id in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 24
+[04-Apr-2026 23:57:01 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 40
+[04-Apr-2026 23:57:01 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:46
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(46): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 46
+[04-Apr-2026 23:57:04 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 40
+[04-Apr-2026 23:57:04 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:46
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(46): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 46
+[04-Apr-2026 23:57:05 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 40
+[04-Apr-2026 23:57:05 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:46
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(46): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 46
+[04-Apr-2026 23:58:08 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 40
+[04-Apr-2026 23:58:08 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:46
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(46): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 46
+[22-Apr-2026 11:51:03 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 31
+[22-Apr-2026 11:51:03 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'taer5511_ecole_install.eleves' doesn't exist in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:37
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(37): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 37
+[22-Apr-2026 11:51:05 UTC] PHP Warning:  Undefined variable $prefixe in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 31
+[22-Apr-2026 11:51:05 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'taer5511_ecole_install.eleves' doesn't exist in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php:37
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php(37): PDOStatement->execute()
+#1 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-eleves.php on line 37
+[22-Apr-2026 11:57:32 UTC] PHP Warning:  Undefined array key "annee" in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-notes.php on line 29
+[22-Apr-2026 11:57:32 UTC] PHP Warning:  Undefined array key "mois" in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-notes.php on line 30
+[15-Jun-2026 11:37:38 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:37:38 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:37:38 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:38:03 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:38:03 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:38:03 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:38:45 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:38:45 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:38:45 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:39:27 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:39:27 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:39:27 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:41:56 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:41:56 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:41:56 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:42:38 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:42:38 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:42:38 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:42:56 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:42:56 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:42:56 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:46:39 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:46:39 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21304
+[15-Jun-2026 11:46:39 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LANGCIV0" in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php:5509
+Stack trace:
+#0 /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php(9136): civ()
+#1 /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php(91): recherche_personne()
+#2 {main}
+  thrown in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 5509
+[15-Jun-2026 11:51:59 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:52:03 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:52:16 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:53:06 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:55:20 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:58:22 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[15-Jun-2026 11:58:53 UTC] PHP Fatal error:  Cannot redeclare function calculerHeureDeFin() (previously declared in /home/taer5511/dev.triade-v4.net/triade/api-v1/get-edt.php:27) in /home/taer5511/dev.triade-v4.net/triade/librairie_php/timezone.php on line 677
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Undefined array key 0 in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[21-Jun-2026 23:15:25 UTC] PHP Warning:  Trying to access array offset on null in /home/taer5511/dev.triade-v4.net/triade/librairie_php/db_triade.php on line 21317
+[05-Aug-2026 20:11:21 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:11:21 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:11:21 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:17:25 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:17:25 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:17:25 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:44:11 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:44:11 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134
+[05-Aug-2026 20:44:11 UTC] PHP Warning:  Undefined variable $noteengl in /home/taer5511/dev.triade-v4.net/triade/librairie_php/recupnoteperiode.php on line 1134

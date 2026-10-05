@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur Divercities
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2020/06/24 08:46:36 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="divercities_authentication_url_pattern">Motif de l'URL d'authentification</entry>
+	<entry code="divercities_authentication_source">Source d'authentification</entry>
+	<entry code="divercities_authentication_source_error">Vous devez définir une source d'authentification Divercities pour continuer</entry>
+</XMLlist>

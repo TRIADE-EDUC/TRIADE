@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: parameters_subst.class.php,v 1.4 2017-07-12 15:15:00 tsamson Exp $
+// $Id: parameters_subst.class.php,v 1.4 2017/07/12 15:15:00 tsamson Exp $
 
 require_once($include_path."/parser.inc.php");
 
-//Cette classe va chercher dans un fichier une liste de paramÃ¨tres et peut les extraire au besoin
+//Cette classe va chercher dans un fichier une liste de paramètres et peut les extraire au besoin
 //Exemple de fichier:
 /*
 <parameters_list>

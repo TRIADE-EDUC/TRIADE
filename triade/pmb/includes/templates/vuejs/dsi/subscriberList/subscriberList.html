@@ -1,0 +1,17 @@
+<div id="subscriberList">
+    <loader></loader>
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<add v-if="action == 'add' || action == 'edit'" :subscriber-list="subscriberList" :types="types"></add>
+	<list v-else :list="list"></list>
+</div>
+
+<script type="text/javascript">
+	window.addEventListener("RMCLoaded", function() {
+		require(['apps/search_dsi/DsiForm'], function(DsiForm) {
+			new DsiForm({
+				className: 'DsiForm',
+				formName: 'search_form'
+			});	
+		});
+	})
+</script>

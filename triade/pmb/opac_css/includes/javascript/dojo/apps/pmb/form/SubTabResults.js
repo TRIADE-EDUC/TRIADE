@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabResults.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabResults.js,v 1.10 2023/12/27 13:57:47 tsamson Exp $
 
 
 define([
@@ -43,11 +43,19 @@ define([
 			},
 			onDownloadEnd: function(){
 				this.inherited(arguments);
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			setContent:function(){
 				this.inherited(arguments);
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			onLoad: function(){
 				if(query('input[type="button"]', this.containerNode).length){
@@ -83,7 +91,15 @@ define([
 					method: 'POST',
 					handleAs: 'html',
 				}).then(lang.hitch(this, function(data){
-					this.set('content', data);
+					var content = "";
+					try{
+						//on teste s'il s'agit d'un json ou non
+						data = JSON.parse(data);
+						content = data.results;
+					} catch(e) {
+						content = data;
+					}
+					this.set('content', content);
 				}));
 				return false;
 			},
@@ -109,7 +125,7 @@ define([
 				noticeChilds.forEach(lang.hitch(this, function(childDiv){
 					var links = query('a[href]', childDiv);
 					links.forEach(lang.hitch(this, function(link){
-						if(!domAttr.get(link, 'target') || (domAttr.get(link, 'target') && (domAttr.get(link, 'target') != '#'))){
+						if(domAttr.get(link, 'href') != '#'){
 							domAttr.set(link, 'target', '_blank');
 						}
 					}));
@@ -118,14 +134,22 @@ define([
 			extraTreatment: function(){
 				//if((typeof this.parameters.queryParameters.tab != "undefined") && (this.parameters.queryParameters.tab == "frbr")){
 					//Link remapping
-					var results = query('a[onclick][data-element-id]');
+					var results = query('a[onclick][data-element-id]', this.domNode);
 					results.forEach(lang.hitch(this, function(a){
-						on(a, 'click', lang.hitch(this, function(a){
+						on(a, 'click', lang.hitch(this, function(a, e){
+							e.preventDefault();
+							e.stopPropagation();
 							var propName = (domAttr.get(a, 'data-element-type') == "authorities" ? 'id_authority' : 'id');
+							var params = this.parameters.queryParameters.params ? JSON.parse(this.parameters.queryParameters.params) : {};
+							if (this.parameters.tabId) {
+								this.tabId = this.parameters.tabId;
+							}
 							topic.publish('SubTabResults', 'eltClicked', 
 								{
 									[propName]: domAttr.get(a, 'data-element-id'), 
-									type: this.parameters.queryParameters.what,
+									type: domAttr.get(a, 'data-element-type'),
+									params,
+									tabId: (this.tabId ? this.tabId : ''),
 								}
 							);
 						}, a));

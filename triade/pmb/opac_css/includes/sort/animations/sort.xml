@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.3 2023/05/11 07:06:41 gneveu Exp $ -->
+<sort reference="anim_animations" referencekey="id_animation" ppersoprefix="anim_animation" typeobject="21">
+
+    <!--Name-->
+    <field name="selvars_animation_name" type="text" typefield="select" id="3">
+        <table>
+            <tablefield>name</tablefield>
+        </table>
+    </field>
+
+</sort>

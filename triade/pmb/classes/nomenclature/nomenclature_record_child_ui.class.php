@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_child_ui.class.php,v 1.10 2016-06-01 08:19:26 dgoron Exp $
+// $Id: nomenclature_record_child_ui.class.php,v 1.11 2022/01/21 08:37:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $class_path;
 require_once($class_path."/nomenclature/nomenclature_record_child.class.php");
 
 /**
  * class nomenclature_record_formations
- * ReprÃ©sente les formations de la nomenclature d'une notice
+ * Représente les formations de la nomenclature d'une notice
  */
 
 
@@ -34,7 +34,7 @@ class nomenclature_record_child_ui {
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		$this->id=$id*1;
+		$this->id = intval($id);
 		$this->record_child = new nomenclature_record_child($this->id);
 	} // end of member function __construct
 		
@@ -55,7 +55,7 @@ class nomenclature_record_child_ui {
 	}
 	
 	public function get_isbd(){
-		global $dbh,$msg;	
+		global $msg;	
 		$isbd="";	
 		$data=$this->record_child->get_data();
 		

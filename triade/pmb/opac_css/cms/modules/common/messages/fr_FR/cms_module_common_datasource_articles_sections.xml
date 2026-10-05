@@ -5,10 +5,11 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_articles_sections.xml,v 1.2 2015-01-08 15:46:06 dgoron Exp $ -->
+$Id: cms_module_common_datasource_articles_sections.xml,v 1.3 2020/08/13 08:28:18 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_sections">Sélecteur d'une ou plusieurs rubriques</entry>
 	<entry code="cms_module_common_selector_env_var">Sélecteur de rubrique depuis une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_global_var">Sélecteur de rubrique depuis une variable globale</entry>
 	<entry code="cms_module_common_selector_generic_parent_section">Sélecteur de rubrique parente</entry>
 </XMLlist>

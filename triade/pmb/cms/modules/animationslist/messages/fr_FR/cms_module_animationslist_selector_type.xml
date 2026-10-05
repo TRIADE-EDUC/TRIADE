@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_animationslist_selector_type.xml,v 1.2 2022/01/19 13:03:19 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_animationslist_selector_type_id_type'>Type d'évènement</entry>
+</XMLlist>

@@ -2,44 +2,44 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sticks_sheet_stick.class.php,v 1.2 2016-09-14 13:04:15 vtouchard Exp $
+// $Id: sticks_sheet_stick.class.php,v 1.2 2016/09/14 13:04:15 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class sticks_sheet_stick {
 		
 	/**
-	 * Marge intÃ©rieure haute de l'Ã©tiquette
+	 * Marge intérieure haute de l'étiquette
 	 * @var float
 	 */
 	protected $top_margin;
 	
 	/**
-	 * Marge intÃ©rieure basse de l'Ã©tiquette
+	 * Marge intérieure basse de l'étiquette
 	 * @var float
 	 */
 	protected $bottom_margin;
 	
 	/**
-	 * Marge intÃ©rieure gauche de l'Ã©tiquette
+	 * Marge intérieure gauche de l'étiquette
 	 * @var float
 	 */
 	protected $left_margin;
 	
 	/**
-	 * Marge intÃ©rieure droite de l'Ã©tiquette
+	 * Marge intérieure droite de l'étiquette
 	 * @var float
 	 */
 	protected $right_margin;
 	
 	/**
-	 * Largeur de l'Ã©tiquette
+	 * Largeur de l'étiquette
 	 * @var float
 	 */
 	protected $width;
 	
 	/**
-	 * Hauteur de l'Ã©tiquette
+	 * Hauteur de l'étiquette
 	 * @var float
 	 */
 	protected $height;

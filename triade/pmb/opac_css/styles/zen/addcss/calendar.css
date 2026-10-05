@@ -106,6 +106,12 @@
 	border-color: #F9F9F9;
 	box-shadow: 0px 0px 0px 1px #FBFBFB inset;
 }
+
+.tundra td.dijitCalendarCurrentDate {
+	outline: 2px solid #007ac2;
+	outline-offset: -4px;
+}
+
 /*jour*/
 
 .tundra .dijitCalendarHoveredDate {

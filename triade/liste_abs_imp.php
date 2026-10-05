@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -61,7 +61,7 @@ $a=0;
 $data_2=affAbsNonJustif22Limit($_GET["filtre"],$_GET["depart"],$_GET["nbaff"]);
 	// $data : tab bidim - soustab 3 champs
 	//  elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier, heure_saisie , creneaux
-	for($j=0;$j<count($data_2);$j++) {
+	for($j=0;$j<countTriade($data_2);$j++) {
 			$ideleve=$data_2[$j][0];
 			if ($ideleve == "-4") { continue; }
 			$classe=chercheIdClasseDunEleve($ideleve);

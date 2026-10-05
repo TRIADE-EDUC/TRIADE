@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: actes.tpl.php,v 1.22 2019-05-27 16:04:40 btafforeau Exp $
+// $Id: actes.tpl.php,v 1.23 2020/11/04 11:01:59 dgoron Exp $
 
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
@@ -61,5 +61,3 @@ $search_form_actes = "
 </form>
 <br />
 ";
-
-?>

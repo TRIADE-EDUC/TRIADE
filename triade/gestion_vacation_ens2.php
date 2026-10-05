@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,9 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -44,11 +47,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="125">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print "Vacation Enseignant" ?></font></b></td>
@@ -100,7 +103,7 @@ $data=listingMatiereProf($idpers,$idClasse);
 $pe=preg_replace('/"/',"'",rechercheInfoPerso($idpers,0));
 $lieuenseignant=preg_replace('/"/',"'",rechercheInfoPerso($idpers,1));
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$matiere=chercheMatiereNom3($data[$i][0]);
 	$tablisteMatiere[$matiere]=ucwords($matiere);
 	$sousmatiere=chercheSousMatiereNom($data[$i][0]);
@@ -175,20 +178,21 @@ Total en NET : <input type='checkbox' value='1' name='totalEnNet' /> <i>(oui)</i
 <?php
 $totalUnite="BRUT";
 $data=recupCommandeVacation($idpers); // nbheure,idmatiere,type_prestation,idclasse,id,nbforfait,enNet
-if (count($data)) $totalUnite=($data[0][6] == '1') ? "NET" : "BRUT";
+if (countTriade($data)) $totalUnite=($data[0][6] == '1') ? "NET" : "BRUT";
 ?>
-<table width="100%" border=1 bordercolor="#000000" bgcolor="#FFFFFF" id='table1'>
+<div style="overflow-x:auto;margin:8px 0">
+<table style="width:100%;border-collapse:collapse">
 <tr>
-	<td id="bordure" bgcolor="yellow"  ><font class='T1'>Supp.</font></td>
-	<td id="bordure" bgcolor="yellow"  ><font class='T1'>PRESTATION</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class='T1'>Nb HEURES</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class='T1'>FORFAIT</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class='T1'>BASE</font></td>
-	<td id="bordure" bgcolor="yellow" align='center'><font class='T1'>TOTAL <?php print $totalUnite ?></font></td>
+	<th class="cc-th" style="width:36px"></th>
+	<th class="cc-th">Prestation</th>
+	<th class="cc-th" style="text-align:center">Nb heures</th>
+	<th class="cc-th" style="text-align:center">Forfait</th>
+	<th class="cc-th" style="text-align:center">Base</th>
+	<th class="cc-th" style="text-align:center">Total <?php print $totalUnite ?></th>
 </tr>
 <?php
 $nbligne=0;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$nbheure=$data[$i][0];
 	$idprestat=$data[$i][2];
 	$id=$data[$i][4];
@@ -214,13 +218,13 @@ for($i=0;$i<count($data);$i++) {
 		$forfait="";
 		$total=$base*$nbheure;
 	}
-	print "<tr   class=\"tabnormal2\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >
-	<td id='bordure' align='center' ><a href='gestion_vacation_ens2.php?idpers=$idpers&idsupp=$id' title='Supprimer' ><img src='image/commun/trash.png' border='0' /></a></td>
-	<td id='bordure' ><font class='T1'>$nomprestat - $matiere en $classe</font></td>
-	<td id='bordure' align='center'><font class='T1'>$nbheure</font></td>
-	<td id='bordure' align='center'><font class='T1'>$forfait</font></td>
-	<td id='bordure' align='center'><font class='T1'>".affichageFormatMonnaie($base)."</font></td>
-	<td id='bordure' align='center'><font class='T1'>$total</font></td>
+	print "<tr class=\"cc-tr-data\">
+	<td style='padding:4px 8px;text-align:center'><a href='gestion_vacation_ens2.php?idpers=$idpers&idsupp=$id' title='Supprimer'><img src='image/commun/trash.png' border='0'></a></td>
+	<td style='padding:4px 8px'>$nomprestat - $matiere en $classe</td>
+	<td style='padding:4px 8px;text-align:center'>$nbheure</td>
+	<td style='padding:4px 8px;text-align:center'>$forfait</td>
+	<td style='padding:4px 8px;text-align:center'>".affichageFormatMonnaie($base)."</td>
+	<td style='padding:4px 8px;text-align:center'>$total</td>
 	</tr>";
 	$totalHT+=$total;
 
@@ -228,15 +232,12 @@ for($i=0;$i<count($data);$i++) {
 	
 }
 ?>
-</table>
+</table></div>
 
-<br /><br />
-<table width="65%" border=1 bordercolor="#000000" bgcolor="#FFFFFF" align="center" >
-<tr><td align='right' id=bordure ><font class="T2">&nbsp;TOTAL&nbsp;<?php print $totalUnite ?>&nbsp;:&nbsp;</font></td><td align='center' bgcolor="#CCCCCC" >
-<b><?php print "${totalHT}&nbsp;$unite" ?></b></td></tr>
-
-</table>
-<br /><br />
+<div style="text-align:right;padding:8px 12px;font-weight:600;background:#f0f2fa;border:1px solid #c5cae9;border-radius:4px;margin:8px 0">
+  Total <?php print $totalUnite ?> : <?php print "$totalHT $unite" ?>
+</div>
+<br>
 
 
 </form>
@@ -329,7 +330,7 @@ $Y+=10;
 $pdf->SetFont('Arial','',10);
 $ii=0;
 $nbl2=0;
-for($i=0;$i<count($data);$i++) {// nbheure,idmatiere,type_prestation,idclasse,id
+for($i=0;$i<countTriade($data);$i++) {// nbheure,idmatiere,type_prestation,idclasse,id
 	$nb=$data[$i][0];
 	$idprestat=$data[$i][2];
 	$id=$data[$i][4];
@@ -461,7 +462,7 @@ $pdf->SetFont('Arial','',12);
 $X=20;$Y+=10;
 
 $uu=0;
-for($i=0;$i<count($liste);$i++) {
+for($i=0;$i<countTriade($liste);$i++) {
 
 	$dateDuCours=dateForm($liste[$i][3]);
 	$heureDuCours=timeForm($liste[$i][4]);
@@ -510,7 +511,7 @@ $data=recupCommandeVacation($idpers); // nbheure,idmatiere,type_prestation,idcla
 //$dateDebutAff="01/09/".date("Y");
 //$dateFinAff="31/08/".$annee1;
 
-for ($ii=0;$ii<count($data);$ii++) {
+for ($ii=0;$ii<countTriade($data);$ii++) {
 	$idClasse=$data[$ii][3];
 	$typeprestation=$data[$ii][2];
 
@@ -522,7 +523,7 @@ for ($ii=0;$ii<count($data);$ii++) {
 
 	$liste=heureEnseignantparDate2($idpers,$idClasse,$dateDebutAff,$dateFinAff,'eval','0',$data[$ii][1],$typeprestation); 
 
-	for($i=0;$i<count($liste);$i++) {
+	for($i=0;$i<countTriade($liste);$i++) {
 		$dateDuCours=dateForm($liste[$i][3]);
 		$heureDuCours=timeForm($liste[$i][4]);
 		$duree=timeForm($liste[$i][5]);$duree=preg_replace("/:/","h",$duree);
@@ -592,13 +593,14 @@ filtreAnneeScolaireSelectNote($anneeScolaire,3);
 <?php  if ("tout" == $_POST["filtre"]) $select="selected='selected'" ; ?>
 
 <option value='tout' id='select0' <?php print $select ?>  ><?php print "Toutes les classes" ?></option>
-<?php 
+<?php
 unset($select);
+if (!isset($tabfiltre)) $tabfiltre = [];
 ksort($tabfiltre);
 foreach($tabfiltre as $key=>$value) {
-	if ($value != "tout") { 
-		if ($value == $_POST["filtre"]) { 
-			$select="selected='selected'" ;	
+	if ($value != "tout") {
+		if ($value == $_POST["filtre"]) {
+			$select="selected='selected'" ;
 		}else{
 			$select="";
 		}
@@ -607,11 +609,14 @@ foreach($tabfiltre as $key=>$value) {
 }
  ?>
 </select>
+</form>
 <br><br>
 
 <?php } ?>
-<br /><br /><br />
-
+<br>
+<div class="toolbar" style="padding:10px 8px;border-top:1px solid #e8eaf6;margin-top:4px">
+  <script language="JavaScript">buttonMagicRetour("gestion_vacation.php","_parent")</script>
+</div>
 
 <!-- // fin form -->
 </td></tr></table>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmbxml2ead_output.class.php,v 1.1 2018-07-25 06:19:17 dgoron Exp $
+// $Id: pmbxml2ead_output.class.php,v 1.1 2018/07/25 06:19:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -24,8 +24,8 @@ class pmbxml2ead_output extends convert_output {
 	      $r.="			<creation>".chr(0x0D).chr(0x0A);
 	      $r.="				<date></date>".chr(0x0D).chr(0x0A);
 	      $r.="			</creation>".chr(0x0D).chr(0x0A);
-	      $r.="			<langusage>Document rÃ©digÃ© en".chr(0x0D).chr(0x0A);
-	      $r.="				<language langcode=\"fre\">franÃ§ais</language>".chr(0x0D).chr(0x0A);
+	      $r.="			<langusage>Document rédigé en".chr(0x0D).chr(0x0A);
+	      $r.="				<language langcode=\"fre\">français</language>".chr(0x0D).chr(0x0A);
 	      $r.="			</langusage>".chr(0x0D).chr(0x0A);
 	      $r.="		</profiledesc>".chr(0x0D).chr(0x0A);
 	      $r.="	</eadheader>".chr(0x0D).chr(0x0A);

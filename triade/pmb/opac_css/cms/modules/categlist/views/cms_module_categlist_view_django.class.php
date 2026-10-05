@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_categlist_view_django.class.php,v 1.2 2015-09-22 13:34:21 vtouchard Exp $
+// $Id: cms_module_categlist_view_django.class.php,v 1.2 2015/09/22 13:34:21 vtouchard Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
 
@@ -16,7 +16,7 @@ class cms_module_categlist_view_django extends cms_module_common_view_django
 		{% for term in terms %}
     		{% if loop.first %}
                 <h3>Synonymes</h3>
-        		<span>Les synonymes des catÃ©gories suivantes, ont Ã©tÃ© pris en compte pendant la recherche:</span>
+        		<span>Les synonymes des catégories suivantes, ont été pris en compte pendant la recherche:</span>
         		<ul>
     		{% endif %}
         		  <li><a href='./index.php?lvl=categ_see&id={{term.id_retenue}}'>{{term.libelle_retenue}}</a> ({{term.libelle_rejetee}}) </li>

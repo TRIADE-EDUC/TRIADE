@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_abonnements_periodicite_ui.class.php,v 1.1 2018-10-12 11:59:35 dgoron Exp $
+// $Id: list_configuration_abonnements_periodicite_ui.class.php,v 1.5 2021/04/19 07:10:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/abonnements/list_configuration_abonnements_ui.class.php");
 
 class list_configuration_abonnements_periodicite_ui extends list_configuration_abonnements_ui {
 	
@@ -15,10 +13,15 @@ class list_configuration_abonnements_periodicite_ui extends list_configuration_a
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('libelle');
+	}
+	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('duree', 'data_type', 'integer');
+		$this->set_setting_column('seuil_periodicite', 'datatype', 'integer');
+		$this->set_setting_column('retard_periodicite', 'datatype', 'integer');
+		$this->set_setting_column('consultation_duration', 'datatype', 'integer');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -33,23 +36,14 @@ class list_configuration_abonnements_periodicite_ui extends list_configuration_a
 		);
 	}
 	
-	protected function get_cell_content($object, $property) {
+	protected function _get_object_property_unite($object) {
 		global $msg;
-	
-		$content = '';
-		switch($property) {
-			case 'unite':
-				switch($object->unite) {
-					case '0':$content .= $msg['abonnements_periodicite_unite_jour'];break;
-					case '1':$content .= $msg['abonnements_periodicite_unite_mois'];break;
-					case '2':$content .= $msg['abonnements_periodicite_unite_annee'];break;
-				}
-				break;
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
+		
+		switch($object->unite) {
+			case '0':return $msg['abonnements_periodicite_unite_jour'];
+			case '1':return $msg['abonnements_periodicite_unite_mois'];
+			case '2':return $msg['abonnements_periodicite_unite_annee'];
 		}
-		return $content;
 	}
 	
 	protected function get_edition_link($object) {

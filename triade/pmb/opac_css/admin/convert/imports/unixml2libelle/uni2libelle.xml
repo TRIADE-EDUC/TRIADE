@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: uni2libelle.xml,v 1.2.34.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <convert>
 	<field code="001" tag="idNotice">
 	</field>

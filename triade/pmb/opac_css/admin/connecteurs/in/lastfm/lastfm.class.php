@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lastfm.class.php,v 1.15 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: lastfm.class.php,v 1.18.4.1 2025/04/16 12:16:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,28 +12,26 @@ require_once($class_path."/author.class.php");
 require_once("lastfm_api.class.php");
 
 class lastfm extends connector {
-	//propriÃ©tÃ©s internes
+
+	//propriétés internes
 	public $api;
 	public $enrichpage;	//page d'enrichissement pour enrichissement paginable
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::get_id()
+	 */
+    public function get_id()
+    {
     	return "lastfm";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
 		global $charset;
 		global $pmb_url_base;
 		global $token;
-    	
+
     	$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -41,14 +39,14 @@ class lastfm extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		if($source_id!=0){
 			$url = $pmb_url_base."admin.php?categ=connecteurs&sub=in&act=add_source&id=15&source_id=".$source_id;
 		}else{
 			$url = $this->msg['lastfm_no_source'];
 		}
-		
+
 		$form="
 		<div class='row'>&nbsp;</div>
 		<div class='row'>
@@ -94,35 +92,41 @@ class lastfm extends connector {
 				<a href='http://www.last.fm/api/auth/?api_key=".$api_key."'>".$this->msg['lastfm_link_allow_ws']."</a>";
 		}else{
 			$form.="
-				<span>".$this->msg['lastfm_allow_need_api_key']."</span>";	
+				<span>".$this->msg['lastfm_allow_need_api_key']."</span>";
 		}
 		$form.="
 			</div>
 		</div>
 		<div class='row'>&nbsp;</div>
-		
+
 		<div class='row'>&nbsp;</div>
 		";
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $api_key,$secret_key,$token_saved;
     	$t=array();
   		$t["api_key"]=$api_key;
-  		$t["secret_key"]=$secret_key;   
+  		$t["secret_key"]=$secret_key;
   		$t["token_saved"]=$token_saved;
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader($source_id){
 		$header= array();
 		$header[]= "<!-- Script d'enrichissement LastFM-->";
-		$header[]= "<script type='text/javascript'>
+		$header[]= "<script>
 		function switch_lastfm_page(notice_id,type,page,action){
 			var pagin= new http_request();
 			var content = document.getElementById('div_'+type+notice_id);
@@ -142,11 +146,11 @@ class lastfm extends connector {
 					break;
 			}
 			pagin.request('./ajax.php?module=ajax&categ=enrichment&action=enrichment&type='+type+'&id='+notice_id+'&enrichPage='+page,false,'',true,gotEnrichment);
-		} 
+		}
 		</script>";
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($notice_id,$source_id){
 		$type['type'] = array(
 			"bio",
@@ -158,37 +162,35 @@ class lastfm extends connector {
 				"code" => "pictures",
 				"label" => "Photos"
 			)
-		);		
+		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$params=array(),$page=1){
 		$enrichment= array();
 		$this->enrichPage = $page;
 		$this->noticeToEnrich = $notice_id;
 		$this->typeOfEnrichment = $type;
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
-		@ini_set("zend.ze1_compatibility_mode", "0");
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
-			case "bio" : 
+			case "bio" :
 				$enrichment['bio']['content'] = $this->get_artist_biography($source_id);
 				break;
-			case "events" : 
+			case "events" :
 				$enrichment['events']['content'] = $this->get_artist_events($source_id);
-				break;	
-			case "similar_artists" : 
+				break;
+			case "similar_artists" :
 				$enrichment['similar_artists']['content'] = $this->get_similar_artists($source_id);
 				break;
-			case "pictures" : 
+			case "pictures" :
 				$enrichment['pictures']['content'] = $this->get_pictures($source_id);
 				break;
-		}		
+		}
 		$enrichment['source_label']=$this->msg['lastfm_enrichment_source'];
-		@ini_set("zend.ze1_compatibility_mode", "1");
 		return $enrichment;
 	}
-	
+
 	public function get_notice_infos(){
 		$infos = array();
 		//on va chercher le titre de la notice...
@@ -206,21 +208,21 @@ class lastfm extends connector {
 			//$infos['author'] = $author->display;
 			$infos['author'] = ($author->rejete!= ""? $author->rejete." ":"").$author->name;
 		}
-		return $infos; 		
+		return $infos;
 	}
-	
-	
+
+
 	public function get_artist_biography($source_id){
 		$this->init_ws($source_id);
 		$bio = $this->api->get_artist_biography();
 	//	highlight_string(print_r($bio,true));
 		if ($bio['content'] != ""){
-			return utf8_decode(nl2br($bio['content']));
+			return encoding_normalize::utf8_decode(nl2br($bio['content']));
 		}else{
 			return $this->msg['lastfm_no_informations'];
 		}
 	}
-	
+
 	public function get_similar_artists($source_id){
 		$this->init_ws($source_id);
 		$similar = $this->api->get_similar_artists();
@@ -236,10 +238,10 @@ class lastfm extends connector {
 				<td style='text-align:center;'>
 					<a href='".$similar[$i]['url']."' target='_blank'>
 						<img src='".$similar[$i]['image']['large']."' alt=''/><br/>
-						<span>".utf8_decode($similar[$i]['name'])."</span>
+						<span>".encoding_normalize::utf8_decode($similar[$i]['name'])."</span>
 					</a>
 				</td>";
-			
+
 			if($i%3 == 2){
 				$html.="
 			</tr>";
@@ -249,10 +251,10 @@ class lastfm extends connector {
 		</table>";
 		return $html;
 	}
-	
+
 	public function get_pictures($source_id){
 		global $charset;
-		
+
 		$this->init_ws($source_id);
 		$pictures = $this->api->get_pictures($this->enrichPage);
 		if($pictures['total']>0){
@@ -269,7 +271,7 @@ class lastfm extends connector {
 							<img src='".$pictures['images'][$i]['sizes']['largesquare']['url']."' alt=''/>
 						</a>
 					</td>";
-				
+
 				if($i%4 == 3){
 					$html.="
 				</tr>";
@@ -281,9 +283,9 @@ class lastfm extends connector {
 		}else{
 			$html = $this->msg['lastfm_no_informations'];
 		}
-		return $html;		
+		return $html;
 	}
-	
+
 	public function init_ws($source_id){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -292,16 +294,16 @@ class lastfm extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$authVars['apiKey'] = $api_key;
 		$authVars['secret'] = $secret_key;
 		$authVars['token'] = $token_saved;
-		
+
 		$this->api = new lastfm_api($authVars);
 		$this->api->set_notice_infos($this->get_notice_infos());
 	}
-	
+
 	public function get_pagin_form($infos){
 		$current = $infos['page'];
 		$ret = "";
@@ -315,6 +317,6 @@ class lastfm extends connector {
 			$ret = "<div class='row'>".$ret."</div>";
 		}
 		return $ret;
-	}	
+	}
 }
 ?>

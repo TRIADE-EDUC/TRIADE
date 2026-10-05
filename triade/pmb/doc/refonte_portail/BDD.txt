@@ -1,0 +1,20 @@
+@startuml
+map portal_portal {
+    id => int(11)
+    name => varchar(255)
+    default => tinyInt(1)
+    version_num => int(11)
+}
+
+map portal_version {
+    id => int(11)
+    last_version_num => int(11) Default 0
+    name => varchar(255)
+    portal_num => int(11)
+    create_at => datetime
+    properties => mediumBlob
+}
+
+portal_version::portal_num --> portal_portal::id
+portal_portal::version_num --> portal_version::id
+@enduml

@@ -1,23 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: execute.inc.php,v 1.15 2016-09-08 15:05:52 dgoron Exp $
+// $Id: execute.inc.php,v 1.16 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// include d'exÃ©cution d'une procÃ©dure
+global $class_path, $msg, $id;
+
+// include d'exécution d'une procédure
 require_once ($class_path."/procs.class.php");
 
+$id = intval($id);
 $requete = "SELECT * FROM procs WHERE idproc=$id ";
-$res = pmb_mysql_query($requete, $dbh);
+$res = pmb_mysql_query($requete);
 
 $nbr_lignes = pmb_mysql_num_rows($res);
 $urlbase = "./admin.php?categ=misc&sub=proc&action=final&id=$id";
 
 if($nbr_lignes) {
 
-	// rÃ©cupÃ©ration du rÃ©sultat
+	// récupération du résultat
 	$row = pmb_mysql_fetch_row($res);
 	$idp = $row[0];
 	$name = $row[1];

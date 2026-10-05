@@ -1,46 +1,44 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: urlslist.class.php,v 1.7 2017-07-12 15:15:02 tsamson Exp $
+// $Id: urlslist.class.php,v 1.9.4.1 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-global $class_path,$base_path, $include_path;
+global $class_path;
 require_once($class_path."/connecteurs.class.php");
 
 
 class urlslist extends connector {
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $del_old;				//Supression ou non des notices dejÃ  existantes
-	
+
+	//Variables internes pour la progression de la récupération des notices
+	public $del_old;				//Supression ou non des notices dejà existantes
+
 	public $profile;				//Profil wikipedia
-	public $match;					//Tableau des critÃ¨res wikipedia
-	public $current_site;			//Site courant du profile (nÂ°)
+	public $match;					//Tableau des critères wikipedia
+	public $current_site;			//Site courant du profile (n°)
 	public $searchindexes;			//Liste des indexes de recherche possibles pour le site
-	public $current_searchindex;	//NumÃ©ro de l'index de recherche de la classe
+	public $current_searchindex;	//Numéro de l'index de recherche de la classe
 	public $match_index;			//Type de recherche (power ou simple)
 	public $types;					//Types de documents pour la conversino des notices
-	
-	//RÃ©sultat de la synchro
-	public $error;					//Y-a-t-il eu une erreur	
+
+	//Résultat de la synchro
+	public $error;					//Y-a-t-il eu une erreur
 	public $error_message;			//Si oui, message correspondant
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "urlslist";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
-    	global $charset,$dbh;
+    	global $charset;
   		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -48,7 +46,7 @@ class urlslist extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
     	$form ="
 			<div class='row'>&nbsp;</div>
@@ -78,7 +76,7 @@ class urlslist extends connector {
 				<div class='colonne-suite'>
 					<select name='cp_field'>";
     	$query = "select idchamp, titre from notices_custom where type='url'";
-    	$result = pmb_mysql_query($query,$dbh);
+    	$result = pmb_mysql_query($query);
     	if(pmb_mysql_num_rows($result)){
     		while($row = pmb_mysql_fetch_object($result)){
     			$form.="
@@ -93,10 +91,10 @@ class urlslist extends connector {
 				</div>
 			</div>
 			<div class='row'>&nbsp;</div>";
-    	
+
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $libelle,$infobulle,$source_name;
     	global $cp_field;
@@ -111,10 +109,16 @@ class urlslist extends connector {
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader($source_id){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -123,11 +127,11 @@ class urlslist extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$header= array();
 		$header[] ="
-		<script type='text/javascript'>
+		<script>
 					function load_urlslist(url,parent){
 						var frame = document.getElementById(parent+'_frame');
 						if(!frame){
@@ -146,7 +150,7 @@ class urlslist extends connector {
 		";
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($notice_id,$source_id){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -155,8 +159,9 @@ class urlslist extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
+		$type = array();
 		$query = "select 1 from notices_custom_values where notices_custom_champ = ".$cp_field." and notices_custom_origine = ".$notice_id;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -165,13 +170,13 @@ class urlslist extends connector {
 					'code' => str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle))),
 					'label' => $libelle,
 					'infobulle' => $infobulle
-				) 
+				)
 			);
 			$type['source_id'] = $source_id;
 		}
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array()){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -180,22 +185,22 @@ class urlslist extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		$enrichment= array();
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
 			case str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle))) :
 			default :
 				$enrichment[str_replace(array(" ","%","-","?","!",";",",",":"),"",strip_empty_chars(strtolower($libelle)))]['content'] = $this->urlsInfos($notice_id,$source_id);
 				break;
-		}		
+		}
 		$enrichment['source_label']= sprintf($this->msg['urlslist_enrichment_source'],$source_name);
 		return $enrichment;
 	}
-	
-	
-	
+
+
+
 	public function urlsInfos($notice_id,$source_id){
 		$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
@@ -204,7 +209,7 @@ class urlslist extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		if($cp_field){
 			$query = "select datatype from notices_custom where idchamp = ".$cp_field;

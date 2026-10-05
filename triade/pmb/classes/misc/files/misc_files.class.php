@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_files.class.php,v 1.2 2018-11-26 09:20:57 dgoron Exp $
+// $Id: misc_files.class.php,v 1.3 2022/06/28 06:14:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -151,26 +151,26 @@ class misc_files {
 					'planificateur' => $this->get_files_parsed_folder($base_path.'/admin/planificateur'),
 						
 				),
-				'classes' => array(
-						'frbr' => $this->get_files_parsed_folder($base_path.'/classes/frbr', 'messages')
-				),
-				'cms' => $this->get_files_parsed_folder($base_path.'/cms', 'messages'),
+// 				'classes' => array(
+// 						'frbr' => $this->get_files_parsed_folder($base_path.'/classes/frbr', 'messages'),
+// 				),
+// 				'cms' => $this->get_files_parsed_folder($base_path.'/cms', 'messages'),
 				'includes' => array(
 					'indexation' => $this->get_files_parsed_folder($base_path.'/includes/indexation', 'indexation'),
 					'marc_tables' => $this->get_files_parsed_folder($base_path.'/includes/marc_tables', 'list'),
-					'messages' => $this->get_files_parsed_folder($base_path.'/includes/messages', 'messages'),
+// 					'messages' => $this->get_files_parsed_folder($base_path.'/includes/messages', 'messages'),
 					'search_queries' => $this->get_files_parsed_folder($base_path.'/includes/search_queries', 'search_fields'),
 					'sort' => $this->get_files_parsed_folder($base_path.'/includes/sort', 'sort'),
 				),
 				'opac_css' => array(
-					'cms' => $this->get_files_parsed_folder($base_path.'/opac_css/cms', 'messages'),
-					'classes' => array(
-							'frbr' => $this->get_files_parsed_folder($base_path.'/opac_css/classes/frbr', 'messages')
-					),
+// 					'cms' => $this->get_files_parsed_folder($base_path.'/opac_css/cms', 'messages'),
+// 					'classes' => array(
+// 							'frbr' => $this->get_files_parsed_folder($base_path.'/opac_css/classes/frbr', 'messages')
+// 					),
 					'includes' => array(
 						'indexation' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/indexation', 'indexation'),
 						'marc_tables' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/marc_tables', 'list'),
-						'messages' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/messages', 'messages'),
+// 						'messages' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/messages', 'messages'),
 						'search_queries' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/search_queries', 'search_fields'),
 						'sort' => $this->get_files_parsed_folder($base_path.'/opac_css/includes/sort', 'sort'),
 					)

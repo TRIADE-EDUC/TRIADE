@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: pmbxml2ead.xsl,v 1.4.34.1 2024/08/28 14:10:16 rtigero Exp $ -->
+
 <xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 <xsl:output method="xml" indent='yes' encoding="ISO-8859-1" omit-xml-declaration="yes" />
-	
-<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/doctype.xml est requis -->	
-<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/recordtype.xml est requis -->	
-<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/function.xml est requis -->	
-<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/lang.xml est requis -->	
+
+<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/doctype.xml est requis -->
+<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/recordtype.xml est requis -->
+<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/function.xml est requis -->
+<!-- Attention le fichier ../../../../includes/marc_tables/fr_FR/lang.xml est requis -->
 
 	<xsl:template match="/unimarc/notice">
 		 <c level="item">
@@ -17,7 +23,7 @@
 				</xsl:call-template>
 				<xsl:call-template name="collation"/>
   				<xsl:call-template name="lien"/>
-				<xsl:call-template name="langPub"/>														 
+				<xsl:call-template name="langPub"/>
 				<xsl:call-template name="resume"/>
 				<xsl:call-template name="cote"/>
 				<xsl:call-template name="numNotice"/>
@@ -31,12 +37,12 @@
 			 <xsl:call-template name="controlAccess"/>
 		</c>
    </xsl:template>
-	
-	
+
+
 	<xsl:template name="titres">
 		<unittitle>
 			<xsl:value-of select="normalize-space(f[@c='200']/s[@c='a'])"/>
-		</unittitle>	
+		</unittitle>
 
 		<xsl:if test="bl='a' and f[@c='461']/s[@c='t']!='' ">
 			<unittitle type="in">
@@ -52,7 +58,7 @@
 				</xsl:if>
 			</unittitle>
 		</xsl:if>
-		
+
 		<xsl:if test="f[@c='200']/s[@c='d']">
 			<unittitle type="parallel">
 				<xsl:value-of select="normalize-space(f[@c='200']/s[@c='d'])"/>
@@ -62,12 +68,12 @@
 			<unittitle type="otherinfo">
 				<xsl:value-of select="normalize-space(f[@c='200']/s[@c='e'])"/>
 			</unittitle>
-		</xsl:if>		
+		</xsl:if>
 		<xsl:if test="f[@c='200']/s[@c='c']">
 			<unittitle type="titre_auteur_different">
 				<xsl:value-of select="normalize-space(f[@c='200']/s[@c='c'])"/>
 			</unittitle>
-		</xsl:if>		
+		</xsl:if>
 		<xsl:if test="bl!='a' and f[@c='461']/s[@c='t']!=''">
 			<unittitle type="titre_de_serie">
 				<xsl:value-of select="normalize-space(f[@c='461']/s[@c='t'])"/>
@@ -76,8 +82,8 @@
 				<unittitle type="numero_de_serie">
 					<xsl:value-of select="normalize-space(f[@c='461']/s[@c='v'])"/>
 				</unittitle>
-			</xsl:if>	
-		</xsl:if>		
+			</xsl:if>
+		</xsl:if>
 
 		<xsl:for-each select="f[@c='900'][s[@c='n']='titre_de_forme']">
 			<unittitle type="titre_de_forme">
@@ -88,29 +94,29 @@
 			<unittitle type="titre_general">
 				<xsl:value-of select="normalize-space(s[@c='a'])"/>
 			</unittitle>
-		</xsl:for-each>	
-		
+		</xsl:for-each>
+
 		<xsl:for-each select="f[@c='900'][s[@c='n']='titre_original']">
 			<unittitle type="titre_original">
 				<xsl:value-of select="normalize-space(s[@c='a'])"/>
 			</unittitle>
-		</xsl:for-each>	
+		</xsl:for-each>
 
 		<xsl:for-each select="f[@c='900'][s[@c='n']='titres_precedents']">
 			<unittitle type="titres_precedents">
-				<xsl:value-of select="normalize-space(s[@c='a'])" />	
+				<xsl:value-of select="normalize-space(s[@c='a'])" />
 			</unittitle>
 		</xsl:for-each>
 
 		<xsl:for-each select="f[@c='900'][s[@c='n']='titres_suivants']">
 			<unittitle type="titres_suivants">
-				<xsl:value-of select="normalize-space(s[@c='a'])" />	
+				<xsl:value-of select="normalize-space(s[@c='a'])" />
 			</unittitle>
 		</xsl:for-each>
 
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="genreForm">
     	<physdesc>
 		<xsl:if test="normalize-space(dt)!='' and dt!='*' ">
@@ -123,8 +129,8 @@
 		</genreform>
 		</physdesc>
    </xsl:template>
-   
-   
+
+
 	<xsl:template name="auteurs">
 		<xsl:param name="balise"/>
 		<xsl:if test="f[@c='700'] or f[@c='701'] or f[@c='702'] or f[@c='710'] or f[@c='711'] or f[@c='712']"><!--Auteurs-->
@@ -138,12 +144,12 @@
 					<origination>
 						<xsl:call-template name="auteur"/>
 					</origination>
-				</xsl:otherwise>			
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
 	</xsl:template>
 
-	
+
 	<xsl:template name="auteur">
 				<xsl:if test="f[@c='700']/s[@c='a']"><!--Auteur principal-->
 					<persname>
@@ -158,9 +164,9 @@
 						<xsl:if test="(f[@c='700']/s[@c='b'])">, <xsl:value-of select="normalize-space(f[@c='700']/s[@c='b'])"/></xsl:if>
 					</persname>
 				</xsl:if>
-				
-				<xsl:if test="f[@c='701']/s[@c='a']"><!--Autres auteurs--> 
-					<xsl:for-each select="f[@c='701']"> 
+
+				<xsl:if test="f[@c='701']/s[@c='a']"><!--Autres auteurs-->
+					<xsl:for-each select="f[@c='701']">
 						<persname>
 							<xsl:if test="./s[@c='4']">
 								<xsl:attribute name="role">
@@ -174,8 +180,8 @@
 						</persname>
 					</xsl:for-each>
 				</xsl:if>
-				
-				<xsl:if test="f[@c='702']/s[@c='a']"> <!--Auteurs secondaires--> 
+
+				<xsl:if test="f[@c='702']/s[@c='a']"> <!--Auteurs secondaires-->
 					<xsl:for-each select="f[@c='702']">
 						<persname>
 							<xsl:if test="./s[@c='4']">
@@ -190,7 +196,7 @@
 						</persname>
 					</xsl:for-each>
 				</xsl:if>
-				
+
 				<xsl:if test="f[@c='710']/s[@c='a']"><!--Auteur principal-->
 					<corpname>
 						<xsl:if test="f[@c='710']/s[@c='4']">
@@ -204,8 +210,8 @@
 						<xsl:if test="(f[@c='710']/s[@c='b'])">, <xsl:value-of select="normalize-space(f[@c='710']/s[@c='b'])"/></xsl:if>
 					</corpname>
 				</xsl:if>
-			
-				<xsl:if test="f[@c='711']/s[@c='a']"><!--Autres auteurs--> 
+
+				<xsl:if test="f[@c='711']/s[@c='a']"><!--Autres auteurs-->
 					<xsl:for-each select="f[@c='711']">
 						<corpname>
 							<xsl:if test="./s[@c='4']">
@@ -220,8 +226,8 @@
 						</corpname>
 					</xsl:for-each>
 				</xsl:if>
-			
-				<xsl:if test="f[@c='712']/s[@c='a']"><!--Auteurs secondaires--> 
+
+				<xsl:if test="f[@c='712']/s[@c='a']"><!--Auteurs secondaires-->
 					<xsl:for-each select="f[@c='712']">
 						<corpname>
 							<xsl:if test="./s[@c='4']">
@@ -237,8 +243,8 @@
 					</xsl:for-each>
 				</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="collation">
 		<xsl:choose>
 			<xsl:when test="bl!='a'">
@@ -263,7 +269,7 @@
 							<extent type="matériel d'accompagnement">
 								<xsl:value-of select="normalize-space(f[@c='215']/s[@c='e'])"/>
 							</extent>
-						</xsl:if>						
+						</xsl:if>
 					</physdesc>
 				</xsl:if>
 			</xsl:when>
@@ -278,8 +284,8 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="lien">
 		<xsl:if test="f[@c='856']/s[@c='u']">
 		  	<dao>
@@ -297,8 +303,8 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$desc"/>
-						</xsl:otherwise>	
-					</xsl:choose>		
+						</xsl:otherwise>
+					</xsl:choose>
 				</extref>
 			</dao>
 		</xsl:if>
@@ -318,8 +324,8 @@
 			</langmaterial>
 		</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="cote">
 		<xsl:for-each select="f[@c='900'][s[@c='n']='cote']">
 			<unitid type="cote">
@@ -327,8 +333,8 @@
 			</unitid>
 		</xsl:for-each>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="numNotice">
 		<xsl:for-each select="f[@c='900'][s[@c='n']='num_notice']">
 			<unitid type="num_notice">
@@ -336,8 +342,8 @@
 			</unitid>
 		</xsl:for-each>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="dates">
 		<xsl:if test="f[@c='210']/s[@c='d']">
 			<unitdate label="date d'édition">
@@ -358,41 +364,41 @@
 			</unitdate>
 		</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="controlAccess">
 		<xsl:if test="f[@c='606']/s[@c='a']">
 			<controlaccess>
 				<xsl:for-each select="f[@c='606']/s[@c='a']">
-					<subject>	
+					<subject>
 						<xsl:value-of select="normalize-space(.)"/>
 					</subject>
 				</xsl:for-each>
 			</controlaccess>
 		</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="notes">
 			<xsl:if test="f[@c='300']/s[@c='a']">
 				<odd type="notes_generales"><head>Notes générales</head>
 					<xsl:for-each select="f[@c='300']/s[@c='a']">
-						<p>	
+						<p>
 							<xsl:value-of select="normalize-space(.)"/>
 						</p>
 					</xsl:for-each>
 				</odd>
 			</xsl:if>
 			<xsl:if test="f[@c='327']/s[@c='a']">
-				<scopecontent><head>Notes de contenu</head>	
+				<scopecontent><head>Notes de contenu</head>
 					<xsl:for-each select="f[@c='327']/s[@c='a']">
 						<p>
 							<xsl:value-of select="normalize-space(.)"/>
 						</p>
 					</xsl:for-each>
-				</scopecontent>	
+				</scopecontent>
 			</xsl:if>
-			
+
 			<xsl:if test="f[@c='900'][s[@c='n']='notes_edition']">
 				<odd type="notes_edition"> <head>Notes relatives à l'édition</head>
 					<xsl:for-each select="f[@c='900'][s[@c='n']='notes_edition']">
@@ -402,7 +408,7 @@
 					</xsl:for-each>
 				</odd>
 			</xsl:if>
-			
+
 			<xsl:if test="f[@c='900'][s[@c='n']='notes_these']">
 				<odd type="notes_these"> <head>Notes de thèse</head>
 					<xsl:for-each select="f[@c='900'][s[@c='n']='notes_these']">
@@ -468,7 +474,7 @@
 			</xsl:if>
 	</xsl:template>
 
-	
+
 	<xsl:template name="edition">
 		<xsl:if test="f[@c='225'] or f[@c='210'] or f[@c='205']/s[@c='a']">
 			<bibliography>
@@ -504,7 +510,7 @@
 								<xsl:if test="f[@c='225']/s[@c='i']">
 									<title type="sous-collection">
 										<xsl:value-of select="normalize-space(f[@c='225']/s[@c='i'])"/>
-									</title>							
+									</title>
 								</xsl:if>
 								<xsl:if test="f[@c='225']/s[@c='v']">
 									<num type="numéro dans la collection">
@@ -525,45 +531,45 @@
 			</bibliography>
 		</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<xsl:template name="resume">
 		<xsl:if test="f[@c='330']/s[@c='a']">
-			<abstract>	
+			<abstract>
 				<xsl:value-of select="normalize-space(f[@c='330']/s[@c='a'])"/>
 			</abstract>
 		</xsl:if>
 	</xsl:template>
-	
-	
+
+
 	<!-- ===================================== FONCTIONS ======================================== -->
-	
+
 	<!--Pour lier le code au type de notice-->
 	<xsl:template name="type_doc">
 		<xsl:param name="entree"/>
 		<xsl:variable name="noeud" select="document('../../includes/marc_tables/fr_FR/doctype.xml')"/>
 		<xsl:value-of select="$noeud/XMLlist/entry[@code=$entree]"></xsl:value-of>
 	</xsl:template>
-	
+
 	<!--Pour lier le code au support de notice-->
 	<xsl:template name="niveau_biblio">
 		<xsl:param name="entree"/>
 		<xsl:variable name="noeud" select="document('../../includes/marc_tables/fr_FR/recordtype.xml')"/>
 		<xsl:value-of select="$noeud/XMLlist/entry[@code=$entree]"></xsl:value-of>
 	</xsl:template>
-	
+
 	<!--Pour lier le code à la fonction de l'auteur-->
 	<xsl:template name="fonction_auteur">
 		<xsl:param name="entree"/>
 		<xsl:variable name="noeud" select="document('../../includes/marc_tables/fr_FR/function.xml')"/>
 		<xsl:value-of select="$noeud/XMLlist/entry[@code=$entree]"></xsl:value-of>
 	</xsl:template>
-	
+
 	<!--Pour lier le code à la langue-->
 	<xsl:template name="code_langue">
 		<xsl:param name="entree"/>
 		<xsl:variable name="noeud" select="document('../../includes/marc_tables/fr_FR/lang.xml')"/>
 		<xsl:value-of select="$noeud/XMLlist/entry[@code=$entree]"></xsl:value-of>
 	</xsl:template>
-	
-</xsl:stylesheet> 
+
+</xsl:stylesheet>

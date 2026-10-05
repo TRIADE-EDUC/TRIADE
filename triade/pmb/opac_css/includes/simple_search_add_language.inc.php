@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: simple_search_add_language.inc.php,v 1.6 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: simple_search_add_language.inc.php,v 1.6.14.1 2025/03/25 07:32:25 dgoron Exp $
 
 function search_other_function_filters() {
 	global $code_langue_restrict;
@@ -12,7 +12,7 @@ function search_other_function_filters() {
 	$r.="<option value=''>".$msg['all_languages']."</option>";
 	$requete="select distinct code_langue from notices_langues where code_langue is not null and code_langue!='' order by ordre_langue";
 	$resultat=pmb_mysql_query($requete);
-    // on met les balises <option> dans un tableau, index√© par le nom traduit de la langue
+    // on met les balises <option> dans un tableau, indexÈ par le nom traduit de la langue
     $t=array();
     while ($res=pmb_mysql_fetch_object($resultat)) {
         if ($marc_liste_langues->table[$res->code_langue]) {
@@ -23,10 +23,10 @@ function search_other_function_filters() {
             $t[$marc_liste_langues->table[$res->code_langue]]=$s;
         }
     }
-    // tri le tableau selon les cl√©s (ici les noms des langues, pas les codes)
+    // tri le tableau selon les clÈs (ici les noms des langues, pas les codes)
     ksort($t);
 
-    // recopie des balises tri√©es dans la liste <select>
+    // recopie des balises triÈes dans la liste <select>
     foreach($t as $k => $v) $r.=$v;
 
     $r.="</select>";
@@ -36,11 +36,10 @@ function search_other_function_filters() {
 function search_other_function_clause() {
 	global $code_langue_restrict;
 	
-	$r = "";
 	if ($code_langue_restrict) {
-		$r .= "select distinct num_notice as notice_id from notices_langues where code_langue='".$code_langue_restrict."' and type_langue=0";
+		return "select distinct num_notice as notice_id from notices_langues where code_langue='".addslashes($code_langue_restrict)."' and type_langue=0";
 	} 
-	return $r;
+	return "";
 }
 
 function search_other_function_has_values() {

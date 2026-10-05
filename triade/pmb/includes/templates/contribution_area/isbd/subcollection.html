@@ -1,0 +1,11 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: subcollection.html,v 1.2 2020/07/09 15:24:42 tsamson Exp $ -->
+
+{% block element_link %}
+	<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{list_element.isbd |  escape true }}', '{{ global.callback }}', '{{ list_element.get_object_instance.parent }}', '{{list_element.get_object_instance.parent_libelle |  escape true}}', '{{ list_element.get_object_instance.editeur }}', '{{list_element.get_object_instance.editeur_libelle |  escape true}}')">
+		{% block element_selector_header %}
+			{{ list_element.isbd | safe }}
+		{% endblock %}
+	</a>
+{% endblock %}

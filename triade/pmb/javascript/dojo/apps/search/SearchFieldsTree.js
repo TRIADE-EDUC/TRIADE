@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SearchFieldsTree.js,v 1.4 2016-11-25 16:34:48 apetithomme Exp $
+// $Id: SearchFieldsTree.js,v 1.5 2020/10/27 16:13:28 qvarin Exp $
 
 define(['dojo/_base/declare',
         'dijit/Tree'
@@ -24,9 +24,15 @@ define(['dojo/_base/declare',
 		
 		onDblClick: function(item, node, evt) {
 			if (item.leaf) {
-				dojo.byId('add_field').value = item.id;
+			    var node = dojo.byId('add_field');
+			    node.value = item.value;
+			    
+			    if (item.authperso && node.form.authperso_id) {
+			        node.form.authperso_id.value = item.authperso
+                }
+			    
 				this.searchController.getFormInfos();
-				dojo.byId('add_field').value = '';
+				node.value = '';
 			}
 		}
 	});

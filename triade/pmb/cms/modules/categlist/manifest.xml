@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2015-09-22 07:33:26 vtouchard Exp $ -->
+$Id: manifest.xml,v 1.1 2015/09/22 07:33:26 vtouchard Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Liste des renvois entre catégories</name>

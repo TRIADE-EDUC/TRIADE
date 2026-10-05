@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.1.34.1 2024/08/28 14:10:18 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>PMB XML MARC -&gt; MEDLINE</importname>
@@ -10,7 +16,7 @@
 
 	<!-- Type de la sortie -->
 	<output importable="no" type="txt" suffix="txt" charset='iso-8859-1' mimetype="text/text"/>
-	
+
 	<step type="xmltransform">
 		<!-- Conversion en html -->
 		<xslfile>pmbxml2medline.xsl</xslfile>

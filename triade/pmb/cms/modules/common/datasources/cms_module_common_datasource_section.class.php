@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_section.class.php,v 1.13 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_datasource_section.class.php,v 1.18 2023/04/25 10:10:15 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ class cms_module_common_datasource_section extends cms_module_common_datasource{
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -21,7 +21,10 @@ class cms_module_common_datasource_section extends cms_module_common_datasource{
 			"cms_module_common_selector_global_var",
 			"cms_module_common_selector_generic_parent_section",
 			"cms_module_common_selector_type_section",
-			"cms_module_common_selector_type_section_generic"
+			"cms_module_common_selector_type_section_generic",
+		    "cms_module_common_selector_section_by_cp_and_search_segment",
+		    "cms_module_common_selector_section_by_cp_and_search_universe",
+		    "cms_module_common_selector_section_by_value_cp"
 		);
 	}
 	
@@ -48,7 +51,7 @@ class cms_module_common_datasource_section extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -61,22 +64,22 @@ class cms_module_common_datasource_section extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$section_id = $selector->get_value();
 			$section_ids = $this->filter_datas("sections",array($section_id));
 			if(isset($section_ids[0]) && $section_ids[0]){
-				$section = new cms_section($section_ids[0]);
+			    $section = new cms_section($section_ids[0]);
+			    $links = [
+			        "article" => $this->get_constructed_link("article", "!!id!!"),
+			        "section" => $this->get_constructed_link("section", "!!id!!")
+			    ];
 				if(!isset($this->parameters['load_articles_data'])) $this->parameters['load_articles_data'] = 1;
-				if($this->parameters['load_articles_data']) {
-					$return = $section->format_datas(true, true, true, true);
-				} else {
-					$return = $section->format_datas(true, false, true, true);
-				}
+				$return = $section->format_datas($links);
 				return $return;
 			}
 		}

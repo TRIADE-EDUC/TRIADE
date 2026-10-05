@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
-<!-- messages localisés en portugais pour l'OPAC de PMB
-$Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
+<!-- messages localisés en portuguais pour l'OPAC de PMB
+$Id: pt_PT.xml,v 1.750.2.24.2.8 2025/05/20 12:25:26 dbellamy Exp $ -->
 
 <XMLlist>
 <entry code="not_allowed">Operação não autorizada</entry>
 <entry code="10">Pesquisar</entry>
 <entry code="11">ok</entry>
+<entry code="74">Profession</entry>
 <entry code="110">Categorias</entry>
+<entry code="125">Sexe</entry>
 <entry code="200">Registo desconhecido ou inacessível</entry>
 <entry code="201">Responsabilidades</entry>
 <entry code="202">Meter este registo num cesto</entry>
 <entry code="203">Conteúdo</entry>
 <entry code="204">Resumo</entry>
+<entry code="294">Support</entry>
+<entry code="4016">Cote</entry>
 <entry code="format_date">%d/%m/%Y</entry>
 <entry code="format_date_sql">%d/%m/%Y</entry>
 <entry code="format_date_input">%d/%d/%d</entry>
@@ -92,10 +96,10 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="date_back">Data prevista de devolução</entry>
 <entry code="start">início</entry>
 <entry code="end">fim</entry>
-<entry code="first_page">primeira página</entry>
-<entry code="last_page">última página</entry>
-<entry code="prec_page">página anterior</entry>
-<entry code="next_page">página seguinte</entry>
+<entry code="first_page">Ir para a primeira página</entry>
+<entry code="last_page">Ir para a última página</entry>
+<entry code="prec_page">Ir para a página anterior</entry>
+<entry code="next_page">Ir para a próxima página</entry>
 <entry code="back_summary">voltar ao sumário</entry>
 <entry code="page">página</entry>
 <entry code="pages">páginas</entry>
@@ -418,8 +422,8 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="resa_resa_titre_add">Adicionar uma reserva:</entry>
 <entry code="dsi_bannette_gerer">Gerir as suas consultas</entry>
 <entry code="dsi_bannette_gerer_priv">Gerir as suas consultas personalizadas</entry>
-<entry code="dsi_bannette_gerer_sauver">Guardar</entry>
-<entry code="dsi_bannette_gerer_supprimer">Suprimir</entry>
+<entry code="dsi_bannette_gerer_sauver">Guardar a sua seleção de alertas</entry>
+<entry code="dsi_bannette_gerer_supprimer">Eliminar a sua seleção de alertas privados</entry>
 <entry code="dsi_bannette_gerer_abonn">Inscrição</entry>
 <entry code="dsi_bannette_gerer_nom_liste">Nome da lista de novidades</entry>
 <entry code="dsi_bannette_gerer_date">Data do último envio</entry>
@@ -519,9 +523,9 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="acquisition_sug_rec">recebida</entry>
 <entry code="acquisition_sug_arc">arquivada</entry>
 <entry code="voir_contenu_detail">Ver o conteúdo em detalhe</entry>
-<entry code="mdp_txt_intro_demande">Forneça-nos o seu email para que possamos enviar-lhe as suas informações de ligação.</entry>
+<entry code="mdp_txt_intro_demande">Saisissez votre email, s'il correspond à un compte, un lien de réinitialisation vous sera adressé.</entry>
 <entry code="mdp_bt_send">Enviar</entry>
-<entry code="mdp_mail_body"><![CDATA[Bonjour,<br /><br />Pour faire suite à votre demande de réinitialisation de mot de passe à <b>!!biblioname!!</b>, veuillez trouver ci-dessous le lien qui vous permettra d'effectuer ce changement : <br /><br />!!lien_mdp!!<br /><br />La clé de connexion automatique sera effacée après ouverture du lien pour des raisons de sécurité.<br /><br /> - Pour rappel, votre identifiant est : !!login!!<br /><br />Si vous rencontrez des difficultés, adressez un mail à !!biblioemail!!.<br /><br />]]></entry>
+<entry code="mdp_mail_body"><![CDATA[Bonjour !!empr_name!! !!empr_fistname!!,<br /><br />Pour faire suite à votre demande de réinitialisation de mot de passe à <b>!!biblioname!!</b>, veuillez trouver ci-dessous le lien qui vous permettra d'effectuer ce changement : <br /><br />!!lien_mdp!!<br /><br />La clé de connexion automatique sera effacée après ouverture du lien pour des raisons de sécurité.<br /><br /> - Pour rappel, votre identifiant est : !!login!!<br /><br />Si vous n'êtes pas à l'origine de cette demande merci d'ignorer ce mail.<br />Si vous rencontrez des difficultés, adressez un mail à !!biblioemail!!.<br /><br />]]></entry>
 <entry code="mdp_mail_obj">Informação de ligação para !!biblioname!!</entry>
 <entry code="mdp_sent_ok">As informações de ligação foram enviadas para </entry>
 <entry code="mdp_no_email">Email errado ou desconhecido, se tiver algum problema envie um mail para !!biblioemail!!.</entry>
@@ -670,25 +674,26 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="subs_intro_services"><![CDATA[<h2 class='subs_intro_services'><span>S'inscrire pour plus de services</span></h2>Vous pouvez vous créer un compte pour accéder à certains services comme la création d'abonnements aux nouveautés ou bien la possibilité de donner son avis. <em>Cette inscription n'est pas nécessaire si vous êtes déjà emprunteur !</em>]]></entry>
 <entry code="subs_intro_explication"><![CDATA[<h2 class='subs_intro_explication'>Comment créer son compte ?</h2>Remplissez simplement le formulaire ci-dessous puis validez. Vous recevrez un mail permettant de confirmer votre inscription.<br />Vous devrez confirmer votre inscription dans les !!nb_h_valid!! heures. <em>Les champs <b>en gras</b> sont obligatoires.</em><br /><br />]]></entry>
 <entry code="subs_titre_form">S'identifier: </entry>
-<entry code="subs_f_nom">Nom: </entry>
-<entry code="subs_f_prenom">Prénom: </entry>
-<entry code="subs_f_email">Email: </entry>
-<entry code="subs_f_login">Identifiant: </entry>
-<entry code="subs_f_password">Mot de passe: </entry>
-<entry code="subs_f_passwordv">Mot de passe (vérification): </entry>
-<entry code="subs_f_image">Code d'enregistrement: </entry>
-<entry code="subs_f_verifcode">Code de vérification: </entry>
-<entry code="subs_f_adr1">Adresse 1: </entry>
-<entry code="subs_f_adr2">Adresse 2: </entry>
+<entry code="subs_f_nom">Nom</entry>
+<entry code="subs_f_prenom">Prénom</entry>
+<entry code="subs_f_email">Email</entry>
+<entry code="subs_f_login">Identifiant</entry>
+<entry code="subs_f_password">Mot de passe</entry>
+<entry code="subs_f_passwordv">Mot de passe (vérification)</entry>
+<entry code="subs_f_image">Code d'enregistrement</entry>
+<entry code="subs_f_verifcode">Code de vérification</entry>
+<entry code="subs_f_adr1">Adresse 1</entry>
+<entry code="subs_f_adr2">Adresse 2</entry>
 <entry code="subs_f_cp">Code postal - </entry>
-<entry code="subs_f_ville">Ville: </entry>
-<entry code="subs_f_pays">Pays: </entry>
-<entry code="subs_f_tel1">Téléphone: </entry>
-<entry code="subs_f_msg">Commentaires: </entry>
+<entry code="subs_f_ville">Ville</entry>
+<entry code="subs_f_pays">Pays</entry>
+<entry code="subs_f_tel1">Téléphone</entry>
+<entry code="subs_f_msg">Commentaires</entry>
 <entry code="subs_txt_codeverif">Afin de limiter les robots vous devez renseigner le code figurant sur cette image:</entry>
 <entry code="subs_bouton_form">Valider l'inscription</entry>
 <entry code="subs_form_obligatoire">Saisie incomplète, vous devez renseigner tous les champs en gras !</entry>
 <entry code="subs_form_bad_passwords">Les mots de passe ne concordent pas !</entry>
+<entry code="subs_form_bad_verifcode">Le code de vérification est incorrect !</entry>
 <entry code="subs_pb_email"><![CDATA[<h3>Inscription impossible !</h3><br /><span class='erreur'>Cet email est déjà utilisé.</span><br /><br /><a href='./askmdp.php?demande=ok&email=!!email!!'>Demandez le renvoi de vos informations de connexion !</a><br />]]></entry>
 <entry code="subs_pb_login"><![CDATA[<h3>Inscription impossible avec cet identifiant !</h3><br /><span class='erreur'>L'identifiant !!f_login!! est déjà utilisé, un autre vous est proposé, saisissez de nouveau votre mot de passe et le code et valider</span><br />]]></entry>
 <entry code="subs_ok_inscrit"><![CDATA[<h1>Inscription réussie !</h1><br /><span class='erreur'>Un mail de validation d'inscription a été envoyé à !!f_email!!.</span><br />Vous devrez confirmer votre inscription dans les !!nb_h_valid!! heures.<br />]]></entry>
@@ -786,15 +791,15 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="avis_detail_add_sujet">Sujet :</entry>
 <entry code="avis_detail_add_comment">Ajoutez un commentaire :</entry>
 <entry code="avis_detail_comment_madatory">L'avis doit contenir un sujet et commentaire !</entry>
-<entry code="titres_uniformes">Titres uniformes</entry>
-<entry code="titres_uniformes_found">Titres uniformes trouvés</entry>
-<entry code="titre_uniforme_search">Titre uniforme</entry>
-<entry code="list_titres_uniformess">des titres uniformes</entry>
-<entry code="titre_uniforme_see_title">Détail du titre uniforme</entry>
-<entry code="doc_titre_uniforme_title">Documents disponibles avec ce titre uniforme</entry>
-<entry code="titre_uniforme_detail">Titre uniforme %s</entry>
-<entry code="titre_uniforme_aff_public">Titres uniformes :</entry>
-<entry code="titre_uniforme_search">Titre uniforme</entry>
+<entry code="titres_uniformes">Oeuvres / Expressions</entry>
+<entry code="titres_uniformes_found">Oeuvres / Expressions trouvées</entry>
+<entry code="titre_uniforme_search">Oeuvre / Expression</entry>
+<entry code="list_titres_uniformess">des oeuvres / expressions</entry>
+<entry code="titre_uniforme_see_title">Détail de l'oeuvre / expression</entry>
+<entry code="doc_titre_uniforme_title">Documents disponibles avec cette oeuvre / expression</entry>
+<entry code="titre_uniforme_detail">Oeuvre / Expression %s</entry>
+<entry code="titre_uniforme_aff_public">Oeuvres / Expressions :</entry>
+<entry code="titre_uniforme_search">Oeuvre / Expression</entry>
 <entry code="congres_aff_public_libelle">Congrès :</entry>
 <entry code="suggest_notice_opac">Faire une suggestion d'achat</entry>
 <entry code="congres_search">Congrès</entry>
@@ -1097,7 +1102,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="avis_validation_en_cours">Votre avis est bien enregistré. Il est en attente de validation.</entry>
 <entry code="opac_keywords">OPAC, web, library, opensource, catalog, catalogue, bibliothèque, médiathèque, pmb, phpmybibli</entry>
 <entry code="collstate_form_surloc">Sur localisation</entry>
-<entry code="subs_f_loc">Localisation : </entry>
+<entry code="subs_f_loc">Localisation</entry>
 <entry code="label_title_facette">Liste des facettes</entry>
 <entry code="search_facette">facette</entry>
 <entry code="233">Titre</entry>
@@ -1215,8 +1220,8 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="serialcirc_ask_menu">Suivre les demandes d'inscription</entry>
 <entry code="serialcirc_ret_accepted">Demande de retour acceptée</entry>
 <entry code="serialcirc_expected_date">Date attendue</entry>
-<entry code="filing_date">Date de dépôt</entry>
-<entry code="return_date">Date de retour</entry>
+<entry code="filing_date">Date de dépôt BDP</entry>
+<entry code="return_date">Date de retour BDP</entry>
 <entry code="simili_search">Peut-être aimerez-vous</entry>
 <entry code='serialcirc_ask_copy_msg'>Message</entry>
 <entry code='serialcirc_ask_copy_analysis'>	Dépouillement(s) Spécifique(s)</entry>
@@ -1321,7 +1326,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="isbd_serie">Série</entry>
 <entry code="isbd_subcollection">Sous-collection</entry>
 <entry code="isbd_categories">Catégorie</entry>
-<entry code="isbd_titre_uniforme">Titre uniforme</entry>
+<entry code="isbd_titre_uniforme">Oeuvre / Expression</entry>
 <entry code="isbd_author">Auteur</entry>
 <entry code="dans_start">Dans</entry>
 <entry code="facette_suggest">Suggestions</entry>
@@ -1409,7 +1414,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="aut_oeuvre_form_coordonnees">Coordonnées (oeuvre cartographique)</entry>
 <entry code="aut_oeuvre_form_equinoxe">Equinoxe (oeuvre cartographique)</entry>
 <entry code="aut_oeuvre_form_auteur">Auteurs de l'oeuvre</entry>
-<entry code="tu_dont_del_author">Cet auteur est utilisé dans des titres uniformes. Impossible de le supprimer.</entry>
+<entry code="tu_dont_del_author">Cet auteur est utilisé dans des oeuvres / expressions. Impossible de le supprimer.</entry>
 <entry code="isbd_oeuvre">Oeuvre</entry>
 
 <entry code="accueil_bannette_public">Alerte(s) disponible(s)</entry>
@@ -1721,7 +1726,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="aut_link_coll">[Collection] %1s</entry>
 <entry code="aut_link_subcoll">[Sous collection] %1s</entry>
 <entry code="aut_link_serie">[Série] %1s</entry>
-<entry code="aut_link_tu">[Titre uniforme] %1s</entry>
+<entry code="aut_link_tu">[Oeuvre / Expression] %1s</entry>
 <entry code="aut_link_indexint">[Indexation décimale] %1s</entry>
 
 <entry code="do_demande_on_record">Faire une demande sur ce document</entry>
@@ -1889,7 +1894,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="author_see">Forme retenue (renvoi voir)</entry>
 
 <entry code="contact_form_title">Formulaire de contact</entry>
-<entry code="contact_form_introduction">Formuler votre demande ci-dessous.</entry>
+<entry code="contact_form_introduction">Formulez votre demande ci-dessous.</entry>
 <entry code="contact_form_recipient_by_object">Choisissez un objet :</entry>
 <entry code="contact_form_recipient_by_person">Choisissez un destinataire :</entry>
 <entry code="contact_form_recipient_by_location">Choisissez une localisation :</entry>
@@ -1902,14 +1907,16 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="contact_form_object">Objet de votre message :</entry>
 <entry code="contact_form_text">Votre message :</entry>
 <entry code="contact_form_button_send">Envoyer votre message</entry>
-<entry code="contact_form_parameter_name_mandatory">Vous devez saisir votre nom.</entry>
-<entry code="contact_form_parameter_firstname_mandatory">Vous devez saisir votre prénom.</entry>
-<entry code="contact_form_parameter_group_mandatory">Vous devez saisir votre groupe.</entry>
-<entry code="contact_form_parameter_email_mandatory">Vous devez saisir votre adresse mail.</entry>
-<entry code="contact_form_parameter_tel_mandatory">Vous devez saisir votre téléphone.</entry>
+<entry code="contact_form_parameter_name_mandatory">Vous devez saisir votre nom. (Ex: Doe)</entry>
+<entry code="contact_form_parameter_firstname_mandatory">Vous devez saisir votre prénom. (Ex: John)</entry>
+<entry code="contact_form_parameter_group_mandatory">Vous devez saisir votre groupe. (Ex: Mon groupe)</entry>
+<entry code="contact_form_parameter_email_mandatory">Vous devez saisir votre adresse mail. (Ex: john.doe@email.com)</entry>
+<entry code="contact_form_parameter_tel_mandatory">Vous devez saisir votre téléphone. (Ex: 0122334455)</entry>
+<entry code="contact_form_parameter_attachments_mandatory">Vous devez ajouter au moins une pièce jointe.</entry>
 <entry code="contact_form_recipient_mandatory">Vous devez sélectionner un destinataire.</entry>
 <entry code="contact_form_object_mandatory">Vous devez sélectionner un objet.</entry>
-<entry code="contact_form_text_mandatory">Vous devez saisir un message.</entry>
+<entry code="contact_form_object_free_mandatory">Vous devez saisir votre objet. (Ex: Mon objet)</entry>
+<entry code="contact_form_text_mandatory">Vous devez saisir un message. (Ex: Mon message)</entry>
 <entry code="contact_form_verifcode_mandatory">Le code figurant sur l'image ne correspond pas à ce que vous avez saisi.</entry>
 <entry code="contact_form_send_success_msg">Votre demande a bien été envoyée.</entry>
 <entry code="contact_form_send_error_msg">Une erreur est survenue lors de l'envoi de votre demande.</entry>
@@ -1995,7 +2002,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="onto_common_datatype_ui_fr">français</entry>
 <entry code="onto_common_datatype_ui_en">anglais</entry>
 <entry code="onto_common_datatype_ui_no_lang">Sans langue</entry>
-<entry code="onto_contribution_push_button">Enregistrer et valider</entry>
+<entry code="onto_contribution_push_button">Proposer et valider</entry>
 <entry code="operator_between_multiple_authorities">Opérateur entre autorités :</entry>
 <entry code="operator_between_multiple_authorities_or">Ou</entry>
 <entry code="operator_between_multiple_authorities_and">Et</entry>
@@ -2018,7 +2025,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="selector_publisher">Sélection d'un éditeur</entry>
 <entry code="selector_serie">Sélection d'un titre de série</entry>
 <entry code="selector_subcollection">Sélection d'une sous-collection</entry>
-<entry code="selector_titre_uniforme">Sélection d'un titre uniforme</entry>
+<entry code="selector_titre_uniforme">Sélection d'une oeuvre / expression</entry>
 <entry code="selector_author_add">Créer un auteur</entry>
 <entry code="selector_category_add">Créer une catégorie</entry>
 <entry code="selector_collection_add">Créer une collection</entry>
@@ -2026,7 +2033,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="selector_publisher_add">Créer un éditeur</entry>
 <entry code="selector_serie_add">Créer un titre de série</entry>
 <entry code="selector_subcollection_add">Créer une sous-collection</entry>
-<entry code="selector_titre_uniforme_add">Créer un titre uniforme</entry>
+<entry code="selector_titre_uniforme_add">Créer une oeuvre / expression</entry>
 <entry code="no_author_found">Aucun auteur trouvé</entry>
 <entry code="no_category_found">Aucune catégorie trouvée</entry>
 <entry code="no_collection_found">Aucune collection trouvée</entry>
@@ -2034,15 +2041,15 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="no_publisher_found">Aucun éditeur trouvé</entry>
 <entry code="no_serie_found">Aucun titre de série trouvé</entry>
 <entry code="no_subcollection_found">Aucune sous-collection trouvée</entry>
-<entry code="no_titre_uniforme_found">Aucun titre uniforme trouvé</entry>
+<entry code="no_titre_uniforme_found">Aucune oeuvre / expression trouvée</entry>
 <entry code="selector_author_type_all">Afficher tout</entry>
 <entry code="selector_author_type_pp">Personne physique</entry>
 <entry code="selector_author_type_coll">Collectivité</entry>
 <entry code="selector_author_type_congres">Congrès</entry>
 <entry code="authorities_select_all">Tous</entry>
-<entry code="empr_menu_contribution_area">Espace de contribution</entry>
+<entry code="empr_menu_contribution_area">Mes contributions</entry>
 <entry code="empr_menu_contribution_area_new">Nouvelle contribution</entry>
-<entry code="empr_menu_contribution_area_list">Mes contributions</entry>
+<entry code="empr_menu_contribution_area_list">Proposées</entry>
 <entry code="empr_contribution_area_not_activate">Les contributions ne sont pas activées.</entry>
 <entry code="empr_no_prolongation_short_loan_flag">Ce prêt ne peut être prolongé.</entry>
 <entry code="empr_no_prolongation_limit">Nombre de prolongations autorisées atteint.</entry>
@@ -2084,18 +2091,18 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="civilite_madame">Madame</entry>
 <entry code="selvars_empr_auth_opac">Connexion automatique à l'OPAC</entry>
 <entry code="onto_contribution_push_in_progress">Validation en cours...</entry>
-<entry code="onto_contribution_submit_button">Enregistrer comme brouillon</entry>
+<entry code="onto_contribution_submit_button">Proposer</entry>
 <entry code="onto_contribution_datatype_docnum_file_duplication_existing">Un doublon existe dans la base</entry>
 <entry code="cart_empty_simplified">Panier (0)</entry>
 <entry code="cart_full_simplified">Panier plein</entry>
 <entry code="cart_contents_simplified">Panier (%s)</entry>
 <entry code="onto_contribution_last_file">Fichier actuel</entry>
-<entry code="empr_menu_contribution_area_done">Mes contributions validées</entry>
+<entry code="empr_menu_contribution_area_done">Validées</entry>
 
 <entry code="download_docnum_no_doc">Votre sélection ne contient aucun document numérique téléchargeable.</entry>
 
 <entry code="scan_request_creation_mail_title">Nouvelle demande de numérisation</entry>
-<entry code="scan_request_creation_mail_content"><![CDATA[Une demande de numérisation a été créée :<br><br><b>Titre :</b> !!scan_title!!<br><b>Description :</b> !!scan_desc!!<br><b>Destinataire :</b> !!scan_dest!!]]></entry>
+<entry code="scan_request_creation_mail_content"><![CDATA[Une demande de numérisation a été créée :<br><br><b>Titre :</b> !!scan_title!!<br><b>Description :</b> !!scan_desc!!<br><b>Destinataire :</b> !!scan_dest!!<br><b>Permalien :</b> !!permalink!!]]></entry>
 
 <entry code="facette_moins_link">[-]</entry>
 
@@ -2106,12 +2113,11 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="etagere_print">Imprimer...</entry>
 
 <entry code="record_numerisation">Demande de numérisation</entry>
-<entry code="onto_contribution_inter_submit_button">Enregistrer</entry>
+<entry code="onto_contribution_inter_submit_button">Proposer</entry>
 <entry code="onto_empr_contribution_area_last_contribution_title">Dernière contribution</entry>
 <entry code="onto_empr_contribution_area_last_contribution_copy">Copier le lien</entry>
 <entry code="onto_empr_contribution_area_last_contribution_copy_success">Le lien est copié dans votre presse-papier</entry>
 <entry code="onto_empr_contribution_area_last_contribution_copy_not_allowed">Votre navigateur n'autorise pas la copie automatique. Copiez le champ ci-dessous.</entry>
-<entry code="empr_menu_contribution_area">Espace de contribution</entry>
 
 <entry code="bannette_human_query_show">Voir les critères de recherche de l'alerte</entry>
 <entry code="entity_graph_records_having_as_authors">Notices ayant pour auteur</entry>
@@ -2171,7 +2177,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_extended_publisher_concepts_autopostage">Concepts avec autopostage de l'éditeur</entry>
 <entry code="search_extended_collection_concepts_autopostage">Concepts avec autopostage de la collection</entry>
 <entry code="search_extended_subcollection_concepts_autopostage">Concepts avec autopostage de la sous-collection</entry>
-<entry code="search_extended_titre_uniforme_concepts_autopostage">Concepts avec autopostage du titre uniforme</entry>
+<entry code="search_extended_titre_uniforme_concepts_autopostage">Concepts avec autopostage de l'oeuvre / expression</entry>
 <entry code="search_extended_serie_concepts_autopostage">Concepts avec autopostage de la série</entry>
 <entry code="search_extended_indexint_concepts_autopostage">Concepts avec autopostage de l'indexation décimale</entry>
 <entry code="notice_basket_remove">Retirer de votre panier</entry>
@@ -2272,12 +2278,12 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_extended_serie_concepts">Concepts de la série</entry>
 <entry code="search_extended_serie_aut_link">Autorités liées de la série</entry>
 <entry code="search_extended_serie_statut">Statut de la série</entry>
-<entry code="search_extended_titres_uniformes">Titres uniformes</entry>
+<entry code="search_extended_titres_uniformes">Oeuvres / Expressions</entry>
 <entry code="search_extended_titre_uniforme_oeuvre_type">Type d'oeuvre</entry>
 <entry code="search_extended_titre_uniforme_oeuvre_nature">Nature de l'oeuvre</entry>
 <entry code="search_extended_titre_uniforme_name">Nom de l'oeuvre</entry>
-<entry code="search_extended_titre_uniforme_expression">Expression de</entry>
-<entry code="search_extended_titre_uniforme_others_link">Autres liens</entry>
+<entry code="search_extended_titre_uniforme_expression">Liens - Expression de</entry>
+<entry code="search_extended_titre_uniforme_others_link">Liens - Autres liens</entry>
 <entry code="search_extended_titre_uniforme_author">Auteur de l'oeuvre</entry>
 <entry code="search_extended_titre_uniforme_forme">Forme de l'oeuvre (Saisie Libre)</entry>
 <entry code="search_extended_titre_uniforme_forme_marclist">Forme de l'oeuvre (Liste)</entry>
@@ -2312,7 +2318,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_custom_collection">Personnalisables des collections</entry>
 <entry code="search_custom_subcollection">Personnalisables des sous-collections</entry>
 <entry code="search_custom_serie">Personnalisables des séries</entry>
-<entry code="search_custom_tu">Personnalisables des titres uniformes</entry>
+<entry code="search_custom_tu">Personnalisables des oeuvres / expressions</entry>
 <entry code="search_custom_indexint">Personnalisables des index. décimales</entry>
 <entry code="search_extended_skos_concepts_notation">Notation</entry>
 <entry code="search_extended_skos_concepts_note">Note</entry>
@@ -2327,7 +2333,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_extended_publisher_concepts_autopostage">Concepts avec autopostage de l'éditeur</entry>
 <entry code="search_extended_collection_concepts_autopostage">Concepts avec autopostage de la collection</entry>
 <entry code="search_extended_subcollection_concepts_autopostage">Concepts avec autopostage de la sous-collection</entry>
-<entry code="search_extended_titre_uniforme_concepts_autopostage">Concepts avec autopostage du titre uniforme</entry>
+<entry code="search_extended_titre_uniforme_concepts_autopostage">Concepts avec autopostage de l'oeuvre / expression</entry>
 <entry code="search_extended_serie_concepts_autopostage">Concepts avec autopostage de la série</entry>
 <entry code="search_extended_indexint_concepts_autopostage">Concepts avec autopostage de l'indexation décimale</entry>
 <entry code="search_extended_skos_concepts_autoposted">Concepts autopostés</entry>
@@ -2356,7 +2362,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_coll_creator">Créateur de la collection</entry>
 <entry code="search_subcoll_creator">Créateur de la sous-collection</entry>
 <entry code="search_serie_creator">Créateur de la série</entry>
-<entry code="search_tu_creator">Créateur du titre uniforme</entry>
+<entry code="search_tu_creator">Créateur de l'oeuvre / expression</entry>
 <entry code="search_indexint_creator">Créateur de l'indexation décimale</entry>
 <entry code="search_segment_new_search">Nouvelle recherche à partir d'un autre segment</entry>
 <entry code="bannette_unsubscribe_confirm">Vous devez cliquer sur ce lien pour confirmer votre désinscription.</entry>
@@ -2364,7 +2370,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="connecteurs_search_simple"><![CDATA[Vous pouvez lancer une recherche portant sur un ou plusieurs champs ou <a href='%s'>faire une recherche simple</a>]]></entry>
 <entry code="empr_menu_pnb_loan">Mes prêts numériques</entry>
 <entry code="empr_menu_pnb_loan_list">Mes prêts en cours</entry>
-<entry code="empr_menu_pnb_devices">Mes périphériques de lecture</entry>
+<entry code="empr_menu_pnb_devices">Périphériques de lecture</entry>
 <entry code="empr_pnb_loan_not_activate">Le prêt numérique n'est pas activé</entry>
 <entry code="empr_pnb_devices_list">Périphériques disponibles</entry>
 <entry code="126">Masculin</entry>
@@ -2374,7 +2380,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="empr_pnb_no_current_loans">Aucun prêt numérique en cours</entry>
 <entry js="search" code="results">résultat(s)</entry>
 <entry code="empr_menu_pnb_parameters">Paramètres</entry>
-<entry code="empr_pnb_parameters_hint">Indice du mot de passe</entry>
+<entry code="empr_pnb_parameters_hint">Phrase secrète</entry>
 <entry code="empr_pnb_parameters_password">Mot de passe</entry>
 <entry code="pnb_digital_expl">Exemplaire numérique</entry>
 <entry code="empr_pnb_choose_device">Choix du périphérique de lecture</entry>
@@ -2388,7 +2394,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="combine_extended_search">Recherches multi-critères</entry>
 <entry code="search_history_combine">Combiner les recherches cochées</entry>
 <entry code="empr_pnb_loan_extend">Prolonger</entry>
-<entry code="empr_pnb_loan_redownload">Re-télécharger</entry>
+<entry code="empr_pnb_loans_download">Re-télécharger</entry>
 <entry code="pnb_loan_already_borrowed">Vous avez déjà emprunté ce document</entry>
 <entry code="ontology_skos_concept">Concepts</entry>
 <entry js="history" code="show_history_check_all">Tout cocher</entry>
@@ -2400,8 +2406,8 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="search_segment_all_fields">Tous les champs du segment</entry>
 <entry code="perso_select">Sélection %s</entry>
 <entry code="reset">Réinitialiser</entry>
-<entry code="facette_reset_one">Déselectionner ce critère</entry>
-<entry code="facette_reset_all">Déselectionner tout les critères</entry>
+<entry code="facette_reset_one">Désélectionner ce critère</entry>
+<entry code="facette_reset_all">Désélectionner tous les critères</entry>
 <entry code="notice_preview_close">Fermer la fenêtre</entry>
 <entry code="close">Fermer</entry>
 <entry code="disable_this_filter">Déselectionner ce filtre</entry>
@@ -2540,7 +2546,7 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="onto_error_too_long_value_small_text">%s : Ce champ ne doit pas dépasser 512 caractères.</entry>
 <entry code="empr_renewal">Se réabonner</entry>
 <entry code="empr_renewal_success">La prolongation de votre abonnement a bien été effectuée jusqu'au %s</entry>
-<entry code="subs_pb_invalid_login"><![CDATA[<h3>Inscription impossible avec cet identifiant !</h3><br /><span class='erreur'>L'identifiant est invalide, un autre vous est proposé, saisissez de nouveau votre mot de passe ainsi que le code et validez</span><br />]]></entry>
+<entry code="subs_pb_invalid_login"><![CDATA[<h3>Inscription impossible avec cet identifiant !</h3><br /><span class='erreur'>L'identifiant !!f_login!! est invalide, un autre vous est proposé, saisissez de nouveau votre mot de passe ainsi que le code et validez</span><br />]]></entry>
 <entry code="empr_delete_account">Suppression du compte</entry>
 <entry code="delete_account_running">Suppression du compte en cours...</entry>
 <entry code="empr_confirm_deleting_account">Êtes-vous sûr(e) de vouloir supprimer votre compte ?</entry>
@@ -2552,4 +2558,934 @@ $Id: pt_PT.xml,v 1.458 2019-06-03 09:50:56 ccraig Exp $ -->
 <entry code="empr_account_recall_activation">Vous n'avez pas encore confirmé votre inscription. Veuillez valider votre compte à l'aide de l'e-mail de confirmation. Renvoyer l'e-mail ?</entry>
 <entry code="cms_module_charte_accept_button">J'ai lu et j'accepte les conditions</entry>
 <entry code="dsi_bannette_no_equation">Aucune équation de recherche associée</entry>
+<entry code="nomenclature_search_nomenclature_abbreviation">Tutti des instruments</entry>
+<entry code="nomenclature_search_nomenclature_abbreviation_bois">Tutti des bois</entry>
+<entry code="nomenclature_search_nomenclature_abbreviation_cuivres">Tutti des cuivres</entry>
+<entry code="nomenclature_search_nomenclature_abbreviation_percussions">Tutti des percussions</entry>
+<entry code="nomenclature_search_nomenclature_abbreviation_cordes">Tutti des cordes</entry>
+<entry code="nomenclature_search_instruments_no_standard">Instruments non standards</entry>
+<entry code="nomenclature_search_instruments_workshop">Instruments d'un atelier</entry>
+<entry code="noteq_query"><![CDATA[!=]]></entry>
+<entry code="nomenclature_search">Nomenclatures</entry>
+<entry code="nomenclature_search_formations">Formation</entry>
+<entry code="nomenclature_search_types">Type de formation</entry>
+<entry code="nomenclature_search_formation_label">Nom de formation</entry>
+<entry code="nomenclature_search_workshop_label">Nom d'un atelier</entry>
+<entry code="nomenclature_search_nomenclature_notes">Notes</entry>
+<entry code="cms_module_common_datasource_desc_last_update_sql_date">Date de dernière mise à jour (Format SQL)</entry>
+<entry code="empr_msg">Message</entry>
+<entry code="error_template">Erreur sur le template</entry>
+<entry code="facette_delete_one">Supprimer</entry>
+<entry code="authperso_sel_title">Sélection : %s</entry>
+<entry code="parperso_option_duration_begin">Entre</entry>
+<entry code="parperso_option_duration_end">et</entry>
+<entry code="script_analytics_button_dnt_confirm">OK</entry>
+<entry code="search_extended_record_qualified_author">Auteur qualifié de la notice</entry>
+<entry code="notice_vedette_composee_author">Qualification</entry>
+<entry code="tu_authors_list">Auteurs</entry>
+<entry code="empr_no_loan_old">Aucun prêt précédent</entry>
+<entry code="cms_module_common_datasource_desc_last_update_sql_date">Date de dernière mise à jour (Format SQL)</entry>
+<entry code="cms_module_charte_accept_button">J'ai compris</entry>
+<entry code="contact_form_object_other">Saisie libre de l'objet</entry>
+<entry code="contact_form_object_free_entry">Saisissez l'objet de votre message :</entry>
+<entry code="contact_form_parameter_attachments">Joindre :</entry>
+<entry code="empr_groups_comments">Message de groupe</entry>
+<entry code="search_universe_id">Identifiant</entry>
+<entry code="search_universe_url">Permalien</entry>
+<entry code="search_segment_id">Identifiant</entry>
+<entry code="search_segment_url">Permalien</entry>
+<entry code="empr_view_sugg_detail">Détail d'une suggestion</entry>
+<entry code="empr_change_password_form_empty">Le mot de passe ne peut pas être vide.</entry>
+<entry code="empr_password_bad_security">Le mot de passe n'est pas assez sécurisé.</entry>
+<entry code="scan_request_nb_scanned_pages">Nombre de pages numérisées</entry>
+<entry code="empr_old_password">Veuillez saisir votre mot de passe actuel :</entry>
+<entry code="empr_old_password_wrong">Le mot de passe actuel saisi est incorrect.</entry>
+<entry code="pnb_not_allowed">Le prêt numérique n'est pas autorisé pour ce lecteur.</entry>
+<entry code="show_cart_more_actions">Autres actions</entry>
+<entry code="contact_form_error_email_adress">Vous devez saisir une adresse mail valide. (Ex: john.doe@email.com)</entry>
+<entry code="articles">articles</entry>
+<entry code="bulletin_nb_articles">Nombre d'articles</entry>
+<entry code="list_lecture_allow_add_records">Autoriser l'ajout de notices</entry>
+<entry code="list_lecture_allow_remove_records">Autoriser la suppression de notices</entry>
+<entry code="dsi_bannette_cancel">Annuler</entry>
+<entry code="dsi_bannette_edit_cancel">Annuler la modification en cours</entry>
+<entry code="search_custom_explnum">Personnalisables des documents numériques</entry>
+<entry code="onto_contribution_fonction_author">Veuillez sélectionner une fonction</entry>
+<entry code="ontology_p_edit_button">Modifier</entry>
+<entry js="selector" code="selector_tab_selection_validate">Valider la sélection</entry>
+<entry code="print_email_sender_mandatory">La saisie de l'adresse expéditrice est obligatoire.</entry>
+<entry code="contribution_resize_button">Recadrer</entry>
+<entry code="contribution_zoom_in_button">Zoom avant</entry>
+<entry code="contribution_zoom_out_button">Zoom arrière</entry>
+<entry code="ontology_p_find_button">Chercher</entry>
+<entry code="tous_types_docs">Tous les types de documents</entry>
+<entry code="tous_statuts_notice">Tous les statuts</entry>
+<entry js="pnb" code="pnb_confirm_loan">Vous êtes sur le point d'effectuer l'emprunt d'un ouvrage numérique.
+Êtes-vous sûr de vouloir continuer ?</entry>
+<entry code="select_search_tab_contribution">mes contributions proposées</entry>
+<entry code="select_search_tab_fond">fonds validé</entry>
+<entry code="select_search_tab_title">Afficher la recherche dans :</entry>
+<entry code="connecteurs_source_available_in_line">Disponible en ligne</entry>
+<entry js="contribution" code="search_result_tab_fond">Résultats dans le fonds validé (%s résultat(s))</entry>
+<entry js="contribution" code="search_result_tab_title">Résultats dans mes contributions proposées (%s résultat(s))</entry>
+<entry js="contribution" code="onto_contribution_push_confirm_multiple">Êtes-vous sûr de vouloir valider ces contributions ?</entry>
+<entry js="contribution" code="onto_contribution_delete_confirm_multiple">Êtes-vous sûr de vouloir supprimer ces contributions ?</entry>
+<entry js="contribution" code="onto_contribution_not_selected">Aucune contribution n'a été sélectionnée</entry>
+<entry js="selector" code="selector_tab_edit">Modifier</entry>
+<entry js="contribution" code="onto_contribution_input_title">Vous pouvez copier le texte en le sélectionnant mais vous ne pouvez pas le modifier.</entry>
+<entry js="contribution" code="onto_contribution_form_inprogress">Formulaire uniquement en consultation, un sous-formulaire est en cours de modification</entry>
+<entry code="onto_contribution_thanks">Merci de vos contributions.</entry>
+<entry code="onto_contribution_action_selected">Actions sur la selection</entry>
+<entry code="list_applied_sort">Tri</entry>
+<entry code="mdp_txt_multiple_accounts">Plusieurs comptes sont associés à cette adresse mail. Veuillez sélectionner celui destinataire de l'envoi ?</entry>
+<entry code="check_uncheck">Tout cocher/décocher</entry>
+<entry code="empr_menu_contribution_area_list_draft">En cours</entry>
+<entry code="contribution_save_button_draft">Enregistrer</entry>
+<entry js="contribution" code="contribution_save_done">Brouillon sauvegardé</entry>
+<entry js="contribution" code="contribution_save_not_done">Il y a eu un problème à l'enregistrement</entry>
+<entry code="contribution_save_button_draft_time">Dernière sauvegarde le %d à %h</entry>
+<entry js="contribution" code="contribution_save_button_draft_time">Dernière sauvegarde le %d à %h</entry>
+<entry code="contribution_draft_name">Brouillon sans libellé</entry>
+<entry js="contribution" code="contribution_save_impossible_draft">Veuillez valider toutes les contributions liées avant d'enregistrer celle-ci</entry>
+<entry js="contribution" code="contribution_area_computed_fileds_error">%s n'a pas renvoyé de réponse</entry>
+<entry js="contribution" code="contribution_area_save_docnum_error">Merci de sélectionner le répertoire d'upload</entry>
+<entry js="contribution" code="onto_contribution_return_button">Retour</entry>
+<entry code="onto_contribution_no_right_of_access">Vous n'avez pas les droits d'accès</entry>
+<entry js="contribution" code="onto_contribution_group_action_impossible">L'action demandée ne peut être effectuée</entry>
+<entry code="onto_contribution_check_information">L'action demandée n'a pas pu être effectuée sur certaines contributions</entry>
+<entry js="contribution" code="onto_contribution_draft_editing">en cours d'édition</entry>
+<entry js="contribution" code="onto_contribution_error_delete">Suppression impossible, une erreur est survenue</entry>
+<entry code="searcher_all_natures">Toutes les natures</entry>
+<entry js="contribution" code="onto_contribution_last_file">Fichier actuel : %s</entry>
+<entry code="profil_login_too_short_error">L'identifiant doit comporter au moins 2 caractères.</entry>
+<entry code="profil_login_pattern_error">L'identifiant doit être en minuscules, ne peut comporter que des caractères alpha-numériques ainsi que les caractères "-", "_" et "@".</entry>
+<entry code="profil_login_allready_used_error">Cet identifiant est déjà utilisé.</entry>
+<entry code="profil_login_disconnect_after_change">L'identifiant a changé, vous devrez vous reconnecter après l'enregistrement.</entry>
+<entry code="subs_mail_allready_used_error">Cet email est déjà utilisé.</entry>
+<entry js="opac" code="list_lecture_delete_subscriber">Etes-vous sûr de vouloir retirer l'accès à la liste de cet utilisateur ?</entry>
+<entry code="subs_mail_error">Email invalide.</entry>
+<entry js="contribution" code="save_in_progress">Enregistrement en cours</entry>
+<entry code="aut_responsability_form_responsability_authperso">Responsabilités</entry>
+<entry code="aut_responsability_authors">Autorités : Responsabilités</entry>
+<entry code="back">Retour</entry>
+<entry code="entity_currently_locked_title">Entité verrouillée</entry>
+<entry code="entity_currently_locked">Cette entité est actuellement verrouillée en édition par un modérateur, vous ne pouvez pas la modifier pour le moment.</entry>
+<entry code="entity_currently_locked_unlock_question">Voulez-vous forcer l'édition ?</entry>
+<entry code="locked_entity_save_error">Une erreur a eu lieu à l'enregistrement. L'entité est verrouillée par un autre utilisateur.</entry>
+<entry code="entity_unlocked">L'entité n'est plus verrouillée.</entry>
+<entry code="doc_category_title">Documents disponibles dans cette catégorie</entry>
+<entry code='onto_onto_pmb_datatype_pmb_datatype_small_text_link'>URL</entry>
+<entry code="CheckLink">Vérifier ce lien</entry>
+<entry code="CheckButton">Vérifier</entry>
+<entry code="onto_error_url_not_valid">%s : Ce champ doit contenir une URL valide.</entry>
+<entry code="publisher">Éditeurs</entry>
+<entry code="niveau_biblio">Niveau bibliographique</entry>
+<entry code="tnvol">Numéros de série</entry>
+<entry code="653">Date</entry>
+<entry code="231">ISBN, EAN, no.commercial</entry>
+<entry code="261">Format</entry>
+<entry code="4050">Prix</entry>
+<entry code="710">Langues de la publication</entry>
+<entry code="notice_relations">Notices liées</entry>
+<entry code="297">Statut</entry>
+<entry code="notice_thumbnail_url">URL de la vignette</entry>
+<entry code="notice_img_load">Upload de la vignette</entry>
+<entry code="explnum_fichier">Fichier du document</entry>
+<entry code="205">Type</entry>
+<entry code="town">Ville</entry>
+<entry code="country">Pays</entry>
+<entry code="subdivision">Subdivision</entry>
+<entry code="38">Numéro</entry>
+<entry code="isni">ISNI</entry>
+<entry code="categ_parent">Catégorie Parente</entry>
+<entry code="categ_renvoi">Renvoi voir</entry>
+<entry code="renvoi_voir_aussi">Renvois voir aussi</entry>
+<entry code="editeur_adr1">Adresse (ligne 1)</entry>
+<entry code="editeur_adr2">Adresse (ligne 2)</entry>
+<entry code="editeur_cp">C.P.</entry>
+<entry code="acquisition_ach_fou2">Fournisseur</entry>
+<entry code="upload_folder_storage">Répertoire d'upload</entry>
+<entry code="content">Contenu</entry>
+<entry code="logo">Logo</entry>
+<entry code="creation_date">Date de création</entry>
+<entry code="update_date">Date de mise à jour</entry>
+<entry code="291">No. exemplaire</entry>
+<entry code="entity_no_form_available_title">Aucun formulaire disponible</entry>
+<entry code="entity_no_scenario_available_title">Aucun scénario disponible</entry>
+<entry code="entity_no_form_available_contact">Aucun formulaire n'est paramétré pour ce type de contribution, contactez un administrateur</entry>
+<entry code="entity_no_scenario_available_contact">Aucun scénario n'est paramétré pour ce type de contribution, contactez un administrateur</entry>
+<entry code="edit_record">Editer la notice</entry>
+<entry code="onto_common_record">Notice</entry>
+<entry code="onto_common_bulletin">Bulletin</entry>
+<entry code="onto_common_authority">Autorité</entry>
+<entry code="onto_common_author">Auteur</entry>
+<entry code="onto_common_category">Catégorie</entry>
+<entry code="onto_common_publisher">Éditeur</entry>
+<entry code="onto_common_collection">Collection</entry>
+<entry code="onto_common_subcollection">Sous-collection</entry>
+<entry code="onto_common_work">Oeuvre / Expression</entry>
+<entry code="onto_common_concept">Concept</entry>
+<entry code="onto_common_indexint">Indexation décimale</entry>
+<entry code="onto_common_responsability">Responsabilité</entry>
+<entry code="onto_common_expl">Exemplaire</entry>
+<entry code="onto_common_cms_section">Rubrique</entry>
+<entry code="onto_common_cms_article">Article</entry>
+<entry code="edit_autority">Editer</entry>
+<entry code="contribution_area_is_default_area_not_use">Non utilisé pour la modification</entry>
+<entry code="vedette_composee_apercu">Aperçu</entry>
+<entry code="vedette_authors">Auteurs</entry>
+<entry js="contribution" code="vedette_authors_placeholder">Auteurs</entry>
+<entry code="vedette_categories">Catégories</entry>
+<entry js="contribution" code="vedette_categories_placeholder">Catégories</entry>
+<entry code="vedette_concepts">Concepts</entry>
+<entry js="contribution" code="vedette_concepts_placeholder">Concepts</entry>
+<entry code="vedette_publishers">Editeurs</entry>
+<entry js="contribution" code="vedette_publishers_placeholder">Editeurs</entry>
+<entry code="vedette_collections">Collections</entry>
+<entry js="contribution" code="vedette_collections_placeholder">Collections</entry>
+<entry code="vedette_subcollections">Sous-collections</entry>
+<entry js="contribution" code="vedette_subcollections_placeholder">Sous-collections</entry>
+<entry code="vedette_series">Titres de série</entry>
+<entry js="contribution" code="vedette_series_placeholder">Titres de série</entry>
+<entry code="vedette_titres_uniformes">Oeuvres / Expressions</entry>
+<entry js="contribution" code="vedette_titres_uniformes_placeholder">Oeuvres / Expressions</entry>
+<entry code="vedette_indexint">Index. décimale</entry>
+<entry js="contribution" code="vedette_indexint_placeholder">Index. décimale</entry>
+<entry code="vedette_subdivision_tete">Tête</entry>
+<entry code="vedette_subdivision_sujet">Sujet</entry>
+<entry code="vedette_subdivision_geo">Géographique</entry>
+<entry code="vedette_subdivision_chrono">Chronologique</entry>
+<entry code="vedette_subdivision_forme">Forme</entry>
+<entry code="vedette_dont_del_autority">Cette autorité est utilisée dans des vedettes composées. Impossible de la supprimer.</entry>
+<entry code="vedette_records">Notices</entry>
+<entry js="contribution" code="vedette_records_placeholder">Notices</entry>
+<entry code="notice_lien_montant">Ascendant</entry>
+<entry code="notice_lien_descendant">Descendant</entry>
+<entry code="notice_lien_symetrique">Horizontal</entry>
+<entry code='onto_onto_pmb_datatype_resource_pmb_selector'>Selecteur d'entité PMB</entry>
+<entry code='onto_onto_pmb_datatype_resource_pmb_selector_card_error'>Vous avez atteint le nombre d'éléments maximum pour ce champ</entry>
+<entry code="composed_vedettes_grammars_by_entity">Définition des grammaires disponibles en fonction du type d'entité PMB</entry>
+<entry code="frbr_cataloging_scheme_entity">Entité</entry>
+<entry code="composed_vedettes_grammar">Grammaire</entry>
+<entry code="contribution_vedette_title"> Qualification</entry>
+<entry code="custom_search">Recherche Multi-critères</entry>
+<entry code="search_equations">Equation de recherche</entry>
+<entry js="tab" code="new_tab">Nouvel onglet</entry>
+<entry code="empr_menu_pnb">Mon prêt numérique</entry>
+<entry code="empr_pnb_devices_list_comment"><![CDATA[Sélectionnez les périphériques qui seront utilisés pour la lecture des documents en prêt numérique.]]></entry>
+<entry code="empr_pnb_parameters_comment"><![CDATA[Choisissez un mot de passe et une phrase secrète.<br />Le mot de passe sera demandé à l'ouverture des documents en prêt numérique.<br /> La phrase secrète est un indice pour se souvenir du mot de passe.]]></entry>
+<entry code="empr_pnb_no_devices">La récupération des périphériques de lecture est indisponible</entry>
+<entry code="pnb_not_set">Le prêt numérique n'est pas correctement configuré, veuillez contacter votre bibliothèque</entry>
+<entry code="empr_pnb_devices_choose">Choisissez le périphérique de lecture à utiliser</entry>
+<entry js="pnb" code="empr_pnb_no_device_set">Veuillez configurer les périphériques de lecture par défaut dans votre compte</entry>
+<entry code="empr_pnb_no_device_set">Veuillez configurer les périphériques de lecture par défaut dans votre compte</entry>
+<entry js="pnb" code="pnb_loan_modal_title">Vous allez effectuer un prêt numérique</entry>
+<entry code="empr_pnb_loans_return">Retourner</entry>
+<entry code="empr_pnb_loans_extend">Prolonger</entry>
+<entry code="empr_pnb_password_set">Un mot de passe a été défini</entry>
+<entry code="empr_pnb_loan_confirm_title">Vous allez emprunter un exemplaire numérique</entry>
+<entry code="empr_pnb_loan_confirm">Souhaitez-vous poursuivre ?</entry>
+<entry js="pnb" code="pnb_error_msg">L'action n'a pu aboutir</entry>
+<entry js="pnb" code="pnb_success_msg">L'action a été effectuée</entry>
+<entry js="pnb" code="pnb_set_pnb_mdp">Vous n'avez pas défini de mot de passe dans votre espace. Merci de le renseigner avant de poursuivre.</entry>
+<entry code="pnb_confirm_loan">Confirmer l'emprunt</entry>
+<entry code="pnb_loan_pass1">Pour cet emprunt, souhaitez-vous </entry>
+<entry code="pnb_loan_pass_no_set_title">Renseignement du mot de passe</entry>
+<entry code="pnb_loan_pass_no_set_infos"><![CDATA[Aucun mot de passe par défaut n'est défini pour les emprunts numériques<br />vous pouvez en définir un <a target="_blank" href='!!link_param_password!!' >ici</a>]]></entry>
+<entry code="pnb_loan_pass2">Utiliser le mot de passe renseigné dans votre compte pour les prêts numériques?</entry>
+<entry code="pnb_loan_pass3">Définir un mot de passe à usage unique?</entry>
+<entry code="pnb_loan_pass3_no_set">Merci de définir un mot de passe à usage unique</entry>
+<entry js="pnb" code="pnb_error_pass">Vos mots de passe ne concordent pas, merci de contrôler votre saisie</entry>
+<entry js="pnb" code="pnb_error_empty_input">Tous les champs doivent contenir une valeur</entry>
+<entry code="pnb_verif_parameters_password">Vérification du mot de passe</entry>
+<entry code="pnb_devices_no_set"><![CDATA[Aucun périphérique de lecture n'a été défini dans votre compte,<br />vous pouvez le définir <a target="_blank" href='!!link_param_device!!' >ici</a>]]></entry>
+<entry code="subject_contribution_mail">Une contribution proposée est à valider</entry>
+<entry code="subject_mail_confirm_validate_contribution">Votre contribution a été validée</entry>
+<entry code="mail_confirm_contribution_url">Mes contributions validées</entry>
+<entry code="animation_quota_available">Places disponibles</entry>
+<entry code="animation_quota_global">Sur place</entry>
+<entry code="animation_quota_internet">Internet</entry>
+<entry code="animation_quota_prices">Tarifs</entry>
+<entry code="animation_quota_no_limit">Non limitées</entry>
+<entry code="animation_registration">S'inscrire</entry>
+<entry code="animation_registration_cancel">Se désinscrire</entry>
+<entry code="animation_registration_empr">Votre inscription</entry>
+<entry code="animation_title">Titre</entry>
+<entry code="animation_parent">Animation parente</entry>
+<entry code="animation_date">Date</entry>
+<entry code="animation_location">Localisation</entry>
+<entry code="animation_concepts">Concepts</entry>
+<entry code="animation_categories">Catégories</entry>
+<entry code="animation_status">Statut</entry>
+<entry code="animation_comment">Commentaire</entry>
+<entry code="animation_description">Description</entry>
+<entry code="animation_unavailable">Vous ne pouvez pas accéder à cette animation.</entry>
+<entry js="animation" code="animation">Animation</entry>
+<entry js="animation" code="animation_registration_date">Déroulement de l'animation du</entry>
+<entry js="animation" code="animation_registration_date_to">au</entry>
+<entry js="animation" code="animation_registration_title">Inscription à une animation</entry>
+<entry js="animation" code="animation_registration_intro">Si vous êtes déjà emprunteur, connectez-vous afin que le formulaire soit pré-rempli avec vos informations.</entry>
+<entry js="animation" code="animation_registration_intro_info">Si vous n'en disposez pas, vous pouvez-vous toujours créer un compte.</entry>
+<entry js="animation" code="animation_registration_barcode">Numéro de carte</entry>
+<entry js="animation" code="animation_registration_name">Nom</entry>
+<entry js="animation" code="animation_registration_email">Email</entry>
+<entry js="animation" code="animation_registration_phone">Téléphone</entry>
+<entry js="animation" code="animation_registration_explanation">Remplissez simplement le formulaire ci-dessous puis validez.</entry>
+<entry js="animation" code="animation_registration_explanation_required">Les champs avec * sont obligatoires.</entry>
+<entry js="animation" code="animation_registration_contact">Contact</entry>
+<entry js="animation" code="animation_registration_persons">Personnes inscrites : </entry>
+<entry js="animation" code="animation_registration_add_person">Ajouter une personne</entry>
+<entry js="animation" code="animation_registration_add_contact_toregistered_persons">Ajouter le contact aux personnes inscrites</entry>
+<entry js="animation" code="animation_registration_remove_persons">Supprimer</entry>
+<entry js="animation" code="animation_registration_remove_cross">X</entry>
+<entry js="animation" code="animation_registration_price_type">Tarif</entry>
+<entry js="animation" code="animation_registration_price">Prix</entry>
+<entry js="animation" code="animation_registration_cancel">Annuler</entry>
+<entry js="animation" code="animation_registration_save">S'inscrire</entry>
+<entry js="animation" code="animation_registration_error_contact_name">Merci de renseigner un nom pour la personne de contact</entry>
+<entry js="animation" code="animation_registration_error_contact_phone">Merci de renseigner un numéro de téléphone valide pour la personne de contact</entry>
+<entry js="animation" code="animation_registration_error_any_persons">Aucune personne n'est ajoutée pour cette inscription</entry>
+<entry js="animation" code="animation_registration_error_animation">Impossible de faire une inscription, nous ne savons pas sur quelle animation vous souhaitez vous inscrire</entry>
+<entry js="animation" code="animation_registration_error_person_name">Merci de renseigner le nom pour les personnes inscrites</entry>
+<entry js="animation" code="animation_registration_error_cp">Le champ %s est obligatoire !</entry>
+<entry js="animation" code="animation_registration_error_send">Impossible d'envoyer votre inscription, un problème est survenu.</entry>
+<entry js="animation" code="animation_error_fetch">Il y a eu un problème lors de l'envoi des données :</entry>
+<entry js="animation" code="animation_error_no_response">Aucune réponse du serveur.</entry>
+<entry js="animation" code="animation_registration_saved_success">Inscription sauvegardée avec succès</entry>
+<entry js="animation" code="animation_registration_recap">Récapitulatif de votre inscription</entry>
+<entry js="animation" code="animation_registration_not_set">non définie</entry>
+<entry js="animation" code="animation_registration_error">Impossible de faire votre inscription, une personne a peut-être pris votre place.</entry>
+<entry js="animation" code="animation_registration_verifcode">Code de vérification</entry>
+<entry code="animation_registration_verifcode_mandatory">Le code figurant sur l'image ne correspond pas à ce que vous avez saisi.</entry>
+<entry js="animation" code="animation_empr_registration_title">Mes animations</entry>
+<entry js="animation" code="animation_empr_registration_animation_start">Date &amp; Heure</entry>
+<entry js="animation" code="animation_empr_registration_animation_title">Nom</entry>
+<entry js="animation" code="animation_empr_registration_nb_registred">Nombre de participants</entry>
+<entry code="empr_menu_animations">Mes animations</entry>
+<entry code="empr_animations_not_activate">Les animations ne sont pas activées.</entry>
+<entry code="animation_registration_unauthorized">Vous n'êtes pas autorisé à vous inscrire à cette animation.</entry>
+<entry js="animation" code="animation_registration_max_registered">Le nombre maximum de participants a été atteint</entry>
+<entry code="animations_date_to">au</entry>
+<entry code="animations_see_title">Liste des animations à venir</entry>
+<entry js="animation" code="animation_registration_user_confirmation">J'accepte la conservation et l'utilisation à but non commercial de mes données personnelles</entry>
+<entry js="animation" code="animation_registration_deleted_success">Désinscription</entry>
+<entry js="animation" code="animation_registration_deleted_recap">Vous avez été désinscrit de l'animation avec succès</entry>
+<entry js="animation" code="animation_registration_deleted_link_animation">Voir l'animation :</entry>
+<entry js="animation" code="animations_list">Liste des animations</entry>
+<entry code="animation_confirm_delete_registration">Attention, vous êtes la personne de contact pour l\'inscription à cette animation. Votre désinscription entraînera également celle des personnes que vous avez inscrites.</entry>
+<entry code="animations_date_hour_to">à</entry>
+<entry js="animation" code="animation_registration_barcode_already_use">Numéro de carte déjà utilisé</entry>
+<entry js="animation" code="animation_registration_contact_already_add">La personne de contact est déjà ajoutée</entry>
+<entry code="animation_linked">Animations liées :</entry>
+<entry code="animation_expired_no_quota">Aucune place disponible</entry>
+<entry code="explnum_licence_empty_selector">Aucun</entry>
+<entry code="animation_multi_registration">Inscription</entry>
+<entry js="animation" code="animation_children_multi_registration">Inscription</entry>
+<entry js="animation" code="animation_children_title">Titre</entry>
+<entry js="animation" code="animation_children_date">Date</entry>
+<entry js="animation" code="animation_children_animation_quota_available">Places disponibles</entry>
+<entry js="animation" code="animation_registration_list_animation">Liste des animations :</entry>
+<entry js="animation" code="animation_date_expired">Animation expirée</entry>
+<entry js="animation" code="animation_selected_registration_max_registered">Le nombre maximum de participants a été atteint pour l'animation : %s</entry>
+<entry code="animation_event_date_expired">Animation expirée</entry>
+<entry code="animation_empr_already_redistred">Déjà inscrit</entry>
+<entry code="animation_registration_waiting_list">S'inscrire sur liste d'attente</entry>
+<entry js="animation" code="animation_registration_waiting_list_active">Votre inscription se fera sur liste d'attente.</entry>
+<entry code="contribution_validated_draft">Valider</entry>
+<entry code="contribution_edit_draft">Editer</entry>
+<entry code="contribution_delete_draft">Supprimer</entry>
+<entry code="no_animation_location">Pas de localisation définie</entry>
+<entry code="dsi_priv_form_group_type_pperso">Grouper par valeurs de champ personnalisé</entry>
+<entry code="dsi_priv_form_group_type_facette">Grouper par facettes</entry>
+<entry code="dsi_ban_form_regroupe_pperso_no">Pas de regroupement</entry>
+<entry code="parperso_no_field">Il n'y a aucun champ personnalisé</entry>
+<entry code="list_crit_form_facette">Critère principal</entry>
+<entry code="order_sort_facette">Ordre de tri</entry>
+<entry code="intit_gest_tri3">Par ordre croissant</entry>
+<entry code="intit_gest_tri4">Par ordre décroissant</entry>
+<entry code="datatype_sort_facette">Type de données de tri</entry>
+<entry code="datatype_sort_alpha">Alphanumérique</entry>
+<entry code="datatype_sort_num">Numérique</entry>
+<entry code="datatype_sort_date">Date</entry>
+<entry code="facette_order">Ordre</entry>
+<entry code="intitule_vue_facette">Nom de la facette</entry>
+<entry code="critP_vue_facette">Critère principal</entry>
+<entry code="ssCrit_vue_facette">Sous-critère</entry>
+<entry code="nbRslt_vue_facette">Nombre de résultats par items</entry>
+<entry code="title_tab_facette">Liste des facettes disponibles</entry>
+<entry code="sort_view_facette">Options de tri</entry>
+<entry code="facettes_admin_visible_gestion">Visibilité gestion</entry>
+<entry code="visible_facette">Visibilité OPAC</entry>
+<entry code="lib_nelle_facette_form">Ajouter une facette</entry>
+<entry code="facette_order_bt">Trier par Nom</entry>
+<entry code="print_n_notices">%s notice(s)</entry>
+<entry code="tu_interpreter_list">Interprètes</entry>
+<entry code="persovalue_already_in_use"> Cette valeur de champ personnalisé a déjà été sélectionnée</entry>
+<entry code="aut_oeuvre_already_in_use">L'oeuvre sélectionnée est déjà utilisée</entry>
+<entry code="notice_has_link">Oui</entry>
+<entry code="notice_has_no_link">Non</entry>
+<entry code="print_verifcode">Code de vérification :</entry>
+<entry code="print_wrongcode">Le code de vérification saisi n'est pas valide !</entry>
+<entry code="print_wrongcode_backbutton">Retourner au formulaire</entry>
+<entry code="dsi_record_not_classified">Non classée(s)</entry>
+<entry code="search_extended_titre_uniforme_for_expression">Liens - A pour expression</entry>
+<entry code="search_extended_titre_uniforme_expression_by_name">Expression de</entry>
+<entry code="search_extended_titre_uniforme_for_expression_by_name">A pour expression</entry>
+<entry code="search_extended_titre_uniforme_other_link_by_name">Autres liens</entry>
+<entry js="nav_history" code="nav_history_move">Déplacer</entry>
+<entry js="nav_history" code="nav_history_zoom_more"> + </entry>
+<entry js="nav_history" code="nav_history_zoom_minus"> - </entry>
+<entry js="nav_history" code="nav_history_refocus">Recentrer</entry>
+<entry js="nav_history" code="nav_history_advance_mode">Mode avancé</entry>
+<entry js="nav_history" code="nav_history_timeline_popup_submit">ok</entry>
+<entry js="nav_history" code="nav_history_timeline_popup_placeholder">Nom du favori</entry>
+<entry js="nav_history" code="nav_history_bookmarks">Favoris</entry>
+<entry js="nav_history" code="nav_history_bookmark_remove">x</entry>
+<entry code="open_link_url">Ouvrir le lien</entry>
+<entry code="authority_display_forbidden">Vous ne pouvez pas accéder à cette autorité.</entry>
+<entry code="print_emaildest_not_found">Aucune adresse mail n'est associée à votre compte.</entry>
+<entry code="onto_contribution_cancel_title">Retour à la liste des contributions</entry>
+<entry code="onto_contribution_save_push_title">Valider la contribution</entry>
+<entry code="onto_contribution_push_title">Proposer la contribution</entry>
+<entry code="onto_contribution_save_title">Enregistrer la contribution en brouillon</entry>
+<entry code="onto_contribution_delete_title">Supprimer la contribution</entry>
+<entry code="onto_selector_no_search_available">Pas de recherche disponible pour ce type d'élément.</entry>
+<entry code="onto_error_no_minima">%s : Ce champ doit être renseigné.</entry>
+<entry code="onto_error_too_much_values">%s : Ce champ ne peut pas contenir autant de valeurs.</entry>
+<entry code="onto_error_must_be_distinct">"%s" et "%s" ne peuvent pas être identiques.</entry>
+<entry code="onto_error_unvalid_datas">%s : La saisie est invalide.</entry>
+<entry code="docnum_indexation">Documents Numériques</entry>
+<entry code="associated_explnum">Document numérique associé</entry>
+<entry code="cookie_stats">PMB (Statistiques)</entry>
+<entry code="entity_no_convert_available_title">Modification impossible</entry>
+<entry code="entity_no_convert_available_contact">Impossible de modifier cette contribution, merci de contacter un administrateur</entry>
+<entry code="contribution_error_save">Impossible d'enregistrer votre contribution, merci de contacter un administrateur</entry>
+<entry code="error">Erreur</entry>
+<entry js="contribution" code="add_tags">Ajouter le tag</entry>
+<entry code="contribution_placeholder_responsability">Responsabilité</entry>
+<entry code="contribution_placeholder_responsability_function">Fonction de la responsabilité</entry>
+<entry code="password_no_longer_compliant">Votre mot de passe ne respecte plus les régles de sécurité \nModifiez votre mot de passe.</entry>
+
+<entry js="tarteaucitron" code="adblock">Bonjour! Ce site joue la transparence et vous donne le choix des services tiers à activer.</entry>
+<entry js="tarteaucitron" code="adblock_call">Merci de désactiver votre adblocker pour commencer la personnalisation.</entry>
+<entry js="tarteaucitron" code="reload">Recharger la page</entry>
+<entry js="tarteaucitron" code="alertBigScroll">En continuant de défiler,</entry>
+<entry js="tarteaucitron" code="alertBigClick">En poursuivant votre navigation,</entry>
+<entry js="tarteaucitron" code="alertBig">vous acceptez l'utilisation de services tiers pouvant installer des cookies</entry>
+<entry js="tarteaucitron" code="alertBigPrivacy">Ce site utilise des cookies et vous donne le contrôle sur ceux que vous souhaitez activer</entry>
+<entry js="tarteaucitron" code="alertSmall">Gestion des services</entry>
+<entry js="tarteaucitron" code="acceptAll">Tout accepter</entry>
+<entry js="tarteaucitron" code="personalize">Personnaliser</entry>
+<entry js="tarteaucitron" code="close">Fermer</entry>
+<entry js="tarteaucitron" code="privacyUrl">Politique de confidentialité</entry>
+<entry js="tarteaucitron" code="all">Préférences pour tous les services</entry>
+<entry js="tarteaucitron" code="info">Protection de votre vie privée</entry>
+<entry js="tarteaucitron" code="disclaimer">En autorisant ces services tiers, vous acceptez le dépôt et la lecture de cookies et l'utilisation de technologies de suivi nécessaires à leur bon fonctionnement.</entry>
+<entry js="tarteaucitron" code="allow">Autoriser</entry>
+<entry js="tarteaucitron" code="deny">Interdire</entry>
+<entry js="tarteaucitron" code="noCookie">Ce service ne dépose aucun cookie.</entry>
+<entry js="tarteaucitron" code="useCookie">Ce service peut déposer</entry>
+<entry js="tarteaucitron" code="useCookieCurrent">Ce service a déposé</entry>
+<entry js="tarteaucitron" code="useNoCookie">Ce service n'a déposé aucun cookie.</entry>
+<entry js="tarteaucitron" code="more">En savoir plus</entry>
+<entry js="tarteaucitron" code="source">Voir le site officiel</entry>
+<entry js="tarteaucitron" code="noServices">Ce site n'utilise aucun cookie nécessitant votre consentement.</entry>
+<entry js="tarteaucitron" code="toggleInfoBox">Afficher/masquer les informations sur le stockage des cookies</entry>
+<entry js="tarteaucitron" code="title">Panneau de gestion des cookies</entry>
+<entry js="tarteaucitron" code="cookieDetail">Détail des cookies</entry>
+<entry js="tarteaucitron" code="allowAll">Tout accepter</entry>
+<entry js="tarteaucitron" code="denyAll">Tout refuser</entry>
+<entry js="tarteaucitron" code="fallback">est désactivé.</entry>
+<entry js="tarteaucitron" code="allowed">autorisé</entry>
+<entry js="tarteaucitron" code="disallowed">interdit</entry>
+<entry js="tarteaucitron" code="ads:title">Régies publicitaires</entry>
+<entry js="tarteaucitron" code="ads:details">Les régies publicitaires permettent de générer des revenus en commercialisant les espaces publicitaires du site.</entry>
+<entry js="tarteaucitron" code="analytic:title">Mesure d'audience</entry>
+<entry js="tarteaucitron" code="analytic:details">Les services de mesure d'audience permettent de générer des statistiques de fréquentation utiles à l'amélioration du site.</entry>
+<entry js="tarteaucitron" code="social:title">Réseaux sociaux</entry>
+<entry js="tarteaucitron" code="social:details">Les réseaux sociaux permettent d'améliorer la convivialité du site et aident à sa promotion via les partages.</entry>
+<entry js="tarteaucitron" code="video:title">Vidéos</entry>
+<entry js="tarteaucitron" code="video:details">Les services de partage de vidéo permettent d'enrichir le site de contenu multimédia et augmentent sa visibilité.</entry>
+<entry js="tarteaucitron" code="comment:title">Commentaires</entry>
+<entry js="tarteaucitron" code="comment:details">Les gestionnaires de commentaires facilitent le dépôt de vos commentaires et luttent contre le spam.</entry>
+<entry js="tarteaucitron" code="support:title">Support</entry>
+<entry js="tarteaucitron" code="support:details">Les services de support vous permettent d'entrer en contact avec l'équipe du site et d'aider à son amélioration.</entry>
+<entry js="tarteaucitron" code="api:title">APIs</entry>
+<entry js="tarteaucitron" code="api:details">Les APIs permettent de charger des scripts : géolocalisation, moteurs de recherche, traductions, ...</entry>
+<entry js="tarteaucitron" code="other:title">Autre</entry>
+<entry js="tarteaucitron" code="other:details">Services visant à afficher du contenu web.</entry>
+<entry js="tarteaucitron" code="mandatoryTitle">Cookies obligatoires</entry>
+<entry js="tarteaucitron" code="mandatoryText">Ce site utilise des cookies nécessaires à son bon fonctionnement. Ils ne peuvent pas être désactivés.</entry>
+<entry code="reverse_authors_see">Auteur(s) ayant un renvoi vers celui-ci</entry>
+<entry code="subs_ok_already_validated"><![CDATA[<h1>Votre compte a déjà été validé !</h1><br /><br />!!form_access_compte!!<br />]]></entry>
+<entry code="search_segment_refine_search_in_segment">Recherche affinée dans : %s</entry>
+<entry code="search_segment_universe_associate_list">Recherches associées</entry>
+<entry js="searchform" code="sendSearch">Rechercher</entry>
+<entry js="searchform" code="criteriaPlaceholder">Sélectionner un critère</entry>
+<entry code="nav_history_search_universe">Recherche : %s</entry>
+<entry js="nav_history" code="nav_history_search_universe">Redimensionner la zone</entry>
+<entry js="searchform" code="search_help">Aide</entry>
+<entry code="graph_node_limited">%s lien(s) non affiché(s)</entry>
+<entry code="explnum_associate_docnum">Document numérique</entry>
+<entry code="print_full_records_title">Résultats à imprimer</entry>
+<entry code="print_full_records_yes">Imprimer tous les résultats</entry>
+<entry code="print_full_records_no">Imprimer les résultats de la page courante</entry>
+<entry code="notice_title_export_record">Exporter la notice</entry>
+<entry code="notice_title_export_record_button">Exporter</entry>
+<entry code="close_export_record_popup">Fermer la fenêtre</entry>
+<entry code="quotas_not_set">Plus de places disponibles sur Internet, veuillez contacter</entry>
+<entry code="quotas_not_set_biblio">Plus de places disponibles sur Internet, veuillez contacter votre bibliothèque</entry>
+<entry code="empr_password_not_modified">Le nouveau mot de passe doit être différent de l'ancien mot de passe.</entry>
+<entry code="portal_default_label">Portail par défaut</entry>
+<entry code="portal_default_gabarit_label">Modèle par défaut</entry>
+<entry code="portal_default_page_label">Page par défaut</entry>
+<entry code="digital_signature_metadata">Métadonnées</entry>
+<entry code="digital_signature_download_button">Télécharger la signature</entry>
+<entry code="digital_signature_date_metadata">Date de signature : </entry>
+<entry code="digital_signature_publish_date_metadata">Date de publication : </entry>
+<entry code="digital_signature_signer_metadata">Signataire : </entry>
+<entry js="facettes_modal" code="alphabet">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</entry>
+<entry js="facettes_modal" code="close_modal">Fermer</entry>
+<entry js="facettes_modal" code="numeric_facettes">0-9</entry>
+<entry js="facettes_modal" code="validate_modal">Valider</entry>
+<entry js="facettes_modal" code="cancel_modal">Annuler</entry>
+<entry code="language_code_en_UK">UK</entry>
+<entry code="contribution_code_barre_not_valid">Veuillez saisir un code barre valide</entry>
+<entry code="captcha_play_image">Écouter le code</entry>
+<entry code="captcha_loading_image">Loading audio</entry>
+<entry code="captcha_refresh_image">Refresh Image</entry>
+<entry code="mdp_sent_succesfully">Si un compte est lié à %s, un lien pour réinitialiser votre mot de passe vient d'être envoyé.</entry>
+<entry code="cms_module_favoriteslist_saved">Liste des favoris enregistrée</entry>
+<entry code="captcha_image">Image de vérification du test de sécurité</entry>
+<entry js="facettes_modal" code="description_facette">Affichage de la liste en ordre alphabétique.</entry>
+<entry code="expl_date_creation_query">Date de création de l'exemplaire</entry>
+<entry code="resa_waiting_already_loaned">Réservation impossible : vous avez rendu ce document il y a moins de !!nb_days!! jours.</entry>
+<entry code="record_author_separator"><![CDATA[/]]></entry>
+<entry code="admin_nomenclature_formation_form_name">Nom</entry>
+<entry code="admin_nomenclature_formation_form_nature">Nature de la formation</entry>
+<entry code="admin_nomenclature_formation_form_nature_instrument">Instruments</entry>
+<entry code="admin_nomenclature_formation_form_nature_voice">Voix</entry>
+<entry code="admin_nomenclature_formation_types">Liste des Types</entry>
+<entry code="admin_nomenclature_formation_type_form_name">Nom</entry>
+<entry code="animation_mail_registration_waiting"><![CDATA[- %s, inscrit sur liste d'attente.<br>]]></entry>
+<entry code="animation_mail_registration_pending_validation"><![CDATA[- %s, inscription en attente de validation.<br>]]></entry>
+<entry code="animation_mail_registration_validate"><![CDATA[- %s, inscription validée.<br>]]></entry>
+<entry code="external_search_analysis_id">Identifiant d'article (PMID, DOI, ...) </entry>
+<entry js="animation" code="animation_registration_error_contact_mail">Merci de renseigner un mail valide pour la personne de contact</entry>
+<entry js="animation" code="animation_empr_registration_status">Inscription</entry>
+<entry js="animation" code="animation_registration_error_barcode">Merci de renseigner un code barre</entry>
+<entry js="animation" code="animation_registration_error_contact_barcode">Merci de renseigner un code barre valide pour la personne de contact</entry>
+<entry code="animation_registration_error_contact_barcode">Merci de renseigner un code barre valide pour la personne de contact</entry>
+<entry code="animation_registration_error_barcode">Merci de renseigner un code barre valide pour %s</entry>
+<entry code="animation_registration_error_name">Merci de renseigner un nom valide pour la personne n°%s</entry>
+<entry code="selvars_empr_auth_opac_change_password_link">Lien de changement de mot de passe</entry>
+<entry code="selvars_empr_auth_opac_subscribe_link">Lien de réabonnement</entry>
+<entry code="animation_comment_cmpte_subscribe_animation">inscription à l'animation</entry>
+<entry code="animation_comment_cmpte_unsubscribe_animation">désinscription à l'animation</entry>
+<entry code="animation_comment_cmpte_animation_of">du</entry>
+<entry code="search_custom_animations">Personnalisables des animations</entry>
+<entry code="search_custom_cms_article">Personnalisables des articles</entry>
+<entry code="search_custom_cms_section">Personnalisables des rubriques</entry>
+<entry code="search_universe_cms_article_title">Titre d'articles</entry>
+<entry code="search_universe_cms_section_title">Titre de la rubrique</entry>
+<entry code="search_universe_cms_article_num_section">Rubrique parente</entry>
+<entry code="search_universe_cms_article_type">Type de contenu</entry>
+<entry code="search_universe_cms_article_status">Statut de publication</entry>
+<entry code="search_universe_cms_section_num_section">Rubrique parente</entry>
+<entry code="search_universe_cms_section_type">Type de contenu</entry>
+<entry code="search_universe_cms_section_status">Statut de publication</entry>
+<entry code="empr_no_right_of_access_pwd">Vous n'avez pas les droits pour modifier votre mot de passe</entry>
+<entry code="cms_menu_editorial">Contenu editorial</entry>
+<entry code="date_to_come">"À venir</entry>
+<entry js="search_autocomplete" code="see_entity">Voir</entry>
+<entry code="empr_menu_mfa">Ma double authentification</entry>
+<entry code="empr_mfa_not_activate">La double authentification n'est pas activée.</entry>
+<entry js="mfa" code="mfa_secret_code">Code secret : </entry>
+<entry js="mfa" code="mfa_base32_secret_code">Base32 : </entry>
+<entry js="mfa" code="mfa_empty_code">Aucun code</entry>
+<entry js="mfa" code="mfa_init_button">Initialiser la double authentification</entry>
+<entry js="mfa" code="mfa_title">Double authentification</entry>
+<entry js="mfa" code="mfa_confirm_code">Code TOTP de confirmation : </entry>
+<entry js="mfa" code="mfa_send_mail">Envoyer par Mail</entry>
+<entry js="mfa" code="mfa_send_sms">Envoyer par SMS</entry>
+<entry js="mfa" code="mfa_validate_button">Valider la double authentification</entry>
+<entry js="mfa" code="mfa_already_init">Déjà défini</entry>
+<entry js="mfa" code="mfa_reset">Réinitialiser</entry>
+<entry js="mfa" code="mfa_favorite">Préférence d'envoi : </entry>
+<entry js="mfa" code="mfa_favorite_mail">Mail</entry>
+<entry js="mfa" code="mfa_favorite_sms">SMS</entry>
+<entry js="mfa" code="mfa_favorite_save">Enregistrer</entry>
+<entry js="mfa" code="mfa_success_mail">Mail envoyé avec succès</entry>
+<entry js="mfa" code="mfa_error_mail">Echec de l'envoi du mail</entry>
+<entry js="mfa" code="mfa_success_sms">SMS envoyé avec succès</entry>
+<entry js="mfa" code="mfa_error_sms">Echec de l'envoi du SMS</entry>
+<entry js="mfa" code="mfa_reset_confirm">Etes vous sûr(e) de vouloir réinitialiser ?</entry>
+<entry js="mfa" code="mfa_code_error">Code de confirmation incorrect</entry>
+<entry js="mfa" code="mfa_initialization_success">La double authentification a été initialisée avec succès</entry>
+<entry js="common" code="success_save">Enregistré avec succès</entry>
+<entry js="common" code="failed_save">Erreur lors de l'enregistrement</entry>
+<entry code="aut_categs_children">Catégories enfants</entry>
+<entry code="apply">Appliquer</entry>
+<entry code="filter">Filtrer</entry>
+<entry code="sort_by">Trier par</entry>
+<entry code="export_tableur">Export tableur</entry>
+<entry code="export_tableau_html">Export tableau HTML</entry>
+<entry code="export_csv">Export CSV</entry>
+<entry js="mfa" code="mfa_favorite_app">Application</entry>
+<entry code="mfa_login_input_label">Code de sécurité : </entry>
+<entry code="mfa_login_input_placeholder">Code de sécurité</entry>
+<entry code="mfa_login_notify_mail">Un code vous a été envoyé par mail</entry>
+<entry code="mfa_login_send_mail">Recevoir un code par mail</entry>
+<entry code="mfa_login_send_sms">Recevoir un code par sms</entry>
+<entry code="mfa_login_error">Code de sécurité incorrect</entry>
+<entry js="mfa" code="mfa_login_error">Code de sécurité incorrect</entry>
+<entry code="mfa_validate">Valider le code</entry>
+<entry code="mfa_cancel">Annuler</entry>
+<entry code="mfa_title">Double authentification</entry>
+<entry code="mfa_default_suggest_message">Pour vous authentifier, vous pouvez utiliser les applications suivantes sur votre smartphone : \r\n\r\n- FreeOTP\r\n- Google Authenticator</entry>
+<entry code="list_ui_search">Filtres / Tri</entry>
+<entry code="ville_empr">Ville</entry>
+<entry code="categ_empr">Catégorie</entry>
+<entry code="statut_empr">Statut</entry>
+<entry code="year_empr">Année de naissance</entry>
+<entry code="codestat_empr">Code statistique</entry>
+<entry code="circ_date_emprunt">Sortie</entry>
+<entry code="circ_date_retour">Retour</entry>
+<entry code="acquisition_cp">Code Postal</entry>
+<entry code="resa_suppr_th">Suppr.</entry>
+<entry code="list_ui_objects_not_grouped">Sans groupement</entry>
+<entry code="list_ui_selection">Pour la sélection</entry>
+<entry code="list_ui_no_selected">Aucune ligne n'a été sélectionnée.</entry>
+<entry code="list_ui_no_filter">Aucun filtre</entry>
+<entry code="list_ui_filter_date_start">Après le</entry>
+<entry code="list_ui_filter_date_end">Avant le</entry>
+<entry code="list_ui_initialization">Réinitialiser</entry>
+<entry js="dsi" code="unsubscribe_success">Votre désinscription de la diffusion "!!diffusion_name!!" a bien été prise en compte.</entry>
+<entry code="group_prolonge_pret_confirm">Confirmez-vous la prolongation des prêts des membres du groupe ?</entry>
+<entry code="acquisition_sug_com">Commentaires</entry>
+<entry code="acquisition_sug_cod">ISBN</entry>
+<entry code="acquisition_sug_pri">Prix</entry>
+<entry code="acquisition_sug_qte">Quantité</entry>
+<entry code="rgaa_title_format">!!page_title!! | !!biblio_name!!</entry>
+<entry code="rgaa_search_page_title"> - page n°%s</entry>
+<entry code="list_titres_uniformes">des oeuvres / expressions</entry>
+<entry code="publisher_tpl_publisher">Éditeur</entry>
+<entry code="titre_uniforme_tpl_titre_uniforme">Oeuvre/Expression</entry>
+<entry code="category_tpl_category">Catégorie</entry>
+<entry code="collection_tpl_collection">Collection</entry>
+<entry code="indexint_tpl_indexint">Indexation</entry>
+<entry code="serie_tpl_serie">Série</entry>
+<entry code="concept_tpl_concept">Concept</entry>
+<entry code="rgaa_subs_intro_services"><![CDATA[<h1 class='subs_intro_services'><span>S'inscrire pour plus de services</span></h1>Vous pouvez vous créer un compte pour accéder à certains services comme la création d'alertes aux nouveautés ou bien la possibilité de donner votre avis. <em>Cette inscription n'est pas nécessaire si vous êtes déjà emprunteur !</em>]]></entry>
+<entry code="rgaa_empr_modify_password">Changer mon mot de passe</entry>
+<entry code="rgaa_empr_modify_password_ok">Mot de passe modifié</entry>
+<entry code="rgaa_empr_modify_password_ko">Erreur de modification du mot de passe</entry>
+<entry code="faq">FAQ</entry>
+<entry code="search_segments">Segments : </entry>
+<entry code="rgaa_animation">Animation %s</entry>
+<entry code="rgaa_registration_animation">Inscription à l'animation %s</entry>
+<entry code="rgaa_registration_details_animation">Inscription avec succès à l'animation %s</entry>
+<entry code="rgaa_unsubscribre_animation">Désinscription à l'animation %s</entry>
+<entry code="contribution_area_new">Nouvelle contribution</entry>
+<entry code="contribution_area_list">Mes contributions</entry>
+<entry code="contribution_area_list_draft">Mes contributions en cours</entry>
+<entry code="contribution_area_done">Mes contributions validées</entry>
+<entry code="pnb_devices">Périphériques de lecture pour le prêt numérique</entry>
+<entry code="pnb_parameters">Paramètres du prêt numérique</entry>
+<entry code="search_result_authorities">Résultat de la recherche multi-critères d'autorités</entry>
+<entry code="iframe_cart_info">Mon panier</entry>
+<entry code="faq_show_response">Voir la résponse</entry>
+<entry code="rgaa_navbar_label">Navigation des résultats de recherche</entry>
+<entry code="rgaa_navbar_page">page !!page!!</entry>
+<entry code="rgaa_navbar_page_current">page !!page!! active</entry>
+<entry js="searchform" code="operator_input_title">Valeur de l'opérateur</entry>
+<entry code="rgaa_element_checkbox_select">Sélection</entry>
+<entry code="rgaa_typdoc_select">Type de document</entry>
+<entry code="rgaa_checkbox_check">Coche</entry>
+<entry code="rgaa_password_field_desc">Afficher ou masquer le mot de passe</entry>
+<entry code="operator_input_title">Valeur de l'opérateur</entry>
+<entry code="rgaa_author_field_link">Lien vers le site de l'auteur</entry>
+<entry code="rgaa_element_checkbox_select">Sélection</entry>
+<entry code="search_segment_user_query_search">Recherche</entry>
+<entry code="editeur_web">Site web</entry>
+<entry code="ed_comment">Commentaire</entry>
+<entry code="adresse_empr">Adresse</entry>
+<entry code="editeur_ville">Ville</entry>
+<entry code="dsi_format_date">d/m/Y H:i:s</entry>
+<entry js="dsi" code="public_alerts">Liste des alertes publiques</entry>
+<entry js="dsi" code="self_alerts">Liste des alertes privées</entry>
+<entry js="dsi" code="tag_filter_default_value">Sélectionner une étiquette</entry>
+<entry js="dsi" code="alert_list_name">Nom</entry>
+<entry js="dsi" code="alert_list_last_diffusion">Date de la dernière diffusion</entry>
+<entry js="dsi" code="alert_list_taglist">Etiquettes</entry>
+<entry js="dsi" code="alert_list_subscribe_status">Statut de l'abonnement</entry>
+<entry js="dsi" code="alert_list_subscribe_status_checkbox">Abonné</entry>
+<entry js="dsi" code="alert_list_number_elements">Nombre d'éléments</entry>
+<entry js="dsi" code="search_filter_placeholder">Rechercher...</entry>
+<entry js="dsi" code="show_filters">Filtrer</entry>
+<entry js="dsi" code="alert_list_not_subscribe_status_checkbox">Désabonné</entry>
+<entry js="dsi" code="tag_filter_label">Filtrer par étiquette</entry>
+<entry js="graph" code="infovis_resize">Redimensionner la zone</entry>
+<entry code="link_more">En savoir plus</entry>
+<entry js="dsi" code="diffusion_private_title">Créer une alerte</entry>
+<entry js="dsi" code="diffusion_private_name">Nom de l'alerte :</entry>
+<entry js="dsi" code="diffusion_private_periodicity">Periodicité (en jours) :</entry>
+<entry js="dsi" code="diffusion_private_time">Heure d'envoi :</entry>
+<entry js="dsi" code="diffusion_private_save">Enregistrer</entry>
+<entry js="dsi" code="diffusion_private_remove">Supprimer l'alerte</entry>
+<entry code="diffusion_private_error_delete">Impossible de supprimer l'alerte privée</entry>
+<entry js="dsi" code="diffusion_private_delete_confirm">Voulez-vous vraiment supprimer cette alerte ?</entry>
+<entry js="dsi" code="title_alerts">Liste des alertes</entry>
+<entry js="dsi" code="alert_list_search_input">Recherche</entry>
+<entry js="graph" code="zoom_in_button">Zoom avant</entry>
+<entry js="graph" code="zoom_out_button">Zoom arrière</entry>
+<entry code="diffusion_private_unavailable">Alertes privées non disponibles</entry>
+<entry js="dsi" code="alert_btn_title_show_history">Consulter les précédentes diffusions de l'alerte</entry>
+<entry js="dsi" code="alert_paragraph_show_history">Liste des précédentes diffusions de l'alerte (maximum : !!nb_history!!)</entry>
+<entry js="dsi" code="alert_before_diffusion_date">Diffusion du </entry>
+<entry js="dsi" code="alert_no_history">Aucune diffusion précédente </entry>
+<entry js="dsi" code="alert_show_diffusion">Consulter l'alerte</entry>
+<entry js="dsi" code="unsubscribe_diffusion_deleted">Diffusion déjà supprimée. Aucune action requise de votre part.</entry>
+<entry code="aut_menu_titre_uniforme">Oeuvres / Expressions</entry>
+<entry code="indexint_menu">Indexations décimales</entry>
+<entry code="133">Auteur</entry>
+<entry code="135">Éditeur</entry>
+<entry code="dsi_bannette_gerer_actions">Action(s)</entry>
+<entry js="facettes_modal" code="facettes_modal_validate_modal_aria_label">Appliquer les filtres sélectionnés dans la facette !!facette!! (cela rechargera la page)</entry>
+<entry js="facettes_modal" code="facettes_modal_trigger_filter_aria_label">Appliquer le filtre (cela rechargera la page)</entry>
+<entry js="facettes_modal" code="facettes_modal_legend">Sélectionner des filtres</entry>
+<entry code="facettes_modal_trigger_filter_aria_label">Appliquer le filtre (cela rechargera la page)</entry>
+<entry code="list_ui_dataset_title">Liste des %s</entry>
+<entry code="list_opac_bannettes_abon_priv_ui_dataset_title">Liste des alertes personnalisées</entry>
+<entry code="list_opac_bannettes_abon_pub_ui_dataset_title">Liste des alertes</entry>
+<entry code="list_opac_collstate_ui_dataset_title">Liste des états des collections</entry>
+<entry code="list_opac_demandes_ui_dataset_title">Liste des demandes</entry>
+<entry code="list_opac_loans_archives_reader_ui_dataset_title">Liste des prêts précédents</entry>
+<entry code="list_opac_loans_groups_reader_ui_dataset_title">Liste des prêts du groupe</entry>
+<entry code="list_opac_loans_reader_ui_dataset_title">Liste des prêts</entry>
+<entry code="list_opac_locations_ui_dataset_title">Liste des localisations</entry>
+<entry code="list_opac_resa_planning_reader_ui_dataset_title">Liste des réservations planifiées</entry>
+<entry code="list_opac_resa_planning_record_ui_dataset_title">Liste des réservations planifiées de la notice</entry>
+<entry code="list_opac_rss_ui_dataset_title">Liste des flux RSS</entry>
+<entry code="list_opac_scan_requests_ui_dataset_title">Liste des demandes de numérisation</entry>
+<entry code="list_opac_sections_ui_dataset_title">Liste des sections</entry>
+<entry code="list_opac_suggestions_ui_dataset_title">Liste des suggestions</entry>
+<entry js="opac" code="docnum_download_no_ck">Veuillez sélectionner au moins une notice !</entry>
+<entry js="opac" code="resa_no_doc_selected">Veuillez cocher au moins un document.</entry>
+<entry js="opac" code="close_modal">Fermer</entry>
+<entry code="list_opac_bulletins_ui_dataset_title">Liste des bulletins</entry>
+<entry code="bulletin_nb_expl">Nombre d'exemplaires</entry>
+<entry code="bulletin_nb_explnum">Nombre de documents numériques</entry>
+<entry code="search_extended_group_art">Articles</entry>
+<entry code="search_extended_serial_id">Articles issus du périodique</entry>
+<entry code="list_opac_bulletins_a2z_ui_dataset_title">Liste des bulletins</entry>
+<entry code="list_opac_items_ui_dataset_title">Liste des exemplaires</entry>
+<entry code="list_ui_selection_checkbox">Case à cocher pour la sélection</entry>
+<entry js="searchform" code="criteriaLabel">Sélectionner un critère de recherche</entry>
+<entry js="searchform" code="operatorGlobalLabel">Sélectionner l'opérateur entre les différents critères de recherche</entry>
+<entry js="searchform" code="operatorTextLabel">Sélectionner l'opérateur de recherche pour ce critère</entry>
+<entry js="searchform" code="operatorAuthorityLabel">Sélectionner l'opérateur de recherche pour ce critère</entry>
+<entry js="searchform" code="operatorDateLabel">Sélectionner l'opérateur de recherche pour ce critère</entry>
+<entry js="searchform" code="operatorListLabel">Sélectionner l'opérateur de recherche pour ce critère</entry>
+<entry js="searchform" code="operatorMapLabel">Sélectionner l'opérateur de recherche pour ce critère</entry>
+<entry js="searchform" code="authorityLabel">Sélectionner une expression</entry>
+<entry js="searchform" code="searchLabel">Effectuer votre recherche</entry>
+<entry js="searchform" code="dateLabel">Sélectionner une date</entry>
+<entry js="searchform" code="listLabel">Sélectionner un élément de la liste</entry>
+<entry js="searchform" code="addCriteriaLabel">Ajouter un critère de recherche</entry>
+<entry code="list_opac_serialcirc_copy_reader_ui_dataset_title">Liste des demandes de reproduction</entry>
+<entry code="list_opac_serialcirc_ask_reader_ui_dataset_title">Liste des demandes d'inscription</entry>
+<entry code="facette_plus_label">Voir plus de filtres</entry>
+<entry code="facette_moins_label">Voir moins de filtres</entry>
+<entry code="finance_cmpte_abt">Compte abonnement</entry>
+<entry code="finance_cmpte_prets">Compte prêts</entry>
+<entry code="finance_cmpte_amendes">Compte amendes</entry>
+<entry code="finance_cmpte_animation">Compte animations</entry>
+<entry js="payments" code="transactions">Transactions</entry>
+<entry js="payments" code="frozen">En attente</entry>
+<entry js="payments" code="transaction_list">Mes paiements</entry>
+<entry js="payments" code="order_number">Numéro de facture</entry>
+<entry js="payments" code="order_number_date">Date du paiement</entry>
+<entry js="payments" code="order_number_status">Statut du paiement</entry>
+<entry js="payments" code="order_number_status_in_progress">En cours de paiement</entry>
+<entry js="payments" code="order_number_finish">Paiement validé</entry>
+<entry js="payments" code="order_number_abandoned">Paiement refusé</entry>
+<entry js="payments" code="transaction_payment">Payer mes comptes</entry>
+<entry code="list_opac_reservations_reader_ui_dataset_title">Liste des réservations</entry>
+<entry code="376">Exemplaire</entry>
+<entry code="search_explnum">Exemplaire numérique</entry>
+<entry code="search_by_authperso_title">Autorité personnalisée</entry>
+<entry code="search_concept_title">Concept</entry>
+<entry code="selvars_animation_name">Nom de l'animation</entry>
+<entry code="ia_search_ia">Poser une question</entry>
+<entry code="ia_search_welcome">Bonjour je suis %s, posez votre question ici.</entry>
+<entry js="ia" code="send_question">Envoyer</entry>
+<entry js="ai" code="send_question">Envoyer</entry>
+<entry js="ai" code="sessions_title">Sessions :</entry>
+<entry js="ai" code="session_title">Session :</entry>
+<entry js="ai" code="sessions_new">Nouvelle session</entry>
+<entry code="record_display_ai_score">Pertinence de la recherche sémantique :</entry>
+<entry js="ai" code="session_rename">Renommer</entry>
+<entry js="ai" code="session_delete">Supprimer</entry>
+<entry js="ai" code="session_delete_confirm">Êtes-vous sur de vouloir supprimer votre session "%s" ?</entry>
+<entry js="common" code="modal_cancel">Annuler</entry>
+<entry js="common" code="modal_close">Fermer</entry>
+<entry js="common" code="modal_valid">Valider</entry>
+<entry code="search_ai_history">Poser une question : "%s"</entry>
+<entry js="ai" code="sessions_list_empty">Aucune session enregistrée</entry>
+<entry js="ai" code="see_more">Voir plus</entry>
+<entry code="ai_search_found">titres trouvés pour la question</entry>
+<entry code="ai_search_criteria_rmc">Question posée</entry>
+<entry code="ai_search_human_query">Question : "%s"</entry>
+<entry js="ai" code="loading">Chargement...</entry>
+<entry js="ai" code="no_answer">Aucune réponse générée</entry>
+<entry code="cms_search_label_select_search_type">Sélectionner le type de la recherche</entry>
+<entry js="ai" code="answer_information">Ce texte est généré par une intelligence artificielle, il peut contenir des erreurs, vérifiez le contenu des références citées</entry>
+<entry code="contact_form_mandatory_fields_all">Tous les champs sont obligatoires.</entry>
+<entry code="contact_form_mandatory_fields_not_all">* champs obligatoires</entry>
+<entry js="ai" code="tips_text">Vous pouvez essayer d'améliorer la recherche avec cette question : </entry>
+<entry js="ai" code="tips_text_suite">ou faire une recherche tous les champs avec cette expression : </entry>
+<entry code="search_segment_new_search_rgaa">pour votre recherche</entry>
+<entry js="visionneuse" code="visionneuse_title">Visionneuse</entry>
+<entry code="autolevel1_search_title">Rechercher un document</entry>
+<entry js="common" code="rgaa_window_open"> (Ouverture dans une nouvelle fenêtre)</entry>
+<entry code="rgaa_modal_open"> (Ouverture d'une modale)</entry>
+<entry code="rgaa_modal_close">Fermer la modale</entry>
+<entry code="sort_checkbox_label">Cocher/Décocher le tri : </entry>
+<entry code="common_filter_redirection_aria_label">Appliquer le filtre (cela rechargera la page) : </entry>
+<entry code="print_summary_title">Sommaire</entry>
+<entry code="explnum_print_option">Options d'impression</entry>
+<entry code="explnum_print_option_summary">Générer un sommaire</entry>
+<entry code="explnum_print_option_blank_page">Toujours commencer les documents sur la page de gauche</entry>
+<entry code="aria_label_list_docnum_checked_all">Cocher tous les documents</entry>
+<entry code="aria_label_list_docnum_unchecked_all">Décocher tous les documents</entry>
+<entry code="aria_label_print_validate">Valider la sélection et lancer l'impression</entry>
+<entry code="aria_label_print_cancel">Annuler l'impression et fermer la fenêtre</entry>
+<entry code="aria_label_sort_uncheck_all">Désactiver tous les tris (cela rechargera la page)</entry>
+<entry code="rgaa_sort_ui_legend">Sélectionner les tris à appliquer ou cliquer directement sur un lien pour appliquer le tri ciblé.</entry>
+<entry js="opac" code="rgaa_close_modal">Fermer la modale</entry>
+<entry js="opac" code="rgaa_share_copy_link">Copier le lien</entry>
+<entry code="sort_order">Ordre :</entry>
+<entry code="sort_string">Chaine :</entry>
+<entry code="sort_by_placeholder">Sélectionner un tri</entry>
+<entry code="sort_order_placeholder">Sélectionner un ordre</entry>
+<entry code="sort_string_placeholder">Sélectionner une chaine</entry>
+<entry code="atoz_rgaa_perio">Rechercher un périodique</entry>
+<entry js="opac" code="rgaa_expand">Déplier</entry>
+<entry js="opac" code="rgaa_collapse">Replier</entry>
+<entry code="rgaa_level_biblio">Niveau bibliographique :</entry>
+<entry code="rgaa_type_doc">Type de document :</entry>
+<entry js="facettes_modal" code="facettes_close_modal">Fermer la modale</entry>
+<entry code="notice_title_basket_bannette">Ajouter les notices de cette alerte à votre panier</entry>
+<entry code="link_to_bannette_title">Consulter les notices de cette alerte</entry>
+<entry code="list_ui_selection_checkbox_bannette">Cocher ou décocher la case pour vous abonner ou non à l'alerte : </entry>
+<entry code="list_ui_bannette_title_tooltip">Titre de la bannette : </entry>
+<entry code="list_ui_bannette_edit_btn">Éditer la bannette : </entry>
+<entry code="dsi_bt_bannette_priv_empr_rgaa">Vous serez redirigé vers la page de recherche multi-critères</entry>
+<entry code="empr_late_desc">Vous êtes en retard pour ce prêt.</entry>
+<entry code="empr_link_to_notice_label">Accéder à la page de la notice</entry>
+<entry code="rgaa_bulletin_carrousel_next">Bulletin suivant (cela rechargera la page)</entry>
+<entry code="rgaa_bulletin_carrousel_previous">Bulletin précédent (cela rechargera la page)</entry>
+<entry code="rgaa_bulletin_carrousel_label">Bulletin !!bull_num!! paru le !!bull_date!!</entry>
+<entry code="short_url_generate_title">Générer le flux rss - Nouvelle fenêtre</entry>
+<entry code="rgaa_navbar_selector_result_per_page">Sélectionner le nombre de résultats à afficher par page</entry>
+<entry code="artecampus_empr_login">Connectez-vous</entry>
+<entry code="artecampus_login">Se connecter à Arte pour voir la vidéo</entry>
+<entry code="artecampus_see">Accéder au site</entry>
+<entry js="ai" code="sharedlist_btn_add_docnum">Ajouter un document personnel</entry>
+<entry js="ai" code="sharedlist_btn_index_list">Indexer ma liste de lecture pour poser une question</entry>
+<entry js="ai" code="sharedlist_btn_index_list_progress">Indexation en cours... (%s%)</entry>
+<entry js="ai" code="sharedlist_btn_index_list_title">Nombre de notices restantes à indexer : </entry>
+<entry js="ai" code="sharedlist_btn_index_docnum_title">Nombre de documents personnel restants à indexer : </entry>
+<entry js="ai" code="sharedlist_upload_label">Fichier à ajouter</entry>
+<entry js="ai" code="sharedlist_upload_title">Ajouter un document personnel</entry>
+<entry js="ai" code="sharedlist_upload_empty_file">Vous devez sélectionner un fichier</entry>
+<entry js="ai" code="sharedlist_upload_to_large_file_error">Ce fichier est trop volumineux (%s Mo maximum)</entry>
+<entry js="ai" code="sharedlist_upload_type_file_error">Format de fichier incorrect (PDF uniquement)</entry>
+<entry code="sharedlist_upload_to_large_file_error">Ce fichier est trop volumineux (%s Mo maximum)</entry>
+<entry code="sharedlist_upload_type_file_error">Format de fichier incorrect</entry>
+<entry js="common" code="common_loading">Chargement...</entry>
+<entry code="sharedlist_simple_search">Recherche simple</entry>
+<entry code="sharedlist_ai_search">Poser une question</entry>
+<entry code="sharedlist_docnums_list">Mes documents personnel</entry>
+<entry js="ai" code="docnums_list_title">Mes documents personnel :</entry>
+<entry js="ai" code="docnums_list_empty">Aucun document personnel</entry>
+<entry js="ai" code="docnums_list_remove">Supprimer le document</entry>
+<entry js="ai" code="docnums_list_remove_confirm">Confirmez-vous la suppression du document : %s</entry>
+<entry js="ai" code="docnums_list_rename">Renommer le document</entry>
+<entry js="ai" code="docnum_name">Nom du document :</entry>
+<entry js="ai" code="docnums_list_see">Voir le document</entry>
+<entry code="show_sharedlist_n_result">%s notice(s) et %s document(s) personnel(s)</entry>
+<entry code="sharedlist_docnums">Document personnel : %s</entry>
+<entry code="sharedlist_docnums_view">Voir le document personnel</entry>
+<entry code="sharedlist_ia_search_welcome">Posez votre question ici.</entry>
+<entry code="link_reciproque_title">Lien réciproque si coché</entry>
+<entry code="print_generate_pdf_error_msg">Une erreur est survenue lors de la création du pdf</entry>
+<entry code="print_close_popup">Fermer</entry>
+<entry code="date_reset_btn_title">Réinitialiser la date</entry>
+<entry code="artecampus">Arte Campus</entry>
+<entry code="artecampus_access">Accéder à Arte Campus</entry>
+<entry code="artecampus_empr_login">Connectez-vous</entry>
+<entry code="artecampus_login">Se connecter à Arte pour voir la vidéo</entry>
+<entry code="artecampus_see">Accéder au site</entry>
+<entry code="print_add_dest">Ajouter un destinataire</entry>
+<entry code="print_remove_dest">Supprimer le destinataire</entry>
+<entry code="print_legend_email_param">Paramètres du mail</entry>
+<entry code="print_legend_record_option">Paramètres d'affichage des notices</entry>
+<entry js="animation" code="animation_empr_registration_list_registred">Liste des participants</entry>
+<entry code="explnum_id">Identifiant du document numérique</entry>
+<entry js="animation" code="animation_empr_main_user_confirm_delete_registration">Attention, vous êtes la personne de contact pour l'inscription à cette animation. Votre désinscription entraînera également celle des personnes que vous avez inscrites.</entry>
+<entry js="animation" code="animation_empr_other_user_confirm_delete_registration">Êtes-vous sûr de bien vouloir désinscrire cette personne ?</entry>
+<entry js="animation" code="animation_empr_main_user_title_delete_registration">Se désinscrire et désinscrire les autres personnes que vous avez inscrites.</entry>
+<entry js="animation" code="animation_empr_other_user_title_delete_registration">Désinscrire cette personne</entry>
+<entry js="animation" code="animation_empr_registration_caption">Liste de mes inscriptions à des animations</entry>
+<entry js="animation" code="animation_empr_no_registration">Vous n'êtes inscrit(e) à aucune animation.</entry>
+<entry code="animation_registration_waiting_confirmation">S'inscrire et attendre une confirmation</entry>
+<entry code="animation_registration_waiting_list_confirmation">S'inscrire sur liste d'attente et attendre une confirmation</entry>
+<entry code="reset_password_link_expired">Ce lien de réinitialisation de mot de passe n'est plus valide. Merci d'effectuer à nouveau la procédure de réinitialisation.</entry>
+<entry code="contact_form_consent_message">J'accepte la conservation et l'utilisation à but non commercial de mes données personnelles</entry>
+<entry code="contact_form_consent_message_mandatory">Vous devez accepter la conservation et l'utilisation de vos données personnelles à but non commercial</entry>
+<entry js="ai" code="wait_retry_after">Veuillez patienter, l'opération peut prendre un certain temps :</entry>
+<entry js="ai" code="wait_retry_after_second">secondes</entry>
+<entry code="prt_breadcrumb_event">Agenda</entry>
+<entry code="title_meta_gerer_alertes">Gérer mes alertes</entry>
+<entry code="cms_module_favoriteslist_legend">Personnaliser l'affichage de vos rubriques</entry>
+<entry js="facettes" code="facette_plus_label">Voir plus de filtres</entry>
+<entry js="facettes" code="facette_moins_label">Voir moins de filtres</entry>
+<entry js="facettes" code="facette_moins_link">[-]</entry>
+<entry js="facettes" code="facette_plus_link">[+]</entry>
+<entry code="aut_link_authors">Autorités liées - Auteurs</entry>
+<entry code="aut_link_categories">Autorités liées - Catégories</entry>
+<entry code="aut_link_publishers">Autorités liées - Éditeurs</entry>
+<entry code="aut_link_collections">Autorités liées - Collections</entry>
+<entry code="aut_link_subcollections">Autorités liées - Sous-collections</entry>
+<entry code="aut_link_series">Autorités liées - Séries</entry>
+<entry code="aut_link_titres_uniformes">Autorités liées - Oeuvres</entry>
+<entry code="aut_link_indexint">Autorités liées - Indexations décimales</entry>
+<entry code="aut_link_authperso">Autorités liées - Autorités personnalisées</entry>
+<entry code="custom_fields_browse_button">...</entry>
+<entry code="custom_fields_browse_aria_label">Parcoucir les données relatives à %s</entry>
+<entry code="custom_fields_add_button">+</entry>
+<entry code="custom_fields_add_aria_label">Ajouter une donnée relative à %s</entry>
+<entry code="custom_fields_raz_button">X</entry>
+<entry code="custom_fields_raz_aria_label">Réinitialiser la donnée relative à %s</entry>
+<entry code="connection">Connexion</entry>
+<entry code="newtab">Nouvel onglet</entry>
+<entry code="artecampus_empr_login_aria_label">Connectez-vous à Arte Campus</entry>
+<entry code="artecampus_see_more">Accéder au site Arte Campus</entry>
+<entry js="common" code="session_expire_near">Votre session expire bientôt. Voulez-vous la prolonger ?</entry>
+<entry js="common" code="session_extended">Session prolongée !</entry>
+<entry js="common" code="session_outdated">Le délai de prolongation est dépassé, la session n'a pas été prolongée.</entry>
+<entry code="demandes_see">Voir</entry>
+<entry code="facette_filtre_apply_selection">Appliquer les filtres sélectionnés</entry>
+<entry code="login_remaining_attempts">Nombre de tentatives de connexion restant : %s</entry>
+<entry code="last_login_remaining_attempts">Dernière tentative avant d'être bloqué.</entry>
+<entry code="login_rejected_blacklist">Vous n'êtes pas autorisé à vous connecter sur le site !</entry>
+<entry code="login_rejected_too_many_attempts">Vous êtes bloqué pour une durée de %s secondes !</entry>
+<entry code="opac">OPAC</entry>
+<entry code="gestion">Gestion</entry>
+<entry code="notify_login_failed_title">[Sécurité] Tentative de connexion détectée !</entry>
+<entry code="notify_login_failed_content"><![CDATA[Bonjour,<br /><br />Nous avons détecté un certain nombre de connexions en échec pour le compte (!!where!!) : !!login!! (avec l'adresse ip suivante : !!ip!!).<br />Si ces tentatives sont récurrentes, merci de bloquer cette adresse IP ou d'informer l'utilisateur concerné.<br />]]></entry>
+<entry code="notify_login_failed_title_for_user">[Sécurité] Tentative de connexion détectée sur votre compte !</entry>
+<entry code="notify_login_failed_content_for_user"><![CDATA[Bonjour,<br /><br />Nous avons détecté un certain nombre de connexions en échec sur votre compte.<br />Si vous n'êtes pas à l'origine de ces tentatives de connexion, la sécurité de votre compte est peut-être compromise.<br /><br />Merci de contacter votre administrateur.]]></entry>
 </XMLlist>

@@ -1,36 +1,32 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_item.tpl.php,v 1.25 2018-09-26 14:59:56 mbertin Exp $
-
+// $Id: onto_common_item.tpl.php,v 1.36.2.1.2.2 2025/03/05 10:20:03 rtigero Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $ontology_tpl,$msg,$base_path,$ontology_id, $pmb_form_authorities_editables, $PMBuserid;
+global $ontology_tpl,$msg,$base_path,$ontology_id, $PMBuserid;
 
 $ontology_tpl['form_body'] = '
 <script type="text/javascript" src="./javascript/ajax.js"></script>
 <script type="text/javascript">
-	require(["dojo/ready", "apps/pmb/gridform/FormEdit"], function(ready, FormEdit){
+	require(["dojo/ready", "apps/pmb/gridform/OntoFormEdit"], function(ready, OntoFormEdit){
 	     ready(function(){
-	     	new FormEdit();
+           	new OntoFormEdit();
 	     });
 	});
 </script>
-<form id="!!onto_form_id!!" name="!!onto_form_name!!" method="POST" action="!!onto_form_action!!" class="form-autorites" onSubmit="return false;">
+<form id="!!onto_form_id!!" name="!!onto_form_name!!" method="POST" action="!!onto_form_action!!" class="form-autorites" onSubmit="return false;" data-advanced-form="true">
 	<input type="hidden" name="item_uri" value="!!uri!!"/>
 	<input type="hidden" name="save_and_create_concept" id="save_and_create_concept" value=""/>		
 	<div class="left">
 		<h3>!!onto_form_title!!</h3>
 	</div>
 	<div class="right">';
-if ($PMBuserid==1 && $pmb_form_authorities_editables==1){
+if ($PMBuserid==1){
 	$ontology_tpl['form_body'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_edit_format'].'" id="bt_inedit"/>';
 }
-if ($pmb_form_authorities_editables==1) {
-	$ontology_tpl['form_body'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_origin_format'].'" id="bt_origin_format"/>';
-}
-$ontology_tpl['form_body'] .= '
+$ontology_tpl['form_body'] .='
 	</div>
 	<div id="form-contenu">
 		<div class="row">&nbsp;</div>
@@ -43,8 +39,6 @@ $ontology_tpl['form_body'] .= '
 		!!onto_form_history!!
 		&nbsp;
 		!!onto_form_submit!!
-		&nbsp;
-		!!onto_form_save_and_create_concept!!
 	</div>
 	<div class="right">
 		!!onto_form_delete!!
@@ -54,51 +48,24 @@ $ontology_tpl['form_body'] .= '
 !!onto_form_scripts!!
 ';
 
-$ontology_tpl['form_body_grid'] = '
-<script type="text/javascript" src="./javascript/ajax.js"></script>
-<script type="text/javascript">
-	require(["dojo/ready", "apps/contribution_area/ContributionFormEdit", "dojo/dom" ], function(ready, ContributionFormEdit, dom){
-	     ready(function(){
-	     	new ContributionFormEdit();
-	     });
-	});
-</script>
-<form class="form-autorites" onSubmit="return false;">
-	<input type="hidden" id="return_url" name="return_url" value="!!return_url!!"/>	
-	<div class="left">
-		<h3>!!onto_form_title!!</h3>
-	</div>
-	<div class="right">';
-if ($PMBuserid==1 && $pmb_form_authorities_editables==1){
-	$ontology_tpl['form_body_grid'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_edit_format'].'" id="bt_inedit"/>';
-}
-if ($pmb_form_authorities_editables==1) {
-	$ontology_tpl['form_body_grid'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_origin_format'].'" id="bt_origin_format"/>';
-}
-$ontology_tpl['form_body_grid'] .= '
-	</div>
-	<div id="form-contenu">
-		<div class="row">&nbsp;</div>
-		<div id="zone-container">
-			!!onto_form_content!!
-		</div>
-	</div>
-	<div class="row">&nbsp;</div>
-	<div class="left">
-		!!onto_form_save!!
-		&nbsp;
-		!!onto_form_back!!
-	</div>
-	<div class="row"></div>
-</form>
-!!onto_form_scripts!!
-';
 
 $ontology_tpl['form_scripts'] = '
 <script type="text/javascript" src="'.$base_path.'/javascript/ajax.js"></script>
 <script type="text/javascript">
+	require(["dojo/ready", "apps/pmb/form/FormController"], function(ready, FormController){
+	     ready(function(){
+	     	new FormController();
+	     });
+	});
+			
 	!!onto_datasource_validation!!
-	function submit_onto_form() {
+	function submit_onto_form() {		
+		if (check_onto_form()) {
+			document.forms["!!onto_form_name!!"].submit();
+		}
+	}	
+	
+	function check_onto_form() {
 		var error_message = "";
 		for (var i in validations) {
 			if (!validations[i].check()) {
@@ -107,11 +74,10 @@ $ontology_tpl['form_scripts'] = '
 		}
 		if (error_message != "") {
 			alert(error_message);
-		} else {
-			document.forms["!!onto_form_name!!"].submit();
-		}
-	}	
-		
+            return false;
+		} 
+        return true;
+	}				
 	!!onto_form_del_script!!
 	function onto_add_card(element_name,max_card){
 		//La langue choisi et son libelle
@@ -199,7 +165,7 @@ $ontology_tpl['form_scripts'] = '
 		}
 		input_available_lang.value=JSON.stringify(available_lang);
 		
-		//on modifi le combobox lang pour vÃ©rifier et ajouter si besoin la langue de la ligne supprimÃ©e
+		//on modifi le combobox lang pour vérifier et ajouter si besoin la langue de la ligne supprimée
 		for(var i in available_lang){
 			var add=true;
 			for(var j in combobox_lang.options){
@@ -366,6 +332,10 @@ $ontology_tpl['form_scripts'] = '
 			console.log(e);
 		}
 	}
+';
+
+$ontology_tpl['form_scripts'] .= '
+	const tabTokens_onto_item = !!tokens_csrf!!;
 	function onto_check_lnk(element){
 		var prefixId = element.id.split("value")[0];
 		var link = element;
@@ -377,16 +347,18 @@ $ontology_tpl['form_scripts'] = '
 				document.getElementById(prefixId+"picto").removeChild(document.getElementById(prefixId+"picto").firstChild);
 			}
 			document.getElementById(prefixId+"picto").appendChild(wait);
+			var csrf_token = tabTokens_onto_item[0];
+			tabTokens_onto_item.splice(0, 1);
 			var testlink = encodeURIComponent(link.value);
- 			var check = new http_request();
-			if(check.request("./ajax.php?module=ajax&categ=chklnk",true,"&timeout=10&link="+testlink)){
+			var check = new http_request();
+			if(check.request("./ajax.php?module=ajax&categ=chklnk",true,"&timeout=10&link="+testlink+"&csrf_token="+csrf_token)){
 				alert(check.get_text());
 			}else{
 				var result = check.get_text();
 				var type_status=result.substr(0,1);
 				var img = document.createElement("img");
 				var src="";
-			    if(type_status == "2" || type_status == "3"){
+				if(type_status == "2" || type_status == "3"){
 					if((link.value.substr(0,7) != "http://") && (link.value.substr(0,8) != "https://")) link.value = "http://"+link.value;
 					//impec, on print un petit message de confirmation
 					src = "'.get_url_icon('tick.gif').'";
@@ -404,6 +376,9 @@ $ontology_tpl['form_scripts'] = '
 			}
 		}
 	}
+';
+$ontology_tpl['form_scripts'] = '
+<script type="text/javascript">
 	function onto_add_pmb_selector(element_name){
 		var containerDiv = document.createElement("div");
 		var currentIndex = document.getElementById(element_name+"_max_field").getAttribute("value");
@@ -452,14 +427,14 @@ $ontology_tpl['form_scripts'] = '
 		
 			var closureName = subSplit.join("_");
 			
-			if(typeof window[closureName] != "function"){ //CrÃ©ation d une closure Ã  la volÃ©e 
+			if(typeof window[closureName] != "function"){ //Création d une closure à la volée 
 				window[closureName] = function(){
 					onto_add_pmb_selector(element_name.substr(0,element_name.length-1));
 				}
 			}
 
 			var cardCheckerClosure = subSplit.join("_")+"_card";
-			if(typeof window[cardCheckerClosure] != "function"){ //CrÃ©ation d une closure de vÃ©rification de cardinalitÃ© Ã  la volÃ©e
+			if(typeof window[cardCheckerClosure] != "function"){ //Création d une closure de vérification de cardinalité à la volée
 				window[cardCheckerClosure] = function(id_to_check){
 					onto_pmb_selector_card_checker(element_name.substr(0,element_name.length-1));
 				}
@@ -489,7 +464,7 @@ $ontology_tpl['form_scripts'] = '
 		var minCard = parseInt(document.getElementById(elt+"_min").value);
 		var maxCard = parseInt(document.getElementById(elt+"_max").value);
 		var nbElt = parseInt(document.getElementById(elt+"_max_field").value);
-		if((maxCard != -1) && (nbElt > maxCard)){ //Plus dÃ©lÃ©ment que lon peut en mettre
+		if((maxCard != -1) && (nbElt > maxCard)){ //Plus délément que lon peut en mettre
 			alert("'.$msg["onto_onto_pmb_datatype_resource_pmb_selector_card_error"].'");
 			var nodeToDelete = document.getElementById(elt+parseInt(nbElt-1));
 			nodeToDelete.parentNode.removeChild(nodeToDelete);
@@ -596,6 +571,93 @@ $ontology_tpl['form_scripts'] = '
 	function onto_del_first_file(element_name,element_order){
 		
 	}
+
+    function onto_add_link(element_name, element_order) {
+        var new_order = 0;
+        var newOrderNode = document.getElementById(element_name+"_new_order");
+        if (newOrderNode) {
+            new_order = parseInt(newOrderNode.value) + 1;
+            newOrderNode.value = new_order;
+        } else {
+            console.error(`#{$element_name+"_new_order"} not fond!`);
+        } 
+        
+        var parent = document.getElementById(element_name);
+        if (parent) {
+            
+            //div container
+            var new_container = document.createElement("div");
+            new_container.setAttribute("id",element_name+"_"+new_order);
+            new_container.setAttribute("class","row");
+            
+            //check link
+            var old_check_node = document.getElementById(element_name+"_"+element_order+"_lien_check");
+            if (old_check_node) {
+                var check_link = old_check_node.cloneNode(false);
+                check_link.setAttribute("id",element_name+"_"+new_order+"_lien_check");
+                check_link.innerHTML = "";
+                
+                new_container.appendChild(check_link);
+            } else {
+                console.error(`#{$element_name+"_"+element_order+"_lien_check"} not fond!`);
+            }
+            
+            //input pour la valeur
+            var old_value_node = document.getElementById(element_name+"_"+element_order+"_value");
+            if (old_value_node) {
+                var input_value = old_value_node.cloneNode(false);
+                input_value.setAttribute("id",element_name+"_"+new_order+"_value");
+                input_value.setAttribute("name",element_name+"["+new_order+"][value]");
+                input_value.value = "";
+                
+                new_container.appendChild(input_value);
+            } else {
+                console.error(`#{$element_name+"_"+element_order+"_value"} not fond!`);
+            }
+                        
+            // input de type
+            var old_type_node = document.getElementById(element_name+"_"+element_order+"_type");
+            if (old_type_node) {
+                var input_type = old_type_node.cloneNode(false);
+                input_type.setAttribute("id",element_name+"_"+new_order+"_type");
+                input_type.setAttribute("name",element_name+"["+new_order+"][type]");
+                
+                new_container.appendChild(input_type);
+            } else {
+                console.error(`#{$element_name+"_"+element_order+"_type"} not fond!`);
+            } 
+            
+            // open link
+            var old_open_link = document.getElementById(element_name+"_"+element_order+"_open_link");
+            if (old_open_link) {
+                var open_link = old_open_link.cloneNode(false);
+                open_link.setAttribute("id",element_name+"_"+new_order+"_open_link");
+                
+                new_container.appendChild(document.createTextNode(" "));
+                new_container.appendChild(open_link);
+            } else {
+                console.error(`#{$element_name+"_"+element_order+"_open_link"} not fond!`);
+            } 
+            
+            // add link
+            var add_link = document.getElementById(element_name+"_add_text_link");
+            if (add_link) {
+                add_link.setAttribute("data-element-order", new_order);
+                
+                new_container.appendChild(document.createTextNode(" "));
+                new_container.appendChild(add_link);
+            } else {
+                console.error(`#{$element_name+"_add_text_link"} not fond!`);
+            } 
+            
+            parent.appendChild(new_container);
+            return true;
+        } else {
+            console.error(`#{$element_name} not fond!`);
+        }
+        
+        return true;
+    }
 					
 </script>
 <script>
@@ -605,6 +667,6 @@ $ontology_tpl['form_scripts'] = '
 </script>';
 
 $ontology_tpl['form_movable_div'] = '
-<div id="el0Child_!!movable_index!!" class="row" movable="yes" title="!!movable_property_label!!">
+<div id="el0Child_!!movable_index!!" class="row" movable="yes" title="!!movable_property_label!!" data-pmb-propertyname="!!property_name!!">
 	!!datatype_ui_form!!
 </div>';

@@ -1,16 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_licence_profile.class.php,v 1.8 2019-01-31 14:28:08 ngantier Exp $
+// $Id: explnum_licence_profile.class.php,v 1.11 2023/07/13 11:49:21 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
+require_once($class_path.'/interface/admin/interface_admin_docnum_licence_form.class.php');
 require_once($include_path.'/templates/explnum_licence/explnum_licence_profile.tpl.php');
 require_once($class_path.'/translation.class.php');
 
 /**
- * Classe de gestion des profils de rÃ©gimes de licence
+ * Classe de gestion des profils de régimes de licence
  * @author apetithomme, vtouchard
  *
  */
@@ -22,7 +24,7 @@ class explnum_licence_profile {
 	protected $id;
 	
 	/**
-	 * LibellÃ© du profil de rÃ©gime de licence
+	 * Libellé du profil de régime de licence
 	 * @var string
 	 */
 	protected $label;
@@ -34,13 +36,13 @@ class explnum_licence_profile {
 	protected $uri;
 	
 	/**
-	 * Droits associÃ©s
+	 * Droits associés
 	 * @var explnum_licence_right
 	 */
 	protected $rights;
 	
 	/**
-	 * Identifiant du rÃ©gime de licence
+	 * Identifiant du régime de licence
 	 * @var int $explnum_licence_num
 	 */
 	protected $explnum_licence_num;
@@ -64,35 +66,53 @@ class explnum_licence_profile {
 	protected $quotation_rights;
 	
 	public function __construct($id = 0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
+	}
+	
+	public function get_content_form() {
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('explnum_licence_profile_label', 'docnum_statut_libelle')
+		->add_input_node('text', $this->get_label())
+		->set_attributes(array('data-translation-fieldname'=> 'explnum_licence_profile_label'));
+		$interface_content_form->add_element('explnum_licence_profile_uri', 'explnum_licence_uri')
+		->add_input_node('text', $this->get_uri())
+		->set_attributes(array('data-translation-fieldname'=> 'explnum_licence_profile_uri'));
+		$interface_content_form->add_element('explnum_licence_profile_logo_url', 'explnum_licence_logo_url')
+		->add_input_node('text', $this->get_logo_url())
+		->set_attributes(array('data-translation-fieldname'=> 'explnum_licence_profile_logo_url'));
+		$interface_content_form->add_element('explnum_licence_profile_explanation', 'explnum_licence_explanation')
+		->add_textarea_node($this->get_explanation())
+		->set_attributes(array('data-translation-fieldname'=> 'explnum_licence_profile_explanation'));
+		
+		$interface_content_form->add_element('explnum_licence_profile_quotation_rights_vars', 'explnum_licence_profile_quotation_rights', 'flat')
+		->add_html_node($this->get_quotation_variables_selector());
+
+		$interface_content_form->add_element('explnum_licence_profile_quotation_rights')
+		->add_textarea_node($this->get_quotation_rights())
+		->set_attributes(array('data-translation-fieldname'=> 'explnum_licence_profile_quotation_rights'));
+		
+		$interface_content_form->add_element('explnum_licence_profile_linked_rights', 'explnum_licence_profile_linked_rights')
+		->add_html_node($this->generate_rights_checkboxes());
+		return $interface_content_form->get_display();
 	}
 	
 	public function get_form() {
-		global $admin_explnum_licence_profile_form, $msg, $charset;
+		global $msg;
 		
-		$form = $admin_explnum_licence_profile_form;
-		$form = str_replace('!!id!!', $this->id, $form);
-		$form = str_replace('!!explnum_licence_id!!', $this->explnum_licence_num, $form);
-		
+		$interface_form = new interface_admin_docnum_licence_form('explnumlicenceprofileform');
 		if(!$this->id){
-			$form = str_replace('!!form_title!!', $msg['explnum_licence_profile_new'], $form);
-			$form = str_replace('!!bouton_supprimer!!', '', $form);
+			$interface_form->set_label($msg['explnum_licence_profile_new']);
 		}else{
-			$form = str_replace('!!form_title!!', $msg['explnum_licence_profile_edit'], $form);
-			$form = str_replace('!!bouton_supprimer!!', '<input type="button" class="bouton" value="'.$msg['63'].'" onclick="if (confirm(\''.addslashes($msg['explnum_licence_profile_confirm_delete']).'\')) {document.location=\'./admin.php?categ=docnum&sub=licence&action=settings&id='.$this->explnum_licence_num.'&what=profiles&profileaction=delete&profileid='.$this->id.'\'}" />', $form);
+			$interface_form->set_label($msg['explnum_licence_profile_edit']);
 		}
-		$form = str_replace('!!explnum_licence_profile_label!!', $this->get_label(), $form);
-		$form = str_replace('!!explnum_licence_profile_uri!!', $this->get_uri(), $form);
-		$form = str_replace('!!explnum_licence_profile_logo_url!!', $this->get_logo_url(), $form);
-		$form = str_replace('!!explnum_licence_profile_explanation!!', $this->get_explanation(), $form);
-		$form = str_replace('!!explnum_licence_profile_quotation_rights!!', $this->get_quotation_rights(), $form);
-		$form = str_replace('!!quotation_variable_selector!!', $this->get_quotation_variables_selector(), $form);
-		$form = str_replace('!!explnum_licence_profile_linked_rights!!', $this->generate_rights_checkboxes(), $form);
-		
-		$translation = new translation($this->id, 'explnum_licence_profiles');
-		$form .= $translation->connect('explnumlicenceprofileform');
-		
-		return $form;
+		$interface_form->set_object_id($this->id)
+		->set_what('profiles')
+		->set_num_explnum_licence($this->explnum_licence_num)
+		->set_confirm_delete_msg($msg['explnum_licence_profile_confirm_delete'])
+		->set_content_form($this->get_content_form())
+		->set_table_name('explnum_licence_profiles')
+		->set_field_focus('explnum_licence_profile_label');
+		return $interface_form->get_display();
 	}
 	
 	protected function get_quotation_variables() {
@@ -113,7 +133,7 @@ class explnum_licence_profile {
 	}
 	
 	protected function get_quotation_variables_selector() {
-		global $msg, $admin_explnum_licence_quotation_variable_selector, $admin_explnum_licence_quotation_variable_selector_option;
+		global $admin_explnum_licence_quotation_variable_selector, $admin_explnum_licence_quotation_variable_selector_option;
 		// ISBD notice, permalink, auteur
 		$variables = $this->get_quotation_variables();
 		
@@ -130,7 +150,7 @@ class explnum_licence_profile {
 		return $selector;
 	}
 	
-	public function get_values_from_form(){
+	public function set_properties_from_form(){
 		global $explnum_licence_profile_label, $explnum_licence_profile_uri, $explnum_licence_profile_logo_url;
 		global $explnum_licence_profile_explanation, $explnum_licence_profile_quotation_rights, $explnum_licence_profile_rights;
 		
@@ -237,7 +257,7 @@ class explnum_licence_profile {
 	}
 	
 	public function set_explnum_licence_num($explnum_licence_num) {
-		$this->explnum_licence_num = $explnum_licence_num*1;
+		$this->explnum_licence_num = intval($explnum_licence_num);
 		return $this;
 	}
 	
@@ -311,6 +331,13 @@ class explnum_licence_profile {
 			$this->fetch_data();
 		}
 		return $this->uri;
+	}
+	
+	public function get_explnum_licence_num() {
+		if (!isset($this->explnum_licence_num)) {
+			$this->fetch_data();
+		}
+		return $this->explnum_licence_num;
 	}
 	
 	public function get_explanation(){

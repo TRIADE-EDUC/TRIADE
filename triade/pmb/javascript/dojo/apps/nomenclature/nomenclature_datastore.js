@@ -1,12 +1,12 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_datastore.js,v 1.15 2016-02-26 14:52:26 dgoron Exp $
+// $Id: nomenclature_datastore.js,v 1.15 2016/02/26 14:52:26 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase"], function(declare, _WidgetBase){
 	/*
-	 *Classe nomenclature_datastore. Classe sotckant les diffÃ©rentes propriÃ©tÃ©s dÃ©finies en administration pour les nomenclatures
+	 *Classe nomenclature_datastore. Classe sotckant les différentes propriétés définies en administration pour les nomenclatures
 	 */
 	  return declare("nomenclature_datastore",[_WidgetBase], {
 		  	formations_datastore:null,

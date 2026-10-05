@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: demandes_notices.class.php,v 1.7 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: demandes_notices.class.php,v 1.9 2021/12/27 12:52:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class demandes_notices {
 	
-	static function majNoticesTotal($notice){	
+	public static function majNoticesTotal($notice){	
 		$info=self::indexation_prepare($notice);
 		self::majNotices($notice);
 		self::majNoticesGlobalIndex($notice);
@@ -16,7 +16,7 @@ class demandes_notices {
 		self::indexation_restaure($info);
 	}
 	
-	static function indexation_prepare($notice){
+	public static function indexation_prepare($notice){
 		global $lang,$include_path;
 		global $pmb_indexation_lang;
 		global $empty_word;
@@ -46,7 +46,7 @@ class demandes_notices {
 		}
 	}
 	
-	static function majNotices($notice){
+	public static function majNotices($notice){
 		global $pmb_keyword_sep;
 		if($notice){
 			$query = pmb_mysql_query("SELECT notice_id,tparent_id,tit1,tit2,tit3,tit4,index_l, n_gen, n_contenu, n_resume, tnvol, indexation_lang FROM notices WHERE notice_id='".$notice."'");
@@ -70,19 +70,15 @@ class demandes_notices {
 				$req_update .= ", index_n_resume='".addslashes($ind_n_resume)."'";
 				$req_update .= ", index_matieres='".addslashes($ind_matieres)."'";
 				$req_update .= " WHERE notice_id=$row->notice_id ";
-				$update = pmb_mysql_query($req_update);
-	
+				pmb_mysql_query($req_update);
 				pmb_mysql_free_result($query);
-					
 			}
 		}
 	}
 	
-	static function majNoticesGlobalIndex($notice, $NoIndex = 1) {
-		global $dbh;
-			
-		pmb_mysql_query("delete from notices_global_index where num_notice = ".$notice." AND no_index = ".$NoIndex,$dbh);
-		$titres = pmb_mysql_query("select index_serie, tnvol, index_wew, index_sew, index_l, index_matieres, n_gen, n_contenu, n_resume, index_n_gen, index_n_contenu, index_n_resume, eformat, niveau_biblio from notices where notice_id = ".$notice, $dbh);
+	public static function majNoticesGlobalIndex($notice, $NoIndex = 1) {
+		pmb_mysql_query("delete from notices_global_index where num_notice = ".$notice." AND no_index = ".$NoIndex);
+		$titres = pmb_mysql_query("select index_serie, tnvol, index_wew, index_sew, index_l, index_matieres, n_gen, n_contenu, n_resume, index_n_gen, index_n_contenu, index_n_resume, eformat, niveau_biblio from notices where notice_id = ".$notice);
 		$mesNotices = pmb_mysql_fetch_assoc($titres);
 		$tit = $mesNotices['index_wew'];
 		$indTit = $mesNotices['index_sew'];
@@ -102,16 +98,15 @@ class demandes_notices {
 	
 		pmb_mysql_free_result($titres);
 
-		pmb_mysql_query("insert into notices_global_index SET num_notice=".$notice.",no_index =".$NoIndex.", infos_global='".addslashes($infos_global)."', index_infos_global='".addslashes($infos_global_index)."'" , $dbh);
+		pmb_mysql_query("insert into notices_global_index SET num_notice=".$notice.",no_index =".$NoIndex.", infos_global='".addslashes($infos_global)."', index_infos_global='".addslashes($infos_global_index)."'" );
 	}
 	
-	static function majNoticesMotsGlobalIndex($notice, $datatype='all') {
+	public static function majNoticesMotsGlobalIndex($notice, $datatype='all') {
 		global $include_path;
-		global $dbh;
 		global $lang;
 		global $indexation_lang;
 			
-		//Uniquement les champs nÃ©cessaires
+		//Uniquement les champs nécessaires
 		$tableau = array();
 		$tableau["REFERENCE"][0]["value"]="notices";
 		$tableau["REFERENCEKEY"][0]["value"]="notice_id";
@@ -168,14 +163,14 @@ class demandes_notices {
 				//champ perso
 				if($tableau['FIELD'][$i]['DATATYPE'] == "custom_field"){
 					$tab_pp[$tableau['FIELD'][$i]['ID']]=$tableau['FIELD'][$i]['TABLE'][0]['value'];
-					//autoritÃ© perso
+					//autorité perso
 				}elseif($tableau['FIELD'][$i]['DATATYPE'] == "authperso"){
 					$tab_authperso[$tableau['FIELD'][$i]['ID']]=$tableau['FIELD'][$i]['TABLE'][0]['value'];
 					$authperso_code_champ_start=$tableau['FIELD'][$i]['ID'];
 					$authpersos = new authperso_notice($notice);
 				}else if ($tableau['FIELD'][$i]['EXTERNAL']=="yes") {
-					//champ externe Ã  la table notice
-					//Stockage de la structure pour un accÃ¨s plus facile
+					//champ externe à la table notice
+					//Stockage de la structure pour un accès plus facile
 					$temp_ext[$tableau['FIELD'][$i]['ID']]=$tableau['FIELD'][$i];
 				} else {
 					//champ de la table notice
@@ -193,7 +188,7 @@ class demandes_notices {
 						$temp_not['f'][0][$tableau['FIELD'][$i]['ID']."_marc"]=$tableau['FIELD'][$i]['TABLE'][0]['TABLEFIELD'][0]['value']." as "."subst_for_marc_".$tableau['FIELD'][$i]['TABLE'][0]['TABLEFIELD'][0]['MARCTYPE'];
 					}
 				}
-				if($tableau['FIELD'][$i]['ISBD']){ // isbd autoritÃ©s
+				if($tableau['FIELD'][$i]['ISBD']){ // isbd autorités
 					$isbd_ask_list[$tableau['FIELD'][$i]['ID']]= array(
 							'champ' => $tableau['FIELD'][$i]['ID'],
 							'ss_champ' => $tableau['FIELD'][$i]['ISBD'][0]['ID'],
@@ -220,7 +215,7 @@ class demandes_notices {
 				//Construction de la requete
 				//Champs pour le select
 				$select=array();
-				//on harmonise les fichiers XML dÃ©crivant des requetes...
+				//on harmonise les fichiers XML décrivant des requetes...
 				for ($i = 0; $i<count($v["TABLE"]); $i++) {
 					$table = $v['TABLE'][$i];
 					$select=array();
@@ -239,7 +234,7 @@ class demandes_notices {
 							$tab_languages[$k]=$table['LANGUAGE'][0]['value'];
 						}
 						$field_name = $table['TABLEFIELD'][$j]["value"];
-						if(strpos(strtolower($table['TABLEFIELD'][$j]["value"])," as ")!== false){//Pour le cas oÃ¹ l'on a besoin de nommer un champ et d'utiliser un alias
+						if(strpos(strtolower($table['TABLEFIELD'][$j]["value"])," as ")!== false){//Pour le cas où l'on a besoin de nommer un champ et d'utiliser un alias
 							$field_name = substr($table['TABLEFIELD'][$j]["value"],strpos(strtolower($table['TABLEFIELD'][$j]["value"])," as ")+4);
 						}elseif(strpos($table['TABLEFIELD'][$j]["value"],".")!== false){
 							$field_name = substr($table['TABLEFIELD'][$j]["value"],strpos($table['TABLEFIELD'][$j]["value"],".")+1);
@@ -340,7 +335,7 @@ class demandes_notices {
 					if($use_word){
 						$tab_req[$k]["new_rqt"]['rqt'][]=$query;
 					}
-					if($isbd_ask_list[$k]){ // isbd  => memo de la requete pour retrouver les id des autoritÃ©s
+					if($isbd_ask_list[$k]){ // isbd  => memo de la requete pour retrouver les id des autorités
 						$id_aut=$table['NAME'].".".$table["TABLEKEY"][0]['value'];
 						$req="select $id_aut as id_aut_for_isbd from notices".$jointure.$where;
 						$isbd_tab_req[]=$req;
@@ -350,7 +345,7 @@ class demandes_notices {
 				if($use_word){
 					$tab_req[$k]["rqt"] = implode(" union ",$tab_req[$k]["new_rqt"]['rqt']);
 				}
-				if($isbd_ask_list[$k]){ // isbd  => memo de la requete pour retrouver les id des autoritÃ©s
+				if($isbd_ask_list[$k]){ // isbd  => memo de la requete pour retrouver les id des autorités
 					$req=implode(" union ",$isbd_tab_req);
 					$isbd_ask_list[$k]['req']=  $req;
 				}
@@ -359,18 +354,18 @@ class demandes_notices {
 			//qu'est-ce qu'on efface?
 			if($datatype=='all') {
 				$req_del="delete from notices_mots_global_index where id_notice='".$notice."' ";
-				pmb_mysql_query($req_del,$dbh);
+				pmb_mysql_query($req_del);
 				//la table pour les recherche exacte
 				$req_del="delete from notices_fields_global_index where id_notice='".$notice."' ";
-				pmb_mysql_query($req_del,$dbh);
+				pmb_mysql_query($req_del);
 			}else{
 				foreach ( $tab_code_champ as $subfields ) {
 					foreach($subfields as $subfield){
 						$req_del="delete from notices_mots_global_index where id_notice='".$notice."' and code_champ='".$subfield['champ']."'";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 						//la table pour les recherche exacte
 						$req_del="delete from notices_fields_global_index where id_notice='".$notice."' and code_champ='".$subfield['champ']."'";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 						break;
 					}
 				}
@@ -379,22 +374,22 @@ class demandes_notices {
 				if(count($tab_pp)){
 					foreach ( $tab_pp as $id ) {
 						$req_del="delete from notices_mots_global_index where id_notice='".$notice."' and code_champ=100 and code_ss_champ='".$id."' ";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 						//la table pour les recherche exacte
 						$req_del="delete from notices_fields_global_index where id_notice='".$notice."' and code_champ=100 and code_ss_champ='".$id."' ";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 					}
 				}
-				//Les autoritÃ©s perso
+				//Les autorités perso
 				if(count($tab_authperso)){
 					$authperso_fields=$authpersos->get_index_fields_to_delete();
 					foreach ( $authperso_fields as $code_champ ) {
 						$code_champ+=$authperso_code_champ_start;
 						$req_del="delete from notices_mots_global_index where id_notice='".$notice."' and code_champ=$code_champ ";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 						//la table pour les recherche exacte
 						$req_del="delete from notices_fields_global_index where id_notice='".$notice."' and code_champ=$code_champ ";
-						pmb_mysql_query($req_del,$dbh);
+						pmb_mysql_query($req_del);
 					}
 				}
 			}
@@ -403,7 +398,7 @@ class demandes_notices {
 			$tab_insert=array();
 			$tab_field_insert=array();
 			foreach($tab_req as $k=>$v) {
-				$r=pmb_mysql_query($v["rqt"],$dbh);
+				$r=pmb_mysql_query($v["rqt"]);
 	
 				$tab_mots=array();
 				$tab_fields=array();
@@ -541,7 +536,7 @@ class demandes_notices {
 			if(count($tab_pp)){
 				foreach ( $tab_pp as $code_champ => $table ) {
 					$p_perso=new parametres_perso($table);
-					//on doit retrouver l'id des elÃ©ments...
+					//on doit retrouver l'id des eléments...
 					switch($table){
 						case "expl" :
 							$rqt = "select expl_id from notices join exemplaires on expl_notice = notice_id and expl_notice!=0 where notice_id = $notice union select expl_id from notices join bulletins on num_notice = notice_id join exemplaires on expl_bulletin = bulletin_id and expl_bulletin != 0 where notice_id = $notice";
@@ -611,7 +606,7 @@ class demandes_notices {
 					}
 				}
 			}
-			//Les autoritÃ©s perso
+			//Les autorités perso
 			if(count($tab_authperso)){
 				$order_fields=1;
 				$index_fields=$authpersos->get_index_fields($notice);
@@ -663,7 +658,7 @@ class demandes_notices {
 			}
 	
 			if(count($isbd_ask_list)){
-				// Les isbd d'autoritÃ©s
+				// Les isbd d'autorités
 				foreach($isbd_ask_list as $infos){
 					$isbd_s=array(); // cumul des isbd
 		
@@ -767,18 +762,18 @@ class demandes_notices {
 	
 			if(count($tab_insert)){
 				$req_insert="insert ignore into notices_mots_global_index(id_notice,code_champ,code_ss_champ,num_word,pond,position, field_position) values ".implode(',',$tab_insert);
-				pmb_mysql_query($req_insert,$dbh);
+				pmb_mysql_query($req_insert);
 			}
 			if(count($tab_field_insert)){
 				//la table pour les recherche exacte
 				$req_insert="insert ignore into notices_fields_global_index(id_notice,code_champ,code_ss_champ,ordre,value,lang,pond,authority_num) values ".implode(',',$tab_field_insert);
-				pmb_mysql_query($req_insert,$dbh);
+				pmb_mysql_query($req_insert);
 			}
 	
 		}
 	}
 		
-	static function indexation_restaure($info){
+	public static function indexation_restaure($info){
 		global $lang;
 		global $pmb_indexation_lang;
 		global $empty_word;

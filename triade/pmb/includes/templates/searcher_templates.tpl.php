@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_templates.tpl.php,v 1.47 2019-05-27 13:06:42 btafforeau Exp $
+// $Id: searcher_templates.tpl.php,v 1.48 2020/02/05 08:09:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -35,7 +35,7 @@ if ($param_rfid_activate && $pmb_rfid_activate && $pmb_rfid_serveur_url ) {
 			setTimeout(\"init_rfid_read_cb(0,f_expl);\",0);
 		
 			function f_expl(cb) {
-				// il y a une ou plusieurs Ã©tiquette rfid
+				// il y a une ou plusieurs étiquette rfid
 				if( cb.length>0) {			
 					document.getElementById('ex_query').value=cb[0];
 					document.NOTICE_author_query.submit();
@@ -235,7 +235,7 @@ $search_form_categ = "
 			<label for='f_indexint' class='etiquette'>".$msg['indexint_catal_title']."</label>
 			</div>
 		<div class='row'>
-			<input type='text' class='saisie-50em' name='search_indexint' value=\"".htmlentities(stripslashes($search_indexint),ENT_QUOTES,$charset)."\" size='54' onChange=\"this.form.search_indexint_id.value='0';\"/>
+			<input type='text' class='saisie-50em' id='search_indexint' name='search_indexint' completion='indexint' autocomplete='off' autfield='search_indexint_id' value=\"".htmlentities(stripslashes($search_indexint),ENT_QUOTES,$charset)."\" size='54' onKeyUp=\"this.form.search_indexint_id.value='0';\"/>
 			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=indexint&caller=subject_search_form&param1=search_indexint_id&param2=search_indexint&parent=0&bt_ajouter=no', 'selector')\" />
 			<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.search_indexint.value=''; this.form.search_indexint_id.value='0'; \" />
 			<input type='hidden' id='search_indexint_id' name='search_indexint_id' value='".htmlentities(stripslashes($search_indexint_id),ENT_QUOTES,$charset)."' />
@@ -248,8 +248,10 @@ $search_form_categ = "
 		</div>
 		<input type='hidden' name='etat' value='first_search'/>
 	</form>
+	<script type='text/javascript' src='".$base_path."/javascript/ajax.js'></script>
 	<script type='text/javascript'>
 		document.forms['subject_search_form'].elements['search_subject'].focus();
+		ajax_parse_dom();
 		</script>
 	<br />";
 	$browser="
@@ -336,7 +338,7 @@ $search_form_categ = "
 	<br />";
 	$browser_authperso="<iframe name=\"authperso_browser\" frameborder=\"0\" scrolling=\"yes\" width=\"100%\" height=\"300\" src=\"!!browser_url!!\">";
 	
-	//GÃ©olocalisation
+	//Géolocalisation
 	$search_form_map = "
 	<script src='javascript/ajax.js'></script>
 	<script type='text/javascript'>

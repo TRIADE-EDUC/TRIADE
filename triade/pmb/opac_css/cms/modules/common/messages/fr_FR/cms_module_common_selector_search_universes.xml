@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_search_universes.xml,v 1.1 2020/09/14 13:10:52 moble Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_search_universes_choice">Choisissez un ou plusieurs univers</entry>
+	<entry code="cms_module_common_selector_search_universes_no_universe">Aucun univers disponible</entry>
+</XMLlist>

@@ -1,13 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc.inc.php,v 1.9 2019-06-04 09:24:32 ngantier Exp $
+// $Id: serialcirc.inc.php,v 1.12 2023/08/02 06:21:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $include_path, $msg;
+
 if(!isset($actions_form_submit)) $actions_form_submit = '';
 if(!isset($action)) $action = '';
+if(!isset($expl_to_hold)) $expl_to_hold = '';
+if(!isset($expl_to_point)) $expl_to_point = '';
 
 require_once($class_path."/serialcirc_empr.class.php");
 require_once($class_path."/serialcirc_diff.class.php");
@@ -18,7 +22,7 @@ if(!isset($expl_id)) $expl_id = '';
 $serialcirc_empr = new serialcirc_empr();
 switch ($lvl){
 	case "add_resa" :
-		print "<h3><span>".htmlentities($msg["serialcirc_add_resa"],ENT_QUOTES,$charset)."</span></h3>";
+		print common::format_title($msg["serialcirc_add_resa"]);
 		if($expl_to_hold != ""){
 			if(!$serialcirc_empr->hold_expl($expl_to_hold)){
 				print $serialcirc_empr->get_holding_form();	
@@ -28,7 +32,7 @@ switch ($lvl){
 		}
 		break;	
 	case "point" :
-		print "<h3><span>".htmlentities($msg["serialcirc_checkpoint"],ENT_QUOTES,$charset)."</span></h3>";
+		print common::format_title($msg["serialcirc_checkpoint"]);
 		if($expl_to_point != ""){
 			if(!$serialcirc_empr->point_expl($expl_to_point)){
 				print $serialcirc_empr->get_point_form();	
@@ -42,7 +46,7 @@ switch ($lvl){
 		break;
 	case "list_virtual_abo" :
 		$virtual_serialcirc = serialcirc_empr::get_virtual_abo();
-		print "<h3><span>".htmlentities($msg['serialcirc_list_asked_abo']."(".$nb_virtual.")",ENT_QUOTES,$charset)."</span></h3>";
+		print common::format_title($msg['serialcirc_list_asked_abo']."(".$nb_virtual.")");
 		for($i=0 ; $i<count($virtual_serialcirc) ; $i++){
 			if($action == "ask_copy"){
 				if($expl_id == $virtual_serialcirc[$i]->num_expl){
@@ -53,9 +57,9 @@ switch ($lvl){
 		}
 		break;
 	case "copy" :
-		print "<h3><span>".htmlentities($msg["serialcirc_ask_copy"],ENT_QUOTES,$charset)."</span></h3>";
+		print common::format_title($msg["serialcirc_ask_copy"]);
 		if($action == "ask_copy"){
-			if($bulletin_id != 0){
+			if(!empty($bulletin_id)){
 				$serialcirc_empr->ask_copy($bulletin_id,$serialcirc_ask_copy_analysis,$serialcirc_ask_comment);
 			}else if($expl_cb){			
 				print $serialcirc_empr->show_ask_form($expl_cb);
@@ -72,8 +76,8 @@ switch ($lvl){
 		break;
 	case "list_abo" :
 	default :
-		print "<h3><span>".htmlentities($msg["serialcirc_list_abo"],ENT_QUOTES,$charset)."</span></h3>";
-		//si une action vient d'Ãªtre faites...
+		print common::format_title($msg["serialcirc_list_abo"]);
+		//si une action vient d'être faites...
 		if($action == "unsubscribe"){
 			$unsubscribed = $serialcirc_empr->unsubscribe($unsubscribe_list);
 			print $serialcirc_empr->get_display_save_notification($unsubscribed);

@@ -1,14 +1,18 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_fournisseur.tpl.php,v 1.17 2018-01-24 10:54:46 vtouchard Exp $
+// $Id: sel_fournisseur.tpl.php,v 1.19 2021/01/22 07:43:06 dgoron Exp $
 
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates du sÃ©lecteur fournisseurs
+global $msg, $charset, $base_url;
+global $sel_header, $jscript, $sel_search_form, $fournisseur_form, $sel_footer;
+global $param1, $param2,$param3;
+
+// templates du sélecteur fournisseurs
 
 //-------------------------------------------
 //	$sel_header : header
@@ -23,30 +27,38 @@ $sel_header = "
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
 //-------------------------------------------
-$jscript = "
-<script type='text/javascript'>
-<!--
-function set_parent(f_caller, id_value, raison, adresse){
-	set_parent_value(f_caller,'".$param1."', id_value);
-	set_parent_value(f_caller, '".$param2."', reverse_html_entities(raison));
-	try {
-		set_parent_value(f_caller, '".$param3."', reverse_html_entities(adresse));
-	} catch (err){}
-	closeCurrentEnv();
+if ($dyn==2) {
+	//inspiré de $jscript_common_selector
+	$jscript = $jscript_common_selector;
+	$jscript = str_replace('!!param1!!', $param1, $jscript);
+	$jscript = str_replace('!!param2!!', $param2, $jscript);
+} else {
+	$jscript = "
+	<script type='text/javascript'>
+	<!--
+	function set_parent(f_caller, id_value, raison, adresse){
+		set_parent_value(f_caller,'".$param1."', id_value);
+		set_parent_value(f_caller, '".$param2."', reverse_html_entities(raison));
+		try {
+			set_parent_value(f_caller, '".$param3."', reverse_html_entities(adresse));
+		} catch (err){}
+		closeCurrentEnv();
+	}
+	-->
+	</script>
+	";
 }
--->
-</script>
-";
 
 //-------------------------------------------
 //	$sel_search_form : module de recherche
 //-------------------------------------------
 $sel_search_form ="
 <form name='search_form' method='post' action='$base_url'>
-<input type='text' name='f_user_input' value=\"!!deb_rech!!\">
+<input type='text' name='f_user_input' value=\"!!deb_rech!!\" />
 &nbsp;
+<!-- sel_bibli -->
 <input type='submit' class='bouton_small' value='$msg[142]' />&nbsp;
-!!bouton_ajouter!!
+<!-- bouton_ajouter -->
 </form>
 <script type='text/javascript'>
 <!--

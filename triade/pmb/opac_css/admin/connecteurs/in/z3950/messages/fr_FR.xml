@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.1 2008-01-03 17:23:19 gueluneau Exp $ -->
+$Id: fr_FR.xml,v 1.1 2008/01/03 17:23:19 gueluneau Exp $ -->
 
 <XMLlist>
 	<entry code="z3950_url">Adresse du serveur z39.50</entry>

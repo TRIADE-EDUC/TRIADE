@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,15 +19,22 @@ session_start();
  *
  ***************************************************************************/
 ?>
-<?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
+<?php include_once("./common/config5.inc.php"); include_once("./common/config2.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
+<meta charset="utf-8">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
-<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/menu-tab.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -38,12 +45,33 @@ session_start();
 <script type="text/javascript" src="./librairie_js/scriptaculous.js"></script>
 <script type="text/javascript" src="./librairie_js/ajaxNoteVisu.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtdplanifier.js"></script>
-<script type="text/javascript" src="./librairie_js/ajax-menu-tab.js"></script>
-<script type="text/javascript" src="./librairie_js/menu-tab.js"></script>
-
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
-</head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<style>
+#coulBar0 { background-image: none; }
+/* Override ancien jaune → design 2026 */
+td[bgcolor='yellow'], th[bgcolor='yellow'] {
+  background: #f0f2fa !important;
+  color: #080A66 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  padding: 7px 10px !important;
+}
+/* Override ancien hover tableau */
+tr.tabnormal, tr.tabnormal2 { background: #fff; }
+tr.tabnormal:hover, tr.tabnormal2:hover, tr.tabover { background: #f5f7ff; }
+/* Moderniser bordures anciennes tables */
+table[border="1"] { border-collapse: collapse !important; }
+table[border="1"] td, table[border="1"] th { border: 1px solid #dde0f0 !important; }
+/* Badge status admin */
+.fe-status-wrap { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:8px 0 4px; }
+.fe-status-warn { display:inline-flex; align-items:center; gap:5px; background:#fff3e0; border:1px solid #ffb74d; color:#e65100; border-radius:5px; padding:5px 10px; font-size:11px; font-weight:700; }
+.fe-status-lock { display:inline-flex; align-items:center; gap:5px; background:#fce4e4; border:1px solid #ef9a9a; color:#c62828; border-radius:5px; padding:5px 10px; font-size:11px; font-weight:700; }
+/* Message accès refusé */
+.fe-no-access { text-align:center; padding:20px; font-size:12px; color:#888; font-style:italic; }
+</style>
+</HEAD>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+<script language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</script>
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
@@ -51,14 +79,14 @@ include_once("librairie_php/recupnoteperiode.php");
 $cnx=cnx();
 validerequete("7");
 if ($_SESSION["membre"] == "menupersonnel") {
-	if (!verifDroit($_SESSION["id_pers"],"ficheeleve")) {
+	if ((!verifDroit($_SESSION["id_pers"],"ficheeleve")) && (!verifDroit($_SESSION["id_pers"],"AESH"))) {
 		Pgclose();
 		accesNonReserveFen();
 		exit();
 	}
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
@@ -72,117 +100,149 @@ if (trim($saisie_classe) == "") {
 }
 
 $disabledSMS="disabled";
+$showSMS=false;
+$smsActif=false;
 
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
+	$showSMS=true;
 	if ((LAN == "oui") && (file_exists("./common/config-sms.php"))) {
 		$disabledSMS="";
+		$smsActif=true;
 	}
 }
 
 $disabledprojo="1";
-if (( ((defined("NOTEELEVEVISU")) && (NOTEELEVEVISU == "oui")) && ($_SESSION["membre"] == "menuprof")) || ($_SESSION["membre"] == "menuadmin")||($_SESSION["membre"]=="menupersonnel")) { 
+if (( ((defined("NOTEELEVEVISU")) && (NOTEELEVEVISU == "oui")) && ($_SESSION["membre"] == "menuprof")) || ($_SESSION["membre"] == "menuadmin")||($_SESSION["membre"]=="menupersonnel")) {
 		$disabledprojo="0";
 }
 if ($saisie_classe == "") $saisie_classe=chercheIdClasseDunEleve($id_eleve);
 ?>
 
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%"  bgcolor="#0B3A0C"  height="830">
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<table border="0" cellpadding="3" cellspacing="1" width="100%"  bgcolor="#0B3A0C"  height="1130">
 <tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print LANGPROF26 ?> <font id="color2" ><?php print recherche_eleve($id_eleve);?></font></B></font></td></tr>
 <tr id='cadreCentral0' valign='top' ><td>
 <br>
 
-<table width='100%' border=0>
-<tr>
-<td>
-<form method="post" action="ficheeleve2.php" >
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS250 ?>","rien");</script>
-<input type="hidden" name="sClasseGrp" value="<?php print $saisie_classe?>" />
-<input type="hidden" name="anneeScolaire" value="<?php print anneeScolaireViaIdClasse($saisie_classe) ?>" />
-</form>
-</td><td>
-<form method='get' action="sms-mess.php">
-<script language=JavaScript> buttonMagicSubmit3("<?php print LANGMESS251 ?>","sms","<?php print $disabledSMS?>")</script>
-<input type='hidden' name="eid" value="<?php print  $id_eleve ?>" />
-</form>
-</td><td>
-<script language=JavaScript>buttonMagic2("<?php print LANGPROF38 ?>","profpprojo.php?fiche=1&idClasse=<?php print $saisie_classe?>","video","width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes","<?php print $disabledprojo ?>");</script>
-</td>
-<?php if (($_SESSION["membre"] == "menuadmin")  ||  ((VIESCOLAIREMODIFETUDIANT == "oui") && ($_SESSION["membre"] == "menuscolaire")) ) { ?>
-<td>
-<form method='get' action="modif_eleve.php">
-<script language=JavaScript>buttonMagicSubmit3("<?php print LANGMESS252 ?>","fiche","")</script>
-<input type='hidden' name="eid" value="<?php print  $id_eleve ?>" />
-</form>
-</td>
-<?php } ?>
-</tr>
-<tr><td height='20'></td></tr>
-<?php if ( (CARNETSUIVIPROF == "oui") && ($_SESSION["membre"] == "menuprof"))  { ?>
-	<tr><td><script language=JavaScript>buttonMagic("<?php print LANGMESST392 ?>","carnet_editer.php?sClasseGrp=<?php print $saisie_classe?>","_parent","","");</script></td></tr>
-<?php } ?>
+<?php
+/* ── Calcul des variables admin (avant l'HTML) ── */
+$img = $img2 = $brimg = '';
+$bouton = $bouton2 = $bouton33 = '';
+$inactifval = $probaval = $etatmessagerie = '';
 
-<tr>
-<?php 
-if ($_SESSION["membre"] == "menuadmin") { 
-	$brimg=$img2=$img="";
+if ($_SESSION["membre"] == "menuadmin") {
 	if (isset($_GET["val"])) { inactifEleve($id_eleve,$_GET["val"]); }
 	$inactif=getInactifEleve($id_eleve);
 	if ($inactif == "1") {
 		$bouton=LANGMESS255;
 		$inactifval="0";
-		$img="<font id='color3'><img src='image/commun/warning2.gif' align='center' /><b>".LANGMESST393."</b></font>";
+		$img="<span class='fe-status-warn'><i class='bi bi-exclamation-triangle-fill'></i><b>".LANGMESST393."</b></span>";
 	}else{
 		$bouton=LANGMESS254;
 		$inactifval="1";
 	}
 
 	if (isset($_GET["proba"])) { ProbatoireEleve($id_eleve,$_GET["proba"]); }
-        $inactifProba=getProbaEleve($id_eleve);
-        if ($inactifProba == "1") {
-                $bouton2=LANGMESST395;
-                $probaval="0";
-                $img2="<font id='color3'><img src='image/commun/warning2.gif' align='center' /><b>".LANGMESST394."</b></font>";
-        }else{
+	$inactifProba=getProbaEleve($id_eleve);
+	if ($inactifProba == "1") {
+		$bouton2=LANGMESST395;
+		$probaval="0";
+		$img2="<span class='fe-status-warn'><i class='bi bi-exclamation-triangle-fill'></i><b>".LANGMESST394."</b></span>";
+	}else{
 		$bouton2=LANGMESST396;
-                $probaval="1";
-        }
+		$probaval="1";
+	}
 
+	$etatmessagerie="inactif";
+	$bouton33="Bloquer messagerie";
+	$libelle="acces_mail_$id_eleve";
+	if (isset($_GET['messagerie'])) {
+		$valeur=$_GET['messagerie'];
+		$info=dateDMY();
+		if ($valeur == "inactif") {
+			enr_parametrage($libelle,$valeur,$info);
+			$bouton33="Débloquer messagerie";
+			$etatmessagerie="actif";
+		}else{
+			supp_parametrage($libelle);
+		}
+	}
+
+	$data33=aff_structure($libelle);
+	$valeur=$data33[0][1];
+	if ($valeur == "inactif") {
+		$bouton33="Débloquer messagerie";
+		$etatmessagerie="actif";
+		$img2.="<span class='fe-status-lock'><i class='bi bi-lock-fill'></i>Messagerie bloquée</span>";
+	}
 
 	if (($img != "") || ($img2 != "")) {
-		$brimg="<br><br>";
+		$brimg="1";
 	}
+}
 ?>
-<td colspan='4' align='left' >
-<table><tr>
-</td><td><script language=JavaScript>buttonMagic2('<?php print $bouton?>','ficheeleve3.php?eid=<?php print $id_eleve?>&val=<?php print $inactifval?>','_self','')</script></td>
-<td><script language=JavaScript>buttonMagic2('<?php print $bouton2 ?>','ficheeleve3.php?eid=<?php print $id_eleve?>&proba=<?php print $probaval?>','_self','')</script></td>
-<td><script language=JavaScript>buttonMagic2('<?php print "Affecter &agrave; un stage"?>','gestion_stage_affec_eleve_2.php?id=<?php print $id_eleve?>&idclasse=<?php print $saisie_classe ?>','_self','')</script>
-<?php if (true)  { ?>
-<td><script language=JavaScript>buttonMagic2('<?php print "Impression"?>','impressionficheeleve.php?id=<?php print $id_eleve?>&idclasse=<?php print $saisie_classe ?>','_self','')</script>
-<?php } ?>
-</tr>
-<tr><td colspan='3' align='center' ><?php print $brimg.$img." ".$img2 ?></td></tr>
-</table>
-</td>
-<?php } ?>
-</tr>
 
-</table>
+<!-- Barre d'actions -->
+<div class="toolbar flex-wrap" style="margin-bottom:8px; align-items:center;">
+  <form method="post" action="ficheeleve2.php" style="display:inline; margin:0; line-height:0;">
+    <script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS250 ?>","rien");</script>
+    <input type="hidden" name="sClasseGrp" value="<?php print $saisie_classe?>" />
+    <input type="hidden" name="anneeScolaire" value="<?php print anneeScolaireViaIdClasse($saisie_classe) ?>" />
+  </form>
+<?php if ($showSMS): ?>
+  <?php if ($smsActif): ?>
+  <form method='get' action="sms-mess.php" style="display:inline; margin:0; line-height:0;">
+    <script language=JavaScript>buttonMagicSubmit3("<?php print LANGMESS251 ?>","sms","")</script>
+    <input type='hidden' name="eid" value="<?php print $id_eleve ?>" />
+  </form>
+  <?php else: ?>
+  <input type="button" value="<?php print LANGMESS251 ?>" class="button"
+    onclick="alertify.error('Le service SMS n\'est pas activé sur cet établissement.');">
+  <?php endif; ?>
+<?php endif; ?>
+<?php if ($disabledprojo == "0"): ?>
+  <script language=JavaScript>buttonMagic2("<?php print LANGPROF38 ?>","profpprojo.php?fiche=1&idClasse=<?php print $saisie_classe?>","video","width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes","0");</script>
+<?php else: ?>
+  <input type="button" value="<?php print LANGPROF38 ?>" class="btn btn-primary"
+    onclick="alertify.error('Ce service n\'est pas activé. Veuillez contacter votre administrateur TRIADE.');">
+<?php endif; ?>
+  <?php if (($_SESSION["membre"] == "menuadmin") || ((defined("VIESCOLAIREMODIFETUDIANT")) && (VIESCOLAIREMODIFETUDIANT == "oui") && ($_SESSION["membre"] == "menuscolaire"))) { ?>
+  <form method='get' action="modif_eleve.php" style="display:inline; margin:0; line-height:0;">
+    <script language=JavaScript>buttonMagicSubmit3("<?php print LANGMESS252 ?>","fiche","")</script>
+    <input type='hidden' name="eid" value="<?php print $id_eleve ?>" />
+  </form>
+  <?php } ?>
+  <?php if ((defined("CARNETSUIVIPROF")) && (CARNETSUIVIPROF == "oui") && ($_SESSION["membre"] == "menuprof")) { ?>
+    <script language=JavaScript>buttonMagic("<?php print LANGMESST392 ?>","carnet_editer.php?sClasseGrp=<?php print $saisie_classe?>","_parent","","");</script>
+  <?php } ?>
+  <?php if ($_SESSION["membre"] == "menuadmin") { ?>
+    <script language=JavaScript>buttonMagic2('<?php print $bouton?>','ficheeleve3.php?eid=<?php print $id_eleve?>&val=<?php print $inactifval?>','_self','')</script>
+    <script language=JavaScript>buttonMagic2('<?php print $bouton2 ?>','ficheeleve3.php?eid=<?php print $id_eleve?>&proba=<?php print $probaval?>','_self','')</script>
+    <script language=JavaScript>buttonMagic2('<?php print "Affecter stage"?>','gestion_stage_affec_eleve_2.php?id=<?php print $id_eleve?>&idclasse=<?php print $saisie_classe ?>','_self','')</script>
+    <script language=JavaScript>buttonMagic2('<?php print "Impression"?>','impressionficheeleve.php?id=<?php print $id_eleve?>&idclasse=<?php print $saisie_classe ?>','_self','')</script>
+    <script language=JavaScript>buttonMagic2('<?php print $bouton33 ?>','ficheeleve3.php?eid=<?php print $id_eleve?>&messagerie=<?php print $etatmessagerie ?>','_self','')</script>
+  <?php } ?>
+</div>
+<?php if ($brimg): ?>
+<div class="fe-status-wrap"><?php echo $img.' '.$img2; ?></div>
+<?php endif; ?>
 
-
-
-
-<br /><br />
-
-<div id="dhtmlgoodies_tabView1">
+<div class="fe-main-tabs">
+  <div class="fe-main-tab active" data-panel="fe-panel-0"><i class="bi bi-person-lines-fill"></i> <?php print LANGMESS259 ?></div>
+  <div class="fe-main-tab" data-panel="fe-panel-1"><i class="bi bi-journal-bookmark-fill"></i> <?php print LANGMESS260 ?></div>
+  <div class="fe-main-tab" data-panel="fe-panel-2"><i class="bi bi-calendar2-check"></i> <?php print LANGMESS261 ?></div>
+  <div class="fe-main-tab" data-panel="fe-panel-3"><i class="bi bi-shield-exclamation"></i> <?php print LANGMESS262 ?></div>
+  <div class="fe-main-tab" data-panel="fe-panel-4"><i class="bi bi-star-half"></i> Savoir &amp; Etre</div>
+  <div class="fe-main-tab" data-panel="fe-panel-5"><i class="bi bi-clock-history"></i> Classes ant.</div>
+</div>
+<div class="fe-panels">
 
   <?php // Renseignements ?>
-  <div class="dhtmlgoodies_aTab">
+  <div id="fe-panel-0" class="fe-panel active">
 <?php
 $sql=<<<EOF
 SELECT
-	elev_id, 
+	elev_id,
 	nom,
 	prenom,
 	c.libelle,
@@ -197,7 +257,7 @@ SELECT
 	passwd_eleve,
 	civ_1,
 	nomtuteur,
-	prenomtuteur,	
+	prenomtuteur,
 	adr1,
 	code_post_adr1,
 	commune_adr1,
@@ -244,9 +304,10 @@ SELECT
 	serie_bac,
 	annee_bac,
 	departement_bac,
-	departementnais
+	departementnais,
+	ine
 FROM
-	${prefixe}eleves, ${prefixe}classes c
+	{$prefixe}eleves, {$prefixe}classes c
 WHERE
 	elev_id='$id_eleve'
 AND	c.code_class=classe
@@ -272,7 +333,7 @@ $numero_eleve=$data[0][36];
 /*
 13	civ_1,
 14	nomtuteur,
-15	prenomtuteur,	
+15	prenomtuteur,
 16	adr1,
 17	code_post_adr1,
 18	commune_adr1,
@@ -358,89 +419,96 @@ $serie_bac=$data[0][59];
 $annee_bac=$data[0][60];
 $departement_bac=$data[0][61];
 $departementnais=$data[0][62];
+$ine=$data[0][63];
 
 ?>
 
-	<div style="position:relative;left:10px;top:15px;float:left;text-align:center;z-index:10000">
-		<div style="position:absolute;top:-28;left:-24px;z-index:1000000" ><img src='image/commun/paperclip.png'></div>
-		<img src="image_trombi.php?idE=<?php print $id_eleve ?>" border=0 ><br>[ <a href="#" class="bouton2"  onclick="open('photoajouteleve.php?ideleve=<?php print $idEleve?>','photo','width=450,height=280')" ><?php print LANGPER30 ?></a> ]</div>
-
-	<div style="position:relative;left:20px;top:5px">
-	<table border=0 width='65%'>
-	<tr><td align='right' width='35%' ><font class='T2'><?php print LANGMESS270 ?></font></td><td><b><font class='T2'><?php print $nom ?></font></b></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS271 ?></font></td><td><font class='T2'><?php print $prenom ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS272 ?></font></td><td title="<?php print $classe?>" ><font class='T2'><?php print trunchaine($classe,35) ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print "Année Scolaire : " ?></font></td><td><?php print $annee_scolaire_eleve  ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS273 ?></font></td><td><font class='T2'><?php print dateForm($date_naissance) ?></font></td></tr>
-	<tr><td align='right' width='5%' ><font class='T2'><?php print LANGMESS274 ?></font></td><td><font class='T2'><?php print $nationalite ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS275 ?></font></td><td><font class='T2'><?php print $lieu_naissance ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print "D&eacute;partement de naissance" ?></font>&nbsp;</td><td><font class='T2'><?php print $departementnais ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS276 ?></font></td><td><font class='T2'><?php print $boursier ?>&nbsp;/&nbsp;CDI&nbsp;:&nbsp;<?php print $cdi ?>&nbsp;/&nbsp;BDE&nbsp;:&nbsp;<?php print $bde ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS277 ?></font></td><td><font class='T2'><?php print $numero_eleve ?></font></td></tr>
-	<tr><td align='right' width='5%' ><font class='T2'><?php print LANGMESS278 ?></font></td><td><font class='T2'><?php print $lv1 ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS279 ?></font></td><td><font class='T2'><?php print $lv2 ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS280 ?></font></td><td><font class='T2'><?php print $option ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS281 ?></font></td><td><font class='T2'><?php print $regime ?></font></td></tr>
-	<tr><td align='right'><font class='T2'><?php print LANGMESS282 ?></font></td><td><font class='T2'><?php print $rangement ?></font></td></tr>
-		<?php
-		$texte=recupIdCodeBar($id_eleve,"menueleve"); 
-		if ($texte != "") {
-			$infoT=LANGASS39;
-		   	print "<tr><td align='right' valign='top'  ><font class='T2'>$infoT :</font></td><td><font class='T2'><img src='./codebar/image.php?code=code39&text=$texte' /></font></td></tr>";
-		}
-		?>
-	    	</table>
-	</div>
-<br><br>
-	<hr>
-<br>
-<div id="dhtmlgoodies_tabView2">
-		<div class="dhtmlgoodies_aTab">
-		<table border=0 width='100%'>
-		<tr><td align='right' width='20%' ><font class='T2'><?php print LANGMESS283 ?></font></td><td><b><font class='T2'><?php print civ($civ_1)." ".$nomtuteur." ".$prenomtuteur ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS284 ?></font></td><td><font class='T2'><?php print $situation_familiale ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS285 ?></font></td><td><font class='T2'><?php print $adr1 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS287 ?></font></td><td><font class='T2'><?php print $code_post_adr1 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS288 ?></font></td><td><font class='T2'><?php print $commune_adr1 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS289 ?></font></td><td><font class='T2'><?php print $email ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS290 ?></font></td><td><font class='T2'><?php print "$telephone / $tel_port_1" ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS291 ?></font></td><td><font class='T2'><?php print $profession_pere ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS292 ?></font></td><td><font class='T2'><?php print $tel_prof_pere ?></font></td></tr>
-	    	</table>
+<div class="fe-info-wrap">
+<div class="fe-photo-card">
+	<img src="image_trombi.php?idE=<?php print $id_eleve ?>" border='0' style='box-shadow:0 4px 12px rgba(0,0,0,0.3);border-radius:8px'><br><br>[ <a href="#" class="bouton2" onclick="open('photoajouteleve.php?ideleve=<?php print $idEleve?>','photo','width=450,height=310')"><?php print LANGPER30 ?></a> ]
+</div><table class="fe-info-table">
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS270 ?></td><td class="fe-value"><b><?php print $nom ?></b></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS271 ?></td><td class="fe-value"><?php print $prenom ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS272 ?></td><td class="fe-value" title="<?php print $classe?>"><?php print trunchaine($classe,35) ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label">Année Scolaire :</td><td class="fe-value"><?php print $annee_scolaire_eleve ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS273 ?></td><td class="fe-value"><?php print dateForm($date_naissance) ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS274 ?></td><td class="fe-value"><?php print $nationalite ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS275 ?></td><td class="fe-value"><?php print $lieu_naissance ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label">Département de naissance :</td><td class="fe-value"><?php print $departementnais ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS276 ?></td><td class="fe-value"><?php print $boursier ?>&nbsp;/&nbsp;CDI&nbsp;:&nbsp;<?php print $cdi ?>&nbsp;/&nbsp;BDE&nbsp;:&nbsp;<?php print $bde ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS277 ?></td><td class="fe-value"><?php print $numero_eleve ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label">Numéro INE :</td><td class="fe-value"><?php print $ine ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS278 ?></td><td class="fe-value"><?php print $lv1 ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS279 ?></td><td class="fe-value"><?php print $lv2 ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS280 ?></td><td class="fe-value"><?php print $option ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS281 ?></td><td class="fe-value"><?php print $regime ?></td></tr>
+<tr class="fe-tab-tr"><td class="fe-label"><?php print LANGMESS282 ?></td><td class="fe-value"><?php print $rangement ?></td></tr>
+<?php
+$texte=recupIdCodeBar($id_eleve,"menueleve");
+if ($texte != "") {
+	$infoT=LANGASS39;
+	print "<tr class='fe-tab-tr'><td class='fe-label'>$infoT :</td><td class='fe-value'><img src='./codebar/image.php?code=code39&text=$texte' /></td></tr>";
+}
+?>
+</table>
+</div>
+	<hr style="border:none;border-top:1px solid #dde0f0;margin:12px 0">
+<div class="fe-sub-section">
+<div class="fe-sub-tabs">
+  <div class="fe-sub-tab active" data-sub="fe-sub-0"><i class="bi bi-person-fill"></i> <?php print preg_replace('/^info\.?\s*/i','',LANGMESS264) ?></div>
+  <div class="fe-sub-tab" data-sub="fe-sub-1"><i class="bi bi-person-fill"></i> <?php print preg_replace('/^info\.?\s*/i','',LANGMESS265) ?></div>
+  <div class="fe-sub-tab" data-sub="fe-sub-2"><i class="bi bi-mortarboard-fill"></i> <?php print preg_replace('/^info\.?\s*/i','',LANGMESS266) ?></div>
+  <div class="fe-sub-tab" data-sub="fe-sub-3"><i class="bi bi-briefcase-fill"></i> Tuteur stage</div>
+  <div class="fe-sub-tab" data-sub="fe-sub-4"><i class="bi bi-clock-history"></i> Historie Stage</div>
+  <div class="fe-sub-tab" data-sub="fe-sub-5"><i class="bi bi-archive-fill"></i> <?php print LANGMESS267 ?></div>
+  <div class="fe-sub-tab" data-sub="fe-sub-6"><i class="bi bi-heart-pulse-fill"></i> Médic.</div>
+  <div class="fe-sub-tab" data-sub="fe-sub-7">Info.</div>
+</div>
+  <div id="fe-sub-0" class="fe-sub-panel active">
+		<table class="fe-tab-table">
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS283 ?></td><td class="fe-tab-value"><b><?php print civ($civ_1)." ".$nomtuteur." ".$prenomtuteur ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS284 ?></td><td class="fe-tab-value"><?php print $situation_familiale ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS285 ?></td><td class="fe-tab-value"><?php print $adr1 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS287 ?></td><td class="fe-tab-value"><?php print $code_post_adr1 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS288 ?></td><td class="fe-tab-value"><?php print $commune_adr1 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS289 ?></td><td class="fe-tab-value"><?php print $email ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS290 ?></td><td class="fe-tab-value"><?php print "$telephone / $tel_port_1" ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS291 ?></td><td class="fe-tab-value"><?php print $profession_pere ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS292 ?></td><td class="fe-tab-value"><?php print $tel_prof_pere ?></td></tr>
+		</table>
 		</div>
-		<div class="dhtmlgoodies_aTab">
-		<table border=0 width='100%'>
-		<tr><td align='right' width='20%' ><font class='T2'><?php print LANGMESS283 ?></font></td><td><b><font class='T2'><?php print civ($civ_2)." ".$nom_resp_2." ".$prenom_resp_2 ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS284 ?></font></td><td><font class='T2'><?php print $situation_familiale ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS285 ?></font></td><td><font class='T2'><?php print $adr2 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS287 ?></font></td><td><font class='T2'><?php print $code_post_adr2 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS288 ?></font></td><td><font class='T2'><?php print $commune_adr2 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS289 ?></font></td><td><font class='T2'><?php print $email_resp_2 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS290 ?></font></td><td><font class='T2'><?php print "$tel_port_2" ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS291 ?></font></td><td><font class='T2'><?php print $profession_mere ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS292 ?></font></td><td><font class='T2'><?php print $tel_prof_mere ?></font></td></tr>
-	    	</table>
+  <div id="fe-sub-1" class="fe-sub-panel">
+		<table class="fe-tab-table">
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS283 ?></td><td class="fe-tab-value"><b><?php print civ($civ_2)." ".$nom_resp_2." ".$prenom_resp_2 ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS284 ?></td><td class="fe-tab-value"><?php print $situation_familiale ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS285 ?></td><td class="fe-tab-value"><?php print $adr2 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS287 ?></td><td class="fe-tab-value"><?php print $code_post_adr2 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS288 ?></td><td class="fe-tab-value"><?php print $commune_adr2 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS289 ?></td><td class="fe-tab-value"><?php print $email_resp_2 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS290 ?></td><td class="fe-tab-value"><?php print "$tel_port_2" ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS291 ?></td><td class="fe-tab-value"><?php print $profession_mere ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS292 ?></td><td class="fe-tab-value"><?php print $tel_prof_mere ?></td></tr>
+		</table>
 		</div>
-		<div class="dhtmlgoodies_aTab">
-		<table border=0 width='100%'>
-		<tr><td align='right' width='20%' ><font class='T2'><?php print LANGMESS283 ?></font></td><td><b><font class='T2'><?php print $nom." ".$prenom ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS285 ?></font></td><td><b><font class='T2'><?php print $adr_eleve ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS287 ?></font></td><td><font class='T2'><?php print $code_post_adr1 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS288 ?></font></td><td><font class='T2'><?php print $commune_adr1 ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS289 ?></font></td><td><font class='T2'><?php print "$email_eleve / $emailpro_eleve" ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS290 ?></font></td><td><font class='T2'><?php print "$tel_eleve / $tel_fixe_eleve" ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS293 ?></font></td><td><font class='T2'><?php print $sexe ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS294 ?></font></td><td><font class='T2'><?php print $class_ant ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print "S&eacute;rie du bac : " ?></font></td><td><font class='T2'><?php print $serie_bac ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print "Ann&eacute;e du bac : " ?></font></td><td><font class='T2'><?php print $annee_bac ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print "D&eacute;partement du bac : " ?></font></td><td><font class='T2'><?php print $departement_bac ?></font></td></tr>
-	    	</table>
+  <div id="fe-sub-2" class="fe-sub-panel">
+		<table class="fe-tab-table">
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS283 ?></td><td class="fe-tab-value"><b><?php print $nom." ".$prenom ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS285 ?></td><td class="fe-tab-value"><b><?php print $adr_eleve ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS287 ?></td><td class="fe-tab-value"><?php print $code_post_adr1 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS288 ?></td><td class="fe-tab-value"><?php print $commune_adr1 ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS289 ?></td><td class="fe-tab-value"><?php print "$email_eleve / $emailpro_eleve" ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS290 ?></td><td class="fe-tab-value"><?php print "$tel_eleve / $tel_fixe_eleve" ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS293 ?></td><td class="fe-tab-value"><?php print $sexe ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS294 ?></td><td class="fe-tab-value"><?php print $class_ant ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label">Série du bac :</td><td class="fe-tab-value"><?php print $serie_bac ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label">Année du bac :</td><td class="fe-tab-value"><?php print $annee_bac ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label">Département du bac :</td><td class="fe-tab-value"><?php print $departement_bac ?></td></tr>
+		</table>
 		</div>
-		<div class="dhtmlgoodies_aTab">
-                <table border=0 width='100%'>
-		<?php
+  <div id="fe-sub-3" class="fe-sub-panel">
+                <?php
 		$dataTuteur=recupInfoTuteurStage($id_eleve);
-		// nom,prenom,civ,email,adr,code_post,commune,tel,tel_port,id_societe_tuteur 
+		// nom,prenom,civ,email,adr,code_post,commune,tel,tel_port,id_societe_tuteur
 		$nomTuteurStage=$dataTuteur[0][0];
 		$prenomTuteurStage=$dataTuteur[0][1];
 		$civTuteur=civ($dataTuteur[0][2]);
@@ -452,56 +520,56 @@ $departementnais=$data[0][62];
 		$tel_TuteurStage=$dataTuteur[0][7];
 		$telPort_TuteurStage=$dataTuteur[0][8];
 		?>
-		<tr><td align='right' width='20%' ><font class='T2'><?php print LANGMESS283 ?></font></td><td><b><font class='T2'><?php print $civTuteur." ".$nomTuteurStage." ".$prenomTuteurStage ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGAGENDA61 ?>&nbsp;:</font></td><td><b><font class='T2'><?php print $societeTuteurStage ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGAGENDA63 ?>&nbsp;:</font></td><td><b><font class='T2'><?php print $adr_TuteurStage ?></font></b></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS287 ?></font></td><td><font class='T2'><?php print $ccp_TuteurStage ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS288 ?></font></td><td><font class='T2'><?php print $commune_TuteurStage ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS289 ?></font></td><td><font class='T2'><?php print "$email_TuteurStage" ?></font></td></tr>
-		<tr><td align='right'><font class='T2'><?php print LANGMESS290 ?></font></td><td><font class='T2'><?php print "$tel_TuteurStage / $telPort_TuteurStage" ?></font></td></tr>
+		<table class="fe-tab-table">
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS283 ?></td><td class="fe-tab-value"><b><?php print $civTuteur." ".$nomTuteurStage." ".$prenomTuteurStage ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGAGENDA61 ?>&nbsp;:</td><td class="fe-tab-value"><b><?php print $societeTuteurStage ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGAGENDA63 ?>&nbsp;:</td><td class="fe-tab-value"><b><?php print $adr_TuteurStage ?></b></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS287 ?></td><td class="fe-tab-value"><?php print $ccp_TuteurStage ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS288 ?></td><td class="fe-tab-value"><?php print $commune_TuteurStage ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS289 ?></td><td class="fe-tab-value"><?php print "$email_TuteurStage" ?></td></tr>
+		<tr class="fe-tab-tr"><td class="fe-tab-label"><?php print LANGMESS290 ?></td><td class="fe-tab-value"><?php print "$tel_TuteurStage / $telPort_TuteurStage" ?></td></tr>
                 </table>
                 </div>
 
-		<div class="dhtmlgoodies_aTab">
-		<table width=100% border=1 style='border-collapse: collapse;' >
-		<tr>
-		<td width=5 bgcolor='yellow' >&nbsp;Période&nbsp;</td>
-		<td align=center  bgcolor='yellow'  >&nbsp;Classe&nbsp;</td>
-		<td align=center  bgcolor='yellow'  >&nbsp;<?php print LANGSTAGE39?>&nbsp;</td>
-		</tr>
+  <div id="fe-sub-4" class="fe-sub-panel">
 		<?php
 		$data=recherche_stage_historique($id_eleve); //e.nom,s.nomprenomeleve,s.classeeleve,s.periodestage
-		for($i=0;$i<count($data);$i++) {
+		?>
+		<table class="table" style="font-size:11px">
+		<thead><tr>
+		  <th class="cc-th" style="width:5%">Période</th>
+		  <th class="cc-th">Classe</th>
+		  <th class="cc-th"><?php print LANGSTAGE39?></th>
+		</tr></thead>
+		<tbody>
+		<?php
+		for($i=0;$i<countTriade($data);$i++) {
 		        $nom_entreprise=$data[$i][0];
 		        $periode=preg_replace('/ /','&nbsp;',$data[$i][3]);
 		        $classe=$data[$i][2];
-		        print "<tr bgcolor='#FFFFFF' >";
-		        print "<td width=5 >&nbsp;$periode&nbsp;</td>";
-		        print "<td >&nbsp;$classe&nbsp;</td>";
-		        print "<td >&nbsp;<a href='gestion_stage_ent_visu_rech_nom.php?recherche=$nom_entreprise' title='Consulter' >$nom_entreprise</a>&nbsp;</td>";
+		        print "<tr class='cc-tr-data'>";
+		        print "<td>&nbsp;$periode&nbsp;</td>";
+		        print "<td>&nbsp;$classe&nbsp;</td>";
+		        print "<td>&nbsp;<a href='gestion_stage_ent_visu_rech_nom.php?recherche=$nom_entreprise' title='Consulter'>$nom_entreprise</a>&nbsp;</td>";
 		        print "</tr>";
 		}
-		print "</table><br><br>";
 		?>
-
-
+		</tbody></table>
 		</div>
 
-
-
-
-
-		<div class="dhtmlgoodies_aTab">
+  <div id="fe-sub-5" class="fe-sub-panel">
 		<?php
 		$databull=recupArchiveBulletin($idEleve); //  ideleve,anneescolaire,trimestre,date,classe,file
 		?>
-		<table border=1 width='100%'  style="border-collapse: collapse;" >
-		<tr>	<td bgcolor='yellow' id='bordure' ><font class='T1'><?php print LANGMESS295 ?></font></td>
-			<td bgcolor='yellow' id='bordure' ><font class='T1'><?php print LANGELE4 ?></font></td>
-			<td bgcolor='yellow' id='bordure' ><font class='T1'><?php print LANGMESS296 ?></font></td>
-			<td bgcolor='yellow' id='bordure' ><font class='T1'><?php print LANGMESS297 ?></font></td>
-			<td bgcolor='yellow' id='bordure' ><font class='T1'><?php print LANGMESS298 ?></font></td>
-		</tr>
+		<table class="table" style="font-size:11px">
+		<thead><tr>
+		  <th class="cc-th"><?php print LANGMESS295 ?></th>
+		  <th class="cc-th"><?php print LANGELE4 ?></th>
+		  <th class="cc-th"><?php print LANGMESS296 ?></th>
+		  <th class="cc-th"><?php print LANGMESS297 ?></th>
+		  <th class="cc-th"><?php print LANGMESS298 ?></th>
+		</tr></thead>
+		<tbody>
 		<?php
 
 		if (isset($_GET["supp"])) {
@@ -510,143 +578,135 @@ $departementnais=$data[0][62];
 			}
 		}
 
-		for($j=0;$j<count($databull);$j++) {
+		for($j=0;$j<countTriade($databull);$j++) {
 			$fichierarc=$databull[$j][5];
 			$fichierarc=preg_replace('/\'/',"",$fichierarc);
 
-			if (file_exists($fichierarc)) {	
+			if (file_exists($fichierarc)) {
 				$lien="<a href='visu_document.php?fichier=$fichierarc' target='_blank' ><img src='image/commun/download.png' title='".LANGTELECHARGE."' border='0' /></a>";
 				if ($_SESSION["membre"] == "menuadmin") $lien.="&nbsp;<a href='ficheeleve3.php?eid=$idEleve&idclasse=$saisie_classe&supp=$fichierarc' ><img src='image/commun/trash.png' title='".LANGBT50."' border='0' /></a>";
-				print '<tr class="tabnormal" onmouseover="this.className=\'tabover\'" onmouseout="this.className=\'tabnormal\'" >';
-				print '<td id=bordure   ><font class=T1>'.$databull[$j][1].'</font></td>';
-				print '<td id=bordure   ><font class=T1>'.preg_replace('/_/','&nbsp;',$databull[$j][4]).'</font></td>';
-				print '<td id=bordure   ><font class=T1>'.$databull[$j][2].'</font></td>';
-				print '<td id=bordure   ><font class=T1>'.$lien.'</font></td>';
-				print '<td id=bordure  ><font class=T1>'.dateForm($databull[$j][3]).'</font></td>';
+				print '<tr class="cc-tr-data">';
+				print '<td>'.$databull[$j][1].'</td>';
+				print '<td>'.preg_replace('/_/','&nbsp;',$databull[$j][4]).'</td>';
+				print '<td>'.$databull[$j][2].'</td>';
+				print '<td>'.$lien.'</td>';
+				print '<td>'.dateForm($databull[$j][3]).'</td>';
 				print '</tr>';
 			}else{
 				suppArchiveBulletinEleve($fichierarc);
 			}
 		}
-
 		?>
-	    	</table>
+		</tbody></table>
 		</div>
 
 		<?php // info medic ?>
-		<div class="dhtmlgoodies_aTab">
+  <div id="fe-sub-6" class="fe-sub-panel">
 		<?php
 		if ( ((defined("INFOMEDIC")) && (INFOMEDIC == "oui")) || ($_SESSION["membre"] == "menuadmin" ) || ($_SESSION["membre"] == "menupersonnel") ) {
-			print "<font class='T2'>".LANGPROF29." : </font><br><br>";
+			print "<div style='font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px'>".LANGPROF29." :</div>";
 			$data=profPmedAff($idEleve);
 			// id,date,ideleve,nomProf,commentaire
-			print "<table width='100%' border='1'  style='border-collapse: collapse;'  >";
-			print "<tr>
-				<td id='bordure' bgcolor='yellow' width='5%'>&nbsp;".LANGTE7."&nbsp;</td>
-				<td id='bordure' bgcolor='yellow' width='30%'>&nbsp;".LANGMESST397."&nbsp;</td>
-				<td id='bordure' bgcolor='yellow'>&nbsp;".LANGSTAGE37."&nbsp;</td>
-				</tr>";
-			for($i=0;$i<count($data);$i++) { ?>
-				<tr>
-				<td valign='top' ><?php print dateForm($data[$i][1]) ?></td>
-				<td valign='top' ><?php print $data[$i][3]?></td>
-				<td valign='top' ><?php print $data[$i][4]?> &nbsp;&nbsp;</td>
+			print "<table class='table' style='font-size:11px'>";
+			print "<thead><tr>
+				<th class='cc-th' style='width:5%'>".LANGTE7."</th>
+				<th class='cc-th' style='width:30%'>".LANGMESST397."</th>
+				<th class='cc-th'>".LANGSTAGE37."</th>
+				</tr></thead><tbody>";
+			for($i=0;$i<countTriade($data);$i++) { ?>
+				<tr class="cc-tr-data">
+				<td valign='top'><?php print dateForm($data[$i][1]) ?></td>
+				<td valign='top'><?php print $data[$i][3]?></td>
+				<td valign='top'><?php print stripslashes($data[$i][4])?>&nbsp;&nbsp;</td>
 				</tr>
 			<?php
 			}
-			print "</table>";
+			print "</tbody></table>";
 		}else{ ?>
-			<br><br><center><font class='T2'><?php print LANGMESS308 ?></font></center>
-		<?php 
-		} 
-		?>
-		</div>
-		<div class="dhtmlgoodies_aTab">
-		<?php 
-		if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel")){
-			print "<br><script language=JavaScript>buttonMagic('".LANGMESS309."','profpcomplement.php?eid=$idEleve','_parent','','');</script>";
+			<div class="fe-no-access"><?php print LANGMESS308 ?></div>
+		<?php
 		}
 		?>
-		<br><br>
+		</div>
+  <div id="fe-sub-7" class="fe-sub-panel">
+		<?php
+		if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel")){
+			print "<br><script language=JavaScript>buttonMagic('".LANGMESS309."','profpcomplement.php?eid=$idEleve','_parent','','');</script><br>";
+		}
+		?>
+		<br>
 		<?php
 			$data=profPinfoAff($idEleve);
 		// id,date,idEleve,nomProf,commentaire
-			print "<table width='100%' border='1'  style='border-collapse: collapse;'  >";
-			print "<tr>
-				<td id='bordure' bgcolor='yellow' width='5%'>&nbsp;".LANGTE7."&nbsp;</td>
-				<td id='bordure' bgcolor='yellow' width='30%'>&nbsp;".LANGMESST397."&nbsp;</td>
-				<td id='bordure' bgcolor='yellow'>&nbsp;".LANGSTAGE37."&nbsp;</td>
-				</tr>";
-			for($i=0;$i<count($data);$i++) {
+			print "<table class='table' style='font-size:11px'>";
+			print "<thead><tr>
+				<th class='cc-th' style='width:5%'>".LANGTE7."</th>
+				<th class='cc-th' style='width:30%'>".LANGMESST397."</th>
+				<th class='cc-th'>".LANGSTAGE37."</th>
+				</tr></thead><tbody>";
+			for($i=0;$i<countTriade($data);$i++) {
 			?>
-				<tr  class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'" >
-				<td valign='top' ><?php print dateForm($data[$i][1]) ?></td>
-				<td valign='top' ><?php print $data[$i][5]?></td>
-				<td valign='top' ><?php print $data[$i][4]?> &nbsp;&nbsp;</td>
-				</tr>		
-				
+				<tr class="cc-tr-data">
+				<td valign='top'><?php print dateForm($data[$i][1]) ?></td>
+				<td valign='top'><?php print $data[$i][5]?></td>
+				<td valign='top'><?php print $data[$i][4]?>&nbsp;&nbsp;</td>
+				</tr>
 			<?php
 			}
 		?>
-		</table>
+		</tbody></table>
 		</div>
-	</div>
+</div>
   </div>
 
 
-  <div class="dhtmlgoodies_aTab">
-<?php 
-	if (  (((defined("NOTEELEVEVISU")) && (NOTEELEVEVISU == "oui")) && ($_SESSION["membre"] == "menuprof")) 
+  <div id="fe-panel-1" class="fe-panel">
+<?php
+	if (  (((defined("NOTEELEVEVISU")) && (NOTEELEVEVISU == "oui")) && ($_SESSION["membre"] == "menuprof"))
 		|| ( ($_SESSION["membre"] == "menuprof") && (ENTRETIENPROF == "oui") )
-		|| ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel") 
+		|| ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel")
 		|| (($_SESSION["membre"] == "menuscolaire") && (VIESCOLAIRENOTEENSEIGNANT == "oui"))
 	   ) { ?>
 		<div id='visunote'></div>
-		<table  >
-		<tr>
-		<td>
-		<form method="get" action="entretien2.php" >
+		<div style="margin:6px 0">
+		<form method="get" action="entretien2.php" style="display:inline">
 		<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS310 ?>","rien");</script>
 		<input type="hidden" name="idclasse" value="<?php print $saisie_classe?>" />
 		<input type="hidden" name="eid" value="<?php print $id_eleve?>" />
 		</form>
-		</td>
-		</tr></table>
+		</div>
 
 		<script>ajaxVisuNote('<?php print $id_eleve ?>','<?php print $saisie_classe ?>','','')</script>
 <?php	}else{ ?>
-		<br><br><center><font class='T2'><?php print LANGMESS308 ?></font></center>
+		<div class="fe-no-access"><?php print LANGMESS308 ?></div>
 <?php   } ?>
   </div>
 
 
   <?php // vie scolaire ?>
-  <div class="dhtmlgoodies_aTab" style="overflow:auto;" >
+  <div id="fe-panel-2" class="fe-panel">
 		<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ) {  ?>
-			<br><table>
-			<tr><td>
-			<form method="post" action="gestion_abs_retard_planifier.php" >
+			<div class="toolbar" style="margin-bottom:8px">
+			<form method="post" action="gestion_abs_retard_planifier.php" style="display:inline">
 			<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS311 ?>","rien");</script>
 			<input type="hidden" name="saisie_nom_eleve" value="<?php print recherche_eleve_nom($id_eleve) ?>"  />
 			</form>
-			</td><td>
-			<form method="post" action="gestion_abs_retard_modif_donne.php" >
-			<td id='bordure'><script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS312 ?>","rien");</script>
+			<form method="post" action="gestion_abs_retard_modif_donne.php" style="display:inline">
+			<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS312 ?>","rien");</script>
 			<input type="hidden" name="saisie_nom_eleve" value="<?php print recherche_eleve_nom($id_eleve) ?>"  />
 			</form>
-			</td><td>
-			<form method="post" action="gestion_abs_retard_modif.php" >
-			<td id='bordure'><script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS313 ?>","rien");</script>
+			<form method="post" action="gestion_abs_retard_modif.php" style="display:inline">
+			<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS313 ?>","rien");</script>
 			<input type="hidden" name="saisie_nom_eleve" value="<?php print recherche_eleve_nom($id_eleve) ?>"  />
 			</form>
-			</td></tr></table><br>
-		<?php } 
-			if ((ACCESPROFVISUABSRTD == "oui") ||  ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ||  ($_SESSION["membre"] == "menupersonnel")) { 
-				$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id FROM ${prefixe}eleves e, ${prefixe}classes c WHERE e.elev_id='$idEleve' AND c.code_class=e.classe ORDER BY c.libelle, e.nom, e.prenom";
+			</div>
+		<?php }
+			if ((ACCESPROFVISUABSRTD == "oui") ||  ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ||  ($_SESSION["membre"] == "menupersonnel")) {
+				$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id FROM {$prefixe}eleves e, {$prefixe}classes c WHERE e.elev_id='$idEleve' AND c.code_class=e.classe ORDER BY c.libelle, e.nom, e.prenom";
 				$res=execSql($sql);
 				$data=chargeMat($res);
-				for($i=0;$i<count($data);$i++) { ?>
-					<table border="1" bordercolor="#000000" width="100%"  style="border-collapse: collapse;"  >
+				for($i=0;$i<countTriade($data);$i++) { ?>
+					<table border="0" width="100%" style="margin-bottom:4px">
 					<tr>
 					<td bgcolor="#FFFFFF" width=55%><?php print LANGTP1 ?> : <B><?php print ucwords(trim($data[$i][1]))?></b></td>
 					<td bgcolor="#FFFFFF"><?php print LANGCALEN7 ?> : <font color=red><?php print trim($data[$i][0])?></font>
@@ -656,18 +716,19 @@ $departementnais=$data[0][62];
 					<td bgcolor="#FFFFFF"> <?php print LANGABS62 ?></td>
 					</tr>
 					</table>
-					<table border="1" bordercolor="#000000" width="100%"  style="border-collapse: collapse;"  >
-					<TR>
-					<TD bgcolor='yellow' align=center width=15%><?php print LANGABS13 ?></td>
-					<TD bgcolor='yellow' align=center width=20%><?php print LANGPARENT17 ?> </td>
-					<TD bgcolor='yellow' align=center width=15%><?php print LANGABS60 ?> </td>
-					<TD bgcolor='yellow' align=center width=20%><?php print LANGABS12 ?> </td>
-					</TR>
+					<table border="1" width="100%" style="border-collapse:collapse;margin-bottom:6px">
+					<thead><TR>
+					<TH class="cc-th" width=15%><?php print LANGABS13 ?></TH>
+					<TH class="cc-th" width=20%><?php print LANGPARENT17 ?></TH>
+					<TH class="cc-th" width=15%><?php print LANGABS60 ?></TH>
+					<TH class="cc-th" width=20%><?php print LANGABS12 ?></TH>
+					</TR></thead>
+					<tbody>
 					<?php
 					$data_2=affRetard($data[$i][3]);
-					// $data : tab bidim - soustab 3 champs
 					// elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere, justifier, heure_saisie, creneaux
-					for($j=0;$j<count($data_2);$j++) {
+
+					for($j=0;$j<countTriade($data_2);$j++) {
 						list($creneaux,$debcre,$fincre)=preg_split('/#/',$data_2[$j][10]);
 						$matiere=chercheMatiereNom($data_2[$j][7]);
 						if (($matiere == "") || ($matiere < 0)) { $matiere="";  } ?>
@@ -711,34 +772,34 @@ $departementnais=$data[0][62];
 							if ($data_2[$j][6] == "inconnu") { $motiftext=LANGINCONNU; }
 							$motiftext=preg_replace('/"/'," ",$motiftext);
 							?>
-							<input type=text name="saisie_modif_<?php print $i?>" value="<?php print $motiftext ?>" size=30 readonly >
-							( <input type=checkbox name="saisie_justifier_<?php print $i?>" value="1" disabled <?php if ($data_2[$j][8] == 1) { print "checked='checked'"; } ?> > Justifié)
+							<input type=text name="saisie_modif_<?php print $i?>" value="<?php print $motiftext ?>" size=10 readonly >
+							(&nbsp;<input type=checkbox name="saisie_justifier_<?php print $i?>" value="1" disabled <?php if ($data_2[$j][8] == 1) { print "checked='checked'"; } ?> > Justifié)
 							</td>
 							</form>
 							</TR>
 						<?php
-        					}
+    					}
 						?>
-						</table>
-						<BR>
-						<table border="1" bordercolor="#000000" width="100%"  style="border-collapse: collapse;"  >
-						<TR>
-						<TD bgcolor='yellow' align=center width=15%><?php print LANGPARENT8 ?> </td>
-						<TD bgcolor='yellow' align=center width=15%><?php print LANGABS60 ?> </td>
-						<TD bgcolor='yellow' align=center width=20%>&nbsp;<?php
+						</tbody></table>
+						<br>
+						<table border="1" width="100%" style="border-collapse:collapse;margin-bottom:12px">
+						<thead><TR>
+						<TH class="cc-th" width=15%><?php print LANGPARENT8 ?></TH>
+						<TH class="cc-th" width=15%><?php print LANGABS60 ?></TH>
+						<TH class="cc-th" width=20%>&nbsp;<?php
 						if ($_SESSION["membre"] == "menuprof") {
 							print "Créneau&nbsp;";
 						}else{
-							print LANGGRP29bis."&nbsp";
+							print LANGGRP29bis."&nbsp;";
 						}
-						?>
-						</td>
-						<TD bgcolor='yellow' align=center width=20%><?php print LANGABS12 ?> </td>
-						</TR>
+						?></TH>
+						<TH class="cc-th" width=20%><?php print LANGABS12 ?></TH>
+						</TR></thead>
+						<tbody>
 						<?php
 						$data_3=affAbsence($data[$i][3]);
 						//    elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif,  duree_heure, id_matiere, time, justifier, heure_saisie, heuredabsence, creneaux
-						for($j=0;$j<count($data_3);$j++) {
+						for($j=0;$j<countTriade($data_3);$j++) {
 							list($creneaux,$debcre,$fincre)=preg_split('/#/',$data_3[$j][13]);
 						?>
 						<TR class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
@@ -773,52 +834,53 @@ $departementnais=$data[0][62];
 						chargement_pendant_jour('<?php print trim($yy)?>','<?php print $i?>','<?php print $i.$j?>');
 						</script>
 						<TD align=center valign=top>
-						<?php 
+						<?php
 						if ($_SESSION["membre"] == "menuprof") {
 							print "$creneaux ($debcre - $fincre)";
 						}else{
-							print dateForm($data_3[$j][2])?> <br> <?php if (($data_3[$j][11] != "") && ($data_3[$j][11] != "00:00:00") ){ print timeForm($data_3[$j][11]); 
+							print dateForm($data_3[$j][2])?> <br> <?php if (($data_3[$j][11] != "") && ($data_3[$j][11] != "00:00:00") ){ print timeForm($data_3[$j][11]);
 						}
 					}
-					?>	       
+					?>
 					</td>
 					<TD valign=top>
 					<?php $motiftext=$data_3[$j][6];
-      					if ($data_3[$j][6] == "inconnu") { $motiftext=LANGINCONNU; }
-      					$motiftext=preg_replace('/"/'," ",$motiftext);
+      				if ($data_3[$j][6] == "inconnu") { $motiftext=LANGINCONNU; }
+      				$motiftext=preg_replace('/"/'," ",$motiftext);
 					?>
-					<input type=text name="saisie_modif_<?php print $i?>" value="<?php print $motiftext ?>" size=30 readonly >
-					( <input type=checkbox name="saisie_justifier_<?php print $i?>" value="1" disabled <?php if ($data_3[$j][10] == 1) { print "checked='checked'"; } ?> > Justifié)
+					<input type=text name="saisie_modif_<?php print $i?>" value="<?php print $motiftext ?>" size=10 readonly >
+					(&nbsp;<input type=checkbox name="saisie_justifier_<?php print $i?>" value="1" disabled <?php if ($data_3[$j][10] == 1) { print "checked='checked'"; } ?> > Justifié)
 					</td>
-					<input type=hidden name=saisie_eleve_id_2 value="<?php print $data[$i][3]?>">
-					<input type=hidden name=saisie_date_ret_2 value="<?php print $data_3[$j][1]?>">
-					<input type=hidden name=saisie_nom_eleve value="<?php print $data[$i][1]?>">
-					<input type=hidden name=saisie_id_champ value="<?php print $i?>">
-					<input type=hidden name=saisie_time value="<?php print $data_3[$j][9]?>">
-					<input type=hidden name=saisie_matiere value="<?php print $data_3[$j][8]?>">
+					<input type='hidden' name=saisie_eleve_id_2 value="<?php print $data[$i][3]?>">
+					<input type='hidden' name=saisie_date_ret_2 value="<?php print $data_3[$j][1]?>">
+					<input type='hidden' name=saisie_nom_eleve value="<?php print $data[$i][1]?>">
+					<input type='hidden' name=saisie_id_champ value="<?php print $i?>">
+					<input type='hidden' name=saisie_time value="<?php print $data_3[$j][9]?>">
+					<input type='hidden' name=saisie_matiere value="<?php print $data_3[$j][8]?>">
 					</form>
 					</td>
 					</TR>
-<?php 				} ?>
-				</table>
+<?php 			}
+					  ?>
+				</tbody></table>
 		<?php } ?>
 	<?php }else{ ?>
-		<br><br><center><font class='T2'><?php print LANGMESS308 ?></font></center>
-	<?php 
-	     } 
+		<div class="fe-no-access"><?php print LANGMESS308 ?></div>
+	<?php
+	     }
 	?>
   </div>
 
-  <?php //  ?>
-  <div class="dhtmlgoodies_aTab"  style="overflow:auto;"  >
-	<table border="1" bordercolor="#000000" width="100%"  style="border-collapse: collapse;"  >
-	<TR><td colspan=4 bgcolor=#FFFFFF align=center> <?php print LANGPARENT15 ?>  </td></tr>
+  <div id="fe-panel-3" class="fe-panel">
+	<table border="1" width="100%" style="border-collapse:collapse;margin-bottom:12px">
+	<thead>
+	<TR><td colspan=4 bgcolor=#FFFFFF align=center style="font-size:12px;font-weight:600;padding:6px"> <?php print LANGPARENT15 ?></td></TR>
 	<TR>
-
-	<TD bgcolor='yellow' align=center width=5><?php print ucwords(LANGPROFK) ?></td>
-	<TD bgcolor='yellow' align=center ><?php print LANGDISC57?> </td>
-
+	<TH class="cc-th" width=5%><?php print ucwords(LANGPROFK) ?></TH>
+	<TH class="cc-th"><?php print LANGDISC57?></TH>
 	</TR>
+	</thead>
+	<tbody>
 <?php
 
 if (($_SESSION["membre"] == "menuprof") || ($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") || ($_SESSION["membre"] == "menupersonnel") ) {
@@ -829,7 +891,7 @@ if (($_SESSION["membre"] == "menuprof") || ($_SESSION["membre"] == "menuadmin") 
 // id,id_eleve,motif,id_category,date_saisie,origin_saisie,signature_parent,attribuer_par,devoir_a_faire
 // $data : tab bidim - soustab 3 champs
 
-for($j=0;$j<count($data_2);$j++)
+for($j=0;$j<countTriade($data_2);$j++)
         {
 		$raison=$data_2[$j][8];
 		$raison=preg_replace('/\r\n/',"<br />",$raison);
@@ -837,7 +899,7 @@ for($j=0;$j<count($data_2);$j++)
 
 ?>
 	<TR  class="tabnormal" onMouseOver="this.className='tabover'" onMouseOut="this.className='tabnormal'">
-	
+
 	<TD align=center valign="top" width=10% ><?php print dateForm($data_2[$j][4])?></td>
 	<TD valign=top>
 	&nbsp;<?php print ucwords(LANGDISC20) ?>: <font color=red><b><?php print rechercheCategory($data_2[$j][3])?></b></font> <br />
@@ -846,21 +908,25 @@ for($j=0;$j<count($data_2);$j++)
 	&nbsp;<?php print LANGDISC9 ?> : <?php print trim($data_2[$j][7]) ?><br>
 	&nbsp;<?php print LANGMESS98 ?> : <?php print $data_2[$j][8]?>
 	</td>
-	
+
 	</TR>
 
 <?php
-	
-        }
+
+}
+
 ?>
-</table>
-<br /><br />
-<table border="1" bordercolor="#000000" width="100%"  style="border-collapse: collapse;"  >
-<TR><td colspan=3 bgcolor=#FFFFFF align=center> <?php print LANGPARENT16 ?></td></tr>
-<TR>
-<TD bgcolor='yellow' align=center width=10%><?php print LANGPARENT16 ?></td>
-<TD bgcolor='yellow' align=center ><?php print LANGDISP2 ?></td>
-</TR>
+	</tbody></table>
+
+	<table border="1" width="100%" style="border-collapse:collapse">
+	<thead>
+	<TR><td colspan=3 bgcolor=#FFFFFF align=center style="font-size:12px;font-weight:600;padding:6px"> <?php print LANGPARENT16 ?></td></TR>
+	<TR>
+	<TH class="cc-th" width=10%><?php print LANGPARENT16 ?></TH>
+	<TH class="cc-th"><?php print LANGDISP2 ?></TH>
+	</TR>
+	</thead>
+	<tbody>
 <?php
 if (($_SESSION["membre"] == "menuparent") || ($_SESSION["membre"] == "menueleve") || ($_SESSION["membre"] == "menututeur") ) {
 	$data_2= affRetenuTotal_par_eleve($_SESSION["id_pers"]);
@@ -873,7 +939,8 @@ if (($_SESSION["membre"] == "menuprof") || ($_SESSION["membre"] == "menuadmin") 
 
 // id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data_2);$j++) {
+
+for($j=0;$j<countTriade($data_2);$j++) {
 ?>
         <TR  class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'">
         <form method=POST>
@@ -896,24 +963,26 @@ for($j=0;$j<count($data_2);$j++) {
 	</td>
         </form>
         </TR>
-<?php } ?>
+<?php }
 
-</table>
-</div>
+?>
+	</tbody></table>
+  </div>
 
-<?php // savoir etre ?>
-  <div class="dhtmlgoodies_aTab" style="overflow:auto;" >
-<table width='100%' border="1" style="border-collapse: collapse;" >
-<tr>
-<td bgcolor="yellow"><font class='T2'><?php print "Date" ?></font></td>
-<td bgcolor="yellow"><font class='T2'><?php print "Ponctualité" ?></font></td>
-<td bgcolor="yellow"><font class='T2'><?php print "Motivation" ?></font></td>
-<td bgcolor="yellow"><font class='T2 '><?php print "Dynamisme" ?></font></td>
-</tr>
+  <?php // savoir etre ?>
+  <div id="fe-panel-4" class="fe-panel">
+	<table border="1" width='100%' style="border-collapse:collapse">
+	<thead><tr>
+	  <th class="cc-th">Date</th>
+	  <th class="cc-th">Ponctualité</th>
+	  <th class="cc-th">Motivation</th>
+	  <th class="cc-th">Dynamisme</th>
+	</tr></thead>
+	<tbody>
 <?php
 $anneeScolaire=anneeScolaireViaIdClasse($saisie_classe);
 $dataInfo=recupSavoirEtre($id_eleve,$saisie_classe,$anneeScolaire);
-for($j=0;$j<count($dataInfo);$j++) { 
+for($j=0;$j<countTriade($dataInfo);$j++) {
 	$ponct=stripslashes($dataInfo[$j][0]);
 	$motiv=stripslashes($dataInfo[$j][1]);
 	$dynam=stripslashes($dataInfo[$j][2]);
@@ -921,74 +990,72 @@ for($j=0;$j<count($dataInfo);$j++) {
 	$date=dateForm($dataInfo[$j][4]);
 	$motiv=preg_replace('/"/',"&quot;",$motiv);
 	$dynam=preg_replace('/"/',"&quot;",$dynam);
-	$ponct=preg_replace('/"/',"&quot;",$ponct); 
-	print "<tr bgcolor='#FFFFFF' >";
-	print "<td width='10%' valign='top' ><font class='T1'>$date</font></td>";
-	print "<td width='30%' valign='top' ><font class='T2'>$ponct</font></td>";
-	print "<td width='30%' valign='top' ><font class='T2'>$motiv</font></td>";			
-	print "<td width='30%' valign='top' ><font class='T2'>$dynam</font></td>";
+	$ponct=preg_replace('/"/',"&quot;",$ponct);
+	print "<tr class='cc-tr-data'>";
+	print "<td width='10%' valign='top'>$date</td>";
+	print "<td width='30%' valign='top'>$ponct</td>";
+	print "<td width='30%' valign='top'>$motiv</td>";
+	print "<td width='30%' valign='top'>$dynam</td>";
+	print "</tr>";
 }
 ?>
-</table>
+	</tbody></table>
+  </div>
 
-</div>
 
-
-	<div class="dhtmlgoodies_aTab"  style="overflow:auto;"  >
+  <div id="fe-panel-5" class="fe-panel">
   		<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")|| ($_SESSION["membre"] == "menupersonnel")) {  ?>
-  			<table width=100% border="1" bgcolor='#FFFFFF'  style="border-collapse: collapse;"  >
-  			<?php 
-			print "<tr><td bgcolor='yellow' width='5%' >&nbsp;Année&nbsp;Scolaire</td><td bgcolor='yellow'>&nbsp;Classe</td></tr>";
+  			<table border="1" width='100%' style="border-collapse:collapse">
+  			<thead>
+			<?php
+			print "<tr><th class='cc-th' style='width:5%'>Année Scolaire</th><th class='cc-th'>Classe</th></tr>";
+			?>
+			</thead>
+			<tbody>
+			<?php
 			$data=listingHistoClasseEleve($idEleve); // annee, classe
-			for ($i=0; $i<count($data);$i++) {
-				print "<tr><td>&nbsp;".$data[$i][0]."&nbsp;</td><td>&nbsp;".$data[$i][1]."</td></tr>";
+			for ($i=0; $i<countTriade($data);$i++) {
+				print "<tr class='cc-tr-data'><td>&nbsp;".$data[$i][0]."&nbsp;</td><td>&nbsp;".$data[$i][1]."</td></tr>";
 			}
    			?>
-  			</table>
+  			</tbody></table>
 		<?php }else{ ?>
-			<br><br><center><font class='T2'><?php print LANGMESS308 ?></font></center>
-		<?php } ?>
-	</div>	
-
-
-
-  	<?php //  Opérations effectuées ?>
-	<div class="dhtmlgoodies_aTab"  style="overflow:auto;"  >
-  		<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")|| ($_SESSION["membre"] == "menupersonnel")) {  ?>
-  			<table width=100% border="1" bgcolor='#FFFFFF'  style="border-collapse: collapse;"  >
-  			<?php 
-			print "<tr><td bgcolor='yellow' width='5%' >&nbsp;Date</td><td bgcolor='yellow'>&nbsp;Action</td><td bgcolor='yellow'>&nbsp;Information</td></tr>";
-			$data=listingHistoEleve($idEleve); // date,action,info
-			for ($i=0; $i<count($data);$i++) {
-				print "<tr><td>&nbsp;".dateForm($data[$i][0])."&nbsp;</td><td>&nbsp;".$data[$i][1]."</td><td>".$data[$i][2]."</td></tr>";
-			}
-   			?>
-  			</table>
-		<?php }else{ ?>
-			<br><br><center><font class='T2'><?php print LANGMESS308 ?></font></center>
+			<div class="fe-no-access"><?php print LANGMESS308 ?></div>
 		<?php } ?>
 	</div>
 
 
 
+
+
+
 </div>
 
 
 
 
-<script type="text/javascript">
-initTabs('dhtmlgoodies_tabView1',Array('<?php print LANGMESS259 ?>','<?php print LANGMESS260 ?>','<?php print LANGMESS261 ?>','<?php print LANGMESS262 ?>','Savoir & Etre','<?php print LANGTMESS505 ?>','<?php print LANGMESS263 ?>'),'0','100%',840,Array(false,false,false,false,false,false,false));
-initTabs('dhtmlgoodies_tabView2',Array('<?php print LANGMESS264 ?>','<?php print LANGMESS265 ?>','<?php print LANGMESS266 ?>','<?php print LANGTMESS435 ?>','Historie Stage','<?php print LANGMESS267 ?>','<?php print LANGMESS268 ?>','<?php print LANGMESS269 ?>'),'0','100%',437,Array(false,false,false,false,false,false,false));
-</script> 
-
-
-
-
-
-
-
-
-
+<script>
+(function(){
+  document.querySelectorAll('.fe-main-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.fe-main-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.fe-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      var panel = document.getElementById(tab.dataset.panel);
+      if (panel) panel.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.fe-sub-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.fe-sub-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.fe-sub-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      var panel = document.getElementById(tab.dataset.sub);
+      if (panel) panel.classList.add('active');
+    });
+  });
+})();
+</script>
 
 	<br><br>
 </td></tr>

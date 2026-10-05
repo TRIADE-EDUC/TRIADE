@@ -178,7 +178,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Per visualizar aqueste site de façon optimala : resolucion minimala : 800x600 <br>"; 
 }else{
-	langmenupied="<p> La <b>T</b>ranspar&eacute;ncia e la <b>R</b>apiditat de l'<b>I</b>nformatica <b>A</b>u servici <b>D</b>e l'<b>E</b>nseignement<br>Per visualizar aqueste site de faiçon optimala : resolucion minimala : 800x600 <br> T.R.I.A.D.E. ©  2024  - Totis dreits reservats";
+	langmenupied="<p> La <b>T</b>ranspar&eacute;ncia e la <b>R</b>apiditat de l'<b>I</b>nformatica <b>A</b>u servici <b>D</b>e l'<b>E</b>nseignement<br>Per visualizar aqueste site de faiçon optimala : resolucion minimala : 800x600 <br> T.R.I.A.D.E. ©  2026  - Totis dreits reservats";
 }
 img_logo_pied="<img src='./image/commun/triade-xhtml.jpg' alt='XHTML'>  <img src='./image/commun/triade-w3C.jpg' alt='w3C'> <img src='./image/commun/triade-css.png' alt='css' > <a href='http://www.triade-educ.com/accueil/don-triade.php' target='_blank' ><img border='0' src='./image/commun/triade_paypal.png' alt='Paypal' ></a><br /><br />";
  

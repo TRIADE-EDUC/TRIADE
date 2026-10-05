@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: indexation_docnum.class.php,v 1.36 2018-11-28 15:45:28 arenou Exp $
+// $Id: indexation_docnum.class.php,v 1.39 2021/12/23 08:16:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once($class_path."/XMLlist.class.php");
 require_once("$base_path/catalog/explnum/index_docnum/index_pdf.class.php");
 require_once("$base_path/catalog/explnum/index_docnum/index_html.class.php");
@@ -20,7 +21,7 @@ require_once("$include_path/explnum.inc.php");
 require_once($class_path."/sphinx/sphinx_explnums_indexer.class.php");
 
 /**
- * Classe de gestion de l'indexation des documents numÃ©riques
+ * Classe de gestion de l'indexation des documents numériques
  */
 class indexation_docnum {
 	
@@ -41,7 +42,7 @@ class indexation_docnum {
 	/**
 	 * Constructeur
 	 */
-	function __construct($id, $texte=''){
+	public function __construct($id, $texte=''){
 		$this->id_explnum = $id;
 		if(!$texte){
 			$this->fetch_data();
@@ -55,27 +56,26 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * Parcours des donnÃ©es de la table explnum
+	 * Parcours des données de la table explnum
 	 */
-	function fetch_data(){
-		global $dbh;
+	public function fetch_data(){
+		$explnum = new explnum($this->id_explnum);
 		
-                $explnum = new explnum($this->id_explnum);
-		
-                if ($content = $explnum->get_file_content()) {
-                    $this->file_content = $content;
-							}else{
-								$this->file_content ="";
-							}
-				$this->file_url = $explnum->explnum_url;
-				$this->mimetype = $explnum->explnum_mimetype;
-				$this->explnum_nomfichier = $explnum->explnum_nomfichier;
-				$this->ext = $explnum->explnum_extfichier;
-			}
+		if ($content = $explnum->get_file_content()) {
+			$this->file_content = $content;
+		}else{
+			$this->file_content ="";
+		}
+		$this->file_url = $explnum->explnum_url;
+		$this->mimetype = $explnum->explnum_mimetype;
+		$this->explnum_nomfichier = $explnum->explnum_nomfichier;
+			$this->ext = $explnum->explnum_extfichier;
+	}
+	
 	/**
 	 * Pour avoir la taille en octets
 	 */
-	function return_bytes($val) {
+	public function return_bytes($val) {
 	    $val = trim($val);
 	    $last = strtolower($val[strlen($val)-1]);
 	    switch($last) {
@@ -90,11 +90,11 @@ class indexation_docnum {
 	    return $val;
 	}
 	/**
-	 * ExÃ©cution du processus d'indexation
+	 * Exécution du processus d'indexation
 	 */
-	function run_index(){
+	public function run_index(){
 		if($this->mimetype == 'URL'){
-			//rÃ©cupÃ©ration par cURL
+			//récupération par cURL
 			$this->get_file_from_curl($this->file_url);
 			create_tableau_mimetype();
 			$this->mimetype = trouve_mimetype($this->fichier);
@@ -126,7 +126,7 @@ class indexation_docnum {
 				$this->vignette = construire_vignette('',$tmpprefix_url_image."images/mimetype/".icone_mimetype($this->mimetype, $this->ext));
 			}
 		} else {
-			//rÃ©cupÃ©ration dans la base
+			//récupération dans la base
 			$this->get_file($this->file_content);
 			create_tableau_mimetype();
 			if(!$this->mimetype) $this->mimetype = trouve_mimetype($this->fichier);
@@ -137,7 +137,7 @@ class indexation_docnum {
 			}
 		}
 		if (file_exists($this->fichier)) {
-			//On parse le XML pour recupÃ©rer le nom de la classe
+			//On parse le XML pour recupérer le nom de la classe
 			$this->parse_xml();
 			//On choisit la classe correspondant au traitement du type MIME
 			$this->choose_class($this->class_associee);
@@ -145,9 +145,9 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On rÃ©cupÃ¨re le nom de la classe de traitement en fonction du  mimetype
+	 * On récupère le nom de la classe de traitement en fonction du  mimetype
 	 */
-	function parse_xml(){
+	public function parse_xml(){
 		global $base_path;
 		
 		$parse = new XMLlist("$base_path/catalog/explnum/index_docnum/index_doc.xml");	
@@ -163,9 +163,9 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On rÃ©cupÃ¨re le texte du document numÃ©rique grÃ¢ce Ã  la bonne classe
+	 * On récupère le texte du document numérique grâce à la bonne classe
 	 */
-	function choose_class($class_name){
+	public function choose_class($class_name){
 		if($class_name){
 			$index_class = new $class_name($this->fichier,$this->mimetype,$this->ext);
 			$this->texte = $index_class->get_text($this->fichier);
@@ -173,17 +173,17 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On rÃ©cupÃ¨re le contenu du fichier qui est en base
+	 * On récupère le contenu du fichier qui est en base
 	 */
-	function get_file($filecontent){
+	public function get_file($filecontent){
 		global $base_path;
 		
-		//On dÃ©finit un nom unique dans le dossier temporaire
+		//On définit un nom unique dans le dossier temporaire
 		$nom_temp = session_id().microtime();
 		$nom_temp = str_replace(' ','_',$nom_temp);
 		$nom_temp = str_replace('.','_',$nom_temp);
 		
-		//On Ã©crit le contenu dans le fichier
+		//On écrit le contenu dans le fichier
 		$fd = fopen("$base_path/temp/".$nom_temp,"w");
 		fwrite($fd,$filecontent);
 		fclose($fd);	
@@ -191,12 +191,12 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On rÃ©cupÃ¨re le contenu du fichier Ã  distance
+	 * On récupère le contenu du fichier à distance
 	 */
-	function get_file_from_curl($f_url){
+	public function get_file_from_curl($f_url){
 		global $base_path;
 		
-		//On dÃ©finit un nom unique dans le dossier temporaire
+		//On définit un nom unique dans le dossier temporaire
 		$nom_temp = session_id().microtime();
 		$nom_temp = str_replace(' ','_',$nom_temp);
 		$nom_temp = str_replace('.','_',$nom_temp);
@@ -209,10 +209,9 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On indexe le document numÃ©rique
+	 * On indexe le document numérique
 	 */
-	function indexer(){
-		global $dbh;
+	public function indexer(){
 		global $sphinx_active; 
 		
 		$explnum_index_sew = strip_empty_words($this->texte);
@@ -220,7 +219,7 @@ class indexation_docnum {
 			$explnum_index_sew = ' '.$explnum_index_sew.' ';
 		}
 		$rqt = " update explnum set explnum_index_sew='".addslashes($explnum_index_sew)."', explnum_index_wew='".addslashes($this->texte)."' where explnum_id='".$this->id_explnum."'";
-		pmb_mysql_query($rqt,$dbh);	
+		pmb_mysql_query($rqt);	
 		if (file_exists($this->fichier)) unlink($this->fichier);	
 		if($sphinx_active){
 			$si = self::get_sphinx_indexer();
@@ -229,17 +228,14 @@ class indexation_docnum {
 	}
 	
 	/**
-	 * On supprime l'index du document numÃ©rique
+	 * On supprime l'index du document numérique
 	 */
-	function desindexer(){
-		global $dbh;
-		
+	public function desindexer(){
 		$rqt = " update explnum set explnum_index_sew='', explnum_index_wew='' where explnum_id='".$this->id_explnum."'";
-		pmb_mysql_query($rqt,$dbh);
+		pmb_mysql_query($rqt);
 	}
 		
 	private static function get_sphinx_indexer(){
-		global $include_path;
 		if(!self::$sphinx_indexer){
 			self::$sphinx_indexer = new sphinx_explnums_indexer();
 		}

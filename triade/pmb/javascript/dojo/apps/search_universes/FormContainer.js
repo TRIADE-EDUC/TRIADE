@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormContainer.js,v 1.10 2018-05-17 15:27:08 apetithomme Exp $
+// $Id: FormContainer.js,v 1.13 2023/09/08 09:31:56 rtigero Exp $
 
 
 define(["dojo/_base/declare", 
@@ -61,6 +61,10 @@ define(["dojo/_base/declare",
 						this.addNewEntity = true;
 					}
 					this.loadContent(evtArgs.html);
+					break;
+				case 'duplicateSegment':
+				case 'duplicateUniverse':
+					this.duplicateItem(evtArgs);
 					break;
 			}			
 		},
@@ -135,7 +139,9 @@ define(["dojo/_base/declare",
 		},
 		onLoad: function(){
 			var form = query('form', this.containerNode)[0];
-			on(form, 'submit', lang.hitch(this, this.postForm));
+			if (typeof form != 'undefined'){
+				on(form, 'submit', lang.hitch(this, this.postForm));
+			}
 //			Array.prototype.slice.call(query('input[onclick]', this.containerNode)).forEach(button => {
 //				domConstruct.destroy(button);
 //			});
@@ -210,5 +216,18 @@ define(["dojo/_base/declare",
 //				this.dijits[dijitId].destroy();
 			}
 		},
+		duplicateItem : function(params){
+			this.showPatience();
+			xhr(params.action,{
+				handleAs: "json",
+				method:'GET'
+			}).then(lang.hitch(this,function(response){
+				this.hidePatience();
+				if (response.status) {
+					topic.publish('FormContainer', 'updateTree', response);
+					this.set('content', '');
+				}	
+			}));
+		}
 	});
 });

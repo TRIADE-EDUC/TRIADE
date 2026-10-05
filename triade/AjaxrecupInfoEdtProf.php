@@ -13,7 +13,7 @@ list($annee0,$annee1)=preg_split('/-/',anneeScolaire());
 $dateDebut=trim($annee0)."-09-01";
 $dateFin=trim($annee1)."-08-31";
 $aff=0;
-for ($i=0;$i<count($data);$i++) {
+for ($i=0;$i<countTriade($data);$i++) {
 	if ($data[$i][0] == "-1") continue;
 	$aff=1;
 	$idmatiere=$data[$i][1];
@@ -22,7 +22,7 @@ for ($i=0;$i<count($data);$i++) {
 	$matiere=chercheMatiereNom($idmatiere);
 	$nbsecondeplanifier=0;
 	$tabnbheureplanifier=nbHeureVacationMatiereParDate($idprof,$idmatiere,$dateDebut,$dateFin,$idclasse); // hh:mm:ss
-	for($j=0;$j<count($tabnbheureplanifier);$j++) {
+	for($j=0;$j<countTriade($tabnbheureplanifier);$j++) {
 		$nbheureplanifier=$tabnbheureplanifier[$j][0];
 		$nbsecondeplanifier+=conv_en_seconde($nbheureplanifier);
 	}

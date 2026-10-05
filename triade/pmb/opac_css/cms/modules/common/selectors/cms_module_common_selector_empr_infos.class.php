@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_empr_infos.class.php,v 1.2 2015-04-03 11:16:22 jpermanne Exp $
+// $Id: cms_module_common_selector_empr_infos.class.php,v 1.3 2023/02/16 13:50:55 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,11 @@ class cms_module_common_selector_empr_infos extends cms_module_common_selector{
 	}
 	
 	public function get_form(){
-		
+
+	    if (!isset($this->parameters['val_choice'])) {
+	        $this->parameters['val_choice'] = "0";
+	    }
+
 		$form="
 			<div class='row'>
 				<div class='colonne3'>
@@ -32,6 +36,8 @@ class cms_module_common_selector_empr_infos extends cms_module_common_selector{
 		return $form;
 	}
 	
+	
+
 	public function save_form(){
 		$this->parameters['val_choice'] = $this->get_value_from_form("val_choice");
 		return parent::save_form();
@@ -44,7 +50,7 @@ class cms_module_common_selector_empr_infos extends cms_module_common_selector{
 				switch($this->parameters['val_choice']){
 					case "statut" :
 						$query = "select empr_statut as val from empr where id_empr = ".$_SESSION['id_empr_session'];
-						break;	
+						break;
 					case "categ" :
 						$query = "select empr_codestat as val from empr where id_empr = ".$_SESSION['id_empr_session'];
 						break;

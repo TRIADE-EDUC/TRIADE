@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -38,54 +40,48 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print LANGTITRE33?></font></b></td>
 </tr>
 <tr id='cadreCentral0' >
 <td >
-<br><br>
-<table border=0 align=center width=100% >
-<tr><td  align="right"  width=50% >
-<form method=post onsubmit="return valide_consul_classe()" name="formulaire"  >
-<font class=T2><?php print LANGELE4?> :</font> <select id="saisie_classe" name="saisie_classe">
-<option STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
-<?php
-select_classe(); // creation des options
-?>
-</select></td><td>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT28?>","consult"); //text,nomInput</script>
+<form method=post onsubmit="return valide_consul_classe()" name="formulaire">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGELE4 ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select">
+      <option STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_classe(); ?>
+    </select>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT28 ?>","consult");</script>
 </form>
-</td></tr>
-<tr><td colspan=2 height=20>
-</td></tr>
-<tr><td align="right" >
-<font class=T2><?php print LANGMESS325 ?> </font> </td><td>
-<script language=JavaScript>buttonMagic("<?php print CLICKICI?>","certificat_param.php","certif_create","scrollbars=yes,width=700,height=680",""); //text,nomInput</script>
-<tr><td colspan=2 height=20></td></tr>
-<tr><td align="right" >
-<font class=T2><?php print LANGMESS326 ?> </font> </td><td align='top'>
-<script language=JavaScript>buttonMagic("<?php print CLICKICI?>","certificat_param_import.php","_parent","",""); //text,nomInput</script></td></tr>
-<?php
-if (isset($_GET["idsup"])) {
-	unlink("data/parametrage/certificat.rtf");
-}
-
-if (file_exists("data/parametrage/certificat.rtf")) {
-	print "<tr><td></td><td >[&nbsp;<a href='telecharger.php?fichier=data/parametrage/certificat.rtf'>".LANGTMESS452."</a>&nbsp;]&nbsp;[&nbsp;<a href='certificat.php?idsup'>".LANGBT50."</a>&nbsp;]</td></tr>";
-	$text=LANGTMESS451;
-	print "<tr><td colspan=2 align=center><br /><br /><font color='red'>$text</font></td></tr>";
-}
-?>
-</table>
-<br><br>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
+<br>
+<div style="display:flex;flex-direction:column;gap:8px;margin:8px 5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS325 ?></span>
+    <script language=JavaScript>buttonMagic("<?php print CLICKICI ?>","certificat_param.php","certif_create","scrollbars=yes,width=700,height=680","");</script>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS326 ?></span>
+    <script language=JavaScript>buttonMagic("<?php print CLICKICI ?>","certificat_param_import.php","_parent","","");</script>
+  </div>
+  <?php
+  if (isset($_GET["idsup"])) { unlink("data/parametrage/certificat.rtf"); }
+  if (file_exists("data/parametrage/certificat.rtf")) {
+    print "<div class='na-row'><span class='na-lbl'>Modèle actuel :</span>[&nbsp;<a href='telecharger.php?fichier=data/parametrage/certificat.rtf'>".LANGTMESS452."</a>&nbsp;]&nbsp;[&nbsp;<a href='certificat.php?idsup'>".LANGBT50."</a>&nbsp;]</div>";
+    print "<div style='color:red;font-size:12px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;margin-top:4px;'>".LANGTMESS451."</div>";
+  }
+  ?>
+</div>
 
 
 <!-- // fin form -->
@@ -95,7 +91,7 @@ if (file_exists("data/parametrage/certificat.rtf")) {
 // affichage de la classe
 if ((isset($_POST["consult"])) || (isset($_POST["num_certif"])))  {
 $saisie_classe=$_POST["saisie_classe"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -109,9 +105,9 @@ $num_certif=$_POST["num_certif"];
 <BR><BR><BR>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2" colspan="3"><b><font id='menumodule1' >
-<?php print LANGELE4?> : <font id='color2'><b><?php print $cl?></b></font> / <?php print LANGCOM3 ?> <font id="color2"><b><?php print count($data) ?></b></font></font></td></tr>
+<?php print LANGELE4?> : <font id='color2'><b><?php print $cl?></b></font> / <?php print LANGCOM3 ?> <font id="color2"><b><?php print countTriade($data) ?></b></font></font></td></tr>
 <?php
-if( count($data) <= 0 )	{
+if( countTriade($data) <= 0 )	{
 	print("<tr id='cadreCentral0'  ><td align=center valign=center>".LANGRECH1."</td></tr>");
 }else {
 	if (!file_exists("data/parametrage/certificat$num_certif.rtf")) {
@@ -150,9 +146,9 @@ if( count($data) <= 0 )	{
 	}
 	?>
 
-	<tr bgcolor="yellow"><td><B><?php print ucwords(LANGIMP8)?></B></td><td colspan=2><B><?php print ucwords(LANGIMP9)?></B></td></tr>
+	<tr><td style="background:#ffffd5;font-weight:700;padding:4px 6px;"><b><?php print ucwords(LANGIMP8) ?></b></td><td colspan=2 style="background:#ffffd5;font-weight:700;padding:4px 6px;"><b><?php print ucwords(LANGIMP9) ?></b></td></tr>
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	?>
 		<tr class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
 		<td ><?php print strtoupper($data[$i][2])?></td>
@@ -170,7 +166,7 @@ if( count($data) <= 0 )	{
 print "</table>";
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

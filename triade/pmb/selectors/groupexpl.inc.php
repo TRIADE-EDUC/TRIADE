@@ -1,23 +1,28 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: groupexpl.inc.php,v 1.4 2017-10-19 14:04:50 ngantier Exp $
+// $Id: groupexpl.inc.php,v 1.5 2022/01/10 10:57:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
+global $class_path, $action, $msg, $charset;
+global $sel_header, $sel_footer, $caller, $expl_list, $expl_list_id, $deb_rech, $user_input, $bt_ajouter, $nbr_lignes, $page, $jscript;
+global $pmb_lecteurs_localises, $deflt_docs_location, $sel_search_form;
+global $id_groupexpl, $name, $statut_principal, $statut_others, $comment;
+
+// la variable $caller, passée par l'URL, contient le nom du form appelant
 $base_url = "./select.php?what=groupexpl&caller=$caller&expl_list_id=$expl_list_id";
 
 require_once($class_path."/groupexpl.class.php");
 require_once($class_path."/session.class.php");
-// contenu popup sÃ©lection collection
+// contenu popup sélection collection
 require_once('./selectors/templates/sel_groupexpl.tpl.php');
 
 // affichage du header
 print $sel_header;
 
-// traitement en entrÃ©e des requÃªtes utilisateur
+// traitement en entrée des requêtes utilisateur
 if ($deb_rech) $f_user_input = $deb_rech ;
 $rech_regexp = 0 ;
 if($f_user_input=="" && $user_input=="") {
@@ -51,7 +56,7 @@ switch($action){
 			</div>
 			<div class='row'>
 				<select name='f_loc' >";
-			$res = pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location order by location_libelle",$dbh);
+			$res = pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location order by location_libelle");
 			$loc_select .= "<option value='0'>".$msg["all_location"]."</option>";
 			while ($value = pmb_mysql_fetch_array($res)) {
 				$loc_select .= "<option value='".$value[0]."'";
@@ -68,6 +73,7 @@ switch($action){
 	case 'update':
 		require_once("$class_path/groupexpl.class.php");
 		$groupexpl = new groupexpl();
+		$value = array();
 		$value['name'] = $name;
 		$value['location'] = $f_loc;
 		$value['statut_principal'] = $statut_principal;
@@ -78,7 +84,7 @@ switch($action){
 		$sel_search_form = str_replace("!!deb_rech!!", htmlentities(stripslashes($f_user_input),ENT_QUOTES,$charset), $sel_search_form);
 		print $sel_search_form;
 		print $jscript;
-		show_results($dbh, $user_input, $nbr_lignes, $page);
+		show_results($user_input, $nbr_lignes, $page);
 		break;
 	case "add_expl":
 		if($id_groupexpl) {
@@ -116,7 +122,7 @@ switch($action){
 				$sel_search_form = str_replace("!!bouton_ajouter!!", $bouton_ajouter, $sel_search_form);
 				$sel_search_form = str_replace("!!deb_rech!!", htmlentities(stripslashes($f_user_input),ENT_QUOTES,$charset), $sel_search_form);
 				print $sel_search_form;
-				show_results($dbh, $user_input, $nbr_lignes, $page);
+				show_results($user_input, $nbr_lignes, $page);
 			} else {
 				print "<script type='text/javascript'>
 						window.close();
@@ -130,19 +136,18 @@ switch($action){
 		$sel_search_form = str_replace("!!deb_rech!!", htmlentities(stripslashes($f_user_input),ENT_QUOTES,$charset), $sel_search_form);
 		print $sel_search_form;
 		print $jscript;
-		show_results($dbh, $user_input, $nbr_lignes, $page);
+		show_results($user_input, $nbr_lignes, $page);
 		break;
 	}
 
-function show_results($dbh, $user_input, $nbr_lignes=0, $page=0, $id = 0) {
+function show_results($user_input, $nbr_lignes=0, $page=0, $id = 0) {
 	global $nb_per_page;
 	global $base_url;
-	global $caller;
  	global $charset;
 	global $msg;
 	global $expl_list_id ;
 	
-	// on rÃ©cupÃ©re le nombre de lignes qui vont bien
+	// on récupére le nombre de lignes qui vont bien
 	if (!$id) {
 		if($user_input=="") {
 			$requete = "SELECT COUNT(1) FROM groupexpl";	
@@ -154,8 +159,8 @@ function show_results($dbh, $user_input, $nbr_lignes=0, $page=0, $id = 0) {
 			}
 			$requete="select count(distinct id_groupexpl) from groupexpl where groupexpl_name like '%".$user_input."%'";
 		}
-		$res = pmb_mysql_query($requete, $dbh);
-		$nbr_lignes = @pmb_mysql_result($res, 0, 0);
+		$res = pmb_mysql_query($requete);
+		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 	} else $nbr_lignes=1;
 	if(!$page) $page=1;
 	$debut =($page-1)*$nb_per_page;
@@ -189,7 +194,7 @@ function show_results($dbh, $user_input, $nbr_lignes=0, $page=0, $id = 0) {
 			print "</div></div>";
 		}
 		
-		// on lance la vraie requÃªte
+		// on lance la vraie requête
 		if (!$id) {
 			if($user_input=="") {
 				$requete = "SELECT groupexpl.* FROM groupexpl";
@@ -198,18 +203,13 @@ function show_results($dbh, $user_input, $nbr_lignes=0, $page=0, $id = 0) {
 				$requete="select groupexpl.* from groupexpl where groupexpl_name like '%".$user_input."%' order by groupexpl_name LIMIT $debut,$nb_per_page";
 			}
 		} else $requete="select groupexpl.* FROM groupexpl where id_groupexpl='".$id."'";
-		$res = @pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		while(($group=pmb_mysql_fetch_object($res))) {
 			print pmb_bidi("
  			<a href=\"$base_url&action=add_expl&id_groupexpl=".$group->id_groupexpl."&expl_list=".implode(",", $expl_list_cb)."\">
 					$group->groupexpl_name</a><br />");
 		}
 		pmb_mysql_free_result($res);
-
-		// constitution des liens
-		$nbepages = ceil($nbr_lignes/$nb_per_page);
-		$suivante = $page+1;
-		$precedente = $page-1;	
 
 		// affichage pagination
 		print "<div class='row'>&nbsp;<hr /></div><div class='center'>";

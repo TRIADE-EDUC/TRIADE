@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -46,11 +46,11 @@ include_once("librairie_php/db_triade.php");
 validerequete("menuprof");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_consul_classe()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
@@ -83,7 +83,7 @@ select_classe(); // creation des options
 <?php
 if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 	$saisie_classe=$_POST["saisie_classe"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
@@ -92,7 +92,7 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 	$cl=$data[0][0];
 	$nomClasse=$cl;
 
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		$fic=$_POST["saisie_classe"];
 		$fichierpdf="./data/pdf_certif/Classe_".suppCaracFichier($cl).".pdf";
 		$cl=preg_replace("/'/"," ",$cl);
@@ -139,7 +139,7 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 		$xcoor0+=20;
 		$ycoor0+=10;
 		$j=0;
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 
 			if ($ii == 45) {
 	                	$pdf->AddPage();
@@ -160,12 +160,10 @@ if ( (isset($_POST["consult"])) || (isset($_POST["saisie_classe"]) ) ) {
 		}
 		if (file_exists($fichierpdf))  {  @unlink($fichierpdf); }
 		$pdf->output('F',$fichierpdf);
+		$workbook->close();
+		print "<script language=JavaScript>buttonMagic('Export Excel','visu_document.php?fichier=$fichierxls','_blank','','');</script>&nbsp;&nbsp;";
 	}
 }
-
-$workbook->close();
-
-print "<script language=JavaScript>buttonMagic('Export Excel','visu_document.php?fichier=$fichierxls','_blank','','');</script>&nbsp;&nbsp;";
 
 ?>
 </UL>
@@ -177,7 +175,7 @@ print "<script language=JavaScript>buttonMagic('Export Excel','visu_document.php
 <!-- // fin form -->
  </td></tr></table>
 
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

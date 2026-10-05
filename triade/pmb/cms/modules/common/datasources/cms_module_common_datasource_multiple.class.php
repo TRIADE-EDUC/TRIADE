@@ -1,35 +1,34 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_multiple.class.php,v 1.6 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_datasource_multiple.class.php,v 1.8.6.2.2.1 2025/04/30 12:52:10 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_datasource_multiple extends cms_module_common_datasource {
-	
+
 	public function get_available_datasources(){
 		return array();
 	}
-	
+
 	public function set_num_cadre_content($id){
-	    $this->num_cadre_content = (int) $id;
+		$this->num_cadre_content = intval($id);
 	}
-	
-	public function set_filter($filter){
-		$this->used_external_filter = true;
-		$this->external_filter = $filter;
+
+	public function set_filter($filter) {
+		$this->used_external_filters = true;
+		$this->external_filters[] = $filter;
 	}
-	
+
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_datas(){
-		global $dbh;
 		if($this->id){
 			//on commence par aller chercher ses infos
 			$query = " select id_cadre_content, cadre_content_hash, cadre_content_num_cadre, cadre_content_data from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
 				$this->id = (int) $row->id_cadre_content;
@@ -39,24 +38,24 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 			}
 			//on va chercher les infos des sous-sources
 			$query = "select id_cadre_content, cadre_content_object from cms_cadre_content where cadre_content_type='datasource' and cadre_content_num_cadre != 0 and cadre_content_num_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row=pmb_mysql_fetch_object($result)){
 					$this->datasources[] = array(
 					    'id' => (int) $row->id_cadre_content,
 						'name' => $row->cadre_content_object
-					);	
+					);
 				}
 			}
 		}
 	}
-	
+
 	/*
-	 * MÃ©thode de gÃ©nÃ©ration du formulaire... 
+	 * Méthode de génération du formulaire...
 	 */
 	public function get_form(){
-		$datasources = $this->get_available_datasources();
-		
+		$this->get_available_datasources();
+
 		$form = "
 			<div class='row'>";
 		$form.=$this->get_hash_form();
@@ -67,13 +66,12 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 			<div class='row' id='subdatasources'>
 			</div>";
 		return $form;
-	}	
-	
+	}
+
 	/*
-	 * Formulaire de sÃ©lection d'un sÃ©lecteur
+	 * Formulaire de sélection d'un sélecteur
 	 */
 	protected function get_datasources_list_form(){
-		global $base_path;
 		$datasources = $this->get_available_datasources();
 		$form= "
 			<div class='colonne3'>
@@ -97,7 +95,7 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 		}
 		$form.="
 				require(['dijit/registry', 'dojo/on', 'dojo/topic', 'dojox/layout/ContentPane', 'dojo/dom','dojo/dom-construct'], function (registry, on, topic, ContentPane, dom, domConstruct) {
-					on(dom.byId('".$this->get_form_value_name("datasource_choice")."'),'change',function (evt){	
+					on(dom.byId('".$this->get_form_value_name("datasource_choice")."'),'change',function (evt){
 						datasource = evt.target.value;
 						cms_load_sub_datassource(datasource,0);
 						evt.target.selectedIndex=0;
@@ -133,7 +131,11 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 					}
 				});
 			</script>";
-		if(count($this->parameters['datasources_name'])>0){
+		if (
+			isset($this->parameters['datasources_name']) &&
+			is_countable($this->parameters['datasources_name']) &&
+			count($this->parameters['datasources_name']) > 0
+		) {
 			$form.="
 			<script type='text/javascript'>";
 			for($i=0; $i<count($this->parameters['datasources_name']) ; $i++){
@@ -145,16 +147,14 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 		}
 		return $form;
 	}
-	
+
 	/*
 	 * Sauvegarde des infos depuis un formulaire...
 	 */
 	public function save_form(){
-		global $dbh;
-		
 		$this->parameters['datasources_name'] = $this->get_value_from_form('datasources_name');
 		$this->parameters['datasources_id'] = $this->get_value_from_form('datasources_id');
-		
+
 		//TODO A REPRENDRE
 		$this->get_hash();
 		if($this->id){
@@ -164,22 +164,22 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 			$query = "insert into cms_cadre_content set";
 			$clause = "";
 		}
-		$query.= " 
+		$query.= "
 			cadre_content_hash = '".$this->hash."',
 			cadre_content_type = 'datasource',
 			cadre_content_object = '".$this->class_name."',".
-			($this->cadre_parent ? "cadre_content_num_cadre = '".$this->cadre_parent."'," : "")."		
+			($this->cadre_parent ? "cadre_content_num_cadre = '".$this->cadre_parent."'," : "")."
 			cadre_content_data = '".addslashes($this->serialize())."'
 			".$clause;
-		$result = pmb_mysql_query($query,$dbh);
-		
+		$result = pmb_mysql_query($query);
+
 		if($result){
 			if(!$this->id){
 				$this->id = pmb_mysql_insert_id();
 			}
-			//on supprime les anciennes sources de donnÃ©es...
+			//on supprime les anciennes sources de données...
 			$query = "select id_cadre_content,cadre_content_object from cms_cadre_content where id_cadre_content != '".$this->id."' and cadre_content_type='datasource' and cadre_content_num_cadre = '".$this->cadre_parent."' and cadre_content_num_cadre_content=0";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row= pmb_mysql_fetch_object($result)){
 					$obj = new $row->cadre_content_object($row->id_cadre_content);
@@ -187,49 +187,50 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 				}
 			}
  			//sous-sources
-			for($i=0 ; $i<count($this->parameters['datasources_name']) ; $i++){
-				$datasource = new $this->parameters['datasources_name'][$i]($this->parameters['datasources_id'][$i]);
-				$datasource->set_cadre_parent($this->cadre_parent);
-				$datasource->set_num_cadre_content($this->id);
-				$datasource->set_brothers($this->parameters['datasources_id']);
-				$result = $datasource->save_form();
-				$this->parameters['datasources_id'][$i] = $datasource->id;
-			}
-			//On nettoie les sous sources absentes du cadres//on supprime les anciennes sources de donnÃ©es...
+			if (is_countable($this->parameters['datasources_name'])) {
+    			for($i=0 ; $i<count($this->parameters['datasources_name']) ; $i++){
+    				$datasource = new $this->parameters['datasources_name'][$i]($this->parameters['datasources_id'][$i]);
+    				$datasource->set_cadre_parent($this->cadre_parent);
+    				$datasource->set_num_cadre_content($this->id);
+    				$datasource->set_brothers($this->parameters['datasources_id']);
+    				$result = $datasource->save_form();
+    				$this->parameters['datasources_id'][$i] = $datasource->id;
+    			}
+ 			}
+			//On nettoie les sous sources absentes du cadres//on supprime les anciennes sources de données...
 			$query = "select id_cadre_content,cadre_content_object from cms_cadre_content where ";
-			if(count($this->parameters['datasources_id'])){
+			if(is_countable($this->parameters['datasources_id']) && count($this->parameters['datasources_id'])){
 				$query.= "id_cadre_content not in (".implode(",",$this->parameters['datasources_id']).") and ";
 			}
 			$query.= "cadre_content_type='datasource' and cadre_content_num_cadre = '".$this->cadre_parent."' and cadre_content_num_cadre_content=".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row= pmb_mysql_fetch_object($result)){
 					$obj = new $row->cadre_content_object($row->id_cadre_content);
 					$obj->delete();
 				}
 			}
-			//on remet Ã  jour la liste des sous-sources dans la source multiple
+			//on remet à jour la liste des sous-sources dans la source multiple
 			$query = "update cms_cadre_content set cadre_content_data = '".addslashes($this->serialize())."' where id_cadre_content='".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			return true;
 		}else{
-			//crÃ©ation de la source de donnÃ©e ratÃ©e, on supprime le hash de la table...
-			$this->delete_hash();		
+			//création de la source de donnée ratée, on supprime le hash de la table...
+			$this->delete_hash();
 			return false;
 		}
 	}
-	
+
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
-		global $dbh;
 		if($this->id){
-			//on commence par Ã©liminer le sÃ©lecteur associÃ©...
+			//on commence par éliminer le sélecteur associé...
 			$query = "select id_cadre_content,cadre_content_object from cms_cadre_content where cadre_content_num_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
-				//la logique voudrait qu'il n'y ai qu'un seul sÃ©lecteur (enfin sous-Ã©lÃ©ment, la conception peut Ã©voluer...), mais sauvons les brebis Ã©garÃ©es...
+				//la logique voudrait qu'il n'y ai qu'un seul sélecteur (enfin sous-élément, la conception peut évoluer...), mais sauvons les brebis égarées...
 				while($row = pmb_mysql_fetch_object($result)){
 					$sub_elem = new $row->cadre_content_object($row->id_cadre_content);
 					$success = $sub_elem->delete();
@@ -239,9 +240,9 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 					}
 				}
 			}
-			//on est tout seul, Ã©liminons-nous !
+			//on est tout seul, éliminons-nous !
 			$query = "delete from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				$this->delete_hash();
 				return true;
@@ -250,33 +251,34 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 			}
 		}
 	}
-	
+
 	/*
-	 * MÃ©thode pour renvoyer les donnÃ©es tel que dÃ©fini par le sÃ©lecteur
+	 * Méthode pour renvoyer les données tel que défini par le sélecteur
 	 */
 	public function get_datas(){
 		$datas = array();
-		for($i=0 ; $i<count($this->parameters['datasources_name']) ; $i++){
-			$datasource = new $this->parameters['datasources_name'][$i]($this->parameters['datasources_id'][$i]);
-			$datas = array_merge_recursive($datas,$datasource->get_datas());
+		if (is_countable($this->parameters['datasources_name'])) {
+    		for($i=0 ; $i<count($this->parameters['datasources_name']) ; $i++){
+    			$datasource = new $this->parameters['datasources_name'][$i]($this->parameters['datasources_id'][$i]);
+    			$datas = array_merge_recursive($datas,$datasource->get_datas());
+    		}
 		}
 		return $datas;
 	}
-	
+
 	public function get_headers($datas=array()){
 		$headers=array();
 		if($this->parameters['datasource']){
 			$datasource = $this->get_selected_datasource();
 			$headers = array_merge($headers,$datasource->get_headers($datas));
 			$headers = array_unique($headers);
-		}	
+		}
 		return $headers;
 	}
-	
+
 	protected function get_selected_datasource(){
 		//on va chercher
-		if($this->parameters['datasource']!= ""){
-			$current_datasource_id = 0;
+	    if(is_countable($this->datasources) && $this->parameters['datasource']!= ""){
 			for($i=0 ; $i<count($this->datasources) ; $i++){
 				if($this->datasources[$i]['name'] == $this->parameters['datasource']){
 					return new $this->parameters['datasource']($this->datasources[$i]['id']);
@@ -286,7 +288,7 @@ class cms_module_common_datasource_multiple extends cms_module_common_datasource
 			return false;
 		}
 	}
-	
+
 	public function get_format_data_structure(){
 		return array();
 	}

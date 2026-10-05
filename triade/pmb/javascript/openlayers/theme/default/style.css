@@ -615,29 +615,43 @@ img.olTileImage {
 .olControlEditingToolbar .btnRectangleEnabled{
 	background-position: -403px -24px;
 }
+
 .olControlEditingToolbar .btnRectangle{
 	background-position: -403px -1px;
 }
+
 .olControlEditingToolbar .btnCercle{
 	background-position: -353px -1px;
 }
+
 .olControlEditingToolbar .btnCercleEnabled{
 	background-position: -353px -24px;
 }
+
 .olControlEditingToolbar .btnTriangle{
 	background-position: -378px -1px;
-}
-
-.olControlEditingToolbar .toggleClusterItemActive{
-	background-position: -353px -24px;
-}
-.olControlEditingToolbar .toggleClusterItemInactive{
-	background-position: -353px -1px;
 }
 
 .olControlEditingToolbar .btnTriangleEnabled{
 	background-position: -378px -24px;
 }
+
+.olControlEditingToolbar .choiceRegular{
+    background-position: -453px -1px;
+}
+
+.olControlEditingToolbar .choiceRegularEnabled{
+    background-position: -453px -24px;
+}
+
+.olControlEditingToolbar .toggleClusterItemActive{
+	background-position: -353px -24px;
+}
+
+.olControlEditingToolbar .toggleClusterItemInactive{
+	background-position: -353px -1px;
+}
+
 .olHandlerBoxAffinage {
     border: 2px solid green;
     position: absolute;

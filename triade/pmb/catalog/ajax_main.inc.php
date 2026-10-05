@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.25 2018-10-12 11:59:35 dgoron Exp $
+// $Id: ajax_main.inc.php,v 1.31.6.2 2024/05/21 09:55:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-//En fonction de $categ, il inclut les fichiers correspondants
+global $class_path, $categ, $sub, $action, $object_type, $datas, $id, $plugin;
 
+//En fonction de $categ, il inclut les fichiers correspondants
 switch($categ) {
 	case 'collections_state':
 		include('./catalog/serials/ajax/collections_state.inc.php');
@@ -27,6 +28,13 @@ switch($categ) {
 	case 'explnum':
 		include('./catalog/explnum/explnum_ajax.inc.php');
 	break;
+	case 'expl':
+		switch($action) {
+			case "list":
+				lists_controller::proceed_ajax($object_type, 'items');
+				break;
+		}
+	break;	
 	case 'serialcirc_diff':
 		include('./catalog/serialcirc_diff/serialcirc_diff_ajax.inc.php');
 	break;
@@ -71,7 +79,34 @@ switch($categ) {
 		if($file){
 			include $file;
 		}
-		break;	
+		break;
+	case 'contribution_area':
+	    include('./catalog/contribution_area/ajax.inc.php');
+	    break;
+	case 'serials' :
+		include('./catalog/serials/ajax_main.inc.php');
+		break;
+	case 'bulletins':
+		switch($action) {
+			case "list":
+				lists_controller::proceed_ajax($object_type, 'bulletins');
+				break;
+		}
+		break;
+	case 'resa' :
+		switch($action) {
+			case "list":
+				lists_controller::proceed_ajax($object_type, 'reservations');
+				break;
+		}
+		break;
+	case 'caddies' :
+	    switch($action) {
+	        case "list":
+	            caddie_controller::proceed_ajax();
+	            break;
+	    }
+	    break;
 	default:
 	//tbd
 	break;		

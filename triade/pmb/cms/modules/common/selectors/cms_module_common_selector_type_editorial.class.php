@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_type_editorial.class.php,v 1.11 2017-06-06 15:26:36 dgoron Exp $
+// $Id: cms_module_common_selector_type_editorial.class.php,v 1.13 2023/05/03 15:15:15 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_selector_type_editorial extends cms_module_common_selector{
 	
+	public $cms_module_common_selector_type_editorial_type;
 	public function __construct($id=0){
 		parent::__construct($id);		
 		$this->once_sub_selector=true;
@@ -49,7 +50,7 @@ class cms_module_common_selector_type_editorial extends cms_module_common_select
 	}
 	
 	protected function gen_select(){
-		//si on est en crÃ©ation de cadre
+		//si on est en création de cadre
 		if(!$this->id){
 			$this->parameters = array(
 					'type_editorial' => '',
@@ -84,12 +85,12 @@ class cms_module_common_selector_type_editorial extends cms_module_common_select
 		return parent::save_form();
 	}
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){
 			$fields = new cms_editorial_parametres_perso($this->parameters["type_editorial"]);
-			if($this->parameters['sub_selector']){
+			if(!empty($this->parameters['sub_selector'])){
 				$sub = new $this->parameters['sub_selector']($this->get_sub_selector_id($this->parameters['sub_selector']));
 				$fields->get_values($sub->get_value());
 				if(isset($fields->values[$this->parameters['type_editorial_field']])){

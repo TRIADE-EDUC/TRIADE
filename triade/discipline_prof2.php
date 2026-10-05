@@ -6,7 +6,7 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -22,11 +22,19 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
 ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<style>
+.na-card  { background:#fff !important; border:1px solid #c5cae9 !important; border-radius:8px !important; padding:14px 16px !important; margin:10px 0 10px !important; }
+.na-row   { display:flex !important; align-items:center !important; margin-bottom:8px !important; gap:8px !important; flex-wrap:wrap !important; }
+.na-lbl   { font-size:12px !important; font-weight:600 !important; color:#333 !important; min-width:140px !important; flex-shrink:0 !important; }
+.na-foot  { margin-top:8px !important; overflow:hidden !important; }
+.na-textarea-lbl { font-size:12px !important; font-weight:600 !important; color:#333 !important; display:block !important; margin-bottom:4px !important; }
+</style>
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
@@ -38,49 +46,45 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
 <script type='text/javascript' src="./librairie_php/auto_server.php?client=all&stub=livesearch"></script>
 <title>Vie Scolaire - Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php
-// connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 validerequete("menuprof");
 $cnx=cnx();
 include_once("./librairie_php/ajax-select.php");
 ajax_js();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<form name=formulaire  onsubmit="return valide_discipline2()" method=post action='discipline_prof3.php'>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<form name=formulaire onsubmit="return valide_discipline2()" method=post action='discipline_prof3.php'>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGDISC37 ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td >
-<BR>
-<!-- // fin  -->
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGDISC37 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 <?php
-// affichage de la classe
 $ident=array('sClasseGrp','cgrp','sMat');
 $HPV=hashPostVar($ident);
 unset($ident);
-$listTmp=explode(":",$HPV[cgrp]);
-unset($HPV[cgrp]);
-$HPV[cid]=$listTmp[0];
-$HPV[gid]=$listTmp[1];
+$listTmp=explode(":",$HPV['cgrp']);
+unset($HPV['cgrp']);
+$HPV['cid']=$listTmp[0];
+$HPV['gid']=$listTmp[1];
 unset($listTmp);
-if($HPV[gid]){
-	$who2="groupe : ".chercheGroupeNom($HPV[gid]);
-        $who="<font color=\"red\"> groupe : ".chercheGroupeNom($HPV[gid]) ."</font>";
-        $saisie_classe=$HPV[gid];
-        if($HPV[gid]){
-                $gid=$HPV[gid];
+if($HPV['gid']){
+	$who2="groupe : ".chercheGroupeNom($HPV['gid']);
+        $who="<font color=\"red\"> groupe : ".chercheGroupeNom($HPV['gid']) ."</font>";
+        $saisie_classe=$HPV['gid'];
+        if($HPV['gid']){
+                $gid=$HPV['gid'];
                 $sqlIn=<<<SQL
                 SELECT
                         liste_elev
                 FROM
-                        ${prefixe}groupes
+                        {$prefixe}groupes
                 WHERE
                         group_id='$gid'
 SQL;
@@ -97,7 +101,7 @@ SQL;
                 $sql .= " CONCAT( upper(trim(nom)),' ',trim(prenom) ) ";
                 $sql .= "
                 FROM
-                        ${prefixe}eleves
+                        {$prefixe}eleves
                 WHERE
                         elev_id IN ($in)
                 ORDER BY
@@ -111,60 +115,65 @@ SQL;
               unset($curs);
         }
 }else{
-      	$cl=chercheClasse($HPV[cid]);
+      	$cl=chercheClasse($HPV['cid']);
 	$who2="classe : ".$cl[0][1];
-        $saisie_classe=$HPV[cid];
+        $saisie_classe=$HPV['cid'];
       	$who=" en <font color=\"red\"> <?php print LANGABS31?> ".$cl[0][1] ."</font> année scolaire : <font color=\"red\">  $anneeScolaire </font>";
       	unset($cl);
-//        $sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
-
-	$sql=" SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' UNION ALL SELECT c.libelle,e.elev_id,e.nom,e.prenom FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY s.nom";
+	$sql=" SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' UNION ALL SELECT c.libelle,e.elev_id,e.nom,e.prenom FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY s.nom";
         $res=execSql($sql);
         $data=chargeMat($res);
         $cl=$data[0][0];
 }
 
-// ne fonctionne que si au moins 1 élève dans la classe
-// nom classe
 $cl=$data[0][0];
 ?>
-<UL><font class="T2"> <?php print  LANGDISC6 ?>  <?php print $who?></font><BR><BR>
-<font class="T2"><?php print LANGDISC7 ?> :</font> <select name=saisie_sanction onchange="searchRequest(this,'sanction','rien','formulaire','saisie_motif')"  >
-<option value="-1" STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
-<?php
-select_category();
-?>
-</select>
-<BR><BR>
-<font class="T2"><?php print LANGDISC8 ?> : </font><select name="saisie_motif">
-<option></option>
-</select>
 
-<BR><BR>
-<input type=hidden name="saisie_qui" value="<?php print $_SESSION["id_pers"] ?>">
-<font class=T2>Description des faits : </font><br><br>
-<textarea name="description_fait" cols=80 rows=5></textarea>
-<br><br>
-<font class="T2"><?php print LANGPROFJ ?> : </font><br><br>
-<textarea name="devoir_a_faire" cols=80 rows=5></textarea>
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC6 ?> :</span>
+    <span><?php print $who ?></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC7 ?> :</span>
+    <select name="saisie_sanction" class="cc-select" onchange="searchRequest(this,'sanction','rien','formulaire','saisie_motif')">
+      <option value="-1" style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_category(); ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGDISC8 ?> :</span>
+    <select name="saisie_motif" class="cc-select">
+      <option></option>
+    </select>
+  </div>
+  <input type=hidden name="saisie_qui" value="<?php print $_SESSION["id_pers"] ?>">
+  <div style="margin-top:10px;">
+    <span class="na-textarea-lbl">Description des faits :</span>
+    <textarea name="description_fait" rows=5 style="width:100%; max-width:440px;"></textarea>
+  </div>
+  <div style="margin-top:10px;">
+    <span class="na-textarea-lbl"><?php print LANGPROFJ ?> :</span>
+    <textarea name="devoir_a_faire" rows=5 style="width:100%; max-width:440px;"></textarea>
+  </div>
+</div>
 
-
-</UL>
-<table border="1" bordercolor="#000000" width="100%" id="bordure"  style="border-collapse: collapse;" >
+<table class="brs-table" width="100%">
 <?php
 $sub=0;
-if (count($data) <= 0 ) {
-        print("<tr><td align=center id='bordure' valign=center><BR>".LANGRECH1."<BR><BR></td></tr>");
+if (countTriade($data) <= 0 ) {
+        print("<tr><td class='brs-td' align=center valign=center><BR>".LANGRECH1."<BR><BR></td></tr>");
 }else{
 ?>
+<thead>
 <tr>
-<td bgcolor="yellow" >&nbsp;<B><?php print LANGNA1 ?> <?php print LANGNA2 ?></B></td>
+<th class="brs-th" style="text-align:left !important;">&nbsp;<?php print LANGNA1 ?> <?php print LANGNA2 ?></th>
 <?php if (RETENUPROF == "oui") { ?>
-<td bgcolor="yellow" width=5 align=center><B>&nbsp;<?php print LANGDISC11 ?>&nbsp;</B></td>
+<th class="brs-th" style="width:5px !important;">&nbsp;<?php print LANGDISC11 ?>&nbsp;</th>
 <?php } ?>
-<td bgcolor="yellow" width=110 align=center><B>Devoir pour le</B></td>
-<td bgcolor="yellow" align=center>&nbsp;
-<?php 
+<th class="brs-th" style="width:110px !important;">Devoir pour le</th>
+<th class="brs-th" style="text-align:center !important;">
+<?php
 $mess="<font face=Verdana size=1><B><font color=red>C</font></B>ochez la case si l\'élève est concerné par la sanction.</FONT>";
 $information="Attention";
 if ((LAN == "oui") && (AGENTWEB == "oui")) {
@@ -173,36 +182,40 @@ if ((LAN == "oui") && (AGENTWEB == "oui")) {
 	$mess="<iframe width=100 height=100 src=\'http://www.triade-educ.org/agentweb/agentmel.php?inc=5&mess=$vocal\'  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe><br>$mess" ;
 }
 ?>
-	<A href='#' onMouseOver="AffBulle3('<?php print $information?>','./image/commun/warning.jpg','<?php print $mess ?>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A>&nbsp;</td>
+<A href='#' onMouseOver="AffBulle3('<?php print $information?>','./image/commun/warning.jpg','<?php print $mess ?>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15' border=0></A>&nbsp;</th>
 </tr>
+</thead>
+<tbody>
 <?php
-for($i=0;$i<count($data);$i++) {
-        
+for($i=0;$i<countTriade($data);$i++) {
+
 	print "<tr id='tr$i' class='tabnormal2' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\">";
-	print "<td>";
+	print "<td class='brs-td'>";
 	print "&nbsp;".trunchaine(ucwords($data[$i][2])." ".ucwords($data[$i][3]),25);
 	$data2=cherche_sanction_day($data[$i][1]);
-	if (count($data2) > 0) {
-		print "&nbsp;&nbsp;&nbsp;<A href='#' onMouseOver=\"AffBulle3('Information','./image/commun/warning.jpg','<font face=Verdana size=1><B><font color=red>".count($data2)."</font></b> santion(s) déjà attribuée(s) aujourd\'hui</B></FONT>'); window.status=''; return true;\" onMouseOut='HideBulle()'><img src='./image/commun/warning.gif' border='0' /></a>";	
+	if (countTriade($data2) > 0) {
+		print "&nbsp;&nbsp;&nbsp;<A href='#' onMouseOver=\"AffBulle3('Information','./image/commun/warning.jpg','<font face=Verdana size=1><B><font color=red>".countTriade($data2)."</font></b> santion(s) déjà attribuée(s) aujourd\'hui</B></FONT>'); window.status=''; return true;\" onMouseOut='HideBulle()'><img src='./image/commun/warning.gif' border='0' /></a>";
 	}
 	print "</td>";
 
 	if (RETENUPROF == "oui") { ?>
-		<td align=center>
-		<select name="saisie_retenu_<?php print $i?>" >
-		<option value=0 STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGNON ?></option>
-		<option value=1 STYLE='color:#000066;background-color:#FCCCCC'><?php print LANGOUI ?></option>
+		<td class="brs-td" align=center>
+		<select name="saisie_retenu_<?php print $i?>" class="cc-select">
+		<option value=0 style='color:#000066;background-color:#CCCCFF'><?php print LANGNON ?></option>
+		<option value=1 style='color:#000066;background-color:#FCCCCC'><?php print LANGOUI ?></option>
 		</select>
 		</td>
 <?php } ?>
-<td width='130' >
+<td class="brs-td" style="width:130px;">
+<div style="display:inline-flex;align-items:center;gap:4px;">
 <input type=text name="saisie_date_devoir_<?php print $i?>" size=10 onblur="valid_date(document.formulaire.saisie_date_retenue_<?php print $i?>,document.formulaire.saisie_retenu_<?php print $i?>)"><?php
 include_once("librairie_php/calendar.php");
 calendarpopup("id1$i","document.formulaire.saisie_date_devoir_$i",$_SESSION["langue"],"0");
 ?>
+</div>
 </td>
-<td align=center>
-<input type=checkbox name="saisie_choisi_<?php print $i?>" onClick="DisplayLigne('tr<?php print $i?>')" >
+<td class="brs-td" align=center>
+<input type=checkbox name="saisie_choisi_<?php print $i?>" onClick="DisplayLigne('tr<?php print $i?>')">
 <input type=hidden name=saisie_pers_<?php print $i?> value="<?php print $data[$i][1]?>">
 </td>
 </tr>
@@ -210,39 +223,29 @@ calendarpopup("id1$i","document.formulaire.saisie_date_devoir_$i",$_SESSION["lan
         }
 	$sub=1;
       }
-print "</table>";
+print "</tbody></table>";
 ?>
 <?php if ($sub == 1) { ?>
-<BR>
-<input type=hidden name=saisie_id value="<?php print count($data)?>">
+<br>
+<input type=hidden name=saisie_id value="<?php print countTriade($data)?>">
 <input type=hidden name=idclasse value="<?php print $who2 ?>">
-<script>var nb=<?php print count($data)?>;</script>
-<table align=center border=0><tr><td>
-<script language=JavaScript>buttonMagicSubmit("Enregistrer Sanction(s)","rien"); //text,nomInput</script>
-</td></tr></table>
+<script>var nb=<?php print countTriade($data)?>;</script>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagicSubmit("Enregistrer Sanction(s)","rien"); //text,nomInput</script>
+</div>
 <br>
 <?php } ?>
-     <!-- // fin  -->
-     </td></tr></table>
-     </form>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-   if ($_SESSION[membre] == "menuadmin") :
-       print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-       print "</SCRIPT>";
-   else :
-      print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-      print "</SCRIPT>";
 
-      top_d();
-
-      print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-     print "</SCRIPT>";
-
-       endif ;
-     ?>
+</td></tr></table>
+</form>
+<?php
+if ($_SESSION['membre'] == "menuadmin") :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 <SCRIPT language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
 </BODY></HTML>

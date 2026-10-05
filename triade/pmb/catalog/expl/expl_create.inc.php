@@ -1,18 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_create.inc.php,v 1.24 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: expl_create.inc.php,v 1.26 2021/04/23 06:26:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $msg, $noex, $option_num_auto, $id, $pmb_droits_explr_localises, $explr_visible_mod;
 
 // gestion des exemplaires
-
-print "<h1>".$msg[290]."</h1>";
-
-// on checke si l'exemplaire n'existe pas d√©j√†
+// on checke si l'exemplaire n'existe pas dÈj‡
 $requete = "SELECT count(1) FROM exemplaires WHERE expl_cb='$noex'";
 $res = pmb_mysql_query($requete);
 
@@ -21,12 +18,12 @@ if((!pmb_mysql_result($res, 0, 0)) || (!empty($option_num_auto) && ($noex=='')))
 	print pmb_bidi("<div class='row'><b>".$notice->header."</b><br />");
 	print pmb_bidi($notice->isbd.'</div>');
 
-	// visibilit√© des exemplaires
-	// On ne v√©rifie que si l'utlisateur peut cr√©er sur au moins une localisation : 
+	// visibilitÈ des exemplaires
+	// On ne vÈrifie que si l'utlisateur peut crÈer sur au moins une localisation : 
 	if (!$pmb_droits_explr_localises||$explr_visible_mod) {
 		$nex = new exemplaire($noex, 0, $id);
 		print "<div class='row'>";
-		print $nex->expl_form('./catalog.php?categ=expl_update&sub=create', "./catalog.php?categ=isbd&id=$id");
+		print $nex->expl_form('./catalog.php?categ=expl_update&sub=create', notice::get_permalink($id));
 		print "</div>";
 	} 
 } else {

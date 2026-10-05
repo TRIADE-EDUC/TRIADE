@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+� 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.5.4.1 2025/04/11 09:35:12 jparis Exp $ 
+-->
+
+<manifest>
+	<namespace>Pmb\DSI\Models\Channel\SMS\SMSChannel</namespace>
+	<type>channel</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<view>Pmb\DSI\Models\View\RawTextView\RawTextView</view>
+		<view>Pmb\DSI\Models\View\AggregatedRawTextView\AggregatedRawTextView</view>
+		<subscriber_list>Pmb\DSI\Models\SubscriberList\RootSubscriberList</subscriber_list>
+	</compatibility>
+	<manually>1</manually>
+	<bypass_send_queue>0</bypass_send_queue>
+</manifest>

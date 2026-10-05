@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_common_entity_cadre.xml,v 1.7 2017-09-20 09:39:08 vtouchard Exp $ -->
+$Id: frbr_entity_common_entity_cadre.xml,v 1.7 2017/09/20 09:39:08 vtouchard Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_common_entity_cadre_add">Création d'un nouveau cadre</entry>

@@ -3,7 +3,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes et libellés type de relation entre autorités
-$Id: relationtype_autup.xml,v 1.1 2012-09-27 15:20:18 arenou Exp $ -->
+$Id: relationtype_autup.xml,v 1.1 2012/09/27 15:20:18 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="1">参照する</entry>

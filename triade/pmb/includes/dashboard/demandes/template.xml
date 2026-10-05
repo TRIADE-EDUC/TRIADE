@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: template.xml,v 1.3 2016-11-29 15:33:37 agiraud Exp $ -->
+$Id: template.xml,v 1.3 2016/11/29 15:33:37 agiraud Exp $ -->
 <template default_lang='fr_FR'>
 	<content lang='fr_FR'><![CDATA[
 		<div class='row'>

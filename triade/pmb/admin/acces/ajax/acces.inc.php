@@ -1,10 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: acces.inc.php,v 1.5 2017-09-06 15:33:47 tsamson Exp $
+// $Id: acces.inc.php,v 1.7 2020/03/20 15:13:38 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path;
+//form
+global $fname, $dom_id, $nb_done, $chk_sav_spe_rights;
+//params
+global $gestion_acces_active, $gestion_acces_user_notice, $gestion_acces_empr_notice, $gestion_acces_empr_docnum;
+global $gestion_acces_empr_contribution_area, $gestion_acces_empr_contribution_scenario, $gestion_acces_contribution_moderator_empr;
+global $gestion_acces_empr_cms_section, $gestion_acces_empr_cms_article;
 
 //droits d'acces actives
 if ($gestion_acces_active==1) {
@@ -38,9 +46,19 @@ if ($gestion_acces_active==1 && $gestion_acces_empr_contribution_scenario==1 && 
 	$dom= $ac->setDomain(5);
 }
 
-//droits d'acces modÃ©rateurs/contributeurs
+//droits d'acces modérateurs/contributeurs
 if ($gestion_acces_active==1 && $gestion_acces_contribution_moderator_empr==1 && $dom_id==6) {
 	$dom= $ac->setDomain(6);
+}
+
+//droits d'acces modérateurs/contributeurs
+if ($gestion_acces_active==1 && $gestion_acces_empr_cms_section==1 && $dom_id==7) {
+    $dom= $ac->setDomain(7);
+}
+
+//droits d'acces modérateurs/contributeurs
+if ($gestion_acces_active==1 && $gestion_acces_empr_cms_article==1 && $dom_id==8) {
+    $dom= $ac->setDomain(8);
 }
 
 if (isset($dom) && is_object($dom)) {

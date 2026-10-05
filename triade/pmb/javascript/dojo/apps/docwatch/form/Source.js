@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Source.js,v 1.6 2019-03-13 14:48:22 dgoron Exp $
+// $Id: Source.js,v 1.6 2019/03/13 14:48:22 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "dojo/dom", "dijit/form/Form", "dojo/dom-construct", "dojo/dom-form"], function(declare, parser, topic, lang, dom, Form, domConstruct, domForm){

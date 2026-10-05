@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watch_view_django.class.php,v 1.4 2017-11-21 13:38:21 dgoron Exp $
+// $Id: cms_module_watch_view_django.class.php,v 1.6 2023/12/07 15:02:48 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,11 +18,11 @@ class cms_module_watch_view_django extends cms_module_common_view_django{
 {% endif %}
 <h3>{{watch.title}}</h3>
 <a href='{{watch.rss_link}}' title='RSS' target='_blank'><img src='".get_url_icon('rss.png')."' alt='RSS'></a>
-<blockquote>{{watch.desc}}</blockquote>
-<blockquote>DerniÃ¨re mise Ã  jour le {{watch.last_date}}</blockquote>
+<div>{{watch.desc}}</div>
+<div>Dernière mise à jour le {{watch.last_date}}</div>
 ";
 		if ($charset=="utf-8") {
-			$this->default_template = utf8_encode($this->default_template);
+			$this->default_template = encoding_normalize::utf8_normalize($this->default_template);
 		}
 	}
 

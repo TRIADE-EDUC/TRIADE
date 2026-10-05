@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: html.xsl,v 1.4.46.1 2024/08/28 14:10:16 rtigero Exp $ -->
+
 <xsl:stylesheet version = '1.0'
      xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 

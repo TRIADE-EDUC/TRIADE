@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_global_var.class.php,v 1.3 2017-07-12 15:15:02 tsamson Exp $
+// $Id: cms_module_common_selector_global_var.class.php,v 1.3 2017/07/12 15:15:02 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -32,7 +32,7 @@ class cms_module_common_selector_global_var extends cms_module_common_selector{
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

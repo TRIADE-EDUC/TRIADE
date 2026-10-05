@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: crontab.class.php,v 1.2 2015-04-03 11:16:19 jpermanne Exp $
+// $Id: crontab.class.php,v 1.3 2019/07/05 13:25:14 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class crontab {
 
 	/*
-	 * Ajoute ou modifie la tÃ¢che PMB dans le cron de l'OS 
+	 * Ajoute ou modifie la tâche PMB dans le cron de l'OS 
 	 */
-	function addTaskCron($id) {
+	public function addTaskCron($id) {
 		global $dbh;
 		
 		$requete = "select id_planificateur, num_type_tache, libelle_tache, desc_tache, calc_next_date_deb, calc_next_heure_deb 
@@ -21,10 +21,10 @@ class crontab {
 		$res = pmb_mysql_query($requete,$dbh);
 		
 		while ($row = pmb_mysql_fetch_array($res)) {
-			$oldCrontab = Array();				/* rÃ©cupÃ¨re les informations de l'ancien crontab */
+			$oldCrontab = Array();				/* récupère les informations de l'ancien crontab */
 			$newCrontab = Array();				/* ajoute le nouveau crontab */
 							
-			exec('crontab -l', $oldCrontab);		/* on rÃ©cupÃ¨re l'ancienne crontab dans $oldCrontab */
+			exec('crontab -l', $oldCrontab);		/* on récupère l'ancienne crontab dans $oldCrontab */
 	
 			$calc_next_date_deb = explode("-", $row["calc_next_date_deb"]);
 			$calc_next_heure_deb = explode(":", $row["calc_next_heure_deb"]);
@@ -39,7 +39,7 @@ class crontab {
 			
 			$trouve = false;
 			
-			//on vÃ©rifie si cette tÃ¢che est dÃ©jÃ  dans le cron
+			//on vérifie si cette tâche est déjà dans le cron
 			foreach($oldCrontab as $index => $ligne) {
 				if (preg_match("/^# ".$ident."/",$oldCrontab[$index], $matches, PREG_OFFSET_CAPTURE) == "1") {
 					$oldCrontab[$index] = "# ".$ident." : ".$comment;
@@ -49,12 +49,12 @@ class crontab {
 				$newCrontab[] = $oldCrontab[$index];
 			}
 
-			//si la tÃ¢che n'est pas trouvÃ©e, on l'ajoute
+			//si la tâche n'est pas trouvée, on l'ajoute
 			if (!$trouve) {
 				$newCrontab[] = "# ".$ident." : ".$comment;
 				$newCrontab[] = $calc_next_heure_deb[0].' '.$calc_next_heure_deb[1].' '.$calc_next_date_deb[2].' '.$calc_next_date_deb[1].' * '.$chpCommande;
 			}
-			$f = fopen('/var/spool/cron/apache', 'w');			/* on crÃ©e le fichier s'il n'existe pas */
+			$f = fopen('/var/spool/cron/apache', 'w');			/* on crée le fichier s'il n'existe pas */
 			fwrite($f, implode(chr(10), $newCrontab)); 
 			fclose($f);
 			
@@ -64,13 +64,13 @@ class crontab {
 	}
 	
 
-	function delTaskCron($ident) {
-		$oldCrontab = Array();						/* rÃ©cupÃ¨re les informations de l'ancien crontab */
+	public function delTaskCron($ident) {
+		$oldCrontab = Array();						/* récupère les informations de l'ancien crontab */
 		$newCrontab = Array();						/* ajoute le nouveau crontab */
-		exec('crontab -l', $oldCrontab);			/* on rÃ©cupÃ¨re l'ancienne crontab dans $oldCrontab */
+		exec('crontab -l', $oldCrontab);			/* on récupère l'ancienne crontab dans $oldCrontab */
 		
 		foreach($oldCrontab as $index=>$ligne) {
-			/* copie $oldCrontab dans $newCrontab sans le script Ã  effacer */
+			/* copie $oldCrontab dans $newCrontab sans le script à effacer */
 			if (preg_match("/^# ".$ident."/",$oldCrontab[$index], $matches, PREG_OFFSET_CAPTURE) == "1") {
 				$ligne= "";
 			//	$oldCrontab[$index+1] = "";
@@ -81,7 +81,7 @@ class crontab {
 						
 		}
 		
-		$f = fopen('/var/spool/cron/apache', 'w');			/* on crÃ©e le fichier s'il n'existe pas */
+		$f = fopen('/var/spool/cron/apache', 'w');			/* on crée le fichier s'il n'existe pas */
 		fwrite($f, implode(chr(10), $newCrontab)); 
 		fclose($f);
 		

@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@
 	validerequete("3");
 	$cnx=cnx();
 	?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
         <?php include("./librairie_php/lib_defilement.php"); ?>
         </TD><td width="472" valign="middle" rowspan="3" align="center">
         <div align='center'><?php top_h(); ?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 // affichage de l'élève (lecture seule)
@@ -99,7 +99,7 @@ SELECT
 	tel_eleve,
 	email_resp_2
 FROM
-	${prefixe}eleves, ${prefixe}classes c
+	{$prefixe}eleves, {$prefixe}classes c
 WHERE
 	elev_id='$eid'
 AND	c.code_class=classe
@@ -116,14 +116,14 @@ $data=chargeMat($res);
 </tr>
 <td id='cadreCentral0'  colspan=2><br>&nbsp;&nbsp;<input type=button class=BUTTON value="<-- <?php print LANGPRECE ?>" onclick="open('ficheeleve3.php?eid=<?php print $_GET["eid"]?>','_parent','')"><br><br></td>
 <?php
-if( count($data) <= 0 )
+if( countTriade($data) <= 0 )
 	{
 	print("<tr><td align=center valign=center>".LANGERROR1."</td></tr>");
 	}
 else { //debut else
 
 $nom_cellule=array(id, LANGELE2, LANGELE3, LANGELE4, Lv1, Lv2, LANGELE5, LANGELE6, LANGELE10, LANGEDIT6, LANGELE11, LANGIMP51,LANGIMP52 ,LANGEDIT3,LANGEDIT8, LANGEL12,  LANGEL14, LANGEL15, LANGEL16, LANGEDIT2, LANGEDIT3, LANGEDIT4, LANGEDIT5, LANGEL18, LANGEL19, LANGEL20, LANGEDIT9, LANGEL21, LANGEL22, LANGEL23, LANGEL24, LANGEL25, LANGEL26, LANGEL27, LANGEL28, LANGEL29, LANGEL30,  LANGELE244. LANGEDIT10, LANGEDIT11,LANGbasededoni41, LANGbasededoni42,LANGEDIT12, LANGEDIT13 );
-for($i=1;$i<count($data[0]);$i++)
+for($i=1;$i<countTriade($data[0]);$i++)
 		{//debut for
 		if(preg_match('/[a-zA-Z0-9äâîïûüèé]{1,}/',trim($data[0][$i]))) {
 			if($i==8) {$data[0][$i]=dateForm($data[0][$i]);}
@@ -151,15 +151,15 @@ print "</table>";
 // Test du membre pour savoir quel fichier JS je dois executer
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ):
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

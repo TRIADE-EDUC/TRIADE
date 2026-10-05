@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: display_tabs.xml,v 1.14 2017-11-29 10:56:14 tsamson Exp $ -->
+$Id: display_tabs.xml,v 1.18 2021/02/08 14:50:44 gneveu Exp $ -->
 
 <pmbtabs>
 	<!--
@@ -197,17 +197,14 @@ $Id: display_tabs.xml,v 1.14 2017-11-29 10:56:14 tsamson Exp $ -->
 	<tab name="oeuvre_expressions" label="msg:authority_tabs_titre_uniforme_expressions" contentType="authorities" for="titre_uniforme">
 		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
 		<query>
-			<select>oeuvre_link_from</select>
-			<table>tu_oeuvres_links</table>
-			<elementField>oeuvre_link_to</elementField>
-			<condition>oeuvre_link_expression = 1</condition>
-			<order>
-				<table>titres_uniformes</table>
-				<field>index_tu</field>
-				<referenceField>oeuvre_link_from</referenceField>
-				<externalField>tu_id</externalField>
-			</order>
-		</query>
+            <select>oeuvre_link_to</select>
+            <table>tu_oeuvres_links</table>
+            <elementField>oeuvre_link_from</elementField>
+            <condition>oeuvre_link_expression = 0 AND oeuvre_link_other_link = 0</condition>
+            <order>
+                <field>oeuvre_link_order</field>
+            </order>
+        </query>
 	</tab>
 	<tab name="oeuvre_other_links" label="msg:aut_oeuvre_form_other_link" contentType="authorities" for="titre_uniforme">
 		<authorityType>AUT_TABLE_TITRES_UNIFORMES</authorityType>
@@ -217,10 +214,7 @@ $Id: display_tabs.xml,v 1.14 2017-11-29 10:56:14 tsamson Exp $ -->
 			<elementField>oeuvre_link_from</elementField>
 			<condition>oeuvre_link_other_link = 1</condition>
 			<order>
-				<table>titres_uniformes</table>
-				<field>index_tu</field>
-				<referenceField>oeuvre_link_to</referenceField>
-				<externalField>tu_id</externalField>
+				<field>oeuvre_link_order</field>
 			</order>
 		</query>
 		<filters>
@@ -369,6 +363,24 @@ $Id: display_tabs.xml,v 1.14 2017-11-29 10:56:14 tsamson Exp $ -->
 		<callable>
 			<class>authority_tabs</class>
 			<method>get_tab_entities_graphed</method>
+		</callable>
+	</tab>
+	<tab name="common_indexed_exemplaire" label="msg:exemplaire_tab_used_in_concept" contentType="expl" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_exemplaire_indexed_with_concepts</method>
+		</callable>
+	</tab>
+	<tab name="common_indexed_cms_section" label="msg:cms_section_tab_used_in_concept" contentType="sections" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_cms_section_indexed_with_concepts</method>
+		</callable>
+	</tab>
+	<tab name="common_indexed_cms_article" label="msg:cms_article_tab_used_in_concept" contentType="articles" for="common">
+		<callable>
+			<class>authority_tabs</class>
+			<method>get_tab_cms_article_indexed_with_concepts</method>
 		</callable>
 	</tab>
 </pmbtabs>

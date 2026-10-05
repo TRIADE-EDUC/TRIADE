@@ -2,7 +2,7 @@
 session_start();
 error_reporting(0);
 if ((empty($_SESSION["nom"])) && (empty($_SESSION["membre"]))) { exit; }
-if (($_SESSION["membre"] == "menuparent") || ($_SESSION["membre"] == "eleve") || ($_SESSION["membre"] == "menupersonnel")) { exit; }
+if (($_SESSION["membre"] == "menuparent") || ($_SESSION["membre"] == "menueleve") || ($_SESSION["membre"] == "menupersonnel")) { exit; }
 if ((isset($_POST["ideleve"]) && ($_POST["ideleve"] > 0) )) {
 	include_once("./common/config.inc.php");
 	include_once("./librairie_php/db_triade.php");
@@ -71,11 +71,11 @@ if ((isset($_POST["ideleve"]) && ($_POST["ideleve"] > 0) )) {
 	$sujet=preg_replace('/¨/',' ',$sujet);
 	$sujet=preg_replace('/;/',' ',$sujet);
 
-	$sql="SELECT * FROM  ${prefixe}notes WHERE elev_id='$ideleve' AND prof_id='$idprof' AND code_mat='$mid' AND coef='$coef' AND date='$date' AND id_classe='$idclasse' AND id_groupe='$idgrp' AND noteexam='$noteExam' AND sujet='".utf8_decode($sujet)."' ";
+	$sql="SELECT * FROM  {$prefixe}notes WHERE elev_id='$ideleve' AND prof_id='$idprof' AND code_mat='$mid' AND coef='$coef' AND date='$date' AND id_classe='$idclasse' AND id_groupe='$idgrp' AND noteexam='$noteExam' AND sujet='".utf8_decode($sujet)."' ";
 	$curs=execSql($sql);
         unset($sql);
-        if ((count(chargeMat($curs)) == 0) && (trim($note) != ""))  {
-		$sql="INSERT INTO ${prefixe}notes(
+        if ((countTriade(chargeMat($curs)) == 0) && (trim($note) != ""))  {
+		$sql="INSERT INTO {$prefixe}notes(
 			elev_id,
 			prof_id,
 			code_mat,

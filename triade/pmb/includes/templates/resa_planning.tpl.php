@@ -1,50 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa_planning.tpl.php,v 1.13 2019-05-27 16:19:33 btafforeau Exp $
+// $Id: resa_planning.tpl.php,v 1.15 2021/05/03 07:59:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $id_notice, $id_bulletin, $id_empr, $groupID, $layout_begin, $msg, $menu_search_commun, $menu_search, $form_resa_dates;
+global $id_notice, $id_bulletin, $id_empr, $groupID, $layout_begin, $msg, $form_resa_dates;
 
 if(!isset($id_notice)) $id_notice = 0;
 if(!isset($id_bulletin)) $id_bulletin = 0;
 if(!isset($id_empr)) $id_empr = 0;
 if(!isset($groupID)) $groupID = 0;
 
-// en-tÃªte et pied de page
+// en-tête et pied de page
 $layout_begin = "<div class='row'>".sprintf($msg['resa_planning_for_empr'],"<a href='./circ.php?categ=pret&form_cb=!!cb_lecteur!!&groupID=$groupID'>!!nom_lecteur!!</a>")."</div>";
-
-$menu_search_commun = "
-	<br />
-	<div class='hmenu'>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=0").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=0&id_empr=$id_empr&groupID=$groupID'>$msg[354]</a>
-		</span>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=1").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=1&id_empr=$id_empr&groupID=$groupID'>$msg[355]</a>
-		</span>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=5").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=5&id_empr=$id_empr&groupID=$groupID'>".$msg['search_by_terms']."</a>
-		</span>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=2").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=2&id_empr=$id_empr&groupID=$groupID'>$msg[356]</a>
-		</span>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=3").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=3&id_empr=$id_empr&groupID=$groupID'>".$msg['search_by_panier']."</a>
-		</span>
-		<span".ongletSelect("categ=resa_planning&resa_action=search_resa&mode=6").">
-			<a href='./circ.php?categ=resa_planning&resa_action=search_resa&mode=6&id_empr=$id_empr&groupID=$groupID'>".$msg['search_extended']."</a>
-		</span>
-	</div>";
-
-$menu_search[0] = $menu_search_commun;
-$menu_search[1] = $menu_search_commun;
-$menu_search[2] = $menu_search_commun;
-$menu_search[3] = $menu_search_commun;
-$menu_search[4] = $menu_search_commun;
-$menu_search[6] = $menu_search_commun;
 
 $form_resa_dates = "
 <script type='text/javascript'>
@@ -70,12 +40,10 @@ $form_resa_dates = "
 <div class='form-contenu'>
 		<div class='row' >
 			<label >".$msg['resa_planning_date_debut']."</label>&nbsp;
-			<input type='hidden' name='resa_deb' value='!!resa_deb!!' />
-			<input type='button' class='bouton' name='resa_date_debut' value='!!resa_date_debut!!' onclick=\"openPopUp('./select.php?what=calendrier&caller=dates_resa&date_caller=!!resa_deb!!&param1=resa_deb&param2=resa_date_debut&auto_submit=NO&date_anterieure=YES', 'calendar')\" />
+			<input type='date' name='resa_deb' value='!!resa_deb!!' />
 			&nbsp;
 			<label>".$msg['resa_planning_date_fin']."</label>&nbsp;
-			<input type='hidden' name='resa_fin' value='!!resa_fin!!'  />
-			<input type='button' class='bouton' name='resa_date_fin' value='!!resa_date_fin!!' onclick=\"openPopUp('./select.php?what=calendrier&caller=dates_resa&date_caller=!!resa_fin!!&param1=resa_fin&param2=resa_date_fin&auto_submit=NO&date_anterieure=YES', 'calendar')\" />
+			<input type='date' name='resa_fin' value='!!resa_fin!!'  />
 		</div>
 		!!resa_loc_retrait!!
 		<div class='row' >

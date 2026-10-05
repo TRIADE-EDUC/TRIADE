@@ -1,23 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cnl.inc.php,v 1.10 2018-02-08 08:54:41 jpermanne Exp $
+// $Id: cnl.inc.php,v 1.10.16.1 2025/03/25 07:32:25 dgoron Exp $
 
 function get_field_dateparution() {
 	global $field_dateparution;
-	if(!$field_dateparution) {
+	
+	if(empty($field_dateparution)) {
 		$q = "select idchamp from notices_custom where name='dateparution' limit 1 "; 
 		$result = pmb_mysql_query($q);
 		if (pmb_mysql_num_rows($result)) $field_dateparution = pmb_mysql_result($result,0,0);
 	}
-	if(!$field_dateparution) $field_dateparution=0;
+	if(empty($field_dateparution)) {
+	    $field_dateparution=0;
+	}
 	return $field_dateparution;
 }
 
 function search_other_function_filters() {
 	global $cnl_comission,$cnl_annee,$cnl_mois;
 	global $charset,$msg;
+	
 	$r="<select name='cnl_comission'>";
 	$r.="<option value=''>Toutes les commissions</option>";
 	$requete="select * from notices_custom_lists where notices_custom_champ=1 order by notices_custom_list_lib";
@@ -41,7 +45,7 @@ function search_other_function_filters() {
 	$r.="</select>";
 	
 	$r.="<select name='cnl_annee'>";
-	$r.="<option value=''>Toutes les annÃ©es</option>";
+	$r.="<option value=''>Toutes les années</option>";
 	$requete="select distinct DATE_FORMAT(notices_custom_date,'%Y') as annee from notices_custom_values where notices_custom_champ=".get_field_dateparution()." and notices_custom_date!='' order by annee desc";
 	$resultat=pmb_mysql_query($requete);
 	while (($res=pmb_mysql_fetch_object($resultat))) {
@@ -111,14 +115,19 @@ function search_other_function_human_query($n) {
 		$r="commission : ";
 		$requete="select notices_custom_list_lib from notices_custom_lists where notices_custom_champ=1 and notices_custom_list_value='".$cnl_comission."' limit 1";
 		$res=pmb_mysql_query($requete);
-		$r.=@pmb_mysql_result($res,0,0);
+		$r.=pmb_mysql_result($res,0,0);
 	}		
 	if ($cnl_annee || $cnl_mois) {
-		if ($r) $r.=", ";
-		if ($cnl_annee && $cnl_mois) $r.=$msg[1005+$cnl_mois]." ".$cnl_annee;
-		elseif (!$cnl_annee && $cnl_mois) $r.=$msg[1005+$cnl_mois];
-		else $r.="annÃ©e : ".$cnl_annee;
+	    if ($r) {
+	        $r.=", ";
+	    }
+	    if ($cnl_annee && $cnl_mois) {
+	        $r.=$msg[1005+$cnl_mois]." ".$cnl_annee;
+	    } elseif (!$cnl_annee && $cnl_mois) {
+	        $r.=$msg[1005+$cnl_mois];
+	    } else {
+	        $r.="année : ".$cnl_annee;
+	    }
 	}
 	return $r;
 }
-?>

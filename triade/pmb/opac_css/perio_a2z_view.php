@@ -1,19 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: perio_a2z_view.php,v 1.5 2018-02-08 15:18:05 dgoron Exp $
+// $Id: perio_a2z_view.php,v 1.6 2023/08/17 09:47:54 dbellamy Exp $
 
 $base_path=".";
 //Affichage d'une notice
 require_once($base_path."/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once($base_path.'/includes/templates/common.tpl.php');
 
-// classe de gestion des catÃ©gories
+// classe de gestion des catégories
 require_once($base_path.'/classes/categorie.class.php');
 require_once($base_path.'/classes/notice.class.php');
 require_once($base_path.'/classes/notice_display.class.php');
@@ -24,7 +24,7 @@ require_once($base_path.'/classes/indexint.class.php');
 // classe d'affichage des tags
 require_once($base_path.'/classes/tags.class.php');
 
-// classe de gestion des rÃ©servations
+// classe de gestion des réservations
 require_once($base_path.'/classes/resa.class.php');
 
 // pour l'affichage correct des notices
@@ -35,17 +35,17 @@ require_once($base_path."/includes/notice_affichage.inc.php");
 
 require_once($base_path."/classes/perio_a2z.class.php");
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
 
-// paramÃ©trage de base
+// paramétrage de base
 $templates = <<<ENDOFFILE
 	<html>
 		<head>
 			!!styles!!
 		</head>
 		<body>			
-			<script type='text/javascript'>
+			<script>
 				function show_what(quoi, id) {
 					var whichISBD = document.getElementById('div_isbd' + id);
 					var whichPUBLIC = document.getElementById('div_public' + id);

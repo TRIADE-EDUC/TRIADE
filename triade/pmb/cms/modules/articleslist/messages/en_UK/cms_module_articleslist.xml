@@ -5,10 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_articleslist.xml,v 1.7 2018-03-20 10:00:40 dgoron Exp $ -->
+$Id: cms_module_articleslist.xml,v 1.9 2023/09/14 09:40:38 gneveu Exp $ -->
 
 <XMLlist>
-	<entry code='cms_module_common_datasource_articles_sections'>Rubrics</entry>
+	<entry code='cms_module_common_datasource_articles_sections'>Articles in a section</entry>
 	<entry code='cms_module_common_datasource_all_articles'>All the articles</entry>
 	<entry code='cms_module_common_datasource_articles'>Articles</entry>
 	<entry code='cms_module_common_datasource_articles_categories'>Articles of a record's categories</entry>
@@ -16,8 +16,12 @@ $Id: cms_module_articleslist.xml,v 1.7 2018-03-20 10:00:40 dgoron Exp $ -->
 	<entry code='cms_module_common_view_articleslist'>Articles list - Django template with link</entry>
 	<entry code='cms_module_articleslist_view_carousel'>Carousel view</entry>
 	<entry code='cms_module_articleslist_view_carousel_responsive'>Responsive carousel view</entry>
+	<entry code='cms_module_articleslist_view_carousel_uikit'>Vue en Carrousel UIkit</entry>
+	<entry code='cms_module_articleslist_view_slideshow'>Vue en Slideshow</entry>
 	<entry code='cms_module_common_datasource_articles_by_article_categories'>Articles of the categories of an article</entry>
 	<entry code='cms_module_common_datasource_articles_by_section_categories'>Articles of the categories of a section</entry>
 	<entry code='cms_module_common_datasource_articles_by_concepts'>Articles indexés par des concepts</entry>
 	<entry code='cms_module_common_datasource_articles_by_categories'>Articles indexés par des catégories</entry>
+	<entry code='cms_module_common_datasource_articles_by_section_cp'>Articles cités en CP d'une rubrique</entry>
+	<entry code='cms_module_articleslist_view_dynamic_grid'>Vue en Dynamic Grid</entry>
 </XMLlist>

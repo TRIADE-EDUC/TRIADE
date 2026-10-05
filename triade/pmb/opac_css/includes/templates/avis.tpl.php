@@ -1,19 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis.tpl.php,v 1.28 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: avis.tpl.php,v 1.31 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 global $msg, $base_path;
-global $avis_tpl_header;
 global $avis_tpl_post_add;
 global $avis_tpl_post_add_pb;
 global $avis_tpl_form_script;
 global $avis_tpl_form;
-
-$avis_tpl_header = "<div id='titre-popup'>".$msg["notice_title_avis"]."</div>";
 
 $avis_tpl_post_add= "
 	<div class='center'><br /><br />".$msg["avis_msg_validation"]."
@@ -22,8 +19,8 @@ $avis_tpl_post_add= "
 $avis_tpl_post_add_pb="<div class='center'><br /><br />".$msg["avis_msg_pb"];
 
 $avis_tpl_form_script="
-	<script type='text/javascript' src='./includes/javascript/bbcode.js'></script>
-	<script type='text/javascript'>
+	<script src='./includes/javascript/bbcode.js'></script>
+	<script>
 		msg_avis_validation_en_cours='".$msg["avis_validation_en_cours"]."';
 	</script>
 ";
@@ -68,13 +65,13 @@ $avis_tpl_form .= "
 			<label>".$msg["avis_liste_lecture"]."</label><br />
 			!!listes_lecture!!
 		</div>
-		<div class='row'>&nbsp;</div>
 		<div class='avis_form_edit_buttons'>
+            <br/>
 			!!button_send!!
 			!!button_save!!
 			!!button_delete!!
 		</div>
-		<script type='text/javascript'>
+		<script>
 			if(document.getElementById('avis_!!id!!_private_!!object_type!!_!!object_id!!').checked) {
 				document.getElementById('avis_!!id!!_display_listes_lecture_!!object_type!!_!!object_id!!').style.display='block';
 			} else {
@@ -84,6 +81,6 @@ $avis_tpl_form .= "
 	</div>
 ";
 
-// si paramÃ©trage formulaire particulier
+// si paramétrage formulaire particulier
 if (file_exists($base_path.'/includes/templates/avis_subst.tpl.php')) require_once($base_path.'/includes/templates/avis_subst.tpl.php');
 

@@ -253,13 +253,13 @@ if(autorisation_module()) {
 		// Verification droits acces groupe
 		validerequete("2");
 		?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 		<?php include("./librairie_php/lib_defilement.php"); ?>
 		</td>
 		<td width="472" valign="middle" rowspan="3" align="center">
 			<div align='center'>
 				<?php top_h(); ?>
-				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 
 
 		<?php
@@ -290,14 +290,13 @@ if(autorisation_module()) {
 										<legend><?php echo LANG_FIN_GENE_021; ?></legend>
 										
 											<table border="0" cellpadding="0" cellspacing="2" align="center">
-												
 												<form name="formulaire_classe" id="formulaire_classe" action="<?php echo url_script(); ?>" method="post" onSubmit="">
-													<input type="hidden" name="operation" id="operation" value="rechercher_code_class">
+												 	<input type="hidden" name="operation" id="operation" value="rechercher_code_class">
 													<input type="hidden" name="annee_scolaire" id="annee_scolaire" value="<?php echo $annee_scolaire; ?>">
-                                                    <input type="hidden" name="inscrits_pas_inscrits" id="inscrits_pas_inscrits" value="<?php echo inscrits_pas_inscrits; ?>">
-												<tr>
+                                                     <input type="text" name="inscrits_pas_inscrits" id="inscrits_pas_inscrits" value="<?php echo $inscrits_pas_inscrits; ?>">
+												<tr> 
 													<td align="right"><?php echo LANG_FIN_CLAS_003; ?>&nbsp;:&nbsp;</td>
-													<td align="left">
+													<td align="left"> 
 														<?php
 														// Verifier si on a au moins une classe
 														$disabled = '';
@@ -748,7 +747,7 @@ if(autorisation_module()) {
 		</form>
 
 		<?php //********** GENERATION DES MENUS ADMINISTRATEUR ********** ?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></script>
 		
 
 		<?php //********** INITIALISATION DES BULLES D'AIDE ********** ?>

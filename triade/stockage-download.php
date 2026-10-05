@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,7 +33,7 @@ include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 
 $data=recupListFichierPartagerViaId($id);
-if (count($data) == 0) { exit; }
+if (countTriade($data) == 0) { exit; }
 
 // fichier,chemin,membreIdProprio,membreIdAutorise,idclasse,membresource,idsource,id
 $fichier=$data[0][0];

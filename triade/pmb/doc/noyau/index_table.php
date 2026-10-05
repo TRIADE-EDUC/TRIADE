@@ -10,10 +10,10 @@ $t_relation=$doc->get_relation();
 
 print "<style>td { font-size:12px;}</style>";
 
-print "<html><body><table width='100%' cellspacing='0' cellpadding='1'><tbody>";
+print "<html><body><table style='width:100%; border-spacing:0px; padding:1px'><tbody>";
 
 $pair=1;
-	//On parcourt les tables triÃ©es dans l'ordre alphabetique
+	//On parcourt les tables triées dans l'ordre alphabetique
 foreach($t_parcours as $k=>$v) {
 	if ($pair==1){$color='#DDDDDD';}else{$color='#FFFFFF';	}
 	print "<tr bgcolor=$color><td>";
@@ -24,11 +24,11 @@ foreach($t_parcours as $k=>$v) {
 	<tr bgcolor=$color><td>";
 	print "<i>".htmlentities($t_table[$k]['DESC'],ENT_QUOTES,'iso-8859-1')."<i/><br />
 	<td/><tr />";
-		//tables liÃ©es
+		//tables liées
 	print "<tr id='t".$k."' style='display:none'>
 	<td style='border-width:1px;border-style:solid;border-color:#000000'>
 	<blockquote>";
-		//raccourcis vers les tables liÃ©es
+		//raccourcis vers les tables liées
 	foreach ( $t_table[$k]['LIENS'] as $val=>$ind){
 		if ($t_relation[$ind]['T_PERE']==$k){
 			print "<a href='#".$t_relation[$ind]['T_FILS']."'onclick=\"parent.description.location='db_description.php?table=".$t_relation[$ind]['T_FILS']."'\">".$t_table[$t_relation[$ind]['T_FILS']]['NAME']."</a>";

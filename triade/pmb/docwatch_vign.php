@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_vign.php,v 1.1 2015-12-15 11:27:20 dgoron Exp $
+// $Id: docwatch_vign.php,v 1.1 2015/12/15 11:27:20 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path     = ".";                            
 $base_auth     = "";  
 $base_title    = "";    

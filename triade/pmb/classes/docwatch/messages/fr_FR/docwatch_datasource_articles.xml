@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: docwatch_datasource_articles.xml,v 1.1 2019-03-19 14:38:56 dgoron Exp $ -->
+$Id: docwatch_datasource_articles.xml,v 1.1 2019/03/19 14:38:56 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="docwatch_datasource_selector_articles_type_article_generic">Sélection via un champ générique d'article</entry>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records_similar_cote.class.php,v 1.6 2016-09-20 14:33:53 vtouchard Exp $
+// $Id: cms_module_common_datasource_records_similar_cote.class.php,v 1.7 2022/01/10 08:31:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ class cms_module_common_datasource_records_similar_cote extends cms_module_commo
 		$this->limitable = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -24,10 +24,9 @@ class cms_module_common_datasource_records_similar_cote extends cms_module_commo
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		global $dbh;
 		$return = array();
 		$selector = $this->get_selected_selector();
 		if ($selector) {
@@ -35,7 +34,7 @@ class cms_module_common_datasource_records_similar_cote extends cms_module_commo
 			if($value!= 0){
 				//on part du premier exemplaire...
 				$query ="select expl_cote from exemplaires where expl_notice = '".($value*1)."' order by expl_cote  limit 1 ";
-				$result = pmb_mysql_query($query,$dbh);
+				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result) > 0){
 					$row = pmb_mysql_fetch_object($result);
 					$cote = $row->expl_cote;
@@ -44,7 +43,7 @@ class cms_module_common_datasource_records_similar_cote extends cms_module_commo
 						union 
 					(select distinct expl_notice,expl_cote from exemplaires where expl_notice!=0 and expl_bulletin = 0 and expl_cote < '".$cote."' and expl_notice = '".($value*1)."' order by expl_cote desc limit 5)" ;
 					
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result) > 0){
 						$return["title"] = "";
 						while($row = pmb_mysql_fetch_object($result)){

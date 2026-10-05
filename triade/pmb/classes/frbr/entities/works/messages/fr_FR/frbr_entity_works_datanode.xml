@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_works_datanode.xml,v 1.5 2018-06-29 13:02:47 tsamson Exp $ -->
+$Id: frbr_entity_works_datanode.xml,v 1.6 2019/09/04 13:20:56 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code='frbr_entity_works_datasource_works'>Oeuvres</entry>
@@ -15,4 +15,5 @@ $Id: frbr_entity_works_datanode.xml,v 1.5 2018-06-29 13:02:47 tsamson Exp $ -->
 	<entry code='frbr_entity_works_datasource_concepts'>Concepts</entry>
 	<entry code='frbr_entity_works_datasource_events'>Evénements</entry>
     <entry code="frbr_entity_works_datasource_records_expressions">Notices des expressions</entry>
+    <entry code='frbr_entity_works_datasource_authperso'>Autorités personnalisées</entry>
 </XMLlist>

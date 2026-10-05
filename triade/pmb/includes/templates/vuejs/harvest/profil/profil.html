@@ -1,0 +1,4 @@
+<div id="harvest-profil">
+    <form-harvest-profil v-if="action == 'modif' || action == 'add'" :profil="profil" :url="url"></form-harvest-profil>
+    <list v-else :list="list" :caption="messages.get('harvest', 'harvest_list_profile_caption')" :url="url"></list>
+</div>

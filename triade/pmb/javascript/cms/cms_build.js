@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_build.js,v 1.42 2016-12-27 16:26:28 dgoron Exp $
+// $Id: cms_build.js,v 1.46 2023/12/14 15:46:57 pmallambic Exp $
 
 var cms_build_obj_list_id=new Array();
 var cms_build_obj_list_type=new Array();
@@ -298,11 +298,11 @@ function cms_drag_activate(actif,cms_dragable_type,cms_receptable_type) {
 	cms_memo_opacdrop =new Array();
 
 	var opac=parent.frames['opac_frame'];
-	// cadres déplacables
+	// cadres d�placables
 	var activer=0;
 	if(cms_dragable_type=="cadre")	activer=actif;
 
-	// pour toutes les zones déclarée dans le xml, on va chercher les childNodes div (soit les cadres )
+	// pour toutes les zones d�clar�e dans le xml, on va chercher les childNodes div (soit les cadres )
 	for(var i=0;i<cms_zone_list.length;i++){
 		var div_zone=opac.document.getElementById(cms_zone_list[i]);
 		if(div_zone)
@@ -311,7 +311,7 @@ function cms_drag_activate(actif,cms_dragable_type,cms_receptable_type) {
 				if(div_zone.childNodes[j].getAttribute("id")){
 					// c'est un cadre du type <div id='XXXX'
 					var div_cadre=div_zone.childNodes[j].getAttribute('id');
-					// on active annule le déplacement du cadre
+					// on active annule le d�placement du cadre
 					cms_drag_activate_obj(div_cadre,activer);
 				}
 			}
@@ -329,7 +329,7 @@ function cms_drag_activate(actif,cms_dragable_type,cms_receptable_type) {
 			if(opac.document.getElementById(cms_zone_list_dragable[i])) cms_drag_activate_obj(cms_zone_list_dragable[i],0);
 		}
 	}
-	// Récepteurs ( 'zone' ou 'conteneur' )
+	// R�cepteurs ( 'zone' ou 'conteneur' )
 	if(cms_receptable_type=="zone" && cms_dragable_type!="zone"){
 		for(var i=0;i<cms_zone_list.length;i++){
 			if(cms_zone_list[i]!="main")
@@ -413,7 +413,7 @@ function cms_drag_record() {
 		var obj_zone=opac.document.getElementById(zone_name); // objet element
 
 		if(obj_zone){
-			// zone présente dans la page
+			// zone pr�sente dans la page
 
 			if(zone_index[zone_name]!=null){
 				index=zone_index[zone_name];
@@ -436,13 +436,19 @@ function cms_drag_record() {
 					if(obj_zone.childNodes[j].getAttribute("id")){
 						var cadre_name=obj_zone.childNodes[j].getAttribute("id"); // Acceuil, Adresse ...
 						var obj_cadre=obj_zone.childNodes[j]; // objet element
-						var cadre_fixed=obj_zone.childNodes[j].getAttribute("fixed");
+						
+						if (obj_zone.childNodes[j].getAttribute("data-fixed")) {
+							var cadre_fixed = obj_zone.childNodes[j].getAttribute("data-fixed");
+						} else {
+							var cadre_fixed = obj_zone.childNodes[j].getAttribute("fixed");
+						}
+
 						page_info['cms_nodes'][0][index]['childs'][nb_cadre]=new Array();
 						page_info['cms_nodes'][0][index]['childs'][nb_cadre]['name']=cadre_name;
 						page_info['cms_nodes'][0][index]['childs'][nb_cadre]['fixed']=(cadre_fixed ? true : false);
 
-						if(obj_zone.childNodes[j].getAttribute("type")=="cms_module_hidden"){
-							page_info['cms_nodes'][0][index]['childs'][nb_cadre]['style']=obj_zone.childNodes[j].getAttribute("cadre_style");
+						if(obj_zone.childNodes[j].getAttribute("data-type")=="cms_module_hidden"){
+							page_info['cms_nodes'][0][index]['childs'][nb_cadre]['style']=obj_zone.childNodes[j].getAttribute("data-cadre-style");
 						}
 						else if(obj_cadre.style.cssText){
 							page_info['cms_nodes'][0][index]['childs'][nb_cadre]['style']=obj_cadre.style.cssText;
@@ -465,7 +471,12 @@ function cms_drag_record() {
 	//console.log('page_info',page_info);
 
 	// Contexte de la page Opac: cms_build_info
-	var post_data='cms_data='+serialize(page_info)+'&cms_build_info='+parent.frames['opac_frame'].document.getElementById('cms_build_info').value;
+	var cms_build_info = parent.frames['opac_frame'].document.getElementById('cms_build_info');
+	var cms_build_info_value = "";
+	if (cms_build_info) {
+		cms_build_info_value = cms_build_info.value;
+	}
+	var post_data='cms_data='+serialize(page_info)+'&cms_build_info='+cms_build_info_value;
 	// Envoi du tout au serveur
 	var http=new http_request();
 	var url = './ajax.php?module=cms&categ=build&sub=block&action=save';
@@ -481,11 +492,11 @@ function get_cadres_list(){
 		var zone_name=cms_zone_list[i]; // bandeau ...
 		var obj_zone=opac.document.getElementById(zone_name); // objet element
 		if(obj_zone){
-			// zone présente dans la page
+			// zone pr�sente dans la page
 			for(var j=0;j<obj_zone.childNodes.length;j++){
 				if(obj_zone.childNodes[j].nodeType == 1){
 					if(obj_zone.childNodes[j].getAttribute("id")){
-						if(obj_zone.childNodes[j].getAttribute("type")=="cms_module_hidden") continue;
+						if(obj_zone.childNodes[j].getAttribute("data-type")=="cms_module_hidden") continue;
 						var cadre_name=obj_zone.childNodes[j].getAttribute("id"); // Acceuil, Adresse ...
 						cadre_list[nb_cadre++]=cadre_name;
 					}
@@ -494,6 +505,16 @@ function get_cadres_list(){
 		}
 	}
 	return cadre_list;
+}
+
+function get_frbr_cadres_list(){
+	var opac=parent.frames['opac_frame'];
+	frbr_cadres_list=new Array();
+	var nodes = opac.document.querySelectorAll('*[data-frbr-cadre]');
+	for (var i = 0; i < nodes.length; i++) {
+		frbr_cadres_list.push(nodes[i].getAttribute("data-frbr-cadre"));
+	}
+	return frbr_cadres_list;
 }
 
 function cms_build_new_cadre(name,contens){
@@ -566,6 +587,20 @@ function cms_build_load_cadres_not_in_cms_list(){
 	return http.get_text();
 }
 
+function cms_build_load_frbr_cadres_in_page_list(){
+	//on recalcule le liste des cadres de la page
+	get_frbr_cadres_list();
+	
+	var http=new http_request();
+
+	var url = './ajax.php?module=cms&categ=module&action=frbr_cadres_list_in_page';
+	for(var i=0;i<frbr_cadres_list.length;i++){
+		url+='&in_page[]='+frbr_cadres_list[i];
+	}
+	http.request(url);
+	return http.get_text();
+}
+
 function cms_build_save_cadre_classement(id_cadre,classement){
 	var http=new http_request();
 	var url = './ajax.php?module=cms&categ=module&action=cadre_save_classement';
@@ -593,5 +628,4 @@ function cms_build_save_page_classement(id_page,classement){
 }
 
 function cms_build_init(){
-
 }

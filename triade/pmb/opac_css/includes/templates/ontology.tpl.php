@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ontology.tpl.php,v 1.4 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: ontology.tpl.php,v 1.5 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -13,7 +13,7 @@ $ontology_tpl['list'] = "
 <div class='row'>
 	<!-- nb_results -->
 </div>
-<script type='text/javascript' src='./javascript/sorttable.js'></script>
+<script src='./javascript/sorttable.js'></script>
 <div class='row'>
 	<table class='sortable'>
 	<thead>
@@ -129,7 +129,7 @@ $ontology_tpl['p_del_button'] = "
 ";
 
 $ontology_tpl['p_script'] = " 
-<script type='text/javascript'>
+<script>
 
 function ontology_del_!!fname!!_!!lang!!(index) {
 
@@ -242,7 +242,7 @@ $ontology_tpl['object_p_sel_button'] = "
 ";
 
 $ontology_tpl['object_p_script'] = "
-<script type='text/javascript'>
+<script>
 
 //Effacer
 function ontology_del_!!fname!!(index) {

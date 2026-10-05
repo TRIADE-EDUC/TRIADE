@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -29,6 +29,7 @@ session_start();
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <?php include("./librairie_php/lib_licence.php"); ?>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade</title>
@@ -101,7 +102,7 @@ endif;
 include_once('../librairie_php/db_triade.php');
 $cnx=cnx();
 $data=affPers('ADM');
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<tr class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\">\n";
 	print "<td >".civ($data[$i][1])."&nbsp;".strtoupper($data[$i][2])."</td>\n";
 	print "<td >".ucfirst($data[$i][3])."</td>\n";

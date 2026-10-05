@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_export_tableau_download.php,v 1.7 2019-06-05 06:41:20 btafforeau Exp $
+// $Id: suggestions_export_tableau_download.php,v 1.7 2019/06/05 06:41:20 btafforeau Exp $
 
 $base_path="../..";
 $base_auth = "ACQUISITION_AUTH";

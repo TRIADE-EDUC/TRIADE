@@ -9,48 +9,119 @@ if (empty($_SESSION["nom"]))  {
 $disabled2="";
 include_once("./common/config2.inc.php");
 include_once("./common/config.inc.php");
+include_once("./common/config-module.php");
 include_once("./librairie_php/db_triade.php");
 
 
-
-if (ACCESSTOCKAGE == "non") {
-        $access="non";
-        $disabled2="disabled='disabled'";
+function getDirectorySize($path) {
+    $size = 0;
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $file) {
+        if ($file->isFile()) {
+            $size += $file->getSize();
+        }
+    }
+    return $size;
 }
 
-if (ACCESSTOCKAGE != "oui") {
-        if (ACCESSTOCKAGEPROF == "non") {
-                $access="non";
-                $disabled2="disabled='disabled'";
-        }
+
+// ACCESSTOCKAGE = "non" signifie lecture seule globale (désactive upload/suppression)
+// mais ne bloque pas l'accès — c'est le contrôle par profil qui est autoritaire.
+if (defined("ACCESSTOCKAGE") && ACCESSTOCKAGE == "non") {
+    $disabled2 = "disabled='disabled'";
 }
 
-if ($_SESSION["membre"] == "menuprof") {
-        if (ACCESSTOCKAGEPROF == "non") {
-                $access="non";
-                $disabled2="disabled='disabled'";
-        }
+// Contrôle d'accès par profil
+$access = "oui";
+$membre = $_SESSION["membre"] ?? '';
+
+if ($membre === "menuprof") {
+    if (defined("ACCESSTOCKAGEPROF") && ACCESSTOCKAGEPROF == "non") {
+        $access = "non"; $disabled2 = "disabled='disabled'";
+    }
+} elseif ($membre === "menuscolaire") {
+    if (defined("ACCESSTOCKAGECPE") && ACCESSTOCKAGECPE == "non") {
+        $access = "non"; $disabled2 = "disabled='disabled'";
+    }
+} elseif ($membre === "menuparent") {
+    if (defined("ACCESSTOCKAGEPARENT") && ACCESSTOCKAGEPARENT == "non") {
+        $access = "non"; $disabled2 = "disabled='disabled'";
+    }
+} elseif ($membre === "menueleve") {
+    if (defined("ACCESSTOCKAGEELEVE") && ACCESSTOCKAGEELEVE == "non") {
+        $access = "non"; $disabled2 = "disabled='disabled'";
+    }
+} elseif ($membre === "menuadmin") {
+    if (defined("STOCKAGEADMIN") && STOCKAGEADMIN == "non") {
+        $access = "non"; $disabled2 = "disabled='disabled'";
+    }
+} elseif ($membre !== "menututeur" && $membre !== "menupersonnel") {
+    $access = "non"; // profil non géré
 }
 
-if ($_SESSION["membre"] == "menuscolaire") {
-        if (ACCESSTOCKAGECPE == "non") {
-                $access="non";
-                $disabled2="disabled='disabled'";
-        }
+if ($access === "non") {
+    header('Location: acces_refuse.php');
+    exit;
 }
 
-if ($_SESSION["membre"] == "menuparent") {
-        if (ACCESSTOCKAGEPARENT == "non") {
-                $access="non";
-                $disabled2="disabled='disabled'";
+function countFiles($path) {
+    $count = 0;
+    foreach (new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)
+    ) as $file) {
+        if ($file->isFile()) {
+            $count++;
         }
+    }
+    return $count;
 }
 
-if ($_SESSION["membre"] == "menueleve") {
-        if (ACCESSTOCKAGEELEVE == "non") {
-                $access="non";
-                $disabled2="disabled='disabled'";
-        }
+global $quota_max, $quota_files_max;
+
+$quota_max       = defined('TAILLESTOCKAGE') ? intval(TAILLESTOCKAGE) : 100 * 1024 * 1024;
+$quota_files_max = defined('INODESTOCKAGE')  ? intval(INODESTOCKAGE)  : 10;
+
+
+function displayQuota() {
+    global $quota_max, $quota_files_max;
+
+    // ----- STOCKAGE -----
+    $used = getDirectorySize(FM_ROOT_PATH);
+    $used_mb = round($used / 1024 / 1024, 1);
+    $quota_mb = round($quota_max / 1024 / 1024, 1);
+    $percent = ($quota_max > 0) ? min(100, ($used / $quota_max) * 100) : 0;
+
+    $color = ($percent > 90) ? 'red' : (($percent > 70) ? 'orange' : '#4caf50');
+
+    // ----- FICHIERS -----
+    $files_used = countFiles(FM_ROOT_PATH);
+    $files_percent = ($quota_files_max > 0) ? min(100, ($files_used / $quota_files_max) * 100) : 0;
+
+    $files_color = ($files_percent > 90) ? 'red' : (($files_percent > 70) ? 'orange' : '#4caf50');
+
+    // ALERTE
+    $alert = '';
+    if ($files_percent > 90) {
+        $alert = '<div style="color:red;"> Trop de fichiers</div>';
+    }
+
+    // ----- AFFICHAGE -----
+    echo '<div style="margin:10px 0;">
+
+        <strong>Stockage :</strong> '.$used_mb.' Mo / '.$quota_mb.' Mo
+        <div style="background:#eee; height:10px; border-radius:5px; margin-top:5px;">
+            <div style="width:'.$percent.'%; height:10px; background:'.$color.'; border-radius:5px;"></div>
+        </div>
+
+        <div style="margin-top:8px;">
+            <strong>Fichiers :</strong> '.$files_used.' / '.$quota_files_max.'
+        </div>
+        <div style="background:#eee; height:10px; border-radius:5px; margin-top:5px;">
+            <div style="width:'.$files_percent.'%; height:10px; background:'.$files_color.'; border-radius:5px;"></div>
+        </div>
+
+        '.$alert.'
+
+    </div><br /><br />';
 }
 
 
@@ -62,7 +133,6 @@ if (!is_dir("./data/stockage/".$_SESSION['membre'])) { mkdir("./data/stockage/".
 //Default Configuration
 $CONFIG = '{"lang":"fr","error_reporting":false,"show_hidden":false,"hide_Cols":false,"theme":"light"}';
 
-
 /**
  * H3K | Tiny File Manager V2.5.0
  * CCP Programmers | ccpprogrammers@gmail.com
@@ -70,7 +140,7 @@ $CONFIG = '{"lang":"fr","error_reporting":false,"show_hidden":false,"hide_Cols":
  */
 
 //TFM version
-define('VERSION', '2.5.0');
+define('VERSION', '2.5.1');
 
 //Application Title
 define('APP_TITLE', 'TRIADE-BOX');
@@ -101,12 +171,16 @@ $global_readonly = false;
 $diruser="./data/stockage/".$_SESSION['membre']."/".$_SESSION['id_pers'];
 if (!is_dir($diruser)) mkdir($diruser);
 
+
+
+
+
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
 $directories_users = array('Username' => '$diruser' );
 
 // Enable highlight.js (https://highlightjs.org/) on view's page
-$use_highlightjs = flase;
+$use_highlightjs = false;
 
 // highlight.js style
 // for dark theme use 'ir-black'
@@ -230,7 +304,7 @@ $report_errors = isset($cfg->data['error_reporting']) ? $cfg->data['error_report
 
 // Hide Permissions and Owner cols in file-listing
 $hide_Cols = isset($cfg->data['hide_Cols']) ? $cfg->data['hide_Cols'] : false;
-$hide_Cols = flase;
+$hide_Cols = false;
 
 // Theme
 $theme = isset($cfg->data['theme']) ? $cfg->data['theme'] : 'light';
@@ -268,7 +342,7 @@ if (defined('FM_EMBED')) {
     }
 
     session_cache_limiter('');
-    session_name(FM_SESSION_ID );
+    session_name('FM_SESSION_ID');
     function session_error_handling_function($code, $msg, $file, $line) {
         // Permission denied for default session, try to create a new one
         if ($code == 2) {
@@ -295,9 +369,9 @@ $is_https = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['
     || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
 
 // update $root_url based on user specific directories
-if (isset($_SESSION[FM_SESSION_ID]['logged']) && !empty($directories_users[$_SESSION[FM_SESSION_ID]['logged']])) {
+if (isset($_SESSION['FM_SESSION_ID']['logged']) && !empty($directories_users[$_SESSION['FM_SESSION_ID']['logged']])) {
     $wd = fm_clean_path(dirname($_SERVER['PHP_SELF']));
-    $root_url =  $root_url.$wd.DIRECTORY_SEPARATOR.$directories_users[$_SESSION[FM_SESSION_ID]['logged']];
+    $root_url =  $root_url.$wd.DIRECTORY_SEPARATOR.$directories_users[$_SESSION['FM_SESSION_ID']['logged']];
 }
 // clean $root_url
 $root_url = fm_clean_path($root_url);
@@ -308,7 +382,7 @@ defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') .
 
 // logout
 if (isset($_GET['logout'])) {
-    unset($_SESSION[FM_SESSION_ID]['logged']);
+    unset($_SESSION['FM_SESSION_ID']['logged']);
     unset( $_SESSION['token']); 
     fm_redirect(FM_SELF_URL);
 }
@@ -361,7 +435,7 @@ if ($ip_ruleset != 'OFF') {
 
 // Auth
 if ($use_auth) {
-    if (isset($_SESSION[FM_SESSION_ID]['logged'], $auth_users[$_SESSION[FM_SESSION_ID]['logged']])) {
+    if (isset($_SESSION['FM_SESSION_ID']['logged'], $auth_users[$_SESSION['FM_SESSION_ID']['logged']])) {
         // Logged
     } elseif (isset($_POST['fm_usr'], $_POST['fm_pwd'], $_POST['token'])) {
         // Logging In
@@ -372,16 +446,16 @@ if ($use_auth) {
                 fm_set_msg(lng('You are logged in'));
                 fm_redirect(FM_ROOT_URL . $_SERVER['REQUEST_URI']);
             } else {
-                unset($_SESSION[FM_SESSION_ID]['logged']);
+                unset($_SESSION['FM_SESSION_ID']['logged']);
                 fm_set_msg(lng('Login failed. Invalid username or password'), 'error');
-                fm_redirect(FM_ROOT_URL . $_SERVER['REQUEST_URI']);
+                fm_redirect(FM_ROOT_URL. $_SERVER['REQUEST_URI']);
             }
         } else {
             fm_set_msg(lng('password_hash not supported, Upgrade PHP version'), 'error');;
         }
     } else {
         // Form
-        unset($_SESSION[FM_SESSION_ID]['logged']);
+        unset($_SESSION['FM_SESSION_ID']['logged']);
         fm_show_header_login();
         ?>
         <section class="h-100">
@@ -443,8 +517,8 @@ if ($use_auth) {
 }
 
 // update root path
-if ($use_auth && isset($_SESSION[FM_SESSION_ID]['logged'])) {
-    $root_path = isset($directories_users[$_SESSION[FM_SESSION_ID]['logged']]) ? $directories_users[$_SESSION[FM_SESSION_ID]['logged']] : $root_path;
+if ($use_auth && isset($_SESSION['FM_SESSION_ID']['logged'])) {
+    $root_path = isset($directories_users[$_SESSION['FM_SESSION_ID']['logged']]) ? $directories_users[$_SESSION['FM_SESSION_ID']['logged']] : $root_path;
 }
 
 // clean and check $root_path
@@ -462,7 +536,7 @@ defined('FM_FILE_EXTENSION') || define('FM_FILE_EXTENSION', $allowed_file_extens
 defined('FM_UPLOAD_EXTENSION') || define('FM_UPLOAD_EXTENSION', $allowed_upload_extensions);
 defined('FM_EXCLUDE_ITEMS') || define('FM_EXCLUDE_ITEMS', (version_compare(PHP_VERSION, '7.0.0', '<') ? serialize($exclude_items) : $exclude_items));
 defined('FM_DOC_VIEWER') || define('FM_DOC_VIEWER', $online_viewer);
-define('FM_READONLY', $global_readonly || ($use_auth && !empty($readonly_users) && isset($_SESSION[FM_SESSION_ID]['logged']) && in_array($_SESSION[FM_SESSION_ID]['logged'], $readonly_users)));
+define('FM_READONLY', $global_readonly || ($use_auth && !empty($readonly_users) && isset($_SESSION['FM_SESSION_ID']['logged']) && in_array($_SESSION['FM_SESSION_ID']['logged'], $readonly_users)));
 define('FM_IS_WIN', DIRECTORY_SEPARATOR == '\\');
 
 // always use ?p=
@@ -731,6 +805,19 @@ if (isset($_GET['del'], $_POST['token']) && !FM_READONLY) {
 if (isset($_POST['newfilename'], $_POST['newfile'], $_POST['token']) && !FM_READONLY) {
     $type = $_POST['newfile'];
     $new = str_replace( '/', '', fm_clean_path( strip_tags( $_POST['newfilename'] ) ) );
+
+    $current_files = countFiles(FM_ROOT_PATH);
+
+    if ($current_files >= $quota_files_max) {
+    	fm_set_msg('Quota de fichiers atteint (' . $quota_files_max . ')', 'error');
+    	$FM_PATH=FM_PATH; fm_redirect(FM_SELF_URL . '?p=' . urlencode($FM_PATH));
+    }
+
+    if ($current_files > ($quota_files_max * 0.9)) {
+    	fm_set_msg('Attention : quota fichiers presque atteint', 'alert');
+    }
+
+
     if (fm_isvalid_filename($new) && $new != '' && $new != '..' && $new != '.' && verifyToken($_POST['token'])) {
         $path = FM_ROOT_PATH;
         if (FM_PATH != '') {
@@ -984,6 +1071,31 @@ if (!empty($_FILES) && !FM_READONLY) {
 
     $filename = $f['file']['name'];
     $tmp_name = $f['file']['tmp_name'];
+
+    $current_files = countFiles(FM_ROOT_PATH);
+
+    if ($current_files >= $quota_files_max) {
+    	$response = array(
+        	'status' => 'error',
+        	'info' => 'Nombre maximum de fichiers atteint (' . $quota_files_max . ')'
+        );
+        echo json_encode($response);
+        exit();
+    }
+
+
+    $current_size = getDirectorySize(FM_ROOT_PATH);
+    $file_size = $_FILES['file']['size'];
+
+    if (($current_size + $file_size) > $quota_max) {
+        $response = array(
+        	'status' => 'error',
+        	'info' => 'Quota dépassé (' . round($current_size/1024/1024,1) . ' Mo utilisés)'
+    	);
+    	echo json_encode($response);
+    	exit();
+    }
+
     $ext = pathinfo($filename, PATHINFO_FILENAME) != '' ? strtolower(pathinfo($filename, PATHINFO_EXTENSION)) : '';
     $isFileAllowed = ($allowed) ? in_array($ext, $allowed) : true;
 
@@ -1350,6 +1462,10 @@ if (!empty($folders)) {
 if (isset($_GET['upload']) && !FM_READONLY) {
     fm_show_header(); // HEADER
     fm_show_nav_path(FM_PATH); // current path
+
+
+
+
     //get the allowed file extensions
     function getUploadExt() {
         $extArr = explode(',', FM_UPLOAD_EXTENSION);
@@ -1450,6 +1566,7 @@ if (isset($_POST['copy']) && !FM_READONLY) {
 
     fm_show_header(); // HEADER
     fm_show_nav_path(FM_PATH); // current path
+    displayQuota();
     ?>
     <div class="path">
         <div class="card <?php echo fm_get_theme(); ?>">
@@ -1707,13 +1824,28 @@ if (isset($_GET['view'])) {
     $is_video = false;
     $is_text = false;
     $is_onlineViewer = false;
+    $is_docx = false;
+    $is_doc  = false;
+    $is_xlsx = false;
 
     $view_title = 'File';
     $filenames = false; // for zip
     $content = ''; // for text
     $online_viewer = strtolower(FM_DOC_VIEWER);
 
-    if($online_viewer && $online_viewer !== 'false' && in_array($ext, fm_get_onlineViewer_exts())){
+    if ($ext === 'docx') {
+        $is_docx = true;
+        $view_title = 'Document Word';
+        $content = fm_extract_docx($file_path);
+    } elseif ($ext === 'doc') {
+        $is_doc = true;
+        $view_title = 'Document Word';
+        $content = fm_extract_doc($file_path);
+    } elseif ($ext === 'xlsx') {
+        $is_xlsx = true;
+        $view_title = 'Feuille de calcul Excel';
+        $content = fm_extract_xlsx($file_path);
+    } elseif($online_viewer && $online_viewer !== 'false' && in_array($ext, fm_get_onlineViewer_exts())){
         $is_onlineViewer = true;
     }
     elseif ($ext == 'zip' || $ext == 'tar') {
@@ -1813,11 +1945,29 @@ if (isset($_GET['view'])) {
                 </div>
                 <?php
             }
-            if($is_onlineViewer) {
+            if ($is_docx || $is_doc) {
+                if ($content === false) {
+                    echo '<p class="text-danger">Impossible de lire le fichier (format non reconnu ou fichier corrompu).</p>';
+                } elseif (trim($content) === '') {
+                    echo '<p class="text-muted">Document vide ou sans texte extractible.</p>';
+                } else {
+                    echo '<div style="background:#fff;border:1px solid #ddd;padding:20px 30px;max-height:600px;overflow-y:auto;font-family:serif;font-size:14px;line-height:1.7;white-space:pre-wrap;">' . $content . '</div>';
+                }
+            } elseif ($is_xlsx) {
+                if ($content === false) {
+                    echo '<p class="text-danger">Impossible de lire le fichier xlsx (ZipArchive requis).</p>';
+                } elseif (trim($content) === '') {
+                    echo '<p class="text-muted">Fichier vide ou sans données extractibles.</p>';
+                } else {
+                    echo '<div style="max-height:600px;overflow:auto;border:1px solid #ddd;padding:10px;">' . $content . '</div>';
+                }
+            } elseif($is_onlineViewer) {
                 if($online_viewer == 'google') {
-                    echo '<iframe src="https://docs.google.com/viewer?embedded=true&hl=en&url=' . fm_enc($file_url) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
+		    $path = parse_url($file_url, PHP_URL_PATH);
+                    echo '<iframe src="./ViewerJS/#/.' . fm_enc($path) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
                 } else if($online_viewer == 'microsoft') {
-                    echo '<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=' . fm_enc($file_url) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
+		    $path = parse_url($file_url, PHP_URL_PATH);
+                    echo '<iframe src="./ViewerJS/#/.' . fm_enc($path) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
                 }
             } elseif ($is_zip) {
                 // ZIP content
@@ -2077,7 +2227,6 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <th><?php echo lng('Size') ?></th>
                 <th><?php echo lng('Modified') ?></th>
                 <?php if (!FM_IS_WIN && !$hide_Cols): ?>
-                    <th><?php echo lng('Perms') ?></th>
                     <th><?php echo lng('Owner') ?></th><?php endif; ?>
                 <th><?php echo lng('Actions') ?></th>
             </tr>
@@ -2093,7 +2242,6 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                     <td class="border-0" data-order></td>
                     <td class="border-0"></td>
                     <?php if (!FM_IS_WIN && !$hide_Cols) { ?>
-                        <td class="border-0"></td>
                         <td class="border-0"></td>
                     <?php } ?>
                 </tr>
@@ -2134,13 +2282,12 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                     </td>
                     <td data-order="a-<?php echo $date_sorting;?>"><?php echo $modif ?></td>
                     <?php if (!FM_IS_WIN && !$hide_Cols): ?>
-                        <td><?php if (!FM_READONLY): ?><a title="Change Permissions" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;chmod=<?php echo urlencode($f) ?>"><?php echo $perms ?></a><?php else: ?><?php echo $perms ?><?php endif; ?>
-                        </td>
                         <td><?php echo $_SESSION['nom']." ".$_SESSION['prenom']  ?></td>
                     <?php endif; ?>
                     <td class="inline-actions"><?php if (!FM_READONLY): ?>
                             <a title="<?php echo lng('Delete')?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="confirmDailog(event, '1028','<?php echo lng('Delete').' '.lng('Folder'); ?>','<?php echo urlencode($f) ?>', this.href);"> <i class="fa fa-trash-o" aria-hidden="true"></i></a>
                             <a title="<?php echo lng('CopyTo')?>..." href="?p=&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o" aria-hidden="true"></i></a>
+                            <a title="<?php echo lng('Rename')?>..." href="#" onclick="renameFile('<?php echo fm_enc($f); ?>')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -2195,8 +2342,6 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                         </span></td>
                     <td data-order="b-<?php echo $date_sorting;?>"><?php echo $modif ?></td>
                     <?php if (!FM_IS_WIN && !$hide_Cols): ?>
-                        <td><?php if (!FM_READONLY): ?><a title="<?php echo 'Change Permissions' ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;chmod=<?php echo urlencode($f) ?>"><?php echo $perms ?></a><?php else: ?><?php echo $perms ?><?php endif; ?>
-                        </td>
                         <td><?php echo fm_enc($_SESSION['nom']." ".$_SESSION['prenom']) ?></td>
                     <?php endif; ?>
                     <td class="inline-actions">
@@ -2204,6 +2349,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                             <a title="<?php echo lng('Delete') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="confirmDailog(event, 1209, '<?php echo lng('Delete').' '.lng('File'); ?>','<?php echo urlencode($f); ?>', this.href);"> <i class="fa fa-trash-o"></i></a>
                             <a title="<?php echo lng('CopyTo') ?>..."
                                href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o"></i></a>
+                            <a title="<?php echo lng('Rename')?>..." href="#" onclick="renameFile('<?php echo fm_enc($f); ?>')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         <?php endif; ?>
                         <a title="<?php echo lng('Download') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;dl=<?php echo urlencode($f) ?>" onclick="confirmDailog(event, 1211, '<?php echo lng('Download'); ?>','<?php echo urlencode($f); ?>', this.href);"><i class="fa fa-download"></i></a>
 			<?php
@@ -2221,7 +2367,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <tfoot>
                     <tr><?php if (!FM_READONLY): ?>
                             <td></td><?php endif; ?>
-                        <td colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '6' : '4' ?>"><em><?php echo lng('Folder is empty') ?></em></td>
+                        <td colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '5' : '4' ?>"><em><?php echo lng('Folder is empty') ?></em></td>
                     </tr>
                 </tfoot>
                 <?php
@@ -2229,7 +2375,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <tfoot>
                     <tr>
                         <?php if (!FM_READONLY): ?><td class="gray"></td><?php endif; ?>
-                        <td class="gray" colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '6' : '4' ?>">
+                        <td class="gray" colspan="<?php echo (!FM_IS_WIN && !$hide_Cols) ? '5' : '4' ?>">
                             <?php echo lng('FullSize').': <span class="badge text-bg-light border-radius-0">'.fm_get_filesize($all_files_size).'</span>' ?>
                             <?php echo lng('File').': <span class="badge text-bg-light border-radius-0">'.$num_files.'</span>' ?>
                             <?php echo lng('Folder').': <span class="badge text-bg-light border-radius-0">'.$num_folders.'</span>' ?>
@@ -2238,10 +2384,10 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 </tfoot>
                 <?php } ?>
         </table>
+	<?php displayQuota(); ?>
     </div>
     <?php
-    $colorA="#67546e";
-    if (isset($_SESSION['color'])) $colorA=$_SESSION['color'];
+    $colorA="#080A66";
     ?>
 <style>
 .btn {
@@ -2755,8 +2901,8 @@ function fm_isvalid_filename($text) {
  */
 function fm_set_msg($msg, $status = 'ok')
 {
-    $_SESSION[FM_SESSION_ID]['message'] = $msg;
-    $_SESSION[FM_SESSION_ID]['status'] = $status;
+    $_SESSION['FM_SESSION_ID']['message'] = $msg;
+    $_SESSION['FM_SESSION_ID']['status'] = $status;
 }
 
 /**
@@ -2830,6 +2976,10 @@ function fm_get_file_icon_class($path)
         case 'ftpquota':
         case 'sql':
         case 'js':
+        case 'ts':
+        case 'jsx':
+        case 'tsx':
+        case 'hbs':
         case 'json':
         case 'sh':
         case 'config':
@@ -2855,6 +3005,13 @@ function fm_get_file_icon_class($path)
         case 'yaml':
         case 'yml':
         case 'toml':
+        case 'tmp':
+        case 'top':
+        case 'bot':
+        case 'dat':
+        case 'bak':
+        case 'htpasswd':
+        case 'pl':
             $img = 'fa fa-file-text-o';
             break;
         case 'css':
@@ -3019,11 +3176,7 @@ function fm_get_audio_exts()
 function fm_get_text_exts()
 {
     return array(
-        'txt', 'css', 'ini', 'conf', 'log', 'htaccess', 'passwd', 'ftpquota', 'sql', 'js', 'json', 'sh', 'config',
-        'php', 'php4', 'php5', 'phps', 'phtml', 'htm', 'html', 'shtml', 'xhtml', 'xml', 'xsl', 'm3u', 'm3u8', 'pls', 'cue',
-        'eml', 'msg', 'csv', 'bat', 'twig', 'tpl', 'md', 'gitignore', 'less', 'sass', 'scss', 'c', 'cpp', 'cs', 'py',
-        'map', 'lock', 'dtd', 'svg', 'scss', 'asp', 'aspx', 'asx', 'asmx', 'ashx', 'jsx', 'jsp', 'jspx', 'cfm', 'cgi',
-        'yml', 'yaml', 'toml'
+	'txt', 'css', 'ini', 'conf', 'log', 'htaccess', 'passwd', 'ftpquota', 'sql', 'js', 'ts', 'jsx', 'tsx', 'mjs', 'json', 'sh', 'config','php', 'php4', 'php5', 'phps', 'phtml', 'htm', 'html', 'shtml', 'xhtml', 'xml', 'xsl', 'm3u', 'm3u8', 'pls', 'cue', 'bash', 'vue','eml', 'msg', 'csv', 'bat', 'twig', 'tpl', 'md', 'gitignore', 'less', 'sass', 'scss', 'c', 'cpp', 'cs', 'py', 'go', 'zsh', 'swift','map', 'lock', 'dtd', 'svg', 'asp', 'aspx', 'asx', 'asmx', 'ashx', 'jsp', 'jspx', 'cgi', 'dockerfile', 'ruby', 'yml', 'yaml', 'toml','vhost', 'scpt', 'applescript', 'csx', 'cshtml', 'c++', 'coffee', 'cfm', 'rb', 'graphql', 'mustache', 'jinja', 'http', 'handlebars','java', 'es', 'es6', 'markdown', 'wiki', 'tmp', 'top', 'bot', 'dat', 'bak', 'htpasswd', 'pl'
     );
 }
 
@@ -3056,6 +3209,258 @@ function fm_get_text_names()
         'contributors',
         'changelog',
     );
+}
+
+/**
+ * Convert Excel column letters to zero-based index (A→0, B→1, AA→26…)
+ */
+function fm_xlsx_col_to_idx($col)
+{
+    $col = strtoupper(preg_replace('/[^A-Za-z]/', '', $col));
+    $idx = 0;
+    for ($i = 0; $i < strlen($col); $i++) {
+        $idx = $idx * 26 + (ord($col[$i]) - 64);
+    }
+    return $idx - 1;
+}
+
+/**
+ * Extract data from a .xlsx file as an HTML table using ZipArchive + SimpleXML
+ * @param string $path Absolute path to the xlsx file
+ * @return string|false HTML string or false on error
+ */
+function fm_extract_xlsx($path)
+{
+    if (!class_exists('ZipArchive')) return false;
+    $zip = new ZipArchive();
+    if ($zip->open($path) !== true) return false;
+
+    // Shared strings
+    $sharedStrings = [];
+    $ssXml = $zip->getFromName('xl/sharedStrings.xml');
+    if ($ssXml !== false) {
+        $ss = @simplexml_load_string($ssXml);
+        if ($ss) {
+            foreach ($ss->si as $si) {
+                $text = '';
+                foreach ($si->r as $r) { $text .= (string)$r->t; }
+                if ($text === '') { $text = (string)$si->t; }
+                $sharedStrings[] = $text;
+            }
+        }
+    }
+
+    // Sheet list
+    $sheets = [];
+    $wbXml = $zip->getFromName('xl/workbook.xml');
+    if ($wbXml !== false) {
+        $wb = @simplexml_load_string($wbXml);
+        if ($wb) {
+            foreach ($wb->sheets->sheet as $s) {
+                $rAttr = $s->attributes('r', true);
+                $num   = preg_replace('/\D/', '', (string)($rAttr['id'] ?? '1'));
+                $sheets[] = ['name' => (string)$s['name'], 'num' => $num ?: '1'];
+            }
+        }
+    }
+    if (empty($sheets)) { $sheets = [['name' => 'Sheet1', 'num' => '1']]; }
+
+    $html = '';
+    foreach ($sheets as $sheet) {
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet' . $sheet['num'] . '.xml');
+        if ($sheetXml === false) continue;
+        $doc = @simplexml_load_string($sheetXml);
+        if (!$doc) continue;
+
+        $rows = [];
+        $maxCol = 0;
+        foreach ($doc->sheetData->row as $row) {
+            $rn = (int)$row['r'];
+            foreach ($row->c as $cell) {
+                $colIdx = fm_xlsx_col_to_idx((string)$cell['r']);
+                $type   = (string)$cell['t'];
+                $val    = '';
+                if (isset($cell->v)) {
+                    if ($type === 's') {
+                        $val = $sharedStrings[(int)$cell->v] ?? '';
+                    } elseif ($type === 'inlineStr') {
+                        $val = (string)$cell->is->t;
+                    } else {
+                        $val = (string)$cell->v;
+                    }
+                }
+                $rows[$rn][$colIdx] = $val;
+                if ($colIdx > $maxCol) { $maxCol = $colIdx; }
+            }
+        }
+        if (empty($rows)) continue;
+
+        ksort($rows);
+        $html .= '<h5 style="margin:12px 0 4px;color:#0B3A0C;">' . htmlspecialchars($sheet['name']) . '</h5>';
+        $html .= '<table style="border-collapse:collapse;font-size:12px;">';
+        $first = true;
+        foreach ($rows as $rn => $row) {
+            $tag = $first ? 'th' : 'td';
+            $bg  = $first ? 'background:#0B3A0C;color:#fff;' : ($rn % 2 === 0 ? 'background:#f5f9f5;' : '');
+            $html .= '<tr>';
+            for ($c = 0; $c <= $maxCol; $c++) {
+                $val = isset($row[$c]) ? $row[$c] : '';
+                $html .= '<' . $tag . ' style="border:1px solid #ccc;padding:3px 8px;' . $bg . '">'
+                       . htmlspecialchars($val) . '</' . $tag . '>';
+            }
+            $html .= '</tr>';
+            $first = false;
+        }
+        $html .= '</table>';
+    }
+    $zip->close();
+    return $html;
+}
+
+/**
+ * Read a FAT sector chain from OLE2 binary data
+ */
+function fm_ole_read_chain($data, $fat, $startSec, $ssz)
+{
+    $buf  = '';
+    $sec  = $startSec;
+    $seen = [];
+    while ($sec < 0xFFFFFFFA && !isset($seen[$sec])) {
+        $seen[$sec] = 1;
+        $off = ($sec + 1) * $ssz;
+        if ($off + $ssz > strlen($data)) break;
+        $buf .= substr($data, $off, $ssz);
+        $sec = $fat[$sec] ?? 0xFFFFFFFE;
+    }
+    return $buf;
+}
+
+/**
+ * Extract plain text from a .doc (Word 97-2003) file — pure PHP, no external deps
+ * Parses the OLE2 container, reads the WordDocument stream, extracts UTF-16LE text.
+ *
+ * In Word 97+, FibBase.fcMin (offset 24) is always 0 — unusable as a text offset.
+ * The real text starts immediately after the FIB, whose size is calculated dynamically
+ * from the variable-length sections (csw / cslw / cbRgFcLcb / cswNew).
+ *
+ * @param string $path Absolute path to the doc file
+ * @return string|false Extracted text or false on error
+ */
+function fm_extract_doc($path)
+{
+    $data = @file_get_contents($path);
+    if ($data === false || strlen($data) < 512) return false;
+
+    // Verify OLE2 signature
+    if (substr($data, 0, 8) !== "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1") return false;
+
+    $ssz = 1 << unpack('v', substr($data, 30, 2))[1];
+
+    // Build FAT
+    $fatCount = unpack('V', substr($data, 44, 4))[1];
+    $fat = [];
+    for ($i = 0; $i < min(109, $fatCount); $i++) {
+        $sec = unpack('V', substr($data, 76 + $i * 4, 4))[1];
+        if ($sec >= 0xFFFFFFFA) break;
+        $off = ($sec + 1) * $ssz;
+        for ($j = 0; $j < $ssz / 4; $j++) {
+            $pos = $off + $j * 4;
+            if ($pos + 4 > strlen($data)) break;
+            $fat[] = unpack('V', substr($data, $pos, 4))[1];
+        }
+    }
+
+    // Locate WordDocument stream in directory
+    $dirSec  = unpack('V', substr($data, 48, 4))[1];
+    $dirData = fm_ole_read_chain($data, $fat, $dirSec, $ssz);
+
+    $wdStart = $wdSize = null;
+    for ($i = 0; $i * 128 < strlen($dirData); $i++) {
+        $e    = substr($dirData, $i * 128, 128);
+        $nLen = unpack('v', substr($e, 64, 2))[1];
+        if (ord($e[66]) !== 2 || $nLen < 4) continue;
+        $name = mb_convert_encoding(substr($e, 0, $nLen - 2), 'UTF-8', 'UTF-16LE');
+        if ($name === 'WordDocument') {
+            $wdStart = unpack('V', substr($e, 116, 4))[1];
+            $wdSize  = unpack('V', substr($e, 120, 4))[1];
+            break;
+        }
+    }
+    if ($wdStart === null || $wdSize < 68) return false;
+
+    $wdStream = substr(fm_ole_read_chain($data, $fat, $wdStart, $ssz), 0, $wdSize);
+    if (strlen($wdStream) < 68) return false;
+
+    // Compute exact FIB (File Information Block) size to skip binary header
+    $fibSize = 32;
+    if (strlen($wdStream) >= 34) {
+        $cbRgW = unpack('v', substr($wdStream, 32, 2))[1];
+        $o = 34 + $cbRgW * 2;
+        if ($o + 2 <= strlen($wdStream)) {
+            $cbRgLw = unpack('v', substr($wdStream, $o, 2))[1];
+            $o += 2 + $cbRgLw * 4;
+            if ($o + 2 <= strlen($wdStream)) {
+                $cbRgFcLcb = unpack('v', substr($wdStream, $o, 2))[1];
+                $o += 2 + $cbRgFcLcb * 8;
+                if ($o + 2 <= strlen($wdStream)) {
+                    $cswNew  = unpack('v', substr($wdStream, $o, 2))[1];
+                    $fibSize = $o + 2 + $cswNew * 2;
+                }
+            }
+        }
+    }
+    $scan = $fibSize < strlen($wdStream) ? substr($wdStream, $fibSize) : $wdStream;
+
+    // UTF-16LE scan: runs of (Latin/ASCII byte + \x00), minimum 4 pairs
+    $textU = '';
+    preg_match_all('/(?:[\x09\x0A\x0D\x20-\x7E\xA0-\xFF]\x00){4,}/', $scan, $mU);
+    foreach ($mU[0] as $chunk) {
+        $textU .= str_replace(["\r\n", "\r", "\x07"], "\n",
+                    mb_convert_encoding($chunk, 'UTF-8', 'UTF-16LE'));
+    }
+
+    // ANSI scan: runs of printable Latin/ASCII bytes, minimum 6
+    preg_match_all('/[\x09\x0A\x0D\x20-\x7E\xA0-\xFF]{6,}/', $scan, $mA);
+    $textA = implode("\n", $mA[0]);
+
+    // UTF-16LE wins when equal or longer (typical for Word 97+)
+    // $textU is already UTF-8; $textA is ANSI/Windows-1252 and must be converted
+    if (strlen($textU) >= strlen($textA)) {
+        $text = $textU;
+    } else {
+        $text = mb_convert_encoding($textA, 'UTF-8', 'Windows-1252');
+    }
+
+    if (trim($text) === '') return false;
+    $text = str_replace(["\x0D", "\x07", "\x0C", "\x0B"], "\n", $text);
+    // Remove control chars while keeping whitespace and all Unicode letters/numbers/punctuation
+    $text = preg_replace('/[^\x09\x0A\x20-\x7E\p{L}\p{N}\p{P}\p{Z}\s]/u', ' ', $text);
+    $text = preg_replace('/\n{3,}/', "\n\n", trim($text));
+    return trim($text) !== '' ? htmlspecialchars($text, ENT_QUOTES, 'UTF-8') : false;
+}
+
+/**
+ * Extract plain text from a .docx file using ZipArchive
+ * @param string $path Absolute path to the docx file
+ * @return string|false Extracted text or false on error
+ */
+function fm_extract_docx($path)
+{
+    if (!class_exists('ZipArchive')) return false;
+    $zip = new ZipArchive();
+    if ($zip->open($path) !== true) return false;
+    $xml = $zip->getFromName('word/document.xml');
+    $zip->close();
+    if ($xml === false) return false;
+    // Paragraphs and table rows → newlines
+    $xml = str_replace(['</w:p>', '</w:tr>'], "\n", $xml);
+    // Tabs
+    $xml = str_replace('<w:tab/>', "\t", $xml);
+    $text = strip_tags($xml);
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    // Collapse more than 2 consecutive blank lines
+    $text = preg_replace("/\n{3,}/", "\n\n", $text);
+    return htmlspecialchars(trim($text), ENT_QUOTES, 'UTF-8');
 }
 
 /**
@@ -3183,9 +3588,12 @@ function fm_download_file($fileLocation, $fileName, $chunkSize  = 1024)
         return (false);
 
     }
-    
-    header("Cache-Control: public");
-    header("Content-Transfer-Encoding: binary\n");
+   
+    header('Content-Description: File Transfer');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    header("Content-Transfer-Encoding: binary");
     header("Content-Type: $contentType");
 
     $contentDisposition = 'attachment';
@@ -3530,7 +3938,7 @@ function fm_show_nav_path($path)
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
             <?php
-    	    $colorA="#67546e"; if (isset($_SESSION['color'])) $colorA=$_SESSION['color']; 
+    	    $colorA="#080A66"; if (isset($_SESSION['color'])) $colorA=$_SESSION['color']; 
             $path = fm_clean_path($path);
             $root_url = "<a href='?p='><i style='color:$colorA' class='fa fa-home' aria-hidden='true' title='" . FM_ROOT_PATH . "'></i></a>";
             $sep = '<i class="bread-crumb"> / </i>';
@@ -3573,12 +3981,12 @@ function fm_show_nav_path($path)
                         <a title="<?php echo lng('NewItem') ?>" class="nav-link" href="#createNewItem" data-bs-toggle="modal" data-bs-target="#createNewItem"><i class="fa fa-plus-square"></i> <?php echo lng('NewItem') ?></a>
                     </li>
                     <li class="nav-item">
-                        <a title="<?php echo lng('Partage') ?>" class="nav-link" href="stockage-partage.php" ><i class="fa fa-plus-square"></i> <?php echo lng('Partage') ?></a>
+                        <a title="<?php echo lng('Partage') ?>" class="nav-link" href="stockage-partage.php"><i class="fa fa-share-alt" aria-hidden="true"></i> <?php echo lng('Partage') ?></a>
                     </li>
                     <?php endif; ?>
                     <?php if (FM_USE_AUTH): ?>
                     <li class="nav-item avatar dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-user-circle"></i> <?php if(isset($_SESSION[FM_SESSION_ID]['logged'])) { echo $_SESSION[FM_SESSION_ID]['logged']; } ?></a>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-user-circle"></i> <?php if(isset($_SESSION['FM_SESSION_ID']['logged'])) { echo $_SESSION['FM_SESSION_ID']['logged']; } ?></a>
                         <div class="dropdown-menu text-small shadow <?php echo fm_get_theme(); ?>" aria-labelledby="navbarDropdownMenuLink-5">
                             <?php if (!FM_READONLY): ?>
                             <a title="<?php echo lng('Settings') ?>" class="dropdown-item nav-link" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;settings=1"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo lng('Settings') ?></a>
@@ -3605,11 +4013,11 @@ function fm_show_nav_path($path)
  */
 function fm_show_message()
 {
-    if (isset($_SESSION[FM_SESSION_ID]['message'])) {
-        $class = isset($_SESSION[FM_SESSION_ID]['status']) ? $_SESSION[FM_SESSION_ID]['status'] : 'ok';
-        echo '<p class="message ' . $class . '">' . $_SESSION[FM_SESSION_ID]['message'] . '</p>';
-        unset($_SESSION[FM_SESSION_ID]['message']);
-        unset($_SESSION[FM_SESSION_ID]['status']);
+    if (isset($_SESSION['FM_SESSION_ID']['message'])) {
+        $class = isset($_SESSION['FM_SESSION_ID']['status']) ? $_SESSION['FM_SESSION_ID']['status'] : 'ok';
+        echo '<p class="message ' . $class . '">' . $_SESSION['FM_SESSION_ID']['message'] . '</p>';
+        unset($_SESSION['FM_SESSION_ID']['message']);
+        unset($_SESSION['FM_SESSION_ID']['status']);
     }
 }
 
@@ -3718,22 +4126,49 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     <?php endif; ?>
     <script type="text/javascript">window.csrf = '<?php echo $_SESSION['token']; ?>';</script>
     <?php
-    $colorA="#67546e";
+    $colorA="#080A66";
     if (isset($_SESSION['color'])) $colorA=$_SESSION['color'];
     ?>
     <style>
-        body { font-size:14px;color:#222;background:#F7F7F7; }
-        body.navbar-fixed { margin-top:55px; }
+        body { font-size:14px;color:#222;background:#f0f2fa; }
+        body.navbar-fixed { margin-top:62px; }
         a, a:hover, a:visited, a:focus { text-decoration:none !important; }
         .filename, td, th { white-space:nowrap  }
-        .navbar-brand { font-weight:bold; }
+        /* ── Custom navbar ── */
+        .main-nav {
+            background:linear-gradient(135deg,#0d1b4a 0%,#1e4d8c 100%) !important;
+            border-bottom:none !important; box-shadow:0 4px 16px rgba(0,0,0,.22);
+            padding:8px 16px;
+        }
+        .navbar-brand {
+            color:#fff !important; font-family:Electrolize,'Trebuchet MS',Arial;
+            font-size:16px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase;
+        }
+        .bread-crumb { color:rgba(255,255,255,.4);font-style:normal; }
+        .main-nav .col-xs-6 a, .main-nav .col-xs-6 i { color:rgba(255,255,255,.85) !important; }
+        .main-nav .col-xs-6 a:hover { color:#fff !important; }
+        .main-nav .navbar-nav .nav-link {
+            color:rgba(255,255,255,.85) !important;
+            background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+            border-radius:8px; margin-left:6px; padding:5px 12px !important;
+            font-size:12px; font-weight:700; transition:background .15s;
+        }
+        .main-nav .navbar-nav .nav-link:hover { background:rgba(255,255,255,.25) !important; color:#fff !important; }
+        .main-nav .nav-item.avatar .nav-link { background:rgba(255,255,255,.12); }
+        .main-nav .dropdown-menu { background:#1a3a6a; border:1px solid rgba(255,255,255,.15); }
+        .main-nav .dropdown-menu a { color:rgba(255,255,255,.85) !important; font-size:12px; }
+        .main-nav .dropdown-menu a:hover { background:rgba(255,255,255,.1); color:#fff !important; }
+        .main-nav .form-control { font-size:12px; border-right-width:0; background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.25); color:#fff; }
+        .main-nav .form-control::placeholder { color:rgba(255,255,255,.5); }
+        .main-nav .input-group-text { background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.25); color:#fff; }
+        .main-nav .navbar-toggler { border-color:rgba(255,255,255,.3); }
+        .main-nav .navbar-toggler-icon { filter:invert(1); }
         .nav-item.avatar a { cursor:pointer;text-transform:capitalize; }
         .nav-item.avatar a > i { font-size:15px; }
         .nav-item.avatar .dropdown-menu a { font-size:13px; }
         #search-addon { font-size:12px;border-right-width:0; }
         .brl-0 { background:transparent;border-left:0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
         .brr-0 { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-        .bread-crumb { color:#cccccc;font-style:normal; }
         #main-table .filename a { color:#222222; }
         .table td, .table th { vertical-align:middle !important; }
         .table .custom-checkbox-td .custom-control.custom-checkbox, .table .custom-checkbox-header .custom-control.custom-checkbox { min-width:18px; display: flex;align-items: center; justify-content: center; }
@@ -3754,7 +4189,8 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .message.error { border-color:red;color:red  }
         .message.alert { border-color:orange;color:orange  }
         .preview-img { max-width:100%;max-height:80vh;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAKklEQVR42mL5//8/Azbw+PFjrOJMDCSCUQ3EABZc4S0rKzsaSvTTABBgAMyfCMsY4B9iAAAAAElFTkSuQmCC) }
-        .inline-actions > a > i { font-size:1em;margin-left:5px;background:<?php print $colorA ?>;color:#fff;padding:3px 4px;border-radius:3px; }
+	<?php $colorA="#080A66"; ?>
+        .inline-actions > a > i { font-size:1em;margin-left:5px;background:<?php print $colorA ?>;color:#CACCEF;padding:3px 4px;border-radius:3px; }
         .preview-video { position:relative;max-width:100%;height:0;padding-bottom:62.5%;margin-bottom:10px  }
         .preview-video video { position:absolute;width:100%;height:100%;left:0;top:0;background:#000  }
         .compact-table { border:0;width:auto  }
@@ -4183,11 +4619,30 @@ var Nom = navigator.appName;
 ns = (Nom == 'Netscape') ? 1:0
 ie = (Nom == 'Microsoft Internet Explorer') ? 1:0
 if (ie) {
-        window.resizeTo(1020,630);
+        window.resizeTo(1020,730);
 }else{
-        window.resizeTo(1120,635);
+        window.resizeTo(1120,735);
 }
 
+</script>
+
+<script>
+function renameFile(oldName) {
+    let newName = prompt("Nouveau nom :", oldName);
+    if (newName && newName !== oldName) {
+        let form = document.createElement("form");
+        form.method = "POST";
+
+        form.innerHTML = `
+            <input type="hidden" name="rename_from" value="${oldName}">
+            <input type="hidden" name="rename_to" value="${newName}">
+            <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+        `;
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
 </script>
 
 </body>

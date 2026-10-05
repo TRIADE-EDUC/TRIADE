@@ -1,0 +1,19 @@
+{
+    "ignoredKeys" : ["model", "numModel", "id", "name", "idSubscriberList"],
+    "subscriberStatus" : {
+        "unsubscriber" : 1,
+        "selfUnsubscriber" : 2
+    },
+    "subscriberForeignKeys" : ["numDiffusion", "numProduct"],
+    "subscriberTypes" : {
+        "manualAdd" : 1,
+        "import" : 3
+    },
+    "subscriberPmbId" : "idEmpr",
+    "subscriberDedoublonField" : "idEmpr",
+    "defaultImportSubscriberSelectorNamespace" : "Pmb\\DSI\\Models\\Selector\\Subscriber\\Empr\\SimpleSearch\\EmprSimpleSearchSelector",
+    "from" : {
+        "import" : "import",
+        "source" : "source"
+    }
+}

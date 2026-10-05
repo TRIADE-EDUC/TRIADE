@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_family_ui.js,v 1.32 2017-11-30 10:53:34 dgoron Exp $
+// $Id: nomenclature_family_ui.js,v 1.32 2017/11/30 10:53:34 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_musicstand_ui", "dojo/on", "dojo/dom-construct", "dojo/topic", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/registry"], function(declare, Musicstand_ui, on, domConstruct, topic, lang, _WidgetBase, registry){

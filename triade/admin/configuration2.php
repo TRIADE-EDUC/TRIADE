@@ -5,8 +5,8 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH - 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************
@@ -18,7 +18,7 @@ session_start();
  *
  ***************************************************************************/
 error_reporting(0);
-//include_once("./librairie_php/lib_licence.php");
+include_once("./librairie_php/lib_licence.php");
 include_once("../common/config.inc.php");
 $repecole = REPECOLE;
 $repadmin = REPADMIN;
@@ -91,6 +91,8 @@ $accesmessparent=$_POST["accesmessparent"];
 $accesmesseleve=$_POST["accesmesseleve"];
 $accesnoteparent=$_POST["accesnoteparent"];
 $accesnoteeleve=$_POST["accesnoteeleve"];
+$accesmoyenneparent=$_POST["accesmoyenneparent"];
+$accesmoyenneeleve=$_POST["accesmoyenneeleve"];
 $noteexamen=$_POST["noteexamen"];
 $cmpsocial=$_POST["cmpsocial"];
 $aniversaire=$_POST["aniversaire"];
@@ -324,13 +326,17 @@ $viescolairemodifetudiant=$_POST["viescolairemodifetudiant"];
 $modifnoteapresarret=$_POST["modifnoteapresarret"];
 
 $examenvatelreunion=$_POST["examenvatelreunion"];
+$googleauthen=$_POST["googleauthen"];
 
 $entretienprof=$_POST["entretienprof"];
 $profpaccesvisadirection=$_POST["profpaccesvisadirection"];
+$APIAccess=$_POST["APIAccess"];
 
 $bannierehauteur=55;
 
 
+if ($banniere_dispo == "online") { $hauteur="150"; }
+if ($banniere_dispo == 0) { $hauteur="150"; }
 if ($banniere_dispo == 1) { $hauteur="62"; }
 if ($banniere_dispo == 2) { $hauteur="132"; }
 if ($banniere_dispo == 3) { $hauteur="132"; }
@@ -357,6 +363,7 @@ if ($banniere_dispo == 26) { $hauteur="150"; }
 if ($banniere_dispo == 27) { $hauteur="220"; }
 if ($banniere_dispo == 28) { $hauteur="150"; }
 if ($banniere_dispo == 29) { $hauteur="250"; }
+if ($banniere_dispo == 30) { $hauteur="150"; }
 if ($hauteur > 0) $bannierehauteur=$hauteur;
 
 if (($banniere_dispo != "") && ($banniere_dispo != "supprimer")) {
@@ -450,6 +457,7 @@ $texte.="define(\"CALPROF\",\"$calprof\");\n";
 $texte.="define(\"FERIE\",\"$ferie\");\n";
 $texte.="define(\"FORUM\",\"$forum\");\n";
 $texte.="define(\"NOTEUSA\",\"$noteusa\");\n";
+if (defined('INTER') && INTER == "oui") $mailreply="no-reply@triade-educ.net"; 
 $texte.="define(\"MAILREPLY\",\"$mailreply\");\n";
 $texte.="define(\"TRACE\",\"$trace\");\n";
 $texte.="define(\"RESERV\",\"$resvprof\");\n";
@@ -483,6 +491,8 @@ $texte.="define(\"ACCESMESSELEVE\",\"$accesmesseleve\");\n";
 $texte.="define(\"ACCESMESSPARENT\",\"$accesmessparent\");\n";
 $texte.="define(\"ACCESNOTEELEVE\",\"$accesnoteeleve\");\n";
 $texte.="define(\"ACCESNOTEPARENT\",\"$accesnoteparent\");\n";
+$texte.="define(\"ACCESMOYENNEELEVE\",\"$accesmoyenneeleve\");\n";
+$texte.="define(\"ACCESMOYENNEPARENT\",\"$accesmoyenneparent\");\n";
 $texte.="define(\"MAILADMIN2\",\"$mailadmin2\");\n";
 $texte.="define(\"NOTEEXAMEN\",\"$noteexamen\");\n";
 $texte.="define(\"MODNAMUR0\",\"$cmpsocial\");\n";
@@ -670,6 +680,8 @@ $texte.="define(\"INTITULECLASSE\",\"$intitule_classe\");\n";
 $texte.="define(\"CNILPROTECTEUR\",\"$cnilprotecteur\");\n";
 $texte.="define(\"AFFICHAGEIA\",\"$affichageia\");\n";
 $texte.="define(\"AFFICHAGESIGN\",\"$affichagesign\");\n";
+$texte.="define(\"GOOGLEAUTHEN\",\"$googleauthen\");\n";
+$texte.="define(\"APIACCESS\",\"$APIAccess\");\n";
 $texte.="?>\n";
 
 

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Category.js,v 1.1 2018-01-17 15:01:13 dgoron Exp $
+// $Id: Category.js,v 1.1 2018/01/17 15:01:13 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "dojo/dom", "dijit/form/Form", "dojo/dom-form", "dojo/text!pmbBase/ajax.php?module=frbr&categ=cataloging&sub=forms&action=get_form&form=category_form_tpl", "dojo/dom-construct"], function(declare, parser, topic, lang, dom, Form, domForm, template, domConstruct){

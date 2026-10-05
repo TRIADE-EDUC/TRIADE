@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_bulletinage_controller.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: entities_bulletinage_controller.class.php,v 1.5 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/entities/entities_records_controller.class.php");
 
 class entities_bulletinage_controller extends entities_records_controller {
@@ -52,16 +53,16 @@ class entities_bulletinage_controller extends entities_records_controller {
 		global $msg;
 		global $serial_header;
 	
-		// affichage d'un form pour crÃ©ation, modification d'un pÃ©riodique
+		// affichage d'un form pour création, modification d'un périodique
 		if(!$this->id) {
-			// pas d'id, c'est une crÃ©ation
+			// pas d'id, c'est une création
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4005], $serial_header);
 		} else {
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4006], $serial_header);
 		}
 		$myBulletinage = $this->get_object_instance();
 		$perio = new serial_display($myBulletinage->get_serial()->id, 1);
-		// titre gÃ©nÃ©ral du pÃ©riodique
+		// titre général du périodique
 		print "
 			<div class='notice-perio'>
 				<div class='row'>
@@ -79,9 +80,9 @@ class entities_bulletinage_controller extends entities_records_controller {
 		global $msg;
 		global $serial_header;
 	
-		// affichage d'un form pour crÃ©ation, modification d'un pÃ©riodique
+		// affichage d'un form pour création, modification d'un périodique
 		if(!$this->id) {
-			// pas d'id, c'est une crÃ©ation
+			// pas d'id, c'est une création
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg[4005], $serial_header);
 		} else {
 			print str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg['bull_duplicate'], $serial_header);
@@ -90,7 +91,7 @@ class entities_bulletinage_controller extends entities_records_controller {
 		$perio = new serial_display($myBulletinage->get_serial()->id, 1);
 		$myBulletinage->bulletin_id = 0;
 		
-		// titre gÃ©nÃ©ral du pÃ©riodique
+		// titre général du périodique
 		print "
 			<div class='notice-perio'>
 				<div class='row'>
@@ -110,7 +111,7 @@ class entities_bulletinage_controller extends entities_records_controller {
 		global $del;
 	
 		$myBul = $this->get_object_instance();
-		$by += 0;
+		$by = intval($by);
 		if(!$by) {
 			$myBul->replace_form();
 		} else {
@@ -118,7 +119,7 @@ class entities_bulletinage_controller extends entities_records_controller {
 			$rep_result = $myBul->replace($by,1-$del);
 			if(!$rep_result) {
 				print "<div class='row'><div class='msg-perio'>".$msg["maj_encours"]."</div></div>
-					<script type=\"text/javascript\">document.location='./catalog.php?categ=serials&sub=view&serial_id=".$this->serial_id."&bul_id=".$by."'</script>";
+					<script>document.location='./catalog.php?categ=serials&sub=view&serial_id=".$this->serial_id."&bul_id=".$by."'</script>";
 			} else {
 				error_message($msg[132], $rep_result, 1, "./catalog.php?categ=serials&sub=view&serial_id=".$this->serial_id);
 			}
@@ -126,11 +127,13 @@ class entities_bulletinage_controller extends entities_records_controller {
 	}
 	
 	protected function get_permalink($id=0) {
-		if(!$id) $id = $this->id;
-		return $this->url_base."&action=view&bul_id=".$id;
+	    if(!$id) {
+	        $id = $this->id;
+	    }
+		return $this->url_base."&action=view&bul_id=" . intval($id);
 	}
 	
 	public function set_serial_id($serial_id=0) {
-		$this->serial_id = $serial_id+0;
+	    $this->serial_id = (int) $serial_id;
 	}
 }

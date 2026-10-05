@@ -1,9 +1,9 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_entites.tpl.php,v 1.5 2017-01-19 10:25:18 dgoron Exp $
+// $Id: sel_entites.tpl.php,v 1.5 2017/01/19 10:25:18 dgoron Exp $
 
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");

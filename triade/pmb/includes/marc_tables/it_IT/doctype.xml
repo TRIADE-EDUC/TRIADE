@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 <!-- liste des type de documents en UNIMARC (italiano)
-$Id: doctype.xml,v 1.2 2005-01-20 08:49:58 touraine37 Exp $ -->
+$Id: doctype.xml,v 1.2 2005/01/20 08:49:58 touraine37 Exp $ -->
 <XMLlist>
 	<entry code="a">materiale a stampa</entry>
 	<entry code="b">materiale manoscritto</entry>

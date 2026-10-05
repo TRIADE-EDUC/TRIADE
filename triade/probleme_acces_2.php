@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,9 +25,15 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<style>
+.pa-msg-ok{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:7px;padding:12px 16px;font-size:12px;color:#2e7d32;margin:8px 0}
+.pa-msg-err{background:#fce4ec;border:1px solid #f48fb1;border-radius:7px;padding:12px 16px;font-size:12px;color:#c62828;margin:8px 0}
+</style>
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade</title>
 </head>
@@ -102,45 +108,62 @@ if (isset($_POST["mdp"])) {
 	}else{
 		$info=rechercheCompteEmailMdpPersonnel($email,$_POST["membre"]);
 	}
-	if ( (trim($info) != "") && (trim($email) != "") ) { 
+	if ( (trim($info) != "") && (trim($email) != "") ) {
 		$mdp=passwd_random2();
 		list($membre,$idpers)=preg_split('/:/',$info);
-		modifPassOublie($mdp,$idpers,$membre,$email);
-		$message=LANGTMESS400."<br />".LANGTMESS401." : <br /> $email ";
+		envoiMailModifMotdePasse($membre,$idpers,$email);
+		$messageOk = true;
+		$message=LANGTMESS400."<br>".LANGTMESS401." : <b>$email</b>";
 	}else{
-		$message="<font id='color2'>".LANGTMESS402."</font>  <br /><br />".LANGTMESS403." <br />".LANGTMESS404 .": <a href='probleme_acces.php?id'><b>".LANGTMESS405."</b></a> ";
-	}	
+		$messageOk = false;
+		$message=LANGTMESS402."<br><br>".LANGTMESS403." ".LANGTMESS404.": <a href='probleme_acces.php?id'>".LANGTMESS405."</a>";
+	}
 	Pgclose();
 ?>
-	<br><ul><font class='T2'> <?php print $message ?> <br />
-	<br /><br /><?php print LANGattente3 ?></font></ul> 
-	
+<table border='0' width='100%' style="background:#f8f9ff;border:2px solid #c5cae9;border-radius:8px;box-shadow:0 2px 8px rgba(8,10,102,.10)">
+<tr><td style="padding:16px 18px">
+	<div class="<?php print $messageOk ? 'pa-msg-ok' : 'pa-msg-err' ?>"><?php print $message ?></div>
+	<p style="font-size:12px;color:#555;margin:10px 0 0 0"><?php print LANGattente3 ?></p>
+</td></tr>
+</table>
+
 <?php }else{ ?>
-	<form name="formulaire" method="post" >
-	<table border='0' width=100%>
-	<tr><td>
-	<ul>
-	<br><B><font class=T2><?php print LANGMESS151 ?></B> : <BR><BR><br>
-	<?php print LANGMESS152 ?><BR><BR><br />
-	<?php print "Pour le mode d'accès : " ?>
-	<select name="membre" >
-	<option value="" id='select0'><?php print LANGCHOIX ?></option>
-	<option value="ELE" id='select1' >Etudiant/Elève</option>
-	<option value="PAR" id='select1' >Parent d'élève</option>
-	<option value="ENS" id='select1' >Enseignant</option>
-	<option value="MVS" id='select1' >Vie Scolaire</option>
-	<option value="PER" id='select1' >Personnels</option>
-	<option value="TUT" id='select1' >Tuteur de stage</option>
-	<option value="ADM" id='select1' >Direction</option>
-	</select> 
-	<br><br><br>
-	<?php print LANGELE244 ?> : <input type=text name="email" size=40 value="<?php print $_POST["email"] ?>" > <br><br>
-	</ul></td></tr>
+<form name="formulaire" method="post">
+<table border='0' width='100%' style="background:#f8f9ff;border:2px solid #c5cae9;border-radius:8px;box-shadow:0 2px 8px rgba(8,10,102,.10)">
+<tr><td style="padding:16px 18px">
+
+	<p style="font-size:13px;font-weight:700;color:#080A66;margin:0 0 6px 0"><?php print LANGMESS151 ?></p>
+	<p style="font-size:12px;color:#555;margin:0 0 14px 0"><?php print LANGMESS152 ?></p>
+
+	<table border=0 cellpadding=0 cellspacing=0>
+	<tr>
+	<td style="padding:5px 10px 5px 0;font-size:12px;font-weight:600;color:#444;white-space:nowrap">Mode d'accès :</td>
+	<td style="padding:5px 0">
+	<select name="membre" style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:200px">
+		<option value="" id='select0'><?php print LANGCHOIX ?></option>
+		<option value="ELE" id='select1'>Etudiant/Elève</option>
+		<option value="PAR" id='select1'>Parent d'élève</option>
+		<option value="ENS" id='select1'>Enseignant</option>
+		<option value="MVS" id='select1'>Vie Scolaire</option>
+		<option value="PER" id='select1'>Personnels</option>
+		<option value="TUT" id='select1'>Tuteur de stage</option>
+		<option value="ADM" id='select1'>Direction</option>
+	</select>
+	</td></tr>
+	<tr>
+	<td style="padding:5px 10px 5px 0;font-size:12px;font-weight:600;color:#444;white-space:nowrap"><?php print LANGELE244 ?> :</td>
+	<td style="padding:5px 0">
+	<input type=text name="email" size=40 value="<?php print htmlspecialchars($_POST["email"]) ?>" style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:260px">
+	</td></tr>
 	</table>
-	<BR><center><input type=submit name="mdp" value="<?php print LANGMESS153 ?>" class='bouton2'></center>
-	</form>
+
+	<br><center><input type=submit name="mdp" value="<?php print LANGMESS153 ?>" style="background:#080A66;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:12px;font-weight:700;cursor:pointer"></center>
+
+</td></tr>
+</table>
+</form>
 <?php } ?>
-<br /><br />
+<br>
 </tr></table>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>
 <?php top_d(); ?>

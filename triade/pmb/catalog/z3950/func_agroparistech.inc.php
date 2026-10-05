@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: func_agroparistech.inc.php,v 1.4 2016-06-22 06:51:22 jpermanne Exp $
+// $Id: func_agroparistech.inc.php,v 1.4 2016/06/22 06:51:22 jpermanne Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -32,7 +32,7 @@ function traite_info_subst(&$obj){
 			$obj->serie = $obj->titles[0];
 			$obj->titles[0] = $tmp_buffer;
 		}
-	} elseif($obj->bibliographic_level=="s"){ //Pour les pÃ©rios, on bascule les infos de sÃ©rie en complÃ©ment de titre
+	} elseif($obj->bibliographic_level=="s"){ //Pour les périos, on bascule les infos de série en complément de titre
 		$record = new iso2709_record ($obj->notice, AUTO_UPDATE,$obj->notice_type);
 		$_200_e_complement=array();
 		$_200_h=$record->get_subfield_array("200","h");

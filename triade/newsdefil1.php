@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -31,11 +31,11 @@ session_start();
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title> </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
@@ -44,7 +44,7 @@ if (isset($_POST["Submit"])) {
          $today=dateDMY();
 	 $titre=strip_tags($_POST["saisietitre"]);
 	 $news=$_POST["resultat"];
-         $fichier=fopen("./data/fic_news_defil_$_SESSION[membre].txt","w");
+         $fichier=fopen("./data/fic_news_defil_$_SESSION['membre'].txt","w");
          fwrite($fichier,"$titre#||#$today#||#$news");
          fclose($fichier);
 	 $cnx = cnx();

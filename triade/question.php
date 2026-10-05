@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,8 +25,10 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade</title>
@@ -122,43 +124,67 @@ $email=$data[0][5];
 $urlsite=$data[0][7];
 Pgclose();
 ?>
-<br>
-<table bgcolor='#FFFFFF' border='1' bordercolor='#000000' align='center' width='70%' style="box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75);border-radius: 25px ; -webkit-border-radius: 25px; -moz-border-radius: 25px;" >
-<tr><td id='bordure' align='center'><br />&nbsp;&nbsp;<font class='T2'><b><font size=4><?php print $nom_etablissement ?></font></b><br><?php print $tel." ".$email ?><br><?php print $urlsite ?>&nbsp;&nbsp;</font><br><br></td></tr>
-</table>
-<br>
 <?php
 if (preg_match('/demo.triade-educ.net/',WEBROOT)) {
-        $disabled="disabled='disabled'";
-        $message="Version de démonstration, vous êtes actuellement sur la platforme de démonstration.\n\n(Saisie Impossible)\n\nL'Equipe Triade";
+    $disabled="disabled='disabled'";
+    $message="Version de démonstration, vous êtes actuellement sur la platforme de démonstration.\n\n(Saisie Impossible)\n\nL'Equipe Triade";
 }
 ?>
 
 <!-- // fin  -->
-<form name=formulaire method=post>
-<table border='0' width=100%>
-<tr>
-<td>
-<ul>
-<br><br>
-<b><font class=T2><?php print LANGTTITRE6?></b> : <br><br>
-
-<?php print LANGFORUM10 ?> : <input type=text name="nom" size=40 value="<?php print $_POST["nom"] ?>" <?php print $disabled ?> ><BR><BR>
-
-<?php print LANGFORUM10bis ?> : <input type=text name="prenom" size=40 value="<?php print $_POST["prenom"] ?>"  <?php print $disabled ?> ><BR><BR>
-
-<?php print LANGELE244 ?> : <input type=text name="email" size=40 value="<?php print $_POST["email"] ?>" <?php print $disabled ?> > <i><font class=T1>(<?php print LANGPROBLE1?>)</font></i></ul> <br><br>
+<br>
+<table border='0' width='100%' style="background:#f0f2fa;border:2px solid #c5cae9;border-radius:8px;box-shadow:0 2px 8px rgba(8,10,102,.10)">
+<tr><td style="padding:12px 16px;text-align:center">
+    <div style="font-size:15px;font-weight:700;color:#080A66;margin-bottom:4px"><?php print htmlspecialchars($nom_etablissement) ?></div>
+    <?php if ($tel || $email): ?>
+    <div style="font-size:12px;color:#555;margin-bottom:2px"><?php print htmlspecialchars($tel) ?><?php if ($tel && $email) print ' &nbsp;&bull;&nbsp; ' ?><?php print htmlspecialchars($email) ?></div>
+    <?php endif; ?>
+    <?php if ($urlsite): ?>
+    <div style="font-size:11px;color:#888"><?php print htmlspecialchars($urlsite) ?></div>
+    <?php endif; ?>
 </td></tr>
-<tr><td colspan='2' align='center'>
-<?php print LANGASS27 ?> : 
+</table>
 
-  <BR><BR><textarea <?php print $disabled ?> name=saisie_question cols="75" rows="9"><?php print $_POST["saisie_question"] ?><?php print $message ?></textarea><br><br>
-<center>
-<input type=submit value="<?php print LANGTPROBL3?>" class='bouton2' <?php print $disabled ?> >
-</center>
+<br>
+
+<form name=formulaire method=post>
+<table border='0' width='100%' style="background:#f8f9ff;border:2px solid #c5cae9;border-radius:8px;box-shadow:0 2px 8px rgba(8,10,102,.10)">
+<tr><td style="padding:16px 18px">
+
+    <p style="font-size:13px;font-weight:700;color:#080A66;margin:0 0 14px 0"><?php print LANGTTITRE6 ?></p>
+
+    <table border=0 cellpadding=0 cellspacing=0 width='100%'>
+    <tr>
+    <td style="padding:5px 12px 5px 0;font-size:12px;font-weight:600;color:#444;white-space:nowrap;width:120px"><?php print LANGFORUM10 ?> :</td>
+    <td style="padding:5px 0"><input type=text name="nom" size=40 value="<?php print htmlspecialchars($_POST["nom"]) ?>" <?php print $disabled ?> style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:260px"></td>
+    </tr>
+    <tr>
+    <td style="padding:5px 12px 5px 0;font-size:12px;font-weight:600;color:#444;white-space:nowrap"><?php print LANGFORUM10bis ?> :</td>
+    <td style="padding:5px 0"><input type=text name="prenom" size=40 value="<?php print htmlspecialchars($_POST["prenom"]) ?>" <?php print $disabled ?> style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:260px"></td>
+    </tr>
+    <tr>
+    <td style="padding:5px 12px 5px 0;font-size:12px;font-weight:600;color:#444;white-space:nowrap"><?php print LANGELE244 ?> :</td>
+    <td style="padding:5px 0">
+        <input type=text name="email" size=40 value="<?php print htmlspecialchars($_POST["email"]) ?>" <?php print $disabled ?> style="padding:6px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:260px">
+        <span style="font-size:11px;color:#888;font-style:italic">&nbsp;(<?php print LANGPROBLE1 ?>)</span>
+    </td>
+    </tr>
+    <tr>
+    <td style="padding:10px 12px 5px 0;font-size:12px;font-weight:600;color:#444;vertical-align:top"><?php print LANGASS27 ?> :</td>
+    <td style="padding:10px 0 5px 0">
+        <textarea <?php print $disabled ?> name=saisie_question rows="7" style="padding:8px 10px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;background:#fff;color:#333;width:100%;box-sizing:border-box;resize:vertical"><?php print htmlspecialchars($_POST["saisie_question"]) ?><?php print $message ?></textarea>
+    </td>
+    </tr>
+    </table>
+
+    <br><center>
+    <input type=submit value="<?php print LANGENR ?>" <?php print $disabled ?> style="background:#080A66;color:#fff;border:none;border-radius:7px;padding:9px 24px;font-size:12px;font-weight:700;cursor:pointer">
+    </center>
+
+</td></tr>
+</table>
 </form>
-<br /><br />
-</tr></table>
+<br>
 <!-- // fin  -->
 </td></tr></table>
 <SCRIPT language="JavaScript" src="./librairie_js/menudepart2.js"></SCRIPT>

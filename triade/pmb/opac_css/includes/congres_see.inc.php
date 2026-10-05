@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: congres_see.inc.php,v 1.35 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: congres_see.inc.php,v 1.39 2023/08/02 06:21:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path, $msg;
+global $id;
 
 // affichage du detail pour un auteur
 require_once($class_path."/authorities/page/authority_page_congres.class.php");
@@ -14,16 +17,16 @@ require_once("$class_path/aut_link.class.php");
 
 print "<div id='aut_details'>\n";
 
+$id = intval($id);
 if($id) {
-	$id+=0;
 	$rqt_auteurs = "select author_id as aut from authors where author_see='$id' and author_id!=0 ";
 	$rqt_auteurs .= "union select author_see as aut from authors where author_id='$id' and author_see!=0 " ;
-	$res_auteurs = pmb_mysql_query($rqt_auteurs, $dbh);
+	$res_auteurs = pmb_mysql_query($rqt_auteurs);
 	$clause_auteurs = " in ('$id' ";
 	while(($id_aut=pmb_mysql_fetch_object($res_auteurs))) {
 		$clause_auteurs .= ", '".$id_aut->aut."' ";
 		$rqt_auteursuite = "select author_id as aut from authors where author_see='$id_aut->aut' and author_id!=0 ";
-		$res_auteursuite = pmb_mysql_query($rqt_auteursuite, $dbh);
+		$res_auteursuite = pmb_mysql_query($rqt_auteursuite);
 		while(($id_autsuite=pmb_mysql_fetch_object($res_auteursuite))) $clause_auteurs .= ", '".$id_autsuite->aut."' ";
 	}
 	$clause_auteurs .= " ) " ;
@@ -31,13 +34,13 @@ if($id) {
 	// affichage des informations sur l'auteur
 	$ourAuteur = new auteur($id);
 	if($ourAuteur->type == 72) {
-		// Congr√®s
-		print pmb_bidi("<h3><span>".$msg["congres_see_title"]." $renvoi</span></h3>\n");
+		// CongrËs
+		print common::format_title($msg["congres_see_title"]." ".$renvoi);
 	} else if($ourAuteur->type == 71) {
-		// Collectivit√©s
-		print pmb_bidi("<h3><span>".$msg["collectivite_see_title"]." $renvoi</span></h3>\n");
+		// CollectivitÈs
+		print common::format_title($msg["collectivite_see_title"]." ".$renvoi);
 	} else {
-		print pmb_bidi("<h3><span>".$msg["author_see_title"]." $renvoi</span></h3>\n");
+		print common::format_title($msg["author_see_title"]." ".$renvoi);
 	}
 	print "<div id='aut_details_container'>\n";
 	print "	<div id='aut_see' class='aut_see'>\n
@@ -50,12 +53,16 @@ if($id) {
 
 	print $ourAuteur->author_comment;
 
-	// r√©cup√©ration des formes rejet√©es pour affichage
+	// rÈcupÈration des formes rejetÈes pour affichage
 	$requete = "select distinct author_id as aut from authors where author_id $clause_auteurs and author_id!=$id " ;
-	$res = pmb_mysql_query($requete, $dbh);
+	$res = pmb_mysql_query($requete);
 	while (($obj=pmb_mysql_fetch_object($res))) {
 		$objRenvoi = new auteur($obj->aut);
-		pmb_strlen($renvoi) ? $renvoi .= ', ('.$objRenvoi->get_isbd().")" : $renvoi = $objRenvoi->isbd_entry;
+		if (pmb_strlen($renvoi)) {
+		    $renvoi .= ', ('.$objRenvoi->get_isbd().")";
+		} else {
+		    $renvoi = $objRenvoi->isbd_entry;
+		}
 	}
 
 	if (pmb_strlen($renvoi)) print pmb_bidi("<span class='number_results'>$renvoi</span><br />\n");
@@ -68,7 +75,7 @@ if($id) {
 	$authority_page = new authority_page_congres($id);
 	
 	//LISTE DE NOTICES ASSOCIEES
-	//composition du contexte, puis envoi des donn√©es au template Django
+	//composition du contexte, puis envoi des donnÈes au template Django
 	$context = array();
 	//$authority = new authority(0, $id, AUT_TABLE_AUTHORS);
 	$authority = authorities_collection::get_authority('authority', 0, ['num_object' => $id, 'type_object' => AUT_TABLE_AUTHORS]);
@@ -76,7 +83,7 @@ if($id) {
 	print $authority->render($context);
 
 } else {
-	print pmb_bidi("<h3><span>".$msg["author_see_title"]." $renvoi</span></h3>\n");
+	print common::format_title($msg["author_see_title"]." ".$renvoi);
 	print "<div id='aut_details_container'>\n";
 }
 

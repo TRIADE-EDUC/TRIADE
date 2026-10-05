@@ -1,7 +1,7 @@
 /* +--------------------------------------------------------------------------+
 // � 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: layout.css,v 1.154 2017-10-30 16:05:10 mramage Exp $
+// $Id: layout.css,v 1.156 2020/06/22 07:28:31 dgoron Exp $
 */
 
 /* ---------------------------------------------------------------------------*/
@@ -1001,7 +1001,7 @@ h3
 
 .erreur-child
 {
-	display:none;
+	display:block;
 	margin-left: 12%;
     padding:0;
     color:#000;
@@ -1262,7 +1262,7 @@ table td .img_notice {
 iframe#history {
 	width:40%;
 	height:97%;
-	position:absolute; 
+	position:fixed; 
 	top:1%; 
 	left:1%;
 	z-index:1000;

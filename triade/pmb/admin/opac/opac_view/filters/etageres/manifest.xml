@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2011-04-20 06:27:21 ngantier Exp $ -->
+$Id: manifest.xml,v 1.1 2011/04/20 06:27:21 ngantier Exp $ -->
 
 <manifest>
 	<name>etageres</name>

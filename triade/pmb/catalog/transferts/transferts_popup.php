@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: transferts_popup.php,v 1.14 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: transferts_popup.php,v 1.15.8.1 2025/03/04 07:32:08 dgoron Exp $
 
 global $id_notice, $id_bulletin, $hook_tansfert_popup_result, $selecteur;
 
@@ -12,9 +12,16 @@ $base_auth = "TRANSFERTS_AUTH";
 $base_title = "\$msg[6]";
 
 $base_use_dojo = 1;
+$base_transferts_popup = 1;
 
 require_once ($base_path."/includes/init.inc.php");
-require_once ($base_path."/includes/".$transferts_ghost_expl_gen_script);
+
+global $class_path, $action, $msg, $PMBuserid;
+global $transferts_ghost_expl_gen_script;
+
+if (!empty($transferts_ghost_expl_gen_script)) {
+    require_once ($base_path."/includes/".$transferts_ghost_expl_gen_script);
+}
 require_once($class_path."/transfert.class.php");
 require_once($class_path."/expl.class.php");
 
@@ -23,7 +30,7 @@ if ($action=="enregistre") {
 	//on transforme la liste en tableau
 	$tab_id = explode(",",$expl_ids);
 	/**
-	 * CrÃ©ation des exemplaires fantÃ´mes
+	 * Création des exemplaires fantômes
 	 */
 	if(isset($transfert_type) && $transfert_type == "1"){
 		$createdGhostsIds = array();
@@ -68,7 +75,7 @@ if ($action=="enregistre") {
 	/**
 	 * TODO: traiter les 2 cas:
 	 * 	-Pas d'expl fournis
-	 * 	-Pas d'expl transfÃ©rable
+	 * 	-Pas d'expl transférable
 	 * 		-> Quel impact sur la popup ? 
 	 * 			-> Fermeture directe ?
 	 *	 		-> Alert d'error ?
@@ -82,11 +89,13 @@ if ($action=="enregistre") {
 	$evth = events_handler::get_instance();
 	$evth->send($evt);
 	if($evt->get_result()){
-		$hook_tansfert_popup_result= $evt->get_result();
+		$hook_tansfert_popup_result = $evt->get_result();
+	} else {
+	    $hook_tansfert_popup_result = '';
 	}
 	
 	/**
-	 * Inclusion templates exemplaire fantome si le paramÃ¨tre est activÃ©
+	 * Inclusion templates exemplaire fantome si le paramètre est activé
 	 */
 	$radio_expl_fantome = "";
 	$table_expl_fantome = "";
@@ -95,6 +104,8 @@ if ($action=="enregistre") {
 		$table_expl_fantome .= $transferts_popup_table_expl_fantomes;
 		$tmpStringGhost = str_replace("!!class_ligne!!", "even", $transferts_popup_ligne_tableau_ex_fantome);
 		$generatedGhostCb = init_gen_code_exemplaire('', '');
+	} else {
+	    $tmpStringGhost = '';
 	}
 	$transferts_popup_global = str_replace('!!expl_fantome_checkbox!!', $radio_expl_fantome, $transferts_popup_global);
 	$transferts_popup_global = str_replace("!!table_exemplaire_fantome!!", $table_expl_fantome, $transferts_popup_global);
@@ -139,11 +150,11 @@ if ($action=="enregistre") {
 	}
 	$tmpString = "";
 	/**
-	 * TODO: GÃ©rer les droits sur les groupes
+	 * TODO: Gérer les droits sur les groupes
 	 */
 	foreach ($expls_groups as $expl_group_id => $values_array) {
 		if($pmb_pret_groupement){
-			if ($expl_group_id) { //!= 0 donc, un id dÃ©fini
+			if ($expl_group_id) { //!= 0 donc, un id défini
 				$group_checkbox = "";
 				if(check_group_transferability($expl_group_id)){
 					$group_checkbox = str_replace('!!group_id!!', $expl_group_id, $transfert_popup_groups_checkbox);
@@ -165,27 +176,29 @@ if ($action=="enregistre") {
 	
 			//on parcourt toutes les colonnes de la requete
 			for($i=0; $i<$nbCols; $i++) {
-				//on remplace les donnÃ©es Ã  afficher
-				$tmpLigne = str_replace("!!".pmb_mysql_field_name($res,$i)."!!",$values[$i],$tmpLigne);
+				//on remplace les données à afficher
+				$tmpLigne = str_replace("!!".pmb_mysql_field_name($res,$i)."!!",$values[$i] ?? '',$tmpLigne);
 				if($nb == 0 && $transferts_ghost_expl_enable){
-					$tmpStringGhost = str_replace("!!".pmb_mysql_field_name($res,$i)."!!",$values[$i],$tmpStringGhost);
-					switch(pmb_mysql_field_name($res,$i)){
-						case 'expl_id':
-							$tmpStringGhost = str_replace("!!expl_status!!",do_selector('docs_statut', "expl_virtual_status", $transferts_ghost_statut_expl_transferts), $tmpStringGhost);
-							$tmpStringGhost = str_replace("!!expl_parent_id!!",$values[$i],$tmpStringGhost);
-							break;
-						case 'expl_cb':
-							$tmpStringGhost = str_replace("!!cb_ghost_from!!",$values[$i],$tmpStringGhost);
-							break;
-						case 'expl_notice':
-							$tmpStringGhost = str_replace("!!parent_type!!",'notice',$tmpStringGhost);
-							$tmpStringGhost = str_replace("!!parent_num!!",$values[$i],$tmpStringGhost);
-							break;
-						case 'expl_bulletin':
-							$tmpStringGhost = str_replace("!!parent_type!!",'bulletin',$tmpStringGhost);
-							$tmpStringGhost = str_replace("!!parent_num!!",$values[$i],$tmpStringGhost);
-							break;
-					}
+				    if ($tmpStringGhost) {
+    					$tmpStringGhost = str_replace("!!".pmb_mysql_field_name($res,$i)."!!",$values[$i],$tmpStringGhost);
+    					switch(pmb_mysql_field_name($res,$i)){
+    						case 'expl_id':
+    							$tmpStringGhost = str_replace("!!expl_status!!",do_selector('docs_statut', "expl_virtual_status", $transferts_ghost_statut_expl_transferts), $tmpStringGhost);
+    							$tmpStringGhost = str_replace("!!expl_parent_id!!",$values[$i],$tmpStringGhost);
+    							break;
+    						case 'expl_cb':
+    							$tmpStringGhost = str_replace("!!cb_ghost_from!!",$values[$i],$tmpStringGhost);
+    							break;
+    						case 'expl_notice':
+    							$tmpStringGhost = str_replace("!!parent_type!!",'notice',$tmpStringGhost);
+    							$tmpStringGhost = str_replace("!!parent_num!!",$values[$i],$tmpStringGhost);
+    							break;
+    						case 'expl_bulletin':
+    							$tmpStringGhost = str_replace("!!parent_type!!",'bulletin',$tmpStringGhost);
+    							$tmpStringGhost = str_replace("!!parent_num!!",$values[$i],$tmpStringGhost);
+    							break;
+    					}
+				    }
 				}
 			}
 			//on ajoute la ligne aux autres
@@ -232,26 +245,26 @@ if ($action=="enregistre") {
 echo $footer;
 
 // deconnection MYSql
-pmb_mysql_close($dbh);
+pmb_mysql_close();
 
 function get_ghost_expl_cb($code_exemplaire,$notice_id=0, $bulletin_id=0){
-	global $dbh;
-	
-	//GÃ©nÃ©ration automatique de code barre, activÃ© pour cet abonnement
+    $notice_id = intval($notice_id);
+    $bulletin_id = intval($bulletin_id);
+	//Génération automatique de code barre, activé pour cet abonnement
 	$requete="DELETE from exemplaires_temp where sess not in (select SESSID from sessions)";
-	$res = pmb_mysql_query($requete,$dbh);
+	pmb_mysql_query($requete);
 	
     do{
 		$code_exemplaire = gen_code_exemplaire($notice_id, $bulletin_id, $code_exemplaire);
 		$requete="select expl_cb from exemplaires WHERE expl_cb='$code_exemplaire'";
-	    $res0 = pmb_mysql_query($requete,$dbh);
+	    $res0 = pmb_mysql_query($requete);
 	    $requete="select cb from exemplaires_temp WHERE cb='$code_exemplaire' AND sess <>'".SESSid."'";
-	    $res1 = pmb_mysql_query($requete,$dbh);
-    }while((pmb_mysql_num_rows($res0)||pmb_mysql_num_rows($res1)));
+	    $res1 = pmb_mysql_query($requete);
+    } while((pmb_mysql_num_rows($res0)||pmb_mysql_num_rows($res1)));
 	      
 	//Memorise dans temps le cb et la session pour le cas de multi utilisateur session
 	$requete="INSERT INTO exemplaires_temp (cb ,sess) VALUES ('$code_exemplaire','".SESSid."')";
-	pmb_mysql_query($requete,$dbh);
+	pmb_mysql_query($requete);
 	return $code_exemplaire;
 }
 
@@ -269,18 +282,20 @@ function check_transferability($expl_ids){
 function check_group_transferability($group_id){
 	$expl_ids = get_group_expls($group_id);
 	$transferable = true;
-	foreach($expl_ids as $expl_id){
-		if(!transfert::est_transferable($expl_id)){
-			$transferable = false;
-		}
+	if (!empty($expl_ids)) {
+    	foreach($expl_ids as $expl_id){
+    		if(!transfert::est_transferable($expl_id)){
+    			$transferable = false;
+    		}
+    	}
 	}
 	return $transferable;
 }
 
 function get_group_expls($group_id){
-	global $dbh;
+    $group_id = intval($group_id);
 	$rqt = "SELECT distinct groupexpl_expl_num from groupexpl_expl where groupexpl_num = ".$group_id;
-	$result = pmb_mysql_query($rqt, $dbh);
+	$result = pmb_mysql_query($rqt);
 	$expl_ids_from_group = array();
 	while($res = pmb_mysql_fetch_object($result)){
 		$expl_ids_from_group[] = $res ->groupexpl_expl_num;

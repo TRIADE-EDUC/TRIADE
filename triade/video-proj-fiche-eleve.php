@@ -1,91 +1,92 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
- *                            ---------------
- *
- *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
  ***************************************************************************/
 ?>
+<?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content="-1">
+<meta charset="utf-8">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="librairie_css/css.css">
+<link rel="stylesheet" href="librairie_css/css-v4.css">
+<link rel="stylesheet" href="librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
 <script language="JavaScript" src="librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="librairie_js/lib_css.js"></script>
-<?php //<script language="JavaScript" src="librairie_js/function.js"></script> ?>
 <title>Triade Vidéo-Projecteur</title>
+<style>
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; font-family: Electrolize, Trebuchet MS, Arial, sans-serif; overflow: hidden; background: #fff; }
+.fe-wrap {
+  display: flex; align-items: center; height: 100%;
+  background: linear-gradient(90deg,#f0f2fa 0%,#fff 60%);
+  padding: 0 12px 0 10px; gap: 12px;
+}
+.fe-photo img {
+  width: 80px; height: 80px; border-radius: 50%;
+  object-fit: cover; border: 3px solid #fff;
+  box-shadow: 0 3px 10px rgba(8,10,102,.25);
+  display: block;
+}
+.fe-info { flex: 1; min-width: 0; }
+.fe-name { font-size: 16px; font-weight: 700; color: #080A66; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fe-prenom { font-size: 13px; color: #444; margin-top: 2px; }
+.fe-age { font-size: 11px; color: #666; margin-top: 4px; }
+.fe-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.fe-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
+.fe-badge-oui { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.fe-badge-non { background: #f5f5f5; color: #999; border: 1px solid #e0e0e0; }
+.fe-empty { text-align: center; width: 100%; color: #888; font-size: 13px; padding: 20px; }
+</style>
 </head>
-<body  marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" bgcolor="#FFFFFF" >
+<body>
 <?php include("./librairie_php/lib_licence.php"); ?>
-<div style="height: 90%; width: 97%; padding: 5px; border: 1px solid rgba(0,0,0,0.5); border-radius: 10px; background: rgba(0,0,0,0.25); box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.1), inset 0 10px 20px rgba(255,255,255,0.3), inset 0 -15px 30px rgba(0,0,0,0.3); -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3); -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3); -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 10px 20px rgba(255,255,255,0.25), inset 0 -15px 30px rgba(0,0,0,0.3);">
-<table border='0' width=100%  cellspacing=2>
 <?php
 include_once('librairie_php/db_triade.php');
 validerequete("7");
 $cnx=cnx();
 $ideleve=$_GET["saisie_eleve"];
 $idclasse=$_GET["saisie_classe"];
-
+?>
+<div class="fe-wrap">
+<?php
 if ($ideleve == "") {
-	print "<tr><td align=center><br><br><b><font size=3>Aucun élève dans cette classe</font></b></td></tr>";
-}else {
-	$sql="SELECT  elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,numero_eleve,boursier,cdi,bde  FROM ${prefixe}eleves, ${prefixe}classes c WHERE elev_id='$ideleve' AND c.code_class='$idclasse'";
-	$res=execSql($sql);
-	$data=chargeMat($res);
-if( count($data)  <= 0 ) {
-	print("<tr><td align=center valign=center>Données introuvables</td></tr>");
-}else { //debut else
-	$boursier=($data[0][10]) ? LANGOUI : LANGNON ;
-	$cdi=($data[0][11]) ? LANGOUI : LANGNON ;
-	$bde=($data[0][12]) ? LANGOUI : LANGNON ;
-
-	?>
-	<tr>
-	<td width=5 valign=top rowspan=3>
-	<div>
-<!--	<div style="position:absolute;top:0px;left:0px;z-index:1000000" ><img src='image/commun/paperclip.png'></div> -->
-	<img src="image_trombi.php?idE=<?php print $ideleve ?>" height='100' style="position:relative;top:19;left:15px;z-index:1;border:2px solid #fff;background: url(img/tiger.png) no-repeat;-moz-box-shadow: 5px 5px 5px grey;-webkit-box-shadow: 5px 5px 5px grey ;box-shadow: 5px 5px 5px grey;-moz-border-radius:20px;-webkit-border-radius:25px;border-radius:25px;"   >
-	</div>
-	</td>
-	<td valign='top' >
-	<div  style="position:relative;top:19;left:50px;z-index:1" >
-	&nbsp; <font size=3 color="#000000" >Nom : <b><?php print strtoupper(trim($data[0][1]))?></b></font>
-	<br>&nbsp; <font size=3 color="#000000" >Prénom : <b><?php print ucwords(trim($data[0][2]))?></b></font>
-	<br>&nbsp; <font size=3 color="#000000" >Age : <?php
-	                $dateage=dateForm($data[0][8]);
-	                if ($dateage == "00/00/0000") {
-	                        print "??/??/????";
-	                        $age="??";
-	                }else{
-	                        print $dateage;
-	                        $age=calculAge(dateForm($data[0][8]));
-	                }
-		        ?>&nbsp;&nbsp;(<?php print $age ?> ans)
-	<br>&nbsp; <font class='T1'>Boursier (<?php print $boursier?>)&nbsp;&nbsp;/&nbsp;&nbsp;CDI (<?php print $cdi?>)&nbsp;&nbsp;/&nbsp;&nbsp;BDE (<?php print $bde?>) </font>
-	</div>
-	</td>
-	</tr>
-	<?php
-	}
+  print "<div class='fe-empty'><i class='bi bi-person-x'></i> Aucun élève dans cette classe</div>";
+}else{
+  $sql="SELECT elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,numero_eleve,boursier,cdi,bde FROM {$prefixe}eleves, {$prefixe}classes c WHERE elev_id='$ideleve' AND c.code_class='$idclasse'";
+  $res=execSql($sql);
+  $data=chargeMat($res);
+  if (countTriade($data) <= 0) {
+    print "<div class='fe-empty'>Données introuvables</div>";
+  }else{
+    $boursier=$data[0][10] ? LANGOUI : LANGNON;
+    $cdi=$data[0][11] ? LANGOUI : LANGNON;
+    $bde=$data[0][12] ? LANGOUI : LANGNON;
+    $dateage=dateForm($data[0][8]);
+    $age=($dateage=="00/00/0000") ? "??" : calculAge($dateage);
+    ?>
+    <div class="fe-photo">
+      <img src="image_trombi.php?idE=<?php print $ideleve ?>" alt="">
+    </div>
+    <div class="fe-info">
+      <div class="fe-name"><?php print strtoupper(trim($data[0][1])) ?></div>
+      <div class="fe-prenom"><?php print ucwords(trim($data[0][2])) ?></div>
+      <div class="fe-age"><i class="bi bi-calendar-event"></i> <?php print ($dateage=="00/00/0000")?"??/??/????" : $dateage ?> &nbsp;(<?php print $age ?> ans)</div>
+      <div class="fe-badges">
+        <span class="fe-badge <?php print $data[0][10]?'fe-badge-oui':'fe-badge-non' ?>"><i class="bi bi-award"></i> Boursier : <?php print $boursier ?></span>
+        <span class="fe-badge <?php print $data[0][11]?'fe-badge-oui':'fe-badge-non' ?>"><i class="bi bi-book"></i> CDI : <?php print $cdi ?></span>
+        <span class="fe-badge <?php print $data[0][12]?'fe-badge-oui':'fe-badge-non' ?>"><i class="bi bi-people"></i> BDE : <?php print $bde ?></span>
+      </div>
+    </div>
+    <?php
+  }
 }
 ?>
-</table>
 </div>
 <?php Pgclose(); ?>
 </body>

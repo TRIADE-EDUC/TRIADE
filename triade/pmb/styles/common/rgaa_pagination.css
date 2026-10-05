@@ -1,0 +1,84 @@
+/* +--------------------------------------------------------------------------+
+// 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: rgaa_pagination.css,v 1.1.2.3 2025/01/24 13:29:52 dgoron Exp $ */
+/*------------------------------------------------------------------------------------------*/
+
+.navbar>form>nav {
+    all: unset
+}
+
+.navbar>form>nav *:not(button:has(img)) {
+    display: inline-block;
+    min-width: 16px;
+    padding: 3px 5px;
+    line-height: 20px;
+    text-decoration: none;
+    box-sizing: border-box;
+    text-align: center;
+    background: #eee;
+    color: #444;
+    font-style: normal;
+    margin: 0 5px;
+    max-height: 26px;
+}
+
+.navbar>form>nav:is(span, span:hover, span:focus) {
+    background:transparent;
+}
+.navbar>form>nav>*:hover,
+.navbar>form>nav>span>*:is(:focus, :hover) {
+    background: #f5f5f5;
+}
+
+.navbar>form>nav>*:is(a, button)>img {
+    vertical-align: middle;
+    padding: 5px 5px;
+    margin:0px 5px;
+}
+
+.navbar>form>nav>*:is(a, button) {
+    margin : 0 5px;
+}
+
+.navbar-paginator {
+    background: transparent !important;
+}
+
+/* -----------------------------------------------------*/
+/*          Paginateur                                  */
+/* -----------------------------------------------------*/
+
+.navbar .navbar-container {
+    width: 100%;
+    /*display: flex;*/
+}
+
+.navbar .navbar-paginator {
+    margin-right: auto;
+}
+
+.navbar .navbar-paginator ol,
+.navbar .navbar_per_page_container ul {
+    list-style: none;
+    display: inline-block;
+}
+
+.navbar .navbar-paginator ol li {
+    margin: 0 5px;
+    display: inline-block;
+}
+
+.navbar .navbar_per_page_container ul li {
+    margin-left: 24px;
+}
+
+.navbar .navbar_per_page_container .navbar_per_page.current,
+.navbar .navbar-paginator .navbar_page.current {
+    font-weight: 600;
+}
+
+.navbar .navbar_per_page_container .navbar_per_page,
+.navbar .navbar-paginator .navbar_page {
+    text-decoration: none;
+}

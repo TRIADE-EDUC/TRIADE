@@ -1,15 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: retours.inc.php,v 1.14 2018-12-27 10:05:22 dgoron Exp $
+// $Id: retours.inc.php,v 1.17 2022/10/04 09:20:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path."/list/transferts/list_transferts_retours_ui.class.php");
+global $class_path, $action, $sub, $msg, $database_window_title;
+global $liste_transfert;
+global $form_cb_expl, $transferts_retour_acceptation_OK, $transferts_retour_acceptation_erreur;
+global $site_destination, $nb_per_page;
+
 require_once($class_path."/mono_display_expl.class.php");
 
-// Titre de la fenÃªtre
+// Titre de la fenêtre
 echo window_title($database_window_title.$msg['transferts_circ_menu_retour'].$msg[1003].$msg[1001]);
 
 //creation de l'objet transfert
@@ -17,12 +21,12 @@ $obj_transfert = new transfert();
 
 switch ($action) {
 	case "aff_ret":
-		//on affiche l'Ã©cran de validation
+		//on affiche l'écran de validation
 		$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_demande' => 3));
 		print $list_transferts_retours_ui->get_display_valid_list();
 		break;
 	case "ret":
-		//on enregistre les validations des exemplaires sÃ©lectionnÃ©s
+		//on enregistre les validations des exemplaires sélectionnés
 		$obj_transfert->enregistre_retour($liste_transfert);
 		$action="";
 		break;
@@ -30,9 +34,7 @@ switch ($action) {
 
 if ($action == "") {
 	//pas d'action donc affichage de la liste des validations en attente
-	if(!isset($site_destination)) $site_destination='';
-	get_cb_expl($msg['transferts_circ_menu_titre']." > ".$msg['transferts_circ_menu_retour'],
-					$msg[661], $msg['transferts_circ_retour_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_destination=".$site_destination."&nb_per_page=".$nb_per_page);
+	get_cb_expl('',	$msg[661], $msg['transferts_circ_retour_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_destination=".$site_destination."&nb_per_page=".$nb_per_page);
 
 	//pour la validation d'un exemplaire
 	if ($form_cb_expl != "") {
@@ -51,7 +53,7 @@ if ($action == "") {
 		}
 	} 
 	
-	$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 3, 'site_destination' => $deflt_docs_location), array(), array('by' => 'date_retour'));
+	$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 3), array(), array('by' => 'date_retour'));
 	print $list_transferts_retours_ui->get_display_list();
 }
 

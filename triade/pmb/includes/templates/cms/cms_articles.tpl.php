@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_articles.tpl.php,v 1.3 2017-10-19 14:42:59 dgoron Exp $
+// $Id: cms_articles.tpl.php,v 1.3 2017/10/19 14:42:59 dgoron Exp $
 
 global $cms_articles_list;
 global $cms_articles_list_item;

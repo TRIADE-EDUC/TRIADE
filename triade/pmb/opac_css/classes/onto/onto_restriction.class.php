@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_restriction.class.php,v 1.1 2017-01-06 16:10:51 tsamson Exp $
+// $Id: onto_restriction.class.php,v 1.1 2017/01/06 16:10:51 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,25 +22,25 @@ class onto_restriction {
 	 /*** Attributes: ***/
 
 	/**
-	 * CardinalitÃ© minimum
+	 * Cardinalité minimum
 	 * @access private
 	 */
 	private $min = 0;
 
 	/**
-	 * CardinalitÃ© maximum : -1 = *
+	 * Cardinalité maximum : -1 = *
 	 * @access private
 	 */
 	private $max = -1;
 
 	/**
-	 * PropriÃ©tÃ©s non utilisables avec la propriÃ©tÃ© associÃ©e Ã Â  la restriction
+	 * Propriétés non utilisables avec la propriété associée à  la restriction
 	 * @access private
 	 */
 	private $exclusion;
 
 	/**
-	 * PropriÃ©tÃ©s dont la valeur doit Ãªtre diffÃ©rente de celle de la propriÃ©tÃ© associÃ©e Ã  la restriction
+	 * Propriétés dont la valeur doit être différente de celle de la propriété associée à la restriction
 	 * @access private
 	 */
 	private $distinct;

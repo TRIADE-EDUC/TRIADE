@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_datasource_records.class.php,v 1.2 2018-09-19 13:49:36 tsamson Exp $
+// $Id: frbr_entity_common_datasource_records.class.php,v 1.3 2020/02/17 14:18:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($class_path."/filter_results.class.php");
@@ -17,7 +17,11 @@ class frbr_entity_common_datasource_records extends frbr_entity_common_datasourc
 	    $implode_data = implode(",", $data);
 	    $filter = new filter_results($implode_data);
 	    $records_id = $filter->get_results();
-	    $data = explode(",",$records_id);
+	    if($records_id) {
+	    	$data = explode(",",$records_id);
+	    } else {
+	    	$data = array();
+	    }
 	    return $data;
 	}
 	

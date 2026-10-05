@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_entities_link.class.php,v 1.4 2018-03-21 09:46:49 tsamson Exp $
+// $Id: frbr_cataloging_entities_link.class.php,v 1.4 2018/03/21 09:46:49 tsamson Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -46,7 +46,7 @@ class frbr_cataloging_entities_link {
 	public function add_destination($destination_uri, $destination_name) {	
 		$this->destinations = array();
 		$label_uri = $destination_uri;
-		// On gÃ¨re les cas particuliers
+		// On gère les cas particuliers
 		switch ($destination_name) {
 			case 'linked_record' :
 				$destination_name = 'record';

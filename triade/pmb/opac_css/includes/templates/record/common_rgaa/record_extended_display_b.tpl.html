@@ -1,0 +1,46 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_extended_display_b.tpl.html,v 1.1.2.1 2025/04/22 14:15:08 jdupuy Exp $ -->
+
+{% block record_tit1 %}
+	<!-- Titre propre -->
+	<h1 id="notice_main_title">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</h1>
+{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.bulletin_id %}
+		<li class="record_bul_info">
+			<span class="labelNot">
+				{{ msg.dans_start }} :<!-- Titre du periodique-->
+			</span>
+			<span class="labelContent">
+				<a href="{{ record.liens_opac.lien_rech_notice | replace '!!id!!' record.bul_info.id }}" title="{{msg.title_link_base}} {{ record.bul_info.title }} ({{ record.bul_info.numero }} {{ record.bul_info.date }})">{{ record.bul_info.title }}</a>
+			</span>
+		</li>
+	{% endif %}
+{% endblock %}
+
+{% block articles %}
+	<!-- Depouillements -->
+	{% for article in record.articles %}
+		{% if loop.first %}
+			<div id="zone_depouillements">
+				<h3>
+					<span id="titre_depouillements">{{ msg.bull_dep }}</span>
+				</h3>
+				{% if record.cart_allow %}
+					{% if global.opac_cart_only_for_subscriber == "1" %}
+					      {% if session_vars.id_empr %}
+						      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+					      {% endif %}
+					{% else %}
+					      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+					{% endif %}
+				{% endif %}
+		{% endif %}
+		{{ article }}
+		{% if loop.last %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock articles %}

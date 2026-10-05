@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2020/06/24 08:46:36 dbellamy Exp $ -->
+
+<manifest>
+	<name>Divercities</name>
+	<comment>Connecteur d'authentification Divercities</comment>
+	<author>Didier Bellamy</author>
+	<org>PMB Services</org>
+	<date>2019-11-12</date>
+	<url>http://www.sigb.net</url>
+	<api_requirements/>
+</manifest>

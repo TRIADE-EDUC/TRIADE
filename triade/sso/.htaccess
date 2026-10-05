@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# OIDC Discovery endpoints
+RewriteRule ^\.well-known/openid-configuration$  .well-known/openid-configuration.php  [L]
+RewriteRule ^\.well-known/jwks\.json$            .well-known/jwks.json.php             [L]

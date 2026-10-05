@@ -1,10 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: chat.class.php,v 1.1 2018-10-03 12:45:49 ngantier Exp $
+// $Id: chat.class.php,v 1.2 2022/02/10 13:11:12 dgoron Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))	die("no access");
 
+global $class_path;
 require_once($class_path."/chat/chat_tools.class.php");
 	
 /**
@@ -27,7 +28,7 @@ class chat extends chat_tools{
     
     public function __construct( $user_id = 0) {
         global $PMBuserid;
-        $this->user_id = $user_id + 0;
+        $this->user_id = intval($user_id);
         if (!$this->user_id) {
             $this->user_id = $PMBuserid;
         }
@@ -90,7 +91,7 @@ class chat extends chat_tools{
 	    $type_id = $this->get_type_id($user_type_id);
 	    $user_num = $this->get_id($user_type_id);
 	    
-	    $user_num+= 0;
+	    $user_num = intval($user_num);
 	    if (!$user_num) return;
 	    
 	    if ($type_id == CHAT_TYPE_GROUP) {
@@ -145,7 +146,7 @@ class chat extends chat_tools{
 	
 	public function delete_message($params) {
 	    
-	    $params->id_chat_message+= 0;
+		$params->id_chat_message = intval($params->id_chat_message);
 	    if (!$params->id_chat_message) return;
 	    
 	    $query = "DELETE FROM chat_messages WHERE id_chat_message=" . $params->id_chat_message;
@@ -251,7 +252,7 @@ class chat extends chat_tools{
 	
 	public function chat_group_delete($params) {
 	    
-	    $params->id+= 0;
+		$params->id = intval($params->id);
 	    if (!$params->id) return;
 	    
 	    $query = "DELETE FROM chat_users_groups WHERE chat_user_group_num = " . $params->id;
@@ -262,7 +263,7 @@ class chat extends chat_tools{
 	    
 	public function chat_group_save($params) {
 	    
-	    $params->id+= 0;	// id du group    
+		$params->id = intval($params->id);	// id du group    
 	    $query_part = " chat_groups SET
             chat_group_name = '" . $params->name . "',
             chat_group_author_user_type = " . $this->user_type . ",

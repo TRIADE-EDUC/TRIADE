@@ -2,8 +2,8 @@
 session_start();
 $anneeScolaire=$_COOKIE["anneeScolaire"];
 if (isset($_POST["anneeScolaire"])) {
-        $anneeScolaire=$_POST["anneeScolaire"];
-        setcookie("anneeScolaire",$anneeScolaire,time()+36000*24*30);
+	$anneeScolaire=$_POST["anneeScolaire"];
+	setcookie("anneeScolaire",$anneeScolaire,time()+36000*24*30);
 }
 
 /***************************************************************************
@@ -11,7 +11,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -24,7 +24,6 @@ if (isset($_POST["anneeScolaire"])) {
  *   (at your option) any later version.
  *
  ***************************************************************************/
-
 ?>
 <HTML>
 <HEAD>
@@ -33,155 +32,170 @@ if (isset($_POST["anneeScolaire"])) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_trimestre.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php 
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<?php
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS327 ?></font></b></td></tr>
-<tr id='cadreCentral0'>
-<td >
-<!-- // debut form  -->
-<blockquote><BR>
-<form method=post onsubmit="return validVignette1()" name="formulaire" action="publipostage_2.php">
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
-<font class="T2"><?php print LANGBULL3 ?> :</font>
-                 <select name='anneeScolaire'  >
-                 <?php
-                 filtreAnneeScolaireSelectNote($anneeScolaire,3);
-                 ?>
-                 </select>
-                <br><br>
-
-<font class=T2><?php print LANGPROFG?> :</font> <select id="saisie_classe" name="saisie_classe">
-               <option id='select0' ><?php print LANGCHOIX?></option>
 <?php
-select_classe(); // creation des options
+if (isset($_COOKIE["publipomatricule"]))   { $matriculep=$_COOKIE["publipomatricule"]; }
+if (isset($_COOKIE["publipoadresse"]))     { $adressep=$_COOKIE["publipoadresse"]; }
+if (isset($_COOKIE["publipoadresseinfo"])) { $adresseinfop=$_COOKIE["publipoadresseinfo"]; }
+if (isset($_COOKIE["publipomembre"]))      { $membrep=$_COOKIE["publipomembre"]; }
+if (isset($_COOKIE["publicivilite"]))      { $civilitep=$_COOKIE["publicivilite"]; }
+if (isset($_COOKIE["publiclasse"]))        { $classep=$_COOKIE["publiclasse"]; }
 
-if (isset($_COOKIE["publipomatricule"])) 	{ $matriculep=$_COOKIE["publipomatricule"]; }
-if (isset($_COOKIE["publipoadresse"])) 		{ $adressep=$_COOKIE["publipoadresse"]; }
-if (isset($_COOKIE["publipoadresseinfo"])) 	{ $adresseinfop=$_COOKIE["publipoadresseinfo"]; }
-if (isset($_COOKIE["publipomembre"])) 		{ $membrep=$_COOKIE["publipomembre"]; }
-if (isset($_COOKIE["publicivilite"])) 		{ $civilitep=$_COOKIE["publicivilite"]; }
-if (isset($_COOKIE["publiclasse"])) 		{ $classep=$_COOKIE["publiclasse"]; }
+$checked1=$checked2=$checked3=$checked4=$checked5="";
+$checked6=$checked7=$checked8=$checked9="";
 
-if ($membrep == "PAR") $checked1="checked='checked'";
-if ($membrep == "ELE") $checked2="checked='checked'";
-
+if ($membrep == "PAR")    $checked1="checked='checked'";
+if ($membrep == "ELE")    $checked2="checked='checked'";
 if ($adresseinfop == "PAR1") $checked3="checked='checked'";
 if ($adresseinfop == "PAR2") $checked4="checked='checked'";
 if ($adresseinfop == "ELE")  $checked5="checked='checked'";
-
-if ($civilitep == "1")  $checked8="checked='checked'";
-/*
-if ($adressep == "oui")  $checked6="checked='checked'";
-if ($matriculep == "oui")  $checked7="checked='checked'";
-if ($classep == "oui")  $checked9="checked='checked'";
- */
+if ($civilitep == "1")       $checked8="checked='checked'";
 ?>
 
-</select> <br /><br />
-<font class='T2'> <?php print LANGMESS245 ?>  
-<input type=radio name="membre" value="PAR" <?php print $checked1 ?> /> <?php print LANGMESS246 ?> 
-<input type=radio name="membre" value="ELE" <?php print $checked2 ?> /> <?php print INTITULEELEVE ?> </font>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS327 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
+
+<!-- ── Formulaire 1 : Élèves ── -->
+<form method="post" onsubmit="return validVignette1()" name="formulaire" action="publipostage_2.php">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGBULL3 ?> :</span>
+    <select name="anneeScolaire" class="cc-select">
+      <?php filtreAnneeScolaireSelectNote($anneeScolaire,3); ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFG ?> :</span>
+    <select id="saisie_classe" name="saisie_classe" class="cc-select">
+      <option><?php print LANGCHOIX ?></option>
+      <?php select_classe(); ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS245 ?> :</span>
+    <span>
+      <label><input type="radio" name="membre" value="PAR" <?php print $checked1 ?>> <?php print LANGMESS246 ?></label>
+      &nbsp;&nbsp;
+      <label><input type="radio" name="membre" value="ELE" <?php print $checked2 ?>> <?php print INTITULEELEVE ?></label>
+    </span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS248 ?> :</span>
+    <span>
+      <label><input type="radio" name="adresseinfo" value="PAR1" <?php print $checked3 ?>> <?php print LANGMESS249 ?> 1</label>
+      &nbsp;&nbsp;
+      <label><input type="radio" name="adresseinfo" value="PAR2" <?php print $checked4 ?>> <?php print LANGMESS249 ?> 2</label>
+      &nbsp;&nbsp;
+      <label><input type="radio" name="adresseinfo" value="ELE"  <?php print $checked5 ?>> <?php print INTITULEELEVES ?></label>
+    </span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS412 ?> :</span>
+    <select name="id_vignette" class="cc-select">
+      <option value="0"><?php print LANGCHOIX ?></option>
+      <option value="2">2 <?php print LANGTMESS434 ?> (105x39)</option>
+      <option value="3">2 <?php print LANGTMESS434 ?> (105x39) avec marge</option>
+      <option value="6">2 <?php print LANGTMESS434 ?> (105x37)</option>
+      <option value="5">2 <?php print LANGTMESS434 ?> (102x41)</option>
+      <option value="1">3 <?php print LANGTMESS434 ?> (70x42,3)</option>
+      <option value="4">3 <?php print LANGTMESS434 ?> (70x37)</option>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS328 ?> :</span>
+    <label><input type="checkbox" name="civeleve" value="1" <?php print $checked8 ?>> <i>(<?php print LANGOUI ?>)</i></label>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS329 ?> :</span>
+    <label><input type="checkbox" name="matricule" id="matricule" value="oui" <?php print $checked7 ?> onclick="document.getElementById('adresse').checked=false;"> <i>(<?php print LANGOUI ?>)</i></label>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS330 ?> :</span>
+    <label><input type="checkbox" name="classe" id="classe" value="oui" <?php print $checked9 ?> onclick="document.getElementById('adresse').checked=false;"> <i>(<?php print LANGOUI ?>)</i></label>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS331 ?> :</span>
+    <label><input type="checkbox" name="adresse" id="adresse" value="oui" <?php print $checked6 ?> onclick="document.getElementById('matricule').checked=false;document.getElementById('classe').checked=false;"> <i>(<?php print LANGOUI ?>)</i></label>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print VALIDER ?>","consult1");</script>
 <br><br>
-<font class='T2'> <?php print LANGMESS248 ?>  
-<input type=radio name="adresseinfo" value="PAR1" <?php print $checked3 ?> /> <?php print LANGMESS249 ?> 1 
-<input type=radio name="adresseinfo" value="PAR2" <?php print $checked4 ?> /> <?php print LANGMESS249 ?> 2
-<input type=radio name="adresseinfo" value="ELE"  <?php print $checked5 ?> /> <?php print INTITULEELEVES ?> </font>
-<br><br>
-<font class=T2><?php print LANGMESS412 ?> :</font> <select id="id_vignette" name="id_vignette">
-	       <option id='select0' value='0' ><?php print LANGCHOIX?></option>
-               <option id='select0' value='2' >2 <?php print LANGTMESS434 ?> (105x39)</option>
-               <option id='select0' value='3' >2 <?php print LANGTMESS434 ?> (105x39) avec marge</option>
-               <option id='select0' value='6' >2 <?php print LANGTMESS434 ?> (105x37)</option>
-	       <option id='select0' value='5' >2 <?php print LANGTMESS434 ?> (102x41)</option>
-	       <option id='select0' value='1' >3 <?php print LANGTMESS434 ?> (70x42,3)</option>
-	       <option id='select0' value='4' >3 <?php print LANGTMESS434 ?> (70x37)</option>
-</select> <br /><br />
-<font class='T2'> <?php print LANGMESS328 ?> <input type=checkbox name="civeleve"  value="1"  <?php print $checked8 ?> /> </font><i>(<?php print LANGOUI ?>) </i> <br><br>
-
-<font class='T2'> <?php print LANGMESS329 ?> <input type='checkbox' <?php print $checked7 ?> name="matricule" id='matricule' value="oui" onclick="document.getElementById('adresse').checked=false ;" /> </font><i>(<?php print LANGOUI ?>) </i> <br><br>
-
-<font class='T2'> <?php print LANGMESS330 ?> <input type='checkbox'  name="classe" value="oui" <?php print $checked9 ?> id='classe' onclick="document.getElementById('adresse').checked=false ;" /> </font><i>(<?php print LANGOUI ?>) </i><br><br>
-
-<font class='T2'> <?php print LANGMESS331 ?> <input type='checkbox' <?php print $checked6 ?> name="adresse" value="oui"  id='adresse' onclick="document.getElementById('matricule').checked=false ; document.getElementById('classe').checked=false"  /> </font><i>(<?php print LANGOUI ?>) </i><br><br>
-
-<UL><UL><UL>
-<script language=JavaScript>buttonMagicSubmit("<?php print VALIDER?>","consult1"); //text,nomInput</script>
-</UL></UL></UL>
 </form>
 
-<br><br>
-<hr>
-<br><br>
-<form method=post action="publipostage_2.php" name='formulaire2' onsubmit="return validVignette2()" >
-<font class="T2"><?php print LANGMESS413 ?>  :</font> <select name="saisie_type">
+<div style="border-top:2px solid #c5cae9;margin:10px 5px;"></div>
 
-    <option id='select0' value='0' ><?php print LANGCHOIX?></option>
-    <option id='select1' value="ENS" ><?php print LANGPER18 ?></option>
-    <option id='select1' value="ADM" ><?php print LANGMESS217 ?></option>
-    <option id='select1' value="TUT" ><?php print LANGTMESS435 ?></option>
-    <option id='select1' value="PER" ><?php print LANGMESS220 ?></option>
-    <option id='select1' value="MVS" ><?php print LANGMESS219 ?></option>
-</select>
-<br><br>
-<font class=T2><?php print LANGMESS412 ?> :</font> <select id="id_vignette" name="id_vignette">
-	       <option id='select0' value='0' ><?php print LANGCHOIX?></option>
-               <option id='select0' value='2' >2 <?php print LANGTMESS434 ?> (105x39)</option>
-               <option id='select0' value='3' >2 <?php print LANGTMESS434 ?> (105x39) avec marge</option>
-               <option id='select0' value='6' >2 <?php print LANGTMESS434 ?> (105x37)</option>
-	       <option id='select0' value='5' >2 <?php print LANGTMESS434 ?> (102x41)</option>
-	       <option id='select0' value='1' >3 <?php print LANGTMESS434 ?> (70x42,3)</option>
-	       <option id='select0' value='4' >3 <?php print LANGTMESS434 ?> (70x37)</option>
-</select> <br /><br />
-<font class='T2'> <?php print LANGTMESS436 ?> : <input type='checkbox' <?php print $checked6 ?> name="adresse" value="oui"  id='adresse' onclick="document.getElementById('matricule').checked=false ; document.getElementById('classe').checked=false"  /> </font><i>(<?php print LANGOUI ?>) </i><br><br>
-<UL><UL><UL>
-<script language=JavaScript>buttonMagicSubmit("<?php print VALIDER ?>","consult2"); //text,nomInput</script>
+<!-- ── Formulaire 2 : Personnel ── -->
+<form method="post" action="publipostage_2.php" name="formulaire2" onsubmit="return validVignette2()">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS413 ?> :</span>
+    <select name="saisie_type" class="cc-select">
+      <option value="0"><?php print LANGCHOIX ?></option>
+      <option value="ENS"><?php print LANGPER18 ?></option>
+      <option value="ADM"><?php print LANGMESS217 ?></option>
+      <option value="TUT"><?php print LANGTMESS435 ?></option>
+      <option value="PER"><?php print LANGMESS220 ?></option>
+      <option value="MVS"><?php print LANGMESS219 ?></option>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGMESS412 ?> :</span>
+    <select name="id_vignette" class="cc-select">
+      <option value="0"><?php print LANGCHOIX ?></option>
+      <option value="2">2 <?php print LANGTMESS434 ?> (105x39)</option>
+      <option value="3">2 <?php print LANGTMESS434 ?> (105x39) avec marge</option>
+      <option value="6">2 <?php print LANGTMESS434 ?> (105x37)</option>
+      <option value="5">2 <?php print LANGTMESS434 ?> (102x41)</option>
+      <option value="1">3 <?php print LANGTMESS434 ?> (70x42,3)</option>
+      <option value="4">3 <?php print LANGTMESS434 ?> (70x37)</option>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGTMESS436 ?> :</span>
+    <label><input type="checkbox" name="adresse" value="oui" <?php print $checked6 ?> onclick="document.getElementById('matricule').checked=false;document.getElementById('classe').checked=false;"> <i>(<?php print LANGOUI ?>)</i></label>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print VALIDER ?>","consult2");</script>
 <br><br>
 </form>
 
-</blockquote>
-<br /><br /><br />
-<!-- // fin form -->
 </td></tr></table>
 
-
-
 <?php
-// Test du membre pour savoir quel fichier JS je dois executer
-if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-print "</SCRIPT>";
-else :
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-print "</SCRIPT>";
-top_d();
-print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-print "</SCRIPT>";
-endif ;
-// deconnexion en fin de fichier
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+} else {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+}
 Pgclose();
 ?>
-
 </BODY>
 </HTML>

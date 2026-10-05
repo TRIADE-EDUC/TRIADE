@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ExplnumList.js,v 1.7 2018-03-29 14:46:17 tsamson Exp $
+// $Id: ExplnumList.js,v 1.7 2018/03/29 14:46:17 tsamson Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", "dojo/dom-attr", "dijit/registry", "dojo/on"], function(declare, WidgetBase, xhr, lang, topic, domConstruct, domAttr, registry, on){

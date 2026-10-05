@@ -20,7 +20,7 @@ $(document).ready(function(){
 	$(".Section").attr("data", function(){ return $(".expl_header_section_libelle").text() });
 	$(".Support").attr("data", function(){ return $(".expl_header_tdoc_libelle").text() });	
 	$(".Cote").attr("data", function(){ return $(".expl_header_expl_cote").text() });	
-	$(".DisponibilitÃ©").attr("data", function(){ return $(".expl_header_statut").text() });	
+	$(".Disponibilité").attr("data", function(){ return $(".expl_header_statut").text() });	
 	
 });
 

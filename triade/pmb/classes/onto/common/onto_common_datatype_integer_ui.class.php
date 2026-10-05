@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_integer_ui.class.php,v 1.2 2017-09-13 12:38:33 tsamson Exp $
+// $Id: onto_common_datatype_integer_ui.class.php,v 1.5 2020/08/28 14:40:27 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,8 +23,8 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -37,10 +37,10 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 		global $msg,$charset,$ontology_tpl;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
 		
 		$content='';
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -109,8 +109,8 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -120,7 +120,7 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -131,10 +131,10 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 	} // end of member function get_display
 	
 	/**
-	 * Retourne un object JSON avec 2 mÃ©thodes check et get_error_message
+	 * Retourne un object JSON avec 2 méthodes check et get_error_message
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ©
+	 * @param property property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_uri URI de l'instance
 	 * @param string flag Flag
@@ -146,7 +146,7 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 	public static function get_validation_js($item_uri,$property, $restrictions,$datas, $instance_name,$flag){
 		global $msg;
 		return '{
-			"message": "'.addslashes($property->label).'",
+			"message": "'.addslashes($property->get_label()).'",
 			"valid" : true,
 			"nb_values": 0,
 			"error": "",
@@ -155,18 +155,20 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 				this.values = new Array();
 				this.nb_values = 0;
 				this.valid = true;
-				var order = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order").value;
-				for (var i=0; i<=order ; i++){
-					var input_value = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
-					if(input_value && input_value.value != ""){
-						if(parseInt((input_value.value * 1))!= NaN){
-							this.nb_values++;
-						}else{
-							this.valid = false;
-							this.error = "nan";
-							return this.valid;
-						}
-					}
+				var order = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order");
+                if (order) {
+    				for (var i=0; i<=order.value ; i++){
+    					var input_value = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
+    					if(input_value && input_value.value != ""){
+    						if(parseInt((input_value.value * 1))!= NaN){
+    							this.nb_values++;
+    						}else{
+    							this.valid = false;
+    							this.error = "nan";
+    							return this.valid;
+    						}
+    					}
+                    }
 				}
 				
 				if(this.nb_values < '.$restrictions->get_min().'){
@@ -191,7 +193,7 @@ class onto_common_datatype_integer_ui extends onto_common_datatype_ui {
 						this.message = "'.addslashes($msg['onto_error_nan']).'";
 						break;
  				}
-				this.message = this.message.replace("%s","'.addslashes($property->label).'");
+				this.message = this.message.replace("%s","'.addslashes($property->get_label()).'");
 				return this.message;
 			}
 		}';

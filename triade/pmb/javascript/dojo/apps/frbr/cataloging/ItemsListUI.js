@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ItemsListUI.js,v 1.15 2018-03-21 16:37:47 tsamson Exp $
+// $Id: ItemsListUI.js,v 1.15 2018/03/21 16:37:47 tsamson Exp $
 
 
 define([

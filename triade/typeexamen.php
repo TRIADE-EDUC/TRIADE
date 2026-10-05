@@ -96,5 +96,8 @@ if (NOTEEXAMEN == "oui") {
 					<?php } ?>
                                        </select>
 <?php
+}else{
+	print "<i>Non configur&eacute; en mode examen,<br>consulter le compte administrateur Triade.</i>";
+
 }
 ?>

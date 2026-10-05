@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- liste des blocs dragables pour la construction des pages OPAC
+$Id: cms_build_id_rgaa.xml,v 1.6.2.1.2.1 2025/03/07 12:41:58 dgoron Exp $ -->
+
+
+<!-- 
+	/!\ L'attribut id="" est obligatoire et ne peut-être vide
+	
+	définir un container :
+	<cms_object receptable='yes' container='yes'/>
+	
+	définir une zone :
+	<cms_object draggable='yes' receptable='yes' zone='yes'/>
+	
+	définir un cadre :
+	<cms_object draggable='yes' receptable='yes'/>
+	
+	définir un objet déplacable :
+	<cms_object draggable='yes' />
+
+	Pour indiquer qu'un cadre est fixe, ajouter l'attribut fixed="yes"
+-->
+
+<cms_objects>
+    <!-- Container principale de la page -->
+    <cms_object id='container' draggable='no' receptable='yes' container='yes' />
+
+    <!-- Zone dans le container -->
+    <cms_object id='intro' label='Introduction' draggable='yes' receptable='yes'
+        zone='yes' semantic-tag="header" semantic-role="banner">
+        <parent>container</parent>
+        <child_before></child_before>
+        <child_after>bandeau</child_after>
+    </cms_object>
+    <cms_object id='bandeau' label='Bandeau' draggable='yes' receptable='yes'
+        zone='yes' semantic-tag="aside">
+        <parent>container</parent>
+        <child_before>intro</child_before>
+        <child_after>main</child_after>
+    </cms_object>
+    <cms_object id='main' label='Main' draggable='yes' receptable='yes'
+        zone='yes'>
+        <parent>container</parent>
+        <child_before>bandeau</child_before>
+        <child_after>bandeau_2</child_after>
+    </cms_object>
+    <cms_object id='bandeau_2' label='Bandeau 2' draggable='yes'
+        receptable='yes' zone='yes' semantic-tag="aside">
+        <parent>container</parent>
+        <child_before>main</child_before>
+        <child_after>footer</child_after>
+    </cms_object>
+    <cms_object id='footer' label='Pied de page' draggable='yes'
+        receptable='yes' zone='yes' semantic-tag="footer"
+        semantic-role="contentinfo">
+        <parent>main</parent>
+        <child_before>bandeau_2</child_before>
+        <child_after></child_after>
+    </cms_object>
+
+    <!-- Zone dans le main -->
+    <cms_object id='main_header' label='Entête de la page' draggable='yes'
+        receptable='yes' zone='yes'>
+        <parent>main</parent>
+        <child_before></child_before>
+        <child_after>main_hors_footer</child_after>
+    </cms_object>
+    <cms_object id='main_hors_footer' label='Contenu de la page'
+        draggable='yes' receptable='yes' zone='yes' semantic-tag="main">
+        <parent>main</parent>
+        <child_before>main_header</child_before>
+        <child_after></child_after>
+    </cms_object>
+</cms_objects>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -56,7 +56,7 @@ $prenomprof=recherche_personne_prenom($idprof,'ENS');
 ?>
 <HTML>
 <HEAD>
-<title>Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -69,11 +69,11 @@ $prenomprof=recherche_personne_prenom($idprof,'ENS');
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?></div>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font id='menumodule1'><?php print LANGPROF37 ?>  </b><font id="color2"><?php print strtoupper($nomprof)." ".ucwords($prenomprof) ?></font></td></tr>
 <tr id='cadreCentral0'>
@@ -106,7 +106,7 @@ print "<tr><td colspan=2 id='bordure'  ><img src='image/commun/on1.gif' align=ce
 $idprof=verif_si_suppleant($idprof);
 $data=affdevoirScolaireProf($idprof,$date,"date_devoir"); 
 // id_class_or_grp, matiere_id, date_saisie, heure_saisie, date_devoir, texte, classorgrp, id, number, fichier,idprof,tempsestimedevoir
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$number=$data[$i][8];
 	$tempsestime=$data[$i][13];
 	if ((trim($tempsestime) != "") && ($tempsestime != "00:00:00"))  {

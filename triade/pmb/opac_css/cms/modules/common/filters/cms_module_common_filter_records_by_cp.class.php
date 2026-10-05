@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_filter_records_by_cp.class.php,v 1.2 2018-02-26 10:45:34 arenou Exp $
+// $Id: cms_module_common_filter_records_by_cp.class.php,v 1.4.6.1 2025/01/17 10:40:43 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -24,12 +24,12 @@ class cms_module_common_filter_records_by_cp extends cms_module_common_filter{
     }
     
     public function filter($datas){
-        $filtered_datas= $filter = array();
+        $filtered_datas= array();
         $selector_from = $this->get_selected_selector("from");
         $selector_by = $this->get_selected_selector("by");
         $field_by = $selector_by->get_value();
         $field_from = $selector_from->get_value();
-        if(count($field_by) && $field_from && count($datas)){
+        if(((is_array($field_by) && count($field_by)) || (is_string($field_by) && $field_by != '')) && $field_from && (is_countable($datas) && count($datas))){
             $selector_by->get_value();
             $pperso = new parametres_perso("notices");
             for($i=0 ; $i<count($datas) ; $i++){

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -76,13 +76,13 @@ if(autorisation_module()) {
 		// Verification droits acces groupe
 		validerequete("2");
 		?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 		<?php include("./librairie_php/lib_defilement.php"); ?>
 		</td>
 		<td width="472" valign="middle" rowspan="3" align="center">
 			<div align='center'>
 				<?php top_h(); ?>
-				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 
 
 		<?php
@@ -219,7 +219,7 @@ if(autorisation_module()) {
 					</form>
 					<form name="formulaire_planning" id="formulaire_planning" action="<?php echo $g_chemin_relatif_module; ?>planning_liste.php" method="post">
 					</form>
-					<form name="formulaire_reservation" id="formulaire_reservation" action="<?php echo $g_chemin_relatif_module; ?>reservation_liste.php" method="post">
+					<form name="formulaire_reservation" id="formulaire_reservation" action="<?php echo $g_chemin_relatif_module; ?>reservation_liste.php" method="post" >
 					</form>
 
 					<br>
@@ -232,7 +232,7 @@ if(autorisation_module()) {
 		}
 		?>
 		
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
+		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></script>
 		
 		
 		<script language="javascript">InitBulle("#000000","#FCE4BA","red",1);</script>

@@ -1,18 +1,18 @@
 <?php
 
-// $Id: search_empr.txt,v 1.2 2009-05-16 11:05:14 dbellamy Exp $
+// $Id: search_empr.txt,v 1.3 2023/11/06 12:19:36 dbellamy Exp $
 
 // howto search a borrower
 
 $content = "
 <div class='row'>
-<h3><center>PMB: Ús dels caracters especials dins la cerca d'usuaris</center></h3>
+<h3><center>PMB: &uacute;s dels caracters especials dins la cerca d'usuaris</center></h3>
 </div>
 <br /><hr /><br /><b>Cerca extesa</b><br />
 <p class='pn-normal'>Per obtenir un llistat de tots els usuaris, deixar en blanc i validar directament.</p>
 
 <b>Cerca selectiva</b><br />
-<p class='pn-normal'>Per una cerca més selectiva, pots utitlizar caracters especials: <br /> 
+<p class='pn-normal'>Per una cerca m&eacute;s selectiva, pots utitlizar caracters especials: <br /> 
 <ul>
 <li>per cercar per tots els noms que <b> comencen</b> amb <b>ALE</b>, escriure: <b>^ALE</b>, </li>
 <li>per cercar tots els noms que <b>contenen ALE</b>, escriure: <b>ALE</b>, </li>

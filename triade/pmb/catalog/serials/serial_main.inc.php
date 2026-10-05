@@ -1,16 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serial_main.inc.php,v 1.27 2017-08-08 14:06:21 dgoron Exp $
+// $Id: serial_main.inc.php,v 1.30 2022/02/23 14:47:31 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// inclusion du template de gestion des pÃ©riodiques
+global $class_path, $include_path, $msg, $database_window_title, $sub, $serial_header;
+global $id,$serial_id, $bulletin_id, $bul_id, $explnum_id, $f_explnum_id, $f_notice;
+
+// inclusion du template de gestion des périodiques
 include("$include_path/templates/serials.tpl.php");
 
-// classes particuliÃ¨res Ã  ce module
+// classes particulières à ce module
 require_once("$class_path/serials.class.php");
+require_once($class_path."/collstate.class.php");
 require_once("./catalog/serials/serial_func.inc.php");
 require_once("./catalog/serials/bulletinage/bul_func.inc.php");
 
@@ -18,7 +22,11 @@ echo window_title($database_window_title.$msg[771].$msg[1003].$msg[1001]);
 
 switch($sub) {
 	case 'serial_form':
-		include('./catalog/serials/serial_form.inc.php');
+		require_once($class_path."/entities/entities_serials_controller.class.php");
+		
+		$entities_serials_controller = new entities_serials_controller($id);
+		$entities_serials_controller->set_action('form');
+		$entities_serials_controller->proceed();
 		break;
 	case 'update':
 		include('./catalog/serials/serial_update.inc.php');
@@ -39,10 +47,13 @@ switch($sub) {
 		include('./catalog/serials/analysis/analysis_main.inc.php');
 		break;
 	case 'serial_replace':
-		include('./catalog/serials/serial_replace.inc.php');
+		require_once($class_path."/entities/entities_serials_controller.class.php");
+		
+		$entities_serials_controller = new entities_serials_controller($serial_id);
+		$entities_serials_controller->set_action('replace');
+		$entities_serials_controller->proceed();
 		break;
 	case 'serial_duplicate':
-		print "<h1>$msg[catal_duplicate_serial]</h1>"; 
 		// routine de copie
 		$serial = new serial($serial_id);
 		$serial->serial_id=0 ;
@@ -73,13 +84,21 @@ switch($sub) {
 		include('./catalog/serials/explnum/serial_explnum_delete.inc.php');
 		break;
 	case 'collstate_form':
-		include('./catalog/serials/collstate_form.inc.php');
+		$collstate = new collstate($id,$serial_id);
+		echo $collstate->do_form();
 		break;
 	case 'collstate_update':
-		include('./catalog/serials/collstate_update.inc.php');
+		$collstate = new collstate($id,$serial_id, $bulletin_id);
+		$collstate->update_from_form();
+		$view="collstate";
+		$location=$location_id;
+		include('./catalog/serials/serial_view.inc.php');
 		break;
 	case 'collstate_delete':
-		include('./catalog/serials/collstate_delete.inc.php');
+		$collstate = new collstate($id);
+		$collstate->delete();
+		$view="collstate";
+		include('./catalog/serials/serial_view.inc.php');
 		break;
 	case 'abts_retard':
 		include('./catalog/serials/abts_retard/abts_retard.inc.php');
@@ -88,7 +107,8 @@ switch($sub) {
 		include('./catalog/serials/serialcirc_ask/serialcirc_ask.inc.php');
 		break;
 	case 'collstate_bulletins_list':
-		include('./catalog/serials/collstate_bulletins_list.inc.php');
+		$collstate = new collstate($id, $serial_id, $bulletin_id);
+		print $collstate->get_bulletins_list();
 		break;
 	default:
 		echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg["recherche"], $serial_header);

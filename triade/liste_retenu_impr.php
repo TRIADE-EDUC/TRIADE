@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtd3.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -40,15 +42,12 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCOUR1 ?></font></b></td></tr>
-<tr id='cadreCentral0'>
-<td ><br>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<br>
 
 <table><tr><td>
 <form method="post">
@@ -76,18 +75,18 @@ if (isset($_POST["trie_date"])) {
 <ul><font class="T2"><?php print LANGCONFIG3?>.</font><br><br></ul>
 <table border=1 bgcolor='#FFFFFF' align="center">
 <?php
-$sql="SELECT elev_id  FROM ${prefixe}eleves ORDER BY classe,nom,prenom LIMIT 5";
+$sql="SELECT elev_id  FROM {$prefixe}eleves ORDER BY classe,nom,prenom LIMIT 5";
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
         print("<BR><center><font size=3>".LANGABS10."</font><BR><BR></center>");
 } else {
 
 $data_2=affRetenuNonEffectuebis($trie);
 // $data : id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire,description_fait,nom,courrier_env 
 
-for($j=0;$j<count($data_2);$j++) {
+for($j=0;$j<countTriade($data_2);$j++) {
 	if ($data_2[$j][6] == "1") { continue; }
 	$dateretenue=$data_2[$j][1];
 	$heureretenue=$data_2[$j][2];
@@ -123,7 +122,7 @@ for($j=0;$j<count($data_2);$j++) {
 }
 ?>
 </table>
-<input type=hidden name=nb value="<?php print count($data_2) ?>">
+<input type=hidden name=nb value="<?php print countTriade($data_2) ?>">
 <br><br>
 <table align=center><tr><td>
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGENR?>","rien"); //text,nomInput</script>
@@ -138,17 +137,17 @@ for($j=0;$j<count($data_2);$j++) {
        // Test du membre pour savoir quel fichier JS je dois executer
   if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

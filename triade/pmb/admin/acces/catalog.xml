@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: catalog.xml,v 1.11 2017-09-06 15:33:47 tsamson Exp $ -->
+$Id: catalog.xml,v 1.12 2020/03/19 10:30:28 dbellamy Exp $ -->
 
 <!--  format du fichier 
 ****************************************************************************************
@@ -22,4 +22,6 @@ path:	chemin d'accès au fichiers de définition
 	<item id="4" path='empr_contribution_area' />
 	<item id="5" path='empr_contribution_scenario' />
 	<item id="6" path='contribution_moderator_empr' />
+	<item id="7" path='empr_cms_section' />
+	<item id="8" path='empr_cms_article' />
 </catalog>

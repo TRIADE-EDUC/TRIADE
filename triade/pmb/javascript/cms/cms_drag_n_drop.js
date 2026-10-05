@@ -1,19 +1,19 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_drag_n_drop.js,v 1.9 2016-06-18 12:06:28 Alexandre Exp $
+// $Id: cms_drag_n_drop.js,v 1.9 2016/06/18 12:06:28 Alexandre Exp $
 
 
 /*
  * Utilisation :
  *
- * Definition des elements pouvant Ãªtre deplaces :
+ * Definition des elements pouvant être deplaces :
  *
  * Attribut draggable="yes" (obligatoire)
  * Attribut dragtype="$TXT" (obligatoire= Type d'element a deplacer)
  * Attribut callback_before="$FCT" (Nom de la fonction appelee sur clic avant deplacement)
- * Attribut callback_after="$FCT" (Nom de la fonction appelee sur relache apres deplaÃ§ement)
- * Attribut dragflash="yes"  (Affichage d'un symbole au survol d'un element deplaÃ§able)
+ * Attribut callback_after="$FCT" (Nom de la fonction appelee sur relache apres deplaçement)
+ * Attribut dragflash="yes"  (Affichage d'un symbole au survol d'un element deplaçable)
  * Attribut dragicon="$IMG" (Image affichee lors du deplacement)
  * Attribut dragtext="$TEXT" (Texte affiche lors du deplacement)
  * Attribut draghand="$ID" (ID de la poignee utilisee pour deplacer l'element)
@@ -25,17 +25,17 @@
  * Attribut highlight=$FCT" (Nom de la fonction appelee au survol du recepteur)
  * Attribut downlight=$FCT" (Nom de la fonction apres au survol du recepteur)
  *
- * Appeller la fonction "init_drag()" pour rechercher tous les elements deplaÃ§ables de la page
+ * Appeller la fonction "init_drag()" pour rechercher tous les elements deplaçables de la page
  *
  * La fonction "dragtype_recepttype(dragged,target)" est appelee pour associer l'element deplace et l'element cible (si elle existe)
  *
  *
  */
 
- //TODO = a modifier pour prendre en compte la possibilite d'avoir un recepteur acceptant +sieurs types d elements deplaÃ§ables
+ //TODO = a modifier pour prendre en compte la possibilite d'avoir un recepteur acceptant +sieurs types d elements deplaçables
 
 
-var	draggable=new Array(); 	//Elements deplaÃ§ables
+var	draggable=new Array(); 	//Elements deplaçables
 var recept=new Array();		//Elements recepteurs
 var handler=new Array();	//Poignees
 var is_down=false;
@@ -110,7 +110,7 @@ function cms_mouse_down_draggable(e) {
 		e.returnValue=false;
 	}
 
-	//Recuperation de l'element d'origine qui a reÃ§u l'evenement
+	//Recuperation de l'element d'origine qui a reçu l'evenement
 	if (e.target) var targ=e.target; else var targ=e.srcElement;
 
 	//On nettoie tout drag en cours
@@ -247,7 +247,7 @@ function cms_up_dragged(e) {
 	//Si il y a un clone en cours de mouvement, on le supprime, on remet tout a zero et on
 	// appelle la fonction qui gere le drag si elle existe et qu'il y a un recepteur en dessous
 	if (current_drag!=null) {
-		//Y-a-t-il un recepteur en dessous du lÃ¢che ?
+		//Y-a-t-il un recepteur en dessous du lâche ?
 		try{
 			target=cms_is_on();
 			if (target&&e.shiftKey) {
@@ -305,7 +305,7 @@ function show_cadre_depos(cadre,x,y){
 		var child_block=childs[i];
 		if((child_block.offsetWidth!=0)&&(child_block.offsetHeight!=0)) {
 			left_coords=cms_findPos(child_block);
-			//On a trouvÃ© !
+			//On a trouvé !
 			if (((x>=left_coords[0])&&(x<=left_coords[0]+child_block.offsetWidth))&&((y>=left_coords[1])&&(y<=left_coords[1]+child_block.offsetHeight))) {
 				cadre_depos.style.left=left_coords[0]+"px";
 				cadre_depos.style.top=left_coords[1]+"px";
@@ -339,7 +339,7 @@ function cms_move_dragged(e) {
 		//Deplacement
 		var pos=getCoordinate(e);
 
-		//Positionnement du clone Ã  l'endroit de son original
+		//Positionnement du clone à l'endroit de son original
 		var coords_orig=cms_findPos(dragged);
 		var encx=posxdown-coords_orig[0];
 		var ency=posydown-coords_orig[1];
@@ -466,7 +466,7 @@ function cms_parse_drag(n) {
 			}
 
 		}
-		//C'est un element deplaÃ§able
+		//C'est un element deplaçable
 		if (n.getAttribute("draggable")=="yes") {
 
 			draggable[draggable.length]=n.getAttribute("id");
@@ -480,7 +480,7 @@ function cms_parse_drag(n) {
 			} else {
 				tmp=n;
 			}
-			//Implementation des gestionnaires d'evenement pour les elements deplaÃ§ables
+			//Implementation des gestionnaires d'evenement pour les elements deplaçables
 			tmp.onmousedown=function(e) {
 				cms_mouse_down_draggable(e);
 			}
@@ -549,7 +549,7 @@ function cms_init_recept() {
 function cms_init_drag() {
 
 	//Reinitialisation des tableaux et variables
-	draggable=new Array(); 	//Elements deplaÃ§ables
+	draggable=new Array(); 	//Elements deplaçables
 	recept=new Array();		//Elements recepteurs
 	handler=new Array();	//Poignees
 	is_down=false;
@@ -572,7 +572,7 @@ function cms_init_drag() {
 	d_height=new Array();
 	d_highlight="";
 
-	//Recherche de tous les elements deplaÃ§ables et des recepteurs
+	//Recherche de tous les elements deplaçables et des recepteurs
 	cms_parse_drag(parent.frames['opac_frame'].document.body);
 	// Si pas de draggable ou de recept
 	if(!draggable.length || !recept.length){
@@ -591,7 +591,7 @@ function cms_init_drag() {
 			cms_mouse_over(e);
 		}
 
-		//On capte les Ã©vÃªnements clavier
+		//On capte les évênements clavier
 		/*document.onkeydown=function (e) {
 			cms_key_down(e);
 		}

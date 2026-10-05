@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_subcollections.class.php,v 1.6 2018-03-12 11:17:53 apetithomme Exp $
+// $Id: searcher_authorities_subcollections.class.php,v 1.6 2018/03/12 11:17:53 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

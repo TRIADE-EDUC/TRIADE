@@ -14,16 +14,18 @@ session_start();
 *  Free Software Foundation; either version 2 of the License, or (at your  *
 *  option) any later version.                                              *
 \**************************************************************************/
-//error_reporting(0);
+error_reporting(0);
 $pre=ucfirst(trim($_SESSION["prenom"]));
 $nomp=strtoupper(trim($_SESSION["nom"]));
 $membre=trim($_SESSION["membre"]);
 
-if (!isset($INDEX_STYLE))
-    $INDEX_STYLE = "Petrole";
+
+if (!isset($INDEX_STYLE)) $INDEX_STYLE = "Petrole";
+
 if (file_exists("inc/conf.inc.php")) {
-    include("inc/param.inc.php");
+    include_once("inc/param.inc.php");
 }
+
 $APPLI_STYLE=$INDEX_STYLE;
 require("inc/nocache.inc.php");
 $nc += 0;
@@ -35,7 +37,7 @@ include("lang/$APPLI_LANGUE.php");
 if ($membre == "menuprof") {
 	include_once("../../common/config.inc.php");
 	$idpers=$_SESSION["id_suppleant"];
-	$DB_CX->DbQuery("SELECT * FROM ${prefixe}vacataires WHERE pers_id='$idpers'");
+	$DB_CX->DbQuery("SELECT * FROM {$prefixe}vacataires WHERE pers_id='$idpers'");
   	if ($DB_CX->DbNumRows()) {
 	        $idpers=$_SESSION["id_suppleant"];
   	}else{
@@ -46,18 +48,19 @@ if ($membre == "menuprof") {
 }
 
 
-  if ($_GET["nc"] != 1 &&  $ztFrom != "profil" && $ztAction != "INSERT")  {
-	  $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}tria2phenix WHERE idtriade='$idpers' AND membre='$membre' ");
+if ($_GET["nc"] != 1 &&  $ztFrom != "profil" && $ztAction != "INSERT")  {
+	  $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}tria2phenix WHERE idtriade='$idpers' AND membre='$membre' ");
 	  if (!$DB_CX->DbNumRows()) {
-		  Header("location: index.php?nc=1");
+		  header("location: index.php?nc=1");
 		  exit;
   	  }
-  }
+}
 
   // Gestion des rapports d'erreurs
+//
 
 
-  if ($PUBLIC && $ztFrom == "profil" && $ztAction == "INSERT") {
+if ($PUBLIC && $ztFrom == "profil" && $ztAction == "INSERT") {
     include("inc/fonctions.inc.php");
  
     // Recuperation des Saisies
@@ -127,7 +130,7 @@ if ($membre == "menuprof") {
     $FORMAT_NOM_UTIL = ($rsProfil['util_format_nom'] == "0") ? "util_nom, ' ', util_prenom" : "util_prenom, ' ', util_nom";
 
     // Verifie si le login choisi n'est pas deja utilise
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_login='".$rsProfil['util_login']."'");
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_login='".$rsProfil['util_login']."'");
     if (!$DB_CX->DbNumRows()) {
 	include_once("../../common/config2.inc.php");
 	if (defined("METEOID")) {
@@ -135,36 +138,36 @@ if ($membre == "menuprof") {
   	}else{
 		$meteoTRIADE="";
 	}
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}utilisateur (util_nom, util_prenom, util_login, util_passwd, util_interface, util_debut_journee, util_fin_journee, util_telephone_vf, util_planning, util_partage_planning, util_email, util_autorise_affect, util_alert_affect, util_precision_planning, util_semaine_type, util_duree_note, util_rappel_delai, util_rappel_type, util_rappel_email, util_format_nom, util_menu_dispo, util_url_export, util_note_barree, util_rappel_anniv, util_rappel_anniv_coeff, util_rappel_anniv_email, util_langue, util_timezone, util_timezone_partage, util_format_heure,util_meteo_code) VALUES ('".$rsProfil['util_nom']."', '".$rsProfil['util_prenom']."', '".$rsProfil['util_login']."', '".$ztPasswdMD5."','".$rsProfil['util_interface']."',".$rsProfil['util_debut_journee'].",".$rsProfil['util_fin_journee'].",'".$rsProfil['util_telephone_vf']."',".$rsProfil['util_planning'].",'".$rsProfil['util_partage_planning']."','".$rsProfil['util_email']."','".$rsProfil['util_autorise_affect']."','".$rsProfil['util_alert_affect']."','".$rsProfil['util_precision_planning']."','".$rsProfil['util_semaine_type']."','".$rsProfil['util_duree_note']."',".$rsProfil['util_rappel_delai'].",".$rsProfil['util_rappel_type'].",".$rsProfil['util_rappel_email'].",'".$rsProfil['util_format_nom']."','".$rsProfil['util_menu_dispo']."','".$rsProfil['util_url_export']."','".$rsProfil['util_note_barree']."',".$rsProfil['util_rappel_anniv'].",".$rsProfil['util_rappel_anniv_coeff'].",".$rsProfil['util_rappel_anniv_email'].",'".$rsProfil['util_langue']."','".$rsProfil['util_timezone']."','".$rsProfil['util_timezone_partage']."','".$rsProfil['util_format_heure']."','$meteoTRIADE')");
-      if ($DB_CX->DbAffectedRows()>0) {
-	      $idUser = $DB_CX->DbInsertID();
-	$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}tria2phenix (idtriade,idphenix,membre) VALUE ('$idpers','$idUser','$membre')");
-	$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}rss_reader (rr_util_id,rr_rss_url,rr_rss_titre,rr_rss_accueil,rr_rss_nb_obj,rr_rss_ordre) VALUES ('$idUser','http://www.triade-educ.com/accueil/news/rss.xml','TRIADE-EDUC',1,NULL,'1')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}utilisateur (util_nom, util_prenom, util_login, util_passwd, util_interface, util_debut_journee, util_fin_journee, util_telephone_vf, util_planning, util_partage_planning, util_email, util_autorise_affect, util_alert_affect, util_precision_planning, util_semaine_type, util_duree_note, util_rappel_delai, util_rappel_type, util_rappel_email, util_format_nom, util_menu_dispo, util_url_export, util_note_barree, util_rappel_anniv, util_rappel_anniv_coeff, util_rappel_anniv_email, util_langue, util_timezone, util_timezone_partage, util_format_heure,util_meteo_code) VALUES ('".$rsProfil['util_nom']."', '".$rsProfil['util_prenom']."', '".$rsProfil['util_login']."', '".$ztPasswdMD5."','".$rsProfil['util_interface']."',".$rsProfil['util_debut_journee'].",".$rsProfil['util_fin_journee'].",'".$rsProfil['util_telephone_vf']."',".$rsProfil['util_planning'].",'".$rsProfil['util_partage_planning']."','".$rsProfil['util_email']."','".$rsProfil['util_autorise_affect']."','".$rsProfil['util_alert_affect']."','".$rsProfil['util_precision_planning']."','".$rsProfil['util_semaine_type']."','".$rsProfil['util_duree_note']."',".$rsProfil['util_rappel_delai'].",".$rsProfil['util_rappel_type'].",".$rsProfil['util_rappel_email'].",'".$rsProfil['util_format_nom']."','".$rsProfil['util_menu_dispo']."','".$rsProfil['util_url_export']."','".$rsProfil['util_note_barree']."',".$rsProfil['util_rappel_anniv'].",".$rsProfil['util_rappel_anniv_coeff'].",".$rsProfil['util_rappel_anniv_email'].",'".$rsProfil['util_langue']."','".$rsProfil['util_timezone']."','".$rsProfil['util_timezone_partage']."','".$rsProfil['util_format_heure']."','$meteoTRIADE')");
 
-
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}favoris_groupe (fgr_util_id, fgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
+  
+	if ($DB_CX->DbAffectedRows()>0) {
+        $idUser = $DB_CX->DbInsertID();
+	$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}tria2phenix (idtriade,idphenix,membre) VALUE ('$idpers','$idUser','$membre')");
+	$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}rss_reader (rr_util_id,rr_rss_url,rr_rss_titre,rr_rss_accueil,rr_rss_nb_obj,rr_rss_ordre) VALUES ('$idUser','https://www.triade-educ.org/fr/news/rss.xml','TRIADE-EDUC',1,NULL,'1')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}favoris_groupe (fgr_util_id, fgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
         // Partage du planning en consultation : si partage selectif uniquement
         if ($rsProfil['util_partage_planning']==2) {
           $tabPartage = explode("+", $ztPartage);
-          for ($i=0;$i<count($tabPartage);$i++)
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_partage VALUES (".$idUser.",".$tabPartage[$i].")");
+          for ($i=0;$i<countTriade($tabPartage);$i++)
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_partage VALUES (".$idUser.",".$tabPartage[$i].")");
         }
         // Partage du planning en modification
         if ($rsProfil['util_autorise_affect']==3) {// Si affectation selective uniquement
           $tabAffecte = explode("+", $ztAffecte);
-          for ($i=0;$i<count($tabAffecte);$i++)
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES (".$idUser.",".$tabAffecte[$i].")");
+          for ($i=0;$i<countTriade($tabAffecte);$i++)
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES (".$idUser.",".$tabAffecte[$i].")");
         }
         elseif ($rsProfil['util_autorise_affect']==2) {// Si consultation basee sur la liste du partage
           if ($rsProfil['util_partage_planning']!=2)
             $rsProfil['util_autorise_affect']=$rsProfil['util_partage_planning'];
           else {
-            for ($i=0;$i<count($tabPartage);$i++)
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}planning_affecte VALUES (".$idUser.",".$tabPartage[$i].")");
+            for ($i=0;$i<countTriade($tabPartage);$i++)
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}planning_affecte VALUES (".$idUser.",".$tabPartage[$i].")");
           }
         }
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}droit (droit_util_id, droit_admin) VALUES (".$idUser.", 'N')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}droit (droit_util_id, droit_admin) VALUES (".$idUser.", 'N')");
         if ($COOKIE_AUTH) { // Envoi d'un cookie temporaire + connexion automatique
           setcookie($COOKIE_NOM, $rsProfil['util_login'].":".$ztPasswdMD5.":0:0", time()+86400*$COOKIE_DUREE, "/", "", 0);
           Header("location: phenix.php");
@@ -198,10 +201,12 @@ if ($membre == "menuprof") {
     }*/
   }
 
+
   include("skins/$APPLI_STYLE.php"); // Style par defaut
   entete_page();
 
   if ($nc != 1) { // On n'est pas dans le cas d'une creation de compte
+
     if (isset($bgColorIndex))
       $bgColor[1] = $bgColorIndex; 
 ?>
@@ -326,7 +331,7 @@ if ($membre == "menuprof") {
 		if ($membre == "menuprof") {
 			include_once("../../common/config.inc.php");
 			$idpers=$_SESSION["id_suppleant"];
-			$DB_CX->DbQuery("SELECT * FROM ${prefixe}vacataires WHERE pers_id='$idpers'");
+			$DB_CX->DbQuery("SELECT * FROM {$prefixe}vacataires WHERE pers_id='$idpers'");
 		  	if ($DB_CX->DbNumRows()) {
 			        $idpers=$_SESSION["id_suppleant"];
 		  	}else{
@@ -339,10 +344,12 @@ if ($membre == "menuprof") {
 	    $pre=ucfirst(trim($_SESSION["prenom"]));
 	    $nomp=strtoupper(trim($_SESSION["nom"]));
     	    $membre=trim($_SESSION["membre"]);
+	    
+
 
       $DB_CX->DbQuery("SHOW FIELDS FROM ".$PREFIX_TABLE."utilisateur");
       while ($champ = $DB_CX->DbNextRow()) {
-        $rsProfil[$champ[Field]]=$champ['Default'];
+        $rsProfil[$champ['Field']]=$champ['Default'];
       }
 
 	if ($membre == "menueleve") {
@@ -352,6 +359,7 @@ if ($membre == "menuprof") {
 	}else{
 		$nomp=strtoupper(trim($_SESSION["nom"]));
 	}
+
 
       $rsProfil['util_id']     = "";
       $rsProfil['util_nom']    = "$nomp";

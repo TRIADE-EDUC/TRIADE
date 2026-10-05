@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,14 +40,14 @@ include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
 <?php
 $idEleve=$_POST["ideleve"];
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%"  bgcolor="#0B3A0C"  height="85">
 <tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print "Opérations effectuées sur " ?> <font id="color2" ><?php print recherche_eleve($idEleve);?></font></B></font></td></tr>
 <tr id='cadreCentral0' ><td>
@@ -56,7 +56,7 @@ $idEleve=$_POST["ideleve"];
 <?php 
 print "<tr><td bgcolor='yellow' width='5%' >&nbsp;Date</td><td bgcolor='yellow'>&nbsp;Action</td></tr>";
 $data=listingHistoEleve($idEleve); // date,action,info
-for ($i=0; $i<count($data);$i++) {
+for ($i=0; $i<countTriade($data);$i++) {
 	print "<tr><td>&nbsp;".dateForm($data[$i][0])."&nbsp;</td><td>&nbsp;".$data[$i][1]."</td></tr>";
 }
 ?>
@@ -67,15 +67,15 @@ for ($i=0; $i<count($data);$i++) {
 // Test du membre pour savoir quel fichier JS je dois executer
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ):
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

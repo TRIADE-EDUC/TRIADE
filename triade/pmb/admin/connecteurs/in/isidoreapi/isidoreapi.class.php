@@ -1,35 +1,35 @@
 <?php
+// +-------------------------------------------------+
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: isidoreapi.class.php,v 1.7.4.1 2025/04/16 12:16:50 dbellamy Exp $
+
 global $class_path;
 require_once($class_path."/curl.class.php");
 
 class isidoreapi extends connector {
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
+        return "isidoreapi";
     }
-    
-    public function get_id() {
-    	return "isidoreapi";
-    }
-    
-    //Est-ce un entrepot ?
-    public function is_repository() {
-            return 2;
-    }
-    
-    public function enrichment_is_allow(){
-        return false;
-    }
-    
-     //Formulaire des propriÃ©tÃ©s gÃ©nÃ©rales
+
+    //Formulaire des propriétés générales
     public function source_get_property_form($source_id) {
         global $charset;
         $params=$this->get_source_params($source_id);
         //Affichage du formulaire en fonction de $this->parameters
         $url='';
+        $limit = '';
         if ($params["PARAMETERS"]) {
-                $vars = unserialize($params["PARAMETERS"]);
-                $url=$vars['url'];
-                $limit=$vars['limit'];
+            $vars = unserialize($params["PARAMETERS"]);
+            $url=$vars['url'];
+            $limit=$vars['limit'];
         }
         $form="<div class='row'>
                 <div class='colonne3'>
@@ -53,28 +53,28 @@ class isidoreapi extends connector {
                 ";
         return $form;
     }
-    
-    public function make_serialized_source_properties($source_id) { 	
+
+    public function make_serialized_source_properties($source_id) {
         global $url,$limit;
-	$this->sources[$source_id]["PARAMETERS"]=serialize(['url'=>$url,'limit'=>$limit]);
+        $this->sources[$source_id]["PARAMETERS"]=serialize(['url'=>$url,'limit'=>$limit]);
     }
-    
-    //RÃ©cupÃ©ration  des proriÃ©tÃ©s globales par dÃ©faut du connecteur (timeout, retry, repository, parameters)
+
+    //Récupération  des proriétés globales par défaut du connecteur (timeout, retry, repository, parameters)
     public function fetch_default_global_values() {
-            parent::fetch_default_global_values();
-            $this->repository=2;
+        parent::fetch_default_global_values();
+        $this->repository=2;
     }
-    
+
     private function checkArray($value) {
         if (is_array($value))
             $val=$value[0];
-        else $val=$value;
-        if (is_object($val)) {
-            if ($val->{"$"}) $val=$val->{"$"}; else $val="?";
-        }
-        return $val;
+            else $val=$value;
+            if (is_object($val)) {
+                if ($val->{"$"}) $val=$val->{"$"}; else $val="?";
+            }
+            return $val;
     }
-    
+
     public function rec_record($record,$source_id,$search_id,$url) {
         //Initialisation
         $ref="";
@@ -84,24 +84,24 @@ class isidoreapi extends connector {
         $subfield_order=0;
         $value="";
         $date_import=date("Y-m-d H:i:s",time());
-        
+
         $params=$this->get_source_params($source_id);
-        
+
         $ref = md5($record->{"@uri"});
-        
+
         //Si conservation des anciennes notices, on regarde si elle existe
         if (!$this->del_old) {
-                $ref_exists = $this->has_ref($source_id, $ref);
+            $ref_exists = $this->has_ref($source_id, $ref);
         }
         //Si pas de conservation des anciennes notices, on supprime
         if ($this->del_old) {
-                $this->delete_from_entrepot($source_id, $ref);
-                $this->delete_from_external_count($source_id, $ref);
+            $this->delete_from_entrepot($source_id, $ref);
+            $this->delete_from_external_count($source_id, $ref);
         }
         $ref_exists = false;
-        //Si pas de conservation ou refÃ¯Â¿Â½rence inexistante
-        if (($this->del_old)||((!$this->del_old)&&(!$ref_exists))) {
-            //Insertion de l'entÃ¯Â¿Â½te
+        //Si pas de conservation ou reference inexistante
+        if ( ($this->del_old) ||  ( (!$this->del_old) && (!$ref_exists) ) ) {
+            //Insertion de l'entete
             $n_header["rs"]="*";
             $n_header["ru"]="*";
             $n_header["el"]="*";
@@ -109,14 +109,14 @@ class isidoreapi extends connector {
             $n_header["hl"]="0";
             $n_header["dt"]="a";
 
-            //RÃ©cupÃ©ration d'un ID
+            //Récupération d'un ID
             $recid = $this->insert_into_external_count($source_id, $ref);
 
             foreach($n_header as $hc=>$code) {
                 $this->insert_header_into_entrepot($source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
             }
-                 
-            foreach($record->isidore as $key=>$value) {          
+
+            foreach($record->isidore as $key=>$value) {
                 switch ($key) {
                     case "title":
                         $ufield="200";
@@ -130,7 +130,7 @@ class isidoreapi extends connector {
                         if (preg_match("/[0-9]{4}/",$val,$m)) {
                             $val=$m[0];
                         } else $val="";
-                       break;
+                        break;
                     case "abstract":
                         $ufield="327";
                         $usubfield="a";
@@ -142,7 +142,7 @@ class isidoreapi extends connector {
                     case "types":
                         $ufield="900";
                         $usubfield="a";
-                        $val="Document Isidore";
+                        $val="Doctrine";
                         //$val=$this->checkArray($value->type);
                         break;
                     case "url":
@@ -164,11 +164,11 @@ class isidoreapi extends connector {
                 }
                 $field_order=0;
                 /*if (!is_object($val))
-                    print($source_id." ".$ref." ".$date_import." ".$ufield." ".$usubfield." ".$field_order." 0 ".$val." ".$recid." ".$search_id).PHP_EOL;
-                else {
-                    print($source_id." ".$ref." ".$date_import." ".$ufield." ".$usubfield." ".$field_order." 0 ".$recid." ".$search_id).PHP_EOL;
-                    print_r($val);
-                }*/
+                 print($source_id." ".$ref." ".$date_import." ".$ufield." ".$usubfield." ".$field_order." 0 ".$val." ".$recid." ".$search_id).PHP_EOL;
+                 else {
+                 print($source_id." ".$ref." ".$date_import." ".$ufield." ".$usubfield." ".$field_order." 0 ".$recid." ".$search_id).PHP_EOL;
+                 print_r($val);
+                 }*/
                 $this->insert_content_into_entrepot($source_id, $ref, $date_import, $ufield, $usubfield, $field_order, 0, $val, $recid, $search_id);
             }
             //$this->insert_content_into_entrepot($source_id, $ref, $date_import, "900", "a", 0, 0, 'Isidore', $recid, $search_id);
@@ -177,59 +177,64 @@ class isidoreapi extends connector {
             $this->n_recu++;
         }
     }
-    
+
     public function make_get($url,$criterias) {
-        $get=$url."/resource/search?";
-        $first=true;
-        foreach ($criterias as $param=>$value) {
-            $get.=(!$first?"&":"").$param."=".$value;
-            if ($first) $first=!$first;
+        $get = $url . "/resource/search?";
+        $first = true;
+        foreach ($criterias as $param => $value) {
+            $get .= (! $first ? "&" : "") . $param . "=" . $value;
+            if ($first) {
+                $first = ! $first;
+            }
         }
         return $get;
     }
-    
+
     //Fonction de recherche
     public function search($source_id,$query,$search_id) {
         global $base_path;
 
         $params=$this->get_source_params($source_id);
         $params_source=unserialize($params["PARAMETERS"]);
-        
+
         $url=$params_source['url'];
         $limit=$params_source['limit'];
-        
+
         if (!$limit) $limit=100;
-        
+
         foreach($query as $amterm) {
-           switch ($amterm->ufield) {
-               case 'XXX':
-                   $criterias['q']=rawurlencode($amterm->values[0]);
-                   break;
-               case '461$t':
-                   $criterias['collection']=rawurlencode($amterm->fieldvar['trevue_id'][0]);
-                   break;
-               case '7XX':
-                   $criterias['author']=rawurlencode($amterm->fieldvar['auteur_id'][0]);
-                   break;
-               case '210$d':
-                   $criterias['date']=rawurlencode(substr($amterm->values[0],strlen($amterm->values[0])-4),4);
-                   break;
-               default:
-                   break;
-           }
+            switch ($amterm->ufield) {
+                case 'XXX':
+                    $criterias['q']=rawurlencode($amterm->values[0]);
+                    break;
+                case '461$t':
+                    $criterias['collection']=rawurlencode($amterm->fieldvar['trevue_id'][0]);
+                    break;
+                case '7XX':
+                    $criterias['author']=rawurlencode($amterm->fieldvar['auteur_id'][0]);
+                    break;
+                case '210$d':
+                    $criterias['date']=rawurlencode(substr($amterm->values[0],strlen($amterm->values[0])-4,4));
+                    break;
+                case '200$a':
+                    $criterias['q']=rawurlencode($amterm->values[0]);
+                    break;
+                default:
+                    break;
+            }
         }
         if (!count($criterias)) return;
         $criterias['output']='json';
         $criterias['discipline']="http://aurehal.archives-ouvertes.fr/subject/shs.droit";
         $criterias['replies']=200;
-        //RequÃªte CURL au webservice...
+        //Requête CURL au webservice...
         $get=$this->make_get($url,$criterias);
 
         //Appel Curl
         $curl =  new Curl();
         $result = $curl->get($get);
         if ($result) {
-            $result=json_decode($result);   
+            $result=json_decode($result);
             //Nombre :
             $total=($result->response->replies->meta->{"@items"}>$limit?$limit:$result->response->replies->meta->{"@items"});
             $page=0;

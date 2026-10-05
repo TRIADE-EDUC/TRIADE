@@ -10,7 +10,7 @@ if ((DSTPROF == "oui" ) && ($_SESSION["membre"] == "menuprof" )) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,11 +47,11 @@ validerequete("menuprof");
 $cnx=cnx();
 error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPARENT23 ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -69,12 +69,12 @@ error($cnx);
 if (isset($_GET["supp"])) { supp_dem_dst_by_prof($_GET["supp"],$_SESSION["id_pers"]); }
 
 $data=attenteValidDST($_SESSION["id_pers"]); //id_dem,id_pers,date_dem,classe,mat_text,heure,duree
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<tr class=\"tabnormal2\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >";
 	print "<td id='bordure'>&nbsp;".dateForm($data[$i][2])."&nbsp;</td>";
 	print "<td id='bordure'>&nbsp;".$data[$i][3]."&nbsp;</td>";
 	print "<td id='bordure'>&nbsp;".$data[$i][4]." H&nbsp;</td>";
-	print "<td id='bordure'>&nbsp;".$data[$i][5]."&nbsp;(".timeForm($data[$i][6])."h)</td>";
+	print "<td id='bordure'>&nbsp;".substr($data[$i][5],0,-3)."&nbsp;(".timeForm($data[$i][6])."h)</td>";
 	print "<td id='bordure'>";
 	print "<input type=button onclick=\"open('attentedst.php?supp=".$data[$i][0]."','_parent','')\" name=create value='Supprimer' class='bouton2' />";
 	print "</td>";
@@ -84,6 +84,9 @@ for($i=0;$i<count($data);$i++) {
 
 ?>
 </table>
+<br>
+<center><input type='button' value="<?php print LANGSTAGE73 ?>" class=button onclick="open('calendrier_dst_visu_readonly.php','_self','')" /></center>
+<br><br>
 
      <!-- // fin  -->
      </td></tr></table>
@@ -91,17 +94,17 @@ for($i=0;$i<count($data);$i++) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

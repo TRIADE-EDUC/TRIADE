@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_converter_record.class.php,v 1.1 2018-09-24 13:39:22 tsamson Exp $
+// $Id: rdf_entities_converter_record.class.php,v 1.5 2024/03/14 14:43:36 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -46,7 +46,6 @@ class rdf_entities_converter_record extends rdf_entities_converter {
 		    "notice_is_new" => "http://www.pmbservices.fr/ontology#new_record",
 		    "commentaire_gestion" => "http://www.pmbservices.fr/ontology#comment",
 		    "thumbnail_url" => "http://www.pmbservices.fr/ontology#thumbnail_url",
-		    "thumbnail" => "http://www.pmbservices.fr/ontology#thumbnail",
 		    "statut" => "http://www.pmbservices.fr/ontology#has_record_status"
 		));
 		return $this->map_fields;
@@ -160,6 +159,24 @@ class rdf_entities_converter_record extends rdf_entities_converter {
 						'external_field_name' => 'id_notices_relations',
 				        'abstract_entity' => '1'
 				),
+				'http://www.pmbservices.fr/ontology#has_docnum' => array(
+				        'type' => 'docnum',
+						'table' => 'explnum',
+						'reference_field_name' => 'explnum_notice',
+						'external_field_name' => 'explnum_id',
+				),
+				'http://www.pmbservices.fr/ontology#has_expl' => array(
+				        'type' => 'expl',
+						'table' => 'exemplaires',
+						'reference_field_name' => 'expl_notice',
+						'external_field_name' => 'expl_id',
+				),
+                'http://www.pmbservices.fr/ontology#has_bulletin' => array(
+                    'type' => 'bulletin',
+                    'table' => 'analysis',
+                    'reference_field_name' => 'analysis_notice',
+                    'external_field_name' => 'analysis_bulletin'
+                ),
 		));
 	    
 	    //auth perso
@@ -187,7 +204,7 @@ class rdf_entities_converter_record extends rdf_entities_converter {
 	}				
 	
 	protected function init_base_query_elements() {
-		// On dÃ©finit les valeurs par dÃ©faut
+		// On définit les valeurs par défaut
 		$this->base_query_elements = parent::init_base_query_elements();
 		if (!$this->entity_id) {
 			$this->base_query_elements = array_merge($this->base_query_elements, array(

@@ -2,22 +2,22 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_menu.class.php,v 1.21 2017-11-21 12:00:59 dgoron Exp $
+// $Id: cms_module_menu.class.php,v 1.25.2.1.2.1 2025/02/12 12:34:06 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_menu extends cms_module_common_module {
-	
+
 	public function __construct($id=0){
 		$this->module_path = str_replace(basename(__FILE__),"",__FILE__);
 		parent::__construct($id);
 	}
-	
+
 	public function get_manage_form(){
 		global $base_path;
 		//variables persos...
 		global $menu;
-		
+
 		$form="
 		<div dojoType='dijit.layout.BorderContainer' style='width: 100%; height: 800px;'>
 			<div dojoType='dijit.layout.ContentPane' region='left' splitter='true' style='width:300px;' >";
@@ -34,7 +34,7 @@ class cms_module_menu extends cms_module_common_module {
 			}
 		}
 			$form.="
-				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&menu=new'/>Ajouter un menu</a> 
+				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&menu=new'>".$this->format_text($this->msg['cms_module_agenda_add_calendar'])."</a>
 			";
 		$form.="
 			</div>
@@ -49,14 +49,14 @@ class cms_module_menu extends cms_module_common_module {
 		</div>";
 		return $form;
 	}
-	
+
 	public function save_manage_form(){
 		global $menu;
 		global $menu_delete;
 		global $cms_module_menu_menu_name;
-		
+
 		$params = $this->managed_datas['module'];
-		
+
 		if($menu_delete){
 			unset($params['menus'][$menu_delete]);
 		}else{
@@ -67,34 +67,34 @@ class cms_module_menu extends cms_module_common_module {
 				);
 				$params['menus']['menu'.(self::get_max_menu_id($this->managed_datas['module']['menus'])+1)] = $menu_infos;
 			}else{
-				//sinon on rÃ©Ã©crit juste l'Ã©lÃ©ment
+				//sinon on réécrit juste l'élément
 				$params['menus'][$menu]['name'] = $cms_module_menu_menu_name;
 			}
 		}
 		return $params;
 	}
-	
-	protected function get_max_menu_id($datas){
+
+	protected function get_max_menu_id($datas) {
 		$max = 0;
-		if(count($datas)){
+		if (is_countable($datas) && count($datas)) {
 			foreach	($datas as $key => $val){
-				$key = str_replace("menu","",$key)*1;
+			    $key = intval(str_replace("menu","",$key));
 				if($key>$max) $max = $key;
 			}
 		}
 		return $max;
 	}
-	
+
 	protected function get_managed_menu_form($menu){
 		global $opac_url_base;
 		global $base_path;
-		
+
 		$infos = array();
 		if($menu != "new"){
 			$infos = $this->managed_datas['module']['menus'][$menu];
 		} else {
 			$infos = array(
-				'name' => ""	
+				'name' => ""
 			);
 		}
 		$form="
@@ -115,7 +115,7 @@ class cms_module_menu extends cms_module_common_module {
 				</div>
 			</div>";
 		if($menu!="new"){
-		//sÃ©lecteur d'entrÃ©e		
+		//sélecteur d'entrée
 		$form.="
 			<div class='row'>
 				<div class='colonne3'>
@@ -199,11 +199,11 @@ class cms_module_menu extends cms_module_common_module {
 																	}else var param_value = page_params;
 																	page_params = page_params.replace(param_value,'');
 																	var row = cms_create_element(page_var.name+' - '+page_var.comment,'text','cms_module_menu_menu_entry_page_vars[]',param_value);
-																	content.appendChild(row);	
+																	content.appendChild(row);
 																	var row = cms_create_element('','hidden','cms_module_menu_menu_entry_page_vars_name[]',page_var.name);
-																	content.appendChild(row);									
+																	content.appendChild(row);
 																});
-																
+
 															}
 														}
 													});
@@ -231,11 +231,11 @@ class cms_module_menu extends cms_module_common_module {
 														if(data.length > 0){
 															dojo.forEach(data,function(page_var){
 																var row = cms_create_element(page_var.name+' - '+page_var.comment,'text','cms_module_menu_menu_entry_page_vars[]','');
-																content.appendChild(row);	
+																content.appendChild(row);
 																var row = cms_create_element('','hidden','cms_module_menu_menu_entry_page_vars_name[]',page_var.name);
-																content.appendChild(row);									
+																content.appendChild(row);
 															});
-															
+
 														}
 													}
 												});
@@ -245,7 +245,7 @@ class cms_module_menu extends cms_module_common_module {
 									break;
 								default :
 									//do nothing
-									break;							
+									break;
 							}
 							if(!item){
 								content.appendChild(cms_create_button('ajouter','".$this->format_text($this->msg['cms_module_menu_menu_entry_button'])."'));
@@ -253,7 +253,7 @@ class cms_module_menu extends cms_module_common_module {
 									load_entry();
 									dijit.byId('cms_module_menu_entry_form').destroyDescendants(false);
 								}
-								// on remet le sÃ©lecteur en place...
+								// on remet le sélecteur en place...
 								document.getElementById('cms_module_menu_menu_add_entry').selectedIndex = 0;
 							}else{
 								content.appendChild(cms_create_button('cms_update_item','".$this->format_text($this->msg['cms_module_menu_menu_entry_button_edit'])."'));
@@ -266,16 +266,16 @@ class cms_module_menu extends cms_module_common_module {
 								dojo.byId('cms_delete_item').onclick = function() {
 									dijit.byId(\"cms_module_menu_entries\").model.store.deleteItem(item);
 									dijit.byId('cms_module_menu_entry_form').destroyDescendants(false);
-								}							
-							}						
+								}
+							}
 						}
-						
+
 						function delete_entry(item){
 							if(typeof console != 'undefined') {
 								console.log(item);
 							}
 						}
-						
+
 						function load_entry(){
 							var type = document.getElementById('cms_module_menu_entry_type').value;
 							var content = document.getElementById('cms_module_menu_entry_form');
@@ -317,7 +317,7 @@ class cms_module_menu extends cms_module_common_module {
 							}
 							dijit.byId('cms_module_menu_entry_form').destroyDescendants(false);
 						}
-						
+
 						function cms_module_menu_update_tree_items(parent,newChildrenList){
 							elements_infos= new Object();
 							tree_infos= new Object();
@@ -326,8 +326,8 @@ class cms_module_menu extends cms_module_common_module {
 							var http = new http_request();
 							http.request('".$this->get_ajax_link(array('do' => "save_tree", 'menu' => $menu))."',true,'&elements='+dojo.toJson(elements_infos)+'&tree_infos='+dojo.toJson(tree_infos));
 						}
-						
-						
+
+
 						function cms_module_menu_get_tree_infos(elem){
 							try{
 								if(elem.id && elem.id[0] && elem.title && elem.title[0]){
@@ -346,9 +346,9 @@ class cms_module_menu extends cms_module_common_module {
 									}
 									for(var i=0 ; i<elem.children.length ; i++){
 										if(elem.id && elem.id[0]){
-											tree_infos[elem.id[0]].push(elem.children[i].id[0]);							
+											tree_infos[elem.id[0]].push(elem.children[i].id[0]);
 										}else if(elem.root){
-											tree_infos[0].push(elem.children[i].id[0]);		
+											tree_infos[0].push(elem.children[i].id[0]);
 										}
 										cms_module_menu_get_tree_infos(elem.children[i]);
 									}
@@ -374,7 +374,7 @@ class cms_module_menu extends cms_module_common_module {
 				dojo.require('dijit.Tree');
 				dojo.require('dijit.tree.dndSource');
 				dojo.require('dojox.layout.ContentPane');
-				
+
 				function prepare(){
 					var store = new dojo.data.ItemFileWriteStore({
     	        		url: '".$this->get_ajax_link(array('do' => "get_tree",'menu' => $menu))."'
@@ -382,7 +382,7 @@ class cms_module_menu extends cms_module_common_module {
         			var treeModel = new dijit.tree.ForestStoreModel({
 	            		store: store,
         			});
-				
+
 					var treeControl = new dijit.Tree({
 						model: treeModel,
 						showRoot: false,
@@ -398,7 +398,7 @@ class cms_module_menu extends cms_module_common_module {
 					dojo.connect(treeModel, 'onChange', cms_module_menu_update_tree_items);
     			}
 			    dojo.ready(prepare);
-			    
+
 				function cms_module_menu_edit_item(item,node,evt){
 					load_entry_form(this.model.store.getValue(item,'type'),item);
 				}
@@ -415,21 +415,21 @@ class cms_module_menu extends cms_module_common_module {
 		}
 		return $form;
 	}
-	
-	function execute_ajax(){
+
+	public function execute_ajax(){
 		global $charset;
 		global $do;
 		global $menu;
 		$response = array();
 		switch($do){
 			case "get_tree" :
-				if(!isset($this->managed_datas['module']['menus'][$menu]) || !isset($this->managed_datas['module']['menus'][$menu]['items'])){
+				if (!isset($this->managed_datas['module']['menus'][$menu]['items'])) {
 					$items = array(
 						'identifier' => 'id',
 						'label' => 'title',
 						'items' => array()
-					);					
-				}else {
+					);
+				} else {
 					$items = array(
 						'identifier' => 'id',
 						'label' => 'title',
@@ -437,27 +437,27 @@ class cms_module_menu extends cms_module_common_module {
 					);
 				}
 				$response['content'] = json_encode($items);
-				$response['content-type'] = "application/json"; 
+				$response['content-type'] = "application/json";
 				break;
 			case "save_tree" :
 				global $tree_infos;
 				global $elements;
-				
+
 //				$this->debug("------------------------start-------------------------");
 //				$this->debug("------------------------posted-------------------------");
 //				$this->debug(stripslashes($elements));
 //				$this->debug($tree_infos);
 				$tree= array();
-				
+
 				if($charset != 'utf-8'){
-					$elements = utf8_encode($elements);
+					$elements = encoding_normalize::utf8_normalize($elements);
 				}
 				$elements = json_decode(stripslashes($elements),true);
 				//$elements = $this->charset_normalize($elements,"utf-8");
 				$tree_infos = json_decode(stripslashes($tree_infos),true);
 				$tree_infos = array_reverse($tree_infos,true);
-				
-//				$this->debug("------------------------entrÃ©e-------------------------");
+
+//				$this->debug("------------------------entrée-------------------------");
 //				$this->debug($elements);
 //				$this->debug($tree_infos);
 //				$this->debug("------------------------debut boucle-------------------------");
@@ -490,17 +490,17 @@ class cms_module_menu extends cms_module_common_module {
 							unset($tree[$child]);
 						}
 					}
-//					$this->debug("------------------------entrÃ©e-------------------------");
+//					$this->debug("------------------------entrée-------------------------");
 //					$this->debug($elements);
 //					$this->debug("------------------------arbre-------------------------");
 //					$this->debug($tree);
 				}
-				
+
 				$this->managed_datas['module']['menus'][$menu]['items'] = $tree[0]['items'];
 				$query = "replace into cms_managed_modules set managed_module_name = '".addslashes($this->class_name)."', managed_module_box = '".$this->addslashes(serialize($this->managed_datas))."'";
 				pmb_mysql_query($query);
 				$response['content'] = "OK";
-				$response['content-type'] = "application/json"; 
+				$response['content-type'] = "application/json";
 				break;
 			default :
 				$response = parent::execute_ajax();
@@ -508,14 +508,14 @@ class cms_module_menu extends cms_module_common_module {
 		}
 		return $response;
 	}
-	
-	function get_next_item_id($menu){	
+
+	public function get_next_item_id($menu){
 		$max =  $this->_get_max_item_id($this->managed_datas['module']['menus'][$menu]['items'],0)+1;
 		return $max;
 	}
-	
-	function _get_max_item_id($items,$max){
-		if(is_array($items)){
+
+	public function _get_max_item_id($items,$max){
+		if (is_array($items)){
 			foreach($items as $item){
 				if(count($item['children'])){
 					$max = $this->_get_max_item_id($item['children'],$max);

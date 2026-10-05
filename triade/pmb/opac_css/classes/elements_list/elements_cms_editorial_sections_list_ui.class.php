@@ -2,14 +2,14 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_cms_editorial_sections_list_ui.class.php,v 1.2 2018-10-18 09:08:07 dgoron Exp $
+// $Id: elements_cms_editorial_sections_list_ui.class.php,v 1.2 2018/10/18 09:08:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($class_path.'/elements_list/elements_list_ui.class.php');
 
 /**
- * Classe d'affichage d'un onglet qui affiche une liste rubrique du contenu Ã©ditorial
+ * Classe d'affichage d'un onglet qui affiche une liste rubrique du contenu éditorial
  * @author ngantier
  *
  */

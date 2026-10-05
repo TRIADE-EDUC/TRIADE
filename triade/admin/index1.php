@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,7 +26,7 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
-<link rel="alternate" type="application/rss+xml" title="Actualité Triade" href="http://www.triade-educ.com/accueil/news/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="Actualité Triade" href="https://www.triade-educ.com/accueil/news/rss.xml" />
 <script language="JavaScript" src="librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="../librairie_js/ticker.js"></script>
 <LINK REL="SHORTCUT ICON" href="./favicon.ico">
@@ -43,7 +43,7 @@ if (! file_exists($fichier)) {
 <?php
 include("./librairie_php/lib_netscape.php");
 include("./librairie_php/lib_licence.php");
-
+$affiche="";
 $fichier="../data/erreurs.log";
 if (file_exists($fichier))  {
        $fic=fopen($fichier,"r");
@@ -65,7 +65,7 @@ if (file_exists($fichier))  {
 include_once("../common/config.inc.php");
 include_once("../librairie_php/db_triade.php");
 $cnx=cnx();
-if ($cnx == 0) {
+if (!$cnx) {
 	print "<br />";
 	print "<img src='../image/commun/kitwarning.gif' align=left><font class=T2 color=red>";
 	print "<b>"."Suite à un problème technique,"."</b><br />";
@@ -123,7 +123,7 @@ if ($cnx == 0) {
 </font></td></tr></table>
 
 <?php 
-if (!file_exists('../moodle/config.php')) {
+if (file_exists('no-install-moodle')) {
 ?>
 
 	</font></TD></TR></TABLE>
@@ -135,8 +135,8 @@ if (!file_exists('../moodle/config.php')) {
 	<td >
 	<table height=100% width=100% border=0 >
 	<TR><TD align=top>
-	Veuillez terminer l'installation : 
-        <input type=button onclick="open('../moodle/','_blank','');" value='Installer Moodle' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;
+	Veuillez installer le elearning Moodle : 
+        <input type=button onclick="open('./moodleinstall.php','_self','');" value='Cliquer ici' STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>&nbsp;&nbsp;
 	</td></tr></table>
 
 <?php

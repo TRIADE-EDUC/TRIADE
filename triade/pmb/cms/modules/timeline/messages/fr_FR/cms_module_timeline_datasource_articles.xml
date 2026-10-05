@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Flux RSS
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_timeline_datasource_articles.xml,v 1.2 2020/09/24 12:16:31 jlaurent Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_timeline_datasource_articles_title">Titre</entry>
+	<entry code="cms_module_timeline_datasource_articles_resume">Résumé</entry>
+	<entry code="cms_module_timeline_datasource_articles_create_date">Date de création</entry>
+	<entry code="cms_module_timeline_datasource_articles_start_date">Date de début de publication</entry>
+	<entry code="cms_module_timeline_datasource_articles_end_date">Date de fin de publication</entry>
+	<entry code="cms_module_timeline_datasource_articles_logo">Logo</entry>
+</XMLlist>

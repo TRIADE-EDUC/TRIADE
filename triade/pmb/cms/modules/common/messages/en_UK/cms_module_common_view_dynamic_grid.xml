@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_dynamic_grid.xml,v 1.2 2021/10/13 12:46:29 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_dynamic_grid_general_parameters">Paramétrage Général</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_colwidth">Largeur des colonnes</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_colwidth_defaut">Mettre 0 pour la valuer AUTO</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_animation">Animer les colonnes lors d'une modification</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_no">Non</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_yes">Oui</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_duration">Durée de l'animation</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_gutter">Espacement  entre les colonnes (en px)</entry>	
+	<entry code="cms_module_common_view_dynamic_grid_controls">Identifiant de la DIV contenant les filtres</entry>	
+	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+	<entry code='cms_module_common_view_django_default_template_id'>Date de création</entry>
+	<entry code='cms_module_common_view_django_default_template_id_desc'>Date de création décroissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title'>Titre croissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title_desc'>Titre décroissant</entry>
+</XMLlist>

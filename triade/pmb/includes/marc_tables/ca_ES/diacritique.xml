@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- 
-$Id: diacritique.xml,v 1.3 2006-03-07 23:12:25 touraine37 Exp $ -->
+$Id: diacritique.xml,v 1.3 2006/03/07 23:12:25 touraine37 Exp $ -->
 <XMLlist>	
 	<entry code="a">אבגדהוÀÁÂÃÄÅA</entry>	
 	<entry code="e">יטךכÈÉÊËE</entry>	

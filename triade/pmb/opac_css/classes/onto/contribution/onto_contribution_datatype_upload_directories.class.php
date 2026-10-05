@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_contribution_datatype_upload_directories.class.php,v 1.2 2018-10-05 10:29:14 tsamson Exp $
+// $Id: onto_contribution_datatype_upload_directories.class.php,v 1.3 2020/09/07 11:59:43 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,8 +11,8 @@ require_once $class_path.'/onto/common/onto_common_datatype.class.php';
 
 /**
  * class onto_common_datatype_list
- * Les mÃ©thodes get_form,get_value,check_value,get_formated_value,get_raw_value
- * sont Ã©ventuellement Ã  redÃ©finir pour le type de donnÃ©es
+ * Les méthodes get_form,get_value,check_value,get_formated_value,get_raw_value
+ * sont éventuellement à redéfinir pour le type de données
  */
 class onto_contribution_datatype_upload_directories  extends onto_common_datatype {
 
@@ -33,7 +33,7 @@ class onto_contribution_datatype_upload_directories  extends onto_common_datatyp
 	}
 	
 	public function get_value(){
-		// si c'est un tableau on rÃ©cupÃ¨re que la premiÃ¨re valeur
+		// si c'est un tableau on récupère que la première valeur
 		if (is_array($this->value)) {
 			$this->value = array_shift($this->value);
 		}
@@ -41,7 +41,7 @@ class onto_contribution_datatype_upload_directories  extends onto_common_datatyp
 	}
 	
 	public function get_formated_value(){
-		$display_label = $this->offsetget_value_property("display_label");
+	    $display_label = $this->offsetget_value_property("display_label");
 		if ($display_label) {
 			return $display_label;
 		}

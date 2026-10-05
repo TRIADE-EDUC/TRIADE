@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis.js,v 1.10 2016-10-07 08:35:31 dgoron Exp $
+// $Id: avis.js,v 1.12 2021/03/30 13:32:22 dgoron Exp $
 
 
 function show_avis(id, object_id, object_type) {
@@ -13,7 +13,7 @@ function show_avis(id, object_id, object_type) {
 	}
 }
 
-//avis sauvegardé en Ajax
+//avis sauvegard� en Ajax
 function save_avis(id, object_id, object_type) {
 	var note=3;
 	var boutons_note = document.getElementsByName('avis_'+id+'_note_'+object_type+'_'+object_id);
@@ -109,12 +109,14 @@ function avis_callback_response(id, object_id, object_type, response) {
 			var oldNode = document.getElementById('avis_'+object_id);
 			oldNode.parentNode.replaceChild(newNode, oldNode);
 			
-			var scripts = document.getElementById('avis_'+object_id).getElementsByTagName("script");
-			for(var i=0; i<scripts.length; i++) {
-				if (window.execScript)
-					window.execScript(scripts[i].text.replace('<!--',''));
-				else
-					window.eval(scripts[i].text);
+			if(document.getElementById('avis_'+object_id)) {
+				var scripts = document.getElementById('avis_'+object_id).getElementsByTagName("script");
+				for(var i=0; i<scripts.length; i++) {
+					if (window.execScript)
+						window.execScript(scripts[i].text.replace('<!--',''));
+					else
+						window.eval(scripts[i].text);
+				}
 			}
 		}
 		//on est dans le contexte de la popup, rafraichir la note et le nombre d'avis

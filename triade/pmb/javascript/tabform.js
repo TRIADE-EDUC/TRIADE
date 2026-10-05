@@ -1,5 +1,5 @@
 // gestion des forms "collapsibles" en Javascript
-// $Id: tabform.js,v 1.13 2017-12-15 11:39:01 dgoron Exp $
+// $Id: tabform.js,v 1.13 2017/12/15 11:39:01 dgoron Exp $
 
 // tabCreate() : cr�e un objet form et affecte les m�thodes et propri�t�s
 

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: upload_folder.class.php,v 1.5 2017-12-27 09:47:00 apetithomme Exp $
+// $Id: upload_folder.class.php,v 1.8 2023/08/28 14:01:11 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,19 +16,16 @@ class upload_folder {
 	public $repertoire_path='';
 	public $repertoire_navigation=0;
 	public $repertoire_hachage=0;
-	public $repertoire_subfolder=0;
-	public $repertoire_utf8=0;
+	public $repertoire_subfolder=20;
+	public $repertoire_utf8=1;
 	
 	public function __construct($id=0, $action=''){
-		global $dbh;
-		
-		$this->repertoire_id = $id+0;
+		$this->repertoire_id = intval($id);
 		$this->action = $action;	
 		
 		if($this->repertoire_id){
-			//Modification
 			$req="select repertoire_nom, repertoire_url, repertoire_path, repertoire_navigation, repertoire_hachage, repertoire_subfolder, repertoire_utf8 from upload_repertoire where repertoire_id='".$this->repertoire_id."'";
-			$res=pmb_mysql_query($req,$dbh);
+			$res=pmb_mysql_query($req);
 			if(pmb_mysql_num_rows($res)){
 				$item = pmb_mysql_fetch_object($res);
 				$this->repertoire_nom=$item->repertoire_nom;
@@ -38,24 +35,7 @@ class upload_folder {
 				$this->repertoire_hachage=$item->repertoire_hachage;
 				$this->repertoire_subfolder=$item->repertoire_subfolder;
 				$this->repertoire_utf8=$item->repertoire_utf8;
-			} else {
-				$this->repertoire_nom='';
-				$this->repertoire_url='';
-				$this->repertoire_path='';
-				$this->repertoire_navigation=0;
-				$this->repertoire_hachage=0;
-				$this->repertoire_subfolder=0;
-				$this->repertoire_utf8=0;
-			}
-		} else {
-			//CrÃ©ation
-			$this->repertoire_nom='';
-			$this->repertoire_url='';
-			$this->repertoire_path='';
-			$this->repertoire_navigation=0;
-			$this->repertoire_hachage=0;
-			$this->repertoire_subfolder=20;
-			$this->repertoire_utf8=0;
+			} 
 		}
 	}
 	
@@ -70,7 +50,7 @@ class upload_folder {
 	}
 	
 	/**
-	 * Formate le nom du chemin en utilisant l'id du rÃ©pertoire
+	 * Formate le nom du chemin en utilisant l'id du répertoire
 	 */
 	public function formate_path_to_id($chemin){			
 		$chemin = str_replace($this->repertoire_path,$this->repertoire_id."/",$chemin);
@@ -80,7 +60,7 @@ class upload_folder {
 	}
 	
 	/*
-	 * Retourne si le repertoire est hachÃ©
+	 * Retourne si le repertoire est haché
 	 */
 	public function isHashing(){
 		return $this->repertoire_hachage;
@@ -97,7 +77,6 @@ class upload_folder {
 	 * Hache le nom de fichier pour le classer
 	 */
 	public function hachage($nom_fichier){
-								
 		$chemin= $this->repertoire_path;
 		$nb_dossier = $this->repertoire_subfolder;
 		$total=0;
@@ -112,15 +91,15 @@ class upload_folder {
 	}
 	
 	/*
-	 * dÃ©code la chaine dans le bon charset
+	 * décode la chaine dans le bon charset
 	 */
 	public function decoder_chaine($chaine){
 		global $charset;
 		
 		if($charset != 'utf-8' && $this->isUtf8()) {
-			return utf8_decode($chaine);
+			return encoding_normalize::utf8_decode($chaine);
 		} else if($charset == 'utf-8' && !$this->isUtf8()) {
-			return utf8_encode($chaine);
+			return encoding_normalize::utf8_normalize($chaine);
 		}
 		return $chaine;
 	}
@@ -132,9 +111,9 @@ class upload_folder {
 		global $charset;
 		
 		if($charset != 'utf-8' && $this->isUtf8()) {
-			return utf8_encode($chaine);
+			return encoding_normalize::utf8_normalize($chaine);
 		} else if($charset == 'utf-8' && !$this->isUtf8()) {
-			return utf8_decode($chaine);
+			return encoding_normalize::utf8_decode($chaine);
 		}
 		return $chaine;
 	}
@@ -211,4 +190,4 @@ class upload_folder {
 	}
 	
 }
-?>
+

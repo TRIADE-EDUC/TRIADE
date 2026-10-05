@@ -1,16 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: type.inc.php,v 1.3 2017-06-02 10:05:36 dgoron Exp $
+// $Id: type.inc.php,v 1.5 2021/01/21 08:52:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($id_liste)) $id_liste = 0;
-if(!isset($act)) $act = '';
+global $class_path, $id, $id_liste;
 
-require_once($class_path."/demandes_types.class.php");
+require_once($class_path."/demandes_type.class.php");
+require_once($class_path."/configuration/configuration_controller.class.php");
 
-$dmd_type = new demandes_types("demandes_type","id_type","libelle_type",$id_liste);
-$dmd_type->proceed($act);
-?>
+configuration_controller::set_model_class_name('demandes_type');
+configuration_controller::set_list_ui_class_name('list_configuration_demandes_type_ui');
+configuration_controller::proceed((!empty($id) ? $id : $id_liste));

@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_bannetteslist.class.php,v 1.12 2019-05-22 15:54:21 dgoron Exp $
+// $Id: cms_module_common_view_bannetteslist.class.php,v 1.16 2023/12/07 15:02:47 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_common_view_bannetteslist extends cms_module_common_view_django{
 	
@@ -20,7 +22,7 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 			<a href='{{flux_rss.link}}'>{{flux_rss.name}}</a>
 		{% endfor %}
 		<div>
-			<blockquote>{{bannette.comment}}</blockquote>
+			<div>{{bannette.comment}}</div>
 			{% for record in bannette.records %}
 				{{record.content}}
 			{% endfor %}
@@ -95,14 +97,13 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 		
 		$this->save_constructor_link_form("bannette");
 		$this->save_constructor_link_form("notice");
-		$this->parameters['nb_notices'] = $cms_module_common_view_bannetteslist_nb_notices+0;
+		$this->parameters['nb_notices'] = (int) $cms_module_common_view_bannetteslist_nb_notices;
 		$this->parameters['css'] = stripslashes($cms_module_bannetteslist_view_bannetteslist_css);
 		$this->parameters['used_template'] = $cms_module_common_view_django_template_record_content;
 		return parent::save_form();
 	}
 		
 	public function render($datas){
-		global $dbh;
 		global $opac_url_base;
 		global $opac_show_book_pics;
 		global $opac_book_pics_url;
@@ -112,16 +113,16 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 		global $opac_bannette_notices_order;
 		global $liens_opac;
 		
-		// DÃ©jÃ  gÃ©nÃ©rÃ© dans une classe fille
+		// Déjà généré dans une classe fille
 		if($this->render_already_generated) {
 			return parent::render($datas);
 		}
 		
-		if(!$opac_notice_affichage_class){
+		if(empty($opac_notice_affichage_class)){
 			$opac_notice_affichage_class ="notice_affichage";
 		}
 	
-		//on gÃ¨re l'affichage des banettes				
+		//on gère l'affichage des banettes				
 		foreach($datas["bannettes"] as $i => $bannette) {
 			$datas['bannettes'][$i]['link'] = $this->get_constructed_link('bannette',$datas['bannettes'][$i]['id']);
 			
@@ -133,20 +134,22 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 			}
 			$requete.= " ".$limitation;
 		
-			$resultat = pmb_mysql_query($requete, $dbh);
+			$resultat = pmb_mysql_query($requete);
 			$cpt_record=0;
 			$datas["bannettes"][$i]['records']=array();
+			$thumbnailSourcesHandler = new ThumbnailSourcesHandler();
 			while ($r=pmb_mysql_fetch_object($resultat)) {	
 				$content="";
 				$url_vign = "";
-				if (($r->code || $r->thumbnail_url) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $r->thumbnail_url))) {
-					$url_vign = getimage_url($r->code, $r->thumbnail_url);
+				if ($opac_show_book_pics=='1') {
+				    $url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $r->num_notice);
 				}
-				if($this->parameters['used_template']){
+				
+				$notice_class = new $opac_notice_affichage_class($r->num_notice, $liens_opac);
+				if (!empty($this->parameters['used_template'])) {
 					$tpl = notice_tpl_gen::get_instance($this->parameters['used_template']);
-					$content= $tpl->build_notice($r->num_notice);
-				}else{					
-					$notice_class = new $opac_notice_affichage_class($r->num_notice,$liens_opac);
+					$content = $tpl->build_notice($r->num_notice);
+				} else {					
 					$notice_class->do_header();
 					switch ($opac_bannette_notices_format) {
 						case AFF_BAN_NOTICES_REDUIT :
@@ -176,11 +179,41 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 							break ;
 					}
 				}
-				$datas["bannettes"][$i]['records'][$cpt_record]['id']=$r->num_notice;
-				$datas["bannettes"][$i]['records'][$cpt_record]['title']=$r->title;
-				$datas["bannettes"][$i]['records'][$cpt_record]['link']=$this->get_constructed_link("notice",$r->num_notice);
-				$datas["bannettes"][$i]['records'][$cpt_record]['url_vign']=$url_vign;
-				$datas["bannettes"][$i]['records'][$cpt_record]['content']=$content;
+				
+				$datas["bannettes"][$i]['records'][$cpt_record] = [
+				    'id' => $r->num_notice,
+				    'title' => $r->title,
+				    'link' => $this->get_constructed_link('notice', $r->num_notice),
+				    'url_vign' => $url_vign,
+				    'content' => $content,
+				    'parent' => []
+				];
+				
+				if (!empty($notice_class->parent_id)) {
+				    $url_parent_vign = "";
+				    $notice_parent_class = new $opac_notice_affichage_class($notice_class->parent_id);
+				    
+				    $parent_notice_id = $notice_parent_class->notice_id;
+				    $is_parent_bulletin = false;
+				    if ($notice_parent_class->notice->niveau_biblio == 'b') {
+				        $parent_notice_id = $notice_parent_class->bulletin_id;
+				        $is_parent_bulletin = true;
+				    }
+				    
+				    $url_parent_vign = '';
+				    if ($opac_show_book_pics=='1') {
+				        $url_parent_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $parent_notice_id);
+				    }
+				    
+				    $datas["bannettes"][$i]['records'][$cpt_record]['parent'] = [
+				        'id' => $parent_notice_id,
+				        'title' => $notice_parent_class->notice->tit1,
+				        'vign' => $url_parent_vign,
+				        'header' => $notice_parent_class->notice_header,
+				        'link' => $this->get_constructed_link('notice', $notice_parent_class->notice_id, $is_parent_bulletin)
+				    ];
+				}
+				
 				$cpt_record++;
 			}		
 		}
@@ -239,7 +272,33 @@ class cms_module_common_view_bannetteslist extends cms_module_common_view_django
 							array(
 								'var' => "bannettes[i].records[j].content",
 								'desc'=> $this->msg['cms_module_bannetteslist_view_notices_record_content_desc']
-							)
+							),
+						    array(
+						        'var' => "bannettes[i].records[j].parent",
+						        'desc'=> $this->msg['cms_module_bannetteslist_view_record_parent_desc'],
+						        'children' => array(
+						            array(
+						                'var' => "bannettes[i].records[j].parent.id",
+						                'desc'=> $this->msg['cms_module_bannetteslist_view_record_id_desc']
+						            ),
+						            array(
+						                'var' => "bannettes[i].records[j].parent.title",
+						                'desc'=> $this->msg['cms_module_bannetteslist_view_record_title_desc']
+						            ),
+						            array(
+						                'var' => "bannettes[i].records[j].parent.link",
+						                'desc'=> $this->msg['cms_module_bannetteslist_view_record_link_desc']
+						            ),
+						            array(
+						                'var' => "bannettes[i].records[j].parent.url_vign",
+						                'desc'=> $this->msg['cms_module_bannetteslist_view_record_url_vign_desc']
+						            ),
+						            array(
+						                'var' => "bannettes[i].records[j].parent.content",
+						                'desc'=> $this->msg['cms_module_bannetteslist_view_notices_record_content_desc']
+						            )
+						        )
+						    )
 						)									
 					),
 					array(

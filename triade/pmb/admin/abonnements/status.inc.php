@@ -1,38 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: status.inc.php,v 1.1 2018-01-29 14:52:30 ngantier Exp $
+// $Id: status.inc.php,v 1.3 2021/01/21 07:42:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path.'/abts_status.class.php');
+global $class_path, $id;
 
-switch($action) {
-	case 'update':
-		$statut = abts_status::get_from_from();
-		if(!abts_status::save($statut)){
-			error_message("",$msg['save_error'], 0);
-		}
-		abts_status::show_list();
-		break;
-	case 'add':
-		abts_status::show_form(0);
-		break;
-	case 'edit':
-		abts_status::show_form($id);
-		break;
-	case 'del':
-		if(!abts_status::delete($id)){
-			$used=abts_status::check_used($id);			
-			foreach($used as $abt){
-				$list.=$abt['link'].'<br/>';
-			}
-			error_message("", $msg['abts_status_used'].'<br/>'.$list);
-		}
-		abts_status::show_list();
-		break;
-	default:
-		abts_status::show_list();
-		break;
-}
+require_once($class_path.'/abts_status.class.php');
+require_once($class_path."/configuration/configuration_controller.class.php");
+
+configuration_controller::set_model_class_name('abts_status');
+configuration_controller::set_list_ui_class_name('list_configuration_abonnements_status_ui');
+configuration_controller::proceed($id);

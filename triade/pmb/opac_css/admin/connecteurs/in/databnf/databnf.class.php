@@ -1,47 +1,44 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: databnf.class.php,v 1.11 2017-11-07 15:39:09 ngantier Exp $
+// $Id: databnf.class.php,v 1.14.4.2 2025/05/07 14:25:38 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 global $class_path,$base_path, $include_path;
 require_once($class_path."/connecteurs.class.php");
-require_once("$class_path/rdf/arc2/ARC2.php");
-//require_once("$include_path/h2o/h2o.php");
 require_once($base_path."/cms/modules/common/includes/pmb_h2o.inc.php");
 
 class databnf extends connector {
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $del_old;				//Supression ou non des notices dejÃ  existantes
-	
+
+	//Variables internes pour la progression de la récupération des notices
+	public $del_old;				//Supression ou non des notices dejà existantes
+
 	public $profile;				//Profil wikipedia
-	public $match;					//Tableau des critÃ¨res wikipedia
-	public $current_site;			//Site courant du profile (nÂ°)
+	public $match;					//Tableau des critères wikipedia
+	public $current_site;			//Site courant du profile (n°)
 	public $searchindexes;			//Liste des indexes de recherche possibles pour le site
-	public $current_searchindex;	//NumÃ©ro de l'index de recherche de la classe
+	public $current_searchindex;	//Numéro de l'index de recherche de la classe
 	public $match_index;			//Type de recherche (power ou simple)
 	public $types;					//Types de documents pour la conversino des notices
-	
-	//RÃ©sultat de la synchro
-	public $error;					//Y-a-t-il eu une erreur	
+
+	//Résultat de la synchro
+	public $error;					//Y-a-t-il eu une erreur
 	public $error_message;			//Si oui, message correspondant
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "databnf";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
+        global $charset, $sparql_endpoint_url;
     	$params=$this->get_source_params($source_id);
     	if ($params["PARAMETERS"]) {
     		//Affichage du formulaire avec $params["PARAMETERS"]
@@ -57,66 +54,72 @@ class databnf extends connector {
    			 	<label for='sparql_endpoint_url'>".$this->msg["databnf_sparql_endpoint_url"]."</label>
     		</div>
     		<div class='colonne_suite'>
-    			<input type='text' class='saisie-40em' name='sparql_endpoint_url' id='sparql_endpoint_url' value='".htmlentities($sparql_endpoint_url,ENT_QUOTES,$charset)."' size='10'/>
+                <input type='text' class='saisie-40em' name='sparql_endpoint_url' id='sparql_endpoint_url' value='".htmlentities($sparql_endpoint_url ?? "", ENT_QUOTES, $charset)."' size='10'/>
     		</div>
     	</div>
     	<div class='row'></div>";
     	return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $sparql_endpoint_url;
     	$t["sparql_endpoint_url"]=$sparql_endpoint_url;
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader(){
 		global $lang;
 		$header= array();
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($source_id){
 		$type['type'] = array(
-			array( 
+			array(
 				'code' => "databnf_oeuvre",
 				'label' => $this->msg["databnf_oeuvre_label"]
 			),
-			array( 
+			array(
 				'code' => "databnf_bio",
 				'label' => $this->msg["databnf_bio_label"]
 			)
-		);		
+		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array()){
 		$enrichment= array();
 		$params=$this->unserialize_source_params($source_id);
 		$sparql_end_point=$params["PARAMETERS"]["sparql_endpoint_url"];
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		switch ($type){
 			case "databnf_bio" :
-				$enrichment['databnf_bio']['content'] = $this->get_author_page($notice_id,$sparql_end_point);	
+				$enrichment['databnf_bio']['content'] = $this->get_author_page($notice_id,$sparql_end_point);
 				break;
 			case "databnf_oeuvre" :
 			default :
 				$enrichment['databnf_oeuvre']['content'] = $this->noticeInfos($notice_id,$sparql_end_point);
 				break;
-		}		
+		}
 		$enrichment['source_label']=$this->msg['databnf_enrichment_source'];
 		return $enrichment;
 	}
-	
+
 	public function get_author_page($notice_id,$sparql_end_point){
 		global $lang;
 		global $charset;
-		
+
 		if($enrich_params['label']!=""){
 			$author = $enrich_params['label'];
 		}else{
@@ -128,26 +131,26 @@ class databnf extends connector {
 				$author_number = pmb_mysql_result($result,0,1);
 				$author_class = new auteur($author_id);
 				$author =  $author_class->get_isbd();
-				
+
 				//On y va !
 				$config = array(
 						'remote_store_endpoint' => $sparql_end_point,
 						'remote_store_timeout' => 15
 				);
 				$store = ARC2::getRemoteStore($config);
-				
+
 				//Recherche de l'URI de l'auteur !
 				$sparql="prefix skos: <http://www.w3.org/2004/02/skos/core#>
 				SELECT * WHERE {
   					?auteur rdf:type skos:Concept .
   					FILTER regex(?auteur, \"^http://data\.bnf\.fr:8080/ark:/12148/cb".$author_number."\") .
 				}";
-				
+
 				$rows=$store->query($sparql,'rows');
-				
+
 				if ($rows[0]["auteur"]) {
 					$uri_auteur=$rows[0]["auteur"];
-				
+
 					//Biographie...
 					$sparql="prefix foaf: <http://xmlns.com/foaf/0.1/>
 					prefix dc: <http://purl.org/dc/terms/>
@@ -180,7 +183,7 @@ class databnf extends connector {
 					} catch(Exception $e) {
 						$rows=array();
 					}
-					$rows=array_uft8_decode($rows);
+					$rows=encoding_normalize::utf8_decode($rows);
 					$template="{% for record in result %}
 								<h3>{{record.isbd}}<div style='float:right'><a href='{{record.page}}' target='_blank'><img src='http://data.bnf.fr/data/a9782ddcfea7752a2c5224f971cd991d/logo-data.gif' style='max-height:20px'/></a></div></h3>
 								<br />
@@ -188,15 +191,15 @@ class databnf extends connector {
 								<table>
 								<tr><td style='background:#EEEEEE'>Date de naissance</td><td>{{record.naissance}}</td></tr>
 								<tr><td style='background:#EEEEEE'>Lieu de naissance</td><td>{{record.lieunaissance}}</td></tr>
-								<tr><td style='background:#EEEEEE'>Date de dÃ©cÃ¨s</td><td>{{record.mort}}</td></tr>
-								<tr><td style='background:#EEEEEE'>Lieu de dÃ©cÃ¨s</td><td>{{record.lieumort}}</td></tr>
+								<tr><td style='background:#EEEEEE'>Date de décès</td><td>{{record.mort}}</td></tr>
+								<tr><td style='background:#EEEEEE'>Lieu de décès</td><td>{{record.lieumort}}</td></tr>
 								</table>
 								<br/>
 								<h4 style='font-size:1.2em'>{{record.biographie}}</h4>
 								<br/>
 							   {% endfor %}";
-					$html_to_return = H2o::parseString($template)->render(array("result"=>$rows));	
-					
+					$html_to_return = H2o::parseString($template)->render(array("result"=>$rows));
+
 					//Vignettes
 					$sparql="prefix foaf: <http://xmlns.com/foaf/0.1/>
 							prefix dc: <http://purl.org/dc/elements/1.1/>
@@ -210,7 +213,7 @@ class databnf extends connector {
 					} catch(Exception $e) {
 						$rows=array();
 					}
-					$rows=array_uft8_decode($rows);
+					$rows=encoding_normalize::utf8_decode($rows);
 					$template="<h3>Vignettes (BnF)</h3>
 							  <table style='width:100%'>
 								<tr>
@@ -220,24 +223,24 @@ class databnf extends connector {
 							    </tr>
 							  </table>";
 					$html_to_return .= H2o::parseString($template)->render(array("result"=>$rows));
-					
+
 					//Bibliographie
 					$sparql="prefix foaf: <http://xmlns.com/foaf/0.1/>
 						prefix dc: <http://purl.org/dc/terms/>
 						prefix dcterm: <http://purl.org/dc/terms/>
 						prefix frbr-rda: <http://purl.org/vocab/frbr/core#>
 						prefix rdarelationships: <http://rdvocab.info/RDARelationshipsWEMI/>
-						
+
 						SELECT ?oeuvre ?oeuvre_concept ?date ?title ?url ?gallica WHERE {
 						  <$uri_auteur> foaf:focus ?person .
 						  ?oeuvre dc:creator ?person .
 						  ?oeuvre_concept foaf:focus ?oeuvre .
-						  OPTIONAL { 
+						  OPTIONAL {
 						     ?oeuvre dc:date ?date
 						  } .
 						  ?oeuvre dc:title ?title .
 						  OPTIONAL { ?oeuvre foaf:depiction ?url } .
-						  OPTIONAL { 
+						  OPTIONAL {
 						      ?manifestation rdarelationships:workManifested ?oeuvre .
 						      ?manifestation rdarelationships:electronicReproduction ?gallica .
 						  } .
@@ -247,7 +250,7 @@ class databnf extends connector {
 					} catch(Exception $e) {
 						$rows=array();
 					}
-					$rows=array_uft8_decode($rows);
+					$rows=encoding_normalize::utf8_decode($rows);
 					$template="<h3>Bibliographie (BNF)</h3>
 						<div class='center'>
 						<div style='overflow-x:scroll;overflow-y:auto;width:850px;'>
@@ -298,16 +301,16 @@ class databnf extends connector {
 			}
 		}
 //		print $html_to_return;
-		return $html_to_return; 
+		return $html_to_return;
 	}
-	
+
 	public function noticeInfos($notice_id,$sparql_end_point){
 		global $lang,$charset;
-		
+
 		//On va rechercher l'isbn si il existe....
 		$requete="select code from notices where notice_id=$notice_id";
 		$resultat=pmb_mysql_query($requete);
-		
+
 		if (pmb_mysql_num_rows($resultat)) {
 			$isbn=pmb_mysql_result($resultat,0,0);
 		} else $isbn="";
@@ -318,17 +321,17 @@ class databnf extends connector {
 					'remote_store_timeout' => 15
 			);
 			$store = ARC2::getRemoteStore($config);
-			
+
 			if (isISBN($isbn)) {
 				$isbn=formatISBN($isbn,10);
 				$isbn13=formatISBN($isbn,13);
 			}
-			
+
 			$sparql="prefix bnf-onto: <http://data.bnf.fr/ontology/>
 				prefix rdarelationships: <http://rdvocab.info/RDARelationshipsWEMI/>
 				SELECT ?oeuvre WHERE {
 				  ?manifestation bnf-onto:ISBN '$isbn' .
-				  ?manifestation rdarelationships:workManifested ?oeuvre 
+				  ?manifestation rdarelationships:workManifested ?oeuvre
 				}";
 			try {
 				$rows=$store->query($sparql,'rows');
@@ -373,11 +376,11 @@ class databnf extends connector {
 				} catch(Exception $e) {
 					$rows=array();
 				}
-				$rows=array_uft8_decode($rows);
+				$rows=encoding_normalize::utf8_decode($rows);
 				$template="
 						<h3>{{result.0.titre}}<div style='float:right'><a href='$oeuvre' target='_blank'><img src='http://data.bnf.fr/data/a9782ddcfea7752a2c5224f971cd991d/logo-data.gif' style='max-height:20px'/></a></div></h3>
 									<br />
-									<h3>DÃ©tail de l'oeuvre (BNF)</h3>
+									<h3>Détail de l'oeuvre (BNF)</h3>
 						{% if result.0.vignette %}
 							<table>
 								<tr>
@@ -394,12 +397,12 @@ class databnf extends connector {
 							</tr>
 						  </table>
 						{% endif %}
-						<br/>	
-						<h4>{{result.0.description}}</h4>			
+						<br/>
+						<h4>{{result.0.description}}</h4>
 				";
 				$html_to_return .= H2o::parseString($template)->render(array("result"=>$rows));
-				
-				//RÃ©cupÃ©ration des exemplaires de Gallica
+
+				//Récupération des exemplaires de Gallica
 				$sparql="prefix skos: <http://www.w3.org/2004/02/skos/core#>
 					prefix foaf: <http://xmlns.com/foaf/0.1/>
 					prefix dc: <http://purl.org/dc/terms/>
@@ -423,15 +426,15 @@ class databnf extends connector {
 				} catch(Exception $e) {
 					$rows=array();
 				}
-				$rows=array_uft8_decode($rows);
+				$rows=encoding_normalize::utf8_decode($rows);
 				$template="
-						<h3>Editions numÃ©risÃ©es dans Gallica</h3><br/>
+						<h3>Editions numérisées dans Gallica</h3><br/>
 						<table>
 						{% for record in result %}
 							{% if record.gallica %}
 							<tr>
 								<td><a href='{{record.gallica}}' target='_blank'><img height='40px' src='http://gallica.bnf.fr/images/dynamic/perso/logo_gallica.png' /></a></td>
-								<td><a href='{{record.gallica}}' target='_blank'>Edition : {{record.date}} par {{record.publisher}} Ã  {{record.place}}</a></td>
+								<td><a href='{{record.gallica}}' target='_blank'>Edition : {{record.date}} par {{record.publisher}} à {{record.place}}</a></td>
 								<td>{{record.note}}</td>
 								<td>{{record.numerisele}}</td>
 							</tr>
@@ -441,7 +444,7 @@ class databnf extends connector {
 				";
 				$html_to_return .= H2o::parseString($template)->render(array("result"=>$rows));
 				$template="
-						<h3>Editions dans la bibliothÃ¨que</h3><br/>
+						<h3>Editions dans la bibliothèque</h3><br/>
 						<table>
 						{% for record in result %}
 							{% if record.isbn %}
@@ -451,7 +454,7 @@ class databnf extends connector {
 								{% if i_catalog.0.nb %}
 									<tr style='height:70px'>
 										<td><a href='index.php?lvl=notice_display&id={{i_catalog.0.notice_id}}' target='_blank'>{% if record.vignette %}<img src='{{record.vignette}}' height='70px'/>{% else %}&nbsp;{% endif %}</a></td>
-										<td><a href='index.php?lvl=notice_display&id={{i_catalog.0.notice_id}}' target='_blank'>Edition : {{record.date}} par {{record.publisher}} Ã  {{record.place}}</a></td>
+										<td><a href='index.php?lvl=notice_display&id={{i_catalog.0.notice_id}}' target='_blank'>Edition : {{record.date}} par {{record.publisher}} à {{record.place}}</a></td>
 										<td>{{record.note}}</td>
 										<td><a href='index.php?lvl=notice_display&id={{i_catalog.0.notice_id}}' target='_blank'>{{i_catalog.0.nb}} exemplaires disponible(s)</a></td>
 									</tr>
@@ -463,11 +466,11 @@ class databnf extends connector {
 				try {
 					$html_to_return .= H2o::parseString($template)->render(array("result"=>$rows));
 				} catch (Exception $e) {
-					$html_to_return.=highlight_string(print_r($e,true),true);
+				    $html_to_return.= $this->msg["error_template"];
 				}
 			}
 		}
-		return $html_to_return; 
+		return $html_to_return;
 	}
 }
 ?>

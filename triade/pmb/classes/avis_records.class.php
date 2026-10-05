@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis_records.class.php,v 1.4 2017-08-24 10:11:51 ngantier Exp $
+// $Id: avis_records.class.php,v 1.6.8.1 2024/12/23 14:59:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -46,19 +46,19 @@ class avis_records extends avis {
 					$notice_id=$row->notice_id;
 					if($row->niveau_biblio != 's' && $row->niveau_biblio != 'a') {
 						// notice de monographie
-						$link = './catalog.php?categ=isbd&id=!!id!!';
-						$link_expl = './catalog.php?categ=edit_expl&id=!!notice_id!!&cb=!!expl_cb!!&expl_id=!!expl_id!!';
-						$link_explnum = './catalog.php?categ=edit_explnum&id=!!notice_id!!&explnum_id=!!explnum_id!!';
-						$mono = new mono_display($row->notice_id, 6, $link, 1, $link_expl, '', $link_explnum,1, 0, 1, 1);
+						$link = notice::get_pattern_link();
+						$link_expl = exemplaire::get_pattern_link();
+						$link_explnum = explnum::get_pattern_link();
+						$mono = new mono_display($row->notice_id, 6, $link, 1, $link_expl, '', $link_explnum,1, 0, 1, 1, array(), 0, false, true, 0, 0, 1, 0, array(), 0);
 						$display .= pmb_bidi($mono->result);
 					} else {
-						// on a affaire Ã  un pÃ©riodique
-						$link_serial = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
-						$link_analysis = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!';
-						$link_bulletin = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!';
+						// on a affaire à un périodique
+						$link_serial = serial::get_pattern_link();
+						$link_analysis = analysis::get_pattern_link();
+						$link_bulletin = bulletinage::get_pattern_link();
 						$link_explnum = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!";
 						$link_explnum_serial = "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!";
-						$serial = new serial_display($row->notice_id, 6, $link_serial, $link_analysis, $link_bulletin, "", $link_explnum_serial, 0, 0, 1, 1, true, 1 );
+						$serial = new serial_display($row->notice_id, 6, $link_serial, $link_analysis, $link_bulletin, "", $link_explnum_serial, 0, 0, 1, 1, true, 1, 0, array(), false, 1, 0, 0, 0, array(), 0);
 						$display .= pmb_bidi($serial->result);
 					}
 					$display .=  "<ul>" ;

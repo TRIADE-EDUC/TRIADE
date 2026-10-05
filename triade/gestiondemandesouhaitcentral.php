@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -148,7 +148,7 @@ if ($idstage != "") {
 	print "<option id='select0' value='0' >".LANGCHOIX."</option>";
 }
 $data=periodeStageCentralDate();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<option id='select1' value='".$data[$i][2]."' >(".$data[$i][3].") ".dateForm($data[$i][0])." - ".dateForm($data[$i][1])."</option>";
 }
 ?>

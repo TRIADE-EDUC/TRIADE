@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_animationslist_view_django_directory.xml,v 1.1 2021/03/26 13:47:46 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_animationslist_view_django_directory'>Répertoire de templates à utiliser</entry>
+	<entry code='cms_module_animationslist_view_django_directory_animations_desc'>Animations</entry>
+	<entry code='cms_module_animationslist_view_django_directory_animation_content_desc'>Rendu HTML de l'animation</entry>
+</XMLlist>

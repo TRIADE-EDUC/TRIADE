@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Rubrique
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sectionslist_filter_sections_has_article.xml,v 1.2 2021/10/11 13:37:11 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_sectionslist_filter_sections_has_article_label'>Contient un ou des article(s)</entry>
+	<entry code='cms_module_sectionslist_filter_sections_has_article_value1'>La rubrique contient au moins un article</entry>
+	<entry code='cms_module_sectionslist_filter_sections_has_article_value0'>La rubrique ou une de ses sous-rubriques contient au moins un article</entry>
+</XMLlist>

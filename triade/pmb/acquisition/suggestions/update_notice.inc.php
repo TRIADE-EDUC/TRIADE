@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: update_notice.inc.php,v 1.40 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: update_notice.inc.php,v 1.41 2022/01/07 14:00:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -15,24 +15,16 @@ require_once($class_path."/parametres_perso.class.php");
 
 $entities_records_controller = new entities_records_controller($id);
 if($entities_records_controller->has_rights()) {
-	// On a besoin de rÃ©cupÃ©rer le tit1 sur forcage
+	// On a besoin de récupérer le tit1 sur forcage
 	if ($forcage == 1) {
 		$tab= unserialize(stripslashes($ret_url));
 		foreach($tab->GET as $key => $val){
-			if (get_magic_quotes_gpc())
-				$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+			add_sl($val);
+			$GLOBALS[$key] = $val;
 		}
 		foreach($tab->POST as $key => $val){
-			if (get_magic_quotes_gpc())
-				$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+			add_sl($val);
+			$GLOBALS[$key] = $val;
 		}
 	}
 	$p_perso=new parametres_perso("notices");

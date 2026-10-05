@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_page.class.php,v 1.9 2017-11-30 10:53:34 dgoron Exp $
+// $Id: cms_module_common_selector_page.class.php,v 1.9 2017/11/30 10:53:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -19,7 +19,7 @@ class cms_module_common_selector_page extends cms_module_common_selector{
 	}
 	
 	public function get_form(){
-		//si on est sur une page de type Page en crÃ©ation de cadre, on propose la condition prÃ©-remplie...
+		//si on est sur une page de type Page en création de cadre, on propose la condition pré-remplie...
 		if($this->cms_build_env['lvl'] == "cmspage"){
 			if(!$this->id){
 				$this->parameters[] = (isset($this->cms_build_env['get']['pageid']) ? $this->cms_build_env['get']['pageid'] : '');
@@ -64,7 +64,7 @@ class cms_module_common_selector_page extends cms_module_common_selector{
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

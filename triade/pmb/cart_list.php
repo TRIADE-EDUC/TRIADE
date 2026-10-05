@@ -1,16 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart_list.php,v 1.17 2017-11-30 10:00:36 dgoron Exp $
+// $Id: cart_list.php,v 1.20 2023/12/08 08:53:19 dgoron Exp $
 
 $base_path=".";
 $base_noheader=1;
 $base_nobody=1;
 
-
 $base_auth = "CATALOGAGE_AUTH";
 require_once("includes/init.inc.php");
+
+global $class_path, $msg, $charset;
+global $id_object, $type_object;
+
 require_once("$class_path/caddie.class.php");
 require_once("$class_path/empr_caddie.class.php");
 require_once($class_path.'/event/events/event_caddie.class.php');
@@ -20,11 +23,10 @@ require_once($class_path.'/caddie/authorities_caddie_controller.class.php');
 
 header("Content-Type: text/html; charset=$charset");
 
-//si id_object est prÃ©sent, il s'agit de l'accÃ¨s rapide aux paniers (div apparaissant sur mouseOver icone panier)
+//si id_object est présent, il s'agit de l'accès rapide aux paniers (div apparaissant sur mouseOver icone panier)
 //sinon, il s'agit de la liste des paniers pour le drag and drop
 
-if(isset($id_object)) $id_object += 0;
-else $id_object = 0;
+$id_object = intval($id_object);
 if ($id_object) {
 	if(!isset($type_object) || !$type_object) $type_object = 'NOTI';
 	switch ($type_object) {
@@ -49,7 +51,15 @@ if ($id_object) {
 	$is_cart=0;
 	$link="<a href='#' id='close_cart_pannel' ><img style='border:0px' class='align_middle' src='".get_url_icon('close.gif')."'/></a>";
 	
-	print "<div><table style='width:100%'><tbody><tr><td class='align_left' style='width:90%'></td><td class='align_right'>$link</td></tr></tbody></table></div>";
+	print "
+    <div>
+        <table style='width:100%' role='presentation'>
+            <tr>
+                <td class='align_left' style='width:90%'></td>
+                <td class='align_right'>$link</td>
+            </tr>
+        </table>
+    </div>";
 	
 	if (count($list_noti)) {
 		print "<h3>$msg[396]</h3><br />";
@@ -112,4 +122,3 @@ if ($id_object) {
 					'nb_item_blob' => $nb_item_blob,
 					'nb_item_blob_pointe' => $nb_item_blob_pointe
 				*/
-?>

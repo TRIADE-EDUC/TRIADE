@@ -1,0 +1,7 @@
+{
+    "modelModalExcludeElements" : ["name-subscriber", "email-subscriber", "select-subscriber-type"],
+    "modelSelectorExcludeElements" : ["datafetch", "structure", "num_tag", "ormName", "locked", "messages"],
+    "aggregatorItemNamespace" : "Pmb\\DSI\\Models\\Item\\Aggregator\\AggregatorItem",
+    "diffusionsPendingTabs" : ["item", "preview", "subscriber"],
+    "eventIgnoredKeys" : ["id", "idEvent", "numModel", "name"]
+}

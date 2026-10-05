@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rent_account_types.class.php,v 1.4 2016-10-26 08:27:54 ngantier Exp $
+// $Id: rent_account_types.class.php,v 1.6 2022/02/18 13:10:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/rent/rent_account_types.tpl.php");
 require_once($class_path."/entites.class.php");
 require_once($class_path."/exercices.class.php");
@@ -27,7 +28,7 @@ class rent_account_types {
 	protected $exercice;
 	
 	/**
-	 * Types de dÃ©compte
+	 * Types de décompte
 	 * @var array
 	 */
 	protected $account_types;
@@ -45,11 +46,11 @@ class rent_account_types {
 	protected $request_type_pref_account_messages;
 	
 	public function __construct($id_entity=0, $id_exercice=0) {
-		$this->entity = new entites($id_entity*1);
+		$this->entity = new entites($id_entity);
 		if(!$id_exercice) {
 			$id_exercice = $this->get_last_exercice();
 		}
-		$this->exercice = new exercices($id_exercice*1);
+		$this->exercice = new exercices($id_exercice);
 		$this->fetch_data();
 	}
 	
@@ -86,8 +87,6 @@ class rent_account_types {
 	}
 	
 	protected function gen_selector_exercices() {
-		global $msg;
-	
 		$display = '';
 		$query = exercices::listByEntite($this->entity->id_entite,1);
 		$display=gen_liste($query,'id_exercice','libelle', 'account_types_exercices', 
@@ -155,8 +154,9 @@ class rent_account_types {
 
 	public static function get_request_type_pref_account($key) {
 		global $acquisition_request_type_pref_account;
-		$param=(array) json_decode($acquisition_request_type_pref_account);
-		return $param[$key]; 
+		$param = (array) json_decode($acquisition_request_type_pref_account);
+		if (isset($param[$key])) return $param[$key];
+		return ''; 
 	}
 	
 	public function get_request_type_pref_account_list() {
@@ -243,7 +243,7 @@ class rent_account_types {
 
 	public function delete() {
 		$query = "delete from rent_account_types_sections where account_type_num_exercice= ".$this->exercice->id_exercice;
-		$result = pmb_mysql_query($query);
+		pmb_mysql_query($query);
 	}
 	
 	public function get_account_types() {

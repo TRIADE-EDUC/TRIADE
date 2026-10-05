@@ -1,0 +1,71 @@
+<!-- $Id: animations_list.tpl.html,v 1.6.2.1 2024/07/31 08:43:58 gneveu Exp $ -->
+
+{% if animations %}
+	<div class="AnimList">
+        {% if global.opac_rgaa_active %}
+            <h1>{{ msg.animations_see_title }}</h1>
+        {% else %}
+            <h3>{{ msg.animations_see_title }}</h3>
+        {% endif %}
+		<table class="animationsList">
+			<thead>
+				<tr>
+					<th>{{ msg.animation_title }}</th>
+					<th>{{ msg.animation_date }}</th>
+					<th>{{ msg.animation_quota_available }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for animation in animations %}
+				<tr class="descr_animation {% cycle 'odd', 'even' %}">
+					{% block name %}
+						<td>
+							<a href="./index.php?lvl=animation_see&id={{ animation.id }}">
+								{{ animation.name }}
+							</a>
+						</td>
+					{% endblock %}
+					
+					{% block date %}
+						<td>
+							{{ animation.event.startDate }} 
+							{% if animation.event.startHour != '00:00' %}
+								{{ animation.event.startHour }}
+							{% endif %}<br>
+							{% if !animation.event.duringDay %}
+								{% if animation.event.startDate != animation.event.endDate %}
+									{{ msg.animations_date_to }} {{ animation.event.endDate }} 
+									{% if animation.event.endHour != '00:00' %}
+										{{ animation.event.endHour }}
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						</td>
+					{% endblock %}
+					{% block quota %}
+						<td class="labelContent">
+							{% if !animation.hasChildrens and animation.hasQuotas %}
+								{% if animation.allQuotas.animationQuotas.internet != 0 and animation.allQuotas.availableQuotas.internet != 0 %}
+									<span>
+										{{ animation.allQuotas.availableQuotas.internet }} / {{ animation.allQuotas.animationQuotas.internet }}
+									</span>
+								{% else %}
+									{% if animation.allQuotas.animationQuotas.internet != 0 and animation.allQuotas.availableQuotas.internet == 0 %}
+										{{ msg.quotas_not_set_biblio }}
+									{% else %}
+										<span>
+											{{ msg.animation_quota_no_limit }}
+										</span>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						</td>
+					{% endblock %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+	<h3>{{ msg.animation_unavailable }}</h3>
+{% endif %}

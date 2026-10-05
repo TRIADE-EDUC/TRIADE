@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_generic_authority_type.class.php,v 1.4 2016-09-20 14:33:53 vtouchard Exp $
+// $Id: cms_module_common_selector_generic_authority_type.class.php,v 1.4 2016/09/20 14:33:53 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
 class cms_module_common_selector_generic_authority_type extends cms_module_common_selector{
 	
 	/**
-	 * Type de l'autoritÃ©
+	 * Type de l'autorité
 	 * @var int
 	 */
 	protected $authority_type;
 	
 	/**
-	 * Identifiant non unique de l'autoritÃ©
+	 * Identifiant non unique de l'autorité
 	 * @var int
 	 */
 	protected $authority_raw_id;
@@ -38,7 +38,7 @@ class cms_module_common_selector_generic_authority_type extends cms_module_commo
 	}
 
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){
@@ -55,7 +55,7 @@ class cms_module_common_selector_generic_authority_type extends cms_module_commo
 	}
 	
 	/**
-	 * Retourne l'identifiant non unique de l'autoritÃ©
+	 * Retourne l'identifiant non unique de l'autorité
 	 */
 	public function get_authority_raw_id() {
 		if (!$this->authority_raw_id) {

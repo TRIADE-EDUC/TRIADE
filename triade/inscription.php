@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if ( (empty($_SESSION["nom"])) && (empty($_SESSION["membre"]) ) ) {
 	header('Location: ./acces_refuse.php');
 	exit;
@@ -19,8 +20,8 @@ PgClose();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -35,8 +36,7 @@ PgClose();
 ?>
 <!--
 /************************************************************
-Last updated: 12/12/2008    par Taesch  Eric
-
+Last updated: 18/09/2024    par Taesch  Eric
 Last updated: 31/07/2006    par Pirio Mikaël
   - Correction du code pour la validation XHTML 1.0 - strict
 *************************************************************/
@@ -84,17 +84,14 @@ Last updated: 31/07/2006    par Pirio Mikaël
 			$mess="<iframe width='120' height='350' src=\"./agentweb/agentpers.php?inc=6&mess=M1&etablissement=$etablissement&m=M4\"  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe>";
 			print $mess;
 		}
-		 
 ?>
 
-				<img src="./image/logo_triade_licence.gif"
+				<img src="./image/commun/logo_triade_licence.png" width='50%'
 				     alt="logo_triade_licence" />
 
 <?php
 	include_once("./common/version.php");
 	include_once("./common/productId.php");
-	
-
 ?>
 
 				<p>
@@ -129,7 +126,7 @@ Last updated: 31/07/2006    par Pirio Mikaël
 		</div>
 
 <?php
-	include_once("installation/librairie/pied_page.php");
+	pieddepage();
 ?>
 
 <!---------------->

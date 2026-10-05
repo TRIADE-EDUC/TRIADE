@@ -25,11 +25,11 @@
        $err = "<P class=\"rouge\"><B>".trad("CALIMP_ECHEC_CSV_PV")."</B></P>";
     } else {
       //Creation du groupe "Import" s'il n'existe pas
-      $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
       if ($DB_CX->DbNumRows())
         $grpID = $DB_CX->DbResult(0,0);
       else {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
         $grpID = $DB_CX->DbInsertID();
       }
       $tabindex = explode(";",$fcontents[0]);
@@ -112,7 +112,7 @@
         // Enregistrement du contact dans la Base
         if ($nom!="") {
           $nbAjout++;
-          $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+          $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
           if ($DB_CX->DbNumRows()) {
             $enr = $DB_CX->DbNextRow();
             $SQL = "cal_nom='".$nom_c."'";
@@ -136,11 +136,11 @@
             if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
             if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
             $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-            $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+            $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
           } else {
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
             if ($DB_CX->DbAffectedRows()>0) {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
             }
           }
         } else
@@ -169,11 +169,11 @@
       $err = "<P class=\"rouge\"><B>".trad("CALIMP_ECHEC_VCARD")."</B></P>";
     } else {
       //Creation du groupe "Import" s'il n'existe pas
-      $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
       if ($DB_CX->DbNumRows())
         $grpID = $DB_CX->DbResult(0,0);
       else {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
         $grpID = $DB_CX->DbInsertID();
       }
       for ($i=0;$i<count($fcontents);$i++) {
@@ -275,7 +275,7 @@
           // Enregistrement du contact dans la Base
           if ($nom!="") {
             $nbAjout++;
-            $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+            $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
             if ($DB_CX->DbNumRows()) {
               $enr = $DB_CX->DbNextRow();
               $SQL = "cal_nom='".$nom_c."'";
@@ -299,11 +299,11 @@
               if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
               if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
               $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-              $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+              $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
             } else {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
               if ($DB_CX->DbAffectedRows()>0) {
-                $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+                $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
               }
             }
           } else
@@ -333,11 +333,11 @@
       $err = "<P class=\"rouge\"><B>".trad("CALIMP_ECHEC_VCARD")."</B></P>";
     } else {
       //Creation du groupe "Import" s'il n'existe pas
-      $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
       if ($DB_CX->DbNumRows())
         $grpID = $DB_CX->DbResult(0,0);
       else {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
         $grpID = $DB_CX->DbInsertID();
       }
       for ($i=0;$i<count($fcontents);$i++) {
@@ -434,7 +434,7 @@
           // Enregistrement du contact dans la Base
           if ($nom!="") {
             $nbAjout++;
-            $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+            $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
             if ($DB_CX->DbNumRows()) {
               $enr = $DB_CX->DbNextRow();
               $SQL = "cal_nom='".$nom_c."'";
@@ -458,11 +458,11 @@
               if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
               if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
               $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-              $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+              $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
             } else {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
               if ($DB_CX->DbAffectedRows()>0) {
-                $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+                $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
               }
             }
           } else
@@ -491,11 +491,11 @@
       $err = "<P class=\"rouge\"><B>".trad("CALIMP_ECHEC_CSV_V")."</B></P>";
     } else {
       //Creation du groupe "Import" s'il n'existe pas
-      $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
       if ($DB_CX->DbNumRows())
         $grpID = $DB_CX->DbResult(0,0);
       else {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
         $grpID = $DB_CX->DbInsertID();
       }
       // on lit le premier caractere pour voir si ce n'est pas un guillemet
@@ -606,7 +606,7 @@
               $ville = $ville_b;
               $pays = $pays_b;
             }
-            $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+            $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
             if ($DB_CX->DbNumRows()) {
               $enr = $DB_CX->DbNextRow();
               $SQL = "cal_nom='".$nom_c."'";
@@ -630,11 +630,11 @@
               if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
               if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
               $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-              $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+              $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
             } else {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
               if ($DB_CX->DbAffectedRows()>0) {
-                $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+                $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
               }
             }
           } else
@@ -683,7 +683,7 @@
           // Enregistrement du contact dans la Base
           if ($nom!="") {
             $nbAjout++;
-            $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+            $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
             if ($DB_CX->DbNumRows()) {
               $enr = $DB_CX->DbNextRow();
               $SQL = "cal_nom='".$nom_c."'";
@@ -707,11 +707,11 @@
               if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
               if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
               $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-              $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+              $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
             } else {
-              $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+              $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
               if ($DB_CX->DbAffectedRows()>0) {
-                $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+                $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
               }
             }
           } else
@@ -741,11 +741,11 @@
       $err = "<P class=\"rouge\"><B>".trad("CALIMP_ECHEC_LDIF")."</B></P>";
     } else {
       //Creation du groupe "Import" s'il n'existe pas
-      $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_nom='".trad("CALIMP_GROUPE_IMPORT")."' AND cgr_util_id=".$idUser);
       if ($DB_CX->DbNumRows())
         $grpID = $DB_CX->DbResult(0,0);
       else {
-        $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
+        $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.",'".trad("CALIMP_GROUPE_IMPORT")."')");
         $grpID = $DB_CX->DbInsertID();
       }
       // On commence a parcourir le fichier
@@ -764,7 +764,7 @@
             // Enregistrement du contact dans la Base
             if ($nom_c!="") {
               $nbAjout++;
-              $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
+              $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_nom LIKE '%$nom_c%' AND cal_prenom LIKE '%$prenom_c%' AND cal_util_id='$idUser'");
               if ($DB_CX->DbNumRows()) {
                 $enr = $DB_CX->DbNextRow();
                 $SQL = "cal_nom='".$nom_c."'";
@@ -788,11 +788,11 @@
                 if ($enr['cal_yahoo']=="") $SQL .= ",cal_yahoo='".$yahoo."'";
                 if ($enr['cal_emailpro']=="") $SQL .= ",cal_emailpro='".$email_boulot."'";
                 $SQL .= " WHERE cal_nom='".$nom_c."' AND cal_prenom='".$prenom_c."' AND cal_util_id='".$idUser."'";
-                $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}calepin SET $SQL");
+                $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}calepin SET $SQL");
               } else {
-                $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
+                $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_icq,cal_util_id,cal_note,cal_date_naissance,cal_aim,cal_msn,cal_yahoo,cal_emailpro) VALUES ('$soc','$nom_c','$prenom_c','$adresse','$cpostal','$ville','$pays','$tel_home','$tel_work','$tel_cell','$tel_fax','$email_perso','$icq','$idUser','$note','$anniv','$aim','$msn','$yahoo','$email_boulot')");
                 if ($DB_CX->DbAffectedRows()>0) {
-                  $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
+                  $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cal_id, cap_cgr_id) VALUES (".$DB_CX->DbInsertID().",".$grpID.")");
                 }
               }
             } else

@@ -1,15 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: last_records.inc.php,v 1.27 2018-06-29 09:03:35 dgoron Exp $
+// $Id: last_records.inc.php,v 1.28 2021/04/22 11:40:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path.'/elements_list/elements_records_list_ui.class.php');
+global $class_path, $gestion_acces_active, $gestion_acces_user_notice, $pmb_nb_lastnotices, $PMBuserid, $msg;
 
-// affichage de l'entête de page
-print "<h1>${msg[938]}</h1>";
+require_once($class_path.'/elements_list/elements_records_list_ui.class.php');
 
 // affichage des notices
 print "<div class=\"row\">";
@@ -35,7 +34,7 @@ $requete = "SELECT * FROM notices ";
 $requete.= $acces_j;
 $requete.= "ORDER BY $pmb_latest_order LIMIT $last_records";
 
-$result = pmb_mysql_query($requete, $dbh);
+$result = pmb_mysql_query($requete);
 if (pmb_mysql_num_rows($result)) {
 	$records = array();
 	while(($notice = pmb_mysql_fetch_object($result))) {

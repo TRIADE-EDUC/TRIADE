@@ -1,11 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_recipients.class.php,v 1.3 2018-03-06 17:06:08 dgoron Exp $
+// $Id: campaign_recipients.class.php,v 1.5 2023/02/08 13:17:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/campaigns/campaign_recipient.class.php");
 
 class campaign_recipients{
@@ -13,7 +14,7 @@ class campaign_recipients{
 	protected $recipients;
 	
 	public function __construct($num_campaign=0) {
-		$this->num_campaign = $num_campaign+0;		
+		$this->num_campaign = intval($num_campaign);		
 		$this->fetch_data();
 	}
 	
@@ -41,7 +42,7 @@ class campaign_recipients{
 	}
 	
 	public static function delete($num_campaign=0) {
-		$num_campaign += 0;
+		$num_campaign = intval($num_campaign);
 		$query = "delete from campaigns_recipients where campaign_recipient_num_campaign = '".$num_campaign."'";
 		pmb_mysql_query($query);
 	}
@@ -51,13 +52,13 @@ class campaign_recipients{
 	}
 	
 	public static function get_number_recipients($num_campaign=0) {
-		$num_campaign += 0;
+		$num_campaign = intval($num_campaign);
 		$query = "select count(*) from campaigns_recipients where campaign_recipient_num_campaign = '".$num_campaign."'";
 		$result = pmb_mysql_query($query);
 		return pmb_mysql_result($result, 0, 0);
 	}
 	
-	public static function get_possible_values_of_field($campaigns=array(), $field_name) {
+	public static function get_possible_values_of_field($campaigns=array(), $field_name='') {
 		global $msg;
 		
 		$values = array();

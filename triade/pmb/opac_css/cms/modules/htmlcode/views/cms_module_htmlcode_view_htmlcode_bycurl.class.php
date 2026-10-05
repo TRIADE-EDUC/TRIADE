@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_htmlcode_view_htmlcode_bycurl.class.php,v 1.5 2016-01-21 14:27:47 dbellamy Exp $
+// $Id: cms_module_htmlcode_view_htmlcode_bycurl.class.php,v 1.6 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -76,9 +76,9 @@ class cms_module_htmlcode_view_htmlcode_bycurl extends cms_module_common_view{
 		}
 		if($response) {
 			if($charset == 'utf-8' && !$this->parameters['html_bycurl_utf8']) {
-				$response = utf8_encode($response);
+				$response = encoding_normalize::utf8_normalize($response);
 			} else if($charset != 'utf-8' && $this->parameters['html_bycurl_utf8']) {
-				$response = utf8_decode($response);
+				$response = encoding_normalize::utf8_decode($response);
 			}
 		}
 		return $response;

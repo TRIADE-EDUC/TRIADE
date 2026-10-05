@@ -2,22 +2,22 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_agenda.class.php,v 1.6 2017-11-21 13:38:21 dgoron Exp $
+// $Id: cms_module_agenda.class.php,v 1.9.2.1.2.1 2025/02/12 12:34:07 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_agenda extends cms_module_common_module {
-	
+
 	public function __construct($id=0){
 		$this->module_path = str_replace(basename(__FILE__),"",__FILE__);
 		parent::__construct($id);
 	}
-	
+
 	public function get_manage_form(){
 		global $base_path;
 		//variables persos...
 		global $calendar;
-		
+
 		$form="
 		<h3>".$this->format_text($this->msg['cms_module_agenda_manage_title'])."</h3>
 		<div dojoType='dijit.layout.BorderContainer' style='width: 100%; height: 800px;'>
@@ -35,7 +35,7 @@ class cms_module_agenda extends cms_module_common_module {
 			}
 		}
 			$form.="
-				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&calendar=new'/>".$this->format_text($this->msg['cms_module_agenda_add_calendar'])."</a> 
+				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&calendar=new'>".$this->format_text($this->msg['cms_module_agenda_add_calendar'])."</a>
 			";
 		$form.="
 			</div>
@@ -48,9 +48,9 @@ class cms_module_agenda extends cms_module_common_module {
 		$form.="
 			</div>
 		</div>";
-		return $form;	
-	}	
-	
+		return $form;
+	}
+
 	protected function get_managed_calendar_form($calendar){
 		if($calendar != "new"){
 			$infos = $this->managed_datas['module']['calendars'][$calendar];
@@ -62,7 +62,7 @@ class cms_module_agenda extends cms_module_common_module {
 			);
 		}
 		$form = "";
-		
+
 		//nom
 		$form.="
 			<div class='row'>
@@ -83,7 +83,7 @@ class cms_module_agenda extends cms_module_common_module {
 					<input type='text' name='cms_module_agenda_calendar_color' value='".$this->format_text($infos['color'])."'/>
 				</div>
 			</div>";
-		//type de contenu Ã  prendre en compte...
+		//type de contenu à prendre en compte...
 		$form.="
 			<div class='row'>
 				<div class='colonne3'>
@@ -113,19 +113,19 @@ class cms_module_agenda extends cms_module_common_module {
 						load : function(data){
 							dojo.byId('cms_module_agenda_dates_form').innerHTML = data;
 						}
-					});		
+					});
 				}
-			</script>";				
-		//date Ã©vÃ¨nement
+			</script>";
+		//date évènement
 		$form.="
 			<div class='row' id='cms_module_agenda_dates_form'>
 			</div>";
-		
+
 
 		return $form;
 	}
-	
-	function save_manage_form(){
+
+	public function save_manage_form(){
 		global $calendar;
 		global $calendar_delete;
 		global $cms_module_agenda_calendar_name;
@@ -133,11 +133,11 @@ class cms_module_agenda extends cms_module_common_module {
 		global $cms_module_agenda_calendar_type;
 		global $cms_module_agenda_calendar_start_date;
 		global $cms_module_agenda_calendar_end_date;
-		
-		
+
+
 		$params = $this->managed_datas['module'];
-		
-		
+
+
 		if($calendar_delete){
 			unset($params['calendars'][$calendar_delete]);
 		}else{
@@ -150,33 +150,33 @@ class cms_module_agenda extends cms_module_common_module {
 					'type' => stripslashes($cms_module_agenda_calendar_type),
 					'start_date' => stripslashes($cms_module_agenda_calendar_start_date),
 					'end_date' => stripslashes($cms_module_agenda_calendar_end_date)
-			);	
+			);
 		}
 		return $params;
 	}
-	
+
 	protected static function get_max_calendar_id($datas){
 		$max = 0;
-		if(count($datas)){
+		if(is_countable($datas) && count($datas)){
 			foreach	($datas as $key => $val){
-				$key = str_replace("calendar","",$key)*1; 
-				if($key>$max) $max = $key; 
+			    $key = intval(str_replace("calendar","",$key));
+				if($key>$max) $max = $key;
 			}
 		}
 		return $max;
 	}
-		
+
 	public function execute_ajax(){
 		global $calendar,$id_type;
 		$response = array();
-		$fields = new cms_editorial_parametres_perso($id_type);		
+		$fields = new cms_editorial_parametres_perso($id_type);
 		$select="
 		<div class='row'>
 			<div class='colonne3'>
 				<label for='cms_module_agenda_calendar_start_date'>".$this->format_text($this->msg['cms_module_agenda_calendar_start_date'])."</label>
 			</div>
-			<div class='colonne-suite'> 
-				<select name='cms_module_agenda_calendar_start_date' >";	
+			<div class='colonne-suite'>
+				<select name='cms_module_agenda_calendar_start_date' >";
 		$select.= $fields->get_selector_options($this->managed_datas['module']['calendars'][$calendar]['start_date']);
 		$select.= "
 				</select>
@@ -186,16 +186,16 @@ class cms_module_agenda extends cms_module_common_module {
 			<div class='colonne3'>
 				<label for='cms_module_agenda_calendar_end_date'>".$this->format_text($this->msg['cms_module_agenda_calendar_end_date'])."</label>
 			</div>
-			<div class='colonne-suite'> 
-				<select name='cms_module_agenda_calendar_end_date' >";	
+			<div class='colonne-suite'>
+				<select name='cms_module_agenda_calendar_end_date' >";
 		$select.= $fields->get_selector_options($this->managed_datas['module']['calendars'][$calendar]['end_date']);
 		$select.= "
 				</select>
 			</div>
 		</div>";
 		$response['content'] = $select;
-		$response['content-type'] = 'text/html'; 
-		
+		$response['content-type'] = 'text/html';
+
 		return $response;
 	}
 }

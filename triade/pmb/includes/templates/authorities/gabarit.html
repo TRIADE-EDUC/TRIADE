@@ -1,4 +1,4 @@
-<!-- $Id: gabarit.html,v 1.29 2019-05-22 08:03:41 ngantier Exp $ -->
+<!-- $Id: gabarit.html,v 1.38 2023/12/22 08:50:19 dgoron Exp $ -->
 
 <style type="text/css">
 .aut_display_table {
@@ -28,7 +28,7 @@
 	<small>
 		<span class='{{authority.statut_class_html}}' style='margin-right: 3px;'>
 			<a href=# onmouseover="z=document.getElementById('zoom_statut{{  authority.num_object }}'); z.style.display='';" onmouseout="z=document.getElementById('zoom_statut{{  authority.num_object }}'); z.style.display='none';">
-				<img src="{{ img.spacer.gif }}" width="10" height="10" />
+				<img src="{{ img.spacer.gif }}" style='width:10px; height:10px' alt="{{ authority.statut_label | escape }}" />
 			</a>
 		</span>
 	</small>
@@ -56,8 +56,6 @@
 						{% block aut_see %}
 							{% block details %}
 							{% endblock %}							
-							{% block map %}
-							{% endblock %}
 							{% block aut_linked %}
 								{% if aut_link.display %}
 									<div class="aut_linked aut_display_row">
@@ -80,7 +78,7 @@
 												</div>
 												<div class="aut_display_cell">
 										{% endif %}
-													<a href="./autorites.php?categ=see&sub=concept&id={{ concept.id }}">{{ concept.display_label }}</a><br/>
+													<a href="./autorites.php?categ=see&sub=concept&id={{ concept.id }}">{{ concept.isbd }}</a><br/>
 										{% if loop.last %}
 												</div>	
 											</div>
@@ -102,11 +100,28 @@
 									{% endif %}
 								{% endfor %}
 							{% endblock %}
-							
+							{% block ark_link %}
+								{% if global.pmb_show_permalink %}
+									{% if authority.permalink %}
+											<div class="aut_display_row">
+												<div class="aut_display_cell">
+													<b>{{ msg.opac_permalink }} :</b>
+												</div>
+												<div class="aut_display_cell">
+													<a href="{{authority.permalink}}">{{authority.permalink}}</a>
+												</div>
+											</div>
+									{% endif %}
+								{% endif %}
+							{% endblock %}
+							{% block responsabilities %}
+							{% endblock %}
 							{% block enrichment %}
 							{% endblock %}
 						{% endblock %}
 					</div>
+					{% block map %}
+					{% endblock %}
 				</td>
 			</tr>
 		</table>
@@ -120,7 +135,8 @@
 		var display_table = document.getElementById('authority_display_table');
 		var tr_container = document.getElementById('authority_container');
 		var content = display_table.innerHTML;
-		if(content.trim() != ""){
+		var map = document.getElementById('map_notice');
+		if(content.trim() != "" || map){
 			tr_container.setAttribute('style', 'display:block;');
 		}
 	</script>
@@ -138,8 +154,12 @@
 			<br/>
 			<div id="content_onglet_perio" class='ui-clearfix'>
 		{% endif %}
-		{% if authority_tab.nb_results %}
-			<span{% if global.quoi == authority_tab.name %} class='onglet-perio-selected' {% else %} class='onglets-perio' {% endif %}><a href="./autorites.php?categ=see&sub={{ authority.string_type_object }}&id={{  authority.num_object }}&quoi={{ authority_tab.name }}#content_onglet_perio">{{ authority_tab.label }} ({{ authority_tab.nb_results }})</a></span>
+		{% if authority_tab.can_display_tab %}
+			<span{% if global.quoi == authority_tab.name %} class='onglet-perio-selected' {% else %} class='onglets-perio' {% endif %}>
+				<a href="./autorites.php?categ=see&sub={{ authority.string_type_object }}&id={{  authority.num_object }}&quoi={{ authority_tab.name }}#content_onglet_perio">
+					{{ authority_tab.label }} {% if authority_tab.content_type != "graph" %}({{ authority_tab.nb_results }}){% endif %}
+				</a>
+			</span>
 		{% endif %}
 		{% if loop.last %}
 			</div>
@@ -147,7 +167,7 @@
 	{% endfor %}
 {% endblock %}
 
-{% if authority.authority_list_ui.nb_results %}
+{% if authority.authority_list_ui.can_display_content %}
 	<div class="elts-list-tabs">
 {% endif %}
 
@@ -165,7 +185,7 @@
 		<div style="display:table-cell">
 		{% for group_id, group_infos in groups.elements %}
 			<input type="checkbox" id="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" value="{{ group_id }}" name="elements_list_filters[{{ group_name }}][]" {% for group_filter_name, filter in session.elements_list_filters %}{% if group_filter_name == group_name %}{% for filter_id in filter %}{% if filter_id == group_id %}checked="checked"{% endif %}{% endfor %}{% endif %}{% endfor %} title="{{ group_infos.nb_results }}"/>
-			<label title="{{ group_infos.nb_results }}" for="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" class="etiquette">{{ group_infos.label }}</label>
+			<label title="{{ group_infos.nb_results }}" for="elements_list_filters_{{ group_name }}_{{ loop.counter0 }}" class="etiquette">{{ group_infos.label }} ({{ group_infos.nb_results }})</label>
 		{% endfor %}
 		</div>
 	</div>
@@ -180,7 +200,7 @@
 {% endfor %}
 	
 {% block aut_list %}
-	{% if authority.authority_list_ui.nb_results %}
+	{% if authority.authority_list_ui.can_display_content %}
 		{% if authority.authority_list_ui.expandable %}
 			<a href="#" onclick="expandAll_ajax(0, document.getElementById('elements_list_container')); return false;"><img style="border:0px" id="expandall" src="{{ img.expand_all.gif }}"></a>
 			<a href="#" onclick="collapseAll(document.getElementById('elements_list_container')); return false;"><img style="border:0px" id="collapseall" src="{{ img.collapse_all.gif }}"></a>

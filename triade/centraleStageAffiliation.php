@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,7 +38,7 @@ include_once('librairie_php/db_triade.php');
 $cnx=cnx();
 $data=visu_param();
 // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,$anneeScolaire
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$nom_etablissement=trim($data[$i][0]);
 	$adresse=trim($data[$i][1]);
 	$postal=trim($data[$i][2]);

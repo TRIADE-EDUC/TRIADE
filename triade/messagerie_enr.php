@@ -42,11 +42,11 @@ if (isset($_POST["saisie_envoi"])) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS1?>  <?php print dateDMY()   ?></font></b></td>
 </tr>
@@ -80,24 +80,25 @@ if ($valid == 1) {
 	}
 }
 
+
 if ($valid == 1) {
 	print "<center><font color=red class='T2' >".LANGMESS37.".</font></center><br />";
 }else{
 	if ($_SESSION["membre"] == "menuadmin") {
 		$type_personne="ADM";
-		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],ADM);}
+		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],'ADM');}
 	if ($_SESSION["membre"] == "menututeur") {
 		$type_personne="TUT";
-		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],TUT);}
+		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],'TUT');}
 	if ($_SESSION["membre"] == "menupersonnel") {
 		$type_personne="PER";
-		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],PER);}
+		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],'PER');}
 	if ($_SESSION["membre"] == "menuprof") {
 		$type_personne="ENS";
-		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],ENS);}
+		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],'ENS');}
 	if ($_SESSION["membre"] == "menuscolaire") {
 		$type_personne="MVS";
-		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],MVS);}
+		$emetteur=chercheIdPersonne(strtolower($_SESSION["nom"]),$_SESSION["prenom"],'MVS');}
 	if ($_SESSION["membre"] == "menuparent") {
 		$type_personne="PAR";
 		$emetteur=chercheIdEleve(strtolower($_SESSION["nom"]),$_SESSION["prenom"]);}
@@ -116,7 +117,7 @@ if ($valid == 1) {
 	                	 $prenomemetteur=$_SESSION["prenom"];
 		                 $idpiecejointe=$_POST["idpiecejoint"];
 		                 $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-                		 for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+                		 for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
 		        	         $nomfic=$tabfichierjoint[$jj][1];
                 		         $fichierj=$tabfichierjoint[$jj][0];
 		                         if (file_exists("./data/fichiersj/$fichierj")) {
@@ -131,11 +132,12 @@ if ($valid == 1) {
 		                 mailTriade(stripslashes($objet),$text,$text,$destinataire,$source,$source,$expediteur,$fichierjoint);
 			}
 		}
-	 	if (count($tabsuppfichier) > 0) {
+	 	if (countTriade($tabsuppfichier) > 0) {
                  	foreach($tabsuppfichier as $key=>$val) { if (file_exists($val)) @unlink($val); }
                         deleteRefPieceJointe($idpiecejointe);
                  }
 	}	
+
 
 	if ($envoimessagecompletparmail == '1') {
 		$objet=$_POST["saisie_objet"];
@@ -166,15 +168,15 @@ if ($valid == 1) {
 					$saisie_classe=$_POST["saisie_classe"];
 		                        if (($destinataire == "tousleseleves") || ($destinataire == "touslesparents")) {
 						$anneeScolaire=anneeScolaireViaIdClasse($saisie_classe);
-                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe='$saisie_classe' AND b.code_class='$saisie_classe' AND a.annee_scolaire='$anneeScolaire' ORDER BY nom";
+                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe='$saisie_classe' AND b.code_class='$saisie_classe' AND a.annee_scolaire='$anneeScolaire' ORDER BY nom";
                                 		$res=execSql($sql);
 		                                $dataEleve=chargeMat($res);
                 		        }
 		                        $k=0;
                 		        if ($destinataire == "tousleselevesdelegue") {
-                                		$sql="SELECT  eleve1,eleve2  FROM  ${prefixe}delegue";
+                                		$sql="SELECT  eleve1,eleve2  FROM  {$prefixe}delegue";
 		                                $res=execSql($sql);$dataDelegue=chargeMat($res);
-                		                for($uu=0;$uu<count($dataDelegue);$uu++) {
+                		                for($uu=0;$uu<countTriade($dataDelegue);$uu++) {
                                 		        $dataEleve[$k][1]=$dataDelegue[$uu][0];$k++;
 		                                        $dataEleve[$k][1]=$dataDelegue[$uu][1];$k++;
                 		                }
@@ -183,7 +185,7 @@ if ($valid == 1) {
 		                        }
 		                        if ($destinataire == "tousleselevesecole")  {
 						$anneeScolaire=anneeScolaireViaIdClasse();
-                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
+                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
 		                                $res=execSql($sql);
                 		                $dataEleve=chargeMat($res);
 						$type_personne_dest="ELE";
@@ -191,23 +193,23 @@ if ($valid == 1) {
                 		        }
 		                        if ($destinataire == "touslesparentsecole")  {
 						$anneeScolaire=anneeScolaireViaIdClasse();
-                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
+                		                $sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
 		                                $res=execSql($sql);
                 		                $dataEleve=chargeMat($res);
 						$type_personne_dest="PAR";
 						$membre_dest="menuparent";
                 		        }
 		                        if ($destinataire == "touslesparentsdelegues")  {
-                		                $sql="SELECT  nomparent1,nomparent2  FROM  ${prefixe}delegue";
+                		                $sql="SELECT  nomparent1,nomparent2  FROM  {$prefixe}delegue";
                                 		$res=execSql($sql);$dataDelegue=chargeMat($res);
-		                                for($uu=0;$uu<count($dataDelegue);$uu++) {
+		                                for($uu=0;$uu<countTriade($dataDelegue);$uu++) {
                 		                        $dataEleve[$k][1]=$dataDelegue[$uu][0];$k++;
                                 		        $dataEleve[$k][1]=$dataDelegue[$uu][1];$k++;
 		                                }
 						$type_personne_dest="PAR";
 						$membre_dest="menuparent";
                         		}
-					for($ii=0;$ii<count($dataEleve);$ii++) {
+					for($ii=0;$ii<countTriade($dataEleve);$ii++) {
 						$destinataire=$dataEleve[$ii][1];
 						if (is_numeric($destinataire)) {
 							$nomemetteur=strtolower(recherche_personne_nom($destinataire,$type_personne_dest));
@@ -216,7 +218,7 @@ if ($valid == 1) {
 							$expediteur=recherche_personne_nom($emetteur,$type_personne);
 							$idpiecejointe=$_POST["idpiecejoint"];
 							$tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-							for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+							for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
 								$nomfic=$tabfichierjoint[$jj][1];
 								$fichierj=$tabfichierjoint[$jj][0];
 								if (file_exists("./data/fichiersj/$fichierj")) {
@@ -256,7 +258,7 @@ if ($valid == 1) {
                                                         	$expediteur=recherche_personne_nom($emetteur,$type_personne);
                                                         	$idpiecejointe=$_POST["idpiecejoint"];
 	                                                        $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-        	                                                for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+        	                                                for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
                 	                                                $nomfic=$tabfichierjoint[$jj][1];
                         	                                        $fichierj=$tabfichierjoint[$jj][0];
                                 	                                if (file_exists("./data/fichiersj/$fichierj")) {
@@ -276,13 +278,13 @@ if ($valid == 1) {
 					}elseif ($type_personne_dest == "TUTEURSTAGE") {
 
 						if ($destinataire == "touslestuteursdestage")  {
-	                                                $sql="SELECT pers_id,nom,prenom  FROM  ${prefixe}personnel WHERE type_pers='TUT'";
+	                                                $sql="SELECT pers_id,nom,prenom  FROM  {$prefixe}personnel WHERE type_pers='TUT'";
         	                                       	$res=execSql($sql);
                 	                                $dataTuteur=chargeMat($res);
                         	                        $type_personne_dest="TUT";
                                 	                $membre_dest="menututeur";
 							$type_personne_dest="TUT";
-							for($jj=0;$jj<count($dataTuteur);$jj++) {
+							for($jj=0;$jj<countTriade($dataTuteur);$jj++) {
 								$destinataire=$dataTuteur[$jj][0];
 								$nomemetteur=strtolower(recherche_personne_nom($destinataire,$type_personne_dest));
 								$prenomemetteur=strtolower(recherche_personne_prenom($destinataire,$type_personne_dest));
@@ -298,7 +300,7 @@ if ($valid == 1) {
                                                                         $expediteur=recherche_personne_nom($emetteur,$type_personne);
                                                                         $idpiecejointe=$_POST["idpiecejoint"];
                                                                         $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-                                                                        for($jjj=0;$jj<count($tabfichierjoint);$jjj++) {
+                                                                        for($jjj=0;$jj<countTriade($tabfichierjoint);$jjj++) {
                                                                                 $nomfic=$tabfichierjoint[$jjj][1];
                                                                                 $fichierj=$tabfichierjoint[$jjj][0];
                                                                                 if (file_exists("./data/fichiersj/$fichierj")) {
@@ -317,7 +319,7 @@ if ($valid == 1) {
                                    	     	}elseif($destinataire == "touslestuteursdestagedelaclasse" ) {
 							$saisie_classe=$_POST["saisie_classe"];
 							$anneeScolaire=anneeScolaireViaIdClasse($saisie_classe);
-							$sql="SELECT p.pers_id,p.nom,p.prenom FROM ${prefixe}personnel p , ${prefixe}stage_eleve s , ${prefixe}eleves e , ${prefixe}stage_entreprise t
+							$sql="SELECT p.pers_id,p.nom,p.prenom FROM {$prefixe}personnel p , {$prefixe}stage_eleve s , {$prefixe}eleves e , {$prefixe}stage_entreprise t
 							                WHERE
 							                p.type_pers='TUT' AND
 							                s.id_eleve=e.elev_id AND
@@ -332,7 +334,7 @@ if ($valid == 1) {
                                                         $type_personne_dest="TUT";
                                                         $membre_dest="menututeur";
                                                         $type_personne_dest="TUT";
-                                                        for($jj=0;$jj<count($dataTuteur);$jj++) {
+                                                        for($jj=0;$jj<countTriade($dataTuteur);$jj++) {
                                                                 $destinataire=$dataTuteur[$jj][0];
                                                                 $nomemetteur=strtolower(recherche_personne_nom($destinataire,$type_personne_dest));
                                                                 $prenomemetteur=strtolower(recherche_personne_prenom($destinataire,$type_personne_dest));
@@ -348,7 +350,7 @@ if ($valid == 1) {
                                                                         $expediteur=recherche_personne_nom($emetteur,$type_personne);
                                                                         $idpiecejointe=$_POST["idpiecejoint"];
                                                                         $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-                                                                        for($jjj=0;$jjj<count($tabfichierjoint);$jjj++) {
+                                                                        for($jjj=0;$jjj<countTriade($tabfichierjoint);$jjj++) {
                                                                                 $nomfic=$tabfichierjoint[$jjj][1];
                                                                                 $fichierj=$tabfichierjoint[$jjj][0];
                                                                                 if (file_exists("./data/fichiersj/$fichierj")) {
@@ -373,7 +375,7 @@ if ($valid == 1) {
 	                                                        $expediteur=recherche_personne_nom($emetteur,$type_personne);
 	                                                        $idpiecejointe=$_POST["idpiecejoint"];
         	                                                $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-	                                                        for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+	                                                        for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
 	                                                                $nomfic=$tabfichierjoint[$jj][1];
 	                                                                $fichierj=$tabfichierjoint[$jj][0];
 	                                                                if (file_exists("./data/fichiersj/$fichierj")) {
@@ -411,7 +413,7 @@ if ($valid == 1) {
                                                                		$expediteur=recherche_personne_nom($emetteur,$type_personne);
 	                                                                $idpiecejointe=$_POST["idpiecejoint"];
         	                                                        $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-	                                                                for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+	                                                                for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
 	                                                                        $nomfic=$tabfichierjoint[$jj][1];
 	                                                                        $fichierj=$tabfichierjoint[$jj][0];
 	                                                                        if (file_exists("./data/fichiersj/$fichierj")) {
@@ -435,7 +437,7 @@ if ($valid == 1) {
         	                                        $expediteur=recherche_personne_nom($emetteur,$type_personne);
 	                                                $idpiecejointe=$_POST["idpiecejoint"];
 	                                                $tabfichierjoint=infoPieceJointe($idpiecejointe); // md5,nom
-	                                                for($jj=0;$jj<count($tabfichierjoint);$jj++) {
+	                                                for($jj=0;$jj<countTriade($tabfichierjoint);$jj++) {
 	                                               		$nomfic=$tabfichierjoint[$jj][1];
 	                                                        $fichierj=$tabfichierjoint[$jj][0];
 	                                                        if (file_exists("./data/fichiersj/$fichierj")) {
@@ -456,7 +458,7 @@ if ($valid == 1) {
 		}
 		// supprier fichier dans ./data/tmp/ et ./data/fichiersj/
 		if ($envoimessagecompletparmail == '1') {
-			if (count($tabsuppfichier) > 0) {
+			if (countTriade($tabsuppfichier) > 0) {
 				foreach($tabsuppfichier as $key=>$val) { if (file_exists($val)) @unlink($val); } 
 				deleteRefPieceJointe($idpiecejointe);
 			}
@@ -475,7 +477,7 @@ if ($valid == 1) {
 
 		$listingDest=preg_replace('/,$/','',trim($_POST["saisie_destinataire_value"]));
 		$tabdestinataire=explode(',',$listingDest);
-		if (count($tabdestinataire) == 0)  {
+		if (countTriade($tabdestinataire) == 0)  {
 			print "<script language=JavaScript>location.href='messagerie_envoi_suite.php?saisie_classe=$saisie_classe&saisie_envoi=$saisie_envoi&saisie_obj=$objet&message=$text&erreur=1&brouillon=$brouillon'</script>";
 			exit;
 		}
@@ -540,7 +542,7 @@ print $type_personne_dest;
 
 			if (($destinataire == "tousleseleves") || ($destinataire == "touslesparents")) {
 				$anneeScolaire=anneeScolaireViaIdClasse($saisie_classe);
-				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe='$saisie_classe' AND b.code_class='$saisie_classe' AND a.annee_scolaire='$anneeScolaire' ORDER BY nom";
+				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe='$saisie_classe' AND b.code_class='$saisie_classe' AND a.annee_scolaire='$anneeScolaire' ORDER BY nom";
 				$res=execSql($sql);
 				$dataEleve=chargeMat($res);
 			}
@@ -548,9 +550,9 @@ print $type_personne_dest;
 	
 
 			if ($destinataire == "tousleselevesdelegue") {
-			      	$sql="SELECT  eleve1,eleve2  FROM  ${prefixe}delegue";
+			      	$sql="SELECT  eleve1,eleve2  FROM  {$prefixe}delegue";
 				$res=execSql($sql);$dataDelegue=chargeMat($res);
-				for($uu=0;$uu<count($dataDelegue);$uu++) {
+				for($uu=0;$uu<countTriade($dataDelegue);$uu++) {
 					$dataEleve[$k][1]=$dataDelegue[$uu][0];$k++;
 					$dataEleve[$k][1]=$dataDelegue[$uu][1];$k++;
 				}
@@ -562,7 +564,7 @@ print $type_personne_dest;
 
 			if ($destinataire == "tousleselevesecole")  {
 				$anneeScolaire=anneeScolaireViaIdClasse();
-				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
+				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
 				$res=execSql($sql);
 				$dataEleve=chargeMat($res);
 				$type_personne_dest="ELE";$membre_dest="menueleve";
@@ -570,7 +572,7 @@ print $type_personne_dest;
 
 			if ($destinataire == "touslesparentsecole")  {
 				$anneeScolaire=anneeScolaireViaIdClasse();
-				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
+				$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe=b.code_class AND a.annee_scolaire='$anneeScolaire' ORDER BY a.nom";
 				$res=execSql($sql);
 				$dataEleve=chargeMat($res);
 				$type_personne_dest="PAR";$membre_dest="menuparent";
@@ -578,9 +580,9 @@ print $type_personne_dest;
 
 			// -------------------------------------------------------------------------------------------------------------- //
 			if ($destinataire == "touslesparentsdelegues")  {
-				$sql="SELECT  nomparent1,nomparent2  FROM  ${prefixe}delegue";
+				$sql="SELECT  nomparent1,nomparent2  FROM  {$prefixe}delegue";
 				$res=execSql($sql);$dataDelegue=chargeMat($res);
-				for($uu=0;$uu<count($dataDelegue);$uu++) {
+				for($uu=0;$uu<countTriade($dataDelegue);$uu++) {
 					$dataEleve[$k][1]=$dataDelegue[$uu][0];$k++;
 					$dataEleve[$k][1]=$dataDelegue[$uu][1];$k++;
 				}
@@ -588,7 +590,7 @@ print $type_personne_dest;
 			}
 
 			if ($destinataire == "touslestuteursdestage")  {
-                                $sql="SELECT null,pers_id,nom,prenom  FROM  ${prefixe}personnel WHERE type_pers='TUT'";
+                                $sql="SELECT null,pers_id,nom,prenom  FROM  {$prefixe}personnel WHERE type_pers='TUT'";
                                 $res=execSql($sql);
                                 $dataEleve=chargeMat($res);
                                 $type_personne_dest="TUT";
@@ -599,7 +601,7 @@ print $type_personne_dest;
 			if ($destinataire == "touslestuteursdestagedelaclasse" ) {
                                 $saisie_classe=$_POST["saisie_classe"];
                                 $anneeScolaire=anneeScolaireViaIdClasse($saisie_classe);
-                                $sql="SELECT null,p.pers_id,p.nom,p.prenom FROM ${prefixe}personnel p , ${prefixe}stage_eleve s , ${prefixe}eleves e , ${prefixe}stage_entreprise t
+                                $sql="SELECT null,p.pers_id,p.nom,p.prenom FROM {$prefixe}personnel p , {$prefixe}stage_eleve s , {$prefixe}eleves e , {$prefixe}stage_entreprise t
                                            WHERE
                                            p.type_pers='TUT' AND
                                            s.id_eleve=e.elev_id AND
@@ -616,7 +618,7 @@ print $type_personne_dest;
 
 			
 		
-			for($ii=0;$ii<count($dataEleve);$ii++) {
+			for($ii=0;$ii<countTriade($dataEleve);$ii++) {
 				$destinataire=$dataEleve[$ii][1];
 				$number=md5(uniqid(rand()));
 				if ($type_personne_dest == "TUTEURSTAGE") $type_personne_dest="TUT";
@@ -628,7 +630,7 @@ print $type_personne_dest;
 		  		        if ($type_personne_dest == "PAR") { $personne_envoi.=" (Parent)"; } 
 				        if ($type_personne_dest == "ELE") { $personne_envoi.=" (Elève)"; } 
 					history_cmd($_SESSION["nom"],"MESSAGERIE","envoi &agrave; $personne_envoi");
-			     		if ((FORWARDMAIL == "oui")  &&  (DEV != "1")) {
+			     		if ((defined("FORWARDMAIL")) && (FORWARDMAIL == "oui") && (DEV != "1")) {
 				     		@ini_set("sendmail_from",MAILCONTACT);
 	     					if ($type_personne_dest == "GRPMAIL") {
 							$data=liste_idpers_mail($destinataire);
@@ -710,7 +712,7 @@ print $type_personne_dest;
 			     if ($type_personne_dest == "PAR") { $personne_envoi.=" (Parent)"; } 
 			     if ($type_personne_dest == "ELE") { $personne_envoi.=" (Elève)"; } 
 			     history_cmd($_SESSION["nom"],"MESSAGERIE","envoi à $personne_envoi");
-			     if ((FORWARDMAIL == "oui") && (DEV != "1")) {
+			     if ((defined("FORWARDMAIL")) && (FORWARDMAIL == "oui") && (DEV != "1")) {
 				     	@ini_set("sendmail_from",MAILCONTACT);
 	     				if ($type_personne_dest == "GRPMAIL") {
 						$data=liste_idpers_mail($destinataire);

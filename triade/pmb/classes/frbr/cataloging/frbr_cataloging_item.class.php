@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_item.class.php,v 1.6 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_cataloging_item.class.php,v 1.6 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -62,7 +62,7 @@ class frbr_cataloging_item {
 	}
 	
 	public function get_display() {
-		//Retourne l'affichage de l'Ã©lÃ©ment en fonction de son type
+		//Retourne l'affichage de l'élément en fonction de son type
 	}
 	
 	public function get_id() {

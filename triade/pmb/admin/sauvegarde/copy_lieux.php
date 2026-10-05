@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: copy_lieux.php,v 1.10 2017-10-23 10:13:00 ngantier Exp $
+// $Id: copy_lieux.php,v 1.10 2017/10/23 10:13:00 ngantier Exp $
 
 //if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -15,7 +15,7 @@ require($base_path."/includes/init.inc.php");
 
 require("lib/api.inc.php");
 
-//RÃ©cupÃ©ration du lieu
+//Récupération du lieu
 $requete="select sauv_lieu_nom,sauv_lieu_url, sauv_lieu_protocol, sauv_lieu_login, sauv_lieu_password, sauv_lieu_host from sauv_lieux where sauv_lieu_id=".$sauv_lieu_id;
 $resultat=@pmb_mysql_query($requete);
 
@@ -41,7 +41,7 @@ switch ($res->sauv_lieu_protocol) {
 	//Si protocol = ftp
 	case "ftp" :
 		$msg_="";
-		//Connexion + passage dans le rÃ©pertoire concernÃ©
+		//Connexion + passage dans le répertoire concerné
 		$conn_id=connectFtp($res->sauv_lieu_host, $res->sauv_lieu_login, $res->sauv_lieu_password, $res->sauv_lieu_url, $msg_);
 		if ($conn_id=="") {
 			abort_copy("Copy : ".$res->sauv_lieu_nom." : Failed : ".$msg_,$logid);

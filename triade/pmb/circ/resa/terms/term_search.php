@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_search.php,v 1.6 2007-07-28 07:04:30 touraine37 Exp $
+// $Id: term_search.php,v 1.6 2007/07/28 07:04:30 touraine37 Exp $
 //
-// Recherche des termes correspondants Ã  la saisie
+// Recherche des termes correspondants à la saisie
 
 $base_path="../../..";                            
 $base_auth = ""; 
@@ -13,7 +13,7 @@ $base_title="Recherche par termes";
 require_once ("$base_path/includes/init.inc.php");  
 require_once ("$class_path/term_search.class.php");
 
-//RÃ©cupÃ©ration des paramÃ¨tres du formulaire appellant
+//Récupération des paramètres du formulaire appellant
 $base_query = "id_empr=$id_empr&groupID=$groupID&unq=$unq";
 
 //Page en cours d'affichage

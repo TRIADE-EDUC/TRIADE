@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_perso.tpl.php,v 1.9 2017-10-13 10:53:49 dgoron Exp $
+// $Id: sel_perso.tpl.php,v 1.10 2019/12/13 10:07:00 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
+
+global $dyn, $perso_name, $msg, $p1, $p2, $base_url;
+global $sel_header, $jscript, $sel_search_form, $sel_footer;
 
 //-------------------------------------------
 //	$sel_header : header
@@ -24,39 +27,53 @@ $sel_header = "
 $jscript_ = "
 <script type='text/javascript'>
 <!--
-function set_parent_w(f_caller, id_value, libelle_value,w)
+function set_parent_w(f_caller, id_value, libelle_value, w)
 {
-	dyn=$dyn;
-	nomchamp='$perso_name';
+	dyn = $dyn;
+	nomchamp = '$perso_name';
 	if (dyn) {
-		n_chp=get_parent_value(f_caller, 'n_'+nomchamp);
+		n_chp = get_parent_value(f_caller, 'n_'+nomchamp);
 		flag = 1;
-		//VÃ©rification que la valeur du champ perso n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
-		for (i=0; i<n_chp; i++) {	
-			if (w.parent.document.getElementById('f_'+nomchamp+'_'+i).value==libelle_value) {
-				alert('".$msg["persovalue_already_in_use"]."');
-				flag = 0;
-				break;
-			}
+		node = w.parent;
+		//Vérification que la valeur du champ perso n'est pas déjà sélectionnée
+		for (i = 0; i < n_chp; i++) {
+		    if (node.document.getElementById('f_'+nomchamp+'_'+i)) {
+    			if (node.document.getElementById('f_'+nomchamp+'_'+i).value == libelle_value) {
+    				alert('".$msg["persovalue_already_in_use"]."');
+    				flag = 0;
+    				break;
+    			}
+            } else if (w.document.getElementById('f_'+nomchamp+'_'+i)) {
+			    node = w;
+                if (node.document.getElementById('f_'+nomchamp+'_'+i).value == libelle_value) {
+    				alert('".$msg["persovalue_already_in_use"]."');
+    				flag = 0;
+    				break;
+    			}
+            }
 		}
 		if (flag) {
-			for (i=0; i<n_chp; i++) {
-				if ((w.parent.document.getElementById('f_'+nomchamp+'_'+i).value==0)||(w.parent.document.getElementById('f_'+nomchamp+'_'+i).value=='')) break;
+			for (i = 0; i < n_chp; i++) {
+				if ((node.document.getElementById('f_'+nomchamp+'_'+i).value == 0) || (node.document.getElementById('f_'+nomchamp+'_'+i).value == '')) {
+				    break;
+                }
 			}
 
-			try{
-				if (i==n_chp) w.parent.add_$perso_name();
-			} catch(e){
-				i=0;
-				w.parent.document.getElementById('f_'+nomchamp+'_'+i).value=reverse_html_entities(libelle_value);
+			try {
+				if (i == n_chp) {
+				    node.add_$perso_name();
+                }
+			} catch(e) {
+				i = 0;
+				node.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
 				closeCurrentEnv();
 			}
-			w.parent.document.getElementById(nomchamp+'_'+i).value = id_value;
-			w.parent.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
+			node.document.getElementById(nomchamp+'_'+i).value = id_value;
+			node.document.getElementById('f_'+nomchamp+'_'+i).value = reverse_html_entities(libelle_value);
 		}
 	} else {
-		set_parent_value(f_caller, '".$p1."', id_value);
-		set_parent_value(f_caller, '".$p2."', reverse_html_entities(libelle_value));
+		set_parent_value(f_caller, '$p1', id_value);
+		set_parent_value(f_caller, '$p2', reverse_html_entities(libelle_value));
 		closeCurrentEnv();
 	}
 }

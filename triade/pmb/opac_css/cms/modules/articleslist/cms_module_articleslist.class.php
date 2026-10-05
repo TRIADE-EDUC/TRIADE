@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_articleslist.class.php,v 1.1 2012-05-22 15:15:05 dgoron Exp $
+// $Id: cms_module_articleslist.class.php,v 1.1 2012/05/22 15:15:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

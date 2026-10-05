@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_search_selector_dest.xml,v 1.1 2012-10-17 09:13:39 arenou Exp $ -->
+$Id: cms_module_search_selector_dest.xml,v 1.1 2012/10/17 09:13:39 arenou Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_search_selector_search_dest_dests'>Types possibles de la recherche</entry>

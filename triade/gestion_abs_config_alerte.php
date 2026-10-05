@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,40 +26,32 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_discipline.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 validerequete("2");
-// connexion P
-
 $cnx=cnx();
+
 if (isset($_POST["create"])) {
 	$libelle="alertNbAbs";
 	$valeur=$_POST["nbabs"];
-	if ($valeur == "0") {
-		supp_parametrage($libelle);
-	}else{
-		enr_parametrage($libelle,$valeur);
-	}
+	if ($valeur == "0") { supp_parametrage($libelle); }else{ enr_parametrage($libelle,$valeur); }
 	$libelle="alertNbRtd";
 	$valeur=$_POST["nbrtd"];
-	if ($valeur == "0") {
-		supp_parametrage($libelle);
-	}else{
-		enr_parametrage($libelle,$valeur);
-	}
-
+	if ($valeur == "0") { supp_parametrage($libelle); }else{ enr_parametrage($libelle,$valeur); }
 	if (!empty($_POST["saisie_liste"])) {
 		$idliste=join(",",$_POST["saisie_liste"]);
-		enr_parametrage('alertAbsMail',"\{$idliste}");	
+		enr_parametrage('alertAbsMail',"\{$idliste}");
 		alertJs(LANGDONENR);
 	}
 }
@@ -70,129 +62,97 @@ if (isset($_GET["supplist"])) {
 	supp_parametrage('alertNbRtd');
 }
 
+$valNbAbs=aff_enr_parametrage("alertNbAbs");
+$valNbRtd=aff_enr_parametrage("alertNbRtd");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Gestion des alertes absences et retards"?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Gestion des alertes absences et retards</font></b></td></tr>
 <tr id='cadreCentral0'>
-<td >
+<td>
+
 <form method="post" action="gestion_abs_config_alerte.php">
-<BR>
-&nbsp;&nbsp;<font class=T2><?php print LANGCONFIG4 ?> : <br>
-<br>&nbsp;&nbsp;<?php print LANGCONFIG5 ?> : 
-<select name="nbabs">
-<?php 
-$val=aff_enr_parametrage("alertNbAbs"); 
-if (trim($val[0][1]) != "") {
-?>
-	<option value='<?php print $val[0][1] ?>' id='select1' ><?php print $val[0][1] ?></option>  
-<?php } ?>
-<option value='0' id='select0' >0</option>  
-<option value='3' id='select0' >3</option>  
-<option value='5' id='select0'>5</option>  
-<option value='10' id='select0'>10</option>  
-<option value='15' id='select0'>15</option>  
-<option value='20' id='select0'>20</option>  
-<option value='25' id='select0'>25</option>  
-</select> <?php print LANGCONFIG7 ?>
-<br>
-<br>
-
-&nbsp;&nbsp;<?php print LANGCONFIG6 ?> : 
-<select name="nbrtd">
-<?php 
-$val=aff_enr_parametrage("alertNbRtd"); 
-if (trim($val[0][1]) != "") {
-?>
-	<option value='<?php print $val[0][1] ?>' id='select1' ><?php print $val[0][1] ?></option>  
-<?php } ?>
-<option value='0' id='select0' >0</option>  
-<option value='3' id='select0' >3</option>  
-<option value='5' id='select0'>5</option>  
-<option value='10' id='select0'>10</option>  
-<option value='15' id='select0'>15</option>  
-<option value='20' id='select0'>20</option>  
-<option value='25' id='select0'>25</option>  
-</select> <?php print LANGCONFIG7 ?>
-<br>
-<br>
-
-&nbsp;&nbsp;Avertir les utilisateurs suivants : 
-<br><br>
-<center>
-<table width=100% border="0">
-<TR><TD>&nbsp;&nbsp;
-<select align=top name="saisie_liste[]" size=20  style="width:190px" multiple="multiple">
-<?php
-print "<optgroup label='".LANGGEN1."'>";
-select_personne('ADM');
-print "<optgroup label='".LANGGEN2."'>";
-select_personne('MVS');
-print "<optgroup label='".LANGGEN3."'>";
-select_personne('ENS');
-?>
-</select>
-</TD>
-<TD valign=top align=center>
-<TABLE border="1" width=80% bordercolor="#000000"  style='border-collapse: collapse;' >
-<TR><TD bgcolor="#FFFFFF">
-<?php print LANGMESS25?> <font color=red><B><?php print LANGGRP4?></b></font> <?php print LANGGRP5?><BR>  <BR>
-</td></tr></table><br>
-<div align="left">
-<font class=T2>
-&nbsp;&nbsp;&nbsp;<u><?php print LANGCONFIG8 ?></u> :<br><br>
-</font><font class=T1>
-<?php 
-$val=aff_enr_parametrage("alertAbsMail"); 
-$data=liste_idpers_grp_mail($val[0][1]);
-for($i=0;$i<count($data);$i++) {
-	if ($data[$i] != "") {
-		print "&nbsp;&nbsp;&nbsp;&nbsp;<img src='image/commun/on1.gif' width='8' height='8' /> ".trunchaine(recherche_personne($data[$i]),30);
-		print "<br>";
-	}
-}
-?>
-</font>
-<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <a href="gestion_abs_config_alerte.php?supplist">Supprimer la liste</a> ]
+<div class="na-card" style="margin:5px;">
+  <div style="font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;"><?php print LANGCONFIG4 ?></div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGCONFIG5 ?> :</span>
+    <select name="nbabs" class="cc-select" style="width:80px;">
+      <?php if (trim($valNbAbs[0][1]) != "") { ?><option value='<?php print $valNbAbs[0][1] ?>'><?php print $valNbAbs[0][1] ?></option><?php } ?>
+      <option value='0'>0</option>
+      <option value='3'>3</option>
+      <option value='5'>5</option>
+      <option value='10'>10</option>
+      <option value='15'>15</option>
+      <option value='20'>20</option>
+      <option value='25'>25</option>
+    </select>
+    <span style="font-size:11px;color:#666;"><?php print LANGCONFIG7 ?></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGCONFIG6 ?> :</span>
+    <select name="nbrtd" class="cc-select" style="width:80px;">
+      <?php if (trim($valNbRtd[0][1]) != "") { ?><option value='<?php print $valNbRtd[0][1] ?>'><?php print $valNbRtd[0][1] ?></option><?php } ?>
+      <option value='0'>0</option>
+      <option value='3'>3</option>
+      <option value='5'>5</option>
+      <option value='10'>10</option>
+      <option value='15'>15</option>
+      <option value='20'>20</option>
+      <option value='25'>25</option>
+    </select>
+    <span style="font-size:11px;color:#666;"><?php print LANGCONFIG7 ?></span>
+  </div>
 </div>
-</td></tr>
 
-</table>
+<div class="na-card" style="margin:5px;">
+  <div style="font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">Avertir les utilisateurs suivants :</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+    <select name="saisie_liste[]" size="12" style="width:190px;" multiple="multiple" class="cc-select">
+      <?php
+      print "<optgroup label='".LANGGEN1."'>";
+      select_personne('ADM');
+      print "<optgroup label='".LANGGEN2."'>";
+      select_personne('MVS');
+      print "<optgroup label='".LANGGEN3."'>";
+      select_personne('ENS');
+      ?>
+    </select>
+    <div style="font-size:11px;color:#555;line-height:1.6;max-width:180px;">
+      <?php print LANGMESS25 ?> <strong style="color:#c62828;"><?php print LANGGRP4 ?></strong> <?php print LANGGRP5 ?>
+      <br><br>
+      <strong><?php print LANGCONFIG8 ?></strong> :
+      <?php
+      $val=aff_enr_parametrage("alertAbsMail");
+      $data=liste_idpers_grp_mail($val[0][1]);
+      for($i=0;$i<countTriade($data);$i++) {
+          if ($data[$i] != "") {
+              print "<br>&bull; ".trunchaine(recherche_personne($data[$i]),30);
+          }
+      }
+      ?>
+      <br><br>
+      <a href="gestion_abs_config_alerte.php?supplist" style="color:#c62828;font-size:11px;">Supprimer la liste</a>
+    </div>
+  </div>
+</div>
 <br>
-<br>
-
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGENR ?>","create"); //text,nomInput</script>
-</td></tr></table>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGENR ?>","create");</script>
+<br><br>
 </form>
 
-
-
-<BR><BR>
 </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-   if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-       print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-       print "</SCRIPT>";
-   else :
-      print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-      print "</SCRIPT>";
-
-      top_d();
-
-      print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-     print "</SCRIPT>";
-
-       endif ;
-
-   Pgclose();
-     ?>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+Pgclose();
+?>
 </BODY></HTML>

@@ -1,5 +1,5 @@
-<?PHP
-// $Id: empty_words,v 1.3 2008-02-22 17:39:54 daerts Exp $
+<?php
+// $Id: empty_words,v 1.3.38.1 2025/01/16 10:24:14 qvarin Exp $
 
 // tableau contenant les mots vides
 $empty_word[] = 'de';

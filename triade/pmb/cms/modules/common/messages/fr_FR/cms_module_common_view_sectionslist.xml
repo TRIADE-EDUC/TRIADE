@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_sectionslist.xml,v 1.5 2018-03-13 13:30:06 dgoron Exp $ -->
+$Id: cms_module_common_view_sectionslist.xml,v 1.5 2018/03/13 13:30:06 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_sectionslist_used_template">Choix du template</entry>

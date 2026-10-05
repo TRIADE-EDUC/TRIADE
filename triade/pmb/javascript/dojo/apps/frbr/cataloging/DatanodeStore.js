@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: DatanodeStore.js,v 1.1 2018-01-17 15:01:13 dgoron Exp $
+// $Id: DatanodeStore.js,v 1.1 2018/01/17 15:01:13 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic"], function(declare,PMBStore, xhr, lang, topic){

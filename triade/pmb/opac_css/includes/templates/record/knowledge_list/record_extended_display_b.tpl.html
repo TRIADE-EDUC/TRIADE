@@ -1,0 +1,54 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_extended_display_b.tpl.html,v 1.3 2021/10/12 08:53:38 rtigero Exp $ -->
+
+{% block record_tit1 %}
+	<tr class="record_tit1">
+		<td class="labelNot">
+			<span>{{ msg.tit1display_start }}</span>
+		</td>
+		<td class="labelContent">
+			<span id="exempl_titleNot">
+				<a href="{{ record.liens_opac.lien_rech_notice | replace '!!id!!' record.bul_info.id }}" title="{{ record.bul_info.title }}">{{ record.bul_info.title }}</a>, {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}
+			</span>
+		</td>
+	</tr>
+{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.aff_date_date %}
+		<tr class="record_bul_info">
+			<td class="labelNot">
+				<span>{{ msg.bull_date_date }}</span> <!-- Paru le -->
+			</td>
+			<td class="labelContent">
+				<span>{{ record.bul_info.aff_date_date }}</span>
+			</td>
+		</tr>
+	{% endif %}
+{% endblock %}
+
+{% block articles %}
+	<!-- Depouillements -->
+	{% for article in record.articles %}
+		{% if loop.first %}
+			<div id="zone_depouillements">
+				<h3>
+					<span id="titre_depouillements">{{ msg.bull_dep }}</span>
+				</h3>
+				{% if record.cart_allow %}
+					{% if global.opac_cart_only_for_subscriber == "1" %}
+					      {% if session_vars.id_empr %}
+						      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+					      {% endif %}
+					{% else %}
+					      <a href="cart_info.php?id={{record.bul_info.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+					{% endif %}
+				{% endif %}
+		{% endif %}
+		{{ article }}
+		{% if loop.last %}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock articles %}

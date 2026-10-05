@@ -1,21 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: caddie_procs.class.php,v 1.21 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: caddie_procs.class.php,v 1.24.8.1 2025/03/20 09:08:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once ($class_path."/procs.class.php");
 require_once ($include_path."/templates/cart.tpl.php");
 require_once ($class_path."/parameters.class.php");
 
-// dÃ©finition de la classe de gestion des procÃ©dures de paniers
+// définition de la classe de gestion des procédures de paniers
 
 class caddie_procs extends procs {
 	
-	static $module = 'catalog';
-	static $table = 'caddie_procs';
+	public static $module = 'catalog';
+	public static $table = 'caddie_procs';
 	
 	public static function get_display_list() {
 		global $base_path, $msg;
@@ -23,7 +24,7 @@ class caddie_procs extends procs {
 		
 		$display = "<hr /><table>";
 		
-		// affichage du tableau des procÃ©dures
+		// affichage du tableau des procédures
 		if ($PMBuserid!=1) $where=" where (autorisations='$PMBuserid' or autorisations like '$PMBuserid %' or autorisations like '% $PMBuserid %' or autorisations like '% $PMBuserid' or autorisations_all=1) ";
 		else $where="";
 		$query = "SELECT idproc, type, name, requete, comment, autorisations, autorisations_all FROM ".static::$table." $where ORDER BY type, name ";
@@ -85,7 +86,7 @@ class caddie_procs extends procs {
 		global $f_proc_name;
 		global $f_proc_code;
 		global $f_proc_comment;
-		global $userautorisation;
+		global $autorisations;
 		global $autorisations_all;
 		
 		if($f_proc_name && $f_proc_code) {
@@ -93,12 +94,12 @@ class caddie_procs extends procs {
 			$result = pmb_mysql_query($query);
 			$nbr_lignes = pmb_mysql_result($result, 0, 0);
 			if(!$nbr_lignes) {
-				if (is_array($userautorisation)) {
-					$autorisations=implode(" ",$userautorisation);
+				if (is_array($autorisations)) {
+					$autorisations=implode(" ",$autorisations);
 				} else {
 					$autorisations='';
 				}
-				$autorisations_all += 0;
+				$autorisations_all = intval($autorisations_all);
 				$param_name=parameters::check_param($f_proc_code);
 				if ($param_name!==true) {
 					error_message_history($param_name, sprintf($msg["proc_param_check_field_name"],$param_name), 1);
@@ -118,17 +119,17 @@ class caddie_procs extends procs {
 		global $f_proc_name;
 		global $f_proc_code;
 		global $f_proc_comment;
-		global $userautorisation;
+		global $autorisations;
 		global $autorisations_all;
 		
-		$id += 0;
+		$id = intval($id);
 		if($id) {
-			if (is_array($userautorisation)) {
-				$autorisations=implode(" ",$userautorisation);
+			if (is_array($autorisations)) {
+				$autorisations=implode(" ",$autorisations);
 			} else {
 				$autorisations="";
 			}
-			$autorisations_all += 0;
+			$autorisations_all = intval($autorisations_all);
 			$param_name=parameters::check_param($f_proc_code);
 			if ($param_name!==true) {
 				error_message_history($param_name, sprintf($msg["proc_param_check_field_name"],$param_name), 1);
@@ -141,115 +142,81 @@ class caddie_procs extends procs {
 		return false;
 	}
 	
-	public static function get_proc_form($id=0) {
-		global $base_path, $msg;
-		global $cart_procs_form;
-		global $charset;
-		global $PMBuserid;
-		
-		$id += 0;
-		$form = $cart_procs_form;
-		switch (static::$table) {
-			case 'empr_caddie_procs':
-				$example_code = $msg['cart_ex_selection']." select id_empr as <b>object_id</b> from empr where ...<br />
+	public static function get_query_data($id=0) {
+	    return "SELECT idproc, name, requete, comment, autorisations, autorisations_all, type
+            FROM ".static::$table." WHERE idproc=".$id;
+	}
+	
+	public static function get_example_code() {
+	    global $msg;
+	    
+	    switch (static::$table) {
+	        case 'empr_caddie_procs':
+	            return $msg['cart_ex_selection']." select id_empr as <b>object_id</b> from empr where ...<br />
 					".$msg['cart_ex_action']." update empr set empr_statut=!!nouveau_statut!! where id_empr in (CADDIE(<b>EMPR</b>))";
-				break;
-			case 'authorities_caddie_procs':
-				$example_code = $msg['cart_ex_selection']." select id_authority as <b>object_id</b>, 'AUTHORS' as object_type from authorities JOIN <b>authors</b> ON <b>author_id</b>=authorities.num_object and authorities.type_object = 1 where ...<br />
+	        case 'authorities_caddie_procs':
+	            return $msg['cart_ex_selection']." select id_authority as <b>object_id</b>, 'AUTHORS' as object_type from authorities JOIN <b>authors</b> ON <b>author_id</b>=authorities.num_object and authorities.type_object = 1 where ...<br />
 				".$msg['cart_ex_action']." update authorities set num_statut=!!nouveau_statut!! where id_authority in (CADDIE(<b>AUTHORS</b>))<br />
-				MIXED / AUTHORS / CATEGORIES / PUBLISHERS / COLLECTIONS / SUBCOLLECTIONS / SERIES / TITRES_UNIFORMES / INDEXINT";
-				break;
-			case 'caddie_procs':
-			default:
-				$example_code = $msg['cart_ex_selection']." select notice_id as <b>object_id</b>, <b>'NOTI'</b> as object_type from notices where ...<br />
+				MIXED / AUTHORS / CATEGORIES / PUBLISHERS / COLLECTIONS / SUBCOLLECTIONS / SERIES / TITRES_UNIFORMES / INDEXINT / AUTHPERSO";
+	        case 'caddie_procs':
+	        default:
+	            return $msg['cart_ex_selection']." select notice_id as <b>object_id</b>, <b>'NOTI'</b> as object_type from notices where ...<br />
 					'NOTI' / 'EXPL' / 'BULL'<br />
 					".$msg['cart_ex_action']." update exemplaires set expl_statut=!!nouveau_statut!! where expl_id in (CADDIE(<b>EXPL</b>))<br />
 					EXPL / NOTI / BULL";
-				break;
-		}
-		$form = str_replace('!!example_code!!', $example_code, $form);
-		$form = str_replace('!!cancel_link!!', static::format_url(), $form);
-		$autorisations = array();
-		$autorisations_all = 0;
-		if($id) {
-			$query = "SELECT idproc, name, requete, comment, autorisations, autorisations_all, type FROM ".static::$table." WHERE idproc=".$id;
-			$result = pmb_mysql_query($query);
-			if(pmb_mysql_num_rows($result)) {
-				$row = pmb_mysql_fetch_object($result);
-				$autorisations_donnees=explode(" ",$row->autorisations);
-				$autorisations_all = $row->autorisations_all;
-				$query_users = "SELECT userid, username FROM users order by username ";
-				$result_users = pmb_mysql_query($query_users);
-				$all_users=array();
-				while (list($all_userid,$all_username)=pmb_mysql_fetch_row($result_users)) {
-					$all_users[]=array($all_userid,$all_username);
-				}
-				for ($i=0 ; $i<count($all_users) ; $i++) {
-					if (array_search ($all_users[$i][0], $autorisations_donnees)!==FALSE) $autorisations[$i][0]=1;
-					else $autorisations[$i][0]=0;
-					$autorisations[$i][1]= $all_users[$i][0];
-					$autorisations[$i][2]= $all_users[$i][1];
-				}
-				if ($row->type != "ACTION") {
-					$form=str_replace("!!exec_button!!","<input type='button' class='bouton' value=' ".$msg[708]." ' onClick=\"document.location='".static::format_url("&action=execute&id=".$id)."'\" />&nbsp;",$form);
-				} else {
-					$form=str_replace("!!exec_button!!","",$form);
-				}
-				$form = str_replace('!!form_title!!', $msg["procs_modification"], $form);
-				$form = str_replace('!!action!!', static::format_url("&action=modif&id=".$id), $form);
-				
-				$form = str_replace('!!type!!', htmlentities($msg["caddie_procs_type_".$row->type],ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!name!!', htmlentities($row->name,ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!code!!', htmlentities($row->requete,ENT_QUOTES, $charset), $form);
-				$form = str_replace('!!comment!!', htmlentities($row->comment,ENT_QUOTES, $charset), $form);
-				$button_delete = "<input type='button' class='bouton' value=' ".$msg['supprimer']." ' onClick=\"javascript:confirmation_delete(".$id.",'".htmlentities(addslashes($row->name), ENT_QUOTES, $charset)."')\" />";
-				$form=str_replace("!!button_delete!!",$button_delete,$form);
-			}
-		} else {
-			$query_users = "SELECT userid, username FROM users order by username ";
-			$result_users = pmb_mysql_query($query_users);
-			$all_users=array();
-			while (list($all_userid,$all_username)=pmb_mysql_fetch_row($result_users)) {
-				$autorise = 0;
-				//On autorise l'utilisateur courant par dÃ©faut
-				if ($all_userid == $PMBuserid) {
-					$autorise = 1;
-				}
-				$autorisations[]=array($autorise, $all_userid,$all_username);
-			}
-			
-			$form=str_replace("!!exec_button!!","",$form);
-			$form = str_replace('!!form_title!!', $msg[704], $form);
-			$form = str_replace('!!action!!', static::format_url("&action=add"), $form);
-			
-			$type_select = "<select name='f_proc_type'>
-				<option value='SELECT'>".$msg['caddie_procs_type_SELECT']."</option>
-				<option value='ACTION'>".$msg['caddie_procs_type_ACTION']."</option>
-				</select>";
-			$form = str_replace('!!type!!', $type_select, $form);
-			$form = str_replace('!!name!!', '', $form);
-			$form = str_replace('!!code!!', '', $form);
-			$form = str_replace('!!comment!!', '', $form);
-			$form=str_replace("!!button_delete!!","",$form);
-		}
-		$form = str_replace('!!id!!', $id, $form);
-		
-		$autorisations_users="";
-		$id_check_list='';
-		foreach ($autorisations as $row_number => $row_data) {
-			$id_check="auto_".$row_data[1];
-			if($id_check_list)$id_check_list.='|';
-			$id_check_list.=$id_check;
-			if ($row_data[0]) $autorisations_users.="<span class='usercheckbox'><input type='checkbox' name='userautorisation[]' id='$id_check' value='".$row_data[1]."' checked class='checkbox'><label for='$id_check' class='normlabel'>&nbsp;".$row_data[2]."</label></span>&nbsp;&nbsp;";
-			else $autorisations_users.="<span class='usercheckbox'><input type='checkbox' name='userautorisation[]' id='$id_check' value='".$row_data[1]."' class='checkbox'><label for='$id_check' class='normlabel'>&nbsp;".$row_data[2]."</label></span>&nbsp;&nbsp;";
-		}
-		$autorisations_users.="<input type='hidden' id='auto_id_list' name='auto_id_list' value='$id_check_list' >";
-		$form = str_replace('!!autorisations_users!!', $autorisations_users, $form);
-		
-		$form = str_replace('!!autorisations_all!!', ($autorisations_all ? "checked='checked'" : ""), $form);
-		
-		$form .= confirmation_delete(static::format_url("&action=del&id="));
-		return $form;
+	    }
+	}
+	
+	public static function get_proc_content_form($id=0, $data=[]) {
+	    global $msg;
+	    global $num_classement;
+	    
+	    $interface_content_form = new interface_content_form(static::class);
+	    
+	    if ($id) {
+	        $interface_content_form->add_element('f_proc_type', 'caddie_procs_type')
+	        ->add_html_node($msg["caddie_procs_type_".$data['type']]);
+	        
+	    } else {
+	        $options = ['SELECT' => $msg['caddie_procs_type_SELECT'], 'ACTION' => $msg['caddie_procs_type_ACTION']];
+	        $interface_content_form->add_element('f_proc_type', 'caddie_procs_type')
+	        ->add_select_node($options);
+	    }
+	    $interface_content_form->add_element('f_proc_name', '705')
+	    ->add_input_node('text', $data['name'])
+	    ->set_maxlength(255);
+	    
+	    if($id) {
+	        $num_classement = $data['num_classement'];
+	    } else {
+	        $num_classement = intval($num_classement);
+	    }
+	    $element = $interface_content_form->add_element('f_proc_code', '706');
+	    $element->add_textarea_node($data['requete'], 70, 10);
+	    $element->add_html_node(static::get_example_code());
+	    
+	    $interface_content_form->add_element('f_proc_comment', '707')
+	    ->add_input_node('text', $data['comment'])
+	    ->set_maxlength(255);
+	    
+	    $interface_content_form->add_element('autorisations_all', 'procs_autorisations_all', 'flat')
+	    ->add_input_node('boolean', $data['autorisations_all']);
+	    $interface_content_form->add_inherited_element('permissions_users', 'autorisations', 'procs_autorisations')
+	    ->set_autorisations($data['autorisations'])
+	    ->set_on_create(($id ? 0 : 1));
+	    
+	    return $interface_content_form->get_display();
+	}
+	    
+	protected static function get_interface_form_instance() {
+	    return new interface_catalog_form('maj_proc');
+	}
+	
+	protected static function has_form_execute_button($id=0, $type='ACTION') {
+	    if ($id && $type != "ACTION") {
+	        return true;
+	    }
+	    return false;
 	}
 	
 	public static function get_form_after_execution($id, $name, $code, $commentaire, $is_external = false) {
@@ -276,7 +243,7 @@ class caddie_procs extends procs {
 		return $form;
 	}
 	
-	// affichage du tableau des procÃ©dures
+	// affichage du tableau des procédures
 	public static function get_display_list_from_caddie($idcaddie, $args_url = 'categ=&sub=&quelle=', $type='ACTION', $action = "add_item") {
 		global $msg,$charset;
 		global $PMBuserid;
@@ -357,7 +324,6 @@ class caddie_procs extends procs {
 	}
 	
 	public static function check_rights($id) {
-		global $msg;
 		global $PMBuserid;
 	
 		if ($id) {
@@ -482,7 +448,7 @@ class caddie_procs extends procs {
 				$hp->get_final_query();
 				$code=$hp->final_query;
 				$id=$id_query;
-				$param_proc_hidden=$hp->get_hidden_values();//Je mets les paramÃªtres en champ cachÃ© en cas de forÃ§age
+				$param_proc_hidden=$hp->get_hidden_values();//Je mets les paramêtres en champ caché en cas de forçage
 				$param_proc_hidden.="<input type='hidden' name='id_query'  value='".$id_query."' />";
 			} else {
 				$code = '';
@@ -509,10 +475,10 @@ class caddie_procs extends procs {
 			print "<form class='form-".$current_module."' id='formulaire' name='formulaire' action='' method='post'>";
 			print $param_proc_hidden;
 			if($force_exec){
-				print "<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forcÃ© la requete
+				print "<input type='hidden' name='force_exec'  value='".$force_exec."' />";//On a forcé la requete
 			}
 			print static::get_form_after_execution($idp, $name, $code, $commentaire, $is_external);
-			// rÃ©cupÃ©ration du rÃ©sultat
+			// récupération du résultat
 			$report = static::run_query($code);
 			if($report['state'] == false && $report['message'] == 'explain_failed') {
 				static::final_explain_failed($id);
@@ -524,7 +490,7 @@ class caddie_procs extends procs {
 	}
 	
 	public static function get_parameters_remote() {
-		//utilisÃ©es dans la classe remote_procedure en globale pour le module catalog
+		//utilisées dans la classe remote_procedure en globale pour le module catalog
 		global $allowed_proc_types;
 		global $types_selectaction;
 		global $testable_types;

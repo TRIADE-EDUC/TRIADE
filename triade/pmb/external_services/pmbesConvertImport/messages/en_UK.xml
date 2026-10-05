@@ -24,7 +24,7 @@
 <!-- get_convert_types -->
 <entry code="get_convert_types_description">List of possible conversion types</entry>
 <entry code="get_convert_types_output_description">Table with an identifier as key and the label of the conversion as value ("name" attribute of the "item" tag of the catalog.xml file)</entry>
-ntry code="get_convert_types_output_description">Tableau avec en clé un identifiant et en valeur le libellé de la conversion (attribut "name" de la balise "item" du fichier catalog.xml)</entry>
+<entry code="get_convert_types_output_description">Tableau avec en clé un identifiant et en valeur le libellé de la conversion (attribut "name" de la balise "item" du fichier catalog.xml)</entry>
 
 <!-- convert_by_path -->
 <entry code="convert_by_path_description">Convertit une notice d'un format vers un autre format (utilisation du chemin du type de conversion)</entry>

@@ -51,11 +51,11 @@ $ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 $mySession=hashSessionVar($ident);
 unset($ident);
 // données DB utiles pour cette page
-// $donne=$mySession[Spid];
+// $donne=$mySession['Spid'];
 ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -87,19 +87,19 @@ unset($ident);
 <br />
 <font class="T2">&nbsp;&nbsp;<strong>
 <?php
-print chercheNomCarnet($idcarnet);
+print stripslashes(chercheNomCarnet($idcarnet));
 ?>
 </strong>
 <br><br />
 </font>
 <?php
 $data=listeCompetence($idcarnet); // id,idcarnet,libelle,ordre
-if (count($data) > 0 ) {
+if (countTriade($data) > 0 ) {
 	print "<form method='POST' name='formulaire' action='carnet_editer_3.php' onsubmit='return validecompetence()' >";
 	print "<table>";
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "<tr>";
-		print "<td><font class=T2>".trunchaine($data[$i][2],46)."</font></td>";
+		print "<td><font class=T2>".trunchaine(stripslashes($data[$i][2]),46)."</font></td>";
 		print "<td align=left><input type=radio name='idcompetence' value=\"".$data[$i][0]."\" ></td>";
 		print "</tr>";
 	}
@@ -110,7 +110,6 @@ if (count($data) > 0 ) {
 <?php selectTypeNotation($idcarnet) ?>
 </select>
 </td></tr>
-
 <tr><td colspan="2" ><br /><br /><font class="T2">Choix de la période : </font> <select name="periode" >
 <option  id="select0" ><?php print LANGCHOIX?></option>
 <?php selectPeriodeCarnet($idcarnet) ?>
@@ -143,17 +142,17 @@ if (count($data) > 0 ) {
 </td></tr></table>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,6 +50,15 @@
 	$cnx=cnx();
 	error($cnx);
 
+if (isset($_POST["offline"])) {
+	modif_personnel_actif_desactif($_POST["id_pers"],"1");
+        history_cmd($_SESSION["nom"],"DESACTIVE"," de $_POST[saisie_creat_nom]");
+}
+
+if (isset($_POST["online"])) {
+        modif_personnel_actif_desactif($_POST["id_pers"],"0");
+        history_cmd($_SESSION["nom"],"ACTIVE"," de $_POST[saisie_creat_nom]");
+}
 
 if(isset($_POST["create"])){
 	// requete ? prenom2 ?
@@ -76,9 +85,17 @@ if(isset($_POST["create"])){
           $commune=trim($data[0][8]);
 	  $tel=trim($data[0][9]);
 	  $telPort=trim($data[0][10]);
+	  $offline=trim($data[0][12]);
 ?>
      <!-- // fin  -->
+<?php if ($offline == 1) {
+        print "<br><center><font id=color3 class=T2  ><img src='../image/commun/warning.png' align='center'/> Ce compte est actuellement inactif ! <br></font></center><br>";
+
+
+} ?>
+
      <blockquote><BR>
+
 <fieldset><legend><?php print LANGMODIF5 ?></legend>
 <table width=80% border=0 cellpadding="2" cellspacing="2" >
 <tr><td align=right ><font class="T2">Civ : </font></td><td>
@@ -116,6 +133,10 @@ if(isset($_POST["create"])){
 <input type=hidden name=id_pers value="<?php print $saisie_id?>" >
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGMODIF13 ?>","create"); //text,nomInput</script>
 <script language=JavaScript>buttonMagic("<?php print LANGBT8?>","compte-admin.php","_parent","","");</script>
+<?php if ($offline == 0) { ?>
+        <script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS398 ?>","offline"); //text,nomInput</script><?php } else {?>
+        <script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS399 ?>","online"); //text,nomInput</script>
+<?php } ?>
 <BR><br>
 </center>
      </blockquote>

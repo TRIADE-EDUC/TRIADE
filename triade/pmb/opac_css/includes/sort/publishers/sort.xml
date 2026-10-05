@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.6 2020/08/05 12:37:36 jlaurent Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="publisher" typeobject="3">
+	
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="103" type="text" typefield="select" id="2">
+		<table name="publishers">
+			<tablefield>index_publisher</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="publishers">
+			<tablefield>ed_id</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Postal Code-->
+	<field name="location_details_cp" type="num" typefield="select" id="4">
+		<table name="publishers">
+			<tablefield>ed_cp</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+	</field>
+		
+	<!--City-->
+	<field name="72" type="text" typefield="select" id="5">
+		<table name="publishers">
+			<tablefield>ed_ville</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+	</field>
+		
+	<!--Country-->
+	<field name="146" type="text" typefield="select" id="6">
+		<table name="publishers">
+			<tablefield>ed_pays</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+		</table>
+	</field>
+		
+	<!--Fournisseurs-->
+	<field name="acquisition_ach_fou" type="text" typefield="select" id="7">
+		<table name="publishers">
+			<tablefield>index_entite</tablefield>
+			<tablekey>ed_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=3</referencefield>
+			</link>
+			<link type="n1">
+				<table>entites</table>
+				<tablekey>id_entite</tablekey>
+				<externalfield>ed_num_entite</externalfield>
+			</link>
+		</table>
+	</field>
+	
+</sort>

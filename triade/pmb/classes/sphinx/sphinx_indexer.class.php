@@ -1,142 +1,330 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sphinx_indexer.class.php,v 1.9 2019-05-27 12:55:59 arenou Exp $
+// $Id: sphinx_indexer.class.php,v 1.23.2.1 2024/10/17 08:22:51 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once $class_path.'/sphinx/sphinx_base.class.php';
-require_once($base_path."/devel/sphinx/progress_bar.php");
+require_once $class_path . '/sphinx/sphinx_base.class.php';
+require_once $base_path . "/devel/sphinx/progress_bar.php";
 
-class sphinx_indexer extends sphinx_base {
-	
-	/**
-	 * Nom de la clé dans la table (à revoir si necessaire à terme)
-	 * @var string
-	 */
-	protected $object_key= 'id_notice';
-	/**
-	 * Nom de la clé a retourner (a revoir si nécessaire à terme)
-	 * @var string
-	 */
-	protected $object_id= 'notice_id';
-	
-	/**
-	 * Tableau contenant les données sources (doit disparaitre à terme)
-	 * @var string
-	 */
-	protected $object_table = 'notices';
-	/**
-	 * Tableau contenant les données d'index (doit disparaitre à terme)
-	 * @var string
-	 */
-	protected $object_index_table = 'notices_fields_global_index';
-	
-	protected $specificsAttributes = array();
-	
-	
-	public function __construct(){
-		parent::__construct();
-	}
-	public function fillIndex($object_id=0)
-	{
-	    global $sphinx_indexes_prefix;
-	    
-	    //$options['size'] = 80;
-		$this->parse_file();
-		$object_id+=0;
-		//Remplissage des indexs...
-		$rq='select '.$this->object_key.' from '.$this->object_table.' '.($object_id!= 0 ? 'where '.$this->object_key.'='.$object_id : '').' order by 1';
-		$res=pmb_mysql_query($rq);
-		if ($res) {
-			pmb_mysql_query('set session group_concat_max_len = 16777216');
-			if( $object_id == 0) print ProgressBar::start(pmb_mysql_num_rows($res), "Index ".$this->default_index, $options);
-			while ($object=pmb_mysql_fetch_object($res)) {
-				//purge...
-				$langs = $this->getAvailableLanguages();
-				for($i=0 ; $i<count($langs) ; $i++){
-					foreach($this->indexes as $index_name => $infos){
-					    pmb_mysql_query('delete from '.$sphinx_indexes_prefix.$index_name.($langs[$i] != '' ? '_'.$langs[$i] :'').' where id = '.$object->{$this->object_key},$this->getDBHandler());
-					}
-				}
-				//Construction de l'index
-				$rq='select code_champ,code_ss_champ,lang,group_concat(value SEPARATOR "'.$this->getSeparator().'") as value from '.$this->object_index_table.' where id_notice= '.$object->{$this->object_key}.' and lang in ("'.implode('","',$this->getAvailableLanguages()).'") group by code_champ,code_ss_champ,lang';
-				$inserts = array();
-				$res_notice=pmb_mysql_query($rq);
-				while ($champ=pmb_mysql_fetch_object($res_notice)) {
-					if(in_array($champ->lang,$langs)){
-						$code_champ=str_pad($champ->code_champ, 3,"0",STR_PAD_LEFT);
-						$code_ss_champ=str_pad($champ->code_ss_champ, 2,"0",STR_PAD_LEFT);
-						$field='f_'.$code_champ.'_'.$code_ss_champ;
-	
-						if($this->insert_index[$field]){
-							$inserts[$this->insert_index[$field].($champ->lang ? '_'.$champ->lang : '')][$field] = addslashes($champ->value);
-						}
-					}
-				}
-				$inserts = $this->getSpecificsFiltersValues($object->{$this->object_key},$inserts);
-				
-				foreach($inserts as $table => $fields){
-					$keys = $values =  "";
-					foreach($fields as $key => $value){
-						if($keys){
-							$keys.=",";
-							$values.=",";
-						}
-						$keys.=$key;
-						if(substr($key,0,2) !== "f_"){
-						    $values.=$value;
-						}else{
-                            $values.='\''.$value.'\'';
-						}
-					}
-					$query = 'insert into '.$sphinx_indexes_prefix.$table.' (id,'.$keys.') values('.$object->{$this->object_key}.','.$values.')';
-					if(!pmb_mysql_query($query,$this->getDBHandler())){
-						print $table. ' : '.pmb_mysql_error($this->getDBHandler()). "\n";
-					}
-				}
-				if( $object_id == 0) print ProgressBar::next();
-			}
-			if( $object_id == 0) print ProgressBar::finish();
-		}
-	}
-	
-	public function deleteIndex($object_id=0)
-	{
-		$object_id+=0;
-		$langs = $this->getAvailableLanguages();
-		for($i=0 ; $i<count($langs) ; $i++){
-			foreach($this->indexes as $index_name => $infos){
-				pmb_mysql_query('delete from '.$index_name.($langs[$i] != '' ? '_'.$langs[$i] :'').' where id = '.$object_id ,$this->getDBHandler());
-			}
-		}
-	}
-	
-	public function getIndexConfFile()
-	{
-	    global $sphinx_indexes_path;
-	    global $sphinx_indexes_prefix;
-		$this->parse_file();
-		$conf = '
-#########################################
-#   PMB AUTOMATIC INDEX CONTSTRUCTION   #
-#########################################';
-		$langs = $this->getAvailableLanguages();
-		for($i=0 ; $i<count($langs) ; $i++){
-			foreach($this->indexes as $index_name => $infos){
-				if(count($infos['fields'])){
-				    $index_name = $sphinx_indexes_prefix.$index_name.($langs[$i] != '' ? '_'.$langs[$i] : '');
-					$conf.='
-		
-index '.$index_name.'
+class sphinx_indexer extends sphinx_base
 {
-	type = rt
-	path = '.str_replace('//', '/', $sphinx_indexes_path.'/'.$index_name).'
-	dict = keywords
-	min_infix_len = 3
-	expand_keywords = 1
-	charset_table = 0..9, a..z, _, A..Z->a..z, U+00C0->a, U+00C1->a, \
+
+    /**
+     * Nom de la cle dans la table (a revoir si necessaire a terme)
+     * @var string
+     */
+    protected $object_key = 'id_notice';
+    /**
+     * Nom de la cle a retourner (a revoir si necessaire a terme)
+     * @var string
+     */
+    protected $object_id = 'notice_id';
+
+    /**
+     * Tableau contenant les donnees sources (doit disparaitre a terme)
+     * @var string
+     */
+    protected $object_table = 'notices';
+    /**
+     * Tableau contenant les donnees d'index (doit disparaitre a terme)
+     * @var string
+     */
+    protected $object_index_table = 'notices_fields_global_index';
+
+    protected $already_checked = false;
+
+    protected $specificsAttributes = array();
+
+    /* Taille paquet d'objets a traiter */
+    protected $packetSize = 1000;
+
+    /* Timezone MySQL */
+    protected static $timeZone = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Remplissage d'un index
+     *
+     * @param number  $object_id : id objet a indexer
+     *
+     */
+    public function fillIndex($object_id = 0)
+    {
+        $object_id = intval($object_id);
+        if (!$object_id) {
+            return;
+        }
+        $this->fillIndexes([$object_id], false);
+    }
+
+
+    /**
+     * Remplissage d'un ensemble index
+     *
+     * @param [int] $object_ids : id objets a indexer. Si vide, remplissage de l'ensemble des index
+     * @param boolean $showProgression : affichage progression en console
+     *
+     */
+    public function fillIndexes($object_ids = [], $showProgression = false)
+    {
+        array_walk($object_ids, function (&$a) {
+            $a = intval($a);
+        });
+        $showProgression = boolval($showProgression);
+
+        $this->parse_file();
+        $langs = $this->getAvailableLanguages();
+        $imploded_langs = implode('","', $langs);
+        $separator = $this->getSeparator();
+
+        pmb_mysql_query('set session group_concat_max_len = 16777216');
+
+        // Suppression index sphinx
+        $this->deleteIndexes($object_ids);
+
+        $tab_values = [];
+
+        //Selection des objets a indexer
+        $rq = 'select ' . $this->object_key . ' from ' . $this->object_table;
+        if (!empty($object_ids)) {
+            $rq .= ' where ' . $this->object_key . ' in (' . implode(',', $object_ids) . ')';
+        }
+        $res = pmb_mysql_query($rq);
+
+        if ($res) {
+
+            if ($showProgression) {
+                print ProgressBar::start(pmb_mysql_num_rows($res), "Index " . $this->default_index);
+            }
+
+            $n = 0;
+            while ($row = pmb_mysql_fetch_assoc($res)) {
+
+                $id = $row[$this->object_key];
+
+                //Construction de l'index
+                $inserts = [];
+
+                $rq = 'select code_champ, code_ss_champ, lang, group_concat(value SEPARATOR "' . $separator . '") as value' .
+                    ' from ' . $this->object_index_table .
+                    ' where id_notice= ' . $id . ' and lang in ("' . $imploded_langs . '") group by code_champ,code_ss_champ,lang';
+                $res_notice = pmb_mysql_query($rq);
+
+                while ($champ = pmb_mysql_fetch_assoc($res_notice)) {
+                    if (in_array($champ['lang'], $langs)) {
+                        $code_champ = str_pad($champ['code_champ'], 3, "0", STR_PAD_LEFT);
+                        $code_ss_champ = str_pad($champ['code_ss_champ'], 2, "0", STR_PAD_LEFT);
+                        $field = 'f_' . $code_champ . '_' . $code_ss_champ;
+
+                        if (isset($this->insert_index[$field])) {
+                            $inserts[$this->insert_index[$field] . ($champ['lang'] ? '_' . $champ['lang'] : '')][$field] = addslashes(encoding_normalize::utf8_normalize($champ['value']));
+                        }
+                    }
+                }
+                $inserts = $this->getSpecificsFiltersValues($id, $inserts);
+                foreach ($inserts as $table => $fields) {
+                    $keys = $values = "";
+                    foreach ($fields as $key => $value) {
+                        if ($keys) {
+                            $keys .= ",";
+                            $values .= ",";
+                        }
+                        $keys .= $key;
+                        if (substr($key, 0, 2) !== "f_") {
+                            if (!empty($value)) {
+                                $values .= $value;
+                            } else {
+                                $values .= "''";
+                            }
+                        } else {
+                            $values .= '\'' . $value . '\'';
+                        }
+                    }
+                    $tab_values[$table][$keys][] = '(' . $id . ',' . $values . ')';
+                }
+
+                if ($showProgression) {
+                    print ProgressBar::next();
+                }
+
+                $n++;
+                if ($n > $this->packetSize) {
+                    $this->insertIndexes($tab_values);
+                    $tab_values = [];
+                    $n = 0;
+                }
+            }
+
+            $this->insertIndexes($tab_values);
+            $tab_values = [];
+
+            if ($showProgression) {
+                print ProgressBar::finish();
+            }
+        }
+    }
+
+
+    /**
+     * Insertion des index sphinx par paquets
+     *
+     * @param array $tab_values : valeurs a inserer
+     * [
+     *     'nom table' => [
+     *         'liste champs' => [
+     *             [valeurs]
+     *          ]
+     *     ]
+     * ]
+     *
+     */
+    protected function insertIndexes(&$tab_values = [])
+    {
+        if (!count($tab_values)) {
+            return;
+        }
+
+        global $sphinx_indexes_prefix;
+
+        foreach ($tab_values as $table => $t_value) {
+
+            foreach ($t_value as $k => $v) {
+
+                $query = 'insert into ' . $sphinx_indexes_prefix . $table . ' (id,' . $k . ') values ' . implode(',', $v);
+                if (!pmb_mysql_query($query, $this->getDBHandler())) {
+                    print $table . ' : ' . pmb_mysql_error($this->getDBHandler()) . PHP_EOL;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Suppression d'un index
+     *
+     * @param number $object_id : id index a supprimer
+     *
+     */
+    public function deleteIndex($object_id = 0)
+    {
+        global $sphinx_indexes_prefix;
+
+        $object_id = intval($object_id);
+        if (!$object_id) {
+            return;
+        }
+        $this->parse_file();
+        $langs = $this->getAvailableLanguages();
+
+        for ($i = 0; $i < count($langs); $i++) {
+            foreach ($this->indexes as $index_name => $infos) {
+                $query = 'delete from ' . $sphinx_indexes_prefix . $index_name . ($langs[$i] != '' ? '_' . $langs[$i] : '') . ' where id = ' . $object_id;
+                pmb_mysql_query($query, $this->getDBHandler());
+            }
+        }
+    }
+
+
+    /**
+     * Suppression d'un ensemble d'index
+     *
+     * @param [int] $object_ids : ids index a supprimer. Si vide, suppression de l'ensemble des index
+     *
+     */
+    public function deleteIndexes($object_ids = [])
+    {
+        global $sphinx_indexes_prefix;
+
+        array_walk($object_ids, function (&$a) {
+            $a = intval($a);
+        });
+
+        $this->parse_file();
+        $langs = $this->getAvailableLanguages();
+
+        for ($i = 0; $i < count($langs); $i++) {
+            foreach ($this->indexes as $index_name => $infos) {
+                $query = 'delete from ' . $sphinx_indexes_prefix . $index_name . ($langs[$i] != '' ? '_' . $langs[$i] : '');
+                if (!empty($object_ids)) {
+                    $query .= ' where id in (' . implode(',', $object_ids) . ')';
+                } else {
+                    $query .= ' where id > 0';
+                }
+                pmb_mysql_query($query, $this->getDBHandler());
+            }
+        }
+    }
+
+    /**
+     * Retourne la timezone MySQL
+     *
+     * @return string
+     */
+    protected function getMysqlTimeZone()
+    {
+        if (!is_null(static::$timeZone)) {
+            return static::$timeZone;
+        }
+        static::$timeZone = '';
+        $tz_rqt = "SELECT @@system_time_zone";
+        $tz_res = pmb_mysql_query($tz_rqt);
+        if (pmb_mysql_num_rows($tz_res)) {
+            $tz = pmb_mysql_result($tz_res, 0, 0);
+        }
+        static::$timeZone = $tz;
+        return static::$timeZone;
+    }
+
+
+    /**
+     * Retourne un datetime du 01/01/1970 00:00:00 fonction de la timezone MySQL
+     *
+     * @return DateTime
+     */
+    protected function getTimeStamp()
+    {
+        $tz = $this->getMysqlTimeZone();
+        if ('' !== $tz) {
+            $ts = DateTime::createFromFormat('d-m-Y H:i:s', '01-01-1970 00:00:00', new DateTimeZone($tz));
+        } else {
+            $ts = DateTime::createFromFormat('d-m-Y H:i:s', '01-01-1970 00:00:00');
+        }
+        return $ts;
+    }
+
+
+    public function getIndexConfFile()
+    {
+        global $sphinx_indexes_path;
+        global $sphinx_indexes_prefix;
+        global $sphinx_troncat_min_length;
+
+        $this->parse_file();
+        $conf = '
+########################################
+#   PMB AUTOMATIC INDEX CONSTRUCTION   #
+########################################';
+        $langs = $this->getAvailableLanguages();
+        for ($i = 0; $i < count($langs); $i++) {
+            foreach ($this->indexes as $index_name => $infos) {
+                if (count($infos['fields'])) {
+                    $index_name = $sphinx_indexes_prefix . $index_name . ($langs[$i] != '' ? '_' . $langs[$i] : '');
+                    $conf .= '
+
+index ' . $index_name . '
+{
+    type = rt
+    path = ' . str_replace('//', '/', $sphinx_indexes_path . '/' . $index_name) . '
+    min_infix_len = ' . $sphinx_troncat_min_length . '
+    expand_keywords = 0;
+    charset_table = 0..9, a..z, _, A..Z->a..z, U+00C0->a, U+00C1->a, \
         U+00C2->a, U+00C3->a, U+00C4->a, U+00C5->a, U+00C7->c, U+00C8->e, \
         U+00C9->e, U+00CA->e, U+00CB->e, U+00CC->i, U+00CD->i, U+00CE->i, \
         U+00CF->i, U+00D1->n, U+00D2->o, U+00D3->o, U+00D4->o, U+00D5->o, \
@@ -220,53 +408,368 @@ index '.$index_name.'
         U+1EF3->y, U+1EF4->y, U+1EF5->y, U+1EF6->y, U+1EF7->y, U+1EF8->y, \
         U+1EF9->y
 
-	#fields definition';
-					for($j=0 ; $j<count($infos['fields']) ; $j++){
-						$conf.='
-	rt_field = '.$infos['fields'][$j];
-					}
-				}
-				if(count($infos['attributes'])){
-					$conf.='
-	#attribute definition';
-					for($j=0 ; $j<count($infos['attributes']) ; $j++){
-					    if(substr($infos['attributes'][$j],0,2) == "f_"){
-						  $conf.='
-	rt_attr_string = '.$infos['attributes'][$j];
-					    }else{
-					        $conf.='
-	rt_attr_multi = '.$infos['attributes'][$j];
-					    }
-					}
-				}
-				$conf.='
+    #fields definition';
+                    for ($j = 0; $j < count($infos['fields']); $j++) {
+                        $conf .= '
+    rt_field = ' . $infos['fields'][$j];
+                    }
+                }
+                if (count($infos['attributes'])) {
+                    $conf .= '
+    #attribute definition';
+                    foreach ($infos['attributes'] as $type => $attributes) {
+                        for ($j = 0; $j < count($attributes); $j++) {
+                            if ($type == 'bigint') {
+                                $conf .= '
+    rt_attr_bigint	= ' . $attributes[$j];
+                            } else {
+                                if ($type == 'string' || substr($attributes[$j], 0, 2) == "f_") {
+                                    $conf .= '
+    rt_attr_string = ' . $attributes[$j];
+                                } else {
+                                    $conf .= '
+    rt_attr_multi = ' . $attributes[$j];
+                                }
+                            }
+                        }
+                    }
+                }
+                $conf .= '
 }';
-			}	
-		}
-		return $conf;
-	}
-	
-	protected function getSpecificsFiltersValues($id, $inserts){
-		$filters = $this->addSpecificsFilters($id);
-		$assertions = array();
-		foreach($filters as $name => $values){
-			if(!is_array($values)){
-				$values = array($values);
-			}
-			$val = '';
-			for($i=0 ; $i<count($values) ; $i++){
-			    $values[$i] = crc32($values[$i]);
-               
-			}
-			$filters[$name] = '('.implode(',',$values).')';
-		}
-		foreach($inserts as $index => $fields){
-		    $inserts[$index] = array_merge($inserts[$index],$filters);
-		}
-		return $inserts;
-	}
-	
-	protected function addSpecificsFilters($id,$filters=array()){
-		return $filters;
-	}
+            }
+        }
+        return $conf;
+    }
+
+
+    protected function getSpecificsFiltersValues($id, $inserts)
+    {
+        $filters = $this->addSpecificsFilters($id);
+        foreach ($filters as $type => $filter) {
+            foreach ($filter as $name => $values) {
+                if (!is_array($values)) {
+                    $values = array($values);
+                }
+                $nb_values = count($values);
+                if ($type != 'int' && $type != 'bigint') {
+                    for ($i = 0; $i < $nb_values; $i++) {
+                        $values[$i] = crc32($values[$i]);
+                    }
+                }
+                if ($type == 'multi') {
+                    $filters[$type][$name] = '(' . implode(',', $values) . ')';
+                } else {
+                    $filters[$type][$name] = implode(',', $values);
+                }
+            }
+            foreach ($inserts as $index => $fields) {
+                $inserts[$index] = array_merge($inserts[$index], $filters[$type]);
+            }
+        }
+        return $inserts;
+    }
+
+
+    protected function addSpecificsFilters($id, $filters = array())
+    {
+        return $filters;
+    }
+
+
+    public function editSphinxTables($pmb_table_name, $action, $field_name, $field_perso_id = '', $field_type = '')
+    {
+        $dbh = $this->getDBHandler();
+        $pperso_field = $this->get_pperso_name($pmb_table_name);
+        $sphinx_tables_name = $this->getSphinxTablesName($pmb_table_name);
+        $sphinx_type = $this->getSphinxType($field_type);
+
+        if (!empty($field_perso_id)) {
+            $field_name = $pperso_field . '_' . str_pad($field_perso_id, 2, '0', STR_PAD_LEFT);
+        }
+
+        foreach ($sphinx_tables_name as $sphinx_table_name) {
+            switch ($action) {
+                case 'update':
+                    if ($this->checkSphinxFieldExists($field_name, $sphinx_table_name)) {
+                        pmb_mysql_query("ALTER TABLE $sphinx_table_name DROP COLUMN $field_name", $dbh);
+                    }
+                    pmb_mysql_query("ALTER TABLE $sphinx_table_name ADD COLUMN $field_name $sphinx_type", $dbh);
+                    break;
+                case 'delete':
+                    if ($this->checkSphinxFieldExists($field_name, $sphinx_table_name)) {
+                        pmb_mysql_query("ALTER TABLE $sphinx_table_name DROP COLUMN $field_name", $dbh);
+                    }
+                    break;
+                case 'create':
+                default:
+                    if (!$this->checkSphinxFieldExists($field_name, $sphinx_table_name)) {
+                        pmb_mysql_query("ALTER TABLE $sphinx_table_name ADD COLUMN $field_name $sphinx_type", $dbh);
+                    }
+                    break;
+            }
+        }
+    }
+
+
+    private function getSphinxTablesName($table_name)
+    {
+        global $sphinx_indexes_prefix;
+
+        $sphinx_tables = [];
+        $languages = $this->getAvailableLanguages();
+        $sphinx_table_name = $sphinx_indexes_prefix;
+
+        switch ($table_name) {
+            case 'notices':
+                $sphinx_table_name .= 'records';
+                break;
+            case 'author':
+                $sphinx_table_name .= 'authors';
+                break;
+            case 'categ':
+                $sphinx_table_name .= 'categories';
+                break;
+            case 'collection':
+                $sphinx_table_name .= 'collections';
+                break;
+            case 'skos':
+                $sphinx_table_name .= 'concepts';
+                break;
+            case 'publisher':
+                $sphinx_table_name .= 'publishers';
+                break;
+            case 'serie':
+                $sphinx_table_name .= 'series';
+                break;
+            case 'subcollection':
+                $sphinx_table_name .= 'subcollections';
+                break;
+            case 'tu':
+                $sphinx_table_name .= 'titres_uniformes';
+                break;
+            default:
+                $sphinx_table_name .= $table_name;
+                break;
+        }
+
+        foreach ($languages as $language) {
+            $temp = $sphinx_table_name;
+            if (!empty($language)) {
+                $temp .= "_$language";
+            }
+            $sphinx_tables[] = $temp;
+        }
+
+        return $sphinx_tables;
+    }
+
+
+    private function getSphinxType($field_type)
+    {
+        switch ($field_type) {
+            case 'integer':
+                $sphinx_type = 'INTEGER';
+                break;
+            case 'date':
+                $sphinx_type = 'BIGINT';
+                break;
+            case 'float':
+                $sphinx_type = 'FLOAT';
+                break;
+            case 'small_text':
+            case 'text':
+            default:
+                $sphinx_type = 'STRING';
+                break;
+        }
+        return $sphinx_type;
+    }
+
+
+    private function checkSphinxFieldExists($field_name, $table)
+    {
+        $res = pmb_mysql_query("DESC $table", $this->getDBHandler());
+        while ($row = pmb_mysql_fetch_assoc($res)) {
+            if ($row['Field'] == strtolower($field_name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * $sphinx_fields : Variable contenant les champs deja contenus en base
+     * $this->indexes : Variable contenant les champs censes etre en base (/indexation/entity/champs_base.xml)
+     */
+    public function checkExistingIndexes()
+    {
+        global $sphinx_indexes_prefix;
+
+        if ($this->already_checked) {
+            return;
+        }
+        $langs = $this->getAvailableLanguages();
+        $nb_langs = count($langs);
+        $dbh = $this->getDBHandler();
+
+        $current_tables = [];
+        $res = pmb_mysql_query("SHOW TABLES", $dbh);
+        while ($row = pmb_mysql_fetch_assoc($res)) {
+            $current_tables[] = $row['Index'];
+        }
+
+        for ($i = 0; $i < $nb_langs; $i++) {
+            foreach ($this->indexes as $type => $values) {
+                $sphinx_table_name = $sphinx_indexes_prefix . $type . ($langs[$i] != '' ? '_' . $langs[$i] : '');
+                if (!empty($values['fields'])) {
+                    if (!in_array($sphinx_table_name, $current_tables)) {
+                        // On tombe sur des tables que l'on avait pas en base
+                        // Il faut donc les ajouter
+                        // Seul hic, il faut Sphinx 3.0 minimum (on est en 2.2 pour le moment)
+                        continue;
+                    }
+                    $res = pmb_mysql_query("DESC $sphinx_table_name", $dbh);
+                    $indexes = $values;
+                    $sphinx_fields = [];
+                    while ($row = pmb_mysql_fetch_assoc($res)) {
+                        if ($row['Field'] != 'id') {
+                            $sphinx_fields[$row['Type']][] = $row['Field'];
+                        }
+                    }
+                    foreach ($sphinx_fields as $type_field => $fields) {
+                        $nb_fields = count($fields);
+                        for ($j = 0; $j < $nb_fields; $j++) {
+                            if (in_array($fields[$j], $indexes['fields'])) {
+                                $index = array_search($fields[$j], $indexes['fields']);
+                                unset($indexes['fields'][$index]);
+                                unset($sphinx_fields[$type_field][$j]);
+                                if (empty($sphinx_fields[$type_field])) {
+                                    unset($sphinx_fields[$type_field]);
+                                }
+                            } else {
+                                foreach ($indexes['attributes'] as $type_attr => $values_attr) {
+                                    if (in_array($fields[$j], $values_attr)) {
+                                        if ($type_attr == $type_field || ($type_attr == 'multi' && $type_field == 'mva')) {
+                                            unset($indexes['attributes'][$type_attr][$j]);
+                                            if (empty($indexes['attributes'][$type_attr])) {
+                                                unset($indexes['attributes'][$type_attr]);
+                                            }
+                                            unset($sphinx_fields[$type_field][$j]);
+                                            if (empty($sphinx_fields[$type_field])) {
+                                                unset($sphinx_fields[$type_field]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!empty($sphinx_fields)) {
+                    foreach ($sphinx_fields as $type => $values) {
+                        foreach ($values as $value) {
+                            pmb_mysql_query("ALTER TABLE $sphinx_table_name DROP COLUMN $value", $dbh);
+                        }
+                    }
+                }
+                if (!empty($indexes['fields'])) {
+                    foreach ($indexes['fields'] as $field) {
+                        pmb_mysql_query("ALTER TABLE $sphinx_table_name ADD COLUMN $field STRING", $dbh);
+                    }
+                }
+                if (!empty($indexes['attributes'])) {
+                    foreach ($indexes['attributes'] as $type_attr => $values_attr) {
+                        foreach ($values_attr as $value) {
+                            pmb_mysql_query("ALTER TABLE $sphinx_table_name ADD COLUMN $value $type_attr", $dbh);
+                        }
+                    }
+                }
+            }
+        }
+        $this->already_checked = true;
+    }
+
+
+    private function get_pperso_name($pmb_table_name)
+    {
+        $authperso_id = 0;
+
+        $class_name = $this->getIndexerClassName($pmb_table_name);
+        $sphinx_class = new $class_name();
+
+        if ($class_name == "sphinx_authperso_indexer") {
+            $authperso_id = explode("_", $pmb_table_name)[1];
+        }
+
+        return $sphinx_class->get_pperso_field($authperso_id);
+    }
+
+
+    private function getIndexerClassName($pmb_table_name)
+    {
+        $class_name = 'sphinx_';
+        switch ($pmb_table_name) {
+            case 'notices':
+                $class_name .= 'records';
+                break;
+            case 'author':
+                $class_name .= 'authors';
+                break;
+            case 'categ':
+                $class_name .= 'categories';
+                break;
+            case 'collection':
+                $class_name .= 'collections';
+                break;
+            case 'skos':
+                $class_name .= 'concepts';
+                break;
+            case 'publisher':
+                $class_name .= 'publishers';
+                break;
+            case 'serie':
+                $class_name .= 'series';
+                break;
+            case 'subcollection':
+                $class_name .= 'subcollections';
+                break;
+            case 'tu':
+                $class_name .= 'titres_uniformes';
+                break;
+            default:
+                $class_name .= 'authperso';
+                break;
+        }
+        $class_name .= '_indexer';
+        return $class_name;
+    }
+
+
+    public function checkSphinxTables()
+    {
+        global $sphinx_indexes_prefix;
+
+        $langs = $this->getAvailableLanguages();
+        $nb_langs = count($langs);
+        $dbh = $this->getDBHandler();
+
+        $current_tables = [];
+        $res = pmb_mysql_query("SHOW TABLES", $dbh);
+        while ($row = pmb_mysql_fetch_assoc($res)) {
+            $current_tables[] = $row['Index'];
+        }
+
+        for ($i = 0; $i < $nb_langs; $i++) {
+            foreach ($this->indexes as $type => $values) {
+                $sphinx_table_name = $sphinx_indexes_prefix . $type . ($langs[$i] != '' ? '_' . $langs[$i] : '');
+                if (!empty($values['fields'])) {
+                    if (!in_array($sphinx_table_name, $current_tables)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }

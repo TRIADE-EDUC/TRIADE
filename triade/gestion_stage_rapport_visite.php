@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,17 +50,17 @@ $date=date("Y");
 $date2=date("Y")-1;
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 if (isset($_GET["eid"])) { $eid=$_GET["eid"]; }
 if (isset($_POST["ideleve"])) {$eid=$_POST["ideleve"]; }
 if($eid) {
-	$sql="SELECT elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,lieu_naissance,nationalite,	passwd,	passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,email,email_eleve,class_ant,annee_ant,tel_eleve,email_resp_2,sexe,code_compta FROM ${prefixe}eleves, ${prefixe}classes c WHERE elev_id='$eid' AND c.code_class=classe";
+	$sql="SELECT elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,lieu_naissance,nationalite,	passwd,	passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,email,email_eleve,class_ant,annee_ant,tel_eleve,email_resp_2,sexe,code_compta FROM {$prefixe}eleves, {$prefixe}classes c WHERE elev_id='$eid' AND c.code_class=classe";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$nomEleve=$data[0][1];
@@ -99,7 +99,7 @@ if (isset($_GET["idmodif"])) {
 </tr>
 <?php
 
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
 	print("<tr id='cadreCentral0' ><td align=center valign=center>".LANGRECH3."</td></tr>");
 }else {
 ?>
@@ -281,7 +281,7 @@ if (isset($_GET["idsupp"])) {
 
 $data=listingContreRenduStage($eid,$identreprise);
 //id,idstage,dateVisite,heureVisite,identreprise,contrerendu,visiteur,saisiele
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if ($data[0][1] != $idstage ) continue;
 	$datastage=recherchedatestage($idstage);
 	print "<tr  class=\"tabnormal\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\" >";
@@ -346,17 +346,17 @@ $pdf->output('F',$fichier);
 
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

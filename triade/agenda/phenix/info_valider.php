@@ -18,7 +18,7 @@
 
   // Suppression des informations selectionnees
   if (!empty($ztSuppr)) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_id IN (".$ztSuppr.")");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_id IN (".$ztSuppr.")");
   }
   // Report du rappel des informations selectionnees -> info_id|report_en_seconde[,...]
   if (!empty($ztReport)) {
@@ -26,7 +26,7 @@
     for ($i=0; $i<count($tabReport); $i++) {
       list($infoId, $report) = explode("|",$tabReport[$i]);
       $tsAlert = gmmktime()+$report;
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}information SET info_heure_rappel=".$tsAlert." WHERE info_id=".$infoId);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}information SET info_heure_rappel=".$tsAlert." WHERE info_id=".$infoId);
     }
   }
 

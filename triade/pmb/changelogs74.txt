@@ -1,0 +1,1458 @@
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.7                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+****************************
+Les numéros indiqués ici (#000000) sont utilisés en interne par PMB Services par son équipe de développement.
+
+*******************
+INCONNU
+
+--------------
+Administration
+--------------
+
+#144019 : Nettoyage des caractères invalides lors de la conversion XML
+Prise en compte des caractères ISO-8859-15 sur les PMB ISO-8859-1.
+
+---------
+Autorités
+---------
+
+#143275 : [RMC Autorités] Ajout d'autorités dans un panier
+L'ajout d'autorités dans un panier ne prenait pas en compte la sélection lorsque cela était demandé.
+
+#143441 : [Autorités] Dernières entités créées
+Ne pas utiliser le cache de la recherche '*' pour afficher les dernières entités créées.
+
+---------
+Catalogue
+---------
+
+#143071 : [Paniers] Codes-barres
+Ajout de l'option de mise en page par défaut dans les modèles de planche.
+
+-----------
+Circulation
+-----------
+
+#143515 : [Quotas de prêts] Par types de documents 
+Intégration dès à présent possible de ce type de quota au niveau des prêts.
+
+#144253 : Gestion des mots de passe internes avec authentification externe
+Permet de gérer un mot de passe interne même s'il y a une authentification externe
+
+------
+Divers
+------
+
+#144253 : Gestion des mots de passe internes avec authentification externe
+Permet de gérer un mot de passe interne même s'il y a une authentification externe
+
+#143214 : [Divers] Enrichissement du getter django pour les auteurs
+Ajout du nombre d'utilisations de la fonction d'auteur.
+
+#143307 : Correction authentification depuis application Dilicom Baobab
+
+#143322 : [RMC responsive] Modification des champs d'autorités
+Lors d'une RMC responsive en OPAC, si dans un champ de sélection d'autorité on n'en sélectionne aucune, l'opérateur du critère devient *Contient*, ce qui permet de rechercher sur le texte tapé dans le champ
+
+#143327 : [H2o] Correction de la fonction strftime
+Correction sur l'interprétation du format lorsqu'il est transmis en français.
+
+#143332 : Correction formatage liste des prêts pour l'application Dilicom Baobab
+La propriété productFormDetails doit être un tableau.
+
+#143326 : [H2o] Ajout la possibilité de trier par une clé de tableau pour la methode Arraysort;"Exemple d'utilisation :
+Ici author.functions nous retourne un tableau.
+<pre>
+array
+  0 => 
+    array
+      'id' => string '205'
+      'count_tu' => string '1'
+  1 => 
+    array
+      'id' => string '605'
+      'count_tu' => string '4'
+</pre>
+On passe en argument le type de tri.
+Ici, nous voulons trier par ordre décroissant et sur la clé du tableau count_tu.
+<pre>
+{% setvalue tab_author :author.functions %}
+{% arraysort tab_author 'desc' 'count_tu' %} 
+</pre>
+Nous aurons donc en sortie de fonction :
+<pre>
+array
+  0 => 
+    array
+      'id' => string '605'
+      'count_tu' => string '4'
+  1 => 
+    array
+      'id' => string '205'
+      'count_tu' => string '1'
+</pre>
+Si on ne renseigne pas le nom de la colonne sur laquelle on veut trier, on garde le comportement d'origine."
+
+#144473 : Correction gestion des messages de mots de passe 
+
+--------
+Editions
+--------
+
+#143986 : [Relances d'adhésions] Pour la sélection
+Prise en compte de la sélection dans la génération des lettres/mails de relances en lot.
+
+----
+OPAC
+----
+
+#143102 : [Sélecteurs] Affichage de la multi-critères
+Correction de l'affichage de la multi-critères intégrée dans une popup.
+​
+-------
+Portail
+-------
+
+#142848 : Collections numériques : correction de la suppression quand le répertoire de cache n'était pas accessible
+Quand le répertoire de cache n'était pas accessilble, notamment quand on importe des bases, la suppression retournait une erreur. C'est corrigé.
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+------------
+Acquisitions
+------------
+
+#136317 : [Suggestions à traiter] ISBN + prix
+Possibilité d'afficher les colonnes ISBN et prix sur les listes de suggestions.
+
+--------------
+Administration
+--------------
+
+#133401 : Fonction d'import Indexpresse
+Intégration de la fonction d'import dans PMB.
+
+#133852 : [Quotas / vues OPAC] Optimisations du code source
+Optimisations du code source pour de futures évolutions.
+
+#134718 : Plugin génération clés / chiffrement données
+Plugin permettant la génération de clés RSA pour intégration dans PMB et le chiffrement / déchiffrement de données
+
+#136523 : Compatibilité du plugin de chiffrement en php7.3 pour PMB74
+Ajout polyfill-mbstring en version 74 de PMB pour compatibilité du plugin de chiffrement en php7.3
+
+#136535 : Limitation du plugin de chiffrement à l'utilisateur d'identifiant 1
+
+#137354 : Gestion des serveurs SMTP - v2
+Version 2 de la gestion des serveurs SMTP.
+
+#138108 : [Gestion des utilisateurs] Conf serveur sortant
+Intégration d'un message au niveau des utilisateurs lorsque le serveur sortant n'est pas configuré.
+Suite à l'enregistrement de la fiche utilisateur, déplacement de la position dans la liste sur sa fiche pour connaître l'état du serveur sortant.
+
+#138348 : [Configurations mails] Utilisations
+Ajout d'une nouvelle colonne pour les utilisations. De plus, par défaut, on affichera toutes les configurations sur la même page.
+
+#140831 : [Configurations SMTP] Utilisations
+Intégration des utilisations dans les coordonnées du module "Acquisitions".
+
+#142663 : [Configuration des mails] Mails invalides
+Prise en compte de l'invalidité des domaines de mails dans la configuration des serveurs SMTP.
+
+#145977 : [Logs] Effacer les logs;"Ajout d'un bouton "Effacer les logs" pour faire un reset complet de la table de logs.
+
+#145990 : Ajout de l'origine de la notice dans l'export;"Ajout des champs suivants dans l'export pour l'origine de la notice :
+- 801$a : nom de l'origine
+- 801$b : pays
+- 801$c : date
+
+----------
+Animations
+----------
+
+#134435 : [Animation] Possibilité de rendre les templates substituables
+Liste des templates :
+- animation_display.tpl.html
+- animations_list.tpl.html
+- printRegistrationList.tpl.html
+
+---------
+Autorités
+---------
+
+#134921 : [Identifiants ARK] Ajout des liens ARK sur les autorités en gestion
+
+#138039 : Ajout des permaliens d'autorités en gestion
+
+#141359 : [skos concepts] Prise en compte de la langue pour le display label
+Ajout de la prise en compte de la globale *$lang* quand on cherche le display label d'un skos concept dans la table skos_fields_global_index.
+Ajout d'un *order by ordre* dans le cas où on n'a aucun résultat si aucune ligne n'a de langue définie
+
+-------
+Bibloto
+-------
+
+#138796 : [bibloto] Affichage de la liste des prêts même si le prêt n'est pas autorisé
+
+---------
+Catalogue
+---------
+
+#132992 : [RMC] critère "avis"
+Ajout du critère "avis" en recherche multi-critères côté gestion.
+
+#137127 : [Recherche externe] Ajout de la recherche sur l'identifiant d'article (PMID, DOi, ...)
+Ajout de la recherche sur l'identifiant d'article (014$a). Par exemple, recherche sur le PMID et le DOI avec une source PubMed.
+
+#138339 : Autocomplétion sur les catégories : Utilisation du "contient" 
+Dans l'autocomplétion des catégories, par défaut, on utilise le "commence par" en gestion. Maintenant si le nombre de résultat est inférieur à 20, on utilise le "contient" dans un second temps.
+
+#138372 : Ajout de la recherche "contient" dans l'autocomplétion des listes (ex : localisations d'exemplaire)
+Dans l'autocomplétion des listes, la recherche faisait uniquement un "commence par". La recherche fait maintenant un "commence par ou contient".
+
+-----------
+Circulation
+-----------
+
+#133127 : [Réservations] Paramètre "resa_waiting_already_loaned"
+Empêcher la réservation d'un document par un utilisateur si la personne en question l'a rendu il y a moins de x jours.
+
+#133416 : [RFID] Driver Bibliothéca
++Modifications apportées :+
+- Lors d'un prêt multiple, l'indicateur d'état (petite pastille) passe de couleur verte si la désactivation de l'antivol a fonctionné, sinon elle passe au rouge.
+- Prise en compte du multi-parties pour les documents
+
+#133509 : Ajout d'information dans le mail de génération de mot de passe pour un utilisateur
+On donne la possibilité d'ajouter des informations supplémentaires dans le mail, lors de la génération du mot de passe pour un utilisateur.
+Liste des paramétres :
++Mot de passe+
+!!pwd!!
++URL vers l'opac pour la connexion+
+!!url!!
++Informations emprunteur+
+!!empr_login!!
+!!empr_name!!
++Localisation+
+!!location_name!!
+!!location_adr1!!
+!!location_adr2!!
+!!location_cp!!
+!!location_town!!
+!!location_phone!!
+!!location_email!!
+!!location_website!!
+
+------
+Divers
+------
+
+#131974 : [Paniers / Action rapide] Effacer les pointages
+Ajout de l'option "Effacer les pointages" dans le sélecteur d'actions rapides des paniers.
+
+#132726 : [PDF / Footer] Alignement + Flag d'affichage
+Ajout d'une propriété surchargeable pour l'alignement du pied de page.
+Ajout d'un flag surchargeable pour l'affichage ou non de la pagination.
+
+#133879 : [RMC] Ajout de critère date d'ajout / modification des autorités
+Ajout de la possibilité de passer un critère en recherche multi-critères permettant de rechercher sur la date de création ou la date de modification de la notice de l'autorité
+
+#134498 : Ajout classe de chiffrement réversible
+
+#134511 : Ajout paramètres de définition emplacements clé publique / clé privée
+
+#134742 : Mise à jour PHPMailer et packages requis pour authentification XOAUTH2
+
+#135196 : Mise à jour packages requis pour authentification XOAUTH2 
+
+#135200 : SMTP : Gestion authentification xoauth2 + chiffrement des données sensibles
+
+#135723 : Prise en compte des documents numérique MP3
+Quand on enregistre un document numérique de type MP3, il était enregistré avec le minetype audio/mpeg.
+Ce qui posait un souci au ré-affichage en opac.
+
+#136304 : Ajout script demande token pour configuration SMTP avec XOAUTH2 + paramètre encoding
+Ajout du script de demande de token pour la mise en oeuvre de XOAUTH2 avec SMTP
+Ajout d'un paramètre encoding pour l'envoi des mails
+
+#136508 : [Sphinx] Compatibilté avec Sphinx V3
+Suppression d'un paramétre devenu obsolète ("dict=keywords").
+
+#136734 : Amélioration de la recherche des enregistrements supprimés dans les connecteurs OAI sortants
+
+#137417 : Prise en compte charset utf8mb3 pour l'installation
+
+#137994 : [Politique des mots de passe] Ajout de caractères spéciaux et d'une information lors de l'inscription
+*Ajout des caractères spéciaux :*
+ - & / @ / = / ?
+Ajout d'une alerte lors de l'inscription en OPAC sur la conformité du mot de passe.
+
+#138028 : [Indexation] Diminution des appels AJAX
+Limitation des appels AJAX lors du changement de page.
+Quand on est en circulation, on ne déclenche pas d'indexation.
+
+#138297 : [Borne de prêt] Retour de documents avec une réservation dépassée
+Possibilité d'ignorer la validité d'une réservation d'un document lors de son retour
+
+#138873 : [Récupération vignette] Réduction timeout cURL
+Contexte du problème :
+Lorsque le paramètre book_pics_url contient plusieurs URLs, un délai de 15 secondes est fixé avant l'appel à la seconde source. Les vignettes peuvent donc mettre beaucoup de temps à s'afficher.
+
+Diminution du timeout cURL à 5 secondes au lieu de 15 lors de récupération des vignettes via le getimage.php.
+
+#138956 : Modification des scripts de conversion Ascodocpsy
+
+#140756 : Modification du process d'installation 
+Permettre l'installation sur un serveur avec encodage par défaut utf8mb4
+Interdire l'utilisation d'une base déjà existante en utf8mb4 ou la convertir en utf8mb3
+Permettre l'installation sur un serveur avec sql_mode != des paramètres spécifiés.
+
+#140958 : Limitation des statopac aux requêtes GET et POST
+
+#141161 : Modification de la procédure d'installation
+- Reprise des prérequis
+- Suppression du blocage sur les prérequis MySQL
+- Ajout de variables de session pour MySQL
+
+#141324 : Harmonisation des règles de définition de mot de passe OPAC/ Gestion et transformation  en CDATA (min_special_chars)
+
+#142043 : [Acquisitions] Prise en compte de la substitution des statuts de suggestions
+Prise en compte de la substitution des statuts de suggestions si le XML "includes/suggestions/suggestions_map_subst.xml" est présent.
+
+#143294 : [Divers] Ajout la possibilité de récupérer les auteurs sans les vedettes
+
+#146934 : [Export OAI] Mise en cache des identifiants des notices liées
+Gestion de la mise en cache des identifiants des notices liées
+
+#148138 : [Sphinx] - Correction / optimisation de la recherche
+Les résultats d'une recherche dans un segment avec sphinx, venaient créer une table temporaire avec quatre fois les mêmes identifiants à l'intérieur.
+Cela pose des problèmes de latence lors de la jointure avec d'autres tables temporaires.
+
+----
+OPAC
+----
+
+#133100 : [Webservices] Ajout d'une réservation
+Intégration des notifications par mail des utilisateurs concernés en ajout de réservation.
+
+#133544 : Ajout d'un message separateur pour les auteurs de notices dans les résas
+Le message est par défaut : "/"
+Code message : record_author_separator
+
+#134739 : Déplacement du bouton "Changer le mot de passe" dans l'onglet "mon compte"
+Le bouton "Changer le mot de passe" était avant les informations de l'emprunteur, maintenant il est en dessous.
+
+#136497 : [Contributions] Suppression de la recherche sur les documents numériques 
+Utilisation de l'attribut "pmb:no_search" pour la propriété "has_docnum" de l'ontologie des entités PMB. Ainsi la recheche n'est plus accessible.  
+
+#136822 : [Ark] Ajout de la redirection OPAC pour les autorités personnalisables
+
+#138354 : Connecteur d'enrichissement Mir@bel
+
+#141312 : Ajout d'une bascule visibilité mot de passe en changement de mot de passe
+
+#142257 : Prise en compte de l'origine de l'authentification pour le message de demande de modification de mots de passe
+En cas d'authentification mixte (interne/externe)
+- si authentification externe => pas d'affichage du message de demande de modification de mot de passe
+- si authentification interne => affichage du message de demande de modification de mot de passe
+
+#146206 : [Univers de recherche] Récupération des informations des segments
+Si on décide de ne pas afficher la liste des segments d'un univers avec du css, on ne va pas chercher les informations correspondantes.
+
+-------
+Portail
+-------
+
+#132497 : Refonte du paginateur dans la navigation a2z
+
+#136308 : Portail - module avis : sélection d'avis de notice en fonction d'un emprunteur lié à un article
+Sélection d'avis de notice en fonction d'un emprunteur lié à un article via un champ perso
+
+​
+*******************
+ANOMALIES
+
+--------------
+Administration
+--------------
+
+#132437 : [Localisation / Sur-localisation] Email
+Augmentation de la taille du champ email à 255 caractères maximum.
+
+#132651 : Indexation FAQ
+En nettoyage de base via les API, la réindexation de la FAQ se faisait avec le champ base des notices si les index globaux étaient activés dans la même taches.
+On passe maintenant par la factory indexation_collection pour récupérer l'instance et ne plus avoir le souci. 
+
+#133791 : Mauvaise variable renvoyée dans le getter
+Dans l'event explnum, on retourne le document numérique au lieu de la vignette dans le getter sur la vignette
+
+#136362 : [Hist. des mails] Relances à faire
+Correction sur le groupement des mails pour ceux envoyés depuis le module de relances.
+
+#136616 : Vérification lors de la suppression des stockages
+Dorénavant, on vérifie à la suppression d'un stockage s'il n'est pas utilisé dans des collections numériques
+
+#136748 : Pictogrammes d'exports
+L'affichage des pictogrammes d'exports n'étaient pas compatibles avec le module "Administration".
+
+#137393 : [Serveurs sortant SMTP] Alerte
+Bloc d'alerte dans le module administration indiquant que des mails ne sont pas configurés.
+
+#138122 : Prise en compte du niveau bibliographique dans l'import de notice
+Dorénavant, si on importe une notice unimarc avec le code "bl" de renseigné, on en tient compte.
+
+#138665 : Conversion MEMODOCNET BCDI -> pmb-XML UNIMARC
+Contexte :
+Fichier source en ISO-8859-1
+PMB en UTF-8
+La conversion ne fonctionnait pas y compris lorsque l'on forçait l'encodage de la source.
+
+#138879 : [Droits d'accès] Affichage des menus & sous-menus
+Correction sur l'affichage des menus & sous-menus.
+
+#139694 : Correction d'une erreur de namespace en creation/modification d'un connecteur de type Webdav
+
+#140401 : [Prisme > XML] Fonction de conversion
+Mise à niveau de la fonction de conversion par rapport à la conversion "Prisme > Unimarc"
+
+#140523 : [Préférences] Serveur sortant SMTP
+Pas utile d'afficher le bouton "Annuler".
+
+#141835 : [Conversion Prisme > UNIMARC] Détection automatique de l'encodage
+Modification automatique de l'encodage d'un fichier ISO-8859-1 sur une base UTF-8 lors de la conversion Prisme > Unimarc.
+
+#145629 : Vérification des liens d'exemplaires numériques de notices/ de bulletins
+Correction sur l'ajout des liens cassés dans un panier de notices.
+
+#146561 : [Edition d'une tâche] Affichage de la description
+L'affichage de la description était sortie de la zone de texte à cause d'une balise mal fermée.
+Le navigateur ne le considérait certainement pas comme une erreur auparavant.
+
+----------
+Animations
+----------
+
+#132233 : Ajout la possibilité d'associer un calendrier pour les animations
+Dans l'administration des animations, on peut créer un calendrier en lui donnant un nom et une couleur.
+Quand on ajoute ou que l'on modifie une animation, on peut lui associer un calendrier.
+Dans le portail, quand on affiche la liste des animations en mode calendrier, on peut choisir d'afficher la couleur du statut ou du calendrier de l'animation.
+
+#133406 : [Animations] Correction dans l'envoi du mail lors d'une réservation
+Lors du remplacement de !!animation_registered_list!! dans le template de mail, on ne renvoyait aucune information sur les personnes inscrites.
+
+#136930 : Animation - Mail d'inscription
+Ajout du statut de l'inscription sur les personnes inscrites.
+Exemple si une personne est inscrite en liste d'attente, on retrouvera dans le mail :
+<pre>
+- Martin, inscrit sur liste d'attente.
+</pre>
+
+---------
+Autorités
+---------
+
+#135418 : Correction lors de l'enregistrement d'une autorité
+Lorsqu'une autorité avait un champ personnalisé du même type qu'elle, on pouvait la sélectionner dans ce champ.
+Ce qui provoquait une boucle infinie.
+
+#136027 : [Sphinx] Autocomplétion d'une oeuvre
+- L'autocomplétion d'une ?uvre était très lente sur de grosses bases, car l'appel au searcher_factory n'était pas présent.
+- La recherche ne passait donc pas par la recherche sphinx
+
+#136147 : [Gestion des autorités] Auteurs
+Ré-intégration de l'affichage du renvoi dans l'affichage des auteurs en tableau suite à une recherche.
+
+#136737 : Correction dans le remplacement d'autorités personnalisées
+Le remplacement entre autorités personnalisées n'était pas pris en compte dans les vedettes (concepts composés, qualification, ...). C'est corrigé.
+
+#137521 : Correction dans les autorités liées (problème d'encodage)
+le fichier aut_links.xml était encodé en iso alors que ce contenu était en utf-8. Le fichier n'était donc pas valide. C'est corrigé.
+
+#137539 : [Indexation] Correction dans les concepts composés
+Quand on lance l'indexation pour un concept composé, il indexait aussi sa composition qui elle-même indexait à nouveau le concept composé.
+Et ainsi de suite...
+C'est corrigé.
+
+#138248 : [RMC Autorités] Tri des résultats d'un ou plusieurs paniers
+Correction sur l'affichage des tris lors d'une recherche multi-critères avec les critères de paniers.
+
+#139995 : Correction de l'affichage de la carte sur l'aperçu d'un autorité
+Auparavant, l'emprise de l'autorité ne s'affichait pas sur la carte dans l'aperçu de celle ci. Ex : si une catégorie n'avait pas de notice associée, son emprise n'était pas affichée. C'est corrigé.
+
+#140430 : [Autorités perso] Champs multivalués
+Correction sur l'affichage des champs multivalués en résultats de recherche.
+
+---------
+Catalogue
+---------
+
+#132036 : [RFID] Bibliotheca : nombre d'appels au webservice
+Il y avait un trop grand nombre d'appels au WebService, certains appels étaient en concurrence.
+
+#132425 : [Identifiants ARK] Ajout de la génération du permalink dans les notices externes
+En préparation de futurs ARK sur les notices externes.
+
+#132650 : [Paniers d'autorités] Autorités liées + CP URL
+- Ajout de la colonne "Autorités liées" dans les paniers d'autorités
+- Affichage du lien brut plutôt que le libellé brut dans le tableau pour les CP de type URL
+
+#133207 : Correction dans l'affichage des vignettes de document numérique en gestion
+
+#135689 : [Catégorisation d'une notice] Recherche hiérarchique
+Redimensionnement de la fenêtre de sélection des catégories dans l'onglet de recherche hiérarchique. 
+Le paginateur de ce dernier n'était pas toujours visible.
+
+#135744 : [Articles de périodiques] Dédoublonnage 
+Le dédoublonnage était faussé lorsque celui-ci utilise l'année de publication dans le calcul lors de l'enregistrement d'articles de périodique.
+Pour cause, l'année n'est pas soumise par le formulaire.
+
+#138151 : [Connecteurs] Préférence "nouveautés"
+Prise en compte de la préférence nouveauté dans les notices lors de l'intégration en lot via connecteur.
+
+#138347 : [Z3950] Intégration de notices en lot
+Correction sur la prise en compte des scripts personnalisés du côté de la récupération des relations associées aux notices.
+
+#138349 : [Bulletinage] Gestion des retards 
+Lorsque l'on est sur la gestion des retards, il n'était pas possible de revoir le contenu du PDF/RTF en actionnant une seconde fois le bouton "Relancer".
+
+#138948 : Cache XML de recherche multi-critères
+Le cache XML dans les recherches multi-critères n'était plus pris en compte depuis l'implémentation  des recherches en cascade.
+
+#140787 : [Import Z3950] Correction création des catégories + Ajout d'un paramètre utilisateur pour la catégorisation
+Lors de l'import par le catalogue, avant toute chose, on enregistrait les catégories.
+Si on annulait l'import, les catégories restaient présentes.
+C'est corrigé.
+Ajout d'un paramètre utilisateur pour la sélection automatique ou manuelle de la catégorisation.
+
+#141401 : [Facettes] Critère de recherche multi-critères
+Optimisation du critère spécial de recherche multi-critères pour résoudre un problème de lenteurs.
+
+#144967 : Autocomplétion dans les catégories : correction de l'enregistrement
+À la sélection d'une catégorie contenant la recherche (et pas commençant par), l'identifiant était préfixé par "*". L'indexation ne se créait pas. C'est corrigé.
+
+-----------
+Circulation
+-----------
+
+#133498 : Génération du mot de passe lors de l'envoi d'un mail
+Quand on génère un mot de passe par mail pour un utilisateur en circulation, le mot de passe était chiffré avec la nouvelle méthode d'encryptage et plus dans l'ancienne.
+Lors de la connexion a l'opac, on n'invitait plus l'emprunteur à le modifier.
+On ajoute dans l'URL de connexion dans le mail la "database".
+Ce qui permet d'éviter le souci de conflit dans les cookies (PhpMyBibli-DATABASE) qui pouvait apporter un côté aléatoire.
+
+#133583 : Génération du mot de passe pour un lecteur
+Lors de la création d'un mot de passe aléatoire d'un lecteur en circulation, le nombre de caractères était bien trop supérieur à ce qu'on voulait.
+C'est corrigé
+
+#136642 : [Circulation de périodiques] Réparer la liste de circulation
+Ajout d'un bouton pour réparer la liste de circulation lorsque celle-ci n'est plus associée à une liste de diffusion pour l'impression.
+
+#136814 : [Prêts d'un lecteur] Prolongations simples / multiples
+Le calcul des prolongations depuis la fiche lecteur ne fonctionnait plus à partir de la version 7.4, retour en arrière sur l'ergonomie de sélection des dates.
+
+#137001 : Correction sur génération des mots de passe
+En version 7.4, la génération des mots de passe par mail se fait avec l'ancien format.
+Si le paramètre "opac_empr_password_salt" n'est pas défini, la génération n'est pas correcte.
+>> Vérification et génération du paramètre si besoin.
+
+#138144 : Correction prise en compte niveau de relance dans mails et lettres de retards
+
+#138652 : [Transferts] Refus à partir de la liste des envois
+Correction sur le refus à partir de la liste des envois.
+
+#139678 : [Réservations / Transferts] choix d'un exemplaire situé dans une autre localisation
+Affichage de l'icône de transfert lorsque le scénario suivant se produit sur la liste des réservations en cours :
+- L'usager Lecteur_A localisé à Localisation_A réserve des documents avec retrait à Localisation_B.
+- Exemplaires Localisés à Localisation_B et Localisation_C.
+- Exemplaire de Localisation_B est déjà emprunté. Celui de Localisation_C est disponible MAIS pas de possibilité de choix d'exemplaire
+
+------
+Divers
+------
+
+#132571 : [ARC2] Non destruction des tables temporaires
+Une requête SPARQL de sélection dans ARC2 génère une création de table tempo en SQL pour aller chercher la donnée.
+Cette table était bien détruite après dans le framework mais pas sur la bonne session MySQL.
+Du coup le "drop if exist" ne lève pas d'erreur mais ne supprimait pas pour autant la table tempo.
+Cela augmentait violemment le nombre de descripteurs de fichiers dans MySQL jusqu'à dépasser la directive open_file_limit, ce qui provoque une erreur.
+La modification est faites directement dans le vendor pour corriger, ce bug n'est pas encore traité dans le dépôt d'origine d'ARC2
+
+#135593 : Affichage des qualifications dans les champs perso
+La qualification était répétée sur tous les champs.
+
+#135690 : [Sélecteurs] Pagination
+Optimisations du code source sur la gestion de la pagination dans les sélecteurs PMB.
+
+#136225 : Correction formatage des paramètres dans classe mail
+
+#136403 : [Droits d'accès] Surcharge des droits d'accès
+Rétablissement de la surcharge possible des droits d'accès au niveau des entités (lecteurs, notices, etc.).
+
+#137290 : [RMC] \ dans les critères de recherche
+Correction sur l'apparition d'antislash dans les critères de recherche lors de l'application d'une substitution avec des apostrophes.
+
+#137365 : [Borne de prêt] - Prolongation de prêt
+Revue de la prolongation des prêts pour qu'elle concorde avec le comportement en OPAC.
+
+#137580 : Correction vérification login/mot de passe emprunteur sur connecteur Dilicom API APP
+
+#137984 : [Lettres de retard] espacement entre after_recouvrement et after_list
+L'espacement entre les valeurs des paramètres after_recouvrement et after_list dépendait de la taille du bloc exemplaire. L'espace vide était donc plus ou moins important selon le paramétrage.
+
+#138137 : [Django - h2o] Normalisation de l'encodage des fichiers
+Problème de mélange d'encodage des fichiers et des données.
+
+#138496 : Correction de l'insertion dans la pile d'indexation
+Dans certains cas très particuliers (ex : contributions multiples), la requête d'insertion dans la pile plantait et les nouvelles entités n'étaient indexées. C'est corrigé.
+
+#138548 : [RMC] Correction du critère date d'ajout / modification des autorités
+- Correction de la recherche sur les dates avec l'opérateur "="
+
+#138944 : Corrections failles de sécurité;
+- OPAC Export : Injection SQL
+
+#139080 : Correction du calcul de la date de parution de notice dans les imports
+
+#139326 : [ZServer] Mise à jour avec yaz v5.34 et correction de la recherche
+- Refactorisation du code de ztest.c pour prendre en compte la dernière version de Yaz(v5.34)
+- Prise en compte des accents et des apostrophes dans la recherche
+
+#139977 : Nettoyage des caractères invalides lors de la conversion XML
+
+#140483 : OAI Sortant : Correction de la gestion des notices supprimées
+
+#140838 : [ARC2] Après une requête d'insertion puis une requête de sélection, on ferme la connexion
+Quand on fait des requêtes "insert" puis un "select" après, on doit déco/reco de la base de donnée pour ne plus avoir de cache.
+- Ajout d'une méthode pour faire la déco/reco
+- Appel de la méthode dans le handler au moment de la sauvegarde.
+
+#141134 : Corrections sur erreurs lors de la lecture de la constante SESSlang
+
+#141146 : Correction sur sélecteur de base en gestion
+
+#141206 : Déclenchement de l'indexation dans les sélecteurs
+Quand on ouvre un sélecteur pour une recherche ou une création, on déclenche l'indexation. Cela permet de rechercher les entités fraîchement créées et ainsi créer des liens avec celles-ci. 
+
+#141620 : [Bulletins] Tri après filtrage sur numéro
+Correction sur la disparition du tri suite à un filtrage sur une colonne.
+
+#141807 : [Zones de texte large] Traductions
+Correction sur le ré-affichage des zones de texte large traduisibles.
+
+#142292 : Correction erreur indexation instruments
+
+#143226 : [Divers] Correction erreur de duplication de vedettes
+Les qualifications dans les oeuvres et les notices posaient problème en duplication.
+
+#143605 : [Contributions] Prise en compte du bulletin lors de la contribution sur une notice de bulletin
+La contribution d'exemplaire sur une notice de bulletin ne reliait que l'exemplaire à la notice et non au bulletin. Celui-ci n'apparaissait donc pas dans la liste des exemplaires du bulletin
+
+#146148 : [Web services] Correction sur la gestion des paramètres en JSON-RPC + orthographe
+
+#149057 : Correction verification version max MySQL 
+
+---
+DSI
+---
+
+#148769 : [DSI] Correctif duplication de flux RSS
+Un souci lors de la duplication faisait perdre le paramétrage du flux RSS, du flux original et de son duplicata.
+Le paramétrage est à présent conservé et reporté lors de la duplication.
+
+--------
+Editions
+--------
+
+#144521 : [Planches de codes-barres] Données non enregistrées
+Correction sur l'enregistrement des valeurs "Place allouée au nom de l'établissement", "Taille de la police" et "Taille du texte".
+
+#146528 : [Templates de notices] #date_publication()
+;Correction sur la récupération de la date de publication.
+Précision : la date récupérée est celle au format AAAA-MM-JJ, elle est donc à formater au besoin avec #format_date();
+
+#148729 : [Retards lecteurs] Impression/Mail des relances
+Application de l'action "Impression/Mail des relances" à celles sélectionnées.
+Intégration d'un bouton pour réaliser toutes les relances.
++ Ajout d'une confirmation pour chacune des deux actions.
+
+----
+FRBR
+----
+
+#136944 : Correction pb encodage en iso pour l'enregistrement du placement des cadres FRBR 
+Il y avait une erreur lors de l'enregistrement du placement des pages FRBR avec un portail en iso.
+
+------------
+Modélisation
+------------
+
+#136036 : [Copier coller] Des scénarios dans les Espaces de contribution
+
+#137147 : [Contribution] Correction dans l'affichage des champs personnalisables
+Les listes de champs personnalisables en contribution n'étaient pas bien ordonnées.
+C'est corrigé.
+
+----
+OPAC
+----
+
+
+#132479 : [Suggestions de recherche / auto-complétion] Saut 2 par 2
+Correction sur la sélection des éléments auto-complétables dans l'ensemble de l'OPAC lorsque les suggestions de recherche sont activées, la flèche basse passait les entités de 2 en 2.
+
+#132525 : Correction du paginateur sur la liste de notices dans les autorités
+
+#133202 : [Fil d'Ariane] Historique de navigation
+Prise en compte des bases en iso 
+
+#133436 : Visionneuse, page blanche si pas de classe d'affichage
+On gère un cas très particulier... J'ai bien une classe d'affichage pour afficher la visionneuse mais elle ne sait pas restituer le document (pas de méthode render pour la classe générique).
+Dans le cas, l'afficheur redirige maintenant vers doc_num.php.
+
+#133630 : [Contributions] Correction de la construction des champs de responsabilités
+
+#133729 : [Interrogation externe] Affichage des cases à cocher
+Encapsulation des cases à cocher regroupant les différents critères de recherche dans une div.
+
+#133880 : Correction dans l'affichage de la requête humaine
+L'affichage d'un critère spécial ne fonctionnait plus dans la human query
+
+#134172 : Paginateur
++Modifications :+
+- Prise en compte des fichiers subst
+- Correction de la prise en compte du nombre d'éléments par page sur une recherche de notices
+
+#134730 : Formulaire de contact : afficher les messages d'erreurs sous les champs concernés
+Les erreurs étaient affichées dans tous les cas sous les champs concernés.
+
+#135488 : Prise en compte du mode d'affichage des notices à l'application d'une facette
+Prise en compte du fichier display_mode.xml pour l'affichage du paginateur.
+
+#135489 : [Recherches prédéfinies / paginateur] En accès direct
+Affichage des résultats d'une recherche prédéfinie en accès direct, le paginateur ne fonctionnait pas à tous les coups.
+
+#135503 : [Paginateur] Sélecteur Custom - Correction dans le sélecteur du nombre de pages
+Pour le sélecteur custom :
+On ne fait plus un "onclick" sur les options, mais un "onchange" sur le select.
+Pour une compatibilité avec tous les navigateurs.
+
+#136031 : [Connexion OPAC / Vues OPAC] Redirection
+Les données postées n'étaient pas embarquées lors de la redirection dans un contexte où les vues OPAC sont activées.
+
+#136300 : Correction du style pour la carte en OPAC
+Sur certains portails, les boutons pour utiliser la carte correctement étaient masqués. C'est corrigé.
+
+#136524 : Correction de l'export des paniers
+Lorsqu'on voulait exporter les notices présentes dans son panier, le fichier d'export était corrompu par l'alerte indiquant que le mot de passe de l'emprunteur ne respecte plus les règles de sécurité.
+
+#136563 : [Contribution] Correction dans la modification de document numérique
+Lorsque l'on supprime un document numérique d'une notice dans une contribution validée, on ne pouvait pas en rajouter un nouveau.
+C'est corrigé.
+
+#137865 : [Contributions] Correction dans l'affichage de la recherche sur les entités liées
+Suite au développement sur la suppression de la recherche sur les documents numériques, on ne pouvait plus chercher aucune autre entité dans les formulaires. C'est corrigé.
+
+#138059 : [RMC Responsive] Tri dans les sélecteurs
+Lors de l'affichage d'une liste, les champs étaient ordonnés par identifiant.
+Le tri est maintenant par ordre alphabétique.
+
+#138119 : [Sélection d'un tag] Libellé avec apostrophe
+Correction sur la sélection de tag lorsque le libellé contient une apostrophe.
+
+#138467 : Conservation du contexte d'authentification externe lors de la destruction de session
+
+#138574 : Correction affichage connecteur enrichissement Mir@bel
+
+#138919 : [Templates de notices] #no_image();
+Correction sur la prise en compte du type de document lors de la récupération de la no_image.
+
+#139257 : [RMC Responsive] Affichage des champs personnalisables de type liste de choix
+Dans la RMC Responsive les champs personnalisables de type liste de choix ne s'affichaient pas.
+C'est corrigé.
+
+#140321 : [Charte] Affinage d'une recherche
+L'affichage suite à l'affinage d'une recherche multi-critères contenant un critère d'autorité avec des valeurs pré-sélectionnées engendrait parfois un visuel à plat.
+
+#140638 : [Reliures / Nombre d'articles] Liste des bulletins
+Correction sur l'affichage de la colonne "Nombre d'articles".
+
+#140743 : [Données d'exemplaire] Réservation(s) associée(s)
+Correction sur la récupération du nombre de réservations associées lorsque le code-barres exemplaire contient un apostrophe.
+
+#141594 : Correction sur la récupération des subst de messages pour les mots de passe
+
+#141905 : Recherche dans les sources affiliées
+Correction sur l'affichage de certains résultats.
+
+#142185 : [Visionneuse / Driver PMB] Sphinx 
+Intégration de Sphinx dans le driver PMB de la visionneuse
+
+#146186 : [Listes de lectures] Ajout de membres
+Empêcher un usager non connecté de récupérer la liste des lecteurs de la base.
+
+#147023 : Correction erreur sur recherches catégories en OPAC
+
+#148283 : Correction dans l'expiration des sessions OPAC
+Les sessions OPAC expiraient quand un utilisateur anonyme se connectait.
+
+#149320 : [Univers de recherche] Recherche longue sur une base avec beaucoup de volumétrie
+Gain de temps important lors d'une recherche dans un segment, le calcul de la pertinence perturbait le traitement.
+
+-------
+Portail
+-------
+
+#133113 : [Portail] correction dans l'envoi de données aux vues
+Avec l'ajout du paginateur dans certains cadres de portail, la structure de données en entrée a changé. Ce qui produit des erreurs dans les vues.
+
+#136060 : [Gestion du contenu éditorial] Filtre rapide
+Le filtre rapide ne fonctionnait pas avec les caractères accentués et les caractères spéciaux.
+
+#140905 : Portail : correction du permalien pour les articles/rubriques génériques
+Dans les templates django, le permalien des articles/génériques ne retournait qu'une chaîne vide. C'est corrigé.
+
+----
+RFID
+----
+
+#135242 : Correction warning sur protocol SIP 
+
+#141918 : [RFID] Correction lors de la programmation d'étiquette
+S'il y avait une erreur lors de l'écriture d'une puce, on indiquait "une erreur est survenue" et ensuite "programmé avec succès".
+C'est corrigé.
+
+
+*******************
+NOUVELLES FONCTIONNALITES
+
+​--------------
+Administration
+--------------
+
+#129145 : [Mails] Configuration serveur sortant SMTP
+Déploiement d'une configuration SMTP possible par adresse mail expéditrice
+
+----
+OPAC
+----
+
+#131353 : Connecteur Mir@abel
+Nouvelle fonctionnalité
+
+-------
+Portail
+-------
+
+#145156 : [Portail] Ajout d'une source de données Rubriques citées en CP d'une rubrique
+Une nouvelle source de données dans la partie portail a été ajoutée, basée sur le fonctionnement de la source de données *Articles cités en CP d'une rubrique*.
+Elle se nomme *Rubriques citées en CP d'une rubrique*. 
+Elle retourne une liste de rubriques ayant pour valeur de champ perso une valeur passée en variable globale. Le champ perso à utiliser ainsi que la valeur sont à paramétrer dans le cadre, avec la datasource.
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.6                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+*******************
+ANOMALIES
+
+------------
+Mod�lisation
+------------
+
+#131321 : [Contribution] Revue des popup en mod�rations/mod�lisation
+Revue des boutons "...", dans les formulaires de contributions, certaines pages retournaient des codes d'erreur 404 ou pas le bon type d'entit�s.
+
+----
+OPAC
+----
+
+#131784 : Ajout d'une description pour la modal des facettes
+Pour ajouter une description sp�cifique pour une facette, il faut ajouter dans les susbst des messages une entr�e avec le code : description_facette_X
+ - *X* correspond � l'identifiant de la facette.
+Exemple :
+<pre><code class="xml">
+<entry js="facettes_modal" code="description_facette_1">Affichage de la liste des ann�es de cr�ation en ordre croissant.</entry>
+</code></pre>
+Un message par d�faut est d�j� renseign�.
+
+
+*******************
+EVOLUTIONS
+
+------
+Divers
+------
+
+#131492 : Template param�trable pour oeuvres et auteur
+Ajout d'un m�canisme permettant de changer le template H2o � appeler en OPAC comme en gestion...
+Pour les oeuvres, on peut maintenant utiliser un premier suffixe pour la nature (titre_uniforme_a.html) voir un deuxi�me (titre_uniforme_a_a.html) pour le type de l'oeuvre...
+Pour les auteurs, on peut maintenant utiliser le type en suffixe (author_70.html / author_71.html / author_72.html)
+Ces fichiers restent eux-m�me substituables...
+C'est valable pour le template g�n�ral de la page, la liste, le d�tail et l'ISBD s'il existe.
+
+----
+OPAC
+----
+
+#131389 : [Contributions] Modification de la structure des champs "responsabilit�" pour avoir un style identique aux autres champs
+inclusion du bouton "+" dans la div "contribution_area_flex"
+
+#131465 : Segment de recherche : ajout des facettes dans le partage de recherche
+
+-------
+Portail
+-------
+
+#131867 : Ajout d'un paginateur dans les modules de listes
+Ajout du paginateur dans les listes :
+- Liste d'animations
+- Liste de portefolio
+
+#131924 : [Animations] Enrichissement du plugin
+On donne la possibilit� d'acc�der � l'animation dans le contenu d'un article.
+Exemple :
+{{ article.animation.description }}
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.5                                                               *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+ANOMALIES
+
+--------------
+Administration
+--------------
+
+#129321 : Identification des roles d'usagers dans les droits d'acc�s
+Correction d'un cas de figure suite � l'�volution permettant d'avoir plusieurs r�les possibles pour un seul usager.
+Si le r�le peut etre multiple, les valeurs qu'ont utilisent pour le calculer aussi !
+
+---------
+Catalogue
+---------
+
+#128983 : [Multi-crit�res] Crit�res de date
+Correction des libell�s sur les op�rateurs.
+
+#129793 : Documents num�riques : Ajout d'un mime-type
+Dans les documents num�riques, s'il n'y a pas de vignette, on n'affichait plus l'image qui correspondait au mime-type du fichier.
+
+-----------
+Circulation
+-----------
+
+#128475 : [Pr�visions] Action de validation
+L'action de validation ne fonctionnait plus depuis le passage champs de saisie "Date de d�but" et "Date de fin" en HTML5.
+
+#129002 : [Fiche lecteur] G�n�ration d'un mot de passe lecteur + envoi par mail
+La combinaison de la g�n�ration d'un nouveau mot de passe avec l'envoi par mail ne fonctionnait pas.
+La m�thode de cryptage utilis�e restait sur l'ancienne, quelque cas pouvaient fonctionner.
+
+------------
+Mod�lisation
+------------
+
+#128286 : [Contribution] On affiche les erreurs et non une fatale
+Dans la r�cup�ration des sc�narios li�s, on a une erreur d'appel de static qui levait une fatale et non l'erreur.
+C'est corrig�.
+
+----
+OPAC
+----
+
+#128457 : [Demandes de num�risation] Cr�ation impossible
+Correction sur la cr�ation de nouvelles demandes de num�risation.
+
+#129933 : Ajout de la classe "special" pour les notices li�es 
+Dans les notices li�es en OPAC, on ne r�cup�re pas les informations de la classe sp�ciale.
+
+#130378 : Faille XSS dans les univers
+Correction d'une faille XSS dans l'affinage d'un segment
+
+-------
+Portail
+-------
+
+#129374 : [Contribution] Statut du document num�rique non pris en compte
+L'int�gration d'un document num�rique en contribution se faisait forc�ment avec le premier statut existant. 
+On prend maintenant en compte s'il y en a un de s�lectionn� dans le formulaire.
+
+
+*******************
+EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#129370 : Prise en compte des �v�nements dans les Webservices
+On s'assure maintenant que le syst�me d'abonnement aux �v�nements dans le code est op�rationnel au travers des webservices
+
+#129813 : Gestion de l'encode dans le script d'import lecteurs import_bretagne_3.inc.php
+Gestion de l'encode dans le script d'import des lecteurs import_bretagne_3.inc.php via un s�lecteur pour le fichier � traiter et en fonction de l'encodage du PMB.
+
+#130627 : Gestion des r�gles de mots de passe � l'import
+V�rification de la conformit� des mots de passe fournis � l'import.
+Si OK > Nouveau format
+Sinon > Ancien format (impose le changement de mot de passe)
+
+#130768 : Identifiants ARK : g�n�ration des ARK via le planificateur de t�ches
+Ajout de la g�n�ration des ark dans le nettoyage de base et le planificateur.
+
+---------
+Catalogue
+---------
+
+#129640 : Possibilit� pour un �venement d'afficher un message d'erreur � la sauvegarde d'un document num�rique
+Maintenant, si l'event d'apr�s sauvegarde ram�ne une erreur, elle est affich�e dans l'interface
+
+-----------
+Circulation
+-----------
+
+#129748 : [Animation] Circulation - Ajout d'informations suppl�mentaires
+Dans la circulation, ajout d'informations suppl�mentaires dans la liste des animations :
+- Nombre de places restantes
+- Localisation (Si pas de localisation renseign�e)
+- Statut
+- Type
+
+------
+Divers
+------
+
+#130387 : ARKs: Permalien pour les entit�s de pmb
+
+#130523 : Identifiants ARK : Report en 7.4
+
+---
+DSI
+---
+
+#129716 : Ajout des alertes priv�es dans les univers de recherche
+Ajout des alertes priv�es dans les univers de recherche pour les segments de type "Notices"
+En OPAC cr�ation d'une alerte priv�e via un bouton dans l'univers de recherche sur le segment
+En Gestion DSI gestion de l'alerte priv�e + RMC
+
+----
+OPAC
+----
+
+#130343 : Formulaire de contact : param�trage pour afficher les messages d'erreurs sous les champs concern�s
+
+#130839 : [Nomenclatures] Impl�mentation des nomenclatures � l'OPAC
+Report des classes de nomenclature de la gestion � l'OPAC.
+Ajout de 2 propri�t�s dans la classe record_datas pour l'acc�s aux donn�es des nomenclatures des notices:
+*record.nomenclature*
+*record.analyzed_nomenclature*
+
+-------
+Portail
+-------
+
+#130353 : Paginateur de l'OPAC "templatable" en Django
+Modification du paginateur de l'OPAC afin de pouvoir de remettre en forme � la demande.
+Il y a maintenant un template DJango (qui reprend � l'identique l'existant) qu'on peut personnaliser.
+Les templates pour le paginateur et le s�lecteur de nombre de r�sultats par page sont ind�pendants.
+
+#130475 : [Portail] Ajout de la pagination dans les modules de listes (notices, articles, rubriques)
+Ajout d'un syst�me de pagination dans les modules de listes : notices, articles, rubriques sur toutes leurs datasources pr�sentes
+Attention, il ne peut n'y avoir qu'un seul paginateur par page !
+Les �l�ments du paginateur peuvent �tre appel�s de mani�re ind�pendante dans le template Django : 
+  - le paginateur => {{ paginator.paginator }}
+  - le nombre par page => {{ paginator.nbPerPageSelector }}
+  - le navigateur (reprend les deux �l�ments du dessus) => {{ paginator.navigator }}
+  
+----
+RFID
+----
+
+#129148 : [RFID/Bibliotheca] - D�sactivation du bouton "Confirmer les prets" en mode simple
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.4                                                               *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+ANOMALIES
+
+----------
+Animations
+----------
+
+#125781 : Liste des valeurs de champs personnalis�s
+Correction sur la r�cup�ration de la valeur par d�faut.
+
+#125809 : Remplacement de motifs dans le mailing;Correction sur le remplacement de 3 motifs dans le mailing :
+- !!empr_auth_opac!!
+- !!empr_auth_opac_subscribe_link!!
+- !!empr_auth_opac_change_password_link!!
+
+#125831 : [D�tail d'une animation] Animations li�es
+Correction sur l'affichage des animations li�es � partir du d�tail de l'animation.
+
+-----------
+Circulation
+-----------
+
+#126715 : [RFID] Biblioth�ca : Ajout de l'�tat de la puce dans la rfid
+Dans la circulation, quand on lit une puce, on sait si l'antivol est actif ou pas.
+*
+------------
+Mod�lisation
+------------
+
+#127038 : [Contribution] Ajout d'un contr�le sur le champ code barre de l'exemplaire - Rajout d'un test Javascript en gestion/opac;On rajoute un test sur la pr�sence ou non du champ.
+Cela �vite une erreur javascript.
+
+----
+OPAC
+----
+
+#126035 : [Droits d'acc�s] Correction dans le calcul des profils utilisateurs des droits multiples;Avec l'ajout des droits multiples, le calcul des profils utilisateurs n'�tait pas correct quand il croisait plusieurs param�tres (ex : "cat�gorie de lecteur" / "localisation"). C'est corrig�
+
+#126839 : [Contribution] Ajout d'un contr�le sur le champ code barre de l'exemplaire
+Si on saisit un code barre qui est d�j� pr�sent en base, on n'int�grait pas la contribution.
+
+*******************
+EVOLUTIONS
+
+------
+Divers
+------
+
+#122568 : [contributions] ajout d'une propri�t� exemplaire vers notice
+Ajout d'une propri�t� RDF permettant d'ajouter des exemplaires dans le formulaire de contribution d'une notice
+
+#126572 : Ajout des classes de conversion en gestion
+Les classes de conversion sont utilis�es pour transf�rer un entit� PMB dans un store RDF.  
+
+#127832 : [Portail - FRBR] Ajout d'une source de donn�es bulletins dans les notices
+Permet d'alimenter un cadre FRBR de notices avec la notice de bulletin � partir d'un de ses articles.
+
+----
+OPAC
+----
+
+#126067 : Affichage des facettes dans une modale;Nouveau param�tre pour activer cette fonctionnalit�.
+Param�tre : opac_facettes_modal_activate
+
+#126885 : [Univers de recherche] Segment utilisant des valeurs dynamiques :  valeurs optionnelles + pas de mise en cache des r�sultats
+Pour les segments utilisant des valeurs dynamiques dans leur jeu de donn�es, ces valeurs pourront �tre optionnelles : si elles ne sont pas renseign�es, on en tient pas compte. De plus, pour ces segments, il n'y aura pas de mise cache des r�sultats de recherche (cache javascript), parce que justement les valeurs sont dynamiques.
+
+-------
+Portail
+-------
+
+#126665 : [Portail][Module] Possibilit� de s�lectionner plusieurs types d'�venement
+Possibilit� de s�lectionner plusieurs types d'�v�nement dans le module liste d'animation > Source de donn�es > Animation d'un ou plusieurs types d'�v�nement
+
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.3                                                               *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+Voir correctifs de la 7.3.12 dans le fichier changelogs73.txt dans le r�pertoire racine de PMB (ajoutez "73" dans l'URL de cette page !)
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.2                                                                *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+*******************
+ANOMALIES
+
+
+----------
+Animations
+----------
+
+#120745 : [Animation] Correction �ditorialisation - quotas
+- Quand on transforme une animation en article :
+> on r�cup�re le commentaire pour mettre dans le r�sum�
+> on garde la mise en forme HTML d�fini dans les commentaires et dans la description
+> prise en compte de tinyMCE
+- Quotas :
+> correction dans le calcul des quotas internet et global
+> affichage OPAC : quotas Internet a la place de quotas global, et si plus de place internet disponible on affiche un message
+
+#123136 : [Animation] Correction de l'�ditorialisation d'une animation
+On ne pouvait plus �ditorialiser une animation, c'est corrig�.
+
+---------
+Catalogue
+---------
+
+#121332 : Affichage r�duit par d�faut des notices quand aucun template n'est d�fini
+
+-----------
+Circulation
+-----------
+
+#120852 : G�n�ration des r�gles de mot de passe par d�faut
+S'il n'y a pas de r�gle de mot de passe de d�finie, on applique pour le g�n�rateur de mot de passe. 
+Au moins : 6 caract�res, 1 chiffre et une majuscule
+
+#120957 : Politique de changement de mot de passe - Prise en compte du fichier ext_auth.inc.php
+
+#122238 : [Fiche lecteur] Prolongation d'un pr�t
+Correction de la prolongation par pr�t dans la fiche lecteur.
+- La prolongation �tait soumise � la saisie dans le champ date
+- L'action de prolongation sur le bouton ne tenait pas compte de la saisie
+
+#124780 : [Fiche lecteur] Validit� de l'email
+Modification de la regexp pour v�rifier la validit� de l'email, la pr�c�dente engendrait des blocages de page lorsque le mail n'�tait pas correctement format�.
+
+------
+Divers
+------
+
+#120629 : Correction de l'indexation des autorit�s li�es
+une autorit� ne pouvait �tre index�e par des autorit�s li�es du m�me type. C'est corrig�.
+
+#121154 : Politique de changement de mot de passe - Modification / Ajustement
+- En OPAC on ne peut plus saisir l'ancien mot de passe comme nouveau
+- Modification du nombre minimal qui compose la g�n�ration du mot de passe et la mise par d�faut en base (au moins 12 caract�res au lieu de 6)
+- Suppression de l'espace � la suite du mot de passe lors de l'envoi du mail
+- Modification du message : Le mot de passe lecteur doit �tre red�fini. -> Le lecteur doit red�finir son mot de passe.
+
+#123041 : Correction de l'inclusion du fichier ARK 2
+Le fichier a �t� d�plac�.
+
+#123062 : Correction de l'indexation des autorit�s li�es entre autorit�s personnalis�es
+une autorit� perso ne pouvait �tre index�e par des autorit�s li�es du m�me type. C'est corrig�.
+
+#124029 : [Contribution] Valeur par d�faut pour le champ "Autre lien"
+
+----
+OPAC
+----
+
+#120641 : Correction de la pagination dans la visionneuse des segments de recherche
+
+#120742 : [Animation] Correction du statut par d�faut a l'inscription en OPAC 
+Quand on s'inscrivait, on pouvait avoir un statut par d�faut � 0 ce qui levait une erreur.
+
+#121139 : [OPAC - Univers] Tris apr�s filtres ne s'appliquent pas
+En OPAC si on appliquait un tri apr�s avoir appliqu� une facette, on perdait la facette et on triait tous les r�sultats de la recherche. Ce souci a �t� corrig�.
+
+#122244 : Corrections diverses dans les contributions
+- champ "commentaire" des concepts : masqu�
+- champ "en relation s�mantique" des concepts : masqu�
+- champ "autorit� li�e" : modification de l'ordre d'affichage des s�lecteurs (type de lien / type d'autorit�)
+
+#122451 : Correction des droits d'acc�s multiples quand on n'est pas connect�
+Depuis l'�volution des droits d'acc�s multiples, un bug emp�chait d'avoir acc�s aux notices quand on n'�tait pas connect�. C'est corrig�
+
+#123323 : [Contribution] Correction quand on clique sur le bouton "Chercher" 
+Quand on ne saisit pas de valeur dans les champs de recherche, on met une "*" et on fait une recherche tous les champs.
+
+#123361 : [Sphinx] Correction dans la recherche des oeuvres en contribution
+
+#123626 : Correction dans la demande de changement de mot de passe
+Quand on faisait une demande de mot de passe oubli� sans �tre connect�, on avait une erreur.
+C'est corrig�.
+
+#124033 : Contribution : ajout d'un contr�le suppl�mentaire sur les champs personnalis�s de type "liste de choix" 
+Si les ordres ne sont pas renseign�s, on fait en sorte de leur en donner un par d�faut. 
+
+
+*******************
+EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#120934 : Suppression visibilite et ajout d'une valeur par defaut pour le parametre empr_password_enabled_rules
+
+#123131 : [Gestion des mots de passe] Ajout d'une alerte si pr�sence d'une authentification externe
+Dans le menu de gestion des mots de passe pour les lecteurs, on pr�vient s'il y a une authentification externe.
+
+---------
+Autorit�s
+---------
+
+#125587 : Ajout de la liste des types de liens dans les oeuvres/expressions
+� la place d'avoir dans la pr�visualisation d'une ?uvre/expression "Expression de" maintenant on liste les liens entre ?uvres/expressions.
+
+-----------
+Circulation
+-----------
+
+#120314 : Evolution dans l'envoi d'un mail avec le mot de passe lors d'une inscription ou d'une demande de mot de passe
+- Ajout d'un param�tre pour cocher par d�faut l'envoi d'un mail a la cr�ation (empr_send_pwd_by_mail)
+- S'il n'y a pas de mail valide de renseign� la case est d�sactiv�e.
+
+------
+Divers
+------
+
+#120946 : D�clenchement de l'indexation de la notice � l'ajout, modification ou suppression d'un document num�rique
+
+#121324 : [OPAC - Univers] Ajout d'un onglet de recherche de p�riodiques dans les recherches sur les univers
+Ajout de la possibilit� d'afficher en recherche sur les univers l'onglet de recherche sur les p�riodiques. Cela se param�tre dans le param�trage de l'univers, en cochant la case "Activer la recherche sur les p�riodiques"
+
+#121820 :  Ne plus afficher le champ expression r�guli�re dans la g�n�ration des r�gles de mot de passe
+
+#122801 : [Contributions] Ajout de l'ordre des champs persos de liste dans les formulaires
+Une propri�t� rdf "order" a �t� ajout�e afin de conserver et r�afficher l'ordre des �l�ments de champs perso de liste tels que d�finis dans le param�trage de l'ordre du champ.
+
+#123666 : [contributions] Ajout d'un lookup h2o pour compter les contributions d'un utilisateur
+Ajout d'un lookup retournant un tableau contenant le compteur de contributions en cours, en attente de validation et valid�es pour un utilisateur.
+
+------------
+Mod�lisation
+------------
+
+#122292 : [Contribution] Ajout la possibilit� d'ordonner les r�ponses � afficher en OPAC
+On peut mettre un ordre sur les formulaires et sur les sc�narios.
+
+----
+OPAC
+----
+
+#120343 : Droits d'acc�s : possibilit� d'avoir des r�les multiples pour les emprunteurs
+Si on calcule les r�les des emprunteurs par rapport � une propri�t� multiple (ex : localisation), les droits d'acc�s sont calcul�s en fonction du r�le le plus permissif.
+
+#120624 : [contributions] possibilit� de passer un param�tre dans la shorturl pour acc�der � un formulaire de contribution
+On ajoute un param�tre 'from_record' permettant de savoir si l'utilisateur provient d'une page de notice dans le formulaire de contribution. Utilis� par le PAM notamment.
+
+#121223 : [Univers de recherche] Ajout de la recherche par Ann�e
+Maintenant on peut chercher soit par date (jj/mm/aaaa) ou par ann�e (aaaa)
+Par d�faut dans pmb on cherche sur la date.
+Par exemple : 
+On peut substituer le fichier "/opac_css/includes/search_queries/search_universes_fields.xml" en modifiant le type "date" par type "text" pour avoir une recherche par ann�e.
+
+#122838 : [Contributions] ajout des autorit�s li�es
+On peut d�sormais contribuer sur les autorit�s li�es.
+
+-------
+Portail
+-------
+
+#123215 : Optimisations du Portail
+* Mise en cache de l'arbre des rubriques pour �viter d'aller le calculer � chaque fois
+* Changement d'approche dans les filtres sur valeurs de CP dans le contenu �ditorial, on requete directement plutot qu'utiliser les classes
+* Dans la vue en carousel responsive de notices, on s'assure de ne pas charger de donn�es pour rien. 
+
+#123510 : Ajout d'un tag et d'un filtre H2O pour les contributions
+Filtre H2O :
+{% if "identifiant" | check_right "domaine" "dom_id"
+ %}
+{%endif%}
+Tag H2O :
+Example renvoi le nombre de contribution brouillon d'un emprunteur
+{% sparqlcontribution variable %}
+    SELECT (COUNT(?s) AS ?counter) WHERE {
+        ?s <http://www.pmbservices.fr/ontology#has_contributor> '407' .
+        ?s <http://www.pmbservices.fr/ontology#is_draft> ?o .
+    }
+{% endsparqlcontribution %}
+
+----
+RFID
+----
+
+#124630 : [RFID] Ajout du driver biblioth�ca
++Informations de param�trage :+
+rfid_afi_security_codes		true,false	
+rfid_driver			bibliotheca	
+rfid_serveur_url		http://localhost:21645/
+
+- En mode 0 / 1
++Catalogue+
+> Programmer une �tiquette et activer l'antivol (Nombre de pi�ce 1) 
++Circulation+
+> Programmer une �tiquette / carte lecteur
+
+
+- En mode 0 :
++Circulation+
+> Lecture de l'�tiquette / carte lecteur
+> Pr�t d'un seul exemplaire avec d�sactivation de l'antivol
+> Activer / D�sactiver l'antivol
+> Retour d'un exemplaire avec r�activation de l'antivol
+
+
+- En mode 1 :
++Circulation+
+> Lecture des �tiquettes / carte lecteur
+> Pr�t de plusieurs exemplaires avec d�sactivation de l'antivol
+> Activer / D�sactiver l'antivol
+> Retour de plusieurs exemplaires avec r�activation de l'antivol
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4.1                                                                *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+Voir sur le site www.sigb.net :
+Nouveaut�s : https://www.sigb.net/site/version7-4/nouveautes_7-4.pdf
+Am�liorations : https://www.sigb.net/site/version7-4/ameliorations_7-4.pdf
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.3.14                                                                *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+Voir le fichier changelogs73.txt dans le r�pertoire racine de PMB (ajoutez "73" dans l'URL de cette page !)

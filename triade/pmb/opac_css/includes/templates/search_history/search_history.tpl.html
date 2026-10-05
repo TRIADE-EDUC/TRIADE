@@ -1,0 +1,224 @@
+<!-- $Id: search_history.tpl.html,v 1.6.2.2 2024/07/22 14:56:13 pmallambic Exp $ -->
+
+<div id="search_history_container" class="search_history_container">
+{% if has_history %}
+	<script>
+		var history_all_checked = false;
+		
+		function check_uncheck_all_history() {
+			if (history_all_checked) {
+				setCheckboxes("cases_a_cocher", "cases_suppr", false);
+				history_all_checked = false;
+				document.getElementById("show_history_checked_all").value = pmbDojo.messages.getMessage("history", "show_history_check_all");
+				document.getElementById("show_history_checked_all").title = pmbDojo.messages.getMessage("history", "show_history_check_all");
+				if (document.getElementById("show_history_checked_all_1")) {
+					document.getElementById("show_history_checked_all_1").value = pmbDojo.messages.getMessage("history", "show_history_check_all");
+					document.getElementById("show_history_checked_all_1").title = pmbDojo.messages.getMessage("history", "show_history_check_all");
+				}
+			} else {
+				setCheckboxes("cases_a_cocher", "cases_suppr", true);
+				history_all_checked = true;
+				document.getElementById("show_history_checked_all").value = pmbDojo.messages.getMessage("history", "show_history_uncheck_all");
+				document.getElementById("show_history_checked_all").title = pmbDojo.messages.getMessage("history", "show_history_uncheck_all");
+				if (document.getElementById("show_history_checked_all_1")) {
+					document.getElementById("show_history_checked_all_1").value = pmbDojo.messages.getMessage("history", "show_history_uncheck_all");
+					document.getElementById("show_history_checked_all_1").title = pmbDojo.messages.getMessage("history", "show_history_uncheck_all");
+				}
+			}
+			return false;
+		}
+		
+		function setCheckboxes(the_form, the_objet, do_check) {
+			 var elts = document.forms[the_form].elements[the_objet+"[]"] ;
+			 var elts_cnt = (typeof(elts.length) != "undefined") ? elts.length : 0;
+			 if (elts_cnt) {
+				for (var i = 0; i < elts_cnt; i++) {
+			 		elts[i].checked = do_check;
+			 	} // end for
+			 } else {
+			 	elts.checked = do_check;
+			 } 
+			 return true;
+		}
+						
+		function verifCheckboxes(the_form, the_objet) {
+			var bool=false;
+			var elts = document.forms[the_form].elements[the_objet+"[]"] ;
+			var elts_cnt  = (typeof(elts.length) != "undefined")
+	                  ? elts.length
+	                  : 0;
+	
+			if (elts_cnt) {
+					
+				for (var i = 0; i < elts_cnt; i++) { 		
+					if (elts[i].checked)
+					{
+						bool = true;
+					}
+				}
+			} else {
+					if (elts.checked)
+					{
+						bool = true;
+					}
+			}
+			return bool;
+		} 
+	</script>
+	{{ msg.history_title | page_title }}
+	
+	<form name="cases_a_cocher" class="search_history_form" method="post" action="./index.php?lvl=search_history&raz_history=1">
+		{% if global.opac_rgaa_active %}
+			<div id="history_action">
+				<ul id="history_action_list">
+					<li>
+						<input id="show_history_checked_all" type="button" class="bouton"  value="{{ msg.show_history_check_all }}" onClick="check_uncheck_all_history();" />
+					</li>
+					<li>
+						<input id="remove_history_checked" type="button" class="bouton" value="{{ msg.suppr_elts_coch }}" onClick="if (verifCheckboxes('cases_a_cocher','cases_suppr')){ document.cases_a_cocher.submit(); return false;}" />
+					</li>
+					<li>
+						<input id="search_history" type="button" class="bouton search_history_combine_button" value=" {{ msg.search_history_combine }}" />
+					</li>
+					<li>
+						<label for="search_history_combine_op" class="visually-hidden">{{ msg.operator_between_multiple_selection }}</label>	
+						<select id="search_history_combine_op" title='{{msg.operator_between_multiple_selection}}' name="search_history_combine_op" class="search_history_combine_op">
+							<option value="and">{{ msg.search_and }}</option>
+							<option value="or">{{ msg.search_or }}</option>
+						</select>
+					</li>
+				</ul>
+			</div>
+		{% else %}
+			<div id="history_action">
+				<input id="show_history_checked_all" type="button" class="bouton"  value="{{ msg.show_history_check_all }}" onClick="check_uncheck_all_history();" /><span class="espaceResultSearch">&nbsp;</span>
+				<input id="remove_history_checked" type="button" class="bouton" value="{{ msg.suppr_elts_coch }}" onClick="if (verifCheckboxes('cases_a_cocher','cases_suppr')){ document.cases_a_cocher.submit(); return false;}" /><span class="espaceResultSearch">&nbsp;</span>
+				<input id="search_history" type="button" class="bouton search_history_combine_button" value=" {{ msg.search_history_combine }}" />
+				<label for="search_history_combine_op" class="visually-hidden">{{ msg.operator_between_multiple_selection }}</label>	
+				<select id="search_history_combine_op" title='{{msg.operator_between_multiple_selection}}' name="search_history_combine_op" class="search_history_combine_op">
+					<option value="and">{{ msg.search_and }}</option>
+					<option value="or">{{ msg.search_or }}</option>
+				</select>
+			</div>
+		{% endif %}
+		{% if global.opac_rgaa_active %}
+			<fieldset id="history_fieldset">
+				<legend class="visually-hidden">{{ msg.history_title }}</legend>
+				{% for history in histories %}
+					{{ history }}
+				{% endfor %}
+			</fieldset>
+		{% else %}
+			<ul class="search_history_ul">
+				{% for history in histories %}
+				{{ history }}
+				{% endfor %}
+			</ul>
+		{% endif %}
+		
+		{% if nb_queries > 20 %}
+			<div id="history_action_1">
+				<input id="show_history_checked_all_1" type="button" class="bouton" value="{{ msg.show_history_check_all }}" onClick="check_uncheck_all_history();" /><span class="espaceResultSearch">&nbsp;</span>
+				<input id="remove_history_checked_1" type="button" class="bouton" value="{{ msg.suppr_elts_coch }}" onClick="if (verifCheckboxes('cases_a_cocher','cases_suppr')){ document.cases_a_cocher.submit(); return false;}" /><span class="espaceResultSearch">&nbsp;</span>
+				<input id="search_history_1" type="button" class="bouton search_history_combine_button" value="{{ msg.search_history_combine }}" /><span class="espaceResultSearch">&nbsp;</span>
+				<label for="search_history_combine_op_1" class="visually-hidden">{{ msg.operator_between_multiple_selection }}</label>	
+				<select id="search_history_combine_op_1" title='{{msg.operator_between_multiple_selection}}' name="search_history_combine_op" class="search_history_combine_op">
+					<option value="and">{{ msg.search_and }}</option>
+					<option value="or">{{ msg.search_or }}</option>
+				</select>
+			</div>
+		{% endif %}
+		
+		<script>
+			require(['dojo/dom',
+					'dojo/on',
+					'dojo/_base/lang',
+					'dojo/dom-construct',
+					'dojo/query',
+                    'dojo/ready'],
+			function(dom, on, lang, domConstruct, query, ready){
+				var search_history_combine = function(){
+					var checkboxes = query('input[type="checkbox"][data-search-id]');
+					var checkedBoxes = [];
+					checkboxes.forEach(function(box){
+						if(box.checked){
+							checkedBoxes.push(box);
+						}
+					});
+					if(checkedBoxes.length == 1){
+						document.forms['search_'+checkedBoxes[0].value].submit();
+					}else{
+						var form = domConstruct.create('form', {
+							action: './index.php?lvl=more_results&mode=extended',
+							name: 'search',
+							method: 'post',
+						}, document.body);
+						for(var i=0 ; i<checkedBoxes.length ; i++){
+							domConstruct.create('input', {
+								type: 'hidden',
+								name: 'search[]',
+								value: 's_1',
+							}, form);
+							domConstruct.create('input', {
+								type: 'hidden',
+								name: 'op_'+i+'_s_1',
+								value: 'EQ',
+							}, form);
+							domConstruct.create('input', {
+								type: 'hidden',
+								name: 'field_'+i+'_s_1[]',
+								value: checkedBoxes[i].value,
+							}, form);
+							if(i!=0){
+								domConstruct.create('input', {
+									type: 'hidden',
+									name: 'inter_'+i+'_s_1',
+									value: dom.byId('search_history_combine_op').value,
+								}, form);
+							}
+						}
+						domConstruct.create('input', {
+							type: 'hidden',
+							name: 'explicit_search',
+							value: 1,
+						}, form);
+	
+						domConstruct.create('input', {
+							type: 'hidden',
+							name: 'search_xml_file',
+							value: 'search_fields',
+						}, form);
+						domConstruct.create('input', {
+							type: 'hidden',
+							name: 'launch_search',
+							value: 1,
+						}, form);
+						domConstruct.create('input', {
+							type: 'hidden',
+							name: 'search_type_asked',
+							value: 'extended_search',
+						}, form);
+						form.submit();
+					}
+				}
+                ready(function(){
+                    on(dom.byId('search_history'), 'click', search_history_combine);
+                    if (dom.byId('search_history_1')) {
+                    	on(dom.byId('search_history_1'), 'click', search_history_combine);
+                    }
+                    query('.search_history_combine_op').forEach(function(op, i, ops) {
+                    	on(op, 'change', function(e) {
+                    		ops.forEach(function(node) {
+                    			node.value = e.target.value;
+                    		});
+                    	});
+                    });
+                });                
+			});
+		</script>
+	</form>
+{% else %}
+	{{ msg.history_title | page_title }}
+	<p>{{ msg.histo_empty }}</p>
+{% endif %}
+</div>

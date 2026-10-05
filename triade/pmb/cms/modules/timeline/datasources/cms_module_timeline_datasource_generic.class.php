@@ -1,23 +1,37 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_timeline_datasource_generic.class.php,v 1.3 2017-10-17 10:22:10 apetithomme Exp $
+// $Id: cms_module_timeline_datasource_generic.class.php,v 1.3.16.1 2025/04/30 12:52:10 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_timeline_datasource_generic extends cms_module_common_datasource {
-	
-	protected static $prefix = ''; /** PrÃ©fixe Ã  dÃ©river selon les entitÃ©s enfants **/
-	
+
+	protected static $prefix = ''; /** Préfixe à dériver selon les entités enfants **/
+
+	protected $entity_type = '';
+	protected $title_fields = [];
+	protected $resume_fields = [];
+	protected $image_fields = [];
+	protected $date_fields = [];
+
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->limitable = true;
 		$this->init_usable_fields();
 	}
-	
-	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+
+	protected function init_usable_fields()
+	{}
+
+	protected function get_full_values($ids)
+	{
+		return [];
+	}
+
+	/**
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$datas = array();
@@ -42,8 +56,8 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 					</div>
 					<div class='colonne-suite'>";
 		$form.= $this->gen_parameters_selector(
-				'title_fields', 
-				$this->get_form_value_name('title'), 
+				'title_fields',
+				$this->get_form_value_name('title'),
 				(isset($this->parameters['timeline_fields']['title']) ? $this->parameters['timeline_fields']['title'] : '')
 		);
 		$form.="
@@ -69,7 +83,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 					</div>
 					<div class='colonne-suite'>";
 		$form.= $this->gen_parameters_selector(
-				'date_fields', 
+				'date_fields',
 				$this->get_form_value_name('start_date'),
 				(isset($this->parameters['timeline_fields']['start_date']) ? $this->parameters['timeline_fields']['start_date'] : '')
 		);
@@ -82,7 +96,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 					</div>
 					<div class='colonne-suite'>";
 		$form.= $this->gen_parameters_selector(
-				'date_fields', 
+				'date_fields',
 				$this->get_form_value_name('end_date'),
 				(isset($this->parameters['timeline_fields']['end_date']) ? $this->parameters['timeline_fields']['end_date'] : ''),
 				true
@@ -96,7 +110,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 					</div>
 					<div class='colonne-suite'>";
 		$form.= $this->gen_parameters_selector(
-				'image_fields', 
+				'image_fields',
 				$this->get_form_value_name('image'),
 				(isset($this->parameters['timeline_fields']['image']) ? $this->parameters['timeline_fields']['image'] : ''),
 				true
@@ -106,7 +120,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 				</div>";
 		return $form;
 	}
-	
+
 	public function save_form(){
 		if(!isset($this->parameters['timeline_fields'])){
 			$this->parameters['timeline_fields'] = [];
@@ -114,14 +128,14 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 		$this->parameters['timeline_fields']['title'] = $this->get_value_from_form('title');
 		$this->parameters['timeline_fields']['resume'] = $this->get_value_from_form('resume');
 		$this->parameters['timeline_fields']['start_date'] = $this->get_value_from_form('start_date');
-		$this->parameters['timeline_fields']['end_date'] = $this->get_value_from_form('end_date');		
+		$this->parameters['timeline_fields']['end_date'] = $this->get_value_from_form('end_date');
 		$this->parameters['timeline_fields']['image'] = $this->get_value_from_form('image');
 		return parent::save_form();
 	}
-	
+
 	protected function gen_parameters_selector($property_name, $selector_name, $selected='', $empty_default_value=''){
 		$selector = '<select name="'.$selector_name.'">';
-		
+
 		if($empty_default_value){
 			$selector.= '<option value="">'.$this->format_text($this->msg['cms_module_timeline_datasource_generic_selector_default']).'</option>';
 		}
@@ -131,7 +145,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 		$selector.= '</select>';
 		return $selector;
 	}
-	
+
 	protected function get_perso_fields($type, $datatype){
 		$data = array();
 		$query = 'select name, titre, idchamp from '.static::$prefix.'_custom where datatype = "'.$datatype.'" and type="'.$type.'"';
@@ -143,15 +157,15 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 		}
 		return $data;
 	}
-	
+
 	protected function get_cp_value($field_name, $entity_id){
 		$query = 'select idchamp from '.static::$prefix.'_custom where name = "'.$field_name.'"';
 		$result = pmb_mysql_query($query);
-	
+
 		$field_id = pmb_mysql_fetch_object($result)->idchamp;
-	
+
 		$pperso = new parametres_perso(static::$prefix);
 		return $pperso->get_val_field($entity_id, $field_name);
 	}
-	
+
 }

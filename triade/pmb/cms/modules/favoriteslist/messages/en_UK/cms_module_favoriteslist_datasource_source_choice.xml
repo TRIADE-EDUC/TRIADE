@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_favoriteslist_datasource_source_choice.xml,v 1.2 2022/07/12 10:25:31 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_favoriteslist_name'>Nom</entry>
+	<entry code='cms_module_favoriteslist_source'>Type</entry>
+	<entry code='cms_module_favoriteslist_sectionslist'>Liste de rubriques</entry>
+	<entry code='cms_module_favoriteslist_select_type'>Sélectionnez un type</entry>
+	<entry code='cms_module_favoriteslist_default_list'>Liste par défaut</entry>
+</XMLlist>

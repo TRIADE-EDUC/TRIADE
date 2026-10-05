@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: analysis_move.inc.php,v 1.4 2017-11-22 11:07:34 dgoron Exp $
+// $Id: analysis_move.inc.php,v 1.6 2022/01/07 11:40:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $msg, $charset, $bul_id, $analysis_id, $to_bul;
+global $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid;
+global $serial_header;
 
 //verification des droits de modification notice
 $acces_m=1;
@@ -15,7 +18,7 @@ if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 	$dom_1= $ac->setDomain(1);
 	$acces_j = $dom_1->getJoin($PMBuserid,8,'bulletin_notice');
 	$q = "select count(1) from bulletins $acces_j where bulletin_id=".$bul_id;
-	$r = pmb_mysql_query($q, $dbh);
+	$r = pmb_mysql_query($q);
 	if ($r) {
 		if(pmb_mysql_result($r,0,0)==0) {
 			$acces_m=0;
@@ -36,7 +39,7 @@ if ($acces_m==0) {
 } else {
 	
 	if(!$to_bul) {
-		// affichage d'un form pour dÃ©placer un article de pÃ©riodique
+		// affichage d'un form pour déplacer un article de périodique
 		echo str_replace('!!page_title!!', $msg['4000'].$msg['1003'].$msg['analysis_move'], $serial_header);
 		
 		// on instancie le truc
@@ -47,10 +50,9 @@ if ($acces_m==0) {
 		$link_parent = "<a href=\"./catalog.php?categ=serials\">";
 		$link_parent .= $msg[4010]."</a>";
 		$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
-		$link_parent .= "<a href=\"./catalog.php?categ=serials&sub=view&serial_id=";
-		$link_parent .= $myBul->bulletin_notice."\">".$myBul->get_serial()->tit1.'</a>';
+		$link_parent .= "<a href=\"".serial::get_permalink($myBul->bulletin_notice)."\">".$myBul->get_serial()->tit1.'</a>';
 		$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
-		$link_parent .= "<a href=\"./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$bul_id\">";
+		$link_parent .= "<a href=\"".bulletinage::get_permalink($bul_id)."\">";
 		if ($myBul->bulletin_numero) $link_parent .= $myBul->bulletin_numero." ";
 		if ($myBul->mention_date) $link_parent .= " (".$myBul->mention_date.") "; 
 		$link_parent .= "[".$myBul->aff_date_date."]";  
@@ -62,11 +64,11 @@ if ($acces_m==0) {
 		print "<div class='row'>".$myAnalysis->move_form()."</div>";
 	} else {
 
-		// routine de dÃ©placmeent
+		// routine de déplacmeent
 		$myAnalysis = new analysis($analysis_id, $bul_id);
 		$myAnalysis->move($to_bul);
 		
-		print pmb_bidi("<script type=\"text/javascript\">document.location='./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=".$to_bul."'</script>");
+		print pmb_bidi("<script type=\"text/javascript\">document.location='".bulletinage::get_permalink($to_bul)."'</script>");
 		//Redirection
 	}
 

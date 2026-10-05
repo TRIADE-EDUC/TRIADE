@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_file.class.php,v 1.2 2017-09-13 12:38:32 tsamson Exp $
+// $Id: onto_common_datatype_file.class.php,v 1.2 2017/09/13 12:38:32 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,8 +13,8 @@ require_once $class_path.'/onto/onto_files.class.php';
 
 /**
  * class onto_common_datatype_small_text
- * Les mÃ©thodes get_form,get_value,check_value,get_formated_value,get_raw_value
- * sont Ã©ventuellement Ã  redÃ©finir pour le type de donnÃ©es
+ * Les méthodes get_form,get_value,check_value,get_formated_value,get_raw_value
+ * sont éventuellement à redéfinir pour le type de données
  */
 class onto_common_datatype_file extends onto_common_datatype {
 
@@ -43,7 +43,7 @@ class onto_common_datatype_file extends onto_common_datatype {
 		$object_id = onto_common_uri::get_id($uri_item);
 		
 		global ${$field_name};
-		if($storage_id){ //On a une mÃ©thode de stockage -> Upload du document possible
+		if($storage_id){ //On a une méthode de stockage -> Upload du document possible
 			/* @var $storage storage */
 			$storage = storages::get_storage_class($storage_id);
 			if($storage){

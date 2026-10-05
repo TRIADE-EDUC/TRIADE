@@ -2,14 +2,14 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_editorial_tree.tpl.php,v 1.6 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: cms_editorial_tree.tpl.php,v 1.7 2023/08/17 09:47:55 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 global $base_path, $cms_editorial_tree_layout, $cms_editorial_tree_content, $msg;
 		
 $cms_editorial_tree_layout= "
-		<script type='text/javascript' src='./javascript/cms/cms_tree_dnd.js'></script>
-		<script type='text/javascript'>
+		<script src='./javascript/cms/cms_tree_dnd.js'></script>
+		<script>
 			dojo.require('dijit.layout.ContentPane');
 			dojo.require('dijit.tree.ForestStoreModel');
 			dojo.require('dojo.data.ItemFileWriteStore');
@@ -32,7 +32,7 @@ $cms_editorial_tree_content ="
 			&nbsp;<a id='add_article_button' href='$base_path/cms.php?categ=article&sub=edit&id=new'>".$msg['cms_editorial_form_new_article_from_section']."</a>
 		</span>
 		<div id='section_tree'>
-			<script type='text/javascript'>
+			<script>
 			var store = new dojo.data.ItemFileWriteStore({
     	        	url: './ajax.php?module=cms&categ=list_sections'
         		});

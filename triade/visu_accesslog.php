@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -37,6 +37,8 @@ function telechargerFichierLocal($chemin){
  die();
 }
 
+if (file_exists("./common/config2.inc.php")) include_once("./common/config2.inc.php"); 
+if (file_exists("../common/config2.inc.php")) include_once("../common/config2.inc.php"); 
 
 function dateDMY() {
 	$timezone=TIMEZONE;
@@ -99,4 +101,3 @@ fclose($fic);
 turnOverLog("./data/install_log/access.log","8000000");
 telechargerFichierLocal("./data/install_log/access.log");
 ?>
-

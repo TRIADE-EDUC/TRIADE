@@ -1,0 +1,59 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: paginator.css,v 1.1.6.1 2025/06/04 12:39:33 qvarin Exp $ */
+
+/*
+--------------------------------------------------------------------------
+    Componants Vue.js Paginator
+--------------------------------------------------------------------------
+*/
+
+.paginator-space-between {
+    display : flex;
+    justify-content: space-between;
+}
+
+.paginator-button {
+    cursor: pointer;
+    border-radius: 3px !important;
+    border: none !important;
+    padding: 0 10px !important;
+    color : white !important;
+}
+
+.pagination button.pagination-bouton-nav {
+    font-weight: 400;
+    font-size: 28px;
+    border: none;
+    background: none;
+    color: #595959;
+    margin: 0.5rem;
+    cursor: pointer;
+}
+
+.pagination button.pagination-bouton-nav:hover {
+    margin-bottom: 6px;
+}
+
+.pagination button.pagination-bouton-nav:disabled {
+    border: none !important;
+}
+
+.pagination button.bouton-page {
+    background: none;
+    color: #595959;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: none;
+    min-width: 20px;
+    cursor: pointer;
+}
+
+.pagination button.bouton-page.active {
+    color: white;
+}
+
+.pagination button.bouton-page:hover:not(.active):not([disabled]) {
+    background-color: #ddd;
+}

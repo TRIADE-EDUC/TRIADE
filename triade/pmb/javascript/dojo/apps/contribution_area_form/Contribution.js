@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Contribution.js,v 1.1 2017-09-13 12:38:33 tsamson Exp $
+// $Id: Contribution.js,v 1.2.8.1 2025/03/05 10:20:03 rtigero Exp $
 
 
 define([
@@ -63,8 +63,19 @@ define([
 				/**
 				 * Contenu de data.data: array("uri" => $this->item->get_uri(), "displayLabel" => $display_label)
 				 */
-				standby.hide();
-				topic.publish('Contribution', 'savedForm', {widgetId: this.nodeId, response: data});
+				if(data.errors){
+					let message = "";
+					let errors = data.errors;
+					let countErrors = errors.length;
+					for(let i = 0; i < countErrors; i++){
+						message += errors[i]+"\n";
+					}
+					standby.hide();
+					window.alert(message);				
+				} else {
+					standby.hide();
+					topic.publish('Contribution', 'savedForm', {widgetId: this.nodeId, response: data});
+				}
 			}));
 		},
 		push: function(e) {
@@ -81,6 +92,8 @@ define([
 			var form = e.target.form;
 			var params = ioQuery.queryToObject(form.action.substring(form.action.indexOf("?") + 1));
 			form.setAttribute("accept-charset", "utf-8");
+			//Visiblement le parametre POST prend le pas sur le parametre GET alors on force save_push dans le form
+			params.action = "save_push";
 			iframe('./ajax.php?module=ajax&categ=contribution&iframe=1&action=save_push', {
 				form: form.id,
 				data: params,

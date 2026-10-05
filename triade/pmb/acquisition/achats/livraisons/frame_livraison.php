@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frame_livraison.php,v 1.29 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: frame_livraison.php,v 1.33 2023/08/02 07:36:47 dbellamy Exp $
 
 global $action, $retour_liste;
 
 //Liste les lignes d'une facture
-$base_path="../../..";                            
-//$base_auth = "ACQUISITION_AUTH";  
+$base_path="../../..";
+//$base_auth = "ACQUISITION_AUTH";
 $include_path = "$base_path/includes";
 $class_path = "$base_path/classes";
-
+$base_use_dojo=1;
 $current_alert="acquisition";
 require_once("$include_path/init.inc.php");
 
@@ -44,19 +44,19 @@ function verif_liv() {
 
 	//Si pas de lignes sur la livraison >> Avertissement utilisateur et retour
 	$qte_liv = 0;
-	for($i='1'; $i<=$max_lig; $i++) {
-		$qte_liv = $qte_liv + $rec[$i]; 
+	for($i=1; $i<=$max_lig; $i++) {
+		$qte_liv = $qte_liv + $rec[$i];
 	}
 
 	if ( ($action == 'update') && ($max_lig_liv == 0) && ($qte_liv == 0)) {
 		$error = true;
-		$error_msg = $msg['acquisition_liv_vid']; 
+		$error_msg = $msg['acquisition_liv_vid'];
 		return;
 	}
 
-	for($i='1'; $i<=$max_lig; $i++) {
-		
-		//V√©rification quantit√© livr√©e
+	for($i=1; $i<=$max_lig; $i++) {
+
+		//VÈrification quantitÈ livrÈe
 		if (!is_numeric($rec[$i]) || $rec[$i] < '0' || $rec[$i] > '99999' ) {
 			$error = true;
 			$error_msg = $msg['acquisition_lig'].' '.$i.': '.$msg['acquisition_qte_liv_inv'];
@@ -67,34 +67,34 @@ function verif_liv() {
 			$error_msg = $msg['acquisition_lig'].' '.$i.': '.$msg['acquisition_qte_liv_sup'];
 			break;
 		}
-		
+
 	}
-	
+
 }
 
 
-//Affichage cr√©ation BL depuis commande
+//Affichage crÈation BL depuis commande
 function show_lig_from_cde() {
-	
+
 	global $msg, $charset;
 	global $frame_modif, $frame_row, $frame_row_bl_header, $frame_row_bl, $bt_sup_lig;
 	global $id_bibli, $id_cde, $id_liv;
 	global $auto, $focus;
 	global $error, $error_msg;
-	
+
 	$frame = $frame_modif;
-	
-	//Affichage du solde √† livrer sur la commande
+
+	//Affichage du solde ‡ livrer sur la commande
 	$lignes_cde = actes::getLignes($id_cde);
 
 	$nb_lig = 0;
-	
+
 	while (($row_cde = pmb_mysql_fetch_object($lignes_cde))) {
-		
+
 		if ($row_cde->type_ligne == 3) {	// Frais, non livrables
-			
+
 		} else {
-		
+
 			//recherche des lignes de livraison
 			$lignes_liv = lignes_actes::getLivraisons($row_cde->id_ligne);
 			$sol = $row_cde->nb;
@@ -102,61 +102,61 @@ function show_lig_from_cde() {
 				$sol = $sol - $row_liv->nb;
 			}
 			$rec = 0;
-	
-			//affichage ligne si solde √† livrer >0
+
+			//affichage ligne si solde ‡ livrer >0
 			if ($sol) {
-	
+
 				$nb_lig++;
-				$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);						
+				$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);
 				$frame = str_replace('!!no!!', $nb_lig, $frame);
 				$frame = str_replace('!!id_lig!!', $row_cde->id_ligne, $frame);
 				$frame = str_replace('!!id_prod!!', $row_cde->num_produit, $frame);
 				$frame = str_replace('!!code!!', htmlentities($row_cde->code, ENT_QUOTES, $charset), $frame);
 				$frame = str_replace('!!hidden_lib!!', htmlentities($row_cde->libelle, ENT_QUOTES, $charset), $frame);
 				$frame = str_replace('!!lib!!', nl2br(htmlentities($row_cde->libelle, ENT_QUOTES, $charset)), $frame);
-				$frame = str_replace('!!sol!!', $sol, $frame);	
+				$frame = str_replace('!!sol!!', $sol, $frame);
 				$frame = str_replace('!!rec!!', $rec, $frame);
 			}
-		}		
-	}	
-	$frame = str_replace('!!max_lig!!', $nb_lig, $frame);	
+		}
+	}
+	$frame = str_replace('!!max_lig!!', $nb_lig, $frame);
 	$frame = str_replace('!!max_lig_liv!!', '0', $frame);
 
 	$frame = str_replace('!!id_liv!!', '0', $frame);
 
-	print $frame; 	
-	
-}  
+	print $frame;
+
+}
 
 
 //Affichage des lignes de livraison
 function show_lig_liv() {
-	
+
 	global $msg, $charset;
 	global $frame_modif, $frame_row, $frame_row_bl_header, $frame_row_bl, $frame_row_arc, $bt_sup_lig, $no_bt_sup_lig;
 	global $id_bibli, $id_cde, $id_liv;
 	global $auto, $focus;
 	global $error, $error_msg;
-	
+
 	$frame = $frame_modif;
-	
-	//Lecture des √©l√©ments de la commande
-	$cde = new actes($id_cde);	
+
+	//Lecture des ÈlÈments de la commande
+	$cde = new actes($id_cde);
 	$lignes_cde = actes::getLignes($id_cde);
 
 
-	if( ($cde->statut & 32) == 32 ) { 	//La commande est archiv√©e donc le bl non modifiable
-	
+	if( ($cde->statut & 32) == 32 ) { 	//La commande est archivÈe donc le bl non modifiable
+
 		$nb_lig = 0;
 
 		while (($row_cde = pmb_mysql_fetch_object($lignes_cde))) {
-			
-			
+
+
 			if ($row_cde->type_ligne == 3) {	// Frais, non livrables
-				
+
 			} else {
-			
-		
+
+
 				//recherche des lignes de livraison
 				$lignes_liv = lignes_actes::getLivraisons($row_cde->id_ligne);
 				$rec = 0;
@@ -164,81 +164,82 @@ function show_lig_liv() {
 					$rec = $rec + $row_liv->nb;
 				}
 				$sol = $row_cde->nb - $rec;
-	
+
 				$nb_lig++;
-				$frame = str_replace('<!-- lignes -->', $frame_row_arc.'<!-- lignes -->', $frame);						
+				$frame = str_replace('<!-- lignes -->', $frame_row_arc.'<!-- lignes -->', $frame);
 				$frame = str_replace('!!no!!', $nb_lig, $frame);
 				$frame = str_replace('!!id_lig!!', $row_cde->id_ligne, $frame);
 				$frame = str_replace('!!id_prod!!', $row_cde->num_produit, $frame);
 				$frame = str_replace('!!code!!', htmlentities($row_cde->code, ENT_QUOTES, $charset), $frame);
 				$frame = str_replace('!!hidden_lib!!', htmlentities($row_cde->libelle, ENT_QUOTES, $charset), $frame);
 				$frame = str_replace('!!lib!!', nl2br(htmlentities($row_cde->libelle, ENT_QUOTES, $charset)), $frame);
-				$frame = str_replace('!!sol!!', $sol, $frame);	
+				$frame = str_replace('!!sol!!', $sol, $frame);
 				$frame = str_replace('!!rec!!', $rec, $frame);
-		
-			}		
-		
-		}	
-		$frame = str_replace('!!max_lig!!', $nb_lig, $frame);	
+
+			}
+
+		}
+		$frame = str_replace('!!max_lig!!', $nb_lig, $frame);
 		$frame = str_replace('!!max_lig_liv!!', 0, $frame);
 		$frame = str_replace('!!id_liv!!', '0', $frame);
 		$frame = str_replace('<!-- bouton_sup_lig -->', $no_bt_sup_lig, $frame);
-		print $frame;				
-	
+		print $frame;
+
 	} else {	//le bl est modifiable
 
-		
-		if( ($cde->statut & 4) != 4 ) { 	//La commande est sold√©e, on n'affiche pas les lignes restant √† livrer
-			
+
+		if( ($cde->statut & 4) != 4 ) { 	//La commande est soldÈe, on n'affiche pas les lignes restant ‡ livrer
+
 			$nb_lig = 0;
-			
+
 			while (($row_cde = pmb_mysql_fetch_object($lignes_cde))) {
-				
-			
+
+
 				if ($row_cde->type_ligne == 3) {	// Frais, non livrables
 				} else {
-			
-				
+
+
 					//recherche des lignes de livraison
 					$lignes_liv = lignes_actes::getLivraisons($row_cde->id_ligne);
 					$sol = $row_cde->nb;
 					while (($row_liv = pmb_mysql_fetch_object($lignes_liv))) {
-						
-						$sol = $sol - $row_liv->nb; 
+
+						$sol = $sol - $row_liv->nb;
 					}
 					$rec = 0;
-			
-					//affichage ligne si solde √† livrer >0
+
+					//affichage ligne si solde ‡ livrer >0
 					if ($sol) {
-			
+
 						$nb_lig++;
-						$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);						
+						$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);
 						$frame = str_replace('!!no!!', $nb_lig, $frame);
 						$frame = str_replace('!!id_lig!!', $row_cde->id_ligne, $frame);
 						$frame = str_replace('!!id_prod!!', $row_cde->num_produit, $frame);
 						$frame = str_replace('!!code!!', htmlentities($row_cde->code, ENT_QUOTES, $charset), $frame);
-						$frame = str_replace('!!hidden_lib!!', htmlentities($row_cde->libelle, ENT_QUOTES, $charset), $frame);						
+						$frame = str_replace('!!hidden_lib!!', htmlentities($row_cde->libelle, ENT_QUOTES, $charset), $frame);
 						$frame = str_replace('!!lib!!', nl2br(htmlentities($row_cde->libelle, ENT_QUOTES, $charset)), $frame);
-						$frame = str_replace('!!sol!!', $sol, $frame);	
+						$frame = str_replace('!!sol!!', $sol, $frame);
 						$frame = str_replace('!!rec!!', $rec, $frame);
 					}
-				}		
-			}	
-			$frame = str_replace('!!max_lig!!', $nb_lig, $frame);	
+				}
+			}
+			$frame = str_replace('!!max_lig!!', $nb_lig, $frame);
 
 		} else {
 
 			$frame = str_replace('!!max_lig!!', 0, $frame);
 
-		}	
-		
-		//affichage du d√©j√† livr√© sur le bon de livraison courant
+		}
+
+		//affichage du dÈj‡ livrÈ sur le bon de livraison courant
 		if ($id_liv) {
+		    $nb_lig = 0;
 			$frame = str_replace('<!-- lignes -->', $frame_row_bl_header.'<!-- lignes -->', $frame);
 			$lignes_liv = actes::getLignes($id_liv);
 			$max_lig_liv = pmb_mysql_num_rows($lignes_liv);
 			$frame = str_replace('!!max_lig_liv!!', $max_lig_liv, $frame);
-		
+
 			while (($row_liv = pmb_mysql_fetch_object($lignes_liv))) {
 				$nb_lig++;
 				$frame = str_replace('<!-- lignes -->', $frame_row_bl.'<!-- lignes -->', $frame);
@@ -246,31 +247,31 @@ function show_lig_liv() {
 				$frame = str_replace('!!id_lig!!', $row_liv->lig_ref, $frame);
 				$frame = str_replace('!!id_prod!!', $row_liv->num_produit, $frame);
 				$frame = str_replace('!!code!!', htmlentities($row_liv->code, ENT_QUOTES, $charset), $frame);
-				$frame = str_replace('!!hidden_lib!!', htmlentities($row_liv->libelle, ENT_QUOTES, $charset), $frame);	
-				$frame = str_replace('!!lib!!', nl2br(htmlentities($row_liv->libelle, ENT_QUOTES, $charset)), $frame);	
+				$frame = str_replace('!!hidden_lib!!', htmlentities($row_liv->libelle, ENT_QUOTES, $charset), $frame);
+				$frame = str_replace('!!lib!!', nl2br(htmlentities($row_liv->libelle, ENT_QUOTES, $charset)), $frame);
 				$frame = str_replace('!!rec!!', $row_liv->nb, $frame);
 			}
-			
+
 			$frame = str_replace('!!id_liv!!', $id_liv, $frame);
 			$frame = str_replace('<!-- bouton_sup_lig -->', $bt_sup_lig, $frame);
-	
+
 		} else {
 			$frame = str_replace('!!id_liv!!', '0', $frame);
 			$frame = str_replace('<!-- bouton_sup_lig -->', $no_bt_sup_lig, $frame);
 		}
-	
-	
+
+
 		if ($error) {
 			$frame = str_replace('<!-- error -->', "<script type='text/javascript'>alert(\"".$error_msg."\"); </script>", $frame);
 		}
-		print $frame; 	
+		print $frame;
 	}
-}  
+}
 
 
 //Affichage des lignes si erreur
 function show_lig_bak() {
-	
+
 	global $msg, $charset;
 	global $frame_modif, $frame_row, $frame_row_bl_header, $frame_row_bl, $bt_sup_lig, $no_bt_sup_lig;
 	global $id_bibli, $id_cde, $id_liv;
@@ -280,14 +281,14 @@ function show_lig_bak() {
 	global $warning, $warning_msg;
 
 	$frame = $frame_modif;
-	
-	$lig_aliv = array(); //Tableau des lignes √† livrer
-	$lig_dliv = array(); //Tableau des lignes d√©j√† livr√©es
+
+	$lig_aliv = array(); //Tableau des lignes ‡ livrer
+	$lig_dliv = array(); //Tableau des lignes dÈj‡ livrÈes
 	$focus = 0;
-	
-	//Les lignes restant √† livrer sont reprises telles quelles
+
+	//Les lignes restant ‡ livrer sont reprises telles quelles
 	for($i=1;$i<=$max_lig;$i++) {
-		
+
 		$lig_aliv[$i]['id_lig'] = $id_lig[$i];
 		$lig_aliv[$i]['id_prod']=$id_prod[$i];
 		$lig_aliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
@@ -295,90 +296,90 @@ function show_lig_bak() {
 		$lig_aliv[$i]['sol']= $sol[$i];
 		$lig_aliv[$i]['rec']= $rec[$i];
 	}
-	
-	//Les lignes d√©j√† livr√©es sont reprises telles quelles
+
+	//Les lignes dÈj‡ livrÈes sont reprises telles quelles
 	for($i;$i<=$max_lig+$max_lig_liv;$i++) {
-			
+
 		$lig_dliv[$i]['id_lig'] = $id_lig[$i];
 		$lig_dliv[$i]['id_prod']=$id_prod[$i];
 		$lig_dliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
 		$lig_dliv[$i]['lib']= htmlentities(stripslashes($lib[$i]), ENT_QUOTES, $charset);
 		$lig_dliv[$i]['rec']= $rec[$i];
-		
-	}
-	
 
-	$index = 1;	
+	}
+
+
+	$index = 1;
 	$max_lig = count($lig_aliv);
-	//Affichage des lignes restant √† livrer
+	//Affichage des lignes restant ‡ livrer
 	foreach($lig_aliv as $key=>$value) {
-				
+
 		$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);
 		$frame = str_replace('!!no!!', $index, $frame);
-		$frame = str_replace('!!id_lig!!', $lig_aliv[$key]['id_lig'], $frame);
-		$frame = str_replace('!!id_prod!!', $lig_aliv[$key]['id_prod'], $frame);
-		$frame = str_replace('!!code!!', $lig_aliv[$key]['code'], $frame);
-		$frame = str_replace('!!hidden_lib!!', $lig_aliv[$key]['lib'], $frame);
-		$frame = str_replace('!!lib!!', nl2br($lig_aliv[$key]['lib']), $frame);
-		$frame = str_replace('!!sol!!', $lig_aliv[$key]['sol'], $frame);
-		$frame = str_replace('!!rec!!', $lig_aliv[$key]['rec'], $frame);		
-		$index++;			
-		
+		$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+		$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+		$frame = str_replace('!!code!!', $value['code'], $frame);
+		$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+		$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+		$frame = str_replace('!!sol!!', $value['sol'], $frame);
+		$frame = str_replace('!!rec!!', $value['rec'], $frame);
+		$index++;
+
 	}
 	$frame = str_replace('!!max_lig!!', $max_lig, $frame);
-	
+
 	$max_lig_liv = count($lig_dliv);
 	if ($max_lig_liv) {
 
 		$frame = str_replace('<!-- lignes -->', $frame_row_bl_header.'<!-- lignes -->', $frame);
-	
-		//Affichage des lignes d√©j√† livr√©es
+
+		//Affichage des lignes dÈj‡ livrÈes
 		foreach($lig_dliv as $key=>$value) {
-			
+
 			$frame = str_replace('<!-- lignes -->', $frame_row_bl.'<!-- lignes -->', $frame);
 			$frame = str_replace('!!no!!', $index, $frame);
-			$frame = str_replace('!!id_lig!!', $lig_dliv[$key]['id_lig'], $frame);
-			$frame = str_replace('!!id_prod!!', $lig_dliv[$key]['id_prod'], $frame);
-			$frame = str_replace('!!code!!', $lig_dliv[$key]['code'], $frame);
-			$frame = str_replace('!!hidden_lib!!', $lig_dliv[$key]['lib'], $frame);
-			$frame = str_replace('!!lib!!', nl2br($lig_dliv[$key]['lib']), $frame);
-			$frame = str_replace('!!rec!!', $lig_dliv[$key]['rec'], $frame);		
+			$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+			$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+			$frame = str_replace('!!code!!', $value['code'], $frame);
+			$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+			$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+			$frame = str_replace('!!rec!!', $value['rec'], $frame);
 			$index++;
 		}
 	}
 	$frame = str_replace('!!max_lig_liv!!', $max_lig_liv, $frame);
 
-		
+
 	if ($error) {
 		$frame = str_replace('<!-- error -->', "<script type='text/javascript'>alert(\"".$error_msg."\"); </script>", $frame);
 	}
 
 	$frame = str_replace('!!id_liv!!', $id_liv, $frame);
 
-	print $frame; 	
-	
+	print $frame;
+
 }
 
 
 
-//test et formatage du code saisi 
+//test et formatage du code saisi
 function test_cb() {
-	
+
 	global $cb;
 	global $barcode;
-	
+
 	$EAN = '';
 	$isbn = '';
 	$barcode = '';
 
 	// on commence par voir ce que la saisie utilisateur est ($cb)
-	$cb = clean_string($cb);				
-	
+	$cb = clean_string($cb);
+
 	if(isEAN($cb)) {
 		// la saisie est un EAN -> on tente de le formater en ISBN
 		$isbn = EANtoISBN($cb);
-		// si √©chec, on prend l'EAN comme il vient
-		if(!$isbn) {
+		// si Èchec, on prend l'EAN comme il vient
+		if( '' == $isbn ) {
 			$barcode = $cb;
 		} else {
 			$barcode=$isbn;
@@ -387,20 +388,23 @@ function test_cb() {
 		if(isISBN($cb)) {
 			// si la saisie est un ISBN
 			$isbn = formatISBN($cb);
-			// si √©chec, ISBN erron√© on le prend sous cette forme
-			if(!$isbn) $barcode = $cb;
-				else $barcode=$isbn ;
+			// si Èchec, ISBN erronÈ on le prend sous cette forme
+			if( '' == $isbn ) {
+			    $barcode = $cb;
+			} else {
+			    $barcode=$isbn ;
+			}
 		} else {
-			// ce n'est rien de tout √ßa, on prend la saisie telle quelle
+			// ce n'est rien de tout Áa, on prend la saisie telle quelle
 			$barcode = $cb;
 		}
 	}
 }
 
 
-//Recherche dans les lignes de commandes apr√®s saisie code barre
+//Recherche dans les lignes de commandes aprËs saisie code barre
 function search_lig_liv() {
-	
+
 	global $msg, $charset;
 	global $frame_modif, $frame_row, $frame_row_bl_header, $frame_row_bl, $bt_sup_lig, $no_bt_sup_lig;
 	global $id_bibli, $id_cde, $id_liv, $auto;
@@ -411,14 +415,14 @@ function search_lig_liv() {
 	global $warning, $warning_msg;
 
 	$frame = $frame_modif;
-	
-	$lig_aliv = array(); //Tableau des lignes √† livrer
-	$lig_dliv = array(); //Tableau des lignes d√©j√† livr√©es
+
+	$lig_aliv = array(); //Tableau des lignes ‡ livrer
+	$lig_dliv = array(); //Tableau des lignes dÈj‡ livrÈes
 	$focus = 0;
-	
-	//Les lignes restant √† livrer sont reprises telles quelles
+
+	//Les lignes restant ‡ livrer sont reprises telles quelles
 	for($i=1;$i<=$max_lig;$i++) {
-		
+
 		$lig_aliv[$i]['id_lig'] = $id_lig[$i];
 		$lig_aliv[$i]['id_prod']=$id_prod[$i];
 		$lig_aliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
@@ -426,135 +430,119 @@ function search_lig_liv() {
 		$lig_aliv[$i]['sol']= $sol[$i];
 		$lig_aliv[$i]['rec']= $rec[$i];
 	}
-	
-	//Les lignes d√©j√† livr√©es sont reprises telles quelles
+
+	//Les lignes dÈj‡ livrÈes sont reprises telles quelles
 	for($i;$i<=$max_lig+$max_lig_liv;$i++) {
-			
+
 		$lig_dliv[$i]['id_lig'] = $id_lig[$i];
 		$lig_dliv[$i]['id_prod']=$id_prod[$i];
 		$lig_dliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
 		$lig_dliv[$i]['lib']= htmlentities(stripslashes($lib[$i]), ENT_QUOTES, $charset);
 		$lig_dliv[$i]['rec']= $rec[$i];
-		
+
 	}
-	
+
 	//recherche du code saisi
 	$trouve = 0;
 	$dep = false;
 	foreach($lig_aliv as $key=>$value) {
-		
-		if($lig_aliv[$key]['code'] == $barcode) {	//Code trouv√©
-
+		if($value['code'] == $barcode) {	//Code trouvÈ
 			$trouve = $key;
-
-			if ($auto) {	//Mode incr√©ment automatique
-								
-				if( ($lig_aliv[$key]['rec'] < $lig_aliv[$key]['sol']) ) {	
-				
-					//La qt√© saisie est inf√©rieure √† la qt√© restant √† recevoir >> Incr√©ment qt√© saisie et sortie
-					$lig_aliv[$key]['rec'] = $lig_aliv[$key]['rec']+1;	
+			if ($auto) {	//Mode incrÈment automatique
+				if( ($value['rec'] < $value['sol']) ) {
+					//La qtÈ saisie est infÈrieure ‡ la qtÈ restant ‡ recevoir >> IncrÈment qtÈ saisie et sortie
+				    $lig_aliv[$key]['rec'] = $value['rec']+1;
 					$dep = false;
 					break;
-					
 				} else {
-					
-					//La qt√© saisie est √©gale √† la quantit√© restant √† recevoir >> On note le d√©passement et on recherche plus avant 
+					//La qtÈ saisie est Ègale ‡ la quantitÈ restant ‡ recevoir >> On note le dÈpassement et on recherche plus avant
 					$dep = true;
-				
 				}
-			
 			} else {		//Mode recherche
-
-				if( ($lig_aliv[$key]['rec'] < $lig_aliv[$key]['sol']) ) {	
-				
-					//La qt√© saisie est inf√©rieure √† la qt√© restant √† recevoir >> Sortie
+				if( ($value['rec'] < $value['sol']) ) {
+					//La qtÈ saisie est infÈrieure ‡ la qtÈ restant ‡ recevoir >> Sortie
 					break;
-					
-				} 			
-				//Sinon, si la quantit√© saisie est √©gale √† la quantit√© restant √† recevoir >> On recherche plus avant 
-									
+				}
+				//Sinon, si la quantitÈ saisie est Ègale ‡ la quantitÈ restant ‡ recevoir >> On recherche plus avant
 			}
-			
-		}	
-				
+		}
 	}
 
-
-	$index = 1;	
+	$index = 1;
 	$max_lig = count($lig_aliv);
-	//Affichage des lignes restant √† livrer
+	//Affichage des lignes restant ‡ livrer
 	foreach($lig_aliv as $key=>$value) {
-		
+
 		if ($auto && ($trouve == $key)) {
 			$focus = $index;
 			if ($dep){
 				$error = true;
 				$error_msg = $msg['acquisition_lig'].' '.$index.': '.$msg['acquisition_qte_liv_sup'];
 			}
-		}			
-		
+		}
+
 		if (!$auto && ($trouve == $key)) {
 			$focus = $index;
 		}
-				
+
 		$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);
 		$frame = str_replace('!!no!!', $index, $frame);
-		$frame = str_replace('!!id_lig!!', $lig_aliv[$key]['id_lig'], $frame);
-		$frame = str_replace('!!id_prod!!', $lig_aliv[$key]['id_prod'], $frame);
-		$frame = str_replace('!!code!!', $lig_aliv[$key]['code'], $frame);
-		$frame = str_replace('!!hidden_lib!!', $lig_aliv[$key]['lib'], $frame);
-		$frame = str_replace('!!lib!!', nl2br($lig_aliv[$key]['lib']), $frame);
-		$frame = str_replace('!!sol!!', $lig_aliv[$key]['sol'], $frame);
-		$frame = str_replace('!!rec!!', $lig_aliv[$key]['rec'], $frame);		
-		$index++;			
-		
+		$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+		$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+		$frame = str_replace('!!code!!', $value['code'], $frame);
+		$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+		$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+		$frame = str_replace('!!sol!!', $value['sol'], $frame);
+		$frame = str_replace('!!rec!!', $value['rec'], $frame);
+		$index++;
+
 	}
 	$frame = str_replace('!!max_lig!!', $max_lig, $frame);
-	
+
 	$max_lig_liv = count($lig_dliv);
 	if ($max_lig_liv) {
 
 		$frame = str_replace('<!-- lignes -->', $frame_row_bl_header.'<!-- lignes -->', $frame);
-	
-		//Affichage des lignes d√©j√† livr√©es
+
+		//Affichage des lignes dÈj‡ livrÈes
 		foreach($lig_dliv as $key=>$value) {
-			
+
 			$frame = str_replace('<!-- lignes -->', $frame_row_bl.'<!-- lignes -->', $frame);
 			$frame = str_replace('!!no!!', $index, $frame);
-			$frame = str_replace('!!id_lig!!', $lig_dliv[$key]['id_lig'], $frame);
-			$frame = str_replace('!!id_prod!!', $lig_dliv[$key]['id_prod'], $frame);
-			$frame = str_replace('!!code!!', $lig_dliv[$key]['code'], $frame);
-			$frame = str_replace('!!hidden_lib!!', $lig_dliv[$key]['lib'], $frame);
-			$frame = str_replace('!!lib!!', nl2br($lig_dliv[$key]['lib']), $frame);
-			$frame = str_replace('!!rec!!', $lig_dliv[$key]['rec'], $frame);		
+			$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+			$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+			$frame = str_replace('!!code!!', $value['code'], $frame);
+			$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+			$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+			$frame = str_replace('!!rec!!', $value['rec'], $frame);
 			$index++;
 		}
 	}
 	$frame = str_replace('!!max_lig_liv!!', $max_lig_liv, $frame);
 
 
-	//Mise en place focus si code saisi trouv√©
+	//Mise en place focus si code saisi trouvÈ
 	if ($focus) {
 		if(!$auto) {
 			$focus = "<script type='text/javascript'>window.location.hash= '#ancre[".$focus."]';f=document.getElementById('rec[".$focus."]');f.focus();</script>";
 		} else {
 			$focus = "<script type='text/javascript'>window.parent.document.getElementById('cb').focus();</script>";
-		}			
-	} else { 
+		}
+	} else {
 		$focus = "<script type='text/javascript'>alert('".$msg['acquisition_liv_code_inex']."'); window.parent.document.getElementById('cb').focus();</script>";
 	}
-	
+
 	$frame = str_replace('<!-- focus -->', $focus, $frame);
-	
-		
+
+
 	if ($error) {
 		$frame = str_replace('<!-- error -->', "<script type='text/javascript'>alert(\"".$error_msg."\"); </script>", $frame);
 	}
 
 	$frame = str_replace('!!id_liv!!', $id_liv, $frame);
 
-	print $frame; 	
-	
+	print $frame;
+
 }
 
 
@@ -565,15 +553,15 @@ function sup_lig_liv() {
 	global $id_bibli, $id_cde, $id_liv;
 	global $max_lig, $max_lig_liv;
 	global $chk, $id_lig, $id_prod, $code, $lib, $sol, $rec;
-	
+
 	$frame = $frame_modif;
-	
-	$lig_aliv = array(); //Tableau des lignes √† livrer
-	$lig_dliv = array(); //Tableau des lignes d√©j√† livr√©es
-	
-	//Les lignes restant √† livrer sont reprises telles quelles
+
+	$lig_aliv = array(); //Tableau des lignes ‡ livrer
+	$lig_dliv = array(); //Tableau des lignes dÈj‡ livrÈes
+
+	//Les lignes restant ‡ livrer sont reprises telles quelles
 	for($i=1;$i<=$max_lig;$i++) {
-		
+
 		$lig_aliv[$i]['id_lig'] = $id_lig[$i];
 		$lig_aliv[$i]['id_prod']=$id_prod[$i];
 		$lig_aliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
@@ -581,133 +569,133 @@ function sup_lig_liv() {
 		$lig_aliv[$i]['sol']= $sol[$i];
 		$lig_aliv[$i]['rec']= $rec[$i];
 	}
-	
-	//La quantite recue des lignes supprim√©es est report√©e dans le solde des lignes restant √† livrer si l'identifiant de ligne existe
-	//Sinon, une nouvelle ligne restant √† livrer est cr√©√©e
+
+	//La quantite recue des lignes supprimÈes est reportÈe dans le solde des lignes restant ‡ livrer si l'identifiant de ligne existe
+	//Sinon, une nouvelle ligne restant ‡ livrer est crÈÈe
 	for($i;$i<=$max_lig+$max_lig_liv;$i++) {
 
-		if ($chk[$i]) {	//La ligne est coch√©e pour suppression
-			
+		if ($chk[$i]) {	//La ligne est cochÈe pour suppression
+
 			$ral = false;
-			for($j=1;$j<=$max_lig; $j++) {	//Y avait-il un solde √† livrer
-			
-				if($lig_aliv[$j]['id_lig'] == $id_lig[$i]) {	//Si oui, on rajoute le re√ßu de la ligne supprim√©e au solde √† livrer
+			for($j=1;$j<=$max_lig; $j++) {	//Y avait-il un solde ‡ livrer
+
+				if($lig_aliv[$j]['id_lig'] == $id_lig[$i]) {	//Si oui, on rajoute le reÁu de la ligne supprimÈe au solde ‡ livrer
 					$lig_aliv[$j]['sol'] = $lig_aliv[$j]['sol']+$rec[$i];
 					$ral = true;
 					break;
-				} 
+				}
 			}
-			if (!$ral) {	//Il n'y avait pas de reste √† livrer, on recr√©e la ligne dans le tableau des restant √† livrer
-				
+			if (!$ral) {	//Il n'y avait pas de reste ‡ livrer, on recrÈe la ligne dans le tableau des restant ‡ livrer
+
 				$lig_aliv[$i]['id_lig'] = $id_lig[$i];
 				$lig_aliv[$i]['id_prod']=$id_prod[$i];
 				$lig_aliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
 				$lig_aliv[$i]['lib']= htmlentities(stripslashes($lib[$i]), ENT_QUOTES, $charset);
 				$lig_aliv[$i]['sol']= $rec[$i];
 				$lig_aliv[$i]['rec']= '0';
-				
+
 			}
-			
-		} else {	//La ligne n'est pas coch√©e pour suppression, on la conserve dans les d√©j√† livr√©es
-		
+
+		} else {	//La ligne n'est pas cochÈe pour suppression, on la conserve dans les dÈj‡ livrÈes
+
 			$lig_dliv[$i]['id_lig'] = $id_lig[$i];
 			$lig_dliv[$i]['id_prod']=$id_prod[$i];
 			$lig_dliv[$i]['code']=htmlentities(stripslashes($code[$i]), ENT_QUOTES, $charset);
 			$lig_dliv[$i]['lib']= htmlentities(stripslashes($lib[$i]), ENT_QUOTES, $charset);
 			$lig_dliv[$i]['rec']= $rec[$i];
-		
+
 		}
 	}
-	
 
-	
-	$index = 1;	
+
+
+	$index = 1;
 	$max_lig = count($lig_aliv);
-	//Affichage des lignes restant √† livrer
+	//Affichage des lignes restant ‡ livrer
 	foreach($lig_aliv as $key=>$value) {
-		
+
 		$frame = str_replace('<!-- lignes -->', $frame_row.'<!-- lignes -->', $frame);
 		$frame = str_replace('!!no!!', $index, $frame);
-		$frame = str_replace('!!id_lig!!', $lig_aliv[$key]['id_lig'], $frame);
-		$frame = str_replace('!!id_prod!!', $lig_aliv[$key]['id_prod'], $frame);
-		$frame = str_replace('!!code!!', $lig_aliv[$key]['code'], $frame);
-		$frame = str_replace('!!hidden_lib!!', $lig_aliv[$key]['lib'], $frame);
-		$frame = str_replace('!!lib!!', nl2br($lig_aliv[$key]['lib']), $frame);
-		$frame = str_replace('!!sol!!', $lig_aliv[$key]['sol'], $frame);
-		$frame = str_replace('!!rec!!', $lig_aliv[$key]['rec'], $frame);		
+		$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+		$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+		$frame = str_replace('!!code!!', $value['code'], $frame);
+		$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+		$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+		$frame = str_replace('!!sol!!', $value['sol'], $frame);
+		$frame = str_replace('!!rec!!', $value['rec'], $frame);
 		$index++;
 	}
 	$frame = str_replace('!!max_lig!!', $max_lig, $frame);
-	
+
 	$max_lig_liv = count($lig_dliv);
 	if ($max_lig_liv) {
 
 		$frame = str_replace('<!-- lignes -->', $frame_row_bl_header.'<!-- lignes -->', $frame);
-	
-		//Affichage des lignes d√©j√† livr√©es
+
+		//Affichage des lignes dÈj‡ livrÈes
 		foreach($lig_dliv as $key=>$value) {
-			
+
 			$frame = str_replace('<!-- lignes -->', $frame_row_bl.'<!-- lignes -->', $frame);
 			$frame = str_replace('!!no!!', $index, $frame);
-			$frame = str_replace('!!id_lig!!', $lig_dliv[$key]['id_lig'], $frame);
-			$frame = str_replace('!!id_prod!!', $lig_dliv[$key]['id_prod'], $frame);
-			$frame = str_replace('!!code!!', $lig_dliv[$key]['code'], $frame);
-			$frame = str_replace('!!hidden_lib!!', $lig_dliv[$key]['lib'], $frame);
-			$frame = str_replace('!!lib!!', nl2br($lig_dliv[$key]['lib']), $frame);
-			$frame = str_replace('!!rec!!', $lig_dliv[$key]['rec'], $frame);		
+			$frame = str_replace('!!id_lig!!', $value['id_lig'], $frame);
+			$frame = str_replace('!!id_prod!!', $value['id_prod'], $frame);
+			$frame = str_replace('!!code!!', $value['code'], $frame);
+			$frame = str_replace('!!hidden_lib!!', $value['lib'], $frame);
+			$frame = str_replace('!!lib!!', nl2br($value['lib']), $frame);
+			$frame = str_replace('!!rec!!', $value['rec'], $frame);
 			$index++;
 		}
 	}
 	$frame = str_replace('!!max_lig_liv!!', $max_lig_liv, $frame);
-	
+
 	$frame = str_replace('!!id_liv!!', $id_liv, $frame);
-	
-	print $frame;		
-} 
+
+	print $frame;
+}
 
 
 //Enregistre le bon de livraison
 function update_liv() {
-	
+
 	global $id_bibli, $id_cde, $id_liv, $comment, $ref;
 	global $max_lig, $max_lig_liv, $id_lig, $id_prod, $code, $rec;
 	global $acquisition_email_sugg;
-		
-	$tab_liv = array(); //Tableau des lignes livr√©es
-	
-	//Les lignes restant √† livrer sont reprises dans la tableau si la qt√© re√ßue est >0
+
+	$tab_liv = array(); //Tableau des lignes livrÈes
+
+	//Les lignes restant ‡ livrer sont reprises dans la tableau si la qtÈ reÁue est >0
 	for($i=1;$i<=$max_lig;$i++) {
-		
+
 		if ($rec[$i]) {
 			$tab_liv[$i]['id_lig'] = $id_lig[$i];
 			$tab_liv[$i]['rec']= $rec[$i];
 		}
 	}
 
-	//Les quantit√©s recues des lignes d√©j√† livr√©es sont report√©es dans le tableau si l'identifiant de ligne existe
-	//Sinon une nouvelle ligne est cr√©√©e 
+	//Les quantitÈs recues des lignes dÈj‡ livrÈes sont reportÈes dans le tableau si l'identifiant de ligne existe
+	//Sinon une nouvelle ligne est crÈÈe
 	for($i;$i<=$max_lig+$max_lig_liv;$i++) {
 
 		$deja = false;
-		for($j=1;$j<=$max_lig; $j++) {	//Y a-t'il une ligne deja cr√©√©e
+		for($j=1;$j<=$max_lig; $j++) {	//Y a-t'il une ligne deja crÈÈe
 
-			if($tab_liv[$j]['id_lig'] == $id_lig[$i]) {	//Si oui, on rajoute la quantit√© re√ßue dans le tableau
+			if($tab_liv[$j]['id_lig'] == $id_lig[$i]) {	//Si oui, on rajoute la quantitÈ reÁue dans le tableau
 				$tab_liv[$j]['rec'] = $tab_liv[$j]['rec']+$rec[$i];
 				$deja = true;
 				break;
-			} 
+			}
 		}
-		if (!$deja) {	//Sinon, on cr√©e la ligne dans le tableau 
+		if (!$deja) {	//Sinon, on crÈe la ligne dans le tableau
 			$tab_liv[$i]['id_lig'] = $id_lig[$i];
 			$tab_liv[$i]['rec']= $rec[$i];
-			
-		}		
+
+		}
 	}
-	
-	//R√©cup√©ration de la commande
+
+	//RÈcupÈration de la commande
 	$cde = new actes($id_cde);
-	
-	if (!$id_liv) {	//Cr√©ation du bon de livraison
+
+	if (!$id_liv) {	//CrÈation du bon de livraison
 
 		$liv = new actes();
 		$liv->date_acte = today();
@@ -722,11 +710,11 @@ function update_liv() {
 		$liv->reference = $ref;
 		$liv->calc();
 		$liv->save();
-		
+
 		$id_liv = $liv->id_acte;
-		//cr√©ation des liens entre actes
+		//crÈation des liens entre actes
 		$la = new liens_actes($id_cde, $id_liv);
-	
+
 	} else {	//Modification du bon de livraison
 
 		$liv = new actes($id_liv);
@@ -734,24 +722,24 @@ function update_liv() {
 		$liv->commentaires = trim($comment);
 		$liv->reference = trim($ref);
 		$liv->save();
-		
+
 	}
-	
-	//Suppression des lignes de livraisons pr√©c√©demment enregistr√©es
+
+	//Suppression des lignes de livraisons prÈcÈdemment enregistrÈes
 	actes::deleteLignes($id_liv);
 
 	$sug_map = new suggestions_map();
 
-	//Cr√©ation des lignes de livraison
+	//CrÈation des lignes de livraison
 	foreach ($tab_liv as $key=>$value) {
 
-		$lig_cde = new lignes_actes($tab_liv[$key]['id_lig']);
-		
-		
-		$lig_liv = new lignes_actes();	
+		$lig_cde = new lignes_actes($value['id_lig']);
+
+
+		$lig_liv = new lignes_actes();
 		$lig_liv->num_acte = $liv->id_acte;
 		$lig_liv->lig_ref = $lig_cde->id_ligne;
-		$lig_liv->num_acquisition = $lig_cde->num_acquisition; 				
+		$lig_liv->num_acquisition = $lig_cde->num_acquisition;
 		$lig_liv->num_rubrique = $lig_cde->num_rubrique;
 		$lig_liv->num_produit = $lig_cde->num_produit;
 		$lig_liv->num_type = $lig_cde->num_type;
@@ -760,51 +748,51 @@ function update_liv() {
 		$lig_liv->prix = $lig_cde->prix;
 		$lig_liv->tva = $lig_cde->tva;
 		$lig_liv->remise = $lig_cde->remise;
-		$lig_liv->nb = $tab_liv[$key]['rec'];
+		$lig_liv->nb = $value['rec'];
 		$lig_liv->date_cre = today();
-		$lig_liv->save();		
+		$lig_liv->save();
 
 		if ( $lig_cde->num_acquisition != 0 ) {
 			$sug = array();
 			$sug[] = $lig_cde->num_acquisition;
-			$sug_map->doTransition('RECEIVED', $sug);						
+			$sug_map->doTransition('RECEIVED', $sug);
 		}
 
 	}
 
-	//La commande est-elle sold√©e
+	//La commande est-elle soldÈe
 	$tab_cde = actes::getLignes($id_cde);
 	$solde = true;
 	while (($row_cde = pmb_mysql_fetch_object($tab_cde))) {
-		
+
 		if ($row_cde->type_ligne == 3) {	// Frais, non livrables
-			
+
 		} else {
-	
+
 
 			$tab_liv = lignes_actes::getLivraisons($row_cde->id_ligne);
 			$nb_liv = 0;
 			while (($row_liv = pmb_mysql_fetch_object($tab_liv))) {
 				$nb_liv = $nb_liv + $row_liv->nb;
 			}
-			
-		
+
+
 			if ($row_cde->nb > $nb_liv) {
 				$solde = false;
 				break;
 			}
-		
-		}		
-		
+
+		}
+
 	}
-	
+
 	if ($solde) {
-		$cde->statut = ($cde->statut & (~2) | 4); // Cde sold√©e >> Statut commande = en cours->sold√©
+		$cde->statut = ($cde->statut & (~2) | 4); // Cde soldÈe >> Statut commande = en cours->soldÈ
 	}
 	$cde->update_statut();
 
-	
-}  
+
+}
 
 
 
@@ -814,7 +802,7 @@ switch($action) {
 
 	case 'from_cde' :
 		show_lig_from_cde();
-		break;		
+		break;
 
 	case 'show_lig' :
 		show_lig_liv();
@@ -833,16 +821,16 @@ switch($action) {
 		verif_liv();
 		if ($error) {
 			show_lig_bak();
-			break;			
+			break;
 		} else {
 			update_liv();
 			print $retour_liste;
-		}	
+		}
 		break;
 
 	default:
 		break;
-		
+
 }
 
 ?>

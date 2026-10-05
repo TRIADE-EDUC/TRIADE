@@ -1,28 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: photo_tableau.inc.php,v 1.6 2018-05-25 13:48:21 dgoron Exp $
+// $Id: photo_tableau.inc.php,v 1.7 2023/12/08 08:51:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/notice_affichage.phototheque.class.php");
 
 function photo_tableau($id,$cart) {
 	global $liens_opac;
-	global $opac_notices_format;
-	global $opac_notices_depliable;
-	global $opac_cart_allow;
-	global $opac_cart_only_for_subscriber;
-	global $opac_notice_affichage_class;
 	global $photo_tableau_pos;
 	
 	$max_tableau_pos=3;
 	
 	$retour_aff="";
-	//DÃ©but du flux
+	//Début du flux
 	if ($id==-1) {
-		$retour_aff="<table>";
+		$retour_aff="<table role='presentation'>";
 		$photo_tableau_pos=0;
 	}
 	
@@ -51,7 +47,5 @@ function photo_tableau($id,$cart) {
 		$retour_aff.="</td>";
 		$photo_tableau_pos++;
 	}
-	
 	return $retour_aff;
 }
-?>

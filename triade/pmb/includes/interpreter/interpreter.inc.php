@@ -1,10 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: interpreter.inc.php,v 1.16 2017-01-25 17:07:05 dgoron Exp $
+// $Id: interpreter.inc.php,v 1.20 2022/06/20 12:06:00 dgoron Exp $
+
+global $include_path, $func_format;
+
 require_once ($include_path . "/misc.inc.php");
 
+if(empty($func_format)) {
+	$func_format= array();
+}
 $func_format['romain']= 'aff_romain';
 $func_format['roman']= 'aff_romain';
 $func_format['date']= 'aff_date';
@@ -38,11 +44,11 @@ $func_format['dayofyear']= 'aff_dayofyear';
 $func_format['curdate']= 'aff_curdate';
 $func_format['0day']= 'aff_0day';
 $func_format['0month']= 'aff_0month';
-//     passer en majuscule la premiÃ¨re lettre, 
+//     passer en majuscule la première lettre, 
 $func_format['1ucase']='aff_ucase_firstletter';
 //    passer le tout en majuscules,
 $func_format['ucase']='aff_ucase';
-//    passer les premiÃ¨res lettres de chaque mot en majuscule.
+//    passer les premières lettres de chaque mot en majuscule.
 $func_format['1ucasew']='aff_ucase_firstletter_word';
 // Convertie un nombre en lettre (1=>a, 26=>z) param 1: le chiffre, param2 optionnel: >0:en Majuscule
 $func_format['i2char']= 'aff_i2char';
@@ -112,11 +118,11 @@ function aff_date($param) {
 }
 function aff_day($param) {
 	$date=$param[0];
-	return pmb_sql_value("SELECT DAYOFMONTH('$date')");	// 1 Ã  31
+	return pmb_sql_value("SELECT DAYOFMONTH('$date')");	// 1 à 31
 }
 function aff_0day($param) {
 	$date=$param[0];
-	return pmb_sql_value("SELECT right(concat('0',DAYOFMONTH('$date')),2)");	//01 Ã  31 
+	return pmb_sql_value("SELECT right(concat('0',DAYOFMONTH('$date')),2)");	//01 à 31 
 }
 function aff_dayofweek($param) {
 	$date=$param[0];	
@@ -128,11 +134,11 @@ function aff_dayofweek($param) {
 }
 function aff_month($param) {
 	$date=$param[0];
-	return pmb_sql_value("SELECT MONTH('$date')");	//1 Ã  12 
+	return pmb_sql_value("SELECT MONTH('$date')");	//1 à 12 
 }
 function aff_0month($param) {
 	$date=$param[0];
-	return pmb_sql_value("SELECT right(concat('0',MONTH('$date')),2)");	//01 Ã  12 
+	return pmb_sql_value("SELECT right(concat('0',MONTH('$date')),2)");	//01 à 12 
 }
 function aff_week($param) {
 	$date=$param[0];
@@ -147,45 +153,45 @@ function aff_str_month($param) {
 	global $msg;
 	$date=$param[0];	
 	// param optionnel pour afficher le message dans une autre langue
-	$langue=$param[1];
+	$langue=(!empty($param[1]) ? $param[1] : '');
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 
-	$month=pmb_sql_value("SELECT MONTH('$date')")+1005;//1 Ã  12 
-	return $local_msg{$month};
+	$month=pmb_sql_value("SELECT MONTH('$date')")+1005;//1 à 12 
+	return $local_msg[$month];
 }
 function aff_str_day($param) {
 	global $msg;
 	$date=$param[0];	
-	$langue=$param[1];
+	$langue=(!empty($param[1]) ? $param[1] : '');
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 	
 	$day=((pmb_sql_value("SELECT DAYOFWEEK('$date')")+5)%7)+1;
-	return $local_msg{"week_days_".$day};
+	return $local_msg["week_days_".$day];
 }
 function aff_str_short_month($param) {
 	global $msg;
 	$date=$param[0];	
 	// param optionnel pour afficher le message dans une autre langue
-	$langue=$param[1];
+	$langue=(!empty($param[1]) ? $param[1] : '');
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 
-	$month=pmb_sql_value("SELECT MONTH('$date')")+1005;//1 Ã  12 
-	return $local_msg{$month};
+	$month=pmb_sql_value("SELECT MONTH('$date')")+1005;//1 à 12 
+	return $local_msg[$month];
 }
 
 function aff_str_short_day($param) {
 	global $msg;
 	$date=$param[0];	
 	// param optionnel pour afficher le message dans une autre langue
-	$langue=$param[1];
+	$langue=(!empty($param[1]) ? $param[1] : '');
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 	
 	$day=((pmb_sql_value("SELECT DAYOFWEEK('$date')")+5)%7)+1;
-	return $local_msg{"week_days_short_".$day};
+	return $local_msg["week_days_short_".$day];
 }
 
 function load_lang($lang){
@@ -227,7 +233,7 @@ function aff_season($param) {
 	$days=pmb_sql_value("SELECT DAYOFMONTH('$date')");
 	$date=sprintf("%d%02d",$month,$days);
 	if( ($date >= 321) && ($date < 621) ) return 1;//Printemps
-	if( ($date >= 621) && ($date < 923) ) return 2;//EtÃ©
+	if( ($date >= 621) && ($date < 923) ) return 2;//Eté
 	if( ($date >= 923) && ($date < 1222) ) return 3;//Automne
 	return 4;//Hivers
 }
@@ -237,7 +243,7 @@ function aff_str_season($param) {
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 	$season=aff_season($param);
-	return $local_msg{"season_".$season};	
+	return $local_msg["season_".$season];	
 		
 }
 function aff_seasonS($param) {
@@ -245,7 +251,7 @@ function aff_seasonS($param) {
 	if( $season == 1) return 3;//Automne
 	if( $season == 2) return 4;//Hivers
 	if( $season == 3) return 1;//Printemps
-	return 2;//EtÃ©
+	return 2;//Eté
 }
 function aff_str_seasonS($param) {
 	global $msg;
@@ -253,56 +259,47 @@ function aff_str_seasonS($param) {
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
 	$season = aff_seasonS($param);
-	return $local_msg{"season_".$season};	
+	return $local_msg["season_".$season];	
 }
 function aff_add_day($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_ADD('" .$date. "', INTERVAL " .$nb. " DAY)");
 }
 function aff_add_month($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_ADD('" .$date. "', INTERVAL " .$nb. " MONTH)");
 }
 function aff_add_year($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_ADD('" .$date. "', INTERVAL " .$nb. " YEAR)");
 }
 function aff_sub_day($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_SUB('" .$date. "', INTERVAL " .$nb. " DAY)");
 }
 function aff_sub_month($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_SUB('" .$date. "', INTERVAL " .$nb. " MONTH)");
 }
 function aff_sub_year($param) {
-	global $msg;
 	$date=$param[0];
 	$nb=$param[1];
 	return pmb_sql_value("SELECT DATE_SUB('" .$date. "', INTERVAL " .$nb. " YEAR)");
 }
 function aff_quarter($param) {
-	global $msg;
 	$date=$param[0];
 	return pmb_sql_value("SELECT QUARTER('" .$date. "')");
 }
 function aff_dayofyear($param) {
-	global $msg;
 	$date=$param[0];
 	return pmb_sql_value("SELECT DAYOFYEAR('" .$date. "')");
 }
 function aff_curdate($param) {
-	global $msg;
 	return pmb_sql_value("SELECT CURDATE()");
 }
 function aff_ucase_firstletter($param) {
@@ -312,6 +309,9 @@ function aff_ucase($param) {
 	return strtoupper($param[0]);
 }
 function aff_ucase_firstletter_word($param) {
+	if(!empty($param[1])) {
+		return ucwords($param[0], $param[1]);
+	}
 	return ucwords($param[0]);
 }
 
@@ -339,7 +339,7 @@ function aff_ordinal($param) {
 		$langue=$param[1];
 		$local_msg=$msg;
 		if($langue)$local_msg=load_lang($langue);
-		return $local_msg{"ordinal_".$index};
+		return $local_msg["ordinal_".$index];
 	}
 }
 
@@ -349,6 +349,6 @@ function aff_str_ordinal($param) {
 	$langue=$param[1];
 	$local_msg=$msg;
 	if($langue)$local_msg=load_lang($langue);
-	return $local_msg{"ordinal_s_".$index};
+	return $local_msg["ordinal_s_".$index];
 }
 

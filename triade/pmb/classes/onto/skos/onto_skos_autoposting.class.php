@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_autoposting.class.php,v 1.2 2018-06-29 12:50:41 tsamson Exp $
+// $Id: onto_skos_autoposting.class.php,v 1.2 2018/06/29 12:50:41 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class onto_skos_autoposting {
     
     /**
-     * permet de stocker les anciens chemins gÃ©nÃ©riques avant la sauvegarde pour les comparer aux nouveaux
+     * permet de stocker les anciens chemins génériques avant la sauvegarde pour les comparer aux nouveaux
      * @var array
      */
     protected $old_broad_paths;
     
     /**
-     * permet de stocker les anciens chemins spÃ©cifiques avant la sauvegarde pour les comparer aux nouveaux
+     * permet de stocker les anciens chemins spécifiques avant la sauvegarde pour les comparer aux nouveaux
      * @var array
      */
     protected $old_narrow_paths;
@@ -39,13 +39,13 @@ class onto_skos_autoposting {
 	
 	/**
 	 * 
-	 * @var array liste des preflabels des termes gÃ©nÃ©riques
+	 * @var array liste des preflabels des termes génériques
 	 */
 	protected $broaders_preflabels;
 	
 	/**
 	 * 
-	 * @var array liste des preflabels des termes spÃ©cifiques
+	 * @var array liste des preflabels des termes spécifiques
 	 */
 	protected $narrowers_preflabels;
 	
@@ -95,12 +95,12 @@ class onto_skos_autoposting {
 	}
 	
 	/**
-	 * indexation du concept autopostÃ©
+	 * indexation du concept autoposté
 	 * @param int $concept_id
 	 */
 	public function index_autoposted_concept($concept_id) {	
         $this->save_paths(onto_common_uri::get_uri($concept_id));
-	    //rÃ©indexation des notices indexÃ©s avec le concepts
+	    //réindexation des notices indexés avec le concepts
         index_concept::update_linked_elements($concept_id);
 	}
 	
@@ -131,7 +131,7 @@ class onto_skos_autoposting {
 	}
 	
 	/**
-	 * renvoie les concepts gÃ©nÃ©riques d'un noeud
+	 * renvoie les concepts génériques d'un noeud
 	 * 
 	 * @param string $class_uri
 	 * @return array
@@ -156,7 +156,7 @@ class onto_skos_autoposting {
  	}
  	
 	/**
-	 * renvoie les concepts spÃ©cifiques d'un noeud
+	 * renvoie les concepts spécifiques d'un noeud
 	 * 
 	 * @param string $class_uri
 	 * @return array
@@ -182,7 +182,7 @@ class onto_skos_autoposting {
  	
 	
 	/**
-	 * Retourne le chemin des concepts gÃ©nÃ©riques
+	 * Retourne le chemin des concepts génériques
 	 * @param string $uri
 	 * @param array $paths
 	 * @param string $path_beginning
@@ -219,7 +219,7 @@ class onto_skos_autoposting {
 	}
 	
 	/**
-	 * Retourne le chemin des concepts spÃ©cifiques
+	 * Retourne le chemin des concepts spécifiques
 	 * @param string $uri
 	 * @param array $paths
 	 * @param string $path_beginning
@@ -256,7 +256,7 @@ class onto_skos_autoposting {
 	}
 	
 	/**
-	 * Enregistrement des chemins des concepts spÃ©cifiques et gÃ©nÃ©riques pour l'autopostage
+	 * Enregistrement des chemins des concepts spécifiques et génériques pour l'autopostage
 	 * @param string $uri
 	 */
 	public function save_paths($uri = "") {
@@ -274,7 +274,7 @@ class onto_skos_autoposting {
 	}
 	
 	/**
-	 * Enregistrement des chemins des concepts gÃ©nÃ©riques
+	 * Enregistrement des chemins des concepts génériques
 	 * @param string $uri
 	 * @return array
 	 */
@@ -285,7 +285,7 @@ class onto_skos_autoposting {
 		if (!is_numeric($nb_levels)) {
 			$nb_levels = -1;
 		}		
-		//on commence par supprimer les anciens chemins avant de les remettre Ã  jour
+		//on commence par supprimer les anciens chemins avant de les remettre à jour
 		$query = "DELETE {<".$uri."> pmb:broadPath ?broadpath}";
 		$this->handler->data_query($query);		
 		
@@ -313,7 +313,7 @@ class onto_skos_autoposting {
 		if (!is_numeric($nb_levels)) {
 			$nb_levels = -1;
 		}		
-		//on commence par supprimer les anciens chemins avant de les remettre Ã  jour
+		//on commence par supprimer les anciens chemins avant de les remettre à jour
 		$query = "DELETE {<".$uri."> pmb:narrowPath ?narrowpath}";
 		$this->handler->data_query($query);
 		

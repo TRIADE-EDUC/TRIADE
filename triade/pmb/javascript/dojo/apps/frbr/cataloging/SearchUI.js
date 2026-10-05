@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SearchUI.js,v 1.6 2018-02-21 10:00:58 vtouchard Exp $
+// $Id: SearchUI.js,v 1.6 2018/02/21 10:00:58 vtouchard Exp $
 
 
 define(["dojo/_base/declare", 

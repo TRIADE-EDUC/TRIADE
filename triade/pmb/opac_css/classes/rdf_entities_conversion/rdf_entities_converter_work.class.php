@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_converter_work.class.php,v 1.1 2018-09-24 13:39:22 tsamson Exp $
+// $Id: rdf_entities_converter_work.class.php,v 1.4 2022/03/17 13:01:05 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -46,8 +46,7 @@ class rdf_entities_converter_work extends rdf_entities_converter_authority {
 	}
 	
 	protected function init_foreign_fields() {
-		$this->foreign_fields = array_merge(parent::init_foreign_fields(), array(
-		));
+		$this->foreign_fields = array_merge(parent::init_foreign_fields(), array());
 		return $this->foreign_fields;
 	}
 	
@@ -88,15 +87,16 @@ class rdf_entities_converter_work extends rdf_entities_converter_authority {
 						'reference_field_name' => 'oeuvre_link_from',
 						'external_field_name' => 'oeuvre_link_to',
 						'other_fields' => array(
-								'oeuvre_link_expression' => '1',
+								'oeuvre_link_expression' => '0',
 								'oeuvre_link_other_link' => '0'
-						)
+						),
+    		              'abstract_entity' => '1'
 				),
 				'http://www.pmbservices.fr/ontology#has_expression' => array(
 				        'type' => 'linked_work',
 						'table' => 'tu_oeuvres_links',
-						'reference_field_name' => 'oeuvre_link_to',
-						'external_field_name' => 'oeuvre_link_from',
+						'reference_field_name' => 'oeuvre_link_from',
+						'external_field_name' => 'oeuvre_link_to',
 						'other_fields' => array(
 								'oeuvre_link_expression' => '1',
 								'oeuvre_link_other_link' => '0'
@@ -111,7 +111,8 @@ class rdf_entities_converter_work extends rdf_entities_converter_authority {
 						'other_fields' => array(
 								'oeuvre_link_expression' => '0',
 								'oeuvre_link_other_link' => '1'
-						)
+						),
+				    'abstract_entity' => '1'
 				),
 				'http://www.pmbservices.fr/ontology#has_event' => array(
 				        'type' => 'work',
@@ -150,7 +151,12 @@ class rdf_entities_converter_work extends rdf_entities_converter_authority {
 	}
 	
 	protected function init_special_fields() {
-	    $this->special_fields = array_merge(parent::init_special_fields(), array());
+	    $this->special_fields = array_merge(parent::init_special_fields(), array(
+	        'http://www.pmbservices.fr/ontology#thumbnail_url' => array(
+	            "method" => array($this,"get_thumbnail_url"),
+	            "arguments" => array($this->aut_table_constant)
+	        )
+	    ));
 	    return $this->special_fields;
 	}
 }

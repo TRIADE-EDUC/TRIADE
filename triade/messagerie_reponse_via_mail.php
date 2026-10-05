@@ -13,8 +13,8 @@ include_once("./common/config.inc.php");
 include_once("./librairie_php/langue.php");
 include_once('librairie_php/db_triade.php');
 $cnx=cnx();
-$data=affichage_messagerie_message($_GET["saisie_id_message"]);
-if (count($data) == 0) {
+$data=affichage_messagerie_message($_GET["saisie_id_message"],$_SESSION['id_pers']);
+if (countTriade($data) == 0) {
 	print "Erreur d'accès !";
 	exit;
 }
@@ -24,7 +24,7 @@ if (count($data) == 0) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -66,7 +66,7 @@ if (count($data) == 0) {
 <?php
 //  id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest
 // $data : tab bidim - soustab 3 champs
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$qui_envoi=$data[$i][7];
 	$dou_envoi=$data[$i][9];
  	$number=$data[$i][10];

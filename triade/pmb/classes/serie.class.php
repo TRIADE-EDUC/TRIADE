@@ -1,15 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serie.class.php,v 1.85 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: serie.class.php,v 1.96.4.1 2025/02/27 15:17:23 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des 'titres de sÃ©ries'
+use Pmb\Ark\Entities\ArkEntityPmb;
+// définition de la classe de gestion des 'titres de séries'
 if ( ! defined( 'SERIE_CLASS' ) ) {
   define( 'SERIE_CLASS', 1 );
 
+  global $class_path;
+  
 require_once($class_path."/notice.class.php");
 require_once("$class_path/aut_link.class.php");
 require_once("$class_path/aut_pperso.class.php");
@@ -21,14 +24,15 @@ require_once($class_path."/indexation_authority.class.php");
 require_once($class_path."/authority.class.php");
 require_once ($class_path.'/indexations_collection.class.php');
 require_once ($class_path.'/indexation_stack.class.php');
+require_once ($class_path.'/interface/entity/interface_entity_serie_form.class.php');
 
 class serie {
 
 	// ---------------------------------------------------------------
-	//	propriÃ©tÃ©s de la classe
+	//	propriétés de la classe
 	// ---------------------------------------------------------------
 	public $s_id=0;			// MySQL s_id in table 'series'
-	public	$name='';			// nom de la sÃ©rie
+	public	$name='';			// nom de la série
 	public	$index='';			// forme pour l'index
 	public $isbd_entry_lien_gestion ; // lien sur le nom vers la gestion
 	public $num_statut = 1; //Statut
@@ -36,15 +40,15 @@ class serie {
 	protected static $controller;
 	
 	// ---------------------------------------------------------------
-	//		sÃ©rie($s_id) : constructeur
+	//		série($s_id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {
-		$this->s_id = $id+0;
+		$this->s_id = intval($id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos du titre
+	//		getData() : récupération infos du titre
 	// ---------------------------------------------------------------
 	public function getData() {
 		$this->name			=	'';
@@ -55,13 +59,15 @@ class serie {
 			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
+				pmb_mysql_free_result($result);
+				
 				$this->s_id = $row->serie_id;
 				$this->name = $row->serie_name;
 				$this->index = $row->serie_index;
 				$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
 				$this->num_statut = $authority->get_num_statut();
-				// Ajoute un lien sur la fiche sÃ©rie si l'utilisateur Ã  accÃ¨s aux autoritÃ©s
-				if (SESSrights & AUTORITES_AUTH){ 
+				// Ajoute un lien sur la fiche série si l'utilisateur à accès aux autorités
+				if (defined('SESSrights') && (SESSrights & AUTORITES_AUTH)){ 
 				    $this->isbd_entry_lien_gestion = "<a href='./autorites.php?categ=see&sub=serie&id=".$this->s_id."' class='lien_gestion'>".$this->name."</a>";
 				}else{
 				    $this->isbd_entry_lien_gestion = $this->name;
@@ -89,88 +95,74 @@ class serie {
 	    return $data;
 	}
 	
+	protected function get_content_form() {
+		global $thesaurus_concepts_active;
+		global $serie_content_form;
+		
+		$content_form = $serie_content_form;
+		
+		$element = interface_entity_element::get_instance('el0Child_0', 'serie_nom', '233');
+		$element->add_input_node('text', $this->name, ['data-pmb-deb-rech' => '1']);
+		$content_form = str_replace('!!element_serie_nom!!', $element->get_display(), $content_form);
+		
+		$aut_link= new aut_link(AUT_TABLE_SERIES,$this->s_id);
+		$content_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_serie') , $content_form);
+		
+		$aut_pperso= new aut_pperso("serie",$this->s_id);
+		$content_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $content_form);
+		
+		if($thesaurus_concepts_active == 1){
+			$index_concept = new index_concept($this->s_id, TYPE_SERIE);
+			$content_form = str_replace('!!concept_form!!', $index_concept->get_form('saisie_serie'), $content_form);
+		}else{
+			$content_form = str_replace('!!concept_form!!', "", $content_form);
+		}
+		$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
+		$content_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $content_form);
+		return $content_form;
+	}
+	
+	public function get_form($duplicate = false) {
+		global $msg;
+		global $user_input, $nbr_lignes, $page ;
+		
+		$interface_form = new interface_entity_serie_form('saisie_serie');
+		if(isset(static::$controller) && is_object(static::$controller)) {
+			$interface_form->set_controller(static::$controller);
+		}
+		$interface_form->set_enctype('multipart/form-data');
+		if($this->s_id && !$duplicate) {
+			$interface_form->set_label($msg['337']);
+			$interface_form->set_document_title($this->name.' - '.$msg['337']);
+		} else {
+			$interface_form->set_label($msg['336']);
+			$interface_form->set_document_title($msg['336']);
+		}
+		$interface_form->set_object_id($this->s_id)
+		->set_num_statut($this->num_statut)
+		->set_content_form($this->get_content_form())
+		->set_table_name('series')
+		->set_field_focus('serie_nom')
+		->set_url_base(static::format_url());
+		
+		$interface_form->set_page($page)
+		->set_nbr_lignes($nbr_lignes)
+		->set_user_input($user_input);
+		return $interface_form->get_display();
+	}
+	
 	// ---------------------------------------------------------------
 	//		show_form : affichage du formulaire de saisie
 	// ---------------------------------------------------------------
 	public function show_form($duplicate = false) {
-	
-		global $msg;
-		global $charset;
-		global $serie_form;
-		global $pmb_type_audit;
-		global $thesaurus_concepts_active;
-	
-		if($this->s_id && !$duplicate) {
-			$action = static::format_url("&sub=update&id=".$this->s_id);
-			$libelle = $msg[337];
-			$button_remplace = "<input type='button' class='bouton' value='$msg[158]' ";
-			$button_remplace .= "onclick='unload_off();document.location=\"".static::format_url("&sub=replace&id=".$this->s_id)."\"'>";
-			$button_delete = "<input type='button' class='bouton' value='$msg[63]' ";
-			$button_delete .= "onClick=\"confirm_delete();\">";
-			$button_voir = "<input type='button' class='bouton' value='$msg[voir_notices_assoc]' ";
-			$button_voir .= "onclick='unload_off();document.location=\"./catalog.php?categ=search&mode=10&etat=aut_search&aut_type=tit_serie&aut_id=$this->s_id\"'>";
-		} else {
-			$action = static::format_url('&sub=update&id=');
-			$libelle = $msg[336];
-			$button_remplace = '';
-			$button_delete ='';
-			$button_voir="" ;
-		}
-		$aut_link= new aut_link(AUT_TABLE_SERIES,$this->s_id);
-		$serie_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_serie') , $serie_form);
-		
-		$aut_pperso= new aut_pperso("serie",$this->s_id);
-		$serie_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $serie_form);
-		/**
-		 * Gestion du selecteur de statut d'autoritÃ©
-		 */
-		$serie_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_SERIES, $this->num_statut), $serie_form);
-		
-		$serie_form = str_replace('!!id!!', $this->s_id, $serie_form);
-		$serie_form = str_replace('!!libelle!!', $libelle, $serie_form);
-		$serie_form = str_replace('!!action!!', $action, $serie_form);
-		$serie_form = str_replace('!!cancel_action!!', static::format_back_url(), $serie_form);
-		$serie_form = str_replace('!!id!!', $this->s_id, $serie_form);
-		$serie_form = str_replace('!!serie_nom!!', htmlentities($this->name,ENT_QUOTES, $charset), $serie_form);
-		$serie_form = str_replace('!!remplace!!', $button_remplace,  $serie_form);
-		$serie_form = str_replace('!!voir_notices!!', $button_voir,  $serie_form);
-		$serie_form = str_replace('!!delete!!', $button_delete,  $serie_form);
-		$serie_form = str_replace('!!delete_action!!', static::format_delete_url("&id=".$this->s_id), $serie_form);
-		// pour retour Ã  la bonne page en gestion d'autoritÃ©s
-		// &user_input=".rawurlencode(stripslashes($user_input))."&nbr_lignes=$nbr_lignes&page=$page
-		global $user_input, $nbr_lignes, $page ;
-		$serie_form = str_replace('!!user_input!!',			htmlentities($user_input,ENT_QUOTES, $charset),		$serie_form);
-		$serie_form = str_replace('!!nbr_lignes!!',			$nbr_lignes,										$serie_form);
-		$serie_form = str_replace('!!page!!',				$page,												$serie_form);
-		if($thesaurus_concepts_active == 1){
-			$index_concept = new index_concept($this->s_id, TYPE_SERIE);
-			$serie_form = str_replace('!!concept_form!!',	$index_concept->get_form('saisie_serie'),			$serie_form);
-		}else{
-			$serie_form = str_replace('!!concept_form!!',	"",			$serie_form);
-		}
-		if ($this->name) {
-			$serie_form = str_replace('!!document_title!!', addslashes($this->name.' - '.$libelle), $serie_form);
-		} else {
-			$serie_form = str_replace('!!document_title!!', addslashes($libelle), $serie_form);
-		}
-		$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
-		$serie_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $serie_form);
-		if ($pmb_type_audit && $this->s_id && !$duplicate) {
-			$bouton_audit= audit::get_dialog_button($this->s_id, AUDIT_SERIE);
-		} else {
-			$bouton_audit= "";
-		}
-		$serie_form = str_replace('!!audit_bt!!',				$bouton_audit,												$serie_form);
-		$serie_form = str_replace('!!controller_url_base!!', static::format_url(), $serie_form);
-		
-		print $serie_form;
+		print $this->get_form($duplicate);
 	}
 	
 	// ---------------------------------------------------------------
 	//		replace_form : affichage du formulaire de remplacement
 	// ---------------------------------------------------------------
 	public function replace_form() {
-		global $serie_replace;
+		global $serie_replace_content_form;
 		global $msg;
 		global $include_path;
 		
@@ -178,49 +170,54 @@ class serie {
 			require_once("$include_path/user_error.inc.php");
 			error_message($msg[161], $msg[162], 1, static::format_url('&sub=&id='));
 			return false;
-			}
-	
-		$serie_replace=str_replace('!!id!!', $this->s_id, $serie_replace);
-		$serie_replace=str_replace('!!serie_name!!', $this->name, $serie_replace);
-		$serie_replace=str_replace('!!controller_url_base!!', static::format_url(), $serie_replace);
-		$serie_replace=str_replace('!!cancel_action!!', static::format_back_url(), $serie_replace);
-		print $serie_replace;
+		}
+		
+		$content_form = $serie_replace_content_form;
+		$content_form = str_replace('!!id!!', $this->s_id, $content_form);
+		
+		$interface_form = new interface_autorites_replace_form('serie_replace');
+		$interface_form->set_object_id($this->s_id)
+		->set_label($msg["159"]." ".$this->name)
+		->set_content_form($content_form)
+		->set_table_name('series')
+		->set_field_focus('serie_libelle')
+		->set_url_base(static::format_url());
+		print $interface_form->get_display();
 	}
 	
 	// ---------------------------------------------------------------
-	//		delete() : suppression du titre de sÃ©rie
+	//		delete() : suppression du titre de série
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
 		global $msg;
 		
 		if(!$this->s_id)
-			// impossible d'accÃ©der Ã  cette notice de titre de sÃ©rie
+			// impossible d'accéder à cette notice de titre de série
 			return $msg[409];
 	
 		if(($usage=aut_pperso::delete_pperso(AUT_TABLE_SERIES, $this->s_id,0) )){
-			// Cette autoritÃ© est utilisÃ©e dans des champs perso, impossible de supprimer
+			// Cette autorité est utilisée dans des champs perso, impossible de supprimer
 			return '<strong>'.$this->display.'</strong><br />'.$msg['autority_delete_error'].'<br /><br />'.$usage['display'];
 		}
-		// rÃ©cupÃ©ration du nombre de notices affectÃ©es
+		// récupération du nombre de notices affectées
 		$requete = "SELECT COUNT(1) AS qte FROM notices WHERE tparent_id=".$this->s_id;
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 	
 		if(!$nbr_lignes) {
 	
-			// On regarde si l'autoritÃ© est utilisÃ©e dans des vedettes composÃ©es
+			// On regarde si l'autorité est utilisée dans des vedettes composées
 			$attached_vedettes = vedette_composee::get_vedettes_built_with_element($this->s_id, TYPE_SERIE);
 			if (count($attached_vedettes)) {
-				// Cette autoritÃ© est utilisÃ©e dans des vedettes composÃ©es, impossible de la supprimer
+				// Cette autorité est utilisée dans des vedettes composées, impossible de la supprimer
 				return '<strong>'.$this->name."</strong><br />".$msg["vedette_dont_del_autority"].'<br/>'.vedette_composee::get_vedettes_display($attached_vedettes);
 			}
 			
-			// titre de sÃ©rie non-utilisÃ© dans des notices : Suppression OK
-			// effacement dans la table des titres de sÃ©rie
+			// titre de série non-utilisé dans des notices : Suppression OK
+			// effacement dans la table des titres de série
 			$requete = "DELETE FROM series WHERE serie_id=".$this->s_id;
-			$result = pmb_mysql_query($requete, $dbh);
-			// liens entre autoritÃ©s
+			pmb_mysql_query($requete);
+			// liens entre autorités
 			$aut_link= new aut_link(AUT_TABLE_SERIES,$this->s_id);
 			$aut_link->delete();		
 			$aut_pperso= new aut_pperso("serie",$this->s_id);
@@ -233,15 +230,15 @@ class serie {
 			// nettoyage indexation
 			indexation_authority::delete_all_index($this->s_id, "authorities", "id_authority", AUT_TABLE_SERIES);
 			
-			// effacement de l'identifiant unique d'autoritÃ©
+			// effacement de l'identifiant unique d'autorité
 			$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
 			$authority->delete();
 			
 			audit::delete_audit(AUDIT_SERIE,$this->s_id);
 			return false;
 			} else {
-				// Ce titre de sÃ©rie est utilisÃ© dans des notices, impossible de le supprimer
-				return '<strong>'.$this->name."</strong><br />${msg[410]}";
+				// Ce titre de série est utilisé dans des notices, impossible de le supprimer
+				return '<strong>'.$this->name."</strong><br />{$msg[410]}";
 			}
 		}
 	
@@ -249,66 +246,77 @@ class serie {
 	//		replace($by) : remplacement du titre
 	// ---------------------------------------------------------------
 	public function replace($by,$link_save=0) {
-	
-		// Ã  complÃ©ter
+		// à compléter
 		global $msg;
-		global $dbh;
+		global $pmb_ark_activate;
 	
 		if(!$by) {
 			// pas de valeur de remplacement !!!
 			return "serious error occured, please contact admin...";
 		}
 		if (($this->s_id == $by) || (!$this->s_id))  {
-			// impossible de remplacer une autoritÃ© par elle-mÃªme
+			// impossible de remplacer une autorité par elle-même
 			return $msg[411];
 		}
 		
 		$aut_link= new aut_link(AUT_TABLE_SERIES,$this->s_id);
-		// "Conserver les liens entre autoritÃ©s" est demandÃ©
+		// "Conserver les liens entre autorités" est demandé
 		if($link_save) {
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link->add_link_to(AUT_TABLE_SERIES,$by);		
 		}
 		$aut_link->delete();
 		
 		// a) remplacement dans les notices
 		$requete = "UPDATE notices SET tparent_id=$by WHERE tparent_id=".$this->s_id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
 		$rqt_notice="select notice_id,tit1,tit2,tit3,tit4 from notices where tparent_id=".$by;
 		$r_notice=pmb_mysql_query($rqt_notice);
 		while ($r=pmb_mysql_fetch_object($r_notice)) {
 			$rq_serie="update notices, series set notices.index_serie=serie_index, notices.index_wew=concat(serie_name,' ',tit1,' ',tit2,' ',tit3,' ',tit4),notices.index_sew=concat(' ',serie_index,' ','".addslashes(strip_empty_words($r->tit1." ".$r->tit2." ".$r->tit3." ".$r->tit4))."',' ') where notice_id=".$r->notice_id." and serie_id=tparent_id";
 			pmb_mysql_query($rq_serie);
-			}
+		}
 		
-		// b) suppression du titre de sÃ©rie Ã  remplacer
+		// nettoyage indexation concepts
+		$index_concept = new index_concept($this->s_id, TYPE_SERIE);
+		$index_concept->delete();
+		
+		if ($pmb_ark_activate) {
+		    $idReplaced = authority::get_authority_id_from_entity($this->s_id, AUT_TABLE_SERIES);
+		    $idReplacing = authority::get_authority_id_from_entity($by, AUT_TABLE_SERIES);
+		    if ($idReplaced && $idReplacing) {
+		        $arkEntityReplaced = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplaced);
+		        $arkEntityReplacing = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplacing);
+		        $arkEntityReplaced->markAsReplaced($arkEntityReplacing);
+		    }
+		}
+		
+		// effacement de l'identifiant unique d'autorité
+		$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
+		$authority->delete();
+		
+		// b) suppression du titre de série à remplacer
 		$requete = "DELETE FROM series WHERE serie_id=".$this->s_id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
-		//Remplacement dans les champs persos sÃ©lecteur d'autoritÃ©
+		//Remplacement dans les champs persos sélecteur d'autorité
 		aut_pperso::replace_pperso(AUT_TABLE_SERIES, $this->s_id, $by);
 		
 		audit::delete_audit (AUDIT_SERIE, $this->s_id);
 			
-			// nettoyage indexation
-			indexation_authority::delete_all_index($this->s_id, "authorities", "id_authority", AUT_TABLE_SERIES);
-			
-			// effacement de l'identifiant unique d'autoritÃ©
-			$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
-			$authority->delete();
-			
+		// nettoyage indexation
+		indexation_authority::delete_all_index($this->s_id, "authorities", "id_authority", AUT_TABLE_SERIES);
+		
 		serie::update_index($by);
 	
 		return FALSE;
 		}
 	
 	// ---------------------------------------------------------------
-	//		update($value) : mise Ã  jour du titre de sÃ©rie
+	//		update($value) : mise à jour du titre de série
 	// ---------------------------------------------------------------
 	public function update($value) {
-	
-		global $dbh;
 		global $msg;
 		global $include_path;
 		global $thesaurus_concepts_active;
@@ -318,7 +326,7 @@ class serie {
 		if(!$value)
 			return false;
 	
-		// nettoyage de la chaÃ®ne en entrÃ©e
+		// nettoyage de la chaîne en entrée
 		$value = clean_string($value);
 	
 		$requete = 'SET serie_name="'.$value.'", ';
@@ -328,11 +336,11 @@ class serie {
 			// update
 			$requete = 'UPDATE series '.$requete;
 			$requete .= ' WHERE serie_id='.$this->s_id.' LIMIT 1;';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$rqt_notice="select notice_id,tit1,tit2,tit3,tit4 from notices where tparent_id=".$this->s_id;
 				$r_notice=pmb_mysql_query($rqt_notice);
 				while ($r=pmb_mysql_fetch_object($r_notice)) {
-					$rq_serie="update notices, series set notices.index_serie=serie_index, notices.index_wew=concat(serie_name,' ',tit1,' ',tit2,' ',tit3,' ',tit4),notices.index_sew=concat(' ',serie_index,' ','".addslashes(strip_empty_words($r->tit1." ".$r->tit2." ".$r->tit3." ".$r->tit4))."',' ') where notice_id=".$r->notice_id." and serie_id=tparent_id";
+					$rq_serie="update notices, series set  notices.update_date = notices.update_date, notices.index_serie=serie_index, notices.index_wew=concat(serie_name,' ',tit1,' ',tit2,' ',tit3,' ',tit4),notices.index_sew=concat(' ',serie_index,' ','".addslashes(strip_empty_words($r->tit1." ".$r->tit2." ".$r->tit3." ".$r->tit4))."',' ') where notice_id=".$r->notice_id." and serie_id=tparent_id";
 					pmb_mysql_query($rq_serie);
 				}
 				
@@ -351,16 +359,16 @@ class serie {
 				return FALSE;
 			}
 		} else {
-			// crÃ©ation : s'assurer que le titre n'existe pas dÃ©jÃ 
+			// création : s'assurer que le titre n'existe pas déjà
 			$dummy = "SELECT * FROM series WHERE serie_name REGEXP '^$value$' LIMIT 1 ";
-			$check = pmb_mysql_query($dummy, $dbh);
+			$check = pmb_mysql_query($dummy);
 			if(pmb_mysql_num_rows($check)) {
 				require_once("$include_path/user_error.inc.php");
-				warning($msg[336], $msg[340]);
+				print $this->warning_already_exist($msg[336], $msg[340]);
 				return FALSE;
 			}
 			$requete = 'INSERT INTO series '.$requete.';';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$this->s_id=pmb_mysql_insert_id();
 	
 				audit::insert_creation(AUDIT_SERIE, $this->s_id) ;
@@ -390,7 +398,7 @@ class serie {
 			$index_concept->save();
 		}
 			
-		// Mise Ã  jour des vedettes composÃ©es contenant cette autoritÃ©
+		// Mise à jour des vedettes composées contenant cette autorité
 		vedette_composee::update_vedettes_built_with_element($this->s_id, TYPE_SERIE);
 		
 		serie::update_index($this->s_id);
@@ -399,42 +407,42 @@ class serie {
 	}
 	
 	// 	---------------------------------------------------------------
-	// 			import() : import d'un titre de sÃ©rie
+	// 			import() : import d'un titre de série
 	// 	---------------------------------------------------------------
 	// 	fonction d'import de notice auteur (membre de la classe 'author');
 	public static function import($title, $statut=1, $thumbnail_url='') {
-	
-		global $dbh;
-	
-		// check sur la variable passÃ©e en paramÃ¨tre
+		// check sur la variable passée en paramètre
 		if(!$title) {
 			return 0;
 		}
 	
-		// tentative de rÃ©cupÃ©rer l'id associÃ©e dans la base (implique que l'autoritÃ© existe)
-		// prÃ©paration de la requÃªte
+		// tentative de récupérer l'id associée dans la base (implique que l'autorité existe)
+		// préparation de la requête
 		$key = addslashes($title);
 	
 		$query = "SELECT serie_id FROM series WHERE serie_name='".rtrim(substr($key,0,255))."' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT series ".$query);
-		// rÃ©sultat
+		// résultat
 	
-		// rÃ©cupÃ©ration du rÃ©sultat de la recherche
-		$tserie  = pmb_mysql_fetch_object($result);
-		// du rÃ©sultat et rÃ©cupÃ©ration Ã©ventuelle de l'id
-		if($tserie->serie_id)
-			return $tserie->serie_id;
+		// récupération du résultat de la recherche
+		if(pmb_mysql_num_rows($result)) {
+			$tserie  = pmb_mysql_fetch_object($result);
+			// du résultat et récupération éventuelle de l'id
+			if($tserie->serie_id) {
+				return $tserie->serie_id;
+			}
+		}
 	
-		// id non-rÃ©cupÃ©rÃ©e, il faut crÃ©er la forme.
+		// id non-récupérée, il faut créer la forme.
 		$index = addslashes(strip_empty_words($title));
 		
 			$query = 'INSERT INTO series SET serie_name="'.$key.'", serie_index=" '.$index.' "';
 	
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = @pmb_mysql_query($query);
 		if(!$result) die("can't INSERT into series".$query);
 		
-		$id=pmb_mysql_insert_id($dbh);
+		$id=pmb_mysql_insert_id();
 		audit::insert_creation (AUDIT_SERIE, $id) ;
 			
 			//update authority informations
@@ -474,7 +482,7 @@ class serie {
 	public static function update_index($id, $datatype = 'all') {
 		indexation_stack::push($id, TYPE_SERIE, $datatype);
 		
-		// On cherche tous les n-uplet de la table notice correspondant Ã  cette sÃ©rie.
+		// On cherche tous les n-uplet de la table notice correspondant à cette série.
 		$query = "select distinct(notice_id) from notices where tparent_id='".$id."'";	
 		authority::update_records_index($query, 'serie');
 	}
@@ -540,15 +548,26 @@ class serie {
 	}
 	
 	protected static function format_delete_url($url='') {
-		global $base_path;
-			
 		if(isset(static::$controller) && is_object(static::$controller)) {
 			return 	static::$controller->get_delete_url();
 		} else {
 			return static::format_url("&sub=delete".$url);
 		}
 	}
-} # fin de dÃ©finition de la classe serie
+	
+	protected function warning_already_exist($error_title, $error_message, $values=array())  {
+		$authority = new authority(0, $this->s_id, AUT_TABLE_SERIES);
+		$display = $authority->get_display_authority_already_exist($error_title, $error_message, $values);
+		$display = str_replace("!!action!!", static::format_url(), $display);
+		$display = str_replace("!!forcing_button!!", '', $display);
+		
+		$hidden_specific_values = $authority->put_global_in_hidden_field("serie_nom");
+		$hidden_specific_values .= $authority->put_global_in_hidden_field("authority_statut");
+		$hidden_specific_values .= $authority->put_global_in_hidden_field("authority_thumbnail_url");
+		$display = str_replace('!!hidden_specific_values!!', $hidden_specific_values, $display);
+		return $display;
+	}
+} # fin de définition de la classe serie
 
-} # fin de dÃ©laration
+} # fin de délaration
 

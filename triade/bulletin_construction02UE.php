@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -71,14 +71,14 @@ $debut=deb_prog();
 $valeur=visu_affectation_detail_bulletin($_POST["saisie_classe"]);
 if (count($valeur)) {
 	if ($_POST["typetrisem"] == "trimestre") {
-	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; $triabsconet="T1"; $sem=1; $tricoef='trimestre1'; }
-	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; $triabsconet="T2"; $sem=2; $tricoef='trimestre2'; }
-	if ($_POST["saisie_trimestre"] == "trimestre3" ) { $textTrimestre=LANGBULL24; $triabsconet="T3"; $tricoef='trimestre3';  }
+	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; $triabsconet="T1"; $sem=1; $tricoef='trimestre1'; $saisie_trimestre='trimestre1'; }
+	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; $triabsconet="T2"; $sem=2; $tricoef='trimestre2'; $saisie_trimestre='trimestre2'; }
+	if ($_POST["saisie_trimestre"] == "trimestre3" ) { $textTrimestre=LANGBULL24; $triabsconet="T3"; $tricoef='trimestre3'; $saisie_trimestre='trimestre3'; }
 }
 
 if ($_POST["typetrisem"] == "semestre") {
-	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL25; $triabsconet="T1"; $sem=1; $tricoef='trimestre1'; }
-	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL26; $triabsconet="T2"; $sem=2; $tricoef='trimestre2'; }
+	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL25; $triabsconet="T1"; $sem=1; $tricoef='trimestre1'; $saisie_trimestre='trimestre1'; }
+	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL26; $triabsconet="T2"; $sem=2; $tricoef='trimestre2'; $saisie_trimestre='trimestre2'; }
 	if (($_POST["saisie_trimestre"] == "trimestre3" ) || ($_POST["saisie_trimestre"] == "annuel")) { $textTrimestre="Annuel"; $triabsconet=""; $sem='12'; $tricoef=''; }
 }
 
@@ -120,6 +120,9 @@ if (($_POST["saisie_trimestre"] == "trimestre3") || ($_POST["saisie_trimestre"] 
 $dateDebut=dateForm($dateDebut);
 $dateFin=dateForm($dateFin);
 
+// Date de fin étendue pour les notes de rattrapage (juillet + septembre)
+$_anneeFinAS = substr($_POST["annee_scolaire"], -4);
+$dateFinRattrapage = "31/10/" . $_anneeFinAS;
 
 
 // recupe du nom de la classe
@@ -127,6 +130,10 @@ $data=chercheClasse($_POST["saisie_classe"]);
 $classe_nom=$data[0][1];
 $classenomlong=$data[0][2];
 
+$noVieAsso = preg_match('/(EMBA|MBA\s*[12])\s+MANAGEMENT\s+STRAT/i', $classenomlong)
+          || preg_match('/(EMBA|MBA\s*[12])\s+MANAGEMENT\s+STRAT/i', $classe_nom)
+          || preg_match('/(EMBA|MBA\s*[12])\s+MANAGEMENT\s+STRAT/i', TextNoAccent($classenomlong))
+          || preg_match('/(EMBA|MBA\s*[12])\s+MANAGEMENT\s+STRAT/i', TextNoAccent($classe_nom));
 
 if ($_POST["saisie_trimestre"] != "trimestre1" ) $affECTS="oui";
 
@@ -211,8 +218,13 @@ if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
+if ($plageEleve == "70") { $dep=59; $nbEleveT=69; }
+if ($plageEleve == "80") { $dep=69; $nbEleveT=79; }
+if ($plageEleve == "90") { $dep=79; $nbEleveT=89; }
+if ($plageEleve == "100") { $dep=89; $nbEleveT=99; }
 if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
 // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve
+
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
@@ -230,26 +242,32 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$pdf->SetSubject("Bulletin de notes $textTrimestre "); 
 	$pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com"); 
 
-	$logo="./image/banniere/ESMK.jpeg";
+	$logo="./image/banniere/ESMK2.jpeg";
 	if (file_exists($logo)) {
-		$pdf->Image($logo,10,3,20,20);	
+		$pdf->Image($logo,10,3,35,20);	
 	}
 	$logo="./image/banniere/ESGCI.jpg";
 	if (file_exists($logo)) {
-		$pdf->Image($logo,80,3,25,7);	
+		$pdf->Image($logo,170,6,25,7);	
 	}
-	$logo="./image/banniere/UPA_carre.jpg";
-	if (file_exists($logo)) {
+//	$logo="./image/banniere/UPA_carre.jpg";
+/*	if (file_exists($logo)) {
 		$pdf->Image($logo,160,3,40,10);	
 	}
-
+ */
 	// insertion de la Annee SCOLAIRE
 	$pdf->SetFont('Arial','B',14);
 	$pdf->SetXY(100,30);
 	$pdf->MultiCell(100,10,"RELEVE DE NOTES ET RESULTATS",1,'C',0);
-	$pdf->SetXY(100,39);
+	$pdf->SetXY(100,40);
 	$pdf->SetFont('Arial','',12);
-	$pdf->MultiCell(100,10,"Session $anneeScolaire",0,'C',0);
+	$pdf->MultiCell(100,6,"Session $anneeScolaire",0,'C',0);
+	$libSemestre = ($sem==1) ? "Semestre 1" : (($sem==2) ? "Semestre 2" : "");
+	if ($libSemestre != "") {
+		$pdf->SetXY(100,46);
+		$pdf->SetFont('Arial','',11);
+		$pdf->MultiCell(100,6,$libSemestre,0,'C',0);
+	}
 	// fin d'insertion
 
 
@@ -349,12 +367,6 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		$pdf->MultiCell(120,5,"$nom_ue",1,'L',0);
 		$pdf->SetXY($X+=120,$Y);
 
-		
-
-
-
-	
-
 		$Xmemo=$X;	
 		$Ymemo=$Y;
 		
@@ -419,22 +431,66 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			// mise en place du cadre note / barème
 			// ------------------------------------------------------
 			if (($idgroupe == "0") || (trim($idgroupe) == "")) {
-				$noteaffP1=moyenneEleveMatiere($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
+				if ($_POST['recupNoteRattrapage'] == "oui") {
+					$noteRattrapage=moyenneEleveMatiereRecupRattrapage($idEleve,$idmatiere,$dateDebut,$dateFinRattrapage,$idprof);
+					$notesansrattrapage=moyenneEleveMatiereSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
+					$noteaffP1=$notesansrattrapage;
+				}else{
+					$noteaffP1=moyenneEleveMatiereSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
+				}
 			}else{
-				$noteaffP1=moyenneEleveMatiereGroupe($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
+				if ($_POST['recupNoteRattrapage'] == "oui") {
+					$noteRattrapage=moyenneEleveMatiereGroupeRecupRattrapage($idEleve,$idmatiere,$dateDebut,$dateFinRattrapage,$idgroupe,$idprof);
+					$notesansrattrapage=moyenneEleveMatiereGroupeSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
+					$noteaffP1=$notesansrattrapage;
+				}else{
+					$noteaffP1=moyenneEleveMatiereGroupeSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
+				}
 			}
+
+
+			if ($_POST['recupNoteRattrapage'] == "oui") {
+				if (($idgroupe == "0") || (trim($idgroupe) == "")) {
+					$noteaffP0=moyenneEleveMatiereSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
+					$nbnote=nbNoteEleveMatiereSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
+				}else{
+					$noteaffP0=moyenneEleveMatiereGroupeSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);	
+					$nbnote=nbNoteEleveMatiereGroupeSansRattrapage($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
+				}
+				if ($nbnote > 1) {
+					$total3=(($noteaffP1*40)/100)+(($noteRattrapage*60)/100);
+					$total3=number_format($total3, 2, '.', '');
+					$noteaffP1=$noteaffP0;
+					if ($total3 > $noteaffP0) $noteaffP1=$total3;
+//					if ($idEleve == 743) {
+//						print "$noteaffP0 $total3<br>";
+//					}
+				}else{
+//					print "$nomEleve $matiere $noteaffP0 > $noteRattrapage <br>";
+					$noteaffP1=$noteaffP0;
+					if ($noteRattrapage > $noteaffP0) $noteaffP1=$noteRattrapage;
+				}
+			}
+
+
 			if ($_POST["saisie_trimestre"] == "trimestre3" ) saveMoyenneAnnuel($idEleve,$idmatiere,$idClasse,'',$noteaffP1,$anneeScolaire);
 			$pdf->MultiCell(30,$hauteurMatiere,"$noteaffP1",0,'C',0);
 			$pdf->SetXY($X+=30,$Y);
 
-			if (trim($noteaffP1) != "") { 
-	                       	$moyenEU0=moyenEleveUE($code_ue,$idClasse,$idEleve,$saisie_trimestre,$dateDebut,$dateFin,$ordreaffichage);
+			if (trim($noteaffP1) != "") {
+				if ($_POST['recupNoteRattrapage'] == "oui") {
+					$moyenEU0=moyenEleveUERattrapage($code_ue,$idClasse,$idEleve,$saisie_trimestre,$dateDebut,$dateFin,$ordreaffichage);
+				}else{
+	                       		$moyenEU0=moyenEleveUE($code_ue,$idClasse,$idEleve,$saisie_trimestre,$dateDebut,$dateFin,$ordreaffichage);
+				}
 				if ($_POST["saisie_trimestre"] == "trimestre3" ) saveMoyenneAnnuel($idEleve,'',$idClasse,$code_ue,$moyenEU0,$anneeScolaire);
-                                if (($noteaffP1 >= 10) || (($moyenEU0 >= 10) && ($noteaffP1 >= 8)))  {
+                                $compensationOk = ($_POST['recupNoteRattrapage'] == "oui") && ($moyenEU0 >= 10) && ($noteaffP1 >= 8);
+				if (($noteaffP1 >= 10) || $compensationOk)  {
 					$resultat="ACQUIS";
                                 }else{
 					$resultat="NON ACQUIS";
 					$ects=0;
+					$UENONACQUIS=1;
 				}
 				$ectsGeneral+=$ects;
 				$moyenUE+=$noteaffP1*$coefMatiere;
@@ -459,12 +515,12 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 		
 
-		if ($moyenUE != "") { 
+		if ($moyenUE != "") {
 			$moyenUETotal=$moyenUE/$coefUE;
 			if (($moyenUETotal >= 10) && ($UENONACQUIS != 1)){
-				$resultat="ACQUIS"; 
+				$resultat="ACQUIS";
 			}else{
-				$resultat="NON ACQUIS"; 
+				$resultat="NON ACQUIS";
 				//$ectsUE=0;
 			}
 			$moyUEP1Aff=$moyenUETotal;
@@ -503,27 +559,40 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 $X=$Xorigine;
 
-if ($moyenGeneral != "") { 
-	$moyenGeneral=$moyenGeneral/$coefGeneral;
-	if ($moyenGeneral >= 10) {
-		$resultatGeneral="ADMIS"; 
-	}else{
-		$resultatGeneral="NON ADMIS"; 
+$infoplus = "";
+if ($sem == 1 || $sem == 2) {
+	// Règle semestrielle : 30 crédits validés = ACQUIS
+	if ($moyenGeneral != "") {
+		$moyenGeneral = $moyenGeneral / $coefGeneral;
+		if (($moyenGeneral < 10) && ($moyenGeneral != "")) { $moyenGeneral = "0" . $moyenGeneral; }
+		$moyenGeneralAff = number_format($moyenGeneral, 2, '.', '');
+	} else {
+		$moyenGeneralAff = "?";
 	}
-	$moyenGeneralAff=$moyenGeneral;	
-	if (($moyenGeneral < 10) && ($moyenGeneral != "")) { $moyenGeneral="0".$moyenGeneral; }
-	$moyenGeneralAff = number_format($moyenGeneral, 2, '.', '');
-
-}else{
-	$moyenGeneralAff="?";
-}
-
-$infoplus="";
-if ($ectsGeneral < 60) $resultatGeneral="NON ACQUIS";
-if (($ectsGeneral > 45) && ($moyenGeneralAff > 10) && ($ectsGeneral < 60))  {
-		$nbc=60-$ectsGeneral;	
-		$resultatGeneral="ADMIS *";
-		$infoplus="* $nbc crédits à valider en N+1";
+	$resultatGeneral = ($ectsGeneral >= 30) ? "ACQUIS" : "NON ACQUIS";
+} else {
+	// Règle annuelle : moyenne >= 10 et 60 crédits
+	if ($moyenGeneral != "") {
+		$moyenGeneral = $moyenGeneral / $coefGeneral;
+		if ($moyenGeneral >= 10) {
+			$resultatGeneral = "ADMIS";
+		} else {
+			$resultatGeneral = "NON ADMIS";
+		}
+		$moyenGeneralAff = $moyenGeneral;
+		if (($moyenGeneral < 10) && ($moyenGeneral != "")) { $moyenGeneral = "0" . $moyenGeneral; }
+		$moyenGeneralAff = number_format($moyenGeneral, 2, '.', '');
+	} else {
+		$moyenGeneralAff = "?";
+	}
+	if ($ectsGeneral < 60) $resultatGeneral = "NON ACQUIS";
+	if (!$noVieAsso && ($ectsGeneral > 45) && ($moyenGeneralAff > 10) && ($ectsGeneral < 60)) {
+		$nbc = 60 - $ectsGeneral;
+		$resultatGeneral = "ADMIS *";
+		$infoplus = "* $nbc crédits à valider en N+1";
+	}
+	if ($noVieAsso && ($ectsGeneral >= 60)) $resultatGeneral = "ADMIS";
+	if ($noVieAsso && $resultatGeneral == "ADMIS *") $resultatGeneral = "ADMIS";
 }
 
 $pdf->SetFont('Arial','B',9);
@@ -543,25 +612,26 @@ if ($infoplus != "") {
 $pdf->SetFont('Arial','B',9);
 
 
-$pdf->SetXY($X=5,$Y+=10);
-$pdf->SetFont('Arial','',10);
-$pdf->MultiCell(150,5,"Participation à la vie associative de l'école     : Insuffisant       : Satisfaisant       : Excellent");
+if (!$noVieAsso) {
+	$pdf->SetXY($X=5,$Y+=10);
+	$pdf->SetFont('Arial','',10);
+	$pdf->MultiCell(150,5,"Participation à la vie associative de l'école     : Insuffisant       : Satisfaisant       : Excellent");
 
-$montessori=recherchemontessori($idEleve,"univproafrique",$_POST["saisie_trimestre"]);
-$montessori=$montessori[0][0];
-if (trim($montessori) == "Insuffisant")  { $checkedmont1="1"; }else{ $checkedmont1="0"; }
-if ($montessori == "Satisfaisant")  { $checkedmont2="1"; }else{ $checkedmont2="0"; }
-if ($montessori == "Excellent") { $checkedmont3="1"; }else{ $checkedmont3="0"; }
+	$montessori=recherchemontessori($idEleve,"univproafrique",$_POST["saisie_trimestre"]);
+	$montessori=$montessori[0][0];
+	if (trim($montessori) == "Insuffisant")  { $checkedmont1="1"; }else{ $checkedmont1="0"; }
+	if ($montessori == "Satisfaisant")  { $checkedmont2="1"; }else{ $checkedmont2="0"; }
+	if ($montessori == "Excellent") { $checkedmont3="1"; }else{ $checkedmont3="0"; }
 
-
-$pdf->SetFillColor(0);
-$pdf->SetXY($X+=68,$Y+1);
-$pdf->MultiCell(3,3,"",1,'C',$checkedmont1);
-$pdf->SetXY($X+=25,$Y+1);
-$pdf->MultiCell(3,3,"",1,'C',$checkedmont2);
-$pdf->SetXY($X+=27,$Y+1);
-$pdf->MultiCell(3,3,"",1,'C',$checkedmont3);
-$pdf->SetFillColor(255);
+	$pdf->SetFillColor(0);
+	$pdf->SetXY($X+=68,$Y+1);
+	$pdf->MultiCell(3,3,"",1,'C',$checkedmont1);
+	$pdf->SetXY($X+=25,$Y+1);
+	$pdf->MultiCell(3,3,"",1,'C',$checkedmont2);
+	$pdf->SetXY($X+=27,$Y+1);
+	$pdf->MultiCell(3,3,"",1,'C',$checkedmont3);
+	$pdf->SetFillColor(255);
+}
 
 
 
@@ -572,9 +642,9 @@ unset($coefGeneral);
 
 $pdf->SetXY($Xorigine+20,$Y+20);
 $pdf->MultiCell(40,5,"$directeur\nDirecteur général",0,'C',0); 
-$logo="./image/banniere/ESMK.jpeg";
+$logo="./image/banniere/ESMK2.jpeg";
 if (file_exists($logo)) {
-	$pdf->Image($logo,$Xorigine+30,$Y+31,20,20);
+	$pdf->Image($logo,$Xorigine+30,$Y+31,35,20);
 }
 
 
@@ -587,7 +657,7 @@ $datefait=dateLettre(date("d/m/Y"));
 $pdf->MultiCell(60,5,"Dr Richard DELAYE\nDoyen, président du jury",0,'C',0); 
 $logo="./image/banniere/tampon_upa_signature.jpg";
 if (file_exists($logo)) {
-        $pdf->Image($logo,$Xorigine+145,$Y+31,55,30);
+        $pdf->Image($logo,$Xorigine+145,$Y+31,50,30);
 }
 
 
@@ -595,7 +665,53 @@ $pdf->SetFont('Arial','',6);
 $pdf->SetXY(3,260);
 $pdf->MultiCell(200,3,"International Management School Group est une association à vocation francophone\nprésente sur les site de Brazzaville-Kinshasa-Pointe-Noire. Partenaire du Groupe ESG - www.univpro-afrique.com \n\nAucun duplicata de ce document ne pourra être édité. Veillez à faire des copies.",0,'C',0);
 
-if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
+// Règle S1+S2 : si semestre 2 avec 30 crédits, vérifier aussi les 30 crédits de S1
+$ectsS1 = 0;
+if ($sem == 2 && $ectsGeneral >= 30 && $_POST["affdocattestation"] == "oui") {
+	$dateDebutS1form = dateForm($dateDebutS1);
+	$dateFinS1form   = dateForm($dateFinS1);
+	$recupUE_S1 = recupUE($idClasse, 1);
+	for ($fS1 = 0; $fS1 < count($recupUE_S1); $fS1++) {
+		$code_ue_S1 = $recupUE_S1[$fS1][0];
+		$listeMatS1 = recupMatiereUE($code_ue_S1, $idClasse);
+		for ($iS1 = 0; $iS1 < count($listeMatS1); $iS1++) {
+			if ($listeMatS1[$iS1][4] == 0) continue;
+			$idmat_S1 = $listeMatS1[$iS1][0];
+			$idprofS1 = $listeMatS1[$iS1][2];
+			$ordreS1  = $listeMatS1[$iS1][3];
+			if (verifMatiereAvecGroupeUE($idmat_S1, $idEleve, $idClasse, $ordreS1)) continue;
+			if ($_POST['recupNoteRattrapage'] == "oui") {
+					$noteRattS1   = moyenneEleveMatiereRecupRattrapage($idEleve, $idmat_S1, $dateDebutS1form, $dateFinS1form, $idprofS1);
+					$noteSansExS1 = moyenneEleveMatiereSansRattrapage($idEleve, $idmat_S1, $dateDebutS1form, $dateFinS1form, $idprofS1);
+					$noteBaseS1   = moyenneEleveMatiereSansRattrapage($idEleve, $idmat_S1, $dateDebutS1form, $dateFinS1form, $idprofS1);
+					$nbNoteS1     = nbNoteEleveMatiereSansRattrapage($idEleve, $idmat_S1, $dateDebutS1form, $dateFinS1form, $idprofS1);
+					if (trim($noteBaseS1) !== "") {
+						if ($nbNoteS1 > 1) {
+							$totalS1 = number_format(($noteSansExS1 * 40) / 100 + ($noteRattS1 * 60) / 100, 2, '.', '');
+							$noteS1  = ($totalS1 > $noteBaseS1) ? $totalS1 : $noteBaseS1;
+						} else {
+							$noteS1 = ($noteRattS1 > $noteBaseS1) ? $noteRattS1 : $noteBaseS1;
+						}
+					} else {
+						$noteS1 = "";
+					}
+					$moyenUE_S1 = moyenEleveUE($code_ue_S1, $idClasse, $idEleve, 'trimestre1', $dateDebutS1form, $dateFinS1form, $ordreS1);
+					$compensS1  = ($moyenUE_S1 >= 10) && ($noteS1 >= 8);
+				} else {
+					$noteS1     = moyenneEleveMatiereSansRattrapage($idEleve, $idmat_S1, $dateDebutS1form, $dateFinS1form, $idprofS1);
+					$compensS1  = false;
+				}
+				if (trim($noteS1) !== "") {
+					if ($noteS1 >= 10 || $compensS1) {
+						$ectsS1 += recupECTS($idmat_S1, $idClasse, 'trimestre1');
+					}
+				}
+		}
+	}
+}
+$ectsTotal = ($sem == 2 && $ectsS1 >= 30 && $ectsGeneral >= 30) ? ($ectsGeneral + $ectsS1) : $ectsGeneral;
+
+if (($_POST["affdocattestation"] == "oui") && ($ectsTotal >= 60)) {
 
 
 	$pdf->AddPage();
@@ -605,9 +721,9 @@ if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
 
 	// mise en place du logo
 
-	$logo="./image/banniere/ESMK.jpeg";
+	$logo="./image/banniere/ESMK2.jpeg";
         if (file_exists($logo)) {
-                $pdf->Image($logo,10,3,20,20);
+                $pdf->Image($logo,10,3,35,20);
         }
 
 
@@ -615,11 +731,12 @@ if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
         if (file_exists($logo)) {
                 $pdf->Image($logo,80,3,25,7);
         }
+/*
         $logo="./image/banniere/UPA_carre.jpg";
         if (file_exists($logo)) {
                 $pdf->Image($logo,160,3,40,10);
         }
-
+ */
 
 	$X=0;
 
@@ -659,14 +776,14 @@ if (($_POST["affdocattestation"] == "oui") && ($ectsGeneral >= 60)) {
 	if (chercherNiveauClasse($idClasse) == "A3") $info2="portant à 180 crédits ECTS";
 	if (chercherNiveauClasse($idClasse) == "M1") $info2="portant à 240 crédits ECTS";
 	if (chercherNiveauClasse($idClasse) == "M2") $info2="portant à 300 crédits ECTS";
-	$pdf->MultiCell(150,5,"au titre de l'année universitaire $anneeScolaire\npar l'acquisition de $ectsGeneral crédits ECTS $info2 (crédits européens)$info",0,'C',0);
+	$pdf->MultiCell(150,5,"au titre de l'année universitaire $anneeScolaire\npar l'acquisition de $ectsTotal crédits ECTS $info2 (crédits européens)$info",0,'C',0);
 
 
 	$pdf->SetXY($Xorigine+20,180);
 	$pdf->MultiCell(40,5,"$directeur\nDirecteur général",0,'C',0); 
-	$logo="./image/banniere/ESMK.jpeg";
+	$logo="./image/banniere/ESMK2.jpeg";
 	if (file_exists($logo)) {
-		$pdf->Image($logo,$Xorigine+30,192,20,20);	
+		$pdf->Image($logo,$Xorigine+30,192,35,20);	
 	}
 
 	$pdf->SetXY($Xorigine+150,170);
@@ -728,7 +845,12 @@ $pdf=new PDF();
 $merge->output("./data/pdf_bull/$classe_nom/liste_complete.pdf");
 if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
 	$cmd="gs -q -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=./data/pdf_bull/$classe_nom/liste_complete.pdf -dBATCH $listing";
-	$null=system("$cmd",$retval);
+	if ($listing != "") {
+		$nobouton="non";
+		$null=system("$cmd",$retval);
+	}else{
+		$nobouton="oui";
+	}
 }
 include_once('./librairie_php/pclzip.lib.php');
 @unlink('./data/pdf_bull/'.$classe_nom.'.zip');
@@ -740,9 +862,14 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 @rmdir('./data/pdf_bull/'.$classe_nom);
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
-<br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<br>
+<?php 
+if ($nobouton == "non") { ?>
+<ul><ul>
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
+<?php } ?>
+
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
 

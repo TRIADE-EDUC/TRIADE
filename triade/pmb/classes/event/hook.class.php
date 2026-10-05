@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: hook.class.php,v 1.2 2016-04-08 13:30:10 arenou Exp $
+// $Id: hook.class.php,v 1.2 2016/04/08 13:30:10 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

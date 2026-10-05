@@ -1,0 +1,88 @@
+@charset "utf-8";
+
+/* ---------------------------------------------------------*/
+/*                        Grid Layout                       */
+/* ---------------------------------------------------------*/
+
+.asideContentAnim {
+	float: left;
+	margin-right: 15px;
+	width: 26%;
+}
+
+/* ---------------------------------------------------------*/
+/*                        Animation content                 */
+/* ---------------------------------------------------------*/
+
+.animation_contenu {
+	margin-left: 23%;
+	overflow: hidden;
+}
+
+.descr_animation {
+	width: 100%;
+}
+
+.descr_animation td {
+	padding: 4px;
+	min-width: 110px;
+}
+
+.labelAnim {
+	vertical-align: top;
+}
+
+/* ---------------------------------------------------------*/
+/*                        Titre notice                      */
+/* ---------------------------------------------------------*/
+
+#exempl_titleAnim {
+	font-weight: 600;
+	font-size: 1.2em;
+}
+
+/* ---------------------------------------------------------*/
+/*                        Responsive                        */
+/* ---------------------------------------------------------*/
+
+@media screen and (max-width: 599px) {
+	.animation_contenu {
+		border-top: solid 2px;
+		margin-top: 20px;
+	}
+
+	.descr_animation,
+	.descr_animation tbody {
+        display: block;
+        margin-top: 10px;
+    }
+    .descr_animation tr {
+        display: table;
+        width: 100%;
+        text-align: left;
+    }
+    .descr_animation td {
+		display: table-row;
+		width: 100%;
+    }
+    .descr_animation .labelNot {
+    	padding: 0;
+    	line-height: normal;
+    }
+    .descr_animation .labelNot>span {
+    	display: block;
+    	padding: 4px 7px;
+    	font-weight: 500;
+    	margin: 5px 0px;
+    	background-color: #EFEFEF;
+    }
+}
+
+@media screen and (max-width: 767px) {
+	.asideContentAnim,
+	.animation_contenu {
+		float: none;
+		width: auto;
+		margin: 10px auto;
+	}	
+}

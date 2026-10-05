@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_datasource_monitoring_website.class.php,v 1.16 2019-02-26 15:14:08 mbertin Exp $
+// $Id: docwatch_datasource_monitoring_website.class.php,v 1.22 2023/08/28 14:04:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -147,7 +147,6 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 		$content_from_link = array();
 		if($link){
 			$datas = array();
-			@ini_set("zend.ze1_compatibility_mode", "0");
 			$informations = array();
 			$loaded=false;
 			$aCurl = new Curl();
@@ -157,6 +156,8 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 			$html=$content->body;
 			if($html && $content->headers['Status-Code'] == 200){
 				$this->content_headers = $content->headers;
+				//Uniformisons les retours en minuscules pour la compatibilité sur tous les environnements
+				$this->content_headers = array_change_key_case($this->content_headers, CASE_LOWER);
 				if(is_array($this->parameters['xpath_expressions']) && count($this->parameters['xpath_expressions'])) {
 					$dom = new DOMDocument();
 					$old_errors_value = false;
@@ -176,26 +177,28 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 						$xpath = new DOMXPath($dom);
 						foreach ($this->parameters['xpath_expressions'] as $i=>$xpath_expression) {
 							$entries = $xpath->query($xpath_expression);
-							$html_content = $this->clean_html($dom->saveHTML($entries->item(0)));
-							if($this->parameters['xpath_expressions_for_title'][$i]) {
-								$entries = $xpath->query($this->parameters['xpath_expressions_for_title'][$i]);
-								$html_title = $this->clean_html($dom->saveHTML($entries->item(0)));
-							} else {
-								$html_title = '';
+							if(is_object($entries) && $entries->item(0)) {
+    							$html_content = $this->clean_html($dom->saveHTML($entries->item(0)));
+    							if($this->parameters['xpath_expressions_for_title'][$i]) {
+    								$entries = $xpath->query($this->parameters['xpath_expressions_for_title'][$i]);
+    								$html_title = $this->clean_html($dom->saveHTML($entries->item(0)));
+    							} else {
+    								$html_title = '';
+    							}
+    							$html_link = '';
+    							if($this->parameters['xpath_expressions_for_link'][$i]) {
+    								$entries = $xpath->query($this->parameters['xpath_expressions_for_link'][$i]);
+    								preg_match("/\<a.*\>(.*)\<\/a\>/isU", strip_tags($dom->saveHTML($entries->item(0)), '<a>'), $link_matches);
+    								if($link_matches[0]) {
+    									$html_link = $link_matches[0];
+    								}
+    							}
+    							$content_from_link[] = array(
+    									'content' => $html_content,
+    									'title' => $html_title,
+    									'link' => $html_link
+    							);
 							}
-							$html_link = '';
-							if($this->parameters['xpath_expressions_for_link'][$i]) {
-								$entries = $xpath->query($this->parameters['xpath_expressions_for_link'][$i]);
-								preg_match("/\<a.*\>(.*)\<\/a\>/isU", strip_tags($dom->saveHTML($entries->item(0)), '<a>'), $link_matches);
-								if($link_matches[0]) {
-									$html_link = $link_matches[0];
-								}
-							}
-							$content_from_link[] = array(
-									'content' => $html_content,
-									'title' => $html_title,
-									'link' => $html_link
-							);
 						}
 					}
 					libxml_use_internal_errors($old_errors_value);
@@ -209,11 +212,11 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 			}
 		}
 		
-		//Dom renvoie de l'utf-8. Mais certains caractÃ¨res windows peuvent Ãªtre prÃ©sents dans les pages...
+		//Dom renvoie de l'utf-8. Mais certains caractères windows peuvent être présents dans les pages...
 		if($charset != "utf-8"){
 			foreach ($content_from_link as $key=>$content) {
 				foreach ($content as $key_content=>$value_content) {
-					$content_from_link[$key][$key_content] = utf8_decode(encoding_normalize::clean_cp1252($value_content,'utf-8'));
+					$content_from_link[$key][$key_content] = encoding_normalize::utf8_decode(encoding_normalize::clean_cp1252($value_content,'utf-8'));
 				}
 			}
 		}
@@ -256,7 +259,7 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 				}
 			}
 		} else {
-			$link .= '#'.strtotime($this->content_headers['Date']).rand(0,1000);
+			$link .= '#'.strtotime($this->content_headers['date']).rand(0,1000);
 		}
 		return $link;
 	}
@@ -292,6 +295,8 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 						return false;
 					}
 					if(md5($content_from_base[0]['content']) != md5($content_from_link[0]['content'])) {
+						if(!isset($content_from_base[0]['content'])) $content_from_base[0]['content'] = '';
+						if(!isset($content_from_link[0]['content'])) $content_from_link[0]['content'] = '';
 						$xdiff_string = xdiff_string_diff($content_from_base[0]['content'] , $content_from_link[0]['content']);
 						$xdiff_change = $this->get_xdiff_change($xdiff_string);
 						if($this->parameters['mode_creation_items'] == 'by_change') {
@@ -322,7 +327,7 @@ class docwatch_datasource_monitoring_website extends docwatch_datasource{
 					$data["summary"] = $item['content'];
 					$data["content"] = '';
 					$data["url"] = $item['link'];
-					$data["publication_date"] = date( 'Y-m-d H:i:s', strtotime($this->content_headers['Date']));
+					$data["publication_date"] = date( 'Y-m-d H:i:s', strtotime($this->content_headers['date']));
 					$data["logo_url"] = '';
 					$data["descriptors"] = "";
 					$data["tags"] = '';

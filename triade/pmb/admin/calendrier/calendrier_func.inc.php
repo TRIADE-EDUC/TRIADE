@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: calendrier_func.inc.php,v 1.19 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: calendrier_func.inc.php,v 1.23 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-/* ce sÃ©lecteur est basÃ© sur le calendrier dont la description et
- l'auteur initial sont mentionnÃ©s ci-dessous.
- Il a Ã©tÃ© modifiÃ© afin d'Ãªtre utilisable dans notre application */
+/* ce sélecteur est basé sur le calendrier dont la description et
+ l'auteur initial sont mentionnés ci-dessous.
+ Il a été modifié afin d'être utilisable dans notre application */
 
 
 /***************************************************************************
@@ -17,13 +17,13 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
  | |_) | |_| | |_) | __/ _ \ / _ \| / __| || |_| | | |
  |  __/|  _  |  __/| || (_) | (_) | \__ \__   _| |_| |
  |_|   |_| |_|_|    \__\___/ \___/|_|___/  |_|  \___/
- 
+
  calendrier.php  -  A calendar
  -------------------
  begin                : June 2002
  copyright            : (C) 2002 PHPtools4U.com - Mathieu LESNIAK
  email                : support@phptools4u.com
- 
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -36,25 +36,25 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
  ***************************************************************************/
 
 /*
- - $params['calendar_id'] :  Par dÃ©faut Ã  1, incrÃ©menter cette valeur pour utiliser plusieurs calendriers sur la mÃªme page.
- - $params['calendar_columns'] :  Par dÃ©faut Ã  7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes.
- - $params['show_day'] :  Par dÃ©faut Ã  1, permet d'afficher les jours (L M M J V S D)
- - $params['show_month'] :  Par dÃ©faut Ã  1, permet d'afficher le nom du mois et l'annÃ©e en haut
- - $params['nav_link'] :  Par dÃ©faut Ã  1, affiche les liens pour les jours et mois prÃ©cÃ©dents / suivants
- - $params['link_after_date'] :  Par dÃ©faut Ã  0, si activÃ©, affiche les liens de la navigation (cf ci-dessus) pour les dates supÃ©rieures au jour en cours
- - $params['link_on_day'] :  Lien Ã  attribuer sur les jours du calendrier. A chaque lien est rajoutÃ© la date en argument. PrÃ©voir de mettre '?argument=' en fin de lien
- - $params['font_face'] :  Police a utiliser (par dÃ©faut : 'Verdana, Arial, Helvetica')
- - $params['font_size'] :  Taille de la police moyenne en pixels (10 par dÃ©faut)
- - $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par dÃ©faut)
+ - $params['calendar_id'] :  Par défaut à 1, incrémenter cette valeur pour utiliser plusieurs calendriers sur la même page.
+ - $params['calendar_columns'] :  Par défaut à 7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes.
+ - $params['show_day'] :  Par défaut à 1, permet d'afficher les jours (L M M J V S D)
+ - $params['show_month'] :  Par défaut à 1, permet d'afficher le nom du mois et l'année en haut
+ - $params['nav_link'] :  Par défaut à 1, affiche les liens pour les jours et mois précédents / suivants
+ - $params['link_after_date'] :  Par défaut à 0, si activé, affiche les liens de la navigation (cf ci-dessus) pour les dates supérieures au jour en cours
+ - $params['link_on_day'] :  Lien à attribuer sur les jours du calendrier. A chaque lien est rajouté la date en argument. Prévoir de mettre '?argument=' en fin de lien
+ - $params['font_face'] :  Police a utiliser (par défaut : 'Verdana, Arial, Helvetica')
+ - $params['font_size'] :  Taille de la police moyenne en pixels (10 par défaut)
+ - $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par défaut)
  - $params['today_bg_color'] :  Couleur de fond de la case du jour en cours
  - $params['font_today_color'] :  Couleur de la police pour le jour en cours
  - $params['font_color'] :  Couleur de la police
  - $params['font_nav_bg_color'] :  Couleur de fond pour la barre des jours (L M M J V S D)
  - $params['font_nav_color'] :  Couleur de la police pour la barre des jours (L M M J V S D)
  - $params['font_header_color'] :  Couleur de la police pour le nom du mois
- - $params['border_color'] :  Couleur pour les sÃ©paration des cases et des bordures
- - $params['use_img'] :  Utilise des fichiers gif Ã  cÃ´tÃ© du nom du mois et pour la barre de navigation en bas. Si dÃ©fini Ã  '0', affiche les liens textes.
- 
+ - $params['border_color'] :  Couleur pour les séparation des cases et des bordures
+ - $params['use_img'] :  Utilise des fichiers gif à côté du nom du mois et pour la barre de navigation en bas. Si défini à '0', affiche les liens textes.
+
  */
 
 $base_url = "./admin.php?categ=calendrier&sub=$sub";
@@ -85,11 +85,10 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	global $PHP_SELF;
 	global $link_on_day, $params, $base_url, $caller, $msg, $charset, $date_caller;
 	//global $PHP_SELF, $HTTP_POST_VARS, $HTTP_GET_VARS;
-	
-	global $dbh ;
+
 	global $style_calendrier ;
 	global $admin_calendrier_form_mois_start, $admin_calendrier_form_mois_end, $admin_calendrier_form_mois_commentaire ;
-	
+
 	if (!$loc_id) {
 		global $deflt2docs_location;
 		$loc_id=$deflt2docs_location;
@@ -100,8 +99,9 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	while ($resdate_ouverture=pmb_mysql_fetch_object($resultatdate_ouverture)) {
 		$ouvert[$resdate_ouverture->date_ouverture] = array ("ouvert" => $resdate_ouverture->ouvert, "commentaire" => $resdate_ouverture->commentaire) ;
 	}
-	
+
 	// Default Params
+	$param_d=array();
 	$param_d['calendar_id']		= 1; // Calendar ID
 	$param_d['calendar_columns']= 5; // Nb of columns
 	$param_d['show_day'] 		= 1; // Show the day bar
@@ -117,23 +117,24 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	$param_d['font_today_color']= '#990000';
 	$param_d['font_color']		= '#000000';
 	$param_d['font_nav_bg_color']= '#A9B4B3';
-	
+
 	$param_d['font_nav_color']	= '#FFFFFF';
 	$param_d['font_header_color']	= '#FFFFFF';
 	$param_d['border_color']	= '#3f6551';
 	$param_d['use_img']		= 1; // Use gif for nav bar on the bottom
-	
+
 	// /Params
-	
+	$param = array();
+
 	$monthes_name = array('',$msg[1006],$msg[1007],$msg[1008],$msg[1009],$msg[1010],$msg[1011],$msg[1012],$msg[1013],$msg[1014],$msg[1015],$msg[1016],$msg[1017]);
 	$days_name = array('',$msg[1018],$msg[1019],$msg[1020],$msg[1021],$msg[1022],$msg[1023],$msg[1024]);
-	
+
 	foreach($param_d as $key => $val) {
 		if (isset($params[$key])) $param[$key] = $params[$key];
-		else $param[$key] = $param_d[$key];
+		else $param[$key] = $val;
 	}
 	$param['calendar_columns'] = ($param['show_day']) ? 7 : $param['calendar_columns'];
-	
+
 	//priv_reg_glob_calendar('date');
 	if ($date == '') {
 		$date_MySQL = " CURDATE() ";
@@ -146,12 +147,12 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	$rqt_date = "select date_format(".$date_MySQL.", '%d') as current_day, date_format(".$date_MySQL.", '%m') as current_month_2, date_format(".$date_MySQL.", '%c') as current_month, date_format(".$date_MySQL.", '%Y') as current_year " ;
 	$resultatdate=pmb_mysql_query($rqt_date);
 	$resdate=pmb_mysql_fetch_object($resultatdate);
-	
+
 	$current_day 		= $resdate->current_day;
 	$current_month 		= $resdate->current_month;
 	$current_month_2	= $resdate->current_month_2;
 	$current_year 		= $resdate->current_year;
-	
+
 	$date_MySQL_firstday = "'$year-$current_month_2-01'";
 	$rqt_date = "select date_format(".$date_MySQL_firstday.", '%w') as first_day_pos,
 				date_format(DATE_SUB(DATE_ADD(".$date_MySQL_firstday.", INTERVAL 1 MONTH),INTERVAL 1 DAY), '%d') as nb_days_month " ;
@@ -159,26 +160,26 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	$resdate=pmb_mysql_fetch_object($resultatdate);
 	$first_day_pos 		= $resdate->first_day_pos;
 	$first_day_pos 		= ($first_day_pos == 0) ? 7 : $first_day_pos;
-	
+
 	$nb_days_month 		= $resdate->nb_days_month ;
-	
+
 	$current_month_name = $monthes_name[$current_month];
-	
-	/* Ajout ER : dÃ©tection si date en cours du calendrier correspond ou pas Ã  la date de l'appelant
-	 Sans ce test, le lien sur tous les jours identiques d'un autre mois n'Ã©taient pas affichÃ©s, exemple :
+
+	/* Ajout ER : détection si date en cours du calendrier correspond ou pas à la date de l'appelant
+	 Sans ce test, le lien sur tous les jours identiques d'un autre mois n'étaient pas affichés, exemple :
 	 appelant avec date au 04/10/2003 >> lien du 04/11/2003 absent */
 	$date_MySQL_caller = "'".substr($date_caller, 0 ,4)."-".substr($date_caller, 4 ,2)."-".substr($date_caller, 6 ,2)."'";
 	$rqt_date = "select date_format(".$date_MySQL_caller.", '%d') as current_day, date_format(".$date_MySQL_caller.", '%c') as current_month, date_format(".$date_MySQL_caller.", '%Y') as current_year ";
 	$resultatdate=pmb_mysql_query($rqt_date);
 	$resdate=pmb_mysql_fetch_object($resultatdate);
-	
+
 	$caller_day 		= $resdate->current_day;
 	$caller_month 		= $resdate->current_month;
 	$caller_year 		= $resdate->current_year;
-	
+
 	if (($caller_month==$current_month) && ($caller_year==$current_year) && ($caller_day==$current_day)) $same_date=1; else $same_date=0;
-	
-	if (!$style_calendrier) {
+
+	if (empty($style_calendrier) ) {
 		$style_calendrier = '<style type="text/css">
 				<!--
 				.calendarNav'.$param['calendar_id'].' 	{  font-family: '.$param['font_face'].'; font-size: '.($param['font_size']-1).'px; font-style: normal; background-color: '.$param['border_color'].'}
@@ -194,9 +195,9 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 		$output = '';
 	}
 	if ($form_input_par_jour) $output .= $admin_calendrier_form_mois_start ;
-	
-	$output .= '<table style="border:0px"  cellpadding="1" cellspacing="0">';
-	
+
+	$output .= '<table style="border:0px; padding:1px;border-spacing:0px">';
+
 	// Displaying the current month/year
 	if ($param['show_month'] == 1) {
 		$output .= '<tr>';
@@ -204,13 +205,13 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 		$output .= "<a name='".$current_year."-".$current_month_2."' ></a>";
 		if ($base_url_mois) $output .= "<a href='".$base_url_mois."&date=".$current_year.$current_month_2."01&loc=".$loc_id."' alt='".$msg["calendrier_edition"]."' title='".$msg["calendrier_edition"]."'>";
 		if ($param['use_img'] ) $output .= "<img src='".get_url_icon('mois.gif')."'>";
-		
+
 		$output .= $current_month_name.' '.$current_year;
 		if ($base_url_mois) $output .= "</a>";
 		$output .= "</td>";
 		$output .= "</tr>";
 	}
-	
+
 	// Building the table row with the days
 	if ($param['show_day'] == 1) {
 		$output .= '<tr class="align_right">';
@@ -225,7 +226,7 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 	} else {
 		$first_day_pos = 1;
 	}
-	
+
 	$output .= '<tr class="align_right">';
 	$int_counter = 0;
 	for ($i = 1; $i < $first_day_pos; $i++) {
@@ -251,7 +252,7 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 			}
 			$url_maj = $url_maj_base."&action=O&loc=".$loc_id."&date=" ;
 		}
-		
+
 		### Row start
 		if ((($i + $first_day_pos-1) % $param['calendar_columns']) == 1 && $i != 1) {
 			$output .= "<tr class='align_right'>";
@@ -264,14 +265,14 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 		if (($i == $current_day) && ($same_date == 1)) {
 			$output .= '<td class="align_right '.$class.'">'.$input_commentaire.'<a href="'.$url_maj.$current_year.'-'.$current_month_2.'-'.$i_2.'#'.$current_year.'-'.$current_month_2.'" alt='.$commentaire.' title='.$commentaire.'>'.$i.'</a></td>';
 		} elseif ($param['link_on_day'] != '') {
-			
+
 			$date_MySQL_loop = "'".$current_year."-".$current_month_2."-".$i_2."'";
-			
+
 			$rqt_date = "select case when CURDATE() <= ".$date_MySQL_loop." then 1 ELSE 0 END as test_loop ";
 			$resultatdate=pmb_mysql_query($rqt_date);
 			$resdate=pmb_mysql_fetch_object($resultatdate);
 			$test_loop = $resdate->test_loop;
-			
+
 			if ($test_loop) {
 				if ($param['link_after_date'] == 0) {
 					$output .= '<td class="align_right '.$class.'">'.$i.'</td>';
@@ -289,21 +290,21 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 			$output .= '<td class="align_right '.$class.'">'.$input_commentaire.$i.'</td>';
 		}
 		$int_counter++;
-		
+
 		// Row end
 		if ( (($i+$first_day_pos-1) % $param['calendar_columns']) == 0 ) {
 			$output .= '</tr>';
 		}
 	}
 	$cell_missing = $param['calendar_columns'] - $int_counter;
-	
+
 	for ($i = 0; $i < $cell_missing; $i++) {
 		$output .= '<td class="align_right">&nbsp;</td>';
 	}
 	$output .= '</tr>';
 	// Display the nav links on the bottom of the table
 	if ($param['nav_link'] == 1) {
-		
+
 		$date_MySQL = "'$current_year-$current_month-$current_day'";
 		$rqt_date = "select
 				date_format(DATE_SUB(".$date_MySQL.", INTERVAL 1 YEAR),'%Y%m%d') as previous_month,
@@ -314,14 +315,14 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 				case when CURDATE() < date_format(DATE_ADD(".$date_MySQL.", INTERVAL 1 MONTH),'%Y%m%d') then 1 else 0 END as test_next_month ";
 		$resultatdate=pmb_mysql_query($rqt_date);
 		$resdate=pmb_mysql_fetch_object($resultatdate);
-		
+
 		$previous_month	= $resdate->previous_month;
 		$next_month    	= $resdate->next_month;
 		$previous_day  	= $resdate->previous_day;
 		$next_day      	= $resdate->next_day;
 		$test_next_month = $resdate->test_next_month;
 		$test_next_year  = $resdate->test_next_year;
-		
+
 		if ($param['use_img']) {
 			$g 	= '<img src="'.get_url_icon('g.gif').'" style="border:0px" title="'.$msg['calendrier_mois_prececent'].'">';
 			$gg = '<img src="'.get_url_icon('gg.gif').'" style="border:0px" title="'.$msg['calendrier_annee_prececente'].'">';
@@ -333,19 +334,19 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 			$d  = '&gt;';
 			$dd = '&gt;&gt;';
 		}
-		
+
 		if ( ($param['link_after_date'] == 0) && ($test_next_month) ) {
 			$next_day_link = '&nbsp;';
 		} else {
 			$next_day_link 		= '<a href="'.$base_url.'&date='.$next_day.'&loc='.$loc_id.'">'.$d.'</a>';
 		}
-		
+
 		if ( ($param['link_after_date'] == 0) && ($test_next_year) ) {
 			$next_month_link = '&nbsp;';
 		} else {
 			$next_month_link 	= '<a href="'.$base_url.'&date='.$next_month.'&loc='.$loc_id.'">'.$dd.'</a>';
 		}
-		
+
 		$output .= '<tr>';
 		$output .= '	<td colspan="'.$param['calendar_columns'].'" class="calendarDays align_right'.$param['calendar_id'].'">';
 		$output .= "
@@ -359,7 +360,7 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 				";
 						$output .= '</td>';
 						$output .= '</tr>';
-						
+
 	}
 	$output .= '</table>';
 	if ($form_input_par_jour) {
@@ -368,4 +369,38 @@ function admin_calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_u
 		$output .= $admin_calendrier_form_mois_end ;
 	}
 	return $output;
+}
+
+function calendar_open_or_close_date($date, $ouverture, $commentaire) {
+	global $faire;
+	global $duplicate_locs, $loc;
+
+	if($faire=="initialization") {
+		$rqt_date = "delete from ouvertures where date_ouverture='".$date."' and num_location=$loc ";
+		pmb_mysql_query($rqt_date);
+	} else {
+		$rqt_date = "update ouvertures set ouvert=$ouverture, commentaire='$commentaire' where date_ouverture='".$date."' and num_location=$loc ";
+		pmb_mysql_query($rqt_date);
+		if (!pmb_mysql_affected_rows()) {
+			$rqt_date = "insert into ouvertures set ouvert=$ouverture, date_ouverture='".$date."', commentaire='$commentaire', num_location=$loc ";
+			pmb_mysql_query($rqt_date);
+			if (!pmb_mysql_affected_rows()) die ("insert into ouvertures failes") ;
+		}
+	}
+	if (isset($duplicate_locs) && is_array($duplicate_locs)) {
+		foreach ($duplicate_locs as $duplicate_loc) {
+			if($faire=="initialization") {
+				$rqt_date = "delete from ouvertures where date_ouverture='".$date."' and num_location=$duplicate_loc ";
+				pmb_mysql_query($rqt_date);
+			} else {
+				$rqt_date = "update ouvertures set ouvert=$ouverture, commentaire='$commentaire' where date_ouverture='".$date."' and num_location=$duplicate_loc ";
+				pmb_mysql_query($rqt_date);
+				if (!pmb_mysql_affected_rows()) {
+					$rqt_date = "insert into ouvertures set ouvert=$ouverture, date_ouverture='".$date."', commentaire='$commentaire', num_location=$duplicate_loc ";
+					pmb_mysql_query($rqt_date);
+					if (!pmb_mysql_affected_rows()) die ("insert into ouvertures failes") ;
+				}
+			}
+		}
+	}
 }

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_django.xml,v 1.2 2016-06-28 13:28:53 tsamson Exp $ -->
+$Id: cms_module_common_view_django.xml,v 1.4 2020/02/05 08:12:53 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_django_add_template">Add a template</entry>
@@ -26,4 +26,6 @@ $Id: cms_module_common_view_django.xml,v 1.2 2016-06-28 13:28:53 tsamson Exp $ -
 	<entry code="cms_module_common_view_django_session_vars_opac_url_desc">Variable $opac_url_base</entry>
 	<entry code="cms_module_common_view_django_session_vars_platform_desc">Operating system name</entry>
 	<entry code="cms_module_common_view_django_session_vars_browser_desc">Browser name</entry>
+	<entry code="cms_module_common_view_django_session_vars_server_addr_desc">Adresse IP du serveur</entry>
+	<entry code="cms_module_common_view_django_session_vars_remote_addr_desc">Adresse IP du client</entry>
 </XMLlist>

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_authorities.tpl.php,v 1.8 2019-05-21 09:12:35 ngantier Exp $
+// $Id: sel_authorities.tpl.php,v 1.10 2023/04/07 14:38:40 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates des s√©lecteurs d'autorit√©s
+// templates des sÈlecteurs d'autoritÈs
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -15,9 +15,10 @@ if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 global $jscript_common_authorities_unique;
 global $jscript_common_authorities_link;
 global $add_field, $field_id, $field_name_id;
-global $max_field;
+global $max_field, $what;
 
 $jscript_common_authorities_unique ="
+	<div id='indexation_infos' style='display:none;'></div>
 	<script type='text/javascript'>
 		<!--
 		function set_parent(f_caller, id_value, libelle_value, callback){
@@ -26,13 +27,13 @@ $jscript_common_authorities_unique ="
 			if(!(typeof w.parent.$add_field == 'function')) {
 				w.parent.document.getElementById('$field_id').value = id_value;
 				w.parent.document.getElementById('$field_name_id').value = reverse_html_entities(libelle_value);
-				closeCurrentEnv();
+				closeCurrentEnv('$what');
 				return;
 			}
 			var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 			var flag = 1;
 			
-			//V√©rification que l'√©l√©ment n'est pas d√©j√† s√©lectionn√©e
+			//VÈrification que l'ÈlÈment n'est pas dÈj‡ sÈlectionnÈe
 			for (var i=0; i<n_element; i++) {
 				if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 					alert('".$msg["term_already_in_use"]."');
@@ -59,14 +60,15 @@ $jscript_common_authorities_unique ="
 		-->
 	</script>";
 
-// Pour les liens entre autorit√©s
+// Pour les liens entre autoritÈs
 $jscript_common_authorities_link = "
+	<div id='indexation_infos' style='display:none;'></div>
 	<script type='text/javascript'>
 	function set_parent(f_caller, id_value, libelle_value, callback){	
 		var w = window;
 		n_aut_link=w.parent.document.forms[f_caller].elements['max_aut_link'].value;
 		flag = 1;	
-		//V√©rification que l'autorit√© n'est pas d√©j√† s√©lectionn√©e
+		//VÈrification que l'autoritÈ n'est pas dÈj‡ sÈlectionnÈe
 		for (i=0; i<n_aut_link; i++) {
 			if (w.parent.document.getElementById('f_aut_link_id'+i).value==id_value && w.parent.document.getElementById('f_aut_link_table'+i).value=='!!param1!!') {
 				alert('".$msg["term_already_in_use"]."');

@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des types de documentos 995 de AFBDP
-$Id: typdoc_995.xml,v 1.2 2006-03-07 23:12:25 touraine37 Exp $ -->
+$Id: typdoc_995.xml,v 1.2 2006/03/07 23:12:25 touraine37 Exp $ -->
 
 <XMLlist>
 	<entry code="aa">impreso / affiche</entry>

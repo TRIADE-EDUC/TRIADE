@@ -1,24 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: reset.inc.php,v 1.18 2017-08-23 07:22:08 ngantier Exp $
+// $Id: reset.inc.php,v 1.19 2021/07/30 14:43:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($f_ex_location)) $f_ex_location = '';
-if(!isset($f_ex_statut)) $f_ex_statut = '';
+global $class_path, $include_path, $sub, $msg, $database_window_title;
+global $deflt_docs_location, $deflt_docs_statut;
+global $f_ex_location, $f_ex_statut, $f_reset_resa, $form_cb_expl, $transferts_reset_OK;
 
 require_once ("$include_path/expl_info.inc.php");
 require_once($class_path."/mono_display_expl.class.php");
 
-// Titre de la fenÃªtre
+// Titre de la fenêtre
 echo window_title($database_window_title.$msg['transferts_circ_menu_reset'].$msg[1003].$msg[1001]);
 
 //creation de l'objet transfert
 $obj_transfert = new transfert();
-$form=do_cb_expl($msg['transferts_circ_menu_titre']." > ".$msg['transferts_circ_menu_reset'],
-					$msg[661], $msg['transferts_circ_reset_exemplaire'], "./circ.php?categ=trans&sub=".$sub);
+$form=do_cb_expl('', $msg[661], $msg['transferts_circ_reset_exemplaire'], "./circ.php?categ=trans&sub=".$sub);
 
 if(!$f_ex_location)$f_ex_location=$deflt_docs_location;
 if(!$f_ex_statut)$f_ex_statut=$deflt_docs_statut;
@@ -27,7 +27,6 @@ $formlocid="f_ex_section".$f_ex_location;
 if(!isset(${$formlocid})) $expl_section = '';
 else $expl_section = ${$formlocid};
 
-if(!isset($f_reset_resa)) $f_reset_resa = '';
 $checked_reset_resa = '';
 if($f_reset_resa){
 	$checked_reset_resa = " checked='checked' ";
@@ -75,7 +74,7 @@ print str_replace('<!-- !!before!! -->', $form_suite,	$form);
 if ($form_cb_expl != "") {
 	
 	$query = "select * from exemplaires where expl_cb='".$form_cb_expl."' ";	
-	$result = pmb_mysql_query($query, $dbh);
+	$result = pmb_mysql_query($query);
 	$expl_info = pmb_mysql_fetch_object($result);
 	if($expl_info->expl_id) {
 		// Reset des transferts en cours
@@ -83,7 +82,7 @@ if ($form_cb_expl != "") {
 				WHERE id_transfert=num_transfert and num_expl=expl_id  and etat_transfert=0 AND expl_cb='".$form_cb_expl."' " ;
 		pmb_mysql_query( $rqt );
 		
-		//on met Ã  jour la localisation de expl avec celle de l'utilisateur
+		//on met à jour la localisation de expl avec celle de l'utilisateur
 		$rqt = "UPDATE exemplaires 
 				SET expl_location=".$f_ex_location.", transfert_location_origine =".$f_ex_location.",  
 				expl_statut=".$f_ex_statut.", transfert_statut_origine =".$f_ex_statut." 
@@ -99,18 +98,18 @@ if ($form_cb_expl != "") {
 		$rqt = "insert transferts_source SET trans_source_numloc=".$f_ex_location." , trans_source_numexpl=".$expl_info->expl_id;
 		pmb_mysql_query( $rqt );
 
-		// Suppression doc Ã  ranger
+		// Suppression doc à ranger
 		$rqt = "delete from resa_ranger where resa_cb='".$form_cb_expl."' ";
-		$res = pmb_mysql_query($rqt, $dbh) ;
+		pmb_mysql_query($rqt) ;
 
-		// Suppression doc Ã  traiter
+		// Suppression doc à traiter
 		$rqt = "UPDATE exemplaires set expl_retloc=0 where expl_cb='".$form_cb_expl."' limit 1 ";
-		pmb_mysql_query($rqt, $dbh);
+		pmb_mysql_query($rqt);
 		
 		if($f_reset_resa){
 			// Suppression resa
 			$rqt = "delete from resa where resa_cb='".$form_cb_expl."' " ;
-			pmb_mysql_query($rqt, $dbh) ;				
+			pmb_mysql_query($rqt) ;				
 		}
 		// le reset est fait
 

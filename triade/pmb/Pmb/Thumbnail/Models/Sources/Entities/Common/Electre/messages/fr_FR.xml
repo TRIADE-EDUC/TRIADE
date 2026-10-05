@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2023/01/13 15:34:36 dbellamy Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Electre</entry>
+	<entry code="description">Récupération d'une vignette Electre.</entry>
+    <entry code="user">Nom d'utilisateur : </entry>
+    <entry code="client_id">Identifiant client : </entry>
+    <entry code="client_secret">Secret client : </entry>
+</XMLlist>

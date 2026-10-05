@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_controler.js,v 1.78 2019-05-28 14:40:41 btafforeau Exp $
+// $Id: map_controler.js,v 1.88 2023/08/09 08:50:07 qvarin Exp $
 
 const TYPE_RECORD = 11;
 const TYPE_LOCATION = 15;
@@ -38,6 +38,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
         id_img_plus:"",
         hashIds: null,
         temporaryFeature: null,
+        temporaryData: null,
         //Les param�tres du constructeur sont un noeud dom auquel sera rattach� la carte OpenLayers & un objet json repr�sentant les donn�es de l'emprises
         constructor: function () {
             //Conversion de degree decimaux en metre (la projection 4326 d�finie la terre en tant qu'une elipse alors que la 900913 la d�finie en tant qu'une sph�re)
@@ -157,6 +158,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                         request.post(this.layersURL, {
                             'data': "search_id=" + this.searchId + "&wkt_map_hold=" + geom,
                             'handleAs': "application/json",
+                            'headers': {
+                               'X-Requested-With': ''
+                            }
                         }).then(callbackLayers);
 
                     } else {
@@ -167,6 +171,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                                 request.post(this.dataLayers[i].data_url, {
                                     'data': "indice=" + i + "&search_id=" + this.searchId + "&wkt_map_hold=" + geom,
                                     'handleAs': "application/json",
+                                    'headers': {
+                                       'X-Requested-With': ''
+                                    }
                                 }).then(callbackHolds);
                             } else {
                                 this.drawLayer(this.dataLayers[i], i);
@@ -536,41 +543,10 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             }
             for (var i = 0; i < toHighlight.length; i++) {
                 this.highlightNotice(toHighlight[i]);
-                this.highlightFeatures(this.featureByNotice[toHighlight[i]], "rgba(0,0,0,0.3)");
+//                this.highlightFeatures(this.featureByNotice[toHighlight[i]], "rgba(0,0,0,0.3)");
 
             }
-
-        },
-        /*
-         * Fonction de clonage des features, r�cup�re la g�ometrie & les propri�t�s de base (les ids et le layer sont chang�s afin d'�viter tout bug) 
-         * 
-         */
-        cloneFeature: function (feature) {
-            var clonedObj = {};
-            for (var key in feature) {
-                if (key == 'layer') {
-                    clonedObj[key] = null;
-                }
-                else if (key == 'geometry') {
-                    clonedObj[key] = {};
-                    for (var key2 in feature[key])
-                    {
-                        if (key2 == 'id') {
-                            clonedObj[key][key2] = 'new id' + feature[key][key2];
-                        }
-                        else {
-                            clonedObj[key][key2] = feature[key][key2];
-                        }
-                    }
-                }
-                else if (key == '_sketch') {
-                    //Nothing
-                }
-                else {
-                    clonedObj[key] = feature[key];
-                }
-            }
-            return clonedObj;
+        	this.highlightFeatures([e.feature], "rgba(0,0,0,0.3)");
         },
         downlightRecord: function (e) {
             var indiceFeature = e.feature.id.split('_');
@@ -579,9 +555,11 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             var index = this.hoveredFeature.indexOf(e.feature);
             this.hoveredFeature.splice(index, 1);
             for (var i = 0; i < listeIds.length; i++) {
-                this.destroyEmpriseById(listeIds[i]);
+//                this.destroyEmpriseById(listeIds[i]);
                 this.downlightNotice(listeIds[i]);
             }
+            this.destroyEmpriseByFeatures([e.feature]);
+            
         },
         downlightAll: function () {
             var style = {fillColor: "#0000ff", strokeColor: "#0000ff", strokeWidth: 1, fillOpacity: 0.4};
@@ -625,7 +603,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 }
                 var style = {fillColor: color, strokeWidth: 1, strokeColor: color, fillOpacity: 0.7, title: libelle};
                 for (var i = 0; i < arrayFeature.length; i++) {
-                    var clonedFeature = this.cloneFeature(arrayFeature[i]);
+                	//on utilise la fonction native de l'objet feature
+                	//c'est plus propre pour la duplication des components (pas de conflit d'id, pas d'emprise qui disparait)
+                    var clonedFeature = arrayFeature[i].clone();
                     var numLayer = arrayFeature[i].layer.name.split('_');
                     var numFeature = arrayFeature[i].id.split('_');
                     clonedFeature.id = numLayer[numLayer.length - 1] + '_' + numFeature[numFeature.length - 1];
@@ -641,7 +621,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
          * Appell�e � l'arr�t du survol d'une notice dans le dom, supprime toute les features du layer d'highlight 
          */
         downlightHolds: function (e) {
-
             var patternNombre = /\d+/g;
             var style = {fillColor: "#0000ff", strokeColor: "#0000ff", strokeWidth: 1, fillOpacity: 0.4};
             var idNot = e.currentTarget.getAttribute('id').match(patternNombre)[0];
@@ -653,7 +632,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
          * prend en param�tre un id de notice
          */
         highlightNotice: function (idNotice) {
-        	
             if (dom.byId('el'+idNotice+'_'+this.hashIds[idNotice]+'Parent') != null) {
                 domStyle.set(dom.byId('el'+idNotice+'_'+this.hashIds[idNotice]+'Parent'), "border", "1px red solid");
                 domStyle.set(dom.byId('el'+idNotice+'_'+this.hashIds[idNotice]+'Child'), "border", "1px red solid");
@@ -672,25 +650,33 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
         destroyEmpriseById: function (id) {
             if (this.layerHighlight != null) {
                 var arrayFeat = this.featureByNotice[id];
-                if (arrayFeat) {
-                    var idHighlighted = [];
-                    var arrayHigh = [];
-
-                    for (var i = 0; i < arrayFeat.length; i++) {
-                        var id = arrayFeat[i].id.split('_');
-                        var idLayer = arrayFeat[i].layer.name.split('_');
-                        idHighlighted.push({
-                            'idFeature': id[id.length - 1],
-                            'idLayer': idLayer[idLayer.length - 1]
-                        });
-                    }
-
-                    for (var i = 0; i < idHighlighted.length; i++) {
-                        if (this.map.olMap.getLayersByName('highlight')[0].getFeatureById(idHighlighted[i].idLayer + '_' + idHighlighted[i].idFeature) != null) {
-                            this.map.olMap.getLayersByName('highlight')[0].getFeatureById(idHighlighted[i].idLayer + '_' + idHighlighted[i].idFeature).destroy();
-                        }
-                    }
-                }
+                this.destroyEmpriseByFeatures(arrayFeat);
+            }
+        },
+        /**
+         * destruction d'une emprise en fonction des features et pas un id de notice
+         */
+        destroyEmpriseByFeatures: function (arrayFeat) {
+            if (this.layerHighlight != null) {
+	        	if (arrayFeat) {
+	                var idHighlighted = [];
+	                var arrayHigh = [];
+	
+	                for (var i = 0; i < arrayFeat.length; i++) {
+	                    var id = arrayFeat[i].id.split('_');
+	                    var idLayer = arrayFeat[i].layer.name.split('_');
+	                    idHighlighted.push({
+	                        'idFeature': id[id.length - 1],
+	                        'idLayer': idLayer[idLayer.length - 1]
+	                    });
+	                }
+	
+	                for (var i = 0; i < idHighlighted.length; i++) {
+	                    if (this.map.olMap.getLayersByName('highlight')[0].getFeatureById(idHighlighted[i].idLayer + '_' + idHighlighted[i].idFeature) != null) {
+	                        this.map.olMap.getLayersByName('highlight')[0].getFeatureById(idHighlighted[i].idLayer + '_' + idHighlighted[i].idFeature).destroy();
+	                    }
+	                }
+	            }
             }
         },
         /*
@@ -883,6 +869,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                             default:
                                 break;
                         }
+                        this.removeTemporaryFeature();
                     }
                     else {
                         if (dom.byId('formManuel') != null)
@@ -1214,6 +1201,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                     			dom.byId('pt_1_lat').value = data.lat;
                     		}
                     		this.drawPoint(data);
+                            this.removeTemporaryFeature();
                     	}), lang.hitch(this, this.drawPoint));
                         break;
                     case 'formulaireLigne':
@@ -1258,23 +1246,23 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                     	
                     	if ((address.value || city.value || postcode.value) && dom.byId("address").checked) {
                     		this.searchByAddress('', deferredPoly);
-                    		deferredPoly.then(lang.hitch(this, function(data) {
-                        		if (data) {
-                        			var feature = this.formatWKT.read(data.geotext);
-                                    if (feature != undefined) {
-                                        var newPoly = feature.geometry.transform(this.projFrom, this.projTo);
-                                        this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].addFeatures([feature]);
-                            			this.map.olMap.zoomToExtent(feature.geometry.bounds);
-                            			feature['attributes']['data-display_address'] = data.display_name;
-                            			feature['attributes']['data-address'] = data.address;
-                                        this.setHiddenField(feature);
-                                        this.map_controls.polygone.deactivate();
-                                        this.map_controls.edition.activate();
-                                        this.removeTemporaryFeature();
-                                        //Create feature associated
-                                    }
-                        		}
-                        	}));
+                    		data = temporaryData;
+                    		if (data) {
+                    			var feature = this.formatWKT.read(data.geotext);
+                                if (feature != undefined) {
+                                    var newPoly = feature.geometry.transform(this.projFrom, this.projTo);
+                                    this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].addFeatures([feature]);
+                        			this.map.olMap.zoomToExtent(feature.geometry.bounds);
+                        			feature['attributes']['data-display_address'] = data.display_name;
+                        			feature['attributes']['data-address'] = data.address;
+                                    this.setHiddenField(feature);
+                                    this.map_controls.polygone.deactivate();
+                                    this.map_controls.edition.activate();
+                                    this.removeTemporaryFeature();
+                                    //Create feature associated
+                                }
+                    		}
+                        
                     	} else {
                     		deferredPoly.cancel();
                     		var divPt = query('div[edited="true"]');
@@ -1481,12 +1469,14 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 else {
                     wktString = "<textarea name='textarea' id='wktExport_" + i + "' rows='10' cols='80'>" + this.formatWKT.write(this.featureSelected) + "</textarea><br/>";
                 }
-                this.dialogWktExport = new Dialog({
-                    title: pmbDojo.messages.getMessage("carto", "carto_wkt_export_label"),
-                    content: wktString,
-                    id: 'exportWkt',
-                    style: "width: 450px"
-                });
+                if(!this.dialogWktExport) {
+                	this.dialogWktExport = new Dialog({
+                        title: pmbDojo.messages.getMessage("carto", "carto_wkt_export_label"),
+                        content: wktString,
+                        id: 'exportWkt',
+                        style: "width: 450px"
+                    });
+                }
                 this.dialogWktExport.show();
                 this.dialogWktExport.onHide = callbackPopupImportClose;
             }
@@ -1499,15 +1489,17 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             var callbackValideImport = lang.hitch(this, this.valideImportWkt);
             var callbackAddTextArea = lang.hitch(this, this.addTextWkt);
             var callbackPopupImportClose = lang.hitch(this, this.destroyPopup);
-            this.dialogWktImport = new Dialog({
-                title: pmbDojo.messages.getMessage("carto", "carto_wkt_import_label"),
-                id: 'importWkt',
-                content: "<textarea name='textarea' class='textareaWkt' placeholder='" + pmbDojo.messages.getMessage("carto", "carto_wkt_import_placeholder") + ".' rows='10' cols='50'></textarea><br/><input type='button' class='bouton' id='addWktText' value='+'/><input type='button' class='bouton' value='" + pmbDojo.messages.getMessage("carto", "carto_validate_label") + "' id='valideImport'/>",
-                style: "width: 300px"
-            });
+            if(!this.dialogWktImport) {
+            	this.dialogWktImport = new Dialog({
+                    title: pmbDojo.messages.getMessage("carto", "carto_wkt_import_label"),
+                    id: 'importWkt',
+                    content: "<textarea name='textarea' class='textareaWkt' placeholder='" + pmbDojo.messages.getMessage("carto", "carto_wkt_import_placeholder") + ".' rows='10' cols='50'></textarea><br/><input type='button' class='bouton' id='addWktText' value='+'/><input type='button' class='bouton' value='" + pmbDojo.messages.getMessage("carto", "carto_validate_label") + "' id='valideImport'/>",
+                    style: "width: 300px"
+                });
+            }
             this.dialogWktImport.show();
-            on(dom.byId('valideImport'), 'click', callbackValideImport)
-            on(dom.byId('addWktText'), 'click', callbackAddTextArea)
+            on(dom.byId('valideImport'), 'click', callbackValideImport);
+            on(dom.byId('addWktText'), 'click', callbackAddTextArea);
             this.dialogWktImport.onHide = callbackPopupImportClose;
             //this.dialogWktImport.onClose = callbackPopupImportClose;
         },
@@ -1522,7 +1514,21 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 this.dialogWktExport = null;
             }
 
+        },
+        hidePopup: function (e) {
+    		if (this.dialogWktImport != null) {
+    			var textAreas = query('.textareaWkt');
+                var nbEmprise = textAreas.length;
+                for (var i = 0; i < nbEmprise; i++) {
+                	textAreas[i].value = '';
+                }
+				this.dialogWktImport.hide();
+    		}
 
+    		if (this.dialogWktExport != null) {
+				this.dialogWktExport.hide();
+			}
+    		
         },
         valideImportWkt: function (e) {
             var textAreas = query('.textareaWkt');
@@ -1544,7 +1550,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 }
 
             }
-            this.destroyPopup();
+            this.hidePopup();
         },
         addTextWkt: function () {
             domConstruct.place("<textarea name='textarea' class='textareaWkt' rows='10' placeholder='" + pmbDojo.messages.getMessage("carto", "carto_wkt_import_placeholder") + ".' cols='50'></textarea><br/>", dom.byId('addWktText'), "before");
@@ -1789,6 +1795,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                     this.selectFeatureEdition(e);
                 }
                 this.setHiddenField(arguments[0].feature);
+                var clone = e.feature.clone();
+                var ptGoodCoords = clone.geometry.transform(this.projTo, this.projFrom);
+                this.fillAddressDataHiddenField(ptGoodCoords);
                 this.saveCurrentState();
             });
             layer.events.register("featureselected", this, function (e) {
@@ -1798,6 +1807,11 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 this.featureSelected = null;
             });
             layer.events.register("featureadded", this, function (e) {
+            	var clone = e.feature.clone();
+                var ptGoodCoords = clone.geometry.transform(this.projTo, this.projFrom);
+                if (dom.byId('searchResultList') && dom.byId('searchResultList').style.display == "none") {
+                	this.fillAddressDataHiddenField(ptGoodCoords);
+                }
                 this.saveCurrentState();
             });
             layer.events.register("featureremoved", this, function (e) {
@@ -2056,11 +2070,15 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	                	dom.byId('address').removeAttribute('checked');
 	                }
                 }
-                if (dom.byId('searchResultList').style.display == 'block') {
-                	dom.byId('searchResultList').style.display = 'none';
+                if (dom.byId('searchResultList')) {
+	                if (dom.byId('searchResultList').style.display == 'block') {
+	                	dom.byId('searchResultList').style.display = 'none';
+	                }
                 }
-                if (dom.byId('valideModif').style.display == 'none') {
-                	dom.byId('valideModif').style.display = 'inline-block';
+                if (dom.byId('valideModif')) {
+	                if (dom.byId('valideModif').style.display == 'none') {
+	                	dom.byId('valideModif').style.display = 'inline-block';
+	                }
                 }
                 for (var i = 0; i < query('div[typechamps="degreeDec"]').length; i++) {
                     query('div[typechamps="degreeDec"]')[i].style.display = 'none';
@@ -2105,11 +2123,15 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	                	dom.byId('address').removeAttribute('checked');
 	                }
                 }
-                if (dom.byId('searchResultList').style.display == 'block') {
-                	dom.byId('searchResultList').style.display = 'none';
+                if (dom.byId('searchResultList')) {
+	                if (dom.byId('searchResultList').style.display == 'block') {
+	                	dom.byId('searchResultList').style.display = 'none';
+	                }
                 }
-                if (dom.byId('valideModif').style.display == 'none') {
-                	dom.byId('valideModif').style.display = 'inline-block';
+                if (dom.byId('valideModif')) {
+	                if (dom.byId('valideModif').style.display == 'none') {
+	                	dom.byId('valideModif').style.display = 'inline-block';
+	                }
                 }
                 for (var i = 0; i < query('div[typechamps="degreeDec"]').length; i++) {
                     query('div[typechamps="degreeDec"]')[i].style.display = 'inline';
@@ -2195,9 +2217,12 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             	if (ptEdited != null) {
             		jsonDataDisplay = JSON.parse(ptEdited.getAttribute("data-address"));
             	}
-            	console.log(jsonDataDisplay);
             	if (jsonDataDisplay != null) {
-            		if (jsonDataDisplay.road) {
+            		if (jsonDataDisplay.parking) {
+            			address = jsonDataDisplay.parking;
+            		} else if (jsonDataDisplay.locality) {
+            			address = jsonDataDisplay.locality;
+            		} else if (jsonDataDisplay.road) {
         				if (jsonDataDisplay.house_number) {
         					address += jsonDataDisplay.house_number + " ";
         				}
@@ -2216,6 +2241,10 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
         				city = jsonDataDisplay.city;
         			} else if (jsonDataDisplay.hamlet) {
         				city = jsonDataDisplay.hamlet;
+        			} else if (jsonDataDisplay.town) {
+        				city = jsonDataDisplay.town;
+        			} else if (jsonDataDisplay.county) {
+        				city = jsonDataDisplay.county;
         			} else if (jsonDataDisplay.state) {
         				city = jsonDataDisplay.state;
         			}
@@ -2546,7 +2575,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                         break;
                     case pmbDojo.messages.getMessage("carto", "carto_control_rectangle"):
                         this.map_controls.regPoly.handler.setOptions({sides: 4});
-                        btnPushed.panel_div.className = btnPushed.panel_div.className.replace('btnRectangle', 'btnRectangleEnabled');
+                    	if (btnPushed.panel_div.className.indexOf('Enabled') == -1) {
+                    		btnPushed.panel_div.className = btnPushed.panel_div.className.replace('btnRectangle', 'btnRectangleEnabled');
+                    	}
                         break;
                 }
             }
@@ -2565,7 +2596,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             this.inherited(arguments);
         },
         callbackCluster: function (i, zoomLevel, data) {
-            //console.log('CallbackCluster indice:', i, ' zoom level: ', zoomLevel);
             if (!this.featuresByZoom) {
                 this.featuresByZoom = {};
             }
@@ -2608,11 +2638,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             this.printByZoomLevel(zoomLevel, i);
         },
         printByZoomLevel: function (zoomLevel, i) {
-            //console.log('i, print by zoomlvl', i);
             var currentLayer = this.map.olMap.getLayersByName(this.dataLayers[i].name + "_" + i)[0];
             currentLayer.removeAllFeatures();
             //this.map.olMap.layers[i].destroyFeatures();
-            //console.log('features zoom length', this.featuresByZoom[zoomLevel][i].length);
             var features = new Array();
             if (this.featuresByZoom[zoomLevel][i]) {
                 currentLayer.addFeatures(this.featuresByZoom[zoomLevel][i]);
@@ -2636,7 +2664,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
         zoomEnd: function (event) {
             if (this.cluster) {
                 this.showPatience();
-                //console.log('moveEnd', event);
                 var bounds = this.map.olMap.calculateBounds();
                 var geom = bounds.toGeometry();
                 geom = geom.transform(this.projTo, this.projFrom);
@@ -2659,6 +2686,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                         request.post(this.dataLayers[i].data_url, {
                             'data': "indice=" + i + "&search_id=" + this.searchId + "&wkt_map_hold=" + geom + "&zoom_level=" + event.object.zoom + "&cluster=" + this.cluster,
                             'handleAs': "json",
+                            'headers': {
+                               'X-Requested-With': ''
+                            }
                         }).then(callbackCluster);
                     }
                 }
@@ -2686,6 +2716,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 request.post(this.dataLayers[i].data_url, {
                     'data': "indice=" + i + "&search_id=" + this.searchId + "&wkt_map_hold=" + geom + "&zoom_level=" + this.map.olMap.zoom + "&cluster=" + this.cluster,
                     'handleAs': "json",
+                    'headers': {
+                       'X-Requested-With': ''
+                    }
                 }).then(callbackHolds);
             }
         },
@@ -2723,6 +2756,13 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             }
             return false;
         },
+
+
+        /*
+         * Déselectionne tous les contrôles de carte possibles (features, menu..)
+         * 
+         * @param void
+         */
         deactivateAllControls: function () {
             for (var key in this.map_controls) {
                 if (typeof this.map_controls[key].unselectAll == "function") {
@@ -2737,6 +2777,13 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 this.map_controls[key].deactivate();
             }
         },
+
+
+        /*
+         * Permet la sauvegarde de l'emplacement actuel d'un point et gère l'affichage des boutons d'annulation des modifications
+         * 
+         * @param void
+         */
         saveCurrentState: function () {
             if (this.mode == "edition") {
                 var featureObj = new Array();
@@ -2752,15 +2799,22 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 this.editionStates.push({"features": featureObj, "control": this.getCurrentActivatedControl(), "selectedFeature": selectedFeature});
                 if (!dom.byId('cancelEdit') && this.editionStates.length > 2) {
                     domConstruct.place("<input type='button' class='bouton' id='cancelEdit' value='" + pmbDojo.messages.getMessage("carto", "carto_label_cancel_modifications") + "'/>", dom.byId('map_manual_edition'), "before");
-                    on(dom.byId('cancelEdit'), 'click', lang.hitch(this, this.loadLastState, true));
+                    on(dom.byId('cancelEdit'), 'click', lang.hitch(this, this.loadState, true));
                 }
                 if (!dom.byId('cancelLastEdit') && this.editionStates.length > 1) {
                     domConstruct.place("<input type='button' class='bouton' id='cancelLastEdit' value='" + pmbDojo.messages.getMessage("carto", "carto_label_cancel_last_modification") + "'/>", dom.byId('map_manual_edition'), "before");
-                    on(dom.byId('cancelLastEdit'), 'click', lang.hitch(this, this.loadLastState));
+                    on(dom.byId('cancelLastEdit'), 'click', lang.hitch(this, this.loadState, false));
                 }
             }
         },
-        loadLastState: function (first) {
+
+
+        /*
+         * Permet de revenir à un emplacement de point précédent
+         * 
+         * @param first (Boolean) : Si true alors on annule toutes les modifications, si false on annule la dernière modification
+         */
+        loadState: function (first) {
             var first = first != undefined && typeof first == "boolean" && first != false ? first : false;
             this.deactivateAllControls();
             if (this.editedFeature && this.editedFeature.layer && this.editedFeature.layer.events.listeners.featureover != null) {
@@ -2815,26 +2869,67 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
             }
 
         },
+
+
+        /*
+         * Empeche l'utilisateur de créer un point en dehors du cadre de la map
+         * 
+         * @param e (Event) : Evenement associé à l'appel de cette fonction
+         */
         cancelDraw: function (e) {
             var currentCtrl = this.getCurrentActivatedControl();
             if (currentCtrl && currentCtrl.CLASS_NAME == "OpenLayers.Control.DrawFeature") {
                 currentCtrl.cancel();
             }
         },
-        
-        searchByAddress : function(query, deferred) {
+
+
+        /*
+         * Effectue une recherche sur nominatim en fonction des champs Adresse et affiche les résultats de la recherche dans une liste
+         * 
+         * @param query (String) : Contenu de la recherche à envoyer à Nominatim
+         * @param deferred (Object) : Instance de la classe Deffered de dojo
+         */
+        searchByAddress : function(query, deferred, indice) {
         	this.showPatience();
         	var self = this;
-        	selectAddress = dom.byId("searchResultList");
+        	var uri = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&polygon_text=1&accept-language=fr-FR";
+        	var selectAddress = dom.byId("searchResultList");
+        	var addressSearched = encodeURI(dom.byId('pt_1_search_address').value);
+        	var citySearched = encodeURI(dom.byId('pt_1_search_city').value);
+        	var postcodeSearched = encodeURI(dom.byId('pt_1_search_postcode').value);
+        	
+        	if (!addressSearched) {
+        		if (citySearched) {
+        			uri += "&city=" + citySearched;
+        		}
+        		if (postcodeSearched) {
+        			uri += "&postalcode=" + postcodeSearched;
+        		}
+        	} else {
+        		uri += "&q=" + addressSearched;
+        		if (citySearched) {
+        			uri += " " + citySearched;
+        		}
+        		if (postcodeSearched) {
+        			uri += " " + postcodeSearched;
+        		}
+        	}
         	if (selectAddress.style.display != "none") {
-        		query = document.querySelector(".searchResult.selected").firstChild.innerHTML;
-        		query = encodeURI(query);
-        		request("https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&polygon_text=1&accept-language=fr-FR&q=" + query, {
+        		request(uri, {
 					handleAs: 'json',
+                    headers: {
+                       'X-Requested-With': ''
+                    }
 				}).then(function(data) {
-					if (data[0]) {
-						deferred.resolve(data[0]);
+					if (!indice) {
+						indice = 0;
 					}
+					if (!data[indice]) {
+						indice = 0;
+					}
+					deferred.resolve(data[indice]);
+					this.temporaryData = data[indice];
 					deferred.reject();
 					self.hidePatience();
 				}, function(err) {
@@ -2842,14 +2937,20 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				});
         	}
         },
-        
+
+
+        /*
+         * Effectue une recherche sur nominatim en fonction des champs Adresse et affiche les résultats de la recherche dans une liste
+         * 
+         * @param query
+         */
         listerAdresses: function(query) {
-        	var callbackClickAddress = lang.hitch(this, this.highlightAddress);
-        	addressSearched = dom.byId('pt_1_search_address').value;
-        	citySearched = dom.byId('pt_1_search_city').value;
-        	postcodeSearched = dom.byId('pt_1_search_postcode').value;
-        	uri = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&polygon_text=1&accept-language=fr-FR";
-        	
+        	let callbackClickAddress = lang.hitch(this, this.highlightAddress);
+        	let addressSearched = dom.byId('pt_1_search_address').value;
+        	let citySearched = dom.byId('pt_1_search_city').value;
+        	let postcodeSearched = dom.byId('pt_1_search_postcode').value;
+        	let uri = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&polygon_text=1&accept-language=fr-FR";
+
         	if (addressSearched != "") {
     			uri += "&q=" + addressSearched + " " + citySearched + " " + postcodeSearched;
         	} else {
@@ -2860,37 +2961,41 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
         			uri += "&postalcode=" + postcodeSearched;
         		}
         	}
-        	
+
         	if (uri) {
         		query = encodeURI(uri);
+
         		request(query, {
-					handleAs: 'json',
-				}).then(function(data) {
-					selectAddress = dom.byId("searchResultList");
+                 	handleAs: 'json',
+                 	headers: {
+                        'X-Requested-With': ''
+                    },
+                }).then(function(data) {
+					let selectAddress = dom.byId("searchResultList");
 					selectAddress.style.display = "block";
 					while (selectAddress.hasChildNodes()) {  
 						selectAddress.removeChild(selectAddress.firstChild);
 					}
-					for (var i = 0; i < data.length; i++) {
-						newSearch = document.createElement('div');
+					for (let i = 0; i < data.length; i++) {
+						let newSearch = document.createElement('div');
 						newSearch.setAttribute('id', 'searchResult' + i);
 						newSearch.setAttribute('class', 'searchResult');
 						selectAddress.appendChild(newSearch);
-						
-						newAddress = document.createElement('span');
+
+						let newAddress = document.createElement('span');
 						newAddress.setAttribute('name', 'resultAddress');
 						newAddress.innerHTML = data[i].display_name;
 						newSearch.appendChild(newAddress);
-						
+
 						on(dom.byId('searchResult' + i), 'click', callbackClickAddress);
 					}
-					
+
 					if (data.length == 0) {
 						selectAddress.style.display = "none";
 						if (dom.byId("pt_1").lastChild.nodeName == "H2") {
 							dom.byId("pt_1").removeChild(dom.byId("pt_1").lastChild);
 						}
-						noResult = document.createElement("h2");
+						let noResult = document.createElement("h2");
 						noResult.innerHTML = pmbDojo.messages.getMessage("carto", "carto_research_no_result");
 						dom.byId("pt_1").appendChild(noResult);
 					} else {
@@ -2901,12 +3006,20 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				});
         	}
         },
-        
+
+
+        /*
+         * Permet de prévisualiser le point ou le polygone avant placement définitif lors d'une recherche par adresse
+         * 
+         * @param e (Event) : Evenement associé à l'appel de cette fonction
+         */
         highlightAddress: function(e) {
-        	for (var i = 0; i < dom.byId("searchResultList").childElementCount; i++) {
-        		if (dom.byId("searchResult" + i).getAttribute("class") ==  "searchResult selected") {
-        			dom.byId("searchResult" + i).setAttribute("class", "searchResult");
-        		}
+        	if (dom.byId("searchResultList")) {
+        		for (var i = 0; i < dom.byId("searchResultList").childElementCount; i++) {
+            		if (dom.byId("searchResult" + i).getAttribute("class") ==  "searchResult selected") {
+            			dom.byId("searchResult" + i).setAttribute("class", "searchResult");
+            		}
+            	}
         	}
         	if (e.target.tagName == "SPAN") {
         		selectedAddress = e.target.parentElement;
@@ -2917,32 +3030,74 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 
         	var deferred = new Deferred();
         	var address = e.target.firstChild.innerHTML;
-        	this.searchByAddress(address, deferred);
-        	
-        	if (!this.map_controls.point.active) {
-        		deferred.then(lang.hitch(this, function(data) {
-	        		if (data) {
-	        			var feature = this.formatWKT.read(data.geotext);
-	                    if (feature != undefined) {
-	                        var newPoly = feature.geometry.transform(this.projFrom, this.projTo);
-	                        this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].addFeatures([feature]);
-	                        if (this.temporaryFeature != null) {
-	                        	this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].removeFeatures([this.temporaryFeature]);
-	                        }
-	            			this.map.olMap.zoomToExtent(newPoly.bounds);
-	                        this.map_controls.polygone.deactivate();
-	                        this.temporaryFeature = feature;
-	                    }
-	        		}
-        		}));
-        	}
+        	indice = selectedAddress.id.substring(12);
+        	this.searchByAddress(address, deferred, indice);
+    		deferred.then(lang.hitch(this, function(data) {
+        		if (data) {
+        			var feature = this.formatWKT.read(data.geotext);
+        			if (this.map_controls.point.active && data.geotext.includes('POLYGON')) {
+        				feature.geometry = feature.geometry.getCentroid();
+        			}
+        				
+                    if (feature != undefined) {
+                        var newPoly = feature.geometry.transform(this.projFrom, this.projTo);
+                        this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].addFeatures([feature]);
+                        if (this.temporaryFeature != null) {
+                        	this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].removeFeatures([this.temporaryFeature]);
+                        }
+            			this.map.olMap.zoomToExtent(newPoly.bounds);
+                        this.map_controls.polygone.deactivate();
+                        this.temporaryFeature = feature;
+                    }
+        		}
+    		}));
     		dom.byId("valideModif").style.display = "inline-block";
         },
-        
+
+
+        /*
+         * Supprime la feature temporaire créée pendant la prévisualisation lors de la recherche par adresse
+         * 
+         * @param void
+         */
         removeTemporaryFeature: function() {
         	if (this.temporaryFeature != null) {
         		this.map.olMap.getLayersByName(this.dataLayers[0].name + "_0")[0].removeFeatures([this.temporaryFeature]);
         	}
+        },
+
+
+        /*
+         * Récupère une adresse sur Nominatim à partir de coordoonnées x et y, et remplit les champs d'adresse et les champs cachés
+         * 
+         * @param goodCoords (Array) : Tableau associatif contenant les coordonnées x et y d'un point
+         */
+        fillAddressDataHiddenField: function(goodCoords) {
+        	if (goodCoords['x'] === undefined && goodCoords['y'] === undefined) {
+        		return;
+        	}
+        	var lonlat = new OpenLayers.LonLat(goodCoords['x'], goodCoords['y']);
+        	lon = lonlat['lon'];
+        	lat = lonlat['lat'];
+        	var deferred = new Deferred();
+        	request("https://nominatim.openstreetmap.org/reverse?format=json&lat="+lat+"&lon="+lon, {
+                headers: {
+                    'X-Requested-With': ''
+                }
+            }).then(function(data) {
+				if (data) {
+					deferred.resolve(data);
+				}
+				deferred.reject();
+			});
+        	deferred.then(lang.hitch(this, function(data) {
+        		if (data) {
+        			data = JSON.parse(data);
+					this.editedFeature['attributes']['data-address'] = data['address'];
+					this.editedFeature['attributes']['data-display_address'] = data['display_name'];
+					this.setHiddenField(this.editedFeature);
+        		}
+        	}));
         },
     }); 
  });

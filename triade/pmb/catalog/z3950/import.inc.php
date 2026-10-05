@@ -1,16 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: import.inc.php,v 1.44 2019-05-31 13:12:38 ngantier Exp $
+// $Id: import.inc.php,v 1.49 2023/10/11 12:18:24 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $include_path, $action, $source, $msg, $pmb_indexation_lang;
+global $id_notice, $znotices_id, $last_query_id, $f_ex_cb;
+
 if(!isset($f_ex_cb)) $f_ex_cb = '';
 
-// d√©finition du minimum n√©c√©ssaire 
+// dÈfinition du minimum nÈcÈssaire 
 require_once("$include_path/marc_tables/$pmb_indexation_lang/empty_words");
 require_once("$class_path/iso2709.class.php");
 require_once("$class_path/author.class.php");
@@ -24,13 +27,17 @@ require_once("notice.inc.php");
 require_once("$class_path/expl.class.php");
 require_once("$include_path/templates/expl.tpl.php");
 require_once("$class_path/z3950_notice.class.php");
+require_once("$class_path/serials.class.php");
+require_once("$class_path/notice.class.php");
 
+$id_notice = intval($id_notice);
 if (!$id_notice) {
 	print "<h1>$msg[z3950_integr_catal]</h1>";
 } else {
 	print "<h1>$msg[notice_z3950_remplace_catal]</h1>";
 }
-
+$znotices_id = intval($znotices_id);
+$last_query_id = intval($last_query_id);
 $resultat=pmb_mysql_query("select znotices_id, znotices_bib_id, isbd, isbn, titre, auteur, z_marc from z_notices where znotices_id='$znotices_id' AND znotices_query_id='$last_query_id'");
 
 $test_resultat=0;
@@ -41,7 +48,7 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 	//$id_notice=$ligne["znotices_id"];	
 	$znotices_id=$ligne["znotices_id"];
 	
-	/* r√©cup√©ration du format des notices retourn√©es par la bib */
+	/* rÈcupÈration du format des notices retournÈes par la bib */
 	$znotices_bib_id=$ligne["znotices_bib_id"];
 	$rqt_bib_id=pmb_mysql_query("select format from z_bib where bib_id='$znotices_bib_id'");
 	while (($ligne_format=pmb_mysql_fetch_array($rqt_bib_id))) {
@@ -59,7 +66,7 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 	    if (!empty($source) && $source == 'form') {
 			$notice = new z3950_notice ('form');
 		} else {
-			// avant affichage du formulaire : d√©tecter si notice d√©j√† pr√©sente pour proposer MAJ
+			// avant affichage du formulaire : dÈtecter si notice dÈj‡ prÈsente pour proposer MAJ
 			$isbn_verif = traite_code_isbn($ligne['isbn']) ;
 			$suite_rqt="";
 			if (isISBN($isbn_verif)) {
@@ -69,14 +76,17 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 			}
 			if ($isbn_verif) {
 				$requete = "SELECT notice_id FROM notices WHERE code='$isbn_verif' ".$suite_rqt;
-				$myQuery = pmb_mysql_query($requete, $dbh);
+				$myQuery = pmb_mysql_query($requete);
 				$temp_nb_notice = pmb_mysql_num_rows($myQuery) ;
-				if ($temp_nb_notice) $not_id = pmb_mysql_result($myQuery, 0 ,0) ;
-					else $not_id=0 ;
+				if ($temp_nb_notice) {
+				    $not_id = pmb_mysql_result($myQuery, 0 ,0) ;
+				} else {
+				    $not_id=0 ;
+				}
 			}
-			// if ($not_id) METTRE ICI TRAITEMENT DU CHOIX DU DOUBLON echo "<script> alert('Existe d√©j√†'); </script>" ;
-			$notice = new z3950_notice ($format, $ligne['z_marc']);
-			//Si pas d'origine renseign√©e en 801, on reprend le nom de la source
+			// if ($not_id) METTRE ICI TRAITEMENT DU CHOIX DU DOUBLON echo "<script> alert('Existe dÈj‡'); </script>" ;
+			$notice = new z3950_notice ($format, $ligne['z_marc'],0 , true);
+			//Si pas d'origine renseignÈe en 801, on reprend le nom de la source
 			if (!count($notice->origine_notice)) {
 				$requete = "SELECT bib_nom FROM z_bib WHERE bib_id=".$ligne['znotices_bib_id'];
 				$myQuery = pmb_mysql_query($requete);
@@ -87,7 +97,7 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 			}
 		}
 	}
-	
+
 	$integration_OK="PASFAIT";
 	$integrationexpl_OK="PASFAIT";
 	switch ($action) {
@@ -147,20 +157,20 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 			print "<hr /><strong>$msg[z3950_integr_expl_echec]</strong>";
 			break;
 	}
-	
+
+	switch($notice->bibliographic_level.$notice->hierarchic_level){
+		case "a2" :
+			$url_view = analysis::get_permalink($num_notice, $notice->bull_id);
+			break;
+		case "s1" :
+			$url_view = serial::get_permalink($num_notice);
+			break;
+		default :
+			$url_view = notice::get_permalink($num_notice);
+			break;
+	}
 	switch ($integration_OK) {
 		case "OK" :
-			switch($notice->bibliographic_level.$notice->hierarchic_level){
-				case "a2" :
-					$url_view = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$notice->bull_id&art_to_show=$num_notice";
-					break;
-				case "s1" :
-					$url_view = "./catalog.php?categ=serials&sub=view&serial_id=".$num_notice;
-					break;
-				default :
-					$url_view = "./catalog.php?categ=isbd&id=".$num_notice;
-					break;
-			}
 			print "<hr />
 					<span class='msg-perio'>".$msg['z3950_integr_not_ok']."</span>
 					&nbsp;<a id='liensuite' href=\"javascript:top.document.location='$url_view'\">$msg[z3950_integr_not_lavoir]</a>";
@@ -169,14 +179,14 @@ while (($ligne=pmb_mysql_fetch_array($resultat))) {
 		case "UPDATE_OK" :
 			print "<hr />
 					<span class='msg-perio'>".$msg['z3950_update_not_ok']."</span>
-					&nbsp;<a id='liensuite' href=\"javascript:top.document.location='./catalog.php?categ=isbd&id=$num_notice'\">$msg[z3950_integr_not_lavoir]</a>";
+					&nbsp;<a id='liensuite' href=\"javascript:top.document.location='".$url_view."'\">$msg[z3950_integr_not_lavoir]</a>";
 			print "<script type='text/javascript'>document.getElementById('liensuite').focus();</script>" ;
 			break;
 		case "EXISTAIT" :
 			if ($action=="integrer") {
 				print "<hr />
 					<span class='msg-perio'>".$msg['z3950_integr_not_existait']."</span>
-					&nbsp;<a id='liensuite' href=\"javascript:top.document.location='./catalog.php?categ=isbd&id=$num_notice'\">$msg[z3950_integr_not_lavoir]</a>";
+					&nbsp;<a id='liensuite' href=\"javascript:top.document.location='".$url_view."'\">$msg[z3950_integr_not_lavoir]</a>";
 				print "<script type='text/javascript'>document.getElementById('liensuite').focus();</script>" ;
 			}
 			break;

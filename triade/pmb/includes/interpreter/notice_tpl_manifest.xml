@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
+$Id: notice_tpl_manifest.xml,v 1.32.2.3.2.1 2025/05/21 06:52:24 dgoron Exp $ -->
 <manifest>
 	<name>notice_tpl</name>
 	<description>msg:Notice_tpl_functions_description</description>
@@ -33,7 +33,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:author_2_output_description</description>
 			</outputs>
 		</method>
-		<method name="#authors(param0,param1,param2,param3,param4,param5,param6,param7);" rights="" version="1.0" comment="msg:authors_description" language_independant="true">
+		<method name="#authors(param0,param1,param2,param3,param4,param5,param6,param7,param8);" rights="" version="1.0" comment="msg:authors_description" language_independant="true">
 			<inputs>
 				<description>msg:authors_input_description</description>
 			</inputs>
@@ -41,7 +41,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:authors_output_description</description>
 			</outputs>
 		</method>
-		<method name="#authors_by_type(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:authors_by_type_description" language_independant="true">
+		<method name="#authors_by_type(param0,param1,param2,param3,param4,param5,param6,param7);" rights="" version="1.0" comment="msg:authors_by_type_description" language_independant="true">
 			<inputs>
 				<description>msg:authors_by_type_input_description</description>
 			</inputs>
@@ -49,7 +49,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:authors_by_type_output_description</description>
 			</outputs>
 		</method>
-		<method name="#authors_by_type_dir(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:authors_by_type_dir_description" language_independant="true">
+		<method name="#authors_by_type_dir(param0,param1,param2,param3,param4,param5,param6,param7);" rights="" version="1.0" comment="msg:authors_by_type_dir_description" language_independant="true">
 			<inputs>
 				<description>msg:authors_by_type_dir_input_description</description>
 			</inputs>
@@ -57,7 +57,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:authors_by_type_dir_output_description</description>
 			</outputs>
 		</method>
-		<method name="#authors_by_type_with_tpl(param0,param1,param2,param3,param4,param5,param6,#{param7};,param8);" rights="" version="1.0" comment="msg:parents_authors_by_type_with_tpl_description" language_independant="true">
+		<method name="#authors_by_type_with_tpl(param0,param1,param2,param3,param4,param5,param6,#{param7};,param8,param9);" rights="" version="1.0" comment="msg:parents_authors_by_type_with_tpl_description" language_independant="true">
 			<inputs>
 				<description>msg:authors_by_type_with_tpl_input_description</description>
 			</inputs>
@@ -169,6 +169,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:date_publication_output_description</description>
 			</outputs>
 		</method>
+		<method name="#expl_number();" rights="" version="1.0" comment="msg:expl_number_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_number_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_number_output_description</description>
+			</outputs>
+		</method>
 		<method name="#expl();" rights="" version="1.0" comment="msg:expl_description" language_independant="true">
 			<inputs>
 				<description>msg:expl_input_description</description>
@@ -177,7 +185,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:expl_output_description</description>
 			</outputs>
 		</method>
-		<method name="#expl_by_field(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:expl_by_field_description" language_independant="true">
+		<method name="#expl_by_field(param0,param1,param2,param3,param4);" rights="" version="1.0" comment="msg:expl_by_field_description" language_independant="true">
 			<inputs>
 				<description>msg:expl_by_field_input_description</description>
 			</inputs>
@@ -185,7 +193,7 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:expl_by_field_output_description</description>
 			</outputs>
 		</method>
-		<method name="#expl_with_tpl(param0,param1,param2,param3);" rights="" version="1.0" comment="msg:expl_with_tpl_description" language_independant="true">
+		<method name="#expl_with_tpl(param0,param1,param2,param3,param4);" rights="" version="1.0" comment="msg:expl_with_tpl_description" language_independant="true">
 			<inputs>
 				<description>msg:expl_with_tpl_input_description</description>
 			</inputs>
@@ -215,6 +223,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<description>msg:expl_num_vign_reduit_output_description</description>
+			</outputs>
+		</method>
+		<method name="#expl_num_by_field(param0,param1,param2,param3,param4);" rights="" version="1.0" comment="msg:expl_num_by_field_description" language_independant="true">
+			<inputs>
+				<description>msg:expl_num_by_field_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:expl_num_by_field_output_description</description>
 			</outputs>
 		</method>
 		<method name="#expl_num_with_tpl(param0,param1,param2,param3,param4,param5,param6);" rights="" version="1.0" comment="msg:expl_num_with_tpl_description" language_independant="true">
@@ -271,6 +287,22 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<description>msg:img_url_output_description</description>
+			</outputs>
+		</method>
+		<method name="#img_base64();" rights="" version="1.0" comment="msg:img_base64_description" language_independant="true">
+			<inputs>
+				<description>msg:img_base64_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:img_base64_output_description</description>
+			</outputs>
+		</method>
+		<method name="#no_image();" rights="" version="1.0" comment="msg:no_image_description" language_independant="true">
+			<inputs>
+				<description>msg:no_image_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:no_image_output_description</description>
 			</outputs>
 		</method>
 		<method name="#indexint(param0,param1,param2,param3,param4,param5);" rights="" version="1.0" comment="msg:indexint_description" language_independant="true">
@@ -601,6 +633,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:year_publication_output_description</description>
 			</outputs>
 		</method>
+		<method name="#concepts(param0,param1);" rights="" version="1.0" comment="msg:concepts_description" language_independant="true">
+			<inputs>
+				<description>msg:concepts_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:concepts_output_description</description>
+			</outputs>
+		</method>
 		<method name="#keywords(param0);" rights="" version="1.0" comment="msg:keywords_description" language_independant="true">
 			<inputs>
 				<description>msg:keywords_input_description</description>
@@ -661,7 +701,15 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:date_bulletin_output_description</description>
 			</outputs>
 		</method>
-			<method name="#issn();" rights="" version="1.0" comment="msg:issn_description" language_independant="true">
+		<method name="#bulletin_id();" rights="" version="1.0" comment="msg:bulletin_id_description" language_independant="true">
+			<inputs>
+				<description>msg:bulletin_id_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:bulletin_id_output_description</description>
+			</outputs>
+		</method>
+		<method name="#issn();" rights="" version="1.0" comment="msg:issn_description" language_independant="true">
 			<inputs>
 				<description>msg:issn_input_description</description>
 			</inputs>
@@ -719,6 +767,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<description>msg:group_output_description</description>
+			</outputs>
+		</method>
+		<method name="#filter_from_notice_info(param0,param1,param2);" rights="" version="1.0" comment="msg:filter_from_notice_info_description" language_independant="true">
+			<inputs>
+				<description>msg:filter_from_notice_info_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:filter_from_notice_info_output_description</description>
 			</outputs>
 		</method>
 		<method name="#linked_id(param0,param1);" rights="" version="1.0" comment="msg:linked_id_description" language_independant="true">
@@ -897,6 +953,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:extract_path_output_description</description>
 			</outputs>
 		</method>
+		<method name="#extract_explode(param0,param1,param2);" rights="" version="1.0" comment="msg:extract_explode_description" language_independant="true">
+			<inputs>
+				<description>msg:extract_explode_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:extract_explode_output_description</description>
+			</outputs>
+		</method>
 		<method name="#gen_tpl(tableau,texte,option);" rights="" version="1.0" comment="msg:gen_tpl_description" language_independant="true">
 			<inputs>
 				<description>msg:gen_tpl_input_description</description>
@@ -985,12 +1049,28 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:strtolower_output_description</description>
 			</outputs>
 		</method>
+		<method name="#strpos(param0,param1,param2);" rights="" version="1.0" comment="msg:strpos_description" language_independant="true">
+			<inputs>
+				<description>msg:strpos_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:strpos_output_description</description>
+			</outputs>
+		</method>
 		<method name="#substr(param0,param1,param2);" rights="" version="1.0" comment="msg:substr_description" language_independant="true">
 			<inputs>
 				<description>msg:substr_input_description</description>
 			</inputs>
 			<outputs>
 				<description>msg:substr_output_description</description>
+			</outputs>
+		</method>
+		<method name="#limitstring(param0,param1,param2);" rights="" version="1.0" comment="msg:limitstring_description" language_independant="true">
+			<inputs>
+				<description>msg:limitstring_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:limitstring_output_description</description>
 			</outputs>
 		</method>
 		<method name="#trim(param0);" rights="" version="1.0" comment="msg:trim_description" language_independant="true">
@@ -1009,6 +1089,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 				<description>msg:ucfirst_output_description</description>
 			</outputs>
 		</method>
+		<method name="#ucwords(param0);" rights="" version="1.0" comment="msg:ucwords_description" language_independant="true">
+			<inputs>
+				<description>msg:ucwords_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:ucwords_output_description</description>
+			</outputs>
+		</method>
 		<method name="#set_variable(param0);" rights="" version="1.0" comment="msg:set_variable_description" language_independant="true">
 			<inputs>
 				<description>msg:set_variable_input_description</description>
@@ -1023,6 +1111,14 @@ $Id: notice_tpl_manifest.xml,v 1.21 2019-01-21 13:23:17 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<description>msg:get_variable_output_description</description>
+			</outputs>
+		</method>
+		<method name="#get_global_variable(param0);" rights="" version="1.0" comment="msg:get_global_variable_description" language_independant="true">
+			<inputs>
+				<description>msg:get_global_variable_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:get_global_variable_output_description</description>
 			</outputs>
 		</method>
 		<method name="#strip_tags(param0);" rights="" version="1.0" comment="msg:strip_tags_description" language_independant="true">

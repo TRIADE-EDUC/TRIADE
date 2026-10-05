@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module liste de flux RSS
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_rsslist.xml,v 1.2 2021/04/29 13:49:16 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_rsslist">Vue d'une liste de flux RSS</entry>
+</XMLlist>

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: GhostContainer.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: GhostContainer.js,v 1.3 2020/06/09 08:19:00 dgoron Exp $
 
 
 define([
@@ -50,7 +50,7 @@ define([
 			postCreate: function() {
 				this.inherited(arguments);
 				this.createGhost();
-				
+				this.createActionsSelection();
 			},
 			getFormNode: function(){
 				var input = document.querySelector('input');
@@ -58,6 +58,7 @@ define([
 				
 			},
 			createGhost: function(){
+				this.parameters.initialPosYParent = window.scrollY;
 				var elementSize = geometry.getContentBox(this.parameters.field);
 				
 				this.ghost = domConstruct.create('div', {
@@ -71,7 +72,26 @@ define([
 				}, this.parameters.field, 'after');
 				domConstruct.place(this.parameters.field, this.containerNode, 'last');
 			},
+			createActionsSelection: function(){
+				var containerActions = domConstruct.create('div', {
+					id: "selector_actions_selection",
+					class: "selector_actions_selection",
+					innerHTML:''
+				}, this.containerNode, 'last');
+				
+				var inputButtonSelectionValidate = domConstruct.create('input', {
+					type: "button",
+					id: "selector_selection_validate",
+					name: "selector_selection_validate",
+					class: "bouton",
+					value: pmbDojo.messages.getMessage('selector', 'selector_tab_selection_validate')
+				}, containerActions);
+				on(inputButtonSelectionValidate, 'click', lang.hitch(this, function(){
+					topic.publish('GhostContainer', 'GhostContainer', 'validatedSelection');
+				}));
+			},
 			destroy: function(){
+				window.scrollTo(0, this.parameters.initialPosYParent);
 				var form = this.getFormNode();
 				domConstruct.place(this.parameters.field, this.ghost, 'after');
 				domConstruct.destroy(this.ghost);

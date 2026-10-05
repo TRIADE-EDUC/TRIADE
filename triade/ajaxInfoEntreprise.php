@@ -12,7 +12,7 @@ $cnx=cnx();
 if (isset($_POST["idEntreprise"])) {
 	$data=recherche_activite_id($_POST["idEntreprise"]);
 	// id_serial,nom,contact,adresse,code_p,ville,secteur_ac,activite_prin,tel,fax,email,info_plus,bonus,nbchambre,siteweb,grphotelier,nbetoile,registrecommerce,siren,siret,formejuridique,secteureconomique,INSEE,NAFAPE,NACE,typeorganisation
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$infoEntreprise.="<font class=T2>";
 		$infoEntreprise.=stripslashes(LANGSTAGE39)." : <b><font color=red>".$data[$i][1]."</font></b><br>";
 

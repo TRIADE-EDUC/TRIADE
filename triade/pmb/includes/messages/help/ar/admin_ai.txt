@@ -1,0 +1,6 @@
+<h2>Intelligence Artificielle</h2>
+</p><p>
+Gestion de l'IA dans PMB.
+</p>
+<p><b>Recherche sémantique</b> : Gestion du paramétrage pour la recherche sémantique.</p>
+<p><b>Liste de lecture</b> : Gestion du paramétrage pour les listes de lecture.</p>

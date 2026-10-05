@@ -1,6 +1,6 @@
 <?php
 
-// $Id: regex.txt,v 1.12 2017-10-04 12:29:46 dgoron Exp $
+// $Id: regex.txt,v 1.13 2019/12/13 08:08:07 dgoron Exp $
 
 // documentation succincte sur les expressions r&eacute;guli&egrave;res
 
@@ -20,8 +20,8 @@ $content = "
 </table>
 <hr />
 <b>Recherche simple</b>
-<p class='pn-normal'>Par d&eacute;faut, le moteur cherche les &eacute;l&eacute;ments qui contiennent <b>au moins</b> (OU implicite) un des mots saisis. Le tri se fait selon le nombre d&eacute;croissant de mots trouv&eacute;s, puis par ordre alphab&eacute;tique.
-<br />Ex. <em>jambon bayonne</em> signifie les &eacute;l&eacute;ments qui contiennent les mots jambon <b>ou</b> Bayonne (jambon de Bayonne, jambon de Parme, l'histoire de Bayonne, ...).
+<p class='pn-normal'>Par d&eacute;faut, le moteur cherche les &eacute;l&eacute;ments qui contiennent <b>au moins</b> (!!operator_uppercase!! implicite) un des mots saisis. Le tri se fait selon le nombre d&eacute;croissant de mots trouv&eacute;s, puis par ordre alphab&eacute;tique.
+<br />Ex. <em>jambon bayonne</em> signifie les &eacute;l&eacute;ments qui contiennent les mots jambon <b>!!operator_lowercase!!</b> Bayonne (jambon de Bayonne, jambon de Parme, l'histoire de Bayonne, ...).
 <br />Les accents ne sont pas pris en compte ainsi que les majuscules/minuscules. Si deux mots sont s&eacute;par&eacute;s par un autre signe que espace, +, ou -, les deux mots sont consid&eacute;r&eacute;s comme devant appara&icirc;tre dans le r&eacute;sultat <br />Ex. <em>Saint Jean/mer</em> sera analys&eacute; comme : chercher les &eacute;l&eacute;ments qui contiennent <em>saint</em> <b>ou</b> les &eacute;l&eacute;ments qui contiennent <em>jean et mer</em> <b>ou</b> les deux.
 <br />Certains mots sont ignor&eacute;s car trop courants ou sans signification pertinente en fran&ccedil;ais (ex : de, du, da, t, l, d, s, son, sa, ...).
 </p>
@@ -46,32 +46,38 @@ Le tiret est consid&eacute;r&eacute; comme un op&eacute;rateur entre deux mots (
 </p>
 <b>Op&eacute;rateurs logiques entre deux mots</b>
 <p class='pn-normal'>Des op&eacute;rateurs logiques peuvent &ecirc;tre utilis&eacute;s entre les mots :</p>
-<ul><li><b>+</b> : op&eacute;rateur ET<br />Ex. <em>disque + dur</em> signifie les &eacute;l&eacute;ments qui contiennent les mots disque <b>et</b> dur.</li>
+<ul><li><b>+</b> : op&eacute;rateur !!operator_more_uppercase!!<br />Ex. <em>disque + dur</em> signifie les &eacute;l&eacute;ments qui contiennent les mots disque <b>!!operator_more_lowercase!!</b> dur.</li>
 <li><b>-</b> : op&eacute;rateur SAUF (ET NON)<br />Ex. <em>disque - dur</em> signifie les &eacute;l&eacute;ments qui contiennent le mot disque, <b>sauf ceux qui contiennent aussi</b> le mot dur.</li>
 </ul>
 <p class='pn-normal'>Plusieurs op&eacute;rateurs peuvent &ecirc;tre encha&icirc;n&eacute;s dans une m&ecirc;me expression. Ils sont appliqu&eacute;s dans l'ordre, de gauche &agrave; droite.
-<br />Ex. <em>po&eacute;sie + fran&ccedil;ais* - romantique*</em> signifie les &eacute;l&eacute;ments contenant <em>po&eacute;sie et fran&ccedil;ais(e)(s)</em> <b>sans</b> <em>romantique(s)</em>.
+<br />Ex. <em>po&eacute;sie + fran&ccedil;ais* - romantique*</em> signifie les &eacute;l&eacute;ments contenant <em>po&eacute;sie !!operator_more_lowercase!! fran&ccedil;ais(e)(s)</em> <b>sans</b> <em>romantique(s)</em>.
 <br /><br />Attention, deux op&eacute;rateurs ne peuvent se suivre, une n&eacute;gation ne peut &ecirc;tre combin&eacute;e &agrave; un op&eacute;rateur (<b>+~</b> revient au m&ecirc;me que l'op&eacute;rateur <b>-</b>).
 </p>
 <b>Regroupements</b>
 <p class='pn-normal'>Une expression peut &ecirc;tre regroup&eacute;e pour devenir un terme. Ce regroupement se fait avec les <b>parenth&egrave;ses</b>. Cela permet de changer l'ordre d'application des op&eacute;rateurs ou de combiner les r&eacute;sultats d'expressions complexes.
 <br />Ex.</p>
 <ul>
-<li><em>po&eacute;sie + (fran&ccedil;aise romantique)</em> signifie dans tous les &eacute;l&eacute;ments qui contiennent francaise ou romantique, uniquement ceux qui contiennent <em>po&eacute;sie</em>.</li>
-<li><em>(po&eacute;sie + fran&ccedil;aise) romantique</em> signifie tous les &eacute;l&eacute;ments qui contiennent <em>po&eacute;sie et fran&ccedil;aise</em> <b>ou</b> tous les &eacute;l&eacute;ments qui contiennent <em>romantique</em></li>
-<li><em>~(po&eacute;sie + fran&ccedil;aise) + (litt&eacute;rature am&eacute;ri*)</em> signifie <em>tous les &eacute;l&eacute;ments qui ne contiennent pas po&eacute;sie et fran&ccedil;aise</em> <b>et</b> <em>les &eacute;l&eacute;ments qui contiennent litt&eacute;rature ou am&eacute;ri*</em></li>
+<li><em>po&eacute;sie + (fran&ccedil;aise romantique)</em> signifie dans tous les &eacute;l&eacute;ments qui contiennent francaise !!operator_lowercase!! romantique, uniquement ceux qui contiennent <em>po&eacute;sie</em>.</li>
+<li><em>(po&eacute;sie + fran&ccedil;aise) romantique</em> signifie tous les &eacute;l&eacute;ments qui contiennent <em>po&eacute;sie !!operator_more_lowercase!! fran&ccedil;aise</em> <b>!!operator_lowercase!!</b> tous les &eacute;l&eacute;ments qui contiennent <em>romantique</em></li>
+<li><em>~(po&eacute;sie + fran&ccedil;aise) + (litt&eacute;rature am&eacute;ri*)</em> signifie <em>tous les &eacute;l&eacute;ments qui ne contiennent pas po&eacute;sie !!operator_more_lowercase!! fran&ccedil;aise</em> <b>!!operator_more_lowercase!!</b> <em>les &eacute;l&eacute;ments qui contiennent litt&eacute;rature !!operator_lowercase!! am&eacute;ri*</em></li>
 </ul>
-<p class='pn-normal'>Les parenth&egrave;ses peuvent &ecirc;tre imbriqu&eacute;es sans limite.<br />Ex. <em>(po&eacute;sie + (fran&ccedil;aise romantique)) (litt&eacute;rature + XIX)</em> signifie <em>dans tous les &eacute;l&eacute;ments qui contiennent fran&ccedil;aise ou romantique, uniquement ceux qui contiennent po&eacute;sie</em> <b>ou</b> <em>les &eacute;l&eacute;ments qui contiennent litt&eacute;rature et XIX</em>
+<p class='pn-normal'>Les parenth&egrave;ses peuvent &ecirc;tre imbriqu&eacute;es sans limite.<br />Ex. <em>(po&eacute;sie + (fran&ccedil;aise romantique)) (litt&eacute;rature + XIX)</em> signifie <em>dans tous les &eacute;l&eacute;ments qui contiennent fran&ccedil;aise !!operator_lowercase!! romantique, uniquement ceux qui contiennent po&eacute;sie</em> <b>!!operator_lowercase!!</b> <em>les &eacute;l&eacute;ments qui contiennent litt&eacute;rature !!operator_more_lowercase!! XIX</em>
 </p>
 <b>Pertinence</b>
 <p class='pn-normal'>Les r&eacute;sultats sont tri&eacute;s par ordre de pertinence puis par ordre alphab&eacute;tique. La pertinence est calcul&eacute;e simplement par le nombre total de mots ou de termes exacts trouv&eacute;s.
 <br />Ex.</p>
 <ul>
-<li><em>jambon bayonne</em> trouvera tous les &eacute;l&eacute;ments contenant jambon ou Bayonne, ceux qui contiennent les deux mots seront au d&eacute;but de la liste de r&eacute;sultat</li>
-<li><em>~(po&eacute;sie + fran&ccedil;aise) (litt&eacute;rature am&eacute;ri*)</em> trouvera tous les &eacute;l&eacute;ments qui ne contiennent pas <em>po&eacute;sie et fran&ccedil;aise</em>, dans ces &eacute;l&eacute;ments, ceux qui contiennent <em>litt&eacute;rature ou am&eacute;ri*</em> appara&icirc;tront en premier dans la liste de r&eacute;sultats (d'abord litt&eacute;rature et am&eacute;ri*, puis am&eacute;ri*, puis litt&eacute;rature)</li>
+<li><em>jambon bayonne</em> trouvera tous les &eacute;l&eacute;ments contenant jambon !!operator_lowercase!! Bayonne, ceux qui contiennent les deux mots seront au d&eacute;but de la liste de r&eacute;sultat</li>
+<li><em>~(po&eacute;sie + fran&ccedil;aise) (litt&eacute;rature am&eacute;ri*)</em> trouvera tous les &eacute;l&eacute;ments qui ne contiennent pas <em>po&eacute;sie !!operator_more_lowercase!! fran&ccedil;aise</em>, dans ces &eacute;l&eacute;ments, ceux qui contiennent <em>litt&eacute;rature !!operator_lowercase!! am&eacute;ri*</em> appara&icirc;tront en premier dans la liste de r&eacute;sultats (d'abord litt&eacute;rature et am&eacute;ri*, puis am&eacute;ri*, puis litt&eacute;rature)</li>
 </ul>
 ";
 
+$operator = ($pmb_default_operator ? $msg['search_and'] : $msg['search_or']);
+$operator_more = ($pmb_default_operator ? $msg['search_or'] : $msg['search_and']);
+$content = str_replace('!!operator_uppercase!!', strtoupper($operator), $content);
+$content = str_replace('!!operator_lowercase!!', strtolower($operator), $content);
+$content = str_replace('!!operator_more_uppercase!!', strtoupper($operator_more), $content);
+$content = str_replace('!!operator_more_lowercase!!', strtolower($operator_more), $content);
 print $content;
 
 ?>

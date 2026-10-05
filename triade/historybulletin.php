@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -64,7 +64,7 @@ endif;
 
 $data=historyBulletinAff();
 // fichier,classe,periode,datedebut,datefin
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 	{
 	print "<tr>\n";
 	print "<td bgcolor='#FFFFFF' align='center' valign=top>".$data[$i][1]."</td>\n";

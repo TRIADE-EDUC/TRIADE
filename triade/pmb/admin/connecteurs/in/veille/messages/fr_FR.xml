@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2021/05/05 08:45:38 jlaurent Exp $ -->
+
+<XMLlist>
+	<entry code="sources_watches_label">Choisir les veilles que vous souhaitez récupérer </entry>
+	<entry code="items_interesting_label">Choisir les items à afficher</entry>
+	<entry code="items_interesting_all">Tous</entry>
+	<entry code="items_interesting_only">Intéressants</entry>
+	<entry code="items_not_interesting_only">Non intéressants</entry>
+</XMLlist>

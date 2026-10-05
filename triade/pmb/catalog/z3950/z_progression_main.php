@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // |                                                                          |
-// | Ces scripts sont basÃ©s sur le travail de Quentin CHEVILLON               |
+// | Ces scripts sont basés sur le travail de Quentin CHEVILLON               |
 // +-------------------------------------------------+
-// $Id: z_progression_main.php,v 1.19 2017-01-31 15:41:41 dgoron Exp $
+// $Id: z_progression_main.php,v 1.19 2017/01/31 15:41:41 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path="../..";
 $base_auth = "CATALOGAGE_AUTH";  
 $base_title = "";    
@@ -24,7 +24,7 @@ if(!isset($tri1)) $tri1 = '';
 if(!isset($tri2)) $tri2 = '';
 
 //
-// On dÃ©termine les BibliothÃ¨ques sÃ©lectionnÃ©es
+// On détermine les Bibliothèques sélectionnées
 //
 if ( ($clause=="")) {
 	echo $msg['z3950_no_bib_selectetd'];
@@ -33,7 +33,7 @@ if ( ($clause=="")) {
 }
 $selection_bib="where bib_id in (".$clause.") ";
 //
-// On rÃ©cupÃ¨re ID_query et on met Ã  jour la base pour une prochaine recherche
+// On récupère ID_query et on met à jour la base pour une prochaine recherche
 //
 
 $sql = "insert into z_query (zquery_id, search_attr) values (0,'crit1=$crit1&val1=$val1&bool1=$bool1&crit2=$crit2&val2=$val2')";

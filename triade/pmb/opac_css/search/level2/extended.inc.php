@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: extended.inc.php,v 1.120 2019-01-16 17:03:24 dgoron Exp $
+// $Id: extended.inc.php,v 1.142.2.3.2.3 2025/04/11 08:41:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $base_path, $class_path;
 
 // second niveau de recherche OPAC sur titre
 // inclusion classe pour affichage notices (level 1)
@@ -17,33 +19,14 @@ require_once($base_path.'/classes/suggest.class.php');
 require_once($class_path."/map/map_search_controler.class.php");
 require_once($class_path."/shorturl/shorturl_type_search.class.php");
 require_once($class_path."/sort.class.php");
+require_once($class_path."/bannette.class.php");
 
-global $es;
-global $searcher;
-global $facette_test;
-global $opac_allow_external_search;
-global $opac_allow_affiliate_search;
-global $opac_visionneuse_allow;
-global $search_result_extended_affiliate_lvl2_head;
-global $tab;
-global $opac_allow_bannette_priv;
-global $allow_dsi_priv;
-global $opac_search_results_per_page;
-global $opac_notices_depliable;
-global $filtre_compare;
-global $begin_result_liste;
-global $link_to_print_search_result;
-global $link_to_visionneuse;
-global $opac_search_allow_refinement;
-global $opac_short_url;
-global $pmb_logs_activate;
-global $debut;
-global $search_result_extended_affiliate_lvl2_head_wo_link;
-global $page;
-global $add_cart_link;
-global $opac_simple_search_suggestions;
-global $count;
-global $opac_nb_max_tri;
+global $es, $searcher, $facette_test, $opac_allow_external_search, $opac_allow_affiliate_search, $opac_visionneuse_allow, $search_result_extended_affiliate_lvl2_head;
+global $tab, $opac_allow_bannette_priv, $allow_dsi_priv, $opac_search_results_per_page, $opac_notices_depliable, $filtre_compare, $begin_result_liste;
+global $link_to_print_search_result, $link_to_visionneuse, $opac_search_allow_refinement, $opac_short_url, $pmb_logs_activate, $debut;
+global $search_result_extended_affiliate_lvl2_head_wo_link, $page, $add_cart_link, $opac_simple_search_suggestions, $count, $opac_nb_max_tri, $from_see;
+global $msg, $l_typdoc, $reinit_compare, $opac_autolevel2;
+global $charset, $opac_rgaa_active;
 
 $es=new search();
 
@@ -52,22 +35,22 @@ $sr_form='';
 $allow_search_affiliate_and_external=true;
 if($opac_allow_affiliate_search || $opac_allow_external_search){
 	$es_uni=new search("search_fields_unimarc");
-	if((isset($_SESSION['facette']) && count($_SESSION['facette'])) || $facette_test || $es_uni->has_forbidden_fields()){
+	if((isset($_SESSION['facette']) && is_countable($_SESSION['facette']) && count($_SESSION['facette'])) || $facette_test || $es_uni->has_forbidden_fields()){
 		$allow_search_affiliate_and_external=false;
 	}
 }
 
 if($opac_allow_affiliate_search && $allow_search_affiliate_and_external){
-	$sr_form.= $search_result_extended_affiliate_lvl2_head;
+    $sr_form.= str_replace('!!title!!', common::format_title($msg['resultat_recherche']),$search_result_extended_affiliate_lvl2_head);
 } else {
-	$sr_form.= "	<div id=\"resultatrech\"><h3 class='searchResult-title'>".$msg['resultat_recherche']."</h3>\n
+	$sr_form.= "	<div id=\"resultatrech\">".common::format_title($msg['resultat_recherche'])."\n
 		<div id=\"resultatrech_container\">
 		<div id=\"resultatrech_see\">";
 }
 
-//le contenu du catalogue est calculÃ© dans 2 cas  :
-// 1- la recherche affiliÃ©e n'est pas activÃ©e, c'est donc le seul rÃ©sultat affichable
-// 2- la recherche affiliÃ©e est active et on demande l'onglet catalog...
+//le contenu du catalogue est calculé dans 2 cas  :
+// 1- la recherche affiliée n'est pas activée, c'est donc le seul résultat affichable
+// 2- la recherche affiliée est active et on demande l'onglet catalog...
 if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "catalog")){
 	//gestion du tri
 	if (isset($_GET["sort"])) {	
@@ -84,9 +67,9 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 		
 		$_SESSION["lq_facette"]=$_SESSION["facette"];
 		$_SESSION["lq_facette_search"]["lq_search"]=$es->serialize_search();
-	}else if(isset($from_see) && $from_see == 1 && isset($filtre_compare) && $filtre_compare == "compare"){
-		//from_see est un Ã©lÃ©ment postÃ© dans un formulaire d'une page d'autoritÃ© 
-		//il flage l'origine qui nÃ©cessite une reconstruction de l'environnement de la multi-critÃ¨re pour faire les filtres multiples ou le comparateur
+	}else if(isset($from_see) && $from_see == 1 && (empty($filtre_compare) || (isset($filtre_compare) && $filtre_compare == "compare")) ){
+		//from_see est un élément posté dans un formulaire d'une page d'autorité 
+		//il flage l'origine qui nécessite une reconstruction de l'environnement de la multi-critère pour faire les filtres multiples ou le comparateur
 		facettes::make_facette_search_env();
 	}
 	$lib_recherche=$es->make_human_query();
@@ -96,7 +79,7 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 		$nbexplnum_to_photo = $searcher->get_nb_explnums();	
 	}
 	$count = $searcher->get_nb_results();
-	$l_typdoc= implode(",",$searcher->get_typdocs());// La variable global $l_typdoc est utilisÃ©e pour la photothÃ¨que
+	$l_typdoc= implode(",",$searcher->get_typdocs());// La variable global $l_typdoc est utilisée pour la photothèque
 	//Enregistrement des stats
 	if($pmb_logs_activate){
 		global $nb_results_tab;
@@ -104,33 +87,78 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 	}
 	
 	if($count){
-		if(isset($_SESSION["last_sortnotices"]) && $_SESSION["last_sortnotices"]!==""){
-			$notices = $searcher->get_sorted_result($_SESSION["last_sortnotices"],$debut,$opac_search_results_per_page);	
-		}else{
-			$notices = $searcher->get_sorted_result("default",$debut,$opac_search_results_per_page);	
-		}
-		if (count($notices)) {
+	    global $nb_per_page_custom;
+	    if (!$nb_per_page_custom) {
+	        $nb_per_page_custom = $opac_search_results_per_page;
+	    }
+	    
+	    if(isset($_SESSION["last_sortnotices"]) && $_SESSION["last_sortnotices"]!==""){
+	        $notices = $searcher->get_sorted_result($_SESSION["last_sortnotices"],$debut,$nb_per_page_custom);
+	    }else{
+	        $notices = $searcher->get_sorted_result("default",$debut,$nb_per_page_custom);
+	    }
+	    if (is_countable($notices) && count($notices)) {
 			$_SESSION['tab_result_current_page'] = implode(",", $notices);
 		} else {
 			$_SESSION['tab_result_current_page'] = "";
 		}
 	}
-	$sr_form.= pmb_bidi("<h3 class='searchResult-search'><span class='searchResult-equation'><span class='search-found'>$count $msg[titles_found]</span> ".$lib_recherche."</span></h3>");
-	
-	// pour la DSI - crÃ©ation d'une alerte
+	$sr_form .= pmb_bidi("
+	        <h3 id='searchResult-search' class='searchResult-search'>
+	           <span class='searchResult-equation'>
+	               <span class='search-found'>$count $msg[titles_found]</span> ".$lib_recherche."
+	           </span>
+	        </h3>");
+
+	//$sr_form .= "</div><div id=\"resultatrech_liste\">";
+	$sr_form .= "<div id=\"resultatrech_liste\">";
+	if($opac_rgaa_active){
+	    // ouverture div pour contenir toutes les fonctionnalités
+	    $sr_form.= "<div id='resultatrech_tools' class='result_tools'>";
+	}
+
+	// pour la DSI - création d'une alerte
 	if ($opac_allow_bannette_priv && $allow_dsi_priv && ((isset($_SESSION['abon_cree_bannette_priv']) && $_SESSION['abon_cree_bannette_priv']==1) || $opac_allow_bannette_priv==2)) {
-		$sr_form.= "<input type='button' class='bouton' name='dsi_priv' value=\"$msg[dsi_bt_bannette_priv]\" onClick=\"document.form_values.action='./empr.php?lvl=bannette_creer'; document.form_values.submit();\"><span class=\"espaceResultSearch\">&nbsp;</span>";
+	    $sr_form.= $es->make_hidden_search_form('./index.php?lvl=more_results&mode=extended', 'bannette_priv_form_values', '', false);
+	    $sr_form.= $es->make_hidden_opac_view_form_content();
+	    $sr_form.= "</form>";
+        $sr_form.= "<input
+            role='link'
+            type='button'
+            class='bouton btn_dsi btn_dsi_add'
+            name='dsi_priv'
+            value='".htmlspecialchars($msg['dsi_bt_bannette_priv'], ENT_QUOTES, $charset)."'
+            aria-label='" . htmlspecialchars($msg['dsi_bt_bannette_priv'], ENT_QUOTES, $charset) . "'
+            onClick=\"document.bannette_priv_form_values.action='./empr.php?lvl=bannette_creer'; document.bannette_priv_form_values.submit();\"
+            onkeydown=\"if (event.key === 'Enter') {
+                document.bannette_priv_form_values.action='./empr.php?lvl=bannette_creer';
+                document.bannette_priv_form_values.submit();
+            }\"
+        >";
+	    $sr_form.= "<span class=\"espaceResultSearch\">&nbsp;</span>";
 	}
 	
 	// pour la DSI - Modification d'une alerte
+	if(!empty($_SESSION['abon_edit_bannette_priv']) && !empty($_SESSION['abon_edit_bannette_priv_visibility_until']) && $_SESSION['abon_edit_bannette_priv_visibility_until'] < time()) {
+		unset($_SESSION['abon_edit_bannette_priv']);
+	}
 	if ($opac_allow_bannette_priv && $allow_dsi_priv && (isset($_SESSION['abon_edit_bannette_priv']) && $_SESSION['abon_edit_bannette_priv']==1)) {
-		$sr_form.= "<input type='button' class='bouton' name='dsi_priv' value=\"".$msg['dsi_bannette_edit']."\" onClick=\"document.form_values.action='./empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."'; document.form_values.submit();\"><span class=\"espaceResultSearch\">&nbsp;</span>";
+        $sr_form.= "<input
+            role='link'
+            type='button'
+            class='bouton btn_dsi btn_dsi_edit' 
+            id='dsi_priv_tooltip' 
+            name='dsi_priv' 
+            value='".htmlspecialchars($msg['dsi_bannette_edit'], ENT_QUOTES, $charset)."'
+            aria-label='" . htmlspecialchars($msg['dsi_bannette_edit'], ENT_QUOTES, $charset) . "'
+            onClick=\"document.form_values.action='./empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."'; document.form_values.submit();\"
+            onkeydown=\"if (event.key === 'Enter') {
+                document.bannette_priv_form_values.action='./empr.php?lvl=bannette_edit';
+                document.bannette_priv_form_values.submit();
+            }\"
+        >";
+	    $sr_form .= bannette::get_tooltip_private_edition($_SESSION['abon_edit_bannette_id'], 'dsi_priv_tooltip') ."<span class=\"espaceResultSearch\">&nbsp;</span>";
 	}
-	
-	if(!$opac_allow_affiliate_search || !$allow_search_affiliate_and_external) {
-		$sr_form.= "</div>";
-	}
-	$sr_form.= "<div id=\"resultatrech_liste\">";
 	
 	if ($count) {
 		if ($opac_notices_depliable) {
@@ -154,7 +182,7 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 			$sr_form.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;&nbsp;</span>".$link_to_visionneuse;
 	
 			$sr_form.= "
-		<script type='text/javascript'>
+		<script>
 			function sendToVisionneuse(explnum_id){
 				if (typeof(explnum_id)!= 'undefined') {
 					var explnum =document.createElement('input');
@@ -188,10 +216,23 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 
 	//affinage
 	//enregistrement de l'endroit actuel dans la session
-	if ($_SESSION["last_query"]) {	$n=$_SESSION["last_query"]; } else { $n=$_SESSION["nb_queries"]; }
+	$n = 0;
+	if ( isset($_SESSION["last_query"]) && is_int($_SESSION["last_query"]) ) {
+	    $n = $_SESSION["last_query"];
+	} elseif( isset($_SESSION["nb_queries"]) && is_int($_SESSION["nb_queries"]) )  {
+	    $n = $_SESSION["nb_queries"];
+	}
+	$n = (string) $n;
 	
-	if(empty($_SESSION['facette']) || count($_SESSION['facette'])==0){
-		$_SESSION["notice_view".$n]["search_mod"]="extended";
+	if(empty($_SESSION['facette']) || count($_SESSION['facette'])==0) {
+
+	    if( !isset($_SESSION['notice_view'.$n]) || !is_array($_SESSION['notice_view'.$n])) {
+	        $_SESSION['notice_view'.$n] = [];
+	    }
+	    if (!(isset($from_see) && $from_see == 1)) {
+	        // Si on ne vient pas d'une page d'autorité on met extended
+    		$_SESSION["notice_view".$n]["search_mod"]="extended";
+	    }
 		$_SESSION["notice_view".$n]["search_page"]=$page;
 	}
 	
@@ -216,12 +257,16 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 	//fin etendre
 	
 	$sr_form.= suggest::get_add_link();
+	if($opac_rgaa_active){
+	    // fermeture div fonctionnalités
+	    $sr_form.= "</div>";
+	}
 	
 	//on suis le flag filtre/compare
 	facettes::session_filtre_compare();
-	$sr_form.= "<blockquote>";
+	$sr_form.= "<blockquote role='presentation'>";
 	if($filtre_compare=='compare'){
-		//on valide la variable session qui comprend les critÃ¨res de comparaisons
+		//on valide la variable session qui comprend les critères de comparaisons
 		facette_search_compare::session_facette_compare();
 		//affichage comparateur
 		$facette_compare= new facette_search_compare();
@@ -232,7 +277,7 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 			$sr_form.=  $msg[$compare];
 		}
 	}else{
-		//si demande de rÃ©initialisation
+		//si demande de réinitialisation
 		if(isset($reinit_compare) && $reinit_compare==1){
 			facette_search_compare::session_facette_compare(null,$reinit_compare);
 		}
@@ -255,7 +300,7 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 	
 	$sr_form.= "<div class='row'><span class=\"espaceResultSearch\">&nbsp;</span></div>";
 	
-	//Si pas de rÃ©sultats, affichage des suggestions
+	//Si pas de résultats, affichage des suggestions
 	if(!$count && $opac_simple_search_suggestions){
 		$tableSuggest="";
 		if ($opac_autolevel2==2) {
@@ -296,30 +341,43 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 		}
 	}
 	
-	if($filtre_compare=='compare'){
-		$sr_form.="<div id='navbar'><hr></div>";
-	}elseif($count){
-		if(!$opac_allow_affiliate_search){
-			$url_page = "javascript:document.form_values.page.value=!!page!!; document.form_values.submit()";
-			$nb_per_page_custom_url = "javascript:document.form_values.nb_per_page_custom.value=!!nb_per_page_custom!!";
-			$action = "javascript:document.form_values.page.value=document.form.page.value; document.form_values.submit()";
-		}else{
-			$url_page = "javascript:document.form_values.page.value=!!page!!; document.form_values.catalog_page.value=document.form_values.page.value; document.form_values.action = \"./index.php?lvl=more_results&mode=extended&tab=catalog\"; document.form_values.submit()";
-			$nb_per_page_custom_url = "javascript:document.form_values.nb_per_page_custom.value=!!nb_per_page_custom!!";
-			$action = "javascript:document.form_values.page.value=document.form.page.value; document.form_values.catalog_page.value=document.form_values.page.value; document.form_values.action = \"./index.php?lvl=more_results&mode=extended&tab=catalog\"; document.form_values.submit()";
+	$record_display = record_display_modes::get_instance();
+	$nav_displayed = true;
+	if (isset($record_display) && is_a($record_display, record_display_modes::class)) {
+	    $current_mode = $record_display->get_current_mode();
+	    $nav_displayed = $record_display->is_nav_displayed($current_mode);
+	}
+	
+	if($nav_displayed){
+    	if($filtre_compare=='compare'){
+    		$sr_form.="<div id='navbar'><hr></div>";
+    	}elseif($count){
+    		if(!$opac_allow_affiliate_search){
+    			$url_page = "javascript:document.form_values.page.value=!!page!!; document.form_values.submit()";
+    			$nb_per_page_custom_url = "javascript:document.form_values.nb_per_page_custom.value=!!nb_per_page_custom!!";
+    			$action = "javascript:document.form_values.page.value=document.form.page.value; document.form_values.submit()";
+    		}else{
+    			$url_page = "javascript:document.form_values.page.value=!!page!!; document.form_values.catalog_page.value=document.form_values.page.value; document.form_values.action = \"./index.php?lvl=more_results&mode=extended&tab=catalog\"; document.form_values.submit()";
+    			$nb_per_page_custom_url = "javascript:document.form_values.nb_per_page_custom.value=!!nb_per_page_custom!!";
+    			$action = "javascript:document.form_values.page.value=document.form.page.value; document.form_values.catalog_page.value=document.form_values.page.value; document.form_values.action = \"./index.php?lvl=more_results&mode=extended&tab=catalog\"; document.form_values.submit()";
+    		}
+    		$sr_form.="<div id='navbar'><hr />\n<div style='text-align:center'>".printnavbar($page, $count, $opac_search_results_per_page, $url_page, $nb_per_page_custom_url, $action)."</div></div>";
 		}
-		$sr_form.="<div id='navbar'><hr />\n<div style='text-align:center'>".printnavbar($page, $count, $opac_search_results_per_page, $url_page, $nb_per_page_custom_url, $action)."</div></div>";
 	}
 	
 	if(!$opac_allow_affiliate_search  || !$allow_search_affiliate_and_external) {
-		$sr_form.= "	</div>";
+	    $sr_form.= "</div></div>";
 	}
-	$sr_form = str_replace('<!-- search_result_extended_affiliate_lvl2_head_link -->',$search_result_extended_affiliate_lvl2_head_wo_link,$sr_form);
-	
+	$sr_form = str_replace(
+	    '<!-- search_result_extended_affiliate_lvl2_head_link -->',
+	    $search_result_extended_affiliate_lvl2_head_wo_link ?? "",
+	    $sr_form
+	);
+
 } else {
 	
 	if($tab == "affiliate"){
-		//l'onglet source affiliÃ©es est actif, il faut son contenu...
+		//l'onglet source affiliées est actif, il faut son contenu...
 		$query = $es->serialize_search();
 		$as=new affiliate_search_extended($query);
 		$as->getResults();
@@ -330,7 +388,7 @@ if(!$opac_allow_affiliate_search || ($opac_allow_affiliate_search && $tab == "ca
 	<div class='row'><span class=\"espaceResultSearch\">&nbsp;</span></div>";
 	
 	//Enregistrement des stats
-	if($pmb_logs_activate){
+	if($pmb_logs_activate && $tab == "affiliate"){
 		global $nb_results_tab;
 		$nb_results_tab['extended_affiliate'] = $as->getTotalNbResults();
 	}
@@ -344,11 +402,8 @@ print $sr_form;
 function extended_get_current_search_map($mode_search=0){
 	global $opac_map_activate;
 	global $opac_map_max_holds;
-	global $dbh;
-	global $javascript_path;
 	global $opac_map_size_search_result;
 	global $page;
-	global $aut_id;
 	$map = "";
 	if($opac_map_activate==1 || $opac_map_activate==2){
 		$map_hold = null;

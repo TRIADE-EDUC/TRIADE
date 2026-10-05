@@ -8,16 +8,21 @@
  /*
   * Fichier en UTF-8
   */
- 
- include_once("arc2/ARC2.php");
 
 /*
- Rêgle Implicite :
- 	- Si pas de domaine ou de range : peu s'appliquer à toutes les ressources
+ R�gle Implicite :
+ 	- Si pas de domaine ou de range : peut s'appliquer � toutes les ressources
  	- Si pas de owl:maxCardinality : liaison n (sans limite)
  	- Si pas de owl:minCarinality : liaison 0 (il peut ne pas y en avoir)
  	- Si pas de owl:maxCardinality ni owl:minCarinality c'est une liaison 0-n
  */
+
+if (php_sapi_name() !== 'cli') {
+	die('no access');
+}
+
+$base_path =  __DIR__ . '/../..';
+require_once $base_path.'/vendor/autoload.php';
 
 $config = array(
   /* db */
@@ -59,7 +64,7 @@ $q = $prefix.'
 DELETE
 {
     <http://www.w3.org/2004/02/skos/core> ?a ?b .
-}	
+}
 WHERE {
 	<http://www.w3.org/2004/02/skos/core> ?a ?b .
 	FILTER(?b != owl:ontology) .
@@ -78,7 +83,7 @@ INSERT INTO <skos>
 {
     <http://www.w3.org/2004/02/skos/core> dct:description "Ontologie PMB basée sur Skos"@fr .
     <http://www.w3.org/2004/02/skos/core> dct:title "Vocabulaire SKOS - PMB"@fr .
-    <http://www.w3.org/2004/02/skos/core> dct:creator "Didier Bellamy" ; dct:creator "Matthieu Bertin"  ; dct:contributor "Florent Tétart" ; dct:date "'.date("c").'" 
+    <http://www.w3.org/2004/02/skos/core> dct:creator "Didier Bellamy" ; dct:creator "Matthieu Bertin"  ; dct:contributor "Florent Tétart" ; dct:date "'.date("c").'"
 }
 ';
 $rows = $store->query($q);
@@ -133,7 +138,7 @@ INSERT INTO <skos>
 }
 WHERE {
 	?class a owl:Class .
-	FILTER (isURI(?class)) 
+	FILTER (isURI(?class))
 }
 ';*//*
 $q = $prefix.'
@@ -145,7 +150,7 @@ INSERT INTO <skos>
 }
 WHERE {
 	?class rdf:type owl:Class .
-	FILTER (isURI(?class)) 
+	FILTER (isURI(?class))
 }
 ';*/
 $q = $prefix.'
@@ -642,7 +647,7 @@ INSERT INTO <skos>
 	skos:narrowMatch		pmb:datatype pmb:resource_selector .
 	skos:relatedMatch		pmb:datatype pmb:resource_selector .
 	skos:exactMatch			pmb:datatype pmb:resource_selector .
-	skos:closeMatch			pmb:datatype pmb:resource_selector 
+	skos:closeMatch			pmb:datatype pmb:resource_selector
 }
 ';
 $rows = $store->query($q, '','',1);
@@ -654,7 +659,7 @@ if ($errs = $store->getErrors()) {
 }
 
 
-//ajout du libellé devant être affiché (par exemple dans une liste) 
+//ajout du libellé devant être affiché (par exemple dans une liste)
 $q = $prefix.'
 INSERT INTO <skos>
 {
@@ -672,7 +677,7 @@ if ($errs = $store->getErrors()) {
 	echo "Nb insert ok: ".$rows["result"]["t_count"]."\n\n\n";
 }
 
-//ajout du libellé devant être affiché (par exemple dans une liste) 
+//ajout du libellé devant être affiché (par exemple dans une liste)
 $q = $prefix.'
 INSERT INTO <skos>
 {
@@ -726,7 +731,7 @@ INSERT INTO <skos>
 	skos:member 			pmb:name "member" .
 	skos:memberList 		pmb:name "memberlist" .
 	skos:mappingRelation	pmb:name "mappingrelation" .
-	skos:broadMatch			pmb:name "broadmatch" .	
+	skos:broadMatch			pmb:name "broadmatch" .
 	skos:narrowMatch		pmb:name "narrowmatch" .
 	skos:relatedMatch		pmb:name "relatedmatch" .
 	skos:exactMatch			pmb:name "exactmatch" .
@@ -751,8 +756,8 @@ WHERE {
     ?x ?y ?z .
 	?x owl:onProperty skos:inScheme .
 	FILTER (isURI(?class))  .
-	FILTER (isLiteral(?z)) 
-}		
+	FILTER (isLiteral(?z))
+}
 ';
 $rows = $store->query($q,"rows");
 if ($rows) {
@@ -773,7 +778,7 @@ $ns = array(
 $conf = array('ns' => $ns);
 $ser = ARC2::getRDFXMLSerializer($conf);
 $all = $store->query("SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
-$rdfxml2 = $ser->getSerializedTriples($all["result"]['rows']);  
+$rdfxml2 = $ser->getSerializedTriples($all["result"]['rows']);
 file_put_contents('skos_pmb.rdf', $rdfxml2);
 
 $q = $prefix.'

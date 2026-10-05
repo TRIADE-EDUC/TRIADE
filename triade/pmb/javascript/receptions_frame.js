@@ -1,17 +1,17 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions_frame.js,v 1.4 2011-08-10 10:08:27 dbellamy Exp $
+// $Id: receptions_frame.js,v 1.4 2011/08/10 10:08:27 dbellamy Exp $
 
 /*
- * nÃ©cessite :	ajax.js
+ * nécessite :	ajax.js
  * 				tablist.js
  * 				http_request.js
  * 
- * variables a dÃ©clarer dans le formulaire appelant:
+ * variables a déclarer dans le formulaire appelant:
  * msg_error_cb_cote				//cote et cb obligatoires
- * msg_error_cb						//cb dÃ©jÃ  utilisÃ©
- * msg_acquisition_recept_qte_err		//qtÃ© incorrecte
+ * msg_error_cb						//cb déjà utilisé
+ * msg_acquisition_recept_qte_err		//qté incorrecte
  *   
  */			
 
@@ -117,7 +117,7 @@ function recept_add_expl(form) {
 	form.submit();
 }
 
-//enregistrement rÃ©ception
+//enregistrement réception
 function recept_update(form) {
 	var qte_liv=form.elements['qte_liv'];
 	if (isNaN(qte_liv.value) || qte_liv.value<=0) {
@@ -129,14 +129,14 @@ function recept_update(form) {
 }
 
 
-//mise Ã  jour statut suggestion
+//mise à jour statut suggestion
 function recept_update_sug(form) {
 	form.setAttribute('action',base_path+'/acquisition/achats/receptions/receptions_frame.php?action=update_sug');
 	form.submit();
 }
 
 
-//mise Ã  jour de la liste dans la fenetre parent
+//mise à jour de la liste dans la fenetre parent
 function recept_update_liste () {
 	try {
 		var no = document.getElementById('no').value;
@@ -149,13 +149,13 @@ function recept_update_liste () {
 	} catch(err) {}
 }
 
-//annulation prÃ©cÃ©dente rÃ©ception
+//annulation précédente réception
 function recept_undo(form) {
 	form.setAttribute('action',base_path+'/acquisition/achats/receptions/receptions_frame.php?action=undo');
 	form.submit();
 }
 
-//passage Ã  la ligne suivante
+//passage à la ligne suivante
 function recept_next(direction) {
 	var next = document.getElementById('no').value*1+(direction);
 	var max_no = window.parent.document.getElementById('max_no').value;

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.2 2015-03-02 13:57:34 gueluneau Exp $ -->
+$Id: fr_FR.xml,v 1.2 2015/03/02 13:57:34 gueluneau Exp $ -->
 
 <XMLlist>
 	<entry code="databnf_no_informations">Aucune Information disponible.</entry>

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,7 +47,6 @@ function mettre(text,formulaire,nom,target) {
 callback = {
     search: function(result) {
         var out = "";
-
         var target=result[0];
         var form=result[1];
         var champs=result[2];
@@ -59,7 +58,7 @@ callback = {
             if (i != '______array') {
 		var text=result[i];
 		text2 = text.replace(/'/g,"#");
-                out += "&nbsp;<a href='#' onclick='mettre(\""+text2+"\",\""+form+"\",\""+champs+"\",\""+target+"\")' >"+text+"</a>&nbsp;&nbsp;<br>";
+                out += "&nbsp;<a href='#' onClick='mettre(\""+text2+"\",\""+form+"\",\""+champs+"\",\""+target+"\")' >"+text+"</a>&nbsp;&nbsp;<br>";
             }
         }
         out += "";

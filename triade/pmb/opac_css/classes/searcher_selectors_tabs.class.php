@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_selectors_tabs.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: searcher_selectors_tabs.class.php,v 1.2 2020/04/03 07:31:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -35,6 +35,7 @@ class searcher_selectors_tabs extends searcher_tabs {
     	$tab=$this->get_current_tab();
     	if($this->is_multi_search_criteria()){
     		$sc=$this->get_instance_search();
+    		$sc->add_context_parameter('in_selector', true);
     		$sc->set_elements_list_ui_class_name('elements_'.$this->xml_file.'_selectors_list_ui');
     		$sc->reduct_search();
     		$this->set_session_history($sc->make_human_query(), $tab, "QUERY");

@@ -1,32 +1,14 @@
 <?php
-/***************************************************************************
- *                              T.R.I.A.D.E
- *                            ---------------
- *
- *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
- *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-function connexpersistance($style) {
-	// $style="color:red;font-weight:bold;font-size:11px;text-align: center;";
-	print "<script type='text/javascript' src='./librairie_js/ajax-time.js'></script>";
-	print "<span name='info-time' id='info-time' style='$style' ></span>";
-	print "<script type='text/javascript' >";
-	print "function boucle(){";
-	print "		ConnexPersistant();";
-	print "	setTimeout('boucle()',300000);";  // toutes les 5 minutes
-	print "}";
-	print "boucle();";
-	print "</script>";
+function connexpersistance($style='') {
+    print "<script type='text/javascript' src='./librairie_js/ajax-time.js'></script>";
+    $css = $style ? $style : "display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#6c757d;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;padding:2px 7px;border-radius:10px;background:#f0f2fa;border:1px solid #e8eaf6;vertical-align:middle";
+    print "<span name='info-time' id='info-time' style='$css'></span>";
+    print "<script type='text/javascript'>";
+    print "function boucle(){";
+    print "  ConnexPersistant();";
+    print "  setTimeout('boucle()',300000);";
+    print "}";
+    print "boucle();";
+    print "</script>";
 }
 ?>

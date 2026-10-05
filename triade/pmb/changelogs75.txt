@@ -1,0 +1,2442 @@
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.7                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+****************************
+Les numéros indiqués ici (#000000) sont utilisés en interne par PMB Services par son équipe de développement.
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#157851 : [Planificateur / Tableau de bord] Optimisations
+Quelques optimisations sur le tableau de bord.
+
+#158770 : Modification de la génération de la liste des mimetypes de documents numériques
+Ajout d'un index i_explnum_mimetype sur la table explnum.
+Modification des requêtes de génération dans les fichiers search_fields.xml
+
+#159567 : [Indexation des nomenclatures] Gain de temps
+Gain de temps sur l'indexation des nomenclatures en limitant le calcul d'un certain nombre de données calculées plusieurs fois.
+
+#159587 : [nettoyage de base] optimisation de la génération de vignettes de documents numériques
+
+-----------
+Applimobile
+-----------
+
+#159336 : [Appli Mobile] Connexion externe
+
+------
+Divers
+------
+
+#149699 : Gestion renouvellement refresh_token pour authentification SMTP XOAUTH2 Azure
+
+#158480 : Evolution pour prise en charge tinyMCE 6
+
+#159152 : Recherche sur les synonymes
+Ajout d'un paramètre Gestion et OPAC pour activer ou non la recherche sur les synonymes.
++Paramètres :+ 
+- pmb_synonym_search
+- opac_synonym_search
+
+#159405 : [Sphinx] Ajout de la compatibilité avec le multi-bases
+- Ajout d'un paramètre (sphinx_api_connect) pour le multi-bases pour l'API de sphinx.
+- Affichage des erreurs du client sphinx lorsque le paramètre display_errors est à 2.
+- Ajout d'un paramètre (--db=_nom_de_la_base_) au script de réindexation (sphinx_fill.php).
+
+#159526 : Ajout d'un processus de surveillance des tâches planifiées
+
+#159813 : [Webservices] Ajout du nombre de réservations pour les notices et bulletins
+Ajout d'un paramètre *nbResa* qui permet de récupérer le nombre de réservations pour les méthodes (groupes *pmbesOPACEmpr*, *pmbesOPACAnonymous*, *pmbesNotices*): 
+* fetchNoticeList
+* fetchNoticeListFull
+* fetchNoticeListFullWithBullId
+* fetchBulletinListFull
+
+#160201 : Ajout des opérateurs >= et <= sur les indexations décimales dans les recherches multicritères
+
+#160468 : Correction prise en compte des traductions
+Pas de chargement des traductions si opac_show_languages=0
+
+---
+DSI
+---
+
+​#158030 : [Bannettes / diffusions] Nombre de notices maxi à diffuser par mail 
+Une limite à 100 notices maximum sera désormais appliquée côté PMB au moment de l'envoi des mails.
+
+------------
+Modélisation
+------------
+
+#158031 : [Contributions] ajout des équations sur les bulletins
+On utilise des équations de notice pour filtrer les bulletins.
+
+----
+OPAC
+---- 
+
+#158019 : [Contributions] ajout du lien entre les documents numériques et les bulletins
+
+#158638 : [Contributions] ajout des restrictions sur les propriétés de bulletin dérivées des notices
+
+#159344 : [Contributions] Ajout de restrictions supplémentaires pour les bulletins
+Ajout d'une restriction sur la date de parution et le numéro (un seul champ maximum)
+
+
+*******************
+ANOMALIES
+
+​------------
+Acquisitions
+------------
+
+#160034 : Correction recherche dans les acquisitions
+La recherche tous les champs dans les acquisitions n'était prise en compte que lors d'un 2eme essai.
+
+--------------
+Administration
+--------------
+
+#157984 : Correction enregistrement mot de passe utilisateur dans les préférences
+
+#158581 : Correction génération champ data-search des paramètres
+Le Parser CSRF ne supporte pas les entités HTML non fermées > ajout d'une option JSON_HEX_AMP dans le json_encode du contenu du champ data-search
+
+#159390 : [vignettes] Utilisation du paramétrage par défaut des liens externes
+Il y a un paramétrage par défaut des liens externes, mais il n'était pas pris en compte si on ne l'enregistrait pas une première fois. C'est corrigé.
+
+#160174 : Correction dans la suppression d'un stockage
+Test ajouté pour éviter les erreurs fatales dans la suppression d'un stockage avec un identifiant inconnu
+
+​----------
+Animations
+----------
+
+#159909 : [Animation] Erreur lors de l'envoi d'un mailling
+Correction PHP
+
+---------
+Autorités
+---------
+
+#159658 : [Autorités] Insertion dans la table authorities
+Avant de faire une insertion dans la table authorities, nous vérifions que l'auteur, ou autre autorité, existe bien.
+
+-------
+Bibloto
+-------
+
+#158378 : [Bibloto - Automate] Bloquer la prolongation pour les documents réservés
+
+---------
+Catalogue
+---------
+
+#160205 : [nomenclatures] Erreur à la création d'ateliers
+Correction d'une erreur au premier enregistrement d'une nomenclature, si plusieurs ateliers étaient ajoutés, seul le dernier était enregistré.
+
+------
+Divers
+------
+
+#154985 : Correction d'erreurs sql qui bloquent les envois de DSI
+​
+#157946 : Prise en compte des fichiers subst dans les messages de mots de passe
+
+#158093 : [Vignette] Animation
+Correction d'une erreur PHP (fatale) , si l'animation n'existait plus ou pas.
+
+#158103 : [Paramètres] Enregistrement impossible (Finances, Nomenclature, Cache Image)
+On ne prenait pas en compte l'enregistrement de certains paramètres.
+C'est corrigé.
+
+#158379 : [RMC] Alignement des champs de saisie
+Dans la RMC en gestion, dans le thème pure, les champs de saisie n'étaient pas alignés lors de l'ajout d'une ligne.
+C'est corrigé.
+
+#159073 : [Modules] Affichage des menus
+L'enregistrement plié/non plié par défaut des menus sur les différents modules ne fonctionnait plus.
+
+#159246 : Suppression des déclarations de Dtd erronées dans les champs base
+
+#159357 : [vignettes] Correction de l'appel à des vignettes de notices qui n'existent pas
+Quand des notices ont été supprimées, on n'appelle plus les vignettes associées.
+Dans la source de la BNF, si aucun ARK, on ne retournait pas le bon format de données. C'est corrigé.
+
+#159362 : Correction appel statique getAcceptedLanguages
+
+#159376 : [Listes] Comparaison des dates
+Correction sur la comparaison des dates selon le format de données en entrée.
+
+#159751 : [Indexation] Gestion des sens dans les éléments marclist indexés
+Ajout de la prise en compte des types *ascendant* et *descendant* dans les marclists lors de l'indexation. Les liens typés avec ascendant et descendant ne pouvaient pas être indexés
+
+#160261 : [CURL] Prise en compte des versions HTTP
+La regex ne prenait pas en compte les différentes versions du HTTP dans les en-tête Curl.
+C'est corrigé
+
+#160289 : [Indexation] Ajout de vérification
+- On n'indexe plus une entité sans identifiant.
+- On vérifie que l'entité existe toujours avant de l'indexer.
+
+---
+DSI
+---
+
+#159814 : [DSI] Correction des images dans les mails
+Dans les mails, de temps en temps, on utilisait encore le cache des images.
+Si le cache expirait, alors les images ne s'affichaient plus.
+
+----
+OPAC
+----
+
+#158024 : [Animation] Erreur dans le template des animations
+Dans le template on faisait appel à l'animation et non à son enfant pour les quotas globaux.
+C'est corrigé.
+
+#158528 : [Autocomplétion] Compatibilité sous Chrome
+L'autocomplétion de la recherche en OPAC n'était pas compatible avec Chrome
+
+#158599 : Correction formulaires saisie mdp en OPAC
+
+#159846 : Erreur 500 - Fatal error - affiliate_search_author::fetch_auteurs
+Correction sur l'affichage des auteurs en recherche affiliée.
+
+#160199 : [Univers & Segment] Optimisation
+- Mise en cache de la recherche de segment pour éviter de la recalculer à chaque fois.
+- Libération de la session dans le calcul des nombres de résultats sur la page de l'univers (pour chaque segment).
+
+#160257 : Animation - problème de captcha
+Lors du travail sur le RGAA, nous avons remarqué un petit soucis sur le captcha dans l'enregistrement à une animation
+
+#160387 : Correction lecture des messages de mot de passe
+
+-------
+Portail
+-------
+
+#159171 : [Portail] Ajout de type et sous-type de page
++Type et sous-type de page ajoutés :+
+- Recherche multi-critères autorités
+- Résultat intermédiaire d'une recherche multi-critères autorités
+- Résultats d'une recherche par concepts
+- Mot de passe oublié
+- Page d'inscription
+- Mes Animations
+- Mes Contributions
+- Nouvelle contribution
+- Mes contributions en cours
+- Mes contributions validées
+- Formulaire de contribution
+- Mes prêts numériques
+
+
+*******************
+NOUVELLES FONCTIONNALITES
+
+------
+Divers
+------
+
+#158389 : Connecteur Electre NG
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.6                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#156124 : [Imports] Passage par l'indexation_stack dans l'import 
+On ne passait pas par la pile d'indexation dans l'import de notices et d'exemplaires, ce qui surchargeait la mémoire à l'import de beaucoup de notices quand il essayait d'indexer. Cela est corrigé.
+
+#156179 : OAI : Ajout d'un mode de conservation de l'URL de la source lors de la synchronisation avec resumptionToken
+La construction des requêtes OAI avec resumptionToken peut maintenant se faire de 2 manières :
+- A partir de l'URL fournie dans la réponse (mode par défaut pour rétrocompatibilité)
+- A partir de l'URL définie dans la source
+
+#156319 : Ajout de l'url de la vignette du document numérique dans les exports
+
+#156792 : [Univers de recherche] Traduction des tris
+Implémentation de la traduction dans les tris associés aux segments de recherche.
+
+#157173 : [OPAC > Statistiques] Erreur, ceci n'est pas un fichier PMBFIELDS !
+Ajout de l'information sur le fichier posant problème lors de la consolidation.
+
+#157917 : Nettoyage des fichiers temporaires
+Ajout des préfixes suivants dans la purge des fichiers temporaires :
+- ontologies_
+- search_fields_
+- opac_lang
+
+------
+Divers
+------
+
+#154874 : [Champs personnalisables / Liste de choix] Valeurs traduisibles
+Possibilité de traduire les valeurs de champs personnalisés.
+
+#154924 : Traductions des lettres/mails
+Possibilité de traduire les paramètres de lettres et de mails dans plusieurs langues.
+
+#155581 : OAI : Modification de la génération de l'URL Base en cas de resumptionToken
+
+#155596 : [Templates] Vignettes en base64
+Modification :
+- Possibilité d'ajout d'un paramètre
+- Prise en compte du paramètre
+- Mise à jour de la documentation
+Exemple d'usage #img_base64 :
+#if(#img_base64()
+,<img src="#img_base64();" style="width:100px;" />,<img src="#img_base64(./images/no_image.jpg);" style="width:100px;" />)
+
+#156248 : Sécurité : ajout de variables globales non surchargeables en gestion
+
+#156264 : Sécurité : Ajout d'un filtrage des entrées sur les statistiques de visites
+
+#156736 : [SPHINX] Améliorations de l'utilisation mémoire dans les searchers
+Quelques optimisations de mémoire dans les searchers sphinx. On effectue certains traitements sur des tableaux pouvant être très larges par passes en relâchant la mémoire à la fin de chacune.
+
+#157230 : [Sphinx] Correction searcher categories
+Ajout d'un intval sur l'id thésaurus pour le filtre du searcher pour éviter les soucis de recherche si le paramètre n'est pas parfaitement bien renseigné
+
+--------
+Editions
+--------
+
+#157812 : [PNB] Tri sur le numéro de commande
+Optimisation du tri sur le numéro de commande.
+
+----
+OPAC
+----
+
+#155033 : Reprise module d'abonnement à une liste de bannettes
+
+#155327 : [OPAC - Sécurité] Stratégie de sécurité du contenu (CSP)
+Le content security policy (CSP) ou stratégie de sécurité du contenu permet d'améliorer la sécurité des pages web en permettant de détecter et de réduire certains types d'attaques, dont les attaques XSS (Cross Site Scripting) et les injections de contenu.
+Par défaut, la valeur est vide pour ne spécifier aucune directive de sécurité de contenu.
+Nom du paramètre : 
+<pre>
+content_security_policy
+</pre>
+Documentation : https://developer.mozilla.org/fr/docs/Web/HTTP/CSP
+
+#156328 : [RMC responsive] Traductions des valeurs de champs personnalisés
+Application de la traduction des valeurs de champs personnalisés dans la recherche multi-critères responsive.
+
+#156740 : Animation - ajout des champs perso dans le template
+Ajout des champs perso dans le template des animations 
+
+#156864 : [Contributions] Ajout automatique des nouveaux champs obligatoires dans les formulaires
+Ajout automatique des nouveaux champs obligatoires en tant que champs cachés avec une valeur par défaut
+
+#157295 : [Contributions] ajout des formulaires de bulletin
+
+-------
+Portail
+-------
+​
+#155880 : Correction de l'enregistrement des champs personnalisés de type lien
+ces champs perso étaient cassés à partir de la V7_5_5_1. Ils enregistraient 3 valeurs vides. Le comportement normal a été rétabli
+
+#157069 : [CMS] Ajout sélecteur pour la source de données rubriques citées en CP d'une rubrique
+Ajout d'un sélecteur permettant de récupérer la liste des rubriques utilisées dans le champ perso de la rubrique fournie par le paramètre. 
+
+#157724 : [Portail] Ajout des classements dans le cadre de liste d'abonnements
+Ajout des classements des bannettes dans les données du cadre de liste d'abonnements
+
+
+*******************
+ANOMALIES
+
+--------------
+Administration
+--------------
+
+#155372 : [Supervision des mails] Export tableur
+L'export tableur ne fonctionnait pas.
+
+#155374 : [Hist. de logs] Limite à 50 000 
+Ajout d'une limite à 50 000 entrées dans la table de logs avec une purge de 20% appliquée si cela dépasse.
+
+#155485 : Correction d'une requête SQL qui modifie le niveau bibliographique à 0
+Dans les imports, quand on ne trouvait aucun lien sur une notice de bulletin, une requête tentait de la transformer en monographie mais seul le niveau bibliographique était passé à 0. C'est corrigé.
+
+#155851 : [Gestionnaire de tâches / Synchronisation externe]  Date de dernière synchronisation
+Correction sur le stockage de la date de dernière synchronisation lorsque celle-ci ne contient aucune nouveauté.
+
+#156033 : Correction traduction des paramètres
+
+#156516 : [Planificateur] Affichage des types de communication dans le type de tâche animation
+
+#157307 : [Planificateur de tâches] Fichiers de logs
+Ajout de la gestion du multi-bases.
+
+----------
+Animations
+----------
+
+#155275 : [Animation] Suppression en lot d'une liste d'inscriptions
+Le bouton tout cocher, ne prenait pas en compte les filtres "Animations" et "Statut".
+
+#156482 : [Animations] Récupération du logo à la duplication
+On récupère à présent le logo de l'animation dupliquée s'il y en a une et qu'on ne modifie pas le champ dans le formulaire d'animation.
+
+---------
+Autorités
+---------
+
+#155078 : Amélioration du module des synonymes
+- correction de la structure html quand les listes sont trop longues
+- nettoyage des tables avec des liens incohérents.
+- sélection des mots étendues (excepté les mots vides)
+- message d'erreur quand on veut ajouter un mot déjà existant
+- enregistrement des liens mêmes si on ne sélectionne pas le synonyme via l'autocomplétion
+- optimisation des requêtes sql
+
+---------
+Catalogue
+---------
+
+#155358 : Procédure d'action en recherche
+Les actions rapides dans une recherche ne fonctionnaient pas lorsqu'on transformait une rechercher d'exemplaire en rechercher de notice.
+
+#156063 : Correction erreur fatale dans la création de notice avec champs personnalisés
+
+#157130 : [Vignettes] URL de la vignette stockée en base64
+Ne pas réaliser d'appel cURL lorsque l'URL de la vignette stockée au niveau de la notice est en base64.
+
+#157188 : [Prêts / Exemplaires] Date du dernier retour
+Modification du calcul pour une meilleure cohérence.
+
+#157303 : [Notice / PNB] Tableau des commandes
+Ne pas faire dépendre l'affichage des commandes sur le paramètre "show_exemplaires_pnb".
+
+-----------
+Circulation
+-----------
+
+#155345 : [Recherche lecteurs] Contrôle du filtre "Localisations"
+En recherche lecteurs, ne pas filtrer sur les localisations si une des valeurs est égale à -1.
+
+#156349 : [Demandes de numérisations] Destinataire obligatoire
+Correction sur le contrôle du destinataire en création de demande de numérisation.
+
+------
+Divers
+------
+
+#155402 : __code_message**Libellé du message
+Rappel sur l'utilisation de la variable GET "check_messages" dans l'URL :
+- check_messages=1 => affiche les libellés avec leur code XML associé
+- check_messages=-1 => permet de retourner à l'affichage classique
+
+Le retour à l'affichage classique demandait un double rafraîchissement de la page, cela ne sera plus le cas désormais.
+
+#155642 : Correction erreur fatale dans l'appel à thumbnail.php
+Quand nos chers amis les robots appellent le fichier thumbnail.php sans paramètre. Cela remontait une erreur fatale. C'est corrigé.
+
+#155954 : [PHP] Autoload des classes de recherche
+On allait chercher des classe PHP qui n'existaient pas.
+
+#156942 : Correction dans la récupération des documents numériques liés aux bulletins
+Un cas particulier permettait de récupérer les documents numériques de toutes les monographies au lieu de ceux d'un seul bulletin, quand celui-ci n'avait pas le bon niveau hiérarchique
+
+#157311 : [Editeur TinyMCE] CP HTML
+Correction sur l'intégration de l'éditeur TinyMCE lors de la répétabilité.
+
+#157460 : [AJAX] Erreur dans l'autocomplétion des catégories
+Correction d'une erreur d'affichage dans l'autcomplétion des catégories si le paramètre *categories_show_only_last_indexation* est activé. Le libellé de la catégorie apparaissait deux fois dans l'input.
+
+---
+DSI
+---
+​
+#155413 : [Veilles] Correction sur la duplication des sources
+L'action de duplication ne copiait pas le paramétrage du sélecteur de la source d'origine.
+De plus, cela réinitialisait le paramétrage d'origine du sélecteur.
+
+#156262 : [historique diffusion bannettes] Affichage de la liste
+Optimisations sur l'application des tris :
+- Tri SQL sur les colonnes dont cela est possible
+- Chargement en AJAX de la liste
+- Etant donné qu'il n'y a pas de purge automatique, suppression du tri sur les colonnes calculées lorsque le nombre de diffusions conservées dépasse 500.
+
+--------
+Editions
+--------
+
+#157218 : [Éditions>Retards par date] Tri par groupe
+Le tri par groupe ne fonctionnait pas.
+
+------------
+Modélisation
+------------
+
+#156321 : [Contributions] correction erreur à l'enregistrement des champs calculés
+Quand les erreurs sont activées, il peut y en avoir dans la requête ajax d'enregistrement. On ne voit jamais la validation.
+
+----
+OPAC
+----
+​
+​#155232 : [OPAC] Blocage de la prolongation du document s'il est réservé
+Lorsqu'on vérifiait si le document était réservé par un lecteur, on perdait l'identifiant de la notice.
+Nous ne trouvons donc aucune réservation liée à cet exemplaire.
+
+#155648 : Correction fatale lors de la récupération des catégories
+Lors de la récupération des catégories, si on avait un num_noeud à zéro, alors on avait une fatale.
+C'est corrigé.
+
+#155657 : Correction fatale lors de l'affichage d'une rubrique
+Lors de l'affichage d'une rubrique, il arrive que l'on tombe dans une possible boucle infinie.
+C'est corrigé.
+
+#156051 : Correction de l'encodage dans l'autocomplétion des catégories en OPAC
+Quand on récupérait les resultats de l'autocomplétion en json, les catégories accentuées étaient mal encodées. C'est corrigé
+
+#156184 : [RMC Responsive] correction de la recherche par catégorie
+En rmc responsive, en recherche par catégorie, on n'allait pas chercher les informations de thésaurus. Les requêtes ne s'exécutaient pas. La recherche ne renvoyait aucun résultat. C'est fonctionnel à présent.
+
+#156315 : [RMC Responsive] Traductions des thésaurus
+La traductions des libellés de thésaurus ne suivait pas sur la recherche multi-critères responsive.
+
+#156839 : Animation - Chargement Vuejs
+Vuejs était initialisé alors que la div#animations n'était pas encore chargé dans le dom.
+
+
+#157393 : [RMC Responsive / autolevel à 0] Rebond impossible
+Le rebond vers le niveau 2 ne fonctionnait pas.
+
+#157465 : [Mot de passe oublié] Comparaison des emails
+Correction de la comparaison des mails en tenant compte des éventuelles différences minuscules/majuscules.
+
+#157538 : [Segment de recherche] Segment inconnu
+Ne pas générer d'erreur lorsque le segment de recherche n'est pas connu.
+
+#157573 : Correction connecteur enrichissement wikipédia
+​
+-------
+Portail
+-------
+
+#157631 : [Flux RSS / Liste de flux RSS] Timeout par défaut
+Valorisation d'un timeout par défaut à 2 secondes lors de l'ajout d'un nouveau cadre portant sur ou plusieurs flux RSS.
+Cela permettra de réduire les blocages de page lorsque les flux ne répondent pas.
+
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.5                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#153337 : Récupération des champs persos pour le récolteur
+
+---------
+Catalogue
+---------
+
+#154831 : [Etagères / Tris] Implémentation de la traduction
+Implémentation de la traduction sur les libellés de tris.
+
+----
+OPAC
+----
+
+#154715 : Traduction des localisations
+Visible en  OPAC principalement
+
+#154856 : [Tris] Affichage du libellé
+Affichage du libellé de tri dans la bonne langue de l'OPAC.
+
+
+*******************
+ANOMALIES
+
+
+--------------
+Administration
+--------------
+
+#153323 : Récupération du mapping des champs de recherche des connecteurs pour le récolteur
+
+---------
+Catalogue
+---------
+
+#154823 : [Tris disponibles] Correction de l'affichage de la liste
+- Correction de l'affichage des tris disponibles dans la fenêtre de définition des tris
+- Protection des données en entrée de la construction des tris
+
+-----------
+Circulation
+-----------
+
+#154814 : [Groupes d'exemplaires] Création d'un groupe
+La création d'un groupe reprenait les exemplaires des autres groupes.
+
+----
+OPAC
+----
+
+#154828 :  [Affichage de notices] Traduction des noms de thesaurus 
+Affichage du libellé de thésaurus traduit dans la bonne langue.
+
+#154832 : Correction fatale sur appel subscribe.php
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.4                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#149942 : Ajout de l'état de validation dans le formulaire de configuration des mails
+
+#150765 : Vignettes : nouvelle gestion du cache
+
+#151370 : [Paramétrage utilisateur] Gestion des alertes OPAC
+Ajout d'un champ "Email destinataire" permettant de recevoir les alertes OPAC. Si celui-ci n'est pas rempli, l'email de l'utilisateur sera utilisé à la place.
+Dans certains cas, le champ "Email" peut être utilisé pour avoir une adresse d'envoi de mail, mais pas de consultation.
+Ajout d'une case à cocher pour être alerté lors des nouvelles inscriptions dans les animations.
+Prise en compte de "Email destinataire" dans les autres alertes pour les nouvelles réservations, les nouvelles contributions et les nouvelles inscriptions
+Pour les alertes des nouvelles inscriptions dans les animations, il faut configurer un nouveau type de communications : Animations > Types de communications > Actions d'inscription
+Avec un template créé dans les templates de mails : Template de Mail > Gestion des templates de mail.
+
+#151692 : Traduction des autorités personnalisés
+Ajout de la possibilité de traduire les libellés d'autorités personnalisées.
+
+#151853 : Traduction des champs des états des collections
+Ajout de la possibilité de traduire les libellés d'emplacements, de supports et de statuts.
+
+#152847 : [Paramétrage des mails] Expéditeur du mail
+Ajout de l'option "Paramètres OPAC biblio_name / biblio_email" en choix d'expéditeur ou/et replyTo dans le paramétrage des types de mail en partie gestion. 
+
+#153215 : Amélioration des manifests de connecteurs entrants
+Ajout d'un tag search qui précise si on peut chercher dans le connecteur.
+
+#153965 : Configuration du serveur sortant (SMTP)
+- Optimisations sur la construction du formulaire
+- Gestion du type d'authentification par défaut
+
+#154310 : [Récolteur] Modification bdd + Nettoyage
+
+#154312 : [Services externes] Ajout de la génération des vignettes de documents numériques manquantes
+
+#154384 : [imports] Ajout de la récupération de la vignette dans la fonction d'import BDP
+Ajout de la récupération d'une URL de vignette en import de notice dans la fonction d'import BDP. L'URL est récupérée à partir du champ unimarc 896.
+
+---------
+Autorités
+---------
+
+#153966 : [Menus sémantiques] Détacher les droits sur "catégories"
+Le droit accordé à l'utilisateur sur les catégories n'aura plus d'impact sur l'affichage des menus "Synonymes" et "Mots vides".
+
+-------
+Bibloto
+-------
+
+#151524 : [Bibloto] Reprise du formulaire de paramétrage du connecteur + Ajout d'un paramètre pour ignorer les messages d'exemplaires lors du retour
+
+---------
+Catalogue
+---------
+
+#154183 : [Récolteur] Reprise intégration données notices externes
+
+#154402 : [Récolteur] Récupération champs persos et récupération des valeurs
+Amélioration / Évolution
+
+-----------
+Circulation
+-----------
+
+#153428 : Transferts : ajout d'informations sur les refus.
+- ajout la localisation de destination dans les refus / les réceptions en circulation
+- ajout du menu des transferts refusés en édition
+- ajout de l'information de refus de la demande dans la fiche du lecteur en circulation
+
+--------
+Demandes
+--------
+
+#153985 : Optimisations du code source des demandes
+Possibilité de personnaliser les listes de demandes
+
+------
+Divers
+------
+
+#150833 : [Contenus externes] Affichage des vignettes
+Modification de l'intégration des vignettes de notices générées dans les mails et autres exports. 
+
+#151007 : [Univers de recherche] Explication recherche multi-critères
+Ajout d'une explication pour la configuration des champs de recherche à mettre dans search_universes_fields.xml, et une bulle d'information dans la configuration d'un univers pour indiquer qu'il y a du paramétrage.
+
+#151043 : Amélioration de la gestion des notices liées dans les exports OAI
+
+#151415 : [Django] Images SVG
+Ajout de la possibilité d'insérer des fichiers SVG dans les templates Django.
+Exemple :
+<div>
+{{ svg.nomdelimage }}
+</div>
+
+#151965 : Ajout classe IPTools + Màj droits accès
+Ajout d'une classe IPTools qui sert pour l'instant à valider l'accès à partir d'une liste d'IPs.
+Suppression de l'attribut class_path inutile depuis mise en place autoloader.
+Reprise de la classe de droits d'acces afin d'être a peu près ISO entre OPAC et Gestion.
+
+
+#152538 : [Vulnérabilité] Déni de service (DoS)
++Exemple de l'attaque :+ http://mon-pmb.fr/index.php/index.php
+Ajout d'une sécurité pour bloquer les URL "interdites".
+
+
+#152615 : [Traduction] Ajout de la traduction du statut et de la section pour les exemplaires
+Dans l'affichage des tableaux exemplaires OPAC/Gestion, maintenant les traductions sont prises en compte.
+
+#153237 : [Univers - RMC] Récupération des articles via son périodique
+Ajout d'un critère dans la RMC pour récupérer les Articles catalogués dans un périodique.
+
+#153659 : [Nomenclature] Amélioration de la prise en compte des nomenclatures
+- Correction dans l'indexation des nomenclatures
+- Prise en compte dans les templates de notices
+- Prise en compte de l'indexation dans les facettes et la recherche
+
+#153833 : [exports] Ajout de champs URL dans l'export RIS pour Zotero
+Ajout de quelques champs lors de l'export de notices au format *RIS Zotero*:
+* Ajout du permalien de l'OPAC (mis dans l'attribut *UR*)
+* Ajout des liens vers les documents numériques (mis dans l'attribut *L3*)
+A noter que désormais les fichiers de transformation XSLT pourront accéder à la globale *$opac_url_base* si nécessaire.
+
+#153999 : [Impression] Ajout de l'impression au format PDF en gestion
+Ajout de la possibilité de générer un fichier pdf à partir de l'impression
+
+---
+DSI
+---
+
+#152482 : Amélioration de la gestion des erreurs de lecture des flux RSS dans les veilles
+
+--------
+Editions
+--------
+
+#151442 : [Prêts] Filtre sur le support
+Ajout du filtre sur le support d'exemplaire lors de l'affichage des prêts + harmonisation des autres filtres.
+
+#153360 : [PNB] Optimisations de l'appel à l'api de Dilicom
+Optimisation lors de la récupération des statuts d'exemplaires sur l'api Dilicom
+* * Optimisation lors de syncro Dilicom dans le gestionnaire de tâches
+* * Optimisation côté affichage de la liste des demandes (Editions -> Commandes)
+Cela consiste à récupérer les infos chez Dilicom par 10 éléments au lieu de 1 par 1
+Réduit le temps de l'affichage de la liste et de la syncro par 10
+
+----
+OPAC
+----
+
+#150058 : [Saisie du mot de passe] Ajout d'un oeil 
+Ajout d'un oeil pour visualiser le mot de passe lors de la saisie.
+
+#151045 : [Réservation] Conflit entre la popup de réservation et la refonte portail
+Quand la refonte portail est activé et que la réservation est en popup, cela apportait une fatale erreur. C'est corrigé.
+Dans la popup il manque une div "container" et surement d'autres div.
+
+#151058 : [Périodique] Correction navigateur de périodique
+Une correction avait été faite sur la navigation de périodique, pour la case a cocher "Abonnement actif".
+Mais la correction avec les modifications récentes du portail, créer un nouveau bug.
+Maintenant la recherche ne fonctionne plus.
+C'est corrigé.
+
+#151193 : [Divers] Affichage graph et concept
+Modifications :
+- Modification du template par défaut des concepts pour avoir le même rendu pour les concepts enfants/parents
+- Agrandissement du graphe (navigation dans un thesaurus/schéma)
+- Modification du style pour le bouton qui permet d'afficher ou non le mot de passe (formulaire de connexion)
+
+#151217 : Univers de recherche : traduction des libellés dans l'historique
+
+#151485 : [Périodique] Calendrier de recherche sur les bulletins
+Modification du calendrier de recherche sur les bulletins.
+
+#152561 : Ajout du tri dans les résultats de recherches partagés
+
+#152650 : Correction requête SQL qui génère de la charge serveur
+Erreur de syntaxe dans une requête SQL qui génère beaucoup de log (via la supervision) et ainsi de la potentielle charge serveur.
+
+#152783 : [Vignettes] Prise en compte de la maintenance
+
+#152972 : [RGAA] Modification des balises HTML <blockquote>;La balise blockquote est destinée à faire une citation mais elle est régulièrement utilisée au lieu de <div> dans pmb.
+
+#153183 : [Traduction] Ajout de la traduction du nom du Thésaurus dans la recherche
+Dans la recherche de catégorie en OPAC les traductions sont prises en compte pour le nom du Thésaurus en auto-complétion.
+
+#153986 : [Contributions] Mise en place des bulletins
+- Prise en compte de la contribution sur les bulletins
+- Correction dans les formulaires : Niveau bibliographique et Niveau hiérarchique
+- Recherche sur les bulletins
+
+#154016 : [Contribution] Upload des vignettes 
+Prise en compte de l'upload des vignettes dans les notices et les documents numériques
+
+#154168 : Paiement en ligne
+Ajout du paiement en ligne :
+Pour l'instant, Payfip est le seul moyen de paiement développé.
+- Administration : 
+> Ajout d'un menu de paramétrage (a affiné suivant les informations fournies par les organismes)
+> Administration - Gest. Financière & relances mult. - Organisme de paiement
+- Opac :
+> Ajout d'une entrée "Mes paiements" dans le compte emprunteur et dans l'accès rapide
+Dans la vue "Mes paiements", on y retrouve toutes les informations des différents comptes, les listes des comptes que l'on doit payé et le résumé des paiements.
+
+
+-------
+Portail
+-------
+
+#152888 : [Portail] Module Agenda
+Possibilités de trier les articles et de limiter le nombre d'articles.
+
+#153500 : Comptabilités PHP 8.x
+
+#154401 : [Portail] Optimisation de l'accès aux onglets du portail
+- Optimisation du chargement des pages dans les onglets du portail
+
+----------
+Sémantique
+----------
+
+#132672 : [Ontologie] Prise en compte d'un flag internal
+Ajout de la prise en compte d'un flag PMB "internal" dans le parse de l'ontologie.
+Si on le trouve, on considère la propriété ou la classe associée comme un élément interne que l'on ne veut pas exposer directement dans l'interface
+
+#132675 : Refacto de l'indexation dans les ontologies génériques
+Refonte de l'interface de définition de l'indexation dans les ontologies génériques : 
+- Ajout d'une propriété code champ calculé automatiquement sur les classes
+- Ajout d'une propriété code sous-champ calculé automatiquement sur les propriétés
+- Création d'une interface spécifique pour paramétrer l'indexation pour chaque classe
+
+#134169 : Page d'entité en Gestion
+Ajout d'une page de consultation d'une entité créée au travers d'une ontologie
+
+#134846 : RMC sur les entités des ontologies
+Ajout d'une RMC sur les entités d'une ontologie.
+
+#135407 : Univers de recherche
+Ajout des entités des ontologies dans les univers de recherche
+
+*******************
+ANOMALIES
+
+--------------
+Administration
+--------------
+
+#151236 : [Pointage des importés] Pointage successif
+Le pointage successif des exemplaires contenait des erreurs avec les sections localisées.
+
+#151328 : Vignettes : rétrocompatibilité avec l'ancien paramétrage des liens externes
+Le paramétrage des liens externes a évolué pour tenir compte d'un timeout pour les appels externes. Cependant, les paramétrages déjà en place n'étaient plus utilisables. Il fallait réenregistrer le paramétrage. Ce ne sera plus nécessaire.
+
+#152332 : Vignettes : récupération des vignettes uploadées en base de données.
+Les vignettes uploadées en base64 dans la base de données n'étaient pas récupérées.
+
+#153812 : Correction dans la création d'un utilisateur.
+On ne pouvait plus ajouter d'utilisateur. La requête de création retournait une erreur. C'est corrigé.
+
+#153950 : Serveur sortant (SMTP) non validé
+Enrichissement de l'interface sur la configuration des serveurs sortants pour continuer d'afficher les anciennes adresses paramétrées.
+
+#154130 : [Sauvegarde] Correction de l'affichage du tableau
+- Correction de l'affichage de tableau dans les groupes de tables qui s'affichaient en ligne
+
+#154194 : [Récolteur] Reprise des formulaires
++Modifications :+
+- Possibilité de ne mettre aucun champ de recherche sur une source.
+- Suppression de l'option "Ajouter" sur les champs non-répétables
+- Correction PHP
+
+----------
+Animations
+----------
+
+#151649 : [Animation] Affichage de la page des inscriptions
+Dans la page des inscriptions, on allait récupérer trop d'informations pour gérer l'affichage.
+C'est corrigé.
+
+#153239 : Problème de cast de valeurs dans les animations
+Des valeurs ne sont pas toujours cast lors de l'envoi des données à VueJS, causant des problèmes sur des conditions dans le module
+
+---------
+Autorités
+---------
+
+#151476 : [Concepts] Menu "Multi-critères"
+Masquage de l'onglet "Multi-critères" sous le menu Autorités > Concepts.
+
+-------
+Bibloto
+-------
+
+#153358 : [Bibloto - Automate] Impression uniquement pour tous les prêts
+- Ajout d'une option dans le connecteur PMB
+- Correction des pages blanches Automate
+
+---------
+Catalogue
+---------
+
+#151388 : Vignettes : correction d'une erreur fatale en recherche externe
+
+#151399 : Correction erreur fatale à l'enregistrement d'un notice
+Suite à la modification du nom de certaines méthodes (_notice_relations::update_nomenclature_ranking()_), l'appel à ces dernières n'avaient pas été mis à jour. Ce qui provoquait des erreurs. C'est corrigé.
+
+#151614 : Correction dans l'enregistrement des recherches prédéfinies
+Suite à la mise à jour de mysql8, on ne pouvait plus enregister les recherches prédéfinies. Certaines variables arrivaient en conflit. C'est corrigé.
+
+#153925 : [Affichage d'une notice] Affichage des boutons
+Protection des boutons d'action pour les substitutions de messages avec apostrophes.
+
+#154230 : [Récolteur] Correction récupération des informations
+
+#154307 : [Vignette] Correction de l'affichage d'une vignette en SVG
+Une vignette SVG qui n'a pas de taille de défini en dur sur la balise <svg> n'est pas visible sur l'affichage dans le catalogue
+
+-----------
+Circulation
+-----------
+
+#150930 : [Planificateur de tâches / Mailing] Mails non envoyés
+- Ajout d'un indicateur de mails non envoyés sur le récapitulatif des paniers de lecteurs
+- Consultation possible des lecteurs n'ayant pas reçu le mail
+
+#152427 : Correction sélecteur de concepts dans procédures
+
+#153536 : Correction du loader lors d'un retour de prêt
+- Un bug était présent lors de retour de prêt, si le champ du code barre de l'exemplaire était vide, le loader tourné à l'infini
+
+------
+Divers
+------
+
+#149924 : [Indexation / Traductions] Facettes exemplaires 
+L'indexation des champs traduisibles associés aux exemplaires sera désormais répartie dans les différentes langues de l'OPAC.
+
+#150965 : [Contribution] Prise en compte des colonnes dans les grilles
+Dans les grilles de formulaires, on pouvait faire des colonnes, mais elles n'étaient pas prises en compte au ré-affichage.
+
+#151673 : Système d'export/import de notice
+Export :
+- Export du lien notice de bulletin vers le périodique, ne contenait pas les informations du périodique.
+Import :
+- Correction PHP, lors de la création des liens, l'indication du rang (ranking) n'était pas fourni.
+- Correction des liens entre notices, on ne créait plus le lien inverse pour "est un bulletin de" (code: "b")
+- Blocage de la création d'exemplaire sur un article. (Cela n'est pas possible dans PMB.)
+- Correction de la création d'exemplaire sur une notice de bulletin. (On relit le bulletin à l'exemplaire et non sa notice.)
+
+#151689 : [Mail / Vignettes] Transfert des vignettes en pièces jointes
+Transformation des vignettes base64 en pièces jointes des mails pour la compatibilité des clients de messagerie.
+
+#152852 : Correction régressions connecteur z3950 et récolteur
+
+#152899 : [Plugin] Animation
+Prise en compte de l'indexation et de l'historique de l'article.
+
+#153211 : [Univers - RMC] Rechercher avec une valeur dynamique 
+La recherche avec un critère "Valeur Dynamique" ne fonctionnait plus.
+
+#153259 : [Vignette] Compatibilité avec l'ancien mécanisme
+Lorsque l'on passait un PMB inférieur à la version 7.5 et que l'on modifiait une notice avec une vignette.
+La vignette uploadée était supprimée.
+
+#153390 : [Templates de bannettes] Vignettes en base64
+Modification :
+- Amélioration du tag Django Imgbase64
+- Ajout d'une fonction dans les tamplates de notice (#img_base64)
+Exemple d'usage tag Django Imgbase64 :
+<pre>
+<img src="{% imgbase64 images/logojpg %}"/>
+<img src="{% imgbase64 {{ global.pmb_img_url }}logojpg %}">
+</pre>
+Exemple d'usage #img_base64 :
+<pre>
+#if(#img_base64()
+,<img src="#img_base64();" style="width:100px;" />,<img src="./images/no_image.jpg" style="width:100px;" />)
+</pre>
+
+#153581 : [Vignette] Mise en cache
+Correction d'une "Fatal error", lorsqu'on mettait en cache un fichier qui n'était pas une image.
+
+#153869 : [Authentification - Templates de notice] Vignettes en base64
+Si on essayait de récupérer la vignette avec l'URL de gestion, on avait une erreur, car on n'était pas connecté.
+Modification apportée :
+- Récupération de la vignette via l'URL de l'OPAC.
+
+#153914 : Recherche d'autorités personnalisées
+Les opérateurs "Commence par", "Finit par", "Exactement comme" et "Contient" sur le critère "Tous les champs" recherchaient obligatoirement un espace.
+
+#153926 : [Editions avancées de paniers] colonne Marqué ?
+Ajout de la colonne "Marqué ?" nativement sur les éditions avancées de paniers et sur les exports associés.
+
+#153953 : [Docnums] Correction récupération de l'image par défaut selon le mimetype
+La vignette par défaut d'un document numérique selon le mimetype n'était pas récupérée si on passait par *vig_num.php* en gestion. On la récupère bien à présent.
+
+#154048 : [Autocomplétion] Prise en compte du paramètre categories_show_only_last_indexation
+Le paramètre *categories_show_only_last_indexation* n'était pas repris dans certains cas dans l'autocomplétion des catégories via le sélecteur. C'est désormais le cas.
+
+--------
+Editions
+--------
+
+#152845 : [PNB] Optimisations sur l'affichage des commandes
+Correction sur l'application du tri des commandes
+Corrections d'affichage des contenus de cellules (dates, valeurs entières, ..)
+Optimisations des tris pour un rendu plus rapide
+
+#152946 : [Lettre de relance] Correction langue italienne
+Le fichier des quotas de finances n'était pas correct en italien.
+
+#154391 : Tri dans les commandes du PNB
+Vérification de la connexion à la base de données lors de l'affichage des commandes après l'interrogation à Dilicom.
++ ajout du fil d'ariane au dessus de la liste.
+
+----
+OPAC
+----
+
+#150042 : [Recherche dans les univers] Générer le flux rss d'une recherche 
+Le rendu du flux RSS était vide lors du partage de la recherche.
+
+#150326 : [Collections numériques] Date de création
+Modification du format de la date de création pour y inscrire l'heure, la minute et la seconde afin que ce soit plus précis du côté des tris de documents numériques.
+
+#150395 : Autocomplétion dans les titres de la revue
+Dans l'autocomplétion en opac, tous les identifiants des "titres de la revue" étaient identiques.
+C'est corrigé.
+
+#151298 : [Panier + listes de lecture] Tri sur le titre sans les mots vides
+Remplacement du tri par défaut des notices dans le panier et dans les listes de lecture, les mots vides seront désormais ignorés.
+
+#151395 : Correction de failles de sécurité
+Lors de la soumission du formulaire de contact, on nettoie les entrées.
+Sauf que l'on peut avoir un tableau et non une valeur.
+C'est corrigé.
+
+#151616 : [PMB ISO-8859-1] Recherche niveau 1 dans le bandeau
+Correction de l'encodage des termes affichés dans le bandeau.
+
+#151876 : Vignettes : récupération des vignettes de documents numériques à l'OPAC
+Correction de l'url d'appel
+
+#152356 : Menu "Prêts précédents"
+Les prêts précédents ne s'affichaient pas en fonction d'un certain contexte.
+
+#152728 : Univers de recherche : nom de la recherche
+Erreur de condition php pour l'affichage du nom de la recherche.
+
+#153064 : [OPAC] Correction structure HTML
+Il manquait des fermetures de balises HTML, ce qui provoquait un mauvais placement.
+C'est corrigé.
+
+#153557 : [Optimisation] Chargement des images.
+Ajout de l'attribut loading="lazy" sur toutes les images présentes en OPAC.
+
+Pour informations, l'attribut "loading" avec la valeur "lazy" permet de retarder le chargement des images.
+Le navigateur, ne va pas charger les images en dehors de la zone d'affichage (définie par le navigateur) et elles seront chargées au fur et à mesure.
+
+#153569 : [RGAA / ParserCSRF] Attribut lang sur le HTML
+Ajout d'une condition sur le parcours des métadonnées pour vérifier si la meta charset existe déjà.
+Cela permet de conserver l'attribut lang sur la balise HTML de la page.
+
+#153661 : Nombre d'éléments affichés sur une page
+Ajout d'un contrôle sur le nombre d'éléments affichés sur une page. Celle-ci ne pourra plus dépasser le nombre max définis dans le paramètre "items_pagination_custom".
+Si ce paramètre n'est pas défini, le nombre maximum d'éléments affichés sur une page sera de 200 (correspond à la valeur max définis par défaut dans le paramètre "items_pagination_custom").
+
+#153862 : Impression de résultats de recherche
+Corrections sur la présentation de la fenêtre d'impression.
+
+#153931 : Traductions sur fichier empr_fr_FR_subst.xml
+Prise en compte de la langue de l'interface pour récupérer les messages.
+
+#154223 : [OPAC] Optimisation de l'autocomplétion
+- le chargement d'une page sur laquelle se situait l'autocomplétion provoquait des lenteurs, notamment des pages blanches avant l'affichage de la page
+
+-------
+Portail
+-------
+
+#150886 : [Gestion du cache] Interrogation des données
+Les données des cadres de portail ne seront plus systématiquement calculées sur chacune des pages.
+
+#153295 : [Refonte Portail] Script d'accessibilité
+Si le script pour les fonctionnements des boutons d'accessibilité était dans une zone masquée, le script était supprimé.
+
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.3                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+INCONNU
+
+--------------
+Administration
+--------------
+
+#148549 : [Nettoyage de base] Ajout de la génération des vignettes de documents numériques manquantes
+
+----------
+Animations
+----------
+
+#146914 : [Animations] Modification des quotas internet d'une animation 
+Exemple :
+Si une animation a un quota internet à 5.
+Il y a cinq personnes inscrites et deux personnes en liste d'attente.
+Si on modifie le quota internet de l'animation, on inscrit les personnes en liste d'attente.
+
+#148438 : Correction dans la création d'article lié à une animation
+On ne pouvait éditorialiser les animations. Le plugin n'était plus lu à cause de la limitation de la découverte des répertoires. 
+
+#149414 : [Animations] Masquer la répétition des animations
+On masque la répétition :
+- Si l'animation a des réservations
+- Si elle est sur la journée
+- Si la date de fin est identique à la date de début
+
+---------
+Catalogue
+---------
+
+#148890 : Optimisation de l'affichage de la page des paniers
+Le contenu de chaque notice d'un panier (détails, vignettes, ...) n'est plus chargé par défaut. Il le sera au dépliement (bouton plus).
+
+------
+Divers
+------
+
+#146833 : [Audit / Hist.] Optimisations
+Amélioration de l'affichage de l'audit sur les entités
+
+#147872 : Ajout d'une methode javascript globale d'inclusion de fichier
+Ajout de la méthode "pmb_include" dans le fichier misc.js. 
+À utiliser de préférence pour inclure des fichiers js, sans passer par les balises <script type='text/javascript' src='nom_fichier.js'></script>. Il s'agit surtout d'éviter les inclusions multiples d'un même fichier.
+
+#148977 : [API Rest] Souci dans le rest.php avec un OPAC en ISO
+Correction d'une fatale si on utilisait l'API REST en OPAC avec un OPAC en ISO-8859-1
+
+----
+OPAC
+----
+
+#149385 : [Univers de recherche] Expression booléenne : Aucun résultats lors d'une recherche dans un univers
+Si Expression booléenne comporte un accent, la recherche en opac ne retourne pas de résultat.
+C'est corrigé.
+
+-------
+Portail
+-------
+
+#147456 : Ajout uikit v 3.16.24
+Ajout uikit v3.16.24
+
+#149033 : [Refonte portail] Affichage de la page de connexion
+Lorsque la refonte portail est activée, on ne prenait pas en compte la page do_resa.php.
+Cela cassait tout le chaînage.
+C'est corrigé.
+
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+------------
+Acquisitions
+------------
+
+#148500 : [Suggestions] Factorisation de la génération des mails
+Factorisation du code source + ajout dans l'interface de paramétrage des mails.
+--------------
+Administration
+--------------
+
+#146378 : [Transferts] Paramétrage d'une liste
+Ajout de l'option "Préférence utilisateur" lors de la définition du filtre d'origine au niveau du paramétrage de la liste.
+
+#146562 : [Gestion des fichiers] Affichage de la pondération
+Affichage de la pondération au niveau des listes récapitulatives des indexations.
+Cela a pour but d'autoriser ultérieurement la modification de la pondération par l'interface.
+
+#146579 : Vignettes :  ajout d'un timeout paramétrable pour les accès externes
+
+#147534 : Traduction du libellé et de la description des univers et des segments
+
+#147932 : [Préférences] Modification du mot de passe
+Ajout de l'oeil pour visualiser le mot de passe en clair lors de la saisie du nouveau.
+
+#148339 : [Planificateur de tâches] Envoi d'une commande
+Correction sur le traitement de la commande envoyée + captation de la commande dans le rapport de la tâche.
+
+#148409 : Vignettes : ajout d'une limite de taille pour la récupération des vignettes BNF
+
+#148710 : [Pubmed] Ajout des autorités sur les imports de type "PubmedBookArticle"
+
+#148898 : [Webservices / Gestionnaire de tâches] Gestion des erreurs
+Travail sur les webservices pour mieux gérer les retours d'erreur dans le gestionnaire de tâches.
+
+----------
+Animations
+----------
+
+#148702 : [Animations] Tri des animations parentes par date de début
+- Tri des animations parentes par date de début
+- Ajout d'un espace dans le template VueJS
+
+#148743 : [Animations] Tri par date dans l'organisation des animations
+- Tri récursif par date de début dans l'organisation des animations
+
+---------
+Autorités
+---------
+
+#146181 : ISBD d'auteur à partir d'une oeuvre
+Modification de l'appel PHP pour la récupération de l'ISBD d'auteur sur une oeuvre.
+
+#146541 : [Tableau de bord] Autorités
+Enrichissement du bloc d'autorités :
+- nombre d'éditeurs
+- nombre de collections
+- nombre de sous-collections
+- nombre de titres de série
+- nombre d'oeuvres/expressions
+- nombre d'indexations décimales
+
+---------
+Catalogue
+---------
+
+#147841 : Optimisation de l'affichage de la page d'un bulletin
+- chargement ajax du contenu des dépouillements (comme pour les résultats de recherche)
+
+#149704 : [Fonctions Z39.50] Factorisation de code PHP
+Diminution du code dupliqué dans les personnalisations z3950 :
+- Uniformisation de la fonction "traite_categories_enreg" sur la classe Z3950_notice
+- Uniformisation de la fonction "traite_categories_from_form" sur la classe Z3950_notice
+- Uniformisation de la fonction "create_categ_z3950" sur la classe Z3950_notice
+
+-----------
+Circulation
+-----------
+
+#147626 : Circulation des périodiques - Bouton Supprimer les circulations
+Modification du libellé "Supprimer les circulations sélectionnées" par "Supprimer les sans retour sélectionnés".
+
+#149538 : [Circulation] Ajout d'un loader lors du prêt / retour
+- Ajout de deux méthodes dans le misc.js pour l'affichage d'un loader générique avec overlay sur l'ensemble de la page.
+<pre>
+pmb_show_loader() pour afficher le loader
+pmb_hide_loader() pour cacher le loader
+</pre>
+- Mise en place du loader dans le prêt / retour de document lorsque la RFID n'est pas activée.
+- Blocage de l'envoi du formulaire si ce dernier a déjà été envoyé.
+
+------
+Divers
+------
+
+#147633 : Compatibilité MySQL 8.x
+
+#148382 : [Contributions] Génération des mails
+Transfert de la génération des mails vers le framework de mails.
+
+#149208 : [Listes] Optimisations sur la gestion des tris multiples
+Optimisations sur la gestion des tris multiples dans les listes.
+
+#149728 : Téléchargement d'un document numérique
+Lors du téléchargement d'un document numérique, le nom de fichier donné pour l'enregistrement sera prioritairement celui indiqué en "Nom de document numérique" plutôt qu'un nom commençant par "file_". 
+
+---
+DSI
+---
+
+#148373 : [Historique de diffusions] Alimentation de la bannette
+Conservation des identifiants de notices ayant répondu aux équations, filtrage sur la date et le statut y compris.
+
+#149404 : [Historique de diffusions] Affichage des dernières diffusions
+Lisibilité de la liste par défaut :
+- Groupement par nom de bannette
+- Tri décroissant sur la date de diffusion
+
+--------
+Editions
+--------
+
+#148721 : [Relances d'adhésion] Imprimer/Envoyer les relances
+Améliorations de l'ergonomie sur les relances d'adhésion.
+Deux boutons sont désormais disponibles pour l'impression ou l'envoi par mail selon le paramétrage :
+- Imprimer toutes les relances d'adhésion OU Envoyer toutes les relances d'adhésion
+- Imprimer les relances d'adhésion OU Envoyer les relances d'adhésion (selon le paramètre relance_adhesion)
+
+----
+OPAC
+----
+
+#146622 : [Mes prêts] Gestion de la prolongation groupée
+- Harmonisation de l'affichage des prêts
+- Cases à cocher pour ne prolonger que ceux voulus
+- Calcul de la date de prolongation par prêt
+- Bouton prolonger pour la sélection
+
+#147634 : [Recherche] Modification de la recherche pour les synonymes
+Lors d'une recherche, si le mot a un synonyme qui contient un tiret (cerf-volant) :
+On recherchait le mot cerf-volant de cette façon :
+On affiche tous les documents qui contiennent le mot cerf ou volant
+Maintenant :
+On affiche tous les documents qui contiennent le mot cerf et volant 
+
+#148189 : [Segment de recherche] Ajout d'un placeholder dans la recherche
+Quand on se trouve dans un segment de recherche, il n'y avait pas de placeholder dans la barre de recherche.
+C'est corrigé.
+
+#149325 : Déplacement de la zone accessibilité de l'OPAC
+- Déplacement de l'input dans la div#accessibility
+
+#149572 : [Surlignage] Page chargée
+Application du surlignage lorsque la page est chargée afin de gagner du temps sur l'affichage de base.
+
+-------
+Portail
+-------
+
+#148028 : DSFR (Système de Design de l'État)
+Intégration du DSFR dans la liste des toolkits disponibles au niveau de la construction du portail.
+
+#148361 : [Refonte portail] - Ajout d'une interface pour gérer les versions
+
+#148390 : [Refonte portail] - Ajout d'un bouton pour éditer un cadre
+- Ajout d'un bouton qui renvoie dans l'édition d'un cadre dans la mise en page
+
+#148397 : [Refonte portail] Ajout des informations css des cadres dans la vue "Mise en page"
+Ajout d'un bouton information avec les informations css du cadre.
+
+#148403 : [Refonte portail] Non prise en compte des conditions d'affichage
+Lors de la création d'un nouveau cadre, si le paramètre cms_portail est a deux alors, on n'affiche aucune condition d'affichage par défaut.
+
+#148471 : [Refonte Portail] Modification de message dans les listes d'articles
+Modification du label du sélecteur de donnée "Rubrique" dans le module "Liste d'articles" par "Articles d'une Rubrique"
+
+#148502 : [Refonte portail] - Ajout de la recherche par identifiant
+- Ajout d'un sélecteur dans la gestion du contenu éditorial pour permettre la recherche par identifiant
+
+#148546 : [Refonte portail] Masquer "Cadre Fixe" et "Conserver l'URL de construction"
+- Masquer "Cadre Fixe" et "Conserver l'URL de construction" lorsqu'on est sur la refonte
+
+#148734 : [CMS] Module liste de favoris - ajout d'une datasource
+Ajout de la datasource *Rubriques citées en champ perso d'une rubrique* dans le module liste de favoris afin de pouvoir sélectionner une liste de rubriques en fonction d'une valeur de champ perso.
+
+#148780 : [Portail] Ajout d'un filtre dans les cadres de type "Liste d'animation"  et ajout du tri et ordonnancement dans la data source"Animations par valeur d'un champ perso"
+Ajout d'un filtre pour trier les animations par date de début et n'afficher que les animations qui ne sont pas passées.
+Ajout dans la datasource "Animations par valeur d'un champ perso" la prise en compte des champs "tri" et "ordre"
+
+*******************
+ANOMALIES
+
+--------------
+Administration
+--------------
+
+#147447 : Correction de l'enregistrement du formulaire des supports
+
+#147619 : [Connecteurs / Items de veille] Edition d'une source
+Correction du formulaire pour la récupération d'items de veille.
+
+#147656 : [Gestionnaire de tâches] Tableau de bord
+Correction du tri des tâches en attente.
+
+#147928 : Affichage des droits par utilisateur
+Correction sur la visibilité des utilisateurs par groupe au sein des formulaires de procédures, templates de mails, etc.
+
+#148234 : [Initialisation des droits d'accès] Barre de progression
+Passage de la jauge de progression en HTML5 avec un correctif supplémentaire concernant le rafraîchissement en temps réel.
+
+#148399 : Duplication des champs perso d'un article ou d'une rubrique
+Les valeurs des champs personnalisés contenant des apostrophes n'étaient pas dupliquées.
+
+#148582 : [Mails] Connexion MySQL + durée d'envoi
+- Vérification de la connexion MySQL au retour de l'envoi d'un mail
+- Log des mails lorsque le serveur de mail répond au-delà de 5 secondes
+
+#149175 : [Page de maintenance] Erreur de sauvegarde du contenu
+Correctif sur la sauvegarde du contenu de la page de maintenance.
+
+#149571 : [Page de maintenance] Editeur TinyMCE
+- Rétro-compatibilité sur l'affichage de l'éditeur TinyMCE lorsqu'il est paramétré.
+- Ré-affichage du template par défaut si aucun contenu enregistré
+
+----------
+Animations
+----------
+
+#146216 : [Animations] Suppression du logo lors de la sauvegarde
+Quand on sauvegarde une animation, le logo de celle-ci n'était pas sauvegardé.
+C'est corrigé.
+
+#148888 : [Animations] Correction souci d'affichage dans l'impression excel et répétition des animations
+Suite des améliorations dans les ORM, on ne renvoyait plus un objet, mais un tableau.
+Maintenant, s'il n'y a pas d'inscription, alors l'animation peut devenir une parente et la répétition d'animation peut se faire.
+
+---------
+Autorités
+---------
+
+#146222 : Remplacement d'une collection : affichage de l'éditeur
+On affichait l'identifiant de l'éditeur à la place de son libellé.
+
+---------
+Catalogue
+---------
+
+#146852 : [Vignette] Récupèration de la vignette du document numérique pour une notice
+Il était impossible de récupérer la vignette du document numérique en gestion (certificat client)
+
+#147862 : [Auteur / Titre] Identifiant de notice -> Article de périodique orphelin
+Lorsque l'on recherche un article de périodique via la recherche par identifiant de notice, PMB proposera désormais de le rattacher à un bulletin et un périodique s'il est orphelin.
+
+#148122 : [Connecteurs / recherche externe] Contrôle de la notice intégrée
+Amélioration du contrôle de notices déjà présentes dans la base pour éviter les éventuels problèmes d'intégrations antérieurs.
+
+#148143 : [Indexation / Recherche par termes] Multi-thésaurus
+L'indexation par terme ne fonctionnait plus lorsque l'on provenait d'une recherche sur tous les thésaurus.
+
+#149174 : [Paniers / Export tableur] Mode avancé  
+Reprise de la première ligne du tableur sur l'édition simple dans l'édition avancée.
+
+#149658 : [Document numérique] URL grisée
+Ne pas désactiver le champ "URL" lorsque le mimetype du document numérique est "URL" même si le nom de fichier est renseigné.
+
+#149695 : [Zotero] Dédoublonnage du bulletin
+Le dédoublonnage sur la date ne fonctionnait pas correctement lorsque seule l'année de parution était présente sur Zotero.
+
+#149718 : [Intégration en catalogage] Permalien de la notice
+Construction du permalien selon le niveau bibliographique et le niveau hiérarchique.
+
+------
+Divers
+------
+
+#146533 : OAI Entrant - Modification parse des données xml
+Déplacement du parse des données xml après réception complète des requêtes http. 
+Pas de parse des chunks.
+
+#147333 : [Vignettes] Image par défaut de la BnF 
+L'option "Utilisation de l'image par défaut de la BnF" n'était pas prise en compte.
+
+#148854 : [Vignettes] Affichage des vignettes depuis les Webservices
+Les URL de vignettes récupérées depuis les webservices PMB pointaient sur l'URL de la gestion alors qu'elles devraient pointer sur celle de l'OPAC.
+C'est à présent le cas.
+
+#148965 : [RMC] Ajout/Effacement d'autorités 
+Correction sur l'effacement des informations d'autorités lors d'une multiple sélection.
+Exemple :
+1 / Sélection du critère "Catégorie"
+2 / Sélection d'une première catégorie
+3 / Ajout d'une seconde catégorie
+4 / Effacement de cette seconde catégorie
+5 / Lancement de la recherche
+6 / L'effacement n'a pas été pris en compte
+
+#149003 : Suppression de l'appel à la méthode php rename()
+Cette méthode posait des problèmes sur les montages sshfs. Le fichier renommé n'était pas supprimé des répertoires temporaires. 
+On la remplace par les méthodes copy(from, to) / unlink(from).
+
+---
+DSI
+---
+
+#147930 : [Classements d'équations] Ordonnancement
+L'ordonnancement des classements d'équations était inefficace dans certaines situations.
+
+----
+OPAC
+----
+
+#146563 : [Listes de lecture] Tris depuis la gestion d'une liste
+L'application d'un nouveau tri depuis la gestion d'une liste ne fonctionnait pas.
+
+#146675 : [Prolongation d'un prêt] Contrôle supplémentaire
+Contrôle sur la prolongation multiple via le rafraîchissement de la page (F5), ce qui engendrait des affichages "5/3" pour le nombre déjà réalisé.
+
+#146960 : Correction Fatale dans la recherche MC Autorités en OPAC
+
+#147728 : [Mon compte] Mes prêts
+Corrections / Améliorations diverses sur l'affichage / export des prêts.
+
+#147775 : [Prêts en cours du groupe] Date de prolongation 
+Ne pas autoriser le changement par le responsable de la date de prolongation calculée automatiquement avec les différentes règles de calcul.
+
+#147776 : [Prêts précédents] Affichage + export de la liste
+Factorisation PHP de l'affichage et de l'export de la liste des prêts précédents.
+
+#148771 : Résultats de recherche d'autorités
+Corrections des templates d'autorités dans les listes.
+
+#149170 : [Alertes personnalisées] Tri alphabétique sur le nom
+L'affichage des alertes personnalisées n'était pas toujours ordonné correctement.
+
+#149584 : [Formulaire de contact] Mails
+Revue de l'expéditeur des 2 mails envoyés lors d'une demande par un usager avec accusé de réception.
+Gestion de la définition de l'expéditeur au sein du nouveau module "Administration > Envois de mails > Paramétrage".
+
+-------
+Portail
+-------
+
+#148172 : [Portail] Ajout d'un lien pour cliquer dans les modules agenda et module menu
+Quand on active la refonte portail, on parse le HTML et on le nettoie.
+Dans les deux modules agenda et menu, la balise "<a>" posait un problème de fermeture.
+
+*******************
+NOUVELLES FONCTIONNALITES
+
+--------------
+Administration
+--------------
+
+#148226 : [Segments] Duplication d'un segment de recherche
+Ajout de la possibilité de dupliquer un segment dans les univers de recherche et d'un sélecteur pour déterminer le ou les univers qui recevront le segment dupliqué
+
+#148228 : Interface de paramétrage des envois de mails
+Nouvelle entrée "Paramétrage" dans le menu "Envois de mails" de l'administration.
+Celle-ci a pour but de lister le paramétrage des différents envois de mails dans PMB tout en offrant la possibilité à l'utilisateur de modifier les choix par défaut appliqués.
+
+#148246 : [Univers] Duplication d'un univers de recherche
+Ajout d'un bouton dupliquer dans le formulaire d'un univers de recherche.
+
+#148606 : [Interface] Modules
+Administration > Interface > Modules
+- Possibilité de personnaliser les points d'entrée par module
+
+------
+Divers
+------
+
+#136310 : Compatibilités PHP >= 8
+Nouvelle tâche de fond pour les compatibilités PHP 8.
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.2                                                                  *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+*******************
+INCONNU
+
+--------------
+Administration
+--------------
+
+#142860 : [Gestion de tâches] Envoi de DSI
+Correction sur l'enregistrement des actions à réaliser.
+
+#143387 : [Gestion des tâches] Liste des tâches 
+Refonte de les listes récapitulatives des tâches par type afin de pouvoir proposer un enrichissement des données.
+
+#143470 : [OAI /Cairn] Affichage des sets sous forme d'autorité
+Ajout d'une option dans le paramétrage global des OAI pour définir le format d'affichage des sets en paramétrage de sources.
+
+#143533 : [Gestionnaire des tâches] Réindexation des concepts
+La réindexation des concepts via le planificateur de tâches ne fonctionnait plus.
+
+#143638 : [Statistique OPAC] Nommage d'une colonne
+Contrôle des caractères sur le nommage des colonnes, les espaces ne sont pas autorisés.
+
+#143649 : [Gest. Financière & relances mult.] Sous sous-menus
+Ajout de classes CSS sur les sous-menus des sous-menus en gestion financière.
+
+#144764 : [Administration] Ajout d'une entrée "Securité"
+Ajout d'une entrée sécurité qui comprend : 
+- Authentification externe
+- Multiple authentification
+
+#144875 : [Authentification externe] Vue Services externes et Manifestes
+
+#145267 : [Mot de passe] Gestion des mots de passe internes avec authentification externe
+
+#145691 : [Authentification externe] Ajout de paramétre dans les formulaires des modéles/configurations
+- Ajout des revendications  (Claims)
+Changement du fonctionnement des "Attributs externes"
+
+----------
+Animations
+----------
+
+#143101 : [Univers de recherche] Ajout d'un critère pour les animations
+Possibilité de rechercher que les animations dont la date de fin n'est pas encore passé.
+
+---------
+Catalogue
+---------
+
+#142854 : [Documents numériques] Mimetype SVG
+Ajout du mimetype "Image/SVG" dans la liste des mimetypes autorisés.
+
+------
+Divers
+------
+
+#142818 : [PDF / PMB ISO-8859-1] FPDF error: Undefined font: helvetica
+Correction de l'erreur "Undefined font : helvetica".
+
+#143019 : Vignettes : ajout de la source ORB Decitre 
+
+#143049 : Vignettes : ajout de la source BnF
+
+#143158 : Suppression de l'appel au cache des images pour les vignettes
+En attendant de développer une solution de cache pérenne, on ne fait plus appel à l'actuelle. Trop de charge serveur
+
+#143383 : [URL de la vignette] Images SVG
+Les URLs de vignettes de notices/autorités pointant vers des images SVG seront désormais correctement interprétées en affichage.
+
+#143586 : Remise en route du gestionnaire d'événements
+La découverte des événements contenait une erreur de parse depuis le 27/04.
+
+#143687 : [Plugins] Ajout d'un hook pour afficher une colonne
+Ajout d'un hook dans les listes pour donner la possibilité d'ajouter une colonne liée à un environnement bien précis.
+
+#144708 : [Authentification externe] Intégration du plugin d'authentification
+- Factorisation et intégration dans PMB du plugin d'authentification externe
+- Ajout des sources
+- Gestion des manifestes
+
+#144767 : [Autoload] Inclusion H2o_Parser et H2o_Lexer dans h2o.php
+
+#144775 : [Authentification externe] Retrait OpenIDConnectClient du vendor
+
+#144892 : [Authentification externe] Vue Modèles et messages
+
+#145545 : [Authentification externe] Ajout des points de retour d'authentification
+
+---
+DSI
+---
+
+#143081 : [Veilles / Sources] Filtrer les nouveaux éléments avec une expression booléenne
+L'expression booléenne saisie n'est plus limitée à 255 caractères.
+
+--------
+Editions
+--------
+
+#142806 : [Transferts] Affichage du titre de la notice
+Correction sur l'interprétation du HTML sur la colonne "Titre", régression qui a eu lieu suite à la protection des sorties textes dans les listes.
+
+----
+OPAC
+----
+
+#142859 : Vignettes : affichage des vignettes dans les carrousels
+
+#145661 : [Authentification externe] Authentification en OPAC
+
+#145695 : [Authentification externe] Ajout liens d'authentification externe en OPAC
+
+#145724 : [Authentification externe] Gestion déconnexion OPAC
+
+#145867 : [Authentification externe] Inscription depuis données externes
+
+-------
+Portail
+-------
+
+#143022 : Modif image de gestion sort.png
+- Modif image de gestion sort.png
+- css sur l'image pour la rendre plus lisible
+
+#143065 :  Style PURE | Uniformisation Couleurs des statuts 
+Uniformisation Couleurs des statuts entre le style enjoy et le style pure.
+
+#143103 : [Portail] Ajout d'un tri dans le sélecteur de données pour les articles cités en champ perso d'une rubrique
+Maintenant, on peut trier par date, début de l'événement présent dans l'agenda.
+
+
+*******************
+AMÉLIORATIONS / EVOLUTIONS
+
+--------------
+Administration
+--------------
+
+#123985 : ARK : Génération des identifiants ARK en lot 
+Via le menu Administration / Modules / ARK / Génération ARK
+
+#135347 : Refonte de la génération des vignettes 
+
+#136561 : Ajout de la possibilité de supprimer les fichiers d'autoload en nettoyage de base
+
+#141911 : [Nettoyage de base] Barre de progression HTML5
+Modification de la barre de progression au format HTML5
+
+#142610 : Vignettes : possibilité de supprimer des sources par défaut dans les liens externes (amazon, abebooks,...)
+Dans certaines structures, le copyright pose des soucis.
+
+#144274 : Vignettes : évolution de la source "aucune image" pour aller chercher par défaut les no_image définies pour chaque type de notice
+
+#145008 : [Préférences utilisateur] Menu authentification
+Déplacement de la modification du mot de passe de l'utilisateur connecté dans ce nouveau menu.
+
+----------
+Animations
+----------
+
+#136171 : [Animations] Possibilité d'ajouter une image à une animation et un texte alternatif
+Maintenant on peut définir une image et une texte alternatif pour une animation.
+Dans le portail, on peut faire appel à l'image de l'animation :
+{{ article.animation.logo.xxx }}
+xxx à remplacer par : 
+<pre>
+small_vign : taille -> 16 px
+vign : taille -> 100 px
+small : taille -> 140 px
+medium :taille -> 300 px
+big : taille -> 600 px
+large : taille -> taille d'origine de l'image
+</pre>
+	            
+et pour le texte alternatif :
+{{ article.animation.logo.alt }}
+
+#138553 : [Animations] Ajout de l'inscription pour une personne
+Ajout d'une case à cocher dans le formulaire d'une animation, qui permet l'inscription d'une personne à la fois
+
+#138556 : [Animations] Champ obligatoire à l'inscription
+Maintenant, c'est l'email qui est obligatoire et non le téléphone pour une inscription à une animation.
+
+#138630 : [Animation] Ajout du statut de l'inscription
+Ajout du statut de l'inscription dans le compte emprunteur, dans la liste des animations et dans le récapitulatif d'une inscription à une animation.
+
+#138635 : [Animations] Obligation du code-barre 
+Si le paramètre "animations_only_empr" est actif, on rend obligatoire les codes-barres.
+
+#138657 : [Animations] Récupération de l'image d'une animation
+Dans le template des animations (_animation_display.tpl.html_), on peut faire appel à l'image de l'animation :
+<pre>
+{{ animation.formatLogo.xxx }}
+</pre>
+*xxx* à remplacer par :
+<pre>
+small_vign : taille -> 16 px
+vign : taille -> 100 px
+small : taille -> 140 px
+medium :taille -> 300 px
+big : taille -> 600 px
+large : taille -> taille d'origine de l'image
+</pre>
+
+#138682 : [Animations] Ajout de préférences utilisateur
+Nouvelle entrée "Animations" dans les préférences utilisateur :
+- Autoriser l'inscription en liste d'attente
+- Valider l'inscription automatiquement à l'OPAC
+- Type de communication
+- Limiter l'inscription à la personne de contact
+
+#138702 : [Animations] Récupération des champs personnalisables
++Comment récupérer les valeurs formatées :+
+<pre>
+{% debug animation.customFields.0.customFormatValues %}
+</pre>
+
+#138731 : [Animations] Ajout d'un nouveau filtre sur la localisation d'une animation dans les listes de réservation
+Refonte des filtres dans les listes de réservations.
+
+#138785 : [Animations] Ajout la possibilité d'exporter la liste des inscriptions au format Excel
+
+#138876 : [Animations] Gestion des inscriptions en cas de de désistement
+Quand une personne se désinscrit d'une animation, on regarde le nombre de places libérées, pour passer en validé et/ou en attente de validation une autre inscription. 
+
+#139722 : [Animations] Ajout d'une répétition pour la création d'animations en lot
+Dans les animations, on peut maintenant en créer en lot pour faire de la répétition.
+- Ajout de la fonctionnalité de répétition
+> Journalier / Hebdomadaire / Mensuelle
+> Reprise d'informations de l'animation parente
+> Ajout de calendrier pour visualiser les jours séléectionnés
+- Ajout de la fonctionnalité de suppression par animation / en lot
+- Ajout d'un paginateur
+
+#139886 : [Animation] Amélioration de la prise en compte des dates de début et de fin pour la répétition des animations
+
+#140021 : [Animation] Initialisation du contenu éditorial
+Dans la configuration du contenu éditorial du plugin, on peut maintenant initialiser les animations.
+
+#140370 : [Animations] Ajout de la gestion financière
+- Ajout d'un paramètre pour l'activer : gestion_animation
+- Ajout d'une entrée "Solde animation" en circulation
+- Ajout d'un lien pour aller voir l'animation directement depuis la ligne de compte
+- Prise en compte des lignes de compte en débit lors de l'inscription si validation automatique ou manuelle
+- Prise en compte des lignes de compte en crédit s'il y a suppression de l'inscription à l'animation
+
+#140406 : [Animations] Plugin : Ajout de la date de fin pour un article
+Maintenant, on a la possibilité de définir la date de fin de l'article en reprenant la date de fin d'animation.
+Le bouton "initialiser" dans la configuration du contenu éditorial prend en compte aussi ce nouveau paramètre.
+
+---------
+Catalogue
+---------
+
+#137432 : [Vignettes] Évolution dans la gestion des vignettes de notice uploadées
+Suite à un upload de vignette, on ne stocke plus d'url (ex : getimage.php/....) dans la table notice. C'est la nouvelle mécanique des vignettes qui gère l'affichage. 
+
+#141621 : [Paniers d'exemplaires / actions rapides] Code-barres
+Ajout de l'option code-barres dans le sélecteur d'actions rapides.
+
+-----------
+Circulation
+-----------
+
+#140391 : [Prévisions] Disponibilité dans plusieurs localisations
+Pouvoir réserver un document sur une seule localisation quand il est dispo dans plusieurs localisations.
+
+#140795 : [Prévisions] Colonne "Localisation de retrait"
+Affichage de la colonne "Localisation de retrait" lorsque l'on est dans un contexte multi-sites.
+
+#140801 : [Personnalisation des listes] Ajout des prévisions
+Ajout des prévisions dans les listes personnalisables, conditionnées sur l'activation du paramètre.
+
+------
+Divers
+------
+
+#117030 : RMC responsive - Structure VueJs
+
+#117112 : RMC responsive - Amélioration structure, gestion des champs texte / liste / date
+
+#124510 : Ajout autoloader
+
+#129116 : Ajout d'une sécurité CSRF dans les formulaires
++CSRF (Cross-site request forgery) :+
+Nous allons ajouter dans certains formulaires un champ caché contenant une clé de validité (celui-ci est différent entre chaque formulaire.).
+Ces clés seront valides (~1h), si ce délai est dépassé, le formulaire ne sera plus valide.
+Sécurité ajoutée en Gestion et en OPAC.
++[DEV] comment le mettre en place :+
+Pour que le champ caché soit ajouté dans le formulaire, il faut ajouter l'attribut "data-csrf='true'".
++Exemple :+
+<pre><code class="html">
+<form action="./index.php" method="POST" data-csrf="true">
+...
+</form>
+</code></pre>
+Ensuite vous avez simplement à appeler la methode "verify_csrf()" pour vérifier la validité de la clé.
+Si vous voulez faire une redirection spécifique, vous pouvez passer une url en paramètre de la fonction. 
+
+#130377 : [ARK] Affichage des ARK en OPAC
+Ajout de propriétés permettant l'affichage des ARK en OPAC.
+Propriété **ark_link** ajoutée pour :
+- les autorités
+- les notices
+- les bulletins
+
+#130663 : [FPDF] Mise à jour de la librairie
+Mise à jour de la librairie FPDF :
+- version 1.53 -> version 1.84
+
+#133344 : Cache APCU: ajout d'une methode pour supprimer une entrée
+Ajout d'une méthode deleteFromCache pour pouvoir supprimer une donnée dans le cache sans tout purger
+
+#136978 : [vignettes] Prise en compte des champ perso pour la récupération des vignettes de documents numériques
+Modification de la source de vignettes *docnum* afin de pouvoir sélectionner la vignette issue d'un document numérique en fonction d'un champ personnalisable paramétré dans la source.
+Le champ doit être de type *list* *query_list* et *query_auth* et visible à l'OPAC.
+
+#137099 : [vignettes] Ajout classe Dilicom + correction messages
+
+#140114 : [Webservices PMB] Optimisations du code source
+Optimisations du code source dans les groupes de fonctions.
+
+#141100 : [Plugins / Listes] Sélecteur multiple éditable
+Intégration des sélecteurs multiples dans une cellule éditable.
+
+#141127 : [Plugins] Evénements à la suppression des entités
+Ajout d'événements à la suppression des entités
+
+#141294 : [Plugins / Paniers] Evénement à la suppression d'entités via un panier
+Ajout d'un événement à la suppression d'entités via un panier. 
+Cela permet entre autre d'interdire la suppression pour certains utilisateurs PMB et de modifier le statut des entités.
+
+#141332 : [Lettres] Optimisations
+Optimisations de code pour la personnalisation.
+
+#141601 : Modification de l'autoload afin de ne prendre en compte que les fichiers se terminant par .class.php
+
+#141610 : [Univers de recherche] Ajout des animations
+Dans les univers de recherche, on peut créer un segment de type animation.
+- Ajout des champs des personnalisables dans la RMC
+
+#141758 : [Univers de recherche] Ajout du contenu éditorial 
+Dans les univers de recherche, on peut créer un segment de type article ou rubrique.
+
+#141816 : [Univers de recherche] Modification des fichiers search_fields
+Modification des search_fields pour les animations et contenu éditorial
+
+#142037 : Compatibilité PHP8 barre progression
++ suppression Erreur Deprecated 
+
+#142193 : Limitation de la découverte des gestionnaires d'évènements
+Limitation de la découverte des hooks
+- découverte effectuée 1 seule fois
+- exploration sur 3 niveaux de répertoires max
+- exclusion des répertoires vendor et CVS
+
+#142236 : [Univers de recherche] Contenu éditorial
+
+#142410 : Révision du tri dans l'autocomplétion des catégories
+
+#144078 : [Autoload] Reconstruction de l'index des classes sur erreur de chargement
+
+#145944 : [Authentification externe] Modification de la prise en compte du fichier ext_auth
+On va récupérer en base de données les informations pour savoir s'il y a une identification externe.
+
+#145986 : [Authentification externe] Transformation des données
+Prise en compte du paramétrage pour la transformation des lecteurs et des utilisateurs.
+
+---
+DSI
+---
+
+#145976 : [Bannettes / Historique] Equations de remplissage
+Ajout des informations de remplissage des bannettes dans l'historisation.
+
+------------
+Modélisation
+------------
+
+#134603 : Ajout d'une property ISBD
+Ajout d'une nouvelle propriété dans l'ontologie pour définir optionnellement un ISBD directement dans l'interface.
+Dans ce cas, il prend le dessus sur l'ISBD générique dans les fichiers.
+
+#134629 : Modification de la génération des URIs
+Modification de la génération des URIs.
+
+Pour la définition des ontologies, le motif est le suivant :
+> @<<uri_de_l'ontologie>#<pmbname_de_l_entite>@
+
+Coté Alimentation :
+> @<base_url><pmbname_de_l'ontologie><pmbname_de_l'entite>#<increment>@
+
+----
+OPAC
+----
+
+#121133 : [refonte portail] Structure de fichiers, methodes internes
+Fichiers principaux de la librairie de construction du portail opac.
+
+#131579 : [Pages FRBR] Optimisation du placement des cadres
+En OPAC, les templates de notices sont conservés intacts. Le placement des cadres ne les déstructure plus. Ça ne cause plus de souci de CSS. 
+L'affichage des pages de notice pourra éventuellement changer entre 2 versions de PMB. D'où le commit en DEV uniquement. Ça ira de paire avec la refonte du portail.
+
+#138165 : [Animations] Ajout de la personne de contact par défaut lors de l'inscription en OPAC
+Lors de l'inscription à une animation en OPAC, si on renseigne juste la personne de contact et que l'on valide l'inscription.
+Alors, cette personne sera ajoutée par défaut.
+Ajout de différentes "class css" sur les lignes du tableau d'inscription.
+
+#141919 : [Notice / Affichage Django] Surlignage "off"
+Ajout d'un attribut HTML "data-highlight" avec la valeur à "off" sur les zones ne devant pas être concernées par le surlignage dans une notice.
+
+#142549 : Uniformisation de la sélection des catégories 
+Maintenant en OPAC, suite à une recherche via les sélecteurs, la sélection d'une catégorie retourne son renvoi, s'il y en a un. Comme en gestion.
+
+#144855 : [accessibilité] Prise en compte de l'unité CSS REM
+Possibilité d'appliquer l'attribut *font-size* (module accessibilité) normalement placé sur le body, sur la balise HTML, pour la compatibilité avec l'unité CSS REM.
+Il faut pour cela passer le paramètre OPAC *accessibility* à *2*
+
+#145379 : Suggestions de resultats dans les recherches simples
+Suggestions de resultats dans les recherches simples :
+- recherche de base en OPAC
+- recherche simple dans les univers
+- recherche simple dans les segments
+
+-------
+Portail
+-------
+
+#135591 : [Portail] Possibilité de choisir l'affichage pour les options de la recherche
+Dans le module de recherche, on peut choisir d'afficher soit les boutons pour choisir la recherche en "radio" ou en "dropdown".
+
+#135773 : [Animation] Enrichissement du plugin
+On donne la possibilité d'accéder à d'autre propriété de l'animation dans le contenu d'un article
+- Localisation
+- Champs personnalisés
+
+#137416 : Sécurisation des formulaires issus de cadres portail
+Pour le web, il faudra ajouter l'attribut "data-crsf='true'" sur la balise <form> pour renforcer la sécurité.
+Déplacement du parser csrf après la construction du portail (https://fr.wikipedia.org/wiki/Cross-site_request_forgery).
+
+#138011 : Amélioration de la refonte portail
+- Ajout du nom du cadre/zone dans un attribut data
+- Recalcul du nom du cadre dans les mises en page
+- Redirection sur le formulaire sur le clic d'un cadre/modèle/page
+- Gestion des attributs sur les cadres de portail
+
+#138643 :  [Refonte Portail] Corrections CSS
+- Modifications du css pour distinguer les modèles / cadres hérités
+
+#138757 : [Animations] Module de portail
+- Ajout d'un filtre sur les champs perso
+- Ajout d'une source de donnée pour sélectionner des animations à partir d'un champ perso
+
+#140429 : [Portail] Ajout d'un tri dans le sélecteur de données pour tous les articles
+Maintenant, on peut trier par date, début de l'événement présent dans l'agenda.
+
+----------
+Sémantique
+----------
+
+#130998 : Epurage du formulaire pour les propriétés Flag PMB et le nom machine
+Dans le formulaire d'une property ou d'une classe d'une onto perso, on n'a pas besoin d'avoir le sélecteur de langue pour le flag PMB et le nom machine.
+
+#131105 : Cohérence entre le datatype, le range et le marclist
+Ajout d'un javascript dans le formulaire d'édition d'une propriété d'une ontologie générique pour conserver la cohérence entre le datatype (qui sert à déterminer le mode de saisie dans l'interface d'alimentation) le range (qui déterminer quel est la nature de l'objet du triplet) et le marclist (qui est utilisé seulement si le range est marclist).
+Maintenant si le range ne correspond plus au datatype, il s'adapte à la volée au changement du datatype et vice-versa.
+De son coté, le marclist s'active et se désactive si besoin.
+
+#132081 : Grilles de saisie dans les ontos persos
+Ajout des grilles de saisies sur les formulaires d'ontologies génériques
+
+#133656 : Refonte de l'indexation dans les ontologies
+Refonte permettant maintenant de gérer des pondérations différentes sur un même propriété en cas de range multiple.
+
+#133683 : Zone de notification dans le module sémantique
+Création de la classe de pilotage de la zone de notification dans le module sémantique.
+Permet principalement de déclencher la pile d'indexation lorsque l'on saisie des entités dans les ontologies sans avoir à repasser par un autre onglet.
+
+#133709 : Passage aux "nouveaux sélecteurs"
+On utilise maintenant le système de sous-onglet à la place des sélecteurs pour les ontologies. 
+
+#133749 : Possibilité d'ajouter une nouvelle entité directement en sélection
+On permet maintenant d'ajouter directement une entité de l'ontologie depuis le sélecteur en saisie.
+
+#134131 : Création d'ISBD en template Django par défaut
+Ajout d'un mécanisme de template Django pour générer des ISBD des entités issues des ontologies.
+Ajout d'une classe onto_common_entity qui porte un tableau des données d'une entité exploitable dans un template Django.
+Ajout d'un répertoire @includes/templates/ontologies/@ qui contient un répertoire common. 
+Dans le répertoire common, un répertoire ISBD avec un gabarit et un fichier entity.html.
+
+Il est possible d'ajouter un répertoire au même niveau que common portant le pmb_name de l'ontologie, il sera utiliser en priorité.
+
+Le fichier Django qui sera utilisé est lui substituable.
+Pour l'exemple, on demande l'IBSD d'une entité "exemple" de l'ontologie "demo". On cherchera par ordre de priorité : 
+> # @includes/templates/ontologies/demo/exemple_subst.html@
+> # @includes/templates/ontologies/demo/exemple.html@
+> # @includes/templates/ontologies/demo/entity_subst.html@
+> # @includes/templates/ontologies/demo/entity.html@
+> # @includes/templates/ontologies/common/exemple_subst.html@
+> # @includes/templates/ontologies/common/exemple.html@
+> # @includes/templates/ontologies/common/entity_subst.html@
+> # @includes/templates/ontologies/common/entity.html@
+
+Coté données, on peut aussi utiliser l'héritage pour faire des persos au besoin. Pour le meme exemples, on ira chercher la classe dans cet ordre :
+> # @classes/onto/demo/onto_demo_entity_exemple.class.php@
+> # @classes/onto/demo/onto_demo_entity.class.php@
+> # @classes/onto/common/onto_common_entity_exemple.class.php@
+> # @classes/onto/common/onto_common_entity.class.php@
+
+#134582 : Affichage du menu
+On conserve le menu de l'ontologie courante sur toutes les pages.
+
+#135307 : Page d'entité dans l'OPAC
+Recopie de la page de synthèse d'une entité d'une ontologie depuis la gestion dans l'OPAC
+
+
+*******************
+ANOMALIES
+
+------------
+Acquisitions
+------------
+
+#145523 : [Suggestions] Affichage des états
+Prise en compte du formatage HTML dans la cellule.
+
+--------------
+Administration
+--------------
+
+#129501 : [Digital Signature] MAJ de l'alter_V5 en DEV 
+Suppression ALTER TABLE pour la modification du champ "fields" pour la table digital_signature.
+La modification est faite directement dans la création de la table.
+
+#130952 : [Sémantique] On fait réapparaitre les menus
+On corrige une regression qui cassait le fonctionnement du module de définition des ontologies génériques.
+On en profite pour séparer la liste des ontologies présentes de leurs définitions. 
+
+#136119 : [Droits d'accès] Refonte du paramétrage
+Refonte du paramétrage des droits d'accès (rôles / profils).
+
+#138686 : Correction des erreurs affichées dans le formulaire de modification d'un utilisateur
+Pour afficher la liste des schémas dans ce formulaire, la requête sparql du calcul de leur isbd utilisait un nom d'espace non déclaré. C'est corrigé.
+
+#141166 : [Services externes] Sélection des autorisations par utilisateur
+Ré-affichage des cases à cocher ayant récemment disparues par la protection générique des données.
+
+#141528 : [Vignettes] Modification de la source "liens externes" pour permettre l'ajout de valeurs personnalisées
++ modification des champs search_segment_description et search_universe_description en TEXT dans la base de données.
+
+----------
+Animations
+----------
+
+#136320 : [Animations - Pluging] Suppression d'une animation
+Lors de la suppression, on ne vidait pas les champs perso de l'article lié.
+
+#137486 : [Animation] Amélioration de la gestions des quotas et possibilité d'ajout d'une animation à la journée
+*Gestion des dates dans les animations :*
+- Ajout d'une case à cocher pour déclarer un jour entier (On peut tester avec la variable "duringDay")
+- Lors de l'éditorialisation d'une animation, si la date de début et la date de fin sont identiques, on ne met pas de date de fin
+- Revu des différents templates pour la prise en compte de la variable "duringDay" 
+- Dans les listes d'animations, si pas de date de fin, on remplace dans la liste par "Animation sur la journée"
+*Gestion des quotas dans les animations :*
+- Correction des quotas lors de l'inscription à une animation Gestion/Opac
+- Correction dans les différents affichages
+
+#138590 : [Animations] Revue des boutons
+Modification de la balise HTML utilisée pour faire des boutons (passe des "input" en "button")
+
+#138597 : [Animation] Ajout d'une pièce jointe dans les mails et remplacement de motif dans l'objet de l'émail
+On peut ajouter une pièce jointe dans le mailing d'une animation.
+Il y a la possibilité d'ajouter des motifs dans l'objet de l'émail envoyé.
+Voici la liste :
+'!!animation_name!!',
+'!!animation_empr_name!!',
+'!!animation_empr_firstname!!',
+'!!animation_start_date!!',
+'!!animation_end_date!!',
+'!!animation_start_hour!!',
+'!!animation_end_hour!!',
+'!!animation_registered_list!!',
+'!!animation_location!!',
+'!!animation_registration_unsubscribe_link!!'
+et les motifs de remplacement de l'emprunteur
+
+#138656 : [Animation] Bloquer l'inscription en gestion
+En gestion, lors de l'inscription a une animation, on pouvait enregistrer deux fois la même personne.
+
+#139993 : [Animations] Enrichissement du plugin
+- Ajout :
+> animation_format_date -> Retourne les dates formatées
+> > Exemple :
+> > [start] => 14/11/2022
+> > [end] => 14/12/2022
+> > [startHour] => 10:00
+> > [endHour] => 18:00
+> animation_format_quotas -> Retourne les quotas formatés 
+> > Exemple :
+> > [quotas_global] => 50
+> > [quotas_internet] => 50
+> > [quotas_global_available] => 12
+> > [quotas_internet_available] => 12
+> > [quotas_global_reserved] => 0
+> > [quotas_internet_reserved] => 38
+> > [quotas_global_waiting] => 0
+> > [quotas_internet_waiting] => 0
+- Prise en compte lors de la suppression d'une animation parente, la suppression des articles pour les enfants.
+
+#141283 : [Animations] Impression des listes d'inscrits
+- Correction pour substituer le fichier : ./includes/templates/animations/printRegistrationList.tpl.html
+- Ajout de toutes les informations de l'animation :
+> {{ animation.customFields }}
+> {{ animation.categories }}
+> {{ animation.categories }}
+> {{ animation.parent }}
+> {{ animation.prices }}
+> {{ animation.location }}
+> {{ animation.status }}
+> {{ animation.type }}
+> {{ animation.concepts }}
+> {{ animation.calendar }}
+*ATTENTION {% debug animation %} dans printRegistrationList peut faire ralentir énormément la prévisualisation de la page d'impression*
+
+---------
+Autorités
+---------
+
+#141102 : Refonte de l'indexation des autorités liées
+- optimisation des requêtes de sélection
+- correction des requêtes pour n'indexer que le nécessaire
+- indexation des concepts liés
+- correction de la double indexation des autorités liées (à la sauvegarde, puis via la pile d'indexation)
+
+---------
+Catalogue
+---------
+
+#141011 : Ajout de notices dans un panier
+Correction sur le formatage du lien autour du libellé de panier pour l'ajout d'une notice.
+
+#141202 : [Editions de paniers] Corrections d'affichage
+- Conservation de l'interprétation du HTML pour certaines colonnes
+- Formatage de la date pour les groupements par colonnes contenant une date
+- Intégration du formatage du groupement pour la colonne "Editeur(s) groupé(s)" 
+
+#144810 : [Etats des collections] Filtre sur le titre
+Il était nécessaire d'appliquer la recherche deux fois pour que le filtre fonctionne.
+
+#145015 : Vignettes - ne plus afficher des vignettes de notices internes dans les notices externes
+Les notices partagent parfois le même identifiant, mais la vignette affichée ne correspond pas.
+
+------
+Divers
+------
+
+#136815 : [Compatibilité PHP 7.3] Suppression des propriétés typées
+Les propriétés typées ne sont pas prises en compte PHP 7.3.
+
+#137734 : [vignettes] Correction sur lecture des paramètres pour DILICOM si table vide
+
+#138030 : Mise à jour des packages npm
+Correction de vulnérabilités node_modules
+
+#138337 : [Vignette] Corrections diverses
+- Mutualisation du cache Gestion/OPAC
+- Possibilités de désactiver la récupération du premier document numérique pour la vignette de notice
+- Suppression du cache lors de la modification d'une notice/document numérique 
+
+#138491 : [Compatibilité PHP8] Modification du mode de rapport d'erreur mysqli
+https://www.php.net/manual/fr/mysqli-driver.report-mode.php
+À partir de PHP 8.1.0, la valeur par défaut est MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT. Auparavant, il était MYSQLI_REPORT_OFF. 
+
+#138747 : [Compatibilité PHP8] Corrections sur recherche + modules portail
+
+#141189 : Protection de la génération de l'url de la vignette quand l'identifiant de la notice est invalide
+
+#141353 : [Listes / Exports] Multi-groupements
+Correction de l'affichage sur les exports suivants lors de groupements multiples :
+- Tableur
+- Tableau HTML
+- Document bibliographique
+
+#142284 : Fermeture de pointeurs de fichiers / dossiers
+
+#143914 : Vignettes : nouvelle mécanique utilisée dans les cadres de portail
+Maintenant on utilise la nouvelle métode de génération de vignettes dans les cadres de portail. On ne tient plus compte de la propriété "thumbnail_url"
+
+#145923 : [FPDF] Correction du chargement des fichiers de fonts
+
+#146140 : Correction fatal error dans les authentifications externes
+
+----
+OPAC
+----
+
+#135748 : [Animations] Ajout de classe CSS dans les formulaires.
+
+#138083 : [Périodique] Navigateur de périodique
+Avec le fonctionnement du nouveau portail, lorsque l'on cochait l'abonnement actif, il restait prit en compte lors du changement de page.
+
+#141612 : Corrections de lenteurs dans le portails
++Modification apportées :+
+- Prise en compte du cache des cadres dans la refonte portail
+- Optimisation dans la récupérations d'une animation dans un cadres d'articles
+
+#141977 : [OPAC] Formulaire de modification du compte lecteur
+Ajout d'une alerte pour indiquer que l'on n'a pas les droits pour modifier son mot de passe (statut de lecteur : $allow_pwd).
+
+#142194 : [Listes de lecture] Tris disponibles
+Corrections sur l'application des tris dans les listes de lecture.
+
+#144089 : [RMC responsive] Correction de l'envoi du formulaire
+
+#146162 : Mail de ré-initialisation de mot de passe
+Normalisation des remplacements de motifs sur l'objet et le contenu du mail.
+
+-------
+Portail
+-------
+
+#131558 : Refonte portail : optimisation du JSON
+- Compression du JSON avant l'enregistrement
+- Réduction de la taille du JSON en Base de donnée
+- Diverses améliorations
+
+#136571 : Portail - Module Liste d'animation
++Modifications apportées :+
+ - Ajout d'une source de données qui remonte toutes les animations
+ - La possibilité de modifier le lien pour une Animation/liste d'animations.
+ - Ajout d'une vue "Calendrier Django"
+
+#136771 : [Portail - Animation] Suppression du sélecteur de template pour les listes d'animations
+Dans le module des listes d'animations.
+- Renommage du "Vue Django" en "Template Django"
+- Suppression du sélecteur de template
+
+#138539 : [Refonte Portail] Corrections diverses
+ - Revue de l'héritage
+ - Ajout de couleur dans la mise en page (pour savoir quels sont les éléments modifiés ou non)
+
+#139059 : [Refonte Portail] Génération des URL
+Souci de calcul des droits d'accès pour les notices
+
+#140029 : [Refonte Portail] Url de la prévisualisation
+Utilisation du paramètre "url_base_cms_build" pour la prévisualisation en OPAC
+
+#140422 : Correction feuille de style starter_pageo
+Correction feuille de style starter_pageo
+
+----------
+Sémantique
+----------
+
+#130958 : Correction sur le formulaire de création d'une ontologie
+On s'assure qu'il n'y a pas d'injection possible sur le formulaire de création d'une ontologie générique
+
+#131004 : Stabilisation des champs dans les formulaires de définitions d'une ontologie
+Ajout de triplets pmb:formOrder dans l'ontologie pour faire en sorte que les champs restent dans le même ordre entre 2 rechargements de formulaires
+
+#131161 : Sous-onglet de Range instable dans les sélecteurs
+Lorsque que l'on va chercher une valeur de propriété qui est une ressource pouvant appartenir à plusieurs classes (range multiple dans l'ontologie), on avait parfois une inversion entre les onglets d'une page à l'autre.
+Ce qui, en plus d'être perturbant visuellement, générait une incohérence particulièrement source d'erreurs de saisie.
+On applique maintenant un tri arbitraire alphanumérique sur les uris.
+
+#131580 : Remise en marche de l'indexation
+Suite à la refonte du moteur d'indexation, les items issues des ontologies génériques n'étaient plus indexés.
+C'est réparé, on ajoute maintenant les items d'ontologies dans la pile d'indexation classique.
+On a du modifié un peu le la base car maintenant c'est en tache de fond :
+ - Ajout d'une colonne informations dans indexation_stack pour y mettre le pmb_name de l'ontologie qui contient les infos des propriétés à indexer
+ - Ajout d'une colonne pmb_name dans ontologies pour pouvoir retrouver l'instance d'ontologie au moment où on indexe... 
+
+#133342 : Correction des endpoints SPARQL 
+Suite à la MAJ du framework ARC2, les endpoints SPARQL ne fonctionnaient plus.
+On a rajouté l'option qui permet de faire la connexion automatiquement.
+
+#133690 : Perte de la variable current_module dans les sélecteurs
+Dans les sélecteurs, si on n'a un rechargement de page, on perdait la variable current_module.
+Fonctionnellement, pas de souci en soit, mais on perdait de let thème du module qui a déclenché l'ouverture du sélecteur
+
+#133699 : On évite les recherches infructueuses
+Dans les sélecteurs, on évite de proposer une recherche si l'entité n'est pas indexée.
+
+*******************
+NOUVELLES FONCTIONNALITES
+
+--------------
+Administration
+--------------
+
+#140155 : [Gestionnaire de tâches] Indexation / Nettoyage de la base PMB
+Refonte du code source PHP d'indexation / nettoyage de la base PMB.
+
+Objectifs :
+- Changement de la structure des résultats de fonctions du groupe pmbesClean afin qu'elles soient mieux exploitable par le gestionnaire de tâches ou autre script externe
+- Implémentation d'une propriété dans le groupe pmbesClean pour définir un nombre d'éléments maximum à traiter lors d'un appel
+- Implémentation d'une propriété identique du côté du gestionnaire de tâches fixée à 200 pour gérer du multi-processus sur les actions d'indexation
+- Amélioration du compteur de progression, mise à jour fréquentes lors des actions d'indexation
+- Rendre l'interruption d'une indexation possible grâce au découpage par paquet
+
+---
+DSI
+---
+
+#139472 : [Bannettes] Historique de diffusions
+- Nouvelle option dans le paramétrage de la bannette pour historiser les diffusions de bannette
+- Nouveau menu dans l'onglet DSI pour visualiser les dernières diffusions
+
+--------
+Editions
+--------
+
+#139005 : [Etats paramétrables / En préparation] Ajout des champs personnalisés
+Possibilité de faire des états paramétrables sur les champs personnalisés.
+
+----
+OPAC
+----
+
+#146110 : [Authentification externe]  Ajout de revendication lors de l'authentification OIDC
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.5.1                                                                *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+Voir sur le site www.sigb.net :
+Nouveautés : en cours de rédaction
+Améliorations : en cours de rédaction
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+*                                    CHANGE_LOG_7.4                                                                    *
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+************************************************************************************************************************
+
+
+Voir le fichier changelogs74.txt dans le répertoire racine de PMB (ajoutez "74" dans l'URL de cette page !)

@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_bretagne.inc.php,v 1.30 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_bretagne.inc.php,v 1.35.2.1 2024/12/17 13:50:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// DEBUT param√©trage propre √† la base de donn√©es d'importation :
-global $class_path; //N√©cessaire pour certaines inclusions
+// DEBUT paramÈtrage propre ‡ la base de donnÈes d'importation :
+global $class_path; //NÈcessaire pour certaines inclusions
 require_once($class_path."/serials.class.php");
 require_once($class_path."/categories.class.php");
 
@@ -32,7 +32,7 @@ function recup_noticeunimarc_suite($notice) {
 		$cle=$record->inner_directory[$i]['label'];
 		switch($cle) {
 			case "464":
-				//C'est un p√©riodique donc un d√©pouillement ou une notice objet
+				//C'est un pÈriodique donc un dÈpouillement ou une notice objet
 				$info_464=$record->get_subfield($cle,"t","v","p","d","z","e");
 				break;
 			default:
@@ -51,10 +51,10 @@ function recup_noticeunimarc_suite($notice) {
 	$info_905=$record->get_subfield("905","a");
 	$info_906=$record->get_subfield_array_array("906","a");
 
-} // fin recup_noticeunimarc_suite = fin r√©cup√©ration des variables propres √† la bretagne
+} // fin recup_noticeunimarc_suite = fin rÈcupÈration des variables propres ‡ la bretagne
 
 function import_new_notice_suite() {
-	global $dbh,$charset;
+	global $charset;
 	global $notice_id;
 
 	global $info_464;
@@ -65,12 +65,12 @@ function import_new_notice_suite() {
 
 	global $bulletin_ex;
 
-	// param : l'article h√©rite-t-il de l'URL de la vignette de la notice chapeau
+	// param : l'article hÈrite-t-il de l'URL de la vignette de la notice chapeau
 	global $pmb_serial_thumbnail_url_article;
-	// param : l'article h√©rite-t-il de l'URL de la vignette de la notice bulletin
+	// param : l'article hÈrite-t-il de l'URL de la vignette de la notice bulletin
 	global $pmb_bulletin_thumbnail_url_article;
 
-	//Cas des p√©riodiques
+	//Cas des pÈriodiques
 	if (is_array($info_464)) {
 		$requete="select * from notices where notice_id=$notice_id";
 		$resultat=pmb_mysql_query($requete);
@@ -78,23 +78,23 @@ function import_new_notice_suite() {
 		//Notice chapeau existe-t-elle ?
 			$requete="select notice_id from notices where tit1='".addslashes($info_464[0]['t'])."' and niveau_hierar='1' and niveau_biblio='s'";
 			$resultat=pmb_mysql_query($requete);
-			if (@pmb_mysql_num_rows($resultat)) {
-				//Si oui, r√©cup√©ration id
+			if (pmb_mysql_num_rows($resultat)) {
+				//Si oui, rÈcupÈration id
 				$chapeau_id=pmb_mysql_result($resultat,0,0);
 				//Bulletin existe-t-il ?
 				$requete="select bulletin_id from bulletins where bulletin_numero='".addslashes($info_464[0]['v'])."' and  mention_date='".addslashes($info_464[0]['d'])."' and bulletin_notice=$chapeau_id";
 				//$requete="select bulletin_id from bulletins where bulletin_numero='".addslashes($info_464[0]['v'])."' and bulletin_notice=$chapeau_id";
 				$resultat=pmb_mysql_query($requete);
-				if (@pmb_mysql_num_rows($resultat)) {
-					//Si oui, r√©cup√©ration id bulletin
+				if (pmb_mysql_num_rows($resultat)) {
+					//Si oui, rÈcupÈration id bulletin
 					$bulletin_id=pmb_mysql_result($resultat,0,0);
 				} else {
-					//Si non, cr√©ation bulletin
+					//Si non, crÈation bulletin
 					$info=array();
 					$bulletin=new bulletinage("",$chapeau_id);
-					$bul_titre_txt='Bulletin N¬∞';
+					$bul_titre_txt='Bulletin N∞';
 					if ($charset=='utf-8') {
-						$bul_titre_txt=utf8_encode($bul_titre_txt);
+						$bul_titre_txt=encoding_normalize::utf8_normalize($bul_titre_txt);
 					}
 					$info['bul_titre']=addslashes($bul_titre_txt.$info_464[0]['v']);
 					$info['bul_no']=addslashes($info_464[0]['v']);
@@ -116,7 +116,7 @@ function import_new_notice_suite() {
 					$bulletin_id=$bulletin->update($info);
 				}
 			} else {
-				//Si non, cr√©ation notice chapeau et bulletin
+				//Si non, crÈation notice chapeau et bulletin
 				$chapeau=new serial();
 				$info=array();
 				$info['tit1']=addslashes($info_464[0]['t']);
@@ -125,13 +125,13 @@ function import_new_notice_suite() {
 				$info['typdoc']=$r->typdoc;
 
 				$chapeau->update($info);
-				$chapeau_id=$chapeau->serial_id;
+				$chapeau_id=$chapeau->id;
 
 				$bulletin=new bulletinage("",$chapeau_id);
 				$info=array();
-				$bul_titre_txt='Bulletin N¬∞';
+				$bul_titre_txt='Bulletin N∞';
 				if ($charset=='utf-8') {
-					$bul_titre_txt=utf8_encode($bul_titre_txt);
+					$bul_titre_txt=encoding_normalize::utf8_normalize($bul_titre_txt);
 				}
 				$info['bul_titre']=addslashes($bul_titre_txt.$info_464[0]['v']);
 				$info['bul_no']=addslashes($info_464[0]['v']);
@@ -160,15 +160,15 @@ function import_new_notice_suite() {
 				$bulletin_ex=$bulletin_id;
 			} else {
 				$annee=$info_464[0]['d'];
-				$date_parution=$info['date_date'];
-				//R√©cup√®re la date du bulletin (non disponible autrement si il existe d√©j√†) pour l'article
+				$date_parution=(!empty($info['date_date']) ? $info['date_date'] : '');
+				//RÈcupËre la date du bulletin (non disponible autrement si il existe dÈj‡) pour l'article
 				$select="SELECT date_date FROM bulletins WHERE bulletin_id='".$bulletin_id."'";
 				$res_date=pmb_mysql_query($select);
 				if($res_date && pmb_mysql_num_rows($res_date)){
 					$date_parution=pmb_mysql_result($res_date,0,0);
 					$annee=substr($date_parution,0,4);
 				}
-				//D√©doublonnage : v√©rifie si un article avec ce titre n'existe pas d√©j√† pour le bulletin
+				//DÈdoublonnage : vÈrifie si un article avec ce titre n'existe pas dÈj‡ pour le bulletin
 				$requete="SELECT old.notice_id,old.tit1 FROM notices new, notices old JOIN analysis ON analysis_notice=old.notice_id WHERE new.notice_id='".addslashes($notice_id)."' AND new.notice_id!=old.notice_id AND analysis_bulletin='".addslashes($bulletin_id)."' AND new.tit1=old.tit1";
 				$res_doubl=pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($res_doubl)){
@@ -194,30 +194,34 @@ function import_new_notice_suite() {
 					$bulletin_ex=$bulletin_id;
 				}
 			}
-	} else $bulletin_ex=0;
-
-	//Traitement du th√©saurus
-	$unknown_desc=array();
-	$ordre_categ = 0;
-	for ($i=0; $i<count($info_606_a); $i++) {
-		for ($j=0; $j<count($info_606_a[$i]); $j++) {
-			$descripteur=trim($info_606_a[$i][$j]);
-			//Recherche du terme
-			//dans le thesaurus par defaut et dans la langue de l'interface
-			$libelle = addslashes($descripteur);
-			$categ_id = categories::searchLibelle($libelle);
-
-			if ($categ_id) {
-				$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) VALUES($notice_id,$categ_id,$ordre_categ)";
-				pmb_mysql_query($requete);
-				$ordre_categ++;
-			} else {
-				$unknown_desc[]=$descripteur;
-			}
-		}
+	} else {
+	    $bulletin_ex=0;
 	}
 
-	if(count($info_610)){
+	//Traitement du thÈsaurus
+	$unknown_desc=array();
+	$ordre_categ = 0;
+	if (!empty($info_606_a)) {
+    	for ($i=0; $i<count($info_606_a); $i++) {
+    		for ($j=0; $j<count($info_606_a[$i]); $j++) {
+    			$descripteur=trim($info_606_a[$i][$j]);
+    			//Recherche du terme
+    			//dans le thesaurus par defaut et dans la langue de l'interface
+    			$libelle = addslashes($descripteur);
+    			$categ_id = categories::searchLibelle($libelle);
+    
+    			if ($categ_id) {
+    				$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) VALUES($notice_id,$categ_id,$ordre_categ)";
+    				pmb_mysql_query($requete);
+    				$ordre_categ++;
+    			} else {
+    				$unknown_desc[]=$descripteur;
+    			}
+    		}
+    	}
+	}
+
+	if(!empty($info_610) && count($info_610)){
 		for ($i=0; $i<count($info_610); $i++) {
 			$tmp=explode($pmb_keyword_sep,$info_610[$i]);
 			if(count($tmp)){
@@ -243,7 +247,7 @@ function import_new_notice_suite() {
 		pmb_mysql_query($requete);
 	}
 
-	//Th√®me
+	//ThËme
 	import_records::insert_list_integer_values_custom_field(1, $notice_id, $info_900);
 
 	//Genres
@@ -253,7 +257,7 @@ function import_new_notice_suite() {
 	import_records::insert_list_integer_values_custom_field(3, $notice_id, $info_902);
 
 	//Type de nature
-	if ($info_905[0]) {
+	if (!empty($info_905[0])) {
 		$requete="select max(notices_custom_list_value*1) from notices_custom_lists where notices_custom_champ=6";
 		$resultat=pmb_mysql_query($requete);
 		$max=@pmb_mysql_result($resultat,0,0);
@@ -275,8 +279,8 @@ function import_new_notice_suite() {
 	//Niveau
 	import_records::insert_list_integer_values_custom_field(7, $notice_id, $info_906);
 
-	//Ann√©e de p√©remption
-	if ($info_903[0]) {
+	//AnnÈe de pÈremption
+	if (!empty($info_903[0])) {
 		$requete="select notices_custom_integer from notices_custom_values where notices_custom_integer='".addslashes($info_903[0])."' and notices_custom_champ=4 and notices_custom_origine='".$notice_id."'";
 		$resultat=pmb_mysql_query($requete);
 		if (!pmb_mysql_num_rows($resultat)) {
@@ -286,7 +290,7 @@ function import_new_notice_suite() {
 	}
 
 	//Date de saisie
-	if ($info_904[0]) {
+	if (!empty($info_904[0])) {
 		$requete="select notices_custom_date from notices_custom_values where notices_custom_date='".addslashes($info_904[0])."' and notices_custom_champ=5 and notices_custom_origine='".$notice_id."'";
 		$resultat=pmb_mysql_query($requete);
 		if (!pmb_mysql_num_rows($resultat)) {
@@ -299,23 +303,22 @@ function import_new_notice_suite() {
 
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
-
-	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id,
-		$section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
-		$cote_mandatory,$info_464 ;
+	global $prix, $notice_id, $info_995, $tdoc_codage, $book_lender_id,
+		$sdoc_codage, $book_statut_id, $locdoc_codage, $statisdoc_codage,
+		$cote_mandatory,$info_464, $nb_expl_ignores;
 
 	global $bulletin_ex;
 
 	// lu en 010$d de la notice
 	$price = $prix[0];
 
-	// la zone 995 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof($info_995); $nb_expl++) {
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 
-		/* pr√©paration du tableau √† passer √† la m√©thode */
+		/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
 		if (($bulletin_ex)&&(is_array($info_464))) {
 			$expl['bulletin']=$bulletin_ex;
@@ -324,12 +327,12 @@ function traite_exemplaires () {
 			$expl['notice']     = $notice_id ;
 			$expl['bulletin']=0;
 		}
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; √† chercher dans docs_typdoc
+		// $expl['typdoc']     = $info_995[$nb_expl]['r']; ‡ chercher dans docs_typdoc
 		$data_doc=array();
-		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc import√© (".$book_lender_id.")";
+		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importÈ (".$book_lender_id.")";
 		//$data_doc['tdoc_libelle'] = $typdoc_995[$info_995[$nb_expl]['r']];
 		//if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "\$r non conforme -".$info_995[$nb_expl]['r']."-" ;
-		$data_doc['duree_pret'] = 0 ; /* valeur par d√©faut */
+		$data_doc['duree_pret'] = 0 ; /* valeur par dÈfaut */
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		$data_doc['tdoc_libelle']=$info_995[$nb_expl]['r'] ;
 		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
@@ -340,7 +343,7 @@ function traite_exemplaires () {
 
         if (!trim($expl['cote'])) $expl['cote']="ARCHIVES";
 
-		// $expl['section']    = $info_995[$nb_expl]['q']; √† chercher dans docs_section
+		// $expl['section']    = $info_995[$nb_expl]['q']; ‡ chercher dans docs_section
 		$data_doc=array();
 		if (!$info_995[$nb_expl]['t'])
 			$info_995[$nb_expl]['t'] = "inconnu";
@@ -350,11 +353,11 @@ function traite_exemplaires () {
 			else $data_doc['sdoc_owner'] = 0 ;
 		$expl['section'] = docs_section::import($data_doc);
 
-		/* $expl['statut']     √† chercher dans docs_statut */
+		/* $expl['statut']     ‡ chercher dans docs_statut */
 		/* TOUT EST COMMENTE ICI, le statut est maintenant choisi lors de l'import
 		if ($info_995[$nb_expl]['o']=="") $info_995[$nb_expl]['o'] = "e";
 		$data_doc=array();
-		$data_doc['statut_libelle'] = $info_995[$nb_expl]['o']." -Statut import√© (".$book_lender_id.")";
+		$data_doc['statut_libelle'] = $info_995[$nb_expl]['o']." -Statut importÈ (".$book_lender_id.")";
 		$data_doc['pret_flag'] = 1 ;
 		$data_doc['statusdoc_codage_import'] = $info_995[$nb_expl]['o'] ;
 		$data_doc['statusdoc_owner'] = $book_lender_id ;
@@ -363,8 +366,8 @@ function traite_exemplaires () {
 
 		$expl['statut'] = $book_statut_id;
 
-		// $expl['location']   = $info_995[$nb_expl]['']; √† fixer par combo_box
-		// fig√© dans le code ici pour l'instant :
+		// $expl['location']   = $info_995[$nb_expl]['']; ‡ fixer par combo_box
+		// figÈ dans le code ici pour l'instant :
 		//$info_995[$nb_expl]['localisation']="Bib princip"; /* biblio principale */
 		$data_doc=array();
 		$data_doc['location_libelle'] = "inconnu";
@@ -378,9 +381,9 @@ function traite_exemplaires () {
 			else $data_doc['locdoc_owner'] = 0 ;
 		$expl['location'] = docs_location::import($data_doc);
 
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilis√©, √©ventuellement √† fixer par combo_box
+		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÈ, Èventuellement ‡ fixer par combo_box
 		$data_doc=array();
-		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub vis√© import√© (".$book_lender_id.")";
+		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visÈ importÈ (".$book_lender_id.")";
 		if (!$info_995[$nb_expl]['q'])
 			$info_995[$nb_expl]['q'] = "inconnu";
 		$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q'] ;
@@ -390,21 +393,25 @@ function traite_exemplaires () {
 		$expl['codestat'] = docs_codestat::import($data_doc);
 
 
-		// $expl['creation']   = $info_995[$nb_expl]['']; √† pr√©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; √† pr√©ciser
+		// $expl['creation']   = $info_995[$nb_expl]['']; ‡ prÈciser
+		// $expl['modif']      = $info_995[$nb_expl]['']; ‡ prÈciser
 
 		$expl['note']       = $info_995[$nb_expl]['u'];
 		$expl['prix']       = $price;
 		$expl['expl_owner'] = $book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 
-		$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
-		$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
-
+		if (!empty($info_995[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_995[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		}
+		
 		$expl_id = exemplaire::import($expl);
 		if ($expl_id == 0) {
 			$nb_expl_ignores++;
-			}
+		}
 
 		//debug : affichage zone 995
 		/*
@@ -424,7 +431,7 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

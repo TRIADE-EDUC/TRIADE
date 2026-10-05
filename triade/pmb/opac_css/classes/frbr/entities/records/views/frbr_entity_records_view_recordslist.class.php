@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_records_view_recordslist.class.php,v 1.8 2018-09-19 13:49:36 tsamson Exp $
+// $Id: frbr_entity_records_view_recordslist.class.php,v 1.10 2022/09/16 09:43:23 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,15 +15,15 @@ class frbr_entity_records_view_recordslist extends frbr_entity_common_view_djang
 		{% endfor %}";
 	}
 
-	public function render($datas){	
-		//on rajoute nos Ã©lÃ©ments...
+	public function render($datas, $grouped_datas = []){	
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
 		$render_datas['title'] = $this->msg["frbr_entity_records_view_recordslist_title"];
 		$render_datas['records'] = array();
 		if(is_array($datas)){                        
 			foreach($datas as $record){
-                //RÃ©cupÃ©ration des oeuvres associÃ©es
+                //Récupération des oeuvres associées
                 $works=array();
                 $requete="select id_authority from notices_titres_uniformes join authorities on num_object=ntu_num_tu and type_object=7 where ntu_num_notice=".$record;
                 $resultat=pmb_mysql_query($requete);
@@ -37,10 +37,11 @@ class frbr_entity_records_view_recordslist extends frbr_entity_common_view_djang
                 }
 				$render_datas['records'][]= array(
 						'content' => record_display::get_display_in_result($record, (isset($this->parameters->django_directory) ? $this->parameters->django_directory : "")),
-                                                'works'=>$works,
-                                                'items'=>record_display::get_display_expl_list($record),
-                                                'explnums'=>record_display::get_display_explnums($record)
-                                );
+				        'object' => new record_datas($record),
+                        'works'=>$works,
+                        'items'=>record_display::get_display_expl_list($record),
+                        'explnums'=>record_display::get_display_explnums($record)
+                );
 			}
 		}
 		//on rappelle le tout...
@@ -61,11 +62,15 @@ class frbr_entity_records_view_recordslist extends frbr_entity_common_view_djang
 					'var' => "records[i].content",
 					'desc'=> $this->msg['frbr_entity_records_view_record_content_desc']
 				),
-                                array(
-                                        'var' => "records[i].works",
-                                        'desc' => $this->msg['frbr_entity_works_view_works_desc'],
-                                        'children' => $this->prefix_var_tree(titre_uniforme::get_format_data_structure(),"records[i].works[i]")
-                                )
+				array(
+					'var' => "records[i].object",
+					'desc'=> $this->msg['frbr_entity_records_view_record_object_desc']
+				),
+                array(
+                    'var' => "records[i].works",
+                    'desc' => $this->msg['frbr_entity_records_view_works_desc'],
+                    'children' => $this->prefix_var_tree(titre_uniforme::get_format_data_structure(),"records[i].works[i]")
+                )
 			)
 		);
 		$format = array_merge($format,parent::get_format_data_structure());

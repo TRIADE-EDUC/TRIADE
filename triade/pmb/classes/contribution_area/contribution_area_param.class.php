@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_param.class.php,v 1.3 2018-06-20 14:49:33 apetithomme Exp $
+// $Id: contribution_area_param.class.php,v 1.8 2021/04/14 14:34:17 gneveu Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -10,7 +10,7 @@ require_once ($include_path . '/templates/contribution_area/contribution_area_pa
 
 /**
  * class contribution_area
- * ReprÃ©sente un espace de contribution
+ * Représente un espace de contribution
  */
 class contribution_area_param {
 	
@@ -21,7 +21,7 @@ class contribution_area_param {
 
 	public function get_form() {
 		global $contribution_area_param_form;
-		global $pmb_contribution_ws_url, $pmb_contribution_ws_username, $pmb_contribution_ws_password, $pmb_contribution_opac_show_sub_form;
+		global $pmb_contribution_ws_url, $pmb_contribution_ws_username, $pmb_contribution_ws_password, $pmb_contribution_opac_show_sub_form, $pmb_contribution_opac_accordion_result, $pmb_contribution_opac_auto_save_draft, $pmb_contribution_opac_edit_entity;
 		global $charset, $msg;
 		
 		$quick_param_link = '';
@@ -33,12 +33,16 @@ class contribution_area_param {
 		$contribution_area_param_form = str_replace('!!user_password!!', ($pmb_contribution_ws_password ? $pmb_contribution_ws_password : ""), $contribution_area_param_form);
 		$contribution_area_param_form = str_replace('!!source_url!!', ($pmb_contribution_ws_url ? $pmb_contribution_ws_url : ""), $contribution_area_param_form);
 		$contribution_area_param_form = str_replace('!!show_sub_form!!', ($pmb_contribution_opac_show_sub_form ? "checked='checked'" : ""), $contribution_area_param_form);
+		$contribution_area_param_form = str_replace('!!accordion_result!!', ($pmb_contribution_opac_accordion_result ? "checked='checked'" : ""), $contribution_area_param_form);
+		$contribution_area_param_form = str_replace('!!contribution_edit_entity!!', ($pmb_contribution_opac_edit_entity ? "checked='checked'" : ""), $contribution_area_param_form);
+		$contribution_area_param_form = str_replace('!!auto_save_draft!!', ($pmb_contribution_opac_auto_save_draft ? "checked='checked'" : ""), $contribution_area_param_form);
+		$contribution_area_param_form = str_replace('!!contribution_docnum_directory_options!!', $this->get_contribution_docnum_directory(), $contribution_area_param_form);
 		return $contribution_area_param_form;
 	}
 
 	public function save_from_form(){
-		global $source_url, $user_name, $user_password, $show_sub_form;
-		global $pmb_contribution_ws_url, $pmb_contribution_ws_username, $pmb_contribution_ws_password, $pmb_contribution_opac_show_sub_form;
+	    global $source_url, $user_name, $user_password, $show_sub_form, $accordion_result, $auto_save_draft, $contribution_edit_entity, $contribution_docnum_directory;
+	    global $pmb_contribution_ws_url, $pmb_contribution_ws_username, $pmb_contribution_ws_password, $pmb_contribution_opac_show_sub_form;
 		
 		$query = "UPDATE parametres SET valeur_param = '".addslashes($user_name)."' WHERE sstype_param = 'contribution_ws_username'";
 		pmb_mysql_query($query);
@@ -47,6 +51,14 @@ class contribution_area_param {
 		$query = "UPDATE parametres SET valeur_param = '".addslashes($source_url)."' WHERE sstype_param = 'contribution_ws_url'";
 		pmb_mysql_query($query);
 		$query = "UPDATE parametres SET valeur_param = '".addslashes($show_sub_form)."' WHERE sstype_param = 'contribution_opac_show_sub_form'";
+		pmb_mysql_query($query);
+		$query = "UPDATE parametres SET valeur_param = '".addslashes($accordion_result)."' WHERE sstype_param = 'contribution_opac_accordion_result'";
+		pmb_mysql_query($query);
+		$query = "UPDATE parametres SET valeur_param = '".addslashes($auto_save_draft)."' WHERE sstype_param = 'contribution_opac_auto_save_draft'";
+		pmb_mysql_query($query);
+		$query = "UPDATE parametres SET valeur_param = '".addslashes($contribution_edit_entity)."' WHERE sstype_param = 'contribution_opac_edit_entity'";
+		pmb_mysql_query($query);
+		$query = "UPDATE parametres SET valeur_param = '".addslashes($contribution_docnum_directory)."' WHERE sstype_param = 'contribution_opac_docnum_directory'";
 		pmb_mysql_query($query);
 		
 		$pmb_contribution_ws_url = $source_url;
@@ -106,7 +118,7 @@ class contribution_area_param {
 		pmb_mysql_query("INSERT INTO connectors_out_sources_esgroups (connectors_out_source_esgroup_sourcenum, connectors_out_source_esgroup_esgroupnum)
 				VALUES (".$external_source_id.", ".$external_group_id.")");
 		
-		// Mise Ã  jour des paramÃ¨tres
+		// Mise à jour des paramètres
 		pmb_mysql_query("UPDATE parametres SET valeur_param = '".addslashes($user_name)."' WHERE sstype_param = 'contribution_ws_username'");
 		pmb_mysql_query("UPDATE parametres SET valeur_param = '".addslashes($user_password)."' WHERE sstype_param = 'contribution_ws_password'");
 		pmb_mysql_query("UPDATE parametres SET valeur_param = '".addslashes($external_source_url)."' WHERE sstype_param = 'contribution_ws_url'");
@@ -127,5 +139,21 @@ class contribution_area_param {
 		$html = str_replace('!!user_id_options!!', $user_id_options, $html);
 		
 		return $html;
+	}
+	
+	public function get_contribution_docnum_directory() {
+	    global $charset, $msg;
+	    global $pmb_contribution_opac_docnum_directory;
+	    
+	    $query = "SELECT repertoire_id, repertoire_nom FROM upload_repertoire";
+	    $result = pmb_mysql_query($query);
+	    $repertoire_id_options = '';
+        if (empty($pmb_contribution_opac_docnum_directory)) {
+            $repertoire_id_options .= '<option value="0" selected>'.$msg['contribution_docnum_directory_select'].'</option>';
+        }
+	    while($row = pmb_mysql_fetch_assoc($result)) {
+	        $repertoire_id_options .= '<option value="' . $row["repertoire_id"] . '"' . ($row["repertoire_id"] == $pmb_contribution_opac_docnum_directory ? "selected='selected'" : "") .'">'.htmlentities($row["repertoire_nom"], ENT_QUOTES, $charset).'</option>';
+	    }
+	    return $repertoire_id_options;
 	}
 } // end of contribution_area

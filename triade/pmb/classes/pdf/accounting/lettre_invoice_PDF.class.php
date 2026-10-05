@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_invoice_PDF.class.php,v 1.3 2019-05-23 15:23:26 dgoron Exp $
+// $Id: lettre_invoice_PDF.class.php,v 1.6 2020/01/23 14:38:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/pdf/accounting/lettre_accounting_PDF.class.php");
 
 class lettre_invoice_PDF extends lettre_accounting_PDF {
@@ -47,11 +48,12 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 	public $w_dat = '';
 	
 	public $prix = '';
+	public $tot_ht = 0;
+	public $tot_tva = 0;
+	public $tot_ttc = 0;
 	
-	protected function get_parameter_value($name) {
-		$parameter_name = 'acquisition_pdffac_'.$name;
-		global $$parameter_name;
-		return $$parameter_name;
+	protected static function get_parameter_prefix() {
+	    return 'acquisition_pdffac';
 	}
 	
 	protected function _init_pos_num() {
@@ -65,7 +67,7 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 	
 	protected function _init_pos_tot() {
 		$pos_tot = explode(',', $this->get_parameter_value('pos_tot'));
-		//Insertion de la valeur 0 pour la position Y inexistant dans le paramÃ©trage
+		//Insertion de la valeur 0 pour la position Y inexistant dans le param�trage
 		array_splice($pos_tot, 1, 0, array('0'));
 		$this->_init_position('tot', $pos_tot);
 	}
@@ -82,10 +84,9 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 		global $msg,$pmb_pdf_font;
 		global $acquisition_gestion_tva;
 		
-		//On rÃ©cupÃ¨re les infos de la facture
+		//On r�cup�re les infos de la facture
 		$this->id_acte = $id_fac;
 		$fac = $this->get_acte();
-		$lignes = actes::getLignes($this->id_acte);
 		
 		$id_cde = liens_actes::getParent($this->id_acte);
 		$cde = new actes($id_cde);
@@ -142,64 +143,14 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 	
 		if ($acquisition_gestion_tva) $this->prix.= $msg['acquisition_act_tab_priht']."\n".$msg['acquisition_tva']."\n".$msg['acquisition_rem']; 
 		else $this->prix.= " ".$msg['acquisition_act_tab_prittc']."\n".$msg['acquisition_rem'];	
-		$tot_ht = 0;
-		$tot_tva = 0;
-		$tot_ttc = 0;
+		$this->tot_ht = 0;
+		$this->tot_tva = 0;
+		$this->tot_ttc = 0;
 	
 		$this->doEntete();
 	
-		while (($row = pmb_mysql_fetch_object($lignes))) {
-			$typ = new types_produits($row->num_type);
-			$col1 = $typ->libelle."\n".$row->code;
-			if ($row->num_rubrique) {
-				$rub = new rubriques($row->num_rubrique);
-				$col5 = $rub->num_cp_compta;
-			} else {
-				$col5 = '';
-			}
-			$col4 = number_format($row->prix, 2,'.','')." ".$fac->devise."\n".number_format($row->tva,2,'.','')." %\n".number_format($row->remise,2,'.','')." %";
+		$this->doLines();
 		
-			$this->h = $this->h_tab * max( 	$this->PDF->NbLines($this->w_code, $col1),
-						$this->PDF->NbLines($this->w_lib, $row->libelle),
-						$this->PDF->NbLines($this->w_qte, $row->nb),
-						$this->PDF->NbLines($this->w_pri, $col4),
-						$this->PDF->NbLines($this->w_dat, $col5) );
-							
-			$this->s = $this->y+$this->h;		
-			if ($this->s > ($this->hauteur_page-$this->marge_bas)){
-				$this->PDF->AddPage();
-				$this->PDF->SetXY($this->x_tab, $this->y_tab);
-				$this->y = $this->PDF->GetY();
-				$this->doEntete();
-			} 
-			$this->PDF->SetXY($this->x_code, $this->y);
-			$this->PDF->Rect($this->x_code, $this->y, $this->w_code, $this->h);
-			$this->PDF->MultiCell($this->w_code, $this->h_tab, $col1, 0, 'L');
-			$this->PDF->SetXY($this->x_lib, $this->y);
-			$this->PDF->Rect($this->x_lib, $this->y, $this->w_lib, $this->h);
-			$this->PDF->MultiCell($this->w_lib, $this->h_tab, $row->libelle, 0, 'L');
-			$this->PDF->SetXY($this->x_qte, $this->y);
-			$this->PDF->Rect($this->x_qte, $this->y, $this->w_qte, $this->h);
-			$this->PDF->MultiCell($this->w_qte, $this->h_tab, $row->nb, 0, 'R');
-			$this->PDF->SetXY($this->x_pri, $this->y);
-			$this->PDF->Rect($this->x_pri, $this->y, $this->w_pri, $this->h);
-			$this->PDF->MultiCell($this->w_pri, $this->h_tab, $col4, 0, 'R');
-			$this->PDF->SetXY($this->x_dat, $this->y);
-			$this->PDF->Rect($this->x_dat, $this->y, $this->w_dat, $this->h);
-			$this->PDF->MultiCell($this->w_dat, $this->h_tab, $col5, 0, 'R');
-			$this->y = $this->y+$this->h;
-	
-			//calcul des montants ht, ttc, tva			
-			if ($acquisition_gestion_tva) {
-				$lig_ht = $row->nb * $row->prix * (1-($row->remise/100)) ;
-				$tot_ht = $tot_ht + $lig_ht;
-				$tot_tva = $tot_tva + ($lig_ht*($row->tva/100) );
-				$tot_ttc = $tot_ht + $tot_tva;						
-			} else {
-				$lig_ttc = $row->nb * $row->prix * (1-($row->remise/100)) ;
-				$tot_ttc = $tot_ttc + $lig_ttc;
-			}
-		}
 		$this->y = $this->PDF->SetY($this->y);
 	
 		//affichage des montants ht, ttc, tva	
@@ -216,13 +167,13 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 		}
 		if ($acquisition_gestion_tva){
 			$this->PDF->Cell($this->l_tot, $this->h_tot, $msg['acquisition_total_ht'], 1, 0, 'L',0);
-			$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($tot_ht, 2),2,'.','')." ".$fac->devise, 1, 1, 'R',0);
+			$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($this->tot_ht, 2),2,'.','')." ".$fac->devise, 1, 1, 'R',0);
 			$this->PDF->Cell($this->l_tot, $this->h_tot, $msg['acquisition_tva'], 1, 0, 'L',0);
-			$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($tot_tva, 2),2,'.','')." ".$fac->devise, 1, 1,'R',0);	 		 	
+			$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($this->tot_tva, 2),2,'.','')." ".$fac->devise, 1, 1,'R',0);	 		 	
 		}
 	
 		$this->PDF->Cell($this->l_tot, $this->h_tot, $msg['acquisition_total_ttc'], 1, 0, 'L',0);
-		$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($tot_ttc, 2),2,'.','')." ".$fac->devise, 1, 1, 'R',0);	 	
+		$this->PDF->Cell($this->l_tot, $this->h_tot, number_format(round($this->tot_ttc, 2),2,'.','')." ".$fac->devise, 1, 1, 'R',0);	 	
 	
 		$this->PDF->SetAutoPageBreak(true, $this->marge_bas);
 		$this->PDF->SetX($this->marge_gauche);
@@ -265,6 +216,66 @@ class lettre_invoice_PDF extends lettre_accounting_PDF {
 		$this->PDF->Rect($this->x_dat, $this->y, $this->w_dat, $this->h, 'FD');
 		$this->PDF->MultiCell($this->w_dat, $this->h_tab, $msg['acquisition_num_cp_compta'], 0, 'L');
 		$this->y = $this->y+$this->h;
+	}
+	
+	public function doLines() {
+		global $acquisition_gestion_tva;
+		
+		$fac = $this->get_acte();
+		
+		$lignes = actes::getLignes($this->id_acte);
+		while (($row = pmb_mysql_fetch_object($lignes))) {
+			$typ = new types_produits($row->num_type);
+			$col1 = $typ->libelle."\n".$row->code;
+			if ($row->num_rubrique) {
+				$rub = new rubriques($row->num_rubrique);
+				$col5 = $rub->num_cp_compta;
+			} else {
+				$col5 = '';
+			}
+			$col4 = number_format($row->prix, 2,'.','')." ".$fac->devise."\n".number_format($row->tva,2,'.','')." %\n".number_format($row->remise,2,'.','')." %";
+			
+			$this->h = $this->h_tab * max( 	$this->PDF->NbLines($this->w_code, $col1),
+					$this->PDF->NbLines($this->w_lib, $row->libelle),
+					$this->PDF->NbLines($this->w_qte, $row->nb),
+					$this->PDF->NbLines($this->w_pri, $col4),
+					$this->PDF->NbLines($this->w_dat, $col5) );
+			
+			$this->s = $this->y+$this->h;
+			if ($this->s > ($this->hauteur_page-$this->marge_bas)){
+				$this->PDF->AddPage();
+				$this->PDF->SetXY($this->x_tab, $this->y_tab);
+				$this->y = $this->PDF->GetY();
+				$this->doEntete();
+			}
+			$this->PDF->SetXY($this->x_code, $this->y);
+			$this->PDF->Rect($this->x_code, $this->y, $this->w_code, $this->h);
+			$this->PDF->MultiCell($this->w_code, $this->h_tab, $col1, 0, 'L');
+			$this->PDF->SetXY($this->x_lib, $this->y);
+			$this->PDF->Rect($this->x_lib, $this->y, $this->w_lib, $this->h);
+			$this->PDF->MultiCell($this->w_lib, $this->h_tab, $row->libelle, 0, 'L');
+			$this->PDF->SetXY($this->x_qte, $this->y);
+			$this->PDF->Rect($this->x_qte, $this->y, $this->w_qte, $this->h);
+			$this->PDF->MultiCell($this->w_qte, $this->h_tab, $row->nb, 0, 'R');
+			$this->PDF->SetXY($this->x_pri, $this->y);
+			$this->PDF->Rect($this->x_pri, $this->y, $this->w_pri, $this->h);
+			$this->PDF->MultiCell($this->w_pri, $this->h_tab, $col4, 0, 'R');
+			$this->PDF->SetXY($this->x_dat, $this->y);
+			$this->PDF->Rect($this->x_dat, $this->y, $this->w_dat, $this->h);
+			$this->PDF->MultiCell($this->w_dat, $this->h_tab, $col5, 0, 'R');
+			$this->y = $this->y+$this->h;
+			
+			//calcul des montants ht, ttc, tva
+			if ($acquisition_gestion_tva) {
+				$lig_ht = $row->nb * $row->prix * (1-($row->remise/100)) ;
+				$this->tot_ht = $this->tot_ht + $lig_ht;
+				$this->tot_tva = $this->tot_tva + ($lig_ht*($row->tva/100) );
+				$this->tot_ttc = $this->tot_ht + $this->tot_tva;
+			} else {
+				$lig_ttc = $row->nb * $row->prix * (1-($row->remise/100)) ;
+				$this->tot_ttc = $this->tot_ttc + $lig_ttc;
+			}
+		}
 	}
 }
 

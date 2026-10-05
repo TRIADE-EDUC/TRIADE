@@ -20,6 +20,15 @@
 @session_start();
 if (!isset($APPLI_STYLE ))
   $APPLI_STYLE = "Petrole";
+
+
+if (!function_exists('get_magic_quotes_gpc')) {
+    function get_magic_quotes_gpc(): bool {
+        return false;
+    }
+}
+
+
 // ----------------------------------------------------------------------------
 // GENERATION D'UN IDENTIFIANT DE SESSION
 // ----------------------------------------------------------------------------
@@ -34,12 +43,12 @@ function SessionId($longueur, $idUser, $weekType, $hdScreen, $fromPPX) {
     $sid = "";
     for ($index = 0; $index < $longueur; $index++)
       $sid .= substr($Pool, (mt_rand()%(strlen($Pool))), 1);
-    $DB_CX->DbQuery("SELECT sid_util_id FROM ${PREFIX_TABLE}sid WHERE sid_id='".$sid."'");
+    $DB_CX->DbQuery("SELECT sid_util_id FROM {$PREFIX_TABLE}sid WHERE sid_id='".$sid."'");
     $ok = ($DB_CX->DbNumRows() == 0);
   }
 
   // Enregistrement de la session
-  $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}sid (sid_id, sid_util_id, sid_admin_id, sid_last_maj, sid_session_id, sid_util_subst_id, sid_semaine_type, sid_filtre_couleur, sid_screen) VALUES ('".$sid."',".$idUser.",0,'".date("Y-m-d H:i:s", time())."','".@session_id()."',".$idUser.",'".$weekType."','ALL','".$hdScreen."')");
+  $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}sid (sid_id, sid_util_id, sid_admin_id, sid_last_maj, sid_session_id, sid_util_subst_id, sid_semaine_type, sid_filtre_couleur, sid_screen) VALUES ('".$sid."',".$idUser.",0,'".date("Y-m-d H:i:s", time())."','".@session_id()."',".$idUser.",'".$weekType."','ALL','".$hdScreen."')");
 
   // Transmission de l'identifiant genere
   return ($sid);
@@ -59,13 +68,13 @@ function Session_ok($idSession, $fromPPX = false) {
   // Mod fcke_aff_toolbar  
   // On supprime les sessions de plus de 1 heure
   if (!$fromPPX) {
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}sid WHERE sid_last_maj < '".date("Y-m-d H:i:s", (time() - $DUREE_SESSION))."'");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}sid WHERE sid_last_maj < '".date("Y-m-d H:i:s", (time() - $DUREE_SESSION))."'");
   }
   // Retrait temporaire des droits d'administration
   $idAdmin = 0;
 
   // On recherche les sessions encore valides
-  $DB_CX->DbQuery("SELECT util_id, util_interface, util_telephone_vf, util_planning, sid_util_subst_id, sid_semaine_type, sid_filtre_couleur, sid_screen, admin_id, util_format_nom, util_menu_dispo, util_note_barree, util_menuonclick, util_langue, CONCAT(util_nom,' ',util_prenom) AS nomUtil, util_fcke, util_fcke_toolbar, util_fcke_aff_toolbar, droit_profils, droit_agendas, droit_notes, droit_admin FROM ${PREFIX_TABLE}sid LEFT JOIN ${PREFIX_TABLE}admin ON admin_id=sid_admin_id, ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}droit WHERE sid_id='".$idSession."' AND sid_session_id='".@session_id()."' AND sid_util_id = util_id AND droit_util_id=util_id");
+  $DB_CX->DbQuery("SELECT util_id, util_interface, util_telephone_vf, util_planning, sid_util_subst_id, sid_semaine_type, sid_filtre_couleur, sid_screen, admin_id, util_format_nom, util_menu_dispo, util_note_barree, util_menuonclick, util_langue, CONCAT(util_nom,' ',util_prenom) AS nomUtil, util_fcke, util_fcke_toolbar, util_fcke_aff_toolbar, droit_profils, droit_agendas, droit_notes, droit_admin FROM {$PREFIX_TABLE}sid LEFT JOIN {$PREFIX_TABLE}admin ON admin_id=sid_admin_id, {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}droit WHERE sid_id='".$idSession."' AND sid_session_id='".@session_id()."' AND sid_util_id = util_id AND droit_util_id=util_id");
 
   if ($DB_CX->DbNumRows() && $enr = $DB_CX->DbNextRow()) {
     // Recuperation des parametres de l'utilisateur connecte
@@ -105,10 +114,10 @@ function Session_ok($idSession, $fromPPX = false) {
     $hdScreen = $enr['sid_screen'];
     // Controle de la validite de l'identifiant d'administrateur recupere
     if ($idAdmin) {
-      $DB_CX->DbQuery("SELECT admin_id FROM ${PREFIX_TABLE}admin, ${PREFIX_TABLE}sid, ${PREFIX_TABLE}droit WHERE droit_util_id=$idUser AND droit_admin='O' AND sid_util_id=droit_util_id AND admin_id=sid_admin_id AND admin_id=".$idAdmin);
+      $DB_CX->DbQuery("SELECT admin_id FROM {$PREFIX_TABLE}admin, {$PREFIX_TABLE}sid, {$PREFIX_TABLE}droit WHERE droit_util_id=$idUser AND droit_admin='O' AND sid_util_id=droit_util_id AND admin_id=sid_admin_id AND admin_id=".$idAdmin);
       if (!$DB_CX->DbNumRows()) {
         $idAdmin = 0;
-        $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_admin_id=0 WHERE sid_id='".$idSession."'");
+        $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_admin_id=0 WHERE sid_id='".$idSession."'");
       } elseif (!$fromPPX) {
         // Attribution des droits d'administration si applicable
         $droit_PROFILS = _DROIT_PROFIL_COMPLET;
@@ -125,9 +134,9 @@ function Session_ok($idSession, $fromPPX = false) {
     if (!$fromPPX) {
       // Verification de la substitution
       if ($droit_AGENDAS < _DROIT_AGENDA_TOUS) {
-        $sql = "SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (util_id=".$USER_SUBSTITUE." AND util_partage_planning='1') OR (util_id=".$USER_SUBSTITUE." AND util_partage_planning='2' AND ppl_consultant_id=".$idUser.")";
+        $sql = "SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (util_id=".$USER_SUBSTITUE." AND util_partage_planning='1') OR (util_id=".$USER_SUBSTITUE." AND util_partage_planning='2' AND ppl_consultant_id=".$idUser.")";
       } else {
-        $sql = "SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE;
+        $sql = "SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE;
       }
       $DB_CX->DbQuery($sql);
       if ((!$DB_CX->DbNumRows())) {
@@ -136,7 +145,7 @@ function Session_ok($idSession, $fromPPX = false) {
       }
     }
     // Bail ok, on le renouvelle
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_last_maj='".date("Y-m-d H:i:s", time())."'".$majSubst." WHERE sid_id='".$idSession."'");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_last_maj='".date("Y-m-d H:i:s", time())."'".$majSubst." WHERE sid_id='".$idSession."'");
   } else {
     (!$fromPPX) ? Header("location: deconnexion.php?msg=5") : formLog();
     exit;
@@ -541,7 +550,7 @@ function colSpan($hDeb,$flag,$nbMax,$inHebdo) {
 // ----------------------------------------------------------------------------
 function getListeCouleur() {
   global $DB_CX, $PREFIX_TABLE, $USER_SUBSTITUE;
-  $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$USER_SUBSTITUE." ORDER BY cou_libelle");
+  $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$USER_SUBSTITUE." ORDER BY cou_libelle");
   $tabCouleur = Array();
   while($enr=$DB_CX->DbNextRow()) {
     $tabCouleur[$enr['cou_libelle']] = $enr['cou_couleur'];
@@ -557,8 +566,8 @@ function getListeCouleur() {
 function insertOrUpdate($param,$valeur,$groupe) {
   global $DB_CX, $PREFIX_TABLE;
   $groupe += 0;
-  if (!$DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}configuration VALUES ('$param', '$valeur', $groupe);")) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}configuration SET valeur='$valeur' WHERE param='$param' AND groupe=$groupe");
+  if (!$DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}configuration VALUES ('$param', '$valeur', $groupe);")) {
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}configuration SET valeur='$valeur' WHERE param='$param' AND groupe=$groupe");
   }
 }
 // ----------------------------------------------------------------------------
@@ -629,7 +638,7 @@ function insertOccurrence() {
   // Enregistrement des personnes concernees
   $ageID = $DB_CX->DbInsertID();
   for ($nb=0;$nb < count($idParticipant);$nb++)
-    $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$ageID.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
+    $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$ageID.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
 }
 // ----------------------------------------------------------------------------
 
@@ -656,7 +665,7 @@ function get_all_variables($array, &$target) {
   }
   $is_magic_quotes = get_magic_quotes_gpc();
   reset($array);
-  while (list($key, $val) = each($array)) {
+  foreach ($array as $key => $val) {
     if (is_array($val)) {
       pxExtract($val, $target[$key]);
     } else if (!$is_magic_quotes) {
@@ -676,7 +685,7 @@ function display_variables() {
       $strout .= "<TR bgcolor=\"".$bgColor[0]."\"><TH colspan=\"2\">Valeurs du GET</TH></TR>";
       $DEBUGTAB = array();
       get_all_variables($_GET, $DEBUGTAB);
-      while (list($key, $val) = each($DEBUGTAB)) {
+      foreach ($DEBUGTAB as $key => $val) {
         $strout .= "<TR bgcolor=\"".$bgColor[1]."\"><TD><B>$key</B></TD><TD>$val</TD></TR>";
       }
     }
@@ -684,7 +693,7 @@ function display_variables() {
       $strout .= "<TR bgcolor=\"".$bgColor[0]."\"><TH colspan=\"2\">Valeurs du POST</TH></TR>";
       $DEBUGTAB = array();
       get_all_variables($_POST, $DEBUGTAB);
-      while (list($key, $val) = each($DEBUGTAB)) {
+      foreach ($DEBUGTAB as $key => $val) {
         $strout .= "<TR bgcolor=\"".$bgColor[1]."\"><TD><B>$key</B></TD><TD>$val</TD></TR>";
       }
     }

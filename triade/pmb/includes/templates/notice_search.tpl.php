@@ -1,140 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_search.tpl.php,v 1.27 2019-05-27 13:47:15 btafforeau Exp $
+// $Id: notice_search.tpl.php,v 1.29 2021/05/03 08:28:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $option_show_notice_fille, $option_show_expl, $layout_begin, $layout_end, $menu_search_commun, $msg, $pmb_use_uniform_title, $pmb_map_activate, $menu_search_tpl;
-global $pmb_allow_external_search, $menu_search, $other_search_form, $current_module, $nb_per_page_a_search;
+global $layout_begin, $layout_end, $msg;
+global $other_search_form, $current_module, $nb_per_page_a_search;
 
-if(!isset($option_show_notice_fille)) $option_show_notice_fille = 0;
-if(!isset($option_show_expl)) $option_show_expl = 0;
-
-// en-tÃªte et pied de page
+// en-tête et pied de page
 $layout_begin = "";
 $layout_end = "";
-
-$menu_search_commun="
-<div class='hmenu'>
-	<span".ongletSelect("categ=search&mode=0").">
-		<a href='./catalog.php?categ=search&mode=0'>
-			$msg[354]
-		</a>
-	</span>
-	<span".ongletSelect("categ=search&mode=1").">
-		<a href='./catalog.php?categ=search&mode=1'>
-			$msg[355]
-		</a>
-	</span>
-	<span".ongletSelect("categ=search&mode=5").">
-		<a href='./catalog.php?categ=search&mode=5'>
-			".$msg['search_by_terms']."
-		</a>
-	</span>
-	<span".ongletSelect("categ=search&mode=2").">
-		<a href='./catalog.php?categ=search&mode=2'>
-			$msg[356]
-		</a>
-	</span>";
-if ($pmb_use_uniform_title)	$menu_search_commun.="<span".ongletSelect("categ=search&mode=9").">
-		<a href='./catalog.php?categ=search&mode=9'>
-			".$msg['search_by_titre_uniforme']."
-		</a>
-	</span>";
-$menu_search_commun.="
-	<!-- !!authpersos!! -->
-	<span".ongletSelect("categ=search&mode=3").">
-		<a href='./catalog.php?categ=search&mode=3'>
-			".$msg['search_by_panier']."
-		</a>
-	</span>
-	<span".ongletSelect("categ=search&mode=6").">
-		<a href='./catalog.php?categ=search&mode=6'>
-			".$msg['search_extended']."
-		</a>
-	</span>
-	<span".ongletSelect("categ=search&mode=8").">
-		<a href='./catalog.php?categ=search&mode=8&option_show_notice_fille=$option_show_notice_fille&option_show_expl=$option_show_expl'>
-			".$msg['search_exemplaire']."
-		</a>
-	</span>";
-if ($pmb_map_activate) $menu_search_commun.="<span".ongletSelect("categ=search&mode=11").">
-		<a href='./catalog.php?categ=search&mode=11'>
-			".$msg['search_map']."
-		</a>
-	</span>
-";		
-	$menu_search_tpl="
-	<span !!selected!!>
-		<a href='./catalog.php?categ=search&mode=!!mode!!'>
-			!!label!!
-		</a>
-	</span>
-	";
-if ($pmb_allow_external_search) $menu_search_commun .= "
-	<span".ongletSelect("categ=search&mode=7&external_type=simple").">
-		<a href='./catalog.php?categ=search&mode=7&external_type=simple'>
-			".$msg['connecteurs_external_search']."
-		</a>
-	</span>
-";
-$menu_search_commun .= "
-</div>
-";
-
-$menu_search[0] = "
-    <h1>$msg[357]<span>$msg[1901]$msg[354]</span></h1>
-".$menu_search_commun;
-
-$menu_search[1] = "
-    <h1>$msg[357]<span>$msg[1901]$msg[355]</span></h1>
-".$menu_search_commun;
-
-$menu_search[2] = "
-    <h1>$msg[357]<span>$msg[1901]$msg[356]</span></h1>
-".$menu_search_commun;
-
-$menu_search[3] = "
-    <h1>$msg[357]<span>$msg[1901]$msg[search_by_panier]</span></h1>
-".$menu_search_commun;
-
-$menu_search[4] = "
-    <h1>$msg[357]<span>$msg[1901]$msg[413]</span></h1>
-".$menu_search_commun;
-
-$menu_search[5] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['search_by_terms']."</span></h1>
-".$menu_search_commun;
-
-$menu_search[6] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['search_extended']."</span></h1>
-".$menu_search_commun;
-
-$menu_search[7] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['connecteurs_external_search']."</span></h1>
-".$menu_search_commun;
-    
- $menu_search[8] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['search_expl']."</span></h1>
-".$menu_search_commun; 
-      
- $menu_search[9] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['search_by_titre_uniforme']."</span></h1>
-".$menu_search_commun;   
  
-  $menu_search[10] = "
-    <h1>$msg[357]<span>$msg[1901]".$msg['search_by_titre_serie']."</span></h1>
-".$menu_search_commun;   
-  
-  $menu_search[11] = "
-  <h1>$msg[357]<span>$msg[1901]".$msg['search_by_map']."</span></h1>
-".$menu_search_commun;
-  
-  $menu_search[1000] = "
-    <h1>$msg[357]<span>$msg[1901]!!authperso_search_title!!</span></h1>
-".$menu_search_commun;  
 //    ----------------------------
 //    Form: Other Search
 //    ----------------------------
@@ -142,7 +20,7 @@ $other_search_form ="
 <script type='text/javascript'>
       function test_form(form)
       {
-     // on checke si le champ de saisie est renseignÃ©
+     // on checke si le champ de saisie est renseigné
             if(form.other_query.value.length == 0)
             {
                 alert(\"$msg[414]\");
@@ -198,7 +76,7 @@ $other_search_form ="
             <input type='checkbox' id='n_matieres_flag' name='n_matieres_flag' checked='checked' value='1' />$msg[1911]
             </div>
         </div>
-    <!--    Formes flÃ©chies
+    <!--    Formes fléchies
     <div class='row'>
         <label for='etiquette'>$msg[1906]$msg[1907]</label>
         </div>
@@ -212,7 +90,7 @@ $other_search_form ="
     -->
 
     <br />
-    <!--    RÃ©sultats par page    -->
+    <!--    Résultats par page    -->
     <div class='row'>
         <label class='etiquette' for='res_per_page'>$msg[1905]$msg[1901]</label>
         <select id='res_per_page' name='res_per_page'>

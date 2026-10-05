@@ -2,21 +2,21 @@
 
 require_once("classes/fpdf.class.php");
 
-class convert extends fpdf{
-	public $logoUrl;	//url du logo dÃ©posÃ© sur chaque page...
+class convert extends FPDF{
+	public $logoUrl;	//url du logo déposé sur chaque page...
 	public $header;	//header de page...
 	public $footers;	//pied de page du document...
 	public $resolution;
-	
+
 	public $outlines=array();
 	public $OutlineRoot;
-	
-	
+
+
 	public function __construct($params=array()){
 		parent::__construct();
 		$this->footers = $params['footers'];
-		$this->setCreator(utf8_decode($params['creator']));
-		$this->SetTextColor(0);	
+		$this->setCreator(encoding_normalize::utf8_decode($params['creator']));
+		$this->SetTextColor(0);
 	}
 
 	public function getSize($dimension,$resolution){
@@ -30,27 +30,27 @@ class convert extends fpdf{
 		);
 		return $size;
 	}
-	
+
 	public function convertPxToMm($px,$dpi=0){
 		return ($px*25.4)/($dpi ? $dpi : $this->resolution);
 	}
-		
+
 	public function Footer(){
 		if ($this->logoUrl !="") $this->Image($this->logoUrl,10,8,20);
 		if ($this->header) {
 			$this->SetFont('Arial',"",14);
-			$this->Cell(80); //DÃ©calage Ã  droite
-			$this->Cell(30,10,$this->header,0,'C');	
+			$this->Cell(80); //Décalage à droite
+			$this->Cell(30,10,$this->header,0,'C');
 		}
-		
-		//si on a un footer spÃ©cificique pour la page courante...
+
+		//si on a un footer spécificique pour la page courante...
 		$footer = array();
 		if($this->footers['page'.$this->PageNo()]){
 			$footer = $this->footers['page'.$this->PageNo()];
 		}else if ($this->footers['all']){
 			$footer = $this->footers['all'];
 		}
-		
+
 		//on applique le footer
 		if($footer['name']){
 			$this->SetY((-15*$this->h/297));
@@ -58,26 +58,26 @@ class convert extends fpdf{
 			//Police Arial italique 8
 			$this->SetFont('Arial','I',(8*$this->w/210));
 			if($footer['link']){
-				$this->Cell(0,10,utf8_decode($footer['name']),0,0,'',false,utf8_decode($footer['link']));
+			    $this->Cell(0,10,encoding_normalize::utf8_decode($footer['name']),0,0,'',false,encoding_normalize::utf8_decode($footer['link']));
 			}else{
-				$this->Cell(0,10,utf8_decode($footer['name']),0,0,'',false,'');
+			    $this->Cell(0,10,encoding_normalize::utf8_decode($footer['name']),0,0,'',false,'');
 			}
 		}
 	}
-	
+
 	public function Error($msg){
-		//erreur sur la classe FDPF, on la log avant d'arreter la gÃ©nÃ©ration...
-		logMsg($msg);	
+		//erreur sur la classe FDPF, on la log avant d'arreter la génération...
+		logMsg($msg);
 		//Fatal error
 		parent::Error($msg);
 	}
-	
+
 	/*************************************************************************
 	 *  Fonctions pour les signets (provient du site FPDF / Auteur : Olivier  *
 	 *  http://www.fpdf.org/fr/script/script1.php                            *
-	 *  ModifiÃ© par Arnaud RENOU (prise en compte d'un numÃ©ro de page        *
+	 *  Modifié par Arnaud RENOU (prise en compte d'un numéro de page        *
 	 *************************************************************************/
-	
+
 	public function Bookmark($txt, $page=-1, $level=0, $y=0)	{
 		if($y==-1)
 			$y=$this->GetY();
@@ -89,7 +89,7 @@ class convert extends fpdf{
 	public function BookmarkUTF8($txt,$page=-1, $level=0, $y=0){
 		$this->Bookmark($this->_UTF8toUTF16($txt),$page, $level,$y);
 	}
-	
+
 	public function _putbookmarks(){
 		$nb=count($this->outlines);
 		if($nb==0)
@@ -148,18 +148,18 @@ class convert extends fpdf{
 		$this->_out('/Last '.($n+$lru[0]).' 0 R>>');
 		$this->_out('endobj');
 	}
-	
-	public function _putresources(){
+
+	protected function _putresources(){
 		parent::_putresources();
 		$this->_putbookmarks();
 	}
-	
-	public function _putcatalog(){
+
+	protected function _putcatalog(){
 		parent::_putcatalog();
 		if(count($this->outlines)>0)
 		{
-			$this->_out('/Outlines '.$this->OutlineRoot.' 0 R');
-			$this->_out('/PageMode /UseOutlines');
+			$this->_put('/Outlines '.$this->OutlineRoot.' 0 R');
+			$this->_put('/PageMode /UseOutlines');
 		}
 	}
 

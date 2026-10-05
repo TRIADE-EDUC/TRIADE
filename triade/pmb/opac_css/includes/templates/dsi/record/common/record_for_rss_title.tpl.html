@@ -1,0 +1,22 @@
+<!-- $Id: record_for_rss_title.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+<div id="record_header_{{ record.id }}">
+{% block record_tit1 %}
+	<h3><a href="{{ record.permalink }}">
+		{% block record_serie %}
+			{% if record.serie.id %}
+				<!-- Serie -->
+				<span class="serie_notCourte">{{ record.serie.name }}{% if record.tnvol %}, {{ record.tnvol }}. {% endif %}</span>
+			{% else %}
+				{% if record.tnvol %}
+					<span class="serie_notCourte">{{ record.tnvol }}. </span>
+				{% endif %}
+			{% endif %}
+		{% endblock %}
+		
+		{% block record_title %}
+			<span class="tit1_notCourte">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+		{% endblock %}
+	</a></h3>
+{% endblock %}
+</div>

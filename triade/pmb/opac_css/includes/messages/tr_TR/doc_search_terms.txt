@@ -8,7 +8,7 @@
 <p>Sonuçlar iki bölüme ayrılır. <b>Üst kısımda arama sonucunda bulunan konu başlıkları görüntülenir.</b> Bu bölüm yeni arama yapılana kadar değişmez. Konu başlıklarından birine (<i>ör. siyaset tarihi</i>) tıklayınız.</p>
 <p><b>Alt kısımda</b> seçtiğiniz konu başlığı, bir üst konu başlığı (ör. <i>tarih</i>), bir alt konu başlıkları (<i>ör. Türkiye siyaset tarihi</i>, ...) ve olası göndermeler (<i>ör. siyaset bilimi, anayasa, ...</i>) görüntülenir.
 <br />Bu bölümdeki <b>bağlantılara tıklayarak konu başlıkları arasında geçiş yapabilirsiniz.</b></p>
-<p>İlginizi çeken konuyla <b>ilgili kayıtları görüntülemek için</b>, konu başlıklarının solunda bulunan <b>büyütece <img src='images/search.gif' align='absmiddle'> tıklayınız</b>.
+<p>İlginizi çeken konuyla <b>ilgili kayıtları görüntülemek için</b>, konu başlıklarının solunda bulunan <b>büyütece <img src='images/search.gif' > tıklayınız</b>.
 <br />Büyüteç gözükmüyorsa, bu konu başlığı altında hiçbir yapıt bulunmamaktadır.</p>
 
 <hr />

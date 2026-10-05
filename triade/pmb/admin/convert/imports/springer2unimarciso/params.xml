@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.2.28.1 2024/08/28 14:10:15 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>USMARC @BOOKS -&gt; UNIMARC ISO2709</importname>
@@ -8,7 +14,7 @@
 	<input type="iso_2709" endchar="0x1d"/>
 	<!-- Type de sortie -->
 	<output importable="yes" type="iso_2709" suffix="uni"/>
-	<!-- Début de conversion -->	
+	<!-- Début de conversion -->
 
 	<step type="custom">
 		<!-- Correction erreur springer -->

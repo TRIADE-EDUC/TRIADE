@@ -34,7 +34,7 @@
     // Info sur les utilisateurs selectionnes
     //Recuperer les horaires de debut et fin de journee de chaque utilisateur pour les mettre a "occupe" s'ils ne correspondent pas a la plage horaire choisie
     //Recuperer la semaine type des utilisateurs pour les rendre indisponibles les jours a 0
-    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY util_id");
+    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY util_id");
     // Tableau contenant les id => horaires (case 1 et 2) et semaine type de l'utilisateur (case 3)
     $aUtil = array();
     while ($enr=$DB_CX->DbNextRow()) {
@@ -107,7 +107,7 @@
       list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$leJour);
       // Recuperation des horaires des notes dans la table agenda_concerne
       $sql  = "SELECT age_heure_debut, age_heure_fin, age_aty_id, aco_util_id, age_date, age_date_creation, age_date_modif";
-      $sql .= " FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}agenda";
+      $sql .= " FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}agenda";
       $sql .= " WHERE aco_util_id IN (".$sChoix.")";
       $sql .= "  AND age_id=aco_age_id";
       $sql .= "  AND ($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))";

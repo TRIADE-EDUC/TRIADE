@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_browse.php,v 1.11 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: term_browse.php,v 1.11 2019/06/07 08:05:39 btafforeau Exp $
 //
 // Frames pour naviguer par terme
 

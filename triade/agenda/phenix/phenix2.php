@@ -31,7 +31,7 @@
       $autoLogin = $tabLog[2];
     }
     // Recherche de l'utilisateur correspondant
-    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_login = '".$ztLogin."' AND util_passwd = '".$ztPasswdMD5."'");
+    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_login = '".$ztLogin."' AND util_passwd = '".$ztPasswdMD5."'");
 
     if ($DB_CX->DbNumRows()) {
       // L'utilisateur existe
@@ -63,7 +63,7 @@
   include("lang/$APPLI_LANGUE.php");
 
   // Recherche du nom de l'utilisateur
-  $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_url_export FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_url_export FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
 
   $urlsUtils = array();
   while ($enr = $DB_CX->DbNextRow()) {

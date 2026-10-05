@@ -1,29 +1,29 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: grid.class.php,v 1.3 2017-09-13 12:38:33 tsamson Exp $
+// $Id: grid.class.php,v 1.3.16.1 2025/04/25 09:37:43 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe d'une grille
+// définition de la classe d'une grille
 
 require_once($class_path."/encoding_normalize.class.php");
 
 class grid {
-	
+
 	/**
 	 * Type de grille
 	 * @var string
 	 */
 	protected $type = '';
-	
+
 	/**
 	 * Filtres de la grille <=> Elements pivots
 	 * @var string
 	 */
 	protected $filter = '';
-	
+
 	/**
 	 * Flag
 	 * @var boolean
@@ -31,11 +31,11 @@ class grid {
 	protected $status = false;
 
 	/**
-	 * DonnÃ©es de la grille
+	 * Données de la grille
 	 * @var string
 	 */
 	protected $data = '';
-	
+
 	/**
 	 * Constructeur
 	 * @param string $type
@@ -48,7 +48,7 @@ class grid {
 	}
 
 	/**
-	 * DonnÃ©es de la grille
+	 * Données de la grille
 	 */
 	protected function fetch_data() {
 		$query = 'select grid_generic_data from grids_generic
@@ -60,9 +60,9 @@ class grid {
 			$this->data = pmb_mysql_result($result,0);
 		}
 	}
-	
+
 	public function save() {
-		
+
 		if($this->status) {
 			$query = 'update grids_generic set';
 		} else {
@@ -84,16 +84,17 @@ class grid {
 			return true;
 		}
 		return false;
-		
+
 	}
-      
+
 	/**
 	 * Suppression de la grille
 	 * @return boolean
 	 */
 	public function delete() {
+		return false;
 	}
-	
+
 	public static function permute_backbone($backbone_values){
 		if(count($backbone_values) > 1){
 			$newFirstLevel = array();
@@ -107,14 +108,14 @@ class grid {
 		}
 		return $backbone_values;
 	}
-	
+
 	public static function json_response($status, $datas = '') {
 		return encoding_normalize::json_encode(array('status'=> $status, 'datas'=> $datas));
 	}
-	
+
 	public static function proceed($datas) {
 		global $action;
-		
+
 		switch ($action) {
 			case "save":
 				$datas = json_decode(encoding_normalize::utf8_normalize(stripslashes($datas)));
@@ -159,35 +160,35 @@ class grid {
 				break;
 		}
 	}
-	
+
 	public function get_type() {
 		return $this->type;
 	}
-	
+
 	public function set_type($type) {
 		$this->type = $type;
 	}
-	
+
 	public function get_filter() {
 		return $this->filter;
 	}
-	
+
 	public function set_filter($filter) {
 		$this->filter = $filter;
 	}
-	
+
 	public function get_status() {
 		return $this->status;
 	}
-	
+
 	public function set_status($status) {
 		$this->status = $status;
 	}
-	
+
 	public function get_data() {
 		return $this->data;
 	}
-	
+
 	public function set_data($data) {
 		$this->data = $data;
 	}

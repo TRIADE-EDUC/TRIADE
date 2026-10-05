@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -87,13 +87,13 @@ if (isset($_POST["validation"])) {
 
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print $competence ?></font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print stripslashes($competence) ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td valign=top>
 <!-- // fin  -->
@@ -102,16 +102,16 @@ $data=rechercheDescriptif($idcompetence,$idcarnet); //id,libelle,bold
 ?>
 <br>
 <?php
-if ((count($data) > 0) && ($notation != "")) {
+if ((countTriade($data) > 0) && ($notation != "")) {
 
-	print "<font class='T2' id='color3'>&nbsp;&nbsp;Evaluation pour la Période $periode</font> ";
+	print "<font class='T2' id='color3'>&nbsp;&nbsp;Evaluation pour la Période $periode</font><br><br>";
 
 	print "<form method=post><font class='T2'>&nbsp;&nbsp;Elève : </font><select name='direct_eleve'>";
 	print "<option value='null' id='select0' >".LANGCHOIX."</option>";
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 	$res=execSql($sql);
 	$data_eleve=chargeMat($res);
-	for ($j=0;$j<count($data_eleve);$j++) {
+	for ($j=0;$j<countTriade($data_eleve);$j++) {
 		print "<option id='select1'  value=\"".$data_eleve[$j][1]."\">".ucwords(trim($data_eleve[$j][2]))." ".trim($data_eleve[$j][3])."</option>";
 	}
 	print "</select>&nbsp;"; 
@@ -142,16 +142,16 @@ if ((count($data) > 0) && ($notation != "")) {
 
 
 
-	print "<font class='T2'>&nbsp;&nbsp;Fiche de l'élève :  <strong>".strtoupper($nomEleve)." ".ucwords($prenomEleve)."</strong>";
+	print "<br><br><font class='T2'>&nbsp;&nbsp;Fiche de l'élève :  <strong>".strtoupper($nomEleve)." ".ucwords($prenomEleve)."</strong>";
 
 	print "<form name='formulaire' method='post'  >";
 	if (($notation !=  "julesverne") && ($notation !=  "commentaire")) {
-		print "<div align='left'><font class='T1'><i>N.B. :  X=Compétence travaillée mais non évaluée</i></font></div>";
+		print "<div align='left'>&nbsp;&nbsp;<font class='T1'><i>N.B. :  X=Compétence travaillée mais non évaluée</i></font></div>";
 	}
 
-	print "<table border='1' bordercolor='#000000' bgcolor='#FFFFFF'>";
+	print "<ul><table border='1' bordercolor='#000000' bgcolor='#FFFFFF' style='border-collapse: collapse;' >";
 	$j=0;
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$iddescriptif=$data[$i][0];
 		$libelle=$data[$i][1];
 		$bold=$data[$i][2];
@@ -166,11 +166,12 @@ if ((count($data) > 0) && ($notation != "")) {
 		}
 
 		print "<tr class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\"  >\n";
+		$libelle=stripslashes($libelle);
 		if ($bold) {
-			print "<td $bgcolor $colspan >$b $libelle $bb</td>\n";
+			print "<td $bgcolor $colspan >&nbsp;$b $libelle $bb&nbsp;</td>\n";
 		}else{
-			print "<td $bgcolor $colspan valign='top' > $b ".trunchaine($libelle,80)." $bb</td>\n";
-			print "<td  valign='top' >\n";
+			print "<td $bgcolor $colspan valign='top' >&nbsp;$b ".$libelle." $b&nbsp;</td>\n";
+			print "<td  valign='top' width='180px'>\n";
 			if (!$bold) {
 
 				$note=rechercheEvalutionEleve($idEleve,$idcarnet,$iddescriptif,$idcompetence,$notation,$periode,$idclasse); // id,note
@@ -240,6 +241,22 @@ if ((count($data) > 0) && ($notation != "")) {
 					print "X&nbsp;<input type=checkbox onclick='validCheck(this.form.notation_$j)' $checkedX />&nbsp;";
 					if ($note == "X") { print "<script language='JavaScript'>document.formulaire.notation_$j.style.visibility='hidden' </script>"; }
 				}
+
+
+				if ($notation == "educnational") {
+					if ($note == "1") { $checked1="checked='checked' style='background-color:#CCCCCC'"; }else{ $checked1=''; }
+                                        if ($note == "2") { $checked2="checked='checked' style='background-color:#CCCCCC'"; }else{ $checked2=''; }
+                                        if ($note == "3") { $checked3="checked='checked' style='background-color:#CCCCCC'"; }else{ $checked3=''; }
+                                        if ($note == "4") { $checked4="checked='checked' style='background-color:#CCCCCC'"; }else{ $checked4=''; }
+                                        if ($note == "X") { $checked5="checked='checked' style='background-color:#CCCCCC'"; }else{ $checked5=''; }
+                            print "&nbsp;<input type=radio name=notation_$j value='X' $checked5 /><i>&nbsp;Non&nbsp;Evaluée&nbsp;</i><br/>";
+                            print "&nbsp;<input type=radio name=notation_$j value='1' $checked1 />&nbsp;Non&nbsp;atteint&nbsp;<br/>";
+                            print "&nbsp;<input type=radio name=notation_$j value='2' $checked2 />&nbsp;Partiellemen&nbsp;atteints&nbsp;<br/>";
+                                print "&nbsp;<input type=radio name=notation_$j value='3' $checked3 />&nbsp;Atteints<br/>";
+                                print "&nbsp;<input type=radio name=notation_$j value='4' $checked4 />&nbsp;Dépassés<br/>";
+
+				}
+
 				print "<input type=hidden name='iddescriptif_$j' value='$iddescriptif' />";
 				$j++;
 			}
@@ -249,7 +266,7 @@ if ((count($data) > 0) && ($notation != "")) {
 		
 		print "</tr>\n";
 	}
-	print "</table>";
+	print "</table></ul>";
 	print "<input type=hidden name='nb' value='$j' />";
 	print "<input type=hidden name='idcarnet' value='$idcarnet' />";
 	print "<input type=hidden name='idcompetence' value='$idcompetence' />";
@@ -286,17 +303,17 @@ if ((count($data) > 0) && ($notation != "")) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

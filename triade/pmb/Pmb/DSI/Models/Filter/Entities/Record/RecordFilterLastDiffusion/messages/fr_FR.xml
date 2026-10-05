@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2023/02/24 15:12:50 jparis Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Notices créées "x jours" depuis la dernière diffusion</entry>
+	<entry code="field_nb_days">Nombre de jours</entry>
+</XMLlist>

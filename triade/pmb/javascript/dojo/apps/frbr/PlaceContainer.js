@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PlaceContainer.js,v 1.10 2017-05-10 16:08:24 tsamson Exp $
+// $Id: PlaceContainer.js,v 1.10 2017/05/10 16:08:24 tsamson Exp $
 
 
 define([

@@ -2,16 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_page_author.class.php,v 1.3 2018-07-09 15:53:37 arenou Exp $
+// $Id: authority_page_author.class.php,v 1.4 2021/06/14 07:38:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $class_path;
 require_once($class_path."/authorities/page/authority_page.class.php");
 require_once($class_path."/authorities/tabs/authority_tabs_author.class.php");
 /**
  * class authority_page_author
- * Controler d'une page d'une autoritÃ© auteur
+ * Controler d'une page d'une autorité auteur
  */
 class authority_page_author extends authority_page {
 	
@@ -20,7 +20,7 @@ class authority_page_author extends authority_page {
 	 * @param int $id Identifiant de l'auteur
 	 */
 	public function __construct($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$query = "select author_id from authors where author_id = ".$this->id;
 		$result = pmb_mysql_query($query);
 		if($result && pmb_mysql_num_rows($result)) {

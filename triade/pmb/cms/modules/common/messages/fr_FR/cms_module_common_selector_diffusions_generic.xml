@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_diffusions_generic.xml,v 1.1.4.2 2025/04/11 10:10:10 jparis Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_diffusions">Sélection manuelle</entry>
+	<entry code="cms_module_common_selector_diffusions_public">Depuis les diffusions publiques</entry>
+	<entry code="cms_module_common_selector_diffusions_private">Depuis les diffusions privées</entry>
+	<entry code="cms_module_common_selector_type_section">Depuis un champ de type de contenu d'une rubrique</entry>
+	<entry code="cms_module_common_selector_type_article">Depuis un champ de type de contenu d'un article</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Sélecteur par la valeur d'un champ générique d'article</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>
+</XMLlist>

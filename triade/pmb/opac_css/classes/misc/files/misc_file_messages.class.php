@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_messages.class.php,v 1.1 2018-11-23 13:58:14 dgoron Exp $
+// $Id: misc_file_messages.class.php,v 1.2 2020/08/17 11:57:12 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -67,7 +67,7 @@ class misc_file_messages extends misc_file {
 	}
 	
 	public function get_display_list() {
-		$display = "<table id='file_messages_list'>";
+		$display = "<table id='misc_file_messages_list'>";
 		$display .= $this->get_display_header_list();
 		if(count($this->messages)) {
 			$display .= $this->get_display_content_list();
@@ -81,7 +81,7 @@ class misc_file_messages extends misc_file {
 		return '<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
-<!-- messages localisÃ©s
+<!-- messages localisés
 ****************************************************************************************
 '.$this->get_sign_template().'
 ****************************************************************************************

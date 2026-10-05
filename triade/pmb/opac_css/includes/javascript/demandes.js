@@ -1,10 +1,10 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: demandes.js,v 1.3 2010-02-08 11:28:09 kantin Exp $
+// $Id: demandes.js,v 1.3 2010/02/08 11:28:09 kantin Exp $
 
 /*
- * CrÃ©ation du formulaire de saisie d'une action
+ * Création du formulaire de saisie d'une action
  */
 function show_form(id,type){
 	
@@ -33,7 +33,7 @@ function cancel(){
 }
 
 /*
- * Enregistrement d'une action Question/RÃ©ponse
+ * Enregistrement d'une action Question/Réponse
  */
 function save_ask(id,type){
 	var action = new http_request();

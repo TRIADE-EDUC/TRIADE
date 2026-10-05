@@ -1,34 +1,36 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pubmed_analyse_query.class.php,v 1.3 2017-03-21 11:32:17 dgoron Exp $
+// $Id: pubmed_analyse_query.class.php,v 1.6.6.1 2024/12/02 15:20:23 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/analyse_query.class.php");
 
 class pubmed_analyse_query extends analyse_query{
 	public $pubmed_stopwords = array();
+	public $field = '';
 
-    public function __construct($input,$debut=0,$parenthesis=0,$search_linked_words=1,$keep_empty=0,$field,$pubmed_stopwords) {
+    public function __construct($input,$debut=0,$parenthesis=0,$search_linked_words=1,$keep_empty=0,$field='',$pubmed_stopwords=array()) {
     	$this->pubmed_stopwords = $pubmed_stopwords;
     	$this->field = $field;
     	$this->operator = strtoupper($this->operator);
     	parent::__construct($input,0,0,1,0);
     }
-        
+
 	public function nettoyage_mot_vide($string) {
-		//Supression des espaces avant et aprÃ¨s le terme
+		//Supression des espaces avant et après le terme
 		$string = trim($string);
-		//DÃ©composition en mots du mot nettoyÃ© (ex : l'arbre devient l arbre qui donne deux mots : l et arbre)
+		//Décomposition en mots du mot nettoyé (ex : l'arbre devient l arbre qui donne deux mots : l et arbre)
 		$words=explode(" ",$string);
-		//Variable de stockage des mots restants aprÃ¨s supression des mots vides
+		//Variable de stockage des mots restants après supression des mots vides
 		$words_empty_free=array();
 		//Pour chaque mot
 		for ($i=0; $i<count($words); $i++) {
 			$words[$i]=trim($words[$i]);
-			//VÃ©rification que ce n'est pas un mot vide
+			//Vérification que ce n'est pas un mot vide
 			if (($this->keep_empty)||(in_array($words[$i],$this->pubmed_stopwords)===false)) {
 				//Si ce n'est pas un mot vide, on stoque
 				$words_empty_free[]=$words[$i];
@@ -36,14 +38,17 @@ class pubmed_analyse_query extends analyse_query{
 		}
 		return $words_empty_free;
 	}
-	
-	//Affichage sous forme mathÃ©matique logique du rÃ©sultat de l'analyse
+
+	//Affichage sous forme mathématique logique du résultat de l'analyse
 	public function show_analyse($tree="") {
+		$r ="";
 		if ($tree=="") $tree=$this->tree;
+		$i = 0;
 		foreach($tree as $elem){
-			if($elem->start_with == 0){
-				//PubMed veut ses opÃ©rateurs en MAJ
-				if ($elem->operator) $r.=" ".strtoupper($elem->operator)." ";
+		    // Cas particulier pour le DIO qui est un identifiant comprennant des caracteres spéciaux
+		    if(($this->field != "[DOI]" && $elem->start_with == 0) || ($this->field == "[DOI]" && $elem->start_with == 1)){
+				//PubMed veut ses operateurs en MAJ
+		        if ($elem->operator && $i) $r.=" ".strtoupper($elem->operator)." ";
 				$r.="(";
 				if ($elem->not) $r.="not";
 				if ($elem->sub==null) {
@@ -54,8 +59,9 @@ class pubmed_analyse_query extends analyse_query{
 					$r.=$this->field;
 				} else {
 					$r.="( ".$this->show_analyse($elem->sub).") ";
-				}		
-				$r.=")";				
+				}
+				$r.=")";
+    			$i++;
 			}
 		}
 		return $r;

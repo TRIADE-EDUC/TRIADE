@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FieldsTree.js,v 1.2 2017-04-14 08:58:55 dgoron Exp $
+// $Id: FieldsTree.js,v 1.2 2017/04/14 08:58:55 dgoron Exp $
 
 define(['dojo/_base/declare',
         'dijit/Tree'

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_recordslist_view_django_directory.xml,v 1.2 2016-08-22 13:30:50 vtouchard Exp $ -->
+$Id: cms_module_recordslist_view_django_directory.xml,v 1.2.20.1 2025/03/04 08:39:52 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_recordslist_view_django_directory'>Répertoire de templates à utiliser</entry>
@@ -13,4 +13,5 @@ $Id: cms_module_recordslist_view_django_directory.xml,v 1.2 2016-08-22 13:30:50 
 	<entry code='cms_module_recordslist_view_record_content_desc'>Rendu HTML de la notice</entry>
 	<entry code='cms_module_recordslist_view_add_cart_link'>Ajouter au panier</entry>
 	<entry code='cms_module_recordslist_view_add_cart_link_desc'>Lien d'ajout des éléments dans un panier</entry>
+	<entry code='cms_module_recordslist_view_source_infos_desc'>Informations sur les sources</entry>
 </XMLlist>

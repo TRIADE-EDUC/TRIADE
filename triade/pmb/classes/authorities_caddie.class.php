@@ -1,24 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authorities_caddie.class.php,v 1.42 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: authorities_caddie.class.php,v 1.61.4.3 2025/04/15 13:14:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des paniers
-
+// définition de la classe de gestion des paniers
+global $class_path, $include_path;
 require_once ($class_path."/caddie_root.class.php");
 require_once ($include_path."/templates/authorities_cart.tpl.php");
 require_once ($include_path."/templates/cart.tpl.php");
-require_once($class_path."/autoloader.class.php");
-require_once($class_path."/list/caddie/list_authorities_caddie_ui.class.php");
 require_once($class_path.'/event/events/event_users_group.class.php');
 
 class authorities_caddie extends caddie_root {
-	// propriÃ©tÃ©s
+	// propriétés
 	public $idcaddie ;
-	public $type = ''			;	// Type de panier (AUTHORS = auteurs, CATEGORIES = categories, PUBLISHERS = Ã©diteurs,...)
+	public $type = ''			;	// Type de panier (AUTHORS = auteurs, CATEGORIES = categories, PUBLISHERS = éditeurs,...)
 	public static $table_name = 'authorities_caddie';
 	public static $field_name = 'idcaddie';
 	public static $table_content_name = 'authorities_caddie_content';
@@ -34,20 +32,19 @@ class authorities_caddie extends caddie_root {
 	//		caddie($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($caddie_id=0) {
-		$this->idcaddie = $caddie_id+0;
+		$this->idcaddie = intval($caddie_id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos caddie
+	//		getData() : récupération infos caddie
 	// ---------------------------------------------------------------
 	protected function getData() {
-		global $dbh;
 		parent::getData();
 		$this->type = '';
 		if($this->idcaddie) {
 			$requete = "SELECT * FROM authorities_caddie WHERE idcaddie='$this->idcaddie' ";
-			$result = @pmb_mysql_query($requete, $dbh);
+			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$temp = pmb_mysql_fetch_object($result);
 				pmb_mysql_free_result($result);
@@ -70,11 +67,6 @@ class authorities_caddie extends caddie_root {
 		}
 	}
 	
-	protected function get_template_form() {
-		global $cart_form;
-		return $cart_form;
-	}
-	
 	protected function get_warning_delete() {
 		global $msg;
 		
@@ -82,7 +74,7 @@ class authorities_caddie extends caddie_root {
 		foreach ($this->liaisons as $type => $values){
 			if(count($values)){
 				switch ($type){
-					default://On ne doit pas passer par lÃ 
+					default://On ne doit pas passer par là
 						break;//On sort aussi du foreach
 				}
 			}
@@ -95,34 +87,9 @@ class authorities_caddie extends caddie_root {
 		return array('MIXED', 'AUTHORS', 'CATEGORIES', 'PUBLISHERS', 'COLLECTIONS', 'SUBCOLLECTIONS', 'SERIES', 'TITRES_UNIFORMES', 'INDEXINT', 'CONCEPTS', 'AUTHPERSO');
 	}
 	
-	// formulaire
-	public function get_form($form_action="", $form_cancel="") {
-		global $msg, $charset;
-		global $liaison_tpl;
-		
-		$form = parent::get_form($form_action, $form_cancel);
-		$form=str_replace('!!cart_type!!', $this->get_type_form(), $form);
-		if ($this->get_idcaddie()) {
-			$info_liaisons = $this->get_links_form();
-			$message_delete_warning = "";
-			if($info_liaisons){
-				$liaison_tpl=str_replace("<!-- info_liaisons -->",$info_liaisons,$liaison_tpl);
-				$form = str_replace('<!-- liaisons -->', $liaison_tpl, $form);
-				$message_delete_warning = $this->get_warning_delete();
-			}
-			$button_delete = "<input type='button' class='bouton' value=' ".$msg['supprimer']." ' onClick=\"javascript:confirmation_delete(".$this->get_idcaddie().",'".htmlentities(addslashes($this->name),ENT_QUOTES, $charset)."')\" />";
-			$form = str_replace('!!button_delete!!', $button_delete, $form);
-			$form .= confirmation_delete("./autorites.php?categ=caddie&action=del_cart&idcaddie=",$message_delete_warning);
-		} else {
-			$form = str_replace('!!button_delete!!', '', $form);
-		}
-		return $form;
-	}
-	
 	// Liaisons pour le panier
 	protected function get_links_form() {
-		global $msg, $charset;
-		global $dsi_active;
+		global $charset;
 			
 		$links_form = "";
 		$end = false;
@@ -130,7 +97,7 @@ class authorities_caddie extends caddie_root {
 			if (count ( $values )) {
 				$links_form .= "<br>";
 				switch ($type) {
-					default : // On ne doit pas passer par lÃ 
+					default : // On ne doit pas passer par là
 						$links_form = "";
 						//break 2; // On sort aussi du foreach
 						$end = true;
@@ -168,14 +135,12 @@ class authorities_caddie extends caddie_root {
 	}
 	
 	static public function get_cart_data($temp) {
-		global $dbh;
-		
 		$nb_item = 0 ;
 		$nb_item_pointe = 0 ;
 		$rqt_nb_item="select count(1) from authorities_caddie_content where caddie_id='".$temp->idcaddie."' ";
-		$nb_item = pmb_mysql_result(pmb_mysql_query($rqt_nb_item, $dbh), 0, 0);
+		$nb_item = pmb_mysql_result(pmb_mysql_query($rqt_nb_item), 0, 0);
 		$rqt_nb_item_pointe = "select count(1) from authorities_caddie_content where caddie_id='".$temp->idcaddie."' and (flag is not null and flag!='') ";
-		$nb_item_pointe = pmb_mysql_result(pmb_mysql_query($rqt_nb_item_pointe, $dbh), 0, 0);
+		$nb_item_pointe = pmb_mysql_result(pmb_mysql_query($rqt_nb_item_pointe), 0, 0);
 		
 		return array(
 				'idcaddie' => $temp->idcaddie,
@@ -202,15 +167,15 @@ class authorities_caddie extends caddie_root {
 				parent::get_cart_list("MIXED", $acces_rapide)
 			);
 		}
-		//DÃ©doublonnage 
+		//Dédoublonnage 
 		return array_map("unserialize", array_unique(array_map("serialize", $caddies)));
 	}
 	
-	// crÃ©ation d'un panier vide
+	// création d'un panier vide
 	public function create_cart() {
 		$requete = "insert into authorities_caddie set name='".addslashes($this->name)."', type='".$this->type."', comment='".addslashes($this->comment)."', autorisations='".$this->autorisations."', autorisations_all='".$this->autorisations_all."', caddie_classement='".addslashes($this->classementGen)."', acces_rapide='".$this->acces_rapide."', favorite_color='".addslashes($this->favorite_color)."' ";
 		$user = $this->get_info_user();
-		if(count($user)) {
+		if(is_object($user)) {
 			$requete .= ", creation_user_name='".addslashes($user->name)."', creation_date='".date("Y-m-d H:i:s")."'";
 		}
 		pmb_mysql_query($requete);
@@ -222,7 +187,7 @@ class authorities_caddie extends caddie_root {
 	// sauvegarde du panier
 	public function save_cart() {
 		$query = "update authorities_caddie set name='".addslashes($this->name)."', type='".$this->type."', comment='".addslashes($this->comment)."', autorisations='".$this->autorisations."', autorisations_all='".$this->autorisations_all."', caddie_classement='".addslashes($this->classementGen)."', acces_rapide='".$this->acces_rapide."', favorite_color='".addslashes($this->favorite_color)."' where ".static::get_field_name()."='".$this->get_idcaddie()."'";
-		$result = pmb_mysql_query($query);
+		pmb_mysql_query($query);
 		return true;
 	}
 
@@ -236,22 +201,22 @@ class authorities_caddie extends caddie_root {
 	public function add_item($item=0, $object_type="AUTHORS") {
 		if (!$item) return CADDIE_ITEM_NULL ;
 		
-		// les objets sont cohÃ©rents
+		// les objets sont cohérents
 		if ($object_type==$this->type || $this->type == "MIXED") {
 			$requete_compte = "select count(1) from authorities_caddie_content where caddie_id='".$this->get_idcaddie()."' AND object_id='".$item."' ";
-			$result_compte = @pmb_mysql_query($requete_compte);
+			$result_compte = pmb_mysql_query($requete_compte);
 			$deja_item=pmb_mysql_result($result_compte, 0, 0);
 			if (!$deja_item) {
 				$requete= "insert into authorities_caddie_content set caddie_id='".$this->get_idcaddie()."', object_id='".$item."' ";
-				$result = @pmb_mysql_query($requete);
+				pmb_mysql_query($requete);
 			}
 		} elseif($object_type == "MIXED" && $this->get_type_object_from_item($item) == static::get_const_from_type($this->type)) {
 			$requete_compte = "select count(1) from authorities_caddie_content where caddie_id='".$this->get_idcaddie()."' AND object_id='".$item."' ";
-			$result_compte = @pmb_mysql_query($requete_compte);
+			$result_compte = pmb_mysql_query($requete_compte);
 			$deja_item=pmb_mysql_result($result_compte, 0, 0);
 			if (!$deja_item) {
 				$requete= "insert into authorities_caddie_content set caddie_id='".$this->get_idcaddie()."', object_id='".$item."' ";
-				$result = @pmb_mysql_query($requete);
+				pmb_mysql_query($requete);
 			}
 		}
 	}
@@ -262,48 +227,54 @@ class authorities_caddie extends caddie_root {
 		$authority = new authority($item);
 		$object_instance = $authority->get_object_instance();
 		
-		switch ($authority->get_type_object()) {
-			case AUT_TABLE_INDEX_CONCEPT :
-			case AUT_TABLE_CONCEPT :
-				global $class_path;
-								
-				$autoloader = new autoloader();
-				$autoloader->add_register("onto_class",true);
-				
-				$params = new stdClass();
-				$params->action = 'delete_from_cart';
-				$params->categ = 'concepts';
-				$params->sub = 'concept';
-				$params->id = $object_instance->get_id();
-				
-				static::get_handler();
-				
-				$onto_skos_controler = new onto_skos_controler(static::$handler, $params);
-				$response = $onto_skos_controler->proceed();
-				if (count($response)) {
-					return CADDIE_ITEM_AUT_USED;
-				} else {
-					return CADDIE_ITEM_SUPPR_BASE_OK;
-				}
-				break;
-			case AUT_TABLE_AUTHPERSO :
-				$authperso = new authperso(0, $object_instance->id);
-				if ($authperso->delete($object_instance->id) === false) {
-					return CADDIE_ITEM_SUPPR_BASE_OK;
-				} else  {
-					return CADDIE_ITEM_AUT_USED;
-				}
-				break;
-			default :
-				if ($object_instance->delete() === false) {
-					return CADDIE_ITEM_SUPPR_BASE_OK;
-				} else  {
-					return CADDIE_ITEM_AUT_USED;
-				}
-				break;
-		}	
-		/* Appeler la methode delete pour chacun des types d'autoritÃ©s
-		 * Faire attention au retour de chacune des mÃ©thodes pour retourner la bonne constante : CADDIE_ITEM_SUPPR_BASE_OK - CADDIE_ITEM_AUTHORITY_USED - CADDIE_ITEM_OK
+		$entity_type = authority::aut_const_to_type_const($authority->get_type_object());
+		if($this->has_del_item_base_rights($item, $entity_type)){
+			switch ($authority->get_type_object()) {
+				case AUT_TABLE_INDEX_CONCEPT :
+				case AUT_TABLE_CONCEPT :
+					global $class_path;
+					
+					$params = new stdClass();
+					$params->action = 'delete_from_cart';
+					$params->categ = 'concepts';
+					$params->sub = 'concept';
+					$params->id = $object_instance->get_id();
+					
+					static::get_handler();
+					
+					$onto_skos_controler = new onto_skos_controler(static::$handler, $params);
+					//$response = $onto_skos_controler->proceed();
+					
+					$skos_concept = new skos_concept($object_instance->get_id());
+					$response = $skos_concept->delete();
+					
+					if ($response === false) {
+						return CADDIE_ITEM_AUT_USED;
+					} else {
+						return CADDIE_ITEM_SUPPR_BASE_OK;
+					}
+					break;
+				case AUT_TABLE_AUTHPERSO :
+					$authperso = new authperso(0, $object_instance->id);
+					if ($authperso->delete($object_instance->id) === false) {
+						return CADDIE_ITEM_SUPPR_BASE_OK;
+					} else  {
+						return CADDIE_ITEM_AUT_USED;
+					}
+					break;
+				default :
+					if ($object_instance->delete() === false) {
+						return CADDIE_ITEM_SUPPR_BASE_OK;
+					} else  {
+						return CADDIE_ITEM_AUT_USED;
+					}
+					break;
+			}
+		} else {
+			return CADDIE_ITEM_NO_DELETION_RIGHTS;
+		}
+		/* Appeler la methode delete pour chacun des types d'autorités
+		 * Faire attention au retour de chacune des méthodes pour retourner la bonne constante : CADDIE_ITEM_SUPPR_BASE_OK - CADDIE_ITEM_AUTHORITY_USED - CADDIE_ITEM_OK
 		 */
 		return CADDIE_ITEM_OK ;
 	}
@@ -311,27 +282,24 @@ class authorities_caddie extends caddie_root {
 	// suppression d'un item de tous les caddies
 	public function del_item_all_caddies($item, $type) {
 		$requete_suppr = "delete from authorities_caddie_content where object_id='".$item."'";
-		$result_suppr = pmb_mysql_query($requete_suppr);
+		pmb_mysql_query($requete_suppr);
 	}
 
 	public function del_item_flag() {
-		global $dbh;
 		$requete = "delete FROM authorities_caddie_content where caddie_id='".$this->idcaddie."' and (flag is not null and flag!='') ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$this->compte_items();
 	}
 
 	public function del_item_no_flag() {
-		global $dbh;
 		$requete = "delete FROM authorities_caddie_content where caddie_id='".$this->idcaddie."' and (flag is null or flag='') ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$this->compte_items();
 	}
 
-	public function pointe_item($item=0) {
-		global $dbh;
+	public function pointe_item($item=0, $object_type="", $blob="", $blob_type="") {
 		$requete = "update authorities_caddie_content set flag='1' where caddie_id='".$this->idcaddie."' and object_id='".$item."' ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$this->compte_items();
 		return CADDIE_ITEM_OK ;
 	}
@@ -341,9 +309,8 @@ class authorities_caddie extends caddie_root {
 		parent::delete();
 	}
 
-	// get_cart() : ouvre un panier et rÃ©cupÃ¨re le contenu
+	// get_cart() : ouvre un panier et récupère le contenu
 	public function get_cart($flag="") {
-		global $dbh;
 		$cart_list=array();
 		switch ($flag) {
 			case "FLAG" :
@@ -357,7 +324,7 @@ class authorities_caddie extends caddie_root {
 				$requete = "SELECT * FROM authorities_caddie_content where caddie_id='".$this->idcaddie."' ";
 				break ;
 			}
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($result)) {
 			while ($temp = pmb_mysql_fetch_object($result)) {
 				$cart_list[] = $temp->object_id;
@@ -370,56 +337,42 @@ class authorities_caddie extends caddie_root {
 	public function compte_items() {
 		parent::compte_items();
 	}
-
-	static public function show_actions($id_caddie = 0, $type_caddie = '') {
-		global $cart_action_selector,$cart_action_selector_line;
-		
-		$array_actions = self::get_array_actions($id_caddie, $type_caddie);
-		$lines = '';
-		foreach($array_actions as $item_action){
-			$tmp_line = str_replace('!!cart_action_selector_line_location!!',$item_action['location'],$cart_action_selector_line);
-			$tmp_line = str_replace('!!cart_action_selector_line_msg!!',$item_action['msg'],$tmp_line);
-			$lines.= $tmp_line;
-		}
-		
-		//On rÃ©cupÃ¨re le template
-		$to_show = str_replace('!!cart_action_selector_lines!!',$lines,$cart_action_selector);
-		
-		return $to_show;
-	}
 	
 	public static function get_array_actions($id_caddie = 0, $type_caddie = '', $actions_to_remove = array()) {
 		global $msg;
 		$array_actions = array();
 		if (empty($actions_to_remove['edit_cart'])) {
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_edit_panier"], 'location' => './autorites.php?categ=caddie&sub=gestion&quoi=panier&action=edit_cart&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_edit_panier"], 'location' => static::get_constructed_link('gestion', 'panier', 'edit_cart', $id_caddie, '&item=0'));
+		}
+		if (empty($actions_to_remove['pointage_raz'])) {
+			$array_actions[] = array('msg' => $msg["caddie_menu_pointage_raz"], 'location' => static::get_constructed_link('pointage', 'raz', '', $id_caddie));
 		}
 		if (empty($actions_to_remove['supprpanier'])) {
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_suppr_panier"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=supprpanier&action=choix_quoi&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_suppr_panier"], 'location' => static::get_constructed_link('action', 'supprpanier', 'choix_quoi', $id_caddie, '&item=0'));
 		}
-		//$array_actions[] = array('msg' => $msg["caddie_menu_action_transfert"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=transfert&action=transfert&object_type=NOTI&idcaddie='.$id_caddie.'&item=');
+// 		$array_actions[] = array('msg' => $msg["caddie_menu_action_transfert"], 'location' => static::get_constructed_link('action', 'transfert', 'transfert', $id_caddie, '&item=0'));
 		if (empty($actions_to_remove['edition'])) {
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_edition"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=edition&action=choix_quoi&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_edition"], 'location' => static::get_constructed_link('action', 'edition', 'choix_quoi', $id_caddie, '&item=0'));
 		}
-		//$array_actions[] = array('msg' => $msg["caddie_menu_action_export"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=export&action=choix_quoi&object_type=NOTI&idcaddie='.$id_caddie.'&item=0');
+		//$array_actions[] = array('msg' => $msg["caddie_menu_action_export"], 'location' => static::get_constructed_link('action', 'export', 'choix_quoi', $id_caddie, '&item=0'));
 		if (empty($actions_to_remove['selection'])) {
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_selection"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=selection&action=&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_selection"], 'location' => static::get_constructed_link('action', 'selection', '', $id_caddie, '&item=0'));
 		}
 		$evt_handler = events_handler::get_instance();
 		$event = new event_users_group("users_group", "get_autorisation_del_base");
 		$evt_handler->send($event);
 		if(!$event->get_error_message() && empty($actions_to_remove['supprbase'])){
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_suppr_base"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=supprbase&action=choix_quoi&object_type='.$type_caddie.'&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_suppr_base"], 'location' => static::get_constructed_link('action', 'supprbase', 'choix_quoi', $id_caddie, '&object_type='.$type_caddie.'&item=0'));
 		}
 		if (empty($actions_to_remove['reindex'])) {
-			$array_actions[] = array('msg' => $msg["caddie_menu_action_reindex"], 'location' => './autorites.php?categ=caddie&sub=action&quelle=reindex&action=choix_quoi&idcaddie='.$id_caddie.'&item=0');
+			$array_actions[] = array('msg' => $msg["caddie_menu_action_reindex"], 'location' => static::get_constructed_link('action', 'reindex', 'choix_quoi', $id_caddie, '&item=0'));
 		}
 		return $array_actions;
 	}
 	
 	protected function replace_in_action_query($query, $by) {
 // 		$final_query=str_replace("CADDIE(MIXED)",$by,$final_query);
-		$final_query = preg_replace("/CADDIE\(((.*,)?AUTHORS(,[^\)]*)?|(.*,)?CATEGORIES(,[^\)]*)?|(.*,)?PUBLISHERS(,[^\)]*)?|(.*,)?COLLECTIONS(,[^\)]*)?|(.*,)?SUBCOLLECTIONS(,[^\)]*)?|(.*,)?SERIES(,[^\)]*)?|(.*,)?TITRES_UNIFORMES(,[^\)]*)?|(.*,)?INDEXINT(,[^\)]*)?|(.*,)?CONCEPTS(,[^\)]*)?)\)/", $by, $query);
+		$final_query = preg_replace("/CADDIE\(((.*,)?MIXED(,[^\)]*)?|(.*,)?AUTHORS(,[^\)]*)?|(.*,)?CATEGORIES(,[^\)]*)?|(.*,)?PUBLISHERS(,[^\)]*)?|(.*,)?COLLECTIONS(,[^\)]*)?|(.*,)?SUBCOLLECTIONS(,[^\)]*)?|(.*,)?SERIES(,[^\)]*)?|(.*,)?TITRES_UNIFORMES(,[^\)]*)?|(.*,)?INDEXINT(,[^\)]*)?|(.*,)?AUTHPERSO(,[^\)]*)?|(.*,)?CONCEPTS(,[^\)]*)?)\)/", $by, $query);
 		return $final_query;
 	}
 	
@@ -428,22 +381,20 @@ class authorities_caddie extends caddie_root {
 		return $cart_choix_quoi_edition;
 	}
 	
-	public function get_list_caddie_ui() {
+	public function get_list_caddie_content_ui() {
 		global $show_list;
 		
-		list_authorities_caddie_ui::set_id_caddie($this->idcaddie);
-		list_authorities_caddie_ui::set_object_type($this->type);
+		list_authorities_caddie_content_ui::set_id_caddie($this->idcaddie);
+		list_authorities_caddie_content_ui::set_object_type($this->type);
 		if($show_list) {
-			list_authorities_caddie_ui::set_show_list(true);
+			list_authorities_caddie_content_ui::set_show_list(true);
 		}
-		return new list_authorities_caddie_ui();
+		return new list_authorities_caddie_content_ui();
 	}
 	
 	public function get_edition_form($action="", $action_cancel="") {
-		global $msg;
-		
 		if(!$action) $action = "./autorites/caddie/action/edit.php?idcaddie=".$this->get_idcaddie();
-		if(!$action_cancel) $action_cancel = "./autorites.php?categ=caddie&sub=action&quelle=edition&action=&idcaddie=0" ;
+		if(!$action_cancel) $action_cancel = static::get_constructed_link('action', 'edition');
 		$form = parent::get_edition_form($action, $action_cancel);
 		$form = str_replace('<!-- !!boutons_supp!! -->', '', $form);
 		$form = str_replace('<!-- notice_template -->', '', $form);
@@ -452,10 +403,7 @@ class authorities_caddie extends caddie_root {
 	
 	private function generate_authority($authority){
 		global $include_path;
-		$template_path = $include_path.'/templates/authorities/list/'.$authority->get_string_type_object().'.html';
-		if(file_exists($include_path.'/templates/authorities/list/'.$authority->get_string_type_object().'_subst.html')){
-			$template_path = $include_path.'/templates/authorities/list/'.$authority->get_string_type_object().'_subst.html';
-		}
+		$template_path = $authority->find_template("list");
 		if(file_exists($template_path)){
 			$h2o = H2o_collection::get_instance($template_path);
 			$context = array('list_element' => $authority);
@@ -469,11 +417,11 @@ class authorities_caddie extends caddie_root {
 		global $msg, $begin_result_liste;
 		global $nbr_lignes, $page, $nb_per_page_search ;
 		
-		// nombre de rÃ©fÃ©rences par pages
+		// nombre de références par pages
 		if ($nb_per_page_search != "") $nb_per_page = $nb_per_page_search ;
 		else $nb_per_page = 10;
 		
-		// on rÃ©cupÃ©re le nombre de lignes
+		// on récupére le nombre de lignes
 		if(!$nbr_lignes) {
 			$requete = "SELECT count(1) FROM authorities_caddie_content where caddie_id='".$this->get_idcaddie()."' ".static::get_query_filters();
 			$res = pmb_mysql_query($requete);
@@ -501,7 +449,7 @@ class authorities_caddie extends caddie_root {
 		}
 		
 		$liste=array();
-		$result = @pmb_mysql_query($requete);
+		$result = pmb_mysql_query($requete);
 		if ($result) {
 			if(pmb_mysql_num_rows($result)) {
 				while ($temp = pmb_mysql_fetch_object($result)) {
@@ -509,14 +457,14 @@ class authorities_caddie extends caddie_root {
 				}
 			}
 		}
-		if(!sizeof($liste) || !is_array($liste)) {
+		if ((empty($liste) && !is_array($liste)) || !is_array($liste)) {
 			print $msg[399];
 			return;
 		} else {
 			print $this->get_js_script_cart_objects('autorites');
 			print $begin_result_liste;
-			print authorities_caddie::show_actions($this->get_idcaddie());
-			foreach ($liste as $cle => $object) {
+			print authorities_caddie::show_actions($this->get_idcaddie(), $this->type);
+			foreach ($liste as $object) {
 				$authority = new authority($object['object_id']);
 				if (!$no_del) {
 					$lien_suppr_cart = "<a href='$url_base&action=del_item&item=".$object['object_id']."&page=$page_suppr&nbr_lignes=$nb_after_suppr&nb_per_page=$nb_per_page'><img src='".get_url_icon('basket_empty_20x20.gif')."' alt='basket' title=\"".$msg['caddie_icone_suppr_elt']."\" /></a>";
@@ -540,7 +488,7 @@ class authorities_caddie extends caddie_root {
 	public function aff_cart_titre() {
 		global $msg;
 		
-		$link = "./autorites.php?categ=caddie&sub=gestion&quoi=panier&action=&object_type=$this->type&idcaddie=$this->idcaddie&item=0";
+		$link = static::get_constructed_link('gestion', 'panier', '', $this->idcaddie, '&object_type='.$this->type.'&item=0');
 		return "
 			<div class='titre-panier'>
 				<h3>
@@ -558,7 +506,7 @@ class authorities_caddie extends caddie_root {
 		global $msg;
 		
 		$pb = new progress_bar($msg['caddie_situation_reindex_encours'], count($liste), 5);
-		foreach ($liste as $cle => $object) {
+		foreach ($liste as $object) {
 		    $authority = new authority($object);
 		    switch ($authority->get_type_object()) {
 		        case AUT_TABLE_CONCEPT :
@@ -571,7 +519,7 @@ class authorities_caddie extends caddie_root {
 		        	break;
 		        default :
     			$indexation_authority = indexations_collection::get_indexation($authority->get_type_object());
-    			$indexation_authority->maj($object);
+    			$indexation_authority->maj($authority->get_num_object());
 		    }
 		    $pb->progress();
 		}
@@ -579,22 +527,26 @@ class authorities_caddie extends caddie_root {
 	}
 	
 	public function del_items_base_from_list($liste=array()) {
-		$res_aff_suppr_base = '';
-		
+		$res_aff_suppr_base = array();
 		foreach ($liste as $object) {
-			if ($this->del_item_base($object)==CADDIE_ITEM_SUPPR_BASE_OK) {
+			$del_item_base = $this->del_item_base($object);
+			if ($del_item_base == CADDIE_ITEM_SUPPR_BASE_OK) {
 				$this->del_item_all_caddies($object, $this->type) ;
 			} else {
 				$authority = new authority($object);
-				$res_aff_suppr_base .= $this->generate_authority($authority);
+				if(empty($res_aff_suppr_base[$del_item_base])) {
+					$res_aff_suppr_base[$del_item_base] = array();
+				}
+				$res_aff_suppr_base[$del_item_base][] = $this->generate_authority($authority);
 			}
 		}
 		return $res_aff_suppr_base;
 	}
 	
-	protected function write_header_tableau($worksheet) {
+	protected function write_header_tableau($authority_type = 0) {
 	    global $charset;
 		global $msg;
+		global $worksheet;
 		
 		$worksheet->write_string(2, 0, $msg['caddie_action_marque']);
 		$col = 1;			
@@ -608,10 +560,11 @@ class authorities_caddie extends caddie_root {
 		        break;
 		    }
 		} else {
-		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'type_object' => $this->get_const_from_type($this->type)]);
+		    $type_object = $authority_type ?? $this->get_const_from_type($this->type);
+		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, ['type_object' => $type_object]);
 		}
 		$object_instance = $authority_instance->get_object_instance();
-		if (method_exists($object_instance, 'build_data_to_export')) {
+		if (is_object($object_instance) && method_exists($object_instance, 'build_header_to_export')) {
 		    $data_to_export = $object_instance->build_header_to_export();
 		    foreach ($data_to_export as $data) {
 		        $worksheet->write_string(2,$col++,$data);
@@ -626,37 +579,39 @@ class authorities_caddie extends caddie_root {
 		}
 	}
 	
-	protected function write_content_tableau($worksheet) {
+	protected function write_content_tableau($authority_type = 0) {
 	    global $charset;
+	    global $worksheet;
 	    
 		$list = $this->get_tab_list();
 		$debligne_excel = 4;
 		foreach ($list as $cle => $object) {
-		    
-		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, $object['object_id'], [ 'type_object' => $this->get_const_from_type($this->type)]);
-			
-			if ($object['flag']) $worksheet->write_string(($cle+$debligne_excel),0,"X");
-			$col = 1;			
-			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_id());
-			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_isbd());
-			$data_to_export = array();
-			$object_instance = $authority_instance->get_object_instance();
-			if (method_exists($object_instance, 'build_data_to_export')) {
-			    $data_to_export = $object_instance->build_data_to_export();			    
-			    foreach ($data_to_export as $data) {
-			        $worksheet->write_string(($cle+$debligne_excel),$col++,$data);
-			    }	
-			}
-			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_statut_label());
-			$worksheet->write_string(($cle+$debligne_excel),$col++,strip_tags($authority_instance->init_autlink_class()->get_display()));
-			$p_perso = $authority_instance->get_p_perso();
-			foreach ($p_perso as $data) {
-			    $worksheet->write_string(($cle + $debligne_excel), $col++, html_entity_decode(strip_tags($data['AFF']),ENT_QUOTES, $charset));
-			}	
+		    if (empty($authority_type) || $authority_type == $object['type_object']) {
+    		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, $object['object_id'], [ 'type_object' => $this->get_const_from_type($this->type)]);
+    			
+    			if ($object['flag']) $worksheet->write_string(($cle+$debligne_excel),0,"X");
+    			$col = 1;
+    			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_id());
+    			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_isbd());
+    			$data_to_export = array();
+    			$object_instance = $authority_instance->get_object_instance();
+    			if (is_object($object_instance) && method_exists($object_instance, 'build_data_to_export')) {
+    			    $data_to_export = $object_instance->build_data_to_export();
+    			    foreach ($data_to_export as $data) {
+    			        $worksheet->write_string(($cle+$debligne_excel),$col++,$data);
+    			    }
+    			}
+    			$worksheet->write_string(($cle+$debligne_excel),$col++,$authority_instance->get_statut_label());
+    			$worksheet->write_string(($cle+$debligne_excel),$col++,strip_tags($authority_instance->init_autlink_class()->get_display()));
+    			$p_perso = $authority_instance->get_p_perso();
+    			foreach ($p_perso as $data) {
+    			    $worksheet->write_string(($cle + $debligne_excel), $col++, html_entity_decode(strip_tags($data['AFF']),ENT_QUOTES, $charset));
+    			}
+		    }
 		}
 	}
 	
-	protected function get_display_header_tableauhtml() {
+	protected function get_display_header_tableauhtml($authority_type = 0) {
 		global $msg;
 		
 		$display = '';
@@ -673,10 +628,11 @@ class authorities_caddie extends caddie_root {
     		    break;
     		}
 		} else {
-		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'type_object' => $this->get_const_from_type($this->type)]);
+		    $type_object = $authority_type ?? $this->get_const_from_type($this->type);
+		    $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, ['type_object' => $type_object]);
 		}
 		$object_instance = $authority_instance->get_object_instance();
-		if(method_exists($object_instance, 'build_data_to_export')) {
+		if (is_object($object_instance) && method_exists($object_instance, 'build_header_to_export')) {
 		    $data_to_export = $object_instance->build_header_to_export();
 		    foreach ($data_to_export as $data) {
 		        $display .= "<th>".$data."</th>";
@@ -693,41 +649,51 @@ class authorities_caddie extends caddie_root {
 		return $display;
 	}
 	
-	protected function get_display_content_tableauhtml() {
+	protected function get_display_content_tableauhtml($authority_type = 0) {
 	    
 		$list = $this->get_tab_list();		
 		$display = '';
 		foreach ($list as $object) {
-			$display .= "<tr>";
-			if ($object['flag']) $display .= "<td class='center'>X</td>";
-			else $display .= "<td class='center'></td>";
-			
-			$authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, $object['object_id'], [ 'type_object' => $this->get_const_from_type($this->type)]);	
-			
-			$display .= "<td class='center'>".$authority_instance->get_id()."</td>";
-			$display .= "<td>".$authority_instance->get_isbd()."</td>";
-			
-			$object_instance = $authority_instance->get_object_instance();
-			if(method_exists($object_instance, 'build_data_to_export')) {
-			    $data_to_export = $object_instance->build_data_to_export();			    
-			    foreach ($data_to_export as $data) {
-			        $display .= "<td>".$data."</td>";
-			    }	
-			}
-			$display .= "<td>".$authority_instance->get_statut_label()."</td>";			
-			$display .= "<td>".strip_tags($authority_instance->init_autlink_class()->get_display())."</td>";		
-			
-			$p_perso = $authority_instance->get_p_perso();
-			foreach ($p_perso as $data) {
-			    $display .= "<td>".$data['AFF']."</td>";
-			}	
-			$display .= "</tr>";
+		    if (empty($authority_type) || $authority_type == $object['type_object']) {
+    			$display .= "<tr>";
+    			if ($object['flag']) $display .= "<td class='center'>X</td>";
+    			else $display .= "<td class='center'></td>";
+    			
+    			$authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, $object['object_id'], [ 'type_object' => $this->get_const_from_type($this->type)]);	
+    			
+    			$display .= "<td class='center'>".$authority_instance->get_id()."</td>";
+    			$display .= "<td>".$authority_instance->get_isbd()."</td>";
+    			
+    			$object_instance = $authority_instance->get_object_instance();
+    			if (is_object($object_instance) && method_exists($object_instance, 'build_data_to_export')) {
+    			    $data_to_export = $object_instance->build_data_to_export();
+    			    foreach ($data_to_export as $data) {
+    			        $display .= "<td>".$data."</td>";
+    			    }
+    			}
+    			$display .= "<td>".$authority_instance->get_statut_label()."</td>";
+    			$display .= "<td>".strip_tags($authority_instance->init_autlink_class()->get_display())."</td>";
+    			
+    			$p_perso = $authority_instance->get_p_perso();
+    			foreach ($p_perso as $data) {
+    			    $display .= "<td>".$data['AFF']."</td>";
+    			}
+    			$display .= "</tr>";
+		    }
 		}
 		return $display;
 	}
 	
 	public function get_idcaddie() {
 		return $this->idcaddie;
+	}
+	
+	public function get_id() {
+	    return $this->idcaddie;
+	}
+	
+	public function set_idcaddie($idcaddie) {
+	    $this->idcaddie = intval($idcaddie);
 	}
 	
 	public static function get_type_from_const($const) {
@@ -787,4 +753,109 @@ class authorities_caddie extends caddie_root {
 		}
 		return static::$handler;
 	}
-} // fin de dÃ©claration de la classe caddie
+	
+	public function get_tab_list() {
+	    global $elt_flag, $elt_no_flag;
+	    
+	    $list = array();
+	    
+	    if (($elt_flag=="") && ($elt_no_flag=="")) {
+	        $elt_no_flag = 1;
+	        $elt_flag = 1;
+	    }
+	    $query = "SELECT " . static::$table_content_name . ".*, authorities.type_object 
+        FROM " . static::$table_content_name." 
+        JOIN authorities ON object_id = id_authority 
+        WHERE ".static::$field_content_name."='".$this->get_idcaddie()."' ";
+	    
+	    if ($elt_flag && $elt_no_flag ) $complement_clause = "";
+	    if (!$elt_flag && $elt_no_flag ) $complement_clause = " and (flag is null or flag = '') ";
+	    if ($elt_flag && !$elt_no_flag ) $complement_clause = " and flag is not null ";
+	    $query .= $complement_clause." order by object_id";
+	    $result = pmb_mysql_query($query);
+	    if(pmb_mysql_num_rows($result)) {
+	        while ($row = pmb_mysql_fetch_object($result)) {
+	            $list[] = ['object_id' => $row->object_id, 'flag' => $row->flag, 'type_object' => $row->type_object];
+	        }
+	    }
+	    return $list;
+	}
+	
+	public function get_authorities_types_from_mixed_caddie() {
+	    $query = "SELECT DISTINCT type_object
+        FROM authorities
+        JOIN " . static::$table_content_name . " ON object_id = id_authority
+        WHERE " . static::$field_content_name . " = '" . $this->get_idcaddie() . "'";
+	    
+	    $types = [];
+	    $res = pmb_mysql_query($query);
+	    if (pmb_mysql_num_rows($res)) {
+	        while ($row = pmb_mysql_fetch_assoc($res)) {
+    	        $types[] = $row['type_object'];
+	        }
+	    }
+	    
+	    return $types;
+	}
+	
+	public function get_display_tableauhtml() {
+	    if ($this->type == 'MIXED') {
+	        $display = "";
+	        $authorities_types = $this->get_authorities_types_from_mixed_caddie();
+	        foreach ($authorities_types as $authority_type) {
+    	        $display .= "<table>";
+    	        $display .= $this->get_display_header_tableauhtml($authority_type);
+    	        $display .= $this->get_display_content_tableauhtml($authority_type);
+    	        $display .= "</table>";
+	        }
+	        return $display;
+	    }
+	    
+	    return parent::get_display_tableauhtml();
+	}
+	
+	public function write_tableau() {
+	    if ($this->type == 'MIXED') {
+	        $display = "";
+	        $authorities_types = $this->get_authorities_types_from_mixed_caddie();
+	        foreach ($authorities_types as $authority_type) {
+	            $display .= $this->write_header_tableau($authority_type);
+	            $display .= $this->write_content_tableau($authority_type);
+	        }
+    	    
+    	    return $display;
+	    }
+	    
+	    return parent::write_tableau();
+	}
+	
+	public static function get_constructed_link($sub = '', $sub_categ = '', $action = '', $idcaddie = 0, $args_others = '') {
+		global $base_path;
+		
+		$link = $base_path . "/autorites.php?categ=caddie&sub=" . $sub;
+		if ($sub_categ) {
+			switch ($sub) {
+				case 'gestion':
+					$link .= "&quoi=" . $sub_categ;
+					break;
+				case 'collecte':
+				case 'pointage':
+					$link .= "&moyen=" . $sub_categ;
+					break;
+				case 'action':
+					$link .= "&quelle=" . $sub_categ;
+					break;
+			}
+		}
+		if ($action) {
+			$link .= "&action=" . $action;
+		}
+		if ($args_others) {
+			$link .= $args_others;
+		}
+		if ($idcaddie) {
+			$link .= "&idcaddie=" . $idcaddie;
+		}
+		return $link;
+	}
+} // fin de déclaration de la classe caddie

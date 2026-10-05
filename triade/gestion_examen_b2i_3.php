@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,18 +34,18 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_trimestre.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("./librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Visa direction" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -58,7 +58,7 @@ $type_notation=$_POST["type_notation"];
 
 
 for($i=0;$i<$nb;$i++) {
-	$eleveid=$_POST[eleveid][$i];
+	$eleveid=$_POST['eleveid'][$i];
 	$note=$_POST["b2I_$eleveid"];
 	$cr=create_noteB2IA2($eleveid,$idclasse,$type_notation,$note);
 	if ($cr) {
@@ -81,7 +81,7 @@ for($i=0;$i<$nb;$i++) {
 </td></tr></table>
 
 
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

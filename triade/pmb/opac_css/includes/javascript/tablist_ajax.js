@@ -1,7 +1,7 @@
 //+-------------------------------------------------+
 //� 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 //+-------------------------------------------------+
-//$Id: tablist_ajax.js,v 1.11 2019-05-29 10:59:42 ccraig Exp $
+//$Id: tablist_ajax.js,v 1.13 2023/08/17 09:47:54 dbellamy Exp $
 
 var expand_state=new Array();
 
@@ -16,7 +16,7 @@ function expandBase_ajax(el, unexpand,	notice_affichage_cmd){
 		whichIm.src = whichIm.src.replace('nomgif=plus','nomgif=moins');
 		changeCoverImage(whichEl);
 		if(!expand_state[el]) {
-			whichEl.innerHTML =  "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' border='0'></div>" ;
+			whichEl.innerHTML =  "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' ></div>" ;
 			var url= "./ajax.php?module=expand_notice&categ=expand";
 			// On initialise la classe:
 			var req = new http_request();
@@ -57,8 +57,7 @@ function expandBase_ajax_callback(text,el) {
   		require(['dojo/dom-construct', 'dojo/query'], function(domConstruct, query){
 			query('script', whichEl).forEach(function(node) {
 				domConstruct.create('script', {
-					innerHTML: node.innerHTML,
-					type: 'text/javascript'
+					innerHTML: node.innerHTML
 				}, node, 'replace');
 			});
   		});
@@ -96,7 +95,7 @@ function expandAll_ajax(mode) {
 					if(mode==1){
 						//appel par lot
 						nb_to_send++;
-						document.getElementById(el + 'Child').innerHTML = "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' border='0'></div>";
+						document.getElementById(el + 'Child').innerHTML = "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' ></div>";
 						display_cmd_all+=display_cmd;
 						if (i<(tempColl.length -1))display_cmd_all+='|*|*|';
 						if(nb_to_send>40) {
@@ -106,7 +105,7 @@ function expandAll_ajax(mode) {
 						}
 					}else{
 						//appel par notice		    		
-						document.getElementById(el + 'Child').innerHTML = "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' border='0'></div>";
+						document.getElementById(el + 'Child').innerHTML = "<div style='width:100%; height:30px;text-align:center'><img style='padding 0 auto;' src='"+pmb_img_patience+"' id='collapseall' ></div>";
 						expandAll_ajax_block_suite('display_cmd='+display_cmd);
 					}
 				}else{
@@ -166,8 +165,7 @@ function expandAll_ajax_callback_block(text,el) {
 		  		require(['dojo/dom-construct', 'dojo/query'], function(domConstruct, query){
 					query('script', whichEl).forEach(function(node) {
 						domConstruct.create('script', {
-							innerHTML: node.innerHTML,
-							type: 'text/javascript'
+							innerHTML: node.innerHTML
 						}, node, 'replace');
 					});
 		  		});

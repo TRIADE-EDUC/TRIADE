@@ -1,13 +1,13 @@
 -- +-------------------------------------------------+
 -- © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 -- +-------------------------------------------------+
--- $Id: indexint_chambery.sql,v 1.7 2012-12-05 09:41:50 mbertin Exp $
+-- $Id: indexint_chambery.sql,v 1.8 2021/04/21 15:41:09 rtigero Exp $
 
--- MySQL dump 10.13  Distrib 5.1.55, for mandriva-linux-gnu (i586)
+-- MySQL dump 10.17  Distrib 10.3.25-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: bibli
 -- ------------------------------------------------------
--- Server version	5.1.55-Max
+-- Server version	10.3.25-MariaDB-0ubuntu0.20.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,11 +15,9 @@
 /*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 
 truncate table pclassement;
 truncate table indexint;
@@ -30,7 +28,7 @@ truncate table indexint;
 
 LOCK TABLES `pclassement` WRITE;
 /*!40000 ALTER TABLE `pclassement` DISABLE KEYS */;
-INSERT INTO `pclassement` (`id_pclass`, `name_pclass`, `typedoc`) VALUES (1,'BM de Chambéry','abcdefgijklmr');
+INSERT INTO `pclassement` (`id_pclass`, `name_pclass`, `typedoc`, `locations`) VALUES (1,'BM de Chambéry','abcdefgijklmr','');
 /*!40000 ALTER TABLE `pclassement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,7 +339,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (299,'438','Usage de la langue, Expressions, Vocabulaires spécialisés',' 438 usage langue expressions vocabulaires specialises ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (300,'439','Autres langues germaniques : yiddish, néerlandais, suédois, danois, norvégien?',' 439 autres langues germaniques yiddish neerlandais suedois danois norvegien ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (301,'440','Français\nMéthodes de français pour les étrangers anglais, allemands, italiens, espagnols, turc?',' 440 francais methodes francais pour etrangers anglais allemands italiens espagnols turc ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (302,'440.7','Français (Etude et enseignement) : ouvrages parascolaires, annales concernant uniquement la grammaire ou l\'orthographe. [Les annales de français \"générales\" abordant également la littérature française sont classées en 808.7. Pour les aspects plus particuliers, utiliser les indices 441 à 448]',' 440 7 francais etude enseignement ouvrages parascolaires annales concernant uniquement grammaire ou orthographe annales francais \"generales\" abordant egalement litterature francaise sont classees 808 7 pour aspects plus particuliers utiliser indices 441 448 ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (302,'440.7','Français (Etude et enseignement) : ouvrages parascolaires, annales concernant uniquement la grammaire ou l\'orthographe. [Les annales de français \"générales\" abordant également la littérature française sont classées en 808.7. Pour les aspects plus particuliers, utiliser les indices 441 à 448]',' 440 7 francais etude enseignement ouvrages parascolaires annales concernant uniquement grammaire ou orthographe annales francais generales abordant egalement litterature francaise sont classees 808 7 pour aspects plus particuliers utiliser indices 441 448 ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (303,'442','Histoire de la langue française. Etymologie de la langue française. Ancien  et moyen français',' 442 histoire langue francaise etymologie langue francaise ancien moyen francais ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (304,'443','Dictionnaires de la langue française',' 443 dictionnaires langue francaise ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (305,'445','Manuels de grammaire, de conjugaison et d\'orthographe, Vocabulaire général',' 445 manuels grammaire conjugaison orthographe vocabulaire general ',1);
@@ -808,7 +806,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (766,'782.21','British beat, pop 60\'s',' 782 21 british beat pop 60 s ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (767,'782.22','Glam, glitter',' 782 22 glam glitter ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (768,'782.23','Power pop, pop-rock',' 782 23 power pop pop rock ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (769,'782.24','Pop \"indie\"',' 782 24 pop \"indie\" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (769,'782.24','Pop \"indie\"',' 782 24 pop indie ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (770,'782.25','Brit pop',' 782 25 brit pop ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (771,'782.3','Folk rock, country rock, blues rock',' 782 3 folk rock country rock blues rock ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (772,'782.31','Folk acoustique',' 782 31 folk acoustique ',1);
@@ -959,7 +957,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (917,'785.62','Orchestre de variété',' 785 62 orchestre variete ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (918,'785.63','Danses de salon : tango, valse, charleston, etc?',' 785 63 danses salon tango valse charleston etc ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (919,'785.64','Accordéon, musette',' 785 64 accordeon musette ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (920,'785.65','Compilations des meilleures ventes \"hits\"',' 785 65 compilations meilleures ventes \"hits\" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (920,'785.65','Compilations des meilleures ventes \"hits\"',' 785 65 compilations meilleures ventes hits ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (921,'785.66','Karaoké',' 785 66 karaoke ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (922,'785.7','Musique de plein air et musique de sociétés musicales',' 785 7 musique plein air musique societes musicales ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (923,'785.71','Hymnes nationaux',' 785 71 hymnes nationaux ',1);
@@ -999,7 +997,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (957,'788.1','Chansons pour enfants',' 788 1 chansons pour enfants ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (958,'788.11','Chansons traditionnelles françaises (pour les enfants), rondes, comptines',' 788 11 chansons traditionnelles francaises pour enfants rondes comptines ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (959,'788.12','Berceuses chantées',' 788 12 berceuses chantees ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (960,'788.2','Chansons sociales : chansons \"pour et contre\", chansons de lutte, de propagande, contestataires, révolutionnaires, chansons d\'activités collectives diverses : travail, marins, supporters, etc?',' 788 2 chansons sociales chansons \"pour contre\" chansons lutte propagande contestataires revolutionnaires chansons activites collectives diverses travail marins supporters etc ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (960,'788.2','Chansons sociales : chansons \"pour et contre\", chansons de lutte, de propagande, contestataires, révolutionnaires, chansons d\'activités collectives diverses : travail, marins, supporters, etc?',' 788 2 chansons sociales chansons pour contre chansons lutte propagande contestataires revolutionnaires chansons activites collectives diverses travail marins supporters etc ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (961,'788.3','Chansons humoristiques',' 788 3 chansons humoristiques ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (962,'788.4','Chansons à texte (texte prédominant)',' 788 4 chansons texte texte predominant ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (963,'788.5','Chansons de variétés (musique prédominante)',' 788 5 chansons varietes musique predominante ',1);
@@ -1108,7 +1106,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1066,'791.43','Dictionnaires et encyclopédies du cinéma',' 791 43 dictionnaires encyclopedies cinema ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1067,'791.436','Genres : Western, Dessin animé, film d\'animation, etc?',' 791 436 genres western dessin anime film animation etc ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1068,'791.437','Scénarios et critiques [Pour les scénarios de films documentaires dont la vidéo ou le DVD figure dans les collections, saisir un deuxième champ 676 avec l\'indice attribué à la vidéo ou au DVD et les champs 6XX contenant les vedettes-matières également attribuées à la vidéo ou au DVD]',' 791 437 scenarios critiques pour scenarios films documentaires dont video ou dvd figure dans collections saisir deuxieme champ 676 avec indice attribue video ou dvd champs 6xx contenant vedettes matieres egalement attribuees video ou dvd ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1069,'791.438','Films : ouvrages traitant d\'un film particulier, albums, livres du type \"Autour de?\"',' 791 438 films ouvrages traitant film particulier albums livres type \"autour \" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1069,'791.438','Films : ouvrages traitant d\'un film particulier, albums, livres du type \"Autour de?\"',' 791 438 films ouvrages traitant film particulier albums livres type autour ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1070,'791.49','Histoire et invention du cinéma',' 791 49 histoire invention cinema ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1071,'791.494','Histoire du cinéma par pays : Europe',' 791 494 histoire cinema par pays europe ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (1072,'791.495','Histoire du cinéma par pays : Asie',' 791 495 histoire cinema par pays asie ',1);
@@ -1602,10 +1600,9 @@ UNLOCK TABLES;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-11-29  9:13:43
+-- Dump completed on 2021-04-21 10:07:48

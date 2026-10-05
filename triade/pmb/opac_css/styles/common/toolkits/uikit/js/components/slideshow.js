@@ -283,12 +283,14 @@
             });
 
             if (processed) {
-
-                this.triggers = this.find('[data-uk-slideshow-item]');
-
-                // Set start slide
-                this.slides.attr('aria-hidden', 'true').removeClass('uk-active').eq(this.current).addClass('uk-active').attr('aria-hidden', 'false');
-                this.triggers.filter('[data-uk-slideshow-item="'+this.current+'"]').addClass('uk-active');
+				//hack cms_module_common_view_slideshow #97254
+				$(document).ready(()=>{
+	                this.triggers = this.find('[data-uk-slideshow-item]');
+	
+	                // Set start slide
+	                this.slides.attr('aria-hidden', 'true').removeClass('uk-active').eq(this.current).addClass('uk-active').attr('aria-hidden', 'false');
+	                this.triggers.filter('[data-uk-slideshow-item="'+this.current+'"]').addClass('uk-active');
+				});
             }
 
             if (resize && processed) {

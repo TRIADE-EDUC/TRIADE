@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2024/03/19 14:16:03 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="europresse_ws">Web Service</entry>
+	<entry code="europresse_url">URL</entry>
+	<entry code="europresse_login">Identifiant</entry>
+	<entry code="europresse_pwd">Mot de passe</entry>
+	<entry code="europresse_save_to_continue">Vous devez enregistrez les paramètres d'accès au Web Service pour continuer</entry>
+	<entry code="europresse_search_params">Paramétrage de la recherche</entry>
+	<entry code="europresse_documentBase">Type de document</entry>
+	<entry code="europresse_documentBase_News">Documents</entry>
+	<entry code="europresse_documentBase_Biographies">Fiches biographiques</entry>
+	<entry code="europresse_documentBase_Companies">Fiches entreprises</entry>
+	<entry code="europresse_domain">Domaine de recherche</entry>
+	<entry code="europresse_domain_All">Tout le contenu</entry>
+	<entry code="europresse_dateRange">Période de recherche</entry>
+	<entry code="europresse_dateRange_TODAY">Aujourd'hui</entry>
+	<entry code="europresse_dateRange_SINCE_YESTERDAY">Depuis hier</entry>
+	<entry code="europresse_dateRange_DAYS_3">Depuis 3 jours</entry>
+	<entry code="europresse_dateRange_DAYS_7">Depuis 7 jours</entry>
+	<entry code="europresse_dateRange_DAYS_30">Depuis 30 jours</entry>
+	<entry code="europresse_dateRange_MONTHS_3">Depuis 3 mois</entry>
+	<entry code="europresse_dateRange_MONTHS_6">Depuis 6 mois</entry>
+	<entry code="europresse_dateRange_YEARS_1">Depuis 1 an</entry>
+	<entry code="europresse_dateRange_YEARS_2">Depuis 2 ans</entry>
+	<entry code="europresse_dateRange_ALL">Dans toutes les archives</entry>
+	<entry code="europresse_maxCount">Nombre maximum de résultats renvoyés</entry>
+	<entry code="europresse_ws_error">Erreur d'accès, veuillez vérifier les paramètres du Web Service.</entry>
+</XMLlist>

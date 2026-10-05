@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_carousel_view_carousel.class.php,v 1.30 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: cms_module_carousel_view_carousel.class.php,v 1.37.2.2 2025/01/21 15:29:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($include_path."/h2o/h2o.php");
@@ -16,8 +16,8 @@ class cms_module_carousel_view_carousel extends cms_module_common_view_django{
 <ul id='carousel_{{id}}'>
 	{% for record in records %}
 		<li class='{{id}}_item'>
-			<a href='{{record.link}}' title='{{record.title}}'>
-				<img src='{{record.vign}}' alt=''/>
+			<a href='{{record.link}}' alt='{{record.title}}' title='{{record.title}}'>
+				<img src='{{record.vign}}'/>
 				<br />
 			</a>
 		</li>
@@ -150,10 +150,10 @@ class cms_module_carousel_view_carousel extends cms_module_common_view_django{
 		global $cms_module_carousel_view_carousel_pager;
 				
 		$this->parameters['mode'] = $cms_module_carousel_view_carousel_mode;
-		$this->parameters['speed'] = $cms_module_carousel_view_carousel_speed+0;
-		$this->parameters['pause'] = $cms_module_carousel_view_carousel_pause+0;
-		$this->parameters['display_quantity'] = $cms_module_carousel_view_carousel_display_quantity+0;
-		$this->parameters['slide_quantity'] = $cms_module_carousel_view_carousel_slide_quantity+0;
+		$this->parameters['speed'] = (int) $cms_module_carousel_view_carousel_speed;
+		$this->parameters['pause'] = (int) $cms_module_carousel_view_carousel_pause;
+		$this->parameters['display_quantity'] = (int) $cms_module_carousel_view_carousel_display_quantity;
+		$this->parameters['slide_quantity'] = (int) $cms_module_carousel_view_carousel_slide_quantity;
 		$this->parameters['autostart'] = $cms_module_carousel_view_carousel_autostart==1 ? true : false;
 		$this->parameters['css'] = stripslashes($cms_module_carousel_view_carousel_css);
 		$this->parameters['used_template'] = $cms_module_common_view_django_template_record_content;
@@ -166,80 +166,64 @@ class cms_module_carousel_view_carousel extends cms_module_common_view_django{
 	public function get_headers($datas=array()){
 		global $base_path;
 		$headers = parent::get_headers($datas);
-		$headers[]= "<script type='text/javascript' src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxSlider.min.js'></script>";
+		$headers[]= "<script src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxSlider.min.js'></script>";
 		$args = array(
 			'do' => "generate_css"
 		);
-		$headers[]= "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link($args)."'/>";
+		$headers[]= "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link($args, 'css')."'/>";
 		return $headers;
 	}
 	
 	public function render($datas){
-	    global $base_path;
 		$html2return = "";
-		if(count($datas['records'])){
-			try{
-				$id = "carousel_".$this->get_module_dom_id();
-				$datas['id']=$this->get_module_dom_id();
-				if(!isset($datas['get_vars']) || !$datas['get_vars']){
-					$datas['get_vars'] = $_GET;
-				}
-				if(!isset($datas['post_vars']) || !$datas['post_vars']){
-					$datas['post_vars'] = $_POST;
-				}
-				$template_path = $base_path.'/temp/'.LOCATION.'_cms_carousel_view_'.$this->id;
-				if(!file_exists($template_path) || (md5($this->parameters['active_template']) != md5_file($template_path))){
-				    file_put_contents($template_path, $this->parameters['active_template']);
-				}
-				$H2o = H2o_collection::get_instance($template_path);
-				$html2return.= $H2o->render($datas);
-				
+		if(is_countable($datas['records']) && count($datas['records'])){
+			$id = "carousel_".$this->get_module_dom_id();
+			$datas['id']=$this->get_module_dom_id();
+			$html2return.= H2o::parseString($this->parameters['active_template'])->render($datas);
+		
+			$html2return.= "
+		<script type='text/javascript'>
+			jQuery(document).ready(function() {";
+			if($this->parameters['mode'] == "horizontal"){		
 				$html2return.= "
-			<script type='text/javascript'>
-				jQuery(document).ready(function() {";
-				if($this->parameters['mode'] == "horizontal"){		
-					$html2return.= "
-					var item_width = document.getElementById('".$this->get_module_dom_id()."').offsetWidth/".$this->parameters['display_quantity'].";
-					var items = document.getElementsByClassName('".$this->get_module_dom_id()."_item');
-					for(var i=0 ; i<items.length ; i++){
-						items[i].style.width = item_width+'px';
-					}";
-				}else{
-					$html2return.= "
-					var item_width = document.getElementById('".$this->get_module_dom_id()."').offsetHeight/".$this->parameters['display_quantity'].";
-					var items = document.getElementsByClassName('".$this->get_module_dom_id()."_item');
-					for(var i=0 ; i<items.length ; i++){
-						items[i].style.height = item_width+'px';
-					}";			
-				}
+				var item_width = document.getElementById('".$this->get_module_dom_id()."').offsetWidth/".$this->parameters['display_quantity'].";
+				var items = document.getElementsByClassName('".$this->get_module_dom_id()."_item');
+				for(var i=0 ; i<items.length ; i++){
+					items[i].style.width = item_width+'px';
+				}";
+			}else{
 				$html2return.= "
-					jQuery('#".$id."').bxSlider({
-						mode: '".$this->parameters['mode']."',
-						speed: '".$this->parameters['speed']."',
-						pause: '".$this->parameters['pause']."',
-						auto: true,
-						autoStart: ".($this->parameters['autostart'] ? "true" : "false").",
-						autoHover: ".($this->parameters['autohover'] ? "true" : "false").",
-						autoControls: false,
-						controls:true,
-						prevImage: '',
-						prevText: '',
-						nextImage: '',
-						nextText: '',
-						startImage: '',
-						startText: '',
-						stopImage: '',
-						//stopText:'',
-						pager: ".($this->parameters['pager'] ? "true" : "false").",
-						randomStart: false,
-						displaySlideQty: ".$this->parameters['display_quantity'].",
-						moveSlideQty: ".$this->parameters['slide_quantity']."
-					});
-				});
-			</script>";
-			} catch(Exception $e){
-				$html2return = $this->msg["cms_module_common_view_error_template"];
+				var item_width = document.getElementById('".$this->get_module_dom_id()."').offsetHeight/".$this->parameters['display_quantity'].";
+				var items = document.getElementsByClassName('".$this->get_module_dom_id()."_item');
+				for(var i=0 ; i<items.length ; i++){
+					items[i].style.height = item_width+'px';
+				}";			
 			}
+			$html2return.= "
+				jQuery('#".$id."').bxSlider({
+					mode: '".$this->parameters['mode']."',
+					speed: '".$this->parameters['speed']."',
+					pause: '".$this->parameters['pause']."',
+					auto: true,
+					autoStart: ".($this->parameters['autostart'] ? "true" : "false").",
+					autoHover: ".($this->parameters['autohover'] ? "true" : "false").",
+					autoControls: false,
+					controls:true,
+					prevImage: '',
+					prevText: '',
+					nextImage: '',
+					nextText: '',
+					startImage: '',
+					startText: '',
+					stopImage: '',
+					//stopText:'',
+					pager: ".($this->parameters['pager'] ? "true" : "false").",
+					randomStart: false,
+					displaySlideQty: ".$this->parameters['display_quantity'].",
+					moveSlideQty: ".$this->parameters['slide_quantity']."
+				});
+			});
+		</script>";
 		}
 		return $html2return;
 	}
@@ -369,9 +353,9 @@ class cms_module_carousel_view_carousel extends cms_module_common_view_django{
 	    if (static::class == "cms_module_carousel_view_carousel") {
 			$datas = new cms_module_carousel_datasource_notices();
 			$format_datas = $datas->get_format_data_structure();
- 			$format_datas[0]['children'][] = array(
- 					'var' => "records[i].content",
- 					'desc' => $this->msg['cms_module_carousel_view_carousel_record_content_desc']
+	 		$format_datas[0]['children'][] = array(
+	 				'var' => "records[i].content",
+	 				'desc' => $this->msg['cms_module_carousel_view_carousel_record_content_desc']
 	 		);
 			$format_datas = array_merge($format_datas,parent::get_format_data_structure());
 			return $format_datas;

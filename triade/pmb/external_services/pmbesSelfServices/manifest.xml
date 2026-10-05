@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
+$Id: manifest.xml,v 1.13.8.1 2025/03/14 13:20:34 tsamson Exp $ -->
 
 <manifest>
 	<name>pmbesSelfServices</name>
@@ -23,7 +23,7 @@ $Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
 				<description>msg:self_checkout_inputs_description</description>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_checkout_expl_cb"/>
 				<param name="id_empr" type="scalar" dataType="integer" description="msg:self_checkout_id_empr"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_checkout_pmbUserId"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_checkout_pmbUserId" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_checkout_outputs_description</description>
@@ -50,7 +50,8 @@ $Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
 			<inputs>
 				<description>msg:self_checkin_inputs_description</description>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_checkin_expl_cb"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_checkin_pmbUserId"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_checkin_pmbUserId" optional="yes" default_value="-1"/>
+				<param name="device" type="scalar" dataType="string" description="msg:self_checkin_device" optional="yes" default_value="bibloto"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_checkin_outputs_description</description>
@@ -71,7 +72,8 @@ $Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
 			<inputs>
 				<description>msg:self_renew_inputs_description</description>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_renew_expl_cb"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_renew_pmbUserId"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:self_renew_pmbUserId" optional="yes"  default_value="-1"/>
+				<param name="check_resa" type="scalar" dataType="integer" description="msg:self_renew_check_resa" optional="yes"  default_value="0"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_renew_outputs_description</description>
@@ -86,8 +88,8 @@ $Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
 			<inputs>
 				<description>msg:self_checkout_bibloto_inputs_description</description>
 				<param name="expl_cb" type="scalar" dataType="string" description="msg:self_checkout_expl_cb"/>
-				<param name="empr_cb" type="scalar" dataType="string" description="msg:self_checkout_bibloto_empr_cb"/>
-				<param name="confirm" type="scalar" dataType="boolean" description="msg:self_checkout_bibloto_confirm"/>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:self_checkout_bibloto_empr_cb" optional="yes"/>
+				<param name="confirm" type="scalar" dataType="boolean" description="msg:self_checkout_bibloto_confirm" optional="yes"  default_value="1"/>
 			</inputs>
 			<outputs>
 				<description>msg:self_checkout_bibloto_outputs_description</description>
@@ -98,6 +100,29 @@ $Id: manifest.xml,v 1.9 2019-01-23 13:42:06 dgoron Exp $ -->
 				<result name="due_date" type="scalar" dataType="string" description="msg:self_checkout_due_date"/>
 				<result name="message_quota" type="scalar" dataType="string" description="msg:self_checkout_message_quota"/>
 				<result name="message_expl_comment" type="scalar" dataType="string" description="msg:self_checkout_message_quota"/>		
+			</outputs>
+		</method>		
+		<method name="get_loans_printer_template" comment="msg:print_loans_description" rights="" version="1.0" language_independant="false">
+			<inputs>
+				<description>msg:print_loans_inputs_description</description>
+				<param name="empr_cb" type="scalar" dataType="string" description="msg:print_loans_empr_cb"/>
+				<param name="expl_cb" type="scalar" dataType="string" description="msg:print_loans_expl_cb" optional="yes" />
+			</inputs>
+			<outputs>
+				<description>msg:print_loans_outputs_description</description>
+				<result name="print_tpl"  type="scalar" dataType="string" description="msg:print_loans_tpl_result"/>
+			</outputs>
+		</method>		
+		<method name="get_printers_config" comment="msg:get_printers_config_description" rights="" version="1.0" language_independant="false">
+			<inputs>
+				<description></description>
+			</inputs>
+			<outputs>
+				<description>msg:print_loans_outputs_description</description>
+				<result name="printer_list" type="array" description="msg:get_printers_config_result">
+					<result name="printer" type="scalar" dataType="string" description="msg:get_printers_config_printer_list" />
+					<result name="printer_name"  type="scalar" dataType="string" description="msg:get_printers_config_printer_name"/>
+				</result>
 			</outputs>
 		</method>		
 	</methods>

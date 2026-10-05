@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,7 +52,7 @@ $prenomprof=recherche_personne_prenom($idprof,'ENS');
 ?>
 <HTML>
 <HEAD>
-<title>Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -149,7 +149,7 @@ for($i=0;$i<=$nb;$i++) {
 	print "<img src='image/commun/on1.gif' align=center width=8 height=8> <b><u>$sujet</u> :</b><br>";
 	print "</div>";
 	$cumultempsestime=0;
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		$tempsestime=$data[$j][11];
 		$cumultempsestime+=conv_en_seconde($data[$j][11]);
 		if (($tempsestime != "00:00:00") && ($devoirvisu==1) && (trim($tempsestime) != "") ) {

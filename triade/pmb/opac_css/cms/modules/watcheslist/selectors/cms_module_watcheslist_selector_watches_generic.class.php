@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watcheslist_selector_watches_generic.class.php,v 1.4 2015-03-11 16:27:25 arenou Exp $
+// $Id: cms_module_watcheslist_selector_watches_generic.class.php,v 1.5 2022/01/18 20:34:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,10 +26,9 @@ class cms_module_watcheslist_selector_watches_generic extends cms_module_common_
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	*/
 	public function get_value(){
-		global $bdh;
 		if(!$this->value){
 			if($this->parameters['sub_selector']){
 				$sub_selector = $this->get_selected_sub_selector();

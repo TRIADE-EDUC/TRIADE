@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@
 	validerequete("3");
 	$cnx=cnx();
 	?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
         <?php include("./librairie_php/lib_defilement.php"); ?>
         </TD><td width="472" valign="middle" rowspan="3" align="center">
         <div align='center'><?php top_h(); ?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de l'élève (lecture seule)
 $idEleve=$_GET["eid"];
@@ -63,7 +63,7 @@ if ($_SESSION["membre"] == "menuadmin") {
 <?php
 	$data=profPinfoAff($idEleve);
 	// id,date,idEleve,nomProf,commentaire
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	?>
 		<tr><td><br />&nbsp;&nbsp;
 		<?php print LANGPROF30?>  <b><?php print dateForm($data[$i][1]) ?></b>
@@ -84,15 +84,15 @@ if ($_SESSION["membre"] == "menuadmin") {
 // Test du membre pour savoir quel fichier JS je dois executer
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ):
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

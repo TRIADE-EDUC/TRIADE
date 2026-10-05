@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -21,9 +21,9 @@ session_start();
 ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
 <meta name="Copyright" content="Triade©, 2001">
 <?php
 include_once("./common/lib_ecole.php");
@@ -39,80 +39,126 @@ if (empty($_SESSION["admin1"])) {
 }
 ?>
 <script>var largeurfen='1024'</script>
+<script>var banniere='online'</script>
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
-<script language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/lib_defil.js"></script>
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4-2.css">
+<script language="JavaScript" src="./<?php echo REPADMIN; ?>/librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade</title>
+<title>Triade — Statistiques</title>
 </head>
-<body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  >
-<SCRIPT language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/menudepart.js"></SCRIPT>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<SCRIPT language="JavaScript" src="./<?php echo REPADMIN; ?>/librairie_js/menudepart.js"></SCRIPT>
 <?php include("./".REPADMIN."/librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/menudepart1.js"></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Statistique de l'établissement</font></b></td></tr>
-<tr  id='cadreCentral0'><td > <p align="left"><font color="#000000">
-<!-- // debut de la saisie -->
-<br /><br />
-<table border=1 width=80% align=center bgcolor="#ffffff" style="border-collapse: collapse;" >
-<tr>
-<td><font class=T1>Information Nav., Version, OS, Langue </font></td>
-<td width=10%>  <input type=button value="Cliquez ici" onclick="open('statistique_nav.php','_parent','')"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" ></td></tr>
-<tr>
-<td><font class=T1>Information type de connection </font></td>
-<td><input type=button value="Cliquez ici" onclick="open('statistique_debit.php','_parent','')"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" ></td></tr>
-<tr>
-<td><font class=T1>Information Connection par heure </font></td>
-<td><input type=button value="Cliquez ici" onclick="open('statistique_conc_heure.php','_parent','')"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" ></td></tr>
-<tr>
-<td><font class=T1>Information Utilisateur enregistré</font></td>
-<td><input type=button value="Cliquez ici" onclick="open('statistique_conc_utilisateur.php','_parent','')"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" ></td></tr>
-<tr>
-<td><font class=T1>Information type d'écran </font></td>
-<td><input type=button value="Cliquez ici" onclick="open('statistique_ecran.php','_parent','')"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" ></td>
-</tr></table>
-<br /><br />
-<!-- // fin de la saisie -->
-</blockquote>
+<SCRIPT language="JavaScript" src="./<?php echo REPADMIN; ?>/librairie_js/menudepart1.js"></SCRIPT>
 
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Statistique de l'établissement</font></b></td></tr>
+<tr id='cadreCentral0'><td>
+
+<!-- Navigation statistiques -->
+<div style="margin:10px 8px 14px;">
+    <table class="cc-data-table">
+        <tbody>
+            <tr class="cc-tr-data">
+                <td class="cc-td">Information Nav., Version, OS, Langue</td>
+                <td class="cc-td cc-td-center" style="width:120px;">
+                    <a href="#" onclick="open('statistique_nav.php','_parent','')" class="btn-nav" style="text-decoration:none;">Consulter</a>
+                </td>
+            </tr>
+            <tr class="cc-tr-data">
+                <td class="cc-td">Information type de connexion</td>
+                <td class="cc-td cc-td-center">
+                    <a href="#" onclick="open('statistique_debit.php','_parent','')" class="btn-nav" style="text-decoration:none;">Consulter</a>
+                </td>
+            </tr>
+            <tr class="cc-tr-data">
+                <td class="cc-td">Information connexion par heure</td>
+                <td class="cc-td cc-td-center">
+                    <a href="#" onclick="open('statistique_conc_heure.php','_parent','')" class="btn-nav" style="text-decoration:none;">Consulter</a>
+                </td>
+            </tr>
+            <tr class="cc-tr-data">
+                <td class="cc-td">Information utilisateur enregistré</td>
+                <td class="cc-td cc-td-center">
+                    <a href="#" onclick="open('statistique_conc_utilisateur.php','_parent','')" class="btn-nav" style="text-decoration:none;">Consulter</a>
+                </td>
+            </tr>
+            <tr class="cc-tr-data">
+                <td class="cc-td">Information type d'écran</td>
+                <td class="cc-td cc-td-center">
+                    <a href="#" onclick="open('statistique_ecran.php','_parent','')" class="btn-nav" style="text-decoration:none;">Consulter</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Journal des connexions -->
 <?php
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
-$cnx=cnx();
+$cnx = cnx();
 
 if (isset($_GET["limit"])) {
-	$data=trace_aff('0');
-}else{
-	$data=trace_aff('400');
+    $data = trace_aff('0');
+} else {
+    $data = trace_aff('400');
 }
-// nom,ip,date,heure,os,navigateur,membre
-$date=dateDMY();
-$date=datemoinsn($date,365) ;
-print "&nbsp;&nbsp;<i>(Les informations de connexion sont conservées pendant <b>UNE</b> année.)</i> <br><br> &nbsp;&nbsp;Les 400 dernieres connexions.<br><br>";
-print "<table width=100% align=center border=1 bgcolor='#FFFFFF' style='border-collapse: collapse;' >";
-print "<tr bgcolor='yellow'><td align=center>Date</td><td align=center>Nom - Prénom</td><td align=center>Adresse IP</td><td align=center>System - Navigateur</td></tr>";
-for($i=0;$i<count($data);$i++) {
-	print "<tr >";
-	print "<td width=5 align=center >".dateForm($data[$i][2])."<br>&nbsp;".$data[$i][3]."</td>";
-	print "<td>&nbsp;".$data[$i][0]."<br>&nbsp;".$data[$i][6]."</td>";
-	print "<td>&nbsp;".$data[$i][1]."</td>";
-	print "<td>&nbsp;".$data[$i][4]." - ".$data[$i][5]."</td>";
-	print "</tr>";
-}
-print "</table>";
-print "<br><br>";
+$date = dateDMY();
+$date = datemoinsn($date, 365);
 ?>
-<?php
-if ( ! isset($_GET["limit"])) {
-?>
-<script language=JavaScript>buttonMagic("Liste complete depuis le <?php print dateForm($date) ?>","statistique.php?limit","_self","","");</script>
-<br><br><br>
-<?php } ?>
+
+<div style="margin:0 8px 6px;font-size:11px;font-family:Electrolize,Trebuchet MS,Arial;color:#555;">
+    <i>Les informations de connexion sont conservées pendant <b>un an</b>.</i>
+    <?php if (!isset($_GET["limit"])): ?>
+    &nbsp;— Affichage limité aux 400 dernières connexions.
+    <?php endif; ?>
+</div>
+
+<div style="margin:0 8px 14px;">
+<table class="cc-data-table">
+    <thead>
+        <tr class="cc-thead-row">
+            <th class="cc-th cc-th-center" style="width:14%;">Date</th>
+            <th class="cc-th">Nom — Prénom</th>
+            <th class="cc-th cc-th-center" style="width:16%;">Adresse IP</th>
+            <th class="cc-th" style="width:26%;">Système — Navigateur</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php for ($i = 0; $i < countTriade($data); $i++) { ?>
+        <tr class="cc-tr-data">
+            <td class="cc-td cc-td-center">
+                <?php echo dateForm($data[$i][2]); ?><br>
+                <span style="font-size:10px;color:#666;"><?php echo $data[$i][3]; ?></span>
+            </td>
+            <td class="cc-td">
+                <?php echo htmlspecialchars($data[$i][0]); ?><br>
+                <span style="font-size:10px;color:#666;"><?php echo htmlspecialchars($data[$i][6]); ?></span>
+            </td>
+            <td class="cc-td cc-td-center"><?php echo htmlspecialchars($data[$i][1]); ?></td>
+            <td class="cc-td"><?php echo htmlspecialchars($data[$i][4]); ?> — <?php echo htmlspecialchars($data[$i][5]); ?></td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>
+</div>
+
+<?php if (!isset($_GET["limit"])): ?>
+<div style="margin:0 8px 14px;">
+    <a href="statistique.php?limit" class="btn-retour" style="text-decoration:none;">
+        Liste complète depuis le <?php echo dateForm($date); ?>
+    </a>
+</div>
+<?php endif; ?>
 
 </td></tr></table>
-<SCRIPT language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/menudepart2.js"></SCRIPT>
+<SCRIPT language="JavaScript" src="./<?php echo REPADMIN; ?>/librairie_js/menudepart2.js"></SCRIPT>
 </body>
 </html>

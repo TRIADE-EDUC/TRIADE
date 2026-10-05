@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_ontopmb_datatype_marclist_selector_ui.tpl.php,v 1.1 2017-05-30 13:30:20 vtouchard Exp $
+// $Id: onto_ontopmb_datatype_marclist_selector_ui.tpl.php,v 1.1 2017/05/30 13:30:20 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

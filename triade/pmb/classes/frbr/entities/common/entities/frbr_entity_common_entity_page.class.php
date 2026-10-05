@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_entity_page.class.php,v 1.17 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_entity_page.class.php,v 1.18.8.1 2025/04/24 12:37:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/frbr/frbr_entities.class.php");
 require_once($class_path."/opac_views.class.php");
 require_once($class_path."/encoding_normalize.class.php");
@@ -13,59 +14,59 @@ require_once($class_path."/auth_templates.class.php");
 require_once($class_path."/notice_tpl.class.php");
 
 class frbr_entity_common_entity_page extends frbr_entity_common_entity {
-	
+
 	/**
 	 * Identifiant de la page
 	 */
 	protected $id;
-	
+
 	/**
-	 * LibellÃ© de la page
+	 * Libellé de la page
 	 * @var string
 	 */
 	protected $name;
-	
+
 	/**
 	 * Description de la page
 	 */
 	protected $comment;
-	
+
 	/**
-	 * Type d'entitÃ©
+	 * Type d'entité
 	 */
 	protected $entity;
-	
+
 	/**
-	 * ParamÃ¨tres spÃ©cifiques
+	 * Paramètres spécifiques
 	 */
 	protected $parameters;
-	
+
 	/**
 	 * Vues OPAC
 	 * @var string
 	 */
 	protected $opac_views;
-	
+
 	protected $order;
-	
+
 	protected $type = 'page';
-	
+
 	protected $backbone = array();
-	
+
 	/**
 	 * Cadres opac permanents d'une page
 	 * @var array
 	 */
 	protected $cadre_opac_types;
-	
+
 	public function __construct($id=0) {
 		parent::__construct($id);
 	}
-	
+
 	protected static function _init_parameters($type='') {
 		global $opac_authorities_templates_folder;
 		global $opac_notices_format_django_directory;
-		
+
 		$parameters = new stdClass();
 		if($type == "authperso") {
 			$parameters->authperso = new stdClass();
@@ -94,7 +95,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $parameters;
 	}
-	
+
 	protected function fetch_data() {
 		$this->name = '';
 		$this->comment = '';
@@ -129,10 +130,10 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			}
 		}
 	}
-		
-	public static function get_parameters_form($type, $parameters = null) {
+
+	public function get_parameters_form($type = '', $parameters = null) {
 		global $msg;
-		
+
 		if($parameters == null) {
 			$parameters = static::_init_parameters($type);
 		}
@@ -164,12 +165,12 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $form;
 	}
-	
+
 	public function get_form($ajax= true) {
 		global $msg, $charset;
 		global $current_module;
 		global $pmb_opac_view_activate;
-		
+
 		if($ajax){
 			$action = "./ajax.php?module=cms&categ=frbr_entities&elem=".$this->class_name."&action=save_form";
 		}
@@ -198,8 +199,8 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 					<div class='row'>
 						".($this->id ? frbr_entities::get_hidden_field('page_entity', $this->entity) : frbr_entities::get_selector('page_entity', $this->entity, 'load_entity_parameters(this.value);'))."
 					</div>
-					<div id='parameters_form'>			
-						".static::get_parameters_form($this->entity, $this->parameters)."
+					<div id='parameters_form'>
+						". $this->get_parameters_form($this->entity, $this->parameters)."
 					</div>";
 		if($pmb_opac_view_activate) {
 			if($this->opac_views) $selected = explode(',', $this->opac_views);
@@ -233,10 +234,10 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			";
 		return $form;
 	}
-	
+
 	protected function get_backbones_list_form(){
-		global $msg, $charset, $base_path;
-	
+		global $msg, $charset;
+
 		$form = "";
 		$form.="
 			<div class='row'>
@@ -262,13 +263,13 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 				<script type='text/javascript'>
 						require(['dojo/topic'],
 						function(topic){
-							topic.publish('ParametersFormsReady', 'frbrEntityLoadManagedElemForm', {elem:'frbr_entity_common_backbone',selectedIndex:'backbone".$this->backbone['data']->id."',id: '".$this->backbone['id']."', domId:'backbone_form',numPage:'".$this->id."'})	  
+							topic.publish('ParametersFormsReady', 'frbrEntityLoadManagedElemForm', {elem:'frbr_entity_common_backbone',selectedIndex:'backbone".$this->backbone['data']->id."',id: '".$this->backbone['id']."', domId:'backbone_form',numPage:'".$this->id."'})
 						});
 				</script>";
 		}
 		return $form;
 	}
-	
+
 	public function set_parameters_from_form() {
 		global $page_parameters;
 		$parameters = stripslashes_array($page_parameters);
@@ -281,16 +282,16 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			}
 		}
 	}
-	
+
 	/**
-	 * DonnÃ©es provenant d'un formulaire
+	 * Données provenant d'un formulaire
 	 */
 	public function set_properties_from_form() {
 		global $page_name;
 		global $page_comment;
 		global $page_entity;
 		global $page_opac_views;
-		
+
 		$this->name = stripslashes($page_name);
 		$this->comment = stripslashes($page_comment);
 		$this->entity = stripslashes($page_entity);
@@ -301,14 +302,14 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			$this->opac_views = "";
 		}
 	}
-	
+
 	/**
 	 * Formatage pour la sauvegarde dans la table '_content'
 	 */
 	public function save_content($type='') {
 		$page_type = 'page_'.$type.'_choice';
 		global ${$page_type};
-	
+
 		if(isset(${$page_type}) && isset($this->{$type}['name']) && ${$page_type} == $this->{$type}['name']){
 			$type_id = $this->{$type}['id'];
 		}else{
@@ -346,12 +347,12 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Sauvegarde
 	 */
 	public function save(){
-	
+
 		if($this->id) {
 			$query = 'update frbr_pages set ';
 			$where = 'where id_page= '.$this->id;
@@ -381,15 +382,14 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Suppression
 	 */
 	public static function delete($id=0){
-		global $msg;
-		$id += 0;
+		$id = intval($id);
 		if($id) {
-			//suppression des datanodes associÃ©s
+			//suppression des datanodes associés
 			$query = "SELECT id_datanode FROM frbr_datanodes WHERE datanode_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -397,7 +397,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 					frbr_entity_common_entity_datanode::delete($row->id_datanode, true);
 				}
 			}
-			//suppression des cadres associÃ©s
+			//suppression des cadres associés
 			$query = "SELECT id_cadre FROM frbr_cadres WHERE cadre_num_datanode = 0 AND cadre_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -405,34 +405,34 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 					frbr_entity_common_entity_cadre::delete($row->id_cadre);
 				}
 			}
-			//suppresion de la page			
+			//suppresion de la page
 			$query = "delete from frbr_pages where id_page = ".$id;
 			$result = pmb_mysql_query($query);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public function get_id() {
 		return $this->id;
 	}
-	
+
 	public function get_name() {
 		return $this->name;
 	}
-	
+
 	public function get_entity() {
 		return $this->entity;
 	}
-	
+
 	public function get_type() {
 		return $this->type;
 	}
-	
+
 	public function get_parameters() {
 		return $this->parameters;
 	}
-	
+
 	public function set_parameters($parameters) {
 		$this->parameters = static::_init_parameters($this->entity);
 		foreach ($this->parameters as $property=>$data) {
@@ -450,9 +450,9 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			}
 		}
 	}
-	
+
 	/**
-	 * modification d'un seul paramÃ¨tre
+	 * modification d'un seul paramètre
 	 * @param stdClass $parameters
 	 */
 	public function set_parameter($parameter) {
@@ -463,7 +463,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			$this->parameters->{$property}->value = $parameter->{$property}->value;
 		}
 	}
-	
+
 	protected function get_datanodes() {
 		$query = 'SELECT * FROM frbr_datanodes WHERE datanode_num_page = "'.$this->id.'"';
 		$result = pmb_mysql_query($query);
@@ -481,7 +481,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $datanodes;
 	}
-	
+
 	protected function add_cadre($id_cadre, $name, $num_datanode=0, $visibility=0, $order=0, $cadre_type='') {
 		return array(
 				'id' => $id_cadre,
@@ -494,7 +494,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 				'type' => 'cadre'
 		);
 	}
-	
+
 	protected function get_cadres() {
 		$query = 'SELECT *
 				FROM frbr_cadres
@@ -509,10 +509,10 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $datacadres;
 	}
-	
+
 	protected function add_cadre_opac($cadre_type) {
 		global $msg;
-	
+
 		$query = "select * from frbr_place
 				where place_cadre_type = '".$cadre_type."' and place_num_page = ".$this->id;
 		$result = pmb_mysql_query($query);
@@ -527,7 +527,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 			return $this->add_cadre(0, $msg['frbr_page_'.$cadre_type], 0, $visibility, 0, $cadre_type);
 		}
 	}
-	
+
 	protected function get_cadres_opac() {
 		$cadres_opac = array();
 		foreach($this->get_cadre_opac_types() as $cadre_type) {
@@ -535,19 +535,19 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $cadres_opac;
 	}
-	
+
 	public function get_dojo_tree(){
 		$data_array = array('num_page'=> $this->id, 'rootNode'=> array('id'=> 0, 'root'=> true, 'name'=> $this->name, 'page' => $this->id, 'cadres_opac' => $this->get_cadres_opac()), 'treeDatanodes' => $this->get_datanodes(), 'treeCadres' => $this->get_cadres());
 		return encoding_normalize::json_encode($data_array);
 	}
-	
+
 	public function get_form_tree() {
 		global $frbr_page_tree_tpl;
 		$form = $frbr_page_tree_tpl;
 		$form = str_replace('!!parameters!!', $this->get_dojo_tree(), $form);
 		return $form;
 	}
-	
+
 	public function get_form_build() {
 		$form = "<div data-dojo-type='dijit/layout/TabContainer' id='frbrTabContainer' data-dojo-props='splitter:true,region:\"top\"' style='width:auto;height:50%'>";
 		$form .= $this->get_form_tree();
@@ -556,13 +556,13 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		$form .= "</div>";
 		return $form;
 	}
-	
+
 	public function get_backbone() {
 		return $this->backbone;
 	}
-	
+
 	public static function get_class_name_from_id($id_page) {
-		$id_page+=0;
+		$id_page = intval($id_page);
 		$class_name = '';
 		$query = '	SELECT page_entity
 					FROM frbr_pages
@@ -577,7 +577,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $class_name;
 	}
-	
+
 	public static function get_entity_type_from_id($id_page) {
 		$entity_type = '';
 		$query = '	SELECT page_entity
@@ -591,7 +591,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $entity_type;
 	}
-	
+
 	public function get_parameter_value($property='') {
 		$parameter = '';
 		if(isset($this->parameters->$property)) {
@@ -599,7 +599,7 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $parameter;
 	}
-	
+
 	protected function get_cadre_opac_types() {
 		if(!isset($this->cadre_opac_types)) {
 			switch ($this->entity) {
@@ -613,14 +613,22 @@ class frbr_entity_common_entity_page extends frbr_entity_common_entity {
 		}
 		return $this->cadre_opac_types;
 	}
-	
+
 	public function update_place_from_parameters() {
 		foreach ($this->get_cadre_opac_types() as $cadre_type) {
-			$query = '	UPDATE frbr_place 
-						SET place_visibility = "'.(isset($this->parameters->{$cadre_type}) ? $this->parameters->{$cadre_type}->value : 0).'" 
+			$query = '	UPDATE frbr_place
+						SET place_visibility = "'.(isset($this->parameters->{$cadre_type}) ? $this->parameters->{$cadre_type}->value : 0).'"
 						WHERE place_num_page = "'.$this->id.'"
 						AND place_cadre_type = "'.$cadre_type.'"';
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 		}
+	}
+
+	/**
+	 *
+	 * @return int
+	 */
+	protected function get_max_order() {
+		return 0;
 	}
 }

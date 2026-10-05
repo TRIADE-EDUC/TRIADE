@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_groupexpl.tpl.php,v 1.4 2017-10-13 10:21:55 dgoron Exp $
+// $Id: sel_groupexpl.tpl.php,v 1.4 2017/10/13 10:21:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates du sÃ©lecteur groupexpl
+// templates du sélecteur groupexpl
 
 //-------------------------------------------
 //	$sel_header : header

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabAdvancedSearch.js,v 1.7 2018-10-29 08:38:39 ngantier Exp $
+// $Id: SubTabAdvancedSearch.js,v 1.7 2018/10/29 08:38:39 ngantier Exp $
 
 
 define([

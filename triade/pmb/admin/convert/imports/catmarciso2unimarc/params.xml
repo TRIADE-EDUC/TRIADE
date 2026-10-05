@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.3.14.1 2024/08/28 14:10:18 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>USMARC ISO2709 -&gt; pmb-XML UNIMARC</importname>
@@ -9,7 +15,7 @@
 	<!-- Type de sortie -->
 	<output importable="yes" type="iso_2709" suffix="marc"/>
 
-	<!-- Début de conversion -->	
+	<!-- Début de conversion -->
 
 	<step type="custom">
 		<script>catmarciso2unimarc.class.php</script>

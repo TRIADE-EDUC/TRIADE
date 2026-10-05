@@ -23,7 +23,7 @@
   $navigateur = $_SERVER['HTTP_USER_AGENT'];
   $navigateurCompatible=!(strpos($navigateur,"MSIE 4") || strpos($navigateur,"MSIE 5") || strpos($navigateur,"MSIE 6"));
   //Fete du jour
-  $DB_CX->DbQuery("SELECT fet_nom FROM ${PREFIX_TABLE}fetes WHERE fet_mois=".$moisEnCours." AND fet_jour=".intval($jourEnCours));
+  $DB_CX->DbQuery("SELECT fet_nom FROM {$PREFIX_TABLE}fetes WHERE fet_mois=".$moisEnCours." AND fet_jour=".intval($jourEnCours));
   $feteDuJour = $DB_CX->DbResult(0,0);
   //Titre page
   $iTitre = ($USER_SUBSTITUE!=$idUser) ? 0 : $tcType;
@@ -55,11 +55,11 @@
         $titrePage = "&nbsp;&nbsp;".trad("TITRE_CONTACT");
       elseif ($tcMenu==_MENU_PROFIL) {
         if ($droit_PROFILS <= _DROIT_PROFIL_PARAM_PARTAGE) {
-          /*Public*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur  WHERE util_id=".$idUser);
+          /*Public*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur  WHERE util_id=".$idUser);
         } elseif ($droit_AGENDAS < _DROIT_AGENDA_TOUS) {
-          /*Users*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+          /*Users*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
         } else  {
-          /*Admin*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
+          /*Admin*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
         }
         if ($DB_CX->DbNumRows()==1) {
           $genre = prefixeMot(strtolower(substr($DB_CX->DbResult(0,1),0,1)));
@@ -122,7 +122,7 @@
 		$ico="";
 		$ico_mail = "";
 	    //sid_util_id=".$enr['util_id']."
-		$DB_CX->DbQuery("SELECT DISTINCT util_id, util_email, sid_util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}sid ON sid_util_id=util_id");
+		$DB_CX->DbQuery("SELECT DISTINCT util_id, util_email, sid_util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}sid ON sid_util_id=util_id");
 		while ($enr = $DB_CX->DbNextRow()) {
 		if (!$enr['sid_util_id']) $ico[$enr['util_id']] = "<IMG src=\"image/user_off.gif\" BORDER=\"0\">&nbsp;&nbsp;";
 		else $ico[$enr['util_id']] = "<IMG src=\"image/user_on.gif\" BORDER=\"0\">&nbsp;&nbsp;";
@@ -132,11 +132,11 @@
 		}
 		// Fin mod qui est là ?
         if ($droit_AGENDAS < _DROIT_AGENDA_PARTAGE) {
-          /*Public*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser);
+          /*Public*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser);
         } else if ($droit_AGENDAS >= _DROIT_AGENDA_TOUS) {
-          /*Admin*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
+          /*Admin*/$DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
         } else {
-          $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+          $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
         }
         if ($DB_CX->DbNumRows()==1) {
           $genre = prefixeMot(strtolower(substr($DB_CX->DbResult(0,1),0,1)),trad("COMMUN_PREFIXE_D"),trad("COMMUN_PREFIXE_DE"));

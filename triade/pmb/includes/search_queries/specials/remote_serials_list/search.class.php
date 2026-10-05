@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.8 2017-07-12 15:15:02 tsamson Exp $
+// $Id: search.class.php,v 1.10.4.1 2025/03/05 15:06:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-global $msg,$lang,$charset,$base_path,$class_path,$include_path;
+global $class_path;
 
 require_once($class_path.'/connecteurs.class.php');
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 
 class remote_serials_list{
@@ -26,28 +26,25 @@ class remote_serials_list{
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
     	$operators["EQ"]="=";
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
-    	global $msg;
-    	global $charset;
-    	global $get_input_box_id;
     	global $base_path;
 
     	//$this->s = new search(false,"search_simple_fields.xml");
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
 
-    	$r.="
+    	$r ="
    			<script type='text/javascript'>
    				if(typeof(seriallist_fields)=='undefined'){
    					var seriallist_fields = new Array();
@@ -191,10 +188,8 @@ class remote_serials_list{
     public function get_ajax_params(){
     	global $selected_sources;
     	global $field_form;
-    	global $charset;
     	global $serial;
     	global $onchange;
-    	global $msg;
 		global $base_path;
 		
     	$response = array();
@@ -279,12 +274,12 @@ class remote_serials_list{
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	global $search;
     	global $source;
     	global $base_path;
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$serial_="field_".$this->n_ligne."_s_".$this->id;
     	$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     	global ${$serial_};
@@ -295,7 +290,7 @@ class remote_serials_list{
     	if(!$this->is_empty($serial)){
     		$source_id=0;
     		$issue_id=array();
-    		foreach ( $issues as $value ) {//Tous les bulletins viennent forcÃ©ment du pÃ©riodique de la mÃªme source
+    		foreach ( $issues as $value ) {//Tous les bulletins viennent forcément du périodique de la même source
        			$t = explode('_',$value[0]);
        			$source_id = $t[0];
        			$issue_id[]=$t[2];
@@ -352,12 +347,12 @@ class remote_serials_list{
 		return array();
     }
     	    
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
 		global $search;
     	global $source;
     	global $base_path,$charset;    	    	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$serial_="field_".$this->n_ligne."_s_".$this->id;
     	$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     	global ${$serial_};
@@ -400,7 +395,7 @@ class remote_serials_list{
 						$elem[2] = $value['bulletin_bulletin']['serial_title'];
 						if ($charset!='utf-8') {
 							foreach($elem as $k=>$v) {
-								$elem[$k]=utf8_decode($v);
+								$elem[$k]=encoding_normalize::utf8_decode($v);
 							}
 						}
 						if($issues_infos == ""){
@@ -417,20 +412,20 @@ class remote_serials_list{
 	    } 
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if($valeur[0]!= ""){
     		$issues_="fieldvar_".$this->n_ligne."_s_".$this->id;
     		global ${$issues_};
     		$issues = ${$issues_};
-    		if(count($issues[0])>0){
+    		if(is_countable($issues[0]) && count($issues[0])>0){
     			return false;
     		}
     	}
     	return true;
     }
     
-     //fonction de dÃ©coupage d'une chaine trop longue
+     //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur,$size=50) {
     	if (strlen($valeur)>=$size) {
     		$pos=strrpos(substr($valeur,0,$size)," ");

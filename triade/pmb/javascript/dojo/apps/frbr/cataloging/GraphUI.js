@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: GraphUI.js,v 1.17 2018-03-21 09:46:49 tsamson Exp $
+// $Id: GraphUI.js,v 1.17 2018/03/21 09:46:49 tsamson Exp $
 
 
 define([

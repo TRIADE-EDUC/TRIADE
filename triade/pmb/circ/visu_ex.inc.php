@@ -1,21 +1,29 @@
 <?php
+use Pmb\Common\Library\Navbar\Navbar;
+
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: visu_ex.inc.php,v 1.36 2019-04-09 09:56:15 apetithomme Exp $
+// $Id: visu_ex.inc.php,v 1.39.4.2 2025/01/24 16:34:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $msg, $pmb_book_pics_show, $pmb_book_pics_url, $PMBuserid;
+global $gestion_acces_active, $gestion_acces_user_notice, $nb_per_page_search;
+global $form_cb_expl, $nb_results, $ex_query;
+global $begin_result_liste, $end_result_liste;
+global $typdoc_query, $page, $link, $link_expl, $link_explnum, $print_mode;
 
 $prefix_url_image="./";
 if (!isset($back_to_visu)){
 	get_cb_expl($msg[375], $msg[661], $msg['circ_tit_form_cb_expl'], './circ.php?categ=visu_ex');
 	if($form_cb_expl){
 		$query = "select expl_id, expl_notice, pret_flag, pret_idempr from docs_statut, exemplaires left join pret on pret_idexpl=expl_id where expl_cb='$form_cb_expl' and expl_statut=idstatut ";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(!pmb_mysql_num_rows($result)) {
 			// exemplaire inconnu
 			$alert_sound_list[]="critique";
-			print "<strong>$form_cb_expl&nbsp;: ${msg[367]}</strong>";
+			print "<strong>$form_cb_expl&nbsp;: {$msg[367]}</strong>";
 		} else {
 			$expl_lu = pmb_mysql_fetch_object($result) ;
 			if ($stuff = get_expl_info($expl_lu->expl_id, 1)) {
@@ -23,7 +31,7 @@ if (!isset($back_to_visu)){
 				// print $begin_result_liste;
 				print print_info($stuff,1,1);
 				// pour affichage de l'image de couverture
-				if ($pmb_book_pics_show=='1' && (($pmb_book_pics_url && $stuff->code) || (isset($stuff->thumbnail_url) && $stuff->thumbnail_url)))
+				if ($pmb_book_pics_show == '1' && (($pmb_book_pics_url && !empty($stuff->code)) || (!empty($stuff->thumbnail_url))))
 					print "<script type='text/javascript'>
 						<!--
 						var img = document.getElementById('PMBimagecover".$expl_lu->expl_notice."');
@@ -40,7 +48,7 @@ if (!isset($back_to_visu)){
 			} else {
 				// exemplaire inconnu
 				$alert_sound_list[]="critique";
-				print "<strong>$form_cb_expl&nbsp;: ${msg[367]}</strong>";
+				print "<strong>$form_cb_expl&nbsp;: {$msg[367]}</strong>";
 			}
 		}
 	}
@@ -67,7 +75,7 @@ if (!isset($back_to_visu)){
 		// la saisie est un EAN -> on tente de le formater en ISBN
 		$EAN=$ex_query;
 		$isbn = EANtoISBN($ex_query);
-		// si Ã©chec, on prend l'EAN comme il vient
+		// si échec, on prend l'EAN comme il vient
 		if(!$isbn) 
 			$code = str_replace("*","%",$ex_query);
 		else {
@@ -78,7 +86,7 @@ if (!isset($back_to_visu)){
 		if(isISBN($ex_query)) {
 			// si la saisie est un ISBN
 			$isbn = formatISBN($ex_query);
-			// si Ã©chec, ISBN erronÃ© on le prend sous cette forme
+			// si échec, ISBN erroné on le prend sous cette forme
 			if(!$isbn) 
 				$code = str_replace("*","%",$ex_query);
 			else {
@@ -86,31 +94,33 @@ if (!isset($back_to_visu)){
 				$code=formatISBN($code10,13);
 			}
 		} else {
-			// ce n'est rien de tout Ã§a, on prend la saisie telle quelle
+			// ce n'est rien de tout ça, on prend la saisie telle quelle
 			$code = str_replace("*","%",$ex_query);
-			// filtrer par typdoc_query si selectionnÃ©
+			// filtrer par typdoc_query si selectionné
 			if(!empty($typdoc_query) && !empty($typdoc_query[0])) $where_typedoc=" and typdoc in ('".implode("','", $typdoc_query)."') ";
 		}
 	}
-	
+	$page = intval($page);
 	if(!empty($nb_results)){
-		$limit_page= " limit ".$page*$nb_per_page_search.", $nb_per_page_search "; 
+	    if ($page) {
+	        $limit_page= " limit ".($page-1)*$nb_per_page_search.", $nb_per_page_search "; 
+	    } else {
+	        $limit_page= " limit 0, $nb_per_page_search ";
+	    }
 	}else{
 		$limit_page= " "; 
-		$page=0;
 	}	
-
 	$rqt_bulletin = 0;
 	// on compte
 	if ($EAN && $isbn) {
 		
-		// cas des EAN purs : constitution de la requÃªte
+		// cas des EAN purs : constitution de la requête
 		$requete = "SELECT distinct notices.* FROM notices ";
 		$requete.= $acces_j;
 		$requete.= "left join exemplaires on notices.notice_id=exemplaires.expl_notice ";
 		$requete.= "WHERE niveau_biblio='m' AND (exemplaires.expl_cb like '$code' OR exemplaires.expl_cb='$ex_query' OR notices.code in ('$code','$EAN'".($code10?",'$code10'":"").")) ";
 		$requete.= $limit_page;
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		
 	} elseif ($isbn) {
 		
@@ -120,34 +130,34 @@ if (!isset($back_to_visu)){
 		$requete.= "left join exemplaires on notices.notice_id=exemplaires.expl_notice ";
 		$requete.= " WHERE niveau_biblio='m' AND (exemplaires.expl_cb like '$code' OR exemplaires.expl_cb='$ex_query' OR notices.code in ('$code'".($code10?",'$code10'":"").")) ";
 		$requete.= $limit_page;
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		
 	} elseif ($code) {
 		
 		// recherche d'un exemplaire
-		// note : le code est recherchÃ© aussi dans le champ code des notices
-		// (cas des code-barres disques qui Ã©chappent Ã  l'EAN)
+		// note : le code est recherché aussi dans le champ code des notices
+		// (cas des code-barres disques qui échappent à l'EAN)
 		//
 		$requete = "SELECT distinct notices.* FROM notices ";
 		$requete.= $acces_j;
 		$requete.= "left join exemplaires on notices.notice_id=exemplaires.expl_notice ";
 		$requete.= "WHERE niveau_biblio='m' AND (exemplaires.expl_cb like '$code' OR notices.code like '$code') $where_typedoc ";
 		$requete.= $limit_page;		
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($myQuery)==0) {
-			// rien trouvÃ© en monographie
+			// rien trouvé en monographie
 			$requete = "SELECT distinct notices.*, bulletin_id FROM notices ";
 			$requete.= $acces_j;
 			$requete.= "left join bulletins on bulletin_notice=notice_id left join exemplaires on (bulletin_id=expl_bulletin and expl_notice=0) ";
 			$requete.= "WHERE niveau_biblio='s' AND (exemplaires.expl_cb like '$code' OR bulletin_numero like '$code' OR bulletin_cb like '$code' OR notices.code like '$code')  $where_typedoc ";
 			$requete.= "GROUP BY bulletin_id ";
 			$requete.= $limit_page;
-			$myQuery = pmb_mysql_query($requete, $dbh);
+			$myQuery = pmb_mysql_query($requete);
 			$rqt_bulletin=1;
 		}
 		
 	} else {
-		// Pas de rÃ©sultat
+		// Pas de résultat
 		error_message($msg[235], $msg[307]." $ex_query", 1, "./circ.php?categ=visu_rech");
 		die();
 	}
@@ -158,10 +168,10 @@ if (!isset($back_to_visu)){
 					
 	if ($rqt_bulletin!=1) {
 		if(pmb_mysql_num_rows($myQuery)) {
-			// la recherche fournit plusieurs rÃ©sultats !!!
-			// boucle de parcours des notices trouvÃ©es
-			// inclusion du javascript de gestion des listes dÃ©pliables
-			// dÃ©but de liste
+			// la recherche fournit plusieurs résultats !!!
+			// boucle de parcours des notices trouvées
+			// inclusion du javascript de gestion des listes dépliables
+			// début de liste
 			print sprintf("<div class='othersearchinfo'><b>".$msg[940]."</b>&nbsp;$ex_query =&gt; ".$msg["searcher_results"]."</div>",$nb_results);			
 			print $begin_result_liste;
 			$nb=0;
@@ -174,9 +184,9 @@ if (!isset($back_to_visu)){
 					/*echo "<pre>";
 					print_r($notice);
 					echo "</pre>";*/
-					//Les liens sont dÃ©fini dans le fichier visu_rech.inc.php
-					if (!isset($link_explnum)) $link_explnum = "";
-					if (!isset($print_mode)) $print_mode = 0;
+					//Les liens sont défini dans le fichier visu_rech.inc.php
+					if (empty($link_explnum)) $link_explnum = "";
+					$print_mode = intval($print_mode);
 					$display = new mono_display($notice, 6, $link, 1, $link_expl, '', $link_explnum,1, $print_mode,1,1,'',0,false,true,$recherche_ajax_mode);
 					//mono_display($id, $level=1, $action='', $expl=1, $expl_link='', $lien_suppr_cart="", $explnum_link='', $show_resa=0, $print=0, $show_explnum=1, $show_statut=0, $anti_loop='', $draggable=0, $no_link=false, $show_opac_hidden_fields=true,$ajax_mode=0)
 					print pmb_bidi($display->result);
@@ -208,7 +218,7 @@ if (!isset($back_to_visu)){
 			}	
 			print $end_result_liste;
 		} else {
-			// Pas de rÃ©sultat
+			// Pas de résultat
 			error_message($msg[235], $msg[307]." $ex_query", 1, "./circ.php?categ=visu_rech");
 			die();
 		}
@@ -216,7 +226,7 @@ if (!isset($back_to_visu)){
 	
 	//Gestion de la pagination
 	if ($nb_results) {
-		$nav_bar = "
+		print "
 		<form name='search_form' action='./circ.php?categ=visu_rech' method='post' style='display:none'>
 			<input type='hidden' name='page' value='$page'/>
 			<input type='hidden' name='nb_results' value='$nb_results'/>
@@ -225,40 +235,14 @@ if (!isset($back_to_visu)){
 			<input type='hidden' name='statut_query' value=''/>
 		</form>";
 		
-		$n_max_page=ceil($nb_results/$nb_per_page_search);
-	    	
-	    if (!$page) $page_en_cours=0 ;
-		else $page_en_cours=$page ;
-	
-	    // affichage du lien precedent si necessaire
-	    if ($page>0) {
-	    	$nav_bar .= "<a href='#' onClick='document.search_form.page.value-=1; ";
-	    	$nav_bar .= "document.search_form.submit(); return false;'>";
-	    	$nav_bar .= "<img src='".get_url_icon('left.gif')."' style='border:0px; margin:3px 3px' title='".$msg[48]."' alt='[".$msg[48]."]' class='align_middle'/>";
-		    $nav_bar .= "</a>";
+		if (!$page) {
+		    $current_page = 1 ;
+		} else {
+		    $current_page = intval($page);
 		}
-	        
-		$deb = $page_en_cours - 10 ;
-		if ($deb<0) $deb=0;
-		for($i = $deb; ($i < $n_max_page) && ($i<$page_en_cours+10); $i++) {
-			if($i==$page_en_cours) $nav_bar .= "<strong>".($i+1)."</strong>";
-			else {
-				$nav_bar .= "<a href='#' onClick=\"if ((isNaN(document.search_form.page.value))||(document.search_form.page.value=='')) document.search_form.page.value=1; else document.search_form.page.value=".($i)."; ";
-	    		$nav_bar .= "document.search_form.submit(); return false;\">";
-	    		$nav_bar .= ($i+1);
-	    		$nav_bar .= "</a>";
-			}
-			if($i<$n_max_page) $nav_bar .= " "; 
-		}
-	        
-		if(($page+1)<$n_max_page) {
-	    	$nav_bar .= "<a href='#' onClick=\"if ((isNaN(document.search_form.page.value))||(document.search_form.page.value=='')) document.search_form.page.value=1; else document.search_form.page.value=parseInt(document.search_form.page.value)+parseInt(1); ";
-	    	$nav_bar .= "document.search_form.submit(); return false;\">";
-	    	$nav_bar .= "<img src='".get_url_icon('right.gif')."' style='border:0px; margin:3px 3px' title='".$msg[49]."' alt='[".$msg[49]."]' class='align_middle'>";
-	    	$nav_bar .= "</a>";
-	    } else 	$nav_bar .= "";
-		$nav_bar = "<div class='center'>$nav_bar</div>";
-	   	echo $nav_bar ;
+		$navbar = new Navbar($current_page, $nb_results, $nb_per_page_search);
+		$navbar->setHiddenFormName('search_form');
+		print "<div class='center'>".$navbar->render()."</div>";
 	}  
 }
 

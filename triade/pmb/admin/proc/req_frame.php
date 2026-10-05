@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: req_frame.php,v 1.3 2009-06-25 16:33:21 dbellamy Exp $
+// $Id: req_frame.php,v 1.3 2009/06/25 16:33:21 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../..";
 $base_auth = "ADMINISTRATION_AUTH";
 $base_title = "\$msg[7]";    

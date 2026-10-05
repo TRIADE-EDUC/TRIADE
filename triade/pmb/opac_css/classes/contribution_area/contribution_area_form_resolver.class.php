@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_form_resolver.class.php,v 1.1 2019-01-07 11:39:09 apetithomme Exp $
+// $Id: contribution_area_form_resolver.class.php,v 1.1 2019/01/07 11:39:09 apetithomme Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -10,7 +10,7 @@ require_once ($class_path.'/contribution_area/contribution_area_store.class.php'
 
 /**
  * class contribution_area_form_resolver
- * Classe de rÃ©solution de formulaire Ã  utiliser en contribution
+ * Classe de résolution de formulaire à utiliser en contribution
  */
 class contribution_area_form_resolver {
 	

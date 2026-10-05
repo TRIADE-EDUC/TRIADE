@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.2 2015-06-22 14:53:30 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.4 2024/04/15 13:06:44 rtigero Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -23,6 +23,7 @@ fetchNoticeList
   <entry code="fetchNoticeList_recordCharset">the charset in which we want the results</entry>
   <entry code="fetchNoticeList_includeLinks">include the links between records, issues and articles</entry>
   <entry code="fetchNoticeList_includeItems">include the copies in the zone 995</entry>
+  <entry code="fetchNoticeList_cleanHTML">clean up HTML code</entry>
   <entry code="fetchNoticeList_results">The different records</entry>
   <entry code="fetchNoticeList_results_noticeId">the record's id</entry>
   <entry code="fetchNoticeList_results_noticeContent">the record in the wanted format</entry>
@@ -36,6 +37,7 @@ fetchNoticeListArray
 	<entry code="fetchNoticeListArray_recordCharset">The charset in which we want the results</entry>
 	<entry code="fetchNoticeListArray_includeLinks">include links between records, issues and articles</entry>
 	<entry code="fetchNoticeListArray_includeItems">include the copies in the 995 zone</entry>
+	<entry code="fetchNoticeListArray_cleanHTML">clean up HTML code</entry>
 	<entry code="fetchNoticeListArray_results">The different records</entry>
   <!--
 listNoticeExplNums
@@ -170,5 +172,6 @@ fetchNoticesAdministrative
 	<entry code="fetchNoticesAdministrative_list_result">Management informations of the record</entry>
 	<entry code="fetchNoticesAdministrative_results_noticeId">The id of the record</entry>
 	<entry code="fetchNoticesAdministrative_results_administrative">Management informations of a record</entry>
-	
+
+	<entry code="getNbResa">Récupérer le nombre de réservations associées</entry>	
 </XMLlist>

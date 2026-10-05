@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -74,14 +74,14 @@ $saisieannee=$_GET["saisieannee"];
 	}
 	$data=affPlanEquip("equip",dateFormBase($date));
 	// id.n,idmatos.n,idqui.n,quand.n,heure_depart.n,heure_fin.n,info.n,valider.n,type.m,id,m
-	print "<table width=95% border=1 align=center>";
+	print "<table width='95%' border='1' align='center' style='border-collapse: collapse;' >";
 	print "<tr bgcolor='yellow'>";
 	print "<td width=95 valign=top >&nbsp;De&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;à</td>";
 	print "<td width=150 valign=top>&nbsp;Réservé&nbsp;par</td>";
 	print "<td valign=top >&nbsp;Equipement&nbsp;</td>";
 	print "<td  valign=top >&nbsp;Supprimer&nbsp;</td>";
 	print "</tr>";
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$res="";
         if (DBTYPE == "mysql") {
              if ($data[$i][7] == 0)  {

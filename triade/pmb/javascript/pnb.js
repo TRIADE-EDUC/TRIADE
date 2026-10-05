@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pnb.js,v 1.2 2018-06-28 12:34:27 ngantier Exp $
+// $Id: pnb.js,v 1.2 2018/06/28 12:34:27 ngantier Exp $
 
 function pnb_get_loans_completed_number(record_id, line_id) {
 	var request = new http_request();

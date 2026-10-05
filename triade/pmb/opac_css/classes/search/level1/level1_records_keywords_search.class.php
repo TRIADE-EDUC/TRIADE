@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: level1_records_keywords_search.class.php,v 1.2 2018-04-18 12:18:45 dgoron Exp $
+// $Id: level1_records_keywords_search.class.php,v 1.5 2023/08/17 09:47:57 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,14 +19,16 @@ class level1_records_keywords_search extends level1_records_search {
     	global $search_terms;
     	$aq = new analyse_query($this->user_query);
     	$search_terms = $aq->get_positive_terms($aq->tree);
-    	//On enlÃ¨ve le dernier terme car il s'agit de la recherche boolÃ©enne complÃ¨te
-    	unset($search_terms[count($search_terms)-1]);
+    	//On enlève le dernier terme car il s'agit de la recherche booléenne complète
+    	if (!empty($search_terms)) {
+        	unset($search_terms[count($search_terms)-1]);
+    	}
     	
     	if($opac_allow_affiliate_search){
     		if ($auto_submit) {
     			if($this->get_nb_results()){
     				print "<div class='search_result'>".$this->get_hidden_search_form()."</div>
-    					<script type=\"text/javascript\" >
+    					<script>
 							document.search_keywords.action = '".$this->get_form_action()."&tab=catalog';
 							document.search_keywords.submit();
 						</script>";
@@ -37,7 +39,7 @@ class level1_records_keywords_search extends level1_records_search {
     	}else{
     		if($this->get_nb_results()) {
     			if ($auto_submit) {
-    				print $this->get_hidden_search_form()."<script type=\"text/javascript\" >document.forms['search_keywords'].submit();</script>";
+    				print $this->get_hidden_search_form()."<script>document.forms['search_keywords'].submit();</script>";
     			} else {
     				print "<div class='search_result' id=\"titre\" name=\"titre\">";
     				print "<strong>";
@@ -53,6 +55,10 @@ class level1_records_keywords_search extends level1_records_search {
     			}
     		}
     	}
+    }
+    
+    protected function get_mode() {
+    	return 'keyword';
     }
 }
 ?>

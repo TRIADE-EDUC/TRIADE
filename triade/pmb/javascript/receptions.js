@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions.js,v 1.6 2017-09-28 09:23:37 dgoron Exp $
+// $Id: receptions.js,v 1.8 2019/07/18 13:50:35 dgoron Exp $
 
 /*
  * n�cessite :	ajax.js
@@ -318,8 +318,30 @@ function apply_changes(form) {
 
 //envoi des relances
 function do_relances(form) {
-	form.setAttribute('action','./acquisition.php?categ=ach&sub=recept&action=do_relances');
-	form.submit();
+	var checkboxes = Array.prototype.slice.call(document.querySelectorAll('input[type=\"checkbox\"][name=\"chk[]\"]:checked:enabled'));
+	if(checkboxes.length) {
+		var relance_already = false;
+		var date = new Date();
+		var month = ''+(date.getMonth()+1);
+		var day = ''+date.getDate();
+		var year = date.getFullYear();
+		if (month.length < 2) month = '0' + month;
+	    if (day.length < 2) day = '0' + day;
+		var today = year+'-'+month+'-'+day;
+		checkboxes.forEach(function(checkbox) {
+			var lastRelance = Array.prototype.slice.call(document.querySelectorAll('input[type=\"hidden\"][id=\"date_last_relance['+checkbox.value+']\"]'));
+			if(lastRelance && (typeof lastRelance[0] !== 'undefined') && lastRelance[0].value == today) {
+				relance_already = true;
+			}
+		});
+		if(!relance_already || confirm(pmbDojo.messages.getMessage('acquisition', 'acquisition_relance_already_confirm'))) {
+			form.setAttribute('action','./acquisition.php?categ=ach&sub=recept&action=do_relances');
+			form.submit();
+		}
+	} else {
+		alert(pmbDojo.messages.getMessage('acquisition', 'acquisition_act_tab_checked_empty'));
+		return false;
+	}
 }
 
 //catalogage

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_datasource_sections.class.php,v 1.9 2019-03-19 14:38:56 dgoron Exp $
+// $Id: docwatch_datasource_sections.class.php,v 1.11 2023/04/26 13:26:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/cms/cms_section.class.php");
 
 /**
@@ -30,35 +31,35 @@ class docwatch_datasource_sections extends docwatch_datasource{
 	} // end of member function __construct
 
 	/**
-	 * Génération de la structure de données representant les items de type rubrique
+	 * G�n�ration de la structure de donn�es representant les items de type rubrique
 	 *
 	 */
 	
-	protected function get_items_datas($selector_values){
-		global $dbh;
+	protected function get_items_datas($items){
 		$rubriques_retour = array();
-		if(count($selector_values)){
-			foreach($selector_values as $id){
+		if(count($items)){
+			foreach($items as $id){
 				$rubrique_instance = new cms_section($id);
 				$rubrique_data = $rubrique_instance->format_datas();
 				$rubrique = array();
 				$rubrique['type'] = 'section';
-				$rubrique['num_section'] = $rubrique_data['id'];
-				$rubrique['title'] = $rubrique_data['title'];
-				$rubrique['summary'] = $rubrique_data['resume'];
-				$rubrique['content'] = $rubrique_data['resume'];
-				$rubrique['logo_url'] = $rubrique_data['logo']['large'];
-				$rubrique['url'] = $this->get_constructed_link("section", $rubrique_data['id']);
-				if($rubrique_data['start_date'] == ""){
-					$rubrique['publication_date'] = extraitdate($rubrique_data['create_date']);
+				$rubrique['num_section'] = $rubrique_data->get_id();
+				$rubrique['title'] = $rubrique_data->get_title();
+				$rubrique['summary'] = $rubrique_data->get_resume();
+				$rubrique['content'] = $rubrique_data->get_resume();
+				$rubrique['logo_url'] = $rubrique_data->get_logo()['large'];
+				$rubrique['url'] = $this->get_constructed_link("section", $rubrique_data->get_id());
+				if($rubrique_data->get_start_date() == ""){
+					$rubrique['publication_date'] = extraitdate($rubrique_data->get_create_date());
 				}
 				else{
-					$rubrique['publication_date'] = $rubrique_data['start_date'];
+					$rubrique['publication_date'] = $rubrique_data->get_start_date();
 				}	
-				if(count($rubrique_data['descriptors'])){
+				if(count($rubrique_data->get_descriptors())){
 				    $descriptors = array();
-				    for($i=0 ; $i<count($rubrique_data['descriptors']) ; $i++){
-				        $descriptors[]  = array('id' => $rubrique_data['descriptors'][$i]['id']);
+				    $rubrique_data_descriptors = $rubrique_data->get_descriptors();
+				    for($i=0 ; $i<count($rubrique_data_descriptors) ; $i++){
+				        $descriptors[]  = array('id' => $rubrique_data_descriptors[$i]['id']);
 				    }
 				    $rubrique['descriptors'] = $descriptors;
 				}

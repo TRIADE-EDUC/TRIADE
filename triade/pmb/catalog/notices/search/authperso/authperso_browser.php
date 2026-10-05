@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authperso_browser.php,v 1.5 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: authperso_browser.php,v 1.5 2019/06/07 08:05:39 btafforeau Exp $
 
 global $j_offset, $ancre, $browser_url, $limite_affichage, $restriction, $mode, $msg, $select;
 
 // page d'affichage du browser de collections
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../../../..";
 $class_path="$base_path/classes";
 $include_path="$base_path/classes";
@@ -22,7 +22,7 @@ $j_offset = "
 <script type='text/javascript'>
 <!--
 function jump_anchor(anc) {
-	// rÃ©cupÃ©ration de l'index de l'ancre
+	// récupération de l'index de l'ancre
 	for ( i = 0; i <= document.anchors.length; i++) {
 		if(document.anchors[i].name == anc) {
 			anc_index = i;
@@ -33,7 +33,7 @@ function jump_anchor(anc) {
 		// code pour IE
 		document.anchors[anc_index].scrollIntoView();
 	} else {
-		// mettre ici le code pour Mozilla et Netscape quand on aura trouvÃ©
+		// mettre ici le code pour Mozilla et Netscape quand on aura trouvé
 	}
 }
 // -->
@@ -41,7 +41,7 @@ jump_anchor('".(isset($ancre) ? $ancre : '')."');
 </script>
 ";
 
-// url du prÃ©sent browser
+// url du présent browser
 $browser_url = "./authperso_browser.php";
 
 print "<div id='contenu-frame'>";

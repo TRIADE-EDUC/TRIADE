@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: titre_uniforme.html,v 1.3 2019-02-15 08:30:30 ngantier Exp $ -->
+<!-- $Id: titre_uniforme.html,v 1.4 2021/03/24 10:20:56 arenou Exp $ -->
 
 {% block isbd %}
 	{{ element.get_isbd_simple }}
@@ -55,7 +55,16 @@
 			</div>
 		</div>
 	{% endif %}
-	
+	{% if element.tonalite_marclist_name %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_titre_uniforme_form_tonalite_list }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ element.tonalite_marclist_name }}
+			</div>
+		</div>
+	{% endif %}
 	{% if element.oeuvre_expressions_list_ui.nb_results %}
 		<div class="aut_display_row">
 			<div class="aut_display_cell">

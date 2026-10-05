@@ -2,14 +2,14 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_tabs_parser.class.php,v 1.11 2018-11-26 14:32:02 dgoron Exp $
+// $Id: authority_tabs_parser.class.php,v 1.11 2018/11/26 14:32:02 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class authority_tabs_parser {
 	
 	/**
-	 * Fichier xml Ã  utiliser
+	 * Fichier xml à utiliser
 	 * @var string
 	 */
 	protected $xml_file;
@@ -21,14 +21,14 @@ class authority_tabs_parser {
 	protected $full_path;
 	
 	/**
-	 * Tableau des onglets parsÃ©s
+	 * Tableau des onglets parsés
 	 * @var elements_list_tab
 	 */
 	protected $tabs;
 	
 	/**
 	 * Constructeur
-	 * @param string $xml_file Fichier xml Ã  utiliser
+	 * @param string $xml_file Fichier xml à utiliser
 	 * @param string $full_path Chemin entier vers le fichier xml
 	 */
 	public function __construct($xml_file = '', $full_path = '') {
@@ -78,9 +78,9 @@ class authority_tabs_parser {
 			}
 		}else{
 			if (file_exists($tempFile) ) {
-				//Le fichier XML original a-t-il Ã©tÃ© modifiÃ© ultÃ©rieurement ?
+				//Le fichier XML original a-t-il été modifié ultérieurement ?
 				if (filemtime($filepath) > filemtime($tempFile)) {
-					//on va re-gÃ©nÃ©rer le pseudo-cache
+					//on va re-générer le pseudo-cache
 					unlink($tempFile);
 				} else {
 					$dejaParse = true;
@@ -113,22 +113,22 @@ class authority_tabs_parser {
 			foreach ($tabs['TAB'] as $tab) {
 				$current_tab = new elements_list_tab($tab['NAME'], get_msg_to_display($tab['LABEL']), $tab['CONTENTTYPE']);
 				if (isset($tab['CONTENTTYPE']) && $tab['CONTENTTYPE'] == 'authorities') {
-					// Si on a affaire Ã  un onlget d'autoritÃ©, on regarde s'il est spÃ©cialisÃ© dans un type d'autoritÃ©
+					// Si on a affaire à un onlget d'autorité, on regarde s'il est spécialisé dans un type d'autorité
 					if (isset($tab['AUTHORITYTYPE'][0]['value']) && $tab['AUTHORITYTYPE'][0]['value'] && defined($tab['AUTHORITYTYPE'][0]['value'])) {
 						$current_tab->set_content_authority_type(constant($tab['AUTHORITYTYPE'][0]['value']));
 					}
 				}
-				// on rÃ©cupÃ¨re les Ã©lÃ©ments de requÃªte
+				// on récupère les éléments de requête
 				if (isset($tab['QUERY'][0]) && $tab['QUERY'][0]) {
 					$query_elements = $this->parse_query_elements($tab['QUERY'][0]);
 					$current_tab->set_query_elements($query_elements);
 				}
-				// on rÃ©cupÃ¨re le callable
+				// on récupère le callable
 				if (isset($tab['CALLABLE'][0]) && $tab['CALLABLE'][0]) {
 					$callable = $this->parse_callable($tab['CALLABLE'][0]);
 					$current_tab->set_callable($callable);
 				}
-				// on rÃ©cupÃ¨re les filtres
+				// on récupère les filtres
 				if (isset($tab['FILTERS'][0]['FILTER']) && $tab['FILTERS'][0]['FILTER']) {
 					$filters = $this->parse_filters($tab['FILTERS'][0]['FILTER']);
 					$current_tab->set_filters($filters);
@@ -148,9 +148,9 @@ class authority_tabs_parser {
 	}
 	
 	/**
-	 * Retourne un tableau formatÃ© contenant les Ã©lements de la requÃªte
-	 * @param array $query Structure parsÃ©e de la requÃªte
-	 * @return array Tableau formatÃ© contenant les Ã©lements de la requÃªte
+	 * Retourne un tableau formaté contenant les élements de la requête
+	 * @param array $query Structure parsée de la requête
+	 * @return array Tableau formaté contenant les élements de la requête
 	 */
 	private function parse_query_elements($query) {
 		$join = array();
@@ -200,9 +200,9 @@ class authority_tabs_parser {
 	}
 	
 	/**
-	 * Retourne un tableau formatÃ© contenant les Ã©lements du callable
-	 * @param array $parsed_callable Structure parsÃ©e du callable
-	 * @return array Tableau formatÃ© contenant les Ã©lements du callable
+	 * Retourne un tableau formaté contenant les élements du callable
+	 * @param array $parsed_callable Structure parsée du callable
+	 * @return array Tableau formaté contenant les élements du callable
 	 */
 	private function parse_callable($parsed_callable) {
 		$callable = array(
@@ -213,9 +213,9 @@ class authority_tabs_parser {
 	}
 	
 	/**
-	 * Retourne un tableau formatÃ© contenant les Ã©lements des filtres
-	 * @param array $parsed_filters Structure parsÃ©e des filtres
-	 * @return array Tableau formatÃ© contenant les Ã©lements des filtres
+	 * Retourne un tableau formaté contenant les élements des filtres
+	 * @param array $parsed_filters Structure parsée des filtres
+	 * @return array Tableau formaté contenant les élements des filtres
 	 */
 	private function parse_filters($parsed_filters) {
 		$filters = array();
@@ -234,8 +234,8 @@ class authority_tabs_parser {
 	}
 	
 	/**
-	 * Retourne les onglets liÃ©s Ã  un type d'autoritÃ©
-	 * @param string $authority_type Type de l'autoritÃ© dont on veut les onglets
+	 * Retourne les onglets liés à un type d'autorité
+	 * @param string $authority_type Type de l'autorité dont on veut les onglets
 	 * @return array
 	 */
 	public function get_tabs_for($authority_type) {

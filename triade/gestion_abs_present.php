@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -51,11 +51,11 @@ if (PRESENTPROF == "oui") {
 }
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post  name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
@@ -103,37 +103,37 @@ if (isset($_POST["consult"])) {
 	$saisie_groupe=$_POST["saisie_groupe"];
 
 	if ($saisie_classe != "0") {
-		$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+		$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 	}elseif ($saisie_etude != "0") {
 		$idetude=$_POST["saisie_etude"];
 		$typevaleur=$_POST["saisie_etude"];
 		$typechamps="saisie_etude";
-		$sql="SELECT id_etude,id_eleve FROM ${prefixe}etude_affect WHERE id_etude='$idetude' ";
+		$sql="SELECT id_etude,id_eleve FROM {$prefixe}etude_affect WHERE id_etude='$idetude' ";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 		$idmatiere="-".$data[0][0]; // correspond à l'etude avec le "-"
 		$nometude=rechercheEtude($data[0][0]);
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$liste_eleves.=$data[$i][1].",";
 		}
 		$liste_eleves=preg_replace('/,$/',"",$liste_eleves);
 		if ($liste_eleves != "") {
-			$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
+			$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
 			$res=execSql($sql);
 			$data=chargeMat($res);
 		}
 	}elseif ($saisie_groupe != "0") {
 		$gid=$saisie_groupe;
-		$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid' ";
+		$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid' ";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 		$cl=$data[0][0];
 		$nomgrp=$data[0][0];
 		$liste_eleves=preg_replace('/\{/',"",$data[0][1]);
 		$liste_eleves=preg_replace('/\}/',"",$liste_eleves);
-		$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
+		$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 	}
@@ -142,7 +142,7 @@ if (isset($_POST["consult"])) {
 	// nom classe
 	$cl=$data[0][0];
 
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		$fic=$_POST["saisie_classe"];
 		$fichierpdf="./data/pdf_certif/Classe_".suppCaracFichier($cl).".pdf";
 	
@@ -173,7 +173,7 @@ if (isset($_POST["consult"])) {
 		$xcoor0+=20;
 		$ycoor0+=10;
 		$j=0;
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 
 			if ($ii == 45) {
 	                	$pdf->AddPage();
@@ -213,21 +213,21 @@ if(isset($_POST["consult"])) { ?>
 <tr id='coulBar0' ><td height="2" colspan="3">
 	<b><font   id='menumodule1' >
 <?php if (($saisie_classe != "0") && ($cl != "")) { ?>
-	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b></font></font></td></tr>
+	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b></font></font></td></tr>
 <?php } ?>
 
 <?php if (($saisie_groupe != "0") && ($nomgrp != "")) { ?>
-	<?php print "Groupe" ?> : <font id="color2"><b><?php print $nomgrp?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b></font></font></td></tr>
+	<?php print "Groupe" ?> : <font id="color2"><b><?php print $nomgrp?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b></font></font></td></tr>
 <?php } ?>
 
 <?php if (($saisie_etude != "0") && ($nometude != "")) { ?>
-	<?php print "Etude" ?> : <font id="color2"><b><?php print $nometude?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b></font></font></td></tr>
+	<?php print "Etude" ?> : <font id="color2"><b><?php print $nometude?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b></font></font></td></tr>
 <?php } ?>
 
 
 	<tr><td id='cadreCentral0' > 
 <?php 
-	if( count($data) <= 0 ) {
+	if( countTriade($data) <= 0 ) {
 		print("<center><font class=T2>".LANGRECH1."</font></center>");
 	} else {
 ?>		<table>
@@ -236,7 +236,7 @@ if(isset($_POST["consult"])) { ?>
 		<?php
 		$disabled="disabled";
 		$data3=recupCreneauDefault("creneau"); // libelle,text
-		if (count($data3) > 0) {
+		if (countTriade($data3) > 0) {
 			$data3=recupInfoCreneau($data3[0][1]);
 			print "<option  id='select1' value=\"".trim($data3[0][0])."#".$data3[0][1]."#".$data3[0][2]."\" >".trim($data3[0][0])." : ".timeForm($data3[0][1])." - ".timeForm($data3[0][2])."</option>\n";
 			$disabled="";
@@ -276,7 +276,7 @@ if(isset($_POST["consult"])) { ?>
 		<td bgcolor="yellow" width="1%"><b>&nbsp;<?php print ucwords("présent")?>&nbsp;</b></td>
 		</tr>
 <?php
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 	?>
 	<tr   id='tr<?php print $i ?>' class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
 	<td><?php
@@ -305,15 +305,15 @@ print "</td></tr></table><br>";
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
             top_d();
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

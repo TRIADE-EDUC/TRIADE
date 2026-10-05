@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records_by_cp_val.class.php,v 1.3 2018-04-24 15:46:30 dgoron Exp $
+// $Id: cms_module_common_datasource_records_by_cp_val.class.php,v 1.4.6.1.2.1 2025/02/12 12:34:08 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_datasource_records_by_cp_val extends cms_module_common_datasource_records_list{
-	
+
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -22,7 +23,7 @@ class cms_module_common_datasource_records_by_cp_val extends cms_module_common_d
 	}
 
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -33,11 +34,11 @@ class cms_module_common_datasource_records_by_cp_val extends cms_module_common_d
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+	    if(is_countable($this->selectors) && $this->parameters['selector'] != ""){
 			for($i=0 ; $i<count($this->selectors) ; $i++){
 				if($this->selectors[$i]['name'] == $this->parameters['selector']){
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
@@ -62,7 +63,7 @@ class cms_module_common_datasource_records_by_cp_val extends cms_module_common_d
 			$records = array();
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
-					$records[] = $row->notice_id*1;	
+				    $records[] = intval($row->notice_id);
 				}
 			}
 			$query = "DROP TEMPORARY TABLE ".$table;
@@ -70,7 +71,12 @@ class cms_module_common_datasource_records_by_cp_val extends cms_module_common_d
 			$searcher->unserialize_search($current_search);
 			$records = $this->filter_datas("notices",$records);
 			$return = $this->sort_records($records);
-			if($this->parameters['nb_max_elements'] > 0){
+
+			// Pagination
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($return['records']);
+			    $return['records'] = $this->cut_paging_list($return['records'], $return["paging"]);
+			} else if($this->parameters['nb_max_elements'] > 0){
 				$return['records'] = array_slice($return['records'], 0, $this->parameters['nb_max_elements']);
 			}
 			return $return;

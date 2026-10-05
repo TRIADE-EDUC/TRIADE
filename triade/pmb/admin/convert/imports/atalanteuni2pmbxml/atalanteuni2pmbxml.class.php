@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: atalanteuni2pmbxml.class.php,v 1.2 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: atalanteuni2pmbxml.class.php,v 1.3 2022/04/21 07:34:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/admin/convert/convert.class.php");
 
 class atalanteuni2pmbxml extends convert {
@@ -27,6 +28,7 @@ class atalanteuni2pmbxml extends convert {
 			$data.="  <dt>".$typ_doc."</dt>\n";
 		}
 		
+		$zs = array();
 		for ($i=0; $i<count($fields)-1; $i++) {
 			$field=explode("@",$fields[$i]);
 			$cf=substr($field[2],0,3);
@@ -68,6 +70,7 @@ class atalanteuni2pmbxml extends convert {
 			$data.="  </f>\n";
 		}
 		$data.="</notice>\n";
+		$r = array();
 		$r['VALID'] = true;
 		$r['ERROR'] = "";
 		$r['DATA'] = $data;

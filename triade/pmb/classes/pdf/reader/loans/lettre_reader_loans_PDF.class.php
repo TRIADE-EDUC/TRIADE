@@ -1,16 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_reader_loans_PDF.class.php,v 1.3 2019-05-24 15:47:38 dgoron Exp $
+// $Id: lettre_reader_loans_PDF.class.php,v 1.7.2.2 2024/10/01 15:38:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/pdf/reader/lettre_reader_PDF.class.php");
 
 class lettre_reader_loans_PDF extends lettre_reader_PDF {
 	
-	protected function get_parameter_prefix() {
+    protected static function get_parameter_prefix() {
 		return "pdflettreloans";
 	}
 	
@@ -21,6 +22,7 @@ class lettre_reader_loans_PDF extends lettre_reader_PDF {
 		$this->_init_parameter_value('debut_expl_1er_page', 35);
 		$this->_init_parameter_value('debut_expl_page', 10);
 		$this->_init_parameter_value('limite_after_list', 260);
+		$this->_init_parameter_value('list_order', 'pret_date');
 	}
 	
 	protected function _init_default_positions() {
@@ -38,18 +40,40 @@ class lettre_reader_loans_PDF extends lettre_reader_PDF {
 		}
 	}
 	
+	protected function get_query_list_base() {
+	    return "
+            SELECT pret_idempr, expl_id, expl_cb, trim(concat(ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date, concat(' (',mention_date,')') ,''))) as tit, niveau_relance
+            FROM pret
+            join exemplaires ON pret_idexpl=expl_id
+            LEFT JOIN notices as notices_m ON notices_m.notice_id = exemplaires.expl_notice and expl_notice <> 0
+            LEFT JOIN bulletins ON bulletins.bulletin_id = exemplaires.expl_bulletin
+            LEFT JOIN notices AS notices_s ON bulletins.bulletin_notice = notices_s.notice_id
+        ";
+	}
+	
+	protected function get_query_list_order() {
+	    return "order by ".$this->get_parameter_value('list_order');
+	}
+	
+	protected function get_query_list($id) {
+		$id = intval($id);
+	    return $this->get_query_list_base()." where pret_idempr='".$id."' ".$this->get_query_list_order();
+	}
+	
 	public function doLettre($id_empr) {
 		global $biblio_name;
 		global $msg;
 		
-		//requete par rapport Ã  un emprunteur
-		$rqt = "select expl_cb from pret, exemplaires where pret_idempr='".$id_empr."' and pret_idexpl=expl_id order by pret_date " ;
+		//Génération de la lettre dans la langue du lecteur
+		$this->set_language(emprunteur::get_lang_empr($id_empr));
+		//requete par rapport à un emprunteur
+		$rqt = $this->get_query_list($id_empr);
 		$req = pmb_mysql_query($rqt);
 		$count = pmb_mysql_num_rows($req);
 		
 		$this->PDF->addPage();
 		
-		// paramÃ©trage spÃ©cifique Ã  ce document :
+		// paramétrage spécifique à ce document :
 		$offsety = 0;
 		
 		$this->display_biblio_info(0, 0, 1) ;
@@ -79,7 +103,29 @@ class lettre_reader_loans_PDF extends lettre_reader_PDF {
 			$indice_page++;
 		}
 		pmb_mysql_free_result($req);
+		//Restauration de la langue de l'interface
+		$this->restaure_language();
 	}
 	
+	protected function get_default_parameters() {
+		$default_parameters = array();
+		$default_parameters['nb_par_page'] = $this->get_parameter_value('nb_par_page');
+		$default_parameters['nb_1ere_page'] = $this->get_parameter_value('nb_1ere_page');
+		$default_parameters['taille_bloc_expl'] = $this->get_parameter_value('taille_bloc_expl');
+		$default_parameters['debut_expl_1er_page'] = $this->get_parameter_value('debut_expl_1er_page');
+		$default_parameters['debut_expl_page'] = $this->get_parameter_value('debut_expl_page');
+		$default_parameters['limite_after_list'] = $this->get_parameter_value('limite_after_list');
+		$default_parameters['list_order'] = $this->get_parameter_value('list_order');
+		return $default_parameters;
+	}
+	
+	protected function get_default_positions() {
+		$default_positions = array();
+		$default_positions['biblio_info'] = $this->get_position_values('biblio_info');
+		$default_positions['lecteur_info'] = $this->get_position_values('lecteur_info');
+		$default_positions['date_edition'] = $this->get_position_values('date_edition');
+		$default_positions['expl_info'] = $this->get_position_values('expl_info');
+		return $default_positions;
+	}
 	
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2022/11/17 11:29:57 tsamson Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste d'avis</name>
+	<name lang="en_UK">Reviews list</name>
+	<author>
+		<name>Thomas SAMSON</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-08-02</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_reviewslist_datasource_records_reviews</datasource>
+			<datasource>cms_module_reviewslist_datasource_articles_reviews</datasource>
+			<datasource>cms_module_reviewslist_datasource_sections_reviews</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_common_view_reviewslist</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+		<filters>
+			<filter>cms_module_reviewslist_filter_validated</filter>
+		</filters>
+	</use>
+</manifest>

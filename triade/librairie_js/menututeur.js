@@ -1,10 +1,10 @@
-/***************************************************************************
+﻿/***************************************************************************
 *                              T.R.I.A.D.E
 *                            ---------------
 *
 *   begin                : Janvier 2000
-*   copyright            : (C) 2000 E. TAESCH - T. TRACHET
-*   Site                 : http://www.triade-educ.com
+*   copyright            : (C) 2000 E. TAESCH - 
+*   Site                 : http://www.triade-educ.org
 *
 *
 ***************************************************************************
@@ -21,7 +21,11 @@ document.write("<center><br /><table width='"+largeurfen+"' border='0' cellspaci
 document.write("<tr valign='top' id='coulfond1' >");
 document.write("<td height='717' id='bordure' >");
 document.write("<div align='left'>");
-document.write("<table background='./data/image_banniere/banniere000.jpg'  border='0' cellpadding='0' cellspacing='0' width='100%' height='250'  >");
+if (banniere == 'online') { 
+document.write("<table  background='https://www.triade-educ.org/banniere_triade/banniere000.jpg' border='0' cellpadding='0' cellspacing='0' width='100%' height='"+bannierehauteur+"' style='background-repeat:no-repeat' >");
+}else{
+document.write("<table background='./data/image_banniere/banniere000.jpg'  border='0' cellpadding='0' cellspacing='0' width='100%' height='"+bannierehauteur+"' style='background-repeat:no-repeat' >");
+}
 document.write("<tr>");
 document.write("<td valign='bottom' colspan='3' rowspan='3' style='padding-left:3px' >");
 -->

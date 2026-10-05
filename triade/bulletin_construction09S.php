@@ -44,11 +44,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<script language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
+<script language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></script>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<script language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+<script language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></script>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -69,7 +69,7 @@ if ($_SESSION['membre'] == "menuprof") {
 }
 $debut = deb_prog();
 $valeur = visu_affectation_detail($_POST['saisie_classe']);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST['saisie_trimestre'] == "trimestre1" ) { $textSemestre=LANGBULL25; $choixSemestre=1; }
 if ($_POST['saisie_trimestre'] == "trimestre2" ) { $textSemestre=LANGBULL26; $choixSemestre=2; }
@@ -131,7 +131,7 @@ function __WriteHTML($pdf, $xy, $html, $offsetX=1, $offsetY=1)
 function __datesSemestre($numSemestre, $idClasse)
 {
     $dateRecup = recupDateTrimByIdclasse("trimestre".$numSemestre, $idClasse);
-    for($j = 0; $j < count($dateRecup); $j++) {
+    for($j = 0; $j < countTriade($dateRecup); $j++) {
         $dateDebut=$dateRecup[$j][0];
         $dateFin=$dateRecup[$j][1];
     }
@@ -238,7 +238,7 @@ function __notesEleve($idEleve, $idClasse, $ordre, $choixSemestre)
     $totaux = array(); // tableau des moyennes annuelles par matière pour le calcule de la moyenne annuelle
     $points_balance = 0;
 
-    for($i = 0; $i < count($ordre); $i++) {
+    for($i = 0; $i < countTriade($ordre); $i++) {
 
         $row = array();
 
@@ -312,7 +312,7 @@ function __notesEleve($idEleve, $idClasse, $ordre, $choixSemestre)
 // Recuperation des coordonnées de l'établissement                 //
 /////////////////////////////////////////////////////////////////////
 $data = visu_paramViaIdSite(chercheIdSite($_POST["saisie_classe"]));
-for($i = 0; $i < count($data); $i++) {
+for($i = 0; $i < countTriade($data); $i++) {
     $nom_etablissement = trim($data[$i][0]);
     $adresse = trim($data[$i][1]);
     $postal = trim($data[$i][2]);
@@ -354,7 +354,7 @@ $pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com");
 $eleveT = recupEleve($_POST['saisie_classe']); // recup liste eleve
 $policeT = 10;
 
-for($j = 0; $j < count($eleveT); $j++) {
+for($j = 0; $j < countTriade($eleveT); $j++) {
 
     $pdf->AddPage();
 
@@ -449,7 +449,7 @@ for($j = 0; $j < count($eleveT); $j++) {
     //$firephp->log($data, 'Données Elève:'.$idEleve);
 
     $totalECTS = 0;
-    for($i = 0; $i < count($data['Tableau']); $i++) {
+    for($i = 0; $i < countTriade($data['Tableau']); $i++) {
 
         $row = $data['Tableau'][$i];
 
@@ -583,7 +583,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 

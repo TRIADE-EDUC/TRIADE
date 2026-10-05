@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: track_clicks.js,v 1.5 2019-02-21 13:27:30 dgoron Exp $
+// $Id: track_clicks.js,v 1.8 2021/10/29 10:02:36 dgoron Exp $
 
 function _trackClick(event){
 	//event.button == 0 => clic gauche
@@ -16,7 +16,7 @@ function _trackClick(event){
 	}
 	if (el && el.href) {
 		var open_link = false;
-
+		
 		if (el.href.indexOf(location.host) == -1 && el.href.substring(0,10).toLowerCase()!='javascript') {
 			var type = 'external_url_external';
 			if (el.getAttribute('type')) {
@@ -24,6 +24,13 @@ function _trackClick(event){
 			}
 			log_click(el.getAttribute('href'),type);
 			open_link = true;
+		} else if(el.href.indexOf(location.host) != -1 && el.href.indexOf('.php') == -1 && el.href.indexOf('.js') == -1) {
+			//URL interne HTML, PNG, etc.
+			var type = 'external_url_internal';
+			if (el.getAttribute('type')) {
+				type = el.getAttribute('type');
+			}
+			log_click(el.getAttribute('href'),type);
 		}
 		//L'appel est synchrone et le comportement doit rester � l'identique
 //		if (open_link) {
@@ -38,7 +45,12 @@ function _trackClick(event){
 function log_click(url,type){
 	
 	var action = new http_request();
-	var ajax_url = './ajax.php?module=ajax&categ=log&type_url='+type+'&called_url='+url;
+	var called_url = url;
+	if(url.indexOf('?') != -1) {
+		//encodons l'url si celle-ci ne l'est pas encore
+		called_url = encodeURIComponent(url);
+	}
+	var ajax_url = './ajax.php?module=ajax&categ=log&type_url='+type+'&called_url='+called_url;
 	
 	action.request(ajax_url);
 	

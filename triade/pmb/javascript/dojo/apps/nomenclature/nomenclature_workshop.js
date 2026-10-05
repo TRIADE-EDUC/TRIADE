@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_workshop.js,v 1.12 2016-02-23 14:07:00 apetithomme Exp $
+// $Id: nomenclature_workshop.js,v 1.12 2016/02/23 14:07:00 apetithomme Exp $
 
 define(["dojo/_base/declare","apps/nomenclature/nomenclature_instruments_list", "dijit/registry"], function(declare, Instruments_list, registry){
 	/*

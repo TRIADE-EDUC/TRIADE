@@ -7,7 +7,7 @@ include_once("./librairie_php/verifEmailEnregistre.php");
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,6 +28,8 @@ include_once("./librairie_php/verifEmailEnregistre.php");
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/acces.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
@@ -36,36 +38,23 @@ include_once("./librairie_php/verifEmailEnregistre.php");
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script type='text/javascript' src="./librairie_php/server.php?client=Util,main,dispatcher,httpclient,request,json,loading,iframe"></script>
 <script type='text/javascript' src="./librairie_php/auto_server.php?client=all&stub=livesearch"></script>
-<title>Vie Scolaire - Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
+<title>Vie Scolaire - Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGABS1?></font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td >
-<!-- // fin  -->
-<BR><UL>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
-<table border="0" height="120">
-<form name='formulaire00'  method='post' action='gestion_abs_retard_codebar.php'>
-<tr><td align="left">
-<font class="T2"><?php print LANGMESS433 ?> : </font>
-</td><td valign=bottom>
-<table align=center><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis ?>","rien"); //text,nomInput</script></td></tr></table>
-</td></tr>
-</form>
-<tr><td height=20></td></tr>
-<FORM name='formulaire' onsubmit='return valide_consul_classe()' method='post' action='gestion_abs_retard_suite.php'>
-<tr><td align="left">
-<font class="T2"><?php print ucwords(LANGIMP10)?> : </font><br><br> <Select name='saisie_classe' >
-<option value=0 STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — Saisie absences / retards
+     ══════════════════════════════════════════════════════ -->
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGABS1 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 <?php
 include_once('librairie_php/db_triade.php');
 
@@ -79,67 +68,89 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 $cnx=cnx();
 include_once("./librairie_php/ajax.php");
 ajax_js();
-select_classe2(25);
 ?>
-</select>
-</td><td valign=bottom>
-<table align=center><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis?>","class"); //text,nomInput</script></td></tr></table>
-</td></tr>
+
+<!-- Form lecteur code-barres -->
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 5px 4px;">
+  <span class="na-lbl"><?php print LANGMESS433 ?> :</span>
+  <form name='formulaire00' method='post' action='gestion_abs_retard_codebar.php' style="margin:0;">
+    <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis ?>","rien");</script></span>
+  </form>
+</div>
+
+<div style="border-top:2px solid #c5cae9;margin:10px 5px;"></div>
+
+<!-- Form classe -->
+<form name='formulaire' onsubmit='return valide_consul_classe()' method='post' action='gestion_abs_retard_suite.php'>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print ucwords(LANGIMP10) ?> :</span>
+    <select name='saisie_classe' class="cc-select">
+      <option value=0 style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_classe2(25); ?>
+    </select>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis ?>","class");</script>
+<br><br>
 </form>
 
-<FORM name=formulaire_5 onsubmit='return valide_consul_classe2()' method="post" action='gestion_abs_retard_suite.php'>
-<tr><td align="left"><br><br>
-<font class="T2"><?php print ucwords(LANGPROF4)?> : </font><br><br> <Select name='saisie_groupe' >
-<option value=0 STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
-<?php
-select_groupe_id();
-?>
-</select>
-</td><td valign=bottom>
-<table align=center><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis?>","grp"); //text,nomInput</script></td></tr></table>
-</td></tr>
+<div style="border-top:2px solid #c5cae9;margin:10px 5px;"></div>
+
+<!-- Form groupe -->
+<form name=formulaire_5 onsubmit='return valide_consul_classe2()' method="post" action='gestion_abs_retard_suite.php'>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print ucwords(LANGPROF4) ?> :</span>
+    <select name='saisie_groupe' class="cc-select">
+      <option value=0 style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_groupe_id(); ?>
+    </select>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis ?>","grp");</script>
+<br><br>
 </form>
 
+<div style="border-top:2px solid #c5cae9;margin:10px 5px;"></div>
 
+<!-- Form étude -->
 <form name=formulaire_55 onsubmit='return valide_consul_classe22()' method="post" action='gestion_abs_retard_suite.php'>
-<tr><td align="left"><br><br>
-<font class="T2"><?php print ucwords(LANGGRP62)?> : </font><br><br> <Select name='saisie_etude' >
-<option value=0 STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
-<?php
-select_etude();
-?>
-</select>
-</td><td valign=bottom>
-<table align=center><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis?>","etude"); //text,nomInput</script></td></tr></table>
-</td></tr>
-</form>
-</table>
-
-<table>
-<FORM name=formulaire_56  method="post" action='gestion_abs_present.php'>
-<tr><td align="left"><br><br>
-<font class="T2"><?php print LANGMESS434 ?> : </font>
-</td><td valign=bottom>
-<table align=center><tr><td><script language=JavaScript>buttonMagicSubmit("<?php print LANGENR ?>","rien"); //text,nomInput</script></td></tr></table>
-</td></tr>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print ucwords(LANGGRP62) ?> :</span>
+    <select name='saisie_etude' class="cc-select">
+      <option value=0 style='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_etude(); ?>
+    </select>
+  </div>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT27bis ?>","etude");</script>
+<br><br>
 </form>
 
-</table>
+<div style="border-top:2px solid #c5cae9;margin:10px 5px;"></div>
+
+<!-- Form feuille présence -->
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 5px;">
+  <span class="na-lbl"><?php print LANGMESS434 ?> :</span>
+  <form name=formulaire_56 method="post" action='gestion_abs_present.php' style="margin:0;">
+    <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("<?php print LANGENR ?>","rien");</script></span>
+  </form>
+</div>
+<br>
+
 <?php PgClose(); ?>
+</td></tr></table>
 
-<?php brmozilla($_SESSION["navigateur"]); ?>
-</UL></td></tr></TABLE>
-<?php//-----------------------------------------------------------------------?>
-<BR><br>
-<?php//-----------------------------------------------------------------------?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGABS4bis?></font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td >
-<BR>
-<table width="100%" align="center" border="0">
-<tr>
+<br><br>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — Listings et rapports
+     ══════════════════════════════════════════════════════ -->
 <?php
 if ((LAN == "oui") && (file_exists("./common/config-sms.php"))) {
 	$disabled="";
@@ -148,213 +159,212 @@ if ((LAN == "oui") && (file_exists("./common/config-sms.php"))) {
 	$disabled="disabled";
 	$textdisabled=" / Non Abonn&eacute;";
 }
+$disabledAttr = $disabled ? "disabled" : "";
+$disabledClass = $disabled ? "btn-dest-disabled" : "";
 ?>
-<td width=50% align=right>
-<font class="T2"><?php print "Listing absences" ?> :</font>
-</td><td align=left><table width="100%"><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","liste_abs.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("<?php print "Envoi Mail" ?>","liste_abs_impr.php","_parent","","")</script>
-<form method=post action="sms-abs.php"><script language=JavaScript> buttonMagicSubmit3("<?php print "Envoi SMS $textdisabled "?>","sms","<?php print $disabled?>")</script></form></td></tr></table>
-</td></tr>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGABS4bis ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
+<div class="dest-list" style="margin:5px;">
 
-<tr><td align=right>
-<font class="T2"><?php print "Listing retards" ?> :</font>
-</td><td align=left><table width="100%"><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","liste_rtd.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("<?php print "Envoi Mail" ?>","liste_rtd_impr.php","_parent","","")</script>
-<form method=post action="sms-rtd.php"><script language=JavaScript> buttonMagicSubmit3("<?php print "Envoi SMS $textdisabled "?>","sms","<?php print $disabled?>")</script></form>
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label">Listing absences</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('liste_abs.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('liste_abs_impr.php','_parent','')">Envoi Mail</button>
+      <form method="post" action="sms-abs.php" style="margin:0;">
+        <button type="submit" name="sms" value="1" class="btn-dest <?php print $disabledClass ?>" <?php print $disabledAttr ?>>Envoi SMS<?php print $textdisabled ?></button>
+      </form>
+    </div>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGABS68 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","liste_abs_rtd_classe.php","_parent","","")</script>
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label">Listing retards</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('liste_rtd.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('liste_rtd_impr.php','_parent','')">Envoi Mail</button>
+      <form method="post" action="sms-rtd.php" style="margin:0;">
+        <button type="submit" name="sms" value="1" class="btn-dest <?php print $disabledClass ?>" <?php print $disabledAttr ?>>Envoi SMS<?php print $textdisabled ?></button>
+      </form>
+    </div>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS436  ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","liste_abs_rtd_aucun.php","_parent","","")</script>
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGABS68 ?></div>
+    <button type="button" class="btn-dest" onclick="open('liste_abs_rtd_classe.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGTMESS488 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","liste_rattrapage.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("<?php print "Export rattrapage" ?>","export_rattrapage.php","_parent","","")</script>&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS436 ?></div>
+    <button type="button" class="btn-dest" onclick="open('liste_abs_rtd_aucun.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS437 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","releve_abs_rtd_classe.php","_parent","","")</script>
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGTMESS488 ?></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('liste_rattrapage.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('export_rattrapage.php','_parent','')">Export rattrapage</button>
+    </div>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS438 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","releve_abs_rtd_semaine_classe.php","_parent","","")</script>
-&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS437 ?></div>
+    <button type="button" class="btn-dest" onclick="open('releve_abs_rtd_classe.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS439 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","impr_abs_rtd_eleve.php","_parent","","")</script>
-&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS438 ?></div>
+    <button type="button" class="btn-dest" onclick="open('releve_abs_rtd_semaine_classe.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS439 ?></div>
+    <button type="button" class="btn-dest" onclick="open('impr_abs_rtd_eleve.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS440 ?></div>
+    <button type="button" class="btn-dest" onclick="open('listePresent.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS440 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","listePresent.php","_parent","","")</script>
-&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
+  <?php if ($_SESSION['membre'] != "menuprof") { ?>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS441 ?></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('gestion_abs_sconet.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('base_de_donne_importation700.php','_parent','')">Import</button>
+    </div>
+  </div>
+  <?php } ?>
 
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGABS69 ?></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('cumul_abs_rtd_classe.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('cumul_rtd_impr.php','_parent','')"><?php print LANGaffec_cre41 ?></button>
+    </div>
+  </div>
 
-<?php if ($_SESSION['membre'] != "menuprof")  { ?>
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS441 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","gestion_abs_sconet.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("Import",'base_de_donne_importation700.php','_parent','','')</script>
-&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
-<?php } ?>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS442 ?></div>
+    <button type="button" class="btn-dest" onclick="open('gestion_abs_statistique.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
 
-<tr><td align=right>
-<font class="T2"><?php print LANGABS69 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","cumul_abs_rtd_classe.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("<?php print LANGaffec_cre41?>","cumul_rtd_impr.php","_parent","","")</script>&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
-
-
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS442 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","gestion_abs_statistique.php","_parent","","")</script>
-&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
-
-
-
-
-</table>
-
-<br><br></td></tr>
-</table>
+</div>
 <br><br>
-<?php//-----------------------------------------------------------------------?>
+</td></tr></table>
+
+<br><br>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — Recherche par élève
+     ══════════════════════════════════════════════════════ -->
 <form method="post" onsubmit="return valide_recherche_eleve_1()" name="formulaire_1" id="formulaire_1" action="gestion_abs_retard_modif_donne.php">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS443 ?> </font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS443 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
-<td ><blockquote><BR>
-<table border=0 cellspacing=0>
-<tr><td ><font class='T2'>
-<?php print LANGMESS444 ?><input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_planifier.php'" />
-<?php print LANGMESS445 ?><input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_modif_donne.php'"  checked='checked' />
-<?php print LANGMESS446 ?><input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_modif.php'" />
-</font></td></tr>
-</table><br><br>
-<table border=0 cellspacing=0>
-<tr><td>
-<font class="T2"><?php print LANGBULL3 ?> :</font>
-                <select name='anneeScolaire' >
-                <?php
-                filtreAnneeScolaireSelectNote($anneeScolaire,5);
-                ?>
-                </select>
-</td></tr>
-<tr><td height='20'></td></tr>
-<tr><td style="padding-top:0px;" nowrap>
-<font class="T2"><?php print LANGABS3?> : </font><input type="text" name="saisie_nom_eleve" size="20" id="search" autocomplete="off" onkeyup="searchRequest(this,'eleve','target0','formulaire_1','saisie_nom_eleve')"   style="width:15em" />
-</td></tr><tr><td style="padding-top:0px;"><div id="target0" style="width:16em" ></div></td></tr>
-</table><br>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS447 ?>","rien");</script> 
-<font class='T2'><?php print LANGMESS448 ?><input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_conv.php'" /></font>
-</blockquote><br><br>
+<td>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl">Mode :</span>
+    <span>
+      <label style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">
+        <input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_planifier.php'" />
+        <?php print LANGMESS444 ?>
+      </label>
+      &nbsp;&nbsp;
+      <label style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">
+        <input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_modif_donne.php'" checked='checked' />
+        <?php print LANGMESS445 ?>
+      </label>
+      &nbsp;&nbsp;
+      <label style="font-size:12px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">
+        <input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_modif.php'" />
+        <?php print LANGMESS446 ?>
+      </label>
+    </span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGBULL3 ?> :</span>
+    <select name='anneeScolaire' class="cc-select">
+      <?php filtreAnneeScolaireSelectNote($anneeScolaire,5); ?>
+    </select>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGABS3 ?> :</span>
+    <input type="text" name="saisie_nom_eleve" id="search" autocomplete="off" class="cc-select" style="width:15em;" onkeyup="searchRequest(this,'eleve','target0','formulaire_1','saisie_nom_eleve')">
+  </div>
+  <div style="padding-left:130px;"><div id="target0" style="width:16em;"></div></div>
+</div>
+<br>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 5px;">
+  <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS447 ?>","rien");</script></span>
+  <label style="font-size:12px;font-weight:700;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">
+    <input type='radio' name='act' onclick="document.getElementById('formulaire_1').action='gestion_abs_retard_conv.php'" />
+    <?php print LANGMESS448 ?>
+  </label>
+</div>
+<br><br>
 </td></TR></TABLE>
 </form>
+
 <BR>
 
-
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — Configuration (non accessible menuprof)
+     ══════════════════════════════════════════════════════ -->
 <?php if ($_SESSION['membre'] != "menuprof") { ?>
-<?php//-----------------------------------------------------------------------?>
+<BR>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS449 ?> </font></b></td></tr>
-<tr id='cadreCentral0'><td valign='top' >
-	<table border='0'>
-
-
-<tr><td align=right>
-<font class="T2"><?php print LANGABS70 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","gestion_abs_config.php","_parent","","")</script>
-<script language=JavaScript> buttonMagic("<?php print LANGMESS450?>","gestion_abs_config_alerte.php","_parent","","")</script>
-&nbsp;&nbsp;</td></tr></table>
-
-
-<tr><td align=right>
-<font class="T2"><?php print LANGMESS451 ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGBT28?>","gestion_crenau_config.php","_parent","","")</script>
-</td></tr></table>
-
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS449 ?></font></b></td></tr>
+<tr id='cadreCentral0'><td>
 <?php
 if (file_exists("./common/config-sms.php")) {
 	include_once("./common/config-sms.php");
 	$idsms=SMSKEY;
 	$inc=GRAPH;
+}else{
+	$idsms="";
+	$inc=defined("GRAPH") ? GRAPH : "";
 }
 ?>
-<tr><td align=right valign='top' >
-<font class="T2"><?php print LANGMESS452  ?> :</font>
-</td><td align=left><table><tr><td>
-<script language=JavaScript> buttonMagic("<?php print LANGCONFIG?>","gestion_sms_config.php","_parent","","")</script>
-<script language=JavaScript>buttonMagic('<?php print LANGMESS453 ?>','https://support.triade-educ.com/support/sms-compte.php?idsms=<?php print $idsms?>&inc=<?php print $inc ?>','','width=550,height=600','','');</script>&nbsp;&nbsp;
+<div class="dest-list" style="margin:5px;">
+
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGABS70 ?></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('gestion_abs_config.php','_parent','')"><?php print LANGBT28 ?></button>
+      <button type="button" class="btn-dest" onclick="open('gestion_abs_config_alerte.php','_parent','')"><?php print LANGMESS450 ?></button>
+    </div>
+  </div>
+
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS451 ?></div>
+    <button type="button" class="btn-dest" onclick="open('gestion_crenau_config.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
+
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGMESS452 ?></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+      <button type="button" class="btn-dest" onclick="open('gestion_sms_config.php','_parent','')"><?php print LANGCONFIG ?></button>
+      <button type="button" class="btn-dest" onclick="open('https://support.triade-educ.com/support/sms-compte.php?idsms=<?php print $idsms ?>&inc=<?php print $inc ?>','','width=550,height=600')"><?php print LANGMESS453 ?></button>
+    </div>
+  </div>
+
+</div>
+<br>
 </td></tr></table>
+<?php } ?>
 
-
-<?php 
-     print "</td></tr></table>";
-     print "</td></tr></table>";
-
-}else{
-     brmozilla($_SESSION["navigateur"]);
-}	
-
-       // Test du membre pour savoir quel fichier JS je dois executer
-   if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-       print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-       print "</SCRIPT>";
-   else :
-      print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-      print "</SCRIPT>";
-
-      top_d();
-
-      print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-     print "</SCRIPT>";
-
-       endif ;
-     ?>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 <?php include_once("./librairie_php/finbody.php"); ?>
-   </BODY></HTML>
+</BODY></HTML>

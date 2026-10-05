@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.1 2015-06-15 12:55:35 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.2 2020/08/18 01:23:44 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -46,6 +46,6 @@ makeConsolidation
   <entry code="makeConsolidation_date_ech">Due date</entry>
   <entry code="makeConsolidation_list_ck">List of views to consolidate</entry>
   <entry code="makeConsolidation_output_description"></entry>
-  <entry code="makeConsolidation_result">No result of return for now</entry>
+  <entry code="makeConsolidation_result">Detail of consolidated views</entry>
   
 </XMLlist>

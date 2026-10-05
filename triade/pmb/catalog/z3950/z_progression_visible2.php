@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: z_progression_visible2.php,v 1.8 2017-01-31 15:41:41 dgoron Exp $
+// $Id: z_progression_visible2.php,v 1.8 2017/01/31 15:41:41 dgoron Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "";
@@ -16,7 +16,7 @@ require_once ("$base_path/includes/init.inc.php");
 
 
 // avec MSIE le bouton resultats est toujour visible
-// avec Mozilla/Firefox il devient visible Ã  la fin de yaz_wait()
+// avec Mozilla/Firefox il devient visible à la fin de yaz_wait()
 // avec autres browser je ne sais pas ;-)
 
 $visi='hidden';

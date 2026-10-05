@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_logo.tpl.php,v 1.7 2019-05-27 11:55:30 ngantier Exp $
+// $Id: cms_logo.tpl.php,v 1.7 2019/05/27 11:55:30 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

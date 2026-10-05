@@ -1,0 +1,8 @@
+<div id="signature">
+	<template v-if="'edit' == action">
+		<signatureedit :pmb="pmb" :action="action" :signdata="signdata" :img="img"></signatureedit>
+	</template>
+	<template v-else>
+		<signaturelist :pmb="pmb" :certificates = "certificates" :action="action" :list="list" :img="img"></signaturelist>
+	</template>
+</div>

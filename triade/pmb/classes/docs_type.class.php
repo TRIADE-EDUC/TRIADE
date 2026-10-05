@@ -1,73 +1,186 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docs_type.class.php,v 1.9 2017-01-03 11:14:01 dgoron Exp $
+// $Id: docs_type.class.php,v 1.23 2023/08/29 08:29:21 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// d√©finition de la classe de gestion des 'docs_type'
+global $class_path;
+require_once($class_path."/translation.class.php");
+
+// dÈfinition de la classe de gestion des 'docs_type'
 
 if ( ! defined( 'DOCSTYPE_CLASS' ) ) {
   define( 'DOCSTYPE_CLASS', 1 );
 
 class docs_type {
 	/* ---------------------------------------------------------------
-		propri√©t√©s de la classe
+		propriÈtÈs de la classe
    -------------------------------------------------------------- */
 	public $id=0;
 	public $libelle='';
-	public $duree_pret=0;
+	public $duree_pret=31;
+	public $duree_resa=15;
 	public $tdoc_codage_import="";
 	public $tdoc_owner=0;
+	public $tarif_pret='0.00';
+	public $short_loan_duration=1;
 
 	/* ---------------------------------------------------------------
 			docs_type($id) : constructeur
 	   --------------------------------------------------------------- */
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
 	/* ---------------------------------------------------------------
-			getData() : r√©cup√©ration des propri√©t√©s
+			getData() : rÈcupÈration des propriÈtÈs
 	   --------------------------------------------------------------- */
 	public function getData() {
-		global $dbh;
-	
 		if(!$this->id) return;
 	
-		/* r√©cup√©ration des informations de la cat√©gorie */
+		/* rÈcupÈration des informations de la catÈgorie */
 		$requete = 'SELECT * FROM docs_type WHERE idtyp_doc='.$this->id.' LIMIT 1;';
-		$result = pmb_mysql_query($requete, $dbh) or die (pmb_mysql_error()." ".$requete);
-		if(!pmb_mysql_num_rows($result)) return;
+		$result = pmb_mysql_query($requete) or die (pmb_mysql_error()." ".$requete);
+		if(!pmb_mysql_num_rows($result)) {
+			pmb_error::get_instance(static::class)->add_message("not_found", "not_found_object");
+			return;
+		}
 			
 		$data = pmb_mysql_fetch_object($result);
 		$this->id = $data->idtyp_doc;		
 		$this->libelle = $data->tdoc_libelle;
 		$this->duree_pret = $data->duree_pret;
+		$this->duree_resa = $data->duree_resa;
 		$this->tdoc_codage_import = $data->tdoc_codage_import;
 		$this->tdoc_owner = $data->tdoc_owner;
+		$this->tarif_pret = $data->tarif_pret;
+		$this->short_loan_duration = $data->short_loan_duration;
 	}
 
+	public function get_content_form() {
+		global $msg;
+		global $pmb_quotas_avances, $pmb_short_loan_management;
+		global $pmb_gestion_financiere, $pmb_gestion_tarif_prets;
+		
+		$interface_content_form = new interface_content_form(static::class);
+		
+		$interface_content_form->add_element('form_libelle', '103')
+		->add_input_node('text', $this->libelle)
+		->set_attributes(array('data-translation-fieldname' => 'tdoc_libelle'));
+		if (!$pmb_quotas_avances) {
+			$interface_content_form->add_element('form_pret', '123')
+			->add_input_node('integer', $this->duree_pret)
+			->set_attributes(array('maxlength' => 10));
+		}
+		if (!$pmb_quotas_avances && $pmb_short_loan_management) {
+			$interface_content_form->add_element('form_short_loan_duration', 'short_loan_duration_wdays')
+			->add_input_node('integer', $this->short_loan_duration)
+			->set_attributes(array('maxlength' => 10));
+		}
+		if (!$pmb_quotas_avances) {
+			$interface_content_form->add_element('form_resa', 'duree_resa')
+			->add_input_node('integer', $this->duree_resa)
+			->set_attributes(array('maxlength' => 10));
+		}
+		if (($pmb_gestion_financiere)&&($pmb_gestion_tarif_prets==1)) {
+			$interface_content_form->add_element('form_tarif_pret', 'typ_doc_tarif')
+			->add_input_node('integer', $this->tarif_pret)
+			->set_attributes(array('maxlength' => 10));
+		}
+		$interface_content_form->add_element('form_tdoc_codage_import', 'proprio_codage_interne')
+		->add_input_node('integer', $this->tdoc_codage_import)
+		->set_class('saisie-20em');
+		$interface_content_form->add_element('form_tdoc_owner', 'proprio_codage_proprio')
+		->add_query_node('select', "select idlender, lender_libelle from lenders order by lender_libelle ", $this->tdoc_owner)
+		->set_empty_option(0, $msg[556])
+		->set_first_option(0, $msg["proprio_generique_biblio"])
+		->set_class('saisie-20em');
+		
+		return $interface_content_form->get_display();
+	}
+	
+	public function get_form() {
+	    global $admin_typdoc_js_content_form, $msg;
+		
+		$interface_form = new interface_admin_form('typdocform');
+		if(!$this->id){
+			$interface_form->set_label($msg['122']);
+		}else{
+			$interface_form->set_label($msg['124']);
+		}
+		$content_form = $this->get_content_form().$admin_typdoc_js_content_form;
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->libelle." ?")
+		->set_content_form($content_form)
+		->set_table_name('docs_type')
+		->set_field_focus('form_libelle');
+		return $interface_form->get_display();
+	}
+	
+	public function set_properties_from_form() {
+		global $form_libelle, $form_pret, $form_resa, $form_short_loan_duration, $form_tarif_pret, $form_tdoc_codage_import, $form_tdoc_owner;
+		
+		$this->libelle = stripslashes($form_libelle);
+		$this->duree_pret = intval($form_pret);
+		$this->duree_resa = intval($form_resa);
+		$this->tdoc_owner = intval($form_tdoc_owner);
+		$this->tdoc_codage_import = stripslashes($form_tdoc_codage_import);
+		$this->tarif_pret = stripslashes($form_tarif_pret);
+		$this->short_loan_duration = intval($form_short_loan_duration);
+	}
+	
+	public function get_query_if_exists() {
+		return "SELECT count(1) FROM docs_type WHERE (tdoc_libelle='".addslashes($this->libelle)."' AND idtyp_doc!='".$this->id."' )";
+	}
+	
+	public function save() {
+		global $pmb_quotas_avances, $pmb_gestion_financiere, $pmb_gestion_tarif_prets, $pmb_short_loan_management;
+		
+		// O.k., now if the id already exist UPDATE else INSERT
+		$q =(($this->id)?"update ":"insert into ");
+		$q.= "docs_type set tdoc_libelle='".addslashes($this->libelle)."', ";
+		$q.= ((!$pmb_quotas_avances)?"duree_pret='".$this->duree_pret."', duree_resa='".$this->duree_resa."', ":'');
+		$q.= ((!$pmb_quotas_avances && $pmb_short_loan_management)?"short_loan_duration='".$this->short_loan_duration."', ":'');
+		$q.= (($pmb_gestion_financiere && $pmb_gestion_tarif_prets==1)?"tarif_pret='".addslashes($this->tarif_pret)."', ":'');
+		$q.= "tdoc_codage_import='".addslashes($this->tdoc_codage_import)."', tdoc_owner='".$this->tdoc_owner."' ";
+		$q.= (($this->id)?"where idtyp_doc=".$this->id." ":'');
+		pmb_mysql_query($q);
+		if(!$this->id) {
+			$this->id = pmb_mysql_insert_id();
+		}
+		$translation = new translation($this->id, "docs_type");
+		$translation->update("tdoc_libelle", "form_libelle");
+		return true;
+	}
+	
+	public static function check_data_from_form() {
+		global $form_libelle;
+		
+		if(empty($form_libelle)) {
+			return false;
+		}
+		return true;
+	}
+	
 	// ---------------------------------------------------------------
 	//		import() : import d'un type de document
 	// ---------------------------------------------------------------
 	public static function import($data) {
-		// cette m√©thode prend en entr√©e un tableau constitu√© des informations suivantes :
+		// cette mÈthode prend en entrÈe un tableau constituÈ des informations suivantes :
 		//	$data['tdoc_libelle'] 	
 		//	$data['duree_pret']
 		//	$data['tdoc_codage_import']
 		//	$data['tdoc_owner']
 	
-		global $dbh;
-	
-		// check sur le type de  la variable pass√©e en param√®tre
-		if(!sizeof($data) || !is_array($data)) {
-			// si ce n'est pas un tableau ou un tableau vide, on retourne 0
+		// check sur le type de  la variable passÈe en paramËtre
+		if ((empty($data) && !is_array($data)) || !is_array($data)) {
+		    // si ce n'est pas un tableau ou un tableau vide, on retourne 0
 			return 0;
 			}
-		// check sur les √©l√©ments du tableau
+		// check sur les ÈlÈments du tableau
 		$long_maxi = pmb_mysql_field_len(pmb_mysql_query("SELECT tdoc_libelle FROM docs_type limit 1"),0);
 		$data['tdoc_libelle'] = rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['tdoc_libelle']))),0,$long_maxi));
 		$long_maxi = pmb_mysql_field_len(pmb_mysql_query("SELECT tdoc_codage_import FROM docs_type limit 1"),0);
@@ -78,22 +191,22 @@ class docs_type {
 		/* tdoc_codage_import est obligatoire si tdoc_owner != 0 */
 		//if(($data['tdoc_owner']!=0) && ($data['tdoc_codage_import']=="")) return 0;
 		
-		// pr√©paration de la requ√™te
+		// prÈparation de la requÍte
 		$key0 = addslashes($data['tdoc_libelle']);
 		$key1 = addslashes($data['tdoc_codage_import']);
 		$key2 = $data['tdoc_owner'];
 		
-		/* v√©rification que le type doc existe */
-		$query = "SELECT idtyp_doc FROM docs_type WHERE tdoc_codage_import='${key1}' and tdoc_owner = '${key2}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vÈrification que le type doc existe */
+		$query = "SELECT idtyp_doc FROM docs_type WHERE tdoc_codage_import='{$key1}' and tdoc_owner = '{$key2}' LIMIT 1 ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT docs_type ".$query);
 		$docs_type  = pmb_mysql_fetch_object($result);
 	
 		/* le type de doc existe, on retourne l'ID */
 		if($docs_type->idtyp_doc) return $docs_type->idtyp_doc;
 	
-		// id non-r√©cup√©r√©e, il faut cr√©er la forme.
-		/* une petite valeur par d√©faut */
+		// id non-rÈcupÈrÈe, il faut crÈer la forme.
+		/* une petite valeur par dÈfaut */
 		if ($data['duree_pret']=="") $data['duree_pret']=0;
 		
 		$query  = "INSERT INTO docs_type SET ";
@@ -101,16 +214,39 @@ class docs_type {
 		$query .= "duree_pret='".$data['duree_pret']."', ";
 		$query .= "tdoc_codage_import='".$key1."', ";
 		$query .= "tdoc_owner='".$key2."' ";
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't INSERT into docs_type ".$query);
 	
-		return pmb_mysql_insert_id($dbh);
-	} /* fin m√©thode import */
+		return pmb_mysql_insert_id();
+	} /* fin mÈthode import */
 
-	/* une fonction pour g√©n√©rer des combo Box 
-   param√™tres :
-	$selected : l'√©l√©ment s√©lection√© le cas √©ch√©ant
-   retourne une chaine de caract√®res contenant l'objet complet */
+	public static function delete($id) {
+		global $msg, $admin_liste_jscript;
+		
+		$id = intval($id);
+		if($id) {
+			// requÍte sur 'exemplaires' pour voir si ce typdoc est encore utilisÈ
+			$total = 0;
+			$total = pmb_mysql_result(pmb_mysql_query("select count(1) from exemplaires where expl_typdoc ='".$id."' "), 0, 0);
+			if ($total==0) {
+				translation::delete($id, "docs_type");
+				$q = "DELETE FROM docs_type WHERE idtyp_doc=$id ";
+				pmb_mysql_query($q);
+				return true;
+			} else {
+				$msg_suppr_err = $admin_liste_jscript;
+				$msg_suppr_err .= $msg[1700]." <a href='#' onclick=\"showListItems(this);return(false);\" what='typdoc_docs' item='".$id."' total='".$total."' alt=\"".$msg["admin_docs_list"]."\" title=\"".$msg["admin_docs_list"]."\"><img src='".get_url_icon('req_get.gif')."'></a>" ;
+				pmb_error::get_instance(static::class)->add_message('294', $msg_suppr_err);
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/* une fonction pour gÈnÈrer des combo Box 
+   paramÍtres :
+	$selected : l'ÈlÈment sÈlectionÈ le cas ÈchÈant
+   retourne une chaine de caractËres contenant l'objet complet */
 	public static function gen_combo_box ( $selected ) {
 		global $msg;
 		$requete="select idtyp_doc, tdoc_libelle from docs_type order by tdoc_libelle ";
@@ -148,8 +284,11 @@ class docs_type {
 		return $gen_liste_str ;
 	} /* fin gen_combo_box */
 
-} /* fin de d√©finition de la classe */
+	public function get_translated_libelle() {
+		return translation::get_translated_text($this->id, 'docs_type', 'tdoc_libelle', $this->libelle);
+	}
+} /* fin de dÈfinition de la classe */
 
-} /* fin de d√©laration */
+} /* fin de dÈlaration */
 
 

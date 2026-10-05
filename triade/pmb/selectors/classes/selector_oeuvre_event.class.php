@@ -1,23 +1,24 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_oeuvre_event.class.php,v 1.1 2018-12-11 07:58:46 dgoron Exp $
-  
+// $Id: selector_oeuvre_event.class.php,v 1.3.6.1 2025/01/16 10:24:12 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/classes/selector_authperso.class.php");
 require_once($base_path."/selectors/templates/sel_oeuvre_event.tpl.php");
 
 class selector_oeuvre_event extends selector_authperso {
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 	}
-	
+
 	public function get_sel_search_form_template() {
 		global $msg, $charset;
-	
+
 		$authpersos= authpersos::get_oeuvre_event_authpersos();
 		if(!$authperso_id)$authperso_id=$authpersos[0]['id'];
 		$sel_authpersos = '';
@@ -30,7 +31,7 @@ class selector_oeuvre_event extends selector_authperso {
 			}
 			$sel_authpersos.= "</select>&nbsp;";
 		}
-		
+
 		$sel_search_form ="
 			<form name='".$this->get_sel_search_form_name()."' method='post' action='".static::get_base_url()."'>
 				".$sel_authpersos."
@@ -47,24 +48,30 @@ class selector_oeuvre_event extends selector_authperso {
 		";
 		return $sel_search_form;
 	}
-	
+
 	public function proceed() {
 		global $msg;
 		global $action;
 		global $authperso_id;
-	
-		$authpersos= authpersos::get_oeuvre_event_authpersos();
-		if (!count($authpersos)){
+		global $param1;
+
+		$authpersos = authpersos::get_oeuvre_event_authpersos();
+		if (empty($authpersos)) {
 			print $msg['oeuvre_event_sel_no'];
 			exit;
 		}
-		if(!$authperso_id)$authperso_id=$authpersos[0]['id'];
-		
-		switch($action){
+		if (!empty($param1)) {
+		    $authperso_id = $param1;
+		}
+		if (empty($authperso_id)) {
+		    $authperso_id = $authpersos[0]['id'];
+		}
+
+		switch($action) {
 			default:
 				parent::proceed();
+				break;
 		}
 	}
-	
 }
 ?>

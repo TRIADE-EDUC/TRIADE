@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: webepires2uni_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: webepires2uni_input.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class webepires2uni_input extends convert_input {
 		$content="";
 		$index=array();
 		$n=1;
-		//Lecture du fichier d'entrÃ©e
+		//Lecture du fichier d'entrée
 		while (!$stop) {
 			
 			//Recherche de +++
@@ -31,9 +31,9 @@ class webepires2uni_input extends convert_input {
 				$content=str_replace("!\n ","",$content);
 				$pos_deb=strpos($content,"+++");
 			}
-			//DÃ©but accrochÃ©
+			//Début accroché
 			if ($pos_deb!==false) {
-				//Notice = dÃ©but jusqu'au +++
+				//Notice = début jusqu'au +++
 				$notice=substr($content,0,$pos_deb);
 				$content=substr($content,$pos_deb+3);
 			} else {
@@ -42,7 +42,7 @@ class webepires2uni_input extends convert_input {
 				$stop=true;
 			}
 			
-			//Si c'est la premiÃ¨re notice, c'est la ligne d'intitulÃ©s !!
+			//Si c'est la première notice, c'est la ligne d'intitulés !!
 			if ($first) {
 				$cols=explode(";;",$notice);
 				$fcols=fopen("$base_path/temp/".$origine."_cols.txt","w+");

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_status.class.php,v 1.4 2018-01-09 11:21:07 dgoron Exp $
+// $Id: contribution_area_status.class.php,v 1.6 2022/01/05 08:35:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once ($class_path."/contribution_area/contribution_area.class.php");
 require_once("$include_path/templates/contribution_area/contribution_area_status.tpl.php");
 
@@ -45,8 +46,6 @@ class contribution_area_status{
 	}
 	
 	public static function get_list(){
-		global $dbh;
-		
 		if(!static::$status_fetched){
 			static::$status = array();
 			$query = "select contribution_area_status_id, contribution_area_status_gestion_libelle,contribution_area_status_class_html, contribution_area_status_available_for from contribution_area_status order by contribution_area_status_gestion_libelle";
@@ -72,7 +71,7 @@ class contribution_area_status{
 		global $admin_contribution_area_status_form;
 		
 		static::get_list();
-		$id+=0;
+		$id = intval($id);
 		$form = $admin_contribution_area_status_form;
 		
 		if(isset(static::$status[$id])){
@@ -88,6 +87,7 @@ class contribution_area_status{
 		}
 		
 		$form = str_replace("!!form_title!!", $form_title, $form);
+		$couleur = array();
 		for ($i=1;$i<=20; $i++) {
 			if ($statut['class_html'] == "statutnot".$i){
 			    $checked = "checked";
@@ -102,31 +102,71 @@ class contribution_area_status{
 		}
 		
 		$couleurs=implode("",$couleur);
-		$form = str_replace("!!class_html!!", $couleurs, $form);
-
-		$form = str_replace("!!gestion_libelle!!", htmlentities($statut['label'],ENT_QUOTES,$charset),$form);
-		if($id == 1 || !isset(static::$status[$id])){
-			$form = str_replace("!!bouton_supprimer!!","",$form);
-		}else{
-			$form = str_replace("!!bouton_supprimer!!","<input class='bouton' type='button' value=' $msg[supprimer] ' onClick=\"javascript:confirmation_delete(!!id!!,'!!libelle_suppr!!')\" />",$form); ;
+		
+	    $button = "";
+		if($id != 1 && isset(static::$status[$id])){
+		    $button = "<input class='bouton' type='button' value='".$msg["supprimer"]."' onClick=\"javascript:confirmation_delete(!!id!!,'!!libelle_suppr!!')\" />";
 		}
 		
+		
+		$form = str_replace(
+		    array(
+		        "!!class_html!!",
+		        "!!gestion_libelle!!",
+		        '!!bouton_supprimer!!',
+		    ),
+		    array(
+		        $couleurs,
+		        htmlentities($statut['label'],ENT_QUOTES,$charset),
+		        $button,
+		    ), $form);
+		
 		$entities_list = static::get_pmb_entities();
-		$i=0;
-		$pmb_entities="";
+		$pmb_entities = "";
+		
+		// Si c'est le "Statut par défaut" on désactive tout
+		$default = "";
+		if ($id == 1) {
+		    $default = 'onclick="return false;" readonly="readonly"';
+		}
+		
+		$i = 0;
 		foreach($entities_list as $value => $name){
+		    
 		    if($i!= 0 && $i % 5 == 0){
 				$pmb_entities.= "<br>";
 			}
-			$pmb_entities.= "<span style='margin-right:5px;'><input".($id==1 ? " disabled='disabled'" : "")." type='checkbox'".( (in_array($value,$statut['available_for']) || $id == 1) ? " checked='checked'" : "")." name='form_available_for[]' value='".$value."'/> $name</span>";
+			
+			$inputId = "entity_".$value;
+			$isChecked = "";
+			if (in_array($value,$statut['available_for']) || $id == 1 || $id == 0) {
+			    $isChecked = 'checked="checked"';
+			}
+			
+			$pmb_entities .= '<span id="entitie_item">
+                                <input class="entitie_item_checkbox" id="'.$inputId.'" '.$default.' type="checkbox"'.$isChecked.' name="form_available_for[]" value="'.$value.'"/> 
+                                <label for="'.$inputId.'">'.$name.'</label>
+                            </span>';
+			
 			$i++;
 		}
 		
-		$form = str_replace("!!list_entities!!", $pmb_entities, $form);
+		$form = str_replace(
+		    array(
+		        "!!coche_button_type!!",
+		        "!!list_entities!!",
+		        '!!libelle_suppr!!',
+		        "!!id!!"
+		    ), 
+		    array(
+		        ($id==1 ? 'hidden' : "button"),
+		        $pmb_entities,
+		        addslashes($statut['label']),
+		        $id
+		    ), $form);
 		
-		$form.=confirmation_delete("./modelling.php?categ=contribution_area&sub=status&action=del&id=");
-		$form = str_replace('!!libelle_suppr!!', addslashes($statut['label']), $form);
-		$form = str_replace("!!id!!",$id,$form);
+		$form .= confirmation_delete("./modelling.php?categ=contribution_area&sub=status&action=del&id=");
+		
 		print $form;
 	}
 	
@@ -146,8 +186,7 @@ class contribution_area_status{
 	}
 	
 	public static function save($statut){
-		global $dbh;
-		$statut['id'] += 0; 
+		$statut['id'] = intval($statut['id']); 
 		if($statut['label'] != ""){ 
 			if($statut['id'] != 0){
 				$query = " update contribution_area_status set ";
@@ -160,7 +199,7 @@ class contribution_area_status{
 				contribution_area_status_gestion_libelle = '".addslashes($statut['label'])."',
 				contribution_area_status_class_html = '".addslashes($statut['class_html'])."',
 				contribution_area_status_available_for = '".addslashes(serialize($statut['available_for']))."' ";
-			$result = pmb_mysql_query($query.$where,$dbh);
+			$result = pmb_mysql_query($query.$where);
 			if($result){
 				static::$status_fetched = false;
 			}else{
@@ -171,13 +210,12 @@ class contribution_area_status{
 	}
 	
 	public static function delete($id) {
-		global $dbh;
-		$id+=0;
+		$id = intval($id);
 		if($id==1) return true;
 		
-		if(!count($used = static::check_used($id))){
+		if(!count(static::check_used($id))){
 			$query = "delete from contribution_area_status where contribution_area_status_id = ".$id;
-			pmb_mysql_query($query,$dbh);
+			pmb_mysql_query($query);
 			return true;
 		}
 		return false;	
@@ -185,15 +223,12 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction qui controle si le status de contribution est utilisÃ©
+	 * Fonction qui controle si le status de contribution est utilisé
 	 * @param integer $id 
 	 * @return array:
 	 */
 	public static function check_used($id){
-		global $dbh,$msg;
-		global $base_path;
-		
-		$id+=0;
+		$id = intval($id);
 		$used = array();
 		return $used;
 	}
@@ -203,15 +238,15 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction permettant de gÃ©nÃ©rer le selecteur des statut dÃ©finis pour un type d'autoritÃ©
-	 * @param integer $auth_type Constante type d'autoritÃ© (ou 1000+id authperso)
-	 * @param integer $auth_statut_id Identifiant du statut enregistrÃ© pour l'autoritÃ© courante 
-	 * @param boolean $selector_search SÃ©lÃ©cteur affichÃ© dans la page de recherche
+	 * Fonction permettant de générer le selecteur des statut définis pour un type d'autorité
+	 * @param integer $auth_type Constante type d'autorité (ou 1000+id authperso)
+	 * @param integer $auth_statut_id Identifiant du statut enregistré pour l'autorité courante 
+	 * @param boolean $selector_search Sélécteur affiché dans la page de recherche
 	 * @return string
 	 */
 	public static function get_form_for($pmb_entity, $contribution_area_id, $search=false){
 	    global $msg;
-	    $id+=0;
+	    
         $status_defined = static::get_status_for($pmb_entity);
         $on_change='';
         if($search){
@@ -229,13 +264,13 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction retournant un tableau des statut dÃ©fini pour le type d'autoritÃ© passÃ© en parametre
-	 * @param integer $auth_type Type d'autoritÃ©
-	 * @return array $status_found Tableau des status disponible pour le type d'autoritÃ© passÃ© en parametre
+	 * Fonction retournant un tableau des statut défini pour le type d'autorité passé en parametre
+	 * @param integer $auth_type Type d'autorité
+	 * @return array $status_found Tableau des status disponible pour le type d'autorité passé en parametre
 	 */
 	private static function get_status_for($pmb_entity){
 	    /**
-	     * TODO test sur auth_type pour les authoritÃ©s perso
+	     * TODO test sur auth_type pour les authorités perso
 	     */
 	    static::get_list();
 	    $status_found = array();

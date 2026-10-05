@@ -1,42 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scheduler_tasks_type.class.php,v 1.3 2018-07-17 09:59:14 dgoron Exp $
+// $Id: scheduler_tasks_type.class.php,v 1.9 2024/03/12 13:13:51 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/parser.inc.php");
 require_once($include_path."/templates/taches.tpl.php");
 require_once($include_path."/connecteurs_out_common.inc.php");
-require_once($class_path."/scheduler/scheduler_task_docnum.class.php");
 require_once($class_path."/upload_folder.class.php");
 require_once($class_path."/xml_dom.class.php");
 require_once($class_path."/scheduler/scheduler_task.class.php");
 
 class scheduler_tasks_type {
 	
-	protected $id;						// identifiant du type de tÃ¢che
-	protected $name;					// nom du type de tÃ¢che
-	protected $path;					// chemin du type de tÃ¢che
-	protected $comment;					// commentaire sur le type de tÃ¢che
-	
+	protected $id;						// identifiant du type de tâche
+	protected $name;					// nom du type de tâche
+	protected $path;					// chemin du type de tâche
+	protected $comment;					// commentaire sur le type de tâche
+	protected $number;
 	protected $parameters;
 	
-	protected $timeout;					// Temps limite d'exÃ©cution
+	protected $timeout;					// Temps limite d'exécution
 	protected $histo_day;				// Historique de conservation en jour 
 	protected $histo_number;			// Historique de conservation en nombre
-	protected $restart_on_failure;		// Replanifier la tÃ¢che automatiquement en cas d'Ã©chec
-	protected $alert_mail_on_failure;	// Alerter par mail en cas d'Ã©chec ?
+	protected $restart_on_failure;		// Replanifier la tâche automatiquement en cas d'échec
+	protected $alert_mail_on_failure;	// Alerter par mail en cas d'échec ?
 	protected $mail_on_failure='';		// Adresses mails destinataires
 	
-	protected $states;					// listing des Ã©tats
+	protected $states;					// listing des états
 	protected $commands;				// listing des commandes
-	protected $dir_upload_boolean;		// La tÃ¢che a-t-elle besoin d'un rÃ©pertoire d'upload?
-	protected $msg;						// Messages propres au type de tÃ¢che
+	protected $dir_upload_boolean;		// La tâche a-t-elle besoin d'un répertoire d'upload?
+	protected $msg;						// Messages propres au type de tâche
 	
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 	}
 	
 	//fichier de commandes
@@ -46,7 +46,7 @@ class scheduler_tasks_type {
 		$xml_dom_commands = new xml_dom($xml_commands);
 		
 		$filename = $base_path."/admin/planificateur/".$this->path."/manifest.xml";
-		//fichier manifest spÃ©cifique
+		//fichier manifest spécifique
 		$xml_manifest=file_get_contents($filename);
 		$xml_dom_manifest = new xml_dom($xml_manifest);
 			
@@ -55,9 +55,9 @@ class scheduler_tasks_type {
 		$this->dir_upload_boolean = $this->parse_dir_upload($xml_dom_manifest);
 	}
 	
-	// listing des Ã©tats
+	// listing des états
 	public function parse_states($xml_dom_commands, $xml_dom_manifest) {
-		global $base_path;
+		$tab_states = array();
 	
 		$nodes_nostates_manifest = $xml_dom_manifest->get_nodes("manifest/capacities/nostates/state");
 		$nodes_states_manifest = $xml_dom_manifest->get_nodes("manifest/capacities/states/state");
@@ -129,11 +129,12 @@ class scheduler_tasks_type {
 	
 	// listing des commandes
 	public function parse_commands($xml_dom_commands, $xml_dom_manifest) {
-		global $base_path, $msg, $lang;
+		global $msg;
 	
+		$tab_commands=array();
 		$nodes_commands = $xml_dom_commands->get_nodes("workflow/commands/command");
 		if ($nodes_commands) {
-			foreach ($nodes_commands as $id=>$node_command) {
+			foreach ($nodes_commands as $node_command) {
 				$t=array();
 				$t["id"] = $xml_dom_commands->get_attribute($node_command,"id");
 				$t["name"] = $xml_dom_commands->get_attribute($node_command,"name");
@@ -145,12 +146,12 @@ class scheduler_tasks_type {
 	
 		$nodes_commands_manifest = $xml_dom_manifest->get_nodes("manifest/capacities/commands/command");
 		if ($nodes_commands_manifest) {
-			foreach ($nodes_commands_manifest as $id=>$node_command_manifest) {
+			foreach ($nodes_commands_manifest as $node_command_manifest) {
 				$t=array();
 				$t["id"] = $xml_dom_manifest->get_attribute($node_command_manifest,"id");
 				$t["name"] = $xml_dom_manifest->get_attribute($node_command_manifest,"name");
 				if($xml_dom_manifest->get_attribute($node_command_manifest,"label")) {
-					$t["label"] = $this->msg[str_replace("msg:", "", $xml_dom_manifest->get_attribute($node_command_manifest,"label"))];
+					$t["label"] = $this->msg[str_replace("msg:", "", $xml_dom_manifest->get_attribute($node_command_manifest,"label"))] ?? "";
 				} else {
 					$t["label"] = "";
 				}
@@ -160,7 +161,7 @@ class scheduler_tasks_type {
 		return $tab_commands;
 	}
 	
-	// Est-ce une tÃ¢che qui demande un rÃ©pertoire d'upload pour des fichiers gÃ©nÃ©rÃ©s??
+	// Est-ce une tâche qui demande un répertoire d'upload pour des fichiers générés??
 	public function parse_dir_upload($xml_dom_manifest) {
 		$node_directory = $xml_dom_manifest->get_node("manifest/directory_upload");
 		if ($node_directory) {
@@ -170,43 +171,40 @@ class scheduler_tasks_type {
 		}
 	}
 	
-	//affichage du formulaire global au type de tÃ¢che
+	//affichage du contenu du formulaire global au type de tâche
+	public function get_content_form() {
+	    $interface_content_form = new interface_content_form(static::class);
+	    $interface_content_form->set_grid_model('flat_column_3');
+	    $interface_content_form->add_element('timeout', 'planificateur_timeout')
+	    ->add_input_node('number', $this->timeout);
+	    $interface_content_form->add_element('histo_day', 'planificateur_conserv_histo_day')
+	    ->add_input_node('number', $this->histo_day);
+	    $interface_content_form->add_element('histo_number', 'planificateur_histo_number_conserv')
+	    ->add_input_node('number', $this->histo_number);
+	    $interface_content_form->add_element('restart_on_failure', 'planificateur_restart_on_failure')
+	    ->add_input_node('boolean', $this->restart_on_failure);
+
+	    $params_alert_mail = explode(",",$this->alert_mail_on_failure);
+	    $interface_content_form->add_element('alert_mail_on_failure', 'planificateur_alert_mail_on_failure')
+	    ->add_input_node('boolean', $params_alert_mail[0]);
+	    $interface_content_form->add_element('mail_on_failure', 'planificateur_mail_on_failure')
+	    ->add_input_node('text', (isset($params_alert_mail[1]) ? $params_alert_mail[1] : ''));
+	    return $interface_content_form->get_display();
+	}
+	
+	//affichage du formulaire global au type de tâche
 	public function get_form() {
-		global $base_path,$charset,$msg, $admin_planificateur_global_params;
+		global $msg;
 	
 		$this->fetch_global_properties();
-		$admin_planificateur_global_params=str_replace("!!script_js!!","",$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!special_form!!","",$admin_planificateur_global_params);
-		//Remplacement des valeurs par dÃ©faut
-		$admin_planificateur_global_params=str_replace("!!id!!",$this->id,$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!comment!!",htmlentities(scheduler_tasks::get_catalog_element($this->id, 'COMMENT'),ENT_QUOTES,$charset),$admin_planificateur_global_params);
-				
-		//ce type de tÃ¢che nÃ©cessite-t-il d'un rÃ©pertoire d'upload pour les documents numÃ©riques?
-		$admin_planificateur_global_params=str_replace("!!div_upload!!","",$admin_planificateur_global_params);
-//		if ($dir_upload_boolean != "0") {
-//			$up = new upload_folder($rep_upload);
-//			$nom_chemin = $up->formate_nom_to_path($up->repertoire_nom.$path_upload);
-//			$admin_planificateur_global_params=str_replace("!!div_upload!!","<div class='row'>
-//				<div class='colonne3'><label for='timeout'/>".$msg["print_numeric_ex_title"]."</label></div>
-//						<div class='colonne_suite'>
-//							".$msg["planificateur_upload"]." :
-//							<input type='text' name='path' id='path' value='!!path!!' class='saisie-50emr' READONLY />
-//							<input type='button' id='upload_path' class='bouton' onclick='upload_openFrame(event)' value='...' name='upload_path' />
-//							<input id='id_rep' type='hidden' value='!!id_rep!!' name='id_rep' />
-//						</div>
-//				</div>",$admin_planificateur_global_params);
-//		} else {
-//			$admin_planificateur_global_params=str_replace("!!div_upload!!","",$admin_planificateur_global_params);
-//		}
-	
-		$admin_planificateur_global_params=str_replace("!!timeout!!",$this->timeout,$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!histo_day!!",$this->histo_day,$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!histo_number!!",$this->histo_number,$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!restart_on_failure_checked!!",($this->restart_on_failure ? "checked=checked" : ""),$admin_planificateur_global_params);
-		$params_alert_mail = explode(",",$this->alert_mail_on_failure);
-		$admin_planificateur_global_params=str_replace("!!alert_mail_on_failure_checked!!",($params_alert_mail[0] ? " checked=checked " : ""),$admin_planificateur_global_params);
-		$admin_planificateur_global_params=str_replace("!!mail_on_failure!!",(isset($params_alert_mail[1]) ? $params_alert_mail[1] : ''),$admin_planificateur_global_params);
-		return $admin_planificateur_global_params;
+		
+		$interface_form = new interface_admin_planificateur_form('planificateur_global_form');
+		$interface_form->set_label($msg["planificateur_properties"]." : ".scheduler_tasks::get_catalog_element($this->id, 'COMMENT'));
+		$interface_form->set_object_id($this->id)
+		->set_content_form($this->get_content_form())
+		->set_table_name('taches_type')
+		->set_no_deletable(true);
+		return $interface_form->get_display();
 	}
 	
 	public function get_params() {
@@ -222,14 +220,14 @@ class scheduler_tasks_type {
 	public function set_properties_from_form() {
 		global $timeout, $histo_day, $histo_number, $restart_on_failure, $alert_mail_on_failure, $mail_on_failure; 
 		
-		$this->timeout=$timeout+0;
-		$this->histo_day=$histo_day+0;
-		$this->histo_number=$histo_number+0;
+		$this->timeout=intval($timeout);
+		$this->histo_day=intval($histo_day);
+		$this->histo_number=intval($histo_number);
 		$this->restart_on_failure=($restart_on_failure ? "1" : "0");
 		$this->alert_mail_on_failure=($alert_mail_on_failure ? "1" : "0").($mail_on_failure ? ",".$mail_on_failure : "");
 	}
 	
-	//Sauvegarde des propriÃ©tÃ©s gÃ©nÃ©rales
+	//Sauvegarde des propriétés générales
 	public function save_global_properties() {
 		$query = "replace into taches_type (id_type_tache,parameters, timeout, histo_day, histo_number, restart_on_failure, alert_mail_on_failure) values('".$this->id."',
 		'".serialize($this->parameters)."','".$this->timeout."','".$this->histo_day."','".$this->histo_number."','".$this->restart_on_failure."','".$this->alert_mail_on_failure."')";
@@ -245,7 +243,7 @@ class scheduler_tasks_type {
 		$this->alert_mail_on_failure=0;
 	}
 	
-	//PropriÃ©tes globales d'un type de tache du planificateur (timeout, histo_day, ...)
+	//Propriétes globales d'un type de tache du planificateur (timeout, histo_day, ...)
 	public function fetch_global_properties() {
 		$query="select parameters, timeout, histo_day, histo_number, restart_on_failure, alert_mail_on_failure from taches_type where id_type_tache='".$this->id."'";
 		$resultat=pmb_mysql_query($query);
@@ -262,31 +260,12 @@ class scheduler_tasks_type {
 		}
 	}
 	
-	//affiche la planification de tÃ¢ches par type
-	public function get_display_list() {
-		global $charset;
-	
-		$display = '';
-		$query = "SELECT id_planificateur, libelle_tache, desc_tache FROM planificateur WHERE num_type_tache = '".$this->id."'";
-		$res = pmb_mysql_query($query);
-		$parity_source= $this->id % 2;
-		if ($res) {
-			while ($row=pmb_mysql_fetch_object($res)) {
-				$pair_impair_source = $parity_source++ % 2 ? "even" : "odd";
-				$tr_javascript_source=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair_source'\" onmousedown=\"if (event) e=event; else e=window.event; if (e.srcElement) target=e.srcElement; else target=e.target; if (target.nodeName!='INPUT') document.location='./admin.php?categ=planificateur&sub=manager&act=task&type_task_id=".$this->id."&planificateur_id=".$row->id_planificateur."';\" ";
-				$display .= "<tr style='cursor: pointer' class='$pair_impair_source' $tr_javascript_source>
-				<td>".htmlentities($row->libelle_tache, ENT_QUOTES, $charset)."</td>
-						<td>".htmlentities($row->desc_tache, ENT_QUOTES, $charset)."</td>
-						<td></td><td></td></tr>";
-			}
-		}
-		return $display;
-	}
-	
 	public function get_number() {
-		$res = pmb_mysql_query("select * from planificateur where num_type_tache=".$this->id);
-		$nb = pmb_mysql_num_rows($res);
-		return $nb;
+		if(!isset($this->number)) {
+			$res = pmb_mysql_query("select * from planificateur where num_type_tache=".$this->id);
+			$this->number = pmb_mysql_num_rows($res);
+		}
+		return $this->number;
 	}
 	
 	public function get_id() {

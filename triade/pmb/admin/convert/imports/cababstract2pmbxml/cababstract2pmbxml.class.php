@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cababstract2pmbxml.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: cababstract2pmbxml.class.php,v 1.3 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$include_path/isbn.inc.php");
 require_once($base_path."/admin/convert/convert.class.php");
@@ -15,6 +16,7 @@ class cababstract2pmbxml extends convert {
 	protected static function organize_line($tab_line){
 		$res = array();
 		for($i=0;$i<count($tab_line);$i++){
+			$matches = array();
 			if(preg_match("/^([A-Z0-9]{1,4}) +(.*)$/",$tab_line[$i],$matches)){
 				$champ = $matches[1];
 				if($res[$champ]) {
@@ -40,7 +42,7 @@ class cababstract2pmbxml extends convert {
 		global $charset;	
 		
 		if(mb_detect_encoding($notice) =='UTF-8' && $charset == "iso-8859-1")
-			$notice = utf8_decode($notice);
+			$notice = encoding_normalize::utf8_decode($notice);
 	
 		if (!$tab_functions) $tab_functions=new marc_list('function');
 		$fields=explode("\n",$notice);
@@ -114,7 +116,7 @@ class cababstract2pmbxml extends convert {
 			  <el>1</el>
 			  <ru>i</ru>\n";	
 		
-		//Soyons sÃ»r que le microtime ne sera plus le mÃªme..
+		//Soyons sûr que le microtime ne sera plus le même..
 		usleep(1);
 		
 		$data.="<f c='001' ind='  '>\n";
@@ -126,21 +128,9 @@ class cababstract2pmbxml extends convert {
 			$data.="	<s c='a'>".htmlspecialchars(strtolower(substr($lang,0,3)),ENT_QUOTES,$charset)."</s>";
 			$data.="</f>\n";		
 		}
-		if($title){
-			$data.="<f c='200' ind='  '>\n";								
-			$data.="	<s c='a'>".htmlspecialchars(implode(',',explode('###',$title)),ENT_QUOTES,$charset)."</s>";
-			$data.="</f>\n";
-		}
-		if($pagination){
-			$data.="<f c='215' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($pagination,ENT_QUOTES,$charset)."</s>\n";
-			$data.="</f>\n";
-		}	
-		if($abstract){
-			$data.="<f c='330' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars(implode(',',explode('###',$abstract)),ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}		
+		$data.=static::get_converted_field_uni('200', 'a', implode(',',explode('###',$title)));
+		$data.=static::get_converted_field_uni('215', 'a', $pagination);
+		$data.=static::get_converted_field_uni('330', 'a', implode(',',explode('###',$abstract)));
 		if($serial_title){
 			$data.="<f c='461' ind='  '>\n";				
 			$data.="	<s c='t'>".htmlspecialchars(implode(',',explode('###',$serial_title)),ENT_QUOTES,$charset)."</s>\n";	
@@ -191,14 +181,11 @@ class cababstract2pmbxml extends convert {
 		if($doi){
 			$doi = trim($doi);
 			if($doi){
-				$data.="<f c='900' ind='  '>\n";
-				$data.="	<s c='a'>".htmlspecialchars($doi,ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='l'>DOI</s>\n";
-				$data.="	<s c='n'>cp_doi_identifier</s>\n";
-				$data.="</f>\n";
+				$data.=static::get_converted_field_uni('900', 'a', $doi, array('l' => 'DOI', 'n' => 'cp_doi_identifier'));
 			}
 		}
 		$data .= "</notice>\n";
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

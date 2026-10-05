@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,7 +26,7 @@ $cnx=cnx();
 
 
 $data=activite_liste();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 //	print "<option value='".$data[$i][0]."'>".trunchaine($data[$i][0],40)."</option>";
 //	print "document.formulaire.activite.options[document.formulaire.activite.options.length] = new Option('dmc','cmd');";
 	print trunchaine($data[$i][0],40)."#";	

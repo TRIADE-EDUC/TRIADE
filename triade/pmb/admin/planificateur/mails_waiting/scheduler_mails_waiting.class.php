@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scheduler_mails_waiting.class.php,v 1.1 2018-03-09 13:44:08 dgoron Exp $
+// $Id: scheduler_mails_waiting.class.php,v 1.3 2024/04/11 08:26:23 dbellamy Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_task.class.php");
-require_once($class_path."/mail.class.php");
+require_once($class_path."/mail_waiting.class.php");
 
 class scheduler_mails_waiting extends scheduler_task {
 	
@@ -28,11 +28,11 @@ class scheduler_mails_waiting extends scheduler_task {
 
 			while($row = pmb_mysql_fetch_object($result)) {
 				$this->listen_commande(array(&$this,"traite_commande"));
-				if($this->statut == WAITING) {
-					$this->send_command(RUNNING);
+				if($this->statut == scheduler_task::WAITING) {
+				    $this->send_command(scheduler_task::RUNNING);
 				}
-				if ($this->statut == RUNNING) {
-					$mail = new mail($row->id_mail);
+				if ($this->statut == scheduler_task::RUNNING) {
+					$mail = new mail_waiting($row->id_mail);
 					$response = $mail->send();
 					if($response) {
 						$this->add_content_report('Sent : '.$mail->get_to_name().' ('.$mail->get_to_mail().')');

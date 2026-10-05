@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
 
 <!-- codici SUTRS per PMB tradotti in italiano da Marco Vaninetti e Massimo Mancini
-$Id: sutrs.xml,v 1.1 2005-03-15 23:00:03 martizva Exp $ -->
+$Id: sutrs.xml,v 1.1 2005/03/15 23:00:03 martizva Exp $ -->
 
 <XMLlist>
 <entry code="BiblioLevel">Livello bibliografico</entry>

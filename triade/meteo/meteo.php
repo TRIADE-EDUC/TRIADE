@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH 
+ *   copyright            : (C) 2000 E. TAESCH
  *   Site                 : http://www.triade-educ.org
  *
  *
@@ -21,28 +21,16 @@ session_start();
 
 
 setlocale(LC_TIME, "fr_FR"); // ou "fr"
-include_once("./common/config2.inc.php");
-include_once("../librairie_php/timezone.php");
+if (file_exists("./common/config2.inc.php"))      include_once("./common/config2.inc.php");
+if (file_exists("../librairie_php/timezone.php")) include_once("../librairie_php/timezone.php");
+if (file_exists("../common/config2.inc.php"))      include_once("../common/config2.inc.php");
+if (file_exists("./librairie_php/timezone.php")) include_once("./librairie_php/timezone.php");
 
 $partner = "";
-$ville = METEOID; 
-//$vname="Paris";
+$ville = METEOID;
 $jours = 2;
 $datedujour=dateDMY2();
 $url = "https://www.triade-educ.org/accueil/weather.php?ref=".METEOID."&date=$datedujour";
-//print $url;
-/*
-<TRIADE>
-	<forecast>
-		<date>2022-11-19</date>
-		<ville>Rennes</ville>
-		<min>5</min>
-		<max>11</max>
-		<jour>3</jour>
-		<nuit>40</nuit>
-	</forecast>
-</TRIADE>
-*/
 
 $data=simplexml_load_file($url);
 if ($data !== false) {
@@ -66,68 +54,41 @@ if ($data !== false) {
 
 ?>
 
-<table class=meteofond>
-<tr><td class=meteotitre colspan=2>&nbsp;&nbsp;&nbsp;Prévision sur <?php print $vname?></td></tr> 
-<tr>
-      <td class=meteocorps>
-	<table>
-      <tr>
-         <td colspan=3 class=meteosstitre><strong>
-            <?php 
-	print dateForm("$date0");
-		?>
-         </strong></td>
-      </tr>
-      <tr>
-         <td>Max:<br> <?php print "$max0"."°C"?></td>
-         <td class=meteosstitre><?php print LANGMETEO1 ?></td>
-         <td class=meteosstitre><?php print LANGMETEO2 ?></td>
-      </tr>
-      <tr>
-         <td>Min:<br> <?php print "$min0"."°C"?></td>
-         <td rowspan=2><img src="./meteo/img/<?php print $imgjour0 ?>.png"
-            width=40 ></td>
-         <td rowspan=2><img src="./meteo/img/<?php print $imgnuit0 ?>.png"
-            width=40 ></td>
-      </tr>
-      <!-- <tr>
-         <td>H%: <?php print $xml["hmid"][$i]?></td>
-      </tr>
-	-->
-      </table></td>
+<div class="meteo-wrap">
+    <div class="meteo-header">&#9728; Prévisions météo &ndash; <?php print $vname ?></div>
+    <div class="meteo-days">
 
+        <div class="meteo-day">
+            <div class="meteo-date"><?php print dateForm("$date0") ?></div>
+            <div class="meteo-cols">
+                <div class="meteo-col">
+                    <img class="meteo-img" src="./meteo/img/<?php print $imgjour0 ?>.png" alt="">
+                    <span class="meteo-label"><?php print LANGMETEO1 ?></span>
+                    <span class="meteo-temp"><?php print $max0 ?>°C</span>
+                </div>
+                <div class="meteo-col">
+                    <img class="meteo-img" src="./meteo/img/<?php print $imgnuit0 ?>.png" alt="">
+                    <span class="meteo-label"><?php print LANGMETEO2 ?></span>
+                    <span class="meteo-temp"><?php print $min0 ?>°C</span>
+                </div>
+            </div>
+        </div>
 
-      <td class=meteocorps>
-	<table>
-      <tr>
-         <td colspan=3 class=meteosstitre><strong>
-            <?php 
-	print dateForm("$date1");
-		?>
-         </strong></td>
-      </tr>
-      <tr>
-         <td>Max:<br> <?php print "$max1"."°C"?></td>
-         <td class=meteosstitre><?php print LANGMETEO1 ?></td>
-         <td class=meteosstitre><?php print LANGMETEO2 ?></td>
-      </tr>
-      <tr>
-         <td>Min:<br> <?php print "$min1"."°C"?></td>
-         <td rowspan=2><img src="./meteo/img/<?php print $imgjour1; ?>.png"
-            width=40 alt=""></td>
-         <td rowspan=2><img src="./meteo/img/<?php print $imgnuit1; ?>.png"
-            width=40 alt=""></td>
-      </tr>
-      <!-- <tr>
-         <td>H%: <?php print $xml["hmid"][$i]?></td>
-      </tr>
-	-->
-      </table></td>
+        <div class="meteo-day">
+            <div class="meteo-date"><?php print dateForm("$date1") ?></div>
+            <div class="meteo-cols">
+                <div class="meteo-col">
+                    <img class="meteo-img" src="./meteo/img/<?php print $imgjour1 ?>.png" alt="">
+                    <span class="meteo-label"><?php print LANGMETEO1 ?></span>
+                    <span class="meteo-temp"><?php print $max1 ?>°C</span>
+                </div>
+                <div class="meteo-col">
+                    <img class="meteo-img" src="./meteo/img/<?php print $imgnuit1 ?>.png" alt="">
+                    <span class="meteo-label"><?php print LANGMETEO2 ?></span>
+                    <span class="meteo-temp"><?php print $min1 ?>°C</span>
+                </div>
+            </div>
+        </div>
 
-
-
-
-
-</tr>
-  
-</table>
+    </div>
+</div>

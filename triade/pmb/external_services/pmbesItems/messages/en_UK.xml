@@ -4,68 +4,66 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.2 2021/03/11 13:34:41 dbellamy Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
 
-<!--
-pmbesItems
--->
-	<entry code="pmbesItems_description">Functions related to the copies</entry>
-	<!--
-fetch_notice_items
--->
-	<entry code="fetch_notice_items_description">Returns the different copies connected to a record if they exists</entry>
+    <!-- pmbesItems -->
+	<entry code="pmbesItems_description">Functions related to copies</entry>
+	
+	<!-- fetch_notice_items -->
+	<entry code="fetch_notice_items_description">Returns copies of a record</entry>
 	<entry code="fetch_notice_items_input_description"></entry>
 	<entry code="fetch_notice_items_output_description"></entry>
-	<entry code="fetch_notice_items_noticeid">The record number</entry>
-	<entry code="fetch_notice_items_OPACUserId">the id of a borrower to check his/her access rights on this record.
-	-1: Don't take into account
+	<entry code="fetch_notice_items_noticeid">Record ID</entry>
+	<entry code="fetch_notice_items_OPACUserId">Borrower ID, for checking access rights.
+	-1: Ignore
 	0: anonymous borrower
-	x: id of the borrower</entry>
-	<entry code="fetch_notice_items_items">The copies if they exist</entry><!--
-fetch_item
--->
-	<entry code="fetch_item_description">Returns a copy by one of its identifiers</entry>
-	<entry code="fetch_item_input_description">You choose: item_cb or item_id</entry>
+	x: borrower ID
+	</entry>
+	<entry code="fetch_notice_items_items">Array of copies</entry>
+	
+	<!-- fetch_item -->
+	<entry code="fetch_item_description">Returns a copy from one of its identifiers</entry>
+	<entry code="fetch_item_input_description">your choice: identifier or barcode</entry>
 	<entry code="fetch_item_output_description"></entry>
-	<entry code="fetch_item_item_cb">The barcode of the copy</entry>
-	<entry code="fetch_item_item_id">The id of the copy</entry>
-	<entry code="fetch_item_OPACUserId">the id of a borrower to check his/her access rights on this record.
-	-1: Do not take into account
+	<entry code="fetch_item_item_cb">Copy barcode</entry>
+	<entry code="fetch_item_item_id">Copy ID</entry>
+	<entry code="fetch_item_OPACUserId">Borrower ID, for checking access rights.
+	-1: Ignore
 	0: anonymous borrower
-	x: id of the borrower</entry>
-	<entry code="fetch_item_item">The copy if it exists</entry>
+	x: borrower ID
+	</entry>
+	<entry code="fetch_item_item">Copy</entry>
 
-<!--
-fetch_notices_items
--->
-	<entry code="fetch_notices_items_description">Does the same as fetch_notice_items but for a number of records</entry>
+	<!-- fetch_notices_items -->
+	<entry code="fetch_notices_items_description">Returns the items associated with a list of records</entry>
 	<entry code="fetch_notices_items_input_description"></entry>
 	<entry code="fetch_notices_items_output_description"></entry>
-	<entry code="fetch_notices_items_noticesid">A table of ids of records</entry>
+	<entry code="fetch_notices_items_noticesid">Array of record IDs</entry>
 	<entry code="fetch_notices_items_noticesid_anoticeid"></entry>
-	<entry code="fetch_notices_items_OPACUserId">the id of a borrower, to check his/her access rights on this record.
-	-1: Do not take into account
+	<entry code="fetch_notices_items_OPACUserId">Borrower ID, for checking access rights.
+	-1: Ignore
 	0: anonymous borrower
-	x: id of the borrower</entry>
+	x: borrower ID
+	</entry>
 	<entry code="fetch_notices_items_result"></entry>
-	<entry code="fetch_notices_items_result_noticeid">The id of the record</entry>
-	<entry code="fetch_notices_items_result_items">The copies of the record</entry>
-<!--
-fetch_bulletins_items
--->
-	<entry code="fetch_bulletins_items_description">Return the copies connected to a list of issues</entry>
+	<entry code="fetch_notices_items_result_noticeid">Record ID</entry>
+	<entry code="fetch_notices_items_result_items">Array of copies</entry>
+	
+	<!-- fetch_bulletins_items -->
+	<entry code="fetch_bulletins_items_description">Returns the items associated with a list of issues</entry>
 	<entry code="fetch_bulletins_items_input_description"></entry>
 	<entry code="fetch_bulletins_items_output_description"></entry>
-	<entry code="fetch_bulletins_items_bulletinids">The ids of the issues</entry>
-	<entry code="fetch_bulletins_items_OPACUserId">the id of a borrower to check his/her access rights on this record.
-	-1: Do not take into account
+	<entry code="fetch_bulletins_items_bulletinids">Arra of issue IDs</entry>
+	<entry code="fetch_bulletins_items_OPACUserId">Borrower ID, for checking access rights.
+	-1: Ignore
 	0: anonymous borrower
-	x: id of the borrower</entry>
+	x: borrower ID
+	</entry>
 	<entry code="fetch_bulletins_items_result"></entry>
-	<entry code="fetch_bulletins_items_result_bulletinid">The id of the issue</entry>
-	<entry code="fetch_bulletins_items_result_items">The copies of the issue</entry>
+	<entry code="fetch_bulletins_items_result_bulletinid">Issue ID</entry>
+	<entry code="fetch_bulletins_items_result_items">Array of copies</entry>
 
 </XMLlist>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_recordslist_selector_last_read.class.php,v 1.1 2015-04-16 12:14:57 dgoron Exp $
+// $Id: cms_module_recordslist_selector_last_read.class.php,v 1.2 2021/02/12 10:08:40 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class cms_module_recordslist_selector_last_read extends cms_module_common_select
 	}
 	
 	public function get_value(){
-		if(!$this->value){
+	    if(!$this->value && !empty($_SESSION[$this->parameters])){
 			$this->value = $_SESSION[$this->parameters];
 		}
 		return $this->value;

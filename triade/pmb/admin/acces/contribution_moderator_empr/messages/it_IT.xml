@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: it_IT.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
+$Id: it_IT.xml,v 1.1 2017/09/04 12:47:43 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="long_name">Droits d'accès Modérateurs - Contributeurs</entry>

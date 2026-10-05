@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,13 +38,11 @@ class livesearch {
 
 	function search($input,$quoi,$target,$form,$champs) {
 
-			
-/*
+		/*
 		$fp=fopen("./essai.txt","a+");
 		fwrite($fp,"$input:$quoi:$target:$form:$champs:\r\n");
 		fclose($fp);
-*/	 
-	 	
+		 */
 
 		$ret = array();
 
@@ -52,7 +50,6 @@ class livesearch {
 		include_once('./db_triade_ajax.php');
 		include_once('./lib_prefixe.php');
 		$cnx=cnx_ajax();
-
 
 
 		if ($quoi == "eleve") {
@@ -124,7 +121,7 @@ class livesearch {
 
 	}
 
-
 }
+ 
 
 ?>

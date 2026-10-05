@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.1 2023/06/27 15:42:01 gneveu Exp $ 
+-->
+
+<manifest>
+    <description>Authentification OIDC</description>
+    <name>OpenIDConnect</name>
+    <class>Pmb\Authentication\Models\Sources\OpenIDConnect\OpenIDConnectQuery</class>
+    <view>openIDConnectForm</view>
+</manifest>

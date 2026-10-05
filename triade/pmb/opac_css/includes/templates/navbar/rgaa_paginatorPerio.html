@@ -1,0 +1,62 @@
+{% extends "rgaa_paginator.html" %}
+<!-- $Id: rgaa_paginatorPerio.html,v 1.2.2.1 2024/09/10 15:06:05 jparis Exp $ -->
+{% comment %}
+{% endcomment  %}
+
+{% block paginator_nav %}
+<div class="navbar-container">
+	<nav class='navbar-paginator d-flex flex-wrap' role='navigation' aria-label='{{ msg.rgaa_navbar_label }}'>
+		<ol class="d-flex flex-wrap">
+			<li>
+				<button id='perio-page-first' class='navbar_first navbar_page' title='{{ msg.first_page }}' {% if current.previous > 0 %}onclick='{{ rgaa.onclick | replace
+					"!!page!!" 1 }}' {% else %}aria-disabled='true' role='button'{% endif %}>
+					<img alt='' {% if current.previous> 0 %} src='{{ img.first }}' {% else %} src='{{ img.first-grey }}' {% endif
+					%}>
+				</button>
+			</li>
+			<li>
+				<button id='perio-page-prev' class='navbar_prev navbar_page' title='{{ msg.prec_page }}' {% if current.previous> 0 %}onclick='{{ rgaa.onclick | replace
+					"!!page!!" current.previous }}' {% else %}aria-disabled='true' role='button'{% endif %}>
+					<img alt='' {% if current.previous> 0 %} src='{{ img.prev }}' {% else %} src='{{ img.prev-grey }}' {% endif %}>
+				</button>
+			</li>
+			
+			{% for p in pages %}
+			<li>
+				<button id='perio-page-{{p}}' class='navbar_page {% if p == current.page %}current{% endif %}' {% if p==current.page %}aria-current="page" aria-pressed='true'{% else %} aria-pressed='false' {% endif %}
+					title='{% if p == current.page %}{{ msg.rgaa_navbar_page_current  | replace "!!page!!" p }}{% else %}{{ msg.rgaa_navbar_page  | replace "!!page!!" p }}{% endif %}'
+					{% if p !='...' %}onclick='{{ rgaa.onclick | replace "!!page!!" p }}' {% else %} disabled {% endif %}>
+					{{ p }}
+				</button>
+			</li>
+			{% endfor %}
+			<li>
+				<button id='perio-page-next' class='navbar_next navbar_page' title='{{ msg.prec_page }}' {% if current.next < nbPages or current.next==nbPages
+					%}onclick='{{ rgaa.onclick | replace "!!page!!" current.next }}' {% else %}aria-disabled='true' role="button" {% endif %}>
+					<img alt='' {% if current.next < nbPages or current.next == nbPages %} src='{{ img.next }}' {% else %} src='{{ img.next-grey }}' {% endif %}>
+				</button>
+			</li>
+			<li>
+				<button id='perio-page-last' class='navbar_last navbar_page' title='{{ msg.first_page }}' {% if current.next < nbPages or current.next==nbPages %}onclick='{{ rgaa.onclick | replace "!!page!!" nbPages }}' {% else %}aria-disabled='true' role="button" {% endif %}>
+					<img alt='' {% if current.next < nbPages or current.next == nbPages %} src='{{ img.last }}' {% else %} src='{{ img.last-grey }}' {% endif %}>
+				</button>
+			</li>
+		</ol>
+		<span class="navbar_page_info">({{current.elems.first}} - {{current.elems.last}} / {{total}})</span>
+	</nav>
+</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+		function changepage(idPage, idPerio, element) {
+			document.getElementById("bull_page").value = idPage;
+			show_perio(idPerio);
+			window.setTimeout(() => document.getElementById(element.id).focus(), 100);
+		}
+	</script>
+{% endblock %}
+
+{% block input %}
+	<input type="hidden" id='page' name="page" value="{{ current.page }}"/>
+{% endblock %}

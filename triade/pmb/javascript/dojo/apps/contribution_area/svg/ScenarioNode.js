@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ScenarioNode.js,v 1.2 2018-10-16 12:06:57 apetithomme Exp $
+// $Id: ScenarioNode.js,v 1.2 2018/10/16 12:06:57 apetithomme Exp $
 
 define([
         "dojo/_base/declare", 

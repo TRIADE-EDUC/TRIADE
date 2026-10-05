@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.7 2016-09-20 15:17:15 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.8 2024/04/15 13:06:44 rtigero Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -20,9 +20,9 @@ simpleSearch
 <entry code="simpleSearch_output_description"></entry>
 <entry code="simpleSearch_searchType">Le type de recherche:
   0 (SEARCH_ALL)=tous les champs,
-  1 (SEARCH_TITLE)=titre, 
-  2 (SEARCH_AUTHOR)=auteur, 
-  3 (SEARCH_EDITOR)=éditeur, 
+  1 (SEARCH_TITLE)=titre,
+  2 (SEARCH_AUTHOR)=auteur,
+  3 (SEARCH_EDITOR)=éditeur,
   4 (SEARCH_COLLECTION)=collection,
   6 (SEARCH_CATEGORIES)=catégories/mots matières</entry>
 <entry code="simpleSearch_searchTerm">Chaine à rechercher</entry>
@@ -40,7 +40,7 @@ getAdvancedSearchFields
   <!--
 advancedSearch
 -->
-  
+
   <entry code="advancedSearch_description">Effectuer une recherche avancée</entry>
   <entry code="advancedSearch_inputs_description"></entry>
   <entry code="advancedSearch_outputs_description"></entry>
@@ -51,11 +51,11 @@ advancedSearch
   <entry code="advancedSearch_search_value">les valeurs de recherche</entry>
   <entry code="advancedSearch_searchId">nom de la ressource résultat</entry>
   <entry code="advancedSearch_nbResults">nombre de résultats trouvés</entry>
-  
+
   <!--
 fetchSearchRecords
 -->
-  
+
 <entry code="fetchSearchRecords_description">Fonctions pour récupérer les notices issues d'une recherche</entry>
 <entry code="fetchSearchRecords_input_description"></entry>
 <entry code="fetchSearchRecords_output_description"></entry>
@@ -77,7 +77,7 @@ fetchSearchRecords
     typedutri_nomdutri, avec:
     -typedutri: d ou c pour un tri croissant ou décroissant
     -nomdutri: l'id du tri (voir la fonction get_sort_types).
-    
+
     exemples:
     -c_text_1: tri par titre croissant.
     -d_num_7: tri par année d'édition décroissante.
@@ -116,7 +116,7 @@ fetchSearchRecords
     typedutri_nomdutri, avec:
     -typedutri: d ou c pour un tri croissant ou décroissant
     -nomdutri: l'id du tri (voir la fonction get_sort_types).
-    
+
     exemples:
     -c_text_1: tri par titre croissant.
     -d_num_7: tri par année d'édition décroissante.
@@ -134,7 +134,7 @@ fetchSearchRecords
   <!--
 fetch_notice_items
 -->
-  
+
 <entry code="fetch_notice_items_description">Renvoie les différents exemplaires associés à une notice s'ils existent</entry>
 <entry code="fetch_notice_items_input_description"></entry>
 <entry code="fetch_notice_items_output_description"></entry>
@@ -144,7 +144,7 @@ fetch_notice_items
   <!--
 listNoticeExplNums
 -->
-  
+
 <entry code="listNoticeExplNums_description">Liste les documents numériques associés à une notice</entry>
 <entry code="listNoticeExplNums_input_description"></entry>
 <entry code="listNoticeExplNums_output_description"></entry>
@@ -154,7 +154,7 @@ listNoticeExplNums
   <!--
 listBulletinExplNums
 -->
-  
+
 <entry code="listBulletinExplNums_description">Liste les documents numériques associés à un bulletin</entry>
 <entry code="listBulletinExplNums_input_description"></entry>
 <entry code="listBulletinExplNums_output_description"></entry>
@@ -200,13 +200,13 @@ fetchNoticeList
     [sort_name] => text_1
     [sort_caption] => Titre
     )
-    
+
     [1] => Array
     (
     [sort_name] => num_2
     [sort_caption] => Indexation décimale
     )
-    
+
     [2] => Array
     (
     [sort_name] => text_3
@@ -216,15 +216,15 @@ fetchNoticeList
 )</entry>
   <entry code="simple_search_localise_description">Effectuer une recherche simple filtrée par localisation et section</entry>
   <entry code="simple_search_localise_inputs_description"></entry>
-  <entry code="simple_search_localise_inputs_description_searchType">Le type de la recherche:  
+  <entry code="simple_search_localise_inputs_description_searchType">Le type de la recherche:
   0 (SEARCH_ALL)=tous les champs,
-  1 (SEARCH_TITLE)=titre, 
-  2 (SEARCH_AUTHOR)=auteur, 
-  3 (SEARCH_EDITOR)=éditeur, 
+  1 (SEARCH_TITLE)=titre,
+  2 (SEARCH_AUTHOR)=auteur,
+  3 (SEARCH_EDITOR)=éditeur,
   4 (SEARCH_COLLECTION)=collection,
   6 (SEARCH_CATEGORIES)=catégories/mots matières</entry>
   <entry code="simple_search_localise_inputs_description_searchTerm">chaine à rechercher</entry>
-  <entry code="simple_search_localise_inputs_description_pmbUserId">l'id d'un utilisateur pmb, pour filtrer les résultats selon les droits d'accès. 
+  <entry code="simple_search_localise_inputs_description_pmbUserId">l'id d'un utilisateur pmb, pour filtrer les résultats selon les droits d'accès.
 -1: pour ne pas en tenir compte</entry>
   <entry code="simple_search_localise_inputs_description_OPACUserId">l'id d'un emprunteur, pour filtrer les résultats selon les droits d'accès
 	-1: Ne pas tenir compte
@@ -287,7 +287,7 @@ listFacets
   <entry code="listFacets_results_code_champ">Code champ</entry>
   <entry code="listFacets_results_code_ss_champ">Code sous champ</entry>
   <entry code="listFacets_results_count">Nombre de notices associées</entry>
-  
+
 <!--
 listRecordsFromFacets
 -->
@@ -301,5 +301,7 @@ listRecordsFromFacets
   <entry code="listRecordsFromFacets_inputs_description_filter_value">Valeur</entry>
   <entry code="listRecordsFromFacets_results">Liste des notices</entry>
   <entry code="listRecordsFromFacets_outputs_description_noticeId">Identifiant de la notice</entry>
-  
+
+
+  <entry code="getNbResa">Récupérer le nombre de réservations associées</entry>
 </XMLlist>

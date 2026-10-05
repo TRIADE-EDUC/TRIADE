@@ -2,20 +2,19 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_store_arc2_extended.class.php,v 1.3 2017-08-23 07:57:24 tsamson Exp $
+// $Id: onto_store_arc2_extended.class.php,v 1.6 2023/02/24 14:45:26 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-/**
- * class onto_store_contribution_area_form
- * 
- */
+global $class_path;
+require_once "$class_path/onto/onto_store_arc2.class.php";
+
 class onto_store_arc2_extended extends onto_store_arc2 {
 
 	/**
 	 * Charge un fichier RDF dans le store
 	 *
-	 * @param string onto_filepath Chemin du fichier RDF Ã Â  charger dans le store
+	 * @param string onto_filepath Chemin du fichier RDF à  charger dans le store
 	
 	 * @return bool
 	 * @access public
@@ -25,7 +24,7 @@ class onto_store_arc2_extended extends onto_store_arc2 {
 		
 		$bool = true;
 	
-		//evolution pour la possibilitÃ© d'avoir plusieurs fichier rdf
+		//evolution pour la possibilité d'avoir plusieurs fichier rdf
 		if (!is_numeric($thesaurus_ontology_filemtime)) {
 			$tab_file_rdf =  unserialize($thesaurus_ontology_filemtime);
 			if (!isset($tab_file_rdf[$this->store->getName()])) {
@@ -34,13 +33,13 @@ class onto_store_arc2_extended extends onto_store_arc2 {
 		} else {
 			$tab_file_rdf[$this->store->getName()] = $thesaurus_ontology_filemtime;
 		}
-		//on charge l'ontologie seulement si la date de modification du fichier est > Ã  la date de derniÃ¨re lecture
+		//on charge l'ontologie seulement si la date de modification du fichier est > à la date de dernière lecture
 		if($reset || (filemtime($onto_filepath) > $tab_file_rdf[$this->store->getName()])){
 			// le load ne fait qu'ajouter les nouveaux triplets sans supprimer les anciens, donc on purge avant...
 			$this->store->reset();
 			
 			//LOAD n'accepte qu'un chemin absolu
-			$res=$this->query('LOAD <file://'.realpath($onto_filepath).'>');
+			$res=$this->query('LOAD <file:///'.realpath($onto_filepath).'>');
 				
 			$tab_file_rdf[$this->store->getName()] = filemtime($onto_filepath);
 				
@@ -58,6 +57,9 @@ class onto_store_arc2_extended extends onto_store_arc2 {
 		if ($bool) {
 			if (!empty($this->config['params'])) {
 				foreach ($this->config['params'] as $uri => $object) {
+				    if (empty($uri)) {
+                        continue;
+				    }
 					$query = "insert into <pmb> " . $this->rdf_serialize($object,$uri);
 					$this->query($query,$this->namespaces);
 				}

@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,6 +40,7 @@ if (empty($_SESSION["admin1"])) {
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./<?php print REPADMIN?>/librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_histo_heure.js"></script>
 <title>Triade</title>
@@ -70,7 +71,7 @@ for ($i=13;$i<=24;$i++) {
 }
 // initialisation
 // jusqu'a 12 heure
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 {
 	for ($j=0;$j<=12;$j++) {
 		if ($j == $data[$i][0]) {
@@ -88,7 +89,7 @@ foreach($heure as $key => $value) {
 }
 // initialisation
 // de 13 jusqu'a 24 heure
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 {
 	for ($t=13;$t<=24;$t++) {
 		if ($t == $data[$i][0]) {

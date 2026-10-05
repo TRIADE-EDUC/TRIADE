@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_root.class.php,v 1.3 2018-01-03 15:34:22 tsamson Exp $
+// $Id: docwatch_root.class.php,v 1.3 2018/01/03 15:34:22 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

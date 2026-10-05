@@ -2,22 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_accounting_commandes_ui.class.php,v 1.4 2019-02-26 15:49:36 dgoron Exp $
+// $Id: list_accounting_commandes_ui.class.php,v 1.13.4.2 2025/02/20 15:31:54 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/accounting/list_accounting_ui.class.php");
-
 class list_accounting_commandes_ui extends list_accounting_ui {
 		
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
-	
 	protected function get_button_add() {
 		global $msg;
 	
-		return "<input class='bouton' type='button' value='".$msg['acquisition_ajout_'.$this->get_initial_name()]."' onClick=\"document.location='".static::get_controller_url_base()."&action=modif&id_bibli=".$this->filters['entite']."&id_".$this->get_initial_name()."=0';\" />";
+		return $this->get_interface_button($msg['acquisition_ajout_'.$this->get_initial_name()], ['location' => static::get_controller_url_base()."&action=modif&id_bibli=".$this->filters['entite']."&id_".$this->get_initial_name()."=0"]);
 	}
 	
 	/**
@@ -28,11 +22,14 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 		array('main_fields' =>
 				array(
 						'numero' => '38',
+				        'nom_acte' => 'acquisition_cde_nom',
 						'num_fournisseur' => 'acquisition_ach_fou2',
 						'date_acte' => 'acquisition_cde_date_cde',
 						'date_echeance' => 'acquisition_cde_date_ech',
 						'statut' => 'acquisition_statut',
-						'print_mail' => ''
+				        'commentaires' => 'acquisition_commentaires',
+				        'commentaires_i' => 'acquisition_commentaires_i',
+						'print_mail' => 'print_mail'
 				)
 		);
 	}
@@ -42,11 +39,28 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 			$this->add_column_selection();
 		}
 		$this->add_column('numero');
+		$this->add_column('nom_acte');
 		$this->add_column('num_fournisseur');
 		$this->add_column('date_acte');
 		$this->add_column('date_echeance');
 		$this->add_column('statut');
 		$this->add_column('print_mail');
+	}
+	
+	protected function _get_object_property_statut($object) {
+		global $msg;
+		
+		$st = (($object->statut) & ~(STA_ACT_FAC | STA_ACT_PAY | STA_ACT_ARC));
+		switch ($st) {
+			case STA_ACT_AVA :
+				return $msg['acquisition_cde_aval'];
+			case STA_ACT_ENC :
+				return $msg['acquisition_cde_enc'];
+			case STA_ACT_REC :
+				return $msg['acquisition_cde_liv'];
+			default :
+				return $msg['acquisition_cde_enc'];
+		}
 	}
 	
 	protected function get_cell_content($object, $property) {
@@ -60,26 +74,14 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 				}
 				break;
 			case 'statut':
-				$st = (($object->statut) & ~(STA_ACT_FAC | STA_ACT_PAY | STA_ACT_ARC));
-				switch ($st) {
-					case STA_ACT_AVA :
-						$statut = htmlentities($msg['acquisition_cde_aval'], ENT_QUOTES, $charset);
-						break;
-					case STA_ACT_ENC :
-						$statut = htmlentities($msg['acquisition_cde_enc'], ENT_QUOTES, $charset);
-						break;
-					case STA_ACT_REC :
-						$statut = htmlentities($msg['acquisition_cde_liv'], ENT_QUOTES, $charset);
-						break;
-					default :
-						$statut = htmlentities($msg['acquisition_cde_enc'], ENT_QUOTES, $charset);
-				}
+				$statut = htmlentities($this->_get_object_property_statut($object), ENT_QUOTES, $charset);
 				if( ($object->statut & STA_ACT_PAY) == STA_ACT_PAY ) {
 					$st_fac = htmlentities($msg['acquisition_act_pay'], ENT_QUOTES, $charset); 
 				} elseif( ($object->statut & STA_ACT_FAC) == STA_ACT_FAC ) {
 						$st_fac = htmlentities($msg['acquisition_act_fac'], ENT_QUOTES, $charset); 
-				} else 
+				} else {
 					$st_fac = '';
+				}
 				if ($st_fac) $statut.='&nbsp;/&nbsp;'.$st_fac;
 				if(($object->statut & STA_ACT_ARC) == STA_ACT_ARC) {
 					$content .= '<s>'.$statut.'</s>';
@@ -94,30 +96,27 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 		return $content;
 	}
 	
-	protected function get_selection_actions() {
+	protected function init_default_selection_actions() {
 		global $msg;
-	
-		if(!isset($this->selection_actions)) {
-			$this->selection_actions = array();
-			switch($this->filters['status']) {
-				case STA_ACT_AVA :
-					//Bouton valider
-					$this->selection_actions[] = $this->get_selection_action('valid', $msg['acquisition_act_bt_val'], 'tick.gif', $this->get_link_action('list_valid', 'val'));
-					
-					//Bouton supprimer
-					$this->selection_actions[] = $this->get_selection_action('delete', $msg['63'], 'interdit.gif', $this->get_link_action('list_delete', 'sup'));
-					break;
-				case STA_ACT_ENC :
-					$this->selection_actions[] = $this->get_selection_action('sold', $msg['acquisition_cde_bt_sol'], 'sold.png', $this->get_link_action('list_sold', 'sol'));
-					break;
-				case STA_ACT_REC :
-					$this->selection_actions[] = $this->get_selection_action('arc', $msg['acquisition_act_bt_arc'], 'folderclosed.gif', $this->get_link_action('list_arc', 'arc'));
-					break;
-				default:
-					break;
-			}
+		
+		parent::init_default_selection_actions();
+		switch($this->filters['status']) {
+			case STA_ACT_AVA :
+				//Bouton valider
+				$this->add_selection_action('valid', $msg['acquisition_act_bt_val'], 'tick.gif', $this->get_link_action('list_valid', 'val'));
+				
+				//Bouton supprimer
+				$this->add_selection_action('delete', $msg['63'], 'interdit.gif', $this->get_link_action('list_delete', 'sup'));
+				break;
+			case STA_ACT_ENC :
+				$this->add_selection_action('sold', $msg['acquisition_cde_bt_sol'], 'sold.png', $this->get_link_action('list_sold', 'sol'));
+				break;
+			case STA_ACT_REC :
+				$this->add_selection_action('arc', $msg['acquisition_act_bt_arc'], 'folderclosed.gif', $this->get_link_action('list_arc', 'arc'));
+				break;
+			default:
+				break;
 		}
-		return $this->selection_actions;
 	}
 	
 	public function get_type_acte() {
@@ -137,7 +136,7 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 	}
 	
 	public static function run_arc_object($object) {
-		//Commande archivÃ©e
+		//Commande archivée
 		$object->statut = ($object->statut | STA_ACT_ARC);
 		$object->update_statut();
 		
@@ -153,7 +152,7 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 	public static function run_sold_object($object) {
 		global $comment, $ref, $date_pay, $num_pay;
 		
-		//Commande considÃ©rÃ©e comme soldÃ©e
+		//Commande considérée comme soldée
 		$object->statut = ($object->statut & (~STA_ACT_ENC));
 		$object->statut = ($object->statut | STA_ACT_REC);
 		
@@ -179,9 +178,9 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 		}
 		
 		if ($facture) {
-			$object->statut = ($object->statut | STA_ACT_FAC); //Pas de reste Ã  facturer >>Statut commande = facturÃ©e
+			$object->statut = ($object->statut | STA_ACT_FAC); //Pas de reste à facturer >>Statut commande = facturée
 		
-			//Si de plus toutes les factures sont payÃ©es, Statut commande=payÃ©
+			//Si de plus toutes les factures sont payées, Statut commande=payé
 			$tab_pay = liens_actes::getChilds($object->id_acte, TYP_ACT_FAC);
 			$paye= true;
 			while (($row_pay = pmb_mysql_fetch_object($tab_pay))) {
@@ -192,7 +191,7 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 			}
 			if ($paye) $object->statut = ($object->statut | STA_ACT_PAY);
 		} else {
-			$object->statut = ($object->statut & (~STA_ACT_FAC));	//Reste Ã  facturer >>Statut commande = non facturÃ©e
+			$object->statut = ($object->statut & (~STA_ACT_FAC));	//Reste à facturer >>Statut commande = non facturée
 		}
 		$object->numero=addslashes($object->numero);
 		$object->commentaires = trim($comment);
@@ -206,7 +205,7 @@ class list_accounting_commandes_ui extends list_accounting_ui {
 	
 	public static function run_delete_object($object) {
 		if ($object->type_acte==TYP_ACT_CDE && $object->statut==STA_ACT_AVA) {
-			$object->delete();
+			actes::delete($object->id_acte);
 		}
 	}
 }

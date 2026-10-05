@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: collection.html,v 1.2 2018-04-09 09:07:16 dgoron Exp $ -->
+<!-- $Id: collection.html,v 1.3 2023/09/20 14:30:38 dgoron Exp $ -->
 
 {% block detail %}
 	{% if element.editeur %}
@@ -34,7 +34,7 @@
 	{% if element.comment %}
 		<div class="aut_display_row">
 			<div class="aut_display_cell">
-				<b>{{msg.707}} :</b>
+				<b>{{msg.comment}} :</b>
 			</div>
 			<div class="aut_display_cell">
 				{{ element.comment | nl2br }}

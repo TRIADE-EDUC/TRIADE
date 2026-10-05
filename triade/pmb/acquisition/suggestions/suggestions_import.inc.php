@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_import.inc.php,v 1.7 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: suggestions_import.inc.php,v 1.7 2019/05/28 15:00:01 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -21,7 +21,7 @@ switch($act){
 			$file_name=basename($_FILES["import_file"]["tmp_name"]);
 			$redirect=rawurlencode("../../acquisition.php?categ=sug&sub=multi&act=import&src_liste=".$src_liste."&origine_id=".$origine_id."&type_origine=".$type_origine);
 			if($import_type == 'uni'){
-				//Si on a un fichier unimarc en entrÃ©e
+				//Si on a un fichier unimarc en entrée
 				$file_in = rawurlencode($file_name);
 				$sug = new suggestion_multi();
 				$sug->create_table_from_uni();

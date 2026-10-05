@@ -1,0 +1,956 @@
+@import url('./css-v4-2.css');
+
+/* ── consult_classe.php – Design 2026 ── */
+.cc-filter-bar{background:#f8f9ff;border:2px solid #c5cae9;border-radius:8px;padding:12px 18px;margin:10px 0 14px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.cc-filter-form{display:flex;align-items:center;gap:8px}
+.cc-filter-label{font-size:12px;font-weight:600;color:#080A66}
+.cc-select{padding:5px 9px;border:1px solid #c5cae9;border-radius:6px;font-size:12px;color:#333;background:#fff}
+.cc-data-table{width:100%;border-collapse:collapse;border:1px solid #c5cae9;overflow:hidden}
+.cc-thead-row{background:#f0f2fa}
+.cc-th{padding:8px 10px !important;background:#f0f2fa !important;color:#080A66 !important;font-size:11px !important;font-weight:700 !important;border-bottom:2px solid #dde0f0 !important;text-align:left !important}
+.cc-th-center{text-align:center}
+.cc-tr-data{border-bottom:1px solid #c5cae9}
+.cc-tr-data td{background:#fff !important}
+.cc-tr-data:hover td{background:#f5f7ff !important}
+.cc-td{padding:6px 10px;font-size:12px;color:#333}
+.cc-td-center{text-align:center}
+.cc-tr-total{background:#e8eaf6}
+.cc-td-total{font-weight:700;color:#080A66}
+.cc-td-total-label{padding:6px 10px;font-size:12px;font-weight:700;color:#080A66;text-align:right}
+.cc-btn-consult{font-size:11px;font-weight:600;color:#080A66;text-decoration:none;border:1px solid #c5cae9;border-radius:5px;padding:3px 10px;background:#eef0f8;display:inline-block}
+.cc-btn-consult:hover{background:#c5cae9}
+.cc-link-classe{color:#080A66;text-decoration:none;font-weight:600}
+.cc-link-classe:hover{text-decoration:underline}
+
+/* ── Extension classe .m pour éléments non-<a> ── */
+.m { color:#FFFFFF; text-decoration:none; font-weight:bold; font-size:12px; }
+
+/* ── Messagerie Réception – Design 2026 ── */
+.msg-toolbar {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    background: #f0f2fa; border: 1px solid #d0d4ee; border-radius: 6px;
+    padding: 8px 12px; margin-bottom: 10px;
+}
+.msg-table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(8,10,102,.08);
+}
+.msg-table thead th {
+    padding: 9px 10px; font-size: 12px; font-weight: 600; text-align: left;
+}
+.msg-table thead th a {
+    text-decoration: none;
+}
+.msg-table thead th a:hover { text-decoration: underline; }
+.msg-row { border-bottom: 1px solid #eef0f8; transition: background .12s; }
+.msg-row:hover { background: #f5f7ff; }
+.msg-row.unread { border-left: 4px solid #080A66; background: #fafbff; }
+.msg-row.read   { border-left: 4px solid transparent; }
+.msg-row td { padding: 9px 10px; vertical-align: middle; }
+.msg-subject { font-size: 13px; text-decoration: none; display: inline; }
+.msg-subject.unread { font-weight: 700; color: #080A66; }
+.msg-subject.read   { font-weight: 400; color: #444; }
+.msg-subject.alert-msg { color: #c62828 !important; }
+.msg-sender { font-size: 12px; color: #555; }
+.msg-sender.unread { font-weight: 600; color: #222; }
+.msg-date { font-size: 11px; color: #888; text-align: center; white-space: nowrap; }
+.msg-icon { margin-right: 4px; }
+.msg-icon.unread { color: #080A66; }
+.msg-icon.read   { color: #CACCEF; }
+.badge-pj    { color: #999; font-size: 12px; margin-left: 4px; }
+.badge-alert { color: #e53935; font-size: 12px; margin-left: 4px; }
+.badge-print { color: #aaa; font-size: 12px; margin-left: 4px; }
+.sort-icon   { color: #CACCEF; margin-left: 4px; }
+.btn-action {
+    background: #080A66; color: #fff; border: none; border-radius: 4px;
+    padding: 5px 13px; font-size: 12px; cursor: pointer; font-family: Electrolize, Arial, sans-serif;
+}
+.btn-action:hover { background: #0d12a0; }
+.btn-danger { background: #c62828; }
+.btn-danger:hover { background: #e53935; }
+.select-action {
+    border: 1px solid #c0c4e0; border-radius: 4px;
+    padding: 4px 8px; font-size: 12px; font-family: Electrolize, Arial, sans-serif;
+}
+.msg-empty { text-align: center; padding: 28px; color: #999; font-style: italic; }
+.msg-pagination { display: flex; justify-content: space-between; align-items: center; padding: 8px 2px; }
+.sep { color: #ccc; }
+.mode-toggle label { font-size: 11px; color: #555; cursor: pointer; margin-left: 6px; }
+
+/* ── Message Réception (popup) – Design 2026 ── */
+* { box-sizing: border-box; }
+body {
+    background: #f0f2fa;
+    margin: 0; padding: 0;
+    font-family: Electrolize, Trebuchet MS, Arial, sans-serif;
+    font-size: 13px;
+}
+.msg-wrapper {
+    max-width: 780px; margin: 14px auto; padding: 0 10px 20px;
+}
+.msg-header-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(8,10,102,.10);
+    border-top: 4px solid #080A66;
+    padding: 16px 20px 12px;
+    margin-bottom: 12px;
+}
+.msg-meta-row {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.msg-from-label {
+    font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px;
+}
+.msg-from-name { font-size: 15px; font-weight: 700; color: #080A66; }
+.msg-from-class { font-size: 11px; color: #777; margin-top: 2px; }
+.msg-date-block { text-align: right; white-space: nowrap; }
+.msg-date-val { font-size: 13px; color: #555; font-weight: 600; }
+.msg-time-val { font-size: 11px; color: #999; }
+.msg-subject-row {
+    border-top: 1px solid #eef0f8; padding-top: 10px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.msg-subject-text { font-size: 14px; font-weight: 700; color: #222; }
+.msg-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.btn-msg {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: none; border: none; padding: 2px;
+    cursor: pointer; text-decoration: none;
+    transition: opacity .15s, transform .1s;
+    position: relative;
+}
+.btn-msg:hover { opacity: .75; transform: translateY(-1px); }
+.btn-msg[title]:hover::after {
+    content: attr(title);
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: #222; color: #fff; font-size: 11px; white-space: nowrap;
+    padding: 3px 8px; border-radius: 4px; pointer-events: none; z-index: 999;
+}
+.msg-attachments {
+    background: #fffbf0; border: 1px solid #f5e0a0; border-radius: 8px;
+    padding: 10px 16px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: #7a5a00;
+}
+.msg-attachments i { font-size: 16px; color: #e8a000; }
+.msg-body-card {
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(8,10,102,.07);
+    padding: 20px 24px; min-height: 200px;
+    color: #222; line-height: 1.6; font-size: 13px;
+}
+.msg-body-card p { margin: 0 0 8px; }
+.msg-footer { margin-top: 16px; text-align: center; }
+.msg-pub-label {
+    font-size: 10px; color: #bbb; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 4px;
+}
+.msg-pub-wrap {
+    display: inline-block;
+    background: #f7f8fc; border: 1px solid #e4e6f0;
+    border-radius: 8px; padding: 8px 12px; line-height: 0;
+}
+
+/* ── Param établissement – Design 2026 ── */
+.param-wrap { padding: 10px; }
+.param-site-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: #fff; border: 1px solid #dde0f0; border-radius: 8px;
+    padding: 8px 14px; margin-bottom: 10px;
+}
+.param-site-label { font-size: 13px; color: #222; font-weight: 600; }
+.param-card {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; overflow: hidden; margin-bottom: 6px;
+}
+.param-field {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 14px; border-bottom: 1px solid #eef0f8;
+}
+.param-label {
+    font-size: 12px; font-weight: 600; color: #444;
+    min-width: 160px; text-align: right; flex-shrink: 0;
+}
+.param-required { color: #c62828; }
+.param-input {
+    border: 1px solid #CACCEF; border-radius: 5px;
+    padding: 4px 8px; font-size: 12px; color: #222;
+    flex: 1; outline: none; font-family: Electrolize, Arial, sans-serif;
+}
+.param-input:focus { border-color: #080A66; box-shadow: 0 0 0 2px rgba(8,10,102,.1); }
+.param-select {
+    border: 1px solid #CACCEF; border-radius: 5px;
+    padding: 4px 8px; font-size: 12px; color: #222;
+    background: #fff; cursor: pointer;
+}
+.param-btn-popup {
+    background: #CACCEF; color: #080A66;
+    border: none; border-radius: 5px;
+    padding: 4px 14px; font-size: 12px; font-weight: 700;
+    cursor: pointer;
+}
+.param-btn-popup:hover { background: #b0b4e8; }
+.param-submit-row { text-align: center; padding: 10px 0 4px; }
+
+/* ── News Actualité – Design 2026 ── */
+.news-wrap { padding: 10px; }
+.news-card {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; overflow: hidden; margin-bottom: 8px;
+}
+.news-field {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-bottom: 1px solid #eef0f8;
+}
+.news-label {
+    font-size: 12px; font-weight: 600; color: #444;
+    min-width: 60px; flex-shrink: 0;
+}
+.news-input {
+    border: 1px solid #CACCEF; border-radius: 5px;
+    padding: 5px 10px; font-size: 13px; color: #222;
+    flex: 1; outline: none; font-family: Electrolize, Arial, sans-serif;
+}
+.news-input:focus { border-color: #080A66; box-shadow: 0 0 0 2px rgba(8,10,102,.1); }
+.news-editor-wrap { padding: 10px 14px 14px; }
+.news-submit-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 8px; padding: 10px 0 4px;
+}
+.news-no-lan {
+    padding: 14px; text-align: center;
+    color: #c62828; font-size: 13px; font-weight: 600;
+}
+
+/* ── Audio – Design 2026 ── */
+.audio-wrap { padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+.audio-card { background: #fff; border: 1px solid #dde0f0; border-radius: 8px; overflow: hidden; }
+.audio-card-header {
+    background: #080A66; color: #fff;
+    padding: 10px 14px; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+}
+.audio-card-body { padding: 14px 16px; }
+.audio-field {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid #eef0f8;
+}
+.audio-field:last-child { border-bottom: none; }
+.audio-label { font-size: 12px; font-weight: 600; color: #444; min-width: 120px; flex-shrink: 0; }
+.audio-input {
+    border: 1px solid #CACCEF; border-radius: 5px;
+    padding: 5px 10px; font-size: 13px; color: #222;
+    flex: 1; outline: none; font-family: Electrolize, Arial, sans-serif;
+}
+.audio-input:focus { border-color: #080A66; box-shadow: 0 0 0 2px rgba(8,10,102,.1); }
+.audio-progress-wrap { padding: 10px 0 4px; }
+.audio-progress-wrap progress { width: 100%; height: 8px; border-radius: 4px; }
+.audio-status { font-size: 12px; color: #555; margin-top: 6px; min-height: 18px; }
+.audio-player-wrap {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 10px 0;
+}
+.audio-player-wrap audio { flex: 1; min-width: 200px; }
+.audio-info-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f0f2fa; border: 1px solid #dde0f0;
+    border-radius: 6px; padding: 6px 12px;
+    font-size: 12px; color: #080A66; font-weight: 600;
+}
+.audio-record-btns { display: flex; gap: 10px; margin-bottom: 10px; }
+.audio-record-btns button {
+    padding: 7px 18px; border: none; border-radius: 5px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: Electrolize, Arial, sans-serif;
+}
+#recordButton { background: #080A66; color: #fff; }
+#recordButton:hover { background: #0d12a0; }
+#stopButton  { background: #CACCEF; color: #080A66; }
+#stopButton:hover:not([disabled]) { background: #b0b4e8; }
+#stopButton[disabled] { opacity: .5; cursor: default; }
+.audio-recordings { list-style: none; padding: 0; margin: 8px 0 0; }
+.audio-recordings li { font-size: 12px; padding: 4px 0; }
+.audio-hint {
+    font-size: 12px; color: #555;
+    background: #fffbe6; border: 1px solid #f5e0a0;
+    border-radius: 6px; padding: 8px 12px; margin-bottom: 10px;
+}
+.audio-textarea {
+    width: 100%; border: 1px solid #CACCEF; border-radius: 5px;
+    padding: 8px 10px; font-size: 13px; color: #222;
+    font-family: Electrolize, Arial, sans-serif;
+    outline: none; resize: vertical;
+}
+.audio-textarea:focus { border-color: #080A66; box-shadow: 0 0 0 2px rgba(8,10,102,.1); }
+.audio-submit-row { display: flex; justify-content: center; padding: 12px 0 4px; gap: 8px; }
+.audio-delete-btn {
+    background: #c62828; color: #fff; border: none; border-radius: 5px;
+    padding: 6px 16px; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: Electrolize, Arial, sans-serif;
+}
+.audio-delete-btn:hover { background: #e53935; }
+
+/* ── Dashboard acces2 – Design 2026 ── */
+.intro {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 13px; margin-bottom: 10px;
+}
+.vertical-line {
+    border-left: 2px solid #dde0f0;
+    display: inline-block; height: 50px; margin: 0 10px;
+}
+.dash-alert-banner {
+    background: #fff3e0; border: 1px solid #ffb74d; border-radius: 6px;
+    padding: 8px 14px; font-size: 13px; color: #e65100; font-weight: 600;
+    margin-bottom: 8px;
+}
+.dash-audio-card {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; overflow: hidden; margin: 10px 0;
+}
+.dash-audio-header {
+    background: #080A66; color: #fff;
+    padding: 8px 14px; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+}
+.dash-audio-body { padding: 12px 14px; }
+.dash-news-table {
+    width: 100%; border-collapse: collapse; background: #fff;
+    border-radius: 0 0 8px 8px;
+}
+.dash-news-row { border-bottom: 1px solid #eef0f8; transition: background .12s; }
+.dash-news-row:last-child { border-bottom: none; }
+.dash-news-row:hover { background: #f5f7ff; }
+.dash-news-row td { padding: 9px 12px; vertical-align: middle; font-size: 13px; }
+.dash-news-link { color: #080A66; text-decoration: none; font-weight: 600; }
+.dash-news-link:hover { text-decoration: underline; }
+.dash-news-meta { font-size: 11px; color: #888; text-align: right; white-space: nowrap; }
+/* ── Calendrier – Design 2026 ── */
+.cal-wrap { margin: 6px 0; font-family: Electrolize, Arial, sans-serif; }
+.cal-title {
+    font-size: 13px; font-weight: 700; color: #080A66;
+    text-align: center; padding: 8px 6px 6px;
+    background: #f0f2fa; border-radius: 6px 6px 0 0;
+    border: 1px solid #dde0f0; border-bottom: none;
+}
+.cal-table {
+    border-collapse: collapse; width: 100%;
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 0 0 6px 6px; overflow: hidden;
+}
+.cal-head th {
+    background: #080A66; color: #fff;
+    font-size: 11px; font-weight: 600;
+    padding: 5px 2px; text-align: center;
+}
+.cal-day {
+    text-align: center; padding: 4px 2px;
+    font-size: 12px; color: #333;
+    border: 1px solid #f0f2fa;
+}
+.cal-day-today {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #080A66; color: #fff;
+    border-radius: 50%; width: 22px; height: 22px;
+    font-weight: 700; font-size: 12px;
+}
+.cal-day-event { background: #e8f5e9; }
+.cal-day-dst   { background: #fce4ec; }
+.cal-day-ferie { background: #e8eaf6; color: #5c35be; }
+.cal-day a { color: #080A66; text-decoration: none; font-weight: 600; font-size: 12px; }
+.cal-day a:hover { text-decoration: underline; }
+.cal-info {
+    margin-top: 6px; padding: 10px 14px;
+    background: #fffbe6; border: 1px solid #f5c842;
+    border-radius: 6px; font-size: 12px; color: #5a4000; line-height: 1.6;
+}
+.cal-year-grid {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: center; padding: 8px;
+}
+.cal-year-grid .cal-wrap { min-width: 155px; }
+
+/* ── CalendarPopup (calendarDim, préfixe TEST) – Design 2026 ── */
+.TESTcpDayColumnHeader,.TESTcpYearNavigation,.TESTcpMonthNavigation,.TESTcpCurrentMonthDate,.TESTcpOtherMonthDate,.TESTcpCurrentDate,.TESTcpTodayText,.TESTcpText{font-family:Arial,sans-serif;font-size:11px}
+table.TESTcpBorder{border:2px solid #c5cae9 !important;border-radius:8px !important;box-shadow:0 4px 16px rgba(8,10,102,.18) !important;background:#fff !important;overflow:hidden}
+.TESTcpMonthNavigation,.TESTcpYearNavigation{background:#080A66 !important;color:#fff !important;font-weight:700;text-align:center;text-decoration:none}
+a.TESTcpMonthNavigation,a.TESTcpYearNavigation{color:#fff !important;text-decoration:none;padding:2px 5px;display:inline-block}
+span.TESTcpMonthNavigation,span.TESTcpYearNavigation{color:#fff !important;font-size:11px;font-weight:700}
+input.TESTcpYearNavigation{font-size:11px;width:36px;text-align:center;border:1px solid #c5cae9;border-radius:4px;padding:2px 4px;background:#fff;color:#080A66;font-weight:700}
+td.TESTcpDayColumnHeader{background:#080A66 !important;text-align:center !important;padding:4px 2px !important;border:none !important}
+span.TESTcpDayColumnHeader{color:#fff !important;font-size:10px;font-weight:700}
+td.TESTcpCurrentMonthDate{text-align:center !important;padding:3px 2px}
+td.TESTcpCurrentMonthDate:hover{background:#eef0f8}
+a.TESTcpCurrentMonthDate{color:#333;text-decoration:none}
+td.TESTcpOtherMonthDate{text-align:center !important;padding:3px 2px}
+a.TESTcpOtherMonthDate{color:#bbb;text-decoration:none}
+td.TESTcpCurrentDate{background:#080A66 !important;text-align:center !important;padding:3px 2px;border:none !important}
+a.TESTcpCurrentDate{color:#fff !important;text-decoration:none;font-weight:700}
+.TESTcpCurrentMonthDateDisabled,.TESTcpOtherMonthDateDisabled,.TESTcpCurrentDateDisabled{color:#ddd;text-decoration:line-through;text-align:center}
+td.TESTcpTodayText,td.TESTcpTodayTextDisabled{border-top:2px solid #c5cae9 !important;text-align:center;padding:4px}
+a.TESTcpTodayText{color:#080A66 !important;font-weight:700;text-decoration:none}
+a.TESTcpTodayText:hover{text-decoration:underline}
+
+.dash-profp-msg {
+    font-size: 13px; color: #333; padding: 10px 14px;
+    border-bottom: 1px solid #eef0f8; background: #fff;
+}
+.dash-profp-meta { font-size: 11px; color: #888; text-align: right; padding: 4px 14px 8px; }
+/* ── Météo – Design 2026 ── */
+.meteo-wrap {
+    background: #fff; border: 1px solid #dde0f0;
+    border-radius: 8px; overflow: hidden;
+    margin: 6px 0; font-family: Electrolize, Arial, sans-serif;
+}
+.meteo-header {
+    background: linear-gradient(135deg, #080A66 0%, #1a237e 100%);
+    color: #fff; font-size: 13px; font-weight: 700;
+    padding: 8px 12px; text-align: center;
+}
+.meteo-days { display: flex; }
+.meteo-day {
+    flex: 1; padding: 10px 6px; text-align: center;
+    border-right: 1px solid #f0f2fa;
+}
+.meteo-day:last-child { border-right: none; }
+.meteo-date {
+    font-size: 12px; font-weight: 700; color: #080A66;
+    margin-bottom: 8px; text-transform: capitalize;
+}
+.meteo-cols { display: flex; justify-content: center; gap: 10px; }
+.meteo-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.meteo-img { width: 40px; height: 40px; }
+.meteo-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.meteo-temp { font-size: 14px; font-weight: 700; color: #333; }
+/* ── Page DST/Calendrier – Design 2026 ── */
+.dst-toolbar { display:flex; gap:8px; align-items:center; padding:6px 0 10px; flex-wrap:wrap; }
+.dst-btn { border-radius:6px; padding:5px 12px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid; }
+.dst-btn-refresh { background:#f0f2fa; color:#080A66; border-color:#dde0f0; }
+.dst-btn-refresh:hover { background:#dde0f0; }
+.dst-btn-alert { background:#fff3cd; color:#856404; border-color:#ffc107; }
+.dst-btn-alert:hover { background:#ffe69c; }
+.dst-filter { display:flex; align-items:center; gap:8px; padding:4px 0 12px; flex-wrap:wrap; }
+.dst-filter-label { font-size:12px; font-weight:600; color:#080A66; white-space:nowrap; }
+.dst-select { border:1px solid #dde0f0; border-radius:6px; padding:4px 8px; font-size:12px; color:#333; background:#fff; }
+.dst-nav { display:flex; justify-content:space-between; align-items:center; padding:10px 4px 4px; }
+.dst-nav a { color:#080A66; font-size:12px; font-weight:600; text-decoration:none; padding:4px 12px; border:1px solid #dde0f0; border-radius:6px; background:#f0f2fa; }
+.dst-nav a:hover { background:#dde0f0; }
+.dst-legend { display:flex; gap:14px; flex-wrap:wrap; padding:2px 4px 6px 10px; margin-top:-4px; font-size:11px; color:#555; }
+.dst-legend-item { display:flex; align-items:center; gap:5px; }
+.dst-legend-dot { width:12px; height:12px; border-radius:3px; display:inline-block; }
+.dst-legend-dst  { background:#fce4ec; border:1px solid #f48fb1; }
+.dst-legend-ferie { background:#e8eaf6; border:1px solid #9fa8da; }
+.dst-legend-today { background:#080A66; border-radius:50%; }
+
+/* ── ficheeleve3.php – Design 2026 ── */
+td[bgcolor=yellow]{background:#fffde7 !important;color:#080A66 !important;font-weight:700 !important;font-size:11px !important;padding:6px 8px !important;border-bottom:2px solid #f9c600 !important}
+.fe-info-wrap{display:flex;gap:20px;align-items:flex-start;margin-bottom:20px}
+.fe-photo-card{text-align:center;min-width:110px;flex-shrink:0;padding-top:10px}
+.fe-info-table{border-collapse:collapse;flex:1}
+.fe-label{padding:3px 10px 3px 0;text-align:right;font-size:12px;color:#555;white-space:nowrap;width:38%;vertical-align:top}
+.fe-value{padding:3px 8px;font-size:12px;color:#333;vertical-align:top}
+.fe-value b{color:#080A66}
+.fe-tab-table{border-collapse:collapse;width:100%}
+.fe-tab-tr td{border-bottom:1px solid #eef0f8;vertical-align:top}
+.fe-tab-tr:hover td{background:#f0f4ff !important}
+.fe-tab-label{padding:4px 10px 4px 0;text-align:right;font-size:12px;color:#555;white-space:nowrap;width:22%}
+.fe-tab-value{padding:4px 8px;font-size:12px;color:#333}
+.fe-tab-value b{color:#080A66}
+
+/* ── ficheeleve.php – Design 2026 ── */
+.fef-wrap{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 10px}
+.fef-card{flex:1;min-width:200px;background:#fff;border:1px solid #e0e4f0;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(8,10,102,.06)}
+.fef-card-title{font-size:11px;font-weight:700;color:#080A66;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid #eef0f8}
+.fef-field{margin-bottom:10px}
+.fef-label{display:block;font-size:11px;color:#666;font-weight:600;margin-bottom:3px}
+.fef-select,.fef-input{width:100%;padding:5px 8px;border:1px solid #c5cae9;border-radius:5px;font-size:12px;color:#333;background:#fff;box-sizing:border-box}
+.fef-btn{margin-top:10px;background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-weight:600;cursor:pointer;width:100%}
+.fef-btn:hover{background:#1a237e}
+.fef-suggest{width:100%;background:#fff;border:1px solid #c5cae9;border-top:none;border-radius:0 0 5px 5px;font-size:12px;max-height:160px;overflow-y:auto}
+.fef-suggest li{cursor:pointer}
+.fef-results{margin:8px 0 16px}
+.fef-rtitle{font-size:12px;font-weight:700;color:#080A66;background:#eef0f8;padding:7px 12px;border-radius:7px 7px 0 0;border:1px solid #c5cae9}
+.fef-rtable{border-collapse:collapse;width:100%;background:#fff;border:1px solid #c5cae9;border-top:none}
+.fef-rtable th{background:#f5f6fe;font-size:11px;font-weight:700;color:#555;padding:5px 10px;text-align:left;border-bottom:2px solid #c5cae9}
+.fef-rtable td{font-size:12px;color:#333;padding:5px 10px;border-bottom:1px solid #eef0f8}
+.fef-rtable tr:last-child td{border-bottom:none}
+.fef-rtable tr:hover td{background:#f0f4ff}
+.fef-empty{font-size:12px;color:#888;padding:10px;text-align:center}
+.fef-consult{font-size:11px;font-weight:600;color:#080A66;border:1px solid #c5cae9;border-radius:5px;padding:3px 10px;background:#eef0f8;cursor:pointer;white-space:nowrap}
+.fef-consult:hover{background:#c5cae9}
+.fef-rtable td:last-child{text-align:right}
+.fef-complex{text-align:center;margin:10px 0 4px}
+.fef-complex .fef-btn{width:auto;padding:6px 24px;display:inline-block}
+
+/* ── compta_consulte3.php – Design 2026 ── */
+.cc3-student-card{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px;background:#fff;border:1px solid #e0e4f0;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(8,10,102,.06)}
+.cc3-photo{flex-shrink:0;text-align:center}
+.cc3-info{flex:1;border-collapse:collapse;width:100%}
+.cc3-info td{font-size:12px;padding:3px 6px;border-bottom:1px solid #eef0f8;vertical-align:top}
+.cc3-info tr:last-child td{border-bottom:none}
+.cc3-info .cc3-lbl{color:#888;font-size:11px;white-space:nowrap;width:1%}
+.cc3-info .cc3-val{color:#080A66;font-weight:600}
+.cc3-filter{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;color:#555;font-weight:600}
+.cc3-filter select{padding:4px 8px;border:1px solid #c5cae9;border-radius:5px;font-size:12px;color:#333;background:#fff}
+.cc3-table{width:100%;border-collapse:collapse;border:1px solid #c5cae9}
+.cc3-th{background:#fffde7;color:#080A66;font-size:11px;font-weight:700;padding:6px 8px;border-bottom:2px solid #f9c600;text-align:center;white-space:nowrap}
+.cc3-td{font-size:12px;color:#333;padding:5px 8px;border-bottom:1px solid #eef0f8;vertical-align:top}
+.cc3-td-right{text-align:right;font-weight:700;white-space:nowrap}
+.cc3-td-center{text-align:center}
+.cc3-tr:hover .cc3-td{background:#f0f4ff}
+.cc3-legend{font-size:11px;color:#555;margin:10px 0 8px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.cc3-totals{background:#eef0f8;border:1px solid #c5cae9;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px}
+.cc3-total-row{display:flex;justify-content:space-between;padding:2px 0}
+.cc3-total-row+.cc3-total-row{border-top:1px solid #c5cae9;margin-top:4px;padding-top:6px}
+.cc3-total-lbl{color:#555}
+.cc3-total-val{font-weight:700;color:#080A66}
+
+/* ── notesEleve.php – Design 2026 ── */
+.ne-topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:6px 4px}
+.ne-nav-btn{color:#f9c600;font-size:12px;font-weight:700;text-decoration:none;padding:3px 10px;border:1px solid rgba(249,198,0,.5);border-radius:5px;white-space:nowrap}
+.ne-nav-btn:hover{background:rgba(249,198,0,.15);color:#fff}
+.ne-month{color:#fff;font-size:13px;font-weight:700;text-align:center;flex:1}
+.ne-moyenne-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:#ccc;padding:4px 0 2px}
+.ne-moyenne-bar select{padding:3px 6px;border:1px solid #c5cae9;border-radius:4px;font-size:11px}
+.ne-info-input{width:100%;padding:4px 8px;border:1px solid #3949ab;border-radius:4px;font-size:11px;color:#c62828;background:#fff;font-weight:600;box-sizing:border-box;margin-top:4px}
+.ne-tutor-select{padding:4px 8px;border:1px solid #c5cae9;border-radius:5px;font-size:12px;color:#333;margin-bottom:4px}
+.ne-table{width:100%;border-collapse:collapse}
+.ne-tr td{border-bottom:1px solid #eef0f8;vertical-align:top}
+.ne-tr:hover td{background:#f0f4ff}
+.ne-td-subject{width:33%;padding:6px 10px;font-size:12px;font-weight:600;color:#080A66;border-right:2px solid #e0e4f0}
+.ne-td-notes{padding:6px 10px;font-size:12px;color:#333;line-height:2}
+.ne-note{display:inline-block;padding:1px 7px;border-radius:4px;font-size:12px;margin:1px 2px;cursor:pointer;text-decoration:none}
+.ne-note-normal{background:#eef0f8;color:#080A66}
+.ne-note-normal:hover{background:#c5cae9}
+.ne-note-abs{background:#fce4e4;color:#c62828;font-weight:700}
+.ne-note-abs:hover{background:#ffb3b3}
+.ne-note-special{background:#fff3e0;color:#e65100;font-weight:700}
+.ne-note-special:hover{background:#ffe0b2}
+.ne-note-exam{outline:2px solid #f9c600}
+.ne-denied{color:#c62828;font-size:12px;padding:16px;text-align:center;font-weight:600}
+.ne-nav-row{display:flex;justify-content:space-between;padding:6px 10px;background:#f5f6fe;border-top:2px solid #c5cae9}
+.ne-nav-link{color:#c62828;font-size:12px;font-weight:700;text-decoration:none}
+.ne-nav-link:hover{text-decoration:underline}
+/* --- trombi-eleve.php – Design 2026 --- */
+.tro-grid{display:flex;flex-wrap:wrap;gap:14px;padding:12px 6px;justify-content:center}
+.tro-card{display:flex;flex-direction:column;align-items:center;gap:6px;width:110px}
+.tro-photo{border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);width:90px;height:90px;object-fit:cover;display:block}
+.tro-name{font-size:11px;color:#333;text-align:center;font-weight:600;line-height:1.3;word-break:break-word;max-width:110px}
+.tro-empty{color:#888;font-size:12px;padding:20px;text-align:center;font-style:italic}
+/* --- information.php – Design 2026 --- */
+.inf-card{background:#fff;border-radius:10px;max-width:380px;margin:16px auto;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e0e4f0}
+.inf-title{color:#080A66;font-size:15px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #eef0f8;text-align:center}
+.inf-row{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid #f5f6fe;font-size:12px;align-items:baseline}
+.inf-row:last-child{border-bottom:none}
+.inf-lbl{color:#888;font-size:11px;min-width:110px;text-align:right;flex-shrink:0}
+.inf-val{color:#333;font-weight:500;word-break:break-word}
+.inf-val a{color:#080A66;text-decoration:none}
+.inf-val a:hover{text-decoration:underline}
+.inf-map{margin:12px auto 8px;text-align:center}
+.inf-map iframe{border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.15);display:block;margin:0 auto}
+/* --- circulaire_liste.php – Design 2026 --- */
+.cil-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 4px;margin-bottom:8px;font-size:12px}
+.cil-filter-lbl{color:#333;font-weight:600}
+.cil-filter-select{font-size:12px;border-radius:4px;border:1px solid #c5cae9;padding:3px 8px}
+.cil-back-btn{background:#eef0f8;color:#080A66;border:1px solid #c5cae9;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;text-decoration:none;font-family:inherit}
+.cil-back-btn:hover{background:#c5cae9}
+.cil-table{width:100%;border-collapse:collapse;font-size:12px}
+.cil-th{background:#fffde7;color:#080A66;font-weight:700;padding:7px 10px;border-bottom:2px solid #c5cae9;white-space:nowrap}
+.cil-th a{color:#080A66;text-decoration:none;display:flex;align-items:center;gap:4px}
+.cil-th a:hover{text-decoration:underline}
+.cil-sort-arrow{color:#bbb;font-size:10px}
+.cil-sort-active .cil-sort-arrow{color:#080A66;font-size:11px}
+.cil-tr{background:#fff}
+.cil-tr:nth-child(even){background:#f8f9fd}
+.cil-tr:hover td{background:#eef0f8}
+.cil-td{padding:6px 10px;border-bottom:1px solid #eef0f8;color:#333;vertical-align:top}
+.cil-td-date{white-space:nowrap;color:#555;font-size:11px}
+.cil-td-cat{color:#555;font-size:11px;font-style:italic}
+.cil-td-ref{font-family:monospace;font-size:11px;color:#333}
+.cil-td-dl{text-align:center;white-space:nowrap}
+.cil-dl-btn{display:inline-block;background:#eef0f8;color:#080A66;border:1px solid #c5cae9;border-radius:4px;padding:3px 10px;font-size:11px;text-decoration:none;font-weight:600}
+.cil-dl-btn:hover{background:#c5cae9}
+.cil-classes{font-size:11px;color:#666;font-style:italic;padding:2px 10px 6px;border-bottom:1px solid #eef0f8}
+.cil-classes-all{color:#2e7d32;font-weight:600}
+.cil-empty{color:#888;font-size:12px;padding:20px;text-align:center;font-style:italic}
+/* --- cahiertext_visu.php – Design 2026 --- */
+.ctv-topbar{display:flex;align-items:center;gap:10px;padding:4px 2px;flex-wrap:wrap}
+.ctv-title{color:#fff;font-weight:700;font-size:13px}
+.ctv-classname{color:#f9c600;font-weight:700;font-size:13px}
+.ctv-tutor-select{font-size:11px;border-radius:4px;border:1px solid #aaa;padding:2px 6px}
+.ctv-upcoming{background:#fff8e1;border-radius:6px;padding:10px 12px;margin-bottom:12px;border:1px solid #ffe082}
+.ctv-upcoming-title{font-size:11px;font-weight:700;color:#e65100;text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px}
+.ctv-entry{background:#fff;border-radius:6px;margin-bottom:8px;padding:10px 12px;border:1px solid #e0e4f0;font-size:12px}
+.ctv-entry-head{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.ctv-subject{background:#eef0f8;color:#080A66;font-weight:700;font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.ctv-date{color:#888;font-size:11px;font-style:italic}
+.ctv-content{color:#333;line-height:1.6;margin-top:2px}
+.ctv-time{display:inline-block;margin-top:5px;font-size:11px;color:#e65100;background:#fff3e0;border-radius:4px;padding:2px 7px}
+.ctv-file{display:flex;align-items:center;gap:5px;font-size:11px;margin-top:4px;color:#555}
+.ctv-file a{color:#080A66;text-decoration:none}
+.ctv-file a:hover{text-decoration:underline}
+.ctv-empty{color:#888;font-size:12px;padding:12px 4px;font-style:italic;text-align:center}
+.ctv-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 0;margin:4px 0;gap:6px;flex-wrap:wrap}
+.ctv-nav-btn{background:#eef0f8;color:#080A66;border:1px solid #c5cae9;border-radius:5px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.ctv-nav-btn:hover{background:#c5cae9}
+.ctv-nav-center{display:flex;align-items:center;gap:6px}
+.ctv-global-btn{background:#2e7d32;color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit}
+.ctv-global-btn:hover{background:#388e3c}
+.ctv-date-input{color:#000066;background:#FCE4BA;border:1px solid #c5a000;border-radius:4px;padding:3px 7px;font-size:12px;width:90px}
+.ctv-date-submit{background:#f9c600;color:#1a237e;border:none;border-radius:4px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:700;font-family:inherit}
+.ctv-date-submit:hover{background:#ffe54c}
+.ctv-sep{border:none;border-top:1px solid #e0e4f0;margin:10px 0}
+/* --- edt_visu_el.php – Design 2026 --- */
+.edt-toolbar{background:#1a237e;padding:8px 12px;display:flex;flex-direction:column;gap:8px;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.edt-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.edt-nav-btn{background:#3949ab;color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.edt-nav-btn:hover{background:#5c6bc0}
+.edt-date-input{color:#000066;background:#FCE4BA;border:1px solid #c5a000;border-radius:4px;padding:3px 7px;font-size:12px;width:90px}
+.edt-ok-btn{background:#f9c600;color:#1a237e;border:none;border-radius:4px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:700}
+.edt-ok-btn:hover{background:#ffe54c}
+.edt-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.edt-class-lbl{color:#ccc;font-size:12px}
+.edt-class-name{color:#f9c600;font-weight:700;font-size:13px}
+.edt-tutor-select{font-size:11px;border-radius:4px;border:1px solid #aaa;padding:2px 6px}
+.edt-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.edt-export-btn{background:#2e7d32;color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit}
+.edt-export-btn:hover{background:#388e3c}
+.edt-ical-lbl{color:#ccc;font-size:11px}
+.edt-ical-input{font-size:11px;color:#333;border:1px solid #c5cae9;border-radius:4px;padding:3px 6px;background:#fff}
+.edt-print-btn{background:none;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:3px 8px;cursor:pointer;color:#fff;font-size:12px}
+.edt-print-btn:hover{background:rgba(255,255,255,.1)}
+/* --- visu_discipline_parent.php – Design 2026 --- */
+.vdi-section-title{font-size:12px;font-weight:700;color:#080A66;text-transform:uppercase;letter-spacing:.4px;padding:8px 4px 4px;border-bottom:2px solid #c5cae9;margin-bottom:8px}
+.vdi-card{background:#fff;border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid #e0e4f0}
+.vdi-card-head{display:flex;justify-content:space-between;align-items:center;background:#eef0f8;padding:7px 12px;border-bottom:1px solid #c5cae9}
+.vdi-card-date{color:#080A66;font-weight:700;font-size:12px}
+.vdi-card-time{color:#555;font-size:11px}
+.vdi-card-body{padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.vdi-field{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px;font-size:12px}
+.vdi-lbl{color:#080A66;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.vdi-val{color:#333;line-height:1.5}
+.vdi-category{color:#c62828;font-weight:700}
+.vdi-bool-oui{color:#2e7d32;font-weight:700}
+.vdi-bool-non{color:#c62828;font-weight:700}
+.vdi-empty{color:#888;font-size:12px;padding:14px 4px;font-style:italic}
+.vdi-section-gap{margin-top:16px}
+/* --- visu_dispence_parent.php – Design 2026 --- */
+.vdp-list{padding:6px 0}
+.vdp-card{background:#fff;border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid #e0e4f0}
+.vdp-card-head{display:flex;justify-content:space-between;align-items:center;background:#eef0f8;padding:7px 12px;border-bottom:1px solid #c5cae9}
+.vdp-card-head-lbl{color:#080A66;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+.vdp-period{color:#333;font-size:12px;font-weight:600}
+.vdp-card-body{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.vdp-info-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px;font-size:12px}
+.vdp-lbl{color:#080A66;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.vdp-val{color:#333}
+.vdp-sep{color:#ccc}
+.vdp-bool-oui{color:#2e7d32;font-weight:700;font-size:12px}
+.vdp-bool-non{color:#c62828;font-weight:700;font-size:12px}
+.vdp-notes-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.vdp-note-pair{display:flex;gap:4px;align-items:center}
+.vdp-note-chip{background:#FCCCCC;border-radius:4px;padding:3px 8px;font-size:11px;color:#000066;font-weight:600}
+.vdp-date-chip{background:#f0f4ff;border-radius:4px;padding:3px 8px;font-size:11px;color:#080A66}
+/* --- savoiretrevisu.php – Design 2026 --- */
+.sev-list{padding:6px 0}
+.sev-card{background:#fff;border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid #e0e4f0}
+.sev-card-head{display:flex;justify-content:space-between;align-items:center;background:#eef0f8;padding:7px 12px;border-bottom:1px solid #c5cae9}
+.sev-card-date{color:#080A66;font-weight:700;font-size:12px}
+.sev-card-teacher{color:#555;font-size:11px;text-align:right;line-height:1.4}
+.sev-card-teacher b{color:#333}
+.sev-card-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.sev-aptitude{}
+.sev-apt-label{color:#080A66;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.sev-apt-value{color:#333;font-size:12px;line-height:1.5}
+.sev-empty{color:#888;font-size:12px;padding:20px;text-align:center;font-style:italic}
+/* --- visu_retard_parent.php – Design 2026 --- */
+.vrp-topbar{display:flex;align-items:center;gap:10px;padding:4px 2px}
+.vrp-title{color:#fff;font-weight:700;font-size:13px}
+.vrp-tutor-select{font-size:11px;border-radius:4px;border:1px solid #aaa;padding:2px 6px}
+.vrp-filter{display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:8px 4px 8px;margin-bottom:8px}
+.vrp-filter select{font-size:12px;border-radius:4px;border:1px solid #c5cae9;padding:2px 6px}
+.vrp-table{width:100%;border-collapse:collapse;font-size:12px}
+.vrp-th{background:#fffde7;color:#080A66;font-weight:700;padding:7px 10px;border-bottom:2px solid #c5cae9;text-align:left}
+.vrp-th-center{text-align:center}
+.vrp-tr{background:#fff}
+.vrp-tr:nth-child(even){background:#f8f9fd}
+.vrp-tr:hover td{background:#eef0f8}
+.vrp-td{padding:6px 10px;border-bottom:1px solid #eef0f8;color:#333;vertical-align:top}
+.vrp-td-center{text-align:center;white-space:nowrap}
+.vrp-badge-rattrap{display:inline-block;margin-top:4px;font-size:11px;color:#2e7d32;background:#e8f5e9;border-radius:4px;padding:2px 7px}
+.vrp-empty{color:#888;font-size:12px;padding:20px;text-align:center;font-style:italic}
+/* popup note */
+#ne-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center}
+#ne-popup-overlay.ne-popup-open{display:flex}
+#ne-popup-card{background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.22);padding:18px 20px 14px;min-width:220px;max-width:300px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;position:relative}
+#ne-popup-close{position:absolute;top:8px;right:10px;background:none;border:none;font-size:18px;cursor:pointer;color:#aaa;line-height:1;padding:0}
+#ne-popup-close:hover{color:#333}
+#ne-popup-header{display:flex;align-items:baseline;gap:10px;padding-bottom:8px;border-bottom:1px solid #eef0f8;margin-bottom:8px}
+#ne-popup-date{color:#080A66;font-weight:700;font-size:14px}
+#ne-popup-coeff{color:#888;font-size:11px}
+#ne-popup-sujet{color:#333;font-style:italic;margin-bottom:12px;line-height:1.4}
+#ne-popup-stats{display:flex;background:#eef0f8;border-radius:6px;padding:8px 12px;text-align:center;justify-content:space-around}
+#ne-popup-stats>div{flex:1}
+.ne-popup-stat-lbl{color:#888;font-size:10px;margin-bottom:2px}
+.ne-popup-moy-val{color:#080A66;font-weight:700}
+.ne-popup-other-val{color:#555}
+#ne-popup-examen{margin-top:8px;font-size:11px;color:#555;display:none}
+/* --- planclasse-visu-pe.php – Design 2026 --- */
+.pcv-body{background:#f0f2f8}
+.pcv-denied{margin:40px auto;text-align:center;font-size:14px;color:#c0392b;font-weight:bold}
+.pcv-student{position:absolute;text-align:center;z-index:1}
+.pcv-photo{width:55px;height:55px;object-fit:cover;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.3);display:block;margin:0 auto 3px}
+.pcv-name{font-size:10px;font-weight:600;color:#1a237e;line-height:1.3;text-align:center;white-space:nowrap}
+.pcv-bureau{position:absolute;z-index:1;width:130px;height:50px;background:linear-gradient(135deg,#455a64,#37474f);border:1px solid #263238;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.3);text-align:center;line-height:50px;font-weight:bold;font-size:13px;color:#fff;letter-spacing:1px}
+/* --- list_delegue.php – Design 2026 --- */
+.ldg-topbar{display:flex;align-items:center;gap:10px;padding:4px 2px}
+.ldg-title{color:#fff;font-weight:700;font-size:13px}
+.ldg-classname{color:#f9c600;font-size:12px;font-weight:700}
+.ldg-card{background:#fff;border-radius:10px;margin:14px 8px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.1);border:1px solid #e0e4f0}
+.ldg-section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;padding-bottom:6px;border-bottom:1px solid #eef0f8;margin-bottom:8px}
+.ldg-section-mt{margin-top:16px}
+.ldg-row{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px solid #f5f6fe}
+.ldg-row:last-child{border-bottom:none}
+.ldg-lbl{font-size:11px;color:#888;min-width:90px;flex-shrink:0}
+.ldg-role{font-size:10px;color:#fff;background:#9fa8da;border-radius:3px;padding:1px 6px;font-weight:600;flex-shrink:0}
+.ldg-role-eleve{background:#a5d6a7}
+.ldg-val{font-size:13px;font-weight:600;color:#1a237e}
+/* --- triade-coach.php – Design 2026 --- */
+.tco-subtitle{color:#f9c600;font-size:11px;font-weight:400}
+.tco-wrap{background:#f3f6fc;border:1px solid #dde0f0;border-radius:12px;margin:8px 4px;padding:14px 16px;overflow-x:hidden;overflow-y:auto;max-height:680px}
+.tco-coach-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tco-coach-lbl{font-size:12px;font-weight:600;color:#080A66;white-space:nowrap}
+.tco-coach-select{font-size:12px;border:1px solid #c5cae9;border-radius:6px;padding:4px 8px;background:#fff;color:#333;min-width:180px}
+.tco-upload-area{background:#fff;border:1px dashed #c5cae9;border-radius:8px;padding:10px 14px;margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tco-upload-lbl{font-size:12px;font-weight:600;color:#080A66;white-space:nowrap}
+.tco-file-input{font-size:11px;color:#333}
+.tco-upload-hint{font-size:11px;color:#888}
+.tco-progress-wrap{display:flex;align-items:center;gap:8px;width:100%;margin-top:4px}
+.tco-progress{width:200px;height:8px;border-radius:4px}
+.tco-status{font-size:11px;color:#555;font-style:italic}
+.tco-input-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tco-question{flex:1;border:1px solid #c5cae9;border-radius:20px;height:40px;padding:0 18px;font-size:13px;color:#333;outline:none;background:#fff}
+.tco-question:focus{border-color:#080A66;box-shadow:0 0 0 2px rgba(8,10,102,.1)}
+.tco-send-btn{background:#080A66;color:#fff;border:none;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tco-send-btn:hover{background:#1a237e}
+.tco-options-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:4px 0 10px;border-bottom:1px solid #e0e4f0;margin-bottom:10px}
+.tco-web-label{display:flex;align-items:center;gap:5px;font-size:12px;color:#333;cursor:pointer}
+.tco-disclaimer{font-size:10px;color:#999;font-style:italic;flex:1;min-width:160px}
+.tco-result{margin-top:8px;font-size:13px;line-height:1.6;color:#333}
+.tco-token{font-size:10px;color:#bbb;text-align:right;margin-top:4px}
+/* --- boursier.php – Design 2026 --- */
+.brs-table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.brs-th{background:#080A66;color:#fff;font-weight:700;padding:8px 12px;text-align:left;font-size:11px}
+.brs-th-num{text-align:center}
+.brs-tr{background:#fff}
+.brs-tr:nth-child(even){background:#f8f9fd}
+.brs-tr:hover td{background:#eef0f8}
+.brs-td{padding:7px 12px;border-bottom:1px solid #eef0f8;color:#333;vertical-align:middle}
+.brs-td-num{text-align:center}
+.brs-td-nonzero{color:#1a237e;font-weight:600}
+.brs-tr-total{background:#fffde7}
+.brs-tr-total:hover td{background:#fff9c4}
+.brs-td-total-lbl{font-weight:700;color:#080A66;font-style:italic}
+.brs-td-total{font-weight:700;color:#080A66}
+/* --- gestion_groupe.php – Design 2026 --- */
+.gg-card{margin:14px 8px;display:flex;flex-direction:column;gap:0}
+.gg-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;border-bottom:1px solid #eef0f8;background:#fff;margin:0}
+.gg-row:first-child{border-radius:8px 8px 0 0}
+.gg-row:last-child{border-bottom:none;border-radius:0 0 8px 8px}
+.gg-row:hover{background:#f5f6fe}
+.gg-lbl{font-size:12px;color:#333;flex:1}
+.gg-btn{font-size:11px;font-weight:600;color:#080A66;background:#eef0f8;border:1px solid #c5cae9;border-radius:5px;padding:4px 12px;cursor:pointer;white-space:nowrap}
+.gg-btn:hover{background:#c5cae9}
+.gg-btn-action{color:#fff;background:#3949ab;border-color:#3949ab}
+.gg-btn-action:hover{background:#283593}
+.gg-btn-edit{color:#fff;background:#00695c;border-color:#00695c}
+.gg-btn-edit:hover{background:#004d40}
+.gg-btn-check{color:#fff;background:#e65100;border-color:#e65100}
+.gg-btn-check:hover{background:#bf360c}
+/* --- creat_groupe.php – Design 2026 --- */
+.cg-card{background:#fff;border:1px solid #e0e4f0;border-radius:8px;padding:14px 16px;margin:10px 0}
+.cg-field-row{display:flex;align-items:center;gap:10px;padding:6px 0;flex-wrap:wrap}
+.cg-lbl{font-size:12px;font-weight:600;color:#333;min-width:110px;flex-shrink:0}
+.cg-input{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.cg-input:focus{outline:none;border-color:#080A66}
+.cg-select{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.cg-file-input{font-size:12px;color:#333}
+.cg-section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;padding:10px 0 6px;border-top:1px solid #eef0f8;margin-top:6px}
+.cg-classes-row{display:flex;gap:14px;align-items:flex-start;padding:4px 0 8px}
+.cg-multiselect{border:1px solid #c5cae9;border-radius:6px;font-size:12px;padding:4px;min-width:130px;background:#fff}
+.cg-classes-hint{font-size:11px;color:#555;line-height:1.5;flex:1;padding-top:4px}
+.cg-actions{display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid #eef0f8;margin-top:6px;flex-wrap:wrap}
+.cg-btn{font-size:11px;font-weight:600;color:#080A66;background:#eef0f8;border:1px solid #c5cae9;border-radius:5px;padding:5px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+.cg-btn:hover{background:#c5cae9}
+.cg-btn-link{font-size:11px;font-weight:600;color:#555;background:#f5f5f5;border:1px solid #ddd;border-radius:5px;padding:4px 10px;text-decoration:none;display:inline-block}
+.cg-btn-link:hover{background:#e0e0e0}
+.cg-btn-primary{color:#fff;background:#080A66;border-color:#080A66}
+.cg-btn-primary:hover{background:#1a237e}
+.cg-btn-danger{color:#fff;background:#c62828;border-color:#c62828}
+.cg-btn-danger:hover{background:#b71c1c}
+.cg-sep{border:none;border-top:2px dashed #e0e4f0;margin:14px 0}
+.cg-csv-info{background:#fffbe6;border:1px solid #f5c842;border-radius:8px;padding:10px 14px;margin:10px 0}
+.cg-csv-title{font-size:11px;font-weight:700;color:#5a4000;margin-bottom:8px}
+.cg-csv-table{width:100%;border-collapse:collapse}
+.cg-csv-th{background:#fff8e1;border:1px solid #f5c842;padding:5px 10px;font-size:11px;font-weight:600;color:#5a4000;text-align:left}
+/* --- messagerie_creat_grpmailele.php – Design 2026 --- */
+.mcge-card{background:#fff;border:1px solid #e0e4f0;border-radius:8px;padding:14px 16px;margin:10px 0}
+.mcge-field-row{display:flex;align-items:center;gap:10px;padding:6px 0;flex-wrap:wrap}
+.mcge-lbl{font-size:12px;font-weight:600;color:#333;min-width:90px;flex-shrink:0}
+.mcge-input{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.mcge-input:focus{outline:none;border-color:#080A66}
+.mcge-section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;padding:10px 0 4px;border-top:1px solid #eef0f8;margin-top:6px}
+.mcge-sort-links{font-size:11px;color:#555;padding:4px 0 10px}
+.mcge-sort-links a{color:#080A66;text-decoration:none;font-weight:600}
+.mcge-sort-links a:hover{text-decoration:underline}
+.mcge-two-col{display:flex;gap:14px;align-items:flex-start;padding:4px 0}
+.mcge-multiselect{border:1px solid #c5cae9;border-radius:6px;font-size:12px;padding:4px;min-width:190px;background:#fff;flex-shrink:0}
+.mcge-options{flex:1;display:flex;flex-direction:column;gap:10px}
+.mcge-info-box{background:#fffde7;border:1px solid #f9c600;border-radius:6px;padding:8px 12px;font-size:12px;color:#444;line-height:1.5}
+.mcge-check-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#333;cursor:pointer}
+.mcge-check-row input{cursor:pointer}
+.mcge-actions{display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid #eef0f8;margin-top:10px;flex-wrap:wrap}
+/* --- besoin_daide.php – Design 2026 --- */
+.bda-chat-wrap{background:#F3F6FC;border:1px solid #d0d5ea;border-radius:16px;padding:14px 16px;margin:6px 4px;overflow-x:hidden;overflow-y:auto;height:92%}
+.bda-upload-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:8px}
+.bda-upload-lbl{font-size:12px;color:#444;font-weight:600;flex-shrink:0}
+.bda-file-input{font-size:12px;color:#333}
+.bda-upload-hint{font-size:11px;color:#888}
+.bda-progress-wrap{display:flex;align-items:center;gap:10px;padding:4px 0}
+.bda-progress{width:280px;height:12px;border-radius:6px;overflow:hidden}
+.bda-progress-text{font-size:11px;color:#555}
+.bda-status{font-size:12px;color:#3949ab;font-weight:600;min-height:18px;padding:2px 0 6px}
+.bda-question-row{display:flex;align-items:center;gap:10px;padding:8px 0;flex-wrap:wrap}
+.bda-question{border:1px solid #c5cae9;border-radius:20px;height:38px;padding:0 16px;font-size:13px;color:#333;flex:1;min-width:200px}
+.bda-question:focus{outline:none;border-color:#080A66}
+.bda-send-col{display:flex;flex-direction:column;align-items:flex-start;gap:4px;flex-shrink:0}
+.bda-send-btn{background:#080A66;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer}
+.bda-send-btn:hover{background:#1a237e}
+.bda-check-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#555;cursor:pointer}
+.bda-disclaimer{font-size:10px;color:#888;font-style:italic;padding:4px 0 10px;line-height:1.4}
+.bda-result{margin-top:10px;font-size:13px;color:#222;line-height:1.6}
+.bda-assist-card{padding:12px 8px 16px}
+.bda-assist-intro{display:flex;align-items:center;gap:12px;padding:8px 0 14px}
+.bda-assist-img{width:40px;height:auto;flex-shrink:0}
+.bda-assist-text{font-size:13px;color:#333}
+.bda-assist-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding-top:4px}
+/* --- creat_admin.php – Design 2026 --- */
+.ca-nav-card{display:flex;align-items:center;gap:14px;padding:10px 8px;flex-wrap:wrap}
+.ca-nav-img{width:36px;height:auto;flex-shrink:0}
+.ca-nav-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ca-form-wrap{padding:10px 8px 6px}
+.ca-fieldset{border:1px solid #c5cae9;border-radius:8px;padding:10px 14px 14px;margin-bottom:14px;background:#fafbff}
+.ca-legend{font-size:11px;font-weight:700;color:#080A66;padding:0 6px;text-transform:uppercase;letter-spacing:.5px}
+.ca-field-row{display:flex;align-items:center;gap:8px;padding:5px 0;flex-wrap:wrap}
+.ca-lbl{font-size:12px;color:#444;min-width:130px;flex-shrink:0;text-align:right}
+.ca-input{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.ca-input:focus{outline:none;border-color:#080A66}
+.ca-input-wide{min-width:200px}
+.ca-select{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.ca-required{color:#c62828;font-weight:700;font-size:13px}
+.ca-actions{padding:10px 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* --- list_admin.php – Design 2026 --- */
+.la-table{width:100%;border-collapse:collapse}
+.la-tr{border-bottom:1px solid #eef0f8;transition:background .12s;background:#fff}
+.la-tr:hover{background:#f0f2fa}
+.la-td{padding:7px 10px;font-size:12px;color:#333;vertical-align:middle}
+.la-td-icon{width:28px;text-align:center}
+.la-td-action{width:1%;white-space:nowrap;text-align:right}
+.la-icon-inactive{vertical-align:middle}
+.la-btn-modif{font-size:11px;font-weight:600;color:#080A66;background:#eef0f8;border:1px solid #c5cae9;border-radius:5px;padding:3px 10px;cursor:pointer}
+.la-btn-modif:hover{background:#c5cae9}
+/* --- suppression_compte_admin.php – Design 2026 --- */
+.sca-card{padding:10px 8px 6px}
+.sca-fieldset{border:1px solid #f5c6c6;border-radius:8px;padding:12px 16px 14px;background:#fff9f9}
+.sca-legend{font-size:11px;font-weight:700;color:#c62828;padding:0 6px;text-transform:uppercase;letter-spacing:.5px}
+.sca-field-row{display:flex;align-items:center;gap:10px;padding:8px 0;flex-wrap:wrap}
+.sca-lbl{font-size:12px;font-weight:600;color:#444;flex-shrink:0}
+.sca-select{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333;min-width:160px}
+.sca-actions{padding-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* --- modif_admin.php – Design 2026 --- */
+.ma-form-wrap{padding:10px 8px 6px}
+.ma-inactive-banner{display:flex;align-items:center;gap:8px;background:#fff3e0;border:1px solid #ffb74d;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;font-weight:600;color:#e65100}
+.ma-fieldset{border:1px solid #c5cae9;border-radius:8px;padding:10px 14px 14px;margin-bottom:14px;background:#fafbff}
+.ma-legend{font-size:11px;font-weight:700;color:#080A66;padding:0 6px;text-transform:uppercase;letter-spacing:.5px}
+.ma-field-row{display:flex;align-items:center;gap:8px;padding:5px 0;flex-wrap:wrap}
+.ma-lbl{font-size:12px;color:#444;min-width:130px;flex-shrink:0;text-align:right}
+.ma-input{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.ma-input:focus{outline:none;border-color:#080A66}
+.ma-input-wide{min-width:200px}
+.ma-select{border:1px solid #c5cae9;border-radius:5px;padding:4px 8px;font-size:12px;color:#333}
+.ma-btn-pass{font-size:11px;font-weight:600;color:#fff;background:#3949ab;border:1px solid #3949ab;border-radius:5px;padding:4px 12px;cursor:pointer}
+.ma-btn-pass:hover{background:#283593}
+.ma-photo-row{display:flex;align-items:flex-start;gap:14px;padding:6px 0}
+.ma-photo{border:1px solid #ddd;border-radius:4px}
+.ma-photo-links{display:flex;flex-direction:column;gap:6px;font-size:12px}
+.ma-photo-links{display:flex;flex-direction:column;gap:8px;justify-content:center}
+.ma-btn-photo-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#080A66;background:#eef0f8;border:1px solid #c5cae9;border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.ma-btn-photo-pill:hover{background:#c5cae9}
+.ma-actions{display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid #eef0f8;margin-top:4px;flex-wrap:wrap}
+
+/* ── Accessibilité Menus TRIADE (WCAG 2.1 / RGAA) ── */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-visible {
+    position: fixed !important;
+    top: 10px !important;
+    left: 10px !important;
+    z-index: 99999 !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 10px 18px !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    background: #080A66 !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    border: 2px solid #ffb300 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+    text-decoration: none !important;
+}
+
+/* Prise de focus visible au clavier */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid #ffb300 !important;
+    outline-offset: 2px !important;
+}
+
+/* Classes pour remplacer les id dupliqués dans les menus */
+.menumodule0, a.menumodule0 {
+    font-family: Electrolize, sans-serif;
+    font-size: 12px;
+    color: #080A66;
+    text-decoration: none;
+}
+.menumodule0:hover, a.menumodule0:hover {
+    text-decoration: underline;
+    color: #0b0f8a;
+}
+.menu-top-nav {
+    display: inline-block;
+    width: 100%;
+}
+.menu-side-nav {
+    display: block;
+    width: 100%;
+}
+

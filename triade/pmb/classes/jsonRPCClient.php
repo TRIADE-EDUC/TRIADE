@@ -163,6 +163,7 @@ class jsonRPCClient {
 			while($row = fgets($fp)) {
 				$response.= trim($row)."\n";
 			}
+			fclose($fp);
 			$this->debug && $debug.='***** Server response *****'."\n".$response.'***** End of server response *****'."\n";
 			$response_array = json_decode($response,true);
 		} else {

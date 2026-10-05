@@ -1,0 +1,28 @@
+{% extends "paginator.html" %}
+<!-- $Id: paginatorPerio.html,v 1.4.2.2 2024/11/15 10:37:26 gneveu Exp $ -->
+{% comment %}
+{% endcomment  %}
+
+{% block script %}
+	<script>
+		function changepage(idPage, idPerio) {
+			document.getElementById('bull_page').value = idPage;
+			show_perio(idPerio);
+		}
+		function nbPerPage(nbPage, idPerio) {
+			document.getElementById('bull_nb_per_page').value = nbPage;
+		}
+	</script>
+{% endblock %}
+
+{% block input %}
+	<input type="hidden" id='page' name="page" value="{{ current.page }}"/>
+{% endblock %}
+
+{% block selector %}
+	{% if from_cms %}
+		{% include "selector.html" with custom=custom current=current %}
+	{% else %}
+		{% include "selector_in_result.html" with custom=custom current=current %}
+	{% endif %}
+{% endblock %}

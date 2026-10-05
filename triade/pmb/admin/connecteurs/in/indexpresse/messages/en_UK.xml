@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2020/06/15 08:33:29 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="indexpresse_ws">Web Service</entry>
+	<entry code="indexpresse_url">Indexpresse Web Service URL</entry>
+	<entry code="indexpresse_auth_mode">Authentication mode</entry>
+	<entry code="indexpresse_auth_by_ip">IP</entry>
+	<entry code="indexpresse_auth_by_account">Login / Password</entry>
+	<entry code="indexpresse_login">Login</entry>
+	<entry code="indexpresse_pwd">Password</entry>
+	<entry code="indexpresse_search_params">Search settings</entry>
+	<entry code="indexpresse_maxCount">Maximum number of results returned</entry>
+</XMLlist>

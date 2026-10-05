@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_small_text_ui.class.php,v 1.11 2019-01-10 13:54:51 arenou Exp $
+// $Id: onto_common_datatype_small_text_ui.class.php,v 1.16 2021/10/05 12:24:17 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,8 +23,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -37,10 +37,12 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 		global $msg,$charset,$ontology_tpl;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
 		
+		$tab_lang = array();
 		$content='';
-		if($datas && sizeof($datas)){
+		$multilingue = "";
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -58,7 +60,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 				$inside_row=$ontology_tpl['form_row_content_small_text'];
 				
 				$inside_row=str_replace("!!onto_row_content_small_text_value!!",htmlentities($data->get_formated_value() ,ENT_QUOTES,$charset) ,$inside_row);
-				$inside_row=str_replace("!!onto_row_combobox_lang!!",self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'['.$order.'][lang]',$instance_name.'_'.$property->pmb_name.'_'.$order.'_lang',$data->get_lang()) ,$inside_row);
+				$multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'['.$order.'][lang]',$instance_name.'_'.$property->pmb_name.'_'.$order.'_lang',$data->get_lang(), 1, '', $tab_lang);
+				$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 				$inside_row=str_replace("!!onto_row_content_small_text_range!!",$property->range[0] , $inside_row);
 				
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -66,10 +69,10 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 				$input='';
 				if($first){
 					if($restrictions->get_max()<$i || $restrictions->get_max()===-1){
-						$input=$ontology_tpl['form_row_content_input_add'];
+						$input .= $ontology_tpl['form_row_content_input_add'];
 					}
 				}else{
-					$input=$ontology_tpl['form_row_content_input_del'];
+					$input .= $ontology_tpl['form_row_content_input_del'];
 				}
 				
 				$row=str_replace("!!onto_row_inputs!!",$input , $row);
@@ -87,13 +90,14 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 			$inside_row=$ontology_tpl['form_row_content_small_text'];
 			
 			$inside_row=str_replace("!!onto_row_content_small_text_value!!","" , $inside_row);
-			$inside_row=str_replace("!!onto_row_combobox_lang!!",self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'[0][lang]',$instance_name.'_'.$property->pmb_name.'_0_lang') , $inside_row);
+			$multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'[0][lang]',$instance_name.'_'.$property->pmb_name.'_0_lang', '', 1, '', $tab_lang);
+			$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 			$inside_row=str_replace("!!onto_row_content_small_text_range!!",$property->range[0] , $inside_row);
 			
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
 			$input='';
 			if($restrictions->get_max()!=1){
-				$input=$ontology_tpl['form_row_content_input_add'];
+				$input .= $ontology_tpl['form_row_content_input_add'];
 			}
 			$row=str_replace("!!onto_row_inputs!!",$input , $row);
 			
@@ -111,8 +115,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -122,7 +126,7 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}

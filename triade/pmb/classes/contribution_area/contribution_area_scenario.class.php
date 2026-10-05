@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_scenario.class.php,v 1.2 2017-09-04 12:47:43 tsamson Exp $
+// $Id: contribution_area_scenario.class.php,v 1.6 2024/03/22 15:31:04 qvarin Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -11,12 +11,12 @@ require_once($class_path.'/onto/common/onto_common_uri.class.php');
 
 /**
  * class contribution_area_scenario
- * ReprÃ©sente un scenario de contribution
+ * Représente un scenario de contribution
  */
 class contribution_area_scenario {
 	
 	/**
-	 * Id du scÃ©nario de contribution
+	 * Id du scénario de contribution
 	 * 
 	 * @access protected
 	 */
@@ -32,7 +32,7 @@ class contribution_area_scenario {
 	}
 	
 	public static function get_status($id) {
-		$id += 0;
+		$id = intval($id);
 		$uri = onto_common_uri::get_uri($id);
 		self::get_graphstore();
 		$result = self::$graphstore->query('
@@ -46,7 +46,7 @@ class contribution_area_scenario {
 	}
 	
 	public static function get_entity_type($id) {
-		$id += 0;
+		$id = intval($id);
 		$uri = onto_common_uri::get_uri($id);
 		self::get_graphstore();
 		$result = self::$graphstore->query('
@@ -115,13 +115,13 @@ class contribution_area_scenario {
 					
 				if ($user_rights & 2) {
 					$p_sel = gen_liste($q, 'prf_id', 'prf_name', 'res_prf[5]', '', $res_prf, '0', $def_prf, '0', $def_prf);
-					$p_rad = "<input type='radio' name='prf_rad[5]' value='R' ";
+					$p_rad = "<input type='radio' id='prf_rad_5_R' name='prf_rad[5]' value='R' ";
 					if ($gestion_acces_empr_contribution_scenario_def != '1')
 						$p_rad .= "checked='checked' ";
-					$p_rad .= ">" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</input><input type='radio' name='prf_rad[5]' value='C' ";
+					$p_rad .= "><label for='prf_rad_5_R' >" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</label></input><input type='radio' id='prf_rad_5_C' name='prf_rad[5]' value='C' ";
 					if ($gestion_acces_empr_contribution_scenario_def == '1')
 						$p_rad .= "checked='checked' ";
-					$p_rad .= ">" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . " $p_sel</input>";
+					$p_rad .= "><label for='prf_rad_5_C' >" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . $p_sel."</label></input>";
 					$r_form = str_replace('<!-- prf_rad -->', $p_rad, $r_form);
 				} else {
 					$r_form = str_replace('<!-- prf_rad -->', htmlentities($dom_5->getResourceProfileName($res_prf), ENT_QUOTES, $charset), $r_form);
@@ -129,13 +129,13 @@ class contribution_area_scenario {
 					
 				// droits/profils utilisateurs
 				if ($user_rights & 1) {
-					$r_rad = "<input type='radio' name='r_rad[5]' value='R' ";
+					$r_rad = "<input type='radio' id='r_rad_5_R' name='r_rad[5]' value='R' ";
 					if ($gestion_acces_empr_contribution_scenario_def != '1')
 						$r_rad .= "checked='checked' ";
-					$r_rad .= ">" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</input><input type='radio' name='r_rad[5]' value='C' ";
+					$r_rad .= "><label for='r_rad_5_R' >" . htmlentities($msg['dom_rad_calc'], ENT_QUOTES, $charset) . "</label></input><input type='radio' id='r_rad_5_C' name='r_rad[5]' value='C' ";
 					if ($gestion_acces_empr_contribution_scenario_def == '1')
 						$r_rad .= "checked='checked' ";
-					$r_rad .= ">" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . "</input>";
+					$r_rad .= "><label for='r_rad_5_C' >" . htmlentities($msg['dom_rad_def'], ENT_QUOTES, $charset) . "</label></input>";
 					$r_form = str_replace('<!-- r_rad -->', $r_rad, $r_form);
 				}
 					
@@ -173,15 +173,19 @@ class contribution_area_scenario {
 	
 							$t_rows .= "
 								<tr>
-									<td style='width:25px;' ><input type='checkbox' name='chk_rights[5][" . $k . "][" . $k2 . "]' value='1' ";
+									<td style='width:25px;' ><input type='checkbox' id='chk_rights_5_".$k."_".$k2."' name='chk_rights[5][" . $k . "][" . $k2 . "]' value='1' ";
 							if (isset($t_rights[$k]) && isset($t_rights[$k][$res_prf]) && ($t_rights[$k][$res_prf] & (pow(2, $k2 - 1)))) {
 								$t_rows .= "checked='checked' ";
 							}
-							if (($user_rights & 1) == 0)
-								$t_rows .= "disabled='disabled' ";
-							$t_rows .= "/></td>
+							if (($user_rights & 1) == 0) {
+								$t_rows .= "disabled='disabled' /></td>
 									<td>" . htmlentities($v2, ENT_QUOTES, $charset) . "</td>
 								</tr>";
+							} else {
+							    $t_rows .= "/></td>
+									<td><label for='chk_rights_5_".$k."_".$k2."' >" . htmlentities($v2, ENT_QUOTES, $charset) . "</label></td>
+								</tr>";
+							}
 						}
 						$c_tab = str_replace('<!-- rows -->', $t_rows, $c_tab);
 					}
@@ -209,24 +213,37 @@ class contribution_area_scenario {
 	}
 	
 	public static function delete($id) {
-		$id += 0;
-		$uri = onto_common_uri::get_uri($id);
 		self::get_graphstore();
-		self::$graphstore->query('
-			delete WHERE {
+		
+		$id = intval($id);
+		$uri = onto_common_uri::get_uri($id);
+		
+		$succes = self::$graphstore->query('
+			delete {
 				<'.$uri.'> ?p ?o
 			}
 		');
-		self::$graphstore->query('
-			delete WHERE {
+		if (!$succes) {
+		    var_dump(self::$graphstore->get_errors());
+		}
+		
+		$succes = self::$graphstore->query('
+			delete {
 				?s ?p <'.$uri.'>
 			}
 		');
+		if (!$succes) {
+		    var_dump(self::$graphstore->get_errors());
+		}
 		
 		pmb_mysql_query('delete from onto_uri where uri_id = '.$id);
 		
 		//suppression des droits d'acces empr_contribution_area_scenario
-		$requete = "delete from acces_res_5 where res_num=".$id;
-		@pmb_mysql_query($requete);
+		$query_acces = "show tables like 'acces_res_5'";
+		$result_acces = pmb_mysql_query($query_acces);
+		if($result_acces && pmb_mysql_num_rows($result_acces)) {
+    		$requete = "delete from acces_res_5 where res_num=".$id;
+    		@pmb_mysql_query($requete);
+		}
 	}
 } // end of contribution_area_scenario

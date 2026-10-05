@@ -1,0 +1,492 @@
+<!-- $Id: record_unimarc_in_result_display.tpl.html,v 1.5 2023/08/24 10:35:24 rtigero Exp $ -->
+
+{% block record_content %}
+
+<!-- Entete de la notice -->
+<div id="eles{{ record.id }}Parent" class="notice-parent">
+	<img class='img_plus' src="./getgif.php?nomgif=plus" name="imEx" id="eles{{ record.id }}Img" title="{{ msg.expandable_notice }}" alt="{{ msg.expandable_notice }}" onClick="expandBase('eles{{record.id}}', true); return false;" >
+	<img src="./images/{{ record.icon_doc }}" alt='{{record.niveau_biblio}} : {{record.typdoc}}' title='{{record.niveau_biblio}} : {{record.typdoc}}'/>
+	<span class="notice-heada">
+		<h3>
+		{% if record.source_label %}
+			<span class="source_notCourte">{{ record.source_label }} : </span>
+		{% endif %}
+		
+		{% block record_header %}
+			{% if record.serie %}
+			<!-- Serie -->
+				<span class="serie_notCourte">{{ record.serie.name }}{% if record.tnvol %}, {{ record.tnvol }}. {% endif %}</span>
+			{% else %}
+				{% if record.tnvol %}
+					<span class="serie_notCourte">{{ record.tnvol }}. </span>
+				{% endif %}
+			{% endif %}
+				<span class="tit1_notCourte">
+					{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}{% if record.auteurs_principaux%} / {{record.auteurs_principaux}}{% endif %}
+				</span>	
+		{% endblock %}
+		</h3>
+	</span>
+	<br />
+</div>
+
+<!-- Contenu de la notice -->
+<div id="eles{{record.id}}Child" class="notice-child" style="margin-bottom:6px;display:none;">
+	{% block record_picture %}
+		<div class="vignetteimgNot">
+			{% if record.get_picture_url %}
+				<!-- Vignette de la notice -->
+				<div class="vignetteDocNot">
+					<img class="vignetteNot" src= "{{ record.get_picture_url }}" alt="{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+				</div>						
+			{% endif %}	
+		</div>
+	{% endblock %}
+	<div class="notice_corps">	
+		<table class="descr_notice" role="presentation">
+			<tbody>
+				{% block record_in %}
+				{% endblock %}
+				{% block record_serie %}
+					{% if record.serie %}
+						<tr class="record_serie">
+							<td class="labelNot">
+								<span>{{ msg.tparent_start }}</span> <!-- Serie -->
+							</td>
+							<td class="labelContent">
+								<span>{{ record.serie.name }}{% if record.tnvol %}, {{ record.tnvol }}{% endif %}</span>
+							</td>
+						</tr>
+					{% else %}
+						{% if record.tnvol %}
+							<tr class="record_serie">
+								<td class="labelNot">
+									<span>{{ msg.tnvol_start }}</span>
+								</td>
+								<td class="labelContent">
+									<span>{{ record.tnvol }}</span>
+								</td>
+							</tr>
+						{% endif %}
+					{% endif %}
+				{% endblock %}
+				{% block record_tit1 %}
+					<tr class="record_tit1">
+						<td class="labelNot">
+							<span>{{ msg.tit1display_start }}</span>
+						</td>
+						<td class="labelContent">
+							<span id="exempl_titleNot">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+						</td>
+					</tr>
+				{% endblock %}							
+				{% block record_tit2 %}
+						{% if record.tit2 %}
+							<tr class="record_tit2">
+								<td class="labelNot">
+									<span>{{ msg.other_title_t2_start }}</span>
+								</td>
+								<td class="labelContent">
+									<span id="exempl_title3Not">{{ record.tit2 }}</span>
+								</td>
+							</tr>
+						{%endif%}
+				{% endblock %}
+				{% block record_tit3 %}
+						{% if record.tit3 %}
+							<tr class="record_tit3">
+								<td class="labelNot">
+									<span>{{ msg.other_title_t3_start }}</span>
+								</td>
+								<td class="labelContent">
+									<span id="exempl_title3Not">{{ record.tit3 }}</span>
+								</td>
+							</tr>
+						{%endif%}
+				{% endblock %}
+				{% block record_tdoc %}
+					{% if record.tdoc %}
+						<tr class="record_tdoc">
+							<td class="labelNot">
+								<span>{{ msg.typdocdisplay_start }}</span> <!-- Type de document-->
+							</td>
+							<td class="labelContent">
+								<span>{{ record.tdoc }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}								
+				{% block record_responsabilites %}
+					{% for auteur in record.responsabilites.auteurs %}
+						{% if loop.first %}
+							<tr class="record_responsabilites">
+								<td class="labelNot">
+									<span>{{ msg.auteur_start }}</span>
+								</td>
+								<td class="labelContent">
+									<span>
+						{% else %}
+						 ; 
+						{% endif %}
+						{{ auteur.auteur_titre }}{% if auteur.fonction_aff %}, {{ auteur.fonction_aff }}{% endif %}
+						{% if loop.last %}
+									</span>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endblock %}
+				{% block record_publishers %}
+					{% if record.publishers.0.name %}
+						<tr class="record_publishers">
+							<td class="labelNot">
+								<span>{{ msg.editeur_start }}</span> <!-- Edition, Annee-->
+							</td>
+							<td class="labelContent">
+								<span>{{ record.publishers.0.name }}{% if record.publishers.0.city %} ({{ record.publishers.0.city }}){% endif %}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}							
+				{% block record_other_publishers %}
+					{% if record.publishers.1.name %}
+						<tr class="record_other_publishers">
+							<td class="labelNot">
+								<span>{{ msg.other_editor }}</span> <!-- Edition, Annee-->
+							</td>
+							<td class="labelContent">
+								<span>{{ record.publishers.1.name }}{% if record.publishers.1.city %} ({{ record.publishers.1.city }}){% endif %}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				{% block record_year %}
+					{% if record.year %}
+						<tr class="record_year">
+							<td class="labelNot">
+								<span>{{ msg.year_start }}</span> <!-- Annee edition -->
+							</td>
+							<td class="labelContent">
+								<span>{{ record.year }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				{% block record_collection %}
+					{% if record.collection.titre %}
+						<tr class="record_collection">
+							<td class="labelNot">
+								<span>{{ msg.coll_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.collection.titre }}{% if !record.subcollection.titre %}{% if record.nocoll %}. {{ record.nocoll }}{% endif %}{% endif %}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_subcollection %}
+					{% if record.subcollection.titre %}
+						<tr class="record_subcollection">
+							<td class="labelNot">
+								<span>{{ msg.subcoll_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.subcollection.titre }}{% if record.nocoll %}. {{ record.nocoll }}{% endif %}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_npages %}
+					{% if record.npages %}
+						<tr class="record_npages">
+							<td class="labelNot">
+								<span>{{ msg.npages_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.npages }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_ill %}
+					{% if record.ill %}
+						<tr class="record_ill">
+							<td class="labelNot">
+								<span>{{ msg.ill_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.ill }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_size %}
+					{% if record.size %}
+						<tr class="record_size">
+							<td class="labelNot">
+								<span>{{ msg.size_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.size }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_accomp %}
+					{% if record.accomp %}
+						<tr class="record_accomp">
+							<td class="labelNot">
+								<span>{{ msg.accomp_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.accomp }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_code %}
+					{% if record.code %}
+						<tr class="record_code">
+							<td class="labelNot">
+								<span>{{ msg.code_start }}</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ record.code }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}	
+				
+				{% block record_n_gen %}
+					{% if record.n_gen %}								
+						{% for n_gen in record.n_gen %}
+							{% if loop.first %}
+							<tr class="record_n_gen">
+								<td class="labelNot">
+									<span>{{ msg.n_gen_start }}</span>
+								</td>
+								<td class="labelContent">
+							{% endif %}
+							<span>{{ n_gen | nl2br }}</span>
+							{% if loop.last %}
+									</td>
+								</tr>
+							{% endif %}				
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
+					
+				{% block record_langues %}
+					{% if record.langues.langues %}
+						<tr class="record_langues">
+							<td class="labelNot">
+								<span>{{ msg.langues_start }}</span>
+							</td>
+							<td class="labelContent">
+								{% for langue in record.langues.langues %}
+									{% if loop.first%}
+										<span>{{langue.langue}} (<i>{{langue.code}}</i>)</span>
+									{% else %}
+										 <span>{{langue.langue}} (<i>{{langue.code}}</i>)</span>
+									{% endif %}
+								{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_p_perso %}
+					{% for cp in record.p_perso %}
+						<tr class="record_p_perso">
+							<td class="labelNot">
+								<span>{{ cp.libelle }} :</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ cp.value }}</span>
+							</td>
+						</tr>
+					{% endfor %}
+				{% endblock %}
+				
+				{% block record_docnums %}
+					{% if record.docnums %}
+						<!-- Documents numeriques -->				
+						{% for docnum in record.docnums %}
+							{% if loop.first %}
+								<tr class="record_docnums">
+									<td class='labelNot'>
+										<span>{{ msg.entrepot_notice_docnum}}</span>
+									</td>
+									<td class="labelContent">
+										<ul>
+							{% endif %}
+							{% if docnum.a %}
+											<li>
+								{% if docnum.b %}
+									{{ docnum.b }} : 
+								{% endif%}
+												<i><a href="{{docnum.a}}">{{docnum.a}}</a></i>
+											</li>
+							{% endif%}
+							{% if loop.last %}
+										</ul>
+									</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
+							
+				{% block record_resume %}
+					{% if record.resume %}								
+						{% for resume in record.resume %}
+							{% if loop.first %}
+								<tr class="record_resume">
+									<td class="labelNot">
+										<span>{{ msg.n_resume_start }}</span>
+									</td>
+									<td class="labelContent">
+							{% endif %}
+							<span>{{ resume | nl2br }}</span>
+							{% if loop.last %}
+									</td>
+								</tr>
+							{% endif %}				
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_contenu %}
+					{% if record.contenu %}								
+						{% for contenu in record.contenu %}
+							{% if loop.first %}
+								<tr class="record_contenu">
+									<td class="labelNot">
+										<span>{{ msg.n_contenu_start }}</span>
+									</td>
+									<td class="labelContent">
+							{% endif %}
+							<span>{{ contenu | nl2br }}</span>
+							{% if loop.last %}
+									</td>
+								</tr>
+							{% endif %}				
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
+					
+				{% block record_categories %}
+					{% for categorie in record.categories %}
+						{% if loop.first %}
+							<tr class="record_categories">
+								<td class="labelNot">
+									<span>{{ msg.categories_start }}</span>
+								</td>
+								<td class="labelContent">
+						{% endif %}
+						<p>{{ categorie }}</p>
+						{% if loop.last %}
+								</td>
+							</tr>
+						{% endif %}				
+					{% endfor %}
+				{% endblock %}
+				
+				{% block record_mots_cles %}
+					{% if record.mots_cles %}
+						<tr class="record_mots_cles">
+							<td class="labelNot">
+								{% if global.opac_allow_add_tag == "0" %}
+									<span>{{ msg.keywords_start }}</span>
+								{% else %}
+									<span>{{ msg.tags }}</span>
+								{% endif %}
+							</td>
+							<td class="labelContent">
+								{% for mot in record.mots_cles %}
+									{% if loop.counter!=1 %}
+										{{global.pmb_keyword_sep}}
+									{% endif %}
+									 {{mot}}  
+								{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block record_indexint %}
+					{% if record.indexint %}
+						{% for indexint in record.indexint %}
+							{% if loop.first %}
+								<tr class="record_indexint">
+									<td class="labelNot">
+										<span>{{ msg.indexint_start }}</span>
+									</td>
+									<td class="labelContent">
+							{% endif %}
+								<span>{{ indexint }}</span>
+							{% if loop.last %}
+									</td>
+								</tr>
+							{% endif %}				
+						{% endfor %}
+					{% endif %}								
+				{% endblock %}
+				
+				{% block record_lien %}
+					{% if record.lien %}
+						   <tr class="record_lien">
+						   		<td class="labelNot">
+						   			<span>{{ msg.lien_start }}</span>
+						   		</td>
+						   		<td class="labelContent">
+						   			<span><a href="{{record.lien}}" target="_blank" title="{{msg.open_link_url_notice}}">{{ record.lien }}</a></span>
+						   		</td>
+						   </tr>
+						{% endif %}
+				{% endblock %}				
+			</tbody>
+		</table>
+		
+		{% block record_expl %}
+			{% if record.expls_datas %}
+				<h3><span 
+				    {% if global.opac_rgaa_active == 1 %} class='titre_exemplaires' {% else %} id='titre_exemplaires' class='titre_exemplaires' {% endif %} > msg.exemplaries }}<!--nb_expl_visible--></span></h3>
+					<table cellpadding='2' class='exemplaires' style='width:100%'>
+						<tr>
+							<th>{{ msg.extexpl_codebar }}</th>
+							<th>{{ msg.extexpl_cote }}</th>
+							<th>{{ msg.extexpl_location }}</th>
+							<th>{{ msg.extexpl_section }}</th>
+							<th>{{ msg.extexpl_statut }}</th>
+							<th>{{ msg.extexpl_emprunteur }}</th>
+							<th>{{ msg.extexpl_doctype }}</th>
+							<th>{{ msg.extexpl_note }}</th>
+						</tr>
+						{% for expl in record.expls_datas %}
+						<tr>
+							<td>{{ expl.content.f }}</td>
+							<td>{{ expl.content.k }}</td>
+							<td>{{ expl.content.v }}</td>
+							<td>{{ expl.content.x }}</td>
+							<td>{{ expl.content.1 }}</td>
+							<td>{{ expl.content.a }}</td>
+							<td>{{ expl.content.e }}</td>
+							<td>{{ expl.content.u }}</td>
+						</tr>
+						{% endfor%}
+					</table>
+			{% endif %} 
+		{% endblock %}		
+	</div>
+</div>
+{% endblock %}
+<div class='clear'></div>
+
+ 

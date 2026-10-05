@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_bulletinage_explnum_controller.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: entities_bulletinage_explnum_controller.class.php,v 1.3 2023/10/24 09:57:08 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/entities/entities_analysis_controller.class.php");
 
 class entities_bulletinage_explnum_controller extends entities_bulletinage_controller {
@@ -35,7 +36,7 @@ class entities_bulletinage_explnum_controller extends entities_bulletinage_contr
 	public function proceed_explnum_form() {
 		$this->action_link = $this->url_base."&action=explnum_update";
 		if($this->id) {
-			$this->delete_link = $this->url_base."&action=explnum_delete&bul_id=".$this->bulletin_id."&explnum_id=".$this->id;
+			$this->delete_link = $this->url_base."&action=explnum_delete&bul_id=".intval($this->bulletin_id)."&explnum_id=".intval($this->id);
 		} else {
 			$this->delete_link = "";
 		}
@@ -48,11 +49,13 @@ class entities_bulletinage_explnum_controller extends entities_bulletinage_contr
 	}
 	
 	protected function get_permalink($id=0) {
-		if(!$id) $id = $this->bulletin_id;
-		return $this->url_base."&action=view&bul_id=".$id;
+	    if(!$id) {
+	        $id = $this->bulletin_id;
+	    }
+		return $this->url_base."&action=view&bul_id=" . intval($id);
 	}
 	
 	public function set_bulletin_id($bulletin_id=0) {
-		$this->bulletin_id = $bulletin_id+0;
+	    $this->bulletin_id = (int) $bulletin_id;
 	}
 }

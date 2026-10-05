@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: CmsSource.xml,v 1.1 2024/02/26 14:28:54 dbellamy Exp $ -->
+
+<source>
+
+    <methods>
+    
+        <!-- Nb articles -->
+        <nb_articles>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM cms_articles WHERE 1</query>
+        </nb_articles>
+
+        <!-- Nb de rubriques -->
+        <nb_sections>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM cms_sections WHERE 1</query>
+        </nb_sections>
+    </methods>
+</source>

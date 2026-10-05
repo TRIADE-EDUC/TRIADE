@@ -1,0 +1,26 @@
+<!-- $Id: section_in_result_display.tpl.html,v 1.1.4.1 2024/06/07 10:26:48 pmallambic Exp $ -->
+
+<article>
+    <div id="section_container_{{ section.id }}" class="pmb_item">
+        <div class="uk-flex uk-flex-wrap">
+            {% if section.logo.exists %}
+                <!-- image -->
+                <div class="pmb_side_img pmb_img">
+                    <a aria-hidden="true" href="{{section.fields_type.cp_edt_url.values.0.value | default section.permalink}}" target="{{section.fields_type.cp_edt_new_tab.values.0.value}}">
+                        <img src="{{section.logo.small}}" alt="{{section.fields_type.cp_edt_s_logo_alt.values.0.value}}"/>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="uk-flex uk-flex-column uk-width-expand">
+                <!-- item -->
+                <h3 class="pmb_subtitle">
+                    <a aria-hidden="true" href="{{section.fields_type.cp_edt_url.values.0.value | default section.permalink}}" target="{{section.fields_type.cp_edt_new_tab.values.0.value}}">{{section.title}}</a>
+                </h3>
+                <p class="pmb_resume">
+                    {{section.resume | strip_tags | limitstring, 350, "..."}}
+                </p>
+                <a class="pmb_button pmb-button-left" href="{{section.fields_type.cp_edt_url.values.0.value | default section.permalink}}" target="{{section.fields_type.cp_edt_new_tab.values.0.value}}">{{msg.prt_lire}}</a>
+            </div>
+        </div>
+    </div>
+</article>

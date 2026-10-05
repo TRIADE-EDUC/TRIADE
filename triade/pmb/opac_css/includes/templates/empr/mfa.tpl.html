@@ -1,0 +1,47 @@
+<!-- $Id: mfa.tpl.html,v 1.1 2023/07/13 13:17:02 jparis Exp $ -->
+<div id="mfa-popup">
+    <form action="{{ action }}" method="POST" name="mfa-popup-form">
+        <div>
+            <div class="row">
+                <h3 for='mfa_code'>{{ msg.mfa_title }}</h3>
+            </div>
+            <div class="row">
+                <label for='mfa_code'>{{ msg.mfa_login_input_label }}</label>
+            </div>
+            <div class="row">
+                <input type='text' name='mfa_code' id='mfa_code' size='20' border='0' value='' required>
+            </div>
+            <div class="row">
+                <span id="mfa-notify" class="error">&nbsp;</span>
+            </div>
+            <div class="row code-send">
+                {% if empr.empr_mail.0 %}
+                    <a class='bouton' id='btn_send_mail' type='button' onclick='send_code_otp("send_mail")'>
+                        {{ msg.mfa_login_send_mail }}
+                    </a>
+                {% endif %}
+                {% if sms_activate and empr.empr_tel1 and empr.empr_sms %}
+                    <a class='bouton' id='btn_send_sms' type='button' onclick='send_code_otp("send_sms")'>
+                        {{ msg.mfa_login_send_sms }}
+                    </a>
+                {% endif %}
+            </div>
+            <div class="row">
+                {{ hidden_global_vars }}
+            </div>
+            <div class="row">
+                <p>Si vous avez scanné votre code QR pendant l'initialisation, vous avez également la possibilité d'utiliser une <b>application</b></p>
+            </div>
+            <div class="row form-actions">
+                <input class='bouton' 
+                    type='button'
+                    onclick="close_mfa_frame()"
+                    value='{{ msg.76 }}'>
+                <input class='bouton' 
+                    type='submit'
+                    onclick="send_ajax_login(event)"
+                    value='{{ msg.mfa_validate }}'>
+            </div>
+        </div>
+    </form>
+</div>

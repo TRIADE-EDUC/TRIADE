@@ -1,13 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.11 2017-12-05 14:23:52 wlair Exp $
+// $Id: main.inc.php,v 1.12 2021/02/09 18:01:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
-
-$admin_layout = str_replace('!!menu_sous_rub!!', $msg[329], $admin_layout);
-print $admin_layout;
 
 ?>
 

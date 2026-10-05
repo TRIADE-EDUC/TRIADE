@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Graph
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_graph_view_spacetree.xml,v 1.5 2023/10/26 15:26:18 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code='toolkit_required'>Le toolkit "jit" est requis pour le fonctionnement.</entry>
+	<entry code='cms_module_graph_view_spacetree'>Affichage SpaceTree</entry>
+    <entry code='cms_module_graph_view_spacetree_distance'>Distance entre chaque noeud :</entry>
+    <entry code='cms_module_graph_view_spacetree_node_type'>Forme des noeuds :</entry>
+    <entry code='cms_module_graph_view_spacetree_node_width'>Largeur des noeuds :</entry>
+    <entry code='cms_module_graph_view_spacetree_node_height'>Hauteur des noeuds :</entry>
+	<entry code='cms_module_graph_view_spacetree_node_type_circle'>Cercle</entry>
+	<entry code='cms_module_graph_view_spacetree_node_type_rectangle'>Rectangle</entry>
+	<entry code='cms_module_graph_view_spacetree_node_type_square'>Carré</entry>
+	<entry code='cms_module_graph_view_spacetree_node_type_ellipse'>Ellipse</entry>
+    <entry code='cms_module_graph_view_spacetree_node_color'>Couleur des noeuds :</entry>
+    <entry code='cms_module_graph_view_spacetree_node_color_selected'>Couleur des noeuds sélectionnés :</entry>
+    <entry code='cms_module_graph_view_spacetree_label_style'>Style des libellés</entry>
+    <entry code='cms_module_graph_view_spacetree_label_style_none'>Aucun</entry>
+    <entry code='cms_module_graph_view_spacetree_label_style_bold'>Gras</entry>
+    <entry code='cms_module_graph_view_spacetree_label_style_italic'>Italique</entry>
+    <entry code='cms_module_graph_view_spacetree_label_size'>Taille des libellés</entry>
+    <entry code='cms_module_graph_view_spacetree_label_color'>Couleur des libellés</entry>
+	<entry code='cms_module_graph_view_spacetree_levels_to_show'>Nombre de niveaux à afficher pour une sous-arborescence :</entry>
+	<entry code='cms_module_graph_view_spacetree_tooltip_template_folder'>Dossier de templates à utiliser pour le tooltip :</entry>
+</XMLlist>

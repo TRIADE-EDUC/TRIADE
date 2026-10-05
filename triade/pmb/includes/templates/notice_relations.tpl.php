@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_relations.tpl.php,v 1.12 2019-05-27 12:35:59 btafforeau Exp $
+// $Id: notice_relations.tpl.php,v 1.15 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -52,8 +52,10 @@ $notice_relations_links_tpl = "
         name=this.getAttribute('id').substring(4);
         name_id = name.substr(0,5)+'_id_'+name.substr(6);
         openPopUp('./select.php?what=notice&caller=notice&param1='+name_id+'&param2='+name+'&no_display=!!notice_id_no_replace!!', 'selector');
-        name_rank = name.substr(0,5)+'_rank_'+name.substr(6);
-        document.getElementById(name_rank).value=0;
+        name_ranking = name.substr(0,5)+'_ranking_'+name.substr(6);
+        if(document.getElementById(name_ranking)) {
+			document.getElementById(name_ranking).value=0;
+		}
     }
 
 	function raz_rel() {
@@ -294,7 +296,7 @@ $notice_relations_links_tpl = "
 <!-- onglet 13 -->
 <div id='el11Parent' class='parent'>
 <h3>
-    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el11Img' onClick=\"expandBase('el11', true); return false;\" title='".$msg["notice_relations"]."' border='0' /> ".$msg["notice_relations"]."
+    ".get_expandBase_button('el11', 'notice_relations')." ".$msg["notice_relations"]."
 </h3>
 </div>
 

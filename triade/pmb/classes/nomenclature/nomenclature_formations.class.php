@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_formations.class.php,v 1.7 2015-04-03 11:16:23 jpermanne Exp $
+// $Id: nomenclature_formations.class.php,v 1.9 2023/05/05 13:38:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 /**
  * class nomenclature_formations
- * ReprÃ©sente toutes les formations 
+ * Représente toutes les formations 
  */
 class nomenclature_formations{
 
@@ -29,19 +29,16 @@ class nomenclature_formations{
 	 * @access public
 	 */
 	public function __construct() {
-		
 		$this->fetch_datas();
 	} // end of member function __construct
 
 	protected function fetch_datas(){
-		global $dbh;
 		$this->formations =array();
-		
 		$query = "select id_formation from nomenclature_formations order by formation_order";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
-				$this->add_formation( new nomenclature_formation($row->id_formation));				
+				$this->add_formation(nomenclature_formation::get_instance($row->id_formation));				
 			}
 		}		
 	}

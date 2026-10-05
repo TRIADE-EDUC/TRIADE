@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_show.class.php,v 1.21 2019-06-04 08:50:39 btafforeau Exp $
+// $Id: term_show.class.php,v 1.27.2.1 2025/01/16 11:03:35 gneveu Exp $
 //
-// Gestion de l'affichage d'un notice d'un terme du thÃ©saurus
+// Gestion de l'affichage d'un notice d'un terme du thésaurus
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/category.class.php");
 require_once($class_path."/thesaurus.class.php");
 require_once("$class_path/marc_table.class.php");
@@ -15,42 +16,42 @@ require_once("$class_path/aut_link.class.php");
 
 class term_show {
 
-	public $base_query;				//ParamÃ¨tres supplÃ©mentaires passÃ©s dans les URL
-	public $term;						//Terme Ã  afficher
-	public $parent_link;				//Nom de la fonction Ã  appeller pour afficher les liens d'action Ã  cÃ´tÃ© des catÃ©gories
+	public $base_query;				//Paramètres supplémentaires passés dans les URL
+	public $term;						//Terme à afficher
+	public $parent_link;				//Nom de la fonction à appeller pour afficher les liens d'action à côté des catégories
 	public $url_for_term_show;			//URL a rappeller
 	public $keep_tilde;
 	public $id_thes = 0;
 	public $thes;
-	
-    public function __construct($term,$url_for_term_show,$base_query,$parent_link,$keep_tilde=0, $id_thes) {
+
+    public function __construct($term, $url_for_term_show, $base_query, $parent_link, $keep_tilde = 0, $id_thes = 0) {
     	$this->base_query=$base_query;
     	$this->term=$term;
     	$this->parent_link=$parent_link;
     	$this->url_for_term_show=$url_for_term_show;
-    	$this->keep_tilde=$keep_tilde+0;
-    	$this->id_thes = $id_thes+0;
-		$this->thes = new thesaurus($this->id_thes); 
+    	$this->keep_tilde=intval($keep_tilde);
+    	$this->id_thes = intval($id_thes);
+		$this->thes = new thesaurus($this->id_thes);
     }
-    
+
     public function has_child($categ_id) {
 		$requete = "select count(1) from noeuds where num_parent = '".$categ_id."' ";
 		$resultat=pmb_mysql_query($requete);
 		return pmb_mysql_result($resultat,0,0);
 	}
 
-	//RÃ©cupÃ©ration du chemin
+	//Récupération du chemin
 	public function get_categ_lib_($categ_id) {
 		global $charset;
-		
+
 		$re="";
 
-		//Instanciation de la catÃ©gorie
+		//Instanciation de la catégorie
 		$r=new category($categ_id);
-		//RÃ©cupÃ©ration du chemin
+		//Récupération du chemin
 		for ($i=0; $i<count($r->path_table); $i++) {
 			if ($re!='') $re.=' - ';
-			//Si la catÃ©gorie ne commence pas par "~", on affiche le libelle avec un lien pour la recherche sur le terme, sinon on affiche ~
+			//Si la catégorie ne commence pas par "~", on affiche le libelle avec un lien pour la recherche sur le terme, sinon on affiche ~
 			if (($r->path_table[$i]['libelle'][0]!='~')||($this->keep_tilde))
 			//if (($r->has_child)||($this->keep_tilde))
 				$re.="<a href=\"".$this->url_for_term_show.'?term='.rawurlencode($r->path_table[$i]['libelle']).'&id_thes='.$r->thes->id_thesaurus.'&'.$this->base_query."\">".htmlentities($r->path_table[$i]['libelle'],ENT_QUOTES,$charset).'</a>';
@@ -59,8 +60,8 @@ class term_show {
 			}
 		}
 		if ($re!='') $re.=' - ';
-		//Si le libellÃ© de la catÃ©gorie ne commence pas par "~", on affiche le libellÃ© avec un lien sinon ~
-		if (($r->libelle[0]!='~')||($this->keep_tilde))
+		//Si le libellé de la catégorie ne commence pas par "~", on affiche le libellé avec un lien sinon ~
+		if ((substr($r->libelle, 0, 1) != '~') || ($this->keep_tilde))
 			$re.="<a href=\"".$this->url_for_term_show.'?term='.rawurlencode($r->libelle).'&id_thes='.$r->thes->id_thesaurus.'&'.$this->base_query."\">".htmlentities($r->libelle,ENT_QUOTES,$charset).'</a>';
 		else{
 			$re.='~';
@@ -70,17 +71,17 @@ class term_show {
 
 	public function get_categ_lib($categ_id, $categ_libelle,$force_link=false) {
 		global $charset;
-		
+
 		$r=new category($categ_id);
-		
+
 		if($r->is_under_tilde){
 			return "~";
 		}
-		
+
 		if ($r->parent_id) {
 			$path=$this->get_categ_lib_($r->parent_id);
 		}
-		
+
 		$same=false;
 		if( pmb_strtolower(convert_diacrit($r->libelle)) == pmb_strtolower(convert_diacrit($categ_libelle))){
 			$same=true;
@@ -108,16 +109,14 @@ class term_show {
 	}
 
 	public function show_tree($categ_id,$prefixe,$level,$max_level) {
-		
+
 		global $charset;
 		global $msg;
-		global $lang;
-		global $dbh;
 		$pl=$this->parent_link;
 		global ${$pl};
-		
+
 		$res='';
-		
+
 		if ($this->has_child($categ_id)&&($level<($max_level))) {
 
 		$resultat_2=$this->do_query(4,$categ_id);
@@ -152,39 +151,37 @@ class term_show {
 		global $history,$history_thes;
 		global $charset;
 		global $msg;
-		global $dbh;
-		global $lang;
 		global $thesaurus_mode_pmb;
 		$pl=$this->parent_link;
 		global ${$pl};
 
 		$res='';
-		
+
 		if ($history!='') {
 			$res.="<a href=\"".$this->url_for_term_show.'?term='.rawurlencode(stripslashes($history)).'&id_thes='.rawurlencode(stripslashes($history_thes)).'&'.$this->base_query."\">&lt;</a>&nbsp;";
 		}
 
-		//RÃ©cupÃ©ration des catÃ©gories ayant le mÃªme libellÃ©
+		//Récupération des catégories ayant le même libellé
 		$resultat_1=$this->do_query(1);
-		
-		if($thesaurus_mode_pmb == 0){
-			$res.='<b>'.htmlentities($this->term,ENT_QUOTES,$charset).'</b><blockquote>';
-		}else{
-			$res.='<b>'.htmlentities("[".$this->thes->libelle_thesaurus."] ".$this->term,ENT_QUOTES,$charset).'</b><blockquote>';
-		}
-		
 
-		//Initialisation du tableau des renvois (permet d'Ã©viter d'afficher deux fois un mÃªme renvoi, ou un renvoi vers le noeud traitÃ©)
+		if($thesaurus_mode_pmb == 0){
+			$res.='<b>'.htmlentities($this->term,ENT_QUOTES,$charset).'</b><blockquote role="presentation">';
+		}else{
+			$res.='<b>'.htmlentities("[".$this->thes->libelle_thesaurus."] ".$this->term,ENT_QUOTES,$charset).'</b><blockquote role="presentation">';
+		}
+
+
+		//Initialisation du tableau des renvois (permet d'éviter d'afficher deux fois un même renvoi, ou un renvoi vers le noeud traité)
 		$t_see=array();
 
-		//Pour chaque catÃ©gorie ayant le mÃªme libellÃ©
+		//Pour chaque catégorie ayant le même libellé
 		while ($r1=pmb_mysql_fetch_object($resultat_1)) {
-			$t_see[$r1->categ_id]=1;//Pour les renvois vers le un noeud traitÃ©
-			//Lecture du chemin vers la catÃ©gorie
-			$renvoi=$this->get_categ_lib($r1->categ_id,$this->term).' ';
-			//Si la catÃ©gorie est une sous catÃ©gorie d'une terme "~", alors c'est un renvoi d'un terme orphelin ou on en tient pas compte
-			if (($renvoi[0]=='~')&&($r1->categ_see)&&(!$this->keep_tilde)) {
-				//Si le renvoi n'existe pas dÃ©jÃ , on l'affiche et on l'enregistre
+			$t_see[$r1->categ_id]=1;//Pour les renvois vers le un noeud traité
+			//Lecture du chemin vers la catégorie
+			$renvoi = $this->get_categ_lib($r1->categ_id,$this->term).' ';
+			//Si la catégorie est une sous catégorie d'une terme "~", alors c'est un renvoi d'un terme orphelin ou on en tient pas compte
+			if ((substr($renvoi, 0, 1) == '~') && ($r1->categ_see) && (!$this->keep_tilde)) {
+				//Si le renvoi n'existe pas déjà, on l'affiche et on l'enregistre
 				if (!$t_see[$r1->categ_see]) {
 					$visible=$pl($r1->categ_id,$r1->categ_see);
 					if ($visible["VISIBLE"])
@@ -192,43 +189,43 @@ class term_show {
 					$t_see[$r1->categ_see]=1;
 				}
 			} else {
-				if (($renvoi[0]!='~')||($this->keep_tilde)) {
-					//Si la catÃ©gorie n'est pas une sous catÃ©gorie d'un terme "~", on affiche le chemin					$visible=$pl($r1->categ_id,$r1->categ_see);
+			    if ((substr($renvoi, 0, 1) != '~')||($this->keep_tilde)) {
+					//Si la catégorie n'est pas une sous catégorie d'un terme "~", on affiche le chemin					$visible=$pl($r1->categ_id,$r1->categ_see);
 					$visible=$pl($r1->categ_id,$r1->categ_see);
 					if ($visible["VISIBLE"]) {
 						$res.=$visible["LINK"].'&nbsp;'.$renvoi.' - <b>'.$r1->categ_libelle.'</b><br />';
 						//Si il y a un renvoi, on l'affiche
 						if ($r1->categ_see) {
-							$res.='<blockquote>'.$msg['term_show_see'].' '.$this->get_categ_lib($r1->categ_see,$r1->categ_libelle,true);
-							//Si c'est le mÃªme libellÃ©, on l'ajoute au chemin parent, sans lien
+							$res.='<blockquote role="presentation">'.$msg['term_show_see'].' '.$this->get_categ_lib($r1->categ_see,$r1->categ_libelle,true);
+							//Si c'est le même libellé, on l'ajoute au chemin parent, sans lien
 							$res.='</blockquote><br />';
 						}
 					}
 				}
 			}
-			
-			//Si le renvoi ne commence pas par "~" alors on affiche les sous niveaux et les catÃ©gories associÃ©es
-			if (($renvoi[0]!='~')||($this->keep_tilde)) {
+
+			//Si le renvoi ne commence pas par "~" alors on affiche les sous niveaux et les catégories associées
+			if ((substr($renvoi, 0, 1) != '~') || ($this->keep_tilde)) {
 				//Affichage des premiers sous niveaux
-				$res.='<blockquote>';
-				//Recherche du niveau de la catÃ©gorie (0,1 ou supÃ©rieur Ã  1)
+				$res.='<blockquote role="presentation">';
+				//Recherche du niveau de la catégorie (0,1 ou supérieur à 1)
 				$l=$this->get_level($r1->categ_id);
-				//Si le niveau est supÃ©rieur Ã  1, on affiche que deux sous niveaux sinon 3
+				//Si le niveau est supérieur à 1, on affiche que deux sous niveaux sinon 3
 				if ($l>1) $max_level=3; else $max_level=2;
-		
+
 				//Affichage des n sous premiers niveaux
-				$res.=$this->show_tree($r1->categ_id,$this->term,0,$max_level);	
+				$res.=$this->show_tree($r1->categ_id,$this->term,0,$max_level);
 				$res.='</blockquote>';
-				
-				//Recherche des catÃ©gories associÃ©es
+
+				//Recherche des catégories associées
 				$requete = "select count(1) from voir_aussi where voir_aussi.num_noeud_orig = '".$r1->categ_id."' ";
 				$nta=pmb_mysql_result(pmb_mysql_query($requete),0,0);
 				//Si il y en a
 				if ($nta) {
-					$res.='<blockquote>';
-					
+					$res.='<blockquote role="presentation">';
+
 					$resultat_ta=$this->do_query(2,$r1->categ_id);
-					
+
 					$first=1;
 					$res1='';
 					while ($r_ta=pmb_mysql_fetch_object($resultat_ta)) {
@@ -238,16 +235,17 @@ class term_show {
 							$res1.=$visible["LINK"]."&nbsp;<a href=\"".$this->url_for_term_show.'?term='.rawurlencode($r_ta->categ_libelle).'&id_thes='.$this->id_thes.'&'.$this->base_query."\">".htmlentities($r_ta->categ_libelle,ENT_QUOTES,$charset).'</a>';
 						}
 					}
-					if ($res1!='') $res.=''.$msg['term_show_see_also'].'<blockquote><i>'.$res1.'</i></blockquote>';
+					if ($res1!='') $res.=''.$msg['term_show_see_also'].'<blockquote role="presentation"><i>'.$res1.'</i></blockquote>';
 					$res.= '</blockquote>';
 				}
-				//Recherche des liens d'autoritÃ©s entre catÃ©gories
-				$aut_link= new aut_link(AUT_TABLE_CATEG,$r1->categ_id);
-				if(count($aut_link->aut_list)){
+				//Recherche des liens d'autorités entre catégories
+				$aut_link = new aut_link(AUT_TABLE_CATEG,$r1->categ_id);
+				$aut_list = $aut_link->get_aut_list();
+				if(is_countable($aut_list) && count($aut_list)) {
 					$res1_tab = array();
 					$source = new marc_list("aut_link");
 					$liste_type_relation = $source->table;
-					foreach ( $aut_link->aut_list as $val ) {
+					foreach ( $aut_list as $val ) {
        					if($val["to"] == AUT_TABLE_CATEG){
 							$r_link=$this->do_query(3,$val["to_num"]);
 							if(pmb_mysql_num_rows($r_link) == 1){
@@ -259,7 +257,7 @@ class term_show {
 								}
 								if ($visible["VISIBLE"]) {
 									$tmp=$visible["LINK"]."&nbsp;".htmlentities($info_thes,ENT_QUOTES,$charset).$this->get_categ_lib($r_link_res->categ_id, $this->term,true);
-									if ($val['direction'] == 'up') {									    
+									if ($val['direction'] == 'up') {
 									    $res1_tab[$liste_type_relation['ascendant'][$val["type"]]][]=$tmp;
 									} else {
 									    $res1_tab[$liste_type_relation['descendant'][$val["type"]]][]=$tmp;
@@ -269,9 +267,9 @@ class term_show {
        					}
 					}
 					if(count($res1_tab)){
-						$res.='<blockquote>'.$msg['aut_link'].' :';
+						$res.='<blockquote role="presentation">'.$msg['aut_link'].' :';
 						foreach ($res1_tab as $key => $value) {
-       						$res.='<i><blockquote>'.htmlentities($key,ENT_QUOTES,$charset).' : '.implode(",",$value).'</blockquote></i>';
+       						$res.='<i><blockquote role="presentation">'.htmlentities($key,ENT_QUOTES,$charset).' : '.implode(",",$value).'</blockquote></i>';
 						}
 						$res.= '</blockquote>';
 					}
@@ -281,8 +279,8 @@ class term_show {
 		$res.='</blockquote>';
 		return $res;
 	}
-	
-	
+
+
 	public function do_query($mode,$param=""){
 		global $lang;
 		$select="SELECT DISTINCT noeuds.id_noeud AS categ_id, ";
@@ -291,16 +289,16 @@ class term_show {
 		$where="WHERE 1 ";
 		$order="ORDER BY categ_libelle ";
 		$limit="";
-		
+
 		if(($lang==$this->thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false)){
 			$simple=true;
 		}else{
 			$simple=false;
 		}
-		
+
 		//$select.= "noeuds.num_parent AS categ_parent, ";
-		
-		
+
+
 		if($simple){
 			$select.="catdef.libelle_categorie AS categ_libelle, ";
 			//$select.= "catdef.note_application as categ_comment, ";
@@ -311,7 +309,7 @@ class term_show {
 			//$select.= "if (catlg.num_noeud is null, catdef.note_application, catlg.note_application) as categ_comment, ";
 			//$select.= "if (catlg.num_noeud is null, catdef.index_categorie, catlg.index_categorie) as index_categorie ";
 		}
-		
+
 		if($mode == 1){
 			$where.="AND noeuds.num_thesaurus = '".$this->id_thes."' ";
 			if($simple){
@@ -320,7 +318,7 @@ class term_show {
 				$where.="AND (IF (catlg.num_noeud IS NULL, catdef.libelle_categorie = '".addslashes($this->term)."', catlg.libelle_categorie = '".addslashes($this->term)."') ) ";
 			}
 		}elseif($mode == 2){
-			$from="FROM voir_aussi JOIN noeuds ON noeuds.id_noeud=voir_aussi.num_noeud_dest ";//On Ã©crase l'ancien from car ce n'est pas ce que l'on veut
+			$from="FROM voir_aussi JOIN noeuds ON noeuds.id_noeud=voir_aussi.num_noeud_dest ";//On écrase l'ancien from car ce n'est pas ce que l'on veut
 			$where.="AND voir_aussi.num_noeud_orig = '".$param."' ";
 		}elseif($mode == 3){
 			$select.="noeuds.num_thesaurus as thes_id, ";

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -53,7 +53,7 @@ $cnx=cnx();
 	</tr>
 <?php
 	$data=recup_abs_rtd_aucun2($_POST["saisie_date_debut"],$_POST["saisie_date_fin"]); //id,classe,date,heure,matiere,enseignante
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 ?>
 	<tr>
 	<TD bgcolor=#FFFFFF >&nbsp;<?php print $data[$i][1] ?></TD>

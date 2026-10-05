@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+� 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.3 2023/05/31 07:35:17 qvarin Exp $ 
+-->
+
+<manifest>
+	<type>item</type>
+	<namespace>Pmb\DSI\Models\Item\Entities\ItemWatch\ItemWatchListItem\ItemWatchListItem</namespace>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<selector>Pmb\DSI\Models\Selector\Item\Entities\ItemWatch\ItemWatchSelector</selector>
+		<view>Pmb\DSI\Models\View\DjangoView\DjangoView</view>
+		<view>Pmb\DSI\Models\View\WYSIWYGView\WYSIWYGView</view>
+		<view>Pmb\DSI\Models\View\SimpleView\SimpleView</view>
+		<view>Pmb\DSI\Models\View\AggregatedDjangoView\AggregatedDjangoView</view>
+		<view>Pmb\DSI\Models\View\AggregatedRawTextView\AggregatedRawTextView</view>
+		<view>Pmb\DSI\Models\View\RssView\RssView</view>
+	</compatibility>
+</manifest>

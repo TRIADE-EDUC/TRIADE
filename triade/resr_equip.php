@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,28 +26,33 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+<style>
+.edt-days-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.edt-day-lbl  { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:700; color:#080A66; font-family:Electrolize,Trebuchet MS,Arial,sans-serif; }
+.resa-msg     { font-size:12px; margin-top:8px; }
+</style>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php
-// connexion (après include_once lib_licence.php obligatoirement)
 include_once("librairie_php/db_triade.php");
 include_once("librairie_php/timezone.php");
 validerequete("7");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 $date="jj/mm/aaaa";
@@ -86,152 +91,129 @@ if (isset($_POST["create"])) {
 		$messageresa.="[<a href=\"#\" onclick=\"open('resr_equip_plan.php?equip=".$equipement."&saisiedate=".$date."','resa','width=600,height=500,scrollbars=yes')\">consulter</a>]";
 	}
 }
-
 ?>
 
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
-<?php print LANGRESA44?></font></b></td>
-</tr>
-<tr id='cadreCentral0' >
-<td><br><br>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGRESA44 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
+<!-- // fin form -->
 <?php if ($enr == "pasok") { ?>
 <form name="formulaire" method="post" action="resr_equip.php" onsubmit="return validresa()">
-<table width=100% height=150 border=0>
-<tr>
-<td align=right><font class=T2><?php print LANGRESA45?> :</font> </td>
-<td><select name="saisie_equip">
-    <?php
-	if (isset($_POST["saisie_equip"])) {
-		print "<option  value=".$equipement." STYLE='color:#000066;background-color:#FCE4BA'>".recherche_equip($equipement)."</option>";
-	}
-     ?>
-    <option   value="choix"  STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
-<?php
-select_equip(); // creation des options
-?>
-</select>
-</td>
-</tr>
-<tr><td align=right width=50%><font class=T2><?php print LANGRESA71 ?> :</font> </td>
-<?php
-if (isset($_GET["date"])) {
-		$date=dateForm($_GET["date"]);
-}
-?>
-<td><input type="text" name="saisie_date" value="<?php print $date?>"   size=12 class=bouton2 onKeyPress="onlyChar(event)"    >
-<?php
-include_once("librairie_php/calendar.php");
-calendarDim("id1","document.formulaire.saisie_date",$_SESSION["langue"],"0","0");
-?>
-</td></tr>
 
-<tr><td align=right><font class=T2><?php print LANGRESA72 ?> :</font> </td>
-<td><input type=text name=saisie_heure1 value="<?php print $heure1?>"  onclick="this.value=''" size=5  onKeyPress="onlyChar2(event)"  ></td></tr>
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGRESA45 ?> :</span>
+    <select name="saisie_equip" class="cc-select">
+      <?php
+      if (isset($_POST["saisie_equip"])) {
+          print "<option value=".$equipement." STYLE='color:#000066;background-color:#FCE4BA'>".recherche_equip($equipement)."</option>";
+      }
+      ?>
+      <option value="choix" STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_equip(); ?>
+    </select>
+  </div>
 
-<tr><td align=right><font class=T2><?php print LANGRESA73 ?> :</font> </td>
-<td><input type=text name=saisie_heure2 value="<?php print $heure2?>"  onclick="this.value=''" size=5  onKeyPress="onlyChar2(event)"  ></td></tr>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGRESA71 ?> :</span>
+    <?php if (isset($_GET["date"])) { $date=dateForm($_GET["date"]); } ?>
+    <input type="text" name="saisie_date" value="<?php print $date ?>" size=12 class=bouton2 onKeyPress="onlyChar(event)">
+    <?php include_once("librairie_php/calendar.php"); calendarDim("id1","document.formulaire.saisie_date",$_SESSION["langue"],"0","0"); ?>
+  </div>
 
-<tr><td align=right valign=top><font class=T2><?php print "Informations" ?> :</font> </td>
-<td><textarea name=saisie_info cols=30 rows=3><?php print $info?></textarea></td></tr>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGRESA72 ?> :</span>
+    <input type=text name=saisie_heure1 value="<?php print $heure1 ?>" onclick="this.value=''" size=5 onKeyPress="onlyChar2(event)" class="bouton2">
+  </div>
 
-<tr><td align=right><font class=T2><?php print "Récurrence" ?> :</font> </td>
-<td><font class=T2>jusqu'au </font><input type="text" name="periode" readonly="readonly" size=10> 
-				     <?php include_once("librairie_php/calendar.php");
-				     calendarDim('id2','document.formulaire.periode',$_SESSION["langue"],"0","0");?></td></tr>
-<?php
-	if ($date != "jj/mm/aaaa") {
-		$jour=date_jour2($date); // "di","lu","ma","me","je","ve","sa"
-		switch($jour) {
-			case "di" :  $checkDi="checked='checked'" ; break;
-			case "lu" :  $checkLu="checked='checked'" ; break;
-			case "ma" :  $checkMa="checked='checked'" ; break;
-			case "me" :  $checkMe="checked='checked'" ; break;
-			case "je" :  $checkJe="checked='checked'" ; break;
-			case "ve" :  $checkVe="checked='checked'" ; break;
-			case "sa" :  $checkSa="checked='checked'" ; break;
-		}
-	}
-?>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGRESA73 ?> :</span>
+    <input type=text name=saisie_heure2 value="<?php print $heure2 ?>" onclick="this.value=''" size=5 onKeyPress="onlyChar2(event)" class="bouton2">
+  </div>
 
+  <div style="margin-bottom:9px;">
+    <span class="na-textarea-lbl">Informations :</span>
+    <textarea name=saisie_info cols=30 rows=3 style="width:98%;"><?php print $info ?></textarea>
+  </div>
 
-<tr><td align=right valign=center><font class=T2><?php print "Redondance" ?> :</font> </td>
-<td><table border=0>
-<tr>
-<td width=5>&nbsp;<?php print LANGL ?></td>
-<td>&nbsp;<?php print LANGM ?></td>
-<td>&nbsp;<?php print LANGME ?></td>
-<td>&nbsp;<?php print LANGJ ?></td>
-<td>&nbsp;<?php print LANGV ?></td>
-<td>&nbsp;<?php print LANGS ?></td>
-<td>&nbsp;<?php print LANGD ?></td>
-</tr>
-<tr>
-<td><input type="checkbox" name="jours[]" value="1" <?php print $checkLu ?> ></td>
-<td><input type="checkbox" name="jours[]" value="2" <?php print $checkMa ?> ></td>
-<td><input type="checkbox" name="jours[]" value="3" <?php print $checkMe ?> ></td>
-<td><input type="checkbox" name="jours[]" value="4" <?php print $checkJe ?> ></td>
-<td><input type="checkbox" name="jours[]" value="5" <?php print $checkVe ?> ></td>
-<td><input type="checkbox" name="jours[]" value="6" <?php print $checkSa ?> ></td>
-<td><input type="checkbox" name="jours[]" value="7" <?php print $checkDi ?> ></td>
-</tr>
-</table></td></tr>
+  <div class="na-row">
+    <span class="na-lbl">Récurrence :</span>
+    <span style="font-size:12px;color:#333;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;">jusqu'au</span>
+    <input type="text" name="periode" readonly="readonly" size=10 class="bouton2">
+    <?php include_once("librairie_php/calendar.php"); calendarDim('id2','document.formulaire.periode',$_SESSION["langue"],"0","0"); ?>
+  </div>
 
+  <?php
+  if ($date != "jj/mm/aaaa") {
+      $jour=date_jour2($date);
+      switch($jour) {
+          case "di" : $checkDi="checked='checked'"; break;
+          case "lu" : $checkLu="checked='checked'"; break;
+          case "ma" : $checkMa="checked='checked'"; break;
+          case "me" : $checkMe="checked='checked'"; break;
+          case "je" : $checkJe="checked='checked'"; break;
+          case "ve" : $checkVe="checked='checked'"; break;
+          case "sa" : $checkSa="checked='checked'"; break;
+      }
+  }
+  ?>
+  <div class="na-row">
+    <span class="na-lbl">Redondance :</span>
+    <div class="edt-days-row">
+      <label class="edt-day-lbl"><?php print LANGL ?><input type="checkbox" name="jours[]" value="1" <?php print $checkLu ?>></label>
+      <label class="edt-day-lbl"><?php print LANGM ?><input type="checkbox" name="jours[]" value="2" <?php print $checkMa ?>></label>
+      <label class="edt-day-lbl"><?php print LANGME ?><input type="checkbox" name="jours[]" value="3" <?php print $checkMe ?>></label>
+      <label class="edt-day-lbl"><?php print LANGJ ?><input type="checkbox" name="jours[]" value="4" <?php print $checkJe ?>></label>
+      <label class="edt-day-lbl"><?php print LANGV ?><input type="checkbox" name="jours[]" value="5" <?php print $checkVe ?>></label>
+      <label class="edt-day-lbl"><?php print LANGS ?><input type="checkbox" name="jours[]" value="6" <?php print $checkSa ?>></label>
+      <label class="edt-day-lbl"><?php print LANGD ?><input type="checkbox" name="jours[]" value="7" <?php print $checkDi ?>></label>
+    </div>
+  </div>
+</div>
 
-<tr><td colspan=2 align=center><br><br>
-<table align=center><tr><td>
-<script language='JavaScript'>buttonMagicSubmit("<?php print LANGENR?>","create"); //text,nomInput</script>
-<script language='JavaScript'>buttonMagic("<?php print "Planning" ?>","calendrier_resa_equip_visu.php","_parent","","");</script>&nbsp;&nbsp;
-<?php
-if ($_SESSION["membre"] == "menuadmin") { 
-	print "<script language='JavaScript'>buttonMagicRetour2('resr_admin.php','_self','Retour menu')</script>&nbsp;&nbsp;";
-}
-if ($_SESSION["membre"] == "menuprof") { 
-	print "<script language='JavaScript'>buttonMagicRetour2('resa_prof.php','_self','Retour menu')</script>&nbsp;&nbsp;";
-}
-?>
-</td></tr></table>
-<br>
-<?php print $messageresa; ?>
-<br><br>
-</td></tr>
-</table>
-<?php
-}else {
-	if (RESERV == "oui") {
-		print "<br><font class='T2'><center>".LANGRESA69."</center></font>";
-	}else{
-		print "<br><font class='T2'><center>".LANGRESA50."</center></font>";
-	}
-	print "<br><br><table align='center'><tr><td align='center'><script>buttonMagicRetour2('resr_equip.php','_self','Faire une autre réservation équipement')</script>&nbsp;";
-	print "<script>buttonMagicRetour2('resr_salle.php','_self','Faire une réservation salle')</script>&nbsp;&nbsp;";
-	print "</td></tr></table><br><br>";
-}
-?>
+<div class="na-foot">
+  <button type="submit" name="create" value="1" class="btn-enr"><?php print LANGENR ?></button>
+  <button type="button" class="btn-retour" onclick="open('calendrier_resa_equip_visu.php','_parent','')">Planning</button>
+  <?php if ($_SESSION["membre"] == "menuadmin"): ?>
+  <button type="button" class="btn-retour" onclick="open('resr_admin.php','_self','')">Retour menu</button>
+  <?php endif ?>
+  <?php if ($_SESSION["membre"] == "menuprof"): ?>
+  <button type="button" class="btn-retour" onclick="open('resa_prof.php','_self','')">Retour menu</button>
+  <?php endif ?>
+</div>
 
-</td></tr>
+<?php if ($messageresa): ?>
+<div class="resa-msg"><?php print $messageresa ?></div>
+<?php endif ?>
+
+</form>
+
+<?php } else { ?>
+
+<div class="na-card" style="text-align:center;">
+  <div style="font-size:13px;font-weight:700;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;margin-bottom:12px;">
+    <?php print (RESERV == "oui") ? LANGRESA69 : LANGRESA50 ?>
+  </div>
+  <div class="na-foot" style="justify-content:center;">
+    <button type="button" class="btn-retour" onclick="open('resr_equip.php','_self','')">Faire une autre réservation équipement</button>
+    <button type="button" class="btn-retour" onclick="open('resr_salle.php','_self','')">Faire une réservation salle</button>
+  </div>
+</div>
+
+<?php } ?>
+
 <!-- // fin form -->
 </td></tr></table>
-</form>
+
 <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
-// deconnexion en fin de fichier
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."2.js'></SCRIPT>";
+else :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."33.js'></SCRIPT>";
+endif;
 Pgclose();
 ?>
 </BODY>

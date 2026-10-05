@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edit_explnum.inc.php,v 1.19 2019-06-05 09:04:42 btafforeau Exp $
+// $Id: edit_explnum.inc.php,v 1.20 2019/07/12 10:25:27 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -19,4 +19,3 @@ $entities_records_explnum_controller->set_action('explnum_form');
 $entities_records_explnum_controller->proceed();
 
 ?>
-	

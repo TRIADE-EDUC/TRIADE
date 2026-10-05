@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -90,7 +90,7 @@ if (isset($_GET["MT1"])) {
 	$idcarnet=$_POST["idcarnet"];
 	// recherche des dates de debut et fin
 	$dateRecup=recupDateTrim("trimestre1");
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
        	 	$dateDebut=$dateRecup[$j][0];
 	       	 $dateFin=$dateRecup[$j][1];
 	}
@@ -98,7 +98,7 @@ if (isset($_GET["MT1"])) {
 	$dateFinT1=dateForm($dateFin);
 	//-----/
 	$dateRecup=recupDateTrim("trimestre2");
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 	       	 $dateDebut=$dateRecup[$j][0];
         	$dateFin=$dateRecup[$j][1];	
 	}
@@ -106,7 +106,7 @@ if (isset($_GET["MT1"])) {
 	$dateFinT2=dateForm($dateFin);
 	//-----/
 	$dateRecup=recupDateTrim("trimestre3");
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
         	$dateDebut=$dateRecup[$j][0];
 	        $dateFin=$dateRecup[$j][1];
 	}
@@ -142,7 +142,7 @@ if (isset($_GET["apres"])) {
 	$i=$_GET["apres"];
 	$trimes=$_GET["saisie_trimestre"];
 	$idclasse=$_GET["saisie_classe"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 	$res=execSql($sql);
 	$data_eleve=chargeMat($res);
 	if ($i <= 0) {$i=0;}
@@ -158,10 +158,10 @@ if (isset($_POST["direct_eleve"])) {
 	$trimes=$_POST["saisie_trimestre"];
 	$ok=0;
 	$ideleve=$_POST["direct_eleve"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 	$res=execSql($sql);
 	$data_eleve=chargeMat($res);
-	for ($j=0;$j<count($data_eleve);$j++) {
+	for ($j=0;$j<countTriade($data_eleve);$j++) {
 		if ($ideleve == $data_eleve[$j][1]) {
 			$i=$j;
 			break;
@@ -176,7 +176,7 @@ if ($ok == 1) {
 	$idclasse=$_POST["saisie_classe"];
 	$trimes=$_POST["saisie_trimestre"];
 	$idcarnet=$_POST["idcarnet"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 	$res=execSql($sql);
 	$data_eleve=chargeMat($res);
 	$ideleve=$data_eleve[0][1];
@@ -187,7 +187,7 @@ if ($ok == 1) {
 //-----------------------------------------------//
 
 $dateRecup=recupDateTrim($tri);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -215,10 +215,10 @@ $dateFin=dateForm($dateFin);
 	<select name="direct_eleve">
 	<option > <?php print LANGCHOIX?> </option>
 	<?php
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 	$res=execSql($sql);
 	$data_eleve=chargeMat($res);
-	for ($j=0;$j<count($data_eleve);$j++) {
+	for ($j=0;$j<countTriade($data_eleve);$j++) {
 	?>
 	<option STYLE='color:#000066;background-color:#CCCCFF'  value="<?php print $data_eleve[$j][1]?>"><?php print ucwords(trim($data_eleve[$j][2]))." ".trim($data_eleve[$j][3])?></option>
 	<?php
@@ -233,10 +233,10 @@ $dateFin=dateForm($dateFin);
 <tr><td valign=top height=10 >
 <font class=T2>
 <?php
-$sql="SELECT  elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,numero_eleve  FROM ${prefixe}eleves, ${prefixe}classes c WHERE elev_id='$ideleve' AND c.code_class='$idclasse'";
+$sql="SELECT  elev_id,nom,prenom,c.libelle,lv1,lv2,`option`,regime,date_naissance,numero_eleve  FROM {$prefixe}eleves, {$prefixe}classes c WHERE elev_id='$ideleve' AND c.code_class='$idclasse'";
 $res=execSql($sql);
 $data=chargeMat($res);
-if( count($data)  <= 0 ) {
+if( countTriade($data)  <= 0 ) {
 	print("<b><font color=red>Données introuvables</font></b>");
 }else { //debut else
 	?>
@@ -279,7 +279,7 @@ $dom_progress=preg_replace('/\{/',"",$dom_progress);
 $dom_progress=preg_replace('/\}/',"",$dom_progress);
 $tab_dom_progress=explode(",",$dom_progress);
  
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$iddescriptif=$data[$i][0];
 	$libelle=$data[$i][1];
 	$bold=$data[$i][2];

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: apisoap.class.php,v 1.10 2017-07-18 13:47:42 dgoron Exp $
+// $Id: apisoap.class.php,v 1.10 2017/07/18 13:47:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -31,7 +31,7 @@ class apisoap extends connecteur_out {
 		return new apisoap_source($this, $source_id, $this->msg);
 	}
 	
-	//On chargera nous mÃªme les messages si on en a besoin
+	//On chargera nous même les messages si on en a besoin
 	public function need_global_messages() {
 		return false;
 	}
@@ -111,7 +111,7 @@ class apisoap_source extends connecteur_out_source {
 		}
 		$result .= "</div>";
 		
-		//Fonction exportÃ©es
+		//Fonction exportées
 		$result  .= '<div class=row><label class="etiquette" for="api_exported_functions">'.$this->msg["apisoap_exported_functions"].'</label><br />';
 		$api_select = '<select MULTIPLE name="api_exported_functions[]" size="20" >';
 		foreach ($api_functions as $agroup_name => $agroup) {
@@ -160,7 +160,7 @@ class apisoap_source extends connecteur_out_source {
 		if (!isset($authorized_groups) || !$authorized_groups)
 			$authorized_groups = array();
 		
-		//RÃ©cupÃ©rons la liste des fonctions pour virer de l'entrÃ©e les noms de fonctions qui n'existent pas
+		//Récupérons la liste des fonctions pour virer de l'entrée les noms de fonctions qui n'existent pas
 		$api_catalog = es_catalog::get_instance();
 		$api_functions = array();
 		foreach ($api_catalog->groups as $agroup) {

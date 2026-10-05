@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_selectors_tabs.class.php,v 1.6 2019-03-02 14:08:41 arenou Exp $
+// $Id: searcher_selectors_tabs.class.php,v 1.8 2021/02/09 11:09:52 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,7 +22,9 @@ class searcher_selectors_tabs extends searcher_tabs {
     		$instance_elements_list_ui = $this->get_instance_elements_list_ui();
     		$elements = $instance_elements_list_ui->get_elements_list();
     		print $begin_result_liste;
-    		search_authorities::get_caddie_link();    		
+    		search_authorities::get_caddie_link();
+    		$tab=$this->get_current_tab();
+    		search_authorities::get_sort_link(count($this->objects_ids), $tab['OBJECTS_TYPE'], true);
     		print $elements;
     		print $end_result_liste;
     		$this->pager();
@@ -33,6 +35,7 @@ class searcher_selectors_tabs extends searcher_tabs {
     	$tab=$this->get_current_tab();
     	if($this->is_multi_search_criteria()){
     		$sc=$this->get_instance_search();
+    		$sc->add_context_parameter('in_selector', true);
     		$sc->set_elements_list_ui_class_name('elements_'.$this->xml_file.'_selectors_list_ui');
     		$sc->reduct_search();
     		$this->set_session_history($sc->make_human_query(), $tab, "QUERY");

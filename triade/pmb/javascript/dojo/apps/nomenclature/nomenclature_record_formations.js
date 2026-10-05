@@ -1,11 +1,11 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_formations.js,v 1.5 2016-06-03 12:48:58 dgoron Exp $
+// $Id: nomenclature_record_formations.js,v 1.5 2016/06/03 12:48:58 dgoron Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_musicstand_ui"], function(declare, Musicstand_ui){
 	/*
-	 *Classe nomenclature_record_formations. Classe permettant de reprÃ©senter les formations d'une notice
+	 *Classe nomenclature_record_formations. Classe permettant de représenter les formations d'une notice
 	 */
 	  return declare(null, {
 			    

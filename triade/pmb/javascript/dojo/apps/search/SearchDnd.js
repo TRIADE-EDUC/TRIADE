@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SearchDnd.js,v 1.4 2016-11-25 16:34:48 apetithomme Exp $
+// $Id: SearchDnd.js,v 1.4 2016/11/25 16:34:48 apetithomme Exp $
 
 define(['dojo/_base/declare',
         'dojo/dnd/Source',

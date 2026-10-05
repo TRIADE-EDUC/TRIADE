@@ -49,7 +49,7 @@ class lastfmApiCache {
 	 * @param array $config The config array
 	 * @uses lastfmApiDatabase
 	 */
-	function __construct($config) {
+	public function __construct($config) {
 		$this->config = $config;
 		
 		if ( isset($this->config['cache_type']) ) {

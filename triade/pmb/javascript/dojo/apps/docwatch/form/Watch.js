@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Watch.js,v 1.13 2018-08-21 15:38:44 plmrozowski Exp $
+// $Id: Watch.js,v 1.13 2018/08/21 15:38:44 plmrozowski Exp $
 
 
 define(["dojo/_base/declare", "dojo/parser", "dojo/topic", "dojo/_base/lang", "dojo/dom", "dijit/form/Form", "dojo/dom-form", "dojo/text!pmbBase/ajax.php?module=dsi&categ=docwatch&sub=forms&action=get_form&form=docwatch_watch_form_tpl", "dojo/query", "dojo/request/xhr"], function(declare, parser, topic, lang, dom, Form, domForm, template, query, xhr){

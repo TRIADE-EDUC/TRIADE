@@ -1,9 +1,11 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: publisher.html,v 1.4 2017-11-22 14:51:42 dgoron Exp $ -->
+<!-- $Id: publisher.html,v 1.6 2023/08/08 15:36:21 qvarin Exp $ -->
 
-{% block header %}
-	<h3><span>{{ msg.publisher_see_title }}</span></h3>
+{% block title %}
+	{% title authority_isbd %}
+		 {{ msg.publisher_tpl_publisher }} {{ authority.name }}{% if authority.web %} <a target="_blank" href="{{authority.web}}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	{% endtitle %}
 {% endblock %}
 
 {% block aut_see %}
@@ -12,12 +14,6 @@
 	</div>
 {% endblock %}
 	
-{% block title %}
-	<h3>
-		{{ authority.name }}{% if authority.web %} <a target="_blank" href="{{authority.web}}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
-	</h3>
-{% endblock %} 
-
 {% block details %}
 	{% if authority.ed_comment %}
 		<div class="aut_display_row">

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.14 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: ajax_main.inc.php,v 1.18.8.1 2024/05/21 09:55:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $categ, $datas, $caddie, $object, $plugin, $sub, $file, $search_xml_file, $search_xml_file_full_path;
+global $class_path, $categ, $datas, $plugin, $sub, $action, $object_type, $file, $search_xml_file, $search_xml_file_full_path;
 
 require_once($class_path."/caddie/authorities_caddie_controller.class.php");
 
@@ -14,11 +14,10 @@ require_once($class_path."/caddie/authorities_caddie_controller.class.php");
 
 switch($categ):
 	case 'commande':
-		
-	break;
+        break;
 	case 'type_empty_word':
 		include('./autorites/semantique/ajax/type_empty_word.inc.php');
-	break;
+		break;
 	case 'dashboard' :
 		include("./dashboard/ajax_main.inc.php");
 		break;
@@ -33,13 +32,7 @@ switch($categ):
 		include('./autorites/titres_uniformes/tu_form_vedette.inc.php');
 		break;
 	case 'caddie':
-		if(isset($caddie)) {
-			$idcaddie = substr($caddie, strrpos($caddie, '_')+1);
-		}
-		if(isset($object)) {
-			$id_item = substr($object, strrpos($object, '_')+1);
-		}
-		authorities_caddie_controller::proceed_ajax($idcaddie, $id_item);
+	    include('./autorites/caddie/caddie_ajax.inc.php');
 		break;
 	case 'plugin' :
 		$plugins = plugins::get_instance();
@@ -69,7 +62,21 @@ switch($categ):
 	case 'vedettes' : 
 	    include("./autorites/vedettes/ajax_main.inc.php");
 	    break;
+	case 'get_authperso_form_vedette':
+		include('./autorites/authperso/authperso_form_vedette.inc.php');
+		break;
+	case 'caddies':
+	    switch($action) {
+	        case "list":
+	            authorities_caddie_controller::proceed_ajax();
+	            break;
+	    }
+	    break;
 	default:
-	//tbd
-	break;		
+		switch($action) {
+			case "list":
+				lists_controller::proceed_ajax($object_type, 'configuration/'.$categ);
+				break;
+		}
+    	break;
 endswitch;	

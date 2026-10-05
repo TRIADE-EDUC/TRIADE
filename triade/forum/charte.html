@@ -1,64 +1,179 @@
-        <HTML>
-        <HEAD>
-        <META http-equiv="CacheControl" content = "no-cache">
-        <META http-equiv="pragma" content = "no-cache">
-        <META http-equiv="expires" content = -1>
-        <meta name="Copyright" content="Triade©, 2001">
-        <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
-        <script language="JavaScript" src="../librairie_js/clickdroit2.js"></script>
-        <title>Triade - Charte Forum</title>
-        </head>
-<body id='bodyfond2' >
-<p><b><font color="#000000">ATTENTION CE FORUM N'EST PAS ANONYME</font><font color="#990000">.</font></b></p>
-<table width="99%" border="0">
-  <tr>
-    <td>
-      <p><font color="#000000">La volonté de TRIADE est de faire de son site un
-        lieu de discussion pour les parents, les enseignants, la vie scolaire
-        de l'&eacute;tablissement. <br>
-        Ce service se veut cordial et chaleureux et tous les membres se doivent
-        de respecter cette charte de bonne conduite, et ce partout sur Triade
-        (dans les mails, les espaces de discussion, ...). <br>
-        <br>
-        <b><font color="red"><U>Légalité</U></font> </b></font></p>
-      <p><font color="#000000">Aucune activité illégale n'est autorisée sur TRIADE.
-        De plus encourager de telles activités, ou donner les moyens correspondant
-        à ces activités, ne sera pas plus toléré. Il est interdit de fournir des
-        moyens d'obtenir des logiciels à caractère illégal et/ou nuisible (comme
-        les virus ou les programmes de hack). </font></p>
-      <p><b><font color="red"><U>Responsabilité</U></font></b></p>
-      <p><font color="#000000">Chaque utilisateur est responsable de ses actions
-        sur TRIADE, ainsi que des propos qu'il y tient. De plus, TRIADE ne peut
-        pas être tenu pour responsable du manque de protection de l'ordinateur
-        d'un utilisateur. Le contenu posté par les utilisateurs est de leur seule
-        responsabilité. TRIADE se réserve le droit de retirer tout contenu publié
-        par les utilisateurs, sans avoir à prévenir l'utilisateur concerné. TRIADE
-        se réserve le droit de pouvoir (à tout moment et sans préavis) réduire
-        l'accès, bloquer temporairement ou détruire définitivement un compte qui
-        n'aurait pas respecté cette charte, qui aurait encouragé quelqu'un à ne
-        pas respecter la charte. TRIADE n'est en aucun cas responsable des actions
-        des utilisateurs. </font></p>
-      <p><font color="#OOOOOO">Participer au respect de la charte : aidez TRIADE
-        à faire de ce site un lieu communautaire et convivial. Pour cela, respectez
-        cette charte et faîtes-la respecter. Si vous rencontrez des utilisateurs
-        qui n'ont pas bien pris connaissance de la charte, invitez-les à la lire.
-        </font></p>
-      <p><b><font color="red"><U>Convivialité</U></font></b></p>
-      <p><font color="#OOOOOO">Il est entendu, afin de contribuer à une atmosphère
-        cordiale sur le site, que les utilisateurs se respectent les uns les autres.<br>
-        Le harcèlement d'une autre personne, les insultes, les propos visant à
-        blesser une autre personne ne seront pas tolérés. <br>
-        Nous attendons bien évidemment de nos membres qu'ils s'expriment dans
-        un langage correct. <br>
-        De même, les propos racistes, xénophobes, révisionnistes, ou faisant preuve
-        d'intolérance (qu'elle soit religieuse, idéologique ou philosophique)
-        ne seront pas plus admis. </font></p>
-      <p>&nbsp;</p>
-      <p><font color="#OOOOOO">Dernière mise à jour : Avril 2006 </font></p>
-    </td>
-  </tr>
-</table><BR>
-<CENTER><input type=button onclick="window.close();" value="Fermer la Fenêtre" class='bouton2'></CENTER>
+<HTML>
+<HEAD>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content="-1">
+<meta charset="UTF-8">
+<meta name="Copyright" content="TriadeÂ©, 2001">
+<title>Triade - Charte Forum</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+  background: #f4f6fb;
+  color: #333;
+  line-height: 1.6;
+}
+
+.ch-header {
+  background: #080A66;
+  color: #fff;
+  padding: 12px 14px 10px;
+  text-align: center;
+}
+.ch-header-title {
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.ch-header-sub {
+  font-size: .78em;
+  opacity: .75;
+  margin-top: 2px;
+}
+
+.ch-warning {
+  background: #fff3cd;
+  border-left: 3px solid #e67e22;
+  margin: 10px;
+  padding: 7px 10px;
+  border-radius: 0 4px 4px 0;
+  font-size: .82em;
+  font-weight: 600;
+  color: #7a4500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ch-warning::before {
+  content: 'âš ';
+  font-size: 1em;
+}
+
+.ch-section {
+  margin: 10px;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e8edff;
+}
+.ch-section-header {
+  background: #080A66;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: .78em;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ch-section-header::before {
+  font-size: 1em;
+}
+.ch-section--legalite   .ch-section-header::before { content: 'âš–'; }
+.ch-section--responsabilite .ch-section-header::before { content: 'ğŸ‘¤'; }
+.ch-section--convivialite .ch-section-header::before { content: 'ğŸ¤'; }
+
+.ch-section-body {
+  padding: 8px 10px;
+  font-size: .82em;
+  color: #444;
+  line-height: 1.65;
+}
+
+.ch-intro {
+  margin: 10px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: .82em;
+  color: #444;
+  border: 1px solid #e8edff;
+  line-height: 1.65;
+}
+
+.ch-footer {
+  margin: 10px;
+  padding-bottom: 6px;
+}
+.ch-date {
+  font-size: .75em;
+  color: #999;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.ch-close {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: #080A66;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: .85em;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .03em;
+  transition: background .15s;
+}
+.ch-close:hover { background: #0d0f99; }
+</style>
+</head>
+<body>
+
+<div class="ch-header">
+  <div class="ch-header-title">ğŸ“‹ Charte du Forum</div>
+  <div class="ch-header-sub">TRIADE â€” RÃ¨gles de bonne conduite</div>
+</div>
+
+<div class="ch-warning">CE FORUM N'EST PAS ANONYME</div>
+
+<div class="ch-intro">
+  La volontÃ© de TRIADE est de faire de son site un lieu de discussion
+  pour les parents, les enseignants et la vie scolaire de l'Ã©tablissement.
+  Ce service se veut cordial et chaleureux â€” tous les membres se doivent
+  de respecter cette charte, partout sur TRIADE.
+</div>
+
+<div class="ch-section ch-section--legalite">
+  <div class="ch-section-header">LÃ©galitÃ©</div>
+  <div class="ch-section-body">
+    Aucune activitÃ© illÃ©gale n'est autorisÃ©e sur TRIADE. Encourager de telles
+    activitÃ©s ou en fournir les moyens ne sera pas tolÃ©rÃ©. Il est interdit de
+    fournir des moyens d'obtenir des logiciels illÃ©gaux ou nuisibles (virus,
+    programmes de piratageâ€¦).
+  </div>
+</div>
+
+<div class="ch-section ch-section--responsabilite">
+  <div class="ch-section-header">ResponsabilitÃ©</div>
+  <div class="ch-section-body">
+    Chaque utilisateur est responsable de ses actions et de ses propos sur TRIADE.
+    Le contenu postÃ© est de la seule responsabilitÃ© de son auteur. TRIADE se rÃ©serve
+    le droit de retirer tout contenu, et de rÃ©duire l'accÃ¨s, bloquer ou supprimer
+    dÃ©finitivement un compte ne respectant pas cette charte.
+  </div>
+</div>
+
+<div class="ch-section ch-section--convivialite">
+  <div class="ch-section-header">ConvivialitÃ©</div>
+  <div class="ch-section-body">
+    Les utilisateurs se respectent les uns les autres. Le harcÃ¨lement, les insultes
+    et les propos blessants ne sont pas tolÃ©rÃ©s. Les propos racistes, xÃ©nophobes,
+    rÃ©visionnistes ou faisant preuve d'intolÃ©rance (religieuse, idÃ©ologique ou
+    philosophique) ne sont pas admis. Nous attendons de nos membres qu'ils
+    s'expriment dans un langage correct.
+  </div>
+</div>
+
+<div class="ch-footer">
+  <div class="ch-date">DerniÃ¨re mise Ã  jour : Avril 2006</div>
+  <button class="ch-close" onclick="window.close()">Fermer</button>
+</div>
 
 </BODY>
 </HTML>

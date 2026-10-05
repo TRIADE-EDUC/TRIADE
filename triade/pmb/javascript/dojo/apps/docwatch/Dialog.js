@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Dialog.js,v 1.7 2019-03-13 14:48:22 dgoron Exp $
+// $Id: Dialog.js,v 1.8 2024/01/26 13:15:20 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dojo/topic", "dojo/_base/lang", "apps/pmb/PMBDialog", "apps/docwatch/form/Category", "apps/docwatch/form/Watch", "apps/docwatch/form/DuplicateSource"], function(declare, topic, lang, Dialog, CategoryForm, WatchForm, DuplicateSourceForm){
@@ -11,7 +11,8 @@ define(["dojo/_base/declare", "dojo/topic", "dojo/_base/lang", "apps/pmb/PMBDial
 			this.own(
 				topic.subscribe("watchesUI",lang.hitch(this,this.handleEvents)),
 				topic.subscribe("watchStore",lang.hitch(this,this.handleEvents)),
-				topic.subscribe("source",lang.hitch(this,this.handleEvents))
+				topic.subscribe("source",lang.hitch(this,this.handleEvents)),
+				topic.subscribe("sourcesStore",lang.hitch(this,this.handleEvents))
 			);
 		},
 		
@@ -58,6 +59,7 @@ define(["dojo/_base/declare", "dojo/topic", "dojo/_base/lang", "apps/pmb/PMBDial
 				case "categoryDeleted" :
 				case "watchSaved" :
 				case "watchDeleted" :
+				case "sourceSaved" :
 					this.destroyDescendants();
 					this.hide();
 					break;

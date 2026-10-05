@@ -1,15 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dashboard_module_catalog.class.php,v 1.12 2018-12-20 11:00:19 mbertin Exp $
+// $Id: dashboard_module_catalog.class.php,v 1.14.4.1 2025/03/17 08:15:42 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/dashboard/dashboard_module.class.php");
 require_once("$class_path/abts_pointage.class.php");
 
 class dashboard_module_catalog extends dashboard_module {
+	public $template = "";
+	public $module_name = "";
+	public $module = "";
 
 	public function __construct(){
 		global $msg,$base_path;
@@ -18,8 +22,8 @@ class dashboard_module_catalog extends dashboard_module {
 		$this->module_name = $msg[6];
 		$this->alert_url = $base_path."/ajax.php?module=ajax&categ=alert&current_alert=".$this->module;
 		parent::__construct();
-	}	
-	
+	}
+
 	public function get_quick_params_form(){
 		global $msg;
 		$html= "";
@@ -97,7 +101,7 @@ class dashboard_module_catalog extends dashboard_module {
 					    list=document.getElementById(\"dashboard_docloc_section\"+id);
 					    list.style.display=\"none\";
 					}
-				
+
 					id=selectBox.options[selectBox.selectedIndex].value;
 					list=document.getElementById(\"dashboard_docloc_section\"+id);
 					list.style.display=\"block\";
@@ -106,48 +110,48 @@ class dashboard_module_catalog extends dashboard_module {
 		}
 		return $html;
 	}
-		
+
 	public function get_records_recevoir(){
 		$return = array();
 		global $memo_abts_pointage_calc_alert;
-		if(!is_array($memo_abts_pointage_calc_alert) || (!count($memo_abts_pointage_calc_alert))){	
-			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();			
+		if (!is_array($memo_abts_pointage_calc_alert) || (!count($memo_abts_pointage_calc_alert))){
+			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();
 		}
 		$return[0]["total"]=$memo_abts_pointage_calc_alert["a_recevoir"];
 		return $return;
-	}	
-	
+	}
+
 	public function get_records_prochain(){
 		$return = array();
 		global $memo_abts_pointage_calc_alert;
-		if(!count($memo_abts_pointage_calc_alert)){	
-			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();	
+		if(!count($memo_abts_pointage_calc_alert)){
+			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();
 		}
 		$return[0]["total"]=$memo_abts_pointage_calc_alert["prochain_numero"];
 		return $return;
-	}	
-	
+	}
+
 	public function get_records_retard(){
 		$return = array();
 		global $memo_abts_pointage_calc_alert;
-		if(!count($memo_abts_pointage_calc_alert)){	
-			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();	
+		if(!count($memo_abts_pointage_calc_alert)){
+			$memo_abts_pointage_calc_alert=abts_pointage::get_dashboard_info();
 		}
 		$return[0]["total"]=$memo_abts_pointage_calc_alert["en_retard"];
 		return $return;
 	}
-	
+
 	public function get_records_alerte(){
 		$return = array();
 		global $memo_abts_pointage_calc_alert;
-		if(!count($memo_abts_pointage_calc_alert)){	
+		if(!count($memo_abts_pointage_calc_alert)){
 			$abt=new abts_pointage();
 			$memo_abts_pointage_calc_alert=$abt->calc_alert();
 		}
 		$return[0]["total"]=$memo_abts_pointage_calc_alert["en_alerte"];
 		return $return;
 	}
-	
+
 	public function save_quick_params(){
 		$query = "update users set ";
 		$update=array();
@@ -168,5 +172,5 @@ class dashboard_module_catalog extends dashboard_module {
 		}
 		return true;
 	}
-	
+
 }

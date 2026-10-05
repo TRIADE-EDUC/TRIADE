@@ -1,4 +1,4 @@
-<!-- $Id: contribution_areas_list.tpl.html,v 1.2 2019-03-21 16:19:24 ccraig Exp $ -->
+<!-- $Id: contribution_areas_list.tpl.html,v 1.3 2020/07/09 15:24:43 tsamson Exp $ -->
 
 <style type="text/css">
 	.contribution_form_table {
@@ -44,7 +44,11 @@
 				{% for form in forms_by_type %}		
 					<div class='contribution_form_table_row {% if loop.odd %}odd{%else%}even{% endif %} '>
 						<a  style='border-left: 5px solid {{ form.area.color }};' class='contribution_form_table_cell' href='./catalog.php?categ=contribution_area&action=edit&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
-							{{ form.displayLabel }}
+							{% if form.isbd %}
+								{{ form.isbd | safe }}
+							{% else %}
+								{{ form.displayLabel }}
+							{% endif %}
 						</a>
 						{% if form.contributor %}
 							<div class='contribution_form_table_cell'>

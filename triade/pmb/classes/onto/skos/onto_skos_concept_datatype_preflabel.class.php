@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_concept_datatype_preflabel.class.php,v 1.14 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: onto_skos_concept_datatype_preflabel.class.php,v 1.14 2019/06/11 08:53:57 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,7 +16,7 @@ class onto_skos_concept_datatype_preflabel extends onto_common_datatype{
 	} // end of member function __construct
 	
 	public function check_value(){
-		//TODO : on plug le systÃ¨me des vedettes composÃ© ici pour leurs enregistrement	
+		//TODO : on plug le système des vedettes composé ici pour leurs enregistrement	
 		if (is_string($this->value)) return true;
 			return false;
 	}
@@ -29,9 +29,9 @@ class onto_skos_concept_datatype_preflabel extends onto_common_datatype{
 		if (${$var_name} && count(${$var_name})) {
 			global ${$var_name."_is_composed"};
 			if (!${$var_name."_is_composed"}) {
-				// Ce n'est pas une vedette composÃ©e
+				// Ce n'est pas une vedette composée
 				
-				//On va supprimer une Ã©ventuelle vedette prÃ©cÃ©dente
+				//On va supprimer une éventuelle vedette précédente
 				global ${$var_name."_composed"};
 				foreach (${$var_name."_composed"} as $order => $data) {
 					if ($data["id"]) {
@@ -61,7 +61,7 @@ class onto_skos_concept_datatype_preflabel extends onto_common_datatype{
 					}
 				}
 			} else {
-				// C'est une vedette composÃ©e
+				// C'est une vedette composée
 				global ${$var_name."_composed"};
 				foreach (${$var_name."_composed"} as $order => $data) {
 					$data=stripslashes_array($data);
@@ -72,10 +72,10 @@ class onto_skos_concept_datatype_preflabel extends onto_common_datatype{
 							$vedette_composee->set_label($data["value"]);
 						}
 						
-						// On commence par rÃ©initialiser le tableau des Ã©lÃ©ments de la vedette composÃ©e
+						// On commence par réinitialiser le tableau des éléments de la vedette composée
 						$vedette_composee->reset_elements();
 						
-						// On remplit le tableau des Ã©lÃ©ments de la vedette composÃ©e
+						// On remplit le tableau des éléments de la vedette composée
 						foreach ($data["elements"] as $subdivision => $elements) {
 							if ($elements["elements_order"] !== "") {
 								$elements_order = explode(",", $elements["elements_order"]);

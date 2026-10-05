@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_type_formation.js,v 1.1 2015-01-27 16:14:59 vtouchard Exp $
+// $Id: nomenclature_type_formation.js,v 1.1 2015/01/27 16:14:59 vtouchard Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_musicstand_ui"], function(declare, Musicstand_ui){
 	/*

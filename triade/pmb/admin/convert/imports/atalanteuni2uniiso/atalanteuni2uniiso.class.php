@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: atalanteuni2uniiso.class.php,v 1.2 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: atalanteuni2uniiso.class.php,v 1.4 2023/08/23 10:25:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/admin/convert/convert.class.php");
 
 class atalanteuni2uniiso extends convert {
@@ -14,7 +15,7 @@ class atalanteuni2uniiso extends convert {
 		global $typ_doc_atalante;
 		global $charset;
 		
-		if (!$typ_doc_atalante) {
+		if (empty($typ_doc_atalante)) {
 			$typ_doc_atalante=array("DOC"=>"a","VID"=>"g","PMU"=>"c","URL"=>"l","SON"=>"j");
 		}
 		
@@ -27,6 +28,7 @@ class atalanteuni2uniiso extends convert {
 			$data.="  <dt>".$typ_doc."</dt>\n";
 		}
 		
+		$zs = array();
 		for ($i=0; $i<count($fields)-1; $i++) {
 			$field=explode("@",$fields[$i]);
 			$cf=substr($field[2],0,3);
@@ -68,6 +70,7 @@ class atalanteuni2uniiso extends convert {
 			$data.="  </f>\n";
 		}
 		$data.="</notice>\n";
+		$r = array();
 		$r['VALID'] = true;
 		$r['ERROR'] = "";
 		$r['DATA'] = $data;

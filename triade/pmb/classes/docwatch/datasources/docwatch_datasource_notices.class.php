@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_datasource_notices.class.php,v 1.9 2018-04-19 11:58:55 dgoron Exp $
+// $Id: docwatch_datasource_notices.class.php,v 1.11 2023/06/07 10:27:46 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 require_once($class_path."/docwatch/datasources/docwatch_datasource.class.php");
 require_once($class_path."/docwatch/selectors/docwatch_selector_notices.class.php");
@@ -38,7 +40,7 @@ class docwatch_datasource_notices extends docwatch_datasource{
 	} // end of member function __construct
 	
 	/**
-	 * Génération de la structure de données representant les items de type notice
+	 * G�n�ration de la structure de donn�es representant les items de type notice
 	 * @return array
 	 */
 	
@@ -47,6 +49,7 @@ class docwatch_datasource_notices extends docwatch_datasource{
 		global $opac_show_book_pics, $opac_book_pics_url;
 		$records = array();
 		if(count($items)){
+		    $thumbnailSourcesHandler = new ThumbnailSourcesHandler();
 			foreach($items as $item) {
 				$notice = new notice($item);
 				$record = array();
@@ -64,12 +67,14 @@ class docwatch_datasource_notices extends docwatch_datasource{
 				}
 				$record["content"] = $notice->n_contenu;
 				$record["url"] = $pmb_opac_url."index.php?lvl=notice_display&id=".$notice->id;
-				if (($notice->code || $notice->thumbnail_url) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $notice->thumbnail_url))) {
-					$logo_url=getimage_url($notice->code, $notice->thumbnail_url);
-				}
-				$record["logo_url"] = $logo_url;
+				$record["logo_url"] = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $notice->id);
 				$record["publication_date"] = $notice->date_parution;
 				$record["descriptors"] = $notice->categories;
+				if(count($record["descriptors"])) {
+				    foreach ($record["descriptors"] as $i=>$descriptor) {
+				        $record["descriptors"][$i]['id'] = $descriptor['categ_id'];
+				    }
+				}
 				$record["tags"] = ($notice->index_l ? explode($pmb_keyword_sep, $notice->index_l) : "");
 				$records[] = $record;
 			}

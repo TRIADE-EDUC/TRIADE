@@ -88,16 +88,16 @@ var ISO5426= new Array({
 //
 //
 function ISO_646_5426_decode(string) {
-	//Remplacement des symboles et caractères spéciaux
+	//Remplacement des symboles et caract�res sp�ciaux
 	string_r="";
 	for (var i=0; i<string.length; i++) {
-		//Si c'est un caractère avant 0xA0 alors rien a changer
+		//Si c'est un caract�re avant 0xA0 alors rien a changer
 		if (string[i]<"\xA0") 
 			string_r+=string[i];
 		else if ((string[i]>="\xC0")&&(string[i]<="\xDF")) {
-			//Si c'est un diacritique on regarde le caractère suivant et on cherche dans la table de correspondance
+			//Si c'est un diacritique on regarde le caract�re suivant et on cherche dans la table de correspondance
 			car=string[i]+string[i+1];
-			//Si le caractère est connu
+			//Si le caract�re est connu
 			var found = false;
 			for (var j=0 ; j<ISO5426_dia.length ; j++){
 				if (ISO5426_dia[j] == car) {
@@ -109,10 +109,10 @@ function ISO_646_5426_decode(string) {
 				//Sinon on ne tient juste pas compte du diacritique
 				string_r+=string[i+1];
 			}
-			//On avance d'un caractère
+			//On avance d'un caract�re
 			i++;
 		} else {
-			//Sinon c'est un catactère spécial ou un symbole
+			//Sinon c'est un catact�re sp�cial ou un symbole
 			car=string[i];
 			string_r+=ISO5426[car];
 		}
@@ -447,8 +447,8 @@ record.prototype.translate = function(item) {
 		this._associateDBField(item, "330", "a", "abstractNote");
 		
 		// Extract tags
-		// TODO : Ajouter les autres champs en 6xx avec les autoritï¿½s construites. 
-		// nï¿½cessite de reconstruire les autoritï¿½s
+		// TODO : Ajouter les autres champs en 6xx avec les autorit�s construites. 
+		// n�cessite de reconstruire les autorit�s
 		this._associateTags(item, "610", "a");
 		
 		// Extract scale (for maps)

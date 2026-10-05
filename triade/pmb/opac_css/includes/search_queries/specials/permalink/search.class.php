@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.4 2018-10-23 13:59:59 dgoron Exp $
+// $Id: search.class.php,v 1.4.16.1 2025/01/30 11:20:35 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($include_path."/rec_history.inc.php");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class permalink_search {
 	public $id;
@@ -25,8 +25,8 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
-	 * @return array OpÃ©rateurs disponibles
+	 * Fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
+	 * @return array Opérateurs disponibles
 	 */
 	public function get_op() {
 		$operators = array();
@@ -37,7 +37,7 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+	 * Fonction de récupération de l'affichage de la saisie du critère
 	 * @return string Chaine html
 	 */
 	public function get_input_box() {
@@ -62,7 +62,7 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+	 * Fonction de création de la requête (retourne une table temporaire)
 	 * @return string Nom de la table temporaire
 	 */
 	public function make_search() {
@@ -79,12 +79,12 @@ class permalink_search {
 	}
 	
 	/**
-	 * Fonction de crÃ©ation de la recherche sÃ©rialisÃ©e (retourne un tableau sÃ©rialisÃ©)
-	 * @return string Nom du tableau sÃ©rialisÃ©
+	 * Fonction de création de la recherche sérialisée (retourne un tableau sérialisé)
+	 * @return string Nom du tableau sérialisé
 	 */
 	public function serialize_search() {
 			
-		//RÃ©cupÃ©ration de la valeur de saisie
+		//Récupération de la valeur de saisie
 		$valeur_="field_".$this->n_ligne."_s_".$this->id;
 		global ${$valeur_};
 		$valeur=${$valeur_};
@@ -106,21 +106,21 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+	 * Fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
 	 * @return array
 	 */
 	public function make_human_query() {
 		global $msg,$charset;
 		global $include_path;
 
-		//RÃ©cupÃ©ration de la valeur de saisie
+		//Récupération de la valeur de saisie
 		$valeur_="field_".$this->n_ligne."_s_".$this->id;
 		global ${$valeur_};
 		$valeur=${$valeur_};
 		
 		$context = unserialize($valeur[0]);
 		$human = $context['human_query'];
- 		if(in_array('s_3',$context['serialized_search']['SEARCH'])){
+ 		if(is_countable($context['serialized_search']['SEARCH']) && is_array($context['serialized_search']['SEARCH']) && in_array('s_3',$context['serialized_search']['SEARCH'])){
  			for( $i=0 ; $i<count($context['serialized_search']['SEARCH']) ; $i++) {
  				if($context['serialized_search']['SEARCH'][$i] == 's_3'){
  					switch ($context['serialized_search'][$i]['INTER']) {
@@ -159,9 +159,9 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de dÃ©coupage d'une chaine trop longue
-	 * @param string $valeur Chaine Ã  dÃ©couper
-	 * @return string Chaine dÃ©coupÃ©e
+	 * Fonction de découpage d'une chaine trop longue
+	 * @param string $valeur Chaine à découper
+	 * @return string Chaine découpée
 	 */
 	public function cutlongwords($valeur) {
 		if (strlen($valeur)>=50) {
@@ -174,8 +174,8 @@ class permalink_search {
 	}
 
 	/**
-	 * Fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
-	 * @param array $valeur Champ saisi ou sÃ©lectionnÃ©
+	 * Fonction de vérification du champ saisi ou sélectionné
+	 * @param array $valeur Champ saisi ou sélectionné
 	 * @return boolean true si vide
 	 */
 	public function is_empty($valeur) {

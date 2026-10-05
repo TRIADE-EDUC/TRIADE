@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_records_caddie_list_ui.class.php,v 1.2 2018-10-18 09:08:07 dgoron Exp $
+// $Id: elements_records_caddie_list_ui.class.php,v 1.4 2023/07/26 15:07:59 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/elements_list/elements_records_list_ui.class.php');
 
 /**
@@ -26,7 +27,7 @@ class elements_records_caddie_list_ui extends elements_records_list_ui {
 		global $nb_per_page_search;
 		global $page;
 		
-		// nombre de rÃ©fÃ©rences par pages
+		// nombre de références par pages
 		if ($nb_per_page_search != "") $nb_per_page = $nb_per_page_search ;
 		else $nb_per_page = 10;
 		
@@ -65,7 +66,7 @@ class elements_records_caddie_list_ui extends elements_records_list_ui {
 				
 				$elements_list.= "
 				<div id=\"el!!id!!Parent\" class=\"notice-parent\">
-					<span class=\"notice-heada\"><strong>$lien_suppr_cart ".$msg["4014"]." : ".$content['content']."&nbsp;: ${msg[395]}</strong></span>
+					<span class=\"notice-heada\"><strong>$lien_suppr_cart ".$msg["4014"]." : ".$content['content']."&nbsp;: {$msg[395]}</strong></span>
 					<br />
 				</div>";
 			}

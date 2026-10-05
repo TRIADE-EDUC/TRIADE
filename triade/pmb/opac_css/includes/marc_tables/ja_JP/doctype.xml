@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des type de documents en UNIMARC (japonais)
-$Id: doctype.xml,v 1.4 2011-07-04 14:24:30 dbellamy Exp $ -->
+$Id: doctype.xml,v 1.4 2011/07/04 14:24:30 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="a">印刷資料</entry>

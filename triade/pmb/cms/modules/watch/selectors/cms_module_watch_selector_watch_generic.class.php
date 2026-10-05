@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watch_selector_watch_generic.class.php,v 1.3 2015-03-05 15:12:06 arenou Exp $
+// $Id: cms_module_watch_selector_watch_generic.class.php,v 1.3 2015/03/05 15:12:06 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -27,7 +27,7 @@ class cms_module_watch_selector_watch_generic extends cms_module_common_selector
 	}	
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

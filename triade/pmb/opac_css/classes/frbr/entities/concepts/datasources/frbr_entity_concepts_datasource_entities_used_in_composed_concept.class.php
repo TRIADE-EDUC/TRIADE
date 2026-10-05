@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_concepts_datasource_entities_used_in_composed_concept.class.php,v 1.2 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: frbr_entity_concepts_datasource_entities_used_in_composed_concept.class.php,v 1.3 2019/11/15 08:14:23 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -37,10 +37,10 @@ class frbr_entity_concepts_datasource_entities_used_in_composed_concept extends 
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
-		$query = 'SELECT num_vedette, num_object FROM vedette_link WHERE num_object IN ('.implode(',', $datas).') AND type_object = '.TYPE_CONCEPT_PREFLABEL;
+		$query = 'SELECT DISTINCT num_vedette, num_object FROM vedette_link WHERE num_object IN ('.implode(',', $datas).') AND type_object = '.TYPE_CONCEPT_PREFLABEL;
 		$result = pmb_mysql_query($query);
 		$num_vedettes = array();
 		$num_objects = array();
@@ -53,7 +53,7 @@ class frbr_entity_concepts_datasource_entities_used_in_composed_concept extends 
 		
 		$datas = array();
 		if (count($num_vedettes)) {
-			$query = 'SELECT object_id AS id, num_vedette FROM vedette_object WHERE object_type = '.$this->parameters->object_type.' AND num_vedette IN ('.implode($num_vedettes).')';
+			$query = 'SELECT DISTINCT object_id AS id, num_vedette FROM vedette_object WHERE object_type = '.$this->parameters->object_type.' AND num_vedette IN ('.implode($num_vedettes).')';
 			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_assoc($result)) {

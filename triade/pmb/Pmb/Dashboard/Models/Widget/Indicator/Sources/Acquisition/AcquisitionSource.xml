@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: AcquisitionSource.xml,v 1.1 2024/02/26 14:28:54 dbellamy Exp $ -->
+
+<source>
+ 
+    <methods>
+    
+        <!-- Nb de suggestions à valider -->
+        <nb_sugg_todo>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM suggestions WHERE statut=1</query>
+        </nb_sugg_todo>
+        
+        <!-- Nb de suggestions validées / confirmées -->
+        <nb_sugg_validated_confirmed>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM suggestions WHERE statut in (2,8)</query>
+        </nb_sugg_validated_confirmed>
+        
+        <!-- Nb de suggestions rejetées / abandonnées / archivées  -->
+        <nb_sugg_rejected_givenup_filed>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM suggestions WHERE statut in (4,16,128)</query>
+        </nb_sugg_rejected_givenup_filed>
+
+        <!-- Nb de suggestions devisées / commandées  -->
+        <nb_sugg_estimated_ordered>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM suggestions WHERE statut in (32,1024)</query>
+        </nb_sugg_estimated_ordered>
+        
+        <!-- Nb de suggestions reçues  -->
+        <nb_sugg_received>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM suggestions WHERE statut=64</query>
+        </nb_sugg_received>
+        
+        <!-- Nb de commandes à valider  -->
+        <nb_cde_todo>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM actes WHERE statut=1</query>
+        </nb_cde_todo>
+        
+        <!-- Nb de commandes en cours -->
+        <nb_cde_pending>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM actes WHERE statut=2</query>
+        </nb_cde_pending>
+        
+        <!-- Nb de commandes livrées / archivées -->
+        <nb_cde_received_filed>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM actes WHERE statut in(4,32)</query>
+        </nb_cde_received_filed>
+        
+    </methods>
+</source>

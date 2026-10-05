@@ -10,7 +10,7 @@
 class lastfmApiSocket {
 	/**
 	 * Stores the socket handler
-	 * @var class
+	 * @var object
 	 */
 	private $handle;
 	/**
@@ -41,7 +41,7 @@ class lastfmApiSocket {
 	 * @param integer $port The port number
 	 * @return boolean
 	 */
-	function lastfmApiSocket ($host, $port) {
+	public function __construct($host, $port) {
 		// Set class variables
 		$this->host = $host;
 		$this->port = $port;
@@ -63,34 +63,32 @@ class lastfmApiSocket {
 	 * @param string $type The type of data to return (array or string)
 	 * @return string|array
 	 */
-	function send ($msg, $type = '') {
+	public function send ($msg, $type = '') {
 		// Send message over connection
 		fwrite($this->handle, $msg);
 		
 		// Check what type is required
-		if ( $type == 'array' ) {
+		if ($type == 'array') {
 			// If array loop and create array
 			$response = array();
 			$line_num = 0;
-			while ( !feof($this->handle) ) {
-				if( ($response[$line_num] = fgets($this->handle, 4096)) === false ) {
+			while (!feof($this->handle)) {
+				if(($response[$line_num] = fgets($this->handle, 4096)) === false) {
 					break;
-				}
-				else {
+				} else {
 					$line_num++;
 				}
 			}
 			// Return response as array
 			return $response;
-		}
-		elseif ( $type == 'string' ) {
+		} elseif ($type == 'string') {
 			// If string, loop and create string
-			$response = '';
-	   		while ( !feof($this->handle) ) {
-	       			$response .= fgets($this->handle, 4096);
+		    $response_string = '';
+	   		while (!feof($this->handle)) {
+	   		    $response_string .= fgets($this->handle, 4096);
 	   		}
 			// Return response as string
-			return $response;
+	   		return $response_string;
 		}
 		else {
 			// If anything else, return nothing but a TRUE
@@ -103,7 +101,7 @@ class lastfmApiSocket {
 	 * Closes the connection
 	 * @return boolean
 	 */
-	function close () {
+	public function close () {
 		// Close connection
 		fclose($this->handle);
 		return TRUE;

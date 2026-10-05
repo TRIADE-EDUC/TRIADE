@@ -1,19 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_view.class.php,v 1.20 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: opac_view.class.php,v 1.26.4.1 2025/03/14 13:27:45 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 // classes de gestion des vues Opac
 
 // inclusions principales
+global $class_path, $include_path;
 require_once("$include_path/templates/opac_view.tpl.php");
 require_once("$class_path/param_subst.class.php");
 require_once($class_path."/opac_filters.class.php");
 require_once("$class_path/search.class.php");
 require_once("$class_path/quotas.class.php");
+require_once("$class_path/interface/admin/interface_admin_opac_form.class.php");
 
 class opac_view {
 
@@ -26,23 +28,30 @@ class opac_view {
 	public $visible=0;
 	public $last_gen='';					//datetime derniere generation
 	public $ttl=86400;						//duree de validite
-	public $opac_view_wo_query = 0;			//pas de recherche mc associ√©e
-
+	public $opac_view_wo_query = 0;			//pas de recherche mc associÈe
+	public $view_list_empr = 0;
+	public $view_list_empr_default;
+	public $opac_views_list = array();
+	public $selector = "";
+	public $search_class = null;
+	protected static $search_parameters = array();
+	public $param_subst = null;
+	public $opac_filters = null;
+	
 	// constructeur
 	public function __construct($id=0,$id_empr=0) {
 		// si id, allez chercher les infos dans la base
 		if(!$id_empr) $this->search_class=new search(false);
-		$this->id = $id+0;
-		$this->id_empr = $id_empr+0;
+		$this->id = intval($id);
+		$this->id_empr = intval($id_empr);
 		$this->fetch_data();
 		return $this->id;
 	}
 	
-	// r√©cup√©ration des infos en base
+	// rÈcupÈration des infos en base
 	public function fetch_data() {
-		global $dbh;
 		if($this->id){
-			$myQuery = pmb_mysql_query("SELECT * FROM opac_views WHERE opac_view_id='".$this->id."' LIMIT 1", $dbh);
+			$myQuery = pmb_mysql_query("SELECT * FROM opac_views WHERE opac_view_id='".$this->id."' LIMIT 1");
 			$myreq= pmb_mysql_fetch_object($myQuery);
 			$this->name=$myreq->opac_view_name;
 			$this->requete=$myreq->opac_view_query;
@@ -64,8 +73,8 @@ class opac_view {
 		$this->view_list_empr=array();
 		$this->view_list_empr_default=0;
 		if($this->id_empr){
-			// vues selectionn√©es pour empr
-			$myQuery = pmb_mysql_query("SELECT * FROM opac_views_empr WHERE emprview_empr_num='".$this->id_empr."' ", $dbh);
+			// vues selectionnÈes pour empr
+			$myQuery = pmb_mysql_query("SELECT * FROM opac_views_empr WHERE emprview_empr_num='".$this->id_empr."' ");
 			if(pmb_mysql_num_rows($myQuery)){
 				while(($r=pmb_mysql_fetch_object($myQuery))) {
 					if($r->emprview_default) $this->view_list_empr_default=$r->emprview_view_num;
@@ -77,8 +86,8 @@ class opac_view {
 	}
 	
 	public function get_list($name='', $value_selected=0) {
-		global $dbh,$charset;
-		$myQuery = pmb_mysql_query("SELECT * FROM opac_views order by opac_view_name ", $dbh);
+		global $charset;
+		$myQuery = pmb_mysql_query("SELECT * FROM opac_views order by opac_view_name ");
 		$this->opac_views_list=array();
 	
 		$selector = "<select name='$name' id='$name'>";
@@ -102,9 +111,9 @@ class opac_view {
 		return true;
 	
 	}
-	// fonction de mise √† jour ou de cr√©ation
+	// fonction de mise ‡ jour ou de crÈation
 	public function update($value) {
-		global $dbh,$msg;
+		global $msg;
 		$fields="";
 		foreach($value as $key => $val) {
 			if($fields) $fields.=",";
@@ -113,35 +122,35 @@ class opac_view {
 	
 		if($this->id) {
 			// modif
-			$erreur=pmb_mysql_query("UPDATE opac_views SET $fields WHERE opac_view_id=".$this->id, $dbh);
+			$erreur=pmb_mysql_query("UPDATE opac_views SET $fields WHERE opac_view_id=".$this->id);
 			if(!$erreur) {
 				error_message($msg["opac_view_form_edit"], $msg["opac_view_form_add_error"],1);
 				exit;
 			}
 		} else {
 			// create
-			$erreur=pmb_mysql_query("INSERT INTO opac_views SET $fields ", $dbh);
-			$this->id = pmb_mysql_insert_id($dbh);
+			$erreur=pmb_mysql_query("INSERT INTO opac_views SET $fields ");
+			$this->id = pmb_mysql_insert_id();
 			if(!$erreur) {
 				error_message($msg["opac_view_form_edit"], $msg["opac_view_form_add_error"],1);
 				exit;
 			}
 		}
 	
-		// Cr√©ation/suppression table associ√©e si besoin
+		// CrÈation/suppression table associÈe si besoin
 		if ($this->opac_view_wo_query) {
 			$q = "drop table if exists opac_view_notices_".$this->id;
-			pmb_mysql_query($q, $dbh);
+			pmb_mysql_query($q);
 		} else {
 			$req_create="create table if not exists opac_view_notices_".$this->id." (
 			opac_view_num_notice int(20) not null default 0,
 			PRIMARY KEY (opac_view_num_notice)
 			)";
-			pmb_mysql_query($req_create,$dbh);
+			pmb_mysql_query($req_create);
 		}
 	
 	
-		// rafraichissement des donn√©es
+		// rafraichissement des donnÈes
 		$this->fetch_data();
 		return $this->id;
 	}
@@ -178,30 +187,33 @@ class opac_view {
 	}
 	
 	public function gen() {
-		global $dbh,$msg;
+		static::apply_opac_search_parameters();
 		for($i=0;$i<count($this->opac_views_list);$i++) {
 			$query="SHOW TABLES LIKE 'opac_view_notices_".$this->opac_views_list[$i]->id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)) {
 				$req="TRUNCATE TABLE opac_view_notices_".$this->opac_views_list[$i]->id;
-				@pmb_mysql_query($req, $dbh);
+				pmb_mysql_query($req);
 			}
 			if($this->opac_views_list[$i]->query) {
 				$this->search_class->unserialize_search($this->opac_views_list[$i]->query);
 				$table=$this->search_class->make_search() ;
 				$req="INSERT ignore INTO opac_view_notices_".$this->opac_views_list[$i]->id." ( opac_view_num_notice) select notice_id from $table ";
-				pmb_mysql_query($req, $dbh);
+				pmb_mysql_query($req);
 				pmb_mysql_query("drop table $table");
 			}
 		}
 		$req="update opac_views set opac_view_last_gen=now()";
-		pmb_mysql_query($req, $dbh);
+		pmb_mysql_query($req);
+		static::restore_gestion_search_parameters();
 	}
 	
-	// fonction g√©n√©rant le form de saisie
-	public function do_form() {
-		global $msg,$tpl_opac_view_form, $tpl_opac_view_create_form, $charset,$newsearch,$suite;
+	// fonction gÈnÈrant le form de saisie
+	public function get_form() {
+		global $msg,$tpl_opac_view_content_form, $tpl_opac_view_create_content_form, $charset,$suite;
 	
+		$interface_form = new interface_admin_opac_form('opac_view_form');
+		
 		// titre formulaire
 		if($this->id) {
 			global $suite,$requete;
@@ -209,104 +221,89 @@ class opac_view {
 				$this->requete=stripslashes($requete);
 				$this->human_query =$this->search_class->make_serialized_human_query($this->requete) ;
 			}
-			$libelle=$msg["opac_view_modifier"];
-			$link_delete="<input type='button' class='bouton' value='".$msg[63]."' onClick=\"confirm_delete();\" />";
+			$interface_form->set_label($msg["opac_view_modifier"]);
 			$button_modif_requete = "onClick=\"document.modif_requete_form.submit();\" ";
 			$form_modif_requete = $this->make_hidden_search_form();
-			$tpl=$tpl_opac_view_form;
+			$content_form=$tpl_opac_view_content_form;
 		} else {
-			$tpl=$tpl_opac_view_create_form;
-			$libelle=$msg["opac_view_add"];
-			$link_delete="";
+			$content_form=$tpl_opac_view_create_content_form;
+			$interface_form->set_label($msg["opac_view_add"]);
 			$button_modif_requete ="";
 			$form_modif_requete ="";
 		}
 		// Champ
 		$opac_visible_selected= "!!opac_visible_selected_".$this->visible."!!";
-		$tpl = str_replace($opac_visible_selected, "selected=selected", $tpl);
-		$tpl = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES,$charset), $tpl);
-		$tpl = str_replace('!!libelle!!',htmlentities($libelle,ENT_QUOTES,$charset) , $tpl);
-		$tpl = str_replace('!!comment!!',htmlentities($this->comment,ENT_QUOTES,$charset) , $tpl);
-		$tpl = str_replace('!!last_gen!!',(($this->last_gen!=NULL)?htmlentities(formatdate($this->last_gen,ENT_QUOTES,$charset)):'') , $tpl);
-		$tpl = str_replace('!!ttl!!',htmlentities($this->ttl,ENT_QUOTES,$charset) , $tpl);
+		$content_form = str_replace($opac_visible_selected, "selected=selected", $content_form);
+		$content_form = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES,$charset), $content_form);
+		$content_form = str_replace('!!comment!!',htmlentities($this->comment,ENT_QUOTES,$charset) , $content_form);
+		$content_form = str_replace('!!last_gen!!',(($this->last_gen!=NULL)?htmlentities(formatdate($this->last_gen,ENT_QUOTES,$charset)):'') , $content_form);
+		$content_form = str_replace('!!ttl!!',htmlentities($this->ttl,ENT_QUOTES,$charset) , $content_form);
 	
-		// recherche multicrit√®res
+		// recherche multicritËres
 		if (!$suite== 'transform_equ' && $this->opac_view_wo_query) {
-			$tpl = str_replace('!!opac_view_w_query_checked!!','',$tpl);
-			$tpl = str_replace('!!opac_view_wo_query_checked!!',"checked='checked'",$tpl);
+			$content_form = str_replace('!!opac_view_w_query_checked!!','',$content_form);
+			$content_form = str_replace('!!opac_view_wo_query_checked!!',"checked='checked'",$content_form);
 		} else {
-			$tpl = str_replace('!!opac_view_wo_query_checked!!','',$tpl);
-			$tpl = str_replace('!!opac_view_w_query_checked!!',"checked='checked'",$tpl);
+			$content_form = str_replace('!!opac_view_wo_query_checked!!','',$content_form);
+			$content_form = str_replace('!!opac_view_w_query_checked!!',"checked='checked'",$content_form);
 		}
 	
-		$tpl = str_replace('!!opac_view_id!!', $this->id,  $tpl);
-		$tpl = str_replace('!!form_modif_requete!!', $form_modif_requete,  $tpl);
-		$tpl = str_replace('!!search_build!!', $button_modif_requete,  $tpl);
-		$tpl = str_replace('!!requete_human!!', $this->human_query, $tpl);
-		$tpl = str_replace('!!requete!!', htmlentities($this->requete,ENT_QUOTES, $charset), $tpl);
+		$content_form = str_replace('!!opac_view_id!!', $this->id,  $content_form);
+		$content_form = str_replace('!!search_build!!', $button_modif_requete,  $content_form);
+		$content_form = str_replace('!!requete_human!!', $this->human_query, $content_form);
+		$content_form = str_replace('!!requete!!', htmlentities($this->requete,ENT_QUOTES, $charset), $content_form);
 	
 		// param subst
-		if(isset($this->param_subst))$tpl = str_replace('!!parameters!!', $this->param_subst->get_form_list("./admin.php?categ=opac&sub=opac_view&section=list&opac_view_id=".$this->id."&action=param"), $tpl);
-		else $tpl=str_replace('!!parameters!!',"", $tpl);
+		if(isset($this->param_subst))$content_form = str_replace('!!parameters!!', $this->param_subst->get_form_list("./admin.php?categ=opac&sub=opac_view&section=list&opac_view_id=".$this->id."&action=param"), $content_form);
+		else $content_form=str_replace('!!parameters!!',"", $content_form);
 	
 		// elements visibles: filtres
-		if(isset($this->opac_filters))$tpl = str_replace('!!filters!!', $this->opac_filters->show_all_form(), $tpl);
-		else $tpl=str_replace('!!filters!!',"", $tpl);
+		if(isset($this->opac_filters))$content_form = str_replace('!!filters!!', $this->opac_filters->show_all_form(), $content_form);
+		else $content_form=str_replace('!!filters!!',"", $content_form);
 	
-		$action="./admin.php?categ=opac&sub=opac_view&section=list&opac_view_id=".$this->id."&action=save";
-		$tpl = str_replace('!!action!!', $action, $tpl);
-		$tpl = str_replace('!!delete!!', $link_delete, $tpl);
-		$tpl = str_replace('!!annul!!', "onClick=\"document.location='./admin.php?categ=opac&sub=opac_view&section=list'\" ", $tpl);
-		return $tpl;
+		$form = "
+		<script type='text/javascript'>
+			function check_link(id) {
+				w=window.open(document.getElementById(id).value);
+				w.focus();
+			}
+		</script>";
+		$form .= $form_modif_requete;
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg["confirm_suppr"])
+		->set_content_form($content_form)
+		->set_table_name('opac_views')
+		->set_field_focus('name');
+		$form .= $interface_form->get_display();
+		return $form;
 	}
 	
 	public function get_form_param() {
 		return $this->param_subst->exec_param_form("./admin.php?categ=opac&sub=opac_view&section=list&opac_view_id=".$this->id."&action=param");
 	}
 	
-	// fonction g√©n√©rant le form de saisie
-	public function do_list() {
-		global $tpl_opac_view_list_tableau,$tpl_opac_view_list_tableau_ligne;
-	
-		$liste="";
-		// pour toutes les vues
-		for($i=0;$i<count($this->opac_views_list);$i++) {
-			if ($i % 2) $pair_impair = "even"; else $pair_impair = "odd";
-	        $td_javascript="  onmousedown=\"document.location='./admin.php?categ=opac&sub=opac_view&section=list&action=form&opac_view_id=!!opac_view_id!!'\" ";
-	        $tr_surbrillance = "onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".$pair_impair."'\" ";
-	        $line = str_replace('!!td_javascript!!',$td_javascript , $tpl_opac_view_list_tableau_ligne);
-	        $line = str_replace('!!tr_surbrillance!!',$tr_surbrillance , $line);
-	        $line = str_replace('!!pair_impair!!',$pair_impair , $line);
-	
-			$line =str_replace('!!opac_view_id!!', $this->opac_views_list[$i]->id, $line);
-			$line = str_replace('!!name!!', $this->opac_views_list[$i]->name, $line);
-			$line = str_replace('!!comment!!', $this->opac_views_list[$i]->comment, $line);
-			$liste.=$line;
-		}
-		return str_replace('!!lignes_tableau!!',$liste , $tpl_opac_view_list_tableau);
-	}
-	
 	public function do_sel_list() {
 		global $tpl_opac_view_list_sel_tableau,$tpl_opac_view_list_sel_tableau_ligne;
 		global $pmb_opac_view_class;
-		global $base_path,$include_path,$lang,$msg;
+		global $include_path,$lang,$msg;
 		global $charset;
 	
 		// on reprend...
 		global $pmb_opac_view_activate;
 		$j=0;
-		$list = $disabled = "";
-		//on a une classe sp√©cifique pour la gestion des vues...
+		$disabled = "";
+		//on a une classe spÈcifique pour la gestion des vues...
 		//on ne peut pas proposer le forcage, mais on peut peut etre afficher les valeurs
 		if($pmb_opac_view_class){
 			$tpl = "
 			<div class='row'>".htmlentities($msg['opac_view_class_exists'],ENT_QUOTES,$charset)."</div>";
 		}else{
 			if($pmb_opac_view_activate==2){
-				//d√©finition en administration, on va chercher les valeurs...
+				//dÈfinition en administration, on va chercher les valeurs...
 				$qt = new quota("OPAC_VIEW",$include_path."/quotas/own/".$lang."/opac_views.xml");
-				//Tableau de passage des param√®tres
+				//Tableau de passage des paramËtres
 				if($this->id_empr){
+					$struct=array();
 					$struct["READER"] = $this->id_empr;
 					$values = $qt->get_quota_value_with_id($struct);
 				}else{
@@ -316,7 +313,7 @@ class opac_view {
 				if($values['VALUE'] && $values['VALUE'] != -1){
 					$allowed = unserialize($values['VALUE']);
 				}
-				//on a peut etre d√©j√† forcer
+				//on a peut etre dÈj‡ forcer
 				if(count($this->view_list_empr)==0){
 					$disabled = "disabled='disabled'";
 				}
@@ -370,7 +367,7 @@ class opac_view {
 				$line = str_replace('!!opac_view_id!!', $this->opac_views_list[$i]->id, $line);
 				$tr_surbrillance = "onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".($j%2 ? "odd" : "even")."'\" ";
 				$line = str_replace('!!tr_surbrillance!!',$tr_surbrillance , $line);
-				//gestion simple ou for√ßage pour l'utilisateur...
+				//gestion simple ou forÁage pour l'utilisateur...
 				if($disabled == ""){
 					if(in_array($this->opac_views_list[$i]->id,$this->view_list_empr)){
 						$checked = "checked='checked'";
@@ -462,11 +459,10 @@ class opac_view {
 	}
 	
 	public function update_sel_list() {
-		global $dbh;
 		global $form_empr_opac_view; // issu du formulaire
 		global $form_empr_opac_view_default; // issu du formulaire
 	
-		if($this->id_empr) pmb_mysql_query("DELETE from opac_views_empr WHERE emprview_empr_num=".$this->id_empr, $dbh);
+		if($this->id_empr) pmb_mysql_query("DELETE from opac_views_empr WHERE emprview_empr_num=".$this->id_empr);
 	
 		if(is_array($form_empr_opac_view) && $this->id_empr){
 			foreach($form_empr_opac_view as $view_num){
@@ -477,69 +473,100 @@ class opac_view {
 				if($found || $view_num == 0){
 					if($view_num==$form_empr_opac_view_default)$default=1; else $default=0;
 					$req="INSERT INTO opac_views_empr SET emprview_view_num=$view_num, emprview_empr_num=".$this->id_empr.", emprview_default=$default ";
-					pmb_mysql_query($req, $dbh);
+					pmb_mysql_query($req);
 				}
 			}
 		}
 	}
 	
-	public function delete() {
-		global $dbh;
-	
-		if($this->id) {
+	public static function delete($id) {
+		$id = intval($id);
+		if($id) {
 			// relation vues / empr
-			pmb_mysql_query("DELETE from opac_views_empr WHERE emprview_view_num=".$this->id, $dbh);
+			pmb_mysql_query("DELETE from opac_views_empr WHERE emprview_view_num=".$id);
 			// table de la liste des notices de la vue
-			$req="DROP TABLE opac_view_notices_".$this->id;
+			$req="DROP TABLE IF EXISTS opac_view_notices_".$id;
 			pmb_mysql_query($req);
 			// la vue
-			pmb_mysql_query("DELETE from opac_views WHERE opac_view_id='".$this->id."' ", $dbh);
-			$this->id=0;
+			pmb_mysql_query("DELETE from opac_views WHERE opac_view_id='".$id."' ");
 		}
-		$this->fetch_data();
 	}
 	
 	public function make_hidden_search_form() {
 	    global $search;
 	    global $charset;
-	    global $page;
+	    
 	    $url = "./catalog.php?categ=search&mode=6" ;
 	    // remplir $search
 	    $this->search_class->unserialize_search($this->requete);
 	
 	    $r="<form name='modif_requete_form' action='$url' style='display:none' method='post'>";
-	
-	    for ($i=0; $i<count($search); $i++) {
-	    	$inter="inter_".$i."_".$search[$i];
-	    	global ${$inter};
-	    	$op="op_".$i."_".$search[$i];
-	    	global ${$op};
-	    	$field_="field_".$i."_".$search[$i];
-	    	global ${$field_};
-	    	$field=${$field_};
-	    	//R√©cup√©ration des variables auxiliaires
-	    	$fieldvar_="fieldvar_".$i."_".$search[$i];
-	    	global ${$fieldvar_};
-	    	$fieldvar=${$fieldvar_};
-	    	if (!is_array($fieldvar)) $fieldvar=array();
-	
-	    	$r.="<input type='hidden' name='search[]' value='".htmlentities($search[$i],ENT_QUOTES,$charset)."'/>";
-	    	$r.="<input type='hidden' name='".$inter."' value='".htmlentities(${$inter},ENT_QUOTES,$charset)."'/>";
-	    	$r.="<input type='hidden' name='".$op."' value='".htmlentities(${$op},ENT_QUOTES,$charset)."'/>";
-	    	for ($j=0; $j<count($field); $j++) {
-	    		$r.="<input type='hidden' name='".$field_."[]' value='".htmlentities($field[$j],ENT_QUOTES,$charset)."'/>";
-	    	}
-	    	reset($fieldvar);
-	    	foreach ($fieldvar as $var_name => $var_value) {
-	    		for ($j=0; $j<count($var_value); $j++) {
-	    			$r.="<input type='hidden' name='".$fieldvar_."[".$var_name."][]' value='".htmlentities($var_value[$j],ENT_QUOTES,$charset)."'/>";
-	    		}
-	    	}
+	    
+	    if (!empty($search)) {
+    	    for ($i=0; $i<count($search); $i++) {
+    	    	$inter="inter_".$i."_".$search[$i];
+    	    	global ${$inter};
+    	    	if (!isset(${$inter})) ${$inter} = '';
+    	    	$op="op_".$i."_".$search[$i];
+    	    	global ${$op};
+    	    	$field_="field_".$i."_".$search[$i];
+    	    	global ${$field_};
+    	    	$field=${$field_};
+    	    	//RÈcupÈration des variables auxiliaires
+    	    	$fieldvar_="fieldvar_".$i."_".$search[$i];
+    	    	global ${$fieldvar_};
+    	    	$fieldvar=${$fieldvar_};
+    	    	if (!is_array($fieldvar)) $fieldvar=array();
+    	
+    	    	$r.="<input type='hidden' name='search[]' value='".htmlentities($search[$i],ENT_QUOTES,$charset)."'/>";
+    	    	$r.="<input type='hidden' name='".$inter."' value='".htmlentities(${$inter},ENT_QUOTES,$charset)."'/>";
+    	    	$r.="<input type='hidden' name='".$op."' value='".htmlentities(${$op},ENT_QUOTES,$charset)."'/>";
+    	    	for ($j=0; $j<count($field); $j++) {
+    	    		$r.="<input type='hidden' name='".$field_."[]' value='".htmlentities($field[$j],ENT_QUOTES,$charset)."'/>";
+    	    	}
+    	    	reset($fieldvar);
+    	    	foreach ($fieldvar as $var_name => $var_value) {
+    	    		for ($j=0; $j<count($var_value); $j++) {
+    	    			$r.="<input type='hidden' name='".$fieldvar_."[".$var_name."][]' value='".htmlentities($var_value[$j],ENT_QUOTES,$charset)."'/>";
+    	    		}
+    	    	}
+    	    }
 	    }
-	    // Champs √† m√©moriser
+	    // Champs ‡ mÈmoriser
 	    $r.="<input type='hidden' name='opac_view_id' value='".$this->id."'/>";
 	    $r.="</form>";
 	    return $r;
     }
 
-} // fin d√©finition classe
+    public static function apply_opac_search_parameters() {
+    	global $pmb_allow_term_troncat_search, $opac_allow_term_troncat_search;
+    	global $pmb_default_operator, $opac_default_operator;
+    	global $pmb_multi_search_operator, $opac_multi_search_operator;
+    	global $pmb_search_relevant_with_frequency, $opac_search_relevant_with_frequency;
+    	
+    	if(empty(static::$search_parameters)) {
+    		static::$search_parameters = array(
+    				'allow_term_troncat_search' => $pmb_allow_term_troncat_search,
+    				'default_operator' => $pmb_default_operator,
+    				'multi_search_operator' => $pmb_multi_search_operator,
+    				'search_relevant_with_frequency' => $pmb_search_relevant_with_frequency
+    		);
+    	}
+    	$pmb_allow_term_troncat_search = $opac_allow_term_troncat_search;
+    	$pmb_default_operator = $opac_default_operator;
+    	$pmb_multi_search_operator = $opac_multi_search_operator;
+    	$pmb_search_relevant_with_frequency = $opac_search_relevant_with_frequency;
+    }
+    
+    public static function restore_gestion_search_parameters() {
+    	global $pmb_allow_term_troncat_search;
+    	global $pmb_default_operator;
+    	global $pmb_multi_search_operator;
+    	global $pmb_search_relevant_with_frequency;
+    	
+    	$pmb_allow_term_troncat_search = static::$search_parameters['allow_term_troncat_search'];
+    	$pmb_default_operator = static::$search_parameters['default_operator'];
+    	$pmb_multi_search_operator = static::$search_parameters['multi_search_operator'];
+    	$pmb_search_relevant_with_frequency = static::$search_parameters['search_relevant_with_frequency'];
+    }
+} // fin dÈfinition classe

@@ -4801,6 +4801,10 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 	background-repeat: repeat;
 }
 
+.claro img.dijitTreeExpando {
+	background-image: none;
+}
+
 .claro .dijitTreeExpando {
 	background-image: url("images/treeExpandImages.png");
 	width: 16px;

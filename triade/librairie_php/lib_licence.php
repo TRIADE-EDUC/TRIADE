@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.org
  *
  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 //------------------------------------------------------------------------------
 // section pour un acces non autorise
+
 
 include_once("./librairie_php/lib_emul_register.php");
 
@@ -35,12 +36,12 @@ if (file_exists("./common/lib_triade_interne.php")) {
         }
 }
 
-
 if (file_exists("./common/version.php")) include_once("./common/version.php");
 if (file_exists("./common/lib_admin.php")) include_once("./common/lib_admin.php");
 if (file_exists("./common/lib_crypt.php")) include_once("./common/lib_crypt.php");
 if (file_exists("./common/lib_ecole.php")) include_once("./common/lib_ecole.php");
 if (file_exists("./common/config2.inc.php")) include_once("./common/config2.inc.php");
+if (file_exists("../common/config2.inc.php")) include_once("../common/config2.inc.php");
 if (file_exists("./common/config3.inc.php")) include_once("./common/config3.inc.php");
 if (file_exists("./common/config4.inc.php")) include_once("./common/config4.inc.php");
 if (file_exists("./common/config8.inc.php")) include_once("./common/config8.inc.php");
@@ -54,20 +55,22 @@ if (file_exists("./librairie_ph/lib_context.php")) include_once("./librairie_php
 if (file_exists("./common/config-module.php")) include_once("./common/config-module.php");
 if (file_exists("./common/config-fen.php")) include_once("./common/config-fen.php");
 
-// -----------------------------------------------------------------------------
-
-if (!defined('INTITULEDIRECTION')) { define("INTITULEDIRECTION","direction"); }
-if (!defined('INTITULEELEVE')) { define("INTITULEELEVE","élève"); }
-if (!defined('INTITULECLASSE')) { define("INTITULECLASSE","classe"); }
-if (!defined('INTITULEENSEIGNANT')) { define("INTITULEENSEIGNANT","enseignant"); }
-if (!defined('LARGEURFEN')) { define("LARGEURFEN","780"); }
-// -----------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+if (!defined('INTITULEDIRECTION')) 	{ define("INTITULEDIRECTION","direction"); 	}
+if (!defined('INTITULEELEVE')) 		{ define("INTITULEELEVE","élève"); 		}
+if (!defined('INTITULECLASSE')) 	{ define("INTITULECLASSE","classe"); 		}
+if (!defined('INTITULEENSEIGNANT')) 	{ define("INTITULEENSEIGNANT","enseignant"); 	}
+if (!defined('LARGEURFEN')) 		{ define("LARGEURFEN","780"); 			}
+if (!defined('MODULEADMINEVALENS')) 	{ define("MODULEADMINEVALENS","non"); 		}
+if (!defined('MODULEPACTEADMIN'))   { define("MODULEPACTEADMIN","non"); }
+if (!defined('MODULEPACTEPROF'))    { define("MODULEPACTEPROF","non");  }		 
+// --------------------------------------------------------------------------------------
 // syxtaxe d'utilisation
-// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuparent",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuprof",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menudeux",$_SESSION[id_pers],$_SESSION[membre]);
+// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuparent",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuprof",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menudeux",$_SESSION[id_pers],$_SESSION['membre']);
 // scolaire et admin
 function verifplus($verifplus,$idpers,$idmembre) {
 	if ($verifplus == "menudeux") {
@@ -92,7 +95,6 @@ function verifplus($verifplus,$idpers,$idmembre) {
 	}
 }
 
-
 // -----------------------------------------------------------------------------
 
 function testadminplus() {
@@ -114,34 +116,13 @@ function brmozilla($navig) {
 
 if (file_exists("./common/lib_patch.php")){
 	include_once('./common/lib_patch.php');
-	$rev="<br>Rev : <em>".VERSIONPATCH."</em>  - <i>".VERSIONMD5."</i>";
+	$VERSIONPATCH="000-00";
+	$VERSIONMD5="";
+	if (defined("VERSIONPATCH"))  $VERSIONPATCH=VERSIONPATCH;
+	if (defined("VERSIONMD5"))  $VERSIONMD5=VERSIONMD5; 
+	$rev="<br>Rev : <em>".$VERSIONPATCH."</em>  - <i>".$VERSIONMD5."</i>";
 }
 
-//------------------------------------------------------------------------------
-// construction de la license
-// pour Internet explorer
-
-if (preg_match('/msie/i', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/opera/i', $_SERVER['HTTP_USER_AGENT']))
-{
-print "<div id=\"menu\" class=\"fond\" style=\"background-image:url(./image/commun/fond_inscrip.jpg);position:absolute;z-index:2;\">";
-print "<div class=\"intitules\" url=\"\" align=\"left\">";
-print "<br /><img src=\"./image/commun/logo_triade_licence.gif\" />";
-print "        <br /><br />Version : <strong>".VERSION."</strong>";
-print "	       $rev";
-print "        <br /> Tous droits réservés <br />";
-print "                Licence d'utilisation : ".LICENCE."<br />";
-print "                Product&nbsp;ID&nbsp;=&nbsp;<font class='T1'>".PRODUCTID."</font>";
-print "        <br />";
-print "        <textarea cols=55 rows=5 style='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>";
-droit();
-print "</textarea>";
-print "        <hr /><table width=95%><tr><td align=left> <font size=2 ><a href='http://www.triade-educ.org' target='_blank' >Triade©</a>, ".DATEOUT." </font></td><td align=right><input type=button value='Fermer Fenêtre' onclick='masque_menu()' class='bouton2' ></td></tr></table>";
-print "<br /></div></div>";
-print "<script type=\"text/javascript\">";
-print "document.getElementById('menu').style.visibility='hidden'";
-print "</script>";
-}
- 
 
 //------------------------------------------------------------------------------
 // declaration de variables
@@ -153,7 +134,7 @@ if  (preg_match("/http/",FORUM)) {
 	print "<script type=\"text/javascript\"> var forum='forum.php'; forumtarget='forum'; </script>";
 }
 
-
+/*
 
 //------------------------------------------------------------------------------
 // interdit l'utilisation de la touche F11 et F5
@@ -211,6 +192,8 @@ function attente() {
 }
 //----------------------------------------------------------------
 // Config droit d'acces module
+
+
 print "<script>";
 print "var lan='".LAN."';";
 print "var moduledispence='".DISPENSE."'; ";
@@ -293,14 +276,12 @@ print "var moduletuteurcahierdetexte='".MODULETUTEURCAHIERDETEXTE."'; ";
 print "var moduletuteurcirculaire='".MODULETUTEURCIRCULAIRE."'; ";
 print "var moduletuteurcalendrier='".MODULETUTEURCALENDRIER."'; ";
 print "var moduleprofemargement='".MODULEPROFEMARGEMENT."'; ";
-
 print "var moduleparentagenda='".MODULEPARENTAGENDA."'; ";
 print "var moduleparentstockage='".MODULEPARENTSTOCKAGE."'; ";
 print "var moduleparentmsn='".MODULEPARENTMSN."'; ";
 print "var moduleparentcompta='".MODULEPARENTCOMPTA."'; ";
 print "var moduleparentrss='".MODULEPARENTRSS."'; ";
 print "var moduleparentcantine='".MODULEPARENTCANTINE."'; ";
-
 print "var moduleeleveagenda='".MODULEELEVEAGENDA."'; ";
 print "var moduleelevestockage='".MODULEELEVESTOCKAGE."'; ";
 print "var moduleelevemsn='".MODULEELEVEMSN."'; ";
@@ -310,7 +291,6 @@ print "var moduleelevecantine='".MODULEELEVECANTINE."'; ";
 print "var modulenewspageviescolaire='".MODULENEWSPAGEVIESCOLAIRE."'; ";
 print "var modulenewsviescolaire='".MODULENEWSVIESCOLAIRE."'; ";
 print "var moduleboursieradmin='".MODULEBOURSIERADMIN."'; ";
-
 print "var modulemessagerieadmin='".MODULEMESSAGERIEADMIN."'; ";
 print "var modulemessagerieprof='".MODULEMESSAGERIEPROF."'; ";
 print "var modulemessagerieeleve='".MODULEMESSAGERIEELEVE."'; ";
@@ -325,11 +305,9 @@ print "var INTITULEELEVE='".ucfirst(TextNoAccentLicence(INTITULEELEVE))."'; ";
 print "var intituleeleve='".INTITULEELEVE."'; ";
 print "var intituleclasse='".INTITULECLASSE."'; ";
 print "var intituleenseignant='".INTITULEENSEIGNANT."'; ";
-
 print "var moduleplanningeleve='".MODULEPLANNINGELEVE."'; ";
 print "var moduleplanningparent='".MODULEPLANNINGPARENT."'; ";
 print "var moduleplanningprof='".MODULEPLANNINGPROF."'; ";
-
 print "var rubriquebulletin='".RUBRIQUEBULLETIN."'; ";
 print "var rubriqueannexe='".RUBRIQUEANNEXE."'; ";
 print "var rubriquegestion='".RUBRIQUEGESTION."'; ";
@@ -338,7 +316,6 @@ print "var rubriqueetablissement='".RUBRIQUEETABLISSEMENT."'; ";
 print "var rubriqueviescolaire='".RUBRIQUEVIESCOLAIRE."'; ";
 print "var rubriqueetudiant='".RUBRIQUEETUDIANT."'; ";
 print "var rubriqueactualite='".RUBRIQUEACTUALITE."'; ";
-
 print "var moduleadmincdi='".MODULEADMINCDI."'; ";
 print "var moduleadminnotanet='".MODULEADMINNOTANET."'; ";
 print "var moduleadmingestionsms='".MODULEADMINGESTIONSMS."'; ";
@@ -354,7 +331,6 @@ print "var moduleadminplanclasse='".MODULEADMINPLANCLASSE."'; ";
 print "var moduleadmingestiondelegue='".MODULEADMINGESTIONDELEGUE."'; ";
 print "var moduleadminsousmatiere='".MODULEADMINSOUSMATIERE."'; ";
 print "var moduleadminsuppleant='".MODULEADMINSUPPLEANT."'; ";
-
 print "var moduleadminprofp='".MODULEADMINPROFP."'; ";
 print "var moduleadminconfignoteusa='".MODULEADMINCONFIGNOTEUSA."'; ";
 print "var moduleadminentretienindividuel='".MODULEADMINENTRETIENINDIVIDUEL."'; ";
@@ -364,7 +340,6 @@ print "var moduleadminnoteviescolaire='".MODULEADMINNOTEVIESCOLAIRE."'; ";
 print "var moduleadminimprperiode='".MODULEADMINIMPRPERIODE."'; ";
 print "var moduleadminabsrtd='".MODULEADMINABSRTD."'; ";
 print "var moduleadminpreinscription='".MODULEADMINPREINSCRIPTION."'; ";
-
 print "var moduleadminnouvelleannee='".MODULEADMINNOUVELLEANNEE."'; ";
 print "var moduleadminarchivage='".MODULEADMINARCHIVAGE."'; ";
 print "var moduleadminnewsdefilant='".MODULEADMINNEWSDEFILANT."'; ";
@@ -386,15 +361,15 @@ print "var moduleviescolairechambre='".MODULECHAMBRESVIESCOLAIRE."'; ";
 print "var moduleradio='".MODULERADIO."'; ";
 print "var modulefourniturescolaire='".MODULEFOURNITURESCOLAIRE."';";
 print "var moduledelegueparent='".MODULEDELEGUEPARENT."';";
+print "var moduleparentlocalisation='".(defined('MODULEPARENTLOCALISATION') ? MODULEPARENTLOCALISATION : 'non')."';";
 print "var moduleadminevalens='".MODULEADMINEVALENS."';";
+print "var modulepacteadmin='".MODULEPACTEADMIN."';";
+print "var modulepacteprof='".MODULEPACTEPROF."';";
 print "var largeurfen='".LARGEURFEN."';";
+print "var banniere='".BANNIEREDISPO."';";
+print "var bannierehauteur='".BANNIEREHAUTEUR."';";
 print "if (screen.width >= 800) { largeurfen='780'; }";
 print "if (screen.width >= 1024) { largeurfen='1020'; }";
-//print "if (screen.width >= 1920) { largeurfen='1500'; }";
-//print "alert(largeurfen);";
-//print "alert(screen.width);";
-
-
 
 
 if (defined('FOOTERSPECIAL')) { 
@@ -454,9 +429,13 @@ print "if (moduleelearning == 'MODULEELEARNING') { moduleelearning='dokeos'; } \
 print "if (moduleradio == 'MODULERADIO') { moduleradio='oui'; } \n";
 print "if (modulefourniturescolaire == 'MODULEFOURNITURESCOLAIRE') { modulefourniturescolaire='oui'; } \n";
 print "if (moduledelegueparent == 'MODULEDELEGUEPARENT') { moduledelegueparent='oui'; } \n";
+print "if (moduleparentlocalisation == 'MODULEPARENTLOCALISATION') { moduleparentlocalisation='non'; } \n";
 
-include_once('librairie_php/db_triade.php');
-$cnx=cnx();
+if (file_exists('db_triade.php')) include_once('db_triade.php');
+if (file_exists('librairie_php/db_triade.php')) include_once('librairie_php/db_triade.php');
+
+$cnx=cnx(); 
+
 if (verifDroit($_SESSION["id_pers"],'vatelcompta')) { $ok="oui"; }else{ $ok='non'; }
 print "var modulefinanciervatelpersonnel='$ok';\n";
 if (verifDroit($_SESSION["id_pers"],'vatelchambre')) { $ok="oui"; }else{ $ok='non'; }
@@ -490,9 +469,12 @@ print "var modulevideoprojo='$ok';\n";
 if (verifDroit($_SESSION["id_pers"],'entretien')) { $ok="oui"; }else{ $ok='non'; }
 print "var moduleentretien='$ok';\n";
 if (verifDroit($_SESSION["id_pers"],'edt')) { $ok="oui"; }else{ $ok='non'; }
-print "var moduleedt='$ok';\n";
 
-print "var SIGNKEY='';";
+if (verifDroit($_SESSION["id_pers"],'AESH')) { $ok="oui"; }else{ $ok='non'; }
+print "var moduleedt='$ok';\n";
+print "var moduleficheeleve='$ok';\n";
+print "var modulecarnetnotes='$ok';\n";
+print "var SIGNKEY='';\n";
 
 if (file_exists("../common/config-sign.php")) {
 	include_once("../common/config-sign.php");

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entities_parser.class.php,v 1.1 2017-04-25 15:23:21 dgoron Exp $
+// $Id: frbr_entities_parser.class.php,v 1.2 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,9 +25,9 @@ class frbr_entities_parser {
 		if(count($this->folders_list) == 0){
 			if(is_dir($this->path)){
 				$dh = opendir($this->path);
-				//on parcours tout le rÃ©pertoire
+				//on parcours tout le répertoire
 				while(($dir = readdir($dh)) !== false){
-					//le rÃ©pertoire parent et common ne sont pas des modules
+					//le répertoire parent et common ne sont pas des modules
 					if($dir != "common"  & substr($dir,0,1) != "."){
 						$this->folders_list[] = $dir;
 					}
@@ -90,7 +90,7 @@ class frbr_entities_parser {
 
 // 	public static function get_module_class_by_id($id){
 // 		global $dbh;
-// 		$id+=0;
+// 		$id = intval($id);
 // 		$query = "select * from cms_cadres where id_cadre = ".$id;
 // 		$result = pmb_mysql_query($query,$dbh);
 // 		if(pmb_mysql_num_rows($result)){

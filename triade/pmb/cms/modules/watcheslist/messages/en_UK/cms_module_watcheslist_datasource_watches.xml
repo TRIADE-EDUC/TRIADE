@@ -5,9 +5,12 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_watcheslist_datasource_watches.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+$Id: cms_module_watcheslist_datasource_watches.xml,v 1.2.8.1 2025/04/29 09:37:29 dgoron Exp $ -->
 
 <XMLlist>
+	<entry code="cms_module_watcheslist_datasource_watches_load_items_data">A t-on besoin des informations sur les items associés ?</entry>
+	<entry code="cms_module_watcheslist_datasource_watches_load_items_interesting">Seulement les items intéressants ?</entry>
+	<entry code="cms_module_watcheslist_datasource_watches_load_items_limit">Nombre maximum d'items à renvoyer</entry>
 	<entry code='cms_module_watcheslist_selector_watches_generic'>Direct watches selection</entry>
 	<entry code='cms_module_watcheslist_view_watches_desc'>Watches table</entry>
 </XMLlist>

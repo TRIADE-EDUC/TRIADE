@@ -1,106 +1,74 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requests.tpl.php,v 1.10 2019-05-27 12:35:59 btafforeau Exp $
+// $Id: requests.tpl.php,v 1.11 2022/03/31 14:17:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $req_add_form, $current_module, $msg, $charset, $req_auth, $frame_req_add_form, $req_tab_header_select, $joi_tab_header_select, $joi_tab_line_select, $lim_tab_header_select;
+global $req_add_content_form, $current_module, $msg, $charset, $req_auth, $frame_req_add_form, $req_tab_header_select, $joi_tab_header_select, $joi_tab_line_select, $lim_tab_header_select;
 global $lim_tab_line_select, $req_tab_header_insert, $req_tab_header_update, $req_tab_header_delete, $joi_tab_header_insert, $joi_tab_header_update, $joi_tab_header_delete;
 global $lim_tab_header_delete, $lim_tab_line_delete;
 
-// $req_add_form : template creation requete
-$req_add_form = "
-<form class='form-".$current_module."' id='req_modif' name='req_modif' method='post' action='./admin.php?categ=proc&sub=req&action=update'>
-	<h3>!!form_title!!</h3>
-	<!--    Contenu du form    -->
-	<div class='form-contenu'>
-		<div class='row'>
-			<div class='left'>
-				<label class='etiquette' for='req_name'>".htmlentities($msg['req_name_lbl'], ENT_QUOTES, $charset)."</label>
-			</div>
-			<div class='right'>
-				<label class='etiquette' for='req_name'>".htmlentities($msg['proc_clas_proc'], ENT_QUOTES, $charset)."</label>
-			</div>
-		</div>
-		<div class='row'>
-			<div class='left'>
-				<input type='text' id='req_name' name='req_name' value='!!req_name!!' maxlength='255' class='saisie-80em'/>
-			</div>
-			<div class='right'>
-				!!classement!!
-			</div>
-		</div>
-		
-		<div class='row'>
-			<div class='colonne5'>
-				<label class='etiquette' for='req_type'>".htmlentities($msg['req_type_lbl'], ENT_QUOTES, $charset)."</label>
-			</div>
-			<div id='req_univ1' class='colonne_suite' style='display:none';>
-				<label class='etiquette' for='req_univ'>".htmlentities($msg['req_univ_lbl'], ENT_QUOTES, $charset)."</label>
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne5'>
-				!!req_type!!		
-			</div>
-			<div id='req_univ2' class='colonne_suite' style='display:none';>
-				!!req_univ!!
-				<input type='button' id='req_bt_sui' name='req_bt_sui' class='bouton_small' value='".htmlentities($msg['req_bt_sui'],ENT_QUOTES,$charset)."' onClick=\"req_openFrame(event);\"/>
-			</div>
-		</div>
-		<div class='row'>
-			<label class='etiquette' for='req_code'>".htmlentities($msg['req_code_lbl'], ENT_QUOTES, $charset)."</label>
-		</div>
-		<div class='row'>
-			<textarea id='req_code' name='req_code' cols='80' rows='8'>!!req_code!!</textarea>
-		</div>
-		
-		<div class='row'>
-			<label class='etiquette' for='req_comm'>".htmlentities($msg['req_comm_lbl'], ENT_QUOTES, $charset)."</label>
-		</div>
-		<div class='row'>
-			<input type='text' id='req_comm' name='req_comm' class='saisie-80em' value='!!req_comm!!' maxlength='255'/>
-		</div>
-		
-		<div class='row'>
-			<label class='etiquette'>".htmlentities($msg['req_auth_lbl'], ENT_QUOTES, $charset)."</label>
-			<input type='button' class='bouton_small align_middle' value='".$msg['tout_cocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,1);'>
-			<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,0);'>
-		</div>
-		<div class='row'>
-			!!req_auth!!
-		</div>
+// $req_add_content_form : template creation requete
+$req_add_content_form = "
+<div class='row'>
+	<div class='left'>
+		<label class='etiquette' for='req_name'>".htmlentities($msg['req_name_lbl'], ENT_QUOTES, $charset)."</label>
 	</div>
-	<div class='row'>
-		<div class='left'>
-			<input type='button' class='bouton' value='".$msg['76']."' onclick=\"document.location='./admin.php?categ=proc'; \"/>
-			<input type='submit' class='bouton' value='".$msg['77']."' onclick=\"return test_form(this.form); \"/>
-		</div>
-		<div class='right'>
-			<!-- bt_sup -->
-		</div>
+	<div class='right'>
+		<label class='etiquette' for='req_name'>".htmlentities($msg['proc_clas_proc'], ENT_QUOTES, $charset)."</label>
 	</div>
-	<div class='row'></div>
-</form>
-<script type='text/javascript' src='./javascript/select.js'></script>
-<script type='text/javascript' src='./javascript/requests.js'></script>
-<script type='text/javascript'>
-function test_form(form) {
-	if(form.req_name.value.length == 0) {
-		alert('".addslashes($msg[702])."');
-		form.req_name.focus();
-		return false;
-	}
-	if(form.req_code.value.length == 0) {
-		alert('".addslashes($msg[703])."');
-		form.req_code.focus();
-		return false;
-	}
-	return true;
-}
-</script>";
+</div>
+<div class='row'>
+	<div class='left'>
+		<input type='text' id='req_name' name='req_name' value='!!req_name!!' maxlength='255' class='saisie-80em'/>
+	</div>
+	<div class='right'>
+		!!classement!!
+	</div>
+</div>
+
+<div class='row'>
+	<div class='colonne5'>
+		<label class='etiquette' for='req_type'>".htmlentities($msg['req_type_lbl'], ENT_QUOTES, $charset)."</label>
+	</div>
+	<div id='req_univ1' class='colonne_suite' style='display:none';>
+		<label class='etiquette' for='req_univ'>".htmlentities($msg['req_univ_lbl'], ENT_QUOTES, $charset)."</label>
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne5'>
+		!!req_type!!		
+	</div>
+	<div id='req_univ2' class='colonne_suite' style='display:none';>
+		!!req_univ!!
+		<input type='button' id='req_bt_sui' name='req_bt_sui' class='bouton_small' value='".htmlentities($msg['req_bt_sui'],ENT_QUOTES,$charset)."' onClick=\"req_openFrame(event);\"/>
+	</div>
+</div>
+<div class='row'>
+	<label class='etiquette' for='req_code'>".htmlentities($msg['req_code_lbl'], ENT_QUOTES, $charset)."</label>
+</div>
+<div class='row'>
+	<textarea id='req_code' name='req_code' cols='80' rows='8'>!!req_code!!</textarea>
+</div>
+
+<div class='row'>
+	<label class='etiquette' for='req_comm'>".htmlentities($msg['req_comm_lbl'], ENT_QUOTES, $charset)."</label>
+</div>
+<div class='row'>
+	<input type='text' id='req_comm' name='req_comm' class='saisie-80em' value='!!req_comm!!' maxlength='255'/>
+</div>
+
+<div class='row'>
+	<label class='etiquette'>".htmlentities($msg['req_auth_lbl'], ENT_QUOTES, $charset)."</label>
+	<input type='button' class='bouton_small align_middle' value='".$msg['tout_cocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,1);'>
+	<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,0);'>
+</div>
+<div class='row'>
+	!!req_auth!!
+</div>
+";
 
 
 $req_auth = "

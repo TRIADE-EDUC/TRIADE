@@ -9,6 +9,6 @@ mostra nella <b>parte inferiore più informazioni</b> sulla categoria scelta ed 
 <hr />
 <p>Cliccando su uno dei link della parte inferiore, ci si può spostare tra le categorie.</p>
 <hr />
-<p>Per selezionare una categoria e mostrare le opere corrispondenti, cliccare sull'icona <img src='images/search.gif' align='absmiddle'>situata all'inizio della riga.</p>
+<p>Per selezionare una categoria e mostrare le opere corrispondenti, cliccare sull'icona <img src='images/search.gif' >situata all'inizio della riga.</p>
 <hr />
 <p>Se l'icona non è presente, significa che nessun'opera è inserita in quella categoria.</p>

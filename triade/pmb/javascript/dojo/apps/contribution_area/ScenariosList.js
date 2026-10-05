@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ScenariosList.js,v 1.6 2017-11-30 10:53:34 dgoron Exp $
+// $Id: ScenariosList.js,v 1.13 2022/03/15 14:40:51 tsamson Exp $
 
 
 define([
@@ -17,13 +17,15 @@ define([
         "dojo/dnd/Moveable",
         "dojo/dom-construct",
         "dojo/dom-class",
-        "dojo/dom-style"
-    ], function(declare, topic, lang, ContentPane, dom, domConstruct, on, query, domClass, Moveable, domConstruct, domClass, domStyle){
+        "dojo/dom-style",
+        "apps/contribution_area/SvgContextMenu",
+    ], function(declare, topic, lang, ContentPane, dom, domConstruct, on, query, domClass, Moveable, domConstruct, domClass, domStyle, SvgContextMenu){
 	return declare(ContentPane, {
 		scenariosListHandler:null,
 		currentParentType:null,
 		currentParent:null,		
 		count:null,
+		selectlist:null,
 		constructor: function(){
 			this.scenariosListHandler = new Array();
 		},
@@ -34,8 +36,14 @@ define([
 				topic.subscribe('Form', lang.hitch(this, this.handleEvents)),
 				topic.subscribe('Node', lang.hitch(this,this.handleEvents)),
 				topic.subscribe('Dialog', lang.hitch(this, this.handleEvents)),
-				topic.subscribe('GraphStore', lang.hitch(this, this.handleEvents))
+				topic.subscribe('GraphStore', lang.hitch(this, this.handleEvents)),
+				topic.subscribe('Graph', lang.hitch(this, this.handleEvents))
 			);
+			
+			this.selectlist = query('select[data-type="contribution_scenario_list"]').forEach(lang.hitch(this,function(selectNode) {
+				on(selectNode, "change", lang.hitch(this, this.zoomOnScenario, selectNode));
+			}));
+			
 			this.buildList();			
 		},
 		handleEvents: function(evtType,evtArgs){	
@@ -57,6 +65,9 @@ define([
 					break;
 				case 'refreshNodes' :
 					this.buildList();
+					break;
+				case 'removeOptionScenario' :
+					this.removeScenariosOptions(evtArgs.scenarioId);
 					break;
 			}
 		},
@@ -114,7 +125,6 @@ define([
 								
 				on(img, 'click', lang.hitch(this, this.expendBaseEntity, entityName));
 				
-				
 				var divContent = domConstruct.create('div', {id:entities[i].pmb_name+'_scenario_divChild', 'class':'notice-child contribution_area_scenario', style:{marginBottom:'6px', display:'none'}}, divHeader);
 				this.buildScenariosListByEntity(entities[i].pmb_name, divContent);
 				var span = domConstruct.create('span', {'class':'notice-heada', innerHTML: entities[i].name+' ('+this.count+')'}, divRowParent);
@@ -136,7 +146,9 @@ define([
 			}
 			
 			if (nodeFilter && nodeFilter.type == "attachment") {
-				expandBase(nodeFilter.entityType + '_scenario_div', true);
+				for(var i = 0; i < nodeFilter.entityType.length ; i++){
+					expandBase(nodeFilter.entityType[i] + '_scenario_div', true);
+				}
 			}
 			
 		},
@@ -147,7 +159,9 @@ define([
 					if (!scenarios[i].parentScenario) {
 						this.count++;
 						var scenarioNode = domConstruct.create('div', {draggable: true, id: 'scenario_'+scenarios[i].id, innerHTML: scenarios[i].name, 'class':'scenario_line'}, node);
+						new SvgContextMenu({targetNodeIds: [scenarioNode], contextType : 'scenarioList'});
 						this.generateScenarioLink(scenarios[i],scenarioNode);
+						this.buildScenariosOptionsByEntity(scenarios[i], entityType);
 					}
 				}
 				return true;
@@ -184,5 +198,57 @@ define([
 			expandBase(entityName, true);
 			return false;
 		},
+		zoomOnScenario: function (scenarioId) {
+			topic.publish('ScenariosList', 'zoomOnNode', scenarioId)
+		},
+		buildScenariosOptionsByEntity(scenario, entityType) {
+			// On ajoute que les scenario présent dans le graph
+			if (scenario.displayed) {
+
+				// Si l'optgroup est déjà présente on le récupère
+				var entities = availableEntities.query({type:'entity', pmb_name:entityType});
+				if (this.selectlist[0].querySelector("optgroup[label='"+entities[0].name+"']")) {
+					var optGroup = this.selectlist[0].querySelector("optgroup[label='"+entities[0].name+"']")
+				} else {
+					var optGroup = document.createElement('optgroup');
+					optGroup.label = entities[0].name;
+				}
+				
+				// Si l'option est déjà présente on ne l'ajoute pas
+				// Mais qu'il est modifié
+				
+				var optScen = this.selectlist[0].querySelector("option[value='"+scenario.id+"']");
+				
+				if (!optScen) {
+					var option = document.createElement('option');
+					option.value = scenario.id;
+					option.innerHTML = scenario.name;
+					on(option, "click", lang.hitch(this, this.zoomOnScenario, scenario.id));
+					optGroup.appendChild(option);
+					this.selectlist[0].appendChild(optGroup);
+				}else{
+					optScen.value = scenario.id;
+					optScen.innerHTML = scenario.name;
+				}
+			}
+		},
+		removeScenariosOptions(scenarioId) {
+			if (this.selectlist[0].querySelector("option[value='"+scenarioId+"']")) {
+				var option = this.selectlist[0].querySelector("option[value='"+scenarioId+"']")
+				if (option.parentNode && option.parentNode.nodeName == "OPTGROUP") {
+					var optGroup = option.parentNode;
+				}
+				
+				// On retire pas la valeur par defaut
+				if (option && option.value != "") {
+					this.selectlist[0].options.remove(option.index);
+					
+					// Si on a plus d'option dans OPTGROUP on le supprime
+					if (optGroup && optGroup.children.length == 0) {
+						this.selectlist[0].removeChild(optGroup);
+					}
+				}
+			}
+		}
 	});
 });

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_authperso_datasource_works.class.php,v 1.1 2018-03-26 09:31:35 dgoron Exp $
+// $Id: frbr_entity_authperso_datasource_works.class.php,v 1.1 2018/03/26 09:31:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,7 +14,7 @@ class frbr_entity_authperso_datasource_works extends frbr_entity_common_datasour
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
 		$query = "SELECT oeuvre_event_tu_num as id, oeuvre_event_authperso_authority_num as parent FROM tu_oeuvres_events

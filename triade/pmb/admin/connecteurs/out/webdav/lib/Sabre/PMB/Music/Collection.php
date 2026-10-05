@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Collection.php,v 1.7 2016-03-30 15:31:14 apetithomme Exp $
+// $Id: Collection.php,v 1.9.12.1 2025/03/13 16:31:11 qvarin Exp $
 namespace Sabre\PMB\Music;
 
 use Sabre\DAV;
 use Sabre\PMB;
 
 class Collection extends PMB\Collection {
-	
+
 	protected $sub_manifestations;
-	
-	function get_code_from_name($name){
+
+	public function get_code_from_name($name){
+	    global $matches;
 		$val="";
 		if(preg_match("/\(([ERMBKWCFPIVA][0-9]{1,})\)$/i",$name,$matches)){
 			$val=$matches[1];
@@ -21,12 +22,13 @@ class Collection extends PMB\Collection {
 		}
 		return $val;
 	}
-	
-	function getChildren(){
+
+	public function getChildren() {
+		return [];
 	}
-	
-	
-	function getChild($name){
+
+
+	public function getChild($name){
 		switch($name){
 			default :
 				$code = $this->get_code_from_name($name);
@@ -74,9 +76,9 @@ class Collection extends PMB\Collection {
 					// Cas particulier des instruments non standards
 					$child = new Musicstand("(".$code.")", $this->config);
 				} else {
-					//document numÃ©rique d'une notice
+					//document numérique d'une notice
 					$query = "select distinct explnum_id,notice_id from explnum join notices on explnum_bulletin = 0 and explnum_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
-					//document numÃ©riques d'une notice de bulletin
+					//document numériques d'une notice de bulletin
 					$query.= "union select distinct explnum_id,notice_id from explnum join bulletins on explnum_notice = 0 and explnum_bulletin = bulletin_id join notices on num_notice != 0 and num_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
 					//$query = $this->filterExplnums($query);
 					$result  = pmb_mysql_query($query);
@@ -84,25 +86,26 @@ class Collection extends PMB\Collection {
 						$row = pmb_mysql_fetch_object($result);
 						$child = new PMB\Explnum("(E".$row->explnum_id.")");
 					}else{
-						throw new DAV\Exception\FileNotFound('File not found: ' . $name);
+					    throw new DAV\Exception\NotFound('File not found: ' . $name);
 					}
 					break;
 				}
 		}
 		return $child;
 	}
-	
-	
-	
-	function getName(){
+
+
+
+	public function getName(){
 		//must be defined
+		return '';
 	}
-	
-	function createFile($name, $data = null) {
+
+	public function createFile($name, $data = null) {
 		throw new DAV\Exception\Forbidden('Permission denied to create file (filename ' . $name . ')');
     }
-    
-    function filter_sub_manifestations($query){
+
+    public function filter_sub_manifestations($query){
     	//on remonte d'abord les parents...
     	$current = $this;
     	$parents = array();
@@ -119,7 +122,7 @@ class Collection extends PMB\Collection {
     	switch($this->config['authentication']){
     		case "gestion" :
     			$acces_j='';
-    			//soit les droits d'accÃ¨s sont activÃ©s et il est possible que la notice ne soit pas visible pour certaines personnes
+    			//soit les droits d'accès sont activés et il est possible que la notice ne soit pas visible pour certaines personnes
     			//soit c'est la requete de base
     			if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 	    			$ac= new \acces();
@@ -129,14 +132,14 @@ class Collection extends PMB\Collection {
     				if($this->parentNode && $this->parentNode->restricted_objects){
 						$query.= " where uni.notice_id in (".$this->parentNode->restricted_objects.")";
 	    			}
-    			}elseif($this->parentNode && $this->parentNode->restricted_objects){//Si la gestion des droits n'est pas activÃ© il faut quand mÃªme restreindre la recherche
+    			}elseif($this->parentNode && $this->parentNode->restricted_objects){//Si la gestion des droits n'est pas activé il faut quand même restreindre la recherche
     				$query = "select notice_id from (".$query.") as uni ";
     				$query.= " where uni.notice_id in (".$this->parentNode->restricted_objects.")";
     			}
     			break;
     		case "opac" :
     			$acces_j='';
-    			//droit d'accÃ¨s ou statut
+    			//droit d'accès ou statut
     			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
     				$ac= new \acces();
 	    			$dom_1= $ac->setDomain(2);
@@ -154,7 +157,7 @@ class Collection extends PMB\Collection {
    				break;
    			case "anonymous" :
    				//on doit regarder
-   				//droit d'accÃ¨s ou statut
+   				//droit d'accès ou statut
    				if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
    					$ac= new \acces();
    					$dom_1= $ac->setDomain(2);
@@ -170,13 +173,13 @@ class Collection extends PMB\Collection {
    					}
 				}
 				break;
-			default ://On ne doit jamais passer dans ce cas lÃ 
+			default ://On ne doit jamais passer dans ce cas là
    				$query="";
    				break;
     	}
     	$this->sub_manifestations =array();
 		if (!$this->check_write_permission()) {
-			//vÃ©rification des droits sur les documents numÃ©riques
+			//vérification des droits sur les documents numériques
 			switch($this->config['authentication']){
 				case "opac" :
 					if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
@@ -185,19 +188,19 @@ class Collection extends PMB\Collection {
 						$acces_j = $dom_3->getJoin($webdav_current_user_id,16,'explnum_id');
 						$query = "select distinct explnum_notice as notice_id from explnum $acces_j where explnum_notice in ($query)";
 					}else{
-						// vÃ©rification du statut de chaque document
+						// vérification du statut de chaque document
 						$query = "select distinct explnum_notice as notice_id from explnum join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and explnum_notice in ($query)";
 					}
 					break;
 				case "anonymous" :
-					//on doit requeter les droits d'accÃ¨s propre Ã  chaque document
+					//on doit requeter les droits d'accès propre à chaque document
 					if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
 						$ac= new \acces();
 						$dom_3= $ac->setDomain(3);
 						$acces_j = $dom_3->getJoin(0,16,'explnum_id');
 						$query = "select distinct explnum_notice as notice_id from explnum $acces_j where explnum_notice in ($query)";
 					}else{
-						// vÃ©rification du statut de chaque document
+						// vérification du statut de chaque document
 						$query = "select distinct explnum_notice as notice_id from explnum join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and explnum_visible_opac_abon=0 and explnum_notice in ($query)";
 					}
 					break;
@@ -212,10 +215,10 @@ class Collection extends PMB\Collection {
     		while($row = pmb_mysql_fetch_object($result)){
     			$this->sub_manifestations[] = $row->notice_id;
     		}
-    	}else{//Si j'ai plus de notice dans cette branche il faut le garde en mÃ©moire sinon dans la branche du dessous on repart avec toute les notices
+    	}else{//Si j'ai plus de notice dans cette branche il faut le garde en mémoire sinon dans la branche du dessous on repart avec toute les notices
     		$this->sub_manifestations[] = "'ensemble_vide'";
     	}
     	$this->restricted_objects = implode(",",$this->sub_manifestations);
     }
-    
+
 }

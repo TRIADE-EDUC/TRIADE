@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_concepts.php,v 1.3 2019-03-07 11:04:41 ngantier Exp $
+// $Id: print_concepts.php,v 1.5 2023/11/30 11:10:07 dgoron Exp $
 
 $base_path = ".";
 $base_auth = "AUTORITES_AUTH";
@@ -16,8 +16,13 @@ if ($_GET['action'] != "print") {
 	$base_noheader = 1;
 }
 require($base_path . "/includes/init.inc.php");
+
+global $msg, $action, $output, $typeimpression;
+global $scheme_id, $parent_id;
+
 @set_time_limit(0);
 
+$color = array();
 $color[0] = "#d7d8ff"; // violet
 $color[1] = "#fcffc5"; // jaune
 $color[2] = "#c9e9ff"; // bleu
@@ -98,7 +103,7 @@ if ($action == "print") {
 	$niveau = 0;
 	switch ($typeimpression) {
 		case "arbo":		
-		    echo "<table width=100% cellspacing=0 cellpadding=3>";
+		    echo "<table style='border-spacing: 0px; padding: 3px; width: 100%'>";
 		    $count = count($results);
 		    for ($i = 0; $i < $count; $i++) {
 			    enfants($results[$i]->concept, $niveau, true);
@@ -111,7 +116,7 @@ if ($action == "print") {
 		        enfants($results[$i]->concept, $niveau, false);
 		    }
 		    asort($data_noeud_to_sort);
-		    echo "<table width=100% cellspacing=0 cellpadding=3>";
+		    echo "<table style='border-spacing: 0px; padding: 3px; width: 100%'>";
 		    foreach ($data_noeud_to_sort as $uri => $value) {
 		        echo encoding_normalize::utf8_normalize($data_noeud[$uri]['display']);
 		    }
@@ -121,7 +126,7 @@ if ($action == "print") {
 	print "</body></html>";
 }
 
-pmb_mysql_close($dbh);
+pmb_mysql_close();
 
 function enfants($uri, $niveau, $print_arbo = true) {
     global $list_uri, $data_noeud, $data_noeud_to_sort;

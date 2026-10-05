@@ -1,26 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: custom_cote_pmi.inc.php,v 1.2 2015-04-03 11:16:18 jpermanne Exp $
+// $Id: custom_cote_pmi.inc.php,v 1.3 2022/01/03 14:10:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 
 /*
- * Cote pour PMI : Plan de classement plus nb_expl associÃ©+1
+ * Cote pour PMI : Plan de classement plus nb_expl associé+1
  */
 function prefill_cote($id_notice=0,$cote="") {
- 	global $dbh;
  	global $value_prefix_cote ;
 	$res_dewey = '';
 	$res_cote = '';
-	$res_expl = '';
 	if (!$cote) {
 	
 		// fetch the dewey code
 		$requete = "SELECT indexint_name as index_cote FROM indexint, notices where notice_id='$id_notice' and indexint=indexint_id ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_num_rows($result); 
 		if ($nbr_lignes) {
 			$res = pmb_mysql_fetch_object($result) ;
@@ -28,7 +26,7 @@ function prefill_cote($id_notice=0,$cote="") {
 		}
 
 		$requete = "SELECT expl_cote as cote_expl from exemplaires where expl_cote like '".$res_dewey." %' ";
-		$result = @pmb_mysql_query($requete, $dbh);
+		$result = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_num_rows($result);
 		
 		// build the code using also the author name

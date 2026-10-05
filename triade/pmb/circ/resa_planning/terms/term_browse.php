@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_browse.php,v 1.4 2012-09-06 07:52:00 ngantier Exp $
+// $Id: term_browse.php,v 1.4 2012/09/06 07:52:00 ngantier Exp $
 //
 // Frames pour naviger par terme
 

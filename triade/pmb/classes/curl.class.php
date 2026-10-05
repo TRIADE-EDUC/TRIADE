@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: curl.class.php,v 1.20 2019-04-02 13:05:50 dbellamy Exp $
+// $Id: curl.class.php,v 1.29 2024/04/23 12:44:41 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -29,18 +29,21 @@ class Curl {
 	public $handle;
 	public $buffer="";
 	
-	# Variables qui empechent le dÃ©passement mÃ©moire
+	# Variables qui empechent le dépassement mémoire
 	public $limit=0;	
 	public $body_overflow;
 	public $timeout=0;
 	
+	public $header_detect = 0;
+	public $save_file_name = null;
+
 	public function __construct() {
 		global $base_path;
-		// initialisation des libellÃ©s de rÃ©ponse
+		// initialisation des libellés de réponse
 		$this->reponsecurl['N/A'] = "Ikke HTTP";
 		$this->reponsecurl['OK']    = "Valid hostname";
 		$this->reponsecurl['FEJL']  = "Invalid hostname";
-		$this->reponsecurl['DÃ¸d']   = "No response";
+		$this->reponsecurl['Død']   = "No response";
 		$this->reponsecurl[100]   = "Continue";
 		$this->reponsecurl[101]   = "Switching Protocols";
 		$this->reponsecurl[200]   = "OK";
@@ -161,8 +164,8 @@ class Curl {
 		curl_setopt($this->handle, CURLOPT_REFERER, $this->referer);
 		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->handle, CURLOPT_URL, str_replace(" ","%20",preg_replace("/#.*$/","",$url)));
-		/*On supprime ce qui suit le # car c'est une ancre pour le navigateur et avec on consiÃ¨re la validation fausse alors qu'elle est bonne
-		 *On remplace les espaces par %20 pour la mÃªme raison
+		/*On supprime ce qui suit le # car c'est une ancre pour le navigateur et avec on consière la validation fausse alors qu'elle est bonne
+		 *On remplace les espaces par %20 pour la même raison
 		 */
 		curl_setopt($this->handle, CURLOPT_USERAGENT, $this->user_agent);		
 		if($this->limit) 
@@ -205,8 +208,28 @@ class Curl {
 		
 		if ($response) {
 			$response = new CurlResponse($response);
+			$response_status = substr($response->headers['Status-Code'], 0, 1);
+			if(empty($response->body)) {
+				if (preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR) {
+					$uniqid = cURL_log::prepare_error('curl_error');
+					$uniqid = cURL_log::set_url_from($uniqid, $url);
+					cURL_log::register($uniqid, 'PCRE Backtrack limit was exhausted!');
+				}
+			} elseif ($response_status != '2' && $response_status != '3') {
+				$uniqid = cURL_log::prepare_error('curl_error');
+				$uniqid = cURL_log::set_url_from($uniqid, $url);
+				if($response->headers['Status-Code']){
+					$message = $this->reponsecurl[$response->headers['Status-Code']];
+				}else{
+					$message = 'Unknown code';
+				}
+				cURL_log::register($uniqid, $message);
+			}
 		} else {
 			$this->error = curl_errno($this->handle).' - '.curl_error($this->handle);
+			$uniqid = cURL_log::prepare_error('curl_error');
+			$uniqid = cURL_log::set_url_from($uniqid, $url);
+			cURL_log::register($uniqid, $this->error);
 		}
 		curl_close($this->handle);
 		
@@ -219,30 +242,74 @@ class Curl {
 }
  
 class CurlResponse {
+
+	/**
+	 * Response body
+	 *
+	 * @var string
+	 */
 	public $body = '';
+
+	/**
+	 * Headers
+	 *
+	 * @var array
+	 */
 	public $headers = array();
 	
+	/**
+	 * Error message
+	 *
+	 * @var string
+	 */
+	public $error = '';
+
 	public function __construct($response) {
 		# Extract headers from response
-		$pattern = '#HTTP/\d\.\d.*?$.*?\r\n\r\n#ims';
-		preg_match_all($pattern, $response, $matches);
-		$headers = explode("\r\n", str_replace("\r\n\r\n", '', array_pop($matches[0])));
+		$headerLineMatches = array();
+		$headerLinesIsValid = preg_match_all('#HTTP/\d\.{0,2}?\d{0,1}?.*?$.*?\r\n\r\n#ims', $response, $headerLineMatches);
 		
+		if (!$headerLinesIsValid) {
+			$this->error = 'Invalid headers';
+			return false;
+		}
+
+		$headerLines = str_replace("\r\n\r\n", '', array_pop($headerLineMatches[0]));
+		$headerLines = explode("\r\n", $headerLines);
+
 		# Extract the version and status from the first header
-		$version_and_status = array_shift($headers);
-		preg_match('#HTTP/(\d\.\d)\s(\d\d\d)\s(.*)#', $version_and_status, $matches);
-		$this->headers['Http-Version'] = $matches[1];
-		$this->headers['Status-Code'] = $matches[2];
-		$this->headers['Status'] = $matches[2].' '.$matches[3];
+		$statusLine = array_shift($headerLines);
+		$statusLineMatches = array();
+		$statusLineIsValid = preg_match('#HTTP/(\d\.?\d?)\s(\d{3})\s(.*)#', $statusLine, $statusLineMatches);
+
+		if (!$statusLineIsValid) {
+			$this->error = 'Invalid status line (' . $statusLine . ')';
+			return false;
+		}
 		
+		$this->headers['Http-Version'] = $statusLineMatches[1];
+		$this->headers['Status-Code'] = $statusLineMatches[2];
+
+		$status = $statusLineMatches[2] . ' ';
+		if (isset($statusLineMatches[3])) {
+			$status .= $statusLineMatches[3];
+		}
+		$this->headers['Status'] = $status;
+
 		# Convert headers into an associative array
-		foreach ($headers as $header) {
-			preg_match('#(.*?)\:\s(.*)#', $header, $matches);
-			$this->headers[$matches[1]] = $matches[2];
+		foreach ($headerLines as $headerLine) {
+			$headerLineMatches = array();
+			$headerLineIsValid = preg_match('#(.*?)\:\s(.*)#', $headerLine, $headerLineMatches);
+
+			if (!$headerLineIsValid) {
+				$this->error = 'Invalid header line (' . $headerLine . ')';
+				return false;
+			}
+			$this->headers[$headerLineMatches[1]] = $headerLineMatches[2];
 		}
 		
 		# Remove the headers from the response body
-		$this->body = preg_replace($pattern, '', $response);
+		$this->body = preg_replace('#HTTP/\d\.{0,2}?\d{0,1}?.*?$.*?\r\n\r\n#ims', '', $response);
 	}
 	
 	public function __toString() {

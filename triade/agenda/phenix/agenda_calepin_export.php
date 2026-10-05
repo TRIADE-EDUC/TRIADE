@@ -25,7 +25,7 @@
   if (strtolower($fic)=="vcard-palm") {
     $fileName = "Export_contacts_VCard_Palm_Desktop".date("Ymd-His").".vcf";
 
-  //  $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+  //  $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
     $DB_CX->DbQuery(stripslashes($sql));
     if ($DB_CX->DbNumRows()) {
       $contenu = "";
@@ -74,7 +74,7 @@
   elseif (strtolower($fic)=="vcard") {
     $fileName = "Export_contacts_VCard_".date("Ymd-His").".vcf";
 
-  //  $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+  //  $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
     $DB_CX->DbQuery(stripslashes($sql));
     if ($DB_CX->DbNumRows()) {
       $contenu = "";
@@ -123,7 +123,7 @@
   elseif (strtolower($fic)=="csvv") {
     $fileName = "Export_contacts_csvcsv(delimiteur-virgule)_".date("Ymd-His").".csv";
 
-  //  $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+  //  $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
     $DB_CX->DbQuery(stripslashes($sql));
     if ($DB_CX->DbNumRows()) {
       $contenu = "";
@@ -250,7 +250,7 @@
   elseif (strtolower($fic)=="ldif") {
     $fileName = "Export_contacts_ldif_".date("Ymd-His").".ldif";
     $deb=0;
-  //  $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+  //  $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
     $DB_CX->DbQuery(stripslashes($sql));
     if ($DB_CX->DbNumRows()) {
       $contenu = "";

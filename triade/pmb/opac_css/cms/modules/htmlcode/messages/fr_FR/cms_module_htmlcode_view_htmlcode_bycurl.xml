@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_htmlcode_view_htmlcode_bycurl.xml,v 1.2 2015-03-17 11:14:41 dbellamy Exp $ -->
+$Id: cms_module_htmlcode_view_htmlcode_bycurl.xml,v 1.2 2015/03/17 11:14:41 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_htmlcode_view_htmlcode_bycurl_url'>URL</entry>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include_once("./librairie_php/lib_licence.php");
 include_once("./common/config.inc.php");
@@ -13,7 +13,7 @@ include_once("imprimeNote.php");
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -36,10 +36,19 @@ include_once("imprimeNote.php");
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/menu-tab.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
+<meta charset="utf-8">
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<style>#coulBar0 { background-image: none; }</style>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php
@@ -54,7 +63,7 @@ if ($_SESSION["membre"] == "menupersonnel") {
 	}
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
@@ -63,20 +72,14 @@ $id_eleve=$_GET["id"];
 $saisie_classe=$_GET["idclasse"];
 ?>
 
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%"  bgcolor="#0B3A0C"  height="400">
 <tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print LANGPROF26 ?> <font id="color2" ><?php print recherche_eleve($id_eleve);?></font></B></font></td></tr>
 <tr id='cadreCentral0' valign='top' ><td>
-<br>
-<ul>
-<font class='T2 shadow'>Choix des élèments à imprimer : </font>
-<br />
-<br />
-<form method='post' >
-<table>
+
 <?php
 if (isset($_POST['imp'])) {
-	$checkedNotes=($_POST['notes'] == 1) ? "checked='checked'" : ""; 
+	$checkedNotes=($_POST['notes'] == 1) ? "checked='checked'" : "";
 	$checkedSavoiretre=($_POST['savoiretre'] == 1) ? "checked='checked'" : "";
 	$checkedAbsrtd=($_POST['absrtd'] == 1) ? "checked='checked'" : "";
 }else{
@@ -85,51 +88,57 @@ if (isset($_POST['imp'])) {
 	$checkedAbsrtd="checked='checked'";
 }
 ?>
-<tr><td align='right' ><input type='checkbox' value='1' name='notes' <?php print $checkedNotes ?>  onClick="document.getElementById('bouton').style.display='none'" > : </td><td>Notes</td></tr>
-<tr><td align='right' ><input type='checkbox' value='1' name='savoiretre' <?php print $checkedSavoiretre ?> onClick="document.getElementById('bouton').style.display='none'"  > : </td><td>Savoir être </td></tr>
-<tr><td align='right' ><input type='checkbox' value='1' name='absrtd' <?php print $checkedAbsrtd ?> onClick="document.getElementById('bouton').style.display='none'"  > : </td><td>Abs / Retard </td></tr>
-<tr><td height='20' colspan='2' ></td></tr>
-<tr><td colspan='2'><table>
-	<tr>
-	<td><script> buttonMagicSubmit3('<?php print VALIDER ?>','imp','')</script></td>
-	<td><script> buttonMagic('Retour','<?php print $_SESSION["pageretour"] ?>','_self','','') </script></td>
-	</tr>
-	</table>
-
-</table>
-</form>
+<div class="card" style="margin:10px">
+  <div class="card-header"><span class="card-title"><i class="bi bi-printer"></i> Éléments à imprimer</span></div>
+  <div style="padding:12px">
+  <form method='post'>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+    <label style="font-size:12px;display:flex;align-items:center;gap:6px">
+      <input type='checkbox' value='1' name='notes' <?php print $checkedNotes ?> onClick="document.getElementById('bouton').style.display='none'"> Notes
+    </label>
+    <label style="font-size:12px;display:flex;align-items:center;gap:6px">
+      <input type='checkbox' value='1' name='savoiretre' <?php print $checkedSavoiretre ?> onClick="document.getElementById('bouton').style.display='none'"> Savoir être
+    </label>
+    <label style="font-size:12px;display:flex;align-items:center;gap:6px">
+      <input type='checkbox' value='1' name='absrtd' <?php print $checkedAbsrtd ?> onClick="document.getElementById('bouton').style.display='none'"> Abs / Retard
+    </label>
+  </div>
+  <div class="toolbar">
+    <script>buttonMagicSubmit3('<?php print VALIDER ?>','imp','')</script>
+    <script>buttonMagic('Retour','<?php print $_SESSION["pageretour"] ?>','_self','','')</script>
+  </div>
+  </form>
+  </div>
+</div>
 <?php
-if (isset($_POST["imp"])) { 
+if (isset($_POST["imp"])) {
 	$anneeScolaire=anneeScolaire();
 	$data=recupDateTrimIdclasse($saisie_classe,$anneeScolaire);
-	// date_debut,date_fin,trim_choix,idclasse
-	
 	$dateDebut=dateForm($data[0][0]);
 
 	if (($_POST['notes'] == 1) || ($_POST['absrtd'] == 1) || ($_POST['savoiretre'] == 1) ) {
 		define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
 		include_once('./librairie_pdf/fpdf/fpdf.php');
 		include_once('./librairie_pdf/html2pdf.php');
-		$pdfAll=new PDF();  // declaration du constructeur
-	
-		if ($_POST['notes'] == 1) 	 $pdfAll =& imprimeNote(&$pdfAll,$saisie_classe,$id_eleve,$dateDebut,$anneeScolaire);
-		if ($_POST['absrtd'] == 1)	 $pdfAll =& imprimeABSRts(&$pdfAll,$saisie_classe,$id_eleve,$dateDebut);
-		if ($_POST['savoiretre'] == 1) 	 $pdfAll =& imprimeSavoirEtre(&$pdfAll,$saisie_classe,$id_eleve,$dateDebut,$anneeScolaire);
-	
+		$pdfAll=new PDF();
+
+		if ($_POST['notes'] == 1) $pdfAll =& imprimeNote($pdfAll,$saisie_classe,$id_eleve,$dateDebut,$anneeScolaire);
+		if ($_POST['absrtd'] == 1) $pdfAll =& imprimeABSRts($pdfAll,$saisie_classe,$id_eleve,$dateDebut);
+		if ($_POST['savoiretre'] == 1) $pdfAll =& imprimeSavoirEtre($pdfAll,$saisie_classe,$id_eleve,$dateDebut,$anneeScolaire);
 
 		$nomprenomeleve=recherche_eleve_nom($id_eleve)."_".recherche_eleve_prenom($id_eleve);
-	        $nomprenomeleve=TextNoAccent($nomprenomeleve);
-	        $nomprenomeleve=TextNoCarac($nomprenomeleve);
-	        $nomprenomeleve=preg_replace('/\//',"_",$nomprenomeleve);
-	        $nomprenomeleve=preg_replace('/ /',"_",$nomprenomeleve);
-	        $fichier="./data/pdf_bull/".$nomprenomeleve.".pdf";
-	        @unlink($fichier); // destruction avant creation
-        	$pdfAll->output('F',$fichier);
-		print "<input type='button' onclick=\"open('telecharger.php?fichier=$fichier&filename=$fichier','_blank','');\" class='BUTTON'  value='PDF Complet' id='bouton' />&nbsp;&nbsp;";
+		$nomprenomeleve=TextNoAccent($nomprenomeleve);
+		$nomprenomeleve=TextNoCarac($nomprenomeleve);
+		$nomprenomeleve=preg_replace('/\//',"_",$nomprenomeleve);
+		$nomprenomeleve=preg_replace('/ /',"_",$nomprenomeleve);
+		$fichier="./data/pdf_bull/".$nomprenomeleve.".pdf";
+		@unlink($fichier);
+		$pdfAll->output('F',$fichier);
+		print "<div style='margin-top:10px'><input type='button' onclick=\"open('telecharger.php?fichier=$fichier&filename=$fichier','_blank','');\" class='BUTTON' value='PDF Complet' id='bouton'></div>";
 	}
 }
 ?>
-<br /><br /></ul></td></tr>
+</div></td></tr>
 </td></tr></table>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer

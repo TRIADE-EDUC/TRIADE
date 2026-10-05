@@ -1,10 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_searcher_templates.tpl.php,v 1.5 2016-04-07 14:59:18 jpermanne Exp $
+// $Id: sel_searcher_templates.tpl.php,v 1.6 2019/07/10 12:58:06 dgoron Exp $
 
 // page de switch recherche notice
+global $pmb_serialcirc_active;
 
 $form_query = "
 <div class='row' style='margin:0px 5px 0px 5px;'>
@@ -99,8 +100,8 @@ $elt_b_list_abt = "
 $elt_r_list_abt = "
 <div class='row' style='margin-left:5px;'>
 	<div class='colonne80'>!!result!!</div>
-	<div class='colonne10'>&nbsp;</div>
 	<div class='colonne10'>!!aff_date_echeance!!</div>
+    ".($pmb_serialcirc_active ? "<div class='colonne10 center'>!!aff_nb_recipients!!</div>" : "<div class='colonne10'>&nbsp;</div>")."
 </div>"; 
 
 //Debut liste frais

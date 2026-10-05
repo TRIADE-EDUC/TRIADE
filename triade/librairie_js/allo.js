@@ -3,8 +3,9 @@ var W3C=(document.getElementById)? true: false;
 var currIDb=null, currIDs=null, xoff=0, yoff=0; zctr=0; totz=0;
 function trackmouse(evt){
 if((currIDb!=null) && (currIDs!=null)){
-var x=(IE5)? event.clientX+document.body.scrollLeft : evt.pageX;
-var y=(IE5)? event.clientY+document.body.scrollTop : evt.pageY;
+var e=evt||window.event;
+var x=e.pageX||(e.clientX+document.body.scrollLeft);
+var y=e.pageY||(e.clientY+document.body.scrollTop);
 currIDb.style.left=x+xoff+'px';
 currIDs.style.left=x+xoff+10+'px';
 currIDb.style.top=y+yoff+'px';
@@ -17,8 +18,9 @@ currIDs=null;
 NS6bugfix();
 }
 function grab_id(evt){
-xoff=parseInt(this.IDb.style.left)-((IE5)? event.clientX+document.body.scrollLeft : evt.pageX);
-yoff=parseInt(this.IDb.style.top)-((IE5)? event.clientY+document.body.scrollTop : evt.pageY);
+var e=evt||window.event;
+xoff=parseInt(this.IDb.style.left)-(e.pageX||(e.clientX+document.body.scrollLeft));
+yoff=parseInt(this.IDb.style.top)-(e.pageY||(e.clientY+document.body.scrollTop));
 currIDb=this.IDb;
 currIDs=this.IDs;
 }
@@ -32,35 +34,43 @@ zctr=zctr+2;
 this.subb.style.zIndex=zctr;
 this.subs.style.zIndex=zctr-1;
 }
-function createPopup(id, title, width, height, x , y , isdraggable, boxcolor, barcolor, shadowcolor, text, textcolor, textptsize, textfamily, titlecolor ){
+function createPopup(id, title, width, height, x , y , isdraggable, boxcolor, barcolor, shadowcolor, text, textcolor, textptsize, textfamily, titlecolor, bordercolor ){
 if(W3C){
 zctr+=2;
 totz=zctr;
 var txt='';
-txt+='<div id="'+id+'_s" style="position:absolute; left:'+(x+10)+'px; top:'+(y+10)+'px; width:'+width+'px; height:'+height+'px; background-color:'+shadowcolor+'; filter:alpha(opacity=50); visibility:visible"> </div>';
-txt+='<div id="'+id+'_b" style="border:outset '+barcolor+' 2px; position:absolute; left:'+x+'px; top:'+y+'px; width:'+width+'px; overflow:hidden; height:'+height+'px; background-color:'+boxcolor+'; visibility:visible">';
-txt+='<div style="width:'+width+'px; height:16px; background-color:'+barcolor+'; padding:0px; border:1px"><table cellpadding="0" cellspacing="0" border="0" width="'+(IE5? width-4 : width)+'"><tr><td width="'+(width-20)+'"><div id="'+id+'_h" style="width:'+(width-20)+'px; height:12px; font: 9px Arial; color:'+titlecolor+'"> '+title+'</div></td><td align="right"><a onmousedown="document.getElementById(\''+id+'_s\').style.display=\'none\'; document.getElementById(\''+id+'_b\').style.display=\'none\';return false"><img src="./image/closeb.gif" title="Pour fermer la fenêtre" border="0" height="15" width="15"></a></td></tr></table></div>';
-txt+='<div id="'+id+'_ov" width:'+width+'px; style="margin:2px; color:'+textcolor+'; font:'+textptsize+'pt '+textfamily+';">'+text+'</div></div>';
+var _border=bordercolor?'1px solid '+bordercolor:'outset '+barcolor+' 2px';
+txt+='<div id="'+id+'_s" style="position:absolute;left:'+(x+10)+'px;top:'+(y+10)+'px;width:'+width+'px;height:'+height+'px;background-color:'+shadowcolor+';opacity:0.5;visibility:visible"> </div>';
+txt+='<div id="'+id+'_b" style="border:'+_border+';position:absolute;left:'+x+'px;top:'+y+'px;width:'+width+'px;overflow:hidden;height:'+height+'px;background-color:'+boxcolor+';visibility:visible">';
+txt+='<div id="'+id+'_bar" draggable="false" style="width:'+width+'px;height:16px;background-color:'+barcolor+';padding:0px;cursor:move;user-select:none;-webkit-user-select:none"><table cellpadding="0" cellspacing="0" border="0" width="'+width+'"><tr><td width="'+(width-20)+'"><div id="'+id+'_h" style="width:'+(width-20)+'px;height:14px;line-height:14px;font:9px Arial;color:'+titlecolor+'">&nbsp;&nbsp;'+title+'</div></td><td><a id="'+id+'_close" style="cursor:pointer"><img src="./image/closeb.gif" title="Pour fermer la fenêtre" border="0" height="15" width="15" draggable="false" style="margin-right:8px;display:block"></a></td></tr></table></div>';
+txt+='<div id="'+id+'_ov" style="margin:2px;color:'+textcolor+';font:'+textptsize+'pt '+textfamily+';">'+text+'</div></div>';
 document.write(txt);
-this.IDh=document.getElementById(id+'_h');
-this.IDh.IDb=document.getElementById(id+'_b');
-this.IDh.IDs=document.getElementById(id+'_s');
-this.IDh.IDb.subs=this.IDh.IDs;
-this.IDh.IDb.subb=this.IDh.IDb;
-this.IDh.IDb.IDov=document.getElementById(id+'_ov');
-if(IE5){
-this.IDh.IDb.IDov.style.width=width-6;
-this.IDh.IDb.IDov.style.height=height-22;
-this.IDh.IDb.IDov.style.scrollbarBaseColor=boxcolor;
-this.IDh.IDb.IDov.style.overflow="auto";
-}else{
-this.IDh.IDs.style.MozOpacity=.5;
-}
-this.IDh.IDb.onmousedown=incrzindex;
+var IDb=document.getElementById(id+'_b');
+var IDs=document.getElementById(id+'_s');
+var IDbar=document.getElementById(id+'_bar');
+var IDclose=document.getElementById(id+'_close');
+IDbar.addEventListener('dragstart',function(e){e.preventDefault();});
+IDclose.addEventListener('mousedown',function(e){e.stopPropagation();});
+IDclose.addEventListener('click',function(){IDb.style.display='none';IDs.style.display='none';});
+IDb.addEventListener('mousedown',function(){zctr+=2;IDb.style.zIndex=zctr;IDs.style.zIndex=zctr-1;});
 if(isdraggable){
-this.IDh.onmousedown=grab_id;
-this.IDh.onmouseup=stopdrag;
-}}}
+IDbar.addEventListener('mousedown',function(e){
+if(e.target===IDclose||e.target.tagName==='IMG') return;
+e.preventDefault();
+var startX=e.clientX,startY=e.clientY;
+var startL=parseInt(IDb.style.left)||0;
+var startT=parseInt(IDb.style.top)||0;
+function onMove(e){
+IDb.style.left=(startL+e.clientX-startX)+'px';
+IDb.style.top=(startT+e.clientY-startY)+'px';
+IDs.style.left=(startL+e.clientX-startX+10)+'px';
+IDs.style.top=(startT+e.clientY-startY+10)+'px';
+}
+function onUp(){document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);}
+document.addEventListener('mousemove',onMove);
+document.addEventListener('mouseup',onUp);
+});
+}}};
 if(W3C)document.onmousemove=trackmouse;
 if(!IE5 && W3C)window.onload=NS6bugfix;
 /*

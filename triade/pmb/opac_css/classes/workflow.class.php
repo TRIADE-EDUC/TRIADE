@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: workflow.class.php,v 1.4 2019-05-09 10:35:37 ngantier Exp $
+// $Id: workflow.class.php,v 1.4.16.1 2025/05/13 15:37:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path.'/parser.inc.php');
 
 class workflow {
@@ -41,7 +42,7 @@ class workflow {
 		//Parse le fichier dans un tableau	
 		$param=_parser_text_no_function_($xml,"STRUCTURE");
 		
-		//Liste des Ã©tats gÃ©nÃ©raux (nom=>libellÃ©)
+		//Liste des états généraux (nom=>libellé)
 		for($i=0;$i<count($param['STATES'][0]['STATE']);$i++){
 			$this->states_com[$param['STATES'][0]['STATE'][$i]['NAME']] = $param['STATES'][0]['STATE'][$i]['COMMENT'];
 		}
@@ -108,36 +109,47 @@ class workflow {
 	}
 	
 	/*
-	 * Retourne le nom d'un Ã©tat en fonction de son id
+	 * Retourne le nom d'un état en fonction de son id
 	 */
 	public function getStatesById($state_id){
-		return $this->object_states_by_id[$state_id];
+	    if (isset($this->object_states_by_id[$state_id])) {
+	        return $this->object_states_by_id[$state_id];
+	    }
+	    return '';
 	}
 	
 	/*
-	 * Retourne le libellÃ© associÃ© Ã  un Ã©tat
+	 * Retourne le libellé associé à un état
 	 */
 	public function getStateCommentById($state_id){
 		global $msg;
 		
-		$message = explode(':',$this->states_com[$this->object_states_by_id[$state_id]]);
-		return $msg[$message[1]];
+		if (isset($this->object_states_by_id[$state_id]) && !empty($this->states_com[$this->object_states_by_id[$state_id]])) {
+    		$message = explode(':',$this->states_com[$this->object_states_by_id[$state_id]]);
+    		if (!empty($msg[$message[1]])) {
+    		    return $msg[$message[1]];
+    		}
+		}
+		return '';
 	}
 	
 	/*
-	 * Retourne le libellÃ© associÃ© Ã  un type
+	 * Retourne le libellé associé à un type
 	 */
 	public function getTypeCommentById($type_id){
-		
 		global $msg;
-		
-		$message = explode(":",$this->object_types[$this->object_types_by_id[$type_id]]['COMMENT']);
-		
-		return $msg[$message[1]];
+
+		if (isset($this->object_types_by_id[$type_id]) && !empty($this->object_types[$this->object_types_by_id[$type_id]]['COMMENT'])) {
+            $message = explode(":",$this->object_types[$this->object_types_by_id[$type_id]]['COMMENT']);
+            if (!empty($msg[$message[1]])) {
+                return $msg[$message[1]];
+            }
+		}
+		return '';
 	}
 	
 	/*
-	 * Retourne la liste des Ã©tats joignables depuis un autre Ã©tat
+	 * Retourne la liste des états joignables depuis un autre état
 	 */
 	public function getStateList($state_id=-1){
 		
@@ -145,7 +157,7 @@ class workflow {
 		
 		if($state_id == -1){
 			$i=0;
-			foreach($this->object_states as $key=>$value){
+			foreach($this->object_states as $value){
 				$i++;
 				$state_list[$i]['id'] = $value['ID'];
 				if($value['DEFAULT']){
@@ -158,15 +170,17 @@ class workflow {
 			}
 		} else {
 			$nom = $this->getStatesById($state_id);
-			for($i=0;$i<count($this->object_transitions[$nom]);$i++){
-				$state_list[$i]['id'] = $this->object_states[$this->object_transitions[$nom][$i]]['ID'];
-				if( $this->object_states[$this->object_transitions[$nom][$i]]['DEFAULT']){
-					$state_list[$i]['default'] = $this->object_states[$this->object_transitions[$nom][$i]]['DEFAULT'];
-				}
-				if( $this->object_states[$this->object_transitions[$nom][$i]]['IMAGE']){
-					$state_list[$i]['image'] = $this->object_states[$this->object_transitions[$nom][$i]]['IMAGE'];
-				}
-				$state_list[$i]['comment'] = $this->getStateCommentById($this->object_states[$this->object_transitions[$nom][$i]]['ID']);
+			if(array_key_exists($nom,$this->object_transitions)) {
+    			for($i=0;$i<count($this->object_transitions[$nom]);$i++){
+    				$state_list[$i]['id'] = $this->object_states[$this->object_transitions[$nom][$i]]['ID'];
+    				if( $this->object_states[$this->object_transitions[$nom][$i]]['DEFAULT']){
+    					$state_list[$i]['default'] = $this->object_states[$this->object_transitions[$nom][$i]]['DEFAULT'];
+    				}
+    				if( $this->object_states[$this->object_transitions[$nom][$i]]['IMAGE']){
+    					$state_list[$i]['image'] = $this->object_states[$this->object_transitions[$nom][$i]]['IMAGE'];
+    				}
+    				$state_list[$i]['comment'] = $this->getStateCommentById($this->object_states[$this->object_transitions[$nom][$i]]['ID']);
+    			}
 			}
 		}
 		
@@ -182,7 +196,7 @@ class workflow {
 		$type_list = array();
 		$i=0;
 		
-		foreach($this->object_types as $key=>$value){
+		foreach($this->object_types as $value){
 			$i++;
 			$type_list[$i]['id'] = $value['ID'];
 			if( $value['DEFAULT']){
@@ -199,9 +213,4 @@ class workflow {
 		
 		return $type_list;
 	}
-	
-	
-	
-	
 }
-?>

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormContainer.js,v 1.1 2017-09-13 12:38:33 tsamson Exp $
+// $Id: FormContainer.js,v 1.2 2021/06/30 13:44:38 gneveu Exp $
 
 
 define([
@@ -16,14 +16,14 @@ define([
         'dojo/query',
         'apps/contribution_area_form/Contribution',
         'dojo/ready',
-        'apps/pmb/gridform/FormEdit',
+        'apps/contribution_area/ContributionFormEdit',
         'dojo/topic',
         'dijit/registry',
         'dojo/dom-attr',
         'dojo/dom-geometry',
         'dojo/dom-construct',
         'dojo/dom-style'
-        ], function(declare, dom, on, lang, xhr, domForm, TabContainer, ContentPane, query, Contribution, ready, FormEdit, topic, registry, domAttr, geometry, domConstruct, domStyle){
+        ], function(declare, dom, on, lang, xhr, domForm, TabContainer, ContentPane, query, Contribution, ready, ContributionFormEdit, topic, registry, domAttr, geometry, domConstruct, domStyle){
 		return declare([TabContainer], {
 			standby : null,
 			overlayDiv: null,
@@ -76,7 +76,7 @@ define([
 					}	
 				}));
 				
-				new FormEdit('catalog', formType, dom.byId(tabId));				
+				new ContributionFormEdit('catalog', formType, dom.byId(tabId));				
 				if (tabId) {	
 					var cancel_button = query(".cancel_part > *", dom.byId(tabId))[0];
 					if(cancel_button) {
@@ -100,10 +100,13 @@ define([
 			fillField: function(data){
 				//Contenu de data.data: array("uri" => $this->item->get_uri(), "displayLabel" => $display_label)
 				var nodeToFill = registry.byId(data.widgetId).nodeClickedId;
-				if (nodeToFill) {					
+				if (nodeToFill) {				
 					var displayLabel = registry.byId(nodeToFill+'_display_label');
-					displayLabel.store.addData([{id : data.response.displayLabel, datas : data.response.displayLabel, value : data.response.uri}]);
-					displayLabel.set("item", {id:data.response.displayLabel, datas:data.response.displayLabel, value:data.response.uri});
+					if (displayLabel) {
+						displayLabel.store.addData([{id : data.response.displayLabel, datas : data.response.displayLabel, value : data.response.uri}]);
+						displayLabel.set("item", {id:data.response.displayLabel, datas:data.response.displayLabel, value:data.response.uri});
+					}
+					domAttr.set(nodeToFill+'_display_label', 'value', data.response.displayLabel);
 					domAttr.set(nodeToFill+'_value', 'value', data.response.uri);
 				}
 			},

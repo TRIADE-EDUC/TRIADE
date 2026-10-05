@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis.class.php,v 1.6 2017-12-03 19:48:53 Alexandre Exp $
+// $Id: avis.class.php,v 1.9.2.1.2.1 2025/03/13 16:27:12 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/mono_display.class.php");
 require_once($class_path."/serial_display.class.php");
 require_once($include_path."/templates/avis.tpl.php");
@@ -28,7 +29,7 @@ class avis {
 	protected $object_type;
 
 	/**
-	 * ChaÃ®ne de caractÃ¨re du type de l'objet
+	 * Chaîne de caractère du type de l'objet
 	 * @var string
 	 */
 	protected $object_string_type;
@@ -36,7 +37,7 @@ class avis {
 	protected $nbr_lignes;
 
 	public function __construct($object_id = 0) {
-		$this->object_id = $object_id*1;
+		$this->object_id = intval($object_id);
 		if(!isset($this->object_type)) $this->object_type = 0;
 		$this->set_object_string_type($this->object_type);
 	}
@@ -129,40 +130,60 @@ class avis {
 		return $query;
 	}
 
-	public static function get_display_review($avis) {
-		global $msg, $charset;
-		global $pmb_avis_note_display_mode;
+	public static function get_display_note($avis) {
+	    global $msg;
+	    global $pmb_avis_note_display_mode;
 
+	    if($pmb_avis_note_display_mode){
+	        if($pmb_avis_note_display_mode!=1){
+	            $categ_avis=$msg['avis_detail_note_'.$avis->note];
+	        } else {
+	            $categ_avis='';
+	        }
+	        if($pmb_avis_note_display_mode!=2){
+	            $etoiles="";$cpt_star = 4;
+	            for ($i = 1; $i <= $avis->note; $i++) {
+	                $etoiles.="<img border=0 src='".get_url_icon('star.png')."' align='absmiddle' />";
+	            }
+	            for ( $j = round($avis->note);$j <= $cpt_star ; $j++) {
+	                $etoiles .= "<img border=0 src='".get_url_icon('star_unlight.png')."' align='absmiddle' />";
+	            }
+	        }
+	        if($pmb_avis_note_display_mode==3 || $pmb_avis_note_display_mode==5) {
+	            return $etoiles."<br />".$categ_avis;
+	        } else if($pmb_avis_note_display_mode==4) {
+	            return $etoiles;
+	        } else {
+	            return $etoiles.$categ_avis;
+	        }
+	    }
+	    return '';
+	}
+
+	public static function get_display_text($avis) {
+	    global $charset;
+
+	    $display = '';
+	    $note = static::get_display_note($avis);
+	    if (!$avis->valide) {
+	        $display .=  "<span style='color:#CC0000'>$note<b>".htmlentities($avis->sujet,ENT_QUOTES,$charset)."</b></span>";
+	    } else {
+            $display .=  "<span style='color:#00BB00'>$note<b>".htmlentities($avis->sujet,ENT_QUOTES,$charset)."</b></span>";
+	    }
+	    if($charset != "utf-8") {
+	        $avis->commentaire=cp1252Toiso88591($avis->commentaire);
+	    }
+        $display .=  ", ".htmlentities($avis->ladate,ENT_QUOTES,$charset)." ".htmlentities($avis->empr_prenom." ".$avis->empr_nom,ENT_QUOTES,$charset);
+        return $display;
+	}
+
+	public static function get_display_review($avis) {
 		$display =  "
 		<div class='left'>
 		<input type='checkbox' name='valid_id_avis[]' id='valid_id_avis[]' value='$avis->id_avis' onClick=\"stop_evenement(event);\"/>" ;
-		if($pmb_avis_note_display_mode){
-			if($pmb_avis_note_display_mode!=1){
-				$categ_avis=$msg['avis_detail_note_'.$avis->note];
-			} else {
-				$categ_avis='';
-			}
-			if($pmb_avis_note_display_mode!=2){
-				$etoiles="";$cpt_star = 4;
-				for ($i = 1; $i <= $avis->note; $i++) {
-					$etoiles.="<img border=0 src='".get_url_icon('star.png')."' align='absmiddle' />";
-				}
-				for ( $j = round($avis->note);$j <= $cpt_star ; $j++) {
-					$etoiles .= "<img border=0 src='".get_url_icon('star_unlight.png')."' align='absmiddle' />";
-				}
-			}
-			if($pmb_avis_note_display_mode==3 || $pmb_avis_note_display_mode==5)$note=$etoiles."<br />".$categ_avis;
-			else if($pmb_avis_note_display_mode==4)$note=$etoiles;
-			else $note=$etoiles.$categ_avis;
-		} else $note="";
 
-		if (!$avis->valide)
-			$display .=  "<span style='color:#CC0000'>$note<b>".htmlentities($avis->sujet,ENT_QUOTES,$charset)."</b></span>";
-		else
-			$display .=  "<span style='color:#00BB00'>$note<b>".htmlentities($avis->sujet,ENT_QUOTES,$charset)."</b></span>";
-
-		if($charset != "utf-8") $avis->commentaire=cp1252Toiso88591($avis->commentaire);
-		$display .=  ", ".htmlentities($avis->ladate,ENT_QUOTES,$charset)." ".htmlentities($avis->empr_prenom." ".$avis->empr_nom,ENT_QUOTES,$charset)."
+		$display .= static::get_display_text($avis);
+		$display .=  "
 		</div>
 		<div class='row'>
 		".do_bbcode($avis->commentaire)."
@@ -185,12 +206,17 @@ class avis {
 		global $msg;
 		global $current_module;
 
-		$form = "<script type='text/javascript' src='./javascript/bbcode.js'></script>
+		$form = "
+            <script type='text/javascript'>
+                pmb_include('./javascript/bbcode.js');
+            </script>
 			<form class='form-".$current_module."' method='post' id='validation_avis' name='validation_avis' >
 					<h3>".$msg['avis_titre_form']."</h3>
 					<div class='form-contenu'>";
 		$form .= $this->get_filters_display();
-		$form .= $this->get_display_list();
+		if (method_exists($this, 'get_display_list')) {
+			$form .= $this->get_display_list();
+		}
 		$form .= $this->pagination();
 		$form .= "
 		</div>
@@ -198,6 +224,7 @@ class avis {
 			<div class='left'>
 				<input type='hidden' name='quoifaire' value='' />
 				<input type='button' class='bouton' name='selectionner' value='".$msg['avis_bt_selectionner']."' onClick=\"setCheckboxes('validation_avis', 'valid_id_avis', true); return false;\" />&nbsp;
+				<input type='button' class='bouton' name='deselectionner' value='".$msg['avis_bt_deselectionner']."' onClick=\"setCheckboxes('validation_avis', 'valid_id_avis', false); return false;\" />&nbsp;
 				<input type='button' class='bouton' name='valider' value='".$msg['avis_bt_valider']."' onclick='this.form.quoifaire.value=\"valider\"; this.form.submit()' />&nbsp;
 				<input type='button' class='bouton' name='invalider' value='".$msg['avis_bt_invalider']."' onclick='this.form.quoifaire.value=\"invalider\"; this.form.submit()' />&nbsp;
 			</div>
@@ -211,16 +238,19 @@ class avis {
 	}
 
 	public static function validate($id) {
+		$id = intval($id);
 		$query = "update avis set valide=1 where id_avis='".$id."' ";
 		pmb_mysql_query($query);
 	}
 
 	public static function unvalidate($id) {
+		$id = intval($id);
 		$query = "update avis set valide=0 where id_avis='".$id."' ";
 		pmb_mysql_query($query);
 	}
 
 	public static function delete($id) {
+		$id = intval($id);
 		$query = "delete from avis where id_avis='".$id."' ";
 		pmb_mysql_query($query);
 	}

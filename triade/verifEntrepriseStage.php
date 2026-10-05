@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -24,8 +24,8 @@ include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 $data=verifEntreprise($_POST["nomEntreprise"]);  //nom,code_p,ville
-if (count($data) > 0) {
-	for($i=0;$i<count($data);$i++) {
+if (countTriade($data) > 0) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$societe=html_quotes($data[$i][0]);
 		$ccp=html_quotes($data[$i][1]);
 		$ville=html_quotes($data[$i][2]);

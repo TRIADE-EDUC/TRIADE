@@ -2,10 +2,14 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: circ.sht,v 1.13 2017-05-16 08:25:15 jpermanne Exp $
+// $Id: circ.sht,v 1.17 2024/03/13 09:00:57 touraine37 Exp $
 
 // raccourcis clavier pour la page main
+global $include_path, $raclavier, $deflt_bypass_isbn_page;
 
+if(empty($raclavier)) {
+	$raclavier = array();
+}
 $raclavier[] = array("C" , "./circ.php");										// Circulation > Circulation > Pret de documents
 $raclavier[] = array("R" , "./circ.php?categ=retour");	 						// Circulation > Circulation > Retour de documents
 $raclavier[] = array("J" , "./circ.php?categ=ret_todo");	 					// Circulation > Circulation > Documents a traiter
@@ -19,7 +23,11 @@ $raclavier[] = array("B" , "./catalog.php?shcut=B");							// Catalogue > Recher
 $raclavier[] = array("M" , "./catalog.php?categ=search&mode=6");				// Catalogue > Recherche > Toutes notices > Multi-criteres
 $raclavier[] = array("I" , "./catalog.php?categ=search_perso");					// Catalogue > Recherche > Prédéfinie
 $raclavier[] = array("D" , "./catalog.php?categ=last_records");					// Catalogue > Dernières notices
-$raclavier[] = array("N" , "./catalog.php?categ=create");	 					// Catalogue > Documents > Nouvelle Notice
+if($deflt_bypass_isbn_page) {
+	$raclavier[] = array("N" , "./catalog.php?categ=create_form&id=0");	 		// Catalogue > Documents > Nouvelle Notice > Formulaire direct
+} else {
+	$raclavier[] = array("N" , "./catalog.php?categ=create");	 				// Catalogue > Documents > Nouvelle Notice
+}
 $raclavier[] = array("F" , "./catalog.php?categ=serials&sub=pointage&id=0");	// Catalogue > Periodiques > Bulletinage
 $raclavier[] = array("G" , "./catalog.php?categ=caddie&sub=action");			// Catalogue > Paniers > Actions
 $raclavier[] = array("Z" , "./catalog.php?categ=z3950");						// Catalogue > Externe > Z39.50
@@ -31,6 +39,7 @@ $raclavier[] = array("E" , "./edit.php?categ=expl&sub=encours");				// Editions 
 $raclavier[] = array("X" , "./admin.php?categ=param&action=");					// Administration > Modules > Outils > Parametres 
 $raclavier[] = array("S" , "./admin.php?categ=sauvegarde&sub=launch");			// Administration > Modules > Sauvegardes > Lancement sauvegarde
 
+$raclavier[] = array("O" , "./dashboard.php");									// Tableau de bord
 $raclavier[] = array("P" , "./account.php");									// Préférences de l'utilisateur courant
 $raclavier[] = array("Q" , "./logout.php");										// Deconnexion
 

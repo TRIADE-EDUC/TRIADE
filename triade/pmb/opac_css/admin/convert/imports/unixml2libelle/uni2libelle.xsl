@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: uni2libelle.xsl,v 1.1.34.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="2.0">
-	
+
 	<xsl:output method="xml" indent="yes" encoding="iso-8859-1"/>
-	
+
 	<xsl:param name="corresp" select="document('admin/convert/imports/unixml2libelle/uni2libelle.xml')"/>
-	
+
 	<xsl:template match="notice">
 		<notice>
 			<xsl:apply-templates select="f"/>
 		</notice>
 	</xsl:template>
-	
+
 	<xsl:template match="f">
 		<!-- Recherche du code -->
 		<xsl:variable name="code">
@@ -41,7 +47,7 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template name="element">
 		<xsl:param name="code"/>
 		<xsl:choose>
@@ -53,12 +59,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template name="sous_element">
 		<xsl:param name="code"/>
 		<xsl:param name="sous_code"/>
-		
-		<xsl:choose>			
+
+		<xsl:choose>
 			<xsl:when test="$corresp/convert/field[@code=$code]/subfield[@code=$sous_code]">
 				<xsl:value-of select="$corresp/convert/field[@code=$code]/subfield[@code=$sous_code]/@tag"/>
 			</xsl:when>

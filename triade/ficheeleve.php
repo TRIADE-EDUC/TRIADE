@@ -6,7 +6,7 @@ include_once("./librairie_php/verifEmailEnregistre.php");
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -51,10 +51,10 @@ $sql .= "
 	a.code_groupe,
 	trim(g.libelle)
 FROM
-	${prefixe}affectations a,
-	${prefixe}matieres m,
-	${prefixe}classes c,
-	${prefixe}groupes g
+	{$prefixe}affectations a,
+	{$prefixe}matieres m,
+	{$prefixe}classes c,
+	{$prefixe}groupes g
 WHERE
 	code_prof='$Spid'
 AND a.code_classe = c.code_class
@@ -67,24 +67,24 @@ $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
 // patch pour problème sous-matière à 0
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
 }
 // fin patch
 freeResult($curs);
 unset($curs);
-//htmlTableMat($data);
 ?>
 <?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_note.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -93,13 +93,8 @@ unset($curs);
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/jquery-min.js" ></script>
-<style>
-ul { style-type:none;list-style: none; cursor:pointer;margin-left: 3px;padding-left: 0; }
-li { padding:7x; }
-</style>
-<?php include("./librairie_php/googleanalyse.php"); ?>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <SCRIPT language="JavaScript" src="./librairie_js/<?php print $_SESSION["membre"]?>.js"></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
@@ -113,147 +108,115 @@ li { padding:7x; }
 <tr id='cadreCentral0' >
 <td>
 <!-- // fin  -->
-<form method="POST" onsubmit="return verifAccesFiche()" name="formulaire" action="ficheeleve2.php">
-<br />
-<blockquote>
-         <ul>
-                <font class="T2"><?php print LANGBULL3 ?> :</font>
-                 <select name='anneeScolaire'  >
-                 <?php
-		 $anneeScolaire=$_COOKIE["anneeScolaire"];
-                 filtreAnneeScolaireSelectNote($anneeScolaire,3);
-                 ?>
-                 </select>
-		<br><br>
 
-             <font class=T2><?php print LANGPROFG ?> :</font>
-				<?php if ($_SESSION["membre"] == "menuprof") { ?>
-					 <select name="sClasseGrp" size="1" >
-					 <option value="0" STYLE="color:#000066;background-color:#FCE4BA"> <?php print LANGCHOIX3 ?> </option>
-					 <?php
-					 for($i=1;$i<count($data);$i++){
-					 	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
-							continue;
-						}else {
-							// utilisation de l'opérateur ternaire expr1?expr2:expr3;
-							$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
-							if (isset($verif[$libelle])) continue;
-		                                        $verif[$libelle]=$libelle;
-							print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0]."\">".$libelle."</option>\n";
-						}
-						$gtmp=$data[$i][4];
-						$ctmp=$data[$i][0];
-					 }
-					 unset($gtmp);
-					 unset($ctmp);
-					 unset($libelle);
-					 unset($verif);
-					 ?>
-					 </select>
-				<?php }else{ ?>
-					 <select name="sClasseGrp" size="1" >
-					 <option id='select0' ><?php print LANGCHOIX?></option>
-					 <?php select_classe(); // creation des options ?>
-					 </select>
-				<?php } ?>
-				 <br /><br />
-                <!--
-				 Indiquer la matière :
+<div class="fef-wrap">
 
-				<select name="sMat" size="1">
-                <option value="0" STYLE="color:#000066;background-color:#FCE4BA">Choix ...</option>
-               	</select>
-			<br><br>
-                 -->
-				<br>
-				 <UL><UL><UL><UL>
-		 <script language=JavaScript>buttonMagicSubmit("<?php print LANGBT31 ?>","rien"); //text,nomInput</script>
-				                                 <br><br>
+  <!-- Accès par classe -->
+  <div class="fef-card">
+    <div class="fef-card-title"><?php print LANGPROFG ?></div>
+    <form method="POST" onsubmit="return verifAccesFiche()" name="formulaire" action="ficheeleve2.php">
+      <div class="fef-field">
+        <label class="fef-label"><?php print LANGBULL3 ?></label>
+        <select name='anneeScolaire' class="fef-select">
+          <?php
+          $anneeScolaire=$_COOKIE["anneeScolaire"];
+          filtreAnneeScolaireSelectNote($anneeScolaire,3);
+          ?>
+        </select>
+      </div>
+      <div class="fef-field">
+        <label class="fef-label"><?php print LANGPROFG ?></label>
+        <?php if ($_SESSION["membre"] == "menuprof") { ?>
+          <select name="sClasseGrp" class="fef-select">
+            <option value="0"><?php print LANGCHOIX3 ?></option>
+            <?php
+            for($i=1;$i<countTriade($data);$i++){
+              if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
+                continue;
+              }else{
+                $libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+                if (isset($verif[$libelle])) continue;
+                $verif[$libelle]=$libelle;
+                print "<option value=\"".$data[$i][0]."\">".$libelle."</option>\n";
+              }
+              $gtmp=$data[$i][4];
+              $ctmp=$data[$i][0];
+            }
+            unset($gtmp,$ctmp,$libelle,$verif);
+            ?>
+          </select>
+        <?php }else{ ?>
+          <select name="sClasseGrp" class="fef-select">
+            <option id='select0'><?php print LANGCHOIX?></option>
+            <?php select_classe(); ?>
+          </select>
+        <?php } ?>
+      </div>
+      <button type="submit" name="rien" class="fef-btn"><?php print LANGBT31 ?></button>
+    </form>
+  </div>
 
-				 </UL></UL></UL></UL></UL>
-                 </form>
-</blockquote>
-<hr />
+  <!-- Recherche par nom -->
+  <div class="fef-card">
+    <div class="fef-card-title"><?php print LANGABS3 ?></div>
+    <form method="post" onsubmit="return valide_recherche_eleve_1()" name="formulaire_1">
+      <div class="fef-field">
+        <label class="fef-label"><?php print LANGABS3 ?></label>
+        <input type="text" name="saisie_nom_eleve" id="search" autocomplete="off" class="fef-input" />
+        <div id="userList" class="fef-suggest"></div>
+      </div>
+      <button type="submit" name="create" class="fef-btn"><?php print LANGBT31 ?></button>
+    </form>
+  </div>
 
-<form method=post onsubmit="return valide_recherche_eleve_1()" name="formulaire_1">
-<blockquote><BR>
-<table border=0 cellspacing=0><tr><td style="padding-top:0px;" nowrap>
-<font class="T2"><?php print LANGABS3?> : </font></td><td> 
-<input type="text" name="saisie_nom_eleve" size="20" id="search" autocomplete="off" style="width:15em;"  />
-</td></tr>
-<tr><td></td><td style="padding-top:0px;"><div id="userList" style="width:13.5em;border-style:none; background-color:#EEEEEE;"></div></td></tr>
-</table><div style="position:relative">
-<UL><UL><UL><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT31?>","create"); //text,nomInput</script></UL></UL></UL>
 </div>
-</blockquote>
-<?php brmozilla($_SESSION["navigateur"]);?>
-<?php brmozilla($_SESSION["navigateur"]);?>
-</form>
-<br><br><br>
 
 <?php
-//alertJs(empty($create));
-// affichage de la liste d élèves trouvés
 if(isset($_POST["saisie_nom_eleve"]))
 {
-$saisie_nom_eleve=trim($_POST["saisie_nom_eleve"]);
-$motif=strtolower($saisie_nom_eleve);
-$sql=<<<EOF
+  $saisie_nom_eleve=trim($_POST["saisie_nom_eleve"]);
+  $motif=strtolower($saisie_nom_eleve);
+  $sql=<<<EOF
 
 SELECT c.libelle,e.nom,e.prenom,e.elev_id,e.classe
-FROM ${prefixe}eleves e, ${prefixe}classes c
+FROM {$prefixe}eleves e, {$prefixe}classes c
 WHERE lower(e.nom) LIKE '%$motif%'
 AND c.code_class = e.classe
 ORDER BY c.libelle, e.nom, e.prenom
 
 EOF;
-$res=execSql($sql);
-$data=chargeMat($res);
-
+  $res=execSql($sql);
+  $data=chargeMat($res);
 ?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#CCCCCC" >
-<tr id='coulBar0' ><td height="2" colspan=3><b><font   id='menumodule1'>
-		<?php print LANGRECH2?> : <font id="color2"><B><?php print ucwords(stripslashes($motif))?></font>
-	</font></td>
-</tr>
-<?php
+<div class="fef-results">
+  <div class="fef-rtitle"><?php print LANGRECH2 ?> : <b><?php print htmlspecialchars(ucwords(stripslashes($motif))) ?></b></div>
+  <table class="fef-rtable">
+  <?php if( countTriade($data) <= 0 ){ ?>
+    <tr><td class="fef-empty" colspan="3"><?php print LANGRECH3 ?></td></tr>
+  <?php }else{ ?>
+    <tr>
+      <th><?php print ucwords(LANGIMP10) ?></th>
+      <th><?php print ucwords(strtolower(LANGIMP8)) ?> <?php print ucwords(strtolower(LANGIMP9)) ?></th>
+      <th></th>
+    </tr>
+    <?php for($i=0;$i<countTriade($data);$i++){ $idEleve=$data[$i][3]; ?>
+    <tr>
+      <td><?php print ucwords(strtolower($data[$i][0])) ?></td>
+      <td><?php infoBulleEleveSansLoupe($idEleve,ucwords(strtolower($data[$i][1]))." ".ucwords(strtolower($data[$i][2]))) ?></td>
+      <td><input type="button" class="fef-consult" value="Consulter" onclick="open('ficheeleve3.php?eid=<?php print $data[$i][3]?>&idclasse=<?php print $data[$i][4]?>','_self','')" /></td>
+    </tr>
+    <?php } ?>
+  <?php } ?>
+  </table>
+</div>
+<script type="text/JavaScript">InitBulle('#000000','#CCCCFF','red','1');</script>
+<?php } ?>
 
-if( count($data) <= 0 )
-	{
-	print("<tr><td align=center valign=center>".LANGRECH3."</td></tr>");
-	}
-else {
-?>
-<tr bgcolor="#FFFFFF"><td><b><?php print ucwords(LANGIMP10)?></b></td><td><B><?php print LANGIMP8?> <?php print LANGIMP9?></B></td><td><B> </B></td></tr>
-<?php
-for($i=0;$i<count($data);$i++)
-{
-	$idEleve=$data[$i][3];
-	?>
-	<tr>
-	<td bgcolor="#FFFFFF"><?php print ucfirst($data[$i][0])?></td>
-	<td bgcolor="#FFFFFF"><?php infoBulleEleveSansLoupe($idEleve,strtoupper($data[$i][1])." ".ucwords($data[$i][2])) ; ?> </td>
-	<td bgcolor="#FFFFFF" width='5%'><input type='button' class="BUTTON" value='Consulter' onclick="open('ficheeleve3.php?eid=<?php print $data[$i][3]?>&idclasse=<?php print $data[$i][4] ?>','_self','')"; /></td>
-	</tr>
-	<?php
-	}
-}
-
-?>
-</table>
-<script type="text/JavaScript">InitBulle('#000000','#CCCCFF','red',1);</script>
-<?php
-}
-?>
-<hr>
-<br>
-<form method=post action="recherche_complexe.php" >
-<table align='center'><tr><td>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESST399 ?>","create"); //text,nomInput</script>
-</td></tr></table>
-<br><br>
-</form>
-
+<div class="fef-complex">
+  <form method="post" action="recherche_complexe.php">
+    <button type="submit" name="create" class="fef-btn"><?php print LANGMESST399 ?></button>
+  </form>
+</div>
 
      <!-- // fin  -->
      </td></tr></table>
@@ -261,17 +224,17 @@ for($i=0;$i<count($data);$i++)
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ):
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

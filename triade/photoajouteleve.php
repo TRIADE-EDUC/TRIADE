@@ -1,21 +1,12 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
  *
  ***************************************************************************/
 ?>
@@ -24,12 +15,28 @@ session_start();
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
+<meta charset="utf-8">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
 <script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Trombinoscope</title>
+<style>
+body { padding: 16px; }
+.photo-card { max-width: 480px; margin: 0 auto; }
+.photo-identity { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+.photo-identity img { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-radius: 8px; flex-shrink: 0; }
+.photo-identity-info { font-size: 12px; line-height: 2; }
+.photo-identity-info strong { color: #080A66; }
+</style>
 </head>
 <body id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
@@ -39,7 +46,7 @@ if (($_SESSION["membre"] == "menueleve") && (MODIFTROMBIELEVE == "oui" )) {
 	$_GET['idelevesupp']=$_SESSION["id_pers"];
 }else{
 	validerequete("3");
-}	
+}
 $cnx=cnx();
 
 if (isset($_GET["idelevesupp"])) {
@@ -57,7 +64,6 @@ if (isset($_POST["create"])) {
 	$size=$_FILES['photo']['size'];
 
 	$taille = getimagesize($tmp_name);
-	//if ((!empty($photo)) &&  ($size <= 2000000) &&  ($taille[0] <= 96) && ($taille[1] <= 96)   ) {
 	if ((!empty($photo)) &&  ($size <= 2000000)) {
 		$type=str_replace("image/","",$type);
 		$type=str_replace("pjpeg","jpg",$type);
@@ -68,52 +74,50 @@ if (isset($_POST["create"])) {
 			move_uploaded_file($tmp_name,"data/image_eleve/$nomphoto");
 			history_cmd($_SESSION["nom"],"PHOTO","AJOUT $nomphoto");
 			modif_photo($nomphoto,$_POST["ideleve"]);
-			print "<script>alert(\"Photo Enregistrée \\n\\n L'Equipe Triade\"); parent.window.close();</script>";
+			print "<script>alertify.success('Photo enregistrée'); setTimeout(function(){parent.window.close();},1500);</script>";
 		 }else{
-			print "<font class=T1 color=red>".LANGTRONBI3."</font>";
+			print "<div class='alert alert-danger' style='margin-bottom:8px'>".LANGTRONBI3."</div>";
 		 }
 	} else {
-		print "<font class=T1 color=red>".LANGTRONBI4."</font>";
+		print "<div class='alert alert-danger' style='margin-bottom:8px'>".LANGTRONBI4."</div>";
 	}
 }
+
+if (isset($_GET["idelevesupp"]))  { $ideleve=$_GET["idelevesupp"]; }
+if (isset($_GET["ideleve"]))  { $ideleve=$_GET["ideleve"]; }
+if (isset($_POST["ideleve"])) { $ideleve=$_POST["ideleve"]; }
 ?>
-<form method='post' ENCTYPE="multipart/form-data" action="photoajouteleve.php">
-<table border=0 width=100%>
-<tr>
-<?php
-	
-	if (isset($_GET["idelevesupp"]))  { $ideleve=$_GET["idelevesupp"]; }
-	if (isset($_GET["ideleve"]))  { $ideleve=$_GET["ideleve"]; }
-	if (isset($_POST["ideleve"])) { $ideleve=$_POST["ideleve"]; }
-	$text1="modifier";
-	
-?>
-<td align=center>
-	<br>
-	<div >
-	<div style="position:absolute;top:-1px;left:8px;z-index:1000000" ><img src='image/commun/paperclip.png'></div>
-	<img src="image_trombi.php?idE=<?php print $ideleve?>"  width=96 height=96 />
-	</div>
-</td>
-<td width=65%>
-<br>
-<font class=T2>
-<?php print LANGTRONBI5 ?> : <b><?php print recherche_eleve_nom($ideleve); ?></b> <br><br>
-<?php print LANGTRONBI6?> : <b><?php print recherche_eleve_prenom($ideleve); ?></b> <br><br>
-<?php print LANGELE4 ?> : <b><?php $idclasse=chercheIdClasseDunEleve($ideleve); print chercheClasse_nom($idclasse); ?></b> <br><br>
-</font>
-<br>
-<tr><td colspan=2 align=center><br> <?php print $text1?> <?php print LANGTRONBI7 ?> : <input type="file" name="photo" size=30 > <br> <?php print "L'image doit être <b>au format jpg</b><br>Recommandé 96px sur 96px  de dimension"?> </td></tr>
-<tr><td colspan=2 align=center><br>
-<table align=center><tr><td><br>
-<script language=JavaScript>buttonMagicSubmit('<?php print LANGBT46?>','create'); //text,nomInput</script> <script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script>&nbsp;&nbsp;
-</td></tr></table>
-</td></tr>
-</tr></table>
-<input type='hidden' name='ideleve' value="<?php print $ideleve ?>" />
-</form>
+
+<div class="photo-card">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="bi bi-camera-fill"></i> Photo élève</span>
+    </div>
+    <div style="padding:16px">
+      <div class="photo-identity">
+        <div style="position:relative">
+          <img src="image_trombi.php?idE=<?php print $ideleve?>" width='96' height='96' />
+        </div>
+        <div class="photo-identity-info">
+          <?php print LANGTRONBI5 ?> : <strong><?php print recherche_eleve_nom($ideleve); ?></strong><br>
+          <?php print LANGTRONBI6?> : <strong><?php print recherche_eleve_prenom($ideleve); ?></strong><br>
+          <?php print LANGELE4 ?> : <strong><?php $idclasse=chercheIdClasseDunEleve($ideleve); print chercheClasse_nom($idclasse); ?></strong>
+        </div>
+      </div>
+      <form method='post' ENCTYPE="multipart/form-data" action="photoajouteleve.php">
+        <div class="form-row" style="margin-bottom:8px">
+          <label style="font-size:12px;margin-bottom:4px;display:block"><?php print LANGTRONBI7 ?> <span style="color:#888;font-size:11px">(JPG, max 2 Mo, recommandé 96×96 px)</span></label>
+          <input type="file" name="photo" class="form-control" style="font-size:12px">
+        </div>
+        <div class="toolbar" style="margin-top:12px">
+          <script language=JavaScript>buttonMagicSubmit('<?php print LANGBT46?>','create');</script>
+          <script language=JavaScript>buttonMagicFermeture();</script>
+        </div>
+        <input type='hidden' name='ideleve' value="<?php print $ideleve ?>" />
+      </form>
+    </div>
+  </div>
+</div>
 <BR>
-<?php
-Pgclose();
-?>
+<?php Pgclose(); ?>
 </BODY></HTML>

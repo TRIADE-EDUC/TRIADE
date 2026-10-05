@@ -1,7 +1,11 @@
-
 <div id="entity_graph" class="entity_graph">
 	<div data-dojo-type="apps/pmb/FrbrEntitiesGraph"
 		data-dojo-props='style:{width: "100%",height:"500px"}, memoryNodes:{{graph.nodes}}, memoryLinks:{{graph.links}}' 
 		class="graph_pmb" id="graph_pmb">
+		<div class="graph_menu">
+		    <button type='button' class='bouton' data-type='contribution_zoom_out_button' title='{{ msg.contribution_zoom_out_button }}'><i class='fa fa-minus'></i></button>
+		    <button type='button' class='bouton' data-type='contribution_zoom_in_button' title='{{ msg.contribution_zoom_in_button }}'><i class='fa fa-plus'></i></button>
+		    <button type='button' class='bouton' data-type='contribution_resize_button'>{{ msg.contribution_resize_button }}</button>
+		</div>
 	</div>
 </div>

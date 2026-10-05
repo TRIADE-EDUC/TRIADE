@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.1 2011-08-02 12:36:01 arenou Exp $ -->
+$Id: fr_FR.xml,v 1.2 2019/09/05 10:16:35 btafforeau Exp $ -->
 
 <XMLlist>
 	<entry code="openurl_service_endpoint">Adresse du serveur</entry>
@@ -16,5 +16,6 @@ $Id: fr_FR.xml,v 1.1 2011-08-02 12:36:01 arenou Exp $ -->
 	<entry code="openurl_mode">Mode de fonctionnement</entry>
 	<entry code="openurl_mode_requeteur">Requêteur</entry>
 	<entry code="openurl_mode_byref">Fournisseur de données By-Reference</entry>
+	<entry code="openurl_no_configuration_required">Rien à configurer</entry>
 			
 </XMLlist>

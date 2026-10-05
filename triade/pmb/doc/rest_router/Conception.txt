@@ -1,0 +1,42 @@
+@startuml
+
+namespace PMB {
+	namespace REST {
+	
+		class RouterRest {
+			#url
+			#CONTROLLER
+			+BASE_AUTH
+			+__construct(string $url)
+			+proceed()
+			#call()
+			#generateRoutes()
+			#get(string $url): RouteRest
+			#post(string $url): RouteRest
+			#addRoute(string $method, string $url): RouteRest
+		}
+		
+		class CmsRouterRest extends RouterRest {}
+		class ArkRouterRest extends RouterRest {}
+		
+		class RouteRest {
+			-url = ""
+			-method = ""
+			-args = array()
+			..
+			+__construct(string $url, string $method = "")
+			-searchMethod()
+			+getMethod()
+			+getArguments()
+			+with(string $param, string $pattern): RouteRest
+			+match(string $match_url): bool
+		}
+
+		'' Liens
+		RouterRest *-- RouteRest : Contient des >
+	}
+}
+		
+		
+
+@enduml

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: form_mapper.class.php,v 1.4 2017-11-23 11:30:22 arenou Exp $
+// $Id: form_mapper.class.php,v 1.4 2017/11/23 11:30:22 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,7 +14,7 @@ class form_mapper {
 	}	
 	
 	/**
-	 * Fonction retournant l'instance de form_mapper associÃ© au type passÃ© en paramÃ¨tre
+	 * Fonction retournant l'instance de form_mapper associé au type passé en paramètre
 	 * @param String $source
 	 * @return form_mapper|boolean
 	 */
@@ -33,21 +33,21 @@ class form_mapper {
 	}
 	
 	/**
-	 * Fonction redÃ©rivÃ©e dans les classes enfants
+	 * Fonction redérivée dans les classes enfants
 	 */
 	public function getMapping($dest){
-		//fonction dÃ©rivÃ©e dans les classes enfants
+		//fonction dérivée dans les classes enfants
 	}
 	
 	/**
-	 * Fonction redÃ©rivÃ©e dans les classes enfants
+	 * Fonction redérivée dans les classes enfants
 	 */
 	public function getDestinations(){
-		//fonction dÃ©rivÃ©e dans les classes enfants
+		//fonction dérivée dans les classes enfants
 	}
 	
-	//L'appel Ã  isMapped est faitt dans le template de l'entitÃ© dest (tu dans notre cas)
-	//donc on a pas de mapper tu pour le cd44, dinc Ã§a ne marche pas..
+	//L'appel à isMapped est faitt dans le template de l'entité dest (tu dans notre cas)
+	//donc on a pas de mapper tu pour le cd44, dinc ça ne marche pas..
     //
 	public static function isMapped($dest){
 		global $pmb_authority_mapping_folder, $class_path;
@@ -74,7 +74,7 @@ class form_mapper {
 	}
 
 	/**
-	 * Fonction gÃ©nÃ©rant les boutons de crÃ©ation
+	 * Fonction générant les boutons de création
 	 */
 	public static function get_action_button($source, $id) {
 		$button = '';

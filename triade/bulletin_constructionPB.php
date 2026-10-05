@@ -7,7 +7,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,11 +50,11 @@ $LCF_date_examen = strip_tags(trim($_POST['date_edition']));
 $LCF_titre_releve = strip_tags(trim($_POST['titre_releve']));
 ?>
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -79,7 +79,7 @@ if ($_SESSION["membre"] == "menuprof") {
 
 $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 	if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -114,7 +114,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // de l etablissement
 $idsite=chercheIdSite($data[0][0]);
 $data=visu_paramViaIdSite($idsite);
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim(TextNoAccent($data[$i][0]));
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -135,7 +135,7 @@ $examen="Partiel Blanc";
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim($_POST["saisie_trimestre"]);
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -179,14 +179,14 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 //-------------------------
 	$max="";
 	$min=1000;
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$noteMoyEleG=0;
 		$coefEleG=0;
 		$moyenEleve2="";
 	
-		for($t=0;$t<count($ordre);$t++) {
+		for($t=0;$t<countTriade($ordre);$t++) {
 			$idMatiere=$ordre[$t][0];
 			$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$t][2]);
 
@@ -225,17 +225,17 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 	
 if (isset($_POST["plageEleve"])) {
 	$plageEleve=$_POST["plageEleve"];
-	if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+	if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 	if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 	if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 	if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 	if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 	if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 	if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-	if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+	if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 }else{
 	$dep=0;
-	$nbEleveT=count($eleveT);
+	$nbEleveT=countTriade($eleveT);
 }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
@@ -296,7 +296,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 ######
 	// mise en place du logo
 	$photo=recup_photo_bulletin_idsite($idsite);
-	if (count($photo) > 0) {
+	if (countTriade($photo) > 0) {
 		$logo="./data/image_pers/".$photo[0][0];
 		if (file_exists($logo)) {
 			$xlogo=25;
@@ -386,7 +386,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// adresse de l'élève
 	// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 	/*$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -485,7 +485,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 
 
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$i][2]);
@@ -616,7 +616,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		if ($idgroupe == "0") {   // non matiere affectée à un groupe
 			$max="";
 			$min=1000;
-			for($g=0;$g<count($eleveT);$g++) {
+			for($g=0;$g<countTriade($eleveT);$g++) {
 				// variable eleve
 				$idEleveMoyen=$eleveT[$g][4];
 				$valeur=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -633,7 +633,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			$max="";
 			$min=1000;
 			$eleveTg=listeEleveDansGroupe($idgroupe);
-			for($g=0;$g<count($eleveTg);$g++) {
+			for($g=0;$g<countTriade($eleveTg);$g++) {
 				$idEleveMoyen=$eleveTg[$g];
 				$valeur=moyenneEleveMatiereGroupe($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 				if (trim($valeur) != "") {	
@@ -894,7 +894,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 

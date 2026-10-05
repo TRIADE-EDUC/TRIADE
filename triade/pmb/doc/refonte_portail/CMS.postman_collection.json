@@ -1,0 +1,1569 @@
+{
+	"info": {
+		"_postman_id": "20c6b72b-8638-492d-acf7-4a99f6a01e45",
+		"name": "CMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Type et sous-type de page",
+			"item": [
+				{
+					"name": "Liste des type de pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/page/type",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des sous-type de pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/page/sub-type",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"sub-type"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Page",
+			"item": [
+				{
+					"name": "Liste des pages",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mettre à jour une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"name\": \"Page Rename\"}",
+									"description": "Donn�es modifi�s",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/update/{{page_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"update",
+								"{{page_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/delete/{{page_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"delete",
+								"{{page_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/create",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des frames dans une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/frame/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"frame",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des zones dans une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/zone/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"zone",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear du cache d'une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/clear/cache",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"clear",
+								"cache"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Changement du tag sémantique sur un élément d'une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"parent\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\ZoneOpacModel\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"container\",\n         \"classes\":[\n            \n         ],\n         \"id\":51\n      },\n      \"is_hidden\":false,\n      \"name\":\"container\",\n      \"children\": [...]\n   \"tag_element\":\"header\",\n   \"page_id\":2\n}",
+									"description": "Données de l'élément",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/update/tag/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"update",
+								"tag",
+								"element"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enregistrer un contexte pour une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/save/context/{{page_id}}?={\n   \"name\":\"Catalogue+en+ligne+Bib'Doc\",\n   \"value\":\"{\"post\":[],\"get\":{\"database\":\"pmb\",\"cms_build_activate\":\"1\",\"opac_view\":\"-1\"},\"type\":\"28\",\"subType\":2801}\",\n   \"url\":\"http://localhost/pmb_dev/opac_css/\"\n}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"save",
+								"context",
+								"{{page_id}}"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": "{\n   \"name\":\"Catalogue+en+ligne+Bib'Doc\",\n   \"value\":\"{\"post\":[],\"get\":{\"database\":\"pmb\",\"cms_build_activate\":\"1\",\"opac_view\":\"-1\"},\"type\":\"28\",\"subType\":2801}\",\n   \"url\":\"http://localhost/pmb_dev/opac_css/\"\n}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un contexte pour une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"index_context\":0,\n   \"context\":{\n      \"name\":\"Catalogue+en+ligneb'Doc\",\n      \"value\":\"{\"post\":[],\"get\":{\"database\":\"pmb\",\"cms_build_activate\":\"1\",\"opac_view\":\"-1\"},\"type\":\"28\",\"subType\":2801}\",\n      \"url\":\"http://localhost/pmb_dev/opac_css/\"\n   }\n}",
+									"description": "Données du contexte\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/edit/context/{{page_id}}?=",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"edit",
+								"context",
+								"{{page_id}}"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un contexte pour une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"index_context\":0}\n",
+									"description": "Données du contexte",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/remove/context/{{page_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"remove",
+								"context",
+								"{{page_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajoute / Supprime un contexte favori",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"index_context\": 0}",
+									"description": "Données du contexte",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/bookmark/context/{{page_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"bookmark",
+								"context",
+								"{{page_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Masque un élément dans une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"item\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\FrameOpacModel\",\n      \"name\":\"intro_bibli\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"intro_bibli\",\n         \"classes\":[\n            \n         ],\n         \"id\":3\n      },\n      \"classement\":\"OPAC\",\n      \"is_hidden\":false,\n      \"id\":1,\n      \"classements\":{\n         \"intro_bibli\":\"OPAC\"\n      }\n   },\n   \"parent\":\"intro\",\n   \"page_id\":2\n}",
+									"description": "Données de l'élément\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/hide/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"hide",
+								"element"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un élément d'une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"item\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\FrameCMSModel\",\n      \"name\":\"01_Articles+sur+le+même+sujet+/+listeSameArticle\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"cms_module_articleslist_46\",\n         \"classes\":[\n            \n         ],\n         \"id\":195\n      },\n      \"classement\":\"\",\n      \"is_hidden\":false,\n      \"id\":150,\n      \"classements\":{\n\n      }\n   },\n   \"parent\":\"container\",\n   \"page_id\":2\n}",
+									"description": "Données de l'élément\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/page/{{page_id}}/remove/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"page",
+								"{{page_id}}",
+								"remove",
+								"element"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Modèle",
+			"item": [
+				{
+					"name": "Liste des Modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/list?num_version=1",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"list"
+							],
+							"query": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mettre à jour un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"name\": \"Gabarit Rename\"}",
+									"description": "Donn�es modifi�s",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/update/{{gabarit_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"update",
+								"{{gabarit_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "version_num",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/delete/{{gabarit_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"delete",
+								"{{gabarit_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"gabarit\": {\n        \"class\": \"Pmb\\CMS\\Models\\GabaritLayoutModel\",\n        \"type\": \"28\",\n        \"sub_type\": \"2801\",\n        \"default\": 1,\n        \"name\": \"Gabarit Test\",\n        \"children\": [{\n            \"class\": \"Pmb\\CMS\\Models\\ZoneOpacModel\",\n            \"semantic\": {\n                \"class\": \"Pmb\\CMS\\Semantics\\RootSemantic\",\n                \"id_tag\": \"container\",\n                \"classes\": \"\",\n                \"id\": 1,\n                \"tag\": \"div\"\n            },\n            \"name\": \"container\",\n            \"children\": [{\n                \"class\": \"Pmb\\CMS\\Models\\ZoneOpacModel\",\n                \"semantic\": {\n                    \"class\": \"Pmb\\CMS\\Semantics\\RootSemantic\",\n                    \"id_tag\": \"intro\",\n                    \"classes\": \"\",\n                    \"id\": 2,\n                    \"tag\": \"div\"\n                }\n            }],\n            \"id\": 11\n        }]\n    },\n    \"pages\": [1]\n}",
+									"description": "Données du modèle",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/create",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des frames d'un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/{{gabarit_id}}/frame/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"{{gabarit_id}}",
+								"frame",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des zones d'un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/{{gabarit_id}}/zone/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"{{gabarit_id}}",
+								"zone",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Changement du classement d'un gabarit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "data",
+									"value": "{\n   \"title\":\"00_Barre+de+recherche+simple\",\n   \"isTag\":false,\n   \"isEdited\":false,\n   \"classement\":\"test\",\n   \"data\":{\n      \"type\":\"frame\",\n      \"name\":\"00_Barre+de+recherche+simple\",\n      \"item\":{\n         \"class\":\"Pmb\\\\CMS\\\\Models\\\\FrameCMSModel\",\n         \"name\":\"00_Barre+de+recherche+simple\",\n         \"semantic\":{\n            \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n            \"tag\":\"div\",\n            \"id_tag\":\"cms_module_search_66\",\n            \"classes\":[\n               \n            ],\n            \"id\":60\n         },\n         \"classement\":\"\",\n         \"is_hidden\":false,\n         \"id\":49,\n         \"classements\":{\n\n         }\n      }\n   },\n   \"children\":[\n      \n   ]\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/classement",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"classement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Changement du tag sémantique sur un élément d'un gabarit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"parent\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\ZoneOpacModel\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"main\",\n         \"classes\":[\n            \n         ],\n         \"id\":4\n      },\n      \"is_hidden\":false,\n      \"name\":\"main\",\n      \"children\":[],\n      \"id\":8\n   },\n   \"index_element\":0,\n   \"tag_element\":\"main\",\n   \"gabarit_id\":1\n}",
+									"description": "Données de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/{{gabarit_id}}/update/tag/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"{{gabarit_id}}",
+								"update",
+								"tag",
+								"element"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Masque un élément dans un gabarit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"item\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\FrameOpacModel\",\n      \"name\":\"intro_bibli\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"intro_bibli\",\n         \"classes\":[\n            \n         ],\n         \"id\":3\n      },\n      \"classement\":\"OPAC\",\n      \"is_hidden\":false,\n      \"id\":1,\n      \"classements\":{\n         \"intro_bibli\":\"OPAC\",\n         \"intro_message\":\"OPAC\",\n         \"nav_history\":\"OPAC\",\n         \"navigator\":\"OPAC\",\n      }\n   },\n   \"parent\":\"intro\",\n   \"gabarit_id\":1\n}",
+									"description": "Données d'un élément à masquer",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/{{gabarit_id}}/hide/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"{{gabarit_id}}",
+								"hide",
+								"element"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un élément d'un modèle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"gabarit\":1}",
+									"description": "Données de l'élément\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/gabarit/{{gabarit_id}}/remove/element",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"gabarit",
+								"{{gabarit_id}}",
+								"remove",
+								"element"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Zone",
+			"item": [
+				{
+					"name": "Mettre à jour une zone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"name\": \"Zone Rename\"}",
+									"description": "Donn�es modifi�s",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/zone/update/{{zone_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"zone",
+								"update",
+								"{{zone_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une zone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "version_num",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"gabarit\": 1}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/zone/delete/{{zone_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"zone",
+								"delete",
+								"{{zone_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer une zone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"zone\": {\n        \"class\": \"Pmb\\CMS\\Models\\ZoneCMSModel\",\n        \"name\": \"Zone Test\",\n        \"semantic\": {\n            \"class\": \"Pmb\\CMS\\Semantics\\RootSemantic\",\n            \"id_tag\": \"newZone\",\n            \"classes\": \"\",\n            \"tag\": \"div\"\n        }\n\n    },\n    \"parent\": 1,\n    \"gabarit\": 1\n}",
+									"description": "Donn�es de la zone",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/zone/create",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"zone",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajoute une classe CSS à une zone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{[\"plop\"]}",
+									"description": "Données de la zone",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/zone/classes/{{zone_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"zone",
+								"classes",
+								"{{zone_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cadres",
+			"item": [
+				{
+					"name": "Liste des cadres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mettre à jour un cadre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"name\": \"Frame Rename\"}",
+									"description": "Donn�es modifi�s",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/update/{{frame_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"update",
+								"{{frame_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un cadre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "version_num",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"gabarit\": 1}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/delete/{{frame_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"delete",
+								"{{frame_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un cadre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"frame\": {\n        \"class\": \"Pmb\\CMS\\Models\\FrameCMSModel\",\n        \"name\": \"Frame Test\",\n        \"semantic\": {\n            \"class\": \"Pmb\\CMS\\Semantics\\RootSemantic\",\n            \"id_tag\": \"newFrame\",\n            \"classes\": \"\",\n            \"tag\": \"div\"\n        }\n\n    },\n    \"zone\": 11,\n    \"gabarit\": 1\n}",
+									"description": "Donn�es du cadre",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/create",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear du cache d'une frame",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"class\": \"Pmb\\CMS\\Models\\PagePortalModel\",\n    \"name\": \"Page Test\",\n    \"type\": \"28\",\n    \"sub_type\": \"2801\",\n    \"parent_page\": [],\n    \"gabarit_layout\": {},\n    \"page_layout\": [],\n    \"conditions\": []\n}",
+									"description": "Donn�es de la page",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/{{frame_id}}/clear/cache",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"{{frame_id}}",
+								"clear",
+								"cache"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Changement du classement d'une frame",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "data",
+									"value": "{\n   \"parent\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\ZoneOpacModel\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"main\",\n         \"classes\":[\n            \n         ],\n         \"id\":4\n      },\n      \"is_hidden\":false,\n      \"name\":\"main\",\n      \"children\": [],\n      \"id\":8\n   },\n   \"index_element\":0,\n   \"tag_element\":\"main\",\n   \"gabarit_id\":1\n}",
+									"type": "text"
+								},
+								{
+									"key": "num_version",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/classement",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"classement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des pages qui contiennent cette frame",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "data",
+									"value": "{\"idTag\":\"cms_module_articleslist_46\"}",
+									"type": "text"
+								},
+								{
+									"key": "num_version",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/page/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"page",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste des gabarits qui contiennent cette frame",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\"idTag\":\"cms_module_articleslist_46\"}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/page/list",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"page",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajoute une classe CSS à un cadre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{ [\"test\"] }",
+									"description": "Données de la frame",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_api}}/frame/classes/{{frame_id}}",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"frame",
+								"classes",
+								"{{frame_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Placement",
+			"item": [
+				{
+					"name": "Déplacer un noeud",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n    \"num_version\": 24,\n    \"id_parent\" : 6,\n    \"index\" : 0,\n    \"class\": \"LayoutElementModel\",\n    \"id_layout\": 1,\n    \"id\": 5\n}",
+									"description": "Donner pour le déplacement",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/insert",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"insert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mise à jour de l'arbre d'une page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"parent\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\ZoneOpacModel\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"main_hors_footer\",\n         \"classes\":[\n            \n         ],\n         \"id\":104\n      },\n      \"is_hidden\":false,\n      \"name\":\"main_hors_footer\",\n      \"children\":[],\n      \"id\":28\n   },\n   \"index_element\":0,\n   \"new_parent\":\"main_header\",\n   \"page_id\":2\n}",
+									"description": "Donner pour le déplacement de parent",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/page/1/update/tree",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"page",
+								"1",
+								"update",
+								"tree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mise à jour de l'arbre d'un gabarit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "num_version",
+									"value": "1",
+									"description": "Version du portail",
+									"type": "text"
+								},
+								{
+									"key": "data",
+									"value": "{\n   \"parent\":{\n      \"class\":\"Pmb\\\\CMS\\\\Models\\\\ZoneOpacModel\",\n      \"semantic\":{\n         \"class\":\"Pmb\\\\CMS\\\\Semantics\\\\HtmlSemantic\",\n         \"tag\":\"div\",\n         \"id_tag\":\"main\",\n         \"classes\":[\n            \n         ],\n         \"id\":4\n      },\n      \"is_hidden\":false,\n      \"name\":\"main\",\n      \"children\":[],\n      \"id\":8\n   },\n   \"index_element\":0,\n   \"new_parent\":\"intro\",\n   \"gabarit_id\":1\n}",
+									"description": "Donner pour le déplacement",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/gabarit/1/update/tree",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"gabarit",
+								"1",
+								"update",
+								"tree"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Autres",
+			"item": [
+				{
+					"name": "Liste des vues OPAC",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_api}}/opac_views",
+							"host": [
+								"{{base_url_api}}"
+							],
+							"path": [
+								"opac_views"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Connexion au PMB",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ret_url",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "database",
+							"value": "pmb",
+							"type": "text"
+						},
+						{
+							"key": "user",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/main.php",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"main.php"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/pmb_dev",
+			"type": "string"
+		},
+		{
+			"key": "base_url_api",
+			"value": "{{base_url}}/cms",
+			"type": "string"
+		},
+		{
+			"key": "page_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "gabarit_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "zone_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "frame_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

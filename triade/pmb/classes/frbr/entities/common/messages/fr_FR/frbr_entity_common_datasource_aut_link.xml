@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_common_datasource_aut_link.xml,v 1.4 2019-01-18 14:36:27 dbellamy Exp $ -->
+$Id: frbr_entity_common_datasource_aut_link.xml,v 1.4 2019/01/18 14:36:27 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_common_datasource_aut_link_authors">Auteurs liés</entry>

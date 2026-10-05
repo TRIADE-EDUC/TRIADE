@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_requests.js,v 1.4 2018-12-06 12:27:17 dgoron Exp $
+// $Id: scan_requests.js,v 1.5 2019/06/20 10:12:38 dgoron Exp $
 
 function show_scan_request(id_suffix) {
 	var div = document.getElementById('scan_request'+id_suffix);
@@ -54,21 +54,44 @@ function expand_scan_request(id_scan_request) {
 	}
 }
 
-function scan_request_search_order(what) {
-	if(!document.getElementById("scan_request_order_by")) return;
-	if(!document.forms["search"]) return;
-	
-	if (document.getElementById("scan_request_order_by").value != what) {
-		document.getElementById("scan_request_order_by").value = what;
-		document.getElementById("scan_request_order_by_sens").value = 'asc';
-	} else {
-		if(document.getElementById("scan_request_order_by_sens")){
-			if(document.getElementById("scan_request_order_by_sens").value == 'asc'){
-				document.getElementById("scan_request_order_by_sens").value = 'desc';
-			}else{
-				document.getElementById("scan_request_order_by_sens").value = 'asc';			
-			}
+function scan_requests_expand_all(context) {
+	if ((context == undefined) || !context) context = document;
+	var tempCollCommentsChild = context.querySelectorAll('tr[class~="scan_requests_children"]');
+	var tempColl = Array.prototype.slice.call(tempCollCommentsChild);
+	var tempCollCnt = tempColl.length;
+	for (var i = 0; i < tempCollCnt; i++) {
+		if (tempColl[i].previousElementSibling.style.display != 'none')
+			tempColl[i].style.display = 'table-row';
+		var callback = tempColl[i].getAttribute("callback");
+		if(callback){
+			window[callback]();
+		}
+		if(typeof ajax_resize_elements == "function"){
+			ajax_resize_elements();
 		}
 	}
-	document.forms["search"].submit();
+	tempColl    = context.querySelectorAll('img[class~="scan_requests_img_plus"]');
+	tempCollCnt = tempColl.length;
+	for (var i = 0; i < tempCollCnt; i++) {
+		tempColl[i].src = imgOpened.src;
+	}
+}
+
+function scan_requests_collapse_all(context) {
+	if ((context == undefined) || !context) context = document;
+	var tempCollCommentsChild = context.querySelectorAll('tr[class~="scan_requests_children"]');
+	var tempColl = Array.prototype.slice.call(tempCollCommentsChild);
+	  
+	var tempCollCnt = tempColl.length;
+	for (var i = 0; i < tempCollCnt; i++) {
+		tempColl[i].style.display = 'none';
+	}
+	tempColl    = context.querySelectorAll('img[class~="scan_requests_img_plus"]');
+	tempCollCnt = tempColl.length;
+	for (var i = 0; i < tempCollCnt; i++) {
+		//on teste sur 2 niveaux
+//		if(Array.prototype.slice.call(tempColl[i].parentElement.classList).indexOf('notice-parent') != -1 || Array.prototype.slice.call(tempColl[i].parentElement.classList).indexOf('parent')!= -1 || Array.prototype.slice.call(tempColl[i].parentElement.parentElement.classList).indexOf('notice-parent') != -1 || Array.prototype.slice.call(tempColl[i].parentElement.parentElement.classList).indexOf('parent') != -1) {
+			tempColl[i].src = imgClosed.src;
+//		}
+	}
 }

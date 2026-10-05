@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.3 2020/08/05 12:37:36 jlaurent Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="serie" typeobject="6">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+
+	<!--Name-->
+	<field name="233" type="text" typefield="select" id="2">
+		<table name="series">
+			<tablefield>serie_index</tablefield>
+			<tablekey>serie_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=6</referencefield>
+			</link>
+		</table>
+	</field>
+
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="series">
+			<tablefield>serie_id</tablefield>
+			<tablekey>serie_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=6</referencefield>
+			</link>
+		</table>
+	</field>
+	
+</sort>

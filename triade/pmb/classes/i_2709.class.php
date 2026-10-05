@@ -1,170 +1,170 @@
 <?php
 
-if(!defined("IS3")) define("IS3",chr(0x1d));			//CaractÃ¨re de fin d'enregistrement
-if(!defined("IS2")) define("IS2",chr(0x1e));			//CaractÃ¨re de fin de champ
-if(!defined("IS1")) define("IS1",chr(0x1f));			//CaractÃ¨re de dÃ©but de sous champ
-if(!defined("NSBB")) define("NSBB",chr(0x88));			//CaractÃ¨re de dÃ©but "non sorting bloc"
-if(!defined("NSBE")) define("NSBE",chr(0x89));			//CaractÃ¨re de fin "non sorting bloc"
+if(!defined("IS3")) define("IS3",chr(0x1d));			//Caractère de fin d'enregistrement
+if(!defined("IS2")) define("IS2",chr(0x1e));			//Caractère de fin de champ
+if(!defined("IS1")) define("IS1",chr(0x1f));			//Caractère de début de sous champ
+if(!defined("NSBB")) define("NSBB",chr(0x88));			//Caractère de début "non sorting bloc"
+if(!defined("NSBE")) define("NSBE",chr(0x89));			//Caractère de fin "non sorting bloc"
 
 
 class iso2709 {
 	//Parties brutes de la notice
-	public $notice;					//Notice complÃ¨te
+	public $notice;					//Notice complète
 	public $guide;						//Guide
 	public $directory;					//Directory
-	public $data;						//DonnÃ©es
-	
-	//CaractÃ¨res spÃ©ciaux de synchronisation
-	public $record_end;				//CaractÃ¨re de fin d'enregistrement
-	public $field_end;					//CaractÃ¨re de fin de champ
-	public $subfield_begin;			//CaractÃ¨re de dÃ©but de sous champ
-	public $NSB_begin;					//CaractÃ¨re dÃ©but "non sorting bloc"
-	public $NSB_end;					//CaractÃ¨re fin "non sorting bloc"
-	
-	//Longueurs d'encodage de certaines donnÃ©es
-	public $ind_lenght=2;				//Longeur des indicateurs (en nombre de caractÃ¨res)
-	public $subfield_code_lenght=2;	//Longueur du code sous champ (subfield_begin compris)
-	public $zone_lenght=4;				//Nombre de caractÃ¨res pour coder la longueur d'un champ complet
-	public $first_pos=5;				//Nombre de caractÃ¨res pour coder la position d'un champ dans la zone data
+	public $data;						//Données
 
-	//Champs calculÃ©s
-	public $total_lenght;				//Longueur totale de la notice (calculÃ©e Ã  la gÃ©nÃ©ration)
-	public $data_pos;					//Position de la zone de donnÃ©es dans la notice (calculÃ©e Ã  la gÃ©nÃ©ration)
-	
-	//Champs propres au type de donnÃ©es
+	//Caractères spéciaux de synchronisation
+	public $record_end;				//Caractère de fin d'enregistrement
+	public $field_end;					//Caractère de fin de champ
+	public $subfield_begin;			//Caractère de début de sous champ
+	public $NSB_begin;					//Caractère début "non sorting bloc"
+	public $NSB_end;					//Caractère fin "non sorting bloc"
+
+	//Longueurs d'encodage de certaines données
+	public $ind_lenght=2;				//Longeur des indicateurs (en nombre de caractères)
+	public $subfield_code_lenght=2;	//Longueur du code sous champ (subfield_begin compris)
+	public $zone_lenght=4;				//Nombre de caractères pour coder la longueur d'un champ complet
+	public $first_pos=5;				//Nombre de caractères pour coder la position d'un champ dans la zone data
+
+	//Champs calculés
+	public $total_lenght;				//Longueur totale de la notice (calculée à la génération)
+	public $data_pos;					//Position de la zone de données dans la notice (calculée à la génération)
+
+	//Champs propres au type de données
 	public $statut;					//Statut marc de la notice
-	public $application_codes;			//Codes propres au type de donnÃ©es
-	var	$supplementary;				//Codes supplÃ©mentaires propres au type de donnÃ©es
-	
-	//Champs dÃ©codÃ©s
-	public $guide_infos=array();		//Tableaux des codes propres au type de donnÃ©es
-	public $directory_table=array();	//Table dÃ©codÃ©e du rÃ©pertoire
-	public $fields;					//Tableau des champs / sous-champs dÃ©codÃ©s
-	
+	public $application_codes;			//Codes propres au type de données
+	public $supplementary;				//Codes supplémentaires propres au type de données
+
+	//Champs décodés
+	public $guide_infos=array();		//Tableaux des codes propres au type de données
+	public $directory_table=array();	//Table décodée du répertoire
+	public $fields;					//Tableau des champs / sous-champs décodés
+
 	//Gestion des erreurs
 	public $error=false;				//Indicateur d'erreur
 	public $error_message="";			//Message d'erreur
-	
+
 	public $is_utf8 = false;			//Gestion de l'UTF-8 dans les notices
 	/*
-		VÃ©rification de la cohÃ©rence du format de la notice :
-			-VÃ©rifie les longueurs, la place des zones, que le rÃ©pertoire correspond Ã  la zone de donnÃ©es
+		Vérification de la cohérence du format de la notice :
+			-Vérifie les longueurs, la place des zones, que le répertoire correspond à la zone de données
 	*/
-	function general_check() {
-		//VÃ©rifications sommaires
+	public function general_check() {
+		//Vérifications sommaires
 		//La taille de la notice est-elle correcte ?
 		if ($this->total_lenght!=strlen($this->notice)) {
 			$this->error=true;
 			$this->error_message="La longueur de la notice ne correspond pas aux informations du guide ".$this->total_lenght." ".strlen($this->notice);
 			return false;
 		}
-		
+
 		//La fin de la notice est-elle bien la fin de notice ?
 		if (substr($this->notice,strlen($this->notice)-1,1)!=IS3) {
 			$this->error=true;
-			$this->error_message="La notice est tronquÃ©e ou ce n'est pas une notice";
+			$this->error_message="La notice est tronquée ou ce n'est pas une notice";
 			return false;
 		}
-		
-		//VÃ©rification du directory et structure
-		//Si le caractÃ¨re prÃ©cÃ©dent le dÃ©but des donnÃ©es n'est pas field_end alors il y a un problÃ¨me
+
+		//Vérification du directory et structure
+		//Si le caractère précédent le début des données n'est pas field_end alors il y a un problème
 		if (substr($this->directory,strlen($this->directory)-1,1)!=IS2) {
 			$this->error=true;
-			$this->error_message="Le rÃ©pertoire ou la zone de donnÃ©es ne semble pas Ãªtre au bon endroit";
+			$this->error_message="Le répertoire ou la zone de données ne semble pas être au bon endroit";
 			return false;
 		}
 		//Parse du directory
 		$dir_entry_lenght=3+$this->zone_lenght+$this->first_pos;
 		if (((strlen($this->directory)-1) % $dir_entry_lenght)) {
 			$this->error=true;
-			$this->error_message="Le rÃ©pertoire n'a pas la bonne taille";
+			$this->error_message="Le répertoire n'a pas la bonne taille";
 		} else {
 			$nb_fields=(strlen($this->directory)-1)/$dir_entry_lenght;
 			for ($i=0; $i<$nb_fields; $i++) {
 				$label=substr($this->directory,$i*$dir_entry_lenght,3);
-				$lzone=substr($this->directory,$i*$dir_entry_lenght+3,$this->zone_lenght)*1;
-				$fpos=substr($this->directory,$i*$dir_entry_lenght+3+$this->zone_lenght,$this->first_pos)*1;
+				$lzone = intval(substr($this->directory,$i*$dir_entry_lenght+3,$this->zone_lenght));
+				$fpos = intval(substr($this->directory,$i*$dir_entry_lenght+3+$this->zone_lenght,$this->first_pos));
 				$this->directory_table[$i]["POS"]=$fpos;
 				$this->directory_table[$i]["LENGHT"]=$lzone;
 				$this->directory_table[$i]["LABEL"]=$label;
 				if (substr($this->data,$fpos+$lzone-1,1)!=IS2) {
 					$this->error=true;
-					$this->error_message="Erreur sur le champ nÂ°".($i+1)." : le code de fin de champ n'a pas Ã©tÃ© trouvÃ©";
+					$this->error_message="Erreur sur le champ n°".($i+1)." : le code de fin de champ n'a pas été trouvé";
 					return false;
 				}
 			}
 		}
 		return true;
 	}
-	
-	
-	function get_guide_infos() {
+
+
+	public function get_guide_infos() {
 		//A surcharger
 	}
-	
-	function create_guide_infos() {
+
+	public function create_guide_infos() {
 		//A surcharger
 	}
-	
-	function check_guide_infos() {
+
+	public function check_guide_infos() {
 		//A surcharger
 	}
-	
-	function default_guide_infos() {
+
+	public function default_guide_infos() {
 		//A surcharger
 	}
-	
-	function default_statut() {
+
+	public function default_statut() {
 		//A surcharger
 	}
-	
+
 	/*
-		Lecture du guide et extractions des diffÃ©rentes zones de la notice (guide, directory, data)
+		Lecture du guide et extractions des différentes zones de la notice (guide, directory, data)
 	*/
-	function read_guide() {
-		
+	public function read_guide() {
+
 		//Extraction du guide
 		$this->guide=substr($this->notice,0,24);
-		
-		//Lecture thÃ©orique du guide
+
+		//Lecture théorique du guide
 		//Longueur totale de la notice
-		$this->total_lenght=substr($this->guide,0,5)*1;
+		$this->total_lenght = intval(substr($this->guide,0,5));
 		//Longueur de l'indicateur
-		$this->ind_lenght=substr($this->guide,10,1)*1;
-		//Longueur du code de sous champ 
-		$this->subfield_code_lenght=substr($this->guide,11,1)*1;
+		$this->ind_lenght = intval(substr($this->guide,10,1));
+		//Longueur du code de sous champ
+		$this->subfield_code_lenght = intval(substr($this->guide,11,1));
 		//Longueur de zone
-		$this->zone_lenght=substr($this->guide,20,1)*1;
-		//Longeur de la position du premier caractÃ¨re
-		$this->first_pos=substr($this->guide,21,1)*1;
-		//Position du premier caractÃ¨re de la zone de donnÃ©es
-		$this->data_pos=substr($this->guide,12,5)*1;
+		$this->zone_lenght = intval(substr($this->guide,20,1));
+		//Longeur de la position du premier caractère
+		$this->first_pos = intval(substr($this->guide,21,1));
+		//Position du premier caractère de la zone de données
+		$this->data_pos = intval(substr($this->guide,12,5));
 		//Statut de la notice
 		$this->statut=substr($this->guide,5,1);
 		//Codes d'application
 		$this->application_codes=substr($this->guide,6,4);
-		//DÃ©finitions supplÃ©mentaires
+		//Définitions supplémentaires
 		$this->supplementary=substr($this->guide,17,3);
-		
+
 		//Extractions des infos propres au type de notice
 		$this->get_guide_infos();
-		
+
 		//Extraction du directory
 		$this->directory=substr($this->notice,24,$this->data_pos-24);
-		//Extraction des donnÃ©es
+		//Extraction des données
 		$this->data=substr($this->notice,$this->data_pos);
-		
-		//VÃ©rifications gÃ©nÃ©rales
+
+		//Vérifications générales
 		if (!$this->general_check()) return false;
-		
-		//VÃ©rifications spÃ©cifiques
+
+		//Vérifications spécifiques
 		return $this->check_guide_infos();
 	}
 
 	/*
 		Tables de conversion ISO 646 & 5426 / ISO 8859-15
 	*/
-	function iso_tables() {
+	public function iso_tables() {
 		global $ISO5426,$ISO5426_dia,$ISO8859_15,$ISO8859_15_dia;
 		//Tableaux de correspondance de ISO646/5426 vers ISO8859-15
 			$ISO5426_dia=array(
@@ -193,7 +193,7 @@ class iso2709 {
 				chr(0xcf).chr(0x53)=>chr(0xa6),chr(0xcf).chr(0x73)=>chr(0xa8),chr(0xcf).chr(0x5a)=>chr(0xb4),
 				chr(0xc5).chr(0x20)=>chr(0xaf),chr(0xca).chr(0x20)=>chr(0xb0),chr(0xc7).chr(0x20)=>chr(0xba)
 			);
-			
+
 			$ISO5426=array(
 				chr(0xa0)=>chr(0xa0),chr(0xa1)=>chr(0xa1),chr(0xa2)=>chr(0x22),chr(0xa3)=>chr(0xa3),
 				chr(0xa4)=>chr(0x45).chr(0x75).chr(0x72),chr(0xa5)=>chr(0xa5),chr(0xa6)=>chr(0x3f),chr(0xa7)=>chr(0xa7),
@@ -213,12 +213,12 @@ class iso2709 {
 				chr(0xfb)=>chr(0xdf),chr(0xfc)=>chr(0xfe),chr(0xfd)=>chr(0x3f),chr(0xfe)=>chr(0x3f),
 				chr(0xff)=>chr(0x3f)
 			);
-			
+
 			//Tableaux de correspondance de ISO8859-15 vers ISO646/5426
 			//Pour les diacritiques, il y a correspondance biunivoque, on fait donc une inversion du tableau
 			$ISO8859_15_dia=array_flip($ISO5426_dia);
-			
-			//Pour les caractÃ¨res spÃ©ciaux, la transformation n'est pas biunivoque
+
+			//Pour les caractères spéciaux, la transformation n'est pas biunivoque
 			$ISO8859_15=array(
 				chr(0xa0)=>chr(0xa0),chr(0xa1)=>chr(0xa1),chr(0xa2)=>chr(0x3f),chr(0xa3)=>chr(0xa3),
 				chr(0xa4)=>chr(0x80),chr(0xa5)=>chr(0xa5),chr(0xa6)=>chr(0xcf).chr(0x53),chr(0xa7)=>chr(0xa7),
@@ -232,19 +232,19 @@ class iso2709 {
 				chr(0xf7)=>chr(0x2f),chr(0xf8)=>chr(0xf9),chr(0xfe)=>chr(0xfc)
 			);
 	}
-	
+
 	/*
 		Conversion d'une chaine ISO 8859-15 en ISO 646/5426
 	*/
-	function ISO_646_5426_encode($string) {
+	public function ISO_646_5426_encode($string) {
 		global $ISO5426,$ISO5426_dia,$ISO8859_15,$ISO8859_15_dia;
 		if (!$ISO5426) {
 			$this->iso_tables();
 		}
-		
+
 		$string_r="";
 		for ($i=0; $i<strlen($string); $i++) {
-			if ($string[$i]<chr(0xa0)) 
+			if ($string[$i]<chr(0xa0))
 				$string_r.=$string[$i];
 			else if ($ISO8859_15_dia[$string[$i]])
 				$string_r.=$ISO8859_15_dia[$string[$i]];
@@ -255,34 +255,34 @@ class iso2709 {
 		}
 		return $string_r;
 	}
-	
+
 	//	Conversion d'une chaine ISO 646 / 5426 an ISO 8859-15
 
-	function ISO_646_5426_decode($string) {
+	public function ISO_646_5426_decode($string) {
 		global $ISO5426,$ISO5426_dia,$ISO8859_15,$ISO8859_15_dia;
 		if (!$ISO5426) {
 			$this->iso_tables();
 		}
-		//Remplacement des symboles et caractÃ¨res spÃ©ciaux
+		//Remplacement des symboles et caractères spéciaux
 		$string_r="";
 		for ($i=0; $i<strlen($string); $i++) {
-			//Si c'est un caractÃ¨re avant 0xA0 alors rien a changer
-			if ($string[$i]<chr(0xA0)) 
+			//Si c'est un caractère avant 0xA0 alors rien a changer
+			if ($string[$i]<chr(0xA0))
 				$string_r.=$string[$i];
 			else if (($string[$i]>=chr(0xC0))&&($string[$i]<=chr(0xDF))) {
-				//Si c'est un diacritique on regarde le caractÃ¨re suivant et on cherche dans la table de correspondance
+				//Si c'est un diacritique on regarde le caractère suivant et on cherche dans la table de correspondance
 				$car=$string[$i].$string[$i+1];
-				//Si le caractÃ¨re est connu
+				//Si le caractère est connu
 				if (!empty($ISO5426_dia[$car])) {
 					$string_r.=$ISO5426_dia[$car];
 				} else {
 					//Sinon on ne tient juste pas compte du diacritique
 					$string_r.=$string[$i+1];
 				}
-				//On avance d'un caractÃ¨re
+				//On avance d'un caractère
 				$i++;
 			} else {
-				//Sinon c'est un catactÃ¨re spÃ©cial ou un symbole
+				//Sinon c'est un catactère spécial ou un symbole
 				$car=$string[$i];
 				$string_r.=$ISO5426[$car];
 			}
@@ -291,16 +291,20 @@ class iso2709 {
 		$string_r=str_replace(NSBE,"",$string_r);
 		return $string_r;
 	}
-	
-	function ISO_decode($chaine) {
+
+	public function ISO_decode($chaine) {
 		global $charset;
-		$encodage_fic_source=$_SESSION["encodage_fic_source"];
-		//On a forcÃ© l'encodage au moment de l'import ou de la convertion
+		if(!empty($_SESSION["encodage_fic_source"])) {
+			$encodage_fic_source=$_SESSION["encodage_fic_source"];
+		} else {
+			$encodage_fic_source='';
+		}
+		//On a forcé l'encodage au moment de l'import ou de la convertion
 		if($encodage_fic_source == "iso8859"){
 			if($charset !=='utf-8'){//Le charset de PMB est en iso-8859
 				return $chaine ;
 			}else{
-				return pmb_utf8_encode($chaine);
+				return encoding_normalize::utf8_normalize($chaine);
 			}
 		}elseif($encodage_fic_source == "iso5426"){
 			if(is_object($this)) {
@@ -311,9 +315,9 @@ class iso2709 {
 			if($charset !=='utf-8'){//Le charset de PMB est en iso-8859
 				return $chaine ;
 			}else{
-				return pmb_utf8_encode($chaine);
+				return encoding_normalize::utf8_normalize($chaine);
 			}
-			
+
 		}elseif(($encodage_fic_source == "utf8") || (is_object($this) && ($this->is_utf8===TRUE))){
 			//On regarde si il y a les NSBB NSBE
 			if(preg_match("/^".chr(0xc2).chr(0x98)."(.*?)".chr(0xc2).chr(0x9c)."(.*)$/s",$chaine,$matches)){
@@ -321,11 +325,11 @@ class iso2709 {
 					$chaine=$matches[1].$matches[2];
 				}
 			}
-			
+
 			if($charset !=='utf-8'){//Le charset de PMB est en iso-8859
-				$chaine=pmb_utf8_decode($chaine);
+				$chaine=encoding_normalize::utf8_decode($chaine);
 			}
-			
+
 			return $chaine;
 		}
 
@@ -334,38 +338,42 @@ class iso2709 {
 		} else {
 			$chaine=iso2709::ISO_646_5426_decode($chaine);
 		}
-		
+
 		if ($charset == 'utf-8'){
-			$chaine = pmb_utf8_encode($chaine);
+			$chaine = encoding_normalize::utf8_normalize($chaine);
 		}
-		
+
 		return $chaine;
 	}
-	
-	function ISO_encode($chaine) {
+
+	public function ISO_encode($chaine) {
 		global $charset;
 		if (!$chaine) return $chaine;
 		if(is_object($this) && ($this->is_utf8===TRUE)){
 			return $chaine;
 		}
 		if ($charset == 'utf-8' && is_object($this) && ($this->is_utf8===false))
-			$chaine = pmb_utf8_decode($chaine);
+			$chaine = encoding_normalize::utf8_decode($chaine);
 		else if ($charset != 'utf-8' && is_object($this) && ($this->is_utf8===true))
-			$chaine = pmb_utf8_encode($chaine);
+			$chaine = encoding_normalize::utf8_normalize($chaine);
 		if(is_object($this)) $chaine=$this->ISO_646_5426_encode($chaine);
 		else $chaine=iso2709::ISO_646_5426_encode($chaine);
 		return $chaine;
-	}	
-	
+	}
+
 	//	Extraction des champs dans le tableau fields
-	function read_fields() {
-		$encodage_fic_source=$_SESSION["encodage_fic_source"];
+	public function read_fields() {
+		if(!empty($_SESSION["encodage_fic_source"])) {
+			$encodage_fic_source=$_SESSION["encodage_fic_source"];
+		} else {
+			$encodage_fic_source='';
+		}
 		if($encodage_fic_source == "utf8"){//On choisi de forcer l'encodage des notices lues
 			$this->is_utf8=TRUE;
 		}
 		//Lecture des champs
 		for ($i=0; $i<count($this->directory_table); $i++) {
-			//Position et longueur du champ dans data 
+			//Position et longueur du champ dans data
 			$fpos=$this->directory_table[$i]["POS"];
 			$lzone=$this->directory_table[$i]["LENGHT"];
 			$label=$this->directory_table[$i]["LABEL"];
@@ -385,27 +393,27 @@ class iso2709 {
 					$this->fields[$label][$n][$sf][]=$this->ISO_decode(substr($subfields[$j],1));
 				}
 				if(($label == "100") && !$encodage_fic_source && $this->fields["100"][0]["a"][0]){
-					//On regarde si il y a un encodage de prÃ©cisÃ©
+					//On regarde si il y a un encodage de précisé
 					if ((strlen($this->fields["100"][0]["a"][0]) > 28) && substr($this->fields["100"][0]["a"][0],26,2)=='50'){
 						$this->is_utf8=TRUE; //UNIMARC
 					}
 				}
 			}
-		}		
+		}
 	}
-	
-	//	GÃ©nÃ©ration au format iso2709 de la notice Ã  partir du tableau fields, de statut, de guide_infos
-	
-	function gen_iso2709() {
+
+	//	Génération au format iso2709 de la notice à partir du tableau fields, de statut, de guide_infos
+
+	public function gen_iso2709() {
 		//Longueur maximum d'une zone
-		$max_zone_lenght=str_repeat("9",$this->zone_lenght)*1;
-		//Position maximum dans la zone de donnÃ©es
-		$max_first_pos=str_repeat("9",$this->first_pos)*1;
-		//Si les donnÃ©es propres Ã  la notice sont bonnes alors on construit la notice au format iso 2709
+	    $max_zone_lenght = intval(str_repeat("9",$this->zone_lenght));
+		//Position maximum dans la zone de données
+		$max_first_pos = intval(str_repeat("9",$this->first_pos));
+		//Si les données propres à la notice sont bonnes alors on construit la notice au format iso 2709
 		if ($this->create_guide_infos()) {
 			//Construction du guide
 			$this->guide="%s".$this->statut.$this->application_codes.$this->ind_lenght.$this->subfield_code_lenght."%s".$this->supplementary.$this->zone_lenght.$this->first_pos."  ";
-			//Construction du rÃ©pertoire & de la zone de donnÃ©es
+			//Construction du répertoire & de la zone de données
 			$this->directory="";
 			$this->data="";
 			$this->notice="";
@@ -415,14 +423,14 @@ class iso2709 {
 			foreach ($this->fields as $key => $val) {
 				if (strlen($key)!=3) {
 					$this->error=true;
-					$this->error_message="Un label n'a pas la bonne taille (3 caractÃ¨res)";
+					$this->error_message="Un label n'a pas la bonne taille (3 caractères)";
 					return false;
 				}
 				for ($i=0; $i<count($val); $i++) {
 					//Construction de la zone data
 					$data="";
 					reset($val[$i]);
-					//Traitement du cas spÃ©cial sans sous champs
+					//Traitement du cas spécial sans sous champs
 					if (isset($val[$i]["value"])) {
 						$data=$this->ISO_646_5426_encode($val[$i]["value"]);
 					} else {
@@ -450,17 +458,17 @@ class iso2709 {
 							}
 						}
 					}
-					//J'ai mon data qui est prÃªt
+					//J'ai mon data qui est prêt
 					//Ajout du code de fin de champ
 					$data.=IS2;
 					if (strlen($data)>$max_zone_lenght) {
 						$this->error=true;
-						$this->error_message="Un champ dÃ©passe la taille maximum autorisÃ©e";
+						$this->error_message="Un champ dépasse la taille maximum autorisée";
 						return false;
 					}
 					if (strlen($this->data)>$max_first_pos) {
 						$this->error=true;
-						$this->error_message="La taille de la zone de donnÃ©es est supÃ©rieure au maximum autorisÃ©";
+						$this->error_message="La taille de la zone de données est supérieure au maximum autorisé";
 						return false;
 					}
 					$this->directory.=$key.str_pad((string)strlen($data),$this->zone_lenght,"0",STR_PAD_LEFT).str_pad((string)strlen($this->data),$this->first_pos,"0",STR_PAD_LEFT);
@@ -471,21 +479,21 @@ class iso2709 {
 					$n++;
 				}
 			}
-			//Ajout code fin de champ au rÃ©pertoire
+			//Ajout code fin de champ au répertoire
 			$this->directory=$this->directory.IS2;
-			
-			//J'ai tout construit : donnÃ©es et repertoire, on calcule les tailles
+
+			//J'ai tout construit : données et repertoire, on calcule les tailles
 			//Taille totale
 			$this->total_lenght=24+strlen($this->directory)+strlen($this->data)+1;
 			if ($this->total_lenght>99999) {
 				$this->error=true;
-				$this->error_message="La taille totale de la notice dÃ©passe la longueur maximum autorisÃ©e";
+				$this->error_message="La taille totale de la notice dépasse la longueur maximum autorisée";
 				return false;
 			}
-			//Position de la zone de donnÃ©es
+			//Position de la zone de données
 			$this->data_pos=24+strlen($this->directory);
 			$this->guide=sprintf($this->guide,str_pad((string)$this->total_lenght,5,"0",STR_PAD_LEFT),str_pad((string)$this->data_pos,5,"0",STR_PAD_LEFT));
-			
+
 			$this->notice=$this->guide.$this->directory.$this->data.IS3;
 		}
 	}
@@ -493,7 +501,7 @@ class iso2709 {
 	/*
 		Sortie format texte de la notice
 	*/
-	function get_txt() {
+	public function get_txt() {
 		$txt_notice="";
 		$txt_notice.="rs ".(trim($this->statut)?$this->statut:"*")."\n";
 		reset($this->guide_infos);
@@ -519,11 +527,11 @@ class iso2709 {
 		$txt_notice.="\n";
 		return $txt_notice;
 	}
-	
+
 	/*
-		Sortie d'un tableau structurÃ© pour du XML
+		Sortie d'un tableau structuré pour du XML
 	*/
-	function get_xml_table() {
+	public function get_xml_table() {
 		$xml_table=array();
 		$xml_table["rs"][0]["value"]=$this->statut;
 		reset($this->guide_infos);
@@ -535,7 +543,7 @@ class iso2709 {
 			for ($i=0; $i<count($val); $i++) {
 				reset($val[$i]);
 				foreach ($val[$i] as $key_s => $val_s) {
-					if (!is_array($val_s)) 
+					if (!is_array($val_s))
 						$xml_table[$key][$i][$key_s]=$val_s;
 					else
 						for ($j=0; $j<count($val_s); $j++) {
@@ -546,12 +554,12 @@ class iso2709 {
 		}
 		return $xml_table;
 	}
-	
+
 	/*
-		Sortie d'un tableau structurÃ© pour du XML, avec les codes champs et sous champs en indicateurs
+		Sortie d'un tableau structuré pour du XML, avec les codes champs et sous champs en indicateurs
 		au lieu de tags
 	*/
-	function get_translated_xml_table() {
+	public function get_translated_xml_table() {
 		$xml_table=array();
 		$xml_table["RS"][0]["value"]=$this->statut;
 		reset($this->guide_infos);
@@ -579,13 +587,13 @@ class iso2709 {
 		}
 		return $xml_table;
 	}
-	
+
 	/*
 		Sortie au format XML de la notice
-		Cette fonction n'est jamais utilisÃ©e Matthieu 17/04/20013
-    	Si Ã§a devait Ãªtre le cas voir la gestion de l'encodage
+		Cette fonction n'est jamais utilisée Matthieu 17/04/20013
+    	Si ça devait être le cas voir la gestion de l'encodage
 	*/
-	function get_xml($header = true) {
+	public function get_xml($header = true) {
 		$xml="  <rs>".htmlspecialchars(trim($this->statut)?$this->statut:"*")."</rs>\n";
 		reset($this->guide_infos);
 		foreach ($this->guide_infos as $key => $val) {
@@ -601,7 +609,7 @@ class iso2709 {
 				$cr="\n";
 				foreach ($val[$i] as $key_s => $val_s) {
 					if (!is_array($val_s)) {
-						if ($key_s!="value") 
+						if ($key_s!="value")
 							$att.=" ".strtolower($key_s)."='".htmlspecialchars($val_s)."'";
 						else {
 							$value=htmlspecialchars($val_s);
@@ -622,20 +630,20 @@ class iso2709 {
 		$to_return.="
 	<notice>
 		".$xml."
-	</notice>"; 
+	</notice>";
 		return $to_return;
 	}
-	
-	function create_from_translated_xml_table($xml_table) {
-		//RÃ©initialisation des variables de la classe
+
+	public function create_from_translated_xml_table($xml_table) {
+		//Réinitialisation des variables de la classe
 		$this->fields=array();
 		$this->statut=$this->default_statut();
 		$this->guide_infos=$this->default_guide_infos();
-		
+
 		reset($xml_table);
-		
+
 		$xml_table=$xml_table["NOTICE"][0];
-		
+
 		foreach ($xml_table as $key => $val) {
 			if ($key!="F") {
 				//Si c'est un tag connu pour le guide
@@ -648,7 +656,7 @@ class iso2709 {
 					$this->statut=$val[0]["value"];
 				} //Sinon, on en tient pas compte
 			} else {
-				//C'est le dÃ©but des champs f
+				//C'est le début des champs f
 				for ($i=0; $i<count($val); $i++) {
 					$f_t=array();
 					$f=$val[$i];
@@ -656,7 +664,7 @@ class iso2709 {
 					if ($f["value"])
 						$f_t["value"]=$f["value"];
 					else {
-						//Sinon on rÃ©cupÃ¨re l'indicateur
+						//Sinon on récupère l'indicateur
 						if ($f["IND"]) $f_t["IND"]=$f["IND"]; else $f_t["IND"]="  ";
 						reset($f);
 						//Pour tous les sous tags
@@ -678,8 +686,8 @@ class iso2709 {
 		}
 		return $this->gen_iso2709();
 	}
-	
-	function create_from_translated_xml($xml) {
+
+	public function create_from_translated_xml($xml) {
 		$p=new private_parser($xml);
 		if (!$p->error)
 			return $this->create_from_translated_xml_table($p->table);
@@ -689,13 +697,13 @@ class iso2709 {
 			return false;
 		}
 	}
-	
-	function create_from_xml_table($xml_table) {
-		//RÃ©initialisation des variables de la classe
+
+	public function create_from_xml_table($xml_table) {
+		//Réinitialisation des variables de la classe
 		$this->fields=array();
 		$this->statut=$this->default_statut();
 		$this->guide_infos=$this->default_guide_infos();
-		
+
 		reset($xml_table);
 		foreach ($xml_table as $key => $val) {
 			//Si c'est un tag connu pour le guide
@@ -717,14 +725,14 @@ class iso2709 {
 							$f_t["value"]=$f["value"];
 							$this->fields[substr($key,1)][]=$f_t;
 						}else if ($f["ind"]) {
-							//Sinon on rÃ©cupÃ¨re l'indicateur
+							//Sinon on récupère l'indicateur
 							$f_t["IND"]=$f["ind"];
 							reset($f);
 							//Pour tous les sous tags
 							foreach ($f as $key_s => $val_s) {
 								//Si c'est un sous champ
 								if (is_array($val_s)) {
-									//Pour chaque sous champ 
+									//Pour chaque sous champ
 									for ($j=0; $j<count($val_s); $j++) {
 										//Si il y a une valeur, on l'affecte
 										if (substr($key_s,0,1)=="_")
@@ -744,8 +752,8 @@ class iso2709 {
 		}
 		return $this->gen_iso2709();
 	}
-	
-	function create_from_xml($xml) {
+
+	public function create_from_xml($xml) {
 		$p=new private_parser($xml, false);
 		if (!$p->error)
 			return $this->create_from_xml_table($p->table);
@@ -756,13 +764,13 @@ class iso2709 {
 			return false;
 		}
 	}
-	
+
 	/*
 		Sortie au format XML de la notice avec les codes champs et sous champs en indicateurs
-		Cette fonction n'est jamais utilisÃ©e Matthieu 17/04/20013
-    	Si Ã§a devait Ãªtre le cas voir la gestion de l'encodage
+		Cette fonction n'est jamais utilisée Matthieu 17/04/20013
+    	Si ça devait être le cas voir la gestion de l'encodage
 	*/
-	function get_translated_xml($gen_xmlheader=1) {
+	public function get_translated_xml($gen_xmlheader=1) {
 		$xml="  <rs>".htmlspecialchars(trim($this->statut)?$this->statut:"*")."</rs>\n";
 		reset($this->guide_infos);
 		foreach ($this->guide_infos as $key => $val) {
@@ -778,7 +786,7 @@ class iso2709 {
 				$cr="\n";
 				foreach ($val[$i] as $key_s => $val_s) {
 					if (!is_array($val_s)) {
-						if ($key_s!="value") 
+						if ($key_s!="value")
 							$att.=" ".$key_s."='".htmlspecialchars($val_s)."'";
 						else {
 							$value=htmlspecialchars($val_s);
@@ -796,22 +804,22 @@ class iso2709 {
 		if($gen_xmlheader) return"<?xml version='1.0' encoding='iso-8859-15'?>\n<notice>\n".$xml."</notice>\n";
 		return "<notice>\n".$xml."</notice>\n";
 	}
-	
-	function field_exist($field) {
+
+	public function field_exist($field) {
 		if ($this->fields[$field]) return true; else return false;
 	}
-	
-	function get_list_of_fields() {
+
+	public function get_list_of_fields() {
 		$dir_table=array();
 		for ($i=0; $i<count($this->directory_table); $i++) {
 			$dir_table[$i]=$this->directory_table[$i]["LABEL"];
 		}
 	}
-	
-	function get_list_of_subfields() {
+
+	public function get_list_of_subfields() {
 	}
-	
-	function __construct($notice="",$type="UNI") {
+
+	public function __construct($notice="",$type="UNI") {
 		if ($notice) {
 			//Si il y a une notice, on l'analyse
 			switch ($type) {
@@ -833,7 +841,7 @@ class iso2709 {
 					break;
 			}
 		} else {
-			//Sinon, on rempli statut par dÃ©faut, guide_infos et champs = tableau vide
+			//Sinon, on rempli statut par défaut, guide_infos et champs = tableau vide
 			$this->statut=$this->default_statut();
 			$this->guide_infos=$this->default_guide_infos();
 			$this->fields=array();
@@ -842,15 +850,15 @@ class iso2709 {
 	}
 }
 
-/* Un parser XML simple */ 
+/* Un parser XML simple */
 class private_parser {
 	public $table;
 	public $xml;
 	public $error;
 	public $error_message;
-	
-	// Lecture rÃ©cursive de la structure et stockage des paramÃ¨tres
-	function recursive(&$indice, $niveau, &$param, &$tag_count, &$vals) {
+
+	// Lecture récursive de la structure et stockage des paramètres
+	public function recursive(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 		if ($indice > count($vals))
 			exit;
 		while ($indice < count($vals)) {
@@ -880,9 +888,9 @@ class private_parser {
 			}
 		}
 	}
-	
-	
-	function __construct($xml,$ucase=true,$rootelement="") {
+
+
+	public function __construct($xml,$ucase=true,$rootelement="") {
 		global $charset;
 		$vals = array();
 		$index = array();
@@ -911,7 +919,9 @@ class private_parser {
 						return false;
 					}
 				}
-				list($rootelement,$this->table)=each($param);
+				$rootelement = key($param);
+				$this->table = current($param);
+				next($param);
 				$this->table=$this->table[0];
 				return true;
 			}
@@ -937,8 +947,8 @@ define("AUT_CONTENT_LIEU_ED",0x48);
 define("AUT_CONTENT_FORM",0x49);
 
 class iso2709_authorities extends iso2709 {
-	
-	function default_guide_infos() {
+
+	public function default_guide_infos() {
 		$guide_infos=array(
 			"nt"=>"x",
 			"et"=>"a",
@@ -946,35 +956,39 @@ class iso2709_authorities extends iso2709 {
 		);
 		return $guide_infos;
 	}
-	
-	function default_statut() {
+
+	public function default_statut() {
 		return "n";
 	}
-	
-	function get_guide_infos() {
+
+	public function get_guide_infos() {
 		$guide_infos=array();
 
 		$this->guide_infos["nt"]=substr($this->application_codes,0,1);
 		$this->guide_infos["et"]=substr($this->application_codes,3,1);
-		$this->guide_infos["el"]=substr($this->supplementary,0,1);
+		if(substr($this->supplementary,0,1) != '#') {
+			$this->guide_infos["el"]=substr($this->supplementary,0,1);
+		} else {
+			$this->guide_infos["el"]=" ";
+		}
 	}
-	
-	function create_guide_infos() {
+
+	public function create_guide_infos() {
 		if ($this->check_guide_infos()) {
-			//CrÃ©ation de la zone application codes et supplementary
+			//Création de la zone application codes et supplementary
 			$this->application_codes= $this->guide_infos["nt"]."  ".$this->guide_infos["et"];
 			$this->supplementary= $this->guide_infos["el"]."  ";
 			return true;
 		} else return false;
 	}
-	
-	function check_guide_infos() {
+
+	public function check_guide_infos() {
 		$rs=array("c","d","n");
 		$nt=array("w","x","y","z");
 		$et=array("a","b","c","d","e","f","g","h","i","j","k","l");
 		$el=array(" ","3");
-		
-		//VÃ©rifications des codes autorisÃ©s spÃ©cifiques au type de notice
+
+		//Vérifications des codes autorisés spécifiques au type de notice
 		$as=array_search($this->statut,$rs);
 		if (($as===false)||($as===null)) {
 			$this->error=true;
@@ -990,7 +1004,7 @@ class iso2709_authorities extends iso2709 {
 		$as=array_search($this->guide_infos["et"],$et);
 		if (($as===false)||($as===null)) {
 			$this->error=true;
-			$this->error_message="Le type de l'entitÃ© est inconnu : ".$this->guide_infos["et"];
+			$this->error_message="Le type de l'entité est inconnu : ".$this->guide_infos["et"];
 			return false;
 		}
 		$as=array_search($this->guide_infos["el"],$el);
@@ -999,14 +1013,14 @@ class iso2709_authorities extends iso2709 {
 			$this->error_message="Le niveau d'encodage est inconnu : ".$this->guide_infos["el"];
 			return false;
 		}
-		
+
 		return true;
 	}
 }
 
 class iso2709_notices extends iso2709 {
-	
-	function default_guide_infos() {
+
+	public function default_guide_infos() {
 		$guide_infos=array(
 			"dt"=>"a",
 			"bl"=>"m",
@@ -1016,39 +1030,47 @@ class iso2709_notices extends iso2709 {
 		);
 		return $guide_infos;
 	}
-	
-	function default_statut() {
+
+	public function default_statut() {
 		return "n";
 	}
-	
-	function get_guide_infos() {
+
+	public function get_guide_infos() {
 		$guide_infos=array();
 
 		$this->guide_infos["dt"]=substr($this->application_codes,0,1);
 		$this->guide_infos["bl"]=substr($this->application_codes,1,1);
-		$this->guide_infos["hl"]=substr($this->application_codes,2,1);
-		$this->guide_infos["el"]=substr($this->supplementary,0,1);
+		if(substr($this->application_codes,2,1) != '#') {
+			$this->guide_infos["hl"]=substr($this->application_codes,2,1);
+		} else {
+			$this->guide_infos["hl"]="0";
+		}
+		if(substr($this->supplementary,0,1) != '#') {
+			$this->guide_infos["el"]=substr($this->supplementary,0,1);
+		} else {
+			$this->guide_infos["el"]=" ";
+		}
 		$this->guide_infos["ru"]=substr($this->supplementary,1,1);
 	}
-	
-	function create_guide_infos() {
+
+	public function create_guide_infos() {
 		if ($this->check_guide_infos()) {
-			//CrÃ©ation de la zone application codes et supplementary
+			//Création de la zone application codes et supplementary
 			$this->application_codes= $this->guide_infos["dt"].$this->guide_infos["bl"].$this->guide_infos["hl"]." ";
 			$this->supplementary= $this->guide_infos["el"].$this->guide_infos["ru"]." ";
 			return true;
 		} else return false;
 	}
-	
-	function check_guide_infos() {
+
+	public function check_guide_infos() {
 		$rs=array(" ","c","d","n","o","p");
 		$dt=array("a","b","c","d","e","f","g","h","i","j","k","l","m","r");
 		$bl=array("a","m","s","c");
 		$hl=array(" ","0","1","2");
 		$el=array(" ","1","2","3");
 		$ru=array(" ","i","n");
-		
-		//VÃ©rifications des codes autorisÃ©s spÃ©cifiques au type de notice
+
+		//Vérifications des codes autorisés spécifiques au type de notice
 		$as=array_search($this->statut,$rs);
 
 		if (($as===false)||($as===null)) {
@@ -1059,7 +1081,7 @@ class iso2709_notices extends iso2709 {
 		$as=array_search($this->guide_infos["dt"],$dt);
 		if (($as===false)||($as===null)) {
 			$this->error=true;
-			$this->error_message="Le type de donnÃ©es est inconnu";
+			$this->error_message="Le type de données est inconnu";
 			return false;
 		}
 		$as=array_search($this->guide_infos["bl"],$bl);

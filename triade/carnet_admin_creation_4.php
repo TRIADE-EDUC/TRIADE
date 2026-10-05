@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,11 +38,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php"); 
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET19 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -58,6 +58,7 @@ $code_couleur=$_POST["code_couleur"];
 $code_note=$_POST["code_note"];
 $code_julesverne=$_POST["code_julesverne"];
 $code_commentaire=$_POST["code_commentaire"];
+$code_educnational=$_POST["code_educnational"];
 $nb_periode=$_POST["saisie_nb_periode"];
 
 $cnx=cnx();
@@ -81,7 +82,7 @@ function desactive(case1) {
 <form action='carnet_admin_creation_5.php' method="post" name="formulaire">
 <table border=0 align=center width=95%>
 <tr><td align="left" colspan=2><font class="T2"><?php print LANGCARNET41 ?>  : </font><br /><br /></td></tr>
-<tr><td align="left" width=10% valign="top"><font class="T2">*<?php print LANGCARNET42 ?>  : </font><br><br>
+<tr><td align="left" width=10% valign="top"><font class="T2">*<?php print LANGCARNET42 ?>  : Indiquer un nom du cycle/niveau  </font><br><br>
 <?php
 print "<table border='0' width='90%' ><tr>";
 
@@ -90,16 +91,10 @@ $cnx=cnx();
 $data=listeSection(); //  id,libelle,listeidclasse
 
 $j=1;
-for($i=0;$i<count($data);$i++) {
-	print "<td align='right'>";
-	print $data[$i][1]."<input type=checkbox name='section[]'  value=\"".$data[$i][0]."\" onclick=\"desactive('case$i')\" />";
-	print "<select name='ordre[]' id='case$i' disabled='disabled' >";
-	print "<option value=''></option>";
-	print "<option value='1' id='select1'>1</option>";
-	print "<option value='2' id='select1'>2</option>";
-	print "<option value='3' id='select1'>3</option>";
-	print "<option value='4' id='select1'>4</option>";
-	print "</select></td> ";
+for($i=0;$i<countTriade($data);$i++) {
+	print "<td align='center'>";
+	print $data[$i][1]."<input type=radio name='section'  value=\"".$data[$i][0]."\" />";
+	print "</td> ";
 
 
 	if ($j >= 4) { print "</tr><tr>";$j=0; }else{ $j++; } 
@@ -113,7 +108,7 @@ print "</td></tr></table>";
 <tr><td align=center colspan="2"><br />
 <table><tr><td>
 <script language=JavaScript>buttonMagicRetour2("carnet_admin.php","_parent","<?php print LANGCIRCU14?>");</script>
-<script language=JavaScript> buttonMagic("<?php print "Gestion des sections" ?>","carnet_admin_creation_section.php","section","width=500,height=400","")</script>
+<script language=JavaScript> buttonMagic("<?php print "Gestion des cycles" ?>","carnet_admin_creation_section.php","section","width=500,height=450","")</script>
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGCONTINUER ?>","rien");</script>&nbsp;&nbsp;<br><br>
 <script language=JavaScript>buttonMagicReactualise();</script></td></tr></table>
 </td></tr>
@@ -127,6 +122,7 @@ print "</td></tr></table>";
 <input type="hidden" name="code_julesverne" value="<?php print $code_julesverne ?>" />
 <input type="hidden" name="saisie_nb_periode" value="<?php print $nb_periode ?>" />
 <input type="hidden" name="code_commentaire" value="<?php print $code_commentaire ?>" />
+<input type="hidden" name="code_educnational" value="<?php print $code_educnational ?>" />
 
 </form>
 

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.org
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -35,11 +37,11 @@ session_start();
 </head>
 <body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print "Vos réservations" ?></font></b></td>
@@ -71,7 +73,7 @@ if (isset($_GET["id"])) { suppResa($_SESSION["id_pers"],$_GET["id"]);  }
 <br>
 <?php
 
-print "<table width='100%' border=1 bordercolor='#000000' >";
+print "<table width='100%' border=1 bordercolor='#000000' style='border-collapse: collapse;' >";
 print "<tr>";
 print "<td bgcolor='yellow' width=5% >&nbsp;Date&nbsp;</td>";
 print "<td bgcolor='yellow' width=15%  >&nbsp;Horaire&nbsp;</td>";
@@ -80,7 +82,7 @@ print "<td bgcolor='yellow' >&nbsp;Etat&nbsp;</td>";
 print "<td bgcolor='yellow' width=5% >&nbsp;Supprimer.&nbsp;</td>";
 print "</tr>";
 $data=ListeResa($_SESSION["id_pers"]); //id,idmatos,idqui,quand,heure_depart,heure_fin,info,valider
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$em=""; $emF=""; $bgcolor="";
 	if (preg_replace("/-/",'',$data[$i][3]) < dateYMD() ) {  $em="<i>"; $emF="</i>"; $bgcolor="bgcolor='#E4E4E4'"; }
 	$id=$data[$i][0];

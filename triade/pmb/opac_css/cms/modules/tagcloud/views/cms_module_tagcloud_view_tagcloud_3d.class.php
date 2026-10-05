@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_tagcloud_view_tagcloud_3d.class.php,v 1.4 2017-07-12 15:15:01 tsamson Exp $
+// $Id: cms_module_tagcloud_view_tagcloud_3d.class.php,v 1.5 2021/02/12 11:58:25 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,11 +14,14 @@ class cms_module_tagcloud_view_tagcloud_3d extends cms_module_common_view{
 		$this->use_jquery = true;
 	}
 
+	
 	public function get_headers($datas=array()){
+		
 		$headers = parent::get_headers($datas);
-		$headers[]= "<script type='text/javascript' src='".$this->get_module_folder()."includes/javascript/jquery.tagSphere.js'></script>";
+		$headers[]= "<script src='".$this->get_module_folder()."includes/javascript/jquery.tagSphere.js'></script>";
 		return $headers;
 	}
+	
 	
 	public function get_form(){
 		$form=parent::get_form();
@@ -48,6 +51,7 @@ class cms_module_tagcloud_view_tagcloud_3d extends cms_module_common_view{
 		$this->parameters['width'] = $this->get_value_from_form("width");
 		return parent::save_form();
 	}
+	
 	
 	public function render($datas){
 		$html_to_display = "

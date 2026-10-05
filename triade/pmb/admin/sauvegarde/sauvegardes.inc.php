@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauvegardes.inc.php,v 1.5 2007-03-14 16:51:33 gueluneau Exp $
+// $Id: sauvegardes.inc.php,v 1.5 2007/03/14 16:51:33 gueluneau Exp $
 
 //Page des gestion des sauvegardes
 

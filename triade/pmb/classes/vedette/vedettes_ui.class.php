@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedettes_ui.class.php,v 1.8 2019-05-28 10:45:34 ccraig Exp $
+// $Id: vedettes_ui.class.php,v 1.8 2019/05/28 10:45:34 ccraig Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,7 +23,7 @@ class vedettes_ui {
 	/**
 	 *
 	 *
-	 * @param int id_vedette_composee id de la vedette composÃ©e Ã  reprÃ©senter
+	 * @param int id_vedette_composee id de la vedette composée à représenter
 	 * 
 	 * @return void
 	 * @access public
@@ -45,7 +45,7 @@ class vedettes_ui {
 	}
 	
 	/**
-	 * Renvoie le formulaire de la vedette composÃ©e
+	 * Renvoie le formulaire de la vedette composée
 	 * 
 	 * @param $property onto_common_property
 	 * @param $restrictions onto_restriction
@@ -167,10 +167,10 @@ class vedettes_ui {
 	        $elements_html='';
 	        if($elements=$vedette->get_at_elements_subdivision($subdivision['code'])){
 	            
-	            // tableau pour la gestion de l'ordre Ã  l'intÃ©rieur d'une subdivision
+	            // tableau pour la gestion de l'ordre à l'intérieur d'une subdivision
 	            $elements_order = array();
 	            
-	            // On parcourt les Ã©lÃ©ments de la subdivision
+	            // On parcourt les éléments de la subdivision
 	            foreach($elements as $position=>$element){
 	                $current_element_html = $vedette_tpl['vedette_composee_element'];
 	                $elements_order[] = $position;
@@ -217,7 +217,7 @@ class vedettes_ui {
 	}
 	
 	/**
-	 * RÃ©cupÃ¨re les Ã©lÃ©ments du formulaire
+	 * Récupère les éléments du formulaire
 	 *
 	 * @return Array()
 	 * @access public

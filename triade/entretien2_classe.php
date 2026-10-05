@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -62,11 +64,11 @@ $date=date("Y");
 $date2=date("Y")-1;
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 $heureDebut="hh:mm";
@@ -84,84 +86,87 @@ for($i=0;$i<=$nb;$i++) {
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2" colspan=3><b><font   id='menumodule1'><?php print "Enregistrement d'entretien" ?> </b></font></td></tr>
 <?php
-if(count($listingeid) == 0)  {
+if(countTriade($listingeid) == 0)  {
 	print("<tr id='cadreCentral0' ><td align=center valign=center>".LANGRECH3."</td></tr>");
 }else {
 ?>
 <tr  id='cadreCentral0' >
 <td >
-<br>
-<form method="post" name="formulaire" onsubmit="return validentretien()" action="entretien3_classe.php" >
-<table border=0 width="100%" >
-<tr><td>
-<?php 
+<form method="post" name="formulaire" onsubmit="return validentretien()" action="entretien3_classe.php">
+<?php
 	foreach($listingeid as $key=>$value) {
 		$liste.=rechercheEleveNomPrenom($value).", ";
 		$listeid.=$value."#";
 	}
-	$listeid=preg_replace('/#$/','',$listeid) ;
+	$listeid=preg_replace('/#$/','',$listeid);
+	$listePedago=recupListNomPrenomPedago($identretien);
+	$listing="";
+	for($j=0;$j<countTriade($listePedago);$j++) {
+		$listing.=" - ".civ($listePedago[$j][2])." ".$listePedago[$j][0]." ".$listePedago[$j][1];
+	}
+	$act="create";
+	$textbutton=LANGENR;
 ?>
-<font class=T2>
-Nom prénom : <b><?php print $liste ?></b>
-<input type='hidden' value="<?php print $listeid ?>" name="listeeid" />
-<br><br>
-Classe : <b><?php print chercheClasse_nom($idclasse)?></b>
-<br><br> 
-Préparation d'entretien : <input type="checkbox" name="preparation" value="1" <?php print $checked ?> />  (oui)
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl">Nom prénom :</span>
+    <b><?php print $liste ?></b>
+    <input type='hidden' value="<?php print $listeid ?>" name="listeeid">
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Classe :</span>
+    <b><?php print chercheClasse_nom($idclasse) ?></b>
+    <input type="hidden" name="nomclasse" value="<?php print chercheClasse_nom($idclasse) ?>">
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Préparation :</span>
+    <input type="checkbox" name="preparation" value="1" <?php print $checked ?>> (oui)
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Le :</span>
+    <input type="text" name="saisiedate" onKeyPress="onlyChar(event)" size="10" value="<?php print $date ?>" class="bouton2">
+    <?php include_once("librairie_php/calendar.php");
+    calendarDim('id2','document.formulaire.saisiedate',$_SESSION["langue"],"1","0"); ?>
+    <span style="font-size:12px;color:#555;">à</span>
+    <input type="text" name="heuredepart" value="<?php print $heureDebut ?>" onclick="this.value=''" size="5" onKeyPress="onlyChar2(event)" class="bouton2">
+  </div>
+  <div style="margin:10px 0 4px;">
+    <span class="na-lbl">Objet et contenu de l'entretien / Conclusion - Actions</span>
+  </div>
+  <textarea name="objet" style="width:100%;box-sizing:border-box;font-size:13px;" onkeypress="compter(this,'2000', this.form.CharRestant)" rows='15'><?php print $commentaire ?></textarea>
+  <div class="na-row" style="margin-top:4px;">
+    <input type="text" name="CharRestant" size="3" disabled="disabled" value="<?php print $len ?>" class="bouton2">
+    <span style="font-size:11px;color:#555;">(2000 caractères maximum)</span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Fin entretien :</span>
+    <input type="text" name="heurefin" value="<?php print $heureFin ?>" onclick="this.value=''" size="5" onKeyPress="onlyChar2(event)" class="bouton2">
+  </div>
+  <div style="margin:10px 0 4px;">
+    <span class="na-lbl">Equipe Pédagogue :</span>
+    <?php print recherche_personne($_SESSION["id_pers"]) ?>
+  </div>
+  <div style="font-size:11px;color:#555;margin-bottom:6px;"><?php print $listing ?> <span id='listing'></span></div>
+  <div class="na-row">
+    <select id="pers" name="pers" class="cc-select">
+      <option value=''>Autres personnes</option>
+      <?php
+      print "<optgroup label='Direction'>";
+      select_personne_2("ADM",'25');
+      print "<optgroup label='Vie Scolaire'>";
+      select_personne_2("MVS",'25');
+      ?>
+    </select>
+    <input type="button" value="Ajouter" onclick="ajoutPers()" class="btn-retour">
+  </div>
+  <input type="hidden" name="idpers" id='idpers' value="<?php print $_SESSION["id_pers"] ?>;">
+</div>
 <br>
-<br>le : </font> 
-<input type="text" name="saisiedate"  onKeyPress="onlyChar(event)"  size=10 value="<?php print $date ?>" > 
-<?php include_once("librairie_php/calendar.php"); 
-calendarDim('id2','document.formulaire.saisiedate',$_SESSION["langue"],"1","0");
-?> à <input type="text" name="heuredepart"  value="<?php print $heureDebut ?>"  onclick="this.value=''" size=5   onKeyPress="onlyChar2(event)" > 
-</td></tr></table>
-
+<script language=JavaScript>buttonMagicSubmit("<?php print $textbutton ?>","<?php print $act ?>");</script>
 <br>
-
-<font class=T2>&nbsp;&nbsp;&nbsp;Objet et contenu de l'entretien / Conclusion - Actions </font>
-<br><br><font class=T2>&nbsp;&nbsp;&nbsp;</font><textarea name="objet" style="width:400;font-size:16" onkeypress="compter(this,'2000', this.form.CharRestant)" cols='100' rows='20' ><?php print $commentaire ?></textarea>
-<br><font class=T2>&nbsp;&nbsp;&nbsp;</font><input type='text' name='CharRestant' size='2' disabled='disabled' value="<?php print $len ?>" > (2000 caractères maximum)
-
-<br><br><font class=T2>&nbsp;&nbsp;&nbsp;L'entretien s'est terminé à  : <input type="text" name="heurefin"  value="<?php print $heureFin ?>"  onclick="this.value=''" size=5   onKeyPress="onlyChar2(event)" > 
-
-
-<?php
-$listePedago=recupListNomPrenomPedago($identretien); //p.nom,p.prenom,p.civ
-$listing="";
-for($j=0;$j<count($listePedago);$j++) {
-	$listing.=" - ".civ($listePedago[$j][2])." ".$listePedago[$j][0]." ".$listePedago[$j][1];
-}
-?>
-<br><br><font class=T2>&nbsp;&nbsp;&nbsp;Equipe Pédagogue  : <?php print recherche_personne($_SESSION["id_pers"]) ?><br />
-&nbsp;&nbsp;&nbsp;<font class='T1'><?php print $listing ?> <span id='listing'></span></font>
-<br /><br />
-&nbsp;&nbsp;&nbsp;<select id="pers" name="pers" >
-<option value='' >Autres personnes</option> 
-
-<?php 
-print "<optgroup label='Direction' />";
-select_personne_2("ADM",'25');
-print "<optgroup label='Vie Scolaire' />";
-select_personne_2("MVS",'25')
-?>
-</select>&nbsp;<input type='button' value="Ajouter" onclick="ajoutPers()" />
-
-
-<input type="hidden" name="idpers" id='idpers' value="<?php print $_SESSION["id_pers"] ?>;"  /> 
-<input type="hidden" name="nomclasse"  value="<?php print chercheClasse_nom($idclasse)?>"  /> 
-<br><br>
-<?php
-$act="create";
-$textbutton=LANGENR;
-?>
-<table border="0" align="center" ><td><script language=JavaScript>buttonMagicSubmit("<?php print $textbutton?>","<?php print $act ?>"); //text,nomInput</script></td><td>
-&nbsp;&nbsp;
-</td></tr></table>
 <?php } ?>
-<br>
 </td></tr></table>
-
-<br><br>
+<br>
 
 
 

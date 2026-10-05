@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions.inc.php,v 1.17 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: receptions.inc.php,v 1.26 2023/05/04 10:35:19 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -27,17 +27,17 @@ require_once($class_path."/notice_doublon.class.php");
 
 //Affiche la liste des receptions pour une bibliotheque
 function show_list_recept() {
-	global $msg, $charset,$dbh,$tab_bib;
+	global $msg, $charset,$tab_bib;
 	global $recept_search_form,$recept_list_form,$recept_search_form_suite, $recept_hrow_form,$recept_row_form,$sel_fou_form,$sel_dem_form,$sel_rub_form,$sel_date_form;
 	global $bt_app,$bt_rel,$bt_chk, $link_not, $link_bull, $link_art, $link_sug, $bt_cat;
 	global $user_userid;
-	global $lgstat_filter,$deflt3lgstatcde;
+	global $lgstat_filter;
 	global $id_bibli,$id_exer;
 	global $f_fou_code,$f_dem_code,$t_dem,$f_rub_code;
 	global $cde_query,$all_query,$recept_query;
 	global $chk_dev;
 	global $lgstat_all,$comment_lg_all,$comment_lo_all;
-	global $page,$nb_per_page,$nbr_lignes,$last_param;
+	global $page,$nb_per_page,$nbr_lignes;
 	global $date_inf, $date_sup;
 
 	//verifications
@@ -61,8 +61,8 @@ function show_list_recept() {
 									'f_dem_code'=>	$f_dem_code,
 									't_dem'		=>	$t_dem,
 									'f_rub_code'=>	$f_rub_code,
-									'cde_query'	=>	stripslashes($cde_query),
-									'all_query'	=>	stripslashes($all_query),
+									'cde_query'	=>	stripslashes($cde_query ?? ""),
+									'all_query'	=>	stripslashes($all_query ?? ""),
 									'chk_dev'	=>	$chk_dev,
 									'lgstat_filter'=>	$lgstat_filter
 				)));
@@ -177,7 +177,7 @@ function show_list_recept() {
 		$recept_form=str_replace('!!cde_checked!!',"checked='checked'",$recept_form);
 	}
 
-	$recept_form=str_replace('!!cde_query!!',htmlentities(stripslashes($cde_query),ENT_QUOTES,$charset),$recept_form);
+	$recept_form=str_replace('!!cde_query!!',htmlentities(stripslashes($cde_query ?? ""),ENT_QUOTES,$charset),$recept_form);
 
 	//Affichage selecteur dates
 	$sel_date_form[0] = str_replace('!!msg!!', htmlentities($msg['acquisition_recept_date'],ENT_QUOTES,$charset), $sel_date_form[0]);
@@ -186,30 +186,30 @@ function show_list_recept() {
 	} else {
 		$date_inf_lib=$msg['parperso_nodate'];
 	}
-	$sel_date_form[1] = str_replace('!!date_inf!!',$date_inf,$sel_date_form[1]);
-	$sel_date_form[1] = str_replace('!!date_inf_lib!!',$date_inf_lib,$sel_date_form[1]);
+	$sel_date_form[1] = str_replace('!!date_inf!!',$date_inf ?? "",$sel_date_form[1]);
+	$sel_date_form[1] = str_replace('!!date_inf_lib!!',$date_inf_lib ?? "",$sel_date_form[1]);
 	if($date_sup) {
 		$date_sup_lib = formatdate($date_sup);
 	} else {
 		$date_sup_lib=$msg['parperso_nodate'];
 	}
-	$sel_date_form[2] = str_replace('!!date_sup!!',$date_sup,$sel_date_form[2]);
-	$sel_date_form[2] = str_replace('!!date_sup_lib!!',$date_sup_lib,$sel_date_form[2]);
-	$sel_date_form[0] = sprintf($sel_date_form[0], $sel_date_form[1],$sel_date_form[2]);
-	$recept_form = str_replace('<!-- sel_date -->', $sel_date_form[0], $recept_form); 
+	$sel_date_form[2] = str_replace('!!date_sup!!',$date_sup ?? "",$sel_date_form[2]);
+	$sel_date_form[2] = str_replace('!!date_sup_lib!!',$date_sup_lib ?? "",$sel_date_form[2]);
+	$sel_date_form[0] = sprintf($sel_date_form[0], $sel_date_form[1] ?? "",$sel_date_form[2]);
+	$recept_form = str_replace('<!-- sel_date -->', $sel_date_form[0] ?? "", $recept_form); 
 	
 	//Creation selecteur statut de lignes de commandes
 	if (!(is_array($lgstat_filter) && count($lgstat_filter))) {
-		$lgstat_filter=array(0=>$deflt3lgstatcde);
+		$lgstat_filter=array();
 	}
 	$sel_lgstat=lgstat::getHtmlSelect($lgstat_filter, FALSE, array('id'=>'lgstat_filter[]', 'name'=>'lgstat_filter[]','multiple'=>'multiple','size'=>'5'));
 	$recept_form=str_replace('<!-- sel_lgstat -->', $sel_lgstat, $recept_form);
 	
 	//Affichage zone tous les champs 
-	$recept_form=str_replace('!!all_query!!',htmlentities(stripslashes($all_query),ENT_QUOTES,$charset),$recept_form);
+	$recept_form=str_replace('!!all_query!!',htmlentities(stripslashes($all_query ?? ""),ENT_QUOTES,$charset),$recept_form);
 	
 	//Prise en compte du formulaire de recherche
-	// nombre de rÃ©fÃ©rences par pages
+	// nombre de références par pages
 	if (!$nb_per_page) $nb_per_page = 10;
 	if(!$page) $page=1;
 	$debut =($page-1)*$nb_per_page;
@@ -232,17 +232,17 @@ function show_list_recept() {
 		$recept_form.= $recept_list_form;
 		
 		//Affichage zone de reception
-		$recept_form=str_replace('!!recept_query!!',htmlentities(stripslashes($recept_query),ENT_QUOTES,$charset),$recept_form);
+		$recept_form=str_replace('!!recept_query!!',htmlentities(stripslashes($recept_query ?? ""),ENT_QUOTES,$charset),$recept_form);
 		
 		$tab_aff=array();
 		$lgstat_form=lgstat::getHtmlSelect(array(0=>0), FALSE, array('id'=>'sel_lgstat_!!id_lig!!', 'onchange'=>'recept_upd_lgstat(this.getAttribute("id"));'));
 		$act_form='';
 		$i=1;
 		foreach($t_list as $id_acte=>$t_row) {
-			//Affichage lignes Ã  recevoir
+			//Affichage lignes à recevoir
 			foreach ($t_row as $id_ligne=>$row) { 
 				if(!in_array($id_acte,$tab_aff)) {
-					array_push($tab_aff,$id_acte);
+					$tab_aff[] = $id_acte;
 					$recept_form=str_replace('<!-- actes -->',$act_form.'<!-- actes -->',$recept_form);
 					if(!isset($row['type_acte'])) $row['type_acte'] = '';
 					$act_form=str_replace('!!lib_acte!!',
@@ -263,6 +263,7 @@ function show_list_recept() {
 				$row_form=str_replace('!!lgstat!!',$lgstat_row_form,$row_form);
 				$row_form=str_replace('!!comment_lg!!',nl2br(htmlentities($row['commentaires_gestion'],ENT_QUOTES,$charset)),$row_form);
 				$row_form=str_replace('!!comment_lo!!',nl2br(htmlentities($row['commentaires_opac'],ENT_QUOTES,$charset)),$row_form);
+				$row_form=str_replace('!!date_last_relance!!',lignes_actes::getLastDayRelance($id_ligne),$row_form);
 				$row_form=str_replace('!!id_lig!!',$id_ligne,$row_form);
 				$row_form=str_replace('!!typ_lig!!',$row['type_ligne'],$row_form);
 				if ($row['num_produit']) {
@@ -310,8 +311,8 @@ function show_list_recept() {
 		$recept_form=str_replace('!!max_no!!', $i*1-1, $recept_form);
 		
 		//Affichage commentaires
-		$recept_form =	str_replace('!!comment_lg_all!!',htmlentities(stripslashes($comment_lg_all),ENT_QUOTES,$charset),$recept_form);
-		$recept_form =	str_replace('!!comment_lo_all!!',htmlentities(stripslashes($comment_lo_all),ENT_QUOTES,$charset),$recept_form);
+		$recept_form =	str_replace('!!comment_lg_all!!',htmlentities(stripslashes($comment_lg_all ?? ""),ENT_QUOTES,$charset),$recept_form);
+		$recept_form =	str_replace('!!comment_lo_all!!',htmlentities(stripslashes($comment_lo_all ?? ""),ENT_QUOTES,$charset),$recept_form);
 		
 		//boutons
 		$lgstat_all = lgstat::getHtmlSelect(array(0=>0), $msg['acquisition_recept_lgstat_none'], array('id'=>'sel_lgstat_all', 'name'=>'sel_lgstat_all'));
@@ -370,7 +371,7 @@ function apply_changes() {
 
 //Effectue l'envoi de relances
 function do_relances() {
-	global $dbh, $charset;
+	global $msg, $charset;
 	global $id_bibli, $chk, $id_lig;
 	global $acquisition_pdfrel_obj_mail, $acquisition_pdfrel_text_mail;
 	global $acquisition_pdfrel_by_mail,$PMBuseremailbcc;
@@ -386,7 +387,7 @@ function do_relances() {
 	$tab_fou=array();
 	$q = lignes_actes::getLines($tab_lig, true);
 	if ($q) {
-		$r=pmb_mysql_query($q, $dbh);
+		$r=pmb_mysql_query($q);
 		if (pmb_mysql_num_rows($r)) {
 			while($row=pmb_mysql_fetch_object($r)) {
 				if (!array_key_exists($row->num_fournisseur,$tab_fou)) {
@@ -413,8 +414,7 @@ function do_relances() {
 				$fou_coord = pmb_mysql_fetch_object(entites::get_coordonnees($id_fou,1));
 				
 				//Si on peut relancer par mail
-				if (strpos($fou_coord->email,'@')) {
-				
+				if (!empty($fou_coord) && strpos($fou_coord->email,'@')) {
 					$dest_name='';
 					if($fou_coord->libelle) {
 						$dest_name = $fou_coord->libelle;
@@ -428,7 +428,7 @@ function do_relances() {
 					$bib_name = $bib_coord->raison_sociale; 
 					$bib_mail = $bib_coord->email;
 					
-					$lettre = new lettreRelance_PDF();
+					$lettre = lettreRelance_PDF_factory::make();
 					$lettre->doLettre($bib, $bib_coord,$fou, $fou_coord, $tab_act);
 					$piece_jointe=array();
 					$piece_jointe[0]['contenu']=$lettre->getLettre('S');
@@ -438,6 +438,8 @@ function do_relances() {
 					$res_envoi=mailpmb($dest_name, $dest_mail, $obj_mail, $text_mail ,$bib_name, $bib_mail, "Content-Type: text/plain; charset=\"$charset\"", '', $PMBuseremailbcc, 1, $piece_jointe);
 					if (!$res_envoi) {
 						$tab_no_mail[$id_fou]=$tab_act;
+					} else {
+					    print display_notification(sprintf($msg["acquisition_print_emailsucceed"],$dest_mail));
 					}
 				} else {
 					$tab_no_mail[$id_fou]=$tab_act;
@@ -480,65 +482,82 @@ function show_from_cde() {
 }
 
 function catalog() {
-	global $msg, $charset;
-	global $id_lig, $serialized_search;
+	global $msg, $charset, $id_lig, $serialized_search, $value_deflt_fonction, $value_deflt_lang, $xmlta_doctype;
 	
 	$lg = new lignes_actes($id_lig);
-	$taec = explode("\r\n",$lg->libelle);
-	$z=new z3950_notice('from_scratch');
-	$z->libelle_form='';
+	$taec = explode("\r\n", $lg->libelle);
+	$z = new z3950_notice('from_scratch');
+	$z->libelle_form = '';
 	$z->bibliographic_level = 'm';
 	$z->hierarchic_level = '0';
+	$z->aut_array = array();
+	$z->editors = array();
+	$z->collection = array();
+	
 	//titre sur 1ere ligne
-	$z->titles = array(	0=>$taec[0]);
-	$z->serie='';
-	$z->nbr_in_serie='';
+	$z->titles = array(0 => $taec[0]);
+	$z->serie = '';
+	$z->nbr_in_serie = '';
+	
 	//Auteur sur 2eme ligne (Entree, rejete)
-	$taec_a =explode(',',$taec[1]);
-	$z->aut_array[0]=array(	'entree'		=>	$taec_a[0],
-							'rejete'		=>	$taec_a[1],
-							'date'			=>	'',
-							'type_auteur'	=>	'70',
-							'fonction'		=>	$value_deflt_fonction,
-							'id'			=>	0,
-							'responsabilite'=>	0
-							);
-	//Editeur sur 3eme ligne (Ville : Nom, Annee)
-	$taec_e = explode(':',$taec[2]);
-	if (count($taec_e)>1) {		
-		$taec_e1 = explode(',',$taec_e[1]);
-		$z->editors[0] = array(	'name'			=>	trim($taec_e1[0]),
-								'ville'			=>	trim($taec_e[0]),
-								'id'			=>	0
-								);
-	} else {
-		//(Nom, Annee)
-		$taec_e1 = explode(',',$taec[2]);
-		$z->editors[0] = array(	'name'			=>	trim($taec_e1[0]),
-				'ville'			=>	'',
-				'id'			=>	0
+	if (isset($taec[1])) {
+    	$taec_a = explode(',', $taec[1]);
+    	$z->aut_array[0] = array(	
+    	    'entree'		 =>	$taec_a[0],
+    	    'rejete'		 =>	(isset($taec_a[1]) ? $taec_a[1] : ''),
+			'date'			 =>	'',
+			'type_auteur'	 =>	'70',
+			'fonction'		 =>	$value_deflt_fonction,
+			'id'			 =>	0,
+			'responsabilite' =>	0
 		);
 	}
-	//Collection sur 4eme ligne								
-	$z->collection = array(	'name'			=>	trim($taec[3]), 
-							'id'			=>	0
-							);
+	
+	//Editeur sur 3eme ligne (Ville : Nom, Annee)
+	if (isset($taec[2])) {
+    	$taec_e = explode(':', $taec[2]);
+    	if (isset($taec_e[1])) {		
+    		$taec_e1 = explode(',', $taec_e[1]);
+    		$z->editors[0] = array(
+    		    'name'		 =>	trim($taec_e1[0]),
+				'ville'		 =>	trim($taec_e[0]),
+				'id'		 =>	0
+			);
+    	} else {
+    		//(Nom, Annee)
+    		$taec_e1 = explode(',', $taec[2]);
+    		$z->editors[0] = array(	
+    		    'name'		 =>	trim($taec_e1[0]),
+				'ville'		 =>	'',
+				'id'		 =>	0
+    		);
+    	}
+	}
+	
+	//Collection sur 4eme ligne
+	if (isset($taec[3])) {
+    	$z->collection = array(	
+    	    'name'			 =>	trim($taec[3]), 
+    		'id'			 =>	0
+		);
+	}
+	
 	$z->nbr_in_collection = '';
-	$z->year = trim($taec_e1[1]);
+	$z->year = (isset($taec_e1[1]) ? trim($taec_e1[1]) : '');
 	$z->mention_edition = '';
 	$z->isbn = $lg->code;
-	$z->page_nbr='';
-	$z->illustration='';
-	$z->prix=$lg->prix;
-	$z->accompagnement='';
-	$z->size='';
-	$z->general_note='';
-	$z->content_note='';
-	$z->abstract_note='';
+	$z->page_nbr = '';
+	$z->illustration = '';
+	$z->prix = $lg->prix;
+	$z->accompagnement = '';
+	$z->size = '';
+	$z->general_note = '';
+	$z->content_note = '';
+	$z->abstract_note = '';
 	$z->dewey = array();
 	$z->free_index = '';
-	$z->tu_500= array();
-	$z->language_code = array(	0=>$value_deflt_lang );
+	$z->tu_500 = array();
+	$z->language_code = array(0 => $value_deflt_lang);
 	$z->original_language_code = array();
 	$z->link_url = '';
 	$z->link_format = '';
@@ -548,16 +567,15 @@ function catalog() {
 	$z->bull_mention = array();
 	$z->bull_titre = array();
 	$z->bull_num = array();
-		
 	$z->bt_integr_value = $msg[77];
 	$z->bt_undo_value = $msg[76];
-	$z->bt_undo_action ='history.go(-1);';
+	$z->bt_undo_action = 'history.go(-1);';
+	$z->message_retour = $msg[654];
 	
-	$z->message_retour=$msg[654];
-	$form=$z->get_form("acquisition.php?categ=ach&sub=recept&action=record",0,false);
-	$form=str_replace("<!--!!form_title!!-->","<h3>".htmlentities($msg[270], ENT_QUOTES, $charset)."</h3>",$form);
-	$form=str_replace("<!--form_suite-->","<input type='hidden' name='id_lig' value='".$id_lig."' /><!--form_suite-->", $form);
-	$form=str_replace("<!--form_suite-->","<input type='hidden' name='serialized_search' value='".stripslashes($serialized_search)."' /><!--form_suite-->", $form);
+	$form = $z->get_form("acquisition.php?categ=ach&sub=recept&action=record", 0, false);
+	$form = str_replace("<!--!!form_title!!-->", "<h3>".htmlentities($msg[270], ENT_QUOTES, $charset)."</h3>", $form);
+	$form = str_replace("<!--form_suite-->", "<input type='hidden' name='id_lig' value='".$id_lig."' /><!--form_suite-->", $form);
+	$form = str_replace("<!--form_suite-->", "<input type='hidden' name='serialized_search' value='".stripslashes($serialized_search)."' /><!--form_suite-->", $form);
 	print $form;
 }
 
@@ -572,12 +590,8 @@ function record() {
 		case 'new' :
 			$unserialized_post = unserialize(rawurldecode(stripslashes($serialized_post)));
 			foreach($unserialized_post as $key => $val){
-				if (get_magic_quotes_gpc())
-					$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+				add_sl($val);
+				$GLOBALS[$key] = $val;
 				global ${$key};
 			}
 			$z=new z3950_notice("form");
@@ -602,17 +616,17 @@ function record() {
 				$signature = $sign->gen_signature();
 				$r = $sign->getDuplicate();
 			}
-			if($r->notice_id) {
+			if (!empty($r->notice_id)) {
 			
 				if ($r->niveau_biblio =='a' && $r->niveau_hierar== 2) { //article
 					
-					$serial = new serial_display (	$r->notice_id,		// $id = id de la notice Ã  afficher 
+					$serial = new serial_display (	$r->notice_id,		// $id = id de la notice à afficher 
 													6,					// $level :
 																		// 0 : juste le header (titre  / auteur principal avec le lien si applicable)
-																		// 6 : cas gÃ©nÃ©ral dÃ©taillÃ© avec notes, categ, langues, indexation... + boutons 
-													'',					// $action_serial = URL Ã  atteindre si la notice est une notice chapeau
-													'', 				// $action_analysis = URL Ã  atteindre si la notice est un dÃ©pouillement
-																		// note dans ces deux variables, '!!id!!' sera remplacÃ© par l'id de cette notice
+																		// 6 : cas général détaillé avec notes, categ, langues, indexation... + boutons 
+													'',					// $action_serial = URL à atteindre si la notice est une notice chapeau
+													'', 				// $action_analysis = URL à atteindre si la notice est un dépouillement
+																		// note dans ces deux variables, '!!id!!' sera remplacé par l'id de cette notice
 																		// les deux liens s'excluent mutuellement, bien sur. 
 													'', 				// $action_bulletin
 													'', 				// $lien_suppr_cart = lien de suppression de la notice d'un caddie
@@ -631,13 +645,13 @@ function record() {
 					
 				} elseif ($r->niveau_biblio=='m' && $r->niveau_hierar== 0) { 	//monographie
 					
-					$display = new mono_display(	$r->notice_id, 		// $id = id de la notice Ã  afficher
+					$display = new mono_display(	$r->notice_id, 		// $id = id de la notice à afficher
 													6, 					// $level :
 																		//	0 : juste le header (titre  / auteur principal avec le lien si applicable) 
-																		//	1 : ISBD seul, pas de note, bouton modif, expl, explnum et rÃ©sas
-																		// 	6 : cas gÃ©nÃ©ral dÃ©taillÃ© avec notes, categ, langues, indexation... + boutons
-													'', 				// $action = URL associÃ©e au header
-													1, 					// $expl -> affiche ou non les exemplaires associÃ©s
+																		//	1 : ISBD seul, pas de note, bouton modif, expl, explnum et résas
+																		// 	6 : cas général détaillé avec notes, categ, langues, indexation... + boutons
+													'', 				// $action = URL associée au header
+													1, 					// $expl -> affiche ou non les exemplaires associés
 													'', 				// $expl_link
 													'', 				// $lien_suppr_cart
 													'',					// $explnum_link
@@ -704,8 +718,6 @@ function record() {
 }
 
 //Traitement des actions
-print "<h1>".htmlentities($msg['acquisition_ach_ges'],ENT_QUOTES, $charset)."&nbsp;:&nbsp;".htmlentities($msg['acquisition_menu_ach_recept'],ENT_QUOTES, $charset)."</h1>";
-
 switch($action) {
 	case 'apply_changes' :
 		apply_changes();

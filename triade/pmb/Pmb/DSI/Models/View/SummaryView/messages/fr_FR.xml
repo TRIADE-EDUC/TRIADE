@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2023/07/12 10:01:05 qvarin Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Vue sommaire</entry>
+	<entry code="linked-grouping-view">Lié à une vue de groupement :</entry>
+	<entry code="linked-grouping-view-select">Aucune vue de groupement</entry>
+	<entry code="content">Contenu</entry>
+	<entry code="title">Titre du sommaire :</entry>
+	<entry code="default-title">Sommaire :</entry>
+	<entry code="type-List">Type de liste :</entry>
+	<entry code="default-list">Liste numérotée</entry>
+	<entry code="bullet-list">Liste à puces</entry>
+	<entry code="lowercase-alpha">Alphabet en minuscules</entry>
+	<entry code="uppercase-alpha">Alphabet en majuscules</entry>
+	<entry code="lower-roman-numeral">Chiffre romain en minuscules</entry>
+	<entry code="upper-roman-numeral">Chiffre romain en majuscules</entry>
+</XMLlist>

@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rfid_config.inc.php,v 1.10 2019-05-28 13:35:21 ngantier Exp $
+// $Id: rfid_config.inc.php,v 1.10 2019/05/28 13:35:21 ngantier Exp $
 
 
 function get_rfid_port() {
 	global $pmb_rfid_ip_port, $_SERVER;
 	
-	// Donne le port rfid associÃ© Ã  l'ip du client
+	// Donne le port rfid associé à l'ip du client
 	$rfid_port = '';
 	if( $pmb_rfid_ip_port) {
 	    $rfid_port_list = array();

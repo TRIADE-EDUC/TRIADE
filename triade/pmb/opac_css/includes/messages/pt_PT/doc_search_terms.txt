@@ -22,7 +22,7 @@ coloc&aacute;-lo-&aacute; numa sub-categoria.</p>
 <hr />
 <p>Para seleccionar uma categoria e apresentar os itens
 correspondentes, clique na lupa 
-<img src='images/search.gif' align='absmiddle'>
+<img src='images/search.gif' >
 localizada no in&iacute;cio da linha.</p>
 <hr />
 <p>Se a lupa n&atilde;o aparecer, n&atilde;o h&aacute; itens que

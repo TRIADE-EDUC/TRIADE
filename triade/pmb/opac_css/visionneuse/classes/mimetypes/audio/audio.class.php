@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: audio.class.php,v 1.6 2018-10-04 15:24:44 dgoron Exp $
+// $Id: audio.class.php,v 1.7 2022/03/07 14:35:10 dgoron Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 
 class audio extends affichage{
-	public $doc;					//le document numÃ©rique Ã  afficher
+	public $doc;					//le document numérique à afficher
 	public $driver;				//class driver de la visionneuse
-	public $params;				//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();	//tableau des infos Ã  afficher	
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;				//paramètres éventuels
+	public $toDisplay= array();	//tableau des infos à afficher	
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
  
     public function __construct($doc=0) {
     	if($doc){
@@ -24,12 +25,10 @@ class audio extends affichage{
     }
     
     public function fetchDisplay(){
-    	global $base_path;
-    	global $visionneuse_path;
      	//le titre
     	$this->toDisplay["titre"] = $this->doc->titre;
     	
-    	//10/04/2017 : le flash n'est plus supportÃ© par les navigateurs, on passe sur la balise html5 audio
+    	//10/04/2017 : le flash n'est plus supporté par les navigateurs, on passe sur la balise html5 audio
     	
     	// lecture audio  	
     	$this->toDisplay["doc"]="
@@ -46,7 +45,7 @@ class audio extends affichage{
     }
     
     public function getTabParam(){
-
+    	if(!isset($this->parameters['size_x'])) $this->parameters['size_x'] = '';
     	$this->tabParam = array(
 			"size_x"=>array("type"=>"text","name"=>"size_x","value"=>$this->parameters['size_x'],"desc"=>"Largeur du lecteur")
 		);

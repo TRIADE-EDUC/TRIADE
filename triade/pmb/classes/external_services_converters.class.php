@@ -2,11 +2,13 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external_services_converters.class.php,v 1.31 2019-06-10 10:05:02 btafforeau Exp $
+// $Id: external_services_converters.class.php,v 1.37.2.1.2.1 2025/03/12 14:19:30 dgoron Exp $
 
 //
-//Convertisseurs et cacheur de formats des rÃ©sultats des services externes
+//Convertisseurs et cacheur de formats des résultats des services externes
 //
+
+global $base_path, $class_path, $include_path;
 
 require_once("$base_path/admin/convert/export.class.php");
 require_once("$base_path/admin/convert/convert.class.php");
@@ -14,20 +16,19 @@ require_once("$class_path/external_services_caches.class.php");
 require_once("$class_path/mono_display.class.php");
 
 if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) {
-    if (PHP_MAJOR_VERSION == "5") @ini_set("zend.ze1_compatibility_mode", "0");
 	require_once($include_path.'/xslt-php4-to-php5.inc.php');
 }
 
 class external_services_converter {
 	public $object_type=0; //Type d'objet
-	public $life_duration=600; //DurÃ©e de vie de l'objet converti, en secondes
+	public $life_duration=600; //Durée de vie de l'objet converti, en secondes
 	public $results=array();
 	public $cache=NULL;
 	public $params=array();
 	
 	public function __construct($object_type, $life_duration) {
-		$this->object_type = $object_type+0;
-		$this->life_duration = $life_duration+0;
+		$this->object_type = intval($object_type);
+		$this->life_duration = intval($life_duration);
 		$this->cache = new external_services_cache('es_cache_blob', $life_duration);
 	}
 	
@@ -37,14 +38,12 @@ class external_services_converter {
 	
 	public function convert_batch($objects, $format, $target_charset='iso-8859-1') {
 		//Cette fonction va chercher les valeurs dans le cache si elle existent.
-		
-		global $dbh;
-		//Si aucun rÃ©sultat, pas de traitement
+		//Si aucun résultat, pas de traitement
 		if (!is_array($objects)) {
 			$this->results = array();
 			return;
 		}
-		array_walk($objects, function(&$a) {$a = intval($a);});//Soyons sÃ»r de ne stocker que des entiers dans le tableau.
+		array_walk($objects, function(&$a) {$a = intval($a);});//Soyons sûr de ne stocker que des entiers dans le tableau.
 		$objects = array_unique($objects);
 		
 		if (!$objects) {
@@ -52,7 +51,7 @@ class external_services_converter {
 			return;
 		}
 
-		//Initialisons tous avec des zÃ©ros
+		//Initialisons tous avec des zéros
 		$this->results = array_combine($objects, array_fill(0, count($objects), 0));
 		
 		//Allons chercher dans le cache ce qui est encore bon
@@ -70,7 +69,6 @@ class external_services_converter {
 	
 	public function encache_value($object_id, $value, $format) {
 		//Mise en cache d'une valeur
-		global $dbh;
 		$rawed = substr($format, 0, 9) == "raw_array";
 		if ($rawed)
 			$value = serialize($value);
@@ -98,7 +96,7 @@ class external_services_converter_notices extends external_services_converter {
 
 	public function convert_batch_to_pmb_xml($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		$xmlexport = new export($notices_to_convert);
@@ -108,21 +106,21 @@ class external_services_converter_notices extends external_services_converter {
 		if (is_array($this->params['include_links'])) {
 			$parametres=$this->params['include_links'];
 		} else if ($this->params["include_links"]) {
-			$parametres["genere_lien"]=1;//Notices liÃ©es, relations entre notices
+			$parametres["genere_lien"]=1;//Notices liées, relations entre notices
 	
-			$parametres["mere"]=1; //Exporter les liens vers les notices mÃ¨res
-			$parametres["notice_mere"]=0;//Exporter aussi les notices mÃ¨res liÃ©es 
+			$parametres["mere"]=1; //Exporter les liens vers les notices mères
+			$parametres["notice_mere"]=0;//Exporter aussi les notices mères liées 
 			
 			$parametres["fille"]=1; //Exporter les liens vers les notices filles
-			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liÃ©es 
+			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liées 
 			
-			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pÃ©rio
-			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pÃ©rio
-			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pÃ©rio
+			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pério
+			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pério
+			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pério
 		
 			$parametres["bull_link"]=1;//Exporter les liens vers les bulletins pour les notices d'article
-			$parametres["perio_link"]=1; //Exporter les liens vers les pÃ©riodiques pour les notices d'articles
-			$parametres["notice_perio"]=0;//Exporter aussi les pÃ©riodiques pour les notices d'articles
+			$parametres["perio_link"]=1; //Exporter les liens vers les périodiques pour les notices d'articles
+			$parametres["notice_perio"]=0;//Exporter aussi les périodiques pour les notices d'articles
 		}
 		if ($this->params["include_authorite_ids"]) {
 			$parametres["include_authorite_ids"] = true;
@@ -130,25 +128,31 @@ class external_services_converter_notices extends external_services_converter {
 		if (!empty($this->params["map"])) {
 		    $parametres["map"] = true;
 		}
+		if (!empty($this->params["clean_html"])) {
+			$parametres["clean_html"] = true;
+		}
+		if (!empty($this->params["header_datestamp"])) {
+		    $parametres["header_datestamp"] = $this->params["header_datestamp"];
+		}
 		$parametres["docnum"]=1;
 		$keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
 		while($xmlexport->get_next_notice("", array(), array(), $keep_expl, $parametres)) {
 			$xmlexport->toxml();
 			if ($current_notice_id != -1) {
 				$this->results[$current_notice_id] = $xmlexport->notice;
-				//La classe export exporte ses donnÃ©es dans la charset de la base.
+				//La classe export exporte ses données dans la charset de la base.
 				//Convertissons si besoin
 				if ($charset!='utf-8' && $target_charset == 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"UTF-8","Windows-1252");
 					}else{
-						$this->results[$current_notice_id] = utf8_encode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_normalize($this->results[$current_notice_id]);
 					}
 				}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"Windows-1252","UTF-8");
 					}else{
-						$this->results[$current_notice_id] = utf8_decode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_decode($this->results[$current_notice_id]);
 					}
 				}
 				$current_notice_id = $xmlexport->notice_list[$xmlexport->current_notice];
@@ -158,7 +162,7 @@ class external_services_converter_notices extends external_services_converter {
 
 	public function convert_batch_to_json($notices_to_convert, $target_charset='iso-8859-1') {
 			global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		$xmlexport = new export($notices_to_convert);
@@ -167,21 +171,21 @@ class external_services_converter_notices extends external_services_converter {
 		if (is_array($this->params['include_links'])) {
 			$parametres=$this->params['include_links'];
 		} else if ($this->params["include_links"]) {
-			$parametres["genere_lien"]=1;//Notices liÃ©es, relations entre notices
+			$parametres["genere_lien"]=1;//Notices liées, relations entre notices
 	
-			$parametres["mere"]=1; //Exporter les liens vers les notices mÃ¨res
-			$parametres["notice_mere"]=0;//Exporter aussi les notices mÃ¨res liÃ©es 
+			$parametres["mere"]=1; //Exporter les liens vers les notices mères
+			$parametres["notice_mere"]=0;//Exporter aussi les notices mères liées 
 			
 			$parametres["fille"]=1; //Exporter les liens vers les notices filles
-			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liÃ©es 
+			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liées 
 			
-			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pÃ©rio
-			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pÃ©rio
-			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pÃ©rio
+			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pério
+			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pério
+			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pério
 		
 			$parametres["bull_link"]=1;//Exporter les liens vers les bulletins pour les notices d'article
-			$parametres["perio_link"]=1; //Exporter les liens vers les pÃ©riodiques pour les notices d'articles
-			$parametres["notice_perio"]=0;//Exporter aussi les pÃ©riodiques pour les notices d'articles
+			$parametres["perio_link"]=1; //Exporter les liens vers les périodiques pour les notices d'articles
+			$parametres["notice_perio"]=0;//Exporter aussi les périodiques pour les notices d'articles
 		}
 		if ($this->params["include_authorite_ids"]) {
 			$parametres["include_authorite_ids"] = true;
@@ -189,25 +193,31 @@ class external_services_converter_notices extends external_services_converter {
 		if (!empty($this->params["map"])) {
 		    $parametres["map"] = true;
 		}
+		if (!empty($this->params["clean_html"])) {
+			$parametres["clean_html"] = true;
+		}
+		if (!empty($this->params["header_datestamp"])) {
+		    $parametres["header_datestamp"] = $this->params["header_datestamp"];
+		}
 		$parametres["docnum"]=1;
 		$keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
 		while($xmlexport->get_next_notice("", array(), array(), $keep_expl, $parametres)) {
 			$xmlexport->tojson();
 			if ($current_notice_id != -1) {
 				$this->results[$current_notice_id] = $xmlexport->notice;
-				//La classe export exporte ses donnÃ©es dans la charset de la base.
+				//La classe export exporte ses données dans la charset de la base.
 				//Convertissons si besoin
 				if ($charset!='utf-8' && $target_charset == 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"UTF-8","Windows-1252");
 					}else{
-						$this->results[$current_notice_id] = utf8_encode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_normalize($this->results[$current_notice_id]);
 					}
 				}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"Windows-1252","UTF-8");
 					}else{
-						$this->results[$current_notice_id] = utf8_decode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_decode($this->results[$current_notice_id]);
 					}
 				}
 				$current_notice_id = $xmlexport->notice_list[$xmlexport->current_notice];
@@ -223,7 +233,7 @@ class external_services_converter_notices extends external_services_converter {
 	
 	public function convert_batch_to_serialized($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		$xmlexport = new export($notices_to_convert);
@@ -232,21 +242,21 @@ class external_services_converter_notices extends external_services_converter {
 		if (is_array($this->params['include_links'])) {
 			$parametres=$this->params['include_links'];
 		} else if ($this->params["include_links"]) {
-			$parametres["genere_lien"]=1;//Notices liÃ©es, relations entre notices
+			$parametres["genere_lien"]=1;//Notices liées, relations entre notices
 	
-			$parametres["mere"]=1; //Exporter les liens vers les notices mÃ¨res
-			$parametres["notice_mere"]=0;//Exporter aussi les notices mÃ¨res liÃ©es 
+			$parametres["mere"]=1; //Exporter les liens vers les notices mères
+			$parametres["notice_mere"]=0;//Exporter aussi les notices mères liées 
 			
 			$parametres["fille"]=1; //Exporter les liens vers les notices filles
-			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liÃ©es 
+			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liées 
 			
-			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pÃ©rio
-			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pÃ©rio
-			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pÃ©rio
+			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pério
+			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pério
+			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pério
 		
 			$parametres["bull_link"]=1;//Exporter les liens vers les bulletins pour les notices d'article
-			$parametres["perio_link"]=1; //Exporter les liens vers les pÃ©riodiques pour les notices d'articles
-			$parametres["notice_perio"]=0;//Exporter aussi les pÃ©riodiques pour les notices d'articles
+			$parametres["perio_link"]=1; //Exporter les liens vers les périodiques pour les notices d'articles
+			$parametres["notice_perio"]=0;//Exporter aussi les périodiques pour les notices d'articles
 		}
 		if ($this->params["include_authorite_ids"]) {
 			$parametres["include_authorite_ids"] = true;
@@ -254,25 +264,31 @@ class external_services_converter_notices extends external_services_converter {
 		if (!empty($this->params["map"])) {
 		    $parametres["map"] = true;
 		}
+		if (!empty($this->params["clean_html"])) {
+			$parametres["clean_html"] = true;
+		}
+		if (!empty($this->params["header_datestamp"])) {
+		    $parametres["header_datestamp"] = $this->params["header_datestamp"];
+		}
 		$parametres["docnum"]=1;
 		$keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
 		while($xmlexport->get_next_notice("", array(), array(), $keep_expl, $parametres)) {
 			$xmlexport->toserialized();
 			if ($current_notice_id != -1) {
 				$this->results[$current_notice_id] = $xmlexport->notice;
-				//La classe export exporte ses donnÃ©es dans la charset de la base.
+				//La classe export exporte ses données dans la charset de la base.
 				//Convertissons si besoin
 				if ($charset!='utf-8' && $target_charset == 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"UTF-8","Windows-1252");
 					}else{
-						$this->results[$current_notice_id] = utf8_encode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_normalize($this->results[$current_notice_id]);
 					}
 				}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 					if(function_exists("mb_convert_encoding")){
 						$this->results[$current_notice_id] = mb_convert_encoding($this->results[$current_notice_id],"Windows-1252","UTF-8");
 					}else{
-						$this->results[$current_notice_id] = utf8_decode($this->results[$current_notice_id]);
+						$this->results[$current_notice_id] = encoding_normalize::utf8_decode($this->results[$current_notice_id]);
 					}
 				}
 				$current_notice_id = $xmlexport->notice_list[$xmlexport->current_notice];
@@ -289,7 +305,7 @@ class external_services_converter_notices extends external_services_converter {
 	
 	public function convert_batch_to_php_array($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		$xmlexport = new export($notices_to_convert);
@@ -298,27 +314,33 @@ class external_services_converter_notices extends external_services_converter {
 		if (is_array($this->params['include_links'])) {
 			$parametres=$this->params['include_links'];
 		} else if ($this->params["include_links"]) {
-			$parametres["genere_lien"]=1;//Notices liÃ©es, relations entre notices
+			$parametres["genere_lien"]=1;//Notices liées, relations entre notices
 	
-			$parametres["mere"]=1; //Exporter les liens vers les notices mÃ¨res
-			$parametres["notice_mere"]=0;//Exporter aussi les notices mÃ¨res liÃ©es 
+			$parametres["mere"]=1; //Exporter les liens vers les notices mères
+			$parametres["notice_mere"]=0;//Exporter aussi les notices mères liées 
 			
 			$parametres["fille"]=1; //Exporter les liens vers les notices filles
-			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liÃ©es 
+			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liées 
 			
-			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pÃ©rio
-			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pÃ©rio
-			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pÃ©rio
+			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pério
+			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pério
+			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pério
 		
 			$parametres["bull_link"]=1;//Exporter les liens vers les bulletins pour les notices d'article
-			$parametres["perio_link"]=1; //Exporter les liens vers les pÃ©riodiques pour les notices d'articles
-			$parametres["notice_perio"]=0;//Exporter aussi les pÃ©riodiques pour les notices d'articles
+			$parametres["perio_link"]=1; //Exporter les liens vers les périodiques pour les notices d'articles
+			$parametres["notice_perio"]=0;//Exporter aussi les périodiques pour les notices d'articles
 		}
 		if ($this->params["include_authorite_ids"]) {
 			$parametres["include_authorite_ids"] = true;
 		}
 		if (!empty($this->params["map"])) {
 		    $parametres["map"] = true;
+		}
+		if (!empty($this->params["clean_html"])) {
+			$parametres["clean_html"] = true;
+		}
+		if (!empty($this->params["header_datestamp"])) {
+		    $parametres["header_datestamp"] = $this->params["header_datestamp"];
 		}
 		$parametres["docnum"]=1;
 		$keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
@@ -347,23 +369,41 @@ class external_services_converter_notices extends external_services_converter {
 				foreach ($aresult["f"] as &$af) {
 					$af["ind"] = isset($af["ind"]) ? $af["ind"] : "";
 					$af["id"] = isset($af["id"]) ? $af["id"] : "";
+					$af["value"] = isset($af["value"]) ? $af["value"] : "";
+					//La classe export exporte ses données dans la charset de la base.
+					//Convertissons si besoin
+					if($af["value"]){
+    					if ($charset!='utf-8' && $target_charset == 'utf-8'){
+    					    if(function_exists("mb_convert_encoding")){
+    					        $af["value"] = mb_convert_encoding($af["value"],"UTF-8","Windows-1252");
+    					    }else{
+    					        $af["value"] = encoding_normalize::utf8_normalize($af["value"]);
+    					    }
+    					}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
+    					    if(function_exists("mb_convert_encoding")){
+    					        $af["value"] = mb_convert_encoding($af["value"],"Windows-1252","UTF-8");
+    					    }else{
+    					        $af["value"] = encoding_normalize::utf8_decode($af["value"]);
+    					    }
+    					}
+					}
 					$af["s"] = isset($af["s"]) ? $af["s"] : array();
 					foreach ($af["s"] as &$as) {
 						$as["value"] = isset($as["value"]) ? $as["value"] : "";
 						$as["c"] = isset($as["c"]) ? $as["c"] : "";
-						//La classe export exporte ses donnÃ©es dans la charset de la base.
+						//La classe export exporte ses données dans la charset de la base.
 						//Convertissons si besoin
 						if ($charset!='utf-8' && $target_charset == 'utf-8'){
 							if(function_exists("mb_convert_encoding")){
 								$as["value"] = mb_convert_encoding($as["value"],"UTF-8","Windows-1252");
 							}else{
-								$as["value"] = utf8_encode($as["value"]);
+								$as["value"] = encoding_normalize::utf8_normalize($as["value"]);
 							}
 						}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 							if(function_exists("mb_convert_encoding")){
 								$as["value"] = mb_convert_encoding($as["value"],"Windows-1252","UTF-8");
 							}else{
-								$as["value"] = utf8_decode($as["value"]);
+								$as["value"] = encoding_normalize::utf8_decode($as["value"]);
 							}
 						}
 					}
@@ -377,7 +417,7 @@ class external_services_converter_notices extends external_services_converter {
 	
 	public function convert_batch_to_php_array_assoc($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		$xmlexport = new export($notices_to_convert);
@@ -386,27 +426,33 @@ class external_services_converter_notices extends external_services_converter {
 		if (is_array($this->params['include_links'])) {
 			$parametres=$this->params['include_links'];
 		} else if ($this->params["include_links"]) {
-			$parametres["genere_lien"]=1;//Notices liÃ©es, relations entre notices
+			$parametres["genere_lien"]=1;//Notices liées, relations entre notices
 	
-			$parametres["mere"]=1; //Exporter les liens vers les notices mÃ¨res
-			$parametres["notice_mere"]=0;//Exporter aussi les notices mÃ¨res liÃ©es 
+			$parametres["mere"]=1; //Exporter les liens vers les notices mères
+			$parametres["notice_mere"]=0;//Exporter aussi les notices mères liées 
 			
 			$parametres["fille"]=1; //Exporter les liens vers les notices filles
-			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liÃ©es 
+			$parametres["notice_fille"]=0;//Exporter aussi les notices filles liées 
 			
-			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pÃ©rio
-			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pÃ©rio
-			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pÃ©rio
+			$parametres["art_link"]=1;//Exporter les liens vers les articles pour les notices de pério
+			$parametres["notice_art"]=0;//Exporter aussi les articles pour les notices de pério
+			$parametres["bulletinage"]=0;//Exporter le bulletinage pour les notices de pério
 		
 			$parametres["bull_link"]=1;//Exporter les liens vers les bulletins pour les notices d'article
-			$parametres["perio_link"]=1; //Exporter les liens vers les pÃ©riodiques pour les notices d'articles
-			$parametres["notice_perio"]=0;//Exporter aussi les pÃ©riodiques pour les notices d'articles
+			$parametres["perio_link"]=1; //Exporter les liens vers les périodiques pour les notices d'articles
+			$parametres["notice_perio"]=0;//Exporter aussi les périodiques pour les notices d'articles
 		}
 		if ($this->params["include_authorite_ids"]) {
 			$parametres["include_authorite_ids"] = true;
 		}
 		if (!empty($this->params["map"])) {
 		    $parametres["map"] = true;
+		}
+		if (!empty($this->params["clean_html"])) {
+			$parametres["clean_html"] = true;
+		}
+		if (!empty($this->params["header_datestamp"])) {
+		    $parametres["header_datestamp"] = $this->params["header_datestamp"];
 		}
 		$parametres["docnum"]=1;
 		$keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
@@ -441,20 +487,20 @@ class external_services_converter_notices extends external_services_converter {
 					$arf["id"] = isset($af["id"]) ? $af["id"] : "";
 					if (isset($af["s"])) {
 						foreach ($af["s"] as &$as) {
-							//La classe export exporte ses donnÃ©es dans la charset de la base.
+							//La classe export exporte ses données dans la charset de la base.
 							//Convertissons si besoin
 							$value = $as["value"];
 							if ($charset!='utf-8' && $target_charset == 'utf-8'){
 								if(function_exists("mb_convert_encoding")){
 									$value = mb_convert_encoding($value,"UTF-8","Windows-1252");
 								}else{
-									$value = utf8_encode($value);
+									$value = encoding_normalize::utf8_normalize($value);
 								}
 							}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 								if(function_exists("mb_convert_encoding")){
 									$value = mb_convert_encoding($value,"Windows-1252","UTF-8");
 								}else{
-									$value = utf8_decode($value);
+									$value = encoding_normalize::utf8_decode($value);
 								}
 							}
 							if (isset($arf[$as["c"]]) && !is_array($arf[$as["c"]]))
@@ -493,10 +539,10 @@ class external_services_converter_notices extends external_services_converter {
 
 	public function convert_batch_to_dublin_core($notices_to_convert, $target_charset,$xsl_pmbxmlunimarc_to_dc = "") {
 		global $base_path, $opac_url_base;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
-		//Un petit tour en xml en utf-8 et aprÃ¨s on convertit par xsl
+		//Un petit tour en xml en utf-8 et après on convertit par xsl
 		$this->convert_batch_to_pmb_xml($notices_to_convert,'utf-8');
 		
 		//Allons chercher la feuille de style
@@ -517,7 +563,7 @@ class external_services_converter_notices extends external_services_converter {
 				if(function_exists("mb_convert_encoding")){
 					$converted_version = mb_convert_encoding($converted_version,"Windows-1252","UTF-8");
 				}else{
-					$converted_version = utf8_decode($converted_version);
+					$converted_version = encoding_normalize::utf8_decode($converted_version);
 				}
 			}
 			$this->results[$anotice_id] = $converted_version;
@@ -527,20 +573,31 @@ class external_services_converter_notices extends external_services_converter {
 	//Utilise les fonctions de admin/convert pour faire une conversion perso
 	public function convert_batch_to_adminconvert_script($notices_to_convert, $the_conversion, $target_charset) {
 	    global $base_path, $class_path, $charset, $opac_url_base;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
-		//Un petit tour en xml dans le charset de la base et aprÃ¨s on invoque la classe de conversion
+		//Un petit tour en xml dans le charset de la base et après on invoque la classe de conversion
 			$special_export = false;
+			$special_export_class = false;
 			if($the_conversion['special_export'] =='yes') {
-			    //L'export est special et utilise la fonction _export_ dans le fichier export.inc.php du repertoire de conversion
+			    //L'export est special et utilise la methode _export_notice_ de la classe PHP ou utilise la fonction _export_ dans le fichier export.inc.php du repertoire de conversion
 			    try {
-			        $export_file = ("$base_path/admin/convert/imports/{$the_conversion['path']}/export.inc.php");
-			        if(file_exists($export_file) && !function_exists('_export_')) {
+			        $export_file = ("$base_path/admin/convert/imports/{$the_conversion['path']}/{$the_conversion['path']}.class.php");
+			        if(file_exists($export_file)) {
 			            require_once($export_file);
+			            if (method_exists($the_conversion['path'], '_export_notice_')) {
+			                $special_export = true;
+			                $special_export_class = true;
+			            }
 			        }
-			        if(function_exists('_export_')) {
-			            $special_export = true;
+			        if (!$special_export) {
+			            $export_file = ("$base_path/admin/convert/imports/{$the_conversion['path']}/export.inc.php");
+			            if(file_exists($export_file) && !function_exists('_export_')) {
+			                require_once($export_file);
+			            }
+			            if(function_exists('_export_')) {
+			                $special_export = true;
+			            }
 			        }
 			    } catch (Exception $e) {}
 			    
@@ -549,8 +606,13 @@ class external_services_converter_notices extends external_services_converter {
 			if($special_export==true) {
 			    
 			    $keep_expl = isset($this->params["include_items"]) && $this->params["include_items"];
-			    foreach($notices_to_convert as $k=>$v) {
-			        $this->results[$v] = _export_($v, $keep_expl);
+			    foreach($notices_to_convert as $v) {
+			        if($special_export_class) {
+			            $class_name = $the_conversion['path'];
+			            $this->results[$v] = $class_name::_export_notice_($v, $keep_expl);
+			        } else {
+			            $this->results[$v] = _export_($v, $keep_expl);
+			        }
 			    }
 			    
 			}else {
@@ -570,13 +632,13 @@ class external_services_converter_notices extends external_services_converter {
 				if(function_exists("mb_convert_encoding")){
 					$converted_version = mb_convert_encoding($converted_version,"Windows-1252","UTF-8");
 				}else{
-					$converted_version = utf8_decode($converted_version);
+					$converted_version = encoding_normalize::utf8_decode($converted_version);
 				}
 			} else if ($the_conversion["output_charset"] != 'utf-8' && $target_charset == 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$converted_version = mb_convert_encoding($converted_version,"UTF-8","Windows-1252");
 				}else{
-					$converted_version = utf8_encode($converted_version);
+					$converted_version = encoding_normalize::utf8_normalize($converted_version);
 				}
 			}
 			$this->results[$anotice_id] = $converted_version;
@@ -584,75 +646,87 @@ class external_services_converter_notices extends external_services_converter {
 	}
 
 	public function convert_batch_to_header($notices_to_convert, $target_charset) {
-		global $charset,$include_path,$base_path,$msg;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		global $charset,$include_path,$base_path;
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		foreach ($notices_to_convert as $anotice_id) {
 			$monod = new mono_display($anotice_id, 0, '', 0, '', '', '', 0, 1, 0, 0, '', 0, true, false, 0);
-			$this->results[$anotice_id] = $monod->header;
+			if (!empty($this->params["clean_html"])) {
+				$this->results[$anotice_id] = strip_tags($monod->header);
+			} else {
+				$this->results[$anotice_id] = $monod->header;
+			}
 			
 			if ($charset!='utf-8' && $target_charset == 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"UTF-8","Windows-1252");
 				}else{
-					$this->results[$anotice_id] = utf8_encode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_normalize($this->results[$anotice_id]);
 				}
 			}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"Windows-1252","UTF-8");
 				}else{
-					$this->results[$anotice_id] = utf8_decode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_decode($this->results[$anotice_id]);
 				}
 			}
 		}
 	}
 	
 	public function convert_batch_to_isbd($notices_to_convert, $target_charset) {
-		global $charset,$include_path,$base_path,$msg;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		global $charset,$include_path,$base_path;
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		foreach ($notices_to_convert as $anotice_id) {
 			$monod = new mono_display($anotice_id, 1, '', 0, '', '', '', 0, 1, 0, 0, '', 0, true, false, 0);
-			$this->results[$anotice_id] = $monod->isbd;
+			if (!empty($this->params["clean_html"])) {
+				$this->results[$anotice_id] = strip_tags($monod->isbd);
+			} else {
+				$this->results[$anotice_id] = $monod->isbd;
+			}
 			
 			if ($charset!='utf-8' && $target_charset == 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"UTF-8","Windows-1252");
 				}else{
-					$this->results[$anotice_id] = utf8_encode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_normalize($this->results[$anotice_id]);
 				}
 			}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"Windows-1252","UTF-8");
 				}else{
-					$this->results[$anotice_id] = utf8_decode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_decode($this->results[$anotice_id]);
 				}
 			}
 		}
 	}
 	
 	public function convert_batch_to_isbd_suite($notices_to_convert, $target_charset) {
-		global $charset,$include_path,$base_path,$msg;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		global $charset,$include_path,$base_path;
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		foreach ($notices_to_convert as $anotice_id) {
 			$monod = new mono_display($anotice_id, 6, '', 0, '', '', '', 0, 1, 0, 0, '', 0, true, false, 0);
-			$this->results[$anotice_id] = $monod->isbd;
+			if (!empty($this->params["clean_html"])) {
+				$this->results[$anotice_id] = strip_tags($monod->isbd);
+			} else {
+				$this->results[$anotice_id] = $monod->isbd;
+			}
 			
 			if ($charset!='utf-8' && $target_charset == 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"UTF-8","Windows-1252");
 				}else{
-					$this->results[$anotice_id] = utf8_encode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_normalize($this->results[$anotice_id]);
 				}
 			}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 				if(function_exists("mb_convert_encoding")){
 					$this->results[$anotice_id] = mb_convert_encoding($this->results[$anotice_id],"Windows-1252","UTF-8");
 				}else{
-					$this->results[$anotice_id] = utf8_decode($this->results[$anotice_id]);
+					$this->results[$anotice_id] = encoding_normalize::utf8_decode($this->results[$anotice_id]);
 				}
 			}
 		}
@@ -660,9 +734,9 @@ class external_services_converter_notices extends external_services_converter {
 	
 	public function convert_batch_to_personnal_xslt($notices_to_convert, $target_charset,$xslt) {
 		global $base_path, $charset, $opac_url_base;
-		if (!$notices_to_convert || !$xslt) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert || !$xslt) //Rien à faire? On fait rien
 			return;
-		//Un petit tour en xml et aprÃ¨s on converti par xsl
+		//Un petit tour en xml et après on converti par xsl
 		$this->convert_batch_to_pmb_xml($notices_to_convert);
 		
 		foreach ($notices_to_convert as $anotice_id) {
@@ -677,7 +751,7 @@ class external_services_converter_notices extends external_services_converter {
 				if(function_exists("mb_convert_encoding")){
 					$converted_version = mb_convert_encoding($converted_version,"Windows-1252","UTF-8");
 				}else{
-					$converted_version = utf8_decode($converted_version);
+					$converted_version = encoding_normalize::utf8_decode($converted_version);
 				}
 			}
 
@@ -708,7 +782,7 @@ class external_services_converter_notices extends external_services_converter {
 			}
 			
 			if (!$the_conversion) {
-				//Oups! pas trouvÃ©
+				//Oups! pas trouvé
 				//Renvoyons des strings vides.
 				foreach($notices_to_convert as $anotice_id) {
 					$this->results[$anotice_id] = "";
@@ -761,7 +835,7 @@ class external_services_converter_notices extends external_services_converter {
 					$this->convert_batch_to_dublin_core($notices_to_convert, $target_charset,$xslt);
 					break;
 				default:
-					//Par dÃ©faut on renvoi juste le notice_id
+					//Par défaut on renvoi juste le notice_id
 					foreach($notices_to_convert as $anotice_id) {
 						$this->results[$anotice_id] = $anotice_id;
 					}
@@ -769,14 +843,26 @@ class external_services_converter_notices extends external_services_converter {
 			}
 		}
 
-		//Cachons les notices converties maintenant.
-		foreach ($notices_to_convert as $anotice_id) {
-			if ($this->results[$anotice_id])
-				$this->encache_value($anotice_id, $this->results[$anotice_id], $format_ref);
+		// Calcule des notices à mettre en cache
+		$record_put_in_cache = [];
+		$record_put_in_cache = $notices_to_convert;
+		
+		$ids_notice = array_keys($this->results);
+		$index = count($ids_notice);
+		for ($i = 0; $i < $index; $i++) {
+		    if (!in_array($ids_notice[$i], $record_put_in_cache)) {
+		        $record_put_in_cache[] = $ids_notice[$i];
+		    }
+		}
+		
+		// Cachons les notices converties maintenant.
+		$index = count($record_put_in_cache);
+		for ($i = 0; $i < $index; $i++) {
+		    $this->encache_value($record_put_in_cache[$i], $this->results[$record_put_in_cache[$i]], $format_ref);
 		}
 	}
 	
-	//Cette fonction parse les diffÃ©rents catalogues de admin/convert et liste les conversions qui exportent en xml
+	//Cette fonction parse les différents catalogues de admin/convert et liste les conversions qui exportent en xml
 	public static function get_export_possibilities($only_xml=true) {
 		global $base_path;
 		$result = array();
@@ -833,9 +919,8 @@ class external_services_converter_external_notices extends external_services_con
 	}
 
 	public function get_notice_unimarc_array($notice_id) {
-		global $dbh;
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($notice_id);
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		if (!pmb_mysql_num_rows($myQuery))
 			return FALSE;
 		$source_id = pmb_mysql_result($myQuery, 0, 0);
@@ -843,7 +928,7 @@ class external_services_converter_external_notices extends external_services_con
 			return FALSE;
 
 		$requete="select * from entrepot_source_".$source_id." where recid='".addslashes($notice_id)."' order by ufield,field_order,usubfield,subfield_order,value";
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$unimarc = array('f' => array());
 		if(pmb_mysql_num_rows($myQuery)) {
 			$field_order = $subfield_order = 0;
@@ -884,7 +969,7 @@ class external_services_converter_external_notices extends external_services_con
 		
 	public function convert_batch_to_php_array($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		foreach($notices_to_convert as $anotice_id)  {
@@ -916,19 +1001,19 @@ class external_services_converter_external_notices extends external_services_con
 				foreach ($af["s"] as &$as) {
 					$as["value"] = isset($as["value"]) ? $as["value"] : "";
 					$as["c"] = isset($as["c"]) ? $as["c"] : "";
-					//La classe export exporte ses donnÃ©es dans la charset de la base.
+					//La classe export exporte ses données dans la charset de la base.
 					//Convertissons si besoin
 					if ($charset!='utf-8' && $target_charset == 'utf-8'){
 						if(function_exists("mb_convert_encoding")){
 							$as["value"] = mb_convert_encoding($as["value"],"UTF-8","Windows-1252");
 						}else{
-							$as["value"] = utf8_encode($as["value"]);
+							$as["value"] = encoding_normalize::utf8_normalize($as["value"]);
 						}
 					}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 						if(function_exists("mb_convert_encoding")){
 							$as["value"] = mb_convert_encoding($as["value"],"Windows-1252","UTF-8");
 						}else{
-							$as["value"] = utf8_decode($as["value"]);
+							$as["value"] = encoding_normalize::utf8_decode($as["value"]);
 						}
 					}
 				}
@@ -940,7 +1025,7 @@ class external_services_converter_external_notices extends external_services_con
 	
 	public function convert_batch_to_php_array_assoc($notices_to_convert, $target_charset='iso-8859-1') {
 		global $charset;
-		if (!$notices_to_convert) //Rien Ã  faire? On fait rien
+		if (!$notices_to_convert) //Rien à faire? On fait rien
 			return;
 
 		foreach($notices_to_convert as $anotice_id)  {
@@ -974,20 +1059,20 @@ class external_services_converter_external_notices extends external_services_con
 				$arf["id"] = isset($af["id"]) ? $af["id"] : "";
 				if (isset($af["s"])) {
 					foreach ($af["s"] as &$as) {
-						//La classe export exporte ses donnÃ©es dans la charset de la base.
+						//La classe export exporte ses données dans la charset de la base.
 						//Convertissons si besoin
 						$value = $as["value"];
 						if ($charset!='utf-8' && $target_charset == 'utf-8'){
 							if(function_exists("mb_convert_encoding")){
 								$value = mb_convert_encoding($value,"UTF-8","Windows-1252");
 							}else{
-								$value = utf8_encode($value);
+								$value = encoding_normalize::utf8_normalize($value);
 							}
 						}else if ($charset=='utf-8' && $target_charset != 'utf-8'){
 							if(function_exists("mb_convert_encoding")){
 								$value = mb_convert_encoding($value,"Windows-1252","UTF-8");
 							}else{
-								$value = utf8_decode($value);
+								$value = encoding_normalize::utf8_decode($value);
 							}
 						}
 						if (isset($arf[$as["c"]]) && !is_array($arf[$as["c"]]))
@@ -1063,7 +1148,7 @@ class external_services_converter_external_notices extends external_services_con
 				$this->convert_batch_to_php_array_assoc($notices_to_convert, $target_charset);
 				break;
 			default:
-				//Par dÃ©faut on renvoie juste le notice_id
+				//Par défaut on renvoie juste le notice_id
 				foreach($notices_to_convert as $anotice_id) {
 					$this->results[$anotice_id] = $anotice_id;
 				}

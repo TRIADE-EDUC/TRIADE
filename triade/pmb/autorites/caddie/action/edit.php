@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edit.php,v 1.3 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: edit.php,v 1.3 2019/06/03 07:04:57 btafforeau Exp $
 
 global $class_path, $fichier_temp_nom, $mode, $dest, $idcaddie;
 
-// dÃ©finition du minimum nÃ©cessaire 
+// définition du minimum nécessaire 
 $base_path="../../..";                            
 $base_auth = "AUTORITES_AUTH";  
 $base_title = "";
@@ -17,7 +17,7 @@ require_once ($class_path."/caddie/authorities_caddie_controller.class.php");
 $fichier_temp_nom=str_replace(" ","",microtime());
 $fichier_temp_nom=str_replace("0.","",$fichier_temp_nom);
 
-// crÃ©ation de la page
+// création de la page
 if(empty($mode)) $mode = 'simple';
 switch($dest) {
 	case "TABLEAU":

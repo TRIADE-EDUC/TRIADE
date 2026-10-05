@@ -5,9 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_subcollections_datanode.xml,v 1.2 2017-05-05 07:43:35 dgoron Exp $ -->
+$Id: frbr_entity_subcollections_datanode.xml,v 1.2.18.1 2025/04/29 12:27:39 rtigero Exp $ -->
 
 <XMLlist>
 	<entry code='frbr_entity_subcollections_datasource_records'>Notices</entry>
 	<entry code='frbr_entity_subcollections_datasource_concepts'>Concepts</entry>
+	<entry code='frbr_entity_subcollections_datasource_collection'>Collection</entry>
 </XMLlist>

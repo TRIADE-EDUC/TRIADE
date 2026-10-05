@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_relance.php,v 1.1 2011-06-27 15:26:58 ngantier Exp $
+// $Id: print_relance.php,v 1.2 2022/07/28 12:35:46 jparis Exp $
 
 //Ajout aux maniers
 
@@ -29,4 +29,4 @@ if ($action=="print_prepare") {
 		</form>";
 }
 print $footer;
-?>
+html_builder();

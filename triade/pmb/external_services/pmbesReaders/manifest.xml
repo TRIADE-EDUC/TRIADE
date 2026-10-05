@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2011-07-29 12:32:12 dgoron Exp $ -->
+$Id: manifest.xml,v 1.2 2019/08/28 06:48:51 ngantier Exp $ -->
 <manifest>
 	<name>pmbesReaders</name>
 	<description>msg:Readers_functions_description</description>
@@ -18,10 +18,10 @@ $Id: manifest.xml,v 1.1 2011-07-29 12:32:12 dgoron Exp $ -->
 		<method name="listReadersSubscription" rights="" version="1.0" comment="msg:listReadersSubscription_description" language_independant="true">
 			<inputs>
 				<description>msg:listReadersSubscription_input_description</description>
-				<param name="search" type="scalar" dataType="string" description="msg:listReadersSubscription_search"/>
-				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_location_id"/>
-				<param name="empr_statut_edit" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_statut_edit"/>
-				<param name="sortby" type="scalar" dataType="string" description="msg:listReadersSubscription_sortby"/>
+				<param name="search" type="scalar" dataType="string" description="msg:listReadersSubscription_search" optional="yes"/>
+				<param name="empr_location_id" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_location_id" optional="yes"/>
+				<param name="empr_statut_edit" type="scalar" dataType="integer" description="msg:listReadersSubscription_empr_statut_edit" optional="yes"/>
+				<param name="sortby" type="scalar" dataType="string" description="msg:listReadersSubscription_sortby" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:listReadersSubscription_output_description</description>

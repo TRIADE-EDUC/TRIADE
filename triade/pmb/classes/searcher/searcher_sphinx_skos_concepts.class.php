@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_sphinx_skos_concepts.class.php,v 1.3 2017-07-25 15:27:41 vtouchard Exp $
+// $Id: searcher_sphinx_skos_concepts.class.php,v 1.4 2020/04/30 15:13:32 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,6 +17,9 @@ class searcher_sphinx_skos_concepts extends searcher_sphinx_concepts {
 		parent::_get_objects_ids();
 		if (!$this->objects_ids) {
 			return $this->objects_ids;
+		}
+		if ($this->sphinx_query == '*' && count($this->get_filters()) == 0){
+		    return $this->objects_ids;
 		}
 		$query = 'select num_object, id_authority from authorities where id_authority in ('.$this->objects_ids.')'.(($this->sphinx_query != '*') ? ' order by field (id_authority,'.$this->objects_ids.')' : '');
 		$this->objects_ids = '';

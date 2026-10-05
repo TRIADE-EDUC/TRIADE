@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: authorities.xml,v 1.1 2018-10-08 13:59:40 vtouchard Exp $ -->
+<!-- $Id: authorities.xml,v 1.7 2021/01/14 13:58:49 jlaurent Exp $ -->
 <pmbtabs>
 	<url_target>autorites.php?categ=search</url_target>
 	<default_mode>0</default_mode>
@@ -10,6 +10,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="authorities"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -18,6 +23,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"1"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -26,6 +36,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type='authors'></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_author_name" id="2">
 					<input type="text"/>
@@ -36,6 +51,13 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<op>or</op>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#author_name</property>
+							<property>http://www.pmbservices.fr/ontology#author_first_name</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_author_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -55,6 +77,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>			
 			<filterFields>
@@ -68,12 +95,22 @@
 						</options>	
 					</input>
 					<globalvar>type_autorite</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#author_type</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_author_statut" id="2">
 					<input type="query_list">
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"1"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -82,6 +119,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="categories"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_category_label" id="2">
 					<input type="text"/>
@@ -92,6 +134,12 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+							<op>and</op>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#label</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_category_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -110,6 +158,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -122,12 +175,22 @@
 						<query allChoice="yes" titleAllChoice="msg:thes_all">select id_thesaurus, libelle_thesaurus from thesaurus order by libelle_thesaurus</query>
 					</input>
 					<globalvar>id_thes</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_thesaurus</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_category_statut" id="2">
 					<input type="query_list">
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"2"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -136,6 +199,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="publishers"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_publisher_name" id="2">
 					<input type="text"/>
@@ -146,6 +214,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_publisher_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -164,6 +237,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -172,6 +250,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"3"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -180,6 +263,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="collections"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_collection_name" id="2">
 					<input type="text"/>
@@ -190,6 +278,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_collection_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -208,6 +301,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -216,6 +314,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"4"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -224,6 +327,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="subcollections"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_subcollection_name" id="2">
 					<input type="text"/>
@@ -234,6 +342,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_subcollection_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -252,6 +365,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -260,6 +378,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"5"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -268,6 +391,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="series"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_serie_label" id="2">
 					<input type="text"/>
@@ -278,6 +406,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_serie_concepts" id="3">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -296,6 +429,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -304,6 +442,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"6"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -315,6 +458,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type='titres_uniformes'></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_name" id="2">
 					<input type="text"/>
@@ -325,6 +473,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_author" id="3">
 					<input type="authoritie" ajax="authors" selector="auteur"/>
@@ -335,6 +488,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_responsability_author</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_interpreter" id="5">
 					<input type="authoritie" ajax="authors" selector="auteur"/>
@@ -345,6 +503,11 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_responsability_performer</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_concepts" id="4">
 					<var name="thesaurus_concepts_active" visibility="yes">
@@ -363,6 +526,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -371,6 +539,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"7"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_oeuvre_type" id="2">
 					<input type="marc_list">
@@ -378,6 +551,11 @@
 						<restrictquery allChoice="yes" titleAllChoice="msg:searcher_all_types">SELECT group_concat(distinct tu_oeuvre_type SEPARATOR ',') as all_oeuvre_type from titres_uniformes</restrictquery>				
 					</input>
 -					<globalvar>oeuvre_type_selector</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#work_type</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_oeuvre_nature" id="3">
 					<input type="marc_list">
@@ -385,6 +563,11 @@
 						<restrictquery allChoice="yes" titleAllChoice="msg:searcher_all_natures">SELECT group_concat(distinct tu_oeuvre_nature SEPARATOR ',') as all_oeuvre_nature from titres_uniformes</restrictquery>				
 					</input>
 -					<globalvar>oeuvre_nature_selector</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#work_nature</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -393,6 +576,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="indexint"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 				<field title="msg:search_extended_indexint_label" id="2">
 					<input type="text"/>
@@ -403,8 +591,28 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#displayLabel</property>
+						</properties>
+					</fieldcontribution>
 				</field>
-				<field title="msg:search_extended_indexint_concepts" id="3">
+				<field title="msg:search_extended_indexint_comment" id="3">
+					<input type="text"/>
+					<class type="indexint">
+						<fieldrestrict>
+							<field>code_champ</field>
+							<values>8002</values>
+							<op>and</op>
+						</fieldrestrict>
+					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#comment</property>
+						</properties>
+					</fieldcontribution>
+				</field>
+				<field title="msg:search_extended_indexint_concepts" id="4">
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
@@ -421,6 +629,11 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_concept</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -435,6 +648,11 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"8"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
@@ -446,6 +664,11 @@
 				<field title="msg:global_search" id="1">
 					<input type="text" ifSearchEmpty="*" />
 					<class type="concepts"></class>
+					<fieldcontribution>
+						<properties>
+							<property>all_fields</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -460,21 +683,28 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"10"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 -					<globalvar>authority_statut</globalvar>
+					<fieldcontribution>
+						<properties>
+							<property>http://www.pmbservices.fr/ontology#has_authority_status</property>
+						</properties>
+					</fieldcontribution>
 				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:search_extended" mode="10" multiSearchCriteria="yes" />
+		
 		<!-- 		Exemple Onglet d'une recherche prédéfinie -->
 		<!-- 
 		<tab title="Recherche prédéfinie" mode="11" multiSearchCriteria="yes" predefinedSearch="14" />
 		 -->
+		 
 		<!-- 		Exemple Autorité perso -->
-		<!--
-		<tab title="Evenement" mode="1001" objects_type="authperso">
+		<!-- 
+  		<tab title="Evenement" mode="1001" objects_type="authperso_1">
 			<searchFields>
 				<field title="msg:global_search" id="1">
-					<input type="text"/>
-					<class type="authpersos">
+					<input type="text" ifSearchEmpty="*" />
+					<class type="authperso">
 						<fieldrestrict>
 							<field>code_champ</field>
 							<values>1001100</values>
@@ -487,6 +717,6 @@
 				
 			</filterFields>
 		</tab>
-		-->		
-	</tabs>
+		-->
+		</tabs>
 </pmbtabs>

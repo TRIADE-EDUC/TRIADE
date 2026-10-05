@@ -1,159 +1,173 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: manual_categorisation.inc.php,v 1.9 2015-04-03 11:16:22 jpermanne Exp $
+// $Id: manual_categorisation.inc.php,v 1.13 2022/08/10 07:29:59 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/category.class.php");
 include("$include_path/templates/z3950_form.tpl.php");
 
 function get_category_automap_information($libelle) {
-	global $dbh;
 	$sql = "SELECT num_thesaurus, num_noeud, libelle_thesaurus, libelle_categorie FROM categories LEFT JOIN thesaurus ON (categories.num_thesaurus = thesaurus.id_thesaurus) WHERE libelle_categorie = '".addslashes($libelle)."'";
-
 	$result = array();
-	$res = pmb_mysql_query($sql, $dbh);
+	$res = pmb_mysql_query($sql);
 	while (($row = pmb_mysql_fetch_assoc($res))) {
-		$aresult = array();
 		$result[$row["num_thesaurus"]][] = $row;
 	}
 	return $result;
 }
 
-function get_manual_categorisation_form($tableau_600="",$tableau_601="",$tableau_602="",$tableau_604="",$tableau_605="",$tableau_606="",$tableau_607="",$tableau_608="") {
-	global $dbh, $charset, $ptab, $msg;
+function get_manual_categorisation_form($tableau_600 = array(), $tableau_601 = array(), $tableau_602 = array(), $tableau_604 = array(), $tableau_605 = array(), $tableau_606 = array(), $tableau_607 = array(), $tableau_608 = array()) {
+	global $charset, $ptab, $msg;
 	$glue = ' -- ';
 
-	$thesaurus = array();
-	$thesaurus_sql = "SELECT id_thesaurus, libelle_thesaurus FROM thesaurus";
-	$res = pmb_mysql_query($thesaurus_sql, $dbh);
-	while (($row = pmb_mysql_fetch_assoc($res)))
-		$thesaurus[] = $row;
+// 	$thesaurus = array();
+// 	$thesaurus_sql = "SELECT id_thesaurus, libelle_thesaurus FROM thesaurus";
+// 	$res = pmb_mysql_query($thesaurus_sql);
+// 	while (($row = pmb_mysql_fetch_assoc($res)))
+// 		$thesaurus[] = $row;
 
 	$vedettes = array();
 	//600
-	for ($i=0, $count=count($tableau_600['info_600_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_600['info_600_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_b'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_c'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_d'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_f'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_g'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_p'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_t'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_600['info_600_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_600['info_600_a']) && is_array($tableau_600['info_600_a']) ) {
+    	for ($i=0, $count=count($tableau_600['info_600_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_600['info_600_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_b'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_c'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_d'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_f'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_g'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_p'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_t'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_600['info_600_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//601
-	for ($i=0, $count=count($tableau_601['info_601_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_601['info_601_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_b'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_c'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_d'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_e'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_f'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_g'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_h'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_t'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_601['info_601_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_601['info_601_a']) && is_array($tableau_601['info_601_a']) ) {
+    	for ($i=0, $count=count($tableau_601['info_601_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_601['info_601_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_b'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_c'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_d'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_e'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_f'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_g'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_h'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_t'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_601['info_601_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//602
-	for ($i=0, $count=count($tableau_602['info_602_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_602['info_602_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_f'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_t'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_602['info_602_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_602['info_602_a']) && is_array($tableau_602['info_602_a']) ) {
+    	for ($i=0, $count=count($tableau_602['info_602_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_602['info_602_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_f'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_t'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_602['info_602_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//604
-	for ($i=0, $count=count($tableau_604['info_604_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_604['info_604_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_h'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_i'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_k'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_l'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_604['info_604_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_604['info_604_a']) && is_array($tableau_604['info_604_a']) ) {
+    	for ($i=0, $count=count($tableau_604['info_604_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_604['info_604_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_h'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_i'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_k'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_l'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_604['info_604_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//605
-	for ($i=0, $count=count($tableau_605['info_605_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_605['info_605_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_h'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_i'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_k'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_l'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_m'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_n'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_q'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_r'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_s'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_u'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_w'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_605['info_605_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_605['info_605_a']) && is_array($tableau_605['info_605_a']) ) {
+    	for ($i=0, $count=count($tableau_605['info_605_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_605['info_605_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_h'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_i'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_k'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_l'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_m'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_n'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_q'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_r'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_s'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_u'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_w'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_605['info_605_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//606
-	for ($i=0, $count=count($tableau_606['info_606_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_606['info_606_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_606['info_606_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_606['info_606_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_606['info_606_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_606['info_606_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_606['info_606_a']) && is_array($tableau_606['info_606_a']) ) {
+    	for ($i=0, $count=count($tableau_606['info_606_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_606['info_606_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_606['info_606_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_606['info_606_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_606['info_606_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_606['info_606_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//607
-	for ($i=0, $count=count($tableau_607['info_607_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_607['info_607_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_607['info_607_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_607['info_607_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_607['info_607_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_607['info_607_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
+	if( !empty($tableau_607['info_607_a']) && is_array($tableau_607['info_607_a']) ) {
+    	for ($i=0, $count=count($tableau_607['info_607_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_607['info_607_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_607['info_607_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_607['info_607_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_607['info_607_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_607['info_607_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}
 	}
 	//608
-	for ($i=0, $count=count($tableau_608['info_608_a']); $i<$count; $i++) {
-		$apieces = array();
-		$apieces = array_merge($apieces, $tableau_608['info_608_a'][$i]);
-		$apieces = array_merge($apieces, $tableau_608['info_608_j'][$i]);
-		$apieces = array_merge($apieces, $tableau_608['info_608_x'][$i]);
-		$apieces = array_merge($apieces, $tableau_608['info_608_y'][$i]);
-		$apieces = array_merge($apieces, $tableau_608['info_608_z'][$i]);
-		$vedette = implode($glue, $apieces);
-		$vedettes[] = $vedette;
-	}	
+	if( !empty($tableau_608['info_608_a']) && is_array($tableau_608['info_608_a']) ) {
+    	for ($i=0, $count=count($tableau_608['info_608_a']); $i<$count; $i++) {
+    		$apieces = array();
+    		$apieces = array_merge($apieces, $tableau_608['info_608_a'][$i]);
+    		$apieces = array_merge($apieces, $tableau_608['info_608_j'][$i]);
+    		$apieces = array_merge($apieces, $tableau_608['info_608_x'][$i]);
+    		$apieces = array_merge($apieces, $tableau_608['info_608_y'][$i]);
+    		$apieces = array_merge($apieces, $tableau_608['info_608_z'][$i]);
+    		$vedette = implode($glue, $apieces);
+    		$vedettes[] = $vedette;
+    	}	
+	}
 	$result = "";
 	$count=0;
 	$automap_js = "var node_to_captions = [];\n";

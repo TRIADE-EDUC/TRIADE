@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: param_subst.tpl.php,v 1.4 2019-05-27 14:50:06 ngantier Exp $
+// $Id: param_subst.tpl.php,v 1.6 2024/01/17 08:09:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $tpl_param_table, $msg, $tpl_param_table_line, $tpl_param_subst_table, $tpl_param_subst_table_line, $tpl_param_subst_form, $current_module;
 
 //*******************************************************************
-// Définition des templates pour les listes en edition
+// D�finition des templates pour les listes en edition
 //*******************************************************************
 $tpl_param_table = "
 	<table>	
@@ -75,19 +75,19 @@ $tpl_param_subst_form = "
 	<div class='row'>&nbsp;</div>
 	<div class='row'>
 		<div class='colonne5 align_right'>
-				<label class='etiquette'>$msg[1604] &nbsp;</label>
+				<label class='etiquette' for='form_valeur_param'>$msg[1604] &nbsp;</label>
 				</div>
 		<div class='colonne_suite'>
-				<textarea name='form_valeur_param' rows='10' cols='90' wrap='virtual'>!!valeur_param!!</textarea>
+				<textarea id='form_valeur_param' name='form_valeur_param' rows='10' cols='90' wrap='virtual'>!!valeur_param!!</textarea>
 				</div>
 		</div>
 	<div class='row'>&nbsp;</div>
 	<div class='row'>
 		<div class='colonne5 align_right'>
-				<label class='etiquette'>".$msg['param_explication']." &nbsp;</label>
+				<label class='etiquette' for='comment_param'>".$msg['param_explication']." &nbsp;</label>
 				</div>
 		<div class='colonne_suite'>
-				<textarea name='comment_param' rows='10' cols='90' wrap='virtual'>!!comment_param!!</textarea>
+				<textarea id='comment_param' name='comment_param' rows='10' cols='90' wrap='virtual'>!!comment_param!!</textarea>
 				</div>
 		</div>
 	<div class='row'> </div>
@@ -100,6 +100,3 @@ $tpl_param_subst_form = "
 </form>
 <script type='text/javascript'>document.forms['paramform'].elements['form_valeur_param'].focus();</script>
 ";
-
-
-?>

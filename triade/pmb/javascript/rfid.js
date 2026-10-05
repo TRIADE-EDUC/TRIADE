@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rfid.js,v 1.5 2016-05-09 10:13:02 dgoron Exp $
+// $Id: rfid.js,v 1.5 2016/05/09 10:13:02 dgoron Exp $
 
 function f_expl(cb) {
 	nb_part_readed=cb.length;

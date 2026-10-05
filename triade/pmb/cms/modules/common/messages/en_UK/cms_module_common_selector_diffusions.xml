@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_diffusions.xml,v 1.1.4.2 2025/04/11 10:10:09 jparis Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_diffusions_ids">Choose one or more diffusions</entry>
+	<entry code="cms_module_common_selector_diffusions_no_diffusion">No diffusion available</entry>
+</XMLlist>

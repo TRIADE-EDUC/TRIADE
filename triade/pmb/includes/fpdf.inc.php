@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fpdf.inc.php,v 1.93 2019-05-24 15:47:38 dgoron Exp $
+// $Id: fpdf.inc.php,v 1.94 2019/08/02 10:49:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -30,7 +30,7 @@ function biblio_info($x, $y, $short=0) {
 		$ourPDF->setFont($pmb_pdf_font, 'B', 16);
 		$ourPDF->multiCell(120, 8, $biblio_name, 0, 'L', 0);
 	} else {
-		// afin de ne gÃ©nÃ©rer qu'une fois l'adr et compagnie
+		// afin de ne générer qu'une fois l'adr et compagnie
 		if (!$txt_biblio_info) {
 			
 			$txt_biblio_info = trim($biblio_adr1);
@@ -91,7 +91,7 @@ function lettre_retard_par_lecteur($id_empr, $niveau_relance=1) {
 	global $ourPDF;
 	
 	lettre_reader_loans_late_PDF::set_niveau_relance($niveau_relance);
-	$lettre_reader_loans_late_PDF = new lettre_reader_loans_late_PDF();
+	$lettre_reader_loans_late_PDF = lettre_reader_loans_late_PDF::get_instance('reader/loans');
 	$lettre_reader_loans_late_PDF->doLettre($id_empr);
 	$ourPDF = $lettre_reader_loans_late_PDF->PDF; 
 } // fin lettre_retard_par_lecteur
@@ -101,18 +101,18 @@ function lettre_retard_par_groupe($id_groupe, $lecteurs_ids=array(), $niveau_rel
 	global $ourPDF;
 	
 	lettre_reader_loans_late_group_PDF::set_niveau_relance($niveau_relance);
-	$lettre_reader_loans_late_group_PDF = new lettre_reader_loans_late_group_PDF();
+	$lettre_reader_loans_late_group_PDF = lettre_reader_loans_late_group_PDF::get_instance('reader/loans');
 	$lettre_reader_loans_late_group_PDF->set_lecteurs_ids($lecteurs_ids);
 	$lettre_reader_loans_late_group_PDF->doLettre($id_groupe);
 	$ourPDF = $lettre_reader_loans_late_group_PDF->PDF;
 } // fin lettre_retard_par_groupe
 
-// **************** RÃ©servations *************************************
+// **************** Réservations *************************************
 
 function lettre_resa_par_lecteur($id_empr) {
 	global $ourPDF;
 	
-	$lettre_reader_resa_PDF = new lettre_reader_resa_PDF();
+	$lettre_reader_resa_PDF = lettre_reader_resa_PDF::get_instance('reader/resa');
 	$lettre_reader_resa_PDF->doLettre($id_empr);
 	$ourPDF = $lettre_reader_resa_PDF->PDF;
 } // fin lettre_resa_par_lecteur
@@ -120,7 +120,7 @@ function lettre_resa_par_lecteur($id_empr) {
 function lettre_resa_planning_par_lecteur($id_empr) {
 	global $ourPDF;
 	
-	$lettre_reader_resa_planning_PDF = new lettre_reader_resa_planning_PDF();
+	$lettre_reader_resa_planning_PDF = lettre_reader_resa_planning_PDF::get_instance('reader/resa');
 	$lettre_reader_resa_planning_PDF->doLettre($id_empr);
 	$ourPDF = $lettre_reader_resa_planning_PDF->PDF;
 } // fin lettre_resa_planning_par_lecteur

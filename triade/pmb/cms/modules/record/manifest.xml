@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.4 2016-05-17 14:35:48 apetithomme Exp $ -->
+$Id: manifest.xml,v 1.4 2016/05/17 14:35:48 apetithomme Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Notice</name>

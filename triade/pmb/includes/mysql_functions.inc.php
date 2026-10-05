@@ -1,17 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mysql_functions.inc.php,v 1.11 2019-05-29 08:14:14 tsamson Exp $
+// $Id: mysql_functions.inc.php,v 1.17.4.3 2025/02/14 14:57:06 dbellamy Exp $
 
+global $class_path;
 require_once($class_path.'/pmb_mysqli.class.php');
+require_once($class_path.'/logs/MySQLi_log.class.php');
 
 define("PMB_MYSQL_ASSOC", MYSQLI_ASSOC);
 define("PMB_MYSQL_BOTH", MYSQLI_BOTH);
 define("PMB_MYSQL_NUM", MYSQLI_NUM);
 
 /**
- * 
+ *
  * @param resource $link_identifier
  */
 function pmb_mysql_affected_rows($link_identifier = null){
@@ -27,7 +29,7 @@ function pmb_mysql_close($link_identifier = null){
 }
 
 /**
- * 
+ *
  * @param string $server
  * @param string $username
  * @param string $password
@@ -50,7 +52,7 @@ function pmb_mysql_connect($server = null, $username = null, $password = null, $
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param int $row_number
  */
@@ -62,7 +64,7 @@ function pmb_mysql_data_seek($result , $row_number){
 }
 
 /**
- * 
+ *
  * @param resource $link_identifier
  */
 function pmb_mysql_errno($link_identifier = null){
@@ -73,15 +75,15 @@ function pmb_mysql_errno($link_identifier = null){
  *
  * @param resource $link_identifier
  */
-function pmb_mysql_error($link_identifier = null){	
+function pmb_mysql_error($link_identifier = null){
 	if (is_object($link_identifier)) {
 		return $link_identifier->error;
 	}
-	return pmb_mysqli::get_connection($link_identifier)->error;	
+	return pmb_mysqli::get_connection($link_identifier)->error;
 }
 
 /**
- * 
+ *
  * @param string $unescaped_string
  */
 function pmb_mysql_escape_string($unescaped_string){
@@ -89,7 +91,7 @@ function pmb_mysql_escape_string($unescaped_string){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param string $result_type
  */
@@ -100,7 +102,7 @@ function pmb_mysql_fetch_all($result, $result_type = PMB_MYSQL_NUM) {
 	return $result->fetch_all($result_type);
 }
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param string $result_type
  */
@@ -112,7 +114,7 @@ function pmb_mysql_fetch_array($result, $result_type = PMB_MYSQL_BOTH){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  */
 function pmb_mysql_fetch_assoc($result){
@@ -123,10 +125,10 @@ function pmb_mysql_fetch_assoc($result){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param number $field_offset
- * @return unknown
+ * @return integer
  */
 function pmb_mysql_fetch_field($result, $field_offset = 0){
 	if($result === false){
@@ -137,12 +139,12 @@ function pmb_mysql_fetch_field($result, $field_offset = 0){
 		if (!$res) {
 			return $res;
 		}
-	}	
+	}
 	return $result->fetch_field();
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param string $class_name
  * @param array $params
@@ -161,7 +163,7 @@ function pmb_mysql_fetch_object($result, $class_name = "", $params = array()){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  */
 function pmb_mysql_fetch_row($result){
@@ -172,24 +174,24 @@ function pmb_mysql_fetch_row($result){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param number $field_offset
  * @return string
  */
-function pmb_mysql_field_flags($result, $field_offset){	
+function pmb_mysql_field_flags($result, $field_offset){
 	if($result === false){
 		return false;
 	}
 	$flags_num = $result->fetch_field_direct($field_offset)->flags;
-	
+
 	$res = "";
 	foreach (pmb_mysqli::get_mysqli_flags() as $n => $t) {
 		if ($flags_num & $n) {
 			$res .= ' '.$t;
 		}
 	}
-	
+
 	if (empty($res)) {
 		return $res;
 	} else {
@@ -198,7 +200,7 @@ function pmb_mysql_field_flags($result, $field_offset){
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param number $field_offset
  * @return NULL
@@ -257,15 +259,17 @@ function pmb_mysql_field_type($result, $field_offset){
  *
  * @param mysqli_result $result
  */
-function pmb_mysql_free_result($result){
-	if($result === false){
-		return false;
+function pmb_mysql_free_result(&$result){
+	if ($result !== false && !empty($result->num_rows)) {
+		$result->free_result();
+		$result = null;
+		return true;
 	}
-	return $result->free_result();
+	return false;
 }
 
 /**
- * 
+ *
  * @return string
  */
 function pmb_mysql_get_client_info(){
@@ -273,7 +277,7 @@ function pmb_mysql_get_client_info(){
 }
 
 /**
- * 
+ *
  * @param resource $link_identifier
  */
 function pmb_mysql_get_host_info($link_identifier = null){
@@ -305,19 +309,22 @@ function pmb_mysql_insert_id($link_identifier = null){
 }
 
 /**
- * 
+ *
  * @param string $database
  * @param resource $link_identifier
  * @return mixed
  */
 function pmb_mysql_list_tables($database, $link_identifier = null){
-	$res = pmb_mysql_query("SHOW TABLES FROM ".$database, $link_identifier);
-
+	if(strpos($database, '-') !== false) {
+		$res = pmb_mysql_query("SHOW TABLES FROM `".$database."`", $link_identifier);
+	} else {
+		$res = pmb_mysql_query("SHOW TABLES FROM ".$database, $link_identifier);
+	}
 	return $res;
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  */
 function pmb_mysql_num_fields($result){
@@ -339,26 +346,38 @@ function pmb_mysql_num_rows($result){
 }
 
 /**
- * 
+ *
  * @param string $query
  * @param resource $link_identifier
  * @param string $resultmode
  * @return mixed
  */
-function pmb_mysql_query($query, $link_identifier = null, $resultmode = null){
-	if(!isset($result_mode) || $result_mode === null){
-		$result = pmb_mysqli::get_connection($link_identifier)->query($query);
-		if(!$result) {
-			print pmb_mysql_debug(debug_backtrace()[0]);
-		}
-		return $result;
-	} else {
-		return pmb_mysqli::get_connection($link_identifier)->query($query, $resultmode);
-	}	
+function pmb_mysql_query($query, $link_identifier = null, $resultmode = null)
+{
+    if (empty($query)) {
+        return false;
+    }
+    if (! isset($resultmode) || $resultmode === null) {
+        // $uniqId = MySQLi_log::prepare_time($query);
+        $result = pmb_mysqli::get_connection($link_identifier)->query($query);
+        // MySQLi_log::register($uniqId);
+        if (! $result) {
+            print pmb_mysql_debug(debug_backtrace()[0]);
+            if (strlen($query) > 1024) {
+                $label = substr($query, 0, 1024) . "[...]";
+            } else {
+                $label = $query;
+            }
+            MySQLi_log::register(MySQLi_log::prepare_error($label), MySQLi_log::get_error());
+        }
+        return $result;
+    } else {
+        return pmb_mysqli::get_connection($link_identifier)->query($query, $resultmode);
+    }
 }
 
 /**
- * 
+ *
  * @param string $unescaped_string
  * @param resource $link_identifier
  * @return string
@@ -368,7 +387,7 @@ function pmb_mysql_real_escape_string($unescaped_string, $link_identifier = null
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param number $row
  * @param number $field
@@ -383,11 +402,11 @@ function pmb_mysql_result($result, $row, $field = 0){
 	}
 	$result->data_seek($row);
 	$res = $result->fetch_array(PMB_MYSQL_BOTH);
-	return $res[$field];	
+	return $res[$field];
 }
 
 /**
- * 
+ *
  * @param string $database_name
  * @param resource $link_identifier
  * @return boolean
@@ -397,16 +416,16 @@ function pmb_mysql_select_db($database_name, $link_identifier = null){
 }
 
 /**
- * 
+ *
  * @param resource $link_identifier
  * @return string
  */
 function pmb_mysql_stat($link_identifier = null){
-	return pmb_mysqli::get_connection($link_identifier)->stat;
+	return pmb_mysqli::get_connection($link_identifier)->stat();
 }
 
 /**
- * 
+ *
  * @param mysqli_result $result
  * @param int $i
  * @return string
@@ -422,7 +441,7 @@ function pmb_mysql_tablename($result, $i){
 function pmb_mysql_debug($backtrace) {
 	global $msg;
 	global $pmb_display_errors;
-	
+
 	$res = "";
 	if($pmb_display_errors) {
 		$res = "
@@ -434,6 +453,7 @@ function pmb_mysql_debug($backtrace) {
 			<div class='pmb_mysql_debug_content'>
 				<strong>".$backtrace['file'].":".$backtrace['line']."</strong>
 				<p>".$backtrace['args'][0]."</p>
+                ".($pmb_display_errors == 2 ? "<p>".pmb_mysql_error()."</p>" : "")."
 			</div>
 		</div>";
 	}
@@ -441,13 +461,13 @@ function pmb_mysql_debug($backtrace) {
 }
 
 /**
- * 
+ *
  * @param resource $link_identifier
  * @return boolean
  */
 function pmb_mysql_ping($link_identifier = null){
     global $dbh;
-    
+
     if($link_identifier == null){
         $link_identifier = $dbh;
     }

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_generic_article.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+$Id: cms_module_common_selector_generic_article.xml,v 1.2 2022/12/23 10:19:56 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_sub_choice_label">Retrieve</entry>
@@ -13,4 +13,9 @@ $Id: cms_module_common_selector_generic_article.xml,v 1.1 2015-06-16 10:24:25 pm
 	<entry code="cms_module_common_selector_article">Manual selection</entry>
 	<entry code="cms_module_common_selector_env_var">Selection through an environment variable</entry>
 	<entry code="cms_module_common_selector_global_var">Selection through a global variable</entry>
+	<entry code="cms_module_common_selector_article">Sélecteur manuel d'un article</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_reader_status">Sélection depuis une rubrique et un champ perso comparé au statut de l'emprunteur</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_reader_category">Sélection depuis une rubrique et un champ perso comparé à la catégorie de l'emprunteur</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_search_segment">Sélection depuis une rubrique et un champ perso comparé au segment de recherche</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_search_universe">Sélection depuis une rubrique et un champ perso comparé à l'univers de recherche</entry>
 </XMLlist>

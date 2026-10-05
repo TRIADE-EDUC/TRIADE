@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authorities_collection.class.php,v 1.7 2019-05-29 09:00:41 ngantier Exp $
+// $Id: authorities_collection.class.php,v 1.10 2023/07/26 12:49:31 dbellamy Exp $
 
 /**
- * Classe de collection d'autoritÃ©s pour Ã©viter d'instancier plusieurs fois les mÃªmes autoritÃ©s dans une mÃªme page
+ * Classe de collection d'autorités pour éviter d'instancier plusieurs fois les mêmes autorités dans une même page
  * @author apetithomme
  *
  */
@@ -30,61 +30,64 @@ class authorities_collection {
 
 		switch($authority_type){
 			case "author" :
-			case AUT_TABLE_AUTHORS :
+			case (string) AUT_TABLE_AUTHORS :
 				self::load_class("author");
 				self::$authorities[$authority_type][$authority_id] = new auteur($authority_id);
 				break;
 			case "publisher" :
-			case AUT_TABLE_PUBLISHERS :
+			case (string) AUT_TABLE_PUBLISHERS :
 				self::load_class("publisher");
 				self::$authorities[$authority_type][$authority_id] = new publisher($authority_id);
 				break;
 			case "collection" :
-			case AUT_TABLE_COLLECTIONS :
+			case (string) AUT_TABLE_COLLECTIONS :
 				self::load_class("collection");
 				self::$authorities[$authority_type][$authority_id] = new collection($authority_id);
 				break;
 			case "subcollection" :
-			case AUT_TABLE_SUB_COLLECTIONS :
+			case (string) AUT_TABLE_SUB_COLLECTIONS :
 				self::load_class("subcollection");
 				self::$authorities[$authority_type][$authority_id] = new subcollection($authority_id);
 				break;
 			case "serie" :
-			case AUT_TABLE_SERIES :
+			case (string) AUT_TABLE_SERIES :
 				self::load_class("serie");
 				self::$authorities[$authority_type][$authority_id] = new serie($authority_id);
 				break;
 			case "indexint" :
-			case AUT_TABLE_INDEXINT :
+			case (string) AUT_TABLE_INDEXINT :
 				self::load_class("indexint");
 				self::$authorities[$authority_type][$authority_id] = new indexint($authority_id);
 				break;
 			case "titre_uniforme" :
-			case AUT_TABLE_TITRES_UNIFORMES :
+			case (string) AUT_TABLE_TITRES_UNIFORMES :
 				self::load_class("titre_uniforme");
 				self::$authorities[$authority_type][$authority_id] = new titre_uniforme($authority_id);
 				break;
 			case "category" :
-			case AUT_TABLE_CATEG :
+			case (string) AUT_TABLE_CATEG :
 				global $lang;
 				self::load_class("categorie");
 				self::$authorities[$authority_type][$authority_id] = new categorie($authority_id,$lang);
 				break;
 			case "concept" :
-			case AUT_TABLE_CONCEPT :
+			case (string) AUT_TABLE_CONCEPT :
 				self::load_class("skos/skos_concept");
 				if(!is_numeric($authority_id)) {
 				    $authority_id = onto_common_uri::get_id($authority_id);
 				}
-				 self::$authorities[$authority_type][$authority_id] = new skos_concept($authority_id);
-				break;
+                self::$authorities[$authority_type][$authority_id] = new skos_concept($authority_id);
+                break;
+			case (string) AUT_TABLE_INDEX_CONCEPT :
+			    self::$authorities[$authority_type][$authority_id] = new concept($authority_id);
+			    break;
 			case "authperso" :
-			case AUT_TABLE_AUTHPERSO :
-				self::load_class("authperso_authority");
-				self::$authorities[$authority_type][$authority_id] = new authperso_authority($authority_id);
+			case (string) AUT_TABLE_AUTHPERSO :
+				self::load_class("authperso_data");
+				self::$authorities[$authority_type][$authority_id] = new authperso_data($authority_id);
 				break;
 			case 'authority' :
-			case AUT_TABLE_AUTHORITY :
+			case (string) AUT_TABLE_AUTHORITY :
 			    if($authority_id > 0){
 			        $aut = new authority($authority_id);
 			    }else{

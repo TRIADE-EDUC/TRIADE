@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.1.14.1 2024/08/28 14:10:14 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>Onix XML -&gt; pmb-XML UNIMARC</importname>
@@ -6,10 +12,10 @@
 	<nperpass>200</nperpass>
 	<!-- Type de l'entrée -->
 	<input type="xml" rootelement="ONIXMessage" noticeelement="Product" />
-       
+
    <!-- Type de sortie -->
 	<output importable="yes" type="iso_2709" suffix="marc"/>
-	
+
 	 <step type="xmltransform">
 		<!-- Conversion en xml unimarc -->
 		<xslfile>onix2uni.xsl</xslfile>
@@ -18,7 +24,7 @@
 		<trootelement>unimarc</trootelement>
 		<tnoticeelement>notice</tnoticeelement>
 	</step>
-	
+
 	<step type="toiso">
 		<rootelement>unimarc</rootelement>
 		<il>2</il>
@@ -26,5 +32,5 @@
 		<dm1>4</dm1>
 		<dm2>5</dm2>
 		<dm3>0</dm3>
-	</step>	
+	</step>
 </params>

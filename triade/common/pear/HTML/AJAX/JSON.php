@@ -156,7 +156,8 @@ class HTML_AJAX_JSON
         if(function_exists('mb_convert_encoding'))
             return mb_convert_encoding($utf16, 'UTF-8', 'UTF-16');
         
-        $bytes = (ord($utf16{0}) << 8) | ord($utf16{1});
+    //    $bytes = (ord($utf16{0}) << 8) | ord($utf16{1});
+        $bytes = (ord($utf16[0]) << 8) | ord($utf16[1]);
 
         switch(true) {
             case ((0x7F & $bytes) == $bytes):

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.1 2019-06-03 09:55:20 arenou Exp $ -->
+$Id: fr_FR.xml,v 1.1 2019/06/03 09:55:20 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="mediawiki_url">URL du serveur mediawiki (avec api.php)</entry>

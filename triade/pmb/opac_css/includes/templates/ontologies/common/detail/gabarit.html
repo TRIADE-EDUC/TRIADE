@@ -1,0 +1,51 @@
+{% comment %}
+$Id: gabarit.html,v 1.1 2022/12/05 14:00:37 arenou Exp $
+{% endcomment %}
+<style type="text/css">
+	.aut_display_row {
+		display: table-row;
+	}
+	
+	.aut_display_cell {
+		display: table-cell;
+		padding-right: 5px;
+	}
+</style>
+<td style='vertical-align:top'>
+	{% block detail %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.ontology_object_uri }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ entity.uri }}
+			</div>
+		</div>
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b> Type :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ entity.typeLabel | join " / " }}
+			</div>
+		</div>
+		{% for key, elem in entity.infos %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b> {{elem.label}} :</b>
+				</div>
+				<div class="aut_display_cell">
+					{% for value in elem.values %}
+					    {% if !loop.first %} / {% endif %}
+						{% if value.object %}
+							<a href='{{base_url}}&id={{value.object.id}}''>{{value.object.isbd}}</a>
+						{% else %}
+							{{value}}
+						{% endif %}
+						
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}	
+	{% endblock detail %}
+</td>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,60 +26,63 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title></head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" onunload="attente_close()" >
-<?php 
+<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
+</head>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<?php
 include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
-	if (empty($_SESSION["adminplus"])) {
-		print "<script>";
-		print "location.href='./base_de_donne_importation.php'";
-		print "</script>";
-		exit;
-	}
-	?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+if (empty($_SESSION["adminplus"])) {
+	print "<script>location.href='./base_de_donne_importation.php'</script>";
+	exit;
+}
+?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation du fichier XML"?></font></b></td></tr>
-     <tr id='cadreCentral0'>
-     <td >
-     <!-- // fin  -->
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Importation du fichier XML</font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 
-<br />
-<?php
-if (isset($_GET["err"])) {
-	print "<center><font id=color3><b>Mot de passe non conforme ! </b></font></center>";
-	print "<br>";
-}
-?>
-<ul>
-<form method=post  action='./base_de_donne_importation730.php' name=formulaire ENCTYPE="multipart/form-data">
+<?php if (isset($_GET["err"])) { ?>
+<div style="margin:8px;padding:8px 12px;background:#ffebee;border:1px solid #ef9a9a;border-radius:6px;font-size:13px;color:#c62828;font-weight:600;">Mot de passe non conforme !</div>
+<?php } ?>
 
-<font class=T1><?php print LANGGEP2?> : (<b>XML</b>)  <input type="file" name="fichier1" size=20 > <br /><br />
+<form method="post" action="./base_de_donne_importation730.php" name="formulaire" enctype="multipart/form-data">
+<div class="na-card">
 
-<br /><br />
+  <div style="margin-bottom:12px;">
+    <label style="font-size:12px;color:#555;display:block;margin-bottom:4px;"><?php print LANGGEP2 ?> (<b>XML</b>) :</label>
+    <input type="file" name="fichier1" size="25" style="font-size:12px;">
+  </div>
 
-<br />
-<ul><ul>
-<script language=JavaScript>buttonMagicSubmit2("<?php print "Confirmer Importation "?>","<?php print LANGbasededon201?>","<?php print LANGBT5?>"); //text,nomInput</script>
-<!-- <script language=JavaScript>buttonMagicSubmit("<?php print LANGbasededon20?>","<?php print LANGbasededon201?>"); //text,nomInput</script> -->
-</ul></ul></ul>
-<br><br><br><br>
-</font>
-&nbsp;&nbsp;<?php print LANGbasededon21?>
-
+</div>
+<div class="na-foot">
+  <button type="submit" class="btn-enr">Confirmer Importation</button>
+</div>
 </form>
-<!-- // fin  -->
-</td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
-<SCRIPT language="JavaScript">InitBulle('#000000','#FFFFFF','red',1);</SCRIPT>
+
+</td>
+</tr>
+</table>
+
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 </BODY></HTML>

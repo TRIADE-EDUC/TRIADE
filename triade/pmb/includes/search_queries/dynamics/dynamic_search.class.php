@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dynamic_search.class.php,v 1.4 2018-03-13 15:14:57 ngantier Exp $
+// $Id: dynamic_search.class.php,v 1.5 2021/08/17 10:11:27 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -24,6 +24,9 @@ class dynamic_search {
     			break;
     		case 'e' :
     			$this->prefix = 'expl';
+    			break;
+    		case 'en' :
+    			$this->prefix = 'explnum';
     			break;
     		case 'a' :
     			$this->prefix = 'authperso';
@@ -150,7 +153,7 @@ class dynamic_search {
     	return $restrict_query;
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query($field = array()) {
     	return "";    
     }

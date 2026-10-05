@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 
-//	error_reporting(0);
+	error_reporting(0);
 
 	$fichier = "../data/install_log/install.inc";
 
@@ -33,6 +33,32 @@
 // version de php < 4.3.4 (enfin je crois...)
 if ( !defined('PATH_SEPARATOR') ) {
     define('PATH_SEPARATOR', ( substr(PHP_OS, 0, 3) == 'WIN' ) ? ';' : ':');
+}
+
+
+function verifierConnexionPDO($host, $dbname, $user, $password) {
+    try {
+        new PDO(
+            "mysql:host=$host;dbname=$dbname;charset=utf8",
+            $user,
+            $password,
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        );
+        return true; // Connexion OK
+    } catch (PDOException $e) {
+        return false; // Connexion �chou�e
+    }
+}
+
+$loginbase = trim($_POST["login"]);
+$passbase = trim($_POST["password"]);
+$nombase = trim($_POST["nombase"]);
+$host = trim($_POST["hostbase"]);
+
+if (!verifierConnexionPDO($host,$nombase,$loginbase,$passbase)) {
+	echo "<html>Erreur de connexion : les informations de la base de donn&eacute;es ne sont pas correctes.<br>";
+	echo "<a href='./suite.php'>cliquer ici pour recommencer</a></html>";
+	exit;
 }
 
 
@@ -170,6 +196,7 @@ if ( !defined('PATH_SEPARATOR') ) {
 	$loginbase = trim($_POST["login"]);
 	$passbase = trim($_POST["password"]);
 	$nombase = trim($_POST["nombase"]);
+	$server = trim($_POST["typeserveur"]);
 	$repecole = trim($_POST["repecole"]);
 	$repadmin = trim($_POST["repadmin"]);
 	//$langue=trim($_POST["choix_lang"]);
@@ -189,6 +216,8 @@ if ( !defined('PATH_SEPARATOR') ) {
 	$text.= 'define("DEV", "0");'."\n";
 	$text.= 'define("INTER", "non");'."\n";
 	$text.= 'define("VATEL", "0");'."\n";
+	$text.= 'define("COEFF", "0");'."\n";
+	$text.= 'define("PREVISUBULLETIN", "non");'."\n";
 	$text.= 'define("ECOLE", "'.$repecole.'");'."\n";
 	$text.= 'define("ADMIN", "'.$repadmin.'");'."\n";
 	$text.= 'define("SERVEURTYPE", "'.$typeserveur.'");'."\n";
@@ -230,6 +259,8 @@ if ( !defined('PATH_SEPARATOR') ) {
 	$text.= 'define("TYPETABLE", "'.$typetable.'");'."\n";
 	$text.= 'define("VERIFEMAIL", "oui");'."\n";
 	$text.= 'define("GESTIONMDP", "'.$gestionmdp.'"); // valeur possible MD5 ou SHA2 (par défaut crypt)'."\n";
+	$pow_secret = hash('sha256', date('YmdHis') . bin2hex(random_bytes(16)));
+	$text.= 'define("POW_SECRET", "'.$pow_secret.'"); // secret proof-of-work généré à l\'installation'."\n";
 
 //--------------------------------------------------------------------------------------
 //--- si ajout voir aussi notemodif3.php, notesupp3.php, notevisu3.php
@@ -362,8 +393,7 @@ if ( !defined('PATH_SEPARATOR') ) {
 		<div style="text-align: center;">
 
 			<div id="mainInst3">
-				<img src="./image/logo_triade_licence.gif"
-				     alt="logo_triade_licence" />
+				<img src="./image/logo_triade_licence.png" width='300' alt="logo_triade_licence" />
 
 <?php
 	include_once("../common/version.php");
@@ -375,9 +405,16 @@ if ( !defined('PATH_SEPARATOR') ) {
 		$disable='disabled="disabled"';
 	}
 
+	$nbetape='2';
 	if ($base == "mysql") {
 		$etapesuivante=$nbetape;
 		$fichiersuivant="recup2.php";
+
+		if ($server != "LINUX") {
+			$fichiersuivant="recup22.php";
+			$nbetape='4';
+		}
+
 	}else{
 		$etapesuivante="1";
 		$fichiersuivant="recup-fin.php";
@@ -394,23 +431,75 @@ if ( !defined('PATH_SEPARATOR') ) {
 					<span class="T2">
 						INSTALLATION DE LA BASE SQL&nbsp;:<br />
 						<br/>
-						Etape <b>1/2 </b>&nbsp;&nbsp;&nbsp;&nbsp;<img src="./image/stat1.gif" alt="Ok" />
+						Etape <b>1/<?php print $nbetape ?> </b>&nbsp;&nbsp;&nbsp;&nbsp;<img src="./image/stat1.gif" alt="Ok" />
 					</span>
 				</p>
-				<form action="recup2.php" id="form" method="post" onsubmit="document.getElementById('form').val.disabled=true" >
+				<form action="<?php print $fichiersuivant ?>" id="form" method="post" onsubmit="document.getElementById('form').val.disabled=true" >
 						
 						<div style="text-align: right;
 					            padding-right: 100px;
 					            margin-bottom: 1em;">
-						<input type="submit" onclick="this.value='Patientez S.V.P.';"
+						<input type="submit" onclick="this.value='Patientez S.V.P.';openVideo();"
 						       name="val" value=" Suivant --&gt; "
 						       class="BUTTON" <?php print $disable ?> />
 					</div>
 				</form>
+
+				<br><br>
+				<center><i>La proc&eacute;dure d'installation de la base de donn&eacute;es<br>peut prendre plusieurs minutes.
+                                   <br><b>jusqu'&agrave; 10 minutes sur certains serveurs.</b></i></center>
+		
 			</div>
 		</div>
 
-<?php	include_once("./librairie/pied_page.php");  ?>
+<?php
+	
+include_once("./librairie/pied_page.php");  
+
+$cr=hasInternet(); 
+if ($cr) {  ?>
+
+<div id="videoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeVideo()">&times;</span>
+      <iframe id="youtubeFrame"
+        src=""
+        title="TRIADE-YOUTUBE"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+<script>
+function openVideo() {
+	const modal = document.getElementById("videoModal");
+	const frame = document.getElementById("youtubeFrame");
+      	frame.src = 'https://www.youtube.com/embed/b92xmYcFU7E?autoplay=1';
+      	modal.style.display = "flex";
+}
+
+function closeVideo() {
+      const modal = document.getElementById("videoModal");
+      const frame = document.getElementById("youtubeFrame");
+      modal.style.display = "none";
+      frame.src = ""; // stoppe la lecture
+}
+
+// Ferme la fen�tre si on clique en dehors
+window.onclick = function (event) {
+	const modal = document.getElementById("videoModal");
+	if (event.target === modal) {
+		closeVideo();
+	}
+};
+
+</script>
+
+<?php 
+	sleep('30');
+} ?>
 
 	</body>
 </html>

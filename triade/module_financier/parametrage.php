@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,271 +19,134 @@ session_start();
  *
  ***************************************************************************/
 
-// Inclure la librairie d'initialisation du module
 include("librairie_php/lib_init_module.inc.php");
 
-// Verification autorisations acces au module
 if(autorisation_module()) {
-
-	//*************** RECUPERATION/INITIALISATION DES PARAMETRES ****************
 	$operation = lire_parametre('operation', '', 'POST');
-	//***************************************************************************
-
-
-	//*************** TRAITER L'OPERATION DEMANDEE ****************
 	if($operation == "enregistrer") {
-
 	}
-	//***************************************************************************
-	
-	
 } else {
-	// Fermeture connexion bddd
 	Pgclose();
-	// Redirection vers script d'erreur
-	header('Location: ' . FIN_SCRIPT_PAS_AUTORISATION) ;
+	header('Location: ' . FIN_SCRIPT_PAS_AUTORISATION);
 	exit();
 }
-
 ?>
-<html>
-	<head>
-		<meta http-equiv="CacheControl" content = "no-cache">
-		<meta http-equiv="pragma" content = "no-cache">
-		<meta http-equiv="expires" content = -1>
-		<meta name="Copyright" content="Triade©, 2001">
-		<base href="<?php echo site_url_racine(FIN_REP_MODULE); ?>">
-		<link title="style" type="text/CSS" rel="stylesheet" href="./librairie_css/css.css">
-		<script language="javascript" src="./librairie_js/clickdroit2.js"></script>
-		<script language="javascript" src="./librairie_js/function.js"></script>
-		<script language="javascript" src="./librairie_js/lib_css.js"></script>
-		<script language="javascript" src="./librairie_js/verif_creat.js"></script>
-		<link title="style" type="text/CSS" rel="stylesheet" href="./<?php echo $g_chemin_relatif_module; ?>librairie_css/css.css">
-		<?php
-		// Inclure les scripts Javascript
-		inclure_scripts_js_toutes_pages();
-		?>
-		<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
-	</head>
-	
-	<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<HTML>
+<HEAD>
+<META http-equiv="CacheControl" content = "no-cache">
+<META http-equiv="pragma" content = "no-cache">
+<META http-equiv="expires" content = -1>
+<meta name="Copyright" content="Triade©, 2001">
+<base href="<?php echo site_url_racine(FIN_REP_MODULE); ?>">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script language="javascript" src="./librairie_js/clickdroit2.js"></script>
+<script language="javascript" src="./librairie_js/function.js"></script>
+<script language="javascript" src="./librairie_js/lib_css.js"></script>
+<script language="javascript" src="./librairie_js/verif_creat.js"></script>
+<link title="style" type="text/CSS" rel="stylesheet" href="./<?php echo $g_chemin_relatif_module; ?>librairie_css/css.css">
+<?php inclure_scripts_js_toutes_pages(); ?>
+<title>Triade - <?php echo LANG_FIN_PARA_001 ?></title>
+</HEAD>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 
-		<?php //********** GENERATION DU DEBUT DE LA PAGE ET DES MENUS PRINCIPAUX ********** ?>
-		
-		<?php
-		//Verification droits acces application et generation menus
-		include("./librairie_php/lib_licence.php");
-		// Verification droits acces groupe
-		validerequete("2");	
-		?>
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></script>
-		<?php include("./librairie_php/lib_defilement.php"); ?>
-		</td>
-		<td width="472" valign="middle" rowspan="3" align="center">
-			<div align='center'>
-				<?php top_h(); ?>
-				<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></script>
+<?php include("./librairie_php/lib_licence.php"); ?>
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
+<?php validerequete("2"); ?>
+<SCRIPT language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
+<?php include("./librairie_php/lib_defilement.php"); ?>
+</TD><td width="472" valign="top" rowspan="3" align="center">
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
+<?php if(autorisation_module()) { ?>
 
-		<?php
-		// Verification autorisations acces au module
-		if(autorisation_module()) {
-		?>	
+<div class="dest-wrap">
 
-		<!-- TITRE ET CADRE CENTRAL -->
-		<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-			<tr id="coulBar0">
-				<td height="2" align="left">
-					<b><font id="menumodule1" ><?php echo LANG_FIN_PARA_001; ?></font></b>
-				</td>
-			</tr>
-			<tr id="cadreCentral0">
-				<td valign="top" align="center">
-					<form name="formulaire" id="formulaire" action="<?php echo url_script(); ?>" method="post" onSubmit="">
-						
-						<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
-	
-							<?php //********** AFFICHAGE DES DONNEES ********** ?>
-							
-							<tr>
-								<td align="center">&nbsp;</td>
-							</tr>
-							<tr>
-								<td valign=top align="center">
+  <div class="toolbar">
+    <i class="bi bi-sliders" style="color:#080A66;font-size:15px"></i>
+    <span class="card-title"><?php echo LANG_FIN_PARA_001 ?></span>
+  </div>
 
-									<table border="0" cellpadding="0" cellspacing="0" align="center">
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="right" valign="middle"><font class="T2"><?php echo LANG_FIN_GROUPE_001; ?>&nbsp;:&nbsp;</font></td>
-											<td align="left" valign="middle">
-												<script language="javascript">buttonMagic3("<?php print LANG_FIN_GENE_009?>","onclick_groupe_frais()");</script>
-											</td>
-											<td align="left" valign="middle">
-												<a href='javascript:;'  onMouseOver="AffBulle3('<?php echo LANG_FIN_GENE_002; ?>','./image/commun/info.jpg','<?php echo LANG_FIN_GROUPE_002; ?>', '');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="right" valign="middle"><font class="T2"><?php echo LANG_FIN_TFRA_001; ?>&nbsp;:&nbsp;</font></td>
-											<td align="left" valign="middle">
-												<script language="javascript">buttonMagic3("<?php print LANG_FIN_GENE_009?>","onclick_type_frais()");</script>
-											<td align="left" valign="middle">
-												<a href='javascript:;'  onMouseOver="AffBulle3('<?php echo LANG_FIN_GENE_002; ?>','./image/commun/info.jpg','<?php echo LANG_FIN_TFRA_002; ?>', '');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
-											</td>
-										</tr>
-										
-										
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="right" valign="middle"><font class="T2"><?php echo LANG_FIN_TREG_001; ?>&nbsp;:&nbsp;</font></td>
-											<td align="left" valign="middle">
-												<script language="javascript">buttonMagic3("<?php print LANG_FIN_GENE_009?>","onclick_type_reglement()");</script>
-											</td>
-											<td align="left" valign="middle">
-												<a href='javascript:;'  onMouseOver="AffBulle3('<?php echo LANG_FIN_GENE_002; ?>','./image/commun/info.jpg','<?php echo LANG_FIN_TREG_002; ?>', '');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
-											</td>
-										</tr>	
+  <div class="dest-list">
 
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="right" valign="middle"><font class="T2"><?php echo LANG_FIN_BARE_001; ?>&nbsp;:&nbsp;</font></td>
-											<td align="left" valign="middle">
-												<script language="javascript">buttonMagic3("<?php print LANG_FIN_GENE_009?>","onclick_bareme()");</script>
-											</td>
-											<td align="left" valign="middle">
-												<a href='javascript:;'  onMouseOver="AffBulle3('<?php echo LANG_FIN_GENE_002; ?>','./image/commun/info.jpg','<?php echo LANG_FIN_BARE_002; ?>', '');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
-											</td>
-										</tr>	
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>	
-											
-										<tr>
-											<td colspan="3">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="right" valign="middle"><font class="T2"><?php echo LANG_FIN_PARP_001; ?>&nbsp;:&nbsp;</font></td>
-											<td align="left" valign="middle">
-												<script language="javascript">buttonMagic3("<?php print LANG_FIN_GENE_009?>","onclick_config()");</script>
-											</td>
-											<td align="left" valign="middle">
-												<a href='javascript:;'  onMouseOver="AffBulle3('<?php echo LANG_FIN_GENE_002; ?>','./image/commun/info.jpg','<?php echo LANG_FIN_PARP_001; ?>', '');"  onMouseOut="HideBulle()";><img src="./image/help.gif" border=0 align=center></a>
-											</td>
-										</tr>	
-										
-										
-									</table>
-								</td>
-							</tr>
-									
-							<?php //********** MESSAGES UTILISATEUR ********** ?>
-						
-							<tr>
-								<td align="center">&nbsp;</td>
-							</tr>
-							<tr>
-								<td align="center">
-									<a name="MESSAGE"></a>
-									<?php 
-									msg_util_afficher();
-									msg_util_attente_init(); 
-									?>
-									</td>
-							</tr>
-							
-						</table>
-						
-					</form>
-					
-					
-					<?php //********** VALIDATION FORMULAIRES ********** ?>
+    <div class="dest-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-collection" style="color:#080A66;font-size:17px"></i>
+        <span class="dest-row-label"><?php echo LANG_FIN_GROUPE_001 ?></span>
+      </div>
+      <script language="javascript">buttonMagic3("<?php echo LANG_FIN_GENE_009 ?>","onclick_groupe_frais()");</script>
+    </div>
 
+    <div class="dest-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-tag" style="color:#080A66;font-size:17px"></i>
+        <span class="dest-row-label"><?php echo LANG_FIN_TFRA_001 ?></span>
+      </div>
+      <script language="javascript">buttonMagic3("<?php echo LANG_FIN_GENE_009 ?>","onclick_type_frais()");</script>
+    </div>
 
-					<?php //********** GESTION NAVIGATION ********** ?>
-					<script language="javascript">
-						function onclick_type_frais() {
-							msg_util_attente_montrer(true);
-							document.getElementById('formulaire_type_frais').submit();
-						}
-						function onclick_groupe_frais() {
-							msg_util_attente_montrer(true);
-							document.getElementById('formulaire_groupe_frais').submit();
-						}
-						function onclick_type_reglement() {
-							msg_util_attente_montrer(true);
-							document.getElementById('formulaire_type_reglement').submit();
-						}
-						function onclick_bareme() {
-							msg_util_attente_montrer(true);
-							document.getElementById('formulaire_bareme').submit();
-						}
-						function onclick_config() {
-							msg_util_attente_montrer(true);
-							document.getElementById('formulaire_config').submit();
-						}
-						
-						
-						
-					</script>
-					<form name="formulaire_type_frais" id="formulaire_type_frais" action="<?php echo $g_chemin_relatif_module; ?>type_frais_ajout.php" method="post">
-					</form>
-					
-					<form name="formulaire_groupe_frais" id="formulaire_groupe_frais" action="<?php echo $g_chemin_relatif_module; ?>groupe_frais_ajout.php" method="post">
-					</form>
-					
-					<form name="formulaire_type_reglement" id="formulaire_type_reglement" action="<?php echo $g_chemin_relatif_module; ?>type_reglement_ajout.php" method="post">
-					</form>
-					<form name="formulaire_bareme" id="formulaire_bareme" action="<?php echo $g_chemin_relatif_module; ?>bareme_liste.php" method="post">
-					</form>
-					<form name="formulaire_config" id="formulaire_config" action="<?php echo $g_chemin_relatif_module; ?>config_prelevement.php" method="post">
-					</form>
-					<br>
-				</td>
-			</tr>
-		</table>
+    <div class="dest-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-credit-card" style="color:#080A66;font-size:17px"></i>
+        <span class="dest-row-label"><?php echo LANG_FIN_TREG_001 ?></span>
+      </div>
+      <script language="javascript">buttonMagic3("<?php echo LANG_FIN_GENE_009 ?>","onclick_type_reglement()");</script>
+    </div>
 
-		<?php
-		}
-		?>
-		
-		<script language="javascript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></script>
-		
-		
-		<script language="javascript">InitBulle("#000000","#FCE4BA","red",1);</script>
-		
+    <div class="dest-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-table" style="color:#080A66;font-size:17px"></i>
+        <span class="dest-row-label"><?php echo LANG_FIN_BARE_001 ?></span>
+      </div>
+      <script language="javascript">buttonMagic3("<?php echo LANG_FIN_GENE_009 ?>","onclick_bareme()");</script>
+    </div>
 
-		<?php //********** TRAITEMENT A EFFECTUER APRES LE CHARGEMENT DE LA PAGE ********** ?>
-		<script language="javascript" type="text/javascript">
-		
-			// Traitement a effectuer apres le chargement de la page
-			function initialisation_page() {
-				// Preparer la liste des liens a remplacer
-				var liens_a_remplacer = new Array();
-				liens_a_remplacer[0] = 	{
-											"lien_avec" : '<?php echo site_url_racine(FIN_REP_MODULE); ?>#',
-											"remplacer_par" : 'javascript:;'
-										};
-				// Traitements a effectuer sur toutes les pages
-				initialisation_page_global(liens_a_remplacer);
-			}
-			
-			// Executer initialisation_page() au chargement de la page
-			if (window.addEventListener) {
-				window.addEventListener("load",initialisation_page,false);
-			} else if (window.attachEvent) { 
-				window.attachEvent("onload",initialisation_page);
-			}	
-					
-		</script>
-		
-		
-	</body>
-</html>
+    <div class="dest-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-bank" style="color:#080A66;font-size:17px"></i>
+        <span class="dest-row-label"><?php echo LANG_FIN_PARP_001 ?></span>
+      </div>
+      <script language="javascript">buttonMagic3("<?php echo LANG_FIN_GENE_009 ?>","onclick_config()");</script>
+    </div>
+
+  </div>
+
+  <div style="margin-top:8px"><?php msg_util_afficher(); msg_util_attente_init(); ?></div>
+
+</div>
+
+<script language="javascript">
+function onclick_type_frais()     { msg_util_attente_montrer(true); document.getElementById('formulaire_type_frais').submit(); }
+function onclick_groupe_frais()   { msg_util_attente_montrer(true); document.getElementById('formulaire_groupe_frais').submit(); }
+function onclick_type_reglement() { msg_util_attente_montrer(true); document.getElementById('formulaire_type_reglement').submit(); }
+function onclick_bareme()         { msg_util_attente_montrer(true); document.getElementById('formulaire_bareme').submit(); }
+function onclick_config()         { msg_util_attente_montrer(true); document.getElementById('formulaire_config').submit(); }
+</script>
+
+<form name="formulaire_type_frais"     id="formulaire_type_frais"     action="<?php echo $g_chemin_relatif_module ?>type_frais_ajout.php"     method="post"></form>
+<form name="formulaire_groupe_frais"   id="formulaire_groupe_frais"   action="<?php echo $g_chemin_relatif_module ?>groupe_frais_ajout.php"    method="post"></form>
+<form name="formulaire_type_reglement" id="formulaire_type_reglement" action="<?php echo $g_chemin_relatif_module ?>type_reglement_ajout.php"  method="post"></form>
+<form name="formulaire_bareme"         id="formulaire_bareme"         action="<?php echo $g_chemin_relatif_module ?>bareme_liste.php"           method="post"></form>
+<form name="formulaire_config"         id="formulaire_config"         action="<?php echo $g_chemin_relatif_module ?>config_prelevement.php"     method="post"></form>
+
+<?php } ?>
+
+<SCRIPT language="javascript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
+
+<script language="javascript">
+function initialisation_page() {
+  var liens_a_remplacer = [{ "lien_avec": '<?php echo site_url_racine(FIN_REP_MODULE); ?>#', "remplacer_par": 'javascript:;' }];
+  initialisation_page_global(liens_a_remplacer);
+}
+if (window.addEventListener) { window.addEventListener("load", initialisation_page, false); }
+else if (window.attachEvent)  { window.attachEvent("onload", initialisation_page); }
+</script>
+
+</body>
+</HTML>

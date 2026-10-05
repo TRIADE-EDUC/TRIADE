@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_form_mapper.class.php,v 1.6 2019-04-29 11:44:35 ngantier Exp $
+// $Id: notice_form_mapper.class.php,v 1.6 2019/04/29 11:44:35 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -71,7 +71,7 @@ class notice_form_mapper extends form_mapper {
 	}
 	
 	/**
-	 * Retourne le mappage associÃ© au type passÃ© en parametre
+	 * Retourne le mappage associé au type passé en parametre
 	 * @param String $dest
 	 * @return array
 	 */
@@ -198,8 +198,8 @@ class notice_form_mapper extends form_mapper {
 	            global $mapperParams;
 	            
 // 	        	/**
-// 	        	 * ParamÃ¨tres supplÃ©mentaires passÃ©s au mapper depuis le javascript (ici oeuvre nature et oeuvre type)
-// 	        	 * AccÃ¨s via $mapperParams->mapper->nomDuParametre
+// 	        	 * Paramètres supplémentaires passés au mapper depuis le javascript (ici oeuvre nature et oeuvre type)
+// 	        	 * Accès via $mapperParams->mapper->nomDuParametre
 // 	        	 * 
 // 	        	 */
 // 	        	if($mapperParams){

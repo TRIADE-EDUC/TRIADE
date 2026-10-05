@@ -1,0 +1,76 @@
+
+# CHANGE LOG
+## [V8.0.0] - 2025-01-28
+
+## Amélioration / Évolution
+
+- #172485 Administration Ajout d'une table db_update_logs pour journaliser les modifications de base de données
+- #165070 Administration [Actions personnalisables] Optimisations
+- #173221 Divers [PHP8] Corrections accès indice tableau/chaîne avec accolades
+- #173110 Divers [Résultat de recherche] Affichage des notices
+- #172875 Divers [RGAA / Sélecteurs d'autorités] Ajout d'un titre sur l'iframe des sélecteurs d'autorités
+- #170165 Divers [Amende] Gestion des amendes par période
+- #168566 Divers  [Dashboard] Widget menu - possibilité de réordonner les liens
+- #168418 Divers [Dashboard] Ajout d'un paramètre pour l'activation du nouveau module
+- #166902 Divers [Intelligence Artificielle] Amélioration de la recherche sémantique
+- #172711 OPAC Compatibilités PHP8
+- #170536 OPAC Ajout d'une classe dans solo.css
+- #170275 OPAC Ajout d'une classe dans zen_one.css
+- #169890 OPAC Ajout du libellé des catégories dans les cadres de surcharge des métadonnées
+- #166577 OPAC [RGAA] Englobage des boutons de fonctionnalités en page de résultats de recherche et d'autorités
+- #159384 OPAC [RGAA] Ajout de l'attribut aria-current 
+- #171916 Portail Module de recherche
+- #169572 Portail [Portail] Modification du template des listes de favoris
+- #167128 Portail [Portail] Option pour purger les anciennes versions du portail
+- #166756 Portail [Portail] Ajout d'un tri par source de données pour les rubriques / articles sélectionnés via un champ personnalisé
+- #158054 Portail [RGAA] Formulaire de contact - champs obligatoires
+
+## Anomalie
+
+- #170956 Acquisitions [PHP8] Correction de la génération des PDFs 
+- #171625 Administration [Univers de recherche] Ajout d'une facette sur les champs personnalisables
+- #170659 Administration [PHP8] Correction de la création d'un set de connecteurs sortants basé sur une multicritères 
+- #169759 Administration [PHP8]  Correction erreur lors de la synchronisation d'un connecteur OAI entrant
+- #169386 Administration [Connecteurs sortants] corrections PHP8
+- #172915 Animation [Animation] Erreur de compatibilité de méthode en PHP8 
+- #171913 Catalogue [Edition d'une notice] Ajout d'une catégorie
+- #170964 Catalogue [PHP8] Correction erreur fatale en recherche Editeur/Collection
+- #169868 Catalogue Enregistrement des concepts sur une notice
+- #167349 Catalogue [Catalogage] Correction auto-complétion sur catégorie
+- #166657 Catalogue Correction du préremplissage de l'url de la vignette des dépouillements avec l'url de la vignette de la notice mère en catalogage des périodiques 
+- #166565 Catalogue [Catalogage]  Correction de la recherche d'une indexation décimale par auto-complétion.
+- #169887 Circulation [Circulation] Erreur de syntaxe dans la prolongation de prêts
+- #168372 Circulation [PHP8] Correction problème d'ajout de lecteurs dans un panier
+- #167450 Circulation Correction d'erreurs 502 en circulation
+- #166074 Circulation [PHP8] Correction imprimante non accessible
+- #173133 Divers [PHP8] Correction de l'historique de recherche
+- #172801 Divers Correction des balises PHP et formatage des fins de ligne
+- #171860 Divers Compatibilité PHP8
+- #168499 Divers [Sphinx] Corrections PHP8
+- #166066 Editions [Génération de code-barres] Compatibilité PHP8
+- #173311 OPAC Correction syntaxe du bouton "Faire une suggestion"
+- #173252 OPAC Ajout des propriétaires de document numérique dans les templates de bulletin.
+- #173178 OPAC [RGAA / Univers de recherche] Affichage de la requête humaine dans les résultats de recherche d'un multicritère
+- #172366 OPAC [Contributions] Correction du convertisseur de document numérique
+- #171850 OPAC Correction de l'affichage de la visionneuse dans PMB 8
+- #171821 OPAC Compatibilités PHP 8.0
+- #171651 OPAC [Univers de recherche] Nombre d'incohérences dans les notices lors de l'application d'une facette.
+- #171642 OPAC Compatibilités PHP 8.0
+- #171639 OPAC [Univers de recherche] Correction tris sur segments de recherche
+- #171149 OPAC [RGAA] Correction enregistrement et modification d'une équation de recherche de bannette
+- #169898 OPAC [Segment de recherche] Corrrection recherche sur les segments de type autorités personnalisées
+- #169190 OPAC [Affichage d'une notice] Correction affichage "Demande de numérisation" si module inactif
+- #169189 OPAC [OPAC] Correction prise en compte variables de configuration SQL
+- #168411 OPAC [RGAA] Report de modifications dans la navbar
+- #168407 OPAC [RGAA] Compatibilité avec l'accessibilité
+- #159199 OPAC Correctif dysfonctionnement facette
+- #173493 Portail [FRBR] Correction des critères d'autorités personnalisées
+- #172783 Portail [PHP8] Correction erreur fatale sur fonction "in_array"
+- #168588 Portail Correction de l'insertion des scripts js en mode RGAA
+- #165928 Portail [CMS] Correction d'un problème d'encodage dans les collections numériques
+- #162425 Portail [Refonte Portail] Correction des types et sous-types des pages
+
+## Nouvelle fonctionnalité
+
+- #169958 Administration Gestion des rôles / permissions
+

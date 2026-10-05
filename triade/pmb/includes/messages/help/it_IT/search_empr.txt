@@ -1,6 +1,6 @@
 <?php
 
-// $Id: search_empr.txt,v 1.5 2009-05-16 11:05:14 dbellamy Exp $
+// $Id: search_empr.txt,v 1.5 2009/05/16 11:05:14 dbellamy Exp $
 
 // howto search a borrower
 

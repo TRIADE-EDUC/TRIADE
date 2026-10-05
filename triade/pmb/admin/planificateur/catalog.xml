@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: catalog.xml,v 1.10 2018-11-13 12:15:09 dgoron Exp $ -->
+$Id: catalog.xml,v 1.14 2021/03/03 13:16:54 jlaurent Exp $ -->
 
 <catalog>
 	<action id="1" name="dsi" path="dsi" comment="msg:planificateur_catalog_dsi" />
@@ -24,5 +24,8 @@ $Id: catalog.xml,v 1.10 2018-11-13 12:15:09 dgoron Exp $ -->
 	<action id="14" name="scheduler_caddie" path="caddie" comment="msg:planificateur_catalog_scheduler_caddie" />
 	<action id="15" name="scheduler_chklnk" path="chklnk" comment="msg:planificateur_catalog_scheduler_chklnk" />
 <!-- 	<action id="16" name="scheduler_mails_waiting" path="mails_waiting" comment="msg:planificateur_catalog_scheduler_mails_waiting" /> -->
-	<action id="17" name="pnb" path="pnb" comment="msg:planificateur_catalog_pnb" />
+	<action id="17" name="sync_pnb" path="sync_pnb" comment="msg:planificateur_catalog_pnb" />
+	<action id="18" name="scheduler_opac_maintenance" path="opac_maintenance" comment="msg:planificateur_catalog_opac_maintenance" />
+	<action id="19" name="scheduler_access_rights" path="access_rights" comment="msg:planificateur_catalog_access_rights" />
+	<action id="20" name="animationMail" path="animationMail" comment="msg:planificateur_animations" />
 </catalog>

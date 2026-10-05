@@ -1,31 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_sphinx_records.class.php,v 1.11 2019-05-27 12:55:59 arenou Exp $
+// $Id: searcher_sphinx_records.class.php,v 1.15.8.3 2024/11/12 12:49:30 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class searcher_sphinx_records extends searcher_sphinx {
 	protected $index_name = 'records';
-	
+
 	protected $typdocs;
-	
+
 	protected $nb_explnum;
-	
+
 	public function __construct($user_query){
 		global $include_path;
 		$this->champ_base_path = $include_path.'/indexation/notices/champs_base.xml';
 		parent::__construct($user_query);
 		$this->index_name = 'records';
 		$this->id_key = 'notice_id';
- 	}	
-		
-	
+ 	}
+
 	protected function get_full_raw_query(){
 		return 'select notice_id as id, 100 as weight from notices';
 	}
-	
+
 	protected function _filter_results(){
 		if($this->objects_ids != '') {
 			$fr = new filter_results($this->objects_ids);
@@ -41,7 +40,7 @@ class searcher_sphinx_records extends searcher_sphinx {
 			$this->_filter_result_by_custom_search();
 		}
 	}
-	
+
 	protected function _filter_result_by_custom_search() {
 		global $opac_search_other_function;
 		if (($this->objects_ids == '') || !$opac_search_other_function) {
@@ -52,7 +51,7 @@ class searcher_sphinx_records extends searcher_sphinx {
 		if ($custom_query) {
 			$query = 'delete from '.$this->get_tempo_tablename().' where notice_id not in ('.$custom_query.')';
 			pmb_mysql_query($query);
-			
+
 			$this->objects_ids = '';
 			$query = 'select notice_id from '.$this->get_tempo_tablename();
 			$result = pmb_mysql_query($query);
@@ -65,15 +64,15 @@ class searcher_sphinx_records extends searcher_sphinx {
 				}
 			}
 		}
-		return;
+		return true;
 	}
-	
-	public function get_full_query(){		
+
+	public function get_full_query(){
 		$this->get_result();
-		$query =  'select notice_id, pert from '.$this->get_tempo_tablename();	
+		$query =  'select notice_id, pert from '.$this->get_tempo_tablename();
 		return $query;
 	}
-	
+
 	public function get_nb_results(){
 		$this->get_result();
 		if(!$this->objects_ids){
@@ -85,11 +84,10 @@ class searcher_sphinx_records extends searcher_sphinx {
 	public function get_sorted_result($tri = "default",$start=0,$number=20){
 		$this->tri = $tri;
 		$this->get_result();
-		
-		
+
 		$sort = new sort("notices","session");
 		$query = $sort->appliquer_tri_from_tmp_table($this->tri,$this->get_tempo_tablename(),'notice_id',$start,$number);
-		
+
 		$res = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($res)){
 			$this->result=array();
@@ -98,8 +96,8 @@ class searcher_sphinx_records extends searcher_sphinx {
 			}
 		}
 		return $this->result;
-	}	
-		
+	}
+
 	public function explain($display = "",$mode = "",$mini=false){
 		print '<div style="margin-left:10px;width:49%;overflow:hidden;float:left">';
 		print '<h1>Recherche SPHINX</h1>';
@@ -119,35 +117,37 @@ class searcher_sphinx_records extends searcher_sphinx {
 	 		}
  		}
  		print '<p>Temps Total (en seconde) : '.(microtime(true) - $start).'</p></div>';
-	}	
-	
-	public function init_fields_restrict($mode){
-		global $mutli_crit_indexation_oeuvre_title;
+	}
+
+	public function init_fields_restrict($mode) {
+		global $multi_crit_indexation_oeuvre_title;
+
 		$this->fields_restrict = array();
-		$this->fields_ignore = array();	
+		$this->fields_ignore = array();
 		$this->mode = $mode;
-		$datatypes = $this->sphinx_base->getDatatypes();
-		if(isset($datatypes[$mode])){
+		$datatypes = $this->sphinx_base->get_datatypes();
+		if (isset($datatypes[$mode])) {
 		    $this->fields_restrict = $datatypes[$mode];
-		    if($mode == "title" && $mutli_crit_indexation_oeuvre_title){
-		        $this->fields_restrict[]= 'f_026_01';
+		    if ($mode == "title" && $multi_crit_indexation_oeuvre_title == 1) {
+		        $this->fields_restrict[] = 'f_026_01';
 		    }
-		}else{
-		    switch($mode){
-		        case 'title' :
-		            if($mutli_crit_indexation_oeuvre_title){
-		                $this->fields_restrict[]= 'f_026_01';
+		} else {
+		    switch ($mode) {
+		        case 'title':
+		            $this->fields_restrict[] = 'f_001_00';
+		            $this->fields_restrict[] = 'f_002_00';
+		            $this->fields_restrict[] = 'f_003_00';
+		            $this->fields_restrict[] = 'f_004_00';
+		            $this->fields_restrict[] = 'f_006_00';
+		            $this->fields_restrict[] = 'f_023_01';
+		            if ($multi_crit_indexation_oeuvre_title == 1) {
+		                $this->fields_restrict[] = 'f_026_01';
 		            }
-		            $this->fields_restrict[]= 'f_001_00';
-		            $this->fields_restrict[]= 'f_002_00';
-		            $this->fields_restrict[]= 'f_003_00';
-		            $this->fields_restrict[]= 'f_004_00';
-		            $this->fields_restrict[]= 'f_006_00';
 		            break;
-    			case 'authors' :
-    			    if(isset($datatypes['author'])){
+    			case 'authors':
+    			    if (isset($datatypes['author'])) {
     			        $this->fields_restrict = $datatypes['author'];
-    			    }else{
+    			    } else {
     			        $this->fields_restrict[] = 'f_027_01';
     			        $this->fields_restrict[] = 'f_027_02';
     			        $this->fields_restrict[] = 'f_027_03';
@@ -170,27 +170,27 @@ class searcher_sphinx_records extends searcher_sphinx {
     			        $this->fields_restrict[] = 'f_128_04';
     			    }
     				break;
-    			case 'categories' :
+    			case 'categories':
     				$this->fields_restrict[] = 'f_025_01';
-    				break;	
-    			case 'concepts' :
-    			    if(isset($datatypes['concept'])){
+    				break;
+    			case 'concepts':
+    			    if (isset($datatypes['concept'])) {
     			        $this->fields_restrict = $datatypes['concept'];
-    			    }else{
+    			    } else {
     				    $this->fields_restrict[] = 'f_036_01';
     				    $this->fields_restrict[] = 'f_126_01';
     			    }
     				break;
-    			case 'titres_uniformes' :
-    			case 'uniform_title' :
-    			case 'uniformtitle' :
-    			    if(isset($datatypes['titres_uniformes'])){
+    			case 'titres_uniformes':
+    			case 'uniform_title':
+    			case 'uniformtitle':
+    			    if (isset($datatypes['titres_uniformes'])) {
     			        $this->fields_restrict = $datatypes['titres_uniformes'];
-    			    }else if(isset($datatypes['uniform_title'])){
+    			    } elseif (isset($datatypes['uniform_title'])) {
     			        $this->fields_restrict = $datatypes['uniform_title'];
-    			    }else if(isset($datatypes['uniformtitle'])){
+    			    } elseif (isset($datatypes['uniformtitle'])) {
     			        $this->fields_restrict = $datatypes['uniformtitle'];
-    			    }else{
+    			    } else {
         				$this->fields_restrict[] = 'f_026_01';
         				$this->fields_restrict[] = 'f_026_02';
         				$this->fields_restrict[] = 'f_026_03';
@@ -221,47 +221,45 @@ class searcher_sphinx_records extends searcher_sphinx {
         				$this->fields_restrict[] = 'f_127_02';
         				$this->fields_restrict[] = 'f_127_03';
         				$this->fields_restrict[] = 'f_127_04';
-        				//$this->fields_restrict[] = 'f_127_05';
         				$this->fields_restrict[] = 'f_128_01';
         				$this->fields_restrict[] = 'f_128_02';
         				$this->fields_restrict[] = 'f_128_03';
         				$this->fields_restrict[] = 'f_128_04';
-        				//$this->fields_restrict[] = 'f_128_05';
     			    }
     				break;
-    			case 'general_note' :
-    			    if(isset($datatypes['general_note'])){
+    			case 'general_note':
+    			    if (isset($datatypes['general_note'])) {
     			        $this->fields_restrict = $datatypes['general_note'];
-    			    }else{
+    			    } else {
                         $this->fields_restrict[] = 'f_012_00';
     			    }
     			    break;
-    			case 'contents_note' : 
-    			    if(isset($datatypes['contents_note'])){
+    			case 'contents_note':
+    			    if (isset($datatypes['contents_note'])) {
         			    $this->fields_restrict = $datatypes['contents_note'];
-        			}else{
+        			} else {
         			    $this->fields_restrict[] = 'f_013_00';
         			}
 			        break;
-    			case 'abstract' : 
-    			    if(isset($datatypes['abstract'])){
+    			case 'abstract':
+    			    if (isset($datatypes['abstract'])) {
         			    $this->fields_restrict = $datatypes['abstract'];
-        			}else{
+        			} else {
         			    $this->fields_restrict[] = 'f_014_00';
         			}
     			    break;
-    			case 'notes' : 
-    			    if(isset($datatypes['notes'])){
+    			case 'notes':
+    			    if (isset($datatypes['notes'])) {
         			    $this->fields_restrict = $datatypes['notes'];
-        			}else{
+        			} else {
         			    $this->fields_restrict[] = 'f_012_00';
         			    $this->fields_restrict[] = 'f_013_00';
         			    $this->fields_restrict[] = 'f_014_00';
         			}
-    			case 'publishers' :
-    			    if(isset($datatypes['publisher'])){
+    			case 'publishers':
+    			    if (isset($datatypes['publisher'])) {
     			        $this->fields_restrict = $datatypes['publisher'];
-    			    }else{
+    			    } else {
     			        $this->fields_restrict[] = 'f_017_01';
     			        $this->fields_restrict[] = 'f_017_02';
     			        $this->fields_restrict[] = 'f_017_03';
@@ -272,91 +270,47 @@ class searcher_sphinx_records extends searcher_sphinx {
     			        $this->fields_restrict[] = 'f_017_08';
     			    }
     			    break;
-    			case 'keywords' :
+    			case 'keywords':
     			    $this->fields_restrict[] = 'f_017_00';
     			    break;
     			case '':
-    			case 'all_fields' :  
+    			case 'all_fields':
     			    global $opac_exclude_fields;
+
         			$indexes = $this->sphinx_base->getIndexes();
-        			$excludes = explode(',',$opac_exclude_fields);
-        			for($i=0 ; $i<count($excludes) ; $i++){
-        			    $field_partkey = 'f_'.str_pad($excludes[$i], 3, "0", STR_PAD_LEFT);
-        			    for($j=0 ; $j<count($indexes['records']['fields']) ; $j++){
-        			        if(strpos($indexes['records']['fields'][$j],$field_partkey) === 0) {
+        			$excludes = explode(',', $opac_exclude_fields);
+        			$nb_excludes = count($excludes);
+        			for ($i = 0; $i < $nb_excludes; $i++) {
+        			    $field_partkey = 'f_' . str_pad($excludes[$i], 3, "0", STR_PAD_LEFT);
+        			    $nb_fields = count($indexes['records']['fields']);
+        			    for ($j = 0; $j < $nb_fields; $j++) {
+        			        if (strpos($indexes['records']['fields'][$j],$field_partkey) === 0) {
         			            $this->fields_ignore[] = $indexes['records']['fields'][$j];
         			        }
         			    }
         			}
-    // 				$this->fields_ignore[] = 'f_018_01';
-    // 				$this->fields_ignore[] = 'f_018_02';
-    // 				$this->fields_ignore[] = 'f_018_03';
-    // 				$this->fields_ignore[] = 'f_018_04';
-    // 				$this->fields_ignore[] = 'f_018_05';
-    // 				$this->fields_ignore[] = 'f_019_01';
-    // 				$this->fields_ignore[] = 'f_019_02';
-    // 				$this->fields_ignore[] = 'f_019_03';
-    // 				$this->fields_ignore[] = 'f_019_04';
-    // 				$this->fields_ignore[] = 'f_019_05';
-    // 				$this->fields_ignore[] = 'f_019_06';
-    // 				$this->fields_ignore[] = 'f_019_07';
-    // 				$this->fields_ignore[] = 'f_019_08';
-    // 				$this->fields_ignore[] = 'f_020_01';
-    // 				$this->fields_ignore[] = 'f_020_02';
-    // 				$this->fields_ignore[] = 'f_021_01';
-    // 				$this->fields_ignore[] = 'f_021_03';
-    // 				$this->fields_ignore[] = 'f_023_01';
-    // 				$this->fields_ignore[] = 'f_024_01';
-    // 				$this->fields_ignore[] = 'f_024_03';
-    // 				$this->fields_ignore[] = 'f_025_01';
-    // 				$this->fields_ignore[] = 'f_026_01';
-    // 				$this->fields_ignore[] = 'f_026_02';
-    // 				$this->fields_ignore[] = 'f_026_03';
-    // 				$this->fields_ignore[] = 'f_026_04';
-    // 				$this->fields_ignore[] = 'f_026_05';
-    // 				$this->fields_ignore[] = 'f_026_06';
-    // 				$this->fields_ignore[] = 'f_026_07';
-    // 				$this->fields_ignore[] = 'f_026_09';
-    // 				$this->fields_ignore[] = 'f_026_10';
-    // 				$this->fields_ignore[] = 'f_026_11';
-    // 				$this->fields_ignore[] = 'f_026_12';
-    // 				$this->fields_ignore[] = 'f_026_13';
-    // 				$this->fields_ignore[] = 'f_026_14';
-    // 				$this->fields_ignore[] = 'f_026_15';
-    // 				$this->fields_ignore[] = 'f_026_16';
-    // 				$this->fields_ignore[] = 'f_026_17';
-    // 				$this->fields_ignore[] = 'f_026_18';
-    // 				$this->fields_ignore[] = 'f_026_19';
-    // 				$this->fields_ignore[] = 'f_026_20';
-    // 				$this->fields_ignore[] = 'f_026_21';
-    // 				$this->fields_ignore[] = 'f_026_22';
-    // 				$this->fields_ignore[] = 'f_026_23';
     				break;
-    			default : 
-    				//nothing to do
+    			default :
     				break;
     		}
 		}
 	}
-	
-	protected function get_filters(){
-		$filters = parent::get_filters();
-		global $typdoc_query,$statut_query;
-		if($typdoc_query){
-			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est gÃ©rÃ© dans la classe racine Ã  la volÃ©e! 
-			$filters[] = array(
-				'name'=> 'typdoc',
-				'values' => $typdoc_query
-			);
-		}
-		if($statut_query){
-			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est gÃ©rÃ© dans la classe racine Ã  la volÃ©e! 
-			$filters[] = array(
-				'name'=> 'statut',
-				'values' => $statut_query
-			);
-		}
-		return $filters;
+
+	protected function get_filters() {
+	    $filters = parent::get_filters();
+	    global $typdoc;
+
+	    if (!empty($typdoc)) {
+	        // on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est géré dans la classe racine à la volée!
+	        // par contre, on peut avoir un tableau avec une valeur vide...
+	        if (!is_array($typdoc) || (is_array($typdoc) && $typdoc[0] !== '')) {
+	            $filters[] = array(
+	                'name'=> 'typdoc',
+	                'values' => $typdoc
+	            );
+	        }
+	    }
+	    return $filters;
 	}
 
 	public function get_typdocs(){
@@ -383,20 +337,19 @@ class searcher_sphinx_records extends searcher_sphinx {
 		}
 		return $this->nb_explnum;
 	}
-	
+
 	protected function _get_objects_ids() {
 	    global $sphinx_indexes_prefix;
 
 		if (isset($this->objects_ids)) {
 			return $this->objects_ids;
 		}
-		global $mutli_crit_indexation_docnum_allfields, $opac_indexation_docnum_allfields, $dont_check_opac_indexation_docnum_allfields;
+		global $multi_crit_indexation_docnum_allfields, $opac_indexation_docnum_allfields, $dont_check_opac_indexation_docnum_allfields;
 
 		if ($this->mode != 'explnum') {
-    		
     		$with_explnum = false;
-    		if($mutli_crit_indexation_docnum_allfields){//On est dans le cas de la recherche mutli-critÃ¨res
-    			if($mutli_crit_indexation_docnum_allfields > 0){
+    		if ($multi_crit_indexation_docnum_allfields) {//On est dans le cas de la recherche mutli-critères
+    		    if ($multi_crit_indexation_docnum_allfields > 0) {
     				$with_explnum = true;
     			}
     		}elseif(($opac_indexation_docnum_allfields && !$dont_check_opac_indexation_docnum_allfields)){
@@ -408,7 +361,7 @@ class searcher_sphinx_records extends searcher_sphinx {
     		}
 		}else {
 		    $this->objects_ids = '';
-		    // La table tempo n'a pas Ã©tÃ© crÃ©Ã©e par le parent
+		    // La table tempo n'a pas été créée par le parent
 		    $this->_build_tmp_table();
 		}
 		$already_found = explode(',', $this->objects_ids);
@@ -419,6 +372,9 @@ class searcher_sphinx_records extends searcher_sphinx {
 		do {
 			$this->sc->SetLimits($nb, $this->bypass);
 			$result = $this->sc->Query($this->sphinx_query, $sphinx_indexes_prefix.'records_explnums');
+			if((! is_array($result)) || (is_array($result) && ! array_key_exists('matches', $result))){
+				return $this->objects_ids;
+			}
 			for($i = 0 ; $i<count($result['matches']) ; $i++){
 				if (in_array($result['matches'][$i]['attrs']['num_record'], $already_found)) {
 					continue;

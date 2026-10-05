@@ -5,9 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_view.xml,v 1.2 2014-02-20 17:03:43 dbellamy Exp $ -->
+$Id: cms_module_common_selector_view.xml,v 1.3 2020/11/24 14:20:17 gneveu Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_view_id_view">Choisissez une ou plusieurs vues</entry>
 	<entry code="cms_module_common_selector_view_no_view">Aucune vue disponible</entry>
+	<entry code="cms_module_common_selector_view_out_sight">Hors Vue</entry>
 </XMLlist>

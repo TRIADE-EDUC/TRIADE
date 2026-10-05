@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: loan.class.php,v 1.6 2018-06-08 10:21:33 vtouchard Exp $
+// $Id: loan.class.php,v 1.7 2024/04/11 08:26:23 dbellamy Exp $
 
 global $class_path, $include_path;
 require_once($include_path."/parser.inc.php");
@@ -38,10 +38,10 @@ class loan extends scheduler_task {
 //				$p_value = (int) 100/$count;
 //				foreach ($parameters["chk_loan"] as $elem) {
 //					$this->listen_commande(array(&$this, 'traite_commande')); //fonction a rappeller (traite commande)
-//					if($this->statut == WAITING) {
-//						$this->send_command(RUNNING);
+//					if($this->statut == scheduler_task::WAITING) {
+//						$this->send_command(scheduler_task::RUNNING);
 //					}
-				if ($this->statut == RUNNING) {
+				if ($this->statut == scheduler_task::RUNNING) {
 					$this->add_section_report($this->msg["loan_relance"]);
 					$results=array();
 					if (method_exists($this->proxy, "pmbesLoans_filterLoansReaders")) {
@@ -56,7 +56,7 @@ class loan extends scheduler_task {
 								//traitement des options choisies
 								switch ($option) {
 									case LOAN_ALL_ACTIONS :
-										//Comment connaÃ®tre le niveau Ã  valider ??
+										//Comment connaître le niveau à valider ??
 										$this->add_section_report($this->msg["loan_all_actions"]);
 										foreach ($results as $result) {
 											if ($result["id_empr"] != "") {
@@ -80,7 +80,7 @@ class loan extends scheduler_task {
 														$this->add_content_report($this->msg["loan_no_letter"]);
 													}
 												} else {
-													$this->add_content_report("Le chemin du rÃ©pertoire d'upload est invalide ou protÃ©gÃ© en Ã©criture");
+													$this->add_content_report("Le chemin du répertoire d'upload est invalide ou protégé en écriture");
 												}
 											} else {
 												$this->add_function_rights_report("buildPdfLoansDelayReaders","pmbesLoans");
@@ -97,7 +97,7 @@ class loan extends scheduler_task {
 												$content_csv = $this->proxy->pmbesLoans_exportCSV($t_empr);
 												$this->generate_docnum($content_csv,"application/ms-excel","xls");
 											} else {
-												$this->add_content_report("Le chemin du rÃ©pertoire d'upload est invalide ou protÃ©gÃ© en Ã©criture");
+												$this->add_content_report("Le chemin du répertoire d'upload est invalide ou protégé en écriture");
 											}
 										} else {
 											$this->add_function_rights_report("exportCSV","pmbesLoans");

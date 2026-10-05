@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_form.js,v 1.4 2014-12-18 16:40:05 dgoron Exp $ */
+// $Id: cms_form.js,v 1.4 2014/12/18 16:40:05 dgoron Exp $ */
 
 
 function cms_create_row(){

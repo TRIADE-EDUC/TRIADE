@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.3 2019-03-14 10:36:01 tsamson Exp $ -->
+$Id: en_UK.xml,v 1.5 2020/10/01 08:48:40 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -22,6 +22,8 @@ sendMailingCaddie
   <entry code="sendMailingCaddie_output_description"></entry>
   <entry code="sendMailingCaddie_result"></entry>
   <entry code="sendMailingCaddie_email_cc">Additional recipient in hidden copy</entry>
+  <entry code="sendMailingCaddie_attachments">Pièces jointes</entry>
+  <entry code="sendMailingCaddie_associated_campaign">Campagne de mails</entry>
   <entry code="sendMailingSearchPerso_description">Dissemination of the mail template via a predefined search</entry>
   <entry code="sendMailingSearchPerso_input_description"></entry>
   <entry code="sendMailingSearchPerso_id_empr_search_perso">Identifier of the predefined search for borrowers</entry>    
@@ -29,4 +31,6 @@ sendMailingCaddie
   <entry code="sendMailingSearchPerso_output_description"></entry>
   <entry code="sendMailingSearchPerso_result"></entry>
   <entry code="sendMailingSearchPerso_email_cc">Additional recipient in hidden copy</entry>
+  <entry code="sendMailingSearchPerso_attachments">Pièces jointes</entry>
+  <entry code="sendMailingSearchPerso_associated_campaign">Campagne de mails</entry>
 </XMLlist>

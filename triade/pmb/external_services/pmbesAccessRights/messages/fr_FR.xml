@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2020/04/22 08:49:34 dgoron Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+<!--
+pmbesAccessRights
+-->
+  <entry code="AccessRights_functions_description">Fonctions relatives au droits d'accès PMB</entry>   
+<!--
+user_notice
+-->
+  <entry code="user_notice_description">Droits d'acces utilisateurs/notices</entry>
+  <entry code="user_notice_input_description"></entry>
+  <entry code="user_notice_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="user_notice_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="user_notice_output_description"></entry>
+  <entry code="user_notice_result">Résultat de la réinitialisation</entry>
+<!--
+empr_notice
+-->
+  <entry code="empr_notice_description">Droits d'acces emprunteurs/notices</entry>
+  <entry code="empr_notice_input_description"></entry>
+  <entry code="empr_notice_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_notice_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_notice_output_description"></entry>
+  <entry code="empr_notice_result">Résultat de la réinitialisation</entry>
+<!--
+empr_docnum
+-->
+  <entry code="empr_docnum_description">Droits d'acces emprunteurs/documents numériques</entry>
+  <entry code="empr_docnum_input_description"></entry>
+  <entry code="empr_docnum_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_docnum_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_docnum_output_description"></entry>
+  <entry code="empr_docnum_result">Résultat de la réinitialisation</entry>
+<!--
+empr_contribution_area
+-->
+  <entry code="empr_contribution_area_description">Droits d'acces emprunteurs/espaces de contribution</entry>
+  <entry code="empr_contribution_area_input_description"></entry>
+  <entry code="empr_contribution_area_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_contribution_area_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_contribution_area_output_description"></entry>
+  <entry code="empr_contribution_area_result">Résultat de la réinitialisation</entry>
+<!--
+empr_contribution_scenario
+-->
+  <entry code="empr_contribution_scenario_description">Droits d'acces emprunteurs/scenarios de contribution</entry>
+  <entry code="empr_contribution_scenario_input_description"></entry>
+  <entry code="empr_contribution_scenario_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_contribution_scenario_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_contribution_scenario_output_description"></entry>
+  <entry code="empr_contribution_scenario_result">Résultat de la réinitialisation</entry>
+<!--
+contribution_moderator_empr
+-->
+  <entry code="contribution_moderator_empr_description">Droits d'acces modérateurs/contributeurs</entry>
+  <entry code="contribution_moderator_empr_input_description"></entry>
+  <entry code="contribution_moderator_empr_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="contribution_moderator_empr_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="contribution_moderator_empr_output_description"></entry>
+  <entry code="contribution_moderator_empr_result">Résultat de la réinitialisation</entry>
+<!--
+empr_cms_section
+-->
+  <entry code="empr_cms_section_description">Droits d'acces emprunteurs/rubriques</entry>
+  <entry code="empr_cms_section_input_description"></entry>
+  <entry code="empr_cms_section_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_cms_section_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_cms_section_output_description"></entry>
+  <entry code="empr_cms_section_result">Résultat de la réinitialisation</entry>
+<!--
+empr_cms_article
+-->
+  <entry code="empr_cms_article_description">Droits d'acces emprunteurs/articles</entry>
+  <entry code="empr_cms_article_input_description"></entry>
+  <entry code="empr_cms_article_keep_specific_rights">Conserver les droits spécifiques</entry>
+  <entry code="empr_cms_article_delete_calculated_rights">Supprimer les droits calculés</entry>
+  <entry code="empr_cms_article_output_description"></entry>
+  <entry code="empr_cms_article_result">Résultat de la réinitialisation</entry>
+</XMLlist>

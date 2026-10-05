@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: select.php,v 1.19 2019-02-20 15:20:24 dgoron Exp $
+// $Id: select.php,v 1.26 2023/10/17 14:18:55 tsamson Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";
 
 require_once($base_path."/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once($base_path.'/includes/templates/common.tpl.php');
@@ -20,7 +20,7 @@ require_once($base_path."/includes/rec_history.inc.php");
 
 print $popup_header;
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
 
 //initialisation des variables communes
@@ -36,22 +36,32 @@ if(!isset($f_user_input)) $f_user_input = '';
 
 require_once($base_path."/selectors/templates/sel_common.tpl.php");
 
-// classes pour la gestion des sÃ©lecteurs
-if(!isset($autoloader) || !is_object($autoloader)){
-	require_once($class_path."/autoloader.class.php");
-	$autoloader = new autoloader();
-}
-$autoloader->add_register("selectors_class",true);
-
-//L'usager a demandÃ© Ã  voir plus de rÃ©sultats dans sa liste paginÃ©e
+//L'usager a demandé à voir plus de résultats dans sa liste paginée
 if(isset($nb_per_page_custom) && $nb_per_page_custom*1) {
 	$nb_per_page = $nb_per_page_custom;
 }
 if(!isset($nb_per_page) || !$nb_per_page) {
-    $nb_per_page = 10;
+    $nb_per_page = 25;
 }
 
-print "<script type='text/javascript'>
+$nb_per_page = intval($nb_per_page);
+
+global $param1, $param2, $caller, $format_return;
+global $callback, $infield, $p1, $p2, $search_field_id;
+global $search_xml_file, $user_input;
+
+$param1 = strip_tags($param1);
+$param2 = strip_tags($param2);
+$caller = strip_tags($caller);
+$format_return = strip_tags($format_return);
+$callback = strip_tags($callback);
+$infield = strip_tags($infield);
+$p1 = strip_tags($p1);
+$p2 = strip_tags($p2);
+$search_field_id = strip_tags($search_field_id);
+$user_input = strip_tags($user_input);
+
+print "<script>
 	self.focus();
 </script>";
 
@@ -138,21 +148,28 @@ switch($what) {
 		
 		$base_url = selector_ontology::get_base_url();
 		
-		require_once($class_path."/autoloader.class.php");
-		$autoloader = new autoloader();
-		$autoloader->add_register("onto_class",true);
 		$selector_instance = new selector_ontology(stripslashes($deb_rech));
 		break;
 	case 'keyword':
 		$selector_instance = new selector_keyword(stripslashes($user_input));
 		break;
+	case 'contribution':
+		$selector_instance = new selector_contribution(stripslashes($user_input));
+		break;
+	case 'search_segment':
+		$selector_instance = new selector_search_segment(stripslashes($user_input));
+		break;
 	default:
-		print "<script type='text/javascript'>
+		print "<script>
 			window.close();
 			</script>";
 		break;
 }
 if(isset($selector_instance) && is_object($selector_instance)) {
+    global $selector_data;
+    if (isset($selector_data)) {
+        $selector_instance->set_data(stripslashes($selector_data));
+    }
 	$selector_instance->proceed();
 }
 

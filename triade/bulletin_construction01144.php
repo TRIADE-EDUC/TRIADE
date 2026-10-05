@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -43,11 +43,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -71,7 +71,7 @@ $valeur=visu_affectation_detail($_POST["saisie_classe"],$anneeScolaire);
 $affmoyclasse=$_POST["affmoyclasse"];
 $affmoyclasse="oui";
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -105,7 +105,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // recuperation des coordonnées
 // de l'etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -120,7 +120,7 @@ for($i=0;$i<count($data);$i++) {
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim($_POST["saisie_trimestre"]);
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -178,14 +178,14 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
 //-------------------------
 	$max="";
 	$min=1000;
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$noteMoyEleG=0;
 		$coefEleG=0;
 		$moyenEleve2="";
 		$ii=0;
-		for($t=0;$t<count($ordre);$t++) {
+		for($t=0;$t<countTriade($ordre);$t++) {
 			$idMatiere=$ordre[$t][0];
 			$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$t][2]);
 			$noteaff=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -223,7 +223,7 @@ if (($moyenClasseMax < 10) && ($moyenClasseMax!="")) { $moyenClasseMax="0".$moye
 if (($moyenClasseMin < 10) && ($moyenClasseMin!="")) { $moyenClasseMin="0".$moyenClasseMin; }
 if (($moyenClasseGen < 10) && ($moyenClasseGen!="")) { $moyenClasseGen="0".$moyenClasseGen; }
 
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=stripslashes(ucwords(TextNoAccent($eleveT[$j][0])));
 	$prenomEleve=stripslashes(ucfirst(TextNoAccent($eleveT[$j][1])));
@@ -238,11 +238,11 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 // recherche le nombre de sanction
 
 $nbsanctions=nombre_Sanc($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-$nbsanctions=count($nbsanctions);
+$nbsanctions=countTriade($nbsanctions);
 //
 
 $nbexclusions=nombre_Exclu($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-$nbexclusions=count($nbexclusions);
+$nbexclusions=countTriade($nbexclusions);
 
 
 //---------------------------------//
@@ -353,7 +353,7 @@ $pdf->RoundedRect($Xv11+5, 17+$margeEtiquette, 80, 24, 3.5, 'DF');
 
         $dataadresse=chercheadresse($idEleve);
 // elev_id,nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numero_eleve, class_ant, date_naissance, regime, civ_1, civ_2,nom,prenom,nom_resp_2,prenom_resp_2,lieu_naissance
-        for($ik=0;$ik<=count($dataadresse);$ik++) {
+        for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
                 $nomtuteur=stripslashes($dataadresse[$ik][1]);
                 $prenomtuteur=$dataadresse[$ik][2];
 		$civtuteur=$dataadresse[$ik][13];
@@ -504,7 +504,7 @@ if ($affmoyclasse == "oui") {
 		// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure,justifier
 		$nbheureabs=0;
 		$nbabstotal=0;
-		for($o=0;$o<=count($tabnbabs);$o++) {
+		for($o=0;$o<=countTriade($tabnbabs);$o++) {
 			if ($tabnbabs[$o][4] == "-1") { 
 				$nbheureabs+=$tabnbabs[$o][7]; 
 				$nbabstotal+=0.5;
@@ -518,7 +518,7 @@ if ($affmoyclasse == "oui") {
 		// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure,justifier
 		$nbheureabsNJ=0;
 		$nbabstotalNJ=0;
-		for($o=0;$o<=count($tabnbabs);$o++) {
+		for($o=0;$o<=countTriade($tabnbabs);$o++) {
 			if ($tabnbabs[$o][4] == "-1") { 
 				$nbheureabsNJ+=$tabnbabs[$o][7]; 
 				$nbabstotalNJ+=0.5;
@@ -531,7 +531,7 @@ if ($affmoyclasse == "oui") {
 		//-------------------------------------------------------------------------------------------------------------------------------//
 
 		$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-		$nbretard=count($nbretard);
+		$nbretard=countTriade($nbretard);
 	}
 	//$appreciationretard="ASSIDUITE : $nbretard retard(s) / $nbabs demi-journée d'absence(s) / $nbheureabs heure(s) d'absence(s) " ;
 	$appreciationretard=stripslashes("ASSIDUITE : $nbretard retard(s) / $nbabsNJ demi-journée d'absence(s) non justifiée(s) / $nbabs demi-journée d'absence(s) justifié(s) " );
@@ -558,8 +558,8 @@ $ii=0;
 
 //
 //J'enlève du décompte la dernière matière (ORDRE D'AFFICHAGE) qui doit obligatoirement être les commentaires généraux avec ma variable $ledecompte
-//$ledecompte=count($ordre) - 1;
-$ledecompte=count($ordre);
+//$ledecompte=countTriade($ordre) - 1;
+$ledecompte=countTriade($ordre);
 	for($i=0;$i<$ledecompte;$i++) {
 	$matiere=stripslashes(chercheMatiereNom($ordre[$i][0]));
 	$idMatiere=$ordre[$i][0];
@@ -606,7 +606,7 @@ $ledecompte=count($ordre);
 	$note=recupNote($idEleve,$ordre[$i][0],$dateDebut,$dateFin);
 	// note,elev_id,code_mat,date,sujet,typenote,notationsur
 	$Ynote=$Ymat+1;
-	for($b=0;$b<count($note);$b++) {
+	for($b=0;$b<countTriade($note);$b++) {
 		$noteaff=$note[$b][0];
 		$sujet=stripslashes($note[$b][4]);
 		$typenote=$note[$b][5];
@@ -633,7 +633,7 @@ $ledecompte=count($ordre);
 			
 			}
 			
-			if (count($note) <= 6) {
+			if (countTriade($note) <= 6) {
 				if ($sujet != "") {
 					$pdf->SetXY($Xmat+$largeurMat,$Ynote);
 					$pdf->MultiCell($largeursujet,3,"- $sujet",0,'L',0);
@@ -790,7 +790,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -828,7 +828,7 @@ else {
 </form>
 
 <!-- // fin  --></td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <script language=JavaScript>attente_close();</script>
 </BODY></HTML>
 <?php

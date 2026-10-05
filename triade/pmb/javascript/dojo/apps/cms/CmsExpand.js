@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: CmsExpand.js,v 1.7 2018-08-24 12:24:31 tsamson Exp $
+// $Id: CmsExpand.js,v 1.7 2018/08/24 12:24:31 tsamson Exp $
 
 
 define([ 

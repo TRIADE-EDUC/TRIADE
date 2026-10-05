@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: converter_factory.class.php,v 1.4 2018-06-08 10:46:38 mbertin Exp $
+// $Id: converter_factory.class.php,v 1.6 2023/07/24 16:11:06 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,8 +11,8 @@ if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
  */
 
 class converter_factory {
-	
-	public static function make($filename, $filepath, $mimetype='', $extension='', $convert_to='', $tmp_dir, $parameters=array()) {
+
+	public static function make($filename, $filepath, $mimetype = '', $extension = '', $convert_to = '', $tmp_dir = '' , $parameters = []) {
 		if (!$extension) {
 			$extension=substr($filename,strrpos($filename,'.')*1+1);
 		}
@@ -48,7 +48,7 @@ class converter_factory {
 			default :
 				break;
 		}
-		if ($in) { 
+		if ($in) {
 			$classname= 'convert_'.$in.'_to_'.$convert_to;
 			return new $classname($filename, $filepath, $mimetype, $extension, $convert_to, $tmp_dir, $parameters);
 		} else {
@@ -68,7 +68,7 @@ abstract class convert_to {
 	protected $params=array();
 	protected $tmp_dir='';
 
-	function __construct($filename, $filepath, $mimetype='', $extension='', $convert_to='', $tmp_dir, $parameters=array()) {
+	public function __construct($filename, $filepath, $mimetype = '', $extension = '', $convert_to = '', $tmp_dir = '', $parameters = []) {
 		$this->filename=$filename;
 		$this->filepath=$filepath;
 		if ($mimetype)$this->mimetype=$mimetype;
@@ -81,32 +81,32 @@ abstract class convert_to {
 		$this->params['pdftotext_cmd']=$parameters['pdftotext_cmd'];
 		$this->params['pdf2swf_cmd']=$parameters['pdf2swf_cmd'];
 	}
-	
-	abstract function convert();
 
-	abstract function remove_tmp_files();
+	abstract public function convert();
+
+	abstract public function remove_tmp_files();
 }
 
 
 class convert_pdf_to_swf extends convert_to {
-	
+
 	function convert($file_content='') {
 		file_put_contents($this->tmp_dir.$this->filename.'.'.$this->extension,$file_content);
 		$cmd = sprintf($this->params['pdf2swf_cmd'],$this->tmp_dir.$this->filename.'.'.$this->extension, $this->tmp_dir.$this->filename.'.'.$this->convert_to);
 		@exec($cmd);
 		return true;
 	}
-	
+
 	function remove_tmp_files() {
 		@unlink($this->tmp_dir.$this->filename.'.'.$this->extension);
 		@unlink($this->tmp_dir.$this->filename.'.'.$this->convert_to);
 	}
-	
+
 }
 
 
 class convert_odt_to_swf extends convert_to {
-	
+
 	function convert($file_content='') {
 		$done=false;
 		if ($this->params['pyodconverter_cmd']) {
@@ -115,8 +115,8 @@ class convert_odt_to_swf extends convert_to {
 			@exec($cmd);
 			$done=true;
 		}
-		if (!$done && $this->params['jodconverter_cmd']) {	
-			file_put_contents($this->tmp_dir.$this->filename.'.'.$this->extension,$file_content);	
+		if (!$done && $this->params['jodconverter_cmd']) {
+			file_put_contents($this->tmp_dir.$this->filename.'.'.$this->extension,$file_content);
 			$cmd = sprintf($this->params['jodconverter_cmd'], $this->tmp_dir.$this->filename.'.'.$this->extension, $this->tmp_dir.$this->filename.'.pdf');
 			@exec($cmd);
 			$done=true;
@@ -141,16 +141,16 @@ class convert_odt_to_swf extends convert_to {
 				file_put_contents($this->tmp_dir.$this->filename.'.pdf',$res);
 				$done=true;
 			}
-		}	
+		}
 		if ($done) {
 			$cmd = sprintf($this->params['pdf2swf_cmd'],$this->tmp_dir.$this->filename.'.pdf', $this->tmp_dir.$this->filename.'.'.$this->convert_to);
 			@exec($cmd);
 			return true;
 		}
 		return false;
-		
+
 	}
-	
+
 	function remove_tmp_files() {
 		@unlink($this->tmp_dir.$this->filename.'.'.$this->extension);
 		@unlink($this->tmp_dir.$this->filename.'.pdf');
@@ -160,7 +160,7 @@ class convert_odt_to_swf extends convert_to {
 
 
 class convert_odp_to_swf extends convert_to {
-	
+
 	function convert($file_content='') {
 		$done=false;
 		if ($this->params['pyodconverter_cmd']) {
@@ -169,8 +169,8 @@ class convert_odp_to_swf extends convert_to {
 			@exec($cmd);
 			$done=true;
 		}
-		if (!$done && $this->params['jodconverter_cmd']) {	
-			file_put_contents($this->tmp_dir.$this->filename.'.'.$this->extension,$file_content);	
+		if (!$done && $this->params['jodconverter_cmd']) {
+			file_put_contents($this->tmp_dir.$this->filename.'.'.$this->extension,$file_content);
 			$cmd = sprintf($this->params['jodconverter_cmd'], $this->tmp_dir.$this->filename.'.'.$this->extension, $this->tmp_dir.$this->filename.'.'.$this->convert_to);
 			@exec($cmd);
 			$done=true;
@@ -204,7 +204,7 @@ class convert_odp_to_swf extends convert_to {
 	function remove_tmp_files() {
 		@unlink($this->tmp_dir.$this->filename.'.'.$this->extension);
 		@unlink($this->tmp_dir.$this->filename.'.'.$this->convert_to);
-	}	
+	}
 }
 
 

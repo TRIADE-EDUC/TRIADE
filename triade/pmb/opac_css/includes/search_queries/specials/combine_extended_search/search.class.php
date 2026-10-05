@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.3 2018-12-12 10:26:23 dgoron Exp $
+// $Id: search.class.php,v 1.6 2021/11/29 08:52:02 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "combine_extended_search"
+//Classe de gestion de la recherche spécial "combine_extended_search"
 
 class combine_extended_search {
 	public $id;
@@ -37,12 +37,16 @@ class combine_extended_search {
     }
     
     public function make_search(){
+        global $search;
+        
     	$this->get_serialized_search();
     	
     	//enregistrement de l'environnement courant
     	$this->search->push();
-    	
+
     	$this->search->unserialize_search($this->serialized_search);
+    	$this->search->reduct_search();
+    	
     	$table_tempo = $this->search->make_search("tempo_".$this->n_ligne);
     	
     	//restauration de l'environnement courant
@@ -60,6 +64,10 @@ class combine_extended_search {
     	$this->search->push();
 
     	$this->search->unserialize_search($this->serialized_search);
+    	
+    	// On enleve les champs vides de la recherche
+    	$this->search->reduct_search();
+    	
     	$litteral[0] = $this->search->make_human_query();
 
     	//restauration de l'environnement courant
@@ -69,7 +77,7 @@ class combine_extended_search {
     }
     
     public function make_unimarc_query(){
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -78,13 +86,10 @@ class combine_extended_search {
     
     public function get_input_box() {
     	global $charset;
-    	
-    	$this->get_segment_set();
-    	
 		//enregistrement de l'environnement courant
 		$this->search->push();
 		
-    	//on gÃ©nÃ¨re une human_query
+    	//on génère une human_query
 		$this->search->unserialize_search($this->serialized_search);
     	$r = $this->search->make_human_query();
     	$r.="<span><input type='hidden' name='field_".$this->n_ligne."_s_".$this->id."[]' value='".htmlentities($valeur[0],ENT_QUOTES,$charset)."'/></span>";
@@ -95,7 +100,7 @@ class combine_extended_search {
     	return $r;
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="") return true;

@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if ( (empty($_SESSION["nom"])) && (empty($_SESSION["membre"]) ) ) {
 	header('Location: ./acces_refuse.php');
 	exit;
@@ -25,7 +26,7 @@ PgClose();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -76,8 +77,8 @@ $cnx=cnx();
 			//	print $mess;
 			}
 ?>
-				<img src="./image/logo_triade_licence.gif"
-				     alt="logo_triade_licence" /><br /><br />
+				<img src="./image/commun/logo_triade_licence.png" width='50%'
+                                     alt="logo_triade_licence" />
 
 <?php
 if ($_SESSION["membre"] == "menuprof") {
@@ -108,7 +109,7 @@ Pgclose();
 ?>			
 </div></div></div>
 <?php
-include_once("installation/librairie/pied_page.php");
+pieddepage();
 ?>
 </body>
 </html>

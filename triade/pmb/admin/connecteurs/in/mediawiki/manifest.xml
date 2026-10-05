@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2023/12/12 15:58:44 dbellamy Exp $ -->
+
 <manifest>
 	<name>mediawiki</name>
-	<repository>no</repository>
 	<comment>Mediawiki</comment>
+	<search>yes</search>
+	<repository>no</repository>
+	<enrichment>no</enrichment>
 	<author>Florent TETART</author>
 	<org>PMB Services</org>
 	<date>2018-11-01</date>

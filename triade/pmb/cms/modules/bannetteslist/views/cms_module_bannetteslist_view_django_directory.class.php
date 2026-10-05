@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_bannetteslist_view_django_directory.class.php,v 1.3 2019-05-23 13:26:35 dgoron Exp $
+// $Id: cms_module_bannetteslist_view_django_directory.class.php,v 1.4 2023/06/07 10:27:46 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_bannetteslist_view_django_directory extends cms_module_common_view_bannetteslist{
 
@@ -41,7 +43,7 @@ class cms_module_bannetteslist_view_django_directory extends cms_module_common_v
 		global $record_css_already_included;
 		global $opac_bannette_notices_order;
 	
-		//on gÃ¨re l'affichage des banettes				
+		//on gère l'affichage des banettes				
 		foreach($datas["bannettes"] as $i => $bannette) {
 			$datas['bannettes'][$i]['link'] = $this->get_constructed_link('bannette',$datas['bannettes'][$i]['id']);
 			
@@ -56,12 +58,10 @@ class cms_module_bannetteslist_view_django_directory extends cms_module_common_v
 			$resultat = pmb_mysql_query($requete, $dbh);
 			$cpt_record=0;
 			$datas["bannettes"][$i]['records']=array();
+			$thumbnailSourcesHandler = new ThumbnailSourcesHandler();
 			while ($r=pmb_mysql_fetch_object($resultat)) {	
 				$content="";
-				$url_vign = "";
-				if (($r->thumbnail_url || $r->code) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $r->thumbnail_url))) {
-					$url_vign = getimage_url($r->code, $r->thumbnail_url);
-				}
+				$url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $r->num_notice);
 				if(!empty($this->parameters['django_directory'])) {
 					if (!$record_css_already_included) {
 						if (file_exists($include_path."/templates/record/".$this->parameters['django_directory']."/styles/style.css")) {

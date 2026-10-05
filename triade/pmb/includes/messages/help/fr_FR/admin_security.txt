@@ -1,0 +1,10 @@
+<h2>S&eacute;curit&eacute;</h2>
+</p><p>
+Gestion des authentifications.
+</p>
+<p><b>Services Externes</b> : Gestion des authentifications externes.</p>
+<p><b>Mod&eacute;les</b> : Cr&eacute;ation de mod&eacute;les d'authentification multi-facteurs.</p>
+<p><b>Configuration OPAC</b> : Configuration de l'authentification multi-facteurs en OPAC.</p>
+<p><b>Configuration Gestion</b> : Configuration de l'authentification multi-facteurs en Gestion.</p>
+<p><b>Liste Blanche</b> : Liste blanche d'adresses ip &agrave; ne pas bloquer.</p>
+<p><b>Liste Noir</b> : Liste noire d'adresses ip &agrave; bloquer (authentification impossible).</p>

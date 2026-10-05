@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_itemslist_view_django_by_descriptors.xml,v 1.1 2020/08/10 07:02:46 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_itemslist_view_django_build_item_link">Construction du lien vers un item</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_item_link_desc">Lien vers l'item</entry>
+	<entry code="cms_module_itemslist_view_django_build_descriptor_link">Construction du lien vers une catégorie</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_descriptor_link_desc">Lien vers la catégorie</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_descriptors_desc">Tableau des catégories</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_descriptors_id_desc">Identifiant de la catégorie</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_descriptors_label_desc">Libellé de la catégorie</entry>
+	<entry code="cms_module_itemslist_view_django_by_descriptors_descriptors_items_desc">Tableau des items associés à cette catégorie</entry>
+</XMLlist>

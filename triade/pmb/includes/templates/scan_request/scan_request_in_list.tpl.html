@@ -1,23 +1,27 @@
-<!-- $Id: scan_request_in_list.tpl.html,v 1.8.4.1 2019-06-17 14:25:01 dgoron Exp $ -->
+<!-- $Id: scan_request_in_list.tpl.html,v 1.12 2023/12/07 13:19:07 dgoron Exp $ -->
 <tr id="scan_request_{{scan_request.id}}_parent" style="cursor:pointer;">
 	<td>
- 		<img style="border:0px; margin:3px 3px" onclick="expand_scan_request({{scan_request.id}}); return false;" id="scan_request_{{scan_request.id}}_img" name="imEx" class="img_plus" src="./images/plus.gif">
+ 		<img style="border:0px; margin:3px 3px" onclick="expand_scan_request({{scan_request.id}}); return false;" id="scan_request_{{scan_request.id}}_img" name="imEx" class="scan_requests_img_plus img_plus" src="./images/plus.gif">
 	</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ scan_request.title }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{% if scan_request.location_name %}{{ scan_request.location_name }} / {% endif %}{{ scan_request.creator_name }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ empr }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ scan_request.formatted_date }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ scan_request.formatted_wish_date }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ scan_request.formatted_deadline_date }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>{{ scan_request.priority.label }}</td>
-	<td onclick='scan_request_show_form({{scan_request.id}})'>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_title | escape }}'>{{ scan_request.title }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_creator_name | escape }}'>{% if scan_request.location_name %}{{ scan_request.location_name }}<span class="scan_request_creator_name"> / {{ scan_request.creator_name }}</span>{% else %}{{ scan_request.creator_name }}{% endif %}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.empr_nom_prenom | escape }}'>{{ empr }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_date | escape }}'>{{ scan_request.formatted_date }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_wish_date | escape }}'>{{ scan_request.formatted_wish_date }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_deadline_date | escape }}'>{{ scan_request.formatted_deadline_date }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_priority | escape }}'>{{ scan_request.priority.label }}</td>
+	<td onclick='scan_request_show_form({{scan_request.id}})' data-column-name='{{ msg.scan_request_status | escape }}'>
 		<span><img id="scan_request_img_statut_part_{{scan_request.id}}" class="{{ scan_request.status.class_html }}" style="width:7px; height:7px; vertical-align:middle; margin-left:-3px;" src="./images/spacer.gif"></span>
 		<span id="scan_request_statut_part_{{scan_request.id}}" >{{ scan_request.status.label }}</span>
 	</td>
-	<td><img onclick='document.location="{{ scan_request.edit_link }}"' class="icon" width="16" height="16" src="./images/b_edit.png"></td>
+	<td>
+		<a href='{{ scan_request.edit_link }}'>
+			<img  class="icon" width="16" height="16" src="./images/b_edit.png" title="{{ msg.scan_request_edit | escape }}" alt="{{ msg.scan_request_edit | escape }}" />
+		</a>
+	</td>
 </tr>
 
-<tr style="margin-bottom: 6px; display: none;" id="scan_request_{{scan_request.id}}_child">
+<tr style="margin-bottom: 6px; display: none;" id="scan_request_{{scan_request.id}}_child" class="scan_requests_children">
 	<td></td>
 	<td colspan='9'>
 		{% if scan_request.desc %}

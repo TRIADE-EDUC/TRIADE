@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Novembre 2016
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,16 +27,16 @@ function TextNoAccentLicence2($Text){
 	 Return (strtr($Text, "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËéèêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ","AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn"));
 }
 
-if (!defined(INTITULEDIRECTION)) { define("INTITULEDIRECTION","direccion"); }
-if (!defined(INTITULEELEVE)) { define("INTITULEELEVE","escolan"); }
-if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","escolans"); }
+if (!defined("INTITULEDIRECTION")) { define("INTITULEDIRECTION","direccion"); }
+if (!defined("INTITULEELEVE")) { define("INTITULEELEVE","escolan"); }
+if (!defined("INTITULEELEVES")) { define("INTITULEELEVES","escolans"); }
 
 
 
 define("CLICKICI","Clicatz aicí");
 define("VALIDER","Validar");
 define("LANGTP22","INFORMACION - Demanda de D.S.T. de confimar !");
-define("LANGTP3"," calendièr DST ");
+define("LANGTP33"," calendièr DST ");
 define("LANGCHOIX","Causida ...");
 define("LANGCHOIX2","pas cap de classa");
 define("LANGCHOIX3","--- Causida ---");
@@ -2162,7 +2162,7 @@ define("LANGMODIF26","Modificar sosmatèria");
 define("LANGPROF38","Nòtas Trimestralas");
 define("LANGPROF39","Complement d'informacion");
 
-define("LANGCIRCU21","Disp. per"); // abréviation de "Disponible pour" 
+define("LANGCIRCU211","Disp. per"); // abréviation de "Disponible pour" 
 
 define("LANGTELECHARGE","Telecargar"); //  downloader
 
@@ -2352,7 +2352,7 @@ define("LANGDISP23","Intitulat del motiu ");
 define("LANGDISP24","Lista dels motius ");
 define("LANGDISP25","Nombre d'".INTITULEELEVE."s mis a jorn");
 define("LANGDISP26","Le fichièr deu èstre al format xls");
-define("LANGCARNET63","Impòrt Quasernet de Seguiment acabat");
+define("LANGCARNET633","Impòrt Quasernet de Seguiment acabat");
 define("LANGCARNET64","Lista de las sanccions");
 // News 2
 define("LANGCARNET67","Apondon d'una sanccion disciplinària");
@@ -3543,4 +3543,43 @@ define("LANGVATEL303","Alerte SMS");
 define("LANGNEW100","Sanction(s)");
 define("LANGNEW101","Prévision sur ");
 
+define("LANGTT2","Impression du tableau de bulletin");
+
+
+// --- SIECLE-BEE Export ---
+define('LANG_SIECLE_EXPORT_TITRE', 'Exportacion SIECLE-BEE (XML / ZIP)');
+define('LANG_SIECLE_EXPORT_DESC', 'Generacion de l\'archiu ZIP confòrme a las nòrmas nacionalas per l\'importacion dins SIECLE-BEE.');
+define('LANG_SIECLE_PROFIL', 'Perfil d\'esquèma SIECLE');
+define('LANG_SIECLE_PROFIL_STANDARD', 'Estandard (Jos contracte - XSD 4.0)');
+define('LANG_SIECLE_PROFIL_EPHC', 'Privat fòra contracte (EPHC - XSD 1.1)');
+define('LANG_SIECLE_UAI', 'Còdi UAI de l\'establiment');
+define('LANG_SIECLE_ANNEE', 'Annada escolara');
+define('LANG_SIECLE_VALIDATION_XSD', 'Validar la conformitat XSD abans exportacion');
+define('LANG_SIECLE_PERIMETRE', 'Perimètre de l\'exportacion');
+define('LANG_SIECLE_BTN_EXPORTER', 'Generar e telecargar l\'archiu ZIP');
+
+define('LANG_CODE_MEF', 'Còdi MEF (SIECLE)');
+
+// --- Modificacion del senhal (Espaci Privat) ---
+define('LANG_CHG_PASS_TITLE', 'Senhal');
+define('LANG_CHG_PASS_ACTUEL', 'Senhal actual');
+define('LANG_CHG_PASS_NOUVEAU', 'Novèl senhal');
+define('LANG_CHG_PASS_CONFIRM', 'Confirmar lo novèl senhal');
+define('LANG_CHG_PASS_BTN', 'Modificar lo senhal');
+define('LANG_CHG_PASS_OK', 'Vòstre senhal es estat modificat amb succès.');
+define('LANG_CHG_PASS_ERR_ACTUEL', 'Lo senhal actual es incorrècte.');
+define('LANG_CHG_PASS_ERR_CONFIRM', 'Lo novèl senhal e sa confirmacion son pas parièrs.');
+define('LANG_CHG_PASS_ERR_EMPTY', 'Mercés de completar totes los camps del senhal.');
+define('LANG_CHG_PASS_ERR_SECURITY', 'Lo novèl senhal respecta pas los critèris de seguretat de l\'establiment.');
+define('LANG_CHG_PASS_DISABLED', 'La modificacion del senhal es desactivada per vòstre establiment.');
+define('LANG_CHG_PASS_STRENGTH_LABEL', 'Fòrça del senhal:');
+define('LANG_CHG_PASS_STRENGTH_1', 'Fòrça feble');
+define('LANG_CHG_PASS_STRENGTH_2', 'Feble');
+define('LANG_CHG_PASS_STRENGTH_3', 'Mejan');
+define('LANG_CHG_PASS_STRENGTH_4', 'Robust');
+define('LANG_CHG_PASS_MAIL_SUBJECT', 'TRIADE: Confirmacion de modificacion del senhal');
+define('LANG_CHG_PASS_MAIL_BODY1', 'Adieu');
+define('LANG_CHG_PASS_MAIL_BODY2', 'Vos confirmam que lo senhal de vòstre compte TRIADE es estat modificat amb succès lo');
+define('LANG_CHG_PASS_MAIL_BODY3', 'a');
+define('LANG_CHG_PASS_MAIL_BODY4', 'Se sètz pas a l\'origina d\'aquela modificacion, contactatz sulpic l\'administracion de vòstre establiment.');
 ?>

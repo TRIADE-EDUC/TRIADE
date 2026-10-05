@@ -1,0 +1,29 @@
+<div id="ai_search">
+	<transition>
+		<div class="ai_search_loader" v-show="!loaded">
+			<template v-if="ready">
+				<div class="ai_search_loader_container">
+					<i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i>
+					<p>{{ messages.get('ai', 'loading') }}</p>
+				</div>
+			</template>
+		</div>
+	</transition>
+	<sessions
+		:sessions="sessions"
+		:current_session="current_session"
+		:type="type"
+		:list_id="list_id"
+	/>
+	<session-container
+		:session="current_session"
+		:current_index_question="ai_session_index_question"
+		:current_ai_session="ai_session"
+		:welcome_message="welcome_message"
+		:fetch_text_generation="fetch_text_generation"
+		:fetch_tips="fetch_tips"
+		:tips="tips"
+		:type="type"
+		:list_id="list_id"
+	/>
+</div>

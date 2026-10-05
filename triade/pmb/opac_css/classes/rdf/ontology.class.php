@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ontology.class.php,v 1.4 2019-05-09 10:35:37 ngantier Exp $
+// $Id: ontology.class.php,v 1.7 2024/03/22 15:31:03 qvarin Exp $
 
 
 if (stristr ($_SERVER['REQUEST_URI'], ".class.php"))
@@ -22,15 +22,15 @@ class ontology_parser {
 	public $text='';
 
 	
-	/* ElÃ©ments de l'ontologie pmb
+	/* Eléments de l'ontologie pmb
 	 * 
-	 * pmb:noAssertionProperty		Indique une propriÃ©tÃ© ne devant pas Ãªtre utilisÃ©e pour une dÃ©claration
+	 * pmb:noAssertionProperty		Indique une propriété ne devant pas être utilisée pour une déclaration
 	 * 
-	 * pmb:datatype					PrÃ©cise le type de donnÃ©es Ã  reprÃ©senter
-	 * pmb:small_text				Type de donnÃ©e "small text" => "Input"
-	 * pmb:text						Type de donnÃ©e "text" => "Textarea"
+	 * pmb:datatype					Précise le type de données à représenter
+	 * pmb:small_text				Type de donnée "small text" => "Input"
+	 * pmb:text						Type de donnée "text" => "Textarea"
 	 * 
-	 * pmb:displayLabel				Label Ã  afficher dans une liste
+	 * pmb:displayLabel				Label à afficher dans une liste
 	 */
 	 
 	
@@ -49,7 +49,7 @@ class ontology_parser {
 					);  
 	
 	
-	// Tableau types propriÃ©tÃ©s
+	// Tableau types propriétés
 	public $t_is_a_property = array(	'rdf:Property',
 										'owl:ObjectProperty',
 										'owl:FunctionalProperty',
@@ -88,7 +88,7 @@ class ontology_parser {
 		xml_set_character_data_handler ($this->parser, "texte");
 		
 		if ( !xml_parse ($this->parser, $xml, TRUE)) {
-			die (sprintf ("erreur XML %s Ã  la ligne: %d", xml_error_string (xml_get_error_code ($this->parser)), xml_get_current_line_number ($this->parser)));
+			die (sprintf ("erreur XML %s à la ligne: %d", xml_error_string (xml_get_error_code ($this->parser)), xml_get_current_line_number ($this->parser)));
 		}
 		xml_parser_free ($this->parser);
 
@@ -502,7 +502,7 @@ class ontology_parser {
 		} 
 		$this->path_tag[]=$tag;
 		
-		//au premier niveau, on recupÃ¨re les namespaces
+		//au premier niveau, on recupère les namespaces
 		if(count($this->path_tag)==1) {
 			if (count($att)) {
 				foreach($att as $k=>$v) {
@@ -514,7 +514,7 @@ class ontology_parser {
 			}
 		}
 		
-		//au 2eme niveau, ce sont les dÃ©clarations
+		//au 2eme niveau, ce sont les déclarations
 		if(count($this->path_tag)>1) {
 			$t=array_slice($this->path_tag,1);
 			if(count($att)) {
@@ -579,7 +579,7 @@ class ontology_handler {
 	public $limit = 50;
 	
 	
-//TODO a revoir pour mettre en paramÃ¨tre dans pmb	
+//TODO a revoir pour mettre en paramètre dans pmb	
 	public $t_lang = array(	'0'		=> '',
 //							'fr'	=> 'fre',
 //							'en'	=> 'eng',
@@ -605,7 +605,7 @@ class ontology_handler {
 	}
 	
 	
-	public function get_handler($name='', $params) {
+	public function get_handler($name='', $params = []) {
 		
 		$this->handled=FALSE;
 		if($params['object']) {
@@ -619,7 +619,7 @@ class ontology_handler {
 	}
 
 	
-	public function get_property_form_handler($property_uri='', $params) {
+	public function get_property_form_handler($property_uri='', $params = []) {
 	
 		$this->property_form_handled=FALSE;
 		if($property_uri) {
@@ -637,14 +637,14 @@ class ontology_handler {
 	 * 
 	 * @param $params['object'] = nom de l'objet
 	 *
-	 * @param $params['page'] = page Ã  afficher
-	 * @param $params['limit'] = nb d'objets Ã  afficher
+	 * @param $params['page'] = page à afficher
+	 * @param $params['limit'] = nb d'objets à afficher
 	 * 
 	 * @param $params['url_base'] = url de base des pages
 	 * 
 	 * 
 	 */
-//TODO reste Ã  gÃ©rer l'affichage par ordre alphabÃ©tique !!! et le formulaire de recherche
+//TODO reste à gérer l'affichage par ordre alphabétique !!! et le formulaire de recherche
 	
 	public function showlist ($params=array()) {
 		
@@ -691,10 +691,10 @@ class ontology_handler {
 			//comptage des objets
 			$count = $this->count_objects($this->params);
 			
-			//rÃ©cupÃ©ration des objets
+			//récupération des objets
 			$objs = $this->get_objects($this->params);
 	
-			//rÃ©cupÃ©ration des proprietes a afficher dans la liste
+			//récupération des proprietes a afficher dans la liste
 			$p = $this->op->get_pmb_display_label($this->params['object']);
 			if($p && count($objs)) {
 				foreach($objs as $ko=>$vo) {		
@@ -753,7 +753,7 @@ class ontology_handler {
 						}
 					}
 					if ($charset=='iso-8859-1') {
-						$label=utf8_decode($label);
+						$label=encoding_normalize::utf8_decode($label);
 					}
 					
 					$label = htmlentities($label,ENT_QUOTES,$charset);
@@ -793,7 +793,7 @@ class ontology_handler {
 	/*
 	 *
 	 * @param $params['object'] = nom de l'objet
-	 * @param $params['object_uri'] = uri de l'objet Ã  modifier
+	 * @param $params['object_uri'] = uri de l'objet à modifier
 	 * 
 	 * @param $params['url_base'] = url de base des pages
 	 * 
@@ -837,18 +837,18 @@ class ontology_handler {
 			if (!count($pdo)) {
 				$pdo = $this->op->get_object_properties($this->params['object']);
 			}
-// 			print '-->propriÃ©tÃ©s dÃ©finies par l\'ontologie<br />';
+// 			print '-->propriétés définies par l\'ontologie<br />';
 // 			highlight_string(print_r($pdo,true));
 				
 			$peb=array();
-			//rÃ©cuperation des proprietes enregistrees en base
+			//récuperation des proprietes enregistrees en base
 			if ($this->params['object_uri']) {
 				$peb = $this->get_object_properties($this->params['object_uri'], $pdo);
 				
 				if($charset!='utf-8') {
 					foreach($peb as $k=>$v) {
 						if($v['o type']=='literal') {
-							$peb[$k]['o']=utf8_decode($v['o']);
+							$peb[$k]['o']=encoding_normalize::utf8_decode($v['o']);
 						}
 					}
 				}
@@ -1180,11 +1180,11 @@ class ontology_handler {
 	/*
 	 *
 	* @param $params['objects'] = array() ; nom des objets
-	* @param $params['object_uri'] = uri de l'objet Ã  modifier
+	* @param $params['object_uri'] = uri de l'objet à modifier
 	*
-	* @param $params['user_input'] = texte cherchÃ©
-	* @param $params['page'] = page Ã  afficher
-	* @param $params['limit'] = nb d'objets Ã  afficher
+	* @param $params['user_input'] = texte cherché
+	* @param $params['page'] = page à afficher
+	* @param $params['limit'] = nb d'objets à afficher
 	*  
 	* @param $params['url_base'] = url de base des pages
 	*
@@ -1216,12 +1216,12 @@ class ontology_handler {
 	
 	/** 
 	 * @abstract 
-	 * Retourne une liste d'objets sous forme de tableau selon le type demandÃ©
-	 * et la recherche effectuÃ©e
+	 * Retourne une liste d'objets sous forme de tableau selon le type demandé
+	 * et la recherche effectuée
 	 * 
 	 * @param	array 	$params
 	 * array	$params['objects']			: tableau de types d'objet
-	 * string	$params['user_input']		: chaine recherchÃ©e	
+	 * string	$params['user_input']		: chaine recherchée	
 	 * 
 	 * @return array
 	 * [index]	=>	[subject_uri]			=> uri de l'objet
@@ -1259,7 +1259,7 @@ class ontology_handler {
 		}
 		$members=$aq->get_query_members("rdfstore_index","object_val","object_index","subject_uri");
 		
-		// On restreint la recheche aux objets demandÃ©s et aux labels dÃ©finit pour les recherches dans skos_pmb.rdf
+		// On restreint la recheche aux objets demandés et aux labels définit pour les recherches dans skos_pmb.rdf
 		$restrict=array();
 		foreach ( $params['objects'] as $key => $value ) {
 			$restrict[$key]="( subject_type='".addslashes($this->op->from_ns($value))."' ";
@@ -1296,14 +1296,14 @@ class ontology_handler {
 	
 	/** 
 	 * @abstract 
-	 * Retourne une liste d'objets sous forme de tableau selon le type demandÃ©
+	 * Retourne une liste d'objets sous forme de tableau selon le type demandé
 	 * 
 	 * @param	array 	$params
 	 * string	$params['object']	: type d'objet
-	 * int		$params['limit']	: nombre d'objets Ã  retourner
-	 * int		$params['offset']	: offset de dÃ©part
+	 * int		$params['limit']	: nombre d'objets à retourner
+	 * int		$params['offset']	: offset de départ
 	 * 
-	 * string	$params['filter']	: filtre Ã  appliquer
+	 * string	$params['filter']	: filtre à appliquer
 	 * 
 	 * @return array
 	 * [index]	=>	[s]			=> uri de l'objet
@@ -1320,11 +1320,11 @@ class ontology_handler {
 		if (!$params['limit']) {
 			$params['limit']=$this->limit;
 		} 
-		$params['limit']+=0;
+		$params['limit'] = intval($params['limit']);
 		if (!$params['offset']) {
 			$params['offset']=0;
 		}
-		$params['offset']+=0;
+		$params['offset'] = intval($params['offset']);
 		
 		$s_filter='';
 		if(is_string($params['filter'])) {
@@ -1357,7 +1357,7 @@ class ontology_handler {
 	
 	/**
 	 * @abstract 
-	 * Compte le nombre d'objets selon le type demandÃ©
+	 * Compte le nombre d'objets selon le type demandé
 	 * 
 	 * @param array $params
 	 * string $params['object'] : type d'objet
@@ -1389,17 +1389,17 @@ class ontology_handler {
 	
 	/** 
 	 * @abstract 
-	 * Retourne la liste des propriÃ©tÃ©s d'un objet sous forme de tableau
+	 * Retourne la liste des propriétés d'un objet sous forme de tableau
 	 * 
 	 * @param	string 	$object_uri	: uri de l'objet
 	 * 
-	 * @param	array	$property_uris	: liste des propriÃ©tÃ©s cherchÃ©es
+	 * @param	array	$property_uris	: liste des propriétés cherchées
 	 * 
 	 * @return	array
-	 * [index]	=>	[p]			=> prÃ©dicat de la propriÃ©tÃ©
+	 * [index]	=>	[p]			=> prédicat de la propriété
 	 * 				[p type]	=> 'uri'
-	 * 				[o]			=> uri ou contenu de la propriÃ©tÃ©
-	 * 				[o type]	=> type de propriÃ©tÃ© ('uri', literal, ...) 
+	 * 				[o]			=> uri ou contenu de la propriété
+	 * 				[o type]	=> type de propriété ('uri', literal, ...) 
 	 * 				[o lang]	=> code langue si literal
 	 * 
 	 */
@@ -1488,7 +1488,7 @@ class ontology_handler {
 		if ($r['result']['rows'][0]['l']) {
 			$res=$this->op->to_ns($r['result']['rows'][0]['l']);
 			if ($charset=='iso-8859-1') {
-				$res = utf8_decode($res);
+				$res = encoding_normalize::utf8_decode($res);
 			}
 		}
 		

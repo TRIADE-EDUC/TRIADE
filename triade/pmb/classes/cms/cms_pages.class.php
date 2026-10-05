@@ -2,29 +2,29 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_pages.class.php,v 1.7 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_pages.class.php,v 1.12 2023/12/15 08:00:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/cms/cms_pages.tpl.php");
 require_once($include_path."/cms/cms.inc.php");
 
 class cms_pages {	
-	public $list= array();			// tableau contenant les ids des pages Ã  lister...
-	public $data= array();			// tableau contenant les donnÃ©es des pages Ã  lister...
+	public $list= array();			// tableau contenant les ids des pages à lister...
+	public $data= array();			// tableau contenant les données des pages à lister...
 	public $pages_classement_list = array();
-		
+
 	public function __construct(){
 		$this->fetch_data();
 	}
 	
 	protected function fetch_data(){
-		global $dbh;
 		$this->list = array();
 		$this->data = array();
 		$this->pages_classement_list=array();
 		$requete = "select id_page from cms_pages order by page_name ";
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		if(pmb_mysql_num_rows($res)){
 			while($row = pmb_mysql_fetch_object($res)){
 				$this->list[]=$row->id_page;
@@ -41,31 +41,34 @@ class cms_pages {
 	}
 	
 	public function get_list($tpl="",$item_tpl=""){
-		global $msg;
 		global $charset;
-		global $cms_pages_list_tpl;
-		global $cms_pages_list_item_tpl;
+		global $cms_build_pages_tpl;
+		global $cms_build_pages_tpl_item;
 		
-		if(!$tpl)$tpl=$cms_pages_list_tpl;		
+		if(!$tpl) {
+		    $tpl=$cms_build_pages_tpl;
+		}
 		$items="";
-		$pair_impair = "even";		
-		foreach($this->data as $id => $page ){
-			if(!$item_tpl)$item=$cms_pages_list_item_tpl;
-			else $item=	$item_tpl;		
+		$pair_impair = "even";
+		foreach($this->data as $page ){
+		    if(!$item_tpl) {
+		        $item=$cms_build_pages_tpl_item;
+		    } else {
+		        $item=	$item_tpl;
+		    }
 			if($pair_impair == "even") $pair_impair = "odd"; else $pair_impair = "even";
-						
-			$item = str_replace("!!pair_impair!!",$pair_impair,$item);			
+			
+			$item = str_replace("!!pair_impair!!",$pair_impair,$item);
 			$item = str_replace("!!name!!",htmlentities($page['name'],ENT_QUOTES, $charset),$item);
-			$item = str_replace("!!id!!",$page['id'],$item);			
+			$item = str_replace("!!id!!",$page['id'],$item);
 			$items.=$item;
-		}	
+		}
 		$tpl= str_replace("!!items!!",$items,$tpl);
 		return $tpl;
 	}
 
 	
 	public function build_item($id,$tpl_item){
-		global $msg;
 		global $charset;
 					
 		$page=$this->data[$id];
@@ -82,9 +85,10 @@ class cms_pages {
 class cms_page {
 	public $id;		// identifiant de l'objet
 	public $hash;	// hash de l'objet
-	public $name;	// nom
-	public $description;	// description
+	public $name = "";	// nom
+	public $description = "";	// description
 	public $vars= array();	// Variables d'environnement
+	public $classement = 0;
 	
 	public function __construct($id=""){
 	    $this->id= (int) $id;		
@@ -135,8 +139,8 @@ class cms_page {
 		if($ajax)$tpl= $cms_page_form_ajax_tpl;	
 		else $tpl=$cms_page_form_tpl;	
 		
-		$tpl = str_replace("!!name!!",htmlentities($this->name ,ENT_QUOTES, $charset),$tpl);
-		$tpl = str_replace("!!description!!",htmlentities($this->description,ENT_QUOTES, $charset),$tpl);
+		$tpl = str_replace("!!name!!",htmlentities($this->name ?? "", ENT_QUOTES, $charset),$tpl);
+		$tpl = str_replace("!!description!!",htmlentities($this->description ?? "", ENT_QUOTES, $charset),$tpl);
 		if($this->id){
 			$tpl = str_replace("!!form_title!!",htmlentities($msg["cms_page_form_title"] ,ENT_QUOTES, $charset),$tpl);
 			$tpl = str_replace("!!cms_page_form_suppr!!",$cms_page_form_del_button_tpl,$tpl);
@@ -196,7 +200,7 @@ class cms_page {
 	}	
 		
 	public function save_page_classement($id_page,$classement){		
-		$id_cadre+=0;
+		$id_page = intval($id_page);
 		$query = "update cms_pages set page_classement='$classement' where id_cadre = ".$id_page;
 		pmb_mysql_query($query);
 	}	
@@ -234,9 +238,6 @@ class cms_page {
 	}	
 	
 	public function delete(){
-		global $msg;
-		global $charset;
-		
 		$this->delete_vars();
 		$del = "delete from cms_pages where id_page='".$this->id."'";
 		pmb_mysql_query($del);
@@ -246,9 +247,6 @@ class cms_page {
 	}
 
 	public function delete_vars(){
-		global $msg;
-		global $charset;
-		
 		$del = "delete from cms_vars where var_num_page='".$this->id."'";
 		pmb_mysql_query($del);
 		return 0;
@@ -263,5 +261,9 @@ class cms_page {
 			'env_var' => $this->vars
 		);
 		return $infos;
+	}
+	
+	public function get_id() {
+		return $this->id;
 	}
 }// End of class

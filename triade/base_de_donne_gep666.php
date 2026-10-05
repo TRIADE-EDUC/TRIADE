@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,10 +25,6 @@ if ($id != 1) {
 	set_time_limit(3000);
 }
 ?>
-<!-- /************************************************************
-Last updated: 17.08.2004    par Taesch  Eric
-*************************************************************/ -->
-
 <HTML>
 <HEAD>
 <META http-equiv="CacheControl" content = "no-cache">
@@ -44,11 +40,11 @@ Last updated: 17.08.2004    par Taesch  Eric
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript"<?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE31?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -58,11 +54,11 @@ Last updated: 17.08.2004    par Taesch  Eric
 include_once("librairie_php/db_triade.php");
 
 /*
-foreach( $_POST[saisie_classe] as $clef => $valeur) {
+foreach( $_POST['saisie_classe'] as $clef => $valeur) {
 	print $clef." ".$valeur."<br>";
 }
 
-foreach( $_POST[saisie_ref] as $clef => $valeur) {
+foreach( $_POST['saisie_ref'] as $clef => $valeur) {
 	print $clef." ".$valeur."<br>";
 }
 */
@@ -72,9 +68,9 @@ function eclair($x , $y){
 		echo "<br><br><center>".LANGbasededon41."</center>";
 		print "<script>history.go(-1);</script>";
 	}
-	array_pad($x, count($y), "");
-	array_pad($y, count($x), "");
-	while(count($x) > 0){
+	array_pad($x, countTriade($y), "");
+	array_pad($y, countTriade($x), "");
+	while(countTriade($x) > 0){
 		if (  current($x) == "choix") { array_shift($y); array_shift($x);continue; }
 		$in=gep_classe(array_shift($x),array_shift($y));
 		if ($in == 0) {
@@ -157,40 +153,40 @@ if(!$fp) {
 		
 
 			// création du tableau de hash contenant les paramètres de la fonction create_eleve
-			$params[ne]=            strtolower(trim(addslashes($nom1)));
-			$params[pe]=            strtolower(trim(addslashes($prenom1)));
-			$params[ce]=            $classe;
-			$params[lv1]=           strtolower(trim($lv1));
-			$params[lv2]=           strtolower(trim($lv2));
-			$params[option]=        	"";
+			$params['ne']=            strtolower(trim(addslashes($nom1)));
+			$params['pe']=            strtolower(trim(addslashes($prenom1)));
+			$params['ce']=            $classe;
+			$params['lv1']=           strtolower(trim($lv1));
+			$params['lv2']=           strtolower(trim($lv2));
+			$params['option']=        	"";
 			// faire un module pour le regime valeur possible 0,1,2,3
-			$params[regime]=        $regime;
-			$params[naiss]=         $date_naissance;
-			$params[nat]=           $nationnalite;
-			$params[mdp]=           $passwd;
-			$params[mdpeleve]=      $passwd_eleve;
-			$params[nt]=            "";
-			$params[pt]=		"";
-			$params[nadr1]=        	"";
-			$params[adr1]=        	"";
-			$params[cpadr1]=      	"";
-			$params[commadr1]=     	"";
-			$params[nadr2]=        	"";
-			$params[adr2]=         	"";
-			$params[cpadr2]=       	"";
-			$params[commadr2]=     	"";
-			$params[tel]=          	"";
-			$params[profp]=        	"";
-			$params[telprofp]=     	"";
-			$params[profm]=        	"";
-			$params[telprofm]=     	"";
-			$params[nomet]=        	"";
-			$params[numet]=        	"";
-			$params[cpet]=         	"";
-			$params[commet]=    	"";
-			$params[numero_eleve]=  $nonatele;
-			$params[email]=		"";
-			$params[numero_gep]=	$numero_gep;
+			$params['regime']=        $regime;
+			$params['naiss']=         $date_naissance;
+			$params['nat']=           $nationnalite;
+			$params['mdp']=           $passwd;
+			$params['mdpeleve']=      $passwd_eleve;
+			$params['nt']=            "";
+			$params['pt']=		"";
+			$params['nadr1']=        	"";
+			$params['adr1']=        	"";
+			$params['cpadr1']=      	"";
+			$params['commadr1']=     	"";
+			$params['nadr2']=        	"";
+			$params['adr2']=         	"";
+			$params['cpadr2']=       	"";
+			$params['commadr2']=     	"";
+			$params['tel']=          	"";
+			$params['profp']=        	"";
+			$params['telprofp']=     	"";
+			$params['profm']=        	"";
+			$params['telprofm']=     	"";
+			$params['nomet']=        	"";
+			$params['numet']=        	"";
+			$params['cpet']=         	"";
+			$params['commet']=    	"";
+			$params['numero_eleve']=  $nonatele;
+			$params['email']=		"";
+			$params['numero_gep']=	$numero_gep;
 
 			// nouvelle version de create_eleve()
 			$ascii=0;
@@ -211,39 +207,39 @@ if(!$fp) {
 			// divcod est null
 			$nbeleverreur++;
 			// création du tableau de hash contenant les paramètres de la fonction create_eleve
-			$params[ne]=            strtolower(trim(addslashes($nom1)));
-			$params[pe]=            strtolower(trim(addslashes($prenom1)));
-			$params[lv1]=           strtolower(trim($lv1));
-			$params[lv2]=           strtolower(trim($lv2));
-			$params[option]=        	"";
+			$params['ne']=            strtolower(trim(addslashes($nom1)));
+			$params['pe']=            strtolower(trim(addslashes($prenom1)));
+			$params['lv1']=           strtolower(trim($lv1));
+			$params['lv2']=           strtolower(trim($lv2));
+			$params['option']=        	"";
 			// faire un module pour le regime valeur possible 0,1,2,3
-			$params[regime]=        $regime;
-			$params[naiss]=         $date_naissance;
-			$params[nat]=           $nationnalite;
-			$params[mdp]=           $passwd;
-			$params[mdpeleve]=      $passwd_eleve;
-			$params[nt]=            "";
-			$params[pt]=		"";
-			$params[nadr1]=        	"";
-			$params[adr1]=        	"";
-			$params[cpadr1]=      	"";
-			$params[commadr1]=     	"";
-			$params[nadr2]=        	"";
-			$params[adr2]=         	"";
-			$params[cpadr2]=       	"";
-			$params[commadr2]=     	"";
-			$params[tel]=          	"";
-			$params[profp]=        	"";
-			$params[telprofp]=     	"";
-			$params[profm]=        	"";
-			$params[telprofm]=     	"";
-			$params[nomet]=        	"";
-			$params[numet]=        	"";
-			$params[cpet]=         	"";
-			$params[commet]=    	"";
-			$params[numero_eleve]=  $nonatele;
-			$params[email]=		"";
-			$params[numero_gep]=	$numero_gep;
+			$params['regime']=        $regime;
+			$params['naiss']=         $date_naissance;
+			$params['nat']=           $nationnalite;
+			$params['mdp']=           $passwd;
+			$params['mdpeleve']=      $passwd_eleve;
+			$params['nt']=            "";
+			$params['pt']=		"";
+			$params['nadr1']=        	"";
+			$params['adr1']=        	"";
+			$params['cpadr1']=      	"";
+			$params['commadr1']=     	"";
+			$params['nadr2']=        	"";
+			$params['adr2']=         	"";
+			$params['cpadr2']=       	"";
+			$params['commadr2']=     	"";
+			$params['tel']=          	"";
+			$params['profp']=        	"";
+			$params['telprofp']=     	"";
+			$params['profm']=        	"";
+			$params['telprofm']=     	"";
+			$params['nomet']=        	"";
+			$params['numet']=        	"";
+			$params['cpet']=         	"";
+			$params['commet']=    	"";
+			$params['numero_eleve']=  $nonatele;
+			$params['email']=		"";
+			$params['numero_gep']=	$numero_gep;
 
 			// nouvelle create eleve sans classe
 			$ascii=0;
@@ -300,5 +296,5 @@ if ($nbeleverreur > 0 ) {
 </ul>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

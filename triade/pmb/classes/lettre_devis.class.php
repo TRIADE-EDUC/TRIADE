@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_devis.class.php,v 1.8 2019-05-11 15:09:10 dgoron Exp $
+// $Id: lettre_devis.class.php,v 1.10 2020/01/23 14:38:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,11 +17,9 @@ class lettreDevis_PDF extends lettre_accounting_PDF {
 	public $x_qte = '';
 	public $w_qte = '';
 	public $filename='devis.pdf';
-		
-	protected function get_parameter_value($name) {
-		$parameter_name = 'acquisition_pdfdev_'.$name;
-		global ${$parameter_name};
-		return ${$parameter_name};
+	
+	protected static function get_parameter_prefix() {
+	    return 'acquisition_pdfdev';
 	}
 	
 	protected function _init_pos_num() {
@@ -50,13 +48,11 @@ class lettreDevis_PDF extends lettre_accounting_PDF {
 	}
 	
 	public function doLettre($id_bibli, $id_dev) {
+		global $pmb_pdf_font;
 		
-		global $msg,$pmb_pdf_font;
-		
-		//On rÃ©cupÃ¨re les infos du devis
+		//On récupère les infos du devis
 		$this->id_acte = $id_dev;
 		$dev = $this->get_acte();
-		$lignes = actes::getLignes($this->id_acte);
 		
 		$this->PDF->AddPage();
 		$this->PDF->setFont($pmb_pdf_font);
@@ -74,7 +70,7 @@ class lettreDevis_PDF extends lettre_accounting_PDF {
 		$this->display_date();
 		
 		//Affichage coordonnees fournisseur
-		//si pas de raison sociale dÃ©finie, on reprend le libellÃ©
+		//si pas de raison sociale définie, on reprend le libellé
 		//si il y a une raison sociale, pas besoin
 		$this->display_supplier();
 	
@@ -132,33 +128,7 @@ class lettreDevis_PDF extends lettre_accounting_PDF {
 	
 		$this->doEntete();
 		
-		while (($row = pmb_mysql_fetch_object($lignes))) { 
-			$typ = new types_produits($row->num_type);
-			$col1 = $typ->libelle."\n".$row->code;
-			
-			$this->h = $this->h_tab * max( 	$this->PDF->NbLines($this->w_code, $col1),
-			$this->PDF->NbLines($this->w_lib, $row->libelle),
-			$this->PDF->NbLines($this->w_qte, $row->nb) );
-							
-			$this->s = $this->y+$this->h;		
-			if ($this->s > ($this->hauteur_page-$this->marge_bas)){
-		
-				$this->PDF->AddPage();
-				$this->PDF->SetXY($this->x_tab, $this->y_tab);
-				$this->y = $this->PDF->GetY();
-				$this->doEntete();
-			} 
-			$this->PDF->SetXY($this->x_code, $this->y);
-			$this->PDF->Rect($this->x_code, $this->y, $this->w_code, $this->h);
-			$this->PDF->MultiCell($this->w_code, $this->h_tab, $col1, 0, 'L');
-			$this->PDF->SetXY($this->x_lib, $this->y);
-			$this->PDF->Rect($this->x_lib, $this->y, $this->w_lib, $this->h);
-			$this->PDF->MultiCell($this->w_lib, $this->h_tab, $row->libelle, 0, 'L');
-			$this->PDF->SetXY($this->x_qte, $this->y);
-			$this->PDF->Rect($this->x_qte, $this->y, $this->w_qte, $this->h);
-			$this->PDF->MultiCell($this->w_qte, $this->h_tab, $row->nb, 0, 'L');
-			$this->y = $this->y+$this->h;
-		}
+		$this->doLines();
 
 		$this->PDF->SetAutoPageBreak(true, $this->marge_bas);
 		$this->PDF->SetX($this->marge_gauche);
@@ -205,6 +175,36 @@ class lettreDevis_PDF extends lettre_accounting_PDF {
 	
 	}
 
+	public function doLines() {
+		$lignes = actes::getLignes($this->id_acte);
+		while (($row = pmb_mysql_fetch_object($lignes))) {
+			$typ = new types_produits($row->num_type);
+			$col1 = $typ->libelle."\n".$row->code;
+			
+			$this->h = $this->h_tab * max( 	$this->PDF->NbLines($this->w_code, $col1),
+					$this->PDF->NbLines($this->w_lib, $row->libelle),
+					$this->PDF->NbLines($this->w_qte, $row->nb) );
+			
+			$this->s = $this->y+$this->h;
+			if ($this->s > ($this->hauteur_page-$this->marge_bas)){
+				
+				$this->PDF->AddPage();
+				$this->PDF->SetXY($this->x_tab, $this->y_tab);
+				$this->y = $this->PDF->GetY();
+				$this->doEntete();
+			}
+			$this->PDF->SetXY($this->x_code, $this->y);
+			$this->PDF->Rect($this->x_code, $this->y, $this->w_code, $this->h);
+			$this->PDF->MultiCell($this->w_code, $this->h_tab, $col1, 0, 'L');
+			$this->PDF->SetXY($this->x_lib, $this->y);
+			$this->PDF->Rect($this->x_lib, $this->y, $this->w_lib, $this->h);
+			$this->PDF->MultiCell($this->w_lib, $this->h_tab, $row->libelle, 0, 'L');
+			$this->PDF->SetXY($this->x_qte, $this->y);
+			$this->PDF->Rect($this->x_qte, $this->y, $this->w_qte, $this->h);
+			$this->PDF->MultiCell($this->w_qte, $this->h_tab, $row->nb, 0, 'L');
+			$this->y = $this->y+$this->h;
+		}
+	}
 }
 
 class lettreDevis_factory {

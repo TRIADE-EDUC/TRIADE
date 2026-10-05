@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: de_DE.xml,v 1.4 2017-05-24 07:59:17 arenou Exp $ -->
+$Id: de_DE.xml,v 1.5 2024/03/29 14:42:14 pmallambic Exp $ -->
 <messages>
 	<entry code="close">Close</entry>
 	<entry code="fullscreen">Fullscreen</entry>
@@ -36,4 +36,16 @@ $Id: de_DE.xml,v 1.4 2017-05-24 07:59:17 arenou Exp $ -->
 	<entry code="book_top">First page</entry>
 	<entry code="book_bottom">Last page</entry>
 	<entry code="contrast">Set brightness/contrast</entry>
+	<entry code="new_tab">New window</entry>
+	<entry code="go_new_doc">Validate <![CDATA[<span class='visually-hidden'>and access the digital document</span>]]></entry>
+	<entry code="go_page_label">Access a digital document directly by entering its position in the search result</entry>
+	<entry code="paginator_first">First document</entry>
+	<entry code="paginator_prev">Previous document</entry>
+	<entry code="paginator_next">Next document</entry>
+	<entry code="paginator_last">Last document</entry>
+	<entry code="paginator_label">Pagination of digital documents</entry>
+	<entry code="paginator_current">Document</entry>
+	<entry code="record_section_title">View the instructions for this digital document</entry>
+	<entry code="BR_search">Search in the document</entry>
+	<entry code="BR_search_btn">Search</entry>
 </messages>

@@ -27,7 +27,7 @@
   $duree = 0.25;
   if ($id) {
     // Edition d'un libelle
-    $DB_CX->DbQuery("SELECT lib_nom, lib_duree, lib_couleur, lib_partage, lib_util_id, lib_detail FROM ${PREFIX_TABLE}libelle WHERE lib_id=".$id);
+    $DB_CX->DbQuery("SELECT lib_nom, lib_duree, lib_couleur, lib_partage, lib_util_id, lib_detail FROM {$PREFIX_TABLE}libelle WHERE lib_id=".$id);
     if ($enr = $DB_CX->DbNextRow()) {
       $nom = $enr['lib_nom'];
       $duree = $enr['lib_duree'];
@@ -82,7 +82,7 @@
     <TD class="tabInput" nowrap><SELECT name="zlLibelle" onchange="javascript: window.location.href='?sid=<?php echo $sid; ?>&tcType=<?php echo _TYPE_LIBELLE; ?>&tcMenu=<?php echo $tcMenu; ?>&tcPlg=<?php echo $tcPlg; ?>&sd=<?php echo $sd; ?>&id=' + this.value;">
       <OPTION value="0">-- <?php echo trad("LIBELLE_NOUVEAU_LIB");?> --</OPTION>
 <?php
-  $DB_CX->DbQuery("SELECT lib_id, lib_nom FROM ${PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (lib_util_id!=".$idUser." AND lib_partage='O')" : "")." ORDER BY lib_nom");
+  $DB_CX->DbQuery("SELECT lib_id, lib_nom FROM {$PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (lib_util_id!=".$idUser." AND lib_partage='O')" : "")." ORDER BY lib_nom");
   while ($listLib = $DB_CX->DbNextRow()) {
     $selected = ($id == $listLib['lib_id']) ? " selected" : "";
     echo "      <OPTION value=\"".$listLib['lib_id']."\"".$selected.">".htmlspecialchars($listLib['lib_nom'])."</OPTION>\n";
@@ -121,7 +121,7 @@
     if (empty($couleur))
       $couleur = $AgendaFondNotePerso;
     echo "<SELECT name=\"zlCouleur\" style=\"background-color:".$couleur.";\" onchange=\"javascript: changeCouleurListe(this,document.frmLibelle.ztCouleur);\">\n";
-    while (list($key, $val) = each($tabCouleur)) {
+    foreach ($tabCouleur as $key => $val) {
       $selected = ($val==$couleur) ? " selected" : "";
       echo "      <OPTION style=\"background-color:".$val.";\" value=\"".$val."\"".$selected.">".$key."</OPTION>\n";
     }
@@ -140,7 +140,7 @@
 <?php
   // MOD Liste des libelles
   //Liste des differents libelles
-  $DB_CX->DbQuery("SELECT lib_id, lib_nom, lib_detail, lib_duree, lib_couleur, lib_util_id, lib_partage FROM ${PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR lib_partage='O' ORDER BY lib_id");
+  $DB_CX->DbQuery("SELECT lib_id, lib_nom, lib_detail, lib_duree, lib_couleur, lib_util_id, lib_partage FROM {$PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR lib_partage='O' ORDER BY lib_id");
   if ($DB_CX->DbNumRows()) {
     echo ("  <BR>
   <FORM>

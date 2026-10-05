@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: liste_relances.inc.php,v 1.8 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: liste_relances.inc.php,v 1.9 2019/10/09 08:58:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $class_path, $tab_no_mail, $id_bibli, $acquisition_pdfrel_pdfrtf;
 
 // popup d'impression PDF pour liste des relances de receptions
-// reÃ§oit : tab_no_mail
+// reçoit : tab_no_mail
 
 require_once("$class_path/entites.class.php");
 require_once("$class_path/receptions_relances.class.php");
@@ -23,7 +23,7 @@ if (count($tab_fou) && $id_bibli){
 			$lettre = new lettreRelance_RTF();
 			break;
 		default :
-			$lettre = new lettreRelance_PDF();
+			$lettre = lettreRelance_PDF_factory::make();
 			break;
 	}
 	foreach($tab_fou as $id_fou=>$tab_act) {

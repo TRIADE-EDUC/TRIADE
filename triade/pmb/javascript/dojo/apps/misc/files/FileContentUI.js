@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FileContentUI.js,v 1.5 2018-12-19 14:49:39 dgoron Exp $
+// $Id: FileContentUI.js,v 1.5 2018/12/19 14:49:39 dgoron Exp $
 
 define(["dojo/_base/declare", 
         "dojox/layout/ExpandoPane", 

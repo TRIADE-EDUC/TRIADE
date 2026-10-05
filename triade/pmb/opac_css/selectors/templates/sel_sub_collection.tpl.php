@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_sub_collection.tpl.php,v 1.5 2018-03-26 14:03:48 dgoron Exp $
+// $Id: sel_sub_collection.tpl.php,v 1.6 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-// templates du sÃ©lecteur sous-collections
+// templates du sélecteur sous-collections
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -25,11 +25,11 @@ if($selfrom=="rmc") {
 } else {	
 	if ($dyn==3) {
 		$jscript = $jscript_common_authorities_unique;
-	}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+	}elseif ($dyn==2) { // Pour les liens entre autorités
 		$jscript = $jscript_common_authorities_link;
 	}else {
 		$jscript = "
-		<script type='text/javascript'>
+		<script>
 		<!--
 		function set_parent(f_caller, idSubColl, libelleSubColl, callback, idParent, idLibelleParent, idEd, libelleEd)
 		{

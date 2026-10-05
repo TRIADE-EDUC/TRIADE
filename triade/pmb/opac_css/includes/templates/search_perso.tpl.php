@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_perso.tpl.php,v 1.2 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: search_perso.tpl.php,v 1.3 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $tpl_search_perso_liste_tableau, $base_path, $msg, $current_module, $tpl_search_perso_liste_tableau_ligne, $tpl_search_perso_form;
 
 //*******************************************************************
-// Définition des templates pour les listes en edition
+// D�finition des templates pour les listes en edition
 //*******************************************************************
 $tpl_search_perso_liste_tableau = "
-<script type='text/javascript' src='".$base_path."/javascript/search_perso_drop.js'></script>
+<script src='".$base_path."/javascript/search_perso_drop.js'></script>
 <h1>".$msg["search_perso_title"]."</h1>
 <div class='hmenu'>
 	<span><a href='./".$current_module.".php?categ=search_perso'>".$msg["search_perso_list_title"]."</a></span>!!preflink!!
@@ -53,7 +53,7 @@ $tpl_search_perso_liste_tableau_ligne = "
 ";
 
 $tpl_search_perso_form = jscript_unload_question()."
-<script type='text/javascript'>
+<script>
 
 function test_form(form) {
 	if(form.name.value.length == 0)	{
@@ -136,7 +136,7 @@ function check_link(id) {
 <div class='row'></div>
 
 </form>
-<script type='text/javascript'>
+<script>
 	document.forms['search_perso_form'].elements['name'].focus();
 </script>
 ";

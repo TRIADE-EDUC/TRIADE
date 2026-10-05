@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_external_sources.class.php,v 1.4 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: docwatch_selector_external_sources.class.php,v 1.5 2021/08/10 09:53:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,20 +13,20 @@ if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 class docwatch_selector_external_sources extends docwatch_selector {
 	
 	/*
-	 * On rÃ©cupÃ¨re via le formulaire un tableau d'entrepÃ´t
+	 * On récupère via le formulaire un tableau d'entrepôt
 	 * $this->parameters['external_sources']
 	 */
 	
 	public function get_value(){
-		global $dbh;
-		if(!count($this->value) && count($this->parameters['external_sources'])){
-			//vÃ©rifions que ce soit toujours des external_sources...
+	    if(empty($this->value) && is_array($this->parameters['external_sources']) && count($this->parameters['external_sources'])){
+		    $this->value = array();
+			//vérifions que ce soit toujours des external_sources...
 			$query ="select distinct source_id from connectors_sources where source_id in (".implode(",",$this->parameters['external_sources']).") and repository=1";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row=pmb_mysql_fetch_object($result)){
 					$requete = "select distinct recid from entrepot_source_".$row->source_id." order by date_import DESC";
-					$resultat = pmb_mysql_query($requete,$dbh);
+					$resultat = pmb_mysql_query($requete);
 					$i = 0;
 					while($ligne=pmb_mysql_fetch_object($resultat)){
 						if($this->parameters['nb_max_elements']==0 || $i < $this->parameters['nb_max_elements']){
@@ -74,13 +74,13 @@ class docwatch_selector_external_sources extends docwatch_selector {
 	
 	
 	protected function gen_select(){
-		global $dbh,$charset;
+	    global $msg, $charset;
 		
 		if(!isset($this->parameters['external_sources']) || !$this->parameters['external_sources']){
 			$this->parameters['external_sources']= array();
 		}
 		$query ="select source_id, name from connectors_sources where repository='1' order by name";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			$select ="
 				<select name='docwatch_selector_external_sources_select[]' multiple='yes'>";

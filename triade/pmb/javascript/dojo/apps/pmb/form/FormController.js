@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // + 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormController.js,v 1.2 2017-10-11 15:18:56 vtouchard Exp $
+// $Id: FormController.js,v 1.2 2017/10/11 15:18:56 vtouchard Exp $
 
 
 define(['dojo/_base/declare', 

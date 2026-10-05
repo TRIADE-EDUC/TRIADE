@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_checkbox_ui.class.php,v 1.2 2017-09-13 12:38:33 tsamson Exp $
+// $Id: onto_common_datatype_checkbox_ui.class.php,v 1.5 2019/08/14 08:02:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,8 +23,8 @@ class onto_common_datatype_checkbox_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -37,10 +37,10 @@ class onto_common_datatype_checkbox_ui extends onto_common_datatype_ui {
 		global $msg,$charset,$ontology_tpl;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset), $form);
 		
 		$content='';
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -102,8 +102,8 @@ class onto_common_datatype_checkbox_ui extends onto_common_datatype_ui {
 			$content.=$row;
 		}
 		
-		$form=str_replace("!!onto_rows!!",$content ,$form);
-		$form=str_replace("!!onto_row_id!!",$instance_name.'_'.$property->pmb_name , $form);
+		$form=str_replace("!!onto_rows!!", $content , $form);
+		$form=str_replace("!!onto_row_id!!", $instance_name.'_'.$property->pmb_name, $form);
 		
 		return $form;
 	} // end of member function get_form
@@ -111,8 +111,8 @@ class onto_common_datatype_checkbox_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -122,7 +122,7 @@ class onto_common_datatype_checkbox_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}

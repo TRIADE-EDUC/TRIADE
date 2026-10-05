@@ -93,22 +93,22 @@
     // Reinitialisation du tableau indiquant si un jour contient une note ou un anniversaire
     $tabOccupe = array();
     // Recherche des jours du mois courant avec une note ou un anniversaire (agenda et calepin)
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date LIKE '".$anneeCrt."-".$moisCrt."-%'".$whereCouleur." OR (age_date LIKE '%-".$moisCrt."-%' AND DATE_FORMAT(age_date,'%Y%m')<=".date("Ym",$tsSemaine)." AND age_aty_id=1))");
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date LIKE '".$anneeCrt."-".$moisCrt."-%'".$whereCouleur." OR (age_date LIKE '%-".$moisCrt."-%' AND DATE_FORMAT(age_date,'%Y%m')<=".date("Ym",$tsSemaine)." AND age_aty_id=1))");
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }
     // Recherche des notes a cheval
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_dateAvant LIKE '".$anneeCrt."-".$moisCrt."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)".$whereCouleur);
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_dateAvant LIKE '".$anneeCrt."-".$moisCrt."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)".$whereCouleur);
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisCrt."-%' AND DATE_FORMAT(cal_date_naissance,'%Y%m')<=".date("Ym",$tsSemaine));
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisCrt."-%' AND DATE_FORMAT(cal_date_naissance,'%Y%m')<=".date("Ym",$tsSemaine));
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }
 
     // Recuperation des evenements personnalises a notifier dans le calendrier du mois
-    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeCrt-$moisCrt-01') AS decalage, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeCrt-$moisCrt-%' OR (eve_date_debut<'$anneeCrt-$moisCrt-01' AND eve_date_fin>='$anneeCrt-$moisCrt-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeCrt-$moisCrt-01') AS decalage, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeCrt-$moisCrt-%' OR (eve_date_debut<'$anneeCrt-$moisCrt-01' AND eve_date_fin>='$anneeCrt-$moisCrt-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
     $tabEvenementDate = array();
     // Initialisation du tableau des couleurs des jours a vide
     $nbJourMois = date("t",mktime(0,0,0,$moisCrt, 1, $anneeCrt));

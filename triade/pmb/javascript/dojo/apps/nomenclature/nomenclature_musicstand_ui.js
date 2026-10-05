@@ -1,11 +1,11 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_musicstand_ui.js,v 1.51 2016-11-29 13:00:29 vtouchard Exp $
+// $Id: nomenclature_musicstand_ui.js,v 1.51 2016/11/29 13:00:29 vtouchard Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instrument_ui","apps/nomenclature/nomenclature_instrument", "dojo/on", "dojo/dom-construct","dojo/dom", "dojo/_base/lang", "dojo/topic", "dijit/registry", "dijit/_WidgetBase"], function(declare, Instrument_ui, Instrument, on, domConstruct, dom, lang, topic, registry, _WidgetBase){
 	/*
-	 *Classe nomenclature_musicstand_ui. Classe gÃ©nÃ©rant la partie du formulaire liÃ©e a un pupitre
+	 *Classe nomenclature_musicstand_ui. Classe générant la partie du formulaire liée a un pupitre
 	 */
 	  return declare("nomenclature_musicstand_ui",[_WidgetBase], {
 			    
@@ -411,7 +411,7 @@ define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instrument_ui","ap
 			},
 			get_displayed_effective: function(){
 				/**
-				 * TODO: (Traitement des diffÃ©rents cas de workshops Ã  voir plus tard)
+				 * TODO: (Traitement des différents cas de workshops à voir plus tard)
 				 */
 				this.displayed_effective = 0;
 				if(!this.musicstand.get_used_by_workshops()){

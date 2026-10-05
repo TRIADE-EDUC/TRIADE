@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // ? 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormMapper.js,v 1.18 2018-11-20 15:41:00 arenou Exp $
+// $Id: FormMapper.js,v 1.21 2022/11/18 09:52:38 rtigero Exp $
 
 define(['dojo/_base/declare','dojo/io-query', 'dojo/request/xhr', 'dojo/_base/lang', 'dojo/query', 'dojo/dom-attr', 'dojo/dom', 'dojo/dom-construct', 'dojo/topic', 'dijit/registry'],function(declare, ioQuery, xhr, lang, query, domAttr, dom, domConstruct, topic, registry) {
 	return declare(null, {
@@ -107,8 +107,20 @@ define(['dojo/_base/declare','dojo/io-query', 'dojo/request/xhr', 'dojo/_base/la
 		},
 		selectorCallback:function(sourceType, elementId){
 			if(confirm(pmbDojo.messages.getMessage('catalog','form_mapper_confirm_load_tu'))){
+				//Gestion du cas ou on n'a pas l'id de l'element mais l'id du champ de formulaire
+				var id = 0;
+				if(! parseInt(elementId)) {
+					let field = document.getElementById(elementId);
+					let autfield = field.getAttribute('autfield');
+					if(autfield){
+						let codeField = document.getElementById(autfield);
+						id = codeField.value;
+					}
+				} else {
+					id = elementId;
+				}
 				this.source = sourceType;
-				this.idElement = elementId;
+				this.idElement = id;
 				this.getMapping();	
 			}
 		},
@@ -118,6 +130,9 @@ define(['dojo/_base/declare','dojo/io-query', 'dojo/request/xhr', 'dojo/_base/la
 				var currentFieldName = fieldData.fields[i].name;
 				var domEltField = query(fieldData.fields[i].type+'[data-form-name="'+currentFieldName+'"]')[0];
 				var fieldId = domAttr.get(domEltField, 'id');
+				if (fieldId.endsWith('_display_label')){
+					fieldId = fieldId.substr(0,fieldId.length-14);	
+				}
 				if(fieldData.multiple != 'true'){
 					this.setValue(fieldData.fields[i].type, fieldData.fields[i].values[0], fieldId, fieldData.fields[i].subtype);
 					//this[fieldData.fields[i].type+'Purge'](fieldId, false);
@@ -187,7 +202,12 @@ define(['dojo/_base/declare','dojo/io-query', 'dojo/request/xhr', 'dojo/_base/la
 					var widget = registry.byId(id);
 					widget.set('value',value[0]);
 				}else{
-					domAttr.set(eltToEdit, 'value', value);	
+					var eltToEditDisplayLabel = dom.byId(id + "_display_label");                    
+                    if (eltToEditDisplayLabel) {
+                        domAttr.set(eltToEditDisplayLabel, 'value', value);
+                    } else if (eltToEdit) {
+                        domAttr.set(eltToEdit, 'value', value);    
+                    }
 				}
 			}else{
 				switch(subtype){ //A voir pour ajouter radiobutton ?
@@ -262,7 +282,9 @@ define(['dojo/_base/declare','dojo/io-query', 'dojo/request/xhr', 'dojo/_base/la
 		triggerEvent: function(element){
 			var evt = document.createEvent("HTMLEvents");
 			evt.initEvent("change", false, true);
-			element.dispatchEvent(evt);	
+			if (element) {
+				element.dispatchEvent(evt);	
+			}
 		}
 	});
 });

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_cms_parametres_perso.class.php,v 1.4 2018-09-11 11:33:09 tsamson Exp $
+// $Id: onto_cms_parametres_perso.class.php,v 1.5 2023/05/05 09:48:09 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class onto_cms_parametres_perso extends onto_parametres_perso{
 	
 	public $num_type;
 	public $cms_types;
+	public $option_visibilite;
 	
 	/**
-	 * dÃ©claration des uri liÃ©es aux prÃ©fixes cms
+	 * déclaration des uri liées aux préfixes cms
 	 *
 	 * @var array
 	 */
@@ -125,7 +126,7 @@ class onto_cms_parametres_perso extends onto_parametres_perso{
 		
 		$onto .= "
 		<!-- Champs perso ".$this->prefix." PMB -->";
-		//On boucle sur les champs perso d'un sous type de contenu Ã©ditorial
+		//On boucle sur les champs perso d'un sous type de contenu éditorial
 		if (is_array($this->t_fields)) {
     		foreach ($this->t_fields as $cms_type => $t_fields) {
     			if(is_array($t_fields)){

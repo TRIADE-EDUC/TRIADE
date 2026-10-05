@@ -13,7 +13,7 @@ $cnx=cnx();
 $data=heureEnseignantparDate($idpers,$idclasse,$dateDebut,$dateFin); //id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,taux,coursannule
 $j=0;
 $unite=unitemonnaie();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$j++;
 	$u="";$uf="";
 	if($data[$i][11] == "1") { $u="<s>"; $uf="</s>"; }

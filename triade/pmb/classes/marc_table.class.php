@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: marc_table.class.php,v 1.47 2019-04-19 12:23:43 ngantier Exp $
+// $Id: marc_table.class.php,v 1.49 2022/12/07 16:32:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,20 +11,24 @@ if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 if ( ! defined( 'MARC_TABLE_CLASS' ) ) {
   define( 'MARC_TABLE_CLASS', 1 );
 
-// pas bon, Ã  remonter dans les fichiers appelants
+// pas bon, à remonter dans les fichiers appelants
 require_once($class_path.'/XMLlist.class.php');
 require_once($class_path.'/XMLlist_links.class.php');
 
 class marc_list {
 
-// propriÃ©tÃ©s
+// propriétés
 	public $table;
 	public $tablefav;
 	public $parser;
 	public $inverse_of = array();
 	public $attributes = array();
+	
+	public const TYPE_DOCTYPE = "doctype";
+	
+	public const TYPE_NIVEAU_BIBLIO = "nivbiblio";
 
-// mÃ©thodes
+// méthodes
 
 	// constructeur
 	public function __construct($type) {
@@ -53,7 +57,7 @@ class marc_list {
 				$this->table = $parser->table;
 				$this->tablefav = $parser->tablefav;
 				break;
-			case 'doctype':
+			case \marc_list::TYPE_DOCTYPE:
 				$parser = new XMLlist("$include_path/marc_tables/$lang/doctype.xml", 0);
 				$parser->analyser();
 				$this->table = $parser->table;
@@ -90,7 +94,7 @@ class marc_list {
 				$parser->analyser();
 				$this->table = $parser->table;
 				break;
-			case 'nivbiblio':
+			case \marc_list::TYPE_NIVEAU_BIBLIO:
 				$parser = new XMLlist("$include_path/marc_tables/$lang/nivbiblio.xml");
 				$parser->analyser();
 				$this->table = $parser->table;
@@ -197,17 +201,17 @@ class marc_list {
 
 class marc_select {
 
-// propriÃ©tÃ©s
+// propriétés
 
 	public $table;
 	public $name;
 	public $selected;
 	public $onchange;
 	public $display;
-	public $libelle; // libellÃ© du selected
+	public $libelle; // libellé du selected
 	public $attributes=array();
 
-// mÃ©thodes
+// méthodes
 
 	// constructeur
 	public function __construct($type, $name='mySelector', $selected='', $onchange='', $option_premier_code='', $option_premier_info='', $attributes=array()){
@@ -291,7 +295,7 @@ class marc_select {
 	
 	public function first_item_at_last() {
 		$item = array_shift($this->table);
-		array_push($this->table, $item);
+		$this->table[] = $item;
 	}
 }
 
@@ -307,4 +311,4 @@ class marc_list_collection {
 	}
 }
 
-} # fin de dÃ©claration
+} # fin de déclaration

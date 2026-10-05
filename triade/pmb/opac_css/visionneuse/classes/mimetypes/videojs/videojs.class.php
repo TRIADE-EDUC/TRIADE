@@ -1,9 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: videojs.class.php,v 1.10 2017-10-11 08:04:54 ngantier Exp $
+// $Id: videojs.class.php,v 1.13 2023/12/07 15:18:26 dgoron Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 
 class videojs extends affichage {
@@ -29,15 +30,15 @@ class videojs extends affichage {
 	}
 	
 	public function fetchDisplay(){
-		global $visionneuse_path,$base_path, $opac_url_base;
+	    global $visionneuse_path, $charset;
 		//le titre
 		$this->toDisplay["titre"] = $this->doc->titre;
 		
 		$this->toDisplay["doc"].="
-			<script type='text/javascript' src='./includes/javascript/ajax.js'></script>
+			<script src='./includes/javascript/ajax.js'></script>
 			<link href='$visionneuse_path/classes/mimetypes/videojs/videoJS/video-js.css' rel='stylesheet'>
 			<script src='$visionneuse_path/classes/mimetypes/videojs/videoJS/video.js'></script>
-			<script type='text/javascript'>
+			<script>
 				var fullScreen = function(){
 					var video = this;
 					
@@ -76,13 +77,25 @@ class videojs extends affichage {
 		
 		$res=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($res)) {
-			$this->toDisplay["doc"].="			<track kind='subtitles' src='".$this->driver->getUrlBase()."doc_num.php?explnum_id=".pmb_mysql_result($res,0,0)."' srclang='fr' label='FranÃ§ais' default>\n";
+			$this->toDisplay["doc"].="			<track kind='subtitles' src='".$this->driver->getUrlBase()."doc_num.php?explnum_id=".pmb_mysql_result($res,0,0)."' srclang='fr' label='Français' default>\n";
 		}
 		$this->toDisplay["doc"].="
 				</video>
 			</div>
 			<a onClick='showCode();' style='display:block;margin:5px 0'>Int&eacute;grer cette vid&eacute;o&nbsp;</a>
-			<textarea id='video_code' style='display:none;' readonly='readonly' cols='60'><iframe id='iframe_video_".$this->doc->id."' width=\"560\" height=\"315\" src=\"".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&method=getEmbedVideo")."\" frameborder=\"0\" allowFullScreen='true' mozAllowFullScreen='true' webkitAllowFullScreen='true'></iframe></textarea>";
+			<textarea id='video_code' style='display:none;' readonly='readonly' cols='60'>
+                <iframe
+                    title='".htmlentities($this->doc->titre, ENT_QUOTES, $charset)."'
+                    id='iframe_video_".$this->doc->id."' 
+                    width=\"560\" 
+                    height=\"315\" 
+                    src=\"".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&method=getEmbedVideo")."\" 
+                    frameborder=\"0\" 
+                    allowFullScreen='true' 
+                    mozAllowFullScreen='true' 
+                    webkitAllowFullScreen='true'>
+                </iframe>
+            </textarea>";
 		
 		if ($this->isDiarized) $this->toDisplay["doc"] .= "
 			<div>
@@ -160,7 +173,7 @@ class videojs extends affichage {
 			<link href='$visionneuse_path/classes/mimetypes/videojs/videoJS/video-js.css' rel='stylesheet'>
 			<script src='$visionneuse_path/classes/mimetypes/videojs/videoJS/video.js'></script>
 			<title>".$this->doc->titre."</title>
-			<script type='text/javascript'>
+			<script>
 				var isFullScreen = false;
 				var iframe = window.parent.document.getElementById('iframe_video_".$this->doc->id."');
 				var iframe_height = iframe.height;
@@ -212,10 +225,8 @@ class videojs extends affichage {
 	}
 	
 	private function checkIfDiarized() {
-		global $dbh;
-		
 		$query = "select count(*) as nb from explnum_segments where explnum_segment_explnum_num = ".$this->doc->id;
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if ($result && pmb_mysql_num_rows($result)) {
 			$nb = pmb_mysql_fetch_object($result)->nb;
 			if ($nb > 0) $this->isDiarized = true;

@@ -2,34 +2,34 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_piwik.class.php,v 1.2 2017-11-21 12:01:00 dgoron Exp $
+// $Id: cms_module_piwik.class.php,v 1.2.14.1 2025/01/17 10:40:45 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_piwik extends cms_module_common_module {
-	
+
 	public function __construct($id=0){
 		$this->module_path = str_replace(basename(__FILE__),"",__FILE__);
 		parent::__construct($id);
 		$this->modcache = "no_cache";
 	}
-	
+
 	protected function get_max_server_id($datas){
 		$max = 0;
-		if(count($datas)){
+		if (is_countable($datas) && count($datas)) {
 			foreach	($datas as $key => $val){
-				$key = str_replace("server","",$key)*1;
+				$key = intval(str_replace("server","",$key));
 				if($key>$max) $max = $key;
 			}
 		}
 		return $max;
 	}
-	
+
 	public function get_manage_form(){
 		global $base_path;
 		//variables persos...
 		global $server;
-		
+
 		$form="
 		<div dojoType='dijit.layout.BorderContainer' style='width: 100%; height: 800px;'>
 			<div dojoType='dijit.layout.ContentPane' region='left' splitter='true' style='width:300px;' >";
@@ -61,7 +61,7 @@ class cms_module_piwik extends cms_module_common_module {
 		</div>";
 		return $form;
 	}
-	
+
 	public function get_managed_server_form($server){
 		$infos = array();
 		if($server != "new"){
@@ -94,7 +94,7 @@ class cms_module_piwik extends cms_module_common_module {
 					<input type='text' name='cms_module_piwik_server_url' value='".$this->format_text($infos['url'])."'/>
 				</div>
 			</div>";
-		//identififiant du site 
+		//identififiant du site
 		$form.="
 			<div class='row'>
 				<div class='colonne3'>
@@ -139,7 +139,7 @@ class cms_module_piwik extends cms_module_common_module {
 			</div>";
 		return $form;
 	}
-	
+
 	public function save_manage_form(){
 		global $server;
 		global $server_delete;
@@ -149,9 +149,9 @@ class cms_module_piwik extends cms_module_common_module {
 		global $cms_module_piwik_server_domain_prefix;
 		global $cms_module_piwik_server_subdomains_links;
 		global $cms_module_piwik_site_id;
-		
+
 		$params = $this->managed_datas['module'];
-		
+
 		if($server_delete){
 			unset($params['servers'][$server_delete]);
 		}else{
@@ -167,7 +167,7 @@ class cms_module_piwik extends cms_module_common_module {
 				);
 				$params['servers']['server'.(self::get_max_server_id($this->managed_datas['module']['servers'])+1)] = $server_infos;
 			}else{
-				//sinon on rÃ©Ã©crit juste l'Ã©lÃ©ment
+				//sinon on réécrit juste l'élément
 				$params['servers'][$server]['name'] = $cms_module_piwik_server_name;
 				$params['servers'][$server]['url'] = $cms_module_piwik_server_url;
 				$params['servers'][$server]['site_id'] = $cms_module_piwik_site_id;
@@ -178,5 +178,5 @@ class cms_module_piwik extends cms_module_common_module {
 		}
 		return $params;
 	}
-	
+
 }

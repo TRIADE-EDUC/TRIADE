@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype.class.php,v 1.7 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: onto_common_datatype.class.php,v 1.13.8.1 2025/03/05 10:20:03 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ abstract class onto_common_datatype {
 	 /*** Attributes: ***/
 
 	/**
-	 * Indice de la valeur si ordonnÃ©e, 0 sinon
+	 * Indice de la valeur si ordonnée, 0 sinon
 	 * @access public
 	 */
 	public $order = 0;
@@ -37,13 +37,13 @@ abstract class onto_common_datatype {
 	protected $value_type;
 	
 	/**
-	 * PropriÃ©tÃ©s de la valeur (type, langue, ...)
+	 * Propriétés de la valeur (type, langue, ...)
 	 * @access protected
 	 */
 	protected $value_properties;
 	
 	/**
-	 * Le nom de la class UI Ã  utiliser
+	 * Le nom de la class UI à utiliser
 	 * 
 	 * @var string
 	 */
@@ -52,7 +52,7 @@ abstract class onto_common_datatype {
 	/**
 	 * 
 	 *
-	 * @param  value valeur associÃ©
+	 * @param  value valeur associé
 
 	 * @param bool multiple 
 
@@ -74,7 +74,7 @@ abstract class onto_common_datatype {
 	}
 	
 	public function get_formated_value() {
-		//si c'est un tableau, on retourne la premiÃ¨re valeur dans le cas gÃ©nÃ©rale
+		//si c'est un tableau, on retourne la première valeur dans le cas générale
 		if (is_array($this->value)) {
 			foreach ($this->value as $key => $value) {
 				return $value;
@@ -127,7 +127,7 @@ abstract class onto_common_datatype {
 	
 	/**
 	 * 
-	 * Renvoi le nom de la class ui datatype_ui_class_name Ã  utiliser pour le datatype
+	 * Renvoi le nom de la class ui datatype_ui_class_name à utiliser pour le datatype
 	 * 
 	 * @return string
 	 */
@@ -145,28 +145,67 @@ abstract class onto_common_datatype {
 	public static function get_values_from_form($instance_name, $property, $uri_item) {
 		$datatypes = array();
 		$var_name = $instance_name."_".$property->pmb_name;
+		
 		global ${$var_name};
+		
 		if (${$var_name} && count(${$var_name})) {
 			foreach (${$var_name} as $order => $data) {
-				$data=stripslashes_array($data);
-				if (($data["value"] !== null) && ($data["value"] !== '')) {
+				$data = stripslashes_array($data);
+				if(! is_array($data) || !isset($data["value"])){
+					continue;
+				}
+	            // On test si on vient des contributions ou des concepts
+	            if ($property->onto_name === "contribution") {
+	                if (is_string($data["value"]) && strlen($data["value"]) > 1) {
+	                    $check = ($data["value"] !== null && !empty($data["value"]));
+	                } else {
+	                    $check = ($data["value"] !== null);
+	                }
+	            } else {
+	                $check = (!empty($data["value"]));
+	            }
+	            
+	            if ($check) {
+				    
 					$data_properties = array();
+					
 					if (!empty($data["lang"])) {
 						$data_properties["lang"] = $data["lang"];
 					}
-					if ($data["type"] == "http://www.w3.org/2000/01/rdf-schema#Literal") {
+					
+					if (isset($data["type"]) && $data["type"] == "http://www.w3.org/2000/01/rdf-schema#Literal") {
 						$data_properties["type"] = "literal";
 					} else {
 						$data_properties["type"] = "uri";
 					}
+					
 					if (!empty($data["display_label"])) {
 						$data_properties["display_label"] = $data["display_label"];
 					}
+					
 					$class_name = static::class;
-					$datatypes[$property->uri][] = new $class_name($data["value"], $data["type"], $data_properties);
+					$datatypes[$property->uri][] = new $class_name($data["value"], (isset($data["type"]) ? $data["type"] : null), $data_properties);
 				}
 			}
 		}
+		
 		return $datatypes;
+	}
+	
+	public static function get_properties_from_uri($uri) {
+	    $contribution_area_store = new contribution_area_store();
+	    return $contribution_area_store->get_properties_from_uri($uri);
+	}
+	
+	public static function get_assertion_from_uri_with_predicate($item_uri, $predicate) {
+	    $item = onto_handler::get_item_instance($item_uri);
+	    $item = $item->get_assertions();
+	    
+	    foreach ($item as $properties){
+	        if ($predicate == $properties->get_predicate()) {
+	            return $properties;
+	        }
+	    }
+	    return '';
 	}
 } // end of onto_common_datatype

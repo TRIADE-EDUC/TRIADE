@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id$ -->
+
 <convert>
 	<field code="001" tag="idNotice">
 	</field>

@@ -1,6 +1,6 @@
 <?php
 
-// $Id: regex.txt,v 1.1 2010-12-01 20:06:35 touraine37 Exp $
+// $Id: regex.txt,v 1.1 2010/12/01 20:06:35 touraine37 Exp $
 
 // documentation succincte sur les expressions régulières
 

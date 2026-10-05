@@ -105,63 +105,52 @@ var xOffset = 10;
 var yOffset = 10;
 
 function AffBulle(texte) {
-	contenu  = '<table style="border: 0;" cellspacing="0" cellpadding="'+IB.NbPixel+'" >';
-	contenu +=  '<tr style="background-color: '+IB.ColContour+'">';
-	contenu +=   '<td>';
-	contenu +=    '<table style="border: 0; background-color: '+IB.ColFond+';" cellpadding="2" cellspacing="0" width=100% >';
-	contenu +=     '<tr>';
-	contenu +=      '<td style="font-family: arial; font-size: 0.9em; color:'+IB.ColTexte+'">'+texte+'</td>';
-	contenu +=     '</tr>';
-	contenu +=    '</table>';
-	contenu +=   '</td>';
-	contenu +=  '</tr>';
-	contenu += '</table>&nbsp;';
+	contenu = '<div style="'
+		+ 'background:' + IB.ColFond + ';'
+		+ 'color:' + IB.ColTexte + ';'
+		+ 'border:' + IB.NbPixel + 'px solid ' + IB.ColContour + ';'
+		+ 'border-radius:10px;'
+		+ 'box-shadow:0 6px 20px rgba(0,0,0,0.22);'
+		+ 'font-family:Electrolize,Trebuchet MS,Arial,sans-serif;'
+		+ 'font-size:12px;'
+		+ 'line-height:1.6;'
+		+ 'padding:10px 14px;'
+		+ 'max-width:340px;'
+		+ '">' + texte + '</div>';
 
-	var finalPosX=posX-xOffset;
+	var finalPosX = posX - xOffset;
+	if (finalPosX < 0) finalPosX = 0;
 
-	if (finalPosX<0) finalPosX=0;
-
-	if (document.layers) {
-		document.layers["bulle"].document.write(contenu);
-		document.layers["bulle"].document.close();
-		document.layers["bulle"].top = posY + yOffset;
-		document.layers["bulle"].left = finalPosX;
-		document.layers["bulle"].visibility = "show";
-	}
-	else if (document.all) {
-		//var f=window.event;
-		//doc=document.body.scrollTop;
+	if (document.getElementById) {
+		document.getElementById("bulle").innerHTML = contenu;
+		document.getElementById("bulle").style.top = posY + yOffset + "px";
+		document.getElementById("bulle").style.left = finalPosX + "px";
+		document.getElementById("bulle").style.visibility = "visible";
+	} else if (document.all) {
 		bulle.innerHTML = contenu;
-		document.all["bulle"].style.top = posY + yOffset;
-		document.all["bulle"].style.left = finalPosX;//f.x-xOffset;
+		document.all["bulle"].style.top = posY + yOffset + "px";
+		document.all["bulle"].style.left = finalPosX + "px";
 		document.all["bulle"].style.visibility = "visible";
 	}
-	//modif CL 09/2001 - NS6 : celui-ci ne supporte plus document.layers mais document.getElementById
-  else if (document.getElementById) {
-		document.getElementById("bulle").innerHTML = contenu;
-		document.getElementById("bulle").style.top = posY + yOffset;
-		document.getElementById("bulle").style.left = finalPosX;
-		document.getElementById("bulle").style.visibility = "visible";
-	}
-
 }
 
 
 function AffBulleV2(texte) {
-	contenu  = '<table style="border: 0;" cellspacing="0" cellpadding="'+IB.NbPixel+'" >';
-	contenu +=  '<tr style="background-color: '+IB.ColContour+'">';
-	contenu +=   '<td>';
-	contenu +=    '<table style="border:0; background-color:'+IB.ColFond+';" cellpadding="2" cellspacing="0" width=100% >';
-	contenu +=     '<tr>';
-	contenu +=      '<td style="font-family: arial; font-size: 0.9em; color:'+IB.ColTexte+'">'+texte+'</td>';
-	contenu +=     '</tr>';
-	contenu +=    '</table>';
-	contenu +=   '</td>';
-	contenu +=  '</tr>';
-	contenu += '</table>&nbsp;';
+	contenu = '<div style="'
+		+ 'background:' + IB.ColFond + ';'
+		+ 'color:' + IB.ColTexte + ';'
+		+ 'border:' + IB.NbPixel + 'px solid ' + IB.ColContour + ';'
+		+ 'border-radius:10px;'
+		+ 'box-shadow:0 6px 20px rgba(0,0,0,0.22);'
+		+ 'font-family:Electrolize,Trebuchet MS,Arial,sans-serif;'
+		+ 'font-size:12px;'
+		+ 'line-height:1.6;'
+		+ 'padding:10px 14px;'
+		+ 'max-width:340px;'
+		+ '">' + texte + '</div>';
 	document.getElementById("bulle").innerHTML = contenu;
-	document.getElementById("bulle").style.top = posY +"px";
-	document.getElementById("bulle").style.left = posX +"px"; 
+	document.getElementById("bulle").style.top = posY + "px";
+	document.getElementById("bulle").style.left = posX + "px";
 	document.getElementById("bulle").style.display = "block";
 }
 
@@ -234,46 +223,15 @@ function InitBulleV2(ColTexte,ColFond,ColContour,NbPixel) {
 
 
 function AffBulle2(strTitre,strIcone,texte) {
-	// titre, image , texte
-
-	// image/commun/stop.jpg 
-	// image/commun/info.jpg 
-	// image/commun/warning.jpg 
-
-	//la bulle fait L 10px+305px+10px = 325px
-	//              H 30px+nx15px+10px
-
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(../image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(../image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td>';
-		contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+	if (strTitre != "") {
+		contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+		contenu += '<img src="' + strIcone + '" style="width:15px;height:15px;border:0" alt="">';
+		contenu += '<span style="font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+		contenu += '</div>';
 	}
-
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-	contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(../image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '</div>';
+	contenu += '</div>';
 
 	var finalPosX = posX - xOffset;
 
@@ -304,41 +262,15 @@ function AffBulle2(strTitre,strIcone,texte) {
 }
 
 function AffBulle3(strTitre,strIcone,texte) {
-	// image/commun/stop.jpg 
-	// image/commun/info.jpg 
-	// image/commun/warning.jpg 
-
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(./image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(./image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td>';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+	if (strTitre != "") {
+		contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+		contenu += '<img src="' + strIcone + '" style="width:15px;height:15px;border:0" alt="">';
+		contenu += '<span style="font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+		contenu += '</div>';
 	}
-
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(./image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '</div>';
+	contenu += '</div>';
 
 	var finalPosX = posX - xOffset;
 
@@ -377,39 +309,15 @@ function AffBullePrompt(strTitre,texte,id) {
 
 	var motif=eval("document.formulaire.saisie_motif_"+id+".value");
 
-	var strIcone="image/commun/info.jpg";
-
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(./image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(./image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td>';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+	if (strTitre != "") {
+		contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+		contenu += '<span style="font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+		contenu += '</div>';
 	}
-	val="val";
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '<br><input type="text" value="'+motif+'" size="30" onBlur="document.formulaire.saisie_motif_'+id+'.value=(this.value == \'\') ? \'inconnu\' : this.value " /> <input type="button" value="ok" onclick="HideBulleP()" /></div></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(./image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	var val="val";
+	contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '<br><input type="text" value="'+motif+'" size="30" onBlur="document.formulaire.saisie_motif_'+id+'.value=(this.value == \'\') ? \'inconnu\' : this.value " style="margin-top:6px;border:1px solid #c5cae9;border-radius:4px;padding:3px 6px" /> <input type="button" value="ok" onclick="HideBulleP()" style="margin-left:4px;background:#080A66;color:#fff;border:none;border-radius:4px;padding:3px 10px;cursor:pointer" /></div>';
+	contenu += '</div>';
 
 	var finalPosX = posX - xOffset;
 
@@ -446,38 +354,16 @@ function AffBullePrompt(strTitre,texte,id) {
 
 
 function AffBulleEDT(strTitre,strIcone,texte) {
-	// image/commun/stop.jpg 
-	// image/commun/info.jpg 
-	// image/commun/warning.jpg 
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(./image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(./image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<table width=100% ><tr><td>';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td><td width="5%" ><a href="javascript:HideBulle()" ><img src="image/commun/quitter.gif" border="0" ></a></td></tr></table></td>';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+	if (strTitre != "") {
+		contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+		contenu += '<img src="' + strIcone + '" style="width:15px;height:15px;border:0" alt="">';
+		contenu += '<span style="flex:1;font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+		contenu += '<a href="javascript:HideBulle()" style="font-size:16px;color:#888;text-decoration:none;line-height:1" title="Fermer">&times;</a>';
+		contenu += '</div>';
 	}
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(./image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '</div>';
+	contenu += '</div>';
 	var finalPosX = posX - xOffset;
 	if (finalPosX<0) finalPosX = 0;
 	if (document.layers) {
@@ -506,38 +392,16 @@ function AffBulleEDT(strTitre,strIcone,texte) {
 }
 
 function AffBulleEDT2(strTitre,strIcone,texte) {
-        // image/commun/stop.jpg
-        // image/commun/info.jpg
-        // image/commun/warning.jpg
-        var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-        contenu += '<tr style="height: 30px;">';
-        contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-        contenu +=  '<td style="width: 30px; background: url(../image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-        contenu +=  '<td style="width: 285px; background: url(../image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-        contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-        contenu += '</tr>';
-        if ( strTitre != "" ){
-                contenu += '<tr style="height: 30px;">';
-                contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-                contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-                contenu +=   '<table width=100% ><tr><td>';
-                contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-                contenu +=   '<b>' + strTitre + '</b>';
-                contenu +=  '</td><td width="5%" ><a href="javascript:HideBulle()" ><img src="../image/commun/quitter.gif" border="0" ></a></td></tr></table></td>';
-                contenu +=  '<td style="width: 10px; background: url(../image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-                contenu += '</tr>';
+        var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+        if (strTitre != "") {
+                contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+                contenu += '<img src="' + strIcone + '" style="width:15px;height:15px;border:0" alt="">';
+                contenu += '<span style="flex:1;font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+                contenu += '<a href="javascript:HideBulle()" style="font-size:16px;color:#888;text-decoration:none;line-height:1" title="Fermer">&times;</a>';
+                contenu += '</div>';
         }
-        contenu +=  '<tr> ';
-        contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-        contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-        contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-        contenu +=  '</tr>';
-        contenu +=  '<tr style="height: 10px;">';
-        contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-        contenu +=   '<td colspan="2" style="width: 305px; background: url(../image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-        contenu +=   '<td style="width: 10px; background: url(../image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-        contenu +=  '</tr>';
-        contenu += '</table>';
+        contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '</div>';
+        contenu += '</div>';
         var finalPosX = posX - xOffset;
         if (finalPosX<0) finalPosX = 0;
         if (document.layers) {
@@ -568,42 +432,16 @@ function AffBulleEDT2(strTitre,strIcone,texte) {
 
 
 function AffBulleAvecQuit(strTitre,strIcone,texte) {
-	// image/commun/stop.jpg 
-	// image/commun/info.jpg 
-	// image/commun/warning.jpg 
-
-	var contenu = '<table Id="HelpTable" style="width: 335px;" cellspacing="0" cellpadding="0">';
-	contenu += '<tr style="height: 30px;">';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 30px; background: url(./image/commun/Bulle_HC1.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '<td style="width: 285px; background: url(./image/commun/Bulle_HC2.gif); background-repeat: repeat-x;"></td>';
-	contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_HD.gif); background-repeat: no-repeat;"></td>';
-	contenu += '</tr>';
-
-	if ( strTitre != "" ){
-		contenu += '<tr style="height: 30px;">';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-		contenu +=  '<td colspan="2" style="width: 305px; text-align: left; vertical-align: middle; background: #FBFFD9; font-size: 14px; font-family: Tahoma;">';
-		contenu +=   '<table width=100% ><tr><td>';
-		contenu +=   '<img src="' + strIcone + '" style="border: 0; width: 15px; height: 15px; margin-right: 10px;" alt="">';
-		contenu +=   '<b>' + strTitre + '</b>';
-		contenu +=  '</td><td width="5%" ><a href="javascript:HideBulle()" ><img src="image/commun/quitter.gif" border="0" ></a></td></tr></table></td>';
-		contenu +=  '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-		contenu += '</tr>';
+	var contenu = '<div style="background:#fff;border:1px solid #c5cae9;border-radius:10px;box-shadow:0 4px 20px rgba(8,10,102,.18);overflow:hidden;min-width:330px;max-width:360px;font-family:Electrolize,Trebuchet MS,Arial,sans-serif">';
+	if (strTitre != "") {
+		contenu += '<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#eef0f8;border-bottom:1px solid #dde0f0">';
+		contenu += '<img src="' + strIcone + '" style="width:15px;height:15px;border:0" alt="">';
+		contenu += '<span style="flex:1;font-size:12px;font-weight:700;color:#080A66">' + strTitre + '</span>';
+		contenu += '<a href="javascript:HideBulle()" style="font-size:16px;color:#888;text-decoration:none;line-height:1" title="Fermer">&times;</a>';
+		contenu += '</div>';
 	}
-
-	contenu +=  '<tr> ';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CG.gif); background-repeat: repeat-y;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: #FBFFD9; font-family: Arial; font-size: 10px;"><div id="id1" style="overflow:auto; width: 300px;">' + texte + '</div></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_CD.gif); background-repeat: repeat-y;"></td>';
-	contenu +=  '</tr>';
-
-	contenu +=  '<tr style="height: 10px;">';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BG.gif); background-repeat: no-repeat;"></td>';
-	contenu +=   '<td colspan="2" style="width: 305px; background: url(./image/commun/Bulle_BC.gif); background-repeat: repeat-x;"></td>';
-	contenu +=   '<td style="width: 10px; background: url(./image/commun/Bulle_BD.gif); background-repeat: no-repeat;"></td>';
-	contenu +=  '</tr>';
-	contenu += '</table>';
+	contenu += '<div style="padding:10px 14px;font-size:11px;line-height:1.6;color:#333">' + texte + '</div>';
+	contenu += '</div>';
 
 	var finalPosX = posX - xOffset;
 

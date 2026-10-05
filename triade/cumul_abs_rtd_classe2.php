@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -55,15 +55,15 @@ $cnx=cnx();
 $idclasse=$_POST["saisie_classe"];
 
 if ($idclasse == "tous") {
-	$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM ${prefixe}eleves ORDER BY nom,prenom ";
+	$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM {$prefixe}eleves ORDER BY nom,prenom ";
 }else{
-	$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM ${prefixe}eleves  WHERE classe='$idclasse' ORDER BY nom,prenom ";
+	$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM {$prefixe}eleves  WHERE classe='$idclasse' ORDER BY nom,prenom ";
 }
 
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if (count($data) <= 0) {
+if (countTriade($data) <= 0) {
         print("<BR><center>".LANGABS67."<BR><BR></center>");
 } else {
 ?>
@@ -74,7 +74,7 @@ if (count($data) <= 0) {
 	<TD bgcolor=yellow width=20%><b><?php print LANGABS71 ?></b></TD>
 	<TD bgcolor=yellow width=20%><b><?php print LANGABS72 ?></b></TD>
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 
 		$nbabs=0;
 		$nbrtd=0;
@@ -85,7 +85,7 @@ if (count($data) <= 0) {
 
 		$data_2=affRetard_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 		// elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere
-		for($j=0;$j<count($data_2);$j++) {
+		for($j=0;$j<countTriade($data_2);$j++) {
 				$bgcolor="#CCCCCC";
 				$nbminute=preg_replace('/mn/','',$data_2[$j][5]);
 				if (preg_match('/[0-9]h/',$data_2[$j][5])) {
@@ -101,7 +101,7 @@ if (count($data) <= 0) {
 
 		$data_3=affAbsence2_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 		// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier,creneaux
-		for($j=0;$j<count($data_3);$j++) {
+		for($j=0;$j<countTriade($data_3);$j++) {
 				$bgcolor="#CCCCCC";
 				if ($data_3[$j][4] == -1) { 
 					$cumulabsheure+=$data_3[$j][7]; 

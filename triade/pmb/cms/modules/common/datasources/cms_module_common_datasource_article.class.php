@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_article.class.php,v 1.7 2013-01-02 11:07:10 arenou Exp $
+// $Id: cms_module_common_datasource_article.class.php,v 1.11 2021/03/16 14:39:15 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,18 +12,22 @@ class cms_module_common_datasource_article extends cms_module_common_datasource{
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
 			"cms_module_common_selector_article",
 			"cms_module_common_selector_env_var",
-			"cms_module_common_selector_global_var"
+			"cms_module_common_selector_global_var",
+		    "cms_module_common_selector_article_by_section_and_cp_and_reader_status",
+		    "cms_module_common_selector_article_by_section_and_cp_and_reader_category",
+		    "cms_module_common_selector_article_by_section_and_cp_and_search_segment",
+		    "cms_module_common_selector_article_by_section_and_cp_and_search_universe"
 		);
 	}
 	
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -34,17 +38,18 @@ class cms_module_common_datasource_article extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$article_id = $selector->get_value();
 			$article_ids = $this->filter_datas("articles",array($selector->get_value()));
-			if($article_ids[0]){
-				$article = new cms_article($article_ids[0]);
-				return $article->format_datas();
+			if(!empty($article_ids[0])){
+			    $article = new cms_article($article_ids[0]);
+			    $links = ["article" => $this->get_constructed_link("article", "!!id!!")];
+				return $article->format_datas($links);
 			}
 		}
 		return false;

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_authors_controller.class.php,v 1.16 2018-10-29 12:47:25 dgoron Exp $
+// $Id: entities_authors_controller.class.php,v 1.18.2.1 2024/06/11 08:23:56 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,15 +11,16 @@ require_once($class_path.'/author.class.php');
 include($include_path.'/templates/authors.tpl.php');
 
 class entities_authors_controller extends entities_authorities_controller {
-	
+
+	public $num_auth_present = false;
 	protected $model_class_name = 'auteur';
-	
+
 	public function proceed_duplicate() {
 		$object_instance = $this->get_object_instance();
 		$id = 0;
 		$object_instance->show_form($object_instance->type,true);
 	}
-	
+
 	public function proceed_update() {
 		global $msg;
 		global $author_type, $author_nom, $author_rejete;
@@ -31,10 +32,10 @@ class entities_authors_controller extends entities_authorities_controller {
 		global $authority_statut, $authority_thumbnail_url;
 		global $forcing_values;
 		global $forcing;
-		
+
 		if (empty($forcing_values)) {
-		
-    		// mise Ã  jour d'un auteur
+
+    		// mise à jour d'un auteur
     		$author = array(
     				'type' 			=> $author_type,
     				'name' 			=> $author_nom,
@@ -56,7 +57,7 @@ class entities_authors_controller extends entities_authorities_controller {
 		} else {
 		    $author = encoding_normalize::json_decode(stripslashes($forcing_values), true);
 		}
-		
+
 		$object_instance = $this->get_object_instance();
 		if (!isset($forcing)) {
 		    $forcing = false;
@@ -71,17 +72,17 @@ class entities_authors_controller extends entities_authorities_controller {
 		}
 		return 0;
 	}
-		
+
 	public function proceed_form() {
 		global $type_autorite, $cataloging_scheme_id, $id;
-		
+
 		$unlock_unload_script = "";
 		if($this->id){
 		    $entity_locking = new entity_locking($id, $this->get_type_const());
 		    $entity_locking->lock_entity();
 		    $unlock_unload_script = $entity_locking->get_polling_script();
 		}
-		
+
 		$object_instance = $this->get_object_instance();
 		ob_start();
 		$object_instance->show_form($type_autorite);
@@ -95,23 +96,23 @@ class entities_authors_controller extends entities_authorities_controller {
 		print $this->get_selector_js_script();
 		print $unlock_unload_script;
 	}
-	
+
 	public function get_searcher_instance()	{
 		return searcher_factory::get_searcher('authors', '', $this->user_input);
 	}
-	
+
 	protected function search_form() {
 		global $type_autorite;
-		
+
 		$model_class_name = $this->get_model_class_name();
 		$model_class_name::search_form($type_autorite);
 	}
-	
+
 	protected function get_display_header_list() {
 		global $msg;
-		
+
 		$this->num_auth_present = searcher_authorities_authors::has_authorities_sources('author');
-		
+
 		$display = "<tr>
 			<th></th>
 			<th>".$msg[103]."</th>
@@ -121,46 +122,58 @@ class entities_authors_controller extends entities_authorities_controller {
 		</tr>";
 		return $display;
 	}
-	
+
 	protected function get_display_columns() {
-	    
+	    global $msg;
+
 		$object_instance = $this->authority->get_object_instance(array('recursif' => 1));
-		$display = $this->get_display_label_column($this->authority->get_isbd(), $object_instance->info_bulle);		
-		//NumÃ©ros d'autorite
+		$author_entry=$this->authority->get_isbd();
+		if(empty($this->authority->get_isbd_template())) {
+			if($object_instance->see) {
+				// auteur avec renvoi
+				// récupération des données de l'auteur cible
+				$see = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $object_instance->see, array('recursif' => 1));
+				$author_voir=$see->get_isbd();
+				$author_voir = "<a href='".$object_instance->get_gestion_link()."'>".$author_voir."</a>";
+				$author_entry .= ".&nbsp;-&nbsp;<u>$msg[210]</u>&nbsp;:&nbsp;".$author_voir;
+			}
+		}
+		$display = $this->get_display_label_column($author_entry, $object_instance->info_bulle);
+		//Numéros d'autorite
 		if($this->num_auth_present){
 			$display .= "<td>".searcher_authorities_authors::get_display_authorities_sources($this->authority->get_num_object(), 'author')."</td>";
-		}		 
+		}
 		return $display;
 	}
 	protected function get_query_notice_count() {
 		return "SELECT count(distinct responsability_notice) FROM responsability WHERE responsability_author = ".$this->authority->get_num_object();
 	}
-	
+
 	protected function get_permalink($id=0) {
 		if(!$id) $id = $this->id;
 		return "./autorites.php?categ=see&sub=author&id=".$id;
 	}
-	
+
 	protected function get_edit_link($id=0) {
 		if(!$id) $id = $this->id;
 		return $this->url_base."&sub=author_form&id=".$id;
 	}
-	
+
 	protected function get_results_title() {
 		global $msg;
 		global $type_autorite;
-		
+
 		switch($type_autorite){
 			case 70 :
 				//personne physique
 				return $msg[209];
 				break;
 			case 71 :
-				//collectivitÃ©
+				//collectivité
 				return $msg["aut_resul_collectivite"];
 				break;
 			case 72 :
-				//congrÃ¨s
+				//congrès
 				return $msg["aut_resul_congres"];
 				break;
 			default:
@@ -168,47 +181,52 @@ class entities_authors_controller extends entities_authorities_controller {
 				break;
 		}
 	}
-	
+
 	protected function display_no_results() {
-		global $msg;
-		
-		error_message($msg[211], str_replace('!!author_cle!!', $this->user_input, $msg[212]), 0, $this->url_base.'&sub=&id=');
+		global $msg, $charset;
+
+		error_message(
+			$msg[211],
+			str_replace('!!author_cle!!', htmlentities($this->user_input, ENT_QUOTES, $charset), $msg[212]),
+			0,
+			$this->url_base.'&sub=&id='
+		);
 	}
-	
+
 	protected function get_search_mode() {
 		return 0;
 	}
-	
+
 	protected function get_aut_type() {
 		return "";
 	}
-	
+
 	protected function get_last_order() {
 		return 'order by author_id desc ';
 	}
-	
+
 	public function get_back_url() {
 		global $type_autorite;
-	
+
 		$this->back_url = parent::get_back_url();
 		if($type_autorite) $this->back_url .= "&type_autorite=".$type_autorite;
 		return $this->back_url;
 	}
-	
+
 	public function get_delete_url() {
 		global $type_autorite;
-	
+
 		$this->delete_url = parent::get_delete_url();
 		if($type_autorite) $this->delete_url .= "&type_autorite=".$type_autorite;
 		return $this->delete_url;
 	}
-	
+
 	protected function get_pagination_link() {
 		global $type_autorite;
-	
+
 		return parent::get_pagination_link().($type_autorite ? "&type_autorite=".$type_autorite : '');
 	}
-	
+
 	protected function get_aut_const(){
 	    return TYPE_AUTHOR;
 	}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions_frame.tpl.php,v 1.14 2019-05-27 12:31:44 ngantier Exp $
+// $Id: receptions_frame.tpl.php,v 1.15 2020/05/11 09:26:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -271,6 +271,7 @@ $recept_deliv_form_suite = "
 	var msg_error_cb_cote = '".addslashes($msg[304])."';
 	var msg_error_cb = '".addslashes($msg[302])."';
 	var msg_acquisition_recept_qte_err = '".addslashes($msg['acquisition_recept_qte_err'])."';
+	ajax_parse_dom();
 </script>	
 ";
 

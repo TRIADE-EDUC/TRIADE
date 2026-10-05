@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: visu_message.php,v 1.7 2017-11-13 10:23:51 dgoron Exp $
+// $Id: visu_message.php,v 1.7 2017/11/13 10:23:51 dgoron Exp $
 
 $base_path="../../..";
 $base_title="";

@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.1 2012-10-25 13:11:39 ngantier Exp $
+// $Id: main.inc.php,v 1.3 2021/04/21 20:49:30 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $action, $msg, $id, $form_cb_expl;
 
 require_once("$class_path/groupexpl.class.php");
 
@@ -27,21 +29,16 @@ switch($action) {
 		$groupexpl->do_check($form_cb_expl);
 		print $groupexpl->get_see_form();
 	break;
+	case 'update':
 	case 'save':
 		$groupexpl=new groupexpl($id);
-		$data['name']=$name;		
-		$data['comment']=$comment;		
-		$data['location']=$f_loc;	
-		$data['statut_principal']=$statut_principal;
-		$data['statut_others']=$statut_others;
-		$data['resp_expl_num']=$resp_expl_num;
-		$groupexpl->save($data);
+		$groupexpl->set_properties_from_form();
+		$groupexpl->save();
 		$groupexpls=new groupexpls();
 		print $groupexpls->get_list();
 	break;	
 	case 'delete':
-		$groupexpl=new groupexpl($id);
-		$groupexpl->delete();
+		groupexpl::delete($id);
 		$groupexpls=new groupexpls();
 		print $groupexpls->get_list();
 	break;

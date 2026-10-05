@@ -1,20 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: departs.inc.php,v 1.12 2018-12-27 10:05:22 dgoron Exp $
+// $Id: departs.inc.php,v 1.15 2022/10/04 09:20:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($site_destination)) $site_destination = '';
+global $class_path, $sub, $action, $msg, $database_window_title;
+global $transferts_validation_actif, $nb_per_page;
+global $site_destination, $liste_transfert, $form_cb_expl, $motif_refus;
+global $transferts_retour_acceptation_erreur, $transferts_envoi_OK, $transferts_validation_acceptation_OK, $transferts_retour_acceptation_OK;
 
-require_once($class_path."/list/transferts/list_transferts_envoi_ui.class.php");
-require_once($class_path."/list/transferts/list_transferts_refus_ui.class.php");
-require_once($class_path."/list/transferts/list_transferts_validation_ui.class.php");
-require_once($class_path."/list/transferts/list_transferts_retours_ui.class.php");
 require_once($class_path."/mono_display_expl.class.php");
 
-// Titre de la fenÃªtre
+// Titre de la fenêtre
 echo window_title($database_window_title.$msg['transferts_circ_menu_departs'].$msg['1003'].$msg['1001']);
 
 //creation de l'objet transfert
@@ -32,7 +31,7 @@ switch ($action) {
 		$action = "";
 		break;
 	case "aff_refus":
-		//on affiche l'Ã©cran de saisie du refus
+		//on affiche l'écran de saisie du refus
 		$list_transferts_refus_ui = new list_transferts_refus_ui(array('etat_demande' => 1));
 		print $list_transferts_refus_ui->get_display_valid_list();
 		break;
@@ -42,23 +41,23 @@ switch ($action) {
 		$action="";
 		break;
 	case "aff_val":
-		//on affiche l'Ã©cran de validation
+		//on affiche l'écran de validation
 		$list_transferts_validation_ui = new list_transferts_validation_ui(array('etat_demande' => 0));
 		print $list_transferts_validation_ui->get_display_valid_list();
 		break;
 	case "val":
-		//on enregistre les validations des exemplaires sÃ©lectionnÃ©s
+		//on enregistre les validations des exemplaires sélectionnés
 		$obj_transfert->enregistre_validation($liste_transfert);
 		$action="";
 		break;
 		
 	case "aff_ret":
-		//on affiche l'Ã©cran de validation
+		//on affiche l'écran de validation
 		$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_demande' => 3));
 		print $list_transferts_retours_ui->get_display_valid_list();
 		break;
 	case "ret":
-		//on enregistre les validations des exemplaires sÃ©lectionnÃ©s
+		//on enregistre les validations des exemplaires sélectionnés
 		$obj_transfert->enregistre_retour($liste_transfert);
 		$action="";
 		break;
@@ -67,8 +66,7 @@ switch ($action) {
 if ($action == "") {
 	//pas d'action donc affichage de la liste des validations en attente
 
-	get_cb_expl($msg['transferts_circ_menu_titre']." > ".$msg['transferts_circ_menu_departs'],
-					$msg['661'], $msg['transferts_circ_depart_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_destination=".$site_destination."&nb_per_page=".$nb_per_page);
+	get_cb_expl('',	$msg['661'], $msg['transferts_circ_depart_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_destination=".$site_destination."&nb_per_page=".$nb_per_page);
 // 	print $transferts_parcours_filtres;
 	//pour la validation d'un exemplaire
 	if ($form_cb_expl != "") {	
@@ -110,16 +108,16 @@ if ($action == "") {
 	} 
 	
  	// **************************** LISTE DES DEMANDES A VALIDER	
-	$list_transferts_validation_ui = new list_transferts_validation_ui(array('etat_transfert' => 0, 'etat_demande' => 0, 'site_origine' => $deflt_docs_location));
+	$list_transferts_validation_ui = new list_transferts_validation_ui(array('etat_transfert' => 0, 'etat_demande' => 0));
 	print $list_transferts_validation_ui->get_display_list();
 	
 	//$filtres="";
 	// **************************** LISTE DES ENVOIS A EFFECTUER
 	if ($transferts_validation_actif=="1") {
-		$list_transferts_envoi_ui = new list_transferts_envoi_ui(array('etat_transfert' => 0, 'etat_demande' => 1, 'site_origine' => $deflt_docs_location, 'site_destination' => 0));
+		$list_transferts_envoi_ui = new list_transferts_envoi_ui(array('etat_transfert' => 0, 'etat_demande' => 1));
 		print $list_transferts_envoi_ui->get_display_list();
 	} else {
-		$list_transferts_envoi_ui = new list_transferts_envoi_ui(array('etat_transfert' => 0, 'etat_demande' => array(0,1), 'site_origine' => $deflt_docs_location, 'site_destination' => 0));
+		$list_transferts_envoi_ui = new list_transferts_envoi_ui(array('etat_transfert' => 0, 'etat_demande' => array(0,1)));
 		print $list_transferts_envoi_ui->get_display_list();
 	}
 	
@@ -127,9 +125,8 @@ if ($action == "") {
 		$f_etat_dispo = 1;
 	}
 	// **************************** LISTE DES RETOUR A EFFECTUER	
-	$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 3, 'site_destination' => $deflt_docs_location, 'site_origine' => 0, 'f_etat_dispo' => 1), array(), array('by' => 'date_retour'));
+	$list_transferts_retours_ui = new list_transferts_retours_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 3, 'f_etat_dispo' => 1), array(), array('by' => 'date_retour'));
 	print $list_transferts_retours_ui->get_display_list();
-		
 }
 
 ?>

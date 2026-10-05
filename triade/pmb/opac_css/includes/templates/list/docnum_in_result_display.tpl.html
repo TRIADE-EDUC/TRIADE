@@ -1,0 +1,17 @@
+<!-- $Id: docnum_in_result_display.tpl.html,v 1.1.2.2 2024/07/10 08:19:49 qvarin Exp $ -->
+<p>
+    {{ msg.sharedlist_docnums | printf docnum.name }}
+    {% if global.opac_visionneuse_allow %}
+    <button
+    type="button"
+    class="bouton button-see"
+    title="{{ msg.sharedlist_docnums_view }}"
+    onclick="open_visionneuse(sendDocnumToVisionneuse, {{ docnum.id }})">
+        <span class="fa fa-eye" aria-hidden="true"></span>
+    </button>
+    {% else %}
+        <a href="{{ docnum.url }}" target="_blank" title="{ msg.sharedlist_docnums_view }}">
+            <span class="fa fa-eye" aria-hidden="true"></span>
+        </a>
+    {% endif %}
+</p>

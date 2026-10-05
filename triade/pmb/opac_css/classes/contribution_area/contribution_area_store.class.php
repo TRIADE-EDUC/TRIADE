@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_store.class.php,v 1.8 2019-02-22 10:16:53 tsamson Exp $
+// $Id: contribution_area_store.class.php,v 1.23 2022/07/07 14:49:19 qvarin Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -12,40 +12,105 @@ require_once($class_path.'/onto/onto_ontology.class.php');
 class contribution_area_store {
 	
 	protected static $onto;
+	protected static $ontostore;
 	protected static $graphstore;
 	protected static $datastore;
+
+	protected static $uri_from_pmb_name;
 	
-	public function get_ontology(){
+	public const GRAPHSTORE = 1;
+	public const DATASTORE = 2;
+	public const ONTOSTORE = 3;
+	
+	/**
+	 * tableau des namespaces
+	 * @var array
+	 */
+	public const ONTOLOGY_NAMESPACE = array(
+	    "skos"	=> "http://www.w3.org/2004/02/skos/core#",
+	    "dc"	=> "http://purl.org/dc/elements/1.1",
+	    "dct"	=> "http://purl.org/dc/terms/",
+	    "owl"	=> "http://www.w3.org/2002/07/owl#",
+	    "rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	    "rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
+	    "xsd"	=> "http://www.w3.org/2001/XMLSchema#",
+	    "pmb"	=> "http://www.pmbservices.fr/ontology#"
+	);
+	
+	/**
+	 * tableau des namespaces
+	 * @var array
+	 */
+	public const CONTRIBUTION_NAMESPACE = array(
+	    "dc"	=> "http://purl.org/dc/elements/1.1",
+	    "dct"	=> "http://purl.org/dc/terms/",
+	    "owl"	=> "http://www.w3.org/2002/07/owl#",
+	    "rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	    "rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
+	    "xsd"	=> "http://www.w3.org/2001/XMLSchema#",
+	    "pmb"	=> "http://www.pmbservices.fr/ontology#",
+	    "ca"	=> "http://www.pmbservices.fr/ca/"
+	);
+	
+	/**
+	 * Config du graphstore
+	 * @var array
+	 */
+	public const GRAPHSTORE_CONFIG = array(
+	    /* db */
+	    'db_name' => DATA_BASE,
+	    'db_user' => USER_NAME,
+	    'db_pwd' => USER_PASS,
+	    'db_host' => SQL_SERVER,
+	    /* store */
+	    'store_name' => 'contribution_area_graphstore',
+	    /* stop after 100 errors */
+	    'max_errors' => 100,
+	    'store_strip_mb_comp_str' => 0
+	);
+	
+	/**
+	 * Config du ontostore
+	 * @var array
+	 */
+	public const ONTOSTORE_CONFIG = array(
+	    /* db */
+	    'db_name' => DATA_BASE,
+	    'db_user' => USER_NAME,
+	    'db_pwd' => USER_PASS,
+	    'db_host' => SQL_SERVER,
+	    /* store */
+	    'store_name' => 'ontodemo',
+	    /* stop after 100 errors */
+	    'max_errors' => 100,
+	    'store_strip_mb_comp_str' => 0
+	);
+	
+	/**
+	 * Config du datastore
+	 * @var array
+	 */
+	public const DATASTORE_CONFIG = array(
+	    /* db */
+	    'db_name' => DATA_BASE,
+	    'db_user' => USER_NAME,
+	    'db_pwd' => USER_PASS,
+	    'db_host' => SQL_SERVER,
+	    /* store */
+	    'store_name' => 'contribution_area_datastore',
+	    /* stop after 100 errors */
+	    'max_errors' => 100,
+	    'store_strip_mb_comp_str' => 0
+	);
+	
+	/**
+	 * @return onto_ontology
+	 */
+	public function get_ontology() {
 		global $class_path;
-		global $base_path;
 	
 		if(!isset(self::$onto)){
-			$onto_store_config = array(
-					/* db */
-					'db_name' => DATA_BASE,
-					'db_user' => USER_NAME,
-					'db_pwd' => USER_PASS,
-					'db_host' => SQL_SERVER,
-					/* store */
-					'store_name' => 'ontodemo',
-					/* stop after 100 errors */
-					'max_errors' => 100,
-					'store_strip_mb_comp_str' => 0
-			);
-			$tab_namespaces = array(
-					"skos"	=> "http://www.w3.org/2004/02/skos/core#",
-					"dc"	=> "http://purl.org/dc/elements/1.1",
-					"dct"	=> "http://purl.org/dc/terms/",
-					"owl"	=> "http://www.w3.org/2002/07/owl#",
-					"rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-					"rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
-					"xsd"	=> "http://www.w3.org/2001/XMLSchema#",
-					"pmb"	=> "http://www.pmbservices.fr/ontology#"
-			);
-			
-			$onto_store = new onto_store_arc2_extended($onto_store_config);
-			$onto_store->set_namespaces($tab_namespaces);
-			
+		    $onto_store = $this->get_ontostore();
  			//chargement de l'ontologie dans son store
 			$reset = $onto_store->load($class_path."/rdf/ontologies_pmb_entities.rdf", onto_parametres_perso::is_modified());
 			onto_parametres_perso::load_in_store($onto_store, $reset);
@@ -54,66 +119,69 @@ class contribution_area_store {
 		return self::$onto;
 	}
 	
+	/**
+	 * @return onto_store_arc2_extended
+	 */
+	public function get_ontostore() {
+	    if(!isset(self::$ontostore)){
+	        self::$ontostore = new onto_store_arc2_extended(self::ONTOSTORE_CONFIG);
+	        self::$ontostore->set_namespaces(self::ONTOLOGY_NAMESPACE);
+	    }
+	    return self::$ontostore;
+	}
+	
+	/**
+	 * @return onto_store_arc2
+	 */
 	public function get_graphstore(){
 		if(!isset(self::$graphstore)){
-			$store_config = array(
-					/* db */
-					'db_name' => DATA_BASE,
-					'db_user' => USER_NAME,
-					'db_pwd' => USER_PASS,
-					'db_host' => SQL_SERVER,
-					/* store */
-					'store_name' => 'contribution_area_graphstore',
-					/* stop after 100 errors */
-					'max_errors' => 100,
-					'store_strip_mb_comp_str' => 0
-			);
-			$tab_namespaces = array(
-					"dc"	=> "http://purl.org/dc/elements/1.1",
-					"dct"	=> "http://purl.org/dc/terms/",
-					"owl"	=> "http://www.w3.org/2002/07/owl#",
-					"rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-					"rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
-					"xsd"	=> "http://www.w3.org/2001/XMLSchema#",
-					"pmb"	=> "http://www.pmbservices.fr/ontology#",
-					"ca"	=> "http://www.pmbservices.fr/ca/"
-			);
-	
-			self::$graphstore = new onto_store_arc2($store_config);
-			self::$graphstore->set_namespaces($tab_namespaces);
+			self::$graphstore = new onto_store_arc2(self::GRAPHSTORE_CONFIG);
+			self::$graphstore->set_namespaces(self::CONTRIBUTION_NAMESPACE);
 		}
 		return self::$graphstore;
 	}
 	
+	/**
+	 * @return onto_store_arc2
+	 */
 	public function get_datastore(){
 		if(!isset(self::$datastore)){
-			$store_config = array(
-					/* db */
-					'db_name' => DATA_BASE,
-					'db_user' => USER_NAME,
-					'db_pwd' => USER_PASS,
-					'db_host' => SQL_SERVER,
-					/* store */
-					'store_name' => 'contribution_area_datastore',
-					/* stop after 100 errors */
-					'max_errors' => 100,
-					'store_strip_mb_comp_str' => 0
-			);
-			$tab_namespaces = array(
-					"dc"	=> "http://purl.org/dc/elements/1.1",
-					"dct"	=> "http://purl.org/dc/terms/",
-					"owl"	=> "http://www.w3.org/2002/07/owl#",
-					"rdf"	=> "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-					"rdfs"	=> "http://www.w3.org/2000/01/rdf-schema#",
-					"xsd"	=> "http://www.w3.org/2001/XMLSchema#",
-					"pmb"	=> "http://www.pmbservices.fr/ontology#",
-					"ca"	=> "http://www.pmbservices.fr/ca/"
-			);
-	
-			self::$datastore = new onto_store_arc2($store_config);
-			self::$datastore->set_namespaces($tab_namespaces);
+			self::$datastore = new onto_store_arc2(self::DATASTORE_CONFIG);
+			self::$datastore->set_namespaces(self::CONTRIBUTION_NAMESPACE);
 		}
 		return self::$datastore;
+	}
+	
+	/**
+	 * @param int|string $form_id
+	 * @param array $params
+	 * @return onto_store_arc2
+	 */
+	public static function get_formstore ($form_id, $params = array()) {
+		
+		if (empty($form_id)) {
+			throw new \Exception("form_id is empty");
+		}
+		
+	    $store_config = array(
+	        /* db */
+	        'db_name' => DATA_BASE,
+	        'db_user' => USER_NAME,
+	        'db_pwd' => USER_PASS,
+	        'db_host' => SQL_SERVER,
+	        /* store */
+	        'store_name' => 'onto_contribution_form_' . $form_id,
+	        /* stop after 100 errors */
+	        'max_errors' => 100,
+	        'store_strip_mb_comp_str' => 0
+	    );
+	    if (!empty($params)) {
+	        $store_config['params'] = $params;
+	    }
+	    
+	    $formstore = new onto_store_arc2_extended($store_config);
+        $formstore->set_namespaces(contribution_area_store::CONTRIBUTION_NAMESPACE);
+        return $formstore;
 	}
 	
 	public function get_attachment($source_uri, $area_uri = ''){
@@ -135,7 +203,6 @@ class contribution_area_store {
 				?attachment pmb:name ?property_pmb_name
 			}
 		}';
-		
 		$result = self::$graphstore->query($query);
 		if($result){
 			$attachments = self::$graphstore->get_result();
@@ -149,8 +216,8 @@ class contribution_area_store {
 	 * @param string $area_uri URI de l'espace
 	 * @param string $source_id ID du noeud parent
 	 * @param string $dest_type Type de destination
-	 * @param unknown $depth Nombre de niveaux de profondeur (0 pas de limite)
-	 * @return Ambigous <multitype:, multitype:string >
+	 * @param string|int $depth Nombre de niveaux de profondeur (0 pas de limite)
+	 * @return array <multitype:, multitype:string >
 	 */
 	public function get_attachment_detail($source_uri, $area_uri = '', $source_id='', $dest_type='', $depth = 0){
 		$depth--;
@@ -159,12 +226,15 @@ class contribution_area_store {
 
 		for($i=0 ; $i<count($attachments) ; $i++){
 			$detail = $this->get_infos($attachments[$i]->dest);
-
+			
 			if($source_id){
 				$detail['parent'] = $source_id;
 			}
 			if(!empty($attachments[$i]->property_pmb_name)){
 				$detail['propertyPmbName'] = $attachments[$i]->property_pmb_name;
+			}
+			if(!empty($attachments[$i]->identifier)){
+			    $detail['attachmentId'] = $attachments[$i]->identifier;
 			}
 			$details[]=$detail;
 			
@@ -225,6 +295,15 @@ class contribution_area_store {
 					case 'http://www.pmbservices.fr/ontology#comment' :
 						$infos['comment'] = $results[$i]->o;
 						break;
+					case 'http://www.pmbservices.fr/ontology#response' :
+						$infos['response'] = $results[$i]->o;
+						break;
+					case 'http://www.pmbservices.fr/ontology#orderResponse' :
+						$infos['orderResponse'] = $results[$i]->o;
+						break;
+					case 'http://www.pmbservices.fr/ontology#equation' :
+						$infos['equation'] = $results[$i]->o;
+						break;
 				}
 			}
 		}
@@ -245,6 +324,50 @@ class contribution_area_store {
 		return '';
 	}
 	
+	public function get_pmb_identifier_from_uri_id(int $id_uri) {
+		$uri = onto_common_uri::get_uri($id_uri);
+		return $this->get_pmb_identifier_from_uri($uri);
+	}
+	
+	public function get_pmb_identifier_from_uri(string $uri) {
+	    $this->get_datastore();
+		
+		if (!empty($uri)) {
+    		$result = self::$datastore->query('select ?identifier where {
+    			<'.$uri.'> pmb:identifier ?identifier .
+    		}');
+    		if($result){
+    		    $results = self::$datastore->get_result();
+    			if (count($results)) {
+    			    return intval($results[0]->identifier);
+    			}
+    		}
+		}
+		return 0;
+	}
+	
+	public function is_draft_from_uri_id(int $id_uri) {
+		$uri = onto_common_uri::get_uri($id_uri);
+		return $this->is_draft_from_uri($uri);
+	}
+	
+	public function is_draft_from_uri(string $uri) {
+	    $this->get_datastore();
+		
+		if (!empty($uri)) {
+    		$result = self::$datastore->query('select ?is_draft  where {
+    			<'.$uri.'> pmb:is_draft ?is_draft .
+    		}');
+    		if($result){
+    		    $results = self::$datastore->get_result();
+    			if (count($results)) {
+    			    return (isset($results[0]->is_draft) ? true : false);
+    			}
+    		}
+		}
+		return false;
+	}
+	
 	protected function prepare_data($data){
 		$assertions = array();
 		$scenario_uri = "<http://www.pmbservices.fr/ca/Scenario#!!id!!>";
@@ -262,10 +385,10 @@ class contribution_area_store {
 					'predicat' => 'rdf:type',
 							'value' => 'ca:Attachment'
 					);
-									$assertions[]  =array(
-											'subject' => str_replace('!!id!!','area'.$data[$i]->id,$attachment_uri),
-											'predicat' => 'ca:inArea',
-											'value' => $this->get_area_uri()
+					$assertions[]  =array(
+							'subject' => str_replace('!!id!!','area'.$data[$i]->id,$attachment_uri),
+							'predicat' => 'ca:inArea',
+							'value' => $this->get_area_uri()
 					);
 					$assertions[]  =array(
 						'subject' => str_replace('!!id!!','area'.$data[$i]->id,$attachment_uri),
@@ -322,5 +445,226 @@ class contribution_area_store {
 			}
 		}
 		return $assertions;
-	}	
+	}
+	
+	public function get_properties_from_uri($uri) {
+	    $properties = array (
+	        'uri' => $uri
+	    );
+	    
+	    if (!empty($uri)) {
+    	    $query = "SELECT * WHERE {
+                    <$uri> ?p ?o
+                }";
+    	    $this->get_datastore()->query($query);
+    	    if ($this->get_datastore()->num_rows()) {
+    	        $results = $this->get_datastore()->get_result();
+    	        foreach ($results as $result){
+    	            $properties[$result->p] = $result->o;
+    	            $prop = str_replace("http://www.pmbservices.fr/ontology#", "", $result->p);
+    	            $properties[$prop] = $result->o;
+    	        }
+    	    }
+	    }
+	    
+	    return $properties;
+	}
+	
+	/**
+	 *
+	 * @param int $store Utiliser les constantes de la classe
+	 * @param boolean $force
+	 * @return boolean
+	 */
+	public function reset_store($store, $force = false, $delete_file_opac = false ) {
+	    switch ($store) {
+	        case self::DATASTORE:
+	            $this->delete_all_champ_perso($this->get_datastore());
+	            // On supprime le fichier de gestion
+	            return onto_parametres_perso::load_in_store($this->get_datastore(), $force);
+	        case self::ONTOSTORE:
+	            return onto_parametres_perso::load_in_store($this->get_ontostore(), $force);
+	    }
+	    return false;
+	}
+	
+	/**
+	 * Suppresion des champs perso
+	 * (penser a faire un load_in_store après cette methode)
+	 *
+	 * @param onto_store_arc2_extended|onto_store_arc2 $store
+	 * @return []
+	 */
+	public function delete_all_champ_perso ($store) {
+	    
+	    // On récupère tout les champs persos
+	    $succes = $store->query('SELECT ?s WHERE {
+                ?s pmb:is_cp ?is_cp .
+            } GROUP BY ?s');
+	    
+	    $failed = array();
+	    if ($succes && $store->num_rows() > 0) {
+	        $results = $store->get_result();
+	        
+	        $length = count($results);
+	        
+	        // On supprime les datatypes du champs
+	        for ($i = 0; $i < $length; $i++) {
+	            $succes = $store->query('DELETE {
+                    <'.$results[$i]->s.'> ?p ?o .
+                }');
+	            if (!$succes) {
+	                $failed[] = $results[$i];
+	            }
+	        }
+	    }
+	    
+	    return $failed;
+	}
+	
+	/**
+	 * On vérifie les propriétés des formulaire, quand on update un champ perso
+	 * @param string $table_name
+	 * @param int $id_champ
+	 * @param boolean $champ_deleted
+	 */
+	public function check_properties_form($table_name, $id_champ = 0,$champ_deleted = false) {
+	    if (!empty($table_name)) {
+	        
+	        // On récupère les infos des champs
+	        $requete = "SELECT idchamp, name, type, datatype FROM ".$table_name;
+	        $result = pmb_mysql_query($requete);
+	        if (pmb_mysql_num_rows($result)) {
+	            while ($champ = pmb_mysql_fetch_object($result)) {
+	                
+	                // On récupère la liste des formulaires
+	                $forms = contribution_area_forms_controller::get_all_forms();
+	                $length = count($forms);
+	                
+	                // Liste des id de formulaire à mettre à jour
+	                $update_forms = array();
+	                
+	                for ($i = 0; $i < $length; $i++) {
+	                    $form = $forms[$i];
+	                    foreach ($form->form_parameters as $property_name => $value) {
+	                        // Le formulaire utilise la propriété modifier/supprimer
+	                        if (strpos($property_name, $champ->name) !== false) {
+	                            $update_forms[] = [
+	                                "id_form" => $form->id_form,
+	                                "form_type" => $form->form_type,
+	                                "property_name" => $property_name,
+	                                "deleted" => ($champ->idchamp == $id_champ) ? $champ_deleted : false
+	                            ];
+	                        }
+	                    }
+	                }
+	                
+	                
+	                // On met à jour les formulaires
+	                $length = count($update_forms);
+	                for ($i = 0; $i < $length; $i++) {
+	                    if (!empty($update_forms[$i]['deleted']) && $update_forms[$i]['deleted']) {
+	                        $this->delete_properties($update_forms[$i]);
+	                    } else {
+	                        $this->update_properties($update_forms[$i]);
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
+	
+	/**
+	 * On supprime une propriété du store
+	 * @param array $form
+	 * @return boolean
+	 */
+	private function delete_properties ($form) {
+	    $datastore = $this->get_datastore();
+	    $formstore = $this->get_formstore($form['id_form']);
+	    
+	    $succes_datastore = false;
+	    $succes_datastore_1 = false;
+	    $succes_formstore = false;
+	    
+	    
+	    $succes_datastore = $datastore->query('DELETE {
+                        pmb:'.$form['property_name'].' ?p ?o .
+                    }');
+	    if ($succes_datastore) {
+	        $succes_datastore_1 = $datastore->query('DELETE {
+                            ?s pmb:'.$form['property_name'].' ?o .
+                        }');
+	        
+	        $succes_formstore = $formstore->query('DELETE {
+                            pmb:'.$form['property_name'].' ?p ?o .
+                        }');
+	        
+	        $contribution_area_form = new contribution_area_form($form['form_type'], $form['id_form']);
+	        $contribution_area_form->remove_property($form['property_name']);
+	    }
+	    
+	    
+	    return ($succes_datastore && $succes_datastore_1 && $succes_formstore);
+	}
+	
+	/**
+	 * On met a jour la propriété dans un formulaire
+	 * @param array $form
+	 * @return boolean
+	 */
+	private function update_properties ($form) {
+	    $datastore = $this->get_datastore();
+	    $formstore = $this->get_formstore($form['id_form']);
+	    
+	    $succes_delete = false;
+	    $succes_insert = false;
+	    
+	    $succes_datastore = $datastore->query('SELECT ?datatype WHERE {
+                        pmb:'.$form['property_name'].' pmb:datatype ?datatype .
+                    }');
+	    $succes_formstore = $formstore->query('SELECT ?datatype WHERE {
+                        pmb:'.$form['property_name'].' pmb:datatype ?datatype .
+                    }');
+	    
+	    if (($succes_datastore && $datastore->num_rows() > 0 ) && ( $succes_formstore && $formstore->num_rows() > 0)) {
+	        
+	        $formResults = $formstore->get_result();
+	        $dataResults = $datastore->get_result();
+	        
+	        // Le datatype ne correspond pas
+	        if ($formResults[0]->datatype != $dataResults[0]->datatype) {
+	            $succes_delete = $formstore->query('DELETE {
+                                pmb:'.$form['property_name'].' pmb:datatype ?datatype .
+                            }');
+	            if ($succes_delete) {
+	                $succes_insert = $formstore->query('insert into <pmb> {
+                                pmb:'.$form['property_name'].' pmb:datatype <'.$dataResults[0]->datatype.'> .
+                            }');
+	            }
+	        }
+	    }
+	    
+	    return ($succes_delete && $succes_insert);
+	}
+	
+	
+	public function get_uri_from_pmb_name($pmb_name) {
+	    if (isset(self::$uri_from_pmb_name[$pmb_name])) {
+	        return self::$uri_from_pmb_name[$pmb_name];
+	    }
+	    
+	    $this->get_ontostore();
+	    $result = self::$ontostore->query('select ?uri where {
+			?uri pmb:name "'.$pmb_name.'" .
+		}');
+	    if($result){
+	        $results = self::$ontostore->get_result();
+	        if (count($results)) {
+	            self::$uri_from_pmb_name[$pmb_name] = $results[0]->uri;
+	            return $results[0]->uri;
+	        }
+	    }
+	    return '';
+	}
 }

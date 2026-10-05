@@ -15,6 +15,7 @@ langmenudepart1="T.R.I.A.D.E.";
 langmenudepart10="Inicio";
 langmenudepart11="En relacion con";
 langmenudepart12="Su publicidad";
+langmenudepart13="Protection - RGPD";
 //-------
 langmenudepart2="Mantenimiento";
 langmenudepart21="Problema de entrada";
@@ -36,7 +37,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Para visualizar este sitio de manea optima : Internet Explorer 5 y Mozilla ----- resolucion minima : 800x600 <br>"; 
 }else{
-	langmenupied="<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Para visualizar este sitio de manea optima : Internet Explorer 5 y Mozilla ----- resolucion minima : 800x600 <br>   T.R.I.A.D.E. © - 2024 - Derecho reservado";
+	langmenupied="<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Para visualizar este sitio de manea optima : Internet Explorer 5 y Mozilla ----- resolucion minima : 800x600 <br>   T.R.I.A.D.E. © - 2026 - Derecho reservado";
 }
 
 

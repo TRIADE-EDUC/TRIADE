@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,7 +41,7 @@ if(isset($_POST["create"])) {
 	$cgrp=explode(":",$cgrp);
 	$cid=$cgrp[0];
 	$gid=$cgrp[1];
-	$mid=$_GET[sMat];
+	$mid=$_GET['sMat'];
 	$choix_tri=recherche_trimestre_en_cours_via_classe($cid);
 	$typecom=$_GET["typecom"];
 }
@@ -67,7 +67,7 @@ if ($nomGrp != "") {
 if ($choix_tri != "") {
 
 $data=recherche_intervalle_trimestre_via_classe($choix_tri,$cid,$anneeScolaire);
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$date_debut=$data[$i][0];
 	$date_fin=$data[$i][1];
 	$sql2="date >= '$date_debut' AND date <= '$date_fin' ";
@@ -75,7 +75,7 @@ for($i=0;$i<count($data);$i++){
 
 if ($choix_tri == "trimestre2")
 $data=recherche_intervalle_trimestre_via_classe("trimestre1",$cid,$anneeScolaire);
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$date_debutP=$data[$i][0];
 	$date_finP=$data[$i][1];
 }
@@ -83,7 +83,7 @@ for($i=0;$i<count($data);$i++){
 
 if ($choix_tri == "trimestre3")
 $data=recherche_intervalle_trimestre_via_classe("trimestre2",$cid,$anneeScolaire);
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$date_debutP=$data[$i][0];
 	$date_finP=$data[$i][1];
 }
@@ -92,15 +92,15 @@ for($i=0;$i<count($data);$i++){
 // fin de la creation
 
 $listTmp=explode(":",$_GET["sClasseGrp"]);
-unset($HPV[cgrp]);
-$HPV[cid]=$cid;
-$HPV[gid]=$gid;
+unset($HPV['cgrp']);
+$HPV['cid']=$cid;
+$HPV['gid']=$gid;
 unset($listTmp);
 //print_r($HPV);
-if($HPV[gid]):
-        $who="<font color=\"#FFFFFF\">- ".LANGPROF4." : </font> ".chercheGroupeNom($HPV[gid]);
+if($HPV['gid']):
+        $who="<font color=\"#FFFFFF\">- ".LANGPROF4." : </font> ".chercheGroupeNom($HPV['gid']);
 else:
-        $cl=chercheClasse($HPV[cid]);
+        $cl=chercheClasse($HPV['cid']);
         $who="<font color=\"#FFFFFF\">- ".strtolower(LANGELE4)." : </font>".$cl[0][1];
         unset($cl);
 endif;
@@ -304,7 +304,7 @@ function envoi() {
 	print "var tab=new Array();\n";
 
 	$data=liste_com_bulletin($_SESSION["id_pers"]);
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$text=$data[$i][1];
 		$nb=$data[$i][0];
 		$text=preg_replace("/\r\n/"," ",$text);
@@ -315,13 +315,13 @@ function envoi() {
 </script>
 <table  border=0 bordercolor="#000000" >
 <?php
-if($HPV[gid]){
-        $gid=$HPV[gid];
+if($HPV['gid']){
+        $gid=$HPV['gid'];
         $sqlIn=<<<SQL
         SELECT
         	liste_elev
         FROM
-        	${prefixe}groupes
+        	{$prefixe}groupes
         WHERE
         	group_id='$gid'
 SQL;
@@ -345,7 +345,7 @@ SQL;
 	}
 	$sql .= "
         FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	elev_id IN ($in)
 		AND annee_scolaire='$anneeScolaire'
@@ -354,7 +354,7 @@ SQL;
 	";
 		unset($in);
 } else {
-        $cid=$HPV[cid];
+        $cid=$HPV['cid'];
 	$sql="
         SELECT
         	elev_id,
@@ -369,7 +369,7 @@ SQL;
 	}
 	$sql .= "
 	FROM
-        	${prefixe}eleves
+        	{$prefixe}eleves
         WHERE
         	classe='$cid'
 		AND annee_scolaire='$anneeScolaire'
@@ -384,7 +384,7 @@ SQL;
         freeResult($curs);
         unset($curs);
 	
-	   for($i=0;$i<count($mat);$i++){
+	   for($i=0;$i<countTriade($mat);$i++){
 
 				if ($ii == 24) {
 	                		$pdf->AddPage();
@@ -480,7 +480,7 @@ SQL;
 </td>
 <?php 
 		$tabliste=listeMatiereProf($_SESSION["id_pers"],$idclasse,$idMatiere);
-		for($o=0;$o<count($tabliste);$o++) {
+		for($o=0;$o<countTriade($tabliste);$o++) {
 			$idmatiere1=$tabliste[$o][0];
 			$com=cherche_com_eleve2($idEleve,$idmatiere1,$idclasse,$choix_tri,$_SESSION["id_pers"],$idgroupe,$typecom);
 			$nommat=chercheMatiereNom($idmatiere1);
@@ -547,7 +547,7 @@ SQL;
 		$ycoor+=$hauteur;
 		if ($ycoor >= 240) { $ycoor=10; $pdf->AddPage(); }
 
-		$nbcol=2+count($tabliste)+2;
+		$nbcol=2+countTriade($tabliste)+2;
 		print "</tr><tr><td colspan='$nbcol' id='bordure'><hr></td></tr>\n";
 	   }
 
@@ -558,7 +558,7 @@ $pdf->output('F',$fichier);
 
 
 </table><br>
-<input type='hidden' name='nb' value="<?php print count($mat) ?>" >
+<input type='hidden' name='nb' value="<?php print countTriade($mat) ?>" >
 <input type='hidden' name="saisie_classe" value="<?php print $idclasse ?>" >
 <input type='hidden' name="saisie_matiere" value="<?php print $idMatiere ?>" >
 <input type='hidden' name="choix_trimestre" value="<?php print $choix_tri ?>" >

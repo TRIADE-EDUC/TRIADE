@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisé en français pour mon plugin
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.4 2023/10/11 10:44:03 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="crypto_menu">Chiffrement</entry>    
+	<entry code="crypto_sub_menu_key_generation">Génération de clés</entry>
+	<entry code="crypto_sub_menu_data_encryption">Chiffrement de données</entry>
+	<entry code="crypto_private_key">Clé privée</entry>
+	<entry code="crypto_public_key">Clé publique</entry>
+	<entry code="crypto_keys_already_defined"><![CDATA[Un jeu de clés de chiffrement est déjà défini dans PMB.<br />S'il n'a pas été utilisé, il est possible de le modifier .]]></entry>
+	<entry code="crypto_keys_not_defined">Veuillez définir un jeu de clés de chiffrement avant d'utiliser cette fonctionnalité.</entry>
+	<entry code="crypto_data_to_encrypt">Données à chiffrer</entry>
+	<entry code="crypto_encrypted_data">Données chiffrées</entry>
+	<entry code="crypto_encrypt">Chiffrer</entry>
+	<entry code="crypto_encrypt_error">Erreur lors du chiffrement.</entry>
+	<entry code="crypto_data_to_decrypt">Données à déchiffrer</entry>
+	<entry code="crypto_decrypted_data">Données déchiffrées</entry>
+	<entry code="crypto_decrypt">Déchiffrer</entry>
+	<entry code="crypto_decrypt_error">Erreur lors du déchiffrement.</entry>
+	<entry code="crypto_invalid_data_to_decrypt">Les données à déchiffrer ne sont pas valides.</entry>
+	<entry code="crypto_no_access">Vous n'avez pas accès à ce module.</entry>
+</XMLlist>

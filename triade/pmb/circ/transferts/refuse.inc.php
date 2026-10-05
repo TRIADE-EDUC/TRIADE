@@ -1,14 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// √Ç¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: refuse.inc.php,v 1.16 2018-12-27 10:05:22 dgoron Exp $
+// $Id: refuse.inc.php,v 1.20 2022/10/04 09:20:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path."/list/transferts/list_transferts_refus_ui.class.php");
+global $sub, $action, $msg, $database_window_title;
+global $deflt_docs_location;
+global $transferts_nb_jours_pret_defaut, $liste_transfert, $transid;
+global $motif,$date_retour;
 
-// Titre de la fen√™tre
+// Titre de la fenÍtre
 echo window_title($database_window_title.$msg['transferts_circ_menu_refuse'].$msg[1003].$msg[1001]);
 
 //creation de l'objet transfert
@@ -17,13 +20,13 @@ $obj_transfert = new transfert();
 switch ($action) {
 
 	case "aff_supp":
-		//on affiche l'√©cran de validation de suppression
+		//on affiche l'Ècran de validation de suppression
 		$list_transferts_refus_ui = new list_transferts_refus_ui(array('etat_demande' => 4));
 		print $list_transferts_refus_ui->get_display_valid_list();
 		break;
 
 	case "supp":
-		//on supprime les transferts s√©lectionner
+		//on supprime les transferts sÈlectionner
 		$obj_transfert->cloture_transferts($liste_transfert);
 		$action="";
 		break;
@@ -47,8 +50,7 @@ switch ($action) {
 			<div class='row'>&nbsp;</div>		
 			<div class='row'>		
 				<label class='etiquette'>".$msg["transferts_circ_refus_relance_retour"]."</label>
-				<input type='button' class='bouton' name='bt_date_retour' value='!!date_retour!!' onClick=\"var reg=new RegExp('(-)', 'g'); openPopUp('".$base_path."/select.php?what=calendrier&caller=form_circ_trans_redemande&date_caller='+form_circ_trans_redemande.date_retour.value.replace(reg,'')+'&param1=date_retour&param2=bt_date_retour&auto_submit=NO&date_anterieure=YES', 'calendar')\">
-				<input type='hidden' name='date_retour' value='!!date_retour_mysql!!'>
+				<input type='date' name='date_retour' value='!!date_retour_mysql!!'>
 			</div>
 		</div>
 		<input type='submit' class='bouton' name='".$msg["89"]."' value='".$msg["89"]."'>
@@ -110,21 +112,21 @@ switch ($action) {
 			$sel_expl=1;
 			$statut="";
 			$req_res = "select count(1) from resa where resa_cb='".addslashes($data[1])."' and resa_confirmee='1'";
-			$req_res_result = pmb_mysql_query($req_res, $dbh);
+			$req_res_result = pmb_mysql_query($req_res);
 			if(pmb_mysql_result($req_res_result, 0, 0)) {
 				$statut=$msg["transferts_circ_resa_expl_reserve"];
 				$sel_expl=0;
 			}
 			$req_pret = "select date_format(pret_retour, '".$msg["format_date"]."') as aff_pret_retour  from pret where pret_idexpl='".$data[3]."' ";
-			$req_pret_result = pmb_mysql_query($req_pret, $dbh);
+			$req_pret_result = pmb_mysql_query($req_pret);
 			if(pmb_mysql_num_rows($req_pret_result)) {
 				//$statut=$msg["transferts_circ_resa_expl_en_pret"]."()";
 				$statut=$msg[358]." ".pmb_mysql_result($req_pret_result, 0,0);
 				$sel_expl=0;
 			}
-			// transfert demand√©
+			// transfert demandÈ
 			$req="select count(1)  from transferts_demande, transferts where etat_demande ='0' and num_expl='".$data[3]."' and etat_transfert=0 and id_transfert=num_transfert ";
-			$r = pmb_mysql_query($req, $dbh);
+			$r = pmb_mysql_query($req);
 			if(pmb_mysql_result($r, 0, 0)) {
 				if($statut)$statut.=". ";
 				$statut.=$msg["transfert_demande_in_progress"];
@@ -214,11 +216,9 @@ if ($action == "") {
 		}		
 		$obj_transfert->cloture_transferts(implode($liste_transfert,','));
 	}
-	//pas d'action donc affichage de la liste des transferts refus√©s
-
-	echo "<h1>" . $msg['transferts_circ_menu_titre'] . " > " . $msg['transferts_circ_menu_refuse'] . "</h1>";
+	//pas d'action donc affichage de la liste des transferts refusÈs
 	
-	$list_transferts_refus_ui = new list_transferts_refus_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 4, 'site_destination' => $deflt_docs_location, 'site_origine' => 0));
+	$list_transferts_refus_ui = new list_transferts_refus_ui(array('etat_transfert' => 0, 'type_transfert' => 1, 'etat_demande' => 4));
 	print $list_transferts_refus_ui->get_display_list();
 }
 

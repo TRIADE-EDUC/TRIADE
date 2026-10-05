@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
+$Id: manifest.xml,v 1.20 2021/03/04 09:48:47 dbellamy Exp $ -->
 <manifest>
 	<name>pmbesSearch</name>
 	<description>msg:search_functions_description</description>
@@ -21,10 +21,10 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:simple_search_inputs_description</description>
-				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_searchType"/>
-				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_inputs_description_searchTerm"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_pmbUserId"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_OPACUserId"/>
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_searchType" optional="yes" default_value="0"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_inputs_description_searchTerm" optional="yes"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_pmbUserId" optional="yes" default_value="-1"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_inputs_description_OPACUserId" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:simple_search_outputs_description</description>
@@ -41,12 +41,12 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:simple_search_localise_inputs_description</description>
-				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_searchType"/>
-				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_localise_inputs_description_searchTerm"/>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_pmbUserId"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_OPACUserId"/>
-				<param name="localisation" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_localisation"/>
-				<param name="section" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_section"/>				
+				<param name="searchType" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_searchType"  optional="yes" default_value="0"/>
+				<param name="searchTerm" type="scalar" dataType="string" description="msg:simple_search_localise_inputs_description_searchTerm" optional="yes"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_pmbUserId" optional="yes" default_value="-1"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_OPACUserId" optional="yes" default_value="-1"/>
+				<param name="localisation" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_localisation" optional="yes" default_value="0"/>
+				<param name="section" type="scalar" dataType="integer" description="msg:simple_search_localise_inputs_description_section" optional="yes" default_value="0"/>				
 			</inputs>
 			<outputs>
 				<description>msg:simple_search_localise_outputs_description</description>
@@ -90,6 +90,8 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="search_realm" type="scalar" dataType="string" description="msg:get_advanced_sfone_inputs_description_search_realm"/>
 				<param name="lang" type="scalar" dataType="string" description="msg:get_advanced_sfone_inputs_description_lang"/>
 				<param name="fetch_values" type="scalar" dataType="boolean" description="msg:get_advanced_sfone_inputs_description_fetch_values"/>
+				<param name="search_object" type="scalar" dataType="integer" description="msg:get_advanced_sfone_inputs_description_search_object" optional="yes" default_value="null"/>
+				<param name="nocache" type="scalar" dataType="boolean" description="msg:get_advanced_sfone_inputs_description_nocache" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:get_advanced_sfone_outputs_description</description>
@@ -119,8 +121,8 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 						</param>
 					</param>
 				</param>
-				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_pmbUserId"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_OPACUserId"/>
+				<param name="pmbUserId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_pmbUserId" optional="yes" default_value="-1"/>
+				<param name="OPACEmprId" type="scalar" dataType="integer" description="msg:advancedSearch_inputs_description_OPACEmprId" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:advancedSearch_outputs_description</description>
@@ -133,7 +135,6 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 		</method>
 		<method name="get_sort_types" rights="" version="1.0" language_independant="false" comment="msg:get_sort_types_description">
 			<pmb_requirements>
-				
 			</pmb_requirements>
 			<inputs>
 				<description>msg:get_sort_types_input_description</description>
@@ -160,9 +161,9 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetch_search_records_inputs_description_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetch_search_records_inputs_description_recordCount"/>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_recordFormat"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeItems"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetch_search_records_inputs_description_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetch_search_records_inputs_description_includeItems" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_search_records_outputs_description</description>
@@ -183,10 +184,10 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsSorted_recordCount"/>
 				<param name="recordFormat" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordFormat"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeItems"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_recordCharset" optional="yes"  default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeLinks" optional="yes"  default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsSorted_includeItems" optional="yes"  default_value="false"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsSorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsSorted_output_description</description>
@@ -210,9 +211,9 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArray_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeItems"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArray_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeLinks" optional="yes"  default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArray_includeItems" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsArray_output_description</description>
@@ -232,10 +233,10 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecordsArraySorted_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeItems"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_recordCharset" optional="yes"  default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecordsArraySorted_includeItems" optional="yes" default_value="false"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetchSearchRecordsArraySorted_output_description</description>
@@ -257,9 +258,9 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_search_records_outputs_description</description>
@@ -291,10 +292,10 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems" optional="yes" default_value="false"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>                                                                                            
 				<description>msg:fetchNoticeListFull_output_description</description>                        
@@ -326,9 +327,9 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems" optional="yes" default_value="false"/>
 			</inputs>
 			<outputs>
 				<description>msg:fetch_search_records_outputs_description</description>
@@ -360,10 +361,10 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 				<param name="searchId" type="scalar" dataType="string" description="msg:fetchSearchRecords_searchId"/>
 				<param name="firstRecord" type="scalar" dataType="integer" description="msg:fetchSearchRecords_firstRecord"/>
 				<param name="recordCount" type="scalar" dataType="integer" description="msg:fetchSearchRecords_recordCount"/>
-				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset"/>
-				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks"/>
-				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems"/>
-				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType"/>
+				<param name="recordCharset" type="scalar" dataType="string" description="msg:fetchSearchRecords_recordCharset" optional="yes" default_value="'iso-8859-1'"/>
+				<param name="includeLinks" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeLinks" optional="yes" default_value="true"/>
+				<param name="includeItems" type="scalar" dataType="boolean" description="msg:fetchSearchRecords_includeItems" optional="yes" default_value="false"/>
+				<param name="sortType" type="scalar" dataType="string" description="msg:fetchSearchRecordsArraySorted_sortType" optional="yes"/>
 			</inputs>
 			<outputs>                                                                                            
 				<description>msg:fetchNoticeListFull_output_description</description>                        
@@ -384,7 +385,7 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 		</method>
 		<method name="listExternalSources" rights="" version="1.0" language_independant="false">
 			<inputs>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes"  default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result type="array" name="results">
@@ -404,11 +405,11 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 			<inputs>
 				<description>msg:listFacets_inputs_description</description>
 				<param name="searchId" type="scalar" dataType="string" description="msg:listFacets_searchId"/>
-				<param name="fields" type="array" description="msg:listFacets_inputs_description_fields">
+				<param name="fields" type="array" description="msg:listFacets_inputs_description_fields" optional="yes"  default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_field_code_ss_champ"/>
 				</param>
-				<param name="filters" type="array" description="msg:listFacets_inputs_description_filters">
+				<param name="filters" type="array" description="msg:listFacets_inputs_description_filters" optional="yes"  default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listFacets_inputs_description_filter_code_ss_champ"/>
 					<param name="value" type="scalar" dataType="string" description="msg:listFacets_inputs_description_filter_value"/>
@@ -431,7 +432,7 @@ $Id: manifest.xml,v 1.18 2018-03-14 17:24:34 dbellamy Exp $ -->
 			<inputs>
 				<description>msg:listRecordsFromFacets_inputs_description</description>
 				<param name="searchId" type="scalar" dataType="string" description="msg:listRecordsFromFacets_searchId"/>
-				<param name="filters" type="array" description="msg:listRecordsFromFacets_inputs_description_filters">
+				<param name="filters" type="array" description="msg:listRecordsFromFacets_inputs_description_filters" optional="yes"  default_value="array()">
 					<param name="code_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_champ"/>
 					<param name="code_ss_champ" type="scalar" dataType="integer" description="msg:listRecordsFromFacets_inputs_description_filter_code_ss_champ"/>
 					<param name="value" type="scalar" dataType="string" description="msg:listRecordsFromFacets_inputs_description_filter_value"/>

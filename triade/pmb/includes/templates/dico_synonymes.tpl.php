@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dico_synonymes.tpl.php,v 1.8 2019-05-27 14:55:51 btafforeau Exp $
+// $Id: dico_synonymes.tpl.php,v 1.11 2021/04/22 11:53:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -25,7 +25,6 @@ $aff_liste_mots="
 	}
 -->
 </script>
-<h1>".$msg["semantique"]." : ".$msg["dico_syn"]."</h1>
 <div class='row'>
 	<form class='form-$current_module' name='search_mots' method='post' action='./autorites.php?categ=semantique&sub=synonyms&action=search' onSubmit='if (test_form(search_mots)) return true; else return false;'>
 	<h3>".$msg["357"]." : ".$msg["dico_syn"]."</h3>\n
@@ -52,16 +51,17 @@ $aff_liste_mots="
 $aff_modif_mot="
 <script src='javascript/ajax.js'></script>
 !!mots_js!!\n
-<h1>".$msg["semantique"]." : ".$msg["dico_syn"]."</h1>
 <div class='row'>&nbsp;</div>
 <form class='form-$current_module' id='words' name='words' method='post' action='!!action!!&action=modif'>\n
 <h3><div class='left'>".$msg["syn_word"]."</div></h3><div class='row'></div><hr class='spacer' />\n
 <div class='form-contenu'>
 ".$msg["word_selected"]." : <input type='text' class='saisie-20em' name='word_selected' value=\"!!mot_original!!\">\n
-<input type='hidden' name='word_code_selected' value='!!id_mot!!'>
-<input type='hidden' id='max_word' name='max_word' value=\"!!max_word!!\" />
+<input type='hidden' name='word_id_selected' value='!!id_mot!!'>
+<input type='hidden' id='max_f_word' name='max_f_word' value=\"!!max_f_word!!\" />
 <div class='row'>&nbsp;</div>
 <b>".$msg["word_syn"]." :</b><div class='row'>&nbsp;</div>
+<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=synonyms&caller=words&p1=f_word_id&p2=f_word', 'selector')\" />
+<input type='button' class='bouton' value='+' onClick=\"add_f_word();\"/>
 !!mots_lie!!
 <div id='addword'/>
 </div>\n
@@ -77,29 +77,24 @@ document.words.word_selected.focus();
 //fonctions ajax ajout de zones de texte
 $mot_js="
 <script>
-	function fonction_selecteur_word() {
-        name=this.getAttribute('id').substring(4);
-		name_id = name.substr(0,6)+'_code'+name.substr(6);
-        openPopUp('./select.php?what=synonyms&caller=words&p1='+name_id+'&p2='+name, 'selector');
-    }
     function fonction_raz_word() {
         name=this.getAttribute('id').substring(4);
 		name_id = name.substr(0,6)+'_code'+name.substr(6);
         document.getElementById(name).value='';
 		document.getElementById(name_id).value='';
     }
-    function add_word() {
-    	templates.add_completion_selection_field('f_word', 'f_word_code', 'synonyms', fonction_selecteur_word);
+    function add_f_word() {
+		templates.set_is_mutual_field(true);
+    	templates.add_completion_field('f_word', 'f_word_id', 'synonyms');
+		templates.set_is_mutual_field(false);
     }
 </script>";
 
-//template de zone de texte pour chaque mot liÃ©				
+//template de zone de texte pour chaque mot lié				
 $aff_mot_lie="
 <div class='row'>
-<input type='text' class='saisie-30emr' id='f_word!!iword!!' name='f_word!!iword!!' value=\"!!word!!\" autfield='f_word_code!!iword!!' completion=\"synonyms\" />
-<input type='hidden' id='f_word_code!!iword!!' name='f_word_code!!iword!!' value='!!id_word!!'>
-<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=synonyms&caller=words&p1=f_word_code!!iword!!&p2=f_word!!iword!!&deb_rech='+".pmb_escape()."(this.form.f_word!!iword!!.value), 'selector')\" />
-<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_word!!iword!!.value='';this.form.f_word_code!!iword!!.value=''; \" />
-!!bouton_ajouter!!
+<input type='text' class='saisie-30emr' id='f_word!!iword!!' name='f_word!!iword!!' value=\"!!word!!\" autfield='f_word_id!!iword!!' completion=\"synonyms\" />
+<input type='hidden' id='f_word_id!!iword!!' name='f_word_id!!iword!!' value='!!id_word!!' />
+<input type='checkbox' id='f_word_mutual!!iword!!' name='f_word_mutual!!iword!!' value='1' title='".htmlentities($msg['synonym_mutual_link'], ENT_QUOTES, $charset)."' !!word_mutual_checked!! />
+<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_word!!iword!!.value='';this.form.f_word_id!!iword!!.value=''; \" />
 </div>\n";
-?>

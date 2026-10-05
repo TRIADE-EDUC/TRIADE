@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: level2_authorities_search.class.php,v 1.12 2018-11-12 14:57:29 ngantier Exp $
+// $Id: level2_authorities_search.class.php,v 1.14.2.1 2024/06/12 07:10:52 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,10 +14,10 @@ require_once($class_path."/thesaurus.class.php");
 class level2_authorities_search extends level2_search {
 
 	protected $query;
-	
+
 	protected function get_title() {
     	global $msg;
-    	
+
     	$title = '';
     	switch($this->type) {
     		case 'authors':
@@ -55,17 +55,17 @@ class level2_authorities_search extends level2_search {
     	}
     	return $title;
     }
-    
+
     protected function get_categories_query() {
     	global $opac_stemming_active;
     	global $id_thes;
-    	global $lang;
-    	
+    	global $lang, $default_tmp_storage_engine;
+
     	$first_clause = "catdef.libelle_categorie not like '~%' ";
-    	 
+
     	$aq=new analyse_query($this->user_query,0,0,1,0,$opac_stemming_active);
     	$members_catdef = $aq->get_query_members('catdef','catdef.libelle_categorie','catdef.index_categorie','catdef.num_noeud');
-    	 
+
     	$list_thes = array();
     	if ($id_thes == -1) {
     		//recherche dans tous les thesaurus
@@ -75,11 +75,11 @@ class level2_authorities_search extends level2_search {
     		$thes = new thesaurus($id_thes);
     		$list_thes[$id_thes]=$thes->libelle_thesaurus;
     	}
-    	 
+
     	$q = "drop table if exists catjoin ";
     	$r = pmb_mysql_query($q);
-    	 
-    	$query = "create temporary table catjoin ENGINE=MyISAM as select
+
+    	$query = "create temporary table catjoin ENGINE={$default_tmp_storage_engine} as select
     			";
     	foreach ($list_thes as $id_thesaurus=>$libelle_thesaurus) {
     		$thes = new thesaurus($id_thesaurus);
@@ -87,10 +87,10 @@ class level2_authorities_search extends level2_search {
     			noeuds.id_noeud as num_noeud,
     			noeuds.num_thesaurus,
     			".$members_catdef['select']." as pert
-    			from noeuds 		
+    			from noeuds
     		";
     		$query .= "join categories as catdef on noeuds.id_noeud = catdef.num_noeud and catdef.langue = '".$thes->langue_defaut."' ";
-    		
+
     		$query .= "where noeuds.num_thesaurus = '".$thes->id_thesaurus."' ";
     		$query .= "and ".$first_clause." ";
     		$query .= "and ".$members_catdef['where']." ";
@@ -99,7 +99,7 @@ class level2_authorities_search extends level2_search {
     	}
     	return "select id_authority as id, catjoin.pert from catjoin JOIN authorities ON catjoin.num_noeud = authorities.num_object AND type_object = ".AUT_TABLE_CATEG;
     }
-    
+
     protected function get_query() {
     	global $pert, $clause, $tri, $limiter;
     	if(!isset($this->query)){
@@ -113,7 +113,7 @@ class level2_authorities_search extends level2_search {
     			}
     			break;
     		case 'categories':
-    			$query = ""; //SpÃ©cifique aux catÃ©gories
+    			$query = ""; //Spécifique aux catégories
     			$query .= $this->get_categories_query();
     			break;
     		case 'publishers':
@@ -145,9 +145,9 @@ class level2_authorities_search extends level2_search {
     	}
     	return $this->query;
     }
-    
+
     protected function get_permalink($id) {
-    	 
+
     	$permalink = 'index.php?lvl=';
     	switch($this->type) {
     		case 'authors':
@@ -181,7 +181,7 @@ class level2_authorities_search extends level2_search {
     	$permalink .= "&id=".$id."&from=search";
     	return $permalink;
     }
-    
+
     protected function get_display_element($element) {
     	$display = '';
     	switch($this->type) {
@@ -194,33 +194,33 @@ class level2_authorities_search extends level2_search {
     	}
     	return $display;
     }
-    
+
     protected function get_display_elements_list() {
-        global $page,$opac_search_results_per_page; 
-        global $count; 
-        
+        global $page,$opac_search_results_per_page;
+        global $count;
+
         $this->elements_ids = array();
         $searcher = $this->get_searcher_instance();
         if(is_object($searcher)){
-		
+
 		    if(!$page) {
 		        $debut = 0;
 		    } else {
 		        $debut = ($page-1)*$opac_search_results_per_page;
 		    }
 		    $this->elements_ids = $searcher->get_sorted_result("default",$debut,$opac_search_results_per_page);
-		    $count = count(array_filter(explode(',', $searcher->get_objects_ids()))); // pour affichage du nombre de rÃ©sultats
+		    $count = count(array_filter(explode(',', $searcher->get_objects_ids()))); // pour affichage du nombre de résultats
 		}
     	$elements_authorities_list_ui = new elements_authorities_list_ui($this->elements_ids, count($this->elements_ids), false);
     	return $elements_authorities_list_ui->get_elements_list();
     }
-    
+
     protected function search_affiliate() {
     	global $tab;
     	global $pmb_logs_activate;
-    	
+
     	if($tab == "affiliate"){
-    		//l'onglet source affiliÃ©es est actif, il faut son contenu...
+    		//l'onglet source affiliées est actif, il faut son contenu...
     		switch($this->type) {
     			case 'authors':
     				$as=new affiliate_search_author($this->user_query,"authorities");
@@ -287,13 +287,13 @@ class level2_authorities_search extends level2_search {
     		}
     	}
     }
-    
+
     /**
      * Enregistrement des stats
      */
     protected function search_log($count) {
     	global $nb_results_tab;
-    	 
+
     	if($this->type == 'authors') {
 			global $author_type;
 			switch($author_type) {
@@ -315,20 +315,20 @@ class level2_authorities_search extends level2_search {
 			parent::search_log($count);
 		}
     }
-    
+
     public function get_search_title(){
         global $msg, $count;
         if($this->type == "extended"){
-            return pmb_bidi("<h3 class='searchResult-search'><span class='searchResult-equation'><span class='search-found'>".$count." ".$msg["authorities_found"]."</span> '".$this->get_title()."'</span></h3>");
+            return pmb_bidi("<h3 class='searchResult-search' id='searchResult-search' ><span class='searchResult-equation'><span class='search-found'>".$count." ".$msg["authorities_found"]."</span> '".$this->get_title()."'</span></h3>");
         }
         return parent::get_search_title();
     }
-    
+
     public function set_query($query){
         $this->query = $query;
     }
-    
-    protected function get_searcher_instance() {
+
+    public function get_searcher_instance() {
          if($this->type == 'concepts'){
              $obj = new searcher_autorities_skos_concepts($this->user_query);
              return $obj;
@@ -336,7 +336,7 @@ class level2_authorities_search extends level2_search {
         $obj = searcher_factory::get_searcher($this->type, '', $this->user_query);
         return $obj;
     }
-     
+
     protected function get_authority_type_const(){
 		switch($this->type){
 			case "authors" :

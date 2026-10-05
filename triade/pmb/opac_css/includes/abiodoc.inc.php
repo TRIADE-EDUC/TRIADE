@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abiodoc.inc.php,v 1.6 2015-04-03 11:16:17 jpermanne Exp $
+// $Id: abiodoc.inc.php,v 1.7.10.1 2025/03/25 07:32:25 dgoron Exp $
 
 function search_other_function_filters() {
 	global $abiodoc_app,$charset;
@@ -45,14 +45,14 @@ function search_other_function_clause(&$clause) {
 */
 
 function search_other_function_clause() {
-
 	//doit retourner une requete de selection d'identifiants de notices
 	global $abiodoc_app;
-	$r='';
+	
+	$abiodoc_app = intval($abiodoc_app);
 	if ($abiodoc_app) {
-		$r.= "select distinct notices_custom_origine as notice_id from notices_custom_values where notices_custom_champ='27' and notices_custom_integer = '".$abiodoc_app."' ";
+		return "select distinct notices_custom_origine as notice_id from notices_custom_values where notices_custom_champ='27' and notices_custom_integer = '".$abiodoc_app."' ";
 	}
-	return $r;
+	return '';
 }
 
 function search_other_function_has_values() {
@@ -94,8 +94,8 @@ function search_other_function_human_query($n) {
 
 
 function search_other_function_post_values() {
-	global $abiodoc_app;
-	return "<input type=\"hidden\" name=\"abiodoc_app\" value=\"$abiodoc_app\">\n";
+	global $abiodoc_app, $charset;
+	return "<input type=\"hidden\" name=\"abiodoc_app\" value=\"".htmlentities($abiodoc_app, ENT_QUOTES, $charset)."\">\n";
 }
 
 

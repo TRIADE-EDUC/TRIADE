@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,6 +35,7 @@ if (file_exists("../common/config-fen.php")) include_once("../common/config-fen.
 if (!defined('LARGEURFEN')) { define("LARGEURFEN","780"); }
 print "<script>";
 print "var largeurfen='".LARGEURFEN."';";
+print "var banniere='".BANNIEREDISPO."';";
 print "if (screen.width >= 800) { largeurfen='780'; }";
 print "if (screen.width >= 1024) { largeurfen='1020'; }";
 print "</script>";

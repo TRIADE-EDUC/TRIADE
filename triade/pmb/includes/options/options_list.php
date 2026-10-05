@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: options_list.php,v 1.12 2018-07-16 13:51:28 apetithomme Exp $
+// $Id: options_list.php,v 1.12 2018/07/16 13:51:28 apetithomme Exp $
 
 //Gestion des options de type list
 $base_path="../..";

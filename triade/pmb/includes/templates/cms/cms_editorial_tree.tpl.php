@@ -2,10 +2,10 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_editorial_tree.tpl.php,v 1.20 2019-05-27 11:56:11 ngantier Exp $
+// $Id: cms_editorial_tree.tpl.php,v 1.26.2.1 2024/06/19 06:55:26 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
-global $base_path, $cms_editorial_tree_layout, $cms_editorial_tree_content;
+global $base_path, $cms_editorial_tree_layout, $cms_editorial_tree_content, $cms_editorial_tree_selected_item;
 		
 $cms_editorial_tree_layout= "
 		<script type='text/javascript' src='./javascript/misc.js'></script>
@@ -32,13 +32,13 @@ $cms_editorial_tree_layout= "
                             off+= obj.offsetTop;
                        	} while (obj = obj.offsetParent); 
                         var obj = dom.byId('treeBorderContainer');
-                        // on retire √©galement les margin-bottom des parents...
+                        // on retire Ègalement les margin-bottom des parents...
                         do {
                             if(obj.nodeType == 1){  
                                 off+= domStyle.get(obj,'marginBottom');
                             }
                        	} while (obj = obj.parentNode);
-                        // on n'a donc plus d'ascenseur vertical (sauf si le menu de gauche d√©passe, mais l√†...)
+                        // on n'a donc plus d'ascenseur vertical (sauf si le menu de gauche dÈpasse, mais l‡...)
                         registry.byId('treeBorderContainer').resize({h:(mh-off)});
                     });
                 });
@@ -66,45 +66,148 @@ $cms_editorial_tree_content ="
 				</span>
 			</div>
 			<div class='ss-nav-cms-item' class='clear'></div>
+            <div>
+				<select id='fast_filter_param'>
+					<option value='title' selected>".$msg['cms_editorial_filter_by_title']."</option>
+					<option value='id'>".$msg['cms_editorial_filter_by_id']."</option>
+				</select>
+                <input type='text' id='fast_filter_input' />
+            </div>
 		</div>
 		<div id='section_tree'>
 			<script type='text/javascript'>
-			var store = new dojo.data.ItemFileWriteStore({
-    	        	url: './ajax.php?module=cms&categ=list_sections'
-        		});
-        		var treeModel = new dijit.tree.ForestStoreModel({
-            		store: store,
-            		query: {
-		                'type': 'root_section'
-	            	},
-    	        	rootId: 'root',
-        	    	rootLabel: 'Racine',
-            		childrenAttrs: ['children']
-        		});
-	
-    	    	var cms_editorial_tree = new dijit.Tree({
-	    	        model: treeModel,
-					persist : true,
-	    	        openOnDblClick : true,
-	    	        betweenThreshold : '5',
-	    	        getIconClass : get_icon_class,
-	    	        getLabelClass : get_label_class,
-	    	        getLabel : get_label,
-	   	            _createTreeNode: function(args) {
-                        var tnode = new dijit._TreeNode(args);
-                        tnode.labelNode.innerHTML = args.label;
-                        return tnode;
-                    },
-	    	        
-	            	dndController: 'dijit.tree.dndSource'
-	    		    },
-	        		'section_tree'
-    	    	);
-    	    	cms_editorial_tree.dndController.checkItemAcceptance = cms_check_if_item_tree_can_drop_here;
-    	    	cms_editorial_tree.dndController.checkAcceptance = cms_check_if_draggeable_item_tree;
-				dojo.connect(cms_editorial_tree,'onClick',cms_load_content_infos);	
-				dojo.connect(treeModel, 'onAddToRoot', cms_section_add_to_root);
-        		dojo.connect(treeModel, 'onLeaveRoot', cms_section_leave_root);
-				dojo.connect(treeModel, 'onChildrenChange', cms_child_change);
-			</script>
-		</div>";
+                require([
+                    'dojo/ready', 
+                    'dojo/data/ItemFileWriteStore',
+                    'dijit/tree/ForestStoreModel',
+                    'dijit/Tree',
+                    'dojo/_base/lang',
+                    'apps/cms/CmsContextMenu',
+                    'dojo/on',
+                    'dojo/dom',
+                    'dojo/_base/lang',
+                ], 
+                function(ready, ItemFileWriteStore, ForestStoreModel, Tree, lang, CmsContextMenu, on, dom, lang) {
+                    ready(function(){
+            			var store = new ItemFileWriteStore({
+            	        	url: './ajax.php?module=cms&categ=list_sections'
+                		});
+                		var treeModel = new ForestStoreModel({
+                    		store: store,
+                    		query: {
+            	                'type': 'root_section'
+                        	},
+            	        	rootId: 'root',
+                	    	rootLabel: 'Racine',
+                    		childrenAttrs: ['children'],
+                		});
+
+                        var showHideSearch = function(focused){                                                   
+                            store._arrayOfAllItems.forEach(lang.hitch(this,function(element){
+                				let displayField = 'none';
+                				// Pour chaque, on regarde s'il faut l'afficher ou non
+                				for(let i=0 ; i<focused.length ; i++){
+                					if(element.id == focused[i].id || element.id == 'root'){
+                						displayField = 'block';
+                						break;
+                					}
+                				}
+                				// Dans tous les cas, il faut manipuler le DOM...
+                				let treeNodes = cms_editorial_tree.getNodesByItem(element.id[0]);
+                				let treeNode = treeNodes[0];
+                                if(treeNode) {
+                					treeNode.domNode.style.display = displayField;
+								}
+                            }));
+                        }
+            	
+            	    	var cms_editorial_tree = new Tree({
+                    	        model: treeModel,
+                				persist : true,
+                    	        openOnDblClick : true,
+                    	        betweenThreshold : '5',
+                    	        getIconClass : get_icon_class,
+                    	        getLabelClass : get_label_class,
+                    	        getLabel : get_label,
+                                add_context_menu: add_context_menu,
+                                is_Load: false,
+                   	            _createTreeNode: function(args) {
+                                    var tnode = new dijit._TreeNode(args);
+                                    tnode.labelNode.innerHTML = args.label;
+                                    if (this.is_Load) {
+                                        this.add_context_menu(this.tree.getChildren(), CmsContextMenu);
+                                    }
+                                    return tnode;
+                                },
+                            	dndController: 'dijit.tree.dndSource'
+                		    },
+                    		'section_tree'
+            	    	);
+            	    	cms_editorial_tree.dndController.checkItemAcceptance = cms_check_if_item_tree_can_drop_here;
+            	    	cms_editorial_tree.dndController.checkAcceptance = cms_check_if_draggeable_item_tree;
+                        
+                        cms_editorial_tree.onLoadDeferred.then(lang.hitch(cms_editorial_tree, function() {
+                            this.is_Load = true;
+                            this.add_context_menu(this.tree.getChildren(), CmsContextMenu);
+                        }))
+
+                        dojo.connect(cms_editorial_tree,'onClick',cms_load_content_infos);
+            			dojo.connect(treeModel, 'onAddToRoot', cms_section_add_to_root);
+                		dojo.connect(treeModel, 'onLeaveRoot', cms_section_leave_root);
+            			dojo.connect(treeModel, 'onChildrenChange', cms_child_change);
+
+						const fast_filter = function(param, value) {
+							// Les TreeNode ne sont prÈsents dans l'arbre DOM que si tout est dÈpliÈ
+                            cms_editorial_tree.expandAll().then(lang.hitch(this,function(){
+            				    // On cherche les items dans le store
+                				let searchedItems = store.fetch({
+                                    query: { [param]: '*' + value + '*' },
+                                    queryOptions: { ignoreCase: true },
+                                    onComplete: function(items){
+                                        let focused = [];
+                                        for(let i=0 ; i<items.length ; i++){
+                        					let treeNode = cms_editorial_tree.getNodesByItem(items[i].id[0]);
+                                            if(treeNode && treeNode[0]) {
+                        						focused = [].concat(focused,treeNode[0].getTreePath());
+                        					}
+                        				}
+                                        showHideSearch(focused);
+                                    }
+                                });
+                            }))
+						}
+						
+                        on(dom.byId('fast_filter_input'), 'keyup', function (evt) {
+							fast_filter(dom.byId('fast_filter_param').value, evt.target.value);
+                        });
+						on(dom.byId('fast_filter_param'), 'change', function (evt) {
+							const fast_filter_input = dom.byId('fast_filter_input');
+							fast_filter_input.value = '';
+							fast_filter(evt.target.value, fast_filter_input.value);
+                        });
+                    });
+			     });
+    		</script>
+    	</div>";
+
+$cms_editorial_tree_selected_item= "
+        <script type='text/javascript'>
+            require(['dojo/dom','dojo/dom-style','dijit/registry', 'dojo/ready'], function(dom, domStyle, registry, ready) {
+                ready(function(){
+                    setTimeout(function(){
+                        if(dijit.byId('section_tree')) {
+                            if('!!item_type!!' == 'article') {
+                                dijit.byId('section_tree').set('selectedItem', 'article_!!item_id!!');
+                            } else {
+                                dijit.byId('section_tree').set('selectedItem', '!!item_id!!');
+                            }
+							setTimeout(function(){
+                            	if(dijit.byId('section_tree').get('selectedItem')) {
+                                	cms_load_content_infos(dijit.byId('section_tree').get('selectedItem'));
+                            	}
+                        	}, 1000);
+                        }
+                    }, 1000);
+                });
+            });
+        </script>";

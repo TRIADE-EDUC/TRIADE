@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: de_DE.xml,v 1.1 2011-10-11 17:57:43 touraine37 Exp $ -->
+$Id: de_DE.xml,v 1.3 2020/06/03 06:45:33 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="pmb_site">Adresse du webservice</entry>
@@ -22,7 +22,8 @@ $Id: de_DE.xml,v 1.1 2011-10-11 17:57:43 touraine37 Exp $ -->
 	<entry code="pmb_prtcl_soap">SOAP</entry>
 	<entry code="pmb_prtcl_json">Json-RPC</entry>
 	<entry code="pmb_display_items">Récupérer les exemplaires ?</entry>
-	<entry code="pmb_authentification">Une authentification est-elle necessaire ?</entry>
+	<entry code="pmb_authentification">Une authentification est-elle nécessaire ?</entry>
 	<entry code="pmb_username">Identifiant pour l'authentification</entry>
 	<entry code="pmb_password">Mot de passe pour l'authentification</entry>
+	<entry code="pmb_connexion_phrase">Phrase de connexion pour l'authentification</entry>
 </XMLlist>

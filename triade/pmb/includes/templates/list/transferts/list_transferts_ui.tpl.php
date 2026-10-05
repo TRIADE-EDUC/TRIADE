@@ -1,27 +1,47 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_transferts_ui.tpl.php,v 1.2 2019-05-27 10:12:16 ngantier Exp $
+// $Id: list_transferts_ui.tpl.php,v 1.4 2022/03/09 12:47:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 //*******************************************************************
-// DÃ©finition des templates pour le parcours des listes de transfert
+// Définition des templates pour le parcours des listes de transfert
 // en circulation
 //*******************************************************************
 global $list_transferts_ui_parcours_search_content_form_tpl, $msg, $list_transferts_ui_script_case_a_cocher, $list_transferts_ui_script_chg_date_retour, $list_transferts_ui_no_results, $list_transferts_ui_valid_list_tpl, $list_transferts_ui_reception_valid_list_tpl;
 
 $list_transferts_ui_parcours_search_content_form_tpl = "
 <div class='row'>
+	<input type='text' size=2 name='nb_per_page' value='!!nb_res!!' onkeyup=\"document.getElementById('!!objects_type!!_nb_per_page').value = this.value;\">&nbsp;".$msg["transferts_parcours_nb_resultats"]."&nbsp;
+	<div id='!!objects_type!!_search_content' class='list_ui_search_content !!objects_type!!_search_content' style='display:!!unfolded_filters!!;'>
+		!!list_search_content_form_tpl!!
+	</div>
+	!!list_options_content_form_tpl!!
+	!!list_datasets_my_content_form_tpl!!
+	!!list_datasets_shared_content_form_tpl!!
+</div>
+<div class='row'>&nbsp;</div>
+<div class='row'>
 	<div class='left'>
-		<input type='text' size=2 name='nb_per_page' value='!!nb_res!!' onkeyup=\"document.getElementById('!!objects_type!!_nb_per_page').value = this.value;\">&nbsp;".$msg["transferts_parcours_nb_resultats"]."&nbsp;
-		!!filters!!
 		<input type='hidden' id='!!objects_type!!_json_filters' name='!!objects_type!!_json_filters' value='!!json_filters!!' />
+		<input type='hidden' id='!!objects_type!!_json_selected_columns' name='!!objects_type!!_json_selected_columns' value='!!json_selected_columns!!' />
+		<input type='hidden' id='!!objects_type!!_json_applied_group' name='!!objects_type!!_json_applied_group' value='!!json_applied_group!!' />
+		<input type='hidden' id='!!objects_type!!_json_applied_sort' name='!!objects_type!!_json_applied_sort' value='!!json_applied_sort!!' />
 		<input type='hidden' id='!!objects_type!!_page' name='!!objects_type!!_page' value='!!page!!' />
 		<input type='hidden' id='!!objects_type!!_nb_per_page' name='!!objects_type!!_nb_per_page' value='!!nb_per_page!!' />
-		<input type='hidden' id='!!objects_type!!_pager' name='!!objects_type!!_pager' value='!!pager!!' />		
-		<input type='submit' class='bouton' name='".$msg["transferts_parcours_bt_actualiser"]."' value='".$msg["transferts_parcours_bt_actualiser"]."'>
+		<input type='hidden' id='!!objects_type!!_pager' name='!!objects_type!!_pager' value='!!pager!!' />
+		<input type='hidden' id='!!objects_type!!_selected_filters' name='!!objects_type!!_selected_filters' value='!!selected_filters!!' />
+		<input type='hidden' id='!!objects_type!!_ancre' name='!!objects_type!!_ancre' value='!!ancre!!' />
+		<input type='hidden' id='!!objects_type!!_go_directly_to_ancre' name='!!objects_type!!_go_directly_to_ancre' value='!!go_directly_to_ancre!!' />
+		<input type='hidden' id='!!objects_type!!_initialization' name='!!objects_type!!_initialization' value='' />
+		<input type='hidden' id='!!objects_type!!_applied_action' name='!!objects_type!!_applied_action' value='' />
+		<input type='submit' class='bouton' name='".$msg["transferts_parcours_bt_actualiser"]."' value='".$msg["transferts_parcours_bt_actualiser"]."'>&nbsp;
+		!!list_button_save!!
+		!!list_button_initialization!!
+		!!list_button_add!!
+		!!list_buttons_extension!!
 	</div>
 	<div class='right'>!!edition_link!!</div>
 </div>
@@ -30,49 +50,8 @@ $list_transferts_ui_parcours_search_content_form_tpl = "
 
 $list_transferts_ui_script_case_a_cocher = "
 <script language='javascript'>
-	var val_sel = false;
-	function SelAll(formToCheck) {
-		var nb;
-		val_sel = !val_sel;
-		nb = formToCheck.elements.length;
-		for (var i=0;i<nb;i++) {
-			var e = formToCheck.elements[i];
-
-			if ((e.type == 'checkbox')&&(e.name.substr(0,4)=='sel_')) {
-				e.checked = val_sel;
-			}
-		}
-	}
-
 	function check(cac) {
 		cac.checked=!cac.checked;
-	}
-
-	function verifChk(formToCheck,valAction) {
-		nb = formToCheck.elements.length;
-		res = false;
-		for (var i=0;i<nb;i++) {
-			var e = formToCheck.elements[i];
-			if ((e.type == 'checkbox')&&(e.name.substr(0,4)=='sel_'))
-				if (e.checked == true) {
-					res = true;
-					break;
-				}
-		}
-		if (res==true) {
-            if(document.getElementById('statut_reception') && document.getElementById('statut_reception_list')) {
-                var e = document.getElementById('statut_reception');
-                document.getElementById('statut_reception_list').value = e.options[e.selectedIndex].value;
-            }
-            if(document.getElementById('section_reception') && document.getElementById('section_reception_list')) {
-                var e = document.getElementById('section_reception');
-                document.getElementById('section_reception_list').value = e.options[e.selectedIndex].value;
-            }
-			formToCheck.action.value = valAction;
-			formToCheck.submit();
-		} else {
-			alert('".$msg["transferts_circ_pas_de_selection"]."');
-		}
 	}
 </script>
 ";
@@ -83,7 +62,7 @@ $list_transferts_ui_script_chg_date_retour = "
 		var url= './ajax.php?module=circ&categ=transferts&action=date_retour&id=' + idTrans + '&dt=' + dt;
 		var maj_date = new http_request();
 		if(maj_date.request(url)){
-			// Il y a une erreur. Afficher le message retournÃ©
+			// Il y a une erreur. Afficher le message retourné
 			alert ( '" . $msg["540"] . " : ' + maj_date.get_text() );			
 		}
 	}

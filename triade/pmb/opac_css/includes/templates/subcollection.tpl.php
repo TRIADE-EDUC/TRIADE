@@ -1,6 +1,6 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
@@ -11,25 +11,25 @@ if ( ! defined( 'SUBCOLLECTION_TMPL' ) ) {
   define( 'SUBCOLLECTION_TMPL', 1 );
 
 //	----------------------------------
-//	$subcoll_display : Ã©cran d'info pour une souscollection
+//	$subcoll_display : écran d'info pour une souscollection
 // Liste des variables statiques prises en charges :
 // !!name!!      nom de la souscollection
-// !!issn!!      numÃ©ro ISSN de la collection
-// !!coll!!      libellÃ© de la collection parente
-// !!coll_isbd!! libellÃ© de la collection parente, affichage isbd
-// !!publ!!      libellÃ© de l'Ã©diteur parent
-// !!publ_isbd!! libellÃ© de l'Ã©diteur parent, affichage isbd
+// !!issn!!      numéro ISSN de la collection
+// !!coll!!      libellé de la collection parente
+// !!coll_isbd!! libellé de la collection parente, affichage isbd
+// !!publ!!      libellé de l'éditeur parent
+// !!publ_isbd!! libellé de l'éditeur parent, affichage isbd
 // !!isbd!!      affichage isbd de la sous-collection
 
 // Liste des variables dynamiques prises en charges. Les affichages dynamiques sont cliquables le plus souvent
-// !!publisher!! nom de l'Ã©diteur parent
+// !!publisher!! nom de l'éditeur parent
 // !!collection!! nom de la collection parente
 
 global $subcollection_level2_display;
 global $subcollection_level2_no_issn_info;
 global $msg;
 
-// level 2 : affichage gÃ©nÃ©ral
+// level 2 : affichage général
 $subcollection_level2_display = "
 <div class=subcollectionlevel2>
 <h3>".sprintf($msg["subcollection_details_subcollection"],"!!name!!")."</h3>
@@ -44,4 +44,4 @@ $subcollection_level2_display = "
 
 $subcollection_level2_no_issn_info = $msg["subcollection_details_no_issn"];
 
-} # fin de dÃ©finition
+} # fin de définition

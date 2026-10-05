@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_voices_list.js,v 1.6 2016-06-23 16:55:56 dgoron Exp $
+// $Id: nomenclature_voices_list.js,v 1.7 2022/10/14 08:02:10 jparis Exp $
 
 define(["dojo/_base/declare", "dojo/_base/lang", "dojo/topic", "dijit/registry"], function(declare, lang, topic, registry){
 	/*
@@ -105,13 +105,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/topic", "dijit/registry"]
 			},
 			calc_abbreviation: function(){
 				var array_voices = new Array();
-				/** Création d'un array d'objets json représentant chacune des voix **/
+				/** Cr�ation d'un array d'objets json repr�sentant chacune des voix **/
 				for(var i=0 ; i<this.voices.length ; i++){
 					array_voices.push({code:this.voices[i].get_code(), indice:i, effective:this.voices[i].get_effective(), order:this.voices[i].get_order(), abbreviation:this.voices[i].get_abbreviation()});
 				}
 				
 				var array_types = new Array();
-				/** Création d'un array d'array regroupant les voix par type **/
+				/** Cr�ation d'un array d'array regroupant les voix par type **/
 				/** TODO: reorder sur sub array **/
 				for(var i=0 ; i<array_voices.length ; i++){
 					var types = new Array();
@@ -128,7 +128,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/topic", "dijit/registry"]
 				var abbr = "";
 				var indice = 1;
 				var flag_part_undef = false;
-				/** Parcours de l'array d'array et génération de l'abbreviation **/
+				/** Parcours de l'array d'array et g�n�ration de l'abbreviation **/
 				for(var i=0 ; i<array_types.length ; i++){
 					var increment_effective=0;
 					var flag_part_undef = false;
@@ -165,17 +165,20 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/topic", "dijit/registry"]
 					}
 				}
 				this.set_abbreviation(abbr);
-				/** Les nouveaux ordres ont été appliqués, on peut maintenant demander aux ui de se mettre à jour **/
+				/** Les nouveaux ordres ont �t� appliqu�s, on peut maintenant demander aux ui de se mettre � jour **/
 				topic.publish("voices_list", "reorder_voices", {hash:this.get_hash()});
 			},
 			sort_tessiture: function(a, b){
-				if(registry.byId("nomenclature_datastore").get_voice_order_from_code(a[0].code) < registry.byId("nomenclature_datastore").get_voice_order_from_code(b[0].code)){
+				var a_code = parseInt(registry.byId("nomenclature_datastore").get_voice_order_from_code(a[0].code))
+				var b_code = parseInt(registry.byId("nomenclature_datastore").get_voice_order_from_code(b[0].code))
+				
+				if(a_code < b_code){
 					return -1;
 				}
-				if(registry.byId("nomenclature_datastore").get_voice_order_from_code(a[0].code) == registry.byId("nomenclature_datastore").get_voice_order_from_code(b[0].code)){
+				if(a_code == b_code){
 					return 0;
 				}
-				if(registry.byId("nomenclature_datastore").get_voice_order_from_code(a[0].code) > registry.byId("nomenclature_datastore").get_voice_order_from_code(b[0].code)){
+				if(a_code > b_code){
 					return 1;
 				}
 			},

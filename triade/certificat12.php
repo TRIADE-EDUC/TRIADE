@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ validerequete("menuadmin");
 include_once("librairie_php/recupnoteperiode.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE33?></font></b></td></tr>
 <tr id='cadreCentral0' ><td ><br><br>
@@ -65,7 +65,7 @@ if (is_dir("./data/parametrage/certificat_${classeNom}")) {
 
 $num_certif=$_POST["num_certif"];
 $eleveT=recupEleve($idClasse);      // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$nomEleve=trim(strtoupper($eleveT[$j][0]));
 	$prenomEleve=trim(ucwords(strtolower($eleveT[$j][1])));
 	$dateNaissanceEleve=dateForm($eleveT[$j][5]);
@@ -118,7 +118,7 @@ rmdir("./data/parametrage/certificat_${classeNom}");
 <input type=button value="Télécharger"  class=button onclick="open('telecharger.php?fichier=<?php print "./data/parametrage/certificat_${classeNom}".'.zip' ?>','_blank','');" />
 <br /><br /></ul>
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

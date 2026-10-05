@@ -5,8 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_timeline_view_timeline.xml,v 1.2 2017-09-29 12:51:31 arenou Exp $ -->
+$Id: cms_module_timeline_view_timeline.xml,v 1.3 2019/10/25 12:51:23 jlaurent Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_timeline_view_timeline_height">Hauteur de la frise (en px)</entry>
+	<entry code="cms_module_timeline_view_timeline_last_event">Afficher le dernier événement</entry>
 </XMLlist>

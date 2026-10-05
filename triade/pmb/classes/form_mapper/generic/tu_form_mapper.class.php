@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: tu_form_mapper.class.php,v 1.5 2017-09-18 13:20:21 dgoron Exp $
+// $Id: tu_form_mapper.class.php,v 1.7 2022/02/07 08:45:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/form_mapper/form_mapper.class.php');
 require_once($class_path.'/titre_uniforme.class.php');
 require_once($class_path.'/marc_table.class.php');
@@ -25,7 +26,7 @@ class tu_form_mapper extends form_mapper{
 	}
 
 	public function setId($id){
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->init();
 	}
 	
@@ -38,7 +39,7 @@ class tu_form_mapper extends form_mapper{
 	}
 	
 	public function getProfiles($dest){
-		global $charset, $msg;
+		global $msg;
 		$returnedArray = array();
 		switch($dest){
 			case 'tu':
@@ -75,7 +76,7 @@ class tu_form_mapper extends form_mapper{
 	}
 	
 	/**
-	 * Retourne le mappage associÃ© au type passÃ© en parametre
+	 * Retourne le mappage associé au type passé en parametre
 	 * @param String $dest
 	 * @return array
 	 */
@@ -83,20 +84,17 @@ class tu_form_mapper extends form_mapper{
 		
 	    switch($dest){
 	        case 'tu':
-	        	global $for_oeuvre_type;
-	        	global $for_oeuvre_nature;
 	        	global $mapperParams;
 	        	
 	        	/**
-	        	 * ParamÃ¨tres supplÃ©mentaires passÃ©s au mapper depuis le javascript (ici oeuvre nature et oeuvre type)
-	        	 * AccÃ¨s via $mapperParams->mapper->nomDuParametre
+	        	 * Paramètres supplémentaires passés au mapper depuis le javascript (ici oeuvre nature et oeuvre type)
+	        	 * Accès via $mapperParams->mapper->nomDuParametre
 	        	 * 
 	        	 */
 	        	if($mapperParams){
 	        		$mapperParams = json_decode(stripslashes($mapperParams));
 	        	}
 	        	
-	        	$authors = array();
 	        	$fonction = new marc_list('function');
 	        	$authors_label = array();
 	        	$authors_id = array();
@@ -121,6 +119,27 @@ class tu_form_mapper extends form_mapper{
         				'fields' => $fields
         		);
         		
+        		$concept = new index_concept($this->tuObject->id, TYPE_TITRE_UNIFORME);
+        		$concepts = $concept->get_concepts();
+        		$concept_labels = $concept_values = $concept_types = array();
+        		for ($i = 0; $i < count($concepts); $i++) {
+        		    $concept_labels[] = $concepts[$i]->get_display_label();
+        		    $concept_values[] = $concepts[$i]->get_uri();
+        		    $concept_types[] = $concepts[$i]->get_type();
+        		}
+        		$concepts_fields = array(
+        		    array('type'=> 'input', 'name'=>'concept_label', 'values'=> $concept_labels),
+        		    array('type'=> 'input', 'name'=>'concept_value', 'values'=> $concept_values),
+        		    array('type'=> 'input', 'name'=>'concept_type', 'values'=> $concept_types),
+        		);
+        		$concepts_array = array(
+        		    'jscallback' => 'onto_add',
+        		    'mainType' => "concept",
+        		    'callbackParams' => array('concept', 0),
+        		    'multiple' => 'true',
+        		    'fields' => $concepts_fields
+        		);
+        		
         		return array(
         			array(
         				'jscallback' => 'add_oeuvre_expression',
@@ -142,10 +161,10 @@ class tu_form_mapper extends form_mapper{
         					array('type'=> 'input', 'name'=>'date', 'values'=> array($this->tuObject->date)),
         				),
         			),
-        			$authors_array
+        			$authors_array,
+        		    $concepts_array
         		);
         		case 'notice':
-					$authors = array();
 		        	$fonction = new marc_list('function');
 		        	$authors_label = array();
 		        	$authors_id = array();
@@ -183,6 +202,28 @@ class tu_form_mapper extends form_mapper{
         					),
         				);
         			}
+        			
+        			$concept = new index_concept($this->tuObject->id, TYPE_TITRE_UNIFORME);
+        			$concepts = $concept->get_concepts();
+        			$concept_labels = $concept_values = $concept_types = array();
+        			for ($i = 0; $i < count($concepts); $i++) {
+        			    $concept_labels[] = $concepts[$i]->get_display_label();
+        			    $concept_values[] = $concepts[$i]->get_uri();
+        			    $concept_types[] = $concepts[$i]->get_type();
+        			}
+        			$concepts_fields = array(
+        			    array('type'=> 'input', 'name'=>'concept_label', 'values'=> $concept_labels),
+        			    array('type'=> 'input', 'name'=>'concept_value', 'values'=> $concept_values),
+        			    array('type'=> 'input', 'name'=>'concept_type', 'values'=> $concept_types),
+        			);
+        			$concepts_array = array(
+        			    'jscallback' => 'onto_add',
+        			    'mainType' => "concept",
+        			    'callbackParams' => array('concept', 0),
+        			    'multiple' => 'true',
+        			    'fields' => $concepts_fields
+        			);
+        			
 					return array(
 						array(
 							'jscallback' => 'add_titre_uniforme',
@@ -204,7 +245,8 @@ class tu_form_mapper extends form_mapper{
 									array('type'=> 'input', 'name'=>'f_year', 'values'=> array($this->tuObject->date))
 							)
 						),
-						$authors_array
+						$authors_array,
+					    $concepts_array
 					);
 	        default:
 	            return array();

@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_forms_controller.class.php,v 1.14 2019-05-24 14:18:19 tsamson Exp $
+// $Id: contribution_area_forms_controller.class.php,v 1.31 2024/03/22 15:31:04 qvarin Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
 require_once($class_path.'/contribution_area/contribution_area.class.php');
 require_once($class_path.'/encoding_normalize.class.php');
 require_once($include_path.'/templates/contribution_area/contribution_area_forms.tpl.php');
+require_once($class_path.'/contribution_area/contribution_area_form.class.php');
 
 /**
  * class contribution_area_forms_controller
@@ -34,6 +35,7 @@ class contribution_area_forms_controller {
 		self::get_contribution_status();
 		$store_data = array();
 		foreach(self::$entities as $entity){
+		    $entity->name = $entity->get_display_name_for_area();
 			$store_data[] = $entity;
 			foreach (self::$entity_forms[$entity->uri] as $form) {
 				foreach ($form["properties"] as $property) {
@@ -104,7 +106,7 @@ class contribution_area_forms_controller {
 	}
 	
 	public static function delete_uri($uri) {
-		// On supprime tous les triplets correspondant Ã  cette uri
+		// On supprime tous les triplets correspondant à cette uri
 		$query_delete = "delete {
 				<".$uri."> ?prop ?obj
 				}";
@@ -147,7 +149,8 @@ class contribution_area_forms_controller {
 	 						'id' => self::get_identifier(),
 	 						'parent_type' => $entity->pmb_name,
 	 						'name' => $pValues['label'],
-	 						'flag' => (!empty(self::$classes_properties[$entity->pmb_name][$prop]->flags) ? self::$classes_properties[$entity->pmb_name][$prop]->flags[0] : ""),
+	 						//'flag' => (!empty(self::$classes_properties[$entity->pmb_name][$prop]->flags[0]) ? self::$classes_properties[$entity->pmb_name][$prop]->flags[0] : ""),
+	 					    'flag' => (!empty(self::$classes_properties[$entity->pmb_name][$prop]->flags) ? static::init_flags(self::$classes_properties[$entity->pmb_name][$prop]->flags) : []),
 	 					    'pmb_name' => (!empty(self::$classes_properties[$entity->pmb_name][$prop]->pmb_name) ? self::$classes_properties[$entity->pmb_name][$prop]->pmb_name : "")
 	 					);
 	 					
@@ -159,10 +162,38 @@ class contribution_area_forms_controller {
 		return $forms_array;
 	}
 	
+	private static function init_flags(array $flags) {
+	    $authority_key = array_search("authority", $flags);
+	    if ($authority_key === false) {
+	        return $flags;
+	    }
+	    unset($flags[$authority_key]);
+	    $tab_authorities = [
+	        "author",
+	        "category",
+	        "publisher",
+	        "collection",
+	        "subcollection",
+	        "serie",
+	        "work",
+	        "indexint",
+	        "concept",
+	    ];
+	    $authpersos = authpersos::get_authpersos();
+	    foreach ($authpersos as $authperso) {
+	        $tab_authorities[] = "authperso_".$authperso["id"];
+	    }
+	    $flags = array_merge($flags, $tab_authorities);
+	    $flags = array_unique($flags);
+	    return $flags;
+	}
+	
 	public static function display_forms_list(){
 		global $contribution_area_entity_line;
 		global $contribution_area_form_line;
 		global $contribution_area_form_table;
+		global $msg;
+		global $charset;
 		self::fetch_data();
 		
 		$form_list = '
@@ -181,11 +212,11 @@ class contribution_area_forms_controller {
 		
 		$i = 0;	
 		
-		foreach(self::$entities as $entity){
+		foreach (self::$entities as $entity) {
 			$forms = "";
-			if(!is_array($entity)){
+			if (!is_array($entity)) {
 				$form_line = str_replace('!!entity_id!!', $i.$entity->id, $contribution_area_entity_line);
-				$form_line = str_replace('!!entity_name!!', $entity->name, $form_line);	
+				$form_line = str_replace('!!entity_name!!', $entity->get_display_name(), $form_line);	
 				$form_line = str_replace('!!entity_type!!', $entity->pmb_name, $form_line);
 				
 				$form_line = str_replace('!!forms_table!!', (count(self::$entity_forms[$entity->uri]) ? $contribution_area_form_table : "") , $form_line);
@@ -199,11 +230,29 @@ class contribution_area_forms_controller {
 					} else {
 						$forms = str_replace('!!odd_even!!', "even", $forms);
 					}
-					$forms = str_replace('!!form_name!!', $form['name'], $forms);
+					$forms = str_replace('!!form_name!!', htmlentities($form['name'], ENT_QUOTES, $charset), $forms);
 					$forms = str_replace('!!form_id!!', $form['form_id'], $forms);
 					$forms = str_replace('!!form_type!!', $entity->pmb_name, $forms);
+					
+					//On va vérifier si le formulaire est dans un scénario auquel cas on disable la suppression avec un autre message 
+					$contribution_form = new contribution_area_form($entity->pmb_name, $form['form_id']);
+					$has_linked_scenario = $contribution_form->get_scenario_linked()['count'];
+					
+					//Desactivation des boutons supprimer pour les formulaires comportant des brouillons (message prioritaire sur le message d'utilisatiuon du formulaire dans un scénario)
+					if (contribution_area_form::has_draft_contribution_from_id($form['form_id'])){
+					    $forms = str_replace('!!disabled!!', 'disabled', $forms);		
+					    $forms = str_replace('!!disabled_message!!', $msg['contribution_has_draft_hover'], $forms);
+					}
+					else if ($has_linked_scenario) {
+					    $forms = str_replace('!!disabled!!', 'disabled', $forms);
+					    $forms = str_replace('!!disabled_message!!', $msg['contribution_has_scenario_hover'], $forms);
+					} else {
+					    $forms = str_replace('!!disabled!!', '', $forms);		
+					    $forms = str_replace('!!disabled_message!!', '', $forms);		
+					}
+					unset($contribution_form);
 				}	
-
+				
 				$form_line = str_replace('!!forms_number!!', '('.$j.')', $form_line);
 				$form_line = str_replace('!!forms_tab!!', $forms, $form_line);				
 				$form_list.= $form_line;
@@ -221,13 +270,17 @@ class contribution_area_forms_controller {
 	
 	public static function get_contribution_status() {
 		if (!count(self::$contribution_status)) {
-			$query = "SELECT contribution_area_status_id AS id, contribution_area_status_gestion_libelle AS name FROM contribution_area_status";
+			$query = "SELECT contribution_area_status_id AS id, contribution_area_status_gestion_libelle AS name, contribution_area_status_available_for as available_for FROM contribution_area_status";
 			$result = pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_assoc($result)) {
-					$row["type"] = "contributionStatus";
-					$row["pmb_name"] = $row["id"];
-					self::$contribution_status[] = $row;
+				    $available_for = unserialize($row["available_for"]);
+				    if (!empty($available_for)) {
+    					$row["type"] = "contributionStatus";
+    					$row["pmb_name"] = $row["id"];
+    					$row["available_for"] = $available_for;
+    					self::$contribution_status[] = $row;
+				    }
 				}
 			}
 		}
@@ -247,7 +300,7 @@ class contribution_area_forms_controller {
 				ORDER BY ?contributor DESC (?last_edit)";
 	
 		$results = array ();
-		//Parse initial des rÃ©sultats de la requete sparql
+		//Parse initial des résultats de la requete sparql
 		if (self::get_datastore()->query($query)) {
 			$rows = self::get_datastore()->get_result();
 			foreach ($rows as $row) {
@@ -255,7 +308,7 @@ class contribution_area_forms_controller {
 					if (!isset($results[$row->s])) {
 						$results[$row->s] = array ();
 					}
-					$results[$row->s][explode('#', $row->p)[1]] = htmlentities($row->o,ENT_QUOTES,$charset);
+					$results[$row->s][explode('#', $row->p)[1]] = $row->o;
 					
 					if (empty($results[$row->s]["uri_id"])) {
 					    $uri_id = onto_common_uri::get_id($row->s);
@@ -276,7 +329,7 @@ class contribution_area_forms_controller {
 	
 	public static function get_contributor_infos($contributor_id) {
 		$contributor_infos = array();
-		$contributor_id += 0;
+		$contributor_id = intval($contributor_id);
 		if ($contributor_id) {
 			$contributor = new emprunteur($contributor_id);
 			$contributor_infos['id'] = $contributor->id;
@@ -288,7 +341,7 @@ class contribution_area_forms_controller {
 	public static function get_empr_forms($id_empr, $validated_forms = false, $last_id = 0) {
 		global $charset;
 	
-		$id_empr+= 0;
+		$id_empr = intval($id_empr);
 		if (!$id_empr) {
 			return array();
 		}
@@ -301,7 +354,7 @@ class contribution_area_forms_controller {
 				ORDER BY DESC (?last_edit)";
 	
 		$results = array ();
-		//Parse initial des rÃ©sultats de la requete sparql
+		//Parse initial des résultats de la requete sparql
 		if (self::get_datastore ()->query ( $query )) {
 			$rows = self::get_datastore ()->get_result ();
 			foreach ( $rows as $row ) {
@@ -325,7 +378,7 @@ class contribution_area_forms_controller {
 	
 	public static function get_area_infos($area_id) {
 		$area_infos = array();
-		$area_id += 0;
+		$area_id = intval($area_id);
 		if ($area_id) {
 			$area = new contribution_area($area_id);
 			$area_infos['id'] = $area->get_id();
@@ -397,17 +450,16 @@ class contribution_area_forms_controller {
 		//gestion des droits
 	
 		$returned_result = array ();
-		//Composition d'un rÃ©sultat manipulable dans les templates
+		//Composition d'un résultat manipulable dans les templates
 		$onto = self::get_ontology();
 		foreach ($results as $form_uri => $properties_array) {
 				
 			//droit sur l'espace
-			if ($properties_array['area'] && isset($dom_4)) {
+			if (!empty($properties_array['area']) && isset($dom_4)) {
 				if (!$dom_4->getRights($_SESSION['id_empr_session'],$properties_array['area'], 4)) {
 					continue;
 				}
 			}
-	
 			if (!$validated_forms && !empty($properties_array["identifier"])) {
 				continue;
 			} else if ($validated_forms && !isset($properties_array["identifier"])) {
@@ -417,6 +469,10 @@ class contribution_area_forms_controller {
 			if (!isset($returned_result[$onto->get_class_label($properties_array['type'])])) {
 				$returned_result [$onto->get_class_label($properties_array['type'])] = array ();
 			}
+			
+			if (!isset($properties_array['entity_type'])) {
+			    $properties_array['entity_type'] = $onto->get_class_label($properties_array['type']);
+			}
 	
 			if (!empty($properties_array['last_edit'])) {
 				$properties_array['last_edit'] = date($msg['1005'].' H:i', $properties_array['last_edit']);
@@ -425,7 +481,7 @@ class contribution_area_forms_controller {
 			if (!empty($properties_array['area'])) {
 				$properties_array['area'] = self::get_area_infos($properties_array['area']);
 			}
-			//id de l'entitÃ© en base SQL
+			//id de l'entité en base SQL
 			if (!empty($properties_array['identifier'])) {
 				if (isset($properties_array['bibliographical_lvl']) && $properties_array['bibliographical_lvl'] == 'b') {
 					$properties_array['link'] = self::get_link_from_type($properties_array['type'], $properties_array['identifier'], true);
@@ -436,15 +492,14 @@ class contribution_area_forms_controller {
 	
 			//infos du contributeur
 			if (!empty($properties_array['contributor'])) {
-				$properties_array['contributor'] = self::get_contributor_infos($properties_array['contributor']);
-			}
-	
-			$returned_result[$onto->get_class_label($properties_array ['type'])][$form_uri] = $properties_array;
-			if ($last_id && ($last_id == $properties_array['uri_id'])) {
-				$returned_result['last_contribution'][$form_uri] = $properties_array;
-			}
+			    $contributor = self::get_contributor_infos($properties_array['contributor']);
+			    $properties_array['contributor'] = $contributor;
+			    $properties_array['contributor_id'] = $contributor['id'];
+			    $properties_array['contributor_name'] = $contributor['name'];
+			}	
+			$results[$form_uri] = $properties_array;
 		}
-		return $returned_result;
+		return $results;
 	}
 	
 	public static function get_ontology() {
@@ -452,6 +507,41 @@ class contribution_area_forms_controller {
 			self::$ontology = contribution_area::get_ontology();
 		}
 		return self::$ontology;
+	}
+	
+	public static function mail_empr_contribution_validate($uri) {
+	    $store = new contribution_area_store();
+	    $dataStore = $store->get_datastore();
+	    $query = "SELECT * WHERE {
+                    <".$uri."> <http://www.pmbservices.fr/ontology#has_contributor> ?id_contributor.
+                    <".$uri."> <http://www.pmbservices.fr/ontology#last_edit> ?last_edit.
+                    <".$uri."> <http://www.pmbservices.fr/ontology#displayLabel> ?display_label.
+                }";
+	    $dataStore->query($query);
+	    $results = $dataStore->get_result();
+
+	    // On va cherche l'emprunteur
+	    $empr  = new emprunteur($results[0]->id_contributor);
+        if ($empr->mail) {
+            $mail_reader_contribution = new mail_reader_contribution();
+            $mail_reader_contribution->set_mail_to_id($results[0]->id_contributor);
+            $mail_reader_contribution->set_empr($empr);
+            $mail_reader_contribution->set_datastore_results($results);
+            $mail_reader_contribution->send_mail();
+        }
+	}
+	
+	public static function get_all_forms() {
+	    $forms = array();
+	    $query = 'select * from contribution_area_forms';
+	    $result = pmb_mysql_query($query);
+	    if(pmb_mysql_num_rows($result)){
+	        while($row = pmb_mysql_fetch_object($result)) {
+	            $row->form_parameters = encoding_normalize::json_decode($row->form_parameters, true); 
+	            $forms[] = $row;
+	        }
+	    }
+	    return $forms;
 	}
 		
 } // end of contribution_area_forms_controller

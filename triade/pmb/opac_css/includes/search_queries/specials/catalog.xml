@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: catalog.xml,v 1.16 2018-12-14 13:46:28 ngantier Exp $ -->
+<!-- $Id: catalog.xml,v 1.19 2024/02/28 16:14:51 qvarin Exp $ -->
 <specialfields>
 	<type name="combine" class="combine_search" path="combine"></type>
 	<type name="combine_unimarc" class="combine_search_unimarc" path="combine_unimarc"></type>
@@ -13,8 +13,11 @@
 	<type name="list_lecture" class="list_lecture_search" path="list_lecture"></type>
 	<type name="avis" class="avis_search" path="avis"></type>
 	<type name="permalink" class="permalink_search" path="permalink"></type>
-	<type name="search_segment" class="search_universe_segment_search" path="search_universe_segment"></type>	
+	<type name="search_segment" class="search_universe_segment_search" path="search_universe_segment"></type>
 	<type name="combine_extended_search" class="combine_extended_search" path="combine_extended_search"></type>
+	<type name="record_qualified_author" class="record_qualified_author" path="record_qualified_author"></type>
 	<type name="authorities_facet" class="authorities_facet" path="authorities_facet"></type>
 	<type name="map_circle" class="map_circle" path="map_circle"></type>
+	<type name="dynamic_value" class="dynamic_value" path="dynamic_value"></type>
+	<type name="ai_search" class="ai_search" path="ai_search"></type>
 </specialfields>

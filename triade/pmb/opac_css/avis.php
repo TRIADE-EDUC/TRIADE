@@ -1,20 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
-// Â© 2006 mental works / www.mental-works.com contact@mental-works.com
-// 	complÃ¨tement repris et corrigÃ© par PMB Services
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2006 mental works / www.mental-works.com contact@mental-works.com
+// 	complètement repris et corrigé par PMB Services
 // +-------------------------------------------------+
-// $Id: avis.php,v 1.54 2018-02-08 15:18:05 dgoron Exp $
+// $Id: avis.php,v 1.58.4.1 2025/02/07 13:49:04 qvarin Exp $
 
-$base_path=".";
+use Pmb\Common\Library\CSRF\ParserCSRF;
+use Pmb\Common\Library\RGAA\RGAABuilder;
+
+$base_path = ".";
 require_once($base_path."/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once($base_path.'/includes/templates/common.tpl.php');
 
-// classe de gestion des catÃ©gories
+// classe de gestion des catégories
 require_once($base_path.'/classes/categorie.class.php');
 require_once($base_path.'/classes/notice.class.php');
 require_once($base_path.'/classes/notice_display.class.php');
@@ -22,7 +25,7 @@ require_once($base_path.'/classes/notice_display.class.php');
 // classe indexation interne
 require_once($base_path.'/classes/indexint.class.php');
 
-// classe de gestion des rÃ©servations
+// classe de gestion des réservations
 require_once($base_path.'/classes/resa.class.php');
 
 require_once($base_path.'/classes/cms/cms_article.class.php');
@@ -44,85 +47,117 @@ require_once($base_path."/includes/includes_rss.inc.php");
 
 // pour fonction de formulaire de connexion
 require_once($base_path."/includes/empr.inc.php");
-// pour fonction de vÃ©rification de connexion
+// pour fonction de vérification de connexion
 require_once($base_path.'/includes/empr_func.inc.php');
-require_once ($include_path."/interpreter/bbcode.inc.php");
+require_once($include_path."/interpreter/bbcode.inc.php");
 
-if ($opac_avis_allow==0) die("");
-// par dÃ©faut, on suppose que le droit donnÃ© par le statut est Ok
+if ($opac_avis_allow == 0) {
+	http_response_code(403);
+    die("");
+}
+// par défaut, on suppose que le droit donné par le statut est Ok
 $allow_avis = 1 ;
 $allow_tag = 1 ;
 
-if (($todo=='liste' || !$todo) && ($opac_avis_allow==3)) {
-	//consultation possible sans authentification
-	$log_ok = 1;
+if (($todo == 'liste' || !$todo) && ($opac_avis_allow == 3)) {
+    //consultation possible sans authentification
+    $log_ok = 1;
 } else {
-	//VÃ©rification de la session
-	$empty_pwd=true;
-	$ext_auth=false;
-	// si paramÃ©trage authentification particuliÃ¨re et pour le re-authentification ntlm
-	if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
-	$log_ok=connexion_empr();
+    //Vérification de la session
+    $empty_pwd = true;
+    $ext_auth = false;
+    // si paramétrage authentification particulière et pour le re-authentification ntlm
+    if (file_exists($base_path.'/includes/ext_auth.inc.php')) {
+        require_once($base_path.'/includes/ext_auth.inc.php');
+    }
+    $log_ok = connexion_empr();
 }
 
-$allow_avis_ajout=true;
-// on a tout vÃ©rifiÃ© mais si tout est libre alors on force le log_ok Ã  1
-if ($opac_avis_allow==3) {
-	$log_ok=1;
-	$allow_avis=1;
+$allow_avis_ajout = true;
+// on a tout vérifié mais si tout est libre alors on force le log_ok à 1
+if ($opac_avis_allow == 3) {
+    $log_ok = 1;
+    $allow_avis = 1;
 }
-if ($opac_avis_allow==1 && !$log_ok) {
-	$allow_avis_ajout=false ;
+if ($opac_avis_allow == 1 && !$log_ok) {
+    $allow_avis_ajout = false ;
 }
-// La consultation d'avis est autorisÃ© mais son statut bloque...
-if ($opac_avis_allow>0 && $allow_avis==0) {
-	$log_ok=1;
-	$allow_avis=1;
-	$allow_avis_ajout=false ;
+// La consultation d'avis est autorisé mais son statut bloque...
+if ($opac_avis_allow > 0 && $allow_avis == 0) {
+    $log_ok = 1;
+    $allow_avis = 1;
+    $allow_avis_ajout = false ;
 }
 
 // pour template des avis
 require_once($base_path.'/includes/templates/avis.tpl.php');
 
+ob_start();
+
 print $popup_header;
 
-if ($opac_avis_allow && !$allow_avis) die($popup_footer);
+if ($opac_avis_allow && !$allow_avis) {
+    die($popup_footer);
+}
 
-print $avis_tpl_header ;
+print "<div id='titre-popup'>".common::format_title($msg["notice_title_avis"])."</div>";
+
+if (!isset($noticeid)) {
+    $noticeid = 0;
+}
+if (!isset($articleid)) {
+    $articleid = 0;
+}
+if (!isset($sectionid)) {
+    $sectionid = 0;
+}
 
 switch($todo) {
-	case 'liste' :
-	default:
-		if($noticeid) {
-			if ($opac_notice_affichage_class) $notice_affichage=$opac_notice_affichage_class; else $notice_affichage="notice_affichage";
-			$notice=new $notice_affichage($noticeid);
-			print $notice->avis_detail();
-		}
-		if($articleid) {
-			$cms_article = new cms_article($articleid);
-			print $cms_article->get_display_avis_detail();
-		}
-		if($sectionid) {
-			$cms_section = new cms_section($sectionid);
-			print $cms_section->get_display_avis_detail();
-		}
-		break;
-	}
+    case 'liste' :
+    default:
+        if($noticeid) {
+            if ($opac_notice_affichage_class) {
+                $notice_affichage = $opac_notice_affichage_class;
+            } else {
+                $notice_affichage = "notice_affichage";
+            }
+            $notice = new $notice_affichage($noticeid);
+            print $notice->avis_detail();
+        }
+        if($articleid) {
+            $cms_article = new cms_article($articleid);
+            print $cms_article->get_display_avis_detail();
+        }
+        if($sectionid) {
+            $cms_section = new cms_section($sectionid);
+            print $cms_section->get_display_avis_detail();
+        }
+        break;
+}
 
-if (!$log_ok && $opac_avis_allow==2) {
-	$lvl='avis_'.$todo;
-	print do_formulaire_connexion();
+if (!$log_ok && $opac_avis_allow == 2) {
+    $lvl = 'avis_'.$todo;
+    print do_formulaire_connexion();
 }
 
 //Enregistrement du log
-global $pmb_logs_activate;
-if($pmb_logs_activate){
-	global $log;
-	$log->add_log('num_session',session_id());
-	$log->save();
+$record_log = generate_log('avis');
+if ($record_log) {
+    print $record_log->validation_script();
 }
 
 print $popup_footer;
 
+$htmltoparse = ob_get_contents();
+ob_end_clean();
+
+global $opac_rgaa_active;
+if ($opac_rgaa_active) {
+    $htmltoparse = RGAABuilder::transform($htmltoparse);
+}
+
+$parserCSRF = new ParserCSRF();
+print $parserCSRF->parseHTML($htmltoparse);
+
 /* Fermeture de la connexion */
-pmb_mysql_close($dbh);
+pmb_mysql_close();

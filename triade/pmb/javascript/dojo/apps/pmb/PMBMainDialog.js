@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PMBMainDialog.js,v 1.2 2017-10-09 10:31:47 vtouchard Exp $
+// $Id: PMBMainDialog.js,v 1.2.18.1 2025/02/28 14:05:08 tsamson Exp $
 
 
 define(["dojo/_base/declare", 
@@ -18,7 +18,7 @@ define(["dojo/_base/declare",
         "dijit/layout/utils",
         ], function(declare, Dialog, lang, domClass, win, on, lang, domGeometry, domStyle, array, has, utils){
 
-	  return declare(null, {
+	  return declare(Dialog, {
 		  lastState: {},
 		  expanded: false,
 		  initialResize: false,
@@ -48,7 +48,15 @@ define(["dojo/_base/declare",
 		  },
 		  hide: function(){
 			  this.inherited(arguments);
-			  if (domClass.contains(document.body, "dojoDialogOpened")){
+			  this.postClose();
+		  },
+		  destroy : function() {
+			  this.inherited(arguments);
+			  this.postClose();
+			
+		  },
+		  postClose : function() {
+			if (domClass.contains(document.body, "dojoDialogOpened")){
 				  domClass.remove(document.body, "dojoDialogOpened");
 				  if(this.expanded){ 
 					  //nous n'avons qu'une instance du popup, il 

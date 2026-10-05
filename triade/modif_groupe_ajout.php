@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -30,6 +30,9 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
+<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+
+
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
@@ -47,11 +50,11 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGGRP26 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -63,11 +66,11 @@ if ($_SESSION["membre"] == "menuprof") {
 <td bgcolor="yellow"  align=center><?php print LANGGRP30 ?></TD>
 <td bgcolor="yellow"  align=center width=20%><?php print LANGGRP31 ?></TD></TR>
 <?php
-$sql="SELECT group_id,libelle,liste_elev FROM ${prefixe}groupes ORDER BY libelle";
+$sql="SELECT group_id,libelle,liste_elev FROM {$prefixe}groupes ORDER BY libelle";
 $res=execSql($sql);
 $liste_gid=chargeMat($res);
 
-for($cpt=0;$cpt<count($liste_gid);$cpt++){
+for($cpt=0;$cpt<countTriade($liste_gid);$cpt++){
 	if ($liste_gid[$cpt][0] != 0) {
 		$classesDsGroupe[$liste_gid[$cpt][0]."|".$liste_gid[$cpt][1]] = $liste_gid[$cpt][2] ;
 	}
@@ -82,10 +85,10 @@ foreach($classesDsGroupe as $cle => $value)
 		$liste_eleves=preg_replace('/,,/',',',$liste_eleves);
 		$liste_eleves=preg_replace('/\{,/',"{",$liste_eleves);
 		$liste_eleves=preg_replace('/,\}/',"}",$liste_eleves);
-		$sql = "SELECT libelle FROM ${prefixe}classes , ${prefixe}eleves  WHERE classe = code_class AND elev_id IN ($liste_eleves)";
+		$sql = "SELECT libelle FROM {$prefixe}classes , {$prefixe}eleves  WHERE classe = code_class AND elev_id IN ($liste_eleves)";
 		$res = execSql($sql);
 		$data =  chargeMat($res);
-		for($cpt2=0;$cpt2<count($data);$cpt2++) {
+		for($cpt2=0;$cpt2<countTriade($data);$cpt2++) {
 			$classesDsGroupe_tmp[$cle][] = $data[$cpt2][0];
 		}
 	}else{
@@ -122,6 +125,9 @@ foreach($classesDsGroupe as $cle => $value){
 }
 ?>
 </table>
+<br><table align='center' ><tr><td>
+<script language='JavaScript'>buttonMagicRetour2('gestion_groupe.php','_self','Retour menu')</script>
+</td></tr></table>
 </td></tr></table>
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer

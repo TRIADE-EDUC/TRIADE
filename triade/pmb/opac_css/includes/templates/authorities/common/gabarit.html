@@ -1,32 +1,12 @@
-<!-- $Id: gabarit.html,v 1.10 2019-05-22 08:03:41 ngantier Exp $ -->
-
-<style type="text/css">
-.aut_display_table {
-	display: table;
-}
-
-.aut_display_row {
-	display: table-row;
-}
-
-.aut_display_cell {
-	display: table-cell;
-	padding-right: 5px;
-}
-
-#aut_details .vignetteimg {
-	margin-left: 0;
-	margin-bottom: 12px;
-}
-</style>
+<!-- $Id: gabarit.html,v 1.15 2023/08/24 10:35:24 rtigero Exp $ -->
 
 <div id="aut_details">
-	{% block header %}
-		<h3><span>{{ msg.detail_authority_title }}</span></h3>
+	{% block title %}
+		{{ authority.isbd | page_title }}
 	{% endblock %}
 	<div id="aut_details_container">
 		<div id="aut_see" class="aut_see">
-			<table class="table_aut_see">
+			<table class="table_aut_see" role='presentation'>
 				<tr id="authority_container">
 					<td>
 						<div id="authority_display_table" class="aut_display_table">
@@ -36,8 +16,7 @@
 										{{ authority.thumbnail }}
 									</div>
 								{% endif %}
-								{% block title %}
-									<h3>{{authority.isbd}}</h3>
+								{% block header %}
 								{% endblock %}
 								{% block details %}
 									<p>Détails de notre autorité</p>
@@ -92,6 +71,21 @@
 									{% endfor %}
 								{% endblock %}							
 								{% block map %}
+								{% endblock %}
+								{% block authority_edit %}
+									<!-- Bouton edition -->
+									{% if authority.edit_link %}
+										<div class="statutPartN">
+											<span class="imgStatutPartN">
+												<img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.edit_autority}}"/>
+											</span>
+											<span class="StatutPartN">
+												<a href="{{ authority.edit_link }}" title="{{ msg.edit_autority}}">
+													<span class="bt_authority_edit">{{ msg.edit_autority }}</span>
+												</a>
+											</span>										
+							            </div>   
+									{% endif %}				
 								{% endblock %}
 								{% block enrichment %}
 								{% endblock %}

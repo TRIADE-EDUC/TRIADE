@@ -2,53 +2,125 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_bannettes_diffusion_ui.class.php,v 1.3 2019-06-05 14:19:43 dgoron Exp $
+// $Id: list_bannettes_diffusion_ui.class.php,v 1.15 2023/11/29 13:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/bannettes/list_bannettes_ui.class.php");
-
 class list_bannettes_diffusion_ui extends list_bannettes_ui {
-		
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
 	
 	protected function get_form_title() {
 		global $msg;
 		return $msg['dsi_ban_search'];
 	}
 	
-	protected function init_default_columns() {
-		$this->columns = array();
-	}
-		
 	protected function init_available_filters() {
 		parent::init_available_filters();
 		$this->available_filters['main_fields']['type'] = 'dsi_bannette_type';
+	}
+	
+	protected function init_default_columns() {
+		$this->columns = array();
+		$this->add_column_selection();
+		$this->add_column('name', 'dsi_ban_form_nom');
+		$this->add_column('send_last_date');
+		$this->add_column('number_records');
+		$this->add_column('number_subscribed');
+	}
+	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('number_records', 'text', array('bold' => true));
+		$this->set_setting_column('number_subscribed', 'text', array('bold' => true));
+	}
+	
+	protected function _get_label_cell_header($name) {
+		global $msg, $charset;
+		
+		switch ($name) {
+			case 'dsi_ban_form_nom':
+				return
+				"<strong>".htmlentities($msg['dsi_ban_form_nom'],ENT_QUOTES, $charset)."</strong>
+					<br />".htmlentities($msg['dsi_ban_form_com_public'],ENT_QUOTES, $charset);
+			default:
+				return "<strong>".parent::_get_label_cell_header($name)."</strong>";
+				
+		}
+		
+	}
+	
+	protected function get_default_attributes_format_cell($object, $property) {
+		$attributes = array();
+		switch($property) {
+			case 'name':
+				$attributes['style'] = 'width:59%;';
+				break;
+			case 'send_last_date':
+				$attributes['style'] = 'width:20%;';
+				$attributes['sorttable_customkey'] = $object->date_last_envoi;
+				break;
+			case 'number_records':
+			case 'number_subscribed':
+				$attributes['style'] = 'width:10%;';
+				break;
+			default :
+				break;
+		}
+		return $attributes;
+	}
+	
+	protected function get_cell_content($object, $property) {
+		global $charset;
+		
+		$content = '';
+		switch($property) {
+			case 'name':
+				if ($object->proprio_bannette) {
+					$nom_bannette = "<span style='color:red'>".htmlentities($object->nom_bannette,ENT_QUOTES, $charset)."</span>" ;
+				} else {
+					$nom_bannette = htmlentities($object->nom_bannette,ENT_QUOTES, $charset) ;
+				}
+				$content .= "<strong>".$nom_bannette."</strong>
+					<br />(".htmlentities($object->comment_public,ENT_QUOTES, $charset).")";
+				break;
+			case 'send_last_date':
+				$content .= "<strong>".htmlentities($object->aff_date_last_envoi,ENT_QUOTES, $charset)."</strong>";
+				if ($object->alert_diff) {
+					$content .= "<br /><span style='color:red'>(".htmlentities($object->aff_date_last_remplissage,ENT_QUOTES, $charset).")</span>";
+				} else {
+					$content .= "<br />(".htmlentities($object->aff_date_last_remplissage,ENT_QUOTES, $charset).")" ;
+				}
+				break;
+			case 'number_subscribed':
+				$content .= "<strong>".$object->nb_abonnes."</strong>";
+				break;
+			default :
+				$content .= parent::get_cell_content($object, $property);
+				break;
+		}
+		return $content;
 	}
 	
 	/**
 	 * Header de la liste
 	 */
 	public function get_display_header_list() {
-		global $msg, $charset;
-
-		$display = "<tr >
-					<th width='1%' class='sorttable_nosort'>
-					</th>
-					<th width='60%'>
-						<strong>".htmlentities($msg['dsi_ban_form_nom'],ENT_QUOTES, $charset)."</strong>
-						<br />(".htmlentities($msg['dsi_ban_form_com_public'],ENT_QUOTES, $charset).")
-					</th>
-					<th width='20%'>
-						<strong>".htmlentities($msg['dsi_ban_date_last_envoi'],ENT_QUOTES, $charset)."</strong>
-						<br />(".htmlentities($msg['dsi_ban_date_last_remp'],ENT_QUOTES, $charset).")
-					</th>
-					<th width='10%'>
-						<strong>".htmlentities($msg['dsi_ban_nb_notices'],ENT_QUOTES, $charset)."</strong>
-					</th>
-				</tr>";
+		$display = "
+		<tr >
+			<th width='1%' class='sorttable_nosort'>
+			</th>
+			<th width='59%'>
+				".$this->_get_label_cell_header('dsi_ban_form_nom')."
+			</th>
+			<th width='20%'>
+				".$this->_get_label_cell_header('dsi_ban_date_last_envoi')."
+			</th>
+			<th width='10%'>
+				".$this->_get_label_cell_header('dsi_ban_nb_notices')."
+			</th>
+			<th width='10%'>
+				".$this->_get_label_cell_header('dsi_ban_nb_abonnes')."
+			</th>
+		</tr>";
 		return $display;
 	}
 	
@@ -56,35 +128,18 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 	 * Objet de la liste
 	 */
 	protected function get_display_content_object_list($object, $indice) {
-		global $charset;
 		global $sub;
 		
-		if ($object->proprio_bannette) {
-			$nom_bannette = "<span style='color:red'>".htmlentities($object->nom_bannette,ENT_QUOTES, $charset)."</span>" ;
-		} else {
-			$nom_bannette = htmlentities($object->nom_bannette,ENT_QUOTES, $charset) ;
-		}
 		$td_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".($indice % 2 ? 'odd' : 'even')."'\" ";
 		$display = "
 		<tr class='".($indice % 2 ? 'odd' : 'even')."' $td_javascript >
 			<td width='1%' class='center'>
 				<input type='checkbox' name='liste_bannette[]' id='auto_".$object->id_bannette."' value='$object->id_bannette' ".($sub == 'lancer' ? "checked='checked'" : '')."/>
 			</td>
-			<td width='60%'>
-				<strong>".$nom_bannette."</strong>
-				<br />(".htmlentities($object->comment_public,ENT_QUOTES, $charset).")
-			</td>
-			<td sorttable_customkey='".$object->date_last_envoi."'>
-				<strong>".htmlentities($object->aff_date_last_envoi,ENT_QUOTES, $charset)."</strong>";
-			if ($object->alert_diff) {
-				$display .= "<br /><span style='color:red'>(".htmlentities($object->aff_date_last_remplissage,ENT_QUOTES, $charset).")</span>";
-			} else {
-				$display .= "<br />(".htmlentities($object->aff_date_last_remplissage,ENT_QUOTES, $charset).")" ;
-			}
-			$display .= "
-			<td width='10%'>
-				<strong>".htmlentities($object->nb_notices,ENT_QUOTES, $charset)."</strong>
-			</td>
+			".$this->get_display_cell($object, 'name')."
+			".$this->get_display_cell($object, 'send_last_date')."
+			".$this->get_display_cell($object, 'number_records')."
+			".$this->get_display_cell($object, 'number_subscribed')."
 		</tr>";
 		return $display;
 	}
@@ -93,9 +148,6 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 	 * Liste des objets
 	 */
 	public function get_display_content_list() {
-		global $msg, $charset;
-		global $sub;
-		
 		$display = '';
 		$id_check_list = '';
 		if(isset($this->applied_group[0]) && $this->applied_group[0]) {
@@ -132,24 +184,19 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 	}
 	
 	public function get_display_list() {
-		global $msg, $charset;
-		global $base_path;
+		global $msg;
 		global $current_module;
 		global $sub;
 		
 		$display = $this->get_title();
 		
-// 		// Affichage du formulaire de recherche
-		if($sub == 'auto' || $sub == 'manu') {
-			$display .= $this->get_search_form();
-		} else {
-			$display .= $this->get_search_hidden_form();
-		}
+		// Affichage du formulaire de recherche
+		$display .= $this->get_display_search_form();
 		
 		// Affichage de la human_query
-// 		$display .= $this->_get_query_human();
+		$display .= $this->_get_query_human();
 	
-		//RÃ©cupÃ©ration du script JS de tris
+		//Récupération du script JS de tris
 // 		$display .= $this->get_js_sort_script_sort();
 		
 		$display .= "
@@ -175,9 +222,21 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 							} else
 				           		return false;
 				    	}
+                        function valid_test_form() {
+                            var checkbox_list = document.getElementsByName('liste_bannette[]');
+                            for (let checkbox of checkbox_list) {
+                                if (checkbox.checked) {
+                                    return true;
+                                }
+                            }
+                            alert('".$msg['dsi_form_unvalid']."');
+                            return false;
+                        }
 					</script>";
+		$display .= $this->pager_top();
 		//Affichage de la liste des objets
-		$display .= "<table id='".$this->objects_type."_list' width='100%' class='sortable'>";
+		$display .= "<table id='".$this->objects_type."_list' width='100%' class='list_ui_list ".$this->objects_type."_list sortable'>";
+		$display .= $this->get_display_caption_list();
 		$display .= $this->get_display_header_list();
 		if(count($this->objects)) {
 			$display .= $this->get_display_content_list();
@@ -192,23 +251,23 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 			}
 		}
 		$display .= "</table>";
-		$display .= $this->pager();
+		$display .= $this->pager_bottom();
 		$display .= "
 					<div class='row'>&nbsp;</div>
 					<div class='row'>
 						<div class='left'>
-							<input type='button' class='bouton' name='bt_vider' value=\"".$msg['dsi_ban_vider']."\" onclick=\"this.form.suite.value='vider'; this.form.submit();\" />
-							<input type='button' class='bouton' name='bt_remplir' value=\"".$msg['dsi_ban_remplir']."\" onclick=\"this.form.suite.value='remplir'; this.form.submit();\" />
-							<input type='button' class='bouton' name='bt_voircontenu' value=\"".$msg['dsi_ban_visualiser']."\" onclick=\"this.form.suite.value='visualiser'; this.form.submit();\" />
-							<input type='button' class='bouton' name='bt_diffuser' value=\"".$msg['dsi_ban_diffuser']."\" onclick=\"if(confirm_dsi_ban_diffuser()){this.form.suite.value='diffuser'; this.form.submit();}\" />
-							<input type='button' class='bouton' name='bt_diffuser' value=\"".$msg['dsi_dif_full_auto']."\" onclick=\"if(confirm_dsi_dif_full_auto()){this.form.suite.value='full_auto'; this.form.submit();}\" />
+							<input type='button' class='bouton' name='bt_vider' value=\"".$msg['dsi_ban_vider']."\" onclick=\"if(valid_test_form()){this.form.suite.value='vider'; this.form.submit();}\" />
+							<input type='button' class='bouton' name='bt_remplir' value=\"".$msg['dsi_ban_remplir']."\" onclick=\"if(valid_test_form()){this.form.suite.value='remplir'; this.form.submit();}\" />
+							<input type='button' class='bouton' name='bt_voircontenu' value=\"".$msg['dsi_ban_visualiser']."\" onclick=\"if(valid_test_form()){this.form.suite.value='visualiser'; this.form.submit();}\" />
+							<input type='button' class='bouton' name='bt_diffuser' value=\"".$msg['dsi_ban_diffuser']."\" onclick=\"if(valid_test_form() && confirm_dsi_ban_diffuser()){this.form.suite.value='diffuser'; this.form.submit();}\" />
+							<input type='button' class='bouton' name='bt_diffuser' value=\"".$msg['dsi_dif_full_auto']."\" onclick=\"if(valid_test_form() && confirm_dsi_dif_full_auto()){this.form.suite.value='full_auto'; this.form.submit();}\" />
 							<input type='hidden' name='suite' value='' />
 							<input type='hidden' name='id_classement' value='".$this->filters['id_classement']."' />
 							<input type='hidden' name='".$this->objects_type."_name' value='".$this->filters['name']."' />
 						</div>
 						<div class='right'>
-							<input type='button' class='bouton' name='gen_document' value=\"".$msg["dsi_ban_gen_document"]."\" onclick=\"this.form.suite.value='gen_document'; this.form.submit();\" />	
-							<input type='button' class='bouton' name='bt_exporter' value=\"".$msg['dsi_ban_exporter_diff']."\" onclick=\"this.form.suite.value='exporter'; this.form.submit();\" />
+							<input type='button' class='bouton' name='gen_document' value=\"".$msg["dsi_ban_gen_document"]."\" onclick=\"if(valid_test_form()){this.form.suite.value='gen_document'; this.form.submit();}\" />	
+							<input type='button' class='bouton' name='bt_exporter' value=\"".$msg['dsi_ban_exporter_diff']."\" onclick=\"if(valid_test_form()){this.form.suite.value='exporter'; this.form.submit();}\" />
 						</div>
 					</div>
 				</div>
@@ -216,9 +275,7 @@ class list_bannettes_diffusion_ui extends list_bannettes_ui {
 		return $display;
 	}
 	
-	public static function get_controller_url_base() {
-		global $base_path, $sub;
-	
-		return $base_path.'/dsi.php?categ=diffuser&sub='. $sub;
+	protected function get_button_add() {
+		return "";
 	}
 }

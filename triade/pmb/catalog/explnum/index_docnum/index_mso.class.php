@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_mso.class.php,v 1.4 2018-06-08 10:46:38 mbertin Exp $
+// $Id: index_mso.class.php,v 1.6 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,14 +21,14 @@ abstract class index_mso {
 	protected $text='';
 	protected $params=array();
 	
-	function __construct($filename, $mimetype='', $extension='', $convert_to='') {
+	public function __construct($filename, $mimetype='', $extension='', $convert_to='') {
 		$this->filename=realpath($filename);
 		if ($mimetype)$this->mimetype=$mimetype;
 		if ($extension) $this->extension=$extension;
 		$this->get_parameters();
 	}
 	
-	function get_parameters() {
+	public function get_parameters() {
 		global $pmb_indexation_docnum_ext;
 		$all_params=array();
 		$all_params=explode(';',$pmb_indexation_docnum_ext);
@@ -52,7 +52,7 @@ abstract class index_mso {
 		}
 	}
 	
-	function get_text($filename){
+	public function get_text($filename){
 		global $charset;
 		$done=false;
 		if ($this->params['pyodconverter_cmd']) {
@@ -104,7 +104,7 @@ abstract class index_mso {
 			@unlink($this->to_filename);
 		}	
 		if($done && $charset != 'utf-8'){
-			$this->text=utf8_decode($this->text);
+			$this->text=encoding_normalize::utf8_decode($this->text);
 		} 
 		return $this->text;
 	}
@@ -132,7 +132,7 @@ class index_mso_ppt extends index_mso {
 	protected $extension='ppt';
 	protected $convert_to='pdf';
 	
-	function get_text($filename){
+	public function get_text($filename){
 		global $charset;
 		$done=false;
 		if ($this->params['pyodconverter_cmd']) {
@@ -206,7 +206,7 @@ class index_mso_ppt extends index_mso {
 			
 		}	
 		if($done && $charset != 'utf-8'){
-			$this->text=utf8_decode($this->text);
+			$this->text=encoding_normalize::utf8_decode($this->text);
 		} 
 		return $this->text;
 	}

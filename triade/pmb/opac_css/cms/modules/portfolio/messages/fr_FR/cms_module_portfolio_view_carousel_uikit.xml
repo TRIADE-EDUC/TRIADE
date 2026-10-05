@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_portfolio_view_carousel_uikit.xml,v 1.2 2021/02/12 10:08:40 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_itemslist_view_django_build_item_link">Construction du lien vers un item</entry>
+	<entry code="cms_module_itemslist_view_django_item_link_desc">Lien vers l'item</entry>
+	<entry code="cms_module_itemslist_view_django_build_tag_link">Construction du lien vers un tag</entry>
+	<entry code="cms_module_itemslist_view_django_tag_link_desc">Lien vers le tag</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nblarge'>Nombre de documents larges</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nbmedium'>Nombre de documents moyennes</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nbsmall'>Nombre de documents petites</entry>
+</XMLlist>

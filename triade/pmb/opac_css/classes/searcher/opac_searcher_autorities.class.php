@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_searcher_autorities.class.php,v 1.1 2015-03-20 15:42:37 apetithomme Exp $
+// $Id: opac_searcher_autorities.class.php,v 1.1 2015/03/20 15:42:37 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

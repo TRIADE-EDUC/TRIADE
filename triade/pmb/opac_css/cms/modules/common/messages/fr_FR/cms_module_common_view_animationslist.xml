@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_animationslist.xml,v 1.1 2021/03/26 13:47:46 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_animationslist_used_template">Choix du template</entry>
+	<entry code='cms_module_common_view_animationslist_link'>Construction du lien vers une notice</entry>
+</XMLlist>

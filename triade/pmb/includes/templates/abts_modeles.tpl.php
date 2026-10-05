@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts_modeles.tpl.php,v 1.31 2019-05-27 13:06:42 btafforeau Exp $
+// $Id: abts_modeles.tpl.php,v 1.35.4.1 2025/04/08 08:54:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -12,7 +12,7 @@ if(!isset($serial_id)) $serial_id = 0;
 
 $modele_view = "
 <div id='abts_modele!!id_modele!!' class='notice-parent'>
-	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='abts_modele!!id_modele!!Img' title='".addslashes($msg['plus_detail'])."' border='0' onClick=\"expandBase('abts_modele!!id_modele!!', true); return false;\" hspace='3'>
+    ".get_expandBase_button('abts_modele!!id_modele!!')."
 	<span class='notice-heada'>
     	<small>
     		<span  class='statutnot1'  style='margin-right: 3px;'>
@@ -214,138 +214,139 @@ window.onload = function() {
 </script>
 ";
 
+$modele_content_form = "
+<div class='colonne2'>
+	<div class='row'>
+		<label for='modele_name' class='etiquette'>".$msg["abonnements_nom_modele"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' size='40' name='modele_name' id='modele_name' value='!!modele_name!!'/>
+	</div>
+</div>
+<div class='row'></div>
+<div class='colonne2'>
+	<div class='row'>
+		<label for='num_periodicite' class='etiquette'>".$msg["abonnements_periodicite"]."</label>
+	</div>
+	<div class='row'>
+		!!num_periodicite!!
+	</div>
+</div>
+<div class='colonne_suite'>
+	<div class='row'>
+		<label for='duree_abonnement' class='etiquette'>".$msg["abonnements_duree_abonnement"]."</label>
+	</div>
+	<div class='row'>
+		<input type='text' size='5' name='duree_abonnement' id='duree_abonnement' value='!!duree_abonnement!!'/>
+	</div>
+</div>
+<div class='row'></div>
+<div class='colonne2'>
+	<div class='row'>
+		<label class='etiquette'>".$msg["abonnements_date_debut"]."</label>
+	</div>
+	<div class='row'>
+		<input type='date' name='date_debut' value='!!date_debut!!' />
+	</div>
+</div>
+<div class='colonne_suite'>
+	<div class='row'>
+		<label class='etiquette'>".$msg["abonnements_date_fin"]."</label>
+	</div>
+	<div class='row'>
+		<input type='date' name='date_fin' value='!!date_fin!!' />
+	</div>
+</div>
+<div class='row'>
+	<div class='row'>
+		<div id='abts_exclusion' class='notice-parent'>
+            ".get_expandBase_button('abts_exclusion')."
+			<span class='notice-heada'>
+					".$msg["abonnements_titre_exclusion_date"]."
+			</span>
+		</div>
+		<div id='abts_exclusionChild' class='notice-child' style='margin-bottom:6px;display:none;width:94%'>
+			<div class='row'>
+				<label class='etiquette'>".$msg["abonnements_periodicite_jours_semaine_exclus"]."</label>
+			</div>
+			<div class='row'>
+				!!days!!
+			</div>
+			<div class='row'>
+				<label class='etiquette'>".$msg["abonnements_periodicite_jours_mois_exclus"]."</label>
+			</div>
+			<div class='row'>
+				!!days_month!!
+			</div>
+			<div class='row'>
+				<label class='etiquette'>".$msg["abonnements_periodicite_semaines_mois_exclus"]."</label>
+			</div>
+			<div class='row'>
+				!!week_month!!
+			</div>
+			<div class='row'>
+				<label class='etiquette'>".$msg["abonnements_periodicite_semaines_annee_exclus"]."</label>
+			</div>
+			<div class='row'>
+				!!week_year!!
+			</div>
+			<div class='row'>
+				<label class='etiquette'>".$msg["abonnements_periodicite_mois_annee_exclus"]."</label>
+			</div>
+			<div class='row'>
+				!!month_year!!
+			</div>
+			<div class='row'></div>
+		</div>
+	</div>
+	<div class='row'>
+		<div id='abts_numerotation' class='notice-parent'>
+            ".get_expandBase_button('abts_numerotation')."
+			<span class='notice-heada'>
+					".$msg["abonnements_titre_numerotation"]."
+			</span>
+		</div>
+		<div id='abts_numerotationChild' class='notice-child' style='margin-bottom:6px;display:none;width:94%'>
+			<div class='row separateur'>
+				<label class='etiquette'>".$msg["abonnements_titre_numero"]."</label>
+			</div>
+			<div class='row'>
+				!!numero!!
+			</div>
+			<div class='row separateur'>
+				<label class='etiquette'>".$msg["abonnements_titre_volume"]."</label>
+			</div>
+			<div class='row'>
+				!!volume!!
+			</div>
+			<div class='row separateur'>
+				<label class='etiquette'>".$msg["abonnements_titre_tome"]."</label>
+			</div>
+			<div class='row'>
+				!!tome!!
+			</div>
+			<div class='row separateur'>
+				<label class='etiquette'>".$msg["abonnements_titre_format"]."</label>
+			</div>
+			<div class='row'>
+				!!format!!
+				!!format_periode!!
+				<a href='".$base_path."/includes/interpreter/doc?group=interpreter' target='_blank'>".$msg['interpreter_doc_interpreter_link']."</a>
+			</div>
+		</div>
+	</div>
+</div>";
+
 $modele_form = "
 <script type='text/javascript' src='./javascript/tablist.js'></script>
 $modele_script1
 <form class='form-$current_module' id='form_modele' name='form_modele' method='post' action='!!action!!'>
 	<h3>!!num_notice_libelle!!: !!libelle_form!!</h3>
 	<div class='form-contenu'>
-		<input type='hidden' name='modele_id' value='!!modele_id!!'/>
-		<div class='colonne2'>
-			<div class='row'>
-				<label for='modele_name' class='etiquette'>".$msg["abonnements_nom_modele"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' size='40' name='modele_name' id='modele_name' value='!!modele_name!!'/>
-			</div>
-		</div>
-				<input type='hidden' name='num_notice' id='num_notice' value='!!num_notice!!'/>
-		<div class='row'></div>
-		<div class='colonne2'>
-			<div class='row'>
-				<label for='num_periodicite' class='etiquette'>".$msg["abonnements_periodicite"]."</label>
-			</div>
-			<div class='row'>
-				!!num_periodicite!!
-			</div>
-		</div>
-		<div class='colonne_suite'>
-			<div class='row'>
-				<label for='duree_abonnement' class='etiquette'>".$msg["abonnements_duree_abonnement"]."</label>
-			</div>
-			<div class='row'>
-				<input type='text' size='5' name='duree_abonnement' id='duree_abonnement' value='!!duree_abonnement!!'/>
-			</div>
-		</div>
-		<div class='row'></div>
-		<div class='colonne2'>
-			<div class='row'>
-				<label for='date_debut_lib' class='etiquette'>".$msg["abonnements_date_debut"]."</label>
-			</div>
-			<div class='row'>
-				<input type='hidden' name='date_debut' value='!!date_debut!!' />
-				<input class='bouton' type='button' name='date_debut_lib' value='!!date_debut_lib!!' onClick=\"openPopUp('./select.php?what=calendrier&caller=form_modele&date_caller=!!date_debut!!&param1=date_debut&param2=date_debut_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\"   />
-			</div>
-		</div>
-		<div class='colonne_suite'>
-			<div class='row'>
-				<label for='date_fin_lib' class='etiquette'>".$msg["abonnements_date_fin"]."</label>
-			</div>
-			<div class='row'>
-				<input type='hidden' name='date_fin' value='!!date_fin!!' />
-				<input class='bouton' type='button' name='date_fin_lib' value='!!date_fin_lib!!' onClick=\"openPopUp('./select.php?what=calendrier&caller=form_modele&date_caller=!!date_fin!!&param1=date_fin&param2=date_fin_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\"   />
-			</div>
-		</div>
-		<div class='row'>
-			<div class='row'>
-				<div id='abts_exclusion' class='notice-parent'>
-					<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='abts_exclusionImg' title='".addslashes($msg['plus_detail'])."' border='0' onClick=\"expandBase('abts_exclusion', true); return false;\" hspace='3'>
-					<span class='notice-heada'>
-							".$msg["abonnements_titre_exclusion_date"]."
-					</span>
-				</div>
-				<div id='abts_exclusionChild' class='notice-child' style='margin-bottom:6px;display:none;width:94%'>
-					<div class='row'>
-						<label class='etiquette'>".$msg["abonnements_periodicite_jours_semaine_exclus"]."</label>
-					</div>
-					<div class='row'>
-						!!days!!
-					</div>
-					<div class='row'>
-						<label class='etiquette'>".$msg["abonnements_periodicite_jours_mois_exclus"]."</label>
-					</div>
-					<div class='row'>
-						!!days_month!!
-					</div>
-					<div class='row'>
-						<label class='etiquette'>".$msg["abonnements_periodicite_semaines_mois_exclus"]."</label>
-					</div>
-					<div class='row'>
-						!!week_month!!
-					</div>
-					<div class='row'>
-						<label class='etiquette'>".$msg["abonnements_periodicite_semaines_annee_exclus"]."</label>
-					</div>
-					<div class='row'>
-						!!week_year!!
-					</div>
-					<div class='row'>
-						<label class='etiquette'>".$msg["abonnements_periodicite_mois_annee_exclus"]."</label>
-					</div>
-					<div class='row'>
-						!!month_year!!
-					</div>
-					<div class='row'></div>
-				</div>
-			</div>
-			<div class='row'>		
-				<div id='abts_numerotation' class='notice-parent'>
-					<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='abts_numerotationImg' title='".addslashes($msg['plus_detail'])."' border='0' onClick=\"expandBase('abts_numerotation', true); return false;\" hspace='3'>
-					<span class='notice-heada'>
-							".$msg["abonnements_titre_numerotation"]."
-					</span>
-				</div>
-				<div id='abts_numerotationChild' class='notice-child' style='margin-bottom:6px;display:none;width:94%'>
-					<div class='row separateur'>
-						<label class='etiquette'>".$msg["abonnements_titre_numero"]."</label>
-					</div>
-					<div class='row'>
-						!!numero!!
-					</div>
-					<div class='row separateur'>
-						<label class='etiquette'>".$msg["abonnements_titre_volume"]."</label>
-					</div>
-					<div class='row'>
-						!!volume!!
-					</div>
-					<div class='row separateur'>
-						<label class='etiquette'>".$msg["abonnements_titre_tome"]."</label>
-					</div>
-					<div class='row'>
-						!!tome!!
-					</div>
-					<div class='row separateur'>
-						<label class='etiquette'>".$msg["abonnements_titre_format"]."</label>
-					</div>
-					<div class='row'>
-						!!format!!
-						!!format_periode!!
-						<a href='".$base_path."/includes/interpreter/doc?group=interpreter' target='_blank'>".$msg['interpreter_doc_interpreter_link']."</a>
-					</div>
-				</div>
-			</div>	
-		</div>	
-	</div> <!-- Fin du contenu -->
+        <input type='hidden' name='modele_id' value='!!modele_id!!'/>
+        <input type='hidden' name='num_notice' id='num_notice' value='!!num_notice!!'/>
+	   !!content_form!!
+	</div>
 	<div class='row'>
 		<input type='hidden' id='act' name='act' value='' />
 		<div class='left'><input type=\"submit\" class='bouton' value='".$msg["77"]."' onClick=\"document.getElementById('act').value='update';if(test_form(this.form)==true) this.form.submit();else return false;\"/>&nbsp;
@@ -376,5 +377,4 @@ $tpl_calendrier = "
 ";
 		
 $tpl_del_bouton="<input type=\"submit\" class='bouton' value='".$msg["63"]."' onClick=\"document.getElementById('act').value='del';confirm_delete();return false;\"/>";
-$tpl_copy_bouton="<input type='button' class='bouton' value='".$msg["abts_modeles_copy_modele"]."' onclick=\"openPopUp('./select.php?what=notice&niveau_biblio=S&modele_id=!!modele_id!!&serial_id=!!serial_id!!&caller=notice&param1=f_rel_id_0&param2=f_rel_0&no_display=0', 'selector_notice')\" />";			
-?>
+$tpl_copy_bouton="<input type='button' class='bouton' value='".$msg["abts_modeles_copy_modele"]."' onclick=\"openPopUp('./select.php?what=perio&niveau_biblio=S&modele_id=!!modele_id!!&serial_id=!!serial_id!!&caller=notice&param1=f_rel_id_0&param2=f_rel_0&no_display=0', 'selector_notice')\" />";			

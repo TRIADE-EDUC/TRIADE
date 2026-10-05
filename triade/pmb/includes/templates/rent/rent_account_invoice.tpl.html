@@ -1,4 +1,4 @@
-<!-- $Id: rent_account_invoice.tpl.html,v 1.16 2017-10-03 14:05:10 ngantier Exp $ -->
+<!-- $Id: rent_account_invoice.tpl.html,v 1.16.14.1 2024/07/12 12:28:21 dgoron Exp $ -->
 
 <style type='text/css'>
 	table.account_list {
@@ -146,7 +146,7 @@
 	    						<td {% if account.web %} rowspan='2' {% endif %} {% if invoice.nb_accounts > 1 %} style='vertical-align : middle; text-align:center; cursor:pointer; ' onclick='invoices_delete_account({{ account.id }}, {{invoice.id}}); return false;' {% endif %}>{% if invoice.nb_accounts > 1 %}<img src='./images/trash.png' />{% endif %}</td>
 	    					{% endif %}
 							<td {% if account.web %} rowspan='2' style='vertical-align : middle' {% endif %}>{{ account.short_year_date }} / {{ account.id }}</td>
-							<td style='width:250;text-align:left;'>{% if account.event_date != '0000-00-00 00:00:00' %}{{ account.formatted_event_date }}{% if account.event_place %} - {% endif %}{% endif %}{{ account.event_place }}{% if account.event_formation %} - {% endif %}{{ account.event_formation }}<br />{{ account.author.name }}{% if account.author.name %} : {% endif %}{{ account.title }}</td>
+							<td style='width:250;text-align:left;'>{% if account.prestation_date != '0000-00-00 00:00:00' %}{{ account.formatted_prestation_date }}{% if account.event_place %} - {% endif %}{% endif %}{{ account.event_place }}{% if account.event_formation %} - {% endif %}{{ account.event_formation }}<br />{{ account.author.name }}{% if account.author.name %} : {% endif %}{{ account.title }}</td>
 							<td style='width:40;text-align:right;'>{{ account.percent }} %</td>
 							<td style='width:80;'>{{ account.formatted_time }}</td>
 							<td style='width:73;text-align:right;'>{{ account.price }} &euro;</td>							

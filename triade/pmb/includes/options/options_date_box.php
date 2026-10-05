@@ -1,8 +1,8 @@
 <?php
  // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: options_date_box.php,v 1.6 2017-02-24 15:34:34 dgoron Exp $
+// $Id: options_date_box.php,v 1.6 2017/02/24 15:34:34 dgoron Exp $
 
 //Gestion des options de type text
 $base_path = "../..";

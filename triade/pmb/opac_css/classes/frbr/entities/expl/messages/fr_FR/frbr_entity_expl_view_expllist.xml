@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_expl_view_expllist.xml,v 1.1 2019/08/19 09:27:30 jlaurent Exp $ -->
+
+<XMLlist>
+	<entry code="frbr_entity_expl_view_expllist_page_var">Variable à utiliser</entry>
+	<entry code="frbr_entity_expl_view_title">Titre de la liste</entry>
+	<entry code="frbr_entity_expl_view_expl_desc">Exemplaires</entry>	
+	<entry code="frbr_entity_expl_view_expllist_title">Liste des exemplaires</entry>
+</XMLlist>

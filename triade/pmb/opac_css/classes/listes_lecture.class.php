@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: listes_lecture.class.php,v 1.18.4.1 2019-06-17 10:25:56 tsamson Exp $
+// $Id: listes_lecture.class.php,v 1.20 2023/12/21 11:02:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -92,7 +92,7 @@ class listes_lecture {
 	}
 	
 	/**
-	 * Affiche une liste de lecture Ã  moi
+	 * Affiche une liste de lecture à moi
 	 */
 	protected function get_display_my_reading_list($liste, $actions_allow = true) {
 		global $msg, $charset;
@@ -108,7 +108,7 @@ class listes_lecture {
 		$display .= "
 			<div id='liste_".$liste->id_liste."'>";
 		if($actions_allow) {
-			$display .= "<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."'/>";
+			$display .= "<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."' title='".htmlentities($msg['list_ui_selection_checkbox'], ENT_QUOTES, $charset)."'/>";
 		} else {
 			$display .= "<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."' disabled='disabled'/>";
 		}
@@ -183,7 +183,7 @@ class listes_lecture {
 	}
 	
 	/**
-	 * Affiche une liste de lecture partagÃ©e
+	 * Affiche une liste de lecture partagée
 	 */
 	protected function get_display_shared_reading_list($liste) {
 		global $msg, $charset;
@@ -198,7 +198,7 @@ class listes_lecture {
 		}
 		$display .= "
 			<div id='liste_".$liste->id_liste."'>
-				<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."'/>
+				<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."' title='".htmlentities($msg['list_ui_selection_checkbox'], ENT_QUOTES, $charset)."'/>
 				&nbsp;<span><a ".$div_action." href='./index.php?lvl=show_list&sub=consultation&id_liste=".$liste->id_liste."'>".htmlentities($liste->nom_liste,ENT_QUOTES,$charset)."</a><label for='cb".$liste->id_liste."' > ".htmlentities("(".$liste->empr_prenom." ".$liste->empr_nom.")",ENT_QUOTES,$charset)." </label></span>".$div_description."
 			</div>
 		";
@@ -206,7 +206,7 @@ class listes_lecture {
 	}
 	
 	/**
-	 * Affiche la liste des listes de lecture partagÃ©es
+	 * Affiche la liste des listes de lecture partagées
 	 */
 	protected function get_display_shared_reading_lists() {
 		global $msg;
@@ -259,7 +259,7 @@ class listes_lecture {
 			$font_end='';
 			$check='';
 		}
-		//Ajout de script pour la gestion de la confidentialitÃ© et l'ajax
+		//Ajout de script pour la gestion de la confidentialité et l'ajax
 		$ajax="";
 		$disable="";
 		$icone="";
@@ -289,7 +289,7 @@ class listes_lecture {
 			$div_action = "";
 		}
 		$display .= "<div id='liste_".$liste->id_liste."' ".$ajax.">
-			<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."' ".$check." ".$disable." />";
+			<input type='checkbox' class='checkbox' id='cb".$liste->id_liste."' name='list_ck[]' value='".$liste->id_liste."' ".$check." ".$disable." title='".htmlentities($msg['list_ui_selection_checkbox'], ENT_QUOTES, $charset)."' />";
 		if($confidential) {
 			$display .= "&nbsp;<span><a ".$div_action." href='#' onclick='return false;'>".htmlentities($liste->nom_liste,ENT_QUOTES,$charset)."</a>$font<label for='cb".$liste->id_liste."' > ".htmlentities("(".$liste->empr_prenom." ".$liste->empr_nom.")",ENT_QUOTES,$charset)." </label>".$font_end."</span>".$div_description;
 		} else {
@@ -305,7 +305,7 @@ class listes_lecture {
 	}
 	
 	/**
-	 * Affiche la liste des listes de lecture privÃ©es (mes listes + listes partagÃ©es)
+	 * Affiche la liste des listes de lecture privées (mes listes + listes partagées)
 	 */
 	protected function get_display_private_reading_lists() {
 		global $msg;

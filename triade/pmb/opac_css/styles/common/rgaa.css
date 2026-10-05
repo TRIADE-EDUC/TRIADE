@@ -1,0 +1,278 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: rgaa.css,v 1.20.2.2 2024/07/22 14:58:36 pmallambic Exp $ */
+
+:root {
+    --rgaa-highlight-color: #856404;
+}
+
+/* -----------------------------------------------------*/
+/*        Class générales                               */
+/* -----------------------------------------------------*/
+
+.d-flex{
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-1 {
+    flex:1;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.p-relative{
+    position: relative;
+}
+
+
+/* -----------------------------------------------------*/
+/*        Transformation des buttons en lien            */
+/* -----------------------------------------------------*/
+
+button:is(.search_result, .lvl1_list_btn, .btn-icon, .btn-surligner),
+button:is(.onglet, .perio-title, .expand-all-btn, .collapse-all-btn, .accordion-controller, .faq-question-btn, .sub-onglet),
+*:is(#accessibility ul li, .printSearchResult, .triSelector) button,
+*:is(.addCart, .open_visionneuse, .short_url_permalink, .search_bt_sugg, .search_bt_external) button,
+.navbar>form button {
+    border: 0 transparent;
+    background: transparent;
+    cursor: pointer;
+}
+
+*:is(#home_on_top, #accueil h2) a {
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------*/
+/*          FAQ                                         */
+/* -----------------------------------------------------*/
+
+.faq-question-btn {
+    width: 100%;
+}
+
+/* -----------------------------------------------------*/
+/*          Surbrillance Facette                        */
+/* -----------------------------------------------------*/
+
+.surbrillance button {
+    color: var(--rgaa-highlight-color)  !important;
+}
+
+/* -----------------------------------------------------*/
+/*          DIVERS                                      */
+/* -----------------------------------------------------*/
+
+.button-unstylized {
+    all : unset;
+    cursor: pointer;
+}
+.button-unstylized:focus {
+    outline : revert;
+}
+
+/* -----------------------------------------------------*/
+/*          Périodique                                  */
+/* -----------------------------------------------------*/
+
+#a2z_contens .a2z_contens {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#a2z_contens .a2z_contens .a2z_perio_list {
+    width: 25%;
+    list-style: none;
+    height: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
+    padding-right: 8px;
+}
+
+#a2z_contens .a2z_contens .a2z_perio_list li:not(:last-child){
+    margin-bottom: 8px;
+}
+
+#a2z_contens .a2z_contens #a2z_perio {
+    flex: 1;
+    min-width: 1px;
+}
+
+#a2z_contens .perio-title {
+    text-align: left;
+    padding: 7px 0;
+}
+
+button:is(.onglet, .sub-onglet) {
+    padding: 0px 10px;
+    font-weight: 300;
+    display: block;
+    min-height: 34px;
+    line-height: 34px;
+}
+
+.isbd_public_active button:is(.onglet, .sub-onglet),
+.perio_active .perio-title {
+    font-weight: 600;
+}
+
+.bulletin_search_filter input {
+    width: auto;
+}
+
+.inputs_bull_date,
+.bulletin_search_filter {
+    align-items: baseline;
+}
+
+.bulletin_search_filter>label,
+.inputs_bull_date_start>label {
+    min-width: 150px;
+}
+
+.inputs_bull_date_end>label {
+    margin-right: 5px;
+}
+
+.bulletin_search_filter input[type="date"] {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 959px) {
+    #a2z_contens .a2z_contens .a2z_perio_list {
+        width: 100%;
+    }
+
+    .bulletin_search_filter label {
+        width: 100%;
+    }
+}
+
+
+/* -----------------------------------------------------*/
+/*          Modal                                         */
+/* -----------------------------------------------------*/
+
+.modal-container {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #dfdfdfad;
+	cursor: pointer;
+}
+
+@media screen and (min-width: 1200px) {
+    .modal-container #frame_notice_preview {
+        min-width: 1000px;
+    }
+}
+
+/* -----------------------------------------------------*/
+/*          Tri                                         */
+/* -----------------------------------------------------*/
+
+#creer_tri {
+    margin-top: 15px;
+}
+
+.sort_row {
+	gap: 10px;
+}
+
+.sort_col {
+	margin-bottom: 8px;
+}
+
+
+/* -----------------------------------------------------*/
+/*          Change password                             */
+/* -----------------------------------------------------*/
+
+#change_password_form fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.change_password_row:not(:last-child){
+    margin-bottom: 10px;
+}
+
+.change_password_row label {
+    margin-bottom: 12px;
+    display: block;
+}
+
+.change_password_row .btn-icon{
+    background: none;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+}
+
+.change_password_row .btn-icon:hover{
+        background: none;
+}
+
+/* -----------------------------------------------------*/
+/*          Compte emprunteur                          */
+/* -----------------------------------------------------*/
+
+ul.fiche-lecteur {
+    list-style: none;
+    padding-left: 0;
+}
+
+
+/* -----------------------------------------------------*/
+/*          Panier                                      */
+/* -----------------------------------------------------*/
+
+ul#cart_action_list,
+ul#cart_more_actions_list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+#list_action_show_cart_export {
+    width: 100%;
+}
+
+/* -----------------------------------------------------*/
+/*          Historique de recherche                     */
+/* -----------------------------------------------------*/
+
+ul#history_action_list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+#history_fieldset {
+    border: none;
+    padding: 0;
+}

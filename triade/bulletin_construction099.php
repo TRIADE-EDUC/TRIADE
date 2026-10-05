@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,11 +42,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -67,7 +67,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -102,7 +102,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        	$nom_etablissement=trim($data[$i][0]);
        	$adresse=trim($data[$i][1]);
        	$postal=trim($data[$i][2]);
@@ -119,7 +119,7 @@ for($i=0;$i<count($data);$i++) {
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim("trimestre1");
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -128,7 +128,7 @@ $dateFinT1=dateForm($dateFin);
 
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"]);
 //$dateRecup=recupDateTrim("trimestre2");
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -137,7 +137,7 @@ $dateFinT2=dateForm($dateFin);
 
 //$dateRecup=recupDateTrim("trimestre3");
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -162,11 +162,11 @@ $merge=new FPDF_Merge();
 
 
 $eleveT=recupEleve($_POST["saisie_classe"]); // recup liste eleve
-$effectif=count($eleveT);
+$effectif=countTriade($eleveT);
 
 $hautclassant=0;
 $profptab=rechercheprofpMulti($_POST["saisie_classe"]); // idprof,idclasse
-for($j=0;$j<count($profptab);$j++) {
+for($j=0;$j<countTriade($profptab);$j++) {
 	$profp1=recherche_personne2($profptab[$j][0]);
 	$profp1=trunchaine($profp1,14);
 	$profp[$j]=$profp1;
@@ -175,9 +175,9 @@ $profp=implode(', ',$profp);
 
 
 
-if (count($profptab) > 1) { $hautclassant=1.5; }
+if (countTriade($profptab) > 1) { $hautclassant=1.5; }
 
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -191,12 +191,12 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$nbretard=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebutT1),dateFormBase($dateFinT1)); // ideleve,debutdate,findate
-	$nbretardT1=count($nbretard);
+	$nbretardT1=countTriade($nbretard);
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebutT1),dateFormBase($dateFinT1)); // ideleve,debutdate,findate
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$duree_heureT1=0;
 	$nbabsT1=0;
-	for($o=0;$o<count($nbabs);$o++) {
+	for($o=0;$o<countTriade($nbabs);$o++) {
 		if (preg_match('/inconnu/i',$nbabs[$o][6])) { continue; }
 		if ($nbabs[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabs[$o][4])) { 
@@ -214,11 +214,11 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	if ($duree_heureT1 >= 3) { $duree_heureT1 = $duree_heureT1 / 3 ;  $duree_heureT1=preg_replace('/\..*$/','',$duree_heureT1); $nbabsT1 += $duree_heureT1 ; }
 
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebutT2),dateFormBase($dateFinT2)); // ideleve,debutdate,findate
-	$nbretardT2=count($nbretard);
+	$nbretardT2=countTriade($nbretard);
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebutT2),dateFormBase($dateFinT2)); // ideleve,debutdate,findate
 	$duree_heureT2=0;
 	$nbabsT2=0;
-	for($o=0;$o<count($nbabs);$o++) {
+	for($o=0;$o<countTriade($nbabs);$o++) {
 		if (preg_match('/inconnu/i',$nbabs[$o][6])) { continue; }
 		if ($nbabs[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabs[$o][4])) { 
@@ -237,12 +237,12 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 
 
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebutT3),dateFormBase($dateFinT3)); // ideleve,debutdate,findate
-	$nbretardT3=count($nbretard);
+	$nbretardT3=countTriade($nbretard);
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebutT3),dateFormBase($dateFinT3)); // ideleve,debutdate,findate
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$duree_heureT3=0;
 	$nbabsT3=0;
-	for($o=0;$o<count($nbabs);$o++) {
+	for($o=0;$o<countTriade($nbabs);$o++) {
 		if (preg_match('/inconnu/i',$nbabs[$o][6])) { continue; }
 		if ($nbabs[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabs[$o][4])) { 
@@ -265,7 +265,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$duree_heureTT1=0;
 	$nbabsTT1=0;
 	$nbabsdnjT1=0;
-	for($o=0;$o<count($nbabsdnj);$o++) {
+	for($o=0;$o<countTriade($nbabsdnj);$o++) {
 		if ($nbabsdnj[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabsdnj[$o][4])) { 
 				$nbabsdnj[$o][4] = $nbabsdnj[$o][4] - 0.5 ;  
@@ -286,7 +286,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$duree_heureTT2=0;
 	$nbabsTT2=0;
 	$nbabsdnjT2=0;
-	for($o=0;$o<count($nbabsdnj);$o++) {
+	for($o=0;$o<countTriade($nbabsdnj);$o++) {
 		if ($nbabsdnj[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabsdnj[$o][4])) { 
 				$nbabsdnj[$o][4] = $nbabsdnj[$o][4] - 0.5 ;  
@@ -309,7 +309,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$duree_heureTT3=0;
 	$nbabsTT3=0;
 	$nbabsdnjT3=0;
-	for($o=0;$o<count($nbabs);$o++) {
+	for($o=0;$o<countTriade($nbabs);$o++) {
 		if ($nbabsdnj[$o][4] > 0) {
 			if (preg_match('/\.5$/',$nbabsdnj[$o][4])) { 
 				$nbabsdnj[$o][4] = $nbabsdnj[$o][4] - 0.5 ;  
@@ -356,7 +356,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 
 	// mise en place du logo
 	$photo=recup_photo_bulletin();
-	if (count($photo) > 0) {
+	if (countTriade($photo) > 0) {
 		$logo="./data/image_pers/".$photo[0][0];
 		if (file_exists($logo)) {
 			$xlogo=25;
@@ -430,7 +430,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 
 
 	$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -572,7 +572,7 @@ for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$NbCent="";
 	$nbNoteP="";
 	// Mise en place des matieres et nom de prof
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 
 	//	if ($i == 10) {  break; }
 
@@ -1022,7 +1022,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 

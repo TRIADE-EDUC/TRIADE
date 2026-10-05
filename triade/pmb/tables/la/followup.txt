@@ -1,6 +1,6 @@
 1./install.php
 
-pour ajouter le bouton pour la luangue laotient, il suffit d'ajouter les 2 lignes suivantes apres la ligne 64
+pour ajouter le bouton pour la langue laotien, il suffit d'ajouter les 2 lignes suivantes apres la ligne 64
 	
 	<td>&nbsp;&nbsp;</td>
 	<td><input type='submit' class='bouton' name='submit' value='Lao'></td>

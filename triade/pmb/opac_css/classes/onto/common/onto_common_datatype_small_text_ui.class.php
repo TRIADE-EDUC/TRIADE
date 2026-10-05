@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_small_text_ui.class.php,v 1.6 2019-03-14 15:06:54 apetithomme Exp $
+// $Id: onto_common_datatype_small_text_ui.class.php,v 1.14.4.1 2025/01/30 09:08:07 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+require_once $class_path.'/onto/common/onto_common_datatype_ui.class.php';
 
 /**
  * class onto_common_datatype_small_text_ui
@@ -22,8 +24,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -33,13 +35,16 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	 * @access public
 	 */
 	public static function get_form($item_uri,$property, $restrictions,$datas, $instance_name,$flag) {
-		global $msg,$charset,$ontology_tpl;
+	    global $msg,$charset,$ontology_tpl, $msg;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset), $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset), $form);
 		
+		$tab_lang = array();
 		$content='';
-		if(sizeof($datas)){
+		$multilingue = "";
+		
+		if(is_countable($datas) && sizeof($datas)){
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -58,6 +63,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 				$inside_row .= $ontology_tpl['form_row_content_type'];
 				
 				$inside_row=str_replace("!!onto_row_content_small_text_value!!",htmlentities($data->get_formated_value() ,ENT_QUOTES,$charset) ,$inside_row);
+				$multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'['.$order.'][lang]',$instance_name.'_'.$property->pmb_name.'_'.$order.'_lang',$data->get_lang(), 1, '', $tab_lang);
+				$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 				$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
 				
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -86,7 +93,9 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 			$inside_row=$ontology_tpl['form_row_content_small_text'];
 			$inside_row .= $ontology_tpl['form_row_content_type'];
 			
-			$inside_row=str_replace("!!onto_row_content_small_text_value!!", "", $inside_row);
+			$inside_row=str_replace("!!onto_row_content_small_text_value!!","" , $inside_row);
+			$multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'[0][lang]',$instance_name.'_'.$property->pmb_name.'_0_lang', '', 1, '', $tab_lang);
+			$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 			$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
 			
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -112,8 +121,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -123,7 +132,7 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -136,8 +145,8 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 	/**
 	 *
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param onto_restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ©
+	 * @param property property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -150,7 +159,7 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 		global $msg;
 		
 		return '{
-			"message": "'.addslashes($property->label).'",
+			"message": "'.addslashes($property->get_label()).'",
 			"valid" : true,
 			"error": "",
 			"check": function(){
@@ -158,7 +167,7 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 				var order = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_new_order").value;
 				for (var i=0; i<=order ; i++){
 					var label = document.getElementById("'.$instance_name.'_'.$property->pmb_name.'_"+i+"_value");
-					if(label && label.value.length > 51){
+					if(label && label.value.length > 511){
 						this.valid = false;
 						this.error = "too_long";
 					}
@@ -171,7 +180,7 @@ class onto_common_datatype_small_text_ui extends onto_common_datatype_ui {
 						this.message = "'.addslashes($msg['onto_error_too_long_value_small_text']).'";
 						break;
  				}
-				this.message = this.message.replace("%s","'.addslashes($property->label).'");
+				this.message = this.message.replace("%s","'.addslashes($property->get_label()).'");
 				return this.message;
 			}
 		}';

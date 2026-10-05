@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ManageDnd.js,v 1.1 2017-04-11 11:46:20 dgoron Exp $
+// $Id: ManageDnd.js,v 1.1 2017/04/11 11:46:20 dgoron Exp $
 
 define(['dojo/_base/declare',
         'dojo/dnd/Source',

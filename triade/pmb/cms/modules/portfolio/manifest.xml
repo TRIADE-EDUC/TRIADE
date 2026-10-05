@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2013-07-04 12:55:50 arenou Exp $ -->
+$Id: manifest.xml,v 1.3 2019/12/12 15:49:07 btafforeau Exp $ -->
 
 <manifest>
 	<name>Portfolio</name>
@@ -22,6 +22,8 @@ $Id: manifest.xml,v 1.1 2013-07-04 12:55:50 arenou Exp $ -->
 		</datasources>
 		<views>
 			<view>cms_module_common_view_portfolio</view>
+			<view>cms_module_portfolio_view_carousel_uikit</view>
+			<view>cms_module_portfolio_view_slideshow</view>
 		</views>
 		<conditions/>
 	</use>

@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_docs_statut_ui.class.php,v 1.1 2018-10-12 14:44:48 dgoron Exp $
+// $Id: list_configuration_docs_statut_ui.class.php,v 1.6 2023/12/22 13:19:39 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/docs/list_configuration_docs_ui.class.php");
 
 class list_configuration_docs_statut_ui extends list_configuration_docs_ui {
 	
@@ -15,10 +13,7 @@ class list_configuration_docs_statut_ui extends list_configuration_docs_ui {
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'statut_libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('statut_libelle');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -39,48 +34,56 @@ class list_configuration_docs_statut_ui extends list_configuration_docs_ui {
 		return $main_fields;
 	}
 
-	protected function get_cell_content($object, $property) {
-		global $msg;
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('statut_visible_opac', 'align', 'center');
+		$this->set_setting_column('statut_visible_opac', 'datatype', 'boolean');
+	}
 	
-		$content = '';
+	protected function _get_object_property_pret_flag($object) {
+		global $msg;
+		
+		if($object->pret_flag) {
+			return $msg[113];
+		} else {
+			return $msg[114];
+		}
+	}
+	
+	protected function _get_object_property_statut_allow_resa($object) {
+		global $msg;
+		
+		if($object->statut_allow_resa) {
+			return $msg['statut_allow_resa_yes'];
+		} else {
+			return $msg['statut_allow_resa_no'];
+		}
+	}
+	
+	protected function _get_object_property_transfert_flag($object) {
+		global $msg;
+		
+		if($object->transfert_flag) {
+			return $msg['statut_allow_transfert_yes'];
+		} else {
+			return $msg['statut_allow_transfert_no'];
+		}
+	}
+	
+	protected function get_default_attributes_format_cell($object, $property) {
 		switch($property) {
 			case 'statut_libelle':
 				if ($object->statusdoc_owner) {
-					$content .= "<i>".$object->statut_libelle."</i>";
+					return array(
+							'style' => 'font-style:italic;'
+					);
 				} else {
-					$content .= "<strong>".$object->statut_libelle."</strong>";
+					return array(
+							'style' => 'font-weight:bold;'
+					);
 				}
-				break;
-			case 'pret_flag':
-				if($object->pret_flag) {
-					$content .= $msg[113];
-				} else {
-					$content .= $msg[114];
-				}
-				break;
-			case 'statut_allow_resa':
-				if($object->statut_allow_resa) {
-					$content .= $msg['statut_allow_resa_yes'];
-				} else {
-					$content .= $msg['statut_allow_resa_no'];
-				}
-				break;
-			case 'transfert_flag':
-				if($object->transfert_flag) {
-					$content .= $msg['statut_allow_transfert_yes'];
-				} else {
-					$content .= $msg['statut_allow_transfert_no'];
-				}
-				break;
-			case 'statut_visible_opac':
-				$content .= $this->get_cell_visible_flag($object, $property);
-				break;
-	
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
 		}
-		return $content;
+		return parent::get_default_attributes_format_cell($object, $property);
 	}
 	
 	public function get_display_header_list() {
@@ -89,8 +92,8 @@ class list_configuration_docs_statut_ui extends list_configuration_docs_ui {
 	
 		$display = "
 		<tr>
-			<th colspan=".($pmb_transferts_actif ? "6" : "5").">".$msg["docs_statut_gestion"]."</th>
-			<th colspan=2>".$msg["docs_statut_opac"]."</th>
+			<th colspan='".($pmb_transferts_actif ? "6" : "5")."' scope='colgroup'>".$msg["docs_statut_gestion"]."</th>
+			<th colspan='2' scope='colgroup'>".$msg["docs_statut_opac"]."</th>
 		</tr>";
 		$display .= parent::get_display_header_list();
 		return $display;

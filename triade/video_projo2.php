@@ -1,97 +1,128 @@
-<html>
-<body onload="init()">
-<script type="text/javascript" src="./librairie_js/wz_dragdrop.js"></script>
-<img src="video-proj-moy-matiere-etoile.php?saisie_eleve=<?php print $_GET["saisie_eleve"]?>&saisie_classe=<?php print $_GET["saisie_classe"]?>&trimestre=<?php print $_GET["trimestre"]?>" name="main" width="500" height="500" /><br><i>Double-cliquer sur l'image pour la redimensionner.</i>
-<img name="lefttop" src="image/commun/marker_rect.gif" width="16" height="16" style="visibility:hidden;">
-<img name="righttop" src="image/commun/marker_rect.gif" width="16" height="16" style="visibility:hidden;">
-<img name="rightbottom" src="image/commun/marker_rect.gif" width="16" height="16" style="visibility:hidden;">
-<img name="leftbottom" src="image/commun/marker_rect.gif" width="16" height="16" style="visibility:hidden;">
-<script type="text/javascript">
-<!--
-SET_DHTML("main"+CURSOR_MOVE, "lefttop"+CURSOR_NW_RESIZE, "righttop"+CURSOR_NE_RESIZE, "rightbottom"+CURSOR_SE_RESIZE, "leftbottom"+CURSOR_SW_RESIZE);
+﻿<?php
+session_start();
+error_reporting(0);
+include_once('common/config.inc.php');
+include_once('librairie_php/db_triade.php');
+include_once('librairie_php/recupnoteperiode.php');
+$cnx = cnx();
 
-var main = dd.elements.main;
-var lt = dd.elements.lefttop;
-var rt = dd.elements.righttop;
-var rb = dd.elements.rightbottom;
-var lb = dd.elements.leftbottom;
-var grips = [lt, rt, rb, lb];
+$ideleve       = $_GET["saisie_eleve"];
+$idclasse      = $_GET["saisie_classe"];
+$trim_en_cours = $_GET["trimestre"];
+$ordre         = ordre_matiere_visubull($idclasse);
+$eleveT        = recupEleve($idclasse);
 
-function init()
-{
-    hideGrips();
-    main.setZ(main.z+1);
-    main.div.ondblclick = showGrips;
-}
+$dr = recupDateTrimByIdclasse($trim_en_cours, $idclasse);
+$dateDebut = $dateFin = "";
+for ($j = 0; $j < countTriade($dr); $j++) { $dateDebut = $dr[$j][0]; $dateFin = $dr[$j][1]; }
+$dateDebut = dateForm($dateDebut);
+$dateFin   = dateForm($dateFin);
 
-function my_PickFunc()
-{
-    if (dd.obj.name == "main")
-        hideGrips();
-        
-    else
-    {
-        var i = 4; while (i--)
-        {
-            if (grips[i] != dd.obj)
-                grips[i].hide();
+function vp2_labels($eleveT, $ordre, $eid, $idc) {
+    $tab = [];
+    foreach ($eleveT as $elv) {
+        if ($elv[4] != $eid) continue;
+        $idEleve = $elv[4];
+        for ($i = 0; $i < countTriade($ordre); $i++) {
+            $idM = $ordre[$i][0];
+            if (verifMatiereAvecGroupe($idM,$idEleve,$idc,$ordre[$i][2])) continue;
+            $mat  = chercheMatiereNom($idM);
+            $code = chercheCodeMatiere($idM);
+            if ($code != "") $mat = $code;
+            $tab[] = ucwords(strtolower(substr($mat, 0, 8)));
         }
+        break;
     }
+    return $tab;
 }
 
-function my_DropFunc()
-{
-    hideGrips();
+function vp2_notes_eleve($eleveT, $ordre, $eid, $idc, $d, $f) {
+    $tab = [];
+    foreach ($eleveT as $elv) {
+        if ($elv[4] != $eid) continue;
+        $idEleve = $elv[4];
+        for ($i = 0; $i < countTriade($ordre); $i++) {
+            $idM = $ordre[$i][0];
+            if (verifMatiereAvecGroupe($idM,$idEleve,$idc,$ordre[$i][2])) continue;
+            $idprof = recherche_prof($idM,$idc,$ordre[$i][2]);
+            $note   = moyenneEleveMatiere($idEleve,$idM,$d,$f,$idprof);
+            $tab[]  = ($note === "" || $note === null) ? 0 : round((float)preg_replace('/,/','.', $note), 2);
+        }
+        break;
+    }
+    return $tab;
 }
 
-function my_DragFunc()
-{
-    if (dd.obj == rb)
-    {
-        main.resizeTo(rb.x-lb.x, rb.y-rt.y);
+function vp2_notes_classe($eleveT, $ordre, $eid, $idc, $d, $f) {
+    $tab = [];
+    foreach ($eleveT as $elv) {
+        if ($elv[4] != $eid) continue;
+        $idEleve = $elv[4];
+        for ($i = 0; $i < countTriade($ordre); $i++) {
+            $idM = $ordre[$i][0];
+            if (verifMatiereAvecGroupe($idM,$idEleve,$idc,$ordre[$i][2])) continue;
+            $idprof = recherche_prof($idM,$idc,$ordre[$i][2]);
+            $note   = moyeMatGen($idM,$d,$f,$idc,$idprof);
+            $tab[]  = ($note === "" || $note === null) ? 0 : round((float)preg_replace('/,/','.', $note), 2);
+        }
+        break;
     }
-    else if (dd.obj == rt)
-    {
-        main.resizeTo(rt.x-lt.x, rb.y-rt.y);
-        main.moveTo(rt.x-main.w+rt.w/2, rt.y+rt.h/2);
-    }
-    else if (dd.obj == lb)
-    {
-        main.moveTo(lb.x+lb.w/2, lt.y+lt.h/2);
-        main.resizeTo(rb.x-lb.x, lb.y-lt.y);
-    }
-    else if (dd.obj == lt)
-    {
-        main.moveTo(lt.x+lt.w/2, lt.y+lt.h/2);
-        main.resizeTo(rt.x-lt.x, lb.y-lt.y);
-    }
+    return $tab;
 }
 
-function showGrips()
-{
-    moveGripsToCorners();
-    var i = 4; while(i--)
-    {
-        grips[i].setZ(main.z+1);
-        grips[i].show();
+$labels = vp2_labels($eleveT,$ordre,$ideleve,$idclasse);
+$eleve  = vp2_notes_eleve($eleveT,$ordre,$ideleve,$idclasse,$dateDebut,$dateFin);
+$classe = vp2_notes_classe($eleveT,$ordre,$ideleve,$idclasse,$dateDebut,$dateFin);
+
+$jL = json_encode($labels);
+$jE = json_encode($eleve);
+$jC = json_encode($classe);
+Pgclose();
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Graphique Radar</title>
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Electrolize, Arial, sans-serif; background: #f5f7ff; }
+.g-header { background: linear-gradient(135deg,#080A66,#1a1c8a); color: #fff; padding: 8px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+.g-header i { color: #CACCEF; }
+.g-wrap { position: relative; width: 100%; height: calc(100vh - 37px); padding: 10px; display: flex; align-items: center; justify-content: center; }
+.g-wrap canvas { max-width: 490px; max-height: 490px; }
+</style>
+</head>
+<body>
+<div class="g-header"><i class="bi bi-bullseye"></i> Radar des moyennes par matière</div>
+<div class="g-wrap">
+  <canvas id="chart"></canvas>
+</div>
+<script src="librairie_js/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('chart'), {
+  type: 'radar',
+  data: {
+    labels: <?= $jL ?>,
+    datasets: [
+      { label:'Moy. Élève', data:<?= $jE ?>, borderColor:'#080A66', backgroundColor:'rgba(8,10,102,0.15)', borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#080A66' },
+      { label:'Moy. Classe', data:<?= $jC ?>, borderColor:'#e65100', backgroundColor:'rgba(230,81,0,0.08)', borderWidth:2, borderDash:[5,3], pointRadius:3, pointBackgroundColor:'#e65100' }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:true,
+    plugins: { legend:{ position:'bottom', labels:{font:{size:11}, padding:12} } },
+    scales: {
+      r: {
+        min:0, max:20,
+        ticks:{ stepSize:5, backdropColor:'transparent', font:{size:9}, callback:v=>v+'/20' },
+        grid:{ color:'#dde0f0' }, angleLines:{ color:'#dde0f0' },
+        pointLabels:{ font:{size:10, weight:'600'}, color:'#333' }
+      }
     }
-}
-
-function hideGrips()
-{
-    var i = 4; while(i--)
-        grips[i].hide();
-}
-
-function moveGripsToCorners()
-{
-    lt.moveTo(main.x-lt.w/2, main.y-lt.h/2);
-    rt.moveTo(main.x+main.w-lt.w/2, main.y-lt.h/2);
-    rb.moveTo(main.x+main.w-lt.w/2, main.y+main.h-lt.h/2);
-    lb.moveTo(main.x-lt.w/2, main.y+main.h-lt.h/2);
-}
-//-->
+  }
+});
 </script>
-
 </body>
 </html>

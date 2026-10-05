@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dynamic_search_q_txt_i18n.class.php,v 1.4 2017-09-13 11:36:18 dgoron Exp $
+// $Id: dynamic_search_q_txt_i18n.class.php,v 1.6 2022/11/03 09:56:04 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class dynamic_search_q_txt_i18n extends dynamic_search {
 	
 	public function get_query($field = array()) {
 		//Recuperation de l'operateur
-    	$op="op_".$this->n_ligne."_".$this->prefix."_".$this->id;
+    	$op="op_".$this->n_ligne."_".$this->xml_prefix."_".$this->id;
 		global ${$op};
 		$q_index=$this->params["QUERIES_INDEX"];
 		$q=$this->params["QUERIES"][$q_index[${$op}]];
@@ -42,7 +42,7 @@ class dynamic_search_q_txt_i18n extends dynamic_search {
 				}
 				$restricts[] = implode(" ".$q["MULTIPLE_OPERATOR"]." ",$multiple_terms);
 			} else {
-				$restricts[] = str_replace("!!p!!", addslashes($field['text']), $restrict_query);
+				$restricts[] = str_replace("!!p!!", addslashes($field['txt']), $restrict_query);
 			}
 		}
 		if(isset($field['qualification']) && $field['qualification'] != '') {

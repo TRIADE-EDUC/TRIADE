@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ExplnumPopupEdit.js,v 1.4 2018-08-07 16:04:05 vtouchard Exp $
+// $Id: ExplnumPopupEdit.js,v 1.4 2018/08/07 16:04:05 vtouchard Exp $
 
 define([
         "dojo/_base/declare",

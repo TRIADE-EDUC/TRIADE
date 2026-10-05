@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: load_notice_pos.php,v 1.36 2018-05-26 07:23:05 dgoron Exp $
+// $Id: load_notice_pos.php,v 1.38 2022/01/05 08:50:28 dgoron Exp $
 
 $base_path=".";
 $base_noheader=1;
@@ -15,11 +15,14 @@ require_once("includes/init.inc.php");
 header("Content-Type: text/xml");
 print "<?xml version='1.0' encoding='iso-8859-1'?>\n";
 
+global $grille_typdoc, $grille_niveau_biblio, $grille_location;
+global $pmb_map_activate, $pmb_nomenclature_activate, $pmb_use_uniform_title, $deflt_docs_location;
+
 if (!isset($grille_typdoc) || !$grille_typdoc) $grille_typdoc='a' ;
 if (!isset($grille_niveau_biblio) || !$grille_niveau_biblio) $grille_niveau_biblio='m' ;
 
 $requete = "select name from notices_custom order by ordre ";
-$res = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error()."<br />$requete");
+$res = pmb_mysql_query($requete) or die(pmb_mysql_error()."<br />$requete");
 
 if ($grille_niveau_biblio=='m') {
 		$grille_standard="<formpage relative='yes'>
@@ -78,6 +81,7 @@ if ($grille_niveau_biblio=='m') {
 		  <movable id='el10Child_7' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_1' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_2' visible='yes' parent='el10Child'/>
+		  <movable id='el10Child_11' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_6' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_3' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_9' visible='yes' parent='el10Child'/>
@@ -129,6 +133,7 @@ if ($grille_niveau_biblio=='s') {
 		  <movable id='el10Child_7' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_1' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_2' visible='yes' parent='el10Child'/>
+		  <movable id='el10Child_11' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_6' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_3' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_4' visible='yes' parent='el10Child'/>
@@ -180,6 +185,7 @@ if ($grille_niveau_biblio=='a') {
 		  <movable id='el10Child_7' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_1' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_2' visible='yes' parent='el10Child'/>
+		  <movable id='el10Child_11' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_6' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_4' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_9' visible='yes' parent='el10Child'/>
@@ -225,6 +231,7 @@ if ($grille_niveau_biblio=='b') {
 		  <movable id='el10Child_7' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_1' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_2' visible='yes' parent='el10Child'/>
+		  <movable id='el10Child_11' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_6' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_4' visible='yes' parent='el10Child'/>
 		  <movable id='el10Child_9' visible='yes' parent='el10Child'/>
@@ -234,7 +241,7 @@ if ($grille_niveau_biblio=='b') {
 	}
 
 $requete = "select grille_typdoc, grille_niveau_biblio, grille_localisation, descr_format from grilles where grille_niveau_biblio='$grille_niveau_biblio' and grille_typdoc='$grille_typdoc' ";
-$res = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error()."<br />$requete");
+$res = pmb_mysql_query($requete) or die(pmb_mysql_error()."<br />$requete");
 if (!isset($grille_location) || !$grille_location) $grille_location=$deflt_docs_location;
 $descr_format = '';
 while ($grille=pmb_mysql_fetch_object($res)) {

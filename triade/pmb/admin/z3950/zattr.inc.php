@@ -1,10 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: zattr.inc.php,v 1.14 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: zattr.inc.php,v 1.16 2021/03/12 15:15:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $action;
+global $bib_id, $form_attr_bib_id;
+
+require_once($class_path.'/z_attr.class.php');
 
 // gestion des attributs de recherche z3950
 
@@ -21,151 +26,57 @@ function test_form(form)
 </script>
 
 <?php
-function show_zattr($dbh, $bib_id) {
-	global $msg;
-	global $include_path ;
-	global $lang;
-	global $charset;
-	
-	print "<table>
-	<tr>
-		<td>$msg[zattr_libelle]</td>
-		<td>$msg[zattr_attr]</td>
-	</tr>
-	";
-
-	// affichage du tableau des z_attr
-
-	$requete = "SELECT attr_bib_id,  attr_libelle,  attr_attr  FROM z_attr where attr_bib_id ='$bib_id' ORDER BY attr_libelle,  attr_attr ";
-	$res = pmb_mysql_query($requete, $dbh);
-
-	$nbr = pmb_mysql_num_rows($res);
-	
-	// loading the localized attributes labels
-	$la = new XMLlist($include_path."/marc_tables/z3950attributes.xml", 0);
-	$la->analyser();
-	$codici = $la->table;
-
-	$parity=1;
-	for($i=0;$i<$nbr;$i++) {
-		$row=pmb_mysql_fetch_object($res);
-		if ($parity % 2) {
-			$pair_impair = "even";
-			} else {
-				$pair_impair = "odd";
-				}
-		$parity += 1;
-			$tr_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\" onmousedown=\"document.location='./admin.php?categ=z3950&sub=zattr&action=modif&bib_id=$row->attr_bib_id&attr_libelle=$row->attr_libelle';\" ";
-				print "";
-			print "<tr class='$pair_impair' $tr_javascript style='cursor: pointer'>";
-					print "<td><strong>".$msg["z3950_".$codici[$row->attr_libelle]]."</strong></td>";
-					print "<td>".$row->attr_attr."</td>";
-					print "</tr>";
-	}
-	print "</table>
-		<input class='bouton' type='button' value='$msg[76]' onClick=\"document.location='./admin.php?categ=z3950&sub=zbib&action=modif&id=$bib_id'\" />
-		<input class='bouton' type='button' value='".$msg["ajouter"]."' onClick=\"document.location='./admin.php?categ=z3950&sub=zattr&action=add&bib_id=$bib_id'\" />&nbsp;
-		";
+function show_zattr($bib_id) {
+	print list_configuration_z3950_zattr_ui::get_instance(array('attr_bib_id' => $bib_id))->get_display_list();
 }
 
-function zattr_form($zbib_id="", $zattr_libelle="", $zattr_attr="") {
-	global $msg;
-	global $admin_zattr_form;
-	global $include_path ;
-	global $lang;
-	global $charset;
-	
-	// loading the localized attributes labels
-	$la = new XMLlist($include_path."/marc_tables/z3950attributes.xml", 0);
-	$la->analyser();
-	$codici = $la->table;
-	
-	if (!$zattr_libelle) {
-		$admin_zattr_form = str_replace('!!form_title!!', $msg["zattr_ajouter_attr"], $admin_zattr_form);
-		$admin_zattr_form = str_replace('!!bib_id!!', "", $admin_zattr_form);
-		// here the combo box must be enabled because the user is adding a new attr.
-		$select = "<div class='row'>
-				<div class='colonne4 align_right'>
-					<label class='etiquette'>$msg[zattr_libelle] &nbsp;</label>
-				</div>
-				<div class='colonne_suite'> ";
-		
-		$select .= "<select name='form_attr_libelle'>	";
-		foreach ($codici as $codeattr => $libelle) {
-			if($zattr_libelle == $codeattr) $select .= "<option value='".htmlentities($codeattr,ENT_QUOTES, $charset)."' SELECTED>".htmlentities($msg["z3950_".$libelle],ENT_QUOTES, $charset)."</option>";
-				else $select .= "<option value='".htmlentities($codeattr,ENT_QUOTES, $charset)."'>".htmlentities($msg["z3950_".$libelle],ENT_QUOTES, $charset)."</option>";
-			}
-		$select .= "</select></div></div>";
-		
-		} else {
-			$admin_zattr_form = str_replace('!!form_title!!', $msg["zattr_modifier_attr"]." : ".$msg["z3950_".$codici[$zattr_libelle]], $admin_zattr_form);
-			$admin_zattr_form = str_replace('!!bib_id!!', $zbib_id, $admin_zattr_form);
-			// here the combo box doesn't appear because the user can't change the attr. label
-			
-			$select = "<input type=hidden name=form_attr_libelle value='$zattr_libelle'>";
-			}
-	
-	
-	
-	$admin_zattr_form = str_replace('!!code!!', $select, $admin_zattr_form);
-	
-	$admin_zattr_form = str_replace('!!attr_bib_id!!',			$zbib_id,        $admin_zattr_form);
-	$admin_zattr_form = str_replace('!!attr_libelle!!',			$zattr_libelle,  $admin_zattr_form);
-	$admin_zattr_form = str_replace('!!attr_attr!!',			$zattr_attr,     $admin_zattr_form);
-	$admin_zattr_form = str_replace('!!local_attr_libelle!!',	$msg["z3950_".$codici[$zattr_libelle]],  $admin_zattr_form);
-	
-	print confirmation_delete("./admin.php?categ=z3950&sub=zattr&action=del&");
-	
-	print $admin_zattr_form;
-	}
 
 $requete = "SELECT bib_nom, base, search_type FROM z_bib where bib_id ='$bib_id' or bib_id='$form_attr_bib_id' ";
-$res = pmb_mysql_query($requete, $dbh);
+$res = pmb_mysql_query($requete);
 $row=pmb_mysql_fetch_object($res);
 echo "<hr /><strong>$row->bib_nom - $row->base - $row->search_type</strong><hr />";
 switch($action) {
 	case 'update':
-		if(!empty($form_attr_bib_id) && !empty($form_attr_libelle) && !empty($form_attr_attr)) {
-			if($bib_id) {
-				$requete = "UPDATE z_attr SET attr_libelle='$form_attr_libelle', attr_attr='$form_attr_attr' WHERE attr_bib_id='$bib_id' and attr_libelle='$form_attr_libelle' ";
-				$res = pmb_mysql_query($requete, $dbh);
-				} else {
-					$requete = "INSERT INTO z_attr (attr_bib_id,  attr_libelle, attr_attr) VALUES ('$form_attr_bib_id', '$form_attr_libelle', '$form_attr_attr') ";
-					$res = pmb_mysql_query($requete, $dbh);
-					$bib_id = $form_attr_bib_id ;
-					}
-			}
-		show_zattr($dbh,$bib_id);
+		global $form_attr_libelle;
+		if(z_attr::check_data_from_form()) {
+			$z_attr = new z_attr($bib_id, stripslashes($form_attr_libelle));
+			$z_attr->set_properties_from_form();
+			$z_attr->save();
+		}
+		show_zattr($bib_id);
 		break;
 	case 'add':
+		global $form_attr_libelle, $form_attr_attr;
 		if(empty($form_attr_bib_id) || empty($form_attr_libelle) || empty($form_attr_attr)) {
-			zattr_form($bib_id, $form_attr_libelle, $form_attr_attr);
-			} else {
-				show_zattr($dbh, $bib_id);
-				}
+			$z_attr = new z_attr($bib_id);
+			$z_attr->libelle = stripslashes($form_attr_libelle);
+			$z_attr->attr = stripslashes($form_attr_attr);
+			print $z_attr->get_form();
+		} else {
+			show_zattr($bib_id);
+		}
 		break;
 	case 'modif':
 		if($bib_id){
-			$requete = "SELECT attr_bib_id, attr_libelle, attr_attr FROM z_attr WHERE attr_bib_id=$bib_id and attr_libelle='$attr_libelle' ";
-			$res = pmb_mysql_query($requete, $dbh);
-			if(pmb_mysql_num_rows($res)) {
-				$row=pmb_mysql_fetch_object($res);
-				zattr_form ($row->attr_bib_id, $row->attr_libelle, $row->attr_attr );
-				} else {
-					show_zattr($dbh,$bib_id);
-					}
+			global $attr_libelle;
+			$z_attr = new z_attr($bib_id, stripslashes($attr_libelle));
+			if(pmb_error::get_instance('z_attr')->has_error()) {
+				pmb_error::get_instance('z_attr')->display(1, static::get_url_base());
 			} else {
-				show_zattr($dbh,$bib_id);
-				}
+				print $z_attr->get_form();
+			}
+		} else {
+			show_zattr($bib_id);
+		}
 		break;
 	case 'del':
+		global $attr_libelle;
 		if (($bib_id) && ($attr_libelle)) {
-			$requete = "DELETE FROM z_attr WHERE attr_bib_id='$bib_id' and attr_libelle='$attr_libelle' ";
-			$res = pmb_mysql_query($requete, $dbh);
-			show_zattr($dbh,$bib_id);
-			} else show_zattr($dbh,$bib_id);
+			z_attr::delete($bib_id);
+		}
+		show_zattr($bib_id);
 		break;
 	default:
-		show_zattr($dbh,$bib_id);
+		show_zattr($bib_id);
 		break;
 	}

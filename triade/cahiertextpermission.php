@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -63,7 +63,7 @@ include_once("librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx(); 
 $idpers=$_GET["id"];
-$sql="SELECT libelle,text,idclasse,info FROM ${prefixe}parametrage WHERE libelle='permModCdT_$idpers'";
+$sql="SELECT libelle,text,idclasse,info FROM {$prefixe}parametrage WHERE libelle='permModCdT_$idpers'";
 $res=execSql($sql);
 $data=chargeMat($res);
 $nomgrp="permModCdT_$idpers";
@@ -71,12 +71,12 @@ $liste=preg_replace('/\{/',"",$data[0][1]);
 $liste=preg_replace('/\}/',"",$liste);
 unset($data);
 if ($liste != "") {
-	$sql="SELECT nom,prenom,civ,pers_id FROM ${prefixe}personnel where pers_id IN ($liste)";
+	$sql="SELECT nom,prenom,civ,pers_id FROM {$prefixe}personnel where pers_id IN ($liste)";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 }
 
-$sql="SELECT nom,prenom,pers_id FROM ${prefixe}personnel WHERE type_pers='ENS' ORDER BY nom";
+$sql="SELECT nom,prenom,pers_id FROM {$prefixe}personnel WHERE type_pers='ENS' ORDER BY nom";
 $res=execSql($sql);
 $data2=chargeMat($res);
 
@@ -91,9 +91,9 @@ $data2=chargeMat($res);
 <TD bgcolor="yellow" width=20>&nbsp;</TD>
 </tr>
 <tr>
-<td valign=top align=center><br><select name="saisie_depart"  style="width:120px;height:300px" size="<?php print count($data2) ?>"  >
+<td valign=top align=center><br><select name="saisie_depart"  style="width:120px;height:300px" size="<?php print countTriade($data2) ?>"  >
 <?php
-for($i=0;$i<count($data2);$i++) {
+for($i=0;$i<countTriade($data2);$i++) {
     print "<option value='".$data2[$i][2]."' >".ucwords($data2[$i][0])." ".ucwords($data2[$i][1]). "</option>";
 }
 ?>
@@ -104,9 +104,9 @@ for($i=0;$i<count($data2);$i++) {
 &nbsp;<input type="button" value="<<< <?php print LANGBT50 ?>" onClick="calcul('-1');Deplacer(this.form.saisie_recherche,this.form.saisie_depart,'Choisissez un élèment')" class="bouton2" >&nbsp;
 
 </td>
-<td valign=top align=center><br><select name="saisie_recherche" style="width:130px;height:300px" multiple="multiple" size="<?php print count($data)+count($data2)  ?>" >
+<td valign=top align=center><br><select name="saisie_recherche" style="width:130px;height:300px" multiple="multiple" size="<?php print countTriade($data)+countTriade($data2)  ?>" >
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<option value='".$data[$i][3]."' >".ucwords($data[$i][0])." ".ucwords($data[$i][1]). "</option>";
 }
 ?>

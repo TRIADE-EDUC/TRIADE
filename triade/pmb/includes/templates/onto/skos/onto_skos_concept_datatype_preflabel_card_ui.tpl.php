@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_concept_datatype_preflabel_card_ui.tpl.php,v 1.3 2018-11-26 10:04:59 tsamson Exp $
+// $Id: onto_skos_concept_datatype_preflabel_card_ui.tpl.php,v 1.3 2018/11/26 10:04:59 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

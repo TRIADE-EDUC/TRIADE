@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_authority.class.php,v 1.4 2016-05-19 13:23:48 apetithomme Exp $
+// $Id: cms_authority.class.php,v 1.4 2016/05/19 13:23:48 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -57,7 +57,7 @@ class cms_authority {
 						
 				)
 		);
-		// CatÃ©gories
+		// Catégories
 		$authority_types[] =  array(
 				'var' => $msg['134'],
 				'desc' => $msg['134'],
@@ -89,7 +89,7 @@ class cms_authority {
 						
 				)
 		);
-		// SÃ©ries
+		// Séries
 		$authority_types[] =  array(
 				'var' => $msg['333'],
 				'desc' => $msg['333'],
@@ -188,7 +188,7 @@ class cms_authority {
 						)
 				)
 		);
-		// Index. dÃ©cimales
+		// Index. décimales
 		$authority_types[] =  array(
 				'var' => $msg['indexint_menu'],
 				'desc' => $msg['indexint_menu'],

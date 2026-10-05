@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.4 2021/04/26 13:41:28 moble Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="tu" typeobject="7">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+
+	<!--Name-->
+	<field name="103" type="text" typefield="select" id="2">
+		<table name="titres_uniformes">
+			<tablefield>index_tu</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+		</table>
+	</field>
+
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="titres_uniformes">
+			<tablefield>tu_id</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Date-->
+	<field name="aut_oeuvre_form_date" type="num" typefield="select" id="4">
+		<table name="titres_uniformes">
+			<tablefield>tu_date_date</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Forme saisie libre-->
+	<field name="aut_oeuvre_form_forme" type="text" typefield="select" id="5">
+		<table name="titres_uniformes">
+			<tablefield>tu_forme</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Type d'oeuvre-->
+	<field name="aut_oeuvre_form_oeuvre_type" type="text" typefield="select" id="6">
+		<table name="authorities_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_authority</tablekey>
+			<link type="1n">
+				<referencefield>id_authority and code_champ=7001 and code_ss_champ=0 </referencefield>
+			</link>
+			<filter global='lang'>lang='!!lang!!'</filter>
+		</table>
+	</field>
+	
+	<!--Auteurs-->
+	<field name="authors" type="text" typefield="select" id="7">
+		<table name="titres_uniformes">
+			<tablefield>index_author</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+			<link type="n1">
+				<table>responsability_tu</table>
+				<tablekey>responsability_tu_num and responsability_tu_type = 0 and responsability_tu_ordre = 0</tablekey>
+				<externalfield>tu_id </externalfield>
+			</link>
+			<link type="n1">
+				<table>authors</table>
+				<tablekey>author_id</tablekey>
+				<externaltable>responsability_tu</externaltable>
+				<externalfield>responsability_tu_author_num</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Interpretes-->
+	<field name="tu_interpreter_list" type="text" typefield="select" id="8">
+		<table name="titres_uniformes">
+			<tablefield>index_author</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+			<link type="n1">
+				<table>responsability_tu</table>
+				<tablekey>responsability_tu_num and responsability_tu_type = 1 and responsability_tu_ordre = 0</tablekey>
+				<externalfield>tu_id </externalfield>
+			</link>
+			<link type="n1">
+				<table>authors</table>
+				<tablekey>author_id</tablekey>
+				<externaltable>responsability_tu</externaltable>
+				<externalfield>responsability_tu_author_num</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!--forme saisie autocomplete-->
+	<field name="aut_oeuvre_form_forme_list" type="text" typefield="select" id="9">
+		<table name="authorities_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_authority</tablekey>
+			<link type="1n">
+				<referencefield>id_authority and code_champ=7009 and code_ss_champ=0 </referencefield>
+			</link>
+			<filter global='lang'>lang='!!lang!!'</filter>
+		</table>
+	</field>
+	
+	<!--Evenement-->
+	<field name="aut_oeuvre_form_oeuvre_event" type="text" typefield="select" id="10">
+		<table name="titres_uniformes">
+			<tablefield>authperso_index_infos_global</tablefield>
+			<tablekey>tu_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=7</referencefield>
+			</link>
+			<link type="n1">
+				<table>tu_oeuvres_events</table>
+				<tablekey>oeuvre_event_tu_num</tablekey>
+				<externalfield>tu_id </externalfield>
+			</link>
+			<link type="n1">
+				<table>authperso_authorities</table>
+				<tablekey>id_authperso_authority</tablekey>
+				<externaltable>tu_oeuvres_events</externaltable>
+				<externalfield>oeuvre_event_authperso_authority_num</externalfield>
+			</link>
+		</table>
+	</field>
+	
+		<!--Nature de l'oeuvre-->
+	<field name="aut_oeuvre_form_oeuvre_nature" type="text" typefield="select" id="11">
+		<table name="authorities_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_authority</tablekey>
+			<link type="1n">
+				<referencefield>id_authority and code_champ=7002 and code_ss_champ=0 </referencefield>
+			</link>
+			<filter global='lang'>lang='!!lang!!'</filter>
+		</table>
+	</field>
+	
+</sort>

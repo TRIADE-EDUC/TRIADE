@@ -1,31 +1,29 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_ontology.class.php,v 1.10 2018-11-27 14:51:21 ngantier Exp $
+// $Id: selector_ontology.class.php,v 1.18.2.1 2025/01/16 11:24:29 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 require($base_path.'/selectors/templates/sel_ontology.tpl.php');
 require_once($class_path."/encoding_normalize.class.php");
-require_once($class_path."/autoloader.class.php");
 require_once($class_path."/authority.class.php");
 require_once($class_path.'/searcher_tabs.class.php');
 require_once($class_path.'/concept.class.php');
-require_once($class_path.'/autoloader.class.php');
-require_once($class_path.'/rdf/arc2/ARC2.php');
 require_once($class_path.'/elements_list/elements_authorities_selectors_list_ui.class.php');
 require_once($class_path.'/skos/skos_datastore.class.php');
 require_once($class_path.'/skos/skos_onto.class.php');
 
 class selector_ontology extends selector {
-    
+
     public function __construct($user_input=''){
         parent::__construct($user_input);
         $this->objects_type = 'concepts';
     }
-    
+
     public function proceed() {
         global $msg;
         global $class_path;
@@ -46,21 +44,19 @@ class selector_ontology extends selector {
         global $deb_rech;
         global $dyn;
         global $page;
-        
+
         $entity_form = '';
-        $autoloader = new autoloader();
-        $autoloader->add_register("onto_class",true);
-        
+
         global $base_url;
         $base_url = $this->get_base_url();
-        
+
         $params_array = array(
             'base_url' => $base_url,
             'categ'=>'concepts',
             'sub'=> 'concept',
             'objs'=>$objs,
             'action' => $action,
-            'nb_per_page'=> $nb_per_page_gestion,
+            'nb_per_page'=> intval($nb_per_page_gestion),
             'id'=>'',
             'parent_id'=>'',
             'param1'=> $param1,
@@ -85,7 +81,7 @@ class selector_ontology extends selector {
             'callback' => '',
             'return_concept_id' => false
         );
-        
+
         if(!isset($element) || $element != 'concept'){
             if(empty($action)){
                 $action = "list_selector";
@@ -118,7 +114,7 @@ class selector_ontology extends selector {
                     break;
                 case 'element_display':
                     global $id_authority, $caller, $element;
-                    $id_authority += 0;
+                    $id_authority = intval($id_authority);
                     if($id_authority) {
                         $elements_authorities_selectors_list_ui = new elements_authorities_selectors_list_ui(array($id_authority), 1, 1);
                         $elements = $elements_authorities_selectors_list_ui->get_elements_list();
@@ -129,10 +125,10 @@ class selector_ontology extends selector {
                 case 'update':
                     $onto_ui = new onto_ui($class_path."/rdf/skos_pmb.rdf", skos_onto::get_store(), "", skos_datastore::get_store(), "", array(),'http://www.w3.org/2004/02/skos/core#prefLabel', new onto_param($params_array));
                     $id = $onto_ui->proceed();
-                    
+
                     $auth_instance = new authority(0, $id, AUT_TABLE_CONCEPT);
                     $concept_instance = $auth_instance->get_object_instance();
-                    $entity_form = 
+                    $entity_form =
                     '<textarea>'.encoding_normalize::json_encode(array(
                         'id' => $id,
                         'id_authority' => $auth_instance->get_id(),
@@ -162,16 +158,16 @@ class selector_ontology extends selector {
             }
             if($action=='selector_save'){
                 print '<script>document.forms["search_form"].submit();</script>';
-                
+
             }
         }
     }
-    
+
     public static function get_params_url() {
         global $objs, $element, $unique_scheme, $return_concept_id, $concept_scheme;
         global $order, $grammar, $perso_id, $custom_prefixe, $perso_name;
         global $att_id_filter;
-        
+
         $params_url = parent::get_params_url();
         $params_url .= ($objs ? "&objs=".$objs : "");
         $params_url .= ($element ? "&element=".$element : "");
@@ -186,7 +182,7 @@ class selector_ontology extends selector {
         $params_url .= ($att_id_filter ? "&att_id_filter=".$att_id_filter : "");
         return $params_url;
     }
-    
+
     protected function get_change_link($display_mode) {
         $link = static::get_base_url();
         if($display_mode == 2) {
@@ -196,78 +192,78 @@ class selector_ontology extends selector {
         }
         return $link;
     }
-    
+
     protected function get_html_button($location='', $label='') {
         global $charset;
-        
+
         return "<input type='button' class='bouton_small' onclick=\"document.location='".$location."'\" value='".htmlentities($label, ENT_QUOTES, $charset)."' />";
     }
-    
+
     protected function get_search_fields_filtered_objects_types() {
         return array($this->get_objects_type(), "authorities");
     }
-    
+
     protected function get_searcher_tabs_instance() {
         if(!isset($this->searcher_tabs_instance)) {
             $this->searcher_tabs_instance = new searcher_selectors_tabs('authorities');
         }
         return $this->searcher_tabs_instance;
     }
-    
+
     protected function get_search_perso_instance($id=0) {
         return new search_perso($id, 'AUTHORITIES');
     }
-    
+
     protected function get_search_instance() {
         return new search_authorities('search_fields_authorities');
     }
-    
+
     protected function get_sub_tabs(){
         global $mode;
         $current_url = static::get_selector_url();
         $current_url = str_replace('select.php?', 'ajax.php?module=selectors&', $current_url);
         $searcher_tab = $this->get_searcher_tabs_instance();
-        
+
         $url_concept = static::get_base_url();
         $url_concept = str_replace('select.php?', 'ajax.php?module=selectors&', $url_concept);
-        
-        $script = '
-				<div id="sub-container"></div>
-				<script type="text/javascript">
-							require(["apps/pmb/form/form_concept/FormConceptSelector", "dojo/dom", "dojo/ready"], function(FormConceptSelector, dom, ready){
+
+        $script = "
+				<div id='sub-container'></div>
+				<script>
+							require(['apps/pmb/form/form_concept/FormConceptSelector', 'dojo/dom', 'dojo/ready'], function(FormConceptSelector, dom, ready){
 								ready(function(){
-									new FormConceptSelector({doLayout: false, selectorURL:"'.$current_url.'", currentURL: "'.$url_concept.'", multicriteriaMode: "'.$searcher_tab->get_mode_multi_search_criteria().'"}, "sub-container");
+									new FormConceptSelector({doLayout: false, selectorURL:'".$current_url."', currentURL: '".$url_concept."', multicriteriaMode: '".$searcher_tab->get_mode_multi_search_criteria()."', parametersTabs: '".encoding_normalize::json_encode($this->get_parameters_tabs())."'}, 'sub-container');
 								});
 							});
 					   </script>
-				';
-        
+				";
+
         return $script ;
     }
-    
+
     protected function get_search_tabs(){
         global $mode;
         $current_url = static::get_selector_url();
         $current_url = str_replace('select.php?', 'ajax.php?module=selectors&', $current_url);
         $searcher_tab = $this->get_searcher_tabs_instance();
-        
+
         $url_concept = static::get_base_url();
         $url_concept = str_replace('select.php?', 'ajax.php?module=selectors&', $url_concept);
-        
-        $script = '
-				<div id="sub-container"></div>
-				<script type="text/javascript">
-							require(["apps/pmb/form/form_concept/FormConceptSelector", "dojo/dom", "dojo/ready"], function(FormConceptSelector, dom, ready){
+
+        $script = "
+				<div id='sub-container'></div>
+				<script>
+							require(['apps/pmb/form/form_concept/FormConceptSelector', 'dojo/dom', 'dojo/ready'], function(FormConceptSelector, dom, ready){
 								ready(function(){
-									new FormConceptSelector({doLayout: false, selectorURL:"'.$current_url.'", currentURL: "'.$url_concept.'", multicriteriaMode: "'.$searcher_tab->get_mode_multi_search_criteria().'"}, "sub-container");
+									new FormConceptSelector({doLayout: false, selectorURL:'".$current_url."', currentURL: '".$url_concept."', multicriteriaMode: '".$searcher_tab->get_mode_multi_search_criteria()."', parametersTabs: '".encoding_normalize::json_encode($this->get_parameters_tabs())."'}, 'sub-container');
 								});
 							});
 					   </script>
-				';
-        
+				";
+
         return $script ;
     }
-    
+
     protected function get_current_mode(){
         global $mode;
         if(empty($mode)){
@@ -276,7 +272,7 @@ class selector_ontology extends selector {
         }
         return $mode;
     }
-    
+
     protected function get_selector_url(){
         global $base_path;
         global $entity_type;
@@ -284,7 +280,7 @@ class selector_ontology extends selector {
         global $caller;
         global $no_display, $bt_ajouter, $dyn, $callback, $infield;
         global $max_field, $field_id, $field_name_id, $add_field, $nb_per_page;
-        
+
         $selector_url = $base_path."/select.php?what=".$this->get_what_from_type($entity_type)."&caller=".$caller."&mode=".$this->get_current_mode();
         $selector_url .= static::get_params_url();
         if($no_display) 	$selector_url .= "&no_display=".$no_display;
@@ -297,20 +293,20 @@ class selector_ontology extends selector {
         if($field_name_id) 	$selector_url .= "&field_name_id=".$field_name_id;
         if($add_field) 		$selector_url .= "&add_field=".$add_field;
         if($nb_per_page) 	$selector_url .= "&nb_per_page=".$nb_per_page;
-        
+
         foreach($_GET as $name => $value){
             if(strpos($selector_url, $name) === false){
                 $selector_url .= "&".$name."=".$value;
             }
         }
-        return $selector_url;        
+        return $selector_url;
     }
-    
+
     protected function get_composed_concept($element_id){
         $authority = new authority($element_id);
         $vedette = new vedette_composee(0, 'rameau');
         $composed_concept = array();
-        
+
         $vedette_class_name = $authority->get_vedette_class();
         $vedette_field = $vedette->get_at_available_field_class_name($vedette_class_name);
         $num_type = $vedette_field['num'];
@@ -326,17 +322,16 @@ class selector_ontology extends selector {
         }
         /**
          * TODO: Ajouter le cas de retour d'une liste de
-         * concepts utilisant cette autoritÃ© dans sa composition
+         * concepts utilisant cette autorité dans sa composition
          *
          */
         return $composed_concept;
     }
-    
+
     protected function create_concept_from_vedette($vedette){
         global $base_path;
         global $opac_url_base;
-        $autoloader = new autoloader();
-        $autoloader->add_register("onto_class",true);
+
         $data_store_config = array(
             /* db */
             'db_name' => DATA_BASE,
@@ -349,7 +344,7 @@ class selector_ontology extends selector {
             'max_errors' => 100,
             'store_strip_mb_comp_str' => 0
         );
-        
+
         $tab_namespaces=array(
             "skos"	=> "http://www.w3.org/2004/02/skos/core#",
             "dc"	=> "http://purl.org/dc/elements/1.1",
@@ -361,7 +356,7 @@ class selector_ontology extends selector {
             "pmb"	=> "http://www.pmbservices.fr/ontology#"
         );
         $store = ARC2::getStore($data_store_config);
-        
+
         $onto_store_config = array(
             /* db */
             'db_name' => DATA_BASE,
@@ -377,7 +372,7 @@ class selector_ontology extends selector {
         $handler = new onto_handler($base_path."/classes/rdf/skos_pmb.rdf", "arc2", $onto_store_config, "arc2", $data_store_config, $tab_namespaces, 'http://www.w3.org/2004/02/skos/core#prefLabel');
         $uri = onto_common_uri::get_new_uri("",$opac_url_base."concept#");
         $num_concept = onto_common_uri::get_id($uri);
-        
+
         $query = "insert into <pmb> {
 				 		<".$uri."> rdf:type skos:Concept .
 				 		<".$uri."> pmb:showInTop owl:Nothing .
@@ -389,25 +384,25 @@ class selector_ontology extends selector {
 						num_vedette = ".$vedette->get_id().",
 						type_object = 1";
         $result = pmb_mysql_query($query);
-        
+
         $onto_index = onto_index::get_instance($handler->get_onto_name());
         $onto_index->set_handler($handler);
         $onto_index->init();
-        
+
         $onto_index->maj(0, $uri);
-        
-        
+
+
         $authority = new authority(0, $num_concept, AUT_TABLE_CONCEPT);
         return $authority->get_id();
     }
-    
+
     protected function compute_concept_list($concept_id){
         global $tab_page;
         global $pmb_nb_elems_per_tab;
         global $tab_nb_per_page;
         global $msg,$charset, $base_path;
         global $tab_nb_results;
-        
+
         if(!$tab_page){
             $tab_page = 1;
         }
@@ -416,11 +411,11 @@ class selector_ontology extends selector {
         }
         return array_slice($concept_id, (($tab_page-1) * ($tab_nb_per_page*1)), $tab_nb_per_page);
     }
-    
-    
+
+
     /**
      * Fonction permettant de retourner une variable what en
-     * fonction de l'attribut objects_type dÃ©fini dans le fichier xml authorities.xml
+     * fonction de l'attribut objects_type défini dans le fichier xml authorities.xml
      */
     private function get_what_from_type($type){
         switch($type){

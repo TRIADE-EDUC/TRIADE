@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: acquisition_notice.inc.php,v 1.29 2018-03-07 09:55:20 dgoron Exp $
+// $Id: acquisition_notice.inc.php,v 1.32 2019/12/16 16:28:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "inc.php")) die("no access");
 
+global $notice_statut_query, $doctype_query;
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
+// la variable $caller, passée par l'URL, contient le nom du form appelant
 $base_url = "./select.php?what=acquisition_notice";
 $base_url.= "&caller=$caller";		//nom de la fenetre appellante
 $base_url.= "&cr=$cr";				//numero de ligne appellante
@@ -76,7 +77,7 @@ switch ($typ_query) {
 				q.value=v;
 				q.focus();
 				if(callback) {
-					window.parent[callback](".$cr.");
+					window.parent[callback](cr);
 				}
 			}
 			
@@ -211,7 +212,7 @@ switch ($typ_query) {
 				q.value=v;
 				q.focus();
 				if(callback) {
-					window.parent[callback](".$cr.");
+					window.parent[callback](cr);
 				}
 			}
 			
@@ -345,7 +346,7 @@ switch ($typ_query) {
 				q.value=v;
 				q.focus();
 				if(callback) {
-					window.parent[callback](".$cr.");
+					window.parent[callback](cr);
 				}
 			}
 			
@@ -480,7 +481,7 @@ switch ($typ_query) {
 				q.value=v;
 				q.focus();
 				if(callback) {
-					window.parent[callback](".$cr.");
+					window.parent[callback](cr);
 				}
 			}
 			
@@ -543,9 +544,9 @@ switch ($typ_query) {
 			-->
 		</script>";
 		
-		if ($elt_query=='') {
-			$elt_query='*'; 
-			$sh->etat='first_search';
+		if (isset($elt_query) && $elt_query == '') {
+			$elt_query = '*'; 
+			$sh->etat = 'first_search';
 		} 
 		$extended_query="<input type='hidden' name='results_show_all' id='results_show_all' value='0'>";
 		$sh->run();
@@ -560,7 +561,7 @@ switch ($typ_query) {
 		$sh->tab_choice = $tab_choice;
 		$sh->elt_b_list = $elt_b_list_abt;
 		$sh->elt_r_list = $elt_r_list_abt;
-		$sh->elt_r_list_values = array(0=>'result', 1=>'aff_date_echeance');
+		$sh->elt_r_list_values = array(0=>'result', 1=>'aff_date_echeance', 2=>'aff_nb_recipients');
 		$sh->action = "<a href='#' onclick=\"set_parent('!!abt_id!!', '!!code!!', '!!titre!!',  '!!editeur1!!', '!!periodicite!!', '!!duree!!', '!!aff_date_debut!!', '!!prix!!', '!!abt_name!!', '".$callback."');\">!!display!!</a> ";
 		$sh->action_values = array(0=>'abt_id', 1=>'code', 2=>'titre', 3=>'editeur1', 4=>'periodicite', 5=>'duree', 6=>'aff_date_debut', 7=>'prix', 8=>'abt_name');
 		$sh->back_script = "
@@ -606,7 +607,7 @@ switch ($typ_query) {
 				q.value=v;
 				q.focus();
 				if(callback) {
-					window.parent[callback](".$cr.");
+					window.parent[callback](cr);
 				}
 			}
 			
@@ -688,15 +689,15 @@ switch ($typ_query) {
 		//extension de la recherche
 		//localisation
 		$q ="select distinct idlocation, location_libelle from docs_location, docsloc_section where num_location=idlocation order by 2 " ;
-		if (!$location_query) {
+		if (!isset($location_query) || !$location_query) {
 			$location_query=$deflt_bulletinage_location;
 		}
 		$location_form = gen_liste($q, "idlocation", "location_libelle", 'location_query', "", $location_query, "", "", '-1', $msg['all_location'] , 0);
 		$extended_query=$location_form;
 		//echeance
-		if ($date_ech_query=='-1') {
+		if (isset($date_ech_query) && $date_ech_query=='-1') {
 			$date_ech_query_lib=$msg['parperso_nodate'];
-		} elseif (!$date_ech_query) {
+		} elseif (empty($date_ech_query)) {
 			$q = "select date_add(curdate(), interval ".$pmb_abt_end_delay." day) ";
 			$r = pmb_mysql_query($q, $dbh);
 			$date_ech_query=pmb_mysql_result($r, 0, 0);
@@ -710,7 +711,7 @@ switch ($typ_query) {
 			<input type='button' class='bouton_small' style='width:25px;' value='".$msg['raz']."' onclick=\"this.form.elements['date_ech_query_lib'].value='".$msg['parperso_nodate']."'; this.form.elements['date_ech_query'].value='-1';\" />";
 		$extended_query.=$date_ech_form;
 		$extended_query.="<input type='hidden' name='results_show_all' id='results_show_all' value='0'>";
-		if (!$specific_order) {
+		if (empty($specific_order)) {
 			$specific_order = 0;
 		}
 		$extended_query.="<input type='hidden' name='specific_order' id='specific_order' value='".$specific_order."'/>";

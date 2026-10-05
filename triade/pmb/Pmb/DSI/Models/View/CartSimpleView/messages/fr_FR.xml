@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1.4.2 2024/10/01 08:24:23 jparis Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Vue panier simple</entry>
+	<entry code="NOTI">Panier de notices :</entry>
+	<entry code="MIXED">Panier d'autorités :</entry>
+	<entry code="cart_selector_empty_value">Sélectionner un panier</entry>
+</XMLlist>

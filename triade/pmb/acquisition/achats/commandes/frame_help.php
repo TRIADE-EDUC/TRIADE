@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frame_help.php,v 1.6 2019-05-28 15:12:23 btafforeau Exp $
+// $Id: frame_help.php,v 1.6 2019/05/28 15:12:23 btafforeau Exp $
 
 global $whatis, $include_path, $helpdir, $dbh;
 

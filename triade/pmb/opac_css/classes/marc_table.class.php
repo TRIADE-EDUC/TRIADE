@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: marc_table.class.php,v 1.31 2019-04-19 12:28:25 ngantier Exp $
+// $Id: marc_table.class.php,v 1.33 2020/04/16 14:38:45 qvarin Exp $
 
 // classe de gestion des tables MARC en XML
 
@@ -16,13 +16,13 @@ require_once($class_path.'/XMLlist_links.class.php');
 
 class marc_list {
 
-// propriÃ©tÃ©s
+// propriétés
 
 	public $table;
 	public $parser;
 	public $inverse_of = array();
 	public $attributes = array();
-// mÃ©thodes
+// méthodes
 
 	// constructeur
 	public function __construct($type) {
@@ -155,7 +155,7 @@ class marc_list {
 				break;
 			case 'oeuvre_link':
 				$parser = new XMLlist_links("$include_path/marc_tables/$lang/oeuvre_link.xml");
-				$parser->setAttributesToParse(array(array('name' => 'EXPRESSION', 'default_value' => 'no'), array('name' => 'OTHER_LINK', 'default_value' => 'yes')));
+				$parser->setAttributesToParse(array(array('name' => 'EXPRESSION', 'default_value' => 'no'), array('name' => 'OTHER_LINK', 'default_value' => 'yes'), array('name' => 'GROUP', 'default_value' => '')));
 				$parser->analyser();
 				$this->table = $parser->table;
 				$this->attributes = $parser->getAttributes();
@@ -179,17 +179,17 @@ class marc_list {
 
 class marc_select {
 
-// propriÃ©tÃ©s
+// propriétés
 
 	public $table;
 	public $name;
 	public $selected;
 	public $onchange;
 	public $display;
-	public $libelle; // libellÃ© du selected
+	public $libelle; // libellé du selected
 	public $attributes=array();
 
-// mÃ©thodes
+// méthodes
 
 	// constructeur
 	public function __construct($type, $name='mySelector', $selected='', $onchange='', $option_premier_code='', $option_premier_info='', $attributes=array()){
@@ -273,7 +273,7 @@ class marc_select {
 	
 	public function first_item_at_last() {
 		$item = array_shift($this->table);
-		array_push($this->table, $item);
+		$this->table[] = $item;
 	}
 }
 
@@ -289,4 +289,4 @@ class marc_list_collection {
 	}
 }
 
-} # fin de dÃ©claration
+} # fin de déclaration

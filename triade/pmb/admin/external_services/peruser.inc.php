@@ -2,18 +2,23 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: peruser.inc.php,v 1.5 2017-05-19 10:06:11 dgoron Exp $
+// $Id: peruser.inc.php,v 1.8 2022/05/04 12:34:28 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path, $include_path, $iduser;
+global $es_admin_peruser, $is_not_first, $action;
+global $grp_right, $mth_right;
+
 //Initialisation des classes
 require_once($class_path."/external_services.class.php");
+require_once($class_path."/list/configuration/external_services/list_configuration_external_services_peruser_ui.class.php");
 require_once($include_path."/templates/external_services.tpl.php");
 
 $es=new external_services();
 $es_rights=new external_services_rights($es);
 
-//Mise √† jour des droits d'un objet en fonction de la demande particuli√®re d'un utilisateur
+//Mise ‡ jour des droits d'un objet en fonction de la demande particuliËre d'un utilisateur
 function update_rights_for_user(&$es_r,$val) {
 	global $iduser;
 	
@@ -23,7 +28,7 @@ function update_rights_for_user(&$es_r,$val) {
 			if ($es_r->anonymous_user==$iduser) 
 				$es_r->anonymous_user=0;
 			else if (array_search($iduser,$es_r->users)!==false) {
-				//R√©√©criture du tableau des users
+				//RÈÈcriture du tableau des users
 				//Copie
 				$tusers=$es_r->users;
 				$es_r->users=array();
@@ -44,7 +49,7 @@ function update_rights_for_user(&$es_r,$val) {
 		case 2:
 			if (array_search($iduser,$es_r->users)!==false) {
 				//Si il existe dans les users, on le supprime
-				//R√©√©criture du tableau des users
+				//RÈÈcriture du tableau des users
 				//Copie
 				$tusers=$es_r->users;
 				$es_r->users=array();
@@ -57,8 +62,8 @@ function update_rights_for_user(&$es_r,$val) {
 	}
 }
 
-//Enregistrement des droits si n√©cessaire
-if (isset($is_not_first) && $is_not_first) {
+//Enregistrement des droits si nÈcessaire
+if ((isset($is_not_first) && $is_not_first) || ($action == "update")) {
 	foreach ($es->catalog->groups as $group_name => &$group_content) {
 		$val = isset($grp_right[$group_name]) && $grp_right[$group_name];
 		$es_r=$es_rights->get_rights($group_name,"");
@@ -67,7 +72,7 @@ if (isset($is_not_first) && $is_not_first) {
 		$es_rights->set_rights($es_r);
 		if ($es_rights->error) print "<script>alert(\"Il y a eu une erreur lors de l'insertion des droits du groupe $group_name : ".$es_rights->error_message."\");</script>";
 		
-		//On fait la m√™me chose pour les m√©thodes du groupe !
+		//On fait la mÍme chose pour les mÈthodes du groupe !
 		foreach ($group_content->methods as $method_name => &$method_content) {
 			$val = isset($mth_right[$group_name][$method_name]) && $mth_right[$group_name][$method_name];
 			$es_r=$es_rights->get_rights($group_name,$method_name);
@@ -79,68 +84,16 @@ if (isset($is_not_first) && $is_not_first) {
 	}
 }
 
-//G√©n√©ration de la liste des utilisateurs
-$list_users="<select name='iduser' onChange='this.form.submit();'>\n";
-foreach ($es_rights->users as $userid=>$user) {
-	if (!isset($iduser) || !$iduser) {
-		$iduser=$userid;
-	}
-	$list_users.="	<option value='".$userid."' ".($userid==$iduser?"selected":"").">".htmlentities($user->username,ENT_QUOTES,$charset)."</option>\n";
-}
-$list_users.="</select>";
-
-//G√©n√©ration du tableau des droits
-
-$table_rights="<table style='width:100%'>
-<thead><th colspan='3'>Groupe</th><th colspan='3'>Droits pour l'utilisateur</th></thead>
-";
-
-//Pour chaque groupe
-$group_list=$es->get_group_list();
-for ($i=0; $i<count($group_list); $i++) {
-	$group=$group_list[$i];
-	
-	$rights=$es_rights->get_rights($group["name"],"");
-	
-	//$has_basics=(!$es_rights->has_basic_rights($iduser,$group["name"],"")?"disabled='disabled'":"");
-	
-	$full_group_allowed = array_search($iduser,$rights->users)!==false;
-	$table_rights.= "<tr class='".($i%2?"even":"odd")."'><td><br /><b>".htmlentities($group["name"],ENT_QUOTES,$charset)."</b><br /><br /></td><td colspan='2'><i>".htmlentities($group["description"],ENT_QUOTES,$charset)."</i></td>
-	<td colspan=\"3\">
-		<a name=\"".htmlentities($group["name"], ENT_QUOTES, $charset)."\"/><input id=\"nonavailable_".$group["name"]."\" name=\"grp_right[".$group["name"]."]\" ".($full_group_allowed ? "checked" : "")." value=\"1\" onclick=\"enable_or_disable_group_checboxes('".$group["name"]."')\" type=\"checkbox\">&nbsp;<label class='label' for='nonavailable_".htmlentities($group["name"],ENT_QUOTES,$charset)."'>Autoriser tout</label>
-	</td>
-	</tr>";
-
-	$table_rights.= "<thead><td></td><th colspan='2'>".htmlentities($msg["external_services_peruser_methode"],ENT_QUOTES,$charset)."</th><th colspan='3'>".htmlentities($msg["external_services_peruser_methode_autorisees"],ENT_QUOTES,$charset)."<br />
-	</th></thead>";
-	
-	//Pour chaque m√©thode
-	if(isset($group["methods"])) {
-		for ($j=0; $j<count($group["methods"]); $j++) {
-			$method=$group["methods"][$j];
-			
-			$rights=$es_rights->get_rights($group["name"],$method["name"]);
-			
-			$has_basics=(!$es_rights->has_basic_rights($iduser,$group["name"],$method["name"])?"disabled='disabled'":"");
-			
-			$method_checked = !$full_group_allowed && array_search($iduser,$rights->users)!==false;
-			$method_enabled = !$full_group_allowed;
-			
-			$table_rights.= "<tr class='".($i%2?"even":"odd")."'>
-			".(!$j?"<td rowspan='".count($group["methods"])."'>&nbsp;</td>":"")."
-			<td><b>".htmlentities($method["name"],ENT_QUOTES,$charset)."</b></td><td><i>".htmlentities($method["description"],ENT_QUOTES,$charset)."</i></td>
-			<td></td>
-			<td>
-			<a name=\"".htmlentities($group["name"], ENT_QUOTES, $charset).'_'.htmlentities($method["name"], ENT_QUOTES, $charset)."\"/><input type='checkbox' es_group='".$group["name"]."' $has_basics value='1' ".(!$method_enabled ? "disabled" : "")." ".($method_checked ? "checked" : "")." name='mth_right[".htmlentities($group["name"]."][".$method["name"]."]",ENT_QUOTES,$charset)."]' id='available_".htmlentities($group["name"]."_".$method["name"],ENT_QUOTES,$charset)."'>
-			</td>
-			<td>
-			</td>
-			</tr>";
-		}
-	}
+if (empty($iduser)) {
+	$iduser=array_key_first($es_rights->users);
 }
 
-$table_rights.="</table>\n";
+//GÈnÈration de la liste des utilisateurs
+$list_users = list_configuration_external_services_peruser_ui::get_instance()->get_users_selector($iduser);
+
+//GÈnÈration du tableau des droits
+list_configuration_external_services_peruser_ui::set_num_user($iduser);
+$table_rights = list_configuration_external_services_peruser_ui::get_instance()->get_display_list();
 
 $js_funcs = <<<JS
 	<script type="text/javascript">
@@ -171,8 +124,8 @@ JS;
 
 echo $js_funcs;
 
-$es_admin_peruser=str_replace("!!user!!",$list_users,$es_admin_peruser);
-$es_admin_peruser=str_replace("!!table_rights!!",$table_rights,$es_admin_peruser);
-
-print $es_admin_peruser;
+$interface_form = new interface_admin_form('es_rights');
+$interface_form->set_label("D&eacute;finition des droits pour l'utilisateur ".$list_users);
+$interface_form->set_content_form(str_replace("!!table_rights!!",$table_rights,$es_admin_peruser));
+print $interface_form->get_display_parameters();
 ?>

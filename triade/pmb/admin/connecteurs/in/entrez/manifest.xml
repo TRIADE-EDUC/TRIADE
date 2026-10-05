@@ -4,12 +4,15 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2009-05-15 16:06:51 erwanmartin Exp $ -->
+$Id: manifest.xml,v 1.2 2023/12/12 15:58:44 dbellamy Exp $ -->
 
 <manifest>
 	<name>entrez</name>
 	<repository>no</repository>
 	<comment>Connecteur des bases NCBI Entrez</comment>
+	<search>yes</search>
+	<repository>no</repository>
+	<enrichment>no</enrichment>
 	<author>Erwan MARTIN</author>
 	<org>PMB Services</org>
 	<date>2009-04-25</date>

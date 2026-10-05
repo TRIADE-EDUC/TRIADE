@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_records.xml,v 1.4 2015-01-20 09:08:03 arenou Exp $ -->
+$Id: cms_module_common_datasource_records.xml,v 1.4 2015/01/20 09:08:03 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_shelve">Sélecteur manuel d'une étagère</entry>

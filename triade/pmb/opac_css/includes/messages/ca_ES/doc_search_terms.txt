@@ -9,6 +9,6 @@ Els resultats de la cerca es presenten en dos apartats.</p>
 de les categories d'aquesta apartat (per exemple, <i>història política</i>) se't mostrarà <b>a la part inferior de la pantalla</b> 
 més informació sobre la categoria triada.</p>
 <hr /><p>Si fas clic en una de les categories de l'apartat inferior, aniràs navegant de categoria en categoria.</p>
-<hr /><p>Per seleccionar una categoria i veure els docuemnts corresponents, fes clic a la lupa <img src='images/search.gif' align='absmiddle'> 
+<hr /><p>Per seleccionar una categoria i veure els docuemnts corresponents, fes clic a la lupa <img src='images/search.gif' > 
 situada al començament de la línia.</p> 
 <hr /><p>Si no apareix la lupa, vol dir que no hi ha cap document amb aquella matèria.</p>

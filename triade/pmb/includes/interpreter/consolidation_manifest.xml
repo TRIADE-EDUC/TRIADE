@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: consolidation_manifest.xml,v 1.6 2019-05-11 09:29:41 dgoron Exp $ -->
+$Id: consolidation_manifest.xml,v 1.9 2021/09/29 09:07:38 dgoron Exp $ -->
 <manifest>
 	<name>Consolidation</name>
 	<description>msg:Notice_tpl_functions_description</description>
@@ -275,9 +275,25 @@ $Id: consolidation_manifest.xml,v 1.6 2019-05-11 09:29:41 dgoron Exp $ -->
 				<description>msg:empr_ville_output_description</description>
 			</outputs>
 		</method>
+		<method name="#empr_sexe($param, $parser);" rights="" version="1.0" comment="msg:empr_sexe_description" language_independant="true">
+			<inputs>
+				<description>msg:empr_sexe_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:empr_sexe_output_description</description>
+			</outputs>
+		</method>
+		<method name="#empr_pays($param, $parser);" rights="" version="1.0" comment="msg:empr_pays_description" language_independant="true">
+			<inputs>
+				<description>msg:empr_pays_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:empr_pays_output_description</description>
+			</outputs>
+		</method>
 		
 		
-			</methods>
+	</methods>
 	<methods comment="msg:classdateheure">	
 	
 	
@@ -645,6 +661,16 @@ $Id: consolidation_manifest.xml,v 1.6 2019-05-11 09:29:41 dgoron Exp $ -->
 			</inputs>
 			<outputs>
 				<description>msg:desabo_bannette_output_description</description>
+			</outputs>
+		</method>
+	</methods>
+	<methods comment="msg:classanimations">
+		<method name="#animation_id($param, $parser);" rights="" version="1.0" comment="msg:animation_id_description" language_independant="true">
+			<inputs>
+				<description>msg:animation_id_input_description</description>
+			</inputs>
+			<outputs>
+				<description>msg:animation_id_output_description</description>
 			</outputs>
 		</method>
 	</methods>

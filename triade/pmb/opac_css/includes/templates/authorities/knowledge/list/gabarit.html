@@ -1,0 +1,31 @@
+<!-- $Id: gabarit.html,v 1.2 2020/10/09 15:19:17 tgrassin Exp $ -->
+
+<div class="docParent docParentAuthorities" id="record_container_{{ list_element.id }}">
+	<div class="uk-grid uk-grid-small">
+		<div class="uk-width-large-7-10 uk-width-medium-7-10 uk-width-1-1">
+			{% block title_authorities %}
+				<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+					<div class="title_notCourte">
+						<h3>
+							<span class="tit1_notCourte">{{ list_element.name | safe }}</span>
+						</h3>
+					</div>
+				</a>
+			{% endblock %}
+		</div>
+		<div class="uk-width-large-2-10 uk-width-medium-2-10 uk-width-4-5">
+			<div class="auteur_doc">
+				<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+					{{ list_element.type | safe }}
+				</a>
+			</div>
+		</div>
+		<div class="uk-width-large-1-10 uk-width-medium-1-10 uk-width-1-1">
+			<div class="accesAuthorities">
+				<a href="{{ list_element.permalink }}" data-element-id="{{ list_element.id }}" data-element-type="authorities">
+					<i class="fas fa-arrow-right"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

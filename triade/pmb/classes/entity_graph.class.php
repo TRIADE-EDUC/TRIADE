@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entity_graph.class.php,v 1.16 2018-10-19 14:50:42 apetithomme Exp $
+// $Id: entity_graph.class.php,v 1.17.6.1.2.1 2025/04/29 12:27:40 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,11 +21,29 @@ class entity_graph {
 	protected $root_node_id;
 	protected $nb_nodes_graphed = 0;
 	protected static $entity_graph = array();
-
+	
+	/**
+	 * Type du noeud additionnel
+	 * @var string
+	 */
+	public const ADDITIONNAL_TYPE = "additionnal_nodes";
+	
+	/**
+	 * Type du noeud sous-racine
+	 * @var string
+	 */
+	public const NODE_SUBROOT_TYPE = "subroot";
+	
+	/**
+	 * Rayon du noeud sous-racine
+	 * @var string
+	 */
+	public const NODE_SUBROOT_RADUIS = "15";
+	
 	/**
 	 * 
-	 * @param unknown $instance
-	 * @param unknown $type
+	 * @param stdClass $instance
+	 * @param string $type
 	 * @return entity_graph
 	 */
 	public static function get_entity_graph($instance, $type){
@@ -47,7 +65,6 @@ class entity_graph {
 		}
 		
 		$this->entities_graphed = array('nodes'=>array(), 'links'=>array());
-		$nb_result = 0;
 
 		switch($this->type){
 			case 'authority':
@@ -93,16 +110,18 @@ class entity_graph {
 				break;
 		}
 		
-		
-		if (count($this->entities)) {
+		if (!empty($this->entities) && count($this->entities)) {
 			if (isset($this->entities['records']) && count($this->entities['records'])) {
+			    $this->entities['records'] = $this->elements_limited_of_entities($this->entities, 'records', $node['color']);
 				$this->compute_entities($this->entities, 'records', $node);
 			}
 			if(isset($this->entities['authorities']) && count($this->entities['authorities'])){
+			    $this->entities['authorities'] = $this->elements_limited_of_entities($this->entities, 'authorities', $node['color']);
 				$this->compute_entities($this->entities, 'authorities', $node);
 			}
 			if(isset($this->entities['indexed_entities']) && count($this->entities['indexed_entities'])){
-				$this->compute_entities($this->entities,'indexed_entities', $node);
+			    $this->entities['indexed_entities'] = $this->elements_limited_of_entities($this->entities, 'indexed_entities', $node['color']);
+				$this->compute_entities($this->entities, 'indexed_entities', $node);
 			}
 			if(isset($this->entities['indexed_concepts']) && count($this->entities['indexed_concepts'])){
 				$this->compute_entities($this->entities,'indexed_concepts', $node);
@@ -143,7 +162,7 @@ class entity_graph {
 		}
 		$this->entities = array();
 		
-		// RÃ©cupÃ©ration des notices portant cet auteur
+		// Récupération des notices portant cet auteur
 		$query = "select responsability_notice as notice_id from responsability where responsability_author = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -161,7 +180,7 @@ class entity_graph {
 		$this->entities['authorities'] = array();
 		$this->get_entities_indexed();
 		
-		// RÃ©cupÃ©ration des oeuvres portant cet auteur
+		// Récupération des oeuvres portant cet auteur
 		$query = "select responsability_tu_num as work_id, responsability_tu_type as type from responsability_tu where responsability_tu.responsability_tu_author_num = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
@@ -190,7 +209,7 @@ class entity_graph {
 			}
 		}
 		
-		// RÃ©cupÃ©ration des auteurs liÃ©s a celui ci : forme retenue (renvoi voir)
+		// Récupération des auteurs liés a celui ci : forme retenue (renvoi voir)
 		$query = "select author_see as author_id from authors where author_id = ".$this->instance->get_num_object()." AND author_see > 0";
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -206,7 +225,7 @@ class entity_graph {
 			}
 		}
 		
-		// RÃ©cupÃ©ration des auteurs liÃ©s a celui ci : formes rejetÃ©es
+		// Récupération des auteurs liés a celui ci : formes rejetées
 		$query = "select author_id as author_id from authors where author_see = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -253,7 +272,7 @@ class entity_graph {
 		}
 		$this->entities = array();
 		
-		// RÃ©cupÃ©ration des notices portant cet oeuvre
+		// Récupération des notices portant cet oeuvre
 		$query = "select ntu_num_notice as notice_id from notices_titres_uniformes where ntu_num_tu = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -274,7 +293,7 @@ class entity_graph {
 		$this->get_entities_indexed();
 
 		$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
-		// RÃ©cupÃ©ration des oeuvres liÃ©es
+		// Récupération des oeuvres liées
 		$query = "select oeuvre_link_to as work_id, oeuvre_link_type as type, oeuvre_link_expression as expression from tu_oeuvres_links where oeuvre_link_from = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
@@ -299,7 +318,7 @@ class entity_graph {
 			}
 		}
 
-		// RÃ©cupÃ©ration des oeuvres expression de
+		// Récupération des oeuvres expression de
 		$query = "select oeuvre_link_from as work_id, oeuvre_link_type as type from tu_oeuvres_links where oeuvre_link_expression = 1 and oeuvre_link_to = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
@@ -324,7 +343,7 @@ class entity_graph {
 			}
 		}
 		
-		// RÃ©cupÃ©ration des auteurs/interprÃ¨tes de l'oeuvre
+		// Récupération des auteurs/interprètes de l'oeuvre
 		$query = "select responsability_tu_author_num as author_id, responsability_tu_type as type from responsability_tu where responsability_tu.responsability_tu_num = ".$this->instance->get_num_object();
 		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
@@ -372,8 +391,8 @@ class entity_graph {
 		$query = 'select oeuvre_event_tu_num from tu_oeuvres_events where oeuvre_event_authperso_authority_num = "'.$this->instance->get_object_instance()->id.'"';
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
-			//A voir si l'on veux effectuer un traitement diffÃ©rent 
-			//en fonction de si c'est une autoritÃ© perso ou non
+			//A voir si l'on veux effectuer un traitement différent 
+			//en fonction de si c'est une autorité perso ou non
 			$this->entities['authorities']['titre_uniforme']['event_works'] = array(
 					'type' => 'event_works',
 					'label' => $msg['entity_graph_work_which_use_event'],
@@ -556,7 +575,7 @@ class entity_graph {
 		
 		$this->entities = array('authorities' => array());
 		
-		// RÃ©cupÃ©ration des auteurs
+		// Récupération des auteurs
 		$query = "select responsability_author as author_id from responsability where responsability_notice = ".$this->instance->get_id();
 		$result = pmb_mysql_query($query);
 		
@@ -572,7 +591,7 @@ class entity_graph {
 			}
 		}
 		
-		// RÃ©cupÃ©ration des oeuvres portant cette notice
+		// Récupération des oeuvres portant cette notice
 		$query = "select ntu_num_tu as tu_id from notices_titres_uniformes where ntu_num_notice = ".$this->instance->get_id();
 		$result = pmb_mysql_query($query);
 		
@@ -595,7 +614,7 @@ class entity_graph {
 	}
 	
 	protected function get_entity_linked_records() {
-		//RÃ©cupÃ©ration des liens / types
+		//Récupération des liens / types
 		$links=array();
 		$labelsup=marc_list_collection::get_instance("relationtypeup");
 		$labelsdown=marc_list_collection::get_instance("relationtypedown");
@@ -606,9 +625,14 @@ class entity_graph {
 			}
 			
 			foreach ($links as $relation_type => $notices) {
+			    $label = $labelsup->table[$relation_type];
+			    if($type == "down") {
+			        $label = $labelsdown->table[$relation_type];
+			    }
+			    
 				$this->entities["records"]["link_".$relation_type]= array(
 						'type'=>'records',
-						'label'=>($type=="up"?$labelsup->table[$relation_type]:$labelsdown->table[$relation_type]),
+						'label'=>$label,
 						'link'=>'',
 						'elements'=>$notices
 				);
@@ -753,7 +777,7 @@ class entity_graph {
 						foreach($data['elements'] as $id){
 							$authority = new authority(0,$id,authority::get_const_type_object($entities_pmb_type));
 							//Si le noeud principal est une oeuvre (un titre uniforme) et que l'objet que l'on
-							//traite est une autoritÃ© perso, alors c'est un Ã©vÃ©nement
+							//traite est une autorité perso, alors c'est un événement
 							$color = self::get_color_from_type($entities_pmb_type);
 							if($entities_pmb_type == "authperso" && $this->type == 'authority' && $this->instance->get_string_type_object() == 'titre_uniforme'){ 
 								$color = self::get_color_from_type('event');
@@ -854,14 +878,19 @@ class entity_graph {
 			case 'authorities_common_linked_work':
 				return '78,87,142';
 			case 'category':
+			case 'categories':
 				return '92, 249, 249';
 			case 'publisher':
+			case 'publishers':
 				return '92, 249, 249';
 			case 'collection':
+			case 'collections':
 				return '72,106,105';
 			case 'subcollection':
+			case 'subcollections':
 				return '74,156,142';
 			case 'serie':
+			case 'series':
 				return '255,222,3';
 			case 'indexint':
 				return '248,135,163';
@@ -874,6 +903,8 @@ class entity_graph {
 			case 'concepts':
 			case 'concept':
 				return '65,93,94';
+			case self::ADDITIONNAL_TYPE:
+			    return '';
 			default :
 				return '';
 		}
@@ -883,6 +914,7 @@ class entity_graph {
 		$rgb = explode(',', $color);
 		$new_color = ''; 
 		foreach($rgb as $composant){
+			$composant = intval($composant);
 			if($new_color){
 				$new_color.=',';
 			}
@@ -957,11 +989,11 @@ class entity_graph {
 							'label' => $vedette->get_label(),
 							'id' => $vedette->get_id(),
 							'link' => $auhtority_concept->get_authority_link(),
-							'elements' => array('records' => array(), 'authority'=> array())
+							'elements' => array('records' => array(), 'authorities'=> array())
 					);
 					foreach ($vedette_elements as $elements) {
 						foreach ($elements as $element) {
-							//element = instance de vedette_element ; get_entity = instance de la classe liÃ©e (notice ou autoritÃ©) ;
+							//element = instance de vedette_element ; get_entity = instance de la classe liée (notice ou autorité) ;
 							if($element->get_entity()->get_entity_type() == 'authority'){
 								$composed_concept['elements']['authorities'][] = $element->get_entity()->get_id();
 							}else{
@@ -1022,5 +1054,183 @@ class entity_graph {
 				$this->entities['authorities']['authperso']['authperso']['elements'][] = $row->notice_authperso_authority_num;
 			}
 		}
+	}
+	
+	private function elements_limited_of_entities($entities, $type, $parent_color = '') 
+	{
+	    if (empty($entities[$type])) {
+	        return array();
+	    }
+	    
+	    if ($type == 'indexed_entities' || $type == 'indexed_concepts') {
+	        // Cas spécifique qui contient des autorités et des notices
+	        $entities_type = array_keys($entities[$type]);
+	        $index = count($entities_type);
+	        for ($i = 0; $i < $index; $i++) {
+	            $color_link = self::get_color_from_type($type);
+	            $entities[$type][$entities_type[$i]] = $this->elements_limited_of_entities($entities[$type], $entities_type[$i], $color_link);
+	        }
+	    } else {
+    	    foreach ($entities[$type] as $key => $relations) {
+    	        switch ($type) {
+    	            case 'authorities':
+    	                $color_link = self::get_color_from_type($key);
+    	                if($key == "authperso" && $this->type == 'authority' && $this->instance->get_string_type_object() == 'titre_uniforme'){
+    	                    $color_link = self::get_color_from_type('event');
+    	                }
+    	                foreach($relations as $relation_type => $node) {
+    	                    $entities[$type][$key][$relation_type]['elements'] = $this->get_elements_limited_of_node($node, $type, $color_link, $relation_type, $key);
+    	                }
+                        break;
+    	            case 'records':
+        	            // ICI la relations correspond au noeud dans le graphe
+        	            $node = $relations;
+        	            $color_link = self::get_color_from_type($type.'_'.$key);
+        	            if(!$color_link){
+        	                $color_link = self::get_degradate($parent_color);
+        	            }
+        	            $entities[$type][$key]['elements'] = $this->get_elements_limited_of_node($node, $type, $color_link);
+        	            break;
+    	        }
+    	    }
+	    }
+	    return $entities[$type];
+	}
+	
+	private function get_elements_limited_of_node($node, $entities_type, $color_link = "", $relation_type = "", $entities_pmb_type = "") {
+	    global $pmb_entity_graph_limit;
+	    if (empty($node['elements'])) {
+	        return array();
+	    }
+	    
+	    $nodes_limited = array();
+	    if ($pmb_entity_graph_limit != 0 && count($node['elements']) > $pmb_entity_graph_limit) {
+	        $nodes_limited = array_slice($node['elements'], 0, $pmb_entity_graph_limit);
+	        $additional_nodes = array_slice($node['elements'], $pmb_entity_graph_limit, count($node['elements'])-1);
+	        $this->add_additionnal_nodes($additional_nodes, $node['type'], $entities_type, $color_link, $relation_type, $entities_pmb_type);
+	    } else {
+	        $nodes_limited = $node['elements'];
+	    }
+        return $nodes_limited;
+	}
+	
+	protected function add_additionnal_nodes($additional_nodes, $node_type, $entities_type, $color_link = "", $relation_type = "",  $entities_pmb_type = "") {
+	    global $msg, $pmb_entity_graph_limit;
+	    
+	    // On reconstruit l'identifiant du noeud parent
+	    if ($entities_type == "records") {
+	        $source = $this->root_node_id . "_" . $entities_type . "_" . $node_type;
+	    } elseif ($entities_type == "authorities") {
+	        $source = $this->root_node_id . "_" . $entities_pmb_type . "_" . $relation_type;
+	    } else {
+	        return;
+	    }
+	    //var_dump($entities_type, $source, $node_type, $entities_type, $relation_type, $entities_pmb_type);
+	    
+	    // Creation du noeud additionnel
+	    $node_id = "additionnals_" . $source;
+	    if (!isset($this->entities_graphed['nodes'][$node_id])) {	        
+    	    $this->entities_graphed['nodes'][$node_id] = array(
+    	        'id' => $node_id,
+    	        'type' => self::ADDITIONNAL_TYPE,
+    	        'radius' => self::NODE_SUBROOT_RADUIS,
+    	        'color' => entity_graph::get_color_from_type(self::ADDITIONNAL_TYPE),
+    	        'name' => sprintf($msg['graph_node_limited'], count($additional_nodes)),
+    	        'url' => '',
+    	        'limit' => $pmb_entity_graph_limit,
+    	        'elements' => $additional_nodes,
+    	        'info' => array( // info pour la requête ajax
+        	        'elements' => [],
+    	            'entities_pmb_type' => $entities_pmb_type,
+    	            'entities_type' => $entities_type,
+    	            'node_type' => $node_type,
+    	            'link' =>  array(
+    	                'source'=> $source,
+    	                'color' => $color_link ?? ""
+    	            )
+    	        )
+    	    );
+	    }
+	    
+	    // Creation du lien
+	    $this->entities_graphed['links'][] = array(
+	        'source'=> $source,
+	        'target' => $node_id,
+	        'color' => $color_link ?? ""
+	    );
+	}
+	
+	/**
+	 * @param array $node
+	 * @return array
+	 */
+	public static function make_additionnal_nodes($node) {
+	    
+	    $entities_graphed = array();
+	    $entities_graphed['nodes'] = array();
+	    $entities_graphed['links'] = array();
+	    
+	    // On évite les doublons d'identifiant
+	    $node['elements'] = array_unique($node['elements']);
+	    $index = count($node['elements']);
+	    for ($i = 0; $i < $index; $i++) {
+	        
+	        $node_id = $name = $url = $img = $radius = "";
+	        $ajax_type = $node['entities_type'];
+	        $entity_id = $node['elements'][$i];
+	        
+    	    switch ($node['entities_type']) {
+    	        case 'records':
+                    $node_id = 'records_' . $entity_id;
+                    $name = notice::get_notice_title($entity_id);
+                    $url = notice::get_gestion_link($entity_id) . '&quoi=common_entity_graph';
+                    $img = notice::get_icon($entity_id);
+                    $radius = 10;
+                    $ajax_type = "record";
+        	        break;
+    	        case 'authorities':
+    	            $authority = new authority(0, $entity_id, authority::get_const_type_object($node['entities_pmb_type']));
+                    $node_id = 'authorities_' . $authority->get_id();
+                    $name = $authority->get_isbd();
+                    $url = $authority->gestion_link . '&quoi=common_entity_graph';
+                    $img = $authority->get_type_icon();
+                    $radius = 11;
+                    $ajax_type = "authority";
+                    $entity_id = $authority->get_id();
+        	        break;
+    	        default:
+    	            return ['nodes' => [], 'links' => []];
+            }
+            
+            $color = self::get_color_from_type($node['entities_type'] . '_' . $node['entities_pmb_type']);
+            if (!$color) {
+                $color = self::get_color_from_type($node['entities_type']);
+            }
+            if (!$color) {
+                $color = self::get_color_from_type($node['entities_pmb_type']);
+            }
+            if (!$color) {
+                $color = self::get_degradate($node['link']['color']);
+            }
+            
+            $entities_graphed['nodes'][] = array(
+                'id' => $node_id,
+                'type' => $node['entities_type'] . '_'.$node['node_type'],
+                'name' => $name,
+                'url' => $url,
+                'img' => $img,
+                'radius' => $radius,
+                'color' => $color,
+                'ajaxParams' => array('id' => $entity_id, 'type' => $ajax_type)
+            );
+            
+            $entities_graphed['links'][] = array(
+                'source'=> $node['link']['source'],
+                'target' => $node_id,
+                'color' => $node['link']['color']
+            );
+	    }
+	    
+	    return $entities_graphed;
 	}
 }

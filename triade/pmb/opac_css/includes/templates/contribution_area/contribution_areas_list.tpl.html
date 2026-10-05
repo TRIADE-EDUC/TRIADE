@@ -1,53 +1,30 @@
-<!-- $Id: contribution_areas_list.tpl.html,v 1.10 2019-06-06 07:16:49 btafforeau Exp $ -->
+<!-- $Id: contribution_areas_list.tpl.html,v 1.29.4.1 2025/03/05 10:20:03 rtigero Exp $ -->
 
-<style type="text/css">
-	.contribution_form_table {
-		display: table;
-		text-align: center;
-		width:100%;
-		border-spacing: 0px 2px;
-		table-layout: fixed;
-	}
-	
-	.contribution_form_table_row {
-		display: table-row;
-	}
-	
-	.contribution_form_table_cell {
-		display: table-cell;
-		vertical-align: middle;
-		height: 80px;
-		
-	}
-	
-	.contribution_form_table_cell:hover {
-		text-shadow: initial;
-	}
-	
-	.contribution_form_table_row.odd {
-		background-color: #F8F8F8;
-	}
-	.contribution_form_table_row.even {
-	    background-color: #EEEEEE;
-	}
-	.contribution_form_table_row.last_modified {
-		font-weight: bold;
-	}
-</style>
-<!-- Ne rien sortir si il n'y a rien -->	
+{* Ne rien sortir si il n'y a rien *}
+
 {% if forms | length %}
 	
-	{* Dernière contribution *}
+	
+	{% if check_ids %}
+		<div class="contribution_thanks" >{{ msg.onto_contribution_check_information }}</div>
+	{% endif %}
+	
+	{% if contribution_done %}
+		<div class="contribution_thanks" >{{ msg.onto_contribution_thanks}}</div>
+	{% endif %}
+	
+	{* Derniï¿½re contribution *}
 	{% if forms.last_contribution %}
 		{% for last_contrib in forms.last_contribution %}
 			{% if last_contrib.identifier %}
+				<div class="contribution_thanks" >{{ msg.onto_contribution_thanks}}</div>
 				<div class="last_contribution_container">
 					<h3>{{ msg.onto_empr_contribution_area_last_contribution_title }}</h3>
 					<a href="{{last_contrib.link}}">{{ last_contrib.displayLabel }}</a><br/>
 					<input type="text" id="last_contribution_link" value="{{ last_contrib.link | replace './' global.opac_url_base }}"/>
 					<input class="bouton" type="button" id="last_contribution_link_copy" value="{{ msg.onto_empr_contribution_area_last_contribution_copy | e true  }}"/>
 				</div>
-				<script type="text/javascript">
+				<script>
 					require(['dojo/on', 'dojo/dom', 'dojo/topic'], function (on, dom, topic) {
 						on(dom.byId("last_contribution_link_copy"), 'click', function() {
 							try {
@@ -66,17 +43,171 @@
 		{% endfor %}
 	{% endif %}
 	
+	{* Boutons des contributions *}
+	{% block group_action %}
+	<div class='contribution_form_table'>
+		<div class='contribution_table_header'>
+			<div class='contribution_form_table_cell checkbox_cell'>
+				<span>{{ msg.tout_cocher_checkbox}}</span>
+			</div>
+			<div class='contribution_form_table_cell'>&nbsp;</div>
+			<div class='contribution_form_table_cell'>&nbsp;</div>
+			<div class='contribution_form_table_cell'>
+				<span>{{ msg.onto_contribution_action_selected }}</span>
+			</div>
+		</div>
+		<div class='contribution_table_header'>
+			<div class='contribution_form_table_cell checkbox_cell'>
+				<input title='{{ msg.tout_cocher_checkbox }}' type='checkbox' onclick='check_all_contributions(event);'/>
+			</div>
+			<div class='contribution_form_table_cell'>&nbsp;</div>
+			<div class='contribution_form_table_cell'>&nbsp;</div>
+			<div class='contribution_form_table_cell'>
+				{% if !is_draft %}
+					<a id='contribution_form_area_push' onclick='proceed_contributions("push");'>
+						<button class="contrib_list_button bouton" type="button" value="{{ msg.empr_valid_password }}" title="{{ msg.empr_valid_password }}">
+							<i class="fas fa-check"></i>
+						</button>
+					</a>
+				{% endif %}
+				<a id='contribution_form_area_delete' onclick='proceed_contributions("delete");'>
+					<button class="contrib_list_button bouton" type="button" value="{{ msg.empr_valid_password }}" title="{{ msg.onto_contribution_delete_button }}">
+						<i class="fas fa-trash-alt"></i>
+					</button>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	{* Javascript des boutons *}
+	<script>
+		function proceed_contributions(action) {
+			let contributions_to_proceed = {};
+			let is_proceedable = null;
+			let msg = '';
+			let msgCode = '';
+			let ids = '';
+			let unauthorized_ids = '';
+			let lvlRedirect = "{{ redirect }}";
+			let url = './index.php?lvl=contribution_area&action=' + action + '&lvl_redirect=' + lvlRedirect;
+			let contributions_inputs = document.getElementsByName('contribution_form_draft[]');
+			
+			if (contributions_inputs.length) {
+				for (let input of contributions_inputs) {
+					is_proceedable = false;
+					if (document.getElementById('contribution_area_draft_' + action + '_' + input.value) && input.checked) {
+						is_proceedable = true;
+					}
+					if (input.checked) {
+						contributions_to_proceed[input.value] = is_proceedable;
+					}
+				}
+			}
+			
+			if (Object.keys(contributions_to_proceed).length === 0) {
+				alert(pmbDojo.messages.getMessage('contribution', 'onto_contribution_not_selected'));
+				return false;
+			}
+			
+			switch (action) {
+				case 'push':
+					msgCode = 'onto_contribution_push_confirm_multiple';
+					if (contributions_inputs.length == 1) {
+						msgCode = 'onto_contribution_push_confirm';
+					}
+					msg = pmbDojo.messages.getMessage('contribution', msgCode);
+					break;
+				case 'delete':
+					if (contributions_inputs.length == 1) {
+						msg = '{{ msg.onto_contribution_delete_confirm }}';
+					} else {
+						msg = pmbDojo.messages.getMessage('contribution', 'onto_contribution_delete_confirm_multiple');
+					}
+					break;
+				default:
+					break;
+			}
+			
+			for (contribution_id in contributions_to_proceed) {
+				if (contributions_to_proceed[contribution_id]) {
+					if (ids != '') {
+						ids += ',';
+					}
+					ids += contribution_id;
+				}else{
+					if (unauthorized_ids != '') {
+						unauthorized_ids += ',';
+					}
+					unauthorized_ids += contribution_id;
+				}
+			}
+			
+			
+			if (ids) {
+				if (confirm(msg)) {
+					
+					var params = '&id_contrib=' + ids;
+					if (unauthorized_ids) {
+						params += '&unauthorized_ids=' + unauthorized_ids
+					}
+					document.location = url + params;
+				}
+			} else {
+			    alert(pmbDojo.messages.getMessage('contribution', 'onto_contribution_group_action_impossible'));
+			}
+			
+			return false;
+		}
+		
+		function check_all_contributions(event) {
+			let inputs = document.getElementsByName('contribution_form_draft[]');
+			let flag = false;
+				
+			if (event.target.checked) {
+				flag = true;
+			}
+			
+			for (let input of inputs) {
+				input.checked = flag;
+			}
+		}
+	</script>
+	{% endblock %}
+	
 	{* Liste des contributions *}
 	{% for type_form, forms_by_type in forms %}
 		{% if type_form != 'last_contribution' %}
 			<div class="contribution_form_type_title"><h3>{{type_form}}</h3></div>
 			<div class='contribution_form_table'>
 				{% for form in forms_by_type %}		
-					<div class='contribution_form_table_row {% if loop.odd %}odd{%else%}even{% endif %} '>									
-						{% if !form.identifier %}
-							<a  style='border-left: 5px solid {{ form.area.color }};' class='contribution_form_table_cell' href='./index.php?lvl=contribution_area&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
-								{{ form.displayLabel }}
-							</a>
+					<div class='contribution_form_table_row {% if loop.odd %}odd{%else%}even{% endif %} '>	
+						{% block line_form %}								
+							<div class='contribution_form_table_cell checkbox_cell' style='border-left: 5px solid {{ form.area.color }};'>
+								<input id='contribution_form_draft_{{ form.uri_id }}' name='contribution_form_draft[]' type='checkbox' value='{{ form.uri_id }}' {%for id in check_ids%}{% if form.uri_id == id %}checked='checked'{% endif %}{% endfor %}/>
+							</div>
+							<div class='contribution_form_table_cell' style="width:10%">
+								{% if form.icon %}
+									<img  src="{{ form.icon }}" style="max-height:30px"></img>
+								{% endif %}
+							</div>
+							{% if form.can_edit %}	
+								<a class='contribution_form_table_cell' href='./index.php?lvl=contribution_area&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
+									{% if form.isbd %}
+										{{ form.isbd }}
+									{% else %}
+										{{ form.displayLabel }}
+									{% endif %}
+								</a>
+							{% else %}
+								<div class='contribution_form_table_cell'>
+									{% if form.isbd %}
+										{{ form.isbd }}
+									{% else %}
+										{{ form.displayLabel }}
+									{% endif %}
+								</div>
+							{% endif %}
+							
 							{% if form.contributor %}
 								<div class='contribution_form_table_cell'>
 									{{ form.contributor.name }}
@@ -86,35 +217,42 @@
 								{{ form.last_edit }}
 							</div>
 							<div class='contribution_form_table_cell'>
-								{% if form.can_push %}			
-									<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&id={{ form.uri_id }}&action=push' onclick='if(!confirm(pmbDojo.messages.getMessage("contribution", "onto_contribution_push_confirm"))){return false;}'>
-										<input type="button" value="{{ msg.empr_valid_password }}" class="bouton"/>
-									</a>
+							{% if !is_draft %}
+								{% if form.can_push %}
+										<a id='contribution_form_area_push' href='./index.php?lvl=contribution_area&sub={{ form.sub }}&id={{ form.uri_id }}&action=push'>
+											<button class="contrib_list_button" type="button" value="{{ msg.contribution_validated_draft }}" title="{{ msg.contribution_validated_draft }}" class="bouton">
+												<i class="fas fa-check"></i>
+											</button>
+										</a>
+										<input type='hidden' id='contribution_area_draft_push_{{ form.uri_id }}' value='{{ form.uri_id }}'/>
+								{% else %}
+									<button class="contrib_list_button" disabled="disabled" type="button" value="{{ msg.empr_valid_password }}" title="{{ msg.onto_contribution_no_right_of_access }}" class="bouton">
+										<i class="fas fa-check"></i>
+									</button>
 								{% endif %}
-								{% if form.can_edit %}
-									<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
-										<input type="button" value="{{ msg.empr_modify }}" class="bouton"/>
-									</a>
-									<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&id={{ form.uri_id }}&action=delete' onclick='if(!confirm("{{ msg.onto_contribution_delete_confirm }}")){return false;}'>
-										<input type="button" value="{{ msg.onto_contribution_delete_button }}" class="bouton"/>
-									</a>
-								{% endif%}
+							{% endif %}
+							{% if form.can_edit %}	
+								<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&scenario={{ form.parent_scenario_uri }}{% if form.contributor %}&contributor={{ form.contributor.id }}{% endif %}'>
+									<button class="contrib_list_button" type="button" value="{{ msg.contribution_edit_draft }}" title="{{ msg.contribution_edit_draft }}" class="bouton">
+										<i class="fas fa-pencil-alt"></i>
+									</button>
+								</a>
+								<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&id={{ form.uri_id }}&action=delete&lvl_redirect={{ redirect }}' onclick='if(!confirm("{{ msg.onto_contribution_delete_confirm }}")){return false;}'>
+									<button class="contrib_list_button" type="button" value="{{ msg.contribution_delete_draft }}" title="{{ msg.contribution_delete_draft }}" class="bouton">
+										<i class="fas fa-trash-alt"></i>
+									</button>
+								</a>
+								<input type='hidden' id='contribution_area_draft_delete_{{ form.uri_id }}' value='{{ form.uri_id }}'/>
+							{% else %}
+								<button class="contrib_list_button bouton" disabled="disabled" type="button" value="{{ msg.empr_modify }}" title="{{ msg.onto_contribution_no_right_of_access }}">
+									<i class="fas fa-pencil-alt"></i>
+								</button>
+								<button class="contrib_list_button bouton" disabled="disabled" type="button" value="{{ msg.empr_valid_password }}" title="{{ msg.onto_contribution_no_right_of_access }}">
+									<i class="fas fa-trash-alt"></i>
+								</button>
+							{% endif %}
 							</div>
-						{% else %}
-							<a  style='border-left: 5px solid {{ form.area.color }};' class='contribution_form_table_cell' href='{% if form.link %}{{ form.link }}{% else %}#{% endif %}'>
-								{{ form.displayLabel }}
-							</a>
-							<div class='contribution_form_table_cell'>
-								{{ form.last_edit }}
-							</div>
-							<div class='contribution_form_table_cell'>
-								{% if form.can_push %}			
-									<a href='./index.php?lvl=contribution_area&sub={{ form.sub }}&area_id={{ form.area.id }}&form_id={{ form.form_id }}&form_uri={{ form.form_uri }}&id={{ form.uri_id }}&pmb_id={{ form.identifier }}'>
-										<input type="button" value="{{ msg.empr_modify }}" class="bouton"/>
-									</a>
-								{% endif %}								
-							</div>
-						{% endif %}
+						{% endblock %}		
 					</div>
 				{% endfor %}
 			</div>

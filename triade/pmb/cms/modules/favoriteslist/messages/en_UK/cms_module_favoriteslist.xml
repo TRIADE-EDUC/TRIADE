@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_favoriteslist.xml,v 1.4 2022/07/19 14:57:40 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_favoriteslist_admin_form_label'>Configuration des listes de favoris</entry>
+	<entry code='cms_module_favoriteslist_add'>Ajouter</entry>
+	<entry code='cms_module_favoriteslist_name'>Nom</entry>
+	<entry code='cms_module_favoriteslist_source'>Source</entry>
+	<entry code='cms_module_favoriteslist_classique_dest'>Recherche classique dans le catalogue</entry>
+	<entry code='cms_module_favoriteslist_opac_views'>Vues OPAC</entry>
+	<entry code='cms_module_favoriteslist_opac_view_any'>Toutes les vues</entry>
+	<entry code='cms_module_favoriteslist_opac_view_current'>Vue courante</entry>
+	<entry code='cms_module_favoriteslist_cms_pages'>Pages</entry>
+    <entry code='cms_module_favoriteslist_search_opac'>Recherche OPAC</entry>
+    <entry code='cms_module_favoriteslist_delete'>Voulez-vous vraiment supprimer cette recherche ?</entry>
+    <entry code='cms_module_favoriteslist_sectionslist'>Liste de rubriques</entry>
+	<entry code='cms_module_common_view_sectionslist'>Liste de rubriques - template Django avec lien</entry>
+	<entry code='cms_module_favoriteslist_confirm_delete_item'>Ce cadre définit un item de liste de favoris. L'item sera également supprimé. Confirmez-vous la suppression ?</entry>
+	<entry code='cms_module_favoriteslist_confirm_delete_item_others_cadres'>Ce cadre définit un item de liste de favoris utilisé par d'autres cadres (%s). L'item sera également supprimé. Confirmez-vous la suppression ?</entry>
+	<entry code='cms_module_favoriteslist_view_sectionslist_admin'>Liste de rubriques - template Django - Administration</entry>
+	<entry code='cms_module_favoriteslist_view_sectionslist_readonly'>Liste de rubriques - template Django - Visualisation</entry>
+</XMLlist>

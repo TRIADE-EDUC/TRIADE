@@ -1,0 +1,6 @@
+<h2>ARK</h2>
+</p><p>
+Gestion des identifiants ARK.
+</p>
+<p><b>NAAN</b> : Gestion des NAAN (Num&eacute;ros d'autorit&eacute; nommante).</p>
+<p><b>G&eacute;n&eacute;ration</b> : G&eacute;n&eacute;ration en lot des ARK.</p>

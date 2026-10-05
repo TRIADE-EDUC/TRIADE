@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ItemUI.js,v 1.39 2018-11-07 12:21:33 dgoron Exp $
+// $Id: ItemUI.js,v 1.42 2021/07/19 08:13:51 moble Exp $
 
 
 define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/topic","dojo/_base/lang","dijit/form/Button","dijit/form/RadioButton","dijit/form/ToggleButton", "apps/pmb/authForm","dijit/form/DropDownButton", "dijit/DropDownMenu", "dijit/MenuItem", "dijit/form/TextBox","dijit/registry","dojo/dom-style"], function(declare,ContentPane, domConstruct, dom, on, topic, lang, Button, RadioButton, ToggleButton,authForm, DropDownButton, DropDownMenu, MenuItem, TextBox, registry,domStyle){
@@ -90,6 +90,9 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", 
 			if(dojo.byId('tags_isbd')) {
 				domConstruct.place('<label>'+response.tags_isbd+'</label>', dojo.byId('tags_isbd'), 'only');
 			}
+			if(dojo.byId('concept_isbd')) {
+				domConstruct.place('<label>'+response.concepts_isbd+'</label>', dojo.byId('concept_isbd'), 'only');
+			}
 			if(dijit.byId("button_index_id")) {
 				dojo.style("button_index_id", "opacity",0.5);	
 				dijit.byId("button_index_id").set('disabled', true);
@@ -134,7 +137,13 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", 
 			}
 			if (!(data.item.status == 2 && data.item.descriptors.length == 0)) {
 				html+="<b>"+this.getMsg("dsi_docwatch_item_categ")+"</b> : <span id='descriptors_isbd'></span></br>";
-				html+="	<div id='categ'></div>";
+				html+="	<div class='row' id='categ'></div></br>";
+			}
+			if(data.item.concepts) {
+				if (!(data.item.status == 2 && data.item.concepts.length == 0)) {
+					html+="<b>"+this.getMsg("dsi_docwatch_item_concept")+"</b> : <span id='concept_isbd'></span></br>";
+					html+="	<div class='row' id='concept'></div></br>";
+				}
 			}
 			html+="<div class='row'>&nbsp;</div>";
 			html+="<div class='row'>";
@@ -217,9 +226,27 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", 
 						inputIdUrl: "p1",
 						inputNameUrl: "p2",
 						data: data.item.descriptors,
-						callback:"callback_categ"
+						callback:"callback_categ",
 					},'categ')
 				);
+				
+				if(!data.item.concepts)data.item.concepts = new Array();
+				if (!this.conceptForm) {
+					this.own(this.conceptForm= new authForm({
+							id: "concept",
+							what_sel: "select_categ",
+							add_function: "add_categ",
+							completion: "onto",
+							selectUrl: "./select.php?what=ontology&dyn=1",
+							inputIdUrl: "p1",
+							inputNameUrl: "p2",
+							data: data.item.concepts,
+							callback:"callback_categ",
+						},'concept')
+					);
+				} else {
+					this.conceptForm.data = data.item.concepts;
+				}
 				
 				if (data.item.status == 0) {
 					setTimeout(lang.hitch(this,function(){
@@ -349,9 +376,10 @@ define(["dojo/_base/declare", "dijit/layout/ContentPane", "dojo/dom-construct", 
 			else topic.publish('itemUI',"itemMarkAsUninteresting",{itemId:this.itemId});
 		},
 		itemIndex: function(evt){
-			var data=this.categForm.get_data();
-			var data_tags=this.get_tags();
-			topic.publish('itemUI',"itemIndex",{itemId:this.itemId,data:{descriptors:data,tags:data_tags}});
+			var data = this.categForm.get_data();
+			var data_tags = this.get_tags();
+			var data_concept = this.conceptForm.get_data();
+			topic.publish('itemUI',"itemIndex",{itemId:this.itemId,data:{descriptors:data,tags:data_tags, concepts_list:data_concept, item_id:this.itemId}});
 		},
 		get_tags: function(evt){
 			var data= new Array();

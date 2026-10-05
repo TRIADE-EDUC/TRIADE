@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_lvl.class.php,v 1.13 2019-03-21 14:29:29 dgoron Exp $
+// $Id: cms_module_common_selector_lvl.class.php,v 1.15.6.1 2025/01/16 08:45:29 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -44,7 +44,6 @@ class cms_module_common_selector_lvl extends cms_module_common_selector{
 			"index",
 			//search_type_asked	
 			"simple_search",
-			"simple_search_mode_simple_search",
 			"simple_search_mode_auteur",
 			"simple_search_mode_categorie",
 			"simple_search_mode_collection",
@@ -69,12 +68,16 @@ class cms_module_common_selector_lvl extends cms_module_common_selector{
 			"askmdp",
 			"subscribe",
 			"contact_form",
-			"collstate_bulletins_display"
+			"collstate_bulletins_display",
+		    "search_segment",
+		    "search_universe",
+		    "animation_see",
+		    "animations_see"
 		);
 	}
 	
 	public function get_form(){
-		//si on est sur une page de type Page en crÃ©ation de cadre, on propose la condition prÃ©-remplie...
+		//si on est sur une page de type Page en création de cadre, on propose la condition pré-remplie...
 		switch($this->cms_build_env['input']){
 			case "empr.php" :
 				if(!$this->id){
@@ -91,7 +94,7 @@ class cms_module_common_selector_lvl extends cms_module_common_selector{
 					$this->parameters[] = "subscribe";
 				}
 				break;
-			default : 
+			default :
 				if ($this->cms_build_env['search_type_asked']){
 					if(!$this->id){
 						$this->parameters[] = $this->cms_build_env['search_type_asked'];
@@ -118,9 +121,9 @@ class cms_module_common_selector_lvl extends cms_module_common_selector{
 		asort($sorted_lvl);
 		foreach($sorted_lvl as $lvl=>$label){
 			$form.="
-						<option value='".$lvl."' ".(in_array($lvl,$this->parameters) ? "selected='selected'" : "").">".$label."</option>";
+						<option value='".$lvl."' ".(in_array($lvl, $this->parameters) ? "selected='selected'" : "").">".$label."</option>";
 		}
-		$form.="				
+		$form.="
 					</select>
 				</div>
 			</div>";
@@ -140,25 +143,34 @@ class cms_module_common_selector_lvl extends cms_module_common_selector{
 		return $this->value;
 	}
 	
-	public function get_human_description_selector(){		
-		if (!$this->parameters) $this->parameters=array();
+	public function get_human_description_selector()
+	{
 		$description = "";
-		$i = 1;		
-		foreach($this->lvl as $lvl){
-			if(in_array($lvl,$this->parameters)){
-				if($i <= 3){
-					if(array_search($lvl, $this->parameters) == 0){
+		$i = 1;
+
+		if (!isset($this->parameters)) {
+		    $this->parameters = [];
+		}
+
+		if (!empty($this->parameters) && !is_array($this->parameters)) {
+		    $this->parameters = [$this->parameters];
+		}
+
+		foreach ($this->lvl as $lvl) {
+		    if (is_array($this->parameters) && in_array($lvl, $this->parameters)) {
+				if ($i <= 3) {
+					if (array_search($lvl, $this->parameters) == 0) {
 						$description .= $this->format_text($this->msg['cms_module_common_selector_lvl_'.$lvl]);
-					}else{
+					} else {
 						$description .= ", ".$this->format_text($this->msg['cms_module_common_selector_lvl_'.$lvl]);
 					}
-				}else{
+				} else {
 					$description .= " (...+".(count($this->parameters)-3).")";
 					break;
 				}
 				$i++;
-			}			
+			}
 		}
-		return $description;		
+		return $description;
 	}
 }

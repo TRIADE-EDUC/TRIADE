@@ -1,33 +1,29 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serial_affichage_unimarc.class.php,v 1.5 2019-05-29 12:28:05 ngantier Exp $
+// $Id: serial_affichage_unimarc.class.php,v 1.7 2022/01/10 10:23:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/notice_affichage_unimarc.class.php");
 
-
-
-
-//on essaye d'afficher un pÃ©riodique avec une notice de pÃ©rio, bulletin ou article dans les entrepot
+//on essaye d'afficher un périodique avec une notice de pério, bulletin ou article dans les entrepot
 class serial_affichage_unimarc extends notice_affichage_unimarc {
 	
 	public function __construct($id, $liens, $cart=0, $to_print=0, $entrepots_localisations=array()){
 		parent::__construct($id, $liens, $cart, $to_print, $entrepots_localisations);
 	}
 
-	// rÃ©cupÃ©ration des valeurs en table---------------------------------------
+	// récupération des valeurs en table---------------------------------------
 	public function fetch_data() {
-		global $dbh;
-	
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->notice_id);
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$source_id = pmb_mysql_result($myQuery, 0, 0);
 	
 		$requete="select * from entrepot_source_".$source_id." where recid='".addslashes($this->notice_id)."' group by field_order,ufield,usubfield,subfield_order,value";
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		
 		$notice= new stdClass();
 		$lpfo="";
@@ -65,7 +61,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 					case "hl":					
 						if($l->value == '2'){
 							$notice->niveau_hierar=$l->value;
-						} else $notice->niveau_hierar='0'; //On force le niveau Ã  zÃ©ro
+						} else $notice->niveau_hierar='0'; //On force le niveau à zéro
 						break;
 					//ISBN
 					case "011":
@@ -90,6 +86,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 						break;
 					//Editeur
 					case "210":
+					case "214":
 					case "219":
 						if($l->field_order!=$lpfo) {
 							$lpfo=$l->field_order;
@@ -137,7 +134,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 					case "330":
 						$notice->n_resume[]=$l->value;
 						break;
-					//Serie ou PÃ©rio
+					//Serie ou Pério
 					case "461":		
 						switch($l->usubfield){
 							case 'x':
@@ -176,7 +173,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 								break;
 						}
 						break;
-					//Indexations dÃ©cimales..;
+					//Indexations décimales..;
 					case "676":
 					case "686":
 						switch ($l->usubfield) {
@@ -230,7 +227,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 								$notice->thumbnail_url=$l->value;
 						}
 						break;
-					//Documents numÃ©riques
+					//Documents numériques
 					case "897":
 						$doc_nums[$l->field_order][$l->usubfield] = $l->value;
 						break;
@@ -253,7 +250,7 @@ class serial_affichage_unimarc extends notice_affichage_unimarc {
 		$this->fetch_langues(0) ;
 		$this->fetch_langues(1) ;
 		
-		//on a fait un jolie fetch_data, on regarde ce qu'on a rÃ©cupÃ©rÃ© pour remettre en forme...
+		//on a fait un jolie fetch_data, on regarde ce qu'on a récupéré pour remettre en forme...
 		switch($this->notice->niveau_biblio.$this->notice->niveau_hierar){
 			//un article !
 			case "a2" :

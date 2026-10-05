@@ -1,96 +1,138 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sphinx_explnums_indexer.class.php,v 1.5 2019-05-27 12:55:59 arenou Exp $
+// $Id: sphinx_explnums_indexer.class.php,v 1.11.4.1 2025/04/25 09:37:44 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once $class_path.'/sphinx/sphinx_indexer.class.php';
+global $class_path;
 
-class sphinx_explnums_indexer extends sphinx_indexer {
-	
-	public function fillIndex($explnum_id=0){
-	    global $sphinx_indexes_prefix;
-	    
-		$options = array('size' => 80);
-		$explnum_id+=0;
+require_once "$class_path/sphinx/sphinx_indexer.class.php";
 
-		$explnums_noti_ids =[];
-		$explnums_bull_ids =[];
-		$noti_query = 'select explnum_id as id from explnum where explnum_notice != 0 and explnum_bulletin = 0';
-		$bull_query = 'select explnum_id as id from explnum join bulletins on bulletin_id =explnum_bulletin where explnum_notice = 0 and explnum_bulletin != 0';
-		if($explnum_id != 0){
-		    $noti_query.= " and explnum_id =".$explnum_id;
-		    $bull_query.= " and explnum_id =".$explnum_id;
-		    
-		    
-		}
-		$res = pmb_mysql_query($noti_query);
-		while($row = pmb_mysql_fetch_array($res)){
-		    $explnums_noti_ids[] = $row[0];
-		}
-		$res = pmb_mysql_query($bull_query);
-		while($row = pmb_mysql_fetch_array($res)){
-		    $explnums_bull_ids[] = $row[0];
-		}
-		$nb = count($explnums_noti_ids) + count($explnums_bull_ids);		    
-		
+class sphinx_explnums_indexer extends sphinx_indexer
+{
 
-	    $noti_query = 'select explnum_id as id, explnum_notice as num_record, explnum_index_wew as content from explnum where explnum_notice != 0 and explnum_bulletin = 0 and explnum_id = ';
-		$bull_query = 'select explnum_id as id, if(num_notice,num_notice,bulletin_notice) as num_record, explnum_index_wew as content from explnum join bulletins on bulletin_id =explnum_bulletin where explnum_notice = 0 and explnum_bulletin != 0 and explnum_id = ';
-		
-	    if(!$explnum_id) print ProgressBar::start(($nb),"EXPLNUMS",$options);
-	    pmb_mysql_query('set session group_concat_max_len = 16777216');
-	    if(count($explnums_noti_ids)){
-            for($i=0 ; $i<count($explnums_noti_ids) ; $i++){
-                $res = pmb_mysql_query($noti_query.$explnums_noti_ids[$i]);
-                $object=pmb_mysql_fetch_object($res);
-                //purge...
-                pmb_mysql_query('delete from '.$sphinx_indexes_prefix.'records_explnums where id = '.$object->id,$this->getDBHandler());
-                $query = 'insert into '.$sphinx_indexes_prefix.'records_explnums (id,content,num_record) values('.$object->id.',\''.addslashes($object->content).'\',\''.$object->num_record.'\')';
-                if(!pmb_mysql_query($query,$this->getDBHandler())){
-                    print $table. ' : '.pmb_mysql_error($this->getDBHandler()). "\n".$query;die;
+    public function __construct()
+    {
+        $this->default_index = 'explnums';
+        parent::__construct();
+    }
+
+
+    /**
+     * Remplissage d'un ensemble index
+     *
+     * @param [int] $object_ids : id objets a indexer. Si vide, remplissage de l'ensemble des index
+     * @param boolean $showProgression : affichage progression en console
+     *
+     */
+    public function fillIndexes($object_ids = [], $showProgression = false)
+    {
+        global $sphinx_indexes_prefix;
+
+        array_walk($object_ids, function(&$a) { $a = intval($a);});
+        $showProgression = boolval($showProgression);
+
+        pmb_mysql_query('set session group_concat_max_len = 16777216');
+
+        $explnums_noti_ids = [];
+        $explnums_bull_ids = [];
+        $noti_query = 'select explnum_id as id from explnum where explnum_notice != 0 and explnum_bulletin = 0';
+        $bull_query = 'select explnum_id as id from explnum join bulletins on bulletin_id =explnum_bulletin where explnum_notice = 0 and explnum_bulletin != 0';
+        if ($object_ids) {
+            $noti_query .= " and explnum_id in (". implode(',', $object_ids).")";
+            $bull_query .= " and explnum_id in (". implode(',', $object_ids).")";
+        }
+
+        $nb = 0;
+        $res = pmb_mysql_query($noti_query);
+        $nb_explnums_noti = pmb_mysql_num_rows($res);
+        while ($row = pmb_mysql_fetch_array($res)) {
+            $explnums_noti_ids[] = $row[0];
+        }
+
+        $res = pmb_mysql_query($bull_query);
+        $nb_explnums_bull = pmb_mysql_num_rows($res);
+        while ($row = pmb_mysql_fetch_array($res)) {
+            $explnums_bull_ids[] = $row[0];
+        }
+
+        $nb = $nb_explnums_noti + $nb_explnums_bull;
+
+        $noti_query = 'select explnum_id as id, explnum_notice as num_record, explnum_index_wew as content from explnum where explnum_notice != 0 and explnum_bulletin = 0 and explnum_id = ';
+        $bull_query = 'select explnum_id as id, if(num_notice,num_notice,bulletin_notice) as num_record, explnum_index_wew as content from explnum join bulletins on bulletin_id =explnum_bulletin where explnum_notice = 0 and explnum_bulletin != 0 and explnum_id = ';
+
+        if ($showProgression) {
+            print ProgressBar::start($nb, "Index " . $this->default_index);
+        }
+
+        $table = $sphinx_indexes_prefix . 'records_explnums';
+
+        if (!empty($explnums_noti_ids)) {
+            for ($i = 0; $i < $nb_explnums_noti; $i++) {
+                $query = $noti_query . $explnums_noti_ids[$i];
+                $res = pmb_mysql_query($query);
+                $object = pmb_mysql_fetch_object($res);
+
+                // Purge...
+                $dbh = $this->getDBHandler();
+                pmb_mysql_query('delete from ' . $sphinx_indexes_prefix . 'records_explnums where id = ' . $object->id, $dbh);
+                $query = "insert into $table (id, content, num_record) values ($object->id, '" . addslashes(encoding_normalize::utf8_normalize($object->content)) . "', '$object->num_record')";
+                if (!pmb_mysql_query($query, $dbh)) {
+                    print "$table : " . pmb_mysql_error($dbh) . "\n $query";
+                    die();
                 }
-                if(!$explnum_id) print ProgressBar::next();
+                if ($showProgression) {
+                    print ProgressBar::next();
+                }
             }
-	    }
-	    if (count($explnums_bull_ids)){
-	        for($i=0 ; $i<count($explnums_bull_ids) ; $i++){
-	            $res = pmb_mysql_query($bull_query.$explnums_bull_ids[$i]);
-	            $object=pmb_mysql_fetch_object($res);
-	            pmb_mysql_query('delete from '.$sphinx_indexes_prefix.'records_explnums where id = '.$object->id,$this->getDBHandler());
-                $query = 'insert into '.$sphinx_indexes_prefix.'records_explnums (id,content,num_record) values('.$object->id.',\''.addslashes($object->content).'\',\''.$object->num_record.'\')';
-                if(!pmb_mysql_query($query,$this->getDBHandler())){
-                    print $table. ' : '.pmb_mysql_error($this->getDBHandler()). "\n".$query;die;
+        }
+
+        if (!empty($explnums_bull_ids)) {
+            for ($i = 0; $i < $nb_explnums_bull; $i++) {
+                $query = $bull_query . $explnums_bull_ids[$i];
+                $res = pmb_mysql_query($query);
+                $object = pmb_mysql_fetch_object($res);
+
+                // Purge...
+                $dbh = $this->getDBHandler();
+                pmb_mysql_query('delete from ' . $sphinx_indexes_prefix . 'records_explnums where id = ' . $object->id, $dbh);
+                $query = "insert into $table (id, content, num_record) values ($object->id, '" . addslashes(encoding_normalize::utf8_normalize($object->content)) . "', '$object->num_record')";
+                if (!pmb_mysql_query($query, $dbh)) {
+                    print "$table : " . pmb_mysql_error($dbh) . "\n $query";
+                    die();
                 }
-                if(!$explnum_id) print ProgressBar::next();
-	        }
-	    }
-	    if(!$explnum_id) print ProgressBar::finish();
-	}
-	
+                if ($showProgression) {
+                    print ProgressBar::next();
+                }
+            }
+        }
+
+        if ($showProgression) {
+            print ProgressBar::finish();
+        }
+    }
 
 
-	public function getIndexConfFile()
-	{
-	    global $sphinx_indexes_path;
-	    global $sphinx_indexes_prefix;
-	    $index_name = $sphinx_indexes_prefix.'records_explnums';
-		$conf = '
-#########################################
-#   PMB AUTOMATIC INDEX CONTSTRUCTION   #
-#########################################';
-	
-		$conf.= '
+    public function getIndexConfFile()
+    {
+        global $sphinx_indexes_path;
+        global $sphinx_indexes_prefix;
+        $index_name = $sphinx_indexes_prefix.'records_explnums';
+        $conf = '
+########################################
+#   PMB AUTOMATIC INDEX CONSTRUCTION   #
+########################################';
+
+        $conf.= '
 index '.$index_name.'
 {
-	type = rt
-	path = '.str_replace('//', '/', $sphinx_indexes_path.'/'.$index_name).'
-	dict = keywords
-	min_infix_len = 3
-	expand_keywords = 1
-	charset_table = 0..9, a..z, _, A..Z->a..z, U+00C0->a, U+00C1->a, \
+    type = rt
+    path = '.str_replace('//', '/', $sphinx_indexes_path.'/'.$index_name).'
+    min_infix_len = 3
+    expand_keywords = 1
+    charset_table = 0..9, a..z, _, A..Z->a..z, U+00C0->a, U+00C1->a, \
         U+00C2->a, U+00C3->a, U+00C4->a, U+00C5->a, U+00C7->c, U+00C8->e, \
         U+00C9->e, U+00CA->e, U+00CB->e, U+00CC->i, U+00CD->i, U+00CE->i, \
         U+00CF->i, U+00D1->n, U+00D2->o, U+00D3->o, U+00D4->o, U+00D5->o, \
@@ -173,13 +215,13 @@ index '.$index_name.'
         U+1EED->u, U+1EEE->u, U+1EEF->u, U+1EF0->u, U+1EF1->u, U+1EF2->y, \
         U+1EF3->y, U+1EF4->y, U+1EF5->y, U+1EF6->y, U+1EF7->y, U+1EF8->y, \
         U+1EF9->y
-	
-	#fields definition
-	rt_field = content
-	rt_field = num_record
-	#attribute definition
-	rt_attr_uint = num_record
+
+    #fields definition
+    rt_field = content
+    rt_field = num_record
+    #attribute definition
+    rt_attr_uint = num_record
 }';
-		return $conf;
-	}
+        return $conf;
+    }
 }

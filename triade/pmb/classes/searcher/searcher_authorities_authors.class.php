@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_authors.class.php,v 1.8 2018-08-17 10:33:02 ccraig Exp $
+// $Id: searcher_authorities_authors.class.php,v 1.8.14.1 2024/10/17 08:22:51 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,33 +16,35 @@ class searcher_authorities_authors extends searcher_autorities {
 		$this->object_table = "authors";
 		$this->object_table_key = "author_id";
 	}
-	
+
 	public function _get_search_type(){
 		return parent::_get_search_type()."_authors";
 	}
-	
+
 	protected function _get_authorities_filters(){
 		global $type_autorite;
-		
+
 		$filters = parent::_get_authorities_filters();
 		if ($type_autorite && ($type_autorite != '7')) {
 			$filters[] = 'author_type = "'.$type_autorite.'"';
 		}
 		return $filters;
 	}
-	
+
 	protected function _get_sign_elements($sorted=false) {
 		global $type_autorite;
 		$str_to_hash = parent::_get_sign_elements($sorted);
 		$str_to_hash .= "&type_autorite=".$type_autorite;
 		return $str_to_hash;
 	}
-	
+
 	public function get_authority_tri() {
 		return 'index_author';
 	}
-	
+
 	public function explain($display, $mode = 'records',$mini=false){
+		global $begin_result_liste, $end_result_liste;
+
 		error_reporting(E_ALL & ~E_NOTICE);
 		print '<div style="margin-left:10px;width:49%;overflow:hidden;float:left">';
 		print '<h1>Recherche Native</h1>';
@@ -59,14 +61,14 @@ class searcher_authorities_authors extends searcher_autorities {
 		 	print $elements;
 		 	print $end_result_liste;
 	 		print '<p>Temps de gen page (en seconde) : '.(microtime(true) - $inter).'</p>';
- 		}	
+ 		}
  		print '<p>Temps Total (en seconde) : '.(microtime(true) - $start).'</p></div>';
 	}
-	
+
 	protected function _get_human_queries() {
 		global $msg;
 		global $type_autorite;
-		
+
 		$human_queries = parent::_get_human_queries();
 		if ($type_autorite && ($type_autorite != '7')) {
 			switch ($type_autorite) {
@@ -85,7 +87,7 @@ class searcher_authorities_authors extends searcher_autorities {
 					'value' => $type_autorite_label
 			);
 		}
-		
+
 		return $human_queries;
 	}
 }

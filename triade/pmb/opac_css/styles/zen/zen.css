@@ -67,7 +67,7 @@ html {
     font-weight:400;
 }
 
-/* Panier                                          
+/* Panier
  ========================================================================== */
 
 #resume_panier,
@@ -110,7 +110,7 @@ body.cart_info_body {
     color: #fff;
     line-height: 38px;
 }
-/* Image du panier                                          
+/* Image du panier
  ========================================================================== */
 
 .img_basket {
@@ -131,7 +131,7 @@ body.cart_info_body {
 
 .img_basket img {
 }
-/* lien du panier                                          
+/* lien du panier
  ========================================================================== */
 
 #cart_info_iframe_content a {
@@ -144,7 +144,7 @@ body.cart_info_body {
 #cart_info_iframe_content a:hover {
     text-shadow: 0px 0px 0px;
 }
-/* Page panier                                          
+/* Page panier
  ========================================================================== */
 
 #resume_panier.empty {
@@ -372,7 +372,7 @@ table[summary^="navigation bar"] {
 }
 
 #a2z_perio .notice_contenu{
-    margin:0px   
+    margin:0px
 }
 
 #a2z_perio .descr_notice{
@@ -403,4 +403,12 @@ div#widget > a {
  ==========================================================================*/
 .search_other_link, #help_connexion {
     background: transparent;
+}
+
+/*=========================================================================*/
+/* Liste de lecture                                                        */
+/*=========================================================================*/
+
+#reading_list_search .reading_list_search_tabs input[type="button"] {
+    background-color: unset;
 }

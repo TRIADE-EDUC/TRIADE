@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_form.tpl.php,v 1.12 2019-05-27 10:24:32 btafforeau Exp $
+// $Id: import_form.tpl.php,v 1.12 2019/05/27 10:24:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -10,7 +10,7 @@ global $class_path, $encodage_fic_source, $form, $current_module, $msg, $charset
 
 require_once($class_path."/import/import_entities.class.php");
 
-//Gestion de l'encodage du fichier Ã  convertir (pour les fichiers unimarc iso)
+//Gestion de l'encodage du fichier à convertir (pour les fichiers unimarc iso)
 if(isset($encodage_fic_source)){
 	$_SESSION["encodage_fic_source"]=$encodage_fic_source;
 }elseif(isset($_SESSION["encodage_fic_source"])){

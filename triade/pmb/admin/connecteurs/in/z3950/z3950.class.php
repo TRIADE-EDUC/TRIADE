@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: z3950.class.php,v 1.25 2019-06-06 09:56:29 btafforeau Exp $
+// $Id: z3950.class.php,v 1.33.4.1 2025/04/16 12:16:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,14 +13,14 @@ require_once($base_path."/admin/convert/convert.class.php");
 require_once($base_path."/admin/convert/xml_unimarc.class.php");
 
 if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) {
-    if (PHP_MAJOR_VERSION == "5") @ini_set("zend.ze1_compatibility_mode", "0");
 	require_once($include_path.'/xslt-php4-to-php5.inc.php');
 }
 
 function _item_z3950_($param) {
 	global $catalog;
 	global $n_typ_total;
-	if ($param["IMPORT"]=="yes") {
+	if (isset($param["IMPORT"]) && $param["IMPORT"]=="yes") {
+		$t=array();
 		$t["NAME"]=$param["NAME"];
 		$t["INDEX"]=$n_typ_total;
 		$t["PATH"]=$param["PATH"];
@@ -30,45 +30,53 @@ function _item_z3950_($param) {
 }
 
 class z3950 extends connector {
-	public $profiles;				//Profils par dÃ©faut
-	
-	public $convert_path_order=array();	//Table de correspondance entre le chemin d'une conversion et son sumÃ©ro d'ordre
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
+
+	public $profiles;				//Profils par défaut
+
+	public $convert_path_order=array();	//Table de correspondance entre le chemin d'une conversion et son suméro d'ordre
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
     public function get_id() {
     	return "z3950";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function get_profiles() {
-    	$xml_profile=file_get_contents($this->connector_path."/profil.xml");
-    	$param=_parser_text_no_function_($xml_profile,"PROFILES");
-    	for ($i=0; $i<count($param["PROFILE"]); $i++) {
-    		$profile=$param["PROFILE"][$i];
-    		$t=array();
-    		$t["name"]=$profile["NAME"];
-    		if (substr($profile["COMMENT"],0,4)=="msg:") 
-    			$t["comment"]=$this->msg[substr($profile["COMMENT"],4)]; 
-    		else $t["comment"]=$profile["COMMENT"];
-    		for ($j=0; $j<count($profile["UFIELDS"][0]["UFIELD"]); $j++) {
-    			$ufield=$profile["UFIELDS"][0]["UFIELD"][$j];
-    			$t["ufields"][$ufield["NAME"]]=$ufield["IDS"];
+    	$xml_profile = file_get_contents($this->connector_path."/profil.xml");
+    	$param = _parser_text_no_function_($xml_profile, "PROFILES");
+    	$nb_profiles = count($param["PROFILE"]);
+
+    	for ($i = 0; $i < $nb_profiles; $i++) {
+    		$profile = $param["PROFILE"][$i];
+    		$t = array();
+    		$t["name"] = $profile["NAME"];
+
+    		if (substr($profile["COMMENT"], 0, 4) == "msg:") {
+    			$t["comment"] = $this->msg[substr($profile["COMMENT"], 4)];
+    		} else {
+    		    $t["comment"] = $profile["COMMENT"];
     		}
-    		for ($j=0; $j<count($profile["OPERATORS"][0]["OPERATOR"]); $j++) {
-    			$operator=$profile["OPERATORS"][0]["OPERATOR"][$j];
-    			$t["operators"][$operator["NAME"]]=$operator["TYPES"];
+
+    		$nb_ufields = count($profile["UFIELDS"][0]["UFIELD"]);
+    		for ($j = 0; $j < $nb_ufields; $j++) {
+    			$ufield = $profile["UFIELDS"][0]["UFIELD"][$j];
+    			$t["ufields"][$ufield["NAME"]] = $ufield["IDS"];
+    		}
+
+    		if (isset($profile["OPERATORS"][0]["OPERATOR"])) {
+    		    $nb_operators = count($profile["OPERATORS"][0]["OPERATOR"]);
+    		    for ($j = 0; $j < $nb_operators; $j++) {
+        			$operator = $profile["OPERATORS"][0]["OPERATOR"][$j];
+        			$t["operators"][$operator["NAME"]] = $operator["TYPES"];
+        		}
     		}
     		$this->profiles[]=$t;
     	}
     }
-    
+
     public function parse_convert_catalog() {
     	global $catalog,$base_path;
     	//Liste des transformations possibles avant import
@@ -78,15 +86,17 @@ class z3950 extends connector {
 			$fic_catal = "$base_path/admin/convert/imports/catalog_subst.xml";
 		else
 			$fic_catal = "$base_path/admin/convert/imports/catalog.xml";
-		
+
 		_parser_($fic_catal, array("ITEM" => "_item_z3950_"), "CATALOG");
     	$this->convert_path_order=$catalog;
     }
-    
+
     public function source_get_property_form($source_id) {
-    	global $charset,$base_path,$catalog,$reload;
-    	
-    	if (!$reload) {    	
+        global $charset, $base_path, $catalog, $reload, $xslt_exemplaire;
+        global $z3950_profil,$url,$z3950_base,$z3950_login,$z3950_password,$z3950_format,$z3950_port,$z3950_convert,$z3950_max_notices;
+        global $z3950_bib1;
+
+    	if (!$reload) {
 	    	$params=$this->get_source_params($source_id);
 			if ($params["PARAMETERS"]) {
 				//Affichage du formulaire avec $params["PARAMETERS"]
@@ -94,32 +104,30 @@ class z3950 extends connector {
 				foreach ($vars as $key=>$val) {
 					global ${$key};
 					${$key}=$val;
-				}	
+				}
 			}
-    	} else {
-    		global $z3950_profil,$url,$z3950_base,$z3950_login,$z3950_password,$z3950_format,$z3950_port,$z3950_convert,$z3950_max_notices;
     	}
-    			
+
     	if (!($z3950_max_notices*1)) $z3950_max_notices=100;
-    	
+
 		//Liste des transformations possibles avant import
 		$this->parse_convert_catalog();
-		
-		//CrÃ©ation de la liste des types d'import
+
+		//Création de la liste des types d'import
 		$export_type="<select name=\"z3950_convert\" id=\"z3950_convert\">\n";
 		$export_type.="<option value=\"0\">".$this->msg["z3950_no_convert"]."</option>\n";
 		for ($i=0; $i<count($this->convert_path_order); $i++) {
 			$export_type.="<option value=\"".$this->convert_path_order[$i]["PATH"]."\"".($z3950_convert==$this->convert_path_order[$i]["PATH"]?" selected":"").">".$this->convert_path_order[$i]["NAME"]."</option>\n";
 		}
 		$export_type.="</select>";
-		
+
 		$form="
 		<div class='row'>
 			<div class='colonne3'>
 				<label for='url'>".$this->msg["z3950_url"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-60em' name='url' id='url' value='".htmlentities($url,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-60em' name='url' id='url' value='".htmlentities($url ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -127,7 +135,7 @@ class z3950 extends connector {
 				<label for='z3950_base'>".$this->msg["z3950_port"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-10em' name='z3950_port' id='z3950_port' value='".htmlentities($z3950_port,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-10em' name='z3950_port' id='z3950_port' value='".htmlentities($z3950_port ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -135,7 +143,7 @@ class z3950 extends connector {
 				<label for='z3950_base'>".$this->msg["z3950_base"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-30em' name='z3950_base' id='z3950_base' value='".htmlentities($z3950_base,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-30em' name='z3950_base' id='z3950_base' value='".htmlentities($z3950_base ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -143,7 +151,7 @@ class z3950 extends connector {
 				<label for='z3950_login'>".$this->msg["z3950_login"]."</label>&nbsp;
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-20em' name='z3950_login' id='z3950_login' value='".htmlentities($z3950_login,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-20em' name='z3950_login' id='z3950_login' value='".htmlentities($z3950_login ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -151,7 +159,7 @@ class z3950 extends connector {
 				<label for='z3950_password'>".$this->msg["z3950_password"]."</label>&nbsp;
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-20em' name='z3950_password' id='z3950_password' value='".htmlentities($z3950_password,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-20em' name='z3950_password' id='z3950_password' value='".htmlentities($z3950_password ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -159,7 +167,7 @@ class z3950 extends connector {
 				<label for='z3950_format'>".$this->msg["z3950_format"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-30em' name='z3950_format' id='z3950_format' value='".htmlentities($z3950_format,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-30em' name='z3950_format' id='z3950_format' value='".htmlentities($z3950_format ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -167,7 +175,7 @@ class z3950 extends connector {
 				<label for='z3950_max_notices'>".$this->msg["z3950_max_notices"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' class='saisie-10em' name='z3950_max_notices' id='z3950_max_notices' value='".htmlentities($z3950_max_notices,ENT_QUOTES,$charset)."'/>
+				<input type='text' class='saisie-10em' name='z3950_max_notices' id='z3950_max_notices' value='".htmlentities($z3950_max_notices ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
@@ -178,12 +186,12 @@ class z3950 extends connector {
 				".$export_type."
 			</div>
 		</div>";
-		
+
 		$xsl_exemplaire_input = "";
-		if ($xslt_exemplaire) {
+		if (!empty($xslt_exemplaire)) {
 			$xsl_exemplaire_input .= '<select name="action_xsl_expl"><option value="keep">'.sprintf($this->msg["z3950_keep_xsl_exemplaire"], $xslt_exemplaire["name"]).'</option><option value="delete">'.$this->msg["z3950_delete_xsl_exemplaire"].'</option></select>';
 		}
-		
+
 		$xsl_exemplaire_input .= '&nbsp;<input onchange="document.source_form.action_xsl_expl.selectedIndex=1" type="file" name="xsl_exemplaire"/>';
 
 		$form.="
@@ -196,10 +204,10 @@ class z3950 extends connector {
 			</div>
 		</div>
 		";
-		
+
 		//Lecture des profils
 		$this->get_profiles();
-		
+
 		$profils="<input type='hidden' name='reload' value=''/>
 			<select name='z3950_profil' id='z3950_profils'>
 				<option value=''>Manuel</option>
@@ -208,7 +216,7 @@ class z3950 extends connector {
 			$profils.="<option value='".$this->profiles[$i]["name"]."'".($z3950_profil==$this->profiles[$i]["name"]?" selected":"").">".htmlentities($this->profiles[$i]["comment"],ENT_QUOTES,$charset)."</option>\n";
 		}
 		$profils.="</select><input type='button' value='".$this->msg["z3950_bib1_calculate"]."' class='bouton_small' onClick='this.form.reload.value=1; this.form.action=\"".basename($_SERVER["REQUEST_URI"])."\"; this.form.act.value=\"add_source\"; this.form.submit();'/>&nbsp;".$this->msg["z3950_warning_bib1"]."\n";
-		
+
 		$form.="
 		<div class='row'>
 			<div class='colonne3'>
@@ -222,8 +230,8 @@ class z3950 extends connector {
 		";
 
 		$fields=$this->get_unimarc_search_fields();
-		
-		//Si c'est un recalcul 
+
+		//Si c'est un recalcul
 		if ($reload) {
 			//Recherche du profil
 			for ($i=0; $i<count($this->profiles); $i++) {
@@ -233,7 +241,7 @@ class z3950 extends connector {
 				}
 			}
 		}
-		
+
 		$form_bib1="<table class='quadrille'><tr><th>Unimarc</th><th>Champ</th><th>Propri&eacute;t&eacute;s</th></tr>\n";
 		foreach ($fields as $ufield=>$values) {
 			if ($ufield!="FORBIDDEN") {
@@ -250,7 +258,7 @@ class z3950 extends connector {
 							$ops=explode(",",$profil["operators"][$op]);
 							for ($i=0; $i<count($ops); $i++) {
 								$ops_=explode("=",$ops[$i]);
-								$opst[$ops_[0]]=$ops_[1];							
+								$opst[$ops_[0]]=$ops_[1];
 							}
 							for ($i=1; $i<6; $i++) {
 								$bibli="bib1_".str_replace("\$","",$ufield)."_".$op."_".$i;
@@ -267,8 +275,8 @@ class z3950 extends connector {
 								${$bibli}="";
 							}
 						}
-					} 						
-				} else if (count($z3950_bib1)) {
+					}
+				} else if (!empty($z3950_bib1)) {
 					foreach ($z3950_bib1 as $bib1=>$bib1_value) {
 						global ${$bib1};
 						${$bib1}=$bib1_value;
@@ -279,7 +287,7 @@ class z3950 extends connector {
 					for ($i=0; $i<6; $i++) {
 						$bibli="bib1_".str_replace("\$","",$ufield)."_".$op."_".$i;
 						global ${$bibli};
-						$form_bib1.="<td class='quadrille_sub'><input type='text' name='bib1_".str_replace("\$","",$ufield)."_".$op."_".$i."' value='".htmlentities(${$bibli},ENT_QUOTES,$charset)."' style='width:4em'/></td>";
+						$form_bib1.="<td class='quadrille_sub'><input type='text' name='bib1_".str_replace("\$","",$ufield)."_".$op."_".$i."' value='".htmlentities(${$bibli} ?? "",ENT_QUOTES,$charset)."' style='width:4em'/></td>";
 					}
 					$form_bib1.="</tr>";
 				}
@@ -295,9 +303,10 @@ class z3950 extends connector {
 		<div class='row'></div>";
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $url,$z3950_base,$z3950_login,$z3950_password,$z3950_max_notices,$z3950_format,$z3950_port,$z3950_convert,$z3950_profil, $action_xsl_expl;
+    	$t=array();
     	$t["url"]=stripslashes($url);
     	$t["z3950_base"]=stripslashes($z3950_base);
   		$t["z3950_login"]=stripslashes($z3950_login);
@@ -307,9 +316,9 @@ class z3950 extends connector {
   		$t["z3950_port"]=stripslashes($z3950_port);
   		$t["z3950_convert"]=stripslashes($z3950_convert);
   		$t["z3950_profil"]=stripslashes($z3950_profil);
-  		
+
   		$fields=$this->get_unimarc_search_fields();
-  		
+
   		//Enregistrement des profils
   		foreach ($fields as $ufield=>$values) {
   			foreach ($values["OPERATORS"] as $op=>$top) {
@@ -320,27 +329,28 @@ class z3950 extends connector {
   				}
   			}
   		}
-  		
+
   		if($action_xsl_expl == "keep") {
 	    	$oldparams=$this->get_source_params($source_id);
 			if ($oldparams["PARAMETERS"]) {
 				//Affichage du formulaire avec $params["PARAMETERS"]
 				$oldvars=unserialize($oldparams["PARAMETERS"]);
 			}
-	  		$t["xslt_exemplaire"] = $oldvars["xslt_exemplaire"];  			
+	  		$t["xslt_exemplaire"] = $oldvars["xslt_exemplaire"];
   		} else {
 			if (($_FILES["xsl_exemplaire"])&&(!$_FILES["xsl_exemplaire"]["error"])) {
+				$axslt_info=array();
 				$axslt_info["name"] = $_FILES["xsl_exemplaire"]["name"];
 				$axslt_info["content"] = file_get_contents($_FILES["xsl_exemplaire"]["tmp_name"]);
 		  		$t["xslt_exemplaire"] = $axslt_info;
-			}  			
+			}
   		}
 		$this->sources[$source_id]["PARAMETERS"]=serialize($t);
-	
+
 	}
-	
+
 	public function rec_record($record,$source_id,$search_id) {
-		global $charset,$base_path;
+		global $base_path;
 		$date_import=date("Y-m-d H:i:s",time());
 		$r=array();
 		//Inversion du tableau
@@ -350,37 +360,39 @@ class z3950 extends connector {
 		$r["bl"]=($record["BL"][0]["value"]?$record["BL"][0]["value"]:"*");
 		$r["hl"]=($record["HL"][0]["value"]?$record["HL"][0]["value"]:"*");
 		$r["dt"]=($record["DT"][0]["value"]?$record["DT"][0]["value"]:"*");
-		
+
 		$exemplaires = array();
-		
+
 		for ($i=0; $i<count($record["F"]); $i++) {
 			if ($record["F"][$i]["C"] == 996) {
-				//C'est une localisation, les localisations ne sont pas fusionnÃ©es.
+				//C'est une localisation, les localisations ne sont pas fusionnées.
 				$t=array();
 				for ($j=0; $j<count($record["F"][$i]["S"]); $j++) {
 					//Sous champ
 					$sub=$record["F"][$i]["S"][$j];
 					$t[$sub["C"]]=$sub["value"];
 				}
-				$exemplaires[]=$t;					
+				$exemplaires[]=$t;
 			}
-			else if ($record["F"][$i]["value"]) 
+			else if (!empty($record["F"][$i]["value"]))
 				$r[$record["F"][$i]["C"]][]=$record["F"][$i]["value"];
 			else {
 				$t=array();
-				for ($j=0; $j<count($record["F"][$i]["S"]); $j++) {
-					//Sous champ
-					$sub=$record["F"][$i]["S"][$j];
-					$t[$sub["C"]][]=$sub["value"];
+				if(!empty($record["F"][$i]["S"])) {
+					for ($j=0; $j<count($record["F"][$i]["S"]); $j++) {
+						//Sous champ
+						$sub=$record["F"][$i]["S"][$j];
+						$t[$sub["C"]][]=$sub["value"];
+					}
+					$r[$record["F"][$i]["C"]][]=$t;
 				}
-				$r[$record["F"][$i]["C"]][]=$t;
 			}
 		}
 		$record=$r;
-	
+
 		//Recherche du 001
 		$ref=$record["001"][0];
-		//Mise Ã  jour 
+		//Mise à jour
 		if (!$ref) $ref = md5(print_r($record, true));
 		if ($ref) {
 			//Si conservation des anciennes notices, on regarde si elle existe
@@ -392,19 +404,20 @@ class z3950 extends connector {
 				$this->delete_from_entrepot($source_id, $ref);
 				$this->delete_from_external_count($source_id, $ref);
 			}
-			//Si pas de conservation ou refÃ©rence inexistante
+			//Si pas de conservation ou reférence inexistante
 			if (($this->del_old)||((!$this->del_old)&&(!$ref_exists))) {
-				//Insertion de l'entÃªte
+				//Insertion de l'entête
+				$n_header=array();
 				$n_header["rs"]=$record["rs"];
 				$n_header["ru"]=$record["ru"];
 				$n_header["el"]=$record["el"];
 				$n_header["bl"]=$record["bl"];
 				$n_header["hl"]=$record["hl"];
 				$n_header["dt"]=$record["dt"];
-				
-				//RÃ©cupÃ©ration d'un ID
+
+				//Récupération d'un ID
 				$recid = $this->insert_into_external_count($source_id, $ref);
-				
+
 				foreach($n_header as $hc=>$code) {
 					$this->insert_header_into_entrepot($source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
 				}
@@ -413,9 +426,9 @@ class z3950 extends connector {
 					$sub_field_order = 0;
 					foreach($exemplaire as $exkey => $exvalue) {
 						$this->insert_content_into_entrepot($source_id, $ref, $date_import, '996', $exkey, $field_order, $sub_field_order, $exvalue, $recid, $search_id);
-						$sub_field_order++;						
-					}					
-					$field_order++;					
+						$sub_field_order++;
+					}
+					$field_order++;
 				}
 				foreach ($record as $field=>$val) {
 					if(is_array($val)){//On ne remet pas les champs rs, el, ...
@@ -429,7 +442,7 @@ class z3950 extends connector {
 							} else {
 								$this->insert_content_into_entrepot($source_id, $ref, $date_import, $field, '', $field_order, 0, $val[$i], $recid, $search_id);
 							}
-							$field_order++;//Un champ peut-Ãªtre rÃ©pÃ©tÃ© pour une mÃªme notice
+							$field_order++;//Un champ peut-être répété pour une même notice
 						}
 					}
 				}
@@ -437,22 +450,22 @@ class z3950 extends connector {
 			}
 		}
 	}
-	
+
 	public function parse_query($query) {
 		global $z3950_bib1;
 		$r="";
-		
+
 		for ($i=count($query)-1; $i>=0; $i--) {
 			//if (($query[$i]->inter)&&($i)) $r.=" ".$query[$i]->inter." ";
 			if (!$query[$i]->sub) {
 				$af=explode(":",$query[$i]->ufield);
 				$isid=false;
 				if (count($af)>1) {
-					if ($af[0]=="id") $isid=true; 
+					if ($af[0]=="id") $isid=true;
 					$amf=$af[1];
 				} else $amf=$af[0];
 				$ufield=str_replace("\$","",$amf);
-				if ($ufield!="FORBIDDEN") {			
+				if ($ufield!="FORBIDDEN") {
 					if ($isid) {
 						$value=$this->get_values_from_id($query[$i]->values[0],$amf);
 					} else $value=$query[$i]->values[0];
@@ -461,7 +474,7 @@ class z3950 extends connector {
 					if ($z3950_bib1[$bib1."0"]) {
 						if (($query[$i]->inter)&&($i>0)) {
 							$r.=" @".$query[$i]->inter;
-						}	
+						}
 						$uns=explode(",",$z3950_bib1[$bib1."0"]);
 						for ($k=0; $k<count($uns); $k++) {
 							if ($k<count($uns)-1) $r.=" @or";
@@ -482,7 +495,7 @@ class z3950 extends connector {
 		}
 		return $r;
 	}
-	
+
 	public function get_convert_order($path) {
 		if (count($this->convert_path_order)==0) {
 			$this->parse_convert_catalog();
@@ -492,12 +505,12 @@ class z3950 extends connector {
 		}
 		return 0;
 	}
-	
+
 	//Fonction de recherche
 	public function search($source_id,$query,$search_id) {
 		global $base_path, $charset, $include_path;
-		
-		//global $url,$z3950_base,$z3950_login,$z3950_password,$z3950_max_notices,$z3950_format,$z3950_port,$z3950_convert,$z3950_profil;
+
+		global $url,$z3950_base,$z3950_login,$z3950_password,$z3950_max_notices,$z3950_format,$z3950_port,$z3950_convert;
 		$this->error=false;
 		$this->error_message="";
 		$params=$this->get_source_params($source_id);
@@ -508,11 +521,11 @@ class z3950 extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
-		
-		if (!($z3950_max_notices*1)) $z3950_max_notices=100;
-		
+		$z3950_max_notices = intval($z3950_max_notices);
+		if (!$z3950_max_notices) $z3950_max_notices=100;
+
 		//Tranformation de la recherche en requete rpn bib1
 		$rpn=$this->parse_query($query);
 		$zurl=$url.($z3950_port?":".$z3950_port:"").($z3950_base?"/".$z3950_base:"");
@@ -530,6 +543,7 @@ class z3950 extends connector {
 		if (yaz_error($yaz_id)) {
 			$this->error=true;
 			$this->error_message=yaz_error($yaz_id);
+			PHP_log::register(PHP_log::prepare("yaz_search rpn : ".$rpn), $this->error_message);
 		} else {
 			$n_results=yaz_hits($yaz_id);
 			if ($n_results>$z3950_max_notices) $n_results=$z3950_max_notices;
@@ -546,7 +560,7 @@ class z3950 extends connector {
 					$xmlunimarc=new xml_unimarc();
 					$nxml=$xmlunimarc->iso2709toXML_notice($cnotice);
 					$xmlunimarc->notices_xml_[0] = '<?xml version="1.0" encoding="'.$charset.'"?>'.$xmlunimarc->notices_xml_[0];
-					if ($xslt_exemplaire) {
+					if (isset($xslt_exemplaire) && is_array($xslt_exemplaire)) {
 						$xmlunimarc->notices_xml_[0] = $this->apply_xsl_to_xml($xmlunimarc->notices_xml_[0], $xslt_exemplaire["content"]);
 					}
 //					print_r($xmlunimarc->notices_xml_[0]);

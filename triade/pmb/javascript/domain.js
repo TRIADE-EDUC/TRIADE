@@ -1,43 +1,46 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: domain.js,v 1.3 2013-05-20 15:56:20 dbellamy Exp $
+// $Id: domain.js,v 1.4 2023/09/08 06:45:25 dgoron Exp $
 
-var nb_todo=0;
-var nb_done=0;
 var pbar=document.getElementById('pbar');
-var pbar_img=document.getElementById('pbar_img');
+var pbar_progress_node=document.getElementById('pbar_progress');
 var pbar_percent=document.getElementById('pbar_percent');
 
 var dom_var_nb_cols=5;
 
 //initialisation ressources
 function pbar_init() {
-	
-	nb_todo=0;
-	nb_done=0;
 	document.getElementById('pbar_ini_msg').style.display='block';
 	document.getElementById('pbar_end_msg').style.display='none';
 	pbar.style.display='block';
-	nb_todo=dom_updateResources(1);
-	while(nb_done < nb_todo) {
-		nb_done=dom_updateResources(2);
-		pbar_progress();
-	}
-	nb_done=dom_updateResources(3);	
+	var nb_todo=dom_updateResources(1);
+	dom_updateProgress(0, nb_todo);
+	dom_updateResources(3);	
 	pbar_end();
 	return false;
 }
+ 
+function dom_updateProgress(nb_done, nb_todo) {
+	if(nb_done < nb_todo) {
+		nb_done=dom_updateResources(2, nb_done);
+		if(nb_done) {
+			pbar_progress(nb_done, nb_todo);
+			//Application d'un léger timeout pour la mise à jour de la progressbar dans le navigateur
+			setTimeout(function() {dom_updateProgress(nb_done, nb_todo);}, 10);
+		}
+	}
+}
 
 //Mise a jour barre de progression
-function pbar_progress() {
+function pbar_progress(nb_done, nb_todo) {
 	
 	var p=0;
 	if(nb_todo>0) {
 		if(nb_done>nb_todo) nb_done=nb_todo;
 		var p=Math.floor((nb_done/nb_todo)*100);
 	}
-	pbar_img.style.width=p+'%';
+	pbar_progress_node.value=p;
 	pbar_percent.innerHTML=nb_done+" / "+nb_todo+" -- "+p+'%';
 	return false;
 }
@@ -51,7 +54,7 @@ function pbar_end() {
 }
 
 //Demande nb elements a modifier
-function dom_updateResources(step){
+function dom_updateResources(step, nb_done=0){
 	
 	var url='';
 	var chk_sav_spe_rights=0;
@@ -73,9 +76,9 @@ function dom_updateResources(step){
 	}
 	// On initialise la classe:
 	var getAttr = new http_request();
-	// Exécution de la requete
+	// Ex�cution de la requete
 	if(getAttr.request(url)){
-		// Il y a une erreur. Afficher le message retourné
+		// Il y a une erreur. Afficher le message retourn�
 		alert (getAttr.get_text());			
 	}else { 
 		//alert(getAttr.get_text());
@@ -84,7 +87,7 @@ function dom_updateResources(step){
 	return false;
 }
 
-//Decalage tableau des droits à gauche
+//Decalage tableau des droits � gauche
 function dom_move_left() {
 	
 	var par =  document.getElementById('dom_tab').children[0];
@@ -96,7 +99,7 @@ function dom_move_left() {
 	dom_update_usr_sel();
 }
 
-//Decalage tableau des droits à droite
+//Decalage tableau des droits � droite
 function dom_move_right() {
 	
 	var par =  document.getElementById('dom_tab').children[0];
@@ -107,7 +110,7 @@ function dom_move_right() {
 	dom_update_usr_sel();
 }
 
-//Decalage tableau des droits en début de tableau
+//Decalage tableau des droits en d�but de tableau
 function dom_move_first() {
 	
 	var par =  document.getElementById('dom_tab').children[0];

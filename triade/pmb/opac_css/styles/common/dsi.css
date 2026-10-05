@@ -1,0 +1,411 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: dsi.css,v 1.12 2023/11/10 09:19:46 pmallambic Exp $ */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+/*                         STYLE DE LA NOUVELLE DSI                           */
+/* ---------------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------------*/
+
+#alerts .visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.dsi-tag {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin : 3px 4px;
+    border : solid 1px #ccc;
+}
+
+.dsi-tag-selected {
+    background-color: #efefef;
+    color : #000;
+}
+
+.dsi-tag-not-selected, .dsi-tag-not-selected:hover {
+    background-color: transparent;
+}
+
+.dsi-alert-list-item {
+    margin : 18px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.dsi-button {
+	cursor: pointer;
+	border-radius: 3px !important;
+	border: none !important;
+	padding: 0 10px !important;
+	color : white !important;
+}
+.switch {
+  padding: 0;
+}
+
+.switch input[type=checkbox] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-label {
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  transition: 0;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 500;
+  padding: 8px 16px;
+  min-width: 130px;
+  justify-content: center;
+}
+
+.switch-label::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  display: block;
+  height: 14px;
+  width: 14px;
+  background-color: #00D440;
+  border-radius: 50%;
+  transition: 0;
+}
+
+.dsi-subscribed .switch-label {
+  background-color: rgba(41, 255, 0, 0.2);
+  color: #00D440;
+  text-indent: 00px;
+  padding-right: 36px;
+}
+
+.dsi-subscribed .switch-label::before {
+  background-color: #00D440;
+  left: calc(100% - 14px - 16px);
+}
+
+.dsi-not-subscribed .switch-label {
+  background-color: rgba(112, 112, 112, 0.2);
+  text-indent: 20px;
+  color: #707070;
+}
+
+.dsi-not-subscribed .switch-label::before {
+  background-color: #707070;
+}
+
+/* Cette class se met à côté de la class .switch sur le label et permet la transition du bouton de droite à gauche */
+.dsi-subscribe-animation .switch-label,
+.dsi-subscribe-animation .switch-label::before{
+  transition: 0.2s;
+}
+
+.dsi-table-container {
+  margin-top: 32px;
+}
+
+.dsi-table-container thead,
+.dsi-table-container tr {
+  border-bottom: 1px solid rgba(17, 1, 29, 0.2);
+}
+
+.dsi-table-container td {
+  display: table-cell;
+  min-width: 100px;
+}
+
+#alerts {
+	background: #F8F8F8 0% 0% no-repeat padding-box;
+  padding: 8px;
+  border: solid 1px #ddd;
+}
+
+.dsi-search-container {
+  position: relative;
+  max-width: 100%;
+}
+
+.dsi-search-container .text_query{
+  padding-left: 22px;
+  max-width: 100%;
+  margin-right: 8px;
+}
+
+.dsi-search-container svg {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+}
+
+.dsi-tools {
+  margin: 22px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  z-index: 1;
+  position: relative;
+}
+
+.dsi-search-container {
+  margin-right: auto;
+}
+
+.dsi-btn-filter .bouton {
+  background: #fff;
+  border: 1px solid #bbb;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dsi-btn-filter .bouton svg {
+  margin-right: 4px;
+}
+
+.dsi-container-tag {
+  max-height: 0px;
+  opacity: 0;
+  transition: 0.2s;
+  visibility: hidden;
+  transform: translateY(-100%);
+}
+
+.dsi-container-tag.dsi-visible-tags {
+  max-height: 100vh;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0%);
+}
+
+.dsi-container-tag label {
+  padding: 0;
+  font-weight: 500;
+}
+
+.dsi-container-tag select {
+  padding: 8px 16px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  max-width: 100%;
+  width: 250px;
+}
+
+.dsi-list-tag {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dsi-list-tag .dsi-tag.dsi-tag-selected svg {
+    margin-left: 4px;
+}
+
+.dsi-list-tag .not-visible {
+  opacity: 0;
+  width: 0;
+}
+
+.dsi-list-tag .is-visible {
+  opacity: 100%;
+  width: auto;
+}
+
+.dsi-list-tag li {
+  transition-property: opacity, width;
+  transition-duration: 0.2s, 0s;
+  transition-delay: 0 , 2s;
+}
+
+.dsi-table-container table tbody,
+.dsi-table-container table td,
+.dsi-table-container table tr {
+  display: block;
+}
+
+.dsi-table-container table th {
+  display: none;
+}
+
+.dsi-table-container td::before {
+  content: attr(data-label);
+  overflow: hidden;
+  text-align: center;
+  background-color: #f2f2f2;
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 600;
+  padding: 4px;
+}
+
+.dsi-table-container table th,
+.dsi-table-container table td {
+  text-align: center;
+}
+
+#dsi-alerts-priv {
+  margin-top: 48px;
+}
+
+/* Formulaire alerte privée */
+
+#diffusionsPrivate .dsi-search-equation {
+  margin-bottom: 16px;
+}
+
+#diffusionsPrivate form {
+  margin-top: 16px;
+}
+
+#diffusionsPrivate .dsi-form-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+#diffusionsPrivate .dsi-form-group label {
+  padding: 0;
+  width: 150px;
+}
+
+#diffusionsPrivate input[type="submit"]{
+  margin-top: 8px;
+}
+
+@media screen and (min-width:1024px) {
+  /* Le min-width de ce media querie est à réduire dans le cas où il n'y a pas de bandeau sur le portail */
+
+  #alerts {
+    padding: 32px;
+  }
+
+  .dsi-table-container table tbody,
+  .dsi-table-container table td,
+  .dsi-table-container table tr,
+  .dsi-table-container table th {
+    display: revert;
+  }
+
+  .dsi-table-container td::before{
+    content: "";
+    display: none;
+  }
+}
+
+.dsi-private-delete-button {
+  cursor: pointer;
+  background-color: transparent;
+  border : 0;
+}
+
+.dsi-slide-enter-active,
+.dsi-slide-leave-active {
+  max-height: 100vh;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0%);
+  transition: 0.2s;
+}
+
+.dsi-slide-enter,
+.dsi-slide-leave-to{
+  max-height: 0px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-200%);
+}
+
+.dsi-table-container table .dsi-row-history {
+  border: none;
+}
+
+.dsi-table-container table .dsi-row-history .dsi-cell-history {
+  padding: 0;
+}
+
+.dsi-table-container table .dsi-row-history .dsi-cell-history .dsi-container-history {
+  overflow: hidden;
+}
+
+.dsi-table-container table .dsi-row-history .dsi-cell-history .dsi-container-history .dsi-content-history {
+  border-bottom: 1px solid rgba(17, 1, 29, 0.2);
+  padding: 16px 8px;
+}
+
+.dsi-table-container table .dsi-row-history .dsi-cell-history .dsi-container-history .dsi-content-history ol {
+  margin-top: 8px;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+
+.dsi-table-container table .dsi-row-history .dsi-cell-history .dsi-container-history .dsi-content-history ol li:not(:last-child){
+  margin-bottom: 8px;
+}
+
+.dsi-btn-history .bouton {
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.dsi-btn-history .bouton svg {
+  transition: 0.2s;
+  height: 100%;;
+  background: rgba(112, 112, 112, 0.2);
+  border-radius: 50%;
+  margin-right: 4px;
+  flex: 0 0 16px;
+}
+
+.dsi-btn-history .bouton.dsi-active-history svg {
+  transform: rotate(180deg);
+  background: rgba(112, 112, 112, 0.3);
+}
+
+.dsi-btn-previous-diff {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dsi-btn-previous-diff svg {
+  margin-right: 4px;
+}
+
+.dsi-btn-previous-diff span{
+  position: relative;
+  display: inline-block;
+}
+
+.dsi-btn-previous-diff span::after {
+  content: "";
+  height: 1px;
+  background-color: #707070;
+  width: 85%;
+  margin: 0 auto;
+  display: block;
+  transition: 0.2s;
+}
+
+.dsi-btn-previous-diff:hover span::after {
+  width: 100%;
+}

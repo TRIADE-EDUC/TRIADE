@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_docnumslist_datasource_docnumslist.class.php,v 1.12 2017-11-22 13:54:26 ngantier Exp $
+// $Id: cms_module_docnumslist_datasource_docnumslist.class.php,v 1.15.2.1 2025/01/17 10:40:46 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -43,9 +43,9 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 			     		$this->generate_table()
 			.'</div>
 		</div>
-		<script type="text/javascript" src="./javascript/http_request.js"></script>
-			<script type="text/javascript">
-				var crit_label = '.json_encode($this->utf8_normalize($facette_search->fields_sort())).';		
+		<script src="./javascript/http_request.js"></script>
+			<script>
+				var crit_label = '.json_encode(encoding_normalize::utf8_normalize($facette_search->fields_sort())).';		
 				function valid_facette(){
 					var crit = document.getElementById("list_crit").value;
 					var table_crit = document.getElementById("defined_crits");
@@ -118,7 +118,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	}
 	
 	/**
-	 * GÃ©nÃ©ration du tableau de critÃ¨res enregistrÃ©s pour la source
+	 * Génération du tableau de critères enregistrés pour la source
 	 * @return string
 	 */
 	private function generate_table(){
@@ -142,7 +142,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	
 	
 	public function store_proceed($content){
-		global $id, $parent;
+		global $parent;
 			
 		if($parent && $this->datas[$parent]){
 			return $this->datas[$parent];
@@ -171,32 +171,31 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	}
 	
 	private function get_groups($parent,$records,$lvl){
-		global $dbh;
 		global $lang;		
-		pmb_mysql_query("SET SESSION group_concat_max_len = 1000000",$dbh);
+		pmb_mysql_query("SET SESSION group_concat_max_len = 1000000");
 		$req = 'select group_concat(id_notice) as notices_ids, value from notices_fields_global_index where lang in ("", "'.$lang.'")
 	        and id_notice in ("'.implode('","', $records).'") and code_champ="'.($this->parameters['crit'][$lvl]*1).'"';
 		if($this->parameters['subcrit'][$lvl]){
 			$req.= ' and code_ss_champ ="'.$this->parameters['subcrit'][$lvl].'"';
 		}
 		$req.= ' group by value';
-		$result = pmb_mysql_query($req, $dbh);
+		$result = pmb_mysql_query($req);
 		$result_array =array();
 		while($row = pmb_mysql_fetch_object($result)) {
 			self::$nb_row++;
-			$exploded_notices_ids = explode(',',$row->notices_ids); //Array d'ids de notices retournÃ© par la requÃªte
-			$records = array_diff($records, $exploded_notices_ids); //On stock les ids de notices non traitÃ©s pour les placer dans une catÃ©gorie "inconnu"
+			$exploded_notices_ids = explode(',',$row->notices_ids); //Array d'ids de notices retourné par la requête
+			$records = array_diff($records, $exploded_notices_ids); //On stock les ids de notices non traités pour les placer dans une catégorie "inconnu"
 			$temp = array(
 				'id' => self::$nb_row,
 				'name' => $row->value,
 				'parent' => $parent,
 				'lvl' => $lvl,
 				'records' => $exploded_notices_ids,
-				'children' => (isset($this->parameters['crit'][$lvl+1]) ? true : ( count($exploded_notices_ids) > 0 ? true : false))
+			    'children' => (isset($this->parameters['crit'][$lvl+1]) ? true : ( (is_countable($exploded_notices_ids) && count($exploded_notices_ids) > 0) ? true : false))
 			);
 			$result_array[] = $temp;
 		}
-		if(count($records)){ //Si il reste des notices non traitÃ©es, on les places dans une catÃ©gorie "inconnu"
+		if(is_countable($records) && count($records)){ //Si il reste des notices non traitées, on les places dans une catégorie "inconnu"
 			self::$nb_row++;
  			$temp = array(
  				'id' => self::$nb_row,
@@ -204,7 +203,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 				'parent' => $parent,
 				'lvl' => $lvl,
  				'records' => $records,
- 				'children' => (isset($this->parameters['crit'][$lvl+1]) ? true : ( count($records) > 0 ? true : false))
+ 			    'children' => (isset($this->parameters['crit'][$lvl+1]) ? true : ( (is_countable($records) && count($records)) > 0 ? true : false))
  			);
 			$result_array[] = $temp;
 		}
@@ -214,7 +213,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	}
 	
 	private function find_item($id){
-		foreach($this->datas as $parent => $items){
+		foreach($this->datas as $items){
 			foreach($items as $item){
 				if($item['id'] == $id){
 					return $item;
@@ -224,17 +223,16 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	} 
 	
 	private function get_explnums_from_records($records,$parent){
-		global $dbh;
 		$docnums_ids = array();
 		
 		/**
-		 * Va rÃ©cupÃ©rer les docnums des monographie, des notices de bulletins et des notices de perio
+		 * Va récupérer les docnums des monographie, des notices de bulletins et des notices de perio
 		*/
 		$req_notices = 'select explnum.explnum_id,notices.tit1 as explnum_nom, notices.tit4 as cplt from explnum
 	    join notices on notices.notice_id = explnum.explnum_notice where explnum_notice in ("'.implode('","', $records).'") and explnum_bulletin=0';
 		 
 		/**
-		 * Va rÃ©cupÃ©rer les docnums des monographie, des notices de bulletins et des notices de perio
+		 * Va récupérer les docnums des monographie, des notices de bulletins et des notices de perio
 		*/
 		$req_noti_bulletin = 'select explnum.explnum_id, notices.tit1 as explnum_nom, notices.tit4 as cplt from explnum
 		join bulletins on explnum.explnum_bulletin = bulletins.bulletin_id and explnum.explnum_notice = 0 
@@ -242,7 +240,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 	    where notices.notice_id in ("'.implode('","', $records).'") ';
 		 
 		/**
-		 * RÃ©cupÃ©ration des documents numÃ©riques des bulletins d'un periodique
+		 * Récupération des documents numériques des bulletins d'un periodique
 		 */
 		$req_bulletin_from_perio = 'select explnum.explnum_id, notices.tit1 as explnum_nom, notices.tit4 as cplt from explnum
         join bulletins on bulletins.bulletin_id = explnum.explnum_bulletin
@@ -250,7 +248,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
         and notices.niveau_hierar = "1" and notices.niveau_biblio = "s" and notices.notice_id in ("'.implode('","', $records).'")';
 		
 		/**
-		 * RÃ©cupÃ©ration des documents numÃ©riques des articles d'un pÃ©riodique
+		 * Récupération des documents numériques des articles d'un périodique
 		 */
 		$req_art_from_perio = 'select explnum.explnum_id,notice_art.tit1 as explnum_nom, notice_art.tit4 as cplt  from explnum
         join analysis on analysis.analysis_notice = explnum.explnum_notice and explnum.explnum_bulletin = 0
@@ -265,7 +263,7 @@ class cms_module_docnumslist_datasource_docnumslist extends cms_module_common_da
 		$final_req.= 'union ('.$req_noti_bulletin.') ';
 		$final_req.= 'union ('.$req_art_from_perio.')) as uni order by explnum_nom desc, cplt asc';
 		
-		$result = pmb_mysql_query($final_req, $dbh);
+		$result = pmb_mysql_query($final_req);
 		while($row = pmb_mysql_fetch_object($result)) {
 			$docnums_ids[] = array(
 				'id' => 'explnum'.$row->explnum_id,

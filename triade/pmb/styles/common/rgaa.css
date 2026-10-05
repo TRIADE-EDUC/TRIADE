@@ -1,0 +1,54 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2013 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: rgaa.css,v 1.1 2023/11/28 10:14:39 dgoron Exp $ */
+
+:root {
+    --rgaa-highlight-color: #856404;
+}
+
+/* -----------------------------------------------------*/
+/*        Transformation des buttons en lien            */
+/* -----------------------------------------------------*/
+
+button:is(.search_result, .lvl1_list_btn, .btn-icon, .btn-surligner),
+button:is(.onglet, .perio-title, .expand-all-btn, .collapse-all-btn, .accordion-controller, .faq-question-btn),
+*:is(#accessibility ul li, .printSearchResult, .triSelector) button,
+*:is(.addCart, .open_visionneuse, .short_url_permalink, .search_bt_sugg, .search_bt_external) button,
+.navbar>form button {
+    border: 0 transparent;
+    background: transparent;
+    cursor: pointer;
+}
+
+*:is(#home_on_top, #accueil h2) a {
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------*/
+/*          FAQ                                         */
+/* -----------------------------------------------------*/
+
+.faq-question-btn {
+    width: 100%;
+}
+
+/* -----------------------------------------------------*/
+/*          Surbrillance Facette                        */
+/* -----------------------------------------------------*/
+
+.surbrillance button {
+    color: var(--rgaa-highlight-color)  !important;
+}
+
+/* -----------------------------------------------------*/
+/*          DIVERS                                      */
+/* -----------------------------------------------------*/
+
+.button-unstylized {
+    all : unset;
+    cursor: pointer;
+}
+.button-unstylized:focus {
+    outline : revert;
+}

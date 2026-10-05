@@ -1,17 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: translation.class.php,v 1.10 2019-01-24 16:46:40 dgoron Exp $
+// $Id: translation.class.php,v 1.20.2.1.2.2 2025/02/17 15:30:21 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))	die("no access");
 
+global $include_path;
 require_once($include_path."/templates/translation.tpl.php");
 
 /**
- * Classe permettant de gÃ©rer les traductions de libellÃ©
- * Utilise la table translation, croisÃ©e avec le nom de la table et du champ Ã  traduire
- * MÃ©morise et rÃ©cupÃ¨re le texte dans la lange voulue
+ * Classe permettant de gerer les traductions de libelles
+ * Utilise la table translation, croisee avec le nom de la table et du champ a traduire
+ * Memorise et recupere le texte dans la langue voulue
  * 
  "CREATE TABLE translation (
     trans_table VARCHAR( 255 ) NOT NULL default '',
@@ -36,13 +37,13 @@ class translation {
 	
 	protected static $text_fields = array();
 	/**
-	 * Type de donnÃ©e (small_text, text)
-	 * @var unknown
+	 * Type de donnée (small_text, text)
+	 * @var string
 	 */
 	protected $type;
 	
 	public function __construct($num_field, $table_name) {
-		$this->num_field = $num_field+0;
+		$this->num_field = intval($num_field);
 		$this->table_name = $table_name;
 		$this->fetch_data();
 	}
@@ -53,58 +54,67 @@ class translation {
 		
 		if(!isset(static::$languages)) {
 			static::$languages = array();
-			$languages = explode(',', explode(' ', trim($opac_show_languages))[1]);
-			if(count($languages)) {
-				$langues = new XMLlist($include_path."/messages/languages.xml");
-				$langues->analyser();
-				$clang = $langues->table;
-				foreach ($languages as $language) {
-					if(static::get_user_lang() != $language) {
-						static::$languages[] = array(
-								'code' => $language,
-								'label' => (!empty($clang[$language]) ? $clang[$language] : $language)
-						);
+			if(!empty($opac_show_languages)) {
+				$languages = explode(',', explode(' ', trim($opac_show_languages))[1]);
+				if(count($languages)) {
+					$langues = new XMLlist($include_path."/messages/languages.xml");
+					$langues->analyser();
+					$clang = $langues->table;
+					foreach ($languages as $language) {
+// 						if(static::get_user_lang() != $language) {
+							static::$languages[] = array(
+									'code' => $language,
+									'label' => (!empty($clang[$language]) ? $clang[$language] : $language),
+                                    'is_current_lang' => (static::get_user_lang() == $language ? true : false)
+							);
+// 						}
 					}
 				}
 			}
 		}
 	}
 	
-	// rÃ©cupÃ©ration des infos en base
+	// récupération des infos en base
 	public function fetch_data() {
 		$this->data = array();
 		
-		$query = "SELECT * FROM translation WHERE trans_table='".$this->table_name."' and trans_num='".$this->num_field."' ";
+		$query = "SELECT * FROM translation WHERE trans_table='".addslashes($this->table_name)."' and trans_num='".addslashes($this->num_field)."' ";
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){		
 			while(($row = pmb_mysql_fetch_object($result))) {
+			    if(empty($this->data[$row->trans_field])) {
+			        $this->data[$row->trans_field] = array();
+			    }
 				$this->data[$row->trans_field][$row->trans_lang] = ($row->trans_small_text ? $row->trans_small_text : $row->trans_text);
 			}	
-		}		
+		}
 	}
 	
 	/**
 	 * 
-	 * @param unknown $dom_node_id
+	 * @param string $dom_node_id
 	 */
 	public function connect($dom_node_id) {
+
+	    static::_init_languages();
+	    if(empty(static::$languages)) {
+	        return '';
+	    }
 		return "
-		<script type='text/javascript'>
-			require(['apps/pmb/Translations', 'dojo/ready'], function(Translations, ready){
-			ready(function() {
-				new Translations('".$dom_node_id."', '".encoding_normalize::json_encode($this->get_data())."');
+		<script>
+			require(['apps/pmb/Translations', 'dojo/domReady!'], function(Translations){
+				new Translations('".$dom_node_id."', '".addslashes($this->get_json_data())."', '".addslashes($this->get_json_languages())."');
 			});
-		});
 		</script>";
 	}
 	
 	/**
-	 * A ne plus utiliser Ã  l'avenir
-	 * @param unknown $label
-	 * @param unknown $field_id
-	 * @param unknown $field_name
-	 * @param unknown $field_value
-	 * @param unknown $class_saisie
+	 * A ne plus utiliser à l'avenir
+	 * @param string $label
+	 * @param integer $field_id
+	 * @param string $field_name
+	 * @param string $field_value
+	 * @param string $class_saisie
 	 * @param string $style_form
 	 */	
 	public function get_form($label, $field_id, $field_name, $field_value, $class_saisie, $style_form="display: none;") {
@@ -162,6 +172,16 @@ class translation {
 		return $form;
 	}
 	
+	protected function save_from_field_values($field_name, $field_values, $langue, $type) {
+	    if(is_array($field_values)) {
+	        foreach ($field_values as $value) {
+	            $this->save($field_name, $langue, $type, stripslashes($value ?? ''));
+	        }
+	    } else {
+	        $this->save($field_name, $langue, $type, stripslashes($field_values ?? ''));
+	    }
+	}
+	
 	public function update($field_name, $input_field = '', $type = 'small_text') {
 		if(!$input_field) {
 			$input_field = $field_name;
@@ -169,28 +189,16 @@ class translation {
 		// effacer les anciens
 		static::delete($this->num_field, $this->table_name, $field_name);
 		
-		// enregistrement du champ par dÃ©faut dans la langue traduite de l'utilisateur
+		// enregistrement du champ par défaut dans la langue traduite de l'utilisateur
 		$field = $input_field;
 		global ${$field};
-		if(is_array(${$field})) {
-			foreach (${$field} as $value) {
-				$this->save($field_name, static::get_user_lang(), $type, stripslashes($value));
-			}
-		} else {
-			$this->save($field_name, static::get_user_lang(), $type, stripslashes(${$field}));
-		}
+		$this->save_from_field_values($field_name, ${$field}, static::get_user_lang(), $type);
 		
 		static::_init_languages();
 		foreach(static::$languages as $langue) {
 			$field = $langue['code'].'_'.$input_field;
 			global ${$field};
-			if(is_array(${$field})) {
-				foreach (${$field} as $value) {
-					$this->save($field_name, $langue['code'], $type, stripslashes($value));
-				}
-			} else {
-				$this->save($field_name, $langue['code'], $type, stripslashes(${$field}));
-			}
+			$this->save_from_field_values($field_name, ${$field}, $langue['code'], $type);
 		}
 	}
 	
@@ -200,6 +208,31 @@ class translation {
 	
 	public function update_text($field_name, $input_field = '') {
 		$this->update($field_name, $input_field, 'text');
+	}
+	
+	public function update_array($field_name, $input_field = '', $type = 'small_text') {
+	    if(!$input_field) {
+	        $input_field = $field_name;
+	    }
+	    // effacer les anciens
+	    static::delete($this->num_field, $this->table_name, $field_name);
+	    
+	    if(strpos($input_field, '[') !== false) {
+	        $field = pmb_substr($input_field, 0, strpos($input_field, '['));
+	        $indice = pmb_substr($input_field, strpos($input_field, '[')+1, strpos(pmb_substr($input_field, strpos($input_field, '[')+1), ']'));
+	        
+	        // enregistrement du champ par défaut dans la langue traduite de l'utilisateur
+	        global ${$field};
+	        $this->save_from_field_values($field_name, ${$field}[$indice], static::get_user_lang(), $type);
+	        
+	        static::_init_languages();
+	        foreach(static::$languages as $langue) {
+	            $field = $langue['code'].'_'.pmb_substr($input_field, 0, strpos($input_field, '['));
+	            $indice = pmb_substr($input_field, strpos($input_field, '[')+1, strpos(pmb_substr($input_field, strpos($input_field, '[')+1), ']'));
+	            global ${$field};
+	            $this->save_from_field_values($field_name, ${$field}[$indice], $langue['code'], $type);
+	        }
+	    }
 	}
 		
 	public function save($field_name, $langue, $type, $text) {
@@ -219,6 +252,30 @@ class translation {
 	
 	public function get_data() {
 		return $this->data;
+	}
+	
+	public function set_data($data) {
+	    $this->data = $data;
+	    return $this;
+	}
+	
+	public function get_json_data() {
+		/*
+		Cela n'est plus nécessaire : conservation temporaire au cas où
+		$data = $this->data;
+		foreach ($data as $field_name=>$field_data) {
+			foreach ($field_data as $lang=>$field_value) {
+				// on addslashes seulement les doubles quotes sinon il y a une erreur de JSON.parse dans Translation.js
+				$value = addcslashes($field_value, '"');
+				$value = str_replace(array("\n", "\r", "\t"), array("\\n", "\\r", "\\t"), $value);
+				$data[$field_name][$lang] = $value;
+			}
+		}*/
+		return encoding_normalize::json_encode($this->data);
+	}
+	
+	public function get_json_languages() {
+	    return encoding_normalize::json_encode(static::get_languages());
 	}
 	
 	/**
@@ -245,16 +302,16 @@ class translation {
 	}
 	
 	/**
-	 * Retourne la traduction d'un champ dans la langue voulue, ou le libellÃ© par dÃ©faut
-	 * @param int $id Identifiant de l'entitÃ©
-	 * @param string $trans_table Table de rÃ©fÃ©rence
-	 * @param string $trans_field Champ de rÃ©fÃ©rence
-	 * @param string $text LibellÃ© par dÃ©faut
+	 * Retourne la traduction d'un champ dans la langue voulue, ou le libellé par défaut
+	 * @param int $id Identifiant de l'entité
+	 * @param string $trans_table Table de référence
+	 * @param string $trans_field Champ de référence
+	 * @param string $text Libellé par défaut
 	 * @param string $mylang Langue voulue
 	 * @return string
 	 */
 	public static function get_translated_text($id, $trans_table, $trans_field, $text="", $mylang="") {
-		global $lang, $dbh;
+		global $lang;
 	
 		if(!$mylang) {
 			$mylang = $lang;
@@ -280,11 +337,11 @@ class translation {
 		
 		$query = "SELECT trans_field, trans_small_text, trans_text FROM translation WHERE trans_table='".$table."' and trans_lang='".$lang."' and trans_num='".$num."' ";
 		$result = pmb_mysql_query($query);
-		$text_fields = array();
 		if(pmb_mysql_num_rows($result)){
 			while(($row = pmb_mysql_fetch_assoc($result))) {
 				self::$text_fields[$table][$num][$lang][$row['trans_field']] = ($row['trans_small_text'] ? $row['trans_small_text'] : $row['trans_text']); 
 			}
+			pmb_mysql_free_result($result);
 		}
 		return self::$text_fields[$table][$num][$lang];
 	}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_metadatas_datasource_metadatas_page_opac.class.php,v 1.16 2019-03-14 09:08:56 dgoron Exp $
+// $Id: cms_module_metadatas_datasource_metadatas_page_opac.class.php,v 1.21 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 	}
 	
 	protected static function has_bulletin_notice($id_bulletin) {
-		$id_bulletin += 0;
+		$id_bulletin = intval($id_bulletin);
 		$query = "select num_notice from bulletins where bulletin_id = ".$id_bulletin;
 		$result = pmb_mysql_query($query);
 		return pmb_mysql_result($result, 0, 'num_notice');
@@ -33,7 +33,7 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 		} else $niveau='';
 		
 		$query = "";
-		$id+=0;
+		$id = intval($id);
 		if ($id) {
 			switch($niveau){
 				case 'notice_display' :
@@ -92,7 +92,6 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 					$query = "select num_type from authperso_custom_values join authperso_custom on authperso_custom_champ = idchamp where authperso_custom_origine = '".$id."'";
 					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
-						$row = pmb_mysql_fetch_object($result);
 						$query = "select '".$id."' as id ,'".addslashes(authperso::get_isbd($id))."' as title";
 					}
 				default :
@@ -103,14 +102,15 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		global $opac_url_base;
 		global $opac_show_book_pics;
 		global $opac_book_pics_url;
-		global $dbh,$msg;
-		//on commence par rÃ©cupÃ©rer le type et le sous-type de page...
+		global $msg;
+		global $base_path;
+		//on commence par récupérer le type et le sous-type de page...
 		$type_page_opac = cms_module_common_datasource_typepage_opac::get_type_page();
 		$subtype_page_opac = cms_module_common_datasource_typepage_opac::get_subtype_page();
 		
@@ -129,18 +129,26 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 						$niveau = $get['lvl'];
 					} else $niveau='';
 					
-					$result = pmb_mysql_query($query, $dbh);
+					$result = pmb_mysql_query($query);
 					while ($row = pmb_mysql_fetch_object($result)) {
 						$datas["id"] = $row->id;
-						$datas["title"] = $row->title;
-						$datas["resume"] = $row->resume;
+						$datas["title"] = $row->title ?? "";
+						$datas["resume"] = $row->resume ?? "";
 						$url_vign = "";
-						if (($row->code || (isset($row->logo_url) && $row->logo_url)) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || (isset($row->logo_url) && $row->logo_url)))) {
+						if (
+						    (
+						        (isset($row->code) && $row->code) ||
+						        (isset($row->logo_url) && $row->logo_url)
+						    ) && (
+						        $opac_show_book_pics=='1' &&
+						        ($opac_book_pics_url || (isset($row->logo_url) && $row->logo_url))
+						    )
+						) {
 							$url_vign = getimage_url($row->code, (isset($row->logo_url) ? $row->logo_url : ''));
 						}
 						$datas["logo_url"] = $url_vign;
 						$datas["link"] = $opac_url_base."index.php?lvl=".$niveau."&id=".$row->id;
-						$datas["type"] = $row->type;
+						$datas["type"] = $row->type ?? "";
 					}
 				} else{
 					$datas["title"] = cms_module_common_datasource_typepage_opac::get_label($subtype_page_opac);
@@ -157,8 +165,14 @@ class cms_module_metadatas_datasource_metadatas_page_opac extends cms_module_met
 					if (isset($metadatas["metadatas"]) && is_array($metadatas["metadatas"])) {
 						foreach ($metadatas["metadatas"] as $key=>$value) {
 							try {
-								$group_metadatas[$i]["metadatas"][$key] = H2o::parseString($value)->render($datas);
+							    $template_path = $base_path.'/temp/'.LOCATION.'_datasource_metadatas_page_opac_'.md5($value);
+							    if(!file_exists($template_path) || (md5($value) != md5_file($template_path))){
+							        file_put_contents($template_path, $value);
+							    }
+							    $H2o = H2o_collection::get_instance($template_path);
+							    $group_metadatas[$i]["metadatas"][$key] = $H2o->render($datas);
 							}catch(Exception $e){
+							    
 							}
 						}
 					}

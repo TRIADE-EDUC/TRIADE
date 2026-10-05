@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.23 2017-11-30 10:20:53 plmrozowski Exp $ -->
+$Id: manifest.xml,v 1.26 2023/03/16 14:53:09 dgoron Exp $ -->
 <manifest>
 	<name>pmbesTypes</name>
 	<description>msg:pmbesTypes_description</description>
@@ -11,15 +11,22 @@ $Id: manifest.xml,v 1.23 2017-11-30 10:20:53 plmrozowski Exp $ -->
 		<type name="item" description="msg:item_description">
 			<part name="id" type="scalar" dataType="integer" description="msg:item_id"/>
 			<part name="cb" type="scalar" dataType="string" description="msg:item_cb"/>
+			<part name="title" type="scalar" dataType="string" description="msg:item_title" optional="yes"/>
 			<part name="cote" type="scalar" dataType="string" description="msg:item_cote"/>
 			<part name="location_id" type="scalar" dataType="integer" description="msg:item_location_id"/>
-			<part name="location_caption" type="scalar" dataType="string" description="msg:item_location_caption"/>
+			<part name="location" type="scalar" dataType="string" description="msg:item_location"/>
 			<part name="section_id" type="scalar" dataType="integer" description="msg:item_section_id"/>
-			<part name="section_caption" type="scalar" dataType="string" description="msg:item_section_caption"/>
+			<part name="section" type="scalar" dataType="string" description="msg:item_section"/>
 			<part name="statut" type="scalar" dataType="string" description="msg:item_statut"/>
 			<part name="support" type="scalar" dataType="string" description="msg:item_support"/>
-			<part name="situation" type="scalar" dataType="string" description="msg:item_situation"/>
 			<part name="codestat" type="scalar" dataType="string" description="msg:item_codestat"/>
+			<part name="pret_flag" type="scalar" dataType="string" description="msg:item_pret_flag" optional="yes"/>
+			<part name="pret_date" type="scalar" dataType="string" description="msg:item_pret_date" optional="yes"/>
+			<part name="pret_date_raw" type="scalar" dataType="string" description="msg:item_pret_date_raw" optional="yes"/>
+			<part name="pret_retour" type="scalar" dataType="string" description="msg:item_pret_retour" optional="yes"/>
+			<part name="pret_retour_raw" type="scalar" dataType="string" description="msg:item_pret_retour_raw" optional="yes"/>
+			<part name="situation" type="scalar" dataType="string" description="msg:item_situation"/>
+			<part name="pnb_flag" type="scalar" dataType="string" description="msg:item_pnb_flag" optional="yes"/>
 		</type>
 		<type name="reader" description="msg:reader_description">
 			<part name="id" type="scalar" dataType="integer" description="msg:reader_id"/>
@@ -432,6 +439,12 @@ $Id: manifest.xml,v 1.23 2017-11-30 10:20:53 plmrozowski Exp $ -->
 			<part name="article_title" type="scalar" dataType="string" description="msg:cms_article_title"/>
 			<part name="article_resume" type="scalar" dataType="string" description="msg:cms_article_resume"/>
 			<part name="article_contenu" type="scalar" dataType="string" description="msg:cms_article_contenu"/>
+		</type>
+		<type name="cleanGroup" description="msg:cleanGroup_description">
+			<part name="title" type="scalar" dataType="string" description="msg:cleanGroup_title"/>
+			<part name="message" type="scalar" dataType="string" description="msg:cleanGroup_message"/>
+			<part name="affected" type="scalar" dataType="integer" description="msg:cleanGroup_affected"/>
+			<part name="bad_user_rights" type="scalar" dataType="integer" description="msg:cleanGroup_bad_user_rights"/>
 		</type>		
 	</types>
 </manifest>

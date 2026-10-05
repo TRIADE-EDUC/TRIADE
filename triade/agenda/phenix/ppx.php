@@ -136,7 +136,7 @@ function cryptage($mdp) {
     $prefixe=PREFIXE;
     $pwd=cryptage($pwd);
 
-    $DB_CX->DbQuery("SELECT pers_id FROM ${prefixe}personnel WHERE lower(trim(nom))='$nom' AND  lower(trim(prenom))='$prenom' AND mdp='$pwd' AND
+    $DB_CX->DbQuery("SELECT pers_id FROM {$prefixe}personnel WHERE lower(trim(nom))='$nom' AND  lower(trim(prenom))='$prenom' AND mdp='$pwd' AND
     	     type_pers='$membre' AND offline = '0'");
     if (!$DB_CX->DbNumRows()) {
 	  Header("location: ppx.php?error=1");
@@ -153,7 +153,7 @@ function cryptage($mdp) {
     if ($membre == "ELE") { $membre="menueleve"; }
 
 
-    $DB_CX->DbQuery("SELECT idtriade,idphenix,membre FROM ${PREFIX_TABLE}tria2phenix WHERE idtriade='$idpers' AND membre='$membre'");
+    $DB_CX->DbQuery("SELECT idtriade,idphenix,membre FROM {$PREFIX_TABLE}tria2phenix WHERE idtriade='$idpers' AND membre='$membre'");
     if (!$DB_CX->DbNumRows()) {
 	  Header("location: ppx.php?error=1");
 	  exit;
@@ -164,7 +164,7 @@ function cryptage($mdp) {
     $log="$membre$idpers";
  
 
-    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_login='".$log."'");
+    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_login='".$log."'");
     
   
     if ($DB_CX->DbNumRows()) {
@@ -206,7 +206,7 @@ $idUser = Session_ok($sid, true);
 // RECUPERATION ET FORMATAGE DE LA DATE A TRAITER
 // ----------------------------------------------------------------------------
   // Recuperation des infos de timezone de l'utilisateur
-  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
   $tzLibelle = htmlentities($DB_CX->DbResult(0,"tzn_libelle"));
   $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
   $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -342,21 +342,21 @@ $idUser = Session_ok($sid, true);
       $critRecherche = "&lettre=".$lettre;
 
       if ($ztAction=="INSERT") {
-        $sql  = "INSERT INTO ${PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro,cal_icq,cal_aim,cal_msn,cal_yahoo,cal_date_naissance,cal_note,cal_partage,cal_util_id) ";
+        $sql  = "INSERT INTO {$PREFIX_TABLE}calepin (cal_societe,cal_nom,cal_prenom,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro,cal_icq,cal_aim,cal_msn,cal_yahoo,cal_date_naissance,cal_note,cal_partage,cal_util_id) ";
         $sql .= "VALUES ('".$ztSociete."','".$ztNom."','".$ztPrenom."','".$ztAdresse."','".$ztCP."','".$ztVille."','".$ztPays."','".$ztDomicile."','".$ztTravail."','".$ztPortable."','".$ztFax."','".$ztEmail."','".$ztEmailPro."',".$ztICQ.",'".$ztAIM."','".$ztMSN."','".$ztYahoo."','".$ztNaissance."','".$ztNote."','".$ztPartage."',".$idUser.")";
         if ($DB_CX->DbQuery($sql) && $DB_CX->DbAffectedRows()) {
           $id = $DB_CX->DbInsertID();
-          $DB_CX->DbQuery("SELECT cgr_id FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_util_id=".$idUser." AND (cgr_nom='".htmlentities(trad("COMMUN_NON_CLASSE"))."' OR cgr_nom='".trad("COMMUN_NON_CLASSE")."')");
+          $DB_CX->DbQuery("SELECT cgr_id FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_util_id=".$idUser." AND (cgr_nom='".htmlentities(trad("COMMUN_NON_CLASSE"))."' OR cgr_nom='".trad("COMMUN_NON_CLASSE")."')");
           if ($DB_CX->DbNumRows()) {
             $groupe = $DB_CX->DbResult(0,0);
           } else {
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_groupe (cgr_util_id, cgr_nom) VALUES (".$idUser.", '".trad("COMMUN_NON_CLASSE")."')");
             $groupe = $DB_CX->DbInsertID();
           }
-          $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$groupe."',".$id.")");
+          $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}calepin_appartient (cap_cgr_id, cap_cal_id) VALUES ('".$groupe."',".$id.")");
         }
       } elseif ($ztAction=="UPDATE" && $id) {
-        $sql = "UPDATE ${PREFIX_TABLE}calepin ";
+        $sql = "UPDATE {$PREFIX_TABLE}calepin ";
         $sql .= "SET cal_societe='".$ztSociete."', cal_nom='".$ztNom."', cal_prenom='".$ztPrenom."',";
         $sql .= " cal_adresse='".$ztAdresse."', cal_cp='".$ztCP."', cal_ville='".$ztVille."',";
         $sql .= " cal_pays='".$ztPays."', cal_domicile='".$ztDomicile."', cal_travail='".$ztTravail."',";
@@ -382,8 +382,8 @@ $idUser = Session_ok($sid, true);
       echo "<tr align=\"center\" bgcolor=\"$PPX_COULEUR_FOND_COMMUN\"><td colspan=\"4\"><form>";
       echo trad("PPX_JS_SUPPR_CONTACT")."<br><input type=\"button\" value=\"".strtoupper(trad("COMMUN_OUI"))."\" onclick=\"javascript: document.location.href='".$NOM_PAGE."?sid=".$sid."&id=".$id."&v=15&confirm=1".$critRecherche."'\"> <input type=\"button\" value=\"".strtoupper(trad("COMMUN_NON"))."\" onclick=\"javascript: document.location.href='".$NOM_PAGE."?sid=".$sid."&v=12&id=".$id.$critRecherche."'\">";
     } elseif ($id && $confirm=="1") {
-      if ($DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)) && $DB_CX->DbAffectedRows()>0) {
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
+      if ($DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser)) && $DB_CX->DbAffectedRows()>0) {
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}calepin_appartient WHERE cap_cal_id=".$id);
         $v=10;
       } else {
         $v=12;
@@ -409,7 +409,7 @@ $idUser = Session_ok($sid, true);
       echo "<tr bgcolor=\"$PPX_COULEUR_FOND_COMMUN\"><td colspan=\"4\" align=\"center\"><br><font color=\"$PPX_COULEUR_MESSAGE_INFO\">".trad("PPX_SAISIR_BRIBE")."</font><br>&nbsp;</td></tr>";
     else {
       $clauseWhere = (!empty($lettre)) ? "LOWER(cal_nom) LIKE LOWER('".$lettre."%')" : "(LOWER(cal_nom) LIKE LOWER('%".$nom."%') OR LOWER(cal_prenom) LIKE LOWER('%".$nom."%'))";
-      $DB_CX->DbQuery("SELECT DISTINCT cal_id, CONCAT(cal_nom,' ',cal_prenom) AS nomContact, cal_domicile, cal_travail, cal_portable, cal_fax, cal_email, cal_emailpro FROM ${PREFIX_TABLE}calepin WHERE ".$clauseWhere." AND (cal_util_id=".$idUser." OR cal_partage='O') ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+      $DB_CX->DbQuery("SELECT DISTINCT cal_id, CONCAT(cal_nom,' ',cal_prenom) AS nomContact, cal_domicile, cal_travail, cal_portable, cal_fax, cal_email, cal_emailpro FROM {$PREFIX_TABLE}calepin WHERE ".$clauseWhere." AND (cal_util_id=".$idUser." OR cal_partage='O') ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
       if ($DB_CX->DbNumRows()) {
         echo "<tr bgcolor=\"$PPX_COULEUR_NB_RESULTAT\" align=\"center\"><td colspan=\"4\">".sprintf(trad("PPX_NB_REPONSES"), $DB_CX->DbNumRows(), (($DB_CX->DbNumRows()>1)?trad("COMMUN_PLURIEL"):""))."</td></tr>";
         $index = 1;
@@ -450,7 +450,7 @@ $idUser = Session_ok($sid, true);
 // ----------------------------------------------------------------------------
   elseif ($v==12) {
     $closeForm = true;
-    $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_id=".$id);
+    $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_id=".$id);
     if ($enr = $DB_CX->DbNextRow()) {
       $strOutput = "<tr bgcolor=\"$PPX_COULEUR_FOND_COMMUN\"><td colspan=\"4\">";
       if (!empty($enr['cal_societe']))   // Societe
@@ -540,7 +540,7 @@ $idUser = Session_ok($sid, true);
     $proprio = $idUser;
     //Recuperation des informations sur la note pour une modification
     if ($id) {
-      $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser));
+      $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}calepin WHERE cal_id=".$id.(($MODIF_PARTAGE) ? "" : " AND cal_util_id=".$idUser));
       if ($enr = $DB_CX->DbNextRow()) {
         $ztAction = "UPDATE";
         $url = "?sid=".$sid."&v=14&ztAction=UPDATE&id=".$enr['cal_id']."";
@@ -582,7 +582,7 @@ $idUser = Session_ok($sid, true);
 // MODULE CREATION/MODIFICATION D'UNE NOTE
 // ----------------------------------------------------------------------------
   elseif ($v==2) {
-    $DB_CX->DbQuery("SELECT util_debut_journee, util_duree_note FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT util_debut_journee, util_duree_note FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
     $debutJournee = $DB_CX->DbResult(0,0);
     $dureeNote = $DB_CX->DbResult(0,1);
     //Pour une nouvelle note, on se positionne en debut de journee du profil
@@ -593,7 +593,7 @@ $idUser = Session_ok($sid, true);
     $url = "?sid=".$sid."&sd=".$sd."&v=3&ztAction=INSERT";
     //Recuperation des informations sur la note pour une modification
     if ($id) {
-      $DB_CX->DbQuery("SELECT age_id, age_libelle, age_detail, age_date, age_heure_debut, age_heure_fin, age_prive, age_rappel, age_rappel_coeff, age_aty_id, age_disponibilite, age_lieu, age_couleur, age_cal_id FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser." AND age_aty_id!=1");
+      $DB_CX->DbQuery("SELECT age_id, age_libelle, age_detail, age_date, age_heure_debut, age_heure_fin, age_prive, age_rappel, age_rappel_coeff, age_aty_id, age_disponibilite, age_lieu, age_couleur, age_cal_id FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser." AND age_aty_id!=1");
       if ($enr = $DB_CX->DbNextRow()) {
         $tabDate = explode("-",$enr['age_date']);
         // Decalage de la note
@@ -628,7 +628,7 @@ $idUser = Session_ok($sid, true);
     $tabTemp    = array(trad("COMMUN_COUL_DEFAUT") => "");
     $tabCouleur = array_merge($tabTemp,getListeCouleur());
     reset($tabCouleur);
-    while (list($key, $val) = each($tabCouleur)) {
+    foreach ($tabCouleur as $key => $val) {
       $selected = ($val==$enr['age_couleur']) ? " selected" : "";
       echo "<option".((!empty($val)) ? " style=\"background-color:".$val.";\"" : "")." value=\"".$val."\"".$selected.">".$key."</option>";
     }
@@ -652,7 +652,7 @@ $idUser = Session_ok($sid, true);
     echo "<option value=\"1440\"".(($enr['age_rappel_coeff']==1440) ? " selected" : "").">".trad("COMMUN_JOUR")."</option>";
     echo "</select>";
     // Recuperation des contacts de l'utilisateur et ceux qui sont partages
-    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ', cal_prenom)) AS nomContact FROM ${PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR cal_partage='O' ORDER BY nomContact");
+    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ', cal_prenom)) AS nomContact FROM {$PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR cal_partage='O' ORDER BY nomContact");
     // Le choix du contact n'est pas affiche si le calepin est vide
     if ($DB_CX->DbNumRows()) {
       echo "<br><br><b>".trad("PPX_LIB_CONTACT_ASSOCIE")."</b><br><select name=\"zlContactAssocie\">";
@@ -690,7 +690,7 @@ $idUser = Session_ok($sid, true);
     if ($ckTypeNote!=3) {
       $ckTypeNote=2;
     } else {
-      $DB_CX->DbQuery("SELECT util_debut_journee,util_fin_journee FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT util_debut_journee,util_fin_journee FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
       //Pour une note sur toute la journee, on positionne la note sur les horaires du profil
       $zlHeureDebut = $DB_CX->DbResult(0,0);
       $zlHeureFin = $DB_CX->DbResult(0,1);
@@ -723,13 +723,13 @@ $idUser = Session_ok($sid, true);
 
     if (!empty($ztLibelle) && $ztAction=="INSERT") {
       $dateCreation = gmdate("Y-m-d H:i:s", time());
-      $sql = "INSERT INTO ${PREFIX_TABLE}agenda (age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_prive, age_disponibilite, age_lieu, age_couleur, age_cal_id, age_createur_id, age_date_creation, age_modificateur_id, age_date_modif) ";
+      $sql = "INSERT INTO {$PREFIX_TABLE}agenda (age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_prive, age_disponibilite, age_lieu, age_couleur, age_cal_id, age_createur_id, age_date_creation, age_modificateur_id, age_date_modif) ";
       $sql .= "VALUES (".$idUser.",".$ckTypeNote.",'".$ztDateUTC."',".$zlHeureDebutUTC.",".$zlHeureFinUTC.",'".$ztLibelle."','".$ztDetail."',".$zlR1.",".$zlR2.",".$zlPartage.",".$zlDispo.",'".$ztLieu."','".$zlCouleur."',".$zlContactAssocie.",".$idUser.", '".$dateCreation."',".$idUser.", '".$dateCreation."')";
       $DB_CX->DbQuery($sql);
       $idAge = $DB_CX->DbInsertID();
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idUser.",".$alert.",".$endNote.")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idUser.",".$alert.",".$endNote.")");
     } elseif (!empty($ztLibelle) && $ztAction=="UPDATE" && $id) {
-      $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+      $sql = "UPDATE {$PREFIX_TABLE}agenda ";
       $sql .= "SET age_aty_id=".$ckTypeNote.",";
       $sql .= " age_date='".$ztDateUTC."',";
       $sql .= " age_heure_debut=".$zlHeureDebutUTC.",";
@@ -767,38 +767,38 @@ $idUser = Session_ok($sid, true);
     elseif ($id && $confirm=="1" && $flag) {
       if ($flag==2 && $AUTORISE_SUPPR) {
         //Suppression d'une note affectee
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id." AND aco_util_id=".$idUser);
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id=".$id." AND info_destinataire_id=".$idUser);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id." AND aco_util_id=".$idUser);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id=".$id." AND info_destinataire_id=".$idUser);
         //Recherche s'il reste des personnes concernees par cette note
-        $DB_CX->DbQuery("SELECT aco_util_id FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
+        $DB_CX->DbQuery("SELECT aco_util_id FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
         //si NON : on efface la note
         if (!$DB_CX->DbNumRows()) {
-          $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id);
+          $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id);
         } else {
           //si OUI : on reajuste le nombre de participant (pour l'appropriation)
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_nb_participant = ".$DB_CX->DbNumRows()." WHERE age_id=".$idAge);
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_nb_participant = ".$DB_CX->DbNumRows()." WHERE age_id=".$idAge);
         }
       } elseif ($flag==1) {
         //Suppression de la totalite d'une note par son auteur
-        $DB_CX->DbQuery("SELECT DISTINCT age_id FROM ${PREFIX_TABLE}agenda WHERE (age_id=".$id." OR age_mere_id=".$id.") AND age_util_id=".$idUser);
+        $DB_CX->DbQuery("SELECT DISTINCT age_id FROM {$PREFIX_TABLE}agenda WHERE (age_id=".$id." OR age_mere_id=".$id.") AND age_util_id=".$idUser);
         $liste = "0";
         while ($enr = $DB_CX->DbNextRow())
           $liste .= ",".$enr['age_id'];
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.")");
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id IN (".$liste.")");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.")");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id IN (".$liste.")");
       } elseif ($flag==3) {
         //Suppression d'une occurrence d'une note par son auteur
-        $DB_CX->DbQuery("SELECT MIN(age_id) FROM ${PREFIX_TABLE}agenda WHERE age_mere_id=".$id." AND age_util_id=".$idUser);
+        $DB_CX->DbQuery("SELECT MIN(age_id) FROM {$PREFIX_TABLE}agenda WHERE age_mere_id=".$id." AND age_util_id=".$idUser);
         $newId = $DB_CX->DbResult(0,0) + 0;
         if ($newId) {
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=".$newId." WHERE age_mere_id=".$id);
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_mere_id=0 WHERE age_id=".$newId);
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=".$newId." WHERE age_mere_id=".$id);
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_mere_id=0 WHERE age_id=".$newId);
         }
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser);
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser);
         if ($DB_CX->DbAffectedRows()>0) {
-          $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
-          $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}information WHERE info_age_id=".$id);
+          $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
+          $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}information WHERE info_age_id=".$id);
         }
       }
       //Renvoi vers l'affichage du detail de la journee
@@ -810,7 +810,7 @@ $idUser = Session_ok($sid, true);
 // ----------------------------------------------------------------------------
   elseif ($v==5) {
     if ($id) {
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda_concerne SET aco_termine= 1-aco_termine WHERE aco_age_id=".$id." AND aco_util_id=".$idUser);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda_concerne SET aco_termine= 1-aco_termine WHERE aco_age_id=".$id." AND aco_util_id=".$idUser);
     }
     //Renvoi vers l'affichage du detail de la journee
     $v=1;
@@ -824,7 +824,7 @@ $idUser = Session_ok($sid, true);
       echo "<tr align=\"center\" bgcolor=\"$PPX_COULEUR_FOND_COMMUN\"><td colspan=\"4\"><form>";
       echo trad("PPX_JS_APPROPRIER")."<br><input type=\"button\" value=\"".strtoupper(trad("COMMUN_OUI"))."\" onclick=\"javascript: document.location.href='".$NOM_PAGE."?sid=".$sid."&sd=".$sd."&id=".$id."&v=6&confirm=1'\"> <input type=\"button\" value=\"".strtoupper(trad("COMMUN_NON"))."\" onclick=\"javascript: document.location.href='".$NOM_PAGE."?sid=".$sid."&sd=".$sd."&v=1'\">";
     } elseif ($id && $confirm=="1") {
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda SET age_util_id=".$idUser." WHERE age_id=".$id);
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda SET age_util_id=".$idUser." WHERE age_id=".$id);
       //Renvoi vers l'affichage du detail de la journee
       $v=1;
     }
@@ -836,7 +836,7 @@ $idUser = Session_ok($sid, true);
     //Preparation au decalage horaire
     list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,mktime(0,0,0,$moisEnCours,$jourEnCours,$anneeEnCours));
 
-    $DB_CX->DbQuery("SELECT age_id,age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_util_id,age_detail,age_lieu,age_couleur,age_nb_participant,age_date,age_date_creation,age_date_modif,aco_termine,cal_id,CONCAT(cal_prenom,' ',cal_nom) AS nomContact,cal_util_id,cal_partage FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date='".date("Y-m-d",$sd)."' OR ($age_dateAvant='".date("Y-m-d",$sd)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2) OR (age_date LIKE '%".date("m-d",$sd)."' AND age_aty_id=1)) ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
+    $DB_CX->DbQuery("SELECT age_id,age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_util_id,age_detail,age_lieu,age_couleur,age_nb_participant,age_date,age_date_creation,age_date_modif,aco_termine,cal_id,CONCAT(cal_prenom,' ',cal_nom) AS nomContact,cal_util_id,cal_partage FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date='".date("Y-m-d",$sd)."' OR ($age_dateAvant='".date("Y-m-d",$sd)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2) OR (age_date LIKE '%".date("m-d",$sd)."' AND age_aty_id=1)) ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
     $ligneAnniv = $ligneNote = "";
     for ($j=0;$j<$DB_CX->DbNumRows();$j++) {
       $enr = $DB_CX->DbNextRow();
@@ -900,7 +900,7 @@ $idUser = Session_ok($sid, true);
     }
     // Recuperation du jour precedent ayant une note
     $jourAvant = "";
-    $DB_CX->DbQuery("SELECT DATE_FORMAT(IF($age_dateAvant<'".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0,$age_dateAvant,$age_date),'%e/%c/%Y') AS ageDate FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND $age_date<'".date("Y-m-d",$sd)."' AND age_aty_id!=1 ORDER BY age_date DESC LIMIT 0,1");
+    $DB_CX->DbQuery("SELECT DATE_FORMAT(IF($age_dateAvant<'".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0,$age_dateAvant,$age_date),'%e/%c/%Y') AS ageDate FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND $age_date<'".date("Y-m-d",$sd)."' AND age_aty_id!=1 ORDER BY age_date DESC LIMIT 0,1");
     if ($DB_CX->DbNumRows()) {
       // Transformation de la date de debut de la note en timestamp PHP
       list($j,$m,$a) = explode("/",$DB_CX->DbResult(0,0));
@@ -909,7 +909,7 @@ $idUser = Session_ok($sid, true);
     }
     //Recuperation du jour suivant ayant une note
     $jourApres = "";
-    $DB_CX->DbQuery("SELECT DATE_FORMAT(IF($age_date='".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0,$age_dateAvant,$age_date),'%e/%c/%Y') AS ageDate FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date>'".date("Y-m-d",$sd)."' OR ($age_date='".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id!=1 ORDER BY age_date LIMIT 0,1");
+    $DB_CX->DbQuery("SELECT DATE_FORMAT(IF($age_date='".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0,$age_dateAvant,$age_date),'%e/%c/%Y') AS ageDate FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date>'".date("Y-m-d",$sd)."' OR ($age_date='".date("Y-m-d",$sd)."' AND $age_heure_debut>$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id!=1 ORDER BY age_date LIMIT 0,1");
     if ($DB_CX->DbNumRows()) {
       // Transformation de la date de debut de la note en timestamp PHP
       list($j,$m,$a) = explode("/",$DB_CX->DbResult(0,0));
@@ -922,7 +922,7 @@ $idUser = Session_ok($sid, true);
       echo "<tr bgcolor=\"$PPX_COULEUR_LIGNE_NAVIGATION_JOUR\" align=\"center\"><td colspan=\"4\">".$jourAvant.$tabJour[date("w",$sd)]." ".date("d/m/Y",$sd)." [".sprintf(trad("PPX_SEMAINE"), date("W",$sd))."]".$jourApres."</td></tr>";
     }
     // Anniversaire(s) du calepin (y compris les contacts partages)
-    $DB_CX->DbQuery("SELECT cal_id, CONCAT(cal_prenom,' ',cal_nom) AS nomContact FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$idUser." OR cal_partage='O') AND cal_date_naissance LIKE '%".date("m-d",$sd)."'");
+    $DB_CX->DbQuery("SELECT cal_id, CONCAT(cal_prenom,' ',cal_nom) AS nomContact FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$idUser." OR cal_partage='O') AND cal_date_naissance LIKE '%".date("m-d",$sd)."'");
     while ($enr = $DB_CX->DbNextRow())
       $ligneAnniv .= ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR) ? "<a href=\"".$NOM_PAGE."?sid=".$sid."&sd=".$sd."&id=".$enr['cal_id']."&v=12&f=note\">".$enr['nomContact']."</a> / " : "";
     if (!empty($ligneAnniv)) {
@@ -977,7 +977,7 @@ $idUser = Session_ok($sid, true);
     echo "</tr>\n";
 
     //Parametres de la journee choisis par l'utilisateur
-    $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee, util_precision_planning FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee, util_precision_planning FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
     $debutJournee = $DB_CX->DbResult(0,0);
     $finJournee   = $DB_CX->DbResult(0,1);
     $precisionAff = 2*$DB_CX->DbResult(0,2);
@@ -988,7 +988,7 @@ $idUser = Session_ok($sid, true);
     $datePJSemP7=date("Y-m-d",mktime(0,0,0,$moisEnCours,$premierJourSemaine+7,$anneeEnCours));
 
     //Heure de debut et de fin en fonction des notes hors profil
-    $DB_CX->DbQuery("SELECT MIN($age_heure_debut), MAX($age_heure_fin), MAX(IF($age_dateAvant>'$datePJSemM1' AND $age_dateAvant<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0,1,0)), MAX(IF($age_date>'$datePJSemM1' AND $age_date<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin,1,0)) FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND (($age_date>'$datePJSemM1' AND $age_date<'$datePJSemP7') OR ($age_dateAvant>'$datePJSemM1' AND $age_dateAvant<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id=2");
+    $DB_CX->DbQuery("SELECT MIN($age_heure_debut), MAX($age_heure_fin), MAX(IF($age_dateAvant>'$datePJSemM1' AND $age_dateAvant<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0,1,0)), MAX(IF($age_date>'$datePJSemM1' AND $age_date<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin,1,0)) FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND (($age_date>'$datePJSemM1' AND $age_date<'$datePJSemP7') OR ($age_dateAvant>'$datePJSemM1' AND $age_dateAvant<'$datePJSemP7' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id=2");
     if ($DB_CX->DbResult(0,0)!=NULL) {
       $debutJournee = min($debutJournee,$DB_CX->DbResult(0,0));
       $finJournee   = max($finJournee,$DB_CX->DbResult(0,1));
@@ -1009,7 +1009,7 @@ $idUser = Session_ok($sid, true);
       $tzHiver = calculBasculeDST($tzDateHiver,date("Y",$leJour),$tzHeureHiver,$tzGmt,1);
       //Preparation au decalage horaire
       list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$leJour);
-      $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_util_id,age_couleur,age_date,age_date_creation,age_date_modif FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND (($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)) OR (age_date LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$leJour)." AND age_aty_id=1)) ORDER BY age_aty_id DESC, age_date, age_heure_debut");
+      $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_util_id,age_couleur,age_date,age_date_creation,age_date_modif FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND (($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)) OR (age_date LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$leJour)." AND age_aty_id=1)) ORDER BY age_aty_id DESC, age_date, age_heure_debut");
       while ($enr = $DB_CX->DbNextRow()) {
         //Decalage des notes en fonction du fuseau horaire
         list($enr['age_heure_debut'],$enr['age_heure_fin'],$enr['dateCreation'],$enr['dateModif']) = decaleNote($tzGmt,$tzDateEte,$tzHeureEte,$tzDateHiver,$tzHeureHiver,date("Y-m-d",$leJour),$enr['age_date'],$enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif']);
@@ -1118,16 +1118,16 @@ $idUser = Session_ok($sid, true);
 
     // Recherche des jours du mois courant avec une note ou un anniversaire (agenda et calepin)
     $tabOccupe = array();
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date LIKE '".$anneeEnCours."-".$moisEnCours."-%' OR (age_date LIKE '%-".$moisEnCours."-%' AND age_aty_id=1))");
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_date LIKE '".$anneeEnCours."-".$moisEnCours."-%' OR (age_date LIKE '%-".$moisEnCours."-%' AND age_aty_id=1))");
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }
     // Recherche des notes a cheval
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_dateAvant LIKE '".$anneeEnCours."-".$moisEnCours."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)");
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND ($age_dateAvant LIKE '".$anneeEnCours."-".$moisEnCours."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)");
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }
-    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$idUser." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisEnCours."-%'");
+    $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$idUser." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisEnCours."-%'");
     while ($enr=$DB_CX->DbNextRow()) {
       $tabOccupe[$enr['jour']]=1;
     }

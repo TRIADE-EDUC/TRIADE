@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_records.class.php,v 1.22 2018-06-14 10:19:16 dgoron Exp $
+// $Id: cms_module_common_datasource_records.class.php,v 1.24.6.1.2.2 2025/06/03 06:32:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/etagere.class.php");
+global $include_path;
 require_once($include_path."/etagere_func.inc.php");
 
 class cms_module_common_datasource_records extends cms_module_common_datasource_list{
@@ -14,9 +14,10 @@ class cms_module_common_datasource_records extends cms_module_common_datasource_
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -29,11 +30,11 @@ class cms_module_common_datasource_records extends cms_module_common_datasource_
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+	    if(is_array($this->selectors) && $this->parameters['selector'] != ""){
 			for($i=0 ; $i<count($this->selectors) ; $i++){
 				if($this->selectors[$i]['name'] == $this->parameters['selector']){
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
@@ -45,7 +46,8 @@ class cms_module_common_datasource_records extends cms_module_common_datasource_
 			$records = array();
 			if(is_array($shelves) && count($shelves)){
 				foreach ($shelves as $shelve_id){
-					$query = "select id_tri, name, thumbnail_url from etagere where idetagere = '".($shelve_id*1)."'";
+				    $shelve_id = intval($shelve_id);
+					$query = "select id_tri, name, thumbnail_url from etagere where idetagere = '".$shelve_id."'";
 					$result = pmb_mysql_query($query);
 					$notices = array();
 					if($result && pmb_mysql_num_rows($result)){
@@ -66,15 +68,22 @@ class cms_module_common_datasource_records extends cms_module_common_datasource_
 					}					
 				}
 			}
-			$records = $this->filter_datas("notices",$records);
-			if($this->parameters['nb_max_elements'] > 0){
+			$records = $this->filter_datas("notices", $records);
+			// Pagination
+			$return = array();
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($records);
+			    $records = $this->cut_paging_list($records, $return["paging"]);
+			}else if(isset($this->parameters['nb_max_elements']) && $this->parameters['nb_max_elements'] > 0){
 				$records = array_slice($records, 0, $this->parameters['nb_max_elements']);
 			}
-			$return = array(
+			
+			$return_records = array(
 					'title'=> 'Liste de Notices',
 					'records' => $records,
 					'source_infos' => $source_infos
 			);
+			$return = array_merge(isset($return) ? $return : [], $return_records);
 			return $return;
 		}
 		return false;

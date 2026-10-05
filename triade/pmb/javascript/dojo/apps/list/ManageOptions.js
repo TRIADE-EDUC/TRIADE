@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ManageOptions.js,v 1.6 2019-05-17 10:59:17 dgoron Exp $
+// $Id: ManageOptions.js,v 1.9 2022/06/15 10:02:01 dgoron Exp $
 
 define([
         "dojo/_base/declare",
@@ -89,6 +89,10 @@ define([
 									dest.insertBefore(newOption, dest.options[index_down]);
 								}
 								break;
+							case 'sort':
+								dest.appendChild(newOption);
+								this.sortSelectOptions(dest);
+								break;
 							default:
 								dest.appendChild(newOption);
 								break;
@@ -101,7 +105,7 @@ define([
 			this.moveOptions(this.selectorAvailableColumns, this.selectorSelectedColumns);
 		},
 		moveSelectedToAvailable: function() {
-			this.moveOptions(this.selectorSelectedColumns, this.selectorAvailableColumns);
+			this.moveOptions(this.selectorSelectedColumns, this.selectorAvailableColumns, 'sort');
 		},
 		moveOptionFirst: function() {
 			this.moveOptions(this.selectorSelectedColumns, this.selectorSelectedColumns, 'first');
@@ -120,6 +124,23 @@ define([
 	        for (var i = 0; i < selectedColumns.options.length; i++) { 
 	        	selectedColumns.options[i].selected = true; 
 	        }
+		},
+		sortSelectOptions: function(selector) {
+			var options = new Array();
+		    for (var i=0;i<selector.options.length;i++) {
+		    	options[i] = new Array();
+		    	options[i][0] = selector.options[i].text;
+		    	options[i][1] = selector.options[i].value;
+		    }
+		    options.sort();
+		    while (selector.options.length > 0) {
+		    	selector.options[0] = null;
+		    }
+		    for (var i=0;i<options.length;i++) {
+		        var op = new Option(options[i][0], options[i][1]);
+		        selector.options[i] = op;
+		    }
+		    return;
 		},
 		appliedGroupMore: function() {
 			var domNode = dom.byId(this.objects_type+'_options_applied_group_more_content');

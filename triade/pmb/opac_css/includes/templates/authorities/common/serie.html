@@ -1,9 +1,11 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: serie.html,v 1.2 2016-05-11 15:59:45 dgoron Exp $ -->
+<!-- $Id: serie.html,v 1.4 2023/08/08 15:36:21 qvarin Exp $ -->
 
-{% block header %}
-	<h3><span>{{ msg.serie_see_title }}</span></h3>
+{% block title %}
+    {% title authority_isbd %}
+	{{ msg.serie_tpl_serie }}  {{ authority.name }}
+    {% endtitle %}
 {% endblock %}
 
 {% block aut_see %}
@@ -12,11 +14,5 @@
 	</div>
 {% endblock %}
 	
-{% block title %}
-	<h3>
-		{{ authority.name }}
-	</h3>
-{% endblock %} 
-
 {% block details %}
 {% endblock %}

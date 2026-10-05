@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.7 2017-07-12 15:15:01 tsamson Exp $
+// $Id: search.class.php,v 1.10.2.1 2025/01/16 11:03:35 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class navigation_section_search {
 	public $id;
@@ -22,11 +22,11 @@ class navigation_section_search {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     }
     
@@ -34,21 +34,21 @@ class navigation_section_search {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
-    	global $gestion_acces_active,$gestion_acces_empr_notice,$class_path;
+    	global $msg,$gestion_acces_active,$gestion_acces_empr_notice,$class_path;
+    	global $default_tmp_storage_engine;
+
     	
-//    	var_dump($_SESSION);
-    	
-    	$id=$_SESSION['last_module_search']['search_id'];
-    	$location=$_SESSION['last_module_search']['search_location'];
+    	$id=intval($_SESSION['last_module_search']['search_id']);
+    	$location=intval($_SESSION['last_module_search']['search_location']);
     	$plettreaut=$_SESSION["last_module_search"]["search_plettreaut"];
     	$dcote=$_SESSION["last_module_search"]["search_dcote"];
     	$lcote=$_SESSION["last_module_search"]["search_lcote"];
     	$nc=$_SESSION["last_module_search"]["search_nc"];
     	$ssub=$_SESSION["last_module_search"]["search_ssub"];
     	/*
-    	 * rÃ©cupÃ©rer les infos de session
+    	 * récupérer les infos de session
     	 */
     	
     	$requete="SELECT num_pclass FROM docsloc_section WHERE num_location='".$location."' AND num_section='".$id."' ";
@@ -75,38 +75,39 @@ class navigation_section_search {
     		$statut_r="and statut=id_notice_statut and ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
     	}
     	if($_SESSION["opac_view"] && $_SESSION["opac_view_query"] ){
-    		$opac_view_restrict=" notice_id in (select opac_view_num_notice from  opac_view_notices_".$_SESSION["opac_view"].") ";
+    		$opac_view_restrict=" notice_id in (select opac_view_num_notice from  opac_view_notices_".intval($_SESSION["opac_view"]).") ";
     		$statut_r.=" and ".$opac_view_restrict;
     	}
     	if($type_aff_navigopac == 0){//Pas de navigation
-    		//On rÃ©cupÃ¨re les notices de monographie avec au moins un exemplaire dans la localisation et la section
-			$requete="create temporary table temp_n_id ENGINE=MyISAM ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+    		//On récupère les notices de monographie avec au moins un exemplaire dans la localisation et la section
+			$requete="create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
 			pmb_mysql_query($requete);
-			//On rÃ©cupÃ¨re les notices de pÃ©riodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
+			//On récupère les notices de périodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
 			$requete="INSERT INTO temp_n_id (SELECT notice_id FROM exemplaires JOIN bulletins ON expl_section='".$id."' and expl_location='".$location."' and expl_bulletin=bulletin_id JOIN notices ON notice_id=bulletin_notice ".$acces_j." ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
 			pmb_mysql_query($requete);
-			@pmb_mysql_query("alter table temp_n_id add index(notice_id)");
+			pmb_mysql_query("alter table temp_n_id add index(notice_id)");
 			$requeteSource = "SELECT notices.notice_id FROM temp_n_id JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
     	}elseif($type_aff_navigopac == -1){//Navigation par auteurs
-    		$requete="create temporary table temp_n_id ENGINE=MyISAM ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
+    		$requete="create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} ( SELECT notice_id FROM notices ".$acces_j." JOIN exemplaires ON expl_section='".$id."' and expl_location='".$location."' and expl_notice=notice_id ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
     		pmb_mysql_query($requete);
-    		//On rÃ©cupÃ¨re les notices de pÃ©riodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
+    		//On récupère les notices de périodique avec au moins un exemplaire d'un bulletin dans la localisation et la section
     		$requete="INSERT INTO temp_n_id (SELECT notice_id FROM exemplaires JOIN bulletins ON expl_section='".$id."' and expl_location='".$location."' and expl_bulletin=bulletin_id JOIN notices ON notice_id=bulletin_notice ".$acces_j." ".$statut_j." WHERE 1 ".$statut_r." GROUP BY notice_id)";
     		pmb_mysql_query($requete);
-    		@pmb_mysql_query("alter table temp_n_id add index(notice_id)");
+    		pmb_mysql_query("alter table temp_n_id add index(notice_id)");
     		//On sait par quoi doit commencer le nom de l'auteur
 			if($plettreaut == "num"){
 				$requeteSource = "SELECT notices.notice_id FROM temp_n_id JOIN responsability ON responsability_notice=temp_n_id.notice_id JOIN authors ON author_id=responsability_author and trim(index_author) REGEXP '^[0-9]' JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
 			}elseif($plettreaut == "vide"){
     			$requeteSource = "SELECT notices.notice_id FROM temp_n_id LEFT JOIN responsability ON responsability_notice=temp_n_id.notice_id LEFT JOIN notices ON notices.notice_id=temp_n_id.notice_id WHERE responsability_author IS NULL GROUP BY notices.notice_id";
-    		}elseif($plettreaut){
+			}elseif((@preg_match($plettreaut, null) !== false)){
     			$requeteSource = "SELECT notices.notice_id FROM temp_n_id JOIN responsability ON responsability_notice=temp_n_id.notice_id JOIN authors ON author_id=responsability_author and trim(index_author) REGEXP '^[".$plettreaut."]' JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
     		}else{
     			$requeteSource = "SELECT notices.notice_id FROM temp_n_id JOIN notices ON notices.notice_id=temp_n_id.notice_id GROUP BY notices.notice_id";
     		}
     	}else{//Navigation par un plan de classement
     		if ($ssub) {
-    			$t_expl_cote_cond=array();
+    			$t_expl_cote_cond = array();
+    			$t_dcote = explode(",", $dcote);
     			for ($i=0; $i<count($t_dcote); $i++) {
     				$t_expl_cote_cond[]="expl_cote regexp '(^".$t_dcote[$i]." )|(^".$t_dcote[$i]."[0-9])|(^".$t_dcote[$i]."$)|(^".$t_dcote[$i].".)'";
     			}
@@ -120,8 +121,8 @@ class navigation_section_search {
     				$requete.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
     			}
     			$requete.= $statut_r;
-    			$res = pmb_mysql_query($requete, $dbh);
-    			$nbr_lignes = @pmb_mysql_result($res, 0, 0);
+    			$res = pmb_mysql_query($requete);
+    			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 
     			$requete2 = "SELECT COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
     			$requete2.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
@@ -129,8 +130,8 @@ class navigation_section_search {
     				$requete2.= "and expl_cote regexp '".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote))."' and expl_cote not regexp '(\\\\.[0-9]*".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")|([^0-9]*[0-9]+\\\\.?[0-9]*.+".$dcote.str_repeat("[0-9]",$lcote-strlen($dcote)).")' ";
     			}
     			$requete2.= $statut_r;
-    			$res = pmb_mysql_query($requete2, $dbh);
-    			$nbr_lignes += @pmb_mysql_result($res, 0, 0);
+    			$res = pmb_mysql_query($requete2);
+    			$nbr_lignes += pmb_mysql_result($res, 0, 0);
     	
     		} else {
     			$requete = "select COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires $statut_j ";
@@ -139,8 +140,8 @@ class navigation_section_search {
     				$requete.= " and $expl_cote_cond ";
     			}
     			$requete.= $statut_r;
-    			$res = pmb_mysql_query($requete, $dbh);
-    			$nbr_lignes = @pmb_mysql_result($res, 0, 0);
+    			$res = pmb_mysql_query($requete);
+    			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 
     			$requete2 = "SELECT COUNT(distinct notice_id) FROM notices $acces_j ,exemplaires, bulletins $statut_j ";
     			$requete2.= "where  expl_location=$location and expl_section=$id and notice_id=bulletin_notice and expl_bulletin=bulletin_id ";
@@ -148,13 +149,13 @@ class navigation_section_search {
     				$requete2.= "and $expl_cote_cond ";
     			}
     			$requete2.= $statut_r;
-    			$res = pmb_mysql_query($requete2, $dbh);
-    			$nbr_lignes += @pmb_mysql_result($res, 0, 0);
+    			$res = pmb_mysql_query($requete2);
+    			$nbr_lignes += pmb_mysql_result($res, 0, 0);
    			}
     	
     		if($nbr_lignes) {
     			//Table temporaire de tous les id
-    			$requete = "create temporary table temp_n_id ENGINE=MyISAM (select notice_id, expl_id FROM notices $acces_j ,exemplaires $statut_j ";
+    			$requete = "create temporary table temp_n_id ENGINE={$default_tmp_storage_engine} (select notice_id, expl_id FROM notices $acces_j ,exemplaires $statut_j ";
     			$requete.= "WHERE expl_location=$location and expl_section=$id and notice_id=expl_notice ";
     			if (strlen($dcote)) {
     				if (!$ssub) {
@@ -179,14 +180,14 @@ class navigation_section_search {
     			}
     			$requete2.= "$statut_r ";
     			$requete2.= "group by notice_id, expl_id) ";
-    			@pmb_mysql_query($requete2);
-    			@pmb_mysql_query("alter table temp_n_id add index(notice_id, expl_id)");
+    			pmb_mysql_query($requete2);
+    			pmb_mysql_query("alter table temp_n_id add index(notice_id, expl_id)");
     			//Calcul du classement
     			if (!$ssub) {
-    				$rq1_index="create temporary table union1 ENGINE=MyISAM (select distinct expl_cote from exemplaires, temp_n_id where expl_location='".$location."' and expl_section='".$id."' and expl_notice=temp_n_id.notice_id) ";
-    				$res1_index=pmb_mysql_query($rq1_index);
-    				$rq2_index="create temporary table union2 ENGINE=MyISAM (select distinct expl_cote from exemplaires join (select distinct bulletin_id from bulletins join temp_n_id where bulletin_notice=notice_id) as sub on (bulletin_id=expl_bulletin) where expl_location='".$location."' and expl_section='".$id."') ";
-    				$res2_index=pmb_mysql_query($rq2_index);
+    				$rq1_index="create temporary table union1 ENGINE={$default_tmp_storage_engine} (select distinct expl_cote from exemplaires, temp_n_id where expl_location='".$location."' and expl_section='".$id."' and expl_notice=temp_n_id.notice_id) ";
+    				pmb_mysql_query($rq1_index);
+    				$rq2_index="create temporary table union2 ENGINE={$default_tmp_storage_engine} (select distinct expl_cote from exemplaires join (select distinct bulletin_id from bulletins join temp_n_id where bulletin_notice=notice_id) as sub on (bulletin_id=expl_bulletin) where expl_location='".$location."' and expl_section='".$id."') ";
+    				pmb_mysql_query($rq2_index);
     				$req_index="select distinct expl_cote from union1 union select distinct expl_cote from union2";
     				$res_index=pmb_mysql_query($req_index);
     	
@@ -202,7 +203,7 @@ class navigation_section_search {
     				}
     				// Zend
     				while ($ct=pmb_mysql_fetch_object($res_index)) {
-    					//Je regarde si le dÃ©but existe dans indexint
+    					//Je regarde si le début existe dans indexint
     					$lf=5;
     					$t=array();
     					while ($lf>0) {
@@ -246,7 +247,7 @@ class navigation_section_search {
     												$cote_n_1=substr($c[0],0,$level-1);
     												$compl_n_1=str_repeat("0",$lcote-$level+1);
     												if (($cote.$compl)==($cote_n_1.$compl_n_1))
-    													$t["comment"]="GÃ©nÃ©ralitÃ©s";
+    													$t["comment"]="Généralités";
     											}
     											$t["lcote"]=$lcote;
     											$t["dcote"]=$cote;
@@ -300,12 +301,12 @@ class navigation_section_search {
 		return "t_s_navigation_section"; 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {  
     }
     
     public function make_unimarc_query() {
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -314,7 +315,7 @@ class navigation_section_search {
     
     
     
-	//fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	//fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="") return true;

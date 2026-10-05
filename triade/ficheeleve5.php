@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@
 	validerequete("3");
 	$cnx=cnx();
 	?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
                <?php include("./librairie_php/lib_defilement.php"); ?>
              </TD><td width="472" valign="middle" rowspan="3" align="center">
              <div align='center'><?php top_h(); ?>
-             <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+             <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de l'élève (lecture seule)
 $idEleve=$_GET["eid"];
@@ -58,7 +58,7 @@ $idEleve=$_GET["eid"];
 <?php
 $data=profPinfoAff($idEleve);
 // id,dateDebut,dateFin,idEleve,commentaire,nomProf
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr><td ><br />&nbsp;&nbsp;
 <?php print LANGPROF30?> <b><?php print dateForm($data[$i][1])?></b> au <b><?php print dateForm($data[$i][2])?></b>
@@ -76,7 +76,7 @@ for($i=0;$i<count($data);$i++) {
 <?php
 $choix_tri=recherche_trimestre_en_cours();
 $data=recherche_intervalle_trimestre($choix_tri);
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
         $date_debut=$data[$i][0];
         $date_fin=$data[$i][1];
 }
@@ -86,13 +86,13 @@ for($i=0;$i<count($data);$i++){
 <br><br><hr><br>
 <table bgcolor="#FFFFFF" bordercolor="#000000" border=1 align=center>
 <tr><td id="bordure"><br>
-&nbsp;<font size=2><?php print LANGPROFP8 ?> : <?php $data=affRetard($idEleve); print count($data);  ?>&nbsp;&nbsp;</font><br>
+&nbsp;<font size=2><?php print LANGPROFP8 ?> : <?php $data=affRetard($idEleve); print countTriade($data);  ?>&nbsp;&nbsp;</font><br>
 <br>
-<font size=2>&nbsp;<?php print LANGPROFP9 ?> : <?php $data=nombre_retard($idEleve,$date_debut,$date_fin);  print count($data);?>&nbsp;&nbsp;</font><br>
+<font size=2>&nbsp;<?php print LANGPROFP9 ?> : <?php $data=nombre_retard($idEleve,$date_debut,$date_fin);  print countTriade($data);?>&nbsp;&nbsp;</font><br>
 <br>
-<font size=2>&nbsp;<?php print LANGPROFP10 ?> : <?php $data=affAbsence($idEleve); print count($data);  ?>&nbsp;&nbsp;</font><br>
+<font size=2>&nbsp;<?php print LANGPROFP10 ?> : <?php $data=affAbsence($idEleve); print countTriade($data);  ?>&nbsp;&nbsp;</font><br>
 <br>
-<font size=2>&nbsp;<?php print LANGPROFP11 ?>: <?php $data=nombre_abs($idEleve,$date_debut,$date_fin);  print count($data);?>&nbsp;&nbsp;</font><br><br>
+<font size=2>&nbsp;<?php print LANGPROFP11 ?>: <?php $data=nombre_abs($idEleve,$date_debut,$date_fin);  print countTriade($data);?>&nbsp;&nbsp;</font><br><br>
 </td></tr></table>
 </ul>
 <br>
@@ -104,7 +104,7 @@ for($i=0;$i<count($data);$i++){
 <?php
 $data=affSanction_par_eleve($idEleve);
 // id,id_eleve,motif,sanction,date_saisie,origin_saisie,signature_parent,attribuer_par
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         
 ?>
         <option><?php print dateForm($data[$i][4])?>
@@ -137,7 +137,7 @@ for($i=0;$i<count($data);$i++) {
 <?php
 $data=affRetenuTotal_par_eleve($idEleve);
 //id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,sanction,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         $data2=chercheSanction($data[$i][5]);
 ?>
         <option><?php print dateForm($data[$i][1])?>
@@ -170,15 +170,15 @@ for($i=0;$i<count($data);$i++) {
 // Test du membre pour savoir quel fichier JS je dois executer
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire") ):
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

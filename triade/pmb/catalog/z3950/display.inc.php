@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: display.inc.php,v 1.14 2017-10-19 14:21:11 ngantier Exp $
+// $Id: display.inc.php,v 1.15 2021/03/19 14:49:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $include_path, $msg, $current_module;
+global $pmb_indexation_lang, $id_notice, $last_query_id;
 
 // les requis par display.inc.php
 include("$include_path/marc_tables/$pmb_indexation_lang/empty_words");
@@ -21,7 +24,7 @@ while ($ligne3=pmb_mysql_fetch_array($resultat3)) {
 	$resultat_auteur=$ligne3["auteur"];
 	$resultat_isbd=$ligne3["isbd"];
 	if (isISBN($ligne3["isbn"])) $resultat_isbn=formatISBN($ligne3["isbn"]);
-		else $resultat_isbn=$ligne3["isbn"];
+	else $resultat_isbn=$ligne3["isbn"];
 	$resultat_bib_name=$ligne3["bib_nom"];
 	$resultat_bib_format=$ligne3["format"];
 	$test_resultat++;
@@ -35,7 +38,7 @@ while ($ligne3=pmb_mysql_fetch_array($resultat3)) {
 	$retour_affichage.=zshow_isbd($resultat_isbd, $lien);
 	$retour_affichage.="<small><strong>( $resultat_bib_name / $resultat_bib_format )<br /></strong></small><br />";
 }
-
+$opt_tri = array();
 $opt_tri[0][0] = "auteur";   $opt_tri[0][1] = $msg['z3950_auteur'];
 $opt_tri[1][0] = "isbn";     $opt_tri[1][1] = $msg['z3950_isbn'];
 $opt_tri[2][0] = "bib_nom";  $opt_tri[2][1] = $msg['z3950_serveur'];

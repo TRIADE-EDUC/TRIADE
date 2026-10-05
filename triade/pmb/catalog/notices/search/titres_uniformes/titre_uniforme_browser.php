@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: titre_uniforme_browser.php,v 1.6 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: titre_uniforme_browser.php,v 1.6 2019/06/07 08:05:39 btafforeau Exp $
 
 global $base_path, $base_auth, $base_title, $ancre, $j_offset, $browser_url, $limite_affichage, $restriction, $msg, $titre_uniforme, $titre_uniforme_entry;
 
 // page d'affichage du browser de collections
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../../../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[6]";
@@ -21,7 +21,7 @@ $j_offset = "
 <script type='text/javascript'>
 <!--
 function jump_anchor(anc) {
-	// rÃ©cupÃ©ration de l'index de l'ancre
+	// récupération de l'index de l'ancre
 	for ( i = 0; i <= document.anchors.length; i++) {
 		if(document.anchors[i].name == anc) {
 			anc_index = i;
@@ -32,7 +32,7 @@ function jump_anchor(anc) {
 		// code pour IE
 		document.anchors[anc_index].scrollIntoView();
 	} else {
-		// mettre ici le code pour Mozilla et Netscape quand on aura trouvÃ©
+		// mettre ici le code pour Mozilla et Netscape quand on aura trouvé
 	}
 }
 // -->
@@ -40,7 +40,7 @@ jump_anchor('$ancre');
 </script>
 ";
 
-// url du prÃ©sent browser
+// url du présent browser
 $browser_url = "./titre_uniforme_browser.php";
 
 print "<div id='contenu-frame'>";

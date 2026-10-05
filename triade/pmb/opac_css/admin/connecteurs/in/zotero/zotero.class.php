@@ -1,37 +1,44 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: zotero.class.php,v 1.7 2019-03-26 11:16:34 mbertin Exp $
+// $Id: zotero.class.php,v 1.13.4.1 2025/04/16 12:16:50 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-global $class_path,$base_path, $include_path;
+global $class_path,$base_path;
 require_once($class_path."/connecteurs.class.php");
 require_once($class_path."/xml_dom.class.php");
 
 class zotero extends connector {
 
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $n_recu = 0;				//Nombre de notices reÃ§ues
+	//Variables internes pour la progression de la récupération des notices
+	public $n_recu = 0;				//Nombre de notices reçues
 	public $n_total = 0;			//Nombre total de notices
-	
-	public function __construct($connector_path="") {
-		parent::__construct($connector_path);
-	}
 
-	public function get_id() {
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::get_id()
+	 */
+	public function get_id()
+	{
 		return 'zotero';
 	}
 
-	//Est-ce un entrepot ?
-	public function is_repository() {
-		return 1;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::is_repository()
+	 */
+	public function is_repository()
+	{
+	    return connector::REPOSITORY_YES;
 	}
 
 	public function source_get_property_form($source_id) {
 		global $charset;
-		 
+
 		$params=$this->get_source_params($source_id);
 		if ($params['PARAMETERS']) {
 			//Affichage du formulaire avec $params['PARAMETERS']
@@ -64,15 +71,15 @@ class zotero extends connector {
 		<div class='row'>&nbsp;</div>
 		";
 		if (!($zotero_userid && $zotero_client_key) ) {
-				
+
 			$form.="<div class='row'>
 			<h3 style='text-align:center'>".$this->msg['zotero_record_to_see_more']."</h3>
 			</div>";
 			$form.="<div class='row'>&nbsp;</div>";
-				
+
 		} else {
-				
-			//RÃ©cupÃ©ration des collections
+
+			//Récupération des collections
 			$zot = new zotero_protocol($vars,$charset);
 			$collections = $zot->get_collections();
 			if ($zot->error) {
@@ -81,7 +88,7 @@ class zotero extends connector {
 				</div>";
 				$form.="<div class='row'>&nbsp;</div>";
 			} else {
-					
+
 				$form.="<div class='row'>
 				<div class='colonne3'>
 					<label>".$this->msg['zotero_collections_restrict']."</label>
@@ -130,9 +137,10 @@ class zotero extends connector {
 
 	public function make_serialized_source_properties($source_id) {
 		global $zotero_userid,$zotero_client_key,$zotero_collections,$zotero_del_deleted;
+		$t=array();
 		$t['zotero_userid']=stripslashes($zotero_userid);
 		$t['zotero_client_key']=stripslashes($zotero_client_key);
-		 
+
 		if (is_array($zotero_collections) && count($zotero_collections)) {
 			foreach($zotero_collections as $k=>$v) {
 				$zotero_collections[$k]=stripslashes($v);
@@ -145,13 +153,13 @@ class zotero extends connector {
 		$this->sources[$source_id]['PARAMETERS']=serialize($t);
 	}
 
-	//RÃ©cupÃ©ration  des propriÃ©tÃ©s globales par dÃ©faut du connecteur (timeout, retry, repository, parameters)
+	//Récupération  des propriétés globales par défaut du connecteur (timeout, retry, repository, parameters)
 	public function fetch_default_global_values() {
 		parent::fetch_default_global_values();
 		$this->repository=1;
 	}
 
-	
+
 	public function progress() {
 		$callback_progress=$this->callback_progress;
 
@@ -167,25 +175,25 @@ class zotero extends connector {
 		call_user_func($callback_progress,$percent,$nlu,$ntotal);
 	}
 
-	
+
 	public function rec_record($record=array()) {
-		global $dbh, $charset, $base_path;
-		
+		global $charset, $base_path;
+
 		$xml = new DOMDocument('1.0', 'utf-8');
 		//$xml->formatOutput = true;
 		$xml_rec = $xml->createElement('record');
 		$xml->appendChild($xml_rec);
 		$xml_rec->setAttribute('key', $record['zapi:key']);
 		$xml_rec->setAttribute('version', $record['zapi:version']);
-		
+
 		if( is_array($record['content']) && count($record['content']) ) {
 			foreach($record['content'] as $k=>$v) {
 				$this->recurse_record($xml, $xml_rec, $k, $v);
 	 		}
 		}
-		
+
 		if( is_array($record['attachments']) && count($record['attachments']) ) {
-			
+
 			$xml_atts = $xml->createElement('attachments');
 			$xml_rec->appendChild($xml_atts);
 			foreach($record['attachments'] as $k=>$attachment) {
@@ -201,27 +209,27 @@ class zotero extends connector {
 					$this->recurse_record($xml, $xml_att, $k1, $v1);
 				}
  			}
- 			
-		}	
+
+		}
 
 		$in = $xml->saveXML();
 		$xsl_filename = $base_path.'/admin/connecteurs/in/zotero/xslt/zotero_atom_json.xsl';
-		
+
 		$proc = new XSLTProcessor();
 		$xslDoc = new DOMDocument();
 		$xslDoc->load($xsl_filename);
 		$proc->registerPHPFunctions();
 		$proc->importStylesheet($xslDoc);
 		$out = $proc->transformToXml($xml);
-		
+
 		$ref = 0;
 		if ($out) {
-				
+
 			//On a un enregistrement unimarc, on l'enregistre
 			$rec_uni_dom=new xml_dom($out,"utf-8");
-			
+
 			if (!$rec_uni_dom->error) {
-				
+
 				//Initialisation
 				$ref="";
 				$ufield="";
@@ -230,7 +238,7 @@ class zotero extends connector {
 				$subfield_order=0;
 				$value="";
 				$date_import=date('Y-m-d H:i:s');
-			
+
 				$fs=$rec_uni_dom->get_nodes("unimarc/notice/f");
 				//Recherche du 001
 				for ($i=0; $i<count($fs); $i++) {
@@ -239,27 +247,28 @@ class zotero extends connector {
 						break;
 					}
 				}
-				//Mise Ã  jour
+				//Mise à jour
 				if ($ref) {
 					//Suppression anciennes notices
 					$this->delete_from_entrepot($this->source_id, $ref);
 					$this->delete_from_external_count($this->source_id, $ref);
 
-					//Insertion de l'entÃªte
+					//Insertion de l'entête
+					$n_header=array();
 					$n_header["rs"]=$rec_uni_dom->get_value("unimarc/notice/rs");
 					$n_header["ru"]=$rec_uni_dom->get_value("unimarc/notice/ru");
 					$n_header["el"]=$rec_uni_dom->get_value("unimarc/notice/el");
 					$n_header["bl"]=$rec_uni_dom->get_value("unimarc/notice/bl");
 					$n_header["hl"]=$rec_uni_dom->get_value("unimarc/notice/hl");
 					$n_header["dt"]=$rec_uni_dom->get_value("unimarc/notice/dt");
-		
-					//RÃ©cupÃ©ration d'un ID
+
+					//Récupération d'un ID
 					$recid = $this->insert_into_external_count($this->source_id, $ref);
-					
+
 					foreach($n_header as $hc=>$code) {
 						$this->insert_header_into_entrepot($this->source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
 					}
-		
+
 					for ($i=0; $i<count($fs); $i++) {
 						$ufield=$fs[$i]["ATTRIBS"]["c"];
 						$field_order=$i;
@@ -269,7 +278,7 @@ class zotero extends connector {
 								$usubfield=$ss[$j]["ATTRIBS"]["c"];
 								$value=$rec_uni_dom->get_datas($ss[$j]);
 								if($charset != "utf-8"){
-									$value=pmb_utf8_decode($value);
+									$value=encoding_normalize::utf8_decode($value);
 								}
 								$subfield_order=$j;
 								$this->insert_content_into_entrepot($this->source_id, $ref, $date_import, $ufield, $usubfield, $field_order, $subfield_order, $value, $recid);
@@ -277,7 +286,7 @@ class zotero extends connector {
 						} else {
 							$value=$rec_uni_dom->get_datas($fs[$i]);
 							if($charset != "utf-8"){
-								$value=pmb_utf8_decode($value);
+								$value=encoding_normalize::utf8_decode($value);
 							}
 							$this->insert_content_into_entrepot($this->source_id, $ref, $date_import, $ufield, $usubfield, $field_order, $subfield_order, $value, $recid);
 						}
@@ -286,7 +295,7 @@ class zotero extends connector {
 				}
 			}
 		}
-		return $ref;		
+		return $ref;
 	}
 
 	public function recurse_record($xml, $xml_elt, $key, $value) {
@@ -294,7 +303,7 @@ class zotero extends connector {
 		if(is_array($value)) {
 			if(count($value)) {
 				foreach ($value as $k=>$v) {
-					
+
 					if (!is_numeric($key)) {
 						$new_elt = $xml->createElement($key);
 						$xml_elt->appendChild($new_elt);
@@ -302,12 +311,12 @@ class zotero extends connector {
 					} else {
 						$this->recurse_record($xml, $xml_elt, $k, $v);
 					}
-					
-				} 		
+
+				}
 			}
-			
+
 		} else {
-			
+
 			if(!is_numeric($key) && $value!='') {
 				$new_elt = $xml->createElement($key, $value);
 				$xml_elt->appendChild($new_elt);
@@ -315,24 +324,30 @@ class zotero extends connector {
 		}
 	}
 
-	public function form_pour_maj_entrepot($source_id,$sync_form="sync_form") {
-
-		global $charset;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::getSynchroForm()
+	 */
+	public function getSynchroForm($source_id, $sync_form = "sync_form")
+	{
 		global $form_from;
 		global $form_until;
 		global $form_radio;
 
-		$source_id=$source_id+0;
+		$source_id = intval($source_id);
+		$sync_form = in_array($sync_form, [ "sync_form", "planificateur_form"]) ? $sync_form : "sync_form";
+
 		$params=$this->get_source_params($source_id);
 		$vars=unserialize($params['PARAMETERS']);
 
-		$form = "<blockquote>";
+		$form = "<blockquote role='presentation'>";
 		$form .= "</blockquote>";
 		return $form;
 	}
 
 	public function maj_entrepot($source_id,$callback_progress='',$recover=false,$recover_env='') {
-		global $dbh, $charset;
+		global $charset;
 		global $form_from, $form_until, $form_radio;
 
 		$this->callback_progress = $callback_progress;
@@ -345,10 +360,10 @@ class zotero extends connector {
 		//Connexion
 		$zot = new zotero_protocol($p,$charset);
 
-		//RÃ©cupÃ©ration des clÃ©s d'items
+		//Récupération des clés d'items
 		$tab_items_keys = array();
 		if (count($p['zotero_collections'])) {
-				
+
 			foreach($p['zotero_collections'] as $k=>$collection_key) {
 				$tik = array();
 				$tik = $zot->get_items_keys($collection_key);
@@ -356,7 +371,7 @@ class zotero extends connector {
 					$tab_items_keys = array_merge($tab_items_keys, $tik);
 				}
 			}
-				
+
 		} else {
 			$tab_items_keys = $zot->get_items_keys();
 		}
@@ -364,9 +379,9 @@ class zotero extends connector {
 		//Nb items au total
 		$this->n_total = count($tab_items_keys);
 
-		//RÃ©cupÃ©ration des items
+		//Récupération des items
 		$tab_sync_items = array();
-		foreach($tab_items_keys as $k=>$item_key) {
+		foreach($tab_items_keys as $item_key) {
 			$item = $zot->get_item($item_key);
 			$si = $this->rec_record($item);
 			if ($si) {
@@ -376,24 +391,24 @@ class zotero extends connector {
 			}
 		}
 
-		//Suppression des items non synchronisÃ©s
+		//Suppression des items non synchronisés
 		$str_sync_items = '';
 		if(count($tab_sync_items)) {
 			$str_sync_items = implode('","',$tab_sync_items);
 		}
 		if($str_sync_items) {
 			$q = "delete from entrepot_source_".$this->source_id." where ref not in (\"".$str_sync_items."\")";
-			pmb_mysql_query($q,$dbh);
+			pmb_mysql_query($q);
 		} else {
 			$q = "delete from entrepot_source_".$this->source_id;
-			pmb_mysql_query($q,$dbh);
+			pmb_mysql_query($q);
 		}
 		$q = "delete from external_count where source_id=".$this->source_id." and rid not in (select distinct recid from entrepot_source_".$this->source_id." )";
-		pmb_mysql_query($q,$dbh);
-		
+		pmb_mysql_query($q);
+
 		return $this->n_recu;
 	}
-	
+
 }
 
 
@@ -409,7 +424,7 @@ class zotero_protocol {
 
 	public $channel = false;
 	public $url = '';
-	public $params = '';
+	public $params = array();
 	public $response = '';
 	public $error = false;
 	public $error_msg = '';
@@ -436,7 +451,7 @@ class zotero_protocol {
 		$this->params = array();
 		$this->params['key'] = $this->zotero_client_key;
 		$this->params['version'] = $this->zotero_api_version;
-			
+
 		if (is_array($other_params) && count($other_params)) {
 			foreach($other_params as $k=>$v) {
 				$this->params[$k]=$v;
@@ -465,11 +480,11 @@ class zotero_protocol {
 			try {
 				$zpr = $zp->parse($this->response);
 				if (count($zpr)) {
-					foreach($zpr as $k=>$v) {
+					foreach($zpr as $v) {
 						$title = $v['title'];
 						$id = $v['zapi:key'];
 						if ($this->charset != 'utf-8') {
-							$title = utf8_decode($title);
+							$title = encoding_normalize::utf8_decode($title);
 						}
 						$this->result[$id] = $title;
 					}
@@ -493,7 +508,7 @@ class zotero_protocol {
 		return $this->result;
 	}
 
-	
+
 	public function get_childrens_keys($item_key='') {
 
 		$this->result = array();
@@ -531,7 +546,7 @@ class zotero_protocol {
 
 
 	public function get_item($item_key='') {
-	
+
 		$zp = $this->zotero_parser;
 		$zp->reset('item');
 		$this->result = array();
@@ -548,20 +563,20 @@ class zotero_protocol {
 						}
 					}
 					$this->result = $zpr[0];
-						
+
 				} catch(Exception $e) {
 				}
 			}
 		}
 		return $this->result;
 	}
-	
-	
+
+
 	public function get_file($key) {
 		$this->url = $this->zotero_api_url."/users/".$this->zotero_userid."/items/$key/file?";
 		$this->send_request();
 		if (!$this->error) {
-				
+
 		}
 	}
 
@@ -609,9 +624,10 @@ class zotero_parser {
 		xml_set_character_data_handler ($this->parser, 'texte');
 
 		if ( !xml_parse ($this->parser, $xml, TRUE)) {
-			die (sprintf ("erreur XML %s Ã  la ligne: %d", xml_error_string (xml_get_error_code ($this->parser)), xml_get_current_line_number ($this->parser)));
+			die (sprintf ("erreur XML %s à la ligne: %d", xml_error_string (xml_get_error_code ($this->parser)), xml_get_current_line_number ($this->parser)));
 		}
 		xml_parser_free ($this->parser);
+		unset($this->parser);
 		return ($this->t);
 	}
 
@@ -628,7 +644,7 @@ class zotero_parser {
 		$this->text=trim($this->text);
 
 		switch ($this->to_parse) {
-				
+
 			case 'collections' :
 				switch ($tag) {
 					case 'entry' :

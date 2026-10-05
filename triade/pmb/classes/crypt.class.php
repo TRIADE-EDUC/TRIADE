@@ -1,22 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: crypt.class.php,v 1.7 2017-06-30 14:08:17 dgoron Exp $
+// $Id: crypt.class.php,v 1.8 2023/08/23 10:25:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de cryptage/dÃ©cryptage Ã  partir de deux empruntes md5
+//Classe de cryptage/décryptage à partir de deux empruntes md5
 //
 //
-// Instanciation : le constructeur prend comme paramÃ¨tres deux string, empruntes md5
+// Instanciation : le constructeur prend comme paramètres deux string, empruntes md5
 //
-// MÃ©thodes publiques : 
+// Méthodes publiques : 
 //
-// string getCrypt(string str) : crypte la chaine str et renvoi la chaine codÃ©e correspondante
-// string getDecrupt(string str) : dÃ©crypte la chaine str et renvoi la chaine dÃ©codÃ©e correspondante
+// string getCrypt(string str) : crypte la chaine str et renvoi la chaine codée correspondante
+// string getDecrupt(string str) : décrypte la chaine str et renvoi la chaine décodée correspondante
 
-//DÃ©finition de la classe pour include
+//Définition de la classe pour include
 if ( ! defined( 'CRYPT_CLASS' ) ) {
   define( 'CRYPT_CLASS', 1 );
 }
@@ -24,26 +24,26 @@ if ( ! defined( 'CRYPT_CLASS' ) ) {
 class Crypt {
 	
 	//------------------------------------------------------------
-	// DonnÃ©es
+	// Données
 	//------------------------------------------------------------
 	
-	public $print1;					//Empruntes utilisÃ©es pour crÃ©er les Ã©lÃ©ments de codage/dÃ©codage
+	public $print1;					//Empruntes utilisées pour créer les éléments de codage/décodage
 	public $print2;
-	public $tPrint1 = array();			//Tableaux normalisÃ©s issus des empruntes
+	public $tPrint1 = array();			//Tableaux normalisés issus des empruntes
 	public $tPrint2 = array();
 	public $tColCorresp = array();		//Table de codage colonne
 	public $tRowCorresp = array();		//Table de codage ligne
-	public $tInvColCorresp = array();	//Table de dÃ©codage colonne
+	public $tInvColCorresp = array();	//Table de décodage colonne
 
 	//------------------------------------------------------------
 	// Constructeur : Crypt($print1,$print2)
-	// CrÃ©ation des tables de codages Ã  partir des empruntes
+	// Création des tables de codages à partir des empruntes
 	//------------------------------------------------------------
 	public function __construct($print1, $print2) {
 		$this -> print1 = $print1;
 		$this -> print2 = $print2;
 
-		//Calcul des tableaux normalisÃ©s Ã  partir des empruntes
+		//Calcul des tableaux normalisés à partir des empruntes
 		$decal1 = 0;
 		$decal2 = 0;
 		for ($i = 0; $i < 32; $i ++) {
@@ -59,14 +59,14 @@ class Crypt {
 
 		$this -> genCryptTables();
 
-		//Calcul des tables de dÃ©codage
+		//Calcul des tables de décodage
 
 		$this -> genDecryptTables();
 	}
 
 	//------------------------------------------------------------
 	// genTcar()
-	// GÃ©nÃ©ration de la table des caractÃ¨res
+	// Génération de la table des caractères
 	//------------------------------------------------------------
 	public function genTcar() {
 		$tCar = array();
@@ -78,7 +78,7 @@ class Crypt {
 
 	//------------------------------------------------------------
 	// decal(& array $tCar, int $pos, $nStayingCar)
-	// DÃ©calage Ã  gauche de la table des caractÃ¨res $tCar Ã  partir de la position donnÃ©e par $pos sur les $nStayingcar premiers caractÃ¨res
+	// Décalage à gauche de la table des caractères $tCar à partir de la position donnée par $pos sur les $nStayingcar premiers caractères
 	//------------------------------------------------------------
 	public function decal(& $tCar, $pos, $nStayingCar) {
 		for ($i = $pos +1; $i < $nStayingCar; $i ++) {
@@ -88,7 +88,7 @@ class Crypt {
 	
 	//------------------------------------------------------------
 	// hex2decNormalized(char $value)
-	// fonction de convetissage hex->decimal normalisÃ© (entre 0 et 1)
+	// fonction de convetissage hex->decimal normalisé (entre 0 et 1)
 	//------------------------------------------------------------
 	public function hex2decNormalized($value) {
 		$tHex = array("0" => 0, "1" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "a" => 10, "b" => 11, "c" => 12, "d" => 13, "e" => 14, "f" => 15);
@@ -112,29 +112,29 @@ class Crypt {
 
 	//-----------------------------------------------------------
 	// genCryptTables()
-	// GÃ©nÃ©ration des tables de codage
+	// Génération des tables de codage
 	//-----------------------------------------------------------
 	public function genCryptTables() {
 		//Table des colonnes
 
 		$lCar = array();
 
-		//Table des caractÃ¨res
+		//Table des caractères
 		$tCar = $this -> genTcar();
 
 		//pour chaque ligne, 256 colonnes soit presque 8 blocs de 32
 		for ($b = 0; $b < 8; $b ++) {
-			//PremiÃ¨re colonne du bloc
+			//Première colonne du bloc
 			$c = $b * 32;
 
 			$n = 0;
 			while (($n < 32) && ($c < 256)) {
-				//Nombre de caractÃ¨res restant dans la table des caractÃ¨re
+				//Nombre de caractères restant dans la table des caractère
 				$nStayingCar = 256 - $c;
 
-				$nCar = round(($this -> tPrint1[$n] * ($nStayingCar -1)));
+				$nCar = intval(round(($this -> tPrint1[$n] * ($nStayingCar -1))));
 				$lCar[$c] = $tCar[$nCar];
-				//DÃ©calage des caractÃ¨res
+				//Décalage des caractères
 				$this -> decal($tCar, $nCar, $nStayingCar);
 				$n ++;
 				$c ++;
@@ -144,7 +144,7 @@ class Crypt {
 		//32 lignes
 		for ($l = 0; $l < 32; $l ++) {
 			$this -> tColCorresp[$l] = $lCar;
-			//DÃ©calage de la ligne
+			//Décalage de la ligne
 			$this -> decalLine($lCar, $decal1);
 		}
 
@@ -173,7 +173,7 @@ class Crypt {
 	
 	//------------------------------------------------------------
 	// genDecryptTables()
-	// GÃ©nÃ©ration des tables de dÃ©codage
+	// Génération des tables de décodage
 	//------------------------------------------------------------
 	
 	public function genDecryptTables() {
@@ -204,7 +204,7 @@ class Crypt {
 
 	//------------------------------------------------------------
 	// getDecrypt(string $str)
-	// Fonction de dÃ©cryptage d'une chaine $str
+	// Fonction de décryptage d'une chaine $str
 	//------------------------------------------------------------
 	public function getDecrypt($str) {
 		$strR = "";

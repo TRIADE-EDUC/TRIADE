@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: BulletinLine.js,v 1.20 2018-03-29 14:46:17 tsamson Exp $
+// $Id: BulletinLine.js,v 1.22 2020/05/11 08:55:45 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", "dojo/dom-attr", "dijit/registry", "dojo/on", "apps/scan_request/ExplnumList", "dojo/dom", "snet/fileUploader/Uploader", "dojo/dom-style", "dojo/dom-class"], function(declare, WidgetBase, xhr, lang, topic, domConstruct, domAttr, registry, on, ExplnumList, dom, Uploader, domStyle, domClass){
@@ -71,9 +71,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 			  
 			  on(this.plusImg, 'click', lang.hitch(this, function(){expandBase('scan_request_bul_'+this.index+'_', true); return false;}));
 			  
-			  /**
-			   * TODO: ajouter event img
-			   */
+			  domConstruct.place(domConstruct.toDom(' '), this.parentDiv);
 			  var spanContainer = domConstruct.create('span', {width:'368px', 'class':'notice-heada'}, this.parentDiv);
 			
 			  if(!this.params.readOnly && this.editable){
@@ -94,6 +92,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 				  var readonly=true;
 				  this.labelInput = domConstruct.create('a', {id:'scan_request_bul_'+this.index, href:this.bulletinLink + this.data.id, innerHTML:this.data.label}, spanContainer);
 				  if(this.data.id){
+					  domConstruct.place(domConstruct.toDom(' '), spanContainer);
 					  this.copyBulletinTitle = domConstruct.create('input', {type:'button', class:'bouton', value:pmbDojo.messages.getMessage('scan_request', 'scan_request_copy_record_title')},spanContainer);
 					  on(this.copyBulletinTitle, 'click', lang.hitch(this, function() {record_title_copy(this.data.label);}));
 				  }
@@ -115,12 +114,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 			  }  
 
 			  if(this.requestId && this.data.id){
+				  var url = './ajax.php?module=circ&categ=scan_request&sub=upload&num_request='+this.requestId+'&num_bul='+this.data.id;
+				  if(dom.byId('scan_request_concept_uri_value')) {
+					  url += '&concept_uri='+encodeURIComponent(dom.byId('scan_request_concept_uri_value').value);
+				  }
 				  var dropZone = domConstruct.create('div', {id:'scan_request_bul_file_drop_'+this.index, 'class':'dropTarget document_item', 'data-num_bul':this.data.id, style:{width:'50%'}}, col2);
 				  domConstruct.create('p', {style:{'pointer-events': 'none'}, innerHTML: pmbDojo.messages.getMessage('scan_request', 'scan_request_drag_files_here')},dropZone)
 				  var expllistDiv = domConstruct.create('div', {}, col3);
 				  this.explnumList = new ExplnumList(((this.data.explnums)?{explnumObjects:this.data.explnums}:{}),expllistDiv);	
 				  this.uploader = new Uploader({
-						url: './ajax.php?module=circ&categ=scan_request&sub=upload&num_request='+this.requestId+'&num_bul='+this.data.id+'&concept_uri='+encodeURIComponent(dom.byId('scan_request_concept_uri_value').value),
+						url: url,
 						dropTarget: dropZone,
 						maxKBytes: pmbDojo.uploadMaxFileSize,
 						maxNumFiles: 10,
@@ -168,7 +171,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 			  }
 		  },
 		  onDropCallback: function(evt){
-			  this.uploader.changeUrl('./ajax.php?module=circ&categ=scan_request&sub=upload&num_request='+this.requestId+'&num_bul='+this.codeInput.value+'&concept_uri='+encodeURIComponent(dom.byId('scan_request_concept_uri_value').value));	
+			  var url = './ajax.php?module=circ&categ=scan_request&sub=upload&num_request='+this.requestId+'&num_bul='+this.codeInput.value;
+			  if(dom.byId('scan_request_concept_uri_value')) {
+				  url += '&concept_uri='+encodeURIComponent(dom.byId('scan_request_concept_uri_value').value);
+			  }
+			  this.uploader.changeUrl(url);	
 			  var files = evt.dataTransfer.files;
 			  this.uploader.reset();
 			  this.uploader.addFiles(files);

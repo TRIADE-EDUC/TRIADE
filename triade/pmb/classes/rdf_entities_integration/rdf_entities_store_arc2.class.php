@@ -1,13 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_store_arc2.class.php,v 1.3 2017-04-25 16:13:09 apetithomme Exp $
+// $Id: rdf_entities_store_arc2.class.php,v 1.4 2021/01/13 14:24:53 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-// require_once($class_path."/rdf_entities_integration/rdf_entities_store.class.php");
-require_once($class_path."/rdf/arc2/ARC2.php");
 
 class rdf_entities_store_arc2 extends rdf_entities_store {
 	

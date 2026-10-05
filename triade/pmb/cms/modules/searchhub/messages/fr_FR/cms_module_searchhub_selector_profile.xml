@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_searchhub_selector_profile.xml,v 1.1.2.1 2024/12/24 14:51:31 qvarin Exp $ -->
+
+<XMLlist>
+    <entry code="cms_module_searchhub_selector_profile_label">Profil de recherche</entry>
+    <entry code="cms_module_searchhub_selector_profile_default">Sélectionner un profil de recherche</entry>
+</XMLlist>

@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: affichage.inc.php,v 1.16 2017-08-11 06:48:29 dgoron Exp $
+// $Id: affichage.inc.php,v 1.17 2021/03/18 08:56:37 dgoron Exp $
 
+global $class_path;
 require_once ("$class_path/mono_display.class.php");
 require_once ("$class_path/serial_display.class.php");
+require_once ("$class_path/notice.class.php");
+require_once ("$class_path/serials.class.php");
 
 //traite l'affichage d'une colonne
 function aff_colonne($str_ligne, $nom_col, $val_col) {
@@ -21,7 +24,7 @@ function aff_colonne($str_ligne, $nom_col, $val_col) {
 		$str_ligne = str_replace("!!val_empr!!",aff_emprunteur($val_col),$str_ligne);
 	} elseif ($nom_col=="val_section") {
 		$str_ligne = str_replace("!!".$nom_col."!!",do_liste_section($val_col), $str_ligne);
-	} elseif ($nom_col=="val_statut") {//Il faut mettre l'info de retour si il est empruntÃ©
+	} elseif ($nom_col=="val_statut") {//Il faut mettre l'info de retour si il est emprunté
 		$str_ligne = str_replace("!!".$nom_col."!!",aff_statut_exemplaire($val_col), $str_ligne);
 	} else {
 		$str_ligne = str_replace("!!".$nom_col."!!",$val_col, $str_ligne);
@@ -65,14 +68,14 @@ function aff_titre($id_notice,$id_bulletin) {
 		
 		//c'est une notice
 		if (SESSrights & CATALOGAGE_AUTH)
-			$link = './catalog.php?categ=isbd&id=!!id!!';
+			$link = notice::get_pattern_link();
 		$disp = new mono_display($id_notice,0,$link);
 		
 		
 	} else {
 		//c'est un bulletin
 		if (SESSrights & CATALOGAGE_AUTH) 
-			$link = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
+			$link = serial::get_pattern_link();
 		$disp = new bulletinage_display($id_bulletin,0,$link);
 	}
 	
@@ -119,7 +122,7 @@ function do_liste($rqt, $idsel) {
 		$tmpOpt .= "<option value='" . $value[0] . "'";
 		
 		if ($value[0]==$idsel)
-			//c'est l'option par dÃ©faut
+			//c'est l'option par défaut
 			$tmpOpt .= " selected";
 		
 		//fin de l'option

@@ -1,22 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: do_pret_resa.inc.php,v 1.2 2019-02-20 12:45:53 ngantier Exp $
+// $Id: do_pret_resa.inc.php,v 1.3 2021/12/13 08:30:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// script de prÃªt d'une rÃ©sa validÃ©e
-
+// script de prêt d'une résa validée
+global $class_path;
 require_once($class_path."/ajax_pret.class.php");
 
 function do_pret_resa($id_resa, $force_pret=0) {
-	global $dbh, $msg;
+	global $msg;
 	
 	$return_array = array();
 
 	$query = "select expl_cb, expl_id, resa_idempr, resa_idnotice, resa_idbulletin from exemplaires, resa where id_resa='$id_resa' and resa_cb=expl_cb limit 1";
-	$result = pmb_mysql_query($query, $dbh);
+	$result = pmb_mysql_query($query);
 	if(pmb_mysql_num_rows($result)) {
 		$r = pmb_mysql_fetch_object($result);
 		$id_empr = $r->resa_idempr;
@@ -25,18 +25,18 @@ function do_pret_resa($id_resa, $force_pret=0) {
 		if($r->resa_idnotice) {
 			$display = new mono_display($r->resa_idnotice);
 		}elseif($r->resa_idbulletin) {
-			$display = new bulletinage_display($resa_idbulletin);
+			$display = new bulletinage_display($r->resa_idbulletin);
 		}
 		$libelle = $display->header;
 		
 		$pret = new do_pret();
-		if($force_pret) $force_pret+= 1000; // si action de forcage, on force tous les piÃ¨ges
+		if($force_pret) $force_pret+= 1000; // si action de forcage, on force tous les pièges
 		$return_val = $pret->mode1_check_pieges('', $id_empr, $expl_cb, $expl_id, $force_pret);
 		if(!$return_val['status']) {
-			// pas de piÃ¨ge, le prÃªt est effectuÃ©
+			// pas de piège, le prêt est effectué
 			$pret->confirm_pret($id_empr, $expl_id, 0, 'gestion_standard');
 		} else {
-			// supression du pret temporaire, si crÃ©Ã©
+			// supression du pret temporaire, si créé
 			$pret->del_pret($expl_id);
 		}		
 		$return_array = array(
@@ -50,18 +50,18 @@ function do_pret_resa($id_resa, $force_pret=0) {
 			'libelle' => $libelle,						
 			'info' => $pret
 		);
-	}else { // erreur: RÃ©servation non validÃ©e, ou inexistante
+	}else { // erreur: Réservation non validée, ou inexistante
 		$id_empr = '';
 		$libelle = '';
 		$query = "select resa_idempr, resa_idnotice, resa_idbulletin from resa where id_resa='$id_resa' limit 1";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)) {
 			$r = pmb_mysql_fetch_object($result);
 			$id_empr = $r->resa_idempr;
 			if($r->resa_idnotice) {
 				$display = new mono_display($r->resa_idnotice);	
 			}elseif($r->resa_idbulletin) { 
-				$display = new bulletinage_display($resa_idbulletin);
+				$display = new bulletinage_display($r->resa_idbulletin);
 			}			
 			$libelle = $display->header;
 		}

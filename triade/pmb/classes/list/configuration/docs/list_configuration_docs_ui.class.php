@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_docs_ui.class.php,v 1.2 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: list_configuration_docs_ui.class.php,v 1.3 2021/01/12 07:23:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/list_configuration_ui.class.php");
 
 class list_configuration_docs_ui extends list_configuration_ui {
 		

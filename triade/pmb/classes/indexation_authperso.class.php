@@ -2,20 +2,20 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: indexation_authperso.class.php,v 1.6 2018-06-06 08:21:28 dgoron Exp $
+// $Id: indexation_authperso.class.php,v 1.11 2023/04/06 15:28:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($class_path."/indexation_authority.class.php");
 
-//classe de calcul d'indexation des autoritÃ©s perso...
+//classe de calcul d'indexation des autorités perso...
 class indexation_authperso extends indexation_authority {
 
 	protected $id_authperso;
 	
 	public function __construct($xml_filepath, $table_prefix, $type, $id_authperso) {
 		parent::__construct($xml_filepath, $table_prefix, $type);
-		$this->id_authperso = $id_authperso+0;
+		$this->id_authperso = intval($id_authperso);
 		$this->transform_xml_indexation();
 	}
 	
@@ -24,7 +24,14 @@ class indexation_authperso extends indexation_authority {
 		if(is_array(static::$xml_indexation[$this->type]) && count(static::$xml_indexation[$this->type])){
 			foreach (static::$xml_indexation[$this->type]['FIELD'] as $i=>$field){
 				static::$xml_indexation[$this->type]['FIELD'][$i]['ID'] = str_replace('!!id_authperso!!', $this->id_authperso, $field['ID']);
-				if(is_array($field['TABLE'])){
+				if(isset($field['CALLABLE']) && is_array($field['CALLABLE'])){
+				    foreach ($field['CALLABLE'] as $j=>$callable){
+				        if(!empty($callable['PARAMETERS'])){
+				            static::$xml_indexation[$this->type]['FIELD'][$i]['CALLABLE'][$j]['PARAMETERS'] = str_replace('!!id_authperso!!', $this->id_authperso, $callable['PARAMETERS']);
+				        }
+					}
+				}
+				if(isset($field['TABLE']) && is_array($field['TABLE'])){
 					foreach ($field['TABLE'] as $j=>$table){
 						if(isset($table['LINK']) && is_array($table['LINK'])){
 							foreach ($table['LINK'] as $k=>$link){
@@ -40,7 +47,7 @@ class indexation_authperso extends indexation_authority {
 	
 	protected function get_tab_field_insert($object_id, $infos, $order_fields, $isbd, $lang = '', $autorite = 0) {
 		$authority = static::get_authority_instance($object_id, $this->type);
-		return "(".$authority->get_id().", ".AUT_TABLE_AUTHPERSO.", ".$infos["champ"].", ".$infos["ss_champ"].", ".$order_fields.", '".addslashes(trim($isbd))."', '".addslashes(trim($lang))."', ".$infos["pond"].", ".($autorite*1).")";
+		return "(".$authority->get_id().", ".AUT_TABLE_AUTHPERSO.", ".$infos["champ"].", ".$infos["ss_champ"].", ".$order_fields.", '".addslashes(trim($isbd))."', '".addslashes(trim($lang))."', ".$infos["pond"].", ".(intval($autorite)).")";
 	}
 	
 	protected function get_tab_insert($object_id, $infos, $num_word, $order_fields, $pos) {
@@ -49,9 +56,6 @@ class indexation_authperso extends indexation_authority {
 	}
 	
 	protected static function get_authority_instance($object_id, $object_type) {
-		if(!isset(static::$authorities_instance[$object_type][$object_id])) {
-			static::$authorities_instance[$object_type][$object_id] = new authority(0, $object_id, AUT_TABLE_AUTHPERSO);
-		}
-		return static::$authorities_instance[$object_type][$object_id];
+	    return authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $object_id, 'type_object' => AUT_TABLE_AUTHPERSO]);
 	}
 }

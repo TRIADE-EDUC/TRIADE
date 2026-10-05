@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -56,14 +56,14 @@ if(isset($_POST["create"])) {
 
 
 $libelle=$_POST["saisie_intitule"];
-$sql="SELECT libelle,text FROM ${prefixe}parametrage WHERE libelle='$libelle'";
+$sql="SELECT libelle,text FROM {$prefixe}parametrage WHERE libelle='$libelle'";
 $res=execSql($sql);
 $data=chargeMat($res);
 $nomgrp=$data[0][0];
 $liste_prof=preg_replace('/\{/',"",$data[0][1]);
 $liste_prof=preg_replace('/\}/',"",$liste_prof);
 if ($liste_prof != "") {
-	$sql="SELECT nom,prenom FROM ${prefixe}personnel where pers_id IN ($liste_prof)";
+	$sql="SELECT nom,prenom FROM {$prefixe}personnel where pers_id IN ($liste_prof)";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 }
@@ -77,7 +77,7 @@ if ($liste_prof != "") {
 </tr>
 <?php
 // debut for
-for($i=0;$i<count($data);$i++) { ?>
+for($i=0;$i<countTriade($data);$i++) { ?>
 <tr class="tabnormal" onmouseover="this.className='tabover2'" onmouseout="this.className='tabnormal'">
 	<td ><?php print ucwords($data[$i][0])?></td>
 	<td ><?php print ucwords($data[$i][1])?></td>

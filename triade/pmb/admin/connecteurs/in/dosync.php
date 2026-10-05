@@ -1,26 +1,34 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dosync.php,v 1.11 2017-09-29 14:28:37 apetithomme Exp $
+// $Id: dosync.php,v 1.12 2020/05/13 09:14:47 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path."/connecteurs.class.php");
+global $base_path, $class_path, $msg, $charset;
+global $env, $id, $source_id, $cancel;
+
+require_once $class_path."/connecteurs.class.php";
 
 set_time_limit(0);
 
-function show_progress($percent,$nlu,$ntotal) {
+function show_progress($percent, $nlu, $ntotal, $message='') {
 	global $charset;
 	global $source_id;
-	print "pb = document.getElementById('progress_bar'); pb.removeAttribute('width'); pb.setAttribute('width',pb.width*".(round($percent*100)?round($percent*100):"100").");
+	echo "
+		pb = document.getElementById('progress_bar');
+		pb.removeAttribute('width');
+		pb.setAttribute('width',pb.width*".(round($percent*100)?round($percent*100):"100").");
 		document.getElementById('percent').innerHTML='".round($percent*100)."%';
 		document.getElementById('nlu').innerHTML='".htmlentities($nlu,ENT_QUOTES,$charset)."';
 		document.getElementById('ntotal').innerHTML='".htmlentities($ntotal,ENT_QUOTES,$charset)."';";
+	echo "document.getElementById('sync_message').innerHTML='".htmlentities($message,ENT_QUOTES,$charset)."';";
+	
 	$requete="update source_sync set percent=".round($percent*100)." where source_id=$source_id";
-	$r=pmb_mysql_query($requete);
-    ob_flush();
-    flush();
+	pmb_mysql_query($requete);
+	ob_flush();
+	flush();
 }
 
 function return_error($error_message) {
@@ -28,8 +36,9 @@ function return_error($error_message) {
 				erreur_div.setAttribute('class', 'erreur');
 				erreur_div.setAttribute('id', 'red_erreur_message');
 				erreur_div.innerHTML = 'Erreur: ".addslashes($error_message)."';
-				if (document.getElementById('red_erreur_message'))
+				if (document.getElementById('red_erreur_message')) {
 					document.getElementById('erreurpos').removeChild(document.getElementById('red_erreur_message'));
+				}
 				document.getElementById('erreurpos').appendChild(erreur_div);
 	";
 	echo $result;
@@ -48,14 +57,15 @@ if (isset($env)) {
 
 if ($id) {
 	$contrs=new connecteurs();
-	require_once($base_path."/admin/connecteurs/in/".$contrs->catalog[$id]["PATH"]."/".$contrs->catalog[$id]["NAME"].".class.php");
+	require_once $base_path."/admin/connecteurs/in/".$contrs->catalog[$id]["PATH"]."/".$contrs->catalog[$id]["NAME"].".class.php";
 	eval("\$conn=new ".$contrs->catalog[$id]["NAME"]."(\"".$base_path."/admin/connecteurs/in/".$contrs->catalog[$id]["PATH"]."\");");
-}
-else 
+} else {
 	return_error("Missing ID!");
+}
 
-if (!$source_id)
+if (!$source_id) {
 	return_error("Missing source ID!");
+}
 
 //Traitement en cas de requete d'annulation de synchro
 if (!empty($cancel)) {
@@ -67,9 +77,9 @@ if (!empty($cancel)) {
 	pmb_mysql_query($requete);
 	die();
 }
-	
+
 $conn->get_sources();
-//VÃ©rification qu'il n'y a pas de synchronisation en cours...
+//Vérification qu'il n'y a pas de synchronisation en cours...
 
 $is_already_sync=false;
 $recover_env="";
@@ -115,8 +125,7 @@ if (!$is_already_sync) {
 	if (!$recover) {
 		$requete="insert into source_sync (source_id,nrecu,ntotal,date_sync) values($source_id,0,0,now())";
 		$r=pmb_mysql_query($requete);
-	} 
-	else {
+	} else {
 		$requete="update source_sync set cancel=0 where source_id=$source_id";
 		$r=pmb_mysql_query($requete);
 	}
@@ -142,6 +151,3 @@ if (!$is_already_sync) {
 		}
 	} else return_error($msg["connecteurs_sync_currentexists"]);
 }
-
-
-?>

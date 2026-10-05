@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_empr_statut_ui.class.php,v 1.1 2018-10-12 12:18:37 dgoron Exp $
+// $Id: list_configuration_empr_statut_ui.class.php,v 1.5 2023/03/24 07:44:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/empr/list_configuration_empr_ui.class.php");
 
 class list_configuration_empr_statut_ui extends list_configuration_empr_ui {
 	
@@ -15,10 +13,7 @@ class list_configuration_empr_statut_ui extends list_configuration_empr_ui {
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'statut_libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('statut_libelle');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -45,44 +40,40 @@ class list_configuration_empr_statut_ui extends list_configuration_empr_ui {
 		);
 	}
 	
-	protected function get_cell_content($object, $property) {
-		global $msg;
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('default', 'align', 'center');
+		$this->set_setting_column('statut_libelle', 'align', 'left');
+		$this->set_setting_column('allow_loan', 'datatype', 'boolean');
+		$this->set_setting_column('allow_loan_hist', 'datatype', 'boolean');
+		$this->set_setting_column('allow_book', 'datatype', 'boolean');
+		$this->set_setting_column('allow_opac', 'datatype', 'boolean');
+		$this->set_setting_column('allow_dsi', 'datatype', 'boolean');
+		$this->set_setting_column('allow_dsi_priv', 'datatype', 'boolean');
+		$this->set_setting_column('allow_sugg', 'datatype', 'boolean');
+		$this->set_setting_column('allow_liste_lecture', 'datatype', 'boolean');
+		$this->set_setting_column('allow_dema', 'datatype', 'boolean');
+		$this->set_setting_column('allow_prol', 'datatype', 'boolean');
+		$this->set_setting_column('allow_avis', 'datatype', 'boolean');
+		$this->set_setting_column('allow_tag', 'datatype', 'boolean');
+		$this->set_setting_column('allow_pwd', 'datatype', 'boolean');
+		$this->set_setting_column('allow_self_checkout', 'datatype', 'boolean');
+		$this->set_setting_column('allow_self_checkin', 'datatype', 'boolean');
+		$this->set_setting_column('allow_serialcirc', 'datatype', 'boolean');
+		$this->set_setting_column('allow_scan_request', 'datatype', 'boolean');
+		$this->set_setting_column('allow_contribution', 'datatype', 'boolean');
+	}
 	
-		$content = '';
+	protected function get_default_attributes_format_cell($object, $property) {
 		switch($property) {
 			case 'statut_libelle':
-				if ($object->idstatut>2) {
-					$content .= $object->statut_libelle;
+				if ($object->idstatut<=2) {
+					return array(
+							'style' => 'font-weight:bold;'
+					);
 				}
-				else {
-					$content .= "<strong>".$object->statut_libelle."</strong>";
-				}
-				break;
-			case 'allow_loan':
-			case 'allow_loan_hist':
-			case 'allow_book':
-			case 'allow_opac':
-			case 'allow_dsi':
-			case 'allow_dsi_priv':
-			case 'allow_sugg':
-			case 'allow_liste_lecture':
-			case 'allow_dema':
-			case 'allow_prol':
-			case 'allow_avis':
-			case 'allow_tag':
-			case 'allow_pwd':
-			case 'allow_self_checkout':
-			case 'allow_self_checkin':
-			case 'allow_serialcirc':
-			case 'allow_scan_request':
-			case 'allow_contribution':
-				$content .= $this->get_cell_visible_flag($object, $property);
-				break;
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
 		}
-		return $content;
+		return array();
 	}
 	
 	protected function get_edition_link($object) {

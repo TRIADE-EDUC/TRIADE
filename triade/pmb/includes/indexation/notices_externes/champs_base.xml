@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
 
 <!-- 
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: champs_base.xml,v 1.3 2018-10-19 09:40:16 dgoron Exp $ -->
+$Id: champs_base.xml,v 1.5 2024/04/05 07:39:31 dbellamy Exp $ -->
 
 <indexation>
 
@@ -46,7 +45,7 @@ $Id: champs_base.xml,v 1.3 2018-10-19 09:40:16 dgoron Exp $ -->
 
 	<field name="admin_opac_facette_annee_saisie" id="007">
 		<table>
-			<tablefield unimarcField="210$d">year</tablefield>
+			<tablefield unimarcField="210$d,214$d">year</tablefield>
 		</table>		
 	</field>
 
@@ -113,9 +112,9 @@ $Id: champs_base.xml,v 1.3 2018-10-19 09:40:16 dgoron Exp $ -->
 	<!-- publishers -->	
 	<field name="searcher_publisher" id="019" datatype="publisher" keepEmptyWord="yes">
 		<table>
-			<tablefield id="01" unimarcField="210$c" name="editeur_nom">ed_name</tablefield>
-			<tablefield id="02" unimarcField="210$b" name="editeur_adr1">ed_adr1</tablefield>
-			<tablefield id="05" unimarcField="210$a" name="editeur_ville">ed_ville</tablefield>
+			<tablefield id="01" unimarcField="210$c,214$c" name="editeur_nom">ed_name</tablefield>
+			<tablefield id="02" unimarcField="210$b,214$b" name="editeur_adr1">ed_adr1</tablefield>
+			<tablefield id="05" unimarcField="210$a,214$a" name="editeur_ville">ed_ville</tablefield>
 		</table>
 		<isbd id="09" name="isbd" class_name="editeur"/>
 	</field>

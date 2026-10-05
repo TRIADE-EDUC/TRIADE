@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ if ($_SESSION["membre"] == "menupersonnel") {
 }
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_consul_classe()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
@@ -111,7 +111,7 @@ select_classe(); // creation des options
 <?php
 if ($_POST["saisie_classe"] > 0) {
 	$saisie_classe=$_POST["saisie_classe"];
-	$sql="SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
@@ -119,7 +119,7 @@ if ($_POST["saisie_classe"] > 0) {
 	// nom classe
 	$cl=$data[0][0];
 
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		$fic=$_POST["saisie_classe"];
 		$fichierpdf="./data/pdf_certif/Classe_".suppCaracFichier($cl).".pdf";
 		$fichierpdf2="./data/pdf_certif/Classe2_".suppCaracFichier($cl).".pdf";
@@ -165,7 +165,7 @@ if ($_POST["saisie_classe"] > 0) {
 		$xcoor20=10;
 		$ycoor20+=10;
 		$j=0;
-		for($i=0;$i<count($data);$i++) { // libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email,nom_resp2,prenom_resp2,civ_2
+		for($i=0;$i<countTriade($data);$i++) { // libelle,elev_id,nom,prenom,date_naissance,regime,numero_eleve,code_compta,nomtuteur,prenomtuteur,civ_1,telephone,email,nom_resp2,prenom_resp2,civ_2
 			if ($ii == 45) {
 	                	$pdf->AddPage();
 				$ii=0;
@@ -263,17 +263,17 @@ if($_POST["saisie_classe"] > 0) { ?>
 	<BR><BR><BR>
 	<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" >
 	<tr id='coulBar0' ><td height="2" colspan="3"><b><font   id='menumodule1' >
-	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b></font></font></td>
+	<?php print LANGELE4?> : <font id="color2"><b><?php print $cl?></b></font>&nbsp;&nbsp; <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b></font></font></td>
 	</tr>
 <?php 
-	if( count($data) <= 0 ) {
+	if( countTriade($data) <= 0 ) {
 		print("<tr><td align=center valign=center id='cadreCentral0'><font class=T2>".LANGRECH1."</font></td></tr>");
 	} else {
 ?>
 		<tr ><td bgcolor="yellow" > <B><?php print ucwords(LANGIMP8)?></B></td><td bgcolor="yellow"><B><?php print ucwords(LANGIMP9)?></B></td>
 		<td bgcolor="yellow" width="1%"><b><?php print ucwords(LANGIMP45)?></b></td></tr>
 <?php
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 	?>
 	<tr  class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
 	<td><?php infoBulleEleveSansLoupe($data[$i][1],strtoupper($data[$i][2])); ?></td>
@@ -281,7 +281,7 @@ if($_POST["saisie_classe"] > 0) { ?>
 	<td>
 	<?php 
 			if (getInactifEleve($data[$i][1])) { 
-				print "<img src='image/commun/img_ssl_mini.png' title='Inactif' />&nbsp;";
+				print "&#128164;&nbsp;";
 			}
 	?><input type=button value="<?php print LANGIMP45?>" class="bouton2" onClick="open('module_financier/rib_editer.php?elev_id=<?php print $data[$i][1];?>','pass','width=550,height=370')"  ></td>
 	</tr>
@@ -327,7 +327,7 @@ $pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com");
 
 
 $data=visu_affectation_2('tous');
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$nbeleve=nbEleve($data[$i][0]);
 	$nbelevetotal+=$nbeleve;
 	$nbinterne=nbEleveInterne($data[$i][0]);
@@ -408,7 +408,7 @@ $nbinconnutotal=$nbinconnu=0;
 $nbeleveTotal="0";
 $nblignetotal="0";
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$nbeleve=nbEleve($data[$i][0]);
 	$nbelevetotal+=$nbeleve;
 	$nbinterne=nbEleveInterne($data[$i][0]);

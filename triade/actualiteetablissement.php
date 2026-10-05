@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,22 +32,46 @@ session_start();
 <meta name="Copyright" content="Triade©, 2001" />
 <link rel="shortcut icon" href="./favicon.ico" type="image/icon" />
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
 <script type="text/javascript" src="./librairie_js/lib_defil.js"></script>
 <script type="text/javascript" src="./librairie_js/clickdroit.js"></script>
 <script type="text/javascript" src="./librairie_js/function.js"></script>
 <script type="text/javascript" src="./librairie_js/lib_css.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title></head>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
+<script>
+window.alert = function(msg) { if (msg) alertify.error(msg); };
+function valideNews(e) {
+    var titre = document.querySelector('[name=saisie_titre_news]').value.trim();
+    var contenu = CKEDITOR.instances.editor.getData().replace(/<[^>]*>/g, '').trim();
+    if (titre === '' && contenu === '') {
+        alertify.error('Veuillez saisir un titre et un contenu.');
+        return false;
+    }
+    if (titre === '') {
+        alertify.error('Veuillez saisir un titre.');
+        return false;
+    }
+    if (contenu === '') {
+        alertify.error('Veuillez saisir un contenu.');
+        return false;
+    }
+    return true;
+}
+</script></head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include_once("./librairie_php/lib_licence.php");  ?>
 <?php verifplus("menudeux",$_SESSION["id_pers"],$_SESSION["membre"]); ?>
-<SCRIPT type="text/javascript" <?php print "src='librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT type="text/javascript" <?php print "src='librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include_once("./librairie_php/lib_defilement.php"); ?>
 <?php  $today= dateDMY();  ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h();?>
-<SCRIPT type="text/javascript" <?php print "src='librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<form method='post' action="news_actualite.php">
+<SCRIPT type="text/javascript" <?php print "src='librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<form method='post' action="news_actualite.php" onsubmit="return valideNews(event)">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE2?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -61,33 +85,31 @@ $text=stripslashes($recupMessAdmin[0][6]);
 $id=$recupMessAdmin[0][0];
 $title=stripslashes($recupMessAdmin[0][5]);
 $title=preg_replace('/"/','&quot;',$title);
-brmozilla($_SESSION["navigateur"]); 
-
 ?>
-<p align="left"><font color="#000000">
-	&nbsp;&nbsp;<?php print LANGTE1 ?> : <input type="text"  name="saisie_titre_news" maxlength=30  size=35 value="<?php print $title ?>" /><br />
-<center>
-<br />
-<textarea id="editor" name="resultat" ><?php print stripslashes($text) ?></textarea>
-<script type="text/javascript">
-var colorGRAPH='<?php print GRAPH ?>';
-//<![CDATA[
-CKEDITOR.replace( 'editor', {
-	height: '300px' , language:'<?php print ($_SESSION["langue"] == "fr") ? "fr" : "en";  ?>' 
-	} );
-//]]>
-
-</script>
-</center><br>
-<br />
-<center>
-<script type="text/javascript" >buttonMagicSubmit("<?php print LANGBT2?>","Submit"); //text,nomInput</script>
-</center><br><br>
-</font>
-<input type='hidden' name="id" value="<?php print $id ?>" />
-</form><br /></font></p>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
+<div class="news-wrap">
+    <div class="news-card">
+        <div class="news-field">
+            <span class="news-label"><?php print LANGTE1 ?> :</span>
+            <input type="text" class="news-input" name="saisie_titre_news" maxlength="30"
+                   value="<?php print $title ?>">
+        </div>
+        <div class="news-editor-wrap">
+            <textarea id="editor" name="resultat"><?php print stripslashes($text) ?></textarea>
+            <script type="text/javascript">
+            var colorGRAPH='<?php print GRAPH ?>';
+            CKEDITOR.replace('editor', {
+                height: '300px',
+                language: '<?php print ($_SESSION["langue"] == "fr") ? "fr" : "en"; ?>'
+            });
+            </script>
+        </div>
+    </div>
+    <div class="news-submit-row">
+        <script type="text/javascript">buttonMagicSubmit("<?php print LANGBT2 ?>","Submit");</script>
+    </div>
+    <input type="hidden" name="id" value="<?php print $id ?>">
+</div>
+</form>
 <!-- // fin  -->
 </td></tr></table>
      <?php

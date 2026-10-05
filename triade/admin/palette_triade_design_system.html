@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palette de Composants - TRIADE 2026</title>
+    <!-- Import de la police Electrolize pour respecter l'identité Triade -->
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           TRIADE - DESIGN SYSTEM 2026 (Refonte globale)
+           ========================================================================== */
+
+        /* ── 1. VARIABLES GLOBALES (Thème) ── */
+        :root {
+            /* Couleurs Principales */
+            --primary: #080A66;
+            --primary-hover: #1a237e;
+            --primary-light: #eef0f8;
+            --secondary: #3949ab;
+            --secondary-hover: #283593;
+            
+            /* Couleurs de statut */
+            --danger: #c62828;
+            --danger-hover: #e53935;
+            --danger-bg: #fff9f9;
+            --warning: #f9c600;
+            --warning-hover: #ffe54c;
+            --warning-bg: #fff8e1;
+            --success: #2e7d32;
+            --success-bg: #e8f5e9;
+            --alert-orange: #e65100;
+            --alert-orange-bg: #fff3e0;
+
+            /* Niveaux de gris & Textes */
+            --text-main: #333333;
+            --text-muted: #555555;
+            --text-light: #888888;
+            --bg-body: #f0f2fa;
+            --bg-card: #ffffff;
+            
+            /* Bordures & Ombres */
+            --border-color: #c5cae9;
+            --border-light: #eef0f8;
+            --border-radius-sm: 4px;
+            --border-radius-md: 6px;
+            --border-radius-lg: 8px;
+            --border-radius-xl: 10px;
+            --shadow-sm: 0 1px 4px rgba(8, 10, 102, 0.06);
+            --shadow-md: 0 2px 10px rgba(8, 10, 102, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.22);
+
+            /* Typographie */
+            --font-base: 'Electrolize', 'Trebuchet MS', Arial, sans-serif;
+            --text-xs: 10px;
+            --text-sm: 11px;
+            --text-md: 12px;
+            --text-lg: 13px;
+            --text-xl: 14px;
+            --text-xxl: 15px;
+        }
+
+        /* ── 2. RESET & BASE ── */
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg-body);
+            margin: 0; padding: 0;
+            font-family: var(--font-base);
+            font-size: var(--text-lg);
+            color: var(--text-main);
+        }
+        a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+
+        /* ── 3. UTILITAIRES DE MISE EN PAGE ── */
+        .d-flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .flex-column { flex-direction: column; }
+        .align-center { align-items: center; }
+        .align-start { align-items: flex-start; }
+        .align-baseline { align-items: baseline; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .flex-1 { flex: 1; }
+        .flex-shrink-0 { flex-shrink: 0; }
+
+        .gap-xs { gap: 4px; }
+        .gap-sm { gap: 8px; }
+        .gap-md { gap: 12px; }
+        .gap-lg { gap: 16px; }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-bold { font-weight: 700; }
+        .text-muted { color: var(--text-muted); }
+        .text-light { color: var(--text-light); }
+        .text-primary { color: var(--primary); }
+        .text-danger { color: var(--danger); }
+        .text-success { color: var(--success); }
+        .text-uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .mt-sm { margin-top: 8px; }
+        .mb-sm { margin-bottom: 8px; }
+        .mb-md { margin-bottom: 14px; }
+
+        /* ── 4. COMPOSANTS GLOBAUX ── */
+
+        /* Barres d'outils */
+        .toolbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .toolbar-light { background: var(--primary-light); }
+        .toolbar-dark { background: var(--primary); color: #fff; border: none; }
+        .toolbar-title { font-size: var(--text-lg); font-weight: 700; margin: 0; }
+
+        /* Cartes */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .card-header {
+            background: var(--primary-light);
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin: 0;
+        }
+        .card-body { padding: 14px 16px; }
+
+        /* Formulaires */
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .form-row:last-child { border-bottom: none; }
+        .form-label {
+            font-size: var(--text-md);
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 5px 10px;
+            font-size: var(--text-md);
+            color: var(--text-main);
+            background: #fff;
+            font-family: var(--font-base);
+            flex: 1;
+            min-width: 150px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control-auto { flex: none; width: auto; }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(8, 10, 102, 0.1);
+        }
+        select.form-control { cursor: pointer; }
+
+        /* Boutons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 14px;
+            font-size: var(--text-md);
+            font-weight: 600;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-family: var(--font-base);
+            border: 1px solid transparent;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s, opacity 0.15s;
+            white-space: nowrap;
+        }
+        .btn:hover { text-decoration: none; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+        .btn-secondary { background: var(--primary-light); color: var(--primary); border-color: var(--border-color); }
+        .btn-secondary:hover:not(:disabled) { background: var(--border-color); color: var(--primary-hover); }
+
+        .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
+
+        .btn-warning { background: var(--warning); color: var(--primary); border-color: var(--warning); }
+        .btn-warning:hover:not(:disabled) { background: var(--warning-hover); }
+
+        .btn-action { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+        .btn-action:hover:not(:disabled) { background: var(--secondary-hover); }
+
+        /* Tableaux */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: var(--text-md);
+        }
+        .table th {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: var(--text-sm);
+            font-weight: 700;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+        .table th.text-center, .table td.text-center { text-align: center; }
+        .table td {
+            padding: 8px 12px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+        .table tbody tr { transition: background 0.12s; }
+        .table tbody tr:hover td { background: var(--primary-light) !important; }
+        .table-striped tbody tr:nth-child(even) td { background: #f8f9fd; }
+        .table tbody tr:last-child td { border-bottom: none; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: var(--text-xs);
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .badge-primary { background: var(--primary-light); color: var(--primary); border: 1px solid var(--border-color); }
+        .badge-success { background: var(--success-bg); color: var(--success); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger); }
+        .badge-warning { background: var(--warning-bg); color: var(--alert-orange); }
+
+        /* Alertes */
+        .alert {
+            padding: 10px 14px;
+            border-radius: var(--border-radius-md);
+            font-size: var(--text-md);
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+        }
+        .alert-warning { background: var(--alert-orange-bg); border-color: #ffb74d; color: var(--alert-orange); font-weight: 600; }
+        .alert-info { background: #fffbe6; border-color: #f5c842; color: #5a4000; }
+
+
+        /* ==========================================================================
+           STYLES SPECIFIQUES AU STYLEGUIDE (Ne pas inclure en prod)
+           ========================================================================== */
+        .styleguide-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .sg-header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .sg-header h1 { color: var(--primary); margin: 0 0 10px 0; font-size: 24px; }
+        .sg-header p { color: var(--text-muted); margin: 0; }
+        .sg-section {
+            margin-bottom: 40px;
+        }
+        .sg-section-title {
+            font-size: 16px;
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+        .demo-box {
+            background: var(--bg-body);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="styleguide-container">
+    <div class="sg-header">
+        <h1>Design System TRIADE 2026</h1>
+        <p>Aperçu des composants factorisés prêts à être utilisés sur l'ensemble du logiciel.</p>
+    </div>
+
+    <!-- BOUTONS -->
+    <div class="sg-section">
+        <h2 class="sg-section-title">1. Boutons (Buttons)</h2>
+        <div class="demo-box d-flex flex-wrap gap-md align-center">
+            <button class="btn btn-primary">Action Principale</button>
+            <button class="btn btn-secondary">Action Secondaire</button>
+            <button class="btn btn-action">Envoyer Message</button>
+            <button class="btn btn-warning">Attention</button>
+            <button class="btn btn-danger">Supprimer</button>
+            <button class="btn btn-primary" disabled>Désactivé</button>
+        </div>
+    </div>
+
+    <!-- ALERTES ET BADGES -->
+    <div class="sg-section">
+        <h2 class="sg-section-title">2. Alertes & Badges (Alerts & Badges)</h2>
+        <div class="demo-box">
+            <div class="d-flex flex-wrap gap-sm mb-md">
+                <span class="badge badge-primary">Matière</span>
+                <span class="badge badge-success">Validé</span>
+                <span class="badge badge-warning">En attente</span>
+                <span class="badge badge-danger">Retard / Non fait</span>
+            </div>
+            
+            <div class="alert alert-info">
+                <strong>Information :</strong> N'oubliez pas de remplir le cahier de texte avant vendredi.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Attention :</strong> Ce compte administrateur est inactif.
+            </div>
+        </div>
+    </div>
+
+    <!-- CARTES ET BARRES D'OUTILS -->
+    <div class="sg-section">
+        <h2 class="sg-section-title">3. Cartes & Barres d'Outils (Cards & Toolbars)</h2>
+        <div class="demo-box">
+            
+            <!-- Toolbar Claire -->
+            <div class="toolbar">
+                <span class="toolbar-title text-primary">Filtres de recherche</span>
+                <div class="flex-1"></div>
+                <select class="form-control form-control-auto">
+                    <option>Toutes les classes</option>
+                    <option>6ème A</option>
+                </select>
+                <button class="btn btn-secondary">Actualiser</button>
+            </div>
+
+            <!-- Toolbar Foncée -->
+            <div class="toolbar toolbar-dark mb-md">
+                <span class="toolbar-title">Emploi du temps</span>
+                <div class="flex-1"></div>
+                <button class="btn btn-warning">Imprimer</button>
+            </div>
+
+            <!-- Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Paramètres de l'établissement</h3>
+                    <button class="btn btn-action">Modifier</button>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mt-0">Configurez ici les informations de base de votre structure.</p>
+                    <div class="d-flex gap-lg flex-wrap mt-sm">
+                        <div class="flex-1">
+                            <strong>Nom :</strong> Collège Victor Hugo<br>
+                            <strong>Ville :</strong> Paris
+                        </div>
+                        <div class="flex-1 text-right">
+                            <span class="badge badge-success">Licence Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FORMULAIRES -->
+    <div class="sg-section">
+        <h2 class="sg-section-title">4. Formulaires (Forms)</h2>
+        <div class="demo-box card">
+            <div class="card-body">
+                <div class="form-row">
+                    <label class="form-label">Nom du groupe <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: Soutien Maths">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Matière / Catégorie</label>
+                    <select class="form-control">
+                        <option>Mathématiques</option>
+                        <option>Français</option>
+                        <option>Histoire-Géo</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Description rapide</label>
+                    <input type="text" class="form-control">
+                    <button class="btn btn-primary">Rechercher</button>
+                </div>
+                <div class="d-flex justify-center gap-sm mt-md">
+                    <button class="btn btn-secondary">Annuler</button>
+                    <button class="btn btn-primary">Enregistrer les modifications</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLEAUX -->
+    <div class="sg-section">
+        <h2 class="sg-section-title">5. Tableaux de données (Tables)</h2>
+        <div class="demo-box">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Élève</th>
+                            <th>Classe</th>
+                            <th>Motif</th>
+                            <th class="text-center">Statut</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12/10/2026</td>
+                            <td><strong>Dupont Jean</strong></td>
+                            <td>6ème A</td>
+                            <td class="text-muted">Absence maladie</td>
+                            <td class="text-center"><span class="badge badge-success">Justifié</span></td>
+                            <td class="text-right">
+                                <button class="btn btn-secondary">Consulter</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>14/10/2026</td>
+                            <td><strong>Martin Sophie</strong></td>
+                            <td>4ème B</td>
+                            <td class="text-muted">Retard (Bus)</td>
+                            <td class="text-center"><span class="badge badge-warning">Non justifié</span></td>
+                            <td class="text-right">
+                                <button class="btn btn-secondary">Consulter</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>15/10/2026</td>
+                            <td><strong>Kante Ali</strong></td>
+                            <td>3ème C</td>
+                            <td class="text-muted">Exclusion de cours</td>
+                            <td class="text-center"><span class="badge badge-danger">Sanction</span></td>
+                            <td class="text-right">
+                                <button class="btn btn-secondary">Consulter</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

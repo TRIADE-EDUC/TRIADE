@@ -5,8 +5,12 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_article.xml,v 1.1 2015-06-15 12:55:33 pmbs Exp $ -->
+$Id: cms_module_common_datasource_article.xml,v 1.3 2021/03/16 14:39:15 gneveu Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_article">Manual selector of an article</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_reader_status">Sélection depuis une rubrique et un champ perso comparé au statut de l'emprunteur</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_reader_category">Sélection depuis une rubrique et un champ perso comparé à la catégorie de l'emprunteur</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_search_segment">Sélection depuis une rubrique et un champ perso comparé au segment de recherche</entry>
+	<entry code="cms_module_common_selector_article_by_section_and_cp_and_search_universe">Sélection depuis une rubrique et un champ perso comparé à l'univers de recherche</entry>
 </XMLlist>

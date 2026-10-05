@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SearchController.js,v 1.16 2018-10-12 13:13:51 dgoron Exp $
+// $Id: SearchController.js,v 1.21 2021/05/18 09:35:16 arenou Exp $
 
 define(['dojo/_base/declare',
         'dijit/layout/ContentPane',
@@ -64,8 +64,10 @@ define(['dojo/_base/declare',
 					for (var j in children[i].children) {
 						if (children[i].children[j].nodeName == 'OPTION') {
 							this.store.put({
-								id: children[i].children[j].value,
+								id: 'parent_' + i + '_children_' + children[i].children[j].value,
+								value: children[i].children[j].value,
 								label: children[i].children[j].label,
+								authperso: (domAttr.get(children[i].children[j], 'data-authperso_id') ? domAttr.get(children[i].children[j], 'data-authperso_id') : ""),
 								parent: 'parent_' + i,
 								leaf: true
 							});
@@ -73,8 +75,9 @@ define(['dojo/_base/declare',
 					}
 				} else if ((children[i].nodeName == 'OPTION') && (children[i].value)) {
 					this.store.put({
-						id: children[i].value,
+						id: 'root_' + i + "_children_" + children[i].value,
 						label: children[i].label,
+                        value: children[i].value,
 						parent: 'root',
 						leaf: true
 					});
@@ -91,7 +94,19 @@ define(['dojo/_base/declare',
 			domConstruct.place('<h3>' + this.getTreeTitle() + '</h3>', this.contentTree.id);
 			
 			// Expand/Collapse all
-			domConstruct.place('<span id="search_fields_tree_expandall" class="liLike"><img class="dijitTreeExpando dijitTreeExpandoClosed" data-dojo-attach-point="expandoNode" src="'+pmbDojo.images.getImage('expand_all.gif')+'"></span><span id="search_fields_tree_collapseall" class="liLike"><img class="dijitTreeExpando dijitTreeExpandoOpened" data-dojo-attach-point="expandoNode" src="'+pmbDojo.images.getImage('collapse_all.gif')+'"></span><div class="row"></div>', this.contentTree.id);
+			domConstruct.place('<span id="search_fields_tree_expandall" class="liLike"><img class="dijitTreeExpando dijitTreeExpandoClosed" data-dojo-attach-point="expandoNode" src="'+pmbDojo.images.getImage('expand_all.gif')+'"></span><span id="search_fields_tree_collapseall" class="liLike"><img class="dijitTreeExpando dijitTreeExpandoOpened" data-dojo-attach-point="expandoNode" src="'+pmbDojo.images.getImage('collapse_all.gif')+'"></span>', this.contentTree.id);
+			
+			// Filtre rapide
+			this.input = domConstruct.create('input', {
+				type : 'text',
+				id : 'fast_filter_input',
+				placeholder : pmbDojo.messages.getMessage('admin_parameters', 'admin_param_edit_input_placeholder')
+			}, this.contentTree.id, 'last');
+			on(this.input, 'keyup', lang.hitch(this, this.launchFilter));
+			
+			// Div row
+			domConstruct.place('<div class="row"></div>', this.contentTree.id);
+			
 			var model = new ObjectStoreModel({
 				store: this.store,
 				query: { id: 'root'},
@@ -99,10 +114,10 @@ define(['dojo/_base/declare',
 					return !item.leaf;
 				}
 			});
-			var tree = new SearchFieldsTree({model: model, searchController: this});
-			tree.placeAt(this.contentTree);
-			on(dojo.byId('search_fields_tree_expandall'), 'click', function() {tree.expandAll();});
-			on(dojo.byId('search_fields_tree_collapseall'), 'click', function() {tree.collapseAll();});
+			this.tree = new SearchFieldsTree({model: model, searchController: this});
+			this.tree.placeAt(this.contentTree);
+			on(dojo.byId('search_fields_tree_expandall'), 'click', lang.hitch(this,function(){this.tree.expandAll()}));
+			on(dojo.byId('search_fields_tree_collapseall'), 'click', lang.hitch(this,function(){this.tree.collapseAll()}));
 
 			var search_perso = dojo.byId('search_perso');
 			if(search_perso){
@@ -131,6 +146,7 @@ define(['dojo/_base/declare',
 				}
 				this.initDnd();
 				this.updateDeleteButtons();
+				this.updateSelectorDate();
 			} else {
 				domStyle.set(form, 'display', 'none');
 				domConstruct.place('<span class="saisie-contenu" id="search_fields_no_selected_fields">' + pmbDojo.messages.getMessage('search', 'search_fields_no_selected_fields') + '</span>',this.contentForm.id);
@@ -175,7 +191,7 @@ define(['dojo/_base/declare',
 		
 		declareItems: function(node, index, nodeList) {
 			domClass.add(node, 'dojoDndItem');
-			// On met une poign�e !
+			// On met une poignée !
 			domConstruct.place('<i class="fa fa-arrows"></i>', node.childNodes[0]);
 			domStyle.set(node.childNodes[0], 'cursor', 'move');
 			domAttr.set(node, 'search_field_index', index);
@@ -201,6 +217,17 @@ define(['dojo/_base/declare',
 				}
 			}, this);
 		},
+
+		updateSelectorDate: function() {
+			this.searchFieldsList.forEach(function(node, index, nodeList){
+				var selector = query('select[name^="op_"]', node);
+				if (selector.length && selector[0]) {
+					on(selector[0], 'change', lang.hitch(this, function() {
+						this.getFormInfos();
+					}));
+				}
+			}, this);
+		},
 		
 		createJsonDataInput: function(e) {
 			domConstruct.create('input', {
@@ -208,6 +235,46 @@ define(['dojo/_base/declare',
 				name: 'form_json_data',
 				value: domForm.toJson(e.target)
 			}, e.target);
+		},
+		
+		launchFilter : function() {
+			// Les TreeNode ne sont présents dans l'arbre DOM que si tout est déplié
+			this.tree.expandAll().then(lang.hitch(this,function(){
+				// Du coup, quand c'est bon on récupère la saisie dans le filtre
+				let inputValue = this.input.value.toLowerCase();
+				// On cherche les items dans le sore
+				let searchedItems = this.store.query({label : new RegExp(inputValue,"i")})
+				let focused = [];
+				// Pour chaque item, on va chercher l'objet associé et ses parents.
+				for(let i=0 ; i<searchedItems.length ; i++){
+					let treeNode = this.tree.getNodesByItem(searchedItems[i].id);
+					focused = [].concat(focused,treeNode[0].getTreePath());
+				}
+				// Maintenant, on a tous les élements que l'on veut voir afficher...
+				// Petit parcours récursif pour gérer ca
+				this.showHideSearch(focused);
+			}));
+		},
+		
+		showHideSearch : function(focused,id='root'){
+			// On récupère les enfants
+			let children = this.store.getChildren({'id' : id});
+			children.forEach(lang.hitch(this,function(element){
+				let displayField = 'none';
+				// Pour chaque, on regarde s'il faut l'afficher ou non
+				for(let i=0 ; i<focused.length ; i++){
+					if(element.id == focused[i].id || element.id == "root"){
+						displayField = "block";
+						break;
+					}
+				}
+				// Dans tous les cas, il faut manipuler le DOM...
+				let treeNodes = this.tree.getNodesByItem(element.id);
+				let treeNode = treeNodes[0];
+				treeNode.domNode.style.display = displayField;
+				// Petite récursion pour être sur de son coup !
+				this.showHideSearch(focused,element.id);
+			}));
 		}
 	});
 });

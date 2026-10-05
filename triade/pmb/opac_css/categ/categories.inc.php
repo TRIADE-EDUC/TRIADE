@@ -1,19 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categories.inc.php,v 1.37 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: categories.inc.php,v 1.40 2024/04/08 13:07:48 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($opac_show_categ_browser_home_id_thes)) $opac_show_categ_browser_home_id_thes = '';
-// affichage du sommaire gÃ©nÃ©ral des catÃ©gories
+global $base_path, $msg, $charset, $lang;
+global $opac_show_categ_browser_home_id_thes, $id_thes, $opac_thesaurus_defaut, $opac_categories_max_display;
+global $opac_categories_sub_mode, $opac_thesaurus, $opac_categories_columns, $opac_categories_sub_display;
+global $tpl_div_categories, $tpl_div_category, $tpl_subcategory;
+
+// affichage du sommaire général des catégories
 
 require_once ($base_path.'/classes/thesaurus.class.php');
 require_once ($base_path.'/classes/noeuds.class.php');
 
 
-//Si l'on dÃ©finit une liste de thÃ©saurus Ã  afficher Ã  l'Opac on la reprend
+//Si l'on définit une liste de thésaurus à afficher à l'Opac on la reprend
 if ($opac_show_categ_browser_home_id_thes) {
 	$opac_show_categ_browser_home_id_thes_tab=explode(",",$opac_show_categ_browser_home_id_thes);
 }else{
@@ -23,13 +27,13 @@ if ($opac_show_categ_browser_home_id_thes) {
 //recuperation du thesaurus session 
 if (!$id_thes){
 	if(count($opac_show_categ_browser_home_id_thes_tab)){
-		$id_thes=$opac_show_categ_browser_home_id_thes_tab[0];//Je reprends le premier thÃ©saurus de la liste si pas de thÃ©saurus trouvÃ©
+		$id_thes=$opac_show_categ_browser_home_id_thes_tab[0];//Je reprends le premier thésaurus de la liste si pas de thésaurus trouvé
 	}else{
 		$id_thes = thesaurus::getSessionThesaurusId();
 	}
 }
 
-//Si tous thÃ©saurus selectionnÃ© en session, on prend celui par dÃ©faut
+//Si tous thésaurus selectionné en session, on prend celui par défaut
 if ($id_thes == '-1'){
 	$id_thes = $opac_thesaurus_defaut;
 }
@@ -37,10 +41,10 @@ if ($id_thes == '-1'){
 thesaurus::setSessionThesaurusId($id_thes);
 $thes = new thesaurus($id_thes);
 	
-//on positionne le parent comme Ã©tant le noeud racine du thesaurus
+//on positionne le parent comme étant le noeud racine du thesaurus
 $parent = $thes->num_noeud_racine;
 
-// on constitue un tableau avec les catÃ©gories Ã  afficher
+// on constitue un tableau avec les catégories à afficher
 $requete = "select ";
 $requete.= "noeuds.id_noeud AS num_noeud, noeuds.num_renvoi_voir, noeuds.num_thesaurus,";
 if(($lang==$thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false)){
@@ -62,10 +66,10 @@ if(($lang==$thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsL
 		$requete.= "and if (catlg.num_noeud is null, catdef.libelle_categorie not like '~%', catlg.libelle_categorie not like '~%') ";
 }
 $requete.= "order by libelle_categorie limit ".$opac_categories_max_display;
-$result = pmb_mysql_query($requete, $dbh);
+$result = pmb_mysql_query($requete);
 
 while ($level0 = pmb_mysql_fetch_object($result)) {
-	// mise en forme de la catÃ©gorie chapeau
+	// mise en forme de la catégorie chapeau
 	if(!$level0->num_renvoi_voir) {
 		$id = $level0->num_noeud;
 		$link = $level0->libelle_categorie;
@@ -74,7 +78,7 @@ while ($level0 = pmb_mysql_fetch_object($result)) {
 		$link =  '<i>'.$level0->libelle_categorie.'@</i>';
 	}
 			
-	// Si il y a prÃ©sence d'un commentaire affichage du layer					
+	// Si il y a présence d'un commentaire affichage du layer					
 	$result_com = categorie::zoom_categ($id, $level0->comment_public);	
 	
 	$categ = "<a href='./index.php?&lvl=categ_see&id=$id&main=1&id_thes=".$level0->num_thesaurus."'".$result_com['java_com'].">$link</a>";
@@ -99,7 +103,7 @@ while ($level0 = pmb_mysql_fetch_object($result)) {
 			$requete.= "and if (catlg.num_noeud is null, catdef.libelle_categorie not like '~%', catlg.libelle_categorie not like '~%') ";
 	}
 	$requete.= "order by ".$opac_categories_sub_mode." limit ".$opac_categories_sub_display;
-	$result_bis = pmb_mysql_query($requete, $dbh);
+	$result_bis = pmb_mysql_query($requete);
 
 
 	$child = array();
@@ -111,7 +115,7 @@ while ($level0 = pmb_mysql_fetch_object($result)) {
 			$id = $sub_categ->num_renvoi_voir;
 			$link =  '<i>'.$sub_categ->libelle_categorie.'@</i>';
 		}
-		// Si il y a prÃ©sence d'un commentaire affichage du layer					
+		// Si il y a présence d'un commentaire affichage du layer					
 		$result_com = categorie::zoom_categ($id, $sub_categ->comment_public);
 										
 		$child[] = "<a href='./index.php?lvl=categ_see&id=$id&main=1&id_thes=".$sub_categ->num_thesaurus."'".$result_com['java_com'].">".$link."</a>".$result_com['zoom'];
@@ -121,7 +125,7 @@ while ($level0 = pmb_mysql_fetch_object($result)) {
 							'child' => $child);						
 }	
 	
-//affichage des liens vers les autres thÃ©saurus 
+//affichage des liens vers les autres thésaurus 
 $liste_thesaurus = thesaurus::getThesaurusList($opac_show_categ_browser_home_id_thes);
 if($opac_show_categ_browser_home_id_thes_tab){
 	$liste_thesaurus_tmp=array();
@@ -138,21 +142,22 @@ if($opac_show_categ_browser_home_id_thes_tab){
 }
 $liens_thesaurus = '';
 
-if ($opac_thesaurus != 0) {	 //la liste des thesaurus n'est pas affichÃ©e en mode monothesaurus
+if ($opac_thesaurus != 0) {	 //la liste des thesaurus n'est pas affichée en mode monothesaurus
 	$liens_thesaurus.= "<ul class='search_tabs'>";
 	foreach($liste_thesaurus as $id_thesaurus=>$libelle_thesaurus) {
 		$liens_thesaurus.= '<li ';
 		if ($id_thesaurus == $id_thes) 
-			$liens_thesaurus.= "id='current'>".htmlentities($libelle_thesaurus,ENT_QUOTES, $charset)."</li>\n" ;
+			$liens_thesaurus.= "id='current' aria-current='page'>".htmlentities($libelle_thesaurus,ENT_QUOTES, $charset)."</li>\n" ;
 		else
 			$liens_thesaurus.= "><a href='./index.php?id_thes=".$id_thesaurus."'>".htmlentities($libelle_thesaurus,ENT_QUOTES, $charset)."</a></li>\n" ;
 	}
 	$liens_thesaurus.= "</ul>";
 }	
 
-$tpl_div_categories=str_replace("<!-- liens_thesaurus -->",$liens_thesaurus,$tpl_div_categories);
+$tpl_div_categories=str_replace("<!-- title -->", common::format_title($msg['categories'], false, 'categories'),$tpl_div_categories);
+$tpl_div_categories=str_replace("<!-- liens_thesaurus -->", $liens_thesaurus,$tpl_div_categories);
 
-// PrÃ©paration Ã  l'affichage
+// Préparation à l'affichage
 $toprint = $tpl_div_categories;
 $toprint_rootcategories = "";
 $to_jump=0;

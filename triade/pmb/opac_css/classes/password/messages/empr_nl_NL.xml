@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour PMB
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: empr_nl_NL.xml,v 1.1.2.2 2024/11/22 11:33:24 dgoron Exp $
+-->
+
+<XMLlist>
+	<entry code="min_length_desc">Longueur minimum</entry>
+	<entry code="min_uppercase_chars_desc">Nombre minimum de majuscules</entry>
+	<entry code="min_lowercase_chars_desc">Nombre minimum de minuscules</entry>
+	<entry code="min_numbers_desc">Nombre minimum de chiffres</entry>
+	<entry code="min_special_chars_desc"><![CDATA[Nombre minimum de caractères spéciaux <br />(Lister les caractères spéciaux sans délimiteur)]]></entry>
+	<entry code="is_different_from_login_desc">Différent de l'identifiant</entry>
+	<entry code="is_different_from_year_desc">Différent de l'année de naissance</entry>
+    <entry code="custom_regexp_desc"><![CDATA[Expression régulière <br />(Sans délimiteur)]]></entry>
+    <entry code="min_length_error">Votre mot de passe doit comporter au minimum %s caractère(s).</entry>
+    <entry code="min_uppercase_chars_error">Votre mot de passe doit comporter au minimum %s majuscule(s).</entry>
+    <entry code="min_lowercase_chars_error">Votre mot de passe doit comporter au minimum %s minuscule(s).</entry>
+    <entry code="min_numbers_error">Votre mot de passe doit comporter au minimum %s chiffre(s).</entry>
+    <entry code="min_special_chars_error"><![CDATA[Votre mot de passe doit comporter au minimum VAR:size caractère(s) spécial(aux) (Voici la liste des caractère(s) spécial(aux) : VAR:chars ).]]></entry>
+    <entry code="is_different_from_login_error">Votre mot de passe doit être différent de votre identifiant.</entry>
+    <entry code="is_different_from_year_error">Votre mot de passe doit être différent de votre année de naissance.</entry>
+    <entry code="custom_regexp_error">Votre mot de passe doit respecter l'expression régulière : "/%s/".</entry>
+</XMLlist>

@@ -1,6 +1,11 @@
-<!-- $Id: bulletin_without_record_extended_display.tpl.html,v 1.20 2017-12-18 10:36:33 dgoron Exp $ -->
+<!-- $Id: bulletin_without_record_extended_display.tpl.html,v 1.23.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
 
 <div id="noticeNot">
+    
+    {% title %}
+        {{ parent.tit1 }}{% if parent.tit4 %} : {{parent.tit4}}{% endif %}, {{ bulletin.bulletin_numero }}. {{ bulletin.bulletin_titre }}{% if bulletin.mention_date %} - {{ bulletin.mention_date }}{% endif %}
+    {% endtitle %}
+    
 	<div class="parentNot">
 		<div id="blocNotice_descr">
 			
@@ -22,7 +27,7 @@
 				<!-- Contenu de la notice -->
 				<div class="notice_contenu">
 					{{ record.display_coins_span }}
-					<table class="descr_notice">
+					<table class="descr_notice" role="presentation">
 						<tbody>
 							<tr>
 								<td class="labelNot">
@@ -83,10 +88,10 @@
 					{% if record.cart_allow %}
 						{% if global.opac_cart_only_for_subscriber == "1" %}
 						      {% if session_vars.id_empr %}
-								<a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+								<a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
 						      {% endif %}
 						{% else %}
-						      <a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" target="cart_info" title="{{msg.cart_add_result_in}}">{{msg.cart_add_result_in}}</a>
+						      <a href="cart_info.php?id={{bulletin.bulletin_id}}&lvl=analysis" id="add_result_cart" target="cart_info">{{msg.cart_add_result_in}}</a>
 						{% endif %}
 					{% endif %}
 			{% endif %}

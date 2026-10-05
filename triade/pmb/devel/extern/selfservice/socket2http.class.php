@@ -1,11 +1,11 @@
 <?php
 /**
  * \addtogroup server Serveur passerelle
- * \brief ImplÃ©mentation d'une passerelle serveur de socket vers un serveur http
+ * \brief Implémentation d'une passerelle serveur de socket vers un serveur http
  * 
- * L'adresse ::http_url_login est utilisÃ©e pour s'autentifier par cookie,
- * l'adresse ::http_url est utilisÃ©e pour appeller le script qui traite le message reÃ§u par la socket.
- * Le message est transmis en mÃ©thode POST sous la forme message=message_recu.\n
+ * L'adresse ::http_url_login est utilisée pour s'autentifier par cookie,
+ * l'adresse ::http_url est utilisée pour appeller le script qui traite le message reçu par la socket.
+ * Le message est transmis en méthode POST sous la forme message=message_recu.\n
  * Exemple d'utilisation :
  * \verbatim
 $s=new socket2http();
@@ -27,10 +27,10 @@ if (!$ret) print $s->error_message."\n";
 /**
  * \brief Passerelle socket vers un serveur http
  * 
- * La classe implÃ©ment un serveur de socket qui transfÃ¨re Ã  un serveur http les donnÃ©es reÃ§ues via cette socket.\n
- * La rÃ©ponse du serveur http est retransmise intÃ©gralement au client de la socket.
+ * La classe implément un serveur de socket qui transfère à un serveur http les données reçues via cette socket.\n
+ * La réponse du serveur http est retransmise intégralement au client de la socket.
  * @author ftetart
- * \date FÃ©vrier 2008
+ * \date Février 2008
  * \ingroup server
  */
 class socket2http {
@@ -41,27 +41,27 @@ class socket2http {
 	/**
 	 * \brief Variables de login par cookie
 	 * 
-	 * Variables a passer par POST au dÃ©part pour initier la session par cookie. C'est un tableau "nom de variable"=>"valeur"\n
+	 * Variables a passer par POST au départ pour initier la session par cookie. C'est un tableau "nom de variable"=>"valeur"\n
 	 * Exemple : array("user"=>"ftetart","password"=>"xxxxx");\n
 	 * passe au serveur http les variables de connexion "user" et "password"
 	 */
 	public $http_cookie_login=array();
-	public $http_cookie_renew_pattern="";		/*!< \brief Expression rÃ©guliÃ¨re qui permet de dÃ©tecter qu'une session par cookie a expirÃ© */
-	public $http_use_ssl=false;				/*!< \brief Utiliser une connexion sÃ©curisÃ©e par ssl : false=non, true=oui */
-	public $http_ssl_key="";					/*!< \brief ClÃ© privÃ©e pour la connexion ssl*/
-	public $http_ssl_crt="";					/*!< \brief ClÃ© publique pour l'autentification */
+	public $http_cookie_renew_pattern="";		/*!< \brief Expression régulière qui permet de détecter qu'une session par cookie a expiré */
+	public $http_use_ssl=false;				/*!< \brief Utiliser une connexion sécurisée par ssl : false=non, true=oui */
+	public $http_ssl_key="";					/*!< \brief Clé privée pour la connexion ssl*/
+	public $http_ssl_crt="";					/*!< \brief Clé publique pour l'autentification */
 	/**
-	 * \brief Cookies reÃ§us aprÃ¨s l'authentification par session
+	 * \brief Cookies reçus après l'authentification par session
 	 * \private
 	 */
 	public $http_cookies=array();
 	/**
-	 * \brief Corps de la rÃ©ponse http 
+	 * \brief Corps de la réponse http 
 	 * \private
 	 */
 	public $http_core="";
 	/**
-	 *  \brief Hearder de la rÃ©ponse http
+	 *  \brief Hearder de la réponse http
 	 *  \private
 	 */
 	public $http_header="";
@@ -71,17 +71,17 @@ class socket2http {
 	 */
 	public $curl_link;
 	
-	public $socket_max_connections=10;			/*!< \brief Nombre maximum de connexions autorisÃ©s au serveur de socket */
-	public $socket_port=6001;					/*!< \brief NumÃ©ro de port a Ã©couter */
-	public $socket_bind_address="127.0.0.1"; 	/*!< \brief Adresse d'Ã©coute */
+	public $socket_max_connections=10;			/*!< \brief Nombre maximum de connexions autorisés au serveur de socket */
+	public $socket_port=6001;					/*!< \brief Numéro de port a écouter */
+	public $socket_bind_address="127.0.0.1"; 	/*!< \brief Adresse d'écoute */
 	
 	/**
-	 * \brief Tableau des clients socket connectÃ©s
+	 * \brief Tableau des clients socket connectés
 	 * \private
 	 */
 	public $socket_clients=array();
 	/**
-	 * \brief Socket serveur pour crÃ©ation d'une connexion
+	 * \brief Socket serveur pour création d'une connexion
 	 * \private
 	 */
 	public $socket_server="";
@@ -92,7 +92,7 @@ class socket2http {
 	/**
 	 * \brief Constructeur
 	 * 
-	 * Ne prend aucun argument, tout est exÃ©cutÃ© par la mÃ©thode start_bind .
+	 * Ne prend aucun argument, tout est exécuté par la méthode start_bind .
 	 */
     public function __construct() {
     }
@@ -100,7 +100,7 @@ class socket2http {
     /**
      * \brief Gestion de l'erreur socket
      * 
-     * Positionne le flag error Ã  vrai et affecte error_message avec la derniÃ¨re erreur de socket
+     * Positionne le flag error à vrai et affecte error_message avec la dernière erreur de socket
      * @return vide rien
      * \private
      */
@@ -112,15 +112,15 @@ class socket2http {
     /**
      * \brief Initialisation du serveur de socket
      * 
-     * CrÃ©ation de la socket serveur dans $this->socket_server. La fonction ne prend aucun argument mais utilise des variables internes
-     * @param string ::socket_bind_address Adresse d'Ã©coute de la scoket
-     * @param integer ::socket_port Port d'Ã©coute
-     * @return boolean true : la crÃ©ation de la socket a fonctionnÃ©, false : la crÃ©ation a Ã©chouÃ© (sockets2http::error est Ã  true)
+     * Création de la socket serveur dans $this->socket_server. La fonction ne prend aucun argument mais utilise des variables internes
+     * @param string ::socket_bind_address Adresse d'écoute de la scoket
+     * @param integer ::socket_port Port d'écoute
+     * @return boolean true : la création de la socket a fonctionné, false : la création a échoué (sockets2http::error est à true)
      * \note la variable interne ::socket_server contient la ressource de la socket serveur
      * \private
      */
     public function init_socket() {
-    	// CrÃ©ation d'une "TCP Stream socket"
+    	// Création d'une "TCP Stream socket"
 		$this->socket_server = socket_create(AF_INET, SOCK_STREAM, 0);
 		if (!$this->socket_server) {
 			$this->make_socket_error(); 
@@ -142,10 +142,10 @@ class socket2http {
     }
 
 	/**
-	 * \brief Enregistrement des donnÃ©es de la rÃ©ponse http dans ::http_core
-	 * @param ressource $curl_ressource ressource curl qui gÃ¨re la requÃªte
-	 * @param string $data contenu du corps de la rÃ©ponse
-	 * @return integer longueur des donnÃ©es reÃ§ues
+	 * \brief Enregistrement des données de la réponse http dans ::http_core
+	 * @param ressource $curl_ressource ressource curl qui gère la requête
+	 * @param string $data contenu du corps de la réponse
+	 * @return integer longueur des données reçues
 	 * \private
 	 * \ingroup http	 
 	 */
@@ -155,11 +155,11 @@ class socket2http {
 	}
 	
 	/**
-	 * \brief Enregistrement des entÃªtes de la rÃ©ponse http dans ::http_header
-	 * @param ressource $curl_ressource ressource curl qui gÃ¨re la requÃªte
-	 * @param string $data contenu partiel des entÃªtes
-	 * @return integer longueur des donnÃ©es reÃ§ues
-	 * \note Si l'entÃªte passÃ©e dans $data est un cookie (Set-Cookie: ...), le cookie est stockÃ© dans le tableau ::http_cookies
+	 * \brief Enregistrement des entêtes de la réponse http dans ::http_header
+	 * @param ressource $curl_ressource ressource curl qui gère la requête
+	 * @param string $data contenu partiel des entêtes
+	 * @return integer longueur des données reçues
+	 * \note Si l'entête passée dans $data est un cookie (Set-Cookie: ...), le cookie est stocké dans le tableau ::http_cookies
 	 * \private
 	 */
 	public function get_http_header($curl_ressource,$data) {
@@ -171,7 +171,7 @@ class socket2http {
 	}
 
 	/**
-	 * \brief Intialise et prÃ©pare les options curl pour la connexion http
+	 * \brief Intialise et prépare les options curl pour la connexion http
 	 * @param array $http_params tableau des options curl a initialiser sous la forme : "NOM_OPTION"=>"valeur".\n
 	 * \note Exemple de tableau d'option array("URL"=>"http://localhost/pmb/main.php") sera traduit en 
 	 * curl_setopt($this->curl_link,CURLOPT_URL,"http://localhost/pmb/main.php")
@@ -208,17 +208,17 @@ class socket2http {
 	}
 
 	/**
-	 * \brief fait une requÃªte http en vÃ©rifiant la session par cookie
+	 * \brief fait une requête http en vérifiant la session par cookie
 	 * 
-	 * Fait une requÃªte http en postant le paramÃ¨tre message. La fonction vÃ©rifie que la session cookie est toujours valide
-	 * et se reconnecte si nÃ©cÃ©ssaire.
+	 * Fait une requête http en postant le paramètre message. La fonction vérifie que la session cookie est toujours valide
+	 * et se reconnecte si nécéssaire.
 	 * @param string $message message a poster au serveur http (le serveur recevra message=$message)
-	 * @return boolean true : La requÃªte a rÃ©ussie (la rÃ©ponse est dans ::http_core), false : la requÃªte a Ã©chouÃ©
+	 * @return boolean true : La requête a réussie (la réponse est dans ::http_core), false : la requête a échoué
 	 * \private
 	 */
 	public function make_logged_http_request($message,$id_client) {
 		global $protocol_prolonge;
-		//Initialisation de la requÃªte
+		//Initialisation de la requête
 		$http_params=array(
 			"URL"=>$this->http_url,
 			"POST"=>true,
@@ -230,24 +230,24 @@ class socket2http {
 			if ($this->http_use_cookie) {
 				//Recherche du pattern erreur
 				$p=preg_match($this->http_renew_pattern,$this->http_core);
-				//Si session expirÃ©e, reconnexion
+				//Si session expirée, reconnexion
 				if ($p) {
 					//Reconnexion
 					if ($this->http_do_login()) {
 						$this->prepare_http($http_params);
 						if ($this->make_http_request()) {
-							//On s'est reconnectÃ©, OK !
+							//On s'est reconnecté, OK !
 							return true;
 						} else {
 							//Erreur !
 							$this->error=true;
-							$this->error_message="Impossible d'obtenir une rÃ©ponse Ã  l'URL : ".$this->http_url;
+							$this->error_message="Impossible d'obtenir une réponse à l'URL : ".$this->http_url;
 							return false;
 						}	
 					} else {
 						//Erreur !
 						$this->error=true;
-						$this->error_message="Impossible de recrÃ©er une session valide";
+						$this->error_message="Impossible de recréer une session valide";
 						return false;
 					}
 				}
@@ -255,15 +255,15 @@ class socket2http {
 		} else {
 			//Requete pas OK
 			$this->error=true;
-			$this->error_message="Impossible d'obtenir une rÃ©ponse Ã  l'URL : ".$this->http_url;
+			$this->error_message="Impossible d'obtenir une réponse à l'URL : ".$this->http_url;
 			return false;
 		}
 		return true;
 	}
 	
 	/**
-	 * \brief ExÃ©cute la requÃªte http prÃ©parÃ©e par ::http_prepare()
-	 * @return boolean true : la requÃªte a rÃ©ussi, false : la requÃªte a Ã©chouÃ©
+	 * \brief Exécute la requête http préparée par ::http_prepare()
+	 * @return boolean true : la requête a réussi, false : la requête a échoué
 	 * \private
 	 */
 	public function make_http_request() {
@@ -277,28 +277,28 @@ class socket2http {
     /**
      * \brief Login pour une session cookie
      * 
-     * Autentification sur le serveur http et ouverture d'une session par cookie si nÃ©cessaire
-     * @param array ::http_cookie_login paramÃ¨tres a poster pour la connexion, tableau sous la forme :\n
+     * Autentification sur le serveur http et ouverture d'une session par cookie si nécessaire
+     * @param array ::http_cookie_login paramètres a poster pour la connexion, tableau sous la forme :\n
      * "nom_parametre"=>"valeur"
      * @param string ::http_url_login adresse a appeler pour le login session
      * 
-     * \note L'adresse de login est appellÃ©e avec les paramÃ¨tres de connexion (dans ::http_cookie_login) en POST.
-     * La connexion est considÃ©rÃ©e comme rÃ©ussie si on reÃ§oit au moins un cookie en rÃ©ponse dans l'entÃªte.\n
-     * Les cookies sont stockÃ©s dans le tableau ::http_cookies sous la forme "nom_cookie"=>"valeur"
+     * \note L'adresse de login est appellée avec les paramètres de connexion (dans ::http_cookie_login) en POST.
+     * La connexion est considérée comme réussie si on reçoit au moins un cookie en réponse dans l'entête.\n
+     * Les cookies sont stockés dans le tableau ::http_cookies sous la forme "nom_cookie"=>"valeur"
      * 
-     * @return boolean true : la connexion/ouverture de la session a rÃ©ussi, true : la connexion a Ã©chouÃ©
+     * @return boolean true : la connexion/ouverture de la session a réussi, true : la connexion a échoué
      * \private
      */
     public function http_do_login() {
     	//Y-a-t-il une autentification par cookies ?
 		if ($this->http_use_cookie) {
-			//PrÃ©paration de la requÃªte POST avec les Ã©lÃ©ments de login
+			//Préparation de la requête POST avec les éléments de login
 			$post_vars=array();
 			foreach($this->http_cookie_login as $key=>$val) {
 				$post_vars[]=$key."=".rawurlencode($val);
 			}
 			
-			//Initialisation de la requÃªte http
+			//Initialisation de la requête http
 			$http_params=array(
 				"POST"=>true,
 				"URL"=>$this->http_url_login,
@@ -306,22 +306,22 @@ class socket2http {
 			);
 			$this->prepare_http($http_params);
 			
-			//Remise Ã  zero des cookies
+			//Remise à zero des cookies
 			$this->http_cookies=array();
 			
 			//Autentification
 			if ($this->make_http_request()) {
-				//A-t-on reÃ§u des cookies ?
+				//A-t-on reçu des cookies ?
 				if (count($this->http_cookies)) {
 					return true;
 				} else {
-					//L'autentification a Ã©chouÃ©
+					//L'autentification a échoué
 					$this->error=true;
-					$this->error_message="La session http n'a pÃ» Ãªtre crÃ©Ã©e";
+					$this->error_message="La session http n'a pû être créée";
 					return false;
 				}
 			} else {
-				//La requÃªte POST n'a pas marchÃ©
+				//La requête POST n'a pas marché
 				$this->error=true;
 				$this->error_message="Impossible de s'autentifier sur le serveur http !";
 				return false;
@@ -332,8 +332,8 @@ class socket2http {
     /**
      * \brief Test de la connexion http
      * 
-     * Fait une requÃªte http a l'adresse ::http_url pour vÃ©rifier que le serveur http rÃ©pond
-     * @return boolean true : le serveur rÃ©pond bien, false : le serveur ne rÃ©pond pas
+     * Fait une requête http a l'adresse ::http_url pour vérifier que le serveur http répond
+     * @return boolean true : le serveur répond bien, false : le serveur ne répond pas
      * \private
      */
     public function test_http_connection() {
@@ -348,7 +348,7 @@ class socket2http {
 			return true;
 		} else {
 			$this->error=true;
-			$this->error_message="Impossible d'obtenir une rÃ©ponse Ã  l'URL : ".$this->http_url;
+			$this->error_message="Impossible d'obtenir une réponse à l'URL : ".$this->http_url;
 			return false;
 		}
     }
@@ -356,31 +356,31 @@ class socket2http {
     /**
      * \brief Boucle infinie du serveur de socket
      * 
-     * Accepte les connexions jusqu'Ã  concurrence de ::socket_max_connections par la socket serveur 
-     * et gÃ¨re les transferts des donnÃ©es reÃ§ues sur les diffÃ©rentes sockets vers le serveur http.
+     * Accepte les connexions jusqu'à concurrence de ::socket_max_connections par la socket serveur 
+     * et gère les transferts des données reçues sur les différentes sockets vers le serveur http.
      * \private
      */
     public function make_loop() {
     	
-		// $exec_cmd est la commande permettant de lancer le serveur de la borne de prÃªt, une fois ce service actif. 
-		// AffectÃ© dans init_automate.php
+		// $exec_cmd est la commande permettant de lancer le serveur de la borne de prêt, une fois ce service actif. 
+		// Affecté dans init_automate.php
 		global $exec_cmd,$socket_write_type;
 		if ($exec_cmd)	exec($exec_cmd);
-		//Boucle continue d'attente des Ã©vÃªnements
-		print "EntrÃ©e dans la boucle d'Ã©coute du serveur de socket\n";
+		//Boucle continue d'attente des évênements
+		print "Entrée dans la boucle d'écoute du serveur de socket\n";
 		while (true) {
-		    //Affectation de la socket principale Ã  l'Ã©lÃ©ment 0 du tableau des sockets actives
+		    //Affectation de la socket principale à l'élément 0 du tableau des sockets actives
 		    $read[0] = $this->socket_server;
 		    //On effecte au reste du tableau read les sockets en cours ouvertes
 		    for ($i = 0; $i < $this->socket_max_connections; $i++) {
 		        if ($this->socket_clients[$i]['sock']  != null)
 		            $read[$i + 1] = $this->socket_clients[$i]['sock'] ;
 		    }
-		    //PrÃ©paration d'un appel bloquant Ã  socket_select
+		    //Préparation d'un appel bloquant à socket_select
 		    $write=NULL;
 		    $except=NULL;
 		    $ready = socket_select($read,$write,$except,null);
-		    //Si une nouvelle connextion est demandÃ©e, on l'enregistre dans le tableau des connexions courantes
+		    //Si une nouvelle connextion est demandée, on l'enregistre dans le tableau des connexions courantes
 		    if (in_array($this->socket_server, $read)) {
 		    	//Recherche d'une case vide...
 		        for ($i = 0; $i < $this->socket_max_connections; $i++) {
@@ -392,28 +392,28 @@ class socket2http {
 		                break;
 		            }
 		            elseif ($i == $this->socket_max_connections - 1)
-		                print ("Le nombre maximum de client est atteint, connexion refusÃ©e !");
+		                print ("Le nombre maximum de client est atteint, connexion refusée !");
 		        }
-		        //Si l'appel Ã  socket_select a Ã©chouÃ©, on sort de la boucle
+		        //Si l'appel à socket_select a échoué, on sort de la boucle
 		        if (--$ready <= 0)
 		            continue;
 		    } //Fin de la gestion d'une nouvelle connexion
 		    
-		    // Si un client tente d'Ã©crire, on le gÃ¨re ici
+		    // Si un client tente d'écrire, on le gère ici
 		    for ($i = 0; $i < $this->socket_max_connections; $i++) {
 		    	// pour chaque client
 		        if (in_array($this->socket_clients[$i]['sock'] , $read)) {
-		        	//Lecture des donnÃ©es (4096 car au max)
+		        	//Lecture des données (4096 car au max)
 		            $input = socket_read($this->socket_clients[$i]['sock'] , 4096,PHP_BINARY_READ);
 		            if ($input == null) {
-		                //Si donnÃ©es = null, la socket client est dÃ©connectÃ©e, on dÃ©connecte
+		                //Si données = null, la socket client est déconnectée, on déconnecte
 		                socket_close($this->socket_clients[$i]['sock']);
 		                unset($this->socket_clients[$i]);
 		            }
-		            //On nettoie les caractÃ¨res blancs
+		            //On nettoie les caractères blancs
 		            $n = trim($input);
 		            if ($n == 'exit') {
-		                //Si on reÃ§oit exit, on dÃ©connecte le client
+		                //Si on reçoit exit, on déconnecte le client
 		                socket_close($this->socket_clients[$i]['sock']);
 		                unset($this->socket_clients[$i]);
 		            } elseif ($n) {
@@ -422,12 +422,12 @@ class socket2http {
 		            	if ($this->make_logged_http_request($input,$this->socket_clients[$i]['id'])) {
 		            		print "Client ".$this->socket_clients[$i]['id']." / Received : ".$input;
 		            		//print "Response ".$i." : ".$this->http_core."\n";
-		            		//Ecriture de la rÃ©ponse
+		            		//Ecriture de la réponse
 		            		print "Client ".$this->socket_clients[$i]['id']." / Response : ".$this->http_core."\n";
 		            		if($socket_write_type)	socket_write($this->socket_clients[$i]['sock'],ltrim($this->http_core)."");
 		            		else socket_write($this->socket_clients[$i]['sock'],$this->http_core."\r\n");
 		            	} else {
-		            		//Si on a pas rÃ©ussi a avoir une rÃ©ponse du serveur http, on dÃ©connecte
+		            		//Si on a pas réussi a avoir une réponse du serveur http, on déconnecte
 		            		socket_close($this->socket_clients[$i]['sock']);
 		                	unset($this->socket_clients[$i]);
 		            	}
@@ -442,14 +442,14 @@ class socket2http {
     /**
      * \brief Lancement du service
      * 
-     * Teste la connexion http, rÃ©alise l'autentification pour la session cookie si nÃ©cÃ©ssaire,
-     * lance le serveur de socket et gÃ¨re les Ã©vÃ¨nements socket
-     * @return boolean false : Il y a eu une erreur lors du lancement du service le flag sockets2http::error est Ã  true, sinon ne retourne jamais !
+     * Teste la connexion http, réalise l'autentification pour la session cookie si nécéssaire,
+     * lance le serveur de socket et gère les évènements socket
+     * @return boolean false : Il y a eu une erreur lors du lancement du service le flag sockets2http::error est à true, sinon ne retourne jamais !
      */
     public function start_bind() {
     	//Tests de connexion au serveur http
     	if (!$this->test_http_connection()) return false; else
-    	//Si c'est ok, test de connexion Ã  la session par cookie
+    	//Si c'est ok, test de connexion à la session par cookie
     	if (!$this->http_do_login()) return false; else {
     		print "Serveur HTTP ".$this->http_url_login." contacte\n";
     		//Si c'est OK, on initialise le serveur de socket
@@ -462,7 +462,7 @@ class socket2http {
 
 $s=new socket2http();
 
-// Fichier de paramÃ©trage
+// Fichier de paramétrage
 require_once("init_automate.php");
 
 $ret=$s->start_bind();

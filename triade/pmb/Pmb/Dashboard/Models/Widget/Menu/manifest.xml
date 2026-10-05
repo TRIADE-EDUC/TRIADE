@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2024/03/18 12:48:38 jparis Exp $
+-->
+
+<manifest>
+	<namespace>Pmb\Dashboard\Models\Widget\Menu\MenuModel</namespace>
+	<type>menu</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2024-26-01</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<source>Pmb\Dashboard\Models\Widget\Menu\MenuSource</source>
+	<display_formats>
+		<display_format>list</display_format>
+		<display_format>tile</display_format>
+	</display_formats>
+</manifest>

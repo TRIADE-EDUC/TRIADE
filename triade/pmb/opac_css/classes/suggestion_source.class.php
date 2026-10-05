@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_source.class.php,v 1.3 2017-04-26 10:20:06 dgoron Exp $
+// $Id: suggestion_source.class.php,v 1.4 2022/02/16 08:13:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,7 +15,7 @@ class suggestion_source{
 	 * Constructeur
 	 */
 	public function __construct($id=0){
-		$this->id_source = $id+0;
+		$this->id_source = intval($id);
 		if(!$this->id_source){
 			
 			$this->libelle_source = '';

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_principal_author.class.php,v 1.3 2016-09-21 13:09:44 vtouchard Exp $
+// $Id: cms_module_common_selector_principal_author.class.php,v 1.3 2016/09/21 13:09:44 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,7 +22,7 @@ class cms_module_common_selector_principal_author extends cms_module_common_sele
 	}
 	
 	public function get_value(){
-		//le sous-sÃ©lecteur va nous donner la notice...
+		//le sous-sélecteur va nous donner la notice...
 		if(!$this->value){
 			$sub_selector= new $this->parameters['sub_selector']($this->get_sub_selector_id($this->parameters['sub_selector']));
 			$this->value= array(

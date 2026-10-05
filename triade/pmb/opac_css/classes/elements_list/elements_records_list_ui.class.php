@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_records_list_ui.class.php,v 1.3 2018-10-18 10:08:44 dgoron Exp $
+// $Id: elements_records_list_ui.class.php,v 1.7.2.1 2024/12/30 11:01:43 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/elements_list/elements_list_ui.class.php');
 // require_once($class_path.'/serial_display.class.php');
 // require_once($class_path.'/mono_display.class.php');
@@ -48,6 +49,7 @@ class elements_records_list_ui extends elements_list_ui {
 	protected $draggable;
 	protected $no_link;
 	protected $ajax_mode;
+	protected static $lazy_loading = false;
 	
 	public function __construct($contents, $nb_results, $mixed, $groups=array(), $nb_filtered_results = 0) {
 		static::init_links();
@@ -94,39 +96,63 @@ class elements_records_list_ui extends elements_list_ui {
 	}
 	
 	protected function generate_element($element_id, $recherche_ajax_mode=0){
-		$element_id +=0;
-		$result = pmb_mysql_query("SELECT niveau_biblio FROM notices WHERE notice_id=".$element_id);
-		$niveau_biblio = pmb_mysql_result($result, 0, 'niveau_biblio');
-		switch($niveau_biblio) {
-			case 'm' :
-				// notice de monographie
-				$display = new mono_display($element_id, $this->get_level(), static::get_link(), $this->show_expl, static::get_link_expl(), static::get_link_delete_cart(), static::get_link_explnum(),$this->show_resa, $this->print, $this->show_explnum, $this->show_statut, $this->anti_loop, $this->draggable, $this->no_link, $this->show_opac_hidden_fields,($this->ajax_mode ? $recherche_ajax_mode : 0), $this->show_resa_planning, $this->show_map, 0, $this->context_parameters);
-				break;
-			case 's' :
-				// on a affaire à un périodique
-				$display = new serial_display($element_id, $this->get_level(), static::get_link_serial(), static::get_link_analysis(), static::get_link_bulletin(), static::get_link_delete_cart(), static::get_link_explnum_serial(), $this->button_explnum, $this->print, $this->show_explnum, $this->show_statut, $this->show_opac_hidden_fields, $this->draggable,($this->ajax_mode ? $recherche_ajax_mode : 0), $this->anti_loop, $this->no_link, $this->show_map, 0, $this->show_abo_actif, $this->show_expl, $this->context_parameters);
-				break;
-			case 'a' :
-				// on a affaire à un article
-				// function serial_display ($id, $level='1', $action_serial='', $action_analysis='', $action_bulletin='', $lien_suppr_cart="", $lien_explnum="", $bouton_explnum=1,$print=0,$show_explnum=1, $show_statut=0, $show_opac_hidden_fields=true, $draggable=0 ) {
-				$display = new serial_display($element_id, $this->get_level(), static::get_link_serial(), static::get_link_analysis(), static::get_link_bulletin(), static::get_link_delete_cart(), static::get_link_explnum_analysis(), $this->button_explnum, $this->print, $this->show_explnum, $this->show_statut, $this->show_opac_hidden_fields, $this->draggable,($this->ajax_mode ? $recherche_ajax_mode : 0), $this->anti_loop, $this->no_link, $this->show_map, 0, $this->show_abo_actif, $this->show_expl, $this->context_parameters);
-				break;
-			case 'b' :
-				// on a affaire à un bulletin
-				$rqt_bull_info = "SELECT s.notice_id as id_notice_mere, bulletin_id as id_du_bulletin, b.notice_id as id_notice_bulletin 
-						FROM notices as s, notices as b, bulletins 
-						WHERE b.notice_id=".$element_id." and s.notice_id=bulletin_notice and num_notice=b.notice_id";
-				$rst_bull_info = pmb_mysql_query($rqt_bull_info);
-				$id_bulletin = 0;
-				if(pmb_mysql_num_rows($rst_bull_info)) {
-					$bull_ids=pmb_mysql_fetch_object($rst_bull_info);
-					$id_bulletin = $bull_ids->id_du_bulletin; 
-				}
-				$display = new mono_display($element_id, $this->get_level(), str_replace('!!id!!' , $id_bulletin, static::get_link_notice_bulletin()), $this->show_expl, static::get_link_expl(), static::get_link_delete_cart(), str_replace("!!bul_id!!", $id_bulletin, static::get_link_explnum_bulletin()),$this->show_resa, $this->print, $this->show_explnum, $this->show_statut, $this->anti_loop, $this->draggable, $this->no_link, $this->show_opac_hidden_fields,($this->ajax_mode ? $recherche_ajax_mode : 0), $this->show_resa_planning, $this->show_map, 0, $this->context_parameters);
-// 				static::set_link_notice_bulletin('');
-				break;
+		$element_id = intval($element_id);
+		if(!$element_id) {
+		    return '';
 		}
-		return $display->result;
+		$record = new record_datas($element_id);		
+		$this->add_context_parameter('element_id', $element_id);
+		$template_path = $this->get_template_path($record->get_niveau_biblio());
+		$notice_affichage = new notice_affichage($element_id);
+		$notice_affichage->do_header();
+		$context = array(
+		    'list_element' => $record,
+		    'isbd' => $notice_affichage->notice_header,
+		    'header_without_html' => str_replace(array("\n", "\t", "\r"), '', strip_tags($notice_affichage->notice_header)),
+		    'detail' => record_display::get_display_in_result($element_id),
+		);
+		$render = static::render($template_path, $context, $this->get_context_parameters());
+		return $render;
+	}
+	
+	private function get_template_path(string $niveau_biblio) {
+	    global $include_path, $opac_record_templates_folder;
+	    
+	    //parametre a creer si besoin
+	    if($opac_record_templates_folder) {
+	        $template_directory = $opac_record_templates_folder;
+	    } else {
+	        $template_directory = 'common';
+	    }
+	    
+	    $template_name = "record";
+	    switch ($niveau_biblio) {
+	        case "s":
+	            $template_name = "serial";
+	            break;
+	        case "b":
+	            $template_name = "bulletin";
+	            break;
+	        case "a":
+	            $template_name = "article";
+	            break;
+	        case "m":
+	        default:
+	            $template_name = "record";
+	            break;
+	    }
+	    
+	    switch (true) {
+	        case file_exists($include_path.'/templates/record/'.$template_directory.'/list/'.$template_name.'_subst.html'):
+	            return $include_path.'/templates/record/'.$template_directory.'/list/'.$template_name.'_subst.html';
+	        case file_exists($include_path.'/templates/record/'.$template_directory.'/list/'.$template_name.'.html'):
+	            return $include_path.'/templates/record/'.$template_directory.'/list/'.$template_name.'.html';
+	        case file_exists($include_path.'/templates/record/'.$template_directory.'/list/record_subst.html'):
+	            return $include_path.'/templates/record/'.$template_directory.'/list/record_subst.html';
+	        case file_exists($include_path.'/templates/record/'.$template_directory.'/list/record.html'):
+	            return $include_path.'/templates/record/'.$template_directory.'/list/record.html';
+	    }
+	    return "";
 	}
 	
 	protected function get_level() {
@@ -345,5 +371,13 @@ class elements_records_list_ui extends elements_list_ui {
 	
 	public function set_ajax_mode($ajax_mode) {
 		$this->ajax_mode = $ajax_mode;
+	}
+	
+	public static function enable_lazy_loading() {
+	    static::$lazy_loading = true;
+	}
+	
+	public static function disable_lazy_loading() {
+	    static::$lazy_loading = false;
 	}
 }

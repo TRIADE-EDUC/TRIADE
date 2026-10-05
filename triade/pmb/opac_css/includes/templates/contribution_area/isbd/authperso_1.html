@@ -1,0 +1,9 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: authperso_1.html,v 1.2.8.1 2025/01/08 07:20:53 tsamson Exp $ -->
+
+{% block isbd %}
+{% if contribution.authperso_cp_event_title %}{{ contribution.authperso_cp_event_title }}{% else %}
+{{ msg.contribution_draft_name }}{% endif %}
+{% endblock %}
+<!-- exemple de champ : "contribution.authperso_" + nom du cp -->

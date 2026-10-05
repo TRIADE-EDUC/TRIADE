@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_marclist.class.php,v 1.4 2019-03-25 11:20:12 tsamson Exp $
+// $Id: onto_common_datatype_marclist.class.php,v 1.4 2019/03/25 11:20:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,8 +11,8 @@ require_once $class_path.'/onto/common/onto_common_datatype.class.php';
 
 /**
  * class onto_common_datatype_resource_selector
- * Les mÃ©thodes get_form,get_value,check_value,get_formated_value,get_raw_value
- * sont Ã©ventuellement Ã  redÃ©finir pour le type de donnÃ©es
+ * Les méthodes get_form,get_value,check_value,get_formated_value,get_raw_value
+ * sont éventuellement à redéfinir pour le type de données
  */
 class onto_common_datatype_marclist  extends onto_common_datatype {
 

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmbxml2eadad72.class.php,v 1.2 2018-08-10 12:52:52 dgoron Exp $
+// $Id: pmbxml2eadad72.class.php,v 1.2 2018/08/10 12:52:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -74,7 +74,7 @@ class pmbxml2eadad72 extends convert {
 			$notice.="  </f>\n";
 		}
 		
-		//Mention d'Ã©dition
+		//Mention d'édition
 		if ($rn->mention_edition) {
 			$notice.="  <f c='205' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->mention_edition,ENT_QUOTES,$charset)."</s>\n";
@@ -136,7 +136,7 @@ class pmbxml2eadad72 extends convert {
 		}
 		
 		//Notes
-		//GÃ©nÃ©rale
+		//Générale
 		if ($rn->n_gen) {
 		    $notice.="  <f c='300' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_gen,ENT_QUOTES,$charset)."</s>\n";
@@ -148,14 +148,14 @@ class pmbxml2eadad72 extends convert {
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_contenu,ENT_QUOTES,$charset)."</s>\n";
 			$notice.="  </f>\n";
 		}
-		//RÃ©sumÃ©
+		//Résumé
 		if ($rn->n_resume) {
 		    $notice.="  <f c='330' ind='  '>\n";
 			$notice.="    <s c='a'>".htmlspecialchars($rn->n_resume,ENT_QUOTES,$charset)."</s>\n";
 			$notice.="  </f>\n";
 		}
 	
-		//Titre de sÃ©rie
+		//Titre de série
 		$serie="";
 		if ($rn->tparent_id!=0 || $rn->tnvol!='') {
 			$requete="select serie_name from series where serie_id=".$rn->tparent_id;
@@ -168,7 +168,7 @@ class pmbxml2eadad72 extends convert {
 		}
 		
 		if($bl=='a') {
-			//liens vers les pÃ©riodiques et bulletins pour les notices d'article
+			//liens vers les périodiques et bulletins pour les notices d'article
 			$req_link = "SELECT notice_id, tit1, code ";
 			$req_link.= "bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, bulletin_numero ";
 			$req_link.= "from analysis,bulletins,notices WHERE analysis_notice=".$id." and bulletin_id=analysis_bulletin and bulletin_notice=notice_id ";
@@ -219,7 +219,7 @@ class pmbxml2eadad72 extends convert {
 				if ($auth->author_web!='') $notice.="    <s c='N'>".htmlspecialchars($auth->author_web,ENT_QUOTES,$charset)."</s>\n";
 				$notice.="  </f>\n";
 			} elseif (($auth->author_type == "71") || ($auth->author_type == "72")) {
-				//CollectivitÃ©
+				//Collectivité
 				$notice.="  <f c='".$auth->author_type.$auth->responsability_type;
 				if ($auth->author_type == "71") {
 					$notice.="' ind='02'>\n";

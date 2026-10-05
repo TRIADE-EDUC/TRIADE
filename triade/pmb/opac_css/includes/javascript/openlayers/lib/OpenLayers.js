@@ -39,13 +39,13 @@
      *
      * Example:
      * (code)
-     *     <script type="text/javascript">
+     *     <script>
      *         window.OpenLayers = [
      *             "OpenLayers/Util.js",
      *             "OpenLayers/BaseTypes.js"
      *         ];
      *     </script>
-     *     <script type="text/javascript" src="../lib/OpenLayers.js"></script>
+     *     <script src="../lib/OpenLayers.js"></script>
      * (end)
      * In this example OpenLayers.js will load Util.js and BaseTypes.js only.
      */
@@ -98,7 +98,7 @@
          * 
          * (code)
          *   <script src="/path/to/my-custom-ol.js" type="text/javascript"></script>
-         *   <script type="text/javascript">
+         *   <script>
          *      // tell OpenLayers where the control images are
          *      // remember the trailing slash
          *      OpenLayers.ImgPath = "/resources/external/images/ol/";

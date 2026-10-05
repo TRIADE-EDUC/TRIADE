@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,11 +42,11 @@ include_once('librairie_php/db_triade.php');
 validerequete("2");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_recherche_eleve_2()" action="liste_eleve_groupe2.php" name="formulaire_2">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGGRP48 ?></font></b></td>
@@ -59,7 +59,7 @@ $motif=strtolower(trim($_POST["saisie_nom_eleve"]));
 $sql=<<<EOF
 
 SELECT c.libelle,e.nom,e.prenom,e.elev_id
-FROM ${prefixe}eleves e, ${prefixe}classes c
+FROM {$prefixe}eleves e, {$prefixe}classes c
 WHERE lower(e.nom) LIKE '%$motif%'
 AND c.code_class = e.classe
 ORDER BY c.libelle, e.nom, e.prenom
@@ -68,10 +68,10 @@ EOF;
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
         print("<BR><center><font size=3>".LANGDISP1."</font><BR><BR></center>");
 }else {
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$ideleve=$data[$i][3];
 ?>
 <table border="0"  width="100%">

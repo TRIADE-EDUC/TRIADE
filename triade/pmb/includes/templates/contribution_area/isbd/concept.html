@@ -1,0 +1,14 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: concept.html,v 1.2 2020/07/09 15:24:42 tsamson Exp $ -->
+{% block element_link %}
+	{% if global.caller == 'search_form' %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.id }}', '{{list_element.get_object_instance.isbd | escape true }}', '{{global.type}}', '{{ global.callback }}')">
+			{{ list_element.get_object_instance.header | safe }}
+		</a>
+	{% else %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.uri }}', '{{list_element.get_object_instance.isbd |  escape true }}', '{{global.type}}', '{{ global.callback }}')">
+			{{ list_element.get_object_instance.header | safe }}
+		</a>
+	{% endif %}
+{% endblock %}

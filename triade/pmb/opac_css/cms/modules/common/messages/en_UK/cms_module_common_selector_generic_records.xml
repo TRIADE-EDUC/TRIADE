@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_generic_records.xml,v 1.2 2016-04-20 13:54:54 apetithomme Exp $ -->
+$Id: cms_module_common_selector_generic_records.xml,v 1.2 2016/04/20 13:54:54 apetithomme Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_selector_records_doctypes'>Liste de notices depuis les types de document</entry>

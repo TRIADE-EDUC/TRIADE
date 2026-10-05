@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_discipline.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -111,18 +113,13 @@ endif;
 
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSANC3 ?></font></b></td></tr>
-<tr id='cadreCentral0'>
-<td >
-     <!-- // fin  -->
-<BR>
-     <blockquote>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<div class="na-card" style="margin-bottom:12px;">
+<div style="font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px;"><?php print LANGSANC3 ?></div>
 <B><font class="T2"><?php print LANGSANC4 ?></font></B>
 <form method=post >
 <table border=0><tr><td>
@@ -140,20 +137,12 @@ endif;
 <?php
 select_category();
 ?>
-</select> <input type=submit name="creat_supp_category" value="<?php print LANGBT50?>" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;"><br><br>
+</select> <button type="submit" name="creat_supp_category" class="btn-dest" style="background:#c62828;"><?php print LANGBT50 ?></button>
 </form>
-</blockquote>
-</table>
-<BR><BR>
+</div>
 
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSANC3 ?></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td >
-     <!-- // fin  -->
-<BR>
-     <blockquote>
+<div class="na-card" style="margin-bottom:12px;">
+<div style="font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px;"><?php print LANGSANC6 ?></div>
 <B><font class="T2"><?php print LANGSANC6 ?></font></B>
 <form method=post onsubmit="return valide_sanction();" name="formulaire">
 <table border=0><tr><td colspan='2'>
@@ -181,21 +170,12 @@ select_category();
 <?php
 select_sanction2();
 ?>
-</select> <input type=submit name="creat_supp" value="<?php print LANGBT50?>" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;"><br><br>
+</select> <button type="submit" name="creat_supp" class="btn-dest" style="background:#c62828;"><?php print LANGBT50 ?></button>
 </form>
-     </blockquote>
-</table>
-<BR><BR>
+</div>
 
-
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSANC8 ?></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td >
-     <!-- // fin  -->
-<BR>
-<UL>
+<div class="na-card" style="margin-bottom:12px;">
+<div style="font-size:12px;font-weight:700;color:#080A66;margin-bottom:8px;"><?php print LANGSANC8 ?></div>
 <B><font class="T2"><?php print LANGSANC9 ?></font></B>
 <form method=post mane=formulaire >
 <table width=70% border=0 >
@@ -230,21 +210,21 @@ select_category();
 <UL><B> Déjà attribué: <B></UL>
 <table width=100% border=1 bordercolor="#000000">
 <TR>
-<td bgcolor="yellow">&nbsp;<?php print LANGDISC20 ?> </TD>
-<td width=25% bgcolor="yellow">&nbsp;<?php print LANGSANC12 ?> </TD>
-<td bgcolor="yellow">&nbsp;<?php print LANGSANC13 ?> </TD>
-<td width=15% bgcolor="yellow" align="center" > <?php print "&nbsp;Saisie&nbsp;le&nbsp;" ?> </TD>
-<td width=5% bgcolor="yellow">&nbsp;<?php print LANGBT50?> </TD>
+<th class="cc-th"><?php print LANGDISC20 ?></th>
+<th class="cc-th" style="width:25%"><?php print LANGSANC12 ?></th>
+<th class="cc-th"><?php print LANGSANC13 ?></th>
+<th class="cc-th cc-th-center" style="width:15%">Saisie le</th>
+<th class="cc-th cc-th-center" style="width:5%"><?php print LANGBT50 ?></th>
 </TR>
 <?php
 $data=affSanction_nb_retenue();
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data);$j++) {
-	if (count($data) >= 1) {
+for($j=0;$j<countTriade($data);$j++) {
+	if (countTriade($data) >= 1) {
 
 ?>
 <form method=post>
-<TR  class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'">
+<TR class="cc-tr-data">
 <TD>
 &nbsp;<?php
 $nom_sanction=chercheCategory($data[$j][0]);
@@ -258,7 +238,7 @@ print $nom_sanction[0][1];
 &nbsp;<?php print dateForm($data[$j][3])?>&nbsp;
 </TD>
 <TD>
-<input type=submit name="creat_supp_nb_sanction" value="<?php print LANGBT50?>" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;"><br><br>
+<button type="submit" name="creat_supp_nb_sanction" class="btn-dest" style="background:#c62828;"><?php print LANGBT50 ?></button>
 <input type=hidden name=saisie_supp_nb value="<?php print $data[$j][0]?>">
 </td>
 </tr>
@@ -270,23 +250,23 @@ print $nom_sanction[0][1];
 ?>
 </table>
 <BR>
-</td></tr></table>
+</div>
 
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

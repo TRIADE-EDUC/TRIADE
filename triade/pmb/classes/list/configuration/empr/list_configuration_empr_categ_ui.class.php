@@ -2,11 +2,9 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_configuration_empr_categ_ui.class.php,v 1.1 2018-10-12 11:59:35 dgoron Exp $
+// $Id: list_configuration_empr_categ_ui.class.php,v 1.5 2021/04/19 07:10:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-
-require_once($class_path."/list/configuration/empr/list_configuration_empr_ui.class.php");
 
 class list_configuration_empr_categ_ui extends list_configuration_empr_ui {
 	
@@ -15,10 +13,14 @@ class list_configuration_empr_categ_ui extends list_configuration_empr_ui {
 	}
 	
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'libelle',
-				'asc_desc' => 'asc'
-		);
+	    $this->add_applied_sort('libelle');
+	}
+	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('duree_adhesion', 'datatype', 'integer');
+		$this->set_setting_column('age_min', 'datatype', 'integer');
+		$this->set_setting_column('age_max', 'datatype', 'integer');
 	}
 	
 	protected function get_main_fields_from_sub() {
@@ -39,27 +41,18 @@ class list_configuration_empr_categ_ui extends list_configuration_empr_ui {
 		return $main_fields;
 	}
 	
-	protected function get_cell_content($object, $property) {
+	protected function _get_object_property_tarif_abt($object) {
 		global $msg;
 		global $pmb_gestion_financiere, $pmb_gestion_abonnement;
-		if ($pmb_gestion_financiere) {
-			$gestion_abts=$pmb_gestion_abonnement;
-		} else $gestion_abts=0;
 		
-		$content = '';
-		switch($property) {
-			case 'tarif_abt':
-				if ($gestion_abts==1) {
-					$content .= $object->tarif_abt;
-				} else if ($gestion_abts==2) {
-					$content .= $msg["finance_see_finance"];
-				}
-				break;
-			default :
-				$content .= parent::get_cell_content($object, $property);
-				break;
+		if ($pmb_gestion_financiere) {
+			if ($pmb_gestion_abonnement==1) {
+				return $object->tarif_abt;
+			} else if ($pmb_gestion_abonnement==2) {
+				return $msg["finance_see_finance"];
+			}
 		}
-		return $content;
+		return '';
 	}
 	
 	protected function get_edition_link($object) {

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_affichage.class.php,v 1.18 2019-03-12 10:59:25 tsamson Exp $
+// $Id: explnum_affichage.class.php,v 1.20 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$class_path/notice_affichage.class.php");
 require_once("$include_path/explnum.inc.php");
 
@@ -15,20 +16,19 @@ define("DOCNUM_DMDE",1);
 define("DOCNUM_SUGG",2);
 
 /**
- * Classe qui permet d'afficher les documents numÃ©riques aprÃ¨s une recherche OPAC
+ * Classe qui permet d'afficher les documents numériques après une recherche OPAC
  */
 class explnum_affichage{
 	
 	public $tableau_id = array();
 	public $display = "";
 	public $type_elt = "";
-	public $termes_recherche=""; //mots recherchÃ©s pour le pdf
+	public $termes_recherche=""; //mots recherchés pour le pdf
 	
 	/**
 	 * Constructeur
 	 */
 	public function __construct($liste_id=array(),$type='',$searchterms=array()){		
-			
 		$this->tableau_id = $liste_id;
 		$this->type_elt = $type;
 		if($searchterms)
@@ -41,7 +41,7 @@ class explnum_affichage{
 	 */
 	public function construire_tableau(){
 		
-		global $_mimetypes_bymimetype_, $_mimetypes_byext_, $dbh, $charset, $opac_url_base;
+		global $_mimetypes_bymimetype_, $_mimetypes_byext_, $charset, $opac_url_base;
 		global $opac_visionneuse_allow;
 		
 		$ligne_finale = "";
@@ -67,14 +67,14 @@ class explnum_affichage{
 					break;
 				case DOCNUM_NOTI:
 				default:	
-					// rÃ©cupÃ©ration des infos des explnum
+					// récupération des infos des explnum
 					$requete = "SELECT explnum_id, explnum_notice, explnum_bulletin, explnum_nom, explnum_mimetype,
 						 explnum_url, explnum_data, explnum_vignette, explnum_nomfichier, explnum_extfichier
 						  FROM explnum WHERE explnum_id in (".implode(',',$this->tableau_id).")";
 					$url_docnum="/doc_num.php?explnum_id=";
 					break;
 			}
-			$res = pmb_mysql_query($requete, $dbh);
+			$res = pmb_mysql_query($requete);
 			
 			$i=1;
 			$allowed_mimetype=array();
@@ -114,7 +114,7 @@ class explnum_affichage{
 				$expl_liste_obj .= "<div style=\"text-align:center; word-wrap: break-word\">";
 				if ($allowed_mimetype && in_array($expl->explnum_mimetype,$allowed_mimetype)){
 					$link="
-						<script type='text/javascript'>
+						<script>
 							if(typeof(sendToVisionneuse) == 'undefined'){
 								var sendToVisionneuse = function (explnum_id){
 									document.getElementById('visionneuseIframe').src = 'visionneuse.php?'+(typeof(explnum_id) != 'undefined' ? 'explnum_id='+explnum_id+\"\" : '\'');
@@ -155,20 +155,19 @@ class explnum_affichage{
 	}
 	
 	/**
-	 * Affichage des exemplaires numÃ©riques
+	 * Affichage des exemplaires numériques
 	 */
 	public function show_explnum(){
 		print $this->display;
 	}
 	
 	/**
-	 *  RÃ©cupÃ©ration des infos des bulletins
+	 *  Récupération des infos des bulletins
 	 */	
 	public function get_header_bulletin($id){
-		global $dbh;
-		
+		$id = intval($id);
 		$req = "select bulletin_notice, bulletin_numero, date_date, mention_date, bulletin_titre from bulletins where bulletin_id='".$id."'";
-		$res = pmb_mysql_query($req, $dbh);
+		$res = pmb_mysql_query($req);
 		$header ='';
 		while(($bull = pmb_mysql_fetch_object($res))){
 			$notice_mere = $bull->bulletin_notice;

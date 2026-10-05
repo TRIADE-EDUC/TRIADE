@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,18 +35,18 @@
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCHER1?></font></b></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
 <!-- // debut form  -->
-<form action='recherche_complexe_4.php' method=post  name="formulaire">
+<form action='recherche_complexe_4.php' method=post  name="formulaire"  >
 <input type=hidden name="saisie_fichier_format" value='<?php print $_POST["saisie_fichier_format"]?>' >
 <input type=hidden name="saisie_separateur" value='<?php print $_POST["saisie_separateur"]?>' >
 <input type=hidden name="saisie_nb_recherche" value='<?php print $_POST["saisie_nb_recherche"]?>' >
@@ -93,6 +93,6 @@ $listeaffiche=preg_replace('/,/',", ",$listeaffiche);
  </td></tr></table>
 <br /><br />
 <script type="text/JavaScript">InitBulle('#000000','#CCCCFF','red',1);</script>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

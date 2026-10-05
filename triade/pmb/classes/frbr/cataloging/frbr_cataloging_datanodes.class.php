@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_datanodes.class.php,v 1.3 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_cataloging_datanodes.class.php,v 1.3 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,7 +17,7 @@ class frbr_cataloging_datanodes {
 	protected $num_parent;
 	
 	/**
-	 * Liste des jeux de donnÃ©es
+	 * Liste des jeux de données
 	 */
 	protected $datanodes;
 	
@@ -51,7 +51,7 @@ class frbr_cataloging_datanodes {
 		if(pmb_mysql_num_rows($result)) {
 			while($row = pmb_mysql_fetch_object($result)) {
 				$frbr_cataloging_datanode = new frbr_cataloging_datanode($row->id_cataloging_datanode);
-				//Gestion des droits utilisateurs (on affiche uniquement les veilles paramÃ©trÃ©es pour le current user)
+				//Gestion des droits utilisateurs (on affiche uniquement les veilles paramétrées pour le current user)
 				if(in_array(SESSuserid,$frbr_cataloging_datanode->get_allowed_users()) || ($PMBuserid==1)){
 					$this->datanodes[] = $frbr_cataloging_datanode->get_informations();
 				}

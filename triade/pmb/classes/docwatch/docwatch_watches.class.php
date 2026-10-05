@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_watches.class.php,v 1.7 2017-06-12 14:32:37 ngantier Exp $
+// $Id: docwatch_watches.class.php,v 1.9 2022/02/11 09:39:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/docwatch/docwatch_root.class.php");
 require_once($class_path."/docwatch/docwatch_watch.class.php");
 
@@ -38,7 +39,7 @@ class docwatch_watches extends docwatch_root{
 	 * @access public
 	 */
 	public function __construct($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_datas();
 	} // end of member function __construct
 	
@@ -48,11 +49,11 @@ class docwatch_watches extends docwatch_root{
 	 * 
 	 */
 	public function fetch_datas(){
-		global $dbh, $PMBuserid;
+		global $PMBuserid;
 		
 		if ($this->id) {
 			$query = "select category_title, category_num_parent from docwatch_categories where id_category=".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if ($row = pmb_mysql_fetch_object($result)) {
 				$this->title = $row->category_title;
 				$this->num_parent = $row->category_num_parent;
@@ -62,16 +63,16 @@ class docwatch_watches extends docwatch_root{
 			$this->num_parent = -1;
 		}
 		$query = "select id_watch from docwatch_watches where watch_num_category=".$this->id;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		while($row = pmb_mysql_fetch_object($result)) {
 			$docwatch_watch = new docwatch_watch($row->id_watch);
-			//Gestion des droits utilisateurs (on affiche uniquement les veilles paramétrées pour le current user)
+			//Gestion des droits utilisateurs (on affiche uniquement les veilles param�tr�es pour le current user)
 			if(in_array(SESSuserid,$docwatch_watch->get_allowed_users()) || ($PMBuserid==1)){
 				$this->watches[] = $docwatch_watch->get_informations();
 			}
 		}
 		$query = "select id_category from docwatch_categories where category_num_parent=".$this->id;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		while($row = pmb_mysql_fetch_object($result)) {
 			$this->children[] = new docwatch_watches($row->id_category);
 		}
@@ -79,8 +80,8 @@ class docwatch_watches extends docwatch_root{
 	
 	public static function contains_boolean_expression($item_id, $watch_id) {
 		$contains = true;
-		$item_id += 0;
-		$watch_id += 0;
+		$item_id = intval($item_id);
+		$watch_id = intval($watch_id);
 		$query = "select watch_boolean_expression from docwatch_watches where id_watch =".$watch_id;
 		$result = pmb_mysql_query($query);
 		$row = pmb_mysql_fetch_object($result);

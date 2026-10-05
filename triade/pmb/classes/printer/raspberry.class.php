@@ -2,18 +2,17 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: raspberry.class.php,v 1.3 2019-01-31 09:17:58 ccraig Exp $
+// $Id: raspberry.class.php,v 1.4 2019/12/30 15:58:50 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 global $include_path, $class_path;
-@ini_set('zend.ze1_compatibility_mode',0);
 require_once($include_path."/h2o/h2o.php");
 require_once($class_path."/printer/escPos.class.php");
 
 class raspberry {
 	
-	public $data; // info biblo, empr, expl utile Ã  l'impression
+	public $data; // info biblo, empr, expl utile à l'impression
 	
 	public function __construct(){
 	}

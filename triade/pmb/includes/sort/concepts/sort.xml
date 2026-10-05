@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.4 2021/02/01 14:17:56 qvarin Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="skos" typeobject="10">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="onto_common_preflabel" type="text" typefield="select" id="2">
+		<table name="skos_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=1 and code_ss_champ=1 and ordre=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="skos_fields_global_index">
+			<tablefield>id_item</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=1 and code_ss_champ=1 and ordre=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Libelle cache-->
+	<field name="onto_common_hiddenlabel" type="text" typefield="select" id="4">
+		<table name="skos_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=3 and code_ss_champ=1 and ordre=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Libelle alternatif-->
+	<field name="onto_common_altlabel" type="text" typefield="select" id="5">
+		<table name="skos_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=2 and code_ss_champ=1 and ordre=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Schema de concept-->
+	<field name="onto_common_conceptscheme" type="text" typefield="select" id="6">
+		<table name="skos_fields_global_index">
+			<tablefield>value</tablefield>
+			<tablekey>id_item</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=10 and code_champ=4 and code_ss_champ=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!-- Notation -->
+	<field name="onto_common_notation" type="text" typefield="callable" id="7">
+		<callable name="concept_notation" id="01" class_path="./classes/sort_concept.class.php" class_name="sort_concept" method="update_table_tempo_with_property" parameters="notation"/>
+	</field>
+	
+</sort>

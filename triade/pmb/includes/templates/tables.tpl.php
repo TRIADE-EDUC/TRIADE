@@ -3,9 +3,9 @@
 // +-------------------------------------------------+
 // | PMB                                                                      |
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: tables.tpl.php,v 1.8 2019-05-27 14:04:23 ngantier Exp $
+// $Id: tables.tpl.php,v 1.8 2019/05/27 14:04:23 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

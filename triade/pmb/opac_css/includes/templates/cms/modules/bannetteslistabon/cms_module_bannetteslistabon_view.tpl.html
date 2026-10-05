@@ -1,0 +1,617 @@
+<!-- $Id: cms_module_bannetteslistabon_view.tpl.html,v 1.2.2.1 2024/07/29 07:18:53 dbellamy Exp $ -->
+
+{% if get_vars.subscribe_ok != '1' %}
+    <form action='' method='post' name='bannette_subscription' id='bannette_subscription' >
+        <input type='hidden' value='PUB' name='enregistrer'/>
+        <input type='hidden' value='bannette_gerer' name='lvl'/>
+        <input type='hidden' value='1' name='new_connexion'/>
+        <input type='hidden' value='dsi' name='tab'/>
+        <input type='hidden' value='1' name='ok_abonn'/>
+        <div id='alertes'>
+            <div id='abonnRss'>
+                <span id='lienAbnn'>{{ module.msg.cms_module_bannetteslistabon_view_manage_abo | escape;}}</span>
+            </div>
+        </div>
+        <br>
+        {% for bannette in bannettes %}
+            <div class='itemAlerte'>
+                {% setvalue test false %}
+                {% if session_vars.id_empr %}
+                    {% sqlvalue test %}select num_bannette from bannette_abon where num_bannette = {{bannette.id}} and num_empr = {{session_vars.id_empr}}
+                    {% endsqlvalue %}
+                {% endif %}
+                {% if test %}
+                    <input type='checkbox' name='already_abon' value='1' checked='checked' disabled='true'
+                        title='{{ module.msg.cms_module_bannetteslistabon_view_receive_by_mail | escape }} {% if bannette.comment %}{{ bannette.comment | escape }}{% else %}{{ bannette.name| escape }}{% endif %}'
+                        alt='{{ module.msg.cms_module_bannetteslistabon_view_receive_by_mail | escape }} {% if bannette.comment %}{{ bannette.comment | escape }}{% else %}{{ bannette.name | escape }}{% endif %}' />
+                    <input type='hidden' name='bannette_abon[{{bannette.id}}]' value='1' />
+                {% else %}
+                    <input type='checkbox' name='bannette_abon[{{bannette.id}}]' value='1'
+                        title='{{ module.msg.cms_module_bannetteslistabon_view_receive_by_mail | escape }} {% if bannette.comment %}{{bannette.comment| escape }}{% else %}{{bannette.name| escape }}{% endif %}'
+                        alt='{{ module.msg.cms_module_bannetteslistabon_view_receive_by_mail | escape }} {% if bannette.comment %}{{bannette.comment| escape }}{% else %}{{bannette.name| escape }}{% endif %}' />
+                {% endif %}
+                <input type='hidden' name='bannette_filtered_list[]' value='{{bannette.id}}' />
+                <a href='#' onclick="show_hide_records({{bannette.id }});return false;">
+                    <span class='libelleItem'>{% if bannette.comment %}{{bannette.comment}}{% else %}{{bannette.name}}{% endif %}</span>
+                </a>
+                {% if bannette.flux_rss.0.id %}
+                    <a href='{{bannette.flux_rss.0.opac_link}}' target='_blank'>
+                        <img class='imgItem' src='".$opac_url_base."cms/modules/bannetteslistabon/images/rss_feed.png'
+                            title='{{ module.msg.cms_module_bannetteslistabon_view_rss_abo  | escape }} {% if bannette.comment %}{{ bannette.comment | escape }}{% else %}{{ bannette.name | escape }}{% endif %}'
+                            alt='{{ module.msg.cms_module_bannetteslistabon_view_rss_abo  | escape }} {% if bannette.comment %}{{ bannette.comment | escape }}{% else %}{{ bannette.name | escape }}{% endif %}' style='height: 15px;'/>
+                    </a>
+                {% endif %}
+            </div>
+            <div id='itemRecords{{bannette.id}}' class='itemRecords' style='display:none;'>
+                {% for record in bannette.records%}
+                    {{record.content}}
+                {% endfor %}
+                <div class='seeAll'><a href='./index.php?lvl=bannette_see&id_bannette={{bannette.id}}'>{{ module.msg.cms_module_bannetteslistabon_view_see_all_item }}</a></div>
+            </div>
+        {% endfor %}
+
+        {% if session_vars.id_empr != 0 %}
+            <br>
+            <input class='bouton' type='button' onclick="valid_form('abonn')" value='{{ module.msg.cms_module_bannetteslistabon_view_item_abo | escape }}' />
+        {% else %}
+            <br>
+            <input type='radio' name='subscribe' id='subscribe_0' value='0' checked onclick='javascript:show_connect_subscribe(true)' />
+            <label for='subscribe_0'>{{ module.msg.cms_module_bannetteslistabon_view_radio_connect }}</label>
+            <input type='radio' name='subscribe' id='subscribe_1' value='1' onclick='javascript:show_connect_subscribe(false)' />
+            <label for='subscribe_1'>{{ module.msg.cms_module_bannetteslistabon_view_radio_subscribe }}</label>
+            <div id='div_connect' style='display:block;'>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for='connect_login' >{{ module.msg.cms_module_bannetteslistabon_view_connect_login }}</label>
+                            </td>
+                            <td>
+                                <input type='text' value='' id='connect_login' name='connect_login' required />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='connect_password' >{{ module.msg.cms_module_bannetteslistabon_view_connect_pwd }}</label>
+                            </td>
+                            <td>
+                                <input class='password' type='password' value='' id='connect_password' name='connect_password' required />
+                                <span class='fa fa-eye' onclick='toggle_password(this, "connect_password");' ></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                <a href='./askmdp.php'>{{ module.msg.cms_module_bannetteslistabon_view_connect_forgotten_pwd }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                <input class='bouton' type='button' value='{{ module.msg.cms_module_bannetteslistabon_view_connect_btn | escape }}' name='ok' onclick="valid_form('connect')" />
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+            <div id='div_subscribe' style='display:none;'>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td width='180'>
+                                <label for='subscribe_name' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_name }}</label>
+                            </td>
+                            <td>
+                                <input type='text' value='' tabindex='1' id='subscribe_name' name='subscribe_name' required />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='subscribe_first_name' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_first_name }}</label>
+                            </td>
+                            <td>
+                                <input type='text' value='' tabindex='2' id='subscribe_first_name' name='subscribe_first_name' />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='subscribe_mail' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_mail }}</label>
+                            </td>
+                            <td>
+                                <input type='email' value='' tabindex='3' id='subscribe_mail' name='subscribe_mail' required />
+                                <div class='helper' id='subscribe_mail_helper'></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='subscribe_login' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_login}}</label>
+                            </td>
+                            <td>
+                                <input class='subscribe_login' type='text' value='' tabindex='4' id='subscribe_login' name='subscribe_login' autocomplete='off' required />
+                                <div class='helper' id='subscribe_login_helper'></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='subscribe_password' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_pwd }}</label>
+                            </td>
+                            <td>
+                                <input type='password' value='' tabindex='5' name='subscribe_password' id='subscribe_password' autocomplete='new-password' required />
+                                <span class='fa fa-eye' onclick='toggle_password(this, "subscribe_password");' ></span>
+                                <div class='helper' id='subscribe_password_helper'></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for='subscribe_passwordv' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_pwd_verif }}</label>
+                            </td>
+                            <td>
+                                <input type='password' value='' tabindex='6' name='subscribe_passwordv' id='subscribe_passwordv' autocomplete='new-password' required />
+                                <span class='fa fa-eye' onclick='toggle_password(this, "subscribe_passwordv");' ></span>
+                                <div class='helper' id='subscribe_passwordv_helper'></div>
+                            </td>
+                        </tr>
+
+                        {% block captcha %}
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div id='captcha_container' >{{ empr.captcha }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='subscribe_verifcode' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_captcha }}</label>
+                                </td>
+                                <td>
+                                    <input type='text' tabindex='7' id='subscribe_verifcode' name='captcha_code' value='' required />
+                                    <div class='helper' id='subscribe_captcha_helper'></div>
+                                </td>
+                            </tr>
+                        {% endblock %}
+
+                        <tr>
+                            <td colspan='2'>
+                                <input type='checkbox' name='subscribe_consent_message' id='subscribe_consent_message' value='1' required />
+                                <label for='subscribe_consent_message' >{{ module.msg.cms_module_bannetteslistabon_view_subscribe_consent_message }}</label>
+                                <div class='helper' id='subscribe_consent_helper'></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                <input class='bouton' type='button' onclick="valid_form('subscribe')" value='{{ module.msg.cms_module_bannetteslistabon_view_subscribe_btn | escape }}' />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        <br>
+    </form>
+{% else %}
+    <span id='subscribe_ok'>{{ module.msg.cms_module_bannetteslistabon_view_email_sent }}</span>
+{% endif %}
+
+
+<script>
+// bascule affichage des notices d'une bannette
+function show_hide_records(bannette_id) {
+    try {
+        let content = document.getElementById('itemRecords'+bannette_id);
+        if ('none' == content.style.display){
+            content.style.display = 'block';
+        } else {
+            content.style.display = 'none';
+        }
+    } catch(ex) {
+    }
+}
+
+// bascule affichage connexion / inscription
+function show_connect_subscribe(choice_connect) {
+
+    try {
+        let div_connect = document.getElementById('div_connect');
+        let div_subscribe = document.getElementById('div_subscribe');
+
+        if (choice_connect){
+            div_connect.style.display= 'block';
+            div_subscribe.style.display= 'none';
+        } else {
+            div_connect.style.display= 'none';
+            div_subscribe.style.display= 'block';
+        }
+    } catch(ex) {}
+}
+
+// recuperation selection de bannettes
+function get_bannettes(form) {
+    let selection = [];
+    try {
+        for (let i=0; i < form.elements.length;  i++) {
+            if ( (form.elements[i].name.indexOf('bannette_abon') != -1) && (form.elements[i].checked) ) {
+                if (form.elements[i].checked) {
+                    selection.push(form.elements[i].name);
+                }
+            }
+        }
+    } catch(ex) {}
+    return selection;
+}
+
+// verification nom
+function check_subscribe_name() {
+
+    let error = false;
+    try {
+        let subscribe_name = document.getElementById('subscribe_name');
+        subscribe_name.value = subscribe_name.value.trim();
+        if ( 1 >  subscribe_name.value.length ) {
+            error = true;
+        }
+    } catch (ex) {}
+    return !error;
+}
+
+
+// verification adresse mail
+function check_subscribe_mail() {
+    
+    let error = false;
+    let helper_msg = '';
+    try {
+        let subscribe_mail = document.getElementById('subscribe_mail');
+        subscribe_mail.value = subscribe_mail.value.trim();
+        let helper = document.getElementById('subscribe_mail_helper');
+        if(!is_valid_mail(subscribe_mail.value)) {
+            helper_msg = '{{ msg.subs_mail_error | escape; }}';
+            error = true;
+        }
+        if(!error) {
+            let xhr = new http_request();
+            let url = './ajax.php?module=ajax&categ=empr&sub=check_mail_uniqueness&query_id_empr=&query_empr_mail='+subscribe_mail.value;
+            url = encodeURI(url);
+            xhr.request(url, );
+            if(1 != xhr.get_text()) {
+                helper_msg = '{{ msg.subs_mail_allready_used_error | escape; "true" }}';
+                error = true;
+            }
+        }
+        helper.innerHTML = helper_msg;
+    } catch(ex) {}
+    return !error;
+}
+
+// verification login
+function check_subscribe_login() {
+    
+    let error = false;
+    let helper_msg = '';
+    try {
+        let subscribe_login = document.getElementById('subscribe_login');
+        subscribe_login.value = subscribe_login.value.trim();
+        let helper = document.getElementById('subscribe_login_helper');
+            
+        if(!error) {
+            if( 2 > subscribe_login.value.length) {
+                helper_msg = '{{ msg.profil_login_too_short_error | escape }}';
+                error = true;
+            }
+        }
+        if(!error) {
+            let r = new RegExp("^[0-9|a-z|\\-|_|@|\.]{2,}$", 'g');
+            if(false == r.test(subscribe_login.value)) {
+                helper_msg = '{{ msg.profil_login_pattern_error | escape }}';
+                error = true;
+            }
+        }
+        if(!error) {
+            let xhr = new http_request();
+            let url = "./ajax.php?module=ajax&categ=empr&sub=check_login_uniqueness&query_id_empr=0&query_empr_login="+subscribe_login.value;
+            url = encodeURI(url);
+            xhr.request(url, );
+            if(1 != xhr.get_text()) {
+                helper_msg = '{{ msg.profil_login_allready_used_error | escape }}';
+                error = true;
+            }
+        }
+        helper.innerHTML = helper_msg;
+    } catch(ex) {
+        console.log(ex);
+    }
+    return !error;
+}
+
+// verification mot de passe
+function check_subscribe_password() {
+    
+    let enabled_password_rules = {{ empr.password_rules }};
+    let nb_rules = enabled_password_rules.length;
+    let helper_msg = '';
+    let error_msg = [];
+    let password_enabled = true;
+    
+    try {
+        let password = document.getElementById('subscribe_password').value;
+        let password_helper = document.getElementById('subscribe_password_helper');
+        
+        if(0 == nb_rules) {
+            return password_enabled;
+        }
+
+        for(let i = 0; i < nb_rules; i++) {
+            let rule = enabled_password_rules[i];
+            switch (rule.type) {
+                case 'class' :
+                    if( '' != rule.value) {
+                        if(rule.value == password) {
+                            error_msg.push(rule.error_msg);
+                            password_enabled = false;
+                        }
+                    }
+                    break;
+                case 'regexp' :
+                    if( '' != rule.regexp ) {
+                        let regexp = new RegExp(rule.regexp);
+                        if( !regexp.test(password) ) {
+                            error_msg.push(rule.error_msg);
+                            password_enabled = false;
+                        }
+                    }
+                    break;
+            }
+        }
+            
+        if(true == password_enabled) {
+            password_helper.innerHTML = ''; 
+            return true;
+        }
+        
+        if(0 == error_msg.length) {
+            password_helper.innerHTML = ''; 
+        } else {
+            let helper_msg = error_msg.join('<br />');
+            password_helper.innerHTML = helper_msg;
+        }
+        return false;
+    } catch(ex) {
+        console.log(ex);
+    }
+}
+
+// Verification egalite des mots de passe
+function check_suscribe_passwords_match() {
+    
+    let error = false;
+    let helper_msg = '';
+    try {
+        let empr_password = document.getElementById('subscribe_password').value;
+        let empr_passwordv =  document.getElementById('subscribe_passwordv').value;
+        let helper = document.getElementById('subscribe_passwordv_helper');
+        if(empr_password != empr_passwordv) {
+            helper_msg = '{{ msg.subs_form_bad_passwords | escape }}';
+            error = true;
+        }
+        helper.innerHTML = helper_msg;
+    } catch(ex) {}
+    return !error;
+}
+
+// Verification code verification
+function check_subscribe_verifcode() {
+    
+    let error = false;
+    let helper_msg = '';
+    try {
+        let subscribe_verifcode = document.getElementById('subscribe_verifcode');
+        subscribe_verifcode.value = subscribe_verifcode.value.trim();
+        let helper = document.getElementById('subscribe_verifcode_helper');
+        if ( 1 >  subscribe_verifcode.value.length ) {
+            helper_msg = '{{ msg.subs_form_bad_verifcode | escape }}';
+            error = true;
+        } 
+    } catch (ex) {}
+    return !error;
+}
+
+// Verification message consentement
+function check_subscribe_consent_message() {
+    
+    let error = false;
+    try {
+        let subscribe_consent_message = document.getElementById('subscribe_consent_message');
+        subscribe_verifcode.value = subscribe_verifcode.value.trim();
+        if ( !subscribe_consent_message.checked ) {
+            error = true;
+        }
+    } catch (ex) {}
+    return !error;
+}
+
+
+// Validation du formulaire avant soumission
+function valid_form(choice){
+    
+    let form = document.getElementById('bannette_subscription');
+    let params = null;
+    let helper_msg = '';
+    
+    // verification de la selection
+    let selection = get_bannettes(form);
+    if(selection.length < 1) {
+        helper_msg = '{{ module.msg.cms_module_bannetteslistabon_view_no_selection_error | escape }}';
+        alert(reverse_html_entities(helper_msg));
+        return;
+    }
+        
+    switch(choice) {
+        
+        // lecteur authentifie 
+        case 'abonn' :
+            document.bannette_subscription.action='empr.php';
+             document.bannette_subscription.submit();
+            break;
+        
+        
+        // lecteur non authentifie >> connexion
+        case 'connect' :
+            
+            if( (form.elements.connect_login.value.trim().length ==  0) || (form.elements.connect_password.value.trim().length == 0) ) {
+                helper_msg = '{{ module.msg.cms_module_bannetteslistabon_view_no_login_pwd_error | escape }}';
+                alert(reverse_html_entities(helper_msg));
+                return;
+            }
+            
+            xhr = new http_request();
+            url = './ajax.php?module=cms&categ=module&elem=cms_module_bannetteslistabon&action=ajax&do=connect';
+            params = 'login=' + form.connect_login.value + '&password=' + form.connect_password.value;
+            xhr.request(url, true, params);
+            if( 'ok' != xhr.get_text()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_connect_error | escape }}'));
+                return;
+            }
+            document.bannette_subscription.action='empr.php';
+            document.bannette_subscription.submit();
+            
+            break;
+            
+
+        // inscription
+        case 'subscribe' :
+        
+            if (!check_subscribe_name()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_name').focus();
+                return false;
+            }
+            if (!check_subscribe_mail()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_mail').focus();
+                return false;
+            }
+            if (!check_subscribe_login()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_login').focus();
+                return false;
+            }
+            if(!check_subscribe_password()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_password').focus();
+                return false;
+            }
+            if(!check_suscribe_passwords_match()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_passwordv').focus();
+                return false;
+            }
+            if(!check_subscribe_verifcode()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_verifcode').focus();
+                return false;
+            }
+            if(!check_subscribe_consent_message()) {
+                alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_form_error | escape }}'));
+                document.getElementById('subscribe_consent_message').focus();
+                return false;
+            }
+            
+            xhr = new http_request();
+            url = './ajax.php?module=cms&categ=module&elem=cms_module_bannetteslistabon&action=ajax&do=subscribe';
+            params = 'f_nom=' + form.subscribe_name.value;
+            params += '&f_prenom=' + form.subscribe_first_name.value;
+            params += '&f_email=' + form.subscribe_mail.value;
+            params += '&f_login=' + form.subscribe_login.value;
+            params += '&f_password=' + form.subscribe_password.value;
+            params += '&f_passwordv=' + form.subscribe_passwordv.value;
+            params += '&f_verifcode=' + form.subscribe_verifcode.value;
+            params += '&enregistrer=' + form.enregistrer.value;
+            params += '&lvl=' + form.lvl.value;
+            params += '&new_connexion=' + form.new_connexion.value
+            params += '&tab=' + form.tab.value;
+             if(form.subscribe_consent_message.checked) {
+                params += '&f_consent_message=1';
+            } else {
+                params += '&f_consent_message=0';
+            }
+            for (let i = 0; i < selection.length ; i++) {
+                if (form.elements[selection[i]].checked) {
+                    params += '&' + form.elements[selection[i]].name + '= 1'
+                }
+            }
+            xhr.request(url, true, params);
+
+            let response = (xhr.get_text());
+            switch(response) {
+                case 'ok' :
+                    document.location = document.location + '&subscribe_ok=1';
+                    break;
+                case 'error_bad_password' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_bad_password | escape }}'));
+                    break;
+                case 'error_consent_message' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_consent_message | escape }}'));
+                    break;
+                case 'error_tags_not_allowed' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_tags_not_allowed | escape }}'));
+                    break;
+                case 'error_mail_used' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_mail_used | escape }}'));
+                    break;
+                case 'error_login_used' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_login_used | escape }}'));
+                    break;
+                case 'error_login_invalid' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_login_invalid | escape }}'));
+                    break;
+                case 'error_mail_not_sent' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_mail_not_sent | escape }}'));
+                    break;
+                case 'error_code' :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_code | escape }}'));
+                    break;
+                default :
+                    alert(reverse_html_entities('{{ module.msg.cms_module_bannetteslistabon_view_error_unknown | escape }}'));
+                    break;
+            }
+            break;
+    }
+    
+    return;
+    
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    ajax_parse_dom();
+    let check_timeout = null;
+    try {
+
+        document.getElementById('subscribe_login').addEventListener('input', function(e) {
+            clearTimeout(check_timeout);
+            check_timeout = setTimeout(function() {
+                check_subscribe_login();
+            }, 1000);
+        });
+
+        document.getElementById('subscribe_password').addEventListener('input', function(e) {
+            clearTimeout(check_timeout);
+            check_timeout = setTimeout(function() {
+                check_subscribe_password();
+            }, 1000);
+        });
+
+         document.getElementById('subscribe_passwordv').addEventListener('input', function(e) {
+             clearTimeout(check_timeout);
+             check_timeout = setTimeout(function() {
+                 check_suscribe_passwords_match();
+             }, 1000);
+         });
+
+        document.getElementById('subscribe_mail').addEventListener('input', function(e) {
+            clearTimeout(check_timeout);
+            check_timeout = setTimeout(function() {
+                check_subscribe_mail();
+            }, 1000);
+        });
+
+    } catch(ex) {}
+});
+</script>

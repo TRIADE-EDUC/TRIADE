@@ -1,20 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_licence.class.php,v 1.6 2019-06-12 12:48:06 btafforeau Exp $
+// $Id: explnum_licence.class.php,v 1.8 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 use Spipu\Html2Pdf\Html2Pdf;
 
+global $class_path, $include_path;
 require_once($include_path.'/templates/explnum_licence/explnum_licence.tpl.php');
 require_once($class_path.'/explnum_licence/explnum_licence_profile.class.php');
 require_once($class_path.'/explnum_licence/explnum_licence_right.class.php');
 require_once($class_path.'/translation.class.php');
 
 /**
- * Classe de gestion des rÃ©gimes de licence
+ * Classe de gestion des régimes de licence
  * @author apetithomme, vtouchard
  *
  */
@@ -26,7 +27,7 @@ class explnum_licence {
 	protected $id;
 	
 	/**
-	 * LibellÃ© du rÃ©gime de licence
+	 * Libellé du régime de licence
 	 * @var string
 	 */
 	protected $label;
@@ -38,13 +39,13 @@ class explnum_licence {
 	protected $uri;
 	
 	/**
-	 * Profils associÃ©s
+	 * Profils associés
 	 * @var explnum_licence_profile
 	 */
 	protected $profiles;
 	
 	/**
-	 * Droits associÃ©s
+	 * Droits associés
 	 * @var explnum_licence_right
 	 */
 	protected $rights;
@@ -52,7 +53,7 @@ class explnum_licence {
 	public static $script_included = false;
 	
 	public function __construct($id = 0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 	}
 	
 	public function fetch_data() {
@@ -94,7 +95,7 @@ class explnum_licence {
 	}
 	
 	public static function get_explnum_licence_profiles($explnum_id){
-		$explnum_id+=0;
+		$explnum_id = intval($explnum_id);
 		$ids = array();
 		
 		if(!$explnum_id){
@@ -150,7 +151,6 @@ class explnum_licence {
 		if (!$explnum_id) {
 			return '';
 		}
-		global $msg;
 		global $explnum_licence_info_picto, $explnum_licence_script_dialog;
 		$html = '';
 		$profiles = self::get_explnum_licence_profiles($explnum_id);
@@ -171,7 +171,7 @@ class explnum_licence {
 		}
 		global $msg;
 		global $charset;
-		global $explnum_licence_profile_details, $explnum_licence_right_details, $explnum_licence_info_picto;
+		global $explnum_licence_profile_details, $explnum_licence_right_details;
 		$html = '';
 		$profiles = self::get_explnum_licence_profiles($explnum_id);
 		if (!count($profiles)) {
@@ -221,8 +221,6 @@ class explnum_licence {
 		if (!$explnum_id) {
 			return '';
 		}
-		global $msg;
-		global $charset;
 		global $class_path;
 		global $explnum_licence_pdf_container_template;
 		
@@ -236,9 +234,6 @@ class explnum_licence {
 		if (!$explnum_id) {
 			return '';
 		}
-		global $msg;
-		global $charset;
-		global $explnum_licence_profile_details, $explnum_licence_right_details, $explnum_licence_info_picto;
 		$html = '';
 		$profiles = self::get_explnum_licence_profiles($explnum_id);
 		if (!count($profiles)) {

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ontologies.tpl.php,v 1.5 2019-05-27 09:07:44 ngantier Exp $
+// $Id: ontologies.tpl.php,v 1.5 2019/05/27 09:07:44 ngantier Exp $
 
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");

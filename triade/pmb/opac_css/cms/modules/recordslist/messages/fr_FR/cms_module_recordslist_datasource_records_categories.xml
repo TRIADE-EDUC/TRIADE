@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_recordslist_datasource_records_categories.xml,v 1.2 2016-04-26 07:50:45 jpermanne Exp $ -->
+$Id: cms_module_recordslist_datasource_records_categories.xml,v 1.2 2016/04/26 07:50:45 jpermanne Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_recordslist_datasource_records_categories_title">Dans les mêmes catégories</entry>

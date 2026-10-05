@@ -1,19 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmb_document.class.php,v 1.6 2019-01-12 09:40:32 dgoron Exp $
+// $Id: pmb_document.class.php,v 1.10.2.2.2.1 2025/02/12 12:34:08 dbellamy Exp $
 
+use Pmb\AI\Orm\AiSharedListDocnumOrm;
+use Pmb\Common\Orm\OpacListeLectureOrm;
+
+global $class_path;
 require_once($class_path."/cms/cms_document.class.php");
-
 
 class pmb_document extends base_params implements params {
 	public $listeDocs = array();		//tableau de documents
 	public $current = 0;				//position courante dans le tableau
-	public $currentDoc = "";			//tableau dÃ©crivant le document courant
-	public $params;					//tableau de paramÃ¨tres utiles pour la recontructions des requetes...et mÃªme voir plus
-	public $watermark = array();			//Url du watermark si dÃ©fini  + transparence
-  
+	public $currentDoc = array();			//tableau décrivant le document courant
+	public $params;					//tableau de paramètres utiles pour la recontructions des requetes...et même voir plus
+	public $watermark = array();			//Url du watermark si défini  + transparence
+	public $visionneuse_path;
+
     public function __construct($params,$visionneuse_path) {
     	global $opac_photo_mean_size_x,$opac_photo_mean_size_y;
     	$this->driver_name = "pmb_document";
@@ -29,12 +33,12 @@ class pmb_document extends base_params implements params {
 	    	$this->getDocById($this->params["explnum"]);
 	    }
     }
- 	
+
 	public function getDocById($id){
 		$this->current = 0;
 		$this->listeDocs = array($id);
 	}
- 	
+
  	public function recupListDocNum(){
  		if(!count($this->listeDocs)){
 			$this->listeDocs = array();
@@ -42,7 +46,7 @@ class pmb_document extends base_params implements params {
 	 			case "article" :
 	 				$id_article = ($this->params['num_type']*1);
 					$query = "select document_link_num_document from cms_documents_links where document_link_type_object = 'article' and document_link_num_object = '".$id_article."'";
-					
+
 					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						$i=0;
@@ -50,7 +54,7 @@ class pmb_document extends base_params implements params {
 							if($this->params['explnum'] == $row->document_link_num_document){
 								$this->current = $i;
 							}
-							$this->listeDocs[] = $row->document_link_num_document+0;
+							$this->listeDocs[] = intval($row->document_link_num_document);
 							$i++;
 						}
 					}
@@ -58,7 +62,7 @@ class pmb_document extends base_params implements params {
  				case "section" :
  					$id_section = ($this->params['num_type']*1);
  					$query = "select document_link_num_document from cms_documents_links where document_link_type_object = 'section' and document_link_num_object = '".$id_section."'";
- 						
+
  					$result = pmb_mysql_query($query);
  					if(pmb_mysql_num_rows($result)){
  						$i=0;
@@ -66,98 +70,78 @@ class pmb_document extends base_params implements params {
  							if($this->params['explnum'] == $row->document_link_num_document){
  								$this->current = $i;
  							}
- 							$this->listeDocs[] = $row->document_link_num_document+0;
+ 							$this->listeDocs[] = intval($row->document_link_num_document);
  							$i++;
  						}
  					}
  					break;
+				case 'shared_list':
+					if (!AiSharedListDocnumOrm::exist($this->params['id'])) {
+						// Le document n'existe pas
+						break;
+					}
+
+					$aiSharedListDocnum = new AiSharedListDocnumOrm($this->params['id']);
+					if (!OpacListeLectureOrm::has_access($aiSharedListDocnum->num_list_ai_shared_list_docnum, $_SESSION['id_empr_session'])) {
+						// L'emprunteur n'a pas l'accès à la liste de lecture
+						break;
+					}
+
+					$this->current = 0;
+					$this->params['position'] = 0;
+					$this->listeDocs = [
+						$aiSharedListDocnum->id_ai_shared_list_docnum
+					];
+					break;
 	 		}
  		}
- 		if(isset($this->params['position'])){
- 			$this->current = $this->params['position'];
+ 		if (isset($this->params['position'])) {
+ 			$this->current = intval($this->params['position']);
  		}
   	}
-// 	
-// 	//recupÃ©re les documents numÃ©riques associÃ©s
-// 	public function getExplnums($id=0){
-//		global $dbh;
-//		global $opac_photo_filtre_mimetype; //filtre des mimetypes
-//		global $gestion_acces_active,$gestion_acces_empr_notice;
-//		
-//		if( sizeof($this->listeDocs) ==0 ){
-//			$requete = "select explnum_id,explnum_notice,explnum_bulletin,explnum_nom,explnum_mimetype,explnum_url,explnum_extfichier,explnum_nomfichier,explnum_repertoire,explnum_path from explnum ";
-//			if($id !=0){
-//				$id+=0;
-//				$requete .= "where explnum_id = $id";
-//				//if($opac_photo_filtre_mimetype) //Si on est ici c'est que la visionneuse est activÃ© alors on filtre les mimetypes (si il y en a pas on ne doit rien afficher)
-//					$requete .= " and explnum_mimetype in ($opac_photo_filtre_mimetype)";
-//				$res = pmb_mysql_query($requete,$dbh);
-//				$this->listeDocs[] = pmb_mysql_fetch_object($res);
-//				$this->current = 0;
-//			}else {
-//				if(sizeof($this->listeNotices) > 0 && sizeof($this->listeBulls) == 0){
-//					$requete .= "where (explnum_notice in ('".implode("','",$this->listeNotices)."') and explnum_bulletin = 0 ) ";
-//				}else if(sizeof($this->listeBulls) >0 && sizeof($this->listeNotices) == 0){
-//					$requete .= "where (explnum_bulletin in ('".implode("','",$this->listeBulls)."') and explnum_notice = 0)";
-//				}else {
-//					$requete .= "where ((explnum_notice in ('".implode("','",$this->listeNotices)."') and explnum_bulletin = 0) or (explnum_bulletin in ('".implode("','",$this->listeBulls)."') and explnum_notice = 0))";
-//				}
-//				//if($opac_photo_filtre_mimetype) //Si on est ici c'est que la visionneuse est activÃ© alors on filtre les mimetypes (si il y en a pas on ne doit rien afficher)
-//					$requete .= " and explnum_mimetype in ($opac_photo_filtre_mimetype)";
-//				$res = pmb_mysql_query($requete,$dbh);
-//				while(($expl = pmb_mysql_fetch_object($res))){
-//					$this->listeDocs[] = $expl;
-//				}
-//			}
-//			$this->checkCurrentExplnumId();
-//		}
-//	} 
-//	
-//	public function checkCurrentExplnumId(){
-//		if($this->params["explnum_id"] != 0 && $this->params["start"]){
-//			for ($i=0;$i<sizeof($this->listeDocs);$i++){
-//				if($this->params["explnum_id"] == $this->listeDocs[$i]->explnum_id){
-//					$this->current = $i;
-//					break;
-//				}
-//			}
-//		}else $this->current = $this->params["position"];			
-//	}
-//	
+
 	public function getCurrentDoc(){
 		$this->currentDoc = array();
-		//on peut rÃ©cup dÃ©jÃ  un certain nombre d'infos...
+
+		//on peut récup déjà un certain nombre d'infos...
 		$this->currentDoc["id"] = $this->listeDocs[$this->current];
-		$document = new cms_document($this->currentDoc["id"]);
-		$this->currentDoc["titre"] = $document->title ? $document->title : $document->filename; 
-		$this->currentDoc["searchterms"] = $this->params["user_query"];
-		$this->currentDoc["mimetype"] = $document->mimetype;
-		//pour le moment, on s'emmerde pas aevc l'article...
-		$this->currentDoc["desc"] = "";
-		$this->currentDoc["path"] = $document->get_document_in_tmp();
-		$this->currentDoc['extension'] = $ext=substr($document->filename,strrpos($document->filename,'.')*1+1);
-		
-		
-		return $this->currentDoc;		
-		$this->params["explnum_id"] = $this->listeDocs[$this->current]->explnum_id;
+
+		if ($this->params['type'] === 'shared_list') {
+			$aiSharedListDocnum = new AiSharedListDocnumOrm($this->params['id']);
+			$this->currentDoc["titre"] = $aiSharedListDocnum->name_ai_shared_list_docnum;
+			$this->currentDoc["searchterms"] = '';
+			$this->currentDoc["mimetype"] = $aiSharedListDocnum->mimetype_ai_shared_list_docnum;
+			$this->currentDoc["desc"] = "";
+			$this->currentDoc["path"] = $aiSharedListDocnum->getPath();
+			$this->currentDoc['extension'] = $aiSharedListDocnum->extfile_ai_shared_list_docnum;
+		} else {
+			$document = new cms_document($this->currentDoc["id"]);
+			$this->currentDoc["titre"] = $document->title ? $document->title : $document->filename;
+			$this->currentDoc["searchterms"] = $this->params["user_query"];
+			$this->currentDoc["mimetype"] = $document->mimetype;
+			//pour le moment, on s'emmerde pas aevc l'article...
+			$this->currentDoc["desc"] = "";
+			$this->currentDoc["path"] = $document->get_document_in_tmp();
+			$this->currentDoc['extension'] = substr($document->filename,strrpos($document->filename,'.')*1+1);
+		}
+		return $this->currentDoc;
 	}
 
 /*******************************************************************
-*  Renvoie le contenu du document brut et gÃ¨re le cache si besoin  *
+*  Renvoie le contenu du document brut et gère le cache si besoin  *
 ******************************************************************/
 	public function openCurrentDoc(){
-		global $dbh;
 		return file_get_contents($this->currentDoc['path']);
 	}
 
 	public function forbidden_callback(){
 		global $opac_show_links_invisible_docnums;
-		
+
 		$display ="";
 		if(!$_SESSION['user_code'] && $opac_show_links_invisible_docnums){
 			$auth_popup = new auth_popup();
 			$display.= "
-			<script type='text/javascript'>
+			<script>
 				auth_popup('./ajax.php?module=ajax&categ=auth&callback_func=pmb_visionneuse_refresh');
 				function pmb_visionneuse_refresh(){
 					window.location.reload();
@@ -165,8 +149,8 @@ class pmb_document extends base_params implements params {
 			</script>";
 		}
 		return $display;
-	} 
-	
+	}
+
 	public function getBnfClass($mimetype){
 		global $base_path,$class_path,$include_path;
 
@@ -180,14 +164,27 @@ class pmb_document extends base_params implements params {
 				$classname = "docbnf_zip";
 				break;
 		}
-		
+
 		return $classname;
 	}
-	
+
 	public function getVisionneuseUrl($params){
 		global $base_path;
+
 		$url = $base_path."/visionneuse.php?driver=pmb_document";
-		if($params){
+		if ($this->params['type'] === 'shared_list') {
+			// C'est moche, mais c'est la seule solution pour le moment
+			parse_str($params, $result);
+			$result['cms_type'] = 'shared_list';
+			$result['id'] = $result['explnum'];
+			unset($result['explnum']);
+
+			$url .= "&".http_build_query($result);
+			return $url;
+		}
+
+
+		if ($params){
 			$url.= "&".$params;
 		}
 		return $url;
@@ -195,12 +192,16 @@ class pmb_document extends base_params implements params {
 
 	public function getDocumentUrl($id){
 		global $opac_url_base;
+
+		if ($this->params['type'] === 'shared_list') {
+			return '';
+		}
 		return $opac_url_base."/ajax.php?module=cms&categ=document&action=render&id=".$id;
 	}
 
 	public function getCurrentBiblioInfos(){
-		global $msg;
-		
+// 		global $msg;
+
 // 		$current = $this->listeDocs[$this->current]->explnum_id;
 // 		if(!isset($this->biblioInfos[$current])){
 // 			$query = "select explnum_notice,explnum_bulletin from explnum where explnum_id = ".$current;
@@ -218,7 +219,7 @@ class pmb_document extends base_params implements params {
 // 						$aut_query = "select responsability_author from responsability where responsability_notice = ".$row->notice_id." order by responsability_type asc, responsability_ordre asc limit 1";
 // 					}
 // 				}else{
-// 					$query = "select bulletin_id, bulletin_titre,mention_date,date_date,notices.tit1,perio.tit1 as perio_title, notices.notice_id, perio.notice_id as serial_id from bulletins join notices as perio on bulletin_notice = perio.notice_id left join notices on num_notice = notices.notice_id where bulletin_id = ".$row->explnum_bulletin;					
+// 					$query = "select bulletin_id, bulletin_titre,mention_date,date_date,notices.tit1,perio.tit1 as perio_title, notices.notice_id, perio.notice_id as serial_id from bulletins join notices as perio on bulletin_notice = perio.notice_id left join notices on num_notice = notices.notice_id where bulletin_id = ".$row->explnum_bulletin;
 // 					$result = pmb_mysql_query($query);
 // 					if(pmb_mysql_num_rows($result)){
 // 						$row = pmb_mysql_fetch_object($result);
@@ -241,9 +242,9 @@ class pmb_document extends base_params implements params {
 // 				$this->biblioInfos[$current]['permalink']['label'] = $msg['location_more_info'];
 // 				$this->biblioInfos[$current]['author']['label'] = $msg['author_search'];
 // 			}
-			
+
 // 		}
-		return $this->biblioInfos[$current];
+// 		return $this->biblioInfos[$current];
 	}
 }
 ?>

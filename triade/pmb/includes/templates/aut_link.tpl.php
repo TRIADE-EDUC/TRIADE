@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: aut_link.tpl.php,v 1.23 2019-05-31 13:33:05 arenou Exp $
+// $Id: aut_link.tpl.php,v 1.25 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $add_aut_link, $aut_link0, $aut_link1, $form_aut_link, $form_aut_link_buttons, $pmb_aut_link_autocompletion, $add_aut_link, $msg, $charset;
 
-// templates pour la gestion des lien entre autoritÃ©s
+// templates pour la gestion des lien entre autorités
 $add_aut_link=" 
 <script>
 	!!js_aut_link_table_list!!
@@ -194,8 +194,6 @@ $add_aut_link="
 		img_plus.name='img_plus'+suffixe;
 		img_plus.setAttribute('id','img_plus'+suffixe);		
 		img_plus.className='img_plus';
-		img_plus.setAttribute('hspace','3');	
-		img_plus.setAttribute('border','0');	
 		img_plus.setAttribute('src','".get_url_icon('plus.gif')."');
 		var onclick='if(document.getElementById(\"aut_link_viewcomment'+suffixe+'\").style.display==\"none\") {getElementById(\"img_plus'+suffixe+'\").setAttribute(\"src\",\"".get_url_icon('minus.gif')."\");document.getElementById(\"aut_link_viewcomment'+suffixe+'\").style.display=\"inline\";}else {getElementById(\"img_plus'+suffixe+'\").setAttribute(\"src\",\"".get_url_icon('plus.gif')."\");document.getElementById(\"aut_link_viewcomment'+suffixe+'\").style.display=\"none\";} ';
 		img_plus.setAttribute('onclick',onclick);			
@@ -250,7 +248,7 @@ $add_aut_link="
 	/*
 	 * 
 	 	<div id="elacquisitionParent" class="parent" width="100%">
-					<img src="'.get_url_icon('plus.gif').'" class="img_plus" name="imEx" id="elacquisitionImg" title="dÃ©tail" onclick="expandBase('elacquisition', true); return false;" style="border:0px; margin:3px 3px">
+					<img src="'.get_url_icon('plus.gif').'" class="img_plus" name="imEx" id="elacquisitionImg" title="détail" onclick="expandBase('elacquisition', true); return false;" style="border:0px; margin:3px 3px">
 		</div> 
 					
 		<div id="elacquisitionChild" class="child" style="margin-bottom: 6px; display: block;">
@@ -266,7 +264,7 @@ $aut_link0 = "
 	<div class='row'>
 		!!aut_link_type!!
         !!aut_table_list!!
-		<img class='img_plus' border='0' hspace='3' src='".get_url_icon('plus.gif')."' id='img_plus!!aut_link!!'
+		<img class='img_plus' src='".get_url_icon('plus.gif')."' id='img_plus!!aut_link!!'
 			onclick=\"
 				if(document.getElementById('aut_link_viewcomment!!aut_link!!').style.display=='none') {
 					document.getElementById('img_plus!!aut_link!!').src='".get_url_icon('minus.gif')."';
@@ -306,7 +304,7 @@ $aut_link1 = "
 	<div class='row'>
 		!!aut_link_type!!
         !!aut_table_list!!
-		<img class='img_plus' border='0' hspace='3' src='".get_url_icon('plus.gif')."' id='img_plus!!aut_link!!'
+		<img class='img_plus' src='".get_url_icon('plus.gif')."' id='img_plus!!aut_link!!'
 			onclick=\"
 				if(document.getElementById('aut_link_viewcomment!!aut_link!!').style.display=='none') {
 					document.getElementById('img_plus!!aut_link!!').src='".get_url_icon('minus.gif')."';
@@ -359,6 +357,7 @@ $form_aut_link_buttons = "<input type='button' class='bouton_small' value='".$ms
         id='f_button_parcourir_!!index!!' 
 		onclick=\"
 			var selObj=document.getElementById('f_aut_link_table_list_!!index!!');
+			selObj.setAttribute('disabled', 'true');
 			var selIndex=selObj.selectedIndex;
 			var table= selObj.options[selIndex].value;
 			openPopUp(

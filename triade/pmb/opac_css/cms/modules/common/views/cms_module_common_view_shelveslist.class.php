@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_shelveslist.class.php,v 1.12 2018-05-25 12:05:27 dgoron Exp $
+// $Id: cms_module_common_view_shelveslist.class.php,v 1.15 2023/12/07 15:02:47 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class cms_module_common_view_shelveslist extends cms_module_common_view_django{
 					<a href='{{shelve.link_rss}}'>Flux RSS</a>
 				{% endif %}
 				<div>
-					<blockquote>{{shelve.comment}}</blockquote>
+					<div>{{shelve.comment}}</div>
 					{{shelve.records}}
 				</div>
 			{% endfor %}
@@ -66,21 +66,25 @@ class cms_module_common_view_shelveslist extends cms_module_common_view_django{
 		global $cms_module_common_view_shelveslist_nb_notices;
 		global $cms_module_common_view_shelveslist_django_directory;
 		$this->save_constructor_link_form("shelve");
-		$this->parameters['nb_notices'] = $cms_module_common_view_shelveslist_nb_notices+0;
-		$this->parameters['django_directory'] = $cms_module_common_shelveslist_view_django_directory;
+		$this->parameters['nb_notices'] = (int) $cms_module_common_view_shelveslist_nb_notices;
+		$this->parameters['django_directory'] = $cms_module_common_view_shelveslist_django_directory;
 		return parent::save_form();
 	}
 	
 	public function render($datas){
-		global $opac_etagere_notices_format;
-		
-		//on gère l'affichage des notices
-		foreach($datas["shelves"] as $i => $shelve) {
-			$datas['shelves'][$i]['records'] = contenu_etagere($shelve['id'],$this->parameters["nb_notices"],$opac_etagere_notices_format,"",1,'./index.php?lvl=etagere_see&id=!!id!!',$this->parameters['django_directory']);
-			$datas['shelves'][$i]['cart_link'] = $this->get_constructed_link('shelve_to_cart', $shelve['id']);
-		}
-		//on rappelle le tout...
-		return parent::render($datas);
+	    global $opac_etagere_notices_format;
+	    
+	    //on gere l'affichage des notices
+	    if( !empty($datas['shelves']) && is_array($datas['shelves']) ) {
+	        foreach($datas["shelves"] as $i => $shelve) {
+	            if(!empty($shelve['id']) ) {
+	                $datas['shelves'][$i]['records'] = contenu_etagere($shelve['id'],$this->parameters["nb_notices"],$opac_etagere_notices_format,"",1,'./index.php?lvl=etagere_see&id=!!id!!',$this->parameters['django_directory']);
+	                $datas['shelves'][$i]['cart_link'] = $this->get_constructed_link('shelve_to_cart', $shelve['id']);
+	            }
+	        }
+	    }
+	    //on rappelle le tout...
+	    return parent::render($datas);
 	}
 	
 	public function get_format_data_structure(){	

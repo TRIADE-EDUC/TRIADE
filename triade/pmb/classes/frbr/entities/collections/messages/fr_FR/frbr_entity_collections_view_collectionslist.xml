@@ -5,10 +5,13 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_collections_view_collectionslist.xml,v 1.1 2017-04-27 16:02:53 dgoron Exp $ -->
+$Id: frbr_entity_collections_view_collectionslist.xml,v 1.2 2021/03/01 11:04:07 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_collections_view_title">Titre de la liste</entry>
 	<entry code="frbr_entity_collections_view_collections_desc">Collections</entry>
 	<entry code="frbr_entity_collections_view_collectionslist_title">Liste des collections</entry>
+	<entry code="frbr_entity_collections_view_grouped_collections">Groupement de collections</entry>
+	<entry code="frbr_entity_collections_view_grouped_collections_label">Libellé du regroupement</entry>
+	<entry code="frbr_entity_collections_view_grouped_collections_values">Liste des collections par regroupement</entry>
 </XMLlist>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: AuthoritySource.xml,v 1.1 2024/02/26 14:28:55 dbellamy Exp $ -->
+
+<source>
+    
+    <methods>
+    
+        <!-- Nb de catégories -->
+        <nb_category>
+            <type>sql</type>
+            <query>select count(*) from noeuds</query>
+        </nb_category>
+        
+        <!-- Nb d'auteurs -->
+        <nb_author>
+            <type>sql</type>
+            <query>select count(*) from authors</query>
+        </nb_author>
+        
+        <!-- Nb d'éditeurs -->
+        <nb_publisher>
+            <type>sql</type>
+            <query>select count(*) from publishers</query>
+        </nb_publisher>
+        
+        <!-- Nb de collections -->
+        <nb_collection>
+            <type>sql</type>
+            <query>select count(*) from collections</query>
+        </nb_collection>
+        
+        <!-- Nb de sous-collections -->
+        <nb_sub_collection>
+            <type>sql</type>
+            <query>select count(*) from sub_collections</query>
+        </nb_sub_collection>
+        
+        <!-- Nb de séries -->
+        <nb_serie>
+            <type>sql</type>
+            <query>select count(*) from series</query>
+        </nb_serie>
+        
+        <!-- Nb d'oeuvres / expressions (titres uniformes) -->
+        <nb_tu>
+            <type>sql</type>
+            <query>select count(*) from titres_uniformes</query>
+        </nb_tu>
+        
+        <!-- Nb d'indexations -->
+        <nb_indexint>
+            <type>sql</type>
+            <query>select count(*) from indexint</query>
+        </nb_indexint>
+        
+    </methods>
+</source>

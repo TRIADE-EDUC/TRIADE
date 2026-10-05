@@ -1,20 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: view_serial.inc.php,v 1.3 2017-02-20 19:04:07 dgoron Exp $
+// $Id: view_serial.inc.php,v 1.4 2022/02/21 08:12:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// page d'affichage des Ã©lÃ©ments bulletinÃ©s d'un pÃ©riodique en recherche prÃ©visions
+// page d'affichage des éléments bulletinés d'un périodique en recherche prévisions
+global $class_path, $include_path, $msg, $begin_result_liste, $end_result_liste;
+global $serial_id, $id_empr, $groupID;
 
 require_once("$class_path/serials.class.php");
+
+$serial_id = intval($serial_id);
+$id_empr = intval($id_empr);
+$groupID = intval($groupID);
 
 $serial = new serial($serial_id);
 echo "<h3>".$msg[1150]." : ".$serial->tit1."</h3>";
 
 $requete = "select bulletin_id from bulletins join exemplaires on expl_bulletin=bulletin_id WHERE bulletin_notice=$serial_id group by bulletin_id ORDER BY bulletin_id DESC";
-$res = pmb_mysql_query($requete, $dbh);
+$res = pmb_mysql_query($requete);
 
 if(pmb_mysql_num_rows($res)) {
 

@@ -1,0 +1,14 @@
+{% extends 'record_in_result_display.tpl.html' %}
+
+<!-- $Id: record_in_result_display_a.tpl.html,v 1.1.2.1 2025/04/22 14:15:08 jdupuy Exp $ -->
+
+{% block record_year %}{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.bulletin_id %}
+		<li class="in_notCourte">
+			<span class="labelNot">{{ msg.dans_start }} : </span> <!-- Titre du periodique-->
+			<span><a href="{{ record.liens_opac.lien_rech_bulletin | replace '!!id!!' record.bul_info.bulletin_id }}" title="{{msg.title_link_perio}} {{ record.bul_info.title }} ({{ record.bul_info.numero }} {{ record.bul_info.date }})">{{ record.bul_info.title }} {% if record.bul_info.numero %}({{ record.bul_info.numero }}{% if record.bul_info.date %}, {{ record.bul_info.date }}{% endif %}){% else %}{% if record.bul_info.date %}({{ record.bul_info.date }}){% endif %}{% endif %}</a></span>
+		</li>
+	{% endif %}
+{% endblock %}

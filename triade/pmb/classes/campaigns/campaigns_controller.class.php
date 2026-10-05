@@ -2,14 +2,13 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaigns_controller.class.php,v 1.4 2018-04-23 13:27:33 dgoron Exp $
+// $Id: campaigns_controller.class.php,v 1.5 2020/11/18 14:42:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/lists_controller.class.php");
+global $class_path;
 require_once($class_path."/campaigns/campaign.class.php");
 require_once($class_path."/campaigns/campaign_stats.class.php");
-require_once($class_path."/list/list_campaigns_ui.class.php");
 
 class campaigns_controller extends lists_controller {
 	
@@ -18,7 +17,6 @@ class campaigns_controller extends lists_controller {
 	protected static $list_ui_class_name = 'list_campaigns_ui';
 	
 	public static function proceed($id=0) {
-		global $msg;
 		global $action;
 	
 		switch ($action) {

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entrez_protocol.class.php,v 1.11 2019-01-15 15:13:13 mbertin Exp $
+// $Id: entrez_protocol.class.php,v 1.14 2022/06/14 07:45:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,20 +15,20 @@ class xml_dom_entrez {
 	/**
 	 * \brief Arbre des noeuds du document
 	 * 
-	 * L'arbre est composÃ© de noeuds qui ont la structure suivante :
+	 * L'arbre est composé de noeuds qui ont la structure suivante :
 	 * \anchor noeud
 	 * \verbatim
 	 $noeud = array(
-	 	NAME	=> Nom de l'Ã©lÃ©ment pour un noeud de type Ã©lÃ©ment (TYPE = 1)
+	 	NAME	=> Nom de l'élément pour un noeud de type élément (TYPE = 1)
 	 	ATTRIBS	=> Tableau des attributs (nom => valeur)
-	 	TYPE	=> 1 = Noeud Ã©lÃ©ment, 2 = Noeud texte
+	 	TYPE	=> 1 = Noeud élément, 2 = Noeud texte
 	 	CHILDS	=> Tableau des noeuds enfants
 	 )
 	 \endverbatim
 	 */
 	public $tree; 
 	public $error=false; 		/*!< Signalement d'erreur : true : erreur lors du parse, false : pas d'erreur */
-	public $error_message=""; 	/*!< Message d'erreur correspondant Ã  l'erreur de parse */
+	public $error_message=""; 	/*!< Message d'erreur correspondant à l'erreur de parse */
 	public $depth=0;			/*!< \protected */
 	public $last_elt=array();	/*!< \protected */
 	public $n_elt=array();		/*!< \protected */
@@ -75,6 +75,9 @@ class xml_dom_entrez {
 		$this->last_char=true;
 		$this->last_elt[$this->depth]=$this->cur_elt;
 		$this->cur_elt=array();
+		if(!isset($this->cur_elt["DATA"])) {
+			$this->cur_elt["DATA"] = '';
+		}
 		$this->cur_elt["DATA"].=$char;
 		$this->cur_elt["TYPE"]=2;
 		$this->depth++;
@@ -83,7 +86,7 @@ class xml_dom_entrez {
 	/**
 	 * \brief Instanciation du parser
 	 * 
-	 * Le document xml est parsÃ© selon le charset donnÃ© et une reprÃ©sentation sous forme d'arbre est gÃ©nÃ©rÃ©e
+	 * Le document xml est parsé selon le charset donné et une représentation sous forme d'arbre est générée
 	 * @param string $xml XML a manipuler
 	 * @param string $charset Charset du document XML
 	 */
@@ -104,16 +107,18 @@ class xml_dom_entrez {
        		$this->error=true;
 		}
 		$this->tree=$this->last_elt[0];
+		xml_parser_free($xml_parser);
+		unset($xml_parser);
 	}
 	
 	/**
 	 * \anchor path_node
-	 * \brief RÃ©cupÃ©ration d'un noeud par son chemin
+	 * \brief Récupération d'un noeud par son chemin
 	 * 
-	 * Recherche un noeud selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin du noeud recherchÃ©
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvÃ©
+	 * Recherche un noeud selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin du noeud recherché
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -126,17 +131,17 @@ class xml_dom_entrez {
 	 	</b>
 	 </a>
 	 
-	 a/b/c		Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>)
-	 a/b/c[2]/d	Le premier noeud Ã©lÃ©ment d du deuxiÃ¨me noeud c (<d>Sous texte</d>)
-	 a/b/c[3]	Le troisiÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>) 
-	 a/b/id@c	Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>). L'attribut est ignorÃ©
-	 a/b/id@c[3]	Le troisÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>). L'attribut est ignorÃ©
+	 a/b/c		Le premier noeud élément c (<c id="0">Texte</c>)
+	 a/b/c[2]/d	Le premier noeud élément d du deuxième noeud c (<d>Sous texte</d>)
+	 a/b/c[3]	Le troisième noeud élément c (<c id="2">Texte 2</c>) 
+	 a/b/id@c	Le premier noeud élément c (<c id="0">Texte</c>). L'attribut est ignoré
+	 a/b/id@c[3]	Le troisème noeud élément c (<c id="2">Texte 2</c>). L'attribut est ignoré
 	 
-	 Les attributs ne peuvent Ãªtre citÃ©s que sur le noeud final.
+	 Les attributs ne peuvent être cités que sur le noeud final.
 	 \endverbatim
 	 */
-	public function get_node($path,$node="") {
-		if ($node=="") $node=&$this->tree;
+	public function get_node($path, $node = array()) {
+		if (empty($node)) $node =& $this->tree;
 		$paths=explode("/",$path);
 		for ($i=0; $i<count($paths); $i++) {
 			if ($i==count($paths)-1) {
@@ -157,10 +162,10 @@ class xml_dom_entrez {
 			}
 			$nc=0;
 			$found=false;
-			if(is_array($node["CHILDS"]) && count($node["CHILDS"])){
+			if(!empty($node["CHILDS"]) && is_array($node["CHILDS"]) && count($node["CHILDS"])){
 				for ($j=0; $j<count($node["CHILDS"]); $j++) {
 					if (($node["CHILDS"][$j]["TYPE"]==1)&&($node["CHILDS"][$j]["NAME"]==$name)) {
-						//C'est celui lÃ  !!
+						//C'est celui là !!
 						if ($nc==$n) {
 							$node=&$node["CHILDS"][$j];
 							$found=true;
@@ -176,12 +181,12 @@ class xml_dom_entrez {
 	
 	/**
 	 * \anchor path_nodes
-	 * \brief RÃ©cupÃ©ration d'un ensemble de noeuds par leur chemin
+	 * \brief Récupération d'un ensemble de noeuds par leur chemin
 	 * 
-	 * Recherche d'un ensemble de noeuds selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin des noeuds recherchÃ©s
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvÃ©
+	 * Recherche d'un ensemble de noeuds selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin des noeuds recherchés
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -194,9 +199,9 @@ class xml_dom_entrez {
 	 	</b>
 	 </a>
 	 
-	 a/b/c		Tous les Ã©lÃ©ments c fils de a/b 
-	 a/b/c[2]/d	Tous les Ã©lÃ©ments d fils de a/b et du deuxiÃ¨me Ã©lÃ©ment c
-	 a/b/id@c	Tous les noeuds Ã©lÃ©ments c fils de a/b. L'attribut est ignorÃ©
+	 a/b/c		Tous les éléments c fils de a/b 
+	 a/b/c[2]/d	Tous les éléments d fils de a/b et du deuxième élément c
+	 a/b/id@c	Tous les noeuds éléments c fils de a/b. L'attribut est ignoré
 	 \endverbatim
 	 */
 	public function get_nodes($path,$node="") {
@@ -210,21 +215,21 @@ class xml_dom_entrez {
 	}
 	
 	/**
-	 * \brief RÃ©cupÃ©ration des donnÃ©es sÃ©rialisÃ©es d'un noeud Ã©lÃ©ment
+	 * \brief Récupération des données sérialisées d'un noeud élément
 	 * 
-	 * RÃ©cupÃ¨re sous forme texte les donnÃ©es d'un noeud Ã©lÃ©ment :\n
-	 * -Si c'est un Ã©lÃ©ment qui n'a qu'un noeud texte comme fils, renvoie le texte\n
-	 * -Si c'est un Ã©lÃ©ment qui a d'autres Ã©lÃ©ments comme fils, la version sÃ©rialisÃ©e des enfants est renvoyÃ©e
-	 * @param noeud $node Noeud duquel rÃ©cupÃ©rer les donnÃ©es
-	 * @param bool $force_entities true : les donnÃ©es sont renvoyÃ©es avec les entitÃ©s xml, false : les donnÃ©es sont renvoyÃ©es sans entitÃ©s
-	 * @return string donnÃ©es sÃ©rialisÃ©es du noeud Ã©lÃ©ment
+	 * Récupère sous forme texte les données d'un noeud élément :\n
+	 * -Si c'est un élément qui n'a qu'un noeud texte comme fils, renvoie le texte\n
+	 * -Si c'est un élément qui a d'autres éléments comme fils, la version sérialisée des enfants est renvoyée
+	 * @param noeud $node Noeud duquel récupérer les données
+	 * @param bool $force_entities true : les données sont renvoyées avec les entités xml, false : les données sont renvoyées sans entités
+	 * @return string données sérialisées du noeud élément
 	 */
 	public function get_datas($node,$force_entities=false) {
 		$char="";
 		if ($node["TYPE"]!=1) return false;
-		//Recherche des fils et vÃ©rification qu'il n'y a que du texte !
+		//Recherche des fils et vérification qu'il n'y a que du texte !
 		$flag_text=true;
-		if(is_array($node["CHILDS"]) && count($node["CHILDS"])){
+		if(!empty($node["CHILDS"]) && is_array($node["CHILDS"]) && count($node["CHILDS"])){
 			for ($i=0; $i<count($node["CHILDS"]); $i++) {
 				if ($node["CHILDS"][$i]["TYPE"]!=2) $flag_text=false;
 			}
@@ -232,7 +237,7 @@ class xml_dom_entrez {
 		if ((!$flag_text)&&(!$force_entities)) {
 			$force_entities=true;
 		}
-		if(is_array($node["CHILDS"]) && count($node["CHILDS"])){
+		if(!empty($node["CHILDS"]) && is_array($node["CHILDS"]) && count($node["CHILDS"])){
 			for ($i=0; $i<count($node["CHILDS"]); $i++) {
 				if ($node["CHILDS"][$i]["TYPE"]==2)
 					if ($force_entities) 
@@ -255,10 +260,10 @@ class xml_dom_entrez {
 	}
 	
 	/**
-	 * \brief RÃ©cupÃ©ration des attributs d'un noeud
+	 * \brief Récupération des attributs d'un noeud
 	 * 
-	 * Renvoie le tableau des attributs d'un noeud Ã©lÃ©ment (Type 1)
-	 * @param noeud $node Noeud Ã©lÃ©ment duquel on veut les attributs
+	 * Renvoie le tableau des attributs d'un noeud élément (Type 1)
+	 * @param noeud $node Noeud élément duquel on veut les attributs
 	 * @return mixed Tableau des attributs Nom => Valeur ou false si ce n'est pas un noeud de type 1
 	 */
 	public function get_attributes($node) {
@@ -267,13 +272,13 @@ class xml_dom_entrez {
 	}
 	
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un noeud par son chemin
+	 * \brief Récupère les données ou l'attribut d'un noeud par son chemin
 	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es d'un noeud ou la valeur d'un attribut selon le chemin
-	 * @param string $path chemin du noeud recherchÃ©
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return string DonnÃ©e sÃ©rialsiÃ©e ou valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * Récupère les données sérialisées d'un noeud ou la valeur d'un attribut selon le chemin
+	 * @param string $path chemin du noeud recherché
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return string Donnée sérialsiée ou valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -312,7 +317,7 @@ class xml_dom_entrez {
 				$found=false;
 				foreach($elt["ATTRIBS"] as $key=>$val) {
 					if ($key==$attr) {
-						//C'est celui lÃ  !!
+						//C'est celui là !!
 						if ($nc==$n) {
 							$value=$val;
 							$found=true;
@@ -329,13 +334,13 @@ class xml_dom_entrez {
 	}
 	
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un ensemble de noeuds par leur chemin
+	 * \brief Récupère les données ou l'attribut d'un ensemble de noeuds par leur chemin
 	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
-	 * @param string $path chemin des noeuds recherchÃ©s
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return array Tableau des donnÃ©es sÃ©rialisÃ©es ou des valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * Récupère les données sérialisées ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
+	 * @param string $path chemin des noeuds recherchés
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return array Tableau des données sérialisées ou des valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -377,7 +382,7 @@ class xml_dom_entrez {
 					$found=false;
 					foreach($elt["ATTRIBS"] as $key=>$val) {
 						if ($key==$attr) {
-							//C'est celui lÃ  !!
+							//C'est celui là !!
 							if ($nc==$n) {
 								$values[]=$val;
 								$found=true;
@@ -451,12 +456,24 @@ class entrez_request {
 		}
 
 		$curl =  new Curl();
-		$url = $this->base_url . "efetch.fcgi?db=".$this->database."&retmode=xml&id=".implode(",", $this->current_id_list);
-		$result = $curl->get($url);
+		if(count($this->current_id_list) > 200) {
+			$url = $this->base_url . "efetch.fcgi";
+			$fields = [
+					'db' => $this->database,
+					'retmode' => 'xml',
+					'id' => implode(',', $this->current_id_list),
+			];
+			$result = $curl->post($url, $fields);
+		} else {
+			$url = $this->base_url . "efetch.fcgi?db=".$this->database."&retmode=xml&id=".implode(",", $this->current_id_list);
+			$result = $curl->get($url);
+		}
 		
-		$current_responses = $result->body;
-
-		$this->current_responses = $current_responses;
+		$response_status = substr($result->headers['Status-Code'], 0, 1);
+		if ($response_status == '2' || $response_status == '3') {
+			$current_responses = $result->body;
+			$this->current_responses = $current_responses;
+		}
 	}
 	
 	public function get_current_responses() {

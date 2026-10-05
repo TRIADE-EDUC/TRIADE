@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -21,7 +21,7 @@
 include_once("./common/choixlangue.php");  // fichier sur la langue a utiliser
 include_once("./common/lib_ecole.php");   // nom du repertoire de l'ecole
 include_once("./common/version.php");
-include_once('./librairie_pdf/php.arabe/Arabic.php');
+if (file_exists('./librairie_pdf/php.arabe/Arabic.php')) include_once('./librairie_pdf/php.arabe/Arabic.php');
 
 
 // --------------------------------------
@@ -77,8 +77,15 @@ include_once("langue-text-en.php");
 }
 //--------------------------------------
 //--------------------------------------
-
-
+if ( LANGUE == "allemand" ) {
+?>
+<script type="text/javascript" > var langv = '<?php print VERSIONLETTRE?>'; </script>
+<script type="text/javascript" src="/<?php print REPECOLE?>/librairie_js/langue-menu-de.js"></script>
+<script type="text/javascript" src="/<?php print REPECOLE?>/librairie_js/langue-function-de.js"></script>
+<script type="text/javascript" > var lang_lang = 'de'; </script>
+<?php
+include_once("langue-text-de.php");
+}
 // --------------------------------------
 // debut pour l'espagnol
 // --------------------------------------

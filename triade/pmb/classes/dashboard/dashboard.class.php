@@ -2,18 +2,18 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dashboard.class.php,v 1.5 2018-01-03 15:34:22 tsamson Exp $
+// $Id: dashboard.class.php,v 1.9 2023/05/04 10:16:42 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path, $autoload;
 require_once($include_path."/templates/dashboard.tpl.php");
-require_once($class_path."/autoloader.class.php");
-$autoload = new autoloader();
 
 class dashboard {
 	private $dashboard_modules = array();
 	private $dashboards;
 	private $dasboard_to_print = array();
+	private $layout; 
 	
 	public function __construct($dashboard_modules=array()){
 		$this->dashboard_modules = $dashboard_modules;
@@ -24,14 +24,14 @@ class dashboard {
 	}
 
 	public function render(){
-		//On a la liste des modules... On rÃ©cupÃ¨re les tableaux de bord...
+		//On a la liste des modules... On récupère les tableaux de bord...
 		$this->dashboards =array();
 		foreach($this->dashboard_modules as $module_name){
 			$dashboard_classname = "dashboard_module_".$module_name;
 			$this->dashboards[] = new $dashboard_classname();
 		}
 		
-		//les diffÃ©rents tableaux
+		//les différents tableaux
 		$this->dasboard_to_print = $context = array();
 		foreach($this->dashboards as $dashboard){
 			if ($dashboard->module == "dashboard"){
@@ -150,10 +150,9 @@ class dashboard {
 		}	
 		$template = "";
 		if(file_exists($filepath.".xml")){
-			@ini_set("zend.ze1_compatibility_mode", "0");
 			$xml = new DOMDocument();
 			$xml->load($filepath.".xml");
-			//langue de rÃ©fÃ©rence
+			//langue de référence
 			$default_lang = "";
 			$xml_template = $xml->getElementsByTagName("template")->item(0);
 				
@@ -161,7 +160,7 @@ class dashboard {
 				$attributes = $xml_template->attributes;
 				for($i=0 ; $i<$attributes->length ; $i++){
 					if($attributes->item($i)->nodeName == "default_lang"){
-						//dom retourne de l'utf-8 Ã  tous les coups...
+						//dom retourne de l'utf-8 à tous les coups...
 						$default_lang = $this->charset_normalize($attributes->item($i)->nodeValue,"utf-8");
 						break;
 					}
@@ -195,7 +194,6 @@ class dashboard {
 				}
 				if($end) break;				
 			}
-			@ini_set("zend.ze1_compatibility_mode", "1");
 		}
 		return $template;
 	}

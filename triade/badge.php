@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -70,11 +70,11 @@ if (isset($_POST['create'])) {
 		$in.="'$value',";
 	}
 	$in=preg_replace('/,$/','',$in);
-	$sql="SELECT libelle,elev_id,nom,prenom,code_class FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe=code_class AND  code_class IN ($in)";
+	$sql="SELECT libelle,elev_id,nom,prenom,code_class FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe=code_class AND  code_class IN ($in)";
 
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	$nbBadge=count($data);
+	$nbBadge=countTriade($data);
 
 	
 ?>
@@ -152,7 +152,7 @@ if (isset($_POST['create2'])) {
 	$datavisu=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire
 	$anneescolaire=$datavisu[0][11];
 	$in=stripslashes($idclasse);
-	$sql="SELECT libelle,elev_id,nom,prenom,code_class FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe=code_class AND  code_class IN ($in)";
+	$sql="SELECT libelle,elev_id,nom,prenom,code_class FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe=code_class AND  code_class IN ($in)";
 	require_once "./librairie_php/class.writeexcel_workbook.inc.php";
 	require_once "./librairie_php/class.writeexcel_worksheet.inc.php";
 	if (!is_dir("./data/badge")) { @mkdir("./data/badge"); htaccess("./data/badge"); } 
@@ -163,7 +163,7 @@ if (isset($_POST['create2'])) {
 	fwrite($fd,"$info");
 	fclose($fd);
 	$fichier="./data/badge/listing_badge.xls";	
-	$workbook = &new writeexcel_workbook($fichier);
+	$workbook = new writeexcel_workbook($fichier);
 	$worksheet1 =& $workbook->addworksheet('Listing Badge');	
 	$header =& $workbook->addformat();
 	$header->set_color('white');
@@ -183,7 +183,7 @@ if (isset($_POST['create2'])) {
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$ii=1;
-	for($i=0;$i<count($data);$i++) {  //  libelle,elev_id,nom,prenom,code_class
+	for($i=0;$i<countTriade($data);$i++) {  //  libelle,elev_id,nom,prenom,code_class
 		$codebarre=recupCodeBar($data[$i][1],"menueleve");
 		$nom=strtoupper($data[$i][2]);
 		$prenom=strtoupper($data[$i][3]);

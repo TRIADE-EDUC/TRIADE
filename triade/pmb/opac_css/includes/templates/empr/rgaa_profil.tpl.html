@@ -1,0 +1,546 @@
+<!-- $Id: rgaa_profil.tpl.html,v 1.2.2.2.2.1 2025/02/12 09:43:45 dgoron Exp $ -->
+
+{% block intro %}
+    {% if empr.id_empr %}
+    {% else %}
+        {{ msg.rgaa_subs_intro_services }}
+        {{ msg.subs_intro_explication | replace '!!nb_h_valid!!' empr.opac_websubscribe_valid_limit }}
+    {% endif %}
+{% endblock %}
+
+<div id='change-profil'>
+    <div id="change-profil-container" >
+        {% block profil_form %}
+        <form name="empr_form" id="empr_form" method="POST" action="./empr.php?lvl=change_profil&action=save" >
+        {% endblock%}
+            <table role="presentation">
+                <tbody>
+
+                    {% block empr_nom %}
+                        {% if empr.renewal_form_fields.empr_nom.display %}
+                        <tr {% if empr.renewal_form_fields.empr_nom.explanation %} title="{{ empr.renewal_form_fields.empr_nom.explanation }}"{% endif %} >
+                            <td>
+                                <label for="empr_nom" {% if empr.renewal_form_fields.empr_nom.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                    {{ msg.profil_empr_nom }} :
+                                </label>
+                            </td>
+                            <td>
+                                <input id="empr_nom" name="{{ prefix_name }}nom{{ suffix_name }}" type="text" value="{{ empr.empr_nom }}" {% if empr.renewal_form_fields.empr_nom.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_nom.alterable %}readonly {% endif %} />
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endblock %}
+                    {% block empr_prenom %}
+                        {% if empr.renewal_form_fields.empr_prenom.display %}
+                        <tr {% if empr.renewal_form_fields.empr_prenom.explanation %} title="{{ empr.renewal_form_fields.empr_prenom.explanation }}"{% endif %} >
+                            <td>
+                                <label for="empr_prenom" {% if empr.renewal_form_fields.empr_prenom.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                    {{ msg.profil_empr_prenom }} :
+                                </label>
+                            </td>
+                            <td>
+                                <input id="empr_prenom" name="{{ prefix_name }}prenom{{ suffix_name }}" type="text" value="{{ empr.empr_prenom }}" {% if empr.renewal_form_fields.empr_prenom.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_prenom.alterable %}readonly {% endif %} />
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endblock %}
+                    {% if empr.renewal_form_fields.empr_adr1.display %}
+                    <tr {% if empr.renewal_form_fields.empr_adr1.explanation %} title="{{ empr.renewal_form_fields.empr_adr1.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_adr1" {% if empr.renewal_form_fields.empr_adr1.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_adr1 }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_adr1" name="{{ prefix_name }}adr1{{ suffix_name }}" type="text" value="{{ empr.empr_adr1 }}" {% if empr.renewal_form_fields.empr_adr1.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_adr1.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_adr2.display %}
+                    <tr {% if empr.renewal_form_fields.empr_adr2.explanation %} title="{{ empr.renewal_form_fields.empr_adr2.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_adr2" {% if empr.renewal_form_fields.empr_adr2.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_adr2 }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_adr2" name="{{ prefix_name }}adr2{{ suffix_name }}" type="text" value="{{ empr.empr_adr2 }}" {% if empr.renewal_form_fields.empr_adr2.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_adr2.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_cp.display %}
+                    <tr {% if empr.renewal_form_fields.empr_cp.explanation %} title="{{ empr.renewal_form_fields.empr_cp.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_cp" {% if empr.renewal_form_fields.empr_cp.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_cp }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_cp" name="{{ prefix_name }}cp{{ suffix_name }}" type="text" value="{{ empr.empr_cp }}" {% if empr.renewal_form_fields.empr_cp.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_cp.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_ville.display %}
+                    <tr {% if empr.renewal_form_fields.empr_ville.explanation %} title="{{ empr.renewal_form_fields.empr_ville.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_ville" {% if empr.renewal_form_fields.empr_ville.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_ville }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_ville" name="{{ prefix_name }}ville{{ suffix_name }}" type="text" value="{{ empr.empr_ville }}" {% if empr.renewal_form_fields.empr_ville.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_ville.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_pays.display %}
+                    <tr {% if empr.renewal_form_fields.empr_pays.explanation %} title="{{ empr.renewal_form_fields.empr_pays.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_pays" {% if empr.renewal_form_fields.empr_pays.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_pays }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_pays" name="{{ prefix_name }}pays{{ suffix_name }}" type="text" value="{{ empr.empr_pays }}" {% if empr.renewal_form_fields.empr_pays.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_pays.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% block empr_mail %}
+                        {% if empr.renewal_form_fields.empr_mail.display %}
+                            <tr {% if empr.renewal_form_fields.empr_mail.explanation %} title="{{ empr.renewal_form_fields.empr_mail.explanation }}"{% endif %} >
+                                <td>
+                                    <label id="empr_mail_label" for="empr_mail" {% if empr.renewal_form_fields.empr_mail.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                        {{ msg.profil_empr_mail }} :
+                                    </label>
+                                </td>
+                                <td id="empr_mail">
+                                    {% for index, mail in empr.empr_mail %}
+                                        <input aria-labelledby="empr_mail_label" id="empr_mail_{{ index }}" name="{{ prefix_name }}mail{{ suffix_name }}[]" type="email" value="{{ mail }}" {% if empr.renewal_form_fields.empr_mail.mandatory %}{% if index == 0 %}required {% endif %}{% endif %} {% if !empr.renewal_form_fields.empr_mail.alterable %}readonly {% endif %} />
+                                        {% if empr.renewal_form_fields.empr_mail.alterable %}
+                                            {% if index == 0 %}
+                                                <button type="button" id="empr_mail_add_{{ index }}" class="bouton" onclick="empr_mail_add('{{ prefix_name }}mail{{ suffix_name }}')">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if index > 0 %}
+                                                <button type="button" id="empr_mail_remove_{{ index }}" class="bouton" onclick="empr_mail_remove(this)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        <br id="empr_mail_br_{{ index }}">
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endblock %}
+                    {% if empr.renewal_form_fields.empr_tel1.display %}
+                    <tr {% if empr.renewal_form_fields.empr_tel1.explanation %} title="{{ empr.renewal_form_fields.empr_tel1.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_tel1" {% if empr.renewal_form_fields.empr_tel1.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_tel1 }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_tel1" name="{{ prefix_name }}tel1{{ suffix_name }}" type="text" value="{{ empr.empr_tel1 }}" {% if empr.renewal_form_fields.empr_tel1.mandatory %}required {% endif %} {% if !empr.renewal_form_fields.empr_tel1.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_tel2.display %}
+                    <tr {% if empr.renewal_form_fields.empr_tel2.explanation %} title="{{ empr.renewal_form_fields.empr_tel2.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_tel2" {% if empr.renewal_form_fields.empr_tel2.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_tel2 }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_tel2" name="{{ prefix_name }}tel2{{ suffix_name }}" type="text" value="{{ empr.empr_tel2 }}" {% if empr.renewal_form_fields.empr_tel2.mandatory %}required {% endif %}  {% if !empr.renewal_form_fields.empr_tel2.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_prof.display %}
+                    <tr {% if empr.renewal_form_fields.empr_prof.explanation %} title="{{ empr.renewal_form_fields.empr_prof.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_prof" {% if empr.renewal_form_fields.empr_prof.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_prof }} :
+                            </label>
+                        </td>
+                        <td>
+                            <input id="empr_prof" name="{{ prefix_name }}prof{{ suffix_name }}" type="text" value="{{ empr.empr_prof }}" {% if empr.renewal_form_fields.empr_prof.mandatory %}required {% endif %}  {% if !empr.renewal_form_fields.empr_prof.alterable %}disabled {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_year.display %}
+                    <tr {% if empr.renewal_form_fields.empr_year.explanation %} title="{{ empr.renewal_form_fields.empr_year.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_year" {% if empr.renewal_form_fields.empr_year.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_year }} :
+                            </label>
+                        <td>
+                            <input id="empr_year" name="{{ prefix_name }}year{{ suffix_name }}" type="number" min="1900" max="2100" value="{{ empr.empr_year }}" {% if empr.renewal_form_fields.empr_year.mandatory %}required {% endif %}  {% if !empr.renewal_form_fields.empr_year.alterable %}readonly {% endif %} />
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_categ.display %}
+                    <tr {% if empr.renewal_form_fields.empr_categ.explanation %} title="{{ empr.renewal_form_fields.empr_categ.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_categ" {% if empr.renewal_form_fields.empr_categ.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_categ }} :
+                            </label>
+                        </td>
+                        <td>
+                            {% sqlvalue categs %}
+                                SELECT id_categ_empr AS id, libelle FROM empr_categ ORDER BY libelle
+                            {% endsqlvalue %}
+                            <select id="empr_categ" name="{{ prefix_name }}categ{{ suffix_name }}" {% if empr.renewal_form_fields.empr_categ.mandatory %}required{% endif %} {% if !empr.renewal_form_fields.empr_categ.alterable %}readonly onclick="return false;"{% endif %}>
+                                {% for categ in categs %}
+                                    <option value="{{ categ.id }}" {% if categ.id == empr.empr_categ %}selected="selected"{% endif %} {% if !empr.renewal_form_fields.empr_categ.alterable %}disabled {% endif %}>{{ categ.libelle }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_codestat.display %}
+                    <tr {% if empr.renewal_form_fields.empr_codestat.explanation %} title="{{ empr.renewal_form_fields.empr_codestat.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_codestat" {% if empr.renewal_form_fields.empr_codestat.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_codestat }} :
+                            </label>
+                        </td>
+                        <td>
+                            {% sqlvalue codestats %}
+                                SELECT idcode AS id, libelle FROM empr_codestat ORDER BY libelle
+                            {% endsqlvalue %}
+                            <select id="empr_codestat" name="{{ prefix_name }}codestat{{ suffix_name }}" {% if empr.renewal_form_fields.empr_codestat.mandatory %}required{% endif %} {% if !empr.renewal_form_fields.empr_codestat.alterable %}readonly onclick="return false;"{% endif %}>
+                                {% for codestat in codestats %}
+                                    <option value="{{ codestat.id }}" {% if codestat.id == empr.empr_codestat %}selected="selected"{% endif %}>{{codestat.libelle}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if empr.renewal_form_fields.empr_sexe.display %}
+                    <tr {% if empr.renewal_form_fields.empr_sexe.explanation %} title="{{ empr.renewal_form_fields.empr_sexe.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_sexe" {% if empr.renewal_form_fields.empr_sexe.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_sexe }} :
+                            </label>
+                        </td>
+                        <td>
+                            <select id="empr_sexe" name="{{ prefix_name }}sexe{{ suffix_name }}" {% if empr.renewal_form_fields.empr_sexe.mandatory %}required{% endif %} {% if !empr.renewal_form_fields.empr_sexe.alterable %}disabled onclick="return false;"{% endif %}>
+                                <option value="1" {% if empr.empr_sexe == 1 %}selected="selected"{% endif %}>{{ msg.profil_empr_sexe_m }}</option>
+                                <option value="2" {% if empr.empr_sexe == 2 %}selected="selected"{% endif %}>{{ msg.profil_empr_sexe_f }}</option>
+                                <option value="0" {% if empr.empr_sexe == 0 %}selected="selected"{% endif %}>{{ msg.profil_empr_sexe_o }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% block empr_login %}
+                        {% if empr.renewal_form_fields.empr_login.display %}
+                        <tr {% if empr.renewal_form_fields.empr_login.explanation %} title="{{ empr.renewal_form_fields.empr_login.explanation }}"{% endif %} >
+                            <td>
+                                <label for="empr_login" {% if empr.renewal_form_fields.empr_login.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                    {{ msg.profil_empr_login }} :
+                                </label>
+                            </td>
+                            <td>
+                                <input id="empr_login" name="{{ prefix_name }}login{{ suffix_name }}" type="text" value="{{ empr.empr_login }}"  {% if empr.renewal_form_fields.empr_login.mandatory %}required {% endif %}  {% if !empr.renewal_form_fields.empr_login.alterable %}readonly{% endif %} />
+                                <div class='helper' id="empr_login_helper"></div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% if empr.renewal_form_fields.empr_lang.display %}
+                    <tr {% if empr.renewal_form_fields.empr_lang.explanation %} title="{{ empr.renewal_form_fields.empr_lang.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_lang" {% if empr.renewal_form_fields.empr_lang.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.profil_empr_lang }} :
+                            </label>
+                        </td>
+                        <td>
+                            <select id='empr_lang' name='{{ prefix_name }}lang{{ suffix_name }}' {% if empr.renewal_form_fields.empr_lang.mandatory %} required {% endif %} {% if !empr.renewal_form_fields.empr_lang.alterable %} disabled onclick="return false;" {% endif %}>
+                                {{ empr.languages_selector }}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% block empr_location %}
+                        <!-- on ne permet pas la modification de la localisation en modification de profile -->
+                    {% endblock %}
+
+                    {% if empr.renewal_form_fields.empr_msg.display %}
+                    <tr {% if empr.renewal_form_fields.empr_msg.explanation %} title="{{ empr.renewal_form_fields.empr_msg.explanation }}"{% endif %} >
+                        <td>
+                            <label for="empr_msg" {% if empr.renewal_form_fields.empr_msg.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                {{ msg.empr_msg }} :
+                            </label>
+                        </td>
+                        <td>
+                            <textarea id="empr_msg" rows="5" cols="50" id="empr_msg" name="{{ prefix_name }}msg{{ suffix_name }}" {% if empr.renewal_form_fields.empr_msg.mandatory %}required {% endif %}  {% if !empr.renewal_form_fields.empr_msg.alterable %}readonly {% endif %} >{{ empr.empr_msg }}</textarea>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% block empr_p_perso %}
+                        <!-- On declare les variables avant le for pour ne pas rederclarer plusieurs fois avec let -->
+						<script> let node = false; let i = 0; let inputs = [];</script>
+                        {% for cp in empr.p_perso %}
+                            {% if cp.renewal_form_field.display %}
+                                <tr class="empr_p_perso" {% if cp.renewal_form_field.explanation %}title="{{ cp.renewal_form_field.explanation }}"{% endif %}>
+                                    <td>
+                                        <label {% if cp.FOR %}for="{{ cp.FOR }}"{% endif %} {% if cp.renewal_form_field.mandatory %}class="renewal_field_mandatory"{% endif %}>
+                                            {{ cp.TITRE_CLEAN }} :
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div id="{{ cp.NAME }}_container">{{ cp.EDIT }}</div>
+                                        <script>
+											//On recupere tout ce qui est contenu dans cp.EDIT et on ajoute les attributs a tous les inputs et selects
+											node = document.getElementById("{{ cp.NAME }}_container");
+											inputs = node.querySelectorAll("input,select");
+											if(inputs) {
+												for(let element of inputs) {
+													{% if cp.renewal_form_field.mandatory %}
+														if(element.type != 'button') {
+															element.setAttribute("required", "required");
+														}
+													{% endif %}
+													{% if !cp.renewal_form_field.alterable %}
+	                                                    element.setAttribute("disabled", "disabled");
+													{% endif %}
+												}
+											}
+                                        </script>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endblock %}
+                    {% block captcha %}
+                        {% if empr.id_empr %}
+                        {% else %}
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                <div id='captcha_container'>{{ empr.captcha }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span><label for="empr_verifcode" class='subscribe_field_mandatory'>{{ msg.subs_f_verifcode}}</label> : </span>
+                                </td>
+                                <td>
+                                    <input type='text' class='subsform' id='empr_verifcode' name='captcha_code' value='' required/>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endblock %}
+                    {% block empr_other_properties %}
+                    {% endblock %}
+                </tbody>
+            </table>
+            {% block profil_buttons %}
+                {{ empr.p_perso.CHECK_SCRIPTS }}
+                <div class='clear'></div>
+                <input type="submit" class="bouton" value="{{ msg.77 }}"/>
+                {% if global.empr_opac_account_deleted_status %}
+                    <input type=button class='bouton' id='delete_account_button' value="{{ msg.empr_delete_account }}" onClick="delete_account();" />
+                {% endif %}
+            {% endblock %}
+        </form>
+
+    </div>
+</div>
+
+{% block profil_script %}
+    {% if global.empr_opac_account_deleted_status %}
+        <script>
+            function delete_account() {
+                var div = document.createElement('div');
+                div.innerHTML = "{{ msg.empr_confirm_deleting_account }}";
+                var confirm_message = div.firstChild.nodeValue;
+                if (confirm(confirm_message)) {
+                    window.location = './empr.php?lvl=delete_account';
+                }
+            }
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block mail_script %}
+    {% if empr.renewal_form_fields.empr_mail.display %}
+        {% if empr.renewal_form_fields.empr_mail.alterable %}
+            <script>
+                function empr_mail_add(name) {
+
+                    // On recupere la liste des inputs empr_mail
+                    var NodeList = document.querySelectorAll("input[name='"+name+"[]']");
+                    if (NodeList) {
+
+                        length_empr_mail = NodeList.length;
+                        var last_id = "empr_mail_"+(length_empr_mail-1); // on recree le dernier id
+                        var new_id = "empr_mail_"+length_empr_mail; // on recree un nouvel id
+
+                        var add_button_id = "empr_mail_add_0"
+                        var remove_last_id = "empr_mail_remove_"+(length_empr_mail-1);
+                        var remove_new_id = "empr_mail_remove_"+length_empr_mail;
+
+                        var add_button = document.getElementById(add_button_id);
+                        // on recupere le node qui va contenir les inputs
+                        var container_empr_mail = document.getElementById("empr_mail");
+                        // on recupere le node que l'on va cloner
+                        var last_empr_mail = document.getElementById(last_id);
+
+
+                        // on recupere le button de suppression
+                        var last_empr_mail_remove = document.getElementById(remove_last_id);
+
+
+                        if (container_empr_mail && last_empr_mail) {
+
+                            // On clone l'ancien input en modifiant les valeurs.
+                            var new_empr_mail = last_empr_mail.cloneNode(true);
+                            new_empr_mail.id = new_id;
+                            new_empr_mail.value = "";
+                            new_empr_mail.defaultValue = "";
+                            new_empr_mail.required = false
+
+                            // si on cree le button remove
+                            var new_empr_mail_remove = document.createElement("button");
+                            new_empr_mail_remove.type = "button";
+                            new_empr_mail_remove.innerHTML = '<i class="fa fa-trash"></i>';
+                            new_empr_mail_remove.className = add_button.className;
+                            new_empr_mail_remove.id = remove_new_id;
+                            new_empr_mail_remove.onclick = function() { empr_mail_remove(new_empr_mail_remove); };
+
+                            var new_line = document.createElement("br");
+                            new_line.id = "empr_mail_br_"+length_empr_mail;
+
+                            // On ajoute l'input dans le container
+                            container_empr_mail.append(new_empr_mail);
+                            container_empr_mail.append(new_empr_mail_remove);
+                            container_empr_mail.append(new_line);
+                        }
+
+                    }
+                }
+
+                function empr_mail_remove(btn_remove){
+                    var order = btn_remove.id.replace("empr_mail_remove_", "");
+
+                    // on regarde si on a recupere le nombre
+                    if (isNaN(parseInt(order)) == false && order != 0) {
+
+                        // on recupere le node qui contient les inputs
+                        var container_empr_mail = document.getElementById("empr_mail");
+
+                        // on recupere les nodes a supprimer
+                        var empr_mail_input = document.getElementById("empr_mail_"+order);
+                        var empr_mail_br = document.getElementById("empr_mail_br_"+order);
+
+                        // si on a tout , on peut supprimer
+                        if (container_empr_mail && empr_mail_input && btn_remove && empr_mail_br) {
+                            container_empr_mail.removeChild(empr_mail_input);
+                            container_empr_mail.removeChild(empr_mail_br);
+                            container_empr_mail.removeChild(btn_remove);
+                        }
+                    }
+
+                }
+            </script>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+{% block check_login_script %}
+    <script>
+        function check_empr_login() {
+
+            let empr_id = '{{ empr.id_empr }}';
+            let current_empr_login = '';
+            if(empr_id) {
+                current_empr_login = '{{ empr.empr_login }}';
+            }
+            let new_empr_login = document.getElementById('empr_login').value;
+            let error = false;
+            let helper = document.getElementById('empr_login_helper');
+            let helper_msg = '';
+
+            if(!error) {
+                if( 2 > new_empr_login.length) {
+                    helper_msg = '{{ msg.profil_login_too_short_error | escape }}';
+                    error = true;
+                }
+            }
+            if(!error) {
+                let r = new RegExp("^[0-9|a-z|\\-|_|@|\.]{2,}$", 'g');
+                if(false == r.test(new_empr_login)) {
+                    helper_msg = '{{ msg.profil_login_pattern_error | escape }}';
+                    error = true;
+                }
+            }
+            if(!error) {
+                let xhr = new http_request();
+                let url = "./ajax.php?module=ajax&categ=empr&sub=check_login_uniqueness&query_id_empr={{ id_empr }}&query_empr_login="+new_empr_login;
+                url = encodeURI(url);
+                xhr.request(url, );
+
+                if(1 != xhr.get_text()) {
+                    helper_msg = '{{ msg.profil_login_allready_used_error | escape }}';
+                    error = true;
+                }
+            }
+            if(!error && ( '' != current_empr_login) && (new_empr_login != current_empr_login) ) {
+                helper_msg = '{{ msg.profil_login_disconnect_after_change | escape }}';
+            }
+
+            helper.innerHTML = helper_msg;
+            return !error;
+        }
+
+    </script>
+{% endblock %}
+
+{% block username_with_mail_script %}
+{% endblock %}
+
+{% block check_subscribe_script %}
+{% endblock %}
+
+{% block common_script %}
+    <script src="./includes/javascript/ajax.js"></script>
+    <script>ajax_parse_dom();</script>
+{% endblock %}
+
+
+{% block check_script %}
+    {% if empr.renewal_form_fields.empr_login.display %}
+        {% if empr.renewal_form_fields.empr_login.alterable %}
+            <script>
+                function check_before_submit(e) {
+                    if (!check_empr_login()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    };
+                }
+
+                var check_timeout = null;
+                try {
+                    document.getElementById('empr_login').addEventListener('input', function(e) {
+                        clearTimeout(check_timeout);
+                        check_timeout = setTimeout(function() {
+                            check_empr_login();
+                        }, 1000);
+                    });
+                    document.getElementById('empr_form').addEventListener('submit', check_before_submit);
+                } catch(err) {}
+
+            </script>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+

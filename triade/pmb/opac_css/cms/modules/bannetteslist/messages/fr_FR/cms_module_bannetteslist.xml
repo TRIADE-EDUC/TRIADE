@@ -5,9 +5,11 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_bannetteslist.xml,v 1.1 2019-04-30 13:58:05 dgoron Exp $ -->
+$Id: cms_module_bannetteslist.xml,v 1.2 2019/07/25 13:41:58 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_view_bannetteslist'>Vue Django</entry>
 	<entry code='cms_module_bannetteslist_view_django_directory'>Vue depuis un répertoire de templates</entry>
+	<entry code='cms_module_bannetteslist_view_django_from_tpl'>Vue à partir d'un template défini en édition</entry>
+	<entry code='cms_module_bannetteslist_view_django_directory_from_tpl'>Vue depuis un répertoire de templates à partir d'un template défini en édition</entry>
 </XMLlist>

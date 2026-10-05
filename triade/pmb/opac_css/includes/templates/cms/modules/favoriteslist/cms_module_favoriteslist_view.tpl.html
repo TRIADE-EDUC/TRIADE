@@ -1,0 +1,178 @@
+{% if sections and display_mode == "admin" %}
+	{% block sections %}
+		<fieldset>
+			<legend>{{ msg.cms_module_favoriteslist_legend }}</legend>
+		
+			<ul id="sectionsList_{{id}}">
+				{% for section in sections %}
+					<li class="draggableFrame" id="{{id}}_{{section.id}}" draggable="true" data-order="{{ loop.counter }}">
+						{% if section.logo.exists %}
+							<img class="imgM" src="{{section.logo.small}}" alt="{{section.title}}"/>
+						{% endif %}
+						{% block checkbox %}
+							<input 
+								type="checkbox" 
+								id="fav_{{id}}_{{section.id}}" 
+								name="fav_{{id}}_{{section.id}}" 
+								data-entity-id="{{section.id}}" 
+								{% if entities | count section.id ; %} checked {% endif %}
+							/>
+							<label for="fav_{{id}}_{{section.id}}" >{{section.title}}</label>
+						{% endblock checkbox %}
+					</li>
+				{% endfor %}
+			</ul>
+		</fieldset>
+		{% block save_button %}
+			<input type="button" class="bouton" id="saveFavoritesList_{{id}}" name="saveFavoritesList_{{id}}" value="{{msg.77}}"/>
+		{% endblock save_button %}
+	{% endblock sections %}
+
+
+	{% block script %}
+		<script>
+			if (!window.dndFav) {
+				class dndFavoriteList {
+					constructor(cms_id, item, saveLink) {
+						this.item = item;
+						this.saveLink = saveLink;
+						this.dropZoneList = [];
+						this.ulNode = document.getElementById("sectionsList_"+cms_id);
+						if (this.ulNode) {
+							var tabLi = this.ulNode.querySelectorAll("li");
+							tabLi.forEach((node)=>{
+								this.applyDragEvents(node);
+							});
+						}
+						this.saveButton = document.getElementById("saveFavoritesList_"+cms_id);
+						if (this.saveButton) {
+							this.saveButton.addEventListener("click",() => {
+								this.saveFavoritesList()
+							});
+						}
+					}
+					applyDragEvents (node) {
+						node.addEventListener("dragstart", event => {
+							this.calldragstart(node, event);
+						});
+						node.addEventListener("dragend", event => {
+							this.calldragend(node, event);
+						});
+					}
+					calldragstart (node, ev) {
+						this.initDropZone();
+						var cadreDrag = document.getElementById(node.id);
+						ev.dataTransfer.setData("text", ev.target.id);
+						ev.dataTransfer.dropEffect = "move";
+						cadreDrag.setAttribute('class', 'dragStartFrame');
+						this.idDragged = node.id;
+					}
+					calldragend (cadre, ev) {
+						var cadreDrag = document.getElementById(cadre.id);
+						cadreDrag.setAttribute('class', 'draggableFrame');
+						this.idDragged = null;
+						this.destroyDropZone();
+					}
+					calldragenter (cadre,ev){
+					}
+					calldragover (dropZone, ev) {
+						ev.preventDefault();
+						dropZone.setAttribute('class', 'dragoverDropZone');
+					}
+					calldrop(dropZone, ev) {
+						ev.preventDefault();
+						dropZone.setAttribute('class', 'dropZone');
+						var flyingNode = document.getElementById(this.idDragged);
+						dropZone.parentNode.replaceChild(flyingNode, dropZone);
+					}
+					calldragleave (dropZone) {
+						dropZone.setAttribute('class', 'dropZone');
+					}
+					initDropZone(){
+						var tabLi = this.ulNode.querySelectorAll('li');
+						tabLi.forEach((node) => {
+							this.createDropZone(node, 'beforebegin');
+						});
+						this.createDropZone(tabLi[tabLi.length-1], 'afterend');
+					}
+					createDropZone(refNode, position){
+						var dropZone = document.createElement('li');
+						dropZone.classList.add("dropZone");
+						refNode.insertAdjacentElement(position, dropZone);
+						this.dropZoneList.push(dropZone);
+
+						dropZone.addEventListener("dragover", event => {
+							this.calldragover(dropZone, event);
+						});
+						dropZone.addEventListener("dragleave", event => {
+							this.calldragleave(dropZone, event);
+						});
+						dropZone.addEventListener("drop", event => {
+							this.calldrop(dropZone, event);
+						});
+						dropZone.addEventListener("dragend", this.destroyDropZone);
+					}
+					destroyDropZone() {
+						this.dropZoneList.forEach((dropZone)=> {
+							dropZone.remove();
+						});
+						this.dropZoneList = new Array();
+					}
+					saveFavoritesList() {
+						var liChecked = [];
+						this.ulNode.querySelectorAll("li > input[type='checkbox']").forEach((node)=> {
+							if (node.checked) {
+								liChecked.push(node.getAttribute("data-entity-id"));
+							}
+						});
+						var data = {
+								display_mode : "admin",
+								item : this.item,
+								checked_entities : liChecked
+						};
+						var formData = new FormData();
+						formData.append("favoriteslist_data", JSON.stringify(data));
+						fetch(this.saveLink,{
+							method: "POST",
+							body: formData
+						}).then(function(res) {
+							if (res.ok)	{
+								alert(reverse_html_entities("{{msg.cms_module_favoriteslist_saved}}"));
+							}
+						})
+					}
+				}
+				window.dndFav = dndFavoriteList;
+			}
+				new window.dndFav("{{id}}", "{{item}}", "{{save_link}}")
+		</script>
+	{% endblock script %}
+
+	{% block style %}
+		<style>
+			.draggableFrame {
+				margin: 10px;
+				background-color: var(--c-secondary);
+				padding: 25px 5px 25px 5px;
+				text-align: center;
+			}
+
+			.dragStartFrame {
+				opacity: 0.5;
+				background-color: var(--c-secondary);
+				padding: 25px 5px 25px 5px;
+				text-align: center;
+			}
+
+			.dropZone {
+				height: 5px;
+			}
+
+			.dragoverDropZone {
+				border: 2px dashed grey;
+				padding: 20px 10px 20px 10px;
+				background-color: rgb(162, 162, 162, 0.22);
+			}
+		</style>
+	{% endblock style %}
+{% endif %}

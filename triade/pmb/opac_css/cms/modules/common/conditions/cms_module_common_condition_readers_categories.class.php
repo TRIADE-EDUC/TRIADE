@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_condition_readers_categories.class.php,v 1.2 2019-02-25 14:40:39 dgoron Exp $
+// $Id: cms_module_common_condition_readers_categories.class.php,v 1.2 2019/02/25 14:40:39 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -20,7 +20,7 @@ class cms_module_common_condition_readers_categories extends cms_module_common_c
 		$selector = $this->get_selected_selector();
 		if(is_object($selector)) {
 			$values = $selector->get_value();
-			//on regarde si le lecteur est autorisÃ© Ã  accÃ©der aux informations de ce cadre...
+			//on regarde si le lecteur est autorisé à accéder aux informations de ce cadre...
 			if(is_array($values)){
 				foreach($values as $value){
 					if($empr_categ == $value){

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Fichier de substitution des paramètres de tri
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: sort_parameters_subst.xml,v 1.1.4.2 2025/05/05 12:55:35 tsamson Exp $ -->
+<parameters_list>
+	<!--<parameters id="1">
+		<parameter name="pmb_default_sort">d_num_6</parameter>
+		<parameter name="opac_default_sort">d_num_6</parameter>
+	</parameters>-->
+</parameters_list>

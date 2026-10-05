@@ -1,0 +1,8 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_extended_display_s.tpl.html,v 1.1.2.1 2025/04/22 14:15:08 jdupuy Exp $ -->
+
+{% block record_tit1 %}
+	<!-- Titre propre -->
+	<h1 id="notice_main_title">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</h1>
+{% endblock %}

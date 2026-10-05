@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_pdf.class.php,v 1.6 2017-08-10 09:19:07 dgoron Exp $
+// $Id: index_pdf.class.php,v 1.7 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class index_pdf{
 	}
 	
 	/**
-	 * MÃ©thode qui retourne le texte Ã  indexer des pdf
+	 * Méthode qui retourne le texte à indexer des pdf
 	 */
 	public function get_text($filename){
 		global $charset;
@@ -34,7 +34,7 @@ class index_pdf{
 		pclose($fp);
 	
 		if($charset != "utf-8"){
-			return utf8_decode($texte);
+			return encoding_normalize::utf8_decode($texte);
 		}
 		return $texte;
 	}

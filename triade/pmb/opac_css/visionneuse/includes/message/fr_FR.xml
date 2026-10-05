@@ -4,11 +4,11 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.9 2017-05-24 07:59:17 arenou Exp $ -->
+$Id: fr_FR.xml,v 1.10 2024/03/29 14:42:14 pmallambic Exp $ -->
 <messages>
-	<entry code="close">Fermer</entry>
-	<entry code="fullscreen">Plein Ecran</entry>
-	<entry code="normal">Normal</entry>
+	<entry code="close">Fermer la visionneuse</entry>
+	<entry code="fullscreen">Mode plein écran</entry>
+	<entry code="normal">Mode normal</entry>
 	<entry code="nothing_to_display">Aucun document disponible.</entry>
 	<entry code="forbidden_resources">Vous ne pouvez pas accéder à ce document.</entry>
 	<entry code="download_doc">Télécharger le document hors de la visionneuse</entry>
@@ -37,4 +37,16 @@ $Id: fr_FR.xml,v 1.9 2017-05-24 07:59:17 arenou Exp $ -->
 	<entry code="book_top">Première page</entry>
 	<entry code="book_bottom">Dernière page</entry>
 	<entry code="contrast">Régler luminosité/contraste</entry>
+	<entry code="new_tab">Nouvelle fenêtre</entry>
+	<entry code="go_new_doc">Valider <![CDATA[<span class='visually-hidden'>et accéder au document numérique</span>]]></entry>
+	<entry code="go_page_label">Accéder directement à un document numérique en renseignant sa position dans le résultat de recherche</entry>
+	<entry code="paginator_first">Premier document</entry>
+	<entry code="paginator_prev">Document précédent</entry>
+	<entry code="paginator_next">Document suivant</entry>
+	<entry code="paginator_last">Dernier document</entry>
+	<entry code="paginator_label">Pagination des différents documents numériques</entry>
+	<entry code="paginator_current">Document</entry>
+	<entry code="record_section_title">Consulter la notice de ce document numérique</entry>
+	<entry code="BR_search">Chercher dans le document</entry>
+	<entry code="BR_search_btn">Rechercher</entry>
 </messages>

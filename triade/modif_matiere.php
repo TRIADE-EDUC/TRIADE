@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,11 +35,11 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return verifcreatmatiere()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
@@ -84,7 +84,7 @@ $matiereEn=trim(chercheMatiereEn($id));
 $offline=etatOfflineMatiere($id);
 
 
-if(isset($_POST["modif"])):
+if(isset($_POST["modif"])) {
 	include_once("librairie_php/db_triade.php");
 	validerequete("menuadmin");
 	// creation
@@ -95,29 +95,30 @@ if(isset($_POST["modif"])):
 	$code_matiere=$_POST["saisie_code_matiere"];
 	$saisie_creat_matiere_en=$_POST["saisie_creat_matiere_en"];
 	$cr=modif_matiere($_POST["saisie_creat_matiere"],$_POST["saisie_id_matiere"],$sous_matiere,$_POST["saisie_creat_matiere_long"],$code_matiere,$saisie_creat_matiere_en);
-        if($cr):
-	       alertJs(LANGMAT5);
+        if($cr){
+	       	alertJs(LANGMAT5);
 		$matiere=$_POST["saisie_creat_matiere"];
-               history_cmd($_SESSION["nom"],"MODIFICATION","matière $matiere $sous_matiere");
-        else:
+		updateLibelleSansAccent($id);
+               	history_cmd($_SESSION["nom"],"MODIFICATION","matière $matiere $sous_matiere");
+	}else{
                alertJs(LANGMAT6); 
-	endif;
-endif;
+        }
+}
 
 Pgclose();
 ?>
 
-<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere" size=20 maxlength='200' value="<?php print html_quotes(stripslashes($matiere)) ?>"></font> <font class='T1'><i>Format court</i></font><BR>
+<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere" size=20 maxlength='200' value="<?php print html_quotes(stripslashes(stripslashes($matiere))) ?>"></font> <font class='T1'><i>Format court</i></font><BR>
 <br>
-&nbsp;&nbsp;&nbsp;<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere_en" size=20 maxlength='200' value="<?php print html_quotes(stripslashes($matiereEn)) ?>" /></font> <font class='T1'><i><?php print LANGTMESS450 ?></i></font><br>
+&nbsp;&nbsp;&nbsp;<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere_en" size=20 maxlength='200' value="<?php print html_quotes(stripslashes(stripslashes($matiereEn))) ?>" /></font> <font class='T1'><i><?php print LANGTMESS450 ?></i></font><br>
 <br>
-&nbsp;&nbsp;&nbsp;<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere_long" size=40 maxlength='200'  value="<?php print html_quotes(stripslashes($matiereLong)) ?>" /></font> <font class='T1'><i><?php print LANGMESS209 ?>.</i></font><br>
+&nbsp;&nbsp;&nbsp;<font class=T2><?php print LANGGRP9?> : <input type=text name="saisie_creat_matiere_long" size=40 maxlength='200'  value="<?php print html_quotes(stripslashes(stripslashes($matiereLong))) ?>" /></font> <font class='T1'><i><?php print LANGMESS209 ?>.</i></font><br>
 <br>
 &nbsp;&nbsp;
-<font class=T2><?php print LANGMESS210 ?> :</font> <input type=text name="saisie_code_matiere" size=20 maxlength='20' value="<?php print html_quotes(stripslashes($code_matiere)) ?>" ><BR>
+<font class=T2><?php print LANGMESS210 ?> :</font> <input type=text name="saisie_code_matiere" size=20 maxlength='20' value="<?php print html_quotes(stripslashes(stripslashes($code_matiere))) ?>" ><BR>
 <BR><bR>
 
-&nbsp;&nbsp;<?php print LANGMESS416 ?> : </font><input type=text name="sous_matiere" value="<?php print html_quotes(stripslashes($sous_matiere)) ?>">
+&nbsp;&nbsp;<?php print LANGMESS416 ?> : </font><input type=text name="sous_matiere" value="<?php print html_quotes(stripslashes(stripslashes($sous_matiere))) ?>">
 [ <a href="modif_matiere.php?suppsous=<?php print $id ?>"><?php print LANGMESS417 ?></a> ]
 <BR><bR>
 <input type=hidden name="saisie_id_matiere" value="<?php print $id ?>">
@@ -135,5 +136,5 @@ Pgclose();
 <!-- // fin  -->
 </td></tr></table>
 </form>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

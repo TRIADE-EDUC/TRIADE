@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -72,7 +72,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 
 $gid=$_POST["gid"];
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 
 $res=execSql($sql);
 $data=chargeMat($res);
@@ -81,14 +81,14 @@ $liste_eleves=preg_replace('/\{/',"",$data[0][1]);
 $liste_eleves=preg_replace('/\}/',"",$liste_eleves);
 unset($data);
 if ($liste_eleves != "") {
-	$sql="SELECT nom,prenom,libelle,elev_id FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
+	$sql="SELECT nom,prenom,libelle,elev_id FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves)";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 }
 
 
 $saisie_classe=$_POST["saisie_classe"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data2=chargeMat($res);
 $nomclasse=chercheClasse($saisie_classe);
@@ -103,9 +103,9 @@ $nomclasse=chercheClasse($saisie_classe);
 <TD bgcolor="yellow" width=20>&nbsp;</TD>
 </tr>
 <tr>
-<td valign=top align=center><br><select name="saisie_depart"  style="width:120px" size="<?php print count($data2) ?>"  >
+<td valign=top align=center><br><select name="saisie_depart"  style="width:120px" size="<?php print countTriade($data2) ?>"  >
 <?php
-for($i=0;$i<count($data2);$i++) {
+for($i=0;$i<countTriade($data2);$i++) {
     if (verifEleveDansGroupe($data2[$i][1],$gid)) {
 	    print "<option value='".$data2[$i][1]."' >".ucwords($data2[$i][2])." ".ucwords($data2[$i][3]). "</option>";
     }
@@ -116,9 +116,9 @@ for($i=0;$i<count($data2);$i++) {
 <td align=center >
 &nbsp;<input type="button" value="<?php print LANGSTAGE3 ?> >>>" onClick="calcul('+1');Deplacer(this.form.saisie_depart,this.form.saisie_recherche,'Choisissez un élèment')" class="bouton2" >&nbsp;
 </td>
-<td valign=top align=center><br><select name="saisie_recherche" style="width:130px" multiple="multiple" size="<?php print count($data)+count($data2)  ?>" >
+<td valign=top align=center><br><select name="saisie_recherche" style="width:130px" multiple="multiple" size="<?php print countTriade($data)+countTriade($data2)  ?>" >
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<option value='".$data[$i][3]."' >".ucwords($data[$i][0])." ".ucwords($data[$i][1]). "</option>";
 }
 ?>

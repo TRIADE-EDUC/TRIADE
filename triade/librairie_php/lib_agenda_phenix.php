@@ -12,7 +12,7 @@ global $cnx;
 function ajoutNoteAgenda($util_id,$date,$sujet,$commentaire) {
 	global $cnx;
 	$datecreation=dateDMY2()." ".dateHIS();
-	$sql="INSERT INTO ${prefixe}px_agenda (
+	$sql="INSERT INTO {$prefixe}px_agenda (
 		age_mere_id,
 		age_util_id,
 		age_aty_id,
@@ -75,14 +75,14 @@ function ajoutNoteAgenda($util_id,$date,$sujet,$commentaire) {
 		);";
 	execSql($sql);
 	$id=mysql_insert_id();
-	$sql="INSERT INTO ${prefixe}px_agenda_concerne (aco_age_id,aco_util_id,aco_rappel_ok,aco_termine) VALUE ('$id','$util_id','1','0')";
+	$sql="INSERT INTO {$prefixe}px_agenda_concerne (aco_age_id,aco_util_id,aco_rappel_ok,aco_termine) VALUE ('$id','$util_id','1','0')";
 	execSql($sql);
 }
 
 
 function recupUtil_Id($idpers) {
 	global $cnx;
-	$sql="SELECT util_id FROM ${prefixe}px_utilisateur  WHERE util_login='$idpers'";
+	$sql="SELECT util_id FROM {$prefixe}px_utilisateur  WHERE util_login='$idpers'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	if (count($data) > 0) { return $data[0][0]; }

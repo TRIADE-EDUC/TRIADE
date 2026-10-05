@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Form.js,v 1.3 2018-01-09 10:48:40 vtouchard Exp $
+// $Id: Form.js,v 1.3 2018/01/09 10:48:40 vtouchard Exp $
 
 
 define([

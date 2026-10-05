@@ -6,12 +6,12 @@
     },
     "Conseil constitutionnel": {
         "code": "conseilconstitutionnel",
-        "legi": false,
+        "legi": true,
         "dalloz": true
     },
     "Conseil d'\u00c9tat": {
         "code": "conseiletat",
-        "legi": false,
+        "legi": true,
         "dalloz": true
     },
     "Conseil de la concurrence": {
@@ -26,7 +26,7 @@
     },
     "Cour administrative d'appel": {
         "code": "couradministrativeappel",
-        "legi": false,
+        "legi": true,
         "dalloz": true
     },
     "Cour d'appel": {
@@ -61,7 +61,7 @@
     },
     "Tribunal administratif": {
         "code": "tribunaladministratif",
-        "legi": false,
+        "legi": true,
         "dalloz": true
     },
     "Tribunal correctionnel": {
@@ -108,5 +108,15 @@
         "code": "tribunalconflits",
         "legi": true,
         "dalloz": true
+    },
+    "CAA": {
+        "code": "caa",
+        "legi": true,
+        "dalloz": false
+    },
+    "Cour de discipline budgétaire et financière": {
+        "code": "cdbf",
+        "legi": true,
+        "dalloz": false
     }
 }

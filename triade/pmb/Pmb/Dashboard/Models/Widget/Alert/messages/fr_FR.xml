@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2024/03/11 13:55:08 jparis Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Alerte</entry>
+
+	<entry code="bulletinage">Abonnements</entry>
+	<entry code="contribution">Contributions</entry>
+	<entry code="demandes">Demandes</entry>
+	<entry code="empr">Emprunteurs</entry>
+	<entry code="empr_categ">Catégories emprunteurs</entry>
+	<entry code="expl_todo">Exemplaires</entry>
+	<entry code="mails_configuration">Configurations de mails</entry>
+	<entry code="pnb">Prêts numériques</entry>
+	<entry code="registrations">Inscriptions</entry>
+	<entry code="resa">Réservations</entry>
+	<entry code="scan_request">Demandes de numérisations</entry>
+	<entry code="serialcirc">Circulation des périodiques</entry>
+	<entry code="sphinx">Sphinx</entry>
+	<entry code="sugg">Suggestions</entry>
+	<entry code="tag">Tags</entry>
+	<entry code="transferts">Transferts</entry>
+</XMLlist>

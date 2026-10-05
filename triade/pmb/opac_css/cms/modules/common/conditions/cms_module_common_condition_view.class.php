@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_condition_view.class.php,v 1.3 2013-09-25 07:08:36 arenou Exp $
+// $Id: cms_module_common_condition_view.class.php,v 1.4 2023/11/21 14:50:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class cms_module_common_condition_view extends cms_module_common_condition{
 	}
 	
 	public static function is_loadable_default(){
-		if($_SESSION['opac_view']){
+		if(isset($_SESSION['opac_view']) && $_SESSION['opac_view']){
 			return true;
 		}
 		return false;
@@ -29,10 +29,10 @@ class cms_module_common_condition_view extends cms_module_common_condition{
 		$selector = $this->get_selected_selector();
 		$values = $selector->get_value();
 		//on regarde si on est sur la bonne page...
-		if(in_array($_SESSION['opac_view'],$values)){
+		if(!empty($_SESSION['opac_view']) && in_array($_SESSION['opac_view'],$values)){
 			return true;
 		}
-		//on est encore dans la fonction, donc la condition n'est pas vÃ©rifiÃ©e!
+		//on est encore dans la fonction, donc la condition n'est pas vérifiée!
 		return false;
 	}
 }

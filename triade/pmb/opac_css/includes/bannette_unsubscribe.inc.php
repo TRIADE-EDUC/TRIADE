@@ -1,12 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bannette_unsubscribe.inc.php,v 1.1 2018-05-23 14:19:48 dgoron Exp $
+// $Id: bannette_unsubscribe.inc.php,v 1.2 2021/11/19 09:20:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($id_bannette)) $id_bannette = 0; else $id_bannette += 0;
+global $base_path, $class_path, $msg;
+global $id_bannette, $id_empr;
+global $confirmed;
+
+$id_bannette = intval($id_bannette);
 
 require_once($class_path."/search.class.php");
 require_once($class_path."/bannette.class.php");
@@ -15,7 +19,7 @@ require_once($base_path."/includes/bannette_func.inc.php");
 
 if (!$id_bannette) die ("Acc&egrave;s interdit");
 
-// afin de rÃ©soudre un pb d'effacement de la variable $id_empr par empr_included, bug Ã  trouver
+// afin de résoudre un pb d'effacement de la variable $id_empr par empr_included, bug à trouver
 if (!$id_empr) $id_empr=$_SESSION["id_empr_session"] ;
 
 print "<div id='aut_details' class='aut_details_bannette'>\n";

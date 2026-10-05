@@ -35,7 +35,7 @@
   include("lang/$APPLI_LANGUE.php");
 
   if ($zlGroupe != "0") {
-    $DB_CX->DbQuery("SELECT fgr_nom FROM ${PREFIX_TABLE}favoris_groupe WHERE fgr_id=".$zlGroupe);
+    $DB_CX->DbQuery("SELECT fgr_nom FROM {$PREFIX_TABLE}favoris_groupe WHERE fgr_id=".$zlGroupe);
     $nomGroupe = $DB_CX->DbResult(0,0);
     $labelBouton = trad("FAVGRP_BT_MODIFIER");
   } else {

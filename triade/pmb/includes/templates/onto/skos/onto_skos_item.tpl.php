@@ -1,35 +1,85 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_skos_item.tpl.php,v 1.3 2018-03-26 13:30:44 ngantier Exp $
+// $Id: onto_skos_item.tpl.php,v 1.8 2022/10/31 11:31:20 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $ontology_tpl,$msg,$base_path;
+global $ontology_tpl,$msg,$base_path, $pmb_form_authorities_editables, $PMBuserid;
 
+//Chacun chez soit, c'est un peu bizarre, mais on réécrit le form_body ici pour ne pas avoir les boutons d'éditions de grille dans le common
+$ontology_tpl['form_body'] = '
+<form id="!!onto_form_id!!" name="!!onto_form_name!!" method="POST" action="!!onto_form_action!!" class="form-autorites" onSubmit="return false;" data-advanced-form="true">
+	<input type="hidden" name="item_uri" value="!!uri!!"/>
+	<input type="hidden" name="save_and_create_concept" id="save_and_create_concept" value=""/>
+	<div class="left">
+		<h3>!!onto_form_title!!</h3>
+	</div>
+	<div class="right">';
+if ($PMBuserid==1 && $pmb_form_authorities_editables==1){
+    $ontology_tpl['form_body'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_edit_format'].'" id="bt_inedit"/>';
+}
+if ($pmb_form_authorities_editables==1) {
+    $ontology_tpl['form_body'] .='<input type="button" class="bouton_small" value="'.$msg['authorities_origin_format'].'" id="bt_origin_format"/>';
+}
+$ontology_tpl['form_body'] .= '
+	</div>
+	<div id="form-contenu">
+		<div class="row">&nbsp;</div>
+		<div id="zone-container">
+			!!onto_form_content!!
+		</div>
+	</div>
+	<div class="row">&nbsp;</div>
+	<div class="left">
+		!!onto_form_history!!
+		&nbsp;
+		!!onto_form_submit!!
+		&nbsp;
+		!!onto_form_save_and_create_concept!!
+	</div>
+	<div class="right">
+		!!onto_form_delete!!
+	</div>
+	<div class="row"></div>
+</form>
+!!onto_form_scripts!!
+';
 
 
 $ontology_tpl['form_scripts'] = '
+<script type="text/javascript" src="./javascript/ajax.js"></script>
 <script type="text/javascript">
+	require(["dojo/ready",  "apps/pmb/form/FormController","apps/pmb/gridform/FormEdit"], function(ready, FormController, FormEdit){
+	     ready(function(){	
+            new FormController();
+	     	new FormEdit();
+	     });
+	});
 	!!onto_datasource_validation!!
-	function submit_onto_form(save_and_create_concept){
-		var error_message = "";
-		for (var i in validations){
-			if(!validations[i].check()){
-				error_message+= validations[i].get_error_message();
-			}
-		}
-		if(error_message != ""){
-			alert(error_message);
-		}else{
+	function submit_onto_form(save_and_create_concept) {		
+		if (check_onto_form()) {
 			if (save_and_create_concept && document.getElementById("save_and_create_concept")) {
 				document.getElementById("save_and_create_concept").value = 1;
 			}
 			document.forms["!!onto_form_name!!"].submit();
 		}
 	}	
-		
+	
+	function check_onto_form() {
+		var error_message = "";
+		for (var i in validations) {
+			if (!validations[i].check()) {
+				error_message+= validations[i].get_error_message();
+			}
+		}
+		if (error_message != "") {
+			alert(error_message);
+            return false;
+		} 
+        return true;
+	}		
 	!!onto_form_del_script!!
 	function onto_add_card(element_name,max_card){
 		//La langue choisi et son libelle
@@ -117,7 +167,7 @@ $ontology_tpl['form_scripts'] = '
 		}
 		input_available_lang.value=JSON.stringify(available_lang);
 		
-		//on modifi le combobox lang pour vÃ©rifier et ajouter si besoin la langue de la ligne supprimÃ©e
+		//on modifi le combobox lang pour vérifier et ajouter si besoin la langue de la ligne supprimée
 		for(var i in available_lang){
 			var add=true;
 			for(var j in combobox_lang.options){

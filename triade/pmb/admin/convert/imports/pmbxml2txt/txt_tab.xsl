@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: txt_tab.xsl,v 1.1.46.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <xsl:stylesheet version = '1.0'
      xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 
@@ -82,7 +88,7 @@
 </xsl:template>
 
 <xsl:template match="notice/f/s">
-<xsl:text>$</xsl:text><xsl:value-of select="@c"/><xsl:text> </xsl:text><xsl:value-of select="."/><xsl:text>  </xsl:text>  
+<xsl:text>$</xsl:text><xsl:value-of select="@c"/><xsl:text> </xsl:text><xsl:value-of select="."/><xsl:text>  </xsl:text>
 </xsl:template>
 
 <xsl:template match="*"/>

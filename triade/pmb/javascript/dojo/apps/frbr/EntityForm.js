@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntityForm.js,v 1.13 2017-09-20 09:41:18 vtouchard Exp $
+// $Id: EntityForm.js,v 1.16 2022/01/21 13:47:24 tsamson Exp $
 
 
 define([
@@ -18,9 +18,10 @@ define([
         "dijit/registry",
         "dojo/dom-construct",
         "apps/pmb/PMBDojoxDialogSimple",
-        "dojo/dom-form"
+        "dojo/dom-form",
+        "dojo/request/xhr",
         ], 
-		function(declare,parser, Button, topic, lang, on, dom, query, domAttr, request, registry, domConstruct, DialogSimple, domForm){
+		function(declare,parser, Button, topic, lang, on, dom, query, domAttr, request, registry, domConstruct, DialogSimple, domForm, xhr){
 	return declare(null, {
 		type:null,
 		id:null,
@@ -30,6 +31,7 @@ define([
 		msg:null, /** TODO **/
 		dijits:null,
 		formName:null,
+		numPage:null,
 		constructor: function(params){
 			lang.mixin(this, params);
 			this.signals = [];
@@ -57,16 +59,17 @@ define([
 		init: function(){
 			this.signals.push(on(dom.byId(this.formName),'submit', lang.hitch(this, function(evt) {
 				if(this.testForm()){
-					topic.publish('formButton', 'saveNode',dom.byId(this.formName));
+					this.saveForm();
+//					topic.publish('formButton', 'saveNode',dom.byId(this.formName));
 					this.destroy();
 				}
 				evt.preventDefault();
 				return false;
 			})));
-		
 			this.signals.push(on(dom.byId('save_button'),'click', lang.hitch(this, function(evt) {
 				if(this.testForm()){
-					topic.publish('formButton', 'saveNode',dom.byId(this.formName));
+					this.saveForm();
+					//topic.publish('formButton', 'saveNode',dom.byId(this.formName));
 					this.destroy();
 				}
 				evt.preventDefault();
@@ -88,6 +91,7 @@ define([
 			if (cancelButton) {
 				this.signals.push(on(cancelButton,'click', lang.hitch(this,function(evt){
 					topic.publish('formButton', 'clearForm');
+					topic.publish('EntityForm', 'canceled');
 					this.destroy();
 					evt.preventDefault();
 					return false;
@@ -136,13 +140,16 @@ define([
 			if(evt && evt.target.value){
 				params.elem = evt.target.value;
 			}
+			//filtre sur les autorites perso
+			var authperso_num = dom.byId("datanode_authperso_num");
 			request.post('./ajax.php?module=cms&categ=frbr_entities&elem='+params.elem+'&action=get_form&id='+params.id, {
 				data : {
 					frbr_entity_class: this.className,
 					dom_node_id: params.domId,
 					num_page: (params.numPage ? params.numPage : ''),
 					filter_refresh : (params.filterRefresh == "1" ? "1" : "0"),
-					sort_refresh : (params.sortRefresh == "1" ? "1" : "0")
+					sort_refresh : (params.sortRefresh == "1" ? "1" : "0"),
+					authperso_num : (authperso_num && authperso_num.value ? authperso_num.value : "0"),
 				},
 			}).then(lang.hitch(this, function(data){
 				try{
@@ -217,6 +224,9 @@ define([
 			if(!this.dijits[dijitId]){
 				this.dijits[dijitId] = new DialogSimple({title: this.msg['frbr_entity_common_entity_'+this.type+'_'+params.element+'_edit'], executeScripts:true, id : params.className+"_"+params.element+"_dialog_"+params.idElement+"_"+params.manageId, style:{width:'85%'}});
 				var path = './ajax.php?module=cms&categ=frbr_entities&elem='+params.className+'&action=get_manage_form&quoi='+params.quoi+'&id_element='+params.idElement+'&manage_id='+params.manageId+'&num_page='+params.numPage;
+				if (params.authperso_id) {
+					path += "&authperso_id="+params.authperso_id;
+				}
 				this.dijits[dijitId].attr('href', path);
 				this.dijits[dijitId].startup();				
 				this.signals.push(on(this.dijits[dijitId],"load", lang.hitch(this, function() {
@@ -349,6 +359,18 @@ define([
 					preLoadScripts(dom.byId("parameters_form"));
 					query('[data-pmb-evt]',dom.byId("parameters_form")).forEach(lang.hitch(this, this.initEvents));
 				}
+			}));
+		},
+		saveForm : function() {
+			var form = dom.byId(this.formName);
+			xhr(form.action + '&num_page=' + this.numPage,{
+				data :JSON.parse(domForm.toJson(form.id)),
+				handleAs: "json",
+				method:'POST'
+			}).then(lang.hitch(this,function(response){
+				if (response.status) {
+					topic.publish('EntityForm', 'saved', response);
+				}				
 			}));
 		},
 	});

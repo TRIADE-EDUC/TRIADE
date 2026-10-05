@@ -48,33 +48,27 @@ if (isset($_GET["order"])) {
 setcookie("tri_eleve",$triEleve,time()+36000*24*30);
 
 
+$cnx=cnx();
 if ($_SESSION["membre"] == "menuprof") {
 	if (PROFPACCESNOTE == "oui") {
 		verif_profp_ens($_SESSION["id_pers"]);
-		Pgclose();
 	}else{
 		validerequete("menuadmin");
 	}
 }else{
-
 	if ((VIESCOLAIRENOTEENSEIGNANT == "oui") && ($_SESSION["membre"] != "menupersonnel")) {
 		validerequete("2");
 	}else{
 		if ($_SESSION["membre"] != "menuadmin" ) {
-			$cnx=cnx();
-			if (!verifDroit($_SESSION["id_pers"],"carnetnotes")) {
+			if ((!verifDroit($_SESSION["id_pers"],"carnetnotes"))  && (!verifDroit($_SESSION["id_pers"],"AESH")) )  {
 				accesNonReserveFen();
 				exit();
 			}
-			Pgclose();
 		}else{
 			validerequete("menuadmin");
 		}
 	}
 }
-
-$cnx=cnx();
-
 
 if(isset($_POST["create"])) {
 	$cgrp1=$_POST["sClasseGrp"];
@@ -402,6 +396,11 @@ $moyennne->set_fg_color('blue');
 		$noteelevetotal=0;
 		$nbnoteleve=0;
 		$moyenneeleve=0;
+		$noteelevetotalContinu=0;
+                $nbnoteleveContinu=0;
+                $okmoyContinu=0;
+		$noterattrapage="";
+		$nbnoteHorsRatt=0;
 
 		if ($sql2 == "") $data_note=array();	
 
@@ -433,6 +432,7 @@ $moyennne->set_fg_color('blue');
 			$bgexam="bgcolor=\"#FFFFFF\"";
 			if ($data_note[$t][9] != "") {
 				$bgexam="bgcolor=\"yellow\"";
+				if (($data_note[$t][9] == "Rattrapage") && ( VISUNOTERATTRAPAGE == "oui")) $bgexam="bgcolor=\"#96db53\""; 
 			}
 
 
@@ -500,12 +500,32 @@ $moyennne->set_fg_color('blue');
 					if ($notationSur == 15) { $note*=1.333333333333333; $coef /= 1.33333333333333; }
 					if ($notationSur == 10) { $note*=2; $coef/=2; }	
 					if ($notationSur == 5) { $note*=4; $coef/=4;}	
-				
 					if ($notationSur == 6) { $sur20="sur 6"; }	
 				}
-            			$noteelevetotal+=$note*$coef;
-            			$nbnoteleve+=$coef;
-				$okmoy=1;
+
+				if (VISUNOTERATTRAPAGE == "oui") {
+					if ($data_note[$t][9] == "Rattrapage") {
+						$noterattrapage=$note;
+					}else{
+						$noteelevetotal+=$note*$coef;
+	                                        $nbnoteleve+=$coef;
+	                                        $nbnoteHorsRatt++;
+        	                                $okmoy=1;
+
+						if (($data_note[$t][9] != "1er Session") && ($data_note[$t][9] != "Partiel")) {
+						// if ($data_note[$t][9] != "1er Session") {
+							$noteelevetotalContinu+=$note*$coef;
+		                                        $nbnoteleveContinu+=$coef;
+	        	                                $okmoyContinu=1;
+						}
+		
+					}	
+
+				}else{
+	            			$noteelevetotal+=$note*$coef;
+        	    			$nbnoteleve+=$coef;
+					$okmoy=1;
+				}
 	        	}
 	   		if ($nbnoteleve != 0) {
 				$moyenneeleve=$noteelevetotal/$nbnoteleve;
@@ -582,6 +602,28 @@ $moyennne->set_fg_color('blue');
 				if ($unenote == 1) {
 					$nbeleve++;
 					print "<td bgcolor='#FFCC99'><b><a href='#' title='Moyenne Elève $sur20 '>$font $moyenneleveaff $fontf</a></b></td>";
+					if (VISUNOTERATTRAPAGE == "oui") {
+						$moyenneleveaffrattrapage="";
+						if ($noterattrapage != "") {
+							$_moyenneSansRatt = ($nbnoteleve != 0) ? number_format($noteelevetotal/$nbnoteleve,2,'.','') : 0;
+							if ($nbnoteHorsRatt > 1) {
+								$_baseNb  = ($nbnoteleveContinu != 0) ? $nbnoteleveContinu : $nbnoteleve;
+								$_baseTot = ($nbnoteleveContinu != 0) ? $noteelevetotalContinu : $noteelevetotal;
+								if ($_baseNb != 0) {
+									$moyenneeleveContinu = $_baseTot / $_baseNb;
+									$moyenneeleveContinu = number_format($moyenneeleveContinu,2,'.','');
+									$_total3 = (($moyenneeleveContinu*40)/100)+(($noterattrapage*60)/100);
+									$_total3 = number_format($_total3,2,'.','');
+									$moyenneleveaffrattrapage = ($_total3 > $_moyenneSansRatt) ? $_total3 : $_moyenneSansRatt;
+								}
+							} else {
+								$moyenneleveaffrattrapage = ($noterattrapage > $_moyenneSansRatt) ? $noterattrapage : $_moyenneSansRatt;
+							}
+						}
+
+						if ($moyenneleveaffrattrapage == "") $moyenneleveaffrattrapage="&nbsp;&nbsp;&nbsp;&nbsp;";
+						print "<td bgcolor='#7eaf4e'><a href='#' title='Moyenne avec rattrapage'>$moyenneleveaffrattrapage</a></td>";
+					}
 				}else{
 					$moyenneleveaff="";
 					print "<td bgcolor='#FFCC99'>&nbsp;</td>";

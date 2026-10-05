@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_skos_concepts_autoposted.class.php,v 1.3 2018-01-24 15:53:00 tsamson Exp $
+// $Id: searcher_authorities_skos_concepts_autoposted.class.php,v 1.3 2018/01/24 15:53:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

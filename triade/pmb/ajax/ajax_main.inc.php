@@ -1,16 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.41 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: ajax_main.inc.php,v 1.49.2.1.2.1 2025/01/24 13:29:51 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $categ, $plugin, $sub, $class_path, $search_xml_file, $search_xml_file_full_path, $objects_type, $id;
+global $categ, $plugin, $sub, $class_path, $search_xml_file, $search_xml_file_full_path;
 
 //En fonction de $categ, il inclut les fichiers correspondants
 
-switch($categ):
+switch ($categ) {
 	case 'misc':
 		include('./ajax/misc/misc.inc.php');
 		break;
@@ -112,27 +112,20 @@ switch($categ):
 	
 		if(!isset($search_xml_file)) $search_xml_file = '';
 		if(!isset($search_xml_file_full_path)) $search_xml_file_full_path = '';
-		
-		$sc=new search(true, $search_xml_file, $search_xml_file_full_path);
+		if(!empty($ontology_id)) {
+		    $ontology =  new ontology(intval($ontology_id));//::get_ontology_by_pmbname($ontoname);
+		    $sc=new search_ontology(true, $search_xml_file,'',$ontology->get_handler()->get_ontology());
+		}else{
+            $sc=new search(true, $search_xml_file, $search_xml_file_full_path);
+		}
 		$sc->proceed_ajax();
 		break;
 	case 'indexation':
+		session_write_close();
 		require_once('./ajax/misc/indexation.inc.php');
 		break;
 	case 'list':
-		/**
-		 * DG : 17/05/2019
-		 * Provisoire : Il faudrait prévoir de gérer cela sur les aiguilleurs par module 
-		 */
-		if(strpos($objects_type, 'caddie_ui') !== false) {
-			require_once($class_path."/caddie/caddie_root_lists_controller.class.php");
-			if(!isset($id)) $id = 0;
-			caddie_root_lists_controller::proceed_manage_ajax($id, $objects_type);
-		} else {
-			require_once($class_path."/list/lists_controller.class.php");
-			if(!isset($id)) $id = 0;
-			lists_controller::proceed_manage_ajax($id, $objects_type);
-		}
+	    require_once './ajax/misc/list.inc.php';
 		break;
 	case 'translations':
 		include('./ajax/misc/translations.inc.php');
@@ -152,6 +145,24 @@ switch($categ):
     case 'entities' :
     	require_once './ajax/misc/entities.inc.php';
     	break;
-	default:
+    case 'empr':
+        require_once './ajax/misc/empr.inc.php';
+        break;
+    case 'connector_in' :
+    	require_once './ajax/misc/connector_in.inc.php';
+    	break;
+	case 'aceEditorCompletion' :
+    	require_once './ajax/misc/ace_editor_completion.inc.php';
+        break;
+	case 'folders_selector' :
+	    require_once './ajax/misc/folders_selector.inc.php';
+	    break;
+	case 'search_universes' :
+	    require_once './ajax/misc/search_universes.inc.php';
+	    break;
+	case 'elements_list':
+	    require_once './ajax/misc/elements_list.inc.php';
+	    break;
+    default:
 		break;
-endswitch;
+}

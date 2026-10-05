@@ -1,20 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_docnum_planning.class.php,v 1.1 2017-07-10 15:50:02 dgoron Exp $
+// $Id: scan_docnum_planning.class.php,v 1.1 2017/07/10 15:50:02 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
 
 class scan_docnum_planning extends scheduler_planning {
 	
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
 		global $dbh,$charset;
 		global $deflt_upload_repertoire;
 		
-		//On crÃ©er le sÃ©lecteur pour choisir le repertoire d'upload 
+		//On créer le sélecteur pour choisir le repertoire d'upload 
 		$query="SELECT * FROM upload_repertoire";
 		$result=pmb_mysql_query($query,$dbh);
 		

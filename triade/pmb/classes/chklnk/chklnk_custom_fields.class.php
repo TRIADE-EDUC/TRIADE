@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: chklnk_custom_fields.class.php,v 1.1 2017-10-09 11:34:43 dgoron Exp $
+// $Id: chklnk_custom_fields.class.php,v 1.3 2021/03/17 13:32:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/chklnk/chklnk.class.php");
 
 class chklnk_custom_fields extends chklnk {
@@ -90,14 +91,14 @@ class chklnk_custom_fields extends chklnk {
     protected function get_element_edit_link($element) {
     	switch ($this->sub_type) {
     		case 'collstate':
-    			return "./catalog.php?categ=isbd&id=".$element->notice_id;
+    			return notice::get_permalink($element->notice_id);
     			break;
     		case 'cms_editorial':
     			return "./cms.php?categ=editorial&sub=list";
     			break;
     		case 'notices':
     		default:
-    			return "./catalog.php?categ=isbd&id=".$element->id;
+    			return notice::get_permalink($element->id);
     			break;
     	}
     }
@@ -105,6 +106,7 @@ class chklnk_custom_fields extends chklnk {
     protected function process_element($element) {
     	global $pmb_url_base;
     	
+    	$display = '';
     	$pp = $this->get_instance_parametres_perso();
     	switch ($this->sub_type) {
     		case 'collstate':
@@ -122,7 +124,7 @@ class chklnk_custom_fields extends chklnk {
 						$link = substr($value,0,strpos($value,"|"));
 					}else $link = $value;
 					$element->link = $link;
-					$this->check_link($element);
+					$display .= $this->check_link($element);
 				}
 			}else if ($pp->t_fields[$id_cp]['TYPE'] == "resolve"){
 				$options=$pp->t_fields[$id_cp]['OPTIONS'][0];
@@ -144,11 +146,12 @@ class chklnk_custom_fields extends chklnk {
 							$link=$pmb_url_base.$link;
 						}
 						$element->link = $link;
-						$this->check_link($element);
+						$display .= $this->check_link($element);
 					}						
 				}
 			}
 		}
+		return $display;
     }
     
     protected function get_instance_parametres_perso() {

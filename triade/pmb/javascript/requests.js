@@ -1,9 +1,9 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requests.js,v 1.5 2009-06-25 16:33:15 dbellamy Exp $
+// $Id: requests.js,v 1.5 2009/06/25 16:33:15 dbellamy Exp $
 
-//NÃ©cessite select.js
+//Nécessite select.js
 
 
 //Changement du type de requete

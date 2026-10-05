@@ -6,7 +6,7 @@ include_once("./common/config5.inc.php"); header('Content-type: text/html; chars
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -20,19 +20,14 @@ include_once("./common/config5.inc.php"); header('Content-type: text/html; chars
  *
  ***************************************************************************/
 include_once("./librairie_php/lib_error.php");
-include_once("common/config.inc.php"); // futur : auto_prepend_file
+include_once("common/config.inc.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 
-// Sn : variable de Session nom
-// Sp : variable de Session prenom
-// Sm : variable de Session membre
-// Spid : variable de Session pers_id
 $ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 $mySession=hashSessionVar($ident);
 unset($ident);
-// données DB utiles pour cette page
-$mySessionSpid=$mySession[Spid];
+$mySessionSpid=$mySession['Spid'];
 $sql="
 SELECT
 	a.code_classe,
@@ -44,10 +39,10 @@ $sql .= "
 	a.code_groupe,
 	trim(g.libelle)
 FROM
-	${prefixe}affectations a,
-	${prefixe}matieres m,
-	${prefixe}classes c,
-	${prefixe}groupes g
+	{$prefixe}affectations a,
+	{$prefixe}matieres m,
+	{$prefixe}classes c,
+	{$prefixe}groupes g
 WHERE
 	code_prof='$mySessionSpid'
 AND a.code_classe = c.code_class
@@ -62,29 +57,30 @@ $curs=execSql($sql);
 $data=chargeMat($curs);
 @array_unshift($data,array()); // nécessaire pour compatibilité
 // patch pour problème sous-matière à 0
-for($i=0;$i<count($data);$i++){
+for($i=0;$i<countTriade($data);$i++){
 	$tmp=explode(" 0 ",$data[$i][3]);
 	$data[$i][3]=$tmp[0].' '.$tmp[1];
 }
 // fin patch
 freeResult($curs);
 unset($curs);
-//htmlTableMat($data);
 ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_note.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
-<?php 
+<?php
 genMatJs('affectation',$data);
 $choixmatiere='1';
 if (defined("CHOIXMATIEREPROF")) {
@@ -107,7 +103,7 @@ function upSelectMat(arg) {
 		myOpt=new Option();
 		myOpt.value = affectation[i][2];
 		myOpt.text = affectation[i][3];
-		myOpt.text = myOpt.text.replace(/ 0 *$/,"");   // supprime le 0 de la matiere ajout ET
+		myOpt.text = myOpt.text.replace(/ 0 *$/,"");
 		document.formulaire.sMat.options[opt]=myOpt;
 		opt++;
 		}
@@ -129,7 +125,7 @@ function upSelectMat2(arg) {
 		myOpt=new Option();
 		myOpt.value = affectation[i][2];
 		myOpt.text = affectation[i][3];
-		myOpt.text = myOpt.text.replace(/ 0 *$/,"");   // supprime le 0 de la matiere ajout ET
+		myOpt.text = myOpt.text.replace(/ 0 *$/,"");
 		document.formulaire2.sMat.options[opt]=myOpt;
 		opt++;
 		}
@@ -147,101 +143,90 @@ function upSelectMat2(arg) {
 <div align='center'><?php top_h(); ?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/menuprof1.js"></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROFB1 ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGPROFB1 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td>
-<!-- // fin  -->
 
 <form method="post" onsubmit="return verifAccesNote5()" name="formulaire5" action="bulletin_comm_classe2.php">
-<br />
-<ul>
-<b><font class='T2'><?php print "Commentaire bulletin de la classe" ?></font></b><br><br><br>
-<font class="T2"><?php print LANGBULL29 ?> :</font>
-                 <select name='anneeScolaire' >
-                 <?php
-                 filtreAnneeScolaireSelectNote($_COOKIE["anneeScolaire"],3);
-                 ?>
-                 </select>
-                 <br><br>
+<div class="na-card">
+  <div style="font-size:13px;font-weight:700;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial,sans-serif;margin-bottom:12px;">
+    <?php print "Commentaire bulletin de la classe" ?>
+  </div>
 
-<font class="T2"><?php print LANGPROFG ?> :</font>
-<select name="sClasseGrp" size="1" onChange="upSelectMat(this)">
-<option value="0" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX3 ?> </option>
- <?php
-	$dataList=$data;
-	 for($i=1;$i<count($data);$i++){
-	 	if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
-			continue;
-		}
-		else {
-			// utilisation de l'opérateur ternaire expr1?expr2:expr3;
-			$libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
-			print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
-		}
-		$gtmp=$data[$i][4];
-		$ctmp=$data[$i][0];
-	 }
-	 unset($gtmp);
-	 unset($ctmp);
-	 unset($libelle);
- ?>
-</select>
-<br /><br />
-<font class='T2'>
-<?php print LANGPROF5 ?> :
-<?php
-$choix_tri=recherche_trimestre_en_cours_via_classe($cid);
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGBULL29 ?> :</span>
+    <select name='anneeScolaire' class="cc-select">
+      <?php filtreAnneeScolaireSelectNote($_COOKIE["anneeScolaire"],3); ?>
+    </select>
+  </div>
 
-$choix_tri_text=$choix_tri;
-//$tri=recherche_intervalle_trimestre($choix_tri_text);
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROFG ?> :</span>
+    <select name="sClasseGrp" size="1" class="cc-select" onChange="upSelectMat(this)">
+      <option value="0" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX3 ?></option>
+      <?php
+      for($i=1;$i<countTriade($data);$i++){
+          if( $i>1 && ($data[$i][4]==$gtmp) && ($data[$i][0]==$ctmp) ){
+              continue;
+          }else {
+              $libelle=$data[$i][4]?$data[$i][1]."-".$data[$i][5]:$data[$i][1];
+              print "<option STYLE='color:#000066;background-color:#CCCCFF' value=\"".$data[$i][0].":".$data[$i][4]."\">".$libelle."</option>\n";
+          }
+          $gtmp=$data[$i][4];
+          $ctmp=$data[$i][0];
+      }
+      unset($gtmp);
+      unset($ctmp);
+      unset($libelle);
+      ?>
+    </select>
+  </div>
 
-if ($choix_tri_text == "trimestre1") {
-	$choix_tri_text=LANGPROJ3. " ou ".LANGPROJ19;
-}
-if ($choix_tri_text == "trimestre2") {
-    $choix_tri_text=LANGPROJ4. " ou ".LANGPROJ20;
-}
-if ($choix_tri_text == "trimestre3") {
-    $choix_tri_text=LANGPROJ5;
-}
-?>
-<select name="choix_trimestre">
-	<option value='<?php print $choix_tri?>' STYLE="color:#000066;background-color:#FCE4BA"><?php print ucfirst($choix_tri_text)?></option>
-	<option value='trimestre1' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ3. " ou ".LANGPROJ19?></option>
-	<option value='trimestre2' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ4. " ou ".LANGPROJ20?></option>
-	<option value='trimestre3' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ5?></option>
-</select>
-</font>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROF5 ?> :</span>
+    <?php
+    $choix_tri=recherche_trimestre_en_cours_via_classe($cid);
+    $choix_tri_text=$choix_tri;
+    if ($choix_tri_text == "trimestre1") { $choix_tri_text=LANGPROJ3. " ou ".LANGPROJ19; }
+    if ($choix_tri_text == "trimestre2") { $choix_tri_text=LANGPROJ4. " ou ".LANGPROJ20; }
+    if ($choix_tri_text == "trimestre3") { $choix_tri_text=LANGPROJ5; }
+    ?>
+    <select name="choix_trimestre" class="cc-select">
+      <option value='<?php print $choix_tri ?>' STYLE="color:#000066;background-color:#FCE4BA"><?php print ucfirst($choix_tri_text) ?></option>
+      <option value='trimestre1' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ3. " ou ".LANGPROJ19 ?></option>
+      <option value='trimestre2' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ4. " ou ".LANGPROJ20 ?></option>
+      <option value='trimestre3' STYLE='color:#000066;background-color:#CCCCFF'><?php print LANGPROJ5 ?></option>
+    </select>
+  </div>
 
-<br><BR><BR>
-<UL><UL><UL><UL>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT31 ?>","rien"); //text,nomInput</script>
-<br><br>
-</UL></UL></UL></UL>
+</div>
+<br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGBT31 ?>","rien");</script>
+<script language=JavaScript>buttonMagicRetour('bulletincomprof.php','_self');</script>
+<br>
 </form>
 
-<br><br>
-     <!-- // fin  -->
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+<br>
+<!-- // fin  -->
+</td></tr></table>
+<?php
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
-       endif ;
-     ?>
-   </BODY>
-   </HTML>
-   <?php @Pgclose() ?>
+       endif;
+?>
+</BODY>
+</HTML>
+<?php @Pgclose() ?>

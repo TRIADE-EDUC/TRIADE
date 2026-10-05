@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,14 +38,12 @@ session_start();
 include_once("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 validerequete("2");
-$cnx=cnx();
-error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post name="formulaire" action="gestion_etude_eleve_ajout2.php" >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGETUDE33 ?></font></b></td></tr>
@@ -55,14 +53,15 @@ error($cnx);
 <ul><BR>
 <?php
 // debut if de premiere procedure
-if (! isset($_POST["create"])) :
+if (!isset($_POST["create"])) :
 ?>
-                 <font class="T2"><?php print LANGETUDE36 ?> :</font> <b><?php print cherche_nom_etude($_POST["saisie_etude"]) ?></b><br>
-		 <input type=hidden name='saisie_etude' value="<?php print $_POST["saisie_etude"]?>">
-<BR>                <BR><b><?php print LANGETUDE37 ?></b><BR><BR></UL>
-<table width=100% border=0>
-<TR><TD>
+	<font class="T2"><?php print LANGETUDE36 ?> :</font><b><?php print cherche_nom_etude($_POST["saisie_etude"])?></b><br>
+	<input type=hidden name='saisie_etude' value="<?php print $_POST["saisie_etude"]?>">
+	<br><br><b><?php print LANGETUDE37 ?></b><br><br></ul>
+	<table width=100% border=0>
+	<tr><td>
 <?php
+$anneeScolaire=anneeScolaireViaIdClasse();
 $i=0;
 foreach($_POST["saisie_liste"] as $value) {
 	$classes[$i]=$value;
@@ -70,18 +69,18 @@ foreach($_POST["saisie_liste"] as $value) {
 }
 $in=join(",",$classes);
 if (trim($in) != "") {
-	$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id,e.annee_scolaire FROM ${prefixe}classes c, ${prefixe}eleves e WHERE c.code_class = e.classe AND 	e.classe IN ($in) ORDER BY  e.nom,e.prenom";
+	$sql="SELECT c.libelle,e.nom,e.prenom,e.elev_id,e.annee_scolaire FROM {$prefixe}classes c, {$prefixe}eleves e WHERE c.code_class = e.classe AND e.classe IN ($in) AND e.annee_scolaire='$anneeScolaire' ORDER BY  e.nom,e.prenom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 }
 ?>
 <table border=1 width=100% bordercolor="#000000" style="border-collapse: collapse;" >
-<TR>
-<TD bgcolor="yellow" width='50%'><B><?php print LANGNA1 ?></b> <b><?php print LANGNA2 ?> </b></TD>
-<TD bgcolor="yellow" width='5%'>&nbsp;<B>Année&nbsp;Scolaire</b>&nbsp;</TD>
-<TD bgcolor="yellow" width=5%><b><?php print LANGASS27 ?> </b></TD>
-<TD bgcolor="yellow" align=center width=5%><b>Sélectionner</b></TD>
-</TR>
+<tr>
+<td bgcolor="yellow" width='50%' ><B><?php print LANGNA1 ?></b> <b><?php print LANGNA2 ?> </b></TD>
+<td bgcolor="yellow" width='5%'  >&nbsp;<B>Année&nbsp;Scolaire</b>&nbsp;</TD>
+<td bgcolor="yellow" width='5%'  ><b><?php print LANGASS27 ?> </b></TD>
+<td bgcolor="yellow" align='center' width='5%' ><b>Sélectionner</b></TD>
+</tr>
 <script language=JavaScript>
 function validecom(id) {
 	if (document.getElementById(id).style.visibility == 'hidden' ) {
@@ -92,7 +91,7 @@ function validecom(id) {
 }
 </script>
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         ?>
 	<TR class="tabnormal" onmouseover="this.className='tabover2'" onmouseout="this.className='tabnormal'">
 	<TD>
@@ -154,17 +153,17 @@ if (isset($_POST["create"])) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

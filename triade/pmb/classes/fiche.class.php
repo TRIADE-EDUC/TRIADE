@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fiche.class.php,v 1.20 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: fiche.class.php,v 1.22.8.1 2025/04/24 12:37:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/fiche.tpl.php");
 require_once($class_path."/parametres_perso.class.php");
 require_once ($class_path."/spreadsheetPMB.class.php");
@@ -13,33 +14,46 @@ require_once ($class_path."/spreadsheetPMB.class.php");
 class fiche{
 
 	public $id_fiche = 0;
-	public $p_perso = "";
-	public $liste_ids =array();
+
+	/**
+	 * Parametres persos
+	 *
+	 * @var parametres_perso
+	 */
+	public $p_perso;
+
+	public $liste_ids = array();
+
+	public $page = 0;
+
+	public $fiche_prec = 0;
+	public $i_fiche_prec = 0;
+
+	public $fiche_suiv = 0;
+	public $i_fiche_suiv = 0;
 
 	public function __construct($id=0){
 		global $prefix;
-		$this->id_fiche = $id+0;
 
+		$this->id_fiche = intval($id);
 		$this->p_perso = new parametres_perso($prefix);
 	}
 
 	/*
-	 * Formulaire d'Ã©dition d'une fiche
+	 * Formulaire d'édition d'une fiche
 	 */
 	public function show_edit_form(){
-
 		global $form_edit_fiche,$msg, $charset, $act,$base_path;
 		global $perso_word,$page,$nb_per_page,$i_search;
 
 		if($act == 'save_and_new') {
 			$perso_ = $this->p_perso->show_editable_fields(0);
 		} else {
-			$perso_ = $this->p_perso->show_editable_fields($this->id_fiche);	
+			$perso_ = $this->p_perso->show_editable_fields($this->id_fiche);
 		}
-		
+		$perso = "";
 		if (!$this->p_perso->no_special_fields) {
-			$perso="";
-			$perso.=$perso_['CHECK_SCRIPTS']; 
+			$perso.=$perso_['CHECK_SCRIPTS'];
 			for ($i=0; $i<count($perso_['FIELDS']); $i++) {
 				$p=$perso_['FIELDS'][$i];
 				$perso.="<div id='pperso_".$p['NAME']."'  title=\"".htmlentities($p['TITRE'],ENT_QUOTES, $charset)."\">
@@ -72,25 +86,28 @@ class fiche{
 		$form_edit_fiche=str_replace('!!visibility_suiv!!',"style='display:none'",$form_edit_fiche);
 		$form_edit_fiche=str_replace('!!action_prec!!','',$form_edit_fiche);
 		$form_edit_fiche=str_replace('!!action_suiv!!','',$form_edit_fiche);
- 		$form_edit_fiche=str_replace('<!-- focus -->',"<script type='text/javascript'>ajax_parse_dom();document.getElementById('".$perso_['FIELDS'][0]['NAME']."').focus();</script>",$form_edit_fiche);
+		if (isset($perso_['FIELDS'][0]['NAME'])) {
+		    $form_edit_fiche = str_replace('<!-- focus -->', "<script type='text/javascript'>ajax_parse_dom();document.getElementById('".$perso_['FIELDS'][0]['NAME']."').focus();</script>", $form_edit_fiche);
+		} else {
+		    $form_edit_fiche = str_replace('<!-- focus -->', "<script type='text/javascript'>ajax_parse_dom();</script>", $form_edit_fiche);
+		}
 		return $form_edit_fiche;
-
 	}
 
 	/*
 	 * Affiche le formulaire de consultation d'une fiche
 	 */
 	public function show_fiche_form(){
-
 		global $form_edit_fiche,$msg,$charset;
-		global $perso_word,$page;
+		global $perso_word;
 		global $nb_per_page,$i_search;
-		
+
 		if(!$this->id_fiche) return;
 
 		$values = $this->get_values($this->id_fiche);
 		$this->get_info_navigation();
 
+		$display = '';
 		foreach($values as $key=>$val){
 			$display .= "<div class='row'>
 				<div class='colonne3'>
@@ -139,33 +156,36 @@ class fiche{
 
 
 	/*
-	 * Permmet lors de l'affichage d'une fiche de trouvÃ© les infos de navigation en tenant compte de la recherche:
-	 * id fiche prÃ©cÃ©dante,
+	 * Permmet lors de l'affichage d'une fiche de trouvé les infos de navigation en tenant compte de la recherche:
+	 * id fiche précédante,
 	 * id fiche suivante
-	 * page du retour Ã  la liste, et du retour sur effacement
+	 * page du retour à la liste, et du retour sur effacement
 	 */
 	public function get_info_navigation(){
-		global $dbh,$perso_word;
+		global $perso_word;
 		global $i_search;
 		global $nb_per_page_search,$nb_per_page;
-		
+
 		if(!($nb_per_page*1)){
 			$nb_per_page=$nb_per_page_search;
 		}
+
+		$perso_word ??= '';
 		$search_word = str_replace('*','%',$perso_word);
 
 		$requete = "SELECT count(1) FROM fiche where infos_global like '%".$search_word."%' or index_infos_global like '%".$perso_word."%'";
-		$res = pmb_mysql_query($requete, $dbh);
-		$nbr_lignes = pmb_mysql_result($res, 0, 0);
+		$res = pmb_mysql_query($requete);
+		pmb_mysql_result($res, 0, 0);
 
 		if(!$i_search) $limit="limit 0, 2";
 		else $limit="limit ".($i_search-1).", 3";
 
 		$req = "select id_fiche from fiche where infos_global like '%".$search_word."%' or index_infos_global like '%".$perso_word."%' $limit ";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		$this->fiche_prec=0;
 		$this->fiche_suiv=0;
 		if ($nb=pmb_mysql_num_rows($res)) {
+			$result=array();
 			while($fic = pmb_mysql_fetch_object($res)){
 				$result[] = $fic->id_fiche;
 			}
@@ -189,22 +209,22 @@ class fiche{
 	 * Enregistrement d'une fiche
 	 */
 	public function save(){
-		global $prefix, $dbh,$msg,$charset;
+		global $msg,$charset;
 
 		if(!$this->id_fiche){
 			$req = "insert into fiche set infos_global='', index_infos_global=''";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 			$this->id_fiche = pmb_mysql_insert_id();
 			print "<div class='row'><b>".htmlentities($msg['fiche_saved'],ENT_QUOTES,$charset)."</b></div>";
 		} else {
 			$req = "update fiche set infos_global='', index_infos_global='' where id_fiche='".$this->id_fiche."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
-		//On met Ã  jour les champs persos
+		//On met à jour les champs persos
 		$this->p_perso->check_submited_fields();
 		$this->p_perso->rec_fields_perso($this->id_fiche);
 
-		//On met Ã  jour l'index de la fiche
+		//On met à jour l'index de la fiche
 		$this->update_global_index($this->id_fiche);
 	}
 
@@ -212,19 +232,16 @@ class fiche{
 	 * suppression d'une fiche
 	 */
 	public function delete(){
-		global $dbh;
 		$req = "delete from fiche where id_fiche = ".$this->id_fiche;
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		$req = "delete from ".$this->p_perso->prefix."_custom_values where  ".$this->p_perso->prefix."_custom_origine = ".$this->id_fiche;
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 
 	/*
-	 * Mis Ã  jour de l'index d'une fiche
+	 * Mis à jour de l'index d'une fiche
 	 */
 	public function update_global_index($id){
-		global $dbh, $prefix;
-
 		$infos_global = '';
 		$infos_global_index = '';
 		$mots_perso=$this->p_perso->get_fields_recherche($id);
@@ -233,17 +250,15 @@ class fiche{
 			$infos_global_index.= strip_empty_words($mots_perso).' ';
 		}
 		$req = "update fiche set infos_global='".addslashes($infos_global)."', index_infos_global='".addslashes($infos_global_index)."' where id_fiche=$id";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 
 	/*
 	 * Reindexation globale
 	 */
 	public function reindex_all(){
-		global $dbh;
-
 		$req = "select id_fiche from fiche";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		while($fiche = pmb_mysql_fetch_object($res)){
 			$this->update_global_index($fiche->id_fiche);
 		}
@@ -259,36 +274,37 @@ class fiche{
 	}
 
 	/*
-	 * Affiche le formulaire/tableau rÃ©sultat de recherche dans les champs persos
+	 * Affiche le formulaire/tableau résultat de recherche dans les champs persos
 	 */
 	public function show_search_list($action='',$url_base='',$page=1){
-		global $form_search, $fichier_menu_display, $perso_word, $prefix;
-		global $dbh, $msg,$charset;
+		global $form_search, $perso_word;
+		global $msg, $charset;
 		global $nb_per_page_search,$nb_per_page;
 		global $dest;
 		$search_word = str_replace('*','%',$perso_word);
-		
+
 		if(!($nb_per_page*1)){
 			$nb_per_page=$nb_per_page_search;
 		}
 		if(!$page) $page=1;
 		$debut =($page-1)*$nb_per_page;
 		$requete = "SELECT count(1) FROM fiche where infos_global like '%".$search_word."%' or index_infos_global like '%".$perso_word."%'";
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 
 		$req = "select id_fiche from fiche where infos_global like '%".$search_word."%' or index_infos_global like '%".$perso_word."%' ";
 		if(!isset($dest) || !$dest){
 			$req .= " LIMIT ".$debut.",".$nb_per_page." ";
 		}
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
+		$result = array();
 
 		while($fic = pmb_mysql_fetch_object($res)){
 			$result[$fic->id_fiche] = $this->get_values($fic->id_fiche,1);
 		}
 		$form_search = str_replace("!!nb_per_page!!",$nb_per_page,$form_search);
 		$form_search = str_replace("!!perso_word!!",htmlentities(stripslashes($perso_word),ENT_QUOTES,$charset),$form_search);
-		if(!$result){
+		if (empty($result)) {
 			$form_search = str_replace("!!message_result!!",sprintf($msg['fichier_no_result_found'],$perso_word),$form_search);
 			print $form_search;
 		} else {
@@ -307,14 +323,12 @@ class fiche{
 	}
 
 	/*
-	 * On rÃ©cupÃ¨re les valeurs des champs visibles correspondant Ã  la fiche
+	 * On récupère les valeurs des champs visibles correspondant à la fiche
 	 */
 	public function get_values($id_fiche,$visible=0){
-		global $dbh,$charset;
 		$values=array();
-		
 		$tabl_val=$this->p_perso->show_fields($id_fiche);
-		foreach ( $tabl_val["FIELDS"] as $key => $value ) {
+		foreach ( $tabl_val["FIELDS"] as $value ) {
        		if((!$visible || $value["OPAC_SHOW"]) && ($value["AFF"] !== "")){
        			$values[$value["ID"]][]=$value["AFF"];
        		}
@@ -323,24 +337,21 @@ class fiche{
 	}
 
 	public function display_results_tableau($liste_result,$back_url="",$i_search_deb=0,$export = false){
-
-		global $dbh, $charset, $msg;
+		global $charset, $msg;
 		global $perso_word,$page;
 		global $nb_per_page;
 		$req = "select * from ".$this->p_perso->prefix."_custom where multiple=1 order by ordre";//where multiple=1";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if($export){
 			$display = "<table id='result_table' style='width:100%'><tr>";
 		}else{
 			$display = "<script type='text/javascript' src='./javascript/sorttable.js'></script>\n<table id='result_table' style='width:100%' class=\"sortable\"><tr>";
 		}
-		
-		$nb_field=0;
+
 		$field_id=array();
 		while($champ = pmb_mysql_fetch_object($res)){
 			$field_id[]=$champ->idchamp;
 			if($champ->multiple)$display .= "<th>".htmlentities($champ->titre,ENT_QUOTES,$charset)."</th>";
-			$field_visible[$nb_field++]=$champ->multiple;
 		}
 		$display .= "</tr>";
 		$cpt_ligne=0;
@@ -357,7 +368,7 @@ class fiche{
 			 	$display.= "<td>";
 				if($liste[$idchamp]){
 					$cpt=0;
-					foreach($liste[$idchamp] as $cle=>$valeur){
+					foreach($liste[$idchamp] as $valeur){
 						if($cpt)$display.="<br />";
 						$display.= $valeur;
 						$cpt++;
@@ -383,17 +394,17 @@ class fiche{
 	}
 
 	public function print_results_tableau($liste_result){
-		global $dbh, $charset;
-		
+		global $charset;
+
 		$worksheet = new spreadsheetPMB();
 		$bold = array(
 				'font'  => array(
 						'bold'  => true
 				)
 		);
-		
+
 		$req = "select * from ".$this->p_perso->prefix."_custom where multiple=1 order by ordre";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		$num_col=0;
 		$num_ligne=0;
 		$field_id=array();
@@ -403,12 +414,12 @@ class fiche{
 			$num_col++;
 		}
 		$num_ligne++;
-		foreach($liste_result as $idfiche=>$liste){
+		foreach($liste_result as $liste){
 			$num_col=0;
 			foreach($field_id as $idchamp ){
 			 	$val="";
 				if($liste[$idchamp]){
-					foreach($liste[$idchamp] as $cle=>$valeur){
+					foreach($liste[$idchamp] as $valeur){
 						if($val)$val.="\n";
 						$val.= $valeur;
 					}
@@ -418,7 +429,7 @@ class fiche{
 			}
 			$num_ligne++;
 		}
-	
+
 		$worksheet->download('Tableau.xls');
 	}
 }

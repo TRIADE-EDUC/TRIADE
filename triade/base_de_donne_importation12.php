@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ if ($id != 1) {
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title></head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript"<?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTITRE22?></font></b></td>
 </tr>
@@ -145,8 +145,8 @@ if ( (!empty($fichier)) && (($type == "text/plain" ) || ($type == "application/v
 		$fp = fopen ("./data/fichier_ASCII/$fichier","r");
 		$str=file_get_contents("./data/fichier_ASCII/$fichier");
 		$rows=CSV2Array($str);
-		for($i=0;$i<count($rows);$i++)  {
-			for ($j=0;$j<count($rows[$i]);$j++) {
+		for($i=0;$i<countTriade($rows);$i++)  {
+			for ($j=0;$j<countTriade($rows[$i]);$j++) {
 				//print $rows[$i][1]."<br>";
          		 	$nomP=trim($rows[$i][1]);
          		 	$prenomP=trim($rows[$i][2]);
@@ -198,7 +198,7 @@ if ($ok == 1) {
 		// creation ou mise a jour du fichier log  avec prise en
 		$today=dateDMY();
 		$fichier_s=fopen("./".REPADMIN."/data/fic_opinion.txt","a+");
-		$donnee=fwrite($fichier_s,"<BR>Message du : <FONT color=red>$today</font> De :<FONT color=red> $_SESSION[nom] $_SESSION[prenom]</FONT> <BR>Membre : <font color=red> $_SESSION[membre] </FONT><BR> <B>Message :</B> <font color=red> NOUVELLE BASE </font> - avec fichier ASCII <BR>  Etablissement : <font color=red>".REPECOLE."</font> ");
+		$donnee=fwrite($fichier_s,"<BR>Message du : <FONT color=red>$today</font> De :<FONT color=red> $_SESSION[nom] $_SESSION[prenom]</FONT> <BR>Membre : <font color=red> ".$_SESSION['membre']." </FONT><BR> <B>Message :</B> <font color=red> NOUVELLE BASE </font> - avec fichier ASCII <BR>  Etablissement : <font color=red>".REPECOLE."</font> ");
 		fclose($fichier_s);
 		// suppression du fichier ASCII
 		@unlink($fic_ascii);
@@ -227,5 +227,5 @@ Pgclose();
 </ul>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>

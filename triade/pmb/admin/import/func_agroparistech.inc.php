@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_agroparistech.inc.php,v 1.12 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_agroparistech.inc.php,v 1.13 2023/08/29 15:31:35 dbellamy Exp $
 
 /*
  *  ATTENTION CE FICHIER EST EN UTF-8
@@ -616,7 +616,7 @@ function import_new_notice_suite() {
 						$query = "select notice_id from notices where code ='".$issn."' and niveau_biblio = 's' and niveau_hierar = '1'";
 						$result = pmb_mysql_query($query);
 						if(!pmb_mysql_num_rows($result)){
-							//la notice n'existe pas, il faut la créer...
+							//la notice n'existe pas, il faut la creer...
 
 							/* Origine de la notice */
 							$origine_not['nom']=clean_string($origine_notice[0]['b']);
@@ -645,24 +645,24 @@ function import_new_notice_suite() {
 							$child_id = pmb_mysql_result($result,0,0);
 						}
 						if($child_id){
-							// on regarde si une relation similaire existe déjà...
+							// on regarde si une relation similaire existe deja...
 							$query = "select relation_type from notices_relations where relation_type = '".$link_type[$key]['code']."' and ((num_notice = ".$notice_id." and linked_notice = ".$child_id.") or (num_notice = ".$child_id." and linked_notice = ".$notice_id."))";
 							$result = pmb_mysql_query($query);
 							
 							if(!pmb_mysql_num_rows($result)){
-								$rank = 0;
-								$query = "select count(rank) from notices_relations where relation_type = '".$link_type[$key]['code']."' and ";
+								$ranking = 0;
+								$query = "select count(ranking) from notices_relations where relation_type = '".$link_type[$key]['code']."' and ";
 								if($link_type[$key]['sens_link'] == "mother"){
 									$query.= "num_notice = ".$child_id;
 								}else{
 									$query.= "num_notice = ".$notice_id;
 								}
 								$result = pmb_mysql_query($query);
-								if(pmb_mysql_num_rows($result)) $rank = pmb_mysql_result($result,0,0);
+								if(pmb_mysql_num_rows($result)) $ranking = pmb_mysql_result($result,0,0);
 								if($sens[$link_type[$key]['sens_link']][0] == 'num_notice') {
-									notice_relations::insert_from_import($notice_id, $child_id, $link_type[$key]['code'], ($rank+1));
+									notice_relations::insert_from_import($notice_id, $child_id, $link_type[$key]['code'], ($ranking+1));
 								} else {
-									notice_relations::insert_from_import($child_id, $notice_id, $link_type[$key]['code'], ($rank+1));
+									notice_relations::insert_from_import($child_id, $notice_id, $link_type[$key]['code'], ($ranking+1));
 								}
 							}
 						}

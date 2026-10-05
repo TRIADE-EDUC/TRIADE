@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_authorities_concepts_by_section.class.php,v 1.4 2016-09-20 14:33:53 vtouchard Exp $
+// $Id: cms_module_common_selector_authorities_concepts_by_section.class.php,v 1.5 2022/02/24 15:17:41 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -22,15 +22,14 @@ class cms_module_common_selector_authorities_concepts_by_section extends cms_mod
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
-		global $dbh;
 		if(!$this->value){
 			$this->value = array();
 			if ($this->get_section_id()) {
 				$query = 'select num_concept from index_concept where type_object = 13 and num_object = "'.$this->section_id.'"';
-				$result = pmb_mysql_query($query, $dbh);
+				$result = pmb_mysql_query($query);
 				if (pmb_mysql_num_rows($result)) {
 					while ($row = pmb_mysql_fetch_object($result)) {
 						$this->value[] = $row->num_concept;

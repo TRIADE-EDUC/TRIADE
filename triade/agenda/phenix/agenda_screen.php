@@ -32,7 +32,7 @@
   }
 
   $Screen+=0;
-  $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_screen=".$Screen." WHERE sid_id='".$sid."'");
+  $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_screen=".$Screen." WHERE sid_id='".$sid."'");
   if ($COOKIE_AUTH) { // MAJ du cookie d'identification
     if (!empty($_COOKIE) && isset($_COOKIE[$COOKIE_NOM]))
       $tabLog = explode(":",$_COOKIE[$COOKIE_NOM]);

@@ -1,11 +1,11 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_partial.js,v 1.5 2016-03-22 17:16:46 apetithomme Exp $
+// $Id: nomenclature_record_partial.js,v 1.5 2016/03/22 17:16:46 apetithomme Exp $
 
 define(["dojo/_base/declare", "dojo/_base/lang", "dojo/topic", "dijit/registry", "dojo/request/xhr"], function(declare, lang, topic, registry, xhr){
 	/*
-	 *Classe nomenclature_record_formations_ui. Classe gÃ©nÃ©rant le formulaire permettant de reprÃ©senter les formations d'une notice
+	 *Classe nomenclature_record_formations_ui. Classe générant le formulaire permettant de représenter les formations d'une notice
 	 */
 	return declare("nomenclature_record_partial_ui",null, {
 		num_record: null,

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_entities.class.php,v 1.4 2018-11-14 11:36:17 mbertin Exp $
+// $Id: openurl_entities.class.php,v 1.4 2018/11/14 11:36:17 mbertin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,7 +11,7 @@ require_once($class_path."/openurl/transport/protocole/openurl_transport_http.cl
 
 
 class openurl_entity extends openurl_root {
-	public $descriptors = array();	//	descripteurs de l'entitÃ©
+	public $descriptors = array();	//	descripteurs de l'entité
 	
     public function __construct() {}
 
@@ -35,7 +35,7 @@ class openurl_entity extends openurl_root {
 }
 
 /*
- * La ressource rÃ©fÃ©rencÃ©e
+ * La ressource référencée
  */
 class openurl_entity_referent extends openurl_entity {
 	
@@ -87,7 +87,7 @@ class openurl_entity_referent extends openurl_entity {
 					//Private Data
 					break;
 				default :
-					//on colle les Ã©lÃ©ments du by-value dans un tableau
+					//on colle les éléments du by-value dans un tableau
 					if(substr($key,-3) != "ref"){
 						$elements[$key]=$values[0];
 					}
@@ -104,7 +104,7 @@ class openurl_entity_referent extends openurl_entity {
 }
 
 /*
- * La ressource qui contient la rÃ©fÃ©rence
+ * La ressource qui contient la référence
  */
 class openurl_entity_referring_entity extends openurl_entity {
 
@@ -142,7 +142,7 @@ class openurl_entity_referring_entity extends openurl_entity {
 					//Private Data
 					break;
 				default : 
-					//on colle les Ã©lÃ©ments du by-value dans un tableau
+					//on colle les éléments du by-value dans un tableau
 					$elements[$key]=$values[0];
 					break;
 			}
@@ -181,7 +181,7 @@ class openurl_entity_requester extends openurl_entity {
 }
 
 /*
- * Le type de service demandÃ©
+ * Le type de service demandé
  */
 class openurl_entity_service_type extends openurl_entity {
 	
@@ -207,7 +207,7 @@ class openurl_entity_service_type extends openurl_entity {
 					//Private Data
 					break;
 				default : 
-					//on colle les Ã©lÃ©ments du by-value dans un tableau
+					//on colle les éléments du by-value dans un tableau
 					$elements[$key]=$values;
 					break;
 			}
@@ -222,7 +222,7 @@ class openurl_entity_service_type extends openurl_entity {
 }
 
 /*
- * Quel rÃ©solveur?
+ * Quel résolveur?
  */
 class openurl_entity_resolver extends openurl_entity {
 	

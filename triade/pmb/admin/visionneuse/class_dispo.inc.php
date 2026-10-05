@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: class_dispo.inc.php,v 1.6 2017-11-30 16:11:43 wlair Exp $
+// $Id: class_dispo.inc.php,v 1.6 2017/11/30 16:11:43 wlair Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -13,7 +13,7 @@ if (!isset($vue)) {
 	$vue = 'desc';
 }
 if($quoi == ""){
-	//si $quoi non dÃ©fini on prend le premier de la liste...
+	//si $quoi non défini on prend le premier de la liste...
 	foreach($class_param->classMimetypes as $class => $mimetypes){
 		$quoi =$class;
 		break;

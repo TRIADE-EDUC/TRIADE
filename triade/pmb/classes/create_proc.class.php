@@ -1,37 +1,37 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2005 Guillaume Boitel g.boitel@wanadoo.fr
+// © 2005 Guillaume Boitel g.boitel@wanadoo.fr
 // +-------------------------------------------------+
-// $Id: create_proc.class.php,v 1.13 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: create_proc.class.php,v 1.14 2020/11/04 11:18:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion des crÃ©ations de procÃ©dures
-
+//Classe de gestion des créations de procédures
+global $class_path, $include_path;
 require_once($include_path."/parser.inc.php");
 require_once($class_path."/parametres_perso.class.php");
 require_once($include_path."/templates/create_proc.tpl.php");
 
 class create_proc {
-	public $nom_proc;		// nom de la procÃ©dure
-	public $comment;		// commentaire de la procÃ©dure
-	public $userautorisation;	// utilisateur pouvant utiliser cette procÃ©dure
-	public $print_field;	// champs Ã  afficher
-	public $fixed_params;	// paramÃ¨tres fixes
-	public $op_param;		// opÃ©rature liÃ© au paramÃ¨tre fixe
-	public $val_param;		// valeur liÃ© au paramÃ¨ter fixe
-	public $dynamic_params;	// paramÃ¨tres variables
-	public $op_var;		// opÃ©rature liÃ© au paramÃ¨tre fixe
-	public $val_var;		// valeur liÃ© au paramÃ¨ter fixe
+	public $nom_proc;		// nom de la procédure
+	public $comment;		// commentaire de la procédure
+	public $userautorisation;	// utilisateur pouvant utiliser cette procédure
+	public $print_field;	// champs à afficher
+	public $fixed_params;	// paramètres fixes
+	public $op_param;		// opérature lié au paramètre fixe
+	public $val_param;		// valeur lié au paramèter fixe
+	public $dynamic_params;	// paramètres variables
+	public $op_var;		// opérature lié au paramètre fixe
+	public $val_var;		// valeur lié au paramèter fixe
 	public $list_fields;	// champs interrogeable
-	public $operateur;		// listes des opÃ©rateurs
-	public $op_type;		// liens entre types de donnÃ©es et opÃ©rateurs
+	public $operateur;		// listes des opérateurs
+	public $op_type;		// liens entre types de données et opérateurs
 	public $pp;		// champs perso
-	public $etape;		// etape de la crÃ©ation
+	public $etape;		// etape de la création
 	public $r;			// champs !!field_list!!
 	public $sf;		// champs !!already_selected_fields!!
 	public $url;		// url courrante
-	public $url_next;		// url pour l'Ã©tape suivante
+	public $url_next;		// url pour l'étape suivante
 	
 	// constructeur
 	public function __construct($nom_proc,$comment,$userautorisation,$print_field, $fixed_params, $op_param, $val_param, $dynamic_params, $op_var, $val_var) {
@@ -83,7 +83,7 @@ class create_proc {
 		}
 	}
 	
-	// modification de la prioritÃ© d'affichage
+	// modification de la priorité d'affichage
 	public function mod_prio($up){
 		$tmp = $this->print_field[$up-1];
 		$this->print_field[$up-1]=$this->print_field[$up];
@@ -91,21 +91,21 @@ class create_proc {
 		unset($tmp);
 	}
 	
-	// formulaire du choix des paramÃ¨tres fixes
+	// formulaire du choix des paramètres fixes
 	public function choix_param() {
 		global $charset;
 		global $msg;
 		
-		// donnÃ©es provenant du formulaire
+		// données provenant du formulaire
 		global $add_param;
 		global $delete_param;
 		
-		// ajout d'un paramÃ¨tre
+		// ajout d'un paramètre
 		if (($add_param)&&($delete_param==="")){
 			$this->fixed_params[]=$add_param;
 		}
 				
-		//GÃ©nÃ©ration de la liste des champs possibles
+		//Génération de la liste des champs possibles
 		$this->r="<select name='add_param' id='add_param'>\n";
 		
 		//Champs fixes
@@ -132,7 +132,7 @@ class create_proc {
 		}
 		$this->r.="</select>";
 		
-		//Affichage des champs dÃ©jÃ  saisis
+		//Affichage des champs déjà saisis
 		$n=0;
 		$this->sf="<table class='table-no-border'>\n";
 		if(!((count($this->fixed_params)==0) || ((count($this->fixed_params)==1)&&($delete_param!="")))) $this->sf.="<tr><td><b>".$msg["crit"]."</b></td><td><b>".$msg["type_op"]."</b></td><td><b>".$msg[1604]."</b></td><td><b>".$msg[63]."</b></td><tr>";
@@ -184,7 +184,7 @@ class create_proc {
 			}
 		}
 		$this->sf.="</table>\n";
-		// Champs cachÃ©s
+		// Champs cachés
 		$this->sf.="<input type='hidden' name='nom_proc' value='".htmlentities(stripslashes($this->nom_proc),ENT_QUOTES,$charset)."'>";
 		$this->sf.="<input type='hidden' name='comment' value='".htmlentities(stripslashes($this->comment),ENT_QUOTES,$charset)."'>";
 		for($i=0; $i<count($this->userautorisation); $i++) {
@@ -206,21 +206,21 @@ class create_proc {
 		$this->sf.="<input type='hidden' name='delete_param' value=''/>";
 	}
 	
-	// formulaire du choix des paramÃ¨tres variables
+	// formulaire du choix des paramètres variables
 	public function choix_var(){
 		global $charset;
 		global $msg;
 		
-		// donnÃ©es provenant du formulaire
+		// données provenant du formulaire
 		global $add_var;
 		global $delete_var;
 		
-		// ajout d'un paramÃ¨tre
+		// ajout d'un paramètre
 		if (($add_var)&&($delete_var==="")){
 			$this->dynamic_params[]=$add_var;
 		}
 				
-		//GÃ©nÃ©ration de la liste des champs possibles
+		//Génération de la liste des champs possibles
 		$this->r="<select name='add_var' id='add_var'>\n";
 		
 		//Champs fixes
@@ -247,7 +247,7 @@ class create_proc {
 		}
 		$this->r.="</select>";
 		
-		//Affichage des champs dÃ©jÃ  saisis
+		//Affichage des champs déjà saisis
 		$n=0;
 		$this->sf="<table class='table-no-border'>\n";
 		if(!((count($this->dynamic_params)==0) || ((count($this->dynamic_params)==1)&&($delete_var!="")))) $this->sf.="<tr><td><b>".$msg["crit"]."</b></td><td><b>".$msg["type_op"]."</b></td><td><b>".$msg[103]."</b></td><td><b>".$msg[63]."</b></td><tr>";
@@ -299,7 +299,7 @@ class create_proc {
 			}
 		}
 		$this->sf.="</table>\n";
-		// Champs cachÃ©s
+		// Champs cachés
 		$this->sf.="<input type='hidden' name='nom_proc' value='".htmlentities(stripslashes($this->nom_proc),ENT_QUOTES,$charset)."'>";
 		$this->sf.="<input type='hidden' name='comment' value='".htmlentities(stripslashes($this->comment),ENT_QUOTES,$charset)."'>";
 		for($i=0; $i<count($this->userautorisation); $i++) {
@@ -321,12 +321,12 @@ class create_proc {
 		$this->sf.="<input type='hidden' name='delete_var' value=''/>";
 	}
 	
-	// formulaire du choix des champs Ã  afficher
+	// formulaire du choix des champs à afficher
 	public function choix_champ() {
 		global $charset;
 		global $msg;
 		
-		// donnÃ©es provenant du formulaire
+		// données provenant du formulaire
 		global $add_field;
 		global $delete_field;
 		global $add_prio;
@@ -337,16 +337,16 @@ class create_proc {
 			$this->print_field[]=$add_field;
 		}
 		
-		// Identifiant du champ supprimÃ©
+		// Identifiant du champ supprimé
 		for($i=0; $i<count($this->print_field); $i++) {
 			if ((string)$i==$delete_field) $delete_id = $this->print_field[$i];
 		}
 		
-		// Changement de prioritÃ©
+		// Changement de priorité
 		if($add_prio!="") $this->mod_prio($add_prio);
 		if($min_prio!="") $this->mod_prio($min_prio+1);	
 		
-		//GÃ©nÃ©ration de la liste des champs possibles
+		//Génération de la liste des champs possibles
 		$this->r="<select name='add_field' id='add_field'>\n";
 		
 		//Champs fixes
@@ -358,7 +358,7 @@ class create_proc {
 				$this->r.="<optgroup label='".htmlentities($lf["SEPARATOR"],ENT_QUOTES,$charset)."' class='erreur'>\n";
 				$open_optgroup=1;
 			}
-			if((in_array("f_".$id, $this->print_field)===false) || "f_".$id == $delete_id) // Ne pas afficher un champ dÃ©jÃ  prÃ©sent (sauf si il vient d'Ãªtre suprimÃ©)
+			if((in_array("f_".$id, $this->print_field)===false) || "f_".$id == $delete_id) // Ne pas afficher un champ déjà présent (sauf si il vient d'être suprimé)
 				$this->r.="<option value='f_".$id."' style='color:#000000'>".htmlentities($lf["TITLE"],ENT_QUOTES,$charset)."</font></option>\n";
 		}
 		if ($open_optgroup) $this->r.="</optgroup>\n";
@@ -368,14 +368,14 @@ class create_proc {
 			$this->r.="<optgroup label='".$msg["search_custom"]."' class='erreur'>\n";
 			reset($this->pp->t_fields);
 			foreach ($this->pp->t_fields as $id => $pf) {
-				if((in_array("p_".$id, $this->print_field)===false) || "p_".$id == $delete_id) // Ne pas afficher un champ dÃ©jÃ  prÃ©sent (sauf si il vient d'Ãªtre suprimÃ©)
+				if((in_array("p_".$id, $this->print_field)===false) || "p_".$id == $delete_id) // Ne pas afficher un champ déjà présent (sauf si il vient d'être suprimé)
 				$this->r.="<option value='p_".$id."' style='color:#000000'>".htmlentities($pf["TITRE"],ENT_QUOTES,$charset)."</option>\n";
 			}
 			$this->r.="</optgroup>\n";
 		}
 		$this->r.="</select>";
 		
-		//Affichage des champs dÃ©jÃ  saisis
+		//Affichage des champs déjà saisis
 		$n=0;
 		$this->sf="<table class='table-no-border'>\n";
 		for ($i=0; $i<count($this->print_field); $i++) {
@@ -396,7 +396,7 @@ class create_proc {
 				// Boutton de supression
 				$this->sf.="<td style='width:20px'><input type='button' class='bouton' value='".$msg["raz"]."' onClick=\"this.form.delete_field.value='".$n."'; this.form.action='$url'; this.form.target=''; this.form.submit();\"></td>";
 				
-				// Bouttons de prioritÃ©s
+				// Bouttons de priorités
 				if( ($i==0) || (($i==1)&&($delete_field=="0")) ) $this->sf .="<td style='width:20px'>&nbsp;</td>";
 				else $this->sf.="<td style='width:20px'><input type='button' class='bouton' value='+' onClick=\"this.form.add_prio.value='".$n."'; this.form.action='$url'; this.form.target=''; this.form.submit();\"></td>";
 				if( ($i==count($this->print_field)-1) || (($i==count($this->print_field)-2)&&($delete_field==count($this->print_field)-1)) ) $this->sf .="<td style='width:20px'>&nbsp;</td>";
@@ -407,7 +407,7 @@ class create_proc {
 			}
 		}
 		$this->sf.="</table>\n";
-		// Champs cachÃ©s
+		// Champs cachés
 		$this->sf.="<input type='hidden' name='nom_proc' value='".htmlentities(stripslashes($this->nom_proc),ENT_QUOTES,$charset)."'>";
 		$this->sf.="<input type='hidden' name='comment' value='".htmlentities(stripslashes($this->comment),ENT_QUOTES,$charset)."'>";
 		for($i=0; $i<count($this->userautorisation); $i++) {
@@ -437,13 +437,13 @@ class create_proc {
 		$this->sf.="<input type='hidden' name='min_prio' value=''/>";
 	}
 	
-	// crÃ©ation de la requÃªte SQL
+	// création de la requête SQL
 	public function make_proc() {
 		global $msg;
 		global $current_module;
 		
-		// rÃ©cupÃ©ration des champs Ã  afficher
-		if(count($this->print_field)==0) return "erreur"; // gestion de l'erreur a amÃ©liorer
+		// récupération des champs à afficher
+		if(count($this->print_field)==0) return "erreur"; // gestion de l'erreur a améliorer
 		$champs = array();
 		for($i=0; $i<count($this->print_field); $i++) {
 			if(substr($this->print_field[$i],0,1)=="f") {
@@ -456,7 +456,7 @@ class create_proc {
 		}
 		$liste_champs = implode(", ", $champs);
 		
-		// rÃ©cupÃ©ration des tables
+		// récupération des tables
 		$tables = array();
 		$param = array("print_field" => "a",   "fixed_params" => "f",   "dynamic_params" => "d");
 		foreach($param as $key => $value) {
@@ -483,7 +483,7 @@ class create_proc {
 				}
 			}
 		}
-		// Ã©liminer les doublons
+		// éliminer les doublons
 		$tables = array_unique($tables);
 		$liste_tables = implode(", ", $tables);
 		
@@ -597,7 +597,7 @@ class create_proc {
 		
 		$param_var = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
 		$param_var .= "<FIELDS>\n";
-		for($i=0; $i<count($this->dynamic_params); $i++) { // A amÃ©liorer, pour l'instant tout est mis en type text !!!
+		for($i=0; $i<count($this->dynamic_params); $i++) { // A améliorer, pour l'instant tout est mis en type text !!!
 			$param_var .= "<FIELD NAME=\"d_".$i."\" MANDATORY=\"yes\">\n";
 			$param_var .= " <ALIAS><![CDATA[".$this->val_var[$i]."]]></ALIAS>\n";
 			$param_var .= " <TYPE>text</TYPE>\n";
@@ -609,12 +609,12 @@ class create_proc {
 		}
  		$param_var .= "</FIELDS>";
 		
-		// insertion de la procÃ©dure dans la base de donnÃ©es
+		// insertion de la procédure dans la base de données
 		$dbh = connection_mysql();
 		$req = "INSERT INTO procs (name, requete, comment, autorisations, parameters) VALUES ('".$this->nom_proc."', '".addslashes($requete)."', '".$this->comment."', '".implode(" ",$this->userautorisation)."', '".addslashes($param_var)."')";
 		$result = pmb_mysql_query($req, $dbh);
 		
-		// on n'utilse pas le template prÃ©vu pour cette Ã©tape
+		// on n'utilse pas le template prévu pour cette étape
 		$create_proc_form="
 <form class='form-$current_module' name='search_form' action='!!url!!' method='post'>
 	<h3>".$msg["create_proc"]." (!!etape!!/5)</h3>
@@ -640,7 +640,7 @@ class create_proc {
 		global $msg;
 		global $current_module;
 		
-		// on n'utilse pas le template prÃ©vu pour cette Ã©tape
+		// on n'utilse pas le template prévu pour cette étape
 		$create_proc_form="
 <form class='form-$current_module' name='search_form' action='!!url!!' method='post'>
 	<h3>".$msg["create_proc"]." (!!etape!!/5)</h3>
@@ -675,7 +675,7 @@ class create_proc {
 </form>";
 		
 		
-		// rÃ©cupÃ©ration des utilisateurs
+		// récupération des utilisateurs
 		$dbh = connection_mysql();
 		$requete_users = "SELECT userid, username FROM users order by username ";
 		$res_users = pmb_mysql_query($requete_users, $dbh);
@@ -697,7 +697,7 @@ class create_proc {
 	// Gestion de l'affichage
 	public function show_form($url,$url_next, $etape=1) {
 		// $url : url courrante
-		// $url_next : url pour l'Ã©tape suivante
+		// $url_next : url pour l'étape suivante
 		global $create_proc_form;
 		global $msg;
 		

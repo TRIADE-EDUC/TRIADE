@@ -1,10 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_locations_controler.class.php,v 1.3 2019-02-26 13:48:41 tsamson Exp $
+// $Id: map_locations_controler.class.php,v 1.5 2021/12/24 08:34:43 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+global $class_path;
 require_once($class_path."/map/map_objects_controler.class.php");
 
 /**
@@ -16,19 +17,16 @@ class map_locations_controler extends map_objects_controler
 
     public $location_objects;
 
-    public function __construct($type, $ids, $objects, $id_dom = '')
-    {
+    public function __construct($type, $ids, $objects, $id_dom = '') {
         $this->location_objects = $objects;
         parent::__construct($type, $ids);
         $this->id_dom = $id_dom;
         $this->model->set_mode("search_location");
     }
 
-    public function get_json_informations()
-    {
+    public function get_json_informations() {
         global $opac_url_base;
         global $opac_map_max_holds;
-        global $dbh;
 
         $map_hold = $this->get_bounding_box();
         if ($map_hold) {
@@ -58,14 +56,12 @@ class map_locations_controler extends map_objects_controler
         }
     }
 
-    public function get_map_controler_name()
-    {
+    public function get_map_controler_name() {
         return "apps/map/map_location_controler";
     }
 
-    static public function get_map_location($memo_expl, $id_dom = TYPE_LOCATION, $map_only = 0)
-    {
-        global $dbh, $msg;
+    static public function get_map_location($memo_expl, $id_dom = TYPE_LOCATION, $map_only = 0) {
+        global $msg;
         
         $display = '';
         $ids = array();
@@ -87,16 +83,19 @@ class map_locations_controler extends map_objects_controler
             if ($map_only) {
                 return $map->get_map();
             }
-            $display = gen_plus(
-                'map_location_' . $id_notice . '_' . $id_bulletin, 
-                $msg['record_expl_map_location'], 
-                $map->get_map($id_notice . '_' . $id_bulletin, 'map_location_' . $id_notice . '_' . $id_bulletin.'Img'),
-                '',
-                '',
-                '',
-                'map_location-parent',
-                'map_location-child'
-            );
+            $map_display = $map->get_map($id_notice . '_' . $id_bulletin, 'map_location_' . $id_notice . '_' . $id_bulletin.'Img');
+            if($map_display) {
+	            $display = gen_plus(
+	                'map_location_' . $id_notice . '_' . $id_bulletin, 
+	                $msg['record_expl_map_location'], 
+	                $map_display,
+	                '',
+	                '',
+	                '',
+	                'map_location-parent',
+	                'map_location-child'
+	            );
+            }
         }
         return $display;
     }

@@ -1,11 +1,11 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_epires.inc.php,v 1.21 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_epires.inc.php,v 1.26 2022/05/25 07:21:57 dgoron Exp $
 
-// DEBUT param√©trage propre √† la base de donn√©es d'importation :
-global $class_path; //N√©cessaire pour certaines inclusions
+// DEBUT paramÈtrage propre ‡ la base de donnÈes d'importation :
+global $class_path; //NÈcessaire pour certaines inclusions
 require_once($class_path."/serials.class.php");
 require_once($class_path."/thesaurus.class.php");
 require_once($class_path."/categories.class.php");
@@ -35,7 +35,7 @@ function recup_noticeunimarc_suite($notice) {
 		$cle=$record->inner_directory[$i]['label'];
 		switch($cle) {
 			case "464":
-				//C'est un p√©riodique donc un d√©pouillement ou une notice objet
+				//C'est un pÈriodique donc un dÈpouillement ou une notice objet
 				$info_464=$record->get_subfield($cle,"t","v","p","d","z","e","u");
 				break;
 			case "200":
@@ -55,7 +55,7 @@ function recup_noticeunimarc_suite($notice) {
 	$info_904=$record->get_subfield_array_array("904","a");
 	$info_676=$record->get_subfield("676","a");
 
-} // fin recup_noticeunimarc_suite = fin r√©cup√©ration des variables propres √† la bretagne
+} // fin recup_noticeunimarc_suite = fin rÈcupÈration des variables propres ‡ la bretagne
 
 //trouve un champ perso et renvoi so id
 function trouve_champ_perso($nom) {
@@ -80,7 +80,6 @@ function trouve_thesaurus($code) {
 }
 
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 
 	global $info_464,$info_676 ;
@@ -96,7 +95,7 @@ function import_new_notice_suite() {
 	 	$m_thess = pmb_mysql_result(pmb_mysql_query($rqt),0,0);
 	}
 
-	//Cas des p√©riodiques
+	//Cas des pÈriodiques
 	if (is_array($info_464) && trim($info_464[0]['t'])) {
 		$requete="SELECT * FROM notices WHERE notice_id=$notice_id";
 		$resultat=pmb_mysql_query($requete);
@@ -104,11 +103,11 @@ function import_new_notice_suite() {
 		//Notice chapeau existe-t-elle ?
 		$requete="SELECT notice_id FROM notices WHERE tit1='".addslashes($info_464[0]['t'])."' and niveau_hierar='1' and niveau_biblio='s'";
 		$resultat=pmb_mysql_query($requete);
-		if (@pmb_mysql_num_rows($resultat)) {
-			//Si oui, r√©cup√©ration id
+		if (pmb_mysql_num_rows($resultat)) {
+			//Si oui, rÈcupÈration id
 			$chapeau_id=pmb_mysql_result($resultat,0,0);
 
-			//Mise √† jour du champ commentaire de gestion si n√©cessaire
+			//Mise ‡ jour du champ commentaire de gestion si nÈcessaire
 			if ($info_903[0]) {
 				$requete="UPDATE notices SET commentaire_gestion=concat(commentaire_gestion,' ','".addslashes($info_903[0])."') WHERE notice_id=$chapeau_id";
 				pmb_mysql_query($requete);
@@ -117,11 +116,19 @@ function import_new_notice_suite() {
 			//Bulletin existe-t-il ?
 			$requete="SELECT bulletin_id FROM bulletins WHERE bulletin_numero='".addslashes($info_464[0]['v'])."' AND mention_date='".addslashes($info_464[0]['d'])."' AND bulletin_notice=$chapeau_id";
 			$resultat=pmb_mysql_query($requete);
-			if (@pmb_mysql_num_rows($resultat)) {
-				//Si oui, r√©cup√©ration id bulletin
+			//On lance une autre requÍte de test pour vÈrifier l'existence du bulletin (espace insÈcable dans le numÈro ?)
+			//#125734 : contenu du fichier PRISME en erreur
+			$requete_clean_nbsp="SELECT bulletin_id FROM bulletins WHERE bulletin_numero='".addslashes(clean_nbsp($info_464[0]['v']))."' AND mention_date='".addslashes($info_464[0]['d'])."' AND bulletin_notice=$chapeau_id";
+			$resultat_clean_nbsp=pmb_mysql_query($requete_clean_nbsp);
+			
+			if (pmb_mysql_num_rows($resultat)) {
+				//Si oui, rÈcupÈration id bulletin
 				$bulletin_id=pmb_mysql_result($resultat,0,0);
+			} elseif (pmb_mysql_num_rows($resultat_clean_nbsp)) {
+				//Si oui, rÈcupÈration id bulletin
+				$bulletin_id=pmb_mysql_result($resultat_clean_nbsp,0,0);
 			} else {
-				//Si non, cr√©ation bulletin
+				//Si non, crÈation bulletin
 				$info=array();
 				$bulletin=new bulletinage("",$chapeau_id);
 				if ($info_464[0]['u'])
@@ -138,7 +145,7 @@ function import_new_notice_suite() {
 				$bulletin_id=$bulletin->update($info);
 			}
 		} else {
-			//Si non, cr√©ation notice chapeau et bulletin
+			//Si non, crÈation notice chapeau et bulletin
 			$chapeau=new serial();
 			$info=array();
 			$info['tit1']=addslashes($info_464[0]['t']);
@@ -147,9 +154,9 @@ function import_new_notice_suite() {
 			$info['typdoc']=$r->typdoc;
 
 			$chapeau->update($info);
-			$chapeau_id=$chapeau->serial_id;
+			$chapeau_id=$chapeau->id;
 
-			//Mise √† jour du champ commentaire de gestion si n√©cessaire
+			//Mise ‡ jour du champ commentaire de gestion si nÈcessaire
 			if ($info_903[0]) {
 				$requete="UPDATE notices SET commentaire_gestion=concat(commentaire_gestion,' ','".addslashes($info_903[0])."') WHERE notice_id=$chapeau_id";
 				pmb_mysql_query($requete);
@@ -181,7 +188,7 @@ function import_new_notice_suite() {
 		$bulletin_ex=0;
 
 
-	//Traitement du th√©saurus
+	//Traitement du thÈsaurus
 	if ($m_thess>1) {
 		//on est en multi-thesaurus
 		for ($i=0; $i<count($info_606_a); $i++) {
@@ -189,13 +196,13 @@ function import_new_notice_suite() {
 				$descripteur_tete=$info_606_a[$i][$j];
 				$descripteur_fils=$info_606_x[$i][$j];
 
-				//Recherche du th√©saurus
+				//Recherche du thÈsaurus
 				$thes_id=trouve_thesaurus($descripteur_tete);
 				//Recherche du terme fils
 				if ($thes_id>0) {
 					$categ_id_fils=categories::searchLibelle(addslashes(trim($descripteur_fils)),$thes_id,"fr_FR");
 					if (!$categ_id_fils) {
-						//Cr√©ation
+						//CrÈation
 						$new_thes=$thes_id==1?4:$thes_id;	//Choix du thesaurus Candidats descripteurs si descripteur inexistant
 						$categ_id_fils=categories::searchLibelle(addslashes(trim($descripteur_fils)),$new_thes,"fr_FR");
 						if (!$categ_id_fils) {
@@ -205,7 +212,7 @@ function import_new_notice_suite() {
 							$noeud->num_parent=$thesau->num_noeud_racine;
 							$noeud->save();
 							$categ_id_fils=$noeud->id_noeud;
-							//Cr√©ation du libell√©
+							//CrÈation du libellÈ
 							$categ=new categories($noeud->id_noeud,'fr_FR');
 							$categ->libelle_categorie=$descripteur_fils;
 							$categ->index_categorie=" ".strip_empty_words($descripteur_fils)." ";
@@ -218,21 +225,21 @@ function import_new_notice_suite() {
 			}
 		} //for($i
 	} else {
-		//Traitement du th√©saurus unique
+		//Traitement du thÈsaurus unique
 		for ($i=0; $i<count($info_606_a); $i++) {
 			for ($j=0; $j<count($info_606_a[$i]); $j++) {
 				$descripteur_tete=$info_606_a[$i][$j];
 				$descripteur_fils=$info_606_x[$i][$j];
 
-				//Recherche du terme de t√™te
+				//Recherche du terme de tÍte
 				//$requete="SELECT num_noeud FROM categories WHERE libelle_categorie='".addslashes($descripteur_tete)."' AND langue='fr_FR'";
 				$requete="SELECT id_noeud FROM noeuds WHERE autorite='".addslashes($descripteur_tete)."'";
 				$resultat=pmb_mysql_query($requete);
 				if (@pmb_mysql_num_rows($resultat)) {
-					//la t√™te existe !
+					//la tÍte existe !
 					$categ_id_tete=pmb_mysql_result($resultat,0,0);
 				} else {
-					//Cr√©ation de la t√™te
+					//CrÈation de la tÍte
 					//Nouveau Noeud !
 					$th=new thesaurus(1);
 					$noeud=new noeuds();
@@ -241,7 +248,7 @@ function import_new_notice_suite() {
 					$noeud->autorite=$descripteur_tete;
 					$noeud->save();
 					$categ_id_tete=$noeud->id_noeud;
-					//Cr√©ation du libell√©
+					//CrÈation du libellÈ
 					$categ=new categories($noeud->id_noeud,'fr_FR');
 					$categ->libelle_categorie=$descripteur_tete;
 					$categ->index_categorie=" ".strip_empty_words($descripteur_tete)." ";
@@ -250,13 +257,13 @@ function import_new_notice_suite() {
 				//Recherche du terme fils
 				$categ_id_fils=categories::searchLibelle(addslashes($descripteur_fils),1,"fr_FR");
 				if (!$categ_id_fils) {
-					//Cr√©ation
+					//CrÈation
 					$noeud=new noeuds();
 					$noeud->num_thesaurus=1;
 					$noeud->num_parent=$categ_id_tete;
 					$noeud->save();
 					$categ_id_fils=$noeud->id_noeud;
-					//Cr√©ation du libell√©
+					//CrÈation du libellÈ
 					$categ=new categories($noeud->id_noeud,'fr_FR');
 					$categ->libelle_categorie=$descripteur_fils;
 					$categ->index_categorie=" ".strip_empty_words($descripteur_fils)." ";
@@ -268,8 +275,8 @@ function import_new_notice_suite() {
 		}
 	}
 
-	//Indexation d√©cimale
-	if ($info_676[0]) {
+	//Indexation dÈcimale
+	if (!empty($info_676[0])) {
 		$requete="select indexint_id from indexint where indexint_name='".addslashes($info_676[0])."'";
 		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {
@@ -284,10 +291,14 @@ function import_new_notice_suite() {
 	}
 
 	//Organisme
-	import_records::insert_list_integer_value_custom_field_from_name('op', $notice_id, $info_900[0]);
+	if(isset($info_900[0])) {
+		import_records::insert_list_integer_value_custom_field_from_name('op', $notice_id, $info_900[0]);
+	}
 
 	//Genre
-	import_records::insert_list_integer_value_custom_field_from_name('gen', $notice_id, $info_901[0]);
+	if(isset($info_901[0])) {
+		import_records::insert_list_integer_value_custom_field_from_name('gen', $notice_id, $info_901[0]);
+	}
 
 	//Type de texte
 	if (count($info_904)) {
@@ -325,27 +336,27 @@ function import_new_notice_suite() {
 		}
 	}
 
-	//N¬∞ de lot
+	//N∞ de lot
 	if ($info_903[0]) {
 		$requete="UPDATE notices SET commentaire_gestion='".addslashes($info_903[0])."' WHERE notice_id=$notice_id";
 		pmb_mysql_query($requete);
 	}
 
-	//Cas de la mise √† jour des p√©riodiques ou du champ bord (notices chapeau)
+	//Cas de la mise ‡ jour des pÈriodiques ou du champ bord (notices chapeau)
 	if ($bl=="s") {
-		//Si c'est un p√©riodique
+		//Si c'est un pÈriodique
 		if ($dt=="a") {
 			//Passage de la notice en notice chapeau
 			$requete="UPDATE notices SET niveau_biblio='s', niveau_hierar='1' WHERE notice_id=$notice_id";
 			pmb_mysql_query($requete);
-			//Recherche si la notice existe d√©j√† par rapport au titre
+			//Recherche si la notice existe dÈj‡ par rapport au titre
 			$requete="select notice_id FROM notices WHERE ucase(tit1)='".addslashes(strtoupper($info_200[0]))."' AND niveau_biblio='s' AND niveau_hierar='1' AND notice_id!=$notice_id";
 			$resultat=pmb_mysql_query($requete);
 			$update=false;
 			if (pmb_mysql_num_rows($resultat)) {
 				$update=true;
 				$n_update=pmb_mysql_result($resultat,0,0);
-				//Mise √† jour de tous les bulletins
+				//Mise ‡ jour de tous les bulletins
 				$requete="UPDATE bulletins SET bulletin_notice=".$notice_id." WHERE bulletin_notice=".$n_update;
 				pmb_mysql_query($requete);
 				//Suppression de l'ancienne notice
@@ -360,7 +371,7 @@ function import_new_notice_suite() {
 			}
 
 			if ((!$update)&&($rs!="n")) {
-				//Si il n'y a pas de cr√©ation, on supprime la notice
+				//Si il n'y a pas de crÈation, on supprime la notice
 				$requete="DELETE FROM notices WHERE notice_id=$notice_id";
 				pmb_mysql_query($requete);
 				$requete="DELETE FROM notices_categories WHERE notcateg_notice=".$notice_id;
@@ -371,7 +382,7 @@ function import_new_notice_suite() {
 				pmb_mysql_query($requete);
 			}
 		} else if ($dt=="l") {
-			//Recherche si la notice existe d√©j√† par rapport au titre
+			//Recherche si la notice existe dÈj‡ par rapport au titre
 			$requete="select notice_id FROM notices WHERE ucase(tit1)='".addslashes(strtoupper($info_200[0]))."' AND typdoc='l' AND notice_id!=$notice_id";
 			$resultat=pmb_mysql_query($requete);
 			$update=false;
@@ -389,11 +400,11 @@ function import_new_notice_suite() {
 				pmb_mysql_query($requete);
 			}
 		} else if ($dt=="r") {
-			//Mise √† jour du champ bord
+			//Mise ‡ jour du champ bord
 			if ($info_910[0]) {
 				$no_champ = trouve_champ_perso("bord");
 				if ($no_champ>0) {
-					//Recherche si la notice existe d√©j√† par rapport au titre
+					//Recherche si la notice existe dÈj‡ par rapport au titre
 					$requete="SELECT notice_id FROM notices WHERE ucase(tit1)='".addslashes(strtoupper($info_200[0]))."' AND niveau_biblio='s' AND niveau_hierar='1' AND notice_id!=$notice_id";
 					$resultat=pmb_mysql_query($requete);
 					if (pmb_mysql_num_rows($resultat)) {
@@ -417,23 +428,22 @@ function import_new_notice_suite() {
 
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
-
-	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id,
-		$section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
-		$cote_mandatory ;
+	global $prix, $notice_id, $info_995, $tdoc_codage, $book_lender_id,
+		$sdoc_codage, $book_statut_id, $locdoc_codage, $statisdoc_codage,
+		$cote_mandatory, $nb_expl_ignores;
 
 	global $bulletin_ex;
 
 	// lu en 010$d de la notice
 	$price = $prix[0];
 
-	// la zone 995 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 
-		/* pr√©paration du tableau √† passer √† la m√©thode */
+		/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
 		$unique=false;
 		$cb=$expl['cb'];
@@ -455,12 +465,12 @@ function traite_exemplaires () {
 			$expl['notice']     = $notice_id ;
 			$expl['bulletin']=0;
 		}
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; √† chercher dans docs_typdoc
+		// $expl['typdoc']     = $info_995[$nb_expl]['r']; ‡ chercher dans docs_typdoc
 		$data_doc=array();
-		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc import√© (".$book_lender_id.")";
+		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importÈ (".$book_lender_id.")";
 		//$data_doc['tdoc_libelle'] = $typdoc_995[$info_995[$nb_expl]['r']];
 		//if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "\$r non conforme -".$info_995[$nb_expl]['r']."-" ;
-		$data_doc['duree_pret'] = 0 ; /* valeur par d√©faut */
+		$data_doc['duree_pret'] = 0 ; /* valeur par dÈfaut */
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		$data_doc['tdoc_libelle']=$info_995[$nb_expl]['r'] ;
 		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
@@ -471,7 +481,7 @@ function traite_exemplaires () {
 
         if (!trim($expl['cote'])) $expl['cote']="SC";
 
-		// $expl['section']    = $info_995[$nb_expl]['q']; √† chercher dans docs_section
+		// $expl['section']    = $info_995[$nb_expl]['q']; ‡ chercher dans docs_section
 		$data_doc=array();
 		if (!$info_995[$nb_expl]['t'])
 			$info_995[$nb_expl]['t'] = "inconnu";
@@ -483,8 +493,8 @@ function traite_exemplaires () {
 
 		$expl['statut'] = $book_statut_id;
 
-		// $expl['location']   = $info_995[$nb_expl]['']; √† fixer par combo_box
-		// fig√© dans le code ici pour l'instant :
+		// $expl['location']   = $info_995[$nb_expl]['']; ‡ fixer par combo_box
+		// figÈ dans le code ici pour l'instant :
 		//$info_995[$nb_expl]['localisation']="Bib princip"; /* biblio principale */
 		$data_doc=array();
 		$data_doc['location_libelle'] = "inconnu";
@@ -500,9 +510,9 @@ function traite_exemplaires () {
 			$data_doc['locdoc_owner'] = 0 ;
 		$expl['location'] = docs_location::import($data_doc);
 
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilis√©, √©ventuellement √† fixer par combo_box
+		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÈ, Èventuellement ‡ fixer par combo_box
 		$data_doc=array();
-		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub vis√© import√© (".$book_lender_id.")";
+		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visÈ importÈ (".$book_lender_id.")";
 		if (!$info_995[$nb_expl]['q'])
 			$info_995[$nb_expl]['q'] = "inconnu";
 		$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q'] ;
@@ -512,17 +522,21 @@ function traite_exemplaires () {
 		$expl['codestat'] = docs_codestat::import($data_doc);
 
 
-		// $expl['creation']   = $info_995[$nb_expl]['']; √† pr√©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; √† pr√©ciser
+		// $expl['creation']   = $info_995[$nb_expl]['']; ‡ prÈciser
+		// $expl['modif']      = $info_995[$nb_expl]['']; ‡ prÈciser
 
 		$expl['note']       = $info_995[$nb_expl]['u'];
 		$expl['prix']       = $price;
 		$expl['expl_owner'] = $book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 
-		$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
-		$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
-
+		if (!empty($info_995[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_995[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		}
+		
 		$expl_id = exemplaire::import($expl);
 
 		if ($expl_id == 0)
@@ -531,7 +545,7 @@ function traite_exemplaires () {
 	} // fin for
 } // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

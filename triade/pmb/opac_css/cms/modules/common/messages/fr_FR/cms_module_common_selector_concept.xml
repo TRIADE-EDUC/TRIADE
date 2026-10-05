@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français 
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_concept.xml,v 1.1 2023/10/26 07:49:08 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_concept_id_concept">Identifiant du concept</entry>
+</XMLlist>

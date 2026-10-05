@@ -36,12 +36,12 @@
       @fclose($flux);
     }
     // On recupere l'identifiant utilisateur a partir de l'ID passe en parametre dans l'URL
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
     $idUser = $DB_CX->DbResult(0,0) + 0;
     // On lance l'import et on envoi l'entete en fonction du resultat
     if (!empty($idUser) && !empty($data)) {
       // Recuperation des infos de timezone de l'utilisateur
-      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, tzn_zone FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, tzn_zone FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
       $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
       $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
       $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -290,7 +290,7 @@
             // Si le fuseau est fourni, on converti en utc
             if ($note_TZ != "") {
               // Recuperation des infos de timezone
-              $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}timezone WHERE tzn_zone='".$note_TZ."'");
+              $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}timezone WHERE tzn_zone='".$note_TZ."'");
               if ($DB_CX->DbNumRows()) {
                 $tzGmt_N = $DB_CX->DbResult(0,"tzn_gmt");
                 $tzDateEte_N = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -324,7 +324,7 @@
             if ((($date_debut." ".$heure_deb)>=$date_dem_deb) && (($date_debut." ".$heure_deb)<=$date_dem_fin)) {
               // On traite l'ajout si l'heure et bien comprise entre les 2 dates entrees dans le formulaire.
               $importSuite = true;
-              $DB_CX->DbQuery("SELECT age_id, age_date_modif, age_ape_id FROM ${PREFIX_TABLE}agenda WHERE age_date='".substr($date_debut,0,10)."' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
+              $DB_CX->DbQuery("SELECT age_id, age_date_modif, age_ape_id FROM {$PREFIX_TABLE}agenda WHERE age_date='".substr($date_debut,0,10)."' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
               if ($DB_CX->DbNumRows()) {
                 if (empty($data)){
                   $err =  "<P class=\"vert\"><B>".trad("NOTEIMP_MSG_IMPORT_ERREUR")."</B></P>";
@@ -347,7 +347,7 @@
                 if (!empty($data)) {
                   $idAge = $note_uid + 0;
                   // Si la note existe.
-                  $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+                  $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
                   if (!$DB_CX->DbNumRows()) {
                     $idAge = "";
                   }
@@ -356,7 +356,7 @@
                 // couleur
 //                $zlCouleur = $note_couleur;
                 if ($note_couleur=="") {
-                  $DB_CX->DbQuery("SELECT cou_couleur FROM ${PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_categorie'");
+                  $DB_CX->DbQuery("SELECT cou_couleur FROM {$PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_categorie'");
                   if ($DB_CX->DbNumRows()) {
                     $zlCouleur = $DB_CX->DbResult(0,0);
                   }
@@ -604,21 +604,21 @@
         }
         if ($ImportSunbird==true) {
           unset ($Sql_uid_Tbl);
-          $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_aty_id>1 AND age_mere_id=0 AND age_util_id='$idUser'");
+          $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_aty_id>1 AND age_mere_id=0 AND age_util_id='$idUser'");
           while ($enr = $DB_CX->DbNextRow()) {
             $Sql_uid_Tbl[] = $enr['age_id'];
           }
           $liste_note_uid = implode(",", array_diff($Sql_uid_Tbl, $note_uid_Tbl));
           if ($liste_note_uid!="") {
             unset ($Sql_uid_Tbl);
-            $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_mere_id IN (".$liste_note_uid.")");
+            $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_mere_id IN (".$liste_note_uid.")");
             while ($enr = $DB_CX->DbNextRow()) {
               $Sql_uid_Tbl[] = $enr['age_id'];
             }
             if (isset($Sql_uid_Tbl)) $liste_note_uid_mere = implode(",", $Sql_uid_Tbl);
             if (isset($liste_note_uid_mere)) $Ch_liste=$liste_note_uid.",".$liste_note_uid_mere; else $Ch_liste=$liste_note_uid;
-            $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id IN (".$Ch_liste.")");
-            $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$Ch_liste.")");
+            $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id IN (".$Ch_liste.")");
+            $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$Ch_liste.")");
           }
         }    
       }
@@ -799,7 +799,7 @@
 
             if ((($date_debut." ".$heure_deb)>=$date_dem_deb) && (($date_debut." ".$heure_deb)<=$date_dem_fin)) {
               // On traite l'ajout si l'heure et bien comprise entre les 2 dates entrees dans le formulaire.
-              $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_date='$date_debut' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
+              $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_date='$date_debut' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
               if ($DB_CX->DbNumRows()) {
                 // On ne fait rien car la note existe deja
                 $err =  "<P class=\"vert\"><B>".trad("NOTEIMP_MSG_IMPORT_ERREUR")."</B></P>";
@@ -809,7 +809,7 @@
                 // couleur
 //                $zlCouleur = $note_couleur;
                 if ($note_couleur=="") {
-                  $DB_CX->DbQuery("SELECT cou_couleur FROM ${PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_categorie'");
+                  $DB_CX->DbQuery("SELECT cou_couleur FROM {$PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_categorie'");
                   if ($DB_CX->DbNumRows()) {
                     $zlCouleur = $DB_CX->DbResult(0,0);
                   }
@@ -1202,7 +1202,7 @@
               $date_deb_utc = mktime(12,0,0,$tabDate[1],$tabDate[2],$tabDate[0]);
 
               // On regarde si la note existe deja
-              $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_date='".date("Y-m-d",$date_deb_utc)."' AND age_heure_debut=$heure_deb_utc AND age_heure_fin=$heure_fin_utc AND age_libelle='$ztLibelle' AND age_util_id='$idUser'");
+              $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_date='".date("Y-m-d",$date_deb_utc)."' AND age_heure_debut=$heure_deb_utc AND age_heure_fin=$heure_fin_utc AND age_libelle='$ztLibelle' AND age_util_id='$idUser'");
               if ($DB_CX->DbNumRows()) {
                 $id_age = $DB_CX->DbResult(0,0);
                 // On ne fait rien ! car la note existe
@@ -1331,7 +1331,7 @@
                   $tabTemp    = array(trad("COMMUN_COUL_DEFAUT") => $AgendaFondNotePerso);
                   $tabCouleur = array_merge($tabTemp,getListeCouleur());
                   reset($tabCouleur);
-                  while (list($key, $val) = each($tabCouleur)) {
+	          foreach ($tabCouleur as $key => $val) {
                     $selected = ($val==$enr['age_couleur']) ? " selected" : "";
                     echo "      <OPTION style=\"background-color:".$val.";\" value=\"".$val."\"".$selected.">".$key."</OPTION>\n";
                   }
@@ -1534,16 +1534,16 @@
         $zlPeriodicite = 1;
       $liste = "0";
       if ($edit!="occ") {
-        $DB_CX->DbQuery("SELECT DISTINCT age_id, age_date_creation FROM ${PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge);
+        $DB_CX->DbQuery("SELECT DISTINCT age_id, age_date_creation FROM {$PREFIX_TABLE}agenda WHERE age_mere_id=".$idAge);
         while ($enr = $DB_CX->DbNextRow()) {
           $liste .= ",".$enr['age_id'];
           $age_date_create = $enr['age_date_creation'];
         }
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda WHERE age_id IN (".$liste.")");
       }
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.")");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id IN (".$liste.",".$idAge.")");
 
-      $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+      $sql = "UPDATE {$PREFIX_TABLE}agenda ";
       $sql .= "SET age_aty_id=".$ckTypeNote.",";
       $sql .= " age_date='".$ztDateUTC."',";
       $sql .= " age_heure_debut=".$zlHeureDebutUTC.",";
@@ -1574,7 +1574,7 @@
       $sql .= "WHERE age_id=".$idAge." AND age_util_id=".$idUser;
       $DB_CX->DbQuery($sql);
     } else {
-      $sql = "INSERT INTO ${PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id) ";
+      $sql = "INSERT INTO {$PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id) ";
       $sql .= "VALUES (0,".$idUser.",".$ckTypeNote.",'".$ztDateUTC."',".$zlHeureDebutUTC.",".$zlHeureFinUTC.",".$zlPeriodicite.",".$periode1.",".$periode2.",".$periode3.",".$periode4.",".$rdPlage.",".($nbOccurrence + $dateMax).",'".$ztLibelle."','".$ztDetail."',".$zlR1.",".$zlR2.",".$ckEmail.",".$rdPrive.",'".$zlCouleur."',".count($idParticipant).",".$idUser.",".$rdDispo.",'".$age_date_create."','".$age_date_modif."',".$idUser.",'".$ztLieu."',".$zlContactAssocie.")";
       $DB_CX->DbQuery($sql);
       $idAge = $DB_CX->DbInsertID();
@@ -1582,11 +1582,11 @@
 
     // Enregistrement des personnes concernees
     for ($nb=0;$nb < count($idParticipant);$nb++)
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne VALUES (".$idAge.",".$idParticipant[$nb].",".$alert.",".$endNote.")");
 
     if ($idAge) {
       // Requete generique
-      $sql = "INSERT INTO ${PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id) ";
+      $sql = "INSERT INTO {$PREFIX_TABLE}agenda (age_mere_id,age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_nb_participant, age_createur_id, age_disponibilite, age_date_creation, age_date_modif, age_modificateur_id, age_lieu, age_cal_id) ";
       $sql .= "VALUES (".$idAge.",".$idUser.",".$ckTypeNote.",'{theNewDate}',{theBeginHour},{theEndHour},".$zlPeriodicite.",".$periode1.",".$periode2.",".$periode3.",".$periode4.",".$rdPlage.",".($nbOccurrence + $dateMax).",'".$ztLibelle."','".$ztDetail."', ".$zlR1.",".$zlR2.",".$ckEmail.",".$rdPrive.",'".$zlCouleur."',".count($idParticipant).",".$idUser.",".$rdDispo.",'".$age_date_create."','".$age_date_modif."',".$idUser.",'".$ztLieu."',".$zlContactAssocie.")";
       if ($rdPlage == 1) {
         // Repetition en nombre d'occurrence

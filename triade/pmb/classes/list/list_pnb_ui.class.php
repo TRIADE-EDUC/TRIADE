@@ -2,11 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_pnb_ui.class.php,v 1.10 2018-11-09 14:45:19 dgoron Exp $
+// $Id: list_pnb_ui.class.php,v 1.31 2024/03/07 11:51:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path.'/list/list_ui.class.php');
+global $include_path;
 require_once($include_path.'/templates/list/list_pnb_ui.tpl.php');
 
 class list_pnb_ui extends list_ui {
@@ -16,16 +16,14 @@ class list_pnb_ui extends list_ui {
 		return $query;
 	}
 	
-	protected function add_object($row) {
-		$this->objects[] = new pnb_order($row->id_pnb_order);
+	protected function get_object_instance($row) {
+		return new pnb_order($row->id_pnb_order);
 	}
 	
 	/**
 	 * Initialisation des filtres de recherche
 	 */
 	public function init_filters($filters=array()) {
-		global $deflt_docs_location;
-		
 		$this->filters = array(
 		    'alert_end_offers' => '',
 		    'alert_staturation_offers' => '',
@@ -57,68 +55,60 @@ class list_pnb_ui extends list_ui {
 	}
 	
 	protected function init_default_columns() {
-		global $action;
-		$this->add_column('order_id', 'edit_pnb_order_id');
-		$this->add_column('line_id', 'edit_pnb_order_line_id');
-		$this->add_column('notice', 'edit_pnb_order_notice');
-		$this->add_column('loan_max_duration','edit_pnb_order_loan_max_duration');
-		$this->add_column('nb_loans','edit_pnb_order_nb_loans');
-		$this->add_column('nb_simultaneous_loans','edit_pnb_order_nb_simultaneous_loans');
-		$this->add_column('nb_consult_in_situ','edit_pnb_order_nb_consult_in_situ');
-		$this->add_column('nb_consult_ex_situ','edit_pnb_order_nb_consult_ex_situ');
-		$this->add_column('offer_formated_date','edit_pnb_order_offer_date');
-		$this->add_column('offer_formated_date_end','edit_pnb_order_offer_date_end');
-		$this->add_column('offer_duration','edit_pnb_order_offer_duration');
+		$this->add_column('order_id');
+		$this->add_column('line_id');
+		$this->add_column('notice');
+		$this->add_column('loan_max_duration');
+		$this->add_column('nb_loans');
+		$this->add_column('nb_simultaneous_loans');
+		$this->add_column('nb_consult_in_situ');
+		$this->add_column('nb_consult_ex_situ');
+		$this->add_column('offer_date');
+		$this->add_column('offer_date_end');
+		$this->add_column('offer_duration');
 		$this->add_column_sel_button();
 	}
 	
-	/**
-	 * Initialisation de la pagination par dÃ©faut
-	 */
-	protected function init_default_pager() {
-		$this->pager = array(
-				'page' => 1,
-				'nb_per_page' => 10,
-				'nb_results' => 0,
-				'nb_page' => 1
-		);
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_column('default', 'align', 'left');
+		$this->set_setting_column('loan_max_duration', 'datatype', 'integer');
+		$this->set_setting_column('nb_loans', 'datatype', 'integer');
+		$this->set_setting_column('nb_simultaneous_loans', 'datatype', 'integer');
+		$this->set_setting_column('nb_consult_in_situ', 'datatype', 'integer');
+		$this->set_setting_column('nb_consult_ex_situ', 'datatype', 'integer');
+		$this->set_setting_column('offer_date', 'datatype', 'datetime');
+		$this->set_setting_column('offer_date_end', 'datatype', 'datetime');
+		$this->set_setting_column('offer_duration', 'datatype', 'integer');
 	}
 	
 	/**
-	 * Initialisation du tri par dÃ©faut appliquÃ©
+	 * Initialisation du tri par défaut appliqué
 	 */
 	protected function init_default_applied_sort() {
-		$this->applied_sort = array(
-				'by' => 'offer_date',
-				'asc_desc' => 'desc'
-		);
+	    $this->add_applied_sort('offer_date', 'desc');
 	}
 	
 	/**
-	 * Tri SQL
+	 * Champ(s) du tri SQL
 	 */
-	protected function _get_query_order() {	
-		if ($this->applied_sort['by']) {
-			$order = '';
-			$sort_by = $this->applied_sort['by'];
-			switch($sort_by) {
-				case 'offer_date':
-					$order .= 'pnb_order_offer_date';
-					break;
-				case 'offer_date_end':
-					$order .= 'pnb_order_offer_date_end';
-					break;
-				default :
-					$order .= parent::_get_query_order();
-					break;
-			}
-			if ($order) {
-				$this->applied_sort_type = 'SQL';
-				return " order by ".$order." ".$this->applied_sort['asc_desc']; 
-			} else {
-				return "";
-			}
-		}	
+	protected function _get_query_field_order($sort_by) {
+	    switch($sort_by) {
+	        case 'order_id':
+	            return 'pnb_order_id_order';
+	        case 'line_id':
+	        case 'loan_max_duration':
+	        case 'nb_loans':
+	        case 'nb_simultaneous_loans':
+	        case 'nb_consult_in_situ':
+	        case 'nb_consult_ex_situ':
+	        case 'offer_date':
+	        case 'offer_date_end':
+	        case 'offer_duration':
+	            return 'pnb_order_'.$sort_by;
+	        default :
+	            return parent::_get_query_field_order($sort_by);
+	    }
 	}
 	
 	/**
@@ -140,27 +130,15 @@ class list_pnb_ui extends list_ui {
 		parent::set_filters_from_form();
 	}
 	
-	/**
-	 * Filtre SQL
-	 */
-	protected function _get_query_filters() {
+	protected function _add_query_filters() {
 		global $pmb_pnb_alert_end_offers;
 		
-		$filter_query = '';		
-		$this->set_filters_from_form();
-		
-		$filters = array();
 		if ($this->filters['alert_end_offers']) {
-			$filters [] = " DATE_ADD(pnb_order_offer_date_end, INTERVAL - " . $pmb_pnb_alert_end_offers . " DAY) < NOW() ";
+			$this->query_filters [] = " DATE_ADD(pnb_order_offer_date_end, INTERVAL - " . $pmb_pnb_alert_end_offers . " DAY) < NOW() ";
 		}
 		if ($this->filters['alert_staturation_offers']) {
-		    $filters [] = " DATE_ADD(pnb_order_offer_date_end, INTERVAL - " . $pmb_pnb_alert_end_offers . " DAY) < NOW() ";
+			$this->query_filters [] = " DATE_ADD(pnb_order_offer_date_end, INTERVAL - " . $pmb_pnb_alert_end_offers . " DAY) < NOW() ";
 		}
-
-		if (count($filters)) {
-			$filter_query .= ' where '.implode(' and ', $filters);
-		}	
-		return $filter_query;
 	}
 	
 	protected function fetch_data() {
@@ -190,22 +168,62 @@ class list_pnb_ui extends list_ui {
 	        }
 	    }
 	    $this->messages = "";
+	    
+	    $this->init_dilicom();
 	}
 	
 	/**
-	 * Fonction de callback
-	 * @param account $a
-	 * @param account $b
+	 * Initialise les données Dilicom.
+	 *
+	 * Cette fonction récupère les identifiants de ligne à partir du tableau d'objets et appelle l'API Dilicom pour chaque groupe de 10 identifiants de ligne.
+	 * Si des identifiants de ligne restent, la fonction appelle également l'API Dilicom pour ces identifiants.
+	 *
 	 */
-	protected function _compare_objects($a, $b) {
-		if ($this->applied_sort['by']) {
-			$sort_by = $this->applied_sort['by'];
-			switch($sort_by) {
-				default :
-					return parent::_compare_objects($a, $b);
-					break;
-			}
-		}
+	protected function init_dilicom() {
+	    global $dbh;
+	    
+	    $line_ids = array();
+	    if(!empty($this->objects)) {
+    	    foreach ($this->objects as $object) {
+    	        $line_ids[] = $object->get_line_id();
+    	        if(count($line_ids) === 10) {
+    	            $this->call_dilicom($line_ids);
+    	            $line_ids = [];
+    	        }
+    	    }
+    	    
+    	    if(count($line_ids)) {
+    	        $this->call_dilicom($line_ids);
+    	    }
+    	    if(empty($dbh)) {
+    	        //L'interrogation Dilicom peut prendre du temps
+    	        //Verifions que nous n'avons pas perdu la connexion
+    	        $dbh = connection_mysql();
+    	    }
+	    }
+	}
+	
+	/**
+	 * Appelle l'API Dilicom pour obtenir le statut de prêt des IDs spécifiés.
+	 *
+	 * @param array $line_ids Les IDs des lignes de commandes pour lesquelles obtenir le statut de prêt.
+	 * @return void
+	 */
+	protected function call_dilicom($line_ids) {
+	    $response = dilicom::get_instance()->get_loan_status($line_ids);
+	    if(is_array($response) && count($response["loanResponseLine"])) {
+	        foreach ($response["loanResponseLine"] as $response_line) {
+	            pnb_order::$loans_infos[$response_line["orderLineId"]] = $response_line;
+	        }
+	    }
+	}
+	
+	protected function _get_object_property_nb_loans($object) {
+	    return $object->get_loans_completed_number();
+	}
+	
+	protected function _get_object_property_nb_simultaneous_loans($object) {
+	    return $object->get_loans_in_progress();
 	}
 	
 	/**
@@ -224,41 +242,17 @@ class list_pnb_ui extends list_ui {
 	}
 	
 	protected function get_cell_content($object, $property) {
-		global $msg;
-		global $base_path;
-		
 		$content = '';
 		switch($property) {
-			case 'notice' :			    
-				if ($object->get_num_notice()) {
-				    $disp = new mono_display($object->get_num_notice(), 0, './catalog.php?categ=isbd&id=!!id!!');					
-				    $content.= $disp->header;
-				} elseif ($object->get_num_bulletin()) {
-				    $disp = new bulletinage_display($object->get_num_bulletin(), 0, './catalog.php?categ=serials&sub=view&serial_id=!!id!!');
-				    $content.= $disp->header;
-				}
-				break;
+		    case 'notice':
+		        $content .= $object->get_notice(); //conservation de l'interprétation du HTML
+		        break;
 			case 'nb_loans':
-				$content.=  "
-					<script type=\"text/javascript\">
-						addLoadEvent(function() {
-						pnb_get_loans_completed_number_by_line_id('" . $object->get_line_id() . "');
-						});
-					</script>
-					<span id='nb_loans_" . $object->get_line_id() . "'></span> / 
-				";
-				$content.=  parent::get_cell_content($object, $property);
+			    $content.=  $object->get_loans_completed_number() . " / " . parent::get_cell_content($object, $property);
 				break;
-			case 'order_id':
-			case 'order_line_id':
-			case 'order_notice':
-			case 'order_loan_max_duration':
-			case 'order_nb_simultaneous_loans':
-			case 'order_nb_consult_in_situ':
-			case 'order_nb_consult_ex_situ':
-			case 'order_offer_date':
-			case 'order_offer_date_end':
-			case 'order_offer_duration':
+			case 'nb_simultaneous_loans':
+			    $content.=  $object->get_loans_in_progress() . " / " . parent::get_cell_content($object, $property);
+			    break;
 			default :
 				$content .= parent::get_cell_content($object, $property);
 				break;
@@ -266,39 +260,17 @@ class list_pnb_ui extends list_ui {
 		return $content;
 	}
 	
-	protected function get_display_cell_html_value($object, $value) {
-		$value = str_replace('!!id!!', $object->get_id(), $value);
-		$display = "<td>".$value."</td>";
-		return $display;
-	}
-	
-	protected function get_display_cell($object, $property) {
-		$display = "<td>".$this->get_cell_content($object, $property)."</td>";
-		return $display;
-	}
-	
 	protected function get_edition_link() {
-		global $msg;
-		global $sub;
-		
-		$edition_link = '';
-		
-		return $edition_link;
+		return '';
 	}
 		
 	protected function add_column_sel_button() {
 		$this->columns[] = array(
 				'property' => '',
 		    'label' => "<div class='center'><input type='button' id='check_all_command_lines' class='bouton' name='+' value='+'></div>",
-		    'html' => "<div class='center'><input type='checkbox' data-pnb name='sel_!!id!!' value='!!id!!'></div>"
+		    'html' => "<div class='center'><input type='checkbox' data-pnb name='sel_!!id!!' value='!!id!!'></div>",
+		    'exportable' => false
 		);
-	}
-	
-	public function get_display_list() {
-		global $msg, $charset;
-		global $current_module;
-		
-		return parent::get_display_list();
 	}
 		
 	protected function _get_query_human() {
@@ -315,12 +287,6 @@ class list_pnb_ui extends list_ui {
 		return $human_query;
 	}
 	
-	public static function get_controller_url_base() {
-		global $base_path, $sub;
-	
-		return $base_path.'/edit.php?categ=pnb&sub=' . $sub;
-	}
-	
 	/**
 	 * Affichage des filtres du formulaire de recherche
 	 */
@@ -332,18 +298,5 @@ class list_pnb_ui extends list_ui {
 		$search_filters_form = str_replace('!!alert_staturation_offers_checked!!', ($this->filters['alert_staturation_offers'] ? 'checked=checked' : '' ), $search_filters_form);
 		
 		return $search_filters_form;
-	}
-
-	/**
-	 * Affichage du formulaire de recherche
-	 */
-	public function get_search_form() {
-		$search_form = parent::get_search_form();
-		$search_form = str_replace('!!action!!', static::get_controller_url_base(), $search_form);
-		return $search_form;
-	}
-	
-	public function get_offer_formated_date_end() {
-		
 	}
 }

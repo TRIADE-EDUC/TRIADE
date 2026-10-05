@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_cataloging_schemes_list_ui.class.php,v 1.3 2018-10-18 09:08:07 dgoron Exp $
+// $Id: elements_cataloging_schemes_list_ui.class.php,v 1.3 2018/10/18 09:08:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,7 +11,7 @@ require_once($class_path.'/frbr/cataloging/frbr_cataloging_datastore.class.php')
 require_once($class_path.'/onto/common/onto_common_uri.class.php');
 
 /**
- * Classe d'affichage d'un onglet qui affiche une liste de schÃ©ma de catalogage
+ * Classe d'affichage d'un onglet qui affiche une liste de schéma de catalogage
  * @author ngantier
  *
  */

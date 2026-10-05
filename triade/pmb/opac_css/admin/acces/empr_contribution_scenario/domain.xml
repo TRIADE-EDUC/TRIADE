@@ -4,24 +4,43 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
+$Id: domain.xml,v 1.5 2023/11/20 16:56:33 dbellamy Exp $ -->
 
 <domain>
 
 	<!--  empr -->
-	<user lib="msg:379" properties="1,4" >
+	<user lib="msg:379" properties="1,4,5,8,9" >
 		<ref type="table" name="empr" key="id_empr" />
+		
+		<!-- champ emprunteur categorie de lecteur -->
 		<property_link with="1" >
-			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+			<r_query type="field" value="empr_categ" />
 		</property_link>
+		
+		<!-- champ emprunteur localisation -->
 		<property_link with="4"  >
-			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+			<r_query type="field" value="empr_location" />
 		</property_link>
-		<property_link with="5" >
-			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		
+		<!-- variable session vue OPAC -->
+		<property_link with="5" enable="check_param|opac,view_activate,1">
+			<r_query type="session" value="opac_view" />
 		</property_link>
+		
+		<!-- champ emprunteur code statistique de lecteur -->
 		<property_link with="6">
-			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+			<r_query type="field" value="empr_codestat" />
+		</property_link>
+		
+		<!-- champ emprunteur sur-localisation défini à partir de la localisation -->
+		<!-- /!\ ne pas utiliser avec la localisation -->
+		<property_link with="8" enable="check_param|opac,sur_location_activate,1">
+			<r_query type="sql" value="select surloc_num from docs_location join empr on empr_location=idlocation and id_empr=!!usr_id!!" />
+		</property_link>
+		
+		<!-- champ emprunteur statut de lecteur -->
+		<property_link with="9">
+			<r_query type="field" value="empr_statut" />				
 		</property_link>
 	</user>
 
@@ -30,11 +49,11 @@ $Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
 		<ref type="rdf" name="contribution_area_graphstore" key="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" value="http://www.pmbservices.fr/ca/Scenario"/>
 		<property_link with="2" >
 			<c_query type="var" value="entityType" />									<!-- variable de l'entité PMB -->
-			<i_query type="callable" class_path="./classes/contribution_area/contribution_area_scenario.class.php" class="contribution_area_scenario" method="get_entity_type" /><!-- variable de l'entité PMB -->
+			<i_query type="callable" class="contribution_area_scenario" method="get_entity_type" /><!-- variable de l'entité PMB -->
 		</property_link>
 		<property_link with="7" >
 			<c_query type="var" value="scenarioStatus" />			
-			<i_query type="callable" class_path="./classes/contribution_area/contribution_area_scenario.class.php" class="contribution_area_scenario" method="get_status" /><!-- variable de l'entité PMB -->
+			<i_query type="callable" class="contribution_area_scenario" method="get_status" /><!-- variable de l'entité PMB -->
 		</property_link>
 	</resource>
 
@@ -43,7 +62,7 @@ $Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
 			<ref type="table" name="empr_categ" key="id_categ_empr" value="libelle" />
 		</property>	
 		<property id="2" lib="msg:admin_contribution_area_equation_type">
-			<ref type="callable" name="scenario_entity_type" class_path="./classes/contribution_area/contribution_area.class.php" class="contribution_area" method="get_pmb_entities" />
+			<ref type="callable" name="scenario_entity_type" class="contribution_area" method="get_pmb_entities" />
 		</property>	
 		<property id="4" lib="msg:21">
 			<ref type="table" name="docs_location" key="idlocation" value="location_libelle" />
@@ -57,6 +76,12 @@ $Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
 		<property id="7" lib="msg:contribution_area_status">
 			<ref type="table" name="contribution_area_status" key="contribution_area_status_id" value="contribution_area_status_gestion_libelle" />
 		</property>
+		<property id="8" lib="msg:admin_acces_empr_surlocations">
+			<ref type="table" name="sur_location" key="surloc_id" value="surloc_libelle" />
+		</property>
+		<property id="9" lib="msg:admin_acces_empr_statuts"> 
+			<ref type="table" name="empr_statut" key="idstatut" value="statut_libelle" />
+		</property>
 	</properties>
 
 	<controls>
@@ -65,6 +90,7 @@ $Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
 		<control id='3' lib='create' />
 		<control id='4' lib='edit' />
 		<control id='5' lib='push' />
+		<control id='10' global="yes" lib='dom_override_rights' />
 	</controls>
 
 </domain>

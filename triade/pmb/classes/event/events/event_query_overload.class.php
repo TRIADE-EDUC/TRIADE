@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: event_query_overload.class.php,v 1.1 2016-09-15 15:13:08 vtouchard Exp $
+// $Id: event_query_overload.class.php,v 1.1 2016/09/15 15:13:08 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

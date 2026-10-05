@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: z3950_func.inc.php,v 1.19 2017-05-17 14:59:37 ngantier Exp $
+// $Id: z3950_func.inc.php,v 1.22 2023/08/04 07:39:49 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/audit.class.php');
 
 function z_gen_combo_box ( $selected , $nom ) {
@@ -45,8 +46,6 @@ function z_gen_combo_box ( $selected , $nom ) {
 	} /* fin gen_combo_box */
 
 function zshow_isbd($isbd, $lien) {
-	global $msg;
-
 	$retour="
 	<div class='row'>
 		<b>$lien</b>
@@ -123,12 +122,10 @@ function affiche_jsscript ($texte, $classe, $ID_bib) {
 	}
 
 function create_expl($f_ex_cb, $id, $f_ex_typdoc, $f_ex_cote, $f_ex_section, $f_ex_statut, $f_ex_location, $f_ex_cstat, $f_ex_note, $f_ex_prix, $f_ex_owner,$f_ex_comment='' ) {
-	global $dbh;
-
 	$new_expl = 0;
 	$expl_retour = 0;
 	$requete = "SELECT expl_id FROM exemplaires WHERE expl_cb='$f_ex_cb' ";
-	$res = pmb_mysql_query($requete, $dbh);
+	$res = pmb_mysql_query($requete);
 	$nbr_lignes = @pmb_mysql_num_rows($res);
 	if ($nbr_lignes) {
 		$valid_requete = 0 ;
@@ -139,23 +136,23 @@ function create_expl($f_ex_cb, $id, $f_ex_typdoc, $f_ex_cote, $f_ex_section, $f_
 			}
 	if($valid_requete) {
 		$requete = 'INSERT INTO exemplaires SET create_date=sysdate(), ';
-		$requete .= "expl_cb='${f_ex_cb}'";
-		$requete .= ", expl_notice=${id}";
-		$requete .= ", expl_typdoc=${f_ex_typdoc}";
-		$requete .= ", expl_cote='${f_ex_cote}'";
-		$requete .= ", expl_section=${f_ex_section}";
-		$requete .= ", expl_statut=${f_ex_statut}";
-		$requete .= ", expl_location=${f_ex_location}";
-		$requete .= ", expl_codestat=${f_ex_cstat}";
-		$requete .= ", expl_note='".${f_ex_note}."'";
-		$requete .= ", expl_comment='".${f_ex_comment}."'";
-		$requete .= ", expl_prix='${f_ex_prix}'";
-		$requete .= ", expl_owner='${f_ex_owner}'";
-		$result = pmb_mysql_query($requete, $dbh);
+		$requete .= "expl_cb='{$f_ex_cb}'";
+		$requete .= ", expl_notice={$id}";
+		$requete .= ", expl_typdoc={$f_ex_typdoc}";
+		$requete .= ", expl_cote='{$f_ex_cote}'";
+		$requete .= ", expl_section={$f_ex_section}";
+		$requete .= ", expl_statut={$f_ex_statut}";
+		$requete .= ", expl_location={$f_ex_location}";
+		$requete .= ", expl_codestat={$f_ex_cstat}";
+		$requete .= ", expl_note='" . $f_ex_note . "'";
+		$requete .= ", expl_comment='" . $f_ex_comment . "'";
+		$requete .= ", expl_prix='{$f_ex_prix}'";
+		$requete .= ", expl_owner='{$f_ex_owner}'";
+		pmb_mysql_query($requete);
 		$expl_retour = pmb_mysql_insert_id();
 		audit::insert_creation(AUDIT_EXPL,$expl_retour) ;
 		$new_expl=1;
-		}
+	}
 	$retour = array($new_expl,$expl_retour);
 	return $retour;
-	}
+}

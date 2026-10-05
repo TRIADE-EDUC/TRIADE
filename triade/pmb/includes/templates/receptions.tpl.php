@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions.tpl.php,v 1.14 2019-05-27 16:55:44 btafforeau Exp $
+// $Id: receptions.tpl.php,v 1.16.8.1 2024/09/04 07:39:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -178,16 +178,8 @@ $recept_search_form_suite= "
 ";
 
 $sel_date_form[0] = "<label class='etiquette'>!!msg!!</label>"; 
-$sel_date_form[1] = "
-<input type='hidden' id='date_inf' name='date_inf' value='!!date_inf!!' />
-<input type='button' name='date_inf_lib' class='bouton_small' value='!!date_inf_lib!!' onclick=\"openPopUp('./select.php?what=calendrier&caller='+this.form.name+'&date_caller=&param1=date_inf&param2=date_inf_lib&auto_submit=NO&date_anterieure=YES', 'calendar');\">
-<input type='button' class='bouton_small' value='".$msg['raz']."' onclick=\"this.form.elements['date_inf_lib'].value='".$msg['parperso_nodate']."'; this.form.elements['date_inf'].value='';\" >
-";
-$sel_date_form[2] = "
-<input type='hidden' id='date_sup' name='date_sup' value='!!date_sup!!' />
-<input type='button' name='date_sup_lib' class='bouton_small' value='!!date_sup_lib!!' onclick=\"openPopUp('./select.php?what=calendrier&caller='+this.form.name+'&date_caller=&param1=date_sup&param2=date_sup_lib&auto_submit=NO&date_anterieure=YES', 'calendar');\">
-<input type='button' class='bouton_small' value='".$msg['raz']."' onclick=\"this.form.elements['date_sup_lib'].value='".$msg['parperso_nodate']."'; this.form.elements['date_sup'].value='';\" >
-";
+$sel_date_form[1] = "<input type='date' id='date_inf' name='date_inf' value='!!date_inf!!' />";
+$sel_date_form[2] = "<input type='date' id='date_sup' name='date_sup' value='!!date_sup!!' />";
 
 $recept_hrow_form="
 <div class='row'>
@@ -197,15 +189,15 @@ $recept_hrow_form="
 	<table class='act_cell' >
 		<tbody id='act_tab' >
 			<tr>
-				<th width='0px' ></th>
+				<th width='3%' ></th>
 				<th width='10%' title='".htmlentities($msg['acquisition_act_tab_code'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_act_tab_code'], ENT_QUOTES, $charset)."</th>
-				<th width='40%' title='".htmlentities($msg['acquisition_act_tab_lib'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_act_tab_lib'], ENT_QUOTES, $charset)."</th>
-				<th width='7%' title='".htmlentities($msg['acquisition_qte_cde'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_cde'], ENT_QUOTES, $charset)."</th>
-				<th width='7%' title='".htmlentities($msg['acquisition_qte_liv'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_liv'], ENT_QUOTES, $charset)."</th>
-				<th width='7%' title='".htmlentities($msg['acquisition_qte_sol'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_sol'], ENT_QUOTES, $charset)."</th>
+				<th width='35%' title='".htmlentities($msg['acquisition_act_tab_lib'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_act_tab_lib'], ENT_QUOTES, $charset)."</th>
+				<th width='6%' title='".htmlentities($msg['acquisition_qte_cde'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_cde'], ENT_QUOTES, $charset)."</th>
+				<th width='6%' title='".htmlentities($msg['acquisition_qte_liv'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_liv'], ENT_QUOTES, $charset)."</th>
+				<th width='6%' title='".htmlentities($msg['acquisition_qte_sol'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_qte_sol'], ENT_QUOTES, $charset)."</th>
 				<th width='15%' title='".htmlentities($msg['acquisition_lgstat'], ENT_QUOTES, $charset)."' >".htmlentities($msg['acquisition_lgstat'], ENT_QUOTES, $charset)."</th>
 				<th width='16%'>&nbsp;</th>
-				<th width='0px' ></th>
+				<th width='3%' ></th>
 			</tr>
 			<!-- lignes -->
 		</tbody>
@@ -216,7 +208,7 @@ $recept_hrow_form="
 
 $recept_row_form= "
 <tr id='R_!!no!!'>
-	<td width='0px' style='overflow:visible;'>
+	<td width='3%' style='overflow:visible;'>
 		<img onclick=\"javascript:expandRow('D_!!no!!_', true);\"  src='".get_url_icon('plus.gif')."' name='D_!!no!!_Img' id='D_!!no!!_Img' class='act_cell_img_plus' />
 	</td>
 	<td>
@@ -249,9 +241,10 @@ $recept_row_form= "
 			</div>
 		</div>
 	</td>
-	<td width='0px' style='overflow:visible;' >
+	<td width='3%' style='overflow:visible;' >
 		<input type='checkbox' id='chk[!!no!!]' name='chk[]' tabindex='1' value='!!no!!' class='act_cell_chkbox2' />
-		<input type='hidden' id='id_lig[!!no!!]' name='id_lig[!!no!!]' value='!!id_lig!!' /> 
+		<input type='hidden' id='date_last_relance[!!no!!]' name='date_last_relance[]' value='!!date_last_relance!!' />
+        <input type='hidden' id='id_lig[!!no!!]' name='id_lig[!!no!!]' value='!!id_lig!!' /> 
 <!--		<input type='hidden' id='id_sug[!!no!!]' name='id_sug[!!no!!]' value='!!id_sug!!' /> --> 
 		<input type='hidden' id='typ_lig[!!no!!]' name='typ_lig[!!no!!]' value='!!typ_lig!!' /> 	
 		<input type='hidden' id='id_prod[!!no!!]' name='id_prod[!!no!!]' value='!!id_prod!!' />

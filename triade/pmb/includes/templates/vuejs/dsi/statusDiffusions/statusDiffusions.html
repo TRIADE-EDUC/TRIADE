@@ -1,0 +1,5 @@
+<div id="statusDiffusions">
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<statusform v-if="action == 'edit' || action == 'add'" :status="status" categ="status_diffusions"></statusform>
+	<status v-else :list="list" categ="status_diffusions"></status>
+</div>

@@ -587,6 +587,12 @@ p.intro {
 <xsl:template match="dc:identifier" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <tr><td class="key">Resource Identifier</td><td class="value"><xsl:value-of select="."/></td></tr></xsl:template>
 
+<xsl:template match="dcterms:created" xmlns:dcterms="http://purl.org/dc/terms/">
+<tr><td class="key">Creation date</td><td class="value"><xsl:value-of select="."/></td></tr></xsl:template>
+
+<xsl:template match="dcterms:modified" xmlns:dcterms="http://purl.org/dc/terms/">
+<tr><td class="key">Update date</td><td class="value"><xsl:value-of select="."/></td></tr></xsl:template>
+
 <xsl:template match="dc:source" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <tr><td class="key">Source</td><td class="value"><xsl:value-of select="."/></td></tr></xsl:template>
 

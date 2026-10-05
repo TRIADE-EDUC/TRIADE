@@ -4,8 +4,8 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH 
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -23,6 +23,8 @@ if (file_exists($fichier)) {
 	header("Location: index.php?inst=1");
 	exit;
 }
+
+include_once("sql/db-triade.php");
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -54,11 +56,17 @@ if (file_exists($fichier)) {
 
 		<div id="mainInst2">
 
-			<img src="./image/logo_triade_licence.gif" alt="logo_triade_licence" />
+			<img src="./image/logo_triade_licence.png" alt="logo_triade_licence"  width='300' />
 
 <?php
-
-
+	$cr=hasInternet();
+	if ($cr) {
+//		echo "Connexion Internet OK";
+		$internet='1';
+	}else{
+//		echo "Pas de connexion Internet";
+		$internet='0';
+    	}
 
 
 	$repok = 1;
@@ -76,12 +84,12 @@ if (file_exists($fichier)) {
 	print '					<tr>'."\n";
 	print '						<td>'."\n";
 	print '							<img src="image/on1.gif" alt="on1" style="width: 8px; height: 8px" />'."\n";
-	print '							<span class="T1">Version Php <= 7.0&nbsp;:</span>'."\n";
+	print '							<span class="T1">Version Php 7 ou 8&nbsp;:</span>'."\n";
 	print '						</td>'."\n";
 
 	print '						<td>'."\n";
 
-	if (phpversion() <= '7.0') {
+	if ((phpversion() >= '7') && (phpversion() <= '8')) {
 		$txt = '<span style="font-family: Verdana; font-size: 0.9em;">';
 		$txt.= '	<span style="color: red; font-weight: bold;">V</span>ersion ';
 		$txt.= '	Php suppérieur à 5 pour une optimisation complète de Triade';
@@ -91,10 +99,10 @@ if (file_exists($fichier)) {
 		print '	 <a href="#" '.
 			'onmouseover="AffBulle2(\'INFORMATION\',\'../image/commun/info.jpg\',\''.$txt.'\'); window.status=\'\'; return true;" '.
 			'onmouseout="HideBulle()">'."\n";
-		print '							<img src="./image/stat3.gif" alt="stat2" style="border: 0;" /></a>'."\n";
-	}
-	else{
-		print '							<img src="./image/stat1.gif" alt="stat1" style="border: 0;" />'."\n";
+		print '		<img src="./image/stat3.gif" alt="stat2" style="border: 0;" /></a>'."\n";
+	}else{
+		print '		<img src="./image/stat1.gif" alt="stat1" style="border: 0;" />'."\n";
+		$disabled="disabled='disabled'";
 	}
 
 	print '						</td>'."\n";
@@ -265,6 +273,40 @@ if (file_exists($fichier)) {
 		print '				<img src="./image/stat3.gif" alt="stat0" style="border: 0;" />'."\n";
 		print '			</a>'."\n";
 	}
+	
+	print '	<tr>'."\n";
+	print '		<td>'."\n";
+	print '			<img src="image/on1.gif" alt="on1" style="width: 8px; height: 8px" />'."\n";
+	print '			<span class="T1">Support extension curl_init : </span>'."\n";
+	print '		</td>'."\n";
+
+	print '		<td>'."\n";
+	
+	$error=0;
+	if (function_exists('curl_init')) {
+		print '			<img src="./image/stat1.gif" alt="stat1" />'."\n";
+	}
+	else{
+		$txt = '<span style="font-family: Verdana; font-size: 0.9em;">';
+		$txt.= '	<span style="color: red; font-weight: bold;">L</span>\\\'extension ';
+		$txt.= '	<b>Curl_init</b> doit etre charg&eacute; pour pouvoir continuer l\\\'installation ';
+		$txt.= '	d\\\'archivage de Triade.';
+		$txt.= '</span>';
+
+		$txt = htmlspecialchars($txt);
+
+		print '			<a href="#" '.
+			'onmouseover="AffBulle2(\'Information\',\'../image/commun/info.jpg\',\''.$txt.'\'); window.status=\'\'; return true;" '.
+			'onmouseout="HideBulle()">'."\n";
+		print '				<img src="./image/stat3.gif" alt="stat0" style="border: 0;" />'."\n";
+		print '			</a>'."\n";
+		print '		</td>'."\n";
+		print '	</tr>'."\n";
+		print '<font color=red>L\'extention curl_init doit etre activée pour utiliser Triade.</font>';
+		$error='1';
+		$disable="disabled='disabled'";
+	}
+
 
 	print '		</td>'."\n";
 	print '	</tr>'."\n";
@@ -273,6 +315,23 @@ if (file_exists($fichier)) {
 	print '		<td colspan="2"><hr /></td>'."\n";
 	print '	</tr>'."\n";
 
+	print "<tr>\n";
+	print "<td><img src='image/on1.gif' alt='on1' style='width: 8px; height: 8px' /> Accès Internet : </td>\n";
+	print "<td>\n";
+	
+
+
+
+	if ($error == 0) {
+		if ($internet) {
+			print '<img src="./image/stat1.gif" alt="stat2" style="border: 0;" /></a>'."\n";
+		}else{
+			print '<img src="./image/stat0.gif" alt="stat1" style="border: 0;" />'."\n";
+		}
+	}else{
+		print '<img src="./image/stat0.gif" alt="stat1" style="border: 0;" />'."\n";
+	}
+	print "</td></tr>\n";
 
 	$php_recommended_settings = array(array ('Safe Mode','safe_mode','OFF'),
 		array ('Display Errors','display_errors','ON'),
@@ -334,7 +393,6 @@ if (file_exists($fichier)) {
 </tr>
 
 <?php
-
 	}
 
 	if ($chekbox == "1") {

@@ -1,22 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Explnum.php,v 1.6 2015-04-03 11:16:24 jpermanne Exp $
+// $Id: Explnum.php,v 1.9.4.1 2025/03/07 15:33:03 dbellamy Exp $
 namespace Sabre\PMB;
 
 use Sabre\DAV;
 use Sabre\PMB;
+use encoding_normalize;
 
 class Explnum extends PMB\File {
 	private $explnum_id;
 	private $name;
 
-	function __construct($name) {
+	public function __construct($name) {
 		$this->explnum_id = substr($this->get_code_from_name($name),1);
 	}
-	
-	function getName() {
+
+	public function getName() {
 		global $charset;
 		$query = "select explnum_nom, explnum_extfichier from explnum where explnum_id = ".$this->explnum_id;
 		$result = pmb_mysql_query($query);
@@ -30,22 +31,22 @@ class Explnum extends PMB\File {
 			$name.= " (E".$this->explnum_id.").".str_replace(".","",$row->explnum_extfichier);
 		}
 		if($charset != "utf-8"){
-			return utf8_encode($name);
+		    return encoding_normalize::utf8_normalize($name);
 		}else{
 			return $name;
 		}
 	}
 
-	function get() {
+	public function get() {
 		$explnum = new \explnum($this->explnum_id);
 		return $explnum->get_file_content();
 	}
-	
-	function getSize() {
+
+	public function getSize() {
 		return strlen($this->get());
 	}
-	
-	function getContentType(){
+
+	public function getContentType(){
 		$mimetype= "";
 		$query = "select explnum_mimetype from explnum where explnum_id = ".$this->explnum_id;
 		$result = pmb_mysql_query($query);
@@ -54,16 +55,16 @@ class Explnum extends PMB\File {
 		}
 		return $mimetype;
 	}
-	
-	function getETag() {
+
+	public function getETag() {
 		if(file_exists($this->explnum_id)){
 			return '"' . md5_file($this->explnum_id) . '"';
 		}else{
 			return '"' . md5($this->explnum_id) . '"';
 		}
 	}
-	
-	function put($data){
+
+	public function put($data){
 		global $base_path;
 		global $id_rep;
 		if($this->check_write_permission()){
@@ -75,16 +76,16 @@ class Explnum extends PMB\File {
 			$explnum = new \explnum($this->explnum_id);
 			fclose($fp);
 			$id_rep = $this->config['upload_rep'];
-			$explnum->get_file_from_temp($filename,$explnum->explnum_nomfichier,$this->config['up_place']);	
+			$explnum->get_file_from_temp($filename,$explnum->explnum_nomfichier,$this->config['up_place']);
 			$explnum->update();
 			unlink($filename);
 		}else{
-			//on a pas le droit d'Ã©criture 
+			//on a pas le droit d'écriture
 			throw new DAV\Exception\Forbidden('Permission denied to modify file (filename ' . $this->getName() . ')');
 		}
-	} 
-	
-	function delete(){
+	}
+
+	public function delete(){
 		$explnum = new \explnum($this->explnum_id);
 		$explnum->delete();
 	}

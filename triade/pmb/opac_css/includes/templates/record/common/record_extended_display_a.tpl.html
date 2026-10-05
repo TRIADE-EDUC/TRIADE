@@ -1,6 +1,18 @@
 {% extends 'record_extended_display.tpl.html' %}
 
-<!-- $Id: record_extended_display_a.tpl.html,v 1.20 2018-02-22 09:02:21 cgil Exp $ -->
+<!-- $Id: record_extended_display_a.tpl.html,v 1.22 2021/03/23 13:34:59 dgoron Exp $ -->
+
+{% block css_style %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_map %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_aside_content %}
+	{{ block.super }}
+{% endblock %}
 
 {% block record_tit1 %}
 	<tr class="record_tit1">
@@ -42,3 +54,23 @@
 {% block record_size %}{% endblock %}
 
 {% block record_publishers %}{% endblock %}
+	
+{% block record_resa %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_avis_detail %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_simili_search %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_serialcirc_form_actions %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_lien_content %}
+	{{ block.super }}
+{% endblock %}

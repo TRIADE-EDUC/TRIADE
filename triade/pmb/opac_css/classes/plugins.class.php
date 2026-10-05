@@ -2,15 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: plugins.class.php,v 1.4 2018-07-19 14:15:29 tsamson Exp $
+// $Id: plugins.class.php,v 1.5.8.1 2024/06/12 07:01:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], '.class.php')) die('no access');
 
+global $class_path, $include_path;
 require_once $include_path.'/parser.inc.php';
 require_once($class_path.'/plugin.class.php');
 
 /**
- * Classe de gestion du sysÃ¨tme de plugins
+ * Classe de gestion du sysètme de plugins
  * @author arenou
  *
  */
@@ -42,8 +43,8 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode de parcours du rÃ©pertoire de plugins...
-	 * Elle dÃ©clenche l'analyse de chaque plugin prÃ©sent
+	 * Méthode de parcours du répertoire de plugins...
+	 * Elle déclenche l'analyse de chaque plugin présent
 	 */
 	private function parse(){
 		global $base_path;
@@ -60,7 +61,7 @@ class plugins {
 	}
 	
 	/**
-	 * DÃ©termine si un plugin est activÃ© ou non. Toujours vrai pour le moment, cela permet d'envisager une Ã©volution plus tard!
+	 * Détermine si un plugin est activé ou non. Toujours vrai pour le moment, cela permet d'envisager une évolution plus tard!
 	 * @param string $plugin_path
 	 * @return boolean
 	 */
@@ -69,7 +70,7 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode d'analyse d'un plugin
+	 * Méthode d'analyse d'un plugin
 	 * @param string $plugin_path
 	 */
 	private function analyze($plugin_path){
@@ -98,7 +99,7 @@ class plugins {
 				for($i=0 ; $i<count($manifest['MENUS'][0]['MENU']) ; $i++){
 					$menu = $manifest['MENUS'][0]['MENU'][$i];
 					$this->plugins[basename($plugin_path)]['menus'][$menu['MODULE']] = array();
-					if(is_array($menu['TABS'])){
+					if(isset($menu['TABS']) && is_array($menu['TABS'])){
 						for ($j=0 ; $j<count($menu['TABS'][0]['TAB']) ; $j++){	
 							$this->plugins[basename($plugin_path)]['menus'][$menu['MODULE']][$menu['TABS'][0]['TAB'][$j]['ID']] = array(
 								'name' => $menu['TABS'][0]['TAB'][$j]['value'],
@@ -111,7 +112,7 @@ class plugins {
 								$item = array();
 								$item['sub'] = $xml_item['SUB'];
 								$item['name'] = $xml_item['NAME'];
-								if(is_array($xml_item['HMENU']) && is_array($xml_item['HMENU'][0]['ITEM'])){
+								if(!empty($xml_item['HMENU']) && is_array($xml_item['HMENU']) && is_array($xml_item['HMENU'][0]['ITEM'])){
 									$item['hmenu'] = array();
 									for($k=0 ; $k<count($xml_item['HMENU'][0]['ITEM']) ; $k++){
 										$args = '';
@@ -136,14 +137,14 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode qui construit le menu pour un module de PMB
-	 * @param unknown $module
+	 * Méthode qui construit le menu pour un module de PMB
+	 * @param string $module
 	 */
 	public function get_menu($module){
 		global $charset;
 		$html = '';
 		foreach($this->plugins as $plugin_name => $plugin_infos){
-			if(is_array($plugin_infos['menus']) && isset($plugin_infos['menus'][$module]) && is_array($plugin_infos['menus'][$module])){
+			if(isset($plugin_infos['menus']) && is_array($plugin_infos['menus']) && isset($plugin_infos['menus'][$module]) && is_array($plugin_infos['menus'][$module])){
 				foreach($plugin_infos['menus'][$module] as $tab){
 					$html.= '
 					<h3 onclick="menuHide(this,event)">'.htmlentities(self::check_for_msg($plugin_name, $tab['name']),ENT_QUOTES,$charset).'</h3>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!-- Declaration d'un plugin
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2022/11/23 08:03:02 dbellamy Exp $ -->
+<manifest>
+	<name>Chiffrement</name>
+	<author>
+		<name>Didier Bellamy</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-11-16</created_date>
+	<version>1.0</version>
+	<menus>
+		<menu module='admin'>
+			<tabs>
+				<tab id='crypto'>msg:crypto_menu</tab>
+			</tabs>
+			<items>
+				<item tab='crypto' sub='key_generation' name='msg:crypto_sub_menu_key_generation'></item>
+				<item tab='crypto' sub='data_encryption' name='msg:crypto_sub_menu_data_encryption'></item>
+			</items>
+		</menu>
+	</menus>
+</manifest>

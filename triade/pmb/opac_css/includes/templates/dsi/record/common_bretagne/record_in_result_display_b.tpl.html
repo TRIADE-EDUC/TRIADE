@@ -1,0 +1,22 @@
+{% extends '../common/record_in_result_display.tpl.html' %}
+
+<!-- $Id: record_in_result_display_b.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+{% block record_tit1 %}
+	<div class="title_notCourte">
+		<h3>
+			{% block record_title %}
+				<span class="tit1_notCourte"><a href="{{ record.liens_opac.lien_rech_notice | replace '!!id!!' record.bul_info.id }}" title="{{ record.bul_info.title }}">{{ record.bul_info.title }}</a>, {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+			{% endblock %}
+		</h3>
+	</div>
+{% endblock %}
+
+{% block record_expl %}
+	{% if record.availability.availability != 'none' %}
+		<!-- Exemplaire -->
+		<div id="zone_exemplaires">
+			{{ record.display_expl_responsive_list }}
+		</div>
+	{% endif %}
+{% endblock %}

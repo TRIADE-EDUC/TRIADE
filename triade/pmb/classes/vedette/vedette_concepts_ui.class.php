@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_concepts_ui.class.php,v 1.5 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: vedette_concepts_ui.class.php,v 1.7 2020/12/11 16:20:48 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,15 +11,15 @@ require_once($include_path."/templates/vedette/vedette_concepts.tpl.php");
 class vedette_concepts_ui extends vedette_element_ui{
 	
 	/**
-	 * Boite de sÃ©lection de l'Ã©lÃ©ment
+	 * Boite de sélection de l'élément
 	 *
 	 * @return string
 	 * @access public
 	 */
-	public static function get_form($params = array()){
+	public static function get_form($params = array(), $suffix = "") {
 		global $vedette_concepts_tpl;
-		$html = $vedette_concepts_tpl["vedette_concepts_selector"];
 		
+		$html = $vedette_concepts_tpl["vedette_concepts_selector" . $suffix];
 		$html = str_replace('!!concept_scheme!!', (!empty($params['concept_scheme']) ? $params['concept_scheme'] : 0), $html);
 		
 		return $html;
@@ -27,21 +27,21 @@ class vedette_concepts_ui extends vedette_element_ui{
 	
 	
 	/**
-	 * Renvoie le code javascript pour la crÃ©ation du sÃ©lÃ©cteur
+	 * Renvoie le code javascript pour la création du sélécteur
 	 *
 	 * @return string
 	 */
-	public static function get_create_box_js($params = array()){
+	public static function get_create_box_js($params = array(), $suffix = ""){
 		global $vedette_concepts_tpl;
-		if(!in_array('vedette_concepts_script', parent::$created_boxes)){
-			array_push(parent::$created_boxes, 'vedette_concepts_script');
-			return $vedette_concepts_tpl["vedette_concepts_script"];
+		if(!in_array('vedette_concepts_script'.$suffix, parent::$created_boxes)){
+			parent::$created_boxes[] = 'vedette_concepts_script'.$suffix;
+			return $vedette_concepts_tpl["vedette_concepts_script".$suffix];
 		}
 		return '';
 	}
 	
 	/**
-	 * Renvoie les donnÃ©es (id objet, type)
+	 * Renvoie les données (id objet, type)
 	 *
 	 * @return void
 	 * @access public

@@ -1,0 +1,24 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_for_printer_extended.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+{% block record_map %}
+{% endblock %}
+
+{% block record_aside_content %}
+{% endblock %}
+
+{% block record_expl %}
+	{% if record.external_parameters.expl %}
+		{{ block.super }}
+	{% endif %}
+{% endblock %}
+
+{% block record_avis_detail %}
+{% endblock %}
+
+{% block record_simili_search %}
+{% endblock %}
+
+{% block record_serialcirc_form_actions %}
+{% endblock %}

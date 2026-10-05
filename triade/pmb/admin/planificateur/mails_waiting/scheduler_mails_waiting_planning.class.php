@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scheduler_mails_waiting_planning.class.php,v 1.1 2018-03-09 13:44:08 dgoron Exp $
+// $Id: scheduler_mails_waiting_planning.class.php,v 1.1 2018/03/09 13:44:08 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
 
 class scheduler_mails_waiting_planning extends scheduler_planning {
 	
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
 
 		$form = "

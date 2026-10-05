@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".facette_tr_see_more a").append(" <i class='fa fa-plus-square-o'></i>"),$(".expl-empr-retard center b").append("<i class='fa fa-exclamation-circle' aria-hidden='true'></i>")});

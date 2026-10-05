@@ -1,0 +1,104 @@
+<!-- $Id: pnb_devices_modal.tpl.html,v 1.3 2021/02/09 15:30:46 jlaurent Exp $ -->
+<div class='uk-width-1-1 uk-grid-margin'>
+	<form method="post" class="form" name="userAgent" action="">
+		{% if userHasDefaultPwd %}
+			<h3>{{ msg.pnb_loan_pass1 }}</h3>
+			<div>
+			  <input onclick="document.getElementById('form_password').style = 'display:none;'" type="radio" id="default_pass" name="pass_choose" checked="checked">
+			  <label for="default_pass">{{ msg.pnb_loan_pass2 }}</label>
+			</div>
+			<div>
+			  <input onclick="document.getElementById('form_password').style = 'display:block;'" type="radio" id="new_pass" name="pass_choose">
+			  <label for="new_pass">{{ msg.pnb_loan_pass3 }}</label>
+			  <div class="row pnb_alert" id="pnb_error"></div>
+			  <div class="row">&nbsp;</div>
+			  <div id="form_password" style="display:none;">
+		{% else %}
+			<h3>{{ msg.pnb_loan_pass_no_set_title }}</h3>
+			<i>{{ msg.pnb_loan_pass_no_set_infos }}</i>
+		    <div class="row">&nbsp;</div>
+			<div>
+			  <input onclick="document.getElementById('form_password').style = 'display:block;'" type="hidden" id="new_pass" name="pass_choose" checked="checked">
+			  <label for="new_pass">{{ msg.pnb_loan_pass3_no_set }}</label>
+			  <div class="row pnb_alert" id="pnb_error"></div>
+			  <div class="row">&nbsp;</div>
+			  <div id="form_password" style="display:block;">
+		{% endif %}
+
+			  <div class="row">
+				  <div class="colonne2">
+				      <label for="pnb_password">{{ msg.empr_pnb_parameters_password }}</label>
+				  </div>
+				  <div class="colonne_suite">
+		  			  <input id="pnb_password" type="password" name="pnb_password" required/>
+		  			  <span class="fa fa-eye" onclick="toggle_password(this, 'pnb_password');toggle_password(this, 'pnb_password_confirm');"></span>
+				  </div>
+			  </div>
+			  <div class="row">
+				  <div class="colonne2">
+				      <label for="pnb_password_confirm">{{ msg.pnb_verif_parameters_password }}</label>
+				  </div>
+				  <div class="colonne_suite">
+					  <input id="pnb_password_confirm" type="password" name="pnb_password_confirm" required/>
+				  </div>
+			  </div>
+			  <div class="row">
+				  <div class="colonne2">
+				      <label for="pnb_password_hint">{{ msg.empr_pnb_parameters_hint }}</label>
+				  </div>
+				  <div class="colonne_suite">
+					  <input id="pnb_password_hint" type="text" name="pnb_password_hint" required/>
+				  </div>
+			  </div>
+		  </div>
+		</div>
+
+		<h3 id="empr_pnb_devices_list_title">{{ msg.empr_pnb_devices_choose }}</h3>
+		{% if devices.0  %}
+			<div class="form-contenu" style='width:100%'>
+				{% for device in devices %}
+					<div>
+						{% if device == devices.0 %}
+							<input id="device_{{device.userAgentId}}" name="userAgent" type="radio" value="{{ device.userAgentId }}" checked>
+						{% else %}
+							<input id="device_{{device.userAgentId}}" name="userAgent" type="radio" value="{{ device.userAgentId }}" >
+						{% endif %}
+						<label for="device_{{device.userAgentId}}">{{ device.appName }}</label>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="row">
+				&nbsp;
+			</div>
+			<div class="row">
+				<div class="right">
+					<input onclick='pnb_confirm_loan("userAgent", "{{ notice_id }}")'  type="button" class="bouton" value="{{ msg.pnb_confirm_loan }}"/>
+					<input onclick='return pnb_stop_loan("{{ notice_id }}")'  type="button" class="bouton" value="{{ msg.76 }}"/>
+				</div>
+			</div>
+			<div class="row">
+				&nbsp;
+			</div>
+		{% else %}
+			{% if !configWs %}
+				<br><span>{{ msg.pnb_not_set }}</span> 	
+			{% else %}
+				<div class='row'>
+					<i class='loanConfirm'>{{ msg.pnb_devices_no_set }}</i> 	
+				</div>
+				<div class="row">
+					&nbsp;
+				</div>
+				<div class="row">
+					<div class="right">
+						<input onclick='pnb_confirm_loan("", "{{ notice_id }}")'  type="button" class="bouton" value="{{ msg.pnb_confirm_loan }}"/>
+						<input onclick='return pnb_stop_loan("{{ notice_id }}")'  type="button" class="bouton" value="{{ msg.76 }}"/>
+					</div>
+				</div>
+				<div class="row">
+					&nbsp;
+				</div>
+			{% endif %}
+		{% endif %}
+	</form>
+</div>

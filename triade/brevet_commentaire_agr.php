@@ -15,7 +15,7 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -48,11 +48,11 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print "Commentaire du brevet des collèges" ?></font></b></td>
@@ -163,7 +163,7 @@ if (isset($_POST["create3"])) {
 }	
 
 $eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve
-$nbEleveT=count($eleveT);
+$nbEleveT=countTriade($eleveT);
 print "<table border='0' >";
 
 for($j=0;$j<$nbEleveT;$j++) {  
@@ -186,7 +186,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// HISTOIRE DES ARTS
 	$tab=rechercheMatiereBrevet("histoire des arts",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -231,7 +231,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// FRANCAIS
 	$tab=rechercheMatiereBrevet("Français",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -274,7 +274,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// MATHEMATIQUES
 	$tab=rechercheMatiereBrevet("Mathématiques",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -315,7 +315,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Langue vivante 1
 	$tab=rechercheMatiereBrevet("Langue vivante 1",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -355,7 +355,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// SVT
 	$tab=rechercheMatiereBrevet("Sciences Physiques",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -396,7 +396,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Prevention sante 
 	$tab=rechercheMatiereBrevet("Prévention Santé",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$codeEpreuve=recupCodeEpreuve($serie,"prevsantenv");
@@ -444,7 +444,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	//  
 	$tab=rechercheMatiereBrevet("Education physique et sportive",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		if ($examenEPS == "oui") {
@@ -490,7 +490,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Arts 
 	$tab=rechercheMatiereBrevet("Education Socioculturelle",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -532,7 +532,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Sciences Biologiques 
 	$tab=rechercheMatiereBrevet("Sciences Biologiques",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -574,7 +574,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Technologie 
 	$tab=rechercheMatiereBrevet("Techno Secteur Agricoles",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -630,7 +630,7 @@ for($j=0;$j<$nbEleveT;$j++) {
 	// Histoire - Géographie 
 	$tab=rechercheMatiereBrevet("Histoire - Géographie - Civique",$idClasse);
 	$nb=0;$noteT="";$note="";$okedit=0;
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($idMatiere == $idmatiereduprof) { $okedit=1; }
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -688,7 +688,7 @@ PgClose();
 ?>
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGENR." les commentaires" ?>","create3"); //text,nomInput</script>
 
-<input type=hidden name='nbeleve' value='<?php print count($eleveT) ?>' />
+<input type=hidden name='nbeleve' value='<?php print countTriade($eleveT) ?>' />
 <input type=hidden name='serie' value="<?php print $serie ?>" />
 <input type=hidden name='sMat' value="<?php print $idmatiereduprof  ?>" />
 <input type=hidden name='sClasseGrp' value="<?php print $idClasse ?>" />
@@ -704,7 +704,7 @@ connexpersistance("color:black;font-weight:bold;font-size:11px;text-align: cente
 
 <!-- // fin form -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <script language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</script>
 </BODY>
 </HTML>

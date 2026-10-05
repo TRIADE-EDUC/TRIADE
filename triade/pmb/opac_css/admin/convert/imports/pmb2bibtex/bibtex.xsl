@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: bibtex.xsl,v 1.7 2013-03-13 16:50:02 mbertin Exp $ -->
+<!-- $Id: bibtex.xsl,v 1.7 2013/03/13 16:50:02 mbertin Exp $ -->
 
 <!-- http://fr.wikipedia.org/wiki/BibTeX#cite_note-1 -->
 <xsl:stylesheet version = '1.0'

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Graph
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_graph.xml,v 1.3 2023/10/26 07:49:08 dbellamy Exp $ -->
+
+<XMLlist>
+    <entry code='cms_module_graph_datasource_category'>Catégories</entry>
+    <entry code='cms_module_graph_datasource_concept'>Concepts</entry>    
+    <entry code='cms_module_graph_view_spacetree'>Affichage SpaceTree</entry>
+</XMLlist>

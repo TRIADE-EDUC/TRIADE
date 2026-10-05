@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_exotic_instruments_ui.js,v 1.9 2017-11-30 10:53:34 dgoron Exp $
+// $Id: nomenclature_exotic_instruments_ui.js,v 1.9 2017/11/30 10:53:34 dgoron Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instruments_list_ui", "dojo/dom-construct","dojo/dom", "dijit/registry", "dojo/topic", "dojo/_base/lang", "dijit/_WidgetBase", "dojo/on"], function(declare, Instruments_list_ui, domConstruct, dom, registry, topic, lang, _WidgetBase, on){
 	/*

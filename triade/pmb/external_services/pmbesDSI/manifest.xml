@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2018-02-20 10:10:49 dbellamy Exp $ -->
+$Id: manifest.xml,v 1.5.4.1 2025/05/26 12:13:32 rtigero Exp $ -->
 <manifest>
 	<name>pmbesDSI</name>
 	<description>msg:DSI_functions_description</description>
@@ -18,8 +18,8 @@ $Id: manifest.xml,v 1.2 2018-02-20 10:10:49 dbellamy Exp $ -->
 		<method name="listBannettesAuto" rights="" version="1.0" comment="msg:listBannettesAuto_description" language_independant="true">
 			<inputs>
 				<description>msg:listBannettesAuto_input_description</description>
-				<param name="filtre_search" type="scalar" dataType="string" description="msg:listBannettesAuto_filtre_search"/>
-				<param name="id_classement" type="scalar" dataType="integer" description="msg:listBannettesAuto_id_classement"/>
+				<param name="filtre_search" type="scalar" dataType="string" description="msg:listBannettesAuto_filtre_search" optional = "yes"/>
+				<param name="id_classement" type="scalar" dataType="integer" description="msg:listBannettesAuto_id_classement" optional = "yes" default_value = "0"/>
 			</inputs>
 			<outputs>
 				<description>msg:listBannettesAuto_output_description</description>
@@ -108,6 +108,43 @@ $Id: manifest.xml,v 1.2 2018-02-20 10:10:49 dbellamy Exp $ -->
 			<outputs>
 				<description>msg:exportBannette_output_description</description>
 				<result name="result" type="scalar" dataType="string" description="msg:exportBannette_result"/>
+			</outputs>
+		</method>
+		<method name="sentDiffusion" rights="" version="1.0" comment="msg:sentDiffusion_description" language_independant="true">
+			<inputs>
+				<param name="id_diffusion" type="scalar" dataType="integer" description="msg:sentDiffusion_id_diffusion"/>
+			</inputs>
+			<outputs>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannette_result"/>
+			</outputs>
+		</method>
+		<method name="sentProduct" rights="" version="1.0" comment="msg:sentProduct_description" language_independant="true">
+			<inputs>
+				<param name="id_product" type="scalar" dataType="integer" description="msg:sentProduct_id_product"/>
+			</inputs>
+			<outputs>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannette_result"/>
+			</outputs>
+		</method>
+		<method name="listDiffusionAuto" rights="" version="1.0" comment="msg:listDiffusionAuto_description" language_independant="true">
+			<inputs>
+				<param name="filtre_search" type="scalar" dataType="string" description="msg:listBannettesAuto_filtre_search" optional="yes"/>
+			</inputs>
+			<outputs>
+				<result name="result" type="array" dataType="array" description="msg:listDiffusionAuto_result">
+					<result name="id_diffusion" type="scalar" dataType="integer" description="msg:listDiffusionAuto_result_id_diffusion"/>
+					<result name="name" type="scalar" dataType="string" description="msg:listDiffusionAuto_result_name"/>
+				</result>
+			</outputs>
+		</method>
+		<method name="sentDiffusionAuto" rights="" version="1.0" comment="msg:sentDiffusionAuto_description" language_independant="true">
+			<inputs>
+				<param name="list_diffusion" type="array" dataType="array" description="msg:sentDiffusionAuto_description" optional="no">
+					<param name="id_diffusion" type="scalar" dataType="integer" description="msg:sentDiffusionAuto_result_id_diffusion"/>
+				</param>
+			</inputs>
+			<outputs>
+				<result name="result" type="scalar" dataType="string" description="msg:diffuseBannette_result"/>
 			</outputs>
 		</method>
 	</methods>

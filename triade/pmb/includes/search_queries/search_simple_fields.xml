@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: search_simple_fields.xml,v 1.18 2018-10-19 14:00:51 arenou Exp $ -->
+<!-- $Id: search_simple_fields.xml,v 1.23 2024/04/17 07:53:30 rtigero Exp $ -->
 <pmbfields>
 
 	<!-- Zone fixedFields :
 		Liste des champs de recherche possibles de la base de données
 		Chaque champ est modélisé par le tag <field> :
-		<field @att=id,title> 
+		<field @att=id,title>
 			-id : numéro unique arbitraire
 			-title : Texte qui sera affiché dans l'écran de recherche
 			<field> contient les sous tags :
 				<input @type> : type de saisie
-					-type (text|list) : 
+					-type (text|list) :
 						@type=list (dans le cas d'une saisie par liste), input contient les sous champs :
 						 	<queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
 										  -la première donne le code à retourner
 										  -la deuxième donne le libellé dans la liste
-										  
+
 				<query> : requete associée au champ et à l'opérateur
 				<query @att=for,multipleWords,regDiacrit>
-					-for : nom de l'opérateur auquel correspond la requete 
-					 (les opérateurs non listés ne seront pas pris en compte), 
+					-for : nom de l'opérateur auquel correspond la requete
+					 (les opérateurs non listés ne seront pas pris en compte),
 					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
 					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
 			 		<query> contient les sous tags :
-					
-						<main> : Corps principal de la requete, 
-							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
-							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série 
+
+						<main> : Corps principal de la requete,
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche,
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série
 							 de tests de la clause where pour chaque mot saisi
-						
+
 						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
-						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+						<multipleOperator> : opérateur utilisé entre les termes de conditions
 	-->
-	
+
 	<fixedFields>
 		<!-- catégories -->
 		<field title="msg:134" id="1">
@@ -53,7 +53,7 @@
 				<main><![CDATA[select notice_id from notices where notices.indexint like '!!p!!' order by index_serie,tnvol,index_sew]]></main>
 			</query>
 			<query for="EXACT" regDiacrit="yes">
-				<main><![CDATA[select notice_id from notices where notices.indexint like '% !!p!! %' order by index_serie,tnvol,index_sew]]></main>	
+				<main><![CDATA[select notice_id from notices where notices.indexint like '% !!p!! %' order by index_serie,tnvol,index_sew]]></main>
 			</query>
 		</field>
 		<!-- éditeur -->
@@ -88,9 +88,9 @@
 			<query for="BOOLEAN" wordSearch="yes" >
 				<class type="records" mode="title"></class>
 			</query>
-		</field>	
-		<!-- tous les champs -->		
-		<field title="msg:global_search" id="7">			
+		</field>
+		<!-- tous les champs -->
+		<field title="msg:global_search" id="7">
 			<input type="text"/>
 			<variable name="pmb_indexation_docnum_allfields" type="global" />
 			<variable name="ck_affiche" type="input">
@@ -100,7 +100,7 @@
 				<default type="value">0</default>
 				<input type="hidden">
 					<value>1</value>
-				</input> 
+				</input>
 			</variable>
 			<variable name= "is_num" type="input" comment="msg:docnum_indexation">
 				<var name="pmb_indexation_docnum" visibility="yes" hidden="no">
@@ -125,7 +125,7 @@
 		<!-- auteur -->
 		<field title="msg:234" id="8">
 			<query for="EQ" regDiacrit="no">
-				<main><![CDATA[select notice_id from notices, responsability where notice_id=responsability_notice and responsability_author=!!p!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select notice_id from notices, responsability where notice_id=responsability_notice and responsability_author='!!p!!' order by index_serie, tnvol, index_sew]]></main>
 			</query>
 			<query for="BOOLEAN" wordSearch="yes" stemming="no">
 				<class type="records" mode="authors"></class>
@@ -149,6 +149,41 @@
 				<main><![CDATA[select distinct object_id as notice_id from caddie_content,notices where caddie_id='!!p!!' and object_id=notices.notice_id order by index_serie, tnvol, index_sew]]></main>
 			</query>
 		</field>
+		<!-- étagère virtuelle -->
+		<field title="msg:etagere_query" id="14">
+			<variable name="opac_etagere_order" type="global"/>
+			<input type="query_list">
+				<query>select idetagere, name from etagere order by name</query>
+			</input>
+			<query for="EQ" multiple="yes">
+				<part>
+					<main>drop table if exists tmp_etagere_caddie_content</main>
+				</part>
+				<part>
+					<main>
+						CREATE TEMPORARY TABLE tmp_etagere_caddie_content as
+						SELECT distinct object_id, etagere_id
+						FROM caddie_content
+						JOIN etagere_caddie ON caddie_content.caddie_id=etagere_caddie.caddie_id
+						WHERE etagere_id='!!p!!' AND (etagere_caddie.etagere_caddie_filters LIKE '%elt_flag%' OR etagere_caddie.etagere_caddie_filters NOT LIKE '%elt_no_flag%') and caddie_content.flag=1
+						UNION
+						SELECT distinct object_id, etagere_id
+						FROM caddie_content
+						JOIN etagere_caddie ON caddie_content.caddie_id=etagere_caddie.caddie_id
+						WHERE etagere_id='!!p!!' AND (etagere_caddie.etagere_caddie_filters LIKE '%elt_no_flag%' OR etagere_caddie.etagere_caddie_filters NOT LIKE '%elt_flag%') and caddie_content.flag IS NULL
+					</main>
+				</part>
+				<part>
+					<main>
+						<![CDATA[SELECT distinct notice_id FROM tmp_etagere_caddie_content
+							JOIN notices ON notices.notice_id = tmp_etagere_caddie_content.object_id
+							JOIN etagere ON etagere.idetagere = tmp_etagere_caddie_content.etagere_id
+							ORDER BY !!opac_etagere_order!!
+						]]>
+					</main>
+				</part>
+			</query>
+		</field>
 		<!-- **** RECHERCHE POUR L'API **** -->
 		<!-- ** Recherche par localisation ** -->
 		<!-- éditeur -->
@@ -157,11 +192,11 @@
 			<query for="BOOLEAN" booleanSearch="yes" >
 				<main><![CDATA[
 					select uni.notice_id, pert, index_serie,tnvol,index_sew from (
-					select distinct notice_id, !!pert_term!! as pert from notices join publishers on ((ed1_id=ed_id) or (ed2_id=ed_id)) join exemplaires on expl_notice=notice_id where (!!where_term!!) and expl_location=!!location!! 
-					UNION 
+					select distinct notice_id, !!pert_term!! as pert from notices join publishers on ((ed1_id=ed_id) or (ed2_id=ed_id)) join exemplaires on expl_notice=notice_id where (!!where_term!!) and expl_location=!!location!!
+					UNION
 					select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id join publishers on ((ed1_id=ed_id) or (ed2_id=ed_id)) where (!!where_term!!) and expl_location=!!location!!
 					) as uni, notices where uni.notice_id=notices.notice_id
-					 order by index_serie,tnvol,index_sew					
+					 order by index_serie,tnvol,index_sew
 				]]></main>
 				<table>publishers</table>
 				<index_l>ed_name</index_l>
@@ -176,7 +211,7 @@
 				<main><![CDATA[
 					select uni.notice_id, pert, index_serie,tnvol,index_sew from (
 						select distinct notice_id, !!pert_term!! as pert from notices join collections on coll_id=collection_id join exemplaires on expl_notice=notice_id where (!!where_term!!) and expl_location=!!location!!
-						UNION 
+						UNION
 						select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id join collections on coll_id=collection_id where (!!where_term!!) and expl_location=!!location!!
 					) as uni, notices where uni.notice_id=notices.notice_id
 					order by index_serie,tnvol,index_sew]]></main>
@@ -192,11 +227,11 @@
 			<query for="EQ" regDiacrit="yes">
 				<main><![CDATA[select notice_id,(index_sew like '% !!p!! %') as pert from notices join exemplaires on expl_notice=notice_id where (index_sew like '% !!p!! %') and expl_location=!!location!! group by notice_id order by pert desc, index_sew asc]]></main>
 			</query>
-			<query for="BOOLEAN" booleanSearch="yes">				
-				<main><![CDATA[		
-						select uni.notice_id, pert, index_serie,tnvol,index_sew from (				
-							select notice_id, !!pert_term!! as pert from notices join exemplaires on expl_notice=notice_id where !!where_term!!  and expl_location=!!location!! 
-							UNION 
+			<query for="BOOLEAN" booleanSearch="yes">
+				<main><![CDATA[
+						select uni.notice_id, pert, index_serie,tnvol,index_sew from (
+							select notice_id, !!pert_term!! as pert from notices join exemplaires on expl_notice=notice_id where !!where_term!!  and expl_location=!!location!!
+							UNION
 							select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id where (!!where_term!!) and expl_location=!!location!!
 						) as uni, notices where uni.notice_id=notices.notice_id
 						group by uni.notice_id order by pert desc, index_serie, tnvol, index_sew]]></main>
@@ -205,9 +240,9 @@
 				<index_i>index_sew</index_i>
 				<id_field>notice_id</id_field>
 			</query>
-		</field>	
-		<!-- tous les champs -->		
-		<field title="msg:global_search" id="20">			
+		</field>
+		<!-- tous les champs -->
+		<field title="msg:global_search" id="20">
 			<input type="text"/>
 			<variable name="location" type="input"/>
 			<variable name="pmb_indexation_docnum_allfields" type="global" />
@@ -218,7 +253,7 @@
 				<default type="value">0</default>
 				<input type="hidden">
 					<value>1</value>
-				</input> 
+				</input>
 			</variable>
 			<variable name= "is_num" type="input" comment="msg:docnum_indexation">
 				<var name="pmb_indexation_docnum" visibility="yes" hidden="no">
@@ -240,8 +275,8 @@
 				<var name="is_num" booleanSearch="yes">
 					<value>default</value>
 					<main><![CDATA[
-					select uni.notice_id, pert, index_serie,tnvol,index_sew from (		
-						select notice_id, ((!!pert_term_1!!)+(!!pert_term_3!!)*0.5) as pert from notices_global_index join notices on  notice_id=num_notice join exemplaires on expl_notice=notice_id where ((!!where_term_1!!) or (!!where_term_2!!)) and no_index=1 and expl_location=!!location!! 
+					select uni.notice_id, pert, index_serie,tnvol,index_sew from (
+						select notice_id, ((!!pert_term_1!!)+(!!pert_term_3!!)*0.5) as pert from notices_global_index join notices on  notice_id=num_notice join exemplaires on expl_notice=notice_id where ((!!where_term_1!!) or (!!where_term_2!!)) and no_index=1 and expl_location=!!location!!
 						UNION
 						select distinct notice_id, ((!!pert_term_1!!)+(!!pert_term_3!!)*0.5) as pert from notices_global_index join notices on notice_id=num_notice join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id where ((!!where_term_1!!) or (!!where_term_2!!)) and no_index=1 and expl_location=!!location!!
 						) as uni, notices where uni.notice_id=notices.notice_id
@@ -270,12 +305,12 @@
 				<var name="is_num" booleanSearch="yes">
 					<value>1</value>
 					<main><![CDATA[select uni.notice_id, pert from (
-							select notice_id, ((!!pert_term_2!!)+(!!pert_term_1!!)*0.5)+ifnull((!!pert_term_3!!),0) as pert from notices 
+							select notice_id, ((!!pert_term_2!!)+(!!pert_term_1!!)*0.5)+ifnull((!!pert_term_3!!),0) as pert from notices
 							join notices_global_index on num_notice=notice_id
-							left join explnum on explnum_notice=notice_id 
+							left join explnum on explnum_notice=notice_id
 							join exemplaires on expl_notice=notice_id
-							where ((!!where_term_2!!) or (!!where_term_3!!)) 
-							and notice_id=num_notice group by notice_id 
+							where ((!!where_term_2!!) or (!!where_term_3!!))
+							and notice_id=num_notice group by notice_id
 							and expl_location=!!location!!
 							UNION
 							select if(num_notice,num_notice,bulletin_notice) as notice_id, ifnull((!!pert_term_3!!),0) as pert from explnum
@@ -284,7 +319,7 @@
 							where ((!!where_term_3!!))
 							and expl_location=!!location!!
 							group by notice_id
-						) as uni join notices n on n.notice_id=uni.notice_id order by pert desc, index_serie, tnvol, index_sew 
+						) as uni join notices n on n.notice_id=uni.notice_id order by pert desc, index_serie, tnvol, index_sew
 					]]></main>
 					<boolean>
 						<table>notices</table>
@@ -312,16 +347,17 @@
 		<field title="msg:234" id="21">
 			<variable name="location" type="input"/>
 			<query for="EQ" regDiacrit="no">
-				<main><![CDATA[select notice_id from notices join exemplaires on expl_notice=notice_id join responsability on notice_id=responsability_notice where responsability_author=!!p!! and expl_location=!!location!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select notice_id from notices join exemplaires on expl_notice=notice_id join responsability on notice_id=responsability_notice where responsability_author='!!p!!' and expl_location=!!location!! order by index_serie, tnvol, index_sew]]></main>
 			</query>
 			<query for="BOOLEAN" booleanSearch="yes">
 				<main><![CDATA[
-					select uni.notice_id, pert, index_serie,tnvol,index_sew from (	
-						select distinct responsability_notice as notice_id, !!pert_term!! as pert from responsability join authors on responsability_author=author_id join exemplaires on expl_notice=responsability_notice where (!!where_term!!) and expl_location=!!location!!  
-						UNION 
-						select distinct notice_id, !!pert_term!! as pert from responsability join authors on responsability_author=author_id join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id  where (!!where_term!!) and expl_location=!!location!!
-					) as uni, notices where uni.notice_id=notices.notice_id				
-					group by uni.notice_id order by pert desc, index_author]]></main>
+					select uni.notice_id, pert, index_author from (
+						select distinct responsability_notice as notice_id, !!pert_term!! as pert, index_author from responsability join authors on responsability_author=author_id join exemplaires on expl_notice=responsability_notice where (!!where_term!!) and expl_location=!!location!!
+						UNION
+						select distinct num_notice as notice_id, !!pert_term!! as pert, index_author from responsability join authors on responsability_author=author_id join bulletins on num_notice=responsability_notice join exemplaires on expl_bulletin=bulletin_id  where (!!where_term!!) and expl_location=!!location!!
+					) as uni, notices where uni.notice_id=notices.notice_id
+					group by uni.notice_id order by pert desc, index_author]]>
+				</main>
 				<table>authors</table>
 				<index_l>concat(author_name,', ',author_rejete)</index_l>
 				<index_i>index_author</index_i>
@@ -356,7 +392,7 @@
 			<query for="BOOLEAN" booleanSearch="yes" >
 				select uni.notice_id, pert, index_serie,tnvol,index_sew from (
 					select distinct notice_id, !!pert_term!! as pert from notices join publishers on ((ed1_id=ed_id) or (ed2_id=ed_id)) join exemplaires on expl_notice=notice_id where (!!where_term!!) and expl_location=!!location!!  and expl_section=!!section!!
-					UNION 
+					UNION
 					select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id join publishers on ((ed1_id=ed_id) or (ed2_id=ed_id)) where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!
 					) as uni, notices where uni.notice_id=notices.notice_id
 					 order by index_serie,tnvol,index_sew
@@ -373,7 +409,7 @@
 			<query for="BOOLEAN" booleanSearch="yes">
 				<main><![CDATA[select uni.notice_id, pert, index_serie,tnvol,index_sew from (
 						select distinct notice_id, !!pert_term!! as pert from notices join collections on coll_id=collection_id join exemplaires on expl_notice=notice_id where (!!where_term!!) and expl_location=!!location!!  and expl_section=!!section!!
-						UNION 
+						UNION
 						select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id join collections on coll_id=collection_id where (!!where_term!!) and expl_location=!!location!!  and expl_section=!!section!!
 					) as uni, notices where uni.notice_id=notices.notice_id
 					order by index_serie,tnvol,index_sew]]></main>
@@ -390,10 +426,10 @@
 			<query for="EQ" regDiacrit="yes">
 				<main><![CDATA[select notice_id,(index_sew like '% !!p!! %') as pert from notices join exemplaires on expl_notice=notice_id where (index_sew like '% !!p!! %') and expl_location=!!location!! and expl_section=!!section!! group by notice_id order by pert desc, index_sew asc]]></main>
 			</query>
-			<query for="BOOLEAN" booleanSearch="yes">				
-				<main><![CDATA[select uni.notice_id, pert, index_serie,tnvol,index_sew from (				
+			<query for="BOOLEAN" booleanSearch="yes">
+				<main><![CDATA[select uni.notice_id, pert, index_serie,tnvol,index_sew from (
 							select notice_id, !!pert_term!! as pert from notices join exemplaires on expl_notice=notice_id where !!where_term!!  and expl_location=!!location!!  and expl_section=!!section!!
-							UNION 
+							UNION
 							select distinct notice_id, !!pert_term!! as pert from notices join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!
 						) as uni, notices where uni.notice_id=notices.notice_id
 						group by uni.notice_id order by pert desc, index_serie, tnvol, index_sew]]></main>
@@ -402,9 +438,9 @@
 				<index_i>index_sew</index_i>
 				<id_field>notice_id</id_field>
 			</query>
-		</field>	
-		<!-- tous les champs -->		
-		<field title="msg:global_search" id="25">			
+		</field>
+		<!-- tous les champs -->
+		<field title="msg:global_search" id="25">
 			<input type="text"/>
 			<variable name="location" type="input"/>
 			<variable name="section" type="input"/>
@@ -416,7 +452,7 @@
 				<default type="value">0</default>
 				<input type="hidden">
 					<value>1</value>
-				</input> 
+				</input>
 			</variable>
 			<variable name= "is_num" type="input" comment="msg:docnum_indexation">
 				<var name="pmb_indexation_docnum" visibility="yes" hidden="no">
@@ -438,7 +474,7 @@
 				<var name="is_num" booleanSearch="yes">
 					<value>default</value>
 					<main><![CDATA[
-					select uni.notice_id, pert, index_serie,tnvol,index_sew from (		
+					select uni.notice_id, pert, index_serie,tnvol,index_sew from (
 						select notice_id, ((!!pert_term_1!!)+(!!pert_term_3!!)*0.5) as pert from notices_global_index join notices on  notice_id=num_notice join exemplaires on expl_notice=notice_id where ((!!where_term_1!!) or (!!where_term_2!!)) and no_index=1 and expl_location=!!location!! and expl_section=!!section!!
 						UNION
 						select distinct notice_id, ((!!pert_term_1!!)+(!!pert_term_3!!)*0.5) as pert from notices_global_index join notices on notice_id=num_notice join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id where ((!!where_term_1!!) or (!!where_term_2!!)) and no_index=1 and expl_location=!!location!! and expl_section=!!section!!
@@ -468,12 +504,12 @@
 				<var name="is_num" booleanSearch="yes">
 					<value>1</value>
 					<main><![CDATA[select uni.notice_id, pert from (
-							select notice_id, ((!!pert_term_2!!)+(!!pert_term_1!!)*0.5)+ifnull((!!pert_term_3!!),0) as pert from notices 
+							select notice_id, ((!!pert_term_2!!)+(!!pert_term_1!!)*0.5)+ifnull((!!pert_term_3!!),0) as pert from notices
 							join notices_global_index on num_notice=notice_id
-							left join explnum on explnum_notice=notice_id 
+							left join explnum on explnum_notice=notice_id
 							join exemplaires on expl_notice=notice_id
-							where ((!!where_term_2!!) or (!!where_term_3!!)) 
-							and notice_id=num_notice group by notice_id 
+							where ((!!where_term_2!!) or (!!where_term_3!!))
+							and notice_id=num_notice group by notice_id
 							and expl_location=!!location!!
 							and expl_section=!!section!!
 							UNION
@@ -484,7 +520,7 @@
 							and expl_location=!!location!!
 							and expl_section=!!section!!
 							group by notice_id
-						) as uni join notices n on n.notice_id=uni.notice_id order by pert desc, index_serie, tnvol, index_sew 
+						) as uni join notices n on n.notice_id=uni.notice_id order by pert desc, index_serie, tnvol, index_sew
 					]]></main>
 					<boolean>
 						<table>notices</table>
@@ -513,14 +549,14 @@
 			<variable name="location" type="input"/>
 			<variable name="section" type="input"/>
 			<query for="EQ" regDiacrit="no">
-				<main><![CDATA[select notice_id from notices join exemplaires on expl_notice=notice_id join responsability on notice_id=responsability_notice where responsability_author=!!p!! and expl_location=!!location!! and expl_section=!!section!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select notice_id from notices join exemplaires on expl_notice=notice_id join responsability on notice_id=responsability_notice where responsability_author='!!p!!' and expl_location=!!location!! and expl_section=!!section!! order by index_serie, tnvol, index_sew]]></main>
 			</query>
 			<query for="BOOLEAN" booleanSearch="yes">
-				<main><![CDATA[select uni.notice_id, pert, index_serie,tnvol,index_sew from (	
-						select distinct responsability_notice as notice_id, !!pert_term!! as pert from responsability join authors on responsability_author=author_id join exemplaires on expl_notice=responsability_notice where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!  
-						UNION 
-						select distinct notice_id, !!pert_term!! as pert from responsability join authors on responsability_author=author_id join bulletins on bulletin_notice=notice_id join exemplaires on expl_bulletin=bulletin_id  where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!
-					) as uni, notices where uni.notice_id=notices.notice_id				
+				<main><![CDATA[select uni.notice_id, pert, index_author from (
+						select distinct responsability_notice as notice_id, !!pert_term!! as pert, index_author from responsability join authors on responsability_author=author_id join exemplaires on expl_notice=responsability_notice where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!
+						UNION
+						select distinct num_notice as notice_id, !!pert_term!! as pert, index_author from responsability join authors on responsability_author=author_id join bulletins on num_notice=responsability_notice join exemplaires on expl_bulletin=bulletin_id  where (!!where_term!!) and expl_location=!!location!! and expl_section=!!section!!
+					) as uni, notices where uni.notice_id=notices.notice_id
 					group by uni.notice_id order by pert desc, index_author]]></main>
 				<table>authors</table>
 				<index_l>concat(author_name,', ',author_rejete)</index_l>
@@ -566,12 +602,12 @@
 		<field title="msg:map_echelle" id="74" separator="msg:map_search">
 			<var name="pmb_map_activate" visibility="yes">
 				<value visibility="no">0</value>
-			</var> 
+			</var>
 			<input type="query_list">
 				<query>select map_echelle_id, map_echelle_name from map_echelles order by map_echelle_name</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct notice_id from notices where map_echelle_num=!!p!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select distinct notice_id from notices where map_echelle_num='!!p!!' order by index_serie, tnvol, index_sew]]></main>
 			</query>
 		</field>
 		<field title="msg:map_projection" id="75">
@@ -582,7 +618,7 @@
 				<query>select map_projection_id, map_projection_name from map_projections order by map_projection_name</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct notice_id from notices where map_projection_num=!!p!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select distinct notice_id from notices where map_projection_num='!!p!!' order by index_serie, tnvol, index_sew]]></main>
 			</query>
 		</field>
 		<field title="msg:map_ref" id="76">
@@ -593,7 +629,7 @@
 				<query>select map_ref_id, map_ref_name from map_refs order by map_ref_name</query>
 			</input>
 			<query for="EQ">
-				<main><![CDATA[select distinct notice_id from notices where map_ref_num=!!p!! order by index_serie, tnvol, index_sew]]></main>
+				<main><![CDATA[select distinct notice_id from notices where map_ref_num='!!p!!' order by index_serie, tnvol, index_sew]]></main>
 			</query>
 		</field>
 		<field title="msg:map_equinoxe" id="77">
@@ -636,32 +672,32 @@
 			</query>
 		</field>
 	</fixedFields>
-	
+
 	<!-- Zone dynamicFields :
 		Liste des champs personalisés par type de données
-			<field @att=id,dataType> 
+			<field @att=id,dataType>
 			-id : numéro unique arbitraire
 			-dataType : type de données du champ personalisé
 			<field> contient les sous tags :
-			
+
 				<query> : requete associée au champ et à l'opérateur
 				<query @att=for,multipleWords,regDiacrit>
-					-for : nom de l'opérateur auquel correspond la requete 
-					 (les opérateurs non listés ne seront pas pris en compte), 
+					-for : nom de l'opérateur auquel correspond la requete
+					 (les opérateurs non listés ne seront pas pris en compte),
 					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
 					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
 			 		<query> contient les sous tags :
-					
-						<main> : Corps principal de la requete, 
-							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
-							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série  
+
+						<main> : Corps principal de la requete,
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche,
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série
 							 de tests de la clause where pour chaque mot saisi
 							-!!field!! sera remplacé par le numéro de champ personalisé
-						
+
 						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
-						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+						<multipleOperator> : opérateur utilisé entre les termes de conditions
 	-->
-	
+
 	<dynamicFields>
 		<field dataType="small_text" id="1">
 			<query for="BOOLEAN" wordSearch="yes" searchableOnly="yes" notAllowedFor="list,query_list,date,external,resolve,marclist,query_auth">
@@ -699,7 +735,7 @@
 		<field dataType="text" id="2">
 			<query for="BOOLEAN" wordSearch="yes" searchableOnly="yes" notAllowedFor="list,query_list,date,external,resolve,marclist,query_auth">
 					<class type="records" mode="pfield"></class>
-				</query>	
+				</query>
 			<query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
 				<main><![CDATA[select distinct notice_id from notices,notices_custom_values where !!multiple_term!! order by index_serie, tnvol, index_sew]]></main>
 				<multipleTerm>notices_custom_champ=!!field!! and notices_custom_origine=notice_id and notices_custom_text like '%!!p!!%'</multipleTerm>
@@ -799,7 +835,7 @@
 			</query>
 		</field>
 	</dynamicFields>
-	
+
 	<operators>
 		<operator name="BOOLEAN">msg:expr_bool_query</operator>
 		<operator name="CONTAINS">msg:284</operator>

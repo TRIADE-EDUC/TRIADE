@@ -20,4 +20,5 @@ while (!feof($fp)) {
 }
 fwrite($fw,"</XMLlist>");
 fclose($fw);
+fclose($fp);
 ?>

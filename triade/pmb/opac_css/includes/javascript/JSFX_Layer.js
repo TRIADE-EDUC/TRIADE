@@ -1,5 +1,5 @@
 /******************************************************************* 
-* File    : JSFX_Layer.js  Â© JavaScript-FX.com
+* File    : JSFX_Layer.js  © JavaScript-FX.com
 * Created : 2001/04/11 
 * Author  : Roy Whittle  (Roy@Whittle.com) www.Roy.Whittle.com 
 * Purpose : To create a cross browser dynamic layers.
@@ -8,7 +8,7 @@
 * 2001-03-17	3.0		Completely re-witten for use by javascript-fx
 ***********************************************************************/ 
 // +-------------------------------------------------+
-// $Id: JSFX_Layer.js,v 1.2 2008-11-10 13:26:06 touraine37 Exp $
+// $Id: JSFX_Layer.js,v 1.2 2008/11/10 13:26:06 touraine37 Exp $
 
 if(!window.JSFX)
 	JSFX=new Object();

@@ -1,10 +1,10 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requests_frame.js,v 1.8 2013-04-17 08:32:26 mbertin Exp $
+// $Id: requests_frame.js,v 1.8 2013/04/17 08:32:26 mbertin Exp $
 
 /*
- * NÃ©cessite drag_n_drop.js
+ * Nécessite drag_n_drop.js
  * Necessite select.js
  */
 
@@ -197,7 +197,7 @@ function req_addDataCell(lig) {
 	return td;
 }
 
-//Ajout SÃ©lecteur
+//Ajout Sélecteur
 function req_addSelect(order,values) {
 	var d=req_addContainer('no',order);
 	var t_values = values.split(",");

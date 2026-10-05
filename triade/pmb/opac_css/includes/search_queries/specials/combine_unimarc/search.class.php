@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.10 2019-01-16 16:57:14 dgoron Exp $
+// $Id: search.class.php,v 1.10 2019/01/16 16:57:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 require_once($include_path."/rec_history.inc.php");
 
-//Classe de gestion de la recherche spÃ©cial "combine"
+//Classe de gestion de la recherche spécial "combine"
 
 class combine_search_unimarc {
 	public $id;
@@ -24,7 +24,7 @@ class combine_search_unimarc {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	$operators = array();
     	if ($_SESSION["nb_queries"]!=0) {
@@ -33,11 +33,11 @@ class combine_search_unimarc {
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $msg,$charset;
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -80,10 +80,10 @@ class combine_search_unimarc {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -135,7 +135,7 @@ class combine_search_unimarc {
 					case 'categ_see':
 						$search[0]="f_1";	
 						$op_="BOOLEAN";
-						//Recherche de la catÃ©gorie
+						//Recherche de la catégorie
 						$categ_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 						$requete="select libelle_categorie from categories where num_noeud=".$categ_id;
 						$r_cat=pmb_mysql_query($requete);
@@ -168,7 +168,7 @@ class combine_search_unimarc {
 					case 'publisher_see':	
 						$search[0]="f_3";
 						$op_="BOOLEAN";
-						//Recherche de l'Ã©diteur
+						//Recherche de l'éditeur
 						$publisher_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 						$requete="select ed_name from publishers where ed_id=".$publisher_id;
 						$r_pub=pmb_mysql_query($requete);
@@ -179,7 +179,7 @@ class combine_search_unimarc {
 					case 'subcoll_see':	
 						$search[0]="f_5";
 						$op_="BOOLEAN";
-						//Recherche de l'Ã©diteur
+						//Recherche de l'éditeur
 						$subcoll_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 						$requete="select sub_coll_name from sub_collections where sub_coll_id=".$subcoll_id;
 						$r_subcoll=pmb_mysql_query($requete);
@@ -190,7 +190,7 @@ class combine_search_unimarc {
 					case 'titre_uniforme_see':	
 						$search[0]="f_6";
 						$op_="BOOLEAN";
-						//Recherche de l'Ã©diteur
+						//Recherche de l'éditeur
 						$tu_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 						$requete="select tu_name from titre_uniformes where tu_id=".$tu_id;
 						$r_tu=pmb_mysql_query($requete);
@@ -199,7 +199,7 @@ class combine_search_unimarc {
 						}
 					break;							
 				}
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -211,7 +211,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	    	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -235,7 +235,7 @@ class combine_search_unimarc {
 				}
 				$search[0]="f_1";
 				$op_="BOOLEAN";
-				//Recherche de la catÃ©gorie
+				//Recherche de la catégorie
 				$categ_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				$requete="select libelle_categorie from categories where num_noeud=".$categ_id;
 				$r_cat=pmb_mysql_query($requete);
@@ -243,7 +243,7 @@ class combine_search_unimarc {
 					$valeur_champ=pmb_mysql_result($r_cat,0,0);
 				}	
 				
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -255,7 +255,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -277,7 +277,7 @@ class combine_search_unimarc {
 	       		case 'categ_see':
 					$search[0]="f_1";
 					$op_="BOOLEAN";
-					//Recherche de la catÃ©gorie
+					//Recherche de la catégorie
 					$categ_id=$_SESSION["notice_view".$valeur[0]]["search_id"];
 					$requete="select libelle_categorie from categories where num_noeud=".$categ_id;
 					$r_cat=pmb_mysql_query($requete);
@@ -311,7 +311,7 @@ class combine_search_unimarc {
 					$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				}
 					
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -323,7 +323,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -349,14 +349,14 @@ class combine_search_unimarc {
 		return $table_tempo; 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
     	global $msg;
     	global $include_path;
     	
     	$litteral=array();
     			
-    	//RÃ©cupÃ©ration de la valeur de saisie 
+    	//Récupération de la valeur de saisie 
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -368,7 +368,7 @@ class combine_search_unimarc {
     }
     
     public function make_unimarc_query() {
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -442,7 +442,7 @@ class combine_search_unimarc {
 					$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				break;		
 				}
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -454,7 +454,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	    	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -480,7 +480,7 @@ class combine_search_unimarc {
 				$op_="EQ";
 				$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -492,7 +492,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -530,7 +530,7 @@ class combine_search_unimarc {
 				$op_="EQ";
 				$valeur_champ=$_SESSION["notice_view".$valeur[0]]["search_id"];
 				
-				//opÃ©rateur
+				//opérateur
     			$op="op_0_".$search[0];
     			global ${$op};
     			${$op}=$op_;
@@ -542,7 +542,7 @@ class combine_search_unimarc {
     			global ${$field};
     			${$field}=$field_;
     	    	
-    	    	//opÃ©rateur inter-champ
+    	    	//opérateur inter-champ
     			$inter="inter_0_".$search[0];
     			global ${$inter};
     			${$inter}="";
@@ -568,7 +568,7 @@ class combine_search_unimarc {
 		return $mt; 
     }
     
-    //fonction de dÃ©coupage d'une chaine trop longue
+    //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur) {
     	if (strlen($valeur)>=50) {
     		$pos=strrpos(substr($valeur,0,50)," ");
@@ -579,7 +579,7 @@ class combine_search_unimarc {
     	return $valeur;		
     }
     
-	//fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	//fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="-1") return true;

@@ -1,31 +1,46 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.19 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: main.inc.php,v 1.24.4.1 2025/01/24 16:34:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $class_path, $sub, $page, $msg, $pmb_map_activate, $pmb_extended_search_dnd_interface;
+global $reinit_facettes, $param_delete_facette, $check_facette;
+global $reinit_compare;
+global $num_facettes_set;
 
 require_once($class_path."/search.class.php");
 require_once($class_path."/search_perso.class.php");
 
-$sc=new search(true);
+switch ($sub) {
+    case "launch":
+        $num_facettes_set = intval($num_facettes_set);
+        if($num_facettes_set) {
+            facettes::set_session_facettes_set($num_facettes_set);
+        }
+        $reinit_facettes = intval($reinit_facettes);
+        if($reinit_facettes) {
+            facettes::destroy_global_env();
+        }
+        if((isset($param_delete_facette)) || (isset($check_facette) && is_array($check_facette))) {
+            facettes::checked_facette_search();
+        }
+        break;
+    default:
+        //Réinitialisation des facettes
+        facettes::destroy_global_env();
+        break;
+}
 
-$sc->link = './catalog.php?categ=isbd&id=!!id!!';
-$sc->link_expl = './catalog.php?categ=edit_expl&id=!!notice_id!!&cb=!!expl_cb!!&expl_id=!!expl_id!!'; 
-$sc->link_explnum = './catalog.php?categ=edit_explnum&id=!!notice_id!!&explnum_id=!!explnum_id!!';
-$sc->link_serial = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
-$sc->link_analysis = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!';
-$sc->link_bulletin = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!';
-$sc->link_explnum_serial = "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!";
-$sc->link_explnum_analysis = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!";
-$sc->link_explnum_bulletin = "./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id=!!bul_id!!&explnum_id=!!explnum_id!!";
+$sc=new search(true);
+$sc->init_links();
 
 switch ($sub) {
 	case "launch":
-		if ((string)$page=="") {
+	    if ((string)$page=="" || $page==0) {
+		    if(!isset($_SESSION["session_history"])) $_SESSION["session_history"] = array();
 			$_SESSION["CURRENT"]=count($_SESSION["session_history"]);
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["URI"]="./catalog.php?categ=search&mode=6";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"]=$_POST;
@@ -34,19 +49,20 @@ switch ($sub) {
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"]["sub"]="";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["HUMAN_QUERY"]=$sc->make_human_query();
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["HUMAN_TITLE"]= "[".$msg["130"]."] ".$msg["search_extended"];
-			$_POST["page"]=0;
-			$page=0;
+			$_POST["page"]=1;
+			$page=1;
 		}
 		$sc->show_results("./catalog.php?categ=search&mode=6&sub=launch","./catalog.php?categ=search&mode=6", true, '', true );
 		if ($_SESSION["CURRENT"]!==false) {
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["URI"]="./catalog.php?categ=search&mode=6&sub=launch";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["POST"]=$_POST;
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["GET"]=$_GET;
-			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["PAGE"]=$page+1;
+			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["PAGE"]=$page;
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["HUMAN_QUERY"]=$sc->make_human_query();
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["SEARCH_TYPE"]="extended";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]['TEXT_LIST_QUERY']='';
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["TEXT_QUERY"]="";
+			$_SESSION["session_history"][$_SESSION["CURRENT"]]["NOTI"]["EXTENDED_SEARCH"]=$sc->json_encode_search();
 		}
 		if($pmb_map_activate){
 			$sc->check_emprises();

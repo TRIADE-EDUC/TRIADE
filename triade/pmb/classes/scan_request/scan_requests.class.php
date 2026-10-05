@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_requests.class.php,v 1.18 2018-09-07 13:53:24 dgoron Exp $
+// $Id: scan_requests.class.php,v 1.23 2023/07/10 11:47:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path.'/scan_request/scan_request.class.php');
 require_once($class_path.'/scan_request/scan_request_statuses.class.php');
 require_once($class_path.'/scan_request/scan_request_priorities.class.php');
@@ -29,11 +30,10 @@ class scan_requests {
 	}
 	
 	protected function fetch_data() {
-		global $dbh;
 		$this->scan_requests = array();
 		
 		$query = $this->get_query();
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			while ($row = pmb_mysql_fetch_object($result)) {
 				$this->scan_requests[] = new scan_request($row->id_scan_request);
@@ -165,7 +165,7 @@ class scan_requests {
 		
 		if(!isset($scan_request_order_by)) $scan_request_order_by = $_SESSION['scan_requests_filter']['scan_request_order_by'];
 		else $_SESSION['scan_requests_filter']['scan_request_order_by'] = $scan_request_order_by;
-		if(!isset($scan_request_order_by_sens)) $scan_request_order_by = $_SESSION['scan_requests_filter']['scan_request_order_by_sens'];
+		if(!isset($scan_request_order_by_sens)) $scan_request_order_by_sens = $_SESSION['scan_requests_filter']['scan_request_order_by_sens'];
 		else $_SESSION['scan_requests_filter']['scan_request_order_by_sens'] = $scan_request_order_by_sens;
 		
 		switch ($scan_request_order_by){
@@ -252,7 +252,6 @@ class scan_requests {
 	}
 	
 	public function has_scan_requests_on_record($record_id, $record_type) {
-		
 		foreach ($this->scan_requests as $scan_request) {
 			$linked_records = $scan_request->get_linked_records();
 			foreach ($linked_records as $linked_record) {
@@ -267,66 +266,69 @@ class scan_requests {
 	}	
 	
 	public static function clean_scan_requests_on_delete_record($notice_id = 0, $bulletin_id = 0) {
-		global $dbh;
-				
 		if($notice_id){
 			$linked_query = 'delete from scan_request_linked_records where scan_request_linked_record_num_notice ='.$notice_id;			
 		}elseif($bulletin_id){
 			$linked_query = 'delete from scan_request_linked_records where scan_request_linked_record_num_bulletin ='.$bulletin_id;			
 		}
-		if($linked_query)pmb_mysql_query($linked_query, $dbh);		
+		if($linked_query)pmb_mysql_query($linked_query);		
 	}
 	
-	public static function get_admin_form($url="./admin.php?categ=scan_request&sub=upload_folder"){
+	public static function get_admin_content_form(){
 		global $charset;
 		global $msg;
-		global $scan_request_parameters_form;
 		global $pmb_scan_request_explnum_folder;
 		
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->set_grid_model('flat_column_3');
 		$req="select repertoire_id, repertoire_nom from upload_repertoire order by repertoire_nom";
 		$res = pmb_mysql_query($req);
-		
 		if(pmb_mysql_num_rows($res)){
-			$params_form= "
-			<div class='colonne3'>
-				<label>".htmlentities($msg['upload_repertoire_selection'],ENT_QUOTES,$charset)."</label>
-			</div>
-			<div class='colonne_suite'>";
-			$params_form.="
-			<select name='scan_request_folder_param'>";
-			while ($row = pmb_mysql_fetch_object($res)){
-				$params_form.="
-				<option value='".$row->repertoire_id."' ".($row->repertoire_id == $pmb_scan_request_explnum_folder ? "selected='selected'" : "").">".htmlentities($row->repertoire_nom,ENT_QUOTES,$charset)."</option>";
-			}
-			$params_form.="
-			</select>";
-		}else{
-			$params_form.="
-				<div class='colonne3'>
-			<label>".htmlentities($msg['upload_repertoire_undefined'],ENT_QUOTES,$charset)."</label>";
-				
+			$interface_content_form->add_element('scan_request_folder_param', 'upload_repertoire_selection')
+			->add_query_node('select', 'select repertoire_id as id, repertoire_nom as label from upload_repertoire order by label', $pmb_scan_request_explnum_folder);
+		} else {
+			$interface_content_form->add_element('scan_request_folder_param', 'upload_repertoire_selection')
+			->add_html_node("<label>".htmlentities($msg['upload_repertoire_undefined'],ENT_QUOTES,$charset)."</label>");
 		}
-		$params_form.= "
-		</div>";
+		return $interface_content_form->get_display();
+	}
+	
+	public static function get_admin_form(){
+		global $msg;
 		
-		$form = str_replace("!!scan_request_parameters_folder_selector!!",$params_form,$scan_request_parameters_form);
-		$form = str_replace("!!action!!",$url,$form);
-		$form = str_replace("!!form_title!!",$msg['scan_request_admin_parameters_form'],$form);
-		return $form;
+		$interface_form = new interface_admin_form('scan_request_parameters_form');
+		$interface_form->set_label($msg['scan_request_admin_parameters_form'])
+		->set_content_form(static::get_admin_content_form());
+		return $interface_form->get_display_parameters();
 	}
 	
 	public static function save_admin_form(){
 		global $scan_request_folder_param;
-		global $dbh;
 		global $pmb_scan_request_explnum_folder;
 		
-		$scan_request_folder_param += 0; 
+		$scan_request_folder_param = intval($scan_request_folder_param); 
 		$query = 'update parametres set valeur_param="'.$scan_request_folder_param.'" where type_param = "pmb" and sstype_param= "scan_request_explnum_folder"; ';
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			$pmb_scan_request_explnum_folder = $scan_request_folder_param; 
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Suppression des demandes associées
+	 * @param number $num_creator
+	 * @param number $type_creator (1 = User, 2 = Empr)
+	 */
+	public static function delete_from_creator($num_creator=0, $type_creator=2) {
+	    $num_creator = intval($num_creator);
+	    $type_creator = intval($type_creator);
+	    $query = "select id_scan_request from scan_requests where scan_request_num_creator = ".$num_creator." and scan_request_type_creator = ".$type_creator;
+	    $result = pmb_mysql_query($query);
+	    while($row = pmb_mysql_fetch_object($result)) {
+	        $scan_request = new scan_request($row->id_scan_request);
+	        $scan_request->delete(true);
+	    }
 	}
 }

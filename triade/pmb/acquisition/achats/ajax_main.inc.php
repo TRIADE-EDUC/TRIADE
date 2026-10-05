@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.6 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: ajax_main.inc.php,v 1.8 2021/08/09 06:41:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -31,12 +31,14 @@ switch($sub){
 			case 'duplicate_lines':
 				lignes_actes::duplicate_lines($id_cde,$ids_line);
 				break;
+			case "list":
+				lists_controller::proceed_ajax($object_type, 'accounting');
+				break;
 		}
 		break;
 	default:
 		switch($action) {
 			case "list":
-				require_once($class_path.'/list/lists_controller.class.php');
 				lists_controller::proceed_ajax($object_type, 'accounting');
 				break;
 		}

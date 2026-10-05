@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_sphinx_authors.class.php,v 1.7 2018-08-17 10:33:02 ccraig Exp $
+// $Id: searcher_sphinx_authors.class.php,v 1.7 2018/08/17 10:33:02 ccraig Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class searcher_sphinx_authors extends searcher_sphinx_authorities {
 		global $type_autorite;
 		// Ca ne devrait pas, mais pour le bon fonctionnement, on a besoin d'exclure cette valeur
 		if($type_autorite && $type_autorite != 7){
-			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est gÃ©rÃ© dans la classe racine Ã  la volÃ©e!
+			//on ne s'assure pas de savoir si c'est une chaine ou un tableau, c'est géré dans la classe racine à la volée!
 			$filters[] = array(
 					'name'=> 'author_type',
 					'values' => $type_autorite

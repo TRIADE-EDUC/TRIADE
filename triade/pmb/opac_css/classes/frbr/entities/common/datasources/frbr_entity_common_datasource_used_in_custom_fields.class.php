@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_datasource_used_in_custom_fields.class.php,v 1.2 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: frbr_entity_common_datasource_used_in_custom_fields.class.php,v 1.3 2021/01/20 11:01:57 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -60,18 +60,22 @@ class frbr_entity_common_datasource_used_in_custom_fields extends frbr_entity_co
 	}
 	
 	protected function get_custom_list() {
-		if(!isset($this->custom_list)) {
-			$this->custom_list = array();
-			$query = "select idchamp, titre, options, datatype from ".$this->prefix."_custom where type='query_auth' order by name";
-			$result = pmb_mysql_query($query);
-			while($row = pmb_mysql_fetch_assoc($result)) {
-			    $options = _parser_text_no_function_($row['options']);
-				if($this->get_entity_type_from_data_type($options['OPTIONS'][0]['DATA_TYPE'][0]['value']) == $this->origin_entity) {
-					$this->custom_list[] = $row;
-				}
-			}
-		}		
-		return $this->custom_list;
+	    if(!isset($this->custom_list)) {
+	        $this->custom_list = array();
+	        $query = "SELECT idchamp, titre, options, datatype FROM ".$this->prefix."_custom WHERE type='query_auth'";
+	        if (!empty($this->parameters->authperso_id) && $this->prefix == "authperso") {
+	            $query .= " AND num_type = ".$this->parameters->authperso_id;
+	        }
+	        $query .= " ORDER BY name";
+	        $result = pmb_mysql_query($query);
+	        while($row = pmb_mysql_fetch_assoc($result)) {
+	            $options = _parser_text_no_function_($row['options']);
+	            if($this->get_aut_type_from_entity_type($this->origin_entity) == $options['OPTIONS'][0]['DATA_TYPE'][0]['value']) {
+	                $this->custom_list[] = $row;
+	            }
+	        }
+	    }
+	    return $this->custom_list;
 	}
 	
 	protected function get_custom_list_selector() {
@@ -116,13 +120,26 @@ class frbr_entity_common_datasource_used_in_custom_fields extends frbr_entity_co
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
 	    $query = "SELECT ".$this->parameters->prefix."_custom_origine AS id, ".$this->parameters->prefix."_custom_".$this->parameters->datatype." AS parent FROM ".$this->parameters->prefix."_custom_values WHERE ".$this->parameters->prefix."_custom_champ = ".$this->parameters->id." AND ".$this->parameters->prefix."_custom_".$this->parameters->datatype." IN (".implode(',', $datas).")";
 		$datas = $this->get_datas_from_query($query);
 		$datas = parent::get_datas($datas);
 		return $datas;
+	}
+		
+	//cas particulier pour cette methode
+	protected function get_aut_type_from_entity_type($type) {
+	    global $authperso_num;
+	    switch ($type) {
+	        case 'authperso':
+	            if (!empty($authperso_num)) {
+	                return 1000 + intval($authperso_num);
+	            }
+	        default:
+	            return parent::get_aut_type_from_entity_type($type);
+	    }
 	}
 
 }

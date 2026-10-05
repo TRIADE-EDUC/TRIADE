@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 document.write("</div></td>");
 document.write("</tr>");
 document.write("<tr> </tr>");
@@ -45,7 +45,7 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 }else{	
 	if ((webrad == "oui") && (moduleradio == "oui")) { 
 		document.write("<tr>");
-		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=http://www.triade-educ.com/webradio/infomusic.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
+		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.com/webradio/infomusic-2.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
 		document.write("</tr>");
 		document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
 	}else{
@@ -54,13 +54,14 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 	}
 } 
 document.write("<tr>");
-document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>"+langmenuadmin07+"</font></b></td>");
+document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>&#128274; "+langmenuadmin07+"</font></b></td>");
 document.write("</tr>");
 document.write(" <tr>");
 document.write("<td colspan='3' height='38' id='coulModule0' >");
 document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./triade-phone.php' id='menumodule0' >Triade-Phone</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','resizable=yes,width=1000,height=700');\" >"+langmenuadmin00+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./flux.php' id='menumodule0' >"+langmenuadmin521+"</a><br>");
@@ -73,7 +74,7 @@ document.write("<tr>");
 document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write("</tr>");
 document.write("<tr>");
-document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>"+langmenuparent1+"</font></b></td>");
+document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>&#9993; "+langmenuparent1+"</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3'  id='coulModule0'>");
@@ -89,7 +90,7 @@ document.write("<tr>");
 document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write(" </tr>");
 document.write(" <tr>");
-document.write(" <td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>"+langmenuparent2+"</font></b></td>");
+document.write(" <td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>&#128218; "+langmenuparent2+"</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3' id='coulModule0'>");
@@ -105,7 +106,7 @@ document.write("<tr>");
 document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write("</tr>");
 document.write(" <tr>");
-document.write(" <td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>"+langmenupersonnel1+"</font></b></td>");
+document.write(" <td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>&#128273; "+langmenupersonnel1+"</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3' id='coulModule0'>");
@@ -134,7 +135,7 @@ document.write("</tr>");
 
 if (modulefinanciervatelpersonnel == "oui") {
 	document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
-	document.write("<tr id='coulTitre0'><td colspan='3' ><b><font id='menumodule1'>"+langmenuadmin9000+"</font></b></td></tr>");
+	document.write("<tr id='coulTitre0'><td colspan='3' ><b><font id='menumodule1'>&#128182; "+langmenuadmin9000+"</font></b></td></tr>");
 	document.write(" <tr>");
 	document.write("<td colspan='3' height='27' id='coulModule0'>");
 	document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'> ");
@@ -148,7 +149,7 @@ if (modulefinanciervatelpersonnel == "oui") {
 }
 if (modulechambrevatelpersonnel == "oui") {
 	document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
-	document.write("<tr id='coulTitre0'><td colspan='3' ><b><font id='menumodule1'>"+langmenuadmin9100+"</font></b></td></tr>");
+	document.write("<tr id='coulTitre0'><td colspan='3' ><b><font id='menumodule1'>&#128719; "+langmenuadmin9100+"</font></b></td></tr>");
 	document.write(" <tr>");
 	document.write("<td colspan='3' height='27' id='coulModule0'>");
 	document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'> ");

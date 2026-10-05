@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: acces.tpl.php,v 1.10 2019-05-27 16:55:44 btafforeau Exp $
+// $Id: acces.tpl.php,v 1.12 2023/09/08 06:45:25 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -34,7 +34,9 @@ $dom_view_form="
 	<h3><span id='pbar_ini_msg' >".htmlentities($msg['dom_ini'],ENT_QUOTES,$charset)."</span><span id='pbar_end_msg' style='display:none;'>".htmlentities($msg['dom_end'],ENT_QUOTES,$charset)."</span></h3>
 	<div class='pbar_frame' >
 		<div class='row' >".htmlentities($msg['pbar_progress'],ENT_QUOTES,$charset)."<span id='pbar_percent'>0%</span></div>
-		<div class='pbar_gauge'><img id='pbar_img' src='".get_url_icon('jauge.png')."' width='0%'/></div>
+		<div class='pbar_gauge'>
+            <progress id='pbar_progress' max='100' value='0' style='width:100%'></progress>
+           </div>
 	</div>
 </div>
 <div class='row'>
@@ -83,15 +85,6 @@ $user_prf_list_form="
 		<!-- calc_list_form -->
 		<!-- unused_list_form -->
 		<div class='row'></div>
-	</div>
-	<div class='row'>
-		<div class='left'>
-			<input type='button' class='bouton' value='".$msg['654']."' onclick=\"document.location='./admin.php?categ=acces&sub=domain&action=view&id=".$id."' \" />
-			<!-- bt_enr -->
-		</div>
-		<div class='right'>
-			<!-- bt_sup -->
-		</div>
 	</div>
 	<div class='row'></div>
 </form>
@@ -172,16 +165,6 @@ $res_prf_list_form="
 		<!-- unused_list_form -->
 		<div class='row'></div>
 	</div>
-	<div class='row'>
-		<div class='left'>
-			<input type='button' class='bouton' value='".$msg['654']."' onclick=\"document.location='./admin.php?categ=acces&sub=domain&action=view&id=".$id."' \" />
-			<!-- bt_enr -->
-		</div>
-		<div class='right'>
-			<!-- bt_sup -->
-		</div>
-	</div>
-	
 	<div class='row'></div>
 </form>
 <br /><br />";

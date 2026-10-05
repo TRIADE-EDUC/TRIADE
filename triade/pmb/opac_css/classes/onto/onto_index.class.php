@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_index.class.php,v 1.2 2017-05-06 07:36:47 dgoron Exp $
+// $Id: onto_index.class.php,v 1.3 2019/09/20 09:42:04 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,10 +11,13 @@ require_once($class_path."/onto/onto_handler.class.php");
 
 /**
  * class onto_indexation
- * Cette classe permet de mettre Ã  plat un index d'un Ã©lÃ©ment d'une ontologie accessible dans notre schÃ©ma relationel
+ * Cette classe permet de mettre à plat un index d'un élément d'une ontologie accessible dans notre schéma relationel
 */
 class onto_index extends indexation {
-	/**
+	
+
+    static protected $instances = array();
+/**
 	 * handler
 	 *
 	 * @var onto_handler
@@ -204,9 +207,9 @@ class onto_index extends indexation {
 			if($this->handler->data_query($query)){
 				if($this->handler->data_num_rows()){
 					$rows = $this->handler->data_result();
-					//on parcours toutes les assertions utilies Ã  l'indexation
+					//on parcours toutes les assertions utilies à l'indexation
 					foreach($rows as $row){
-						//on parcours la propriÃ©tÃ© infos pour retrouver les bons Ã©lÃ©ments
+						//on parcours la propriété infos pour retrouver les bons éléments
 						foreach($this->infos[$type] as $pound => $properties_uris){
 							$prefix = $this->classes[$type]->pmb_name."_";
 							foreach($properties_uris as $property_uri){
@@ -263,7 +266,7 @@ class onto_index extends indexation {
 		$this->get_sparql_result($object_uri);
 		
 		$this->delete_index($object_id,$datatype);
-		//on a un tableau de rÃ©sultat, on peut le travailler...
+		//on a un tableau de résultat, on peut le travailler...
 		foreach($this->tab_code_champ as $field_id => $element) {
 			foreach ($element as $column => $infos){
 				if(isset($this->sparql_result[$column])){
@@ -275,7 +278,7 @@ class onto_index extends indexation {
 								//fields (contenu brut)
 								$tab_fields_insert[] = "('".$object_id."','".$infos['champ']."','".$infos['ss_champ']."','".$field_order."','".addslashes($value)."','".$language."','".$infos['pond']."','".$autority_num."')";
 								
-								//words (contenu Ã©clatÃ©)
+								//words (contenu éclaté)
 								$tab_tmp=explode(' ',strip_empty_words($value));
 								$word_position = 1;
 								foreach($tab_tmp as $word){
@@ -291,7 +294,7 @@ class onto_index extends indexation {
 									//fields (contenu brut)
 									$tab_fields_insert[] = "('".$object_id."','".$infos['champ']."','".$infos['ss_champ']."','".$field_order."','".addslashes($val)."','".$language."','".$infos['pond']."','".$autority_num."')";
 								
-									//words (contenu Ã©clatÃ©)
+									//words (contenu éclaté)
 									$tab_tmp=explode(' ',strip_empty_words($val));
 									$word_position = 1;
 									foreach($tab_tmp as $word){
@@ -313,5 +316,21 @@ class onto_index extends indexation {
 		return true;
 	}
 	
-
+	/**
+	 * Methode qui retourne l'instance de la classe d'indexation correspondant à l'ontologie
+	 * @param string $onto_name
+	 * @return onto_common_index
+	 */
+	public static function get_instance($onto_name = "common"){
+	    $prefix="onto_";
+	    $suffixe = "_index";
+	    $instance_name = $prefix."common".$suffixe;
+	    if($onto_name && class_exists($prefix.$onto_name.$suffixe)){
+	        $instance_name = $prefix.$onto_name.$suffixe;
+	    }
+	    if (!isset(self::$instances[$instance_name])) {
+	        self::$instances[$instance_name] = new $instance_name();
+	    }
+	    return self::$instances[$instance_name];
+	}
 }

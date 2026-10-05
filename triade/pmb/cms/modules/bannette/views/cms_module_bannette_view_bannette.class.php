@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_bannette_view_bannette.class.php,v 1.5 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_bannette_view_bannette.class.php,v 1.6 2021/11/19 10:22:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/bannette.class.php") ;
 
 class cms_module_bannette_view_bannette extends cms_module_common_view_django{
@@ -85,16 +86,6 @@ class cms_module_bannette_view_bannette extends cms_module_common_view_django{
 	}
 		
 	public function render($datas){
-		global $dbh;			
-		global $opac_url_base;
-		global $opac_show_book_pics;
-		global $opac_book_pics_url;
-		global $opac_notice_affichage_class;
-		global $opac_bannette_notices_depliables;
-		global $opac_bannette_notices_format;
-		global $opac_bannette_notices_order;
-		global $liens_opac;
-		
 		if($datas['id']) {
 			$bannette = new bannette($datas['id']);
 			$info_header = $bannette->construit_liens_HTML();

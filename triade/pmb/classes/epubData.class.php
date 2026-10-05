@@ -1,23 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epubData.class.php,v 1.7 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: epubData.class.php,v 1.8.2.1 2024/09/10 09:54:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class epub_Data {
 	
 	public $filename = ''; //Fichier source de l'eBook
-	public $opfFile = ''; //Fichier d'entrÃ©e de l'eBook
-	public $opfDir = ''; //RÃ©pertoire d'entrÃ©e de l'eBook
-	public $metas = array(); //Tableau des mÃ©tadatas de l'eBook
+	public $opfFile = ''; //Fichier d'entrée de l'eBook
+	public $opfDir = ''; //Répertoire d'entrée de l'eBook
+	public $metas = array(); //Tableau des métadatas de l'eBook
 	public $items = array(); //Liste des fichiers composant l'eBook
 	public $spine = array(); //Ordre d'affichage des fichiers
-	public $spineToc = ''; //Fichier table des matiÃ¨res
+	public $spineToc = ''; //Fichier table des matières
 	public $spinePageMap = ''; //Fichier liste des pages
 	public $pages = array(); //Liste des pages
-	public $toc = array(); //Table des matiÃ¨res
+	public $toc = array(); //Table des matières
 	public $charset = ''; //Charset de l'epub
 	public $cover_item;	//path vers l'image de couverture
 	
@@ -35,11 +35,11 @@ class epub_Data {
 				print ("Fichier eBook non valide : ".$this->filename.".\n");
 			}
 		} else {
-			print ("Fichier non trouvÃ© : '".$filename."'.\n");
+			print ("Fichier non trouvé : '".$filename."'.\n");
 		}
 	}
 	
-	//RÃ©cupÃ©ration du contenu texte en vue d'indexation de l'eBook
+	//Récupération du contenu texte en vue d'indexation de l'eBook
 	public function getFullTextContent($otherCharset='utf-8') {
 		$chaineRetour = '';
 		foreach ($this->spine as $spinId) {
@@ -49,12 +49,12 @@ class epub_Data {
 			$chaineRetour .= strip_tags($contents);			
 		}
 		if ($otherCharset != "utf-8") {
-			$chaineRetour = utf8_decode($chaineRetour);
+			$chaineRetour = encoding_normalize::utf8_decode($chaineRetour);
 		}
 		return $chaineRetour;
 	}
 	
-	//RÃ©cupÃ©ration du contenu d'une page
+	//Récupération du contenu d'une page
 	public function getPageContent($page) {
 		$chaineRetour = $this->getContentFile($this->opfDir.$page);
 		if (!preg_match('`meta charset`',$chaineRetour)) {
@@ -65,7 +65,7 @@ class epub_Data {
 	
 	private function isValidEpub() {
 		$isValid = true;
-		//On vÃ©rifie le fichier "mimetype" et son contenu
+		//On vérifie le fichier "mimetype" et son contenu
 		$mime = $this->getContentFile("mimetype");
 		if (!preg_match('(application\/epub\+zip)', $mime)) {
 			$isValid = false;
@@ -73,7 +73,7 @@ class epub_Data {
 		return $isValid;
 	}
 	
-	//RÃ©cupÃ©ration des mÃ©tadatas
+	//Récupération des métadatas
 	private function fetchMetadatas() {
 		//On ouvre le container.xml
 		$contents = $this->getContentFile("META-INF/container.xml");
@@ -91,7 +91,7 @@ class epub_Data {
 			//On cherche le charset
 			$this->charset = strtolower(mb_detect_encoding($contents));
 			$xml = simplexml_load_string($contents);		
-			//on dÃ©clare les namespaces
+			//on déclare les namespaces
 			$namespaces = $xml->getNamespaces(true);
 			foreach ($namespaces as $k=>$v) {
 				if (trim($k)) {
@@ -100,53 +100,56 @@ class epub_Data {
 			}
 			//on va chercher les metas
 			$xmlMeta = $xml->children('OPF', false)->metadata->children('DC', false);
-			foreach ($xmlMeta as $k=>$v) {
-				$key = $this->decodeCharset($k);
-				switch($key){
-					case "creator":
-					case "contributor":
-					case "date" :	
-						$aut = array();
-						foreach($v->attributes('OPF',false) as $k_attr => $v_attr){
-							$aut[strtolower($this->decodeCharset($k_attr))]=$this->decodeCharset($v_attr);
-						}
-						$aut['value'] = $this->decodeCharset($v);
-						$this->metas[$this->decodeCharset($k)][]=$aut;
-						break;
-					case "identifier":
-						$attrs = $v->attributes('OPF',false);
-						foreach($attrs as $k_attr => $v_attr){
-							$this->metas[$this->decodeCharset($k)][strtolower($this->decodeCharset($v_attr))]=$this->decodeCharset($v);
-						}
-						//le cas oÃ¹ la norme est bien loin...
-						if(!$this->metas[$this->decodeCharset($k)]){
-							$this->metas[$this->decodeCharset($k)]['value'] = $this->decodeCharset($v);
-						}
-						break;
-					default :
-						$this->metas[$this->decodeCharset($k)][] = $this->decodeCharset($v);
-						break;
-				}
+			if (!empty($xmlMeta)) {
+    			foreach ($xmlMeta as $k=>$v) {
+    				$key = $this->decodeCharset($k);
+    				switch($key){
+    					case "creator":
+    					case "contributor":
+    					case "date" :	
+    						$aut = array();
+    						foreach($v->attributes('OPF',false) as $k_attr => $v_attr){
+    							$aut[strtolower($this->decodeCharset($k_attr))]=$this->decodeCharset($v_attr);
+    						}
+    						$aut['value'] = $this->decodeCharset($v);
+    						$this->metas[$this->decodeCharset($k)][]=$aut;
+    						break;
+    					case "identifier":
+    						$attrs = $v->attributes('OPF',false);
+    						foreach($attrs as $k_attr => $v_attr){
+    							$this->metas[$this->decodeCharset($k)][strtolower($this->decodeCharset($v_attr))]=$this->decodeCharset($v);
+    						}
+    						//le cas où la norme est bien loin...
+    						if(!$this->metas[$this->decodeCharset($k)]){
+    							$this->metas[$this->decodeCharset($k)]['value'] = $this->decodeCharset($v);
+    						}
+    						break;
+    					default :
+    						$this->metas[$this->decodeCharset($k)][] = $this->decodeCharset($v);
+    						break;
+    				}
+    			}
 			}
 			//on regarde si on a une mage de couverture...
 			$metastag = $xml->children('OPF', false)->metadata->children('OPF',false);
 			$this->cover_item ="";
-			foreach ($metastag as $k=>$v) {
-				$key = $this->decodeCharset($k);
-				if($key != "meta"){
-					continue;
-				}
-				$attrs = $v->attributes();
-				if($attrs->{"name"} == "cover") {
-					$this->cover_item = $this->decodeCharset($attrs->{"content"});
-					break;
-				}
+			if (!empty($metastag)) {
+    			foreach ($metastag as $k=>$v) {
+    				$key = $this->decodeCharset($k);
+    				if($key != "meta"){
+    					continue;
+    				}
+    				$attrs = $v->attributes();
+    				if($attrs->{"name"} == "cover") {
+    					$this->cover_item = $this->decodeCharset($attrs->{"content"});
+    					break;
+    				}
+    			}
 			}
-			
 		}
 	}
 	
-	//RÃ©cupÃ©ration des items de l'eBook
+	//Récupération des items de l'eBook
 	private function fetchItems() {
 		$contents = $this->getContentFile($this->opfDir.$this->opfFile);
 		if (trim($contents)) {
@@ -158,7 +161,7 @@ class epub_Data {
 		}
 	}
 	
-	//RÃ©cupÃ©ration de l'ordre d'affichage des fichiers
+	//Récupération de l'ordre d'affichage des fichiers
 	private function fetchSpine() {
 		$contents = $this->getContentFile($this->opfDir.$this->opfFile);
 		if (trim($contents)) {
@@ -171,7 +174,7 @@ class epub_Data {
 		}
 	}
 	
-	//RÃ©cupÃ©ration des pages de l'eBook
+	//Récupération des pages de l'eBook
 	private function fetchPages() {
 		$contents = $this->getContentFile($this->opfDir.$this->items[$this->spinePageMap]["href"]);
 		if (trim($contents)) {
@@ -195,7 +198,7 @@ class epub_Data {
 		}
 	}
 	
-	//RÃ©cupÃ©ration de la table des matiÃ¨res
+	//Récupération de la table des matières
 	private function fetchToc() {
 		$contents = $this->getContentFile($this->opfDir.$this->items[$this->spineToc]["href"]);
 			if (trim($contents)) {
@@ -206,7 +209,7 @@ class epub_Data {
 		}
 	}
 	
-	//mÃ©thode pour retrouver de faÃ§on rÃ©currente les points de navigation
+	//méthode pour retrouver de façon récurrente les points de navigation
 	private function readNavPoint($simpleXmlObject,$level){
 		$tmpArray = array();
 		$tmpArray['playOrder'] = $this->decodeCharset($simpleXmlObject->attributes()->{'playOrder'});
@@ -238,7 +241,7 @@ class epub_Data {
 		}
 	}
 	
-	//Fonction de dÃ©codage selon l'environnement
+	//Fonction de décodage selon l'environnement
 	private function decodeCharset($string) {		
 		$string = htmlentities($string,ENT_QUOTES,$this->charset);
 		return $string;

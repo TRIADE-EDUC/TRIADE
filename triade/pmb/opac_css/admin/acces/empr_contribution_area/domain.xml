@@ -4,33 +4,56 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
+$Id: domain.xml,v 1.7 2023/11/20 16:56:33 dbellamy Exp $ -->
 
 <domain>
 
 	<!--  empr -->
-	<user lib="msg:379" properties="1,4" >
+	<user lib="msg:379" properties="1,4,5,6,8,9" >
 		<ref type="table" name="empr" key="id_empr" />
+		
+		<!-- champ emprunteur categorie de lecteur -->
 		<property_link with="1" >
-			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+			<r_query type="field" value="empr_categ" />
 		</property_link>
-		<property_link with="4"  >
-			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+		
+		<!-- champ emprunteur localisation -->
+		<property_link with="4" >
+			<r_query type="field" value="empr_location" />
 		</property_link>
-		<property_link with="5" >
-			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		
+		<!-- variable session vue OPAC -->
+		<property_link with="5" enable="check_param|opac,view_activate,1">
+			<r_query type="session" value="opac_view" />
 		</property_link>
+		
+		<!-- champ emprunteur code statistique de lecteur -->
 		<property_link with="6">
-			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+			<r_query type="field" value="empr_codestat" />
+		</property_link>
+		
+		<!-- champ emprunteur sur-localisation défini à partir de la localisation -->
+		<!-- /!\ ne pas utiliser avec la localisation -->
+		<property_link with="8" enable="check_param|opac,sur_location_activate,1">
+			<r_query type="sql" value="select surloc_num from docs_location join empr on empr_location=idlocation and id_empr=!!usr_id!!" />
+		</property_link>
+		
+		<!-- champ emprunteur statut de lecteur -->
+		<property_link with="9">
+			<r_query type="field" value="empr_statut" />				
 		</property_link>
 	</user>
 
 	<!--  contribution -->
-	<resource lib="msg:130" properties="7">
+	<resource lib="msg:130" properties="7,10">
 		<ref type="table" name="contribution_area_areas" key="id_area" />
 		<property_link with="7" >
 			<c_query type="var" value="area_status" />				<!--  variable contribution statut postée lors de la création de la notice -->
-			<i_query type="field" value="area_status" />	<!--  variable contribution statut stockée dans la table notice -->
+			<i_query type="field" value="area_status" />			<!--  variable contribution statut stockée dans la table notice -->
+		</property_link>
+		<property_link with="10" >
+			<c_query type="var" value="editing_entity" />				<!--  variable contribution statut postée lors de la création de la notice -->
+			<i_query type="field" value="area_editing_entity" />			<!--  variable contribution statut stockée dans la table notice -->
 		</property_link>
 	</resource>
 
@@ -50,12 +73,22 @@ $Id: domain.xml,v 1.1 2017-09-04 12:47:43 tsamson Exp $ -->
 		<property id="7" lib="msg:contribution_area_status">
 			<ref type="table" name="contribution_area_status" key="contribution_area_status_id" value="contribution_area_status_gestion_libelle" />
 		</property>
+		<property id="8" lib="msg:admin_acces_empr_surlocations">
+			<ref type="table" name="sur_location" key="surloc_id" value="surloc_libelle" />
+		</property>
+		<property id="9" lib="msg:admin_acces_empr_statuts"> 
+			<ref type="table" name="empr_statut" key="idstatut" value="statut_libelle" />
+		</property>
+		<property id="10" lib="msg:contribution_area_default_area">
+            <ref type="callable" name="area_editing_entity" class="contribution_area" method="get_acces_editing_entity" />
+        </property>
 	</properties>
 
 	<controls>
 		<control id='1' global="yes" lib='msg:dom_mod_rights' />
 		<control id='2' global="yes" lib='dom_mod_pro' />
 		<control id='3' lib='view' />
+		<control id='10' global="yes" lib='dom_override_rights' />
 	</controls>
 
 </domain>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dynamic_search_date_flot.class.php,v 1.4 2019-04-11 06:35:16 ngantier Exp $
+// $Id: dynamic_search_date_flot.class.php,v 1.7 2021/08/17 10:11:27 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,10 +19,14 @@ class dynamic_search_date_flot extends dynamic_search {
         return $this->search->pp[$this->xml_prefix]->get_formatted_output(array(0 => $field_aff), $this->id);
     }
     
-    public function get_query($field = '', $field1 = '') {
+    public function get_query($field = '', $field1 = '', $operator = "") {
         // Recuperation de l'operateur
         $op = "op_" . $this->n_ligne . "_" . $this->xml_prefix . "_" . $this->id;
         global ${$op};
+        
+        if ($operator) {
+            ${$op} = $operator;
+        }
         
         switch ($this->prefix) {
             case 'authors' :
@@ -77,7 +81,7 @@ class dynamic_search_date_flot extends dynamic_search {
             $date_end_signe = -1;
             $field1 = substr($field1, 0, 1);
         }
-        // annÃ©es saisie infÃ©rieures Ã  4 digit
+        // années saisie inférieures à 4 digit
         if(strlen($field) < 4)	$field = str_pad($field, 4, '0', STR_PAD_LEFT);
         if($field1 && strlen($field1) < 4)	$field1 = str_pad($field1, 4, '0', STR_PAD_LEFT);
         $restricts = array();
@@ -88,8 +92,8 @@ class dynamic_search_date_flot extends dynamic_search {
                 $date_start = pmb_sql_value("select DATE_ADD('" . $date_start . "', INTERVAL - " . $interval.")");
                 $date_end = pmb_sql_value("select DATE_ADD('" . $date_end . "', INTERVAL + " . $interval.")");
                 // format en integer
-                $date_start = str_replace('-', '', $date_start) * $date_start_signe;
-                $date_end = str_replace('-', '', $date_end) * $date_start_signe;
+				$date_start = intval(str_replace('-', '', $date_start)) * $date_start_signe;
+				$date_end = intval(str_replace('-', '', $date_end)) * $date_start_signe;
                 if($date_end < $date_start) {
                     $date = $date_start;
                     $date_start = $date_end;
@@ -124,6 +128,9 @@ class dynamic_search_date_flot extends dynamic_search {
 						or
 						(" . $this->prefix . "_custom_date_end  >=  " . ($date_start) . "
 							and " . $this->prefix . "_custom_date_end <= " . ($date_end) . " )
+						or
+						(" . $this->prefix . "_custom_date_end  >=  " . ($date_end) . "
+							and " . $this->prefix . "_custom_date_start <= " . ($date_start) . " )
 					)";
                  break;
             case 'BETWEEN':
@@ -149,6 +156,8 @@ class dynamic_search_date_flot extends dynamic_search {
 						(" . $this->prefix . "_custom_date_start >= '" . ($date_start) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_end) . "')
 						or
 						(" . $this->prefix . "_custom_date_end  >=  '" . ($date_start) . "' and " . $this->prefix . "_custom_date_end <= '" . ($date_end) . "')
+						or
+						(" . $this->prefix . "_custom_date_end  >=  '" . ($date_end) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_start) . "' )
 					)";
                 break;
             case 'LTEQ': // <=
@@ -158,6 +167,8 @@ class dynamic_search_date_flot extends dynamic_search {
                 
                 $restricts[] = "(
 						". $this->prefix . "_custom_date_end <= '" . ($date_start) . "'
+						or
+						(" . $this->prefix . "_custom_date_end  >=  '" . ($date_start) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_start) . "' )
 					)";
                 break;
             case 'GTEQ': // >=
@@ -167,6 +178,8 @@ class dynamic_search_date_flot extends dynamic_search {
                 
                 $restricts[] = "(
 						" . $this->prefix . "_custom_date_start >= '" . ($date_start) . "'
+						or
+						(" . $this->prefix . "_custom_date_end  >=  '" . ($date_start) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_start) . "' )
 					)";
                 break;
             case 'EQ':
@@ -185,6 +198,8 @@ class dynamic_search_date_flot extends dynamic_search {
 						(" . $this->prefix . "_custom_date_start >= '" . ($date_start) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_end) . "')
 						or
 						(" . $this->prefix . "_custom_date_end  >= '" . ($date_start) . "' and " . $this->prefix . "_custom_date_end <= '" . ($date_end) . "')
+						or
+						(" . $this->prefix . "_custom_date_end  >=  '" . ($date_end) . "' and " . $this->prefix . "_custom_date_start <= '" . ($date_start) . "' )
 					)";
                 break;
             case 'ISEMPTY':
@@ -201,6 +216,23 @@ class dynamic_search_date_flot extends dynamic_search {
             }
             $main = "SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id FROM ((((exemplaires JOIN expl_custom_dates ON expl_custom_champ=" . $this->id . "
 					 AND (" . implode(') and (', $restricts).") AND expl_custom_origine=expl_id) LEFT JOIN notices AS notices_m ON expl_notice = notices_m.notice_id ) LEFT JOIN bulletins ON expl_bulletin = bulletins.bulletin_id) LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id) GROUP BY notice_id order by expl_cb, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew";
+            if (${$op} == 'ISEMPTY') {
+                $main = "SELECT notice_id FROM notices WHERE notice_id NOT IN (".$main.")";
+            }
+            return $main;
+        } elseif ($this->search->fichier_xml == 'search_fields' &&  $this->prefix == 'explnum') {
+            if (${$op} == 'ISNOTEMPTY') {
+                $restricts[] = '1';
+            }
+            $main = "
+            SELECT ifnull(notices_m.notice_id,notices_s.notice_id) as notice_id
+            FROM explnum
+            JOIN explnum_custom_dates ON explnum_custom_champ=" . $this->id . " AND (" . implode(') and (', $restricts)." AND explnum_custom_origine=explnum_id)
+            LEFT JOIN notices AS notices_m ON explnum_notice = notices_m.notice_id
+            LEFT JOIN bulletins ON explnum_bulletin = bulletins.bulletin_id
+            LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id
+            GROUP BY notice_id
+            ORDER BY explnum_id, notices_m.index_serie, notices_m.tnvol, notices_m.index_sew, notices_s.index_serie, notices_s.tnvol, notices_s.index_sew";
             if (${$op} == 'ISEMPTY') {
                 $main = "SELECT notice_id FROM notices WHERE notice_id NOT IN (".$main.")";
             }

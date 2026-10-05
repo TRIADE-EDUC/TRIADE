@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: devis.tpl.php,v 1.46 2019-05-27 08:56:13 tsamson Exp $
+// $Id: devis.tpl.php,v 1.50 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -45,7 +45,7 @@ $devlist_form = "
 ";
 
 //	------------------------------------------------------------------------------
-//	$modif_dev_form : template de crÃ©ation/modification pour les devis
+//	$modif_dev_form : template de création/modification pour les devis
 //	------------------------------------------------------------------------------
 $modif_dev_form = "
 <form class='form-".$current_module."' id='act_modif' name='act_modif' method='post' action=\"\">
@@ -81,7 +81,7 @@ $modif_dev_form = "
 		    		<label class='etiquette'>".htmlentities($msg['acquisition_ach_fou2'], ENT_QUOTES, $charset)."</label>&nbsp;
 				</div>
 				<div class='colonne_suite'>
-					<input type='text' id='lib_fou' name='lib_fou' tabindex='1' value='!!lib_fou!!' class='saisie-30emr' onchange=\"openPopUp('./select.php?what=fournisseur&caller=act_modif&param1=id_fou&param2=lib_fou&param3=adr_fou&id_bibli=!!id_bibli!!&deb_rech='+".pmb_escape()."(this.form.lib_fou.value), 'selector'); \" />
+					<input type='text' id='lib_fou' name='lib_fou' tabindex='1' value='!!lib_fou!!' completion='fournisseurs' param1='!!id_bibli!!' autfield='id_fou' autocomplete='off' callback='callBackAdresseFournisseur' class='saisie-30emr' />
 					<input type='button' class='bouton_small' style='width:20px;' tabindex='1' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=fournisseur&caller=act_modif&param1=id_fou&param2=lib_fou&param3=adr_fou&id_bibli=!!id_bibli!!&deb_rech='+".pmb_escape()."(this.form.lib_fou.value), 'selector'); \" />
 				</div>
 			</div>
@@ -98,7 +98,7 @@ $modif_dev_form = "
 				</div>
 			</div>
 			<div class='colonne2'>
-				<img id='adr_fou_Img' name='adr_fou_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('adr_fou_', true);\"/>
+                ".get_expandBase_button('adr_fou_')."
 		    	<label class='etiquette'>".htmlentities($msg['acquisition_adr_fou'], ENT_QUOTES, $charset)."</label>
 			</div>
 		</div>
@@ -117,7 +117,7 @@ $modif_dev_form = "
 			
 		<div class='row'>
 			<div class='colonne2'>
-				<img id='adr_bib_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('adr_bib_', true);\" />
+                ".get_expandBase_button('adr_bib_')."
 	    		<label class='etiquette'>".htmlentities($msg['acquisition_adr_liv'], ENT_QUOTES, $charset)."</label>
 			</div>
 			<div class='colonne2'>
@@ -147,7 +147,7 @@ $modif_dev_form = "
 		</div>
 
 		<div class='row'>
-			<img id='comment_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('comment_', true);\"/>
+            ".get_expandBase_button('comment_')."
     		<label class='etiquette'>".htmlentities($msg['acquisition_commentaires'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row' style='margin-left:30px'>
@@ -155,7 +155,7 @@ $modif_dev_form = "
 		</div>
 		
 		<div class='row'>
-			<img id='comment_i_Img' src='".get_url_icon('plus.gif')."' class='img_plus' onclick=\"javascript:expandBase('comment_i_', true);\"/>
+            ".get_expandBase_button('comment_i_')."
     		<label class='etiquette'>".htmlentities($msg['acquisition_commentaires_i'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row' style='margin-left:30px'>
@@ -288,6 +288,7 @@ $modif_dev_form.= "
 </form>
 <br /><br />
 <script type='text/javascript' src='./javascript/tablist.js'></script>
+<script type='text/javascript' src='./javascript/ajax.js'></script>
 <script type='text/javascript' src='./javascript/actes.js'></script>
 <script type='text/javascript'>	
 	
@@ -306,17 +307,18 @@ $modif_dev_form.= "
 	} else {
 		act_addLine();
 	}
-	
+	ajax_parse_dom();
+
 </script>
 <!-- jscript -->";
 
 
 
 //	------------------------------------------------------------------------------
-//	template de crÃ©ation/modification pour les lignes de devis
+//	template de création/modification pour les lignes de devis
 //	------------------------------------------------------------------------------
 $modif_dev_row_form = "
-<tr id='R_!!no!!'>
+<tr id='R_!!no!!' class='act_lig_dev_!!typ_lig!!'>
 	<td>
 		<input type='text' id='code[!!no!!]' name='code[!!no!!]' tabindex='1' class='in_cell' value='!!code!!' /><input type='button' tabindex='1' class='bouton_small' style='width:20px;' value='".$msg['parcourir']."' onclick=\"act_getCode(this);\" /><input type='button' tabindex='1' class='bouton_small' style='width:20px;' value='".$msg['raz']."' onclick=\"act_delCode(this);\" />
 	</td>	
@@ -376,4 +378,3 @@ $bt_cde = "<input type='button' class='bouton' value='".$msg['acquisition_dev_bt
 $bt_audit = "<input type='button' class='bouton' value='".$msg['audit_button']."' title='".$msg['audit_button']."' onclick=\"openPopUp('./audit.php?type_obj=4&object_id=".$id_dev."', 'audit_popup')\" />";
 
 $bt_imp = "<input type='button' class='bouton' value='".$msg['imprimer']."' title='".$msg['imprimer']."' onclick=\"openPopUp('./pdf.php?pdfdoc=devi&id_dev=".$id_dev."&id_bibli=".$id_bibli."' ,'print_PDF')\" />"; 
-?>

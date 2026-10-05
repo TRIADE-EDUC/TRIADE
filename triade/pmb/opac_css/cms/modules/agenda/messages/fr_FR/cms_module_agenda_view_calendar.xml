@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_agenda_view_calendar.xml,v 1.1 2012-06-01 13:28:09 arenou Exp $ -->
+$Id: cms_module_agenda_view_calendar.xml,v 1.1 2012/06/01 13:28:09 arenou Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_agenda_view_calendar_nb_displayed_events_under'>Nombre d'évènements à afficher sous le calendrier</entry>

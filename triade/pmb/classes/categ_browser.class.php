@@ -1,15 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: categ_browser.class.php,v 1.28 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: categ_browser.class.php,v 1.31 2023/07/26 15:07:57 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion le l'explorateur de catÃ©gories
+// définition de la classe de gestion le l'explorateur de catégories
 if ( ! defined( 'CATEG_BROWSER_CLASS' ) ) {
   define( 'CATEG_BROWSER_CLASS', 1 );
 
+global $class_path;
 require_once($class_path."/thesaurus.class.php");
 
 class categ_browser {
@@ -86,15 +87,13 @@ class categ_browser {
 
 	// do_browser() : drawing final browser
 	public function do_browser() {
-		global $msg;
-
 		// display up link if applying
 		$up_link = str_replace('!!id!!', '0', $this->folder_link);
 		if($this->parent != $this->thes->num_noeud_racine)
 			$this->display = "<div style='margin:$this->current_margin'>".$up_link.$this->up_folder."<...</a></div>\n";
 		
 		// adding path
-		foreach ($this->parents_tab as $cle => $valeur) {
+		foreach ($this->parents_tab as $valeur) {
 			$link = str_replace('!!id!!', $valeur['id'], $this->folder_link);
 			$doc_l = str_replace('!!id!!', $valeur['id'], $this->document_link);
 
@@ -109,7 +108,7 @@ class categ_browser {
 		}
 
 		// adding children
-		foreach ($this->children_tab as $cle => $valeur) {
+		foreach ($this->children_tab as $valeur) {
 			if($valeur['has_children']) {
 				$link = str_replace('!!id!!', $valeur['id'], $this->folder_link);
 				$doc_l = str_replace('!!id!!', $valeur['id'], $this->document_link);
@@ -129,20 +128,20 @@ class categ_browser {
 			else {
 				$icon = $this->document;
 				if($valeur['see']) {
-					// il y a renvoi vers une autre catÃ©gorie
+					// il y a renvoi vers une autre catégorie
 					$icon = $this->see_img;
 					$valeur['id'] = $valeur['see'];
 					$valeur['name'] = '<i>'.$valeur['name'].'@</i>';
-					// on regarde si la catÃ©gorie cible a des enfants
-					$see_requete = "SELECT count(1) FROM noeuds WHERE num_parent=${valeur['id']} LIMIT 1";
+					// on regarde si la catégorie cible a des enfants
+					$see_requete = "SELECT count(1) FROM noeuds WHERE num_parent={$valeur['id']} LIMIT 1";
 
 					$count_result = pmb_mysql_query($see_requete);
 					if(@pmb_mysql_result($count_result, 0, 0)) {
-						// la catÃ©gorie cible Ã  des enfants -> tous les liens pointent vers l'affichage catÃ©gorie
+						// la catégorie cible à des enfants -> tous les liens pointent vers l'affichage catégorie
 						$link = str_replace('!!id!!', $valeur['id'], $this->folder_link);
 						$doc_l = $link;
 					} else {
-						// la catÃ©gorie cible n'a pas d'enfants -> tous les liens pointent vers la recherche notice
+						// la catégorie cible n'a pas d'enfants -> tous les liens pointent vers la recherche notice
 						$link = str_replace('!!id!!', $valeur['id'], $this->document_link);
 						$doc_l = $link;
 					}
@@ -189,7 +188,10 @@ class categ_browser {
 			$requete.= "if (catlg.num_noeud is null, catdef.index_categorie, catlg.index_categorie) as index_categorie "; 
 			$requete.= "from noeuds left join categories as catdef on noeuds.id_noeud = catdef.num_noeud and catdef.langue = '".$this->thes->langue_defaut."' ";
 			$requete.= "left join categories as catlg on catdef.num_noeud = catlg.num_noeud and catlg.langue = '".$lang."' ";
-			$requete.= "where catdef.num_noeud = '".$temp."' ";	
+			$requete.= "where catdef.num_noeud = '".$temp."' ";
+			if($this->id_thes) {
+				$requete.= "and noeuds.num_thesaurus = '".$this->id_thes."' ";
+			}
 			$requete.= "limit 1 ";
 
 			$result = pmb_mysql_query($requete);
@@ -208,7 +210,9 @@ class categ_browser {
 							'has_records' => $has_records);
 			$temp = $upper->categ_parent;
 		}
-		if(sizeof($this->parents_tab)) $this->parents_tab = array_reverse($this->parents_tab);
+		if (!empty($this->parents_tab)) {
+		    $this->parents_tab = array_reverse($this->parents_tab);
+		}
 	}
 
 	public function get_children() {
@@ -224,11 +228,12 @@ class categ_browser {
 		$requete.= "if (catlg.num_noeud is null, catdef.index_categorie, catlg.index_categorie) as index_categorie "; 
 		$requete.= "from noeuds left join categories as catdef on noeuds.id_noeud = catdef.num_noeud and catdef.langue = '".$this->thes->langue_defaut."' ";
 		$requete.= "left join categories as catlg on catdef.num_noeud = catlg.num_noeud and catlg.langue = '".$lang."' ";
-		$requete.= "where noeuds.num_parent = '".$this->parent."' ";	
+		$requete.= "where noeuds.num_parent = '".$this->parent."' ";
+		if($this->id_thes) {
+			$requete.= "and noeuds.num_thesaurus = '".$this->id_thes."' ";
+		}
 		$requete.= "order by categ_libelle limit 200 ";
 		$result = pmb_mysql_query($requete);
-
-
 		while($current=pmb_mysql_fetch_object($result)) {
 			$count_child = "select count(1) from noeuds where num_parent = '".$current->categ_id."' limit 1";
 			$count_result = pmb_mysql_query($count_child);
@@ -271,7 +276,7 @@ class categ_browser {
 		print pmb_bidi($user_query) ;
 	}
 
-} # fin de dÃ©finition de la classe 'categ_browser'
+} # fin de définition de la classe 'categ_browser'
 
-} # fin de dÃ©laration
+} # fin de délaration
 

@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.7 2019-05-11 10:14:45 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.10 2021/09/29 09:07:38 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -19,6 +19,7 @@ $Id: fr_FR.xml,v 1.7 2019-05-11 10:14:45 dgoron Exp $ -->
   <entry code="classurlexternes">Fonctions sur les urls externes</entry>
   <entry code="classnoticesbulletins">Fonctions sur les notices et les bulletins</entry>
   <entry code="classbannettes">Fonctions sur les bannettes</entry>
+  <entry code="classanimations">Fonctions sur les animations</entry>
    
   
   <!-- #mots_saisis($param,$parser); -->
@@ -181,6 +182,15 @@ $Id: fr_FR.xml,v 1.7 2019-05-11 10:14:45 dgoron Exp $ -->
   <entry code="empr_ville_input_description"></entry>
   <entry code="empr_ville_output_description"></entry>
   
+  <!-- #empr_sexe($param, $parser); -->
+  <entry code="empr_sexe_description">Retourne le genre (0 = Non défini, 1 = Masculin, 2 = Féminin) de l'utilisateur</entry>
+  <entry code="empr_sexe_input_description"></entry>
+  <entry code="empr_sexe_output_description"></entry>
+  
+  <!-- #empr_pays($param, $parser); -->
+  <entry code="empr_pays_description">Retourne le pays de l'utilisateur</entry>
+  <entry code="empr_pays_input_description"></entry>
+  <entry code="empr_pays_output_description"></entry>
   
   <!-- ****************                Fonctions date/heure                  ****************** -->
   
@@ -433,5 +443,17 @@ $Id: fr_FR.xml,v 1.7 2019-05-11 10:14:45 dgoron Exp $ -->
   <entry code="desabo_bannette_description">Retourne le nombre de désabonnements aux bannettes</entry>
   <entry code="desabo_bannette_input_description"></entry>
   <entry code="desabo_bannette_output_description"></entry>
-    
+     
+  
+  
+  
+  <!-- ****************                Fonctions sur les animations                  ****************** -->
+  
+  
+  
+  <!-- #animation_id($param, $parser); -->
+  <entry code="animation_id_description">Retourne l'identifiant de l'animation cliquée</entry>
+  <entry code="animation_id_input_description"></entry>
+  <entry code="animation_id_output_description"></entry>
+  
 </XMLlist>

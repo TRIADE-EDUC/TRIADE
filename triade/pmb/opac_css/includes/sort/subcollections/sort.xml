@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.7 2021/02/01 14:17:56 qvarin Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="subcollection" typeobject="5">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="103" type="text" typefield="select" id="2">
+		<table name="sub_collections">
+			<tablefield>index_sub_coll</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+			<link type="n1">
+				<table>collections</table>
+				<tablekey>collection_id</tablekey>
+				<externalfield>sub_coll_parent</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="sub_collections">
+			<tablefield>sub_coll_id</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Issn-->
+	<field name="165" type="text" typefield="select" id="4">
+		<table name="sub_collections">
+			<tablefield>sub_coll_issn</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Name Collections & sub_collections-->
+	<field name="name_collec_sub_collec" type="text" typefield="select" id="5">
+		<table name="sub_collections">
+			<tablefield>concat(index_coll,' ',index_sub_coll)</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+			<link type="n1">
+				<table>collections</table>
+				<tablekey>collection_id</tablekey>
+				<externalfield>sub_coll_parent</externalfield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Name Collections-->
+	<field name="onto_common_collection" type="text" typefield="select" id="6">
+		<table name="sub_collections">
+			<tablefield>index_coll</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+			<link type="n1">
+				<table>collections</table>
+				<tablekey>collection_id</tablekey>
+				<externalfield>sub_coll_parent</externalfield>
+			</link>
+		</table>
+	</field>
+				
+	<!--Editeurs-->
+	<field name="vedette_publishers" type="text" typefield="select" id="7">
+		<table name="sub_collections">
+			<tablefield>index_publisher</tablefield>
+			<tablekey>sub_coll_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=5</referencefield>
+			</link>
+			<link type="n1">
+				<table>collections</table>
+				<tablekey>collection_id</tablekey>
+				<externalfield>sub_coll_parent</externalfield>
+			</link>
+			<link type="n1">
+				<externaltable>collections</externaltable>
+				<table>publishers</table>
+				<tablekey>ed_id</tablekey>
+				<externalfield>collection_parent</externalfield>
+			</link>
+		</table>
+	</field>
+</sort>

@@ -4,12 +4,14 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2008-08-28 09:05:42 erwanmartin Exp $ -->
+$Id: manifest.xml,v 1.2 2023/12/12 15:58:42 dbellamy Exp $ -->
 
 <manifest>
 	<name>aligastore</name>
-	<repository>no</repository>
 	<comment>Connexion à un serveur Aligastore ©</comment>
+	<search>yes</search>
+	<repository>no</repository>
+	<enrichment>yes</enrichment>
 	<author>Erwan MARTIN</author>
 	<org>PMB Services</org>
 	<date>2008-08-21</date>

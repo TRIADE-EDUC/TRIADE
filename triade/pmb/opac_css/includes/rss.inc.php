@@ -1,10 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rss.inc.php,v 1.9 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: rss.inc.php,v 1.10 2023/12/08 08:52:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $include_path, $msg, $charset;
 
 require_once ($include_path."/rss_func.inc.php") ;
 
@@ -20,7 +22,6 @@ while ($rss = pmb_mysql_fetch_object($res_rss)) {
 
 if (count($sites)>0) {
 	print pmb_bidi("<div id='rss'><h3><span id='titre_rss'>".htmlentities($msg['rss_titre'],ENT_QUOTES, $charset)."</span></h3><span>");
-	$red=false;
 	$articles="";
 	for ($i=0; $i<count($sites); $i++) {
 		$articles .= affiche_rss($sites[$i]) ;

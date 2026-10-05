@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ContextMenu.js,v 1.6 2016-04-14 14:50:32 vtouchard Exp $
+// $Id: ContextMenu.js,v 1.7 2021/06/02 07:44:47 dgoron Exp $
 
 
 define(['dojo/_base/declare', 
@@ -322,12 +322,12 @@ define(['dojo/_base/declare',
 	  				}
 	  				/**
 	  				 * TODO: 
-	  				 * Tester la length du tableau des éléments actifs
-	  				 * Si > 0  --> Séparateur "Actif"
-	  				 * Puis for sur les elts pour les ajouter avec le truc "désactiver" en sous menu
+	  				 * Tester la length du tableau des �l�ments actifs
+	  				 * Si > 0  --> S�parateur "Actif"
+	  				 * Puis for sur les elts pour les ajouter avec le truc "d�sactiver" en sous menu
 	  				 * 
-	  				 * Tester la length du tableau des éléments inactifs
-	  				 * Si > 0 --> Séparateur "Inactif"
+	  				 * Tester la length du tableau des �l�ments inactifs
+	  				 * Si > 0 --> S�parateur "Inactif"
 	  				 * Puis for sur les elts pour les ajouter avec le truc "activer" en sous menu
 	  				 */
 	  				if(arrayEnabled.length){
@@ -427,9 +427,14 @@ define(['dojo/_base/declare',
 				}));
 				
 				var tabSubMenu = new menu();
-				  
+
 				var zones = query('div[etirable="yes"]');
 				for(var i=0; i < zones.length; i++) {
+					if(zones[i].getAttribute('label') == null) {
+						if(zones[i].getAttribute('title') != null) {
+							zones[i].setAttribute('label', zones[i].getAttribute('title'));
+						}
+					}
 					if(this.zone.label != zones[i].getAttribute('label')){
 						tabSubMenu.addChild(new menuItem({
 							label: zones[i].getAttribute('label'),
@@ -487,7 +492,7 @@ define(['dojo/_base/declare',
 			},
 			/**
 			 * TODO *****************
-			 * Rappeler le ondrop d'un elt généré à  la volée
+			 * Rappeler le ondrop d'un elt g�n�r� � la vol�e
 			 */
 			goFirstElement: function(){
 				topic.publish('ContextMenu', 'goFirstElement', {

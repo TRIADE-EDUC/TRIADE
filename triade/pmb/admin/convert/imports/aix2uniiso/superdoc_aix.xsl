@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: superdoc_aix.xsl,v 1.7.22.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:inm="http://www.inmagic.com/webpublisher/query">
 
 <xsl:output method="xml" version="1.0" encoding="iso-8859-1" indent="yes"/>
@@ -54,14 +60,14 @@
 				<xsl:otherwise>a</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
-		
+
 		<xsl:element name="bl">
 			<xsl:choose>
 				<xsl:when test="$nottype='article'">a</xsl:when>
 				<xsl:otherwise>m</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
-		
+
 		<xsl:element name="hl">
 			<xsl:choose>
 				<xsl:when test="$nottype='article'">2</xsl:when>
@@ -69,8 +75,8 @@
 			</xsl:choose>
 		</xsl:element>
 
-		<xsl:choose>	
-			<xsl:when test="$nottype='article'">	
+		<xsl:choose>
+			<xsl:when test="$nottype='article'">
 				<xsl:call-template name="article"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -97,7 +103,7 @@
 	<xsl:call-template name="url"/>
 	<xsl:call-template name="persos"/>
 	<xsl:call-template name="exemplaires">
-		<xsl:with-param name="n_ex" select="1"/>	
+		<xsl:with-param name="n_ex" select="1"/>
 	</xsl:call-template>
 </xsl:template>
 
@@ -108,11 +114,11 @@
 	<xsl:call-template name="isbn"/>
 	<xsl:call-template name="langues"/>
 	<xsl:call-template name="titres"/>
-	
+
 	<xsl:if test="./inm:Titre='' and ./inm:Sous-titre='' and ./inm:Titre-generique=''">
 		<f c='200'><s c='a'>_OBJECT_BULLETIN_</s></f>
 	</xsl:if>
-	
+
 	<!-- lien perio -->
 	<f c='461'>
 		<s c='t'>
@@ -124,8 +130,8 @@
 			</xsl:choose>
 		</s>
 		<s c="9">lnk:perio</s>
-	</f>		
-	<!-- lien bulletin -->					
+	</f>
+	<!-- lien bulletin -->
 	<f c='463'>
 		<s c='v'>
 			<xsl:choose> <!-- numero -->
@@ -136,7 +142,7 @@
 								<xsl:value-of select="concat('VOL. ',./inm:Volume)"/>
 							</xsl:if>
 							<xsl:if test="./inm:Volume!='' and ./inm:Numero-Revue!=''">
-								<xsl:text> </xsl:text>	
+								<xsl:text> </xsl:text>
 							</xsl:if>
 							<xsl:if test="./inm:Numero-Revue!=''">
 								<xsl:value-of select="concat('N° ',./inm:Numero-Revue)"/>
@@ -146,7 +152,7 @@
 							<xsl:text>INDETERMINE</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:when> 
+				</xsl:when>
 				<xsl:when test="normalize-space(substring-before(./inm:No-collection,','))!=''" >
 					<xsl:value-of select="concat('N° ', normalize-space(substring-before(./inm:No-collection,',')))"/>
 				</xsl:when>
@@ -179,7 +185,7 @@
 				<xsl:when test="normalize-space(substring-after(./inm:No-collection,','))='' and normalize-space(./inm:Date-Edition)!=''">
 					<xsl:value-of select="normalize-space(./inm:Date-Edition)"/>
 				</xsl:when>
-			</xsl:choose>						
+			</xsl:choose>
 		</s>
 		<s c="9">lnk:bull</s>
 	</f>
@@ -192,8 +198,8 @@
 	<xsl:call-template name="url"/>
 	<xsl:call-template name="persos"/>
 	<xsl:call-template name="exemplaires">
-		<xsl:with-param name="n_ex" select="1"/>	
-	</xsl:call-template>			
+		<xsl:with-param name="n_ex" select="1"/>
+	</xsl:call-template>
 </xsl:template>
 
 <!-- Id -->
@@ -201,10 +207,10 @@
 	<xsl:if test="./inm:ID!=''" >
 		<f c='001'>
 			<xsl:value-of select="./inm:ID"/>
-		</f>		
+		</f>
 	</xsl:if>
 </xsl:template>
-	
+
 <!-- ISBN/ISSN/prix -->
 <xsl:template name="isbn">
 	<xsl:if test="./inm:ISBN!='' or ./inm:Prix-de-vente!=''" >
@@ -214,13 +220,13 @@
 			</xsl:if>
 			<xsl:if test="./inm:Prix-de-vente!=''">
 				<s c='d'><xsl:value-of select="./inm:Prix-de-vente"/></s>
-			</xsl:if>				
+			</xsl:if>
 		</f>
 	</xsl:if>
 	<xsl:if test="./inm:ISSN!=''">
 		<f c='011'>
 			<s c='a'><xsl:value-of select="./inm:ISSN"/></s>
-		</f>		
+		</f>
 	</xsl:if>
 </xsl:template>
 
@@ -232,101 +238,101 @@
 			<xsl:for-each select="./inm:Langue">
 				<xsl:choose>
 					<xsl:when test=".='Français'">
-						<s c='a'>fre</s>				
+						<s c='a'>fre</s>
 					</xsl:when>
 					<xsl:when test=".='Anglais'">
-						<s c='a'>eng</s>				
+						<s c='a'>eng</s>
 					</xsl:when>
 					<xsl:when test=".='Allemand'">
-						<s c='a'>ger</s>				
+						<s c='a'>ger</s>
 					</xsl:when>
 					<xsl:when test=".='Espagnol'">
-						<s c='a'>spa</s>				
+						<s c='a'>spa</s>
 					</xsl:when>
 					<xsl:when test=".='Italien'">
-						<s c='a'>ita</s>				
+						<s c='a'>ita</s>
 					</xsl:when>
 					<xsl:when test=".='Japonais'">
-						<s c='a'>jpn</s>				
-					</xsl:when>					
+						<s c='a'>jpn</s>
+					</xsl:when>
 					<xsl:when test=".='Chinois'">
-						<s c='a'>chi</s>				
-					</xsl:when>					
+						<s c='a'>chi</s>
+					</xsl:when>
 					<xsl:when test=".='Arabe'">
-						<s c='a'>ara</s>				
-					</xsl:when>					
+						<s c='a'>ara</s>
+					</xsl:when>
 					<xsl:when test=".='Basque'">
-						<s c='a'>baq</s>				
-					</xsl:when>					
+						<s c='a'>baq</s>
+					</xsl:when>
 					<xsl:when test=".='Danois'">
-						<s c='a'>dan</s>				
-					</xsl:when>					
+						<s c='a'>dan</s>
+					</xsl:when>
 					<xsl:when test=".='Esperanto'">
-						<s c='a'>esp</s>				
-					</xsl:when>					
+						<s c='a'>esp</s>
+					</xsl:when>
 					<xsl:when test=".='Français ancien'">
-						<s c='a'>fro</s>				
-					</xsl:when>					
+						<s c='a'>fro</s>
+					</xsl:when>
 					<xsl:when test=".='Grec classique'">
-						<s c='a'>grc</s>				
-					</xsl:when>					
+						<s c='a'>grc</s>
+					</xsl:when>
 					<xsl:when test=".='Grec moderne'">
-						<s c='a'>gre</s>				
-					</xsl:when>					
+						<s c='a'>gre</s>
+					</xsl:when>
 					<xsl:when test=".='Hébreu'">
-						<s c='a'>heb</s>				
-					</xsl:when>					
+						<s c='a'>heb</s>
+					</xsl:when>
 					<xsl:when test=".='Hongrois'">
-						<s c='a'>hun</s>				
-					</xsl:when>					
+						<s c='a'>hun</s>
+					</xsl:when>
 					<xsl:when test=".='Irlandais'">
-						<s c='a'>iri</s>				
-					</xsl:when>					
+						<s c='a'>iri</s>
+					</xsl:when>
 					<xsl:when test=".='Latin'">
-						<s c='a'>lat</s>				
-					</xsl:when>					
+						<s c='a'>lat</s>
+					</xsl:when>
 					<xsl:when test=".='Multilingue'">
-						<s c='a'>mul</s>				
-					</xsl:when>					
+						<s c='a'>mul</s>
+					</xsl:when>
 					<xsl:when test=".='Néerlandais'">
-						<s c='a'>dut</s>				
-					</xsl:when>					
+						<s c='a'>dut</s>
+					</xsl:when>
 					<xsl:when test=".='Occitan'">
-						<s c='a'>oci</s>				
-					</xsl:when>					
+						<s c='a'>oci</s>
+					</xsl:when>
 					<xsl:when test=".='Polonais'">
-						<s c='a'>pol</s>				
-					</xsl:when>					
+						<s c='a'>pol</s>
+					</xsl:when>
 					<xsl:when test=".='Portugais'">
-						<s c='a'>por</s>				
-					</xsl:when>					
+						<s c='a'>por</s>
+					</xsl:when>
 					<xsl:when test=".='Provençal'">
-						<s c='a'>pro</s>				
-					</xsl:when>					
+						<s c='a'>pro</s>
+					</xsl:when>
 					<xsl:when test=".='Roumain'">
-						<s c='a'>rum</s>				
-					</xsl:when>					
+						<s c='a'>rum</s>
+					</xsl:when>
 					<xsl:when test=".='Russe'">
-						<s c='a'>rus</s>				
-					</xsl:when>					
+						<s c='a'>rus</s>
+					</xsl:when>
 					<xsl:when test=".='Tchèque'">
-						<s c='a'>cze</s>				
-					</xsl:when>					
+						<s c='a'>cze</s>
+					</xsl:when>
 					<xsl:when test=".='Turc'">
-						<s c='a'>tur</s>				
-					</xsl:when>					
+						<s c='a'>tur</s>
+					</xsl:when>
 					<xsl:when test=".='Yiddish'">
-						<s c='a'>yid</s>				
-					</xsl:when>					
+						<s c='a'>yid</s>
+					</xsl:when>
 					<xsl:when test=".='Coréen'">
-						<s c='a'>kor</s>				
-					</xsl:when>					
+						<s c='a'>kor</s>
+					</xsl:when>
 					<xsl:when test=".='Libanais'">
-						<s c='a'>ara</s>				
-					</xsl:when>					
+						<s c='a'>ara</s>
+					</xsl:when>
 					<xsl:when test=".='Suédois'">
-						<s c='a'>swe</s>				
-					</xsl:when>					
+						<s c='a'>swe</s>
+					</xsl:when>
 					<xsl:otherwise>
 						<s c='a'><xsl:value-of select="."/></s>
 					</xsl:otherwise>
@@ -363,10 +369,10 @@
 			<xsl:value-of select="./inm:Titre-generique"/>
 		</xsl:when>
 	</xsl:choose>
-	
+
 	</s>
 
-<!-- 
+<!--
 	<xsl:choose>
 		<xsl:when test="./inm:Titre!='' and ./inm:Sous-titre!='' ">
 			<s c='a'><xsl:value-of select="concat(./inm:Titre,' : ',./inm:Sous-titre)"/></s>
@@ -409,19 +415,19 @@
 			<s c='a'>
 				<xsl:if test="./inm:Description-physique!=''">
 					<xsl:value-of select="./inm:Description-physique"/>
-				</xsl:if>					
+				</xsl:if>
 				<xsl:if test="./inm:Pagination!='' and ./inm:Description-physique!=''">
 					<xsl:text >&#x020;</xsl:text>
-				</xsl:if>	
+				</xsl:if>
 				<xsl:if test="./inm:Pagination!=''">
 					<xsl:value-of select="./inm:Pagination"/>
-				</xsl:if>					
+				</xsl:if>
 				<xsl:if test="./inm:Duree!='' and (./inm:Description-physique!='' or ./inm:Pagination!='')">
 					<xsl:text >&#x020;</xsl:text>
-				</xsl:if>	
+				</xsl:if>
 				<xsl:if test="./inm:Duree!=''">
 					<xsl:value-of select="./inm:Duree"/>
-				</xsl:if>					
+				</xsl:if>
 			</s>
 		</f>
 	</xsl:if>
@@ -459,13 +465,13 @@
 	</xsl:if>
 </xsl:template>
 
-	
+
 <!-- responsabilites -->
 <xsl:template name="responsabilites">
 	<xsl:for-each select="./inm:Auteur">
 		<xsl:variable name="type">
 			<xsl:choose>
-				<xsl:when test="position()=1">700</xsl:when> 
+				<xsl:when test="position()=1">700</xsl:when>
 				<xsl:otherwise>701</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -489,7 +495,7 @@
 				<f c='710' ind='0 '>
 					<s c='a'><xsl:value-of select="normalize-space(.)"/></s>
 				</f>
-			</xsl:when> 
+			</xsl:when>
 			<xsl:when test="normalize-space(.)">
 				<f c='711' ind='0 '>
 					<s c='a'><xsl:value-of select="normalize-space(.)"/></s>
@@ -544,7 +550,7 @@
 				<s c='a'><xsl:value-of select="."/></s>
 			</f>
 		</xsl:for-each>
-	</xsl:if>	
+	</xsl:if>
 	<xsl:if test="./inm:Indexation-locale!=''">
 		<xsl:for-each select="./inm:Indexation-locale">
 			<f c='610'>
@@ -561,7 +567,7 @@
 		<f c='801'>
 			<s c='b'><xsl:value-of select="./inm:Origine"/></s>
 		</f>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 
@@ -571,7 +577,7 @@
 		<f c='856'>
 			<s c='u'><xsl:value-of select="./inm:URL"/></s>
 		</f>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 
@@ -592,7 +598,7 @@
 			<s c='a'><xsl:value-of select="."/></s>
 		</xsl:for-each>
 		</f>
-	</xsl:if>	
+	</xsl:if>
 	<!-- Discipline -->
 	<xsl:if test="./inm:Discipline!=''">
 		<f c='902'>
@@ -635,7 +641,7 @@
 <!-- Exemplaires -->
 <xsl:template name="exemplaires">
 	<xsl:param name="n_ex"/>
-	<xsl:if test="./inm:Code-Barre[$n_ex]!=''">	
+	<xsl:if test="./inm:Code-Barre[$n_ex]!=''">
 		<f c='995'>
 			<!-- code barre -->
 			<s c='f'><xsl:value-of select="./inm:Code-Barre[$n_ex]"/></s>
@@ -644,7 +650,7 @@
 				<xsl:choose>
 					<xsl:when test="./inm:Expl-Cote[$n_ex]!=''">
 						<xsl:value-of select="./inm:Expl-Cote[$n_ex]"/>
-					</xsl:when>				
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="./inm:Expl-Cote[1]!=''">
@@ -654,7 +660,7 @@
 								<xsl:text>INDETERMINE</xsl:text>
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:otherwise>				
+					</xsl:otherwise>
 				</xsl:choose>
 			</s>
 			<!-- section -->
@@ -662,7 +668,7 @@
 				<xsl:choose>
 					<xsl:when test="./inm:Expl-Localisation[$n_ex]!=''">
 						<xsl:value-of select="./inm:Expl-Localisation[$n_ex]"/>
-					</xsl:when>				
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="./inm:Expl-Localisation[1]!=''">
@@ -672,8 +678,8 @@
 								<xsl:text>INDETERMINE</xsl:text>
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:otherwise>				
-				</xsl:choose>				
+					</xsl:otherwise>
+				</xsl:choose>
 			</s>
 			<!-- type document -->
 			<s c='r'>
@@ -701,7 +707,7 @@
 	</xsl:if>
 	<xsl:if test="./inm:Code-Barre[$n_ex+1]">
 		<xsl:call-template name="exemplaires">
-			<xsl:with-param name="n_ex" select="$n_ex+1"/>	
+			<xsl:with-param name="n_ex" select="$n_ex+1"/>
 		</xsl:call-template>
 	</xsl:if>
 </xsl:template>

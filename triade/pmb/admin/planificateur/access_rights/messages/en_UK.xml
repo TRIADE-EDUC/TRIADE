@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le nettoyage de la base PMB
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.1 2020/04/22 08:49:34 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="planificateur_access_rights_delete_calculated_rights">Supprimer les droits calculés</entry>
+	<entry code="planificateur_access_rights_initialization">Initialisation</entry>
+	<entry code="planificateur_access_rights_keep_specific_rights">Conserver les droits spécifiques</entry>
+	<entry code="planificateur_access_rights_mod_disabled">Désactivé</entry>
+	<entry code="planificateur_access_rights_nb_done">Nombre d'éléments initialisés :</entry>
+	<entry code="planificateur_access_rights_nb_total">Sur un total de :</entry>
+	<entry code="planificateur_access_rights_deleted_calculated_rights">Droits calculés auparavant supprimés</entry>
+</XMLlist>

@@ -9,7 +9,7 @@ if (isset($_POST["annee_scolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -29,6 +29,8 @@ $id=php_ini_get("safe_mode");
 if ($id != 1) {
 	set_time_limit(900);
 }
+
+
 ?>
 <?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
@@ -46,13 +48,12 @@ if ($id != 1) {
 </head>
 <body  id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<br /><br />
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" align="center" >
 <tr id='coulBar0' ><td height="2" id='menumodule1' ><b><font   id='menumodule1' >Impression du tableau de bulletin </font></b></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
-<!-- // fin  --><br> <br>
+<!-- // fin  -->
 <?php
 $examen=trim($_POST["NoteExam"]);
 
@@ -69,7 +70,7 @@ if ($_SESSION["membre"] == "menupersonnel") {
 }
 $valeur=visu_affectation_detail($_POST["saisie_classe"],$anneeScolaire);
 
-/*if ( count($ordre) >= 20) {
+/*if ( countTriade($ordre) >= 20) {
 	$nbaffichematiere=19;
 }else{
 	$nbaffichematiere=20;
@@ -91,7 +92,7 @@ if (isset($_POST["affcolvide"])) {
 }
 
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	if ($_POST["typetriseman"] == "trimestre") {
 		if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
 		if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; }
@@ -113,7 +114,7 @@ if (count($valeur)) {
 	// recherche des dates de debut et fin
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
-        for($j=0;$j<count($dateRecup);$j++) {
+        for($j=0;$j<countTriade($dateRecup);$j++) {
                 $dateDebut=$dateRecup[$j][0];
                 $dateFinT1=$dateRecup[$j][1];
         }
@@ -121,13 +122,13 @@ if (count($valeur)) {
         $dateFinT1=dateForm($dateFinT1);
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
-        for($j=0;$j<count($dateRecup);$j++) {
+        for($j=0;$j<countTriade($dateRecup);$j++) {
                 $dateFinT2=$dateRecup[$j][1];
         }
         $dateFinT2=dateForm($dateFinT2);
 
 	$dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
-        for($j=0;$j<count($dateRecup);$j++) {
+        for($j=0;$j<countTriade($dateRecup);$j++) {
                 $dateFinT3=$dateRecup[$j][1];
         }
         $dateFinT3=dateForm($dateFinT3);
@@ -165,14 +166,14 @@ if (count($valeur)) {
 
 	$nbMat=0;
 
-	$nbmatiere=count($ordre);
+	$nbmatiere=countTriade($ordre);
 	if ($nbmatiere >= 20) {
 		$nbaffichematiere=19;
 	}else{
 		$nbaffichematiere=20;
 	}
 
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
@@ -197,7 +198,7 @@ if (count($valeur)) {
 	if ($nbMat >= 40) { $nbaffichematiere=22 ; } 
 
 $popo=0;
-while(count($ordre)) {
+while(countTriade($ordre)) {
 	$ju=0;
 	
 	$pdf->AddPage();
@@ -216,7 +217,7 @@ while(count($ordre)) {
 	//TITRE
 	$pdf->SetFont('Arial','',10);
 	$pdf->SetXY(100,5);
-	$pdf->writehtml('<B>Moyennes de '.$classe_nom.' jusqu\'au '.$textTrimestre.'</B> ('.$anneeScolaire.') Il y a '.count($eleveT).' étudiant(s) ');
+	$pdf->writehtml('<B>Moyennes de '.$classe_nom.' jusqu\'au '.$textTrimestre.'</B> ('.$anneeScolaire.') Il y a '.countTriade($eleveT).' étudiant(s) ');
 	// noms matières
 	for($i=0;$i<$nbaffichematiere;$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
@@ -245,7 +246,7 @@ while(count($ordre)) {
 	if ($popo == 0 ) $tabmatiere3=$tabmatiere;
 	$popo++;
 
-	while (list($key, $nom_matiere) = each($tabmatiere)) {
+	foreach ($tabmatiere as $key => $nom_matiere) {
 		list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
 		$pdf->SetFillColor(220);
 		$pdf->SetXY($xmatiere,$ymatiere-3);
@@ -266,7 +267,7 @@ while(count($ordre)) {
 		$pdf->SetFont('Arial','',6);
 	}
 
-	if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 
 		if (MODNAMUR0 == "oui") {
 			$pdf->SetXY($xmatiere,$ymatiere); // placement du cadre notes
@@ -295,7 +296,7 @@ while(count($ordre)) {
 	$xmatiere=$xnomeleve+30;
 	
 	
-	while (list($key, $nom_matiere) = each($tabmatiere2)) {
+	foreach ($tabmatiere2 as $key => $nom_matiere) {
                 list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
                 $coeffaff=recupCoeff($idMatiere,$idClasse,$num_ordre);
                 if ($examen != "") {
@@ -314,7 +315,7 @@ while(count($ordre)) {
 
 	//eleves
 	$afficMoyenEleve="oui";	
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$ju++;
 		$nomEleve=ucwords($eleveT[$j][0]);
@@ -399,7 +400,7 @@ while(count($ordre)) {
 			$XnotVal=$XnotVal + $largeurnote;
 		}
 
-		if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+		if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 			$noteMoyEleG=0; // pour la moyenne  general
 			$coefEleG=0; // pour la moyenne  general
 
@@ -484,20 +485,19 @@ while(count($ordre)) {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			if ($afficMoyenEleve=="non") { 
 				$pdf->MultiCell($largeurnote,5,"----",1,'L',0);	
-				//$pdf->WriteHTML("<B>----</B>");
 			}else{
 				if ($moyenEleve < 10) { 
 					$pdf->SetTextColor(255,0,0);
-				//	$pdf->WriteHTML("<font color=red>".$moyenEleve."</font>");
 				}else {
 					$pdf->SetTextColor(0,0,0);
-				//	$pdf->WriteHTML($moyenEleve);
 				}
 				$pdf->MultiCell($largeurnote,5,"$moyenEleve",1,'L',0);	
 			}
 			$pdf->SetTextColor(0,0,0);
 			if (trim($moyenEleve) != "") {
 				$moyenEleve=preg_replace('/,/','.',$moyenEleve);
+				$moyenClasseGen = (float) $moyenClasseGen;
+				$moyenEleve     = (float) $moyenEleve;
 				$moyenClasseGen+=$moyenEleve;
 				$nbeleve2++;
 			}
@@ -546,7 +546,6 @@ while(count($ordre)) {
 	        	}
 		}
 	  	$pdf->SetXY($XnotVal,$YnotVal); // placement du cadre des matières
-  		//$pdf->MultiCell($largeurnote,6,'',1,'L',1);
 		$xmatiere=$xmatiere + 15;
 		$pdf->SetXY($XnotVal,$YnotVal);
 
@@ -558,10 +557,8 @@ while(count($ordre)) {
 		}else{	
 			if ($moyeMatGen < 10) { 
 				$pdf->SetTextColor(255,0,0);
-				//$pdf->WriteHTML("<font color=red>".$moyeMatGen."</font>");
 			}else {
 				$pdf->SetTextColor(0,0,0);
-				//$pdf->WriteHTML($moyeMatGen);
 			}
 		}	
   		$pdf->MultiCell($largeurnote,6,"$moyeMatGen",1,'L',1);
@@ -570,7 +567,7 @@ while(count($ordre)) {
 
 	}
 
-	if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 		if (MODNAMUR0 == "oui") {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			$moyenEleve="";
@@ -609,7 +606,7 @@ while(count($ordre)) {
 	// classement
 if ($_POST["affrang"] == "1") {
 /*
-	if (count($eleveT)<32)  {
+	if (countTriade($eleveT)<32)  {
 		$XnotVal=$XnotVal+$largeurnote;	
 		$YnotVal = 20;	 
 		arsort($classement);
@@ -622,7 +619,7 @@ if ($_POST["affrang"] == "1") {
 		$pdf->SetXY($XnotVal,$ymatiere-3);
 		$pdf->MultiCell(10,8,'Rang',1,'C',1);
 		$pdf->SetFont('Arial','',10);
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			$pdf->MultiCell(10,$hauteurnomeleve,'',1,'L',0);
 			$pdf->SetXY($XnotVal+2,$YnotVal);
@@ -641,7 +638,7 @@ if ($_POST["affrang"] == "1") {
 		}
 		$pdf->SetXY($XnotVal+5,$YnotVal-$hauteurnomeleve);
 		$pdf->MultiCell(56,$hauteurnomeleve,'Classement :',1,'L',0);
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			if ($jp == 35) { $pdf->AddPage(); $YnotVal=10; $jp=0; }
 			$jp++;
 			$nomEleve=ucwords($eleveT[$j][0]);

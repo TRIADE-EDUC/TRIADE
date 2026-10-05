@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_animationslist_view_calendar.xml,v 1.2 2023/01/03 15:02:45 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_animationslist_view_calendar_nb_displayed_animations_under'>Nombre d'animations à afficher sous le calendrier</entry>
+	<entry code='cms_module_animationslist_view_calendar_link_animation'>Construction du lien vers une animation</entry>
+	<entry code='cms_module_animationslist_view_calendar_link_animationslist'>Construction du lien vers une liste d'animations</entry>
+	<entry code='cms_module_animationslist_view_calendar_color'>Choix de la couleur</entry>
+	<entry code='calendar_color_statut'>Statut</entry>
+	<entry code='calendar_color_calendar'>Calendrier</entry>
+	<entry code='cms_module_animationslist_view_calendar_link'>Construction du lien vers une animation</entry>
+</XMLlist>

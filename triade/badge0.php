@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -74,13 +74,13 @@ if ( (!isset($_POST['create'])) && (!isset($_POST['create2']))   ) { ?>
 <?php if (isset($_POST['create'])) { 
 	$membre=$_POST["membre"];
 	if ($membre != 'tous') {	
-		$sql="SELECT pers_id,nom,prenom,prenom2,photo FROM ${prefixe}personnel WHERE type_pers='$membre' ORDER BY nom";
+		$sql="SELECT pers_id,nom,prenom,prenom2,photo FROM {$prefixe}personnel WHERE type_pers='$membre' ORDER BY nom";
 	}else{
-		$sql="SELECT pers_id,nom,prenom,prenom2,photo FROM ${prefixe}personnel ORDER BY nom";
+		$sql="SELECT pers_id,nom,prenom,prenom2,photo FROM {$prefixe}personnel ORDER BY nom";
 	}
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	$nbBadge=count($data);
+	$nbBadge=countTriade($data);
 ?>
 	<form method='post' onSubmit="return validateBadge();" name="formulaire" >
 	<table border='1' width='80%'>
@@ -137,9 +137,9 @@ if (isset($_POST['create2'])) {
 	$datavisu=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire
 	$anneescolaire=$datavisu[0][11];
 	if ($membre != 'tous') {	
-		$sql="SELECT pers_id,nom,prenom,photo,type_pers FROM ${prefixe}personnel WHERE type_pers='$membre' ORDER BY nom";
+		$sql="SELECT pers_id,nom,prenom,photo,type_pers FROM {$prefixe}personnel WHERE type_pers='$membre' ORDER BY nom";
 	}else{
-		$sql="SELECT pers_id,nom,prenom,photo,type_pers FROM ${prefixe}personnel ORDER BY nom";
+		$sql="SELECT pers_id,nom,prenom,photo,type_pers FROM {$prefixe}personnel ORDER BY nom";
 	}
 	require_once "./librairie_php/class.writeexcel_workbook.inc.php";
 	require_once "./librairie_php/class.writeexcel_worksheet.inc.php";
@@ -171,7 +171,7 @@ if (isset($_POST['create2'])) {
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$ii=1;
-	for($i=0;$i<count($data);$i++) {  //  libelle,elev_id,nom,prenom,code_class
+	for($i=0;$i<countTriade($data);$i++) {  //  libelle,elev_id,nom,prenom,code_class
 		$membre=renvoiTypePersonneMembre($data[$i][4]);
 		$codebarre=recupCodeBar($data[$i][0],"$membre");
 		$nom=strtoupper($data[$i][1]);

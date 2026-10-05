@@ -13,7 +13,7 @@ La sezione <b>Amministrazione dell'OPAC</b> permette di configurare i differenti
 	</li>
 	<li>
 		<b>Navigation par localisation et par section : </b>
-		 Paramètrage de la navigation virtuelle par les plans de classement
+		 Param&eacute;trage de la navigation virtuelle par les plans de classement
 	</li>
 </ul>
 </p>

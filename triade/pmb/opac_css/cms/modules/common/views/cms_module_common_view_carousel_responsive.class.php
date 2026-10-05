@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_carousel_responsive.class.php,v 1.21 2019-04-29 12:30:33 ccraig Exp $
+// $Id: cms_module_common_view_carousel_responsive.class.php,v 1.27.2.1 2025/01/17 10:40:43 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $include_path;
 require_once($include_path."/h2o/h2o.php");
 
 class cms_module_common_view_carousel_responsive extends cms_module_common_view_django{
@@ -29,7 +31,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 	
 	public function get_form(){
 		if (!isset($this->parameters["no_image"]))				$this->parameters["no_image"] = "no_image_carousel.jpg";
-		//valeur par dÃ©faut des paramÃ¨tres gÃ©nÃ©raux
+		//valeur par défaut des paramètres généraux
 		if (!isset($this->parameters["mode"]))					$this->parameters["mode"] = "horizontal";
 		if (!isset($this->parameters["speed"]))					$this->parameters["speed"] = 500;
 		if (!isset($this->parameters["pause"]))					$this->parameters["pause"] = 4000;
@@ -41,7 +43,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 		if (!isset($this->parameters["display_max_quantity"])) 	$this->parameters["display_max_quantity"] = 3;
 		if (!isset($this->parameters["slide_quantity"]))		$this->parameters["slide_quantity"] = 0;
 		if (!isset($this->parameters["slide_width"]))			$this->parameters["slide_width"] = 90;
-		//valeur par dÃ©faut des paramÃ¨tres avancÃ©s
+		//valeur par défaut des paramètres avancés
 		if (!isset($this->parameters["slide_margin"]))			$this->parameters["slide_margin"] = 0;
 		if (!isset($this->parameters["random_start"]))			$this->parameters["random_start"] = false; 
 		if (!isset($this->parameters["easing"]))				$this->parameters["easing"] = null;
@@ -52,7 +54,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 		if (!isset($this->parameters["pager_short_separator"]))	$this->parameters["pager_short_separator"] = "/";
 		if (!isset($this->parameters["controls"]))				$this->parameters["controls"] = true;
 		if (!isset($this->parameters["next_text"]))				$this->parameters["next_text"] = "Suivant";
-		if (!isset($this->parameters["previous_text"]))			$this->parameters["previous_text"] = "PrÃ©cÃ©dent";
+		if (!isset($this->parameters["previous_text"]))			$this->parameters["previous_text"] = "Précédent";
 		if (!isset($this->parameters["auto_controls"]))			$this->parameters["auto_controls"] = false;
 		if (!isset($this->parameters["start_text"]))			$this->parameters["start_text"] = "Jouer";
 		if (!isset($this->parameters["stop_text"]))				$this->parameters["stop_text"] = "Stop";
@@ -379,20 +381,20 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
  		$this->parameters['used_template'] = $cms_module_common_view_django_template_record_content;
  		$this->parameters['no_image'] = $cms_module_common_view_carousel_no_image;
  		
- 		//parametres gÃ©nÃ©raux
+ 		//parametres généraux
  		$this->parameters['mode'] = $cms_module_common_view_carousel_mode;
- 		$this->parameters['speed'] = $cms_module_common_view_carousel_speed+0;
- 		$this->parameters['pause'] = $cms_module_common_view_carousel_pause+0;
- 		$this->parameters['display_max_quantity'] = $cms_module_common_view_carousel_display_max_quantity+0;
- 		$this->parameters['display_min_quantity'] = $cms_module_common_view_carousel_display_min_quantity+0;
- 		$this->parameters['slide_quantity'] = $cms_module_common_view_carousel_slide_quantity+0;
- 		$this->parameters['slide_width'] = $cms_module_common_view_carousel_slide_width+0;
+ 		$this->parameters['speed'] = (int) $cms_module_common_view_carousel_speed;
+ 		$this->parameters['pause'] = (int) $cms_module_common_view_carousel_pause;
+ 		$this->parameters['display_max_quantity'] = (int) $cms_module_common_view_carousel_display_max_quantity;
+ 		$this->parameters['display_min_quantity'] = (int) $cms_module_common_view_carousel_display_min_quantity;
+ 		$this->parameters['slide_quantity'] = (int) $cms_module_common_view_carousel_slide_quantity;
+ 		$this->parameters['slide_width'] = (int) $cms_module_common_view_carousel_slide_width;
  		$this->parameters['autostart'] = $cms_module_common_view_carousel_autostart==1 ? true : false;
  		$this->parameters['autotransition'] = $cms_module_common_view_carousel_autotransition==1 ? true : false;
  		$this->parameters['autohover'] = $cms_module_common_view_carousel_autohover==1 ? true : false;
  		$this->parameters['pager'] = $cms_module_common_view_carousel_pager==1 ? true : false;
-		//paramÃ¨tres avancÃ©s
- 		$this->parameters["slide_margin"] = $cms_module_common_view_carousel_slide_margin+0;
+		//paramètres avancés
+ 		$this->parameters["slide_margin"] = (int) $cms_module_common_view_carousel_slide_margin;
  		$this->parameters["random_start"] = $cms_module_common_view_carousel_random_start == 1 ? true : false;
  		$this->parameters["easing"] = $cms_module_common_view_carousel_easing;
  		$this->parameters["captions"] = $cms_module_common_view_carousel_captions == 1 ? true : false;
@@ -408,15 +410,15 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
  		$this->parameters["stop_text"] = $cms_module_common_view_carousel_stop_text;
  		$this->parameters["autocontrols_combine"] = $cms_module_common_view_carousel_auto_controls_combine == 1 ? true : false;
  		$this->parameters["auto_direction"] = $cms_module_common_view_carousel_auto_direction;
- 		$this->parameters["auto_delay"] = $cms_module_common_view_carousel_auto_delay+0;
+ 		$this->parameters["auto_delay"] = (int) $cms_module_common_view_carousel_auto_delay;
 		return parent::save_form();	
 	}
 	
 	public function get_headers($datas=array()){
 		global $base_path;
 		$headers = parent::get_headers($datas);		
-		$headers[]= "<script type='text/javascript' src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxsliderv4.min.js'></script>";
-		$headers[]= "<script type='text/javascript'>
+		$headers[]= "<script src='".$base_path."/cms/modules/common/includes/javascript/jquery.bxsliderv4.min.js'></script>";
+		$headers[]= "<script>
 		document.addEventListener('DOMContentLoaded', function(){
 		if (navigator.userAgent.search(\"Firefox\") >= 0) {
 		    var ff_version = navigator.userAgent.match(/Firefox\/([\d]+\.[\d])+/);
@@ -441,7 +443,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 		$html2return = "";
 		
 		//TODO VERIF DOM ET APPEL AU JS
-		if(count($datas['records'])){
+		if(is_countable($datas['records']) && count($datas['records'])){
 			$id = "carousel_".$this->get_module_dom_id();
 			$datas['id']=$this->get_module_dom_id();
 			if(!isset($datas['get_vars']) || !$datas['get_vars']){
@@ -450,7 +452,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 			if(!isset($datas['post_vars']) || !$datas['post_vars']){
 				$datas['post_vars'] = $_POST;
 			}
-			//pour la no-image, on cherche celle du style, du common, du dossier image de base, sinon on sert celle par dÃ©faut
+			//pour la no-image, on cherche celle du style, du common, du dossier image de base, sinon on sert celle par défaut
 			$path = "./styles/".$opac_default_style."/images/";
 			if(!file_exists(realpath($path)."/".$this->parameters['no_image'])){
 				$path = "./styles/common/images/";  
@@ -463,21 +465,29 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 				}
 			}
 			$datas['no_image_url'] = $path.$this->parameters['no_image'];
-			for($i=0 ; $i<count($datas['records']) ; $i++){
-				if(!isset($datas['records'][$i]['vign']) || $datas['records'][$i]['vign'] == ""){
-					$datas['records'][$i]['vign'] = $datas['no_image_url'];
-				}
+			if (is_countable($datas['records'])) {
+    			for($i=0 ; $i<count($datas['records']) ; $i++){
+    			    if(is_array($datas['records'][$i]) && (empty($datas['records'][$i]['vign']))){
+    					$datas['records'][$i]['vign'] = $datas['no_image_url'];
+    				}
+    			}
 			}
 			
 			$template_path = $base_path.'/temp/'.LOCATION.'_cms_carousel_responsive_view_'.$this->id;
 			if(!file_exists($template_path) || (md5($this->parameters['active_template']) != md5_file($template_path))){
 			    file_put_contents($template_path, $this->parameters['active_template']);
 			}
-			$H2o = H2o_collection::get_instance($template_path);
-			$html2return.= $H2o->render($datas);
-			
+			try{
+                $H2o = H2o_collection::get_instance($template_path);
+                $html2return.= $H2o->render($datas);
+			}catch(Exception $e){
+			    $html2return = '<!-- '.$e->getMessage().' -->';
+			    $html2return .= '<div class="error_on_template" title="' . htmlspecialchars($e->getMessage(), ENT_QUOTES) . '">';
+			    $html2return .= $this->msg["cms_module_common_view_error_template"];
+			    $html2return .= '</div>';
+			}
 			$html2return.= "
-		<script type='text/javascript'>
+		<script>
 			jQuery(document).ready(function() {
 				jQuery('#".$id."').bxSlider({
 					//parametres generaux
@@ -496,8 +506,8 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 					randomStart: 			".(isset($this->parameters['randomStart']) && $this->parameters['randomStart'] ? "true" : "false").",
 					easing: 				'".(isset($this->parameters["easing"]) ? $this->parameters["easing"] : '')."',
 					captions: 				".(isset($this->parameters['captions']) && $this->parameters['captions'] ? "true" : "false").",
-					adaptiveHeight:			".(isset($this->parameters['adaptive_heigt']) && $this->parameters['adaptive_heigt'] ? "true" : "false").",
-					adaptiveHeightSpeed:	'".(isset($this->parameters["adaptive_heigt_speed"]) ? $this->parameters["adaptive_heigt_speed"] : '')."',
+					adaptiveHeight:			".(isset($this->parameters['adaptive_height']) && $this->parameters['adaptive_height'] ? "true" : "false").",
+					adaptiveHeightSpeed:	'".(isset($this->parameters["adaptive_height_speed"]) ? $this->parameters["adaptive_height_speed"] : '')."',
 					pagerType:				'".(isset($this->parameters["pager_type"]) ? $this->parameters["pager_type"] : '')."',
 					pagerShortSeparator:	'".(isset($this->parameters["pager_short_separator"]) ? $this->parameters["pager_short_separator"] : '')."',
 					controls:				".(isset($this->parameters['controls']) && $this->parameters['controls'] ? "true" : "false").",
@@ -518,7 +528,6 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 	}
 
 	protected function get_managed_template_form($cms_template){
-		global $opac_url_base;
 
 		$form ="";
 		if($cms_template != "new"){
@@ -574,6 +583,7 @@ class cms_module_common_view_carousel_responsive extends cms_module_common_view_
 	}	
 
 	public function get_format_data_structure(){
+		$format_datas=array();
 		$format_datas[]= array(
 			 'var' => "no_image_url",
 			 'desc'=> $this->msg['cms_module_common_view_carousel_no_image_desc']

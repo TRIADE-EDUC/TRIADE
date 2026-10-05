@@ -2,13 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_material_admin.class.php,v 1.2 2016-03-30 14:34:53 ngantier Exp $
+// $Id: nomenclature_material_admin.class.php,v 1.3 2021/03/10 12:58:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $class_path, $include_path;
 
 require_once($include_path."/templates/nomenclature_material_admin.tpl.php");
 require_once($class_path."/marc_table.class.php");
 require_once($class_path.'/skos/skos_concept.class.php');
+require_once($class_path."/parameters/parameter.class.php");
 
 class nomenclature_material_admin {
 	
@@ -72,16 +75,12 @@ class nomenclature_material_admin {
 	}
 	
 	public function save() {
-		global $dbh, $msg;
+		global $msg;
 
-		$query = "UPDATE parametres SET valeur_param='".$this->music_concept_before."' where type_param= 'pmb' and sstype_param='nomenclature_music_concept_before' ";
-		pmb_mysql_query($query, $dbh);
-		$query = "UPDATE parametres SET valeur_param='".$this->music_concept_after."' where type_param= 'pmb' and sstype_param='nomenclature_music_concept_after' ";
-		pmb_mysql_query($query, $dbh);
-		$query = "UPDATE parametres SET valeur_param='".$this->music_concept_blank."' where type_param= 'pmb' and sstype_param='nomenclature_music_concept_blank' ";
-		pmb_mysql_query($query, $dbh);
-		$query = "UPDATE parametres SET valeur_param='".$this->music_children_relation."' where type_param= 'pmb' and sstype_param='nomenclature_record_children_link' ";
-		pmb_mysql_query($query, $dbh);
+		parameter::update('pmb', 'nomenclature_music_concept_before', $this->music_concept_before);
+		parameter::update('pmb', 'nomenclature_music_concept_after', $this->music_concept_after);
+		parameter::update('pmb', 'nomenclature_music_concept_blank', $this->music_concept_blank);
+		parameter::update('pmb', 'nomenclature_record_children_link', $this->music_children_relation);
 		print display_notification($msg['account_types_success_saved']);
 	}
 }

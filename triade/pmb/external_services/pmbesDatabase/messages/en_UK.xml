@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.2 2015-06-19 07:31:23 mbertin Exp $ -->
+$Id: en_UK.xml,v 1.2.22.1 2025/06/09 07:44:13 dbellamy Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -18,7 +18,7 @@ $Id: en_UK.xml,v 1.2 2015-06-19 07:31:23 mbertin Exp $ -->
 	<entry code="get_version_informations_output_shouldbe_subversion">Sub-version the PMB database should be</entry>
 
 	<entry code="need_update_description">Does the base need an update</entry>
-	<entry code="need_update_output_need">True : The base should be updated / False : The base is up to date</entry>
+	<entry code="need_update_output_need">1 : The base should be updated / 0 : The base is up to date</entry>
 	
 	<entry code="update_description">Update feature of the database</entry>
 	<entry code="update_output_result">Result of the update...</entry>

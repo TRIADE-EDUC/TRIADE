@@ -1,16 +1,16 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_ui.class.php,v 1.4 2017-06-22 10:19:48 dgoron Exp $
+// $Id: onto_ui.class.php,v 1.6 2020/09/17 06:56:12 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 /**
  * 
  * Classe permettant l'aiguillage du module onto
- * Prend en charge l'articulation des menus gÃ©nÃ©riques en fonction de l'ontologie
+ * Prend en charge l'articulation des menus génériques en fonction de l'ontologie
  */
 class onto_ui {
 	
@@ -29,7 +29,7 @@ class onto_ui {
 	
 
 	/**
-	 * On attribut les paramÃ¨tres d'aiguillage dans la classe.
+	 * On attribut les paramètres d'aiguillage dans la classe.
 	 * Si je dispose d'un sub (nom de classe) et d'un id j'instancie l'item correspondant
 	 * 
 	 * 
@@ -42,7 +42,7 @@ class onto_ui {
 	 * @param string $default_display_label
 	 * @param onto_param $params
 	 */
-	function __construct($ontology_filepath, $onto_store, $onto_store_config, $data_store_type, $data_store_config, $tab_namespaces, $default_display_label, $params){
+	public function __construct($ontology_filepath, $onto_store, $onto_store_config, $data_store_type, $data_store_config, $tab_namespaces, $default_display_label, $params){
 		$this->params=$params;
 		
 		$this->handler = new onto_handler($ontology_filepath, $onto_store, $onto_store_config, $data_store_type, $data_store_config, $tab_namespaces, $default_display_label);
@@ -55,13 +55,13 @@ class onto_ui {
 		$this->controler=new $controler_class_name($this->handler,$this->params);
 	}
 	
-	public function proceed(){
-		return $this->controler->proceed();
+	public function proceed($last_item = true){
+	    return $this->controler->proceed($last_item);
 	}
 	
 	/**
 	 *
-	 * Renvoi le nom de la class controler Ã  utiliser pour l'ontologie
+	 * Renvoi le nom de la class controler à utiliser pour l'ontologie
 	 *
 	 * @return string
 	 */
@@ -71,7 +71,7 @@ class onto_ui {
 	
 	/**
 	 *
-	 * Recherche et renvoi le nom de classe controler le plus appropriÃ© pour l'ontologie
+	 * Recherche et renvoi le nom de classe controler le plus approprié pour l'ontologie
 	 *
 	 * @param string $ontology_name
 	 * @return string 
@@ -80,7 +80,7 @@ class onto_ui {
 		$suffixe = "_controler";
 		$prefix="onto_";
 		if(class_exists($prefix.$ontology_name.$suffixe)){
-			//La classe controler a le mÃªme nom que l'ontologie
+			//La classe controler a le même nom que l'ontologie
 			//ex : onto_skos<=>onto_skos_controler
 			return $prefix.$ontology_name.$suffixe;
 		}else{

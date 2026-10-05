@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_unimarc.class.php,v 1.4 2017-07-10 15:14:02 jpermanne Exp $
+// $Id: suggestions_unimarc.class.php,v 1.5 2021/12/24 13:21:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/classes/iso2709.class.php");
 
 class suggestions_unimarc{
@@ -19,15 +20,13 @@ class suggestions_unimarc{
 	 * Constructeur
 	 */
 	public function __construct($id=0){
-		global $dbh;
-		
-		$this->sugg_uni_id = $id+0;
+		$this->sugg_uni_id = intval($id);
 		$this->sugg_uni_notice = "";
 		$this->sugg_uni_origine = "";
 		$this->sugg_uni_num_notice = 0;
 		if($this->sugg_uni_id){
 			$req = "select * from import_marc where id_import='".$this->sugg_uni_id."'";
-			$res = pmb_mysql_query($req,$dbh);
+			$res = pmb_mysql_query($req);
 			if($res){
 				$uni = pmb_mysql_fetch_object($res);
 				$this->sugg_uni_notice = $uni->notice;
@@ -41,13 +40,10 @@ class suggestions_unimarc{
 	 * Enregistrement
 	 */
 	public function save(){
-		
-		global $dbh;
-		
 		$req = "insert into import_marc set notice='".addslashes($this->sugg_uni_notice)."', 
 			origine='".addslashes($this->sugg_uni_origine)."',
 			no_notice='".addslashes($this->sugg_uni_num_notice)."'";
-		pmb_mysql_query($req,$dbh); 
+		pmb_mysql_query($req); 
 		
 		$this->sugg_uni_id = pmb_mysql_insert_id();
 	}
@@ -56,29 +52,25 @@ class suggestions_unimarc{
 	 * Suppression
 	 */
 	public function delete(){
-		global $dbh;
-		
 		$req = "delete from import_marc where origine='".$this->sugg_uni_origine."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration de la notice unimarc par l'entrepot
+	 * Récupération de la notice unimarc par l'entrepot
 	 */
 	public function entrepot_to_unimarc($recid) {
-		global $dbh;
-		
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($recid).";";
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$source_id = pmb_mysql_result($myQuery, 0, 0);
 		
 		$requete="select * from entrepot_source_$source_id where recid='".addslashes($recid)."' group by ufield,usubfield,field_order,subfield_order,value order by field_order,subfield_order";
-		$resultat = pmb_mysql_query($requete, $dbh);
+		$resultat = pmb_mysql_query($requete);
 		
 		$unimarc=new iso2709_record("",USER_UPDATE);
 		
 		$field_order=-1;
-		$field=$r->ufield;
+		$field='';
 		$sfields=array();
 		
 		while ($r=pmb_mysql_fetch_object($resultat)) {

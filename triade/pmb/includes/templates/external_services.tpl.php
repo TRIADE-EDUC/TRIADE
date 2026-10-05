@@ -2,37 +2,19 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external_services.tpl.php,v 1.3 2019-05-27 13:05:23 ngantier Exp $
+// $Id: external_services.tpl.php,v 1.4 2021/03/12 13:21:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $es_admin_general, $current_module, $es_admin_peruser;
+global $es_admin_general, $es_admin_peruser;
 
-//Administration gÃ©nÃ©rale
+//Administration générale
 $es_admin_general="
-<form class='form-$current_module' id='es_rights' name='es_rights' method='post' action='./admin.php?categ=external_services&sub=general'>
-	<h3>D&eacute;finition des droits pour les groupes et les m&eacute;thodes</h3>
-	<div class='form-contenu'>
-	<input type='hidden' name='is_not_first' value='1'/>
-	!!table_rights!!
-	</div>
-	<div class='row'>
-		<input type='button' value='Annuler' class='bouton' onClick='document.location=\"admin.php?categ=external_services\"'/>&nbsp;
-		<input type='button' value='Enregistrer' class='bouton' onClick='this.form.submit()'/>
-	</div>
-</form>";
+<input type='hidden' name='is_not_first' value='1'/>
+!!table_rights!!";
 
 //Par utilisateur
 $es_admin_peruser="
-<form class='form-$current_module' id='es_rights' name='es_rights' method='post' action='./admin.php?categ=external_services&sub=peruser'>
-	<h3>D&eacute;finition des droits pour l'utilisateur !!user!!</h3>
-	<div class='form-contenu'>
-	<input type='hidden' name='is_not_first' value=''/>
-	!!table_rights!!
-	</div>
-	<div class='row'>
-		<input type='button' value='Annuler' class='bouton' onClick='document.location=\"admin.php?categ=external_services\"'/>&nbsp;
-		<input type='button' value='Enregistrer' class='bouton' onClick='this.form.is_not_first.value=1; this.form.submit()'/>
-	</div>
-</form>";
+<input type='hidden' name='is_not_first' value='1'/>
+!!table_rights!!";
 ?>

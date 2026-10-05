@@ -2,11 +2,13 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes fonction en UNIMARC (français)
-$Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
+$Id: function.xml,v 1.18 2020/02/24 12:02:31 dgoron Exp $ -->
 
 <XMLlist>
+	<entry code="000">Fonction indéterminée</entry>
 	<entry code="005">Attore-esecutore</entry>
 	<entry code="010">Adattatore</entry>
+	<entry code="018">Auteur de l'animation</entry>
 	<entry code="020">Annotatore</entry>
 	<entry code="030">Arrangiatore</entry>
 	<entry code="040">Artista</entry>
@@ -37,6 +39,8 @@ $Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="212">Commentatore del testo scritto</entry>
 	<entry code="220">Compilatore</entry>
 	<entry code="230">Compositore</entry>
+	<entry code="233">Compositeur de l'oeuvre adaptée</entry>
+	<entry code="236">Compositeur de l'oeuvre principale</entry>
 	<entry code="240">Compositore tipografico</entry>
 	<entry code="245">Ideatore</entry>
 	<entry code="250">Maestro di orchestra</entry>
@@ -49,9 +53,8 @@ $Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="280">Destinatario di una dedica (?)</entry>
 	<entry code="290">Autore d'una dedica</entry>
 	<entry code="295">Organisme de soutenance</entry>
-	<entry code="300">Metteur en scène, réalisateur</entry>
-	<entry code="305">Doctorant, candidat</entry>
 	<entry code="300">Direttore artistico</entry>
+	<entry code="303">Disc jockey</entry>
 	<entry code="305">Laureando</entry>
 	<entry code="310">Distributore</entry>
 	<entry code="320">Donatore</entry>
@@ -63,14 +66,17 @@ $Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="370">Realizzatore del film.</entry>
 	<entry code="380">Contrafattore, falsario</entry>
 	<entry code="390">Proprietario precedente</entry>
+	<entry code="395">Fondateur</entry>
 	<entry code="400">Mecenate</entry>
 	<entry code="410">Tecnico grafico</entry>
 	<entry code="420">Persona onorata, omaggiata</entry>
 	<entry code="430">Illuminatore</entry>
 	<entry code="440">Illustratore</entry>
+	<entry code="445">Impresario</entry>
 	<entry code="450">Firmatario di una presentazione</entry>
 	<entry code="460">Persona intervistata</entry>
 	<entry code="470">Intervistatore</entry>
+	<entry code="475">Collectivité éditrice</entry>
 	<entry code="480">Librettista</entry>
 	<entry code="490">Titolare dei diritti</entry>
 	<entry code="500">Concessionario</entry>
@@ -92,18 +98,23 @@ $Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="590">Esecutore</entry>
 	<entry code="595">Directeur de la recherche</entry>	
 	<entry code="600">Fotografo</entry>
+	<entry code="605">Présentateur</entry>
 	<entry code="610">Stampatore</entry>
 	<entry code="620">Stampatore delle incisioni</entry>
 	<entry code="630">Produttore</entry>
 	<entry code="632">Directeur artistique</entry>
 	<entry code="633">Membre de l'équipe de production</entry>
 	<entry code="635">Programmatore</entry>
+	<entry code="637">Gestionnaire de projet</entry>
 	<entry code="640">Correttore delle bozze</entry>
 	<entry code="650">Editore commerciale</entry>
 	<entry code="651">Direttore della pubblicazione</entry>
-	<entry code="660">Destinatario</entry>
+	<entry code="655">Marionnettiste</entry>
 	<entry code="660">Destinatario di una corrispondenza</entry>
+	<entry code="665">Producteur de phonogramme</entry>
 	<entry code="670">Ingegnere del suono</entry>
+	<entry code="672">Remixeur</entry>
+	<entry code="673">Responsable de l'équipe de recherche</entry>
 	<entry code="675">Critico</entry>
 	<entry code="677">Membre de l'équipe de recherche</entry>
 	<entry code="680">Rubricatore</entry>
@@ -115,10 +126,13 @@ $Id: function.xml,v 1.17 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="720">Firmatario</entry>
 	<entry code="721">Cantante</entry>
 	<entry code="723">Patrono</entry>
+	<entry code="725">Organisme de normalisation</entry>
+	<entry code="726">Cascadeur</entry>
 	<entry code="727">Direttore di tesi</entry>
 	<entry code="730">Traduttore</entry>
 	<entry code="740">Disegnatore dei caratteri di stampa</entry>
 	<entry code="750">Tipografo</entry>
+	<entry code="753">Vendeur</entry>
 	<entry code="755">Cantante</entry>
 	<entry code="760">Incisore su legno</entry>
 	<entry code="770">Autore del materiale di accompagnamento</entry>

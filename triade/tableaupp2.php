@@ -4,13 +4,12 @@ if (isset($_POST["annee_scolaire"])) {
         $anneeScolaire=$_POST["annee_scolaire"];
         setcookie("anneeScolaire",$anneeScolaire,time()+36000*24*30);
 }
-
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -45,15 +44,14 @@ if ($id != 1) {
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body  id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body  id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<br /><br />
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" align="center" >
 <tr id='coulBar0' ><td height="2" id='menumodule1' ><b><font   id='menumodule1' >Impression du tableau de bulletin </font></b></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
-<!-- // fin  --><br> <br>
+<!-- // fin  -->
 <?php
 
 include_once('librairie_php/db_triade.php');
@@ -89,7 +87,7 @@ if (isset($_POST["affcolvide"])) {
 	$affcolvide=1;
 }
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	if ($_POST["typetrisem"] == "trimestre") {
 		if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
 		if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; }
@@ -112,7 +110,7 @@ if (count($valeur)) {
 	// recherche des dates de debut et fin
 //	$dateRecup=recupDateTrim($_POST["saisie_trimestre"]);
 	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -147,7 +145,7 @@ if (count($valeur)) {
 
 	$nbMat=0;
 
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
@@ -171,7 +169,7 @@ if (count($valeur)) {
 	if ($nbMat >= 40) { $nbaffichematiere=22 ; } 
 
 
-while(count($ordre)) {
+while(countTriade($ordre)) {
 	$ju=0;
 	
 	$pdf->AddPage();
@@ -215,7 +213,7 @@ while(count($ordre)) {
 	}
 
 
-	while (list($key, $nom_matiere) = each($tabmatiere)) {
+	foreach ($tabmatiere as $key => $nom_matiere) {
 		list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
 		$pdf->SetFillColor(220);
 		$pdf->SetXY($xmatiere,$ymatiere-3);
@@ -236,22 +234,7 @@ while(count($ordre)) {
 		$pdf->SetFont('Arial','',6);
 	
 	}
-/*
-	while (list($key, $nom_matiere) = each($tabmatiere)) {
-		list($nom_matiere,$num_ordre,$idMatiere)=preg_split("/##/",$nom_matiere);
-		$pdf->SetFillColor(220);
-		$pdf->SetXY($xmatiere,$ymatiere);
-		$pdf->SetFont('Arial','',6);
-  		$pdf->MultiCell($largeurnote,5,"",1,'L',1);	
-		$pdf->SetXY($xmatiere,$ymatiere);
-		$pdf->writehtml(trunchaine(ucfirst($nom_matiere),8));
-		$xmatiere=$xmatiere + 11;
-	
-	}
-
-
- */
-	if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 
 		if (MODNAMUR0 == "oui") {
 			$pdf->SetXY($xmatiere,$ymatiere); // placement du cadre notes
@@ -281,7 +264,7 @@ while(count($ordre)) {
         $xmatiere=$xnomeleve+30;
 
 
-        while (list($key, $nom_matiere) = each($tabmatiere2)) {
+	foreach ($tabmatiere2 as $key => $nom_matiere) {
                 list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
                 $coeffaff=recupCoeff($idMatiere,$idClasse,$num_ordre);
                 if ($examen != "") {
@@ -301,7 +284,7 @@ while(count($ordre)) {
 
 	//eleves
 	$afficMoyenEleve="oui";	
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$ju++;
 		$nomEleve=ucwords($eleveT[$j][0]);
@@ -385,7 +368,7 @@ while(count($ordre)) {
 			$XnotVal=$XnotVal + $largeurnote;
 		}
 
-		if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+		if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 			$noteMoyEleG=0; // pour la moyenne  general
 			$coefEleG=0; // pour la moyenne  general
 
@@ -505,6 +488,8 @@ while(count($ordre)) {
 			$pdf->SetTextColor(0,0,0);
 			if (trim($moyenEleve) != "") {
 				$moyenEleve=preg_replace('/,/','.',$moyenEleve);
+				$moyenClasseGen = (float) $moyenClasseGen;
+				$moyenEleve     = (float) $moyenEleve;
 				$moyenClasseGen+=$moyenEleve;
 				$nbeleve2++;
 			}
@@ -579,7 +564,7 @@ while(count($ordre)) {
 		$pdf->SetFont('Arial','',10);
 		$XnotVal=$XnotVal+$largeurnote;
 	}
-	if (($afficheMoyen) && ($nbaffichematiere > count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere > countTriade($ordre))) {
 		if (MODNAMUR0 == "oui") {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			$moyenEleve="";
@@ -615,7 +600,7 @@ while(count($ordre)) {
 
 	// cclassement
 if ($_POST["affrang"] == "1") {
-	if (count($eleveT)<32) {
+	if (countTriade($eleveT)<32) {
 		$XnotVal=$XnotVal+$largeurnote;	
 		$YnotVal = 20;	 
 		arsort($classement);
@@ -628,7 +613,7 @@ if ($_POST["affrang"] == "1") {
 		$pdf->SetXY($XnotVal,$ymatiere-3);
 		$pdf->MultiCell(10,8,'Rang',1,'C',1);
 		$pdf->SetFont('Arial','',10);
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			$pdf->MultiCell(10,$hauteurnomeleve,'',1,'L',0);
 			$pdf->SetXY($XnotVal+2,$YnotVal);
@@ -647,7 +632,7 @@ if ($_POST["affrang"] == "1") {
 		}
 		$pdf->SetXY($XnotVal+5,$YnotVal-$hauteurnomeleve);
 		$pdf->MultiCell(46,$hauteurnomeleve,'Classement :',1,'L',0);
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			$nomEleve=ucwords($eleveT[$j][0]);
 			$prenomEleve=ucfirst($eleveT[$j][1]);
 			$pdf->SetXY($XnotVal+5,$YnotVal);

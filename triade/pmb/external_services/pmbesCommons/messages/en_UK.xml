@@ -4,13 +4,13 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.3 2016-04-28 10:27:27 mbertin Exp $ -->
+$Id: en_UK.xml,v 1.4 2023/07/17 16:07:45 dbellamy Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
   <entry code="pmbesCommon_description">Common functions of PMB</entry>
-  <entry code="get_uniumarc_labels_description">Retrieves a serialized table of UNIMARC labels</entry>
+  <entry code="get_unimarc_labels_description">Retrieves a serialized table of UNIMARC labels</entry>
   <entry code="get_unimarc_labels_input_description">No parameter</entry>
-  <entry code="get_unimarc_labels_output_description">Table of serialised unimarc_label labels</entry>
-  <entry code="unimarc_labels_description">Serialised type unimarc_label : array(code champ =&gt; array("label"=&gt;libellé champ,"subfields"=>array(code sous champ=&gt;libellé sous champ)))</entry>
+  <entry code="get_unimarc_labels_output_description">Table of serialized UNIMARC codes and labels</entry>
+  <entry code="unimarc_labels_description">Serialized type unimarc_label : array(code champ =&gt; array("label"=&gt;libellé champ,"subfields"=>array(code sous champ=&gt;libellé sous champ)))</entry>
 </XMLlist>

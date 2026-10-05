@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.2 2023/04/21 09:26:41 gneveu Exp $ -->
+<sort reference="cms_sections" referencekey="id_section" ppersoprefix="cms_editorial" typeobject="13">
+
+	<!--Name-->
+	<field name="search_universe_cms_section_title" type="text" typefield="select" id="3">
+		<table>
+			<tablefield>article_title</tablefield>
+		</table>
+	</field>
+
+</sort>

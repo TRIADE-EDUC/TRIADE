@@ -1,0 +1,8 @@
+<div id="calendar">
+	<template v-if="'add' == action || 'edit' == action">
+		<calendarform :pmb="pmb" :calendar="calendar" :action="action" :img="img"></calendarform>
+	</template>
+	<template v-else>
+		<calendarlist :pmb="pmb" :calendarlist="calendar"></calendarlist>
+	</template>
+</div>

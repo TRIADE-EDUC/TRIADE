@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_articles_categories.class.php,v 1.11 2019-03-20 10:51:52 dgoron Exp $
+// $Id: cms_module_common_datasource_articles_categories.class.php,v 1.14.6.1 2025/02/10 15:45:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -24,7 +25,7 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 	}
 
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -32,7 +33,8 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 			"id_article",
 			"article_title",
 			"article_order",
-			"pert"
+			"pert",
+		    "rand()"
 		);
 	}
 	
@@ -44,7 +46,7 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 				case 'and':
 					$query = "select distinct notices_categories.num_noeud
 						from notices_categories
-					    where notices_categories.notcateg_notice = '".($selector->get_value()*1)."'";
+					    where notices_categories.notcateg_notice = '".intval($selector->get_value())."'";
 					$result = pmb_mysql_query($query);
 					$descriptors = array();
 					if($result && (pmb_mysql_num_rows($result) > 0)){
@@ -55,7 +57,7 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 					if(count($descriptors)) {
 						$query = "select distinct id_article,if(article_start_date != '0000-00-00 00:00:00',article_start_date,article_creation_date) as publication_date, notices_categories.num_noeud
 							from cms_articles join cms_articles_descriptors on id_article=num_article
-							where cms_articles_descriptors.num_article != '".($selector->get_value()*1)."' and cms_articles_descriptors.num_noeud IN (".implode(',', $descriptors).")
+							where cms_articles_descriptors.num_article != '".intval($selector->get_value())."' and cms_articles_descriptors.num_noeud IN (".implode(',', $descriptors).")
 							group by id_article
 							having count(id_article) = ".count($descriptors);
 						return $query;
@@ -72,13 +74,24 @@ class cms_module_common_datasource_articles_categories extends cms_module_common
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		$return = $this->get_sorted_datas('id_article', 'num_noeud');
-		if($return) {
-			$return = $this->filter_datas("articles",$return);
-			if ($this->parameters["nb_max_elements"] > 0) $return = array_slice($return, 0, $this->parameters["nb_max_elements"]);
+		$articles = $this->get_sorted_datas('id_article', 'num_noeud');
+		
+		$return = [
+		    "articles" => []
+		];
+		
+		if($articles) {
+			$return["articles"] = $this->filter_datas("articles", $articles);
+			
+			if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+			    $return["paging"] = $this->inject_paginator($return['articles']);
+			    $return['articles'] = $this->cut_paging_list($return['articles'], $return["paging"]);
+			} else if ($this->parameters["nb_max_elements"] > 0) {
+			    $return["articles"] = array_slice($return["articles"], 0, $this->parameters["nb_max_elements"]);
+			}
 		}
 		return $return;
 	}

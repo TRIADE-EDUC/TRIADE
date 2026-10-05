@@ -269,7 +269,7 @@
   $titleBouton = trad('PLGL_ADD');
   if ($ztActionGrp!="NvAff") {
     list ($grpg, $sChoix) = explode ('|', $ggr);
-    $DB_CX->DbQuery("SELECT aff_user, aff_figer, aff_precision, aff_debut, aff_fin FROM ${PREFIX_TABLE}planning_affichage WHERE aff_util_id=".$idUser." AND aff_type=".(($isPlanningGlobal) ? "0" : "1")."");
+    $DB_CX->DbQuery("SELECT aff_user, aff_figer, aff_precision, aff_debut, aff_fin FROM {$PREFIX_TABLE}planning_affichage WHERE aff_util_id=".$idUser." AND aff_type=".(($isPlanningGlobal) ? "0" : "1")."");
     if ($enr=$DB_CX->DbNextRow()) {
       $ckAffCache = $enr['aff_user'];
       $ckAffGr = $enr['aff_figer'];
@@ -279,7 +279,7 @@
     }
   }
   if (($ztActionGrp!="NvAff" && $ztActionGrp!="NvGr") || $sChoix=="") {
-    $DB_CX->DbQuery("SELECT ggr_id, ggr_liste, ggr_nom FROM ${PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." AND ggr_aff='O' AND ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
+    $DB_CX->DbQuery("SELECT ggr_id, ggr_liste, ggr_nom FROM {$PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." AND ggr_aff='O' AND ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
     if ($DB_CX->DbNumRows()) {
       $grpg = $DB_CX->DbResult(0,0);
       $sChoix = $DB_CX->DbResult(0,1);
@@ -293,7 +293,7 @@
   elseif ($ztActionGrp=="NvGr" && $ggr!="0|0") {
     $labelBouton = trad('PLGL_BP_MOD');
     $titleBouton = trad('PLGL_MOD');
-    $DB_CX->DbQuery("SELECT ggr_nom FROM ${PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg." AND ggr_util_id=".$idUser." AND ggr_nom='NoGroup' AND ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
+    $DB_CX->DbQuery("SELECT ggr_nom FROM {$PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg." AND ggr_util_id=".$idUser." AND ggr_nom='NoGroup' AND ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
     if ($DB_CX->DbNumRows()) {
       if ($DB_CX->DbResult(0,0)=="NoGroup") {
         $labelBouton = trad('PLGL_BP_ADD');
@@ -304,11 +304,11 @@
   $tChoix = explode (',', $sChoix);
   $LstUser = array();
   if ($droit_AGENDAS < _DROIT_AGENDA_PARTAGE) {
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   } else if ($droit_AGENDAS >= _DROIT_AGENDA_TOUS) {
-    $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0)");
+    $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0)");
   } else {
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.")");
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.")");
   }
   while ($enr=$DB_CX->DbNextRow())
     $LstUser[] = $enr['util_id'];
@@ -319,7 +319,7 @@
   <TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
   <TR>
 <?php
-  $DB_CX->DbQuery("SELECT ggr_id, ggr_liste FROM ${PREFIX_TABLE}global_groupe WHERE ggr_nom='NoGroup' and ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
+  $DB_CX->DbQuery("SELECT ggr_id, ggr_liste FROM {$PREFIX_TABLE}global_groupe WHERE ggr_nom='NoGroup' and ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")."");
   if ($DB_CX->DbNumRows()) {
     $idNoGroup = $DB_CX->DbResult(0,0);
     $choixNoGroup = $DB_CX->DbResult(0,1);
@@ -327,7 +327,7 @@
     $idNoGroup = "0";
     $choixNoGroup = "0";
   }
-  $DB_CX->DbQuery("SELECT ggr_id, ggr_nom, ggr_liste FROM ${PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")." AND ggr_nom!='NoGroup' ORDER BY ggr_nom");
+  $DB_CX->DbQuery("SELECT ggr_id, ggr_nom, ggr_liste FROM {$PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")." AND ggr_nom!='NoGroup' ORDER BY ggr_nom");
   if ($DB_CX->DbNumRows()) {
     echo ("    <TD class=\"sousMenu\" style=\"text-align:left;\" nowrap>&nbsp;<SELECT name=\"ggr1\" size=\"1\" onChange=\"javascript: changeGgr1(document.frmChoixGrp);\">
       <OPTION value=\"".$idNoGroup."|".$choixNoGroup."\">(".trad("PLGL_NO_GR").")</OPTION>\n");
@@ -378,21 +378,21 @@
 <?php
   // Construction de la liste des utilisateurs selectionnables
   if ($droit_AGENDAS < _DROIT_AGENDA_PARTAGE) {
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   } elseif ($droit_AGENDAS >= _DROIT_AGENDA_TOUS) {
-    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
   } else {
     if ($ckAffCache!="O") {
       if ($isPlanningGlobal) {
         // Liste des utilisateurs dont on peut consulter le planning
-        $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+        $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
       } else {
         // Liste des utilisateurs a qui l'on peut affecter une note
-        $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
+        $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
       }
     } else {
       // Liste de tous les utilisateurs dont on a acces au planning (consultation et/ou affectation)
-      $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+      $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
     }
   }
   $tabUtil = array();
@@ -406,15 +406,15 @@
 
   //Parcours des resultats et constitution de la liste des utilisateurs
   for ($j=0;$j<$indT;$j++) {
-    $DB_CX->DbQuery("SELECT paf_consultant_id FROM ${PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$tabUtil[0][$j]." AND paf_consultant_id=".$idUser);
+    $DB_CX->DbQuery("SELECT paf_consultant_id FROM {$PREFIX_TABLE}planning_affecte WHERE paf_util_id=".$tabUtil[0][$j]." AND paf_consultant_id=".$idUser);
     $tabUtil[2][$j] = ($DB_CX->DbNumRows()>0);
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$tabUtil[0][$j]." AND util_autorise_affect='1'");
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$tabUtil[0][$j]." AND util_autorise_affect='1'");
     if ($DB_CX->DbNumRows()) {
       $tabUtil[2][$j] = true;
     }
-    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM ${PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$tabUtil[0][$j]." AND ppl_consultant_id=".$idUser);
+    $DB_CX->DbQuery("SELECT ppl_consultant_id FROM {$PREFIX_TABLE}planning_partage WHERE ppl_util_id=".$tabUtil[0][$j]." AND ppl_consultant_id=".$idUser);
     $tabUtil[3][$j] = ($DB_CX->DbNumRows()>0);
-    $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$tabUtil[0][$j]." AND util_partage_planning='1'");
+    $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$tabUtil[0][$j]." AND util_partage_planning='1'");
     if ($DB_CX->DbNumRows()) {
       $tabUtil[3][$j] = true;
     }
@@ -477,7 +477,7 @@
 <?php
   // Recuperation des parametres de precision de l'utilisateur connecte
   if ($zlPrec!=4 && $zlPrec!=2) {
-    $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee, util_precision_planning FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee, util_precision_planning FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
     $iHeureMin = $DB_CX->DbResult(0,0);
     $iHeureMax = $DB_CX->DbResult(0,1);
     $zlPrec = $DB_CX->DbResult(0,2) * 2;
@@ -503,7 +503,7 @@
     $aUtiltzDateHiver = array();
     $aUtiltzHeureHiver = array();
 
-    $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_debut_journee, util_fin_journee, util_precision_planning, util_semaine_type, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id IN (".$sChoix.") AND tzn_zone=util_timezone ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_debut_journee, util_fin_journee, util_precision_planning, util_semaine_type, tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id IN (".$sChoix.") AND tzn_zone=util_timezone ORDER BY nomUtil");
     while ($enr = $DB_CX->DbNextRow()) {
       // Recuperation des infos de timezone de l'utilisateur
       $aUtiltzLibelle[$enr['util_id']] = htmlentities($enr['tzn_libelle']);
@@ -632,7 +632,7 @@
 <?php
   echo ("    <TD class=\"tabInput\" width=\"370\" ><SELECT name=\"ggr\" size=\"1\" onChange=\"javascript: changeGgr(document.frmChoixGrp);\">
       <OPTION value=\"".$idNoGroup."|".$choixNoGroup."\">(".trad('PLGL_NO_GR').")</OPTION>\n");
-  $DB_CX->DbQuery("SELECT ggr_id, ggr_nom, ggr_liste FROM ${PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")." ORDER BY ggr_nom");
+  $DB_CX->DbQuery("SELECT ggr_id, ggr_nom, ggr_liste FROM {$PREFIX_TABLE}global_groupe WHERE ggr_util_id=".$idUser." and ggr_type=".(($isPlanningGlobal) ? "0" : "1")." ORDER BY ggr_nom");
   while ($enr = $DB_CX->DbNextRow()) {
     if ($enr['ggr_nom']!="NoGroup") {
       $selected = ($grpg == $enr['ggr_id']) ? " selected" : "";

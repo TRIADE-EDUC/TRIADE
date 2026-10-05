@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_datasource_custom_fields.class.php,v 1.3 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: frbr_entity_common_datasource_custom_fields.class.php,v 1.4.12.1 2025/02/18 16:14:44 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -71,6 +71,7 @@ class frbr_entity_common_datasource_custom_fields extends frbr_entity_common_dat
 
 	protected function get_prefixes() {
 		return array(
+                'notices',
 				'author',
 				'categ',
 				'publisher',
@@ -80,7 +81,8 @@ class frbr_entity_common_datasource_custom_fields extends frbr_entity_common_dat
 				'indexint',
 				'skos',
 				'tu',
-				'authperso'
+				'authperso',
+	            'expl'
 		);
 	}
 
@@ -88,7 +90,7 @@ class frbr_entity_common_datasource_custom_fields extends frbr_entity_common_dat
 		if(!isset($this->custom_list)) {
 			$this->custom_list = array();
 			foreach ($this->get_prefixes() as $prefix) {
-				$query = "select idchamp, titre, options from ".$prefix."_custom where type='query_auth' order by name";
+				$query = "select idchamp, titre, options, datatype from ".$prefix."_custom where type='query_auth' order by name";
 				$result = pmb_mysql_query($query);
 				while($row = pmb_mysql_fetch_assoc($result)) {
 					$options = _parser_text_no_function_($row['options']);
@@ -106,12 +108,13 @@ class frbr_entity_common_datasource_custom_fields extends frbr_entity_common_dat
 
 		if(!isset($this->parameters->prefix)) $this->parameters->prefix = '';
 		if(!isset($this->parameters->id)) $this->parameters->id = 0;
-
+		if(!isset($this->parameters->datatype)) $this->parameters->datatype = 'integer';
+		
 		$custom_list = $this->get_custom_list();
 		$selector = "<select name='datanode_datasource_custom_field'>";
 		foreach ($custom_list as $prefix=>$customs) {
 			foreach ($customs as $custom) {
-				$selector .= "<option value='".$prefix."|||".$custom['idchamp']."' ".($this->parameters->prefix.'|||'.$this->parameters->id == $prefix."|||".$custom['idchamp'] ? "selected='selected'" : "").">".htmlentities($custom['titre'], ENT_QUOTES, $charset)."</option>";
+			    $selector .= "<option value='".$prefix."|||".$custom['idchamp']."|||".$custom['datatype']."' ".($this->parameters->prefix.'|||'.$this->parameters->id.'|||'.$this->parameters->datatype == $prefix."|||".$custom['idchamp']."|||".$custom['datatype'] ? "selected='selected'" : "").">".htmlentities($custom['titre'], ENT_QUOTES, $charset)."</option>";
 			}
 		}
 		$selector .= "</select>";
@@ -139,11 +142,12 @@ class frbr_entity_common_datasource_custom_fields extends frbr_entity_common_dat
 		$custom_field = explode('|||', $datanode_datasource_custom_field);
 		$this->parameters->prefix = $custom_field[0];
 		$this->parameters->id = $custom_field[1];
+		$this->parameters->datatype = $custom_field[2];
 		return parent::save_form();
 	}
 
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
 	    $datatype = 'integer';

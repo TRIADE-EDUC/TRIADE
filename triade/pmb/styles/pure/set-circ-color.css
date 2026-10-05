@@ -2,7 +2,7 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: set-circ-color.css,v 1.7 2018-04-17 15:21:19 wlair Exp $ */
+// $Id: set-circ-color.css,v 1.8 2019/12/01 15:35:35 Alexandre Exp $ */
 /*------------------------------------------------------------------------------------------*/
 /* Color :
 base :#469de1
@@ -14,20 +14,21 @@ active/focus :#318fd9
 	border-bottom-color:#469de1;
 }
 li#navbar-circ.current,
-.circ input[type="checkbox"]:checked, 
-.circ input[type="checkbox"]:indeterminate, 
+.circ input[type="checkbox"]:checked,
+.circ input[type="checkbox"]:indeterminate,
 .circ input[type="radio"]:checked,
-.circ input[type="checkbox"]:checked:focus, 
-.circ input[type="checkbox"]:indeterminate:focus, 
+.circ input[type="checkbox"]:checked:focus,
+.circ input[type="checkbox"]:indeterminate:focus,
 .circ input[type="radio"]:checked:focus,
 .circ div#extra2 span.uk-icon,
 .circ div#extra2 .notification.ui-active {
-	background-color:#469de1;	
+	background-color:#469de1;
 }
-.circ input[type="text"]:focus, 
-.circ select:focus, 
+.circ input[type="text"]:focus,
+.circ input[type="date"]:focus,
+.circ select:focus,
 .circ textarea:focus,
-.circ input[type="checkbox"]:focus, 
+.circ input[type="checkbox"]:focus,
 .circ input[type="radio"]:focus,
 .circ select:focus,
 .circ.claro.pure .dijitButtonHover .dijitButtonNode,
@@ -76,16 +77,16 @@ li#navbar-circ.current,
 	color: #469de1;
 	font-weight: 500;
 }
-.circ #menu ul.uk-nav{		
-	border-top: solid 2px #469de1;		
+.circ #menu ul.uk-nav{
+	border-top: solid 2px #469de1;
 }
-.circ #menu>h3 .uk-icon{		
-	background: #469de1;		
+.circ #menu>h3 .uk-icon{
+	background: #469de1;
 }
-.circ.claro.pure .dijitMenu .dijitMenuItemHover td, 
-.circ.claro.pure .dijitMenu .dijitMenuItemSelected td, 
-.circ.claro.pure .dijitMenuItemHover, 
-.circ.claro.pure .dijitComboBoxMenu .dijitMenuItemHover, 
+.circ.claro.pure .dijitMenu .dijitMenuItemHover td,
+.circ.claro.pure .dijitMenu .dijitMenuItemSelected td,
+.circ.claro.pure .dijitMenuItemHover,
+.circ.claro.pure .dijitComboBoxMenu .dijitMenuItemHover,
 .circ.claro.pure .dijitMenuItemSelected,
 .circ.claro.pure .dojoDndItemOver {
     background-color:rgba(70, 157, 225, 0.3);
@@ -104,7 +105,7 @@ li#navbar-circ.current,
 .circ.claro.pure .dijitComboButton .dijitButtonNode,
 .circ.claro.pure .dijitToggleButton .dijitButtonNode{
 	background-color: #469de1;
-		
+
 }
 .circ input.wyr-input[type='submit']:hover,
 .circ .uk-button:hover,
@@ -134,7 +135,7 @@ li#navbar-circ.current,
 .circ .uk-label,
 .circ .uk-label:hover {
 	background: #469de1;
-	color:#fff;		
+	color:#fff;
 }
 .circ  .search-result-item.notice-child[style*='block'],
 .circ  .child[style*='block'],
@@ -158,10 +159,10 @@ li#navbar-circ.current,
 .pure .circ input[class^='saisie'][class*='emr']:active,
 .pure .circ input[class^='saisie'][class*='emr']:focus{
   background: #85c1f0;
-  color:#000;	
+  color:#000;
 }
 /*
-*Retours 
+*Retours
 */
 
 .circ .form-retour-expl  {
@@ -196,9 +197,9 @@ inside menu //  button
 .pure.circ .hmenu .wui-button:focus,
 .circ #empr-name,
 .pure.circ .hmenu .wui-button  {
-    border-color: #469de1;    
+    border-color: #469de1;
 }
- 
+
 .circ input[type='submit'],
 .circ input[type='button'],
 .circ .bouton{
@@ -212,7 +213,7 @@ inside menu //  button
 
 .circ input[type='submit']:focus,
 .circ input[type='button']:focus,
-.circ .bouton:focus,  
+.circ .bouton:focus,
 .circ input[type='submit']:active,
 .circ input[type='button']:active,
 .circ .bouton:active{

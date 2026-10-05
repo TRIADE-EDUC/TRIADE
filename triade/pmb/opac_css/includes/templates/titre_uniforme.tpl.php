@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: titre_uniforme.tpl.php,v 1.5 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: titre_uniforme.tpl.php,v 1.5 2019/05/29 11:23:32 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -13,7 +13,7 @@ if ( ! defined( 'TITRE_UNIFORME_TMPL' ) ) {
 
 global $titre_uniforme_level2_display, $msg;
   
-// level 2 : affichage gÃ©nÃ©ral
+// level 2 : affichage général
 $titre_uniforme_level2_display = "
 <div class=publisherlevel2>
 <h3>".sprintf($msg["titre_uniforme_detail"],"!!name!!")."</h3>		
@@ -39,4 +39,4 @@ $titre_uniforme_level2_display = "
 </div>
 ";
 
-} # fin de dÃ©finition
+} # fin de définition

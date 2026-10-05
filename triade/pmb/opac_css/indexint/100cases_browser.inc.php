@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: 100cases_browser.inc.php,v 1.15 2017-11-07 15:51:41 ngantier Exp $
+// $Id: 100cases_browser.inc.php,v 1.17 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $msg, $charset, $decimal_see_header, $decimal_see_footer;
 
 print preg_replace('/!!indexint_title!!/m',$msg["100_cases_table"], $decimal_see_header);
 
@@ -20,7 +22,7 @@ else
 cellule.style.background = \"url(\"+imagefond+\") repeat bottom left\";
 }
 </script>
-\n<table style='border:2px' cellpadding=\"1\" cellspacing=\"1\">";
+\n<table style='border:2px; padding: 1px; border-spacing: 1px'>";
 
 $i=0;
 $j=0;
@@ -45,18 +47,18 @@ while ($i < 10) {
 		}
 	$i++;
 	$hundred_cases_table .= "\n</tr>";
-	// La valeur affiche est $i avant l'incrÃ©mentation (post-incrÃ©mentation)
+	// La valeur affiche est $i avant l'incrémentation (post-incrémentation)
 	}
 $hundred_cases_table .= "\n</table>";
 
 $rqt = " select indexint_id, indexint_comment, indexint_name from indexint where indexint_name REGEXP \"^..0$\" ";
-$res = pmb_mysql_query($rqt, $dbh);
+$res = pmb_mysql_query($rqt);
 while($indexint=pmb_mysql_fetch_object($res)) {
 	$indexint->indexint_comment = pmb_preg_replace('/\r/', ' ', $indexint->indexint_comment);
 	$indexint->indexint_comment = pmb_preg_replace('/\n/', ' ', $indexint->indexint_comment);
 	$hundred_cases_table = pmb_preg_replace("/!!".$indexint->indexint_name."!!/m", htmlentities($indexint->indexint_comment,ENT_QUOTES,$charset), $hundred_cases_table);
 	$hundred_cases_table = pmb_preg_replace("/!!id".$indexint->indexint_name."!!/", $indexint->indexint_id, $hundred_cases_table);
-	}
+}
 
 print pmb_bidi($hundred_cases_table);
 print "<br />";

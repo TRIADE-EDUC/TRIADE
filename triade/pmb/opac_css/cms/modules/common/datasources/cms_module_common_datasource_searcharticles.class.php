@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_searcharticles.class.php,v 1.10 2017-01-18 16:29:04 apetithomme Exp $
+// $Id: cms_module_common_datasource_searcharticles.class.php,v 1.12 2022/05/31 08:37:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,7 +14,7 @@ class cms_module_common_datasource_searcharticles extends cms_module_common_data
 		$this->limitable = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -23,21 +23,21 @@ class cms_module_common_datasource_searcharticles extends cms_module_common_data
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
 			"pert",
 			"id_article",
-			"article_title"
+			"article_title",
+		    "rand()"
 		);
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		global $dbh;
 		$selector = $this->get_selected_selector();
 		if($selector) {
 			if($selector->get_value() != ""){

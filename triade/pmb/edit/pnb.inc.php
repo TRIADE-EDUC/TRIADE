@@ -1,12 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pnb.inc.php,v 1.3 2018-06-27 10:05:35 vtouchard Exp $
+// $Id: pnb.inc.php,v 1.4 2020/11/05 10:22:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
-
-require_once ($class_path."/list/list_pnb_ui.class.php");
 
 switch($sub) {
 	case "loans":

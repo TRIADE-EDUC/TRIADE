@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: uni2ident.xsl,v 1.1.40.1 2024/08/28 14:10:15 rtigero Exp $ -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-	
+
 	<xsl:output method="text" encoding="utf-8"/>
-	
+
 	<xsl:template match="/unimarc">
 		<xsl:apply-templates select="notice/f[@c='996']/s[@c='f']"/>
 	</xsl:template>
-	
+
 	<xsl:template match="notice/f[@c='996']/s[@c='f']"><!--Code barre-->
 		<xsl:value-of select="."/>
 		<xsl:text>;Bibliotheque de medecine;</xsl:text>
@@ -19,7 +25,7 @@
 		<xsl:value-of select="../../f[@c='995']/s[@c='k']"/><!--Cote-->
 		<xsl:text>;</xsl:text>
 		<xsl:value-of select="../../f[@c='461']/s[@c='t']"/><!--Serie-->
-		<xsl:text>;;;;</xsl:text>	
+		<xsl:text>;;;;</xsl:text>
 		<xsl:choose>
 			<xsl:when test="../../f[@c='700']/s[@c='a']">
 				<xsl:value-of select="../../f[@c='700']/s[@c='a']"/><xsl:text> </xsl:text><xsl:value-of select="../../f[@c='700']/s[@c='b']"/><!--Auteur-->
@@ -35,14 +41,14 @@
 			</xsl:when>
 			<xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
-		
+
 		<xsl:text>;</xsl:text>
 
 		<xsl:value-of select="../../f[@c='200']/s[@c='a']"/><!--Titre-->
 		<xsl:text>
 </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="*"/>
 
 </xsl:stylesheet>

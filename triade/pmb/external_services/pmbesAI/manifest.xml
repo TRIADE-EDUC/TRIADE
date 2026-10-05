@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.3 2024/01/25 15:07:56 rtigero Exp $ -->
+<manifest>
+	<name>pmbesAI</name>
+	<methods>
+		<method name="getDocnumsContent" rights="" version="1.0" comment="msg:getDocnumsContentDescription" language_independant="true">
+			<inputs>
+				<param name="from_id" type="scalar" dataType="integer" description="msg:fromIdDocnums"/>
+				<param name="id_search_perso" type="scalar" dataType="integer" description="msg:idSearchPerso"/>
+			</inputs>
+			<outputs>
+				<result name="result" type="scalar" dataType="array" description="msg:getDocnumsContentReturnDescription"/>
+			</outputs>
+		</method>
+		<method name="getSummariesContent" rights="" version="1.0" comment="msg:getSummariesContentDescription" language_independant="true">
+			<inputs>
+				<param name="from_id" type="scalar" dataType="integer" description="msg:fromIdNotices"/>
+				<param name="id_search_perso" type="scalar" dataType="integer" description="msg:idSearchPerso"/>
+			</inputs>
+			<outputs>
+				<result name="result" type="scalar" dataType="array" description="msg:getSummariesContentReturnDescription"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

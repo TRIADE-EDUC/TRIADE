@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice.inc.php,v 1.11 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: notice.inc.php,v 1.13 2023/07/26 15:07:57 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -33,7 +33,7 @@ if ($id) {
 			if(pmb_mysql_num_rows($resultat)) {
 				$notice = pmb_mysql_fetch_object($resultat);
 				$cart_click_isbd = "onClick=\"openPopUp('./cart.php?object_type=NOTI&item=$id', 'cart')\"";
-				$cart_click_isbd = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_isbd>" ;
+				$cart_click_isbd = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_isbd>" ;
 				if ($current!==false) {
 					$print_action = "&nbsp;<a href='#' onClick=\"openPopUp('./print.php?current_print=$current&notice_id=".$id."&action_print=print_prepare','print'); w.focus(); return false;\"><img src='".get_url_icon('print.gif')."' style='border:0px' class='center' alt=\"".$msg["histo_print"]."\" title=\"".$msg["histo_print"]."\"/></a>";
 				}
@@ -45,7 +45,7 @@ if ($id) {
 					$isbd = new mono_display($notice, 6, '', $show_expl, '', '', '', 0, 0, $show_explnum, 0, '', 0, false, true, 0, 0, $show_map);
 					
 				} else {
-					// notice de pÃ©riodique
+					// notice de périodique
 					$isbd = new serial_display($notice, 5, '', '', '', '', '', 0, 0, $show_explnum, 0, true, 0, 0, '', false, $show_map);
 				}
 				
@@ -60,30 +60,6 @@ if ($id) {
 						<div class='row'>
 						$isbd->isbd
 						</div>";
-				
-				// pour affichage de l'image de couverture
-				if ($pmb_book_pics_show=='1' && (($pmb_book_pics_url && $isbd->notice->code) || $isbd->notice->thumbnail_url)) {
-					$display .= "<script type='text/javascript'>
-							<!--
-							var img = document.getElementById('PMBimagecover".$id."');
-							isbn=img.getAttribute('isbn');
-							vigurl=img.getAttribute('vigurl');
-							url_image=img.getAttribute('url_image');
-							if (vigurl) {
-								if (img.src.substring(img.src.length-8,img.src.length)=='vide.png') {
-									img.src=vigurl;
-								}
-							} else {
-								if (isbn) {
-									if (img.src.substring(img.src.length-8,img.src.length)=='vide.png') {
-										img.src=url_image.replace(/!!noticecode!!/,isbn);
-									}
-								}
-							}
-							//-->
-							</script>
-							";
-				}
 			}
 		}
 		ajax_http_send_response($display);

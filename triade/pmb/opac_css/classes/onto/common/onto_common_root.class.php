@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_root.class.php,v 1.2 2017-02-08 17:50:25 tsamson Exp $
+// $Id: onto_common_root.class.php,v 1.3 2023/02/07 15:31:40 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -56,7 +56,7 @@ class onto_common_root {
 	public $onto_name;
 	
 	/**
-	 * Store de donnÃ©es
+	 * Store de données
 	 * @var onto_store
 	 * @access private
 	 */
@@ -80,6 +80,11 @@ class onto_common_root {
 	protected function fetch_label(){
 		return "";
 	}	
+	
+	public function set_label($label)
+	{
+	    $this->label = $label;
+	}
 	
 	protected function fetch_flags(){
 		$this->flags = $this->ontology->get_flags($this->uri);

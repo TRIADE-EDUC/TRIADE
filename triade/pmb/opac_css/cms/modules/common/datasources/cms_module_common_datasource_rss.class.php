@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_rss.class.php,v 1.15 2019-06-04 08:50:39 btafforeau Exp $
+// $Id: cms_module_common_datasource_rss.class.php,v 1.22.2.1 2025/01/17 10:40:42 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/curl.class.php");
 
 class cms_module_common_datasource_rss extends cms_module_common_datasource{
@@ -14,7 +15,7 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -27,18 +28,24 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 	}
 
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $cms_module_common_datasource_rss_limit,$cms_module_common_datasource_rss_timeout;
 
 		$this->parameters= array();
-		$this->parameters['nb_max_elements'] = $cms_module_common_datasource_rss_limit+0;
-		$this->parameters['timeout'] = $cms_module_common_datasource_rss_timeout+0;
+		$this->parameters['nb_max_elements'] = (int) $cms_module_common_datasource_rss_limit;
+		$this->parameters['timeout'] = (int) $cms_module_common_datasource_rss_timeout;
 		return parent::save_form();
 	}
 
 	public function get_form(){
+	    if(!isset($this->parameters['nb_max_elements'])) {
+	        $this->parameters['nb_max_elements'] = '';
+	    }
+	    if(!isset($this->parameters['timeout'])) {
+	        $this->parameters['timeout'] = '2';
+	    }
 		$form = parent::get_form();
 		$form.= "
 			<div class='row'>
@@ -61,34 +68,36 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
-	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
-			$informations = array();
-			for($i=0 ; $i<count($this->selectors) ; $i++){
-				if($this->selectors[$i]['name'] == $this->parameters['selector']){
+	public function get_datas() {
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+	    if (is_array($this->selectors) && $this->parameters['selector'] != "") {
+			for ($i = 0; $i < count($this->selectors); $i++) {
+				if ($this->selectors[$i]['name'] == $this->parameters['selector']) {
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
 					break;
 				}
 			}
-			@ini_set("zend.ze1_compatibility_mode", "0");
-			$information = array();
-			$loaded=false;
+			$loaded = false;
 			$aCurl = new Curl();
-			$aCurl->timeout=$this->parameters['timeout'];
+			$aCurl->timeout = $this->parameters['timeout'] ?? 15; // 15 secondes si pas de valeur, c'est déjà beaucoup
 			$url = $selector->get_value();
-			if(is_array($url)){
+			if (is_array($url)) {
 				$url = $url[0];
 			}
-			$content = $aCurl->get($url);
-			$flux=$content->body;
-			if($flux && $content->headers['Status-Code'] == 200){
-			  $rss = new domDocument();
-			  $loaded=$rss->loadXML($flux);
+			
+			$actual_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			if (!empty($url) && $actual_url != $url) {
+    			$content = $aCurl->get($url);
+    			$flux = $content->body;
+    			if ($flux && $content->headers['Status-Code'] == 200) {
+    			  $rss = new domDocument();
+    			  $loaded = $rss->loadXML($flux);
+    			}
 			}
-			if($loaded){
+			$informations = array();
+			if ($loaded) {
 				//les infos sur le flux...
 				//Flux RSS
 				if ($rss->getElementsByTagName("channel")->length > 0) {
@@ -114,12 +123,14 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 						'subject',
 						'format',
 						'language',
+						'source',
 					);
 					for($i=0 ; $i<$items->length ; $i++){
 						if($this->parameters['nb_max_elements']==0 || $i < $this->parameters['nb_max_elements']){
 							$informations['items'][]=$this->get_informations($items->item($i),$elements,false);
 						}
 					}
+					
 				//Flux ATOM
 				} elseif($rss->getElementsByTagName("feed")->length > 0) {
 					$feed = $rss->getElementsByTagName("feed")->item(0);
@@ -144,6 +155,7 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 							'modified',
 							'published',
 							'content',
+							'source',
 					);
 					for($i=0 ; $i<$entries->length ; $i++){
 						if($this->parameters['nb_max_elements']==0 || $i < $this->parameters['nb_max_elements']){
@@ -152,15 +164,12 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 					}
 				}
 			}
-			@ini_set("zend.ze1_compatibility_mode", "1");
 			return $informations;
-
 		}
 		return false;
 	}
 
 	protected function get_informations($node,$elements,$first_only=false){
-		global $charset;
 		$informations = array();
 		foreach($elements as $element){
 			$items = $node->getElementsByTagName($element);
@@ -181,7 +190,6 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 	}
 
 	protected function get_atom_informations($node,$atom_elements,$first_only=false){
-		global $charset;
 		$informations = array();
 		foreach($atom_elements as $atom_element){
 			$items = $node->getElementsByTagName($atom_element);
@@ -286,6 +294,10 @@ class cms_module_common_datasource_rss extends cms_module_common_datasource{
 					array(
 						'var' => "items[i].language",
 						"desc" => $this->msg['cms_module_common_datasource_rss_item_language_desc']
+					),
+					array(
+							'var' => "items[i].source",
+							"desc" => $this->msg['cms_module_common_datasource_rss_item_source_desc']
 					)
 				)
 			),

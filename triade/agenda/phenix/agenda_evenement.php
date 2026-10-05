@@ -24,7 +24,7 @@
   $createur = $idUser;
   $rdType = 0;
   if ($id) {
-    $DB_CX->DbQuery("SELECT DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin, DATE_FORMAT(eve_date_debut,'%Y') AS anneeEvt, eve_libelle, eve_partage, eve_util_id, eve_type, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE eve_id=".$id." AND (eve_util_id=".$idUser." OR eve_partage='O')");
+    $DB_CX->DbQuery("SELECT DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin, DATE_FORMAT(eve_date_debut,'%Y') AS anneeEvt, eve_libelle, eve_partage, eve_util_id, eve_type, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE eve_id=".$id." AND (eve_util_id=".$idUser." OR eve_partage='O')");
     if ($enr = $DB_CX->DbNextRow()) {
       $dateDebut = $enr['dateDebut'];
       $dateFin = $enr['dateFin'];
@@ -149,7 +149,7 @@
   <BR>
 <?php
   //Liste des differents evenements auxquels l'utilisateur a acces
-  $DB_CX->DbQuery("SELECT eve_id, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin, DATE_FORMAT(eve_date_debut,'%Y') AS anneeEvt, eve_libelle, eve_util_id, eve_type, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE eve_util_id=".$idUser." OR eve_partage='O' ORDER BY eve_date_debut, eve_libelle");
+  $DB_CX->DbQuery("SELECT eve_id, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin, DATE_FORMAT(eve_date_debut,'%Y') AS anneeEvt, eve_libelle, eve_util_id, eve_type, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE eve_util_id=".$idUser." OR eve_partage='O' ORDER BY eve_date_debut, eve_libelle");
   if ($DB_CX->DbNumRows()) {
     echo ("  <FORM>
     <TABLE width=\"500\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\" bgcolor=\"".$AgendaBordureTableau."\" style=\"border-collapse:separate;\">\n");

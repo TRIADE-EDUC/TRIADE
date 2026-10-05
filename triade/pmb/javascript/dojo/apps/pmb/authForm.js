@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authForm.js,v 1.5 2017-09-28 09:23:37 dgoron Exp $
+// $Id: authForm.js,v 1.7 2021/09/06 13:32:22 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dojo/dom", "dojo/on", "dojo/topic", "dojo/_base/lang","dijit/form/TextBox", "dijit/form/Button", "dojo/dom-construct"], function(declare, dom, on, topic, lang, TextBox, Button, domConstruct){
@@ -27,15 +27,21 @@ define(["dojo/_base/declare", "dojo/dom", "dojo/on", "dojo/topic", "dojo/_base/l
 				label: "+",
 			}, "button_add_"+this.id).on('click', lang.hitch(this,this.add,"")));
 
-			ajax_pack_element(dojo.byId("f_"+this.id+"0"));
-			
-			for(var i=0; i<this.data.length; i++){
-				if(i==0){
-					dojo.byId("f_"+this.id+"0").value=this.data[0].label;
-					dojo.byId("f_"+this.id+"_id0").value=this.data[0].id;
+			if(this.data.length) {
+				for(var i=0; i<this.data.length; i++){
+					if(i==0){
+						dojo.byId("f_"+this.id+"0").value=this.data[0].label;
+						dojo.byId("f_"+this.id+"_id0").value=this.data[0].id;
+					} else {
+						this.add(this.data[i]);
+					}
 				}
-				else this.add(this.data[i]);
+			} else {
+				if(dojo.byId("f_"+this.id+"0")) {
+					ajax_pack_element(dojo.byId("f_"+this.id+"0"));
+				}
 			}
+			
 			// this.add_function ...
 			if(!window.add_categ){
 				window.add_categ=lang.hitch(this,this.add,"");
@@ -113,15 +119,17 @@ define(["dojo/_base/declare", "dojo/dom", "dojo/on", "dojo/topic", "dojo/_base/l
 			topic.publish('autForm',"autFormChange",{action:"authChange"});
 	    },
 	    get_data: function (){
-			var nb=dojo.byId("max_"+this.id).value;
 			var index=0;
 			var data= new Array();
-			for(var i=0; i<nb; i++){				
-				//var label=dojo.byId("f_"+this.id+i).value;
-				var id=dojo.byId("f_"+this.id+"_id"+i).value;
-				if(id){					
-					data[index]=id;
-					index++;
+			if(dojo.byId("max_"+this.id)) {
+				var nb=dojo.byId("max_"+this.id).value;
+				for(var i=0; i<nb; i++){				
+					//var label=dojo.byId("f_"+this.id+i).value;
+					var id=dojo.byId("f_"+this.id+"_id"+i).value;
+					if(id){					
+						data[index]=id;
+						index++;
+					}
 				}
 			}
 			return (data);

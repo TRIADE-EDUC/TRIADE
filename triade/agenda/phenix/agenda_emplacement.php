@@ -20,7 +20,7 @@
   $createur = $idUser;
   if ($id) {
     //Edition d'un emplacement
-    $DB_CX->DbQuery("SELECT empl_nom, empl_partage, empl_type, empl_util_id FROM ${PREFIX_TABLE}emplacement WHERE empl_id=".$id);
+    $DB_CX->DbQuery("SELECT empl_nom, empl_partage, empl_type, empl_util_id FROM {$PREFIX_TABLE}emplacement WHERE empl_id=".$id);
     if ($enr = $DB_CX->DbNextRow()) {
       $nom = $enr['empl_nom'];
       $ckPartLieu = $enr['empl_partage'];
@@ -72,7 +72,7 @@
     <TD class="tabInput" nowrap><SELECT name="zlLieu" onchange="javascript: window.location.href='?sid=<?php echo $sid; ?>&tcType=<?php echo _TYPE_EMPL; ?>&tcMenu=<?php echo $tcMenu; ?>&tcPlg=<?php echo $tcPlg; ?>&sd=<?php echo $sd; ?>&id=' + this.value;">
       <OPTION value="0">-- <?php echo trad("EMPL_NOUVEAU_LIB");?> --</OPTION>
 <?php
-  $l_Req = "SELECT empl_id, empl_nom FROM ${PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom";
+  $l_Req = "SELECT empl_id, empl_nom FROM {$PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom";
   $DB_CX->DbQuery($l_Req);
   while ($listEmpl = $DB_CX->DbNextRow()) {
     $selected = ($id == $listEmpl['empl_id']) ? " selected" : "";

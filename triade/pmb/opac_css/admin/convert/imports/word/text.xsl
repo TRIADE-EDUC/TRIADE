@@ -1,4 +1,9 @@
 <xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: text.xsl,v 1.2.30.1 2024/08/28 14:10:18 rtigero Exp $ -->
 
 <xsl:output method="text" encoding="iso-8859-1"/>
 

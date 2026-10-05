@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file_catalog.class.php,v 1.7 2018-11-29 07:59:47 dgoron Exp $
+// $Id: misc_file_catalog.class.php,v 1.10 2022/06/28 06:14:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -40,7 +40,7 @@ class misc_file_catalog extends misc_file {
 			<th>".htmlentities($msg['misc_file_label'], ENT_QUOTES, $charset)."</th>
 			<th>".htmlentities($msg['misc_file_comment'], ENT_QUOTES, $charset)."</th>
 			<th>".htmlentities($msg['misc_file_visible'], ENT_QUOTES, $charset)."</th>
-			<th></th>
+			<!--<th></th>-->
 		</tr>";
 		return $display;
 	}
@@ -58,7 +58,7 @@ class misc_file_catalog extends misc_file {
 					<td>".$element['NAME']."</td>
 					<td>".(isset($element['COMMENT']) ? get_msg_to_display($element['COMMENT']) : '')."</td>
 					<td>".$this->get_visible_checkbox($element['ID'])."</td>
-					<td>".$this->get_substituted_icon($element['ID'])."</td>
+					<!--<td>".$this->get_substituted_icon($element['ID'])."</td>-->
 				</tr>";
 			}
 		}
@@ -66,7 +66,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	public function get_display_list() {
-		$display = "<table id='file_catalog_list'>";
+		$display = "<table id='misc_file_catalog_list'>";
 		$display .= $this->get_display_header_list();
 		if(count(static::$xml_catalog)) {
 			$display .= $this->get_display_content_list();
@@ -105,7 +105,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	protected function apply_sort($substitution_fields) {
-		if(!count($this->data)) {
+		if (empty($this->data)) {
 			return $substitution_fields;
 		}
 		$sorted_substitution = array();
@@ -121,7 +121,7 @@ class misc_file_catalog extends misc_file {
 	}
 	
 	public function apply_substitution($fields) {
-		if(count($this->data)) {
+		if (!empty($this->data)) {
 			$substitution = array();
 			foreach ($fields as $field) {
 				if(!isset($this->data[$field['ID']]['visible']) || $this->data[$field['ID']]['visible']) {

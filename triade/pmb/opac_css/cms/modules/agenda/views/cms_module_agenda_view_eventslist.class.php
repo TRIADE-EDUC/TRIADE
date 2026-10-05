@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_agenda_view_eventslist.class.php,v 1.8 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_agenda_view_eventslist.class.php,v 1.11 2023/12/07 15:02:47 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,10 +23,10 @@ le {{event.event_start.format_value}}
  {% endif %}
 {% endif%} : {{event.title}}
 </h3>
-<blockquote>
+<div>
 <img src='{{event.logo.large}}' alt=''/>
 <p>{{event.resume}}<br/><a href='{{event.link}}'>plus d'infos...<a/></p>
-</blockquote>
+</div>
 {% endfor %}
 </div>";
 	}
@@ -53,13 +53,13 @@ le {{event.event_start.format_value}}
 	
 	protected function get_render_datas($datas) {
 		$render_datas = array();
-		$render_datas['title'] = "Liste d'Ã©vÃ¨nements";
+		$render_datas['title'] = "Liste d'évènements";
 		$render_datas['events'] = array();
 		$articles = array();
 		foreach($datas['events'] as $event){
-			$event['link'] = $this->get_constructed_link("article",$event['id']);
+			$event->link = $this->get_constructed_link("article",$event->id);
 			$render_datas['events'][]=$event;
-			$articles[] = $event['id'];
+			$articles[] = $event->id;
 		}
 		//on rappelle le tout...
 		$parent_render = parent::get_render_datas($articles);
@@ -74,11 +74,7 @@ le {{event.event_start.format_value}}
 			'var' => "events[i].link",
 			'desc'=> $this->msg['cms_module_agenda_view_evenslist_link_desc']
 		);
-		$format_data[] = array(
-			'var' => "title",
-			'desc'=> $this->msg['cms_module_agenda_view_evenslist_title_desc']
-		);
-		$format_data = array_merge($format_data,parent::get_format_data_structure());
+		$format_data = array_merge($format_data, parent::get_format_data_structure());
 		return $format_data;
 	}
 }

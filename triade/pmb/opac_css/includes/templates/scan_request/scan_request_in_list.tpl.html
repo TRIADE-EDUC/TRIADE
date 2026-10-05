@@ -1,0 +1,81 @@
+<!-- $Id: scan_request_in_list.tpl.html,v 1.4 2023/12/07 13:24:49 dgoron Exp $ -->
+<tr class="scan_request_header {% if loop.even %}even{% else %}odd{% endif %}" id="scan_request_{{scan_request.id}}_parent" style="cursor:pointer;">
+	<td>
+ 		<img style="border:0px; margin:3px 3px" onclick="expand_scan_request({{scan_request.id}}); return false;" id="scan_request_{{scan_request.id}}_img" name="imEx" class="img_plus" src="./getgif.php?nomgif=plus">
+	</td>
+	<td class='scan_request_header_title' onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_title | escape }}">{{ scan_request.title }}</td>
+	<td class="scan_request_header_date" onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_date | escape }}">{{ scan_request.formatted_date }}</td>
+	<td class="scan_request_header_wish_date" onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_wish_date | escape }}">{{ scan_request.formatted_wish_date }}</td>
+	<td class="scan_request_header_deadline_date" onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_deadline_date | escape }}">{{ scan_request.formatted_deadline_date }}</td>
+	<td class="scan_request_header_priority" onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_priority | escape }}">{{ scan_request.priority.label }}</td>
+	<td class="scan_request_header_status" onclick="document.location='{{ scan_request.display_link }}'" data-column-name="{{ msg.scan_request_status | escape }}">{{ scan_request.status.label }}</td>
+	<td class="scan_request_header_cancel_link">{% if scan_request.status.cancelable %}<a href="{{ scan_request.cancel_link }}">{{ msg.scan_request_cancel }}</a>{% endif %}</td>
+</tr>
+
+<tr class="scan_request_content" style="margin-bottom: 6px; display: none;" id="scan_request_{{scan_request.id}}_child">
+	<td></td>
+	<td colspan='6'>
+		{% if scan_request.desc %}
+			<div class='row scan_request_content_desc'>
+				<div class='colonne25'>
+					{{ msg.scan_request_desc }} :
+				</div>
+				<div class='colonne_suite'>
+					{{ scan_request.desc | nl2br }}
+				</div>
+			</div>
+		{% endif %}
+		{% if scan_request.nb_scanned_pages %}
+			<div class='row scan_request_content_nb_scanned_pages'>
+				<div class='colonne25'>
+					{{ msg.scan_request_nb_scanned_pages }} :
+				</div>
+				<div class='colonne_suite'>
+					{{ scan_request.nb_scanned_pages }}
+				</div>
+			</div>
+		{% endif %}
+		<div class='row scan_request_content_update_date'>
+			<div class='colonne25'>
+				{{ msg.scan_request_update_date }} :
+			</div>
+			<div class='colonne'>
+				{{ scan_request.formatted_update_date }}
+			</div>
+		</div>
+		{% if scan_request.elapsed_time %}
+			<div class='row scan_request_content_elapsed_time'>
+				<div class='colonne25'>
+				{{ msg.scan_request_elapsed_time }} :
+				</div>
+				<div class='colonne'>
+					{{ scan_request.elapsed_time }} {{ msg.scan_request_elapsed_time_unit }}
+				</div>
+			</div>
+		{% endif %}
+		{% if scan_request.comment %}
+			<div class='row scan_request_content_comment'>
+				<div class='colonne25'>
+					{{ msg.scan_request_comment }} :
+				</div>
+				<div class='colonne'>
+					{{ scan_request.comment | nl2br }}
+				</div>
+			</div>
+		{% endif %}
+		{% if scan_request.linked_records %}
+			<div class='row scan_request_content_comment'>
+				<div class='colonne25'>
+					{{ msg.scan_request_linked_records }} :
+				</div>
+				<div class='colonne' style='width: 75%;'>
+					<span>
+					{% for record in scan_request.linked_records %}
+						{{ record.display }}
+					{% endfor %}
+					</span>
+				</div>
+			</div>
+		{% endif %}
+	</td>
+</tr>

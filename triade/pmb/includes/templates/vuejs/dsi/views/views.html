@@ -1,0 +1,76 @@
+<div id="views">
+    <loader></loader>
+	<h1 class="section-title">{{ breadcrumb }}</h1>
+	<add v-if="action == 'add' || action == 'edit'" :types="types" :view="view" :is_model="true" :entities="entities"></add>
+	<list v-else :list="list" :types="types"></list>
+</div>
+
+<script type="text/javascript">
+	window.addEventListener("startTree", function(event) {
+		require(['dijit/registry', 'dojo/data/ItemFileReadStore', 'dijit/tree/ForestStoreModel', 'dijit/Tree','dijit/Tooltip'],function(Registry, Memory,ForestStoreModel,Tree,Tooltip){
+			
+			const treeId = "struct_tree";
+			const editorId = "view-editor";
+			const editorElementId = "django_tree";
+			
+			//On supprime l'arbre si existant pour les recreer
+			var widgets = new Array();
+			Registry.forEach(widget => {
+				if(widget.id == treeId){
+					widgets.push(widget.id);
+					widget.destroyRecursive();
+					widget.destroy();
+				}
+			});
+			for (let i = 0; i < widgets.length; i++) {
+				Registry.remove(widgets[i]);
+			}
+			
+			//On rajoute la div
+			let treeElement = document.createElement('div');
+			treeElement.id = treeId;
+			let editor = document.getElementById(editorElementId);
+			editor.appendChild(treeElement);
+			
+			var datas = {label:'var'};
+			datas.items = event.detail.data;
+			var store = Memory({
+				data : datas
+			});
+			var model = new ForestStoreModel({
+				store: store,
+				rootId: 'root',
+				rootLabel:'Vars'
+			});
+			var tree = new Tree({
+				model: model,
+				showRoot: false,
+				onDblClick: function(item){
+					var itemVar = item.var[0];
+					if (item.tpl && item.tpl[0]) {
+						itemVar = item.tpl[0];
+					}
+					var tpl = '{{'+itemVar+'}}';
+					if (item.tag && item.tag[0]) {
+						tpl = '{%'+itemVar+'%}';
+					}
+					if(pmbDojo.aceManager.getEditor(editorId)){
+						pmbDojo.aceManager.getEditor(editorId).insert(tpl);
+					}else{
+						document.getElementById(editorId).value = document.getElementById(editorId).value + tpl;
+					}
+
+					const event = new CustomEvent("updateEditor");
+					window.dispatchEvent(event);
+				},
+			},treeId);
+			new Tooltip({
+				connectId: treeId,
+				selector: 'span',
+				getContent: function(matchedNode){
+					return dijit.getEnclosingWidget(matchedNode).item.desc[0];
+				}
+			});
+		});
+	})
+</script>

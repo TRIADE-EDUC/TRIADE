@@ -1,39 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_search.class.php,v 1.29 2017-10-20 12:28:22 dgoron Exp $
+// $Id: term_search.class.php,v 1.39.4.1 2025/04/16 10:29:12 dgoron Exp $
 //
-// Gestion de la recherche des termes dans le th√©saurus
+// Gestion de la recherche des termes dans le thÈsaurus
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($base_path."/classes/category.class.php");
+global $class_path;
+
+require_once($class_path."/category.class.php");
 require_once($class_path."/analyse_query.class.php");
 require_once($class_path."/thesaurus.class.php");
 
 class term_search {
 	public $id_thes = 0;				//Etendue de la recherche (identifiant thesaurus ou multi-thesaurus si 0)
 	public $thes;
-	public $search_term_name;			//Nom de la variable contenant le terme recherch√© dans les cat√©gories
-	public $search_term_origin_name;	//Nom de la variable contenant le terme recherch√© saisi par l'utilisateur
-    public $search_term;				//Terme recherch√© dans les cat√©gories
-	public $search_term_oigin;			//Terme recherch√© saisi par l'utilisateur
-    public $n_per_page;				//Nombre de r√©sultats par page
-    public $base_query;				//Param√®tres suppl√©mentaires √† passer dans l'url
-    public $url_for_term_show;			//Page √† appeller pour l'affichage de la fiche du terme
-	public $url_for_term_search;		//Page √† appeller pour l'affichage de la liste des termes correspondants √† la recherche
+	public $search_term_name;			//Nom de la variable contenant le terme recherchÈ dans les catÈgories
+	public $search_term_origin_name;	//Nom de la variable contenant le terme recherchÈ saisi par l'utilisateur
+    public $search_term;				//Terme recherchÈ dans les catÈgories
+    public $search_term_origin;			//Terme recherchÈ saisi par l'utilisateur
+    public $n_per_page;				//Nombre de rÈsultats par page
+    public $base_query;				//ParamËtres supplÈmentaires ‡ passer dans l'url
+    public $url_for_term_show;			//Page ‡ appeller pour l'affichage de la fiche du terme
+	public $url_for_term_search;		//Page ‡ appeller pour l'affichage de la liste des termes correspondants ‡ la recherche
 	public $offset;					//offset en fonction de la page courante
-	public $page;    					//Page courante (r√©cup√©r√©e du formulaire)
-	public $n_total;					//Nombre de termes total correspondants √† la recherche
-    public $keep_tilde;				//Affichage ou non des cat√©gories cach√©es
+	public $page;    					//Page courante (rÈcupÈrÈe du formulaire)
+	public $n_total;					//Nombre de termes total correspondants ‡ la recherche
+    public $keep_tilde;				//Affichage ou non des catÈgories cachÈes
     public $order;						//Stockage de la clause select de calcul de pertinence
-    public $error_message;				//Erreur renvoy√©e par l'analyse de la chaine
-    public $where;						//Clause where apr√®s analyse de la chaine
+    public $error_message;				//Erreur renvoyÈe par l'analyse de la chaine
+    public $where;						//Clause where aprËs analyse de la chaine
     public $aq;
+    public $iframe_mode;
 	
     //Constructeur
-    public function __construct($search_term_name,$search_term_origin_name,$n_per_page=500,$base_query,$url_for_term_show,$url_for_term_search,$keep_tilde=0,$id_thes=0) {
+    public function __construct($search_term_name, $search_term_origin_name, $n_per_page = 500, $base_query = '', $url_for_term_show = '', $url_for_term_search = '', $keep_tilde = 0, $id_thes = 0, $iframe_mode = true) {
 
     	global $page;
     	
@@ -50,13 +53,14 @@ class term_search {
     	global ${$search_term_name};
     	global ${$search_term_origin_name};
     	
-    	$this->search_term=stripslashes(${$search_term_name});
-    	$this->search_term_origin=stripslashes(${$search_term_origin_name});
+    	$this->search_term=stripslashes(${$search_term_name} ?? '');
+    	$this->search_term_origin=stripslashes(${$search_term_origin_name} ?? '');
 		$this->n_per_page=$n_per_page;
     	$this->base_query=$base_query;
     	$this->url_for_term_show=$url_for_term_show;
     	$this->url_for_term_search=$url_for_term_search;
     	$this->keep_tilde=$keep_tilde;
+    	$this->iframe_mode = $iframe_mode;
 
 		$this->id_thes = $id_thes;		
    		if ($id_thes != -1) $this->thes= new thesaurus($id_thes);
@@ -71,20 +75,30 @@ class term_search {
     public function page_navigator() {
     	$url_page=$this->url_for_term_search."?".$this->search_term_name."=".rawurlencode($this->search_term)."&".$this->search_term_origin_name."=".rawurlencode($this->search_term_origin);
     	
+    	$navig = "<span class='navbar'>";
 		if ($this->offset!=0) {
-			$navig="<a href=\"$url_page&page=".($this->page-1)."&".$this->base_query."&nbresultterme=".$this->n_total."\">&lt;</a>";
-		} else {
-			$navig="";
+			if ($this->iframe_mode) {
+				$navig .= "<a href='#' data-name='term_search' data-page='".($this->page-1)."' data-nbresultterme='".$this->n_total."'>&lt;</a>";
+			} else {
+				$navig .= "<a href=\"$url_page&page=".($this->page-1)."&".$this->base_query."&nbresultterme=".$this->n_total."\">&lt;</a>";
+			}
 		}
 		$navig.=" (".($this->offset+1)."-".min($this->offset+$this->n_per_page,$this->n_total).")/".$this->n_total." ";
-		if (($this->offset+$this->n_per_page+1)<$this->n_total) $navig.="<a href=\"$url_page&page=".($this->page+1)."&".$this->base_query."&nbresultterme=".$this->n_total."\">&gt;</a>";
+		if (($this->offset+$this->n_per_page+1)<$this->n_total) {
+			if ($this->iframe_mode) {
+				$navig.="<a href='#' data-name='term_search' data-page='".($this->page+1)."' data-nbresultterme='".$this->n_total."'>&gt;</a>";
+			} else {
+				$navig.="<a href=\"$url_page&page=".($this->page+1)."&".$this->base_query."&nbresultterme=".$this->n_total."\">&gt;</a>";
+			}
+		}
+		$navig .= "</span>";
 		return $navig;	
     }
     
-    //R√©cup√©ration du terme where pour la recherche
+    //RÈcupÈration du terme where pour la recherche
     public function get_where_term() {
     	global $msg;
-    	//Si il y a d√©j√† un terme where calcul√© alors renvoi tout de suite
+    	//Si il y a dÈj‡ un terme where calculÈ alors renvoi tout de suite
     	if ($this->where) return $this->where;
     	
     	//Si il y a un terme saisi alors close where
@@ -105,12 +119,11 @@ class term_search {
 		return $where_term;
     }
     
-    //R√©cup√©ration du nombre de termes correspondants √† la recherche
-    //N'est plus appel√© depuis le 3/08/2012
+    //RÈcupÈration du nombre de termes correspondants ‡ la recherche
+    //N'est plus appelÈ depuis le 3/08/2012
     public function get_term_count() {
-    	global $lang;
+        global $lang, $default_tmp_storage_engine;
     	global $thesaurus_mode_pmb;
-    	global $dbh;    	
 
 		//Comptage du nombre de termes
     	$where_term=$this->get_where_term();
@@ -121,7 +134,7 @@ class term_search {
 
 		if ($this->id_thes != -1){	//1 seul thesaurus
 				
-			if ( ($thesaurus_mode_pmb!='1') || ($lang==$this->thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false) ) { 	//Recherche dans la langue par d√©faut du thesaurus
+			if ( ($thesaurus_mode_pmb!='1') || ($lang==$this->thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false) ) { 	//Recherche dans la langue par dÈfaut du thesaurus
 
 				$q = "select count(distinct libelle_categorie) ";
 				$q.= "from categories as catdef ";
@@ -133,12 +146,12 @@ class term_search {
 				$r = pmb_mysql_query($q);
 				$this->n_total=pmb_mysql_result($r, 0, 0);
 			
-			} else {		//Recherche dans la langue de l'interface ou dans la langue par d√©faut du thesaurus
+			} else {		//Recherche dans la langue de l'interface ou dans la langue par dÈfaut du thesaurus
 
 				$q = "drop table if exists cattmp ";
-				$r = pmb_mysql_query($q, $dbh);
+				$r = pmb_mysql_query($q);
 	
-				$q1 = "create temporary table cattmp engine=myisam select ";
+				$q1 = "create temporary table cattmp engine={$default_tmp_storage_engine} select ";
 				$q1.= "if(catlg.num_noeud is null, catdef.libelle_categorie, catlg.libelle_categorie) as categ_libelle ";
 				$q1.= "from categories as catdef "; 
 				$q1.= "left join categories as catlg on catdef.num_noeud = catlg.num_noeud and catlg.langue = '".$lang."' "; 
@@ -147,7 +160,7 @@ class term_search {
 				$q1.= "and catdef.num_thesaurus = '".$this->id_thes."' ";
 				$q1.= "and catdef.langue = '".$this->thes->langue_defaut."' "; 
 				$q1.= "and catdef.libelle_categorie not like '~%' ";
-				$r1 = pmb_mysql_query($q1, $dbh);
+				pmb_mysql_query($q1);
 				$q2 = "select count(distinct categ_libelle) from cattmp ";
 				$r2 = pmb_mysql_query($q2);
 				$this->n_total=pmb_mysql_result($r2, 0, 0);
@@ -156,11 +169,11 @@ class term_search {
 		} else {
 
 			//tous les thesaurus
-			//on recherche dans la langue de l'interface ou dans la langue par d√©faut du thesaurus
+			//on recherche dans la langue de l'interface ou dans la langue par dÈfaut du thesaurus
 			$q = "drop table if exists cattmp ";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 
-			$q1 = "create temporary table cattmp engine=myisam select ";
+			$q1 = "create temporary table cattmp engine={$default_tmp_storage_engine} select ";
 			$q1.= "id_thesaurus, ";
 			$q1.= "if(catlg.num_noeud is null, catdef.libelle_categorie, catlg.libelle_categorie) as categ_libelle ";
 			$q1.= "from thesaurus ";
@@ -169,7 +182,7 @@ class term_search {
 			$q1.= "where 1 ";
 			if ($where_term) $q1.= "and (if(catlg.num_noeud is null, ".$members_catdef["where"].", ".$members_catlg["where"].") ) ";
 			$q1.= "and catdef.libelle_categorie not like '~%' ";
-			$resultat1 = pmb_mysql_query($q1, $dbh);
+			pmb_mysql_query($q1);
 			
 			$q2 = "select count(distinct id_thesaurus,categ_libelle) from cattmp ";					
 		  	$r2=pmb_mysql_query($q2);
@@ -178,21 +191,18 @@ class term_search {
 }
     
     
-    //Affichage de la liste des r√©sultats
+    //Affichage de la liste des rÈsultats
     public function show_list_of_terms() {
-    	global $charset;
-    	global $msg;
-    	global $lang;
-    	global $dbh;
+    	global $charset, $msg, $lang, $nbresultterme;
     	global $thesaurus_mode_pmb;
-    	global $nbresultterme;
+    	global $caller, $callback;
 		
-    	//Si il y a eu erreur lors de la premi√®re analyse...
+    	//Si il y a eu erreur lors de la premiËre analyse...
     	if ($this->error_message) {
     		return $this->error_message;
     	}
     	
-		//Recherche des termes correspondants √† la requ√™te
+		//Recherche des termes correspondants ‡ la requÍte
 		$where_term=$this->get_where_term();
 		if($where_term) {
 			$members_catdef = $this->aq->get_query_members("catdef", "catdef.libelle_categorie", "catdef.index_categorie", "catdef.num_noeud");
@@ -211,7 +221,7 @@ class term_search {
 		
 		if ($this->id_thes != -1){		//1 seul thesaurus
 			
-			if (($lang==$this->thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false) ) { 	//Recherche dans la langue par d√©faut du thesaurus
+			if (($lang==$this->thes->langue_defaut) || (in_array($lang, thesaurus::getTranslationsList())===false) ) { 	//Recherche dans la langue par dÈfaut du thesaurus
 				$requete.= "num_thesaurus, ";
 				$requete.= "num_noeud as categ_id, ";
 				$requete.= "libelle_categorie as categ_libelle, ";
@@ -229,7 +239,7 @@ class term_search {
 				$requete.= "indexcat asc ";
 				$requete.= "limit ".$this->offset.",".$this->n_per_page;
 			
-			} else {		//Recherche dans la langue de l'interface ou dans la langue par d√©faut du thesaurus
+			} else {		//Recherche dans la langue de l'interface ou dans la langue par dÈfaut du thesaurus
 				$requete.= "catdef.num_thesaurus, ";
 				$requete.= "catdef.num_noeud as categ_id, ";
 				$requete.= "if (catlg.num_noeud is null, catdef.libelle_categorie, catlg.libelle_categorie ) as categ_libelle, ";
@@ -253,7 +263,7 @@ class term_search {
 		} else {
 			
 			//tous les thesaurus
-			//on recherche dans la langue de l'interface ou dans la langue par d√©faut du thesaurus
+			//on recherche dans la langue de l'interface ou dans la langue par dÈfaut du thesaurus
 			$requete.= "catdef.num_thesaurus, ";
 			$requete.= "catdef.num_noeud as categ_id, ";
 			$requete.= "if (catlg.num_noeud is null, catdef.libelle_categorie , catlg.libelle_categorie ) as categ_libelle, ";
@@ -269,9 +279,9 @@ class term_search {
 			$requete.= "catdef.num_thesaurus, indexcat asc ";
 			$requete.= "limit ".$this->offset.",".$this->n_per_page;
 		}
-		$resultat=pmb_mysql_query($requete, $dbh);
+		$resultat=pmb_mysql_query($requete);
 		
-		//On r√©cup√®re le nombre de r√©sultat
+		//On rÈcupËre le nombre de rÈsultat
 		if(!$this->n_total){
 			$qry = "SELECT FOUND_ROWS() AS NbRows";
 			if($resnum = pmb_mysql_query($qry)){
@@ -279,9 +289,13 @@ class term_search {
 			}
 		}
 		
-		$res="<div classtitle_term_search'>";
+		$res="<div class='title_term_search'>";
 		$res.='<b>';
-		if ($this->search_term!='') $res.=$msg['term_search_found_term'].'<i>'.htmlentities($this->search_term_origin,ENT_QUOTES,$charset); else $res.='<i>'.$msg['term_search_all_terms'];
+		if ($this->search_term!='') {
+		    $res.=$msg['term_search_found_term'].'<i>'.htmlentities($this->search_term_origin,ENT_QUOTES,$charset);
+		} else {
+		    $res.='<i>'.$msg['term_search_all_terms'];
+		}
 		$res.="</i></b>\n";
 
 		//Navigateur de page
@@ -290,22 +304,28 @@ class term_search {
 		$res.="</div>";
 		$res.="<div class='row'>";
 		$res.="</div>";
-		//Affichage des termes trouv√©s
+		//Affichage des termes trouvÈs
 		$class='colonne2';
 		while ($r=pmb_mysql_fetch_object($resultat)) {
 			$show=1;
-			//S'il n'y a qu'un seul r√©sultat, v√©rification que ce n'est pas un terme masqu√©
+			//S'il n'y a qu'un seul rÈsultat, vÈrification que ce n'est pas un terme masquÈ
 			if (($r->nb == 1) && (!$this->keep_tilde)) {
 				$t_test = new category($r->categ_id);
 				if (($t_test->is_under_tilde)&&(!$t_test->voir_id)) $show=0;
 			}
 			if ($show) {
-				$res.="<div class='".$class."'>";
-				if ($r->nb>1) $nbre_termes ='('.$r->nb.') ';
-				else  $nbre_termes ='' ;
-				$args = 'term='.rawurlencode($r->categ_libelle).'&id_thes='.$r->num_thesaurus.'&'.$this->base_query;
-				$res.= $nbre_termes."<a href=\"".$this->url_for_term_show.'?'.$args."\" data-evt-args=\"".$args."\" target=\"term_show\" >";
-				if ($this->id_thes == -1) {	 //le nom du thesaurus n'est pas affich√© si 1 seul thesaurus
+				$res .= "<div class='$class'>";
+				$nbre_termes = '';
+				if ($r->nb > 1) {
+				    $nbre_termes = '('.$r->nb.') ';
+				}
+				if ($this->iframe_mode) {
+				    $res .= "$nbre_termes<a href='#' data-name='term_show' data-term-label='".htmlentities($r->categ_libelle, ENT_QUOTES, $charset)."' data-term-thes='".$r->num_thesaurus."'>";
+				} else {
+				    $args = 'term='.rawurlencode($r->categ_libelle).'&id_thes='.$r->num_thesaurus.'&'.$this->base_query;
+				    $res .= "$nbre_termes<a href=\"".$this->url_for_term_show.'?'.$args."\" data-evt-args=\"".$args."\" target=\"term_show\" >";
+				}
+				if ($this->id_thes == -1) {	 //le nom du thesaurus n'est pas affichÈ si 1 seul thesaurus
 					$thesaurus = new thesaurus($r->num_thesaurus);
 					$res.= '['.htmlentities(addslashes($thesaurus->getLibelle()),ENT_QUOTES, $charset).'] ';
 				}
@@ -316,8 +336,9 @@ class term_search {
 				else $class='colonne2';
 			}
 		}
-		if ($class=='colonne_suite') $res.="<div class=\"colonne_suite\"></div>\n";
+		if ($class=='colonne_suite') {
+		    $res.="<div class=\"colonne_suite\"></div>\n";
+		}
 		return $res;
     }
 }
-?>

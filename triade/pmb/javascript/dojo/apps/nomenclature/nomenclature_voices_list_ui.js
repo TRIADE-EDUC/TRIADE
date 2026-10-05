@@ -1,17 +1,17 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_voices_list_ui.js,v 1.7 2016-11-29 13:00:29 vtouchard Exp $
+// $Id: nomenclature_voices_list_ui.js,v 1.7 2016/11/29 13:00:29 vtouchard Exp $
 
 define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic",  "dojo/on", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/registry", "apps/nomenclature/nomenclature_voice_ui", "apps/nomenclature/nomenclature_voice", "dojo/dom"], function(declare, domConstruct, topic, on,lang, _WidgetBase,registry, Voice_ui, Voice, dom){
 	/*
-	 *Classe nomenclature_voices_list_ui. Classe gÃ©rant l'affichage d'une liste de voix
+	 *Classe nomenclature_voices_list_ui. Classe gérant l'affichage d'une liste de voix
 	 */
 	  return declare("voices_list_ui", [_WidgetBase], {
 			    
-		  	voices_list:null, /** Instance du modÃ¨le liÃ© **/
+		  	voices_list:null, /** Instance du modèle lié **/
 		  	nomenclature_voices_ui:null, /** Instance de l'ui parent **/
-		  	voices_ui:null, /** Instance de l'ui gÃ©rÃ©e par cette classe **/
+		  	voices_ui:null, /** Instance de l'ui gérée par cette classe **/
 		  	id:0,
 		  	events_handles: null,
 		  	dom_node:null,
@@ -111,7 +111,7 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic",  "dojo/on", "do
 		    		innerHTML:this.voices_list.nomenclature_voices.record_formation.get_note()
 		    	}, content_note);
 		    	this.own(on(this.textarea_note, 'keyup', lang.hitch(this, this.update_note)));
-		    	/** CrÃ©ation de l'input hidden de la note en vue de la sauvegarde **/
+		    	/** Création de l'input hidden de la note en vue de la sauvegarde **/
 		    	this.hidden_note = domConstruct.create('input', {type:'hidden', name:this.voices_list.nomenclature_voices.record_formation.get_hidden_field_name('notes'), value:this.voices_list.nomenclature_voices.record_formation.get_note()}, content_note);
 		    	
 		    	this.init_voices_ui();
@@ -190,7 +190,7 @@ define(["dojo/_base/declare","dojo/dom-construct", "dojo/topic",  "dojo/on", "do
 		    	voice.set_order(this.voices_list.get_max_order()+1);
 		    	
 		    	this.voices_list.add_voice(voice);
-		    	//Null est passÃ© en 2eme parametre, si l'on passe un noeud, le widget le prendra automatiquement
+		    	//Null est passé en 2eme parametre, si l'on passe un noeud, le widget le prendra automatiquement
 		    	var obj = {id:0, dom_node:this.get_voices_node(), indice:this.get_total_voices(), voice:voice, voices_list_ui:this};
 		    	var new_voice_ui = new Voice_ui(obj);
 		    	this.voices_ui.push(new_voice_ui);

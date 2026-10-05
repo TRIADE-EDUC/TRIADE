@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -30,6 +30,13 @@ Last updated: 28.06.2002    par Taesch  Eric
         <META http-equiv="expires" content = -1>
         <meta name="Copyright" content="Triade©, 2001">
         <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+        <link rel="stylesheet" href="./librairie_css/css-v4.css">
+        <style>
+        .cal-wrap{margin:4px 0;font-family:Arial,sans-serif}.cal-title{font-size:12px;font-weight:700;color:#080A66;text-align:center;padding:6px 4px;background:#f0f2fa;border:1px solid #dde0f0;border-bottom:none;border-radius:6px 6px 0 0}.cal-table{border-collapse:collapse;width:100%;background:#fff;border:1px solid #dde0f0;border-radius:0 0 6px 6px}.cal-head th{background:#080A66;color:#fff;font-size:11px;font-weight:600;padding:4px 2px;text-align:center}.cal-day{text-align:center;padding:3px 2px;font-size:11px;color:#333;border:1px solid #f0f2fa}.cal-day a{color:#080A66;text-decoration:none;font-weight:600}.cal-day-today{display:inline-flex;align-items:center;justify-content:center;background:#080A66;color:#fff;border-radius:50%;width:20px;height:20px;font-weight:700}.cal-day-event{background:#e8f5e9}.cal-day-dst{background:#fce4ec}.cal-day-ferie{background:#e8eaf6;color:#5c35be}.cal-year-grid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:8px}.cal-info{margin-top:6px;padding:10px 14px;background:#fffbe6;border:1px solid #f5c842;border-radius:6px;font-size:12px;color:#5a4000;line-height:1.6}
+        .dst-filter{display:flex;align-items:center;gap:8px;padding:4px 0 12px 10px;flex-wrap:wrap}.dst-filter-label{font-size:12px;font-weight:600;color:#080A66;white-space:nowrap}.dst-select{border:1px solid #dde0f0;border-radius:6px;padding:4px 8px;font-size:12px;color:#333;background:#fff}
+        .dst-legend{display:flex;gap:14px;flex-wrap:wrap;padding:2px 4px 6px 10px;margin-top:-4px;font-size:11px;color:#555}.dst-legend-item{display:flex;align-items:center;gap:5px}.dst-legend-dot{width:12px;height:12px;border-radius:3px;display:inline-block}.dst-legend-event{background:#e8f5e9;border:1px solid #a5d6a7}.dst-legend-ferie{background:#e8eaf6;border:1px solid #9fa8da}.dst-legend-today{background:#080A66;border-radius:50%}
+        .dst-nav{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 4px}.dst-nav a{color:#080A66;font-size:12px;font-weight:600;text-decoration:none;padding:4px 12px;border:1px solid #dde0f0;border-radius:6px;background:#f0f2fa}.dst-nav a:hover{background:#dde0f0}.dst-btn{border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid}.dst-btn-refresh{background:#f0f2fa;color:#080A66;border-color:#dde0f0}.dst-btn-refresh:hover{background:#dde0f0}
+        </style>
         <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
        <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
        <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
@@ -44,66 +51,75 @@ Last updated: 28.06.2002    par Taesch  Eric
         $cnx=cnx();
         error($cnx);
         ?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
         <?php include("./librairie_php/lib_defilement.php"); ?>
         </TD><td width="472" valign="middle" rowspan="3" align="center">
         <div align='center'><?php top_h(); ?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
      <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
       <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'>
 	 <?php print LANGPROFC1 ?></font></b></td>
 	      </tr>
      <tr id='cadreCentral0'>
-     <td valign='top'> <br><br>
-<form method="post" >
-<font class='T2'>&nbsp;&nbsp;Filtre : </font>
-<select name="ressourceID" onchange="this.form.submit()">
-<option  value="tous" id='select1' ><?php print "Toutes les ressources"?></option>
-<?php
-select_equip($_POST["ressourceID"]); // creation des options
-?>
-</select>
+     <td valign='top'>
+<br>
+<form method="post">
+<div class="dst-filter">
+    <span class="dst-filter-label">Filtre :</span>
+    <select name="ressourceID" class="dst-select" onchange="this.form.submit()">
+        <option value="tous" id='select1'><?php print "Toutes les ressources"?></option>
+        <?php select_equip($_POST["ressourceID"]); ?>
+    </select>
+</div>
 </form>
-
-<?php 
+<div class="dst-legend">
+    <span class="dst-legend-item"><span class="dst-legend-dot dst-legend-event"></span> Réservé</span>
+    <span class="dst-legend-item"><span class="dst-legend-dot dst-legend-ferie"></span> Férié / jour off</span>
+    <span class="dst-legend-item"><span class="dst-legend-dot dst-legend-today"></span> Aujourd'hui</span>
+</div>
+<?php
 if (isset($_POST["ressourceID"])) {
-	$idressource=$_POST["ressourceID"];
-}else{
-	$idressource='tous';
+    $idressource=$_POST["ressourceID"];
+} else {
+    $idressource='tous';
 }
-
 $saisie_annee_choix=$_GET["saisie_annee_choix"];
-     ?>
+?>
 <?php include("./librairie_php/lib_calendrier_equipement.php");?>
 <SCRIPT LANGUAGE="JavaScript"><!--
         // On passe en paramètre le numéro du mois et l'année
         annee(<?php print "$saisie_annee_choix"?>);
       //--></SCRIPT>
+<div id="cal-info" class="cal-info" style="display:none;margin:8px 0"></div>
 <?php
 $saisie_annee_plus=$saisie_annee_choix;
 $saisie_annee_plus++;
 $saisie_annee_moin=$saisie_annee_choix;
 $saisie_annee_moin--;
 ?>
-     <center> <A href="./calendrier_reser_equi11.php?saisie_annee_choix=<?php print $saisie_annee_moin?>" ><?php print LANCALED1 ?></A> <------> <A href="./calendrier_reser_equi11.php?saisie_annee_choix=<?php print $saisie_annee_plus?>" ><?php print LANCALED2 ?></A></center>
+<div class="dst-nav">
+    <a href="./calendrier_reser_equi11.php?saisie_annee_choix=<?php print $saisie_annee_moin?>">&#8592; <?php print LANCALED1?></a>
+    <button type="button" class="dst-btn dst-btn-refresh" onclick="window.location.reload(true)">&#8635; Réactualiser</button>
+    <a href="./calendrier_reser_equi11.php?saisie_annee_choix=<?php print $saisie_annee_plus?>"><?php print LANCALED2?> &#8594;</a>
+</div>
 
      <!-- // fin  -->
      </td></tr></table>
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

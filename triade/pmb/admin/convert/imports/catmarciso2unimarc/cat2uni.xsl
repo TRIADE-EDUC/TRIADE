@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cat2uni.xsl,v 1.1.38.1 2024/08/28 14:10:18 rtigero Exp $ -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="1.0">
-	
+
 	<xsl:output method="xml" indent="yes" encoding="ISO-8859-1"/>
-	
+
 	<xsl:template match="/unimarc">
 		<unimarc>
 			<xsl:apply-templates select="notice"/>
 		</unimarc>
 	</xsl:template>
-	
+
 	<xsl:template match="notice">
 		<notice>
 			<rs>n</rs>
@@ -58,7 +64,7 @@
 			<xsl:call-template name="auteur"/>
 		</notice>
 	</xsl:template>
-	
+
 	<!-- ISBN ou Music number -->
 	<xsl:template name="code">
 		<xsl:if test="f[@c='021'] or f[@c='028']">
@@ -76,12 +82,12 @@
 			</f>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- Découpage langue par groupe de 3 caractères -->
 	<xsl:template name="decoupe_langue">
 		<xsl:param name="langue"/>
 		<xsl:param name="souschamp"/>
-		
+
 		<xsl:element name="s">
 			<xsl:attribute name="c"><xsl:value-of select="$souschamp"/></xsl:attribute>
 			<xsl:value-of select="substring($langue,1,3)"/>
@@ -93,7 +99,7 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="langues">
 		<xsl:if test="f[@c='041']">
 			<f c="101">
@@ -112,7 +118,7 @@
 			</f>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="titre">
 		<f c='200'>
 			<s c='a'><xsl:value-of select="f[@c='245']/s[@c='a']"/></s>
@@ -134,7 +140,7 @@
 			</xsl:if>
 		</f>
 	</xsl:template>
-	
+
 	<xsl:template name="editeur">
 		<xsl:for-each select="f[@c='260']">
 			<f c='210'>
@@ -150,7 +156,7 @@
 			</f>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="collation">
 		<xsl:if test="f[@c='300']">
 			<f c='215'>
@@ -179,7 +185,7 @@
 			</f>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="fonctions_auteur">
 		<xsl:param name="fonction_catmarc"/>
 		<xsl:choose>
@@ -188,7 +194,7 @@
 			<xsl:otherwise>070</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template name="collection">
 		<xsl:if test="f[@c='440'] or f[@c='490']">
 			<xsl:if test="f[@c='440']">
@@ -219,7 +225,7 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="notes">
 		<xsl:if test="f[@c='500']">
 			<f c='300'>
@@ -237,7 +243,7 @@
 			</f>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="cdu_music">
 		<xsl:if test="f[@c='080']">
 			<xsl:for-each select="f[@c='080']/s[@c='a']">
@@ -254,7 +260,7 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="auteur">
 		<!-- Auteur principal personne -->
 		<xsl:if test="f[@c='100']">

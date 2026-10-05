@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: amende.class.php,v 1.26 2019-01-23 13:42:06 dgoron Exp $
+// $Id: amende.class.php,v 1.28.6.2.2.2 2025/03/25 11:34:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/calendar.class.php");
 require_once($class_path."/quotas.class.php");
 require_once($class_path."/expl.class.php");
@@ -18,7 +19,7 @@ class amende {
 	
     public function __construct($id_empr, $noreadcache=false) {
     	global $progress_bar;
-    	$this->id_empr=$id_empr+0;
+    	$this->id_empr=intval($id_empr);
     	if (!$noreadcache) {
     		// lire en cache
     		$req="select data_amendes from cache_amendes where id_empr=$id_empr and cache_date=CURDATE()";
@@ -29,7 +30,7 @@ class amende {
 	    	} else {
 	    		$this->t_id_expl=$this->get_list_of_id_expl();
     		
-	    		// on fait le mÃ©nage des anciens caches
+	    		// on fait le ménage des anciens caches
 	    		$req="delete from cache_amendes where cache_date<CURDATE() ";
 	    		pmb_mysql_query($req);
 	    		$req="insert into cache_amendes set id_empr=$id_empr, cache_date=CURDATE(), data_amendes='".addslashes( serialize($this->t_id_expl))."'";
@@ -38,22 +39,22 @@ class amende {
     	} else {
     		$this->t_id_expl=$this->get_list_of_id_expl();
     		
-    		// on fait le mÃ©nage du cache de l'emprunteur
+    		// on fait le ménage du cache de l'emprunteur
     		$req="delete from cache_amendes where cache_date<=CURDATE() and id_empr=$id_empr ";
     		pmb_mysql_query($req);
     		$req="insert into cache_amendes set id_empr=$id_empr, cache_date=CURDATE(), data_amendes='".addslashes( serialize($this->t_id_expl))."'";
     		pmb_mysql_query($req);
     	}
-    	//progress bar utilisÃ© pour le long calcul des relances (relance.inc.php)
+    	//progress bar utilisé pour le long calcul des relances (relance.inc.php)
     	if($progress_bar)$progress_bar->progress();    	
     }
     
     public function get_parameters($id_expl) {
-    	global $pmb_gestion_financiere,$pmb_gestion_amende,$lang,$include_path;
-    	global $finance_amende_jour,$finance_delai_avant_amende,$finance_delai_recouvrement,$finance_amende_maximum,$finance_delai_1_2,$finance_delai_2_3;
+    	global $pmb_gestion_amende,$lang,$include_path;
+    	global $finance_amende_jour,$finance_delai_avant_amende,$finance_delai_recouvrement,$finance_amende_maximum,$finance_delai_1_2,$finance_delai_2_3, $finance_frais_recouvrement;
     	global $tbclasses;
     	
-    	$id_expl += 0;
+    	$id_expl = intval($id_expl);
 		$param=array();
     	
     	if ($pmb_gestion_amende==1) {
@@ -61,11 +62,13 @@ class amende {
     		$param["delai_avant_amende"]=$finance_delai_avant_amende;
     		$param["amende_jour"]=$finance_amende_jour;
     		$param["delai_recouvrement"]=$finance_delai_recouvrement;
+    		$param["frais_recouvrement"]=$finance_frais_recouvrement;
     		$param["amende_maximum"]=$finance_amende_maximum;
     		$param["delai_1_2"]=$finance_delai_1_2;
     		$param["delai_2_3"]=$finance_delai_2_3;
     	} else {
     		//Gestion des quotas
+    	    $struct = array();
  			$struct["READER"]=$this->id_empr;
 			$struct["EXPL"]=$id_expl;
 			$struct["NOTI"] = exemplaire::get_expl_notice_from_id($id_expl);
@@ -74,7 +77,7 @@ class amende {
 			$qt_delai_avant_amende=new quota("AMENDE_DELAI","$include_path/quotas/own/$lang/finances.xml");
 			$param["delai_avant_amende"]=$qt_delai_avant_amende->get_quota_value($struct);
 			
-			if (!$tbclasses["QUOTAS_ELEMENTS"]) {
+			if (empty($tbclasses["QUOTAS_ELEMENTS"])) {
     			$tbclasses["QUOTAS_ELEMENTS"] = quota::$_quotas_[$qt_delai_avant_amende->descriptor]['_elements_'];
     			$tbclasses["QUOTAS_TYPES"] = quota::$_quotas_[$qt_delai_avant_amende->descriptor]['_types_'];
     			$tbclasses["QUOTAS_TABLE"] = quota::$_quotas_[$qt_delai_avant_amende->descriptor]['_table_'];
@@ -86,6 +89,9 @@ class amende {
 			
 			$qt_delai_recouvrement=new quota("AMENDE_DELAI_RECOUVREMENT","$include_path/quotas/own/$lang/finances.xml");
 			$param["delai_recouvrement"]=$qt_delai_recouvrement->get_quota_value($struct);
+			
+			$qt_frais_recouvrement=new quota("AMENDE_FRAIS_RECOUVREMENT","$include_path/quotas/own/$lang/finances.xml");
+			$param["frais_recouvrement"]=$qt_frais_recouvrement->get_quota_value($struct);
 			
 			$qt_amende_maximum=new quota("AMENDE_MAXIMUM","$include_path/quotas/own/$lang/finances.xml");
 			$param["amende_maximum"]=$qt_amende_maximum->get_quota_value($struct);
@@ -132,18 +138,20 @@ class amende {
     	$ta=$this->t_id_expl;
     	for ($i=0; $i<count($ta); $i++) {
     		$t=$ta[$i];
-    		$total+=$t["amende"]["valeur"];
-    		if ($t["amende"]["valeur"]*1) $this->nb_amendes++;
+    		$total += floatval($t["amende"]["valeur"]);
+    		if (floatval($t["amende"]["valeur"])) {
+    		    $this->nb_amendes++;
+    		}
     	}
     	return $total;
     }
     
     public function get_amende($id_expl) {
-    	global $pmb_amende_comptabilisation, $pmb_utiliser_calendrier, $pmb_utiliser_calendrier_location;
+        global $pmb_amende_comptabilisation, $pmb_utiliser_calendrier, $pmb_utiliser_calendrier_location;
     	
-    	$id_expl += 0;
+        $id_expl = intval($id_expl);
     	
-    	//ParamÃ¨tre permettant de calculer l'amende sur le calendrier d'ouverture de la localisation de l'exemplaire
+    	//Paramètre permettant de calculer l'amende sur le calendrier d'ouverture de la localisation de l'exemplaire
     	$loc_calendar = 0;
     	if (($pmb_utiliser_calendrier==1) && $pmb_utiliser_calendrier_location) {
     		$res=pmb_mysql_query("select expl_location from exemplaires where expl_id=".$id_expl);
@@ -165,7 +173,23 @@ class amende {
     		$dr=explode("-",$r->pret_retour);
  		   	$njours=calendar::get_open_days($dr[2],$dr[1],$dr[0],date("d"),date("m"),date("Y"),$loc_calendar);
  		   	$amende_param=$this->get_parameters($id_expl);
- 		   	if ($njours>0) {
+
+ 		   	if ($njours > 0) {
+				global $pmb_gestion_financiere_periode, $pmb_gestion_financiere_periode_amende;
+
+				$pmb_gestion_financiere_periode = intval($pmb_gestion_financiere_periode);
+				// Calcul du nombre de periodes
+				if($pmb_gestion_financiere_periode > 1) {
+					$nbperiode = intval($njours / $pmb_gestion_financiere_periode);
+			
+					if(($pmb_gestion_financiere_periode_amende == 1) && ($njours % $pmb_gestion_financiere_periode != 0)){
+						$nbperiode++;
+					}
+
+					// Remplacement du nombre de jours par le nombre de périodes.
+					$njours = $nbperiode;
+				}
+
  		   		$amende["njours"]=$njours;
 	 		   	if ($njours>$amende_param["delai_avant_amende"]) {
  			   		//En recouvrement ?
@@ -177,19 +201,22 @@ class amende {
  			   				$njours=calendar::get_open_days($dr[2],$dr[1],$dr[0],$drel[2],$drel[1],$drel[0],$loc_calendar);
  			   			}
  			   		}
- 			   		//Calcul de l'amende Ã  partir du dÃ©lai de grÃ¢ce ?
+ 			   		//Calcul de l'amende à partir du délai de grâce ?
  			   		if ($pmb_amende_comptabilisation) {
  			   			$amende["njours"] = $njours - $amende_param["delai_avant_amende"];
  			   		}
- 			   		//Montant maximum dÃ©passÃ© ?
- 			   		$amende["valeur"]=$amende["njours"]*$amende_param["amende_jour"];
+ 			   		//Montant maximum dépassé ?
+ 			   		$amende["valeur"] = floatval($amende["njours"])*floatval($amende_param["amende_jour"]);
+ 			   		if ($amende["recouvrement"]) {
+ 			   		    $amende["valeur"] += floatval($amende_param["frais_recouvrement"]);
+ 			   		}
  			   		if (($amende["valeur"]>$amende_param["amende_maximum"])&&($amende_param["amende_maximum"]>0)) {
  			   			$amende["valeur"]=$amende_param["amende_maximum"];
  			   		}
  			   	}
     		}
     	
-    		//Calcul du niveau thÃ©orique de l'exemplaire
+    		//Calcul du niveau théorique de l'exemplaire
     		//calcul de Date retour+delai_avant_amende
     		$date_1=calendar::add_days($dr[2],$dr[1],$dr[0],$amende_param["delai_avant_amende"],$loc_calendar,true);
     		//calcul de Date retour+delai_avant_amende+delai_1_2
@@ -230,14 +257,16 @@ class amende {
     	$t=array("level"=>0, "level_normal"=>0);
     	$max=-1;
     	$min=-1;
-    	for ($i=0; $i<count($this->t_id_expl); $i++) {
-    		if ($this->t_id_expl[$i]["amende"]["niveau"]>$level_normal) { 
-    			$level_normal=$this->t_id_expl[$i]["amende"]["niveau"]; 
-    			$max=$i; 
-    		}
-    		if ($this->t_id_expl[$i]["amende"]["niveau_relance"]>$level_min) {
-    			$level_min=$this->t_id_expl[$i]["amende"]["niveau_relance"];
-    			$min=$i;
+		if (is_countable($this->t_id_expl)) {
+			for ($i=0; $i<count($this->t_id_expl); $i++) {
+				if ($this->t_id_expl[$i]["amende"]["niveau"]>$level_normal) { 
+					$level_normal=$this->t_id_expl[$i]["amende"]["niveau"]; 
+					$max=$i; 
+				}
+				if ($this->t_id_expl[$i]["amende"]["niveau_relance"]>$level_min) {
+					$level_min=$this->t_id_expl[$i]["amende"]["niveau_relance"];
+					$min=$i;
+				}
     		}
     	}
     	if ($max>=0) {

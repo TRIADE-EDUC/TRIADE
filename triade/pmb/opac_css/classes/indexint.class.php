@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: indexint.class.php,v 1.36 2018-12-05 09:11:55 ngantier Exp $
+// $Id: indexint.class.php,v 1.42.2.1 2024/06/04 13:59:06 jparis Exp $
 
-// dÃ©finition de la classe de gestion des 'indexations internes'
+// définition de la classe de gestion des 'indexations internes'
 if ( ! defined( 'INDEXINT_CLASS' ) ) {
   define( 'INDEXINT_CLASS', 1 );
 
 class indexint {
 
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------
 	public $indexint_id=0;	// MySQL indexint_id in table 'indexint'
 	public	$name='';		// nom de l'indexation
@@ -20,26 +20,30 @@ class indexint {
 	public	$childs = array();
 	public	$has_child = 0 ;
 	public $num_statut = 1;
-	protected $p_perso;	
+	protected $p_perso;
+	public $name_pclass = '';
+	public $display = '';
 
 	// ---------------------------------------------------------------
 	//		indexint($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0, $rech_cote="") {
-		$this->indexint_id = $id+0;
-		if(!$this->indexint_id) {
-			if ($rech_cote) $this->name=$rech_cote;
+		$this->indexint_id = intval($id);
+		if (!$this->indexint_id && $rech_cote) {
+	        $this->name = $rech_cote;
 		}
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos 
+	//		getData() : récupération infos 
 	// ---------------------------------------------------------------
 	public function getData() {
+	    global $pclass;
+	    
 		$this->name			='';
 		$this->comment		='';
-		$this->pclass		= 0;
+		$this->pclass		= (!empty($pclass) ? intval($pclass) : 0);
 		$this->display="";
 		$this->num_statut = 1;
 		if(!$this->indexint_id) {
@@ -75,15 +79,13 @@ class indexint {
 	}
 
 	public function has_notices() {
-		global $dbh;
 		$query = "select count(1) from notices where indexint=".$this->indexint_id;
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		return (@pmb_mysql_result($result, 0, 0));
 	}
 
 	public function cherche_direct_child() {
-	// fonction rÃ©duite Ã  un seul niveau de rÃ©cursivitÃ© par rapport Ã  cherche_child. gm
-		global $dbh;
+	// fonction réduite à un seul niveau de récursivité par rapport à cherche_child. gm
 		global $pmb_indexint_decimal ;
 		
 		$this->childs = array();
@@ -94,12 +96,12 @@ class indexint {
 			}
 		
 		/* calcul de l'arbo :
-		si 3Ã¨me carac != 0
+		si 3ème carac != 0
 			niveau 3
 			sinon si 2eme carac != 0
 				niveau 2
 				sinon prendre le premier carac
-		rechercher quand mÃªme avec les trois carac entiers
+		rechercher quand même avec les trois carac entiers
 		*/
 	
 		if (pmb_strlen($this->name)>3)
@@ -123,7 +125,7 @@ class indexint {
 		}
 		
 		$query = "select indexint_id,indexint_name,indexint_comment from indexint where ".$clause." order by indexint_name ";
-		$res = pmb_mysql_query($query, $dbh);
+		$res = pmb_mysql_query($query);
 		$this->has_child=pmb_mysql_num_rows($res) ;
 		if ($this->has_child) {
 			while ($obj=pmb_mysql_fetch_object($res)) {
@@ -138,23 +140,22 @@ class indexint {
 
 
 	public function cherche_child() {
-		global $dbh;
 		global $pmb_indexint_decimal ;
 		
 		$this->childs = array();
 		
-		if (!$pmb_indexint_decimal) {
+		if (!$pmb_indexint_decimal || !$this->indexint_id) {
 			$this->has_child = 0 ;
 			return ;
-			}
+		}
 		
 		/* calcul de l'arbo :
-		si 3Ã¨me carac != 0
+		si 3ème carac != 0
 			niveau 3
 			sinon si 2eme carac != 0
 				niveau 2
 				sinon prendre le premier carac
-		rechercher quand mÃªme avec les trois carac entiers
+		rechercher quand même avec les trois carac entiers
 		*/
 		$entier = substr($this->name, 0 , 3);
 		if (pmb_strlen($this->name)>3){
@@ -178,7 +179,7 @@ class indexint {
 		// $query = "select indexint_id,indexint_name,indexint_comment from indexint where ".$clause." order by indexint_name ";
 		// sans affichage de l'indexation parente
 		$query = "select indexint_id,indexint_name,indexint_comment from indexint where ".$clause." and indexint_name <> '".addslashes($this->name)."' order by indexint_name ";
-		$res = pmb_mysql_query($query, $dbh);
+		$res = pmb_mysql_query($query);
 		$this->has_child=pmb_mysql_num_rows($res) ;
 		if ($this->has_child) 
 			while ($obj=pmb_mysql_fetch_object($res)) {
@@ -193,10 +194,10 @@ class indexint {
 	public function child_list($image='./images/folder.gif',$css='', $dest=0) {
 	
 		global $css;
-		global $dbh;
 		global $nb_col_scat;
 		global $main;
-	
+
+		$l = "";
 		foreach($this->childs as $valeur) {
 			$libelle = $valeur['namechild']." ".$valeur['commentchild'];
 			$id = $valeur['idchild'];
@@ -212,7 +213,7 @@ class indexint {
 	}
 	
 	public function get_isbd() {
-		if ($this->comment) $isbd = $this->name." - ".$this->comment;
+		if ($this->comment) $isbd = $this->name." - ".str_replace("\r"," ",str_replace("\n"," ",$this->comment));
 		else $isbd = $this->name ;
 		if ($this->name_pclass) {
 			$isbd = "[".$this->name_pclass."] ".$isbd;
@@ -252,7 +253,7 @@ class indexint {
 	public function get_authority() {
 		return authorities_collection::get_authority('authority', 0, ['num_object' => $this->indexint_id, 'type_object' => AUT_TABLE_INDEXINT]);
 	}
-} # fin de dÃ©finition de la classe indexint
+} # fin de définition de la classe indexint
 
-} # fin de dÃ©laration
+} # fin de délaration
 

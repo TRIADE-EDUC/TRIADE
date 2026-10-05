@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_transport.class.php,v 1.4 2018-11-14 11:36:17 mbertin Exp $
+// $Id: openurl_transport.class.php,v 1.4 2018/11/14 11:36:17 mbertin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,11 +19,11 @@ function _getMapItem_($param){
 }
 
 class openurl_transport extends openurl_root{
-	public $infos= array();		// Infos gÃ©nÃ©rales concernant le transport
+	public $infos= array();		// Infos générales concernant le transport
 	public $service_address = "";	// URL du service
-	public $contextObject;			// ContextObject Ã  transporter
-	public $serialized_tsp="";		// infos du transport sÃ©rialisÃ©es
-	public $serialized_obj="";		// ContextObject sÃ©rialisÃ©
+	public $contextObject;			// ContextObject à transporter
+	public $serialized_tsp="";		// infos du transport sérialisées
+	public $serialized_obj="";		// ContextObject sérialisé
     
     public function __construct($url) {
     	$this->service_address = $url;

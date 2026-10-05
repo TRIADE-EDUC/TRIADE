@@ -62,7 +62,7 @@ if (($page!="mensuel") && ($cel_ligne != -1)) {
     $ztDate = $tabDate[2]."-".$tabDate[1]."-".$tabDate[0];
 } 
 
-    $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}agenda WHERE age_id=".$idAge);
+    $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}agenda WHERE age_id=".$idAge);
     $enr = $DB_CX->DbNextRow();
     $date_note = $enr[age_date];
 if ($page=="quot") $ztDate = $date_note;	
@@ -86,7 +86,7 @@ if (($page=="mensuel") || ($cel_ligne == -1)) {
  }
 }
 if ($opt3=="move") {
-    $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+    $sql = "UPDATE {$PREFIX_TABLE}agenda ";
     $sql .= "SET age_date='".$ztDate."',";
 	$sql .= " age_modificateur_id='".$idUser."',";
 	$sql .= " age_date_modif='".gmdate("Y-m-d H:i:s", time())."'";
@@ -102,7 +102,7 @@ if ($opt3=="copy") {
     $enr['age_libelle'] = addslashes($enr['age_libelle']);
     $enr['age_lieu'] = addslashes($enr['age_lieu']);
     $enr['age_detail'] = addslashes($enr['age_detail']);
-    $sql = "INSERT INTO ${PREFIX_TABLE}agenda ";
+    $sql = "INSERT INTO {$PREFIX_TABLE}agenda ";
     $sql .= "(age_util_id,age_aty_id,age_date,age_heure_debut,age_heure_fin,age_plage,age_plage_duree,age_libelle,age_detail,age_lieu,age_rappel,age_rappel_coeff,age_email,age_prive,age_couleur,age_createur_id,age_date_creation,age_cal_id,age_date_modif,age_modificateur_id)";
 if (($page!="mensuel") && ($cel_ligne != -1))
     $sql .= " VALUES ('".$enr[age_util_id]."','".$enr[age_aty_id]."','".$ztDate."','".$zlHeureDebut."','".$zlHeureFin."','".$enr[age_plage]."','".$enr[age_plage_duree]."','".$enr[age_libelle]."','".$enr[age_detail]."','".$enr[age_lieu]."','".$enr[age_rappel]."','".$enr[age_rappel_coeff]."','".$enr[age_email]."','".$enr[age_prive]."','".$enr[age_couleur]."','".$idUser."','".gmdate("Y-m-d H:i:s", time())."','".$enr['age_cal_id']."','".gmdate("Y-m-d H:i:s", time())."','".$idUser."')";
@@ -112,10 +112,10 @@ else
     $DB_CX->DbQuery($sql);
     $idAge = $DB_CX->DbInsertID();
     $idAge_init = $enr[age_id];
-	$requete = mysql_query("SELECT * FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge_init);
-	while($enr = mysql_fetch_array($requete)) {
+	$requete = mysqli_query("SELECT * FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$idAge_init);
+	while($enr = mysqli_fetch_array($requete)) {
       // Enregistrement des personnes concernees
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_concerne (aco_age_id,aco_util_id) VALUES (".$idAge.",".$enr[aco_util_id].")");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_concerne (aco_age_id,aco_util_id) VALUES (".$idAge.",".$enr[aco_util_id].")");
     }
 }
 
@@ -123,7 +123,7 @@ if ($opt3=="move") {
     if ($age_mere_id != 0) $idAgeMere = $age_mere_id;
     else $idAgeMere = $idAge;
     $i=0;
-    $DB_CX->DbQuery("SELECT age_id,age_date FROM ${PREFIX_TABLE}agenda WHERE (age_mere_id=".$idAgeMere." OR age_id=".$idAgeMere.") AND age_id NOT LIKE ".$idAge);
+    $DB_CX->DbQuery("SELECT age_id,age_date FROM {$PREFIX_TABLE}agenda WHERE (age_mere_id=".$idAgeMere." OR age_id=".$idAgeMere.") AND age_id NOT LIKE ".$idAge);
      while ($enr = $DB_CX->DbNextRow())
       {
         $idAge_en_cours = $enr[0];
@@ -145,7 +145,7 @@ for ($j=0;$j<$i;$j=$j+1)
   {
    $date_new = $mod_date[$j]['date'];
    $idAge_en_cours = $mod_date[$j]['id'];
-   $sql = "UPDATE ${PREFIX_TABLE}agenda ";
+   $sql = "UPDATE {$PREFIX_TABLE}agenda ";
    $sql .= "SET age_date='".$date_new."'";
 if (($page!="mensuel") && ($cel_ligne != -1)) {   
    $sql .= ", age_heure_debut=".$zlHeureDebut.",";
@@ -159,7 +159,7 @@ if (($page!="mensuel") && ($cel_ligne != -1)) {
  
 // On récupère quelques variables de l'utilisateur perdues au passage
   include("inc/html.inc.php");
-  $DB_CX->DbQuery("SELECT util_interface, util_format_nom FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+  $DB_CX->DbQuery("SELECT util_interface, util_format_nom FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   $APPLI_STYLE = $DB_CX->DbResult(0,0);
   if ($DB_CX->DbResult(0,1) == 0) {
     $FORMAT_NOM_UTIL = "util_nom, ' ', util_prenom"; 
@@ -235,7 +235,7 @@ if ($page=="cal") {
   $SEMAINE_CALENDRIER = ($SEMAINE_TYPE!="1111111" && $SEMAINE_TYPE!="0000000") ? $SEMAINE_TYPE : "1111100";
 
     // Recuperation des evenements personnalises a notifier dans le calendrier (sert aussi pour le planning mensuel global)
-    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
     $tabEvenementDate = array();
 
     // Initialisation du tableau des couleurs des jours a vide

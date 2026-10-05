@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // + 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormEdit.js,v 1.3 2017-11-30 10:53:34 dgoron Exp $
+// $Id: FormEdit.js,v 1.6 2021/06/30 09:25:29 gneveu Exp $
 
 
 define(['dojo/_base/declare', 
@@ -25,6 +25,7 @@ define(['dojo/_base/declare',
 		  nbZones: null,
 		  zones: null,
 		  context: null,
+		  savedScheme: null,
 		  constructor:function(type, context){
 			  this.context = context ? context : document;
 			  this.type = type;
@@ -35,7 +36,7 @@ define(['dojo/_base/declare',
 		  parseDom: function(){
 			  var currentElts = query('div[movable="yes"]', this.context);
 			  if(this.savedScheme){
-				  for(var i=0; i<this.savedScheme.length ; i++){
+				  for(var i=0; i < this.savedScheme.length; i++) {
 					  var params = {
 						  isExpandable:this.savedScheme[i].isExpandable, 
 						  showLabel:this.savedScheme[i].showLabel, 
@@ -50,7 +51,7 @@ define(['dojo/_base/declare',
 						  newerZone.addConnectStyle();
 					  }
 					  if(this.savedScheme[i].elements.length) {
-						  for(var j=0 ; j<this.savedScheme[i].elements.length ; j++){
+						  for(var j=0 ; j < this.savedScheme[i].elements.length; j++){
 							  var domElt = query('#'+this.savedScheme[i].elements[j].nodeId, this.context)[0];
 							  if(domElt != null) {
 								  newerZone.addField(domElt, this.savedScheme[i].elements[j].visible, this.savedScheme[i].elements[j].disabled);
@@ -71,7 +72,7 @@ define(['dojo/_base/declare',
 					  this.zones.push(objectZone);
 					  this.nbZones++;
 				  }
-				  for(var i=0 ; i<currentElts.length ; i++){
+				  for(var i=0 ; i < currentElts.length; i++){
 					  objectZone.addField(currentElts[i], true, false);
 				  }
 			  }
@@ -79,12 +80,12 @@ define(['dojo/_base/declare',
 		  },
 		  unparseDom: function(){
 			  var cleanElts = query('#zone-container > div', this.context);
-			  for(var i=0; i<this.originalFormat.length ; i++){
+			  for(var i=0; i < this.originalFormat.length; i++){
 				  domConstruct.place(query('#'+this.originalFormat[i].id,this.context)[0], query('#zone-container',this.context)[0], 'last');
 				  query('#'+this.originalFormat[i].id, this.context)[0].className = this.originalFormat[i].class;
 			  }
 
-			  for(var i=0; i<cleanElts.length ; i++){
+			  for(var i=0; i < cleanElts.length ; i++){
 			  	if(cleanElts[i].getAttribute('movable') == null){
 			  		domConstruct.destroy(cleanElts[i]);	
 			  	}
@@ -92,7 +93,7 @@ define(['dojo/_base/declare',
 			  this.zones = new Array();
 		  },
 		  getZoneFromId: function(zoneId){
-			  for(var i=0 ; i<this.zones.length ; i++){
+			  for(var i=0 ; i < this.zones.length ; i++){
 				  if(this.zones[i].nodeId == zoneId){
 					  return this.zones[i];
 				  }
@@ -112,7 +113,7 @@ define(['dojo/_base/declare',
 		  },
 		  getHiddenZones: function(){
 			var hiddenZones = new Array();
-			for(var i=0 ; i<this.zones.length ; i++){
+			for(var i=0 ; i < this.zones.length; i++){
 				if(!this.zones[i].visible){
 					hiddenZones.push(this.zones[i]);	
 				}
@@ -122,7 +123,7 @@ define(['dojo/_base/declare',
 		  getDefaultPos: function(){
 			  var defaultElts = query('div[movable="yes"]',this.context);
 			  this.originalFormat = new Array();
-			  for(var i=0; i<defaultElts.length; i++){
+			  for(var i=0; i < defaultElts.length; i++){
 				  this.originalFormat.push({id:defaultElts[i].id, class: defaultElts[i].className});  
 			  }
 		  },
@@ -132,7 +133,21 @@ define(['dojo/_base/declare',
 				  this.type = /lvl=(\w+)&?/g.exec(currentUrl)[1];
 				  switch(this.type){
 					  case 'contribution_area':
-						  var formId = /form_id=(\w+)&?/g.exec(currentUrl)[1];
+					      // On récupère l'id du formulaire dans l'url courante
+					      var matchs = /form_id=(\w+)&?/g.exec(currentUrl)
+					      var formId = 0;
+					      if (matchs) {
+					          formId = matchs[1];
+					      } else {
+	                          // Si on a aucun id on regarde le formulaire présent dans la page
+				              var forms = query('form',this.context);
+					          if (forms && forms[0]) {
+					              var matchs = /form_id=(\w+)&?/g.exec(forms[0].action)
+		                          if (matchs) {
+		                              formId = matchs[1];
+		                          }
+					          }
+					      } 
 						  this.type += '_form_'+formId;
 						  break;
 				  }
@@ -163,7 +178,7 @@ define(['dojo/_base/declare',
 			  var currentElts = query('div[movable="yes"]',this.context);
 			  if(typeof datas != 'undefined' && datas != ""){
 				  this.savedScheme =  JSON.parse(datas);
-				  for(var i=0 ; i<this.savedScheme.length ; i++){
+				  for(var i=0 ; i < this.savedScheme.length; i++){
 					  var params = {
 						  isExpandable:this.savedScheme[i].isExpandable, 
 						  showLabel:this.savedScheme[i].showLabel, 
@@ -215,9 +230,9 @@ define(['dojo/_base/declare',
 					  var nbColumn = 1;
 					  var lastNbColumn = 1;
 					  var columnInProgress = 0;
-					  for(var j=0 ; j<this.savedScheme[i].elements.length ; j++){
+					  for(var j=0 ; j < this.savedScheme[i].elements.length; j++){
 						  if(columnInProgress == 0) {
-							  var parentDiv = domConstruct.create('div', {class:'container-div row'}, domNode, 'last');
+							  var parentDiv = domConstruct.create('div', {class:'container-div row contribution_input_size'}, domNode, 'last');
 						  }
 						  
 						  var node = query('#'+this.savedScheme[i].elements[j].nodeId, this.context)[0];
@@ -234,7 +249,7 @@ define(['dojo/_base/declare',
 								  nbColumn = 1;
 							  }
 							  if (columnInProgress && ((nbColumn != lastNbColumn) && (j>0))) {
-								  var parentDiv = domConstruct.create('div', {class:'container-div row'}, domNode, 'last');
+								  var parentDiv = domConstruct.create('div', {class:'container-div row contribution_input_size'}, domNode, 'last');
 								  columnInProgress = 0;
 							  }
 							  domConstruct.place(node, parentDiv, 'last');
@@ -269,9 +284,9 @@ define(['dojo/_base/declare',
 					  var nbColumn=1;
 					  var lastNbColumn = 1;
 					  var columnInProgress = 0;
-					  for(var i=0 ; i<currentElts.length ; i++){
+					  for(var i=0 ; i < currentElts.length; i++){
 						  if(columnInProgress == 0) {
-							  var parentDiv = domConstruct.create('div', {class:'container-div row'}, domNode, 'last');
+							  var parentDiv = domConstruct.create('div', {class:'container-div row contribution_input_size'}, domNode, 'last');
 						  }
 						  var result = /colonne([2-5]|_suite)/.exec(currentElts[i].className);
 						  if(result){
@@ -284,7 +299,7 @@ define(['dojo/_base/declare',
 							  nbColumn = 1;
 						  }
 						  if (columnInProgress && ((nbColumn != lastNbColumn) && (j>0))) {
-							  var parentDiv = domConstruct.create('div', {class:'container-div row'}, domNode, 'last');
+							  var parentDiv = domConstruct.create('div', {class:'container-div row contribution_input_size'}, domNode, 'last');
 							  columnInProgress = 0;
 						  }
 						  domConstruct.place(currentElts[i], parentDiv, 'last');
@@ -299,7 +314,7 @@ define(['dojo/_base/declare',
 					  }
 				  }
 				  //Traitement termin�, on nettoye
-				  for(var i=0 ; i<cleanElts.length ; i++){
+				  for(var i=0 ; i < cleanElts.length; i++){
 					  domConstruct.destroy(cleanElts[i]);
 				  }
 			  }
@@ -309,7 +324,7 @@ define(['dojo/_base/declare',
 				return this.zones;
 		  },
 		  getElementFromId:function(id){
-			  for(var i=0 ; i<this.zones.length ; i++){
+			  for(var i=0 ; i < this.zones.length; i++) {
 				  var elt = this.zones[i].getElementFromId(id);
 				  if(elt){
 					  return elt;

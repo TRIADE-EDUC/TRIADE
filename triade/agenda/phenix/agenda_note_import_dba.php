@@ -289,7 +289,7 @@
 
             if ((($date_debut." ".$heure_deb)>=$date_dem_deb) && (($date_debut." ".$heure_deb)<=$date_dem_fin)) {
               // On traite l'ajout si l'heure et bien comprise entre les 2 dates entrees dans le formulaire.
-              $DB_CX->DbQuery("SELECT age_id FROM ${PREFIX_TABLE}agenda WHERE age_date='$date_debut' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
+              $DB_CX->DbQuery("SELECT age_id FROM {$PREFIX_TABLE}agenda WHERE age_date='$date_debut' AND age_heure_debut=$heure_deb AND age_heure_fin=$heure_fin AND age_libelle='$note_summary' AND age_util_id='$idUser'");
               if ($DB_CX->DbNumRows()) {
                 // On ne fait rien car la note existe deja
                 $err =  "<P class=\"vert\"><B>".trad("NOTEIMP_MSG_IMPORT_ERREUR")."</B></P>";
@@ -299,7 +299,7 @@
                 // couleur
                 if ($note_couleur!="")
                 {
-                  $DB_CX->DbQuery("SELECT cou_couleur FROM ${PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_couleur'");
+                  $DB_CX->DbQuery("SELECT cou_couleur FROM {$PREFIX_TABLE}couleurs WHERE cou_libelle ='$note_couleur'");
                   if ($DB_CX->DbNumRows()) {
                     $zlCouleur = $DB_CX->DbResult(0,0);
                   }

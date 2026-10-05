@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: VisitsStatistics.js,v 1.3 2017-12-28 10:11:08 apetithomme Exp $
+// $Id: VisitsStatistics.js,v 1.3 2017/12/28 10:11:08 apetithomme Exp $
 
 define([
         "dojo/_base/declare",

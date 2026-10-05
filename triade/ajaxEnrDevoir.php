@@ -17,8 +17,8 @@ if ( ($_SESSION["membre"] == "menuprof") || ($_SESSION["membre"] == "menuadmin")
 // ----------------------------------------------------------------------------------------------------------------
 	if ($_SESSION["membre"] == "menuprof")  { $id_pers=$_SESSION["id_pers"];        }
 	if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menupersonnel"))  { 
-			$id_pers=$_SESSION["idprofAdminCdT"];  
-			if (isset($_SESSION["idprofviaadmin"])) $id_pers=$_SESSION["idprofviaadmin"]; 
+		$id_pers=$_SESSION["idprofAdminCdT"];  
+		if (isset($_SESSION["idprofviaadmin"])) $id_pers=$_SESSION["idprofviaadmin"]; 
 	}
 
 	if ($_POST["etape"] == "1") {

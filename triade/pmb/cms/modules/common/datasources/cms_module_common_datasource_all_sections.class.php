@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_all_sections.class.php,v 1.5 2017-01-20 09:59:54 ngantier Exp $
+// $Id: cms_module_common_datasource_all_sections.class.php,v 1.7 2022/09/06 07:52:18 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,9 +14,10 @@ class cms_module_common_datasource_all_sections extends cms_module_common_dataso
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -24,7 +25,7 @@ class cms_module_common_datasource_all_sections extends cms_module_common_dataso
 	}
 
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -36,7 +37,7 @@ class cms_module_common_datasource_all_sections extends cms_module_common_dataso
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$this->all_section_order = array();
@@ -57,11 +58,20 @@ class cms_module_common_datasource_all_sections extends cms_module_common_dataso
 			}
 		}
 		$this->all_section_order = $this->filter_datas("sections",$this->all_section_order);
-		if ($this->parameters["nb_max_elements"] > 0) $this->all_section_order = array_slice($this->all_section_order, 0, $this->parameters["nb_max_elements"]);
-		return $this->all_section_order;
+		
+		// Pagination
+		if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+		    $return["paging"] = $this->inject_paginator($this->all_section_order);
+		    $this->all_section_order = $this->cut_paging_list($this->all_section_order, $return["paging"]);
+		}else if ($this->parameters["nb_max_elements"] > 0) {
+		    $this->all_section_order = array_slice($this->all_section_order, 0, $this->parameters["nb_max_elements"]);
+		}
+		
+		$return["sections"] = $this->all_section_order;
+		return $return;
 	}
 	
-	function get_datas_order($section_num) {		
+	public function get_datas_order($section_num) {		
 		$query_section = "select id_section from cms_sections where section_num_parent=".$section_num." 
 				order by section_order";
 		if ($this->parameters["sort_order"] != "") $query_section .= " ".$this->parameters["sort_order"];		

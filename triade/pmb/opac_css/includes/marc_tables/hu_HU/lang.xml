@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes langue en UNIMARC (hongrois)
-$Id: lang.xml,v 1.6 2016-09-13 09:23:22 jpermanne Exp $ -->
+$Id: lang.xml,v 1.7 2021/08/02 15:06:50 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="ace">Acsehnéz</entry>
@@ -258,6 +258,7 @@ $Id: lang.xml,v 1.6 2016-09-13 09:23:22 jpermanne Exp $ -->
 	<entry code="new">Newari</entry>
 	<entry code="nic">Niger-kordofan nyelvek (egyéb)</entry>
 	<entry code="niu">Niuean</entry>
+	<entry code="nla">Közép-holland</entry>
 	<entry code="nor">Norvég</entry>
 	<entry code="nso">Északi szoto</entry>
 	<entry code="nub">Núbiai</entry>

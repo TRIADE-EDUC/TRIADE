@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_carousel_responsive.xml,v 1.2 2015-08-26 11:42:13 jpermanne Exp $ -->
+$Id: cms_module_common_view_carousel_responsive.xml,v 1.2 2015/08/26 11:42:13 jpermanne Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_view_carousel_mode'>Display mode</entry>

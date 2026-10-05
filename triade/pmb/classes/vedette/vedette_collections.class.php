@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_collections.class.php,v 1.8 2018-12-04 10:26:44 apetithomme Exp $
+// $Id: vedette_collections.class.php,v 1.9 2020/06/02 10:12:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,6 +19,12 @@ class vedette_collections extends vedette_element{
 	}
 	
 	public function get_link_see(){
-		return str_replace("!!type!!", "collection",$this->get_generic_link());
+	    global $use_opac_url_base;
+	    
+	    if($use_opac_url_base) {
+	        return str_replace("!!type!!", "coll",$this->get_generic_link());
+	    } else {
+	        return str_replace("!!type!!", "collection",$this->get_generic_link());
+	    }
 	}
 }

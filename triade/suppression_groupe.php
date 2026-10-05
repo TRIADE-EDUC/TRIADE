@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,12 +33,11 @@
 	<script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
         <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
         </head>
-        <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-                        <?php include("./librairie_php/lib_licence.php"); ?>
+        <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  >
 <?php
+include("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 validerequete("menuadmin");
-$cnx=cnx();
 if(isset($_POST["supp"])):
 	$cr=@verifGroupeAffectation($_POST["saisie_grp_supp"]);
 	$groupe=chercheGroupeNom($_POST["saisie_grp_supp"]);
@@ -57,11 +56,11 @@ if(isset($_POST["supp"])):
 	}
 endif;
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_supp_choix('saisie_grp_supp','un groupe')" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGSUPP7?></font></b></td>
@@ -71,14 +70,14 @@ endif;
 <!-- // fin  -->
 <BR>
 <blockquote>
-<fieldset><legend>Module Suppression</legend>
+<fieldset><legend><?php print LANGTT1 ?></legend>
 &nbsp;&nbsp;
-<font class="T2">Nom du groupe :</font>
+<font class="T2"><?php print LANGGRP51 ?> :</font>
 <select name="saisie_grp_supp">
 <option value=choix STYLE="color:#000066;background-color:#FCE4BA" ><?php print LANGCHOIX?></option>
 <?php
 $data=aff_groupe();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if ($data[$i][3] != "") {
 ?>
 	<option value="<?php print $data[$i][0]?>" STYLE='color:#000066;background-color:#CCCCFF' ><?php print $data[$i][3]?></option>
@@ -87,14 +86,23 @@ for($i=0;$i<count($data);$i++) {
 }
 ?>
 </select><br><br><br>
-<UL><UL><UL><script language=JavaScript>buttonMagicSubmit("<?php print LANGSUPP8?>","supp"); //text,nomInput</script></UL></UL></UL><br><br>
+<UL><UL><UL>
+<table>
+<tr>
+<td><script language=JavaScript>buttonMagicSubmit("<?php print LANGSUPP8?>","supp");</script></td>
+<td><script language='JavaScript'>buttonMagicRetour2('gestion_groupe.php','_self','Retour menu')</script></td>
+</tr>
+</table>
+
+
+</UL></UL></UL><br><br>
 </fieldset>
 </blockquote>
-<?php brmozilla($_SESSION[navigateur]); ?>
+<?php brmozilla($_SESSION['navigateur']); ?>
 <!-- // fin  -->
 </td></tr></table>
 </form>
-     <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+     <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
    </BODY></HTML>
 <?php
 Pgclose();

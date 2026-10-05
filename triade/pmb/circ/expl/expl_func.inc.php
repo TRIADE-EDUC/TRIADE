@@ -1,17 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_func.inc.php,v 1.13 2016-05-09 10:13:02 dgoron Exp $
+// $Id: expl_func.inc.php,v 1.14 2023/05/03 14:39:56 jparis Exp $
 
 
 if (stristr ( $_SERVER ['REQUEST_URI'], ".inc.php" ))
 	die ( "no access" );
 	
-// fonctions pour la gestion des exemplaires pour le prÃªt
+// fonctions pour la gestion des exemplaires pour le prêt
 
 
-// rÃ©cupÃ©ration des templates
+// récupération des templates
 include ("$include_path/templates/expl.tpl.php");
 
 // form de saisie cb expl
@@ -36,7 +36,7 @@ function do_cb_expl($title, $message, $title_form, $form_action,$type_form="") {
 	}
 	
 	$cb_tmpl = str_replace ( "!!script!!", $expl_script, $cb_tmpl );
-	$cb_tmpl = str_replace('!!expl_cb!!', $form_cb_expl, $cb_tmpl);
+	$cb_tmpl = str_replace('!!expl_cb!!', $form_cb_expl ?? "", $cb_tmpl);
 	$cb_tmpl = str_replace ( "!!titre_formulaire!!", $title_form, $cb_tmpl );
 	$cb_tmpl = str_replace ( "!!form_action!!", $form_action, $cb_tmpl );
 	

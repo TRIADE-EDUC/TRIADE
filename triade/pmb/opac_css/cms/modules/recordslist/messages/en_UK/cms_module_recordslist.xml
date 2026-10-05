@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_recordslist.xml,v 1.8 2017-07-27 12:51:28 ngantier Exp $ -->
+$Id: cms_module_recordslist.xml,v 1.9 2021/10/13 12:46:28 qvarin Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_datasource_similarrecords'>Similar records</entry>
@@ -30,5 +30,10 @@ $Id: cms_module_recordslist.xml,v 1.8 2017-07-27 12:51:28 ngantier Exp $ -->
 	<entry code='cms_module_common_datasource_records_used_by_composed_concepts'>Notices utilisées par des concepts composés</entry>
 	<entry code='cms_module_common_filter_records_by_doctype'>Par types de document</entry>
 	<entry code='cms_module_recordslist_view_django_directory'>Vue depuis un répertoire de templates</entry>
+	<entry code='cms_module_recordslist_datasource_records_category'>Notices d'une catégorie</entry>
 	<entry code='cms_module_common_datasource_records_by_categories'>Notices indexées par des catégories</entry>
+	<entry code='cms_module_common_filter_records_by_cp'>Par valeur de champs perso</entry>
+	<entry code='cms_module_recordslist_view_carousel_uikit'>Vue en Carrousel Uikit</entry>
+	<entry code='cms_module_recordslist_view_slideshow'>Vue en Slideshow</entry>
+	<entry code='cms_module_recordslist_view_dynamic_grid'>Vue en Dynamic Grid</entry>
 </XMLlist>

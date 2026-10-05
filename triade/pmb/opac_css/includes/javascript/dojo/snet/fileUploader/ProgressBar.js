@@ -32,7 +32,7 @@ define([
 			'<div id="${id}_abort" class="pbwButton">Annuler</div>' +
 			'<div id="${id}_pause" class="pbwButton">Pause</div>' +
 			'<div id="${id}_resume" class="pbwButton">Reprise</div>' +
-			'<div id="${id}_retry" class="pbwButton">RÃ©essayer</div>' +
+			'<div id="${id}_retry" class="pbwButton">Réessayer</div>' +
 			'<div id="${id}_del" class="pbwButton">Supprimer</div>' +
 			'<div id="${id}_remove" class="pbwButton">remove</div>' +
 			'</div>' +
@@ -227,7 +227,7 @@ define([
 		 */
 		abort: function() {
 			this.aborted = true;
-			dom.byId(this.id + '_msg').innerHTML = '<span class="errMsg">Transfert annulÃ©.</span>';
+			dom.byId(this.id + '_msg').innerHTML = '<span class="errMsg">Transfert annulé.</span>';
 			this.setState('aborted');
 			this.onAbort();
 		},
@@ -256,7 +256,7 @@ define([
 
 		wait: function() {
 			this.set('value', Infinity);
-			dom.byId(this.id + '_msg').innerHTML = 'Transfert terminÃ©, sauvergarde sur le serveur.';
+			dom.byId(this.id + '_msg').innerHTML = 'Transfert terminé, sauvergarde sur le serveur.';
 			this.setState('indeterminated');
 		},
 

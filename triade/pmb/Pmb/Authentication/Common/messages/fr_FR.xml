@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.16 2023/07/13 14:52:52 dbellamy Exp $ 
+-->
+
+<XMLlist>
+    <entry code="model_name">Nom du modèle</entry>
+    <entry code="service">Service</entry>
+    <entry code="context">Contexte</entry>
+    <entry code="context_opac">OPAC</entry>
+    <entry code="context_gestion">Gestion</entry>
+
+    <entry code="provider_url">URL du fournisseur</entry>
+    <entry code="client_id">Identifiant client</entry>
+    <entry code="client_secret">Secret client</entry>
+    <entry code="authorization_endpoint">Point de terminaison d'autorisation</entry>
+    <entry code="token_endpoint">Point de terminaison de jeton</entry>
+    <entry code="logout_endpoint">Point de terminaison de déconnexion</entry>
+    <entry code="userinfo_endpoint">Point de terminaison d'informations utilisateur</entry>
+    <entry code="redirect_uri">URL de redirection (connexion)</entry>
+    <entry code="redirect_uri_relay">Relai avant redirection (connexion)</entry>
+    <entry code="logout_redirect_uri">URL de redirection (déconnexion)</entry>
+    <entry code="logout_redirect_uri_relay">Relai avant redirection (déconnexion)</entry>
+    <entry code="attrs">Attributs externes</entry>
+    <entry code="login_attr">Identifiant externe</entry>
+    <entry code="claims">Revendications (claims)</entry>
+    <entry code="scopes">Champs d'application (scopes)</entry>
+    <entry code="authentication_method">Méthode d'authentification</entry>
+    <entry code="client_secret_basic">client_secret_basic</entry>
+    <entry code="client_secret_jwt">client_secret_jwt</entry>
+    <entry code="private_key_jwt">private_key_jwt</entry>
+    <entry code="check_signatures">Vérification des signatures</entry>
+    
+    <entry code="host"></entry>
+    <entry code="uri"></entry>
+    <entry code="port"></entry>
+    <entry code="version"></entry>
+    <entry code="cas_server_ca_cert"></entry>
+    
+    <entry code="user_data">Correspondance données utilisateur</entry>
+    <entry code="empr_data">Correspondance données lecteur</entry>
+    <entry code="ext_attr">Attribut externe</entry>
+    <entry code="empr_field">Champ lecteur</entry>
+    <entry code="user_field">Champ utilisateur</entry>
+    
+    <entry code="SearchEmpr">Recherche lecteur</entry>
+    <entry code="SearchEmprByName">par nom et prénom</entry>
+    <entry code="SearchEmprByLogin">par login</entry>
+    <entry code="SearchEmprByMail">par mail</entry>
+    
+    <entry code="SearchEmprByName">par nom et prénom</entry>
+    <entry code="SearchEmprByLogin">par login</entry>
+    <entry code="SearchEmprByMail">par mail</entry>
+    <entry code="CreateEmpr">Création lecteur</entry>
+    <entry code="CreateEmprDefault">Création par défaut</entry>
+    <entry code="CreateEmprWebsubscribe">Création à partir de l'inscription Web</entry>
+
+    <entry code="SearchUser">Recherche utilisateur</entry>
+    <entry code="SearchUserByLogin">par login</entry>
+    <entry code="SearchUserByMail">par mail</entry>
+    <entry code="CreateUser">Création utilisateur</entry>
+    <entry code="CreateUserDefault">par défaut</entry>
+
+    <entry code="template">Template</entry>
+
+    <entry code="trans_fct">Transformation</entry>
+    <entry code="ToLower">Minuscules</entry>
+    <entry code="ToUpper">Majuscules</entry>
+    <entry code="ToUcFirst">Initiales en majuscules</entry>
+
+    <entry code="choose">Choisir</entry>
+    <entry code="ignore">Ignorer</entry>
+
+    <entry code="opac_param">Paramétrage OPAC</entry>
+    <entry code="gestion_param">Paramétrage Gestion</entry>
+</XMLlist>
+
+

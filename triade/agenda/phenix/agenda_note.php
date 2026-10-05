@@ -26,7 +26,7 @@
 
 <!-- MODULE GESTION DES NOTES -->
 <?php
-  $DB_CX->DbQuery("SELECT util_debut_journee, util_duree_note, util_rappel_delai, util_rappel_type, util_rappel_email, util_fin_journee, util_couleur FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+  $DB_CX->DbQuery("SELECT util_debut_journee, util_duree_note, util_rappel_delai, util_rappel_type, util_rappel_email, util_fin_journee, util_couleur FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   $debutJournee = $DB_CX->DbResult(0,0);
   $dureeNote = $DB_CX->DbResult(0,1);
   //Delai avant rappel de l'utilisateur
@@ -41,7 +41,7 @@
   // Fin MOD Couleur par defaut
   // Si on arrive des plannings globaux
   if (isset($decalH) && $tzPartage=="O") {
-    $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$decalH." AND tzn_zone=util_timezone");
+    $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$decalH." AND tzn_zone=util_timezone");
     $tzLibelle = $DB_CX->DbResult(0,"tzn_libelle");
     $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
     $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -66,14 +66,14 @@
       // Pas de note mere par defaut
       // On recherche si on est en train de modifier une occurrence d'une note recurrente
       // Si c'est le cas on enregistre l'id de la note Mere pour eventuellement modifier toute la serie
-      $DB_CX->DbQuery("SELECT age_mere_id FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id.$testDroit." AND age_aty_id!=1");
+      $DB_CX->DbQuery("SELECT age_mere_id FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id.$testDroit." AND age_aty_id!=1");
       if ($DB_CX->DbResult(0,0)) {
         $idAgeMere = $DB_CX->DbResult(0,0)+0;
         $titrePage = trad("NOTE_TITRE_MODIF_RECURRENTE");
       } else {
         // On recherche si la note en cours de modification n'est pas la note Mere d'une serie recurrente
         // pour offrir la possibilite de modifier soit cette occurrence, soit toute la serie
-        $DB_CX->DbQuery("SELECT COUNT(age_id) FROM ${PREFIX_TABLE}agenda WHERE age_mere_id=".$id.$testDroit." AND age_aty_id!=1");
+        $DB_CX->DbQuery("SELECT COUNT(age_id) FROM {$PREFIX_TABLE}agenda WHERE age_mere_id=".$id.$testDroit." AND age_aty_id!=1");
         if ($DB_CX->DbResult(0,0)) {
           $idAgeMere = $id;
           $titrePage = trad("NOTE_TITRE_MODIF_RECURRENTE");
@@ -84,7 +84,7 @@
     }
     if (!$idAgeMere) {
       //Recuperation des informations de la note
-      $DB_CX->DbQuery("SELECT age_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_aty_id, age_disponibilite, age_lieu, age_cal_id, age_email_contact, age_email_copie, age_util_id FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id.$testDroit." AND age_aty_id!=1");
+      $DB_CX->DbQuery("SELECT age_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_plage, age_plage_duree, age_libelle, age_detail, age_rappel, age_rappel_coeff, age_email, age_prive, age_couleur, age_aty_id, age_disponibilite, age_lieu, age_cal_id, age_email_contact, age_email_copie, age_util_id FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id.$testDroit." AND age_aty_id!=1");
       if ($enr = $DB_CX->DbNextRow()) {
         $tabDate = explode("-",$enr['age_date']);
         // Decalage de la note
@@ -121,7 +121,7 @@
     function addEmpl(_select) {
       if (_select.selectedIndex>0) {
         document.Form1.ztLieu.value=_select[_select.selectedIndex].text+" ";
-      }    
+      }
     }
     //Fin Mod Emplacement Plus
     // Saisie d'un libelle a partir de la liste de choix
@@ -216,7 +216,7 @@
       // Si il ne s'agit pas d'une nouvelle note
       if ($id) {
         // Recherche et stocke les utilisateurs pour lesquels on dispose d'autorisation...
-        $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning ='2' AND ppl_consultant_id=".$idUser.")");
+        $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") OR (util_partage_planning ='1') OR (util_partage_planning ='2' AND ppl_consultant_id=".$idUser.")");
         if ($DB_CX->DbNumRows()) {
           while ($tmp = $DB_CX->DbNextRow()){
             $Tab1[] = $tmp['util_id'];
@@ -224,7 +224,7 @@
         }
 
         //Genere la liste des participants auxquels nous n'avons pas acces...
-        $DB_CX->DbQuery("SELECT aco_util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE util_id=aco_util_id AND aco_age_id=".$id);
+        $DB_CX->DbQuery("SELECT aco_util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE util_id=aco_util_id AND aco_age_id=".$id);
         if ($DB_CX->DbNumRows()) {
           while ($Tab2 = $DB_CX->DbNextRow()) {
             if($tmp_Participants == "") {
@@ -602,7 +602,7 @@
       <TD class="tabInput"><TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
 <?php
     //Liste des libelles personnalises de l'utilisateur connecte
-    $DB_CX->DbQuery("SELECT lib_id, lib_nom, lib_duree, lib_couleur, lib_detail FROM ${PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR (lib_util_id!=".$idUser." AND lib_partage='O') ORDER BY lib_nom");
+    $DB_CX->DbQuery("SELECT lib_id, lib_nom, lib_duree, lib_couleur, lib_detail FROM {$PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR (lib_util_id!=".$idUser." AND lib_partage='O') ORDER BY lib_nom");
     if ($DB_CX->DbNumRows()) {
       echo ("      <TR>
         <TD nowrap><SELECT name=\"zlLibelle\" onchange=\"javascript: addLib(this);\">
@@ -628,7 +628,7 @@
     <TD class="tabIntitule"><?php echo trad("NOTE_LIB_EMPLACEMENT");?></TD>
     <TD class="tabInput"><TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
     <?php
-      $DB_CX->DbQuery("SELECT empl_id, empl_nom FROM ${PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom");
+      $DB_CX->DbQuery("SELECT empl_id, empl_nom FROM {$PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom");
     if ($DB_CX->DbNumRows()) {
       echo ("      <TR>
     <TD nowrap><SELECT name=\"zlLieu\" onchange=\"javascript: addEmpl(this);\">
@@ -703,7 +703,7 @@
         $tabConcerne[] = $USER_SUBSTITUE;
       // Sinon recupere la liste des personnes concernees par la note
       else {
-        $DB_CX->DbQuery("SELECT aco_util_id FROM ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
+        $DB_CX->DbQuery("SELECT aco_util_id FROM {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=".$id);
         while ($rsParticipe = $DB_CX->DbNextRow())
           $tabConcerne[] = $rsParticipe['aco_util_id'];
       }
@@ -760,7 +760,7 @@
     }
 
     // Recuperation des contacts de l'utilisateur et ceux qui sont partages
-    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ',cal_prenom)) AS nomContact FROM ${PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR cal_partage='O' ORDER BY nomContact");
+    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ',cal_prenom)) AS nomContact FROM {$PREFIX_TABLE}calepin WHERE cal_util_id=".$idUser." OR cal_partage='O' ORDER BY nomContact");
     // Le choix du contact n'est pas affiche si le calepin est vide
     if ($DB_CX->DbNumRows()) {
 ?>
@@ -794,7 +794,7 @@
     <TD class="tabInput"><SELECT name="zlCouleur" style="background-color:<?php echo $enr['age_couleur'];?>;" onchange="javascript: changeCouleurListe(this,document.Form1.ztCouleur);">
 <?php
     reset($tabCouleur);
-    while (list($key, $val) = each($tabCouleur)) {
+   foreach ($tabCouleur as $key => $val) {
       $selected = ($val==$enr['age_couleur']) ? " selected" : "";
       echo "      <OPTION style=\"background-color:".$val.";\" value=\"".$val."\"".$selected.">".$key."</OPTION>\n";
     }
@@ -927,7 +927,7 @@
       $rdA1 = " checked"; $rdA2 = ""; $zlA1 = $d; $zlA2 = $m; $zlA3 = "0"; $zlA4 = $j; $zlA5 = $m;
       $rdP1 = " checked"; $rdP2 = ""; $ztP = "10"; $ztDateFin = date("d/m/Y",mktime(0,0,0,$m+1,$d,date("Y",$sd)));
       // Recuperation de la semaine type de l'utilisateur SUBSTITUE
-      $DB_CX->DbQuery("SELECT util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+      $DB_CX->DbQuery("SELECT util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
       $vSemaineType = $DB_CX->DbResult(0,0);
       if ($periodicite > 1) {
         switch ($periodicite) {

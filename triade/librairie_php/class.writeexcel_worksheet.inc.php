@@ -1705,8 +1705,8 @@ class writeexcel_worksheet extends writeexcel_biffwriter
         //!!!
         if (isset($sheet)) {
             $link_type |= 0x08;
-            $sheet_len = pack('V', length($sheet) + 0x01);
-            $sheet     = implode("\0", split('', $sheet));
+            $sheet_len = pack('V', strlen($sheet) + 0x01);
+            $sheet     = implode("\0", str_split($sheet));
             $sheet .= "\0\0\0";
         } else {
             $sheet_len = '';
@@ -1809,7 +1809,7 @@ class writeexcel_worksheet extends writeexcel_biffwriter
         # parameters accordingly.
         # Split the dir name and sheet name (if it exists)
         #
-        list($dir_long, $sheet) = preg_split('\#', $url);
+        list($dir_long, $sheet) = preg_split('/\#/', $url);
         $link_type              = 0x0103; # Always absolute
         //!!!
         if (isset($sheet)) {

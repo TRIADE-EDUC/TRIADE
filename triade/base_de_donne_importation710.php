@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,44 +26,52 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title></head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+</head>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'.js'?>"></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
-<div align='center'>
-<?php top_h(); ?>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'1.js'?>"></SCRIPT>
-<FORM method=POST action="">
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation d'un fichier SIECLE " ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td valign=top>
-<TABLE border=0 width=100%>
-<TR><TD align=top><font class=T2><?php print "Module d'importation de fichier SIECLE format Xml" ?><br><br>
-Module d'importation SIECLE <br><br> <!-- via Exploitation -> Exports Excel -> Fiches élèves complètes --></font></TD>
-</TR></TABLE><br>
-<br />
-<br>
-<script language=JavaScript>
-function suite() {
-	location.href="./base_de_donne_key.php?base=sconetabsxml";
-}
-</script>
-<BR><div align="center"> <input type=button class="BUTTON" value='<?php print LANGBTS?>' onclick='suite();'> </div><br />
-<br>
-<br>
+<div align='center'><?php top_h(); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
-<!-- // fin  -->
-</td></tr></table> </form>
-<BR>
-<SCRIPT language="JavaScript" src="<?php print './librairie_js/'.$_SESSION[membre].'2.js'?>"> </SCRIPT>
+<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Importation d'un fichier SIECLE</font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
+<div class="na-card">
+
+  <p style="font-size:13px;font-weight:700;color:#080A66;margin:0 0 8px;">Module d'importation de fichier SIECLE format XML</p>
+  <p style="font-size:12px;color:#555;margin:0;">Module d'importation SIECLE — Absences au format XML</p>
+
+</div>
+
+<div class="na-foot">
+  <a href="./base_de_donne_key.php?base=sconetabsxml" class="btn-enr" style="text-decoration:none;"><?php print LANGBTS ?></a>
+</div>
+
+</td>
+</tr>
+</table>
+
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 </BODY></HTML>

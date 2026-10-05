@@ -1,12 +1,12 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_perso_drop.js,v 1.1 2016-10-06 12:41:18 dgoron Exp $ */
+// $Id: search_perso_drop.js,v 1.1 2016/10/06 12:41:18 dgoron Exp $ */
 
 
 /********************************************
  *								  			*				
- *      Tri des recherches prÃ©dÃ©finies      *
+ *      Tri des recherches prédéfinies      *
  *                                			* 
  ********************************************/
 

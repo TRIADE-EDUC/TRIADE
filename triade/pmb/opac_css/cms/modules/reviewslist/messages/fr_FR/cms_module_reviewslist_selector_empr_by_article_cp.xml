@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_reviewslist_selector_empr_by_article_cp.xml,v 1.2 2022/12/23 10:19:56 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_reviewslist_selector_articles_by_empr_cp_filter'>Filtrez avec un champ personnalisé d'article sur les emprunteurs</entry>
+	<entry code='cms_module_reviewslist_selector_articles_by_empr_cp_no_cp'>Aucun champ personnalisé sélectionné</entry>
+	<entry code='cms_module_reviewslist_selector_articles_by_empr_cp_label'>Sélection d'un emprunteur</entry>
+	<entry code="cms_module_common_selector_generic_article">Sélection d'article</entry>
+</XMLlist>

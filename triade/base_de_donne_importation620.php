@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,29 +32,31 @@ if ($id != 1) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title></head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" onunload="attente_close()"  >
+<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+</head>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Importation d'un fichier" ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Importation d'un fichier</font></b></td></tr>
 <tr id='cadreCentral0'>
-<td >
+<td>
 <?php
 include_once("librairie_php/db_triade.php");
 
 $fichier=$_FILES["fichier1"]["name"];
 $type=$_FILES["fichier1"]["type"];
 $tmp_name=$_FILES["fichier1"]["tmp_name"];
-//$size=$_FILES["fichier1"]["size"];
 
 if ( (!empty($fichier)) && ($type == "text/xml" )) {
 	$cnx=cnx();
@@ -66,11 +68,11 @@ if ( (!empty($fichier)) && ($type == "text/xml" )) {
 
 	$mdp=$_POST["passwd"];
 
-	$stsweb = simplexml_load_file($fic_xml); 
+	$stsweb = simplexml_load_file($fic_xml);
 	$nbprof=0;
 	$nbclasse=0;
 
-	foreach($stsweb->DONNEES as $DONNEES) { 
+	foreach($stsweb->DONNEES as $DONNEES) {
 		foreach($DONNEES->INDIVIDUS as $INDIVIDUS) {
 			foreach($INDIVIDUS->INDIVIDU as $INDIVIDU) {
 				$nom=$INDIVIDU->NOM_USAGE;
@@ -79,7 +81,7 @@ if ( (!empty($fichier)) && ($type == "text/xml" )) {
 				if ($civ == 1) { $civ=0; }
 				if ($civ == 2) { $civ=1; }
 				if ($civ == 3) { $civ=2; }
-				$cr=create_personnel_prof($nom,$prenom,$mdp,'ENS',$civ,'','','','','','','','');
+				$cr=create_personnel_prof($nom,$prenom,$mdp,'ENS',$civ,'','','','','','','','','');
 				if ($cr == -3) { print "<script>location.href='base_de_donne_importation610.php?err'</script>"; }
 				if ($cr > 0) { $nbprof++; history_cmd($_SESSION["nom"],"CREATION","enseignant"); }
 				foreach($INDIVIDU->SERVICES as $SERVICES) {
@@ -91,29 +93,41 @@ if ( (!empty($fichier)) && ($type == "text/xml" )) {
 				}
 			}
 		}
-	} 
-
-
+	}
 
 	PgClose($cnx);
 
-	print "<br><ul><font class='T2'>Nombre d'enseignants ajoutés : $nbprof </font><br><br>";
-	print "<font class='T2'>Nombre de classes ajoutées : $nbclasse </font></ul>";
-	
-}else {
-
 ?>
-<br />
-<center> <font color=red><?php print LANGbasededon203?></font> <BR><BR>
-<?php print "Le fichier doit être au format XML"?>
-<br /><br />
-<input type=button Value="<?php print LANGBT24 ?>" onclick="javascript:history.go(-1)" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;"><br />
-<br />
-</center>
+<div class="na-card">
+  <p style="font-size:13px;color:#555;margin:0 0 4px;">— Nombre d'enseignants ajoutés : <strong><?php print $nbprof ?></strong></p>
+  <p style="font-size:13px;color:#555;margin:0 0 4px;">— Nombre de classes ajoutées : <strong><?php print $nbclasse ?></strong></p>
+</div>
+<div class="na-foot">
+  <button type="button" class="btn-enr" onclick="location.href='acces2.php'"><?php print LANGBT41 ?></button>
+  <button type="button" class="btn-retour" onclick="location.href='base_de_donne_importation610.php'">Retour</button>
+</div>
+<?php
+}else {
+?>
+<div style="margin:10px;padding:10px 14px;background:#ffebee;border:1px solid #ef9a9a;border-radius:6px;font-size:13px;color:#c62828;text-align:center;">
+  <?php print LANGbasededon203 ?><br><br>Le fichier doit être au format XML
+</div>
+<div class="na-foot">
+  <button type="button" class="btn-retour" onclick="history.go(-1)"><?php print LANGBT24 ?></button>
+</div>
 <?php
 }
 ?>
-<!-- // fin  -->
+
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+?>
 </BODY></HTML>

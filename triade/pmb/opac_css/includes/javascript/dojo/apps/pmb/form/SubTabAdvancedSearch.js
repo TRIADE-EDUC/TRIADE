@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabAdvancedSearch.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabAdvancedSearch.js,v 1.5 2021/11/17 13:37:00 gneveu Exp $
 
 
 define([
@@ -70,11 +70,22 @@ define([
 			  			this.setFormActionEvent(querySearchPerso[i]);
 			  		}
 			  	}
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			manageSearchButton: function(){
 				domConstruct.destroy(dom.byId('save_predefined_search'));
+				
+				var elem = document.getElementById('search_form_submit');
+				if(elem){
+					elem.replaceWith(elem.cloneNode(true));
+				}
+				
 				this.button = dom.byId('search_form_submit');
+				
 				this.button.form.setAttribute('onsubmit', '');
 				on(this.button.form , 'submit', lang.hitch(this, this.postForm));
 			},

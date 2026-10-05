@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_relations_collection.class.php,v 1.2 2016-12-15 17:52:45 dgoron Exp $
+// $Id: notice_relations_collection.class.php,v 1.3 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class notice_relations_collection {
 	 * @return notice_relations:
 	 */
 	static public function get_object_instance($notice_id=0) {
-		$notice_id += 0;
+		$notice_id = intval($notice_id);
 		if (!isset(self::$notice_relations[$notice_id])) {
 			self::$notice_relations[$notice_id] = new notice_relations($notice_id);
 		}

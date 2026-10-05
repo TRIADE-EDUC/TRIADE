@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2024/02/26 14:28:55 dbellamy Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Indicateur</entry>
+
+	<entry code="circ_name">Circulation</entry>
+	<entry code="circ_location">Localisations :</entry>
+	<entry code="circ_date_start">Date de début :</entry>
+	<entry code="circ_date_end">Date de fin :</entry>
+
+	<entry code="circ_nb_empr">Nombre d'emprunteurs</entry>
+	<entry code="circ_nb_empr_expired">Nombre d'emprunteurs avec un abonnement expiré</entry>
+	<entry code="circ_nb_prets">Nombre de prêts</entry>
+	<entry code="circ_nb_prets_late">Nombre de prêts en retard</entry>
+	<entry code="circ_nb_resas">Nombre de réservations</entry>
+	<entry code="circ_nb_resas_to_validate">Nombre de réservations à valider</entry>
+
+	<entry code="catalog_name">Catalogue</entry>
+	<entry code="catalog_nb_records">Nombre de notices</entry>
+	<entry code="catalog_nb_records_perio">Nombre de périodiques</entry>
+	<entry code="catalog_nb_records_articles">Nombre d'articles</entry>
+	<entry code="catalog_nb_bulletins_to_receive">Nombre de bulletins à recevoir</entry>
+	<entry code="catalog_nb_bulletins_next">Nombre de prochains numéros</entry>
+	<entry code="catalog_nb_bulletins_late">Nombre de bulletins en retard</entry>
+	<entry code="catalog_nb_bulletins_alert">Nombre de bulletins en alerte</entry>
+	<entry code="catalog_nb_abon_renouv">Nombre d'abonnement à renouveler</entry>
+	<entry code="catalog_nb_abon_depass">Nombre d'abonnement dépassés</entry>
+
+	<entry code="acquisition_name">Acquisitions</entry>
+	<entry code="acquisition_nb_sugg_todo">Nombre de suggestions à valider</entry>
+	<entry code="acquisition_nb_sugg_validated_confirmed">Nombre de suggestions validées / confirmées</entry>
+	<entry code="acquisition_nb_sugg_rejected_givenup_filed">Nombre de suggestions rejetées / abandonnées / archivées</entry>
+	<entry code="acquisition_nb_sugg_estimated_ordered">Nombre de suggestions devisées / commandées</entry>
+	<entry code="acquisition_nb_sugg_received">Nombre de suggestions reçues</entry>
+	<entry code="acquisition_nb_cde_todo">Nombre de commandes à valider</entry>
+	<entry code="acquisition_nb_cde_pending">Nombre de commandes en cours</entry>
+	<entry code="acquisition_nb_cde_received_filed">Nombre de commandes livrées / archivées</entry>
+	
+	<entry code="admin_name">Administration</entry>
+	<entry code="admin_nb_task_stopped">Nombre de tâches arrêtées</entry>
+	<entry code="admin_nb_task_failed">Nombre de tâches en échec</entry>
+	<entry code="admin_nb_task_pending">Nombre de tâches en attente</entry>
+	<entry code="admin_sphinx_status">Statut sphinx</entry>
+	
+	<entry code="animation_name">Animations</entry>
+	<entry code="animation_nb_registrations_to_validate">Nombre d'inscriptions à valider</entry>
+	<entry code="animation_nb_animations">Nombre d'animations</entry>
+	
+	<entry code="authority_name">Autorités</entry>
+	<entry code="authority_nb_category">Nombre de catégories</entry>
+	<entry code="authority_nb_author">Nombre d'auteurs</entry>
+	<entry code="authority_nb_publisher">Nombre d'éditeurs</entry>
+	<entry code="authority_nb_collection">Nombre de collections</entry>
+	<entry code="authority_nb_sub_collection">Nombre de sous-collections</entry>
+	<entry code="authority_nb_serie">Nombre de séries</entry>
+	<entry code="authority_nb_tu">Nombre d'oeuvres / expressions (titres uniformes)</entry>
+	<entry code="authority_nb_indexint">Nombre d'indexations</entry>
+	
+	<entry code="cms_name">Portail</entry>
+	<entry code="cms_nb_articles">Nombre d'articles</entry>
+	<entry code="cms_nb_sections">Nombre de rubriques</entry>
+	
+	<entry code="demande_name">Demande</entry>
+	<entry code="demande_nb_demande">Nombre de demandes</entry>
+	<entry code="demande_nb_demande_to_valid">Nombre de demandes à valider</entry>
+	<entry code="demande_nb_demande_validated">Nombre de demandes validées</entry>
+	<entry code="demande_nb_demande_refused">Nombre de demandes refusées</entry>
+	<entry code="demande_nb_demande_ended">Nombre de demandes terminées</entry>
+	<entry code="demande_nb_demande_abandoned">Nombre de demandes abandonnées</entry>
+	<entry code="demande_nb_demande_filed">Nombre de demandes archivées</entry>
+
+	<entry code="dsi_name">DSI</entry>
+	<entry code="dsi_nb_bannette">Nombre de bannettes</entry>
+	<entry code="dsi_nb_bannette_priv">Nombre de bannettes privées</entry>
+	<entry code="dsi_nb_bannette_pub_auto">Nombre de bannettes publiques automatiques</entry>
+	<entry code="dsi_nb_bannette_pub_manu">Nombre de bannettes publiques manuelles</entry>
+	<entry code="dsi_nb_bannette_priv_auto_to_emit">Nombre de bannettes privées à diffuser</entry>
+	<entry code="dsi_nb_bannette_pub_auto_to_emit">Nombre de bannettes publiques à diffuser</entry>
+</XMLlist>

@@ -1,23 +1,28 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_controller.class.php,v 1.5 2018-12-11 07:58:46 dgoron Exp $
-  
+// $Id: selector_controller.class.php,v 1.14.2.3 2025/01/17 07:46:29 dgoron Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+//on force l'interface dnd a travers les selecteurs, sinon la rmc n'est pas utilisable
+global $pmb_extended_search_dnd_interface, $include_path;
+$pmb_extended_search_dnd_interface = 1;
+require_once($include_path."/templates/extended_search_dnd.tpl.php");
+
 class selector_controller {
-	
+
 	protected $user_input;
-	
+
 	public function __construct($user_input=''){
 		$this->user_input = $user_input;
 	}
 
 	public function proceed() {
-		global $what, $caller;
-		global $bt_ajouter;
-		
+	    global $what, $caller;
+	    global $bt_ajouter, $action;
+		global $search_xml_file, $search_field_id;
 		switch($what) {
 			case 'auteur':
 				if ((!(SESSrights & AUTORITES_AUTH)) || $caller == "search_form"){
@@ -89,17 +94,17 @@ class selector_controller {
 				$selector = new selector_music_form($this->user_input);
 				break;
 			case 'query_list':
-				$selector = new selector_query_list(stripslashes($user_input));
+				$selector = new selector_query_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
 			case 'list':
-				$selector = new selector_list(stripslashes($user_input));
+			    $selector = new selector_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
 			case 'marc_list':
-				$selector = new selector_marc_list(stripslashes($user_input));
+			    $selector = new selector_marc_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
@@ -108,6 +113,9 @@ class selector_controller {
 				break;
 			case 'emprunteur':
 				$selector = new selector_empr($this->user_input);
+				break;
+			case 'emprunteurs':
+				$selector = new selector_emprs($this->user_input);
 				break;
 			case 'notice':
 				$selector = new selector_notice($this->user_input);
@@ -155,7 +163,7 @@ class selector_controller {
 				$selector = new selector_ontology($this->user_input);
 				break;
 			case 'ontologies' :
-// 				include('./selectors/ontologies.inc.php');
+			    $selector = new selector_ontologies($this->user_input);
 				break;
 			case 'abts' :
 				$selector = new selector_abts($this->user_input);
@@ -172,10 +180,32 @@ class selector_controller {
 			case 'commande':
 // 				include ('./selectors/commande.inc.php');
 				break;
+			case 'external_notice':
+				$selector = new selector_external_notice($this->user_input);
+				break;
+			case 'sort' :
+			    $selector = new selector_sort($this->user_input);
+			    break;
+			case 'animations':
+				$selector = new selector_animations($this->user_input);
+				break;
+			case 'cms_editorial':
+				$selector = new selector_cms_editorial($this->user_input);
+				break;
 			default:
 				break;
 		}
-		$selector->proceed();
+		if (isset($selector) && is_object($selector)) {
+		    switch ($action) {
+		        case 'title':
+		            print $selector->get_title();
+		            break;
+		        default :
+		            $selector->proceed();
+		            break;
+		    }
+			
+		}
 	}
 }
 ?>

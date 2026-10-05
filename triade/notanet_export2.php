@@ -32,7 +32,7 @@ if (isset($_POST["saisie_classe"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -126,11 +126,11 @@ function somme(j) {
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print "Gestion d'examen" ?></font></b></td>
@@ -325,7 +325,7 @@ if (isset($_POST["create3"])) {
 
 
 $eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve
-$nbEleveT=count($eleveT);
+$nbEleveT=countTriade($eleveT);
 print "<table border='0' >";
 for($j=0;$j<$nbEleveT;$j++) {  
 	// variable eleve
@@ -359,7 +359,7 @@ if ($_POST["notehistarts"] == '1') {
 	// HISTOIRE DES ARTS
 	$tab=rechercheMatiereBrevet("histoire des arts",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -405,7 +405,7 @@ if ($_POST["notehistarts"] == '1') {
 	// FRANCAIS
 	$tab=rechercheMatiereBrevet("Français",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -453,7 +453,7 @@ if ($_POST["notehistarts"] == '1') {
 	// MATHEMATIQUES
 	$tab=rechercheMatiereBrevet("Mathématiques",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -496,7 +496,7 @@ if ($_POST["notehistarts"] == '1') {
 	// Langue vivante 1
 	$tab=rechercheMatiereBrevet("Langue vivante 1",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if (!verifMatiereLangue($idEleve,$idMatiere,'LV1',$idClasse)) { continue; } 
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -541,7 +541,7 @@ if ($_POST["notehistarts"] == '1') {
 	// SVT
 	$tab=rechercheMatiereBrevet("SVT",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -585,7 +585,7 @@ if ($_POST["notehistarts"] == '1') {
 	// Physique 
 	$tab=rechercheMatiereBrevet("Physique - Chimie",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -630,7 +630,7 @@ if ($_POST["notehistarts"] == '1') {
 	// EPS 
 	$tab=rechercheMatiereBrevet("Education physique et sportive",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if ($epsviaexamen != "1") {
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -680,7 +680,7 @@ if ($_POST["notehistarts"] == '1') {
 	// Arts 
 	$tab=rechercheMatiereBrevet("Arts plastiques",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -726,7 +726,7 @@ if ($_POST["notehistarts"] == '1') {
 	// Music 
 	$tab=rechercheMatiereBrevet("Education musicale",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -772,7 +772,7 @@ if ($_POST["notehistarts"] == '1') {
 	// Technologie 
 	$tab=rechercheMatiereBrevet("Technologique",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -818,7 +818,7 @@ if ($_POST["notehistarts"] == '1') {
 if ($serie ==  "LV2") {
 	$tab=rechercheMatiereBrevet("langue vivante 2",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if (!verifMatiereLangue($idEleve,$idMatiere,'LV2',$idClasse)) { continue; } 
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -864,7 +864,7 @@ if ($serie ==  "LV2") {
 if ($serie ==  "DP6") {
 	$tab=rechercheMatiereBrevet("Découverte professionnelle 6h",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -951,7 +951,7 @@ if ($noteviescolaire == 1) {
 if ($serie ==  "LV2") {
 	$tab=rechercheMatiereBrevet("Latin ou grec ou Découverte professionnelle 3h (option facultative)",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if (!verifMatiereLangue($idEleve,$idMatiere,'OPT',$idClasse)) { continue; } 
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -1004,7 +1004,7 @@ if ($serie ==  "LV2") {
 if ($serie ==  "DP6") {
 	$tab=rechercheMatiereBrevet("Latin ou grec ou langue vivante 2 (option facultative)",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		if (!verifMatiereLangue($idEleve,$idMatiere,'OPT',$idClasse)) { continue; } 
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -1110,7 +1110,7 @@ if ($_POST["noteA2"] == "1") {
 if ($_POST["notehistgeo"] == "1") {
 	$tab=rechercheMatiereBrevet("Histoire - Géographie",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -1155,7 +1155,7 @@ if ($_POST["notehistgeo"] == "1") {
 if ($_POST["noteeducivi"] == "1") {
 	$tab=rechercheMatiereBrevet("Education civique",$idClasse);
 	$nb=0;$noteT="";$note="";
-	for($i=0;$i<count($tab);$i++) {
+	for($i=0;$i<countTriade($tab);$i++) {
 		$idMatiere=$tab[$i][0];
 		$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 		if ($note != "") {
@@ -1221,7 +1221,7 @@ PgClose();
 <input type=hidden name='notehistgeo' value='<?php print $_POST["notehistgeo"] ?>' />
 <input type=hidden name='noteeducivi' value='<?php print $_POST["noteeducivi"] ?>' />
 
-<input type=hidden name='nbeleve' value='<?php print count($eleveT) ?>' />
+<input type=hidden name='nbeleve' value='<?php print countTriade($eleveT) ?>' />
 <input type=hidden name='serie' value="<?php print $serie ?>" />
 <input type=hidden name='saisie_classe' value="<?php print $idClasse ?>" />
 <input type=hidden name='controle' value="<?php print $_POST["controle"] ?>" />
@@ -1242,7 +1242,7 @@ connexpersistance("color:black;font-weight:bold;font-size:11px;text-align: cente
 
 <!-- // fin form -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <script language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</script>
 </BODY>
 </HTML>

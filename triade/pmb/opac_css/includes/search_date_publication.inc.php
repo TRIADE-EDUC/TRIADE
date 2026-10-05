@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_date_publication.inc.php,v 1.3 2013-10-11 07:49:23 mbertin Exp $
+// $Id: search_date_publication.inc.php,v 1.5 2023/08/17 09:47:52 dbellamy Exp $
 
 function search_other_function_filters() {
 	global $sig_choix,$sig_date_debut,$sig_date_fin,$charset,$msg;
@@ -33,7 +33,7 @@ function search_other_function_filters() {
 	}
 	$r=preg_replace("/!![a-z]*!!/","",$r);
 	
-	$sig_js="<script type=\"text/javascript\">\n
+	$sig_js="<script>\n
 	document.search_input.sig_choix.onchange=affiche_choix_date;
 	affiche_choix_date();
 	function affiche_choix_date(){
@@ -143,7 +143,7 @@ function search_other_function_clause() {
 	//doit retourner une requete de selection d'identifiants de notices
 	global $sig_choix,$sig_date_debut,$sig_date_fin;
 	$r='';
-	//RÃ©cupÃ©ration de la date
+	//Récupération de la date
 	$sig_date_debut_formate=detectFormatDate($sig_date_debut);
 	
 	$sig_date_fin_formate=detectFormatDate($sig_date_fin);
@@ -210,8 +210,8 @@ function search_other_function_human_query($n) {
 
 
 function search_other_function_post_values() {
-	global $sig_choix,$sig_date_debut,$sig_date_fin;
-	return "<input type=\"hidden\" name=\"sig_choix\" value=\"$sig_choix\">\n<input type=\"hidden\" name=\"sig_date_debut\" value=\"$sig_date_debut\">\n<input type=\"hidden\" name=\"sig_date_fin\" value=\"$sig_date_fin\">\n";
+	global $sig_choix,$sig_date_debut,$sig_date_fin, $charset;
+	return "<input type=\"hidden\" name=\"sig_choix\" value=\"".htmlentities($sig_choix, ENT_QUOTES, $charset)."\">\n<input type=\"hidden\" name=\"sig_date_debut\" value=\"".htmlentities($sig_date_debut, ENT_QUOTES, $charset)."\">\n<input type=\"hidden\" name=\"sig_date_fin\" value=\"".htmlentities($sig_date_fin, ENT_QUOTES, $charset)."\">\n";
 }
 
 

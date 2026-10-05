@@ -1,17 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_equation.tpl.php,v 1.5 2019-05-27 10:30:59 ngantier Exp $
+// $Id: contribution_area_equation.tpl.php,v 1.6 2021/02/04 14:07:09 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 //*******************************************************************
-// Définition des templates pour les listes en edition
+// D�finition des templates pour les listes en edition
 //*******************************************************************
 
 global $tpl_contribution_area_equation_liste_tableau, $msg, $tpl_contribution_area_equation_liste_tableau_ligne;
-global $tpl_contribution_area_equation_form, $current_module;
+global $tpl_contribution_area_equation_form, $current_module, $base_path;
+
+require_once "$base_path/javascript/misc.inc.php";
 
 $tpl_contribution_area_equation_liste_tableau = "
 

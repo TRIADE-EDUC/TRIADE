@@ -2,11 +2,13 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des section 995 (public visé) de AFBDP
-$Id: section_995.xml,v 1.2 2006-03-07 23:12:25 touraine37 Exp $ -->
+$Id: section_995.xml,v 1.3 2021/09/27 15:12:53 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="a">adultos</entry>
-	<entry code="j">jóvenes</entry>
+	<entry code="b">jóvenes</entry>
+	<entry code="c">adolescents</entry>
+	<entry code="d">musique</entry>
+	<entry code="e">vidéo</entry>
 	<entry code="u">indeterminado</entry>
-	<entry code="z">otro</entry>
 </XMLlist>

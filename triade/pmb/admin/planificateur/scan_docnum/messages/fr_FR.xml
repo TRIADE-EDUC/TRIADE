@@ -4,12 +4,12 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.2 2015-03-17 10:39:28 abacarisse Exp $ -->
+$Id: fr_FR.xml,v 1.3 2023/04/28 10:35:15 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="planificateur_scan_docnum_upload_folder">Répertoire à analyser</entry>
 	<entry code="planificateur_scan_docnum_upload_repertoire">Répertoire de documents numériques cible</entry>
-	<entry code="planificateur_scan_docnum_doc_a_traiter">Documents a traiter</entry>
+	<entry code="planificateur_scan_docnum_doc_a_traiter">Documents à traiter</entry>
 	<entry code="planificateur_scan_docnum_doc_traites">Documents traités avec succès</entry>
 	<entry code="planificateur_scan_docnum_doc_non_traites">Documents en erreur</entry>
 	<entry code="planificateur_scan_docnum_no_upload_repertoire">Pas de répertoire disponible</entry>

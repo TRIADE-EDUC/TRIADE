@@ -1,65 +1,68 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bull_info.inc.php,v 1.82 2019-04-15 13:38:49 dgoron Exp $
+// $Id: bull_info.inc.php,v 1.95.2.1.2.3 2025/04/30 07:18:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 // affichage des infos bulletin
+global $class_path, $include_path;
 
 require_once($include_path."/resa_func.inc.php");
 require_once($class_path."/emprunteur.class.php");
 require_once($class_path."/sur_location.class.php");
 require_once($include_path."/avis_notice.inc.php");
 require_once($class_path."/groupexpl.class.php");
+require_once($class_path."/notice.class.php");
+require_once($class_path."/serials.class.php");
 
 // get_expl : retourne un tableau HTML avec les exemplaires du bulletinage
 function get_expl($expl, $show_in_reception=0, $return_count = false) {
-	global $msg, $dbh, $charset;
+	global $msg, $charset;
 	global $class_path;
 	global $cart_link_non;
 	global $explr_invisible, $explr_visible_unmod, $explr_visible_mod, $pmb_droits_explr_localises ;
 	global $pmb_transferts_actif;
-	global $pmb_expl_list_display_comments;	
+	global $pmb_expl_list_display_comments;
 	global $pmb_sur_location_activate;
 	global $pmb_expl_data;
 	global $class_path;
 	global $pmb_pret_groupement;
-	
+
 	// attention, $bul est un array
-	if(!sizeof($expl) || !is_array($expl)) {
+	if (!is_array($expl) || empty($expl)) {
 		return $msg["bull_no_expl"];
 	}
 	$explr_tab_invis=explode(",",$explr_invisible);
 	$explr_tab_unmod=explode(",",$explr_visible_unmod);
 	$explr_tab_modif=explode(",",$explr_visible_mod);
-	
+
 //	$th_sur_location="";
 //	if($pmb_sur_location_activate)$th_sur_location="<th>".$msg["sur_location_expl"]."</th>";
-//	
-//	$result  = "<table border=\"0\" cellspacing=\"1\">";
+//
+//	$result  = "<table style='border: 0px; border-spacing: 1px'>";
 //	$result .= "<tr><th>".$msg[293]."</th><th>".$msg[4016]."</th>$th_sur_location<th>".$msg[4017]."</th><th>".$msg[4018]."</th><th>".$msg[4019]."</th><th>".$msg[4015]."</th><th></th>";
 //	while(list($cle, $valeur) = each($expl)) {
 //		$requete = "SELECT pret_idempr, ";
 //		$requete .= " date_format(pret_retour, '".$msg["format_date"]."') as aff_pret_retour ";
 //		$requete .= " FROM pret ";
 //		$requete .= " WHERE pret_idexpl='$valeur->expl_id' ";
-//		$result_prets = pmb_mysql_query($requete, $dbh) or die ("<br />".pmb_mysql_error()."<br />".$requete);
+//		$result_prets = pmb_mysql_query($requete) or die ("<br />".pmb_mysql_error()."<br />".$requete);
 //		if (pmb_mysql_num_rows($result_prets)) $expl_pret = pmb_mysql_fetch_object($result_prets) ;
 //		else $expl_pret="";
 //		$situation = "";
-//		// prÃªtable ou pas s'il est prÃªtÃ©, on affiche son Ã©tat
+//		// prêtable ou pas s'il est prêté, on affiche son état
 //		if (is_object($expl_pret) && $expl_pret->pret_idempr) {
 //			// exemplaire sorti
 //			$rqt_empr = "SELECT empr_nom, empr_prenom, id_empr, empr_cb FROM empr WHERE id_empr='$expl_pret->pret_idempr' ";
-//			$res_empr = pmb_mysql_query($rqt_empr, $dbh) ;
+//			$res_empr = pmb_mysql_query($rqt_empr) ;
 //			$res_empr_obj = pmb_mysql_fetch_object($res_empr) ;
-//			$situation = "<strong>${msg[358]} ".$expl_pret->aff_pret_retour."</strong>";
+//			$situation = "<strong>{$msg[358]} ".$expl_pret->aff_pret_retour."</strong>";
 //			global $empr_show_caddie;
 //			if (!$show_in_reception && $empr_show_caddie && (SESSrights & CIRCULATION_AUTH)) {
-//				$img_ajout_empr_caddie="<img src='".get_url_icon('basket_empr.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" onClick=\"openPopUp('./cart.php?object_type=EMPR&item=".$expl->pret_idempr."', 'cart')\">&nbsp;";
-//			} else { 
+//				$img_ajout_empr_caddie="<img src='".get_url_icon('basket_empr.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" onClick=\"openPopUp('./cart.php?object_type=EMPR&item=".$expl->pret_idempr."', 'cart')\">&nbsp;";
+//			} else {
 //				$img_ajout_empr_caddie="";
 //			}
 //			if (!$show_in_reception) {
@@ -68,26 +71,26 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 //				$situation .= "<br />$res_empr_obj->empr_prenom $res_empr_obj->empr_nom";
 //			}
 //		} else {
-//			// tester si rÃ©servÃ©				
-//			$result_resa = pmb_mysql_query("select 1 from resa where resa_cb='".addslashes($valeur->expl_cb)."' ", $dbh) or die ();
+//			// tester si réservé
+//			$result_resa = pmb_mysql_query("select 1 from resa where resa_cb='".addslashes($valeur->expl_cb)."' ") or die ();
 //			$reserve = pmb_mysql_num_rows($result_resa);
-//			if ($reserve) 
-//				$situation = "<strong>".$msg['expl_reserve']."</strong>"; // exemplaire rÃ©servÃ©
-//			elseif ($valeur->pret_flag)  
-//				$situation = "<strong>${msg[359]}</strong>"; // exemplaire disponible
-//			else 
+//			if ($reserve)
+//				$situation = "<strong>".$msg['expl_reserve']."</strong>"; // exemplaire réservé
+//			elseif ($valeur->pret_flag)
+//				$situation = "<strong>{$msg[359]}</strong>"; // exemplaire disponible
+//			else
 //				$situation = "";
 //		}
-//		
+//
 //		if(!$show_in_reception && (SESSrights & CATALOGAGE_AUTH)){
 //			$cart_click_expl = "onClick=\"openPopUp('./cart.php?object_type=EXPL&item=!!item!!', 'cart')\"";
-//			$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' align='center' alt='middle' title=\"${msg[400]}\" $cart_click_expl>";	
+//			$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' align='center' alt='middle' title=\"{$msg[400]}\" $cart_click_expl>";
 //			$ajout_expl_panier = str_replace('!!item!!', $valeur->expl_id, $cart_link) ;
 //		}else{
 //			$ajout_expl_panier ="";
 //		}
-//		
-//		//si les transferts sont activÃ©s
+//
+//		//si les transferts sont activés
 //		if (!$show_in_reception && $pmb_transferts_actif) {
 //			//si l'exemplaire n'est pas transferable on a une image vide
 //			$dispo_pour_transfert = transfert::est_transferable ( $valeur->expl_id );
@@ -96,24 +99,24 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 //				$ajout_expl_panier .= "<a href=\"#\" onClick=\"openPopUp('./catalog/transferts/transferts_popup.php?expl=" . $valeur->expl_id . "', 'transferts_popup');\">" . "<img src='".get_url_icon('peb_in.png')."' align='center' border=0 alt=\"" . $msg ["transferts_alt_libelle_icon"] . "\" title=\"" . $msg ["transferts_alt_libelle_icon"] . "\"></a>";
 //			else
 //				$ajout_expl_panier .= "<img src='".get_url_icon('spacer.gif')."' align='center' height=20 width=20>";
-//			
+//
 //		}
-//	
+//
 //		$as_invis = false;
 //		$as_unmod = false;
-//		$as_modif = true;		
+//		$as_modif = true;
 //		global $flag_no_delete_bulletin;
 //		$flag_no_delete_bulletin=0;
-//		//visibilitÃ© des exemplaires
+//		//visibilité des exemplaires
 //		if ($pmb_droits_explr_localises) {
 //			$as_invis = in_array($valeur->expl_location,$explr_tab_invis);
 //			$as_unmod = in_array($valeur->expl_location,$explr_tab_unmod);
 //			//$as_modif = in_array($valeur->expl_location,$explr_tab_modif);
-//			
+//
 //			if(!($as_modif=in_array  ($valeur->expl_location,$explr_tab_modif) )) $flag_no_delete_bulletin=1;
 //
-//		} 
-//		if ($show_in_reception || $cart_link_non || !(SESSrights & CATALOGAGE_AUTH)) 
+//		}
+//		if ($show_in_reception || $cart_link_non || !(SESSrights & CATALOGAGE_AUTH))
 //			$link =  htmlentities($valeur->expl_cb,ENT_QUOTES, $charset);
 //		else {
 //			if ($as_modif) {
@@ -122,12 +125,12 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 //				$link = htmlentities($valeur->expl_cb,ENT_QUOTES, $charset);
 //			}
 //		}
-//		
+//
 //		if ($situation) $situation="<br />".$situation;
 //		if(!$show_in_reception && SESSrights & CATALOGAGE_AUTH){
 //			$ajout_expl_panier.="<span id='EXPL_drag_".$valeur->expl_id."'  dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=\"".htmlentities($valeur->expl_cb,ENT_QUOTES, $charset)."\" draggable=\"yes\" dragtype=\"notice\" callback_before=\"show_carts\" callback_after=\"\" style=\"padding-left:7px\"><img src=\"".get_url_icon('notice_drag.png')."\"/></span>";
 //		}
-//		
+//
 //		$line = "<tr>";
 //		if (($valeur->expl_note || $valeur->expl_comment) && $pmb_expl_list_display_comments) $line .= "<td rowspan='2'>$link</td>";
 //		else $line .= "<td>$link</td>";
@@ -146,12 +149,12 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 //			$line .= implode("<br />",$notcom);
 //			$line .= "</tr>";
 //		}
-//		$result .= $line; 		
+//		$result .= $line;
 //	} //while(list($cle, $valeur) = each($expl))
-//	
+//
 //	$result .= "</table>";
-//	
-	
+//
+
 	//maintenant
 	//Liste des champs d'exemplaires
 	if($pmb_sur_location_activate) $surloc_field="surloc_libelle,";
@@ -160,7 +163,7 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 	if (!in_array("expl_cb", $colonnesarray)) array_unshift($colonnesarray, "expl_cb");
 	$total_columns = count($colonnesarray);
 	if ($pmb_pret_groupement || $pmb_transferts_actif) $total_columns++;
-	//PrÃ©sence de champs personnalisÃ©s
+	//Présence de champs personnalisés
 	if (strstr($pmb_expl_data, "#")) {
 		require_once($class_path."/parametres_perso.class.php");
     	$cp=new parametres_perso("expl");
@@ -182,7 +185,7 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
  						var msg_have_select_transfer_expl = '".$msg["notice_expl_have_select_transfer_expl"]."';
  						var msg_have_same_loc_expl = '".$msg["notice_expl_have_same_loc_expl"]."';
  					</script>
- 					<table border=\"0\" cellspacing=\"1\">
+ 					<table style='border: 0px; border-spacing: 1px'>
 						<tr>
 							<th colspan='".(count($colonnesarray)+2)."'>
 								".$msg["notice_for_expl_checked"]."
@@ -192,19 +195,19 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 						</tr>
 					</table>";
 		}
-		$result .= "<table border=\"0\" cellspacing=\"1\" class=\"sortable\">";
-		//un premier tour pour aller chercher les libellÃ©s...
+		$result .= "<table style='border: 0px; border-spacing: 1px' class=\"sortable\">";
+		//un premier tour pour aller chercher les libellés...
 		$entry = '';
 		for ($i=0; $i<count($colonnesarray); $i++) {
 			if (substr($colonnesarray[$i],0,1)=="#") {
-    			//champs personnalisÃ©s
+    			//champs personnalisés
     			if (!$cp->no_special_fields) {
     				$id=substr($colonnesarray[$i],1);
     				$entry.="<th>".htmlentities($cp->t_fields[$id]['TITRE'],ENT_QUOTES,$charset)."</th>";
     			}
     		} else {
-    			eval ("\$colencours=\$msg['expl_header_".$colonnesarray[$i]."'];");
-				$entry.="<th>".htmlentities($colencours,ENT_QUOTES, $charset)."</th>";    				
+				$colencours = $msg['expl_header_' . $colonnesarray[$i]] ?? '';
+				$entry.="<th>".htmlentities($colencours,ENT_QUOTES, $charset)."</th>";
     		}
 		}
 		$result.="<tr>".$entry."<th>&nbsp;</th>";
@@ -212,7 +215,7 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 			$expl_list_id = array();
 			$expl_list_id_transfer = array();
 			$result.="<th class='center'>
-						<input type='checkbox' onclick=\"check_all_expl(this,document.getElementById('expl_list_id').value)\" title='".$msg["notice_expl_check_all"]."' id='select_all' name='select_all' />		
+						<input type='checkbox' onclick=\"check_all_expl(this,document.getElementById('expl_list_id').value)\" title='".$msg["notice_expl_check_all"]."' id='select_all' name='select_all' />
 					</th>";
 		}
 		$result.="</tr>";
@@ -221,21 +224,21 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 			$requete .= " date_format(pret_retour, '".$msg["format_date"]."') as aff_pret_retour ";
 			$requete .= " FROM pret ";
 			$requete .= " WHERE pret_idexpl='$exemplaire->expl_id' ";
-			$result_prets = pmb_mysql_query($requete, $dbh) or die ("<br />".pmb_mysql_error()."<br />".$requete);
+			$result_prets = pmb_mysql_query($requete) or die ("<br />".pmb_mysql_error()."<br />".$requete);
 			if (pmb_mysql_num_rows($result_prets)) $expl_pret = pmb_mysql_fetch_object($result_prets) ;
 			else $expl_pret="";
 			$situation = "";
-			// prÃªtable ou pas s'il est prÃªtÃ©, on affiche son Ã©tat
+			// prêtable ou pas s'il est prêté, on affiche son état
 			if (is_object($expl_pret) && $expl_pret->pret_idempr) {
 				// exemplaire sorti
 				$rqt_empr = "SELECT empr_nom, empr_prenom, id_empr, empr_cb FROM empr WHERE id_empr='$expl_pret->pret_idempr' ";
-				$res_empr = pmb_mysql_query($rqt_empr, $dbh) ;
+				$res_empr = pmb_mysql_query($rqt_empr) ;
 				$res_empr_obj = pmb_mysql_fetch_object($res_empr) ;
-				$situation = "<strong>${msg[358]} ".$expl_pret->aff_pret_retour."</strong>";
+				$situation = "<strong>{$msg[358]} ".$expl_pret->aff_pret_retour."</strong>";
 				global $empr_show_caddie;
 				if (!$show_in_reception && $empr_show_caddie && (SESSrights & CIRCULATION_AUTH)) {
-					$img_ajout_empr_caddie="<img src='".get_url_icon('basket_empr.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" onClick=\"openPopUp('./cart.php?object_type=EMPR&item=".$exemplaire->pret_idempr."', 'cart')\">&nbsp;";
-				} else { 
+				    $img_ajout_empr_caddie="<img src='".get_url_icon('basket_empr.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" onClick=\"openPopUp('./cart.php?object_type=EMPR&item=".$expl_pret->pret_idempr."', 'cart')\">&nbsp;";
+				} else {
 					$img_ajout_empr_caddie="";
 				}
 				if (!$show_in_reception) {
@@ -244,28 +247,28 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 					$situation .= "<br />$res_empr_obj->empr_prenom $res_empr_obj->empr_nom";
 				}
 			} else {
-				// tester si rÃ©servÃ©				
-				$result_resa = pmb_mysql_query("select 1 from resa where resa_cb='".addslashes($exemplaire->expl_cb)."' ", $dbh) or die ();
+				// tester si réservé
+				$result_resa = pmb_mysql_query("select 1 from resa where resa_cb='".addslashes($exemplaire->expl_cb)."' ") or die ();
 				$reserve = pmb_mysql_num_rows($result_resa);
 				if ($reserve) {
-					$situation = "<strong>".$msg['expl_reserve']."</strong>"; // exemplaire rÃ©servÃ©
-				} elseif ($exemplaire->pret_flag) { 
-					$situation = "<strong>${msg[359]}</strong>"; // exemplaire disponible
+					$situation = "<strong>".$msg['expl_reserve']."</strong>"; // exemplaire réservé
+				} elseif ($exemplaire->pret_flag) {
+					$situation = "<strong>{$msg[359]}</strong>"; // exemplaire disponible
 				} else {
 					$situation = "";
 				}
 			}
-			
+
 			if(!$show_in_reception && (SESSrights & CATALOGAGE_AUTH)){
 				$cart_click_expl = "onClick=\"openPopUp('./cart.php?object_type=EXPL&item=!!item!!', 'cart')\"";
 				$cart_over_out = "onMouseOver=\"show_div_access_carts(event,".$exemplaire->expl_id.",'EXPL',1);\" onMouseOut=\"set_flag_info_div(false);\"";
-				$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='center' alt='middle' title=\"${msg[400]}\" $cart_click_expl $cart_over_out>";	
+				$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='center' alt='middle' title=\"{$msg[400]}\" $cart_click_expl $cart_over_out>";
 				$ajout_expl_panier = str_replace('!!item!!', $exemplaire->expl_id, $cart_link) ;
 			}else{
 				$ajout_expl_panier ="";
 			}
-			
-			//si les transferts sont activÃ©s
+
+			//si les transferts sont activés
 			if (!$show_in_reception && $pmb_transferts_actif) {
 				//si l'exemplaire n'est pas transferable on a une image vide
 				$dispo_pour_transfert = transfert::est_transferable ( $exemplaire->expl_id );
@@ -277,23 +280,23 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 					$ajout_expl_panier .= "<img src='".get_url_icon('spacer.gif')."' class='center' height=20 width=20>";
 				}
 			}
-		
+
 			$as_invis = false;
 			$as_unmod = false;
-			$as_modif = true;		
+			$as_modif = true;
 			global $flag_no_delete_bulletin;
 			$flag_no_delete_bulletin=0;
-			//visibilitÃ© des exemplaires
+			//visibilité des exemplaires
 			if ($pmb_droits_explr_localises) {
 				$as_invis = in_array($exemplaire->expl_location,$explr_tab_invis);
 				$as_unmod = in_array($exemplaire->expl_location,$explr_tab_unmod);
 				//$as_modif = in_array($exemplaire->expl_location,$explr_tab_modif);
-				
+
 				if(!($as_modif=in_array  ($exemplaire->expl_location,$explr_tab_modif) )) {
 					$flag_no_delete_bulletin=1;
 				}
-	
-			} 
+
+			}
 			if ($show_in_reception || $cart_link_non || !(SESSrights & CATALOGAGE_AUTH)) {
 				$link =  htmlentities($exemplaire->expl_cb,ENT_QUOTES, $charset);
 			} else {
@@ -303,7 +306,7 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 					$link = htmlentities($exemplaire->expl_cb,ENT_QUOTES, $charset);
 				}
 			}
-			
+
 			if ($situation) {
 				$situation="<br />".$situation;
 			}
@@ -312,10 +315,10 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 			}
 			global $pmb_serialcirc_subst;
 			if ($pmb_serialcirc_subst){
-				$ajout_expl_panier.="<img src='".get_url_icon('print.gif')."' alt='Imprimer...' title='Imprimer...' class='align_middle' border='0'	style='padding-left:7px' 			
+				$ajout_expl_panier.="<img src='".get_url_icon('print.gif')."' alt='Imprimer...' title='Imprimer...' class='align_middle' border='0'	style='padding-left:7px'
 					onclick=\"openPopUp('./ajax.php?module=circ&categ=periocirc&sub=print_cote&expl_id=".$exemplaire->expl_id."', 'circulation');\"
 				>";
-				
+
 			}
 			$line="<tr>";
 			for ($i=0; $i<count($colonnesarray); $i++) {
@@ -324,9 +327,9 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 				$aff_column ="";
 				$id_column = "";
 				if (substr($colonnesarray[$i],0,1)=="#") {
-    				//champs personnalisÃ©s
+    				//champs personnalisés
     				$id=substr($colonnesarray[$i],1);
-					$cp->get_values($exemplaire->expl_id);		
+					$cp->get_values($exemplaire->expl_id);
     				if (!$cp->no_special_fields) {
     					$temp=$cp->get_formatted_output((isset($cp->values[$id]) ? $cp->values[$id] : array()), $id);
     					if (!$temp) {
@@ -358,7 +361,7 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 						$aff_column = htmlentities($colencours,ENT_QUOTES, $charset);
 	    			}
     			}
-				$line.="<td $expl_rowspan $id_column>".$aff_column."</td>";
+				$line.="<td $expl_rowspan $id_column class='expl-column-".$i."'>".$aff_column."</td>";
 			}
 			$line .= "<td>$ajout_expl_panier</td>";
 			if ($pmb_pret_groupement || $pmb_transferts_actif) {
@@ -369,12 +372,16 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 			if (($exemplaire->expl_note || $exemplaire->expl_comment) && $pmb_expl_list_display_comments) {
 				$notcom=array();
 				$line .= "<tr><td colspan='".$total_columns."'>";
-				if ($exemplaire->expl_note && ($pmb_expl_list_display_comments & 1)) $notcom[] .= "<span class='erreur'>$exemplaire->expl_note</span>";
-				if ($exemplaire->expl_comment && ($pmb_expl_list_display_comments & 2)) $notcom[] .= "<span class='expl_list_comment'>$exemplaire->expl_comment</span>";
+				if ($exemplaire->expl_note && ($pmb_expl_list_display_comments & 1)) {
+				    $notcom[] = "<span class='erreur'>$exemplaire->expl_note</span>";
+				}
+				if ($exemplaire->expl_comment && ($pmb_expl_list_display_comments & 2)) {
+				    $notcom[] = "<span class='expl_list_comment'>$exemplaire->expl_comment</span>";
+				}
 				$line .= implode("<br />",$notcom);
 				$line .= "</tr>";
 			}
-			$result.= $line;	
+			$result.= $line;
 		}
 		if ($pmb_pret_groupement || $pmb_transferts_actif) {
 			$result .= "<input type='hidden' id='expl_list_id' name='expl_list_id' value='".implode(",", $expl_list_id)."' 	/>
@@ -386,51 +393,42 @@ function get_expl($expl, $show_in_reception=0, $return_count = false) {
 }
 
 
-// get_analysis : retourne les dÃ©pouillements pour un bulletinage donnÃ©
+// get_analysis : retourne les dépouillements pour un bulletinage donné
 function get_analysis($bul_id) {
-	global $dbh;
 	global $explnum_popup_edition_script;
 	global $pmb_enable_explnum_edition_popup;
+	global $link_analysis, $link_serial, $link_bulletin;
+
 	if(!$bul_id) return '';
 
-	$requete = "SELECT * FROM analysis WHERE analysis_bulletin=$bul_id ORDER BY analysis_notice"; 	
-	$myQuery = pmb_mysql_query($requete, $dbh);
+	$requete = "SELECT * FROM analysis WHERE analysis_bulletin=$bul_id ORDER BY analysis_notice";
+	$myQuery = pmb_mysql_query($requete);
 
-	// attention, c'est complexe lÃ . on dÃ©finit ce qui va se passer pour les liens affichÃ©s dans les notices
-	// 1. si le lien est vers une notice chapeau de pÃ©riodique
-	$link_serial = "./catalog.php?categ=serials&sub=view&serial_id=!!id!!";
-	// 2. si le lien est vers un dÃ©pouillement
+	$link_serial = serial::get_pattern_link();
 	$link_analysis = "./catalog.php?categ=serials&sub=analysis&action=analysis_form&bul_id=$bul_id&analysis_id=!!id!!";
-	// 3. si le lien est vers un bulletin
-	$link_bulletin = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!";
-	// note : si une de ces trois variables est vide, aucun lien n'est crÃ©e en ce qui la concerne dans les notices
-	// exemple : dans cette page, on affiche les infos sur ce bulletinage, il ne sert donc Ã  rien d'afficher un lien
-	// vers celui-ci. donc :
-	$link_bulletin = '';
-	 
+	$link_bulletin = bulletinage::get_pattern_link();
+
 	$analysis_list = '';
+	$list = [];
 	while($analysis=pmb_mysql_fetch_object($myQuery)) {
-		$link_explnum = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&analysis_id=$analysis->analysis_notice&bul_id=$bul_id&explnum_id=!!explnum_id!!";
-		// function serial_display ($id, $level='1', $action_serial='', $action_analysis='', $action_bulletin='', $lien_suppr_cart="", $lien_explnum="", $bouton_explnum=1,$print=0,$show_explnum=1, $show_statut=0, $show_opac_hidden_fields=true ) {
-		$display = new serial_display($analysis->analysis_notice, 6, $link_serial, $link_analysis, $link_bulletin,"",$link_explnum, 1, 0, 1, 1, true, 1);		
-			
-		global $avis_quoifaire,$valid_id_avis;			
-		$display->result = str_replace('<!-- !!avis_notice!! -->', avis_notice($analysis->analysis_notice,$avis_quoifaire,$valid_id_avis), $display->result);
-		if(explnum::get_default_upload_directory()){
-		    $display->result = str_replace('<!-- !!explnum_drop_zone!! -->', explnum::get_drop_zone($analysis->analysis_notice, 'article', $analysis->analysis_bulletin), $display->result);
-		}
-		$analysis_list .= $display->result;
-		
+	    $list[] = $analysis->analysis_notice;
 	}
+	$elements_records_list_ui = new elements_records_list_ui($list, count($list), false);
+	$elements_records_list_ui->set_button_explnum(1);
+	$elements_records_list_ui->set_link_serial($link_serial);
+	$elements_records_list_ui->set_link_analysis($link_analysis);
+	$elements_records_list_ui->set_link_bulletin($link_bulletin);
+
+	$analysis_list .= $elements_records_list_ui->get_elements_list();
 	if($pmb_enable_explnum_edition_popup){
 	    $analysis_list.= $explnum_popup_edition_script;
 	}
 	return $analysis_list;
-} 
+}
 
-// affichage d'informations pour une entrÃ©e de bulletinage
+// affichage d'informations pour une entrée de bulletinage
 function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, $flag_pointe=0, $lien_pointe=0 ) {
-	global $dbh, $msg, $charset;
+	global $msg, $charset;
 	global $liste_script;
 	global $liste_debut;
 	global $liste_fin;
@@ -442,7 +440,9 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 
 	$cart_click_bull = "onClick=\"openPopUp('./cart.php?object_type=BULL&item=!!item!!', 'cart')\"";
 	$cart_over_out = "onMouseOver=\"show_div_access_carts(event,".$bul_id.",'BULL');\" onMouseOut=\"set_flag_info_div(false);\"";
-	
+	$nb_per_page = $nb_per_page ?? 0;
+	$nb_after_suppr = 0;
+	$page_suppr = 0;
 	//Calcul des variables pour la suppression d'items
 	if($nb_per_page){
 		$modulo = $nbr_lignes%$nb_per_page;
@@ -450,24 +450,23 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 			$page_suppr = (!$page ? 1 : $page-1);
 		} else {
 			$page_suppr = $page;
-		}	
-		$nb_after_suppr = ($nbr_lignes ? $nbr_lignes-1 : 0);	
+		}
+		$nb_after_suppr = ($nbr_lignes ? $nbr_lignes-1 : 0);
 	}
-	
+
 	$affichage_final = '';
 	if ($bul_id) {
 		if (SESSrights & CATALOGAGE_AUTH) {
 			$myBul = new bulletinage($bul_id, 0, "./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id=$bul_id&explnum_id=!!explnum_id!!", 0, false);
 			$myBul->notice_show_expl = 0;
 			$myBul->make_display();
-			
+
 			// lien vers la notice chapeau
 			$link_parent = "<a href=\"./catalog.php?categ=serials\">".$msg[4010]."</a>";
-			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
-			$link_parent .= "<a href=\"./catalog.php?categ=serials&sub=view&serial_id=";
-			$link_parent .= $myBul->bulletin_notice."\">".$myBul->get_serial()->tit1.'</a>';
-			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' hspace=\"5\">";
-			
+			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' style='margin: 5px 5px'>";
+			$link_parent .= "<a href=\"".serial::get_permalink($myBul->bulletin_notice)."\">".$myBul->get_serial()->tit1.'</a>';
+			$link_parent .= "<img src='".get_url_icon('d.gif')."' class='align_middle' style='margin: 5px 5px'>";
+
 			if ($myBul->bulletin_numero) {
 				$link_bulletin = $myBul->bulletin_numero." ";
 			}
@@ -478,16 +477,16 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 			} else if ($myBul->date_date) {
 				$date_affichee = " [".formatdate($myBul->date_date)."]";
 			}
-			
+
 			$link_bulletin .= $date_affichee;
 
-			$link_parent .= "<a href='./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$bul_id'>$link_bulletin</a>" ;
+			$link_parent .= "<a href='".bulletinage::get_permalink($bul_id)."'>$link_bulletin</a>" ;
 			$affichage_final .= "<div class='row'><div class='perio-barre'>".$link_parent."</div></div>";
-			
+
 			if ($lien_cart_ajout) {
-				$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_bull $cart_over_out>";
+				$cart_link = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_bull $cart_over_out>";
 				$cart_link = str_replace('!!item!!', $bul_id, $cart_link);
-				$cart_link.="<span id='BULL_drag_".$bul_id."'  dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=\"".htmlentities($link_bulletin,ENT_QUOTES,$charset)."\" draggable=\"yes\" dragtype=\"notice\" callback_before=\"show_carts\" callback_after=\"\" style=\"padding-left:7px\"><img src=\"".get_url_icon('notice_drag.png')."\"/></span>";
+// 				$cart_link.="<span id='BULL_drag_".$bul_id."'  dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=\"".htmlentities($link_bulletin,ENT_QUOTES,$charset)."\" draggable=\"yes\" dragtype=\"notice\" callback_before=\"show_carts\" callback_after=\"\" style=\"padding-left:7px\"><img src=\"".get_url_icon('notice_drag.png')."\"/></span>";
 			} else {
 				$cart_link="" ;
 			}
@@ -507,20 +506,20 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 				}
 				$cart_link .= "<a href='$url_base_suppr_cart&action=del_item&object_type=BULL&item=$bul_id&page=$page_suppr&nbr_lignes=$nb_after_suppr&nb_per_page=$nb_per_page'><img src='".get_url_icon('basket_empty_20x20.gif')."' alt='basket' title=\"".$msg["caddie_icone_suppr_elt"]."\" /></a> $marque_flag";
 			}
-				
+
 		}else{
 			$myBul = new bulletinage($bul_id, 0, '');
 			$cart_link='';
 		}
-		
+
 		$bul_action_bar = str_replace('!!bul_id!!', $bul_id, $bul_action_bar);
-		$bul_action_bar = str_replace('!!nb_expl!!', sizeof($myBul->expl), $bul_action_bar);
-		
+		$bul_action_bar = str_replace('!!nb_expl!!', count($myBul->expl), $bul_action_bar);
+
 		$bul_isbd = $myBul->display;
-		
+
 		$javascript_template ="
 		<div id=\"el!!id!!Parent\" class=\"notice-parent\">
-    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el!!id!!Img\" title=\"".$msg['admin_param_detail']."\" border=\"0\" onClick=\"expandBase('el!!id!!', true); return false;\" hspace=\"3\" />
+            ".get_expandBase_button('el!!id!!')."
     		<span class=\"notice-heada\">!!heada!!</span>
     		<br />
 		</div>
@@ -530,21 +529,21 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 		$aff_expandable = str_replace('!!id!!', $bul_id, $javascript_template);
 		$aff_expandable = str_replace('!!heada!!', $cart_link." ".$bul_isbd, $aff_expandable);
 
-		// affichage des exemplaires associÃ©s
+		// affichage des exemplaires associés
 		$list_expl  = "<div class='exemplaires-perio'>";
 		$list_expl .= "<h3>".$msg[4012]."</h3>";
 		$list_expl .= "<div class='row'>".get_expl($myBul->expl)."</div></div>";
 		$affichage_final .= $list_expl;
-		
+
 		// affichage des documents numeriques
 		$aff_expl_num=$myBul->explnum ;
 		if ($aff_expl_num) {
 			$list_expl = "<div class='exemplaires-perio'><h3>".$msg['explnum_docs_associes']."</h3>";
 			$list_expl .= "<div class='row'>".$aff_expl_num."</div></div>";
 			$affichage_final .=  $list_expl;
-		} 
-		
-		//affichage des dÃ©pouillements
+		}
+
+		//affichage des dépouillements
 		$liste = get_analysis($bul_id);
 		if($liste) {
 			$liste_dep = $liste;
@@ -557,12 +556,12 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 		$affichage_final .= "
 			<div class='depouillements-perio'>
 				<h3>".$msg[4013]."</h3>
-				<div class='row'>
+				<div id='bulletin_analysis_list' class='row'>
 					$liste_dep
 					</div>
 				</div>";
 
-		// affichage des rÃ©sas
+		// affichage des résas
 		$aff_resa=resa_list (0, $bul_id, 0) ;
 		if ($aff_resa) {
 			$affichage_final .= "<h3>".$msg['resas']."</h3>".$aff_resa;
@@ -574,9 +573,9 @@ function show_bulletinage_info($bul_id, $lien_cart_ajout=1, $lien_cart_suppr=0, 
 }
 
 
-// affichage d'informations pour une entrÃ©e de bulletinage en resas
+// affichage d'informations pour une entrée de bulletinage en resas
 function show_bulletinage_info_resa($bul_id, $link_header='') {
-	global $dbh, $msg, $charset;
+	global $msg, $charset;
 
 	$affichage_final = '';
 	if ($bul_id) {
@@ -589,7 +588,7 @@ function show_bulletinage_info_resa($bul_id, $link_header='') {
 		}
 		$javascript_template ="
 			<div id=\"el".$bul_id."Parent\" class=\"notice-parent\">
-	    		<img src=\"".get_url_icon('plus.gif')."\" class=\"img_plus\" name=\"imEx\" id=\"el".$bul_id."Img\" title=\"".$msg['admin_param_detail']."\" border=\"0\" onClick=\"expandBase('el".$bul_id."', true); return false;\" hspace=\"3\" />
+                ".get_expandBase_button("el".$bul_id)."
 	    		<span class=\"notice-heada\">!!header!!</span>
 			</div>
 			<div id=\"el".$bul_id."Child\" class=\"notice-child\" style=\"margin-bottom:6px;display:none;\">
@@ -598,13 +597,13 @@ function show_bulletinage_info_resa($bul_id, $link_header='') {
 
 		$aff_expandable = str_replace('!!header!!', $bul_header, $javascript_template);
 
-		// affichage des exemplaires associÃ©s
+		// affichage des exemplaires associés
 		$list_expl  = "<div class='exemplaires-perio'>";
 		$list_expl .= "<h3>".$msg[4012]."</h3>";
 		$list_expl .= "<div class='row'>".get_expl($myBul->expl,1)."</div></div>";
 		$affichage_final .= $list_expl;
 
-		// affichage des rÃ©sas
+		// affichage des résas
 		$aff_resa=resa_list(0, $bul_id, 0);
 		if ($aff_resa) {
 			$affichage_final .= "<h3>".$msg['resas']."</h3>".$aff_resa;

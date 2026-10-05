@@ -1,15 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editor.class.php,v 1.105 2019-06-06 11:51:06 ngantier Exp $
+// $Id: editor.class.php,v 1.117.2.1.2.1 2025/02/27 16:00:02 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+use Pmb\Ark\Entities\ArkEntityPmb;
 // definition de la classe de gestion des 'editeurs'
 if ( ! defined( 'PUBLISHER_CLASS' ) ) {
   define( 'PUBLISHER_CLASS', 1 );
 
+  global $class_path;
+  
 require_once($class_path."/notice.class.php");
 require_once("$class_path/aut_link.class.php");
 require_once("$class_path/aut_pperso.class.php");
@@ -22,6 +25,7 @@ require_once($class_path."/indexation_authority.class.php");
 require_once($class_path."/authority.class.php");
 require_once ($class_path.'/indexations_collection.class.php');
 require_once ($class_path.'/indexation_stack.class.php');
+require_once ($class_path.'/interface/entity/interface_entity_publisher_form.class.php');
 
 class editeur {
 
@@ -42,7 +46,7 @@ class editeur {
 	public $isbd_entry;		// isbd like version ( _ville_ (_country ?_) : _name_ )
 	public $isbd_entry_lien_gestion ; // lien sur le nom vers la gestion
 	public $ed_comment ; // Commentaire, peut contenir du HTML
-	public $num_statut = 1;    //Identifiant du statut affectÃ© Ã  l'Ã©diteur
+	public $num_statut = 1;    //Identifiant du statut affecté à l'éditeur
 	public $supplier;		// Instance du fournisseur
 	public $authority;	// Instance de authority
 	public $cp_error_message = "";
@@ -53,7 +57,7 @@ class editeur {
 	//		editeur($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
@@ -80,6 +84,8 @@ class editeur {
 			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
+				pmb_mysql_free_result($result);
+				
 				$this->id 	= $row->ed_id;
 				$this->name = $row->ed_name;
 				$this->adr1 = $row->ed_adr1;
@@ -90,11 +96,14 @@ class editeur {
 				$this->web = $row->ed_web;
 				$this->ed_comment = $row->ed_comment;
 				$this->supplier = new entites($row->ed_num_entite);
+				
 				$result = entites::get_coordonnees($row->ed_num_entite,1);
 				if(pmb_mysql_num_rows($result)){
 					$row = pmb_mysql_fetch_object($result);
+					pmb_mysql_free_result($result);
 					$this->supplier->coords_invoice = $row;
 				}
+				
 				$this->authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_PUBLISHERS]);
 				$this->num_statut = $this->authority->get_num_statut();
 				if($this->web) {
@@ -115,7 +124,7 @@ class editeur {
 				// Constitue l'ISBD pour le coupe lieu/editeur
 				if ($l == '[S.l.]' AND $n == '[S.n.]') $this->isbd_entry = '[S.l.&nbsp;: s.n.]';
 				else $this->isbd_entry = $l.'&nbsp;: '.$n;
-				//On fait en sorte que le &nbsp; ne nous embÃªte pas Ã  l'affichage
+				//On fait en sorte que le &nbsp; ne nous embête pas à l'affichage
 				global $charset;
 				$this->isbd_entry = html_entity_decode($this->isbd_entry,ENT_QUOTES, $charset);
 					
@@ -126,9 +135,14 @@ class editeur {
 					if ($this->pays) $this->display = "[$this->pays] : $this->name";
 					else $this->display = $this->name;
 				}
+				
 				// Ajoute un lien sur la fiche editeur si l'utilisateur a acces aux autorites
-				if (SESSrights & AUTORITES_AUTH) $this->isbd_entry_lien_gestion = "<a href='./autorites.php?categ=see&sub=publisher&id=".$this->id."' class='lien_gestion'>".$this->display."</a>";
-				else $this->isbd_entry_lien_gestion = $this->display; 
+				// defined('SESSrights') dans le cas de l'indexation il 'y a pas de AUTH ni de session
+				if (defined('SESSrights') && (intval(SESSrights) & AUTORITES_AUTH)) {
+				    $this->isbd_entry_lien_gestion = "<a href='./autorites.php?categ=see&sub=publisher&id=".$this->id."' class='lien_gestion'>".$this->display."</a>";
+				} else {
+				    $this->isbd_entry_lien_gestion = $this->display; 
+				}
 					
 			}
 		}
@@ -166,82 +180,85 @@ class editeur {
 	    return $data;
 	}
 	
-	// ---------------------------------------------------------------
-	//		show_form : affichage du formulaire de saisie
-	// ---------------------------------------------------------------
-	public function show_form($duplicate = false) {
-	
-		global $msg;
-		global $publisher_form;
-	 	global $charset;
-		global $pmb_type_audit;
+	protected function get_content_form() {
 		global $thesaurus_concepts_active;
+		global $publisher_content_form;
 		global $collections_list_tpl;
-	
-		if($this->id && !$duplicate) {
-			$action = static::format_url("&sub=update&id=".$this->id);
-			$libelle = $msg[148];
-			$button_remplace = "<input type='button' class='bouton' value='$msg[158]' ";
-			$button_remplace .= "onclick='unload_off();document.location=\"".static::format_url("&sub=replace&id=".$this->id)."\"'>";
-	
-			$button_voir = "<input type='button' class='bouton' value='$msg[voir_notices_assoc]' ";
-			$button_voir .= "onclick='unload_off();document.location=\"./catalog.php?categ=search&mode=2&etat=aut_search&aut_type=publisher&aut_id=$this->id\"'>";
-	
-			$button_delete = "<input type='button' class='bouton' value='$msg[63]' ";
-			$button_delete .= "onClick=\"confirm_delete();\">";
-		} else {
-			$action = static::format_url('&sub=update&id=');
-			$libelle = $msg[145];
-			$button_remplace = '';
-			$button_voir = '';
-			$button_delete ='';
-		}
+		
+		$content_form = $publisher_content_form;
+		
+		// Nom
+		$element = interface_entity_element::get_instance('el0Child_0', 'ed_nom', 'editeur_nom');
+		$element->add_input_node('text', $this->name, ['data-pmb-deb-rech' => '1']);
+		$content_form = str_replace('!!element_ed_nom!!', $element->get_display(), $content_form);
+		
+		// Adr1
+		$element = interface_entity_element::get_instance('el0Child_1', 'ed_adr1', 'editeur_adr1');
+		$element->add_input_node('text', $this->adr1);
+		$content_form = str_replace('!!element_ed_adr1!!', $element->get_display(), $content_form);
+		
+		// Adr2
+		$element = interface_entity_element::get_instance('el0Child_2', 'ed_adr2', 'editeur_adr2');
+		$element->add_input_node('text', $this->adr2);
+		$content_form = str_replace('!!element_ed_adr2!!', $element->get_display(), $content_form);
+		
+		// CP
+		$element = interface_entity_element::get_instance('el0Child_3_a', 'ed_cp', 'editeur_cp');
+		$element->set_class('colonne2');
+		$element->add_input_node('integer', $this->cp)
+		->set_maxlength(10);
+		$content_form = str_replace('!!element_ed_cp!!', $element->get_display(), $content_form);
+		
+		// Ville
+		$element = interface_entity_element::get_instance('el0Child_3_b', 'ed_ville', 'editeur_ville');
+		$element->set_class('colonne2');
+		$element->add_input_node('text', $this->ville)
+		->set_class('saisie-20em');
+		$content_form = str_replace('!!element_ed_ville!!', $element->get_display(), $content_form);
+		
+		// Pays
+		$element = interface_entity_element::get_instance('el0Child_4', 'ed_pays', '146');
+		$element->add_input_node('text', $this->pays)
+		->set_class('saisie-20em');
+		$content_form = str_replace('!!element_ed_pays!!', $element->get_display(), $content_form);
+		
+		// Web
+		$element = interface_entity_element::get_instance('el0Child_5', 'ed_web', 'editeur_web');
+		$element->add_input_node('url', $this->web);
+		$content_form = str_replace('!!element_ed_web!!', $element->get_display(), $content_form);
+		
+		//Fournisseur
+		$element = interface_entity_element::get_instance('el0Child_7', 'lib_fou', 'acquisition_ach_fou2');
+		$element->add_authority_node($this->supplier->raison_sociale, 'fournisseur')
+		->set_class('saisie-30emr')
+	    ->set_hidden_name('id_fou')
+	    ->set_hidden_value($this->supplier->id_entite)
+	    ->set_openPopUpUrl("select.php?what=fournisseur&caller=saisie_editeur&param1=id_fou&param2=lib_fou&param3=adr_fou&id_bibli=&deb_rech=+".pmb_escape()."(this.form.lib_fou.value)");
+		$content_form = str_replace('!!element_lib_fou!!', $element->get_display(), $content_form);
+		
+		//Commentaire
+		$element = interface_entity_element::get_instance('el0Child_6', 'ed_comment', 'ed_comment');
+		$element->add_textarea_node($this->ed_comment, 62, 4)
+		->set_class('saisie-80em')
+		->set_attributes(array('wrap' => 'virtual'));
+		$content_form = str_replace('!!element_ed_comment!!', $element->get_display(), $content_form);
+		
 		$aut_link= new aut_link(AUT_TABLE_PUBLISHERS,$this->id);
-		$publisher_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_editeur') , $publisher_form);
+		$content_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_editeur') , $content_form);
 		
 		$aut_pperso= new aut_pperso("publisher",$this->id);
-		$publisher_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $publisher_form);
+		$content_form = str_replace('!!aut_pperso!!', $aut_pperso->get_form(), $content_form);
 		
-		$publisher_form = str_replace('!!libelle!!', $libelle, $publisher_form);
-		$publisher_form = str_replace('!!action!!', $action, $publisher_form);
-		$publisher_form = str_replace('!!cancel_action!!', static::format_back_url(), $publisher_form);
-		$publisher_form = str_replace('!!id!!', $this->id, $publisher_form);
-	 	$publisher_form = str_replace('!!ed_nom!!', htmlentities($this->name,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_adr1!!', htmlentities($this->adr1,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_adr2!!', htmlentities($this->adr2,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_cp!!', htmlentities($this->cp,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_ville!!', htmlentities($this->ville,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_pays!!', htmlentities($this->pays,ENT_QUOTES, $charset), $publisher_form);
-	 	$publisher_form = str_replace('!!ed_web!!', htmlentities($this->web,ENT_QUOTES, $charset), $publisher_form);
-		$publisher_form = str_replace('!!remplace!!', $button_remplace,  $publisher_form);
-		$publisher_form = str_replace('!!voir_notices!!', $button_voir, $publisher_form );
-		$publisher_form = str_replace('!!delete!!', $button_delete, $publisher_form);
-		$publisher_form = str_replace('!!delete_action!!', 		static::format_delete_url("&id=".$this->id), 		$publisher_form);
-		$publisher_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_PUBLISHERS, $this->num_statut) , $publisher_form);
-		// pour retour a la bonne page en gestion d'autorites
-		// &user_input=".rawurlencode(stripslashes($user_input))."&nbr_lignes=$nbr_lignes&page=$page
-		global $user_input, $nbr_lignes, $page ;
-		$publisher_form = str_replace('!!user_input!!',			htmlentities($user_input,ENT_QUOTES, $charset),		$publisher_form);
-		$publisher_form = str_replace('!!nbr_lignes!!',			$nbr_lignes,										$publisher_form);
-		$publisher_form = str_replace('!!page!!',				$page,												$publisher_form);
-		$publisher_form = str_replace('!!ed_comment!!',			$this->ed_comment,									$publisher_form);
-		
-		$publisher_form = str_replace('!!id_fou!!', $this->supplier->id_entite, $publisher_form);
-		$publisher_form = str_replace('!!lib_fou!!', $this->supplier->raison_sociale, $publisher_form);
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
 		
 		if($thesaurus_concepts_active == 1){
 			$index_concept = new index_concept($this->id, TYPE_PUBLISHER);
-			$publisher_form = str_replace('!!concept_form!!',		$index_concept->get_form('saisie_editeur'),		$publisher_form);
+			$content_form = str_replace('!!concept_form!!', $index_concept->get_form('saisie_editeur'), $content_form);
 		}else{
-			$publisher_form = str_replace('!!concept_form!!',		"",			$publisher_form);
-		}
-		if ($this->name) {
-			$publisher_form = str_replace('!!document_title!!', addslashes($this->name.' - '.$libelle), $publisher_form);
-		} else {
-			$publisher_form = str_replace('!!document_title!!', addslashes($libelle), $publisher_form);
+			$content_form = str_replace('!!concept_form!!',	"", $content_form);
 		}
 		$authority = new authority(0, $this->id, AUT_TABLE_PUBLISHERS);
-		$publisher_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $publisher_form);
+		$content_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $content_form);
 		
 		//Collections
 		$collections_content = '';
@@ -261,7 +278,7 @@ class editeur {
 					$odd_even=0;
 				}
 				$collections_content .= "<td class='colonne80'>";
-				$collections_content .= "<a href='".static::format_url("&sub=collection_form&id=".$collection['collection_id'])."'>";
+				$collections_content .= "<a href='./autorites.php?categ=collections&sub=collection_form&id=".$collection['collection_id']."'>";
 				$collections_content .= $collection['collection_name'];
 				$collections_content .= '</a></td>';
 				$collections_content .='</tr>';
@@ -270,25 +287,52 @@ class editeur {
 			</div>";
 			$collections_content = str_replace("<!-- collections_list -->",$collections_content,$collections_list_tpl);
 		}
-		$publisher_form=str_replace("!!liaisons_collections!!",$collections_content,$publisher_form);
+		$content_form=str_replace("!!liaisons_collections!!",$collections_content,$content_form);
 		
+		return $content_form;
+	}
+	
+	public function get_form($duplicate = false) {
+		global $msg;
+		global $user_input, $nbr_lignes, $page ;
 		
-		if ($pmb_type_audit && $this->id && !$duplicate) {
-			$bouton_audit= audit::get_dialog_button($this->id, AUDIT_PUBLISHER);
-		} else {
-			$bouton_audit= "";
+		$interface_form = new interface_entity_publisher_form('saisie_editeur');
+		if(isset(static::$controller) && is_object(static::$controller)) {
+			$interface_form->set_controller(static::$controller);
 		}
-		$publisher_form = str_replace('!!audit_bt!!',$bouton_audit,	$publisher_form);
-		$publisher_form = str_replace('!!controller_url_base!!', static::format_url(), $publisher_form);
+		$interface_form->set_enctype('multipart/form-data');
+		if($this->id && !$duplicate) {
+			$interface_form->set_label($msg['148']);
+			$interface_form->set_document_title($this->name.' - '.$msg['148']);
+		} else {
+			$interface_form->set_label($msg['145']);
+			$interface_form->set_document_title($msg['145']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_num_statut($this->num_statut)
+		->set_content_form($this->get_content_form())
+		->set_table_name('publishers')
+		->set_field_focus('ed_nom')
+		->set_url_base(static::format_url());
 		
-		print $publisher_form;
+		$interface_form->set_page($page)
+		->set_nbr_lignes($nbr_lignes)
+		->set_user_input($user_input);
+		return $interface_form->get_display();
+	}
+	
+	// ---------------------------------------------------------------
+	//		show_form : affichage du formulaire de saisie
+	// ---------------------------------------------------------------
+	public function show_form($duplicate = false) {
+		print $this->get_form($duplicate);
 	}
 
 	// ---------------------------------------------------------------
 	//		replace_form : affichage du formulaire de remplacement
 	// ---------------------------------------------------------------
 	public function replace_form() {
-		global $publisher_replace;
+		global $publisher_replace_content_form;
 		global $msg;
 		global $include_path;
 		
@@ -298,23 +342,27 @@ class editeur {
 			return false;
 		}
 	
-		$publisher_replace=str_replace('!!id!!', $this->id, $publisher_replace);
-		$publisher_replace=str_replace('!!ed_name!!', $this->name, $publisher_replace);
-		$publisher_replace = str_replace('!!controller_url_base!!', static::format_url(), $publisher_replace);
-		$publisher_replace = str_replace('!!cancel_action!!', static::format_back_url(), $publisher_replace);
-		print $publisher_replace;
+		$content_form = $publisher_replace_content_form;
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$interface_form = new interface_autorites_replace_form('publisher_replace');
+		$interface_form->set_object_id($this->id)
+		->set_label($msg["159"]." ".$this->name)
+		->set_content_form($content_form)
+		->set_table_name('publishers')
+		->set_field_focus('ed_libelle')
+		->set_url_base(static::format_url());
+		print $interface_form->get_display();
 	}
 
 	// ---------------------------------------------------------------
-	//		get_collections : renvoie toutes les collections liÃ©es
+	//		get_collections : renvoie toutes les collections liées
 	// ---------------------------------------------------------------
 	public function get_collections() {
-		global $dbh;
-		
 		$collections = array();
 		
 		$requete = "SELECT * FROM collections WHERE collection_parent=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($res)) {
 			while ($row = pmb_mysql_fetch_object($res)) {
 				$collection = array();
@@ -331,7 +379,6 @@ class editeur {
 	//		delete() : suppression de l'editeur
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
 		global $msg;
 		
 		if(!$this->id)
@@ -339,7 +386,7 @@ class editeur {
 			return $msg[403]; 
 
 		if(($usage=aut_pperso::delete_pperso(AUT_TABLE_PUBLISHERS, $this->id,0) )){
-			// Cette autoritÃ© est utilisÃ©e dans des champs perso, impossible de supprimer
+			// Cette autorité est utilisée dans des champs perso, impossible de supprimer
 			return '<strong>'.$this->display.'</strong><br />'.$msg['autority_delete_error'].'<br /><br />'.$usage['display'];
 		}
 		// effacement dans les notices
@@ -347,27 +394,27 @@ class editeur {
 		$requete = "SELECT COUNT(1) FROM notices WHERE ";
 		$requete .= "ed1_id=$this->id OR ";
 		$requete .= "ed2_id=$this->id";
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 		if(!$nbr_lignes) {
 			// on regarde si l'editeur a des collections enfants 
 			$requete = "SELECT COUNT(1) FROM collections WHERE ";
 			$requete .= "collection_parent=".$this->id;
-			$res = pmb_mysql_query($requete, $dbh);
+			$res = pmb_mysql_query($requete);
 			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 			if(!$nbr_lignes) {
 				
-				// On regarde si l'autoritÃ© est utilisÃ©e dans des vedettes composÃ©es
+				// On regarde si l'autorité est utilisée dans des vedettes composées
 				$attached_vedettes = vedette_composee::get_vedettes_built_with_element($this->id, TYPE_PUBLISHER);
 				if (count($attached_vedettes)) {
-					// Cette autoritÃ© est utilisÃ©e dans des vedettes composÃ©es, impossible de la supprimer
+					// Cette autorité est utilisée dans des vedettes composées, impossible de la supprimer
 					return '<strong>'.$this->name."</strong><br />".$msg["vedette_dont_del_autority"].'<br/>'.vedette_composee::get_vedettes_display($attached_vedettes);
 				}
 				
 				// effacement dans la table des editeurs
 				$requete = "DELETE FROM publishers WHERE ed_id=".$this->id;
-				$result = pmb_mysql_query($requete, $dbh);
-				// liens entre autoritÃ©s
+				pmb_mysql_query($requete);
+				// liens entre autorités
 				$aut_link= new aut_link(AUT_TABLE_PUBLISHERS,$this->id);
 				$aut_link->delete();
 				
@@ -381,7 +428,7 @@ class editeur {
 				// nettoyage indexation
 				indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_PUBLISHERS);
 				
-				// effacement de l'identifiant unique d'autoritÃ©
+				// effacement de l'identifiant unique d'autorité
 				$authority = new authority(0, $this->id, AUT_TABLE_PUBLISHERS);
 				$authority->delete();
 				
@@ -389,11 +436,11 @@ class editeur {
 				return false;
 			} else {
 				// Cet editeur a des collections, impossible de le supprimer
-				return '<strong>'.$this->name."</strong><br />${msg[405]}";
+				return '<strong>'.$this->name."</strong><br />{$msg[405]}";
 			}
 		} else {
 			// Cet editeur est utilise dans des notices, impossible de le supprimer
-			return '<strong>'.$this->name."</strong><br />${msg[404]}";
+			return '<strong>'.$this->name."</strong><br />{$msg[404]}";
 		}
 	}
 
@@ -401,10 +448,9 @@ class editeur {
 	//		replace($by) : remplacement de l'editeur
 	// ---------------------------------------------------------------
 	public function replace($by,$link_save=0) {
-	
 		global $msg;
-		global $dbh;
 		global $pmb_synchro_rdf;
+		global $pmb_ark_activate;
 	
 		if((!$by)||(!$this->id)) {
 			// pas de valeur de remplacement !!!
@@ -417,9 +463,9 @@ class editeur {
 		}
 			
 		$aut_link= new aut_link(AUT_TABLE_PUBLISHERS,$this->id);
-		// "Conserver les liens entre autoritÃ©s" est demandÃ©
+		// "Conserver les liens entre autorités" est demandé
 		if($link_save) {
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link->add_link_to(AUT_TABLE_PUBLISHERS,$by);		
 		}	
 		$aut_link->delete();
@@ -428,33 +474,45 @@ class editeur {
 		
 		// a) remplacement dans les notices
 		$requete = "UPDATE notices SET ed1_id=$by WHERE ed1_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "UPDATE notices SET ed2_id=$by WHERE ed2_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 	
 		// b) remplacement dans la table des collections
 		$requete = "UPDATE collections SET collection_parent=$by WHERE collection_parent=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
-	
+		pmb_mysql_query($requete);
+		
+		// nettoyage indexation concepts
+		$index_concept = new index_concept($this->id, TYPE_PUBLISHER);
+		$index_concept->delete();
+		
 		// c) suppression de l'editeur a remplacer
 		$requete = "DELETE FROM publishers WHERE ed_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
-		//Remplacement dans les champs persos sÃ©lecteur d'autoritÃ©
+		//Remplacement dans les champs persos sélecteur d'autorité
 		aut_pperso::replace_pperso(AUT_TABLE_PUBLISHERS, $this->id, $by);
 		
 		audit::delete_audit (AUDIT_PUBLISHER, $this->id) ;
 	
 		// nettoyage indexation
 		indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_PUBLISHERS);
-		
-		// effacement de l'identifiant unique d'autoritÃ©
+		if ($pmb_ark_activate) {
+		    $idReplaced = authority::get_authority_id_from_entity($this->id, AUT_TABLE_PUBLISHERS);
+		    $idReplacing = authority::get_authority_id_from_entity($by, AUT_TABLE_PUBLISHERS);
+		    if ($idReplaced && $idReplacing) {
+		        $arkEntityReplaced = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplaced);
+		        $arkEntityReplacing = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplacing);
+		        $arkEntityReplaced->markAsReplaced($arkEntityReplacing);
+		    }
+		}
+		// effacement de l'identifiant unique d'autorité
 		$authority = new authority(0, $this->id, AUT_TABLE_PUBLISHERS);
 		$authority->delete();
 		
 		editeur::update_index($by);
 		
-		//mise Ã  jour de l'oeuvre rdf
+		//mise à jour de l'oeuvre rdf
 		if($pmb_synchro_rdf){
 			$synchro_rdf = new synchro_rdf();
 			$synchro_rdf->replaceAuthority($this->id,$by,'editeur');
@@ -486,8 +544,6 @@ class editeur {
 	//		update($value) : mise a jour de l'editeur
 	// ---------------------------------------------------------------
 	public function update($value) {
-	
-		global $dbh;
 		global $msg;
 		global $include_path;
 		global $pmb_synchro_rdf;
@@ -522,7 +578,7 @@ class editeur {
 			// update
 			$requete = 'UPDATE publishers '.$requete;
 			$requete .= ' WHERE ed_id='.$this->id.' LIMIT 1;';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				
 				audit::insert_modif (AUDIT_PUBLISHER, $this->id) ;
 				
@@ -534,7 +590,7 @@ class editeur {
 					return false;
 				}
 				
-				//mise Ã  jour de l'Ã©diteur dans la base rdf
+				//mise à jour de l'éditeur dans la base rdf
 				if($pmb_synchro_rdf){
 					$synchro_rdf = new synchro_rdf();
 					$synchro_rdf->updateAuthority($this->id,'editeur');
@@ -550,11 +606,11 @@ class editeur {
 		    $id_doublon = editeur::check_if_exists($value, 1);
 		    if ($id_doublon) {
 				require_once("$include_path/user_error.inc.php");
-				warning($msg[145], $msg[149] . "<a href='./autorites.php?categ=see&sub=publisher&id=$id_doublon'>" . stripslashes(" (${value['name']}).</a>"));
+				print $this->warning_already_exist($msg[145], $msg[149] . "<a href='./autorites.php?categ=see&sub=publisher&id=$id_doublon'>" . stripslashes(" ({$value['name']}).</a>"));
 				return FALSE;
 			}
 			$requete = 'INSERT INTO publishers '.$requete.';';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$this->id=pmb_mysql_insert_id();
 				
 				audit::insert_creation (AUDIT_PUBLISHER, $this->id) ;
@@ -583,7 +639,7 @@ class editeur {
 			$index_concept->save();
 		}
 
-		// Mise Ã  jour des vedettes composÃ©es contenant cette autoritÃ©
+		// Mise à jour des vedettes composées contenant cette autorité
 		vedette_composee::update_vedettes_built_with_element($this->id, TYPE_PUBLISHER);
 		
 		editeur::update_index($this->id);
@@ -595,11 +651,10 @@ class editeur {
 	//		import($value) : import editeur
 	// ---------------------------------------------------------------
 	public static function import($data) {
-		global $dbh;
 		global $pmb_controle_doublons_diacrit;
 	
 		// check sur le type de  la variable passee en parametre
-		if(!sizeof($data) || !is_array($data)) {
+		if ((empty($data) && !is_array($data)) || !is_array($data)) {
 			// si ce n'est pas un tableau ou un tableau vide, on retourne 0
 			return 0;
 		}
@@ -607,7 +662,7 @@ class editeur {
 		$data = array_merge(static::get_default_data(), $data);
 	
 		// tentative de recuperer l'id associee dans la base (implique que l'autorite existe)
-		// preparation de la requeÂªte
+		// preparation de la requeªte
 		if(!isset(static::$long_maxi)) {
 			static::$long_maxi = pmb_mysql_field_len(pmb_mysql_query("SELECT ed_name FROM publishers limit 1"),0);
 		}
@@ -627,24 +682,27 @@ class editeur {
 		if ($pmb_controle_doublons_diacrit) {
 		    $binary = 'BINARY';
 		} 
-		$query = "SELECT ed_id FROM publishers WHERE " . $binary . " ed_name='${key}' and ed_ville = '${ville}' ";
-		$result = @pmb_mysql_query($query, $dbh);
+		$query = "SELECT ed_id FROM publishers WHERE " . $binary . " ed_name='{$key}' and ed_ville = '{$ville}' ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT publisher ".$query);
 		// resultat
 	
 		// recuperation du resultat de la recherche
-		$tediteur  = pmb_mysql_fetch_object($result);
-		// et recuperation eventuelle de l'id
-		if($tediteur->ed_id)
-			return $tediteur->ed_id;
+		if(pmb_mysql_num_rows($result)) {
+			$tediteur  = pmb_mysql_fetch_object($result);
+			// et recuperation eventuelle de l'id
+			if($tediteur->ed_id) {
+				return $tediteur->ed_id;
+			}
+		}
 	
 		// id non-recuperee, il faut creer la forme.
 		$query = 'INSERT INTO publishers SET ed_name="'.$key.'", ed_ville = "'.$ville.'", ed_adr1 = "'.$adr.'", ed_comment="'.$ed_comment.'", ed_adr2="'.$adr2.
 		'", ed_cp="'.$cp.'", ed_pays="'.$pays.'", ed_web="'.$web.'", index_publisher=" '.strip_empty_chars($key).' " ';
 	
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't INSERT into publisher : ".$query);
-		$id=pmb_mysql_insert_id($dbh);
+		$id=pmb_mysql_insert_id();
 		
 		audit::insert_creation (AUDIT_PUBLISHER, $id) ;
 		
@@ -686,17 +744,22 @@ class editeur {
 	public static function update_index($id, $datatype = 'all') {
 		indexation_stack::push($id, TYPE_PUBLISHER, $datatype);
 		
-		// On cherche tous les n-uplet de la table notice correspondant a cet Ã©diteur.
+		// On cherche tous les n-uplet de la table notice correspondant a cet éditeur.
 		$query = "select distinct notice_id from notices where ed1_id='".$id."' OR ed2_id='".$id."'";
 		authority::update_records_index($query, 'publisher');
 	}
 
 	//---------------------------------------------------------------
-	// get_informations_from_unimarc : ressort les infos d'un Ã©diteur depuis une notice unimarc
+	// get_informations_from_unimarc : ressort les infos d'un éditeur depuis une notice unimarc
 	//---------------------------------------------------------------
 	public static function get_informations_from_unimarc($fields){
 		$data = array();
-		if($fields['210']){
+		if($fields['214']){
+			$data['name'] = $fields['214'][0]['c'][0];
+			if($fields['214'][0]['a'][0]) $data['ville'] = clean_string($fields['214'][0]['a'][0]);
+			if($fields['214'][0]['b'][0]) $data['adr1'] = clean_string($fields['214'][0]['b'][0]);
+			if($fields['214'][0]['d'][0]) $data['year'] = clean_string($fields['214'][0]['d'][0]);
+		} elseif($fields['210']){
 			$data['name'] = $fields['210'][0]['c'][0];
 			if($fields['210'][0]['a'][0]) $data['ville'] = clean_string($fields['210'][0]['a'][0]);
 			if($fields['210'][0]['b'][0]) $data['adr1'] = clean_string($fields['210'][0]['b'][0]);
@@ -712,26 +775,30 @@ class editeur {
 	}	
 
 	public static function check_if_exists($data, $from_form = 0){
-	    global $dbh;
 	    global $pmb_controle_doublons_diacrit;
 		
 		if (!isset(static::$long_maxi)) {
 			static::$long_maxi = pmb_mysql_field_len(pmb_mysql_query("SELECT ed_name FROM publishers limit 1"),0);
 		}
+		$ville = '';
 		if ($from_form) {
     		$key = rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['name']))),0,static::$long_maxi));
-    		$ville = trim($data['ville']);
+    		if (isset($data['ville'])) {
+                $ville = trim($data['ville']);
+    		}
 		} else  {		    
 		    $key = addslashes(rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['name']))),0,static::$long_maxi)));
-		    $ville = addslashes(trim($data['ville']));
+		    if (isset($data['ville'])) {
+                $ville = addslashes(trim($data['ville']));
+		    }
 		}
 		
 		$binary = '';
 		if ($pmb_controle_doublons_diacrit) {
 		    $binary = 'BINARY';
 		} 
-		$query = "SELECT ed_id FROM publishers WHERE " . $binary . " ed_name='${key}' and ed_ville = '${ville}' ";
-		$result = @pmb_mysql_query($query, $dbh);
+		$query = "SELECT ed_id FROM publishers WHERE " . $binary . " ed_name='{$key}' and ed_ville = '{$ville}' ";
+		$result = @pmb_mysql_query($query);
 		if(!$result) die("can't SELECT publisher ".$query);
 		// resultat
 		if (pmb_mysql_num_rows($result)) {
@@ -840,13 +907,20 @@ class editeur {
 	}
 	
 	protected static function format_delete_url($url='') {
-		global $base_path;
-			
 		if(isset(static::$controller) && is_object(static::$controller)) {
 			return 	static::$controller->get_delete_url();
 		} else {
 			return static::format_url("&sub=delete".$url);
 		}
+	}
+	
+	protected function warning_already_exist($error_title, $error_message, $values=array())  {
+		$authority = new authority(0, $this->id, AUT_TABLE_PUBLISHERS);
+		$display = $authority->get_display_authority_already_exist($error_title, $error_message, $values);
+		$display = str_replace("!!action!!", static::format_url(), $display);
+		$display = str_replace("!!forcing_button!!", '', $display);
+		$display = str_replace('!!hidden_specific_values!!', '', $display);
+		return $display;
 	}
 } # fin de definition de la classe editeur
 

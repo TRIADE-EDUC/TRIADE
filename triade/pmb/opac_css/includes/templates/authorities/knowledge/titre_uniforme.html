@@ -1,0 +1,319 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: titre_uniforme.html,v 1.2 2020/10/09 15:19:17 tgrassin Exp $ -->
+
+{% block header %}
+	<h3><span>{{authority.name}}</span></h3>
+{% endblock %}
+
+{% block aut_see %}
+	<div class="titreuniformelevel2">
+		{{ block.super}}
+	</div>
+{% endblock %}
+	
+{% block title %}
+{% endblock %} 
+
+{% block details %}
+	{% for author in authority.sorted_responsabilities.authors %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_auteur }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}<br/>{% endif %}
+		<a href='index.php?lvl=author_see&id={{author.id}}'>{{ author.objet.display }}</a>{% for attribute in author.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for performer in authority.sorted_responsabilities.performers %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_interprete }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}<br/>{% endif %}
+		<a href='index.php?lvl=author_see&id={{performer.id}}'>{{ performer.objet.display }}</a>{% for attribute in performer.attributes %}{% if attribute.fonction_label %}, {{ attribute.fonction_label }}{% endif %}{% if attribute.qualif_label %} ({{ attribute.qualif_label }}){% endif %}{% endfor %}
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for parent_expression in authority.oeuvre_parent_expressions_datas %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_oeuvre_expression }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}
+			<br/>
+		{% endif %}
+					<a href='index.php?lvl=titre_uniforme_see&id={{ parent_expression.num_object }}'>{{ parent_expression.isbd }}</a>
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for other_links_type in authority.other_links_datas %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ other_links_type.label }} :</b>
+			</div>
+			<div class="aut_display_cell">
+			{% for other_link in other_links_type.elements %}
+				{% if !loop.first %}
+					<br/>
+				{% endif %}
+					<a href='index.php?lvl=titre_uniforme_see&id={{ other_link.num_object }}'>{{ other_link.isbd }}</a>
+			{% endfor %}
+			</div>
+		</div>
+	{% endfor %}
+	{% for event in authority.oeuvre_events_datas %}
+		{% if loop.first %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_oeuvre_event }} :</b>
+				</div>
+				<div class="aut_display_cell">
+		{% else %}
+			<br/>
+		{% endif %}
+			<a href='index.php?lvl=authperso_see&id={{ event.id }}'>{{ event.isbd }}</a>
+		{% if loop.last %}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	
+	{% if authority.form %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_forme }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.form }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.get_form_label %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_forme_list }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.get_form_label }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.date %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_date }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.date }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.place %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_lieu }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.place }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.subject %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_sujet }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.subject }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.intended_termination == 1 %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ msg.aut_oeuvre_form_completude_finished }}
+			</div>
+		</div>
+	{% else %}
+		{% if authority.intended_termination == 2 %}
+			<div class="aut_display_row">
+				<div class="aut_display_cell">
+					<b>{{ msg.aut_oeuvre_form_completude }} :</b>
+				</div>
+				<div class="aut_display_cell">
+					{{ msg.aut_oeuvre_form_completude_infinite }}
+				</div>
+			</div>
+		{% endif %}
+	{% endif %}
+	{% if authority.intended_audience %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_public }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.intended_audience }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.history %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_histoire }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.history }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.context %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_contexte }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.context }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.distrib %}
+		{% for distribution in authority.distrib %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_oeuvre_form_distribution }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ distribution.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.ref %}
+		{% for reference in authority.ref %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_oeuvre_form_reference }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ reference.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.tonalite %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_tonalite }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.tonalite }}
+			</div>
+		</div>
+	{% endif %}		
+	{% if authority.get_key_label %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_tonalite_list }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.get_key_label }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.coordinates %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_coordonnees }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.coordinates }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.equinox %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_equinoxe }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.equinox }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.subdiv %}
+		{% for subdivision in authority.subdiv %}
+			{% if loop.first %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b>{{ msg.aut_oeuvre_form_subdivision }} :</b>
+					</div>
+					<div class="aut_display_cell">
+			{% else %}; {% endif %}
+			{{ subdivision.label }}
+			{% if loop.last %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	{% if authority.characteristic %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_caracteristique }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ authority.characteristic }}
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.aut_oeuvre_form_comment }} :</b>
+			</div>
+			<div class="aut_comment aut_display_cell">
+				{{ authority.comment | nl2br }}
+			</div>
+		</div>
+	{% endif %}		
+	{% if authority.hasChild %}
+		{{ authority.child_list }}
+	{% endif %}
+{% endblock %}
+
+{% block enrichment %}
+	{% if authority.enrichment %}
+		<h3>Editions numeriques avec Galica et data.bnf</h3>
+		<div class='row'>
+			{% for gallica in authority.enrichment %}
+				<div class='colonne4'><a href='{{gallica.uri_gallica}}' target='_blank'>{{gallica.titre}}<br/>{{gallica.editeur}} ({{gallica.date}})</a></div>
+			{% endfor %}
+			<div class='row'></div>
+		</div>
+	{% endif %}
+{% endblock %}

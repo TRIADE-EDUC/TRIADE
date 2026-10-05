@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: threshold.class.php,v 1.2 2016-08-04 10:00:47 dgoron Exp $
+// $Id: threshold.class.php,v 1.5 2023/07/07 07:02:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/entites.class.php");
 require_once($include_path."/templates/threshold.tpl.php");
 
@@ -18,7 +19,7 @@ class threshold {
 	protected $id;
 	
 	/**
-	 * LibellÃ©
+	 * Libellé
 	 * @var string
 	 */
 	protected $label;
@@ -42,13 +43,13 @@ class threshold {
 	protected $footer;
 	
 	/**
-	 * Etablissement associÃ©
+	 * Etablissement associé
 	 * @var entites
 	 */
 	protected $entity;
 	
-	public function __construct($id) {
-		$this->id = $id*1;
+	public function __construct($id=0) {
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -74,28 +75,50 @@ class threshold {
 		}
 	}
 		
+	public function get_content_form() {
+		global $pmb_gestion_devise;
+		
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->set_grid_model('flat_column_25');
+		$interface_content_form->add_element('threshold_entity', 'threshold_entity')
+		->add_html_node('<b>'.$this->entity->raison_sociale.'</b>');
+		$interface_content_form->add_element('threshold_num_entity')
+		->add_input_node('hidden', $this->entity->id_entite);
+		$interface_content_form->add_element('threshold_label', 'threshold_label')
+		->add_input_node('text', $this->label)
+		->set_class('saisie-30em');
+		$interface_content_form->add_element('threshold_amount', 'threshold_amount')
+		->add_input_node('float', $this->amount)
+		->set_label($pmb_gestion_devise);
+		$interface_content_form->add_element('threshold_amount_tax_included', 'threshold_amount_tax_included')
+		->add_input_node('boolean', $this->amount_tax_included);
+		$interface_content_form->add_element('threshold_footer', 'threshold_footer')
+		->add_textarea_node($this->footer)
+		->set_cols(55)
+		->set_rows(10);
+		return $interface_content_form->get_display();
+	}
+	
 	/**
 	 * Formulaire
 	 */
 	public function get_form(){
-		global $msg,$charset,$base_path;
-		global $threshold_form_tpl;
+		global $msg;
 		
-		$form = $threshold_form_tpl;
+		$interface_form = new interface_form('threshold_form');
+		$interface_form->set_label($msg['threshold_form_edit']);
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['threshold_delete_confirm'])
+		->set_content_form($this->get_content_form())
+		->set_table_name('thresholds')
+		->set_field_focus('threshold_label');
 		
-		$form = str_replace("!!entity_label!!",$this->entity->raison_sociale,$form);
-		$form = str_replace("!!num_entity!!",$this->entity->id_entite,$form);
-		$form = str_replace("!!label!!",$this->label,$form);
-		$form = str_replace("!!amount!!",$this->amount,$form);
-		$form = str_replace("!!amount_tax_included!!",($this->amount_tax_included ? "checked='checked'" : ""),$form);
-		$form = str_replace("!!footer!!",$this->footer,$form);
-		if($this->id) {
-			$form = str_replace('!!button_delete!!', "<input type='button' class='bouton' id='threshold_button_delete' name='threshold_button_delete' value='".$msg['supprimer']."' onclick=\"if(threshold_delete()) {document.location='".$base_path."/admin.php?categ=acquisition&sub=thresholds&action=delete&id=".$this->id."&id_entity=".$this->entity->id_entite."'}\" />", $form);
-		} else {
-			$form = str_replace('!!button_delete!!', "", $form);
+		$url_base = $interface_form->get_url_base();
+		if(!empty($this->entity)) {
+			$url_base .= "&id_entity=".$this->entity->id_entite;
 		}
-		$form = str_replace("!!id!!",$this->id,$form);
-		return $form;
+		$interface_form->set_url_base($url_base);
+		return $interface_form->get_display();
 	}
 
 	/**
@@ -110,9 +133,9 @@ class threshold {
 		
 		$this->label = stripslashes($threshold_label);
 		$this->amount = floatval(stripslashes($threshold_amount));
-		$this->amount_tax_included = $threshold_amount_tax_included*1;
+		$this->amount_tax_included = intval($threshold_amount_tax_included);
 		$this->footer = stripslashes($threshold_footer);
-		$this->entity = new entites($threshold_num_entity*1);
+		$this->entity = new entites($threshold_num_entity);
 	}
 	
 	/**
@@ -148,11 +171,9 @@ class threshold {
 	 * Suppression
 	 */
 	public function delete(){
-		global $msg;
-		
 		if($this->id) {
 			$query = "delete from thresholds where id_threshold = ".$this->id;
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 			return true;
 		}
 		return false;

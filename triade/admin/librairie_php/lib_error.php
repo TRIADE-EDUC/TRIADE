@@ -1,51 +1,73 @@
 <?php
-// Nous allons faire notre propre gestion
+// Gestion personnalisée des erreurs
 error_reporting(0);
 
-// Fonction spéciale de gestion des erreurs
-function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars)
+/**
+ * Gestionnaire d'erreurs personnalisé
+ *
+ * @param int    $errno
+ * @param string $errmsg
+ * @param string $filename
+ * @param int    $linenum
+ * @return bool
+ */
+function userErrorHandler(int $errno, string $errmsg, string $filename, int $linenum): bool
 {
     // Date et heure de l'erreur
-    $dt = date("d/m/Y  H:i:s");
+    $dt = date("d/m/Y H:i:s");
 
-    // Définit un tableau associatif avec les chaînes d'erreur
-    // En fait, les seuls niveaux qui nous interessent
-    // sont E_WARNING, E_NOTICE, E_USER_ERROR,
-    // E_USER_WARNING et E_USER_NOTICE
-    // E_WARNING         => "Alerte",
-    $errortype = array (
-                E_ERROR           => "Erreur",
-                E_PARSE           => "Erreur d'analyse",
-                E_NOTICE          => "Note",
-                E_CORE_ERROR      => "Core Error",
-                E_CORE_WARNING    => "Core Warning",
-                E_COMPILE_ERROR   => "Compile Error",
-                E_COMPILE_WARNING => "Compile Warning",
-                E_USER_ERROR      => "Erreur spécifique",
-                E_USER_WARNING    => "Alerte spécifique",
-                E_USER_NOTICE     => "Note spécifique",
-                E_STRICT          => "Runtime Notice"
-                );
-    // Les niveaux qui seront enregistrés
-    $user_errors = array(E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE, E_ERROR, E_WARNING);
+    // Types d'erreurs
+    $errortype = [
+        E_ERROR             => "Erreur",
+        E_PARSE             => "Erreur d'analyse",
+        E_NOTICE            => "Note",
+        E_CORE_ERROR        => "Core Error",
+        E_CORE_WARNING      => "Core Warning",
+        E_COMPILE_ERROR     => "Compile Error",
+        E_COMPILE_WARNING   => "Compile Warning",
+        E_USER_ERROR        => "Erreur spécifique",
+        E_USER_WARNING      => "Alerte spécifique",
+        E_USER_NOTICE       => "Note spécifique",
+        E_STRICT            => "Runtime Notice",
+        E_DEPRECATED        => "Déprécié",
+        E_USER_DEPRECATED   => "Déprécié spécifique"
+    ];
 
-    if ($errortype[$errno] != "Note") {
+    // Erreurs à traiter
+    $user_errors = [
+        E_USER_ERROR,
+        E_USER_WARNING,
+        E_USER_NOTICE,
+        E_ERROR,
+        E_WARNING
+    ];
 
+    // Type d'erreur inconnu
+    $type = $errortype[$errno] ?? 'Erreur inconnue';
 
-    	$err = "$dt <b>".$_SERVER[PHP_SELF]."</b> <font color=red>".$errortype[$errno]."</font> <br /><i>$errmsg</i> <br />\n";
-	$err .= $filename ;
-    	$err .= "<br> --> ligne :  ". $linenum . "<br>";
+    // On ignore les simples notices
+    if ($type !== "Note") {
 
-    	if (in_array($errno, $user_errors)) {
-//        	$err .= "<center><textarea rows=3 cols=50>".wddx_serialize_value($vars,"Variables")."</textarea></center>";
-    	}
-	$err .="<hr><br>";
+        $script = $_SERVER['PHP_SELF'] ?? 'CLI';
 
-    	// sauvegarde de l'erreur, et mail si c'est critique
-    	// @error_log($err, 3, "./data/erreurs.log");
+        $err  = "$dt <b>$script</b> ";
+        $err .= "<font color='red'>$type</font><br />";
+        $err .= "<i>$errmsg</i><br />";
+        $err .= "$filename<br />";
+        $err .= "--> ligne : $linenum<br />";
+        $err .= "<hr><br />";
+
+        if (in_array($errno, $user_errors, true)) {
+            // Exemple de log fichier (à activer si besoin)
+            // error_log(strip_tags($err), 3, __DIR__ . "/data/erreurs.log");
+        }
     }
+
+    // Empêche le gestionnaire PHP par défaut
+    return true;
 }
 
-$old_error_handler = set_error_handler("userErrorHandler");
+// Activation du gestionnaire
+set_error_handler("userErrorHandler");
 
 ?>

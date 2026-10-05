@@ -1,0 +1,8 @@
+<!-- $Id: gabarit.html,v 1.5.8.1 2025/01/08 07:20:53 tsamson Exp $ -->
+{% block isbd %}
+	{% if contribution.displayLabel %}
+		{{ contribution.displayLabel }}
+	{% else %}
+		{{ msg.contribution_draft_name }}
+	{% endif %}
+{% endblock %}

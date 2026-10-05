@@ -1,9 +1,9 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: zip.class.php,v 1.3 2017-07-12 09:07:56 dgoron Exp $
-  
+// $Id: zip.class.php,v 1.4.10.1 2025/01/16 10:24:13 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class zip {
@@ -13,18 +13,18 @@ class zip {
 	public $nb_pages;
 	public $pagesSizes;
 	public $tmp_path = array();
-	
+
 	public function __construct($zipPath){
 		if (is_file($zipPath)){
 			$this->zipPath = $zipPath;
 			$this->readZip();
 		} else {
-			print ("Archive non trouvÃ© : '".$zipPath."'.\n");
+			print ("Archive non trouvé : '".$zipPath."'.\n");
 		}
 	}
-	
-	function readZip() {
-		/* Ouverture de l'archive et lecture des entrÃ©es */
+
+	public function readZip() {
+		/* Ouverture de l'archive et lecture des entrées */
  		$this->zip = zip_open($this->zipPath);
  		if (is_resource($this->zip)) {
 			while ($zip_entry = zip_read($this->zip)) {
@@ -37,8 +37,8 @@ class zip {
 			ksort($this->entries, SORT_NATURAL | SORT_FLAG_CASE);
  		}
 	}
-	
-	function get_file_content($file_path){
+
+	public function get_file_content($file_path){
 		if(!$this->tmp_path[$file_path]){
 			$this->tmp_path[$file_path]=array_search('uri', @array_flip(stream_get_meta_data($GLOBALS[mt_rand()]=tmpfile())));
 			$fp = fopen($this->tmp_path[$file_path], "w+");
@@ -50,7 +50,7 @@ class zip {
 		}
 		return $content;
 	}
-	
+
 	//retourne un chemin vers le fichier
 	public function get_file($file_path){
 		if(!$this->tmp_path[$file_path]){
@@ -58,7 +58,7 @@ class zip {
 		}
 		return $this->tmp_path[$file_path];
 	}
-	
+
 	public function getNbPages(){
 		if(!$this->nb_pages){
 			//le nombre de page
@@ -66,7 +66,7 @@ class zip {
 		}
 		return $this->nb_pages;
 	}
-	
+
 	public function get_page_content($num_page=1){
 		$content = "";
 		$page = 1;
@@ -78,8 +78,8 @@ class zip {
 		}
 		return $content;
 	}
-	
-	function getPagesSizes(){
+
+	public function getPagesSizes(){
 		//pour chaque page
 		if(!$this->pagesSizes){
 			$page = 1;

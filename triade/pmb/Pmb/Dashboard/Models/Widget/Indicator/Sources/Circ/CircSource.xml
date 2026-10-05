@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: CircSource.xml,v 1.1 2024/02/26 14:28:53 dbellamy Exp $ -->
+
+<source>
+    <conditions>
+    
+        <location>
+            <name>location</name>
+            <type>select</type>
+            <multiple>1</multiple>
+            <datatype>integer</datatype>
+            <default>
+                <method>Pmb\Common\Helper\GlobalContext::get</method>
+                <args>deflt2docs_location</args>
+            </default>
+            <values>
+                <method>Pmb\Common\Helper\DocsLocation::getShortList</method>
+            </values>
+        </location>
+       
+        <period>
+            <name>period</name>
+            <type>period</type>
+            <datatype>period</datatype>
+        </period>
+        
+    </conditions>
+    
+    <methods>
+
+        <!-- Nb emprunteurs -->
+        <nb_empr>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM empr WHERE 1</query>
+            <conditions>
+                <location> AND empr_location IN (!!LOCATION!!)</location>
+                <period>
+                    <date_start><![CDATA[ AND empr_creation >= '!!PERIOD_DATETIME_START!!']]></date_start>
+                    <date_end><![CDATA[ AND empr_creation <= '!!PERIOD_DATETIME_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_empr>
+
+        <!-- Nb emprunteurs avec abonnement expiré -->
+        <nb_empr_expired>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM empr WHERE 1</query>
+            <conditions>
+                <period>
+                    <date_start><![CDATA[ AND empr_date_expiration >= '!!PERIOD_DATE_START!!']]></date_start>
+                    <date_end><![CDATA[ AND empr_date_expiration <= '!!PERIOD_DATE_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_empr_expired>
+
+        <!-- Nb prêts en cours -->
+        <nb_prets>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM pret JOIN exemplaires ON pret_idexpl = expl_id WHERE 1</query>
+            <conditions>
+                <location> AND expl_location IN (!!LOCATION!!)</location>
+                <period>
+                    <date_start><![CDATA[ AND pret_date >= '!!PERIOD_DATETIME_START!!']]></date_start>
+                    <date_end><![CDATA[ AND pret_date <= '!!PERIOD_DATETIME_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_prets>
+
+        <!-- Nb prêts en retard -->
+        <nb_prets_late>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM pret JOIN exemplaires ON pret_idexpl = expl_id WHERE 1</query>
+            <conditions>
+                <location> AND expl_location IN (!!LOCATION!!)</location>
+                <period>
+                    <date_start><![CDATA[ AND pret_retour >= '!!PERIOD_DATE_START!!']]></date_start>
+                    <date_end><![CDATA[ AND pret_retour <= '!!PERIOD_DATE_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_prets_late>
+
+        <!-- Nb resas confirmées -->
+        <nb_resas>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM resa WHERE resa_confirmee = 1</query>
+            <conditions>
+                <period>
+                    <date_start><![CDATA[ AND resa_date >= '!!PERIOD_DATETIME_START!!']]></date_start>
+                    <date_end><![CDATA[ AND resa_date <= '!!PERIOD_DATETIME_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_resas>
+
+        <!-- Nb resas à valider -->
+        <nb_resas_to_validate>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM resa WHERE resa_confirmee = 0</query>
+            <conditions>
+                <period>
+                    <date_start><![CDATA[ AND resa_date >= '!!PERIOD_DATETIME_START!!']]></date_start>
+                    <date_end><![CDATA[ AND resa_date <= '!!PERIOD_DATETIME_END!!']]></date_end>
+                </period>
+            </conditions>
+        </nb_resas_to_validate>
+    </methods>
+</source>

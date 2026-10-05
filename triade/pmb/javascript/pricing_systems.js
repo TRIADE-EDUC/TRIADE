@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pricing_systems.js,v 1.25 2017-09-05 08:37:29 vtouchard Exp $
+// $Id: pricing_systems.js,v 1.30 2024/04/04 07:03:27 dgoron Exp $
 
 /**
  * Affichage Oui/Non de la grille dans la liste
@@ -144,20 +144,6 @@ function pricing_system_grid_confirm_reset() {
 	}
 }
 
-function pricing_system_confirm_delete(){
-	if(confirm(msg_pricing_system_delete_confirm)) {
-		return true;
-	}
-	return false;
-}
-
-function pricing_system_confirm_duplicate(){
-	if(confirm(msg_pricing_system_duplicate_confirm)) {
-		return true;
-	}
-	return false;
-}
-
 function set_style_elements(form, elems, flag_error, msg_error) {
 	for(var i = 0; i < elems.length; i++) {
 		if(flag_error) {
@@ -283,28 +269,20 @@ function show_grid_in_account(id) {
 	document.getElementById('frame_notice_preview').innerHTML=req.get_text();
 }
 
-function account_load_exercices(id_entity) {
-	var url = './ajax.php?module=acquisition&categ=rent&sub=get_exercices&id_entity='+id_entity;
+function account_load_exercices(id_entity, objects_type) {
+	var url = './ajax.php?module=acquisition&categ=rent&sub=get_exercices&objects_type='+objects_type+'&id_entity='+id_entity;
 	var req = new http_request();
 	req.request(url,0,'');
-	var anchor = document.getElementsByName('accounts_search_form_exercices')[0];
+	if(document.getElementById('rent_requests_ui_exercice')) {
+		var anchor = document.getElementById('rent_requests_ui_exercice');
+	} else if(document.getElementById('rent_accounts_ui_exercice')) {
+		var anchor = document.getElementById('rent_accounts_ui_exercice');
+	} else {
+		var anchor = document.getElementById('rent_invoices_ui_exercice');
+	}
 	var span = document.createElement("span");
 	span.innerHTML = req.get_text();
 	anchor.parentNode.replaceChild(span, anchor); 
-}
-
-function accounts_select() {
-	var input = document.getElementById('accounts_select_all');
-	var accounts = document.getElementsByName('accounts[]');
-	if(input.checked) {
-		for(var i=0; i<accounts.length; i++){
-			accounts[i].setAttribute('checked','checked');
-		}
-	} else {
-		for(var i=0; i<accounts.length; i++){
-			accounts[i].removeAttribute('checked');
-		}
-	}
 }
 
 function account_selected_grid(grid) {
@@ -318,89 +296,6 @@ function account_selected_grid(grid) {
 	}
 }
 
-function accounts_sort_by(criteria, asc_desc) {
-	var url = './ajax.php?module=acquisition&categ=rent&sub=get_accounts_list&sort_by='+criteria;
-	if(asc_desc == 'desc') {
-		//on repasse en tri croissant
-		url += '&sort_asc_desc=asc';
-	} else if(asc_desc == 'asc') {
-		//on repasse en tri d�croissant
-		url += '&sort_asc_desc=desc';
-	}
-	var req = new http_request();
-	var filters = document.getElementById('accounts_json_filters').value;
-	var pager = document.getElementById('accounts_pager').value;
-	req.request(url,1, 'filters='+filters+'&pager='+pager);
-	var table = document.getElementById('accounts_list');
-	table.innerHTML = req.get_text();
-}
-
-function accounts_gen_invoices() {
-	var has_commands_checked = false;
-	var accounts = document.getElementsByName('accounts[]');
-	var ids_accounts = new Array();
-	for(var i=0; i<accounts.length; i++){
-		if(accounts[i].checked ){
-			ids_accounts.push(accounts[i].value);
-			if(!has_commands_checked) has_commands_checked = true;
-		}
-	}
-	if(!has_commands_checked) {
-		alert(msg_acquisition_accounts_checked_empty);
-	} else {
-		document.location = './acquisition.php?categ=rent&sub=invoices&action=create_from_accounts&ids='+ids_accounts.join(',');
-	}
-}
-
-function invoices_sort_by(criteria, asc_desc) {
-	var url = './ajax.php?module=acquisition&categ=rent&sub=get_invoices_list&sort_by='+criteria;
-	if(asc_desc == 'desc') {
-		//on repasse en tri croissant
-		url += '&sort_asc_desc=asc';
-	} else if(asc_desc == 'asc') {
-		//on repasse en tri d�croissant
-		url += '&sort_asc_desc=desc';
-	}
-	var req = new http_request();
-	var filters = document.getElementById('invoices_json_filters').value;
-	var pager = document.getElementById('invoices_pager').value;
-	req.request(url,1, 'filters='+filters+'&pager='+pager);
-	var table = document.getElementById('invoices_list');
-	table.innerHTML = req.get_text();
-}
-
-function invoices_gen_invoices() {
-	var has_invoices_checked = false;
-	var invoices = document.getElementsByName('invoices[]');
-	for(var i=0; i<invoices.length; i++){
-		if(invoices[i].checked ){
-			var url = './pdf.php?pdfdoc=account_invoice&id='+invoices[i].value;
-			openPopUp(url,'print_PDF_'+invoices[i].value, 600, 500, -2, -2, 'toolbar=no, dependent=yes, resizable=yes');
-			if(!has_invoices_checked) has_invoices_checked = true;
-		}
-	}
-	if(!has_invoices_checked) {
-		alert(msg_acquisition_invoices_checked_empty);
-	}
-}
-
-function invoices_validate_invoices() {
-	var has_invoices_checked = false;
-	var invoices = document.getElementsByName('invoices[]');
-	var ids_invoices = new Array();
-	for(var i=0; i<invoices.length; i++){
-		if(invoices[i].checked ){
-			ids_invoices.push(invoices[i].value);
-			if(!has_invoices_checked) has_invoices_checked = true;
-		}
-	}
-	if(!has_invoices_checked) {
-		alert(msg_acquisition_invoices_checked_empty);
-	} else {
-		document.location = './acquisition.php?categ=rent&sub=invoices&action=validate&ids='+ids_invoices.join(',');
-	}
-}
-
 function invoices_delete_account(id, id_invoice) {
 	var url = './ajax.php?module=acquisition&categ=rent&sub=invoices&id_invoice='+id_invoice+'&action=delete_account&id='+id;
 	var req = new http_request();
@@ -410,23 +305,9 @@ function invoices_delete_account(id, id_invoice) {
 	}
 }
 
-function invoices_select() {
-	var input = document.getElementById('invoices_select_all');
-	var invoices = document.getElementsByName('invoices[]');
-	if(input.checked) {
-		for(var i=0; i<invoices.length; i++){
-			invoices[i].setAttribute('checked','checked');
-		}
-	} else {
-		for(var i=0; i<invoices.length; i++){
-			invoices[i].removeAttribute('checked');
-		}
-	}
-}
-
 function account_update_price_from_time(time) {
 	var grid = document.getElementById('account_num_pricing_system');
-	if(grid.value) {
+	if(grid.value != 0) {
 		var percent = document.getElementById('account_percent').value;
 		var url = './ajax.php?module=acquisition&categ=rent&sub=get_grid&id='+grid.value+'&action=get_price&from=time&value='+time+'&with='+percent;
 		var req = new http_request();
@@ -443,7 +324,7 @@ function account_update_price_from_time(time) {
 
 function account_update_price_from_percent(percent) {
 	var grid = document.getElementById('account_num_pricing_system');
-	if(grid.value) {
+	if(grid.value != 0) {
 		var time = document.getElementById('account_time').value;
 		var url = './ajax.php?module=acquisition&categ=rent&sub=get_grid&id='+grid.value+'&action=get_price&from=percent&value='+percent+'&with='+time;
 		var req = new http_request();
@@ -454,7 +335,7 @@ function account_update_price_from_percent(percent) {
 
 function account_update_web_price_from_web_percent(percent) {
 	var grid = document.getElementById('account_num_pricing_system');
-	if(grid.value) {
+	if(grid.value != 0) {
 		var time = document.getElementById('account_time').value;
 		var url = './ajax.php?module=acquisition&categ=rent&sub=get_grid&id='+grid.value+'&action=get_price&from=percent&value='+percent+'&with='+time;
 		var req = new http_request();
@@ -540,66 +421,47 @@ function account_add_account_in_invoice(account_id, invoice_id){
 }
 
 function account_form_hide_fields() {
-	document.getElementById('el_account_request_types').setAttribute('style', 'display:none;');
-	document.getElementById('el_account_receipt_limit_date').setAttribute('style', 'display:none;');
-	document.getElementById('el_account_receipt_effective_date').setAttribute('style', 'display:none;');
-	document.getElementById('el_account_return_date').setAttribute('style', 'display:none;');
+	if(document.getElementById('el_account_request_types')) {
+		document.getElementById('el_account_request_types').setAttribute('style', 'display:none;');
+	}
+	if(document.getElementById('el_account_dates')) {
+		document.getElementById('el_account_dates').setAttribute('style', 'display:none;');
+	} else {
+		if(document.getElementById('el_account_receipt_limit_date')) {
+			document.getElementById('el_account_receipt_limit_date').setAttribute('style', 'display:none;');
+		}
+		if(document.getElementById('el_account_receipt_effective_date')) {
+			document.getElementById('el_account_receipt_effective_date').setAttribute('style', 'display:none;');
+		}
+		if(document.getElementById('el_account_return_date')) {
+			document.getElementById('el_account_return_date').setAttribute('style', 'display:none;');
+		}
+	}
 }
 
 function request_form_hide_fields() {
-	document.getElementById('el_account_types').setAttribute('style', 'display:none;');
-	document.getElementById("account_types").disabled = true;
-	document.getElementById('el_account_pricing_system').setAttribute('style', 'display:none;');
-	document.getElementById('el_account_minutage').setAttribute('style', 'display:none;');
-	document.getElementById('el_account_web_minutage').setAttribute('style', 'display:none;');
-}
-
-function requests_select() {
-	var input = document.getElementById('requests_select_all');
-	var requests = document.getElementsByName('requests[]');
-	if(input.checked) {
-		for(var i=0; i<requests.length; i++){
-			requests[i].setAttribute('checked','checked');
-		}
-	} else {
-		for(var i=0; i<requests.length; i++){
-			requests[i].removeAttribute('checked');
-		}
+	if(document.getElementById('el_account_types')) {
+		document.getElementById('el_account_types').setAttribute('style', 'display:none;');
+	}
+	if(document.getElementById("account_types")) {
+		document.getElementById("account_types").disabled = true;
+	}
+	if(document.getElementById('el_account_pricing_system')) {
+		document.getElementById('el_account_pricing_system').setAttribute('style', 'display:none;');
+	}
+	if(document.getElementById('el_account_minutage')) {
+		document.getElementById('el_account_minutage').setAttribute('style', 'display:none;');
+	}
+	if(document.getElementById('el_account_web_minutage')) {
+		document.getElementById('el_account_web_minutage').setAttribute('style', 'display:none;');
 	}
 }
 
-function requests_sort_by(criteria, asc_desc) {
-	var url = './ajax.php?module=acquisition&categ=rent&sub=get_requests_list&sort_by='+criteria;
-	if(asc_desc == 'desc') {
-		//on repasse en tri croissant
-		url += '&sort_asc_desc=asc';
-	} else if(asc_desc == 'asc') {
-		//on repasse en tri d�croissant
-		url += '&sort_asc_desc=desc';
-	}
-	var req = new http_request();
-	var filters = document.getElementById('requests_json_filters').value;
-	var pager = document.getElementById('requests_pager').value;
-	req.request(url,1, 'filters='+filters+'&pager='+pager);
-	var table = document.getElementById('requests_list');
-	table.innerHTML = req.get_text();
-}
-
-function requests_gen_commands() {
-	var has_commands_checked = false;
-	var requests = document.getElementsByName('requests[]');
-	for(var i=0; i<requests.length; i++){
-		if(requests[i].checked ){
-			var url = './pdf.php?pdfdoc=account_command&id='+requests[i].value;
-			openPopUp(url,'print_PDF_'+requests[i].value, 600, 500, -2, -2, 'toolbar=no, dependent=yes, resizable=yes');
-			if(!has_commands_checked) has_commands_checked = true;
-		}
-	}
-	if(!has_commands_checked) {
-		alert(msg_acquisition_requests_checked_empty);
+function account_not_editable_form_hide_fields() {
+	if(document.getElementById('el_account_uniform_title')) {
+		document.getElementById('el_account_uniform_title').setAttribute('style', 'display:none;');
 	}
 }
-
 
 function tu_account_mapper_callback(field,tu_id){
 	if(typeof(formMapperCallback) != 'undefined'){

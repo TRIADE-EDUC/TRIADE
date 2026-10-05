@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_pages.class.php,v 1.2 2017-05-24 15:24:48 tsamson Exp $
+// $Id: frbr_pages.class.php,v 1.3 2019/09/18 09:31:57 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class frbr_pages {
 	}
 	
 	/**
-	 * DonnÃ©es
+	 * Données
 	 */
 	protected function fetch_data() {
 		
@@ -47,5 +47,15 @@ class frbr_pages {
 	
 	public function get_pages() {
 		return $this->pages;
+	}
+	
+	public function filter_pages_by_authperso_type($type) {
+	    $filtered_pages = [];
+	    foreach ($this->pages as $page) {
+	        if (!empty($page->get_parameters()->authperso->value) && $page->get_parameters()->authperso->value == $type) {
+	            $filtered_pages[] = $page;
+	        }
+	    }
+	    $this->pages = $filtered_pages;
 	}
 }

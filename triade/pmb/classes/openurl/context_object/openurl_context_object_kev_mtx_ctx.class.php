@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_context_object_kev_mtx_ctx.class.php,v 1.4 2018-11-14 11:36:17 mbertin Exp $
+// $Id: openurl_context_object_kev_mtx_ctx.class.php,v 1.5 2019/07/11 14:17:15 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -32,7 +32,7 @@ class openurl_context_object_kev_mtx_ctx extends openurl_context_object {
 			highlight_string("ContextObject :".print_r($this->infos,true));
 		}
 		$this->context = openurl_serialize_kev_mtx::serialize($this->infos);
-		//on ajoute les entitÃ©s
+		//on ajoute les entités
 		foreach($this->entities as $entity){
 			$entity_serialized = $entity->serialize_infos($debug);
 			if($entity_serialized != ""){
@@ -199,7 +199,7 @@ class openurl_context_object_kev_mtx_ctx extends openurl_context_object {
 			if (count($desc->search_infos)>1){
 				array_unshift($ent_search,$desc->search_infos);
 			}else{
-				array_push($ent_search,$desc->search_infos);
+				$ent_search[] = $desc->search_infos;
 			}
 		}
 		if(count($ent_search)>0){

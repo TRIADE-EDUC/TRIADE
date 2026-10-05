@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_perso.class.php,v 1.5 2018-11-23 12:51:25 dgoron Exp $
+// $Id: search_perso.class.php,v 1.7 2024/03/22 15:31:03 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// classes de gestion des recherches personnalisÃ©es
+// classes de gestion des recherches personnalisées
 
 // inclusions principales
 require_once("$class_path/search.class.php");
@@ -33,7 +33,7 @@ class search_perso {
 		$this->fetch_data();
 	}
     
-	// rÃ©cupÃ©ration des infos en base
+	// récupération des infos en base
 	protected function fetch_data() {
 		global $PMBuserid;
 		
@@ -61,7 +61,7 @@ class search_perso {
 				$this->order = $row->search_order;
 			}
 		}
-		//On rÃ©cupÃ¨re Ã©galement ses recherches prÃ©dÃ©finies
+		//On récupère également ses recherches prédéfinies
 		$this->fetch_search_perso_user();
 	}
 	
@@ -118,11 +118,11 @@ class search_perso {
 				print $this->do_list();
 				break;
 			case "launch":
-				// accÃ¨s direct Ã  une recherche personalisÃ©e
+				// accès direct à une recherche personalisée
 				print $this->launch();
 				break;
 			default :
-				// affiche liste des recherches prÃ©dÃ©finies
+				// affiche liste des recherches prédéfinies
 				print $this->do_list();
 				break;
 		}
@@ -148,7 +148,7 @@ class search_perso {
 	}
 	
 	public function set_order($order=0) {
-		$order += 0;
+		$order = intval($order);
 		if(!$order) {
 			$query = "select max(search_order) as max_order from search_perso";
 			$result = pmb_mysql_query($query);
@@ -157,7 +157,7 @@ class search_perso {
 		$this->order = $order;
 	}
 
-	// fonction gÃ©nÃ©rant le form de saisie 
+	// fonction générant le form de saisie 
 	public function do_form() {
 		global $msg,$tpl_search_perso_form,$charset;	
 		
@@ -173,7 +173,7 @@ class search_perso {
 			$this->query=$my_search->serialize_search();
 			$this->human = $my_search->make_human_query();		
 		}
-		// Champ Ã©ditable
+		// Champ éditable
 		$tpl_search_perso_form = str_replace('!!id!!', htmlentities($this->id,ENT_QUOTES,$charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!name!!', htmlentities($this->name,ENT_QUOTES,$charset), $tpl_search_perso_form);
 		$tpl_search_perso_form = str_replace('!!shortname!!', htmlentities($this->shortname,ENT_QUOTES,$charset), $tpl_search_perso_form);
@@ -197,7 +197,7 @@ class search_perso {
 		return $tpl_search_perso_form;	
 	}
 
-	// fonction gÃ©nÃ©rant le form de saisie 
+	// fonction générant le form de saisie 
 	public function do_list() {
 		global $tpl_search_perso_liste_tableau,$tpl_search_perso_liste_tableau_ligne;	
 		
@@ -271,7 +271,7 @@ class search_perso {
 		return $forms_search.$links;
 	}
 
-	// suppression d'une collection ou de toute les collections d'un pÃ©riodique
+	// suppression d'une collection ou de toute les collections d'un périodique
 	public function delete() {
 		if($this->id) {
 			pmb_mysql_query("DELETE from search_perso WHERE search_id='".$this->id."' ");
@@ -279,13 +279,13 @@ class search_perso {
 		}
 	}
 	
-	// fonction permettant d'accÃ©der directement Ã  une recherche prÃ©dÃ©finie
+	// fonction permettant d'accéder directement à une recherche prédéfinie
 	public function launch() {
 		if($this->id) {
 			$my_search=new search();
 			$my_search->unserialize_search($this->query);
 			print $my_search->make_hidden_search_form("./catalog.php?categ=search&mode=6","search_form".$this->id);
-			print "<script type='text/javascript'>document.forms['search_form".$this->id."'].submit();</script>";
+			print "<script>document.forms['search_form".$this->id."'].submit();</script>";
 		} else {
 			print $this->do_list();
 		}
@@ -322,4 +322,4 @@ class search_perso {
 		return $target_url;
 	}
 
-} // fin dÃ©finition classe
+} // fin définition classe

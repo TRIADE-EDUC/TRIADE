@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_common.tpl.php,v 1.5 2018-10-08 13:59:40 vtouchard Exp $
+// $Id: sel_common.tpl.php,v 1.6 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -11,7 +11,7 @@ global $jscript_common_selector_simple;
 global $jscript_common_selector;
 
 $jscript_common_selector_simple = "
-	<script type='text/javascript'>
+	<script>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, callback){
 		var w = window;
@@ -32,13 +32,13 @@ $jscript_common_selector_simple = "
 
 
 $jscript_common_selector = "
-	<script type='text/javascript'>
+	<script>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, callback){
 		var w = window;
 		var p1 = '!!param1!!';
 		var p2 = '!!param2!!';
-		//on enlÃ¨ve le dernier _X
+		//on enlève le dernier _X
 		var tmp_p1 = p1.split('_');
 		var tmp_p1_length = tmp_p1.length;
 		tmp_p1.pop();

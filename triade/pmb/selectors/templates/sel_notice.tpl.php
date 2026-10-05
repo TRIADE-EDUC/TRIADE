@@ -2,13 +2,13 @@
 // +-------------------------------------------------+
 // | PMB                                                                      |
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_notice.tpl.php,v 1.18 2017-11-21 14:29:34 dgoron Exp $
+// $Id: sel_notice.tpl.php,v 1.18 2017/11/21 14:29:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates du sÃ©lecteur notices
+// templates du sélecteur notices
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -41,7 +41,7 @@ if ($dyn==1) {
 				var flag = 1;
 				var multiple=1;
 			
-				//VÃ©rification que l'Ã©lÃ©ment n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+				//Vérification que l'élément n'est pas déjà sélectionnée
 				for (var i=0; i<n_element; i++) {
 					if (window.parent.document.getElementById('$field_id'+i).value==id_value) {
 						alert('".$msg["term_already_in_use"]."');

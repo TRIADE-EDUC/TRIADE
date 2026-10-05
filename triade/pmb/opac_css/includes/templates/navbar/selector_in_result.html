@@ -1,0 +1,78 @@
+<!-- $Id: selector_in_result.html,v 1.1.2.3 2024/09/10 15:06:05 jparis Exp $ -->
+{% comment %}
+
+Template pour charter le sélecteur de nombre d'éléments par page
+La structure de données est la suivante :
+current => [
+	page => Page courante,
+    nbPerPage=> Nombre d'élements par page
+	previous=> Numéro de la page précédente
+	next=> Numéro de la page suivante
+	elems => [
+		first => Numéro du premier élément de la page courante,
+		last=> Numéro du dernier élément de la page courante
+]
+custom => [
+	url => URL à  utiliser pour changer le nombre d'éléments par page ( ex : {{custom.url | replace "!!nb_per_page_custom!!" 10}} )
+	customs => Tableau des nombres éléments par page possible
+]
+
+{% endcomment %}
+{% if rgaa.active %}
+	<div class="navbar_per_page_container d-flex flex-wrap">
+		<span class="navbar_per_page_msg">{{msg.per_page}}</span>
+		<ul class="d-flex flex-wrap">
+			{% for nb in custom.customs %}
+				<li>
+					{% if nb == current.nbPerPage %}
+						<a class='navbar_per_page navbar_custom current' aria-current="true" role="link" disabled>{{nb}}</a>
+					{% else %}
+						<a class='navbar_per_page navbar_custom' aria-current="false" href='{{custom.url | replace "!!nb_per_page_custom!!" nb}}'>{{nb}}</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+{% else %}
+<span class="navbar_per_page_items" style='float:right;'>{{msg.per_page}}
+	{% for nb in custom.customs %}
+		{% if nb == current.nbPerPage %}<b>{% endif %}
+			<a class='navbar_custom' href='{{custom.url | replace "!!nb_per_page_custom!!" nb}}'>{{nb}}</a>
+		{% if nb == current.nbPerPage %}</b>{% endif %}
+	{% endfor  %}
+</span>
+{% endif %}
+	{% comment %}
+		<div id='navbar_custom_selector' style='float:right;'>
+			{% for nb in custom.customs %}
+				{% if loop.first %}
+					<label for="navbar_nb_per_page_selector" class="visually-hidden">{{ msg.rgaa_navbar_selector_result_per_page }}</label>
+					<select id="navbar_nb_per_page_selector" onchange='
+						{{custom.url | replace "!!nb_per_page_custom!!" "getNbPage(event)" }}'
+					>
+				{% endif %}
+					<option
+						{% if nb == current.nbPerPage %}
+							selected="selected"
+						{% endif %}
+						value="{{nb}}">{{nb}}
+					</option>
+				{% if loop.last %}
+					</select>
+				{% endif %}
+			{% endfor  %}
+		</div>
+
+		<script>
+			function getNbPage(event){
+				return event.target.value;
+			}
+		</script>
+	{% endcomment %}
+
+
+
+
+
+

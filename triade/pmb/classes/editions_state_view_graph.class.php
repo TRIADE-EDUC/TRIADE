@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_view_graph.class.php,v 1.1 2012-11-02 16:15:28 arenou Exp $
+// $Id: editions_state_view_graph.class.php,v 1.2 2023/03/07 07:36:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/editions_state_view.class.php");
 require_once($class_path."/editions_state_view_tcd.class.php");
 
@@ -44,7 +45,7 @@ class editions_state_view_graph extends editions_state_view {
 				
 		$form = "
 		<form action='' method='post' name='editions_state_graph'>
-			<h3>donnÃ©es Ã  mettre en forme</h3>
+			<h3>données à mettre en forme</h3>
 			<div class='row'>
 				<div class='colonne3'>
 					<label for='graph'>".htmlentities($msg['editions_state_graph_form_label'],ENT_QUOTES,$charset)."</label>
@@ -82,12 +83,8 @@ class editions_state_view_graph extends editions_state_view {
 	
 	
 	
-	//un simple tableau pour la classe gÃ©nÃ©rique...
+	//un simple tableau pour la classe générique...
 	public function show(){
-		global $charset,$msg;
-		global $javascript_path;
-		global $tcd;
-
 		$html = $this->get_form();
 		$this->get_datas();
 		if($this->valid_datas){

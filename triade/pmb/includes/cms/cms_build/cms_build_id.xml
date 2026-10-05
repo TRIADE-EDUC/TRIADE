@@ -1,1 +1,299 @@
-<?xml version="1.0" encoding="iso-8859-1"?><!-- liste des blocs dragables pour la construction des pages OPAC$Id: cms_build_id.xml,v 1.16 2018-02-21 10:31:54 dgoron Exp $ --><cms_objects>		<cms_object id='container' draggable='no' receptable='yes' container='yes'/>				<cms_object id='bandeau' label='Bandeau' draggable='yes' receptable='yes' zone='yes'/>		<cms_object id='bandeau_2' label='Bandeau 2' draggable='yes' receptable='yes' zone='yes'/>		<cms_object id='intro' label='Introduction'  draggable='yes' receptable='yes'  zone='yes'/>		<cms_object id='main' label='Main' draggable='yes' receptable='yes' zone='yes'/>				<cms_object id='footer' label='Pied de page' draggable='yes' receptable='yes' />		<cms_object id='main_hors_footer'  label='Page' draggable='yes' receptable='yes' />								<cms_object id='accessibility' label='Accessibilité' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau</parent>			<child_before></child_before>			<child_after>accueil</child_after>		</cms_object>		<cms_object id='accueil' label='Accueil' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau</parent>			<child_before>accessibility</child_before>			<child_after>adresse</child_after>		</cms_object>		<cms_object id='adresse' label='Adresse' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau</parent>			<child_before>accueil</child_before>			<child_after>post_adress</child_after>		</cms_object>		<cms_object id='post_adress' label='Post Adresse' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau</parent>			<child_before>adresse</child_before>			<child_after>connexion</child_after>		</cms_object>		<cms_object id='connexion'  label='Connexion' draggable='yes' receptable='no' fixed='yes'>			<parent>bandeau</parent>			<child_before>post_adress</child_before>			<child_after></child_after>		</cms_object>		<cms_object id='facette' label='Facettes' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau_2</parent>			<child_before>lvl1</child_before>			<child_after></child_after>		</cms_object>		<cms_object id='lvl1' label='Rechercher dans' draggable='yes' receptable='no' fixed='yes' >			<parent>bandeau_2</parent>			<child_before></child_before>			<child_after>facettes</child_after>		</cms_object>				<cms_object id='intro_bibli' label='Introduction' draggable='yes' receptable='no' fixed='yes'>			<parent>intro</parent>			<child_before></child_before>			<child_after></child_after>		</cms_object>					<cms_object id='footer_rss' label='rss' draggable='yes' receptable='no' fixed='yes'>			<parent>footer</parent>			<child_before></child_before>			<child_after>footer_link_sup</child_after>		</cms_object>			<cms_object id='footer_link_sup' label='Liens supplémentaires' draggable='yes' receptable='no' fixed='yes'>			<parent>footer</parent>			<child_before>footer_rss</child_before>			<child_after>footer_link_website</child_after>		</cms_object>			<cms_object id='footer_link_website' label='Liens site Web ' draggable='yes' receptable='no' fixed='yes'>			<parent>footer</parent>			<child_before>footer_link_sup</child_before>			<child_after>footer_link_pmb</child_after>		</cms_object>					<cms_object id='footer_link_pmb' label='Liens PMB' draggable='yes' receptable='no' fixed='yes'>			<parent>footer</parent>			<child_before>footer_link_website</child_before>			<child_after></child_after>		</cms_object>								<cms_object id='navigator' label='Navigateur' draggable='yes' receptable='no' fixed='yes'>			<parent>main_hors_footer</parent>			<child_before></child_before>			<child_after>resume_panier</child_after>		</cms_object>				<cms_object id='resume_panier' label='Panier' draggable='yes' receptable='no' fixed='yes'>			<parent>main_hors_footer</parent>			<child_before>navigator</child_before>			<child_after></child_after>		</cms_object>				<cms_object id='intro_message' label='Message d&apos;introduction' draggable='yes' receptable='no' />		<cms_object id='search' label='Recherche' draggable='yes' receptable='no' />		<cms_object id='last_entries' label='Dernières acquisitions' draggable='yes' receptable='no' />		<cms_object id='search_result' label='Résultat de recherche' draggable='yes' receptable='no' />		<cms_object id='resultatrech' label='Résultat de recherche' draggable='yes' receptable='no' />		<cms_object id='navbar' label='Barre de navigation' draggable='yes' receptable='no' />		<cms_object id='location' label='Localisation' draggable='yes' receptable='no' />		<cms_object id='categories' label='Catégories' draggable='yes' receptable='no' />		<cms_object id='aut_details' label='Détail autorité' draggable='yes' receptable='no' />		<cms_object id='notice' label='Détail d&apos;une notice' draggable='yes' receptable='no' />		<cms_object id='frame_term_search' label='Recherche par termes' draggable='yes' receptable='no' />		<cms_object id='collstate_bulletins_list' label='Liste des bulletins d&apos;une reliure' draggable='yes' receptable='no' />		<cms_object id='carrousel_bulletin' label='Navigateur de bulletins' draggable='yes' receptable='no' />		</cms_objects>
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- liste des blocs dragables pour la construction des pages OPAC
+$Id: cms_build_id.xml,v 1.23 2022/02/07 09:01:58 jparis Exp $ -->
+
+
+<!-- 
+	/!\ L'attribut id="" est obligatoire et ne peut-être vide
+	
+	définir un container :
+	<cms_object receptable='yes' container='yes'/>
+	
+	définir une zone :
+	<cms_object draggable='yes' receptable='yes' zone='yes'/>
+	
+	définir un cadre :
+	<cms_object draggable='yes' receptable='yes'/>
+	
+	définir un objet déplacable :
+	<cms_object draggable='yes' />
+
+	Pour indiquer qu'un cadres est fixe ajouté l'attribut fixed="yes"
+-->
+
+<cms_objects>
+		<!-- Container principale de la page -->
+		<cms_object id='container' draggable='no' receptable='yes' container='yes'/>
+		
+		<!-- Zone dans le container -->
+		<cms_object id='intro' label='Introduction'  draggable='yes' receptable='yes'  zone='yes'>
+			<parent>container</parent>
+			<child_before></child_before>
+			<child_after>main</child_after>
+		</cms_object>
+		<cms_object id='main' label='Main' draggable='yes' receptable='yes' zone='yes'>
+			<parent>container</parent>
+			<child_before>intro</child_before>
+			<child_after>bandeau</child_after>
+		</cms_object>
+		<cms_object id='bandeau' label='Bandeau' draggable='yes' receptable='yes' zone='yes'>
+			<parent>container</parent>
+			<child_before>intro</child_before>
+			<child_after>bandeau_2</child_after>
+		</cms_object>
+		<cms_object id='bandeau_2' label='Bandeau 2' draggable='yes' receptable='yes' zone='yes'>
+			<parent>container</parent>
+			<child_before>bandeau</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Zone dans le main -->
+		<cms_object id='main_header'  label='Entête de la page' draggable='yes' receptable='yes' zone='yes'>
+			<parent>main</parent>
+			<child_before></child_before>
+			<child_after>main_hors_footer</child_after>
+		</cms_object>
+		<cms_object id='main_hors_footer'  label='Contenue de la page' draggable='yes' receptable='yes' zone='yes'>
+			<parent>main</parent>
+			<child_before>main_header</child_before>
+			<child_after>footer</child_after>
+		</cms_object>
+		<cms_object id='footer' label='Pied de page' draggable='yes' receptable='yes' zone='yes'>
+			<parent>main</parent>
+			<child_before>main_hors_footer</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Cadre dans l'intro -->
+		<cms_object id='intro_bibli' label='Introduction' draggable='yes' receptable='no' fixed='yes'>
+			<parent>intro</parent>
+			<child_before></child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Cadre dans le bandeau -->		<cms_object id='accessibility' label='Accessibilité' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau</parent>
+			<child_before></child_before>
+			<child_after>accueil</child_after>
+		</cms_object>
+		<cms_object id='accueil' label='Accueil' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau</parent>
+			<child_before>accessibility</child_before>
+			<child_after>connexion</child_after>
+		</cms_object>
+		<cms_object id='connexion'  label='Connexion' draggable='yes' receptable='no' fixed='yes'>
+			<parent>bandeau</parent>
+			<child_before>accueil</child_before>
+			<child_after>adresse</child_after>
+		</cms_object>
+		<cms_object id='adresse' label='Adresse' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau</parent>
+			<child_before>connexion</child_before>
+			<child_after>post_adress</child_after>
+		</cms_object>
+		<cms_object id='post_adress' label='Post Adresse' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau</parent>
+			<child_before>adresse</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Cadre dans le bandeau_2 -->
+		<cms_object id='lvl1' label='Rechercher dans' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau_2</parent>
+			<child_before></child_before>
+			<child_after>facette</child_after>
+		</cms_object>
+		<cms_object id='facette' label='Facettes' draggable='yes' receptable='no' fixed='yes' >
+			<parent>bandeau_2</parent>
+			<child_before>lvl1</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Cadre dans le footer -->
+		<cms_object id='footer_rss' label='rss' draggable='yes' receptable='no' fixed='yes'>
+			<parent>footer</parent>
+			<child_before></child_before>
+			<child_after>footer_link_sup</child_after>
+		</cms_object>	
+		<cms_object id='footer_link_sup' label='Liens supplémentaires' draggable='yes' receptable='no' fixed='yes'>
+			<parent>footer</parent>
+			<child_before>footer_rss</child_before>
+			<child_after>footer_link_website</child_after>
+		</cms_object>	
+		<cms_object id='footer_link_website' label='Liens site Web ' draggable='yes' receptable='no' fixed='yes'>
+			<parent>footer</parent>
+			<child_before>footer_link_sup</child_before>
+			<child_after>footer_link_pmb</child_after>
+		</cms_object>			
+		<cms_object id='footer_link_pmb' label='Liens PMB' draggable='yes' receptable='no' fixed='yes'>
+			<parent>footer</parent>
+			<child_before>footer_link_website</child_before>
+			<child_after></child_after>
+		</cms_object>				
+		
+		<!-- Cadre dans le main_hors_footer -->
+		<cms_object id='intro_message' label='Message d&apos;introduction' draggable='yes' receptable='no'>
+		    <parent>main_hors_footer</parent>
+		    <child_before></child_before>
+		    <child_after>nav_history</child_after>
+		</cms_object>
+		<cms_object id='nav_history' label='Historique de navigation' draggable='yes' receptable='no' fixed='yes'>
+		    <parent>main_hors_footer</parent>
+		    <child_before>intro_message</child_before>
+		    <child_after>navigator</child_after>
+		</cms_object>
+		<cms_object id='navigator' label='Navigateur' draggable='yes' receptable='no' fixed='yes'>
+		    <parent>main_hors_footer</parent>
+		    <child_before>nav_history</child_before>
+		    <child_after>error_connection</child_after>
+		</cms_object>
+		<cms_object id='error_connection' label='Connexion' draggable='yes' receptable='no' fixed='yes'>
+			<parent>main_hors_footer</parent>
+			<child_before>navigator</child_before>
+			<child_after>resume_panier</child_after>
+		</cms_object>
+		<cms_object id='resume_panier' label='Panier' draggable='yes' receptable='no' fixed='yes'>
+			<parent>main_hors_footer</parent>
+			<child_before>error_connection</child_before>
+			<child_after>search</child_after>
+		</cms_object>
+		<cms_object id='search' label='Recherche' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>resume_panier</child_before>
+			<child_after>categories</child_after>
+		</cms_object>
+		<cms_object id='categories' label='Catégories' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>search</child_before>
+			<child_after>location</child_after>
+		</cms_object>
+		<cms_object id='location' label='Localisation' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>categories</child_before>
+			<child_after>etageres</child_after>
+		</cms_object>
+		<cms_object id='etageres' label='Étagères' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>location</child_before>
+			<child_after>notice</child_after>
+		</cms_object>
+		<cms_object id='notice' label='Détail d&apos;une notice' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>etageres</child_before>
+			<child_after>aut_details</child_after>
+		</cms_object>
+		<cms_object id='aut_details' label='Détail autorité' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>notice</child_before>
+			<child_after>resultatrech</child_after>
+		</cms_object>
+		<cms_object id='resultatrech' label='Résultat de recherche' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>aut_details</child_before>
+			<child_after>navbar</child_after>
+		</cms_object>
+		<cms_object id='navbar' label='Barre de navigation' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>resultatrech</child_before>
+			<child_after>last_entries</child_after>
+		</cms_object>
+		<cms_object id='last_entries' label='Dernières acquisitions' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>navbar</child_before>
+			<child_after>collstate_bulletins_list</child_after>
+		</cms_object>
+		<cms_object id='collstate_bulletins_list' label='Liste des bulletins d&apos;une reliure' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>last_entries</child_before>
+			<child_after>carrousel_bulletin</child_after>
+		</cms_object>
+		<cms_object id='carrousel_bulletin' label='Navigateur de bulletins' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>collstate_bulletins_list</child_before>
+			<child_after>frame_term_search</child_after>
+		</cms_object>
+		<cms_object id='frame_term_search' label='Recherche par termes' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>carrousel_bulletin</child_before>
+			<child_after>search_result</child_after>
+		</cms_object>
+		<cms_object id='search_result' label='Résultat de recherche' draggable='yes' receptable='no'>
+			<parent>main_hors_footer</parent>
+			<child_before>frame_term_search</child_before>
+			<child_after>search_universe_container</child_after>
+		</cms_object>
+		
+		<!-- Container des univers de recherche -->
+		<cms_object id='search_universe_container' draggable='no' receptable='yes' container='yes'>
+			<parent>main_hors_footer</parent>
+			<child_before>search_result</child_before>
+			<child_after>segment_form_container</child_after>
+		</cms_object>
+		
+		<!-- Cadres dans les univers de recherche -->
+		<cms_object id='search_universe_search' label='Recherche dans les segments' draggable='yes' receptable='no'>
+			<parent>search_universe_container</parent>
+			<child_before></child_before>
+			<child_after>search_universe_list_segments</child_after>
+		</cms_object>
+		<cms_object id='search_universe_list_segments' label='Liste des segments' draggable='yes' receptable='no'>
+			<parent>search_universe_container</parent>
+			<child_before>search_universe_search</child_before>
+			<child_after>result_container</child_after>
+		</cms_object>
+		<cms_object id='result_container' label='Résultat de recherche' draggable='yes' receptable='no'>
+			<parent>search_universe_container</parent>
+			<child_before>search_universe_list_segments</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Container des segments de recherche -->
+		<cms_object id='segment_form_container' draggable='no' receptable='yes' container='yes'>
+			<parent>main_hors_footer</parent>
+			<child_before>search_universe_container</child_before>
+			<child_after>animations</child_after>
+		</cms_object>
+		
+		<!-- Cadre des segments de recherche -->
+		<cms_object id='segment_description' label='Description du segment' draggable='yes' receptable='no'>
+			<parent>segment_form_container</parent>
+			<child_before></child_before>
+			<child_after>search_segment_search</child_after>
+		</cms_object>
+		<cms_object id='search_segment_search' label='Recherche dans les segments' draggable='yes' receptable='no'>
+			<parent>segment_form_container</parent>
+			<child_before>segment_description</child_before>
+			<child_after></child_after>
+		</cms_object>
+		<cms_object id='search_universe_segments_list' label='Liste des segments de l&apos;univer' draggable='yes' receptable='no'>
+			<parent>segment_form_container</parent>
+			<child_before>search_segment_search</child_before>
+			<child_after>search_universe_segment_result_list</child_after>
+		</cms_object>
+		<cms_object id='search_universe_segment_result_list' label='Résultat de recherche du segment' draggable='yes' receptable='no'>
+			<parent>segment_form_container</parent>
+			<child_before>search_universe_segments_list</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Container des animations -->
+		<cms_object id='animations' draggable='no' receptable='yes' container='yes'>
+			<parent>main_hors_footer</parent>
+			<child_before>segment_form_container</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+		<!-- Cadre dans les animations -->
+		<cms_object id='animations_list' label='Liste des animations à venir' draggable='yes' receptable='no'>
+			<parent>animations</parent>
+			<child_before></child_before>
+			<child_after>animation_see</child_after>
+		</cms_object>
+		<cms_object id='animation_see' label='Détail d&apos;une animation' draggable='yes' receptable='no'>
+			<parent>animations</parent>
+			<child_before>animations_list</child_before>
+			<child_after></child_after>
+		</cms_object>
+		
+</cms_objects>

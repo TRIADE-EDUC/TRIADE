@@ -2,15 +2,15 @@
 // +-------------------------------------------------+
 // | PMB                                                                      |
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_ontology.tpl.php,v 1.25 2019-05-21 09:12:35 ngantier Exp $
+// $Id: sel_ontology.tpl.php,v 1.29 2022/11/02 12:01:20 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-global $dyn,$jscript,$infield,$msg,$sel_search_form,$list_form,$element_form,$list_range_links_form,$range_link_form, $param1, $param2;
+global $dyn,$jscript,$infield,$msg,$sel_search_form,$list_form,$element_form,$list_range_links_form,$range_link_form, $param1, $param2, $p1, $p2;
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -19,15 +19,18 @@ if($dyn==1){
 	$jscript = "
 	<script type='text/javascript'>
 	
-	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback)
+	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback, element_name)
 	{
+        if (element_name) {
+            element = element_name;
+        }
 	    var w = window;
         do {
             if(w.document.forms[f_caller]){
                 var form_window = w;
                 break;
             }
-            // normalement pas possible, mais on Ã©vite la boucle infinie
+            // normalement pas possible, mais on évite la boucle infinie
             if(w.location.href == w.parent.location.href){
                 break;
             }
@@ -39,7 +42,7 @@ if($dyn==1){
     		flag = 1;
     		var order_concept = new Array();
     	
-    		//VÃ©rification que la catÃ©gorie n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+    		//Vérification que la catégorie n'est pas déjà sélectionnée
     		for (i=0; i<n_concept; i++) {
     			order_concept[i] = i;
     			if (form_window.document.getElementById(element+'_'+i+'_value') && form_window.document.getElementById(element+'_'+i+'_value').value==id_value) {
@@ -81,7 +84,7 @@ if($dyn==1){
 	
 	</script>
 	";
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = "
 	<script type='text/javascript'>
 	<!--
@@ -90,7 +93,7 @@ if($dyn==1){
 		w=window;
 		n_aut_link=w.parent.document.forms[f_caller].elements['max_aut_link'].value;
 		flag = 1;	
-		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'autorité n'est pas déjà sélectionnée
 		for (i=0; i<n_aut_link; i++) {
 			if (w.parent.document.getElementById('f_aut_link_id'+i).value==id_value && w.parent.document.getElementById('f_aut_link_table'+i).value==$param1) {
 				alert('".$msg["term_already_in_use"]."');
@@ -124,8 +127,9 @@ if($dyn==1){
 	<!--
 	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback)
 	{	
+	    let origine = f_caller;
  		w=window;
-		//dÃ©but Copier/Coller depuis le template sel_editeur.tpl.php
+		//début Copier/Coller depuis le template sel_editeur.tpl.php
 		var i=0;
 		if(!(typeof w.parent.$add_field == 'function')) {
 			w.parent.document.getElementById('$field_id').value = id_value;
@@ -133,10 +137,13 @@ if($dyn==1){
 			parent.parent.close();
 			return;
 		}
+		if (origine == 'skos') {
+		    f_caller = this.parent.document.querySelectorAll('form[id^=\"concept_concept_temp_\"]')[0].id;
+        }
 		var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 		var flag = 1;
 		
-		//VÃ©rification que l'Ã©lÃ©ment n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'élément n'est pas déjà sélectionnée
 		for (var i=0; i<n_element; i++) {
 			if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 				alert('".$msg["term_already_in_use"]."');
@@ -148,16 +155,21 @@ if($dyn==1){
 			for (var i=0; i<n_element; i++) {
 				if ((w.parent.document.getElementById('$field_id'+i).value==0)||(w.parent.document.getElementById('$field_id'+i).value=='')) break;
 			}
-			if (i==n_element) w.parent.$add_field();
+			if (i == n_element && origine == 'skos') {
+			    node = this.parent.document.getElementById('$field_id'+(i-1));
+			    w.parent.$add_field(node);
+			} else if (i == n_element) {
+			    w.parent.$add_field();
+            }
 			w.parent.document.getElementById('$field_id'+i).value = id_value;
 			w.parent.document.getElementById('$field_name_id'+i).value = reverse_html_entities(libelle_value);
 		}	
 		//fin Copier/Coller
 
-// Ce bloc lÃ , il Ã©tait commitÃ©, mais on ne peut pas changÃ© de terme une fois sÃ©lectionnÃ©!
+// Ce bloc là, il était commité, mais on ne peut pas changé de terme une fois sélectionné!
 // 		var n_aut = eval('w.parent.document.'+f_caller+'.n_".$param1.".value');							
 // 		flag = 1;	
-// 		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e		
+// 		//Vérification que l'autorité n'est pas déjà sélectionnée		
 // 		for (var i=0; i<n_aut; i++) {
 // 			if (w.parent.document.getElementById('".$param1."_'+i) && w.parent.document.getElementById('".$param1."_'+i).value==id_value) {
 // 				alert('".$msg["term_already_in_use"]."');
@@ -178,13 +190,13 @@ if($dyn==1){
 	</script>
 	";
 }elseif ($dyn==4) {
-	//Recherche multi-critÃ¨res
+	//Recherche multi-critères
 	$jscript = "
 		<script type='text/javascript'>
 			function set_parent(f_caller, element, id_value, libelle_value, type_value, callback){
 				var p1 = '$param1';
 				var p2 = '$param2';
-				//on enlÃ¨ve le dernier _X
+				//on enlève le dernier _X
 				var tmp_p1 = p1.split('_');
 				var tmp_p1_length = tmp_p1.length;
 				tmp_p1.pop();
@@ -227,7 +239,13 @@ if($dyn==1){
 		</script>	
 	";
 }else{
-	// Pour les vedettes composÃ©es
+	// Pour les vedettes composées
+	if (empty($param1) && !empty($p1)){
+	    $param1 = $p1;
+	}
+	if (empty($param2) && !empty($p2)){
+	    $param2 = $p2;
+	}
 	$jscript = "
 	<script type='text/javascript'>
 		function set_parent(f_caller, element, id_value, libelle_value, type_value, callback){
@@ -249,7 +267,7 @@ $sel_search_form ="
 <form name='search_form' method='post' action='!!base_url!!'>
 	<input type='text' name='deb_rech' value=\"!!deb_rech!!\">
 	&nbsp;
-	<input type='submit' class='bouton_small' value='$msg[142]' />
+	<input type='submit' class='bouton_small' value='$msg[142]' />&nbsp;<input type='button' class='bouton' value='!!add_button_label!!' onclick='!!add_button_onclick!!'/>
 </form>
 <script type='text/javascript'>
 	if(document.forms['search_form'].elements['deb_rech']){

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_datasource_external_sources.class.php,v 1.4 2018-05-16 09:09:35 dgoron Exp $
+// $Id: docwatch_datasource_external_sources.class.php,v 1.5 2022/01/04 12:44:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/external.inc.php");
 require_once($class_path."/z3950_notice.class.php");
 
@@ -36,12 +37,11 @@ class docwatch_datasource_external_sources extends docwatch_datasource{
 	} // end of member function __construct
 	
 	/**
-	 * GÃ©nÃ©ration de la structure de donnÃ©es representant les items d'entrepÃ´ts
+	 * Génération de la structure de données representant les items d'entrepôts
 	 * @return array
 	 */
 	
 	protected function get_items_datas($items){
-		global $dbh,$pmb_opac_url;
 		$records = array();
 		if(count($items)){
 			foreach($items as $item) {
@@ -57,7 +57,7 @@ class docwatch_datasource_external_sources extends docwatch_datasource{
 					$record["url"] = $z->link_url;
 					$record["logo_url"] = $z->thumbnail_url;
 					$query = "select distinct date_import from entrepot_source_".$z->source_id." where recid=".$item;
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if ($result) {
 						$row = pmb_mysql_fetch_object($result);
 						$record["publication_date"] = $row->date_import;

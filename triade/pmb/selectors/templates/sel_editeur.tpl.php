@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_editeur.tpl.php,v 1.29 2018-01-24 10:54:46 vtouchard Exp $
+// $Id: sel_editeur.tpl.php,v 1.30 2020/07/09 09:27:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-// templates du sÃ©lecteur Ã©diteur
+// templates du sélecteur éditeur
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -18,12 +18,12 @@ require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 global $dyn;
 global $jscript;
 global $jscript_common_authorities_unique, $jscript_common_authorities_link;
-global $p1, $p2, $p3, $p4, $p5, $p6, $infield;
+global $p1, $p2, $p3, $p4, $p5, $p6, $infield, $what;
 global $selector_publisher_form;
 
 if ($dyn==3) {
 	$jscript = $jscript_common_authorities_unique;
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = $jscript_common_authorities_link;
 }else {
 	$jscript = "
@@ -33,7 +33,7 @@ if ($dyn==3) {
 		if(f_caller=='search_form'){
 			var p1 = '$p1';
 			var p2 = '$p2';
-			//on enlÃ¨ve le dernier _X
+			//on enlève le dernier _X
 			var tmp_p1 = p1.split('_');
 			var tmp_p1_length = tmp_p1.length;
 			tmp_p1.pop();
@@ -74,7 +74,7 @@ if ($dyn==3) {
 				($p6 ? "set_parent_value(f_caller, '".$p6."', '');" : "")."
 				if(callback)
 					window.parent[callback]('$infield');
-				closeCurrentEnv();
+				closeCurrentEnv('$what');
 			}
 		}else{
 			set_parent_value(f_caller, '".$p1."', id_value);
@@ -85,7 +85,7 @@ if ($dyn==3) {
 			($p6 ? "set_parent_value(f_caller, '".$p6."', '');" : "")."
 			if(callback)
 				window.parent[callback]('$infield');
-			closeCurrentEnv();
+			closeCurrentEnv('$what');
 		}
 	}
 	-->
@@ -94,7 +94,7 @@ if ($dyn==3) {
 }
 
 // ------------------------------------------
-// 	$selector_publisher_form : form saisie Ã©diteur
+// 	$selector_publisher_form : form saisie éditeur
 // ------------------------------------------
 $selector_publisher_form = "
 <script type='text/javascript'>
@@ -108,7 +108,7 @@ $selector_publisher_form = "
 -->
 </script>
 <form name='saisie_editeur' method='post' action=\"!!base_url!!&action=update\">
-<!-- ajouter un Ã©diteur -->
+<!-- ajouter un éditeur -->
 <h3>$msg[143]</h3>
 <div class='form-contenu'>
 	<div class='row'>

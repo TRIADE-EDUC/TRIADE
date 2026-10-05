@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,7 +41,7 @@ $cnx=cnx();
 if (isset($_GET["id"])) {
 	$data=recherche_activite_id($_GET["id"]);
 	//id_serial,nom,contact,adresse,code_p,ville,secteur_ac,activite_prin,tel,fax,email,info_plus
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 ?>
 		<font class=T2>
 		<?php print LANGSTAGE39 ?> : <b><font color=red><?php print $data[$i][1] ?></font></b> <br><br>

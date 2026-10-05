@@ -1,15 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rubriques.inc.php,v 1.19 2017-10-19 14:04:50 ngantier Exp $
+// $Id: rubriques.inc.php,v 1.20 2019/08/20 09:18:41 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// la variable $caller, passÃ©e par l'URL, contient le nom du form appelant
+global $caller, $param1, $param2, $id_bibli, $id_exer, $no_display, $bt_ajouter, $class_path, $sel_header, $elt_query, $charset;
+global $sel_search, $jscript, $nbr_lignes, $page, $sel_footer;
+
+// la variable $caller, passée par l'URL, contient le nom du form appelant
 $base_url = "./select.php?what=rubriques&caller=$caller&param1=$param1&param2=$param2&id_bibli=$id_bibli&id_exer=$id_exer&no_display=$no_display&bt_ajouter=$bt_ajouter";
 
-// contenu popup sÃ©lection fournisseur
+// contenu popup sélection fournisseur
 require_once('./selectors/templates/sel_rubriques.tpl.php');
 require_once($class_path.'/entites.class.php');
 require_once($class_path.'/budgets.class.php');
@@ -25,15 +28,15 @@ $sel_search = str_replace("!!action_url!!", $base_url, $sel_search);
 print $sel_search;
 
 print $jscript;
-show_results($dbh, $nbr_lignes, $page);
+show_results($nbr_lignes, $page);
 
-//fonction de tri des rubriques par libellÃ©
+//fonction de tri des rubriques par libellé
 function sort_array_rub($a,$b) {
 	return $a['lib_rub_no_html']>$b['lib_rub_no_html'];
 }
 
 // affichage des membres de la page
-function show_results($dbh, $nbr_lignes=0, $page=0) {
+function show_results($nbr_lignes=0, $page=0) {
 	
 	global $nb_per_page;
 	global $base_url;
@@ -44,14 +47,14 @@ function show_results($dbh, $nbr_lignes=0, $page=0) {
 	global $acquisition_budget_show_all;
 	global $elt_query;
 
-	// on rÃ©cupÃ©re le nombre de lignes qui vont bien
+	// on récupére le nombre de lignes qui vont bien
 	$nbr_lignes = entites::countRubriquesFinales($id_bibli, $id_exer, true, $elt_query);
 
 	if (!$page) $page=1;
 	$debut = ($page-1)*$nb_per_page;
 
 	if($nbr_lignes) {
-		// on lance la vraie requÃªte
+		// on lance la vraie requête
 		if(!$acquisition_budget_show_all){
 			$res = entites::listRubriquesFinales($id_bibli, $id_exer, true, $debut, $nb_per_page, $elt_query);
 		}else{
@@ -65,9 +68,9 @@ function show_results($dbh, $nbr_lignes=0, $page=0) {
 							
 			$new_id_bud = $row->num_budget;
 			if ($new_id_bud != $id_bud) {
-				//Affichage des rubriques prÃ©cÃ©dentes
+				//Affichage des rubriques précédentes
 				if (count($arrayRub)) {
-					//tri des rubriques par ordre alphabÃ©tique
+					//tri des rubriques par ordre alphabétique
 					usort($arrayRub, "sort_array_rub");
 					foreach ($arrayRub as $rub) {
 						print "<tr><td><div class='child_tab'>";
@@ -97,7 +100,7 @@ function show_results($dbh, $nbr_lignes=0, $page=0) {
 			
 			$lib_rub = '';
 			$lib_rub_no_html = "" ;
-			foreach ($tab_rub as $dummykey=>$value) {
+			foreach ($tab_rub as $value) {
 				$lib_rub.= htmlentities($value[1], ENT_QUOTES, $charset);
 				$lib_rub_no_html.= $value[1];
 				if($value[0] != $row->id_rubrique) $lib_rub.= ":";
@@ -123,7 +126,7 @@ function show_results($dbh, $nbr_lignes=0, $page=0) {
 
 		//Affichage des rubriques restantes
 		if (count($arrayRub)) {
-			//tri des rubriques par ordre alphabÃ©tique
+			//tri des rubriques par ordre alphabétique
 			usort($arrayRub, "sort_array_rub");
 			foreach ($arrayRub as $rub) {
 				print "<tr><td><div class='child_tab'>";

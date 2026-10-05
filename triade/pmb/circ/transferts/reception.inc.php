@@ -1,21 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: reception.inc.php,v 1.25 2018-12-27 10:05:22 dgoron Exp $
+// $Id: reception.inc.php,v 1.30 2022/10/04 09:20:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($site_origine)) $site_origine = '';
-if(!isset($page)) $page = 0;
+global $class_path, $action, $sub, $msg, $charset, $PMBuserid, $database_window_title;
+global $liste_transfert,$statut_reception,$section_reception,$info;
+global $form_cb_expl, $transferts_reception_OK, $transferts_reception_erreur;
+global $site_origine, $nb_per_page, $page;
 
-require_once($class_path."/list/transferts/list_transferts_reception_ui.class.php");
+$page = intval($page);
+
 require_once($class_path."/resa.class.php");
 require_once ($class_path.'/ajax_pret.class.php');
 require_once($class_path."/mono_display_expl.class.php");
 require_once($class_path."/event/events/event_recept_transfert_resa.class.php");
 
-// Titre de la fenÃªtre
+// Titre de la fenêtre
 print window_title($database_window_title.$msg['transferts_circ_menu_reception'].$msg[1003].$msg[1001]);
 
 //creation de l'objet transfert
@@ -37,13 +40,10 @@ switch ($action) {
 		break;
 }
 
-
 if ($action=="") {
+	$tmpString = do_cb_expl('',	$msg[661], $msg['transferts_circ_reception_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_origine=".$site_origine."&nb_per_page=".$nb_per_page, "recep");
 
-	$tmpString = do_cb_expl($msg['transferts_circ_menu_titre']." > ".$msg['transferts_circ_menu_reception'],
-								$msg[661], $msg['transferts_circ_reception_exemplaire'], "./circ.php?categ=trans&sub=".$sub."&site_origine=".$site_origine."&nb_per_page=".$nb_per_page, "recep");
-
-	//on rÃ©cupere l'id du statut par dÃ©faut du site de l'utilisateur
+	//on récupere l'id du statut par défaut du site de l'utilisateur
 	$rqt = "SELECT transfert_statut_defaut FROM docs_location " .
 			"INNER JOIN users ON idlocation=deflt_docs_location " .
 			"WHERE userid=".$PMBuserid;
@@ -72,7 +72,7 @@ if ($action=="") {
 			echo str_replace("!!cb_expl!!", $expl->header,$transferts_reception_OK);
 			$resa=new reservation(0,0,0,$form_cb_expl);
 			if(($empr_resa=$resa->get_empr_info_cb())){			
-				// On dÃ©clenche un Ã©vÃ©nement sur la rÃ©servation Ã  la rÃ©ception d'un transfert !
+				// On déclenche un événement sur la réservation à la réception d'un transfert !
 				$evt = new event_recept_transfert_resa('transfert', 'recept_resa');
 				$evt->set_resa($resa);
 				$evth = events_handler::get_instance();
@@ -84,11 +84,22 @@ if ($action=="") {
 					echo $evt->get_result();
 				}
 			}
+			if(!empty($expl->expl_data->expl_note)) {
+				echo "
+				<div class='row center transferts_reception_message'>
+					<span class='transferts_reception_message_title'>
+						<img src='".get_url_icon('notification_new.png')."' title='".htmlentities($msg["expl_message"], ENT_QUOTES, $charset)."' alt='".htmlentities($msg["expl_message"], ENT_QUOTES, $charset)."' />
+					</span>
+					<span class='transferts_reception_message_content'>
+						<b>".nl2br($expl->expl_data->expl_note)."</b>
+					</span>
+				</div>";
+			}
 			if($motif)echo "<div class='row center'><b>".$motif."</b></div>";
 		}
 	}
 
-	$list_transferts_reception_ui = new list_transferts_reception_ui(array('etat_transfert' => 0, 'etat_demande' => 2, 'site_destination' => $deflt_docs_location, 'site_origine' => 0));
+	$list_transferts_reception_ui = new list_transferts_reception_ui(array('etat_transfert' => 0, 'etat_demande' => 2));
 	print $list_transferts_reception_ui->get_display_list();
 }
 

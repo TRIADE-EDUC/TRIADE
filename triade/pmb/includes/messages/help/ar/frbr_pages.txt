@@ -1,0 +1,4 @@
+<h2>Gestion pages FRBR</h2>
+
+<p>Ce module permet de g&eacute;rer les pages FRBR</p>
+<br />

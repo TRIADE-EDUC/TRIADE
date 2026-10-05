@@ -81,7 +81,7 @@
   if ((($USER_SUBSTITUE==$idUser) and ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR)) or ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION)) {
     //Recuperation des memos de l'utilisateur
 	//Mod MemoProgress
-	$DB_CX->DbQuery("SELECT DISTINCT mem_id, mem_titre, mem_contenu, mem_progress, mem_pcent, mem_util_id FROM ${PREFIX_TABLE}memo WHERE (mem_util_id=".$idUser." OR (mem_util_id!=".$idUser." AND mem_partage='O')) ORDER BY mem_id ASC");
+	$DB_CX->DbQuery("SELECT DISTINCT mem_id, mem_titre, mem_contenu, mem_progress, mem_pcent, mem_util_id FROM {$PREFIX_TABLE}memo WHERE (mem_util_id=".$idUser." OR (mem_util_id!=".$idUser." AND mem_partage='O')) ORDER BY mem_id ASC");
 	//fin Mod MemoProgress
     $afficheFinMenu = false;
     if ($DB_CX->DbNumRows()) {
@@ -111,7 +111,7 @@
   </TR>\n");
     }
     //Recuperation des favoris de l'utilisateur (y compris partages) classes par groupe
-    $DB_CX->DbQuery("SELECT DISTINCT fav_nom, fav_url, fav_commentaire, fgr_nom FROM ${PREFIX_TABLE}favoris, ${PREFIX_TABLE}favoris_groupe WHERE (fav_util_id=".$idUser." OR (fav_util_id!=".$idUser." AND fav_partage='O')) AND fgr_id=fav_fgr_id ORDER BY fgr_nom, fav_nom ASC");
+    $DB_CX->DbQuery("SELECT DISTINCT fav_nom, fav_url, fav_commentaire, fgr_nom FROM {$PREFIX_TABLE}favoris, {$PREFIX_TABLE}favoris_groupe WHERE (fav_util_id=".$idUser." OR (fav_util_id!=".$idUser." AND fav_partage='O')) AND fgr_id=fav_fgr_id ORDER BY fgr_nom, fav_nom ASC");
     if ($DB_CX->DbNumRows()) {
       $afficheFinMenu = true;
       echo ("  <TR>

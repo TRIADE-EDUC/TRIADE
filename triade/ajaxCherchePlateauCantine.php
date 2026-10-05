@@ -6,10 +6,10 @@ if (isset($_POST["id"])) {
 	$cnx=cnx();
 	$data=cherchePlateauCantine($_POST["id"]); // id,libelle,prix,attribue
 	PgClose();
-	if (count($data) > 0) {
-		for($i=0;$i<count($data);$i++) {
+	if (countTriade($data) > 0) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$id=$data[$i][0];
-			$libelle=$data[$i][1];
+			$libelle=urlencode($data[$i][1]);
 			$prix=$data[$i][2]." ".unitemonnaie();
 			$attribue=$data[$i][3];
 			$data2[$i][0]=$id;

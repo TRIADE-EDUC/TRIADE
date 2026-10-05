@@ -1,11 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_demandes.inc.php,v 1.14 2017-05-17 14:59:57 ngantier Exp $
+// $Id: ajax_demandes.inc.php,v 1.17.4.1 2025/04/16 08:15:53 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $class_path, $quoifaire;
+global $id_demande, $id_action;
 
 require_once($base_path."/classes/demandes.class.php");
 require_once($base_path."/classes/demandes_actions.class.php");
@@ -25,13 +27,19 @@ switch($quoifaire){
 		$action=new demandes_actions($id_action,false);
 		ajax_http_send_response(demandes_notes::show_dialog($action->notes, $action->id_action,$action->num_demande,"demandes-show_consult_form"));
 		break;
+	case "get_pperso_form":
+		global $type_demande;
+		$type_demande = intval($type_demande);
+		$demande = new demandes();
+		ajax_http_send_response($demande->get_pperso_form_content($id_demande, $type_demande));
+		break;
 }
 
 /*
  * Affiche le formulaire d'ajout d'un action
  */
 function show_form($id,$type){
-	global $dbh, $msg; 
+	global $msg; 
 	
 	if($type == 'ask'){
 		$title = $msg['demandes_question_form'];
@@ -48,9 +56,8 @@ function show_form($id,$type){
 			<label class='etiquette' >".$msg['demandes_action_date_rdv']."</label>
 		</div>
 		<div class='row'>
-			<blockquote>
-				<input type='text' style='width: 10em;' name='date_rdv' id='date_rdv' 
-					data-dojo-type='dijit/form/DateTextBox' required='false' value='".$date."' />
+			<blockquote role='presentation'>
+				<input type='date' name='date_rdv' id='date_rdv' value='".$date."' />
 			</blockquote>
 		</div>";	
 	}
@@ -64,7 +71,7 @@ function show_form($id,$type){
 			<label class='etiquette' >".$msg['demandes_action_sujet']."</label>
 		</div>
 		<div class='row'>
-			<blockquote>
+			<blockquote role='presentation'>
 			<input type='text' name='sujet' id='sujet' />
 			</blockquote>
 		</div>
@@ -72,7 +79,7 @@ function show_form($id,$type){
 			<label class='etiquette' >".$msg['demandes_action_detail']."</label>
 		</div>
 		<div class='row'>
-			<blockquote>
+			<blockquote role='presentation'>
 				<textarea style='vertical-align:top' id='detail' name='detail' cols='50' rows='5'></textarea>
 			</blockquote>
 		</div>				
@@ -84,11 +91,10 @@ function show_form($id,$type){
 }
 
 /*
- * Enregistrement de la nouvelle action question/rÃ©ponse
+ * Enregistrement de la nouvelle action question/réponse
  */
 function save_ask($id,$type){
-	
-	global $dbh, $sujet, $detail, $date_rdv,$id_empr, $pmb_type_audit;
+	global $sujet, $detail, $date_rdv,$id_empr, $pmb_type_audit;
 	
 	$date = date("Y-m-d",time());
 	if($type=='ask'){
@@ -134,7 +140,7 @@ function save_ask($id,$type){
 			actions_read_gestion=1		
 		";
 	}
-	pmb_mysql_query($req,$dbh);
+	pmb_mysql_query($req);
 	$idaction = pmb_mysql_insert_id();
 	if($pmb_type_audit) audit::insert_creation(AUDIT_ACTION,$idaction);
 	
@@ -142,20 +148,20 @@ function save_ask($id,$type){
 	$display = $dmde_act->getContenuForm();
 
 	$update_dmde = "update demandes set dmde_read_gestion='1' where id_demande=".$id;
-	pmb_mysql_query($update_dmde,$dbh);
+	pmb_mysql_query($update_dmde);
 	
 	ajax_http_send_response($display);
 	
 }
 
 /*
- * Ajouter une note Ã  une action
+ * Ajouter une note à une action
  */
 function add_note(){
-	global $msg,$dbh, $id_action;
+	global $msg, $id_action;
 	
 	$req = "select type_action from demandes_actions where id_action='".$id_action."'";
-	$res = pmb_mysql_query($req,$dbh);
+	$res = pmb_mysql_query($req);
 	$action = pmb_mysql_fetch_object($res);
 	if($action->type_action == '1'){
 		$titre = $msg['demandes_notes_question_form'];
@@ -168,7 +174,7 @@ function add_note(){
 			<label class='etiquette' >".$msg['demandes_notes_contenu']."</label>
 		</div>
 		<div class='row'>
-			<blockquote>
+			<blockquote role='presentation'>
 				<textarea style='vertical-align:top' id='contenu' name='contenu' cols='50' rows='5'></textarea>
 			</blockquote>
 		</div>
@@ -184,7 +190,7 @@ function add_note(){
  */
 function save_note($idaction, $idnote=0, $id_demande=0){
 	
-	global $contenu,$dbh, $charset, $id_empr;
+	global $contenu, $id_empr;
 	global $demandes_email_demandes, $pmb_type_audit;
 	
 	$date = date("Y-m-d",time());
@@ -195,10 +201,10 @@ function save_note($idaction, $idnote=0, $id_demande=0){
 	$req .= " num_action='".$idaction."',";
 	$req .= " notes_num_user='".$id_empr."', notes_type_user=1, ";	
 	$req .= " notes_read_gestion=1";
-	pmb_mysql_query($req,$dbh);
+	pmb_mysql_query($req);
 	
 	$req_up = "update demandes_actions set actions_read=1 where id_action='".$idaction."'";
-	pmb_mysql_query($req_up,$dbh);
+	pmb_mysql_query($req_up);
 	
 	$dmde_act = new demandes_action($id_demande,$idaction);
 	$display = $dmde_act->getContenuForm();
@@ -207,16 +213,16 @@ function save_note($idaction, $idnote=0, $id_demande=0){
 	if($pmb_type_audit && $idnote) {
 		audit::insert_modif(AUDIT_NOTE,$idnote);
 	} elseif ($pmb_type_audit && !$idnote){
-		$idnote = pmb_mysql_insert_id($dbh);
+		$idnote = pmb_mysql_insert_id();
 		audit::insert_creation(AUDIT_NOTE,$idnote);
 	}
 	
-	// crÃ©ation d'une nouvelle note => alerte sur l'action + la demande
+	// création d'une nouvelle note => alerte sur l'action + la demande
 	$req_up1 = "update demandes_actions set actions_read_gestion='1' where id_action='".$idaction."';";
 	$req_up2= "update demandes inner join demandes_actions on demandes_actions.num_demande = demandes.id_demande set demandes.dmde_read_gestion='1' where demandes_actions.id_action='".$idaction."'";
 	
-	pmb_mysql_query($req_up1,$dbh);
-	pmb_mysql_query($req_up2,$dbh);
+	pmb_mysql_query($req_up1);
+	pmb_mysql_query($req_up2);
 	
 	ajax_http_send_response($display);
 }

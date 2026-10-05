@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_ui.class.php,v 1.18 2018-12-17 23:09:30 ccraig Exp $
+// $Id: vedette_ui.class.php,v 1.20 2021/08/25 09:22:05 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class vedette_ui {
 	/**
 	 *
 	 *
-	 * @param int id_vedette_composee id de la vedette composÃ©e Ã  reprÃ©senter
+	 * @param int id_vedette_composee id de la vedette composée à représenter
 	 * 
 	 * @return void
 	 * @access public
@@ -41,7 +41,7 @@ class vedette_ui {
 	}
 	
 	/**
-	 * Renvoie le formulaire de la vedette composÃ©e
+	 * Renvoie le formulaire de la vedette composée
 	 * 
 	 * @param $property onto_common_property
 	 * @param $restrictions onto_restriction
@@ -51,16 +51,19 @@ class vedette_ui {
 	 * @return string
 	 * @access public
 	 */
-	public function get_form($property_name, $order, $instance_name, $property_type = "",$no_add_script=1){
-		global $dbh,$base_path,$charset,$lang,$pmb_allow_authorities_first_page;
-		global $vedette_tpl;
+    public function get_form($property_name, $order, $instance_name, $property_type = "", $no_add_script = 1, $contribution = false) {
+        global $charset, $pmb_allow_authorities_first_page, $vedette_tpl;
 		
 		$form_html = '';
 		//TODO Retirer le style brut
 		if(!$order && $no_add_script){
 			$form_html.=$vedette_tpl['css'].$vedette_tpl['form_body_script'];
 		}
+        if ($contribution){
+            $form_html.=$vedette_tpl['form_body_contribution'];
+        } else {
 		$form_html.=$vedette_tpl['form_body'];
+        }
 		
 		if (!count($this->vedette_composee->get_elements())) {
 			$form_html = str_replace("!!vedette_composee_apercu!!", "", $form_html);
@@ -89,7 +92,11 @@ class vedette_ui {
 					$js_class_name = $vedette_element_ui_class_name::get_js_class_name($available_field['params']);
 				}
 			}
-			$available_fields_scripts.= $vedette_element_ui_class_name::get_create_box_js($available_field['params']);
+            if ($contribution){
+                $available_fields_scripts.= $vedette_element_ui_class_name::get_create_box_js($available_field['params'], "_contribution");
+            } else {
+				$available_fields_scripts.= $vedette_element_ui_class_name::get_create_box_js($available_field['params']);
+            }
 			$get_vedette_element_switchcases.= str_replace("!!vedette_type!!", $js_class_name, $vedette_tpl["vedette_composee_get_vedette_element_switchcase"]);
 			
 			$tmp_html=$vedette_tpl['vedette_composee_available_field'];
@@ -125,10 +132,10 @@ class vedette_ui {
 			$tmp_html = str_replace("!!vedette_composee_subdivision_order!!", $subdivision["order"], $tmp_html);
 			$elements_html='';
 			if($elements=$this->vedette_composee->get_at_elements_subdivision($subdivision['code'])){
-				// tableau pour la gestion de l'ordre Ã  l'intÃ©rieur d'une subdivision
+				// tableau pour la gestion de l'ordre à l'intérieur d'une subdivision
 				$elements_order = array();
 				
-				// On parcourt les Ã©lÃ©ments de la subdivision
+				// On parcourt les éléments de la subdivision
 				foreach($elements as $position=>$element){
 					$current_element_html = $vedette_tpl['vedette_composee_element'];
 					$elements_order[] = $position;
@@ -136,7 +143,12 @@ class vedette_ui {
 					$tab_vedette_elements[$subdivision["order"]][$position] = $element->get_isbd();
 					$element_ui_class_name = vedette_element::search_vedette_element_ui_class_name(get_class($element));
 					$params = $element->get_params();
-					$current_element_html = str_replace("!!vedette_composee_element_form!!", $element_ui_class_name::get_form($params), $current_element_html);
+                    
+                    $suffix = '';
+                    if ($contribution) {
+                        $suffix = '_contribution';
+                    }
+                    $current_element_html = str_replace("!!vedette_composee_element_form!!", $element_ui_class_name::get_form($params, $suffix), $current_element_html);
 					if(!empty($params['label'])){
 						$autority_type = get_msg_to_display($params["label"]);
 					}else{
@@ -167,6 +179,7 @@ class vedette_ui {
 		$form_html=str_replace("!!caller!!", $instance_name, $form_html);
 		$form_html=str_replace("!!vedette_composee_order!!", $order, $form_html);
 		$form_html=str_replace("!!property_name!!", $property_name."_composed", $form_html);
+        $form_html=str_replace("!!property_name_contribution!!", $property_name, $form_html);
 		$form_html=str_replace("!!tab_vedette_elements!!", encoding_normalize::json_encode($tab_vedette_elements), $form_html);
 		$form_html=str_replace("!!vedette_separator!!", htmlentities($this->vedette_composee->get_separator(), ENT_QUOTES, $charset), $form_html);
 		
@@ -174,7 +187,7 @@ class vedette_ui {
 	}
 	
 	/**
-	 * RÃ©cupÃ¨re les Ã©lÃ©ments du formulaire
+	 * Récupère les éléments du formulaire
 	 *
 	 * @return Array()
 	 * @access public
@@ -187,5 +200,23 @@ class vedette_ui {
 	//inutile ?
 	public function proceed() {
 	
+	}
+	
+	public function get_vedette_type_from_pmb_name($pmb_name) {
+	    switch ($pmb_name) {
+	        case 'has_secondary_author':
+	            return TYPE_NOTICE_RESPONSABILITY_SECONDAIRE;
+	        case 'has_other_author':
+	            return TYPE_NOTICE_RESPONSABILITY_AUTRE;
+	        case 'has_responsability_authperso':
+	            return TYPE_AUTHPERSO_RESPONSABILITY;
+	        case 'has_responsability_author':
+	            return TYPE_TU_RESPONSABILITY;
+	        case 'has_responsability_performer':
+	            return TYPE_TU_RESPONSABILITY_INTERPRETER;
+	        case 'has_main_author':
+	            return TYPE_NOTICE_RESPONSABILITY_PRINCIPAL;
+	    }
+	    return 0;
 	}
 }

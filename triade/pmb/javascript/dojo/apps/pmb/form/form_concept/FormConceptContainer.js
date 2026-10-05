@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormConceptContainer.js,v 1.5 2018-10-08 16:41:52 arenou Exp $
+// $Id: FormConceptContainer.js,v 1.7 2021/07/06 11:58:16 gneveu Exp $
 
 /*****
  * 
@@ -22,8 +22,9 @@ define([
         'dijit/layout/TabContainer',
         'apps/pmb/form/form_concept/SubTabSearchConcept',
         'apps/pmb/form/form_concept/SubTabConceptHierarchized',
-        'apps/pmb/form/form_concept/SubTabConceptNavigate'
-], function(declare, TabContainer, SubTabSearchConcept, SubTabConceptHierarchized, SubTabConceptNavigate){
+        'apps/pmb/form/form_concept/SubTabConceptNavigate',
+		'apps/pmb/form/SubTabAdvancedSearch',
+], function(declare, TabContainer, SubTabSearchConcept, SubTabConceptHierarchized, SubTabConceptNavigate, SubTabAdvancedSearch){
 		return declare([TabContainer], {
 			simpleSearchTab: null,   //Onglet rech simple
 			extendedSearchTab: null, //Onglet rech multicritere
@@ -45,6 +46,9 @@ define([
 				this.hierarchizedTab.href = this.parameters.selectorURL+'&action=list';
 				
 
+				this.extendedSearchTab = new SubTabAdvancedSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_advanced_search'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
+				this.extendedSearchTab.href = this.parameters.selectorURL+'&action=advanced_search&mode='+this.parameters.multicriteriaMode;
+					
 				this.navigationTab = new SubTabConceptNavigate({title: pmbDojo.messages.getMessage('selector', 'selector_tab_navigate'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
 				this.navigationTab.href = this.parameters.selectorURL+'&action=navigate';
 				
@@ -58,6 +62,7 @@ define([
 				this.navigationTab.startup();
 				
 				this.addChild(this.simpleSearchTab);
+				this.addChild(this.extendedSearchTab);
 				this.addChild(this.hierarchizedTab);
 				this.addChild(this.navigationTab);
 				

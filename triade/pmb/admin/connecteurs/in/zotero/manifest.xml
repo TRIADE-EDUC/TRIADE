@@ -4,12 +4,14 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2014-01-30 16:28:16 dbellamy Exp $ -->
+$Id: manifest.xml,v 1.2 2023/12/12 15:58:42 dbellamy Exp $ -->
 
 <manifest>
 	<name>zotero</name>
-	<repository>yes</repository>
 	<comment>Synchronisation base Zotero</comment>
+	<search>yes</search>
+	<repository>yes</repository>
+	<enrichment>no</enrichment>
 	<author>Didier Bellamy</author>
 	<org>PMB Services</org>
 	<date>2007-10-17</date>

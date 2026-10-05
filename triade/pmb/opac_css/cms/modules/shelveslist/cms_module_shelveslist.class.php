@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_shelveslist.class.php,v 1.1 2013-01-23 11:30:08 apetithomme Exp $
+// $Id: cms_module_shelveslist.class.php,v 1.1 2013/01/23 11:30:08 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

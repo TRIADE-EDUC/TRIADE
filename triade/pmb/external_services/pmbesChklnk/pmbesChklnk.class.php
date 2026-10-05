@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmbesChklnk.class.php,v 1.1 2017-10-26 10:16:36 dgoron Exp $
+// $Id: pmbesChklnk.class.php,v 1.3 2023/03/16 11:01:52 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/external_services.class.php");
 require_once($class_path."/connecteurs.class.php");
 require_once($class_path."/chklnk/chklnk.class.php");
@@ -14,51 +15,37 @@ class pmbesChklnk extends external_services_api_class {
 	
 	protected $initialized_chklnk;
 	
-	public function restore_general_config() {
-		
-	}
-	
-	public function form_general_config() {
-		return false;
-	}
-	
-	public function save_general_config() {
-		
-	}
-	
 	protected function initialize_chklnk() {
 		chklnk::init_queries();
 	}
 	
 	protected function check_parameter($class_name, $caddie_id=0, $caddie_type='NOTI') {
-		$display = '';
 		if(!isset($this->initialized_chklnk)) {
 			$this->initialize_chklnk();
 		}
 		$class_name_instance = new $class_name();
+		$caddie_id = intval($caddie_id);
 		if ($caddie_id) {
 			$caddie_instance = caddie_root::get_instance_from_object_type($caddie_type, $caddie_id);
 			$class_name_instance->set_caddie_instance($caddie_instance);
 			$class_name_instance->set_caddie_type($caddie_type);
 		}
-		$display .= $class_name_instance->process_scheduler();
-		return $display;
+		return $class_name_instance->process_scheduler();
 	}
 	
 	protected function check_custom_field_parameter($sub_type, $caddie_id=0, $caddie_type='NOTI') {
-		$display = '';
 		if(!isset($this->initialized_chklnk)) {
 			$this->initialize_chklnk();
 		}
 		$chklnk_custom_fields = new chklnk_custom_fields();
 		$chklnk_custom_fields->set_sub_type($sub_type);
+		$caddie_id = intval($caddie_id);
 		if ($caddie_id) {
 			$caddie_instance = caddie_root::get_instance_from_object_type($caddie_type, $caddie_id);
 			$chklnk_custom_fields->set_caddie_instance($caddie_instance);
 			$chklnk_custom_fields->set_caddie_type($caddie_type);
 		}
-		$display .= $chklnk_custom_fields->process_scheduler();
-		return $display;
+		return $chklnk_custom_fields->process_scheduler();
 	}
 	
 	public function check_records($caddie_id=0) {

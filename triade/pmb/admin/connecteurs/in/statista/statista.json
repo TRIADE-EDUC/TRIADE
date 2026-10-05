@@ -1,0 +1,28 @@
+{
+	"search_fields" : {
+		"ALL"	: "1 seul champ de recherche est défini"
+	},
+	"statista" : {
+		"search_fields" : {
+			"XXX"			: ["ALL"],
+			"010$a"			: ["ALL"],
+			"200$a"			: ["ALL"],
+			"210$c219$c" 	: ["ALL"],
+			"225$a410$t" 	: ["ALL"],
+			"225$i411$t" 	: ["ALL"],
+			"60X"			: ["ALL"],
+			"676$a686$a" 	: ["ALL"],
+			"7XX"			: ["ALL"]
+		},
+		"platform_to_languages" : {
+			""   : "eng",
+			"de" : "ger",
+			"en" : "eng",
+			"fr" : "fre",
+			"es" : "spa"
+		},
+		"field_to_cp" : {
+			"sources"	: ["900", "a", "cp_statista_sources"]
+		}
+	}
+}

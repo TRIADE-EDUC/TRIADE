@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.1 2011-07-29 12:32:14 dgoron Exp $ -->
+$Id: manifest.xml,v 1.1 2011/07/29 12:32:14 dgoron Exp $ -->
 <manifest>
 	<name>pmbesBackup</name>
 	<description>msg:Backup_functions_description</description>

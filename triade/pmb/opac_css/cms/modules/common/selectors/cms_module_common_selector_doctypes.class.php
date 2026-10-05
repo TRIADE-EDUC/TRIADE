@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_doctypes.class.php,v 1.2 2015-09-30 14:17:59 apetithomme Exp $
+// $Id: cms_module_common_selector_doctypes.class.php,v 1.2.18.1 2025/01/17 10:40:43 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -32,9 +32,11 @@ class cms_module_common_selector_doctypes extends cms_module_common_selector{
 	protected function gen_select(){
 		global $tdoc;
 		
-		if (!count($tdoc)) $tdoc = new marc_list('doctype');
+		if (!is_countable($tdoc) && !count($tdoc)) {
+		    $tdoc = new marc_list('doctype');
+		}
 		
-		//si on est en crÃ©ation de cadre
+		//si on est en création de cadre
 		if(!$this->id){
 			$this->parameters = array();
 		}
@@ -54,12 +56,15 @@ class cms_module_common_selector_doctypes extends cms_module_common_selector{
 	}
 	
 	public function save_form(){
-		$this->parameters = $this->get_value_from_form("doctypes");
+		$this->parameters = array();
+		if($this->get_value_from_form("doctypes")){
+			$this->parameters = $this->get_value_from_form("doctypes");
+		}
 		return parent ::save_form();
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©e
+	 * Retourne la valeur sélectionnée
 	 */
 	public function get_value(){
 		if(!$this->value){

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FilesUI.js,v 1.3 2018-11-30 13:53:07 dgoron Exp $
+// $Id: FilesUI.js,v 1.3 2018/11/30 13:53:07 dgoron Exp $
 
 
 define(["dojo/_base/declare", 

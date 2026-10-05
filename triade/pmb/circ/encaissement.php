@@ -1,13 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: encaissement.php,v 1.18 2018-12-19 16:19:54 ngantier Exp $
+// $Id: encaissement.php,v 1.20.2.1.2.2 2025/04/03 09:49:37 dgoron Exp $
 
-//Liste des trabsactions d'un compte
-$base_path="..";
+global $base_path, $current_alert, $base_path, $class_path, $id_compte, $pmb_printer_name, $raspberry_ip_to_call, $print_script;
+global $msg, $print_script, $act, $f_payment_method, $transactype_total, $transactype_id, $quantity, $trans, $typ_special;
+global $commentaire, $credit_perte, $PMBuserid, $PMBusername, $dec_perte, $val_transactions;
 
-$current_alert="circ";
+//Liste des transactions d'un compte
+$base_path = "..";
+$current_alert = "circ";
 
 require_once("../includes/init.inc.php");
 require_once("$base_path/classes/comptes.class.php");
@@ -35,15 +38,65 @@ function back_to_main() {
 function encaisse_form($with_validated=false, $transacash_num=0) {
 	global $id_compte,$solde,$date_debut,$val_transactions,$somme,$cpte,$charset;
 	global $pmb_gestion_devise,$msg,$charset;
+	global $show_transactions;
 	
 	$solde=$cpte->get_solde();
 	if ($solde<0) {
-		print "<table>";
-		print "<tr><td style='text-align:right'>".$msg["finance_enc_montant_valide"]." : </td><td style='text-align:right'>".comptes::format($somme*(-1))."</td></tr>";
-		if ($solde<=0) print "<tr class='erreur'><td style='text-align:right'>".$msg["finance_enc_montant_a_enc"]." : </td><td style='text-align:right'>"; else if ($solde>0) print "<td>".$msg["finance_enc_compte_cred"]." : </td><td style='text-align:right'>";
+		print "
+        <table role='presentation'>
+            <tr>
+                <td style='text-align:right'>".$msg["finance_enc_montant_valide"]." : </td>
+                <td style='text-align:right'>".comptes::format($somme*(-1))."</td>
+            </tr>
+        ";
+		if ($solde<=0) {
+		    print "
+            <tr class='erreur'>
+                <td style='text-align:right'>".$msg["finance_enc_montant_a_enc"]." : </td>";
+		} else {
+		    print "
+            <tr>
+                <td>".$msg["finance_enc_compte_cred"]." : </td>";
+		}
+		print "<td style='text-align:right'>";
 		print comptes::format($solde*(-1));		
-		print "</td></tr></table>";
-		print "<script type='text/javascript' >function check_somme(f) {
+		print "</td>
+            </tr>
+        </table>
+        <script type='text/javascript' >
+            function check_somme(f) {
+    			message='';
+    			if (isNaN(f.somme.value)) {
+    				message='".addslashes($msg["finance_enc_nan"])."';
+    			} else {
+    				if (f.somme.value<=0)
+    					message='".addslashes($msg["finance_enc_mnt_neg"])."';
+    			}
+    			if (message) {
+    				alert(message);
+    				return false;
+    			} else return true;
+    		}
+		</script>
+        <form name='form_encaissement' action='encaissement.php?id_compte=$id_compte&show_transactions=$show_transactions&date_debut=".rawurlencode(stripslashes($date_debut))."' method='post'>
+    		<input type='hidden' name='act' value='enc'/>
+    		<input type='hidden' name='transacash_num' value='$transacash_num'/>
+    		<input type='hidden' name='val_transactions' value=\"".htmlentities($val_transactions,ENT_QUOTES,$charset)."\"/>".
+    		htmlentities($msg['finance_mnt_percu'], ENT_QUOTES, $charset)."&nbsp;<input type='text' value='".$solde*(-1)."' name='somme' class='saisie-5em' style='text-align:right'>&nbsp;".$pmb_gestion_devise."
+            " . transaction_payment_method_list::get_selector() . "
+    		<input type='submit' value='".$msg["finance_but_enc"]."' class='bouton' onClick=\"return check_somme(this.form)\"/>&nbsp;<input type='button' value='".$msg["76"]."' class='bouton' onClick=\"document.form_encaissement.act.value=''; document.form_encaissement.submit();\"/>
+		</form>
+		";
+	} else {
+		back_to_main();
+	}
+}
+
+function special_form() {
+    global $id_compte, $date_debut, $val_transactions, $cpte, $msg, $pmb_gestion_devise, $show_transactions;
+	
+	print "<script type='text/javascript' >
+		function check_somme(f) {
 			message='';
 			if (isNaN(f.somme.value)) {
 				message='".addslashes($msg["finance_enc_nan"])."';
@@ -56,47 +109,26 @@ function encaisse_form($with_validated=false, $transacash_num=0) {
 				return false;
 			} else return true;
 		}
-		</script>";
-		print "<form name='form_encaissement' action='encaissement.php?id_compte=$id_compte&show_transactions=$show_transactions&date_debut=".rawurlencode(stripslashes($date_debut))."' method='post'>
-		<input type='hidden' name='act' value='enc'/>
-		<input type='hidden' name='transacash_num' value='$transacash_num'/>
-		<input type='hidden' name='val_transactions' value=\"".htmlentities($val_transactions,ENT_QUOTES,$charset)."\"/>".
-		htmlentities($msg['finance_mnt_percu'], ENT_QUOTES, $charset)."&nbsp;<input type='text' value='".$solde*(-1)."' name='somme' class='saisie-5em' style='text-align:right'>&nbsp;".$pmb_gestion_devise."
-        " . transaction_payment_method_list::get_selector() . "
-		<input type='submit' value='".$msg["finance_but_enc"]."' class='bouton' onClick=\"return check_somme(this.form)\"/>&nbsp;<input type='button' value='".$msg["76"]."' class='bouton' onClick=\"document.form_encaissement.act.value=''; document.form_encaissement.submit();\"/>
-		</form>
-		";
-	} else {
-		back_to_main();
-	}
-}
-
-function special_form() {
-	global $id_compte,$solde,$date_debut,$val_transactions,$somme,$cpte,$charset,$msg, $pmb_gestion_devise;
-	print "<h3>".$msg["finance_but_cred"]."</h3>";
-	print "<script type='text/javascript' >function check_somme(f) {
-		message='';
-		if (isNaN(f.somme.value)) {
-			message='".addslashes($msg["finance_enc_nan"])."';
-		} else {
-			if (f.somme.value<=0)
-				message='".addslashes($msg["finance_enc_mnt_neg"])."';
-		}
-		if (message) {
-			alert(message);
-			return false;
-		} else return true;
-	}
 	</script>";
 	print "<form name='form_special' action='encaissement.php?id_compte=$id_compte&show_transactions=$show_transactions&date_debut=".rawurlencode(stripslashes($date_debut))."' method='post'>
-		<input type='hidden' name='act' value='enc_special'/>
-		".$msg["finance_montant"]." <input type='text' value='' name='somme' class='saisie-5em' style='text-align:right'>&nbsp;".$pmb_gestion_devise."
-        " . transaction_payment_method_list::get_selector() . "<br />
-		<input type='radio' value='1' name='typ_special' id='typ_special_1' checked>&nbsp;<label for='typ_special_1'>".$msg["finance_enc_spe_crediter"]."&nbsp;<input type='checkbox' name='credit_perte' value='1'>&nbsp;".$msg["finance_enc_spe_perte"]."</label><br /><input type='radio' value='2' name='typ_special' id='typ_special_2'>&nbsp;<label for='typ_special_2'>".$msg["finance_enc_debiter"]."</label><br />
-		<input type='radio' value='3' name='typ_special' id='typ_special_3'>&nbsp;<label for='typ_special_3'>".$msg["finance_enc_crediter_enc"]."</label><br /><input type='radio' value='4' name='typ_special' id='typ_special_4'>&nbsp;<label for='typ_special_4'>".$msg["finance_enc_debiter_enc"]." <input type='checkbox' name='dec_perte' value='1'>&nbsp;".$msg["finance_enc_spe_perte"]."</label><br />
-		".$msg["finance_enc_raison"]."<br />
-		<textarea cols='80' rows='2' wrap='virtual' name='commentaire'></textarea><br />
-		<input type='submit' value='".$msg["finance_enc_valider"]."' class='bouton' onClick=\"return check_somme(this.form)\"/>&nbsp;<input type='button' value='".$msg["76"]."' class='bouton' onClick=\"document.form_special.act.value=''; document.form_special.submit();\"/>
+		<h3>".$msg["finance_but_cred"]."</h3>
+        <input type='hidden' name='act' value='enc_special'/>
+        <div class='row'>
+            ".$msg["finance_montant"]." <input type='text' value='' name='somme' class='saisie-5em' style='text-align:right'>&nbsp;".$pmb_gestion_devise."
+            " . transaction_payment_method_list::get_selector() . "
+        </div>
+        <div class='row'>
+    		<input type='radio' value='1' name='typ_special' id='typ_special_1' checked>&nbsp;<label for='typ_special_1'>".$msg["finance_enc_spe_crediter"]."&nbsp;<input type='checkbox' name='credit_perte' value='1'>&nbsp;".$msg["finance_enc_spe_perte"]."</label><br /><input type='radio' value='2' name='typ_special' id='typ_special_2'>&nbsp;<label for='typ_special_2'>".$msg["finance_enc_debiter"]."</label><br />
+    		<input type='radio' value='3' name='typ_special' id='typ_special_3'>&nbsp;<label for='typ_special_3'>".$msg["finance_enc_crediter_enc"]."</label><br /><input type='radio' value='4' name='typ_special' id='typ_special_4'>&nbsp;<label for='typ_special_4'>".$msg["finance_enc_debiter_enc"]." <input type='checkbox' name='dec_perte' value='1'>&nbsp;".$msg["finance_enc_spe_perte"]."</label><br />
+        </div>
+        <div class='row'>
+            ".$msg["finance_enc_raison"]."<br />
+            <textarea cols='80' rows='2' wrap='virtual' name='commentaire'></textarea>
+        </div>
+        <div class='row'>
+            <input type='submit' value='".$msg["finance_enc_valider"]."' class='bouton' onClick=\"return check_somme(this.form)\" />&nbsp;
+            <input type='button' value='".$msg["76"]."' class='bouton' onClick=\"document.form_special.act.value=''; document.form_special.submit();\" />
+        </div>
 		</form>
 		";
 }
@@ -150,7 +182,7 @@ if($pmb_printer_name) {
 		         	var raspberry_ip = '';
 					var printer_type = '';
 		         	
-		         	//Quelle est l'imprimante sÃ©lectionnÃ©e ?
+		         	//Quelle est l'imprimante sélectionnée ?
 		         	if (req.request('./ajax.php?module=circ&categ=zebra_print_pret&sub=get_selected_printer')) {
 						alert ( req.get_text() );
 					} else {
@@ -166,7 +198,7 @@ if($pmb_printer_name) {
 					raspberry_ip = temp[1];
 		
 					//On interroge le raspberry pour connaitre le type d'imprimante (et savoir si elle est bien sur ce raspberry)
-					if (req.request('http://' + raspberry_ip + '/getPrinter?idPrinter=' + printer_id)) {
+					if (req.request('https://' + raspberry_ip + '/getPrinter?idPrinter=' + printer_id)) {
 						alert ( req.get_text() );
 					} else {
 						printer_type = req.get_text();
@@ -176,7 +208,7 @@ if($pmb_printer_name) {
 						return;
 					}
 		
-					//On va gÃ©nÃ©rer le template en fonction de l'imprimante
+					//On va générer le template en fonction de l'imprimante
 					url = url + '&printer_type=' + printer_type;
 					if(req.request(url)){
 						alert ( req.get_text() );
@@ -190,7 +222,7 @@ if($pmb_printer_name) {
 		
 					//On envoie l'impression
 					var xhr = new XMLHttpRequest();
-					xhr.open('POST', 'http://' + raspberry_ip + '/print?', true);
+					xhr.open('POST', 'https://' + raspberry_ip + '/print?', true);
 					xhr.setRequestHeader('Content-type', 'text/plain');
 					xhr.send(JSON.stringify({idPrinter:printer_id,xml:tpl}));
 								
@@ -235,12 +267,17 @@ switch ($act) {
 				$val_transactions.=" #".$t[$i]->id_transaction."#";
 			}
 		}
-		if(count($t)){
-			$transacash_num=$cpte->cashdesk_memo_transactions($t);					
+		$transacash_num = 0;
+		if (!empty($t) && is_array($t)) {
+			$transacash_num = $cpte->cashdesk_memo_transactions($t);					
 		}
-		if ($val_transactions!="") $val_transactions=$msg["finance_enc_tr_lib_valider"]." : ".$val_transactions."\n";
+		if ($val_transactions!="") {
+		    $val_transactions=$msg["finance_enc_tr_lib_valider"]." : ".$val_transactions."\n";
+		}
 		$solde_avant=$cpte->get_solde();
-		if ($solde_avant!=0) $val_transactions.=$msg["finance_enc_tr_lib_etat_compte"]." : ".$solde_avant;
+		if ($solde_avant!=0) {
+		    $val_transactions.=$msg["finance_enc_tr_lib_etat_compte"]." : ".$solde_avant;
+		}
 		$cpte->update_solde();
 		encaisse_form(true,$transacash_num);
 		break;
@@ -250,12 +287,12 @@ switch ($act) {
 		    if ($id_transaction=$cpte->record_transaction("",$somme,1,$val_transactions,1, 0, $f_payment_method)) {
 				$cpte->validate_transaction($id_transaction);
 				$cpte->update_solde();
-				if(!$transacash_num){					
+				if(!$transacash_num){
 					$req="select MAX(transacash_num) from transactions where compte_id=".$cpte->id_compte."";
 					$resultat=pmb_mysql_query($req);
 					if ($transacash_num=pmb_mysql_result($resultat,0,0)){
 						$req="update transactions set transacash_num = $transacash_num where compte_id=".$cpte->id_compte." and transacash_num=0";
-						pmb_mysql_query($req);						
+						pmb_mysql_query($req);
 					}
 				}
 				$cpte->cashdesk_memo_encaissement($id_transaction,$transacash_num,$somme);		
@@ -286,11 +323,13 @@ switch ($act) {
 		$i=0;
 		foreach ($trans as $key=>$value){
 			$cpte->validate_transaction($key);
-			$t[$i]->id_transaction=$key;			
+			if (isset($t[$i])) {
+				$t[$i]->id_transaction=$key;
+			}
 			$i++;
 		}
-		if(count($t)){
-			$transacash_num=$cpte->cashdesk_memo_transactions($t);					
+		if (!empty($t) && is_array($t)) {
+			$transacash_num = $cpte->cashdesk_memo_transactions($t);
 		}
 		$cpte->update_solde();
 		back_to_main();
@@ -366,7 +405,12 @@ switch ($act) {
 		break;
 }
 
-print "<script type='text/javascript'> parent.document.getElementById('selector_transaction_list').style.visibility='hidden';
-parent.document.getElementById('buttons_transaction_list').style.visibility='hidden';
+print "<script type='text/javascript'> 
+if(parent.document.getElementById('selector_transaction_list')) {
+    parent.document.getElementById('selector_transaction_list').style.visibility='hidden';
+}
+if(parent.document.getElementById('buttons_transaction_list')) {
+    parent.document.getElementById('buttons_transaction_list').style.visibility='hidden';
+}
 </script>";
 ?>

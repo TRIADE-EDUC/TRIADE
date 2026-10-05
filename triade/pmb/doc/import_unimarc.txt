@@ -7,7 +7,7 @@
 // |    d'exemplaires                                                         |
 // |                                                                          |
 // +-------------------------------------------------+
-// $Id: import_unimarc.txt,v 1.13 2009-12-24 08:23:51 mbertin Exp $
+// $Id: import_unimarc.txt,v 1.13.36.1 2025/04/16 12:16:51 dbellamy Exp $
 
 
 code unimarc signification >> champs dans les tables de pmb || champs dans l'interface de PMB 
@@ -114,6 +114,12 @@ code unimarc signification >> champs dans les tables de pmb || champs dans l'int
 856 $u ressource électronique >> notices.lien || (Lien) URL associée
 856 $q format >> notices.eformat || (Lien) Format électronique de la resource
 
+900 $a valeur champ perso
+900 $b lien pour champ perso de type resolve|url
+900 $c id pour champ perso de type resolve|url|query_auth|query_list
+900 $n nom champ perso
+900 $l libellé champ perso
+900 $t type champ perso 
 
 995 $a localisation >> docs_location.locdoc_codage_import puis docs_location.idlocation >> exemplaires.expl_location || (Exemplaire) Localisation
 995 $f code-barre >> exemplaires.expl_cb || (Exemplaire) No. exemplaire

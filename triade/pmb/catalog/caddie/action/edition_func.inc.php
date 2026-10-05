@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edition_func.inc.php,v 1.60 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: edition_func.inc.php,v 1.64 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -17,7 +17,7 @@ $codes_auteurs = array();
 
 // Affichage tabulaire du contenu d'un caddie
 function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=0) {
-	global $msg,$dbh,$charset;
+	global $msg,$charset;
 	global $worksheet ;
 	global $myCart ;
 	global $dest ;
@@ -26,7 +26,7 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 	global $max_perso;
 	global $res_compte3 ;
 
-	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermÃ©s
+	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermés
 
 	$contents = '';
 	
@@ -37,7 +37,7 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 
 	$caddie_type = $myCart->type ;
         	
-	// Afin de trier les Ã©ditions :
+	// Afin de trier les éditions :
 	switch ($caddie_type) {
 		case 'NOTI' :
 			$fromc = " left join notices on object_id=notice_id " ;
@@ -61,20 +61,21 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 	$requete .= $complement_clause." order by blob_type, content $orderc, object_id";
 
 	$liste=array();
-	$result = pmb_mysql_query($requete, $dbh) or die($requete."<br />".pmb_mysql_error($dbh));
+	$result = pmb_mysql_query($requete) or die($requete."<br />".pmb_mysql_error());
 	if($dest=="EXPORT_NOTI"){
 		$noti_tpl=new notice_tpl_gen($notice_tpl);		
 	}
 	if(pmb_mysql_num_rows($result)) {
+		$flag_notice_id = array();
 		while ($temp = pmb_mysql_fetch_object($result)) {		
 			if($dest=="EXPORT_NOTI"){
 				if ($caddie_type=="EXPL"){
 					$rqt_test = "select expl_notice as id from exemplaires where expl_id='".$temp->object_id."' ";
-					$res_notice = pmb_mysql_query($rqt_test, $dbh);
+					$res_notice = pmb_mysql_query($rqt_test);
 					$obj_notice = pmb_mysql_fetch_object($res_notice) ;
 					if (!$obj_notice->id) {
 						$rqt_test = "select num_notice as id from bulletins join exemplaires on bulletin_id=expl_bulletin where expl_id='".$temp->object_id."' ";
-						$res_notice = pmb_mysql_query($rqt_test, $dbh);
+						$res_notice = pmb_mysql_query($rqt_test);
 						$obj_notice = pmb_mysql_fetch_object($res_notice) ;
 					}
 					if((!isset($flag_notice_id[$obj_notice->id]) || !$flag_notice_id[$obj_notice->id]) && $obj_notice->id){
@@ -84,7 +85,7 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 				} elseif ($caddie_type=="NOTI") $contents.=$noti_tpl->build_notice($temp->object_id);	
 				if ($caddie_type=="BULL"){
 					$rqt_test = $rqt_tout = "select num_notice as id from bulletins where bulletin_id = '".$temp->object_id."' ";			
-					$res_notice = pmb_mysql_query($rqt_test, $dbh);
+					$res_notice = pmb_mysql_query($rqt_test);
 					$obj_notice = pmb_mysql_fetch_object($res_notice);
 					if((!isset($flag_notice_id[$obj_notice->id]) || !$flag_notice_id[$obj_notice->id]) && $obj_notice->id){
 						$flag_notice_id[$obj_notice->id]=1;
@@ -116,27 +117,28 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 	// en fonction du type de caddie on affiche ce qu'il faut
 	if ($caddie_type=="NOTI") {
 		// calcul du nombre max de colonnes pour les auteurs
-		$rqt_compte1 = "create temporary table tmp_compte1 ENGINE=MyISAM as select count(*) as comptage from caddie_content join notices on object_id=notice_id left join responsability on responsability_notice=notice_id where caddie_id=$idcaddie group by notice_id" ;
-		$res_compte1 = pmb_mysql_query($rqt_compte1, $dbh) ; 
+		pmb_mysql_query("drop table if exists tmp_compte1");
+		$rqt_compte1 = "create temporary table tmp_compte1 ENGINE=memory as select count(*) as comptage from caddie_content join notices on object_id=notice_id left join responsability on responsability_notice=notice_id where caddie_id=$idcaddie group by notice_id" ;
+		pmb_mysql_query($rqt_compte1) ; 
 		$rqt_compte2 = "select max(comptage) as max_aut from tmp_compte1 " ;
-		$res_compte2 = pmb_mysql_query($rqt_compte2, $dbh) ; 
+		$res_compte2 = pmb_mysql_query($rqt_compte2) ; 
 		$compte2 = pmb_mysql_fetch_object($res_compte2) ;
 		$max_aut = $compte2->max_aut ;
 		
 		// calcul du nombre max de colonnes pour les champs perso
 		$rqt_compte3 = "select idchamp, titre from notices_custom order by ordre " ;
-		$res_compte3 = pmb_mysql_query($rqt_compte3, $dbh) ; 
+		$res_compte3 = pmb_mysql_query($rqt_compte3) ; 
 		$max_perso = pmb_mysql_num_rows($res_compte3) ;
 			
-		// boucle de parcours des notices trouvÃ©es
-		// inclusion du javascript de gestion des listes dÃ©pliables
-		// dÃ©but de liste
+		// boucle de parcours des notices trouvées
+		// inclusion du javascript de gestion des listes dépliables
+		// début de liste
 		$entete_bloc_prec="";
 		foreach ($liste as $cle => $object) {
 			if ($object['content']=="") {
 				//On regarde le type de notice
 				$requete="select niveau_biblio, niveau_hierar FROM notices WHERE notice_id='".$object['object_id']."' ";
-				$mon_res=pmb_mysql_query($requete,$dbh);
+				$mon_res=pmb_mysql_query($requete);
 				$sel=" ,'' as Periodique, '' as ISSN, '' as bulletin_numero, '' as mention_date, '' as date_date, '' as bulletin_titre, '' as bulletin_cb";
 				$tabl="";
 				if(pmb_mysql_result($mon_res,0,0) == "a" && pmb_mysql_result($mon_res,0,1) == "2"){
@@ -173,24 +175,37 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 	// si EXPL
 	if ($caddie_type=="EXPL") {
 		// calcul du nombre max de colonnes pour les auteurs
-		$rqt_compte1 = "create temporary table tmp_compte1 ENGINE=MyISAM as select count(*) as comptage from caddie_content join notices on object_id=notice_id left join responsability on responsability_notice=notice_id where caddie_id=$idcaddie group by notice_id" ;
-		$res_compte1 = pmb_mysql_query($rqt_compte1, $dbh) ; 
+		//auteurs associés aux exemplaires de notices
+		pmb_mysql_query("drop table if exists tmp_compte1");
+		$rqt_compte1 = "create temporary table tmp_compte1 ENGINE=memory as select count(*) as comptage from caddie_content join exemplaires on expl_id = object_id join notices on notice_id=expl_notice and expl_notice <> 0 left join responsability on responsability_notice=notice_id where caddie_id=$idcaddie group by notice_id" ;
+		pmb_mysql_query($rqt_compte1) ; 
 		$rqt_compte2 = "select max(comptage) as max_aut from tmp_compte1 " ;
-		$res_compte2 = pmb_mysql_query($rqt_compte2, $dbh) ; 
+		$res_compte2 = pmb_mysql_query($rqt_compte2) ; 
 		$compte2 = pmb_mysql_fetch_object($res_compte2) ;
 		$max_aut = $compte2->max_aut ;
 		
+		//auteurs associés aux périodiques des exemplaires de bulletins
+		pmb_mysql_query("drop table if exists tmp_compte1");
+		$rqt_compte1 = "create temporary table tmp_compte1 ENGINE=memory as select count(*) as comptage from caddie_content join exemplaires on expl_id = object_id join bulletins on bulletin_id=expl_bulletin and expl_bulletin <> 0 join notices on notices.notice_id = bulletins.bulletin_notice left join responsability on responsability_notice=notice_id where caddie_id=$idcaddie group by notice_id" ;
+		pmb_mysql_query($rqt_compte1) ;
+		$rqt_compte2 = "select max(comptage) as max_aut from tmp_compte1 " ;
+		$res_compte2 = pmb_mysql_query($rqt_compte2) ;
+		$compte2 = pmb_mysql_fetch_object($res_compte2) ;
+		if($compte2->max_aut > $max_aut) {
+			$max_aut = $compte2->max_aut ;
+		}
+		
 		// calcul du nombre max de colonnes pour les champs perso
 		$rqt_compte3 = "select idchamp, titre from expl_custom order by ordre " ;
-		$res_compte3 = pmb_mysql_query($rqt_compte3, $dbh) ; 
+		$res_compte3 = pmb_mysql_query($rqt_compte3) ; 
 		$max_perso = pmb_mysql_num_rows($res_compte3) ;
 		
-		// boucle de parcours des exemplaires trouvÃ©s
+		// boucle de parcours des exemplaires trouvés
 		$entete_bloc_prec="";
 		foreach ($liste as $cle => $expl) {
 			if (!$expl["content"]) {
 				$rqt_test = "select expl_bulletin from exemplaires where expl_id='".$expl['object_id']."' ";
-				$result_test = pmb_mysql_query($rqt_test, $dbh);
+				$result_test = pmb_mysql_query($rqt_test);
 				$obj_test = pmb_mysql_fetch_object($result_test) ;
 				if ($obj_test->expl_bulletin==0) {
 					// expl de mono
@@ -255,9 +270,9 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 		} // fin de liste
 	} // fin si EXPL
 	if ($caddie_type=="BULL") {			
-		// boucle de parcours des bulletins trouvÃ©s
-		// inclusion du javascript de gestion des listes dÃ©pliables
-		// dÃ©but de liste
+		// boucle de parcours des bulletins trouvés
+		// inclusion du javascript de gestion des listes dépliables
+		// début de liste
 		$entete_bloc_prec="";
 		foreach ($liste as $cle => $expl) {
 			if (!$expl["content"]) {
@@ -282,24 +297,24 @@ function afftab_cart_objects ($idcaddie=0, $flag="" , $no_flag = "",$notice_tpl=
 
 
 function extrait_info ($sql="", $entete=1, $flag="") {
-	global $dbh ;
 	global $dest ;
 	global $worksheet ;
 	global $entete_bloc;
 	global $msg;
 	
 	global $debligne_excel;
-	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermÃ©s
+	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermés
 	
 	global $max_aut ; // le nombre max de colonnes d'auteurs
 	
 	if (!$debligne_excel) $debligne_excel = 0 ;
 	
-	$res = @pmb_mysql_query($sql, $dbh);
-	$nbr_lignes = @pmb_mysql_num_rows($res);
-	$nbr_champs = @pmb_mysql_num_fields($res);
+	$res = pmb_mysql_query($sql);
+	$nbr_lignes = pmb_mysql_num_rows($res);
+	$nbr_champs = pmb_mysql_num_fields($res);
              		
 	if ($nbr_lignes) {
+		$editions_datasource = array();
 		if ($entete) {
 			$editions_datasource['notices'] = new editions_datasource('notices');
 		}
@@ -310,7 +325,7 @@ function extrait_info ($sql="", $entete=1, $flag="") {
 					$debligne_excel++ ;
 				}
 				for($i=0; $i < $nbr_champs; $i++) {
-					// entÃªte de colonnes
+					// entête de colonnes
 					$fieldname = pmb_mysql_field_name($res, $i);
 					if ($entete) {
 						$worksheet->write_string((1+$debligne_excel),0,$msg['caddie_action_marque']);
@@ -330,7 +345,7 @@ function extrait_info ($sql="", $entete=1, $flag="") {
 					$row = pmb_mysql_fetch_row($res);
 					if ($flag) $worksheet->write_string(($i+$debligne_excel),0,"X");
 					$j=0;
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col=" ";
 						$worksheet->write_string(($i+$debligne_excel),($j+1),$col);
 						$j++;
@@ -358,7 +373,7 @@ function extrait_info ($sql="", $entete=1, $flag="") {
 					$row = pmb_mysql_fetch_row($res);
 					echo "<tr>";
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if (is_numeric($col)){
  							$col = "'".$col ;
 						}
@@ -396,7 +411,7 @@ function extrait_info ($sql="", $entete=1, $flag="") {
 						$odd_even=0;
 					}
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col="&nbsp;";
 						print pmb_bidi("<td>$col</td>");
 					}
@@ -409,7 +424,6 @@ function extrait_info ($sql="", $entete=1, $flag="") {
 
 	
 function extrait_info_notice ($sql="", $entete=1, $flag="") {
-	global $dbh ;
 	global $dest ;
 	global $worksheet ;
 	global $myCart ;
@@ -417,7 +431,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 	global $msg, $charset;
 	
 	global $debligne_excel;
-	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermÃ©s
+	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermés
 	
 	global $max_aut ; // le nombre max de colonnes d'auteurs
 	
@@ -431,13 +445,14 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 
 	if (!$debligne_excel) $debligne_excel = 0 ;
 	
-	$res = @pmb_mysql_query($sql, $dbh);
-	$nbr_lignes = @pmb_mysql_num_rows($res);
-	$nbr_champs = @pmb_mysql_num_fields($res);
+	$res = pmb_mysql_query($sql);
+	$nbr_lignes = pmb_mysql_num_rows($res);
+	$nbr_champs = pmb_mysql_num_fields($res);
 	$nbr_languages = 2;
 	
 	if ($nbr_lignes) {
-		// Pour les champs personnalisÃ©s
+		$editions_datasource = array();
+		// Pour les champs personnalisés
 		$caddie_type = $myCart->type ;
 		switch ($caddie_type) {
 			case 'EXPL' :
@@ -463,7 +478,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					$debligne_excel++ ;
 					$worksheet->write_string((1+$debligne_excel),0,$msg['caddie_action_marque']);
 					for($i=0; $i < $nbr_champs; $i++) {
-						// entÃªte de colonnes
+						// entête de colonnes
 						$fieldname = pmb_mysql_field_name($res, $i);
 						if(isset($editions_datasource['notices']->struct_format['notices_'.$fieldname])) {
 							$worksheet->write_string((1+$debligne_excel),($i+1),$editions_datasource['notices']->struct_format['notices_'.$fieldname]['label']);
@@ -486,9 +501,12 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 						$worksheet->write_string((1+$debligne_excel),($i*6+6+$nbr_champs+$nbr_languages),"aut_resp_type_$i");
 					}
 					$worksheet->write_string((1+$debligne_excel),($max_aut*6+$nbr_champs+$nbr_languages+1),"DESCR");
+					reset($res_compte3);
 					for($i=0; $i < $max_perso; $i++) {
-						$perso = pmb_mysql_fetch_object($res_compte3) ;
-						$worksheet->write_string((1+$debligne_excel),($max_aut*6+$nbr_champs+$nbr_languages+2+$i),$perso->titre);
+						$perso = pmb_mysql_fetch_object($res_compte3);
+						if(!empty($perso) && is_object($perso)) {
+							$worksheet->write_string((1+$debligne_excel),($max_aut*6+$nbr_champs+$nbr_languages+2+$i),$perso->titre);
+						}
 					}
 					$debligne_excel++;
 				}
@@ -510,7 +528,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					}
 					if ($flag) $worksheet->write_string($debligne_excel,0,"X");
 					$j=0;
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col=" ";
 						$worksheet->write_string($debligne_excel,($j+1),$col);
 						$j++;
@@ -536,7 +554,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					$worksheet->write_string($debligne_excel,($max_aut*6+$nbr_champs+$nbr_languages+1),$lib_desc);
 
 					$p_perso=new parametres_perso($libelle_caddie_type);
-					//Champs personalisÃ©s
+					//Champs personalisés
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields(($libelle_caddie_type=='notices'?$id_notice:$id_expl));
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {
@@ -598,7 +616,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					}
 					echo "<tr>";
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if (is_numeric($col)){
  							$col = "'".$col ;
 						}
@@ -633,7 +651,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					print pmb_bidi("<td>".$lib_desc."</td>" );
 					
 					$p_perso=new parametres_perso($libelle_caddie_type);
-					//Champs personalisÃ©s
+					//Champs personalisés
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields(($libelle_caddie_type=='notices'?$id_notice:$id_expl));
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {
@@ -702,7 +720,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 						$odd_even=0;
 					}
 					if ($flag) print "<td>X</td>"; else print "<td>&nbsp;</td>";
-					foreach($row as $dummykey=>$col) {
+					foreach($row as $col) {
 						if(!$col) $col="&nbsp;";
 						print pmb_bidi("<td>$col</td>");
 					}
@@ -734,7 +752,7 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 					print pmb_bidi("<td>".$lib_desc."</td>") ;
 					
 					$p_perso=new parametres_perso($libelle_caddie_type);
-					//Champs personalisÃ©s
+					//Champs personalisés
 					if (!$p_perso->no_special_fields) {
 						$perso_=$p_perso->show_fields(($libelle_caddie_type=='notices'?$id_notice:$id_expl));
 						for ($i=0; $i<count($perso_["FIELDS"]); $i++) {
@@ -750,14 +768,13 @@ function extrait_info_notice ($sql="", $entete=1, $flag="") {
 	} // fin fonction extrait_info_notice
 	
 function extrait_blob ($blob="", $entete=1, $flag="") {
-	global $dbh ;
 	global $dest ;
 	global $worksheet ;
 	global $entete_bloc;
 	global $msg;
 	
 	global $debligne_excel;
-	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermÃ©s
+	global $etat_table ; // permet de savoir si les tag table sont ouverts ou fermés
 	
 	if (!$debligne_excel) $debligne_excel = 0 ;
 	
@@ -803,13 +820,14 @@ function get_functions_authors() {
 } // fin fonction get_functions_authors
 
 function get_categs_edition($id_notice, $lang){
-	global $dbh, $thesaurus_mode_pmb, $thesaurus_defaut, $pmb_keyword_sep;
+	global $thesaurus_mode_pmb, $thesaurus_defaut, $pmb_keyword_sep;
+	global $default_tmp_storage_engine;
 	
 	$lib_desc = "";
 	
 	$q = "drop table if exists catlg ";
-	$r = pmb_mysql_query($q, $dbh);
-	$q = "CREATE TEMPORARY TABLE catlg ENGINE=MyISAM as ";
+	pmb_mysql_query($q);
+	$q = "CREATE TEMPORARY TABLE catlg ENGINE={$default_tmp_storage_engine} as ";
 	$q.= "SELECT categories.num_noeud, categories.libelle_categorie ";
 	$q.= "FROM noeuds, categories, notices_categories ";
 	$q.= "WHERE notices_categories.notcateg_notice = '".$id_notice."' ";
@@ -817,16 +835,16 @@ function get_categs_edition($id_notice, $lang){
 	$q.= "AND categories.num_noeud = notices_categories.num_noeud " ;
 	$q.= "AND categories.num_noeud = noeuds.id_noeud ";
 	$q.= "ORDER BY ordre_categorie";
-	$r = pmb_mysql_query($q, $dbh) ;
+	pmb_mysql_query($q) ;
 	
 	$q = "DROP TABLE IF EXISTS catdef ";
-	$r = pmb_mysql_query($q, $dbh);
+	pmb_mysql_query($q);
 	
 	$q = "CREATE TEMPORARY TABLE catdef ( ";
 	$q.= "num_noeud int(9) unsigned not null default '0', ";
 	$q.= "num_thesaurus int(3) unsigned not null default '0', ";
-	$q.= "libelle_categorie text not null ) ENGINE=MyISAM ";
-	$r = pmb_mysql_query($q, $dbh);
+	$q.= "libelle_categorie text not null ) ENGINE={$default_tmp_storage_engine} ";
+	pmb_mysql_query($q);
 		
 	$thes_list = thesaurus::getThesaurusList();
 	$q = '';
@@ -840,7 +858,7 @@ function get_categs_edition($id_notice, $lang){
 		$q.= "AND categories.num_noeud = notices_categories.num_noeud " ;
 		$q.= "AND categories.num_noeud = noeuds.id_noeud ";
 		$q.= "ORDER BY ordre_categorie";
-		$r = pmb_mysql_query($q, $dbh);
+		pmb_mysql_query($q);
 	}
 	
 	$q = "select catdef.num_thesaurus as num_thesaurus, ";
@@ -849,7 +867,7 @@ function get_categs_edition($id_notice, $lang){
 	if (!$thesaurus_mode_pmb)
 		$q.= "where catdef.num_thesaurus = '".$thesaurus_defaut."' ";
 	
-	$res_desc = pmb_mysql_query($q, $dbh);
+	$res_desc = pmb_mysql_query($q);
 	
 	while ($desc = pmb_mysql_fetch_object($res_desc)) {
 		$lib_desc.=($lib_desc?$pmb_keyword_sep:"");
@@ -872,7 +890,7 @@ function get_authors_editions($id_notice) {
 	$rqt_aut .= "FROM responsability JOIN authors ON responsability_author=author_id ";
 	$rqt_aut .= "WHERE responsability_notice=$id_notice " ;
 	$rqt_aut .= "ORDER BY responsability_type ASC, responsability_ordre ASC";
-	$res_aut = @pmb_mysql_query($rqt_aut);
+	$res_aut = pmb_mysql_query($rqt_aut);
 	
 	if ($res_aut && pmb_mysql_num_rows($res_aut)) {
 		$codes_auteurs = get_functions_authors();
@@ -916,8 +934,8 @@ function get_languages_edition($id_notice, $type=0) {
 
 	if (!$marc_liste_langues) $marc_liste_langues=new marc_list('lang');
 
-	$id_notice += 0;
-	$type += 0;
+	$id_notice = intval($id_notice);
+	$type = intval($type);
 
 	$languages = array();
 	$query = "select code_langue from notices_langues where type_langue =".$type." and num_notice = ".$id_notice." order by ordre_langue";

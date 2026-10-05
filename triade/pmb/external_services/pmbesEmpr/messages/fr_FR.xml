@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.5 2018-10-12 12:28:34 vtouchard Exp $ -->
+$Id: fr_FR.xml,v 1.7.10.1 2025/05/13 10:04:45 tsamson Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -18,14 +18,15 @@ pmbesEmpr
 fetch_empr
 -->
 	<entry code="fetch_empr">Renvoie les informations d'un lecteur par un de ses identifiants</entry>
-	<entry code="fetch_empr_input_description">Au choix: empr_cb ou empr_id</entry>
+	<entry code="fetch_empr_input_description">Au choix: empr_cb, empr_id, empr_cb + empr_cp</entry>
 	<entry code="fetch_empr_output_description"></entry>
 	<entry code="result">Réponse</entry>
 	<entry code="status">0: erreur. 1: ok</entry>
 	<entry code="status_msg">Message d'information relatif au statut</entry>	
 	<entry code="fetch_empr_empr_data">Tableau des données retournées</entry>
-	<entry code="fetch_empr_empr_id">L'Id du lecteur</entry>
-	<entry code="fetch_empr_empr_cb">Le code barres du lecteur</entry>
+	<entry code="fetch_empr_empr_id">Identifiant</entry>
+	<entry code="fetch_empr_empr_cb">Code barres</entry>
+	<entry code="fetch_empr_empr_cp">Nom du champ personnalisé contenant l'identifiant</entry>
 	<entry code="fetch_empr_nom">Nom</entry>
 	<entry code="fetch_empr_prenom">Prénom</entry>
 	<entry code="fetch_empr_sexe">Sexe. Non précisé: 0, Masculin: 1, Féminin: 2</entry>
@@ -99,6 +100,7 @@ fetch_empr
 	<entry code="fetch_empr_nb_resa">Nombre de réservations</entry>
 	<entry code="fetch_empr_nb_previsions">Nombre de prévisions</entry>
 	<entry code="fetch_empr_empr_thumbnail">Photo du lecteur</entry>
+	<entry code="fetch_empr_empty_parameters">empr_id, empr_cb et empr_cp vides.</entry>
 <!--
 delete_empr
 -->	
@@ -126,7 +128,7 @@ empr_list
 update_empr
 -->	
 	<entry code="update_empr">Modification d'un lecteur</entry>
-	<entry code="update_empr_empr_data">Tableau des infos du lecteur. Les champs 'nom', 'location', 'categ', 'statut', 'cstat' doivent être présents et cohérents avec la base de donnée</entry>
+	<entry code="update_empr_empr_data">Tableau des infos du lecteur. Les champs 'location', 'categ', 'statut', 'cstat' doivent être cohérents avec la base de donnée</entry>
 	
 <!--
 statut_list
@@ -146,7 +148,7 @@ statut_list
 	<entry code="statut_list_allow_prol">Prolongation</entry>
 	<entry code="statut_list_allow_avis">Avis</entry>
 	<entry code="statut_list_allow_tag">Tags</entry>
-	<entry code="statut_list_allow_pwd">Changement demot de passe</entry>	
+	<entry code="statut_list_allow_pwd">Changement de mot de passe</entry>	
 	<entry code="statut_list_allow_liste_lecture">listes de lecture</entry>
 	<entry code="statut_list_allow_self_checkout">Prêt autonome</entry>
 	<entry code="statut_list_allow_self_checkin">Retour autonome</entry>
@@ -183,8 +185,8 @@ lang_list
 <!--
 groupe_list
 -->			
-	<entry code="groupe_list">Liste des groupe de lecteur</entry>
-	<entry code="groupe_list_fields">Tableau des groupe de lecteur</entry>
+	<entry code="groupe_list">Liste des groupes de lecteurs</entry>
+	<entry code="groupe_list_fields">Tableau des groupes de lecteurs</entry>
 	<entry code="groupe_list_id">Id</entry>
 	<entry code="groupe_list_libelle">Libellé</entry>
 	<entry code="groupe_list_resp_groupe">Id du reponsable du groupe</entry>
@@ -296,5 +298,12 @@ pperso_list_type_values
 bibloto_empr_list
 -->	
 	<entry code="bibloto_empr_list">Liste de lecteurs pour bibloto</entry>	
-		
+
+<!--
+send_mail_pret_info_to_empr
+-->	
+	<entry code="send_mail_pret_info_to_empr">Envoi de mail</entry>	
+	<entry code="send_mail_pret_info_to_empr_input_description">Paramètre d'entrée</entry>	
+	<entry code="send_mail_pret_info_to_empr_output_description">Statut de l'envoi de mail</entry>	
+			
 </XMLlist>

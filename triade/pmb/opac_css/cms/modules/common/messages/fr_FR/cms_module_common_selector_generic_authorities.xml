@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_generic_authorities.xml,v 1.1 2016-04-20 13:54:54 apetithomme Exp $ -->
+$Id: cms_module_common_selector_generic_authorities.xml,v 1.2 2019/09/03 15:33:13 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_sub_choice_label">Récupérer les autorités via</entry>

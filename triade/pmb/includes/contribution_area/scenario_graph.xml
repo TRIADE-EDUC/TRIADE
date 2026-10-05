@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!-- Définition des formes, couleurs, et tailles des éléments du graphe de définition des scénarios de contribution
-$Id: scenario_graph.xml,v 1.1 2018-10-16 12:06:57 apetithomme Exp $ -->
+$Id: scenario_graph.xml,v 1.1 2018/10/16 12:06:57 apetithomme Exp $ -->
 
 <objects>
 	<object>

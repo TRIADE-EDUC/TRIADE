@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_expl_supagro.inc.php,v 1.5 2017-07-12 15:15:02 tsamson Exp $
+// $Id: ajax_expl_supagro.inc.php,v 1.6 2021/12/28 10:46:12 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -38,8 +38,7 @@ function calculer_cote($text=''){
  * Fonction de calcul de cote pour Bartoli et l'UMR Innovation
  */
 function calculer_cote_bartoli($text=""){
-	
-	global $f_ex_location, $dbh;
+	global $f_ex_location;
 	
 	$section = 'f_ex_section'.$f_ex_location;
 	global ${$section};
@@ -47,7 +46,7 @@ function calculer_cote_bartoli($text=""){
 	$array_result = array();
 	
 	$req_section = " select section_libelle from docs_section where idsection='".${$section}."'";
-	$res_sect = pmb_mysql_query($req_section,$dbh);
+	$res_sect = pmb_mysql_query($req_section);
 	$sec_libelle = pmb_mysql_result($res_sect,0,0);
 	
 	if(${$section} != 27) 
@@ -56,7 +55,7 @@ function calculer_cote_bartoli($text=""){
 	
 	$req_index = "select indexint_id as id, indexint_name as name from indexint where index_indexint REGEXP '(".implode('|',$array_sec).")'
 	  and indexint_name like '".addslashes($text)."%' and num_pclass in('2','3') order by indexint_name, num_pclass limit 20";
-	$res_index = pmb_mysql_query($req_index,$dbh);
+	$res_index = pmb_mysql_query($req_index);
 	
 	if(pmb_mysql_num_rows($res_index) >= 1) {		
 		while(($cote = pmb_mysql_fetch_object($res_index))){
@@ -73,7 +72,7 @@ function calculer_cote_bartoli($text=""){
 			}else{
 				$req_cote.="and expl_cote like '".addslashes($cote->name)." %'";
 			}
-			$res_cote = pmb_mysql_query($req_cote,$dbh);
+			$res_cote = pmb_mysql_query($req_cote);
 			if(pmb_mysql_num_rows($res_cote)){
 				$liste_cotes=array();
 				while(($cotes = pmb_mysql_fetch_object($res_cote))){
@@ -95,7 +94,7 @@ function calculer_cote_bartoli($text=""){
 	} else {
 		$req_index = "select indexint_id as id, indexint_name as name from indexint where num_pclass in('2','3') 
 		  and indexint_name like '".addslashes($text)."%'  order by indexint_name, num_pclass limit 20";
-		$res_index = pmb_mysql_query($req_index,$dbh);
+		$res_index = pmb_mysql_query($req_index);
 		while(($cote = pmb_mysql_fetch_object($res_index))){
 			$req_cote = "
 				select  if(isnull(expl_cote),concat(indexint_name,' ','1'),expl_cote) as cote, if(isnull(expl_cote),0,1) as exist
@@ -110,7 +109,7 @@ function calculer_cote_bartoli($text=""){
 			}else{
 				$req_cote.="and expl_cote like '".addslashes($cote->name)." %'";
 			}
-			$res_cote = pmb_mysql_query($req_cote,$dbh);
+			$res_cote = pmb_mysql_query($req_cote);
 			if(pmb_mysql_num_rows($res_cote)){
 				$liste_cote=array();
 				while(($cotes = pmb_mysql_fetch_object($res_cote))){
@@ -139,8 +138,7 @@ function calculer_cote_bartoli($text=""){
  * Fonction de calcul de cote pour l'IRC
  */
 function calculer_cote_irc($text=""){
-	
-	global $f_ex_location, $dbh;
+	global $f_ex_location;
 	
 	$section = 'f_ex_section'.$f_ex_location;
 	global ${$section};
@@ -148,7 +146,7 @@ function calculer_cote_irc($text=""){
 	$array_result = array();
 	
 	$req_section = " select section_libelle from docs_section where idsection='".${$section}."'";
-	$res_sect = pmb_mysql_query($req_section,$dbh);
+	$res_sect = pmb_mysql_query($req_section);
 	$sec_libelle = pmb_mysql_result($res_sect,0,0);
 	
 	if(${$section} != 27) 
@@ -156,7 +154,7 @@ function calculer_cote_irc($text=""){
 	else $array_sec = array();
 		$req_index = "select indexint_id as id, indexint_name as name from indexint where num_pclass in('4','6')
 		 and indexint_name like '".addslashes($text)."%'  order by indexint_name, num_pclass limit 20";
-		$res_index = pmb_mysql_query($req_index,$dbh);
+		$res_index = pmb_mysql_query($req_index);
 		while(($cote = pmb_mysql_fetch_object($res_index))){
 			$nom=""; 
 			if(strpos($cote->name,'-')!==false){ 
@@ -172,7 +170,7 @@ function calculer_cote_irc($text=""){
 				join notices on expl_notice=notice_id
 				left join indexint on indexint=indexint_id 
 				where expl_location='".$f_ex_location."' ".$clause;	
-			$res_cote = pmb_mysql_query($req_cote,$dbh);
+			$res_cote = pmb_mysql_query($req_cote);
 			if(pmb_mysql_num_rows($res_cote)){
 				$liste_cotes=array();
 				while(($cotes = pmb_mysql_fetch_object($res_cote))){
@@ -190,7 +188,7 @@ function calculer_cote_irc($text=""){
  * Fonction de calcul de cote pour Supagro La Gaillarde
  */
 function calculer_cote_gaillarde($text){
-	global $f_ex_location, $dbh;
+	global $f_ex_location;
 	
 	$section = 'f_ex_section'.$f_ex_location;
 	global ${$section};
@@ -198,22 +196,22 @@ function calculer_cote_gaillarde($text){
 	$array_result = array();
 	
 	$req_section = " select section_libelle from docs_section where idsection='".${$section}."'";
-	$res_sect = pmb_mysql_query($req_section,$dbh);
+	$res_sect = pmb_mysql_query($req_section);
 	$sec_libelle = pmb_mysql_result($res_sect,0,0);
 	
-	$tab_section_auto = array("CongrÃ¨s"=>"20","Accueil"=>"Accueil","ANL"=>"ANL","ECO"=>"ECO",
+	$tab_section_auto = array("Congrès"=>"20","Accueil"=>"Accueil","ANL"=>"ANL","ECO"=>"ECO",
 		"ENV"=>"ENV","F"=>"F","GES"=>"GES","IAA"=>"IAA","Langues"=>"LANG","MAGASIN"=>"MAGASIN","MVV"=>"MVV",
 	    "PROF"=>"PROF","S"=>"S", "SCH"=>"SCH","SVI"=>"SVI","U"=>"U","VEG"=>"VEG","VIDEO"=>"VIDEO");
 	
 	if($tab_section_auto[$sec_libelle]){
-		//Si on est dans un section d'incrÃ©ment automatique		
-		//On rÃ©cupÃ¨re le maximum de toutes les cotes
+		//Si on est dans un section d'incrément automatique		
+		//On récupère le maximum de toutes les cotes
 		$req_max = "select expl_cote
 			from exemplaires 
 			where expl_location='".$f_ex_location."' 
 			and expl_cote REGEXP '(".implode('/|',$tab_section_auto).")'
 		";
-		$res_max = pmb_mysql_query($req_max,$dbh);
+		$res_max = pmb_mysql_query($req_max);
 		$regexp = $cotes = array();
 
 		while (($expl = pmb_mysql_fetch_object($res_max))){
@@ -230,7 +228,7 @@ function calculer_cote_gaillarde($text){
 			and (indexint_name like '".addslashes($text)."%') 
 			and num_pclass ='1'
 			order by indexint_name, num_pclass limit 20";
-		$res_cote = pmb_mysql_query($req_cote,$dbh);
+		$res_cote = pmb_mysql_query($req_cote);
 		while(($cote = pmb_mysql_fetch_object($res_cote))){
 			$array_result[] = $cote->name." ".($max+1);
 		}
@@ -245,7 +243,7 @@ function calculer_cote_gaillarde($text){
 			order by indexint_name, num_pclass
 			limit 20
 			";
-		$res_index = pmb_mysql_query($req_index,$dbh);
+		$res_index = pmb_mysql_query($req_index);
 		if(pmb_mysql_num_rows($res_index) == 0){
 			$req_index = "select indexint_id as id, indexint_name as name from indexint 
 				where index_indexint REGEXP '(".implode('|',$array_sec).")'  and num_pclass='1' 
@@ -253,7 +251,7 @@ function calculer_cote_gaillarde($text){
 				order by indexint_name, num_pclass
 				limit 20
 				";
-			$res_index = pmb_mysql_query($req_index,$dbh);
+			$res_index = pmb_mysql_query($req_index);
 		}
 		if(pmb_mysql_num_rows($res_index) >=1){
 			while(($cote = pmb_mysql_fetch_object($res_index))){			

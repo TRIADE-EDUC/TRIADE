@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" version="1.0">
+<xsl:stylesheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dcterms="http://purl.org/dc/terms/" version="1.0">
 <!-- Feuille de conversion pmb_xml_unimarc -> dublin core
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: pmbxmlunimarc2dc.xsl,v 1.6 2017-02-16 08:48:42 jpermanne Exp $ -->
+$Id: pmbxmlunimarc2dc.xsl,v 1.6.18.1 2025/03/12 14:25:53 dgoron Exp $ -->
 
 <xsl:output method="xml" indent="yes" encoding="utf-8"/>
 <xsl:param name="notice_url_base"></xsl:param>
@@ -49,6 +49,14 @@ $Id: pmbxmlunimarc2dc.xsl,v 1.6 2017-02-16 08:48:42 jpermanne Exp $ -->
 		<!-- ISSN -->
 		<xsl:for-each select="f[@c=011]/s[@c='a']">
 			<dc:identifier>urn:ISSN:<xsl:value-of select="."/></dc:identifier>
+		</xsl:for-each>
+		<!-- Date de creation -->
+		<xsl:for-each select="f[@c=100]/s[@c='a']">
+			<dcterms:created><xsl:value-of select="substring(.,1,8)"/></dcterms:created>
+		</xsl:for-each>
+		<!-- Date de mise a jour -->
+		<xsl:for-each select="f[@c=100]/s[@c='d']">
+			<dcterms:modified><xsl:value-of select="substring(.,1,8)"/></dcterms:modified>
 		</xsl:for-each>
 	</xsl:template>
 	

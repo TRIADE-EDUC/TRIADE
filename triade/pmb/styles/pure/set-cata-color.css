@@ -2,7 +2,7 @@
 /* +--------------------------------------------------------------------------+
 // 2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: set-cata-color.css,v 1.9 2018-04-17 15:21:19 wlair Exp $ */
+// $Id: set-cata-color.css,v 1.10 2020/03/23 15:17:57 btafforeau Exp $ */
 /*------------------------------------------------------------------------------------------*/
 /* Color :
 base :#ef8800
@@ -15,17 +15,17 @@ active/focus :#f77100
 	border-bottom-color:#ef8800;
 }
 li#navbar-catalog.current,
-.catalog input[type="checkbox"]:checked, 
-.catalog input[type="checkbox"]:indeterminate, 
+.catalog input[type="checkbox"]:checked,
+.catalog input[type="checkbox"]:indeterminate,
 .catalog input[type="radio"]:checked,
-.catalog input[type="checkbox"]:checked:focus, 
-.catalog input[type="checkbox"]:indeterminate:focus, 
+.catalog input[type="checkbox"]:checked:focus,
+.catalog input[type="checkbox"]:indeterminate:focus,
 .catalog input[type="radio"]:checked:focus,
 .catalog div#extra2 span.uk-icon,
-.catalog div#extra2 .notification.ui-active ,
+.catalog div#extra2 .notification,
 .pointage_exemplarise input[type="checkbox"]:checked,
-.form-abonnement_parution_edition input[type="checkbox"]:checked{
-	background-color:#ef8800;	
+.form-abonnement_parution_edition input[type="checkbox"]:checked {
+	background-color: #ef8800;
 }
 .catalog input:focus, 
 .catalog select:focus, 

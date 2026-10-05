@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -50,9 +50,9 @@ validerequete("2");
 $data=liste_etude_2($_GET["id"]);
 //id,jour_semaine,heure,salle,pion,nom_etude,duree
 ?>
-<table border="1" bordercolor="#000000" align="center" width="95%">
+<table border="1" bordercolor="#000000" align="center" width="95%" style="border-collapse: collapse;">
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if (($data[$i][4] == "-1") || ($data[$i][4] == NULL )) {
 		$pion="???";
 	}else {
@@ -104,7 +104,7 @@ for($i=0;$i<count($data);$i++) {
 <td bgcolor=yellow><b>Commentaire</b></td><tr>
 <?php
 $data=liste_eleve_etude($_GET["id"]); //id_eleve,id_etude,information,auto_exit
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	print "<tr bgcolor='#FFFFFF' bordercolor='#FFFFFF'><td>".strtoupper(recherche_eleve_nom($data[$i][0]))."</td><td>".strtolower(recherche_eleve_prenom($data[$i][0]))."</td>";
 ?>
 	<td ><?php $idclasse=chercheIdClasseDunEleve($data[$i][0]); $nomclasse=chercheClasse($idclasse); print $nomclasse[0][1]?> </td>

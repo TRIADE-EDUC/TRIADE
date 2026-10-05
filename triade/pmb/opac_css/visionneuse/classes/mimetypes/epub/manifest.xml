@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2018-06-22 09:55:45 ngantier Exp $ -->
+$Id: manifest.xml,v 1.2 2018/06/22 09:55:45 ngantier Exp $ -->
 
 <manifest name="epub">
 	<desc msg="Lecture des fichiers epub"/>

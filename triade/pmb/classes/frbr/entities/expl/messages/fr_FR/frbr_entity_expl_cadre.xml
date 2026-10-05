@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_expl_cadre.xml,v 1.1 2019/08/19 09:27:30 jlaurent Exp $ -->
+
+<XMLlist>
+	<entry code='frbr_entity_expl_view_recordslist'>Liste de notices - template Django</entry>
+</XMLlist>

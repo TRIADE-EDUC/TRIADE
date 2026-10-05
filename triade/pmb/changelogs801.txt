@@ -1,0 +1,347 @@
+
+# CHANGE LOG
+## [8.0.1.9] - 2025-06-09
+
+## Amélioration / Évolution
+
+- #179476 Acquisitions [Fournisseurs / Conditions de vente] Optimisations sur le formulaire d'une remise
+
+## Anomalie
+
+- #179700 Catalogue [Déplacement d'un dépouillement / droits d'accès] Correction sur l'invisibilité de l'article de périodique
+- #179641 Administration [Services externes] Correction méthode de mise à jour Bdd pmbesDatabase_update
+- #179477 Administration [Budgets] Correction sur l'activation du budget
+- #179411 Administration [Import lecteurs] Correction des imports hors LDAP
+- #179757 Animation [Optimisation] Ajout d'une pagination
+- #179454 Catalogue [Notice / Grilles de saisies avancées] Correction sur l'application des grilles sur les utilisateurs autres qu'admin
+- #179573 Circulation [PHP8 / Sécurité] Corrections de sécurité du prêt express
+- #179569 Circulation [PHP8 / RGAA] Correction sur la modification de la note exemplaire
+- #179558 Circulation [PHP8 / RGAA] Correction d'affichage des recouvrements d'un lecteur
+- #179557 Circulation [Liste de réservations / Transferts (Choix pour la réservation "Loc lecteur")] Correction sur l'affichage complet de la liste
+- #179816 Divers [Recherche simple] Nettoyage des caractères cp_1252 (Windows)
+- #179730 Divers [PHP8 / Webservices / Anonyme] Pouvoir utiliser la fonction import_basic du groupe pmbesConvertImport
+- #179562 Divers [PHP8] Corrections dans les classes d'indexation Sphinx
+- #177896 Divers [PHP8] Optimisations / Corrections PHP8
+- #179728 OPAC [RGAA / Mon panier] Correction des échanges de libellés du bouton HTML5 "Tout cocher" -> "Tout décocher"
+
+
+# CHANGE LOG
+## [8.0.1.8] - 2025-05-26
+
+## Amélioration / Évolution
+
+- #178703 Administration [Webservices] Récupération des informations de lecteur grâce à un champ personnalisé
+- #178721 Circulation [Liste des lecteurs d'un groupe / colonne disponible] Prêts (dont réservations) 
+- #179189 Divers Correction de l'autocomplétion dans les champs de concepts 
+- #178831 Divers [Gestion] Tris par défaut avec Sphinx
+- #179152 Administration [Maintenance MySQL / Vérification des index] Diverses optimisations
+- #178484 Demandes [PHP8 / RGAA] Diverses optimisations sur l'affichage des demandes
+- #179129 Divers [Templates de notices / fonctions d'affichage d'auteurs] Séparateur sur le dernier auteur (norme APA)
+- #167454 Divers [Sécurité] Log des tentatives de connexion
+- #179281 OPAC [Facettes / RGAA] Enrichissement du message "Supprimer ce filtre (cela rechargera la page)"
+- #178982 OPAC [Univers de recherche] Amélioration de la structure HTML des résultats de recherche.
+
+## Anomalie
+
+- #179206 Administration [Planificateur de tâches / Gestion des paniers] Correction sur l'exécution de procédures avec paramètres
+- #178749 Administration [Connecteur PMB] Correction erreur fatale 
+- #179225 Bibloto Correction de la déconnexion
+- #179226 Demandes [Liste des demandes] Sélection de l'affectation à l'enregistrement d'une demande
+- #178846 Portail Correction de l'upload du logo dans le contenu éditorial
+- #179037 Administration [Import de lecteurs / import_bretagne_3] Gestion des groupes
+- #178702 Catalogue [Bulletinage] Récupération des dépouillements en AJAX via le bouton tout déplier
+- #179279 Divers [Vendor] Ajout de la dépendance Oauth2 Microsoft
+- #179192 Divers [Univers de recherche] Correction d'erreur dans les univers de recherche des notices externes
+- #179017 Divers [Auto-Complétion] Correction de l'inclusion ajax.js dans les templates
+- #178197 Divers Correction erreurs fatales
+- #177896 Divers [PHP8] Optimisations / Corrections PHP8
+- #179326 Rfid [SIP2] Message item information (CIRCULATION_STATUS)
+
+
+# CHANGE LOG
+## [8.0.1.7] - 2025-05-12
+
+## Amélioration / Évolution
+
+- #178453 Administration [Connecteur Electre] Récupération des notes de contenu
+- #178541 Divers Gestion des exceptions et log des erreurs dans les envois de mail
+- #178339 Divers [Gestion] Tris par défaut
+- #178254 Administration Amélioration de la sélection de la localisation dans un import de lecteurs via fichier csv
+- #178208 Administration [Vignettes] Possibilité de supprimer un niveau bibliographique sans type de document dans la source noimage
+- #178120 Animation [Animations] Correction de la suppression des statuts et types
+- #178328 Circulation [Documents à traiter] Mise à disposition des boutons d'exports
+- #178104 Modélisation [Contributions] Supprimer des brouillons de contribution 
+- #178283 OPAC [Facettes / bouton filtrer] aria-label : Appliquer les filtres sélectionnés
+- #178149 Portail [FRBR] Ajout d'une source collection dans les sources sous-collections et d'une source éditeur dans les sources collections
+
+## Anomalie
+
+- #178436 Administration [Connecteurs Electre] Gestion du type de document en fonction du support d'Électre
+- #178324 Administration Correction conversion fichiers Onix / Prêt numérique
+- #178518 Autorités Correction du permalink des oeuvres en gestion
+- #178128 Catalogue [Driver RFID] Correction de l'écriture d'exemplaire en bulletinage
+- #178533 Divers Gestion des exceptions dans les appels JsonRPC et SOAP
+- #178109 DSI [Refonte DSI] Correction d'une erreur de pagination dans les items
+- #178093 DSI [Refonte DSI] Correction d'une mauvaise gestion des onglets d'items
+- #178517 OPAC [RMC Responsive] Opérateur par défaut sur une sélection d'autorités
+- #178122 Administration Correction de l'affectation des vues
+- #178094 Administration [PHP8 / import ascodocpsy] Mise à jour fonction d'import
+- #178336 Circulation [Circulation des périodiques / douchette] Correction sur le scan de codes-barres
+- #178296 Circulation [Liste de lecteurs] Correction du tri alphabétique sur le nom et le prénom
+- #178205 Divers [Connecteurs] Correction d'erreurs fatales
+- #178183 Divers [PHP 8] Compatibilités, corrections et optimisations
+- #176047 Divers [PHP8] Corrections / Optimisations
+- #178142 DSI [Items de veille] Correction de la récupération des items de veilles dans un contexte de données multiples
+- #178258 Portail [Module portail /  Langues OPAC] Mise en conformité RGAA
+- #178138 Portail [Liste d'items de veille] Ne pas récupérer les items supprimés et purgés
+- #178119 Portail [Veille documentaire ∕ Liste de veilles documentaires] filtre sur les items intéressants et limitation du nombre 
+
+# CHANGE LOG
+## [8.0.1.6] - 2025-04-28
+
+## Amélioration / Évolution
+
+- #177855 Animation [Export d'animations] Ajout de l'exportation au format Ical et JSON
+- #177968 Catalogue [nomenclatures] Ajout d'une vérification de la validité d'une abréviation depuis la synchronisation du détail
+- #177696 Rfid [Driver RFID] Ajout d'un nouveau driver Nedap
+- #177621 Administration [Connecteurs entrants] correction synchronisation connecteur import de fichier + synchronisation depuis planificateur
+- #177919 Catalogue [Gestion - Catalogue] Limiter les résultats dans l'autocomplétion ou dans les sélecteurs d'autorités avec Sphinx
+- #177695 Circulation [Docs à traiter] Refonte de l'affichage pour afficher un filtre sur la localisation de retrait
+- #177604 Demandes Evolutions dans le module demandes
+- #177748 OPAC [RGAA]Ajout de fichier pour les templates de notice 
+- #177980 Portail [FRBR] Ajout d'une source de données sur les responsabilités des autorités personnalisées
+
+## Anomalie
+
+- #177851 OPAC [Animations] Correction des filtres sur un champ perso
+- #177966 Rfid [Driver RFID Bibliotheca] Correction de l'écriture en création d'exemplaire
+- #177854 Animation Correction PHP8 dans les animations
+- #177739 Catalogue [Définition d'un abonnement / PHP8 & RGAA] Diverses évolutions & corrections
+- #177581 Catalogue [Paniers d'exemplaires / pointage] Correction sur le pointage par procédure de sélection
+- #177602 Circulation [Docs à ranger] Diverses corrections/optimisations pour la compatibilité PHP8
+- #177679 Divers [PHP8] Correction erreur fatale sur champs perso
+- #177560 Divers [Pile indexation] Correction d'un blocage de la pile
+- #175820 Divers [Authentification]  Prise en compte du fichier ext_auth.inc.php.
+- #177849 OPAC [Univers] Correction dans la RMC pour l'affichage des documents numériques
+- #177566 OPAC [RGAA / Sélection d'une autorité personnalisée] Modification du titre de la fenêtre
+- #177624 Portail Correction de l'enregistrement des filtres
+- #177618 Portail [Recherche par termes / pagination] Correction de la taille des images au format SVG
+- #177556 Portail [Recherche par termes] Ajout de la balise sémantique "iframe" pour l'affichage des résultats
+
+## Sécurité
+
+- #177725 Divers Correction d'une vulnérabilité LFI
+- #177722 Divers Correction de vulnérabilités XSS
+
+# CHANGE LOG
+## [8.0.1.5] - 2025-04-14
+
+## Amélioration / Évolution
+
+- #177147 Animation Amélioration de l'affichage de l'impression de la liste des participants
+- #176961 Divers [Module extensions] Reprise du code source de l'implémentation du module
+- #177273 Catalogue [Définition d'un modèle prévisionnel] Compatibilités PHP8
+- #177272 Catalogue [Modèles prévisionnels] Format du libellé de période par défaut paramétrable
+- #177310 OPAC [Univers de recherche] Amélioration de la structure HTML des résultats de recherche.
+- #177255 OPAC [Univers de recherche] Ajout d'un template d'animation pour les résultats de recherche
+- #177353 Portail [Hub de recherche] Améliorations ergonomiques
+
+## Anomalie
+
+- #177127 Divers [Indexation] Correction de l'indexation des entités par leurs concepts
+- #177361 OPAC [Facettes / bouton filtrer] Correction du filtrage sur Chrome
+- #176983 OPAC [RMC responsive] Correction de l'autocomplétion
+- #177248 Administration [Import LDAP] Correction sur récupération paramètre from_ldap
+- #177156 Administration [Procédures] Correction sur la présence de fonctions SQL
+- #177440 Catalogue [Recherche ∕ Paniers] Correction de l'impression du panier
+- #177245 Catalogue [Grilles de saisies / Pivots] Correction de l'auto-complétion
+- #177096 Circulation [Encaissement] Passage au protocole HTTPS pour les imprimantes à tickets de prêts
+- #177418 Divers [Vignette de notice] Correction sur la récupération des propriétaires de documents numériques
+- #177312 Divers [escpos-php-development] Modification de l'autoloader
+- #177025 Divers [PHP8] Optimisations / Corrections PHP8
+- #176722 Divers [PHP8 / RGAA] Diverses optimisations sur l'affichage des paniers
+- #177415 OPAC [Iframe de panier / PHP8] Mise en conformité HTML5 (quirks)
+- #177369 OPAC [Recherche avancée] Correction de l'ajout du résultat au panier
+- #177251 OPAC [Recherche par termes] Correction sur la recherche
+
+# CHANGE LOG
+## [8.0.1.4] - 2025-03-31
+
+## Amélioration / Évolution
+
+- #176802 Administration [Connecteurs] Corrections connecteurs C3RB + enrichissement Youtube 
+- #176675 Administration  [Connecteur Electre] Corrections / récupération format
+- #176058 OPAC [Univers de recherche] Optimisations sur les univers et les segments de recherche
+- #176190 Acquisitions [PHP8 / RGAA /Demandes de location] Diverses optimisations
+- #176264 Divers [PHP8 / RGAA] Diverses optimisations sur l'affichage des procédures
+- #166518 Divers [PHP8 / RGAA] Diverses optimisations sur l'affichage des statistiques OPAC
+- #176692 DSI [Historique de diffusions] Ajout du filtre sur la date de diffusion 
+- #176718 Editions [Génération code-barres] Validation des paramètres + corrections PHP8
+
+## Anomalie
+
+- #176189 Acquisitions [Demandes de location] Suppression du mail dans le bon de commande
+- #176433 Animation Optimisation du nombre de données renvoyées
+- #176542 Circulation Correction surcharge des droits d'accès
+- #176741 Divers [Cache image ] Correction erreur recuperation image en cache
+- #176522 Divers [PDF / liste de prêts] Correction du numéro de page
+- #176694 OPAC [Impression PDF] Correction d'une erreur de balise lors l'impression de la page de résultats
+- #176342 OPAC [Impression PDF] Correction de l'affichage des vignettes
+- #176537 Administration [Facettes] Correction du fonctionnement des facettes d'autorités personnalisées
+- #176511 Administration [Actions personnalisables] Correction d'exécution avec multiples "order by"
+- #176109 Administration [PHP8 / consolidation des stats] Correction fatal error
+- #176207 Autorités [Auteur] Correction du formulaire de création/modification 
+- #176719 Catalogue [Recherche multi-critères] Correction de l'ajout d'une sélection dans un panier
+- #176435 Divers [Signature électronique] Correction de la vérification de signature
+- #176346 Divers [PHP8] Optimisations / Corrections PHP8
+- #176196 Divers [RFID] Correction fatal error undefined function get_rfid_port
+- #176149 Divers Correction de l'autoload en PHP8
+- #176263 Editions [Procédures] Correction de la limitation et du tri
+- #176651 OPAC [Avis / Popup] Correction sur l'ouverture du lien
+- #176634 OPAC [Recherche par termes] Dysfonctionnement de l'auto-complétion
+- #176484 OPAC [PHP8 / Fonctions de recherche] Corrections PHP8 codes PHP des fonctions
+- #176291 OPAC [Pages FRBR] Corrections dans l'affichage des icônes de départ du graphe
+
+# CHANGE LOG
+## [8.0.1.3] - 2025-03-17
+
+## Amélioration / Évolution
+
+- #175837 Administration [Connecteur sortant OAI] Nouvelle option "Date de référence"
+- #174987 Administration [Champs personnalisés de notice] Ajout propriété "importable" 
+- #174984 Administration [Connecteur Electre] Améliorations diverses et gestion des erreurs API
+- #175898 Animation Optimisation des données
+- #175862 Autorités [Impression thesaurus] Ajout des données géographiques et des champs personnalisés 
+- #175336 Autorités [Paniers d'oeuvres / Editions avancées] Ajout de la colonne "Notices liées (identifiants)"
+- #175986 Bibloto Ajout de la mention bibloto dans le retour des prêts pour le calcul des statistiques
+- #175465 Demandes [Tableau] Correction de la lenteur d'affichage des demandes
+- #175978 Divers Suppression de la durée de validité des fichiers d'autoload
+- #175540 Divers [Vignettes] Optimisation de la récupération des vignettes
+- #175311 Administration [Exports] Reprise note de contenu export notice format Ascodocpsy
+- #174960 Divers [RGAA] Diverses optimisations dans les modules PMB
+- #175542 OPAC [RGAA / Iframe panier] Refonte du code source de l'affichage du panier
+- #175457 OPAC [RGAA / Durée de session lecteur] Message au lecteur pour prolonger la session
+- #175188 Portail [Liste de notices / Source de données étagère] Ajout des informations sur la source dans la vue depuis un répertoire de templates
+
+## Anomalie
+
+- #175903 Administration [Gestionnaire de tâches / Paniers] Ré-affichage des paramètres
+- #175555 Animation Corrections diverses dans les animations
+- #175626 Autorités [Tri] Correction de la sélection du tri dans les popups
+- #176013 Circulation [Animations] Correction lenteurs liées à la liste des animations dans la fiche lecteur
+- #175697 Circulation Correction audit création exemplaire
+- #175214 Divers [Génération de bibliographie] Optimisation du traitement des images dans les templates
+- #175473 DSI [Refonte DSI] Correction de la duplication de vues WYSIWYG imbriquées
+- #175722 OPAC [Templates de notices / sortie PDF] Correction de la fonction #expl
+- #175213 Administration [Facettes en gestion] Correction sur la suppression d'une facette
+- #175983 Administration [PHP 8 / Liste des vues OPAC] Factorisation du code source
+- #175982 Administration [Liste des vues OPAC] Correction sur l'affichage des facettes
+- #175838 Administration [Connecteurs sortants] Corrections d'affichage des autorisations sur les groupes
+- #175746 Administration [Univers de recherche] Ne pas prendre en compte les facettes de gestion
+- #175337 Autorités [Oeuvre / Expression] Correction d'affichage du permalien
+- #175181 Catalogue [Générer un transfert] Script de génération des codes barres des exemplaires fantômes
+- #175712 Divers [MFA] Correction de la génération du QRCode
+- #175183 Divers [Compatibilité PHP8 / Sécurité] Corrections
+- #174026 Divers [PHP8] Corrections / Optimisations
+- #175377 Modélisation [Contributions] Correctifs divers
+- #175904 OPAC [PHP8 ∕ Fichiers .tpl.php] Chargement des templates
+- #175568 Portail [RGAA / sémantique] Suppression du rôle main sur la div main_hors_footer
+- #175313 Portail [PHP8] Correction erreur fatale sur fonction "in_array"
+
+## Sécurité
+
+- #175458 Divers [Formulaires] Protection HTML des boutons 
+
+
+# CHANGE LOG
+## [8.0.1.2] - 2025-03-03
+
+## Amélioration / Évolution
+
+- #175098 Catalogue [Notices] Ajout d'un événement php à la création d'une sous-manifestation issue d'une nomenclature
+- #171791 Catalogue [RMC / Critères de recherche] Recherche imbriquée de notices
+- #174612 Divers [RGAA / Tableaux] Correction de la conformité des boutons
+- #174611 OPAC [RGAA / Champs personnalisés] Correction de la conformité des boutons
+- #174503 OPAC [RGAA / Tableaux] Correction de la conformité des cases à cocher dans les listes
+- #175041 Portail [H2o / Django] Ajout du filtre pmb_default pour récupérer des messages traduits
+- #174927 Portail [Construction] Ajout de balises sémantiques dans la création d'un cadre
+- #174827 Portail [Module Fil d'ariane] Ajout de la source de données "Depuis une page OPAC"
+- #174552 Portail [Pages FRBR] Ajout d'une source de données sur les champs personnalisés de notice
+- #174461 Portail [Hub de recherche] Ajout des traductions des onglets (titre, description, texte indicatif) + option pour activer ou non un onglet
+
+## Anomalie
+
+- #174873 Autorités [Autorités] Correction des types d'autorité utilisés dans la recherche par identifiant
+- #174815 OPAC [RMC Responsive] Ajout de l'opérateur "contient" sur les titres de périodiques
+- #174587 OPAC [Export mail] Affichage des vignettes de documents numériques
+- #174201 Divers [Compatibilité PHP8] Correction des transformations en entier
+- #173631 Divers Compatibilité PHP8
+- #174813 Administration [Administration] Suppression des colonnes "num_tag" dans les tables de la refonte DSI.
+- #174774 Administration [Facettes] Correction du fonctionnement des facettes d'autorités personnalisées
+- #175091 Catalogue [Facettes en gestion] Correction sur l'affichage de notices démultipliées
+- #175055 Catalogue [Audit] Correction de rechargement de l'autoloader
+- #174700 Catalogue [Contributions] Correction du nombre de contributions à modérer en catalogue
+- #174829 OPAC [RMC] Affichage de la multicritère classique dans les popups de sélection (bouton "...")
+- #174524 OPAC [RGAA / Liste de langues] Ajout de l'attribut lang sur les options du sélecteur
+- #174959 Portail [RGAA / Module ArteCampus] Mise en conformité du module et de la fenêtre d'authentification 
+
+## Sécurité
+
+- #174575 Divers Correction injection SQL
+- #174982 Divers [Vulnérabilité]  Correction de sécurité dans le programme d'installation permettant l'exécution de code à distance
+- #174980 Divers [Vulnérabilité] Inclusion de fichiers et exécution de code à distance
+
+# CHANGE LOG
+## [8.0.1.1] - 2025-02-17
+
+## Amélioration / Évolution
+
+- #173904 Divers Optimisation du chargement des vignettes des documents numériques
+- #172485 Administration Ajout d'une table db_update_logs pour journaliser les modifications de base de données
+- #155574 Administration Facettes en gestion
+- #173649 Divers Ajout des responsabilités dans les templates d'ISBD des autorités personnalisées
+- #172835 Divers [RGAA] Affichage des facettes
+- #174240 OPAC [RGAA] Affichage des actions au dessus des notices du panier
+- #174206 OPAC [RGAA / Formulaire d'inscription ou profil] Ajout des étiquettes sur les champs personnalisés
+- #173946 OPAC [Statistiques] Ajout de filtres pour exclure les robots d'indexation et éviter les doublons
+- #173533 OPAC [Recherche affiliées] Optimisations du code source
+
+## Anomalie
+
+- #173683 Demandes [Liste des demandes] Sélection de la localisation à l'enregistrement d'une demande
+- #174391 Divers Correction appel mysqli::stat()
+- #173640 DSI Correction de la liste des abonnés dans la file d’attente
+- #173568 DSI [PHP] Ajout d'une vérification à la prévisualisation d'une diffusion et l'enregistrement d'une vue
+- #173999 OPAC Correction du centrage des graphes dans leur cadre
+- #173540 OPAC [Connecteurs d'enrichissement] Correction d'une lenteur lors de l'affichage de plusieurs notices
+- #173544 Portail [Contenu éditorial] Optimisation du chargement des images
+- #173621 Catalogue [PHP8] Erreur à l'intégration des notices depuis une recherche externe
+- #174201 Divers [Compatibilité PHP8] Correction des transformations en entier
+- #173631 Divers Compatibilité PHP8
+- #173609 Divers [Compatibilité PHP 8.0] Correction des opérations mathématiques sur les chaînes de caractères
+- #174021 Portail [Liste de notices] Correction de la source de données "Notices d'un panier"
+- #174228 Acquisitions [PHP8] Correction suppression de commandes
+- #174246 Catalogue [Recherche / Mise en panier] Affichage de la couleur des paniers
+- #174070 DSI [Gestion des vues] Correction d'une erreur fatale lors de la suppression d'une vue WYSIWYG importée
+- #174373 OPAC [RGAA / Iframe] Suppression de l'attribut height (obsolète)
+- #174369 OPAC [RGAA / Templates Django] Correction de la conformité des cases à cocher sur les résultats de notices
+- #174349 OPAC [RGAA / Facettes] Ajout d'étiquettes sur les cases à cocher
+
+## Nouvelle fonctionnalité
+
+- #174064 Administration [Facettes en gestion] Mémorisation des valeurs par défaut
+- #173330 Divers Refonte/Factorisation de l'affichage de paginateurs
+
+## Sécurité
+
+- #173889 Divers Mise à jour librairies PHP externes (vendor)
+
+# CHANGE LOG
+## [V8.0.1.0] - 2025-01-28
+
+## Amélioration / Évolution
+
+- #173550 Divers Modification de la gestion des fichiers changelogs
+- #173492 Divers Ajout de libellés explicites pour les critères d'autorités liées
+- #173459 OPAC [Style itst] Suppression de la charte
+

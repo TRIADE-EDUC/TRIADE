@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax.inc.php,v 1.8 2017-11-29 11:18:17 mbertin Exp $
+// $Id: ajax.inc.php,v 1.9 2020/11/04 14:37:13 dbellamy Exp $
 
 /***********************************************
  *function ajax_http_send_response
@@ -17,7 +17,7 @@
 function ajax_http_send_response($ack='',$type='text/html'){
 	global $charset;
 	if(is_array($ack) || is_object($ack)){
-		header("Content-Type: application/json; charset=$charset");
+		header("Content-Type: application/json; charset=utf-8");
 		print json_encode($ack);
 	}else{
 		header("Content-Type: $type; charset=$charset");

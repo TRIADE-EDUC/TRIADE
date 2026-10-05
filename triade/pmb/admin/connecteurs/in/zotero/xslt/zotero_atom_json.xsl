@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: zotero_atom_json.xsl,v 1.4 2018-01-09 14:05:11 jpermanne Exp $ -->
+$Id: zotero_atom_json.xsl,v 1.4 2018/01/09 14:05:11 jpermanne Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 	

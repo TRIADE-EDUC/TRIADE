@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_monitoring_website.class.php,v 1.2 2017-08-23 07:29:05 ngantier Exp $
+// $Id: docwatch_selector_monitoring_website.class.php,v 1.2 2017/08/23 07:29:05 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

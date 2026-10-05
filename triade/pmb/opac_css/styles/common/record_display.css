@@ -144,7 +144,7 @@
 span.imgComment,
 span.imgStatutPartN,
 span.imgDocNum {
-	background-color: #787878;
+	background-color: #797676;
 	padding: 6px 8px;
 	display: inline-block;
 }
@@ -212,7 +212,7 @@ span.imgTag,
 span.imgSuggest,
 .listeLectureN a span:first-child,
 span.ExtnotCom.imgListeLecture {
-	background-color: #787878;
+	background-color: #797676;
 	display: inline-block;
 	padding: 3px 8px;
 }
@@ -241,7 +241,7 @@ a.listeLectureN span{
 /*                            Panier                        */
 /* ---------------------------------------------------------*/
 .onglet_basketNotCourte .img_basketNotCourte img {
-	background-color: #787878;
+	background-color: #797676;
 	padding: 7px;
 	margin-right: 7px;
 	vertical-align: middle;
@@ -355,7 +355,7 @@ span.StatutPartN {
 }
 
 #blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a {
-	background: #787878;
+	background: #797676;
 }
 
 #blocNotice_descr ul.onglets_isbd_publicNot .isbd_public_active a span {
@@ -385,7 +385,7 @@ span.StatutPartN {
 }
 
 #blocNotice_descr ul.onglets_isbd_publicNot li:hover {
-	background: #787878;
+	background: #797676;
 }
 
 #blocNotice_descr ul.onglets_isbd_publicNot li:hover a span {
@@ -411,7 +411,7 @@ span.StatutPartN {
 }
 
 .onglet_basketNot .img_basketNot img {
-	background-color: #787878;
+	background-color: #797676;
 	padding: 7px 8px;
 	vertical-align: middle;
 	margin-right: 7px;
@@ -545,7 +545,7 @@ div[class='suggestN'],
 div[class='docnumNCourte docnumNCourtePermalink'],
 div[class='docnumNCourte'],
 div[class='listeLectureN'] a{
-	background-color: #787878;
+	background-color: #797676;
 }
 
 div.lienP, 
@@ -573,7 +573,7 @@ div[class='listeLectureN'] a{
 	line-height: 23px;
 }
 div[class='onglet_basketNotCourte'] a span:nth-child(1){
-	background-color: #787878;
+	background-color: #797676;
 }
 div[class='avisNCourte'] span:nth-child(1){
 	padding: 3px 8px;

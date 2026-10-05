@@ -1,16 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_reader_loans_ticket_PDF.class.php,v 1.2 2019-04-26 15:59:53 dgoron Exp $
+// $Id: lettre_reader_loans_ticket_PDF.class.php,v 1.3.10.1 2024/06/06 13:51:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/pdf/reader/lettre_reader_PDF.class.php");
 
 class lettre_reader_loans_ticket_PDF extends lettre_reader_PDF {
 	
-	protected function get_parameter_prefix() {
+    protected static function get_parameter_prefix() {
 		return "pdflettreticket";
 	}
 	
@@ -31,6 +32,9 @@ class lettre_reader_loans_ticket_PDF extends lettre_reader_PDF {
 	public function doLettre($id_empr) {
 		global $cb_doc;
 		global $msg;
+		
+		//Génération de la lettre dans la langue du lecteur
+		$this->set_language(emprunteur::get_lang_empr($id_empr));
 		
 		$this->PDF->addPage();
 		
@@ -67,7 +71,7 @@ class lettre_reader_loans_ticket_PDF extends lettre_reader_PDF {
 				$i++;
 			}
 		
-			// Impression des rÃ©servations en cours
+			// Impression des réservations en cours
 			$rqt = "select resa_idnotice, resa_idbulletin from resa where resa_idempr='".$id_empr."' " ;
 			$req = pmb_mysql_query($rqt); 
 			if (pmb_mysql_num_rows($req) > 0) {
@@ -100,7 +104,7 @@ class lettre_reader_loans_ticket_PDF extends lettre_reader_PDF {
 					$this->display_not_bull_info_resa($id_empr, $data['resa_idnotice'],$data['resa_idbulletin'],0,$pos_page, 65);
 					$i++;
 				}
-			} // fin if rÃ©sas
+			} // fin if résas
 		
 		} else {
 			$this->PDF->SetXY (10,80+$offsety);
@@ -109,5 +113,7 @@ class lettre_reader_loans_ticket_PDF extends lettre_reader_PDF {
 		
 			$this->display_expl_info($cb_doc,0,100+$offsety,0,65);
 		}
+		//Restauration de la langue de l'interface
+		$this->restaure_language();
 	}
 }

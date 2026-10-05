@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_ui.tpl.php,v 1.3 2017-11-21 14:05:52 dgoron Exp $
+// $Id: onto_common_ui.tpl.php,v 1.4 2019/10/14 09:28:44 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -11,7 +11,7 @@ global $ontology_tpl,$msg,$base_path;
 $ontology_tpl['list']='
 <div class="row">
 	<script type="javascript" src="./javascript/sorttable.js"></script>
-	<table class="sorttable">
+	<table class="sortable">
 		<tr>
 			<th>!!list_header!!</th>
 		</tr>

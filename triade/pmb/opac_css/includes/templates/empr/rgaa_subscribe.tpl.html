@@ -1,0 +1,282 @@
+{% extends 'rgaa_profil.tpl.html' %}
+<!-- $Id: rgaa_subscribe.tpl.html,v 1.5.2.1 2024/06/28 14:04:40 jparis Exp $ -->
+
+{% block intro %}
+    {% if empr.id_empr %}
+    {% else %}
+        {{ msg.rgaa_subs_intro_services }}
+        {{ msg.subs_intro_explication | replace '!!nb_h_valid!!' empr.opac_websubscribe_valid_limit }}
+    {% endif %}
+{% endblock %}
+
+{% block profil_form %}
+    <form name='empr_form' id="empr_form" method='POST' action='./subscribe.php?subsact=inscrire'>
+{% endblock %}
+
+{% block empr_nom %}
+    <tr {% if empr.renewal_form_fields.empr_nom.explanation %} title="{{ empr.renewal_form_fields.empr_nom.explanation }}"{% endif %} >
+        <td><label for="empr_nom" class="subscribe_field_mandatory">{{msg.subs_f_nom}}</label> :</td>
+        <td>
+            <input id="empr_nom" name="{{ prefix_name }}nom{{ suffix_name }}" type="text" value="{{ empr.empr_nom }}" required/>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block empr_prenom %}
+    <tr {% if empr.renewal_form_fields.empr_prenom.explanation %} title="{{ empr.renewal_form_fields.empr_prenom.explanation }}"{% endif %} >
+        <td><label for="empr_prenom" class="subscribe_field_mandatory">{{ msg.subs_f_prenom}}</label> :</td>
+        <td>
+            <input id="empr_prenom" name="{{ prefix_name }}prenom{{ suffix_name }}" type="text" value="{{ empr.empr_prenom }}" required/>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block empr_mail %}
+    <tr {% if empr.renewal_form_fields.empr_mail.explanation %} title="{{ empr.renewal_form_fields.empr_mail.explanation }}"{% endif %} >
+        <td><label for="empr_mail" class="subscribe_field_mandatory">{{ msg.subs_f_email}}</label> :</td>
+        <td>
+            <input id="empr_mail" name="{{ prefix_name }}mail{{ suffix_name }}[0]" type="email" value="{{ empr.empr_mail.0 }}" required />
+            <div class='helper' id="empr_mail_helper"></div>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block empr_login %}
+    <tr {% if empr.renewal_form_fields.empr_login.explanation %} title="{{ empr.renewal_form_fields.empr_login.explanation }}"{% endif %} >
+        <td><label for="empr_login" class="subscribe_field_mandatory">{{ msg.subs_f_login}}</label> :</td>
+        <td>
+            <input id="empr_login" name="{{ prefix_name }}login{{ suffix_name }}" type="text" value="{{ empr.empr_login }}" autocomplete="off" required />
+            <div class='helper' id="empr_login_helper"></div>
+        </td>
+    </tr>
+    <tr>
+        <td><label for="empr_password" class="subscribe_field_mandatory">{{ msg.subs_f_password}}</label> :</td>
+        <td>
+            <input id="empr_password" name="{{ prefix_name }}password{{ suffix_name }}" type="password" value="" autocomplete="new-password" required />
+            <button title='{{ msg.rgaa_password_field_desc }}' class="btn-icon" type="button" onclick='toggle_password(this.children[0], "empr_password");'>
+                <i class='fa fa-eye' aria-hidden="true"></i>
+            </button>
+            <div class='helper' id="new_password_helper"></div>
+        </td>
+    </tr>
+    <tr>
+        <td><label for="empr_passwordv" class="subscribe_field_mandatory">{{ msg.subs_f_passwordv}}</label> :</td>
+        <td>
+            <input id="empr_passwordv" name="{{ prefix_name }}passwordv{{ suffix_name }}" type="password" value="" autocomplete="new-password" required />
+            <button title="{{ msg.rgaa_password_field_desc }}" class="btn-icon" type="button" onclick='toggle_password(this.children[0], "empr_passwordv");'>
+                <i class='fa fa-eye' aria-hidden="true"></i>
+            </button>
+            <div class='helper' id="empr_password_helper"></div>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block profil_buttons %}
+    <div>
+        <input type='checkbox' required id='empr_consent_message' name='{{ prefix_name }}consent_message{{ suffix_name }}' value='1'/> 
+        <span class='websubscribe_consent_message'><label for='empr_consent_message'>{{ msg.subs_f_consent_message}}</label></span>
+
+        <br/>
+        <input type='submit' class='bouton' value="{{ msg.subs_bouton_form}}" />
+    </div>
+{% endblock %}
+
+{% block profil_script %}
+{% endblock %}
+
+{% block empr_location %}
+    {% if empr.renewal_form_fields.empr_location.display %}
+        <tr {% if empr.renewal_form_fields.empr_location.explanation %} title="{{ empr.renewal_form_fields.empr_location.explanation }}"{% endif %} >
+            <td>
+                <label for="empr_mail" {% if empr.renewal_form_fields.empr_location.mandatory %}class="subscribe_field_mandatory"{% endif %}>
+                    {{ msg.profil_empr_location }} :
+                </label>
+            </td>
+            <td>
+                {% sqlvalue locations %}
+                    select idlocation as id, location_libelle as libelle from docs_location where location_visible_opac=1 order by location_libelle
+                {% endsqlvalue %}
+                <select id="empr_location" name="{{ prefix_name }}location{{ suffix_name }}" {% if empr.renewal_form_fields.empr_location.mandatory %}required{% endif %} {% if !empr.renewal_form_fields.empr_location.alterable %}disabled onclick="return false;"{% endif %}>
+                    {% for location in locations %}
+                        <option value="{{ location.id }}"{% if empr.empr_location == location.id %}selected="selected"{% else %}{%if global.opac_websubscribe_empr_location ==  location.id %}selected="selected"{% endif %}{% endif %}>{{ location.libelle }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+    {% endif %}
+{% endblock %}
+
+{% block mail_script %}
+{% endblock %}
+
+{% block username_with_mail_script %}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const REPLACE_WITH_MAIL = '{{ global.empr_username_with_mail }}';
+
+			const empr_login = document.getElementById('empr_login');
+			const empr_mail = document.getElementById('empr_mail');
+
+			if (empr_login && empr_mail && REPLACE_WITH_MAIL == 1) {
+				empr_login.readOnly = true;
+				empr_mail.addEventListener('input', () => empr_login.value = empr_mail.value);
+			}
+		});
+	</script>
+{% endblock %}
+
+{% block check_subscribe_script %}
+    <script>
+
+        function check_empr_password() {
+            let empr_password = document.getElementById('empr_password').value;
+            let error = false;
+            let helper = document.getElementById('empr_password_helper');
+            let helper_msg = '';
+
+            let r = new RegExp("{{ global.opac_websubscribe_password_regexp }}");
+            if(false == r.test(empr_password)) {
+                helper_msg = '{{ msg.empr_password_bad_security | escape }}';
+                error = true;
+            }
+            if(!error) {
+                let empr_passwordv =  document.getElementById('empr_passwordv').value;              
+                if(empr_password != empr_passwordv) {
+                    helper_msg = '{{ msg.subs_form_bad_passwords | escape }}';
+                    error = true;
+                }
+            }
+            helper.innerHTML = helper_msg;
+            return !error;
+        }
+
+        function check_empr_mail() {
+            let empr_mail = document.getElementById('empr_mail').value;
+            let error = false;
+            let helper = document.getElementById('empr_mail_helper');
+            let helper_msg = '';
+
+            if(!is_valid_mail(empr_mail)) {
+                helper_msg = '{{ msg.subs_mail_error | escape }}';
+                error = true;
+            }
+            if(!error) {
+                let xhr = new http_request();
+                let url = "./ajax.php?module=ajax&categ=empr&sub=check_mail_uniqueness&query_id_empr={{ id_empr }}&query_empr_mail="+empr_mail;
+                url = encodeURI(url);
+                xhr.request(url, );
+
+                if(1 != xhr.get_text()) {
+                    helper_msg = '{{ msg.subs_mail_allready_used_error | escape }}';
+                    error = true;
+                }
+            }
+            helper.innerHTML = helper_msg;
+            return !error;
+        }
+
+    </script>
+{% endblock %}
+
+{% block check_script %}
+    <script>
+        var enabled_password_rules = {{ password_rules }};
+
+        function check_before_submit(e) {
+            if (!check_empr_login()) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            };
+            if(!check_empr_password()) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            if(!check_empr_mail()) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+        }
+
+    function check_new_password() {
+
+            let new_password = document.getElementById('empr_password').value;
+            let new_password_helper = document.getElementById('new_password_helper');
+            let nb_rules = enabled_password_rules.length;
+            let error_msg = [];
+            let password_enabled = true;
+
+            if(0 == nb_rules) {
+                return password_enabled;
+            }
+
+            for(let i = 0; i < nb_rules; i++) {
+                let rule = enabled_password_rules[i];
+                switch (rule.type) {
+                    case 'class' :
+                        if( '' != rule.value) {
+                            if(rule.value == new_password) {
+                                error_msg.push(rule.error_msg);
+                                password_enabled = false;
+                            }
+                        }
+                        break;
+                    case 'regexp' :
+                        if( '' != rule.regexp ) {
+                            let regexp = new RegExp(rule.regexp);
+                            if( !regexp.test(new_password) ) {
+                                error_msg.push(rule.error_msg);
+                                password_enabled = false;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if(true == password_enabled) {
+                new_password_helper.innerHTML = ''; 
+                return true;
+            }
+
+            if(0 == error_msg.length) {
+                new_password_helper.innerHTML = ''; 
+            } else {
+                let helper_msg = error_msg.join('<br />');
+                new_password_helper.innerHTML = helper_msg;
+            }
+            return false;
+        }
+
+        let check_timeout = null;
+        try {
+            document.getElementById('empr_login').addEventListener('input',   function(e) {
+                clearTimeout(check_timeout);
+                check_timeout = setTimeout(function() {
+                    check_empr_login();
+                }, 1000);
+            });
+            document.getElementById('empr_password').addEventListener('input', function(e) {
+                clearTimeout(check_timeout);
+                check_timeout = setTimeout(function() {
+                    check_new_password();
+                }, 1000);
+            });
+            document.getElementById('empr_passwordv').addEventListener('input', function(e) {
+                clearTimeout(check_timeout);
+                check_timeout = setTimeout(function() {
+                    check_empr_password();
+                }, 1000);
+            });
+            document.getElementById('empr_mail').addEventListener('input', function(e) {
+                clearTimeout(check_timeout);
+                check_timeout = setTimeout(function() {
+                    check_empr_mail();
+                }, 1000);
+            });
+            document.getElementById('empr_form').addEventListener('submit', check_before_submit);
+        } catch(err) {}
+
+    </script>
+{% endblock %}

@@ -2,20 +2,19 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: metapace.class.php,v 1.4 2014-05-12 15:28:40 dbellamy Exp $
+// $Id: metapace.class.php,v 1.6 2019/12/30 15:58:50 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 global $include_path;
-@ini_set('zend.ze1_compatibility_mode',0);
 
 require_once($include_path."/h2o/h2o.php");
 
 class metapace {
 	
-	public $data;	// info biblo, empr, expl utile Ã  l'impression
+	public $data;	// info biblo, empr, expl utile à l'impression
 
 	
-	function gen_print($data,$tpl=''){
+	public function gen_print($data,$tpl=''){
 	global $msg;
 
 	$default_template = 
@@ -48,7 +47,7 @@ Emprunteur:
 	}
 
 	
-	function gen_print_transactions($data,$tpl=''){
+	public function gen_print_transactions($data,$tpl=''){
 		global $msg,$pmb_gestion_devise;
 	
 		$default_template = 
@@ -79,7 +78,7 @@ Emprunteur:
 	}
 	
 	
-	function gen_print_card($data,$tpl=''){
+	public function gen_print_card($data,$tpl=''){
 		global $msg;
 
 		$default_template = 

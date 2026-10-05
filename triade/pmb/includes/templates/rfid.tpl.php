@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rfid.tpl.php,v 1.14 2019-05-27 13:23:17 ngantier Exp $
+// $Id: rfid.tpl.php,v 1.15 2021/05/03 07:59:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -96,8 +96,6 @@ $rfid_js_header
 		document.getElementById('table_cb').appendChild(tr);
 	}
 </script>
-
-<h1>".$msg['rfid_programmation_etiquette_titre']."</h1>
 <form class='form-$current_module' name='rfid_prog' onSubmit='commit_cb();return false;' >
 <h3>".$msg['rfid_programmation_etiquette_titre_form']."</h3>
 <div class='form-contenu'>
@@ -157,8 +155,6 @@ $rfid_js_header
 	}
 
 </script>
-
-<h1>".$msg['rfid_effacement_etiquette_titre']."</h1>
 <form class='form-$current_module' name='rfid_prog' onSubmit='commit_cb();return false;' >
 <h3>".$msg['rfid_effacement_etiquette_titre']."</h3>
 <div class='form-contenu'>
@@ -183,7 +179,7 @@ $rfid_js_header
 	
 	function f_lecteur(cb) {
 		var i;	
-		// il y a une ou plusieurs Ã©tiquette rfid		
+		// il y a une ou plusieurs étiquette rfid		
 		del_ligne_lecteur();
 		for (i=0; i < cb.length; i++) {		
 			add_ligne_lecteur( cb[i]);
@@ -194,7 +190,7 @@ $rfid_js_header
 	function f_expl(cb,index,indexcount,antivol) {
 		var i;
 		var info='';
-		// il y a une ou plusieurs Ã©tiquette rfid
+		// il y a une ou plusieurs étiquette rfid
 		del_ligne();
 
 		for (i=0; i < cb.length; i++) {		
@@ -274,8 +270,6 @@ $rfid_js_header
 		document.getElementById('table_lecteur').appendChild(tr);
 	}
 </script>
-
-<h1>".$msg['rfid_lecture_etiquette_titre']."</h1>
 <form class='form-$current_module' name='rfid_prog' onSubmit='commit_cb();return false;' >
 <h3>".$msg['rfid_lecture_etiquette_titre_form']." ( ".$_SERVER['REMOTE_ADDR']." )</h3>
 <div class='form-contenu'>

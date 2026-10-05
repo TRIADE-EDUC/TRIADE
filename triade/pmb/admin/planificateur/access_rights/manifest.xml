@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- gestion des commandes lors des nettoyages
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2020/04/22 08:49:33 dgoron Exp $ -->
+
+<manifest>
+	<capacities>
+		<nostates>
+			<state name="STOPPED"/>
+		</nostates>
+		<states>
+			<state name="STOPPED">
+				<nocommand commands="RESUME"/>
+			</state><!--
+			<state name="SUSPENDED">
+				<nextState commands="FLUSH">SUSPENDED</nextState>
+			</state>
+		--></states>
+		<commands/>
+	</capacities>
+	<directory_upload>0</directory_upload>
+</manifest>

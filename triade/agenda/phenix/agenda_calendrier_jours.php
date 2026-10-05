@@ -51,7 +51,7 @@
     $anneeEnCours = date("Y", $sd_new);
 
     // Recuperation des evenements personnalises a notifier dans le calendrier (sert aussi pour le planning mensuel global)
-    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+    $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
     $tabEvenementDate = array();
     // Initialisation du tableau des couleurs des jours a vide
     $nbJourMois = date("t",$sd_new);
@@ -76,7 +76,7 @@
     }
 
     // Recuperation des infos de timezone de l'utilisateur
-    $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2, ${PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
+    $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2, {$PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
     $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
     $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
     $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -240,16 +240,16 @@
 
   // Recherche des jours du mois courant avec une note ou un anniversaire (agenda et calepin)
   $tabOccupe = array();
-  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." AND ($age_date LIKE '".$anneeEnCours."-".$moisEnCours."-%' OR (age_date LIKE '%-".$moisEnCours."-%' AND DATE_FORMAT(age_date,'%Y%m')<=".date("Ym",mktime(0,0,0,$moisEnCours, 1, $anneeEnCours))." AND age_aty_id=1))");
+  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(IF(age_aty_id=1,age_date,$age_date),'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." AND ($age_date LIKE '".$anneeEnCours."-".$moisEnCours."-%' OR (age_date LIKE '%-".$moisEnCours."-%' AND DATE_FORMAT(age_date,'%Y%m')<=".date("Ym",mktime(0,0,0,$moisEnCours, 1, $anneeEnCours))." AND age_aty_id=1))");
   while ($enr=$DB_CX->DbNextRow()) {
     $tabOccupe[$enr['jour']]=1;
   }
   // Recherche des notes a cheval
-  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." AND ($age_dateAvant LIKE '".$anneeEnCours."-".$moisEnCours."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)");
+  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT($age_dateAvant,'%e') AS jour FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." AND ($age_dateAvant LIKE '".$anneeEnCours."-".$moisEnCours."-%' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2)");
   while ($enr=$DB_CX->DbNextRow()) {
     $tabOccupe[$enr['jour']]=1;
   }
-  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisEnCours."-%' AND DATE_FORMAT(cal_date_naissance,'%Y%m')<=".date("Ym",mktime(0,0,0,$moisEnCours, 1, $anneeEnCours)));
+  $DB_CX->DbQuery("SELECT DISTINCT DATE_FORMAT(cal_date_naissance,'%e') AS jour FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".(($tcMenu<_MENU_CONTACT) ? $USER_SUBSTITUE : $idUser)." OR cal_partage='O') AND cal_date_naissance LIKE '%-".$moisEnCours."-%' AND DATE_FORMAT(cal_date_naissance,'%Y%m')<=".date("Ym",mktime(0,0,0,$moisEnCours, 1, $anneeEnCours)));
   while ($enr=$DB_CX->DbNextRow()) {
     $tabOccupe[$enr['jour']]=1;
   }

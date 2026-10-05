@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: script_analytics.js,v 1.6 2019-05-11 08:38:44 dgoron Exp $
+// $Id: script_analytics.js,v 1.8 2021/03/09 14:52:02 arenou Exp $
 
 
 var scriptAnalytics = {}
@@ -92,6 +92,7 @@ scriptAnalytics.CookieConsent = function() {
         div.setAttribute('id','script_analytics');
         div.setAttribute('align','center');
         div.innerHTML = "<div id='script_analytics_content'>"+pmbDojo.messages.getMessage("opac","opac_dnt_enabled")+
+        "<button style='text-decoration:underline;' name='dnt-confirm' onclick='scriptAnalytics.CookieConsent.dntConfirm();' id='dnt-confirm-button'>"+msg_script_analytics_button_dnt_confirm+"</button>" +
         "</div>";
         bodytag.appendChild(div);
     }
@@ -149,8 +150,9 @@ scriptAnalytics.CookieConsent = function() {
     return {
         
     	accept: function() {
-    		document.cookie = disableStr + '=true;'+ getCookieExpireDate() +' ; path=/';       
-    		document.cookie = 'PhpMyBibli-COOKIECONSENT=true;'+ getCookieExpireDate() +' ; path=/';
+    		let  secure = location.protocol=='https:'? '; secure=true' : '';
+    		document.cookie = disableStr + '=true;'+ getCookieExpireDate() +' ; path=/'+secure;      
+    		document.cookie = 'PhpMyBibli-COOKIECONSENT=true;'+ getCookieExpireDate() +' ; path=/'+secure;
     		var div = document.getElementById('script_analytics');
     		// Message affich� apr�s que l'utilisateur est accept�
     		if ( div!= null ) div.innerHTML = '';
@@ -159,14 +161,25 @@ scriptAnalytics.CookieConsent = function() {
     	},
        
     	opposite: function() {
-    		document.cookie = disableStr + '=true;'+ getCookieExpireDate() +' ; path=/';       
-	        document.cookie = 'PhpMyBibli-COOKIECONSENT=false;'+ getCookieExpireDate() +' ; path=/';
+    		let  secure = location.protocol=='https:'? '; secure=true' : '';
+    		document.cookie = disableStr + '=true;'+ getCookieExpireDate() +' ; path=/'+secure;
+	        document.cookie = 'PhpMyBibli-COOKIECONSENT=false;'+ getCookieExpireDate() +' ; path=/'+secure
 	        var div = document.getElementById('script_analytics');
 	        // Message affich� apr�s que l'utilisateur se soit oppos�
 	        if ( div!= null ) div.innerHTML = ''
 	        window[disableStr] = true;
 	        deleteAnalyticsCookies();
 	    },
+	    
+	    dntConfirm: function() {
+	    	let  secure = location.protocol=='https:'? '; secure=true' : '';
+    		document.cookie = disableStr + '=true;'+ getCookieExpireDate() +' ; path=/'+secure;   
+	        document.cookie = 'PhpMyBibli-COOKIECONSENT=false;'+ getCookieExpireDate() +' ; path=/'+secure;
+    		var div = document.getElementById('script_analytics');
+    		// Message affiché après que l'utilisateur est accepté
+    		if ( div!= null ) div.innerHTML = '';
+    		window[disableStr] = true;
+    	},
         
 	    showInform: function() {
 	    	var div = document.getElementById("inform_and_ask");

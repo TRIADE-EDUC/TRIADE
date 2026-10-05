@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: openurl_mapping.xml,v 1.1 2011-08-02 12:36:00 arenou Exp $ -->
+$Id: openurl_mapping.xml,v 1.1 2011/08/02 12:36:00 arenou Exp $ -->
 
 <map>
 	<item uri="info:ofi" class="root"/>

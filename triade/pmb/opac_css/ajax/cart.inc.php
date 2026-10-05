@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart.inc.php,v 1.1 2017-02-14 09:37:37 dgoron Exp $
+// $Id: cart.inc.php,v 1.1.20.1 2025/02/13 07:33:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $opac_integrate_anonymous_cart, $action, $msg;
 
 if ($opac_integrate_anonymous_cart && $_SESSION['cart_anonymous']) {
 	switch ($action) {

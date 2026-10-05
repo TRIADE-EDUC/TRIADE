@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
 
 <!-- 
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
+$Id: champs_base.xml,v 1.52 2024/04/05 07:39:31 dbellamy Exp $ -->
 
 <indexation>
 
@@ -98,7 +97,7 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 
 	<field name="275" id="015" pond="100">
 		<table>
-			<tablefield>lien</tablefield>
+			<tablefield>if(lien='',"msg:notice_has_no_link","msg:notice_has_link")</tablefield>
 		</table>
 	</field>
 
@@ -214,15 +213,37 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 	
 	<!-- table bulletins
 	<field name="abts_onglet_bull" external="yes" id="022" datatype="bulletin">
-		<table>bulletins</table>
-		<tablefield id="01" pond="5">bulletin_numero</tablefield>
-		<tablefield id="02" pond="5">mention_date</tablefield>
-		<tablefield id="03" pond="5">date_date</tablefield>
-		<tablefield id="04" pond="5">bulletin_titre</tablefield>
-		<tablekey>bulletin_notice</tablekey>
-		<link type="1n">
-			<referencefield>notice_id</referencefield>
-		</link>
+		<table name="analysis">
+			<tablefield id="01" name="4025" pond="5">bulletin_numero</tablefield>
+			<tablefield id="02" name="bulletin_mention_periode" pond="5">mention_date</tablefield>
+			<tablefield id="03" name="4026" pond="5">date_date</tablefield>
+			<tablefield id="04" name="bulletin_mention_titre" pond="5">bulletin_titre</tablefield>
+			<tablekey>analysis_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+			<link type="n1">
+				<table>bulletins</table>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>analysis_bulletin</externalfield>
+			</link>
+			<link type="n1" >
+				<table alias='perio'>notices</table>
+				<tablekey>notice_id</tablekey>
+				<externaltable>bulletins</externaltable>
+				<externalfield>bulletin_notice</externalfield>
+			</link>
+		</table>
+		<table name="bulletins">
+			<tablefield id="01" name="4025" pond="5">bulletin_numero</tablefield>
+			<tablefield id="02" name="bulletin_mention_periode" pond="5">mention_date</tablefield>
+			<tablefield id="03" name="4026" pond="5">date_date</tablefield>
+			<tablefield id="04" name="bulletin_mention_titre" pond="5">bulletin_titre</tablefield>
+			<tablekey>bulletin_notice</tablekey>
+			<link type="1n">
+				<referencefield>notice_id</referencefield>
+			</link>
+		</table>
 	</field> -->
 	
 	<!-- table series -->
@@ -463,11 +484,11 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<filter>(notices.niveau_biblio='a' and notices.niveau_hierar=2)</filter>
 			<tablefield name="extexpl_codebar" id="01" pond="100">expl_cb</tablefield>
 			<tablefield name="extexpl_cote" id="02" pond="100">expl_cote</tablefield>
-			<tablefield name="extexpl_section" id="03" pond="100">section_libelle</tablefield>
-			<tablefield name="extexpl_location" id="04" pond="100">location_libelle</tablefield>
-			<tablefield name="extexpl_statut" id="05" pond="100">statut_libelle</tablefield>
-			<tablefield name="extexpl_doctype" id="06" pond="100">tdoc_libelle</tablefield>
-			<tablefield name="empr_tpl_stat" id="07" pond="100">codestat_libelle</tablefield>
+			<tablefield name="extexpl_section" id="03" pond="100" translation="docs_section.idsection" ifEmpty="section_libelle">section_libelle_opac</tablefield>
+			<tablefield name="extexpl_location" id="04" pond="100" translation="docs_location.idlocation">location_libelle</tablefield>
+			<tablefield name="extexpl_statut" id="05" pond="100" translation="docs_statut.idstatut" ifEmpty="statut_libelle">statut_libelle_opac</tablefield>
+			<tablefield name="extexpl_doctype" id="06" pond="100" translation="docs_type.idtyp_doc">tdoc_libelle</tablefield>
+			<tablefield name="empr_tpl_stat" id="07" pond="100" translation="docs_codestat.idcode">codestat_libelle</tablefield>
 			<tablefield name="proprietary_search" id="08" pond="100">lender_libelle</tablefield>
 			<!-- A activer dans le fichier subst si l'on veut indexer l'exemplaire avec les sur-localisations -->
 			<!-- <tablefield name="expl_header_surloc_libelle" id="09" pond="100">surloc_libelle</tablefield> -->
@@ -539,11 +560,11 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
 			<tablefield name="extexpl_codebar" id="01" pond="100">expl_cb</tablefield>
 			<tablefield name="extexpl_cote" id="02" pond="100">expl_cote</tablefield>
-			<tablefield name="extexpl_section" id="03" pond="100">section_libelle</tablefield>
-			<tablefield name="extexpl_location" id="04" pond="100">location_libelle</tablefield>
-			<tablefield name="extexpl_statut" id="05" pond="100">statut_libelle</tablefield>
-			<tablefield name="extexpl_doctype" id="06" pond="100">tdoc_libelle</tablefield>
-			<tablefield name="empr_tpl_stat" id="07" pond="100">codestat_libelle</tablefield>
+			<tablefield name="extexpl_section" id="03" pond="100" translation="docs_section.idsection" ifEmpty="section_libelle">section_libelle_opac</tablefield>
+			<tablefield name="extexpl_location" id="04" pond="100" translation="docs_location.idlocation">location_libelle</tablefield>
+			<tablefield name="extexpl_statut" id="05" pond="100" translation="docs_statut.idstatut" ifEmpty="statut_libelle">statut_libelle_opac</tablefield>
+			<tablefield name="extexpl_doctype" id="06" pond="100" translation="docs_type.idtyp_doc">tdoc_libelle</tablefield>
+			<tablefield name="empr_tpl_stat" id="07" pond="100" translation="docs_codestat.idcode">codestat_libelle</tablefield>
 			<tablefield name="proprietary_search" id="08" pond="100">lender_libelle</tablefield>
 			<!-- A activer dans le fichier subst si l'on veut indexer l'exemplaire avec les sur-localisations -->
 			<!-- <tablefield name="expl_header_surloc_libelle" id="09" pond="100">surloc_libelle</tablefield> -->
@@ -602,11 +623,11 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<filter>(notices.niveau_biblio='m' and notices.niveau_hierar=0)</filter>
 			<tablefield name="extexpl_codebar" id="01" pond="100">expl_cb</tablefield>
 			<tablefield name="extexpl_cote" id="02" pond="100">expl_cote</tablefield>
-			<tablefield name="extexpl_section" id="03" pond="100">section_libelle</tablefield>
-			<tablefield name="extexpl_location" id="04" pond="100">location_libelle</tablefield>
-			<tablefield name="extexpl_statut" id="05" pond="100">statut_libelle</tablefield>
-			<tablefield name="extexpl_doctype" id="06" pond="100">tdoc_libelle</tablefield>
-			<tablefield name="empr_tpl_stat" id="07" pond="100">codestat_libelle</tablefield>
+			<tablefield name="extexpl_section" id="03" pond="100" translation="docs_section.idsection" ifEmpty="section_libelle">section_libelle_opac</tablefield>
+			<tablefield name="extexpl_location" id="04" pond="100" translation="docs_location.idlocation">location_libelle</tablefield>
+			<tablefield name="extexpl_statut" id="05" pond="100" translation="docs_statut.idstatut" ifEmpty="statut_libelle">statut_libelle_opac</tablefield>
+			<tablefield name="extexpl_doctype" id="06" pond="100" translation="docs_type.idtyp_doc">tdoc_libelle</tablefield>
+			<tablefield name="empr_tpl_stat" id="07" pond="100" translation="docs_codestat.idcode">codestat_libelle</tablefield>
 			<tablefield name="proprietary_search" id="08" pond="100">lender_libelle</tablefield>
 			<!-- A activer dans le fichier subst si l'on veut indexer l'exemplaire avec les sur-localisations -->
 			<!-- <tablefield name="expl_header_surloc_libelle" id="09" pond="100">surloc_libelle</tablefield> -->
@@ -662,11 +683,11 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<filter>(notices.niveau_biblio='s' and notices.niveau_hierar=1)</filter>
 			<tablefield name="extexpl_codebar" id="01" pond="100">expl_cb</tablefield>
 			<tablefield name="extexpl_cote" id="02" pond="100">expl_cote</tablefield>
-			<tablefield name="extexpl_section" id="03" pond="100">section_libelle</tablefield>
-			<tablefield name="extexpl_location" id="04" pond="100">location_libelle</tablefield>
-			<tablefield name="extexpl_statut" id="05" pond="100">statut_libelle</tablefield>
-			<tablefield name="extexpl_doctype" id="06" pond="100">tdoc_libelle</tablefield>
-			<tablefield name="empr_tpl_stat" id="07" pond="100">codestat_libelle</tablefield>
+			<tablefield name="extexpl_section" id="03" pond="100" translation="docs_section.idsection" ifEmpty="section_libelle">section_libelle_opac</tablefield>
+			<tablefield name="extexpl_location" id="04" pond="100" translation="docs_location.idlocation">location_libelle</tablefield>
+			<tablefield name="extexpl_statut" id="05" pond="100" translation="docs_statut.idstatut" ifEmpty="statut_libelle">statut_libelle_opac</tablefield>
+			<tablefield name="extexpl_doctype" id="06" pond="100" translation="docs_type.idtyp_doc">tdoc_libelle</tablefield>
+			<tablefield name="empr_tpl_stat" id="07" pond="100" translation="docs_codestat.idcode">codestat_libelle</tablefield>
 			<tablefield name="proprietary_search" id="08" pond="100">lender_libelle</tablefield>
 			<!- A activer dans le fichier subst si l'on veut indexer l'exemplaire avec les sur-localisations ->
 			<!- <tablefield name="expl_header_surloc_libelle" id="09" pond="100">surloc_libelle</tablefield> ->
@@ -779,6 +800,22 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 		<table>notices</table>
 	</field>
 		
+	<!-- d'exemplaires -->
+	<field name="expl_champs_perso" external="yes" id="200" datatype="custom_field" >
+		<table>expl</table>
+		<index_also_from>
+			<datatype>expl</datatype>
+		</index_also_from>
+	</field>
+	
+	<!-- de documents numériques -->
+	<field name="explnum_champs_perso" external="yes" id="300" datatype="custom_field" >
+		<table>explnum</table>
+		<index_also_from>
+			<datatype>explnum</datatype>
+		</index_also_from>
+	</field>
+	
 	<!-- les Autorités personnalisées -->
 	<!-- de notices -->
 	<field name="notice_authperso" external="yes" id="1000" datatype="authperso">
@@ -794,9 +831,9 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<tablefield name="extexplnum_minetype" id="02" pond="100">explnum_mimetype</tablefield>
 			<tablefield name="extexplnum_url" id="03" pond="100">explnum_url</tablefield>
 			<tablefield name="extexplnum_extfichier" id="04" pond="100">explnum_extfichier</tablefield>
-			<tablefield name="extexplnum_statut" id="05" pond="0">gestion_libelle</tablefield>
-			<tablefield name="extexplnum_lender_num_lender" id="06" pond="0">explnum_lender_num_lender</tablefield>
-			<tablefield name="extexplnum_location" id="07" pond="0">num_location</tablefield>
+			<tablefield name="extexplnum_statut" id="05" pond="0" ifEmpty="gestion_libelle">opac_libelle</tablefield>
+			<tablefield name="extexplnum_lender_num_lender" id="06" pond="0">lender_libelle</tablefield>
+			<tablefield name="extexplnum_location" id="07" pond="0">location_libelle</tablefield>
 			<tablekey>explnum_id</tablekey>
 			<link type="n1">
 				<externalfield>explnum_notice</externalfield>
@@ -807,15 +844,27 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 				<tablekey>id_explnum_statut</tablekey>
 				<externalfield>explnum_docnum_statut</externalfield>
 			</link>
-			<link type="n1">
+			<link type="n0">
 				<table>explnum_lenders</table>
 				<tablekey>explnum_lender_num_explnum</tablekey>
 				<externalfield>explnum_id</externalfield>
 			</link>
-			<link type="n1">
+			<link type="n0">
+				<table>lenders</table>
+				<tablekey>idlender</tablekey>
+				<externaltable>explnum_lenders</externaltable>
+				<externalfield>explnum_lender_num_lender</externalfield>
+			</link>
+			<link type="n0">
 				<table>explnum_location</table>
 				<tablekey>num_explnum</tablekey>
 				<externalfield>explnum_id</externalfield>
+			</link>
+			<link type="n0">
+				<table>docs_location</table>
+				<tablekey>idlocation</tablekey>
+				<externaltable>explnum_location</externaltable>
+				<externalfield>num_location</externalfield>
 			</link>
 		</table>
 		<!-- Exemplaires numériques reliés au bulletin de la notice de bulletin -->
@@ -825,9 +874,9 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<tablefield name="extexplnum_minetype" id="02" pond="100">explnum_mimetype</tablefield>
 			<tablefield name="extexplnum_url" id="03" pond="100">explnum_url</tablefield>
 			<tablefield name="extexplnum_extfichier" id="04" pond="100">explnum_extfichier</tablefield>
-			<tablefield name="extexplnum_statut" id="05" pond="0">gestion_libelle</tablefield>
-			<tablefield name="extexplnum_lender_num_lender" id="06" pond="0">explnum_lender_num_lender</tablefield>
-			<tablefield name="extexplnum_location" id="07" pond="0">num_location</tablefield>
+			<tablefield name="extexplnum_statut" id="05" pond="0" ifEmpty="gestion_libelle">opac_libelle</tablefield>
+			<tablefield name="extexplnum_lender_num_lender" id="06" pond="0">lender_libelle</tablefield>
+			<tablefield name="extexplnum_location" id="07" pond="0">location_libelle</tablefield>
 			<link type="nn">
 				<table>bulletins</table>
 				<referencefield>num_notice</referencefield>
@@ -840,15 +889,27 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 				<tablekey>id_explnum_statut</tablekey>
 				<externalfield>explnum_docnum_statut</externalfield>
 			</link>
-			<link type="n1">
+			<link type="n0">
 				<table>explnum_lenders</table>
 				<tablekey>explnum_lender_num_explnum</tablekey>
 				<externalfield>explnum_id</externalfield>
 			</link>
-			<link type="n1">
+			<link type="n0">
+				<table>lenders</table>
+				<tablekey>idlender</tablekey>
+				<externaltable>explnum_lenders</externaltable>
+				<externalfield>explnum_lender_num_lender</externalfield>
+			</link>
+			<link type="n0">
 				<table>explnum_location</table>
 				<tablekey>num_explnum</tablekey>
 				<externalfield>explnum_id</externalfield>
+			</link>
+			<link type="n0">
+				<table>docs_location</table>
+				<tablekey>idlocation</tablekey>
+				<externaltable>explnum_location</externaltable>
+				<externalfield>num_location</externalfield>
 			</link>
 		</table>
 		<!-- A activer dans le fichier subst si l'on veut indexer la notice de périodiques avec tous les documents numériques de tous ces bulletins -->
@@ -858,7 +919,7 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 			<tablefield name="extexplnum_minetype" id="02" pond="100">explnum_mimetype</tablefield>
 			<tablefield name="extexplnum_url" id="03" pond="100">explnum_url</tablefield>
 			<tablefield name="extexplnum_extfichier" id="04" pond="100">explnum_extfichier</tablefield>
-			<tablefield name="empr_statut_menu" id="05" pond="0">gestion_libelle</tablefield>
+			<tablefield name="empr_statut_menu" id="05" pond="0" ifEmpty="gestion_libelle">opac_libelle</tablefield>
 			<link type="nn">
 				<table>bulletins</table>
 				<referencefield>bulletin_notice</referencefield>
@@ -1017,6 +1078,120 @@ $Id: champs_base.xml,v 1.34 2018-11-20 13:03:24 dgoron Exp $ -->
 					<referencefield>responsability_tu_num  and responsability_tu_type=1</referencefield>
 					<externalfield>responsability_tu_author_num</externalfield>
 				</link>
+			</link>
+		</table>
+	</field>
+	<field name='nomenclature_search_nomenclature_abbreviation_bois' id="131" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,1" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,1" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,1" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,1" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,1" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,1" pond="60"/>
+	</field>
+	<field name='nomenclature_search_nomenclature_abbreviation_cuivres' id="132" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,2" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,2" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,2" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,2" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,2" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,2" pond="60"/>
+	</field>
+	<field name='nomenclature_search_nomenclature_abbreviation_percussions' id="133" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,3" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,3" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,3" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,3" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,3" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,3" pond="60"/>
+	</field>
+	<field name='nomenclature_search_nomenclature_abbreviation_cordes' id="134" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,4" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,4" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,4" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,4" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,4" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,4" pond="60"/>
+	</field>
+	<field name='nomenclature_search_instruments_no_standard' id="135" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,exotic" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,exotic" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,exotic" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,exotic" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,exotic" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,exotic" pond="60"/>
+	</field>
+	<field name='nomenclature_search_instruments_workshop' id="136" datatype='nomenclature'>
+		<callable name="instruments" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="code,workshop" pond="60"/>
+		<callable name="instruments" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="name,workshop" pond="60"/>
+		<callable name="instruments" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="effective,workshop" pond="60"/>
+		<callable name="instruments" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="formation,workshop" pond="60"/>
+		<callable name="instruments" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="musicstand,workshop" pond="60"/>
+		<callable name="instruments" id="06" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_instruments_index" parameters="id,workshop" pond="60"/>
+	</field>
+	<field name='nomenclature_search_voices' id="137" datatype='nomenclature'>
+		<callable name="voices" id="01" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_voices_index" parameters="code" pond="60"/>
+		<callable name="voices" id="02" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_voices_index" parameters="name" pond="60"/>
+		<callable name="voices" id="03" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_voices_index" parameters="effective" pond="60"/>
+		<callable name="voices" id="04" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_voices_index" parameters="formation" pond="60"/>
+		<callable name="voices" id="05" class_path="./classes/nomenclature/nomenclature_record_formations.class.php" class_name="nomenclature_record_formations" method="get_voices_index" parameters="id" pond="60"/>
+	</field>
+	<field name='combine_expl_explnum' id="138">
+		<callable name="combine_expl_explnum_location" id="01" class_path="./classes/record_display.class.php" class_name="record_display" method="get_locations_list" parameters="label" pond="60"/>
+		<callable name="combine_expl_explnum_lender" id="02" class_path="./classes/record_display.class.php" class_name="record_display" method="get_lenders_list" parameters="label" pond="60"/>
+		<index_also_from>
+			<datatype>expl</datatype>
+			<datatype>explnum</datatype>
+		</index_also_from>
+	</field>
+	<field name="notice_is_numeric_search" id="139" pond="0">
+		<table>
+			<tablefield>if(is_numeric=0,"msg:39","msg:40")</tablefield>
+		</table>		
+	</field>
+ 	<field name="aut_responsability_authors" external="yes" id="140" keepEmptyWord="yes">
+		<table name="authors">
+			<tablefield name="201" id="01" pond="110">author_name</tablefield>
+			<tablefield name="202" id="02" pond="110">author_rejete</tablefield>
+			<tablefield name="713" id="03" pond="100">author_date</tablefield>
+			<tablefield name="147" id="04" pond="100">author_web</tablefield>
+			<tablefield name="707" id="05" pond="100">author_comment</tablefield>
+			<tablekey>author_id</tablekey>
+			<idkey>author_id</idkey>
+			<link type="nn">
+				<table>notices_authperso</table>
+				<referencefield>notice_authperso_notice_num</referencefield>
+				<externalfield>notice_authperso_authority_num</externalfield>
+				<link type="nn">
+					<table>responsability_authperso</table>
+					<referencefield>responsability_authperso_num</referencefield>
+					<externalfield>responsability_authperso_author</externalfield>
+				</link>
+			</link>
+		</table>
+	</field>
+	
+    <field name="explnum_associate_docnum" external="yes" id="141" datatype="explnum">
+		<!-- Exemplaires numériques de monographie, périodique et article -->
+		<table name="explnum">
+			<filter>not(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield name="associated_explnum" id="01" pond="100">if(isnull(explnum_nom),"msg:39","msg:40")</tablefield>
+			<tablekey>explnum_id</tablekey>
+			<link type="n0">
+				<externalfield>explnum_notice</externalfield>
+				<linkrestrict>AND explnum.explnum_bulletin=0</linkrestrict>
+			</link>
+		</table>
+		<!-- Exemplaires numériques reliés au bulletin de la notice de bulletin -->
+		<table name="explnum">
+			<filter>(notices.niveau_biblio='b' and notices.niveau_hierar=2)</filter>
+			<tablefield name="associated_explnum" id="01" pond="100">if(isnull(explnum_nom),"msg:39","msg:40")</tablefield>
+			<link type="nn">
+				<table>bulletins</table>
+				<referencefield>num_notice</referencefield>
+				<tablekey>bulletin_id</tablekey>
+				<externalfield>explnum_bulletin</externalfield>
+				<linkrestrict>AND explnum.explnum_notice=0</linkrestrict>
 			</link>
 		</table>
 	</field>

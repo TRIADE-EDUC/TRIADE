@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_bannette_view_bannette.xml,v 1.2 2017-05-23 15:00:20 dgoron Exp $ -->
+$Id: cms_module_bannette_view_bannette.xml,v 1.2 2017/05/23 15:00:20 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_bannette_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_carousel_view_carousel.xml,v 1.10 2013-01-24 14:50:15 apetithomme Exp $ -->
+$Id: cms_module_carousel_view_carousel.xml,v 1.10 2013/01/24 14:50:15 apetithomme Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_carousel_view_carousel_mode'>Mode d'affichage</entry>

@@ -14,6 +14,7 @@ langmenudepart1="T.R.I.A.D.E.";
 langmenudepart10="Home";
 langmenudepart11="About";
 langmenudepart12="Your ad"; 
+langmenudepart13="Protection - RGPD";
 //-------
 langmenudepart2="Maintenance";
 langmenudepart21="Password error";
@@ -34,7 +35,7 @@ if (footer != "") {
 	}
 	langmenupied+="<br>Optimized for : Internet Explorer 5 et Mozilla ----- minimum resolution : 800x600 <br>"; 
 }else{
-	langmenupied="<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Optimized for : Internet Explorer 5 et Mozilla ----- minimum resolution : 800x600 <br> T.R.I.A.D.E. © - 2024 - Tous droits réservés";
+	langmenupied="<p>La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Optimized for : Internet Explorer 5 et Mozilla ----- minimum resolution : 800x600 <br> T.R.I.A.D.E. © - 2026 - Tous droits réservés";
 }
 
 // --------------

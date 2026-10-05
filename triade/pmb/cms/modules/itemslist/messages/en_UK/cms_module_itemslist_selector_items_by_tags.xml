@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_itemslist_selector_items_by_tags.xml,v 1.1 2015-06-15 12:55:34 pmbs Exp $ -->
+$Id: cms_module_itemslist_selector_items_by_tags.xml,v 1.1 2015/06/15 12:55:34 pmbs Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_itemslist_selector_itemstags">Selection through a list of tags</entry>

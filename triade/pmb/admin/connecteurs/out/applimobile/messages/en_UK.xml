@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.6.6.1 2024/05/16 14:39:52 rtigero Exp $ -->
+
+<XMLlist>
+
+    <entry code="applimobile_configuration_ws_url">Adresse du web service de paramétrage</entry>
+    <entry code="applimobile_configuration_ws_unrecorded">Enregistrez la source pour obtenir l'adresse du Web service de paramétrage</entry>
+    <entry code="applimobile_api_key">Clé d'API</entry>
+    <entry code="applimobile_renew_keys">Renouveler les clés d'accès</entry>
+    <entry code="applimobile_operation_ws_url">Adresse du Web service JSON-RPC nécessaire au fonctionnement</entry>
+    <entry code="applimobile_operation_ws_no_jsonrpc_source">Aucune source JSON-RPC n'est définie, vous devez en configurer une</entry>
+    <entry code="applimobile_operation_ws_user">Utilisateur</entry>
+    <entry code="applimobile_operation_ws_password">Mot de passe</entry>
+    <entry code="applimobile_library_name">Nom de la bibliothèque</entry>
+    <entry code="applimobile_library_logo">URL de l'icône de la bibliothèque</entry>
+    <entry code="applimobile_carousel_shelves">Etagères à utiliser pour le carrousel en page d'accueil</entry>
+    <entry code="applimobile_carousel_first_shelf">Afficher en premier</entry>
+    <entry code="applimobile_allow_booking">Autoriser les réservations</entry>
+    <entry code="applimobile_allow_password_change">Autoriser le changement de mot de passe</entry>
+    <entry code="applimobile_contact_template">Template de la page de contact</entry>
+    <entry code="applimobile_facets">Facettes à afficher</entry>
+    <entry code="applimobile_facet_none">Aucune facette n'est définie</entry>
+    <entry code="applimobile_sorts">Tris disponibles</entry>
+    <entry code="applimobile_simple_search_types">Types de recherche simple à utiliser</entry>
+    <entry code="applimobile_simple_search_type_ALL">Tous les champs</entry>
+    <entry code="applimobile_simple_search_type_TITLE">Titre</entry>
+    <entry code="applimobile_simple_search_type_AUTHOR">Auteur</entry>
+    <entry code="applimobile_simple_search_type_EDITOR">Editeur</entry>
+    <entry code="applimobile_simple_search_type_COLLECTION">Collection</entry>
+    <entry code="applimobile_simple_search_type_CATEGORIES">Catégories</entry>
+    <entry code="applimobile_advanced_search_fields">Champs de recherche avancée à utiliser</entry>
+    <entry code="applimobile_associated_accounts_activate">Activer les comptes associés</entry>
+    <entry code="applimobile_rapid_search">La recherche rapide doit être localisée</entry>
+    <entry code="applimobile_disable_func">Désactiver des modules</entry>
+    <entry code="applimobile_loans">Prêts</entry>
+    <entry code="applimobile_cart">Panier</entry>
+    <entry code="applimobile_bookmarkedrecords">Favoris</entry>
+    <entry code="applimobile_simplesearch">Recherche simple</entry>
+    <entry code="applimobile_advancedsearch">Recherche avancée</entry>
+    <entry code="applimobile_suggestionlist">Suggestions</entry>
+    <entry code="applimobile_sections">Sections</entry>
+    <entry code="applimobile_barcodescanner">Scan de code-barres</entry>
+    <entry code="applimobile_barcodeinfo">Carte lecteur</entry>
+    <entry code="applimobile_library">Informations</entry>
+    <entry code="applimobile_external_auth_active">Activer l'authentification externe</entry>
+</XMLlist>

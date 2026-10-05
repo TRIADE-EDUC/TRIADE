@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: translation.class.php,v 1.7 2017-07-27 10:09:39 vtouchard Exp $
+// $Id: translation.class.php,v 1.10 2024/02/06 16:47:32 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))	die("no access");
 
 /**
- * Classe permettant de gÃ©rer les traductions de libellÃ©
- * Utilise la table translation, croisÃ©e avec le nom de la table et du champ Ã  traduire
- * MÃ©morise et rÃ©cupÃ¨re le texte dans la lange voulue
+ * Classe permettant de gerer les traductions de libelles
+ * Utilise la table translation, croisee avec le nom de la table et du champ a traduire
+ * Memorise et recupere le texte dans la langue voulue
  * 
  "CREATE TABLE translation (
     trans_table VARCHAR( 255 ) NOT NULL default '',
@@ -21,6 +21,7 @@ if (stristr($_SERVER['REQUEST_URI'], ".class.php"))	die("no access");
     index i_lang(trans_lang)
    )";  
  */
+
 class translation {
 
 	protected static $text_fields = array();
@@ -29,16 +30,23 @@ class translation {
 	}
 	
 	/**
-	 * Retourne la traduction d'un champ dans la langue voulue, ou le libellÃ© par dÃ©faut
-	 * @param int $id Identifiant de l'entitÃ©
-	 * @param string $trans_table Table de rÃ©fÃ©rence
-	 * @param string $trans_field Champ de rÃ©fÃ©rence
-	 * @param string $text LibellÃ© par dÃ©faut
+	 * Retourne la traduction dans la langue voulue
+	 */
+	public static function get_text($id, $trans_table, $trans_field, $text="", $mylang="") {
+		return static::get_translated_text($id, $trans_table, $trans_field, $text, $mylang);
+	}
+	
+	/**
+	 * Retourne la traduction d'un champ dans la langue voulue, ou le libellé par défaut
+	 * @param int $id Identifiant de l'entité
+	 * @param string $trans_table Table de référence
+	 * @param string $trans_field Champ de référence
+	 * @param string $text Libellé par défaut
 	 * @param string $mylang Langue voulue
 	 * @return string
 	 */
-	public static function get_text($id, $trans_table, $trans_field, $text="", $mylang="") {
-		global $lang, $dbh;
+	public static function get_translated_text($id, $trans_table, $trans_field, $text="", $mylang="") {
+		global $lang;
 		
 		if(!$mylang) {
 			$mylang = $lang;
@@ -52,9 +60,9 @@ class translation {
 	
 	/**
 	 * Retourne la traduction des champs dans la langue voulue
-	 * @param unknown $table
-	 * @param unknown $lang
-	 * @param unknown $num
+	 * @param string $table
+	 * @param string $lang
+	 * @param string $num
 	 * @param string $text
 	 */
 	public static function get_text_fields($table, $lang, $num){

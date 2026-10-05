@@ -1,48 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: alert.inc.php,v 1.13 2019-05-29 12:12:29 btafforeau Exp $
+// $Id: alert.inc.php,v 1.16.2.1 2024/05/02 11:39:02 dgoron Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $base_path, $current_alert, $pmb_transferts_actif, $pmb_pnb_param_login, $charset, $aff_alerte;
+global $base_path, $class_path, $current_alert, $charset, $aff_alerte;
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire                         
+// définition du minimum nécéssaire                         
 $base_auth = "CIRCULATION_AUTH|CATALOGAGE_AUTH|AUTORITES_AUTH|ADMINISTRATION_AUTH|EDIT_AUTH";  
 $base_title = "\$msg[5]";
 require_once ("$base_path/includes/init.inc.php");  
 
-$aff_alerte = '';
-require_once("$base_path/alert/message.inc.php");
-if ($current_alert=="circ") {
-	require_once("$base_path/alert/resa.inc.php");
-	require_once("$base_path/alert/expl_todo.inc.php");			
-	require_once("$base_path/alert/empr.inc.php");
-	//pour les alertes de transferts
-	if ($pmb_transferts_actif && (SESSrights & TRANSFERTS_AUTH))
-		require_once ("$base_path/alert/transferts.inc.php");
-}
-if ($current_alert=="catalog") {
-	require_once("$base_path/alert/tag.inc.php");
-	require_once("$base_path/alert/sugg.inc.php");
-	require_once("$base_path/alert/serialcirc.inc.php");
-	require_once("$base_path/alert/bulletinage.inc.php");
-	if($pmb_pnb_param_login) {
-	   require_once($base_path . "/alert/pnb.inc.php");
-	}
-}
+require_once ("$class_path/alerts/alerts.class.php");
 
-if ($current_alert=="acquisition") {
-	require_once("$base_path/alert/sugg.inc.php");
-}
-if ($current_alert=="demandes") {
-	require_once("$base_path/alert/demandes.inc.php");
-}
+$list_tabs_alerts_ui = new list_tabs_alerts_ui();
 
-//on reprend le format de la rÃ©ponse. VIVE LE JSON !
+//On libère la session car il n'y a pas d'écriture ensuite et cela évite les verrous.
+session_write_close();
+
+$aff_alerte = $list_tabs_alerts_ui->get_display();
+
+//on reprend le format de la réponse. VIVE LE JSON !
 if (trim($aff_alerte)) {
 	if($charset!="utf-8"){
-		$aff_alerte = utf8_encode($aff_alerte);
+		$aff_alerte = encoding_normalize::utf8_normalize($aff_alerte);
 	}
 	$response = array(
 		'state' => 1,
@@ -61,7 +43,7 @@ if (trim($aff_alerte)) {
 ajax_http_send_response($response);
 
 
-// // le '1' permet de savoir que la session est toujours active, pour Ã©viter les transactions ajax ultÃ©rieures
+// // le '1' permet de savoir que la session est toujours active, pour éviter les transactions ajax ultérieures
 // if($aff_alerte)ajax_http_send_response("1<hr class='alert_separator'> $aff_alerte");
 // else ajax_http_send_response("1");
 ?>

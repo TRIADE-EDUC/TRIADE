@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_authperso_controller.class.php,v 1.11 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: entities_authperso_controller.class.php,v 1.14 2022/01/03 10:48:14 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -35,18 +35,20 @@ class entities_authperso_controller extends entities_authorities_controller {
 	}
 	
 	public function get_display_list() {
-		//Il faut la globaliser pour que les autoritÃ©s perso fonctionnent...
+		//Il faut la globaliser pour que les autorités perso fonctionnent...
 		global $url_base;
 		global $categ;
 		
 		$url_base = $this->get_pagination_link();
 		$object_instance = $this->get_object_instance();
 		$this->set_session_history($this->object_instance->get_searcher_instance()->get_human_query(), $categ, 'QUERY');
+		$this->set_session_history($this->object_instance->get_searcher_instance()->get_human_query(), $categ, 'AUT');
 		
 		return $object_instance->get_list();
 	}
 	
 	public function proceed_delete() {
+	    global $msg;
 		$object_instance = $this->get_object_instance();
 		$sup_result = $object_instance->delete($this->id);
 		if(!$sup_result) {
@@ -58,7 +60,7 @@ class entities_authperso_controller extends entities_authorities_controller {
 	
 	public function proceed_replace() {
 		global $msg;
-		global $by, $aut_link_save; 
+		global $by, $aut_link_save;
 	
 		$object_instance = $this->get_object_instance();
 		if(!$by) {
@@ -115,7 +117,7 @@ class entities_authperso_controller extends entities_authorities_controller {
 			$object_instance = $this->get_object_instance();
 			print $object_instance->get_list(true);
 		}else {
-			// affichage du dÃ©but de la liste
+			// affichage du début de la liste
 			print $this->get_display_list();
 		}
 	}
@@ -128,6 +130,11 @@ class entities_authperso_controller extends entities_authorities_controller {
 	protected function get_permalink($id=0) {
 		if(!$id) $id = $this->id;
 		return "./autorites.php?categ=see&sub=authperso&id_authperso=".$this->id_authperso."&id=".$id;
+	}
+	
+	protected function get_display_permalink($id=0) {
+	    if(!$id) $id = $this->id;
+	    return "./autorites.php?categ=see&sub=authperso&id=".$id;
 	}
 	
 	protected function get_edit_link($id=0) {
@@ -144,5 +151,14 @@ class entities_authperso_controller extends entities_authorities_controller {
 	
 	protected function get_aut_const(){
 	    return TYPE_AUTHPERSO;
+	}
+	
+	/**
+	 * parametres a ajouter sur l'url de tri
+	 * @return string
+	 */
+	protected static function get_sort_params_link() {
+	    global $id_authperso;
+	    return "&id_authperso=".$id_authperso;
 	}
 }

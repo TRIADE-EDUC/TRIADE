@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_tpl.class.php,v 1.15 2018-12-20 11:00:19 mbertin Exp $
+// $Id: notice_tpl.class.php,v 1.25 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,12 +13,17 @@ require_once("$class_path/marc_table.class.php");
 class notice_tpl {
 	
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------	
 	public $id;		// MySQL id in table 'notice_tpl'
 	public $name;		// nom du template
 	public $comment;	// description du template
 	public $code ; // Code du template
+	public $show_opac;
+	public $id_test;
+	public $location_label;
+	public $type_doc_label;
+	public $type_notice;
 	
 	// ---------------------------------------------------------------
 	//		constructeur
@@ -29,10 +34,10 @@ class notice_tpl {
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos 
+	//		getData() : récupération infos 
 	// ---------------------------------------------------------------
 	public function getData() {
-		global $dbh,$msg;
+		global $msg;
 
 		$this->name = '';			
 		$this->comment = '';
@@ -52,6 +57,7 @@ class notice_tpl {
 		}	
 		$source = marc_list_collection::get_instance("doctype");
 		$source_tab = $source->table;
+		$type_doc=array();
 		$type_doc[0]="";
 		$this->type_doc_label[0]=$msg["tous_types_docs"];
 		foreach($source_tab as $key=>$libelle) {
@@ -73,7 +79,7 @@ class notice_tpl {
 	
 		if($this->id) {
 			$requete = "SELECT * FROM notice_tpl WHERE notpl_id='".$this->id."' LIMIT 1 ";
-			$result = @pmb_mysql_query($requete, $dbh);
+			$result = @pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$temp = pmb_mysql_fetch_object($result);				
 				$this->name	= $temp->notpl_name;
@@ -81,59 +87,18 @@ class notice_tpl {
 				$this->show_opac	= $temp->notpl_show_opac;					
 				$this->id_test	= $temp->notpl_id_test;			
 				$requete = "SELECT * FROM notice_tplcode  WHERE num_notpl='".$this->id."' ";
-				$result_code = @pmb_mysql_query($requete, $dbh);
+				$result_code = @pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($result_code)) {
 					while(($temp_code= pmb_mysql_fetch_object($result_code))) {
 						$this->code[$temp_code->notplcode_localisation][$temp_code->notplcode_niveau_biblio] [$temp_code->notplcode_typdoc]=$temp_code->nottplcode_code;	
 					}
 				}
 			} else {
-				// pas trouvÃ© avec cette clÃ©
+				// pas trouvé avec cette clé
 				$this->id = 0;								
 			}
 		}
 	}
-	
-	// ---------------------------------------------------------------
-	//		show_list : affichage de la liste des Ã©lÃ©ments
-	// ---------------------------------------------------------------	
-	public function show_list($link="./edit.php") {	
-		global $dbh, $charset,$msg;
-		global $notice_tpl_liste, $notice_tpl_liste_ligne;
-		
-		$tableau = '';
-		$requete = "SELECT * FROM notice_tpl ORDER BY notpl_name ";
-		$result = @pmb_mysql_query($requete, $dbh);
-		if(pmb_mysql_num_rows($result)) {
-			$pair="odd";
-			while(($temp = pmb_mysql_fetch_object($result))){	
-				$id = $temp->notpl_id;			
-				$name = $temp->notpl_name;
-				$comment = $temp->notpl_comment;
-				if($temp->notpl_show_opac)	$show_opac=$msg["notice_tpl_show_opac_yes"];
-				else $show_opac=$msg["notice_tpl_show_opac_no"];
-					
-				
-				if($pair=="even") $pair ="odd";	else $pair ="even";
-				// contruction de la ligne
-				$ligne=$notice_tpl_liste_ligne;
-				
-				$ligne = str_replace("!!name!!",	htmlentities($name,ENT_QUOTES, $charset), $ligne);
-				$ligne = str_replace("!!comment!!",	htmlentities($comment,ENT_QUOTES, $charset), $ligne);
-				$ligne = str_replace("!!show_opac!!",	$show_opac, $ligne);	
-				$ligne = str_replace("!!pair!!",	$pair, $ligne);					
-				$ligne = str_replace("!!link_edit!!",	$link."?categ=tpl&sub=notice&action=edit&id=$id", $ligne);	
-				$ligne = str_replace("!!link_eval!!",	$link."?categ=tpl&sub=notice&action=eval&id=$id&id_test=".$this->id_test, $ligne);	
-				$ligne = str_replace("!!link_export!!",	"./export.php?quoi=notice_tpl&id=".$id, $ligne);
-				$ligne = str_replace("!!id!!",		$id, $ligne);	
-				$tableau.=$ligne;			
-			}				
-		}
-		$liste = str_replace("!!notice_tpl_liste!!",$tableau, $notice_tpl_liste);	
-		$liste = str_replace("!!link_ajouter!!",	$link."?categ=tpl&sub=notice&action=edit", $liste);	
-		$liste = str_replace("!!link_import!!",	$link."?categ=tpl&sub=notice&action=import", $liste);	
-		return $liste;
-	}	
 	
 	// ----------------------------------------------------------------------------------
 	//		get_is_truncated_form : affichage du formulaire avec les localisations ou non
@@ -143,7 +108,7 @@ class notice_tpl {
 		$is_truncated_form = true;
 		
 		if($this->id) {
-			//En modif, on vÃ©rifie si un template dans une loc
+			//En modif, on vérifie si un template dans une loc
 			if (count($this->code)>1) {
 				foreach ($this->code as $id_location =>$tab_typenotice) {
 					//on passe la loc "0" (toutes les locs)
@@ -165,31 +130,8 @@ class notice_tpl {
 		return $is_truncated_form;
 	}
 	
-	// ---------------------------------------------------------------
-	//		show_form : affichage du formulaire de saisie
-	// ---------------------------------------------------------------
-	public function show_form($link="./edit.php") {
-	
-		global $msg;
-		global $notice_tpl_form, $notice_tpl_show_loc_btn;
-		global $charset;
-
-		$form=$notice_tpl_form;		
-		$action = $link."?categ=tpl&sub=notice&action=update&id=!!id!!";
-		
-		if($this->id) {
-			$libelle = $msg["notice_tpl_modifier"];			
-			$button_delete = "<input type='button' class='bouton' value='".$msg['63']."' onClick=\"confirm_delete();\">";
-			$action_delete = $link."?categ=tpl&sub=notice&action=delete&id=!!id!!";
-			$button_duplicate = "<input type='button' class='bouton' value='".$msg["edit_tpl_duplicate_button"]."' onClick=\"document.location='./edit.php?categ=tpl&sub=notice&action=duplicate&id=".$this->id."';\" />";
-			if($this->show_opac) $show_opac=" checked='checked' "; else $show_opac="";			
-		} else {			
-			$libelle = $msg["notice_tpl_ajouter"];
-			$button_delete = "";
-			$button_duplicate = "";
-			$action_delete= "";
-			$show_opac="";
-		}
+	public function get_content_form() {
+		global $charset, $notice_tpl_show_loc_btn;
 		
 		//on n'affiche les localisations que si un template existe dans une des locs
 		$is_truncated_form = $this->get_is_truncated_form();
@@ -203,30 +145,57 @@ class notice_tpl {
 				$form_code.=gen_plus("plus_location".$id_location,$this->location_label[$id_location],$form_typenotice_all);
 			}
 		}
-
-		$form = str_replace("!!libelle!!",	$libelle, $form);
-		$form = str_replace("!!name!!",		htmlentities($this->name,ENT_QUOTES, $charset), $form);
-		$form = str_replace("!!comment!!",	htmlentities($this->comment,ENT_QUOTES, $charset), $form);
-		$form = str_replace("!!id_test!!",	htmlentities($this->id_test,ENT_QUOTES, $charset), $form);
-		$form = str_replace("!!show_opac!!",$show_opac, $form);
-		$form = str_replace("!!code_part!!", $form_code, $form);
-		if ($is_truncated_form) {
-			$form = str_replace("!!show_loc!!", $notice_tpl_show_loc_btn, $form);
-		} else {
-			$form = str_replace("!!show_loc!!", "", $form);
-		}
+		$form_code .= "
+		<div class='row' id='show_loc_div'>
+			".($is_truncated_form ? $notice_tpl_show_loc_btn : '')."
+		</div>";
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('name', 'notice_tpl_name')
+		->add_input_node('text', $this->name)
+		->set_class('saisie-80em')
+		->set_attributes(array('data-pmb-deb-rech' => '1'));
+		$interface_content_form->add_element('comment', 'notice_tpl_description')
+		->add_textarea_node($this->comment, 62, 4)
+		->set_attributes(array('wrap' => 'virtual'));
+		$interface_content_form->add_element('code', 'notice_tpl_code')
+		->add_html_node($form_code);
+		/*	id notice pour test	*/
+		$interface_content_form->add_element('id_test', 'notice_tpl_id_test')
+		->add_input_node('integer', $this->id_test);
+		$interface_content_form->add_element('show_opac')
+		->add_input_node('boolean', $this->show_opac)
+		->set_label_code('notice_tpl_show_opac');
+		
+		$display = "
+		<script type='text/javascript' src='./javascript/tabform.js'></script>
+		<script src='./javascript/ace/ace.js' type='text/javascript' charset='".$charset."'></script>";
+		$display .= $interface_content_form->get_display();
+		return $display;
+	}
+	// ---------------------------------------------------------------
+	//		show_form : affichage du formulaire de saisie
+	// ---------------------------------------------------------------
+	public function get_form() {
 	
-		$form = str_replace("!!action!!",	$action, $form);
-		$form = str_replace("!!duplicate!!", $button_duplicate, $form);		
-		$form = str_replace("!!delete!!",	$button_delete,	$form);
-		$form = str_replace("!!action_delete!!",$action_delete,	$form);
-		$form = str_replace("!!id!!",		$this->id, $form);
+		global $msg;
 
-		return $form;
+		$interface_form = new interface_form('notice_tpl_form');
+		if(!$this->id){
+			$interface_form->set_label($msg['notice_tpl_ajouter']);
+		}else{
+			$interface_form->set_label($msg['notice_tpl_modifier']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_duplicable(true)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->name." ?")
+		->set_content_form($this->get_content_form())
+		->set_table_name('notice_tpl')
+		->set_field_focus('name');
+		return $interface_form->get_display();
 	}
 	
 	// ---------------------------------------------------------------------
-	//		get_form_typenotice_all : rÃ©cupÃ¨re l'affichage des localisations
+	//		get_form_typenotice_all : récupère l'affichage des localisations
 	// ---------------------------------------------------------------------
 	public function get_form_typenotice_all_loc() {
 		
@@ -244,7 +213,7 @@ class notice_tpl {
 	}
 	
 	// ----------------------------------------------------------------------
-	//		get_form_typenotice_all : rÃ©cupÃ¨re l'affichage d'une localisation
+	//		get_form_typenotice_all : récupère l'affichage d'une localisation
 	// ----------------------------------------------------------------------
 	public function get_form_typenotice_all($id_location, $tab_typenotice) {
 		global $charset;
@@ -271,6 +240,7 @@ class notice_tpl {
 								}
 								if (document.getElementById('plus_location".$id_location."Img')) {
 									document.getElementById('plus_location".$id_location."Img').src = imgOpened.src;
+								    expandBase('plus_location".$id_location."', true);
 								}
 							}
 						</script>";
@@ -282,53 +252,44 @@ class notice_tpl {
 		return $form_typenotice_all;
 	}
 	
-	// ---------------------------------------------------------------
-	//		delete() : suppression 
-	// ---------------------------------------------------------------
-	public function delete() {
-		global $dbh;
-		global $msg;
+	public function set_properties_from_form() {
+		global $name, $code_list, $comment,$id_test,$show_opac;
 		
-		if(!$this->id)	return $msg[403]; 
-
-		// effacement dans la table
-		$requete = "DELETE FROM notice_tpl WHERE notpl_id='".$this->id."' ";
-		pmb_mysql_query($requete, $dbh);
-		$requete = "DELETE FROM  notice_tplcode  WHERE num_notpl='".$this->id."' ";
-		pmb_mysql_query($requete, $dbh);
+		$this->name = clean_string(stripslashes($name));
+		$this->comment = stripslashes($comment);
+		$this->id_test = stripslashes($id_test);
+		$this->show_opac = stripslashes($show_opac);
 		
-		return false;
+		$this->code=array();
+		$this->code[0]=array();
+		if(!empty($code_list)) {
+			foreach($code_list as $input_code)	{
+				$code="";
+				eval("global \$".$input_code.";\$code= $".$input_code.";");
+				if($code) {
+					list($label,$location,$type_notice,$type_doc)=explode("_",$input_code);
+					$this->code["$location"]["$type_notice"]["$type_doc"]=stripslashes($code);
+				}
+			}
+		}
 	}
 	
-	
-	
-	// ---------------------------------------------------------------
-	//		update($value) : mise Ã  jour 
-	// ---------------------------------------------------------------
-	public function update($value) {
-	
-		global $dbh;
+	public function save() {
 		global $msg;
 		global $include_path;
 			
-		// nettoyage des chaÃ®nes en entrÃ©e		
-		$value['name'] = addslashes(clean_string($value['name']));
-		$value['comment'] = addslashes($value['comment']);		
-		$value['id_test'] = addslashes($value['id_test']);		
-		$value['show_opac'] = addslashes($value['show_opac']);
-		
-		if(!$value['name'])	return false;
+		if(!$this->name)	return false;
 		
 		$requete  = "SET  ";
-		$requete .= "notpl_name='".$value["name"]."', ";	
-		$requete .= "notpl_id_test='".$value["id_test"]."', ";			
-		$requete .= "notpl_comment='".$value["comment"]."', ";		
-		$requete .= "notpl_show_opac='".$value["show_opac"]."' ";		
+		$requete .= "notpl_name='".addslashes($this->name)."', ";	
+		$requete .= "notpl_id_test='".$this->id_test."', ";			
+		$requete .= "notpl_comment='".addslashes($this->comment)."', ";		
+		$requete .= "notpl_show_opac='".$this->show_opac."' ";		
 		 
 		if($this->id) {
 			// update
 			$requete = "UPDATE notice_tpl $requete WHERE notpl_id=".$this->id." ";
-			if(!pmb_mysql_query($requete, $dbh)) {		
+			if(!pmb_mysql_query($requete)) {		
 				require_once("$include_path/user_error.inc.php"); 
 				warning($msg["notice_tpl_modifier"], $msg["notice_tpl_modifier_erreur"]);
 				return false;
@@ -336,7 +297,7 @@ class notice_tpl {
 		} else {
 			// creation
 			$requete = "INSERT INTO notice_tpl ".$requete;
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$this->id=pmb_mysql_insert_id();				
 			} else {
 				require_once("$include_path/user_error.inc.php"); 
@@ -347,47 +308,54 @@ class notice_tpl {
 		
 		// insertion du code 
 		$requete = "DELETE FROM  notice_tplcode  WHERE num_notpl='".$this->id."' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
-		if($value['code'])
-		foreach($value['code'] as $id_location =>$tab_typenotice) {				
-			foreach($tab_typenotice as $typenotice =>$tab_typedoc) {					
-				foreach($tab_typedoc as  $typedoc=>$code) {	
-					$requete = "INSERT INTO notice_tplcode SET 
-						num_notpl='".$this->id."',
-						notplcode_localisation='$id_location', 
-						notplcode_typdoc='$typedoc',
-						notplcode_niveau_biblio='$typenotice', 
-						nottplcode_code='". addslashes($code)."' ";	
-					if(!pmb_mysql_query($requete, $dbh)) {
-						require_once("$include_path/user_error.inc.php"); 
-						warning($msg["notice_tpl_ajouter"], $msg["notice_tpl_ajouter_erreur"]);
-						return false;
-					}						
-				}	
-							
-			}			
-		}	
+		if(!empty($this->code)) {
+			foreach($this->code as $id_location =>$tab_typenotice) {				
+				foreach($tab_typenotice as $typenotice =>$tab_typedoc) {					
+					foreach($tab_typedoc as  $typedoc=>$code) {	
+						$requete = "INSERT INTO notice_tplcode SET 
+							num_notpl='".$this->id."',
+							notplcode_localisation='$id_location', 
+							notplcode_typdoc='$typedoc',
+							notplcode_niveau_biblio='$typenotice', 
+							nottplcode_code='". addslashes($code)."' ";	
+						if(!pmb_mysql_query($requete)) {
+							require_once("$include_path/user_error.inc.php"); 
+							warning($msg["notice_tpl_ajouter"], $msg["notice_tpl_ajouter_erreur"]);
+							return false;
+						}						
+					}	
+								
+				}			
+			}
+		}
 		return true;
 	}
 		
-	public function update_from_form() {
-		global $name, $code_list, $comment,$id_test,$show_opac;
+	// ---------------------------------------------------------------
+	//		delete() : suppression
+	// ---------------------------------------------------------------
+	public static function delete($id) {
+		global $msg;
 		
-		$value['name']=stripslashes($name);
-		$value['comment']=stripslashes($comment);
-		$value['id_test']=stripslashes($id_test);
-		$value['show_opac']=stripslashes($show_opac);
-
-		foreach($code_list as $input_code)	{
-			$code="";
-			eval("global \$".$input_code.";\$code= $".$input_code.";");
-			if($code) {
-				list($label,$location,$type_notice,$type_doc)=explode("_",$input_code);				
-				$value["code"]["$location"]["$type_notice"]["$type_doc"]=stripslashes($code);
-			}
+		$id = intval($id);
+		if(!$id) {
+		    pmb_error::get_instance(static::class)->add_message("", $msg[403]);
+		    return false;
 		}
-		$this->update($value); 		
+		
+		// effacement dans la table
+		$requete = "DELETE FROM notice_tpl WHERE notpl_id='".$id."' ";
+		pmb_mysql_query($requete);
+		$requete = "DELETE FROM  notice_tplcode  WHERE num_notpl='".$id."' ";
+		pmb_mysql_query($requete);
+		
+		return true;
+	}
+	
+	public function get_id() {
+		return $this->id;
 	}
 	
 	static public function gen_tpl_select($select_name="notice_tpl", $selected_id=0) {		
@@ -397,7 +365,20 @@ class notice_tpl {
 		$onchange="";
 		return gen_liste ($requete, "notpl_id", "nom", $select_name, $onchange, $selected_id, 0, $msg["notice_tpl_list_default"], 0,$msg["notice_tpl_list_default"], 0) ;
 	}
-		
+	
+	static public function get_list() {
+	    
+	    $list = array();
+	    $query = "SELECT notpl_id, if(notpl_comment!='',concat(notpl_name,'. ',notpl_comment),notpl_name) as nom FROM notice_tpl ORDER BY notpl_name ";
+	    $result = pmb_mysql_query($query);
+	    if (pmb_mysql_num_rows($result)) {
+	        while($row = pmb_mysql_fetch_object($result)) {
+	            $list[$row->notpl_id] = $row->nom;
+	        }
+	    }
+	    return $list;
+	}
+	
 	public function show_eval($notice_id=0) {
 		global $notice_tpl_eval;
 		global $deflt2docs_location;
@@ -411,10 +392,8 @@ class notice_tpl {
 	}	
 	
 	public function show_import_form($link="./edit.php") {
-		global $msg;
 		global $notice_tpl_form_import;
-		global $charset;
-
+		
 		$form=$notice_tpl_form_import;		
 		$action = $link."?categ=tpl&sub=notice&action=import_suite";
 		
@@ -424,7 +403,7 @@ class notice_tpl {
 	}
 	
 	public function do_import(){
-		global $dbh, $msg, $charset;
+		global $msg, $charset;
 
 		$erreur=0;
 		$userfile_name = $_FILES['f_fichier']['name'];
@@ -433,7 +412,7 @@ class notice_tpl {
 				
 		$userfile_name = preg_replace("/ |'|\\|\"|\//m", "_", $userfile_name);
 				
-		// crÃ©ation
+		// création
 		if (move_uploaded_file($userfile_temp,'./temp/'.$userfile_moved)) {
 			$fic=1;
 		}				
@@ -446,7 +425,7 @@ class notice_tpl {
 			fclose ($fp) ;
 		}
 				
-		//rÃ©cupÃ©ration et affectation des lignes
+		//récupération et affectation des lignes
 		$input_main_tmp='';
 		$input_sub_tmp='';
 		$input_locations_tmp='';
@@ -487,7 +466,7 @@ class notice_tpl {
 			}
 		}
 		
-		//on recrÃ©e les donnÃ©es
+		//on recrée les données
 		$input_main=unserialize($input_main_tmp);
 		$input_sub=unserialize($input_sub_tmp);
 		$input_locations_tmp=unserialize($input_locations_tmp);
@@ -499,14 +478,14 @@ class notice_tpl {
 		}
 		$input_charset=$input_charset_tmp;
 		
-		//on vÃ©rifie
+		//on vérifie
 		if(!count($input_main)||!count($input_sub)||!trim($input_charset)){
 			$erreur=5;
 		}
 				
 		if(!$erreur){
 			
-			//valeurs Ã  connaitre
+			//valeurs à connaitre
 			$doctype = marc_list_collection::get_instance('doctype');
 			$locations = array();
 			$res=pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location ORDER BY 1");
@@ -517,13 +496,13 @@ class notice_tpl {
 			//gestion de l'encodage fichier/PMB
 			$fonction_convert="";
 			if($input_charset=='iso-8859-1' && $charset=='utf-8'){
-				$input_main=pmb_utf8_encode($input_main);
-				$input_sub=pmb_utf8_encode($input_sub);
-				$input_locations=pmb_utf8_encode($input_locations);
+				$input_main=encoding_normalize::utf8_normalize($input_main);
+				$input_sub=encoding_normalize::utf8_normalize($input_sub);
+				$input_locations=encoding_normalize::utf8_normalize($input_locations);
 			}elseif($input_charset=='utf-8' && $charset=='iso-8859-1'){
-				$input_main=pmb_utf8_decode($input_main);
-				$input_sub=pmb_utf8_decode($input_sub);
-				$input_locations=pmb_utf8_decode($input_locations);
+				$input_main=encoding_normalize::utf8_decode($input_main);
+				$input_sub=encoding_normalize::utf8_decode($input_sub);
+				$input_locations=encoding_normalize::utf8_decode($input_locations);
 			}
 			
 			//Ajout dans notice_tpl
@@ -550,7 +529,7 @@ class notice_tpl {
 						unset($typdoc_cours);
 					}
 					
-					//crÃ©ation requÃªte
+					//création requête
 					$requete="INSERT INTO notice_tplcode SET num_notpl=".$id_tpl;
 					foreach($sub as $value){
 						$requete.=", ".$value["field"]."='".addslashes($value["value"])."'";
@@ -567,7 +546,7 @@ class notice_tpl {
 					$array_error_row["typdoc"]=$typdoc_cours;
 					$array_error_row["location"]=$input_locations[$id_loc_cours]." (".$id_loc_cours.")";
 					
-					//vÃ©rification localisation et type de document
+					//vérification localisation et type de document
 					if(!isset($id_loc_cours)||!isset($typdoc_cours)){
 						$ok_import=false;
 						$array_error_row["error"]=$msg["notice_tpl_import_error_missing_info"];
@@ -586,7 +565,7 @@ class notice_tpl {
 						}
 					}
 					
-					//ajout requÃªte
+					//ajout requête
 					if($ok_import){
 						pmb_mysql_query($requete);
 					}else{
@@ -630,7 +609,7 @@ class notice_tpl {
 	}
 	
 	/**
-	 * Retourne tous les rÃ©pertoires de templates de notices
+	 * Retourne tous les répertoires de templates de notices
 	 * @param string $selected
 	 * @return string
 	 */
@@ -652,6 +631,18 @@ class notice_tpl {
 			}
 		}
 		return $tpl;
+	}
+	
+	public static function get_directories() {
+		$result = array();
+		$dirs = array_filter(glob('./opac_css/includes/templates/record/*'), 'is_dir');
+		
+		foreach($dirs as $dir){
+			if(basename($dir) != "CVS"){
+				$result[] = basename($dir);
+			}
+		}
+		return $result;
 	}
 
 } // fin class 

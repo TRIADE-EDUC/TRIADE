@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,13 +32,12 @@ if (isset($_GET['idE'])) {
 	$photoLocal=recherche_photo_eleve($idEleve);
 	Pgclose();
 
-	
+	if ($photoLocal == "") $photoLocal="null";
 
 	// Définition de la largeur et de la hauteur maximale
 	$width='120';
 	$height='120';
-
-
+	
 	$fic="./data/image_eleve/$photoLocal";
 	if ((file_exists($fic)) && (trim($photoLocal) !=  "")) {
 		$filename = stripslashes(basename($fic));
@@ -93,6 +92,7 @@ if (isset($_GET['idE'])) {
 
 if (isset($_GET['idP'])) {
 	$idPers=$_GET["idP"];
+	$photoLocal="";
 	include_once("./common/config.inc.php");
 	include_once("./common/config2.inc.php");
 	include_once("./librairie_php/db_triade.php");
@@ -103,6 +103,7 @@ if (isset($_GET['idP'])) {
 	$width='120';
 	$height='120';
 	$fic="./data/image_pers/$photoLocal";
+
 	if ((file_exists($fic)) && (trim($photoLocal) !=  "")) {
 		$filename = stripslashes(basename($fic));
 		switch(strrchr(basename($filename), ".")) {
@@ -157,11 +158,11 @@ if (isset($_GET['idP'])) {
 
 if (isset($_GET['edt'])) {
 	$idclasse=$_GET['idclasse'];
-	$fic="./data/image_pers/${idclasse}_edt.jpg";
+	$fic="./data/image_pers/{$idclasse}_edt.jpg";
 	if (file_exists($fic)) {
 		$filename = stripslashes(basename($fic));
 	}else{
-		$fic="./data/image_pers/${idclasse}_edt.png";
+		$fic="./data/image_pers/{$idclasse}_edt.png";
 		$filename = stripslashes(basename($fic));
 	}
 	switch(strrchr(basename($filename), ".")) {

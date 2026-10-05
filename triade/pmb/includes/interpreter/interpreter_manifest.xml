@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: interpreter_manifest.xml,v 1.1 2015-07-24 12:52:42 vdesiles Exp $ -->
+$Id: interpreter_manifest.xml,v 1.1 2015/07/24 12:52:42 vdesiles Exp $ -->
 <manifest>
 	<name>interpreter</name>
 	<description>msg:Fonction Interpreter</description>

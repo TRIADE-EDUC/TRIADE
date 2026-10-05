@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -42,11 +42,11 @@ $cnx=cnx();
 validerequete("menuprof");
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Visa du Responsable d'Unité Enseignement." ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -62,7 +62,7 @@ connexpersistance("color:black;font-weight:bold;font-size:11px;text-align: cente
 if (isset($_POST["consult"])) {
 	if (defined("NBCARBULLPROFP")) { $nbcar=NBCARBULLPROFP;  }else{ $nbcar="500"; }
 	$saisie_classe=$_POST["saisie_classe"];
-	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 	$res=execSql($sql);
 	$dataE=chargeMat($res);
 	
@@ -72,20 +72,20 @@ if (isset($_POST["consult"])) {
 	$data=recupUECode_UE($_SESSION["id_pers"],$saisie_classe);
 
 	print "<table align=center width='100%' border='0' >";
-	if( count($dataE) > 0 ) {	
-		for($j=0;$j<count($dataE);$j++) {
+	if( countTriade($dataE) > 0 ) {	
+		for($j=0;$j<countTriade($dataE);$j++) {
 			$ideleve=$dataE[$j][1];
 			$photoeleve="image_trombi.php?idE=".$ideleve;
 			print "<tr>";
-			print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left' /> ";
+			print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left' style='box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); border-radius: 8px;' />";
 			print "<input type=hidden value=\"".$dataE[$j][1]."\" name='eleveid_$j' />";
-			print "<b> ".ucfirst($dataE[$j][3])." ".strtoupper($dataE[$j][2])."</b>";
+			print "<br /><b>&nbsp;".ucfirst($dataE[$j][3])." ".strtoupper($dataE[$j][2])."</b>";
 			print "</td>";
 			print "<td valign='top' >";
 
-			if (count($data) > 0 ) {
+			if (countTriade($data) > 0 ) {
 				print "<table align=center width='100%' border='0'  >";
-				for($i=0;$i<count($data);$i++) {
+				for($i=0;$i<countTriade($data);$i++) {
 					$code_eu=$data[$i][0];
 					print "<tr>";
 					print "<td valign='top' >";
@@ -105,11 +105,11 @@ if (isset($_POST["consult"])) {
 			print "<tr><td colspan='2' ><hr></td></tr>";
 		}
 		$valider=VALIDER;
-		print "<tr><td colspan=2 ><hr><script language=JavaScript>buttonMagicSubmit('$valider','create');</script></td></tr>";
+		print "<tr><td colspan=2 ><script language=JavaScript>buttonMagicSubmit('$valider','create');</script></td></tr>";
 		print '<input type=hidden name="saisie_trimestre" value="'.$tri.'" />';
 		print "<input type=hidden name='saisie_classe' value=\"".$_POST["saisie_classe"]."\" />";
-		print "<input type=hidden name='saisie_nb'     value='".count($dataE)."' />";
-		print "<input type=hidden name='saisie_nb_ue'  value='".count($data)."'  />";
+		print "<input type=hidden name='saisie_nb'     value='".countTriade($dataE)."' />";
+		print "<input type=hidden name='saisie_nb_ue'  value='".countTriade($data)."'  />";
 			
 	}else{
 		print("<tr><td align=center ><font class=T2>".LANGPROJ6."</font></td></tr>");
@@ -125,15 +125,15 @@ if (isset($_POST["consult"])) {
 // Test du membre pour savoir quel fichier JS je dois executer
 if ($_SESSION["membre"] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

@@ -1,45 +1,42 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: babelio.class.php,v 1.9 2017-11-30 14:33:09 dgoron Exp $
+// $Id: babelio.class.php,v 1.10.2.1.2.1 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-global $class_path,$base_path, $include_path;
+global $class_path;
 require_once($class_path."/connecteurs.class.php");
 require_once($class_path."/curl.class.php");
 
 class babelio extends connector {
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $del_old;				//Supression ou non des notices dejÃ  existantes
-	
+	//Variables internes pour la progression de la récupération des notices
+	public $del_old;				//Supression ou non des notices dejà existantes
+
 	public $profile;				//Profil Amazon
-	public $match;					//Tableau des critÃ¨res UNIMARC / AMAZON
-	public $current_site;			//Site courant du profile (nÂ°)
+	public $match;					//Tableau des critères UNIMARC / AMAZON
+	public $current_site;			//Site courant du profile (n°)
 	public $searchindexes;			//Liste des indexes de recherche possibles pour le site
-	public $current_searchindex;	//NumÃ©ro de l'index de recherche de la classe
+	public $current_searchindex;	//Numéro de l'index de recherche de la classe
 	public $match_index;			//Type de recherche (power ou simple)
 	public $types;					//Types de documents pour la conversino des notices
-	
-	//RÃ©sultat de la synchro
-	public $error;					//Y-a-t-il eu une erreur	
+
+	//Résultat de la synchro
+	public $error;					//Y-a-t-il eu une erreur
 	public $error_message;			//Si oui, message correspondant
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "babelio";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
- 	//Formulaire des propriÃ©tÃ©s gÃ©nÃ©rales
+
+    //Formulaire des propriétés générales
 	public function get_property_form() {
 		global $charset;
 		$this->fetch_global_properties();
@@ -51,7 +48,7 @@ class babelio extends connector {
 		} else {
 			$login="";
 			$mdp="";
-		}	
+		}
 		$r="<div class='row'>
 				<div class='colonne3'><label for='login'>".$this->msg["babelio_login"]."</label></div>
 				<div class='colonne-suite'><input type='text' name='login' value='".htmlentities($login,ENT_QUOTES,$charset)."'/></div>
@@ -62,24 +59,30 @@ class babelio extends connector {
 			</div>";
 		return $r;
 	}
-    
+
     public function make_serialized_properties() {
     	global $login, $mdp;
-		//Mise en forme des paramÃ¨tres Ã  partir de variables globales (mettre le rÃ©sultat dans $this->parameters)
+		//Mise en forme des paramètres à partir de variables globales (mettre le résultat dans $this->parameters)
 		$keys = array();
-    	
+
     	$keys['login']=$login;
 		$keys['mdp']=$mdp;
 		$this->parameters = serialize($keys);
 	}
 
-	public function enrichment_is_allow(){
-		return true;
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::enrichment_is_allow()
+	 */
+	public function enrichment_is_allow()
+	{
+	    return connector::ENRICHMENT_YES;
 	}
-	
+
 	public function getEnrichmentHeader(){
 		$header= array();
-		$header[]= "<!-- Script d'enrichissement BabÃ©lio-->";
+		$header[]= "<!-- Script d'enrichissement Babélio-->";
 		$header[]= "<script type='text/javascript'>
 		function switchPage(notice_id,type,page,action){
 			var pagin= new http_request();
@@ -100,25 +103,26 @@ class babelio extends connector {
 					break;
 			}
 			pagin.request('./ajax.php?module=ajax&categ=enrichment&action=enrichment&type='+type+'&id='+notice_id+'&enrichPage='+page,false,'',true,gotEnrichment);
-		} 
+		}
 		</script>";
 		return $header;
 	}
-	
+
 	public function getTypeOfEnrichment($source_id){
+	    $type = array();
 		$type['type'] = array(
 			"citation",
 			"critique"
-		);		
+		);
 		$type['source_id'] = $source_id;
 		return $type;
 	}
-	
+
 	public function getEnrichment($notice_id,$source_id,$type="",$enrich_params=array(),$page=1){
 		$enrichment= array();
 		$this->noticeToEnrich = $notice_id;
 		$this->enrichPage = $page;
-		//on renvoi ce qui est demandÃ©... si on demande rien, on renvoi tout..
+		//on renvoi ce qui est demandé... si on demande rien, on renvoi tout..
 		$rqt="select code from notices where notice_id = '$notice_id'";
 		$res=pmb_mysql_query($rqt);
 		if(pmb_mysql_num_rows($res)){
@@ -137,20 +141,19 @@ class babelio extends connector {
 				$enrichment['citation']['content'] = $this->getInfos(2,$code);
 				$enrichment['critique']['content'] = $this->getInfos(1,$code);
 				break;
-		}		
+		}
 		$enrichment['source_label']=$this->msg['babelio_enrichment_source'];
 		return $enrichment;
 	}
-	
+
 	public function getInfos($type,$isbn){
-		global $charset;
 		if(!$isbn) return "";
 		$return = "";
 		$t = time();
 		$url = "http://www.babelio.info/sxml/$isbn&type=$type&page=".$this->enrichPage."&auth=".$this->getHash($t)."&timestamp=$t";
 		$curl = new Curl();
 		$xmlToParse = $curl->get($url);
-		$xmlToParse = utf8_decode($xmlToParse);	
+		$xmlToParse = encoding_normalize::utf8_decode($xmlToParse);
 		$xmlToParse=$this->cp1252Toiso88591($xmlToParse);
 		$xmlToParse = str_replace("utf-8","iso-8859-1",$xmlToParse);
 		$xml = _parser_text_no_function_($xmlToParse,"URLSET");
@@ -158,24 +161,34 @@ class babelio extends connector {
 		$return.= $this->getEnrichmentPagin($xml['SOMMAIRE'][0]);
 		return $return;
 	}
-	
+
 	public function getHash($t){
 		$keys = unserialize($this->parameters);
 		return md5($keys['login'].md5($keys['mdp'])."PMB".$t);
 	}
-	
+
 	public function getEnrichmentPagin($sommaire){
 		$current = $sommaire['PAGE'][0]['value'];
-		$nb_page = ceil($sommaire['NB_RESULTATS'][0]['value']/$sommaire['RESULTATS_PAR_PAGE'][0]['value']);
+		if (!empty($sommaire['RESULTATS_PAR_PAGE'][0]['value'])) {
+		    $nb_page = ceil($sommaire['NB_RESULTATS'][0]['value']/$sommaire['RESULTATS_PAR_PAGE'][0]['value']);
+		} else {
+		    $nb_page = 0;
+		}
 		$ret = "";
-		if($current > 1) $ret .= "<img src='".get_url_icon('prev.png')."' onclick='switchPage(\"".$this->noticeToEnrich."\",\"".$this->typeOfEnrichment."\",\"".$current."\",\"previous\");'/>";
-		else $ret .= "<img src='".get_url_icon('prev-grey.png')."'/>";
+		if($current > 1) {
+		    $ret .= "<img src='".get_url_icon('prev.png')."' onclick='switchPage(\"".$this->noticeToEnrich."\",\"".$this->typeOfEnrichment."\",\"".$current."\",\"previous\");'/>";
+		} else {
+		    $ret .= "<img src='".get_url_icon('prev-grey.png')."'/>";
+		}
 		$ret .="&nbsp;".$current."/$nb_page&nbsp;";
-		if($current < $nb_page) $ret .= "<img src='".get_url_icon('next.png')."' onclick='switchPage(\"".$this->noticeToEnrich."\",\"".$this->typeOfEnrichment."\",\"".$current."\",\"next\");'/>";
-		else $ret .= "<img src='".get_url_icon('next-grey.png')."'/>";
+		if($current < $nb_page) {
+		    $ret .= "<img src='".get_url_icon('next.png')."' onclick='switchPage(\"".$this->noticeToEnrich."\",\"".$this->typeOfEnrichment."\",\"".$current."\",\"next\");'/>";
+		} else {
+		    $ret .= "<img src='".get_url_icon('next-grey.png')."'/>";
+		}
 		return "<div class='row'><span style='text-align:center'>".$ret."</span></div>";
 	}
-	
+
 	public function formatEnrichmentResult($xml){
 		$result = "";
 		foreach($xml['URL'] as $url){
@@ -185,10 +198,10 @@ class babelio extends connector {
 			<div class='row'>
 				<div class='row'> ".
 				$this->msg['babelio_enrichment_publish_date']." ".$date;
-			if($this->typeOfEnrichment == 'critique') $result.= "&nbsp;".$this->stars($url['NOTE'][0]['value']) ;
+			if($this->typeOfEnrichment == 'critique') $result.= "&nbsp;".$this->stars(isset($url['NOTE'][0]['value']) ? $url['NOTE'][0]['value'] : 0) ;
 			$result.="
 				</div>
-				<blockquote>";
+				<blockquote role='presentation'>";
 			foreach($url['SNIPPET'] as $content){
 				$result.= $content['value'];
 			}
@@ -196,23 +209,23 @@ class babelio extends connector {
 					<br />
 					<a href='".$url['LOC'][0]['value']."' target='_blank'>".$this->msg['babelio_enrichment_see_more']."</a>
 				</blockquote>
-			</div>";	
+			</div>";
 		}
 		return $result;
 	}
-	
-	// Gestion des Ã©toiles pour les notes
+
+	// Gestion des étoiles pour les notes
 	public function stars($note) {
 		$etoiles_moyenne="";
 		$cpt_star = 5;
-		
+
 		for ($i = 1; $i <= $cpt_star; $i++) {
 			if($note >= $i) $etoiles_moyenne.="<img border=0 src='".get_url_icon('star.png')."' align='absmiddle'>";
 			else $etoiles_moyenne.="<img border=0 src='".get_url_icon('star_unlight.png')."' align='absmiddle'>";
 		}
 		return $etoiles_moyenne;
 	} // fin stars()
-	
+
 	public function cp1252Toiso88591($str){
 		$cp1252_map = array(
 			"\x80" => "EUR", /* EURO SIGN */

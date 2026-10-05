@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: NotificationNode.js,v 1.1 2016-03-18 09:02:55 apetithomme Exp $
+// $Id: NotificationNode.js,v 1.2 2020/08/27 13:49:48 qvarin Exp $
 
 define([ "dojo/text", "dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo/dom-construct", "dgrowl/NotificationNode", "dojo/dom-class", "dojo/_base/event", "dojo/_base/lang", "dojo/text!./NotificationNode.html"],
 	   function(t, declare, base, templated, domCon, NotificationNode, domClass, event, lang, templateString)
@@ -41,9 +41,11 @@ define([ "dojo/text", "dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Templat
 			if(evt)
 				event.stop(evt);
 			// delay on destroy for animation to do its thing...
-			domClass.remove(this.domNode, 'dGrowl-visible');
-			setTimeout(lang.hitch(this, this.destroy),1100);
-			this.onHide(this);
+			if (this.domNode) {
+				domClass.remove(this.domNode, 'dGrowl-visible');
+				setTimeout(lang.hitch(this, this.destroy),1100);
+				this.onHide(this);
+			}
 		}
 	});
 });

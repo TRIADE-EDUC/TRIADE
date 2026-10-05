@@ -3,8 +3,8 @@
 ****************************************************************************************
 © 2002-2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: finances.xml,v 1.5 2017-07-04 07:58:24 mbertin Exp $ -->
-<pmbquotas table="quotas">
+$Id: finances.xml,v 1.6.2.1 2024/11/21 10:02:23 jparis Exp $ -->
+<pmbquotas table="quotas_finance">
 	<elements>
 
 	  	<element name="READER_CATEG" id="2" comment="Categorie lettori">
@@ -46,7 +46,7 @@ $Id: finances.xml,v 1.5 2017-07-04 07:58:24 mbertin Exp $ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
-
+        
 		<element name="LOCATION_READER" id="16" comment="Localizzazioni del lettori ">
             <linkedto>READER</linkedto>
             <tablelinked>empr</tablelinked>
@@ -56,6 +56,7 @@ $Id: finances.xml,v 1.5 2017-07-04 07:58:24 mbertin Exp $ -->
             <field>idlocation</field>
             <label>location_libelle</label>
         </element>
+
 	</elements>
 	
 	<types>
@@ -71,7 +72,7 @@ $Id: finances.xml,v 1.5 2017-07-04 07:58:24 mbertin Exp $ -->
 			</quotas>
 		</type>
 		
-		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Quota dell'importo giornaliero della penale" short_comment="penale giornalierar" filter_id="penale">
+		<type name="AMENDE_BY_DAY" id="2" max="no" min="no" forcelend="no" comment="Quota di penalità giornaliera/periodica" short_comment="penale giornalierar/periodica" filter_id="penale">
 			<quotas>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG</on>
@@ -93,7 +94,29 @@ $Id: finances.xml,v 1.5 2017-07-04 07:58:24 mbertin Exp $ -->
 			</quotas>
 		</type>
 		
-		<type name="AMENDE_DELAI_RECOUVREMENT" id="8" max="no" min="no" forcelend="no" comment="Quota del ritardo prima del recupero della penale" short_comment="ritardo prima del recupero" filter_id="amende">
+		<type name="AMENDE_1_2" id="32" max="no" min="no" forcelend="no" comment="Quotas de délai entre 1er et 2ème rappel" short_comment="délai entre 1er et 2ème rappel" filter_id="amende">
+			<quotas>
+				<on>DOCTYPE</on>
+				<on>READER_CATEG</on>
+				<on>READER_CATEG,DOCTYPE</on>
+				<on>LOCATION,DOCTYPE</on>
+				<on>LOCATION,READER_CATEG</on>
+				<on>LOCATION,READER_CATEG,DOCTYPE</on>
+			</quotas>
+		</type>
+		
+		<type name="AMENDE_2_3" id="64" max="no" min="no" forcelend="no" comment="Quotas de délai entre 2ème et 3ème rappel" short_comment="délai entre 2ème et 3ème rappel" filter_id="amende">
+			<quotas>
+				<on>DOCTYPE</on>
+				<on>READER_CATEG</on>
+				<on>READER_CATEG,DOCTYPE</on>
+				<on>LOCATION,DOCTYPE</on>
+				<on>LOCATION,READER_CATEG</on>
+				<on>LOCATION,READER_CATEG,DOCTYPE</on>
+			</quotas>
+		</type>
+		
+		<type name="AMENDE_DELAI_RECOUVREMENT" id="128" max="no" min="no" forcelend="no" comment="Quotas de délai entre 3ème rappel et recouvrement" short_comment="délai entre 3ème rappel et recouvrement" filter_id="amende">
 			<quotas>
 				<on>DOCTYPE</on>
 				<on>READER_CATEG</on>

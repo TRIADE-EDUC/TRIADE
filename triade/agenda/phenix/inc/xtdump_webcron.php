@@ -21,7 +21,7 @@
 
   @set_time_limit(600);
 
-  $DB_CX->DbQuery("SELECT param, valeur FROM ${PREFIX_TABLE}configuration WHERE groupe=1");
+  $DB_CX->DbQuery("SELECT param, valeur FROM {$PREFIX_TABLE}configuration WHERE groupe=1");
   if ($DB_CX->DbNumRows()) {
     while ($enr = $DB_CX->DbNextRow()) {
       ${$enr['param']} = $enr['valeur'];
@@ -119,7 +119,7 @@
 
   $tblsv = do_backup($PREFIX_TABLE, $XT_DROP_TABLE, $XT_COMPRESS_GZIP, $cfgBase, $fzmax);
 
-  @mysql_close();
+  @mysqli_close();
   if (!$ftbl) {
     close_file($XT_COMPRESS_GZIP);
   }
@@ -150,7 +150,7 @@
       <TD align=center class=texte><font size=2><b>".trad("XTDUMP_MAIL_FICH_TAILLE")."</b></font></TD>
     </TR>";
     reset($f_nm);
-    while (list($i,$val) = each($f_nm)) {
+    foreach ($f_nm as $i => $val) {
       $NomFich=$val;
       $valf = substr ($val,7);
       $mailer->attachment($NomFich, $valf, 'attachment', $AppliMail);

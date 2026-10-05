@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_material_admin.tpl.php,v 1.3 2019-05-27 14:05:40 btafforeau Exp $
+// $Id: nomenclature_material_admin.tpl.php,v 1.4 2021/03/10 12:58:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -10,11 +10,6 @@ global $nomenclature_material_form_tpl, $current_module, $msg, $charset;
 
 $nomenclature_material_form_tpl="
 <script type='text/javascript' src='javascript/ajax.js'></script>
-<script type='text/javascript'>
-	function test_form(form){
-		return true;
-	}	
-</script>
 <form class='form-".$current_module."' id='nomenclature_material_form' name='nomenclature_material_form'  method='post' action=\"admin.php?categ=material&sub=material&action=save\" >
 	<div class='form-contenu'>
 		<div class='row'>
@@ -58,7 +53,7 @@ $nomenclature_material_form_tpl="
 	</div>	
 	<div class='row'>	
 		<div class='left'>
-			<input type='submit' class='bouton' value='".$msg['admin_nomenclature_instrument_form_save']."' onclick=\"if (!test_form(this.form)) return false;\" />
+			<input type='submit' class='bouton' value='".$msg['admin_nomenclature_instrument_form_save']."' />
 		</div>
 		<div class='right'>
 		</div>

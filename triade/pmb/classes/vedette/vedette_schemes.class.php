@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_schemes.class.php,v 1.2 2019-04-19 09:40:05 ccraig Exp $
+// $Id: vedette_schemes.class.php,v 1.3 2020/04/22 15:14:25 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -14,7 +14,7 @@ class vedette_schemes {
 	private static $scheme_by_entity;
 	
 	/**
-	 * Retourne le tableau des schÃ©mas disponibles
+	 * Retourne le tableau des schémas disponibles
 	 * @return array
 	 */
 	public static function get_schemes() {
@@ -32,7 +32,7 @@ class vedette_schemes {
 					}
 					$last_values[$row['authority_num']] = $row['value'];
 				}
-				//pas de langue de l'interface trouvÃ©e
+				//pas de langue de l'interface trouvée
 				foreach ($last_values as $scheme_id => $last_value) {
 					if (!isset(self::$schemes[$scheme_id])) {
 						self::$schemes[$scheme_id] = $last_value;
@@ -44,7 +44,7 @@ class vedette_schemes {
 	}
 	
 	/**
-	 * Retourne le formulaire d'association des schÃ©mas avec les entitÃ©s PMB
+	 * Retourne le formulaire d'association des schémas avec les entités PMB
 	 * @return string
 	 */
 	public function get_scheme_by_entity_form() {
@@ -72,7 +72,7 @@ class vedette_schemes {
 			$schemes_selector = $vedette_scheme_by_entity_selector;
 			$schemes_selector_options = '';
 			
-			// Option sans schÃ©ma
+			// Option sans schéma
 			$option = $vedette_scheme_by_entity_selector_option;
 			$option = str_replace('!!scheme_selector_option_value!!', '0', $option);
 			$option = str_replace('!!scheme_selector_option_label!!', $msg['skos_view_concept_no_scheme'], $option);
@@ -104,7 +104,7 @@ class vedette_schemes {
 	}
 	
 	/**
-	 * RÃ©cupÃ¨re les valeurs postÃ©e du formulaire d'association des schÃ©mas avec les entitÃ©s PMB
+	 * Récupère les valeurs postée du formulaire d'association des schémas avec les entités PMB
 	 */
 	public function set_scheme_by_entity_from_form() {
 		global $scheme_by_entity;
@@ -113,7 +113,7 @@ class vedette_schemes {
 	}
 	
 	/**
-	 * Sauvegarde l'association des schÃ©mas avec les entitÃ©s PMB
+	 * Sauvegarde l'association des schémas avec les entités PMB
 	 */
 	public function save_scheme_by_entity() {
 		pmb_mysql_query('TRUNCATE TABLE vedette_schemes_by_entity');
@@ -129,9 +129,9 @@ class vedette_schemes {
 	}
 	
 	/**
-	 * Retourne les schÃ©mas Ã  utiliser par entitÃ©
-	 * Si une entitÃ© est prÃ©cisÃ©e, ne retourne que les schÃ©mas pour cette entitÃ©
-	 * @param number $entity Constante d'entitÃ© de type TYPE_NOTICE, TYPE_AUTHOR, ...
+	 * Retourne les schémas à utiliser par entité
+	 * Si une entité est précisée, ne retourne que les schémas pour cette entité
+	 * @param number $entity Constante d'entité de type TYPE_NOTICE, TYPE_AUTHOR, ...
 	 * @return array
 	 */
 	public static function get_scheme_by_entity($entity = 0) {
@@ -150,7 +150,7 @@ class vedette_schemes {
 				self::$scheme_by_entity[$row['entity_type']] = $row['scheme'];
 			}
 		}
-		if ($entity) {
+		if ($entity && isset(self::$scheme_by_entity[$entity])) {
 			return self::$scheme_by_entity[$entity];
 		}
 		return self::$scheme_by_entity;

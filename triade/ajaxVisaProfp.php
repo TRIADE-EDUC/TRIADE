@@ -1,8 +1,10 @@
 <?php
 session_start();
 if ( (empty($_SESSION["nom"])) && (empty($_SESSION["membre"]) ) ) { exit; }
-error_reporting(0);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 include_once("./common/config.inc.php");
+include_once("./common/config2.inc.php");
 include_once("./librairie_php/db_triade.php");
 $cnx=cnx();
 if  (($_SESSION["membre"] == "menuadmin") || ( ($_SESSION["membre"] == "menuprof") && (verif_profp_eleve2($_POST["ideleve"],$_SESSION["id_pers"])) ) ) {

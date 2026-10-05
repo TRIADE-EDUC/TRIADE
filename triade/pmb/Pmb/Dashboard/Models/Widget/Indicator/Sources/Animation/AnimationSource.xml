@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: AnimationSource.xml,v 1.1 2024/02/26 14:28:55 dbellamy Exp $ -->
+
+<source>
+    
+    <methods>
+    
+        <!-- Nb d'inscriptions à valider -->
+        <nb_registrations_to_validate>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM anim_registrations WHERE num_registration_status = 1</query>
+        </nb_registrations_to_validate>
+        
+        <!-- Nb d'animations -->
+        <nb_animations>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM anim_animations</query>
+        </nb_animations>
+        
+    </methods>
+</source>

@@ -1,4 +1,3 @@
-<files conf.inc.php>
-  Order Deny,Allow
-  Deny From All
-</files>
+<Files "conf.inc.php">
+  Require all denied
+</Files>

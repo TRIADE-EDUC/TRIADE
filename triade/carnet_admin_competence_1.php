@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -21,6 +21,7 @@ session_start();
 ?>
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -32,7 +33,7 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("./librairie_php/db_triade.php"); 
@@ -53,11 +54,11 @@ if (isset($_POST["modifdirect_competence"])) {
 
 $nom_carnet=chercheNomCarnet($idcarnet);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET49." : <font id='color2'> $nom_carnet </font> " ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -78,14 +79,15 @@ if (isset($_POST["competence_ajout"])) {
 if (isset($_POST["ajouter_descriptif"])) {
 	$idcompetence=$_POST["saisie_idcompetence"];
 	$competence=chercheCompetence($idcompetence);
-	enr_descriptif($idcarnet,$idcompetence,$_POST["bold"],$_POST["saisie_descriptif"]);
+	$descriptif=$_POST["saisie_descriptif"];
+	enr_descriptif($idcarnet,$idcompetence,$_POST["bold"],stripslashes($descriptif));
 }
 
 if (isset($_POST["modifier_descriptif"])) {
 	$iddescriptif=$_POST["saisie_iddescriptif"];
 	$idcompetence=$_POST["saisie_idcompetence"];
 	$competence=chercheCompetence($idcompetence);
-	modif_descriptif($iddescriptif,$_POST["bold"],$_POST["saisie_descriptif"]);
+	modif_descriptif($iddescriptif,$_POST["bold"],stripslashes($_POST["saisie_descriptif"]));
 }
 
 ?>
@@ -94,14 +96,14 @@ if (isset($_POST["modifier_descriptif"])) {
 <?php 
 $data=rechercheDescriptif($idcompetence,$idcarnet); //id,libelle,bold
 ?>
-<center><font class="T2"><b><u><?php print trunchaine($competence,46); ?></u></b></font></center>
+<center><font class="T2"><b><u><?php print trunchaine(stripslashes($competence),46); ?></u></b></font></center>
 <br>
 <br>
-<table border=1 bordercolor="#000000" bgcolor="#FFFFFF">
+<table border=1 bordercolor="#000000" bgcolor="#FFFFFF" style='border-collapse: collapse;'>
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$iddescriptif=$data[$i][0];
-	$libelle=$data[$i][1];
+	$libelle=stripslashes(stripslashes($data[$i][1]));
 	$bold=$data[$i][2];
 	if ($bold) { 
 		$b="<b>"; $bb="</b>"; 
@@ -132,6 +134,7 @@ if (isset($_GET["iddescmodif"])) {
 	$idcarnet=$data[0][1];
 	$idcompetence=$data[0][2];
 	$descriptif=$data[0][3];
+	$descriptif=stripslashes(stripslashes($descriptif));
 	$bold=$data[0][4];
 	if ($bold) {
 		$checkoui="checked='checked'";

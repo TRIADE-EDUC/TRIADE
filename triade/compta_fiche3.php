@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,11 +26,16 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/alertify.min.css">
+<link rel="stylesheet" href="./librairie_css/alertify.default.min.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/alertify.min.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
@@ -40,11 +45,11 @@ include_once("librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
 <?php print "Imprimer fiche d'état des règlements" ?></font></b></td>
@@ -63,9 +68,9 @@ include_once('./librairie_pdf/html2pdf.php');
 $pdf=new PDF();  // declaration du constructeur
 
 
-$pdf->SetTitle("Fiche d'état des règlements");
+$pdf->SetTitle(utf8_decode("Fiche d'état des règlements"));
 $pdf->SetCreator("T.R.I.A.D.E.");
-$pdf->SetSubject("Fiche d'état des règlements"); 
+$pdf->SetSubject(utf8_decode("Fiche d'état des règlements")); 
 $pdf->SetAuthor("T.R.I.A.D.E. - www.triade-educ.com"); 
 
 
@@ -150,7 +155,7 @@ foreach($tabideleve as $key=>$value) {
 	if ($dataVE == "") { $dataVE=array(); }
 	$data=array_merge($data,$dataVE);
 	$Y+=16;
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		$id=$data[$j][0];
 		$libelle=$data[$j][2];
 		$montant=$data[$j][3];

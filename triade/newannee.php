@@ -1,84 +1,135 @@
-<?php
+Ôªø<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
- *
  ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
+include_once("./common/config5.inc.php");
+include_once("./librairie_php/lib_licence.php");
+include_once("librairie_php/db_triade.php");
+$cnx = cnx();
+header('Content-type: text/html; charset='.CHARSET);
 ?>
 <HTML>
 <HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content=-1>
+<meta name="Copyright" content="Triade¬©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert = function(msg){ alertify.error(msg); };</script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
-</head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php
-include_once("./librairie_php/lib_licence.php");
-// connexion (aprËs include_once lib_licence.php obligatoirement)
-include_once("librairie_php/db_triade.php");
-$cnx=cnx();
-?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
+</HEAD>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<script language="JavaScript">
+function suite() {
+  var confirmation = confirm('<?php print LANGCHAN3 ?>','');
+  return confirmation;
+}
+</script>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<form method=post onsubmit="return suite()" name="formulaire" action="./base_de_donne_key.php?base=newannee" >
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print "Nouvelle annÈe scolaire" ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2">
+  <b><font id='menumodule1'>Nouvelle ann√©e scolaire</font></b>
+</td></tr>
 <tr id='cadreCentral0'>
-<td >
-<!-- // debut form  -->
-<br><br>
-<ul><font class='T2'><?php print "<b>Module permettant de passer ‡ l'annÈe suivante</b>" ?>.</font></ul><br>
+<td>
+<!-- // debut -->
 
-<ul><img src="image/commun/warning2.gif" align='center' />&nbsp;&nbsp;&nbsp;<font class=T2 id='color3' ><b>Liste des ÈlÈments supprimÈs :</b> <br /></font><br>
+<form method="post" onsubmit="return suite()" name="formulaire"
+      action="./base_de_donne_key.php?base=newannee">
 
-<font class=T2>&nbsp;&nbsp;- Suppression des notes vie scolaire ÈlËves. </font><br /> 
-<font class=T2>&nbsp;&nbsp;- Suppression des Ètudes d'ÈlËves. </font><br />
-<font class=T2>&nbsp;&nbsp;- Suppression info D.S.T avant le <input type='text' name="supp_date_dst" size='12' maxlength='10' value="<?php print date("d/m/Y") ?>"  onKeyPress="onlyChar2(event)" /></font><br />
-<font class=T2>&nbsp;&nbsp;- Suppr. info cal. des ÈvÈnements avant le <input  name="supp_date_cal" type='text' maxlength='10'  size='12' value="<?php print date("d/m/Y") ?>"  onKeyPress="onlyChar2(event)" /></font><br />
-<font class=T2>&nbsp;&nbsp;- Suppr. info Emploi du temps (EDT) avant le <input type='text' name="supp_date_edt" size='12' maxlength='10'  value="<?php print date("d/m/Y") ?>"  onKeyPress="onlyChar2(event)" /></font><br />
-<font class=T2>&nbsp;&nbsp;- Suppression des dÈlÈguÈs. </font><br />
-</ul>
+<div style="display:flex;flex-direction:column;gap:12px;padding:10px 6px">
 
-<script language=JavaScript>
-      function suite() {
-	       var confirmation=confirm('<?php print LANGCHAN3?>','');
-               return confirmation;
-      }
-      </script>
-<BR><div align="center"> <input type=submit  class="BUTTON" value='<?php print LANGBTS?>' /> </div><br />
+  <div style="background:#eef0f8;border:1px solid #c5cae9;border-radius:6px;padding:10px 14px;font-size:12px;color:#333;line-height:1.6">
+    <strong>Module permettant de passer √† l'ann√©e suivante.</strong>
+  </div>
+
+  <div class="card" style="border-top:3px solid #e65100">
+    <div class="card-header">
+      <span class="card-title" style="color:#e65100;display:flex;align-items:center;gap:6px">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        Liste des √©l√©ments supprim√©s
+      </span>
+    </div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0;border-bottom:1px solid #eef0f8">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        Suppression des notes vie scolaire √©l√®ves
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0;border-bottom:1px solid #eef0f8">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        Suppression des √©tudes d'√©l√®ves
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0;border-bottom:1px solid #eef0f8;flex-wrap:wrap">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        <span>Suppression info D.S.T avant le</span>
+        <input type="text" name="supp_date_dst" size="10" maxlength="10"
+               value="<?php print date("d/m/Y") ?>"
+               onkeypress="onlyChar2(event)"
+               style="border:1px solid #c5cae9;border-radius:4px;padding:3px 8px;font-size:11px;width:90px">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0;border-bottom:1px solid #eef0f8;flex-wrap:wrap">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        <span>Suppression info calendrier des √©v√©nements avant le</span>
+        <input type="text" name="supp_date_cal" size="10" maxlength="10"
+               value="<?php print date("d/m/Y") ?>"
+               onkeypress="onlyChar2(event)"
+               style="border:1px solid #c5cae9;border-radius:4px;padding:3px 8px;font-size:11px;width:90px">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0;border-bottom:1px solid #eef0f8;flex-wrap:wrap">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        <span>Suppression info Emploi du temps (EDT) avant le</span>
+        <input type="text" name="supp_date_edt" size="10" maxlength="10"
+               value="<?php print date("d/m/Y") ?>"
+               onkeypress="onlyChar2(event)"
+               style="border:1px solid #c5cae9;border-radius:4px;padding:3px 8px;font-size:11px;width:90px">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#333;padding:4px 0">
+        <i class="bi bi-dash-circle" style="color:#c62828;flex-shrink:0"></i>
+        Suppression des d√©l√©gu√©s
+      </div>
+
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <button type="submit" class="btn btn-danger" style="display:inline-flex;align-items:center;gap:7px">
+      <i class="bi bi-arrow-clockwise"></i>
+      <?php print LANGBTS ?>
+    </button>
+    <script language=JavaScript>buttonMagicRetour("acces2.php","_self")</script>
+  </div>
+
+</div>
+
 </form>
-<br>
-<!-- // fin form -->
- </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
-<?php
-// deconnexion en fin de fichier
-Pgclose();
-?>
-</BODY>
-</HTML>
+
+<!-- // fin -->
+<?php Pgclose(); ?>
+</td></tr></table>
+
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
+</BODY></HTML>

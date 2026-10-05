@@ -1,10 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: id_notice.inc.php,v 1.2 2015-08-14 12:33:05 dbellamy Exp $
+// $Id: id_notice.inc.php,v 1.4 2022/05/11 07:18:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid;
+global $msg, $begin_result_liste, $end_result_liste;
+global $pmb_show_notice_id, $f_notice_id, $id_empr, $groupID;
 
 //droits d'acces lecture notice
 $acces_j='';
@@ -21,8 +25,9 @@ if($prefix_id){
 	$f_notice_id = str_replace($prefix_id,"",$f_notice_id);
 }
 
+$f_notice_id = intval($f_notice_id);
 $rqt = "select * from notices where notice_id='".$f_notice_id."'";
-$res = pmb_mysql_query($rqt,$dbh);
+$res = pmb_mysql_query($rqt);
 
 if(pmb_mysql_num_rows($res)){
 	$ident = pmb_mysql_fetch_object($res);
@@ -34,7 +39,7 @@ if(pmb_mysql_num_rows($res)){
 		if(pmb_mysql_num_rows($res_bull)){
 			$ident_bull = pmb_mysql_result($res_bull,0,0);
 			print "<script type=\"text/javascript\">";
-			print "document.location = \"./circ.php?categ=resa_planning&resa_action=add_resa&id_empr=$id_empr&groupID=$groupID&id_bulletin=".$ident_bull."\"";
+			print "document.location = \"./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&id_bulletin=".$ident_bull."\"";
 			print "</script>";
 		}
 
@@ -55,17 +60,17 @@ if(pmb_mysql_num_rows($res)){
 		if(pmb_mysql_num_rows($res_bull)){
 			$ident_bull = pmb_mysql_result($res_bull,0,0);
 			print "<script type=\"text/javascript\">";
-			print "document.location = \"./circ.php?categ=resa_planning&resa_action=add_resa&id_empr=$id_empr&groupID=$groupID&id_bulletin=".$ident_bull."\"";
+			print "document.location = \"./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&id_bulletin=".$ident_bull."\"";
 			print "</script>";
 		}
 
 	//C'est une notice de monographie
 	} else {
 		print "<script type=\"text/javascript\">";
-		print  "document.location = \"./circ.php?categ=resa_planning&resa_action=add_resa&id_empr=$id_empr&groupID=$groupID&id_notice=".$ident->notice_id."\"";
+		print  "document.location = \"./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&id_notice=".$ident->notice_id."\"";
 		print "</script>";
 	}
 } else {
-	error_message($msg[235], $msg['notice_id_query_failed']." ".$f_notice_id, 1, "./circ.php?categ=resa_planning&resa_action=search_resa&id_empr=$id_empr&groupID=$groupID&mode=0");
+	error_message($msg[235], $msg['notice_id_query_failed']." ".$f_notice_id, 1, "./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&mode=0");
 	die();
 }

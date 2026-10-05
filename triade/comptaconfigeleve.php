@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,10 +26,15 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/alertify.min.css">
+<link rel="stylesheet" href="./librairie_css/alertify.default.min.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/alertify.min.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_compta.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_comptaSupp.js"></script>
@@ -65,11 +70,11 @@ function selectionne() {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Gestion des versements" ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -134,24 +139,24 @@ if (isset($_POST['ideleve'])) {
 
 
 <table border=0 align=center width="100%">
-<tr><td align="right"><font class=T2><?php print "Nom de l'élève "?> :</font></td>
+<tr><td align="right"><?php print "Nom de l'élève "?> :</td>
 <td><input type="hidden" name="ideleve" value='<?php print $eid ?>' /><b>
 <?php print trunchaine($nom." ".$prenom,40) ?></b></td></tr>
 
-<tr><td align="right" ><font class=T2>Modèle de règlement :</font></td>
+<tr><td align="right" >Modèle de règlement :</td>
     <td ><select  name="listemodele" onChange='selectionne()' >
 	<option id='select1' value="-1" ><?php print "" ?></option>
 	<?php listingModele() ?>
 	</select></td></tr>
 
 
-<tr><td align="right" ><font class=T2>Intitulé du versement :</font></td>
+<tr><td align="right" >Intitulé du versement :</td>
     <td ><input type="text" name="nameversement" size='30' maxlength='30' /></td></tr>
 
-<tr><td align="right" ><font class=T2>Montant du versement :</font></td>
+<tr><td align="right" >Montant du versement :</td>
     <td><input type="text" name="montantversement" size=30 /></td></tr>
 
-<tr><td align="right" ><font class=T2>Mode de paiement :</font></td>
+<tr><td align="right" >Mode de paiement :</td>
     <td><select name="modedepaiement" >
 	<option value='' id='select0' >Choix...</option>
 	<option value='Par CB' id='select1' >Par CB</option>
@@ -162,10 +167,10 @@ if (isset($_POST['ideleve'])) {
 	</select>
 </td></tr>
 
-<tr><td align="right" ><font class=T2>Pour l'année scolaire :</font></td>
+<tr><td align="right" >Pour l'année scolaire :</td>
 <td ><select name='anneescolaire'><?php print anneeScolaireSelect() ?></select></td></tr>
 
-<tr><td align="right" ><font class=T2>Date d'échéance :</font></td>
+<tr><td align="right" >Date d'échéance :</td>
     <td><input type="text" name="dateversement" value="" size=12  onKeyPress="onlyChar(event)" > <?php include_once("librairie_php/calendar.php"); calendarMoiAnnee('id1','document.formulaire.dateversement',$_SESSION["langue"],"0");?></td></tr>
 
 <tr><td height=20></td></tr>
@@ -187,7 +192,7 @@ if (isset($_POST['ideleve'])) {
 </center>
 <br>
 <form method='post' action="comptaconfigeleve.php?eid=<?php print $eid?>" >
-&nbsp;&nbsp;<font class=T2>Filtre : </font><select onChange='this.form.submit()' name='anneescolairefiltre' > <?php filtreAnneeScolaireSelect($anneescolairefiltre) ?> </select><br><br>
+&nbsp;&nbsp;Filtre :<select onChange='this.form.submit()' name='anneescolairefiltre' > <?php filtreAnneeScolaireSelect($anneescolairefiltre) ?> </select><br><br>
 </form><br>
 <?php 
 if (isset($_POST["create"])) {
@@ -212,19 +217,19 @@ function modif(id,dateM,montant,libelle) {
 <?php
 print "<table border='1' width='100%' bgcolor='#FFFFFF' bordercolor='#000000'  >";
 $dataClasse=affClasse(); // code_class,libelle
-for($j=0;$j<count($dataClasse);$j++) {
+for($j=0;$j<countTriade($dataClasse);$j++) {
 	$idclasse=$dataClasse[$j][0];
 	if ($idclasse != $idClasseEleve) { continue; }
 	$classe=$dataClasse[$j][1];
 	print "<tr>";
-	print "<td colspan='4' id='bordure' ><font class='T2'>Classe : ".ucwords($classe);
-	print "</font> / Commun à toute la classe</td></tr>";
-	print "<tr><td width='70' id='bordure' ></td>
-		<td id='bordure' bgcolor=yellow >Libellé du versement</td>
-		<td width='10%' bgcolor=yellow  id='bordure' >&nbsp;Date&nbsp;d'échéance&nbsp;</td>
-		<td width='5%' bgcolor=yellow  id='bordure' >&nbsp;Montant&nbsp;</td></tr>";
+	print "<td colspan='4' id='bordure'>Classe : ".ucwords($classe);
+	print " / Commun à toute la classe</td></tr>";
+	print "<tr><td width='70' id='bordure'></td>
+		<td id='bordure' class='cc-th'>Libellé du versement</td>
+		<td width='10%' class='cc-th' id='bordure'>&nbsp;Date&nbsp;d'échéance&nbsp;</td>
+		<td width='5%' class='cc-th' id='bordure'>&nbsp;Montant&nbsp;</td></tr>";
 	$data=recupConfigVersement($idclasse,$anneescolairefiltre); // id,idclasse,libellevers,montantvers,datevers
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$libelle=$data[$i][2];
 		$montant=$data[$i][3];
 		$id=$data[$i][0];
@@ -253,15 +258,15 @@ for($j=0;$j<count($dataClasse);$j++) {
 
 
 print "<tr>";
-print "<td colspan='4' id='bordure' ><font class='T2'>Individuel : ";
-print "</font><span id='aff$j' ></span></td></tr>";
-print "<tr><td width=70 id='bordure' ></td>
-	<td id='bordure' bgcolor=yellow >Libellé du versement</td>
-	<td width='10%' bgcolor=yellow  id='bordure' >&nbsp;Date&nbsp;d'échéance&nbsp;</td>
-	<td width='5%' bgcolor=yellow  id='bordure' >&nbsp;Montant&nbsp;</td></tr>";
+print "<td colspan='4' id='bordure'>Individuel : ";
+print "<span id='aff$j'></span></td></tr>";
+print "<tr><td width=70 id='bordure'></td>
+	<td id='bordure' class='cc-th'>Libellé du versement</td>
+	<td width='10%' class='cc-th' id='bordure'>&nbsp;Date&nbsp;d'échéance&nbsp;</td>
+	<td width='5%' class='cc-th' id='bordure'>&nbsp;Montant&nbsp;</td></tr>";
 
 $data=recupConfigVersementEleve($eid,$anneescolairefiltre); // id,idclasse,libellevers,montantvers,datevers
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$libelle=$data[$i][2];
 	$montant=$data[$i][3];
 	$id=$data[$i][0];

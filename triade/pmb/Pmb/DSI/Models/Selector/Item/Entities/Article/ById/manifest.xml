@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.3 2023/11/08 08:34:35 rtigero Exp $ 
+-->
+
+<manifest>
+	<namespace>Pmb\DSI\Models\Selector\Item\Entities\Article\ById\ArticleByIdSelector</namespace>
+	<type>selector</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2023-07-19</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<sort>Pmb\DSI\Models\Sort\Entities\Article\ArticleSortTitle\ArticleSortTitle</sort>
+		<sort>Pmb\DSI\Models\Sort\Entities\Article\ArticleSortOrder\ArticleSortOrder</sort>
+	</compatibility>
+</manifest>

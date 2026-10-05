@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign.tpl.php,v 1.2 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: campaign.tpl.php,v 1.3 2023/08/17 09:47:56 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -28,7 +28,7 @@ $campaign_view_tpl = "
 <br /><br />
 <div class='row'></div>
 
-<script type='text/javascript'>
+<script>
 	require([
 		'dojox/charting/Chart',
 		'dojox/charting/plot2d/Pie',

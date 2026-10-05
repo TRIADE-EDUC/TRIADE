@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_records_controller.class.php,v 1.2 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: entities_records_controller.class.php,v 1.5 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/entities/entities_controller.class.php");
 require_once($class_path."/mono_display.class.php");
 require_once($class_path."/notice_doublon.class.php");
@@ -142,20 +143,12 @@ class entities_records_controller extends entities_controller {
 		if ($forcage == 1) {
 			$tab= unserialize(stripslashes($ret_url));
 			foreach($tab->GET as $key => $val){
-				if (get_magic_quotes_gpc())
-					$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+				add_sl($val);
+				$GLOBALS[$key] = $val;
 			}	
 			foreach($tab->POST as $key => $val){
-				if (get_magic_quotes_gpc())
-					$GLOBALS[$key] = $val;
-				else {
-					add_sl($val);
-					$GLOBALS[$key] = $val;
-				}
+				add_sl($val);
+				$GLOBALS[$key] = $val;
 			}
 		} else if( $pmb_notice_controle_doublons != 0 ) {	
 			//Si controle de dedoublonnage active	
@@ -181,7 +174,7 @@ class entities_records_controller extends entities_controller {
 					}
 					print "
 						<br /><div class='erreur'>$msg[540]</div>
-						<script type='text/javascript' src='./javascript/tablist.js'></script>
+						<script src='./javascript/tablist.js'></script>
 						<div class='row'>
 							<div class='colonne10'>
 								<img src='".get_url_icon('error.gif')."' class='align_left'>
@@ -218,7 +211,7 @@ class entities_records_controller extends entities_controller {
 						$nt->result
 				 	    </div>
 						<script>document.getElementById('el".$nt->unique_id."Child').setAttribute('startOpen','Yes');</script>
-						<script type='text/javascript'>document.forms['dummy'].elements['ok'].focus();</script>";
+						<script>document.forms['dummy'].elements['ok'].focus();</script>";
 						$enCours++;
 					}
 					exit();
@@ -234,7 +227,7 @@ class entities_records_controller extends entities_controller {
 		$myNotice = $this->get_object_instance();
 		$myNotice->signature = $this->signature;
 		$myNotice->set_properties_from_form();
-		$saved = $myNotice->save();
+		$myNotice->save();
 		$this->id = $myNotice->id;
 		return $myNotice->id;	
 	}
@@ -244,7 +237,7 @@ class entities_records_controller extends entities_controller {
 		global $by;
 		
 		$myNotice = $this->get_object_instance();
-		$by += 0;
+		$by = intval($by);
 		if(!$by) {
 			$myNotice->replace_form();
 		} else {
@@ -270,7 +263,7 @@ class entities_records_controller extends entities_controller {
 	}
 	
 	public function get_display_view($id=0) {
-		print "<script type='text/javascript'>
+		print "<script>
 			document.location = '".$this->get_permalink($id)."';
 			</script>";
 	}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: transfertdata_upload.php,v 1.7 2019-04-20 14:45:16 ccraig Exp $
+// $Id: transfertdata_upload.php,v 1.8 2019/08/01 13:16:36 btafforeau Exp $
 
 //Restauration d'urgence
 
@@ -25,7 +25,7 @@ if ($_tableau_databases[1] && $base_title) {
 } else $database_window_title="" ; 
 
 @$link=pmb_mysql_connect($_POST["host"], $_POST["db_user"], $_POST["db_password"]) or die("Impossible de se connecter au serveur MySql en tant qu'admin USER_NAME "); // Le @ ordonne a php de ne pas afficher de message d'erreur
-@pmb_mysql_select_db($_POST["db"], $link) or die("Impossible de se connecter Ã  la base de donnÃ©es $dbnamedbhost");
+@pmb_mysql_select_db($_POST["db"], $link) or die("Impossible de se connecter à la base de données $dbnamedbhost");
 
 
 ##### Faire saisir le nom de la bdd, les mots de passe pour securite... et se connecter ensuite. faire quand meme un include db_include pour savoir le charset destination.
@@ -37,13 +37,15 @@ function restore($src) {
 	global $buffer_sql;
 
 	$SQL = array();
-	if($src) {
-		$filename=$src;
-		if(open_restore_stream($src) && $buffer_sql) {
+	if (!empty($src)) {
+		if (open_restore_stream($src) && !empty($buffer_sql)) {
 			// open source file
 			$SQL = preg_split('/;\s*\n|;\n/m', $buffer_sql);
-			for($i=0; $i < sizeof($SQL); $i++) {
-				if($SQL[$i]) $result = pmb_mysql_query($SQL[$i], $link);
+			$nb_queries = count($SQL);
+			for ($i = 0; $i < $nb_queries; $i++) {
+			    if ($SQL[$i]) {
+			        $result = pmb_mysql_query($SQL[$i], $link);
+			    }
 			}
 		} else {
 			die("can't open file $src to restore");

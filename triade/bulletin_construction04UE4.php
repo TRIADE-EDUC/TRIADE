@@ -21,7 +21,7 @@ error_reporting(0);
  ***************************************************************************/
 include_once("./librairie_php/lib_licence.php");
 include_once("./common/config.inc.php");
-$nofooterPDF=NOFOOTERPDF;
+if (defined("NOFOOTERPDF")) $nofooterPDF=NOFOOTERPDF;
 include_once("./librairie_php/lib_get_init.php");
 $id=php_ini_get("safe_mode");
 if ($id != 1) {
@@ -47,11 +47,11 @@ if (isset($_POST["annee_scolaire"])) { $anneeScolaire=$_POST["annee_scolaire"]; 
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -83,12 +83,65 @@ $affphotoeleve="non";
 $calculmoyenbrute="non";
 $affTextDirPedago="non";
 $affhautbasgeneral="non";
+$hauteurMarge=$_POST['hauteurMarge'];
+config_param_ajout($hauteurMarge,"hauteurMarge");
+if (!is_numeric($hauteurMarge)) $hauteurMarge='10';
 
+function grade2($valeur) {
+	if ($valeur == "") return('');
+	if ($valeur >= 18) return("A+");
+	if (($valeur >= 16) && ($valeur < 18))  return("A");
+	if (($valeur >= 15) && ($valeur < 16))  return("A-");
+	if (($valeur >= 14) && ($valeur < 15))  return("B+");
+	if (($valeur >= 13) && ($valeur < 14))  return("B");
+	if (($valeur >= 12) && ($valeur < 13))  return("B-");
+	if (($valeur >= 11) && ($valeur < 12))  return("C+");
+	if (($valeur >= 10) && ($valeur < 11))  return("C");
+	if (($valeur >= 9) && ($valeur < 10))  return("C-");
+	if (($valeur >= 8) && ($valeur < 9))  return("D+");
+	if (($valeur >= 7) && ($valeur < 8))  return("D");
+	if (($valeur >= 6) && ($valeur < 7))  return("E");
+	if (($valeur >= 0) && ($valeur < 6))  return("F");
+}
+
+function point($valeur) {
+	if ($valeur == "") return('');
+        if ($valeur >= 18) return("4");
+        if (($valeur >= 16) && ($valeur < 18))  return("3,9");
+        if (($valeur >= 15) && ($valeur < 16))  return("3,7");
+        if (($valeur >= 14) && ($valeur < 15))  return("3,3");
+        if (($valeur >= 13) && ($valeur < 14))  return("3");
+        if (($valeur >= 12) && ($valeur < 13))  return("2,7");
+        if (($valeur >= 11) && ($valeur < 12))  return("2,3");
+        if (($valeur >= 10) && ($valeur < 11))  return("2");
+        if (($valeur >= 9) && ($valeur < 10))  return("1,6");
+        if (($valeur >= 8) && ($valeur < 9))  return("1,2");
+        if (($valeur >= 7) && ($valeur < 8))  return("0,8");
+        if (($valeur >= 6) && ($valeur < 7))  return("0,4");
+        if (($valeur >= 0) && ($valeur < 6))  return("0");
+}
+
+function mention($valeur) {
+	if ($valeur == "") return('');
+        if ($valeur >= 18) return("Excellent");
+        if (($valeur >= 16) && ($valeur < 18))  return("Excellent");
+        if (($valeur >= 15) && ($valeur < 16))  return("Très Bien");
+        if (($valeur >= 14) && ($valeur < 15))  return("Bien");
+        if (($valeur >= 13) && ($valeur < 14))  return("Assez Bien");
+        if (($valeur >= 12) && ($valeur < 13))  return("Assez Bien");
+        if (($valeur >= 11) && ($valeur < 12))  return("Passable");
+        if (($valeur >= 10) && ($valeur < 11))  return("Passable");
+        if (($valeur >= 9) && ($valeur < 10))  return("Médiocre");
+        if (($valeur >= 8) && ($valeur < 9))  return("Médiocre");
+        if (($valeur >= 7) && ($valeur < 8))  return("Médiocre");
+        if (($valeur >= 6) && ($valeur < 7))  return("Mauvais");
+        if (($valeur >= 0) && ($valeur < 6))  return("Mauvais");
+}
 
 
 $debut=deb_prog();
 $valeur=visu_affectation_detail_bulletin($_POST["saisie_classe"],$anneeScolaire);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; $triabsconet="T1"; $sem=1; }
 	if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; $triabsconet="T2"; $sem=2; }
@@ -102,7 +155,7 @@ if ($_POST["typetrisem"] == "semestre") {
 
 
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebutP1=$dateRecup[$j][0];
 	$dateFinP1=$dateRecup[$j][1];
 }
@@ -110,7 +163,7 @@ $dateDebutP1=dateForm($dateDebutP1);
 $dateFinP1=dateForm($dateFinP1);
 
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebutP2=$dateRecup[$j][0];
 	$dateFinP2=$dateRecup[$j][1];
 }
@@ -118,7 +171,7 @@ $dateDebutP2=dateForm($dateDebutP2);
 $dateFinP2=dateForm($dateFinP2);
 
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$_POST["saisie_classe"],$anneeScolaire);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebutP3=$dateRecup[$j][0];
 	$dateFinP3=$dateRecup[$j][1];
 }
@@ -144,7 +197,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_paramViaIdSite(chercheIdSite($_POST["saisie_classe"]));
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim(TextNoAccent($data[$i][0]));
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -156,16 +209,22 @@ for($i=0;$i<count($data);$i++) {
 }
 // fin de la recup
 
+if ($_POST["saisie_trimestre"] == "trimestre1") { $dateDebut=$dateDebutP1; $dateFin=$dateFinP1; }
+if ($_POST["saisie_trimestre"] == "trimestre2") { $dateDebut=$dateDebutP2; $dateFin=$dateFinP2; }
+
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
 $dateDebut=dateForm($dateDebut);
 $dateFin=dateForm($dateFin);
 
+
 $idClasse=$_POST["saisie_classe"];
+
+
 
 // creation PDF
 //
@@ -203,13 +262,13 @@ $max="";
 $min=1000;
 
 $recupUE=recupUE($idClasse,$sem);
-for($g=0;$g<count($eleveT);$g++) {
+for($g=0;$g<countTriade($eleveT);$g++) {
 	// variable eleve
        	$idEleve=$eleveT[$g][4];
         $noteMoyEleG=0;
         $coefEleG=0;
         $moyenEleve2="";
-	for($f=0;$f<count($recupUE);$f++) {
+	for($f=0;$f<countTriade($recupUE);$f++) {
                 $code_ue=$recupUE[$f][0];
                 $nom_ue=$recupUE[$f][1];
                 $coef_ue=$recupUE[$f][2];
@@ -226,18 +285,19 @@ for($g=0;$g<count($eleveT);$g++) {
 			continue;
 		}
 
-	        $listeMatiere=recupMatiereUE($code_ue,$idClasse);  // u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull, a.langue	
+	         // $listeMatiere=recupMatiereUE($code_ue,$idClasse);  // u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull, a.langue	
+	          $listeMatiere=recupMatiereUE3($nom_ue,$idClasse,$sem,$anneeScolaire);
                 // Verification si saut de page
                 // ---------------------------
                 $nbmatiere=0;
-                for($i=0;$i<count($listeMatiere);$i++) {
+                for($i=0;$i<countTriade($listeMatiere);$i++) {
                         $idmatiere=$idMatiere=$listeMatiere[$i][0];
        	                $ordreaffichage=$listeMatiere[$i][3];
                         $verifGroupe=verifMatiereAvecGroupeUE($idmatiere,$idEleve,$idClasse,$ordreaffichage);
                         if ($verifGroupe) { continue; }
                         $nbmatiere++;
                 }
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 	                $idmatiere=$listeMatiere[$i][0];
 	                $idMatiere=$listeMatiere[$i][0];
 	                $matierelong=chercheMatiereLong($idMatiere);
@@ -297,14 +357,14 @@ unset($nbmatiere);
 
 //$plageEleve=$_POST["plageEleve"];
 $plageEleve="tous";
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=strtoupper($eleveT[$j][0]);
@@ -374,7 +434,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$idprofp=rechercheprofp($_POST["saisie_classe"]);
 	$profp=recherche_personne2($idprofp);
 
-	$Y=20;
+	$Y=$hauteurMarge;
 
 	$X=10;
 	$largeurInfo=90;
@@ -382,7 +442,10 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$pdf->SetFont('Arial','B',10);
 	$pdf->SetXY($X,$Y);
-	$pdf->MultiCell($largeurInfo,3,"Noms et prenoms / Name and surname ",0,'R',0);
+	$pdf->MultiCell($largeurInfo,3,"Noms et prenoms /                                  ",0,'R',0);
+	$pdf->SetFont('Arial','I',10);
+	$pdf->SetXY($X,$Y);
+	$pdf->MultiCell($largeurInfo,3,"                  Name and surname ",0,'R',0);
 	$pdf->SetXY($X+$largeurInfo,$Y);
 	$pdf->SetFont('Arial','',12);
 	$pdf->SetTextColor(255,0,0);
@@ -393,7 +456,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// adresse de l'élève
 	// elev_id,nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numero_eleve, class_ant, date_naissance, regime, civ_1, civ_2,nom,prenom,nom_resp_2,prenom_resp_2,lieu_naissance,email_eleve,adr_eleve,ccp_eleve,commune_eleve
 	$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -412,26 +475,39 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$pdf->SetFont('Arial','B',10);
 	$pdf->SetXY($X,$Y);        
-	$pdf->MultiCell($largeurInfo,3,"Date et lieu de naissance / Date and place of birth ",0,'R',0);
+	$pdf->MultiCell($largeurInfo,3,"Date et lieu de naissance /                                        ",0,'R',0);
+	$pdf->SetFont('Arial','I',10);
+	$pdf->SetXY($X,$Y);        
+	$pdf->MultiCell($largeurInfo,3,"                             Date and place of birth ",0,'R',0);
 	$pdf->SetXY($X+$largeurInfo,$Y);
-	$pdf->MultiCell(120,3,": $datenaissance     à/at  $lieunaissance",0,'L',0);
+	$pdf->SetFont('Arial','',10);
+	$pdf->MultiCell(120,3,": $datenaissance à/at $lieunaissance ",0,'L',0);
+	$pdf->SetFont('Arial','B',10);
 	$Y+=$hauteurInfo;$X=10;
 
 
 	$pdf->SetFont('Arial','B',10);
         $pdf->SetXY($X,$Y);
-        $pdf->MultiCell($largeurInfo,3,"Matricule / Register number ",0,'R',0);
+        $pdf->MultiCell($largeurInfo,3,"Matricule /                            ",0,'R',0);
+        $pdf->SetXY($X,$Y);
+	$pdf->SetFont('Arial','I',10);
+        $pdf->MultiCell($largeurInfo,3,"            Register number ",0,'R',0);
+	$pdf->SetFont('Arial','',10);
         $pdf->SetXY($X+$largeurInfo,$Y);
-        $pdf->MultiCell(120,3,": $matricule        Année académique / Academic year : $anneeScolaire",0,'L',0);
+        $pdf->MultiCell(120,3,": $matricule  Année académique / Academic year : $anneeScolaire ",0,'L',0);
         $Y+=$hauteurInfo;$X=10;
 
 	$level=chercherNiveauClasse($idClasse);
 
 	$pdf->SetFont('Arial','B',10);
         $pdf->SetXY($X,$Y);
-        $pdf->MultiCell($largeurInfo,3,"Niveau / Level ",0,'R',0);
+        $pdf->MultiCell($largeurInfo,3,"Niveau /          ",0,'R',0);
+	$pdf->SetFont('Arial','I',10);
+        $pdf->SetXY($X,$Y);
+        $pdf->MultiCell($largeurInfo,3,"         Level ",0,'R',0);
         $pdf->SetXY($X+$largeurInfo,$Y);
-        $pdf->MultiCell(120,3,": $level           Semestre / Semester  : $textTrimestre",0,'L',0);
+	$pdf->SetFont('Arial','',10);
+        $pdf->MultiCell(120,3,": $level  Semestre / Semester : $textTrimestre ",0,'L',0);
         $Y+=$hauteurInfo;$X=10;
 
 
@@ -439,8 +515,12 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
         $pdf->SetFont('Arial','B',10);
         $pdf->SetXY($X,$Y); 
-        $pdf->MultiCell($largeurInfo,3,"Filière / Discipline ",0,'R',0);
+        $pdf->MultiCell($largeurInfo,3,"Filière /                 ",0,'R',0);
+        $pdf->SetFont('Arial','I',10);
+        $pdf->SetXY($X,$Y); 
+        $pdf->MultiCell($largeurInfo,3,"          Discipline ",0,'R',0);
         $pdf->SetXY($X+$largeurInfo,$Y);        
+        $pdf->SetFont('Arial','',10);
 	$pdf->MultiCell(120,3,": $classeNOM",0,'L',0);
         $Y+=$hauteurInfo;$X=10;
 
@@ -462,11 +542,13 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$pdf->SetXY($X+=15,$Y); 
 	$pdf->MultiCell(20,15,"",1,'C',0);
 	$pdf->SetXY($X,$Y); 
-	$pdf->MultiCell(20,5,"Crédits affectés / Credits ???? ",0,'C',0);
+	$pdf->SetFont('Arial','',6);
+	$pdf->MultiCell(20,5,"Crédits affectés / Credits allocated ",0,'C',0);
+	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY($X+=20,$Y); 
 	$pdf->MultiCell(15,15,"",1,'C',0);
 	$pdf->SetXY($X,$Y+3); 
-	$pdf->MultiCell(15,5,"Note sur 20 ",0,'C',0);
+	$pdf->MultiCell(15,5,"Notes/20 ",0,'C',0);
 	$pdf->SetXY($X+=15,$Y); 
 	$pdf->MultiCell(25,15,"",1,'C',0);
 	$pdf->SetXY($X,$Y+3); 
@@ -480,10 +562,10 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$X=$Xorigine;
 	$Y+=5;
 	$pdf->SetXY($X,$Y); 
-	$pdf->SetFont('Arial','',6);
-	$pdf->MultiCell(50,10,"CENTRE D'INTERETS / CENTER OK INTEREST",1,'C',0);
+	$pdf->SetFont('Arial','',5);
+	$pdf->MultiCell(50,10,"UNITES D'ENSEIGNEMENTS / TEACHING UNITS",1,'C',0);
 	$pdf->SetXY($X+=50,$Y);
-	$pdf->MultiCell(50,10,"UNITES D'ENSEIGNEMENT / COURSES ",1,'C',0);
+	$pdf->MultiCell(50,10,"MATIERES / COURSES",1,'C',0);
 	$pdf->SetXY($X,$Y);
 	$pdf->MultiCell(50,5,"",0,'C',0);
 
@@ -494,32 +576,34 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	if ($sem == 1) {
 	        $recupUE=recupUE($idClasse,$sem);
 	}else{
-        	$recupUE=recupUETRIADE($idClasse,$sem); // code_ue,nom_ue,coef_ue,ects_ue,nom_ue_en
+        //	$recupUE=recupUETRIADE($idClasse,$sem);
+		$recupUE=recupUETRIADE2($idClasse,$sem,$anneeScolaire); // code_ue,nom_ue,coef_ue,ects_ue,nom_ue_en
 	}
 
-	$ectsTOTALP1=0;
-	$ectsTOTALP2=0;
+	$ectsTOTALP1="";
+	$ectsTOTALP2="";
 	// mise en place des matieres
 	$largeurMat=50;
 	$hauteurMatiere=$hauteurmatiere; // taille du cadre matiere
 
 
-	for($f=0;$f<count($recupUE);$f++) {
+	for($f=0;$f<countTriade($recupUE);$f++) {
 		$code_ue=$recupUE[$f][0];
 		$nom_ue=$recupUE[$f][1];
 		$coef_ue=$recupUE[$f][2];
 		$ects_ue=$recupUE[$f][3];
 		$dejapasse=0;
 		if ($sem == 1) { 
-			$listeMatiere=recupMatiereUE($code_ue,$idClasse);  // u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull, a.langue	
+			//$listeMatiere=recupMatiereUE($code_ue,$idClasse);  // u.code_matiere,m.libelle,u.code_enseignant,a.ordre_affichage, a.visubull, a.langue	
+			$listeMatiere=recupMatiereUE3($nom_ue,$idClasse,$sem,$anneeScolaire);
 		}else{
-			$listeMatiere=recupMatiereUE2($nom_ue,$idClasse); 
+			$listeMatiere=recupMatiereUE3($nom_ue,$idClasse,$sem,$anneeScolaire);
 		}
 	
 		// Verification si saut de page
 		// ---------------------------
 		$nbmatiere=0;
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 			$idmatiere=$idMatiere=$listeMatiere[$i][0];
 			$ordreaffichage=$listeMatiere[$i][3];
 			$verifGroupe=verifMatiereAvecGroupeUE($idmatiere,$idEleve,$idClasse,$ordreaffichage);
@@ -535,8 +619,8 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		$pdf->SetFont('Arial','B',7);
 //		$pdf->SetFillColor(220);
 		$pdf->SetXY($X,$Y);
-		$nom_ue=trunchaine($nom_ue,68);
-		$nbmatiere=count($listeMatiere);
+//		$nom_ue=trunchaine($nom_ue,60);
+		$nbmatiere=countTriade($listeMatiere);
 		$pdf->MultiCell($largeurMat,$hauteurMatiere*$nbmatiere,"",1,'L',0);
 		$pdf->SetXY($X,$Y+1);
 		$pdf->MultiCell($largeurMat,3,"$nom_ue",0,'L',0);
@@ -561,7 +645,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		$coefUECLASS="";
 
 		// u.code_matiere,m.libelle
-		for($i=0;$i<count($listeMatiere);$i++) {
+		for($i=0;$i<countTriade($listeMatiere);$i++) {
 			$X=$XorigineMatiere;
 			
 			$idmatiere=$listeMatiere[$i][0];
@@ -595,6 +679,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			$pdf->MultiCell($largeurMat,$hauteurMatiere,"",1,'L',0);
 			$pdf->SetXY($X,$Y+1);
 			//$profAff=recherche_personne2($idprof);
+			$matiere=stripslashes($matiere);
 			$pdf->MultiCell($largeurMat,2,"$matiere",0,'L',0);
 			$pdf->SetFont('Arial','B',6);
 			$pdf->SetXY($X,$Y+4);
@@ -610,9 +695,9 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			// mise en place du cadre note P1
 			// ------------------------------------------------------
 			if (($idgroupe == "0") || (trim($idgroupe) == "")) {
-				$noteaffP1=moyenneEleveMatiere($idEleve,$idmatiere,$dateDebutP1,$dateFinP1,$idprof);
+				$noteaffP1=moyenneEleveMatiere($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
 			}else{
-				$noteaffP1=moyenneEleveMatiereGroupe($idEleve,$idmatiere,$dateDebutP1,$dateFinP1,$idgroupe,$idprof);
+				$noteaffP1=moyenneEleveMatiereGroupe($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 			}
 			unset($noteGen);
 			// ------------------------------------------------
@@ -620,13 +705,20 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			if (($noteaffP1 < 10) && ($noteaffP1 != "")) { $noteaffP11="0".$noteaffP1; }
 			$largA=15;
 			$pdf->MultiCell($largA,$hauteurMatiere,"$noteaffP11",1,'C',0);
+
+			if (($noteaffP11 >=0) && ($noteaffP11 != "")) {
+				$coef=recupCoeff($idmatiere,$idClasse,$ordreaffichage);
+				$moyenneTotal+=$noteaffP11*$coef;
+				$coefTotal+=$coef;
+			}
+
 			$pdf->SetXY($X+=$largA,$Y);
 			// GRADE
 			// ---------------------------------------------------
 			if ($noteaffP1 >= 10) { 
 				$ectsvalider=$ects; 
 			}else{ 
-				//$moyenEU=moyenEleveUE($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebutP1,$dateFinP1,$ordreaffichage);
+				//$moyenEU=moyenEleveUE($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebut,$dateFin,$ordreaffichage);
 				if (($moyenEU >= 10) && ($noteaffP1 >= 10)) {
 					$ectsvalider=$ects; 
 				}else{
@@ -642,9 +734,10 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				}
 			}
 				
-
-			$ectsTOTALP1+=$ects;
-			$pdf->MultiCell(25,$hauteurMatiere,"",1,'C',0);
+//			if (($noteaffP11 < 10) && ($noteaffP11 != "")) $ects=0;
+			if ($noteaffP11 == "") $ects="";
+			if (($ects >= 0) && (ects != "")) { $ectsTOTALP1+=$ects; }
+			$pdf->MultiCell(25,$hauteurMatiere,"$ects",1,'C',0);
 			$pdf->SetXY($X+=25,$Y);
 			
 
@@ -656,9 +749,9 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 			// mise en place des moyennes de classe	
 			if (($idgroupe == "0") || (trim($idgroupe) == "")) { 
 				// idMatiere,datedebut,dateFin,idclasse
-	       	  		$moyeMatGen=moyeMatGen($idmatiere,$dateDebutP1,$dateFinP1,$idClasse,$idprof);
+	       	  		$moyeMatGen=moyeMatGen($idmatiere,$dateDebut,$dateFin,$idClasse,$idprof);
 			}else {
-        			$moyeMatGen=moyeMatGenGroupe($idmatiere,$dateDebutP1,$dateFinP1,$idgroupe,$idprof);
+        			$moyeMatGen=moyeMatGenGroupe($idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 			}
 
 			$moyeMatGenaff=$moyeMatGen;
@@ -666,22 +759,24 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 			if (1) {					
 				if (($idgroupe == "0") || (trim($idgroupe) == "")) {
-					$noteaffP2=moyenneEleveMatiere($idEleve,$idmatiere,$dateDebutP2,$dateFinP2,$idprof);
+					$noteaffP2=moyenneEleveMatiere($idEleve,$idmatiere,$dateDebut,$dateFin,$idprof);
 				}else{
-					$noteaffP2=moyenneEleveMatiereGroupe($idEleve,$idmatiere,$dateDebutP2,$dateFinP2,$idgroupe,$idprof);
+					$noteaffP2=moyenneEleveMatiereGroupe($idEleve,$idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 				}
 				// ---------------------------------------------------------------------------------------
 				if (($idgroupe == "0") || (trim($idgroupe) == "")) {
-					$classement=Rangs($idmatiere,$dateDebutP2,$dateFinP2,$idClasse,$idprof);
+					$classement=Rangs($idmatiere,$dateDebut,$dateFin,$idClasse,$idprof);
     				}else {
-        				$classement=RangsGroupe($idmatiere,$dateDebutP2,$dateFinP2,$idgroupe,$idprof);
+        				$classement=RangsGroupe($idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 				}
 				$noterang=$noteaffP2;
 				// ---------------------------------------------------------------------------------------
 				$noteaff2=$noteaffP2;
 				if (($noteaffP2 < 10) && ($noteaffP2 != "")) { $noteaff2="0".$noteaffP2; }
-
-				$pdf->MultiCell(30,$hauteurMatiere," AAA ",1,'C',0);
+				$moisAnnee=dateMoisAnnee2($dateFin);
+				if (($noteaffP11 < 10) || ($noteaffP11 == "")) $moisAnnee="";
+				
+				$pdf->MultiCell(30,$hauteurMatiere,"$moisAnnee",1,'C',0);
 				// --------------------------------------------------
 			
 				if ($noteaff2 != "") {
@@ -694,7 +789,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				if ($noteaff2 >= 10) { 
 					$ectsvalider=$ects; 
 				}else{ 
-				       $moyenEU=moyenEleveUE($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebutP2,$dateFinP2,$ordreaffichage);
+				       $moyenEU=moyenEleveUE($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebut,$dateFin,$ordreaffichage);
 				       if (($moyenEU >= 10) && ($noteaff2 >= 6)) {
 						$ectsvalider=$ects; 
 				       }else{
@@ -703,7 +798,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				}
 
 				if ($dejapasse == 0) {
-					$noteGen=moyenEleveUESansOPT4($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebutP1,$dateFinP2,$ordreaffichage);
+					$noteGen=moyenEleveUESansOPT4($code_ue,$idClasse,$idEleve,$_POST["saisie_trimestre"],$dateDebut,$dateFin,$ordreaffichage);
 					if ( $noteGen != "" ) {
 				    		$noteMoyEleGTempo = $noteGen * $coef_ue;
 						$noteGen2=$noteGen2 + $noteMoyEleGTempo;
@@ -718,7 +813,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 					$nrang++;
 					if ($val == $noterang){ break; }
 				}		
-				$nbtotalRang=count($classement);
+				$nbtotalRang=countTriade($classement);
 
 				$pourcentA=ceil(($nbtotalRang/100)*10);
 				if ($nrang > 0 && $nbrang <= $pourcentA) { $grade="A"; }
@@ -751,9 +846,9 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				// mise en place des moyennes de classe	
 				if (($idgroupe == "0") || (trim($idgroupe) == "")) {
 					// idMatiere,datedebut,dateFin,idclasse
-	        	   		$moyeMatGen=moyeMatGen($idmatiere,$dateDebutP2,$dateFinP2,$idClasse,$idprof);
+	        	   		$moyeMatGen=moyeMatGen($idmatiere,$dateDebut,$dateFin,$idClasse,$idprof);
 				}else {
-	           			$moyeMatGen=moyeMatGenGroupe($idmatiere,$dateDebutP2,$dateFinP2,$idgroupe,$idprof);
+	           			$moyeMatGen=moyeMatGenGroupe($idmatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 				}
 
 				$moyeMatGenaff=$moyeMatGen;
@@ -761,14 +856,12 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				// --------------------------------------------------
 			}
 
-			if ($_POST["saisie_trimestre"] == "trimestre1") { $dateDebut=$dateDebutP1; $dateFin=$dateFinP1; }
-			if ($_POST["saisie_trimestre"] == "trimestre2") { $dateDebut=$dateDebutP2; $dateFin=$dateFinP2; }
 			
 			// calcul du min et du max
 			if (($idgroupe == "0") || (trim($idgroupe) == "")) {    // non matiere affectée à un groupe
 				$max="";
 				$min=1000;
-				for($g=0;$g<count($eleveT);$g++) {
+				for($g=0;$g<countTriade($eleveT);$g++) {
 					// variable eleve
 					$idEleveMoyen=$eleveT[$g][4];
 					$valeur=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -784,7 +877,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 				$max="";
 				$min=1000;
 				$eleveTg=listeEleveDansGroupe($idgroupe);
-				for($g=0;$g<count($eleveTg);$g++) {
+				for($g=0;$g<countTriade($eleveTg);$g++) {
 					$idEleveMoyen=$eleveTg[$g];
 					$valeur=moyenneEleveMatiereGroupe($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
 					if (trim($valeur) != "") {	
@@ -915,7 +1008,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		}
 
 		if (is_numeric($minUECLASS)) {
-			$minUECLASS=$minUECLASS/$coefUECLASS;
+			$grademinUECLASS=$minUECLASS/$coefUECLASS;
 			$minUECLASSAff=$minUECLASS;
 			$minUECLASSG+=$minUECLASS*$coef;
 
@@ -945,7 +1038,9 @@ $X=3;
 $pdf->SetXY($X,$Y); 
 $pdf->MultiCell($largeurMat,20," ",1,'C',0);
 $pdf->SetXY($X,$Y+3); 
+$pdf->SetFont('Arial','B',12);
 $pdf->MultiCell($largeurMat,20,"Bilan",0,'L',0);
+$pdf->SetFont('Arial','B',8);
 $pdf->SetXY($X+=$largeurMat,$Y); 
 $pdf->MultiCell($largeurMat,10,"Total des crédits / Total Credits",1,'C',0);
 $pdf->SetXY($X+=$largeurMat,$Y); 
@@ -962,19 +1057,40 @@ $Y+=10;
 $X=3+$largeurMat;
 
 
+$pdf->SetFont('Arial','',8);
 $pdf->SetXY($X,$Y); 
-$pdf->MultiCell($largeurMat,10,"QQQQ",1,'C',0);
+$pdf->MultiCell($largeurMat,10,"$ectsTOTALP1",1,'C',0);
 $pdf->SetXY($X+=$largeurMat,$Y); 
-$pdf->MultiCell(15,10,"ZZZZ",1,'C',0);
-$pdf->SetXY($X+=15,$Y); 
-$pdf->MultiCell(20,10,"EEEE",1,'C',0);
-$pdf->SetXY($X+=20,$Y); 
-$pdf->MultiCell(15,10,"RRRR",1,'C',0);
-$pdf->SetXY($X+=15,$Y); 
-$pdf->MultiCell(25,10,"TTTT",1,'C',0);
-$pdf->SetXY($X+=25,$Y); 
-$pdf->MultiCell(30,10,"YYYY",1,'C',0);
 
+if (($coefTotal > 0) && ($moyenneTotal != "")) {
+	$moyenneTotal=$moyenneTotal/$coefTotal;
+	$moyenneTotal=number_format($moyenneTotal,2,',','');
+}
+
+$pdf->MultiCell(15,10,"$moyenneTotal",1,'C',0);
+
+$pdf->SetXY($X+=15,$Y); 
+
+$point=point($moyenneTotal);
+$pdf->MultiCell(20,10,"$point",1,'C',0);
+$pdf->SetXY($X+=20,$Y); 
+$grade2=grade2($moyenneTotal);
+$pdf->MultiCell(15,10,"$grade2",1,'C',0);
+$pdf->SetXY($X+=15,$Y); 
+$mention=mention($moyenneTotal);
+$pdf->MultiCell(25,10,"$mention",1,'C',0);
+$pdf->SetXY($X+=25,$Y); 
+$valide="REFUSE";
+if ($ectsTOTALP1 == 30) $valide="ADMIS"; 
+if ($ectsTOTALP1 == "") $valide="";
+$pdf->MultiCell(30,10,"$valide",1,'C',0);
+
+unset($point);
+unset($mention);
+unset($grade2);
+unset($moyenneTotal);
+unset($coefTotal);
+unset($ectsTOTALP1);
 
 
 
@@ -1033,7 +1149,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 

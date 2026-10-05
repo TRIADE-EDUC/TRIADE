@@ -5,10 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_agenda_view_eventslist.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+$Id: cms_module_agenda_view_eventslist.xml,v 1.2 2022/11/21 14:05:45 qvarin Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_articleslist_build_article_link">Creation of the link for the events</entry>
 	<entry code="cms_module_agenda_view_evenslist_link_desc">Link towards the event</entry>
-	<entry code="cms_module_agenda_view_evenslist_title_desc">Title of the list</entry>
 </XMLlist>

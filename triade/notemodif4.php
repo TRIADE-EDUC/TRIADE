@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,7 +28,7 @@ if ((VIESCOLAIRENOTEENSEIGNANT == "oui") && ($_SESSION["membre"] != "menupersonn
 }else{
 	if (($_SESSION["membre"] != "menuadmin") && ($_SESSION["membre"] != "menuprof")) {
 		$cnx=cnx();
-		if (!verifDroit($_SESSION["id_pers"],"carnetnotes")) {
+		if ((!verifDroit($_SESSION["id_pers"],"carnetnotes"))  && (!verifDroit($_SESSION["id_pers"],"AESH")) )  {
 			accesNonReserveFen();
 			exit();
 		}
@@ -41,7 +41,7 @@ $cnx=cnx();
 ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -120,12 +120,12 @@ $notationsur=$_POST["NotationSur"];
 if ($typenote == "oui") { $typenote="en"; }else{ $typenote="fr"; }
 
 
-$idprof=$mySession[Spid];
+$idprof=$mySession['Spid'];
 if ($adminIdprof != "") { $idprof=$adminIdprof; }
 
 $j=0;
-for($i=0;$i<count($eleves);$i++){
-	$sql="DELETE FROM ${prefixe}notes WHERE elev_id='".$eleves[$i]."' AND prof_id='$idprof' AND code_mat='$mid' AND coef='$coef' AND date='".dateFormBase($date)."' AND id_classe='$idcl' AND id_groupe='$idgrp' AND noteexam='$noteexamen' AND sujet='$sujet'";
+for($i=0;$i<countTriade($eleves);$i++){
+	$sql="DELETE FROM {$prefixe}notes WHERE elev_id='".$eleves[$i]."' AND prof_id='$idprof' AND code_mat='$mid' AND coef='$coef' AND date='".dateFormBase($date)."' AND id_classe='$idcl' AND id_groupe='$idgrp' AND noteexam='$noteexamen' AND sujet='$sujet'";
 	execSql($sql);
 	if (trim($notes[$i]) == "supp") { continue; }
 	if (trim($notes[$i]) == "néant") { $notes[$i]='-3'; }
@@ -140,7 +140,7 @@ execSql("BEGIN");
 $listeNotes=new ListeNotes($j,$idprof,$mid,$coef,$date,$sujet,$Notes,$idcl,$idgrp,$typenote,$noteexamen,$notationsur,$notevisiblele);
 if($listeNotes->persist()){
 	$del=join(",",$_POST["note_id"]);
-	execSql("DELETE FROM ${prefixe}notes WHERE note_id IN ($del)");
+	execSql("DELETE FROM {$prefixe}notes WHERE note_id IN ($del)");
 	execSql("COMMIT");
 	$mid=chercheMatiereNom($mid);
 	history_cmd($_SESSION["nom"],"MODIF","Notes - $sujet - $mid");

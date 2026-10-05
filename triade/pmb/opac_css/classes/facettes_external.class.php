@@ -1,11 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: facettes_external.class.php,v 1.18 2019-05-16 12:54:10 dgoron Exp $
+// $Id: facettes_external.class.php,v 1.28.2.1 2025/01/17 15:10:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/facettes_root.class.php");
 
 class facettes_external extends facettes_root {
@@ -21,6 +22,11 @@ class facettes_external extends facettes_root {
 	 * @var string
 	 */
 	public $mode = 'external';
+	
+	/**
+	 * Methode d'affinage (filter / search)
+	 */
+	public static $refining_method = 'search';
 	
 	/**
 	 * Nom de la classe de comparaison
@@ -53,8 +59,8 @@ class facettes_external extends facettes_root {
 	}
 	
 	public static function get_sub_queries($id_critere, $id_ss_critere, $values=array()) {
-		$id_critere += 0;
-		$id_ss_critere += 0;
+	    $id_critere = intval($id_critere);
+	    $id_ss_critere = intval($id_ss_critere);
 		$type='notices_externes';
 		self::parse_xml_file($type);
 		$unimarcFields = array();
@@ -91,7 +97,7 @@ class facettes_external extends facettes_root {
 		$sub_queries = array();
 		foreach ($unimarcFields as $unimarcField) {
 			$ufield = explode('$', $unimarcField);
-			if($ufield[1]) {
+			if(!empty($ufield[1])) {
 				$sub_queries[] = "ufield = '".$ufield[0]."' AND usubfield = '".$ufield[1]."'".$sub_query_values;
 			} else {
 				$sub_queries[] = "ufield = '".$ufield[0]."'".$sub_query_values;
@@ -119,23 +125,20 @@ class facettes_external extends facettes_root {
 	public static function get_facette_wrapper(){
 		$script = parent::get_facette_wrapper();
 		$script .= "
-		<script type='text/javascript'>
-			function facettes_external_add_searchform(datas) {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'check_facette[]');
-				input_form_values.setAttribute('value', datas);
-				document.forms['form_values'].appendChild(input_form_values);
-			}	
+		<script>
 			function valid_facettes_multi(){
 				var facettes_checked = new Array();
 				var flag = false;
-				//on bloque si aucune case cochÃ©e
+				//on bloque si aucune case cochée
 				var form = document.facettes_multi;
 				for (i=0, n=form.elements.length; i<n; i++){
 					if ((form.elements[i].checked == true)) {
-						//copie le noeud vers form_values
-						facettes_external_add_searchform(form.elements[i].value);
+						if(facettes_get_mode() == 'filter') {
+							params += '&check_facette[]='+form.elements[i].value;
+						} else {
+							//copie le noeud vers form_values
+							facettes_add_searchform(form.elements[i].value);
+						}
 						flag = true;
 					}
 				}
@@ -146,43 +149,20 @@ class facettes_external extends facettes_root {
 					if(document.getElementById('filtre_compare_form_values')) {
 						document.getElementById('filtre_compare_form_values').value='filter';
 					}
-					document.form_values.submit();
+					if(facettes_get_mode() == 'filter') {
+						var req = new http_request();
+						req.request(facettes_ajax_filters_get_elements_url, true, params, true, function(data){
+							document.getElementById('results_list').innerHTML=data;
+							facettes_refresh();
+						});
+					} else {
+						document.".static::$hidden_form_name.".page.value = 1;
+						document.".static::$hidden_form_name.".submit();
+					}
 					return true;
 				} else {
 					return false;
 				}
-			}
-			function facettes_external_valid_facette(datas){
-				facettes_external_add_searchform(JSON.stringify(datas));
-				document.form_values.submit();
-				return true;
-			}
-			function facettes_external_reinit() {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'reinit_facettes_external');
-				input_form_values.setAttribute('value', '1');
-				document.forms['form_values'].appendChild(input_form_values);
-				document.form_values.submit();
-				return true;
-			}
-			function facettes_external_delete_facette(indice) {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'param_delete_facette');
-				input_form_values.setAttribute('value', indice);
-				document.forms['form_values'].appendChild(input_form_values);
-				document.form_values.submit();
-				return true;
-			}
-			function facettes_external_reinit_compare() {
-				var input_form_values = document.createElement('input');
-				input_form_values.setAttribute('type', 'hidden');
-				input_form_values.setAttribute('name', 'reinit_compare');
-				input_form_values.setAttribute('value', '1');
-				document.forms['form_values'].appendChild(input_form_values);
-				document.form_values.submit();
-				return true;
 			}
 		</script>";
 		return $script;
@@ -199,7 +179,7 @@ class facettes_external extends facettes_root {
 			$search = array();
 		}
 		$nb_search = count($search);
-		if ($_SESSION['facettes_external']) {
+		if (!empty($_SESSION['facettes_external'])) {
 			for ($i=0;$i<count($_SESSION['facettes_external']);$i++) {
 				$search[] = "s_5";
 				$field = "field_".($i+$nb_search)."_s_5";
@@ -221,47 +201,6 @@ class facettes_external extends facettes_root {
 		}
 	}
 	
-	public static function destroy_global_search_element($indice) {
-		global $search;
-		
-		$nb_search = count($search);
-		for($i=$indice; $i<=$nb_search; $i++) {
-			$op="op_".$i."_".$search[$i];
-			$field_="field_".$i."_".$search[$i];
-			$inter="inter_".$i."_".$search[$i];
-			$fieldvar="fieldvar_".$i."_".$search[$i];
-			global ${$op};
-			global ${$field_};
-			global ${$inter};
-			global ${$fieldvar};
-			if($i == $nb_search) {
-				unset($GLOBALS[$op]);
-				unset($GLOBALS[$field_]);
-				unset($GLOBALS[$inter]);
-				unset($GLOBALS[$fieldvar]);
- 				unset($search[$i]);
- 				array_pop($search);
-			} else {
-				//on dÃ©cale
-				$n = $i+1;
-				$search[$i]=$search[$n];
-				$op="op_".$n."_".$search[$n];
-				$field_="field_".$n."_".$search[$n];
-				$inter="inter_".$n."_".$search[$n];
-				$fieldvar="fieldvar_".$n."_".$search[$n];
-				global ${$op_next};
-				global ${$field_next};
-				global ${$inter_next};
-				global ${$fieldvar_next};
-					
-				${$op}=${$op_next};
-				${$field_}=${$field_next};
-				${$inter}=${$inter_next};
-				${$fieldvar}=${$fieldvar_next};
-			}
-		}
-	}
-	
 	public static function destroy_global_env($with_session=true){
 		global $search;
 		if(is_array($search) && count($search)){
@@ -270,26 +209,27 @@ class facettes_external extends facettes_root {
 			$nb_search = 0;
 		}
 		for ($i=$nb_search; $i>=0; $i--) {
-			if($search[$i] == 's_5') {
+		    if(!empty($search[$i]) && $search[$i] == 's_5') {
 				static::destroy_global_search_element($i);
 			}
 		}
-		if($with_session) unset($_SESSION['facettes_external']);
+		if($with_session) {
+		    unset($_SESSION['facettes_external']);
+		}
 	}
 	
 	protected static function get_link_delete_clicked($indice, $facettes_nb_applied) {
-		$id += 0;
 		if ($facettes_nb_applied==1) {
 			$link = "facettes_external_reinit();";
 		} else {
-			$link = "facettes_external_delete_facette(".$indice.");";
+			$link = "facettes_delete_facette(".$indice.");";
 		}
 		return $link;
 	}
 			
 	protected static function get_link_not_clicked($name, $label, $code_champ, $code_ss_champ, $id, $nb_result) {
 		$datas = array($name, $label, $code_champ, $code_ss_champ, $id, $nb_result);
-		$link = "facettes_external_valid_facette(".encoding_normalize::json_encode($datas).");"; 
+		$link = "facettes_valid_facette(".encoding_normalize::json_encode($datas).");"; 
 		return $link;
 	}
 	
@@ -299,16 +239,18 @@ class facettes_external extends facettes_root {
 	}
 	
 	protected static function get_link_back($reinit_compare=false) {
-		global $base_path;
 		if($reinit_compare) {
-			$link = "facettes_external_reinit_compare();";
+			$link = "facettes_reinit_compare();";
 		} else {
-			$link = "document.form_values.submit();";
+			$link = "document.".static::$hidden_form_name.".submit();";
 		}
 		return $link;
 	}
 	
 	public static function get_session_values() {
+		if(!isset($_SESSION['facettes_external'])) {
+			$_SESSION['facettes_external'] = '';
+		}
 		return $_SESSION['facettes_external'];
 	}
 	
@@ -368,13 +310,13 @@ class facettes_external extends facettes_root {
 	}
 	
 	public static function get_formatted_value($id_critere, $id_ss_critere, $value) {
-		$id_critere += 0;
-		$id_ss_critere += 0;
+	    $id_critere = intval($id_critere);
+	    $id_ss_critere = intval($id_ss_critere);
 		$fields = static::$fields['notices_externes']['FIELD'];
 		if(is_array($fields)) {
 			foreach ($fields as $field) {
 				if($field['ID'] == $id_critere) {
-					if($field['DATATYPE'] == 'marclist') {
+				    if(!empty($field['DATATYPE']) && $field['DATATYPE'] == 'marclist') {
 						$marctype = $field['TABLE'][0]['TABLEFIELD'][$id_ss_critere]['MARCTYPE'];
 						if($marctype) {
 							if(!isset(self::$marclist_instance[$marctype])) {
@@ -397,4 +339,10 @@ class facettes_external extends facettes_root {
 	public function get_query_explnum($notices_ids) {
 		return '';
 	}
+	
+	public static function set_selected_sources($sources) {
+	    $_SESSION["checked_sources"] = $sources;
+	    return $_SESSION["checked_sources"];
+	}
+
 }// end class

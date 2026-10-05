@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntitiesGraph.js,v 1.3 2018-03-28 09:06:42 tsamson Exp $
+// $Id: EntitiesGraph.js,v 1.7.6.1.2.1 2025/02/08 14:34:35 jparis Exp $
 
 
 define(["dojo/_base/declare",
@@ -18,40 +18,53 @@ define(["dojo/_base/declare",
     ], function (declare, topic, lang, xhr, d3, WidgetBase, dom, domConstruct, domAttr, domStyle, on) {
 
     return declare('EntitiesGraph', [WidgetBase], {
-        nodes: null, //Propri�t�s renseign�es via la classe elements_list_tabs
+        nodes: null, //Propriétés renseignées via la classe elements_list_tabs
         links: null,
         domNode: null, //-> Noeud Svg 
         simulation: null, //D3Simulation
         svgGraph: null,
         tooltipDiv: null,
         centerNode: null,
+        zoom: null,
+        defaultHeigt : 0,
         constructor: function () {
             /**
-             * Todo: cr�er un param�tre contenant une structure JSON d�finissant la taille du svg, les couleurs des diff�rents �l�ments
+             * Todo: créer un paramètre contenant une structure JSON définissant la taille du svg, les couleurs des différents éléments
              */
             window.d3 = d3;
             
         },
         postCreate: function () {
             this.inherited(arguments);
-            var parent = this.domNode.parentNode;            
-            var parentSize = window.getComputedStyle(parent);
+            var parent = this.domNode.parentNode;
+            var parentSize = this.domNode.parentNode.checkVisibility() ? window.getComputedStyle(parent) : this.checkChildDimensionsWhenVisible(parent);
             
+            this.zoom = d3.zoom().scaleExtent([0, 8]).on("zoom", lang.hitch(this, this.zoomed))
+            let svgHeigth = this.defaultHeigt ? this.defaultHeigt : parentSize.height;
             this.svg = d3.select(this.domNode).append("svg")
                 .attr("width", parseInt(parentSize.width) - 10)
-                .attr("height", parseInt(parentSize.height) - 10)
+                .attr("height", svgHeigth)
                 .attr("id", "svgGraph")
                 .attr('xmlns',"http://www.w3.org/2000/svg")
                 .attr('xmlns:xlink',"http://www.w3.org/1999/xlink")
                 .attr('version',"1.1")
                 .attr('baseProfile',"full")
-                .call(d3.zoom().scaleExtent([0, 8]).on("zoom", lang.hitch(this, this.zoomed)))
+                .call(this.zoom)
+		        .on("wheel.zoom", null);
+                
             this.svg = d3.select('#svgGraph').append("g")
             	.attr("id", 'svgMainGroup')
                 .attr("transform", "translate(40,0) scale(0.8)");
 
             this.svgNode = dom.byId('svgGraph');
             d3.select('#svgGraph').append("defs");
+            
+            // Event click contribution_resize_button
+			d3.select('button[data-type="contribution_resize_button"]').on("click", lang.hitch(this, this.resetTheGraph));
+			// Event click contribution_zoom_in_button
+			d3.select('button[data-type="contribution_zoom_in_button"]').on("click", lang.hitch(this, this.zoomIn));
+			// Event click contribution_zoom_out_button
+			d3.select('button[data-type="contribution_zoom_out_button"]').on("click", lang.hitch(this, this.zoomOut));
             
             this.initTooltip();
 
@@ -67,6 +80,8 @@ define(["dojo/_base/declare",
            
             this.initLinks();
             this.initNodes();
+		    this.setDefs();
+		    
             this.initSimulation();
 
             this.clickCapturingFct = lang.hitch(this,function(e){
@@ -74,7 +89,58 @@ define(["dojo/_base/declare",
     			return false;
     		});
         },
-        
+        // Calcul les dimensions quand le parent du graph n'est pas visible
+		checkChildDimensionsWhenVisible: function(node) {
+		    const parent = this.checkParentVisibility(node);
+		    
+		    // Si le parent est invisible ou inexistant
+		    if (!parent) {
+				return { width: 0, height: 0 };
+			}
+		    
+		    // Cloner le parent sans ses enfants
+		    const cloneParent = parent.cloneNode(false); 
+		    
+		    // Rendre le parent temporairement visible
+		    const parentStyle = parent.style;
+		    
+		    // On met l'opacity à 0 pour éviter de voir le block au chargement
+		    parentStyle.opacity = '0';
+		    parentStyle.display = 'block';
+		    parentStyle.visibility = 'visible';
+		    
+		    // Supprimer l'attribut 'hidden' si présent
+		    parent.removeAttribute('hidden');
+		    
+		    // Calculer les dimensions du nœud
+		    const { width, height } = node.getBoundingClientRect();
+		    
+		    // Réintégrer les enfants dans le clone
+		    while (parent.firstChild) {
+		        cloneParent.appendChild(parent.firstChild);
+		    }
+		    
+		    // Restaurer l'élément parent avec ses enfants
+		    parent.parentNode.replaceChild(cloneParent, parent);
+		    
+		    return { width, height };
+		},
+		// Récupère le premier parent qui n'est pas visible
+		checkParentVisibility: function(node) {
+		    // Si le noeud lui-même est invisible, retour immédiat
+		    const style = window.getComputedStyle(node);
+		    
+		    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0' || node.hasAttribute("hidden")) {
+		        return node;
+		    }
+		    
+		    // Si le noeud est visible, retourner le noeud parent
+		    if (node.parentNode) {
+		        return this.checkParentVisibility(node.parentNode);
+		    }
+		    
+		    return null;
+		},
         initLinks : function () {
         	this.linkSvg = this.svg.append("g").attr("id", "graph_links_container").selectAll("line")
             .data(this.links).enter().append("line")
@@ -87,7 +153,8 @@ define(["dojo/_base/declare",
             		return  "stroke: rgb("+d.color+")";	
             	}
             	return  "stroke: #999";
-            });
+            })
+        	.attr("marker-end", "url(#arrow)");
         },
         
         initNodes : function () {
@@ -106,6 +173,7 @@ define(["dojo/_base/declare",
             .on('mouseout', lang.hitch(this, this.hideTooltip));
         
         	this.embellishNode();
+        	this.embellishNodesWithChildrens();
         },
         
         initSimulation : function() {
@@ -124,19 +192,34 @@ define(["dojo/_base/declare",
         },
         
         ticked: function () {
-            this.linkSvg
-                .attr("x1", function (d) {
-                	return d.source.x;
-                })
-                .attr("y1", function (d) {
-                	return d.source.y;
-                })
-                .attr("x2", function (d) {
-                	return d.target.x;
-                })
-                .attr("y2", function (d) {
-                	return d.target.y;
-                });
+        	this.linkSvg
+        	.attr("x1", function (d) {
+        		return d.source.x;
+        	})
+        	.attr("y1", function (d) {
+        		return d.source.y;
+        	})                
+        	.attr("x2", function(d) {
+        		var sx = d.source.x;
+        		var sy = d.source.y;
+        		var tx = d.target.x;
+        		var ty = d.target.y;
+
+        		// Notre ami Thalès nous permet de raccourcir les liens pour y faire apparaitre des flêches
+        		var h = (d.target.radius*Math.abs(tx-sx))/Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
+
+        		return ((tx > sx) ? (tx - h) : (tx + h));
+        	})
+        	.attr("y2", function(d) {
+        		var sx = d.source.x;
+        		var sy = d.source.y;
+        		var tx = d.target.x;
+        		var ty = d.target.y;
+
+        		var h = (d.target.radius*Math.abs(ty-sy))/Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
+
+        		return ((ty > sy) ? (ty - h) : (ty + h));
+        	});
 
             this.nodeSvg.attr("transform", function (d) {
                 return "translate(" + d.x + ", " + d.y + ")";
@@ -177,7 +260,31 @@ define(["dojo/_base/declare",
         			data: node.ajaxParams
         		}).then(lang.hitch(this, this.loadSubGraph));
         		node.ajaxParams = null;
-        	}
+        	} else if (node.type == "additionnal_nodes") {
+				
+				var elements = node.elements.slice(0, node.limit);
+				node.elements.splice(0, node.limit);
+				
+				if (node.elements.length > 0) {
+					var new_name = node.name.replace(/^([0-9]+)/, node.elements.length);
+					this.renameNode(node.id, new_name);
+				} else {
+					this.removeNode(node.id);
+				}
+				
+				node.info.elements = elements;
+        		domStyle.set(this.svgNode, 'cursor', 'wait');
+        		this.svgNode.addEventListener('click', this.clickCapturingFct, true);
+        		if(this.centerNode){
+        			this.centerNode.fx = null;
+        			this.centerNode.fy = null;
+        		}
+        		this.centerNode = node;
+
+    			xhr.post('./ajax.php?module=ajax&categ=entity_graph&sub=get_next_additionnal', {
+        			data: {node: JSON.stringify(node.info)}
+        		}).then(lang.hitch(this, this.loadSubGraph)); 
+			}
         },
         labelClicked: function(node){
         	if(node.url){
@@ -193,7 +300,7 @@ define(["dojo/_base/declare",
         },
         createPatterns: function (d) {
             /**
-             * Traitement � ajouter en fonction du radius
+             * Traitement à ajouter en fonction du radius
              */
             this.defs = this.svgNode.querySelector('defs');
             
@@ -258,8 +365,15 @@ define(["dojo/_base/declare",
         	return true;
         },
         loadSubGraph: function(data){
-        	data = JSON.parse(data);
-        	
+			try {				
+				data = this.formatString(data)
+        	    data = JSON.parse(data);
+			} catch(e) {
+				// on affiche l'erreur
+				console.error(e);
+				// on evite de bloquer la page
+				data = {nodes: [], links: []};
+			}
         	for(var i=0 ; i<data.nodes.length ; i++){
         		if(this.nodeChecker(data.nodes[i].id)){
         			this.nodes.push(data.nodes[i]);
@@ -283,7 +397,9 @@ define(["dojo/_base/declare",
 	        			return  "stroke: rgb("+d.color+")";	
 	        		}
 	        		return  "stroke: #999";
-	        	});
+	        	})
+	        	.attr("marker-end", "url(#arrow)");
+
     		this.linkSvg = linkEnter.merge(this.linkSvg);
     		this.linkSvg.exit().remove();
     		
@@ -337,7 +453,7 @@ define(["dojo/_base/declare",
         	.data(this.nodes, function(d){
         		return d.id;
         	})
-        	.attr('machin', function(d){
+        	.attr('id', function(d){
         		return d.id;
         	})
             .append('circle')
@@ -391,5 +507,101 @@ define(["dojo/_base/declare",
 	            })
 	            .on("click", lang.hitch(this, this.nodeClicked));
         },
+        
+        embellishNodesWithChildrens: function() {
+        	for (var i = 0; i < this.nodes.length; i++) {
+            	if (this.nodes[i].type != 'root' && this.nodes[i].type != 'subroot') {
+            		var node = dom.byId(this.nodes[i].id);
+            		var children = this.getDirectChildren(node);
+            		if (children && children.nodes && children.links) { // On a un noeud avec des enfants
+	            		for (var j = 0; j < node.children.length; j++) {
+	            			if (node.children.item(j).nodeName == "circle") {
+	            				node.children.item(j).setAttribute("class", "has-children");
+	            				j = node.children.length;
+	            			}
+	            		}
+            		}
+            	}
+        	}
+        },
+	    setDefs: function() {
+		    this.svg.append("defs")
+		    	.append('marker')
+			    	.attr("id", "arrow")
+			    	.attr("viewBox", "0 0 10 10")
+			    	.attr("refX", "10")
+			    	.attr("refY", "5")
+			    	.attr("markerUnits", "strokeWidth")
+			    	.attr("markerWidth", "5")
+			    	.attr("markerHeight", "5")
+			    	.attr("orient", "auto")
+			    	.append("path")
+			    	.attr("d", "M 0 0 L 10 5 L 0 10 z")
+		    	;
+	    },
+		resetTheGraph: function() {
+			var svgGraph = d3.select("#svgGraph");
+			svgGraph.transition().duration(2500).call(this.zoom.transform, d3.zoomIdentity.translate(40, 0).scale(0.8));
+		},
+		zoomIn: function() {
+			var svgGraph = d3.select("#svgGraph");
+			// duration = durée de l'animation
+			svgGraph.transition().duration(1000).call(this.zoom.scaleBy, 2);
+		},
+		zoomOut: function() {
+			var svgGraph = d3.select("#svgGraph");
+			// duration = durée de l'animation
+			svgGraph.transition().duration(1000).call(this.zoom.scaleBy, 0.5);
+		},
+	    renameNode: function (id, name) {
+			var node = d3.select("#" + id + "");
+			if (node) {
+				node.select('text').text(function(d){ return name; });
+				node.select('image').text(function(d){ return name; });
+				for(var i=0 ; i < this.nodes.length; i++){
+	        		if(this.nodes[i].id == id) {
+						this.nodes[i].name = name;
+	        			break;
+	    			}	
+	    		}
+			}
+		},
+	    removeNode: function (id) {
+			var node = d3.select("#" + id + "");
+			if (node) {
+				node.remove();
+			}
+
+			for (var i=0; i < this.nodes.length; i++) {
+        		if(this.nodes[i].id == id) {
+		    		this.nodes.splice(i, 1);
+        			break;
+    			}	
+    		}
+    		
+    		var length = this.links.length;
+			for (var i=0; i < length; i++) {
+        		if (this.links[i].source.id == id || this.links[i].target.id == id) {
+	    			// On supprime le lien
+	    			var index = this.links[i].index
+	    			this.linkSvg.filter(function (d, i) { 
+						return i == index;
+					}).remove();
+	    			this.links.splice(i, 1);
+	    			
+	    			// On recommence a 0
+	    			length = this.links.length;
+	    			i = 0;
+    			}
+    		}
+		},
+		formatString : function (encodedStr) {
+            var parser = new DOMParser();
+            // convertie les "&eacute;" en "é", etc.
+            var dom = parser.parseFromString(encodedStr, 'text/html');
+            // remplace les multiples espaces en 1 seul
+            var str = dom.body.textContent.replace(/(\s){2,}/gm, ' ');
+            return str.trim();
+        }
     });
 });

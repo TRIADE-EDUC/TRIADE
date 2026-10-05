@@ -1,29 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauv_tables.class.php,v 1.17 2019-06-04 08:09:06 btafforeau Exp $
+// $Id: sauv_tables.class.php,v 1.21 2024/01/02 11:44:00 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 //Formulaire de gestion des groupes de tables
+global $include_path;
 include ($include_path."/templates/tables_form.tpl.php");
 class sauv_table {
 
-	//DonnÃ©es
+	//Données
 	public $sauv_table_id; //Identifiant
 	public $sauv_table_nom; //Nom du lieu
 	public $sauv_table_tables; //Liste des tables
 	public $act; //Action
 
 	public function __construct() {
-		global $sauv_table_id; //DonnÃ©es reÃ§ues du formulaire
+		global $sauv_table_id; //Données reçues du formulaire
 		global $sauv_table_nom;
 		global $sauv_table_tables;
 		global $act;
 
-		//Stockage des donnÃ©es reÃ§ues
-		$this -> sauv_table_id = $sauv_table_id;
+		//Stockage des données reçues
+		$this -> sauv_table_id = intval($sauv_table_id);
 		$this -> sauv_table_nom = $sauv_table_nom;
 		$this -> sauv_table_tables = $sauv_table_tables;
 		$this -> act = $act;
@@ -52,16 +53,15 @@ class sauv_table {
 		}
 	}
 
-	//Traitement de l'action reÃ§ue du formulaire (Ã  appeller juste aprÃ¨s l'instanciation de la classe)
-	//Renvoie le formulaire Ã  afficher
+	//Traitement de l'action reçue du formulaire (à appeller juste après l'instanciation de la classe)
+	//Renvoie le formulaire à afficher
 	public function proceed() {
-
 		global $first;
 
 		switch ($this -> act) {
 			//Enregistrer
 			case "update" :
-				//Si sauv_lieu_id vide alors crÃ©ation
+				//Si sauv_lieu_id vide alors création
 				if ($this -> sauv_table_id == "") {
 					$this->verifName();
 					$requete = "insert into sauv_tables (sauv_table_nom) values('')";
@@ -69,7 +69,7 @@ class sauv_table {
 					$this -> sauv_table_id = pmb_mysql_insert_id();
 					$first="";
 				}
-				//Update avec les donnÃ©es reÃ§ues
+				//Update avec les données reçues
 				$this->verifTables();
 				$this->verifName();
 				$requete = "update sauv_tables set sauv_table_nom='".$this -> sauv_table_nom."', sauv_table_tables='".implode(",", $this -> sauv_table_tables)."' where sauv_table_id=".$this -> sauv_table_id;
@@ -93,18 +93,19 @@ class sauv_table {
 				break;
 				//Visualiser
 			default :
-				//Ne rien faire, le numÃ©ro de la fiche est dÃ©jÃ  dans $this->sauv_lieu_id
+				//Ne rien faire, le numéro de la fiche est déjà dans $this->sauv_lieu_id
 		}
 		return $this -> showForm();
 	}
 
-	//PrÃ©aparation du formulaire pour affichage
+	//Préaparation du formulaire pour affichage
 	public function showForm() {
 		global $form;
 		global $first;
 		global $msg;
+		global $current_module;
 		
-		//Si premiÃ¨re connexion
+		//Si première connexion
 		if (!$first) {
 			$form = "<h3>".$msg["sauv_tables_sel_or_add"]."</h3>";
 		} else {
@@ -113,7 +114,7 @@ class sauv_table {
 
 				//Si identifiant non vide
 				if ($this -> sauv_table_id) {
-					//RÃ©cupÃ©ration des donnÃ©es de la fiche
+					//Récupération des données de la fiche
 					$requete = "select sauv_table_nom,sauv_table_tables from sauv_tables where sauv_table_id=".$this -> sauv_table_id;
 					$resultat = pmb_mysql_query($requete);
 					if (pmb_mysql_num_rows($resultat) != 0)
@@ -129,10 +130,10 @@ class sauv_table {
 					$tTablesSelected = array();
 				}
 				$form = str_replace("!!sauv_table_id!!", $this -> sauv_table_id, $form);
-				$form = str_replace("!!sauv_table_nom!!", $this -> sauv_table_nom, $form);
+				$form = str_replace("!!sauv_table_nom!!", $this -> sauv_table_nom ?? "", $form);
 
 				//Liste des tables
-				$tTablesSelected = explode(",", $this -> sauv_table_tables);
+				$tTablesSelected = explode(",", $this -> sauv_table_tables ?? "");
 				$requete = "show tables";
 				$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 				$tTables_tab = array();
@@ -153,20 +154,25 @@ class sauv_table {
 					$tables_list.= " class=\"saisie-simple\">&nbsp;".$tTables_tab[$i]."</td>";
 					$curCol ++;
 					if ($curCol == $nMaxCol) {
-						$tables_list.= "</tr>\n";
-						$curCol = 0;
+					    $tables_list .= "</tr><tr>";
+					    
+					    $curCol = 0;
 					}
 				}
-				for ($i = 1; $i < $nMaxCol - $curCol; $i ++) {
-					$tables_list.= "<td>&nbsp;</td>";
-				}
-				if ($curCol < $nMaxCol -1)
+				
+				if($curCol) {
+    				for ($i = 0; $i < $nMaxCol - $curCol; $i ++) {
+    					$tables_list.= "<td>&nbsp;</td>";
+    				}
+    				
 					$tables_list.= "</tr>\n";
-				$tables_list.= "</table>\n";
+				}
 
+				$tables_list.= "</table>\n";
+				
 				$form = str_replace("!!tables_list!!", $tables_list, $form);
 			} else {
-				//Tables non sauvegardÃ©es
+				//Tables non sauvegardées
 				//$form = "<b>".$msg["sauv_tables_unsaved_tables"]."</b>\n";
 				$form = "";				
 				$form.="<form class='form-$current_module' name=\"sauv_tables\" action=\"admin.php?categ=sauvegarde&sub=tables\" method=\"post\">\n";
@@ -175,10 +181,11 @@ class sauv_table {
 				$form.="<table class='nobrd'>\n";
 				$form.="<th class='brd' colspan=2>".$msg["sauv_tables_unsaved_tables"]."</th>\n";
 				
-				//RÃ©cupÃ©ration de la liste
+				//Récupération de la liste
 				$requete = "select sauv_table_id, sauv_table_nom, sauv_table_tables from sauv_tables order by sauv_table_nom";
 				$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 				$tTables = "";
+				$groupList = array();
 				while ($res = pmb_mysql_fetch_object($resultat)) {
 					$tTables.= ",".$res -> sauv_table_tables;
 					$group=array();
@@ -187,7 +194,7 @@ class sauv_table {
 					$groupList[]=$group;
 				}
 				
-				//Recherche des tables non intÃ©grÃ©es dans les groupes
+				//Recherche des tables non intégrées dans les groupes
 				$tTablesSelected = explode(",", $tTables);
 				$requete = "show tables";
 				$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
@@ -222,12 +229,11 @@ class sauv_table {
 		return $form;
 	}
 
-	//Tratitement du retour du formulaire des tables non intÃ©grÃ©es dans les groupes
-	public function updateUnsaved()
-	{
+	//Tratitement du retour du formulaire des tables non intégrées dans les groupes
+	public function updateUnsaved() {
 		global $first;
 		
-		//RÃ©cupÃ©ration de la liste
+		//Récupération de la liste
 		$requete = "select sauv_table_id, sauv_table_nom, sauv_table_tables from sauv_tables ";
 		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 		$tTables = "";
@@ -235,7 +241,7 @@ class sauv_table {
 			$tTables.= ",".$res -> sauv_table_tables;
 		}
 				
-		//Recherche des tables non intÃ©grÃ©es dans les groupes
+		//Recherche des tables non intégrées dans les groupes
 		$tTablesSelected = explode(",", $tTables);
 		$requete = "show tables";
 		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
@@ -268,16 +274,15 @@ class sauv_table {
 	//Affichage de la liste des tables existantes dans la base
 	//linkToForm : true = rend la liste interactive avec le formulaire
 	public function showTree($linkToForm = true) {
-		global $dbh;
 		global $msg;
 		
 		$tree_h = "".$msg["sauv_tables_tree_title"]."\n";
 		$tree_h1 = "<form><table class='nobrd'><th class='brd'!!tree_h!!</th>";
 		$tree = "";
 		
-		//RÃ©cupÃ©ration de la liste
+		//Récupération de la liste
 		$requete = "select sauv_table_id, sauv_table_nom, sauv_table_tables from sauv_tables order by sauv_table_nom";
-		$resultat = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error());
+		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());
 		$tTables = "";
 		while ($res = pmb_mysql_fetch_object($resultat)) {
 			$tTables.= ",".$res -> sauv_table_tables;
@@ -294,7 +299,7 @@ class sauv_table {
 		}
 		$tree.= "</table>";
 
-		//Recherche des tables non intÃ©grÃ©es dans les groupes
+		//Recherche des tables non intégrées dans les groupes
 		$tTablesSelected = explode(",", $tTables);
 		$requete = "show tables";
 		$resultat = pmb_mysql_query($requete) or die(pmb_mysql_error());

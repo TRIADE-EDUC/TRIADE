@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: titre_uniforme.html,v 1.4 2019-02-15 15:45:21 ngantier Exp $ -->
+<!-- $Id: titre_uniforme.html,v 1.5 2019/06/19 09:15:57 ngantier Exp $ -->
 
 {% block isbd %}
 	{{ element.get_isbd_simple }}
@@ -225,7 +225,7 @@
 			{% if loop.first %}
 				<div class="aut_display_row">
 					<div class="aut_display_cell">
-						<b>{{ msg.aut_titre_uniforme_form_subdivision_forme }} :</b>
+						<b>{{ msg.aut_oeuvre_form_subdivision }} :</b>
 					</div>
 					<div class="aut_display_cell">
 			{% else %}; {% endif %}
@@ -249,7 +249,7 @@
 	{% if element.comment %}
 		<div class="aut_display_row">
 			<div class="aut_display_cell">
-				<b>{{msg.707}} :</b>
+				<b>{{msg.aut_oeuvre_form_comment}} :</b>
 			</div>
 			<div class="aut_display_cell">
 				{{ element.comment | nl2br }}

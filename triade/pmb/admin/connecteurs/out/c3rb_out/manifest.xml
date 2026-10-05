@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un connecteur
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2.4.2 2025/03/25 10:21:10 dbellamy Exp $ -->
+
+<manifest>
+	<name>C3RB</name>
+	<comment>Connecteur d'authentification C3RB</comment>
+	<author>Thomas Samson - Didier Bellamy</author>
+	<org>PMB Services</org>
+	<date>2025-03-17</date>
+	<url>http://www.sigb.net</url>
+	<api_requirements/>
+</manifest>

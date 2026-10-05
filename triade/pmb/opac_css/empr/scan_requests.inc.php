@@ -1,10 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: scan_requests.inc.php,v 1.4 2016-01-26 11:22:52 apetithomme Exp $
+// $Id: scan_requests.inc.php,v 1.8 2023/08/17 09:47:55 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $lvl, $sub, $from, $msg;
+global $id, $notice;
 
 require_once($class_path.'/scan_request/scan_requests.class.php');
 require_once($class_path.'/scan_request/scan_request.class.php');
@@ -27,7 +30,7 @@ switch($lvl){
 				if ($id || $scan_request->has_scannable_linked_record()) {
 					print $scan_request->get_form();
 				} else {
-					print '<script type="text/javascript">alert("'.addslashes($msg['scan_request_linked_record_no_scannable_from_caddie']).'");history.go(-1);</script>';
+					print '<script>alert("'.addslashes($msg['scan_request_linked_record_no_scannable_from_caddie']).'");history.go(-1);</script>';
 				}
 				break;
 			case 'save':
@@ -42,8 +45,12 @@ switch($lvl){
 				} else {
 					print '<div class="alerte">'.$msg['scan_request_cant_delete'].'</div>';
 				}
-				$scan_requests = new scan_requests($_SESSION['id_empr_session']);
-				print $scan_requests->get_display_list();
+				$list_opac_scan_requests_ui = list_opac_scan_requests_ui::get_instance(array('empr' => array($_SESSION['id_empr_session'])));
+				if(count($list_opac_scan_requests_ui->get_objects())) {
+				    print $list_opac_scan_requests_ui->get_display_list();
+				} else {
+				    print $msg['scan_request_list_empty'];
+				}
 				break;
 			case 'display':
 			default :
@@ -53,8 +60,11 @@ switch($lvl){
 		break;
 	case 'scan_requests_list':
 	default :
-		$scan_requests = new scan_requests($_SESSION['id_empr_session']);
-		print $scan_requests->get_display_list();
+	    $list_opac_scan_requests_ui = list_opac_scan_requests_ui::get_instance(array('empr' => array($_SESSION['id_empr_session'])));
+	    if(count($list_opac_scan_requests_ui->get_objects())) {
+	        print $list_opac_scan_requests_ui->get_display_list();
+	    } else {
+	        print $msg['scan_request_list_empty'];
+	    }
 	break;
 }
-?>

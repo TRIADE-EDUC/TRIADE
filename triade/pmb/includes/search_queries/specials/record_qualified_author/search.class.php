@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.2 2018-10-09 11:30:18 arenou Exp $
+// $Id: search.class.php,v 1.3 2020/06/04 07:05:42 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-//Classe de gestion de la recherche spÃ©cial "record_qualified_author"
+//Classe de gestion de la recherche spécial "record_qualified_author"
 global $class_path;
 require_once($class_path."/search.class.php");
 
@@ -25,7 +25,7 @@ class record_qualified_author {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	global $msg;
     	$operators = array(
@@ -84,14 +84,14 @@ class record_qualified_author {
 		);
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $msg;
     	global $charset;
     	global $fonction_auteur;
     	global $pmb_authors_qualification;
     	
-    	// rÃ©cupÃ©ration des codes de fonction
+    	// récupération des codes de fonction
     	if (!count($fonction_auteur)) {
     		$fonction_auteur = new marc_list('function');
     		$fonction_auteur = $fonction_auteur->table;
@@ -99,7 +99,7 @@ class record_qualified_author {
     	
     	$display = '';
     	
-     	//RÃ©cupÃ©ration des valeurs saisies
+     	//Récupération des valeurs saisies
     	$values_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$values_};
     	$values=${$values_};
@@ -109,12 +109,16 @@ class record_qualified_author {
     	global ${$fieldvar_};
     	$fieldvar=${$fieldvar_};
     	
-    	$nb_values=count($values);
-    	if(!$nb_values){
-    		//CrÃ©ation de la ligne
-    		$nb_values=1;
+    	$nb_values = 0;
+    	if (!empty($values)) {
+        	$nb_values = count($values);
     	}
-    	$nb_max_aut=$nb_values-1;
+    	
+    	if (empty($nb_values)) {
+    		//Création de la ligne
+    		$nb_values = 1;
+    	}
+    	$nb_max_aut = $nb_values - 1;
     	
     	$display = "<input type='hidden' id='field_".$this->n_ligne."_s_".$this->id."_max_aut' value='".$nb_max_aut."'>";
     	$display .= "<input class='bouton' type='button' value='+' onclick='qualifiedAuthorAddLine(".$this->id.", ".$this->n_ligne.")'>";
@@ -170,15 +174,15 @@ class record_qualified_author {
     	$display .= "
     		<script type='text/javascript'>
     			
-    			//callback du selecteur AJAX pour les autoritÃ©s
+    			//callback du selecteur AJAX pour les autorités
 				function qualifiedAuthorAuthoritySelected(infield){
-					//on enlÃ¨ve le dernier _X
+					//on enlève le dernier _X
 					var tmp_infield = infield.split('_');
 					var tmp_infield_length = tmp_infield.length;
 					//var inc = tmp_infield[tmp_infield_length-1];
 					tmp_infield.pop();
 					infield = tmp_infield.join('_');
-					//pour assurer la compatibilitÃ© avec le selecteur AJAX
+					//pour assurer la compatibilité avec le selecteur AJAX
 					infield=infield.replace('_lib','');
 					infield=infield.replace('_authority_label','');
 					for(i=0;i<=document.getElementById('field_'+tmp_infield[1]+'_s_'+tmp_infield[3]+'_max_aut').value;i++){
@@ -351,10 +355,10 @@ class record_qualified_author {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	
-		//RÃ©cupÃ©ration des valeurs saisies
+		//Récupération des valeurs saisies
     	$values_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$values_};
     	$values=${$values_};
@@ -395,18 +399,18 @@ class record_qualified_author {
 		return "t_s_record_qualified_author"; 
     }
     
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
     	global $msg;
     	global $include_path;
     	global $fonction_auteur;
-    	// rÃ©cupÃ©ration des codes de fonction
+    	// récupération des codes de fonction
     	if (!count($fonction_auteur)) {
     		$fonction_auteur = new marc_list('function');
     		$fonction_auteur = $fonction_auteur->table;
     	}
     	
-    	//RÃ©cupÃ©ration des valeurs saisies
+    	//Récupération des valeurs saisies
     	$values_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$values_};
     	$values=${$values_};
@@ -448,17 +452,17 @@ class record_qualified_author {
     }
     
     public function make_unimarc_query() {
-    	//RÃ©cupÃ©ration des valeurs saisies
+    	//Récupération des valeurs saisies
     	$values_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$values_};
     	$values=${$values_};
     	return "";
     }    
     
-	//fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+	//fonction de vérification du champ saisi ou sélectionné
     public function is_empty($values) {
     	
-    	//RÃ©cupÃ©ration des valeurs saisies
+    	//Récupération des valeurs saisies
     	$values_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$values_};
     	$values=${$values_};

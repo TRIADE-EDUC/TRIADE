@@ -1,45 +1,45 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// $Id: other_proceed.inc.php,v 1.16 2017-11-21 12:01:00 dgoron Exp $
-// Armelle : a priori plus utilisÃ©
-// la couleur pour la mise en Ã©vidence des mots trouvÃ©s
+// $Id: other_proceed.inc.php,v 1.17 2023/07/26 15:07:58 tsamson Exp $
+// Armelle : a priori plus utilisé
+// la couleur pour la mise en évidence des mots trouvés
 $high_color = "#800080";
 define('DEBUG', 0);
 
-// dÃ©finition de la classe de passage par page
+// définition de la classe de passage par page
 class other_search {
-	public $requete			= '';	// la requÃªte SQL complÃ¨te
-	public $nbr_rows 			= 0;	// le nombre de rÃ©sultats trouvÃ©s
-	public $results_per_pages	= 0;	// nombre de rÃ©sultats par page Ã  afficher
-	public $display			= '';	// affichage en clair de la requÃªte utilisateur
-	public $terms					;	// tableau des mots de la requÃªte (pour highlight)
+	public $requete			= '';	// la requête SQL complète
+	public $nbr_rows 			= 0;	// le nombre de résultats trouvés
+	public $results_per_pages	= 0;	// nombre de résultats par page à afficher
+	public $display			= '';	// affichage en clair de la requête utilisateur
+	public $terms					;	// tableau des mots de la requête (pour highlight)
 }
 
 if($obj) {
-	// $obj est rÃ©putÃ© objet (serialisÃ© et urlencodÃ©)
-	// on a juste Ã  le decoder pour rÃ©cupÃ©rer notre instance de la classe other_search
+	// $obj est réputé objet (serialisé et urlencodé)
+	// on a juste à le decoder pour récupérer notre instance de la classe other_search
 	$ourSearch = unserialize(urldecode($obj));
 	} else {
 		// sinon, il faut instancier ourSearch (other_search) avec ce dont on dispose 
 		// include de fabrication de la fonction ad-hoc
 		include('./catalog/notices/search/others/make_object.inc.php');
 		$other_query = clean_string(($other_query));
-		// on dÃ©finit un tableau contenant les termes de la saisie utilisateur
-		// rÃ©cupÃ©ration du nombre de rÃ©sultats par page
+		// on définit un tableau contenant les termes de la saisie utilisateur
+		// récupération du nombre de résultats par page
 		if($res_per_page) $results_per_page = $res_per_page;
 			else $results_per_page = $nb_per_page_a_search;
 		$ourSearch = new other_search();
 		$ourSearch->terms = preg_split('/[\s]+/', $other_query, -1, PREG_SPLIT_NO_EMPTY);
 		$query = test_other_query($n_resume_flag, $n_gen_flag, $n_titres_flag, $n_matieres_flag, $other_query, $search_type);
-		// si la recherche match/against n'a rien donnÃ©, on force en regexp
+		// si la recherche match/against n'a rien donné, on force en regexp
 		if($query['type'] == 1 && $query['nbr_rows'] == 0)
 			$query = test_other_query($n_resume_flag, $n_gen_flag, $n_titres_flag, $n_matieres_flag, $other_query, $search_type, TRUE);
-		$ourSearch->requete = "SELECT * FROM notices WHERE ${query['restr']} ORDER BY ${query['order']}";
+		$ourSearch->requete = "SELECT * FROM notices WHERE {$query['restr']} ORDER BY {$query['order']}";
 		$ourSearch->nbr_rows = $query['nbr_rows'];
 		$ourSearch->results_per_page = $results_per_page;
 		$ourSearch->display = $query['display'];
@@ -55,13 +55,13 @@ if($ourSearch->nbr_rows == 0) {
 	$obj = urlencode(serialize($ourSearch));
 	print pmb_bidi("<div class='othersearchinfo'>$msg[401] ".$ourSearch->display." | ".$ourSearch->nbr_rows.$msg[1916]."</div>");
 
-	// dÃ©finition de la page actuelle
+	// définition de la page actuelle
 	if(!$page) $page=1;
 	$debut =($page-1)*$ourSearch->results_per_page;
 	$requete = $ourSearch->requete." LIMIT $debut,".$ourSearch->results_per_page;
 
-	// inclusion du javascript de gestion des listes dÃ©pliables
-	// dÃ©but de liste
+	// inclusion du javascript de gestion des listes dépliables
+	// début de liste
 	print $begin_result_liste;
 
 	// boucle de fetch des notices
@@ -73,8 +73,8 @@ if($ourSearch->nbr_rows == 0) {
 			$display = new mono_display($n, 6, $link, 1, '');
 			$notice = $display->result;
 		} else {
-			// on a affaire Ã  un pÃ©riodique
-			// prÃ©paration des liens pour lui
+			// on a affaire à un périodique
+			// préparation des liens pour lui
 			$link_serial = "./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&mode=view_serial&serial_id=!!id!!";
 			$link_analysis = '';
 			$link_bulletin = "./circ.php?categ=resa&id_empr=$id_empr&groupID=$groupID&id_bulletin=!!id!!";
@@ -93,7 +93,7 @@ print	$end_result_list;
 	$suivante = $page+1;
 	$precedente = $page-1;
 
-	// affichage du lien prÃ©cÃ©dent si nÃ©cÃ©ssaire
+	// affichage du lien précédent si nécéssaire
 
 	$unq=md5(microtime());
 
@@ -121,14 +121,14 @@ print	$end_result_list;
 }
 
 
-// la couleur pour la mise en Ã©vidence des mots trouvÃ©s
+// la couleur pour la mise en évidence des mots trouvés
 $high_color = "#800080";
 
 ?>
 
 <?php
 
-// pour dÃ©buggage
+// pour débuggage
 if(DEBUG) {
 	print "<p><span style='color:#ff0000'>&lt;debug mode&gt;</span>";
 	print '<br />$ourSearch->requete : '.$ourSearch->requete;

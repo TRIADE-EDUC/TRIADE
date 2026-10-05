@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: visu_rech.inc.php,v 1.12 2019-05-31 07:52:31 ngantier Exp $
+// $Id: visu_rech.inc.php,v 1.15 2021/03/19 14:49:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -33,12 +33,12 @@ require_once("$class_path/searcher.class.php");
 
 //Lien pour l'affichage
 if (SESSrights & CATALOGAGE_AUTH){
-	$link = "./catalog.php?categ=isbd&id=!!id!!" ;
-	$link_analysis="./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!";
-	$link_serial="./catalog.php?categ=serials&sub=view&serial_id=!!id!!";
-	$link_bulletin="./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!";
+	$link = notice::get_pattern_link();
+	$link_analysis = analysis::get_pattern_link();
+	$link_serial = serial::get_pattern_link();
+	$link_bulletin=bulletinage::get_pattern_link();
 	$link_explnum_serial="";
-	$link_expl="./catalog.php?categ=edit_expl&id=!!notice_id!!&cb=!!expl_cb!!&expl_id=!!expl_id!!";		
+	$link_expl = exemplaire::get_pattern_link();		
 } else {
 	$link = "";	
 	$link_analysis = "";
@@ -52,7 +52,7 @@ $base_url = "./circ.php?categ=visu_rech";
 print str_replace("!!mode_recherche!!", $msg[354], $menu_search_visu_rech);
 switch($mode) {
 	case 'view_serial'://Ce cas n'est plus possible depuis le 19/05/2010
-		// affichage de la liste des Ã©lÃ©ments bulletinÃ©s pour un pÃ©riodique
+		// affichage de la liste des éléments bulletinés pour un périodique
 		include('./circ/resa/view_serial.inc.php');
 		break;
 	default :

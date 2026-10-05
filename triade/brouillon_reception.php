@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -55,12 +55,12 @@ if(isset($_POST["suppmess"])) {
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 
 <script>CreerFenetreBe();</script>
-<SCRIPT language="JavaScript" <?php  print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php  print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php  include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php  top_h(); ?>
 <a name=ancre>
-<SCRIPT language="JavaScript" <?php  print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php  print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 	<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS382 ?></font></b></font></td></tr>
 <tr id='cadreCentral0'>
@@ -89,7 +89,7 @@ $data=affichage_messagerie_brouillon_limit($type_personne,$destinataire,$depart,
 // id_message, emetteur, destinataire, message, date, heure, lu, type_personne, objet, type_personne_dest, lu_par_utilisateur, idpiecejointe
 
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 		if (fichierJointExiste($data[$i][11])) { 
 			$imgpiecejointe="<img src='image/attach.gif' align='center' border='0' title='Pièce jointe' />"; 
 		}else{ 
@@ -100,7 +100,7 @@ $reponse_poubelle="<TR><td  bordercolor='#FFFFFF' colspan='4' ><input type=submi
 $reponse_poubelle.="</TD></TR>";
 $reponse_checkbox="<input type=checkbox name=saisie_poubelle_".$i." onClick=\"DisplayLigne('tr".$i."')\" >";
 $hidden="<input type=hidden name=saisie_id_poubelle_".$i." value=".$data[$i][0]." >";
-$hidden_nb="<input type=hidden name=saisie_nb value=".count($data).">";
+$hidden_nb="<input type=hidden name=saisie_nb value=".countTriade($data).">";
          
 	 $imgc="lettre.gif"; 
 ?>
@@ -138,17 +138,17 @@ print $titre.$emetteur;
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

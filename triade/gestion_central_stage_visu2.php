@@ -19,7 +19,7 @@ if ($productid == PRODUCTID) $CENTRAL=1;
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -120,7 +120,7 @@ if (isset($_POST["periode"])) {
 	$idSouhait=$_POST["periode"];
 }
 $data=recupPeriodeStageCentralSouhait($idSouhait);
-if (count($data)) {
+if (countTriade($data)) {
 	$periode1=dateForm($data[0][0]);
 	$periode2=dateForm($data[0][1]);
 	$nomstage=$data[0][2];
@@ -180,7 +180,7 @@ $data=rechercheStageCentralSouhait($periode1,$periode2,$idSouhait);
 // id,datedemande,identreprise,sexe,service,observation,nbdemande,nomentreprisen,s.adresse,s.ville,s.code_p,s.contact,s.tel,s.fax,s.email,s.info_plu,idproductreserv,null,salaire,logement,pays,contact_fonction,web,grphotelier,nbetoile,nbchambre,qualite
 
 $Y+=10;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$adresse=$data[$i][8];
 	$id=$data[$i][0];
 	$idproductresa=$data[$i][16];
@@ -310,7 +310,7 @@ for($i=0;$i<count($data);$i++) {
 			if ($productidattribution == PRODUCTID) {
 				$dataE=visu_param();
 				// nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,$anneeScolaire
-				for($y=0;$y<count($dataE);$y++) {
+				for($y=0;$y<countTriade($dataE);$y++) {
 					$nometablissement=trim($dataE[$y][0]);
 					$villeetablissement=trim($dataE[$y][3]);
 					$paysetablissement=trim($dataE[$y][9]);

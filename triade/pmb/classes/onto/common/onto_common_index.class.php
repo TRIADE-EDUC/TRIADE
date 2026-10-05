@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_index.class.php,v 1.8 2019-06-06 10:12:40 ngantier Exp $
+// $Id: onto_common_index.class.php,v 1.13.4.1 2025/04/24 09:50:00 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ require_once($class_path."/sphinx/sphinx_concepts_indexer.class.php");
 
 /**
  * class onto_indexation
- * Cette classe permet de mettre Ã  plat un index d'un Ã©lÃ©ment d'une ontologie accessible dans notre schÃ©ma relationel
+ * Cette classe permet de mettre à plat un index d'un élément d'une ontologie accessible dans notre schéma relationel
 */
 class onto_common_index extends indexation {
 	/**
@@ -22,15 +22,17 @@ class onto_common_index extends indexation {
 	 * @access public
 	 */
 	public $handler;
-	
+
+	public $classes;
+
 	/**
 	 * properties
 	 *
 	 * @var Array()
 	 * @access protected
 	 */
-	protected $properties;	
-	
+	protected $properties;
+
 	/**
 	 * infos
 	 *
@@ -38,7 +40,7 @@ class onto_common_index extends indexation {
 	 * @access public
 	 */
 	public $infos;
-	
+
 	/**
 	 * sparql_result
 	 *
@@ -46,39 +48,47 @@ class onto_common_index extends indexation {
 	 * @access protected
 	 */
 	protected static $sphinx_indexer;
-	
+
 	/**
 	 * en nettoyage de base ou non
 	 * @var bool
 	 */
 	protected $netbase = false;
-	
+
 	protected $sparql_result;
-	
+
 	protected $lang_codes = array(
-			'fr' => 'fr_FR',
-			'en' => 'en_UK'
+		'fr' => 'fr_FR',
+		'en' => 'en_UK',
+		'nl' => 'nl_NL',
+		'ar' => 'ar',
+		'ca' => 'ca_ES',
+		'es' => 'es_ES',
+		'hu' => 'hu_HU',
+		'it' => 'it_IT',
+		'pt' => 'pt_PT',
+		'ro' => 'ro_RO'
 	);
 
 	public function __construct(){
-		
+
 	}
-	
+
 	public function load_handler($ontology_filepath, $onto_store_type, $onto_store_config, $data_store_type, $data_store_config, $tab_namespaces, $default_display_label){
 		$this->handler = new onto_handler($ontology_filepath, $onto_store_type, $onto_store_config, $data_store_type, $data_store_config, $tab_namespaces, $default_display_label);
 	}
-	
+
 	public function set_handler($handler){
 		$this->handler = $handler;
 	}
-	
+
 	public function init(){
 		$this->handler->get_ontology();
 		$this->table_prefix = $this->handler->get_onto_name();
 		$this->reference_key = "id_item";
 		$this->analyse_indexation();
 	}
-	
+
 	protected function analyse_indexation(){
 	    if(empty($this->infos) || count($this->infos) == 0){
 	        $cache = cache_factory::getCache();
@@ -94,199 +104,195 @@ class onto_common_index extends indexation {
 	                    $this->tab_code_champ = $tab_code_champ;
 	                    return;
 	                }
-	                
+
 	            }
 	        }
-    		
-    		$unions =array();
+
     		if (is_array($this->classes)) {
         		foreach($this->classes as $class){
-        			$unions[$class->uri] = array();
-        			$query = "select * {
+        			$query = "select * where {
         				<".$class->uri."> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?subclass .
         				?subclass rdf:type pmb:indexation .
-        				?subclass owl:onProperty ?property .
-        				optional {		
-        					?subclass pmb:use ?use .
-        				}
-        				?subclass pmb:pound ?pound .
-        				?subclass pmb:field ?field .
-        				?subclass pmb:subfield ?subfield .
-        				optional {
-        					?subclass owl:unionOf ?union
-        				}
         			}";
         			$this->handler->onto_query($query);
         			if($this->handler->onto_num_rows()){
         				$results= $this->handler->onto_result();
         				foreach($results as $result){
-        					if(isset($result->use) && $result->use){
-        						$element = array($result->property => $result->use);
-        					}else{
-        						$element = $result->property;
-        						
-        					}
-        					$this->infos[$class->uri][$result->pound][]= $element;
-        					
-        					$this->tab_code_champ[$result->field][$this->classes[$class->uri]->pmb_name."_".$this->properties[$result->property]->pmb_name] = array(
-        						'champ' => $result->field,
-        						'ss_champ' => $result->subfield,
-        						'pond' => $result->pound,
-        						'no_words' => false					
-        					);
-        				}
-        				if(isset($result->union) && $result->union && !in_array($result->union,$unions[$class->uri])){
-        					$unions[$class->uri][]=$result->union;
+        				    $this->recurse_analyse_indexation($class->uri,$result->subclass);
         				}
         			}
         		}
     		}
-    		foreach($unions as $class_uri => $bnodes){
-    			foreach($bnodes as $bnode){
-    				$this->recurse_analyse_indexation($class_uri,$bnode);
-    			}
-    		} 
     		if(is_object($cache)){
     		    $cache->setInCache('onto_'.$ontology->name.'_index_tab_code_champ',$this->tab_code_champ);
     		    $cache->setInCache('onto_'.$ontology->name.'_index_infos',$this->infos);
     		}
 	    }
 	}
-	
-	protected function recurse_analyse_indexation($class,$bnode){
-		$bnodes  =array();
-		$query = "select * {
-			<".$bnode."> rdf:type pmb:indexation  .
-			<".$bnode."> owl:onProperty ?property .
-			optional {		
-				<".$bnode."> pmb:useProperty ?use .
-			}
-			<".$bnode."> pmb:pound ?pound .
-			<".$bnode."> pmb:field ?field .
-			<".$bnode."> pmb:subfield ?subfield .
-			optional {
-				<".$bnode."> owl:unionOf ?union
-			}
+
+	protected function recurse_analyse_indexation($class_uri,$indexnode){
+		$unions  =array();
+		$query = "select * where {
+			<".$indexnode."> rdf:type pmb:indexation .
+			<".$indexnode."> owl:onProperty ?property .
+			<".$indexnode."> pmb:pound ?pound .
+			<".$indexnode."> pmb:field ?field .
+			<".$indexnode."> pmb:subfield ?subfield .
+            optional {
+                <".$indexnode."> owl:unionOf ?union
+            } .
+            optional {
+				<".$indexnode."> pmb:useProperty ?use .
+			} .
+            optional {
+                <".$indexnode."> pmb:onRange ?on_range .
+			} .
 		}";
 		$this->handler->onto_query($query);
 		if($this->handler->onto_num_rows()){
-			$results= $this->handler->onto_result();
-			foreach($results as $result){
-				if(isset($result->use) && $result->use){
-					$element = array($result->property => $result->use);
-				}else{
-					$element = $result->property;
-				}
-				$this->infos[$class][$result->pound][]= $element;
-				$this->tab_code_champ[$result->field][$this->classes[$class]->pmb_name."_".$this->properties[$result->property]->pmb_name] = array(
-					'champ' => $result->field,
-					'ss_champ' => $result->subfield,
-					'pond' => $result->pound,
-					'no_words' => false
-				);
-			}
-			if(isset($result->union) && $result->union && !in_array($result->union,$bnodes)){
-				$bnodes[]=$result->union;
-			}
+		    $results= $this->handler->onto_result();
+		    foreach($results as $result){
+		        $element = [
+		            'property' => $result->property,
+		        ];
+		        if(!empty($result->use)){
+		            $element['use'] = $result->use;
+		        }
+		        if(!empty($result->on_range)){
+		            $element['on_range'] = $result->on_range;
+		        }
+		        $this->infos[$class_uri][$result->pound][]= $element;
+		        $name = $this->classes[$class_uri]->pmb_name."_".$this->properties[$result->property]->pmb_name;
+		        if(!empty($result->on_range)){
+		            $name.= '_'.$this->classes[$result->on_range]->pmb_name.'_'.$this->properties[$result->use]->pmb_name;
+		        } else if(!empty($result->use)){
+		            $name.= '_'.$this->properties[$result->use]->pmb_name;
+		        }
+		        $this->tab_code_champ[$result->field][$name] = array(
+		            'champ' => $result->field,
+		            'ss_champ' => $result->subfield,
+		            'pond' => $result->pound,
+		            'no_words' => false
+		        );
+		    }
+		    if(isset($result->union) && $result->union && !in_array($result->union,$unions)){
+		        $unions[]=$result->union;
+		    }
 		}
-		foreach($bnodes as $bnode){
-			$this->recurse_analyse_indexation($class,$bnode);
+		foreach($unions as $union){
+		    $this->recurse_analyse_indexation($class_uri,$union);
 		}
 	}
-	
-	public function get_sparql_result($object_uri){
-		$assertions = array();
-		$query = "select * where {
+
+	public function get_sparql_result($object_uri) {
+
+	    $assertions = array();
+		$query = "SELECT * WHERE {
 			<".$object_uri."> rdf:type ?type
  		}";
 		$this->sparql_result = array();
-		
+
 		$this->handler->data_query($query);
 		if($this->handler->data_num_rows()){
 			$result = $this->handler->data_result();
 			$type = $result[0]->type;
 			if($type){
 				if(isset($this->infos[$type]) && is_array($this->infos[$type])){
-					foreach($this->infos[$type] as $pound => $elements){
+					foreach($this->infos[$type] as $elements){
 						foreach($elements as $element){
-							if(is_string($element)){
-								if($element == $this->handler->get_display_label($this->classes[$type]->uri)){
-									$assertions[] = "
-									<".$object_uri."> <".$element."> ?".$this->classes[$type]->pmb_name."_".$this->properties[$element]->pmb_name;
-								}else{
-									$assertions[] = "
-								optional {
-									<".$object_uri."> <".$element."> ?".$this->classes[$type]->pmb_name."_".$this->properties[$element]->pmb_name."
-								}";
-								}
-							}else if(is_array($element)){
-								foreach($element as $property => $sub_property){
-									$assertions[] = "
-								optional {
-									<".$object_uri."> <".$property."> ?".$this->classes[$type]->pmb_name."_".$this->properties[$property]->pmb_name."
-								}";
-								}
-							}
+				            $name = $this->classes[$type]->pmb_name."_".$this->properties[$element['property']]->pmb_name;
+				            $assertions[] = 'optional { '.PHP_EOL.'  <'.$object_uri.'> <'.$element['property'].'> ?'.$name . ' . '.PHP_EOL.'}';
 						}
 					}
 				}
 			}
 		}
-		
+		// On peut avoir des doublons en cas de range multiples !
+		$assertions=array_unique($assertions);
 		if(count($assertions)){
-			$query = "select * where {".implode(" . ",$assertions)."}";
+		    // Une query ne peut pas être composer que d'optional
+		    $query = "SELECT * WHERE {".PHP_EOL;
+		    $query .= "<".$object_uri."> rdf:type ?type .".PHP_EOL;
+		    $query .= implode(" . ".PHP_EOL,$assertions).PHP_EOL."}";
+
 			if($this->handler->data_query($query)){
 				if($this->handler->data_num_rows()){
 					$rows = $this->handler->data_result();
-					//on parcours toutes les assertions utilies Ã  l'indexation
+					//on parcours toutes les assertions utilies à l'indexation
 					foreach($rows as $row){
-						//on parcours la propriÃ©tÃ© infos pour retrouver les bons Ã©lÃ©ments
-						foreach($this->infos[$type] as $pound => $properties_uris){
+						//on parcours la propriété infos pour retrouver les bons éléments
+						foreach($this->infos[$type] as $elements){
 							$prefix = $this->classes[$type]->pmb_name."_";
-							foreach($properties_uris as $property_uri){
-								if(is_string($property_uri)){
-									$property_name = $this->properties[$property_uri]->pmb_name;
-									$var_name = $prefix.$property_name;
-									if(isset($row->{$var_name})){
-										$lang = '';
-										if (isset($row->{$var_name."_lang"}) && isset($this->lang_codes[$row->{$var_name."_lang"}])) {
-											$lang = $this->lang_codes[$row->{$var_name."_lang"}];
-										}
-										if(!isset($this->sparql_result[$var_name][$lang])){
-											$this->sparql_result[$var_name][$lang] = array();
-										}
-										if(!in_array($row->{$var_name},$this->sparql_result[$var_name][$lang])){
-											$this->sparql_result[$var_name][$lang][] = $row->{$var_name};
-										}										
-									}
-								}else if (is_array($property_uri)){
-									foreach($property_uri as $property => $sub_property){
-										$property_name = $this->properties[$property]->pmb_name;
-										$var_name = $prefix.$property_name;
-										if(isset($row->{$var_name})){
-											$query = "select * where {
-												<".$row->{$var_name}."> <".$sub_property."> ?sub_property
+							foreach($elements as $element){
+							    $var_name = $prefix.$this->properties[$element['property']]->pmb_name;
+							    if(isset($row->{$var_name})){
+							        switch(true){
+							            case !empty($element['on_range']) :
+							                $query = "select * where {
+												<".$row->{$var_name}."> <".$element['use']."> ?sub_property .
+                                                <".$row->{$var_name}."> rdf:type <".$element['on_range']."> .
 											}";
-											$this->handler->data_query($query);
-											if($this->handler->data_num_rows()){
-												$result = $this->handler->data_result();
-												$lang = '';
-												if (isset($result[0]->sub_property_lang) && isset($this->lang_codes[$result[0]->sub_property_lang])) {
-													$lang = $this->lang_codes[$result[0]->sub_property_lang];
-												}
-												if(!isset($this->sparql_result[$var_name][$row->{$var_name}])){
-												    $this->sparql_result[$var_name][$row->{$var_name}] = array();
-												}
-												if(!isset($this->sparql_result[$var_name][$row->{$var_name}][$lang])){
-												    $this->sparql_result[$var_name][$row->{$var_name}][$lang] = array();
-												}
-												if (!in_array($result[0]->sub_property,$this->sparql_result[$var_name][$row->{$var_name}][$lang])){
-												    $this->sparql_result[$var_name][$row->{$var_name}][$lang][] = $result[0]->sub_property;
-												}
+							                $this->handler->data_query($query);
+							                if($this->handler->data_num_rows()){
+							                    $result = $this->handler->data_result();
+							                    $lang = '';
+							                    $subrows = $this->handler->data_result();
+							                    $subname = $var_name.'_'.$this->classes[$element['on_range']]->pmb_name.'_'.$this->properties[$element['use']]->pmb_name;
+							                    foreach($subrows as $subrow){
+							                        if (isset($subrow->sub_property_lang) && isset($this->lang_codes[$subrow->sub_property_lang])) {
+							                            $lang = $this->lang_codes[$subrow->sub_property_lang];
+    							                    }
+    							                    if(!isset($this->sparql_result[$subname][$row->{$var_name}])){
+    							                        $this->sparql_result[$subname][$row->{$var_name}] = array();
+    							                    }
+    							                    if(!isset($this->sparql_result[$subname][$row->{$var_name}][$lang])){
+    							                        $this->sparql_result[$subname][$row->{$var_name}][$lang] = array();
+    							                    }
+    							                    if (!in_array($subrow->sub_property,$this->sparql_result[$subname][$row->{$var_name}][$lang])){
+    							                        $this->sparql_result[$subname][$row->{$var_name}][$lang][] = $subrow->sub_property;
+    							                    }
+							                    }
+							                }
+							                break;
+							            case !empty($element['use']) :
+							                $query = "select * where {
+												<".$row->{$var_name}."> <".$element['use']."> ?sub_property .
+											}";
+						                    $this->handler->data_query($query);
+						                    if($this->handler->data_num_rows()){
+						                        $lang = '';
+						                        $subrows = $this->handler->data_result();
+						                        $subname = $var_name.'_'.$this->properties[$element['use']]->pmb_name;
+						                        foreach($subrows as $subrow){
+						                            if (isset($subrow->sub_property_lang) && isset($this->lang_codes[$subrow->sub_property_lang])) {
+						                                $lang = $this->lang_codes[$subrow->sub_property_lang];
+						                            }
+						                            if(!isset($this->sparql_result[$subname][$row->{$var_name}])){
+						                                $this->sparql_result[$subname][$row->{$var_name}] = array();
+						                            }
+						                            if(!isset($this->sparql_result[$subname][$row->{$var_name}][$lang])){
+						                                $this->sparql_result[$subname][$row->{$var_name}][$lang] = array();
+						                            }
+						                            if (!in_array($subrow->sub_property,$this->sparql_result[$subname][$row->{$var_name}][$lang])){
+						                                $this->sparql_result[$subname][$row->{$var_name}][$lang][] = $subrow->sub_property;
+						                            }
+						                        }
+						                    }
+						                    break;
+							            default :
+											$lang = "";
+							                if (isset($row->{$var_name."_lang"}) && isset($this->lang_codes[$row->{$var_name."_lang"}])) {
+							                    $lang = $this->lang_codes[$row->{$var_name."_lang"}];
 											}
-										}							
-									}
-								}
+											if(!isset($this->sparql_result[$var_name][$lang])){
+												$this->sparql_result[$var_name][$lang] = array();
+											}
+											if(!in_array($row->{$var_name},$this->sparql_result[$var_name][$lang])){
+												$this->sparql_result[$var_name][$lang][] = $row->{$var_name};
+											}
+							                break;
+							        }
+							    }
 							}
 						}
 					}
@@ -294,30 +300,28 @@ class onto_common_index extends indexation {
 			}
 		}
 	}
-		
+
 	public function maj($object_id,$object_uri="",$datatype="all"){
-		global $sphinx_active;
-		
 		if($object_id == 0 && $object_uri != ""){
 			$object_id = onto_common_uri::get_id($object_uri);
 		}
 		if($object_id != 0 && !$object_uri){
 			$object_uri = onto_common_uri::get_uri($object_id);
 		}
-		
+
 		if(!count($this->tab_code_champ)){
 			$this->init();
 		}
-		
+
 		$tab_words_insert = $tab_fields_insert = array();
-		
+
 		$this->get_sparql_result($object_uri);
-		
+
 		if(!$this->deleted_index) {
 			$this->delete_index($object_id,$datatype);
 		}
-		//on a un tableau de rÃ©sultat, on peut le travailler...
-		foreach($this->tab_code_champ as $field_id => $element) {
+		//on a un tableau de résultat, on peut le travailler...
+		foreach($this->tab_code_champ as $element) {
 			foreach ($element as $column => $infos){
 				if(isset($this->sparql_result[$column])){
 					$field_order = 1;
@@ -327,8 +331,8 @@ class onto_common_index extends indexation {
 								$language = $key;
 								//fields (contenu brut)
 								$tab_fields_insert[] = "('".$object_id."','".$infos['champ']."','".$infos['ss_champ']."','".$field_order."','".addslashes($value)."','".$language."','".$infos['pond']."','')";
-								
-								//words (contenu Ã©clatÃ©)
+
+								//words (contenu éclaté)
 								$tab_tmp=explode(' ',strip_empty_words($value));
 								$word_position = 1;
 								foreach($tab_tmp as $word){
@@ -339,12 +343,12 @@ class onto_common_index extends indexation {
 							}else {
 								$language = $key2;
 								$autority_num = onto_common_uri::get_id($key);
-								
-								foreach($value as $val){	
+
+								foreach($value as $val){
 									//fields (contenu brut)
 									$tab_fields_insert[] = "('".$object_id."','".$infos['champ']."','".$infos['ss_champ']."','".$field_order."','".addslashes($val)."','".$language."','".$infos['pond']."','".$autority_num."')";
-								
-									//words (contenu Ã©clatÃ©)
+
+									//words (contenu éclaté)
 									$tab_tmp=explode(' ',strip_empty_words($val));
 									$word_position = 1;
 									foreach($tab_tmp as $word){
@@ -362,60 +366,10 @@ class onto_common_index extends indexation {
 				}
 			}
 		}
-		
-		// Champs persos
-		$p_perso=$this->get_parametres_perso_class('skos');
-		$data=$p_perso->get_fields_recherche_mot_array($object_id);
-		$j=0;
-		$order_fields=1;
-		foreach ( $data as $code_ss_champ => $value ) {
-			$tab_mots=array();
-			//la table pour les recherche exacte
-			$infos = array(
-					'champ' => '1100',
-					'ss_champ' => $code_ss_champ,
-					'pond' => $p_perso->get_pond($code_ss_champ)
-			);
-			foreach($value as $val) {
-				$val = strip_empty_words($val);
-				if($val != ''){
-					$tab_tmp=explode(' ',$val);
-		
-					$tab_fields_insert[] = $this->get_tab_field_insert($object_id, $infos, $j, $val);
-					$j++;
-					foreach($tab_tmp as $mot) {
-						if(trim($mot)){
-							$tab_mots[$mot]= "";
-						}
-					}
-				}
-			}
-			$pos=1;
-			foreach ( $tab_mots as $mot => $langage ) {
-				$num_word = indexation::add_word($mot, $langage);
-				$infos = array(
-						'champ' => '1100',
-						'ss_champ' => $code_ss_champ,
-						'pond' => $p_perso->get_pond($code_ss_champ)
-				);
-				$tab_words_insert[] = $this->get_tab_insert($object_id, $infos, $num_word, $order_fields, $pos);
-				$pos++;
-			}
-			$order_fields++;
-		}
 		$this->save_elements($tab_words_insert,$tab_fields_insert);
-		//SPHINX
-		if($sphinx_active){
-			if(!isset(self::$sphinx_indexer)){
-				self::$sphinx_indexer = new sphinx_concepts_indexer();
-			}
-			if(is_object(self::$sphinx_indexer)) {
-				self::$sphinx_indexer->fillIndex($object_id);
-			}
-		}
 		return true;
 	}
-	
+
 	public function set_netbase($netbase) {
 	    $this->netbase = $netbase;
 	}

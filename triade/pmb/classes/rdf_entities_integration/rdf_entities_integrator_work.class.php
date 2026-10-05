@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_integrator_work.class.php,v 1.10 2018-09-07 11:47:33 tsamson Exp $
+// $Id: rdf_entities_integrator_work.class.php,v 1.18 2022/03/22 08:43:16 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -62,7 +62,7 @@ class rdf_entities_integrator_work extends rdf_entities_integrator_authority {
 						'reference_field_name' => 'oeuvre_link_from',
 						'external_field_name' => 'oeuvre_link_to',
 						'other_fields' => array(
-								'oeuvre_link_expression' => '1',
+								'oeuvre_link_expression' => '0',
 								'oeuvre_link_other_link' => '0'
 						)
 				),
@@ -110,8 +110,30 @@ class rdf_entities_integrator_work extends rdf_entities_integrator_authority {
 	
 	protected function init_special_fields() {
 		$this->special_fields = array_merge(parent::init_special_fields(), array(
-				'http://www.pmbservices.fr/ontology#has_responsability_author',
-				'http://www.pmbservices.fr/ontology#has_responsability_performer',
+            'http://www.pmbservices.fr/ontology#has_responsability_author' => array(
+                "method" => array($this,"insert_responsability_tu"),
+                "arguments" => array(0)
+            ),
+		    'http://www.pmbservices.fr/ontology#has_responsability_performer' => array(
+		        "method" => array($this,"insert_responsability_tu"),
+		        "arguments" => array(1)
+		    ),
+		    'http://www.pmbservices.fr/ontology#expression_of' => array(
+		        "method" => array($this,"insert_linked_work"),
+		        "arguments" => array()
+		    ),
+		    'http://www.pmbservices.fr/ontology#has_expression' => array(
+		        "method" => array($this,"insert_linked_work"),
+		        "arguments" => array()
+		    ),
+		    'http://www.pmbservices.fr/ontology#has_other_link' => array(
+		        "method" => array($this,"insert_linked_work"),
+		        "arguments" => array()
+		    ),
+		    'http://www.pmbservices.fr/ontology#thumbnail_url' => array(
+		        "method" => array($this,"insert_thumbnail_url"),
+		        "arguments" => array(AUT_TABLE_TITRES_UNIFORMES)
+		    ),
 		));
 		return $this->special_fields;
 	}
@@ -188,7 +210,7 @@ class rdf_entities_integrator_work extends rdf_entities_integrator_authority {
 		// Audit
 		if ($this->integration_type && $this->entity_id) {
 			$query = 'insert into audit (type_obj, object_id, user_id, type_modif, info, type_user) ';
-			$query.= 'values ("'.AUDIT_TITRE_UNIFORME.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.addslashes(json_encode(array("uri" => $uri))).'", "'.$this->contributor_type.'")';
+			$query.= 'values ("'.AUDIT_TITRE_UNIFORME.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.$this->create_audit_comment($uri).'", "'.$this->contributor_type.'")';
 			pmb_mysql_query($query);
 			// Indexation
 			titre_uniforme::update_index($this->entity_id);
@@ -196,22 +218,122 @@ class rdf_entities_integrator_work extends rdf_entities_integrator_authority {
 	}
 	
 	public function cataloging_insert_reversed_link_work($expression = 0, $other_link = 0, $to = 0, $from = 0, $type = '') {
-		$to+=0;
-		$from+=0;
-		$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
+	    
+	    $to = intval($to);
+	    $from = intval($from);
+		
+	    $oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
 		if(!isset($oeuvre_link->inverse_of[$type])){
 			return;
 		}
-		$select = 'select oeuvre_link_type from tu_oeuvres_links where oeuvre_link_from = "'.$to.'" and oeuvre_link_to= "'.$from.'" and oeuvre_link_type = "'.$oeuvre_link->inverse_of[$type].'" ';
-		$result = pmb_mysql_query($select);
+		
+		$query_select = "SELECT oeuvre_link_type FROM tu_oeuvres_links WHERE oeuvre_link_from = '".$to."'";
+		$query_select .= " AND oeuvre_link_to = '".$from."' AND oeuvre_link_type = '".$oeuvre_link->inverse_of[$type]."'";
+		
+		$result = pmb_mysql_query($query_select);
 		if (pmb_mysql_num_rows($result) > 0) {
 			return;
 		}
-		$max_query = 'select max(oeuvre_link_order) from tu_oeuvres_links where oeuvre_link_from = "'.$to.'"';
-		$result = pmb_mysql_query($max_query);
-		$max_order = pmb_mysql_result($result, 0, 0);
-		$query = 'insert into tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ("'.$to.'","'.$from.'","'.$oeuvre_link->inverse_of[$type].'", '.$expression.', '.$other_link.', "'.($max_order+1).'")';
-		pmb_mysql_query ($query);
+		
+		$query_max = 'SELECT MAX(oeuvre_link_order) FROM tu_oeuvres_links WHERE oeuvre_link_from = "'.$to.'"';
+		$result = pmb_mysql_query($query_max);
+		$max_order = intval(pmb_mysql_result($result, 0, 0));
+		
+		$query_insert = "INSERT INTO tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order)";
+		$query_insert .= " VALUES ('".$to."', '".$from."', '".$oeuvre_link->inverse_of[$type]."', '".$expression."', '".$other_link."', '".($max_order+1)."')";
+		pmb_mysql_query($query_insert);
+		
 		return true;
+	}
+	
+	public function insert_responsability_tu($responsability_tu_type, $values) {
+	    
+	    $query = "	DELETE FROM responsability_tu
+					WHERE responsability_tu_num = '".$this->entity_id."'
+					AND responsability_tu_type = '".$responsability_tu_type."'";
+	    pmb_mysql_query($query);
+	    
+	    $query_values = "";
+	    foreach ($values as $value) {
+	        $responsability_function = $this->store->get_property($value["value"], "pmb:author_function");
+	        $author_uri = $this->store->get_property($value["value"], "pmb:has_author");
+	        $author = $this->integrate_entity($author_uri[0]['value'], true);
+	        $this->entity_data['children'][] = $author;
+	        if ($query_values) {
+	            $query_values .= ',';
+	        }
+	        
+    	    $query = "	INSERT INTO responsability_tu (responsability_tu_author_num, responsability_tu_num, responsability_tu_type, responsability_tu_fonction)
+    					VALUES ('".$author["id"]."', '".$this->entity_id."', $responsability_tu_type, '".$responsability_function[0]['value']."')";
+    	    pmb_mysql_query($query);
+    	    
+    	    $json_vedette = $this->store->get_property($value["value"], "pmb:author_qualification")[0];
+    	    $vedette_value = json_decode($json_vedette['value']);
+    	    
+    	    $this->insert_vedette($vedette_value, pmb_mysql_insert_id());
+	    }
+	}
+	
+	public function insert_linked_work($values) {
+	    foreach ($values as $value) {
+	        
+	        $relation_type_work = $this->store->get_property($value["value"], "pmb:relation_type_work");
+	        $work_uri = $this->store->get_property($value["value"], "pmb:has_work");
+	        $work = $this->integrate_entity($work_uri[0]['value'], true);
+	        if(empty($work['id'])){
+	            continue;
+	        }
+	        $this->entity_data['children'][] = $work;
+	        $oeuvre_link_type = $relation_type_work[0]['value'];
+	        
+	        $query_select = "SELECT oeuvre_link_type FROM tu_oeuvres_links WHERE ";
+	        $query_select .= " oeuvre_link_from = " . $this->entity_id;
+	        $query_select .= " AND oeuvre_link_to = " . $work['id'];
+	        $query_select .= " AND oeuvre_link_type = $oeuvre_link_type";
+	        
+	        $result = pmb_mysql_query($query_select);
+	        if (pmb_mysql_num_rows($result) > 0) {
+	            continue;
+	        }
+	        
+	        $oeuvre_link = marc_list_collection::get_instance('oeuvre_link');
+            $oeuvre_link_other_link = 0;
+	        $oeuvre_link_expression = 0;
+	        
+	        $query_max_order = "SELECT MAX(oeuvre_link_order) FROM tu_oeuvres_links WHERE oeuvre_link_from = " . $this->entity_id;
+	        $result = pmb_mysql_query($query_max_order);
+	        $max_order = pmb_mysql_result($result, 0, 0);
+	        
+	        $oeuvre_link_order = ( intval($max_order) + 1);
+	        	        
+	        
+	        if (!empty($oeuvre_link->attributes[$oeuvre_link_type])) {
+               
+    	        $oeuvre_link_attributes = $oeuvre_link->attributes[$oeuvre_link_type];
+    	        switch($oeuvre_link_attributes['GROUP']){
+    	            case "other_link":
+    	                $oeuvre_link_other_link = 1;
+    	                $oeuvre_link_expression = 0;
+    	                $reverse_oeuvre_link_expression = 0;
+    	                break;
+                    case "expression_of":
+                        $oeuvre_link_other_link = 0;
+                        $oeuvre_link_expression = 0;
+                        $reverse_oeuvre_link_expression = 1;
+                        break;
+                    case "have_expression":
+                        $oeuvre_link_other_link = 0;
+                        $oeuvre_link_expression = 1;
+                        $reverse_oeuvre_link_expression = 0;
+                        break;
+    	        }
+    	        $query_insert = "INSERT INTO tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order)";
+    	        $query_insert .= " VALUES ('".$this->entity_id."', '".$work['id']."', '".$oeuvre_link_type."', '".$reverse_oeuvre_link_expression."', '".$oeuvre_link_other_link."', '".$oeuvre_link_order."')";
+    	        
+    	        pmb_mysql_query($query_insert);
+    	        
+    	        $this->cataloging_insert_reversed_link_work($oeuvre_link_expression, $oeuvre_link_other_link, $work['id'], $this->entity_id, $oeuvre_link_type);
+	        }
+	    }
 	}
 }

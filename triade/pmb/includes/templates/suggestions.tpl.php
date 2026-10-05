@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions.tpl.php,v 1.49 2019-05-27 14:16:26 btafforeau Exp $
+// $Id: suggestions.tpl.php,v 1.50.2.1 2025/01/20 13:13:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -199,7 +199,7 @@ function add_numeric_obj(obj,inc) {
 				<label class='etiquette' >".htmlentities($msg['acquisition_sug_dat_cre'], ENT_QUOTES, $charset)."</label>
 			</div>
 			<div class='colonne5'>
-				<label class='etiquette' >".htmlentities($msg['acquisition_sug_orig'], ENT_QUOTES, $charset)."</label>
+				<label class='etiquette' for='lib_orig'>".htmlentities($msg['acquisition_sug_orig'], ENT_QUOTES, $charset)."</label>
 			</div>
 			<div class='colonne5'>
 				<label class='etiquette' >".htmlentities($msg['acquisition_sug_poi'], ENT_QUOTES, $charset)."</label>
@@ -210,7 +210,7 @@ function add_numeric_obj(obj,inc) {
 			<div class='colonne5'>
 			";
 if ($acquisition_sugg_categ=='1'){
-	$sug_modif_form.= "<label class='etiquette' >".htmlentities($msg['acquisition_categ'], ENT_QUOTES, $charset)."</label>";
+	$sug_modif_form.= "<label class='etiquette' for='num_categ'>".htmlentities($msg['acquisition_categ'], ENT_QUOTES, $charset)."</label>";
 } else {
 	$sug_modif_form.= "&nbsp;";
 }
@@ -258,7 +258,7 @@ $sug_modif_form.="
 		<div class='row'>
 		
 			<div class='colonne5'>
-				<label class='etiquette'>".htmlentities($msg['acquisition_sug_qte'], ENT_QUOTES, $charset)."</label>
+				<label class='etiquette' for='nombre_expl'>".htmlentities($msg['acquisition_sug_qte'], ENT_QUOTES, $charset)."</label>
 				<div class='row'>
 					<!-- nombre_expl -->
 					<input  class='bouton_small' type='button' value='-' onclick=\"add_numeric_obj('nombre_expl',-1)\">
@@ -280,7 +280,7 @@ $sug_modif_form.="
 if(!isset($back_url)) $back_url = "onClick=\"document.location='./acquisition.php?categ=sug&action=list'\"";
 $sug_modif_form.="	
 		<div class='colonne5'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sugg_filtre_src'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='sug_src'>".htmlentities($msg['acquisition_sugg_filtre_src'], ENT_QUOTES, $charset)."</label>
 			<div class='row'>
 				!!liste_source!!
 			</div>
@@ -290,7 +290,7 @@ $sug_modif_form.="
 		<div class='row'><hr /></div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_tit'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='tit'>".htmlentities($msg['acquisition_sug_tit'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='tit' name='tit' class='saisie-60em' value='!!tit!!' />
@@ -298,61 +298,61 @@ $sug_modif_form.="
 		</div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_edi'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='edi'>".htmlentities($msg['acquisition_sug_edi'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='edi' name='edi' class='saisie-30em' value='!!edi!!' />
 		</div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_aut'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='aut'>".htmlentities($msg['acquisition_sug_aut'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='aut' name='aut' class='saisie-30em' value='!!aut!!' />
 		</div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_cod'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='cod'>".htmlentities($msg['acquisition_sug_cod'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='cod' name='cod' class='saisie-30em' value='!!cod!!' />
 		</div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_pri'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='pri'>".htmlentities($msg['acquisition_sug_pri'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='pri' name='pri' class='saisie-10em' value='!!pri!!' />
 		</div>
 
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_url'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='url_sug'>".htmlentities($msg['acquisition_sug_url'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='url_sug' name='url_sug' class='saisie-80em' value='!!url_sug!!' />
 			<!-- url_sug -->
 		</div>
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_com'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='com'>".htmlentities($msg['acquisition_sug_com'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<textarea id='com' name='com' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!com!!</textarea>
 		</div>
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sug_com_gestion'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='com_gestion'>".htmlentities($msg['acquisition_sug_com_gestion'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<textarea id='com_gestion' name='com_gestion' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!com_gestion!!</textarea>
 		</div>		
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sugg_date_publication'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='date_publi'>".htmlentities($msg['acquisition_sugg_date_publication'], ENT_QUOTES, $charset)."</label>
 		</div>
 		<div class='row'>
 			<input type='text' id='date_publi' name='date_publi' value='!!date_publi!!'>
 			<input type='button' class='bouton' id='date_publi_sug' name='date_publi_sug' value='...' onClick=\"openPopUp('./select.php?what=calendrier&caller=sug_modif_form&param1=date_publi&param2=date_publi&auto_submit=NO&date_anterieure=YES', 'calendar')\"/>
 		</div>
 		<div class='row'>
-			<label class='etiquette' >".htmlentities($msg['acquisition_sugg_piece_jointe'], ENT_QUOTES, $charset)."</label>
+			<label class='etiquette' for='piece_jointe_sug'>".htmlentities($msg['acquisition_sugg_piece_jointe'], ENT_QUOTES, $charset)."</label>
 		</div>
 		!!div_pj!!
 		<div class='row'></div>		
@@ -447,7 +447,7 @@ $bt_imp = "<input type='button' class='bouton_small' value='$msg[imprimer]' onCl
 $bt_exporter = "<input type='button' class='bouton_small' value='".$msg['admin_Expvers']."' onClick=\"!!exp!!\" /><!-- list_export -->";
 $bt_export_tableau = "<input type='button' class='bouton_small' value='".$msg['sugg_export_tableau']."' onClick=\"!!exp!!\" />";
 
-$lk_url_sug = "<a href='!!url_sug!!' target='_blank'><img src='".get_url_icon('globe.gif')."' border='0'/></a>";
+$lk_url_sug = "<a href='!!url_sug!!' target='_blank'><img src='".get_url_icon('globe.gif')."' style='border:0px' alt='' /></a>";
 
 
 $script = "
@@ -455,7 +455,7 @@ $script = "
 
 	var check = true;
 
-	//Coche et dÃ©coche les Ã©lÃ©ments de la liste
+	//Coche et décoche les éléments de la liste
 	function checkAll(the_form, the_objet, do_check) {
 	
 		var elts = document.forms[the_form].elements[the_objet+'[]'] ;
@@ -481,7 +481,7 @@ $script = "
 	}
 
 
-	//VÃ©rifie que le nb d'Ã©lements minimum passÃ© en paramÃ¨tre est cochÃ©
+	//Vérifie que le nb d'élements minimum passé en paramètre est coché
 	function verifChk(nb_to_chk) {
 		
 		var elts = document.forms['sug_list_form'].elements['chk[]'];

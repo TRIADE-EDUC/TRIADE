@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_sectionslist_view_carousel.class.php,v 1.7 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_sectionslist_view_carousel.class.php,v 1.13.2.2 2025/01/21 15:29:48 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_sectionslist_view_carousel extends cms_module_carousel_view_carousel{
-	
-	
+
+
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->default_template = "
@@ -24,7 +24,7 @@ class cms_module_sectionslist_view_carousel extends cms_module_carousel_view_car
 </ul>
 		";
 	}
-	
+
 	public function get_form(){
 		$form="
 		<div class='row'>
@@ -39,30 +39,39 @@ class cms_module_sectionslist_view_carousel extends cms_module_carousel_view_car
 		$form.= parent::get_form();
 		return $form;
 	}
-	
+
 	public function save_form(){
 		$this->save_constructor_link_form("section");
 		return parent::save_form();
 	}
-	
-	public function render($ids){
-		$datas = array();
-		for($i=0 ; $i<count($ids) ; $i++){
-			$section = cms_provider::get_instance("section",$ids[$i]);
-			$infos = $section->format_datas(false,false);
-			$infos['link']=$this->get_constructed_link("section",$infos['id']);
-			$datas[]= $infos;
+
+	public function render($datas){
+		$sections = array();
+		$links = [
+		    "article" => $this->get_constructed_link("article", "!!id!!"),
+		    "section" => $this->get_constructed_link("section", "!!id!!")
+		];
+		$local_ids = $datas;
+		if (isset($datas["sections"])) {
+		    $local_ids = $datas["sections"];
 		}
-		return parent::render(array('sections' => $datas));
+		if (is_countable($local_ids)) {
+			for($i=0 ; $i<count($local_ids) ; $i++){
+				$section = cms_provider::get_instance("section",$local_ids[$i]);
+				$infos = $section->format_datas($links);
+				$sections[]= $infos;
+			}
+		}
+		return parent::render(array('sections' => $sections));
 	}
-	
+
 	public function get_format_data_structure(){
 		$datas = cms_section::get_format_data_structure(false,false);
 		$datas[] = array(
 			'var' => "link",
 			'desc'=> $this->msg['cms_module_sectionslist_view_carousel_link_desc']
 		);
-		
+
 		$format_datas = array(
 			array(
 				'var' => "sections",

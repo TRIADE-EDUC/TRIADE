@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PMBSelectorDialog.js,v 1.1 2018-10-08 13:59:40 vtouchard Exp $
+// $Id: PMBSelectorDialog.js,v 1.1 2018/10/08 13:59:40 vtouchard Exp $
 
 
 define(["dojo/_base/declare", 

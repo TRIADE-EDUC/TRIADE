@@ -12,7 +12,7 @@ if (isset($_POST["saisie_trimestre"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,6 +32,8 @@ $id=php_ini_get("safe_mode");
 if ($id != 1) {
 	set_time_limit(900);
 }
+error_reporting('0');
+
 ?>
 <HTML>
 <HEAD>
@@ -48,11 +50,11 @@ if ($id != 1) {
 </head>
 <body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Impression du tableau de bulletin </font></b></td>
 </tr>
@@ -88,7 +90,7 @@ $pointsupp=$_POST["pointsupp"];
 $affmatiere=$_POST["affmatiere"];
 $affsousmatiere=$_POST["affsousmatiere"];
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 	if ($_POST["typetrisem"] == "trimestre") {
 		if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
 		if ($_POST["saisie_trimestre"] == "trimestre2" ) { $textTrimestre=LANGBULL23; }
@@ -111,7 +113,7 @@ if (count($valeur)) {
 	
 	// recherche des dates de debut et fin
 	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -122,10 +124,11 @@ if (count($valeur)) {
 	if ($examen == "") {
 		$ordre=ordre_matiere_visubull($_POST["saisie_classe"],$anneeScolaire); // recup ordre matiere
 	}else{
-		$ordre=ordre_matiere_visubull_btsblanc($_POST["saisie_classe"],$anneeScolaire);
+		$ordre=ordre_matiere_visubull($_POST["saisie_classe"],$anneeScolaire); // recup ordre matiere
+		//$ordre=ordre_matiere_visubull_btsblanc($_POST["saisie_classe"],$anneeScolaire);
 	}
 
-	$nbmatiere=count($ordre);
+	$nbmatiere=countTriade($ordre);
 	
 	// creation PDF
 	//
@@ -144,7 +147,7 @@ if (count($valeur)) {
 	$coefEleG=0; // pour la moyenne  general
 
 	$nbMat=0;
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
@@ -170,7 +173,7 @@ if (count($valeur)) {
 	if ($nbMat >= 40) { $nbaffichematiere=22 ; } 
 
 $dejapage=0;
-while(count($ordre)) {
+while(countTriade($ordre)) {
 	$dejapage++;
 	$pdf->AddPage();
 	unset($tabmatiere);
@@ -190,7 +193,7 @@ while(count($ordre)) {
 	$pdf->writehtml('<B>NOTES de '.$classe_nom.' du '.$textTrimestre.'</B> ('.$anneeScolaire.')  '.$examen);
 	$pdf->SetXY(100,9);
 	$pdf->SetFont('Arial','I',8);
-	$pdf->writehtml('Moyenne générale effectuée avec les moyennes de sous-matière. Il y a '.count($eleveT).' étudiant(s)');
+	$pdf->writehtml('Moyenne générale effectuée avec les moyennes de sous-matière. Il y a '.countTriade($eleveT).' étudiant(s)');
 	$pdf->SetFont('Arial','',10);
 	// noms matières
 	for($i=0;$i<$nbaffichematiere;$i++) {
@@ -219,7 +222,7 @@ while(count($ordre)) {
 	}
 
 
-	while (list($key, $nom_matiere) = each($tabmatiere)) {
+	foreach ($tabmatiere as $key => $nom_matiere) {
 		list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
 		$pdf->SetFillColor(220);
 		$pdf->SetXY($xmatiere,$ymatiere-3);
@@ -254,7 +257,7 @@ while(count($ordre)) {
 	}
 
 
-	if (($afficheMoyen) && ($nbaffichematiere >= count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere >= countTriade($ordre))) {
 
 		if ((EXAMENJTC != "oui") && (MODNAMUR0 == "oui")) {
 			$pdf->SetFont('Arial','B',6);
@@ -286,7 +289,7 @@ while(count($ordre)) {
         $xmatiere=$xnomeleve+30;
 
 
-        while (list($key, $nom_matiere) = each($tabmatiere2)) {
+	foreach ($tabmatiere2 as $key => $nom_matiere) {
                 list($nom_matiere,$num_ordre,$idMatiere,$nomSousMatiere)=preg_split("/##/",$nom_matiere);
                 $coeffaff=recupCoeff($idMatiere,$idClasse,$num_ordre);
                 if ($examen != "") {
@@ -307,7 +310,7 @@ while(count($ordre)) {
 	//eleves
 	$afficMoyenEleve="oui";	
 	$ju=0;
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		$ju++;
 		// variable eleve
 		$nomEleve=ucwords($eleveT[$j][0]);
@@ -325,7 +328,7 @@ while(count($ordre)) {
 
 		$pdf->SetFont('Arial','',8);
 		$pdf->SetXY($xnomeleve,$ynomeleve);
-		$pdf->WriteHTML(trunchaine(ucwords($nomEleve)." ".$prenomEleve,20));
+		$pdf->WriteHTML(trunchaine(ucwords($nomEleve)." ".$prenomEleve,15));
 		$ynomeleve=$hauteurnomeleve + $ynomeleve;
 		$XnotVal=35;
 		//moyennes matières
@@ -392,7 +395,7 @@ while(count($ordre)) {
 			$XnotVal=$XnotVal + $largeurnote;
 		}
 
-		if (($afficheMoyen) && ($nbaffichematiere >= count($ordre))) {
+		if (($afficheMoyen) && ($nbaffichematiere >= countTriade($ordre))) {
 			$noteMoyEleG=0; // pour la moyenne  general
 			$coefEleG=0; // pour la moyenne  general
 			if ((EXAMENJTC != "oui") && (MODNAMUR0 == "oui")) {
@@ -509,6 +512,7 @@ while(count($ordre)) {
 
 			if (trim($moyenEleve) != "") {
 				$moyenEleve=preg_replace('/,/','.',$moyenEleve);
+				if ($moyenClasseGen == "") $moyenClasseGen=0;
 				$moyenClasseGen+=$moyenEleve;
 				$nbeleve2++;
 			}
@@ -581,7 +585,7 @@ while(count($ordre)) {
 	}
 
 
-	if (($afficheMoyen) && ($nbaffichematiere >= count($ordre))) {
+	if (($afficheMoyen) && ($nbaffichematiere >= countTriade($ordre))) {
 		if ((EXAMENJTC != "oui") && (MODNAMUR0 == "oui")) {
 			$moyenEleve="";
 			if ($notescolaireG != "") {
@@ -634,11 +638,11 @@ while(count($ordre)) {
 	}
 
 	
-if ($_POST["affrang"] == "1") {
-	// cclassement
-	$pdf->SetTextColor(0,0,0);
-/*	if ( ((count($eleveT)<32) && ($nbaffichematiere >= $nbmatiere)) || ( $dejapage == 2 ) ) {
-//	if ( ((count($eleveT)<32) && ($nbaffichematiere >= $nbmatiere)) || ( $dejapage == 1 ) ) {
+	if ($_POST["affrang"] == "1") {
+		// cclassement
+		$pdf->SetTextColor(0,0,0);
+	/*	if ( ((countTriade($eleveT)<32) && ($nbaffichematiere >= $nbmatiere)) || ( $dejapage == 2 ) ) {
+	//	if ( ((countTriade($eleveT)<32) && ($nbaffichematiere >= $nbmatiere)) || ( $dejapage == 1 ) ) {
 		$XnotVal=$XnotVal+$largeurnote;	
 		$YnotVal = 23;	 
 		arsort($classement);
@@ -651,7 +655,7 @@ if ($_POST["affrang"] == "1") {
 		$pdf->SetXY($XnotVal,$ymatiere-3);
 		$pdf->MultiCell(10,8,'Rang',1,'C',1);
 		$pdf->SetFont('Arial','',10);
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			$pdf->SetXY($XnotVal,$YnotVal);
 			$pdf->MultiCell(10,$hauteurnomeleve,'',1,'L',0);
 			$pdf->SetXY($XnotVal+2,$YnotVal);
@@ -671,7 +675,7 @@ if ($_POST["affrang"] == "1") {
 		$pdf->SetXY($XnotVal+5,$YnotVal-$hauteurnomeleve);
 		$pdf->MultiCell(56,$hauteurnomeleve,'Classement :',1,'L',0);
 		$jp=0;
-		for($j=0;$j<count($eleveT);$j++) {
+		for($j=0;$j<countTriade($eleveT);$j++) {
 			if ($jp == 36) { $pdf->AddPage(); $YnotVal=10; $jp=0; }	
 			$jp++;
 			$nomEleve=ucwords($eleveT[$j][0]);
@@ -679,7 +683,8 @@ if ($_POST["affrang"] == "1") {
 			$pdf->SetXY($XnotVal+5,$YnotVal);
 			$pdf->MultiCell(50,$hauteurnomeleve,'',1,'L',1);
 			$pdf->SetXY($XnotVal+5,$YnotVal);
-			$pdf->WriteHTML(ucwords($nomEleve)." ".$prenomEleve);
+			$nomprenom1=trunchaine(ucwords($nomEleve)." ".$prenomEleve,20);
+			$pdf->WriteHTML($nomprenom1);
 			$pdf->SetXY($XnotVal+55,$YnotVal);
 			$pdf->MultiCell(6,$hauteurnomeleve,'',1,'L',0);
 			$pdf->SetXY($XnotVal+55,$YnotVal);
@@ -688,7 +693,7 @@ if ($_POST["affrang"] == "1") {
 
 		}
 	// }
-}
+	}
 
 	$classe_nom=TextNoAccent($classe_nom);
 	$classe_nom=TextNoCarac($classe_nom);
@@ -753,17 +758,17 @@ Pgclose();
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             	print "<SCRIPT language='JavaScript' ";
-       		print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       		print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             	print "</SCRIPT>";
        else :
             	print "<SCRIPT language='JavaScript' ";
-      		print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      		print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             	print "</SCRIPT>";
 
             top_d();
 
             	print "<SCRIPT language='JavaScript' ";
-      		print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+      		print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             	print "</SCRIPT>";
 
       endif ;

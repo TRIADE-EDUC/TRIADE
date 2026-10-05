@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: empr_renewal.tpl.php,v 1.4 2019-05-27 15:09:40 btafforeau Exp $
+// $Id: empr_renewal.tpl.php,v 1.5 2019/07/30 11:57:24 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -12,6 +12,13 @@ $empr_renewal_form = "
 <form class='form-admin' name='empr_renewal_form' method='post' id='empr_renewal_form' action='./admin.php?categ=empr&sub=renewal_form&action=save'>
 	<h3>".$msg['empr_renewal_form']."</h3>
 	<div class='form-contenu'>
+		<div class='row'>
+			<label class='etiquette' for='code'>" . $msg['admin_opac_renewal_activate'] . "</label>
+		</div>
+		<div class='row'>
+			<input type='checkbox' id='renewal_activate' name='renewal_activate' class='switch' value='1' !!renewal_activate_checked!!>
+			<label for='renewal_activate'>&nbsp;</label>
+		</div>
 		<table class='modern'>
 			<thead id='empr_renewal_form_fixed_header'>
 				<tr>

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: MemorySelector.js,v 1.1 2017-09-13 12:38:29 tsamson Exp $
+// $Id: MemorySelector.js,v 1.1 2017/09/13 12:38:29 tsamson Exp $
 
 
 define([

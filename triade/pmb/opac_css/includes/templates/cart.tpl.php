@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart.tpl.php,v 1.3 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: cart.tpl.php,v 1.4 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -10,8 +10,8 @@ global $include_path;
 global $cart_integrate_anonymous_on_confirm;
 
 $cart_integrate_anonymous_on_confirm = "
-<script type='text/javascript' src='".$include_path."/javascript/http_request.js'></script>
-<script type='text/javascript'>
+<script src='".$include_path."/javascript/http_request.js'></script>
+<script>
 	window.addEventListener('load', function(){
 		var cart_request= new http_request();
 		if(confirm('!!cart_confirm_message!!')){

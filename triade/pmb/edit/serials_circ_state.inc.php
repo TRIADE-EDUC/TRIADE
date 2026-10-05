@@ -1,23 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serials_circ_state.inc.php,v 1.2 2016-05-10 15:32:19 apetithomme Exp $
+// $Id: serials_circ_state.inc.php,v 1.3 2022/03/25 07:38:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once("$class_path/serialcirc_state.class.php");
+global $class_path, $id;
 
-$serialcirc_state= new serialcirc_state();
-$serialcirc_state->get_filters_from_form();
-switch ($dest) {
-	case 'TABLEAU':
-		$serialcirc_state->export_list_tableau();
-		break;
-	case 'TABLEAUHTML':
-		print $serialcirc_state->export_list_tableauhtml();
-		break;
-	default :
-		print $serialcirc_state->get_list();
-		break;
-}
+require_once($class_path.'/serialcirc/serialcirc_controller.class.php');
+
+serialcirc_controller::set_list_ui_class_name('list_serialcirc_state_ui');
+serialcirc_controller::proceed($id);

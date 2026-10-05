@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -68,7 +68,7 @@ $data=planning_equipement($equipement,$datedepart);
 <td align=center><?php print LANGRESA41 ?></td>
 </tr>
 <?php
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$equip=$data[$i][6];
 	if (DBTYPE == "pgsql") {
 		if ($equip == TRUE) {

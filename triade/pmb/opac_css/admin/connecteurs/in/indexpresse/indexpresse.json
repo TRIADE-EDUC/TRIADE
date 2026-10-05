@@ -1,0 +1,47 @@
+{
+	"connectors" : [
+		"delphes",
+		"generalis",
+		"references"
+	],
+	
+	"search_fields" : {
+		"BI" : "Tous champs",
+		"DE" : "Descripteur",
+		"DD" : "Descripteur Delphes",
+		"DG" : "Descripteur Geographique",
+		"TI" : "Titre",
+		"AU" : "Auteur",
+		"SO" : "Revue",
+		"CO" : "Societe",
+		"DA" : "Annee"
+	}, 
+		
+	"delphes" : {
+		"search_fields" : {
+			"XXX" : ["BI"],
+			"200$a" : ["TI"],
+			"60X" : ["DD","DG"],
+			"7XX" : ["AU"]
+		}
+	},
+	
+	"generalis" : {
+		"search_fields" : {
+			"XXX" : ["BI"],
+			"200$a" : ["TI"],
+			"60X" : ["DE"],
+			"7XX" : ["AU"]
+		}
+	},
+	
+	"references" : {
+		"search_fields" : {
+			"XXX" : ["BI"],
+			"200$a" : ["TI"],
+			"60X" : ["DE"],
+			"7XX" : ["AU"]
+		}
+	}
+
+}

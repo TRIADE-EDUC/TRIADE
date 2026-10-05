@@ -1,9 +1,11 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: collection.html,v 1.5 2017-11-22 14:51:42 dgoron Exp $ -->
+<!-- $Id: collection.html,v 1.7 2023/08/08 15:36:21 qvarin Exp $ -->
 
-{% block header %}
-	<h3><span>{{ msg.detail_coll }}</span></h3>
+{% block title %}
+	{% title authority_isbd %}
+		{{ msg.collection_tpl_collection }} {{ authority.name }} {% if authority.collection_web %} <a target="_blank" href="{{ authority.collection_web }}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
+	{% endtitle %}
 {% endblock %}
 
 {% block aut_see %}
@@ -12,12 +14,6 @@
 	</div>
 {% endblock %}
 	
-{% block title %}
-	<h3>
-		{{ authority.name }} {% if authority.collection_web %} <a target="_blank" href="{{ authority.collection_web }}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
-	</h3>
-{% endblock %}
-
 {% block details %}
 	<div class="aut_display_row">
 		<div class="aut_display_cell">

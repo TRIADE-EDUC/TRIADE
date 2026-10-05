@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: params.interface.php,v 1.11 2017-06-30 14:55:37 dgoron Exp $
+// $Id: params.interface.php,v 1.15.4.1 2025/01/30 09:08:07 tsamson Exp $
  
- //on dÃ©fini les mÃ©thodes Ã  implÃ©menter pour une classe de paramÃ©trage...
+ //on défini les méthodes à implémenter pour une classe de paramétrage...
 
 interface params{
- 	//renvoi un paramÃ¨tre
+ 	//renvoi un paramètre
  	public function getParam($parameter);
  	//renvoi le nombre de documents
  	public function getNbDocs();
@@ -19,11 +19,11 @@ interface params{
 
 class base_params implements params {
 	public $listeDocs = array();		//tableau de documents
-	public $listeMimetypes = array();	//tableau listant les diffÃ©rents mimetypes des documents
+	public $listeMimetypes = array();	//tableau listant les différents mimetypes des documents
 	public $current = 0;				//position courante dans le tableau
-	public $currentDoc = "";			//Document courant
+	public $currentDoc = array();			//Document courant
 	public $currentMimetype = "";		//mimetype courant
-	public $params;					//tableau de paramÃ¨tres utiles pour la recontructions des requetes...et mÃªme voir plus
+	public $params;					//tableau de paramètres utiles pour la recontructions des requetes...et même voir plus
 	public $position = 0;				//
 	public $listeBulls = array();
 	public $listeNotices = array();
@@ -34,14 +34,14 @@ class base_params implements params {
 	}
 	
 	public function getNbDocs(){
-		return sizeof($this->listeDocs);
+		return is_countable($this->listeDocs) ? sizeof($this->listeDocs) : 0;
 	}
 	
 	public function getCurrentDoc(){
 		return $this->currentDoc;
 	}
 
-	//renvoi un document prÃ©cis sinon renvoi faux
+	//renvoi un document précis sinon renvoi faux
  	public function getDoc($numDoc){
  		if($numDoc >= 0 && $numDoc <= $this->getNbDocs()-1){
  			$this->current = $numDoc;
@@ -73,6 +73,10 @@ class base_params implements params {
  		return realpath($visionneuse_path)."/temp/".$this->driver_name."_".$id;
  	}
  	
+ 	public function get_cached_url_filename($id){
+ 	    return $this->getUrlBase()."visionneuse/temp/".$this->driver_name."_".$id;
+ 	}
+ 	
  	public function cleanCache(){
  		global $visionneuse_path;
 
@@ -91,7 +95,7 @@ class base_params implements params {
  		closedir($dh);
 		$deleteList = array();
 		foreach ($files as $file => $stat) {
-			//si le dernier accÃ¨s au fichier est de plus de 3h, on vide...
+			//si le dernier accès au fichier est de plus de 3h, on vide...
 			if( (time() - $stat["mtime"] > (3600*3)) ){
 				if(is_dir($visionneuse_path."/temp/".$file)){
 					$this->rrmdir($visionneuse_path."/temp/".$file);
@@ -119,13 +123,13 @@ class base_params implements params {
         }
     }
     
-	public function is_allowed($doc_id){	
+	public function is_allowed($explnum_id){	
 		$docnum_visible = true;
 		return $docnum_visible;
 	}
     
 	
-	public function is_downloadable($doc_id){
+	public function is_downloadable($explnum_id){
 		return true;
 	}
 	

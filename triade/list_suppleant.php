@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ if (isset($_POST["modif"])) {
 	alertJs(LANGDONENR);
 }
 
-$sql="SELECT p.civ,p.nom,p.prenom,p1.prenom,p1.nom,v.date_ent,v.date_sort,v.pers_id,v.rpers_id FROM ${prefixe}personnel p, ${prefixe}vacataires v,${prefixe}personnel p1 WHERE p.pers_id=v.pers_id AND v.rpers_id=p1.pers_id ORDER BY 2";
+$sql="SELECT p.civ,p.nom,p.prenom,p1.prenom,p1.nom,v.date_ent,v.date_sort,v.pers_id,v.rpers_id FROM {$prefixe}personnel p, {$prefixe}vacataires v,{$prefixe}personnel p1 WHERE p.pers_id=v.pers_id AND v.rpers_id=p1.pers_id ORDER BY 2";
 $res=execSql($sql);
 $data=chargeMat($res);
 // $data : tab bidim
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr>
 	<td bgcolor="#FFFFFF" align=left><?php print civ($data[$i][0])." ".ucwords($data[$i][1])?> <?php print ucwords($data[$i][2])?>  </td>
@@ -89,6 +89,6 @@ for($i=0;$i<count($data);$i++) {
 <table align=center><tr><td>
 <script language=JavaScript>buttonMagicSubmit("<?php print LANGPER30 ?>","modif"); //text,nomInput</script>
 <script language=JavaScript>buttonMagicFermeture(); //bouton de fermeture</script>&nbsp;&nbsp;</td></tr></table><br>
-<input type=hidden name="nb" value="<?php print count($data) ?>" >
+<input type=hidden name="nb" value="<?php print countTriade($data) ?>" >
 </form>
 </BODY></HTML>

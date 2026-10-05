@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_delphe.inc.php,v 1.10 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: func_delphe.inc.php,v 1.12.4.1 2025/03/04 15:50:02 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -11,38 +11,38 @@ function recup_noticeunimarc_suite($notice) {
 	global $info_461,$info_463;
 	global $info_606;
 	global $serie;
-	
-	
+
+
 	$info_461 = array();
 	$info_463 = array();
 	$info_606 = array();
 	$serie = array();
-		
-	$record = new iso2709_record($notice, AUTO_UPDATE); 
-	
+
+	$record = new iso2709_record($notice, AUTO_UPDATE);
+
 	$bl=$record->inner_guide['bl'];
-	$hl=$record->inner_guide['hl'];	
-	
+	$hl=$record->inner_guide['hl'];
+
 	$info_461=$record->get_subfield("461","t");
 	$info_463=$record->get_subfield("463","v","d");
 	$info_606=$record->get_subfield("606","a","2");
-} // fin recup_noticeunimarc_suite 
-	
+} // fin recup_noticeunimarc_suite
+
 function import_new_notice_suite() {
 	global $dbh ;
 	global $notice_id ;
-	
+
 	global $hl,$bl;
 	global $info_461,$info_463;
 	global $info_606;
 	global $id_unimarc;
 	global $delphe_convert;
-	
-	//RÃ©cupÃ©ration des id de thÃ©saurus
+
+	//Récupération des id de thésaurus
 	$thesEntreprise=identifiants_thesaurus("Entreprise");
-	$thesDelphes=identifiants_thesaurus("Mot clÃ© Delphes");
+	$thesDelphes=identifiants_thesaurus("Mot clé Delphes");
 	$thesAciege=identifiants_thesaurus("Aciege");
-	
+
 	//les notices ne sont que des articles...
 	if($hl==2 && $bl=="a"){
 		$bulletin = array(
@@ -54,9 +54,9 @@ function import_new_notice_suite() {
 		);
 		notice_to_article($perio,$bulletin);
 	}
-	
+
 	//les descripteurs
-	
+
 	if(count($delphe_convert)==0){
 		init_delphe_term_convert();
 	}
@@ -74,31 +74,31 @@ function import_new_notice_suite() {
 					$categ_id = add_categ($term,$id_thesaurus,$non_classes,$lang);
 				}
 				break;
-			default : 
-				//on regarde par dÃ©fault dans AciÃ¨ge...
+			default :
+				//on regarde par défault dans Aciège...
 				$id_thesaurus=$thesAciege['TOP'];
 				$non_classes =$thesAciege['NONCLASSES'];
 				$categ_id = find_categ($term,$id_thesaurus,$lang);
 				if($categ_id == 0){
-					//pas trouvÃ© dans aciÃ¨ge, on regarde dans delphes
+					//pas trouvé dans aciège, on regarde dans delphes
 					$id_thesaurus=$thesDelphes['TOP'];
 					$non_classes =$thesDelphes['NONCLASSES'];
 					$categ_id = find_categ($term,$id_thesaurus,$lang);
 					if($categ_id == 0){
-						//pas trouvÃ© dans delphe, on regarde la table de correspondance
+						//pas trouvé dans delphe, on regarde la table de correspondance
 						if(isset($delphe_convert[$term]['aciege']) && $delphe_convert[$term]['aciege']!= ""){
-							//on reprend la correspondance dans AciÃ¨ge
-							//on peut avoir plusieurs termes sÃ©parÃ©s par un +...
+							//on reprend la correspondance dans Aciège
+							//on peut avoir plusieurs termes séparés par un +...
 							$terms_to_keep = explode("+",$delphe_convert[$term]['aciege']);
 							if(count($terms_to_keep)>1){
 								foreach($terms_to_keep as $term_to_keep){
 									$term_to_keep = trim($term_to_keep);
-									$categ_id = find_categ($term_to_keep,1,$lang);	
+									$categ_id = find_categ($term_to_keep,1,$lang);
 									if($categ_id){
 										save_categ($categ_id,$ordre_categ);
 										$ordre_categ++;
 									}
-									$categ_id=0;								
+									$categ_id=0;
 								}
 							}else{
 								$categ_id = find_categ($delphe_convert[$term]['aciege'],1,$lang);
@@ -107,7 +107,7 @@ function import_new_notice_suite() {
 							//ou dans delphes
 							$categ_id = find_categ($delphe_convert[$term]['delphes'],$id_thesaurus,$lang);
 						}else if (!isset($delphe_convert[$term])){
-							//si le terme est prÃ©sent dans le fichier sans aucunes correspondances,on veut juste pas le traiter du tout, sinon reprise en non classÃ©...
+							//si le terme est présent dans le fichier sans aucunes correspondances,on veut juste pas le traiter du tout, sinon reprise en non classé...
 							$categ_id = add_categ($term,$id_thesaurus,$non_classes,$lang);
 						}
 					}
@@ -117,32 +117,32 @@ function import_new_notice_suite() {
 		if($categ_id){
 			save_categ($categ_id,$ordre_categ);
 			$ordre_categ++;
-		}	
+		}
 	}
-	
+
 	//on renseigne le champ perso indexpresse avec le 001...
-	//on rÃ©cup l'id du champ
+	//on récup l'id du champ
 	$rqt = "select idchamp, datatype from notices_custom where name ='cp_index' ";
 	$res = pmb_mysql_query($rqt);
 	if(pmb_mysql_num_rows($res)){
 		$cp_indexpresse = pmb_mysql_fetch_object($res);
 		$insert = "insert into notices_custom_values set notices_custom_champ=".$cp_indexpresse->idchamp.", notices_custom_origine=".$notice_id.", notices_custom_".$cp_indexpresse->datatype." = '".$id_unimarc."'";
 		pmb_mysql_query($insert) or die(pmb_mysql_error());
-	}	
-	
+	}
+
 } // fin import_new_notice_suite
-			
+
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {}
 // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction spÃ©cifique d'export de la zone 995
-function export_traite_exemplaires ($ex=array()) {}	
+// fonction spécifique d'export de la zone 995
+function export_traite_exemplaires ($ex=array()) {}
 
 
 
 
-//catÃ©gories
+//catégories
 function find_categ($term,$id_thesaurus,$lang){
 	$categ_id = categories::searchLibelle(addslashes($term),$id_thesaurus,$lang);
 	if($categ_id){
@@ -167,19 +167,19 @@ function add_categ($term,$id_thesaurus,$non_classes,$lang){
 	$c = new categories($n->id_noeud, $lang);
 	$c->libelle_categorie = $term;
 	$c->index_categorie = ' '.strip_empty_words($term).' ';
-	$c->save();			
+	$c->save();
 	return $n->id_noeud;
 }
 
 function save_categ($categ_to_index,$ordre_categ){
 	global $notice_id;
 	$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) VALUES(".$notice_id.",".$categ_to_index.",".$ordre_categ.")";
-	pmb_mysql_query($requete);	
+	pmb_mysql_query($requete);
 }
 
 function init_delphe_term_convert(){
 	global $base_path;
-	
+
 	global $delphe_convert;
 	$delphe_convert = array();
 	$fp = fopen("$base_path/admin/convert/imports/delphe2unimarciso/TabCorrespDelphes.txt","r");
@@ -192,10 +192,11 @@ function init_delphe_term_convert(){
 }
 
 //Pour le formatage de la date
+if(!function_exists('decoupe_date')) {
 function decoupe_date($date_nom_formate,$annee_seule=false){
 	$date="";
 	$tab=preg_split("/\D/",$date_nom_formate);
-	
+
 	switch(count($tab)){
 		case 3 :
 			if(strlen($tab[0]) == 4){
@@ -225,16 +226,17 @@ function decoupe_date($date_nom_formate,$annee_seule=false){
 			}elseif(strlen($tab[0]) == 6){
 				$date=substr($tab[0],0,4)."-".substr($tab[0],4,2)."-01";
 			}elseif(strlen($tab[0]) == 4){
-				$date=substr($tab[0],0,4)."-01-01";
-			}
+					$date=substr($tab[0],0,4)."-01-01";
+				}
+		}
+
+		if($annee_seule){
+			return substr($date,0,4);
+		}else{
+			return $date;
+		}
+
 	}
-	
-	if($annee_seule){
-		return substr($date,0,4);
-	}else{
-		return $date;
-	}
-	
 }
 
 //ca reste pratique...
@@ -256,8 +258,8 @@ function genere_perio($perio_info){
 	$search = "select notice_id from notices where tit1 LIKE '".addslashes($perio_info['titre'])."' and niveau_biblio = 's' and niveau_hierar = '1'";
 	$res = pmb_mysql_query($search);
 	if(pmb_mysql_num_rows($res) == 0){
-		//il existe pas, faut le crÃ©er
-		//le type de document par dÃ©faut est rÃ©vue
+		//il existe pas, faut le créer
+		//le type de document par défaut est révue
 		$insert = "insert into notices set tit1 = '".addslashes($perio_info['titre'])."', typdoc = 'n', niveau_biblio = 's', niveau_hierar = '1', statut = '".$statutnot."', create_date = '".date("Y-m-d H:i:s")."'";
 		$result = pmb_mysql_query($insert);
 		$perio_id = pmb_mysql_insert_id();
@@ -267,7 +269,7 @@ function genere_perio($perio_info){
 
 function genere_bulletin($perio_info,$bull_info,$isbull=true){
 	global $bl,$hl,$notice_id;
-	//on rÃ©cup et/ou gÃ©nÃ¨re le pÃ©rio
+	//on récup et/ou génère le pério
 	$perio_id = genere_perio($perio_info);
 	//on s'occupe du cas ou on a pas de titre pour le bulletin
 	$search = "select bulletin_id from bulletins where date_date  = '".$bull_info['date']."' and bulletin_numero LIKE '".$bull_info['num']."' and bulletin_notice = $perio_id";
@@ -279,7 +281,7 @@ function genere_bulletin($perio_info,$bull_info,$isbull=true){
 		$insert = "insert into bulletins set date_date  = '".$bull_info['date']."', mention_date = '".$bull_info['mention']."', bulletin_numero = '".$bull_info['num']."', bulletin_notice = $perio_id";
 		if($bl == "s" && $hl == "2") {
 			$insert .=", num_notice = $notice_id";
-			update_notice("b","2");
+			update_notice("b","2","a");
 		}
 		$result = pmb_mysql_query($insert);
 		$bull_id = pmb_mysql_insert_id();
@@ -291,7 +293,7 @@ function genere_bulletin($perio_info,$bull_info,$isbull=true){
 
 function identifiants_thesaurus ($thesaurus_name,$langues_thesaurus='fr_FR') {
 	global $charset;
-	
+
 	$q = "select id_thesaurus from thesaurus where libelle_thesaurus='".addslashes($thesaurus_name)."'";
 	$r = pmb_mysql_query($q);
 	if ($o=pmb_mysql_fetch_object($r)) {
@@ -320,10 +322,10 @@ function identifiants_thesaurus ($thesaurus_name,$langues_thesaurus='fr_FR') {
 		$q = "INSERT INTO noeuds (id_noeud, autorite, num_parent, num_renvoi_voir, visible, num_thesaurus) VALUES (0, 'ORPHELINS', ".$res['TOP'].", 0, '0', ".$res['NUMTHESAURUS'].")";
 		$r = pmb_mysql_query($q) or die(pmb_mysql_error()."<br><br>$q<br><br>");
 		$res['ORPHELINS']=pmb_mysql_insert_id();
-		
-		$tmp='~termes non classÃ©s';
+
+		$tmp='~termes non classés';
 		if($charset=='utf-8'){
-			$tmp=utf8_encode($tmp);
+			$tmp=encoding_normalize::utf8_normalize($tmp);
 		}
 		$q = "INSERT INTO categories (num_thesaurus,num_noeud, langue, libelle_categorie, note_application, comment_public, comment_voir, index_categorie) VALUES (".$res['NUMTHESAURUS'].", ".$res['NONCLASSES'].", 'fr_FR', '".$tmp."', '', '', '', ' termes non classes ')";
 		$r = pmb_mysql_query($q) or die(pmb_mysql_error()."<br><br>$q<br><br>");

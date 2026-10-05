@@ -2,22 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_transferts_reception_ui.class.php,v 1.1 2018-12-27 10:05:22 dgoron Exp $
+// $Id: list_transferts_reception_ui.class.php,v 1.11 2023/12/15 14:56:53 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path.'/list/transferts/list_transferts_ui.class.php');
-
 class list_transferts_reception_ui extends list_transferts_ui {
-	
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
-	
-	protected function get_title() {
-		global $msg;
-		return "<h1>".$msg['transferts_circ_menu_titre']." > ".$msg['transferts_circ_menu_reception']."</h1>";
-	}
 	
 	protected function get_form_title() {
 		global $msg;
@@ -31,18 +20,18 @@ class list_transferts_reception_ui extends list_transferts_ui {
 	
 	protected function init_default_columns() {
 		global $action, $transferts_reception_lot;
-		$this->add_column('record', '233');
-		$this->add_column('cb', '232');
-		$this->add_column('empr', 'transferts_circ_empr');
-		$this->add_column('source', 'transferts_circ_source');
-		$this->add_column('expl_owner', '651');
-		$this->add_column('formatted_date_creation', 'transferts_circ_date_creation');
-		$this->add_column('formatted_date_envoyee', 'transferts_circ_date_envoi');
-		$this->add_column('motif', 'transferts_circ_motif');
-		$this->add_column('transfert_ask_user_num', 'transferts_edition_ask_user');
-		$this->add_column('transfert_send_user_num', 'transferts_edition_send_user');
+		$this->add_column('record');
+		$this->add_column('cb');
+		$this->add_column('empr');
+		$this->add_column('source');
+		$this->add_column('expl_owner');
+		$this->add_column('formatted_date_creation');
+		$this->add_column('formatted_date_envoyee');
+		$this->add_column('motif');
+		$this->add_column('transfert_ask_user_num');
+		$this->add_column('transfert_send_user_num');
 		if(($action == '' || $action == 'list') && $transferts_reception_lot == '1') {
-			$this->add_column_sel_button();
+			$this->add_column_selection();
 		}
 	}
 	
@@ -50,23 +39,46 @@ class list_transferts_reception_ui extends list_transferts_ui {
 		return '';
 	}
 	
-	protected function get_search_filters() {
-		global $msg;
-		$search_filters = '';
-		$search_filters .= "&nbsp;".$msg['transferts_circ_reception_filtre_source'];
-		$search_filters .= "<select name='".$this->objects_type."_site_origine'>";
-		$search_filters .= $this->get_search_options_locations($this->filters['site_origine']);
-		$search_filters .= "</select>";
-		return $search_filters;
+	public function init_filters($filters=array()) {
+		global $deflt_docs_location;
+		
+		$this->filters = array(
+				'site_origine' => 0,
+				'site_destination' => $deflt_docs_location,
+		);
+		//Surcharge si les filtres ne sont pas affiches dans ce contexte
+		if(empty($this->selected_filters['site_origine'])) {
+			$filters['site_origine'] = 0;
+		}
+		if(empty($this->selected_filters['site_destination'])) {
+			$filters['site_destination'] = $deflt_docs_location;
+		}
+		parent::init_filters($filters);
 	}
 	
-	protected function get_display_selection_actions() {
+	protected function init_available_filters() {
+		$this->available_filters =
+		array('main_fields' =>
+				array(
+				    'site_origine' => 'transferts_circ_reception_filtre_source',
+				    'site_destination' => 'transferts_circ_validation_filtre_destination',
+				)
+		);
+		$this->available_filters['custom_fields'] = array();
+	}
+	
+	protected function init_default_selected_filters() {
+	    $this->add_selected_filter('site_origine');
+	    $this->add_selected_filter('site_destination');
+	}
+	
+	protected function init_default_selection_actions() {
 		global $msg;
-		global $transferts_reception_lot;
-		if ($transferts_reception_lot=="1") {
-			return "<input type='button' class='bouton' name='".$msg["transferts_circ_btReception"]."' value='".$msg["transferts_circ_btReception"]."' onclick='verifChk(document.".$this->get_form_name().",\"aff_recep\")'>";
-		} else {
-			return "";
+		global $action, $transferts_reception_lot;
+		
+		parent::init_default_selection_actions();
+		if (($action == '' || $action == 'list') && $transferts_reception_lot=="1") {
+			$this->add_selection_action('recep', $msg['transferts_circ_btReception'], '');
 		}
 	}
 	
@@ -84,7 +96,6 @@ class list_transferts_reception_ui extends list_transferts_ui {
 	}
 	
 	public function get_display_valid_list() {
-		global $msg, $charset;
 		global $base_path, $sub, $action;
 		global $list_transferts_ui_valid_list_tpl;
 		global $PMBuserid;
@@ -100,12 +111,12 @@ class list_transferts_reception_ui extends list_transferts_ui {
 			$display_valid_list .= $this->get_display_content_list();
 		}
 		$display = str_replace('!!valid_list!!', $display_valid_list, $display);
-		$display = str_replace('!!motif!!', $motif, $display);
+		$display = str_replace('!!motif!!', '', $display);
 		$display = str_replace('!!valid_action!!', $base_path."/circ.php?categ=trans&sub=". $sub, $display);
 		$display = str_replace('!!ids!!', $this->filters['ids'], $display);
 		$display = str_replace('!!objects_type!!', $this->objects_type, $display);
 		
-		//on rÃ©cupere l'id du statut par dÃ©faut du site de l'utilisateur
+		//on récupere l'id du statut par défaut du site de l'utilisateur
 		$rqt = "SELECT transfert_statut_defaut FROM docs_location " .
 				"INNER JOIN users ON idlocation=deflt_docs_location " .
 				"WHERE userid=".$PMBuserid;

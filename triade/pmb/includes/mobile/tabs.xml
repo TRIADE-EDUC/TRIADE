@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: tabs.xml,v 1.1 2010-08-11 10:25:38 arenou Exp $ -->
+$Id: tabs.xml,v 1.1 2010/08/11 10:25:38 arenou Exp $ -->
 
 <tabs>
 	<tab name="infoPage" label="Accueil" desc="Mini-site construit avec les InfoPages"/>

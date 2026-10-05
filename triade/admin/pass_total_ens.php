@@ -2,149 +2,125 @@
 session_start();
 error_reporting(0);
 if (empty($_SESSION["admin1"])) {
-    print "<script language='javascript'>";
-    print "location.href='./acces_refuse.php'";
-    print "</script>";
-    exit;
+    print "<script>location.href='./acces_refuse.php'</script>"; exit;
 }
-/***************************************************************************
- *                              T.R.I.A.D.E 
- *                            ---------------
- *
- *   begin                : Janvier 2000 
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-?>
-<HTML>
-<HEAD>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
-<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
-<?php
 include_once("../common/lib_admin.php");
 include_once("../common/config.inc.php");
 include_once("../common/lib_ecole.php");
 include_once("../common/config2.inc.php");
-?>
-
-<script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
-<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script language="JavaScript" src="./librairie_js/function.js"></script>
-<title>Triade</title>
-</head>
-<body id='bodyfond2' text='#000000' >
-
-<?php
 include_once("../librairie_php/db_triade.php");
+$cnx = cnx();
 
-$erreur="";
-$modif="non";
-$cnx=cnx();
+$done    = false;
+$message = "";
+
 if (isset($_POST["create"])) {
-	$emailenvoie=$_POST["emailenvoie"];
-	if ($_POST["initia"] == "0") {
-		initialisePasswordEnseignant($emailenvoie);
-		$message="Les mots de passe sont réinitialisés"; 
-	}
-	if ($_POST["initia"] == "1") { 
-		initialisePasswordDefinieEnseignant($_POST["passedef"],$emailenvoie);
-		$message="Les mots de passe sont réinitialisés"; 
-	}
-	history_cmdAdmin("Admin Triade","MODIF","Réinitialisation mot de passe Enseignant");
-?>
-	<?php 
-	if ($erreurPersonne != "") { ?>
-		<textarea cols=90 rows=18 >Enseignant non trouvé dans la base, vérifier que la syntaxe soit exactement la même que dans la base de données.
-
-<?php print $erreurPersonne ?></textarea><br />
-	<?php }else{ ?>
-	<center><font size=3><?php print $message ?></font>	
-			<br><br>
-	<?php } ?>
-<?php
-if (file_exists("../data/fic_pass.txt")) {
-?>
-<br /><br /><input type=button class=BUTTON value="<?php print "Récupération des mots de passe"?>" onclick="open('recupepwens.php','_blank','')"><br /><br /><br /><br />
-<?php } ?>
-</center>
-		<table align=center border=0>
-		<tr><td align=center>
-		<script language=JavaScript>buttonMagicFermeture(); //text,nomInput</script>
-		</td></tr></table>
-
-	<?php	
-}else {
-
-	$modif="oui";
-}
-
-if ($modif=="oui") {
-?>
-<form name="formulaire" method="post" enctype="multipart/form-data" onSubmit="document.formulaire.rien.disabled=true" >
-<?php print $erreur?>
-<table width=100% align=center border=0>
-<tr><td >
-<ul><font class="T2">Confirmation de la réinitialisation <br />des mots de passe des enseignants</font></ul>
-</td></tr>
-
-<?php 
-if ((LAN == "oui") && (ValideMail(MAILREPLY))) { ?>
-<tr>
-<td><input type='checkbox' name='emailenvoie'  value='1' onclick="envoiMailP()"   > <font class="T2">Envoyer un email au compte avec son nouveau mot de passe.</font>  </td>
-</tr>
-
-<?php
-}
-?>
-<tr><td ><input type="radio" name="initia" value="0" checked="checked"  > Mot de passe aléatoire. </td></tr>
-
-<tr><td><input type="radio" name="initia" value="1" > Mot de passe définie : <input type=text name="passedef"  /> <br></div></td></tr>
-
-<tr><td><div id='infourl' style="display:none"><br><font class='T2'  id='color3' > AVEZ VOUS VERIFIE L'ADRESSE INTERNET DU SITE TRIADE DANS LE MODULE "CONFIG GENERAL" AVANT VALIDATION !!! </font></div>
-
-</td></tr>
-
-<tr><td colspan=2><br>
-
-<table align=center border=0>
-<tr><td align=center>
-<script language=JavaScript>buttonMagicSubmit("Confirmer","rien"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicFermeture(); //text,nomInput</script>&nbsp;&nbsp;
-</td></tr>
-</table>
-</td></tr>
-</table>
-<input type='hidden' name='create' />
-</form>
-
-	<script>
-	function envoiMailP() {
-		if (document.getElementById('infourl').checked == false) {
-			document.getElementById('infourl').checked=true;
-			document.getElementById('infourl').style.display='block';
-		}else{
-			document.getElementById('infourl').checked=false;
-			document.getElementById('infourl').style.display='none';
-		}
-	}
-	document.getElementById('infourl').checked=false;
-	</script>
-<?php
+    $emailenvoie = $_POST["emailenvoie"] ?? "";
+    if ($_POST["initia"] == "0") {
+        initialisePasswordEnseignant($emailenvoie);
+        $message = "Les mots de passe sont réinitialisés.";
+    } elseif ($_POST["initia"] == "1") {
+        initialisePasswordDefinieEnseignant($_POST["passedef"], $emailenvoie);
+        $message = "Les mots de passe sont réinitialisés.";
+    }
+    history_cmdAdmin("Admin Triade", "MODIF", "Réinitialisation mot de passe Enseignant");
+    $done = true;
 }
 Pgclose($cnx);
 ?>
-</BODY>
+<HTML>
+<HEAD>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content="-1">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4-2.css">
+<script language="JavaScript" src="./librairie_js/function.js"></script>
+<style>
+* { box-sizing:border-box; }
+body { margin:0; padding:12px; background:#f0f2fa; font-family:Electrolize,Arial,sans-serif; }
+.pw-wrap { max-width:460px; margin:0 auto; display:flex; flex-direction:column; gap:8px; }
+.pw-radio-group { display:flex; flex-direction:column; gap:6px; }
+.pw-radio-group label { display:flex; align-items:center; gap:7px; font-size:12px; cursor:pointer; padding:5px 8px; border-radius:6px; border:1px solid #dde0f0; }
+.pw-radio-group label:has(input:checked) { background:#e8ebff; border-color:#080A66; font-weight:600; }
+</style>
+<title>Triade — Mots de passe enseignants</title>
+</HEAD>
+<body>
+<div class="pw-wrap">
+
+<?php if ($done): ?>
+  <div class="card">
+    <div class="card-header card-header-primary"><span><i class="bi bi-check-circle-fill" style="margin-right:6px;"></i>Résultat</span></div>
+    <div class="card-body">
+      <p style="color:#2e7d32;font-weight:700;"><i class="bi bi-check-circle-fill"></i> <?php print htmlspecialchars($message) ?></p>
+      <?php if (file_exists("../data/fic_pass.txt")): ?>
+      <div style="margin-top:10px;">
+        <button type="button" class="btn btn-primary" onclick="open('recupepwens.php','_blank','')">
+          <i class="bi bi-download" style="margin-right:5px;"></i>Récupérer les mots de passe
+        </button>
+      </div>
+      <?php endif; ?>
+      <div style="margin-top:12px;">
+        <script language="JavaScript">buttonMagicFermeture();</script>
+      </div>
+    </div>
+  </div>
+
+<?php else: ?>
+
+  <div class="card">
+    <div class="card-header card-header-primary"><span><i class="bi bi-person-workspace" style="margin-right:6px;"></i>Réinitialisation — enseignants</span></div>
+    <div class="card-body">
+      <form name="formulaire" method="post" enctype="multipart/form-data"
+            onsubmit="document.formulaire.rien.disabled=true">
+
+        <?php if ((LAN == "oui") && ValideMail(MAILREPLY)): ?>
+        <div style="margin-bottom:10px;">
+          <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+            <input type="checkbox" name="emailenvoie" value="1" onclick="envoiMailP()">
+            Envoyer un email avec le nouveau mot de passe
+          </label>
+          <div id="infourl" style="display:none;" class="alert alert-danger" style="margin-top:6px;font-size:11px;">
+            <i class="bi bi-exclamation-triangle-fill"></i> Vérifiez l'adresse internet du site Triade dans Config. Général avant validation !
+          </div>
+        </div>
+        <?php endif; ?>
+
+        <div class="pw-radio-group">
+          <label>
+            <input type="radio" name="initia" value="0" checked
+              onclick="document.getElementById('zone-def').style.display='none';">
+            Mot de passe aléatoire
+          </label>
+          <label>
+            <input type="radio" name="initia" value="1"
+              onclick="document.getElementById('zone-def').style.display='block';">
+            Mot de passe défini
+          </label>
+        </div>
+        <div id="zone-def" style="display:none;margin-top:8px;padding:8px 10px;background:#f5f7ff;border-radius:6px;border:1px solid #dde0f0;font-size:12px;">
+          Mot de passe : <input type="text" name="passedef" class="bouton2" style="width:160px;">
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <script language="JavaScript">buttonMagicSubmit("Confirmer","rien");</script>
+          <script language="JavaScript">buttonMagicFermeture();</script>
+        </div>
+        <input type="hidden" name="create">
+      </form>
+    </div>
+  </div>
+
+<?php endif; ?>
+
+</div>
+<script>
+function envoiMailP() {
+    var el = document.getElementById('infourl');
+    el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+}
+</script>
+</body>
 </HTML>

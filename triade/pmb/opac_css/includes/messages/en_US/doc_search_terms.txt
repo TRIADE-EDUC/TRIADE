@@ -12,6 +12,6 @@ vous affiche dans la <b>partie inférieure plus d'informations</b> sur la catégor
 <hr />
 <p>En cliquant sur un des liens de la partie inférieure, vous vous déplacez de catégorie en catégorie.</p>
 <hr />
-<p>Pour sélectionner une catégorie et afficher les ouvrages correspondants, cliquez sur la loupe <img src='images/search.gif' align='absmiddle'>située en début de ligne.</p>
+<p>Pour sélectionner une catégorie et afficher les ouvrages correspondants, cliquez sur la loupe <img src='images/search.gif' >située en début de ligne.</p>
 <hr />
 <p>Si la loupe n'est pas affichée, aucun ouvrage ne correspond à la catégorie.</p>

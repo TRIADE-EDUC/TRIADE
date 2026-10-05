@@ -105,7 +105,7 @@ class DoubleMetaPhone
             $this->current += 1;
           break;
 
-        case 'Ã‡':
+        case 'Ç':
           $this->primary   .= 'S';
           $this->secondary .= 'S';
           $this->current += 1;
@@ -620,7 +620,7 @@ class DoubleMetaPhone
           $this->secondary .= "N";
           break;
 
-        case 'Ã‘':
+        case 'Ñ':
           $this->current += 1;
           $this->primary   .= "N";
           $this->secondary .= "N";
@@ -994,4 +994,3 @@ class DoubleMetaPhone
     return preg_match("#W|K|CZ|WITZ#", $string);     
   }
 } // end of class MetaPhone
-?>

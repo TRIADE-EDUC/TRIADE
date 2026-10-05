@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PMBMainDialog.js,v 1.2 2019-01-22 10:29:27 apetithomme Exp $
+// $Id: PMBMainDialog.js,v 1.2.16.1 2025/02/28 14:05:08 tsamson Exp $
 
 
 define(["dojo/_base/declare", 
@@ -48,7 +48,15 @@ define(["dojo/_base/declare",
 		  },
 		  hide: function(){
 			  this.inherited(arguments);
-			  if (domClass.contains(document.body, "dojoDialogOpened")){
+			  this.postClose();
+		  },
+		  destroy : function() {
+			  this.inherited(arguments);
+			  this.postClose();
+			
+		  },
+		  postClose : function() {
+			if (domClass.contains(document.body, "dojoDialogOpened")){
 				  domClass.remove(document.body, "dojoDialogOpened");
 				  if(this.expanded){ 
 					  //nous n'avons qu'une instance du popup, il 
@@ -61,8 +69,8 @@ define(["dojo/_base/declare",
 		  },
 		  toggleSize: function(){
 			  /**
-			   * TODO: Ajout d'un test pour le placement en hauteur du dijit (la title bar ne doit jamais être masquée);
-			   * Récupérer position top et left
+			   * TODO: Ajout d'un test pour le placement en hauteur du dijit (la title bar ne doit jamais �tre masqu�e);
+			   * R�cup�rer position top et left
 			   */
 			  if(!this.expanded){
 				  this.expand();

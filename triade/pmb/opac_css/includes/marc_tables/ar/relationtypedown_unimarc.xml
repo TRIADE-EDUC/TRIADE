@@ -3,7 +3,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes et libellés type de relation parent>enfants 
-$Id: relationtypedown_unimarc.xml,v 1.1 2009-05-04 15:09:04 kantin Exp $ -->
+$Id: relationtypedown_unimarc.xml,v 1.1 2009/05/04 15:09:04 kantin Exp $ -->
 
 <XMLlist>
 	<!-- article de périodique ou extrait de livre (parties analytiques indissociables physiquement)-->

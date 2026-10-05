@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector.class.php,v 1.10 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: docwatch_selector.class.php,v 1.12 2023/09/20 13:54:01 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/docwatch/docwatch_root.class.php");
 
 /**
@@ -34,7 +35,7 @@ class docwatch_selector extends docwatch_root{
 	protected $num_datasource;
 	
 	/**
-	 * ParamÃ¨tres du selecteur
+	 * Paramètres du selecteur
 	 */
 	protected $parameters;
 	
@@ -60,12 +61,11 @@ class docwatch_selector extends docwatch_root{
 	 * @access public
 	 */
 	protected function fetch_datas(){
-		global $dbh;
 		$this->parameters = array();
 		$this->num_datasource= 0;
 		if($this->id){
 			$query = "select * from docwatch_selectors where id_selector = '".$this->id."'";
-			$result=pmb_mysql_query($query, $dbh);
+			$result=pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$this->num_datasource = $row->selector_num_datasource;
@@ -75,7 +75,7 @@ class docwatch_selector extends docwatch_root{
 	} // end of member function fetch_datas
 	
 	/**
-	 * Formulaire du sÃ©lecteur
+	 * Formulaire du sélecteur
 	 *
 	 * @return string
 	 * @access public
@@ -97,13 +97,12 @@ class docwatch_selector extends docwatch_root{
 	} // end of member function set_from_form
 		
 	/**
-	 * Sauvegarde des propriÃ©tÃ©s
+	 * Sauvegarde des propriétés
 	 *
 	 * @return void
 	 * @access public
 	 */
 	public function save() {
-		global $dbh;
 		if($this->id){
 			$query = "update docwatch_selectors set";
 			$clause = " where id_selector=".$this->id;
@@ -116,10 +115,10 @@ class docwatch_selector extends docwatch_root{
 			selector_num_datasource = '".addslashes($this->num_datasource)."',
 			selector_parameters = '".addslashes($this->serialize())."'
 			".$clause;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			if(!$this->id){
-				$this->id = pmb_mysql_insert_id($dbh);
+				$this->id = pmb_mysql_insert_id();
 			}
 			return true;
 		}else{
@@ -128,10 +127,9 @@ class docwatch_selector extends docwatch_root{
 	} // end of member function save
 	
 	public function delete(){
-		global $dbh;
 		if($this->id){
 			$query = "delete from docwatch_selectors where id_selector = ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				return true;
 			}else{
@@ -158,6 +156,11 @@ class docwatch_selector extends docwatch_root{
 
 	public function get_value(){
 		return $this->value;
+	}
+
+	public function get_parameters()
+	{
+		return $this->parameters;
 	}
 	
 

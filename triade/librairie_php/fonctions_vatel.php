@@ -25,7 +25,7 @@ $sql=<<<SQL
 SELECT
 	a.code_ue,a.num_ue,trim(a.nom_ue),m.code_ue_detail,m.code_matiere,a.semestre
 FROM
-	${prefixe}ue a, ${prefixe}ue_detail m
+	{$prefixe}ue a, {$prefixe}ue_detail m
 WHERE
 	a.code_classe = '$idClasse' 
 $clause	
@@ -48,13 +48,13 @@ function recup_coef($idMatiere,$idClasse) {
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
 	$sql="
 	SELECT
-		${prefixe}affectations.coef
+		{$prefixe}affectations.coef
 	FROM
-		${prefixe}affectations 
+		{$prefixe}affectations 
 	WHERE
-		${prefixe}affectations.code_matiere='$idMatiere'
-	AND ${prefixe}affectations.code_classe= '$idClasse' 
-	AND ${prefixe}affectations.annee_scolaire= '$anneeScolaire' 
+		{$prefixe}affectations.code_matiere='$idMatiere'
+	AND {$prefixe}affectations.code_classe= '$idClasse' 
+	AND {$prefixe}affectations.annee_scolaire= '$anneeScolaire' 
 	";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
@@ -69,9 +69,11 @@ function recup_coef_temp($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$partie
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
 	$where=0;
 	if ($partiel=='partiel') {
-	$where = " AND sujet ='PARTIEL' ";
+		$where = " AND sujet ='PARTIEL' ";
 	} elseif ($partiel=='periode') {
-	$where = " AND sujet <>'PARTIEL' ";
+		$where = " AND sujet <>'PARTIEL' ";
+	} elseif ($partiel=='periode') {
+		$where = " AND noteexam = '$partiel' ";
 	}
 
 	$dateDebut=dateFormBase($dateDebut);
@@ -79,18 +81,18 @@ function recup_coef_temp($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$partie
 
 	$sql="
 	SELECT
-		${prefixe}affectations.coef,
-		${prefixe}notes.id_classe,
-		${prefixe}affectations.code_matiere,
-		${prefixe}affectations.code_classe
+		{$prefixe}affectations.coef,
+		{$prefixe}notes.id_classe,
+		{$prefixe}affectations.code_matiere,
+		{$prefixe}affectations.code_classe
 	FROM
-		${prefixe}notes , ${prefixe}affectations 
+		{$prefixe}notes , {$prefixe}affectations 
 	WHERE
-		${prefixe}notes.elev_id='$idEleve'
-	AND ${prefixe}affectations.code_matiere='$idMatiere'
-	AND ${prefixe}affectations.code_classe= ${prefixe}notes.id_classe	
-	AND ${prefixe}affectations.annee_scolaire='$anneeScolaire' 
-	AND ${prefixe}notes.code_mat='$idMatiere' " .$where .";";
+		{$prefixe}notes.elev_id='$idEleve'
+	AND {$prefixe}affectations.code_matiere='$idMatiere'
+	AND {$prefixe}affectations.code_classe= {$prefixe}notes.id_classe	
+	AND {$prefixe}affectations.annee_scolaire='$anneeScolaire' 
+	AND {$prefixe}notes.code_mat='$idMatiere' " .$where .";";
 
 	$curs=execSql($sql);
 //	print $sql."<br><br>";
@@ -114,6 +116,15 @@ function recup_coef_temp($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$partie
 	return $notefinale;
 }
 
+function nb_matiere_ue($idUe) {
+        global $cnx;
+        global $prefixe;
+	$sql="SELECT count(code_ue) FROM {$prefixe}ue_detail WHERE code_ue = '$idUe'";
+	$curs=execSql($sql);
+        $resultat=chargeMat($curs);
+        return($resultat[0][0]);
+}
+
 function cpte_matiere_ue($idUe) {
 	global $cnx;
 	global $prefixe;
@@ -121,7 +132,7 @@ $sql=<<<SQL
 SELECT
 	code_ue
 FROM
-	${prefixe}ue_detail 
+	{$prefixe}ue_detail 
 WHERE
 	code_ue = '$idUe'
 SQL;
@@ -130,17 +141,20 @@ SQL;
 	unset($curs);
 }
 
+
+
+
 function recup_ordre($idMatiere,$idClasse) {
 	global $cnx;
 	global $prefixe; 
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
-	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage,code_prof FROM ${prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND annee_scolaire='$anneeScolaire' ";
+	$sql="SELECT code_matiere,code_groupe,code_classe,ordre_affichage,code_prof FROM {$prefixe}affectations WHERE code_matiere='$idMatiere' AND code_classe='$idClasse' AND annee_scolaire='$anneeScolaire' ";
 	$curs=execSql($sql);
 	$resultat=chargeMat($curs);
 	return $resultat[0][3];
 }
 
-function recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse) {
+function recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse,$partiel='Partiel') {
 	global $cnx;
 	global $prefixe;
 	$anneeScolaire=$_COOKIE["anneeScolaire"];
@@ -149,29 +163,29 @@ function recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse) {
 //  MODIFIER POUR RECUP COEFF DANS TABLE AFFECTATION 28/10/15
 	$sql="
 	SELECT
-		TRUNCATE(${prefixe}notes.note,2),
-		${prefixe}notes.elev_id,
-		${prefixe}notes.code_mat,
-		${prefixe}notes.date,
-		${prefixe}notes.sujet,
-		${prefixe}notes.typenote,
-		${prefixe}affectations.coef,
-		${prefixe}notes.id_classe,
-		${prefixe}affectations.code_matiere,
-		${prefixe}affectations.code_classe
+		TRUNCATE({$prefixe}notes.note,2),
+		{$prefixe}notes.elev_id,
+		{$prefixe}notes.code_mat,
+		{$prefixe}notes.date,
+		{$prefixe}notes.sujet,
+		{$prefixe}notes.typenote,
+		{$prefixe}affectations.coef,
+		{$prefixe}notes.id_classe,
+		{$prefixe}affectations.code_matiere,
+		{$prefixe}affectations.code_classe
 	FROM
-		${prefixe}notes , ${prefixe}affectations 
+		{$prefixe}notes , {$prefixe}affectations 
 	WHERE
-		${prefixe}notes.elev_id='$idEleve'
-	AND ${prefixe}notes.note>=0	
-	AND ${prefixe}affectations.code_matiere='$idMatiere'
-	AND ${prefixe}affectations.code_classe='$idClasse'
-	AND ${prefixe}notes.code_mat='$idMatiere'
-	AND ${prefixe}notes.date >= '$dateDebut'
-	AND ${prefixe}notes.date <= '$dateFin'
-	AND ${prefixe}affectations.annee_scolaire='$anneeScolaire' 
-	AND ${prefixe}notes.sujet LIKE '%PARTIEL%'
-	GROUP BY ${prefixe}notes.sujet,${prefixe}notes.date";
+		{$prefixe}notes.elev_id='$idEleve'
+	AND {$prefixe}notes.note>=0	
+	AND {$prefixe}affectations.code_matiere='$idMatiere'
+	AND {$prefixe}affectations.code_classe='$idClasse'
+	AND {$prefixe}notes.code_mat='$idMatiere'
+	AND {$prefixe}notes.date >= '$dateDebut'
+	AND {$prefixe}notes.date <= '$dateFin'
+	AND {$prefixe}affectations.annee_scolaire='$anneeScolaire' 
+	AND {$prefixe}notes.noteexam='$partiel' 
+	GROUP BY {$prefixe}notes.sujet,{$prefixe}notes.date";
 	
 	$curs=execSql($sql);
 	$liste_note=chargeMat($curs);
@@ -207,7 +221,7 @@ function recupNoteperiode($idEleve,$idMatiere,$dateDebut,$dateFin) {
 		typenote,
 		coef
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -227,7 +241,7 @@ function recupNoteperiode($idEleve,$idMatiere,$dateDebut,$dateFin) {
 		typenote,
 		coef 
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -249,11 +263,13 @@ function recupNoteperiode($idEleve,$idMatiere,$dateDebut,$dateFin) {
 function moyenneEleveMatiereVatel($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof,$partiel) {
 	global $cnx;
 	global $prefixe;
-	$where=0;
-	if ($partiel=='partiel') {
-	$where = " AND sujet like '%PARTIEL%' ";
+	$where='';
+	if (strtolower($partiel)=='partiel') {
+		$where = " AND sujet like '%PARTIEL%' ";
 	} elseif ($partiel=='periode') {
-	$where = " AND sujet NOT like '%PARTIEL%' ";
+		$where = " AND sujet NOT like '%PARTIEL%' ";
+	} elseif ($partiel=='periode') {
+		$where = " AND noteexam = '$partiel' ";
 	}
 
 	$dateDebut=dateFormBase($dateDebut);
@@ -266,7 +282,7 @@ function moyenneEleveMatiereVatel($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 		TRUNC(coef,2),
 		typenote
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -283,7 +299,7 @@ function moyenneEleveMatiereVatel($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 		TRUNCATE(coef,2),
 		typenote
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 		AND code_mat='$idMatiere'
@@ -305,6 +321,7 @@ function moyenneEleveMatiereVatel($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 		if ($liste[$cc][2] == "en") { $liste[$cc][0] =  $liste[$cc][0] / 5; $noteengl="oui"; }	
 		$nbcoef=$nbcoef + $liste[$cc][1];        // $liste[$cc][1] -> coef
 		$notetempo= $liste[$cc][1] * $liste[$cc][0] ;
+		if ($notefinale == "") $notefinale=0; 
 		$notefinale= $notefinale + $notetempo ;
 	}
 	if ($nbcoef == 0) {$notefinale=""; return  $notefinale; }
@@ -317,7 +334,6 @@ function moyenneEleveMatiereVatel($idEleve,$idMatiere,$dateDebut,$dateFin,$idpro
 function calculMoyenClasseVatel($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,$partiel){
 	global $cnx;
 	global $prefixe;
-
 	$ordre=ordre_matiere($idClasse);
 	for($i=0;$i<count($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
@@ -416,7 +432,7 @@ function format_moyenne($note_m){
 function create_ue($nom_ue) {
         global $cnx;
 	global $prefixe;
-        $sql="INSERT INTO ${prefixe}ue(libelle) VALUES ('$nom_classe')";
+        $sql="INSERT INTO {$prefixe}ue(libelle) VALUES ('$nom_classe')";
 	return(execSql($sql));
 }
 
@@ -433,7 +449,7 @@ function vatel_create($champs,$table) {
 				$requete_valeur .= "'".$valeurvar."',";
 			}
 		}
-		$sql=" INSERT INTO `${prefixe}".$table."` ( ".substr($requete_nom, 0, -1)." ) VALUES ( ".substr($requete_valeur,0,-1).");";
+		$sql=" INSERT INTO `{$prefixe}".$table."` ( ".substr($requete_nom, 0, -1)." ) VALUES ( ".substr($requete_valeur,0,-1).");";
 		execSql($sql);
 		$rt=$cnx->connection->insert_id;
 		return($rt);
@@ -446,7 +462,7 @@ function vatel_create_due($champs,$id,$table) {
 	if (isset($champs)) {
 		foreach ($champs as $nomvar => $valeurvar) {
 		if (!empty($valeurvar) ) {
-				$sql=" INSERT INTO `${prefixe}".$table."` (`code_matiere`,`code_ue`) VALUES ('".$valeurvar."','".$id."');";
+				$sql=" INSERT INTO `{$prefixe}".$table."` (`code_matiere`,`code_ue`) VALUES ('".$valeurvar."','".$id."');";
 				
 				 (execSql($sql));
 			}
@@ -458,7 +474,7 @@ function vatel_create_due($champs,$id,$table) {
 function vatel_create_due_bis($code_matiere,$id,$idprof) {
     	global $cnx;
 	global $prefixe;
-	$sql=" INSERT INTO `${prefixe}ue_detail` (`code_matiere`,`code_ue`,`code_enseignant`) VALUES ('$code_matiere','$id','$idprof');";	
+	$sql=" INSERT INTO `{$prefixe}ue_detail` (`code_matiere`,`code_ue`,`code_enseignant`) VALUES ('$code_matiere','$id','$idprof');";	
 	execSql($sql);	
 }
 
@@ -466,9 +482,9 @@ function vatel_liste_ue($idue) {  // fonction utilisée pour afficher la liste d
    		global $cnx;
 		global $prefixe;
 		if ($idue !='') {
-			$sql= " select * from `${prefixe}ue` where code_ue='".$idue."' ;";
+			$sql= " select * from `{$prefixe}ue` where code_ue='".$idue."' ;";
 		} else {
-			$sql= " select * from `${prefixe}ue` order by code_classe,semestre;";
+			$sql= " select * from `{$prefixe}ue` order by code_classe,semestre;";
 		}
 	//	print $sql;
 		return (chargeMat(execSql($sql)));
@@ -478,7 +494,7 @@ function vatel_liste_ue($idue) {  // fonction utilisée pour afficher la liste d
 function Vatel_affUneClasse($id){
 	global $cnx;
 	global $prefixe;
-        $sql="SELECT libelle FROM ${prefixe}classes where code_class='".$id."' ;";
+        $sql="SELECT libelle FROM {$prefixe}classes where code_class='".$id."' ;";
 //		print $sql;
         $res2=execSql($sql);
         $data2=chargeMat($res2);
@@ -489,24 +505,24 @@ function vatel_liste_uedetail($idue) {  // fonction utilisée pour afficher la l
    		global $cnx;
 		global $prefixe;
 		if ($idue !='') {
-			$sql= " select code_ue_detail,code_ue,code_matiere,code_enseignant  from `${prefixe}ue_detail` where code_ue='".$idue."' ;";
+			$sql= " select code_ue_detail,code_ue,code_matiere,code_enseignant  from `{$prefixe}ue_detail` where code_ue='".$idue."' ;";
 		} else {
-			$sql= " select code_ue_detail,code_ue,code_matiere,code_enseignant  from `${prefixe}ue` order by code_classe;";
+			$sql= " select code_ue_detail,code_ue,code_matiere,code_enseignant  from `{$prefixe}ue` order by code_classe;";
 		}
 	//	print $sql;
 		return (chargeMat(execSql($sql)));
 }
 
 function vatel_modif_ue($champs,$id) {
-   		global $cnx;
-		global $prefixe;
+   	global $cnx;
+	global $prefixe;
 	if (isset($champs)) {
 		foreach ($champs as $nomvar => $valeurvar) {
-			if (!empty($valeurvar) && $nomvar!='create'  && $nomvar!='id_detail' && $nomvar!='nb' && (!preg_match('/code_matiere/',$nomvar)) && (!preg_match('/idprof/',$nomvar))  ){
+			if (!empty($valeurvar) && $nomvar!='create' && $nomvar!='id_detail' && $nomvar!='nb' && (!preg_match('/code_matiere/',$nomvar)) && (!preg_match('/idprof/',$nomvar))  ){
 				$requete .="`".$nomvar."` = '".$valeurvar."',";
 			}
 		}
-		$req=" update `${prefixe}ue` set ".substr($requete, 0, -1)." WHERE `code_ue` = '".$id."' LIMIT 1 ;";
+		$req=" update `{$prefixe}ue` set ".substr($requete, 0, -1)." WHERE `code_ue` = '".$id."' LIMIT 1 ;";
 		return (execSql($req));
 	}
 }
@@ -521,7 +537,7 @@ function vatel_modif_due($id) {
 function vatel_supp_ue($id,$table) {
    		global $cnx;
 		global $prefixe;
-		$req = "DELETE FROM `${prefixe}".$table."` WHERE `code_ue` = '".$id."';";
+		$req = "DELETE FROM `{$prefixe}".$table."` WHERE `code_ue` = '".$id."';";
 		return (execSql($req));
 }
 
@@ -545,7 +561,7 @@ function vatel_moyenne($tableau) {
 function Vatel_Classe_desc($id){ // recup descrlong de la classe pour affichage bulletin
 	global $cnx;
 	global $prefixe;
-        $sql="SELECT desclong FROM ${prefixe}classes where code_class='".$id."' ;";
+        $sql="SELECT desclong FROM {$prefixe}classes where code_class='".$id."' ;";
         $res3=execSql($sql);
         $data3=chargeMat($res3);
         return $data3[0][0];
@@ -555,7 +571,7 @@ function Vatel_Classe_desc($id){ // recup descrlong de la classe pour affichage 
 function vatel_liste_ueViaIdClasse($idclasse,$anneeScolaire) {  // fonction utilisée pour afficher la liste de toute des UE
         global $cnx;
         global $prefixe;
-        $sql="select * from ${prefixe}ue where code_classe='$idclasse' AND annee_scolaire='$anneeScolaire' ;";
+        $sql="select * from {$prefixe}ue where code_classe='$idclasse' AND annee_scolaire='$anneeScolaire' ;";
         return (chargeMat(execSql($sql)));
 }
 

@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.7 2016-09-20 15:17:15 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.9 2021/03/04 09:48:47 dbellamy Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -18,7 +18,7 @@ $Id: fr_FR.xml,v 1.7 2016-09-20 15:17:15 dgoron Exp $ -->
   2 (SEARCH_AUTHOR)=auteur, 
   3 (SEARCH_EDITOR)=éditeur, 
   4 (SEARCH_COLLECTION)=collection,
-  6 (SEARCH_CATEGORIES)=catégories/mots matières</entry>
+  5 (SEARCH_CATEGORIES)=catégories/mots matières</entry>
   <entry code="simple_search_inputs_description_searchTerm">chaine à rechercher</entry>
   <entry code="simple_search_inputs_description_pmbUserId">l'id d'un utilisateur pmb, pour filtrer les résultats selon les droits d'accès. 
 -1: pour ne pas en tenir compte</entry>
@@ -46,6 +46,8 @@ $Id: fr_FR.xml,v 1.7 2016-09-20 15:17:15 dgoron Exp $ -->
   <entry code="get_advanced_sfone_inputs_description_lang">la langue dans laquelle on souhaite le résultat</entry>
   <entry code="get_advanced_sfone_inputs_description_fetch_values">si l'on souhaite également les différentes valeurs possibles du champ, (pour les champs select par exemple)</entry>
   <entry code="get_advanced_sfone_outputs_description"></entry>
+  <entry code="get_advanced_sfone_inputs_description_nocache"></entry>
+  <entry code="get_advanced_sfone_inputs_description_search_object"></entry>
   <entry code="get_advanced_sfone_outputs_description_search_field">un champ de recherche</entry>
 
   <entry code="advancedSearch_description">Effectuer une recherche avancée</entry>
@@ -57,7 +59,7 @@ $Id: fr_FR.xml,v 1.7 2016-09-20 15:17:15 dgoron Exp $ -->
   <entry code="advancedSearch_inputs_description_search_operator">l'opérateur de recherche</entry>
   <entry code="advancedSearch_inputs_description_search_value">les valeurs de recherche</entry>
   <entry code="advancedSearch_inputs_description_pmbUserId">l'id d'un utilisateur pmb, pour filtrer les résultats selon les droits d'accès. -1: ne pas tenir compte.</entry>
-  <entry code="advancedSearch_inputs_description_OPACUserId">l'id d'un emprunteur, pour filtrer les résultats selon les droits d'accès
+  <entry code="advancedSearch_inputs_description_OPACEmprId">l'id d'un emprunteur, pour filtrer les résultats selon les droits d'accès
 	-1: Ne pas tenir compte
 	0: emprunteur anonyme
 	x: id de l'emprunteur</entry>

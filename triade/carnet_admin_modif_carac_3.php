@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,11 +38,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php"); 
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Modification du Carnet de Suivi" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -59,6 +59,7 @@ $code_couleur=(isset($_POST["code_couleur"])) ? 1 : 0 ;
 $code_note=(isset($_POST["code_note"])) ? 1 : 0 ; 
 $code_julesverne=(isset($_POST["code_julesverne"])) ? 1 : 0 ; 
 $code_commentaire=(isset($_POST["code_commentaire"])) ? 1 : 0 ; 
+$code_educnation=(isset($_POST["code_educnation"])) ? 1 : 0 ; 
 
 $cnx=cnx();
 $nbPeriode=nb_periode($idcarnet);
@@ -100,6 +101,7 @@ $select5=($nbPeriode == 5) ? "selected='selected'": "";
 <input type="hidden" name="code_note" value="<?php print $code_note ?>" />
 <input type="hidden" name="code_julesverne" value="<?php print $code_julesverne ?>" />
 <input type="hidden" name="code_commentaire" value="<?php print $code_commentaire ?>" />
+<input type="hidden" name="code_educnation" value="<?php print $code_educnation ?>" />
 
 </form>
 <br /><br />
@@ -109,19 +111,19 @@ $select5=($nbPeriode == 5) ? "selected='selected'": "";
 
 <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

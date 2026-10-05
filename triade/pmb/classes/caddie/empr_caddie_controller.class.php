@@ -1,12 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: empr_caddie_controller.class.php,v 1.12 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: empr_caddie_controller.class.php,v 1.24.6.1.2.1 2025/03/05 07:14:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once ($class_path."/caddie/caddie_root_controller.class.php");
+global $class_path;
+require_once($class_path."/caddie/caddie_root_controller.class.php");
+require_once($class_path."/caddie/empr_caddie_lists_controller.class.php");
 
 class empr_caddie_controller extends caddie_root_controller {
 	
@@ -14,15 +16,40 @@ class empr_caddie_controller extends caddie_root_controller {
 	
 	protected static $procs_class_name = 'empr_caddie_procs';
 	
-	public static function get_template_layout() {
-		global $circ_layout;
-		return $circ_layout;
+	protected static $list_ui_class_name = 'list_empr_caddies_ui';
+	
+	protected static $list_content_ui_class_name = 'list_empr_caddie_content_ui';
+	
+	public static function proceed_module_gestion($quoi, $idcaddie) {
+		switch ($quoi) {
+			case 'razpointage':
+				static::proceed_raz($idcaddie);
+				break;
+			case 'pointage':
+				static::proceed_selection($idcaddie, 'gestion', 'pointage', 'selection');
+				break;
+			case 'pointagebarcode':
+				static::proceed_barcode($idcaddie, 'gestion', 'pointe');
+				break;
+			case 'selection':
+				static::proceed_selection($idcaddie, 'gestion', 'selection', 'selection');
+				break;
+			case 'barcode':
+				static::proceed_barcode($idcaddie, 'gestion', 'add');
+				break;
+			case 'pointagepanier':
+				static::proceed_by_caddie($idcaddie);
+				break;
+			default:
+				parent::proceed_module_gestion($quoi, $idcaddie);
+				break;
+		}
 	}
 	
 	public static function get_aff_paniers_from_panier($idcaddie = 0, $sub = '') {
 		global $msg;
 		 
-		$idcaddie += 0;
+		$idcaddie = intval($idcaddie);
 		static::$title = $msg['caddie_select_pointe_panier'];
 		static::$action_click = "choix_quoi";
 		static::$lien_origine = static::get_constructed_link($sub) . "&quoi=pointagepanier&idcaddie_selected=".$idcaddie;
@@ -57,6 +84,10 @@ class empr_caddie_controller extends caddie_root_controller {
 						break;
 					case 'supprbase':
 						static::$title = $msg['caddie_select_supprbase'];
+						static::$action_click = "choix_quoi";
+						break;
+					case 'carte':
+						static::$title = $msg['caddie_select_carte'];
 						static::$action_click = "choix_quoi";
 						break;
 				}
@@ -106,7 +137,15 @@ class empr_caddie_controller extends caddie_root_controller {
 	public static function get_aff_editable_paniers($idcaddie) {
 		global $msg;
 	
-		return aff_paniers_empr($idcaddie, "./circ.php?categ=caddie&sub=gestion&quoi=panier", "", $msg["caddie_select_afficher"], "", 1, 0, 1);
+		return aff_paniers_empr($idcaddie, static::get_constructed_link('gestion', 'panier'), "", $msg["caddie_select_afficher"], "", 1, 0, 1);
+	}
+	
+	public static function aff_ajax_editable_paniers($idcaddie) {
+	    global $msg;
+	    
+	    static::$object_type = 'EMPR';
+	    static::$title = $msg["caddie_select_afficher"];
+	    parent::aff_ajax_editable_paniers($idcaddie);
 	}
 	
 	public static function get_object_instance($empr_caddie_id=0) {
@@ -115,12 +154,23 @@ class empr_caddie_controller extends caddie_root_controller {
 	
 	public static function get_constructed_link($sub='', $sub_categ='', $action='', $idcaddie=0, $args_others='') {
 		global $base_path;
-	
+		global $quoi;
+		
 		$link = $base_path."/circ.php?categ=caddie&sub=".$sub;
 		if($sub_categ) {
 			switch ($sub) {
 				case 'gestion':
-					$link .= "&quoi=".$sub_categ;
+					switch ($quoi) {
+						case 'selection':
+							$link .= "&quoi=selection&moyen=".$sub_categ;
+							break;
+						case 'pointage':
+							$link .= "&quoi=pointage&moyen=".$sub_categ;
+							break;
+						default :
+							$link .= "&quoi=".$sub_categ;
+							break;
+					}
 					break;
 				case 'action':
 					$link .= "&quelle=".$sub_categ;
@@ -167,7 +217,7 @@ class empr_caddie_controller extends caddie_root_controller {
 					break;
 				case 'pointe_item':
 					$model_class_name = static::get_model_class_name();
-					print $model_class_name::show_actions($idcaddie);
+					print $model_class_name::show_actions($idcaddie, 'EMPR');
 					if (empr_caddie_procs::check_rights($id)) {
 						$hp = new parameters ($id,"empr_caddie_procs") ;
 						$hp->get_final_query();
@@ -178,7 +228,7 @@ class empr_caddie_controller extends caddie_root_controller {
 					break;
 				case 'add_item':
 					$model_class_name = static::get_model_class_name();
-					print $model_class_name::show_actions($idcaddie);
+					print $model_class_name::show_actions($idcaddie, 'EMPR');
 					//C'est ici qu'on fait une action
 					if (empr_caddie_procs::check_rights($id)) {
 						$hp = new parameters ($id,"empr_caddie_procs") ;
@@ -195,10 +245,10 @@ class empr_caddie_controller extends caddie_root_controller {
 					}
 					print $myCart->aff_cart_nb_items();
 					if($sub == 'action') {
-						echo "<hr /><input type='button' class='bouton' value='".$msg["caddie_menu_action_suppr_panier"]."' onclick='document.location=&quot;./circ.php?categ=caddie&amp;sub=action&amp;quelle=supprpanier&amp;action=choix_quoi&amp;idemprcaddie=".$idcaddie."&amp;item=&amp;elt_flag=".$elt_flag."&amp;elt_no_flag=".$elt_no_flag."&quot;' />",
-						"&nbsp;<input type='button' class='bouton' value='".$msg["caddie_menu_action_edit_panier"]."' onclick=\"document.location='./circ.php?categ=caddie&sub=gestion&quoi=panier&action=edit_cart&idemprcaddie=".$idcaddie."&item=0'\" />",
+					    echo "<hr />".static::get_display_button($msg["caddie_menu_action_suppr_panier"], ['location' => "./circ.php?categ=caddie&sub=action&quelle=supprpanier&action=choix_quoi&idemprcaddie=".$idcaddie."&item=&elt_flag=".$elt_flag."&elt_no_flag=".$elt_no_flag]),
+						"&nbsp;".static::get_display_button($msg["caddie_menu_action_edit_panier"], ['location' => static::get_constructed_link('gestion', 'panier', 'edit_cart', $idcaddie, '&item=0')]),
 						"&nbsp;<input type='button' class='bouton' value='".$msg["caddie_supprimer"]."' onclick=\"confirmation_delete(".$myCart->get_idcaddie().",'".htmlentities(addslashes($myCart->name),ENT_QUOTES, $charset)."')\" />",
-						confirmation_delete("./circ.php?categ=caddie&action=del_cart&idemprcaddie=");
+						confirmation_delete(static::get_constructed_link('', '', 'del_cart')."&idemprcaddie=");
 					}
 					break;
 				default:
@@ -236,7 +286,7 @@ class empr_caddie_controller extends caddie_root_controller {
 		global $idcaddie_selected;
 		global $elt_flag, $elt_no_flag;
 		
-		$idcaddie += 0;
+		$idcaddie = intval($idcaddie);
 		if($idcaddie) {
 			$myCart = static::get_object_instance($idcaddie);
 			switch ($action) {
@@ -268,7 +318,7 @@ class empr_caddie_controller extends caddie_root_controller {
 						}
 						$liste= array_merge($liste_0,$liste_1);
 						if($liste) {
-						    foreach ($liste as $cle => $object) {
+						    foreach ($liste as $object) {
 								$myCart_selected->pointe_item($object);
 							}
 						}
@@ -293,8 +343,8 @@ class empr_caddie_controller extends caddie_root_controller {
 		global $action;
 		global $elt_flag, $elt_no_flag;
 		
-		$idcaddie += 0;
-		$idcaddie_origine += 0;
+		$idcaddie = intval($idcaddie);
+		$idcaddie_origine = intval($idcaddie_origine);
 		if($idcaddie) {
 			$myCart = static::get_object_instance($idcaddie);
 			switch ($action) {
@@ -307,7 +357,7 @@ class empr_caddie_controller extends caddie_root_controller {
 					$idcaddie_origine = empr_caddie::check_rights($idcaddie_origine) ;
 					if ($idcaddie_origine) {
 						$myCartOrigine = static::get_object_instance($idcaddie_origine);
-						// procÃ©dure d'ajout
+						// procédure d'ajout
 						print pmb_bidi($myCartOrigine->aff_cart_titre());
 						print $myCartOrigine->aff_cart_nb_items();
 						print $myCart->get_choix_quoi_form(static::get_constructed_link('action', 'transfert', 'transfert_final', $idcaddie)."&idemprcaddie_origine=$idcaddie_origine", static::get_constructed_link('action', 'transfert'), $msg["caddie_choix_transfert"], $msg["caddie_bouton_transferer"]);
@@ -323,18 +373,18 @@ class empr_caddie_controller extends caddie_root_controller {
 						print $myCart->aff_cart_nb_items();
 						if ($elt_flag) {
 							$liste = $myCartOrigine->get_cart("FLAG") ;
-							foreach ($liste as $cle => $object) {
+							foreach ($liste as $object) {
 								$myCart->add_item($object) ;
 							}
 						}
 						if ($elt_no_flag) {
 							$liste = $myCartOrigine->get_cart("NOFLAG") ;
-							foreach ($liste as $cle => $object) {
+							foreach ($liste as $object) {
 								$myCart->add_item($object) ;
 							}
 						}
 						$myCart->compte_items();
-						// procÃ©dure d'ajout
+						// procédure d'ajout
 						echo "<h3>".$msg['empr_caddie_menu_action_apres_transfert']."</h3>";
 						print $myCart->aff_cart_nb_items();
 					}
@@ -352,7 +402,6 @@ class empr_caddie_controller extends caddie_root_controller {
 		global $action;
 		global $form_cb;
 		global $empr_location_id;
-		global $begin_result_expl_liste_unique;
 	
 		if ($idcaddie) {
 			$myCart = static::get_object_instance($idcaddie);
@@ -386,17 +435,17 @@ class empr_caddie_controller extends caddie_root_controller {
 					$myCart->compte_items();
 					print $myCart->aff_cart_nb_items();
 					if($action_prefix == 'add') {
-						print get_cb("", $msg['empr_caddie_collect_form_message'], $msg['empr_caddie_collect_form_title'], "./circ.php?categ=caddie&sub=gestion&quoi=barcode&action=add_item&idemprcaddie=$idcaddie", 0, "", 0);
+						print get_cb("", $msg['empr_caddie_collect_form_message'], $msg['empr_caddie_collect_form_title'], static::get_constructed_link('gestion', 'barcode', 'add_item', $idcaddie), 0, "", 0);
 					} else {
-						print get_cb("", $msg['empr_caddie_pointage_form_message'], $msg['empr_caddie_pointage_form_title'], "./circ.php?categ=caddie&sub=gestion&quoi=pointagebarcode&action=pointe_item&idemprcaddie=$idcaddie", 0, "", 0) ;
+						print get_cb("", $msg['empr_caddie_pointage_form_message'], $msg['empr_caddie_pointage_form_title'], static::get_constructed_link('gestion', 'pointagebarcode', 'pointe_item', $idcaddie), 0, "", 0) ;
 					}
 					break;
 				default:
 					print $myCart->aff_cart_nb_items();
 					if($action_prefix == 'add') {
-						print get_cb("", $msg['empr_caddie_collect_form_message'], $msg['empr_caddie_collect_form_title'], "./circ.php?categ=caddie&sub=gestion&quoi=barcode&action=add_item&idemprcaddie=$idcaddie", 0, "", 0) ;
+						print get_cb("", $msg['empr_caddie_collect_form_message'], $msg['empr_caddie_collect_form_title'], static::get_constructed_link('gestion', 'barcode', 'add_item', $idcaddie), 0, "", 0) ;
 					} else {
-						print get_cb("", $msg['empr_caddie_pointage_form_message'], $msg['empr_caddie_pointage_form_title'], "./circ.php?categ=caddie&sub=gestion&quoi=pointagebarcode&action=pointe_item&idemprcaddie=$idcaddie", 0, "", 0) ;
+						print get_cb("", $msg['empr_caddie_pointage_form_message'], $msg['empr_caddie_pointage_form_title'], static::get_constructed_link('gestion', 'pointagebarcode', 'pointe_item', $idcaddie), 0, "", 0) ;
 					}
 					break;
 			}
@@ -410,9 +459,7 @@ class empr_caddie_controller extends caddie_root_controller {
 	}
 	
 	public static function proceed_raz($idcaddie=0) {
-		global $msg;
-	
-		$idcaddie += 0;
+		$idcaddie = intval($idcaddie);
 		if ($idcaddie) {
 			$myCart = static::get_object_instance($idcaddie);
 			print pmb_bidi($myCart->aff_cart_titre());
@@ -423,4 +470,74 @@ class empr_caddie_controller extends caddie_root_controller {
 			static::get_aff_paniers('gestion', 'razpointage', 'raz');
 		}
 	}
-} // fin de dÃ©claration de la classe empr_caddie_controller
+	
+	public static function proceed_carte($idcaddie=0) {
+		global $action, $msg;
+		
+		$idcaddie = intval($idcaddie);
+		if ($idcaddie) {
+			$myCart = static::get_object_instance($idcaddie);
+			print pmb_bidi($myCart->aff_cart_titre());
+			switch ($action) {
+				case 'choix_quoi':
+					print "<script type='text/javascript'>
+							function generate_cards() {
+								var link = './pdf.php?pdfdoc=carte-lecteur&idemprcaddie=".$idcaddie."';
+								if(document.getElementById('elt_flag').checked) {
+									link += '&elt_flag='+document.getElementById('elt_flag').value;
+								}
+								if(document.getElementById('elt_no_flag').checked) {
+									link += '&elt_no_flag='+document.getElementById('elt_no_flag').value;
+								}
+								openPopUp(link, 'print_PDF');
+							}
+						</script>
+					";
+					print pmb_bidi($myCart->aff_cart_nb_items()) ;
+					print $myCart->aff_cart_nb_items();
+					print $myCart->get_choix_quoi_form("",
+							static::get_constructed_link('action', 'carte', '', 0),
+							$msg["caddie_choix_carte"],
+							$msg["804"],
+							"generate_cards();return false;",false);
+					break;
+				default:
+					break;
+			}
+		} else {
+			static::get_aff_paniers('action', 'carte');
+		}
+	}
+	
+	public static function proceed_pdf_carte($idcaddie=0) {
+		global $elt_flag, $elt_no_flag;
+		
+		$idcaddie = intval($idcaddie);
+		if ($idcaddie) {
+			$lettre_reader_card_PDF = lettre_reader_card_PDF::get_instance('reader');
+			$myCart = static::get_object_instance($idcaddie);
+			$liste_0=$liste_1= array();
+			if ($elt_flag) {
+				$liste_0 = $myCart->get_cart("FLAG") ;
+			}
+			if ($elt_no_flag) {
+				$liste_1= $myCart->get_cart("NOFLAG") ;
+			}
+			$liste= array_merge($liste_0,$liste_1);
+			if($liste) {
+				foreach ($liste as $object) {
+					$lettre_reader_card_PDF->doLettre($object);
+				}
+			}
+			$ourPDF = $lettre_reader_card_PDF->PDF;
+			$ourPDF->OutPut();
+		}
+	}
+		
+	public static function proceed_edition_advanced($idcaddie=0, $object_type='') {
+		empr_caddie_lists_controller::set_id_caddie($idcaddie);
+		empr_caddie_lists_controller::set_object_type($object_type);
+		empr_caddie_lists_controller::proceed($idcaddie);
+	}
+	
+} // fin de déclaration de la classe empr_caddie_controller

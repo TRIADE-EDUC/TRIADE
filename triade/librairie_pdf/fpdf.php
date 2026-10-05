@@ -9,7 +9,7 @@
 
 class FPDF
 {
-const VERSION = '1.85';
+const VERSION = '1.85 - TRIADE';
 protected $page;               // current page number
 protected $n;                  // current object number
 protected $offsets;            // array of object offsets

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_converter_publisher.class.php,v 1.1 2018-09-24 13:39:21 tsamson Exp $
+// $Id: rdf_entities_converter_publisher.class.php,v 1.2 2020/11/26 13:29:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -33,6 +33,16 @@ class rdf_entities_converter_publisher extends rdf_entities_converter_authority 
                 'ed_num_entite' => 'http://www.pmbservices.fr/ontology#has_supplier',
 		));
 		return $this->map_fields;
+	}
+	
+	protected function init_special_fields() {
+	    $this->special_fields = array_merge(parent::init_special_fields(), array(
+	        'http://www.pmbservices.fr/ontology#thumbnail_url' => array(
+	            "method" => array($this,"get_thumbnail_url"),
+	            "arguments" => array($this->aut_table_constant)
+	        )
+	    ));
+	    return $this->special_fields;
 	}
 	
 // 	protected function init_foreign_fields() {

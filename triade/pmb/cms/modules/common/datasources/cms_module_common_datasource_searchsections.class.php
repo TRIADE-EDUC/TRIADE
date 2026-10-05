@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_searchsections.class.php,v 1.5 2016-09-21 13:09:44 vtouchard Exp $
+// $Id: cms_module_common_datasource_searchsections.class.php,v 1.7 2022/09/06 07:52:19 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,9 +12,10 @@ class cms_module_common_datasource_searchsections extends cms_module_common_data
 		parent::__construct($id);
 		$this->sortable = true;
 		$this->limitable = true;
+		$this->paging = true;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -23,7 +24,7 @@ class cms_module_common_datasource_searchsections extends cms_module_common_data
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
@@ -34,10 +35,9 @@ class cms_module_common_datasource_searchsections extends cms_module_common_data
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		global $dbh;
 		$selector = $this->get_selected_selector();
 		if($selector) {
 			$tab_word_query = array();
@@ -61,13 +61,20 @@ class cms_module_common_datasource_searchsections extends cms_module_common_data
 					$query .= " order by ".$this->parameters["sort_by"];
 					if ($this->parameters["sort_order"] != "") $query .= " ".$this->parameters["sort_order"];
 				}
-				$result = pmb_mysql_query($query,$dbh);
+				$result = pmb_mysql_query($query);
 				$return = array();
 				while ($row = pmb_mysql_fetch_object($result)) {
-					$return[] = $row->id_section;
+				    $return["sections"][] = $row->id_section;
 				}
-				$return = $this->filter_datas("sections",$return);
-				if ($this->parameters["nb_max_elements"] > 0) $return = array_slice($return, 0, $this->parameters["nb_max_elements"]);
+				$return["sections"] = $this->filter_datas("sections", $return["sections"]);
+				
+				// Pagination
+				if ($this->paging && isset($this->parameters['paging_activate']) && $this->parameters['paging_activate'] == "on") {
+				    $return["paging"] = $this->inject_paginator($return["sections"]);
+				    $return["sections"] = $this->cut_paging_list($return["sections"], $return["paging"]);
+				}else if ($this->parameters["nb_max_elements"] > 0) {
+				    $return["sections"] = array_slice($return["sections"], 0, $this->parameters["nb_max_elements"]);
+				}
 				return $return;
 			}
 		} 

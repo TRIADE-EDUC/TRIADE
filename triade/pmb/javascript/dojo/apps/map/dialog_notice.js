@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dialog_notice.js,v 1.7 2017-09-05 08:37:29 vtouchard Exp $
+// $Id: dialog_notice.js,v 1.8 2021/05/20 09:18:53 jlaurent Exp $
 
 
 define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo/dom-construct", "dijit/layout/TabContainer","dojo/_base/lang", "dojo/query", "dijit/layout/ContentPane"], function(declare, dom, Dialog, on, domConstruct, TabContainer, lang, query, ContentPane){
@@ -115,7 +115,7 @@ define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo
                     var hrefBegin = domConstruct.create('a');
                     var callbackBegin = lang.hitch(this, this.clickBegin);
                     hrefBegin.innerHTML = "<<";
-                    hrefBegin.href = "#";
+                    //hrefBegin.href = "#";
                     hrefBegin.style.margin = '5px';
                     hrefBegin.style.textDecoration='none'; 
                     on(hrefBegin, 'click', callbackBegin)
@@ -127,7 +127,7 @@ define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo
                     var callbackPrev = lang.hitch(this, this.clickPrev);
 
                     hrefPrev.innerHTML = "<";
-                    hrefPrev.href = "#";
+                    //hrefPrev.href = "#";
                     hrefPrev.style.margin = '5px';
                     hrefPrev.style.textDecoration='none';
                     on(hrefPrev, 'click', callbackPrev)
@@ -144,7 +144,7 @@ define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo
                             var newHref = domConstruct.create('a');
                             var callbackClickPage = lang.hitch(this, this.clickPaginator);
                             newHref.innerHTML = i+1;
-                            newHref.href = "#";
+                            //newHref.href = "#";
                             newHref.style.margin = '5px';
                             newHref.style.textDecoration='none';
                             on(newHref, 'click', callbackClickPage)
@@ -156,7 +156,7 @@ define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo
                     var hrefNext = domConstruct.create('a');
                     var callbackNext = lang.hitch(this, this.clickNext);
                     hrefNext.innerHTML = ">";
-                    hrefNext.href = "#";
+                    //hrefNext.href = "#";
                     hrefNext.style.margin = '5px';
                     hrefNext.style.textDecoration = 'none';
                     on(hrefNext, 'click', callbackNext)
@@ -166,7 +166,7 @@ define(["dojo/_base/declare", "dojo/dom", "apps/pmb/PMBDialog", "dojo/on", "dojo
                     var hrefEnd = domConstruct.create('a');
                     var callbackEnd = lang.hitch(this, this.clickEnd);    			
                     hrefEnd.innerHTML = ">>";
-                    hrefEnd.href = "#";
+                    //hrefEnd.href = "#";
                     hrefEnd.style.margin = '5px';
                     hrefEnd.style.textDecoration = 'none';
                     on(hrefEnd, 'click', callbackEnd)

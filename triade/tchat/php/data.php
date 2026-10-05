@@ -16,9 +16,12 @@
         ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
         ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
 
-        $output .= '<a href="chat.php?user_id='. $row['unique_id'] .'">
+        $msgId  = isset($row2['msg_id']) ? intval($row2['msg_id']) : 0;
+        $fromMe = (isset($row2['outgoing_msg_id']) && $outgoing_id == $row2['outgoing_msg_id']) ? 1 : 0;
+
+        $output .= '<a href="chat.php?user_id='. $row['unique_id'] .'" data-msg-id="'. $msgId .'" data-from-me="'. $fromMe .'">
                     <div class="content">
-                    <img src="php/images/'. $row['img'] .'" alt="">
+                    <img src="php/images/'. ((!empty($row['img']) && file_exists(__DIR__.'/images/'.$row['img'])) ? $row['img'] : 'photo_vide.jpg') .'" alt="" onerror="this.src=\'php/images/photo_vide.jpg\';this.onerror=null;">
                     <div class="details">
                         <span>'. $row['fname']. " " . $row['lname'] .'</span>
                         <p>'. $you . $msg .'</p>

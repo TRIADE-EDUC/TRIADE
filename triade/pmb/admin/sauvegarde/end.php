@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: end.php,v 1.5 2017-10-23 10:13:00 ngantier Exp $
+// $Id: end.php,v 1.5 2017/10/23 10:13:00 ngantier Exp $
 
 //Fin de la sauvegarde
 $base_path="../..";

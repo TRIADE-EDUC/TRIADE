@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FileUI.js,v 1.7 2018-11-29 13:03:02 dgoron Exp $
+// $Id: FileUI.js,v 1.8 2023/07/26 06:23:12 dgoron Exp $
 
 define(["dojo/_base/declare", 
         "dojox/layout/ExpandoPane", 
@@ -25,12 +25,14 @@ define(["dojo/_base/declare",
         "dojo/dom-form",
         "apps/misc/files/FileDnd",
         "dojo/dom-class",
-        "dojo/dom-style"
-        ], function(declare, ExpandoPane, ContentPane, domConstruct, dom, on, topic, lang, registry, Button, query, domStyle, DropDownButton, DropDownMenu, MenuItem, Select, domAttr, ioQuery, xhr, domForm, FileDnd, domClass, domStyle){
+        "dojo/dom-style",
+        "apps/misc/files/PopupPond"
+        ], function(declare, ExpandoPane, ContentPane, domConstruct, dom, on, topic, lang, registry, Button, query, domStyle, DropDownButton, DropDownMenu, MenuItem, Select, domAttr, ioQuery, xhr, domForm, FileDnd, domClass, domStyle, PopupPond){
 	
 	return declare([ContentPane], {
 		path:null,
 		filename:null,
+		popupPond:null,
 		constructor: function(){
 
 		},
@@ -78,6 +80,19 @@ define(["dojo/_base/declare",
 			switch(action) {
 				case 'add_substitution':
 					this.own(on(node, 'click', lang.hitch(this, this.addSubstitution, code, type)));
+					break;
+				case 'edit_pond':
+					if(domAttr.get(dom.byId(node), 'data-file-label')) {
+						var label = domAttr.get(dom.byId(node), 'data-file-label'); 
+					} else {
+						var label = null;
+					}
+					if(domAttr.get(dom.byId(node), 'data-file-pond')) {
+						var pond = domAttr.get(dom.byId(node), 'data-file-pond'); 
+					} else {
+						var pond = null;
+					}
+					this.own(on(node, 'click', lang.hitch(this, this.editPopupPond, code, label, pond)));
 					break;
 			}
 		},
@@ -153,7 +168,11 @@ define(["dojo/_base/declare",
 			if(misc_subst_file_content.getCursorPosition()) {
 				misc_subst_file_content.moveCursorTo(misc_subst_file_content.getCursorPosition().row+1);
 			}
-		}
+		},
+		editPopupPond: function(code, label, pond){
+			this.popupPond = new PopupPond({code: code, label:label, pond:pond});
+			this.popupPond.show();
+		},
 	});
 });
 

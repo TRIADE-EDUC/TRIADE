@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: record_display_modes.class.php,v 1.10 2018-07-13 08:47:06 dgoron Exp $
+// $Id: record_display_modes.class.php,v 1.13.4.2 2025/03/20 10:04:07 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -41,16 +41,19 @@ class record_display_modes {
 		$xml=fread($fp,filesize($filepath));
 		fclose($fp);
 		$this->modes =_parser_text_no_function_($xml, "MODES");
+		if (!isset($this->modes['MODE'])) {
+			$this->modes['MODE'] = [];
+		}
 	}
 	
 	/**
 	 * Retourne un mode en fonction de son ID
 	 * 
 	 * @param int $mode_id l'identifiant d'un mode
-	 * @return array le tableau correspondant au mode recherchÃ©
+	 * @return array le tableau correspondant au mode recherché
 	 */
 	public function get_mode($mode_id){
-		if(sizeof($this->modes['MODE'])){
+		if(is_countable($this->modes['MODE']) && sizeof($this->modes['MODE'])){
 			foreach($this->modes['MODE'] as $mode_offset=>$mode){
 				if($mode['ID']==$mode_id){
 					return $this->modes['MODE'][$mode_offset];
@@ -61,9 +64,9 @@ class record_display_modes {
 	}
 	
 	/**
-	 * Compare les types de doc autorisÃ©s dans le mode avec les types de doc dans le rÃ©sultat.
+	 * Compare les types de doc autorisés dans le mode avec les types de doc dans le résultat.
 	 * 
-	 * @param int $mode_id l'identifiant du mode Ã  comparer
+	 * @param int $mode_id l'identifiant du mode à comparer
 	 * @return boolean comparaison vrai ou fausse
 	 */
 	private function compare_typdoc($mode_id){
@@ -81,21 +84,20 @@ class record_display_modes {
 					$return=false;
 				}
 			}
-		}elseif(!isset($mode['DOCTYPES']) || !sizeof($mode['DOCTYPES'])){
+		}elseif(empty($mode['DOCTYPES'])){
 			$return=true;
 		}
-		
 		return $return;
 	}
 	
 	/**
-	 * Retourne le mode courrant Ã  utiliser pour un resultat de recherche
-	 * en fonction de la sesson, et du paramÃ¨trage dans le fichier xml
+	 * Retourne le mode courrant à utiliser pour un resultat de recherche
+	 * en fonction de la sesson, et du paramètrage dans le fichier xml
 	 * 
-	 * @return int $mode_id l'identifiant du mode Ã  utiliser
+	 * @return int $mode_id l'identifiant du mode à utiliser
 	 */
 	public function get_current_mode(){
-		//On rafraichit (si jamais on est sur une vue avec un paramÃ¨tre substituÃ©....)
+		//On rafraichit (si jamais on est sur une vue avec un paramètre substitué....)
 		$this->get_modes_from_description_file();
 		$this->analyse();
 		
@@ -110,19 +112,17 @@ class record_display_modes {
 		}
 		
 		$available_modes = array();
-		if($this->modes['NOMODE']){
+		if(!empty($this->modes['NOMODE'])){
 			$available_modes[] = 0;
 		}
-		if(sizeof($this->modes['MODE'])){
+		if(!empty($this->modes['MODE']) && is_countable($this->modes['MODE']) && sizeof($this->modes['MODE'])){
 			foreach($this->modes['MODE'] as $mode){
-				
 				if(isset($mode['DOCTYPES'][0]['AUTO']) && $mode['DOCTYPES'][0]['AUTO']=='yes' && $this->compare_typdoc($mode['ID'])){
 					//Mode auto
 					$mode_id_auto= $mode['ID'];
 				}
-				
 				if($mode['DEFAULT']=='yes'){
-					//mode par dÃ©faut
+					//mode par défaut
 					$mode_id_default= $mode['ID'];
 				}
 				$available_modes[] = $mode['ID'];
@@ -130,7 +130,7 @@ class record_display_modes {
 		}
 		
 		if($mode_id_selected || $mode_id_selected==="0"){
-			//on vÃ©rifie que le mode est disponible
+			//on vérifie que le mode est disponible
 			if (!in_array($mode_id_selected,$available_modes)) {
 				if($mode_id_auto){
 					$mode_id=$mode_id_auto;
@@ -172,7 +172,7 @@ class record_display_modes {
 	}
 	
 	/**
-	 * Retourne l'identifiant du template pour l'objet mode passÃ© en param
+	 * Retourne l'identifiant du template pour l'objet mode passé en param
 	 * 
 	 * @param unknown $mode
 	 * @return unknown|number
@@ -196,7 +196,7 @@ class record_display_modes {
 	public function get_template_code($mode_id){
 		$mode=$this->get_mode($mode_id);
 		$code=$mode['TEMPLATE'][0];
-		if(sizeof($code)){
+		if(is_countable($code) && sizeof($code)){
 			return $code;
 		}else {
 			return 0;
@@ -204,7 +204,7 @@ class record_display_modes {
 	}
 	
 	/**
-	 * Retourne le rÃ©pertoire de template Ã  utiliser dans le cas du type django
+	 * Retourne le répertoire de template à utiliser dans le cas du type django
 	 * @param int $mode_id
 	 * @return string
 	 */
@@ -248,46 +248,50 @@ class record_display_modes {
 	 * 
 	 * @return string
 	 */
-	public function show_mode_selector(){
-		
-		//On rafraichit (si jamais on est sur une vue avec un paramÃ¨tre substituÃ©....)
+	public function show_mode_selector() {
+		//On rafraichit (si jamais on est sur une vue avec un paramètre substitué....)
 		$this->get_modes_from_description_file();
 		$this->analyse();
 		
-		$current_mode=$this->get_current_mode();
+		$current_mode = $this->get_current_mode();
 		$nb_modes = 0;
 		
 		$html = "<ul class='mode_selector_list'>";
-		//le mode par dÃ©faut 
-		if($this->modes['NOMODE']){
-			$selected='';
-			if($current_mode==0){
-				$selected='_selected';
+		
+		// Le mode par défaut 
+		if (!empty($this->modes['NOMODE'])) {
+			$selected = '';
+			if ($current_mode == 0) {
+				$selected = '_selected';
 			}
-			$html.= "<li class='mode_selector$selected' onclick='switch_mode(0)'><img src='".$this->get_icon_url($this->modes['NOMODE'][0]['ICON'])."' alt='".$this->modes['NOMODE'][0]['NAME']."'/></li>";
+			$html .= "<li class='mode_selector$selected' onclick='switch_mode(0)' title='".$this->modes['NOMODE'][0]['NAME']."'>
+                          <img src='".$this->get_icon_url($this->modes['NOMODE'][0]['ICON'])."' alt='".$this->modes['NOMODE'][0]['NAME']."'/>
+                      </li>";
 			$nb_modes++;
 		}
 		
-		foreach($this->modes['MODE'] as $mode){
-			if($this->compare_typdoc($mode['ID']) || !$mode['DOCTYPES']){
-				
-				$selected='';
-				if($current_mode==$mode['ID']){
-					$selected='_selected';
+		foreach ($this->modes['MODE'] as $mode) {
+			if ($this->compare_typdoc($mode['ID']) || !$mode['DOCTYPES']) {
+				$selected = '';
+				if ($current_mode == $mode['ID']) {
+					$selected = '_selected';
 				}
-				$html.= "<li class='mode_selector$selected' onclick='switch_mode(".$mode['ID'].")' $selected><img src='".$this->get_icon_url($mode['ICON'])."' alt='".$mode['NAME']."'/></li>";
+				$html .= "<li class='mode_selector$selected' onclick='switch_mode(".$mode['ID'].")' title='".$mode['NAME']."' $selected>
+                              <img src='".$this->get_icon_url($mode['ICON'])."' alt='".$mode['NAME']."'/>
+                          </li>";
 				$nb_modes++;
 			}
 		}
-		// Si on n'a pas ou qu'un seul mode disponible, Ã§a ne sert Ã  rien d'aller plus loin
+		
+		// Si on n'a pas ou qu'un seul mode disponible, ça ne sert à rien d'aller plus loin
 		if ($nb_modes <= 1) {
 			return '';
 		}
 		
-		$html.= "</ul>";
+		$html .= "</ul>";
 		
-		$html.="
-		<script type='text/javascript'>
+		$html .= "
+		<script>
 			function switch_mode(id_mode){
 				
 				var formName='';
@@ -338,7 +342,7 @@ class record_display_modes {
 	}
 	
 	/**
-	 * retourne l'url de l'icone Ã  afficher dans la liste de choix
+	 * retourne l'url de l'icone à afficher dans la liste de choix
 	 *
 	 * @param string $name le nom de l'icone
 	 * @return string le path de l'icone
@@ -378,12 +382,12 @@ class record_display_modes {
 		
 		if(!isset(static::$instance)) {
 			static::$instance = '';
-			//on utilise le systÃ¨me de choix des modes d'affichage
+			//on utilise le système de choix des modes d'affichage
 			if($opac_notices_display_modes && $lvl != "notice_display" && $lvl != "bulletin_display" && $lvl != "show_cart"){
 				//le selecteur de mode d'affichage
 				static::$instance = new record_display_modes();
 				if((isset($user_current_mode) && $user_current_mode) || $user_current_mode==='0'){
-					//Si on a dans le post la variable $user_current_mode qui determine un choix utilisateur (envoyÃ© par les formulaires)
+					//Si on a dans le post la variable $user_current_mode qui determine un choix utilisateur (envoyé par les formulaires)
 					static::$instance->set_user_current_mode($user_current_mode);
 				}
 			}

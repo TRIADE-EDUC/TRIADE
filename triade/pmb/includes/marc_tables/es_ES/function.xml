@@ -2,11 +2,13 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes fonction en UNIMARC (franÁais)
-$Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
+$Id: function.xml,v 1.16 2020/02/24 12:02:31 dgoron Exp $ -->
 
 <XMLlist>
+	<entry code="000">Fonction indéterminée</entry>
 	<entry code="005">Actor</entry>
 	<entry code="010">Adaptador</entry>
+	<entry code="018">Auteur de l'animation</entry>
 	<entry code="020">Anotador</entry>
 	<entry code="030">Arreglista</entry>
 	<entry code="040">Artista</entry>
@@ -32,11 +34,14 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="200">Coreógrafo</entry>
 	<entry code="202">Artiste de cirque</entry>
 	<entry code="205">Colaborador</entry>
+	<entry code="206">Collecteur</entry>
 	<entry code="207">Humoriste, comique</entry>
 	<entry code="210">Comentarista</entry>
 	<entry code="212">Comentarista de texto escrito</entry>
 	<entry code="220">Compilador</entry>
 	<entry code="230">Compositor</entry>
+	<entry code="233">Compositeur de l'oeuvre adaptée</entry>
+	<entry code="236">Compositeur de l'oeuvre principale</entry>
 	<entry code="240">Compositor tipográfico</entry>
 	<entry code="245">Concepto</entry>
 	<entry code="250">Director de orquesta</entry>
@@ -49,9 +54,8 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="280">Dedicatoria</entry>
 	<entry code="290">Autor de una dedicadoria</entry>
 	<entry code="295">Organisme de soutenance</entry>
-	<entry code="300">Metteur en scène, réalisateur</entry>
-	<entry code="305">Doctorant, candidat</entry>
 	<entry code="300">Director artístico</entry>
+	<entry code="303">Disc jockey</entry>
 	<entry code="305">Doctorado</entry>
 	<entry code="310">Distribuidor</entry>
 	<entry code="320">Donador</entry>
@@ -63,6 +67,7 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="370">Realizador de la película.</entry>
 	<entry code="380">Falsificador</entry>
 	<entry code="390">Proprietario anterior</entry>
+	<entry code="395">Fondateur</entry>
 	<entry code="400">Mecenas</entry>
 	<entry code="410">Técnico gráfico</entry>
 	<entry code="420">Persona honorada</entry>
@@ -71,6 +76,7 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="450">Signatario de una presentación</entry>
 	<entry code="460">Persona entrevistada</entry>
 	<entry code="470">Entrevistador</entry>
+	<entry code="475">Collectivité éditrice</entry>
 	<entry code="480">Libretista</entry>
 	<entry code="490">Titular de los derechos</entry>
 	<entry code="500">Concesor</entry>
@@ -92,18 +98,23 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="590">Ejecutador</entry>
 	<entry code="595">Director de la investigación</entry>	
 	<entry code="600">Fotógrafo</entry>
+	<entry code="605">Présentateur</entry>
 	<entry code="610">Impresor</entry>
 	<entry code="620">Impresor de grabados</entry>
 	<entry code="630">Productor</entry>
 	<entry code="632">Director artístico</entry>
 	<entry code="633">Miembro del equipo de producción</entry>
 	<entry code="635">Programador</entry>
+	<entry code="367">Gestionnaire de projet</entry>
 	<entry code="640">Corrector de pruebas</entry>
 	<entry code="650">Editor comercial</entry>
 	<entry code="651">Director de publicación</entry>
-	<entry code="660">Destinatario</entry>
+	<entry code="655">Marionnettiste</entry>
 	<entry code="660">Receptor de correspondencia</entry>
+	<entry code="665">Producteur de phonogramme</entry>
 	<entry code="670">Ingeniero de sonido</entry>
+	<entry code="672">Remixer</entry>
+	<entry code="673">Research team head</entry>
 	<entry code="675">Crítico</entry>
 	<entry code="677">Miembro del equipo de investigación</entry>
 	<entry code="680">Rubricador</entry>
@@ -115,10 +126,13 @@ $Id: function.xml,v 1.15 2017-04-05 14:11:48 ngantier Exp $ -->
 	<entry code="720">Signatario</entry>
 	<entry code="721">Cantante</entry>
 	<entry code="723">Comendador</entry>
+	<entry code="725">Organisme de normalisation</entry>
+	<entry code="726">Cascadeur</entry>
 	<entry code="727">Director de tesi</entry>
 	<entry code="730">Traductor</entry>
 	<entry code="740">Diseñador de caracteres de impresión</entry>
 	<entry code="750">Tipógrafo</entry>
+	<entry code="753">Vendeur</entry>
 	<entry code="755">Cantor</entry>
 	<entry code="760">Grabador</entry>
 	<entry code="770">Autor del material de acompañamiento</entry>

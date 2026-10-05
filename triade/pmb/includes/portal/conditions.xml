@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE conditions>
+
+<conditions>
+	<condition>
+		<label>msg:portal_condition_global</label>
+		<class_name>ConditionEnvModel</class_name>
+	</condition>
+	<condition>
+		<label>msg:portal_condition_view</label>
+		<class_name>ConditionOpacViewModel</class_name>
+	</condition>
+</conditions>

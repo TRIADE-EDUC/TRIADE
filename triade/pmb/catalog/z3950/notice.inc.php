@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: notice.inc.php,v 1.6 2007-03-10 08:50:38 touraine37 Exp $
+// $Id: notice.inc.php,v 1.6.42.1 2025/03/04 16:43:11 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -53,7 +53,7 @@ function convert_usmarc_unimarc_functions ($usmarc_func="") {
 				"frg"=>"380",
 				"fmo"=>"390",
 				"fnd"=>"400",
-				"art"=>"410",
+				"grt"=>"410",
 				"hnr"=>"420",
 				"ilu"=>"430",
 				"ill"=>"440",

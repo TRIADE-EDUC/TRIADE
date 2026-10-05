@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dico_empty_words.inc.php,v 1.6 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: dico_empty_words.inc.php,v 1.8.8.1 2024/06/11 08:23:55 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $search_empty_word, $page, $type_mot_vide, $tri, $clause, $class_path, $include_path, $action, $autorites_list_empty_word, $autorites_add_empty_word;
-global $text_empty_word, $msg, $nb_per_page, $nb_per_page_search, $nb_noti, $id_mot, $type_lien, $pmb_nb_noti_calc_empty_words, $nb_per_page_gestion;
+global $text_empty_word, $msg, $nb_per_page, $nb_per_page_search, $nb_noti, $id_mot, $type_lien, $pmb_nb_noti_calc_empty_words, $nb_per_page_gestion, $charset;
 
 if(!isset($search_empty_word)) $search_empty_word = '';
 if(!isset($page)) $page = 0;
@@ -20,48 +20,56 @@ require_once("$include_path/templates/dico_empty_words.tpl.php");
 
 $baseurl="./autorites.php?categ=semantique&sub=empty_words&action=".$action;
 
-//si on recherche une clÃ© spÃ©cifique, on remplace !!cle!! par la clÃ© sinon par rien
-if ($search_empty_word) $autorites_list_empty_word=str_replace("!!cle!!","'".stripslashes($search_empty_word)."'",$autorites_list_empty_word);
-		else $autorites_list_empty_word=str_replace("!!cle!!","",$autorites_list_empty_word);
+//si on recherche une clé spécifique, on remplace !!cle!! par la clé sinon par rien
+if ($search_empty_word) {
+    $autorites_list_empty_word=str_replace("!!cle!!", "'".htmlentities(stripslashes($search_empty_word), ENT_QUOTES, $charset)."'", $autorites_list_empty_word);
+} else {
+    $autorites_list_empty_word=str_replace("!!cle!!", "", $autorites_list_empty_word);
+}
 
 switch ($action) {
 	case 'add':
-		print $autorites_add_empty_word;
+		$interface_form = new interface_autorites_form('add_empty_word');
+		$interface_form->set_label($msg["add_empty_word"]);
+		$interface_form->set_content_form($autorites_add_empty_word)
+		->set_table_name('mots')
+		->set_field_focus('text_empty_word');
+		print $interface_form->get_display();
 	break;
 	case 'update':
 		if ($text_empty_word) {
-			//vÃ©rification de l'existence du mot
+			//vérification de l'existence du mot
 			$rqt_exist="select id_mot from mots where mot='".addslashes($text_empty_word)."'";
 			$query_exist=pmb_mysql_query($rqt_exist);
 			if (!pmb_mysql_num_rows($query_exist)) {
 				//insertion d'un nouveau mot
 				$rqt_ins="insert into mots (mot) values ('".addslashes($text_empty_word)."')";
 				@pmb_mysql_query($rqt_ins);
-				//recherche de l'id du mot insÃ©rÃ©
+				//recherche de l'id du mot inséré
 				$rqt_search_id="select id_mot from mots where mot='".addslashes($text_empty_word)."'";
 				$query_search_id=pmb_mysql_query($rqt_search_id);
 				if ($query_search_id&&pmb_mysql_num_rows($query_search_id)) {
 					$r=pmb_mysql_fetch_object($query_search_id);
 					//insertion dans la table de lien entre mots que le mot est vide
 					$rqt_ins="insert into linked_mots (num_mot,num_linked_mot,type_lien) values ('".$r->id_mot."',0,3)";
-					@pmb_mysql_query($rqt_ins);		
-					semantique::gen_table_empty_word();		
+					@pmb_mysql_query($rqt_ins);
+					semantique::gen_table_empty_word();
 				}
 			} else {
 				print "<script> alert('".$msg["word_exist"]."'); document.location='./autorites.php?categ=semantique&sub=empty_words&action=add';</script>";
-			}			
+			}
 		}
 		$baseurl="&text_empty_word=".rawurlencode($text_empty_word);
 	break;
 	case 'search':
 		if ($search_empty_word) {
 			$search_empty_word=str_replace("*","%",$search_empty_word);
-			$clause=" and mot like '".$search_empty_word."%'";	
+			$clause=" and mot like '".$search_empty_word."%'";
 		}
 		if ($type_mot_vide) {
 			$types_mots_vides=$type_mot_vide;
-			$autorites_list_empty_word=str_replace("!!checked".$type_mot_vide."!!","checked",$autorites_list_empty_word);	
-		} else $autorites_list_empty_word=str_replace("!!checked0!!","checked",$autorites_list_empty_word);	
+			$autorites_list_empty_word=str_replace("!!checked".$type_mot_vide."!!","checked",$autorites_list_empty_word);
+		} else $autorites_list_empty_word=str_replace("!!checked0!!","checked",$autorites_list_empty_word);
 		$baseurl.="&search_empty_word=".rawurlencode($search_empty_word)."&type_mot_vide=".$type_mot_vide;
 		break;
 	case 'last_words':
@@ -78,19 +86,19 @@ switch ($action) {
 			$nb_noti=floor(($r[0]*$nb_noti)/100);
 			semantique::calculate_empty_words($nb_noti);
 			semantique::gen_table_empty_word();
-		}	
+		}
 		break;
 	case 'del':
 		if ($id_mot&&$type_lien) {
-			@pmb_mysql_query("delete from linked_mots where num_mot=".$id_mot." and num_linked_mot=0 and type_lien=".$type_lien);	
+			@pmb_mysql_query("delete from linked_mots where num_mot=".$id_mot." and num_linked_mot=0 and type_lien=".$type_lien);
 			$rqt="select num_mot from linked_mots where num_mot=".$id_mot." or num_linked_mot=".$id_mot;
 			$query_exist=pmb_mysql_query($rqt);
-			if ($query_exist&&!pmb_mysql_num_rows($query_exist)) @pmb_mysql_query("delete from mots where id_mot=".$id_mot);	
-			semantique::gen_table_empty_word();	
+			if ($query_exist&&!pmb_mysql_num_rows($query_exist)) @pmb_mysql_query("delete from mots where id_mot=".$id_mot);
+			semantique::gen_table_empty_word();
 		}
 		break;
 	default:
-		
+
 	break;
 }
 
@@ -104,17 +112,17 @@ if ($action!='add') {
 	$limit="limit ".(($page-1)*$nb_per_page).",".$nb_per_page;
 	//tous les mots vides
 	if (!$type_mot_vide) $types_mots_vides="2,3,4";
-	//trier par mot ou derniers ajoutÃ©s
-	if (!$tri) $tri=" mot"; 
+	//trier par mot ou derniers ajoutés
+	if (!$tri) $tri=" mot";
 	$autorites_list_empty_word=str_replace("!!checked0!!","checked",$autorites_list_empty_word);
-	$autorites_list_empty_word=str_replace("!!checked2!!","",$autorites_list_empty_word);	
-	$autorites_list_empty_word=str_replace("!!checked3!!","",$autorites_list_empty_word);	
+	$autorites_list_empty_word=str_replace("!!checked2!!","",$autorites_list_empty_word);
+	$autorites_list_empty_word=str_replace("!!checked3!!","",$autorites_list_empty_word);
 	$autorites_list_empty_word=str_replace("!!checked4!!","",$autorites_list_empty_word);
 	//calcul du nombre de mots
 	$rqt1="select id_mot from mots,linked_mots where (linked_mots.type_lien in ($types_mots_vides))$clause and linked_mots.num_mot=mots.id_mot";
 	$execute_query1=pmb_mysql_query($rqt1);
 	$compt=pmb_mysql_num_rows($execute_query1);
-	//recherche des mots vides calculÃ©s et saisis
+	//recherche des mots vides calculés et saisis
 	$rqt="select id_mot,mot,type_lien from mots,linked_mots where (linked_mots.type_lien in ($types_mots_vides))$clause and linked_mots.num_mot=mots.id_mot order by $tri $limit";
 	$execute_query=pmb_mysql_query($rqt);
 	$liste_mots="<tr>
@@ -124,7 +132,7 @@ if ($action!='add') {
 			<th>".$msg["empty_word_created"]."</th>
 			<th>".$msg["no_empty_word"]."</th>
 			<th>&nbsp;</th>
-	   		</tr>\n";	
+	   		</tr>\n";
 	if ($execute_query) {
 		if ($compt) {
 			$parity=1;
@@ -150,8 +158,8 @@ if ($action!='add') {
 			$autorites_list_empty_word=str_replace("!!pagination!!","<div class='row'>".aff_pagination ($baseurl, $compt, $nb_per_page, $page)."</div>",$autorites_list_empty_word);
 		} else $autorites_list_empty_word=str_replace("!!pagination!!","",$autorites_list_empty_word);
 		$autorites_list_empty_word=str_replace("!!see_last_words!!","<div class='right'><a href='./autorites.php?categ=semantique&sub=empty_words&action=last_words'>".$msg["see_last_words_added"]."</a></div>",$autorites_list_empty_word);
-	} 
-	$autorites_list_empty_word=str_replace("!!liste_mots!!",$liste_mots,$autorites_list_empty_word);	
+	}
+	$autorites_list_empty_word=str_replace("!!liste_mots!!",$liste_mots,$autorites_list_empty_word);
 	print $autorites_list_empty_word;
 }
 ?>

@@ -1,19 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa_planning.tpl.php,v 1.10 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: resa_planning.tpl.php,v 1.13 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 global $form_resa_planning_add, $form_resa_planning_confirm, $form_resa_planning_add_from_cart, $form_resa_planning_add_from_cart_item, $form_resa_planning_add_from_cart_loc_retrait_table, $msg;
 global $form_resa_planning_add_from_cart_loc_retrait_row, $form_resa_planning_add_from_cart_loc_retrait_option, $form_resa_planning_add_from_cart_loc_retrait_none;
+global $opac_rgaa_active;
 
 // templates pour le formulaire de pose de reservation planifiee
-
-$form_resa_planning_add = '
-<h3><span>'.$msg['resa_planning_add'].'</span></h3>
-<script type="text/javascript">
+$form_resa_planning_add = "";
+if($opac_rgaa_active) {
+    $form_resa_planning_add .= '<h1><span>'.$msg['resa_planning_add'].'</span></h1>';
+} else {
+    $form_resa_planning_add .= '<h3><span>'.$msg['resa_planning_add'].'</span></h3>';
+}
+$form_resa_planning_add.= '
+<script>
 	function test_form(form) {
 		var t_sel=form.getElementsByTagName("select");
 		var resa_qty = 0;
@@ -68,12 +73,18 @@ $msg['resa_date_debut']."!!date_deb!!&nbsp;".$msg['resa_date_fin']."!!date_fin!!
 
 
 //templates pose resa planifiee a partir d'un panier
-$form_resa_planning_add_from_cart = '
-<h3>'.$msg['resa_planning_add_from_cart'].'</h3>
+if ($opac_rgaa_active) {
+    $resa_planning_title = '<h1>'.$msg['resa_planning_add_from_cart'].'</h1>';
+} else {
+    $resa_planning_title = '<h3>'.$msg['resa_planning_add_from_cart'].'</h3>';
+}
+
+
+$form_resa_planning_add_from_cart = $resa_planning_title . '
 <form action="./do_resa.php?lvl=resa_cart&sub=resa_planning_cart_checked&step=2" method="post" name="dates_resa">
 	<!-- items -->
 	<input type="submit" value="'.$msg[11].'" class="bouton" />
-</form>';		
+</form>';
 
 $form_resa_planning_add_from_cart_item = '
 <div>&nbsp;
@@ -108,7 +119,7 @@ $form_resa_planning_add_from_cart_loc_retrait_table = '
 	<tr>
 		<th>'.$msg['resa_planning_loc_retrait'].'</th>
 		<th>'.$msg['resa_planning_qty_requested'].'</th>
-	</tr>	
+	</tr>
 	<!-- rows -->
 </tbody>
 </table>';

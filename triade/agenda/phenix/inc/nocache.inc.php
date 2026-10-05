@@ -13,7 +13,7 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-
+  error_reporting(0);
   Header("Expires: 0");
   Header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
   Header('Cache-Control: no-store, no-cache, must-revalidate');  // HTTP/1.1

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_authorities_controller.class.php,v 1.3 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: entities_authorities_controller.class.php,v 1.6 2023/08/17 09:47:55 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once ($class_path."/entities/entities_controller.class.php");
 global $pmb_indexation_lang;
 include($include_path."/marc_tables/".$pmb_indexation_lang."/empty_words");
@@ -38,9 +39,6 @@ class entities_authorities_controller extends entities_controller {
 	}
 	
 	protected function get_display_label_column($label='', $infobulle='') {
-		global $charset;
-		
-// 		htmlentities($label, ENT_QUOTES, $charset)
 		$display = "
 			<td style='vertical-align:top' onmousedown=\"document.location='".$this->get_edit_link($this->authority->get_num_object())."&user_input=".rawurlencode($this->user_input)."&nbr_lignes=".$this->nbr_lignes."&page=".$this->page."';\" title='".$infobulle."'>
 				".$this->authority->get_display_statut_class_html().$label."
@@ -53,7 +51,7 @@ class entities_authorities_controller extends entities_controller {
 		
 		$display = '';
 		
-		// On va chercher les infos spÃ©cifique Ã  l'autoritÃ©
+		// On va chercher les infos spécifique à l'autorité
 		$this->authority = new authority($authority_id);
 		
 		if ($this->parity % 2) {
@@ -116,7 +114,7 @@ class entities_authorities_controller extends entities_controller {
 			$page=1;
 			$this->page = $page; 
 		} else {
-			$this->page = $page+0;
+		    $this->page = (int) $page;
 		}
 		$debut =($this->page-1)*$nb_per_page_gestion;
 		
@@ -135,17 +133,16 @@ class entities_authorities_controller extends entities_controller {
 			if (!$last_param) $nav_bar = aff_pagination ($this->get_pagination_link(), $this->nbr_lignes, $nb_per_page_gestion, $this->page, 10, false, true) ;
 			else $nav_bar="";
 		
-			// affichage du rÃ©sultat
+			// affichage du résultat
 			print $this->searcher_instance->get_results_list_from_search($this->get_results_title(), $this->user_input, $display, $nav_bar);
 		} else {
-			// la requÃªte n'a produit aucun rÃ©sultat
+			// la requête n'a produit aucun résultat
 			$this->display_no_results();		
 		}
 	}
 	
 	public function proceed() {
 		global $sub;
-		global $force_unlock;
 		global $PMBuserid;
 		//parade pour la facto
 		$formatted_sub = $sub;
@@ -222,6 +219,8 @@ class entities_authorities_controller extends entities_controller {
 	}
 	
 	public function proceed_delete() {
+	    global $msg;
+	    
 		$object_instance = $this->get_object_instance();
 		$sup_result = $object_instance->delete();
 		if(!$sup_result) {
@@ -251,7 +250,6 @@ class entities_authorities_controller extends entities_controller {
 	
 	public function proceed_duplicate() {
 		$object_instance = $this->get_object_instance();
-		$id = 0;
 		$object_instance->show_form(true);
 	}
 	
@@ -301,13 +299,13 @@ class entities_authorities_controller extends entities_controller {
 		if(!$pmb_allow_authorities_first_page && (!isset($this->user_input) || $this->user_input == '')){
 			$this->search_form();
 		}else {
-			// affichage du dÃ©but de la liste
+			// affichage du début de la liste
 			print $this->get_display_list();
 		}
 	}
 	
 	public function get_display_view($id=0) {
-		print "<script type='text/javascript'>
+		print "<script>
 			document.location = '".$this->get_permalink($id)."';	
 			</script>";
 	}
@@ -315,7 +313,7 @@ class entities_authorities_controller extends entities_controller {
 	 * Fourni le javascript permettant d'instancier le systeme d'onglet
 	 */
 	protected function get_selector_js_script(){
-		return "<script type='text/javascript'>
+		return "<script>
 					require(['dojo/ready', 'apps/pmb/form/FormController'], function(ready, FormController){
 					     ready(function(){
 					     	new FormController();
@@ -327,6 +325,31 @@ class entities_authorities_controller extends entities_controller {
 	public static function get_caddie_link() {
 		global $msg, $categ;
 		return "<a href='#' onClick=\"openPopUp('./print_cart.php?current_print=".$_SESSION['CURRENT']."&action=print_prepare&object_type=".self::get_type_from_categ($categ)."&authorities_caddie=1','print_cart'); return false;\"><img src='".get_url_icon('basket_small_20x20.gif')."' style='border:0px' class='center' alt=\"".$msg["histo_add_to_cart"]."\" title=\"".$msg["histo_add_to_cart"]."\"></a>";
+	}
+	
+	/**
+	 * Retourne le template pour appliquer un tri
+	 * @param int|string $nb_results nombre de résultat de la recherce
+	 * @param string $entity_type type de l'entité
+	 * @return string
+	 */
+	public static function get_sort_link($nb_results, $entity_type) {
+	    global $pmb_nb_max_tri, $msg;
+	    global $affich_authorities_tris_result_liste;
+
+	    $display_icons = "";
+	    if ($nb_results <= $pmb_nb_max_tri) {
+	        $sort_index = "tri_".$entity_type;
+	        $display_icons .= $affich_authorities_tris_result_liste;
+	        $display_icons = str_replace('!!entity_type!!', $entity_type, $display_icons);
+	        if (!empty($_SESSION[$sort_index])) {
+	            $sort = new sort($entity_type,"base");
+	            $display_icons .= $msg['tri_par']." ".$sort->descriptionTriParId($_SESSION[$sort_index]);
+	        }
+	        
+	    }
+	    
+	    return $display_icons;
 	}
 	
 	/**
@@ -369,7 +392,7 @@ class entities_authorities_controller extends entities_controller {
 	}
 	
 	public function get_msg_from_categ($categ, $id_authperso = 0) {
-		global $msg, $search;
+		global $msg;
 		
 		switch ($categ) {
 			case 'auteurs' :
@@ -434,7 +457,7 @@ class entities_authorities_controller extends entities_controller {
 		return $type;
 	}
 	
-	//A dÃ©river dans les enfants
+	//A dériver dans les enfants
 	protected function get_aut_const(){
 	    return '';
 	}

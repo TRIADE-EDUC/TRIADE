@@ -1,19 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf.class.php,v 1.1 2013-09-26 10:15:57 arenou Exp $
+// $Id: rdf.class.php,v 1.3 2021/02/03 09:46:45 qvarin Exp $
 
-
-if (stristr ($_SERVER['REQUEST_URI'], ".class.php"))
-	die ("no access");
-
-require_once ("$class_path/rdf/arc2/ARC2.php");
-
+if (stristr ($_SERVER['REQUEST_URI'], ".class.php")) die ("no access");
 
 class rdf {
 
-	public $errors = array(); // Tableau avec les erreurs rencontrÃ©es
+	public $errors = array(); // Tableau avec les erreurs rencontrées
 	public $config = array(
 		  /* db */
 		  'db_name' => DATA_BASE,
@@ -29,7 +24,7 @@ class rdf {
 	
 	/**
 	 * Constructor
-	 * @param text $store_name : PrÃ©fixe utilisÃ© pour le schÃ©ma rdf
+	 * @param text $store_name : Préfixe utilisé pour le schéma rdf
 	 * @return void
 	 */
 	public function __construct ($store_name="",$config=array()) {
@@ -55,26 +50,26 @@ class rdf {
 			return false;
 		}else{
 			if (!$this->store->isSetUp()) {//Si les tables du store n'existent pas
-				$this->store->setUp();//On crÃ©e les tables
-				if($erreurs=$this->store->getErrors()){//Si la crÃ©ation Ã  Ã©chouÃ©e
+				$this->store->setUp();//On crée les tables
+				if($erreurs=$this->store->getErrors()){//Si la création à échouée
 					foreach ( $erreurs as $value ) {
        					$this->errors[]=$value;
 					}
 					return false;
 					$this->store->closeDBCon();
 				}else{
-					//Si on vient de faire la crÃ©ation pour pouvoir faire autre chose on doit se dÃ©connecter et se reconnecter
+					//Si on vient de faire la création pour pouvoir faire autre chose on doit se déconnecter et se reconnecter
 					$this->store->closeDBCon();
 					$this->store = ARC2::getStore($this->config);
+					$this->store->getDBCon();
 				}
-				
 			}
 		}
 		return true;
 	}
 	
 	/**
-	 * Vide la base liÃ©e au store.
+	 * Vide la base liée au store.
 	 * 
 	 */
 	public function reset(){
@@ -86,7 +81,7 @@ class rdf {
 	}
 	
 	/**
-	 * Supprime la base liÃ©e au store.
+	 * Supprime la base liée au store.
 	 * 
 	 */
 	public function drop(){
@@ -118,7 +113,7 @@ class sparql extends rdf {
 	
 	/**
 	 * Constructor
-	 * @param text $store_name : PrÃ©fixe utilisÃ© pour les tables de stockage du schÃ©ma rdf
+	 * @param text $store_name : Préfixe utilisé pour les tables de stockage du schéma rdf
 	 * @return void
 	 */
 	public function __construct ($store_name="",$config=array()) {
@@ -129,19 +124,19 @@ class sparql extends rdf {
 	
 	/**
 	 * Execution d'une requete sparql dans le store
-	 * @param text $query : RequÃªte sparql Ã  exÃ©cuter
+	 * @param text $query : Requête sparql à exécuter
 	 * @return array : De la forme : 
 		 Array(
-    		[query_type] => "Type de la requÃªte. Expl: Select, Delete, Load, Insert, ...". Toujours prÃ©sent
-    		[result] => Array(. Toujours prÃ©sent
-    		            [t_count] => Nb Ã©lÃ©ments traitÃ©s. Pas prÃ©sent si select
-    					[...] => D'autres clÃ©s possible
+    		[query_type] => "Type de la requête. Expl: Select, Delete, Load, Insert, ...". Toujours présent
+    		[result] => Array(. Toujours présent
+    		            [t_count] => Nb éléments traités. Pas présent si select
+    					[...] => D'autres clés possible
             			[variables] => Array( //Dans le cas d'un select
-                    						[0] => "Variable utilisÃ© dans la requete sparql si prÃ©sente"
+                    						[0] => "Variable utilisé dans la requete sparql si présente"
                 						)
 
-            			[rows] => Array( "RÃ©sultats correspondants Ã  la requete" //Dans le cas d'un select
-                    				[0] => Array( "Forme [Variable (Option si prÃ©sent)] => Vateur"
+            			[rows] => Array( "Résultats correspondants à la requete" //Dans le cas d'un select
+                    				[0] => Array( "Forme [Variable (Option si présent)] => Vateur"
 				                            [label] => Science
 				                            [label type] => literal
 				                            [label lang] => fr
@@ -150,20 +145,20 @@ class sparql extends rdf {
 
         			)
 
-    		[query_time] => 0.11747407913208 //Temps d'execution de la requete. Toujours prÃ©sent
+    		[query_time] => 0.11747407913208 //Temps d'execution de la requete. Toujours présent
 		)
 	 */
 	public function query($query){
 		
 		$result=array();
 
-		if(!count($this->errors)){//Si je n'ai pas dÃ©jÃ  des erreurs
+		if(!count($this->errors)){//Si je n'ai pas déjà des erreurs
 			$result_tmp = $this->store->query($query);//J'execute la requete
-			if($erreurs=$this->store->getErrors()){//Si l'execution de la requete a Ã©chouÃ©
+			if($erreurs=$this->store->getErrors()){//Si l'execution de la requete a échoué
 				foreach ( $erreurs as $value ) {
 					$this->errors[]=$value;
 				}
-			}elseif(!$result_tmp){//Si l'execution de la requete a Ã©chouÃ©
+			}elseif(!$result_tmp){//Si l'execution de la requete a échoué
 			}else{
 				$result=$result_tmp;
 			}
@@ -200,15 +195,15 @@ class sparql extends rdf {
 	
 	/**
 	 * Permet d'obtenir la liste de toutes les ressources du store avec si il existe :
-	 *  @param array $uri_resource_scheme: Tableau avec la liste des URI des schemas Ã  filtrer
+	 *  @param array $uri_resource_scheme: Tableau avec la liste des URI des schemas à filtrer
 	 * 	@return array : De la forme : 
 		 Array(
     		[URI_de_la_ressource] =>  Array(
-    		            [type_ressource_liÃ©e] =>  Array(
+    		            [type_ressource_liée] =>  Array(
                     						[0] => Array(
-			                    						[type] => Type de la ressource liÃ©e (literal / Uri)
-			                    						[val] => Valeur de la ressource liÃ©e
-			                    						[lang] => Langue de la ressource liÃ©e
+			                    						[type] => Type de la ressource liée (literal / Uri)
+			                    						[val] => Valeur de la ressource liée
+			                    						[lang] => Langue de la ressource liée
 			                						)
 			                				[...] => 
                 						)
@@ -248,11 +243,11 @@ class sparql extends rdf {
 	 * 	@return array : De la forme :
 	 Array(
 	 [URI_du_Scheme] =>  Array(// Attention si pas de ConceptScheme dans le store ce tableau est vide
-	 [type_ressource_liÃ©e] =>  Array(
+	 [type_ressource_liée] =>  Array(
 	 [0] => Array(
-	 	[type] => Type de la ressource liÃ©e (literal / Uri)
-	 	[val] => Valeur de la ressource liÃ©e
-	 	[lang] => Langue de la ressource liÃ©e
+	 	[type] => Type de la ressource liée (literal / Uri)
+	 	[val] => Valeur de la ressource liée
+	 	[lang] => Langue de la ressource liée
 	 	)
 	 [...] =>
 	 )
@@ -266,7 +261,7 @@ class sparql extends rdf {
 	 */
 	public function get_scheme_list() {
 		$result=array();
-		//Je cherche dans le store les resources liÃ©es Ã  un scheme avec le lien inScheme
+		//Je cherche dans le store les resources liées à un scheme avec le lien inScheme
 		$query=$this->get_prefix_text()."SELECT ?a
 		WHERE {
 		?resource skos:inScheme ?a .
@@ -279,7 +274,7 @@ class sparql extends rdf {
 				}
 			}
 		}
-		//Je cherche dans le store les resources liÃ©es Ã  un scheme avec le lien topConceptOf
+		//Je cherche dans le store les resources liées à un scheme avec le lien topConceptOf
 		$query=$this->get_prefix_text()."SELECT ?a
 		WHERE {
 		?resource skos:topConceptOf ?a .
@@ -292,7 +287,7 @@ class sparql extends rdf {
 				}
 			}
 		}
-		//Tous les "Scheme" dÃ©finis dans le store
+		//Tous les "Scheme" définis dans le store
 		$query=$this->get_prefix_text()."SELECT ?resource
 		WHERE {
 		?resource a skos:ConceptScheme .
@@ -306,7 +301,7 @@ class sparql extends rdf {
 			}
 		}
 	
-		//On va chercher toutes les informations sur les schemas utilisÃ© dans le store
+		//On va chercher toutes les informations sur les schemas utilisé dans le store
 		if(count($result)){
 			$final=array();
 			$result2=$this->get_resource_list("skos:ConceptScheme",$result);
@@ -324,7 +319,7 @@ class sparql extends rdf {
 	
 	public function load_file($file){
 		//LOAD n'accepte qu'un chemin absolu
-		$res=$this->query('LOAD <file://'.realpath($file).'>');
+		$res=$this->query('LOAD <file:///'.realpath($file).'>');
 		if($res){
 			return $res['result']['t_count'];
 		}else{

@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_cart_tpl.class.php,v 1.1 2017-10-13 13:31:05 ngantier Exp $
+// $Id: print_cart_tpl.class.php,v 1.6 2023/07/04 09:14:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/print_cart_tpl.tpl.php");
 
 class print_cart_tpl {
@@ -14,14 +15,12 @@ class print_cart_tpl {
 	private $header;
 	private $footer;
 	
-	public function __construct($id=0) {
-		$this->id = $id+0;
+	public function __construct($id = 0) {
+		$this->id = (int) $id;
 		$this->fetch_data();
 	}
 	
 	private function fetch_data() {
-		global $dbh;
-		
 		$this->name = '';
 		$this->header = '';
 		$this->footer = '';
@@ -41,6 +40,10 @@ class print_cart_tpl {
 
 	public function get_id() {
 		return $this->id;
+	}
+	
+	public function set_id($id) {
+		$this->id = intval($id);
 	}
 	
 	public function get_name() {
@@ -66,69 +69,49 @@ class print_cart_tpl {
 	public function set_footer($footer) {
 		$this->footer = $footer;
 	}
-	
-	public function proceed() {
-		global $action;
-		global $f_name, $f_header, $f_footer;
-		
-		switch($action) {
-			case 'form':
-				print $this->get_form();
-				break;
-			case 'save':				
-				$this->name = stripslashes($f_name);
-				$this->header = stripslashes($f_header);
-				$this->footer = stripslashes($f_footer);
-				print $this->save();
-				print $this->get_list();
-				break;
-			case 'delete':
-				print $this->delete();
-				print $this->get_list();
-				break;
-			case 'duplicate':
-				print $this->get_form(true);
-				break;		
-			default:
-				print $this->get_list();
-				break;
-		}		
+	       
+	public function get_content_form() {
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('f_name', 'admin_print_cart_tpl_form_name')
+		->add_input_node('text', $this->name);
+		$interface_content_form->add_element('f_header', 'admin_print_cart_tpl_form_header')
+		->add_textarea_node($this->header)
+		->set_cols(100)
+		->set_rows(20);
+		$interface_content_form->add_element('f_footer', 'admin_print_cart_tpl_form_footer')
+		->add_textarea_node($this->footer)
+		->set_cols(100)
+		->set_rows(20);
+		return $interface_content_form->get_display();
 	}
-       
-	private function get_form($duplicate = false) {
-		global $cart_tpl_form_tpl, $msg, $charset;
-		
-		$tpl = $cart_tpl_form_tpl;
-		if($this->id){
-			if (!$duplicate) {
-				$tpl = str_replace('!!msg_title!!', $msg['admin_print_cart_tpl_form_edit'], $tpl);
-				$tpl = str_replace('!!delete!!', "<input type='button' class='bouton' value='".$msg['admin_print_cart_tpl_delete']."' onclick=\"document.getElementById('action').value='delete';this.form.submit();\"  />", $tpl);
-				$tpl = str_replace("!!duplicate!!","<input class='bouton' type='button' value=' ".$msg["admin_print_cart_tpl_duplicate"]." ' onclick=\"document.getElementById('action').value='duplicate';this.form.submit();\" />",$tpl);
-			} else {
-				$tpl = str_replace('!!msg_title!!', $msg['admin_print_cart_tpl_form_add'], $tpl);
-				$tpl = str_replace('!!delete!!', "", $tpl);
-				$tpl = str_replace("!!duplicate!!", "", $tpl);
-			}
-		}else{ 
-			$tpl = str_replace('!!msg_title!!', $msg['admin_print_cart_tpl_form_add'], $tpl);
-			$tpl = str_replace('!!delete!!', "", $tpl);
-			$tpl = str_replace("!!duplicate!!", "", $tpl);
-		}
 	
-		$tpl = str_replace('!!name!!', htmlentities($this->name, ENT_QUOTES, $charset), $tpl);
-		$tpl = str_replace('!!header!!', htmlentities($this->header, ENT_QUOTES, $charset), $tpl);
-		$tpl = str_replace('!!footer!!', htmlentities($this->footer, ENT_QUOTES, $charset), $tpl);
-		if ($duplicate) {
-			$this->id = 0;
+	public function get_form() {
+		global $cart_tpl_content_js_form, $msg;
+		
+		$interface_form = new interface_form('print_cart_tpl');
+		if(!$this->id){
+			$interface_form->set_label($msg['admin_print_cart_tpl_form_add']);
+		}else{
+			$interface_form->set_label($msg['admin_print_cart_tpl_form_edit']);
 		}
-		$tpl = str_replace('!!id!!', $this->id, $tpl);
-		 
-		return $tpl;
+		$interface_form->set_object_id($this->id)
+		->set_duplicable(true)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->name." ?")
+		->set_content_form($cart_tpl_content_js_form.$this->get_content_form())
+		->set_table_name('print_cart_tpl')
+		->set_field_focus('f_name');
+		return $interface_form->get_display();
 	}
 
-	public function save() {
-		global $dbh;
+	public function set_properties_from_form() {
+		global $f_name, $f_header, $f_footer;
 		
+		$this->name = stripslashes($f_name);
+		$this->header = stripslashes($f_header);
+		$this->footer = stripslashes($f_footer);
+	}
+	
+	public function save() {
 		$fields = "
 			print_cart_tpl_name='".addslashes($this->name)."',
 			print_cart_tpl_header='".addslashes($this->header)."',
@@ -136,46 +119,21 @@ class print_cart_tpl {
 		";		
 		if(!$this->id){ // Ajout
 			$req = "INSERT INTO print_cart_tpl SET ".$fields ;	
-			pmb_mysql_query($req, $dbh);
-			$this->id = pmb_mysql_insert_id($dbh);
+			pmb_mysql_query($req);
+			$this->id = pmb_mysql_insert_id();
 		} else {
 			$req = "UPDATE print_cart_tpl SET ".$fields." where id_print_cart_tpl=".$this->id;	
-			pmb_mysql_query($req, $dbh);				
+			pmb_mysql_query($req);				
 		}	
-		$this->fetch_data();
 	}	
 	
-	public function delete() {
-		global $dbh;
-		
-		$req="DELETE from print_cart_tpl WHERE id_print_cart_tpl=".$this->id;
-		pmb_mysql_query($req, $dbh);	
-		
-		$this->fetch_data();	
+	public static function delete($id) {
+		$id = intval($id);
+		if($id) {
+			$req="DELETE from print_cart_tpl WHERE id_print_cart_tpl=".$id;
+			pmb_mysql_query($req);
+		}
+		return true;	
 	}	
-		
-	public function get_list() {
-		global $dbh, $cart_tpl_list_tpl, $cart_tpl_list_line_tpl, $msg;
-			
-		$odd_even = "odd";
-		$tpl_list = '';
-		$req = "select * from print_cart_tpl order by print_cart_tpl_name";
-		$resultat = pmb_mysql_query($req);
-		if (pmb_mysql_num_rows($resultat)) {
-			while($r = pmb_mysql_fetch_object($resultat)) {		
-				$tpl_elt = $cart_tpl_list_line_tpl;
-				if($odd_even=='odd') $odd_even = "even"; else $odd_even = "odd";
-				$tpl_elt = str_replace('!!odd_even!!', $odd_even, $tpl_elt);	
-				$tpl_elt = str_replace('!!name!!', $r->print_cart_tpl_name, $tpl_elt);	
-				$tpl_elt = str_replace('!!header!!', $r->print_cart_tpl_header, $tpl_elt);	
-				$tpl_elt = str_replace('!!footer!!', $r->print_cart_tpl_footer, $tpl_elt);	
-				$tpl_elt = str_replace('!!id!!', $r->id_print_cart_tpl, $tpl_elt);	
-				$tpl_list.= $tpl_elt;	
-			}
-			return str_replace('!!list!!', $tpl_list, $cart_tpl_list_tpl);
-		}		
-		return str_replace('!!list!!', '', $cart_tpl_list_tpl);;
-	}	
-	
 } 
 

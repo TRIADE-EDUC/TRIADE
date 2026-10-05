@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cache_factory.class.php,v 1.2 2018-07-05 10:22:43 arenou Exp $
+// $Id: cache_factory.class.php,v 1.4 2022/10/24 07:55:50 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/cache_apcu.class.php");
 
 class cache_factory {
@@ -19,6 +20,11 @@ class cache_factory {
 	public function getFromCache($key) {
 		return false;
 	}
+	
+	public function deleteFromCache($key) {
+	    return false;
+	}
+	
 
 	/**
 	 * 

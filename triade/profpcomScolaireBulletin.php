@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Visa du Professeur Principal." ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -79,14 +79,14 @@ if (isset($_POST["createcom"])) {
 if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "cycle4")) {
 
 	print "<form method=post name='formulaire' action='profpcomScolaireBulletinCycle.php' >";
-	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$idclasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
+	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$idclasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
 	$saisie_classe=$_POST["saisie_classe"];
 	$cl=chercheClasse_nom($saisie_classe);
 
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		print "<br>";
 		print "<font class=T2>&nbsp;&nbsp;&nbsp;Classe : <b>$cl</b> / ".LANGBULL3." : <b>$anneeScolaire</b> </font><br><br>";
 		print "<table width='100%' border='1' style='border-collapse: collapse;' >";
@@ -95,7 +95,7 @@ if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "
 		print "<td bgcolor='#ACD4F1' >Maîtrise satisfaisante</td>"; 
 		print "<td bgcolor='#91C9ED' >Très bonne maîtrise</td>";	
 		print "</tr>";
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$ideleve=$data[$i][1];
 				
 			$dataCycle=recupInfoCyclePropP($ideleve,$tri); //ideleve,cycle,q1,q2,q3,q4,q5,q6,q7,commentaire,idprofp,q4bis
@@ -252,10 +252,10 @@ if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "
 	
 	if (defined("NBCARBULLPROFP")) { $nbcar=NBCARBULLPROFP;  }else{ $nbcar="500"; }
 	
-	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$idclasse' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$idclasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
+	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$idclasse' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$idclasse' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
 	$res=execSql($sql);
 	$data=chargeMat($res);
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 		print "<br><table width='100%' border='0' ><tr><td><font class=T2>&nbsp;&nbsp;&nbsp;Classe : <b>$cl</b> / ".LANGBULL3." : <b>$anneeScolaire</b> </font></td><td>";
 		print "<script language=JavaScript>buttonMagic(\"Moyennes, Graphs, ...\",\"profpprojo.php?idClasse=$saisie_classe\",'video','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes','');</script></td></tr></table>";
 		print "<br />";
@@ -291,12 +291,12 @@ if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "
 		print "<br>";
 		print "<table align=center width=100% border='0' >";
 	
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$ideleve=$data[$i][1];
 		        $photoeleve="image_trombi.php?idE=".$ideleve;
 			$commentaire=recupCommentaireLivretEPIAPIdeleve($type_rubrique,$anneeScolaire,$idclasse,$_SESSION["id_pers"],$tri,$num,$ideleve);
 		        print "<tr>";
-		        print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left'></td>";
+		        print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left' style='box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;' ></td>";
 		        print "<td valign='top' align='left' >";
 		        print "<input type='hidden' value='$ideleve' name='eleveid_$i' />";
 		        print " <b> ".ucfirst($data[$i][3])." ".strtoupper($data[$i][2])."</b>";
@@ -306,7 +306,7 @@ if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "
 			print "&nbsp;<input type=text name='CharRestant_$i' size=3 disabled='disabled' value='$nbtexte' />";
 			print "</td></tr>";
 		}
-		$nbeleve=count($data);
+		$nbeleve=countTriade($data);
 		
 		$valider=VALIDER;
 		print "<tr><td colspan=2 align='center'><br><br><table><tr><td><script language=JavaScript>buttonMagicSubmit('$valider','createcom');</script></td>";
@@ -339,15 +339,15 @@ if (($tri == "cycle1") || ($tri == "cycle2") || ($tri == "cycle3") || ($tri == "
 // Test du membre pour savoir quel fichier JS je dois executer
 if ($_SESSION["membre"] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

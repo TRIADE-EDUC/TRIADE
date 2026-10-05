@@ -25,14 +25,14 @@ function calculMoyenGeneralEleve($idClasse,$idEleveP,$dateDebut,$dateFin){
 	$ordre=ordre_matiere($idClasse);
 	//$ordre=ordre_matiere_visubull_trim($idClasse,$tri,$anneeScolaire);
 	$eleveT=recupEleve($idClasse); // recup liste eleve
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		
@@ -78,14 +78,14 @@ function calculMoyenGeneralEleveISMAPP($idClasse,$idEleveP,$dateDebut,$dateFin){
 //	$ordre=ordre_matiere($idClasse);
 	$ordre=ordre_matiere_visubull_trim($idClasse,$tri,$anneeScolaire);
 	$eleveT=recupEleve($idClasse); // recup liste eleve
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$idMatiere=$ordre[$i][0];
 		$num_ordre=$ordre[$i][2];
 		$tabmatiere[$num_ordre]="$num_ordre##$idMatiere";
 	}
 
 	//eleves
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$idEleve=$eleveT[$j][4];
 		
@@ -150,14 +150,14 @@ function calculMoyenGeneralEleveISMAPP($idClasse,$idEleveP,$dateDebut,$dateFin){
 
 if ($tri == "trimestre1") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
        	 	$dateDebut=$dateRecup[$j][0];
 	       	  $dateFin=$dateRecup[$j][1];
 	}
 	$dateDebutT1=dateForm($dateDebut);
 	$dateFinT1=dateForm($dateFin);
 	//-----/
-	if (ISMAPP == 1) {
+	if ((defined("ISMAPP")) && (ISMAPP == 1)) {
 		$moyenClasseGenT1=calculMoyenGeneralEleveISMAPP($idclasse,$idEleve,$dateDebutT1,$dateFinT1);
 	}else{
 		$moyenClasseGenT1=calculMoyenGeneralEleve($idclasse,$idEleve,$dateDebutT1,$dateFinT1);
@@ -175,14 +175,14 @@ if ($tri == "trimestre1") {
 
 if ($tri == "trimestre2") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 	       	 $dateDebut=$dateRecup[$j][0];
         	   $dateFin=$dateRecup[$j][1];	
 	}
 	$dateDebutT2=dateForm($dateDebut);
 	$dateFinT2=dateForm($dateFin);
 	//-----/
-	if (ISMAPP == 1) {
+	if ((defined("ISMAPP")) && (ISMAPP == 1)) {
 		$moyenClasseGenT2=calculMoyenGeneralEleveISMAPP($idclasse,$idEleve,$dateDebutT2,$dateFinT2);
 	}else{
 		$moyenClasseGenT2=calculMoyenGeneralEleve($idclasse,$idEleve,$dateDebutT2,$dateFinT2);
@@ -200,7 +200,7 @@ if ($tri == "trimestre2") {
 	
 if ($tri == "trimestre3") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre3",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
         	$dateDebut=$dateRecup[$j][0];
 	          $dateFin=$dateRecup[$j][1];
 	}
@@ -208,7 +208,7 @@ if ($tri == "trimestre3") {
 	$dateFinT3=dateForm($dateFin);
 	//-----/
 	// idclasse,tableaueleve,datedebut,datefin,ordrematriere
-	if (ISMAPP == 1) {
+	if ((defined("ISMAPP")) && (ISMAPP == 1)) {
 		$moyenClasseGenT3=calculMoyenGeneralEleveISMAPP($idclasse,$idEleve,$dateDebutT3,$dateFinT3);
 	}else{
 		$moyenClasseGenT3=calculMoyenGeneralEleve($idclasse,$idEleve,$dateDebutT3,$dateFinT3);

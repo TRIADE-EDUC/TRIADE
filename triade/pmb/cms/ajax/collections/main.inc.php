@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.2 2017-10-19 08:58:33 tsamson Exp $
+// $Id: main.inc.php,v 1.3 2024/03/22 15:31:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 require_once($class_path."/cms/cms_collections.class.php");
 
 if ($categ == "collection") {
-	$id += 0;
+	$id = intval($id);
 	$collection = new cms_collection($id);
 	switch($action){
 		case "get_documents_form" :

@@ -5,11 +5,12 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_recordslist.xml,v 1.6 2016-08-22 13:30:50 vtouchard Exp $ -->
+$Id: cms_module_common_view_recordslist.xml,v 1.8 2022/09/22 09:21:03 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_recordslist_used_template">Choix du template</entry>
 	<entry code="cms_module_common_view_title">Titre</entry>
+	<entry code="cms_module_common_view_source_infos_desc">Informations sur les sources</entry>
 	<entry code="cms_module_commom_view_records_desc">Notices</entry>
 	<entry code="cms_module_common_view_record_id_desc">Identifiant de la notice</entry>
 	<entry code="cms_module_common_view_record_header_desc">En-tête</entry>
@@ -17,6 +18,7 @@ $Id: cms_module_common_view_recordslist.xml,v 1.6 2016-08-22 13:30:50 vtouchard 
 	<entry code="cms_module_common_view_record_link_desc">Lien</entry>
 	<entry code="cms_module_common_view_record_title_desc">Titre</entry>
 	<entry code="cms_module_common_view_record_vign_desc">Vignette</entry>
+	<entry code="cms_module_common_view_record_parent_desc">Parent</entry>
 	<entry code='cms_module_recordslist_view_link'>Construction du lien vers une notice</entry>
 	<entry code='cms_module_recordslist_view_add_cart_link'>Ajouter au panier</entry>
 	<entry code='cms_module_recordslist_view_add_cart_link_desc'>Lien d'ajout des éléments dans un panier</entry>

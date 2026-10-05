@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_bannetteslistabon.class.php,v 1.1 2019-06-11 15:11:16 dgoron Exp $
+// $Id: cms_module_bannetteslistabon.class.php,v 1.1 2019/06/11 15:11:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

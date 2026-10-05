@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_bannettes_public.class.php,v 1.3 2015-12-16 11:50:56 dgoron Exp $
+// $Id: cms_module_common_selector_bannettes_public.class.php,v 1.3.20.1 2025/04/16 07:05:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
@@ -34,7 +34,7 @@ class cms_module_common_selector_bannettes_public extends cms_module_common_sele
 	}
 	
 	protected function gen_select(){
-		$query= "select id_bannette , nom_bannette from bannettes where (num_classement = 1) order by nom_bannette";
+		$query= "select id_bannette , nom_bannette from bannettes where (proprio_bannette = 0) order by nom_bannette";
 		$result = pmb_mysql_query($query);
 		$select = "
 					<select name='".$this->get_form_value_name("id_bannette")."[]'>";
@@ -53,7 +53,7 @@ class cms_module_common_selector_bannettes_public extends cms_module_common_sele
 	}
 	
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		if(!$this->value){

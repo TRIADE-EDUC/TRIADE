@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice.class.php,v 1.52 2019-03-14 10:28:25 ccraig Exp $
+// $Id: notice.class.php,v 1.68 2024/03/13 10:43:13 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,7 +17,7 @@ if ( ! defined('NOTICE_CLASS') )
 {
 define('NOTICE_CLASS', 1);
 
-// constantes pour connaÃ®tre les champs valides
+// constantes pour connaître les champs valides
 define('N_VALID_PRIMAL',       1); //
 define('N_VALID_AUTHORS',      2); //
 define('N_VALID_TYPDOC',       4); //
@@ -33,67 +33,77 @@ class notice {
     public $typdocdisplay = '';  // type du document
     public $tit1          = '';  // titre propre
     public $tit2          = '';  // titre propre 2
-    public $tit3          = '';  // titre parallÃ¨le
-    public $tit4          = '';  // complÃ©ment du titre
+    public $tit3          = '';  // titre parallèle
+    public $tit4          = '';  // complément du titre
     public $tparent_id    = 0;   // id du titre parent
-    public $tparent       = '';  // libellÃ© du titre parent
-    public $tnvol         = '';  // numÃ©ro de partie
+    public $tparent       = '';  // libellé du titre parent
+    public $tnvol         = '';  // numéro de partie
     public $responsabilites =    array("responsabilites" => array(),"auteurs" => array());  // les auteurs
-    public $ed1_id        = 0;   // id Ã©diteur 1
-    public $ed1           = '';  // libellÃ© Ã©diteur 1
+    public $ed1_id        = 0;   // id éditeur 1
+    public $ed1           = '';  // libellé éditeur 1
     public $coll_id       = 0;   // id collection
-    public $coll          = '';  // libellÃ© collection
+    public $coll          = '';  // libellé collection
     public $subcoll_id    = 0;   // id sous collection
-    public $subcoll       = '';  // libellÃ© sous collection
-    public $ed2_id        = 0;   // id Ã©diteur 2
-    public $ed2           = '';  // libellÃ© Ã©diteur 2
+    public $subcoll       = '';  // libellé sous collection
+    public $ed2_id        = 0;   // id éditeur 2
+    public $ed2           = '';  // libellé éditeur 2
     public $code          = '';  // ISBN, code barre commercial ou no. commercial
-    public $npages        = '';  // importance matÃ©rielle (nombre de pages, d'Ã©lÃ©ments...)
+    public $npages        = '';  // importance matérielle (nombre de pages, d'éléments...)
     public $ill           = '';  // mention d'illustration
     public $size          = '';  // format
     public $prix = '';            // prix du document
-    public $year          = '';  // annÃ©e de publication
+    public $year          = '';  // année de publication
     public $nocoll        = '';  // no. dans la collection
-    public $accomp        = '';  // matÃ©riel d'accompagnement
-    public $n_gen         = '';  // note gÃ©nÃ©rale
+    public $accomp        = '';  // matériel d'accompagnement
+    public $n_gen         = '';  // note générale
     public $n_contenu     = '';  // note de contenu
-    public $n_resume      = '';  // resumÃ©/extrait
+    public $n_resume      = '';  // resumé/extrait
     public $categories =array(); // les categories
     public $indexint = 0;        // indexation interne
     public $index_l       = '';  // indexation libre
-    public $lien          = '';  // URL de la ressource Ã©lectronique associÃ©e
-    public $eformat       = '';  // format de la ressource Ã©lectronique associÃ©e
-    public $index_sew    = '';  // pseudo index titre strippÃ©
+    public $lien          = '';  // URL de la ressource électronique associée
+    public $eformat       = '';  // format de la ressource électronique associée
+    public $index_sew    = '';  // pseudo index titre strippé
     public $index_wew    = '';  // pseudo index titre
     public $index_serie   = '';  // pseudo index serie
     public $statut         = ''; //statut de la notice
-    public $niveau_biblio = 'm'; //niveau biblio utilisÃ© pour les pÃ©riodiques : 'm' monographie 'a' article
-    public $niveau_hierar = '0'; //niveau hiÃ©rarchique utilisÃ© pour les pÃ©riodiques
+    public $niveau_biblio = 'm'; //niveau biblio utilisé pour les périodiques : 'm' monographie 'a' article
+    public $niveau_hierar = '0'; //niveau hiérarchique utilisé pour les périodiques
 
     public $validfields   = 0;   // champs valides
-    public $create_date   = "0000-00-00 00:00:00"; // date crÃ©ation
+    public $create_date   = "0000-00-00 00:00:00"; // date création
     public $date_parution;
     public $thumbnail_url = '';
 
+    public $dom = null;
+	public $rights = 0;
+	public $statut_notice = '';
+	public $visu_notice = 0;
+	public $visu_notice_abon = 0;
+	public $visu_expl = 0;
+	public $visu_expl_abon = 0;
+	public $visu_explnum = 0;
+	public $visu_explnum_abon = 0;
+
+    public $notice_header     = '';
 
     // constructeur
     public function __construct($id) {
         global $fonction_auteur;
 
-        // rÃ©cupÃ©ration des codes de fonction
+        // récupération des codes de fonction
         if (!count($fonction_auteur)) {
             $fonction_auteur = new marc_list('function');
             $fonction_auteur = $fonction_auteur->table;
         }
-        $this->id = $id+0;
+        $this->id = intval($id);
         $this->get_primaldata();
-        // mise Ã  jour des catÃ©gories
+        // mise à jour des catégories
         $this->categories = get_notice_categories($this->id) ;
 
     }
 
     public function fetch_visibilite() {
-        global $dbh;
         global $hide_explnum;
         global $gestion_acces_active,$gestion_acces_empr_notice;
         if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
@@ -106,7 +116,7 @@ class notice {
             }
         } else {
             $requete = "SELECT opac_libelle, notice_visible_opac, expl_visible_opac, notice_visible_opac_abon, expl_visible_opac_abon, explnum_visible_opac, explnum_visible_opac_abon FROM notice_statut WHERE id_notice_statut='".$this->statut."' ";
-            $myQuery = pmb_mysql_query($requete, $dbh);
+            $myQuery = pmb_mysql_query($requete);
             if(pmb_mysql_num_rows($myQuery)) {
                 $statut_temp = pmb_mysql_fetch_object($myQuery);
                 $this->statut_notice = $statut_temp->opac_libelle  ;
@@ -126,12 +136,9 @@ class notice {
     }
 
     public function get_primaldata() {
-        global $dbh;
-        global $fonction_auteur;
-
-        // on rÃ©cupÃ¨re les infos de la notice
+        // on récupère les infos de la notice
         $query = "select * from notices where notice_id=".$this->id." limit 1";
-        $result = pmb_mysql_query($query, $dbh);
+        $result = pmb_mysql_query($query);
         if(pmb_mysql_num_rows($result)) {
             $obj = pmb_mysql_fetch_object($result);
             pmb_mysql_free_result($result);
@@ -142,7 +149,7 @@ class notice {
     public function get_primaldatafrom($obj) {
         global $fonction_auteur;
 
-        // prend les donnÃ©es Ã  partir d'un objet retournÃ© par une requÃªte sur la table notices
+        // prend les données à partir d'un objet retourné par une requête sur la table notices
         $this->id = $obj->notice_id;
         $this->typdoc = $obj->typdoc;
         $this->tit1 = $obj->tit1;
@@ -218,7 +225,7 @@ class notice {
             if($this->typdoc) {
 require_once($base_path."/classes/marc_table.class.php");
                 $doctype = new marc_list('doctype');
-                $this->typdocdisplay = $doctype->table[$this->typdoc];
+                $this->typdocdisplay = $doctype->table[$this->typdoc] ?? '';
                 }
             $this->validfields = $this->validfields | N_VALID_TYPDOC;
         }
@@ -228,10 +235,10 @@ require_once($base_path."/classes/marc_table.class.php");
             if($this->lang_code || $this->org_lang_code) {
 require_once($base_path."/classes/marc_table.class.php");
                 $lang = new marc_list('lang');
-                if($this->lang_code) { // libellÃ© langue de la publication
+                if($this->lang_code) { // libellé langue de la publication
                     $this->lang = $lang->table[$this->lang_code];
                     }
-                if($this->org_lang_code) {    // libellÃ© de la langue originale
+                if($this->org_lang_code) {    // libellé de la langue originale
                     $this->org_lang = $lang->table[$this->org_lang_code];
                     }
                 }
@@ -255,7 +262,7 @@ require_once($base_path."/classes/subcollection.class.php");
             $this->validfields = $this->validfields | N_VALID_COLLECTION;
         }
 
-        // informations Ã©diteurs
+        // informations éditeurs
         if (($fields & N_VALID_PUBLISHERS) && ! ($this->validfields & N_VALID_PUBLISHERS)) {
             require_once($base_path."/classes/publisher.class.php");
 
@@ -270,7 +277,7 @@ require_once($base_path."/classes/subcollection.class.php");
             $this->validfields = $this->validfields | N_VALID_PUBLISHERS;
         }
 
-        // libellÃ© du titre parent
+        // libellé du titre parent
         if (($fields & N_VALID_PARENT_TITLE) && ! ($this->validfields & N_VALID_PARENT_TITLE)) {
 
             if($this->tparent_id) {
@@ -282,10 +289,10 @@ require_once($base_path."/classes/subcollection.class.php");
         }
     }
 
-    public function print_resume($level = 2,$css)    {
+    public function print_resume($level = 2, $css = "")    {
         global $fonction_auteur;
         global $base_path ;
-        // rÃ©cupÃ©ration localisation
+        // récupération localisation
         require_once($base_path."/includes/localisation.inc.php");
         global $msg;
         global $css;
@@ -294,8 +301,8 @@ require_once($base_path."/classes/subcollection.class.php");
         if(!$this->id)
             return;
 
-        // adaptation par rapport au niveau de dÃ©tail souhaitÃ©
-        // niveau par dÃ©faut : 2
+        // adaptation par rapport au niveau de détail souhaité
+        // niveau par défaut : 2
         // niveau 3 : format public
         switch ($level) {
             case 1 :
@@ -384,16 +391,16 @@ require_once($base_path."/classes/subcollection.class.php");
         if ($this->tit1<>"") {
             switch($this->niveau_biblio) {
                 case "s":
-                    $tit1_ico = "<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$msg["serial"]."'><img src='./images/icon_per.gif' style='border:0px' alt='".$msg["serial"]."' align='absmiddle'/>
-                    <img src='./images/icon_".$this->typdoc.".gif' style='border:0px' align='absmiddle'/></a>";
+                    $tit1_ico = "<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$msg["serial"]."'><img src='./images/icon_per.gif' style='border:0px' alt='".$msg["serial"]."' />
+                    <img src='./images/icon_".$this->typdoc.".gif' style='border:0px' /></a>";
                     break;
                 case "a":
-                    $tit1_ico = "<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$msg["article"]."'><img src='./images/icon_art.gif' style='border:0px' alt='".$msg["article"]."' align='absmiddle'/>
-                    <img src='./images/icon_".$this->typdoc.".gif' style='border:0px' align='absmiddle'/></a>";
+                    $tit1_ico = "<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$msg["article"]."'><img src='./images/icon_art.gif' style='border:0px' alt='".$msg["article"]."' />
+                    <img src='./images/icon_".$this->typdoc.".gif' style='border:0px' /></a>";
                     break;
                 case "m":
                 default :
-                    $tit1_ico ="<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$this->typdocdisplay."'><img src='./images/icon_".$this->typdoc.".gif' style='border:0px' align='absmiddle'/></a>";
+                    $tit1_ico ="<a href='#' onClick='window.open(\"./includes/messages/fr_FR/icons.html\", \"icones__PMB\", \"scrollbars=yes, toolbar=no, dependent=yes, width=400, height=400, resizable=yes\"); return false' title='".$this->typdocdisplay."'><img src='./images/icon_".$this->typdoc.".gif' style='border:0px' /></a>";
                     break;
             }
             $print = str_replace("!!tit1!!", $this->tit1, $print);
@@ -402,14 +409,14 @@ require_once($base_path."/classes/subcollection.class.php");
         } else {
             $print = str_replace("!!tit1!!","", $print);
         }
-		
-        if ($this->tit2<>"") $print = str_replace("!!tit2!!", '<b>'.$msg['tit2_start'].'</b>'.$this->tit2."<br />", $print);
+
+        if ($this->tit2<>"") $print = str_replace("!!tit2!!", '<b>'.$msg['238'].'</b>'.$this->tit2."<br />", $print);
             else $print = str_replace("!!tit2!!", "", $print);
 
-        if ($this->tit3<>"") $print = str_replace("!!tit3!!", '<b>'.$msg['tit3_start'].'</b>'.$this->tit3."<br />", $print);
+        if ($this->tit3<>"") $print = str_replace("!!tit3!!", '<b>'.$msg['239'].'</b>'.$this->tit3."<br />", $print);
             else $print = str_replace("!!tit3!!", "", $print);
 
-        if ($this->tit4<>"") $print = str_replace("!!tit4!!", '<b>'.$msg['tit4_start'].'</b>'.$this->tit4."<br />", $print);
+        if ($this->tit4<>"") $print = str_replace("!!tit4!!", '<b>'.$msg['240'].'</b>'.$this->tit4."<br />", $print);
             else $print = str_replace("!!tit4!!","", $print);
 
         if ($this->typdocdisplay<>"") $print = str_replace("!!typdocdisplay!!", '<b>'.$msg['typdocdisplay_start'].'</b>'.$this->typdocdisplay."<br />", $print);
@@ -424,7 +431,7 @@ require_once($base_path."/classes/subcollection.class.php");
         if ($this->tnvol<>"") $print = str_replace("!!tnvol!!", "<b>$msg[tnvol_start]</b>".$this->tnvol."<br />", $print);
             else $print = str_replace("!!tnvol!!", "", $print);
 
-        // constitution de la mention de responsabilitÃ©
+        // constitution de la mention de responsabilité
         //$this->responsabilites
         $mention_resp=array();
         $as = array_search ("0", $this->responsabilites["responsabilites"]) ;
@@ -480,12 +487,12 @@ require_once($base_path."/classes/subcollection.class.php");
             else $print = str_replace("!!nocoll!!", "", $print);
 
         if ($this->code<>"") {
-            // Si c'est un livre, c'est magique alors on affiche l'image tirÃ©e de chez amazon europe.
+            // Si c'est un livre, c'est magique alors on affiche l'image tirée de chez amazon europe.
             if (($this->typdoc=='a') && ($opac_show_book_pics=='1')) {
                 $code_chiffre = pmb_preg_replace('/-|\.| /', '', $this->code);
                 //if (@fopen("http://images-eu.amazon.com/images/P/".$code_chiffre.".08.MZZZZZZZ.jpg","r"))
                 if (isISBN($this->code))
-                    $print = str_replace("!!image_petit!!", "<img src='http://images-eu.amazon.com/images/P/".$code_chiffre.".08.MZZZZZZZ.jpg' class='align_right' hspace='4' vspace='2'>", $print);
+                    $print = str_replace("!!image_petit!!", "<img src='http://images-eu.amazon.com/images/P/".$code_chiffre.".08.MZZZZZZZ.jpg' class='align_right' >", $print);
                     else $print = str_replace("!!image_petit!!", "", $print);
             } else     $print = str_replace("!!image_petit!!", "", $print);
             $print = str_replace("!!code!!", '<b>'.$msg['code_start'].'</b>'.$this->code."<br />", $print);
@@ -562,30 +569,69 @@ require_once($base_path."/classes/subcollection.class.php");
 
         if (preg_match("#!!level1!!#", $print)) {
             if ($this->tparent) {
-                if ($this->tnvol) $titre_affiche = $this->tit1." - ".$this->tparent." [".$this->tnvol."]" ;
-                    else $titre_affiche = $this->tit1." - ".$this->tparent ;
-                } else $titre_affiche = $this->tit1 ;
-            if ($this->tit1) $titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$titre_affiche</a>";
-				elseif ($this->tit2) $titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit2</a>";
-					elseif ($this->tit3) $titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit3</a>";
-						elseif ($this->tit4) $titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit4</a>";
-                            else $titre = "";
+            	if ($this->tnvol) {
+            		$titre_affiche = $this->tit1." - ".$this->tparent." [".$this->tnvol."]" ;
+            	} else {
+            		$titre_affiche = $this->tit1." - ".$this->tparent;
+            	}
+            } else {
+            	$titre_affiche = $this->tit1;
+            }
+
+            $titre = "";
+            if ($this->tit1) {
+            	$titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$titre_affiche</a>";
+            } elseif ($this->tit2) {
+            	$titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit2</a>";
+            } elseif ($this->tit3) {
+            	$titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit3</a>";
+            } elseif ($this->tit4) {
+            	$titre = "<a href='".record_datas::format_url("index.php?lvl=notice_display&id=".$this->id)."'>$this->tit4</a>";
+            }
 
             // ***
             //$this->responsabilites
             $auteur = gen_authors_header($this->responsabilites);
             // ***
-            $remplacement = $titre;
-            if (($remplacement != "") && ($auteur != ""))
-                $remplacement .= " / ".$auteur;
 
-            $print = str_replace("!!level1!!", $remplacement, $print);
+            $remplacement = $titre;
+            if (($remplacement != "") && ($auteur != "")) {
+                $remplacement .= " {$msg['record_author_separator']} {$auteur}";
             }
+            $print = str_replace("!!level1!!", $remplacement, $print);
+        }
 
         return $print;
     }
 
-    //RÃ©cupÃ©ration d'un titre de notice
+    // Donne l'id de la notice par son isbn
+    public static function get_notice_id_from_cb($code) {
+
+    	if(!$code) return 0;
+    	$isbn = traite_code_isbn($code);
+
+    	if(isISBN10($isbn)) {
+    		$isbn13 = formatISBN($isbn,13);
+    		$isbn10 = $isbn;
+    	} elseif (isISBN13($isbn)) {
+    		$isbn10 = formatISBN($isbn,10);
+    		$isbn13 = $isbn;
+    	} else {
+    		// ce n'est pas un code au format isbn
+    		$isbn10=$code;
+    	}
+
+    	$requete = "SELECT notice_id FROM notices WHERE ( code='$isbn10' or code='$isbn13') and code !='' LIMIT 1 ";
+    	if(($result = pmb_mysql_query($requete))) {
+    		if (pmb_mysql_num_rows($result)) {
+    			$notice = pmb_mysql_fetch_object($result);
+    			return($notice->notice_id);
+    		}
+    	}
+    	return 0;
+    }
+
+    //Récupération d'un titre de notice
     public static function get_notice_title($notice_id) {
         $requete="select serie_name, tnvol, tit1, code from notices left join series on serie_id=tparent_id where notice_id=".$notice_id;
         $resultat=pmb_mysql_query($requete);
@@ -596,6 +642,29 @@ require_once($base_path."/classes/subcollection.class.php");
         return '';
     }
 
+    public static function get_niveau_biblio($notice_id) {
+    	$query = "SELECT niveau_biblio FROM notices WHERE notice_id = ".intval($notice_id);
+    	$result = pmb_mysql_query($query);
+    	return pmb_mysql_result($result, 0, 'niveau_biblio');
+    }
+
+    public static function get_typdoc($notice_id) {
+    	$query = "SELECT typdoc FROM notices WHERE notice_id = ".$notice_id;
+    	$result = pmb_mysql_query($query);
+    	return pmb_mysql_result($result, 0, 'typdoc');
+    }
+
+    public static function get_field($id, $field) {
+        $id = intval($id);
+        $param = '';
+        if($id) {
+            $query = "SELECT ".addslashes($field)." FROM notices WHERE notice_id = '".$id."' ";
+            $result = pmb_mysql_query($query);
+            $param = pmb_mysql_result($result, 0, 0);
+        }
+        return $param;
+    }
+
     public static function get_permalink($notice_id) {
         global $opac_url_base;
         $requete="select niveau_biblio, serie_name, tnvol, tit1, code from notices left join series on serie_id=tparent_id where notice_id=".$notice_id;
@@ -603,7 +672,7 @@ require_once($base_path."/classes/subcollection.class.php");
         if (pmb_mysql_num_rows($fetch)) {
             $r = pmb_mysql_fetch_object($fetch);
             if($r->niveau_biblio == 's'){
-                // pÃ©riodique
+                // périodique
 //                 $link = './catalog.php?categ=serials&sub=view&serial_id='.$notice_id;
                 $link = $opac_url_base."index.php?lvl=notice_display&id=".$notice_id;
             }elseif($r->niveau_biblio == 'b') {
@@ -638,12 +707,12 @@ require_once($base_path."/classes/subcollection.class.php");
     }
 
     /**
-     * RÃ©cupÃ¨re les infos de la notice
+     * Récupère les infos de la notice
      */
     public static function recup_notice_infos($id){
         global $infos_notice, $infos_expl;
 
-        $id+=0;
+        $id = intval($id);
         $rqt='select notice_id, typdoc, niveau_biblio, index_l, libelle_categorie, name_pclass, indexint_name
         from notices n
         left join notices_categories nc on nc.notcateg_notice=n.notice_id
@@ -676,12 +745,13 @@ require_once($base_path."/classes/subcollection.class.php");
         return 'record';
     }
 
-    //RÃ©cupÃ©rer une date au format AAAA-MM-JJ
+    //Récupérer une date au format AAAA-MM-JJ
     public static function get_date_parution($annee) {
-        return detectFormatDate($annee);
+        $date_parution = detectFormatDate($annee);
+        return (!empty($date_parution) ? $date_parution : "0000-00-00");
     }
-    
-    //RÃ©cupÃ©ration de la no_image
+
+    //Récupération de la no_image
     public static function get_picture_url_no_image($niveau_biblio, $typdoc) {
     	$picture_url = get_url_icon("no_image_".$niveau_biblio.$typdoc.".jpg");
 		if(!file_exists($picture_url)) {
@@ -693,7 +763,11 @@ require_once($base_path."/classes/subcollection.class.php");
 		return $picture_url;
     }
 
+    public function replace($by,$supprime=true) {
+        // A deriver
+    }
+
 } // fin de la classe Notice
 
-} // fin de dÃ©finition de NOTICE_CLASS
+} // fin de définition de NOTICE_CLASS
 

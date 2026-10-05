@@ -1,24 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc.inc.php,v 1.15 2018-09-24 08:30:44 dgoron Exp $
+// $Id: misc.inc.php,v 1.18 2022/03/18 08:33:46 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 // fonctions javascript diverses
 
 // ----------------------------------------------------
-//			mise Ã  jour du titre de la fenÃªtre
+//			mise à jour du titre de la fenêtre
 // ----------------------------------------------------
 function window_title($title='PMB') {
 	$title = pmb_preg_replace('/\"/m', "'", $title);
-	return "<script type='text/javascript'>document.title=\"$title\";window.status=\"$title\";</script>";
-	}
+	return "<script type='text/javascript'>document.title=\"$title\";</script>";
+}
 
 function form_focus($form, $element) {
 	return "<script type='text/javascript'>document.forms['$form'].elements['$element'].focus();</script>";
-	}
+}
 
 function confirmation_delete($url,$entete_message = "") {
 	
@@ -28,8 +28,8 @@ function confirmation_delete($url,$entete_message = "") {
 		function confirmation_delete(param,element) {
         		result = confirm(\"".$entete_message."\\n".$msg['confirm_suppr_de']." '\"+element+\"' ?\");
         		if(result) document.location = \"$url\"+param ;
-   			}</script>";
-	}
+   		}</script>";
+}
 
 function reverse_html_entities() {
 	return "<script type='text/javascript'>
@@ -156,7 +156,7 @@ function reverse_html_entities() {
 		
 		}
 		</script>";
-	}
+}
 
 function jscript_checkbox() {
 	
@@ -250,21 +250,26 @@ function jscript_unload_question() {
 
 function auto_hide_getprefs() {
 	global $current_module;
-	if(!isset($_SESSION["AutoHide"][$current_module])) $_SESSION["AutoHide"][$current_module] = '';
-	if(!$_SESSION["AutoHide"][$current_module] or sizeof($_SESSION["AutoHide"][$current_module])<1){
-		$trueids="0";
+	if (!isset($_SESSION["AutoHide"][$current_module])) {
+	    $_SESSION["AutoHide"][$current_module] = '';
+	}
+	if (!$_SESSION["AutoHide"][$current_module] || count($_SESSION["AutoHide"][$current_module]) < 1) {
+		$trueids = "0";
 	} else {
-		$trueids="";
-		foreach($_SESSION["AutoHide"][$current_module] as $idh3 => $boolh3){
-			if($boolh3=="True"){$trueids.="t,";}
-			elseif($boolh3=="False"){$trueids.="f,";}
+		$trueids = "";
+		foreach ($_SESSION["AutoHide"][$current_module] as $boolh3) {
+			if ($boolh3 == "True") {
+			    $trueids .= "t,";
+			} elseif ($boolh3 == "False") {
+			    $trueids .= "f,";
+			}
 		}
 	}
-	return "<script type=\"text/javascript\">var trueids=\"".$trueids."\";</script>";
+	return "<script type=\"text/javascript\">var trueids=\"$trueids\";</script>";
 }
 
-/* fonction JS de vÃ©rification du code de contrÃ´le EAN13 : 12 caractÃ¨res + 1 de contrÃ´le
-en peÃ©vision de certains contrÃ´les
+/* fonction JS de vérification du code de contrôle EAN13 : 12 caractères + 1 de contrôle
+en peévision de certains contrôles
 function ccc13(form) {
 	factor = 3;
 	sum = 0;
@@ -285,5 +290,4 @@ function ccc13(form) {
 		}
 	}
 */
-
 ?>

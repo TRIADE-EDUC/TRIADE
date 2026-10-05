@@ -1,21 +1,12 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
  *
  ***************************************************************************/
 ?>
@@ -26,6 +17,16 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<style>
+#coulBar0 { background-image: none; }
+.vh-input { width:68px; padding:4px 6px; border:1px solid #c5cae9; border-radius:5px; font-size:12px; text-align:center; color:#080A66; font-weight:600; }
+.vh-input:focus { border-color:#080A66; outline:none; }
+</style>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -33,106 +34,120 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_proto.js"></script>
+<script>window.alert = function(msg) { alertify.error(msg); };</script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php 
-include_once("./librairie_php/lib_licence.php"); 
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<?php
+include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 if ($_SESSION["membre"] == "menupersonnel") {
-        if (!verifDroit($_SESSION["id_pers"],"edt")) {
-                accesNonReserveFen();
-                exit;
-        }
+    if ((!verifDroit($_SESSION["id_pers"],"edt")) && (!verifDroit($_SESSION["id_pers"],"AESH"))) {
+        accesNonReserveFen();
+        exit;
+    }
 }else{
-	validerequete("2");
+    validerequete("2");
 }
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
-<?php print "Ajustement des horaires de prestation " ?></font></b></td>
-</tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'>Ajustement des horaires de prestation</font></b></td></tr>
 <tr id='cadreCentral0'>
-<td >
-<br><br>
+<td>
+
+<div style="padding:12px 8px">
+
 <?php
 if (isset($_POST["modif"])) {
-
 }
-
 ?>
-</form>
 
-<form method="post" >
-<font class="T2">&nbsp;&nbsp;Liste des horaires de prestation </font> &nbsp;&nbsp; <a href='gestion_vacation_horaire.php'><img src="./image/commun/recycle.jpg" border='0' align='center' title='Actualiser la liste' /></a>  <br><br>
-<table width="100%" border="1" bordercolor="#000000" >
-<tr>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;Date&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;Classe&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" ><font class="T2">&nbsp;Enseignant&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;Heure&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;Durée&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;<font color='green'>Correctif</font>&nbsp;</font></td>
-<td bgcolor="yellow" id="bordure" width="1%"><font class="T2">&nbsp;<font color='red'>Supprimer</font>&nbsp;</font></td>
-</tr>
-<?php 
+<form method="post">
+
+<!-- toolbar -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <span style="font-size:12px;font-weight:700;color:#080A66">Liste des horaires de prestation</span>
+  <a href='gestion_vacation_horaire.php' class="btn btn-secondary" style="padding:4px 12px;font-size:12px" title="Actualiser la liste">
+    <i class="bi bi-arrow-clockwise"></i> Actualiser
+  </a>
+</div>
+
+<table class="table table-hover" style="font-size:12px">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Classe</th>
+      <th>Enseignant</th>
+      <th style="text-align:center">Heure</th>
+      <th style="text-align:center">Durée</th>
+      <th style="text-align:center;color:#2e7d32">Correctif</th>
+      <th style="text-align:center;color:#c62828">Supprimer</th>
+    </tr>
+  </thead>
+  <tbody>
+<?php
 $data=listePrestaHoraire(); //id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation
-for($i=0;$i<count($data);$i++) {
-	$id=$data[$i][0];
-	$heure=timeForm($data[$i][4]);
-	$duree=timeForm($data[$i][5]);
-	$classe=chercheClasse_nom($data[$i][7]);
-	$nomprenom=recherche_personne($data[$i][8]);
-	$idprestation=$data[$i][9];
-	$date=$data[$i][3];
-	
-	$heurenew=$heure;
-	$dureenew=$duree;
+for($i=0;$i<countTriade($data);$i++) {
+    $id=$data[$i][0];
+    $heure=timeForm($data[$i][4]);
+    $duree=timeForm($data[$i][5]);
+    $classe=chercheClasse_nom($data[$i][7]);
+    $nomprenom=recherche_personne($data[$i][8]);
+    $idprestation=$data[$i][9];
+    $date=$data[$i][3];
 
-	list($H,$M)=preg_split('/:/',$heure);
-	if ($M <= 10) { $M="00"; }
-	if (($M >= 20) && ($M <= 40))  { $M="30"; }
-	if ($M >= 50) { $M="00"; $H++; }
-	$heurenew="$H:$M";
-	
+    $heurenew=$heure;
+    $dureenew=$duree;
 
-	list($H,$M)=preg_split('/:/',$duree);
-        if ($M <= 10) { $M="00"; }
-        if (($M >= 20) && ($M <= 40))  { $M="30"; }
-        if ($M >= 50) { $M="00"; $H++; }
-	if ($H < 10) $H="0$H";
-        $dureenew="$H:$M";
+    list($H,$M)=preg_split('/:/',$heure);
+    if ($M <= 10) { $M="00"; }
+    if (($M >= 20) && ($M <= 40)) { $M="30"; }
+    if ($M >= 50) { $M="00"; $H++; }
+    $heurenew="$H:$M";
 
+    list($H,$M)=preg_split('/:/',$duree);
+    if ($M <= 10) { $M="00"; }
+    if (($M >= 20) && ($M <= 40)) { $M="30"; }
+    if ($M >= 50) { $M="00"; $H++; }
+    if ($H < 10) $H="0$H";
+    $dureenew="$H:$M";
 
-
-	
-	print "<tr class='tabnormal2' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >";
-	print "<td id='bordure' >&nbsp;".dateForm($date)."&nbsp;</td>";
-	print "<td id='bordure' >&nbsp;".ucwords($classe)."</td>";
-	print "<td id='bordure' ><div id='el$i' >$affiche &nbsp; $nomprenom</div></td>";
-	print "<td id='bordure' align='center'><input type='text' size='6' value='$heure' onchange=\"AjuteEDTHoraire('$id',this.value,'','el$i','5')\" /></td>";
-	print "<td id='bordure' align='center'><input type='text' size='6' value='$duree' onchange=\"AjuteEDTHoraire('$id','',this.value,'el$i','5')\" /></td>"; 
-	print "<td id='bordure' align='center'><a href='#' title='Valider ce correctif'
-		onClick=\"AjuteEDTHoraire('$id','$heurenew','','el$i','5'); 
-			  AjuteEDTHoraire('$id','','$dureenew','el$i','5')\" 
-		>&nbsp;$heurenew&nbsp;-&nbsp;$dureenew&nbsp;</a></td>";
-	print "<td id='bordure' align='center'><input type='checkbox' onClick=\"AjuteEDTHoraire('$id','','','el$i','5')\" /></td>";
-	print "</tr>";
+    print "<tr>";
+    print "<td style='white-space:nowrap'>".dateForm($date)."</td>";
+    print "<td>".ucwords($classe)."</td>";
+    print "<td><div id='el$i'>$affiche &nbsp; $nomprenom</div></td>";
+    print "<td style='text-align:center'><input type='text' class='vh-input' value='$heure' onchange=\"AjuteEDTHoraire('$id',this.value,'','el$i','5')\"></td>";
+    print "<td style='text-align:center'><input type='text' class='vh-input' value='$duree' onchange=\"AjuteEDTHoraire('$id','',this.value,'el$i','5')\"></td>";
+    print "<td style='text-align:center'><a href='#' title='Appliquer le correctif arrondi'
+        class='badge badge-success'
+        style='cursor:pointer;padding:4px 8px;font-size:11px'
+        onClick=\"AjuteEDTHoraire('$id','$heurenew','','el$i','5');
+                  AjuteEDTHoraire('$id','','$dureenew','el$i','5')\">$heurenew &mdash; $dureenew</a></td>";
+    print "<td style='text-align:center'><input type='checkbox' onClick=\"AjuteEDTHoraire('$id','','','el$i','5')\"></td>";
+    print "</tr>";
 }
-
 ?>
+  </tbody>
 </table>
+
 </form>
+
+<div style="margin-top:10px;padding-left:4px">
+  <script language="JavaScript">buttonMagicRetour("edt.php","_self")</script>
+</div>
+
+</div>
+
 <?php brmozilla($_SESSION["navigateur"]); ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<!-- // fin form -->
+<!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_view_carousel_uikit.xml,v 1.1 2019/12/10 16:08:16 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_carousel_uikit_record_content_desc'>Rendu d'un template de notice</entry>
+	<entry code='cms_module_common_view_carousel_uikit_advanced_parameters'>Paramétrage avancé</entry>
+	<entry code='cms_module_common_view_carousel_uikit_general_parameters'>Paramétrage Général</entry>
+	
+	<entry code='cms_module_common_view_django_template_record_content'>Template de notice à utiliser pour le content</entry>
+	<entry code='cms_module_common_view_template_item'>Template d'un item</entry>
+	
+	<entry code='cms_module_common_view_carousel_uikit_no_image'>Image à utiliser par défaut</entry>
+	<entry code='cms_module_common_view_carousel_uikit_no_image_desc'>Lien vers l'image "no-image"</entry>
+	
+	<entry code='cms_module_common_view_carousel_uikit_arrows'>Activer les flèches au survol</entry>
+	<entry code='cms_module_common_view_carousel_uikit_paginator'>Activer le paginateur</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nblarge'>Nombre de notices larges</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nbmedium'>Nombre de notices moyennes</entry>
+	<entry code='cms_module_common_view_carousel_uikit_nbsmall'>Nombre de notices petites</entry>
+	
+	<entry code='cms_module_common_view_carousel_uikit_center'>Centrer les éléments</entry>
+	<entry code='cms_module_common_view_carousel_uikit_yes'>Oui</entry>
+	<entry code='cms_module_common_view_carousel_uikit_no'>Non</entry>
+	<entry code='cms_module_common_view_carousel_uikit_threshold'>Limite en px avant le déclenchement du défilement</entry>
+	<entry code='cms_module_common_view_carousel_uikit_infinite'>Défilement infini</entry>
+	<entry code='cms_module_common_view_carousel_uikit_activecls'>Classe de l'élément central</entry>
+	<entry code='cms_module_common_view_carousel_uikit_autoplay'>Défilement automatique</entry>
+	<entry code='cms_module_common_view_carousel_uikit_pauseonhover'>Arrête le défilement lors du survol</entry>
+	<entry code='cms_module_common_view_carousel_uikit_autoplayinterval'>Temps en ms entre chaque défilement</entry>
+</XMLlist>

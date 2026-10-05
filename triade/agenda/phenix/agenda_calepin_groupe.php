@@ -35,7 +35,7 @@
   include("lang/$APPLI_LANGUE.php");
 
   if ($groupe != "0") {
-    $DB_CX->DbQuery("SELECT cgr_pere_id, cgr_nom FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_id=".$groupe);
+    $DB_CX->DbQuery("SELECT cgr_pere_id, cgr_nom FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_id=".$groupe);
     $grpPere = $DB_CX->DbResult(0,0);
     $nomGroupe = $DB_CX->DbResult(0,1);
     $labelBouton = trad("CALGRP_BT_MODIFIER");
@@ -49,7 +49,7 @@
   function aff_groupe($grpPere,$nivGrp,$grp,$nePasAff) {
     global $DB_CX, $PREFIX_TABLE, $idUser;
     $DB = new Db($DB_CX->ConnexionID);
-    $DB->DbQuery("SELECT cgr_id, cgr_nom FROM ${PREFIX_TABLE}calepin_groupe WHERE cgr_id!=".$nePasAff." AND cgr_pere_id=".$grpPere." AND cgr_util_id=".$idUser." ORDER BY cgr_nom");
+    $DB->DbQuery("SELECT cgr_id, cgr_nom FROM {$PREFIX_TABLE}calepin_groupe WHERE cgr_id!=".$nePasAff." AND cgr_pere_id=".$grpPere." AND cgr_util_id=".$idUser." ORDER BY cgr_nom");
     $nivGrp++;
     while ($enr = $DB->DbNextRow()) {
       $selected = ($grp == $enr['cgr_id']) ? " selected" : "";

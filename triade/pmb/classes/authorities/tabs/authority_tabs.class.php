@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_tabs.class.php,v 1.30 2018-07-09 15:53:37 arenou Exp $
+// $Id: authority_tabs.class.php,v 1.33 2021/12/28 08:46:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/elements_list_tab.class.php');
 require_once($class_path.'/skos/skos_concept.class.php');
 require_once($class_path.'/indexation.class.php');
@@ -16,20 +17,20 @@ require_once($class_path.'/encoding_normalize.class.php');
 class authority_tabs {
 	
 	/**
-	 * Instance de la classe authority associÃ©e
+	 * Instance de la classe authority associée
 	 * @var authority
 	 */
 	protected $authority;
 	
 	/**
-	 * Tableau des onglets de l'autoritÃ©
+	 * Tableau des onglets de l'autorité
 	 * @var elements_list_tab Tableau des onglets
 	 */
 	protected $tabs;
 	
 	/**
 	 * Constructeur
-	 * @param authority $authority Instance de la classe authority associÃ©e
+	 * @param authority $authority Instance de la classe authority associée
 	 */
 	public function __construct($authority){
 		$this->authority = $authority;
@@ -48,7 +49,7 @@ class authority_tabs {
 	
 	/**
 	 * Ajoute un onglet au tableau
-	 * @param authority_tab $tab Onglet Ã  ajouter
+	 * @param authority_tab $tab Onglet à ajouter
 	 */
 	protected function add_tab($tab) {
 		if ($tab) {
@@ -57,8 +58,8 @@ class authority_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour la limite des rÃ©sultats
-	 * @return string Portion de la requÃªte
+	 * Retourne la portion de requête pour la limite des résultats
+	 * @return string Portion de la requête
 	 */
 	protected static function get_limit($elements_ids){
 		global $pmb_nb_elems_per_tab;
@@ -82,7 +83,7 @@ class authority_tabs {
 	}
 	
 	protected function init_tabs_contents() {
-		global $dbh, $quoi, $class_path;
+		global $quoi, $class_path;
 		
 		foreach ($this->tabs as $tab) {
 			$callable = $tab->get_callable();
@@ -94,12 +95,12 @@ class authority_tabs {
 				$nb_result = 0;
 				pmb_mysql_query('set session group_concat_max_len = 16777216');
 				if (($query_elements['getconcepts'] != 'true') || (($query_elements['getconcepts'] == 'true') && count($this->authority->get_concepts_ids()))) {
-					// Si on a besoin des concepts composÃ©s, et qu'aucun n'est trouvÃ©, Ã§a ne sert Ã  rien d'aller plus loin
+					// Si on a besoin des concepts composés, et qu'aucun n'est trouvé, ça ne sert à rien d'aller plus loin
 					$query_clauses = $this->get_query_clauses($query_elements);
 					$query = 'select group_concat(distinct '.$query_elements['table'].'.'.$query_elements['select'].' separator ",")';
 					$query.= $query_clauses['from'];
 					$query.= $query_clauses['where'];
-					$filtered_results = self::get_filtered_results(pmb_mysql_result(pmb_mysql_query($query, $dbh), 0, 0), $tab);
+					$filtered_results = self::get_filtered_results(pmb_mysql_result(pmb_mysql_query($query), 0, 0), $tab);
 					if($filtered_results){
 						$nb_result = (substr_count($filtered_results,",") + 1);
 					}
@@ -107,7 +108,7 @@ class authority_tabs {
 				
 				$tab->set_nb_results($nb_result);
 				if (!$quoi && $nb_result) {
-					// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+					// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 					$quoi = $tab->get_name();
 				}
 				$elements_ids = array();
@@ -115,7 +116,7 @@ class authority_tabs {
 					$filtered_elements = $this->get_tab_filters($tab);
 					
 					if (!$tab->has_filters_values() || ($tab->has_filters_values() && count($filtered_elements))) {
-						// On n'a pas de filtre cochÃ© ou on a au moins un rÃ©sultat aprÃ¨s filtrage, sinon on ne fait rien
+						// On n'a pas de filtre coché ou on a au moins un résultat après filtrage, sinon on ne fait rien
 						$tab->set_nb_filtered_results(count($filtered_elements));
 						$query = 'select group_concat(distinct '.$query_elements['table'].'.'.$query_elements['select'].' '.$query_clauses['order'].' separator ",") as elements_id';
 						$query.= $query_clauses['from'].$query_clauses['order_from'];
@@ -126,7 +127,7 @@ class authority_tabs {
 						
 						//$query.= $query_clauses['order']; non fonctionnel, mis dans le group_concat
 						
-						$result = pmb_mysql_query($query, $dbh);
+						$result = pmb_mysql_query($query);
 						if($result && pmb_mysql_num_rows($result)){
 							$filtered_result = explode(',', self::get_filtered_results(pmb_mysql_result($result, 0, 0),$tab));
 							$filtered_result = self::get_limit($filtered_result);
@@ -152,7 +153,7 @@ class authority_tabs {
 	 * @return multitype:NULL
 	 */
 	protected function get_tab_filters($tab) {
-		global $dbh, $msg;
+		global $msg;
 			
 		$query_elements = $tab->get_query_elements();
 		$query_clauses = $this->get_query_clauses($query_elements);
@@ -163,10 +164,10 @@ class authority_tabs {
 			$result_ids = array();
 			
 			if ($filter['type'] == 'callable') {
-				// Si c'est un filtre de type callable, on appelle la mÃ©thode
+				// Si c'est un filtre de type callable, on appelle la méthode
 				$result_ids = call_user_func_array(array($filter['class'], $filter['method']), array($tab, $filter, $this->authority->get_num_object()));
 			} else {
-				// Sinon on construit les requÃªtes qui vont bien
+				// Sinon on construit les requêtes qui vont bien
 				if ($filter['type'] == 'marc_list') {
 					$marc_list = marc_list_collection::get_instance($filter['marcname']);
 				}
@@ -177,7 +178,7 @@ class authority_tabs {
 				$query.= $query_clauses['where'];
 				$query.= ' group by '.$query_elements['table'].'.'.$filter['field'];
 				
-				$result = pmb_mysql_query($query, $dbh);
+				$result = pmb_mysql_query($query);
 				if (pmb_mysql_num_rows($result)) {
 					while ($row = pmb_mysql_fetch_object($result)) {
 						if(!$row->group_id){
@@ -189,7 +190,7 @@ class authority_tabs {
 								if ($filter['marcname'] != 'oeuvre_link') {
 									$label = (!empty($marc_list->table[$row->group_id]) ? $marc_list->table[$row->group_id] : (!empty($msg['authority_marc_list_empty_filter_'.$filter['marcname']]) ? $msg['authority_marc_list_empty_filter_'.$filter['marcname']] : $msg['authority_marc_list_empty_filter']));
 								} else {
-									// Dans le cas d'oeuvre_link.xml on a un Ã©tage de plus...
+									// Dans le cas d'oeuvre_link.xml on a un étage de plus...
 									foreach ($marc_list->table as $link_type) {
 										if (isset($link_type[$row->group_id])) {
 											$label = $link_type[$row->group_id];
@@ -218,13 +219,13 @@ class authority_tabs {
 					$filter_values = $tab->get_filter_values($filter['name']);
 					
 					/**
-					 * Petit hack permettant de s'en sortir avec les fonctions d'auteurs non valorisÃ©es
-					 * Dans les colonnes en base elles sont soit Ã  0, soit Ã  chaine vide.
-					 * On passe le filtre Ã  '__' pour pouvoir le traiter dans les formulaires
+					 * Petit hack permettant de s'en sortir avec les fonctions d'auteurs non valorisées
+					 * Dans les colonnes en base elles sont soit à 0, soit à chaine vide.
+					 * On passe le filtre à '__' pour pouvoir le traiter dans les formulaires
 					 * 	-> Le 0 n'est pas pris en compte dans les values des input checkbox
-					 * 	-> On construit un message spÃ©cifique "Sans valeur" paramÃ©trable suivant le type de filtre
+					 * 	-> On construit un message spécifique "Sans valeur" paramétrable suivant le type de filtre
 					 * 		authority_marc_list_empty_filter -> Message standard
-					 * 		authority_marc_list_empty_filter_nom_marclist -> Message personnalisÃ©
+					 * 		authority_marc_list_empty_filter_nom_marclist -> Message personnalisé
 					 */
 					$array_search_result = array_search('__', $filter_values);
 					if($array_search_result !== false){
@@ -232,14 +233,14 @@ class authority_tabs {
 						$filter_values[] = 0;
 					}
 					
-					//Si on a des rÃ©sultats; on passe Ã  la suite
+					//Si on a des résultats; on passe à la suite
 					if($filter_values && count($filter_values)){
 						$query = 'select group_concat(distinct '.$query_elements['table'].'.'.$query_elements['select'].' separator ",") as elements_ids';
 						$query.= $query_clauses['from'];
 						$query.= $query_clauses['where'];
 						$query.= ' and '.$query_elements['table'].'.'.$filter['field'].' in ("'.implode('","', $filter_values).'")';
 						
-						$result = pmb_mysql_query($query,$dbh);
+						$result = pmb_mysql_query($query);
 						if(pmb_mysql_num_rows($result)){
 							$row = pmb_mysql_fetch_object($result);
 							$filtered_results = self::get_filtered_results($row->elements_ids, $tab);
@@ -308,7 +309,7 @@ class authority_tabs {
 		$query_clauses['order'] = '';
 		$query_clauses['order_from'] = '';
 		if ($query_elements['order']) {
-			// On commence par faire une jointure si nÃ©cessaire
+			// On commence par faire une jointure si nécessaire
 			if ($query_elements['order']['table'] && !in_array($query_elements['order']['table'], $tables)) {
 				if ($query_elements['order']['joinclause']) {
 					$query_clauses['order_from'].= ' '.$query_elements['order']['joinclause'];
@@ -323,7 +324,7 @@ class authority_tabs {
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les autoritÃ©s indexÃ©es avec un concept utilisant cette autoritÃ©
+	 * Méthode permettant de récupérer les autorités indexées avec un concept utilisant cette autorité
 	 * @param elements_list_tab $tab
 	 * @param authority $authority
 	 */
@@ -341,13 +342,13 @@ class authority_tabs {
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les autoritÃ©s indexÃ©es avec les concepts dont les ids sont passÃ©s en paramÃ¨tres
+	 * Méthode permettant de récupérer les autorités indexées avec les concepts dont les ids sont passés en paramètres
 	 * @param elements_list_tab $tab
 	 * @param authority_tabs $authority_tabs
 	 * @param array $concepts_ids
 	 */
 	protected static function get_tab_authorities_indexed_with_concepts($tab, $authority, $concepts_ids){
-		global $dbh, $msg;
+		global $msg;
 		global $quoi;
 		
 		$types_needed = array(TYPE_AUTHOR, TYPE_CATEGORY, TYPE_PUBLISHER, TYPE_COLLECTION, TYPE_SUBCOLLECTION, TYPE_SERIE, TYPE_TITRE_UNIFORME, TYPE_INDEXINT, TYPE_AUTHPERSO);
@@ -358,11 +359,11 @@ class authority_tabs {
 		
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		if ($nb_result && ($quoi == $tab->get_name())) {
-			// On dÃ©finit les filtres
+			// On définit les filtres
 			$filter = array(
 					'name' => 'common_indexed_authorities_by_types',
 					'label' => $msg['authority_tabs_common_indexed_authorities_by_types']
@@ -370,7 +371,7 @@ class authority_tabs {
 			$tab->set_filters(array($filter));
 			$groups = array();
 			$query = 'select count(distinct num_object) as nb, type_object, id_authperso, authperso_name from index_concept left join authperso_authorities on num_object = id_authperso_authority and type_object = '.TYPE_AUTHPERSO.' left join authperso on id_authperso = authperso_authority_authperso_num where num_concept in ('.implode(',', $concepts_ids).') and type_object in ('.implode(',', $types_needed).') group by type_object, id_authperso';
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					if (($row->type_object == TYPE_AUTHPERSO) && !isset($groups[1000 + $row->id_authperso])) {
@@ -415,13 +416,13 @@ class authority_tabs {
 				$query = 'select SQL_CALC_FOUND_ROWS distinct num_object, type_object, authperso_authority_authperso_num';
 				$query.= ' from index_concept left join authperso_authorities on num_object = id_authperso_authority and type_object = '.TYPE_AUTHPERSO;
 				$query.= ' where num_concept in ('.implode(',', $concepts_ids).') and type_object in ('.implode(',', $types_needed).')';
-				// si on a des filtres sur des authoritÃ©s persos
+				// si on a des filtres sur des authorités persos
 				if (count($authpersos_needed)) {
 					$query.= ' and (authperso_authority_authperso_num is null or authperso_authority_authperso_num in ('.implode(',', $authpersos_needed).'))';
 				}
 				$query.= authority_tabs::get_limit_concept();
-				// on lance la requÃªte
-				$result = pmb_mysql_query($query, $dbh);
+				// on lance la requête
+				$result = pmb_mysql_query($query);
 				$records_ids = array();
 				if($result && pmb_mysql_num_rows($result)){
 					while($row = pmb_mysql_fetch_object($result)){
@@ -437,8 +438,8 @@ class authority_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour la limite des rÃ©sultats des requetes concepts
-	 * @return string Portion de la requÃªte
+	 * Retourne la portion de requête pour la limite des résultats des requetes concepts
+	 * @return string Portion de la requête
 	 */
 	protected static function get_limit_concept(){
 		global $pmb_nb_elems_per_tab;
@@ -456,11 +457,11 @@ class authority_tabs {
 	
 	
 	/**
-	 * MÃ©thode permettant de filtrer les resultats 
-	 * @param $elements_ids String id d'element sÃ©parÃ©s par des virgules
+	 * Méthode permettant de filtrer les resultats 
+	 * @param $elements_ids String id d'element séparés par des virgules
 	 * @param $tab elements_list_tab Instance d'onglet courante
 	 * 
-	 * Nous pourrons implÃ©menter les fitlres sur les droits autoritÃ©s quand ils auront Ã©tÃ© dÃ©veloppÃ©s
+	 * Nous pourrons implémenter les fitlres sur les droits autorités quand ils auront été développés
 	 */
 	protected static function get_filtered_results($elements_ids, $tab){
 		switch($tab->get_content_type()){
@@ -517,10 +518,11 @@ class authority_tabs {
 	
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		if ($nb_result && ($quoi == $tab->get_name())) {
+			$elements_ids = array();
 			foreach ($concepts_ids as $element_id) {
 			    $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $element_id, 'type_object' => $tab->get_content_authority_type()]);
 				$elements_ids[] = $authority->get_id();
@@ -530,21 +532,21 @@ class authority_tabs {
 	}
 
 	protected function get_tab_composed_records($tab, $authority) {
-		global $quoi, $dbh;
+		global $quoi;
 		
 		$ids = $authority->get_records_ids();
 		$nb_result = count($ids);
 	
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		$elements_ids = array();
 		if ($nb_result && ($quoi == $tab->get_name())) {
 			foreach ($ids as $element_id) {
 				$query = "select responsability_notice from responsability where id_responsability=".$element_id;
-				$result = pmb_mysql_query($query, $dbh);				
+				$result = pmb_mysql_query($query);				
 				if($result && pmb_mysql_num_rows($result)){
 					$row = pmb_mysql_fetch_object($result);
 					$elements_ids[] = $row->responsability_notice;
@@ -555,21 +557,21 @@ class authority_tabs {
 	}
 
 	protected function get_tab_composed_tus($tab, $authority) {
-		global $quoi, $dbh;
+		global $quoi;
 		
 		$ids = $authority->get_tus_ids();
 		$nb_result = count($ids);
 	
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		$elements_ids = array();
 		if ($nb_result && ($quoi == $tab->get_name())) {
 			foreach ($ids as $element_id) {
 				$query = "select responsability_tu_num from responsability_tu where id_responsability_tu=".$element_id;
-				$result = pmb_mysql_query($query, $dbh);				
+				$result = pmb_mysql_query($query);				
 				if($result && pmb_mysql_num_rows($result)){
 					$row = pmb_mysql_fetch_object($result);
 					$authority =  authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $row->responsability_tu_num, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
@@ -581,7 +583,7 @@ class authority_tabs {
 	}
 	
 	protected static function get_tab_used_in_pperso_authorities($tab, $authority){
-		global $dbh, $msg, $quoi;
+		global $msg, $quoi;
 		
 		$authority->get_used_in_pperso_authorities();
 		$groups = array();
@@ -672,9 +674,10 @@ class authority_tabs {
 		
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
+		$filter=array();
 		$filter['name']='pp_authorities';
 		$filter['label']=$msg[132];
 		
@@ -692,7 +695,7 @@ class authority_tabs {
 				$flag_filter=0;
 				foreach ($list_filters as $filter_aut_table){
 					if(count($groups[$filter_aut_table]['elements_group_ids'])){
-						$flag_filter=1; // au moins un filtre correspond a un groupe prÃ©sent
+						$flag_filter=1; // au moins un filtre correspond a un groupe présent
 					}
 				}
 				if($flag_filter){
@@ -712,7 +715,7 @@ class authority_tabs {
 	}
 	
 	protected static function get_tab_used_in_pperso_records($tab, $authority){
-		global $dbh, $msg, $quoi;
+		global $quoi;
 
 		$authority->get_used_in_pperso_authorities();
 		$elements_ids=$authority->get_used_in_pperso_authorities_ids('notices');
@@ -720,14 +723,14 @@ class authority_tabs {
 		
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 		$tab->set_contents( self::get_limit($elements_ids) );		
 	}		
 	
 	protected static function get_tab_used_in_pperso_cms_editorial_sections($tab, $authority){
-		global $dbh, $msg, $quoi;		
+		global $quoi;		
 
 		$authority->get_used_in_pperso_authorities();
 		$elements_ids=$authority->get_used_in_pperso_authorities_ids('section');
@@ -735,14 +738,14 @@ class authority_tabs {
 	
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}		
 		$tab->set_contents( self::get_limit($elements_ids) );
 	}
 
 	protected static function get_tab_used_in_pperso_cms_editorial_articles($tab, $authority){
-		global $dbh, $msg, $quoi;
+		global $quoi;
 	
 		$authority->get_used_in_pperso_authorities();
 		$elements_ids=$authority->get_used_in_pperso_authorities_ids('article');
@@ -750,7 +753,7 @@ class authority_tabs {
 	
 		$tab->set_nb_results($nb_result);
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}		
 		$tab->set_contents( self::get_limit($elements_ids) );
@@ -758,17 +761,57 @@ class authority_tabs {
 	
 	protected static function get_tab_entities_graphed($tab, $authority){
 		global $pmb_entity_graph_recursion_lvl;
-		global $pmb_entity_graph_activate;
+		global $pmb_entity_graph_activate, $quoi;
 		
-		if(!$pmb_entity_graph_activate){
-			$tab->set_nb_results(0);
-		}else{
+		if($pmb_entity_graph_activate && $quoi == $tab->get_name()) {
 			$entity_graph = entity_graph::get_entity_graph($authority, 'authority');
 			$entity_graph->get_recursive_graph($pmb_entity_graph_recursion_lvl);
-			$tab->set_nb_results($entity_graph->get_nb_nodes_graphed());
 			$tab->set_contents($entity_graph->get_json_entities_graphed());
 		}
+		$tab->set_nb_results(0);
 	}
 
+	/**
+	 * Méthode permettant de récupérer les exemplaires indexées avec les concepts dont les ids sont passés en paramètres
+	 * @param elements_list_tab $tab
+	 * @param authority $authority
+	 */
+	protected static function get_tab_exemplaire_indexed_with_concepts($tab, $authority){
+	    global $quoi;
+	    $expl_tab_ids = exemplaire::get_expl_from_concept($authority);
+	    $tab->set_nb_results(count($expl_tab_ids));
+	    if($quoi == $tab->get_name()) {
+    	    $tab->set_contents($expl_tab_ids);
+	    }
+	}
+
+	/**
+	 * Méthode permettant de récupérer les rubriques du cms indexées avec les concepts dont les ids sont passés en paramètres
+	 * @param elements_list_tab $tab
+	 * @param authority $authority
+	 */
 	
+	protected static function get_tab_cms_section_indexed_with_concepts($tab, $authority){
+	    global $quoi;
+	    $cms_section_tab_ids = cms_editorial_data::get_cms_section_from_concept($authority);
+	    $tab->set_nb_results(count($cms_section_tab_ids));
+	    if($quoi == $tab->get_name()) {
+    	    $tab->set_contents($cms_section_tab_ids);
+	    }
+	}
+
+	/**
+	 * Méthode permettant de récupérer les articles du cms indexées avec les concepts dont les ids sont passés en paramètres
+	 * @param elements_list_tab $tab
+	 * @param authority $authority
+	 */
+	
+	protected static function get_tab_cms_article_indexed_with_concepts($tab, $authority){
+	    global $quoi;
+	    $cms_article_tab_ids = cms_editorial_data::get_cms_article_from_concept($authority);
+	    $tab->set_nb_results(count($cms_article_tab_ids));
+	    if($quoi == $tab->get_name()) {
+	        $tab->set_contents($cms_article_tab_ids);
+	    }
+	}
 }

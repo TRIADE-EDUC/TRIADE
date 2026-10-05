@@ -3,7 +3,7 @@
 function cms_check_if_draggeable_item_tree(source,node){
 	var item = source.tree.selectedItem;
 	var type = item.type[0];
-	//on peut d�placer une rubrique ou un article! 
+	//on peut d�placer une rubrique ou un article!
 	switch(type){
 		case 'root_section' :
 		case 'section' :
@@ -13,8 +13,8 @@ function cms_check_if_draggeable_item_tree(source,node){
 		case 'articles' :
 		default :
 			return false;
-			break;	
-	}	
+			break;
+	}
 }
 
 //cette m�thode est en r�alit� une r��criture de la m�thode checkItemAcceptance de l'objet dijit.tree.dndSource
@@ -30,7 +30,7 @@ function cms_check_if_item_tree_can_drop_here(target,source,position){
 			case "section" :
 				return true;
 				break;
-			default : 
+			default :
 				return false;
 				break;
 		}
@@ -47,7 +47,7 @@ function cms_check_if_item_tree_can_drop_here(target,source,position){
 				break;
 			default :
 				return false;
-				break;						
+				break;
 		}
 	}
 }
@@ -89,14 +89,14 @@ function cms_section_leave_root(item){
 	var container = document.getElementById('editorial_tree_container');
 	var target_id = dijit.byId('section_tree').dndController.current.item.id[0];
 	var position = dijit.byId('section_tree').dndController.dropPosition;
-	
+
 	var children = Array();
 	var root_children = this.root.children;
 	for (var i=0; i<root_children.length ; i++){
 		children.push(root_children[i].id[0]);
 	}
 	cms_dnd_tree_update(0,children);
-	
+
 	if (document.getElementById('target_id') == null) {
 		var t_id = document.createElement('input');
 		t_id.type = 'hidden';
@@ -107,7 +107,7 @@ function cms_section_leave_root(item){
 	} else {
 		document.getElementById('target_id').value = target_id;
 	}
-	
+
 	if (document.getElementById('position') == null) {
 		var pos = document.createElement('input');
 		pos.type = 'hidden';
@@ -133,7 +133,7 @@ function cms_section_add_to_root(item){
 		var root_children = this.root.children;
 		var children = new Array();
 		var flag = false;
-		
+
 		for (var i=0; i<root_children.length ; i++){
 			var child_id = root_children[i].id[0];
 			if ((target_id == child_id) && (position == 'Before')) {
@@ -170,7 +170,7 @@ function cms_compare_forms(){
 
 function cms_register_form(){
 	if(document.getElementById('content_infos').querySelector('form') && document.getElementById('content_infos').querySelector('form').getAttribute('id')){
-		cms_serialized_form = pmbForm.toJson(document.getElementById('content_infos').querySelector('form').getAttribute('id'));	
+		cms_serialized_form = pmbForm.toJson(document.getElementById('content_infos').querySelector('form').getAttribute('id'));
 	}else{
 		cms_serialized_form = '';
 	}
@@ -186,7 +186,7 @@ function cms_load_content_infos(item,node,evt){
 			tinyMCE_execCommand('mceToggleEditor',true,'cms_editorial_form_resume');
 			tinyMCE_execCommand('mceRemoveControl',true,'cms_editorial_form_resume');
 		}
-		if (tinyMCE_getInstance('cms_editorial_form_contenu')) {	
+		if (tinyMCE_getInstance('cms_editorial_form_contenu')) {
 			tinyMCE_execCommand('mceToggleEditor',true,'cms_editorial_form_contenu');
 			tinyMCE_execCommand('mceRemoveControl',true,'cms_editorial_form_contenu');
 		}
@@ -201,7 +201,7 @@ function cms_load_content_infos(item,node,evt){
 			if(dijit.byId('el9Child')){
 				dijit.byId('el9Child').onDownloadEnd = function(){
 					cms_register_form();
-				}	
+				}
 			}else{
 				cms_register_form();
 			}
@@ -247,7 +247,7 @@ function cms_load_content_infos(item,node,evt){
 
 function cms_update_articles_parent(ids_articles,num_section){
 	var update = new http_request();
-	update.request('./ajax.php?module=cms&categ=update_article',true,'&num_section='+num_section+'&articles='+ids_articles,true,cms_articles_updated);	
+	update.request('./ajax.php?module=cms&categ=update_article',true,'&num_section='+num_section+'&articles='+ids_articles,true,cms_articles_updated);
 }
 
 function cms_articles_updated(response){
@@ -277,7 +277,7 @@ function get_icon_class(item,opened){
 					}
 				}
 				break;
-			case "articles" : 
+			case "articles" :
 				icon_class = opened ? "dijitFolderOpened" : "dijitFolderClosed";
 				break;
 			case "article" :
@@ -304,9 +304,28 @@ function get_label(item){
 	var label = this.model.getLabel(item);
 	var class_html = "<span><img src='./images/spacer.gif' class='"+item.class_html+"' title=\'"+item.state_label+"\' style='width:7px; height:7px; vertical-align:middle; margin-left:-3px;' /></span>";
 	if(item.icon){
-		label = "<img src='"+item.icon[0]+"' alt='"+label+"' title='"+label+"'/>&nbsp;"+class_html+label;
+		label = "<img src='"+item.icon[0]+"' alt='"+label+"' title='"+label+"' loading='lazy' />&nbsp;"+class_html+label;
 	} else {
 		label = class_html+label;
 	}
 	return label;
+}
+
+// Methode pour ajouter le clique droit
+// this cms_editorial_tree
+// CmsContextMenu corresponds au js dans apps/cms/CmsContextMenu
+function add_context_menu(nodes, CmsContextMenu) {
+	for (var i = 0; i < nodes.length; i++) {
+		var node = nodes[i];
+		var parsed = node.domNode.getAttribute('parsed');
+		if (!node.item.root && node.domNode.id && !parsed && node.domNode.hasAttribute('widgetid')) {
+			node.domNode.setAttribute('parsed', 'true');
+			var widgetid = node.domNode.getAttribute('widgetid');
+        	new CmsContextMenu({targetNodeIds: [node.domNode.id], widgetIdNode:widgetid});
+    	}
+		var childrens = node.getChildren();
+		if (childrens && childrens.length > 0) {
+			add_context_menu(childrens, CmsContextMenu);
+		}
+	}
 }

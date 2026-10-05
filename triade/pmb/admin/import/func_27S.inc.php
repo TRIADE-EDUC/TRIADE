@@ -1,26 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_27S.inc.php,v 1.9 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_27S.inc.php,v 1.11 2021/12/09 14:22:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-
-
-
-// +-------------------------------------------------+
-
-// Attention, n'a pas Ã©tÃ© modifiÃ© pour le multi-thesaurus
+global $class_path;
+require_once ($class_path."/import/import_expl_bdp.class.php");
 
 // +-------------------------------------------------+
 
+// Attention, n'a pas été modifié pour le multi-thesaurus
+
+// +-------------------------------------------------+
 
 
 
 
-// DEBUT paramÃ©trage propre Ã  la base de donnÃ©es d'importation :
-//	les champs UNIMARC lus qui vont Ãªtre stockÃ©s dans des champs personnalisÃ©s sont prÃ©cisÃ©s ici
+
+// DEBUT paramétrage propre à la base de données d'importation :
+//	les champs UNIMARC lus qui vont être stockés dans des champs personnalisés sont précisés ici
 $id949_a = 2 ; // autres CDU
 $id949_c = 1 ; // numero de document
 $id949_d = 3 ; // signature du catalographe
@@ -44,11 +44,10 @@ function recup_noticeunimarc_suite($notice) {
 			} /* end of switch */
 	
 		} /* end of for */
-	} // fin recup_noticeunimarc_suite = fin rÃ©cupÃ©ration des variables propres au CNL
+	} // fin recup_noticeunimarc_suite = fin récupération des variables propres au CNL
 	
 	
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 	
 	global $info_949 ;
@@ -63,185 +62,103 @@ function import_new_notice_suite() {
 //	print_r ($info_949);
 //	echo "</pre>";
 
-	// 949$a est stockÃ© dans un champ personnalisÃ© texte
-	// ce champ personnalisÃ© a l'id $id949_a
+	// 949$a est stocké dans un champ personnalisé texte
+	// ce champ personnalisé a l'id $id949_a
 	// TRAITEMENT :
-	//	Rechercher si l'enregistrement existe dÃ©jÃ  dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_a AND notices_custom_origine=$notice_id
-	//	CrÃ©er si besoin
+	//	Rechercher si l'enregistrement existe déjà dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_a AND notices_custom_origine=$notice_id
+	//	Créer si besoin
 	import_records::insert_value_custom_field($id949_a, $notice_id, $info_949[0]['a']);
 
-	// 949$c est stockÃ© dans un champ personnalisÃ© texte
-	// ce champ personnalisÃ© a l'id $id949_c
+	// 949$c est stocké dans un champ personnalisé texte
+	// ce champ personnalisé a l'id $id949_c
 	// TRAITEMENT :
-	//	Rechercher si l'enregistrement existe dÃ©jÃ  dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_c AND notices_custom_origine=$notice_id
-	//	CrÃ©er si besoin
+	//	Rechercher si l'enregistrement existe déjà dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_c AND notices_custom_origine=$notice_id
+	//	Créer si besoin
 	$rqt = "SELECT count(1) FROM notices_custom_values WHERE notices_custom_champ='".$id949_c."' AND notices_custom_origine='".$notice_id."' " ;
-	if (!pmb_mysql_result(pmb_mysql_query($rqt, $dbh),0,0)) {
+	if (!pmb_mysql_result(pmb_mysql_query($rqt),0,0)) {
 		$rqt_ajout = "INSERT INTO notices_custom_values (notices_custom_champ, notices_custom_origine, notices_custom_small_text, notices_custom_integer) VALUES ('".$id949_c."', '".$notice_id."', '".$info_949[0]['c']."', ".$info_949[0]['c'].")" ;
-		$res_ajout = pmb_mysql_query($rqt_ajout, $dbh) ;
-		}
+		pmb_mysql_query($rqt_ajout) ;
+	}
 
-	// 949$d est stockÃ© dans un champ personnalisÃ© texte
-	// ce champ personnalisÃ© a l'id $id949_d
+	// 949$d est stocké dans un champ personnalisé texte
+	// ce champ personnalisé a l'id $id949_d
 	// TRAITEMENT :
-	//	Rechercher si l'enregistrement existe dÃ©jÃ  dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_d AND notices_custom_origine=$notice_id
-	//	CrÃ©er si besoin
+	//	Rechercher si l'enregistrement existe déjà dans notices_custom_values = SELECT 1 FROM notices_custom_values WHERE notices_custom_champ=$id949_d AND notices_custom_origine=$notice_id
+	//	Créer si besoin
 	import_records::insert_value_custom_field($id949_d, $notice_id, $info_949[0]['d']);
 
-	// les champs $606 sont stockÃ©s dans les catÃ©gories
-	//	$a >> en sous catÃ©gories de $id_rech_theme
-	// 		$j en complÃ©ment de $a
-	//		$x en sous catÃ©gories de $a
+	// les champs $606 sont stockés dans les catégories
+	//	$a >> en sous catégories de $id_rech_theme
+	// 		$j en complément de $a
+	//		$x en sous catégories de $a
 	// TRAITEMENT :
-	// pour $a=0 Ã  size_of $info_606_a
-	//	pour $j=0 Ã  size_of $info_606_j[$a]
-	//		concatÃ©ner $libelle_j .= $info_606_j[$a][$j]
+	// pour $a=0 à size_of $info_606_a
+	//	pour $j=0 à size_of $info_606_j[$a]
+	//		concaténer $libelle_j .= $info_606_j[$a][$j]
 	//	$libelle_final = $info_606_a[0]." ** ".$libelle_j
-	//	Rechercher si l'enregistrement existe dÃ©jÃ  dans categories = 
+	//	Rechercher si l'enregistrement existe déjà dans categories = 
 	//		SELECT categ_id FROM categories WHERE categ_parent='".$id_rech_theme."' AND categ_libelle='".addslashes($libelle_final)."' "
-	//	CrÃ©er si besoin et rÃ©cupÃ©rer l'id $categid_a
+	//	Créer si besoin et récupérer l'id $categid_a
 	//	$categid_parent =  $categid_a
-	//	pour $x=0 Ã  size_of $info_606_x[$a]
-	//		Rechercher si l'enregistrement existe dÃ©jÃ  dans categories = 
+	//	pour $x=0 à size_of $info_606_x[$a]
+	//		Rechercher si l'enregistrement existe déjà dans categories = 
 	//			SELECT categ_id FROM categories WHERE categ_parent='".$categ_parent."' AND categ_libelle='".addslashes($info_606_x[$a][$x])."' "
-	//		CrÃ©er si besoin et rÃ©cupÃ©rer l'id $categid_parent
+	//		Créer si besoin et récupérer l'id $categid_parent
 	//
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
-			if (!$libelle_j) $libelle_j .= $info_606_j[$a][$j] ;
-				else $libelle_j .= " ** ".$info_606_j[$a][$j] ;
-			}
-		if (!$libelle_j) $libelle_final = $info_606_a[$a][0] ;
-			else $libelle_final = $info_606_a[$a][0]." ** ".$libelle_j ;
-		if (!$libelle_final) break ; 
-		$rqt_a = "SELECT categ_id FROM categories WHERE categ_parent='".$id_rech_theme."' AND categ_libelle='".addslashes($libelle_final)."' " ;
-		$res_a = pmb_mysql_query($rqt_a,$dbh) ;
+	$nb_infos_606_a = count($info_606_a);
+	for ($a = 0; $a < $nb_infos_606_a; $a++) {
+	    $nb_infos_606_j = count($info_606_j[$a]);
+	    for ($j = 0; $j < $nb_infos_606_j; $j++) {
+	        if (empty($libelle_j)) {
+	            $libelle_j .= $info_606_j[$a][$j];
+	        } else {
+	            $libelle_j .= " ** ".$info_606_j[$a][$j];
+	        }
+		}
+		
+		if (empty($libelle_j)) {
+		    $libelle_final = $info_606_a[$a][0];
+		} else {
+		    $libelle_final = $info_606_a[$a][0]." ** $libelle_j";
+		}
+		if (empty($libelle_final)) {
+		    break; 
+		}
+		
+		$rqt_a = "SELECT categ_id FROM categories WHERE categ_parent='$id_rech_theme' AND categ_libelle='".addslashes($libelle_final)."' ";
+		$res_a = pmb_mysql_query($rqt_a);
 		if (pmb_mysql_num_rows($res_a)) {
-			$categid_a = pmb_mysql_result($res_a, 0, 0) ;
-			} else {
-				$rqt_ajout = "insert into categories set categ_parent='".$id_rech_theme."', categ_libelle='".addslashes($libelle_final)."', index_categorie=' ".strip_empty_words($libelle_final)." ' " ;
-				$res_ajout = pmb_mysql_query($rqt_ajout, $dbh);
-				$categid_a = pmb_mysql_insert_id($dbh) ;
-				}
-		// rÃ©cup des sous-categ en cascade sous $a
-		$categ_parent =  $categid_a ;
-		for ($x=0 ; $x < sizeof($info_606_x[$a]) ; $x++) {
-			$rqt_x = "SELECT categ_id FROM categories WHERE categ_parent='".$categ_parent."' AND categ_libelle='".addslashes($info_606_x[$a][$x])."' " ;
-			$res_x = pmb_mysql_query($rqt_x,$dbh) ;
+			$categid_a = pmb_mysql_result($res_a, 0, 0);
+		} else {
+			$rqt_ajout = "insert into categories set categ_parent='$id_rech_theme', categ_libelle='".addslashes($libelle_final)."', index_categorie=' ".strip_empty_words($libelle_final)." ' ";
+			pmb_mysql_query($rqt_ajout);
+			$categid_a = pmb_mysql_insert_id() ;
+		}
+		
+		// récup des sous-categ en cascade sous $a
+		$categ_parent = $categid_a;
+		$nb_infos_606_x = count($info_606_x[$a]);
+		for ($x = 0; $x < $nb_infos_606_x; $x++) {
+			$rqt_x = "SELECT categ_id FROM categories WHERE categ_parent='$categ_parent' AND categ_libelle='".addslashes($info_606_x[$a][$x])."' ";
+			$res_x = pmb_mysql_query($rqt_x);
 			if (pmb_mysql_num_rows($res_x)) {
-				$categ_parent = pmb_mysql_result($res_x, 0, 0) ;
-				} else {
-					$rqt_ajout = "insert into categories set categ_parent='".$categ_parent."', categ_libelle='".addslashes($info_606_x[$a][$x])."', index_categorie=' ".strip_empty_words($info_606_x[$a][$x])." ' " ;
-					$res_ajout = pmb_mysql_query($rqt_ajout, $dbh);
-					$categ_parent = pmb_mysql_insert_id($dbh) ;
-					}
-			} // fin rÃ©cup des $x en cascade sous l'id de la catÃ©gorie 606$a
+				$categ_parent = pmb_mysql_result($res_x, 0, 0);
+			} else {
+				$rqt_ajout = "insert into categories set categ_parent='$categ_parent', categ_libelle='".addslashes($info_606_x[$a][$x])."', index_categorie=' ".strip_empty_words($info_606_x[$a][$x])." ' ";
+				pmb_mysql_query($rqt_ajout);
+				$categ_parent = pmb_mysql_insert_id();
+			}
+		} // fin récup des $x en cascade sous l'id de la catégorie 606$a
 
 		if ($categ_parent != $id_rech_theme) {
 			// insertion dans la table notices_categories
-			$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', notcateg_categorie='".$categ_parent."' " ;
-			$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
-			}
+			$rqt_ajout = "insert into notices_categories set notcateg_notice='$notice_id', notcateg_categorie='$categ_parent' ";
+			pmb_mysql_query($rqt_ajout);
 		}
-				
-	
-	} // fin import_new_notice_suite
+	}
+} // fin import_new_notice_suite
 			
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
-	
-	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, 
-		$section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
-		$cote_mandatory, $book_location_id;
-		
-	// lu en 010$d de la notice
-	$price = $prix[0];
-	
-	// la zone 995 est rÃ©pÃ©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
-		/* RAZ expl */
-		$expl = array();
-		
-		/* prÃ©paration du tableau Ã  passer Ã  la mÃ©thode */
-		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
-		$expl['notice']     = $notice_id ;
-		
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; Ã  chercher dans docs_typdoc
-		$data_doc=array();
-		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importÃ© (".$book_lender_id.")";
-		$data_doc['tdoc_libelle'] = $typdoc_995[$info_995[$nb_expl]['r']];
-		if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "\$r non conforme -".$info_995[$nb_expl]['r']."-" ;
-		$data_doc['duree_pret'] = 0 ; /* valeur par dÃ©faut */
-		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
-		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
-			else $data_doc['tdoc_owner'] = 0 ;
-		$expl['typdoc'] = docs_type::import($data_doc);
-		
-		$expl['cote'] = $info_995[$nb_expl]['k'];
-                      	
-		// $expl['section']    = $info_995[$nb_expl]['q']; Ã  chercher dans docs_section
-		$data_doc=array();
-		if (!$info_995[$nb_expl]['q']) 
-			$info_995[$nb_expl]['q'] = "u";
-		$data_doc['section_libelle'] = $section_995[$info_995[$nb_expl]['q']];
-		$data_doc['sdoc_codage_import'] = $info_995[$nb_expl]['q'] ;
-		if ($sdoc_codage) $data_doc['sdoc_owner'] = $book_lender_id ;
-			else $data_doc['sdoc_owner'] = 0 ;
-		$expl['section'] = docs_section::import($data_doc);
-		
-		/* $expl['statut']     Ã  chercher dans docs_statut */
-		/* TOUT EST COMMENTE ICI, le statut est maintenant choisi lors de l'import
-		if ($info_995[$nb_expl]['o']=="") $info_995[$nb_expl]['o'] = "e";
-		$data_doc=array();
-		$data_doc['statut_libelle'] = $info_995[$nb_expl]['o']." -Statut importÃ© (".$book_lender_id.")";
-		$data_doc['pret_flag'] = 1 ; 
-		$data_doc['statusdoc_codage_import'] = $info_995[$nb_expl]['o'] ;
-		$data_doc['statusdoc_owner'] = $book_lender_id ;
-		$expl['statut'] = docs_statut::import($data_doc);
-		FIN TOUT COMMENTE */
-		
-		$expl['statut'] = $book_statut_id;
-		
-		$expl['location'] = $book_location_id;
-		
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÃ©, Ã©ventuellement Ã  fixer par combo_box
-		$data_doc=array();
-		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visÃ© importÃ© (".$book_lender_id.")";
-		$data_doc['codestat_libelle'] = $codstatdoc_995[$info_995[$nb_expl]['q']];
-		$data_doc['statisdoc_codage_import'] = $info_995[$nb_expl]['q'] ;
-		if ($statisdoc_codage) $data_doc['statisdoc_owner'] = $book_lender_id ;
-			else $data_doc['statisdoc_owner'] = 0 ;
-		$expl['codestat'] = docs_codestat::import($data_doc);
-		
-		
-		// $expl['creation']   = $info_995[$nb_expl]['']; Ã  prÃ©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; Ã  prÃ©ciser
-                      	
-		$expl['note']       = $info_995[$nb_expl]['u'];
-		$expl['prix']       = $price;
-		$expl['expl_owner'] = $book_lender_id ;
-		$expl['cote_mandatory'] = $cote_mandatory ;
-		
-		$expl_id = exemplaire::import($expl);
-		if ($expl_id == 0) {
-			$nb_expl_ignores++;
-			}
-                      	
-		//debug : affichage zone 995 
-		/*
-		echo "995\$a =".$info_995[$nb_expl]['a']."<br />";
-		echo "995\$b =".$info_995[$nb_expl]['b']."<br />";
-		echo "995\$c =".$info_995[$nb_expl]['c']."<br />";
-		echo "995\$d =".$info_995[$nb_expl]['d']."<br />";
-		echo "995\$f =".$info_995[$nb_expl]['f']."<br />";
-		echo "995\$k =".$info_995[$nb_expl]['k']."<br />";
-		echo "995\$m =".$info_995[$nb_expl]['m']."<br />";
-		echo "995\$n =".$info_995[$nb_expl]['n']."<br />";
-		echo "995\$o =".$info_995[$nb_expl]['o']."<br />";
-		echo "995\$q =".$info_995[$nb_expl]['q']."<br />";
-		echo "995\$r =".$info_995[$nb_expl]['r']."<br />";
-		echo "995\$u =".$info_995[$nb_expl]['u']."<br /><br />";
-		*/
-		} // fin for
-	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
+	import_expl_bdp::traite_exemplaires('27S');
+} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI

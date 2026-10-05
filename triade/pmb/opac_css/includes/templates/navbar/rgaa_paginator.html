@@ -1,0 +1,88 @@
+<!-- $Id: rgaa_paginator.html,v 1.6.2.1.2.1 2025/01/29 09:13:41 dgoron Exp $ -->
+{% comment %}
+
+    Template pour charter le paginateur
+    La structure de données est la suivante :
+    current => [
+        page => Page courante,
+        nbPerPage=> Nombre d'élements par page
+        previous=> Numéro de la page précédente
+        next=> Numéro de la page suivante
+        elems => [
+            first => Numéro du premier élément de la page courante,
+            last=> Numéro du dernier élément de la page courante
+    ]
+    total=> Nombre d'éléments total de la liste
+    nbPages=> Nombre de pages    
+    url => Url à utiliser pour changer de page (ex : {{url | replace "!!page!!" current.previous}} )
+    action=> Action du formulaire
+    script => JS de controle
+    pages=> Tableau des numéros de pages à afficher
+    onsubmit=> Soumission par defaut
+    custom => [
+        url => URL à utiliser pour changer le nombre d'éléments par page ( ex : {{custom.url | replace "!!nb_per_page_custom!!" 10}} )
+        customs => Tableau des nombres éléments par page possible
+    ]
+{% endcomment %}
+<div class="navbar">
+    {% block script %}
+        {{script}}
+    {% endblock %}
+	<form name='form' action='{{ action }}' method='post' onsubmit="{{ onsubmit | safe }}">
+        <div class="navbar-container d-flex flex-wrap">
+            {% block paginator_nav %}
+                <nav class='navbar-paginator d-flex flex-wrap' role='navigation' aria-label='{{ msg.rgaa_navbar_label }}'>
+                    <ol class="d-flex flex-wrap">
+                        <li>
+                            <a class='navbar_first navbar_page' 
+                                title='{{ msg.first_page }}'
+                                {% if current.previous > 0 %}href='{{ url | replace "!!page!!" 1 }}' onclick='{{ onclick | replace "!!page!!" 1 }}' {% else %}aria-disabled='true' role='link'{% endif %}>
+                                <img alt='{{ msg.first_page }}' {% if current.previous > 0 %} src='{{ img.first }}'  {% else %} src='{{ img.first-grey }}'  {% endif %}>
+                            </a>
+                        </li>
+                        <li>
+                            <a class='navbar_prev navbar_page'
+                                title='{{ msg.prec_page }}'
+                                {% if current.previous > 0 %}href='{{url | replace "!!page!!" current.previous }}' onclick='{{onclick | replace "!!page!!" current.previous }}' {% else %}aria-disabled='true' role='link'{% endif %}>
+                                <img alt='{{ msg.prec_page }}' {% if current.previous > 0 %} src='{{ img.prev }}'  {% else %} src='{{ img.prev-grey }}'  {% endif %}>
+                            </a>
+                        </li>
+                        
+                        {% for p in pages %}
+                            <li>
+                                <a class='navbar_page {% if p == current.page %}current{% endif %}'
+                                    {% if p == current.page %}aria-current='page'{% endif %}
+                                    title='{% if p == current.page %}{{ msg.rgaa_navbar_page_current  | replace "!!page!!" p }}{% else %}{{ msg.rgaa_navbar_page  | replace "!!page!!" p }}{% endif %}'
+                                    {% if p != '...' and p != current.page %}href='{{ url | replace "!!page!!" p }}' onclick='{{ onclick | replace "!!page!!" p }}'{% endif %}>
+                                    {{ p }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li>
+                            <a class='navbar_next navbar_page' 
+                                title='{{ msg.next_page }}'
+                                {% if current.next < nbPages or current.next == nbPages %}href='{{url | replace "!!page!!" current.next }}' onclick='{{onclick | replace "!!page!!" current.next }}' {% else %}aria-disabled='true' role='link'{% endif %}>
+                                <img alt='{{ msg.next_page }}' {% if current.next < nbPages or current.next == nbPages %} src='{{ img.next }}' {% else %} src='{{ img.next-grey }}' {% endif %}>
+                            </a>
+                        </li>
+                        <li>
+                            <a class='navbar_last navbar_page'
+                                title='{{ msg.last_page }}'
+                                {% if current.next < nbPages or current.next == nbPages %}href='{{ url | replace "!!page!!" nbPages }}' onclick='{{ onclick | replace "!!page!!" nbPages }}' {% else %}aria-disabled='true' role='link'{% endif %}>
+                                <img alt='{{ msg.last_page }}' {% if current.next < nbPages or current.next == nbPages %} src='{{ img.last }}'  {% else %} src='{{ img.last-grey }}'  {% endif %}>
+                            </a>
+                        </li>
+                    </ol>
+                    <span class="navbar_page_info">({{current.elems.first}} - {{current.elems.last}} / {{total}})</span>
+                </nav>
+            
+            {% endblock %}
+            
+            {% block selector %}
+            {% endblock %}
+            
+            {% block input %}
+            {% endblock %}
+        </div>
+	</form>
+</div>

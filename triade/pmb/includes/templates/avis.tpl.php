@@ -1,48 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis.tpl.php,v 1.17 2019-05-27 13:47:15 btafforeau Exp $
+// $Id: avis.tpl.php,v 1.19 2023/09/04 14:31:19 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-global $avis_tpl_menu, $avis_tpl_form1, $pmb_avis_note_display_mode, $pmb_javascript_office_editor, $id, $avis_tpl_form1_script, $avis_detail_note_msg, $base_path, $msg;
+global $avis_tpl_form1, $pmb_avis_note_display_mode, $pmb_javascript_office_editor, $id, $avis_tpl_form1_script, $avis_detail_note_msg, $base_path, $msg;
 
 if(!isset($id)) $id = 0;
-
-$avis_tpl_menu = "
-<h1>".$msg['titre_avis']." <span>> <!--!!sous_menu_choisi!! --></span></h1>
-<div class='hmenu'>
-	<span".ongletSelect("categ=avis&sub=records").">
-		<a title='".$msg['avis_menu_records']."' href='./catalog.php?categ=avis&sub=records'>
-		".$msg['avis_menu_records']."
-		</a>
-	</span>";
-if(defined('SESSrights') && SESSrights & CMS_AUTH) {
-	$avis_tpl_menu .= "
-	<span".ongletSelect("categ=avis&sub=articles").">
-		<a title='".$msg['avis_menu_articles']."' href='./catalog.php?categ=avis&sub=articles'>
-		".$msg['avis_menu_articles']."
-		</a>
-	</span>";
-}
-if(defined('SESSrights') && SESSrights & CMS_AUTH) {
-	$avis_tpl_menu .= "
-	<span".ongletSelect("categ=avis&sub=sections").">
-		<a title='".$msg['avis_menu_sections']."' href='./catalog.php?categ=avis&sub=sections'>
-		".$msg['avis_menu_sections']."
-		</a>
-	</span>";
-}
-$avis_tpl_menu .= "</div>
-";
 
 if ($pmb_javascript_office_editor) {
 $avis_tpl_form1_script="
 	$pmb_javascript_office_editor
-	<script type='text/javascript' src='./javascript/tinyMCE_interface.js'></script>
-	<script type='text/javascript' src='./javascript/bbcode.js'></script>
 	<script type='text/javascript'>
+        pmb_include('./javascript/tinyMCE_interface.js');
+        pmb_include('./javascript/bbcode.js');
 	<!--
 		function show_add_avis(notice_id) {
 			var div_add_avis=document.getElementById('add_avis_'+notice_id);
@@ -60,8 +33,8 @@ $avis_tpl_form1_script="
 ";
 } else
 $avis_tpl_form1_script="
-	<script type='text/javascript' src='./javascript/bbcode.js'></script>
 	<script type='text/javascript'>
+        pmb_include('./javascript/bbcode.js');
 	<!--
 		function show_add_avis(notice_id) {
 			var div_add_avis=document.getElementById('add_avis_'+notice_id);
@@ -204,6 +177,6 @@ else {
 		</div>
 	";
 }
-// si paramÃ©trage formulaire particulier
+// si paramétrage formulaire particulier
 if (file_exists($base_path.'/includes/templates/avis_subst.tpl.php')) require_once($base_path.'/includes/templates/avis_subst.tpl.php');
 

@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cbgenlibre.inc.php,v 1.5 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: cbgenlibre.inc.php,v 1.5 2019/06/05 09:04:41 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $current_module, $msg;
 
-// $cbgen_query : form de demande d'info pour gÃ©nÃ©ration
+// $cbgen_query : form de demande d'info pour génération
 
 $cbgen_query = "
 
@@ -16,7 +16,7 @@ $cbgen_query = "
 <div class='form-contenu'>
 
 	<div class='row'>
-		<label class='etiquette'>Format Ã©tiquette</label>
+		<label class='etiquette'>Format étiquette</label>
 		<select id='etiq_fmt' name='etiq_fmt' size='1'>
   			<option value='1'>format1</option>
   			<option value='2'>format2</option>
@@ -28,7 +28,7 @@ $cbgen_query = "
 
 
 	<div class='row'>
-		<label class='etiquette' for='etiq_num' >Commencer Ã  l'Ã©tiquette nÂ°</label>
+		<label class='etiquette' for='etiq_num' >Commencer à l'étiquette n°</label>
 		<input id='etiq_num' name='etiq_num' class='saisie-2em' />
 	</div>
 

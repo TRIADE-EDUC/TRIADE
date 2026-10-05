@@ -1,11 +1,11 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_dnd.js,v 1.3 2013-03-11 10:40:20 mbertin Exp $ */
+// $Id: editions_state_dnd.js,v 1.3 2013/03/11 10:40:20 mbertin Exp $ */
 
 function editionsstatefields_editionsstatefields(dragged,target){
 	//Ajout d'un champs
-	//Ã  la dÃ©pose d'un Ã©lÃ©ment, on ajoute un champs cachÃ© et on recharge...
+	//à la dépose d'un élément, on ajoute un champs caché et on recharge...
 	var input = document.createElement("input");
 	input.setAttribute("type","hidden");
 	input.setAttribute("name","editions_state_fields_content_fields[]");
@@ -26,7 +26,7 @@ function editionsstatefields_editionsstatefields(dragged,target){
 
 function editionsstatefieldslist_editionsstatefieldslist(dragged,target){
 	//Suppresion d'un champs
-	//Ã  la dÃ©pose d'un Ã©lÃ©ment, on ajoute un champs cachÃ© et on recharge...
+	//à la dépose d'un élément, on ajoute un champs caché et on recharge...
 	var input = document.createElement("input");
 	input.setAttribute("type","hidden");
 	input.setAttribute("name","editions_state_fields_fields[]");
@@ -54,7 +54,7 @@ function editionsstatefieldslist_editionsstatefieldslist(dragged,target){
 
 function editionsstatefilterslist_editionsstatefilterslist(dragged,target){
 	//Suppresion d'un filtre
-	//Ã  la dÃ©pose d'un Ã©lÃ©ment, on ajoute un champs cachÃ© et on recharge...
+	//à la dépose d'un élément, on ajoute un champs caché et on recharge...
 	var input = document.createElement("input");
 	input.setAttribute("type","hidden");
 	input.setAttribute("name","editions_state_filters_fields[]");
@@ -68,7 +68,7 @@ function editionsstatefilterslist_editionsstatefilterslist(dragged,target){
 
 function editionsstateorderslist_editionsstateorderslist(dragged,target){
 	//Suppresion d'un tri
-	//Ã  la dÃ©pose d'un Ã©lÃ©ment, on ajoute un champs cachÃ© et on recharge...
+	//à la dépose d'un élément, on ajoute un champs caché et on recharge...
 	var input = document.createElement("input");
 	input.setAttribute("type","hidden");
 	input.setAttribute("name","editions_state_orders_fields[]");

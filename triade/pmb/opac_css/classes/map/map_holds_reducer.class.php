@@ -1,12 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_holds_reducer.class.php,v 1.9 2019-02-26 13:48:41 tsamson Exp $
+// $Id: map_holds_reducer.class.php,v 1.12 2022/01/07 14:00:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $class_path;
 require_once($class_path."/map/map_hold_point.class.php");
 
 class map_holds_reducer {
@@ -20,14 +20,14 @@ class map_holds_reducer {
 	protected $map_hold;
 	
 	/**
-	 * Emprises des Ã©lÃ©ments Ã  afficher sur la carte
+	 * Emprises des éléments à afficher sur la carte
 	 * 
 	 * @access protected
 	 */
 	protected $holds;
 	
 	/**
-	 * Box des emprises des Ã©lÃ©ments Ã  afficher sur la carte
+	 * Box des emprises des éléments à afficher sur la carte
 	 *
 	 * @access protected
 	 */
@@ -46,12 +46,12 @@ class map_holds_reducer {
 	 * Constructeur
 	 *  @param map_hold_polygon map_hold Emprise courante de la carte
 	 *  @param Array() ids Liste des identifiants des objets
-	 *  @param int hold_max Nombre maximum d'emprise prÃ©sentes sur une couche de la carte
+	 *  @param int hold_max Nombre maximum d'emprise présentes sur une couche de la carte
 	
 	 * @return void
 	 */
 	
-	function __construct($map_hold,$holds) {
+	public function __construct($map_hold,$holds) {
 		$this->map_hold = $map_hold;
 		$this->holds = $holds;
 		$this->clusters = array();
@@ -73,15 +73,17 @@ class map_holds_reducer {
 		}
 		$map_coords = $this->map_hold->get_coords();
 		/**
-		 * La fonction SQL enveloppe renvoi une emprise normalisÃ©e telle que: POLYGON((MINX MINY, MAXX MINY, MAXX MAXY, MINX MAXY, MINX MINY))
-		 * La distance mini se trouve donc entre les points 0 et 3 (le point 4 Ã©tant le point de fermeture du polygone)
+		 * La fonction SQL enveloppe renvoi une emprise normalisée telle que: POLYGON((MINX MINY, MAXX MINY, MAXX MAXY, MINX MAXY, MINX MINY))
+		 * La distance mini se trouve donc entre les points 0 et 3 (le point 4 étant le point de fermeture du polygone)
 		 */
-		$this->map_distance = (sqrt(pow(($map_coords[0]->get_decimal_long() - $map_coords[3]->get_decimal_long()),2) + pow(($map_coords[0]->get_decimal_lat() - $map_coords[3]->get_decimal_lat()),2)))/$opac_map_hold_distance;
+		if(is_object($map_coords[0]) && is_object($map_coords[3])) {
+			$this->map_distance = (sqrt(pow(($map_coords[0]->get_decimal_long() - $map_coords[3]->get_decimal_long()),2) + pow(($map_coords[0]->get_decimal_lat() - $map_coords[3]->get_decimal_lat()),2)))/$opac_map_hold_distance;
+		}
 	}
 	
 	/**
-	 * Retourne les emprises correspondantes Ã  la rÃ©duction
-	 *  @param int hold_max Nombre maximum d'emprise prÃ©sentes sur une couche de la carte
+	 * Retourne les emprises correspondantes à la réduction
+	 *  @param int hold_max Nombre maximum d'emprise présentes sur une couche de la carte
 	
 	 * @return void
 	 */
@@ -97,7 +99,7 @@ class map_holds_reducer {
 			if(!count($this->clusters)){
 				$this->clusters[$key] = $hold;
 			}else{
-				foreach($this->clusters as $keyC => $holdC){
+				foreach($this->clusters as $holdC){
 					if($this->shouldCluster($holdC, $hold)){
 						if(is_array($holdC->get_num_object())){
 							$num_obj = $holdC->get_num_object();
@@ -135,9 +137,8 @@ class map_holds_reducer {
 	}
 	
 	public function get_point_center($hold){
-		global $dbh;
 		$query = "select AsText(Centroid(geomfromtext('".$hold->get_wkt()."'))) as center";	
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			$row = pmb_mysql_fetch_object($result);
 			$hold_wkt = $row->center;
@@ -189,19 +190,19 @@ class map_holds_reducer {
 		$nb_emprise_max = $this->calc_empr($max);
 		
 		if($nb_emprise_max >= $params[0]){
-			//Avec le seuil max, on a dÃ©jÃ  trop d'emprise, on ne continue pas.
+			//Avec le seuil max, on a déjà trop d'emprise, on ne continue pas.
 			return;
 		}
 		if($nb_emprise_min <= $params[0]){
 			$this->calc_empr($min);
-			//On a un nombre convenable d'emprise avec le seuil min, on s'arrÃªte
+			//On a un nombre convenable d'emprise avec le seuil min, on s'arrête
 			return;
 		}
 		
 		$mid = (($max-$min)/2)+$min;
 		if((($max-$min)/2)  <= $opac_map_hold_ratio_min){
 			$this->calc_empr($mid);
-			//On s'arrÃªte car le seuil est infÃ©rieur au seuil mini
+			//On s'arrête car le seuil est inférieur au seuil mini
 			return;
 		}
 		$nb_emprise_seuil = $this->calc_empr($mid);
@@ -229,7 +230,7 @@ class map_holds_reducer {
 		$this->clustered_holds = array();
 		$this->clusters = array();
 		foreach($this->holds as $key => $hold){
-			if($this->get_occupation_percentage($hold) > $seuil_min){//ces emprises doivent Ãªtre affichÃ©es
+			if($this->get_occupation_percentage($hold) > $seuil_min){//ces emprises doivent être affichées
                                 //quand il y a une seule emprise, $this->get_occupation_percentage($hold) renvoie 100
 				if ($this->get_occupation_percentage($hold) < $opac_map_hold_ratio_max || count($this->holds) == 1){ 
 					$existant_key = $this->check_wkt($this->displayed_holds, $hold->get_wkt());
@@ -247,7 +248,7 @@ class map_holds_reducer {
 							$this->displayed_holds[$key]->set_wkt($this->simplify_polygon($this->displayed_holds[$key]->get_wkt()));
 						}
 					}
-				}//Trop grandes non affichÃ©es
+				}//Trop grandes non affichées
 			}else{//celles ci doivent etre reduite a un point
 				$this->clustered_holds[$key] = $hold;
 			}

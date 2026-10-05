@@ -1,10 +1,10 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dynamic_element.js,v 1.4 2011-06-27 15:26:59 ngantier Exp $
+// $Id: dynamic_element.js,v 1.4 2011/06/27 15:26:59 ngantier Exp $
 
 /*
- * Cette classe a pour but d'implÃ©menter un systÃ¨me gÃ©nÃ©rique d'Ã©vÃ¨nement Ajax sur un noeud HTML
+ * Cette classe a pour but d'implémenter un système générique d'évènement Ajax sur un noeud HTML
  */
 
 var elt_editable = true;

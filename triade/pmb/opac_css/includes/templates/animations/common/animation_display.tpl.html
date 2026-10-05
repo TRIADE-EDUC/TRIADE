@@ -1,0 +1,468 @@
+<!-- $Id: animation_display.tpl.html,v 1.21.2.5 2024/12/26 15:41:34 jparis Exp $ -->
+
+{% if animation.name %}
+	<div class="asideContentAnim">
+		{% block prices %}
+			{% if !animation.hasChildrens and animation.prices %}
+				{% if !animation.event.dateExpired %}
+					<div class="animation_prices">
+						<span>{{ msg.animation_quota_prices }} :</span>
+						<br />
+						<br />
+						{% for price in animation.prices %}
+							<span>
+								{{ price.name }} : {{ price.value }} {{ formData.globals.pmbDevise }}
+								<br />
+							</span>
+						{% endfor %}
+						<hr />
+					</div>
+				{% endif %}
+			{% endif %}
+		{% endblock %}
+		
+		{% block registration %}
+			{% if !animation.hasChildrens %}
+				{% if registration.id %}
+					<div class="animation_registration">
+						<span>{{ msg.animation_registration_empr }} :</span>
+						<br />
+						<br />
+						{% for person in registration.registredPersons %}
+							<span>{{ person.name }}</span>
+						{% endfor %}
+						<hr />
+					</div>
+				{% endif %}
+			{% endif %}
+		{% endblock %}
+		
+		{% block buttons %}
+			<div class="animation_buttons">
+				{% if formData.registrationAllowed %}
+					{% if !registration.id %}
+						{% if !animation.hasChildrens and animation.hasQuotas %}
+							{% if !animation.event.dateExpired %}
+								{% if animation.autoRegistration %}
+									{* <!-- il y une validation automatique de l'inscription --> *}
+									{% if animation.internetQuota == 0 and animation.globalQuota == 0 %}
+										{* <!-- Cas ou il n'y a pas de limites de places  --> *}
+										<div class="animation_button_registration">
+											<div class="animation_unlimitted_quotas">
+												<span class="img_permalink"></span>
+												<span class="label_permalink">
+													<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration }}</a>
+												</span>
+											</div>
+										</div>
+									{% else %}
+										{% if 0 < animation.allQuotas.availableQuotas.internet %}
+											{* <!-- Cas ou des places sont disponibles pour l'animation dans l'inscription en ligne --> *}
+											<div class="animation_button_registration">
+												<div class="animation_available_quotas">
+													<span class="img_permalink"></span>
+													<span class="label_permalink">
+														<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration }}</a>
+													</span>
+												</div>
+											</div>
+										{% else %}
+											{% if animation.allowWaitingList %}
+												{* <!-- Cas ou il n'y a plus de places disponibles mais o� on peut s'inscrire sur la liste d'attente --> *}
+												<div class="animation_button_registration">
+													<div class="animation_unavailable_quotas animation_waiting_list">
+														<span class="img_permalink"></span>
+														<span class="label_permalink">
+															<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration_waiting_list }}</a>
+														</span>
+													</div>
+												</div>
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								{% else %}
+									{* <!-- Cas ou il y'a une liste d'attente --> *}		
+									{% if animation.allowWaitingList %}
+										{% if animation.allQuotas.availableQuotas.internet | substring_count '-' ; > 0 or animation.allQuotas.availableQuotas.internet == 0 %}
+											{* <!-- Cas ou il n'y a pas de validation automatique de l'inscription et il n y a plus de place--> *}
+											<div class="animation_button_registration">
+												<div class="animation_auto_registration">
+													<span class="img_permalink"></span>
+													<span class="label_permalink">
+														<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration_waiting_list_confirmation }}</a>
+													</span>
+												</div>
+											</div>
+										{% else %}
+											{* <!-- Cas ou il n'y a pas de validation automatique de l'inscription et il y a de place--> *}
+											<div class="animation_button_registration">
+												<div class="animation_auto_registration">
+													<span class="img_permalink"></span>
+													<span class="label_permalink">
+														<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration_waiting_confirmation }}</a>
+													</span>
+												</div>
+											</div>
+										{% endif %}
+									{* <!-- Cas ou il y'a pas de liste d'attente --> *}	
+									{% else %}
+										{% if animation.internetQuota == 0 and animation.globalQuota == 0 %}
+											{* <!-- Cas ou il n'y a pas de validation automatique de l'inscription et il y a de place infini --> *}
+											<div class="animation_button_registration">
+												<div class="animation_auto_registration_disabled">
+													<span class="img_permalink"></span>
+													<span class="label_permalink">
+														<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration_waiting_confirmation }}</a>
+													</span>
+												</div>
+											</div>
+										{% else %}
+											{% if 0 < animation.allQuotas.availableQuotas.internet %}
+												{* <!-- Cas ou il n'y a pas de validation automatique de l'inscription et il y a de place --> *}
+												<div class="animation_button_registration">
+													<div class="animation_auto_registration_disabled">
+														<span class="img_permalink"></span>
+														<span class="label_permalink">
+															<a href="./index.php?lvl=registration&action=add&id_animation={{ animation.id }}">{{ msg.animation_registration_waiting_confirmation }}</a>
+														</span>
+													</div>
+												</div>
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					{% else %}
+						<div class="animation_button_registration">
+							<div class="lienP">
+								<span class="img_permalink"></span>
+								<span class="label_permalink">
+									<a href="{{ registration.unsubscribeLink }}" role='button' {% if registration.is_contact %} onclick="return confirm('{{ msg.animation_confirm_delete_registration }}')" {% endif %}>{{ msg.animation_registration_cancel }}</a>
+								</span>
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}
+			</div>
+		{% endblock %}
+	</div>
+	<div class="animation_contenu">
+		<table class="descr_animation">
+			<tbody>
+				{% block name %}
+					<tr class="animation_name">
+						<td class="labelAnim">
+							<span>{{ msg.animation_title }} :</span>
+						</td>
+						<td class="labelContent">
+							<span id="exempl_titleAnim">{{ animation.name }}</span>
+						</td>
+					</tr>
+				{% endblock %}
+				
+				{% block parent %}
+					{% if animation.parent.name %}
+						<tr class="animation_parent">
+							<td class="labelAnim">
+								<span>{{ msg.animation_parent }} :</span>
+							</td>
+							<td class="labelContent">
+								<span>
+									<a href="./index.php?lvl=animation_see&id={{ animation.parent.id }}">{{ animation.parent.name }}</a>
+								</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block date %}
+					<tr class="animation_date">
+						<td class="labelAnim">
+							<span>{{ msg.animation_date }} :</span>
+						</td>
+						<td class="labelContent">
+							<span>
+								{% if animation.event.startDate != animation.event.endDate %}
+									{{ animation.event.startDate }} 
+									{% if animation.event.startHour != '00:00' %}
+										{{ animation.event.startHour }}
+									{% endif %}
+									{% if !animation.event.duringDay %}
+										{{ msg.animations_date_to }} {{ animation.event.endDate }} 
+										{% if animation.event.endHour != '00:00' %}
+											{{ animation.event.endHour }}
+										{% endif %}
+									{% endif %}
+								{% else %}
+									{{ animation.event.startDate }}
+									{% if animation.event.startHour != '00:00' %}
+										{{ animation.event.startHour }}
+									{% endif %}
+									{% if animation.event.endHour != '00:00' %}
+										{{ msg.animations_date_hour_to }} 
+										{{ animation.event.endHour }}
+									{% endif %}
+								{% endif %}
+							</span>
+						</td>
+					</tr>
+				{% endblock %}
+				
+				{% block quota %}
+					{% if !animation.hasChildrens and animation.hasQuotas %}
+						{% if !animation.event.dateExpired %}
+							<tr class="animation_quota">
+								<td class="labelAnim">
+									<span>{{ msg.animation_quota_available }} :</span>
+								</td>
+								<td class="labelContent">
+									{% if !animation.hasChildrens and animation.hasQuotas %}
+										{% if animation.allQuotas.animationQuotas.internet != 0 and animation.allQuotas.availableQuotas.internet != 0 %}
+											<span>
+												{{ animation.allQuotas.availableQuotas.internet }}
+											</span>
+										{% else %}
+											{% if animation.allQuotas.animationQuotas.internet != 0 and animation.allQuotas.availableQuotas.internet == 0 %}
+												{% if animation.location.0.locationLibelle %}
+													{{ msg.quotas_not_set }} : {{ animation.location.0.locationLibelle }}
+												{% else %}
+													{{ msg.quotas_not_set_biblio }}
+												{% endif %}
+											{% else %}
+												<span>
+													{{ msg.animation_quota_no_limit }}
+												</span>
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								</td>
+							</tr>
+						{% endif %}
+					{% endif %}
+				{% endblock %}
+				
+				{% block location %}
+					{% if animation.location %}
+						<tr class="animation_location">
+							<td class="labelAnim">
+								<span>{{ msg.animation_location }} :</span>
+							</td>
+							<td class="labelContent">
+								{% for loc in animation.location %}
+									<span>
+										{{ loc.locationLibelle }}
+										{% if !loop.last %}
+											<br />
+										{% endif %}
+									</span>
+								{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block concepts %}
+					{% if animation.concepts %}
+						<tr class="animation_concepts">
+							<td class="labelAnim">
+								<span>{{ msg.animation_concepts }} :</span>
+							</td>
+							<td class="labelContent">
+								{% for concept in animation.concepts %}
+									<span>
+										<a href="./index.php?lvl=concept_see&id={{ concept.id }}">{{ concept.displayLabel }}</a>
+										{% if !loop.last %}
+											<br />
+										{% endif %}
+									</span>
+								{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block categories %}
+					{% if animation.categories %}
+						<tr class="animation_categories">
+							<td class="labelAnim">
+								<span>{{ msg.animation_categories }} :</span>
+							</td>
+							<td class="labelContent">
+								{% for index,categ in animation.categories %}
+									<span>
+										<a href="./index.php?lvl=categ_see&id={{ categ.id }}">{{ categ.displayLabel }}</a>
+										{% if !loop.last %}
+											<br />
+										{% endif %}
+									</span>
+								{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block status %}
+					{% if animation.status %}
+						<tr class="animation_status">
+							<td class="labelAnim">
+								<span>{{ msg.animation_status }} :</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ animation.status.label }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block comment %}
+					{% if animation.comment %}
+						<tr class="animation_comment">
+							<td class="labelAnim">
+								<span>{{ msg.animation_comment }} :</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ animation.comment }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+				
+				{% block description %}
+					{% if animation.description %}
+						<tr class="animation_description">
+							<td class="labelAnim">
+								<span>{{ msg.animation_description }} :</span>
+							</td>
+							<td class="labelContent">
+								<span>{{ animation.description }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endblock %}
+
+				{% block cp_anim %}
+					{% if animation.customFields %}
+						{% for cp in animation.customFields %}
+							{% if cp.customField.opacShow == 1 and cp.customFormatValues.values.0.format_value %}
+								<tr class="animation_p_perso">
+									<td class="labelAnim">
+										<span>{{ cp.customField.titre }} :</span>
+									</td>
+									<td class="labelContent">
+										<span>{{ cp.customFormatValues.values.0.format_value}}</span>
+									</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
+			</tbody>
+		</table>
+		
+		
+		{% block childrens %}
+			{% if animation.hasChildrens %}
+				{% if animation.childrens.length > 0 %}
+				<div id="animation_childrens_list">
+					<br />
+					<h3>{{ msg.animation_linked }}</h3>
+					<form action="./index.php" method="GET">
+						<input type="hidden" name="lvl" value="registration">
+						<input type="hidden" name="action" value="add">
+						<input type="hidden" name="id_animation" value="{{ animation.id }}">
+						<table class="descr_childrens_animation">
+							<thead>
+								<tr>
+									<th></th>
+									<th>{{ msg.animation_title }}</th>
+									<th>{{ msg.animation_date }}</th>
+									<th>{{ msg.animation_quota_available }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for children in animation.childrens %}
+								<tr class="animation {% cycle 'odd', 'even' %}">
+									{% block childrens_registration %}
+										<td class="labelContent">
+											{% if !children.hasChildrens and children.hasQuotas %}
+												{% if 1 == children.event.dateExpired %}
+													<input type="checkbox" disabled="true" title="{{ msg.animation_event_date_expired }}">
+												{% else %}
+													{% if !children.alreadyRegistred %}
+														{% if children.allowWaitingList %} 
+															<input type="checkbox" title="{{ msg.animation_registration_waiting_list }}" name="numDaughtersAnimation[]" value="{{ children.id }}">
+														{% else %} 
+															{% if children.allQuotas.availableQuotas.global == 0 or children.allQuotas.availableQuotas.global > 0 %}
+																<input type="checkbox" name="numDaughtersAnimation[]" value="{{ children.id }}">
+															{% endif %}
+														{% endif %}
+													{% else %}
+														<input type="checkbox" disabled="true" title="{{ msg.animation_empr_already_redistred }}">
+													{% endif %}
+												{% endif %}
+											{% endif %}
+										</td>
+									{% endblock %}
+									{% block childrens_name %}
+										<td class="labelContent">
+											<a href="./index.php?lvl=animation_see&id={{ children.id }}" class="animation_name">
+												{{ children.name }}
+											</a>
+										</td>
+									{% endblock %}
+									{% block childrens_date %}
+										<td class="labelContent">
+											{{ children.event.startDate }} 
+											{% if children.event.startHour != '00:00' %}
+												{{ children.event.startHour }}
+											{% endif %}<br>
+											{% if !children.event.duringDay %}
+												{{ msg.animations_date_to }} {{ children.event.endDate }} 
+												{% if children.event.endHour != '00:00' %}
+													{{ children.event.endHour }}
+												{% endif %}
+											{% endif %}
+										</td>
+									{% endblock %}
+									{% block childrens_quota %}
+										<td class="labelContent">
+											{% if !children.hasChildrens and children.hasQuotas %}
+												{% if children.event.dateExpired %}
+														<span>
+															{{ msg.animation_expired_no_quota }}
+														</span>
+												{% else %}
+													{% if children.allQuotas.animationQuotas.global %}
+														<span>
+															{{ children.allQuotas.availableQuotas.global }} / {{ children.globalQuota }}
+														</span>
+													{% else %}
+														{% if children.allQuotas.availableQuotas.global == 0 %}
+															{{ msg.animation_no_place }}
+														{% else %}
+															<span>
+																{{ msg.animation_quota_no_limit }}
+															</span>
+														{% endif %}
+													{% endif %}
+												{% endif %}
+											{% endif %}
+										</td>
+									{% endblock %}
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<button type="submit" class="bouton">
+						  {{ msg.animation_registration }}
+						</button>
+					</form>
+				</div>
+				{% endif %}
+			{% endif %}
+		{% endblock %}
+	</div>
+{% else %}
+	<h3>{{ msg.animation_unavailable }}</h3>
+{% endif %}

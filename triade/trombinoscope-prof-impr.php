@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -43,7 +43,7 @@ $cnx=cnx();
 
 // nom classe
 $saisie_classe=$_GET["idclasse"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -68,14 +68,14 @@ if (trim($cl) != "") { ?>
 <br /><br />
 <table border="0" width="100%" align=center>
 <?php
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
 	print("<tr><td align=center valign=center>".LANGRECH1."</td></tr>");
 }else {
 ?>
 <tr>
 <?php
 $nbp=1;
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 
 	<td align=center valign=bottom>

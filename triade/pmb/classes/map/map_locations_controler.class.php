@@ -1,12 +1,13 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_locations_controler.class.php,v 1.2 2016-11-05 14:49:07 ngantier Exp $
+// $Id: map_locations_controler.class.php,v 1.4 2021/12/24 08:34:43 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
+global $class_path;
 require_once($class_path . "/map/map_objects_controler.class.php");
 
 /**
@@ -27,7 +28,6 @@ class map_locations_controler extends map_objects_controler {
     public function get_json_informations() {
         global $pmb_url_base;
         global $pmb_map_max_holds;
-        global $dbh;
 
         $map_hold = $this->get_bounding_box();
         if ($map_hold) {
@@ -63,9 +63,7 @@ class map_locations_controler extends map_objects_controler {
     }
 
     static public function get_map_location($id_notice, $id_bulletin = 0, $id_dom = TYPE_LOCATION) {
-        global $dbh, $msg, $explr_invisible, $pmb_droits_explr_localises;
-
-        $explr_tab_invis = explode(",", $explr_invisible);
+        global $msg, $explr_invisible, $pmb_droits_explr_localises;
 
         if ($id_bulletin) {
             $where_expl_notice_expl_bulletin = " expl_bulletin='" . $id_bulletin . "' ";
@@ -81,7 +79,7 @@ class map_locations_controler extends map_objects_controler {
         $display = '';
         $ids = array();
         $objects = array();
-        $result = pmb_mysql_query($requete, $dbh);
+        $result = pmb_mysql_query($requete);
         if (pmb_mysql_num_rows($result)) {
             while ($expl = pmb_mysql_fetch_object($result)) {
                 $objects["expl"][$expl->expl_location][] = $expl->expl_id;
@@ -96,7 +94,7 @@ class map_locations_controler extends map_objects_controler {
         }
         $requete = "SELECT explnum_id, num_location FROM explnum join explnum_location on explnum_id=num_explnum WHERE " . $where_expl_notice_expl_bulletin;
 
-        $result = pmb_mysql_query($requete, $dbh);
+        $result = pmb_mysql_query($requete);
         if (pmb_mysql_num_rows($result)) {
             while ($expl = pmb_mysql_fetch_object($result)) {
                 $objects["explnum"][$expl->num_location][] = $expl->explnum_id;
@@ -105,16 +103,19 @@ class map_locations_controler extends map_objects_controler {
         }
         if (count($ids)) {
             $map = new map_locations_controler(TYPE_LOCATION, $ids, $objects, $id_dom);
-            $display = gen_plus(
-                'map_location_' . $id_notice . '_' . $id_bulletin, 
-                $msg['record_expl_map_location'], 
-                $map->get_map($id_notice . '_' . $id_bulletin, 'map_location_' . $id_notice . '_' . $id_bulletin.'Img'),
-                '',
-                '',
-                '',
-                'map_location-parent',
-                'map_location-child'
-            );
+            $map_display = $map->get_map($id_notice . '_' . $id_bulletin, 'map_location_' . $id_notice . '_' . $id_bulletin.'Img');
+            if($map_display) {
+	            $display = gen_plus(
+	                'map_location_' . $id_notice . '_' . $id_bulletin, 
+	                $msg['record_expl_map_location'], 
+					$map_display,
+	                '',
+	                '',
+	                '',
+	                'map_location-parent',
+	                'map_location-child'
+	            );
+            }
         }
         return $display;
     }

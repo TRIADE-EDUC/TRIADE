@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -36,7 +36,6 @@ session_start();
 include("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 validerequete("2");
-$cnx=cnx();
 if (isset($_GET["id"])) {
 	$idetude=$_GET["id"];
 }
@@ -49,7 +48,7 @@ if (isset($_POST["newcoord"])) {
 	alertJs(LANGDONENR);
 }
 $data=liste_eleve_etude_trombi($idetude); //id_eleve,id_etude,information,auto_exit
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$idEleve=$data[$i][0];
 	$idclasse="-".$data[$i][1];
 	if ($data[$i][0] > 0) {
@@ -64,7 +63,7 @@ for($i=0;$i<count($data);$i++) {
 	}
 ?>
 	<div align="center" id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;">
-	<img src="image_trombi.php?idE=<?php print $data[$i][0]?>" /><br><br><?php print strtoupper(recherche_eleve_nom($data[$i][0]))."<br>".ucwords(recherche_eleve_prenom($data[$i][0]))?>
+	<img src="image_trombi.php?idE=<?php print $data[$i][0]?>" style='box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); border-radius: 8px;' /><br><br><?php print strtoupper(recherche_eleve_nom($data[$i][0]))."<br>".ucwords(recherche_eleve_prenom($data[$i][0]))?>
 	</div>
 <?php 
 	$listeDiv.="\"$idid\",";
@@ -108,7 +107,7 @@ SET_DHTML(CURSOR_MOVE, TRANSPARENT, <?php print $listeDiv ?>);
 function capture_position() {
 	var valeur="";
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "\tval0=\"E".$data[$i][0]."\";\n";
 		//o0.x; o0.y;
 		print "\to0=dd.elements[val0]; \n";

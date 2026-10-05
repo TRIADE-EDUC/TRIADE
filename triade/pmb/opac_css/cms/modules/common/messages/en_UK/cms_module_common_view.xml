@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
+$Id: cms_module_common_view.xml,v 1.2 2022/09/06 07:52:19 gneveu Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_template_choice">Choose a template</entry>
@@ -14,4 +14,8 @@ $Id: cms_module_common_view.xml,v 1.1 2015-06-16 10:24:25 pmbs Exp $ -->
 	<entry code="cms_module_common_view_new_template">Create a new template</entry>
 	<entry code="cms_module_common_view_template_label">Name of the template</entry>
 	<entry code="cms_module_common_view_template_content">Content of the template</entry>
+	<entry code="cms_module_common_view_list_paging_paginator_title">Affiche le paginateur</entry>
+	<entry code="cms_module_common_view_list_paging_nb_per_page_title">Affiche la sélection du nombre d'éléments par page</entry>
+	<entry code="cms_module_common_view_list_paging_navigator_title">Affiche le paginateur plus le nombre d'éléments par page</entry>
+	<entry code="cms_module_common_view_list_paging_title">Contient la pagination (Attention, une page ne peut contenir qu'un seul paginateur)</entry>
 </XMLlist>

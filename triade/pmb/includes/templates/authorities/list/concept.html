@@ -1,13 +1,13 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: concept.html,v 1.10 2018-08-03 12:47:00 arenou Exp $ -->
+<!-- $Id: concept.html,v 1.11 2019/12/09 10:29:38 tsamson Exp $ -->
 {% block element_link %}
-	{% if global.caller == 'search_form' %}
-		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.id }}', '{{list_element.get_object_instance.isbd | escape true }}', '{{global.type}}', '{{ global.callback }}')">
+	{% if global.caller | substr_count "concept" %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.uri }}', '{{list_element.get_object_instance.isbd | escape true }}', '{{global.type}}', '{{ global.callback }}', '{{ global.element_name}}')">
 			{{ list_element.get_object_instance.header | safe }}
 		</a>
 	{% else %}
-		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.uri }}', '{{list_element.get_object_instance.isbd |  escape true }}', '{{global.type}}', '{{ global.callback }}')">
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ global.element}}', '{{ list_element.get_object_instance.id }}', '{{list_element.get_object_instance.isbd |  escape true }}', '{{global.type}}', '{{ global.callback }}', '{{ global.element_name}}')">
 			{{ list_element.get_object_instance.header | safe }}
 		</a>
 	{% endif %}

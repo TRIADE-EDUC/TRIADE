@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PMBGraph.js,v 1.7 2018-03-03 16:05:53 vtouchard Exp $
+// $Id: PMBGraph.js,v 1.9 2020/06/05 08:44:33 gneveu Exp $
 
 define(["dojo/_base/declare", 
         "dijit/layout/ContentPane",
@@ -69,6 +69,9 @@ define(["dojo/_base/declare",
 		    	}))
 		    	.on("tick", lang.hitch(this, this.ticked));
 		    
+		    // On initialise les markers
+		    this.setDefs();
+		    
 		    this.linkSvg = this.svg.append('g').attr("class","links").selectAll(".graphlink").data(this.getLinks(), function(d){return d.target.id});
 		    this.nodeSvg = this.svg.append('g').attr("class","nodes").selectAll(".node").data(this.getNodes(), function(d){return d.id});
 		    
@@ -101,7 +104,8 @@ define(["dojo/_base/declare",
 		        		}
 		        		return  "stroke: #999";
 		        	})
-		        	.attr("class", "graphlink");
+		        	.attr("class", "graphlink")
+	        		.attr("marker-end", "url(#arrow)");
 			    	
 			    this.linkSvg = linkEnter.merge(this.linkSvg);
 			    this.nodeSvg = this.svg.select('.nodes').selectAll(".node")
@@ -237,6 +241,22 @@ define(["dojo/_base/declare",
 	    
 	    getLinks : function() {
 	    	return this.links;
+	    },
+	    
+	    setDefs: function() {
+		    this.svg.append("defs")
+		    	.append('marker')
+			    	.attr("id", "arrow")
+			    	.attr("viewBox", "0 0 10 10")
+			    	.attr("refX", "10")
+			    	.attr("refY", "5")
+			    	.attr("markerUnits", "strokeWidth")
+			    	.attr("markerWidth", "10")
+			    	.attr("markerHeight", "10")
+			    	.attr("orient", "auto")
+			    	.append("path")
+			    		.attr("d", "M 0 0 L 10 5 L 0 10 z")
+		    	;
 	    },
 
 	});

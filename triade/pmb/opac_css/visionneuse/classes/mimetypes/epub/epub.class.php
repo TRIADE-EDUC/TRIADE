@@ -1,34 +1,35 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epub.class.php,v 1.5 2017-07-03 09:07:10 dgoron Exp $
+// $Id: epub.class.php,v 1.9 2023/12/07 15:18:26 dgoron Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 require_once($visionneuse_path."/../classes/epubData.class.php");
 require_once($visionneuse_path."/classes/mimetypes/converter_factory.class.php");
 
 class epub extends affichage{
-	public $doc;					//le document numÃ©rique Ã  afficher
+	public $doc;					//le document numérique à afficher
 	public $driver;				//class driver de la visionneuse
-	public $params;				//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();	//tableau des infos Ã  afficher	
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;				//paramètres éventuels
+	public $toDisplay= array();	//tableau des infos à afficher
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
 	public $ebook; 				//l'objet ebook
- 
+
     public function __construct($doc=0) {
     	if($doc){
-    		$this->doc = $doc; 
+    		$this->doc = $doc;
     		$this->driver = $doc->driver;
     		$this->params = $doc->params;
     		$this->getParamsPerso();
     	}
     }
-    
+
     public function fetchDisplay(){
-    	global $visionneuse_path;
-    	
+        global $visionneuse_path, $charset;
+
     	//le document
     	$this->driver->cleanCache();
   		if (!$this->driver->isInCache($this->doc->id)) {
@@ -52,36 +53,41 @@ class epub extends affichage{
     											".$tocItem["text"]."
     										</a>
     									</div>";
-    		$identPrecedent=$tocItem["level"];   		
+    		$identPrecedent=$tocItem["level"];
     	}
     	$this->toDisplay["doc"] .= "
     		</div>
-    		<iframe id='ePubFrameViewer' name='ePubFrameViewer' style='height:100%;width:70%'></iframe>    
+    		<iframe 
+                title='".htmlentities($this->doc->titre, ENT_QUOTES, $charset)."' 
+                id='ePubFrameViewer' 
+                name='ePubFrameViewer' 
+                style='height:100%;width:70%'>
+            </iframe>
     		<div style='text-align:center'>
-    			<img src='".$visionneuse_path."/images/zoom_plus.gif' alt='zoom_plus' border='0' onClick='zoomIn();return false;' style='display:inline;'/>
+    			<img src='".$visionneuse_path."/images/zoom_plus.gif' alt='zoom_plus' onClick='zoomIn();return false;' style='display:inline;'/>
     			&nbsp;
-				<img src='".$visionneuse_path."/images/zoom_moins.gif' alt='zoom_moins' border='0' onClick='zoomOut();return false;' style='display:inline;'/>
+				<img src='".$visionneuse_path."/images/zoom_moins.gif' alt='zoom_moins' onClick='zoomOut();return false;' style='display:inline;'/>
     			&nbsp;
-    			<img src='".$visionneuse_path."/images/first.gif' alt='first' border='0' onClick=\"pageCours=0;goPage(pages[pageCours]['href']);return false;\" style='display:inline;'/>
+    			<img src='".$visionneuse_path."/images/first.gif' alt='first' onClick=\"pageCours=0;goPage(pages[pageCours]['href']);return false;\" style='display:inline;'/>
     			&nbsp;
-	        	<img src='".$visionneuse_path."/images/prev.gif' alt='previous' border='0' onClick=\"changePage('-');\" style='display:inline;'/>
+	        	<img src='".$visionneuse_path."/images/prev.gif' alt='previous' onClick=\"changePage('-');\" style='display:inline;'/>
 	        	&nbsp;
 	        	page <input type='text' id='pageNum' name='pageNum' value='0' size='1'/ onChange='appelPage();'> / ".count($ebook->pages)."
 				&nbsp;
-    			<img src='".$visionneuse_path."/images/next.gif' alt='next' border='0' onClick=\"changePage('+');\" style='display:inline;'/>
+    			<img src='".$visionneuse_path."/images/next.gif' alt='next' onClick=\"changePage('+');\" style='display:inline;'/>
     			&nbsp;
-    			<img src='".$visionneuse_path."/images/last.gif' alt='last' border='0' onClick=\"pageCours=".(count($ebook->pages)-1).";goPage(pages[pageCours]['href']);return false;\" style='display:inline;'/>
-    		</div>		
-    	</div> 
-    	<div class='row'></div>   	
-    	<script type='text/javascript'>
+    			<img src='".$visionneuse_path."/images/last.gif' alt='last' onClick=\"pageCours=".(count($ebook->pages)-1).";goPage(pages[pageCours]['href']);return false;\" style='display:inline;'/>
+    		</div>
+    	</div>
+    	<div class='row'></div>
+    	<script>
     		var pages = ".json_encode($ebook->pages).";
     		var pageCours = 0;
     		var idiv= document.getElementById('divEpub');
     		var iframe= document.getElementById('ePubFrameViewer');
     		var pageNumText = document.getElementById('pageNum');
     		var fontSize = 1;
-    		var fichierActuel = '';    		
+    		var fichierActuel = '';
 
     		function changePage(sens) {
 				var ok = true;
@@ -103,25 +109,25 @@ class epub extends affichage{
 					goPage(pages[pageCours]['href']);
 				}
 			}
-			
+
 			function goPage(page) {
 				//On charge la page
 				iframe.src='visionneuse.php/".$this->driver->driver_name."/".$this->doc->id."/'+page;
 			}
-						
+
 			function appelPage() {
 				var maPage = pageNumText.value;
 				maPage = parseInt(maPage);
 				if (isNaN(maPage)) {
-					alert('NumÃ©ro de page non valide');
+					alert('Numéro de page non valide');
 				} else {
-					maPage--; //Le tableau commence Ã  l'indice 0
+					maPage--; //Le tableau commence à l'indice 0
 					if (pages[maPage]) {
 						pageCours = maPage;
 						goPage(pages[pageCours]['href']);
 					} else {
-						alert('NumÃ©ro de page non valide');
-					}					
+						alert('Numéro de page non valide');
+					}
 				}
 			}
 
@@ -134,24 +140,24 @@ class epub extends affichage{
 				}
 				goPage(page);
 			}
-			
+
 			function resizeDivConteneur () {
 				idiv.style.width = '".$this->parameters["size_x"]."%';
 				idiv.style.height = ((getFrameHeight()-40-80)*".($this->parameters["size_y"]/100).")+'px';
 			}
-			
+
 			function zoomIn() {
 				fontSize += 0.1;
 				iframe.contentDocument.body.style.fontSize = fontSize + 'em';
 			}
-			
+
 			function zoomOut() {
 				if (fontSize > 0.11) {
 					fontSize -= 0.1;
 					iframe.contentDocument.body.style.fontSize = fontSize + 'em';
 				}
 			}
-			
+
 			function trouvePageNum() {
 				var ancre = new Array();
 				nb_key = 0;
@@ -168,14 +174,14 @@ class epub extends affichage{
 				if (nb_key == 1) {
 					pageCours = parseInt(ancre[0]['numPage']);
 				} else {
-					var doc = iframe.contentDocument;					
+					var doc = iframe.contentDocument;
 					var scroll = doc.documentElement.scrollTop;
 					if (typeof(iframe.innerHeight) == 'number') {
 						var hauteurFrame = iframe.innerHeight;
 					} else if(doc.documentElement && doc.documentElement.clientHeight) {
 						var hauteurFrame = doc.documentElement.clientHeight;
 					}
-					for (var i=0; i<ancre.length; i++) {						
+					for (var i=0; i<ancre.length; i++) {
 						if (doc.getElementById(ancre[i]['ancre'])) {
 							var y = doc.getElementById(ancre[i]['ancre']).offsetTop - scroll;
 							if (y >= 0 && y < (hauteurFrame/10)) {
@@ -185,22 +191,22 @@ class epub extends affichage{
 								pageCours = parseInt(ancre[i]['numPage'])-1;
 								break;
 							} else if(i==(ancre.length-1)) {
-								//on est sur la derniÃ¨re ancre, rien de dÃ©tectÃ© : elle est au dessus
+								//on est sur la dernière ancre, rien de détecté : elle est au dessus
 								pageCours = parseInt(ancre[i]['numPage']);
 							}
 						}
 					}
 				}
-				pageNumText.value = pageCours+1;				
+				pageNumText.value = pageCours+1;
 			}
-			
+
 			function monInit() {
 				//div conteneur
 				resizeDivConteneur();
 				//docnum
 				goPage(pages[pageCours]['href']);
 			}
-    		
+
 			function pageChargee() {
 				//Fichier actuel
 				var tmpFrameSrc = frames['ePubFrameViewer'].location.href.split('/');
@@ -208,17 +214,17 @@ class epub extends affichage{
 				tmpFrameSrc = frameSrc.split('#');
 				fichierActuel = tmpFrameSrc[0];
 
-				//NumÃ©ro de page en cours
+				//Numéro de page en cours
 				trouvePageNum();
-				
+
 				//On reprend le dernier niveau de zoom
 				try {
 					iframe.contentWindow.body.style.fontSize = fontSize + 'em';
 				}catch(err){
 					iframe.contentDocument.body.style.fontSize = fontSize + 'em';
 				}
-				
-				//on met Ã  jour sur scroll
+
+				//on met à jour sur scroll
 	    		try {
 					iframe.contentWindow.onscroll=function(){
 		    			trouvePageNum();
@@ -227,7 +233,7 @@ class epub extends affichage{
 					iframe.contentDocument.onscroll=function(){
 		    			trouvePageNum();
 		    		}
-				}	    		
+				}
 			}
 
     		if (window.attachEvent) {
@@ -235,23 +241,21 @@ class epub extends affichage{
     		} else {
     			window.addEventListener('load', monInit, false);
     		}
-    		
+
     		if (iframe.attachEvent) {
     			iframe.attachEvent('onload', pageChargee);
     		} else {
     			iframe.addEventListener('load', pageChargee, false);
     		}
-    		
+
     	</script>
     	";
     	//la description
 		$this->toDisplay["desc"] = $this->doc->desc;
     	return $this->toDisplay;
     }
-    
+
     public function render(){
-    	global $visionneuse_path;
-    	
     	$ebook = new epubData($this->driver->get_cached_filename($this->doc->id));
 		if (substr($this->driver->getParam("page"),-3)=="css"){
     		header("Content-Type: text/css");
@@ -260,27 +264,29 @@ class epub extends affichage{
     	}
     	print $ebook->getPageContent($this->driver->getParam("page"));
     }
-    
+
     public function getTabParam(){
+    	if(!isset($this->parameters['size_x'])) $this->parameters['size_x'] = '';
+    	if(!isset($this->parameters['size_y'])) $this->parameters['size_y'] = '';
     	$this->tabParam = array(
 			"size_x"=>array("type"=>"text","name"=>"size_x","value"=>$this->parameters['size_x'],"desc"=>"Largeur du document en % de l'espace visible"),
 			"size_y"=>array("type"=>"text","name"=>"size_y","value"=>$this->parameters['size_y'],"desc"=>"Hauteur du document en % de l'espace visible")
 		);
        	return $this->tabParam;
     }
-    
+
 	public function getParamsPerso(){
 		$params = $this->driver->getClassParam('epub');
 		$this->unserializeParams($params);
 		if($this->parameters['size_x'] == 0) $this->parameters['size_x'] = $this->driver->getParam("maxX");
 		if($this->parameters['size_y'] == 0) $this->parameters['size_y'] = $this->driver->getParam("maxY");
 	}
-	
+
 	public function unserializeParams($paramsToUnserialized){
 		$this->parameters = unserialize($paramsToUnserialized);
 		return $this->parameters;
 	}
-	
+
 	public function serializeParams($paramsToSerialized){
 		$this->parameters =$paramsToSerialized;
 		return serialize($paramsToSerialized);

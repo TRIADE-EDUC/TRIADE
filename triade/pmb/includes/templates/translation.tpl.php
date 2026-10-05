@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: translation.tpl.php,v 1.4 2019-05-27 13:47:15 btafforeau Exp $
+// $Id: translation.tpl.php,v 1.4 2019/05/27 13:47:15 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $translation_tpl_form_javascript, $translation_tpl_form, $translation_tpl_line_form, $translation_tpl_form_input_small_text, $translation_tpl_form_input_text;
 
 //*******************************************************************
-// DÃ©finition des templates 
+// Définition des templates 
 //*******************************************************************
 $translation_tpl_form_javascript = "
 <script type='text/javascript'>

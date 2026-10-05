@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_category.class.php,v 1.3 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_cataloging_category.class.php,v 1.4 2022/02/14 13:41:35 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -106,14 +106,14 @@ class frbr_cataloging_category{
 	public function delete(){
 		global $msg;
 		if($this->id){
-			//pas de jeu de données sur cette catég?
+			//pas de jeu de donn�es sur cette cat�g?
 			$query = "select cataloging_datanode_num_category from frbr_cataloging_datanodes where cataloging_datanode_num_category = '".$this->id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$this->error = $msg['frbr_cataloging_category_error_datanode_associated'];
 				return false;
 			}else{
-				//des sous-catég?
+				//des sous-cat�g?
 				$query = "select id_cataloging_category from frbr_cataloging_categories where cataloging_category_num_parent = '".$this->id."'";
 				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result)){
@@ -136,10 +136,9 @@ class frbr_cataloging_category{
 	}
 	
 	public function get_children() {
-		global $dbh;
 		if(!count($this->children)){
 			$query = "select id_cataloging_category from frbr_cataloging_categories where category_num_parent = '".$this->id."'";
-			$result=pmb_mysql_query($query, $dbh);
+			$result=pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while($row=pmb_mysql_fetch_object($result)){
 					$this->children[] = $row->id_cataloging_category;
@@ -165,7 +164,7 @@ class frbr_cataloging_category{
 	}
 	
 	public function set_id($id) {
-	  $this->id = $id*1;
+	  $this->id = intval($id);
 	}
 	    
 	public function get_parent() {
@@ -173,7 +172,7 @@ class frbr_cataloging_category{
 	}
 	
 	public function set_parent($parent) {
-	  $this->parent = $parent*1;
+	  $this->parent = intval($parent);
 	}
 	
 	public function get_error(){

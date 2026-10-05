@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view.class.php,v 1.19 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_view.class.php,v 1.21 2022/01/03 11:17:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,11 +18,10 @@ class cms_module_common_view extends cms_module_root{
 	}
 	
 	protected function fetch_datas(){
-		global $dbh;
 		if($this->id){
 		//on commence par aller chercher ses infos
 			$query = " select id_cadre_content, cadre_content_hash, cadre_content_num_cadre, cadre_content_data from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$row = pmb_mysql_fetch_object($result);
 				$this->id = (int) $row->id_cadre_content;
@@ -34,7 +33,6 @@ class cms_module_common_view extends cms_module_root{
 	}
 	
 	public function save_form(){
-		global $dbh;
 		$this->get_hash();
 		if($this->id){
 			$query = "update cms_cadre_content set";
@@ -50,14 +48,14 @@ class cms_module_common_view extends cms_module_root{
 			($this->cadre_parent ? "cadre_content_num_cadre = '".$this->cadre_parent."'," : "")."		
 			cadre_content_data = '".addslashes($this->serialize())."'
 			".$clause;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result){
 			if(!$this->id){
 				$this->id = pmb_mysql_insert_id();
 			}
 			//on supprime les anciennes vues...
 			$query = "delete from cms_cadre_content where id_cadre_content != '".$this->id."' and cadre_content_type='view' and cadre_content_num_cadre = '".$this->cadre_parent."'";
-			pmb_mysql_query($query,$dbh);
+			pmb_mysql_query($query);
 			
 			return true; 
 		}
@@ -69,14 +67,13 @@ class cms_module_common_view extends cms_module_root{
 	}
 	
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
-		global $dbh;
 		if($this->id){
-			//on commence par Ã©liminer les sous-Ã©lÃ©ments associÃ© (sait-on jamais...)
+			//on commence par éliminer les sous-éléments associé (sait-on jamais...)
 			$query = "select id_cadre_content,cadre_content_object from cms_cadre_content where cadre_content_num_cadre_content = ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$sub_elem = new $row->cadre_content_object($row->id_cadre_content);
@@ -87,9 +84,9 @@ class cms_module_common_view extends cms_module_root{
 					}
 				}
 			}
-			//on est tout seul, Ã©liminons-nous !
+			//on est tout seul, éliminons-nous !
 			$query = "delete from cms_cadre_content where id_cadre_content = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				$this->delete_hash();
 				return true;
@@ -165,11 +162,8 @@ class cms_module_common_view extends cms_module_root{
 	
 	protected function get_ace_editor_script($textarea_id = 'cms_module_common_view_django_template_content'){
 		return "
-		<script src='./javascript/ace/ace.js' type='text/javascript' charset='utf-8'></script>
-		<script src='./javascript/ace/theme-eclipse.js' type='text/javascript' charset='utf-8'></script>
-		<script src='./javascript/ace/mode-twig.js' type='text/javascript' charset='utf-8'></script>
 		<script>
-		pmbDojo.aceManager.initEditor('".$textarea_id."');
+    		pmbDojo.aceManager.initEditor('".$textarea_id."');
 		</script>";
 	}
 }

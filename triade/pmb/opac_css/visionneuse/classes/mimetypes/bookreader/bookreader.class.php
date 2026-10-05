@@ -1,9 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bookreader.class.php,v 1.30 2018-06-22 09:55:45 ngantier Exp $
+// $Id: bookreader.class.php,v 1.38.2.3 2024/12/18 08:44:58 qvarin Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 //require_once($visionneuse_path."/classes/mimetypes/converter_factory.class.php");
 // require_once($visionneuse_path."/../classes/docbnf.class.php");
@@ -20,17 +21,17 @@ require_once($visionneuse_path."/classes/mimetypes/bookreader/bookreaderZIP.clas
 // error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 class bookreader extends affichage{
-	public $doc;					//le document numÃ©rique Ã  afficher
+	public $doc;					//le document numérique à afficher
 	public $driver;				//class driver de la visionneuse
-	public $params;				//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();	//tableau des infos Ã  afficher	
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;				//paramètres éventuels
+	public $toDisplay= array();	//tableau des infos à afficher
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
 	public $mimeTypeClass;			//instance selon le mimetype
- 
+
 	public function __construct($doc=0) {
     	if($doc){
-    		$this->doc = $doc; 
+    		$this->doc = $doc;
     		$this->driver = $doc->driver;
     		$this->params = $doc->params;
     		$this->getParamsPerso();
@@ -45,43 +46,45 @@ class bookreader extends affichage{
     			"getCSS",
     			"getPageCount"
     		);
+
     		$this->driver->cleanCache();
     		if (!$this->driver->isInCache($this->doc->id)) {
     			$this->driver->copyCurrentDocInCache();
     		}
     	}
-    	
-    	switch($this->doc->mimetype){
-    		case "application/pdf" : 
-    		case "application/x-pdf" : 
-    			$this->mimeTypeClass = new bookreaderPDF($this->doc, $this->parameters);
-    			break;
-    		case "application/bnf" :
-    		case "application/bnf+zip" :
-    			$this->mimeTypeClass = new bookreaderBNF($this->doc);
-    			break;
-    		case "application/epub+zip" :
-    		case "application/octet-stream" :
-    			$this->mimeTypeClass = new bookreaderEPUB($this->doc, $this->parameters);
-    			break;
-     		case "application/zip" :
-     			$this->mimeTypeClass = new bookreaderZIP($this->doc, $this->parameters);
-     			break;
+    	if(!empty($this->doc->mimetype)) {
+	    	switch($this->doc->mimetype){
+	    		case "application/pdf" :
+	    		case "application/x-pdf" :
+	    			$this->mimeTypeClass = new bookreaderPDF($this->doc, $this->parameters);
+	    			break;
+	    		case "application/bnf" :
+	    		case "application/bnf+zip" :
+	    			$this->mimeTypeClass = new bookreaderBNF($this->doc);
+	    			break;
+	    		case "application/epub+zip" :
+	    		case "application/octet-stream" :
+	    			$this->mimeTypeClass = new bookreaderEPUB($this->doc, $this->parameters);
+	    			break;
+	     		case "application/zip" :
+	     			$this->mimeTypeClass = new bookreaderZIP($this->doc, $this->parameters);
+	     			break;
+	    	}
     	}
     }
-    
+
     public function fetchDisplay(){
-    	global $visionneuse_path,$base_path;
+    	global $visionneuse_path, $charset;
      	//le titre
     	$this->toDisplay["titre"] = $this->doc->titre;
     	//la visionneuse pdf
-    	
+
     	if($this->parameters['pdf_allowed'] && ($this->doc->mimetype != "application/pdf")){
     		$this->toDisplay["doc"].="
     		<div><a href='".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&method=getPDF")."' target='_blank'>G&eacute;n&eacute;rer un PDF</a></div>";
     	}
     	$this->toDisplay["doc"].="
-    	<script type='text/javascript'>
+    	<script>
     		window.onload = function(){
 				checkSize();
 				document.getElementById('bookreader_frame').src='".$this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id."&myPage=".$this->driver->params['page']."&user_query=".$this->driver->params['user_query'])."';
@@ -89,22 +92,23 @@ class bookreader extends affichage{
 			function checkSize(){
 				var iframe= document.getElementById('bookreader_frame');
 				if (isNaN(iframe.width) || iframe.width/getFrameWidth() <= 0.9 || iframe.width/getFrameWidth() >= 1){
-					iframe.width = '95%';
-					iframe.height = ((getFrameHeight()-40-80)*0.95)+'px';
-				}				
+					iframe.style.width = '95%';
+					iframe.style.height = ((getFrameHeight()-40-80)*0.95)+'px';
+				}
 			}
+
 		</script>
-		<iframe id='bookreader_frame'></iframe> 
+		<iframe title='".htmlentities($this->doc->titre, ENT_QUOTES, $charset)."' id='bookreader_frame'></iframe>
 		";
     	//if ($this->parameters['autoresize'] == 1)
 		//la description
 		$this->toDisplay["desc"] = $this->doc->desc;
-		return $this->toDisplay;  	
+		return $this->toDisplay;
     }
-    
+
     public function render(){
-    	global $visionneuse_path, $charset;
-    	
+    	global $visionneuse_path, $charset, $lang;
+
     	$subst_style="";
     	if(file_exists($visionneuse_path."/classes/mimetypes/bookreader/BookReader/BookReader_subst.css")){
     		$subst_style="<link rel='stylesheet' type='text/css' href='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReader_subst.css'/>";
@@ -112,21 +116,25 @@ class bookreader extends affichage{
     	//$doc = new docbnf_zip($visionneuse_path."/temp/".$this->doc->id);
     	print "<!DOCTYPE html>
 <html>
-    <head>	
+    <head>
     	<meta charset=\"".$charset."\">
     	<link rel='stylesheet' type='text/css' href='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReader.css'/>
     	<link rel='stylesheet' type='text/css' href='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReaderPerso.css'/>
     	<link rel='stylesheet' type='text/css' href='".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&method=getCSS'/>")."
 	    $subst_style
-	    <script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/excanvas.compiled.js'></script>
-    	<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery-1.4.2.min.js'></script>
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery-ui-1.8.5.custom.min.js?v=3.0.9'></script>
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/dragscrollable.js'></script>
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.colorbox-min.js'></script>
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.ui.ipad.js'></script>
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.bt.min.js'></script>	
-		<script type='text/javascript' src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReader.js?v=3.0.9'></script>	
-    	<script type='text/javascript'>
+	    <script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/excanvas.compiled.js'></script>
+    	<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery-1.4.2.min.js'></script>
+		<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery-ui-1.8.5.custom.min.js?v=3.0.9'></script>
+		<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/dragscrollable.js'></script>
+		<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.colorbox-min.js'></script>
+		<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.ui.ipad.js'></script>
+		<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/jquery.bt.min.js'></script>";
+	    if(file_exists($visionneuse_path.'/classes/mimetypes/bookreader/BookReader/BookReader_'.$lang.'.js')) {
+	    	print "<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReader_".$lang.".js?v=3.0.9'></script>";
+	    } else {
+	    	print "<script src='$visionneuse_path/classes/mimetypes/bookreader/BookReader/BookReader.js?v=3.0.9'></script>";
+	    }
+    	print "<script>
     		$(document).ready(function() {
 	    		br = new BookReader();
 
@@ -151,12 +159,12 @@ class bookreader extends affichage{
 						'.book_down': '".addslashes($this->message->table['book_down'])."',
 						'.play': '".addslashes($this->message->table['play'])."',
 						'.pause': '".addslashes($this->message->table['pause'])."',
-						'.BRdn': '".addslashes($this->message->table['BRdn'])."', 
+						'.BRdn': '".addslashes($this->message->table['BRdn'])."',
 						'.BRup': '".addslashes($this->message->table['BRup'])."',
 						'.book_top': '".addslashes($this->message->table['book_top'])."',
 						'.book_bottom': '".addslashes($this->message->table['book_bottom'])."',
 						'.contrast': '".addslashes($this->message->table['contrast'])."'
-					};  
+					};
 					if ('rl' == this.pageProgression) {
 				        titles['.book_leftmost'] = '".addslashes($this->message->table['book_leftmost'])."';
 				        titles['.book_rightmost'] = '".addslashes($this->message->table['book_rightmost'])."';
@@ -164,7 +172,7 @@ class bookreader extends affichage{
 				        titles['.book_leftmost'] = '".addslashes($this->message->table['book_leftmost'])."';
 				        titles['.book_rightmost'] = '".addslashes($this->message->table['book_rightmost'])."';
 				    }
-                  
+
 				    for (var icon in titles) {
 				        if (titles.hasOwnProperty(icon)) {
 				            $('#BookReader').find(icon).attr('title', titles[icon]);
@@ -181,28 +189,29 @@ class bookreader extends affichage{
 				        pageStr = 'Page ' + pageNum + '/' + this.numLeafs ;
 				    }
 				    $('#pagenum .currentpage').text(pageStr);
+					$('#BRpager a').attr('aria-valuenow', pageNum);
 				}
-	    		
-				//Ici on gÃ©nÃ¨re le bloc d'informations...
+
+				//Ici on génère le bloc d'informations...
 				".$this->genereInfos()."
-				
-				//mode par dÃ©faut
+
+				//mode par défaut
 				br.mode = br.".$this->parameters['mode_affichage'].";
-				
+
 	    		br.pagesSizes= ".$this->getJSPagesSizes().";
-				
+
 				br.getPageWidth = function(index) {
 					if(this.pagesSizes[this.getPageNum(index)]){
 				   		return this.pagesSizes[this.getPageNum(index)].width;
 				   	}else return 480;
 				}
-	
+
 				br.getPageHeight = function(index) {
 					if(this.pagesSizes[this.getPageNum(index)]){
 				    	return this.pagesSizes[this.getPageNum(index)].height;
 				   	}else return 640;
 				}
-				
+
 				br.getPageURI = function(index, reduce, rotate) {
 				    // reduce and rotate are ignored in this simple implementation, but we
 				    // could e.g. look at reduce and load images from a different directory
@@ -210,7 +219,7 @@ class bookreader extends affichage{
 				    var url = '".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&nodesc=1&method=getPage")."&page='+(index+1);
 				    return url;
 				}
-				
+
 				// Return which side, left or right, that a given page should be displayed on
 				br.getPageSide = function(index) {
 					if (0 == (index & 0x1)) {
@@ -219,9 +228,9 @@ class bookreader extends affichage{
 						return 'L';
 					}
 				}
-				
-				br.getSpreadIndices = function(pindex) {   
-					var spreadIndices = [null, null]; 
+
+				br.getSpreadIndices = function(pindex) {
+					var spreadIndices = [null, null];
 					if ('rl' == this.pageProgression) {
 						// Right to Left
 						if (this.getPageSide(pindex) == 'R') {
@@ -244,39 +253,39 @@ class bookreader extends affichage{
 						}
 					}
 					return spreadIndices;
-				}			
-							
+				}
+
 				br.getPageNum = function(index) {
 				    return index+1;
 				}
-				
+
 				br.leafNumToIndex = function(leaf) {
 				    return leaf-1;
 				}
-	
+
 				br.numLeafs = ".$this->getPageCount()." ;
-				
+
 				// Book title and the URL used for the book title link
 				br.bookTitle= '".addslashes($this->doc->titre)."';
 				br.bookUrl  = '".addslashes($this->getBookURL())."';
 				br.logoURL = '".addslashes($this->driver->getUrlBase())."';
-				
+
 				// Override the path used to find UI images
 				br.imagesBaseURL = '".$visionneuse_path."/classes/mimetypes/bookreader/BookReader/images/';
-				
+
 				br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
 				    return \"\";
 				}
-				
+
 				br.search = function(term){
 					$('#textSrch').blur();
-					var url = '".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&nodesc=1&method=search")."&user_query='+".pmb_escape()."(term);
+					var url = '".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&nodesc=1&method=search")."&user_query='+".pmb_escape(false)."(term);
 					term = term.replace(/\//g, ' '); // strip slashes, since this goes in the url
 					this.searchTerm = term;
 					this.showProgressPopup('<img id=\"searchmarker\" src=\"'+this.imagesBaseURL + 'marker_srch-on.png'+'\"> Recherche en cours');
-					$.ajax({url:url, dataType:'json',success : br.BRSearchCallback}); 
+					$.ajax({url:url, dataType:'json',success : br.BRSearchCallback});
 				}
-				
+
 				br.getBookmarksCallback = function(result){
 					if(result){
 						for(var i=0 ; i<result.length ; i++){
@@ -285,26 +294,35 @@ class bookreader extends affichage{
 						}
 					}
 				}
-				
+
 				// Let's go!
 				br.init();
-				
+
 				$('#BRreturn a').attr('target', '_blank');
+				$('#BRreturn a').attr('title', '".addslashes($this->doc->titre) ." - ". addslashes($this->message->table['new_tab'])."');
 				$('#BRtoolbar').find('.read').hide();
 				$('#BRtoolbar .play').show();
 				$('#BRtoolbar .share').hide();
-	
+				$('#BRpager a').attr('role', 'slider');
+				$('#BRpager a').attr('aria-valuemax', ". $this->getPageCount() .");
+				$('#BRpager a').attr('aria-valuemin', 1);
+				$('#BRpager a').attr('aria-valuenow', 1);
+				$('#textSrch').attr('aria-label', '".addslashes($this->message->table['BR_search'])."');
+				$('#textSrch').attr('placeholder', '".addslashes($this->message->table['BR_search'])."');
+				$('#btnSrch').html('".addslashes($this->message->table['BR_search_btn'])."');
+				$('#BRnavCntlBtm').attr('role', 'button');
+
 				//affichage des Bookmarks !
 				$.ajax({url:'".$this->driver->getVisionneuseUrl("lvl=ajax&explnum_id=".$this->doc->id."&nodesc=1&method=getBookmarks")."', dataType:'json',success : br.getBookmarksCallback});";
-    	
+
     if($this->driver->params['page']){
     	print "
     			br.jumpToIndex(".($this->driver->params['page']-1).");";
     }
 
 	if($this->parameters['allow_search']){
-		print "			
-				//Recherche auto Ã  l'ouverture
+		print "
+				//Recherche auto à l'ouverture
 				var user_query = '".$this->driver->params['user_query']."';
 				if ((user_query) && (user_query != '*')) {
 					br.search(user_query);
@@ -318,14 +336,15 @@ class bookreader extends affichage{
     	<div id='BookReader'></div>
     </body>
 </html>";
-    	
+
     }
-    
+
     public function getBookURL(){
     	return $this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id);
     }
-    
+
     public function getCSS(){
+    	header("Content-Type: text/css");
     	$width = 0;
     	if($this->parameters['logo_url']){
     		$img = imagecreatefromstring(file_get_contents($this->parameters['logo_url']));
@@ -342,9 +361,13 @@ class bookreader extends affichage{
 	background: transparent url(".$this->parameters['logo_url'].") no-repeat 0 0;
 }";
     }
-    
-    public function getTabParam(){
 
+    public function getTabParam(){
+    	if(!isset($this->parameters['pdf_creator'])) $this->parameters['pdf_creator'] = '';
+    	if(!isset($this->parameters['pdf_footer_name'])) $this->parameters['pdf_footer_name'] = '';
+    	if(!isset($this->parameters['pdf_footer_link'])) $this->parameters['pdf_footer_link'] = '';
+    	if(!isset($this->parameters['logo_url'])) $this->parameters['logo_url'] = '';
+    	if(!isset($this->parameters['resolution_image'])) $this->parameters['resolution_image'] = '';
     	$this->tabParam = array(
     		"pdf_allowed"=>array("type"=>"checkbox","name"=>"pdf_allowed","value"=>1,"desc"=>"Autoriser l'export au format PDF"),
     		"pdf_creator"=>array("type"=>"text","name"=>"pdf_creator","value"=>$this->parameters['pdf_creator'],"desc"=>"Auteur du PDF"),
@@ -354,61 +377,79 @@ class bookreader extends affichage{
     		"resolution_image"=>array("type"=>"text","name"=>"resolution_image","value"=>$this->parameters['resolution_image'],"desc"=>"R&eacute;solution des images g&eacute;n&eacute;r&eacute;es par pdftoppm"),
     		"format_image"=>array("type"=>"radio","name"=>"format_image","value"=>array("jpeg" => "jpeg", "png" => "png", "imagick" => "imagick"),"desc"=>"Format des images g&eacute;n&eacute;r&eacute;es par pdftoppm. Choisir imagick si les attributs -png et -jpeg ne sont pas support&eacute;s par pdftoppm."),
     		"mode_affichage"=>array("type"=>"radio","name"=>"mode_affichage","value"=>array("constMode1up" => "Mode 1 page", "constMode2up" => "Mode 2 pages", "constModeThumb" => "Mode vignettes"),"desc"=>"Mode d'affichage par d&eacute;faut"),
-    		"allow_search"=>array("type"=>"radio","name"=>"allow_search","value"=>array("0" => "Non", "1" => "Oui"),"desc"=>"Lancer automatiquement une recherche Ã  l'ouverture"),
+    		"allow_search"=>array("type"=>"radio","name"=>"allow_search","value"=>array("0" => "Non", "1" => "Oui"),"desc"=>"Lancer automatiquement une recherche à l'ouverture"),
     	);
        	return $this->tabParam;
     }
-    
+
     public function getParamsPerso(){
 		$params = $this->driver->getClassParam('bookreader');
+
 		$this->unserializeParams($params);
-		if($this->parameters['size_x'] == 0) $this->parameters['size_x'] = $this->driver->getParam("maxX");
-		if($this->parameters['size_y'] == 0) $this->parameters['size_y'] = $this->driver->getParam("maxY");
-		if($this->parameters['resolution_image'] == 0) $this->parameters['resolution_image'] = 100;
-		if($this->parameters['format_image'] == "") $this->parameters['format_image'] = "imagick";
-		if(!$this->parameters['mode_affichage']) $this->parameters['mode_affichage'] = "constMode1up";
-	}
-	
-	public function unserializeParams($paramsToUnserialized){
-		$this->parameters = unserialize($paramsToUnserialized);
-		if(!$this->parameters['print_allowed']) $this->parameters['print_allowed'] = 0;
-		return $this->parameters;
-	}
-	
-	public function serializeParams($paramsToSerialized){
-		if(!$paramsToSerialized['print_allowed']) $paramsToSerialized['print_allowed'] = 0;
-		$this->parameters =$paramsToSerialized;
-		return serialize($paramsToSerialized);
-	}
-	
-	public function getPage(){
-		global $visionneuse_path;
-		session_write_close();
-		$page = 1;
-		if(isset($_GET['page'])){
-			$page = $_GET['page'];
+
+		$this->parameters['resolution_image'] = intval($this->parameters['resolution_image']);
+        if(!$this->parameters['resolution_image'] ) {
+		    $this->parameters['resolution_image'] = 100;
 		}
-		$this->mimeTypeClass->getPage($page);
+		if($this->parameters['format_image'] == "") {
+		    $this->parameters['format_image'] = "imagick";
+		}
+		if(!$this->parameters['mode_affichage']) {
+		    $this->parameters['mode_affichage'] = "constMode1up";
+		}
 	}
 
-	public function getWidth(){
-		global $visionneuse_path;
-		$page = 1;
-		if(isset($_GET['page'])){
-			$page = $_GET['page'];
+	public function unserializeParams($paramsToUnserialized){
+		$this->parameters = unserialize($paramsToUnserialized);
+		if(!$this->parameters['print_allowed']) {
+		    $this->parameters['print_allowed'] = 0;
 		}
-		$this->mimeTypeClass->getWidth($page);
-	}	
-	
-	public function getHeight(){
-		global $visionneuse_path;
-		$page = 1;
-		if(isset($_GET['page'])){
-			$page = $_GET['page'];
-		}
-		$this->mimeTypeClass->getHeight($page);
+		return $this->parameters;
 	}
-	
+
+	public function serializeParams($paramsToSerialized){
+
+	    if(empty($paramsToSerialized['print_allowed'])) {
+	        $paramsToSerialized['print_allowed'] = 0;
+	    }
+
+		$this->parameters = $paramsToSerialized;
+		return serialize($paramsToSerialized);
+	}
+
+	/**
+	 * Retourne la page demande
+	 *
+	 * @return int
+	 */
+	protected function getRequestedPage() {
+		$page = isset($_GET['page']) ? $_GET['page'] : 1;
+		$page = intval($page);
+
+		if ($page < 1) {
+			$page = 1;
+		}
+
+		if ($page > $this->getPageCount()) {
+			$page = $this->getPageCount();
+		}
+
+		return $page;
+	}
+
+	public function getPage() {
+		session_write_close();
+		$this->mimeTypeClass->getPage($this->getRequestedPage());
+	}
+
+	public function getWidth() {
+		$this->mimeTypeClass->getWidth($this->getRequestedPage());
+	}
+
+	public function getHeight(){
+		$this->mimeTypeClass->getHeight($this->getRequestedPage());
+	}
+
 	public function search(){
 		global $visionneuse_path;
 		$user_query = 1;
@@ -417,74 +458,63 @@ class bookreader extends affichage{
 		}
 		$result = $this->mimeTypeClass->search($user_query);
 
-		print json_encode($this->utf8_normalize($result));
+		print json_encode(encoding_normalize::utf8_normalize($result));
 	}
-	
+
 	public function getBookmarks(){
-		print json_encode($this->utf8_normalize($this->mimeTypeClass->getBookmarks()));
+	    if (method_exists($this->mimeTypeClass, 'getBookmarks')) {
+	        print json_encode(encoding_normalize::utf8_normalize($this->mimeTypeClass->getBookmarks()));
+	    }
+	    print json_encode(array());
 	}
-	
+
 	public function getPDF(){
 		global $visionneuse_path;
 		if($this->parameters['pdf_allowed']){
 			$pdfParams = array();
-			
+
 			//Auteur du PDF
 			if(!$this->parameters['pdf_creator']){
 				$this->parameters['pdf_creator'] = "PMB";
 			}
-			$pdfParams['creator'] = $this->utf8_normalize($this->parameters['pdf_creator']);
-	
-			//DÃ©finition du footer
+			$pdfParams['creator'] = encoding_normalize::utf8_normalize($this->parameters['pdf_creator']);
+
+			//Définition du footer
 			if($this->parameters['pdf_footer_name'] || $this->parameters['pdf_footer_link']){
 				$pdfParams['footers']=array(
 					'all' => array(
-						'name' => $this->utf8_normalize($this->parameters['pdf_footer_name']),
-						'link' => $this->utf8_normalize($this->parameters['pdf_footer_link'])
-					)		
+					    'name' => encoding_normalize::utf8_normalize($this->parameters['pdf_footer_name']),
+					    'link' => encoding_normalize::utf8_normalize($this->parameters['pdf_footer_link'])
+					)
 				);
 			}
-			
+
 			//Nommage du fichier de sortie
-			$pdfParams['outname'] = $this->utf8_normalize($this->doc->titre.".pdf");
+			$pdfParams['outname'] = encoding_normalize::utf8_normalize($this->doc->titre.".pdf");
 
 			$this->mimeTypeClass->getPDF($pdfParams);
 		}
 	}
-	
+
 	public function getJSPagesSizes(){
 		$this->mimeTypeClass->getPagesSizes();
 		$js = json_encode($this->mimeTypeClass->pagesSizes);
 		return $js;
 	}
-	
-	public function utf8_normalize($value){
-		global $charset;
-		if($charset != "utf-8"){
-			if(is_string($value)){
-				$value = utf8_encode($value);
-			}else{
-				foreach($value as $key => $val){
-					$value[$key] = $this->utf8_normalize($val);
-				}
-			}
-		}
-		return $value;
-	}
-	
+
 	public function getPageCount(){
 		global $visionneuse_path;
-		
+
 		return $this->mimeTypeClass->getPageCount();
 	}
-	
+
 	public function genereInfos(){
 		$infos = $this->doc->driver->getCurrentBiblioInfos();
 		$bloc_infos = "br.buildInfoDiv = function(jInfoDiv) {
 			//Le titre du document
 			jInfoDiv.find('.BRfloatTitle a').attr({
 				'href': this.bookUrl, 'alt': this.bookTitle}).text(this.bookTitle);
-				//La premiÃ¨re page en couverture...
+				//La première page en couverture...
 				jQuery('<img>', {
 					src : br.getPageURI(0),
 					height : '200px',
@@ -503,21 +533,21 @@ class bookreader extends affichage{
 		if($infos['author']['value']){
 			$bloc_infos.= "
 				jQuery('<p>".addslashes(($infos['author']['label']))." : ".addslashes(($infos['author']['value']))."</p>').appendTo(jInfoDiv.find('.BRfloatTitle'));";
-		}		
+		}
 		if($infos['date']['value']){
 			$bloc_infos.= "
  				jQuery('<p>', {
  					text : '".addslashes(($infos['date']['label']))." : ".addslashes($infos['date']['value'])."',
  				}).appendTo(jInfoDiv.find('.BRfloatTitle'));";
-		}	
+		}
  		$bloc_infos.= "
- 				jQuery(\"<p><a href='".$infos['permalink']['value']."' target='_blank'>".addslashes(($infos['permalink']['label']))."</a></p>\").appendTo(jInfoDiv.find('.BRfloatTitle'));";	
-	
+ 				jQuery(\"<p><a href='".$infos['permalink']['value']."' target='_blank'>".addslashes(($infos['permalink']['label']))."</a></p>\").appendTo(jInfoDiv.find('.BRfloatTitle'));";
+
 //  		if($this->parameters['pdf_allowed']){
 //  			$bloc_infos.= "
-//  				jQuery(\"<p><a href='./visionneuse.php?lvl=ajax&explnum_id=".$this->doc->id."&method=getPDF' target='_blank'>TÃ©lÃ©charger le PDF</a></p>\").appendTo(jInfoDiv.find('.BRfloatFoot'));";
-//  		}				
- 		$bloc_infos.= "		
+//  				jQuery(\"<p><a href='./visionneuse.php?lvl=ajax&explnum_id=".$this->doc->id."&method=getPDF' target='_blank'>Télécharger le PDF</a></p>\").appendTo(jInfoDiv.find('.BRfloatFoot'));";
+//  		}
+ 		$bloc_infos.= "
 			}";
 		return $bloc_infos;
 	}

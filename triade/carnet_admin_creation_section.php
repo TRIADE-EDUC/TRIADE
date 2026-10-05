@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,7 +32,7 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_bascule_select.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_ordre_liste.js"></script>
-<title>Création Section</title>
+<title>Création Cycle / Niveau</title>
 <script language="JavaScript">
 var nbElems=0;
 function calcul(op) {
@@ -64,7 +64,7 @@ $cnx=cnx();
 <br />
 <form method=post name="formulaire" >
 <table border=0 align="center">
-<tr><td align="center" colspan=3><font class="T2">Nom de la section : </font><input type="text" name="saisie_section" size=4 maxlength=5 /> (Max 5 caractères)<br><br></td></tr>
+<tr><td align="center" colspan=3><font class="T2">Nom du cycle : </font><input type="text" name="saisie_section" size='8' maxlength='10' /> (Max 10 caractères)<br><br></td></tr>
 
 
 <tr><td width=33% align=center>
@@ -79,7 +79,7 @@ $cnx=cnx();
 <input type="button" value="&lt;&lt;&lt; <?php print LANGCHER6 ?>" onClick="calcul('-1');Deplacer(this.form.saisie_recherche,this.form.saisie_depart,'Choisissez un élément')" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" >
 	  </td>
 	  <td width=33% align=center>
-		Classes liées à cette section
+		Classes liées au cycle
      		<select size=18 name="saisie_recherche" style="width:130px" multiple="multiple">
 		<OPTION>-------------</OPTION>
 		</select>
@@ -93,8 +93,8 @@ $cnx=cnx();
 <input type=hidden name="saisie_nb_recherche" size=6>
 <input type=hidden name="saisie_recherche_final" size=6>
 <input type="submit" value="<?php print "Enregistrer"?>" name="create" class="BUTTON" onclick="prepEnvoi()" >
-<input type="button" value="Supprimer une section" onclick="open('carnet_admin_supp_section.php','_parent','');" class="BUTTON"   />
-<input type="button" value="Modifier une section" onclick="open('carnet_admin_modif_section.php','_parent','');" class="BUTTON"   />
+<input type="button" value="Supprimer un cycle" onclick="open('carnet_admin_supp_section.php','_parent','');" class="BUTTON"   />
+<input type="button" value="Modifier un cycle" onclick="open('carnet_admin_modif_section.php','_parent','');" class="BUTTON"   />
 <br><br>
 <input type="button" value="Fermer la fenêtre" onclick="parent.window.close();" class="BUTTON"  />
 </td></tr>
@@ -110,9 +110,9 @@ if (isset($_POST["create"])) {
 	$section=$_POST["saisie_section"];
 	$cr=enr_section($listeIdClasse,$section);
 	if ($cr) {
-		alertJs("Section enregistrée \\n\\n L'Equipe TRIADE");
+		alertJs("Cycle enregistré \\n\\n L'Equipe TRIADE");
 	}else{
-		alertJs("Section non enregistrée, le nom de cette section existe déjà.\\n\\n L'Equipe TRIADE");
+		alertJs("Cycle non enregistré, le nom de cette cycle existe déjà.\\n\\n L'Equipe TRIADE");
 	}
 }
 

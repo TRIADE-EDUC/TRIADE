@@ -144,7 +144,7 @@ class jsonRPCClient {
 		if ($this->password) {
 			$request['auth_pw']=md5($this->user.md5($this->password).$this->salt.$this->id.$method);
 		}
-		$request = json_encode($request);
+		$request = encoding_normalize::json_encode($request);
 		$this->debug && $debug.='***** Request *****'."\n".$request."\n".'***** End Of request *****'."\n\n";
 		
 		// performs the HTTP POST
@@ -161,7 +161,7 @@ class jsonRPCClient {
 				$response.= trim($row)."\n";
 			}
 			$this->debug && $debug.='***** Server response *****'."\n".$response.'***** End of server response *****'."\n";
-			$response = json_decode($response,true);
+			$response_array = json_decode($response,true);
 		} else {
 			throw new Exception('Unable to connect to '.$this->url);
 		}
@@ -174,14 +174,14 @@ class jsonRPCClient {
 		// final checks and return
 		if (!$this->notification) {
 			// check
-			if ($response["id"] != $currentId) {
-				throw new Exception('Incorrect response id (request id: '.$currentId.', response id: '.$response["id"].')');
+		    if ($response_array["id"] != $currentId) {
+		        throw new Exception('Incorrect response id (request id: '.$currentId.', response id: '.$response_array["id"].')');
 			}
-			if (!is_null($response["error"])) {
-				throw new Exception('Request error: '.$response["error"]);
+			if (!is_null($response_array["error"])) {
+			    throw new Exception('Request error: '.$response_array["error"]);
 			}
 			
-			return $response["result"];
+			return $response_array["result"];
 			
 		} else {
 			return true;

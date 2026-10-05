@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sync_planning.class.php,v 1.6 2018-09-21 12:19:05 dgoron Exp $
+// $Id: sync_planning.class.php,v 1.6.16.1 2025/04/16 12:16:52 dbellamy Exp $
 
 global $class_path, $include_path;
-require_once($include_path."/parser.inc.php");
-require_once($class_path."/scheduler/scheduler_planning.class.php");
-require_once($class_path."/connecteurs.class.php");
+require_once $include_path."/parser.inc.php";
+require_once $class_path."/scheduler/scheduler_planning.class.php";
+require_once $class_path."/connecteurs.class.php";
 
 class sync_planning extends scheduler_planning {
 
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
+
 		global $msg;
 		global $base_path, $type_task_id, $planificateur_id;
 		global $subaction;
@@ -21,7 +22,7 @@ class sync_planning extends scheduler_planning {
 		$auto_import = 0;
 		$auto_delete = 0;
 		$not_in_notices_externes = 0;
-		
+
 		if ($subaction == 'change') {
 			global $source_entrepot, $connecteurId, $sync_empty;
 		} else {
@@ -33,13 +34,13 @@ class sync_planning extends scheduler_planning {
 					if (is_array($aparamv)) {
 						foreach ($aparamv as $sparam=>$sparamv) {
 							global ${$sparam};
-							${$sparam} = $sparamv;		
+							${$sparam} = $sparamv;
 						}
 					} else {
 						global ${$aparam};
-						${$aparam} = $aparamv;	
-					}		
-				}				
+						${$aparam} = $aparamv;
+					}
+				}
 			}
 		}
 
@@ -74,9 +75,9 @@ class sync_planning extends scheduler_planning {
 		}
 		$f_select .= "</select>";
 		$f_select .= "<input type='hidden' id='connecteurId' name='connecteurId' value='".$connecteurId."' />";
-		//liste des entrepots synchronisable
+		//liste des entrepots synchronisables
 		$form_task = "
-		<div class='row'> 
+		<div class='row'>
 			<div class='colonne3'>
 				<label for='entrepot'>".$this->msg["planificateur_sync_liste"]."</label>
 			</div>
@@ -90,16 +91,19 @@ class sync_planning extends scheduler_planning {
 					<label for='source'>&nbsp;</label>
 				</div>
 				<div class='colonne_suite' id='synchro_source' >";
-		if ($source_entrepot) {		
+
+		if ($source_entrepot) {
 			if ($connecteurId) {
 				require_once($base_path."/admin/connecteurs/in/".$contrs->catalog[$connecteurId]["PATH"]."/".$contrs->catalog[$connecteurId]["NAME"].".class.php");
 				eval("\$conn=new ".$contrs->catalog[$connecteurId]["NAME"]."(\"".$base_path."/admin/connecteurs/in/".$contrs->catalog[$connecteurId]["PATH"]."\");");
 
 				//Si on doit afficher un formulaire de synchronisation
-				$syncr_form = $conn->form_pour_maj_entrepot($source_entrepot,"planificateur_form");			
+				$taskParams = $param;
+				$syncr_form = $conn->getScheduledTaskSynchroForm($source_entrepot, $taskParams);
+
 				$form_task .= "
 					<br />
-					<input type='checkbox' name='sync_empty' value='1' ".($sync_empty ? "checked='checked'" :"")." />".$this->msg["planificateur_sync_empty"]." <br />
+					   <input type='checkbox' name='sync_empty' value='1' ".($sync_empty ? "checked='checked'" :"")." />".$this->msg["planificateur_sync_empty"]." <br />
 					<br />";
 				if ($syncr_form) {
 					$form_task .= $syncr_form;
@@ -108,7 +112,7 @@ class sync_planning extends scheduler_planning {
 		}
 		$form_task .= "</div>
 			</div>
-		<div class='row'>&nbsp;</div>	
+		<div class='row'>&nbsp;</div>
 		<div class='row'>
 			<div class='colonne3'>
 				<label for='auto_import'>".$this->msg["planificateur_sync_import"]."</label>
@@ -134,11 +138,12 @@ class sync_planning extends scheduler_planning {
 			</div>
 		</div>
 		<div class='row'>&nbsp;</div>";
-			
+
 		return $form_task;
 	}
-	
-	public function make_serialized_task_params() {
+
+	public function make_serialized_task_params()
+	{
     	global $base_path, $source_entrepot, $connecteurId, $sync_empty;
     	global $auto_import, $auto_delete, $not_in_notices_externes;
 
@@ -148,7 +153,7 @@ class sync_planning extends scheduler_planning {
 			$t["source_entrepot"]=$source_entrepot;
 			$t["connecteurId"]=$connecteurId;
 			$t["sync_empty"]=$sync_empty;
-			
+
 			$t["sync_last_date"] = '';
 			if($this->id) {
 				$query = "select param from planificateur where id_planificateur=".$this->id;
@@ -168,7 +173,7 @@ class sync_planning extends scheduler_planning {
 					}
 				}
 			}
-			
+
 			if ($connecteurId) {
 				$contrs=new connecteurs();
 				require_once($base_path."/admin/connecteurs/in/".$contrs->catalog[$connecteurId]["PATH"]."/".$contrs->catalog[$connecteurId]["NAME"].".class.php");

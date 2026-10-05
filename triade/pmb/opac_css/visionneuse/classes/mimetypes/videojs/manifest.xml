@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2014-01-10 15:46:42 apetithomme Exp $ -->
+$Id: manifest.xml,v 1.2 2014/01/10 15:46:42 apetithomme Exp $ -->
 
 <manifest name="videojs">
 	<desc msg="Affichage des videos."/>

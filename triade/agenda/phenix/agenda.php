@@ -22,7 +22,6 @@
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
-
   require("inc/nocache.inc.php");
   require("inc/html.inc.php");
   include("inc/param.inc.php");
@@ -78,7 +77,7 @@
   $tcPlg  += 0;
 
   // Recuperation des infos de timezone de l'utilisateur
-  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure, t2.util_timezone_partage FROM ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2, ${PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
+  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure, t2.util_timezone_partage FROM {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2, {$PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
   $tzLibelle = htmlentities($DB_CX->DbResult(0,"tzn_libelle"));
   $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
   $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -154,7 +153,7 @@
         $FILTRE_COULEUR = $zlFiltreCouleur;
       }
       // MAJ de la semaine type et du filtre des notes de l'utilisateur dans la table des sessions
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_semaine_type='".$SEMAINE_TYPE."', sid_filtre_couleur='".$FILTRE_COULEUR."' WHERE sid_id='".$sid."'");
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_semaine_type='".$SEMAINE_TYPE."', sid_filtre_couleur='".$FILTRE_COULEUR."' WHERE sid_id='".$sid."'");
       // Generation de variables pour recuperer les noms complet du createur et du modificateur d'une note
       $NOM_UTIL_CREATEUR = str_replace("util_","t1.util_",$FORMAT_NOM_UTIL);
       $NOM_UTIL_MODIFICATEUR = str_replace("util_","t2.util_",$FORMAT_NOM_UTIL);
@@ -167,7 +166,7 @@
       if (isset($btFiltreAffiche)) {
         $FILTRE_COULEUR = $zlFiltreCouleur;
       }
-      $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_filtre_couleur='".$FILTRE_COULEUR."' WHERE sid_id='".$sid."'");
+      $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_filtre_couleur='".$FILTRE_COULEUR."' WHERE sid_id='".$sid."'");
       break;
     case _MENU_DISP_HEBDO :
     case _MENU_DISP_QUOT :
@@ -201,7 +200,7 @@
 
   // On verifie la validite de la substitution par rapport a l'ecran demande
   if ($tcMenu==_MENU_PLG_MENS_GBL || $tcMenu==_MENU_PLG_HEBDO_GBL || $tcMenu==_MENU_PLG_QUOT_GBL || $droit_AGENDAS < _DROIT_AGENDA_PARTAGE || ($tcMenu>=_MENU_DISP_HEBDO && $tcMenu!=_MENU_RECHERCHE && $USER_SUBSTITUE!=$idUser && $droit_AGENDAS < _DROIT_AGENDA_PARTAGE)) {
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}sid SET sid_util_subst_id=".$idUser." WHERE sid_id='".$sid."'");
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}sid SET sid_util_subst_id=".$idUser." WHERE sid_id='".$sid."'");
     $USER_SUBSTITUE = $idUser;
   }
 
@@ -209,7 +208,7 @@
   // Depuis la version 3.0 cela est gere par la table PLANNING_AFFECTE
   if (($USER_SUBSTITUE!=$idUser) and ($droit_AGENDAS < _DROIT_AGENDA_TOUS)) {
     if ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR) {
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE (util_id=".$USER_SUBSTITUE." AND util_autorise_affect='1') OR (util_id=".$USER_SUBSTITUE." AND util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.")");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE (util_id=".$USER_SUBSTITUE." AND util_autorise_affect='1') OR (util_id=".$USER_SUBSTITUE." AND util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.")");
       $AFFECTE_NOTE = ($DB_CX->DbNumRows());
       if ($AFFECTE_NOTE == false)
         $droit_NOTES = _DROIT_NOTE_STANDARD;
@@ -621,20 +620,22 @@
   }
   if ($tcType==_TYPE_NOTE) {
     // Liste des utilisateurs a qui l'on peut affecter une note
-    $DB = new Db($DB_CX->ConnexionID);
+        $DB = new Db($DB_CX->ConnexionID);
+	$DB=$DB_CX;
+
     if ($droit_AGENDAS < _DROIT_AGENDA_PARTAGE) {
-      $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser);
+      $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser);
     } elseif($droit_AGENDAS >= _DROIT_AGENDA_TOUS) {
       if ($droit_NOTES < _DROIT_NOTE_MODIF_CREATION)
-        $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
+        $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
       else
-        $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
+        $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE (LENGTH(CONCAT(util_nom, util_prenom)) > 0) ORDER BY nomUtil");
     } else {
-      $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$idUser." OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.") ORDER BY nomUtil");
+      $DB->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id='".$idUser."' OR (util_autorise_affect ='1') OR (util_autorise_affect IN ('2','3') AND paf_consultant_id='".$idUser."') ORDER BY nomUtil");
     }
     $nbAffect = $DB->DbNumRows();
     $onLoad = "ajustHeureDuree();";
-      $DB_CX->DbQuery("SELECT util_menu_note FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT util_menu_note FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
       if ($DB_CX->DbNumRows()) {
         if ($DB_CX->DbResult(0,0)=='O')
           $onLoad .= "affOnglet('Reduit');";
@@ -651,7 +652,7 @@
   // Permet de renseigner l'utilisateur qui a affecte la note d'une superposition et de corriger si besoin
   if (isset($lSup) && !empty($lSup)) {
     $sTmp = "";
-    $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM ${PREFIX_TABLE}utilisateur WHERE util_id IN (".$lSup.") ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil FROM {$PREFIX_TABLE}utilisateur WHERE util_id IN (".$lSup.") ORDER BY nomUtil");
     while ($enr = $DB_CX->DbNextRow()) {
       $sTmp .= "\\t- ".addslashes($enr['nomUtil'])."\\n";
     }
@@ -661,7 +662,7 @@
   }
 
   // Recuperation des evenements personnalises a notifier dans le calendrier (sert aussi pour le planning mensuel global)
-  $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+  $DB_CX->DbQuery("SELECT DISTINCT eve_date_debut, TO_DAYS(eve_date_fin)-TO_DAYS(eve_date_debut) AS duree, TO_DAYS(eve_date_debut)-TO_DAYS('$anneeEnCours-$moisEnCours-01') AS decalage, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE (eve_date_debut LIKE '$anneeEnCours-$moisEnCours-%' OR (eve_date_debut<'$anneeEnCours-$moisEnCours-01' AND eve_date_fin>='$anneeEnCours-$moisEnCours-01'))".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
   $tabEvenementDate = array();
   // Initialisation du tableau des couleurs des jours a vide
   $nbJourMois = date("t",$sd);

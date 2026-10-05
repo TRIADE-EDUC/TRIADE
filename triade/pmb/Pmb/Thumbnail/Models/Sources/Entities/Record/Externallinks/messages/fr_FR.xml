@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2023/04/18 07:18:11 tsamson Exp $ 
+-->
+
+<XMLlist>
+	<entry code="name">Liens externes</entry>
+	<entry code="description">Récupération d'une vignette via des liens externes (amazon, abebooks, gamannecy, ...). Dans le chemin fourni, !!isbn!! sera remplacé par le code ISBN ou EAN de la notice purgé de tous les tirets ou points.</entry>
+	<entry code="links_order">Ordre des liens interrogés</entry>
+	<entry code="add_link">Ajout d'un nouveau lien externe</entry>
+	<entry code="link_name">Nom du lien :</entry>
+	<entry code="link_url">Chemin du lien :</entry>
+</XMLlist>

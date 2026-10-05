@@ -1,23 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: level1_authorities_search.class.php,v 1.5 2018-07-26 09:24:17 tsamson Exp $
+// $Id: level1_authorities_search.class.php,v 1.8.2.2 2024/06/12 07:10:51 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/level1_search.class.php");
 
 class level1_authorities_search extends level1_search {
 
 	protected $clause;
-	
+
 	protected $tri;
-	
+
 	protected $pert;
-	
+
 	protected $members;
-	
+
 	protected function get_hidden_search_form_name() {
     	$form_name = '';
     	switch ($this->type) {
@@ -33,24 +34,22 @@ class level1_authorities_search extends level1_search {
     		default:
     			$form_name .= parent::get_hidden_search_form_name();
     			break;
-    			
+
     	}
     	return $form_name;
     }
-    
+
     protected function get_hidden_search_content_form() {
-    	global $charset;
-    	
     	$content_form = parent::get_hidden_search_content_form();
     	switch ($this->type) {
     		case 'categories':
     			global $opac_thesaurus, $opac_thesaurus_default;
-    			$content_form .= "<input type=\"hidden\" id=\"id_thes\" name=\"id_thes\" value=\"".($opac_thesaurus ? -1 : $opac_thesaurus_default)."\">";
+    			$content_form .= "<input type=\"hidden\" name=\"id_thes\" value=\"".($opac_thesaurus ? -1 : $opac_thesaurus_default)."\">";
     			break;
     	}
     	return $content_form;
     }
-           
+
     protected function get_tri() {
     	if(!isset($this->tri)) {
     		$this->tri = 'order by pert desc';
@@ -80,10 +79,10 @@ class level1_authorities_search extends level1_search {
     	}
     	return $this->tri;
     }
-       
+
     public function get_nb_results() {
     	if(!isset($this->nb_results)) {
-    	    
+
     	    $searcher = $this->get_searcher_instance();
     	    if(is_object($searcher)){
     	        $this->nb_results = $searcher->get_nb_results();
@@ -94,7 +93,7 @@ class level1_authorities_search extends level1_search {
     	}
     	return $this->nb_results;
     }
-    
+
     protected function get_mode() {
     	switch ($this->type) {
     		case 'authors':
@@ -126,7 +125,7 @@ class level1_authorities_search extends level1_search {
 				break;
     	}
     }
-    
+
     protected function get_affiliate_mode() {
     	switch ($this->type) {
     		case 'authors':
@@ -155,7 +154,7 @@ class level1_authorities_search extends level1_search {
 				break;
     	}
     }
-    
+
     protected function get_session_key() {
     	switch ($this->type) {
     		case 'authors':
@@ -184,23 +183,26 @@ class level1_authorities_search extends level1_search {
 				break;
     	}
     }
-    
+
     protected function add_in_session() {
+        if(!is_array($_SESSION["level1"][$this->get_session_key()])) {
+            $_SESSION["level1"][$this->get_session_key()] = [];
+        }
     	$_SESSION["level1"][$this->get_session_key()]["form"] = $this->get_hidden_search_form();;
     	$_SESSION["level1"][$this->get_session_key()]["count"] = $this->get_nb_results();
     }
-    
+
     protected function get_search_type() {
     	return 'authorities';
     }
-    
-    protected function get_searcher_instance() {
+
+    public function get_searcher_instance() {
         if($this->type == 'concepts'){
             return new opac_searcher_autorities_skos_concepts($this->user_query);
         }
         return searcher_factory::get_searcher($this->type, '', $this->user_query);
     }
-    
+
     protected function get_authority_type_const(){
         switch($this->type){
             case "authors" :
@@ -225,5 +227,39 @@ class level1_authorities_search extends level1_search {
                 return AUT_TABLE_AUTHPERSO;
         }
     }
+
+    protected function get_display_link_affiliate_js(string $search_form)
+    {
+        global $opac_rgaa_active, $msg;
+
+        if ($opac_rgaa_active) {
+            return "
+                let button = document.createElement('button');
+            	button.setAttribute('type', 'button');
+            	button.classList.add('search_result');
+        		button.innerHTML = \"".$msg['suite']."&nbsp;<img src='".get_url_icon('search.gif')."' style='border:0px' />\";
+
+        		button.addEventListener('click',function(){
+        			document.$search_form.action='".$this->get_form_action()."&tab=affiliate';
+        			document.$search_form.submit();
+        			return false;
+        		},true);
+
+        		div.appendChild(button);
+		    ";
+        }
+        return "
+            var a = document.createElement('a');
+			a.setAttribute('href','#');
+			a.innerHTML = \"".$msg['suite']."&nbsp;<img src='".get_url_icon('search.gif')."' style='border:0px' />\";
+
+			a.addEventListener('click',function(){
+				document.$search_form.action='".$this->get_form_action()."&tab=affiliate';
+				document.$search_form.submit();
+				return false;
+			},true);
+
+			div.appendChild(a);
+        ";
+    }
 }
-?>

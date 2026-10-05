@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_mba_nantes.inc.php,v 1.12 2018-01-09 08:54:31 jpermanne Exp $
+// $Id: func_mba_nantes.inc.php,v 1.14 2021/12/09 14:22:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $include_path, $class_path; //NÃ©cessaire pour certaines inclusions
+global $include_path, $class_path; //Nécessaire pour certaines inclusions
 require_once("$class_path/thesaurus.class.php");
 require_once("$class_path/noeuds.class.php");
 require_once("$class_path/categories.class.php");
@@ -105,7 +105,7 @@ function recup_noticeunimarc_suite($notice) {
 		
 	}
 	
-} // fin recup_noticeunimarc_suite = fin rÃ©cupÃ©ration des variables propres crespicardie : rien de plus
+} // fin recup_noticeunimarc_suite = fin récupération des variables propres crespicardie : rien de plus
 	
 function import_new_notice_suite() {
 	global $dbh,$q ;
@@ -124,10 +124,10 @@ function import_new_notice_suite() {
 	if (!$pmb_keyword_sep) $pmb_keyword_sep=" ; ";
 	$champ_rameau="";
 	
-	for ($a=0; $a<sizeof($info_600_a); $a++) {
+	for ($a=0; $a<count($info_600_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_600_j[$a]); $j++) {
+		for ($j=0; $j<count($info_600_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_600_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_600_j[$a][$j]) ;
 		}
@@ -136,13 +136,13 @@ function import_new_notice_suite() {
 		
 		if (!$libelle_j) $libelle_final = trim($info_600_a[$a][0]).$libelle_final ; else $libelle_final = trim($info_600_a[$a][0]).$libelle_final." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_600_x[$a]); $j++) {
+		for ($j=0; $j<count($info_600_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_600_y[$a]); $j++) {
+		for ($j=0; $j<count($info_600_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_600_z[$a]); $j++) {
+		for ($j=0; $j<count($info_600_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_600_z[$a][$j]) ;
 		}
 		//if($info_600_3[$a][0])$libelle_final.=" @@3 ".trim($info_600_3[$a][0]);		
@@ -150,22 +150,22 @@ function import_new_notice_suite() {
 		$champ_rameau.=$libelle_final;
 	} 	
 	
-	for ($a=0; $a<sizeof($info_601_a); $a++) {
+	for ($a=0; $a<count($info_601_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_601_j[$a]); $j++) {
+		for ($j=0; $j<count($info_601_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_601_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_601_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_601_a[$a][0]) ; else $libelle_final = trim($info_601_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_601_x[$a]); $j++) {
+		for ($j=0; $j<count($info_601_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_601_y[$a]); $j++) {
+		for ($j=0; $j<count($info_601_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_601_z[$a]); $j++) {
+		for ($j=0; $j<count($info_601_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_601_z[$a][$j]) ;
 		}
 		//if($info_601_3[$a][0])$libelle_final.=" @@3 ".trim($info_601_3[$a][0]);
@@ -173,22 +173,22 @@ function import_new_notice_suite() {
 		$champ_rameau.=$libelle_final;
 	} 		
 	
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
+	for ($a=0; $a<count($info_606_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
+		for ($j=0; $j<count($info_606_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_606_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_606_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_606_a[$a][0]) ; else $libelle_final = trim($info_606_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_606_x[$a]); $j++) {
+		for ($j=0; $j<count($info_606_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_606_y[$a]); $j++) {
+		for ($j=0; $j<count($info_606_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_606_z[$a]); $j++) {
+		for ($j=0; $j<count($info_606_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_606_z[$a][$j]) ;
 		}
 		//if($info_606_3[$a][0])$libelle_final.=" @@3 ".trim($info_606_3[$a][0]);
@@ -196,22 +196,22 @@ function import_new_notice_suite() {
 		$champ_rameau.=$libelle_final;
 	} 
 	
-	for ($a=0; $a<sizeof($info_607_a); $a++) {
+	for ($a=0; $a<count($info_607_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_607_j[$a]); $j++) {
+		for ($j=0; $j<count($info_607_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_607_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_607_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_607_a[$a][0]) ; else $libelle_final = trim($info_607_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_607_x[$a]); $j++) {
+		for ($j=0; $j<count($info_607_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_607_y[$a]); $j++) {
+		for ($j=0; $j<count($info_607_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_607_z[$a]); $j++) {
+		for ($j=0; $j<count($info_607_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_607_z[$a][$j]) ;
 		}
 		//if($info_607_3[$a][0])$libelle_final.=" @@3 ".trim($info_607_3[$a][0]);
@@ -219,22 +219,22 @@ function import_new_notice_suite() {
 		$champ_rameau.=$libelle_final;
 	} 
 	
-	for ($a=0; $a<sizeof($info_608_a); $a++) {
+	for ($a=0; $a<count($info_608_a); $a++) {
 		$libelle_final="";
 		$libelle_j="";
-		for ($j=0; $j<sizeof($info_608_j[$a]); $j++) {
+		for ($j=0; $j<count($info_608_j[$a]); $j++) {
 			if (!$libelle_j) $libelle_j .= trim($info_608_j[$a][$j]) ;
 				else $libelle_j .= " ** ".trim($info_608_j[$a][$j]) ;
 		}
 		if (!$libelle_j) $libelle_final = trim($info_608_a[$a][0]) ; else $libelle_final = trim($info_608_a[$a][0])." ** ".$libelle_j ;
 		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_608_x[$a]); $j++) {
+		for ($j=0; $j<count($info_608_x[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_x[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_608_y[$a]); $j++) {
+		for ($j=0; $j<count($info_608_y[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_y[$a][$j]) ;
 		}
-		for ($j=0; $j<sizeof($info_608_z[$a]); $j++) {
+		for ($j=0; $j<count($info_608_z[$a]); $j++) {
 			$libelle_final .= " -- ".trim($info_608_z[$a][$j]) ;
 		}
 		//if($info_608_3[$a][0])$libelle_final.=" @@3 ".trim($info_608_3[$a][0]);
@@ -247,7 +247,7 @@ function import_new_notice_suite() {
 		$n_gen= implode("\n",$info_305);
 		$requete="update notices set n_gen=IF(TRIM(n_gen) != '', CONCAT(n_gen,'\n','".addslashes($n_gen)."'),'".addslashes($n_gen)."') WHERE notice_id='".$notice_id."' ";
 		if(!pmb_mysql_query($requete)){
-			echo "Requete echouÃ© : ".$requete."<br>";
+			echo "Requete echoué : ".$requete."<br>";
 		}
 	}
 		
@@ -260,18 +260,18 @@ function import_new_notice_suite() {
 			if($ind){
 				$requete="UPDATE notices SET index_l='".addslashes(trim($ind.$pmb_keyword_sep.$champ_rameau))."' WHERE notice_id='".$notice_id."'";
 				if(!pmb_mysql_query($requete)){
-					echo "Requete echouÃ© : ".$requete."<br>";
+					echo "Requete echoué : ".$requete."<br>";
 				}
 			}else{
 				$requete="UPDATE notices SET index_l='".addslashes(trim($champ_rameau))."' WHERE notice_id='".$notice_id."'";
 				if(!pmb_mysql_query($requete)){
-					echo "Requete echouÃ© : ".$requete."<br>";
+					echo "Requete echoué : ".$requete."<br>";
 				}
 			}
 		}else{
 			$requete="UPDATE notices SET index_l='".addslashes(trim($champ_rameau))."' WHERE notice_id='".$notice_id."'";
 			if(!pmb_mysql_query($requete)){
-				echo "Requete echouÃ© : ".$requete."<br>";
+				echo "Requete echoué : ".$requete."<br>";
 			}
 		}
 	}
@@ -297,7 +297,7 @@ function import_new_notice_suite() {
 				$c->save();
 				$id_categorie = categories::searchLibelle(addslashes($descripteur),$thesaurus_defaut,'fr_FR',$thes->num_noeud_racine);
 			}
-			$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) VALUES($notice_id,$id_categorie,$i)"; // Je fait le lien entre ma notice et la catÃ©gorie
+			$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) VALUES($notice_id,$id_categorie,$i)"; // Je fait le lien entre ma notice et la catégorie
 			pmb_mysql_query($requete);
 		}
 	}*/
@@ -309,12 +309,13 @@ function import_new_notice_suite() {
 		if (pmb_mysql_num_rows($res)>0){
 			$id_champ=pmb_mysql_result($res,0);
 			for($i=2;$i<count($editor);$i++){
+				$ed=array();
 				$ed['name']=clean_string($editor[$i]['c']);
 				$ed['ville']=clean_string($editor[$i]['a']);
 				$ed1_id = editeur::import($ed);
 				$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values('".$id_champ."','".$notice_id."','".$ed1_id."')";
 				if(!pmb_mysql_query($requete)){
-					echo "requete echouÃ© : ".$requete."<br>";
+					echo "requete echoué : ".$requete."<br>";
 				} 
 			}
 		}
@@ -328,7 +329,7 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($info_001[0])."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
@@ -360,7 +361,7 @@ function import_new_notice_suite() {
 					$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values('".$id_champ."',$notice_id,$value)";
 					$tab_non_rep["titre"]=1;
 					if(!pmb_mysql_query($requete)){
-						echo "requete echouÃ© : ".$requete."<br>";
+						echo "requete echoué : ".$requete."<br>";
 					} 
 				}
 			}
@@ -373,7 +374,7 @@ function import_new_notice_suite() {
 					$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes(trim($info_503[$i]["e"]))."')";
 					$tab_non_rep["nom"]=1;
 					if(!pmb_mysql_query($requete)){
-						echo "requete echouÃ© : ".$requete."<br>";
+						echo "requete echoué : ".$requete."<br>";
 					} 
 				}
 			}
@@ -386,7 +387,7 @@ function import_new_notice_suite() {
 					$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes(trim($info_503[$i]["f"]))."')";
 					$tab_non_rep["prenom"]=1;
 					if(!pmb_mysql_query($requete)){
-						echo "requete echouÃ© : ".$requete."<br>";
+						echo "requete echoué : ".$requete."<br>";
 					} 
 				}
 			}
@@ -399,7 +400,7 @@ function import_new_notice_suite() {
 					$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes(trim($info_503[$i]["h"]))."')";
 					$tab_non_rep["qual"]=1;
 					if(!pmb_mysql_query($requete)){
-						echo "requete echouÃ© : ".$requete."<br>";
+						echo "requete echoué : ".$requete."<br>";
 					} 
 				}
 			}
@@ -443,7 +444,7 @@ function import_new_notice_suite() {
 						$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($date)."')";
 						$tab_non_rep["date"]=1;
 						if(!pmb_mysql_query($requete)){
-							echo "requete echouÃ© : ".$requete."<br>";
+							echo "requete echoué : ".$requete."<br>";
 						} 
 					}
 				}
@@ -464,7 +465,7 @@ function import_new_notice_suite() {
 					$id_champ=pmb_mysql_result($res,0);
 					$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($lieu_etabl)."')";
 					if(!pmb_mysql_query($requete)){
-						echo "requete echouÃ© : ".$requete."<br>";
+						echo "requete echoué : ".$requete."<br>";
 					} 
 				}
 			}
@@ -480,7 +481,7 @@ function import_new_notice_suite() {
 			for($i=0;$i<count($info_901);$i++){
 				$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($info_901[$i])."')";
 				if(!pmb_mysql_query($requete)){
-					echo "requete echouÃ© : ".$requete."<br>";
+					echo "requete echoué : ".$requete."<br>";
 				}
 			} 
 		}
@@ -494,12 +495,12 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($info_999[0])."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
 	
-	//DonnÃ©e codÃ©es monographie
+	//Donnée codées monographie
 	if($info_905[0]){
 		$rqt = "SELECT idchamp FROM notices_custom WHERE name='dc_mono'";
 		$res = pmb_mysql_query($rqt);
@@ -507,12 +508,12 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($info_905[0])."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
 	
-	//DonnÃ©e codÃ©es description physique
+	//Donnée codées description physique
 	if($info_906[0]){
 		$rqt = "SELECT idchamp FROM notices_custom WHERE name='dc_phys'";
 		$res = pmb_mysql_query($rqt);
@@ -520,11 +521,11 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values('".$id_champ."','".$notice_id."','".addslashes($info_906[0])."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
-	//oeuvre du musÃ©e reproduite
+	//oeuvre du musée reproduite
 	if(count($info_994_x)){
 		$val=implode(" ; ",$info_994_x);
 		$rqt = "SELECT idchamp FROM notices_custom WHERE name='oeuvre_reproduite'";
@@ -533,12 +534,12 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_text) values('".$id_champ."','".$notice_id."','".addslashes(trim($val))."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
 		
-	//oeuvre du musÃ©e citÃ©Ã©
+	//oeuvre du musée citéé
 	if(count($info_994_y)){
 		$val=implode(" ; ",$info_994_y);
 		$rqt = "SELECT idchamp FROM notices_custom WHERE name='oeuvre_citee'";
@@ -547,7 +548,7 @@ function import_new_notice_suite() {
 			$id_champ=pmb_mysql_result($res,0);
 			$requete="insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_text) values('".$id_champ."','".$notice_id."','".addslashes(trim($val))."')";
 			if(!pmb_mysql_query($requete)){
-				echo "requete echouÃ© : ".$requete."<br>";
+				echo "requete echoué : ".$requete."<br>";
 			} 
 		}
 	}
@@ -556,18 +557,17 @@ function import_new_notice_suite() {
 			
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-		global $msg, $dbh ;
 	global $nb_expl_ignores ;
 	global $bulletin_ex;
-	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, 
-		$section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
+	global $prix, $notice_id, $info_995, $book_lender_id, 
+		$book_statut_id,
 		$cote_mandatory, $book_location_id ;
 		
 	// lu en 010$d de la notice
 	//$price = $prix[0];
 	
-	// la zone 995 est rÃ©pÃ©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
+	// la zone 995 est répétable
+	for ($nb_expl = 0; $nb_expl < count ($info_995); $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 		
@@ -581,7 +581,7 @@ function traite_exemplaires () {
 			$expl['bulletin']=0;
 		}
 		
-		/* prÃ©paration du tableau Ã  passer Ã  la mÃ©thode */
+		/* préparation du tableau à passer à la méthode */
 		$cbarre = $info_995[$nb_expl]['f'];
 		if(!$cbarre)$cbarre="ind";
 		$pb = 1 ;
@@ -589,7 +589,7 @@ function traite_exemplaires () {
 		$expl['cb']=$cbarre;
 		while ($pb==1) {
 			$q = "SELECT expl_cb FROM exemplaires WHERE expl_cb='".$expl['cb']."' LIMIT 1 ";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			//echo "requete : ".$q."<br>";
 			$nb = pmb_mysql_num_rows($r);
 			if ($nb) {
@@ -598,23 +598,23 @@ function traite_exemplaires () {
 			} else $pb = 0 ;
 		}
 		
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; Ã  chercher dans docs_typdoc
+		// $expl['typdoc']     = $info_995[$nb_expl]['r']; à chercher dans docs_typdoc
 		$data_doc=array();
-		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importÃ© (".$book_lender_id.")";
+		//$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r']." -Type doc importé (".$book_lender_id.")";
 		$data_doc['tdoc_libelle'] = $info_995[$nb_expl]['r'];
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		if(!$data_doc['tdoc_libelle']){
-			$data_doc['tdoc_libelle'] ="IndÃ©terminÃ©";
-			$data_doc['tdoc_codage_import'] ="IndÃ©terminÃ©";
+			$data_doc['tdoc_libelle'] ="Indéterminé";
+			$data_doc['tdoc_codage_import'] ="Indéterminé";
 		}
-		$data_doc['duree_pret'] = 0 ; /* valeur par dÃ©faut */
+		$data_doc['duree_pret'] = 0 ; /* valeur par défaut */
 		$data_doc['tdoc_owner'] = 0 ;
 		$expl['typdoc'] = docs_type::import($data_doc);
 		
 		$expl['cote'] = $info_995[$nb_expl]['k'];
 		if($expl['cote'] == "")$expl['cote'] = "Indetermine";
                       	
-		// $expl['section']    = $info_995[$nb_expl]['q']; Ã  chercher dans docs_section
+		// $expl['section']    = $info_995[$nb_expl]['q']; à chercher dans docs_section
 		/*$data_doc=array();
 		$info_995[$nb_expl]['q']=trim($info_995[$nb_expl]['q']);
 		if (!$info_995[$nb_expl]['q']) 
@@ -624,8 +624,8 @@ function traite_exemplaires () {
 		$data_doc['section_libelle'] = $info_995[$nb_expl]['q'];
 		$data_doc['sdoc_codage_import'] = $info_995[$nb_expl]['q'] ;
 		if(!$data_doc['section_libelle']){
-			$data_doc['section_libelle'] = "IndÃ©terminÃ©";
-			$data_doc['sdoc_codage_import'] = "IndÃ©terminÃ©";
+			$data_doc['section_libelle'] = "Indéterminé";
+			$data_doc['sdoc_codage_import'] = "Indéterminé";
 		}
 		$data_doc['sdoc_owner'] = 0 ;
 		$expl['section'] = docs_section::import($data_doc);
@@ -634,7 +634,7 @@ function traite_exemplaires () {
 		if(!($info_995[$nb_expl]['o'])){
 			$expl['statut'] = $book_statut_id;
 		}else{
-			$info_995[$nb_expl]['o']="IndÃ©terminÃ©";
+			$info_995[$nb_expl]['o']="Indéterminé";
 			$data_doc=array();
 			$data_doc['statusdoc_codage_import']=$info_995[$nb_expl]['o'];
 			$data_doc['statut_libelle']=$info_995[$nb_expl]['o'];
@@ -655,20 +655,20 @@ function traite_exemplaires () {
 		}
 		
 		
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÃ©, Ã©ventuellement Ã  fixer par combo_box
+		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisé, éventuellement à fixer par combo_box
 		$data_doc=array();
 		$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q'];
 		$data_doc['statisdoc_codage_import'] = $info_995[$nb_expl]['q'];
 		if(!$data_doc['codestat_libelle']){
-			$data_doc['codestat_libelle'] = "IndÃ©terminÃ©";
-			$data_doc['statisdoc_codage_import'] = "IndÃ©terminÃ©";
+			$data_doc['codestat_libelle'] = "Indéterminé";
+			$data_doc['statisdoc_codage_import'] = "Indéterminé";
 		}
 		$data_doc['statisdoc_owner'] = 0 ;
 		$expl['codestat'] = docs_codestat::import($data_doc);
 		
 		
-		// $expl['creation']   = $info_995[$nb_expl]['']; Ã  prÃ©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; Ã  prÃ©ciser
+		// $expl['creation']   = $info_995[$nb_expl]['']; à préciser
+		// $expl['modif']      = $info_995[$nb_expl]['']; à préciser
                       	
 		$expl['comment']       =  $info_995[$nb_expl]['u'];
 		$expl['note']       = "" ;
@@ -676,7 +676,7 @@ function traite_exemplaires () {
 		$expl['expl_owner'] = $book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 		
-		$data['date_depot']=""; // Attention il faut en post migration mette cette info dans la date de crÃ©ation de l'exemplaire
+		$expl['date_depot']=""; // Attention il faut en post migration mette cette info dans la date de création de l'exemplaire
 		// quoi_faire 
 		$expl['quoi_faire'] = 2 ;
 		
@@ -690,7 +690,7 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction spÃ©cifique d'export de la zone 995
+// fonction spécifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 
 	}	

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_parent_sections.class.php,v 1.3 2015-12-16 11:50:56 dgoron Exp $
+// $Id: docwatch_selector_parent_sections.class.php,v 1.5 2022/01/18 07:36:38 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,11 +13,10 @@ if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 class docwatch_selector_parent_sections extends docwatch_selector {
 	
 	public function get_value(){
-		global $dbh;
-		if(!count($this->value) && count($this->parameters['sections'])){
+		if(empty($this->value) && count($this->parameters['sections'])){
 			$this->value = array();
 			$query = "select distinct id_section from cms_sections where section_num_parent in(".implode(",",$this->parameters['sections']).")"; 
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row=pmb_mysql_fetch_object($result)){
 					$this->value[] = $row->id_section;

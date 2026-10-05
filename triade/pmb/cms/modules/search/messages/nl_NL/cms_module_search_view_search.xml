@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en neerlandais pour la vue du module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_search_view_search.xml,v 1.6 2024/03/05 16:00:18 pmallambic Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_search_button_label'>Zoeken</entry>
+	<entry code='cms_module_search_view_help'>Afficher le bouton d'aide</entry>
+	<entry code='cms_module_search_view_yes'>Ja</entry>
+	<entry code='cms_module_search_view_no'>Neen</entry>
+	<entry code='cms_module_search_help'>Help</entry>
+	<entry code='cms_module_search_view_title'>Titre du cadre de recherche</entry>
+	<entry code='cms_module_search_view_link_search_advanced'>Afficher le lien de recherche avancée</entry>
+	<entry code='cms_module_search_view_link_search_advanced_display'>Recherche avancée</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab'>Destination du lien de recherche avancée</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_simple_search'>Recherche simple</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_search_perso'>Recherches prédéfinies</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_extended_search'>Recherches multi-critères</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_extended_search_authorities'>Recherche multi-critères autorités</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_term_search'>Recherche par termes</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_tags_search'>Recherche par tags</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_perio_a2z'>Périodiques</entry>
+	<entry code='cms_module_search_view_input_placeholder'>Texte indicatif par défaut</entry>
+	<entry code='cms_module_search_view_advanced_parameters'>Paramétrage avancé</entry>
+	<entry code='cms_module_search_view_others_links'>Autres liens :</entry>
+	<entry code='cms_module_search_view_link_url'>Lien :</entry>
+	<entry code='cms_module_search_view_link_check'>Vérifier</entry>
+	<entry code='cms_module_search_view_link_label'>Libellé :</entry>
+	<entry code='cms_module_search_view_link_target'>Ouvrir dans un nouvel onglet</entry>
+	<entry code='cms_module_search_view_nofill'>Vider la saisie de recherche après en avoir effectuée une</entry>
+	<entry code='cms_module_search_view_limit_completion'>Limiter la complétion automatique à 3 car. minimum</entry>
+	<entry code='cms_module_search_selector_aff_input_search'>Affichage de la liste de recherche</entry>
+	<entry code='cms_module_search_selector_aff_input_radio'>Bouton Radio</entry>
+	<entry code='cms_module_search_selector_aff_input_dropdown'>Sélecteur</entry>
+	<entry code='cms_module_search_view_link_title'>Title :</entry>
+</XMLlist>

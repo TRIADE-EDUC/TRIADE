@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur arteVOD
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1.2.1 2024/07/18 12:38:21 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code="artecampus_title">Arte Campus</entry>
+	<entry code="artecampus_url">URL du catalogue</entry>
+	<entry code="artecampus_key">Clé privée</entry>
+	<entry code="artecampus_location_label">Localisation</entry>
+	<entry code="artecampus_location">Localisation</entry>
+	<entry code="artecampus_location_default">Sélectionner une localisation</entry>
+	<entry code="artecampus_uai">UAI</entry>
+	<entry code="artecampus_actions">Actions</entry>
+	<entry code="artecampus_role_label">Définitions des rôles</entry>
+	<entry code="artecampus_categorie">Catégories de lecteurs</entry>
+	<entry code="artecampus_role">Rôle</entry>
+	<entry code="artecampus_role_default">Sélectionner un rôle</entry>
+	<entry code="artecampus_role_teacher">Enseignant</entry>
+	<entry code="artecampus_role_student">Étudiant</entry>
+	<entry code="artecampus_add">+</entry>
+	<entry code="artecampus_delete">Supprimer</entry>
+	<entry code="artecampus_error_curl">Une erreur est survenue lors de la récupération des données. Vérifier l'URL du catalogue.</entry>
+</XMLlist>

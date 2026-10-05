@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.2.42.1 2024/08/28 14:10:18 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>MARC ISO2709 -&gt; pmb-XML MARC</importname>

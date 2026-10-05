@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_editorial_types.class.php,v 1.20 2019-06-13 09:39:52 dgoron Exp $
+// $Id: cms_editorial_types.class.php,v 1.24 2021/05/11 08:18:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/templates/cms/cms_editorial_types.tpl.php");
 
 class cms_editorial_types {
@@ -106,7 +107,7 @@ class cms_editorial_types {
 		$options = "";
 		$this->get_types();
 		$options.= "
-			<option value='0'".(!$selected ? "selected='selected'" : "").">".$msg['cms_editorial_form_type_choice']."</option>";	
+			<option value='0'".(!$selected ? " selected='selected'" : "").">".$msg['cms_editorial_form_type_choice']."</option>";	
 		for($i=1 ; $i<count($this->types) ; $i++){
 			$options.= "
 			<option value='".$this->types[$i]['id']."'".($this->types[$i]['id']==$selected ? "selected='selected'" : "").">".htmlentities($this->types[$i]['label'],ENT_QUOTES,$charset)."</option>";	
@@ -114,187 +115,23 @@ class cms_editorial_types {
 		return $options;
 	}
 	
-	public function get_table($form_link=""){
-		global $msg,$charset;
-		global $type_list_empr;
-		global $pair_impair;
-		$this->get_types();
-		
-		if(!$form_link){
-			$form_link="./admin.php?categ=cms_editorial&sub=type&elem=".$this->element."&action=edit";
-		}
-		
-		$types =array();
-		for($i=0 ; $i<count($this->types) ; $i++){
-			$types[]=$this->types[$i];
-		}
-		
-		$table = "
-		<table>
-			<tr>
-				<th>".$msg['editorial_content_type_label']."</th>
-				<th>".$msg['editorial_content_type_comment']."</th>
-				<th>".$msg['editorial_content_type_fields']."</th>
-			</tr>";
-		
-		for($i=0 ; $i<count($types) ; $i++){
-			$class = ($i%2 ? "odd":"even");
-			$fields_list = "";
-			foreach($types[$i]['fields'] as $field){
-				$fields_list.= htmlentities($field['TITRE'],ENT_QUOTES,$charset)." (<i>".$type_list_empr[$field['TYPE']]."</i>)<br />";
-			}
-			
-			$table.= "
-			<tr class='".($i%2 ? "odd":"even")."' onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".$pair_impair."'\">";
-			if(strpos($this->types[$i]['element'], "generic") === false){
-				$table .= "<td onclick='document.location=\"".$form_link."&id=".$types[$i]['id']."\"'style='cursor:pointer' >".htmlentities($types[$i]['label'],ENT_QUOTES,$charset)."</td>";
-			}else{
-				$table .= "<td onclick='document.location=\"".$form_link."&id=".$types[$i]['id']."\"'style='cursor:pointer' ><b>".htmlentities($types[$i]['label'],ENT_QUOTES,$charset)."</b></td>";
-			}
-				
-							
-			$table.= "<td onclick='document.location=\"".$form_link."&id=".$types[$i]['id']."\"'style='cursor:pointer' >".htmlentities($types[$i]['comment'],ENT_QUOTES,$charset)."</td>
-				<td>".$fields_list."<input type='button' class='bouton' value=' ".$msg['cms_editorial_type_fieldlist_edit']." ' onclick='document.location=\"./admin.php?categ=cms_editorial&sub=type&elem=".$this->element."&quoi=fields&type_id=".$types[$i]['id']."\"'/></td>
-			</tr>";
-		}
-		$table.= "
-		</table>
-		<div class='row'>&nbsp;</div>
-		<div class='row'>
-			<input type='button' class='bouton' value='".$msg['editorial_content_type_add']."' onclick='document.location=\"".$form_link."&id=0\"'/>
-		</div>";
-		return $table;
-	}
-	
-	public function get_form($id=0,$url=""){
-		global $msg,$charset;
-		global $cms_editorial_type_form;
-		global $cms_editorial_type_form_generic_label;
-		global $cms_editorial_type_form_std_label;
-		$this->get_types();
-		
-		if(!$url){
-			$url="./admin.php?categ=cms_editorial&sub=type&elem=".$this->element;
-		}
-		
-		if($id){
-			for($i=0 ; $i<count($this->types) ; $i++){
-				if($this->types[$i]['id'] == $id){
-					$type = $this->types[$i];
-					break;
-				}
-			}
-		}
-		
-		if($type['id']){
-			$form = str_replace("!!form_title!!",$msg['editorial_content_type_edit'],$cms_editorial_type_form);
-			$form = str_replace("!!comment!!",htmlentities($type['comment'],ENT_QUOTES,$charset),$form);
-			$form = str_replace("!!id!!",$type['id'],$form);
-			if(strpos($this->types[$i]['element'], "generic") != false){
-				$form = str_replace("!!cms_editorial_label!!",$cms_editorial_type_form_generic_label, $form);
-				$url="./admin.php?categ=cms_editorial&sub=type&elem=".$this->types[$i]['element'];
-				$form = str_replace("!!bouton_supprimer!!","",$form);
-			}else{
-				$form = str_replace("!!cms_editorial_label!!",$cms_editorial_type_form_std_label, $form);
-				$form = str_replace("!!bouton_supprimer!!","<input type='button' class='bouton' value=' ".$msg[63]." ' onclick='confirmation_delete(\"&action=delete&id=".$type['id']."\",\"".htmlentities($type['label'],ENT_QUOTES,$charset)."\")' />",$form);
-				$form.= confirmation_delete($url);
-			}
-			
-			$form = str_replace("!!label!!",htmlentities($type['label'],ENT_QUOTES,$charset), $form);
-			
-		}else{
-			$form = str_replace("!!form_title!!",$msg['editorial_content_type_add'],$cms_editorial_type_form);	
-			if(strpos($this->types[$i]['element'], "generic") != false){
-				$form = str_replace("!!cms_editorial_label!!",$cms_editorial_type_form_generic_label, $form);
-			}else{
-				$form = str_replace("!!cms_editorial_label!!",$cms_editorial_type_form_std_label, $form);
-					
-			}
-			$form = str_replace("!!label!!","",$form);
-			$form = str_replace("!!comment!!","",$form);
-			$form = str_replace("!!id!!",0,$form);
-			$form = str_replace("!!bouton_supprimer!!","",$form);
-		}
-		$form = str_replace("!!action!!",$url,$form);
-		$form = str_replace("!!cms_page_options!!",$this->get_pages_options($type['num_page']),$form);
-		$form = str_replace("!!cms_env_var_options!!",$this->get_env_var_options($type['num_page'], $type['num_var']), $form);
-		
-		return $form;
-	}
-	
-	public function save(){
-		global $cms_editorial_type_label,$cms_editorial_type_comment,$cms_editorial_type_id, $cms_editorial_type_page_var_selector, $cms_editorial_type_page_selector;
-		$cms_editorial_type_page_selector+=0;
-		if($cms_editorial_type_id){
-			$cms_editorial_type_id+=0;
-			$query = "update cms_editorial_types set ";
-			$clause = "where id_editorial_type = ".$cms_editorial_type_id;
-		}else{
-			$query = "insert into cms_editorial_types set ";
-			$clause = "";
-		}
-		$query.= "
-			editorial_type_element = '".$this->element."',
-			editorial_type_label = '".$cms_editorial_type_label."',
-			editorial_type_comment = '".$cms_editorial_type_comment."',
-			editorial_type_permalink_num_page = ".$cms_editorial_type_page_selector.",
-			editorial_type_permalink_var_name = '".$cms_editorial_type_page_var_selector."' 
-					";
-		$query.= " ".$clause;
-		pmb_mysql_query($query);
-		
-		if(strpos($this->element, "generic") != false){ 
-			//On repasse au fonctionnement normal, nous ne sommes plus en éditions d'un élément générique
-			$this->element = str_replace('_generic', '' , $this->element);
-		}
-	}
-	
-	public function delete($id){
-		global $msg,$charset;
-		$id+=0;
-		if($id){
-			//on regarde si le type est utilisé
-			$query = "select id_".$this->element." from cms_".$this->element."s where ".$this->element."_num_type = ".$id;
-			$result = pmb_mysql_query($query);
-			if(pmb_mysql_num_rows($result)){
-				$error = $msg['type_used'];
-			}
-			
-			//on regarde si le type est utilisé dans un formulaire de contribution
-			$query = "SELECT id_form, form_title FROM contribution_area_forms WHERE form_type = '".$this->element."_".$id."'";
-			$result = pmb_mysql_query($query);
-			if(pmb_mysql_num_rows($result)){
-				$error = $msg['cms_type_used_in_contribution'];
-			}
-		}
-		if($error){
-			print "
-			<script type='text/javascript'>
-				alert(\"".$msg['cant_delete'].". ".$error."\");
-			</script>";
-		}else{
-			$fields = new cms_editorial_parametres_perso($id);
-			$fields->delete_all();
-			$query = "delete from cms_editorial_types where id_editorial_type = ".$id;
-			pmb_mysql_query($query);
-		}
-	}
-	
 	public static function get_editable_form($id,$elem,$type_id){
-		global $msg,$charset;
+		global $charset;
 		
 		$type = cms_editorial_types::get_type($type_id);
 		//les champs perso...
 		$obj = new cms_editorial_parametres_perso($type_id);
 		$fields = $obj->show_editable_fields($id,$elem);
 		$form="";
-		for ($i=0; $i<count($fields["FIELDS"]); $i++) {
-			$p=$fields["FIELDS"][$i];
-			$form.="
-			<div id='el9Child_".$p["ID"]."' class='row' movable='yes' title=\"".htmlentities($p["TITRE"], ENT_QUOTES, $charset)."\">
-			<div class='row'><label for='".$p["NAME"]."' class='etiquette'>".htmlentities($p["TITRE"],ENT_QUOTES, $charset)." </label>".$p["COMMENT_DISPLAY"]."</div>
-			<div class='row'>".$p["AFF"]."</div>
-			</div><div class='row'>&nbsp;</div>";
+		if (!empty($fields["FIELDS"])) {
+    		for ($i=0; $i<count($fields["FIELDS"]); $i++) {
+    			$p=$fields["FIELDS"][$i];
+    			$form.="
+    			<div id='el9Child_".$p["ID"]."' class='row' movable='yes' title=\"".htmlentities($p["TITRE"], ENT_QUOTES, $charset)."\">
+    			<div class='row'><label for='".$p["NAME"]."' class='etiquette'>".htmlentities($p["TITRE"],ENT_QUOTES, $charset)." </label>".$p["COMMENT_DISPLAY"]."</div>
+    			<div class='row'>".$p["AFF"]."</div>
+    			</div><div class='row'>&nbsp;</div>";
+    		}
 		}
 		
 		if($form && isset($type['extensions']) && count($type['extensions'])){
@@ -336,7 +173,7 @@ class cms_editorial_types {
 	}
 	
 	public function get_format_data_structure($full=true){
-		global $msg,$charset;
+		global $msg;
 		$fields_type = array();
 		$this->get_types();
 		foreach($this->types as $type){
@@ -395,7 +232,8 @@ class cms_editorial_types {
 	
 	public static function get_env_var_options($page_id, $selected = ''){
 		global $charset, $msg;
-		$page_id+=0;		
+		
+		$page_id = intval($page_id);
 		$options = '';
 		if($page_id){
 			$query = 'select id_var, var_name from cms_vars where var_num_page = '.$page_id;

@@ -1,15 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion_multi.tpl.php,v 1.15 2019-05-27 12:26:22 btafforeau Exp $
+// $Id: suggestion_multi.tpl.php,v 1.16 2021/04/22 09:00:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $multi_sug_form, $msg, $charset, $import_sug_form;
 
 $multi_sug_form= "<div id='make_mul_sugg'>
-<h1>".htmlentities($msg['acquisition_sug_ges'], ENT_QUOTES, $charset)."</h1>
 <div id='make_mul_sugg-container'>
 <script src='./javascript/suggestion_multi.js' type='text/javascript'></script>
 <script>
@@ -109,7 +108,6 @@ $multi_sug_form= "<div id='make_mul_sugg'>
 
 $import_sug_form="
 <div id='import_sug'>
-<h1>".htmlentities($msg['acquisition_sug_ges'], ENT_QUOTES, $charset)."</h1>
 <div id='import_sug-container'>
 <form action=\"acquisition.php?categ=sug&sub=import\" method=\"post\" enctype=\"multipart/form-data\"> 
 	<h3>".htmlentities($msg['acquisition_sugg_import_title'], ENT_QUOTES, $charset)."</h3>

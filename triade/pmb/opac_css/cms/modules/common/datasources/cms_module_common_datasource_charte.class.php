@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_charte.class.php,v 1.1 2019-04-30 12:59:00 ngantier Exp $
+// $Id: cms_module_common_datasource_charte.class.php,v 1.3 2020/03/16 10:28:02 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ class cms_module_common_datasource_charte extends cms_module_common_datasource{
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -23,7 +23,7 @@ class cms_module_common_datasource_charte extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * Sauvegarde du formulaire, revient Ã  remplir la propriÃ©tÃ© parameters et appeler la mÃ©thode parente...
+	 * Sauvegarde du formulaire, revient à remplir la propriété parameters et appeler la méthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -34,17 +34,18 @@ class cms_module_common_datasource_charte extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$article_id = $selector->get_value();
 			$article_ids = $this->filter_datas("articles",array($selector->get_value()));
 			if($article_ids[0]){
-				$article = new cms_article($article_ids[0]);
-				return $article->format_datas();
+			    $article = new cms_article($article_ids[0]);
+			    $links = ["article" => $this->get_constructed_link("article", "!!id!!")];
+				return $article->format_datas($links);
 			}
 		}
 		return false;

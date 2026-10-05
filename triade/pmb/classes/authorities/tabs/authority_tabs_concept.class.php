@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_tabs_concept.class.php,v 1.9 2018-01-24 15:53:00 tsamson Exp $
+// $Id: authority_tabs_concept.class.php,v 1.9 2018/01/24 15:53:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ require_once($class_path.'/onto/common/onto_common_uri.class.php');
 class authority_tabs_concept extends authority_tabs {
 
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les autoritÃ©s indexÃ©es avec ce concept
+	 * Méthode permettant de récupérer les autorités indexées avec ce concept
 	 * @param elements_list_tab $tab
 	 * @param authority_tabs $authority_tabs
 	 */
@@ -22,7 +22,7 @@ class authority_tabs_concept extends authority_tabs {
 	}
 	
 	/**
-	 * retourne les ids des concepts autopostÃ©s
+	 * retourne les ids des concepts autopostés
 	 * @param int $concept_id
 	 * @return array :
 	 */
@@ -42,7 +42,7 @@ class authority_tabs_concept extends authority_tabs {
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les notices indexÃ©es avec ce concept
+	 * Méthode permettant de récupérer les notices indexées avec ce concept
 	 * @param elements_list_tab $tab
 	 * @param authority $authority
 	 */
@@ -57,7 +57,7 @@ class authority_tabs_concept extends authority_tabs {
 		$tab->set_nb_results($nb_result);
 		
 		if (!$quoi && $nb_result) {
-			// Si $quoi n'est pas valorisÃ© et qu'on a des rÃ©sultats, on valorise $quoi avec cet onglet
+			// Si $quoi n'est pas valorisé et qu'on a des résultats, on valorise $quoi avec cet onglet
 			$quoi = $tab->get_name();
 		}
 			
@@ -73,7 +73,7 @@ class authority_tabs_concept extends authority_tabs {
 	}	
 	
 	/**
-	 * Ajout des notices indÃ©xÃ©s par les concepts autopostÃ©s
+	 * Ajout des notices indéxés par les concepts autopostés
 	 * @param elements_records_list_ui $tab
 	 * @param int $concept_id
 	 * @return array:
@@ -81,7 +81,7 @@ class authority_tabs_concept extends authority_tabs {
 	protected static function get_filtered_records_by_concepts_autoposted($tab, $concept_id) {
 		global $msg, $thesaurus_concepts_autopostage;
 		pmb_mysql_query('set session group_concat_max_len = 16777216');
-		//RÃ©cupÃ©ration du nombre de notice liÃ©es
+		//Récupération du nombre de notice liées
 		$groups = array();
 		$elements_ids = array();
 		$records_ids = '';
@@ -118,7 +118,7 @@ class authority_tabs_concept extends authority_tabs {
 				));
 				
 				$filter_values = $tab->get_filter_values("concept_records_with_autoposting");
-				//Si on a des rÃ©sultats; on passe Ã  la suite
+				//Si on a des résultats; on passe à la suite
 				if($filter_values && count($filter_values)){
 					$elements_ids = explode(',', $filtered_results);
 				}

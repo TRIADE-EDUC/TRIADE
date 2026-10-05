@@ -4,12 +4,14 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2012-06-26 13:31:50 ngantier Exp $ -->
+$Id: manifest.xml,v 1.3 2023/12/12 15:58:42 dbellamy Exp $ -->
 
 <manifest>
 	<name>oecd</name>
-	<repository>yes</repository>
 	<comment>Interrogation du serveur OECD</comment>
+	<search>no</search>
+	<repository>yes</repository>
+	<enrichment>no</enrichment>
 	<author>Nicolas Gantier</author>
 	<org>PMB Services</org>
 	<date>2012-06-05</date>

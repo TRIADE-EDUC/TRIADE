@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fpdf_carte_lecteur.class.php,v 1.7 2017-02-01 09:54:16 dgoron Exp $
+// $Id: fpdf_carte_lecteur.class.php,v 1.7 2017/02/01 09:54:16 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,29 +25,29 @@ class FPDF_Etiquette extends FPDF
 {
 	// private properties
 	
-	// infos planche d'Ã©tiquettes
-	public $topMargin;         // Marge du haut de la planche d'Ã©tiquettes
-	public $bottomMargin;      // Marge du bas de la planche d'Ã©tiquettes
-	public $leftMargin;        // Marge de gauche de la planche d'Ã©tiquettes
-	public $rightMargin;       // Marge de droite de la planche d'Ã©tiquettes
+	// infos planche d'étiquettes
+	public $topMargin;         // Marge du haut de la planche d'étiquettes
+	public $bottomMargin;      // Marge du bas de la planche d'étiquettes
+	public $leftMargin;        // Marge de gauche de la planche d'étiquettes
+	public $rightMargin;       // Marge de droite de la planche d'étiquettes
 	
-	public $xSticksPadding;    // Espacement horizontal entre 2 Ã©tiquettes
-	public $ySticksPadding;    // Espacement vertical entre 2 Ã©tiquettes
+	public $xSticksPadding;    // Espacement horizontal entre 2 étiquettes
+	public $ySticksPadding;    // Espacement vertical entre 2 étiquettes
 	
-	public $nbrXSticks;        // Nombre d'Ã©tiquettes en largeur
-	public $nbrYSticks;        // Nombre d'Ã©tiquettes en hauteur
+	public $nbrXSticks;        // Nombre d'étiquettes en largeur
+	public $nbrYSticks;        // Nombre d'étiquettes en hauteur
 	
-	public $stickTopMargin;    // Marge intÃ©rieure haut de l'Ã©tiquette
-	public $stickBottomMargin; // Marge intÃ©rieure bas de l'Ã©tiquette
-	public $stickLeftMargin;   // Marge intÃ©rieure gauche de l'Ã©tiquette
-	public $stickRightMargin;  // Marge intÃ©rieure droite de l'Ã©tiquette
+	public $stickTopMargin;    // Marge intérieure haut de l'étiquette
+	public $stickBottomMargin; // Marge intérieure bas de l'étiquette
+	public $stickLeftMargin;   // Marge intérieure gauche de l'étiquette
+	public $stickRightMargin;  // Marge intérieure droite de l'étiquette
 	
-	public $xStick;            // Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
-	public $yStick;            // Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
-	public $nbrSticks;         // Nombre de sticks ajoutÃ© avec AddStick
+	public $xStick;            // Position courante de l'étiquette (unité : étiquette)
+	public $yStick;            // Position courante de l'étiquette (unité : étiquette)
+	public $nbrSticks;         // Nombre de sticks ajouté avec AddStick
 	
 	// infos code barre
-	public $cbXRes;            // RÃ©solution du code barres
+	public $cbXRes;            // Résolution du code barres
 	public $cbFontSize;        // Taille de la police du code barre
 	public $cbStyle;           // Style du code barre
 	
@@ -60,17 +60,17 @@ class FPDF_Etiquette extends FPDF
 	{
 		parent::__construct($orientation, $unit, $format);
 	
-		// Initialisation des propriÃ©tÃ©s
+		// Initialisation des propriétés
 		$this->nbrXSticks = $nbrXSticks;
 		$this->nbrYSticks = $nbrYSticks;
 		$this->nbrSticks = 0;
 	
-		// par dÃ©faut, prend toute la feuille
+		// par défaut, prend toute la feuille
 		// Marges de la planche
 		$this->SetPageMargins(0, 0, 0, 0);
-		// Ecart entre les Ã©tiquettes
+		// Ecart entre les étiquettes
 		$this->SetSticksPadding(0, 0);
-		// Marge intÃ©rieure des Ã©tiquettes
+		// Marge intérieure des étiquettes
 		$this->SetSticksMargins(5, 5, 5, 5);
 	
 		// infos code barres
@@ -198,10 +198,10 @@ class FPDF_Etiquette extends FPDF
 				$width = (($len+2)*12 + $len+1)*$this->cbXRes;
 				break;
 		}
-		// calcule la hauteur en pixels Ã  partir de la largeur
+		// calcule la hauteur en pixels à partir de la largeur
 		$height = ($width * $h) / $w;
 	
-		// crÃ©e le code barre
+		// crée le code barre
 		switch ($type)
 		{
 			case 'c128a' :
@@ -240,29 +240,29 @@ class UFPDF_Etiquette extends UFPDF
 {
 	// private properties
 	
-	// infos planche d'Ã©tiquettes
-	public $topMargin;         // Marge du haut de la planche d'Ã©tiquettes
-	public $bottomMargin;      // Marge du bas de la planche d'Ã©tiquettes
-	public $leftMargin;        // Marge de gauche de la planche d'Ã©tiquettes
-	public $rightMargin;       // Marge de droite de la planche d'Ã©tiquettes
+	// infos planche d'étiquettes
+	public $topMargin;         // Marge du haut de la planche d'étiquettes
+	public $bottomMargin;      // Marge du bas de la planche d'étiquettes
+	public $leftMargin;        // Marge de gauche de la planche d'étiquettes
+	public $rightMargin;       // Marge de droite de la planche d'étiquettes
 	
-	public $xSticksPadding;    // Espacement horizontal entre 2 Ã©tiquettes
-	public $ySticksPadding;    // Espacement vertical entre 2 Ã©tiquettes
+	public $xSticksPadding;    // Espacement horizontal entre 2 étiquettes
+	public $ySticksPadding;    // Espacement vertical entre 2 étiquettes
 	
-	public $nbrXSticks;        // Nombre d'Ã©tiquettes en largeur
-	public $nbrYSticks;        // Nombre d'Ã©tiquettes en hauteur
+	public $nbrXSticks;        // Nombre d'étiquettes en largeur
+	public $nbrYSticks;        // Nombre d'étiquettes en hauteur
 	
-	public $stickTopMargin;    // Marge intÃ©rieure haut de l'Ã©tiquette
-	public $stickBottomMargin; // Marge intÃ©rieure bas de l'Ã©tiquette
-	public $stickLeftMargin;   // Marge intÃ©rieure gauche de l'Ã©tiquette
-	public $stickRightMargin;  // Marge intÃ©rieure droite de l'Ã©tiquette
+	public $stickTopMargin;    // Marge intérieure haut de l'étiquette
+	public $stickBottomMargin; // Marge intérieure bas de l'étiquette
+	public $stickLeftMargin;   // Marge intérieure gauche de l'étiquette
+	public $stickRightMargin;  // Marge intérieure droite de l'étiquette
 	
-	public $xStick;            // Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
-	public $yStick;            // Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
-	public $nbrSticks;         // Nombre de sticks ajoutÃ© avec AddStick
+	public $xStick;            // Position courante de l'étiquette (unité : étiquette)
+	public $yStick;            // Position courante de l'étiquette (unité : étiquette)
+	public $nbrSticks;         // Nombre de sticks ajouté avec AddStick
 	
 	// infos code barre
-	public $cbXRes;            // RÃ©solution du code barres
+	public $cbXRes;            // Résolution du code barres
 	public $cbFontSize;        // Taille de la police du code barre
 	public $cbStyle;           // Style du code barre
 	
@@ -275,17 +275,17 @@ class UFPDF_Etiquette extends UFPDF
 	{
 		parent::__construct($orientation, $unit, $format);
 	
-		// Initialisation des propriÃ©tÃ©s
+		// Initialisation des propriétés
 		$this->nbrXSticks = $nbrXSticks;
 		$this->nbrYSticks = $nbrYSticks;
 		$this->nbrSticks = 0;
 	
-		// par dÃ©faut, prend toute la feuille
+		// par défaut, prend toute la feuille
 		// Marges de la planche
 		$this->SetPageMargins(0, 0, 0, 0);
-		// Ecart entre les Ã©tiquettes
+		// Ecart entre les étiquettes
 		$this->SetSticksPadding(0, 0);
-		// Marge intÃ©rieure des Ã©tiquettes
+		// Marge intérieure des étiquettes
 		$this->SetSticksMargins(5, 5, 5, 5);
 	
 		// infos code barres
@@ -413,10 +413,10 @@ class UFPDF_Etiquette extends UFPDF
 				$width = (($len+2)*12 + $len+1)*$this->cbXRes;
 				break;
 		}
-		// calcule la hauteur en pixels Ã  partir de la largeur
+		// calcule la hauteur en pixels à partir de la largeur
 		$height = ($width * $h) / $w;
 	
-		// crÃ©e le code barre
+		// crée le code barre
 		switch ($type)
 		{
 			case 'c128a' :
@@ -449,4 +449,4 @@ class UFPDF_Etiquette extends UFPDF
 
 } // fin de la classe FPDF_Etiquette
 
-} // fin de dÃ©finition de FPDF_ETIQUETTE_CLASS
+} // fin de définition de FPDF_ETIQUETTE_CLASS

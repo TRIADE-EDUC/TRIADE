@@ -1,41 +1,45 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Collection.php,v 1.42 2017-10-05 11:02:10 jpermanne Exp $
+// $Id: Collection.php,v 1.51.4.2 2025/03/14 08:07:35 qvarin Exp $
 namespace Sabre\PMB;
 
 use Sabre\DAV;
 use Sabre\PMB;
+use encoding_normalize;
 
 class Collection extends DAV\Collection {
 	public $type;
 	public $config;
 	public $restricted_objects;
+	public $parentNode;
+	protected $notices;
 	protected $formatted_name;
 	protected static $acces;
 	protected static $domain = array();
-	
-	function __construct($config){
+
+	public function __construct($config){
 		$this->config = $config;
 	}
-	
-	function get_code_from_name($name){
+
+	public function get_code_from_name($name){
+	    global $matches;
 		$val="";
-		if(preg_match("/\((T|R|[NTCSIEL][0-9]{1,})\)$/i",$name,$matches)){
+		if(preg_match("/\((T|R|[ODNTCSIEL][0-9]{1,})\)$/i",$name,$matches)){
 			$val=$matches[1];
-		}elseif(preg_match("/\((T|R|[NTCSIEL][0-9]{1,})\)\./i",$name,$matches)){
+		}elseif(preg_match("/\((T|R|[ODNTCSIEL][0-9]{1,})\)\./i",$name,$matches)){
 			$val=$matches[1];
 		}
 		return $val;
 	}
-	
-	function get_notice_by_meta($name,$filename){
+
+	public function get_notice_by_meta($name,$filename){
 		\create_tableau_mimetype();
 		$mimetype = \trouve_mimetype($filename,extension_fichier($name));
-		//on commence avec la gymnatisque des mÃ©tas...
+		//on commence avec la gymnatisque des métas...
 		if($mimetype == "application/epub+zip"){
-			//pour les ebook, on gÃ¨re ca directement ici !
+			//pour les ebook, on gère ca directement ici !
 			$epub = new \epub_Data(realpath($filename));
 			$metas=$epub->metas;
 			$img = imagecreatefromstring($epub->getCoverContent());
@@ -49,7 +53,7 @@ class Collection extends DAV\Collection {
 		$metasMapper = $this->load_metas_mapper();
 		return $metasMapper->get_notice_id($metas, $mimetype,$name,false);
 	}
-	
+
 	protected function load_metas_mapper(){
 		if($this->config['metasMapper_class']){
 			$this->load_class_mapper($this->config['metasMapper_class']);
@@ -61,18 +65,18 @@ class Collection extends DAV\Collection {
 		$this->load_class_mapper("metasMapper");
 		return new \metasMapper($this->config);
 	}
-	
+
 	protected function load_class_mapper($class_name){
-		global $base_path,$include_path,$class_path,$javascript_path;
+		global $class_path;
 		require_once($class_path."/webdav_mapper/".$class_name.".class.php");
 	}
-	
-	function set_parent($parent){
+
+	public function set_parent($parent){
 		$this->parentNode = $parent;
 	}
-	function getChildren(){
+	public function getChildren(){
 		global $msg, $tdoc;
-		
+
 		$children = array();
 		$children_type = "";
 		if($this->type == "rootNode"){
@@ -92,13 +96,13 @@ class Collection extends DAV\Collection {
 			case "categorie" :
 				$thes = new \thesaurus($this->config['used_thesaurus']);
 				$node = new PMB\Categorie("(C".$thes->num_noeud_racine.")",$this->config);
-				$node->restricted_objects=$this->restricted_objects;//On prends en compte les restrictions pour le cas on ne voudrait que les catÃ©gories avec des notices
+				$node->restricted_objects=$this->restricted_objects;//On prends en compte les restrictions pour le cas on ne voudrait que les catégories avec des notices
 				$children = $node->getChildren();
 				break;
 			case "typdoc" :
-				if (!sizeof($tdoc)) $tdoc = new \marc_list('doctype');
+				if (empty($tdoc)) $tdoc = new \marc_list('doctype');
 				foreach($tdoc->table as $label){
-					$children[] = new PMB\Typdoc(PMB\Typdoc::format_typdoc($label). " (T)" ,$this->config); 
+					$children[] = new PMB\Typdoc(PMB\Typdoc::format_typdoc($label). " (T)" ,$this->config);
 				}
 				break;
 			case "statut" :
@@ -150,6 +154,53 @@ class Collection extends DAV\Collection {
 					}
 				}
 				break;
+			case "concept" :
+			    $scheme_uri = \onto_common_uri::get_uri($this->config['used_schema']);
+			    $store = \skos_datastore::get_store();
+
+			    $sparql = "select ?uri where {
+                    ?uri rdf:type skos:Concept .
+                    ?uri skos:inScheme <".$scheme_uri."> .
+                    optional {
+                        ?uri skos:broader ?broader .
+                    }
+                    filter(!bound(?broader))
+                }";
+
+			    if($store->query($sparql)){
+			        $results = $store->get_result();
+			        for($i=0 ; $i<count($results) ; $i++){
+			            $children[] = new PMB\Concept("(D".\onto_common_uri::get_id($results[$i]->uri).")" ,$this->config);
+			        }
+			    }
+			    break;
+			case "oeuvre" :
+			    $links_definition = \marc_list_collection::get_instance('oeuvre_link');
+			    $query = "select tu_id from titres_uniformes";
+			    $result = pmb_mysql_query($query);
+			    if(pmb_mysql_num_rows($result)){
+			        while($row = pmb_mysql_fetch_object($result)){
+			            // On regarde si au à au moins un lien descendant depuis l'oeuvre courante
+			            $needed = true;
+			            $query = "select oeuvre_link_type,oeuvre_link_expression from  tu_oeuvres_links where oeuvre_link_from=".$row->tu_id;
+			            $res = pmb_mysql_query($query);
+			            if(pmb_mysql_num_rows($res)){
+			                while($r = pmb_mysql_fetch_object($res)){
+			                    if(in_array($r->oeuvre_link_type ,array_keys($links_definition->table['ascendant']))){
+			                        $needed=false;
+			                    }
+			                    if(in_array($r->oeuvre_link_type ,array_keys($links_definition->table['descendant']))){
+			                        $needed=true;
+			                        break;
+			                    }
+			                }
+			            }
+			            if($needed){
+                            $children[] = new PMB\Oeuvre("(O".$row->tu_id.")",$this->config);
+			            }
+			        }
+			    }
+			    break;
 			default :
 				break;
 		}
@@ -159,8 +210,8 @@ class Collection extends DAV\Collection {
 		}
 		return $children;
 	}
-	
-	function getChild($name){
+
+	public function getChild($name){
 		switch($name){
 			case "[Notices]" :
 				$child = new PMB\Notices($this->getNotices(),$this->config);
@@ -171,7 +222,7 @@ class Collection extends DAV\Collection {
 					switch(substr($code,0,1)){
 						//notice
 						case "N" :
-							//on vÃ©rifie juste pour pas se faire avoir...
+							//on vérifie juste pour pas se faire avoir...
 							$child = new PMB\Notice("(".$code.")",$this->config);
 							break;
 							//typdoc
@@ -202,14 +253,22 @@ class Collection extends DAV\Collection {
 						case "R" :
 							$child = new PMB\ListeLectureTag($name,$this->config);
 							break;
+							// Oeuvre
+						case "O" :
+						    $child = new PMB\Oeuvre($name,$this->config);
+						    break;
+						    // Concept
+						case "D" :
+						    $child = new PMB\Concept($name,$this->config);
+						    break;
 						default :
 							throw new DAV\Exception\BadRequest('Bad Request: ' . $name);
 							break;
 					}
 				}else{
-					//document numÃ©rique d'une notice
+					//document numérique d'une notice
 					$query = "select distinct explnum_id,notice_id from explnum join notices on explnum_bulletin = 0 and explnum_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
-					//document numÃ©riques d'une notice de bulletin
+					//document numériques d'une notice de bulletin
 					$query.= "union select distinct explnum_id,notice_id from explnum join bulletins on explnum_notice = 0 and explnum_bulletin = bulletin_id join notices on num_notice != 0 and num_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
 					//$query = $this->filterExplnums($query);
 					$result  = pmb_mysql_query($query);
@@ -217,17 +276,17 @@ class Collection extends DAV\Collection {
 						$row = pmb_mysql_fetch_object($result);
 						$child = new PMB\Explnum("(E".$row->explnum_id.")");
 					}else{
-						throw new DAV\Exception\FileNotFound('File not found: ' . $name);
+					    throw new DAV\Exception\NotFound('File not found: ' . $name);
 					}
 					break;
 				}
 		}
 		return $child;
 	}
-	
-	
-	function childExists($name){
-		//pour les besoin des tests, on veut passer par la mÃ©thode de crÃ©ation...
+
+
+	public function childExists($name){
+		//pour les besoin des tests, on veut passer par la méthode de création...
 		return false;
 		switch($name){
 			case "[Notices]" :
@@ -248,6 +307,8 @@ class Collection extends DAV\Collection {
 						case "E" :
 						case "L" :
 						case "R" :
+						case "O" :
+						case "D" :
 							return true;
 							break;
 						default :
@@ -266,29 +327,30 @@ class Collection extends DAV\Collection {
 				}
 		}
 	}
-	
-	function getName(){
+
+	public function getName() {
 		//must be defined
+		return '';
 	}
-	
-	function createFile($name, $data = null) {
+
+	public function createFile($name, $data = null) {
 		if($this->check_write_permission()){
 			global $base_path;
 			global $id_rep;
 			global $gestion_acces_active,$gestion_acces_empr_docnum;
 			global $charset;
-			
+
 			$name = str_replace('\"', '', str_replace('\'', '', $name));
 			if($charset !=='utf-8'){
-				$name=utf8_decode($name);
+				$name = encoding_normalize::utf8_decode($name);
 			}
 			$filename = realpath($base_path."/temp/")."/webdav_".md5($name.time()).".".extension_fichier($name);
 			$fp = fopen($filename, "w");
 			if(!$fp){
-				//on a pas le droit d'Ã©criture
+				//on a pas le droit d'écriture
 				throw new DAV\Exception\Forbidden('Permission denied to create file (filename ' . $filename . ')');
 			}
-			
+
 			while ($buf = fread($data, 1024)){
 				fwrite($fp, $buf);
 			}
@@ -296,18 +358,18 @@ class Collection extends DAV\Collection {
 			if(!file_exists($filename)){
 				//Erreur de copie du fichier
 				unlink($filename);
-				throw new Sabre_DAV_Exception_FileNotFound('Empty file (filename ' . $filename . ')');
+				throw new DAV\Exception\NotFound('Empty file (filename ' . $filename . ')');
 			}
 			if(!filesize($filename)){
 				//Premier PUT d'un client Windows...
 				unlink($filename);
 				return;
 			}
-			
+
 			$notice_id = $this->get_notice_by_meta($name,$filename);
 			$bulletin_id = 0;
 			$this->update_notice($notice_id);
-			
+
 			$query = "SELECT CONCAT(niveau_biblio, niveau_hierar) AS niveau FROM notices WHERE notice_id = ".$notice_id;
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -326,11 +388,30 @@ class Collection extends DAV\Collection {
 			$id_rep = $this->config['upload_rep'];
 			$explnum->get_file_from_temp($filename,$name,$this->config['up_place']);
 			$explnum->params['explnum_statut'] = $this->config['default_docnum_statut'];
+
+			//Enregistrement en base - Le contenu existe déjà sous cette notice
+			if(!empty($explnum->infos_docnum["contenu"])) {
+			    $query = "SELECT explnum_notice,explnum_id from explnum
+                        WHERE explnum_notice = ".$notice_id."
+                        AND explnum_bulletin = ".$bulletin_id."
+                        AND explnum_nom = '".addslashes($explnum->infos_docnum["nom"])."'
+                        AND explnum_data = '".addslashes($explnum->infos_docnum["contenu"])."'";
+			    $result = pmb_mysql_query($query);
+			    if(pmb_mysql_num_rows($result) > 1) {
+			        while ($row = pmb_mysql_fetch_object($result)) {
+			            $old_docnum = new \explnum($row->explnum_id);
+			            $old_docnum->delete();
+			        }
+			    } elseif(pmb_mysql_num_rows($result) == 1) {
+			        $row = pmb_mysql_fetch_object($result);
+			        $explnum->explnum_id = $row->explnum_id;
+			    }
+			}
 			$explnum->update();
 			if(file_exists($filename)){
 				unlink($filename);
 			}
-			
+
 			// Calcul des droits sur le document numerique
 			// Car on n'a pas les variables necessaires postees a la creation
 			$ac = new \acces();
@@ -338,19 +419,19 @@ class Collection extends DAV\Collection {
 				$dom_1 = $ac->setDomain(3);
 				$dom_1->applyRessourceRights($explnum->explnum_id);
 			}
-			
+
 		}else{
-			//on a pas le droit d'Ã©criture
+			//on a pas le droit d'écriture
 			throw new DAV\Exception\Forbidden('Permission denied to create file (filename ' . $name . ')');
 		}
 	}
-	
-	
-	function update_notice($notice_id){
+
+
+	public function update_notice($notice_id){
 		global $pmb_type_audit;
 		global $webdav_current_user_name,$webdav_current_user_id;
 		global $gestion_acces_active, $gestion_acces_user_notice, $gestion_acces_empr_notice;
-		
+
 		$obj = $this;
 		$type = $obj->type;
 		$obj->update_notice_infos($notice_id);
@@ -369,10 +450,10 @@ class Collection extends DAV\Collection {
 			$query .= "type_modif=2 ";
 			$result = @pmb_mysql_query($query);
 		}
-		
+
 		\notice::majNoticesGlobalIndex($notice_id);
 		\notice::majNoticesMotsGlobalIndex($notice_id);
-		
+
 		//TODO - Calcul des droits sur la notice dans les 2 domaines...
 		//pour la gestion
 		if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
@@ -385,12 +466,12 @@ class Collection extends DAV\Collection {
 			$dom_2->applyRessourceRights($notice_id);
 		}
 	}
-	
-	function update_notice_infos($notice_id){
+
+	public function update_notice_infos($notice_id){
 		//must be defined
 	}
-	
-	function filterNotices($query){
+
+	public function filterNotices($query){
 		//on remonte d'abord les parents...
 		$current = $this;
 		$parents = array();
@@ -402,13 +483,13 @@ class Collection extends DAV\Collection {
 		foreach($parents as $parent){
 			$parent->getNotices();
 		}
-		
+
 		global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
 		global $webdav_current_user_id;
 		switch($this->config['authentication']){
 			case "gestion" :
 				$acces_j='';
-				//soit les droits d'accÃ¨s sont activÃ©s et il est possible que la notice ne soit pas visible pour certaines personnes
+				//soit les droits d'accès sont activés et il est possible que la notice ne soit pas visible pour certaines personnes
 				//soit c'est la requete de base
 				if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 					$dom_1= self::get_acces_domain(1);
@@ -417,14 +498,14 @@ class Collection extends DAV\Collection {
 					if($this->parentNode && $this->parentNode->restricted_objects){
 						$query.= " where uni.notice_id in (".$this->parentNode->restricted_objects.")";
 					}
-				}elseif($this->parentNode && $this->parentNode->restricted_objects){//Si la gestion des droits n'est pas activÃ© il faut quand mÃªme restreindre la recherche
+				}elseif($this->parentNode && $this->parentNode->restricted_objects){//Si la gestion des droits n'est pas activé il faut quand même restreindre la recherche
 					$query = "select notice_id from (".$query.") as uni ";
 					$query.= " where uni.notice_id in (".$this->parentNode->restricted_objects.")";
 				}
 				break;
 			case "opac" :
 				$acces_j='';
-				//droit d'accÃ¨s ou statut
+				//droit d'accès ou statut
 				if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
 					$dom_1= self::get_acces_domain(2);
 					$acces_j = $dom_1->getJoin($webdav_current_user_id,16,'notice_id');
@@ -441,7 +522,7 @@ class Collection extends DAV\Collection {
 				break;
 			case "anonymous" :
 				//on doit regarder
-				//droit d'accÃ¨s ou statut
+				//droit d'accès ou statut
 				if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
 					$dom_1= self::get_acces_domain(2);
 					$acces_j = $dom_1->getJoin(0,16,'notice_id');
@@ -456,13 +537,13 @@ class Collection extends DAV\Collection {
 					}
 				}
 				break;
-			default ://On ne doit jamais passer dans ce cas lÃ 
+			default ://On ne doit jamais passer dans ce cas là
 				$query="";
 				break;
 		}
 		$this->notices =array();
-		
-		//vÃ©rification des droits sur les documents numÃ©riques
+
+		//vérification des droits sur les documents numériques
 		switch($this->config['authentication']){
 			case "opac" :
 				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
@@ -472,21 +553,21 @@ class Collection extends DAV\Collection {
 					$explnum_bull_query = "select num_notice as notice_id from bulletins join explnum on explnum_notice=0 and explnum_bulletin != 0 and explnum_bulletin = bulletin_id $acces_j";
 					$query = "select distinct uni.notice_id from (($explnum_notice_query) union ($explnum_bull_query)) as uni ";
 				}else{
-					// vÃ©rification du statut de chaque document
+					// vérification du statut de chaque document
 					$explnum_notice_query = "select explnum_notice as notice_id from explnum join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and explnum_notice in ($query)";
 					$explnum_bull_query = "select num_notice as notice_id from bulletins join explnum on explnum_notice=0 and explnum_bulletin = bulletin_id join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and num_notice in ($query)";
 				}
 				$query = "select distinct uni.notice_id from (($explnum_notice_query) union ($explnum_bull_query)) as uni ";
 				break;
 			case "anonymous" :
-				//on doit requeter les droits d'accÃ¨s propre Ã  chaque document
+				//on doit requeter les droits d'accès propre à chaque document
 				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
 					$dom_3= self::get_acces_domain(3);
 					$acces_j = $dom_3->getJoin(0,16,'explnum_id');
 					$explnum_notice_query = "select explnum_notice as notice_id from explnum $acces_j where explnum_notice in ($query)";
 					$explnum_bull_query = "select num_notice as notice_id from bulletins join explnum on explnum_notice=0 and explnum_bulletin != 0 and explnum_bulletin = bulletin_id $acces_j";
 				}else{
-					// vÃ©rification du statut de chaque document
+					// vérification du statut de chaque document
 					$explnum_notice_query = "select explnum_notice as notice_id from explnum join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and explnum_visible_opac_abon=0 and explnum_notice in ($query)";
 					$explnum_bull_query = "select num_notice as notice_id from bulletins join explnum on explnum_notice=0 and explnum_bulletin = bulletin_id join explnum_statut on id_explnum_statut = explnum_docnum_statut where explnum_visible_opac=1 and explnum_visible_opac_abon=0 and num_notice in ($query)";
 				}
@@ -502,23 +583,23 @@ class Collection extends DAV\Collection {
 			while($row = pmb_mysql_fetch_object($result)){
 				$this->notices[] = $row->notice_id;
 			}
-		}else{//Si j'ai plus de notice dans cette branche il faut le garde en mÃ©moire sinon dans la branche du dessous on repart avec toute les notices
+		}else{//Si j'ai plus de notice dans cette branche il faut le garde en mémoire sinon dans la branche du dessous on repart avec toute les notices
 			$this->notices[] = "'ensemble_vide'";
 		}
 		$this->restricted_objects = implode(",",$this->notices);
 	}
-	
-	function filterExplnums($query){
+
+	public function filterExplnums($query){
 		global $gestion_acces_active,$gestion_acces_empr_docnum;
 		global $webdav_current_user_id;
-		
+
 		switch($this->config['authentication']){
 			case "gestion" :
-				//pas de controle particulier de ce cotÃ© lÃ ...
+				//pas de controle particulier de ce coté là...
 				break;
 			case "opac" :
 				$acces_j='';
-				//droit d'accÃ¨s ou statut
+				//droit d'accès ou statut
 				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
 					$dom_3= self::get_acces_domain(3);
 					$acces_j = $dom_3->getJoin($webdav_current_user_id,16,'explnum_id');
@@ -529,7 +610,7 @@ class Collection extends DAV\Collection {
 				break;
 			case "anonymous" :
 				$acces_j='';
-				//droit d'accÃ¨s ou statut
+				//droit d'accès ou statut
 				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
 					$dom_3= self::get_acces_domain(3);
 					$acces_j = $dom_3->getJoin(0,16,'explnum_id');
@@ -541,12 +622,12 @@ class Collection extends DAV\Collection {
 		}
 		return $query;
 	}
-	
-	function getNotices(){
+
+	public function getNotices(){
 		return array();
 	}
-	
-	function check_write_permission(){
+
+	public function check_write_permission(){
 		global $webdav_current_user_id;
 		if($this->config['write_permission']){
 			$tab = array();
@@ -564,35 +645,36 @@ class Collection extends DAV\Collection {
 					break;
 			}
 			//pas de restriction, on est bon
-			if(!count($tab)){
+			if (is_countable($tab) && !count($tab)) {
 				return true;
-			}elseif($query != ""){
-				//on doit s'assurer que la personne connectÃ©e est dispose des droits...
+			} elseif ($query != "") {
+				//on doit s'assurer que la personne connectée est dispose des droits...
 				$result = pmb_mysql_query($query);
-				if(pmb_mysql_num_rows($result)){
-					if(in_array(pmb_mysql_result($result,0,0),$tab)){
-						return true;
-					}
+				if (
+					pmb_mysql_num_rows($result) &&
+					in_array(pmb_mysql_result($result,0,0),$tab)
+				){
+					return true;
 				}
 			}
 		}
-		//si on est encore dans la fonction, c'est qu'on correspond Ã  aucun critÃ¨re !
+		//si on est encore dans la fonction, c'est qu'on correspond à aucun critère !
 		return false;
 	}
-	
+
 	public function format_name($name) {
 		if (!isset($this->formatted_name)) {
 			$matches = array();
 			$name = (str_replace('/','-',$name));
 			if (preg_match('/(.*)(\s\(.*\)$)/', $name, $matches)) {
-				$name = preg_replace('/[.;\:\/\+]/i', ' ', convert_diacrit(strtolower($matches[1])));
+				$name = preg_replace('/[.;\:\/\+]/i', ' ', convert_diacrit(pmb_strtolower($matches[1])));
 				$name = preg_replace('/[^a-z0-9\s-]/i', '', $name).$matches[2];
 			}
 			$this->formatted_name = \encoding_normalize::utf8_normalize(str_replace('/', '-', $name));
 		}
 		return $this->formatted_name;
 	}
-	
+
 	public function get_parent_by_type($type) {
 		$parent = $this->parentNode;
 		while ($parent->type != $type) {
@@ -600,14 +682,14 @@ class Collection extends DAV\Collection {
 		}
 		return $parent;
 	}
-	
+
 	protected static function get_acces_class(){
 		if(!is_object(self::$acces)){
 			self::$acces = new \acces();
 		}
 		return self::$acces;
 	}
-	
+
 	protected static function get_acces_domain($id){
 		if(!is_object(self::$domain[$id])){
 			self::get_acces_class();

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_txt.class.php,v 1.4 2017-08-10 09:19:07 dgoron Exp $
+// $Id: index_txt.class.php,v 1.5 2020/11/04 11:32:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,7 +21,7 @@ class index_txt{
 	}
 	
 	/**
-	 * RÃ©cupÃ©ration du texte Ã  indexer dans le fichier texte (.txt)
+	 * Récupération du texte à indexer dans le fichier texte (.txt)
 	 */
 	public function get_text($filename){
 		
@@ -36,4 +36,3 @@ class index_txt{
 		return $texte;
 	}
 }
-?>

@@ -5,12 +5,12 @@ if (!isset($sid)) {
 }
 // MOD meteo v5.0
   $err = 0;
-  $DB_CX->DbQuery("SELECT util_meteo_code FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("SELECT util_meteo_code FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
   $code_ville = $DB_CX->DbResult(0,0);
   $code_ville = explode(";",$code_ville);
   if ($code_ville[1]) {
   // L'utilisateur a activé l'affichage de la meteo
-    $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}meteo WHERE met_code_ville='".$code_ville[0]."'");
+    $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}meteo WHERE met_code_ville='".$code_ville[0]."'");
   if ($DB_CX->DbResult(0,0)!=NULL) {
     $met_nom_ville = $DB_CX->DbResult(0,1);
     $met_releve = $DB_CX->DbResult(0,2);

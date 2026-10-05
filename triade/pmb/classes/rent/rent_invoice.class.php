@@ -2,11 +2,13 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rent_invoice.class.php,v 1.27 2019-06-12 12:48:05 btafforeau Exp $
+// $Id: rent_invoice.class.php,v 1.31.4.2 2025/03/19 11:04:43 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 use Spipu\Html2Pdf\Html2Pdf;
+
+global $class_path, $include_path;
 
 require_once($class_path."/rent/rent_account.class.php");
 require_once($class_path."/entites.class.php");
@@ -24,7 +26,7 @@ class rent_invoice {
 	protected $id;
 	
 	/**
-	 * Utilisateur associÃ©
+	 * Utilisateur associé
 	 * @var integer
 	 */
 	protected $num_user;
@@ -36,13 +38,13 @@ class rent_invoice {
 	protected $date;
 	
 	/**
-	 * Date formatÃ©e
+	 * Date formatée
 	 * @var string
 	 */
 	protected $formatted_date;
 	
 	/**
-	 * Statut (0 = encours, 1 = validÃ©)
+	 * Statut (0 = encours, 1 = validé)
 	 * @var integer
 	 */
 	protected $status;
@@ -54,7 +56,7 @@ class rent_invoice {
 	protected $valid_date;
 	
 	/**
-	 * Date de validation formatÃ©e
+	 * Date de validation formatée
 	 * @var string
 	 */
 	protected $formatted_valid_date;
@@ -70,12 +72,12 @@ class rent_invoice {
 	protected $destination_name;
 			
 	/**
-	 * Identifiant de l'acte budgÃ©taire associÃ©
+	 * Identifiant de l'acte budgétaire associé
 	 */
 	protected $num_acte;
 	
 	/**
-	 * DÃ©comptes associÃ©s
+	 * Décomptes associés
 	 * @var rent_account
 	 */
 	protected $accounts;
@@ -83,7 +85,7 @@ class rent_invoice {
 	protected $in_edit;
 
 	public function __construct($id = 0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -91,7 +93,6 @@ class rent_invoice {
 	 * Data
 	 */
 	protected function fetch_data() {
-
 		$this->num_user = 0;
 		$this->date = date('Y-m-d H:i:s');
 		$this->formatted_date = formatdate($this->date);
@@ -118,7 +119,7 @@ class rent_invoice {
 				}
 				$this->destination = $row->invoice_destination;
 				$destination = new marc_list('rent_destination');
-				$this->destination_name=$destination->table[$this->destination];
+				$this->destination_name=$destination->table[$this->destination] ?? '';
 				$this->num_acte = $row->invoice_num_acte;				
 				$query = 'select account_invoice_num_account from rent_accounts_invoices where account_invoice_num_invoice = '.$this->id;
 				$result = pmb_mysql_query($query);
@@ -131,46 +132,49 @@ class rent_invoice {
 		}
 	}
 	
+	public function get_content_form() {
+	    global $msg,$charset;
+	    global $include_path;
+	    global $rent_invoice_content_form_tpl;
+	    
+	    $content_form = $rent_invoice_content_form_tpl;
+	    $content_form = str_replace("!!entity_id!!",$this->get_entity()->id_entite,$content_form);
+	    $content_form = str_replace("!!entity_label!!",$this->get_entity()->raison_sociale,$content_form);
+	    
+	    $content_form = str_replace("!!status!!",$this->gen_selector_status(),$content_form);
+	    $rent_destinations = new marc_select('rent_destination', 'invoice_destinations', $this->destination, '', '0', htmlentities($msg['acquisition_invoice_no_destination'], ENT_QUOTES, $charset));
+	    $content_form = str_replace("!!destinations!!",$rent_destinations->display,$content_form);
+	    
+	    $tpl = $include_path.'/templates/rent/rent_account_invoice.tpl.html';
+	    if (file_exists($include_path.'/templates/rent/rent_account_invoice_subst.tpl.html')) {
+	        $tpl = $include_path.'/templates/rent/rent_account_invoice_subst.tpl.html';
+	    }
+	    $h2o = H2o_collection::get_instance($tpl);
+	    if($this->status == 1) {
+	        $this->in_edit = true;
+	    }
+	    $content_form = str_replace("!!content!!", $h2o->render(array('invoice' => $this)), $content_form);
+	    return $content_form;
+	}
+	
 	/**
 	 * Formulaire
 	 */
 	public function get_form(){
-		global $msg,$charset;
+		global $msg;
 		global $include_path;
-		global $rent_invoice_form_tpl;
 		
-		$form = $rent_invoice_form_tpl;
-		
-		$form = str_replace("!!form_title!!",htmlentities($msg['acquisition_invoice_form_edit'], ENT_QUOTES, $charset),$form);
-		if($this->status == 1) {
-			$button_delete = "<input type='button' class='bouton' value='".htmlentities($msg['acquisition_invoice_delete'], ENT_QUOTES, $charset)."'
-			onclick=\"if(confirm('".htmlentities(addslashes($msg['acquisition_invoice_confirm_delete']), ENT_QUOTES, $charset)."')) { document.location='./acquisition.php?categ=rent&sub=invoices&action=delete&id=".$this->id."';} return false;\"/>";
-		} else {
-			$button_delete = "";
+		$interface_form = new interface_acquisition_rent_form('invoice_form');
+	    $interface_form->set_label($msg['acquisition_invoice_form_edit']);
+		$interface_form->set_object_id($this->id)
+		->set_num_entity($this->get_entity()->id_entite)
+		->set_confirm_delete_msg($msg['acquisition_invoice_confirm_delete'])
+		->set_content_form($this->get_content_form())
+		->set_table_name('rent_invoices');
+		if($this->status != 1) {
+		    $interface_form->set_no_deletable(true);
 		}
-		
-		$form = str_replace("!!button_delete!!",$button_delete,$form);
-		$form = str_replace("!!entity_id!!",$this->get_entity()->id_entite,$form);
-		$form = str_replace("!!entity_label!!",$this->get_entity()->raison_sociale,$form);
-		
-		$form = str_replace("!!status!!",$this->gen_selector_status(),$form);
-		$rent_destinations = new marc_select('rent_destination', 'invoice_destinations', $this->destination, '', '0', htmlentities($msg['acquisition_invoice_no_destination'], ENT_QUOTES, $charset));
-		$form = str_replace("!!destinations!!",$rent_destinations->display,$form);
-		
-		$tpl = $include_path.'/templates/rent/rent_account_invoice.tpl.html';
-		if (file_exists($include_path.'/templates/rent/rent_account_invoice_subst.tpl.html')) {
-			$tpl = $include_path.'/templates/rent/rent_account_invoice_subst.tpl.html';
-		}
-		$h2o = H2o_collection::get_instance($tpl);
-		
-		if($this->status == 1) {
-			$this->in_edit = true;
-		}
-		$content = $h2o->render(array('invoice' => $this));
-
-		$form = str_replace("!!content!!",$content,$form);
-		
-		$form = str_replace("!!id!!",$this->id,$form);
+		$form = $interface_form->get_display();
 		return $form;
 	}
 
@@ -186,10 +190,9 @@ class rent_invoice {
 	}
 	
 	/**
-	 * Sauvegarde de l'acte associÃ©
+	 * Sauvegarde de l'acte associé
 	 */
 	protected function save_acte() {
-	
 		$acte=new actes($this->num_acte);
 		$acte->type_acte=TYP_ACT_RENT_INV;
 		switch($this->status){
@@ -227,7 +230,6 @@ class rent_invoice {
 	 * Sauvegarde
 	 */
 	public function save(){
-
 		$this->save_acte();
 		if($this->id) {
 			$query = 'update rent_invoices set ';
@@ -286,19 +288,16 @@ class rent_invoice {
 	}
 	
 	/**
-	 * Suppression de l'acte associÃ©
+	 * Suppression de l'acte associé
 	 */
 	protected function delete_acte() {
-	
-		$acte=new actes($this->num_acte);
-		$acte->delete();
+		actes::delete($this->num_acte);
 	}
 	
 	/**
 	 * Suppression
 	 */
 	public function delete(){
-
 		if($this->id && ($this->status == 1)) {
 			$accounts = $this->accounts;
 			foreach ($accounts as $account) {
@@ -312,7 +311,7 @@ class rent_invoice {
 	}
 
 	/**
-	 * Ajout d'un dÃ©compte
+	 * Ajout d'un décompte
 	 */
 	public function add_account($account) {
 		if(/*$this->id &&*/ $account->get_id()) {
@@ -325,10 +324,9 @@ class rent_invoice {
 	}
 	
 	/**
-	 * Suppression d'un dÃ©compte associÃ©
+	 * Suppression d'un décompte associé
 	 */
 	public function delete_account($id){
-	
 		if($this->id && $id) {
 			$query = "delete from rent_accounts_invoices 
 				where account_invoice_num_account = ".$id." 	
@@ -347,18 +345,18 @@ class rent_invoice {
 	}
 	
 	/**
-	 * Retourne le nombre de dÃ©comptes associÃ©s
+	 * Retourne le nombre de décomptes associés
 	 */
 	public function get_nb_accounts() {
 		return count($this->accounts);
 	}
 	
 	public function get_entity(){
-		return new entites(entites::getSessionBibliId()*1);
+		return new entites(entites::getSessionBibliId());
 	}
 	
 	public function get_address_entity(){
-		$query_result = entites::get_coordonnees(entites::getSessionBibliId()*1, '1');
+		$query_result = entites::get_coordonnees(entites::getSessionBibliId(), '1');
 		return pmb_mysql_fetch_object($query_result);
 	}
 	
@@ -393,7 +391,7 @@ class rent_invoice {
 			$this->valid_date = date('Y-m-d H:i:s');
 						
 			$acte=new actes($this->num_acte);
-			$acte->statut=STA_ACT_PAY; //payÃ©
+			$acte->statut=STA_ACT_PAY; //payé
 			$acte->save();
 			$this->num_acte=$acte->id_acte;
 			if($this->num_acte){
@@ -494,11 +492,11 @@ class rent_invoice {
 	}
 	
 	public function set_id($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 	}
 	
 	public function set_num_user($num_user) {
-		$this->num_user = $num_user*1;
+		$this->num_user = intval($num_user);
 	}
 			
 	public function set_date($date) {
@@ -540,7 +538,7 @@ class rent_invoice {
 		
 		$invoice_tpl = $h2o->render(array('invoice' => $this));
 		if($charset!="utf-8"){
-			$invoice_tpl=utf8_encode($invoice_tpl);
+			$invoice_tpl=encoding_normalize::utf8_normalize($invoice_tpl);
 		}
 		
 		$html2pdf = new Html2Pdf('PL','A4','fr');

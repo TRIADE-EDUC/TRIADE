@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_dialog.js,v 1.4 2017-09-05 08:37:29 vtouchard Exp $
+// $Id: nomenclature_dialog.js,v 1.4 2017/09/05 08:37:29 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dojo/topic", "dojo/_base/lang","dojo/dom","dojo/on","dojo/dom-attr", "apps/pmb/PMBDialog", "dijit/registry", "apps/nomenclature/form/nomenclature_form_instrument"], function(declare, topic, lang, dom, on, domAttr, Dialog, registry, Instrument_form){

@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des type de documents en UNIMARC (français)
-$Id: doctype.xml,v 1.2 2005-10-31 15:34:49 gueluneau Exp $ -->
+$Id: doctype.xml,v 1.2 2005/10/31 15:34:49 gueluneau Exp $ -->
 
 <XMLlist>
 	<entry code="a">testenn voulet</entry>

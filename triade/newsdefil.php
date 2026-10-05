@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,12 +38,12 @@ session_start();
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <?php verifplus("menudeux",$_SESSION["id_pers"],$_SESSION["membre"]); ?>
-<SCRIPT type="text/javascript" <?php print "src='librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT type="text/javascript" <?php print "src='librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 <?php  $today= dateDMY();  ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h();?>
-<SCRIPT type="text/javascript" <?php print "src='librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT type="text/javascript" <?php print "src='librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <form name="formulaire" method="POST" action="newsdefil1.php" onsubmit="Switch()">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabConceptAdd.js,v 1.2 2018-12-04 09:54:54 ngantier Exp $
+// $Id: SubTabConceptAdd.js,v 1.3 2020/01/08 07:46:46 btafforeau Exp $
 
 
 define([
@@ -35,20 +35,25 @@ define([
 			},
 			postForm: function(buttonClicked){
 				var form = buttonClicked.form;
+				var verified = false;
 				if(domAttr.get(form, 'action').indexOf('select.php') != -1){
 					domAttr.set(form, 'action', domAttr.get(form, 'action').replace('select.php?', 'ajax.php?module=selectors&is_iframe=1&'));
 				}
-				iframe(domAttr.get(buttonClicked.form, 'action'),{
-					form: buttonClicked.form,
-					handleAs: 'json',
-				}).then(lang.hitch(this, function(data){
-					if(parseInt(data.id) && (parseInt(data.id) !=0)){
-						this.set('href', this.href);
-//						console.log('Return of the add', data);
-						data.ghostContainerId = this.parameters.ghostContainerId;
-						topic.publish('SubTabConceptAdd', 'SubTabConceptAdd', 'elementAdded', data);
-					} 
-				}));
+				if (typeof submit_onto_form() === 'function' && submit_onto_form()) {
+					verified = true;
+				}
+				if (verified) {
+					iframe(domAttr.get(buttonClicked.form, 'action'),{
+						form: buttonClicked.form,
+						handleAs: 'json',
+					}).then(lang.hitch(this, function(data){
+						if(parseInt(data.id) && (parseInt(data.id) !=0)){
+							this.set('href', this.href);
+							data.ghostContainerId = this.parameters.ghostContainerId;
+							topic.publish('SubTabConceptAdd', 'SubTabConceptAdd', 'elementAdded', data);
+						} 
+					}));
+				}
 				return false;
 			},
 			setSubmitEvent: function(queryResult){

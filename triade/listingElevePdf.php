@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -69,7 +69,7 @@ $pdf->MultiCell(210,6,"$nomClasse             $nomClasseLong",0,'L',0);
 $Y+=$hauteur+3;
 include_once('librairie_php/recupnoteperiode.php');
 $eleveT=recupEleve($idClasse); // recup liste eleve : nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve
-for($j=0;$j<count($eleveT);$j++) {  // variable eleve
+for($j=0;$j<countTriade($eleveT);$j++) {  // variable eleve
 	$nomEleve=strtoupper($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
 	$idEleve=$eleveT[$j][4];

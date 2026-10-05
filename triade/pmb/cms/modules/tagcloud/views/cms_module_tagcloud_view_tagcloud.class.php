@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_tagcloud_view_tagcloud.class.php,v 1.5 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: cms_module_tagcloud_view_tagcloud.class.php,v 1.6 2021/02/02 10:21:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -49,7 +49,7 @@ class cms_module_tagcloud_view_tagcloud extends cms_module_common_view{
 	
 	public function get_headers($datas=array()){
 		$headers = parent::get_headers($datas);
-		$headers[] = "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link(array('do'=>"generate_css"))."'/>";
+		$headers[] = "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link(array('do'=>"generate_css"), 'css')."'/>";
 		return $headers;
 	}
 	

@@ -2,23 +2,23 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_page_category.class.php,v 1.3 2018-07-26 15:25:52 tsamson Exp $
-if (stristr ( $_SERVER ['REQUEST_URI'], ".class.php" ))
-	die ( "no access" );
+// $Id: authority_page_category.class.php,v 1.5 2021/06/14 07:38:34 dgoron Exp $
+if (stristr ( $_SERVER ['REQUEST_URI'], ".class.php" )) die ( "no access" );
 
+global $class_path;
 require_once ($class_path."/authorities/page/authority_page.class.php");
 
 /**
  * class authority_page_category
- * Controler d'une page d'une autoritÃ© catÃ©gorie
+ * Controler d'une page d'une autorité catégorie
  */
 class authority_page_category extends authority_page {
 	/**
 	 * Constructeur
-	 * @param int $id Identifiant de la catÃ©gorie
+	 * @param int $id Identifiant de la catégorie
 	 */
 	public function __construct($id) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$query = "select id_noeud from noeuds where id_noeud = " . $this->id;
 		$result = pmb_mysql_query($query);
 		if ($result && pmb_mysql_num_rows($result)) {
@@ -29,7 +29,7 @@ class authority_page_category extends authority_page {
 	
 	protected function get_title_recordslist() {
 		global $msg, $charset;
-		return "";
+		return htmlentities($msg['doc_category_title'], ENT_QUOTES, $charset);
 	}
 	
 	protected function get_join_recordslist() {
@@ -49,7 +49,7 @@ class authority_page_category extends authority_page {
 			$path="";
 			$nb_pere=0;
 		}
-		// Si un path est renseignÃ© et le paramÃ¨trage activÃ©
+		// Si un path est renseigné et le paramètrage activé
 		if ($path && ($opac_auto_postage_descendant || $opac_auto_postage_montant || $opac_auto_postage_etendre_recherche) && ($nb_level_montant || $nb_level_descendant)){
 // 			$this->join_recordslist = " FROM noeuds STRAIGHT_JOIN notices_categories on id_noeud=num_noeud join notices on notcateg_notice=notice_id ".$this->acces_j." ".$this->statut_j." ";
 			$join_recordslist = " JOIN notices_categories on notcateg_notice=notice_id JOIN noeuds on id_noeud=num_noeud ";
@@ -73,7 +73,7 @@ class authority_page_category extends authority_page {
 			$nb_pere=0;
 		}
 		
-		// Si un path est renseignÃ© et le paramÃ¨trage activÃ©
+		// Si un path est renseigné et le paramètrage activé
 		if ($path && ($opac_auto_postage_descendant || $opac_auto_postage_montant || $opac_auto_postage_etendre_recherche) && ($nb_level_montant || $nb_level_descendant)){
 				
 			//Recherche des fils
@@ -88,7 +88,7 @@ class authority_page_category extends authority_page {
 				$liste_fils=" id_noeud='".$id."' ";
 			}
 				
-			// recherche des pÃ¨res
+			// recherche des pères
 			$liste_pere = "";
 			if(($opac_auto_postage_montant || $opac_auto_postage_etendre_recherche) && $nb_level_montant ) {
 					

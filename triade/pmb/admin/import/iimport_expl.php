@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: iimport_expl.php,v 1.83 2019-02-06 11:21:25 dgoron Exp $
+// $Id: iimport_expl.php,v 1.87.2.3 2024/12/17 13:50:17 dgoron Exp $
 
-// dÃ©finition du minimum necessaire
+global $base_auth, $base_title, $include_path, $class_path, $pmb_indexation_lang, $file_submit, $isbn_mandatory;
+
+// définition du minimum necessaire
 $base_path="../..";
 $base_auth = "ADMINISTRATION_AUTH";
 $base_title = "";
@@ -42,13 +44,24 @@ require_once("$include_path/parser.inc.php");
 
 require_once("import_func.inc.php");
 
+global $msg, $charset, $sub, $action, $lang, $pmb_import_modele, $encodage_fic_source;
+global $current_module;
+global $deflt_docs_location, $book_lender_id;
+global $nb_expl_ignores, $notice_deja_presente, $notice_remplacee, $isbn_dedoublonnage;
+global $tit, $tit_200a, $isbn, $EAN, $issn_011, $collection_225, $collection_410;
+global $import_notice_existing_replace, $import_explajtNOTI, $import_recordsajtNOTI, $add_explnum;
+global $import_expl_caddie_NOTI, $import_records_caddie_NOTI;
+
+global $import_without_index;
+$import_without_index = filter_var($import_without_index, FILTER_VALIDATE_BOOLEAN);
+
 $name_func="func_import";
 
 if(isset(${$name_func}) && ${$name_func}){
 	${$name_func}.=".php";
 }
 
-//J'efface la fonction d'import de la session au dÃ©but de l'import
+//J'efface la fonction d'import de la session au début de l'import
 if(((!isset($file_submit) || !$file_submit) && $action=="preload" && !${$name_func}) || ($action=="beforeupload" && !${$name_func})){
 	$_SESSION["func_import_model"]="";
 }
@@ -87,7 +100,7 @@ if(!$trouve){
 	}
 }else{
 	$func_import_model=${$name_func};
-	$_SESSION["func_import_model"]=$func_import_model;//Je garde la fonction d'import sÃ©lectionnÃ©e jusqu'Ã  la fin
+	$_SESSION["func_import_model"]=$func_import_model;//Je garde la fonction d'import sélectionnée jusqu'à la fin
 }
 if (file_exists($func_import_model)) {
 	require_once($func_import_model);
@@ -183,14 +196,14 @@ switch ($action) {
 		if ($sub == "import_expl") {
 			/* Does the file exist ? */
 			if ($file_submit=="") {
-				/* l'utilisateur n'est pas passÃ© par le tÃ©lÃ©chargement du fichier */
+				/* l'utilisateur n'est pas passé par le téléchargement du fichier */
 				$filename = $base_path."/admin/import/".$nom_fichier_transfert_ftp;
 				$from_file = "unimarc".(defined("LOCATION")?"_".constant("LOCATION"):"").".fic";
 			} else {
 				$filename=$file_submit;
 			}
 			if ($book_lender_id=="" || $book_statut_id=="" || $isbn_mandatory=="" || $cote_mandatory=="" || $book_location_id=="" || $statutnot=="") {
-				/* l'utilisateur n'est pas passÃ© par le tÃ©lÃ©chargement du fichier, il faut qu'il choisisse un prÃªteur s'il n'en a pas communiquÃ© auparavant */
+				/* l'utilisateur n'est pas passé par le téléchargement du fichier, il faut qu'il choisisse un prêteur s'il n'en a pas communiqué auparavant */
 				print "
 					<form class='form-$current_module' NAME=\"preload\" METHOD=\"post\" ACTION=\"iimport_expl.php\">
 						<h3>".$msg['import_expl_form_titre']."</h3>
@@ -210,7 +223,7 @@ switch ($action) {
 						</div>
 						<div class='row'>&nbsp;</div>
 						<div class='row'>
-	                        <div class='colonne2'>	
+	                        <div class='colonne2'>
 	                    		<label class='etiquette' for='statutnot'>$msg[import_statutnot]</label>
 	                    		<div>
 	                    		".gen_liste_multiple ("select id_notice_statut, gestion_libelle from notice_statut order by 2", "id_notice_statut", "gestion_libelle", "id_notice_statut", "statutnot", "", 1, "", "","","",0)."
@@ -235,22 +248,22 @@ switch ($action) {
 	                   		<div class='colonne2'>
 	                   			<label class='etiquette' for='import_force_notice_is_new'>".$msg['import_force_notice_is_new']."</label>
 	                    		<div>
-	                    			<input type='radio' name='import_force_notice_is_new' id='import_force_notice_is_new' value='0' checked='checked'> ".$msg['39']." 
+	                    			<input type='radio' name='import_force_notice_is_new' id='import_force_notice_is_new' value='0' checked='checked'> ".$msg['39']."
 	                    			<input type='radio' name='import_force_notice_is_new' id='import_force_notice_is_new' value='1'> ".$msg['40']."
 	                    		</div>
 	                   		</div>
 	                   		<div class='colonne-suite'>
 								<label class='etiquette' for='authorities_notices'>".htmlentities($msg['import_with_authorities_notices'],ENT_QUOTES,$charset)."</label><br />
-								<input type='radio' name='authorities_notices' id='authorities_notices1' value='1' class='radio' /><label for='authorities_notices1'>".htmlentities($msg[40],ENT_QUOTES,$charset)."</label>          			
+								<input type='radio' name='authorities_notices' id='authorities_notices1' value='1' class='radio' /><label for='authorities_notices1'>".htmlentities($msg[40],ENT_QUOTES,$charset)."</label>
 								<input type='radio' name='authorities_notices' id='authorities_notices0' value='0' class='radio' checked='checked'/><label for='authorities_notices0'>".htmlentities($msg[39],ENT_QUOTES,$charset)."</label>
 	                    	</div>
 	                   	</div>
 	                   	<div class='row'>&nbsp;</div>
-                   		<div clas='row'>
+                   		<div class='row'>
                    			<div class='colonne2'>
 	                   			<label class='etiquette' for='import_notice_existing_replace'>".$msg['import_notice_existing_replace']."</label>
 	                    		<div>
-	                    			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace0' value='0' checked='checked' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace0'>".$msg['39']."</label> 
+	                    			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace0' value='0' checked='checked' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace0'>".$msg['39']."</label>
 	                    			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace1' value='1' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace1'>".$msg['40']."</label>
 	                    		</div>
 	                    		<div id='import_notice_existing_replace_message' class='warning' style='display: none;'>
@@ -260,12 +273,12 @@ switch ($action) {
                    			<div class='colonne-suite'>
                    				<label class='etiquette' for='authorities_default_origin'>".htmlentities($msg['import_authorities_origin_default_value'],ENT_QUOTES,$charset)."</label><br />
 								".origin::gen_combo_box("authorities","authorities_default_origin")."
-                   			</div> 
-                   		</div>	
+                   			</div>
+                   		</div>
                    		<div class='row'>&nbsp;</div>
 						<div class='row'><hr /></div>
 						<div class='row'>
-                            <label class='etiquette' for='prÃªteur statut'>$msg[560]</label>
+                            <label class='etiquette' for='prêteur statut'>$msg[560]</label>
                             </div>
                         <div class='row'>".
                             lender::gen_combo_box($book_lender_id)."&nbsp;&nbsp;".
@@ -311,6 +324,10 @@ switch ($action) {
                             <label class='etiquette'>$msg[21]</label>
                             </div>
                         </div>
+                        <hr />
+                        <div class='row'>
+                            <input type='checkbox' name='import_without_index' id='import_without_index' value='1' /><label for='import_without_index' class='etiquette' >".htmlentities($msg['import_without_index'],ENT_QUOTES,$charset)."</label> 
+                        </div>
 					".import_expl::get_advanced_form()."
                     <INPUT TYPE=\"SUBMIT\"  class='bouton' NAME=\"upload\" VALUE=\"".$msg[502]."\" />
                     <INPUT NAME=\"categ\" TYPE=\"hidden\" value=\"import\" />
@@ -340,7 +357,7 @@ switch ($action) {
             if ($pb_fini=="EOF") {
 				$formulaire = import_expl::get_hidden_form('load', 'load');
                 printf ($msg[512], $from_file); /* File %s... . End of preload... */
-                
+
                 $fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");
 				fwrite($fo,"");
 				fclose($fo);
@@ -361,9 +378,9 @@ switch ($action) {
 		    } else {
 		    	$filename=$file_submit;
 		    }
-		
+
 		    if ($isbn_mandatory=="") {
-		        /* l'utilisateur n'est pas passÃ© par le tÃ©lÃ©chargement du fichier, il faut qu'il nous dise si l'ISBN est obligatoire */
+		        /* l'utilisateur n'est pas passé par le téléchargement du fichier, il faut qu'il nous dise si l'ISBN est obligatoire */
 		        print "
 		            <form class='form-$current_module' NAME=\"preload\" METHOD=\"post\" ACTION=\"iimport_expl.php\">
 		            <h3>".$msg['import_noti_form_titre']."</h3>
@@ -383,7 +400,7 @@ switch ($action) {
 		             </div>
 					<div class='row'>&nbsp;</div>
 		            <div class='row'>
-                        <div class='colonne2'>	
+                        <div class='colonne2'>
                     		<label class='etiquette' for='statutnot'>$msg[import_statutnot]</label>
                     		<div>
                     		".gen_liste_multiple ("select id_notice_statut, gestion_libelle from notice_statut order by 2", "id_notice_statut", "gestion_libelle", "id_notice_statut", "statutnot", "", 1, "", "","","",0)."
@@ -413,16 +430,16 @@ switch ($action) {
                    		</div>
                    		<div class='colonne-suite'>
 							<label class='etiquette' for='authorities_notices'>".htmlentities($msg['import_with_authorities_notices'],ENT_QUOTES,$charset)."</label><br />
-							<input type='radio' name='authorities_notices' id='authorities_notices1' value='1' class='radio' /><label for='authorities_notices1'>".htmlentities($msg[40],ENT_QUOTES,$charset)."</label>          			
+							<input type='radio' name='authorities_notices' id='authorities_notices1' value='1' class='radio' /><label for='authorities_notices1'>".htmlentities($msg[40],ENT_QUOTES,$charset)."</label>
 							<input type='radio' name='authorities_notices' id='authorities_notices0' value='0' class='radio' checked='checked'/><label for='authorities_notices0'>".htmlentities($msg[39],ENT_QUOTES,$charset)."</label>
                     	</div>
                    	</div>
                    	<div class='row'>&nbsp;</div>
-                   	<div clas='row'>
+                   	<div class='row'>
                    		<div class='colonne2'>
                    			<label class='etiquette' for='import_notice_existing_replace'>".$msg['import_notice_existing_replace']."</label>
                     		<div>
-                    			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace0' value='0' checked='checked' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace0'>".$msg['39']."</label> 
+                    			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace0' value='0' checked='checked' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace0'>".$msg['39']."</label>
                     			<input type='radio' name='import_notice_existing_replace' id='import_notice_existing_replace1' value='1' onclick='param_existing_replace_display();'> <label for='import_notice_existing_replace0'>".$msg['40']."</label>
                     		</div>
                     		<div id='import_notice_existing_replace_message' class='warning' style='display: none;'>
@@ -432,10 +449,10 @@ switch ($action) {
                    		<div class='colonne-suite'>
                    			<label class='etiquette' for='authorities_default_origin'>".htmlentities($msg['import_authorities_origin_default_value'],ENT_QUOTES,$charset)."</label><br />
 							".origin::gen_combo_box("authorities","authorities_default_origin")."
-                   		</div> 
+                   		</div>
                    	</div>
                    	<div class='row'>&nbsp;</div>
-                    <div clas='row'>
+                    <div class='row'>
 		            	<INPUT TYPE=\"SUBMIT\"  class='bouton' NAME=\"upload\" VALUE=\"".$msg[502]."\" />
 		            </div>
 		            <INPUT NAME=\"categ\" TYPE=\"hidden\" value=\"import\" />
@@ -465,7 +482,7 @@ switch ($action) {
 			if ($pb_fini=="EOF") {
 				$formulaire = import_records::get_hidden_form('load', 'load');
 				printf ($msg[509].$msg[512], $from_file, $from_file); /* File %s... . End of preload... */
-				
+
 				$fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");
 				fwrite($fo,"");
 				fclose($fo);
@@ -510,16 +527,17 @@ switch ($action) {
         }
         $inotice=0;
         $notice_rejetee=0;
+        $indexation_stack_number=0;
         $txt="";
 
 		while (($notobj = pmb_mysql_fetch_object($sql_result_import))) {
             $notice=$notobj->notice ;
             $idnotice_import=$notobj->id_import ;
             $inotice++;
-			
+
             $res_lecture = recup_noticeunimarc($notice) ;
             if($link_generate) $res_link = recup_noticeunimarc_link($notice);
-			if (!$res_lecture || !$tit_200a[0]) {
+			if (!$res_lecture || empty($tit_200a[0])) {
                 $res_lecture = 0;
                 // ".$inotice."
                 $fp = fopen ("../../temp/err_import.unimarc","a+");
@@ -527,39 +545,39 @@ switch ($action) {
                 fclose ($fp);
                 $notice_rejetee++;
 			}
-            
+
 			if ($res_lecture) {
                 recup_noticeunimarc_suite($notice) ;
 
                 /* We've got everything, let's have a look if ISBN already exists in notices table */
                 if(!isset($isbn[0])) $isbn[0] = '';
                 if($isbn[0]=="NULL") $isbn[0]="";
-                // si isbn vide, on va tenter de prendre l'EAN stockÃ© en 345$b
+                // si isbn vide, on va tenter de prendre l'EAN stocké en 345$b
                 if ($isbn[0]=="") $isbn[0] = (isset($EAN[0]) ? $EAN[0] : '');
                 // si isbn vide, on va tenter de prendre le serial en 011
                 if ($isbn[0]=="") $isbn[0] = (isset($issn_011[0]) ? $issn_011[0] : '');
                 // si ISBN obligatoire et isbn toujours vide :
                 if ($isbn_mandatory == 1 && $isbn[0]=="") {
-                    // on va tenter de prendre l'ISSN stockÃ© en 225$x
+                    // on va tenter de prendre l'ISSN stocké en 225$x
                     $isbn[0]=$collection_225[0]['x'] ;
-                    // si isbn toujours vide, on va tenter de prendre l'ISSN stockÃ© en 410$x
+                    // si isbn toujours vide, on va tenter de prendre l'ISSN stocké en 410$x
                     if ($isbn[0]=="") $isbn[0]=$collection_410[0]['x'] ;
                 }
 
-				// on commence par voir ce que le code est (basÃ© sur la recherche par code du module catalogage 
+				// on commence par voir ce que le code est (basé sur la recherche par code du module catalogage
 				$ex_query = clean_string($isbn[0]);
-				
+
 				$EAN = '';
 				$isbn = '';
 				$code = '';
 				$code10 = '' ;
-				
+
 				if(isEAN($ex_query)) {
 					// la saisie est un EAN -> on tente de le formater en ISBN
 					$EAN=$ex_query;
 					$isbn = EANtoISBN($ex_query);
-					// si Ã©chec, on prend l'EAN comme il vient
-					if(!$isbn) 
+					// si échec, on prend l'EAN comme il vient
+					if(!$isbn)
 						$code = str_replace("*","%",$ex_query);
 					else {
 						$code=$isbn;
@@ -569,93 +587,94 @@ switch ($action) {
 					if(isISBN($ex_query)) {
 						// si la saisie est un ISBN
 						$isbn = formatISBN($ex_query);
-						// si Ã©chec, ISBN erronÃ© on le prend sous cette forme
-						if(!$isbn) 
+						// si échec, ISBN erroné on le prend sous cette forme
+						if(!$isbn)
 							$code = str_replace("*","%",$ex_query);
 						else {
 							$code10=$isbn ;
 							$code=formatISBN($code10,13);
 						}
 					} else {
-						// ce n'est rien de tout Ã§a, on prend la saisie telle quelle
+						// ce n'est rien de tout ça, on prend la saisie telle quelle
 						$code = str_replace("*","%",$ex_query);
 					}
 				}
-				
+
 				$isbn_OK=$code;
                 $new_notice = 0;
                 $notice_id = 0 ;
-				// le paramÃ©trage est-il : dÃ©doublonnage sur code ? / Ne dÃ©doublonner que sur code ISBN (ignorer les ISSN) ?
+				// le paramétrage est-il : dédoublonnage sur code ? / Ne dédoublonner que sur code ISBN (ignorer les ISSN) ?
                 if ((($isbn_dedoublonnage)&&(!$isbn_only))||(($isbn_dedoublonnage)&&($isbn_only)&&(isISBN($isbn)))) {
 					$trouvees=0;
 					if ($EAN && $isbn) {
-						// cas des EAN purs : constitution de la requÃªte
+						// cas des EAN purs : constitution de la requête
 						$requete = "SELECT distinct notice_id FROM notices ";
 						$requete.= " WHERE notices.code in ('$code','$EAN'".($code10?",'$code10'":"").") limit 1";
-						$myQuery = pmb_mysql_query($requete, $dbh);
+						$myQuery = pmb_mysql_query($requete);
 						$trouvees=pmb_mysql_num_rows($myQuery);
 					} elseif ($isbn) {
 						// recherche d'un isbn
 						$requete = "SELECT distinct notice_id FROM notices ";
 						$requete.= " WHERE notices.code in ('$code'".($code10?",'$code10'":"").") limit 1";
-						$myQuery = pmb_mysql_query($requete, $dbh);
+						$myQuery = pmb_mysql_query($requete);
 						$trouvees=pmb_mysql_num_rows($myQuery);
 					} elseif ($code) {
-						// note : le code est recherchÃ© dans le champ code des notices
-						// (cas des code-barres disques qui Ã©chappent Ã  l'EAN)
+						// note : le code est recherché dans le champ code des notices
+						// (cas des code-barres disques qui échappent à l'EAN)
 						//
 						$requete = "SELECT notice_id FROM notices ";
 						$requete.= " WHERE notices.code like '$code' limit 10";
-						$myQuery = pmb_mysql_query($requete, $dbh);
+						$myQuery = pmb_mysql_query($requete);
 						$trouvees=pmb_mysql_num_rows($myQuery);
 					}
 
-                    // dÃ©doublonnage sur isbn
+                    // dédoublonnage sur isbn
                     if ($EAN  || $isbn || $code) {
 						if ($trouvees==0) {
                             $new_notice=1;
                         } else {
                         	if(isset($import_notice_existing_replace) && $import_notice_existing_replace == 1) {
                         		$new_notice=1;
-                        		$sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_expl_".addslashes(SESSid).".inc', '".$msg['import_notice_replaced']." $EAN  || $isbn || $code ".addslashes($tit[0]['a'])."') ") ;
+                        		pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_expl_".addslashes(SESSid).".inc', '".$msg['import_notice_replaced']." $EAN  || $isbn || $code ".addslashes($tit[0]['a'])."') ") ;
                         	} else {
                             	$new_notice=0;
-                            	$sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_expl_".addslashes(SESSid).".inc', '".$msg[542]." $EAN  || $isbn || $code ".addslashes($tit[0]['a'])."') ") ;
+                            	pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_expl_".addslashes(SESSid).".inc', '".$msg[542]." $EAN  || $isbn || $code ".addslashes($tit[0]['a'])."') ") ;
                             }
                             $notice_id = pmb_mysql_result($myQuery,0,"notice_id");
                         }
                     } else {
                         if ($isbn_mandatory == 1) {
-                            $sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[543]."') ") ;
+                            pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[543]."') ") ;
                         } else {
                             $new_notice = 1;
-							$sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[565]."') ") ;
+							pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[565]."') ") ;
                         }
                     }
                 } else {
-                    // pas de dÃ©doublonnage
+                    // pas de dédoublonnage
                     if ($isbn_mandatory == 1 && $isbn_OK=="") {
-                       $sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[543]."') ") ;
+                       pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[543]."') ") ;
                     }elseif($isbn_OK){
                         $new_notice = 1;
                     }else{
                     	 $new_notice = 1;
-                         $sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[565]."') ") ;
+                         pmb_mysql_query("insert into error_log (error_origin, error_text) values ('import_".addslashes(SESSid).".inc', '".$msg[565]."') ") ;
                     }
                 }
-                
+
                 /* the notice is new, we are going to import it... */
                 if ($new_notice==1) {
                 	if(isset($import_notice_existing_replace) && $import_notice_existing_replace == 1 && $notice_id) {
                 		$notice_remplacee++;
                 	}
-                    import_new_notice($notice_id) ; 
-                    if($link_generate) import_notice_link();                   
-    				import_new_notice_suite() ;    				
-    				// Mise Ã  jour de la table "notices_global_index"
-    				notice::majNoticesGlobalIndex($notice_id);
-    				// Mise Ã  jour de la table "notices_mots_global_index"
-    				notice::majNoticesMotsGlobalIndex($notice_id);
+                    import_new_notice($notice_id) ;
+                    if($link_generate) import_notice_link();
+    				import_new_notice_suite() ;
+    				//Indexation
+    				if(!$import_without_index && ($notice_id != 0)) {
+						indexation_stack::push($notice_id, TYPE_NOTICE, "all");
+						$indexation_stack_number++;
+					}
     				if ($sub == "import_expl") {
     					if(!empty($import_explajtNOTI) && !empty($import_expl_caddie_NOTI)) {
     						import_expl::add_object_caddie($notice_id, 'NOTI', $import_expl_caddie_NOTI);
@@ -667,7 +686,7 @@ switch ($action) {
     				}
                 } else {
                 	$notice_deja_presente++;
-                	
+
 					//TRAITEMENT DES DOCS NUMERIQUES SUR NOTICE EXISTANTE
 					if ($add_explnum===TRUE) ajoute_explnum();
 				}
@@ -677,27 +696,38 @@ switch ($action) {
                     traite_exemplaires () ;
                 } // fin if $sub=import_expl
     		}
-                
-                
+            
             /* this has been succesfuly read, it can be deleted */
 	        $sql_del = "delete from import_marc where id_import = '".$idnotice_import."' ";
             $sql_result_del = pmb_mysql_query($sql_del) or die ("Couldn't delete import_marc $idnotice_import !");
+            
+            if(!$import_without_index && ($indexation_stack_number % 100 == 0)) {
+                //On lance directement l'indexation par lot de 100 pour ne pas encombrer la pile
+                indexation_stack::live_indexation();
+            }
         } /* end while records in import table */
+        
         $sql = "select count(1) as reste from import_marc where origine='".addslashes(SESSid)."'";
         $sql_result = pmb_mysql_query($sql) or die ("Couldn't select count import table !");
         $reste=pmb_mysql_result($sql_result,0,"reste");
 
+        //On termine avec un nouvel appel à l'indexation directe
+        if(!$import_without_index) {
+            indexation_stack::live_indexation();
+        }
+        
         if ($sub == "import_expl") {
             if ($reste > 0 ) {
 				$formulaire = import_expl::get_hidden_form('load', 'load');
-                   
-                 //On enregistre les ids utilisÃ©s avant le rechargement
+
+                 //On enregistre les ids utilisés avant le rechargement
                 global $notices_crees, $notices_a_creer,$bulletins_crees,$bulletins_a_creer;
+                $tabimport_id=array();
                 $tabimport_id['notices_existantes'] = $notices_crees;
                 $tabimport_id['notices_a_creer'] = $notices_a_creer;
                 $tabimport_id['bulletins_crees'] = $bulletins_crees;
                 $tabimport_id['bulletins_a_creer'] = $bulletins_a_creer;
-                $fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");                
+                $fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");
 				fwrite($fo,serialize($tabimport_id));
                 $formulaire.="<script> setTimeout(\"document.load.submit()\",2000); </script>\n";
                 printf ($msg[513], $reste, $nbtot_notice); /* File %s ... . Still %s notices to load (total = %s) ... */
@@ -714,7 +744,7 @@ switch ($action) {
                 if ($notice_rejetee>0) {
                 	print "<br /> ".$notice_rejetee." ".$msg['notices_invalides'];
                 }
-                printf ($msg[521], $nb_expl_ignores); /* ## exemplaire(s) ignorÃ©(s) */
+                printf ($msg[521], $nb_expl_ignores); /* ## exemplaire(s) ignoré(s) */
             } else {
                 $formulaire="";
                 $script="";
@@ -732,7 +762,7 @@ switch ($action) {
                 if ($notice_rejetee>0) {
                 	print "<br /> ".$notice_rejetee." ".$msg['notices_invalides'];
                 }
-                printf ($msg[521], $nb_expl_ignores); /* ## exemplaire(s) ignorÃ©(s) */
+                printf ($msg[521], $nb_expl_ignores); /* ## exemplaire(s) ignoré(s) */
                 /* ajouter ici SELECT error_origin, error_text, count(*) FROM error_log group by error_origin, error_text */
                 $gen_liste_log="";
                 $array_isbn_doublons = array();
@@ -776,23 +806,24 @@ switch ($action) {
             }
             print $formulaire;
             print $script;
-            
-            //Options avancÃ©es
+
+            //Options avancées
             print "<br /><br />".import_expl::get_links_caddies();
-            
+
         } else {
             // import de notices
             if ($reste > 0 ) {
 				$formulaire = import_records::get_hidden_form('load', 'load');
-                
-                //On enregistre les ids utilisÃ©s avant le rechargement
+
+                //On enregistre les ids utilisés avant le rechargement
                 global $notices_crees, $notices_a_creer,$bulletins_crees,$bulletins_a_creer;
+                $tabimport_id=array();
                 $tabimport_id['notices_existantes'] = $notices_crees;
                 $tabimport_id['notices_a_creer'] = $notices_a_creer;
                 $tabimport_id['bulletins_crees'] = $bulletins_crees;
                 $tabimport_id['bulletins_a_creer'] = $bulletins_a_creer;
-                $fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");                
-				fwrite($fo,serialize($tabimport_id));	
+                $fo = fopen("$base_path/temp/liste_id".SESSid.".txt","w");
+				fwrite($fo,serialize($tabimport_id));
                 $formulaire.="<script> setTimeout(\"document.load.submit()\",2000); </script>\n";
                 printf ($msg[509].$msg[513],$from_file, $reste, $nbtot_notice); /* File %s ... . Still %s notices to load (total = %s) ... */
                 if ($notice_deja_presente==1) {
@@ -869,8 +900,8 @@ switch ($action) {
 
 	        print $formulaire;
 	        print $script;
-	        
-	        //Options avancÃ©es
+
+	        //Options avancées
 	        print "<br /><br />".import_records::get_links_caddies();
         }
         break;
@@ -886,17 +917,17 @@ switch ($action) {
         	$formulaire.="<INPUT NAME=\"sub\" TYPE=\"hidden\" value=\"import\" />";
         	$form_text=file_get_contents("$include_path/messages/help/$lang/import.txt");
         }
-        
+
         $formulaire.=str_replace(array("!!nom_fic!!","!!nom_bouton!!"),array(htmlentities($nom_fichier_transfert_ftp,ENT_QUOTES,$charset),htmlentities($msg["admin_import_notice_prechargement"],ENT_QUOTES,$charset)),$form_text);
-        
+
         if(!$table_list_func_import){
         	if(file_exists("func_import_subst.xml")){
 	        	$table_list_func_import=_parser_text_no_function_(file_get_contents("func_import_subst.xml"),"CATALOG");
 	        }elseif(file_exists("func_import.xml")){
 	        	$table_list_func_import=_parser_text_no_function_(file_get_contents("func_import.xml"),"CATALOG");
         	}
-        }       
-        
+        }
+
        	$code_js=$selecteur_fic="";
        	if(is_array($table_list_func_import["ITEM"]) && count($table_list_func_import["ITEM"])){
        		$incr=0;
@@ -909,7 +940,7 @@ switch ($action) {
        		foreach ( $table_list_func_import["ITEM"] as $value ) {
        			$code_js.="func_import_desc[$incr] = \"".htmlentities($value["DESCRIPTION"],ENT_QUOTES,$charset)."\";\n";
        			$code_js.="func_import_value[$incr] = \"".htmlentities(substr($value["FUNCTION"],0,-4),ENT_QUOTES,$charset)."\";\n";
-       			
+
        			$selecteur_fic.="<option value=\"".htmlentities(substr($value["FUNCTION"],0,-4),ENT_QUOTES,$charset)."\" ";
        			if($func_import_model == $value["FUNCTION"]){
        				$selecteur_fic.="selected=\"selected\" ";
@@ -926,11 +957,11 @@ switch ($action) {
    				if(!$selected_trouve){
    					$selecteur_fic.="selected=\"selected\" ";
    				}
-   				
+
    				$selecteur_fic.=">".htmlentities($msg["admin_import_notice_defaut"],ENT_QUOTES,$charset)."</option>\n";
    			}
        		$selecteur_fic.="</select>&nbsp;&nbsp;&nbsp;\n";
-       		
+
        		$code_js.="function affiche_description(){
 	        	var func_import=document.beforeupload.".$name_func.";
 				var mon_select=false;
@@ -944,7 +975,7 @@ switch ($action) {
 	        }";
 	        $code_js.="</script>";
        	}
-       	
+
        	$formulaire.=$selecteur_fic;
        	$formulaire.="<label class=\"etiquette\" for=\"".$name_func."\" id=\"text_desc_func_import\" name=\"text_desc_func_import\">".htmlentities($text_desc_func_import,ENT_QUOTES,$charset)."</label></br>\n";
        	$formulaire.="<label class=\"etiquette\" for=\"encodage_fic_source\" id=\"text_desc_encodage_fic_source\" name=\"text_desc_encodage_fic_source\">".htmlentities($msg["admin_import_encodage_fic_source"],ENT_QUOTES,$charset)."</label>";
@@ -953,9 +984,9 @@ switch ($action) {
        	$formulaire.="<INPUT type=\"button\" value=\"".htmlentities($msg["admin_import_notice_telechargement"],ENT_QUOTES,$charset)."\" class=\"bouton\" onclick=\"document.getElementById('action').value ='beforeupload';document.beforeupload.submit();\" />";
         $formulaire.="<INPUT type=\"button\" value=\"".htmlentities($msg["admin_import_notice_prechargement"],ENT_QUOTES,$charset)."\" class=\"bouton\" onclick=\"document.getElementById('action').value ='preload'; document.beforeupload.submit();\"/>";
         $formulaire.="</form>\n";
-        
+
         $formulaire.=$code_js;
-        
+
         print $formulaire;
         break;
     }

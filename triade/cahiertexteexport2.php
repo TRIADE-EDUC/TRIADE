@@ -16,7 +16,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -62,11 +62,11 @@ if ($_SESSION["membre"] == "menupersonnel") {
 	validerequete("menuadmin");	
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROF37 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -98,7 +98,7 @@ $PHPWord->addParagraphStyle('pStyle', array('spacing'=>100));
 
 
 //code_class,libelle,desclong,offline
-for($i=0;$i<count($dataclasse);$i++) {
+for($i=0;$i<countTriade($dataclasse);$i++) {
 	$idclasse=$dataclasse[$i][0];
 	$libelle=$dataclasse[$i][1];
 	$libellelong=$dataclasse[$i][2];
@@ -112,7 +112,7 @@ for($i=0;$i<count($dataclasse);$i++) {
 
 	$dataens=visu_affectation_detail_cahier_texte($idclasse,$anneeScolaire);
 	//ordre_affichage,code_matiere,code_prof,code_classe,coef,g.libelle,a.langue,a.avec_sous_matiere,a.visubull,a.nb_heure
-	for($j=0;$j<count($dataens);$j++) {
+	for($j=0;$j<countTriade($dataens);$j++) {
 		$idprof=$dataens[$j][2];
 		$idmatiere=$dataens[$j][1];
 		$nomprof=recherche_personne($idprof);
@@ -130,7 +130,7 @@ for($i=0;$i<count($dataclasse);$i++) {
 	//	$section->addTextBreak();
 		$data=exportPDF_contobj_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_contenu",$idprof,$idmatiere,$idclasse);
 
-		for($o=0;$o<count($data);$o++) {
+		for($o=0;$o<countTriade($data);$o++) {
 			$saisiele=dateForm($data[$o][0]);
 			$pourle=dateForm($data[$o][2]);
 			$contenu=strip_tags(html_vers_text($data[$o][3]));
@@ -148,10 +148,10 @@ for($i=0;$i<count($dataclasse);$i++) {
 		
 		}
 		$data=exportPDF_devoir_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_devoir",$idprof,$idmatiere,$idclasse);
-		if (count($data)) {
+		if (countTriade($data)) {
 			$section->addText(utf8_decode("Devoir à faire en $nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
 		}
-		for($o=0;$o<count($data);$o++) {
+		for($o=0;$o<countTriade($data);$o++) {
 			$saisiele=dateForm($data[$o][0]);
 			$pourle=dateForm($data[$o][2]);
 			$devoir=strip_tags(html_vers_text($data[$o][3]));
@@ -182,7 +182,7 @@ $PHPWord = new PHPWord();
 $dataprof=affPersActif('ENS');
 
 // pers_id, civ, nom, prenom, identifiant, offline, email
-for($i=0;$i<count($dataprof);$i++) {
+for($i=0;$i<countTriade($dataprof);$i++) {
 	$idpers=$dataprof[$i][0];
 	$nom=$dataprof[$i][2];
 	$prenom=$dataprof[$i][3];
@@ -194,7 +194,7 @@ for($i=0;$i<count($dataprof);$i++) {
 
 	$dataClasse=recupClasseProf($idpers,$anneeScolaire);
 
-	for($P=0;$P<count($dataClasse);$P++) {
+	for($P=0;$P<countTriade($dataClasse);$P++) {
 		$idclasse=$dataClasse[$P][0];		
 		$libellelong=chercheClasse_description($idclasse);
 		$nomclasse=chercheClasse_nom($idclasse);
@@ -206,7 +206,7 @@ for($i=0;$i<count($dataprof);$i++) {
 
 		$dataens=visu_affectation_detail_cahier_texte_ens($idclasse,$anneeScolaire,$idpers);
 		//ordre_affichage,code_matiere,code_prof,code_classe,coef,g.libelle,a.langue,a.avec_sous_matiere,a.visubull,a.nb_heure
-		for($j=0;$j<count($dataens);$j++) {
+		for($j=0;$j<countTriade($dataens);$j++) {
 			$idprof=$dataens[$j][2];
 			if ($idprof != $idpers) continue; 
 			$idmatiere=$dataens[$j][1];
@@ -216,7 +216,7 @@ for($i=0;$i<count($dataprof);$i++) {
 			$textrun->addText(utf8_decode("$nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'000000', 'size'=>12));
 			$data=exportPDF_contobj_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_contenu",$idprof,$idmatiere,$idclasse);
 			// date_saisie, heure_saisie, date_contenu, contenu, objectif	
-			for($o=0;$o<count($data);$o++) {
+			for($o=0;$o<countTriade($data);$o++) {
 				$saisiele=dateForm($data[$o][0]);
 				$pourle=dateForm($data[$o][2]);
 				$contenu=$data[$o][3];
@@ -239,10 +239,10 @@ for($i=0;$i<count($dataprof);$i++) {
 			unset($contenu);
 			unset($objectif);
 			$data=exportPDF_devoir_cahiertext(dateFormBase($dateDebut),dateFormBase($dateFin),"date_devoir",$idprof,$idmatiere,$idclasse);
-			if (count($data)) {
+			if (countTriade($data)) {
 				$section->addText(utf8_decode("Devoir Ã  faire en $nommatiere "), array('bold'=>true,'name'=>'Verdana', 'color'=>'006699', 'size'=>10));
 			}
-			for($o=0;$o<count($data);$o++) {
+			for($o=0;$o<countTriade($data);$o++) {
 				$saisiele=dateForm($data[$o][0]);
 				$pourle=dateForm($data[$o][2]);
 				$devoir=strip_tags(html_vers_text($data[$o][3]));
@@ -281,7 +281,7 @@ Pgclose();
 <br><br>
 
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

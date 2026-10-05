@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_timeline_datasource_works.xml,v 1.1 2017-09-29 14:38:41 arenou Exp $ -->
+$Id: cms_module_timeline_datasource_works.xml,v 1.1 2017/09/29 14:38:41 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_timeline_datasource_works_comment">Commentaire</entry>

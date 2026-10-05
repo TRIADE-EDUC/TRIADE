@@ -7,7 +7,7 @@ include_once("./common/config5.inc.php"); header('Content-type: text/html; chars
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -87,7 +87,7 @@ for ($i=1;$i<=$_POST["nbgroupement"]; $i++) { ?>
 	<select size=22 name="saisie_depart"  style="width:280px">
 	<?php 
 	$data=affMatiere();
-	for($a=0;$a<count($data);$a++)  {
+	for($a=0;$a<countTriade($data);$a++)  {
 		if ($data[$a][1] != "") {
 			print "<option STYLE='color:#000066;background-color:#CCCCFF' value='".$data[$a][0]."' title=\"".$data[$a][1]." ".preg_replace('/0$/',"",$data[$a][2])."\" >".$data[$a][1]." ".preg_replace('/0$/',"",$data[$a][2])."</option>";
 	        }

@@ -1,0 +1,21 @@
+{% extends 'record_unimarc_in_result_display.tpl.html' %}
+
+<!-- $Id: record_unimarc_in_result_display_b.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+<!-- Bulletin -->
+
+<!-- Entete de la notice -->
+
+<!-- Contenu de la notice -->
+ 
+{% block record_picture %}
+	<div class="vignetteimgNot">
+		{% if record.get_picture_url %}
+			<!-- Vignette de la notice -->
+			<div class="vignetteDocNot">
+				<img class="vignetteNot" src= "{{ record.get_picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+			</div>						
+		{% endif %}	
+	</div>
+{% endblock %}
+ 

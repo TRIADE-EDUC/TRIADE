@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: shorturl_type.class.php,v 1.9 2017-11-21 13:38:21 dgoron Exp $
+// $Id: shorturl_type.class.php,v 1.20 2024/04/26 13:06:45 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,10 +12,11 @@ class shorturl_type {
 	private $last_access;
 	protected $context = array();
 	protected $action ='';
+	protected $type;
 	
 	public function __construct($id=0)
 	{
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_datas();
 	}
 	
@@ -41,7 +42,8 @@ class shorturl_type {
 			pmb_mysql_query('update shorturls set shorturl_last_access=now() where id_shorturl = "'.addslashes($this->id).'"');
 			$this->{$this->action}();
 		}else {
-			throw new Exception('Action undefined');
+			print 'Action undefined';
+			exit;
 		}
 	}
 	public function get_id() {
@@ -52,7 +54,7 @@ class shorturl_type {
 		return $this->hash;
 	}
 	
-	public function get_last_acess() {
+	public function get_last_access() {
 		return $this->last_access;
 	}
 	
@@ -86,28 +88,42 @@ class shorturl_type {
 		return $opac_url_base.'s.php?h='.$this->generate_hash($action,$context).(count($_tableau_databases)>1?'&database='.$database:'');
 	}
 	
-	public function get_display_shorturl_in_result($action = '') {
-		global $msg;
+	public function get_display_shorturl_in_result($action = '', $type_search='') {
+	    global $msg, $charset, $opac_rgaa_active;
 		
 		$rss = (!$action || ($action == 'rss') ? true : false);
 		$permalink = (!$action || ($action == 'permalink') ? true : false);
 		
 		$html = '';
 		if ($rss) {
-			$html.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"short_url\"><a target='_blank' href='".$this->get_shorturl('rss')."' title='".$msg["short_url_generate"]."'>".$msg["short_url_generate"]."</a></span>";
+		    $html.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"short_url\"><a target='_blank' href='".$this->get_shorturl('rss'). ($type_search ? "&type_search=".$type_search : '') ."' title='".$msg["short_url_generate_title"]."'>".$msg["short_url_generate"]."</a></span>";
 		}
 		if ($permalink) {
 			$html.= "
-					<script type='text/javascript'>
+					<script>
 						require(['dojo/on', 'dojo/topic', 'apps/pmb/sharelink/SharePopup'], function(on, topic, SharePopup){
-						window.copy_shorturl_to_clipboard = function() {
-								new SharePopup('".$this->get_shorturl('permalink')."');
-							}					
+						window.copy_shorturl_to_clipboard = function(domNodeSource) {
+							var params = {'domNodeSource': domNodeSource };	
+							new SharePopup('".$this->get_shorturl('permalink')."', params);
+
+							}
 						});
 					</script>";
-			$html.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"short_url_permalink\"><a href='#' onclick='copy_shorturl_to_clipboard(); return false;' title='".$msg["short_url_permalink"]."'>".$msg["short_url_permalink"]."</a></span>";
+			$html.= "<span class='espaceResultSearch'>&nbsp;&nbsp;</span>
+    			    <span class='short_url_permalink'>";
+			if ($opac_rgaa_active) {
+			    $html.= "
+    			        <button type='button' onclick='copy_shorturl_to_clipboard(this); return false;' title='".htmlentities($msg["short_url_permalink"], ENT_QUOTES, $charset)."'>
+    			            ".$msg["short_url_permalink"]."
+		                </button>";
+			} else {
+    			$html.= "
+    			        <a href='#' onclick='copy_shorturl_to_clipboard(this); return false;' title='".htmlentities($msg["short_url_permalink"], ENT_QUOTES, $charset)."'>
+    			            ".$msg["short_url_permalink"]."
+		                </a>";
+			}
+			$html.= "</span>";
 		}
-		
 		return $html;
 	}
 	
@@ -133,7 +149,7 @@ class shorturl_type {
 			}
 			$html.='
 			</form>
-			<script type="text/javascript">
+			<script>
 				document.getElementById("myform").submit();
 			</script>
 			<body></html>';
@@ -157,4 +173,20 @@ class shorturl_type {
 		}
 		return $hash;
 	}
+	
+	public static function get_by_hash($hash) 
+	{
+	    $query = "select id_shorturl,shorturl_type from shorturls where shorturl_hash = '".addslashes($hash)."'";
+	    $result=pmb_mysql_query($query);
+	    if (pmb_mysql_num_rows($result)) {
+	        $row = pmb_mysql_fetch_object($result);
+	        $id = $row->id_shorturl;
+	        $classname = static::class;
+	        $obj = new $classname($id);
+	        return $obj;
+	    }
+	    return false;
+	}
+	
 }
+

@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: iimport_authorities.php,v 1.12 2019-06-07 09:19:49 ngantier Exp $
+// $Id: iimport_authorities.php,v 1.12 2019/06/07 09:19:49 ngantier Exp $
 
-// dÃ©finition du minimum necessaire
+// définition du minimum necessaire
 $base_path="../..";
 $base_auth = "AUTORITES_AUTH";
 
@@ -66,7 +66,7 @@ switch($action){
 		$type_link = unserialize(stripslashes($type_link));
 		if(!is_array($type_link)) $type_link = array();
 		if ($pb_fini=="EOF") {
-			//lecture_terminÃ©
+			//lecture_terminé
 			$form = str_replace("!!file_submit!!",$file_submit,$authorities_import_afterupload_form);
 			$form = str_replace("!!total!!","",$form);
 			$form = str_replace("!!nb_notices!!",0,$form);
@@ -134,12 +134,12 @@ switch($action){
 			while ($notobj = pmb_mysql_fetch_object($res)) {
 	            $idnotice_import=$notobj->id_import ;
 	            $nb_notices++;
-	            //on la traite comme une notice d'autoritÃ©s...
+	            //on la traite comme une notice d'autorités...
 	            $notice_authority = new notice_authority($notobj->notice, "UNI", (!empty($encodage_fic_source) ? $encodage_fic_source : 'utf-8'));
 	            $notice_authority->set_concept_or_category((!empty($category_or_concept) ? $category_or_concept : 'category'));
 	            $notice_authority->get_type();
 	            if($notice_authority->error){
-	            	//en cas d'erreur Ã  la lecture d'un format unimarc A, on a peut Ãªtre un format unimarc B et une notice de collection
+	            	//en cas d'erreur à la lecture d'un format unimarc A, on a peut être un format unimarc B et une notice de collection
 	            	$notice_authority = new notice_authority_serie($notobj->notice,"UNI","iso-8859-1",$type_link['subcollection']);
 	            	 if($notice_authority->error){
 		            	$fp = fopen ("../../temp/err_import_authorities".SESSid.".unimarc","a+");
@@ -148,22 +148,22 @@ switch($action){
 		                $nb_notices_rejetees++;
 	            	 }
 	            }
-           		//on a une notice correcte, on regarde si on doit la traitÃ©e...
+           		//on a une notice correcte, on regarde si on doit la traitée...
 	            if(!$notice_authority->error && ($authorities_type == 'all' || $notice_authority->type == $authorities_type)){ 
 	            	//on y va...
 	            	$authority_import = new $pmb_import_modele_authorities($notice_authority,$create_link,$create_link_spec,$force_update,$id_thesaurus,$type_link['rejected'],$type_link['associated']);
 	            	/* @var $authority_import authority_import */
 	            	$authority_import->set_scheme_uri($scheme_uri);
 	            	
-	            	//on rÃ©cupÃ¨re les infos classiques...
+	            	//on récupère les infos classiques...
 	            	$authority_import->get_informations();
-	            	//on donne la possibilitÃ© d'agir sur les donnÃ©es avant l'import...
+	            	//on donne la possibilité d'agir sur les données avant l'import...
 	            	$authority_import->get_informations_callback();
 	            	//si la notice est d'un type connu et donc importable dans PMB
 	            	if($authority_import->notice->type != ""){
 						// on importe
 	            		$authority_import->import();
-	            		// et on donne la possibilitÃ© d'un traitement post-import
+	            		// et on donne la possibilité d'un traitement post-import
 	            		$authority_import->import_callback();
 	            		
 	            		if(isset($nb_notices_import) && is_array($nb_notices_import) && isset($nb_notices_import[$authority_import->notice->type])){
@@ -178,7 +178,7 @@ switch($action){
 	            }elseif(!$notice_authority->error){
 	            	$sql_log = pmb_mysql_query("insert into error_log (error_origin, error_text) values ('iimport_authorities".addslashes(SESSid).".php', '".addslashes($msg['import_authorite_bad_type'].($notice_authority->type != "" ? $msg["import_authorities_type_".$notice_authority->type] : $msg["52"]))."') ") ;
 	            }
-				// la notice Ã  Ã©tÃ© traitÃ©e, on la supprime de la table d'import...
+				// la notice à été traitée, on la supprime de la table d'import...
 				$query = "delete from import_marc where id_import = ".$idnotice_import;
 				pmb_mysql_query($query);
 			}
@@ -243,7 +243,7 @@ switch($action){
 	// formulaire de base	
 	case "before_upload" :
 	default : 
-		//affichage du selectionneur de thesaurus et du lien vers les thÃ©saurus
+		//affichage du selectionneur de thesaurus et du lien vers les thésaurus
 		$liste_thesaurus = thesaurus::getThesaurusList();
 		$sel_thesaurus = '';
 		$lien_thesaurus = '';

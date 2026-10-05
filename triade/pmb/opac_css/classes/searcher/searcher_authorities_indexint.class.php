@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_indexint.class.php,v 1.1 2017-01-06 16:10:51 tsamson Exp $
+// $Id: searcher_authorities_indexint.class.php,v 1.2 2021/04/06 12:46:05 moble Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -49,4 +49,32 @@ class searcher_authorities_indexint extends searcher_autorities {
 		return $str_to_hash;
 	}
 
+	public function get_authority_tri() {
+		return 'indexint_name';
+	}
+
+	protected function _get_human_queries() {
+		global $msg;
+		global $thesaurus_classement_mode_pmb, $thesaurus_classement_defaut, $id_pclass;;
+		
+		$human_queries = parent::_get_human_queries();
+		if ($thesaurus_classement_mode_pmb) {
+			if ($id_pclass){
+				$human_queries[] = array(
+						'name' => $msg['search_extended_indexint_pclassement'],
+						'value' => pmb_mysql_result(pmb_mysql_query('select name_pclass from pclassement where id_pclass = '.$id_pclass), 0, 0)
+				);
+			}else{
+				// dans tous les classements
+				return $human_queries;
+			}
+		} else {
+			$human_queries[] = array(
+					'name' => $msg['search_extended_indexint_pclassement'],
+					'value' => pmb_mysql_result(pmb_mysql_query('select name_pclass from pclassement where id_pclass = '.$thesaurus_classement_defaut), 0, 0)
+			);
+		}
+		
+		return $human_queries;
+	}
 }

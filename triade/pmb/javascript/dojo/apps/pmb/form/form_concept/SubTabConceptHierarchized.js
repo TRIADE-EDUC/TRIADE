@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabConceptHierarchized.js,v 1.2 2018-06-07 13:05:26 apetithomme Exp $
+// $Id: SubTabConceptHierarchized.js,v 1.2.16.1 2025/02/14 10:47:58 dgoron Exp $
 
 
 define([
@@ -120,7 +120,7 @@ define([
 			},
 			resizeIframe: function(){
 				if(window.parent.location.href != window.location.href){
-				    window.frameElement.height = window.frameElement.contentWindow.document.body.scrollHeight+'px';
+				    window.frameElement.style.height = window.frameElement.contentWindow.document.body.scrollHeight+'px';
 				}
 				this.resize();
 			},

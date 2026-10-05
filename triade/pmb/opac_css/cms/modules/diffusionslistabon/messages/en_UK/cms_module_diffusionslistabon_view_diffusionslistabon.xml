@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_diffusionslistabon_view_diffusionslistabon.xml,v 1.1.4.2 2025/04/11 10:10:10 jparis Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_view_diffusionslistabon_build_diffusion_link">Creation of the link to an diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusionslistabon_css">Linked CSS</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_desc">List of the diffusions</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_id_desc">diffusion ID</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_name_desc">Title</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_link_desc">Lien vers la diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_manage_abo">Gérer ses abonnements</entry>
+	<entry code="cms_module_diffusionslistabon_view_receive_by_mail">Recevoir par mail les alertes</entry>
+	<entry code="cms_module_diffusionslistabon_view_item_abo">S'abonner aux alertes cochées</entry>
+	<entry code="cms_module_diffusionslistabon_view_radio_subscribe">S'inscrire</entry>
+	<entry code="cms_module_diffusionslistabon_view_radio_connect">Se connecter</entry>
+	<entry code="cms_module_diffusionslistabon_view_connect_login">Identifiant :</entry>
+	<entry code="cms_module_diffusionslistabon_view_connect_pwd">Mot de passe :</entry>
+	<entry code="cms_module_diffusionslistabon_view_connect_forgotten_pwd">Mot de passe oublié ?</entry>
+	<entry code="cms_module_diffusionslistabon_view_connect_btn">Se connecter et s'abonner aux alertes cochées</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_name">Nom :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_first_name">Prénom :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_mail">Email :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_login">Identifiant :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_pwd">Mot de passe :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_pwd_verif">Mot de passe (vérification) :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_captcha">Code de vérification :</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_btn">S'inscrire et s'abonner aux alertes cochées</entry>
+	<entry code="cms_module_diffusionslistabon_view_email_sent">Un email de confirmation vient de vous être envoyé, merci de consulter votre messagerie.</entry>
+	<entry code="cms_module_diffusionslistabon_view_subscribe_consent_message">J'accepte la conservation et l'utilisation à but non commercial de mes données personnelles</entry>
+	<entry code="cms_module_diffusionslistabon_view_no_selection_error" >Vous devez sélectionner au moins un abonnement.</entry>
+	<entry code="cms_module_diffusionslistabon_view_no_login_pwd_error" >Vous devez renseigner un identifiant et un mot de passe.</entry>
+	<entry code="cms_module_diffusionslistabon_view_connect_error" >Identifiant ou mot de passe incorrect.</entry>
+	<entry code="cms_module_diffusionslistabon_view_form_error">Votre saisie est incomplète ou erronée.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_bad_password">Votre mot de passe n'est pas assez sécurisé.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_consent_message">Vous devez accepter la conservation de vos données.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_tags_not_allowed">Les champs de saisie ne doivent pas contenir de tags HTML.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_mail_used">Cet email est déjà utilisé.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_login_used">Ce login est déjà utilisé.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_login_invalid">Ce login n'est pas valide.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_mail_not_sent">Votre inscription est prise en compte mais le mail de validation d'inscription n'a pu être envoyé.\nContactez l'administrateur.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_unknown">Une erreur technique est survenue.\nContactez l'administrateur.</entry>
+	<entry code="cms_module_diffusionslistabon_view_error_code">le code de vérification n'est plus valide.</entry>
+	<entry code="cms_module_diffusionslistabon_view_categories_desc">Liste des classements</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_last_desc">Date de la dernière diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_results_desc">Nombre d'éléments dans la diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_subscribed_desc">L'emprunteur est abonné à la diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_tags_desc">Liste des tags de la diffusion</entry>
+	<entry code="cms_module_diffusionslistabon_view_diffusions_id_tag_desc">ID du classement</entry>
+</XMLlist>

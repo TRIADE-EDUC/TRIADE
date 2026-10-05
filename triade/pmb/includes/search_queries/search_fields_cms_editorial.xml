@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: search_fields_cms_editorial.xml,v 1.3 2024/04/17 07:53:30 rtigero Exp $ -->
+<pmbfields>
+
+    <!-- Zone fixedFields :
+        Liste des champs de recherche possibles de la base de données
+        Chaque champ est modélisé par le tag <field> :
+        <field @att=id,title>
+            -id : numéro unique arbitraire
+            -title : Texte qui sera affiché dans l'écran de recherche
+            <field> contient les sous tags :
+                <input @type> : type de saisie
+                    -type (text|list) :
+                        @type=list (dans le cas d'une saisie par liste), input contient les sous champs :
+                            <queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
+                                          -la première donne le code à retourner
+                                          -la deuxième donne le libellé dans la liste
+
+                <query> : requete associée au champ et à l'opérateur
+                <query @att=for,multipleWords,regDiacrit>
+                    -for : nom de l'opérateur auquel correspond la requete
+                     (les opérateurs non listés ne seront pas pris en compte),
+                    -multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
+                    -regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
+                    <query> contient les sous tags :
+
+                        <main> : Corps principal de la requete,
+                            -!!p!! sera remplacé dans la requete par le texte saisi pour la recherche,
+                            -!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série
+                             de tests de la clause where pour chaque mot saisi
+
+                        <multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
+                        <multipleOperator> : opérateur utilisé entre les termes de conditions
+    -->
+
+    <fixedFields>
+
+        <!-- CHAMPS COMMUNS -->
+        <field group="1" title="msg:global_search" id="1">
+            <input type="text"/>
+            <query for="BOOLEAN">
+                <main><![CDATA[
+                    SELECT DISTINCT CONCAT(num_obj, "_", type) as num_object, ((cms_editorial_fields_global_index.value like '% !!p!! %')) AS pert
+                    FROM cms_editorial_fields_global_index
+                    WHERE cms_editorial_fields_global_index.value like '%!!p!!%'
+                    ORDER BY pert desc, cms_editorial_fields_global_index.value ASC
+                ]]></main>
+            </query>
+        </field>
+
+        <field group="1" title="msg:search_universe_cms_title" id="2">
+            <input type="text" />
+            <query for="BOOLEAN">
+                <main><![CDATA[
+                    SELECT DISTINCT CONCAT(num_object, "_", type) as num_object FROM (
+                        SELECT DISTINCT id_article AS num_object, "article" AS type FROM cms_articles WHERE article_title LIKE '%!!p!!%'
+                        UNION ALL
+                        SELECT DISTINCT id_section AS num_object, "section" AS type FROM cms_sections WHERE section_title LIKE '%!!p!!%'
+                    ) AS cms_editorial
+                ]]></main>
+            </query>
+        </field>
+
+        <field group="1" title="msg:search_universe_cms_type" id="3">
+            <input type="query_list">
+                <query>SELECT DISTINCT id_editorial_type, editorial_type_label FROM cms_editorial_types ORDER BY editorial_type_label</query>
+            </input>
+            <query for="EQ">
+                <main><![CDATA[
+                    SELECT DISTINCT CONCAT(num_object, "_", type) as num_object FROM (
+                        SELECT DISTINCT id_article AS num_object, "article" AS type FROM cms_articles WHERE article_num_type = '!!p!!'
+                        UNION ALL
+                        SELECT DISTINCT id_section AS num_object, "section" AS type FROM cms_sections WHERE section_num_type = '!!p!!'
+                    ) AS cms_editorial
+                ]]></main>
+            </query>
+        </field>
+
+        <field group="1" title="msg:search_universe_cms_status" id="4">
+            <input type="query_list">
+                <query>SELECT DISTINCT id_publication_state, editorial_publication_state_label FROM cms_editorial_publications_states ORDER BY editorial_publication_state_label</query>
+            </input>
+            <query for="EQ">
+                <main><![CDATA[
+                    SELECT DISTINCT CONCAT(num_object, "_", type) as num_object FROM (
+                        SELECT DISTINCT id_article AS num_object, "article" AS type FROM cms_articles WHERE article_publication_state = '!!p!!'
+                        UNION ALL
+                        SELECT DISTINCT id_section AS num_object, "section" AS type FROM cms_sections WHERE section_publication_state = '!!p!!'
+                    ) AS cms_editorial
+                ]]></main>
+            </query>
+        </field>
+
+        <!-- CHAMPS D'ARTICLE -->
+        <field group="2" title="msg:search_universe_cms_article_num_section" id="5">
+            <input type="query_list">
+                <query>SELECT DISTINCT id_section, section_title FROM cms_sections ORDER BY section_title</query>
+            </input>
+            <query for="EQ">
+                <main><![CDATA[SELECT DISTINCT CONCAT(id_article, "_article") as num_object FROM cms_articles WHERE num_section IN (!!p!!)]]></main>
+            </query>
+        </field>
+
+        <!-- CHAMPS DE SECTION -->
+        <field group="3" title="msg:search_universe_cms_section_num_section" id="6">
+            <input type="query_list">
+                <query>SELECT DISTINCT id_section, section_title FROM cms_sections ORDER BY section_title</query>
+            </input>
+            <query for="EQ">
+                <main><![CDATA[SELECT DISTINCT CONCAT(id_section, "_section") as num_object FROM cms_sections WHERE section_num_parent IN (!!p!!)]]></main>
+            </query>
+        </field>
+    </fixedFields>
+
+
+    <dynamicFields>
+        <fieldType group="101" type="cms_editorial">
+            <field dataType="small_text" id="1">
+               <query for="BOOLEAN" wordSearch="yes" searchableOnly="yes" notAllowedFor="list,query_list,date,external,resolve,marclist,query_auth,date_flot">
+                    <class type="cms_editorial" mode="pfield"></class>
+                </query>
+                <query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth,date_flot">
+                    <main>
+                        <![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE !!multiple_term!!
+                        ]]>
+                    </main>
+                    <multipleTerm>cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text like '%!!p!!%'</multipleTerm>
+                    <multipleOperator>OR cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text like '%!!p!!%'</multipleOperator>
+                </query>
+                <query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth,date_flot">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE !!multiple_term!!
+                    ]]></main>
+                    <multipleTerm>cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text like '%!!p!!%'</multipleTerm>
+                    <multipleOperator>and</multipleOperator>
+                </query>
+                <query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth,date_flot" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text LIKE '!!p!!%'
+                    ]]></main>
+                </query>
+                <query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth,date_flot" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text LIKE '%!!p!!'
+                    ]]></main>
+                </query>
+                <query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth,date_flot" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="NEAR" notAllowedFor="text,list,query_list,query_auth,date_box,comment,external,url,resolve,marclist,html,text_i18n,q_txt_i18n,date_inter">
+                </query>
+                <query for="LTEQ" notAllowedFor="text,list,query_list,query_auth,date_box,comment,external,url,resolve,marclist,html,text_i18n,q_txt_i18n,date_inter">
+                </query>
+                <query for="GTEQ" notAllowedFor="text,list,query_list,query_auth,date_box,comment,external,url,resolve,marclist,html,text_i18n,q_txt_i18n,date_inter">
+                </query>
+                <query for="BETWEEN" notAllowedFor="text,list,query_list,query_auth,date_box,comment,external,url,resolve,marclist,html,text_i18n,q_txt_i18n,date_inter">
+                </query>
+                <query for="EQ">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="ISEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND (cms_editorial_custom_small_text='' or cms_editorial_custom_small_text is null)
+                    ]]></main>
+                </query>
+                <query for="ISNOTEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_small_text != ''
+                    ]]></main>
+                </query>
+            </field>
+            <field dataType="text" id="2">
+                <query for="BOOLEAN" wordSearch="yes" searchableOnly="yes" notAllowedFor="list,query_list,date,external,resolve,marclist,query_auth">
+                    <class type="cms_editorial" mode="pfield"></class>
+                </query>
+                <query for="CONTAINS_AT_LEAST" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE !!multiple_term!!
+                    ]]></main>
+                    <multipleTerm>cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text like '%!!p!!%'</multipleTerm>
+                    <multipleOperator>or</multipleOperator>
+                </query>
+                <query for="CONTAINS_ALL" multipleWords="yes" regDiacrit="yes" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE !!multiple_term!!
+                    ]]></main>
+                    <multipleTerm>cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text like '%!!p!!%'</multipleTerm>
+                    <multipleOperator>and</multipleOperator>
+                </query>
+                <query for="STARTWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text LIKE '!!p!!%'
+                    ]]></main>
+                </query>
+                <query for="ENDWITH" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text LIKE '%!!p!!'
+                    ]]></main>
+                </query>
+                <query for="EXACT" notAllowedFor="list,query_list,marclist,query_auth" regDiacrit="no">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="EQ">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="ISEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND (cms_editorial_custom_text='' or cms_editorial_custom_text is null)
+                    ]]></main>
+                </query>
+                <query for="ISNOTEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_text != ''
+                    ]]></main>
+                </query>
+            </field>
+            <field dataType="integer" id="3">
+                <query for="EQ">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer < '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer > '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer <= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer >= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="ISEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND (cms_editorial_custom_integer='' or cms_editorial_custom_integer is null)
+                    ]]></main>
+                </query>
+                <query for="ISNOTEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_integer != ''
+                    ]]></main>
+                </query>
+            </field>
+            <field dataType="float" id="4">
+                <query for="EQ">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND round(cms_editorial_custom_float, LENGTH(SUBSTRING_INDEX('!!p!!','.',-1))) = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND round(cms_editorial_custom_float, LENGTH(SUBSTRING_INDEX('!!p!!','.',-1))) < '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND round(cms_editorial_custom_float, LENGTH(SUBSTRING_INDEX('!!p!!','.',-1))) > '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND round(cms_editorial_custom_float, LENGTH(SUBSTRING_INDEX('!!p!!','.',-1))) <= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND round(cms_editorial_custom_float, LENGTH(SUBSTRING_INDEX('!!p!!','.',-1))) >= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="ISEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND (cms_editorial_custom_float='' or cms_editorial_custom_float is null)
+                    ]]></main>
+                </query>
+                <query for="ISNOTEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_float != ''
+                    ]]></main>
+                </query>
+            </field>
+            <field dataType="date" id="5">
+                <query for="EQ">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date = '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date < '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GT" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date > '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date <= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="GTEQ" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date >= '!!p!!'
+                    ]]></main>
+                </query>
+                <query for="LESS_THAN_DAYS">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date > DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)
+                    ]]></main>
+                </query>
+                <query for="MORE_THAN_DAYS">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date < DATE_SUB(NOW(), INTERVAL '!!p!!' DAY)
+                    ]]></main>
+                </query>
+                <query for="THIS_WEEK">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND WEEK(cms_editorial_custom_date,1) = WEEK(NOW(),1) AND YEAR(cms_editorial_custom_date)
+                    ]]></main>
+                </query>
+                <query for="THIS_MONTH">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND MONTH(cms_editorial_custom_date) = MONTH(NOW()) AND YEAR(cms_editorial_custom_date) = YEAR(NOW())
+                    ]]></main>
+                </query>
+                <query for="LAST_MONTH">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND PERIOD_DIFF(DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(cms_editorial_custom_date, '%Y%m')) = 1
+                    ]]></main>
+                </query>
+                <query for="THIS_YEAR">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND YEAR(cms_editorial_custom_date) = YEAR(NOW())
+                    ]]></main>
+                </query>
+                <query for="ISEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND (cms_editorial_custom_date='' or cms_editorial_custom_date='0000-00-00' or cms_editorial_custom_date is null)
+                    ]]></main>
+                </query>
+                <query for="ISNOTEMPTY">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND cms_editorial_custom_date!='' AND cms_editorial_custom_date!=0
+                    ]]></main>
+                </query>
+                <query for="BETWEEN" notAllowedFor="list,query_list,marclist,query_auth">
+                    <main><![CDATA[
+                        SELECT DISTINCT CONCAT(cms_editorial_custom_values.cms_editorial_custom_origine, "_",
+                           CASE
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'section%' THEN 'section'
+                               WHEN cms_editorial_types.editorial_type_element LIKE 'article%' THEN 'article'
+                               ELSE cms_editorial_types.editorial_type_element
+                           END
+                        ) as num_object
+                        FROM cms_editorial_custom_values
+                        JOIN cms_editorial_custom on cms_editorial_custom.idchamp = cms_editorial_custom_values.cms_editorial_custom_champ
+                        JOIN cms_editorial_types on cms_editorial_types.id_editorial_type = cms_editorial_custom.num_type
+                        WHERE cms_editorial_custom_champ=!!field!! AND  if('!!p!!', cms_editorial_custom_date >= '!!p!!', 1) AND if('!!p1!!', cms_editorial_custom_date <= '!!p1!!', 1)
+                    ]]></main>
+                </query>
+            </field>
+        </fieldType>
+    </dynamicFields>
+
+    <specialFields>
+        <field group="1001" type="combine" title="msg:histo_title" id="1"/>
+        <field type="facette" title="msg:search_facette" id="3" opacVisibility="no" visible="no"/>
+        <field type="search_segment" title="msg:search_segment" id="10" opacVisibility="no" visible="no"/>
+        <field type="combine_extended_search" title="msg:combine_extended_search" id="11" opacVisibility="no"/>
+        <field group="1001" type="dynamic_value" title="msg:dynamic_value_field" id="12" />
+    </specialFields>
+
+    <tableName>cms_editorial</tableName>
+    <keyName>num_object</keyName>
+
+    <operators>
+        <operator name="BOOLEAN">msg:expr_bool_query</operator>
+        <operator name="CONTAINS">msg:284</operator>
+        <operator name="CONTAINS_ALL">msg:contient_tous_mots_query</operator>
+        <operator name="CONTAINS_AT_LEAST">msg:contient_plus_un_mot_query</operator>
+        <operator name="STARTWITH">msg:commence_par_query</operator>
+        <operator name="ENDWITH">msg:finit_par_query</operator>
+        <operator name="EXACT">msg:exactement_comme_query</operator>
+        <operator name="EQ">msg:eq_query</operator>
+        <operator name="GT">msg:gt_query</operator>
+        <operator name="LT">msg:lt_query</operator>
+        <operator name="GTEQ">msg:gteq_query</operator>
+        <operator name="LTEQ">msg:lteq_query</operator>
+        <operator name="ISEMPTY" emptyAllowed="yes">msg:est_vide_query</operator>
+        <operator name="ISNOTEMPTY" emptyAllowed="yes">msg:pas_vide_query</operator>
+        <operator name="BETWEEN">msg:search_between_query</operator>
+        <operator name="NEAR">msg:parperso_option_duration_type0</operator>
+        <operator name="LESS_THAN_DAYS">msg:less_than_days_query</operator>
+        <operator name="MORE_THAN_DAYS">msg:more_than_days_query</operator>
+        <operator name="THIS_WEEK" emptyAllowed="yes">msg:this_week_query</operator>
+        <operator name="LAST_WEEK" emptyAllowed="yes">msg:last_week_query</operator>
+        <operator name="THIS_MONTH" emptyAllowed="yes">msg:this_month_query</operator>
+        <operator name="LAST_MONTH" emptyAllowed="yes">msg:last_month_query</operator>
+        <operator name="THIS_YEAR" emptyAllowed="yes">msg:this_year_query</operator>
+    </operators>
+    <groups>
+        <group id="1">
+            <order>1</order>
+            <label>msg:search_universe_cms_global_fields</label>
+        </group>
+        <group id="2">
+            <order>2</order>
+            <label>msg:search_universe_article_global_fields</label>
+        </group>
+        <group id="3">
+            <order>3</order>
+            <label>msg:search_universe_section_global_fields</label>
+        </group>
+        <group id="101">
+            <order>10</order>
+            <label>msg:search_custom_cms_editorial</label>
+        </group>
+        <group id="1001">
+            <order>17</order>
+            <label>msg:recherches_query</label>
+        </group>
+    </groups>
+</pmbfields>

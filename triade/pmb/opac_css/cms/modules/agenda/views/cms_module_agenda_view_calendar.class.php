@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_agenda_view_calendar.class.php,v 1.18 2019-04-10 10:49:36 dgoron Exp $
+// $Id: cms_module_agenda_view_calendar.class.php,v 1.29.2.2 2025/01/21 15:29:49 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -47,34 +47,38 @@ class cms_module_agenda_view_calendar extends cms_module_common_view{
 		global $cms_module_agenda_view_calendar_nb_displayed_events_under;
 		$this->save_constructor_link_form("event");
 		$this->save_constructor_link_form("eventslist");
-		$this->parameters['nb_displayed_events_under'] = $cms_module_agenda_view_calendar_nb_displayed_events_under+0;
+		$this->parameters['nb_displayed_events_under'] = (int) $cms_module_agenda_view_calendar_nb_displayed_events_under;
 		return parent::save_form();
 	}
 	
 	public function get_headers($datas=array()){
-		global $lang;
+
 		$headers = parent::get_headers($datas);
 		$headers[] = "
-		<script type='text/javascript'>
+		<script>
 			require(['dijit/dijit']);
 		</script>";		
 		$headers[] = "
-		<script type='text/javascript'>
+		<script>
 			require(['dijit/Calendar']);
 		</script>";
-		$headers[] = "<script type='text/javascript' src='".$this->get_ajax_link(array('do' => "get_js"))."'/>";
-		$headers[] = "<link rel='stylesheet' type='text/css' href='".$this->get_ajax_link(array('do' => "get_css"))."'/>";
+		// AR - 10/02/21 ; L'appel au JS ne sert à rien, il est vide, c'est un mécanisme prévu mais non utilisé
+		//$headers[] = "<script src='".$this->get_ajax_link(array('do' => "get_js"), 'js')."'/>";
+		$css_file = $this->get_css_file();
+		if($css_file) {
+			$headers[] = "<link rel='stylesheet' type='text/css' href='".$css_file."'/>";
+		}
 		return $headers;
 	}
 	
 	public function render($datas){
-		$html_to_display = "
-		<div id='cms_module_calendar_".$this->id."' data-dojo-props='onChange : cms_module_agenda_highlight_events,getClassForDate:cms_module_agenda_get_class_day'; dojoType='dijit.Calendar' style='width:100%;'></div>";
+		$html_to_display = "<div id='cms_module_calendar_".$this->id."'></div>";
 		$legend ="";
 		$styles = array();
 		$events = array();
 		$event_list= "";
-		if($this->parameters>0 && count($datas['events'])){
+		
+		if($this->parameters>0 && !empty($datas['events']) && is_countable($datas['events']) && count($datas['events'])){
 			$legend ="<div class='row'>";
 			$event_list= "
 		<ul class='cms_module_agenda_view_calendar_eventslist'>";
@@ -82,20 +86,22 @@ class cms_module_agenda_view_calendar extends cms_module_common_view{
 			$date_time = mktime(0,0,0);
 			$calendar = array();
 			foreach($datas['events'] as $event){
-				if(isset($event['event_start']) && $event['event_start']){
- 					$events[] =$event;
-					if(!in_array($event['calendar'],$calendar)){
-						$calendar[] = $event['calendar'];
+			    $event->id_event = $event->id;
+			    $event->event_title = $event->get_title();
+				if(!empty($event->event_start)){
+ 					$events[] = $event;
+					if(!in_array($event->calendar,$calendar)){
+						$calendar[] = $event->calendar;
 						$legend.="
 							<div style='float:left;'>
-								<div style='float:left;width:1em;height:1em;background-color:".$event['color']."'></div>
-								<div style='float:left;'>&nbsp;".$this->format_text($event['calendar'])."&nbsp;&nbsp;</div>
+								<div style='float:left;width:1em;height:1em;background-color:".$event->color."'></div>
+								<div style='float:left;'>&nbsp;".$this->format_text($event->calendar)."&nbsp;&nbsp;</div>
 							</div>";
 					}
-					$styles[$event['id_type']] = $event['color'];
-					if($nb_displayed<$this->parameters['nb_displayed_events_under'] && ($event['event_start']['time']>= $date_time || $event['event_end']['time']>= $date_time)){
+					$styles[$event->id_type] = $event->color;
+					if($nb_displayed<$this->parameters['nb_displayed_events_under'] && ($event->event_start['time']>= $date_time || $event->event_end['time']>= $date_time)){
 						$event_list.="
-				<li><a href='".$this->get_constructed_link("event",$event['id'])."' title='".$this->format_text($event['calendar'])."'><span class='cms_module_agenda_event_".$event['id_type']."'>".$this->get_date_to_display($event['event_start']['format_value'],$event['event_end']['format_value'])."</span> : ".$this->format_text($event['title'])."</a></li>";
+				<li><a href='".$this->get_constructed_link("event",$event->id)."' title='".$this->format_text($event->calendar)."' alt='".$this->format_text($event->title)."'><span class='cms_module_agenda_event_".$event->id_type."'>".$this->get_date_to_display($event->event_start['format_value'],$event->event_end['format_value'])."</span> : ".$this->format_text($event->title)."</a></li>";
 						$nb_displayed++;
 					}
 				}
@@ -104,10 +110,11 @@ class cms_module_agenda_view_calendar extends cms_module_common_view{
 		</ul>";
 			$legend.="</div><div class='row'></div>";
 		}
+		
 		$html_to_display.="
 			<style>
 		";
-		
+
 		if(is_array($styles) && count($styles)){
 			foreach($styles as $id =>$color){
 				$html_to_display.="
@@ -125,75 +132,50 @@ class cms_module_agenda_view_calendar extends cms_module_common_view{
 		";
 		$html_to_display.=$legend.$event_list;
 		
-			
+		$json_events = encoding_normalize::json_encode(encoding_normalize::utf8_normalize($events));
+		if (empty($json_events)) {
+		    $json_events =  array();
+		}
+		
+		$link_single_event = $this->get_constructed_link("event","!!id!!");
+		if (empty($link_single_event)) {
+		    $link_single_event =  "";
+		}
+		
+		$link_events = $this->get_constructed_link("eventslist","!!date!!");
+		if (empty($link_events)) {
+		    $link_events =  "";
+		}
+		
 		$html_to_display.="
-		<script type='text/javascript'>
-			var events = ".json_encode($this->utf8_encode($events)).";	
-			
-			function cms_module_agenda_get_class_day(date,locale){
-				var classname='';
-				dojo.forEach(events,function (event){
-						start_day = new Date(event['event_start']['time']*1000);
-						start_day.setHours(1,0,0,0);
-						if(event['event_end']){
-							end_day = new Date(event['event_end']['time']*1000);
-							end_day.setHours(1,0,0,0);
-						}else end_day = false;
-						if((date.valueOf()>=start_day.valueOf() && (end_day && date.valueOf()<=end_day.valueOf())) || date.valueOf()==start_day.valueOf()){
-							if (classname.indexOf('cms_module_agenda_event_'+event.id_type) === -1) classname+='cms_module_agenda_event_'+event.id_type;
-							if (classname) {
-								classname+= ' ';
-								if(classname.indexOf('cms_module_agenda_multiple_events') === -1) {
-									classname+=' cms_module_agenda_multiple_events ';
-								}
-							}
-						}
-				});
-				return classname;
-			}
-			
-			function cms_module_agenda_highlight_events(value){
-				if(value){
-					require(['dojo/date'],function(date){
-						var current_events = new Array();
-						dojo.forEach(events,function (event){
-							start_day = new Date(event['event_start']['time']*1000);
-							if(event['event_end']){
-								end_day = new Date(event['event_end']['time']*1000);
-							}else end_day = false;
-							//juste une date ou dates debut et fin
-							if(date.difference(value, start_day, 'day') == 0 || (start_day && end_day && date.difference(value, start_day, 'day') <= 0 && date.difference(value, end_day, 'day') >= 0 )){
-								current_events.push(event);
-							}
-							start_day = end_day = false;
-						});
-						if(current_events.length == 1){
-							//un seul evenement sur la journee, on l'affiche directement
-							var link = '".$this->get_constructed_link("event","!!id!!")."';
-							document.location = link.replace('!!id!!',current_events[0]['id']);
-						}else if (current_events.length > 1){
-							//plusieurs evenements, on affiche la liste...
-							var month = value.getMonth()+1;
-							var day =value.getDate();
-							var day = value.getFullYear()+'-'+(month >9 ? month : '0'+month)+'-'+(day > 9 ? day : '0'+day);
-							var link = '".$this->get_constructed_link("eventslist","!!date!!")."';
-							document.location = link.replace('!!date!!',day);
-						}
-					});
-				}
-			}
+		<script>
+            require([
+                'apps/pmb/cms/CmsCalendar',
+                'dojo/ready',
+                'dojo/domReady!'
+            ], function(Calendar, ready){
+                ready(function() {
+                    var calendar = new Calendar({
+                        events: ". $json_events .",
+                        singleEventLink: '". $link_single_event."',
+                        eventsLink: '". $link_events ."'
+                    }, 'cms_module_calendar_".$this->id."')
+                    calendar.startup();
+                });
+            });
 		</script>
 		";
 		return $html_to_display;
 	}
 	
 	public function execute_ajax(){
-		$response = array();
-		global $do;
-		switch ($do){
-			case "get_css" :
-				$response['content-type'] = "text/css";
-				$response['content'] = "
+		return [];
+	}
+	
+	
+	public function get_css_file() {
+		
+		$css_content = "
 #".$this->get_module_dom_id()." td.cms_module_agenda_event_day {
 	background : green;		
 }
@@ -208,15 +190,9 @@ class cms_module_agenda_view_calendar extends cms_module_common_view{
 	color : inherit !important;
 }
 ";
-				
-				break;			
-			case "get_js" :
-				$response['content-type'] = "application/javascript";
-				$response['content'] = "";
-				break;		
-		}
-		return $response;
+		return $this->make_tmp_file($css_content, '.css', true);
 	}
+				
 	
 	protected function get_date_to_display($start,$end){
 		$display = "";

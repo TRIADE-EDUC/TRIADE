@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.5 2014-04-17 07:07:46 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.5 2014/04/17 07:07:46 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="long_name">Droits d'accès Utilisateurs - Notices</entry>

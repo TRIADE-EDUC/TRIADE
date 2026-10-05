@@ -11,7 +11,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -65,7 +65,7 @@ if ($id != 1) {
 
 
 		print "<script>var etat=0; </script>";
-		print "<script language='JavaScript' src='https://support.triade-educ.org/support/crontab/verif.php?id=".BACKUPKEY."'></script>";
+		print "<script language='JavaScript' src='proxy-backup-verif.php'></script>";
 
 		print "<br /><ul><form method='post'><font class='T2'>Nombre d'archives possible : ";
 		print "<select name='nbsave'>

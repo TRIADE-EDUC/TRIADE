@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.2.42.1 2024/08/28 14:10:15 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>UNIMARC MEMO NOTICES -&gt; UNIMARC Bretagne</importname>
@@ -10,7 +16,7 @@
 	<!--<input type="xml" rootelement="unimarc" noticeelement="notice"/>-->
 	<!-- Type de la sortie -->
 	<output importable="yes" type="iso_2709" suffix="marc"/>
-	
+
 	<step type="isotoxml"> -->
 	<!-- Conversion iso2709 unimarc en xml-->
 		<trootelement>unimarc</trootelement>
@@ -23,7 +29,7 @@
 		<trootelement>unimarc</trootelement>
 		<tnoticeelement>notice</tnoticeelement>
 	</step>
-	
+
 	<!-- conversion en iso 2709 du résultat -->
 	<step type="toiso">
 		<rootelement>*</rootelement>

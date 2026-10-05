@@ -1,10 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_main.inc.php,v 1.43 2019-03-19 14:38:56 dgoron Exp $
+// $Id: ajax_main.inc.php,v 1.49 2024/01/26 13:15:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $sub, $action, $type, $form, $msg, $charset, $PMBuserid;
+global $id, $watch_id, $num_watch, $item_id, $notice_id, $class, $deflt_docwatch_watch_filter_deleted;
+global $title, $ttl, $logo_url, $desc, $owner, $allowed_users, $parent;
+global $record_status, $record_types, $indexation_lang, $record_default_lang, $watch_record_is_new;
+global $article_type, $article_parent, $article_status, $section_type, $section_parent, $section_status, $boolean_expression;
+global $watch_rss_link, $watch_rss_lang, $watch_rss_copyright, $watch_rss_editor, $watch_rss_webmaster, $watch_rss_image_title, $watch_rss_image_website;
+global $className;
 
 require_once($class_path."/docwatch/docwatch_watches.class.php");
 require_once($class_path."/docwatch/docwatch_item.class.php");
@@ -122,6 +130,20 @@ switch($sub) {
 				);
 				print encoding_normalize::json_encode($response);
 				break;
+			case "purge_items_mark_as_deleted":
+			    $docwatch_watch = new docwatch_watch($id);
+			    $result = $docwatch_watch->purge_items_mark_as_deleted();
+			    $response = "";
+			    if(!$result){
+			        $response = $docwatch_watch->get_error();
+			    }
+			    $response = array(
+			        'result' => $result,
+			        'elementId' => $docwatch_watch->get_id(),
+			        'response' => $response
+			    );
+			    print encoding_normalize::json_encode($response);
+			    break;
 			case "update_children" :
 				switch ($type) {
 					case "category":
@@ -130,7 +152,7 @@ switch($sub) {
 							if (count($children)) {
 								foreach ($children as $child) {
 									$query = "UPDATE docwatch_categories SET category_num_parent='".$id."' WHERE id_category='".$child."'";
-									$result = pmb_mysql_query($query,$dbh);
+									$result = pmb_mysql_query($query);
 									if (!$result) {
 										$response = $msg["dsi_docwatch_tree_error_database"];
 										break;
@@ -145,7 +167,7 @@ switch($sub) {
 							if (count($children)) {
 								foreach ($children as $child) {
 									$query = "UPDATE docwatch_watches SET watch_num_category='".$id."' WHERE id_watch='".$child."'";
-									$result = pmb_mysql_query($query,$dbh);
+									$result = pmb_mysql_query($query);
 									if (!$result) {
 										$response = $msg["dsi_docwatch_tree_error_database"];
 										break;
@@ -160,7 +182,7 @@ switch($sub) {
 							if (count($children)) {
 								foreach ($children as $child) {
 									$query = "UPDATE docwatch_datasources SET datasource_num_watch='".$id."' WHERE id_datasource='".$child."'";
-									$result = pmb_mysql_query($query,$dbh);
+									$result = pmb_mysql_query($query);
 									if (!$result) {
 										$response = $msg["dsi_docwatch_tree_error_database"];
 										break;
@@ -192,15 +214,16 @@ switch($sub) {
 		switch($action){
 			case "get_items":
 				if($watch_id){
-					if(!isset($autoloader) || !is_object($autoloader)){
-						$autoloader = new autoloader();
-					}
-					$autoloader->add_register("docwatch",true);
 					$docwatch_watch = new docwatch_watch($watch_id);
 					$docwatch_watch->sync();
 					$docwatch_watch->fetch_items();
 					if($docwatch_watch->check_rights()){
-						$response = array('items'=>$docwatch_watch->get_normalized_items(),'formated_last_date'=>date("c",strtotime($docwatch_watch->get_last_date())), 'sources_updated'=>$docwatch_watch->get_synced_datasources());
+						$response = array(
+								'items'=>$docwatch_watch->get_normalized_items(),
+								'formated_last_date'=>date("c",strtotime($docwatch_watch->get_last_date())), 
+								'sources_updated'=>$docwatch_watch->get_synced_datasources(),
+								'deflt_docwatch_watch_filter_deleted' => $deflt_docwatch_watch_filter_deleted
+						);
 						print encoding_normalize::json_encode($response);
 					}
 				}
@@ -294,10 +317,11 @@ switch($sub) {
 				$return = array();
 				$return["action"] = $action;
 				$return["state"] = false;
+				$notice_id = intval($notice_id);
 				if($notice_id){
 					notice::del_notice($notice_id);
-					$query = "update docwatch_items set	item_num_notice = 0 where item_num_notice = '".$num_notice."'";
-					pmb_mysql_query($query, $dbh);
+					$query = "update docwatch_items set	item_num_notice = 0 where item_num_notice = '".$notice_id."'";
+					pmb_mysql_query($query);
 				}
 				break;
 			case "itemCreateSection":
@@ -349,7 +373,7 @@ switch($sub) {
 				$return["state"] = false;
 				if($item_id){
 					if($charset != 'utf-8'){
-						$data = utf8_encode($data);
+						$data = encoding_normalize::utf8_normalize($data);
 					}
 					$data=json_decode(stripslashes($data),true);
 					$docwatch_item = new docwatch_item($item_id);
@@ -372,13 +396,10 @@ switch($sub) {
 				}
 				break;
 			case "get_form" :
-				if(!isset($autoloader) || !is_object($autoloader)){
-					$autoloader = new autoloader();
-				}
-				$autoloader->add_register("docwatch",true);
+				$id = intval($id);
 				if($id){
-					$query = "select id_datasource,datasource_type from docwatch_datasources where id_datasource = '".($id*1)."'";
-					$result = pmb_mysql_query($query,$dbh);
+					$query = "select id_datasource,datasource_type from docwatch_datasources where id_datasource = '".$id."'";
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						$row = pmb_mysql_fetch_object($result);
 						$datasource = new $row->datasource_type($row->id_datasource);
@@ -393,13 +414,10 @@ switch($sub) {
 				}
 				break;
 			case "get_selector_form" :
-				if(!isset($autoloader) || !is_object($autoloader)){
-					$autoloader = new autoloader();
-				}
-				$autoloader->add_register("docwatch",true);
+				$id = intval($id);
 				if($id){
-					$query = "select id_selector,selector_type from docwatch_selectors where id_selector= '".($id*1)."'";
-					$result = pmb_mysql_query($query,$dbh);
+					$query = "select id_selector,selector_type from docwatch_selectors where id_selector= '".$id."'";
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						$row = pmb_mysql_fetch_object($result);
 						$selector = new $row->selector_type($row->id_selector);
@@ -414,13 +432,10 @@ switch($sub) {
 				}
 				break;
 			case "get_sub_selector_form" :
-				if(!isset($autoloader) || !is_object($autoloader)){
-					$autoloader = new autoloader();
-				}
-				$autoloader->add_register("docwatch",true);
+				$id = intval($id);
 				if($id){
-					$query = "select id_selector,selector_type from docwatch_selectors where id_selector= '".($id*1)."'";
-					$result = pmb_mysql_query($query,$dbh);
+					$query = "select id_selector,selector_type from docwatch_selectors where id_selector= '".$id."'";
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						$row = pmb_mysql_fetch_object($result);
 						$selector = new $row->selector_type($row->id_selector);
@@ -435,10 +450,6 @@ switch($sub) {
 				}
 				break;
 			case "save_source" :
-				if(!isset($autoloader) || !is_object($autoloader)){
-					$autoloader = new autoloader();
-				}
-				$autoloader->add_register("docwatch",true);
 				if(class_exists($className)){
 					$docwatch_datasource = new $className($id_datasource);
 					//TODO: Comme pour la veille
@@ -458,12 +469,9 @@ switch($sub) {
 				}
 				break;
 			case "duplicate_source" :
-				if(!isset($autoloader) || !is_object($autoloader)){
-					$autoloader = new autoloader();
-				}
-				$autoloader->add_register("docwatch",true);
 				if(class_exists($className)){
 					$docwatch_datasource = new $className($id_duplicated_datasource);
+					$docwatch_datasource->set_duplicate_from_id($id_duplicated_datasource);
 					$docwatch_datasource->set_id(0);
 					$docwatch_datasource->set_title($title);
 					$docwatch_datasource->set_num_watch($num_watch);

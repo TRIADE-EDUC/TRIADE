@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sessions_tokens.class.php,v 1.1 2016-10-18 07:54:03 apetithomme Exp $
+// $Id: sessions_tokens.class.php,v 1.1 2016/10/18 07:54:03 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -44,8 +44,8 @@ class sessions_tokens {
 	}
 	
 	/**
-	 * GÃ©nÃ¨re un token Ã  partir d'une mÃ©thode et d'un tableau de paramÃ¨tre
-	 * @param callable $callable MÃ©thode de gÃ©nÃ©ration
+	 * Génère un token à partir d'une méthode et d'un tableau de paramètre
+	 * @param callable $callable Méthode de génération
 	 * @param array $arguments Arguments
 	 */
 	public function generate_token($callable, $arguments = array()) {
@@ -55,7 +55,7 @@ class sessions_tokens {
 	}
 	
 	/**
-	 * GÃ©nÃ¨re un token Ã  partir du md5 des arguments transmis concatÃ©nÃ©s
+	 * Génère un token à partir du md5 des arguments transmis concaténés
 	 * @param array $arguments
 	 */
 	public function generate_token_from_arguments($arguments) {
@@ -87,7 +87,7 @@ class sessions_tokens {
 	}
 	
 	/**
-	 * Enregistre le token associÃ© Ã  la session
+	 * Enregistre le token associé à la session
 	 */
 	public function save() {
 		if ($this->SESSID && $this->token) {
@@ -120,7 +120,7 @@ class sessions_tokens {
 	}
 	
 	/**
-	 * @return string Login de l'utilisateur/ Lecteur associÃ© Ã  la session
+	 * @return string Login de l'utilisateur/ Lecteur associé à la session
 	 */
 	public function get_login() {
 		if (!isset($this->login)) {
@@ -168,7 +168,7 @@ class sessions_tokens {
     }
     
     /**
-     * Nettoie les session OPAC expirÃ©es
+     * Nettoie les session OPAC expirées
      */
     protected function clean_sessions() {
 		global $opac_duration_session_auth;
@@ -180,7 +180,7 @@ class sessions_tokens {
 		$query = 'delete from sessions where LastOn < '.$time_out.' and SESSNAME = "PmbOpac"';
 		pmb_mysql_query($query);
 		
-		// Suppression des tokens liÃ©s Ã  des sessions supprimÃ©es
+		// Suppression des tokens liés à des sessions supprimées
 		$query = 'delete from sessions_tokens where sessions_tokens_SESSID not in (select SESSID from sessions)';
 		pmb_mysql_query($query);
     }

@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts_func.inc.php,v 1.12 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: abts_func.inc.php,v 1.14.4.1 2025/02/04 15:02:40 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-/* ce s√©lecteur est bas√© sur le calendrier dont la description et 
-   l'auteur initial sont mentionn√©s ci-dessous.
-   Il a √©t√© modifi√© afin d'√™tre utilisable dans notre application */
+/* ce sÈlecteur est basÈ sur le calendrier dont la description et 
+   l'auteur initial sont mentionnÈs ci-dessous.
+   Il a ÈtÈ modifiÈ afin d'Ítre utilisable dans notre application */
 
 
 /***************************************************************************
@@ -36,30 +36,31 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
  ***************************************************************************/
 
 /* 
-- $params['calendar_id'] :  Par d√©faut √† 1, incr√©menter cette valeur pour utiliser plusieurs calendriers sur la m√™me page.  
-- $params['calendar_columns'] :  Par d√©faut √† 7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes. 
-- $params['show_day'] :  Par d√©faut √† 1, permet d'afficher les jours (L M M J V S D) 
-- $params['show_month'] :  Par d√©faut √† 1, permet d'afficher le nom du mois et l'ann√©e en haut 
-- $params['nav_link'] :  Par d√©faut √† 1, affiche les liens pour les jours et mois pr√©c√©dents / suivants 
-- $params['link_after_date'] :  Par d√©faut √† 0, si activ√©, affiche les liens de la navigation (cf ci-dessus) pour les dates sup√©rieures au jour en cours 
-- $params['link_on_day'] :  Lien √† attribuer sur les jours du calendrier. A chaque lien est rajout√© la date en argument. Pr√©voir de mettre '?argument=' en fin de lien 
-- $params['font_face'] :  Police a utiliser (par d√©faut : 'Verdana, Arial, Helvetica') 
-- $params['font_size'] :  Taille de la police moyenne en pixels (10 par d√©faut) 
-- $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par d√©faut) 
+- $params['calendar_id'] :  Par dÈfaut ‡ 1, incrÈmenter cette valeur pour utiliser plusieurs calendriers sur la mÍme page.  
+- $params['calendar_columns'] :  Par dÈfaut ‡ 7, modifier ce nombre pour diminuer / augmenter le nombres de colonnes. 
+- $params['show_day'] :  Par dÈfaut ‡ 1, permet d'afficher les jours (L M M J V S D) 
+- $params['show_month'] :  Par dÈfaut ‡ 1, permet d'afficher le nom du mois et l'annÈe en haut 
+- $params['nav_link'] :  Par dÈfaut ‡ 1, affiche les liens pour les jours et mois prÈcÈdents / suivants 
+- $params['link_after_date'] :  Par dÈfaut ‡ 0, si activÈ, affiche les liens de la navigation (cf ci-dessus) pour les dates supÈrieures au jour en cours 
+- $params['link_on_day'] :  Lien ‡ attribuer sur les jours du calendrier. A chaque lien est rajoutÈ la date en argument. PrÈvoir de mettre '?argument=' en fin de lien 
+- $params['font_face'] :  Police a utiliser (par dÈfaut : 'Verdana, Arial, Helvetica') 
+- $params['font_size'] :  Taille de la police moyenne en pixels (10 par dÈfaut) 
+- $params['bg_color'] :  Couleur du fond des cases des jours (blanc - #FFFFFF par dÈfaut) 
 - $params['today_bg_color'] :  Couleur de fond de la case du jour en cours 
 - $params['font_today_color'] :  Couleur de la police pour le jour en cours 
 - $params['font_color'] :  Couleur de la police 
 - $params['font_nav_bg_color'] :  Couleur de fond pour la barre des jours (L M M J V S D) 
 - $params['font_nav_color'] :  Couleur de la police pour la barre des jours (L M M J V S D) 
 - $params['font_header_color'] :  Couleur de la police pour le nom du mois 
-- $params['border_color'] :  Couleur pour les s√©paration des cases et des bordures 
-- $params['use_img'] :  Utilise des fichiers gif √† c√¥t√© du nom du mois et pour la barre de navigation en bas. Si d√©fini √† '0', affiche les liens textes. 
+- $params['border_color'] :  Couleur pour les sÈparation des cases et des bordures 
+- $params['use_img'] :  Utilise des fichiers gif ‡ cÙtÈ du nom du mois et pour la barre de navigation en bas. Si dÈfini ‡ '0', affiche les liens textes. 
 
 */
 
 $base_url = "./admin.php?categ=calendrier&sub=$sub";
 $base_url_mois = "./admin.php?categ=calendrier&sub=edition";
 
+$params=array();
 $params['calendar_id'] = 1 ; 				
 $params['calendar_columns'] = 7 ; 			
 $params['show_day'] = 1 ; 				
@@ -81,15 +82,18 @@ $params['border_color'] = "#000000" ;
 $params['use_img'] = 1 ; 
 
 
-function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_mois="", $form_input_par_jour=0,$modele_id,$num_abt) {
+function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_mois="", $form_input_par_jour=0,$modele_id=0,$num_abt=0) {
 	global $link_on_day, $params, $base_url, $caller, $msg, $charset, $date_caller;
-	global $dbh,$pmb_first_week_day_format ;
+	global $pmb_first_week_day_format ;
 	global $style_calendrier ;
 	global $admin_calendrier_form_mois_start, $admin_calendrier_form_mois_end, $admin_calendrier_form_mois_commentaire ;
 	global $deflt2docs_location;
 	
+	$param = array();
+	
 	$output = '';
 	// Default Params
+	$param_d=array();
 	$param_d['calendar_id']		= 1; // Calendar ID
 	$param_d['calendar_columns']= 5; // Nb of columns
 	$param_d['show_day'] 		= 1; // Show the day bar
@@ -146,9 +150,10 @@ function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_moi
 	$nb_days_month 		= $resdate->nb_days_month ;
 	$current_month_name = $monthes_name[$current_month];
 	
-	/* Ajout ER : d√©tection si date en cours du calendrier correspond ou pas √† la date de l'appelant 
-		Sans ce test, le lien sur tous les jours identiques d'un autre mois n'√©taient pas affich√©s, exemple :
+	/* Ajout ER : dÈtection si date en cours du calendrier correspond ou pas ‡ la date de l'appelant 
+		Sans ce test, le lien sur tous les jours identiques d'un autre mois n'Ètaient pas affichÈs, exemple :
 			appelant avec date au 04/10/2003 >> lien du 04/11/2003 absent */
+	$date_caller = $date_caller ?? '';
 	$date_MySQL_caller = "'".substr($date_caller, 0 ,4)."-".substr($date_caller, 4 ,2)."-".substr($date_caller, 6 ,2)."'";
 	$rqt_date = "select date_format(".$date_MySQL_caller.", '%d') as current_day, date_format(".$date_MySQL_caller.", '%c') as current_month, date_format(".$date_MySQL_caller.", '%Y') as current_year ";
 	$resultatdate=pmb_mysql_query($rqt_date);
@@ -171,7 +176,7 @@ function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_moi
 		$output = $style_calendrier ;
 	}
 	if ($form_input_par_jour) $output .= $admin_calendrier_form_mois_start ;  	
-	$output .= '<TABLE style="border:0px"  cellpadding="1" cellspacing="0" class="calendar-container">'."\n";
+	$output .= '<TABLE style="border:0px; padding: 1px; border-spacing: 0px" class="calendar-container">'."\n";
 	// Displaying the current month/year
 	if ($param['show_month'] == 1) {
 		$output .= '<TR>'."\n";
@@ -237,7 +242,7 @@ function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_moi
 			}		
 			$serie=$type_serie+$type_horsserie;		
 		}
-		else{// Pour la grille mod√®le			
+		else{// Pour la grille modËle			
 			$requete = "select type_serie from abts_grille_modele where num_modele='$modele_id' and date_parution ='$obj'";
 			$resultat=pmb_mysql_query($requete);			
 			while($r=pmb_mysql_fetch_object($resultat)){
@@ -245,19 +250,19 @@ function calendar_gestion($date = '', $navbar=0, $url_maj_base='', $base_url_moi
 				$serie+=$type_serie;		
 			}
 		}
-		// c'est un p√©riodique
+		// c'est un pÈriodique
 		if ($serie==1) {
 			$class = " class='lien_date' ";
 		} 
-		// c'est un hors-s√©rie
+		// c'est un hors-sÈrie
 		elseif ($serie==2) {
 			$class = " class='lien_date_hs'";
 		}
-		// c'est un hors-s√©rie et un p√©riodique 
+		// c'est un hors-sÈrie et un pÈriodique 
 		elseif ($serie==3) {
 			$class = " class='lien_date_hs_p'";
 		}
-		// rien n'est attendu ce jour l√†
+		// rien n'est attendu ce jour l‡
 		else {
 			$class = " ";
 		}		

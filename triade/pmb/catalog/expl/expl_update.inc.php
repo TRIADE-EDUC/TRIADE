@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_update.inc.php,v 1.33 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: expl_update.inc.php,v 1.34 2021/03/17 13:32:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -13,7 +13,7 @@ require_once($class_path."/expl.class.php");
 
 $expl_id="";
 
-//VÃ©rification des champs personalisÃ©s
+//Vérification des champs personalisés
 $p_perso=new parametres_perso("expl");
 $nberrors=$p_perso->check_submited_fields();
 if ($nberrors) {
@@ -37,7 +37,7 @@ switch($sub) {
 		$nbr_lignes ? $valid_requete = TRUE : $valid_requete = FALSE;
 		if ($nbr_lignes) $expl_id = pmb_mysql_result($res,0,0);
 		 
-		// remplacement code-barre : test sur le nouveau numÃ©ro
+		// remplacement code-barre : test sur le nouveau numéro
 		if($org_cb != $f_ex_cb) {
 			$requete = "SELECT count(1) FROM exemplaires WHERE expl_cb='$f_ex_cb' ";
 			$res = pmb_mysql_query($requete);
@@ -66,10 +66,10 @@ if($valid_requete) {
 	}
 	$exemplaire->set_properties_from_form();
 	$exemplaire->save();
-	// tout va bene, on rÃ©affiche l'ISBD
+	// tout va bene, on réaffiche l'ISBD
 	print "<div class='row'><div class='msg-perio'>".$msg['maj_encours']."</div></div>";
 	$id_form = md5(microtime());
-	$retour = "./catalog.php?categ=isbd&id=$id";
+	$retour = notice::get_permalink($id);
 	print "
 		<form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"$retour\" style=\"display:none\">
 			<input type=\"hidden\" name=\"id_form\" value=\"$id_form\">
@@ -77,6 +77,6 @@ if($valid_requete) {
 		<script type=\"text/javascript\">document.dummy.submit();</script>
 		";
 } else {
-	error_message($msg[301], $msg[303], 1, "./catalog.php?categ=isbd&id=$id");
+	error_message($msg[301], $msg[303], 1, notice::get_permalink($id));
 }
 ?>

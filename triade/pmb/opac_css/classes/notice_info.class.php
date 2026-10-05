@@ -1,12 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_info.class.php,v 1.71 2019-04-29 13:51:17 dgoron Exp $
+// $Id: notice_info.class.php,v 1.90.2.1 2025/01/08 09:07:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// RÃ©cupÃ©ration des info de notices
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
+
+// Récupération des info de notices
+global $class_path, $include_path;
 require_once($class_path."/parametres_perso.class.php");
 require_once($include_path."/notice_authors.inc.php");
 require_once("$class_path/author.class.php");
@@ -33,7 +36,7 @@ if (empty($fonction_auteur)) {
 
 class notice_info {
 	public $notice;
-	
+
 	public $notice_id;
 	public $environement;
 	protected $isbd;
@@ -43,24 +46,25 @@ class notice_info {
 	protected $memo_iconcart;
 	protected $niveau_biblio;
 	protected $niveau_hierar;
-	
+
 	protected $serial_title;
 	protected $bulletin_numero;
 	protected $bulletin_mention_date;
 	protected $bulletin_date_date;
+	protected $bulletin_id;
 	
 	protected $memo_series;
 	protected $memo_titre;
 	protected $memo_titre_serie;
-	
+
 	protected $memo_notice_bulletin;
 	protected $memo_bulletin;
-	
+
 	protected $memo_complement_titre;
 	protected $memo_titre_parallele;
 	protected $memo_notice;
 	protected $memo_mention_edition;
-	
+
 	protected $memo_lang;
 	protected $memo_lang_or;
 	protected $authors;
@@ -73,7 +77,7 @@ class notice_info {
 	protected $memo_auteur_secondaire_tab;
 	protected $memo_auteur_secondaire;
 	protected $memo_libelle_mention_resp;
-	
+
 	protected $memo_collection;
 	protected $editeurs;
 	protected $memo_ed1;
@@ -82,17 +86,17 @@ class notice_info {
 	protected $memo_ed2;
 	protected $memo_ed2_name;
 	protected $memo_ed2_place;
-	
+
 	protected $memo_year;
 	protected $memo_collation;
-	
+
 	protected $memo_map;
 	protected $memo_map_isbd;
 	protected $memo_map_echelle;
 	protected $memo_map_projection;
 	protected $memo_map_ref;
 	protected $memo_map_equinoxe;
-	
+
 	protected $memo_dewey;
 	protected $memo_exemplaires;
 	protected $memo_categories;
@@ -100,48 +104,48 @@ class notice_info {
 	protected $memo_authperso_all_isbd_list;
 	protected $parametres_auth_perso;
 	protected $parametres_perso;
-	
+
 	protected $memo_notice_mere;
 	protected $memo_notice_mere_relation_type;
 	protected $memo_notice_fille;
 	protected $memo_notice_fille_relation_type;
 	protected $memo_notice_horizontale;
 	protected $memo_notice_horizontale_relation_type;
-	
+
 	protected $memo_notice_article;
 	protected $memo_bulletinage;
 	protected $memo_article_bulletinage;
-	
+
 	protected $memo_explnum;
 	protected $memo_explnum_assoc;
 	protected $memo_explnum_assoc_number;
-	
+
 	protected $memo_image;
 	protected $memo_url_image;
 	protected $permalink;
 	protected $memo_avis;
 	protected $memo_tu;
 	protected $memo_statut;
-	
+
 	protected $memo_collstate;
-	
+
 	public $print_mode = 0;
-	
-	public function __construct($id,$environement=array()) {			
-		$this->notice_id=$id+0;
+
+	public function __construct($id,$environement=array()) {
+		$this->notice_id=intval($id);
 		$this->environement=$environement;
 		if(!isset($this->environement["short"])) $this->environement["short"] = 6;
 		if(!isset($this->environement["ex"]))	$this->environement["ex"] = 0;
 		if(!isset($this->environement["exnum"])) $this->environement["exnum"] = 1;
-		
+
 		if(!isset($this->environement["link"])) $this->environement["link"] = "./catalog.php?categ=isbd&id=!!id!!" ;
 		if(!isset($this->environement["link_analysis"])) $this->environement["link_analysis"] = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!" ;
 		if(!isset($this->environement["link_explnum"])) $this->environement["link_explnum"] = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!" ;
 		if(!isset($this->environement["link_bulletin"])) $this->environement["link_bulletin"] = "./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!" ;
-		
+
 		$this->fetch_data();
 	}
-	
+
 	public function fetch_analysis_info() {
 		if (($this->niveau_biblio=="a")&&($this->niveau_hierar==2)) {
 			$requete="select tit1,bulletin_numero,date_date,mention_date from analysis join bulletins on (analysis_bulletin=bulletin_id) join notices on (bulletin_notice=notice_id) where " .
@@ -156,12 +160,12 @@ class notice_info {
 			}
 		}
 	}
-	
+
 	public function fetch_data() {
 		global $msg;
-		
+
 		if (!$this->notice_id) return false;
-		
+
 		//Recuperation des infos de la notice
 		$requete = "select * from notices where notice_id=".$this->notice_id;
 		$resultat = pmb_mysql_query($requete);
@@ -169,10 +173,10 @@ class notice_info {
 		$this->notice=$res;
 		$this->get_niveau_biblio();
 		$this->get_niveau_hierar();
-		
-		//Recherche des infos du pÃ©riodique
+
+		//Recherche des infos du périodique
 		$this->fetch_analysis_info();
-		
+
 		//Titres
 		$this->memo_titre = '';
 		if($res->tparent_id) {
@@ -181,15 +185,15 @@ class notice_info {
 			if (($serie = pmb_mysql_fetch_object($resultat))) {
 				$this->memo_titre=$serie->serie_name;
 				if($this->notice->tnvol) {
-					$this->memo_titre.= ', '.$res->tnvol;				
+					$this->memo_titre.= ', '.$res->tnvol;
 				}
 			}
 		} elseif($this->notice->tnvol){
 			$this->memo_titre.= $res->tnvol;
 		}
-		
-		$this->memo_titre ? $this->memo_titre .= '. '.$res->tit1 : $this->memo_titre = $res->tit1;	
-		
+
+		$this->memo_titre ? $this->memo_titre .= '. '.$res->tit1 : $this->memo_titre = $res->tit1;
+
 		$this->memo_notice_bulletin=new stdClass();
 		$this->memo_bulletin=new stdClass();
 		if ($res->niveau_biblio=='b') {
@@ -197,8 +201,8 @@ class notice_info {
 			$execute_query=pmb_mysql_query($rqt);
 			$row=pmb_mysql_fetch_object($execute_query);
 			$this->memo_titre.=" ".(!$row->aff_date_date?sprintf($msg["bul_titre_perio"],$row->tit1):sprintf($msg["bul_titre_perio"],$row->tit1.", ".$row->num_bull." [".$row->aff_date_date."]"));
-			
-			// recherche editeur de la notice de perio 
+
+			// recherche editeur de la notice de perio
 			$rqt_perio="select * from notices where notice_id=".$row->bulletin_notice;
 			$execute_query_perio=pmb_mysql_query($rqt_perio);
 			$row_perio=pmb_mysql_fetch_object($execute_query_perio);
@@ -209,40 +213,40 @@ class notice_info {
 			if (!$this->notice->code) {
 				$this->memo_isbn=$row_perio->code;
 			}
-		}elseif ($res->niveau_biblio == 'a' && $res->niveau_hierar == 2) {	
-			$requete = "SELECT b.* "; 
+		}elseif ($res->niveau_biblio == 'a' && $res->niveau_hierar == 2) {
+			$requete = "SELECT b.* ";
 			$requete .= "from analysis a, notices b, bulletins c";
 			$requete .= " WHERE a.analysis_notice=".$this->notice_id;
 			$requete .= " AND c.bulletin_id=a.analysis_bulletin";
 			$requete .= " AND c.bulletin_notice=b.notice_id";
 			$requete .= " LIMIT 1";
 			$myQuery = pmb_mysql_query($requete);
-			if (pmb_mysql_num_rows($myQuery)) {		
+			if (pmb_mysql_num_rows($myQuery)) {
 				$row_perio = pmb_mysql_fetch_object($myQuery);
-				if (!$this->notice->ed1_id) {			
+				if (!$this->notice->ed1_id) {
 					$this->notice->ed1_id=$row_perio->ed1_id;
 				}
-				//issn pour les notice de dÃ©pouillement
+				//issn pour les notice de dépouillement
 				if (!$this->notice->code) {
 					$this->memo_isbn=$row_perio->code;
-				}				
-			}	
+				}
+			}
 
-			//	info du bulletin de ce dÃ©pouillement			
+			//	info du bulletin de ce dépouillement
 			$req_bulletin = "SELECT  c.* from analysis a, bulletins c WHERE c.bulletin_id=a.analysis_bulletin AND analysis_notice=".$res->notice_id;
 			$result_bull = pmb_mysql_query($req_bulletin);
-			if(($bull=pmb_mysql_fetch_object($result_bull))){				
-				$this->memo_bulletin=$bull;				
+			if(($bull=pmb_mysql_fetch_object($result_bull))){
+				$this->memo_bulletin=$bull;
 				$this->memo_notice_bulletin=$bull;
 				$this->bulletin_mention_date=$bull->mention_date;
 				$this->bulletin_date_date=formatdate($bull->date_date);
 				$this->bulletin_numero=$bull->bulletin_numero;
 			}
-		}	
+		}
 		$this->memo_notice = $res;
-		
-		//Titre du pÃ©rio pour les notices de bulletin		
-		if($res->niveau_biblio == 'b' && $res->niveau_hierar == '2'){				
+
+		//Titre du pério pour les notices de bulletin
+		if($res->niveau_biblio == 'b' && $res->niveau_hierar == '2'){
 			$req_bulletin = "SELECT bulletin_id, bulletin_numero, date_date, mention_date, bulletin_titre, bulletin_numero, tit1 as titre from bulletins, notices WHERE bulletin_notice=notice_id AND num_notice=".$res->notice_id;
 			$result_bull = pmb_mysql_query($req_bulletin);
 			while(($bull=pmb_mysql_fetch_object($result_bull))){
@@ -253,10 +257,10 @@ class notice_info {
 				$this->bulletin_date_date=formatdate($bull->date_date);
 				$this->bulletin_numero=$bull->bulletin_numero;
 				$this->bulletin_id = $bull->bulletin_id;
-			}				
+			}
 		}
 	}
-	
+
 	public function get_isbd() {
 		global $tdoc;
 		if(!isset($this->isbd)) {
@@ -291,21 +295,21 @@ class notice_info {
 				if($this->notice->nocoll) $nocoll .= '; '.$this->notice->nocoll;
 				else $nocoll = '';
 				$this->isbd .= ".&nbsp;-&nbsp;(".$this->get_memo_collection().$nocoll.")".' ';
-			}	
+			}
 			if(substr(trim($this->isbd), -1) != "."){
 				$this->isbd .= '.';
 			}
 		}
 		return $this->isbd;
 	}
-					
+
 	public function get_memo_isbn() {
 		if(!isset($this->memo_isbn)) {
 			$this->memo_isbn = $this->notice->code;
 		}
 		return $this->memo_isbn;
 	}
-	
+
 	public function get_memo_typdoc() {
 		global $tdoc;
 		if(!isset($this->memo_typdoc)) {
@@ -313,78 +317,76 @@ class notice_info {
 		}
 		return $this->memo_typdoc;
 	}
-	
+
 	//Icone type de Document
 	public function get_memo_icondoc() {
 		global $tdoc;
-		global $use_opac_url_base;
+
 		if(!isset($this->memo_icondoc)) {
 			$icon_doc = marc_list_collection::get_instance('icondoc');
 			$icon = $icon_doc->table[$this->notice->niveau_biblio.$this->notice->typdoc];
 			if ($icon) {
 				$biblio_doc = marc_list_collection::get_instance('nivbiblio');
 				$info_bulle_icon=$biblio_doc->table[$this->notice->niveau_biblio]." : ".$tdoc->table[$this->notice->typdoc];
-				if ($use_opac_url_base)	$this->memo_icondoc="<img src=\"".get_url_icon($icon, 1)."\" alt=\"$info_bulle_icon\" title=\"$info_bulle_icon\" class='align_top' />";
-				else $this->memo_icondoc="<img src=\"".get_url_icon($icon)."\" alt=\"$info_bulle_icon\" title=\"$info_bulle_icon\" class='align_top' />";
+				$this->memo_icondoc="<img src=\"".get_url_icon($icon)."\" alt=\"$info_bulle_icon\" title=\"$info_bulle_icon\" class='align_top' />";
 			} else {
 				$this->memo_icondoc="";
 			}
 		}
 		return $this->memo_icondoc;
 	}
-	
+
 	public function get_memo_iconcart() {
-		global $msg;
+		global $msg, $charset;
 		global $use_opac_url_base, $opac_url_base;
-		
+
 		if(!isset($this->memo_iconcart)) {
 			if(isset($_SESSION["cart"]) && in_array($this->notice_id, $_SESSION["cart"])) {
-				if ($use_opac_url_base)	$this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href='#' class=\"img_basket_exist\" title=\"".$msg['notice_title_basket_exist']."\"><img src=\"".get_url_icon('basket_exist.png', 1)."\" style='border:0px' alt=\"".$msg['notice_title_basket_exist']."\" /></a></span>";
-				else $this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href='#' class=\"img_basket_exist\" title=\"".$msg['notice_title_basket_exist']."\"><img src=\"".get_url_icon('basket_exist.png')."\" style='border:0px' alt=\"".$msg['notice_title_basket_exist']."\" /></a></span>";
+				$this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href='#' class=\"img_basket_exist\" title=\"".htmlentities($msg['notice_title_basket_exist'],ENT_QUOTES,$charset)."\"><img src=\"".get_url_icon('basket_exist.png')."\" style='border:0px' alt=\"".htmlentities($msg['notice_title_basket_exist'],ENT_QUOTES,$charset)."\" /></a></span>";
 			} else {
 				$title=$this->notice->tit1;
-				if ($use_opac_url_base) $this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href=\"".$opac_url_base."cart_info.php?id=".$this->notice_id."&header=".rawurlencode(strip_tags($title))."\" target=\"cart_info\" class=\"img_basket\" title=\"".$msg['notice_title_basket']."\"><img src=\"".get_url_icon("basket_small_20x20.png", 1)."\" style='border:0px' alt=\"".$msg['notice_title_basket']."\" /></a></span>";
-				else $this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href=\"cart_info.php?id=".$this->notice_id."&header=".rawurlencode(strip_tags($title))."\" target=\"cart_info\" class=\"img_basket\" title=\"".$msg['notice_title_basket']."\"><img src=\"".get_url_icon("basket_small_20x20.png")."\" style='border:0px' alt=\"".$msg['notice_title_basket']."\" /></a></span>";
+				if ($use_opac_url_base) $this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href=\"".$opac_url_base."cart_info.php?id=".$this->notice_id."&header=".rawurlencode(strip_tags($title))."\" target=\"cart_info\" class=\"img_basket\" title=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES,$charset)."\"><img src=\"".get_url_icon("basket_small_20x20.png", 1)."\" style='border:0px' alt=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES,$charset)."\" /></a></span>";
+				else $this->memo_iconcart="<span id='baskets".$this->notice_id."'><a href=\"cart_info.php?id=".$this->notice_id."&header=".rawurlencode(strip_tags($title))."\" target=\"cart_info\" class=\"img_basket\" title=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES,$charset)."\"><img src=\"".get_url_icon("basket_small_20x20.png")."\" style='border:0px' alt=\"".htmlentities($msg['notice_title_basket'],ENT_QUOTES,$charset)."\" /></a></span>";
 			}
 		}
 		return $this->memo_iconcart;
 	}
-	
+
 	public function get_niveau_biblio() {
 		if(!isset($this->niveau_biblio)) {
 			$this->niveau_biblio=$this->notice->niveau_biblio;
 		}
 		return $this->niveau_biblio;
 	}
-	
+
 	public function get_niveau_hierar() {
 		if(!isset($this->niveau_hierar)) {
 			$this->niveau_hierar=$this->notice->niveau_hierar;
 		}
 		return $this->niveau_hierar;
 	}
-	
+
 	public function get_serial_title() {
 		return $this->serial_title;
 	}
-	
+
 	public function get_bulletin_numero() {
 		return $this->bulletin_numero;
 	}
-	
+
 	public function get_bulletin_mention_date() {
 		return $this->bulletin_mention_date;
 	}
-	
+
 	public function get_bulletin_date_date() {
 		return $this->bulletin_date_date;
 	}
-	
+
 	//Titre
 	public function get_memo_titre() {
 		return $this->memo_titre;
 	}
-	
+
 	//Titre de serie
 	public function get_memo_titre_serie() {
 		if(!isset($this->memo_titre_serie)) {
@@ -404,41 +406,41 @@ class notice_info {
 		}
 		return $this->memo_titre_serie;
 	}
-	
+
 	public function get_memo_notice_bulletin() {
-		return $this->memo_notice_bulletin;	
+		return $this->memo_notice_bulletin;
 	}
-	
+
 	public function get_memo_bulletin() {
 		return $this->memo_bulletin;
 	}
-	
+
 	public function get_memo_complement_titre() {
 		if(!isset($this->memo_complement_titre)) {
 			$this->memo_complement_titre = $this->notice->tit4;
 		}
 		return $this->memo_complement_titre;
 	}
-	
+
 	public function get_memo_titre_parallele() {
 		if(!isset($this->memo_titre_parallele)) {
 			$this->memo_titre_parallele = $this->notice->tit3;
 		}
 		return $this->memo_titre_parallele;
 	}
-	
+
 	public function get_memo_notice() {
 		return $this->memo_notice;
 	}
-	
-	//mention d'Ã©dition
+
+	//mention d'édition
 	public function get_memo_mention_edition() {
 		if(!isset($this->memo_mention_edition)) {
 			$this->memo_mention_edition = $this->notice->mention_edition;
 		}
 		return $this->memo_mention_edition;
 	}
-	
+
 	// langues de la publication
 	public function get_memo_lang() {
 		if(!isset($this->memo_lang)) {
@@ -446,7 +448,7 @@ class notice_info {
 		}
 		return $this->memo_lang;
 	}
-	
+
 	// langues originales
 	public function get_memo_lang_or() {
 		if(!isset($this->memo_lang_or)) {
@@ -454,7 +456,7 @@ class notice_info {
 		}
 		return $this->memo_lang_or;
 	}
-	
+
 	// auteurs
 	public function get_authors() {
 		global $fonction_auteur;
@@ -497,13 +499,16 @@ class notice_info {
 			$this->memo_mention_resp_1 = implode ("; ",$mention_resp_1);
 			$this->memo_auteur_autre_tab = $isbd_entry_1;
 			$this->memo_auteur_autre = implode ("; ",$isbd_entry_1);
-				
+
 			$as = array_keys ($this->responsabilites["responsabilites"], "2" ) ;
 			for ($i = 0 ; $i < count($as) ; $i++) {
 				$indice = $as[$i] ;
 				$auteur_2 = $this->responsabilites["auteurs"][$indice] ;
 				$auteur = new auteur($auteur_2["id"]);
-				$auteur->fonction = $fonction_auteur[$auteur_2["fonction"]];
+				$auteur->fonction = '';
+				if ($auteur_2["fonction"]) {
+				    $auteur->fonction = $fonction_auteur[$auteur_2["fonction"]];
+				}
 				$this->authors[]=$auteur;
 				if ($this->print_mode) $mention_resp_lib = $auteur->get_isbd();
 				else $mention_resp_lib = '';
@@ -517,16 +522,16 @@ class notice_info {
 			$this->memo_mention_resp_2 = implode ("; ",$mention_resp_2);
 			$this->memo_auteur_secondaire_tab = $isbd_entry_2;
 			$this->memo_auteur_secondaire = implode ("; ",$isbd_entry_2);
-			
+
 			$this->memo_libelle_mention_resp = implode ("; ",$mention_resp);
 		}
 		return $this->authors;
 	}
-	
+
 	public function get_responsabilites() {
 		return $this->responsabilites;
 	}
-	
+
 	public function get_memo_auteur_principal() {
 		if(!isset($this->memo_auteur_principal)) {
 			$this->memo_auteur_principal = '';
@@ -534,14 +539,14 @@ class notice_info {
 		}
 		return $this->memo_auteur_principal;
 	}
-	
+
 	public function get_memo_mention_resp_1() {
 		if(!isset($this->memo_mention_resp_1)) {
 			$this->memo_mention_resp_1 = '';
 		}
 		return $this->memo_mention_resp_1;
 	}
-	
+
 	public function get_memo_auteur_autre_tab() {
 		if(!isset($this->memo_auteur_autre_tab)) {
 			$this->memo_auteur_autre_tab = '';
@@ -549,7 +554,7 @@ class notice_info {
 		}
 		return $this->memo_auteur_autre_tab;
 	}
-	
+
 	public function get_memo_auteur_autre() {
 		if(!isset($this->memo_auteur_autre)) {
 			$this->memo_auteur_autre = '';
@@ -557,7 +562,7 @@ class notice_info {
 		}
 		return $this->memo_auteur_autre;
 	}
-	
+
 	public function get_memo_mention_resp_2() {
 		if(!isset($this->memo_mention_resp_2)) {
 			$this->memo_mention_resp_2 = '';
@@ -565,7 +570,7 @@ class notice_info {
 		}
 		return $this->memo_mention_resp_2;
 	}
-	
+
 	public function get_memo_auteur_secondaire_tab() {
 		if(!isset($this->memo_auteur_secondaire_tab)) {
 			$this->memo_auteur_secondaire_tab = '';
@@ -573,7 +578,7 @@ class notice_info {
 		}
 		return $this->memo_auteur_secondaire_tab;
 	}
-	
+
 	public function get_memo_auteur_secondaire() {
 		if(!isset($this->memo_auteur_secondaire)) {
 			$this->memo_auteur_secondaire = '';
@@ -581,7 +586,7 @@ class notice_info {
 		}
 		return $this->memo_auteur_secondaire;
 	}
-	
+
 	public function get_memo_libelle_mention_resp() {
 		if(!isset($this->memo_libelle_mention_resp)) {
 			$this->memo_libelle_mention_resp = '';
@@ -589,7 +594,7 @@ class notice_info {
 		}
 		return $this->memo_libelle_mention_resp;
 	}
-	
+
 	// collection
 	public function get_memo_collection() {
 		if(!isset($this->memo_collection)) {
@@ -604,7 +609,7 @@ class notice_info {
 		}
 		return $this->memo_collection;
 	}
-	
+
 	public function get_editeurs() {
 		if(!isset($this->editeurs)) {
 			$this->editeurs = '';
@@ -630,7 +635,7 @@ class notice_info {
 		}
 		return $this->editeurs;
 	}
-	
+
 	public function get_memo_ed1() {
 		if(!isset($this->memo_ed1)) {
 			$this->memo_ed1 = '';
@@ -649,7 +654,7 @@ class notice_info {
 		}
 		return $this->memo_ed1;
 	}
-	
+
 	public function get_memo_ed1_name() {
 		if(!isset($this->memo_ed1_name)) {
 			$this->memo_ed1_name = '';
@@ -668,7 +673,7 @@ class notice_info {
 		}
 		return $this->memo_ed1_name;
 	}
-	
+
 	public function get_memo_ed1_place() {
 		if(!isset($this->memo_ed1_place)) {
 			$this->memo_ed1_place = '';
@@ -687,7 +692,7 @@ class notice_info {
 		}
 		return $this->memo_ed1_place;
 	}
-	
+
 	public function get_memo_ed2() {
 		if(!isset($this->memo_ed2)) {
 			if($this->notice->ed2_id) {
@@ -699,7 +704,7 @@ class notice_info {
 		}
 		return $this->memo_ed2;
 	}
-	
+
 	public function get_memo_ed2_name() {
 		if(!isset($this->memo_ed2_name)) {
 			if($this->notice->ed2_id) {
@@ -711,7 +716,7 @@ class notice_info {
 		}
 		return $this->memo_ed2_name;
 	}
-	
+
 	public function get_memo_ed2_place() {
 		if(!isset($this->memo_ed2_place)) {
 			if($this->notice->ed2_id) {
@@ -723,14 +728,14 @@ class notice_info {
 		}
 		return $this->memo_ed2_place;
 	}
-	
+
 	public function get_memo_year() {
 		if(!isset($this->memo_year)) {
 			$this->memo_year = $this->notice->year;
 		}
 		return $this->memo_year;
 	}
-	
+
 	// zone de la collation (ne concerne que a2)
 	public function get_memo_collation() {
 		if(!isset($this->memo_collation)) {
@@ -746,22 +751,23 @@ class notice_info {
 		}
 		return $this->memo_collation;
 	}
-	
+
 	public function get_map() {
 		if(!isset($this->map)) {
+			$ids=array();
 			$ids[]=$this->notice_id;
 			$this->map=new map_objects_controler(TYPE_RECORD,$ids);
 		}
 		return $this->map;
 	}
-	
+
 	public function get_map_info() {
 		if(!isset($this->map_info)) {
 			$this->map_info=new map_info($this->notice_id);
 		}
 		return $this->map_info;
 	}
-	
+
 	public function get_memo_map_isbd() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map_isbd)) {
@@ -772,7 +778,7 @@ class notice_info {
 		}
 		return $this->memo_map_isbd;
 	}
-	
+
 	public function get_memo_map_echelle() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map_echelle)) {
@@ -785,7 +791,7 @@ class notice_info {
 		}
 		return $this->memo_map_echelle;
 	}
-	
+
 	public function get_memo_map_projection() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map_projection)) {
@@ -798,7 +804,7 @@ class notice_info {
 		}
 		return $this->memo_map_projection;
 	}
-	
+
 	public function get_memo_map_ref() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map_ref)) {
@@ -811,7 +817,7 @@ class notice_info {
 		}
 		return $this->memo_map_ref;
 	}
-	
+
 	public function get_memo_map_equinoxe() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map_equinoxe)) {
@@ -824,7 +830,7 @@ class notice_info {
 		}
 		return $this->memo_map_equinoxe;
 	}
-	
+
 	public function get_memo_map() {
 		global $opac_map_activate;
 		if(!isset($this->memo_map)) {
@@ -835,7 +841,7 @@ class notice_info {
 		}
 		return $this->memo_map;
 	}
-	
+
 	//Recherche du code dewey
 	public function get_memo_dewey() {
 		if(!isset($this->memo_dewey)) {
@@ -849,14 +855,14 @@ class notice_info {
 		}
 		return $this->memo_dewey;
 	}
-	
+
 	//Traitement des exemplaires
 	public function get_memo_exemplaires() {
 		global $opac_sur_location_activate;
-		
+
 		if(!isset($this->memo_exemplaires)) {
 			$this->memo_exemplaires=array();
-			$requete = "select expl_id, expl_cb, expl_cote, expl_statut,statut_libelle, expl_typdoc, tdoc_libelle, expl_note, expl_comment, 
+			$requete = "select expl_id, expl_cb, expl_cote, expl_statut,statut_libelle, expl_typdoc, tdoc_libelle, expl_note, expl_comment,
 					expl_section, section_libelle, expl_owner, lender_libelle, expl_codestat, codestat_libelle,
 					expl_date_retour, expl_date_depot, expl_note, pret_flag, expl_location, location_libelle, expl_prix ";
 			if($opac_sur_location_activate) {
@@ -864,32 +870,32 @@ class notice_info {
 			}
 			$requete.= " from exemplaires
 					left join docs_statut on expl_statut=idstatut
-					left join docs_type on expl_typdoc=idtyp_doc 
+					left join docs_type on expl_typdoc=idtyp_doc
 					left join docs_section on expl_section=idsection
 					left join docs_codestat on expl_codestat=idcode
 					left join lenders on expl_owner=idlender
-					left join docs_location on expl_location=idlocation					
+					left join docs_location on expl_location=idlocation
 					";
 			if($opac_sur_location_activate) {
 				$requete.= " left join sur_location on surloc_num=surloc_id ";
 			}
 			$requete.= " where expl_notice=".$this->notice_id;
-			$requete.= " 
+			$requete.= "
 					union
-					select expl_id, expl_cb, expl_cote, expl_statut,statut_libelle, expl_typdoc, tdoc_libelle, expl_note, expl_comment, 
-					expl_section, section_libelle, expl_owner, lender_libelle, expl_codestat, codestat_libelle, 
+					select expl_id, expl_cb, expl_cote, expl_statut,statut_libelle, expl_typdoc, tdoc_libelle, expl_note, expl_comment,
+					expl_section, section_libelle, expl_owner, lender_libelle, expl_codestat, codestat_libelle,
 					expl_date_retour, expl_date_depot, expl_note, pret_flag, expl_location, location_libelle, expl_prix ";
 			if($opac_sur_location_activate) {
 				$requete.= ", ifnull(surloc_id,0) as surloc_id, ifnull(surloc_libelle,'') as surloc_libelle ";
 			}
-			$requete.= " from exemplaires 
+			$requete.= " from exemplaires
 					left join bulletins on expl_bulletin=bulletin_id
 					left join docs_statut on expl_statut=idstatut
-					left join docs_type on expl_typdoc=idtyp_doc 
+					left join docs_type on expl_typdoc=idtyp_doc
 					left join docs_section on expl_section=idsection
 					left join docs_codestat on expl_codestat=idcode
 					left join lenders on expl_owner=idlender
-					left join docs_location on expl_location=idlocation					
+					left join docs_location on expl_location=idlocation
 					";
 			if($opac_sur_location_activate) {
 				$requete.= " left join sur_location on surloc_num=surloc_id ";
@@ -916,11 +922,11 @@ class notice_info {
 		}
 		return $this->memo_exemplaires;
 	}
-	
+
 	//Traitement des exemplaires
 	public function get_memo_explnum() {
 		global $opac_explnum_order;
-		
+
 		if(!isset($this->memo_explnum)) {
 			$this->memo_explnum=array();
 			$requete = "SELECT explnum_id, explnum_notice, explnum_bulletin, explnum_nom, explnum_mimetype, explnum_url, explnum_vignette, explnum_nomfichier, explnum_extfichier, explnum_docnum_statut
@@ -933,7 +939,7 @@ class notice_info {
 			else $requete .= " order by explnum_mimetype, explnum_id ";
 			$resultat = pmb_mysql_query($requete);
 			while($explnum = pmb_mysql_fetch_object($resultat)) {
-				//Champs perso de documents numÃ©riques
+				//Champs perso de documents numériques
 				$parametres_perso=array();
 				$mes_pp=new parametres_perso("explnum");
 				if (!$mes_pp->no_special_fields) {
@@ -952,7 +958,7 @@ class notice_info {
 		}
 		return $this->memo_explnum;
 	}
-	
+
 	//Descripteurs
 	public function get_memo_categories() {
 		if(!isset($this->memo_categories)) {
@@ -965,7 +971,7 @@ class notice_info {
 		}
 		return $this->memo_categories;
 	}
-	
+
 	public function get_memo_authperso_all_isbd() {
 		if(!isset($this->memo_authperso_all_isbd)) {
 			$authperso = new authperso_notice($this->notice_id);
@@ -973,7 +979,7 @@ class notice_info {
 		}
 		return $this->memo_authperso_all_isbd;
 	}
-	
+
 	public function get_memo_authperso_all_isbd_list() {
 		if(!isset($this->memo_authperso_all_isbd_list)) {
 			$authperso = new authperso_notice($this->notice_id);
@@ -981,7 +987,7 @@ class notice_info {
 		}
 		return $this->memo_authperso_all_isbd_list;
 	}
-	
+
 	public function get_parametres_auth_perso() {
 		if(!isset($this->parametres_auth_perso)) {
 			$authperso = new authperso_notice($this->notice_id);
@@ -1000,7 +1006,7 @@ class notice_info {
 		}
 		return $this->parametres_auth_perso;
 	}
-	
+
 	//Champs perso de notice traite par la table notice_custom
 	public function get_parametres_perso() {
 		if(!isset($this->parametres_perso)) {
@@ -1018,80 +1024,80 @@ class notice_info {
 		}
 		return $this->parametres_perso;
 	}
-	
-	//les notices mÃ¨res
+
+	//les notices mères
 	public function get_memo_notice_mere() {
 		if(!isset($this->memo_notice_mere)) {
-			//Notices liÃ©es, relations entre notices
+			//Notices liées, relations entre notices
 			$notice_relations = notice_relations_collection::get_object_instance($this->notice_id);
 			$this->memo_notice_mere = array();
 			$this->memo_notice_mere_relation_type = array();
 			foreach ($notice_relations->get_parents() as $relation_type=>$relations) {
 				foreach ($relations as $rank=>$relation) {
-					$this->memo_notice_mere[$rank]=$relation->get_linked_notice();
-					$this->memo_notice_mere_relation_type[$rank]=$relation_type;
+				    $this->memo_notice_mere[$relation_type."_".$rank]=$relation->get_linked_notice();
+				    $this->memo_notice_mere_relation_type[$relation_type."_".$rank]=$relation_type;
 				}
 			}
 		}
 		return $this->memo_notice_mere;
 	}
-	
+
 	public function get_memo_notice_mere_relation_type() {
 		if(!isset($this->memo_notice_mere_relation_type)) {
 			$this->get_memo_notice_mere();
 		}
 		return $this->memo_notice_mere_relation_type;
 	}
-	
+
 	//les notices filles
 	public function get_memo_notice_fille() {
 		if(!isset($this->memo_notice_fille)) {
-			//Notices liÃ©es, relations entre notices
+			//Notices liées, relations entre notices
 			$notice_relations = notice_relations_collection::get_object_instance($this->notice_id);
 			$this->memo_notice_fille = array();
 			$this->memo_notice_fille_relation_type = array();
 			foreach ($notice_relations->get_childs() as $relation_type=>$relations) {
 				foreach ($relations as $rank=>$relation) {
-					$this->memo_notice_fille[$rank]=$relation->get_linked_notice();
-					$this->memo_notice_fille_relation_type[$rank]=$relation_type;
+				    $this->memo_notice_fille[$relation_type."_".$rank]=$relation->get_linked_notice();
+				    $this->memo_notice_fille_relation_type[$relation_type."_".$rank]=$relation_type;
 				}
 			}
 		}
 		return $this->memo_notice_fille;
 	}
-	
+
 	public function get_memo_notice_fille_relation_type() {
 		if(!isset($this->memo_notice_fille_relation_type)) {
 			$this->get_memo_notice_fille();
 		}
 		return $this->memo_notice_fille_relation_type;
 	}
-	
+
 	//les notices horizontales
 	public function get_memo_notice_horizontale() {
 		if(!isset($this->memo_notice_horizontale)) {
-			//Notices liÃ©es, relations entre notices
+			//Notices liées, relations entre notices
 			$notice_relations = notice_relations_collection::get_object_instance($this->notice_id);
 			$this->memo_notice_horizontale = array();
 			$this->memo_notice_horizontale_relation_type = array();
 			foreach ($notice_relations->get_pairs() as $relation_type=>$relations) {
 				foreach ($relations as $rank=>$relation) {
-					$this->memo_notice_horizontale[$rank]=$relation->get_linked_notice();
-					$this->memo_notice_horizontale_relation_type[$rank]=$relation_type;
+				    $this->memo_notice_horizontale[$relation_type."_".$rank]=$relation->get_linked_notice();
+				    $this->memo_notice_horizontale_relation_type[$relation_type."_".$rank]=$relation_type;
 				}
 			}
 		}
 		return $this->memo_notice_horizontale;
 	}
-	
+
 	public function get_memo_notice_horizontale_relation_type() {
 		if(!isset($this->memo_notice_horizontale_relation_type)) {
 			$this->get_memo_notice_horizontale();
 		}
 		return $this->memo_notice_horizontale_relation_type;
 	}
-	
-	// liens vers les pÃ©riodiques pour les notices d'article
+
+	// liens vers les périodiques pour les notices d'article
 	public function get_memo_notice_article() {
 		if(!isset($this->memo_notice_article)) {
 			$this->memo_notice_article = array();
@@ -1103,8 +1109,8 @@ class notice_info {
 		}
 		return $this->memo_notice_article;
 	}
-	
-	// bulletinage pour les notices de pÃ©rio
+
+	// bulletinage pour les notices de pério
 	public function get_memo_bulletinage() {
 		if(!isset($this->memo_bulletinage)) {
 			$this->memo_bulletinage = array();
@@ -1116,7 +1122,7 @@ class notice_info {
 		}
 		return $this->memo_bulletinage;
 	}
-	
+
 	// liens vers les bulletins pour les notices d'article
 	public function get_memo_article_bulletinage() {
 		if(!isset($this->memo_article_bulletinage)) {
@@ -1129,59 +1135,59 @@ class notice_info {
 		}
 		return $this->memo_article_bulletinage;
 	}
-	
+
 	public function get_memo_explnum_assoc() {
 		if(!isset($this->memo_explnum_assoc)) {
+			$paramaff=array();
 			$paramaff["mine_type"]=1;
 			$this->memo_explnum_assoc=show_explnum_per_notice($this->notice_id, 0,"",$paramaff);
 		}
 		return $this->memo_explnum_assoc;
 	}
-	
+
 	public function get_memo_explnum_assoc_number() {
 		if(!isset($this->memo_explnum_assoc_number)) {
+			$paramaff=array();
 			$paramaff["mine_type"]=1;
 			$this->memo_explnum_assoc_number=show_explnum_per_notice($this->notice_id, 0,"",$paramaff,true);
 		}
 		return $this->memo_explnum_assoc_number;
 	}
-	
+
 	public function get_memo_image() {
-		global $opac_show_book_pics;
-		global $opac_book_pics_url;
+	    global $use_opac_url_base;
 		global $opac_book_pics_msg;
-		global $opac_url_base;
 		global $charset;
 		if(!isset($this->memo_image)) {
 			$this->memo_image="" ;
 			$this->memo_url_image="";
-			if ($this->notice->code || $this->notice->thumbnail_url) {
-				if ($opac_show_book_pics=='1' && ($opac_book_pics_url || $this->notice->thumbnail_url)) {
-					$url_image_ok = getimage_url($this->notice->code, $this->notice->thumbnail_url);
-					$title_image_ok = "";
-					if(!$this->notice->thumbnail_url) {
-						$title_image_ok = htmlentities($opac_book_pics_msg, ENT_QUOTES, $charset);
-					}
-					if(!trim($title_image_ok)){
-						$title_image_ok = htmlentities($this->notice->tit1, ENT_QUOTES, $charset);
-					}
-					$this->memo_image = "<img src='".$url_image_ok."' title=\"".$title_image_ok."\" class='align_right' hspace='4' vspace='2'>";
-					$this->memo_url_image=$url_image_ok;
-				} else{
-					$this->memo_url_image=notice::get_picture_url_no_image($this->notice->niveau_biblio, $this->notice->typdoc);
-				}
+			$thumbnailSourcesHandler = new ThumbnailSourcesHandler();
+			if($use_opac_url_base) {
+			    $url_image_ok = $thumbnailSourcesHandler->generateSrcBase64(TYPE_NOTICE, $this->notice_id);
+			} else {
+			    $url_image_ok = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $this->notice_id);
 			}
+
+			$title_image_ok = "";
+			if(!$url_image_ok) {
+				$title_image_ok = htmlentities($opac_book_pics_msg, ENT_QUOTES, $charset);
+			}
+			if(!trim($title_image_ok)){
+				$title_image_ok = htmlentities($this->notice->tit1, ENT_QUOTES, $charset);
+			}
+			$this->memo_image = "<img src='".$url_image_ok."' title=\"".$title_image_ok."\" class='align_right' >";
+			$this->memo_url_image=$url_image_ok;
 		}
 		return $this->memo_image;
 	}
-	
+
 	public function get_memo_url_image() {
 		if(!isset($this->memo_url_image)) {
 			$this->get_memo_image();
 		}
-		return $this->memo_url_image;	
+		return $this->memo_url_image;
 	}
-	
+
 	//calcul du permalink...
 	public function get_permalink() {
 		global $opac_url_base;
@@ -1194,7 +1200,7 @@ class notice_info {
 		}
 		return $this->permalink;
 	}
-	
+
 	//Traitement des avis
 	public function get_memo_avis() {
 		if(!isset($this->memo_avis)) {
@@ -1203,7 +1209,7 @@ class notice_info {
 		}
 		return $this->memo_avis;
 	}
-	
+
 	//Titres uniformes
 	public function get_memo_tu() {
 		if(!isset($this->memo_tu)) {
@@ -1214,7 +1220,7 @@ class notice_info {
 				while(($tu=pmb_mysql_fetch_object($resultat))) {
 					$tu_memo = new titre_uniforme($tu->ntu_num_tu);
 					$tu_memo->parametres_perso=array();
-			
+
 					$mes_pp= new parametres_perso("tu");
 					$mes_pp->get_values($tu->ntu_num_tu);
 					$values = $mes_pp->values;
@@ -1224,14 +1230,14 @@ class notice_info {
 							$tu_memo->parametres_perso[$mes_pp->t_fields[$field_id]["NAME"]]["VALUE"][]=$mes_pp->get_formatted_output(array($value),$field_id);
 						}
 					}
-			
+
 					$this->memo_tu[]=$tu_memo;
 				}
 			}
 		}
 		return $this->memo_tu;
 	}
-	
+
 	//statut
 	public function get_memo_statut() {
 		if(!isset($this->memo_statut)) {
@@ -1251,12 +1257,12 @@ class notice_info {
 		}
 		return $this->memo_statut;
 	}
-	
+
 	public function get_info_editeur($id) {
 		$info=array();
 		if($id){
 			$requete = "SELECT * FROM publishers WHERE ed_id=$id LIMIT 1 ";
-			$result = @pmb_mysql_query($requete);
+			$result = pmb_mysql_query($requete);
 			if($result && pmb_mysql_num_rows($result)) {
 				$temp = pmb_mysql_fetch_object($result);
 				pmb_mysql_free_result($result);
@@ -1267,8 +1273,8 @@ class notice_info {
 				$cp		= $temp->ed_cp;
 				$ville	= $temp->ed_ville;
 				$pays		= $temp->ed_pays;
-				$web		= $temp->ed_web;
-				$ed_comment= $temp->ed_comment	;
+// 				$web		= $temp->ed_web;
+// 				$ed_comment= $temp->ed_comment	;
 
 				// Determine le lieu de publication
 				$l = '';
@@ -1278,10 +1284,10 @@ class notice_info {
 				if ($pays)  $l = ($l=='') ? $pays : $l.', '.$pays;
 				if ($ville) $l = ($l=='') ? $ville : $ville.' ('.$l.')';
 				if ($l=='')       $l = '[S.l.]';
-					
+
 				// Determine le nom de l'editeur
 				if ($name) $n = $name; else $n = '[S.n.]';
-					
+
 				// Constitue l'ISBD pour le coupe lieu/editeur
 				if ($l == '[S.l.]' AND $n == '[S.n.]') $isbd_entry = '[S.l.&nbsp;: s.n.]';
 				else $isbd_entry = $l.'&nbsp;: '.$n;
@@ -1289,44 +1295,49 @@ class notice_info {
 				$info['name'] = $name;
 				$info['place'] = $l;
 			}
-		}	
+		}
 		return($info);
 	}
-	
+
 	public function fetch_notices_parents(){
 		$this->notices_parents = array();
 		$this->get_memo_notice_mere();
-		for($i=0 ; $i<count($this->memo_notice_mere) ; $i++){
-			$this->notices_parents[] = new notice_info($this->memo_notice_mere[$i]);
+		if(count($this->memo_notice_mere)) {
+		    foreach ($this->memo_notice_mere as $notice_id) {
+		        $this->notices_parents[] = new notice_info($notice_id);
+		    }
 		}
 	}
 
 	public function fetch_notices_childs(){
 		$this->notices_childs = array();
 		$this->get_memo_notice_fille();
-		for($i=0 ; $i<count($this->memo_notice_fille) ; $i++){
-			$this->notices_childs[] = new notice_info($this->memo_notice_fille[$i]);
-		}		
+		if(count($this->memo_notice_fille)) {
+		    foreach ($this->memo_notice_fille as $notice_id) {
+		        $this->notices_childs[] = new notice_info($notice_id);
+		    }
+		}
 	}
-	
+
 	public function fetch_notices_pairs(){
 		$this->notices_childs = array();
 		$this->get_memo_notice_horizontale();
-		for($i=0 ; $i<count($this->memo_notice_horizontale) ; $i++){
-			$this->notices_childs[] = new notice_info($this->memo_notice_horizontale[$i]);
+		if(count($this->memo_notice_horizontale)) {
+		    foreach ($this->memo_notice_horizontale as $notice_id) {
+		        $this->notices_childs[] = new notice_info($notice_id);
+		    }
 		}
 	}
-	
+
 	//Recherche des etats de collection
 	public function get_memo_collstate() {
 		if(!isset($this->memo_collstate)) {
 			if (($this->niveau_biblio=='s')&&($this->niveau_hierar==1)) {
-				global $dbh;
 				global $opac_sur_location_activate;
-				
+
 				//Traitement des exemplaires
 				$this->memo_collstate=array();
-				
+
 				$q = "select collstate_id, id_serial, state_collections, collstate_origine, collstate_cote, collstate_archive, collstate_lacune, collstate_note, ";
 				$q.= "idlocation, location_libelle, ";
 				$q.= "archempla_id, archempla_libelle, ";
@@ -1345,22 +1356,22 @@ class notice_info {
 				$q.= "join arch_statut on collstate_statut=archstatut_id ";
 				$q.= "where id_serial = '".$this->notice_id."' ";
 				//pour l'opac
-				$q.= "and ((archstatut_visible_opac=1 and archstatut_visible_opac_abon=0)".($_SESSION["user_code"]?" or (archstatut_visible_opac_abon=1 and archstatut_visible_opac=1)":"").")";		
-				$r = pmb_mysql_query($q, $dbh);
+				$q.= "and ((archstatut_visible_opac=1 and archstatut_visible_opac_abon=0)".($_SESSION["user_code"]?" or (archstatut_visible_opac_abon=1 and archstatut_visible_opac=1)":"").")";
+				$r = pmb_mysql_query($q);
 				if ($r) {
 					while (($cs = pmb_mysql_fetch_object($r))) {
-						//Champs perso d'etats de collection		
+						//Champs perso d'etats de collection
 						$parametres_perso=array();
 						$pp=new parametres_perso("collstate");
-						if (!$pp->no_special_fields) {			
+						if (!$pp->no_special_fields) {
 							$pp->get_values($cs->expl_id);
 							$values = $pp->values;
 							foreach ( $values as $field_id => $vals ) {
-								foreach ( $vals as $value ) {				
+								foreach ( $vals as $value ) {
 									$parametres_perso[$pp->t_fields[$field_id]["NAME"]]["TITRE"]=$pp->t_fields[$field_id]["TITRE"];
-									$parametres_perso[$pp->t_fields[$field_id]["NAME"]]["VALUE"]=$pp->get_formatted_output(array($value),$field_id);	
+									$parametres_perso[$pp->t_fields[$field_id]["NAME"]]["VALUE"]=$pp->get_formatted_output(array($value),$field_id);
 								}
-							}							
+							}
 						}
 						$cs->parametres_perso=$parametres_perso;
 						$this->memo_collstate[]=$cs;
@@ -1370,7 +1381,7 @@ class notice_info {
 		}
 		return $this->memo_collstate;
 	}
-	
+
 	private function look_for_attribute_in_class($class, $attribute, $parameters = array()) {
 		if (is_object($class) && isset($class->{$attribute})) {
 			return $class->{$attribute};
@@ -1383,9 +1394,26 @@ class notice_info {
 		}
 		return null;
 	}
-	
+
 	public function __get($name) {
 		return $this->look_for_attribute_in_class($this, $name);
 	}
+
+	private function get_first_memo_explnum_thumbnail() {
+	    if (!isset($this->memo_explnum)) {
+	        $this->get_memo_explnum();
+	    }
+
+	    $first_memo_explnum_thumbnail = "";
+	    $index = count($this->memo_explnum);
+	    for ($i = 0; $i < $index; $i++) {
+	        if (!empty($this->memo_explnum[$i]->explnum_vignette)) {
+	            if (explnum::has_acces_vignette($this->memo_explnum[$i]->explnum_id, $this->memo_explnum[$i]->explnum_notice)) {
+    	            $first_memo_explnum_thumbnail = explnum::get_thumbnail_url($this->memo_explnum[$i]->explnum_vignette, $this->memo_explnum[$i]->explnum_id);
+    	            break;
+	            }
+	        }
+	    }
+	    return $first_memo_explnum_thumbnail;
+	}
 }
-?>

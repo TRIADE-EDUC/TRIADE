@@ -1,0 +1,11 @@
+<div id="registration">
+	<template v-if="action == 'save'">
+		<registrationsaved :pmb="pmb" :formdata="formdata"></registrationsaved>
+	</template>
+	<template v-else-if="action == 'delete'">
+		<registrationdeleted :pmb="pmb" :formdata="formdata"></registrationdeleted>
+	</template>
+	<template v-else>
+		<registrationform :pmb="pmb" :formdata="formdata" :registration="registration"></registrationform>
+	</template>
+</div>

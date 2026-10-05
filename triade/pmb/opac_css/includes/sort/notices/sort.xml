@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: sort.xml,v 1.26 2019-04-08 14:46:05 apetithomme Exp $ -->
+<!-- $Id: sort.xml,v 1.28 2022/09/13 08:41:03 rtigero Exp $ -->
 <sort reference="notices" referencekey="notice_id" ppersoprefix="notices">
 	<field name="title" type="text" typefield="select" id="1">
 		<table>
-			<tablefield>index_sew</tablefield>
-		</table>
+            <filter>notices.niveau_biblio!='b'</filter>
+            <tablefield>index_sew</tablefield>
+        </table>
+        <table name="bulletins">
+            <filter>notices.niveau_biblio='b'</filter>
+            <tablefield>index_titre</tablefield>
+            <tablekey>num_notice</tablekey>
+            <link type="1n">
+                <referencefield>notice_id</referencefield>
+            </link>
+        </table>
 	</field>
 	
 	<field name="indexation_decimale" type="num" typefield="select" id="2">
@@ -159,7 +168,7 @@
 	
 	<field name="type_doc_sort" type="text" typefield="select" id="13">
 		<table>
-			<tablefield>typdoc</tablefield>
+			<tablefield marctype="doctype">typdoc</tablefield>
 		</table>
 	</field>
 	

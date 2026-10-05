@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -90,7 +90,7 @@ $saisieannee=$_GET["saisieannee"];
 
 </UL>
 <center>
-<table width=90% border=1 bordercolor=#000000">
+<table width=90% border=1 bordercolor=#000000" style="border-collapse: collapse;">
 <tr>
 <TD bgcolor=yellow align=center width=30%><?php print LANGASS18 ?></TD>
 <TD bgcolor=yellow align=center width=30%><?php print LANGASS17 ?></TD>
@@ -103,7 +103,7 @@ $data=affDst(); // id_dst,date,matiere,code_classe,heure,duree
 
 $tab_j=array();
 // $data : tab bidim - soustab 3 champs
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 {
         $date_recup_jma=dateFormBase($date);
 	if ($date_recup_jma == $data[$i][1]) {

@@ -32,7 +32,7 @@
   // Si la liste contenant les identifiants des utilisateurs selectionnes n'est pas vide
   if (!empty($sChoix)) {
     // Info sur les utilisateurs selectionnes
-    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY nomUtil");
+    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY nomUtil");
     while ($enr=$DB_CX->DbNextRow()) {
       $vSemaineType = substr($enr['util_semaine_type'],6).substr($enr['util_semaine_type'],0,6); // Semaine type mappee au format PHP (L->D => D->S)
       if (substr($vSemaineType,date("w",$sd),1)=="0") {
@@ -78,7 +78,7 @@
     // Parcours du tableau d'utilisateur pour recuperer toutes les notes
     while (list($sUtilID,$sNomUtil)=each($aUtilPartage)) {
       // Pour chaque utilisateur on verifie si on a acces a son planning en modification
-        $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sUtilID." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
+        $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sUtilID." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_NOTES < _DROIT_NOTE_MODIF_STATUT)) || ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION) || $sUtilID==$idUser) {
         $autoriseAffect = true;
       } else {
@@ -86,7 +86,7 @@
       }
       $sOutput .= "  <TR height=\"17\">\n";
       // Pour chaque utilisateur on verifie si on a acces a son planning en consultation
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sUtilID." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sUtilID." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_NOTES < _DROIT_NOTE_MODIF_STATUT)) || ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION) || $sUtilID==$idUser) {
         $sOutput .= "    <TD class=\"nomUtil\" style=\"padding-left:3px;padding-right:3px;\"><A href=\"javascript: substUser('".$sUtilID."');\" title=\"".trad("DISPOJ_PLANNING_UTIL")."\">".$sNomUtil."</A></TD>\n";
         $autoriseConsult = true;
@@ -105,7 +105,7 @@
       $sql .= "       age_createur_id, CONCAT(".$NOM_UTIL_CREATEUR.") AS nomCreateur, age_prive, age_date_creation,";
       $sql .= "       age_date_modif, age_modificateur_id, CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur, age_id,";
       $sql .= "       age_lieu, CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact, age_date";
-      $sql .= " FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2";
+      $sql .= " FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2";
       $sql .= " WHERE aco_util_id=".$sUtilID;
       $sql .= "  AND age_id=aco_age_id";
       $sql .= "  AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))";

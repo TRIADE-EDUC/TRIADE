@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Profils de gestion droits d'acces Emprunteurs - Rubriques
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: domain.xml,v 1.4 2020/07/03 16:09:08 dbellamy Exp $ -->
+
+<domain>
+	<!--  empr -->
+	<user lib="msg:379" properties="1,2,3" >
+		<ref type="table" name="empr" key="id_empr" />
+		
+		<!--  champ emprunteur categorie de lecteur  -->
+		<property_link with="1">
+			<r_query type="field" value="empr_categ" />
+		</property_link>
+		
+		<!--  champ emprunteur localisation  -->
+		<property_link with="2">
+			<r_query type="field" value="empr_location" />
+		</property_link>
+		
+		<!--  variable session vue OPAC  -->
+		<property_link with="3" enable="check_param|opac,view_activate,1">
+			<r_query type="session" value="opac_view" />
+		</property_link>
+		
+		<!--  champ emprunteur code statistique de lecteur  -->
+		<property_link with="4">
+			<r_query type="field" value="empr_codestat" />
+		</property_link>
+	</user>
+
+	<!--  cms_sections -->
+	<resource lib="msg:editorial_content_publication_state" properties="5">
+		<ref type="table" name="cms_sections" key="id_section" />
+		<property_link with="5" >
+			<c_query type="var" value="cms_editorial_form_publication_state" />			<!--  variable cms_editorial_form_publication_state postée lors de la création du document -->
+			<i_query type="field" value="section_publication_state" />					<!--  variable section_publication_state stockée dans la table cms_sections -->
+		</property_link>
+	</resource>
+
+	<properties>
+		<property id="1" lib="msg:lecteurs_categories">
+			<ref type="table" name="empr_categ" key="id_categ_empr" value="libelle" />
+		</property>
+		<property id="2" lib="msg:21">
+			<ref type="table" name="docs_location" key="idlocation" value="location_libelle" />
+		</property>	
+		<property id="3" lib="msg:opac_view">
+			<ref type="table" name="opac_views" key="opac_view_id" value="opac_view_name" />
+		</property>
+		<property id="4" lib="msg:24">
+			<ref type="table" name="empr_codestat" key="idcode" value="libelle" />
+		</property>
+		
+		<property id="5" lib="msg:editorial_content_publication_state">
+			<ref type="table" name="cms_editorial_publications_states" key="id_publication_state" value="editorial_publication_state_label" />
+		</property>
+		
+	</properties>
+
+	<controls>
+<!-- 
+		<control id='1' global="yes" lib='msg:dom_mod_rights' />
+		<control id='2' global="yes" lib='dom_mod_pro' />
+ -->
+ 		<control id='3' lib='view_cms_section' />
+		<control id='10' global="yes" lib='dom_override_rights' />
+	</controls>
+</domain>

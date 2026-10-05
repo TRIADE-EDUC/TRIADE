@@ -66,11 +66,11 @@ if (isset($_POST["modif"])) {
 $nom_carnet=chercheNomCarnet($idcarnet);
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Modifier le carnet de suivi : <font id='color2'> $nom_carnet </font>" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -80,7 +80,7 @@ $nom_carnet=chercheNomCarnet($idcarnet);
 
 <?php
 $data=listeCompetence($idcarnet); // id,idcarnet,libelle,ordre
-if (count($data) > 0 ) {
+if (countTriade($data) > 0 ) {
 	print "<form  method='post' name='formulaire' >";
 	print "<table>";
 ?>
@@ -88,7 +88,7 @@ if (count($data) > 0 ) {
 <td align=center>
      		<select size=10 name="saisie_recherche" style="width:330px" multiple="multiple">
 <?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "<option value=\"".$data[$i][0]."\"  >".trunchaine($data[$i][2],46)."</option>";
 	}
 ?>
@@ -130,17 +130,17 @@ if (count($data) > 0 ) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

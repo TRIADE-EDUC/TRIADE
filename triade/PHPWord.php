@@ -209,7 +209,7 @@ class PHPWord {
 	 * @return int
 	 */
 	private function _countSections() {
-		return count($this->_sectionCollection);
+		return countTriade($this->_sectionCollection);
 	}
     
     /**

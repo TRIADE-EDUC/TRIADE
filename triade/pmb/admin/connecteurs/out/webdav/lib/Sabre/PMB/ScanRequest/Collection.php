@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Collection.php,v 1.7 2017-07-07 14:14:48 arenou Exp $
+// $Id: Collection.php,v 1.10.4.2 2025/03/13 16:31:11 qvarin Exp $
 namespace Sabre\PMB\ScanRequest;
 
 use Sabre\DAV;
 use Sabre\PMB;
-use Sabre\PMB\Music;
+use encoding_normalize;
 
 class Collection extends PMB\Collection {
-	
+
 	protected $scan_requests = array();
-	
-	function get_code_from_name($name){
+
+	public function get_code_from_name($name){
+	    global $matches;
 		$val="";
 		if(preg_match("/\(([ERNBPSMI][0-9]{1,})\)$/i",$name,$matches)){
 			$val=$matches[1];
@@ -22,10 +23,8 @@ class Collection extends PMB\Collection {
 		}
 		return $val;
 	}
-	
-	function getChildren(){
-		global $tdoc;
-		
+
+	public function getChildren(){
 		$children = array();
 		$children_type = "";
 		if($this->type == "rootNode"){
@@ -77,8 +76,8 @@ class Collection extends PMB\Collection {
 		}
 		return $children;
 	}
-	
-	function getChild($name){
+
+	public function getChild($name){
 		switch($name){
 			case "[Demandes]" :
 				$child = new ScanRequests($this->getScanRequests(),$this->config);
@@ -113,20 +112,20 @@ class Collection extends PMB\Collection {
 							break;
 						//Manifestation
 						case "M" :
-							$child = new Music\Manifestation("(".$code.")", $this->config);
+						    $child = new PMB\Music\Manifestation("(".$code.")", $this->config);
 							break;
 						//Manifestation
 						case "I" :
-							$child = new Music\SubManifestation("(".$code.")", $this->config);
+						    $child = new PMB\Music\SubManifestation("(".$code.")", $this->config);
 							break;
 						default :
 							throw new DAV\Exception\BadRequest('Bad Request: ' . $name);
 							break;
 					}
 				}else{
-					//document num√©rique d'une notice
+					//document numÈrique d'une notice
 					$query = "select distinct explnum_id,notice_id from explnum join notices on explnum_bulletin = 0 and explnum_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
-					//document num√©riques d'une notice de bulletin
+					//document numÈriques d'une notice de bulletin
 					$query.= "union select distinct explnum_id,notice_id from explnum join bulletins on explnum_notice = 0 and explnum_bulletin = bulletin_id join notices on num_notice != 0 and num_notice = notice_id where explnum_nomfichier = '".addslashes($name)."' and explnum_mimetype != 'URL'";
 					//$query = $this->filterExplnums($query);
 					$result  = pmb_mysql_query($query);
@@ -134,17 +133,17 @@ class Collection extends PMB\Collection {
 						$row = pmb_mysql_fetch_object($result);
 						$child = new PMB\Explnum("(E".$row->explnum_id.")");
 					}else{
-						throw new DAV\Exception\FileNotFound('File not found: ' . $name);
+					    throw new DAV\Exception\NotFound('File not found: ' . $name);
 					}
 					break;
 				}
 		}
 		return $child;
 	}
-	
-	
-	function childExists($name){
-		//pour les besoin des tests, on veut passer par la m√©thode de cr√©ation...
+
+
+	public function childExists($name){
+		//pour les besoin des tests, on veut passer par la mÈthode de crÈation...
 		return false;
 		switch($name){
 			case "[Demandes]" :
@@ -163,7 +162,7 @@ class Collection extends PMB\Collection {
 						case "P" :
 						case "S" :
 							return true;
-							break;	
+							break;
 						default :
 							return false;
 							break;
@@ -180,29 +179,30 @@ class Collection extends PMB\Collection {
 				}
 		}
 	}
-	
-	function getName(){
+
+	public function getName(){
 		//must be defined
+		return '';
 	}
-	
-	function createFile($name, $data = null) {
+
+	public function createFile($name, $data = null) {
 		if($this->check_write_permission()){
 			global $base_path;
 			global $id_rep;
 			global $charset;
-			
+
 			$name = str_replace('\"', '', str_replace('\'', '', $name));
-			
+
 			if($charset !=='utf-8'){
-				$name=utf8_decode($name);
+				$name=encoding_normalize::utf8_decode($name);
 			}
 			$filename = realpath($base_path."/temp/")."/webdav_".md5($name.time()).".".extension_fichier($name);
 			$fp = fopen($filename, "w");
 			if(!$fp){
-				//on a pas le droit d'√©criture 
+				//on a pas le droit d'Ècriture
 				throw new DAV\Exception\Forbidden('Permission denied to create file (filename ' . $filename . ')');
 			}
-			
+
 			while ($buf = fread($data, 1024)){
 				fwrite($fp, $buf);
 			}
@@ -210,14 +210,14 @@ class Collection extends PMB\Collection {
 			if(!file_exists($filename)){
 				//Erreur de copie du fichier
 				unlink($filename);
-				throw new Sabre_DAV_Exception_FileNotFound('Empty file (filename ' . $filename . ')');
+				throw new DAV\Exception\NotFound('Empty file (filename ' . $filename . ')');
 			}
 			if(!filesize($filename)){
 				//Premier PUT d'un client Windows...
 				unlink($filename);
 				return;
 			}
-			
+
 			$notice_id = $this->get_notice_by_meta($name,$filename);
 			$bulletin_id = 0;
 			$this->update_notice($notice_id);
@@ -245,16 +245,16 @@ class Collection extends PMB\Collection {
 				unlink($filename);
 			}
 		}else{
-			//on a pas le droit d'√©criture 
+			//on a pas le droit d'Ècriture
 			throw new DAV\Exception\Forbidden('Permission denied to create file (filename ' . $name . ')');
 		}
     }
-    
-    function update_scan_request_infos($scan_request_id){
+
+    public function update_scan_request_infos($scan_request_id){
     	//must be defined
     }
-    
-    function filterScanRequests($query){
+
+    public function filterScanRequests($query){
     	//on remonte d'abord les parents...
     	$current = $this;
     	$parents = array();
@@ -266,8 +266,7 @@ class Collection extends PMB\Collection {
     	foreach($parents as $parent){
     		$parent->getScanRequests();
     	}
-    	
-    	global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
+
 		global $webdav_current_user_id;
  		switch($this->config['authentication']){
 			case "gestion" :
@@ -289,33 +288,33 @@ class Collection extends PMB\Collection {
 					$query.= " and uni.id_scan_request in (".$this->parentNode->restricted_objects.")";
 				}
 				break;
-			default ://On ne doit jamais passer dans ce cas l√†
+			default ://On ne doit jamais passer dans ce cas l‡
 				$query="";
 				break;
-		}	
+		}
 		$this->scan_requests =array();
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				$this->scan_requests[] = $row->id_scan_request;
 			}
-		}else{//Si j'ai plus de demande dans cette branche il faut le garde en m√©moire sinon dans la branche du dessous on repart avec toute les demandes
+		}else{//Si j'ai plus de demande dans cette branche il faut le garde en mÈmoire sinon dans la branche du dessous on repart avec toute les demandes
 			$this->scan_requests[] = "'ensemble_vide'";
 		}
 		$this->restricted_objects = implode(",",$this->scan_requests);
     }
-    
-    function getScanRequests(){
+
+    public function getScanRequests(){
     	return array();
     }
-    
-    function getQueryFilterNotices($query){
-    	global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
+
+    public function getQueryFilterNotices($query){
+    	global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice;
     	global $webdav_current_user_id;
     	switch($this->config['authentication']){
     		case "gestion" :
     			$acces_j='';
-    			//soit les droits d'acc√®s sont activ√©s et il est possible que la notice ne soit pas visible pour certaines personnes
+    			//soit les droits d'accËs sont activÈs et il est possible que la notice ne soit pas visible pour certaines personnes
     			//soit c'est la requete de base
     			if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
     				$ac= new \acces();
@@ -326,47 +325,47 @@ class Collection extends PMB\Collection {
     			break;
     		case "opac" :
     			$acces_j='';
-    			//droit d'acc√®s ou statut
+    			//droit d'accËs ou statut
     			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
     				$ac= new \acces();
     				$dom_1= $ac->setDomain(2);
     				$acces_j = $dom_1->getJoin($webdav_current_user_id,32,'notice_id');
     				$query = "select notice_id from (".$query.") as uni ".$acces_j;
     			}else{
-    				$query = "select uni.notice_id from (".$query.") as uni join notices on notices.notice_id = uni.notice_id 
-    					join notice_statut on notices.statut= id_notice_statut 
+    				$query = "select uni.notice_id from (".$query.") as uni join notices on notices.notice_id = uni.notice_id
+    					join notice_statut on notices.statut= id_notice_statut
     					where ((explnum_visible_opac=1 and explnum_visible_opac_abon=0)".($webdav_current_user_id ?" or (explnum_visible_opac_abon=1 and explnum_visible_opac=1)":"").")
     					and ((notice_scan_request_opac=1 and notice_scan_request_opac_abon=0)".($webdav_current_user_id ?" or (notice_scan_request_opac_abon=1 and notice_scan_request_opac=1)":"").")";
     			}
     			break;
     		case "anonymous" :
     			//on doit regarder
-    			//droit d'acc√®s ou statut
+    			//droit d'accËs ou statut
     			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
     				$ac= new \acces();
     				$dom_1= $ac->setDomain(2);
     				$acces_j = $dom_1->getJoin(0,32,'notice_id');
     				$query = "select notice_id from (".$query.") as uni ".$acces_j;
     			}else{
-    				$query = "select uni.notice_id from (".$query.") as uni join notices on notices.notice_id = uni.notice_id 
-    						join notice_statut on notices.statut= id_notice_statut 
+    				$query = "select uni.notice_id from (".$query.") as uni join notices on notices.notice_id = uni.notice_id
+    						join notice_statut on notices.statut= id_notice_statut
     						where explnum_visible_opac=1 and explnum_visible_opac_abon=0 and notice_scan_request_opac=1 and notice_scan_request_opac_abon=0";
     			}
     			break;
-    		default ://On ne doit jamais passer dans ce cas l√†
+    		default ://On ne doit jamais passer dans ce cas l‡
     			$query="";
     			break;
     	}
     	return $query;
     }
-    
-    function getQueryFilterBulletins($query){
-    	global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice,$gestion_acces_empr_docnum;
+
+    public function getQueryFilterBulletins($query){
+    	global $gestion_acces_active,$gestion_acces_user_notice,$gestion_acces_empr_notice;
     	global $webdav_current_user_id;
     	switch($this->config['authentication']){
     		case "gestion" :
     			$acces_j='';
-    			//soit les droits d'acc√®s sont activ√©s et il est possible que la notice ne soit pas visible pour certaines personnes
+    			//soit les droits d'accËs sont activÈs et il est possible que la notice ne soit pas visible pour certaines personnes
     			//soit c'est la requete de base
     			if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
     				$ac= new \acces();
@@ -379,7 +378,7 @@ class Collection extends PMB\Collection {
     			break;
     		case "opac" :
     			$acces_j='';
-    			//droit d'acc√®s ou statut
+    			//droit d'accËs ou statut
     			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
     				$ac= new \acces();
     				$dom_1= $ac->setDomain(2);
@@ -398,7 +397,7 @@ class Collection extends PMB\Collection {
     			break;
     		case "anonymous" :
     			//on doit regarder
-    			//droit d'acc√®s ou statut
+    			//droit d'accËs ou statut
     			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
     				$ac= new \acces();
     				$dom_1= $ac->setDomain(2);
@@ -407,14 +406,14 @@ class Collection extends PMB\Collection {
     					join bulletins on bulletins.bulletin_id = uni.bulletin_id
     					".$acces_j;
     			}else{
-    				$query = "select uni.bulletin_id, uni.bulletin_num_notice from (".$query.") as uni 
+    				$query = "select uni.bulletin_id, uni.bulletin_num_notice from (".$query.") as uni
     					join bulletins on bulletins.bulletin_id = uni.bulletin_id
     					join notices on notices.notice_id = uni.bulletin_num_notice
-    					join notice_statut on notices.statut= id_notice_statut 
+    					join notice_statut on notices.statut= id_notice_statut
     					where explnum_visible_opac=1 and explnum_visible_opac_abon=0 and notice_scan_request_opac=1 and notice_scan_request_opac_abon=0";
     			}
     			break;
-    		default ://On ne doit jamais passer dans ce cas l√†
+    		default ://On ne doit jamais passer dans ce cas l‡
     			$query="";
     			break;
     	}

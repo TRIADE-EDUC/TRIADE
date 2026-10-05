@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: bcdi_memodocnet.xsl,v 1.2.14.1 2024/08/28 14:10:18 rtigero Exp $ -->
+
 <!DOCTYPE stylesheet [
 	<!ENTITY MAJUSCULE "ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 	<!ENTITY MINUSCULE "abcdefghijklmnopqrstuvwxyz">
@@ -14,7 +20,7 @@
 <unimarc>
 		<xsl:apply-templates select="NOTICES/NOTICE_GENERALE"/>
 		<xsl:apply-templates select="NOTICES/NOTICE_PARTIE/NOTICE_GENERALE"/>
-		<xsl:apply-templates select="NOTICES/NOTICE_PARTIE"/>	
+		<xsl:apply-templates select="NOTICES/NOTICE_PARTIE"/>
 </unimarc>
 </xsl:template>
 
@@ -27,7 +33,7 @@
 	</xsl:call-template>
 </xsl:template>
 
-	
+
 <xsl:template match="NOTICES/NOTICE_PARTIE">
 	<xsl:call-template name="do_notice">
 		<xsl:with-param name="notice" select="."/>
@@ -43,15 +49,15 @@
 		<xsl:element name="rs">*</xsl:element>
 		<xsl:element name="ru">*</xsl:element>
 		<xsl:element name="el">1</xsl:element>
-		
+
 		<!-- Niveau hiérarchique et bibliographique -->
 		<xsl:if test="$notice/TYPE_NOTICE_N">
 			<xsl:call-template name="type_notice">
 				<xsl:with-param name="noeud" select="$notice/TYPE_NOTICE_N"/>
 			</xsl:call-template>
 		</xsl:if>
-		
-		<!-- doctype -->	
+
+		<!-- doctype -->
 		<xsl:choose>
 			<xsl:when test="$notice/TYPE_DOC_N">
 				<xsl:call-template name="type_doc">
@@ -62,11 +68,11 @@
 				<xsl:call-template name="type_doc">
 					<xsl:with-param name="noeud" select="$notice/NOTICE_GENERALE/TYPE_DOC_N"/>
 				</xsl:call-template>
-			</xsl:when>			
+			</xsl:when>
 		</xsl:choose>
-		
+
 		<!-- Dans l'ordre -->
-		<!-- Numéro de référence -->		
+		<!-- Numéro de référence -->
 		<xsl:call-template name="ref">
 			<xsl:with-param name="noeud" select="$notice/IDENTITE_N"/>
 		</xsl:call-template>
@@ -132,15 +138,15 @@
 					<xsl:otherwise>
 						<xsl:call-template name="periodiques">
 							<xsl:with-param name="noeud" select="$notice"/>
-						</xsl:call-template>					
+						</xsl:call-template>
 					</xsl:otherwise>
-				</xsl:choose>								
-			</xsl:when>			
+				</xsl:choose>
+			</xsl:when>
 			<xsl:when test="($notice/TYPE_NOTICE_N='Partie' or $notice/TYPE_NOTICE_N='Contribution') and ($notice/NOTICE_GENERALE/IDENTITE_N != $notice/IDENTITE_N)">
 				<xsl:call-template name="chapitre">
 					<xsl:with-param name="noeud" select="$notice"/>
 				</xsl:call-template>
-			</xsl:when>			
+			</xsl:when>
 		</xsl:choose>
 		<!-- Descripteurs -->
 		<xsl:call-template name="descripteurs">
@@ -181,7 +187,7 @@
 	<xsl:param name="compteur"/>
 	<xsl:param name="fonctions"/>
 	<xsl:param name="notc"/>
-	
+
 	<xsl:variable name="auteur_no" select="substring-before($fonctions,'/')"/>
 	<xsl:element name="f">
 		<!-- code unimarc : aut physique ou moral -->
@@ -253,11 +259,11 @@
 			<xsl:with-param name="fonctions" select="substring-after($fonctions,'/')"/>
 			<xsl:with-param name="notc" select="$notc"/>
 		</xsl:call-template>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="AUTEUR_A">
-	<xsl:choose>	
+	<xsl:choose>
 		<xsl:when test="contains(.,',')">
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
@@ -281,7 +287,7 @@
 				<xsl:attribute name="c">f</xsl:attribute>
 				<xsl:value-of select="concat(../DATE_DE_NAISSANCE_A,'-',../DATE_DE_DECES_A)"/>
 		</xsl:element>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 <!-- Identifiant unique IDENTITE_N -->
@@ -344,7 +350,7 @@
 				<xsl:value-of select="substring-after(substring-after($noeud,'/'),'/')"/>
 				<xsl:value-of select="substring-before(substring-after($noeud,'/'),'/')"/>
 				<xsl:value-of select="substring-before($noeud,'/')"/>
-			</xsl:element>	
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -365,7 +371,7 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
 				<xsl:value-of select="$noeud"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -373,7 +379,7 @@
 <!-- COLLATION -->
 <xsl:template name="collation">
 	<xsl:param name="noeud"/>
-	<xsl:if test="normalize-space($noeud)!=''">	
+	<xsl:if test="normalize-space($noeud)!=''">
 		<xsl:element name="f">
 			<xsl:attribute name="c">215</xsl:attribute>
 			<xsl:attribute name="ind"><xsl:text>  </xsl:text></xsl:attribute>
@@ -382,14 +388,14 @@
 					<xsl:attribute name="c">a</xsl:attribute>
 					<xsl:value-of select="$noeud"/>
 				</xsl:element>
-			</xsl:if>	
+			</xsl:if>
 			<xsl:if test="$noeud/../STANDARD_N">
 				<xsl:element name="s">
 					<xsl:attribute name="c">d</xsl:attribute>
 					<xsl:value-of select="$noeud/../STANDARD_N"/>
 				</xsl:element>
-			</xsl:if>						
-		</xsl:element>		
+			</xsl:if>
+		</xsl:element>
 	</xsl:if>
 </xsl:template>
 
@@ -449,7 +455,7 @@
 				<xsl:value-of select="$noeud"/>
 			</xsl:element>
 		</xsl:element>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 <!-- ISBN -->
@@ -470,7 +476,7 @@
 					<xsl:attribute name="c">d</xsl:attribute>
 					<xsl:value-of select="$noeud/../COUT_N"/>
 				</xsl:element>
-			</xsl:if>			
+			</xsl:if>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -485,7 +491,7 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
 				<xsl:value-of select="normalize-space(translate($noeud,'/',''))"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -500,7 +506,7 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
 				<xsl:value-of select="$noeud"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -512,15 +518,15 @@
 		<xsl:for-each select='$noeud'>
 			<xsl:variable name="pos" select="position()"/>
 			<xsl:variable name="dat" select="$noeud/../DATE_PARUTION_N"/>
-				
+
 			<xsl:if test="$pos &lt; '3'">
 				<xsl:call-template name="do_editeur">
 					<xsl:with-param name="noeud_editeur" select="."/>
 					<xsl:with-param name="position" select="$pos"/>
 					<xsl:with-param name="date" select="$dat"/>
-				</xsl:call-template>				
-			</xsl:if>			
-		</xsl:for-each>		
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:if>
 </xsl:template>
 
@@ -528,7 +534,7 @@
 	<xsl:param name="noeud_editeur"/>
 	<xsl:param name="position"/>
 	<xsl:param name="date"/>
-	
+
 	<xsl:element name="f">
 		<xsl:attribute name="c">210</xsl:attribute>
 		<xsl:attribute name="ind"><xsl:text>  </xsl:text></xsl:attribute>
@@ -568,13 +574,13 @@
 				<xsl:value-of select="normalize-space(substring-before($noeud_editeur/AUTRES_FORMES_E,'/'))"/>
 			</xsl:element>
 		</xsl:if>
-	</xsl:element>	
+	</xsl:element>
 </xsl:template>
 
 <!-- DATE EDITION -->
 <xsl:template name="date_edition">
 	<xsl:param name="noeud"/>
-	<xsl:if test="normalize-space($noeud)!='' and not($noeud/../EDITEURS)">	
+	<xsl:if test="normalize-space($noeud)!='' and not($noeud/../EDITEURS)">
 		<xsl:element name="f">
 			<xsl:attribute name="c">210</xsl:attribute>
 			<xsl:attribute name="ind"><xsl:text>  </xsl:text></xsl:attribute>
@@ -582,14 +588,14 @@
 				<xsl:attribute name="c">d</xsl:attribute>
 				<xsl:value-of select="$noeud"/>
 			</xsl:element>
-		</xsl:element>	
+		</xsl:element>
 	</xsl:if>
 </xsl:template>
 
 <!-- COLLECTIONS -->
 <xsl:template name="collection">
 	<xsl:param name="noeud"/>
-	<xsl:if test="$noeud">		
+	<xsl:if test="$noeud">
 		<xsl:element name="f">
 			<xsl:attribute name="c">225</xsl:attribute>
 			<xsl:attribute name="ind">1 </xsl:attribute>
@@ -604,15 +610,15 @@
 					<xsl:attribute name="c">v</xsl:attribute>
 					<xsl:value-of select="NO_COLLECTION_N"/>
 				</xsl:element>
-			</xsl:if>		
+			</xsl:if>
 			<!-- ISSN COLLECTION -->
 			<xsl:if test="$noeud/ISSN_C_C">
 				<xsl:element name="s">
 					<xsl:attribute name="c">x</xsl:attribute>
 					<xsl:value-of select="$noeud/ISSN_C_C"/>
 				</xsl:element>
-			</xsl:if>			
-		</xsl:element>		
+			</xsl:if>
+		</xsl:element>
 	</xsl:if>
 </xsl:template>
 
@@ -656,7 +662,7 @@
 
 <!-- MOTS CLES -->
 <xsl:template name="mots_clefs">
-	<xsl:param name="noeud"/>	
+	<xsl:param name="noeud"/>
 	<xsl:if test="normalize-space($noeud)!=''">
 		<xsl:call-template name="construct_repeat">
 			<xsl:with-param name="chaine" select="normalize-space($noeud)"/>
@@ -686,7 +692,7 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
 				<xsl:value-of select="DOCUMENTS/COTE_D"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 </xsl:template>
@@ -711,7 +717,7 @@
 				<xsl:with-param name="subfield_number" select="'a'"/>
 		</xsl:call-template>
 	</xsl:if>
-	
+
 	<!-- Genre -->
 	<xsl:if test="$noeud/NATURES_N">
 		<xsl:call-template name="construct_repeat">
@@ -720,7 +726,7 @@
 				<xsl:with-param name="subfield_number" select="'a'"/>
 		</xsl:call-template>
 	</xsl:if>
-	
+
 	<!-- Année de péremption -->
 	<xsl:if test="$noeud/DATE_PEREMPTION_N">
 		<xsl:element name="f">
@@ -728,7 +734,7 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">a</xsl:attribute>
 				<xsl:value-of select="$noeud/DATE_PEREMPTION_N"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 
@@ -743,7 +749,7 @@
 				<xsl:value-of select="substring-before(substring-after($noeud/DATE_SAISIE_N,'/'),'/')"/>
 				<xsl:text>-</xsl:text>
 				<xsl:value-of select="substring-before($noeud/DATE_SAISIE_N,'/')"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
 
@@ -755,7 +761,7 @@
 				<xsl:with-param name="subfield_number" select="'a'"/>
 		</xsl:call-template>
 	</xsl:if>
-	
+
 	<!-- Niveau -->
 	<xsl:if test="$noeud/NIVEAUX_N">
 		<xsl:call-template name="construct_repeat">
@@ -771,29 +777,29 @@
 	<xsl:param name="chaine"/>
 	<xsl:param name="field_number"/>
 	<xsl:param name="subfield_number"/>
-	
-	<xsl:if test="normalize-space(substring-before($chaine,'/'))">		
+
+	<xsl:if test="normalize-space(substring-before($chaine,'/'))">
 		<xsl:variable name="chaine_no" select="substring-before($chaine,'/')"/>
 		<xsl:element name="f">
 			<xsl:attribute name="c"><xsl:value-of select="$field_number"/></xsl:attribute>
 			<xsl:element name="s">
 				<xsl:attribute name="c"><xsl:value-of select="$subfield_number"/></xsl:attribute>
 				<xsl:value-of select="normalize-space($chaine_no)"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
-	
-	<xsl:if test="not(normalize-space(substring-before($chaine,'/'))) and normalize-space($chaine)">	
+
+	<xsl:if test="not(normalize-space(substring-before($chaine,'/'))) and normalize-space($chaine)">
 		<xsl:variable name="chaine_no" select="$chaine"/>
 		<xsl:element name="f">
 			<xsl:attribute name="c"><xsl:value-of select="$field_number"/></xsl:attribute>
 			<xsl:element name="s">
 				<xsl:attribute name="c"><xsl:value-of select="$subfield_number"/></xsl:attribute>
 				<xsl:value-of select="normalize-space($chaine_no)"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
 	</xsl:if>
-	
+
 	<xsl:if test="substring-after($chaine,'/')">
 		<xsl:call-template name="construct_repeat">
 			<xsl:with-param name="chaine" select="substring-after($chaine,'/')"/>
@@ -812,9 +818,9 @@
 			<xsl:element name="s">
 				<xsl:attribute name="c">u</xsl:attribute>
 				<xsl:value-of select="normalize-space($noeud)"/>
-			</xsl:element>			
+			</xsl:element>
 		</xsl:element>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 <!-- Périodiques -->
@@ -824,7 +830,7 @@
 		<xsl:element name="f">
 			<xsl:attribute name="c">464</xsl:attribute>
 			<xsl:attribute name="ind"><xsl:text>  </xsl:text></xsl:attribute>
-			
+
 			<!-- info perio -->
 			<xsl:choose>
 				<xsl:when test="normalize-space($noeud/COLLECTIONS)">
@@ -841,35 +847,35 @@
 								<xsl:text>Notice Sans Titre (Notice de Periodique)</xsl:text>
 							</xsl:element>
 						</xsl:otherwise>
-					</xsl:choose>			
+					</xsl:choose>
 					<xsl:if test="$noeud/COLLECTIONS/ISSN_C_C">
 						<xsl:element name="s">
 							<xsl:attribute name="c">x</xsl:attribute>
 							<xsl:value-of select="$noeud/COLLECTIONS/ISSN_C_C"/>
 						</xsl:element>
-					</xsl:if>								
+					</xsl:if>
 				</xsl:when>
 				<xsl:when test="$noeud/TITRE_NG_N">
 					<xsl:element name="s">
 						<xsl:attribute name="c">t</xsl:attribute>
 						<xsl:value-of select="normalize-space($noeud/TITRE_NG_N)"/>
-					</xsl:element>				
+					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:element name="s">
 						<xsl:attribute name="c">t</xsl:attribute>
 						<xsl:text>Notice Sans Titre (Notice de Periodique)</xsl:text>
 					</xsl:element>
-				</xsl:otherwise>	
+				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<!-- info bulletin -->
 			<xsl:if test="$noeud/NO_COLLECTION_N|$noeud/NOTICE_GENERALE/NO_COLLECTION_N">
 				<xsl:variable name="num_bulletin">
 					<xsl:choose>
 						<xsl:when test="normalize-space($noeud/NO_COLLECTION_N)!=''"><xsl:value-of select="$noeud/NO_COLLECTION_N"/></xsl:when>
 						<xsl:when test="normalize-space($noeud/NOTICE_GENERALE/NO_COLLECTION_N)!=''"><xsl:value-of select="$noeud/NOTICE_GENERALE/NO_COLLECTION_N"/></xsl:when>
-					</xsl:choose>		
+					</xsl:choose>
 				</xsl:variable>
 				<xsl:if test="$num_bulletin!=''">
 					<xsl:element name="s">
@@ -877,16 +883,16 @@
 						<xsl:value-of select="$num_bulletin"/>
 					</xsl:element>
 				</xsl:if>
-			</xsl:if>		
-		
+			</xsl:if>
+
 			<!-- date de bulletin -->
 			<xsl:if test="$noeud/DATE_PARUTION_N">
 				<xsl:element name="s">
 					<xsl:attribute name="c">d</xsl:attribute>
 					<xsl:value-of select="$noeud/DATE_PARUTION_N"/>
-				</xsl:element>				
+				</xsl:element>
 			</xsl:if>
-			
+
 			<!-- titre de bulletin -->
 			<xsl:if test="$noeud/TITRE_NG_N">
 				<xsl:element name="s">
@@ -894,7 +900,7 @@
 					<xsl:value-of select="$noeud/TITRE_NG_N"/>
 				</xsl:element>
 			</xsl:if>
-			
+
 			<!-- nb pages -->
 			<xsl:if test="$noeud/COLLATION_N">
 				<xsl:element name="s">
@@ -902,14 +908,14 @@
 					<xsl:value-of select="$noeud/COLLATION_N"/>
 				</xsl:element>
 			</xsl:if>
-		</xsl:element>	
-	</xsl:if>	
+		</xsl:element>
+	</xsl:if>
 </xsl:template>
 
 <!-- Chapitre -->
 <xsl:template name="chapitre">
 	<xsl:param name="noeud"/>
-	<!--  on integre la notice mere -->	
+	<!--  on integre la notice mere -->
 	<xsl:if test="normalize-space($noeud/NOTICE_GENERALE/TITRE_N) != ''">
 		<xsl:element name="f">
 		<xsl:attribute name="c">463</xsl:attribute>
@@ -947,24 +953,24 @@
 <xsl:template name="exemplaires">
 	<xsl:param name="n_ex"/>
 	<xsl:param name="noeud"/>
-	
-	<xsl:if test="$noeud[$n_ex]">	
+
+	<xsl:if test="$noeud[$n_ex]">
 		<xsl:element name="f">
 			<xsl:attribute name="c">995</xsl:attribute>
 			<xsl:attribute name="ind"><xsl:text>  </xsl:text></xsl:attribute>
-			<!-- Localisation -->			
+			<!-- Localisation -->
 			<xsl:if test="$noeud[$n_ex]/EMPLACEMENT_X">
 				<xsl:element name="s">
 					<xsl:attribute name="c">a</xsl:attribute>
 					<xsl:value-of select="$noeud[$n_ex]/EMPLACEMENT_X"/>
 				</xsl:element>
-			</xsl:if>	
+			</xsl:if>
 			<!-- Code barre -->
 			<xsl:call-template name="code_barre">
 				<xsl:with-param name="n_ex" select="$n_ex"/>
-				<xsl:with-param name="noeud_expl" select="$noeud"/>	
+				<xsl:with-param name="noeud_expl" select="$noeud"/>
 			</xsl:call-template>
-			
+
 			<!-- Cote -->
 			<xsl:choose>
 				<xsl:when test="$noeud[$n_ex]/COTE_E_X">
@@ -972,7 +978,7 @@
 						<xsl:attribute name="c">k</xsl:attribute>
 						<xsl:value-of select="$noeud[$n_ex]/COTE_E_X"/>
 					</xsl:element>
-				</xsl:when>	
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:element name="s">
 						<xsl:attribute name="c">k</xsl:attribute>
@@ -980,7 +986,7 @@
 					</xsl:element>
 				</xsl:otherwise>
 			</xsl:choose>
-					
+
 			<!-- Support -->
 			<xsl:if test="$noeud/../SUPPORT_N">
 				<xsl:element name="s">
@@ -988,7 +994,7 @@
 					<xsl:value-of select="$noeud/../SUPPORT_N"/>
 				</xsl:element>
 			</xsl:if>
-			
+
 			<!-- Section -->
 			<xsl:if test="$noeud/../PUBLIC_N">
 				<xsl:element name="s">
@@ -996,8 +1002,8 @@
 					<xsl:value-of select="$noeud/../PUBLIC_N"/>
 				</xsl:element>
 			</xsl:if>
-			
-			<!-- Statut -->				
+
+			<!-- Statut -->
 			<xsl:if test="normalize-space($noeud[$n_ex]/STATUT_X)!=''">
 				<xsl:element name="s">
 					<xsl:attribute name="c">o</xsl:attribute>
@@ -1006,42 +1012,42 @@
 						<xsl:when test="$noeud[$n_ex]/STATUT_X='Hors-Prêt'"><xsl:text>Consultable sur place</xsl:text></xsl:when>
 						<xsl:when test="$noeud[$n_ex]/STATUT_X='Mis au pilon'"><xsl:text>Pilonné</xsl:text></xsl:when>
 						<xsl:otherwise><xsl:value-of select="$noeud[$n_ex]/STATUT_X"/></xsl:otherwise>
-					</xsl:choose>					
+					</xsl:choose>
 				</xsl:element>
 			</xsl:if>
-				
+
 			<!-- Prix -->
 			<xsl:if test="$noeud[$n_ex]/COUT_E_X">
 				<xsl:element name="s">
 					<xsl:attribute name="c">p</xsl:attribute>
 					<xsl:value-of select="$noeud[$n_ex]/COUT_E_X"/>
 				</xsl:element>
-			</xsl:if>	
-			
+			</xsl:if>
+
 			<!-- Commentaire non bloquant -->
 			<xsl:if test="$noeud[$n_ex]/DIVEXE_X">
 				<xsl:element name="s">
 					<xsl:attribute name="c">u</xsl:attribute>
 					<xsl:value-of select="$noeud[$n_ex]/DIVEXE_X"/>
 				</xsl:element>
-			</xsl:if>							
-						
-			
-						
+			</xsl:if>
+
+
+
 		</xsl:element>
 		<xsl:if test="$noeud[$n_ex+1]">
 			<xsl:call-template name="exemplaires">
-				<xsl:with-param name="n_ex" select="$n_ex+1"/>	
+				<xsl:with-param name="n_ex" select="$n_ex+1"/>
 				<xsl:with-param name="noeud" select="$noeud"/>
 			</xsl:call-template>
 		</xsl:if>
-	</xsl:if>	
+	</xsl:if>
 </xsl:template>
 
 <!-- Numéro d'exemplaire -->
 <xsl:template name="code_barre">
 		<xsl:param name="n_ex"/>
-		<xsl:param name="noeud_expl"/>	
+		<xsl:param name="noeud_expl"/>
 		<xsl:choose>
 			<xsl:when test="$noeud_expl[$n_ex]/CODE_EXEMPLAIRE_X">
 				<xsl:element name="s">
@@ -1053,7 +1059,7 @@
 				<xsl:element name="s">
 					<xsl:attribute name="c">f</xsl:attribute>
 					<xsl:text>INCONNU</xsl:text>
-				</xsl:element>				
+				</xsl:element>
 			</xsl:otherwise>
 		</xsl:choose>
 </xsl:template>

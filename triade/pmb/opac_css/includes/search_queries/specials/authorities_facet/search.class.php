@@ -1,15 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.2 2019-06-13 10:31:14 ccraig Exp $
+// $Id: search.class.php,v 1.4 2022/01/10 10:23:05 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/rec_history.inc.php");
 require_once($include_path."/search_queries/specials/facette/search.class.php");
 
-//Classe de gestion de la recherche spÃ©cial "facette"
+//Classe de gestion de la recherche spécial "facette"
 
 class authorities_facet extends facette_search{
 	public $id;
@@ -19,7 +20,6 @@ class authorities_facet extends facette_search{
 	public $champ_base;
 
     public function make_search(){
-		global $dbh;
 		global $mode;
     	$valeur = "field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur};
@@ -35,7 +35,7 @@ class authorities_facet extends facette_search{
     	$filter_array = ${$valeur};
 
     	$ids_authorities = '';
-    	foreach ($filter_array as $k=>$v) {
+    	foreach ($filter_array as $v) {
     	
     		$filter_value = $v[1];
     		$filter_field = $v[2];
@@ -62,7 +62,7 @@ class authorities_facet extends facette_search{
 		    		}
     				break;
     		}
-    		$rs = pmb_mysql_query($qs, $dbh) or die (mysql_error());
+    		$rs = pmb_mysql_query($qs);
     		
     		$t_ids_authorities=array();
     		
@@ -80,10 +80,10 @@ class authorities_facet extends facette_search{
     	unset($ids_authorities);
     	$last_table = 'table_facette_temp_'.$this->n_ligne.'_'.md5(microtime());
     	$qc_last_table = 'create temporary table '.$last_table.' (id_authority int, index i_id_authority(id_authority))';
-    	pmb_mysql_query($qc_last_table,$dbh) or die ();
+    	pmb_mysql_query($qc_last_table);
     	if(count($t_ids_authorities)) {
     		$qi_last_table = 'insert ignore into '.$last_table.' values ('.implode('),(', $t_ids_authorities).')';
-    		pmb_mysql_query($qi_last_table,$dbh) or die ();
+    		pmb_mysql_query($qi_last_table);
     	}
     	unset($t_ids_authorities);
     	return $last_table;

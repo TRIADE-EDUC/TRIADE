@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_authperso_controller.class.php,v 1.2 2018-12-05 09:09:40 dgoron Exp $
+// $Id: entities_authperso_controller.class.php,v 1.4 2022/02/16 12:38:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/entities/entities_authorities_controller.class.php");
-
 require_once($class_path.'/authperso.class.php');
 
 class entities_authperso_controller extends entities_authorities_controller {
@@ -31,22 +31,24 @@ class entities_authperso_controller extends entities_authorities_controller {
 	}
 	
 	public function set_id_authperso($id_authperso=0) {
-		$this->id_authperso = $id_authperso+0;
+	    $this->id_authperso = (int) $id_authperso;
 	}
 	
 	public function get_display_list() {
-		//Il faut la globaliser pour que les autoritÃ©s perso fonctionnent...
+		//Il faut la globaliser pour que les autorités perso fonctionnent...
 		global $url_base;
 		global $categ;
 		
 		$url_base = $this->get_pagination_link();
 		$object_instance = $this->get_object_instance();
 		$this->set_session_history($this->object_instance->get_searcher_instance()->get_human_query(), $categ, 'QUERY');
+		$this->set_session_history($this->object_instance->get_searcher_instance()->get_human_query(), $categ, 'AUT');
 		
 		return $object_instance->get_list();
 	}
 	
 	public function proceed_delete() {
+	    global $msg;
 		$object_instance = $this->get_object_instance();
 		$sup_result = $object_instance->delete($this->id);
 		if(!$sup_result) {
@@ -65,7 +67,7 @@ class entities_authperso_controller extends entities_authorities_controller {
 			print $object_instance->replace_form($this->id);
 		}else {
 // 		    routine de remplacement
-			$rep_result = $object_instance->replace($id, $by,$aut_link_save);
+			$rep_result = $object_instance->replace($this->id, $by,$aut_link_save);
 			if(!$rep_result) {
 				print $this->get_display_list();
 			}else {
@@ -115,7 +117,7 @@ class entities_authperso_controller extends entities_authorities_controller {
 			$object_instance = $this->get_object_instance();
 			print $object_instance->get_list(true);
 		}else {
-			// affichage du dÃ©but de la liste
+			// affichage du début de la liste
 			print $this->get_display_list();
 		}
 	}

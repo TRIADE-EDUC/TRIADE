@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?> 
-<!-- $Id: params.xml,v 1.3 2007-02-28 12:37:00 mhalm Exp $ -->
+<!-- $Id: params.xml,v 1.3 2007/02/28 12:37:00 mhalm Exp $ -->
 <params>
 	<!--  Nom de l'import--> 
 	<importname>Base PMB -> UNIMARC</importname> 

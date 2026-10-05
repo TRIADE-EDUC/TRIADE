@@ -1,19 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_view.class.php,v 1.21 2019-05-29 06:53:19 ngantier Exp $
+// $Id: opac_view.class.php,v 1.27 2022/03/15 09:50:51 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 // classes de gestion des vues Opac
+global $class_path;
 require_once($class_path."/XMLlist.class.php");
 require_once($class_path."/param_subst.class.php");
 require_once($class_path."/opac_filters.class.php");
 
 /*
- * A dÃ©commenter s'il y a un problÃ¨me de contexte
- * ChargÃ© plus tard pour que les templates soient chargÃ©s avec le contexte de la vue
+ * A décommenter s'il y a un problème de contexte
+ * Chargé plus tard pour que les templates soient chargés avec le contexte de la vue
  */
 // require_once("$class_path/search.class.php");
 // require_once("$class_path/quotas.class.php");
@@ -25,13 +26,13 @@ class opac_view {
 	public $name=''; 						//Nom de la vue
 	public $requete=''; 					//Requete associee a la vue
 	public $comment=''; 					//Commentaire de la vue
-	public $param_subst; 					//Classe d'Ã©crasement des paramÃ¨tres substituÃ©s pour cette vue
-	public $opac_filters; 					//Filtres des Ã©lÃ©ments de l'OPAC
-	public $view_list_empr_default=0; 		//Identifiant de la vue par dÃ©faut pour l'utilisateur courant
+	public $param_subst; 					//Classe d'écrasement des paramètres substitués pour cette vue
+	public $opac_filters; 					//Filtres des éléments de l'OPAC
+	public $view_list_empr_default=0; 		//Identifiant de la vue par défaut pour l'utilisateur courant
 	public $opac_views_list=array(); 		//Tableau des vues visibles en OPAC (opac_view_visible=1)
-	public $selector; 						//Liste de sÃ©lection des vues visibles en OPAC (opac_view_visible=1)
+	public $selector; 						//Liste de sélection des vues visibles en OPAC (opac_view_visible=1)
 	public $search_class;
-	public $opac_view_wo_query = 0;			//pas de recherche mc associÃ©e
+	public $opac_view_wo_query = 0;			//pas de recherche mc associée
 	protected $loaded_classes=false;
 
 	// constructeur
@@ -39,31 +40,41 @@ class opac_view {
 		// si id, allez chercher les infos dans la base
 		$this->id_empr = intval($id_empr);
 		if($id === "default_opac"){
-			$this->id = 0;
+		    $this->id = $id;
 			if (!$this->check_right()){
 				$this->build_env();
 			}
 		}else{
+		    if ($id === "default") {
+		        $id = 0;
+		    }
 			$this->id = intval($id);
 			$this->build_env();
 		}
 	}
 
 	/*
-	 * gÃ©nÃ¨re l'environnement pour l'emprunteur
+	 * génère l'environnement pour l'emprunteur
 	 */
 	public function build_env(){
-		global $dbh;
-		global $lang;
-		
 		if(!count($this->opac_views_list)){
 			$this->list_views();
 		}
-		if(!$this->id || ($this->id && !$this->check_right())){
+		
+		if ($this->id === "default_opac") {
+		    // Vue OPAC Classique
+		    $this->id = 0;		    
+		} elseif ($this->id === 0) {
+		    // Vue activé par défaut
+		    $this->id = $this->view_list_empr_default ?? 0;
+		}
+		
+		if (!$this->check_right()) {
 			$this->id = $this->view_list_empr_default;
 		}
-		if($this->id && $this->check_right()){
-			$myQuery_defaut = pmb_mysql_query("SELECT * FROM opac_views WHERE opac_view_id=".$this->id, $dbh);
+		
+		if($this->id > 0 && $this->check_right()){
+			$myQuery_defaut = pmb_mysql_query("SELECT * FROM opac_views WHERE opac_view_id=".$this->id);
 			if(pmb_mysql_num_rows($myQuery_defaut)){
 				$r_defaut= pmb_mysql_fetch_object($myQuery_defaut);
 				$this->id=	$r_defaut->opac_view_id;
@@ -71,7 +82,7 @@ class opac_view {
 				$this->requete=$r_defaut->opac_view_query;
 				$this->comment=$r_defaut->opac_view_comment;
 				$this->param_subst=new param_subst("opac", "opac_view",$this->id);
-				//on rÃ©cupÃ¨re les messages de la vue OPAC si la langue est diffÃ©rente de celle par dÃ©faut
+				//on récupère les messages de la vue OPAC si la langue est différente de celle par défaut
 				/*if($this->get_parameter_value("opac", "default_lang") && $lang != $this->get_parameter_value("opac", "default_lang")) {
 					if(function_exists('set_language')) {
 						set_language($this->get_parameter_value("opac", "default_lang"));
@@ -79,6 +90,7 @@ class opac_view {
 				}*/
 				$this->set_parameters();
 				$this->load_classes();
+				$this->load_search_other_function();
 				$this->opac_filters=new opac_filters($this->id);
 				if (!$this->requete) {
 					$this->opac_view_wo_query=1;
@@ -108,20 +120,29 @@ class opac_view {
 	}
 	
 	/*
+	 * Chargement
+	 */
+	protected function load_search_other_function() {
+		global $include_path, $opac_search_other_function;
+		if($opac_search_other_function){
+			require_once($include_path."/".$opac_search_other_function);
+		}
+	}
+	
+	/*
 	 * regenere la recherche de restriction de la vue si necessaire
 	 */
 	public function regen() {
-		global $dbh;
 		if ($this->id && !$this->opac_view_wo_query) {
 			$q = "select if((unix_timestamp(now()) - ifnull(unix_timestamp(opac_view_last_gen),0) - opac_view_ttl)>0,1,0) as opac_view_valid from opac_views where opac_view_id=".$this->id." ";
-			$r = pmb_mysql_query($q, $dbh);
+			$r = pmb_mysql_query($q);
 			if (pmb_mysql_result($r,0,0)==1) {
 
 				$q="update opac_views set opac_view_last_gen=now() where opac_view_id=".$this->id." ";
-				pmb_mysql_query($q, $dbh);
+				pmb_mysql_query($q);
 
 				$q="truncate table opac_view_notices_".$this->id;
-				pmb_mysql_query($q, $dbh);
+				pmb_mysql_query($q);
 				
 				$this->search_class = new search("search_fields_gestion");
 				$this->search_class->push();
@@ -130,7 +151,7 @@ class opac_view {
 				$this->search_class->destroy_global_env();
 				$this->search_class->pull();
 				$q="INSERT ignore INTO opac_view_notices_".$this->id." (opac_view_num_notice) select notice_id from $table ";
-				pmb_mysql_query($q, $dbh);
+				pmb_mysql_query($q);
 				pmb_mysql_query("drop table $table");
 
 			}
@@ -141,7 +162,6 @@ class opac_view {
 	 * Liste les vues disponibles
 	 */
 	public function list_views(){
-		global $dbh;
 		global $pmb_opac_view_activate;
 		global $include_path;
 		global $lang;
@@ -151,7 +171,7 @@ class opac_view {
 		//on reprend...
 		if ($this->id_empr){
 			$req="SELECT * FROM opac_views, opac_views_empr  where opac_view_visible!=0 and emprview_view_num=opac_view_id and emprview_empr_num=".$this->id_empr;
-			$myQuery = pmb_mysql_query($req, $dbh);
+			$myQuery = pmb_mysql_query($req);
 			if(pmb_mysql_num_rows($myQuery)){
 				while($r = pmb_mysql_fetch_object($myQuery)){
 					if($r->emprview_default) $this->view_list_empr_default=$r->opac_view_id;
@@ -190,12 +210,12 @@ class opac_view {
 			}else if(!$this->id_empr){
 				$this->opac_views_list[] = 0;
 				$req="SELECT * FROM opac_views where opac_view_visible=1";
-				$myQuery = pmb_mysql_query($req, $dbh);
+				$myQuery = pmb_mysql_query($req);
 				if(pmb_mysql_num_rows($myQuery)){
 					while($r = pmb_mysql_fetch_object($myQuery)){
 						//if($r->emprview_default) $this->view_list_empr_default=$r->opac_view_id;
 						/*else if(!$this->id_empr && !$this->view_list_empr_default){
-							//si pas d'emprunteur, on met la premiÃ¨re vue trouvÃ©e par dÃ©faut
+							//si pas d'emprunteur, on met la première vue trouvée par défaut
 							$this->view_list_empr_default = $r->opac_view_id;
 						}*/
 						$this->opac_views_list[]=$r->opac_view_id;
@@ -206,7 +226,7 @@ class opac_view {
 	}
 
 	/*
-	 * VÃ©rifie la disponibilitÃ© de la vue
+	 * Vérifie la disponibilité de la vue
 	 */
 	public function check_right(){
 		if(!count($this->opac_views_list))
@@ -217,22 +237,22 @@ class opac_view {
 	}
 
 	public function set_parameters(){
-		if($this->id){
+	    if($this->id && isset($this->param_subst)) {
 			$this->param_subst->set_parameters();
 		}
 	}
 
 	public function get_parameter_value($type_param, $sstype_param){
-		if($this->id){
+	    if($this->id && isset($this->param_subst)) {
 			return $this->param_subst->get_parameter_value($type_param, $sstype_param);
 		}
 		return '';
 	}
 
 	public function get_list($name='', $value_selected=0) {
-		global $dbh,$charset;
-		if ($this->id_empr) $myQuery = pmb_mysql_query("SELECT * FROM opac_views left join opac_views_empr on (emprview_view_num=opac_view_id and emprview_empr_num=$this->id_empr) where opac_view_visible!=0 order by opac_view_name ", $dbh);
-		else $myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1 order by opac_view_name ", $dbh);
+		global $charset;
+		if ($this->id_empr) $myQuery = pmb_mysql_query("SELECT * FROM opac_views left join opac_views_empr on (emprview_view_num=opac_view_id and emprview_empr_num=$this->id_empr) where opac_view_visible!=0 order by opac_view_name ");
+		else $myQuery = pmb_mysql_query("SELECT * FROM opac_views where opac_view_visible=1 order by opac_view_name ");
 
 		$selector = "<select name='$name' id='$name'>";
 		if(pmb_mysql_num_rows($myQuery)){
@@ -247,4 +267,4 @@ class opac_view {
 
 		return $selector;
 	}
-} // fin dÃ©finition classe
+} // fin définition classe

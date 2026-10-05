@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,11 +47,11 @@ $taille="width='100%' height='100%'";
 $nbcar=30;
 ?>
 <?php if ($_GET["visu"] != "all") { ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 	$nbcar=10;
 	$taille="width='100%'"; 
@@ -91,7 +91,7 @@ $i=0;
 	$data_2=affRetarddujour2($date);
 	// elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere,justifier, heure_saisie,idprof,idrattrapage,smsenvoye
 	// $data : tab bidim - soustab 3 champs
-	for($j=0;$j<count($data_2);$j++) {
+	for($j=0;$j<countTriade($data_2);$j++) {
                 $ideleve=$data_2[$j][0];
 		$idmatiere=$data_2[$j][7];
 		$idrattrapage=$data_2[$j][11];
@@ -115,7 +115,7 @@ $i=0;
 
 
 		$dataRattra=recupRattrappage($idrattrapage); //date,heure_depart,duree
-		for($P=0;$P<count($dataRattra);$P++) {
+		for($P=0;$P<countTriade($dataRattra);$P++) {
 			if ($P == 0) {
 				$valeurHeure1=timeForm($dataRattra[$P][1]);
 				$valeurDate1=dateForm($dataRattra[$P][0]);
@@ -237,7 +237,7 @@ return false; " >rattrapage</a>]&nbsp;</td><td valign='top' ><?php print $imgsms
 	$data_3=affAbsence3($date);
 	//$data : tab bidim - soustab 3 champs
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier, heure_saisie, idprof, heuredabsence, idrattrapage, smsenvoye
-	for($j=0;$j<count($data_3);$j++){
+	for($j=0;$j<countTriade($data_3);$j++){
 		$ideleve=$data_3[$j][0];
 		$classe=chercheIdClasseDunEleve($ideleve);
 		$idrattrapage=$data_3[$j][14];
@@ -256,7 +256,7 @@ return false; " >rattrapage</a>]&nbsp;</td><td valign='top' ><?php print $imgsms
 		$valeurDuree33="";
 
 		$dataRattra=recupRattrappage($idrattrapage); //date,heure_depart,duree
-		for($P=0;$P<count($dataRattra);$P++) {
+		for($P=0;$P<countTriade($dataRattra);$P++) {
 			if ($P == 0) {
 				$valeurHeure11=timeForm($dataRattra[$P][1]);
 				$valeurDate11=dateForm($dataRattra[$P][0]);
@@ -394,17 +394,17 @@ print "</table>";
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

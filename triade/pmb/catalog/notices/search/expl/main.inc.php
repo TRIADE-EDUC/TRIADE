@@ -1,35 +1,30 @@
 <?php
+use Pmb\Common\Library\Navbar\Navbar;
+
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.28 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: main.inc.php,v 1.33.8.3 2025/01/24 16:34:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $page, $sub, $msg, $option_show_notice_fille, $option_show_expl;
+global $class_path, $page, $sub, $msg, $option_show_notice_fille, $option_show_expl;
 
 require_once($class_path."/search.class.php");
 require_once($class_path."/mono_display_expl.class.php");
 require_once($class_path."/acces.class.php");
 
 if(!isset($page)) $page = '';
-
 $sc=new search(true,"search_fields_expl");
+$sc->init_links();
 
-$sc->link = './catalog.php?categ=isbd&id=!!id!!';
-$sc->link_expl = './catalog.php?categ=edit_expl&id=!!notice_id!!&cb=!!expl_cb!!&expl_id=!!expl_id!!';
-$sc->link_expl_bull = './catalog.php?categ=serials&sub=bulletinage&action=expl_form&bul_id=!!bulletin_id!!&expl_id=!!expl_id!!'; 
-$sc->link_explnum = './catalog.php?categ=edit_explnum&id=!!notice_id!!&explnum_id=!!explnum_id!!';
-$sc->link_serial = './catalog.php?categ=serials&sub=view&serial_id=!!id!!';
-$sc->link_analysis = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!bul_id!!&art_to_show=!!id!!';
-$sc->link_bulletin = './catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=!!id!!';
-$sc->link_explnum_serial = "./catalog.php?categ=serials&sub=explnum_form&serial_id=!!serial_id!!&explnum_id=!!explnum_id!!";
-$sc->link_explnum_analysis = "./catalog.php?categ=serials&sub=analysis&action=explnum_form&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!&explnum_id=!!explnum_id!!";
-$sc->link_explnum_bulletin = "./catalog.php?categ=serials&sub=bulletinage&action=explnum_form&bul_id=!!bul_id!!&explnum_id=!!explnum_id!!";
+$option_show_notice_fille = intval($option_show_notice_fille);
+$option_show_expl = intval($option_show_expl);
+
 switch ($sub) {
 	case "launch":
-		if ((string)$page=="") {
-			$_SESSION["CURRENT"]=count($_SESSION["session_history"]);
+		if ((string)$page=="" || $page==0) {
+		    $_SESSION["CURRENT"]= (is_countable($_SESSION["session_history"]) ? count($_SESSION["session_history"]) : 0);
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["URI"]="./catalog.php?categ=search&mode=8";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"]=$_POST;
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["GET"]=$_GET;
@@ -38,8 +33,8 @@ switch ($sub) {
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["HUMAN_QUERY"]=$sc->make_human_query();
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["HUMAN_TITLE"]=$msg["search_exemplaire"];
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["SEARCH_TYPE"]="EXPL";
-			$_POST["page"]=0;
-			$page=0;
+			$_POST["page"]=1;
+			$page=1;
 		}
 		
 		$table=$sc->get_results("./catalog.php?categ=search&mode=8&sub=launch","./catalog.php?categ=search&mode=8&option_show_notice_fille=$option_show_notice_fille&option_show_expl=$option_show_expl",true);
@@ -48,7 +43,7 @@ switch ($sub) {
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["URI"]="./catalog.php?categ=search&mode=8";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["POST"]=$_POST;
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["GET"]=$_GET;
-			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["PAGE"]=$page+1;
+			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["PAGE"]=$page;
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["HUMAN_QUERY"]=$sc->make_human_query();
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]["SEARCH_TYPE"]="expl";
 			$_SESSION["session_history"][$_SESSION["CURRENT"]]["EXPL"]['TEXT_LIST_QUERY']='';
@@ -61,17 +56,13 @@ switch ($sub) {
 }
 
 function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$search_target="") {
-    global $dbh;
     global $begin_result_liste;
     global $nb_per_page_search;
     global $page;
     global $charset;
-    global $search;
     global $msg;
-    global $pmb_nb_max_tri;
-    global $affich_tris_result_liste;
-    global $pmb_allow_external_search;
- 	global $show_results_data;
+//     global $pmb_nb_max_tri;
+//     global $affich_tris_result_liste;
 	global $option_show_expl,$option_show_notice_fille;
 	global $gestion_acces_active, $gestion_acces_user_notice;
 	global $PMBuserid;
@@ -82,14 +73,17 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
 		$ac= new acces();
 		$dom_1= $ac->setDomain(1);
 		$usr_prf = $dom_1->getUserProfile($PMBuserid);
+		if (!is_array($usr_prf)) {
+		    $usr_prf = [$usr_prf];
+		}
 		
 		$requete = "delete from $table using $table, exemplaires, acces_res_1 ";
 		$requete.= "where ";
 		$requete.= "$table.expl_id=exemplaires.expl_id ";
 		$requete.= "and expl_bulletin=0 ";
 		$requete.= "and expl_notice = res_num ";
-		$requete.= "and usr_prf_num=".$usr_prf." and (((res_rights ^ res_mask) & 4)=0) ";
-		pmb_mysql_query($requete, $dbh);
+		$requete.= "and usr_prf_num IN (".implode(",", $usr_prf).") and (((res_rights ^ res_mask) & 4)=0) ";
+		pmb_mysql_query($requete);
 
 		$requete = "delete from $table using $table, exemplaires, bulletins, acces_res_1 ";
 		$requete.= "where ";
@@ -97,22 +91,26 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
 		$requete.= "and expl_notice=0 ";
 		$requete.= "and expl_bulletin=bulletin_id ";
 		$requete.= "and bulletin_notice=res_num ";
-		$requete.= "and usr_prf_num=".$usr_prf." and (((res_rights ^ res_mask) & 4)=0) ";
-		pmb_mysql_query($requete, $dbh);
+		$requete.= "and usr_prf_num IN (".implode(",", $usr_prf).") and (((res_rights ^ res_mask) & 4)=0) ";
+		pmb_mysql_query($requete);
 		
 	}
 	
-	//visibilité des exemplaires
+	//visibilit� des exemplaires
 	if ($pmb_droits_explr_localises && $explr_invisible) {
 		$requete = "delete from $table using $table, exemplaires ";
 		$requete.= "where ";
 		$requete.= "$table.expl_id=exemplaires.expl_id ";
 		$requete.= "and expl_location in ($explr_invisible)";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 	}
 			
-    $start_page=$nb_per_page_search*$page;
-    
+	$page = intval($page);
+	if($page) {
+	    $start_page = $nb_per_page_search * ($page-1);
+	} else {
+	    $start_page = 0;
+	}
     $requete="select count(1) from $table"; 
     $res = 	pmb_mysql_query($requete);
     if($res)
@@ -132,7 +130,7 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
     
     if ($hidden_form) print $sc->make_hidden_search_form($url);
 
-    $resultat=pmb_mysql_query($requete,$dbh);
+    $resultat=pmb_mysql_query($requete);
 
     $human_requete = $sc->make_human_query();
     
@@ -154,7 +152,7 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
 	print searcher::get_quick_actions("EXPL");
 	print "<br/><input type='button' class='bouton' onClick=\"document.search_form.action='$url_to_search_form'; document.search_form.target='$search_target'; document.search_form.submit(); return false;\" value=\"".$msg["search_back"]."\"/>";
 	
-	// transformation de la recherche en multicritères: on reposte tout avec mode=6
+	// transformation de la recherche en multicrit�res: on reposte tout avec mode=6
 	print "&nbsp;<input  type='button' class='bouton' onClick='document.search_transform.submit(); return false;' value=\"".$msg["search_expl_to_notice_transformation"]."\"/>";
 	print searcher::get_check_uncheck_all_buttons();
 	print "<form name='search_transform' action='./catalog.php?categ=search&mode=6&sub=launch'  method='post' style='display:none;'>";	
@@ -174,9 +172,6 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
 	}	
 	print "</form>"; 
 	
-	$recherche_ajax_mode=0;
-	$nb=0;	
-	
 	if($resultat){			
 	    while ($r=pmb_mysql_fetch_object($resultat)) {
 	    	$requete2="SELECT expl_bulletin FROM exemplaires WHERE expl_id='".$r->expl_id."'";
@@ -192,45 +187,17 @@ function print_results($sc,$table,$url,$url_to_search_form,$hidden_form=true,$se
     
     //Gestion de la pagination
     if ($nb_results) {
-  	  	$n_max_page=ceil($nb_results/$nb_per_page_search);
-   	 	
-   	 	if (!$page) $page_en_cours=0 ;
-		else $page_en_cours=$page ;
-	
-		$nav_bar = '';
-   	 	// affichage du lien précédant si nécessaire
-   	 	if ($page>0) {
-   	 		$nav_bar .= "<a href='#' onClick='document.search_form.page.value-=1; ";
-   	 		if (!$hidden_form) $nav_bar .= "document.search_form.launch_search.value=1; ";
-   	 		$nav_bar .= "document.search_form.submit(); return false;'>";
-    		$nav_bar .= "<img src='".get_url_icon('left.gif')."' style='border:0px; margin:3px 3px'  title='".$msg[48]."' alt='[".$msg[48]."]' class='align_middle'/>";
-    		$nav_bar .= "</a>";
-    	}
-        
-		$deb = $page_en_cours - 10 ;
-		if ($deb<0) $deb=0;
-		for($i = $deb; ($i < $n_max_page) && ($i<$page_en_cours+10); $i++) {
-			if($i==$page_en_cours) $nav_bar .= "<strong>".($i+1)."</strong>";
-			else {
-				$nav_bar .= "<a href='#' onClick=\"if ((isNaN(document.search_form.page.value))||(document.search_form.page.value=='')) document.search_form.page.value=1; else document.search_form.page.value=".($i)."; ";
-    			if (!$hidden_form) $nav_bar .= "document.search_form.launch_search.value=1; ";
-    			$nav_bar .= "document.search_form.submit(); return false;\">";
-    			$nav_bar .= ($i+1);
-    			$nav_bar .= "</a>";
-			}
-			if($i<$n_max_page) $nav_bar .= " "; 
-		}
-        
-		if(($page+1)<$n_max_page) {
-    		$nav_bar .= "<a href='#' onClick=\"if ((isNaN(document.search_form.page.value))||(document.search_form.page.value=='')) document.search_form.page.value=1; else document.search_form.page.value=parseInt(document.search_form.page.value)+parseInt(1); ";
-    		if (!$hidden_form) $nav_bar .= "document.search_form.launch_search.value=1; ";
-    		$nav_bar .= "document.search_form.submit(); return false;\">";
-    		$nav_bar .= "<img src='".get_url_icon('right.gif')."' style='border:0px; margin:3px 3px' title='".$msg[49]."' alt='[".$msg[49]."]' class='align_middle'>";
-    		$nav_bar .= "</a>";
-        } else 	$nav_bar .= "";
-		$nav_bar = "<div class='center'>$nav_bar</div>";
-   	 	echo $nav_bar ;
-  	 	
+        if (!$page) {
+            $current_page = 1 ;
+        } else {
+            $current_page = intval($page);
+        }
+        $navbar = new Navbar($current_page, $nb_results, $nb_per_page_search);
+        if (!$hidden_form) {
+            $navbar->setHiddenFormName('search_form', true);
+        } else {
+            $navbar->setHiddenFormName('search_form');
+        }
+        print "<div id='results_pager' class='center'>".$navbar->render()."</div>";
     }  	
 }
-?>

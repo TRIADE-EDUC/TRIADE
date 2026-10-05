@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.6 2020/08/05 12:37:36 jlaurent Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="author" typeobject="1">
+	
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Birth date-->
+	<field name="713" type="num" typefield="select" id="2">
+		<table name="authors">
+			<tablefield>author_date</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Name-->
+	<field name="201" type="text" typefield="select" id="3">
+		<table name="authors">
+			<tablefield>index_author</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--City-->
+	<field name="72" type="text" typefield="select" id="4">
+		<table name="authors">
+			<tablefield>author_ville</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Subdivision-->
+	<field name="congres_subdivision_libelle" type="text" typefield="select" id="5">
+		<table name="authors">
+			<tablefield>author_subdivision</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Isni-->
+	<field name="author_isni" type="text" typefield="select" id="6">
+		<table name="authors">
+			<tablefield>author_isni</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="7">
+		<table name="authors">
+			<tablefield>author_id</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Country-->
+	<field name="146" type="text" typefield="select" id="8">
+		<table name="authors">
+			<tablefield>author_pays</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Author Numero-->
+	<field name="38" type="num" typefield="select" id="9">
+		<table name="authors">
+			<tablefield>author_numero</tablefield>
+			<tablekey>author_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=1</referencefield>
+			</link>
+		</table>
+	</field>
+	
+</sort>

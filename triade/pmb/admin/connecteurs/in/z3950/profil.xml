@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: profil.xml,v 1.2 2008-08-26 19:30:23 touraine37 Exp $ -->
+$Id: profil.xml,v 1.2 2008/08/26 19:30:23 touraine37 Exp $ -->
 
 <profiles>
 	<profile name="very_simple" comment="msg:z3950_very_simple">

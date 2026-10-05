@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
 // | 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_composee_drag_n_drop.js,v 1.9 2018-12-28 16:27:31 tsamson Exp $ */
+// $Id: vedette_composee_drag_n_drop.js,v 1.10 2020/12/11 16:20:49 btafforeau Exp $ */
 
 
 /******************************************************************
@@ -20,6 +20,7 @@ function vedette_composee_available_fields_vedette_composee_subdivision(dragged,
 	 */
 	
 	var caller_property_name = subdivision_id.substring(0,n)+"_composed";
+	var caller_property_name_contribution = subdivision_id.substring(0,n);
 	var caller_property_authid = dragged.getAttribute("authid");
 	var caller_property_authlabel = dragged.getAttribute("dragtext");
 	
@@ -62,15 +63,14 @@ function vedette_composee_available_fields_vedette_composee_subdivision(dragged,
 		
 		handler.appendChild(img);
 		div.appendChild(handler);
-
-		vedette_element.create_box(caller_property_name,dragged.getAttribute("vedettetype"), div, target.getAttribute("subdivisiontype"), new_order, 0, "", "", target.getAttribute("parentorder"), dragged.getAttribute("data-pmb-params"));
 		
+		vedette_element.create_box(caller_property_name,dragged.getAttribute("vedettetype"), div, target.getAttribute("subdivisiontype"), new_order, 0, "", "", target.getAttribute("parentorder"), dragged.getAttribute("data-pmb-params"), caller_property_name_contribution);
+
 		target.insertBefore(div, target.lastElementChild);
 		vedette_composee_update_order(target);
 		
 		init_drag();
 		ajax_pack_element(document.getElementById(subdivision_id + "_element_" + new_order + "_label"));
-	    ajax_parse_dom();
 	} else {
 		alert("Le nombre maximal d'elements pour cette subdivision est atteint !");
 	}

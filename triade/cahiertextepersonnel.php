@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ include("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Cahier de textes" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -69,7 +69,7 @@ if ($visu == 0) {
         <option   STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
 	<?php
 	$idpers=$_SESSION["id_pers"];
-	$sql="SELECT libelle,text,idclasse,info FROM ${prefixe}parametrage WHERE libelle='permModCdT_$idpers'";
+	$sql="SELECT libelle,text,idclasse,info FROM {$prefixe}parametrage WHERE libelle='permModCdT_$idpers'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$nomgrp="permModCdT_$idpers";
@@ -77,11 +77,11 @@ if ($visu == 0) {
 	$liste=preg_replace('/\}/',"",$liste);
 	unset($data);
 	if ($liste != "") {
-		$sql="SELECT nom,prenom,civ,pers_id FROM ${prefixe}personnel where pers_id IN ($liste)";
+		$sql="SELECT nom,prenom,civ,pers_id FROM {$prefixe}personnel where pers_id IN ($liste)";
 		$res=execSql($sql);
 		$data=chargeMat($res);
 	}
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "<option value='".$data[$i][3]."' id='select1' >".ucwords($data[$i][0])." ".ucwords($data[$i][1]). "</option>";
 	}
 	?>

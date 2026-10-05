@@ -1,22 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: select.php,v 1.53 2019-03-13 12:04:05 dgoron Exp $
+// $Id: select.php,v 1.56 2022/04/15 12:16:06 dbellamy Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path=".";                            
 $base_auth = "";  
 $base_title = "";
 $base_use_dojo=1;
 $base_title = "Selection";
 
+global $base_path, $class_path, $javascript_path, $PMBuserid, $what, $bt_ajouter;
 
 require_once ("$base_path/includes/init.inc.php");  
 require_once("$class_path/marc_table.class.php");
 require_once("$class_path/analyse_query.class.php");
 
-// modules propres Ã  select.php ou Ã  ses sous-modules
+// modules propres à select.php ou à ses sous-modules
 include_once ("$javascript_path/misc.inc.php");
 require_once ("$base_path/includes/shortcuts/shortcuts.php");
 
@@ -52,13 +53,6 @@ require_once($class_path."/user.class.php");
 if(!$nb_per_page) {
 	$nb_per_page = user::get_param($PMBuserid, 'nb_per_page_select');
 }
-
-// classes pour la gestion des sÃ©lecteurs
-if(!isset($autoloader) || !is_object($autoloader)){
-	require_once($class_path."/autoloader.class.php");
-	$autoloader = new autoloader();
-}
-$autoloader->add_register("selectors_class",true);
 
 print "<script type='text/javascript'>
 	 		self.focus();
@@ -127,7 +121,7 @@ switch($what) {
 		}elseif (!$id_pclass && $num_pclass){
 			$id_pclass=$num_pclass;
 		}
-		if ($thesaurus_classement_mode_pmb) { //classement indexation dÃ©cimale autorisÃ© en parametrage
+		if ($thesaurus_classement_mode_pmb) { //classement indexation décimale autorisé en parametrage
 			if (strpos($deb_rech,"]")) $deb_rech=substr($deb_rech,strpos($deb_rech,"]")+2);	
 		}
 		
@@ -231,23 +225,36 @@ switch($what) {
 		$selector_instance = new selector_groups(stripslashes($user_input));
 		break;
 	case 'connectors':
+		global $source_id, $source_url, $connector_path, $connector_name;
 		$selector_instance = new selector_connectors(stripslashes($user_input));
 		$selector_instance->set_source_id($source_id);
+		$selector_instance->set_source_url($source_url);
+		$selector_instance->set_connector_path($connector_path);
+		$selector_instance->set_connector_name($connector_name);
 		break;
 	case 'query_list':
+		global $search_xml_file, $search_field_id;
 		$selector_instance = new selector_query_list(stripslashes($user_input));
 		$selector_instance->set_search_xml_file($search_xml_file);
 		$selector_instance->set_search_field_id($search_field_id);
 		break;
 	case 'list':
+		global $search_xml_file, $search_field_id;
 		$selector_instance = new selector_list(stripslashes($user_input));
 		$selector_instance->set_search_xml_file($search_xml_file);
 		$selector_instance->set_search_field_id($search_field_id);
 		break;
 	case 'marc_list':
+		global $search_xml_file, $search_field_id;
 		$selector_instance = new selector_marc_list(stripslashes($user_input));
 		$selector_instance->set_search_xml_file($search_xml_file);
 		$selector_instance->set_search_field_id($search_field_id);
+		break;
+	case 'list_ui':
+		global $objects_type, $filter_name;
+		$selector_instance = new selector_list_ui(stripslashes($user_input));
+		$selector_instance->set_objects_type($objects_type);
+		$selector_instance->set_filter_name($filter_name);
 		break;
 	default:
 		print "<script type='text/javascript'>

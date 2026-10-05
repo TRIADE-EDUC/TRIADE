@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_pages.js,v 1.3 2012-11-13 16:17:16 ngantier Exp $ */
+// $Id: cms_pages.js,v 1.3 2012/11/13 16:17:16 ngantier Exp $ */
 
 	
 function cms_page_raz_var(suffixe){

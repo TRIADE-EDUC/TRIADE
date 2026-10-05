@@ -5,9 +5,9 @@
  */
 
 class Upload {
-	var $numWrittenBytes = 0;
-	var $fileName = null;
-	var $demoMode = true;
+	public $numWrittenBytes = 0;
+	public $fileName = null;
+	public $demoMode = true;
 
 	/**
 	 * Set demo modus.

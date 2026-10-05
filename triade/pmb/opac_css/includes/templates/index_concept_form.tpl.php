@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_concept_form.tpl.php,v 1.5 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: index_concept_form.tpl.php,v 1.6 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -28,7 +28,7 @@ $index_concept_form = "
 		</div>";
 
 $index_concept_add_button_form = "
-		<script type='text/javascript' src='./javascript/concept_drop.js'></script>
+		<script src='./javascript/concept_drop.js'></script>
 		<input type='hidden' name='tab_concept_order' id='tab_concept_order' value='!!tab_concept_order!!' />
 		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('select.php?what=ontology&caller=!!caller!!&objs=&element=concept&dyn=1&deb_rech=', 'select_concept', 700, 500, -2, -2, '".$select_concept_prop."')\" />
 		<input type='button' class='bouton' value='+' onClick=\"onto_add('concept',0);\"/>";
@@ -43,7 +43,7 @@ $index_concept_text_form = "
 		</div>";
 
 $index_concept_script = "
-<script type='text/javascript'>
+<script>
 	function onto_remove_selector_value(element_name,element_order){
 		document.getElementById(element_name+'_'+element_order+'_value').value = '';
 		document.getElementById(element_name+'_'+element_order+'_type').value = '';
@@ -58,7 +58,7 @@ $index_concept_script = "
 		var parent = document.getElementById('el6Child_3');
 		var new_child='';
 		
-		//on trouve le noeud visÃ©, et on le clone
+		//on trouve le noeud visé, et on le clone
 		for(var i in parent.childNodes){
 			if(parent.childNodes[i].nodeType == Node.ELEMENT_NODE){
 				if(parent.childNodes[i].getAttribute('id')==element_name+'_'+element_order){

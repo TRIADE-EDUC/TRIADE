@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: print_options.xml,v 1.5 2018-06-29 13:19:03 dgoron Exp $ -->
+<!-- $Id: print_options.xml,v 1.5.16.1 2025/04/11 08:11:56 dgoron Exp $ -->
 <!-- Liste des états des checkbox de la fenetre d'impression -->
 <XMLlist>
 	<entry code="all">1</entry>
@@ -12,7 +12,8 @@
 	<entry code="vignette">1</entry>
 	<entry code="outp">1</entry>
 	<entry code="outt">0</entry>
-	<entry code="oute">0</entry>	
+	<entry code="oute">0</entry>
+	<entry code="outpdf">0</entry>	
 	<entry code="exnum">0</entry>
 	<entry code="output_docnum_singly">0</entry>
 	<entry code="output_docnum_zip">1</entry>	

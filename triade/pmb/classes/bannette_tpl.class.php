@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bannette_tpl.class.php,v 1.21 2018-06-06 15:20:12 dgoron Exp $
+// $Id: bannette_tpl.class.php,v 1.25 2023/05/04 09:22:14 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/template.class.php");
 require_once("$include_path/templates/bannette_tpl.tpl.php");
-@ini_set('zend.ze1_compatibility_mode',0);
 require_once($include_path."/h2o/pmb_h2o.inc.php");
 
 class bannette_tpl extends template {
@@ -19,7 +19,7 @@ class bannette_tpl extends template {
 	protected static $base_url;
 	
 	protected static function get_data_query($id) {
-		$id += 0;
+		$id = intval($id);
 		return "SELECT 'bannette' as template_type, bannettetpl_name as template_name, bannettetpl_comment as template_comment, bannettetpl_tpl as template_content  FROM bannette_tpl WHERE bannettetpl_id='".$id."'";
 	}
 	
@@ -108,8 +108,8 @@ class bannette_tpl extends template {
 		$fields_options="<select id='fields_options' name='fields_options'>";
 		$fields_options.= $this->get_fields_options();
 		$fields_options.="</select>";
-		$content_form=str_replace('!!fields_options!!', $fields_options, $content_form);
-		$content_form=str_replace('!!content!!', htmlentities($this->content,ENT_QUOTES, $charset), $content_form);
+		$content_form=str_replace('!!fields_options!!', $fields_options ?? "", $content_form);
+		$content_form=str_replace('!!content!!', htmlentities($this->content ?? "",ENT_QUOTES, $charset), $content_form);
 		return $content_form;
 	}
 	
@@ -155,10 +155,6 @@ class bannette_tpl extends template {
 		return static::$base_url;
 	}
 	
-	public static function get_template_instance($id) {
-		return new bannette_tpl($id);
-	}
-	
 	public static function gen_tpl_select($select_name="form_bannette_tpl", $selected_id=0, $onchange="", $invisible_default=0) {		
 		global $msg;
 		
@@ -168,9 +164,5 @@ class bannette_tpl extends template {
 		} else {
 			return gen_liste ($requete, "bannettetpl_id", "nom", $select_name, $onchange, $selected_id, 0, $msg["bannette_tpl_list_default"], 0,$msg["bannette_tpl_list_default"], 0) ;
 		}	
-	}
-
-	public static function get_list_query() {
-		return "SELECT bannettetpl_id as id_template FROM bannette_tpl ORDER BY bannettetpl_name ";
 	}
 } // fin class 

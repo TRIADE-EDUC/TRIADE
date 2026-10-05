@@ -1,0 +1,22 @@
+<!-- $Id: diffusion_detail.tpl.html,v 1.1 2023/03/29 14:39:33 qvarin Exp $ -->
+<div>
+    <h3 id="diffusion_{{ diffusion.id }}">{{ diffusion.name }}</h3>
+    <table class="uk-table uk-table-small uk-table-striped uk-table-middle" aria-describedby="diffusion_{{ diffusion.id }}">
+        <thead>
+            <tr>
+                <th>{{ msg.dsi_diffusion_channel }}</th>
+                <th>{{ msg.dsi_diffusion_total_subscribers }}</th>
+                <th>{{ msg.dsi_diffusion_last }}</th>
+                <th>{{ msg.dsi_status }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ diffusion.channel.msg.name }}</td>
+                <td>{{ diffusion.nbSubscribers }}</td>
+                <td>{{ diffusion.lastDiffusion }}</td>
+                <td>{{ diffusion.status.0.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

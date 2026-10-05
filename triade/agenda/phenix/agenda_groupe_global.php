@@ -37,9 +37,9 @@
   list ($grpg, $GrChoix) = explode ('|', $ggr);
   if ($grpg != "0") {
     if ($utilgr=="O") {
-      $DB_CX->DbQuery("SELECT gr_util_nom FROM ${PREFIX_TABLE}groupe_util WHERE gr_util_id=".$grpg);
+      $DB_CX->DbQuery("SELECT gr_util_nom FROM {$PREFIX_TABLE}groupe_util WHERE gr_util_id=".$grpg);
     } else {
-      $DB_CX->DbQuery("SELECT ggr_nom FROM ${PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg);
+      $DB_CX->DbQuery("SELECT ggr_nom FROM {$PREFIX_TABLE}global_groupe WHERE ggr_id=".$grpg);
     }
     $ggr_nom = $DB_CX->DbResult(0,0);
     if ($ggr_nom!="NoGroup"){

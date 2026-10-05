@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_opacitem_view_opacitem.class.php,v 1.8 2019-01-16 10:45:02 dgoron Exp $
+// $Id: cms_module_opacitem_view_opacitem.class.php,v 1.13 2023/12/07 10:12:09 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -78,8 +78,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		//cms_module_opacitem_item_centcases
 		
 		//cms_module_opacitem_item_dernotices
-		global $last_records_header;
-		global $last_records_footer;
+		
 		//cms_module_opacitem_item_etageres
 		global $etageres_header;
 		global $etageres_footer;
@@ -95,7 +94,6 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 		global $new_tab;
 		global $search_terms;
 		global $show_tris_form;
-		global $ligne_tableau_tris;
 		global $sort;
 		global $show_sel_form;
 		global $liste_criteres_tri;
@@ -144,7 +142,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 					$bannettes= "<div id='bannettes_subscribed'>\n";
 					$bannettes.= "<h3><span>".$msg['accueil_bannette_privee']."</span></h3>";
 					$bannettes.= "<div id='bannettes_private-container'>";
-					$bannettes.= "<script type='text/javascript' src='./includes/javascript/tablist.js'></script>" ;
+					$bannettes.= "<script src='./includes/javascript/tablist.js'></script>" ;
 					if ($opac_bannette_notices_depliables && $opac_bannette_notices_format!=8){
 						$bannettes.= $begin_result_liste ;
 					}
@@ -166,7 +164,7 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 					$bannettes= "<div id='bannettes_public'>\n";
 					$bannettes.= "<h3><span>".$msg['accueil_bannette_public']."</span></h3>";
 					$bannettes.= "<div id='bannettes_public-container'>";
-					$bannettes.= "<script type='text/javascript' src='./includes/javascript/tablist.js'></script>" ;
+					$bannettes.= "<script src='./includes/javascript/tablist.js'></script>" ;
 					if ($opac_bannette_notices_depliables && $opac_bannette_notices_format!=8){
 						$bannettes.= $begin_result_liste ;
 					}
@@ -201,7 +199,6 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				$return= $centcases;
 				break;
 			case 'cms_module_opacitem_item_dernotices':
-				require_once ($base_path.'/includes/templates/last_records.tpl.php');
 				ob_start();
 				require_once ($base_path.'/includes/last_records.inc.php');
 				$return=ob_get_contents();
@@ -223,8 +220,9 @@ class cms_module_opacitem_view_opacitem extends cms_module_common_view{
 				break;
 			case 'cms_module_opacitem_item_contact_form':
 				if($opac_contact_form) {
-					require_once ($class_path.'/contact_form/contact_form.class.php');
-					$contact_form = new contact_form();
+					require_once ($class_path.'/contact_forms/contact_form.class.php');
+					if(empty($id)) $id = 1;
+					$contact_form = new contact_form($id);
 					$return=$contact_form->get_form();
 				} else {
 					$return='';

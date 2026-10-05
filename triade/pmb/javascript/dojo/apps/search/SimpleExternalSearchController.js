@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SimpleExternalSearchController.js,v 1.2 2016-11-25 16:34:48 apetithomme Exp $
+// $Id: SimpleExternalSearchController.js,v 1.2 2016/11/25 16:34:48 apetithomme Exp $
 
 define(['dojo/_base/declare',
         'apps/search/SearchController',

@@ -1,0 +1,60 @@
+/* +--------------------------------------------------------------------------+
+//  2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: visionneuse.css,v 1.2 2024/03/29 14:42:14 pmallambic Exp $
+*/
+
+#visio_current_description .plusN {
+	display : none;
+}
+
+#visio_container {
+	padding: 30px;
+}
+
+#visio-header .linkFullscreen {
+	display: none;
+}
+
+#visio-header .close {
+	text-align: right;
+}
+
+#visio_current_doc {
+	margin-bottom: 10px;
+}
+
+#visio_paginator_nav ol {
+	display: flex;
+	justify-content: center;
+	gap: 2px;
+}
+
+#visio_paginator_nav ol li::marker {
+	content: '';
+}
+
+#visio_paginator_nav .visio-pag-btn {
+	display: flex;
+	align-items: center;
+}
+
+#visio_paginator_nav .visio-pag-btn img {
+	margin-right: 4px;
+}
+
+#visio_paginator_nav #visio-current {
+	margin: 0 8px;
+}
+
+#visio_paginator #visio-search {	
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+#visio_paginator #visio-search #go_page{
+	max-width: 100px;
+	width: 100%;
+}

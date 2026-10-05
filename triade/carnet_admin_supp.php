@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,75 +26,65 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php 
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<?php
 include_once("./librairie_php/lib_licence.php");
-include_once('librairie_php/db_triade.php');
+include_once("librairie_php/db_triade.php");
 validerequete("menuadmin");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET61 ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGCARNET61 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
-<td valign=top>
-<!-- // fin  -->
-<br />
-<?php
-if (isset($_GET["erreur"])) {
-	print "<font color='red' class='T2'><center> ".LANGCARNET54.". </center></font>";
+<td valign="top">
 
-}
-?>
-<form method="post" action="carnet_admin_supp_2.php"  name="formulaire" onsubmit="return valide_supp_choix('saisie_carnet','<?php print LANGCARNET56?>')" >
-<ul>
-<font class="T2"> <?php print LANGCARNET53 ?> : </font>
+<?php if (isset($_GET["erreur"])) { ?>
+<div style="color:#c00;font-weight:700;text-align:center;padding:8px 5px;margin:6px 5px;background:#fff0f0;border-radius:6px;border:1px solid #fcc;"><?php print LANGCARNET54 ?>.</div>
+<?php } ?>
 
-	<select name="saisie_carnet" >
-	 <option   STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX?></option>
-<?php
-select_carnet(); // creation des options
-Pgclose();
-?>
-	</select> 
-</ul>
-<UL><UL><UL><script language=JavaScript>buttonMagicRetour2("carnet_admin.php","_parent","<?php print LANGCIRCU14?>");</script><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT50 ?>","supp");</script></UL></UL></UL><br><br>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-</form>
+<form method="post" action="carnet_admin_supp_2.php" name="formulaire" onsubmit="return valide_supp_choix('saisie_carnet','<?php print LANGCARNET56 ?>')">
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGCARNET53 ?> :</span>
+    <select name="saisie_carnet" class="cc-select">
+      <option style="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
+      <?php select_carnet(); Pgclose(); ?>
+    </select>
+  </div>
+</div>
+<br>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 5px;">
+  <button type="button" class="btn-retour" onclick="open('carnet_admin.php','_parent','')"><?php print LANGCIRCU14 ?></button>
+  <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT50 ?>","supp");</script></span>
+</div>
 <br><br>
+</form>
 
-<font color='red'><b>&nbsp;<?php print LANGCARNET62 ?></b></font>
-<!-- // fin  -->
+<div style="color:#c00;font-weight:700;padding:8px 10px;margin:8px 5px;background:#fff0f0;border-radius:6px;border:1px solid #fcc;"><?php print LANGCARNET62 ?></div>
+
 </td></tr></table>
 
 <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION["membre"] == "menuadmin") :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
+if ($_SESSION["membre"] == "menuadmin") {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+} else {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+}
 ?>
 </BODY></HTML>

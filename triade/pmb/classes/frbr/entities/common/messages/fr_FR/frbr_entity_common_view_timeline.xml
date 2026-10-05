@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour la classe datasource
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: frbr_entity_common_view_timeline.xml,v 1.1 2019/12/30 13:49:45 jlaurent Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_timeline_datasource_generic_selector_default">Choisissez une valeur</entry>
+	<entry code="cms_module_timeline_datasource_generic_header">Champs à utiliser pour les événements affichés dans la frise</entry>
+	<entry code="cms_module_timeline_datasource_generic_title">Titre</entry>
+	<entry code="cms_module_timeline_datasource_generic_resume">Résumé</entry>
+	<entry code="cms_module_timeline_datasource_generic_start_date">Date de début</entry>
+	<entry code="cms_module_timeline_datasource_generic_end_date">Date de fin</entry>
+	<entry code="cms_module_timeline_datasource_generic_image">Image</entry>
+	<entry code="cms_module_timeline_datasource_generic_start_at_end">Débuter par la fin</entry>
+	<entry code="cms_module_timeline_datasource_generic_start_at_slide">Débuter à la slide n°</entry>
+	
+	<entry code="cms_module_timeline_datasource_records_main_title">Titre propre</entry>
+	<entry code="cms_module_timeline_datasource_records_other_title">Titre propre</entry>
+	<entry code="cms_module_timeline_datasource_records_parallel_title">Titre parallèle</entry>
+	<entry code="cms_module_timeline_datasource_records_resume">Résumé</entry>
+	<entry code="cms_module_timeline_datasource_records_create_date">Date de création</entry>
+	<entry code="cms_module_timeline_datasource_records_date_parution">Date de parution</entry>
+	<entry code="cms_module_timeline_datasource_records_thumbnail_url">Url de la vignette</entry>
+	
+</XMLlist>

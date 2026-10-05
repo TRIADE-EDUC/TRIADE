@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: misc_file.class.php,v 1.6 2018-11-29 11:03:12 dgoron Exp $
+// $Id: misc_file.class.php,v 1.10 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/encoding_normalize.class.php");
 // require_once($include_path."/templates/misc/files/misc_file.tpl.php");
 
@@ -14,7 +15,7 @@ class misc_file {
 	protected $id;
 	
 	/**
-	 * RÃ©pertoire d'accÃ¨s au fichier
+	 * Répertoire d'accès au fichier
 	 * @var string $path
 	 */
 	protected $path;
@@ -41,10 +42,11 @@ class misc_file {
 	protected function fetch_data() {
 		$this->id = 0;
 		$this->data = array();
-		$query = "select * from subst_files where subst_file_path = '".addslashes($this->path)."' and subst_file_filename = '".addslashes($this->filename)."'";
+		$query = "select * from subst_files where subst_file_path = '".addslashes($this->get_opac_path())."' and subst_file_filename = '".addslashes($this->filename)."'";
 		$result = pmb_mysql_query($query);
 		if($result && pmb_mysql_num_rows($result)) {
 			$row = pmb_mysql_fetch_assoc($result);
+			pmb_mysql_free_result($result);
 			$this->id = $row['id_subst_file'];
 			$this->data = encoding_normalize::json_decode($row['subst_file_data'], true);
 		}
@@ -108,7 +110,7 @@ class misc_file {
 			foreach ($subst_file_data as $code=>$element) {
 				$this->data[$code] = array(
 						'visible' => (isset($element['visible']) && $element['visible'] ? 1 : 0),
-						'group' => (isset($element['group']) ? $element['group'] : ''),
+						'group' => (isset($element['group']) ? stripslashes($element['group']) : ''),
 				);
 			}
 		}
@@ -117,9 +119,9 @@ class misc_file {
 	public function get_contents() {
 		if(file_exists($this->path.'/'.$this->filename)) {
 			$contents = file_get_contents($this->path.'/'.$this->filename);
-			return utf8_encode($contents);
+			return encoding_normalize::utf8_normalize($contents);
 		} else {
-			return utf8_encode($this->get_default_template());
+			return encoding_normalize::utf8_normalize($this->get_default_template());
 		}
 		return '';
 	}
@@ -128,7 +130,7 @@ class misc_file {
 		global $contents;
 		
 		if(strpos($this->filename, '_subst.xml') && file_exists($this->path.'/'.str_replace('_subst.xml', '.xml', $this->filename))) {
-			 file_put_contents($this->path.'/'.$this->filename, trim(utf8_decode(stripslashes($contents))));
+		    file_put_contents($this->path.'/'.$this->filename, trim(encoding_normalize::utf8_decode(stripslashes($contents))));
 			return true;
 		}
 		return false;
@@ -213,8 +215,16 @@ class misc_file {
 		return $this->path.'/'.str_replace('.xml', '_subst.xml' , $this->filename);	
 	}
 	
+	protected function get_opac_path() {
+		if(strpos($this->path, 'opac_css') === false) {
+			return str_replace('./', './opac_css/', $this->path);
+		} else {
+			return $this->path;
+		}
+	}
+	
 	protected function get_sign_template() {
-		return 'Â© 2002-'.date('Y').' PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)';
+		return '© 2002-'.date('Y').' PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)';
 	}
 	
 	protected function get_versionning_template() {

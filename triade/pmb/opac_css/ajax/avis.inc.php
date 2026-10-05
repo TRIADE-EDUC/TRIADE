@@ -1,13 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis.inc.php,v 1.10 2016-10-07 08:35:31 dgoron Exp $
+// $Id: avis.inc.php,v 1.11 2022/02/10 13:11:12 dgoron Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-$article_id += 0;
-$section_id += 0;
-$notice_id += 0;
+global $class_path, $sub, $opac_avis_allow, $article_id, $section_id, $notice_id, $id, $private;
+global $opac_notice_affichage_class;
+
+$article_id = intval($article_id);
+$section_id = intval($section_id);
+$notice_id = intval($notice_id);
 if ($opac_avis_allow==0 || (!$notice_id && !$article_id && !$section_id)) {
 	ajax_http_send_response("0");
 }

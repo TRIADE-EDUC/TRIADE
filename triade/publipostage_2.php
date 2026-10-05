@@ -9,30 +9,14 @@ if (isset($_POST["anneeScolaire"])) {
         setcookie("anneeScolaire",$anneeScolaire,time()+36000*24*30);
 }
 
-$matricule=$_POST["matricule"];
-$classe=$_POST["classe"];
-$adresse=$_POST["adresse"];
-$adresseinfo=$_POST["adresseinfo"];
-$civeleve=$_POST["civeleve"];
-$classe=$_POST["classe"];
-$membre=$_POST["membre"];
+if ($id != 1) set_time_limit(900); 
 
-setcookie("publipomatricule","$matricule");
-setcookie("publipoadresse","$adresse");
-setcookie("publipoadresseinfo","$adresseinfo");
-setcookie("publipomembre","$membre");
-setcookie("publicivilite","$civeleve");
-setcookie("publiclasse","$classe");
-
-if ($id != 1) {
-	set_time_limit(900);
-}
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -61,34 +45,43 @@ if ($id != 1) {
 <script language="JavaScript" src="./librairie_js/lib_trimestre.js"></script>
 <title>Triade - Compte de <?php print $_SESSION["nom"]." ".$_SESSION["prenom"] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php 
 include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php");
 validerequete("2");
-$cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Publipostage" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td >
-
 <?php
 
+$matricule=$_POST["matricule"];
+$classe=$_POST["classe"];
+$adresse=$_POST["adresse"];
+$adresseinfo=$_POST["adresseinfo"];
+$civeleve=$_POST["civeleve"];
+$classe=$_POST["classe"];
+$membre=$_POST["membre"];
 
-
-
+setcookie("publipomatricule","$matricule");
+setcookie("publipoadresse","$adresse");
+setcookie("publipoadresseinfo","$adresseinfo");
+setcookie("publipomembre","$membre");
+setcookie("publicivilite","$civeleve");
+setcookie("publiclasse","$classe");
 
 if (isset($_POST["consult1"])) {
 	$idClasse=$_POST["saisie_classe"];
 	$membre=$_POST["membre"];
 	$classe=chercheClasse_nom($idClasse);
-	$nbeleve=count($eleveT);
+	$nbeleve=countTriade($eleveT);
 	$type=$membre;
 	$matricule=$_POST["matricule"];
 	$classe=$_POST["classe"];
@@ -119,10 +112,6 @@ if (isset($_POST["consult2"])) {
 		        break; 
         }
 }
-
-
-
-
 
 define('FPDF_FONTPATH','./librairie_pdf/fpdf/font2/');
 include_once('./librairie_pdf/fpdf/fpdf3.php');
@@ -158,10 +147,6 @@ if ($id_vignette == 1) {
 
 $pdf->AddPage();
 
-
-
-
-
 switch($type) {
      	case 'ENS' :
 	        $data=recupAdrMembre($type);
@@ -186,11 +171,8 @@ switch($type) {
 	        break;
 }
 
-
-	
-
 // On imprime les étiquettes
-for($i=0;$i<count($data);$i++) { //nom,prenom,adr,ccp,commune,civ,pays,numero_eleve
+for($i=0;$i<countTriade($data);$i++) { //nom,prenom,adr,ccp,commune,civ,pays,numero_eleve
 	if (trim($data[$i][0]) == "") { continue; }
 	$nom=strtoupper($data[$i][0]);
 	$prenom=ucfirst($data[$i][1]);
@@ -232,7 +214,7 @@ for($i=0;$i<count($data);$i++) { //nom,prenom,adr,ccp,commune,civ,pays,numero_el
 
 	
 
-	if ($matricule == "oui") { $matricule="N° Etudiant : ".$data[$i][7]; }
+	if ($matricule == "oui") { $matricule=utf8_encode("N° Etudiant : ").$data[$i][7]; }
 	if ($classe == "oui") { $classe="Classe : ".chercheClasse_nom($idClasse); }
 	if ($adresse == "oui") {
 	    	$text = sprintf("%s\n%s\n%s\n%s %s %s", "$civ $nomprenom", '', "$adr", "$ccp", "$commune", "$pays");
@@ -261,15 +243,15 @@ $pdf->close();
 // Test du membre pour savoir quel fichier JS je dois executer
 if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

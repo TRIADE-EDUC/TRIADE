@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: transfert_to_location.inc.php,v 1.3 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: transfert_to_location.inc.php,v 1.5 2022/02/07 17:04:37 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $idcaddie, $action, $msg, $charset, $transferts_nb_jours_pret_defaut, $elt_flag, $elt_no_flag, $dest_id, $date_retour, $motif, $ask_date;
-global $PMBuserid;
+global $PMBuserid, $deflt_docs_location;
 
 require_once("./classes/transfert.class.php");
 
@@ -38,13 +38,13 @@ if ($idcaddie) {
 				<label class='etiquette'>".htmlentities($msg['transferts_popup_ask_date'],ENT_QUOTES,$charset)."</label>
 			</div>
 			<div class='row'>
-				<input type='text' id='ask_date' name='ask_date' value='now'  style='width: 8em;' data-dojo-type='dijit/form/DateTextBox' required='true' />
+                " . get_input_date('ask_date', 'ask_date', '', true) . "
 			</div>			
 			<div class='row'>
 				<label class='etiquette'>".$msg["transferts_popup_date_retour"]."</label>			
 			</div>
 			<div class='row'>
-				<input type='text' id='date_retour' name='date_retour' value='!!date_retour_mysql!!'  style='width: 8em;' data-dojo-type='dijit/form/DateTextBox' required='true' />
+                " . get_input_date('date_retour', 'date_retour', '', true) . "
 			</div>";
 			
 			$form = str_replace('<!--suppr_link-->', $destination_form, $form);
@@ -73,9 +73,10 @@ if ($idcaddie) {
 				$transferts_expl_is_here = array();
 				$transferts_ok = array();
 				$transferts_in_progress = array();
+				$transferts_expl_in_loan = array();
 				$transferts_nok = array();
 				foreach ($liste as $id_expl) {	
-					// L'exemplaire est dÃ©jÃ  ici ? 
+					// L'exemplaire est déjà ici ? 
 					$query = "SELECT expl_location FROM exemplaires WHERE expl_id=".$id_expl;
 					$res = pmb_mysql_query( $query );
 					$src_id = pmb_mysql_result($res, 0);
@@ -89,15 +90,23 @@ if ($idcaddie) {
 					if (pmb_mysql_num_rows($res)) {
 						$transferts_in_progress[] = $id_expl;
 						continue;
-					}			
+					}
+					// L'exemplaire est en cours de prêt ?
+					$query = "select pret_idexpl  from pret where pret_idexpl='".$id_expl."' ";
+					$res = pmb_mysql_query($query);
+					if (pmb_mysql_num_rows($res)) {
+						$transferts_expl_in_loan[] = $id_expl;
+						continue;
+					}
+					
 					$num = $trans->creer_transfert_catalogue($id_expl, $dest_id, $date_retour, stripslashes($motif), $ask_date);
 					if ($num) {	
-						// Le transfert est gÃ©nÃ©rÃ© !	
+						// Le transfert est généré !	
 						$query = 'update transferts set transfert_ask_user_num= "'.$PMBuserid.'" where id_transfert="'.$num.'" ';
 						pmb_mysql_query($query);
 						$transferts_ok[] = $id_expl;
 					} else {
-						// Erreur, Le transfert ne peut etre gÃ©nÃ©rÃ©	
+						// Erreur, Le transfert ne peut etre généré	
 						$transferts_nok[] = $id_expl;
 					}
 				}
@@ -123,13 +132,20 @@ if ($idcaddie) {
 						<div class='colonne3'><b>".count($transferts_in_progress)."</b></div>
 					</div>";
 				}
+				if (count($transferts_expl_in_loan)) {
+					print "
+					<div class='row'>
+						<div class='colonne3 align_left erreur'>".$msg['caddie_menu_action_transfert_to_location_in_loan']."</div>
+						<div class='colonne3'><b>".count($transferts_expl_in_loan)."</b></div>
+					</div>";
+				}
 				if (count($transferts_nok)) {						
 					print "	
 					<div class='row'>								
 						<div class='colonne3 align_left erreur'>".$msg['caddie_menu_action_transfert_to_location_nok']."</div>
 						<div class='colonne3'><b>".count($transferts_nok)."</b></div>		
 					</div>";
-				}							
+				}
 			}
 			break;
 		default:

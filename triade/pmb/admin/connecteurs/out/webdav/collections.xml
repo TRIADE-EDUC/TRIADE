@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: collections.xml,v 1.4 2016-03-31 08:55:44 dgoron Exp $ -->
+$Id: collections.xml,v 1.5 2020/11/25 11:07:50 arenou Exp $ -->
 
 <collections>
 	<groups>
@@ -15,6 +15,8 @@ $Id: collections.xml,v 1.4 2016-03-31 08:55:44 dgoron Exp $ -->
 			<collection code="indexint">msg:webdav_collection_indexint</collection>
 			<collection code="liste_lecture_tag">msg:webdav_collection_liste_lecture_tag</collection>
 			<collection code="liste_lecture">msg:webdav_collection_liste_lecture</collection>
+			<collection code="oeuvre">msg:webdav_collection_oeuvre</collection>
+			<collection code="concept">msg:webdav_collection_concept</collection>
 		</group>
 		<group name="scan_request" value="msg:webdav_collections_group_scan_request" class="webdav_group_scan_request">
 			<collection code="scan_request_status">msg:webdav_collection_status</collection>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur EDS
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.4 2020/07/08 14:56:35 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="eds_ws">Web Service</entry>
+	<entry code="eds_url">URL</entry>
+	<entry code="eds_login">Login</entry>
+	<entry code="eds_pwd">Password</entry>
+	<entry code="eds_profile">Profile</entry>
+	<entry code="eds_search_params">Search settings</entry>
+	<entry code="eds_maxCount">Maximum number of results returned</entry>
+	<entry code="eds_languages">Result languages</entry>
+	<entry code="eds_num">N°</entry>
+	<entry code="eds_vol">Vol.</entry>
+</XMLlist>

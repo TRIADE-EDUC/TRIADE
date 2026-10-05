@@ -1,16 +1,15 @@
 <?php
 function search_other_function_filters() {
 	global $heyrieux_public;
-	global $charset;
-	global $dbh;
-	$r.="<select name='heyrieux_public'>";
+	
+	$r ="<select name='heyrieux_public'>";
 	$r.="<option value=''>tout public</option>" .
 	/*	"<option value='a'>adultes</option>" .
 		"<option value='j'>jeunes</option>" .
 		"<option value='e'>enfants</option>" .
-		"<option value='pl'>premiÃ¨res lectures</option>";*/
+		"<option value='pl'>premières lectures</option>";*/
 	$requete="select section_libelle, sdoc_codage_import from docs_section where section_visible_opac=1 and sdoc_codage_import != '' group by sdoc_codage_import order by sdoc_codage_import";
-	$result = pmb_mysql_query($requete, $dbh);
+	$result = pmb_mysql_query($requete);
 	$option_heyrieux_public_libelle="";
 	if (pmb_mysql_num_rows($result)){
 		while ($sec = pmb_mysql_fetch_object($result)) {
@@ -27,7 +26,7 @@ function search_other_function_filters() {
 						$option_heyrieux_public_libelle="enfants";
 						break;
 				case "pl" :
-						$option_heyrieux_public_libelle="premiÃ¨res lectures";
+						$option_heyrieux_public_libelle="premières lectures";
 						break;
 				default :
 						$option_heyrieux_public_libelle=$sec->section_libelle;
@@ -40,12 +39,11 @@ function search_other_function_filters() {
 }
 
 function search_other_function_clause() {
-	global $dbh;
 	global $heyrieux_public;
 	$r = "";
 	if ($heyrieux_public) {
-		$requete="select distinct idsection from docs_section where section_visible_opac=1 and sdoc_codage_import = '".$heyrieux_public."' order by sdoc_codage_import";
-		$result = pmb_mysql_query($requete, $dbh);
+		$requete="select distinct idsection from docs_section where section_visible_opac=1 and sdoc_codage_import = '".addslashes($heyrieux_public)."' order by sdoc_codage_import";
+		$result = pmb_mysql_query($requete);
 		$public="";
 		if (pmb_mysql_num_rows($result)){
 			while ($sect = pmb_mysql_fetch_object($result)) {
@@ -78,7 +76,6 @@ function search_other_function_get_history($n) {
 }
 
 function search_other_function_human_query($n) {
-	global $dbh;
 	global $heyrieux_public;
 	$r="";
 	$heyrieux_public=$_SESSION["heyrieux_bibli".$n];
@@ -95,7 +92,7 @@ function search_other_function_human_query($n) {
 					$heyrieux_public_human_value="enfants";
 					break;
 			case "pl" :
-					$heyrieux_public_human_value="premiÃ¨res lectures";
+					$heyrieux_public_human_value="premières lectures";
 					break;
 			default :
 					$heyrieux_public_human_value=$heyrieux_public;
@@ -106,8 +103,8 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $heyrieux_public;
-	return "<input type=\"hidden\" name=\"heyrieux_public\" value=\"$heyrieux_public\">\n";
+	global $heyrieux_public, $charset;
+	return "<input type=\"hidden\" name=\"heyrieux_public\" value=\"".htmlentities($heyrieux_public, ENT_QUOTES, $charset)."\">\n";
 }
 
 ?>

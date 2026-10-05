@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart.inc.php,v 1.12 2018-08-03 10:17:06 dgoron Exp $
+// $Id: cart.inc.php,v 1.13 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($idcaddie)) $idcaddie = 0; else $idcaddie += 0;
+if(!isset($idcaddie)) $idcaddie = 0; else $idcaddie = intval($idcaddie);
 if(!isset($item)) $item = '';
 
 // page de switch paniers

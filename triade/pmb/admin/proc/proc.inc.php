@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: proc.inc.php,v 1.28 2016-11-18 13:16:05 dgoron Exp $
+// $Id: proc.inc.php,v 1.29 2019/12/09 10:29:38 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -13,10 +13,10 @@ require_once($class_path."/procs.class.php");
 function show_procs() {
 	global $msg;
 
-	//ProcÃ©dures Internes
+	//Procédures Internes
 	print procs::get_display_list();
 	
-	//ProcÃ©dures Externes
+	//Procédures Externes
 	procs::get_display_remote_lists();
 
 	print "<br>
@@ -30,3 +30,5 @@ if(strpos($action, '_remote') !== false) {
 } else {
 	procs::proceed();
 }
+print "<script type='text/javascript' src='./javascript/ajax.js'></script>
+       <script type='text/javascript'>ajax_parse_dom();</script>";

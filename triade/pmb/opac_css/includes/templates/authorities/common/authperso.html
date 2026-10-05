@@ -1,17 +1,16 @@
 {% extends 'gabarit.html' %}
 
-{% block header %}
-	<h3><span>{{ msg.authperso_see_title }}</span></h3>
+{% block title %}
+    {% if global.opac_rgaa_active %}
+        <h1>{{ authority.type_label }} {{ authority.info.isbd }}</h1>
+    {% endif %}
 {% endblock %}
 
 {% block aut_see %}
 	<div class="authpersolevel2">
-		{{block.super}}
+		{{ block.super }}
 	</div>
 {% endblock %}
-	
-{% block title %}
-{% endblock %} 
 
 {% block details %}
 	{% if authority.info.view %}

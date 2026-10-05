@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.3.42.1 2024/08/28 14:10:17 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>MARC ISO 2709 -&gt; HTML MARC</importname>
@@ -14,7 +20,7 @@
 		<addheader><![CDATA[<head><style>table {border-spacing: 0pt; empty-cells: show; border-collapse: collapse; margin-bottom: 60px} td {border: solid 1px; } table.noborder {margin-bottom: 0px} td.noborder { border:none }</style></head><body>]]></addheader>
 		<addfooter><![CDATA[</body>]]></addfooter>
 	</output>
-	
+
 	<step type="isotoxml">
 		<!-- Conversion iso2709 unimarc en xml-->
 		<trootelement>pmbmarc</trootelement>

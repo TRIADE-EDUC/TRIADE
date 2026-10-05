@@ -3,7 +3,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des section 995 (public visé) de AFBDP
-$Id: codstat_995.xml,v 1.1 2005-03-19 18:40:29 touraine37 Exp $ -->
+$Id: codstat_995.xml,v 1.1 2005/03/19 18:40:29 touraine37 Exp $ -->
 
 <XMLlist>
 	<entry code="a">adults</entry>

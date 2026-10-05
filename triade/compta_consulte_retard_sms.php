@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,11 +27,16 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/alertify.min.css">
+<link rel="stylesheet" href="./librairie_css/alertify.default.min.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/alertify.min.js"></script>
 <script type="text/javascript" src="./librairie_js/info-bulle.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_compta.js"></script>
@@ -53,25 +58,25 @@ if(isset($_POST["consult"])) {
 	$filtreSMS=$filtreSMS[0][0];
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font id='menumodule1'><?php print "SMS pour impayé(s) ou paiement(s) incomplet(s)"?> / <?php print LANGCOM3 ?><font id="color2"><b><?php print count($data) ?></b> </font></b></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font id='menumodule1'><?php print "SMS pour impayé(s) ou paiement(s) incomplet(s)"?> / <?php print LANGCOM3 ?><font id="color2"><b><?php print countTriade($data) ?></b> </font></b></td></tr>
 <tr id='cadreCentral0' >
 <td valign="top">
 	<form method="post" action="sms-mess-classe1.php" >
 	<table width=100%>
 <?php 
-	if( count($data) <= 0 ) {
-		print("<tr><td align=center valign=center id='cadreCentral0'><font class=T2>".LANGRECH1."</font></td></tr>");
+	if( countTriade($data) <= 0 ) {
+		print("<tr><td align=center valign=center id='cadreCentral0'>".LANGRECH1."</td></tr>");
 	} else {
 ?>
-		<tr >
-		<td bgcolor="yellow" ><B><?php print ucwords(LANGIMP8)." "; print ucwords(LANGIMP9); ?></B></td>
-		<td bgcolor="yellow" width="50%" align="center"><b><?php print ucwords("Envoyer")?></b></td></tr>
+		<tr>
+		<td class='cc-th'><B><?php print ucwords(LANGIMP8)." "; print ucwords(LANGIMP9); ?></B></td>
+		<td class='cc-th' width="50%" align="center"><b><?php print ucwords("Envoyer")?></b></td></tr>
 <?php
 		foreach($data as $key => $ideleve) {
 			$idEleve=$ideleve;
@@ -79,7 +84,7 @@ if(isset($_POST["consult"])) {
 			$prenomeleve=recherche_eleve_prenom($idEleve);
 			
 	?>
-	<tr  class="tabnormal2" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal2'" >
+	<tr class='cc-tr-data'>
 	<td><?php print strtoupper($nomeleve)." " ; print trunchaine(ucwords($prenomeleve),30); ?></td>
 	<td>
 <?php
@@ -117,7 +122,7 @@ if(isset($_POST["consult"])) {
 	</tr>
 	<?php
 	}
-	print "<tr><td colspan='2' bgcolor='#FFFFFF' align='center' ><br><br><input type='submit' name='envSmsClasse' value='Enregistrer' class='BUTTON' /><br><br>";
+	print "<tr><td colspan='2' align='center'><br><br><input type='submit' name='envSmsClasse' value='Enregistrer' class='BUTTON' /><br><br>";
 	print "<input type='hidden' name='nbtel' value='$o' /></td></tr>";
 }
 	print "</table>";

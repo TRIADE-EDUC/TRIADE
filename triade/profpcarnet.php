@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -91,7 +91,7 @@ SELECT
         end,
         a.ordre_affichage,a.code_groupe
 FROM
-	${prefixe}affectations a, ${prefixe}eleves e, ${prefixe}matieres m
+	{$prefixe}affectations a, {$prefixe}eleves e, {$prefixe}matieres m
 WHERE
 	e.elev_id = '$Seid'
 AND e.classe = a.code_classe
@@ -121,7 +121,7 @@ SELECT
 	n.typenote,
 	n.notationsur
 FROM
-	${prefixe}notes n, ${prefixe}matieres m
+	{$prefixe}notes n, {$prefixe}matieres m
 WHERE
 	elev_id='$Seid'
 AND DATE_FORMAT(date,'%m')='$date'
@@ -152,12 +152,12 @@ function Note($c,$s,$d,$v,$t,$u){
 
 }
 
-for($i=0;$i<count($mat);$i++){
+for($i=0;$i<countTriade($mat);$i++){
 	$cm=$mat[$i][0];
 	$mat2[$cm][]= new Note($mat[$i][1],$mat[$i][2],$mat[$i][3],$mat[$i][4],$mat[$i][5],$mat[$i][6]);
 }
 $cles=@array_keys($mat2);
-for($i=0;$i<count($ordre);$i++){
+for($i=0;$i<countTriade($ordre);$i++){
         $cle1=$ordre[$i][0];
         $cle2=$ordre[$i][1];
         $j=$ordre[$i][2];
@@ -192,7 +192,7 @@ for($i=0;$i<count($ordre);$i++){
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php
 include("./librairie_php/lib_defilement.php");
 if ($date < 10) {
@@ -201,7 +201,7 @@ if ($date < 10) {
 ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?></div>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form name="formnote">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr bgcolor="#666666">
@@ -240,7 +240,7 @@ if ($date < 10) {
                         $key2=trunchaine(ucwords($key),50);
                         $keyAff=preg_replace('/ /',"&nbsp;",$key2);
 		        echo "<tr><td width='35%'>&nbsp;<strong><a href=\"javascript:void\" onmouseover=\"document.formnote.note.value='Enseigné par ".$prof."'; return true;  \" onmouseout=\"document.formnote.note.value='';\"  >".trunchaine(ucwords($key),40)."</a></strong>&nbsp;</td><td>";
-			for($i=0;$i<count($value);$i++){
+			for($i=0;$i<countTriade($value);$i++){
 				$coeff=$value[$i]->coeff;
 				$date=$value[$i]->date;
 				$sujet=$value[$i]->sujet;
@@ -383,19 +383,19 @@ if ($date < 10) {
 </form>
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION[membre] == "menuadmin") :
+       if ($_SESSION['membre'] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

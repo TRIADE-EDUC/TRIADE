@@ -159,4 +159,5 @@ define("MODULEADMINEVALENS","non");
 define("MODULERADIO","oui");
 define("MODULEFOURNITURESCOLAIRE","oui");
 define("MODULEDELEGUEPARENT","oui");
+define("MODULETRIADECOACH","oui");
 ?>

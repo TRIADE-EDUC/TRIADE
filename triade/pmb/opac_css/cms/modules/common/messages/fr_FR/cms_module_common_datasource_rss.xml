@@ -5,10 +5,10 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_datasource_rss.xml,v 1.7 2016-10-04 11:19:02 dgoron Exp $ -->
+$Id: cms_module_common_datasource_rss.xml,v 1.9 2020/10/28 09:43:00 dbellamy Exp $ -->
 
 <XMLlist>
-	<entry code="cms_module_common_datasource_rss_limit">Nombres d'éléments maximum à renvoyer</entry>
+	<entry code="cms_module_common_datasource_rss_limit">Nombre maximum d'éléments à renvoyer</entry>
 	<entry code="cms_module_common_datasource_rss_title_desc">Titre</entry>
 	<entry code="cms_module_common_datasource_rss_subtitle_desc">Sous-titre</entry>
 	<entry code="cms_module_common_datasource_rss_description_desc">Description du flux</entry>
@@ -30,4 +30,5 @@ $Id: cms_module_common_datasource_rss.xml,v 1.7 2016-10-04 11:19:02 dgoron Exp $
 	<entry code="cms_module_common_selector_type_article_generic">Sélecteur par la valeur d'un champ générique d'article</entry>
 	<entry code="cms_module_common_selector_type_section_generic">Sélecteur par la valeur d'un champ générique de rubrique</entry>
 	<entry code="cms_module_common_datasource_rss_timeout">Time-out (En secondes)</entry>
+	<entry code="cms_module_common_datasource_rss_item_source_desc">Source de l'élément</entry>
 </XMLlist>

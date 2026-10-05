@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormSelector.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: FormSelector.js,v 1.10.8.1 2025/02/14 10:47:58 dgoron Exp $
 
 /*****
  * 
@@ -44,17 +44,21 @@ define([
         'apps/pmb/form/form_concept/SubTabConceptResults',
         'dojo/request',
         'dojo/io-query',
-        'dojox/widget/Standby'
+        'dojox/widget/Standby',
+        'dijit/layout/AccordionContainer',
         ], function(declare, dom, on, lang, xhr, domForm, TabContainer, ContentPane, query, ready, topic, registry, domAttr, 
         		geometry, domConstruct, domStyle, LayoutContainer, FormTab, ContentPaneDojox, SubTabAdd,
-        		SubTabAdvancedSearch, SubTabSimpleSearch, SubTabResults, SubTabConceptResults, request, ioQuery, Standby){
+        		SubTabAdvancedSearch, SubTabSimpleSearch, SubTabResults, SubTabConceptResults, request, ioQuery, Standby, AccordionContainer){
 		return declare([TabContainer], {
 			simpleSearchTab: null,   //Onglet rech simple
 			extendedSearchTab: null, //Onglet rech multicritere
 			resultTab: null,		 //Onglet affichage des résultats de recherche
+			resultTabStore: null,	 //Onglet affichage des résultats de recherche dans les contributions
 			newTab: null,
 			entity: '',
 			standby: null,
+			standbyStore: null,
+			parametersTabs:null,
 			constructor: function(parameters) {
 				this.parameters = parameters;
 				/**
@@ -89,8 +93,18 @@ define([
 					  			this.shutStandby();
 					  			break;
 							case 'initStandby':
-					  			this.initStandby();
+					  			this.initStandby(evtArgs);
 					  			break;
+							case 'initStandbyStore':
+								this.initStandbyStore(evtArgs);
+								break;
+							case 'printResultsStore':
+								this.printResultsStore(evtArgs);
+								this.shutStandby();
+								break;
+							case 'closePrintResultsStore':
+								this.closePrintResultsStore();
+								break;
 				  		}
 				  		break;
 				  	case 'SubTabAdd':
@@ -111,33 +125,48 @@ define([
 			},
 			postCreate: function() {
 				this.inherited(arguments);
+				this.initParametersTabs();
 				this.createTabs();
 			},
 			createTabs: function(){
 				/**
 				 * Ici doit être récupérée l'url du selecteur
 				 */
-				
 				//on teste si on ne provient pas d'un schema de catalogage
 				if (!this.parameters.queryParameters.cataloging_scheme_id) {
-			  		this.simpleSearchTab = new SubTabSimpleSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_simple_search'), style: 'width:95%; height:100%;', parameters: this.parameters});
-					this.simpleSearchTab.href = this.parameters.selectorURL+'&action=simple_search';
-					this.addChild(this.simpleSearchTab);
-
-					this.simpleSearchTab.resize();
-					this.simpleSearchTab.startup();
+					if(this.isVisibleTab('simple_search')) {
+						this.simpleSearchTab = new SubTabSimpleSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_simple_search'), style: 'width:95%; height:100%;', parameters: this.parameters});
+						this.simpleSearchTab.href = this.parameters.selectorURL+'&action=simple_search';
+						if(this.isDefaultSelectedTab('simple_search')) {
+							this.simpleSearchTab.selected = true;
+						}
+						this.addChild(this.simpleSearchTab);
+	
+						this.simpleSearchTab.resize();
+						this.simpleSearchTab.startup();
+					}
 					
-					this.extendedSearchTab = new SubTabAdvancedSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_advanced_search'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
-					this.extendedSearchTab.href = this.parameters.selectorURL+'&action=advanced_search&mode='+this.parameters.multicriteriaMode;
-					this.addChild(this.extendedSearchTab);
+					if(this.isVisibleTab('advanced_search')) {
+						this.extendedSearchTab = new SubTabAdvancedSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_advanced_search'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
+						this.extendedSearchTab.href = this.parameters.selectorURL+'&action=advanced_search&mode='+this.parameters.multicriteriaMode;
+						if(this.isDefaultSelectedTab('advanced_search')) {
+							this.extendedSearchTab.selected = true;
+						}
+						this.addChild(this.extendedSearchTab);
 
-					this.extendedSearchTab.startup();
-					this.extendedSearchTab.resize();
+						this.extendedSearchTab.startup();
+						this.extendedSearchTab.resize();
+					}
 				}
 				
-//				if (this.parameters.bt_ajouter != 'no') {
-//					this.newTab = new SubTabAdd({title: pmbDojo.messages.getMessage('selector', 'selector_tab_add'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
-//					this.newTab.href = this.parameters.selectorURL+'&action=add&form_display_mode=2';
+//				if (this.isVisibleTab('add') && this.parameters.bt_ajouter != 'no') {
+//					if(!this.newTab) {
+//						this.newTab = new SubTabAdd({title: pmbDojo.messages.getMessage('selector', 'selector_tab_add'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
+//						this.newTab.href = this.parameters.selectorURL+'&action=add&form_display_mode=2';
+//						if(this.isDefaultSelectedTab('add')) {
+//							this.newTab.selected = true;
+//						}
+//					}
 //					
 //					this.addChild(this.newTab);	
 //					
@@ -185,17 +214,17 @@ define([
 			},
 			resizeIframe: function(){
 				if(window.frameElement){
-					window.frameElement.height = window.frameElement.contentWindow.document.body.scrollHeight+50+'px';
+					window.frameElement.style.height = window.frameElement.contentWindow.document.body.scrollHeight+50+'px';
 				}
 				this.resize();
 			},
 			initEvents: function(){
 				this.own(
-						topic.subscribe('SubTabSimpleSearch', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('SubTabAdvancedSearch', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('SubTabAdd', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('expandBase', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('tablist', lang.hitch(this, this.handleEvents))
+					topic.subscribe('SubTabSimpleSearch', lang.hitch(this, this.handleEvents)),
+					topic.subscribe('SubTabAdvancedSearch', lang.hitch(this, this.handleEvents)),
+					topic.subscribe('SubTabAdd', lang.hitch(this, this.handleEvents)),
+					topic.subscribe('expandBase', lang.hitch(this, this.handleEvents)),
+					topic.subscribe('tablist', lang.hitch(this, this.handleEvents))
 				);
 			},
 			initStandby: function(){
@@ -212,6 +241,35 @@ define([
 				if(this.standby){
 					this.standby.hide();
 				}
-			}
+				if(this.standbyStore){
+					this.standbyStore.hide();
+				}
+			},
+			
+			initParametersTabs: function() {
+				if(this.parametersTabs && typeof this.parametersTabs !== 'object') {
+					this.parametersTabs = JSON.parse(this.parametersTabs);
+				}
+			},
+			
+			isVisibleTab: function(name) {
+				if(!this.parametersTabs) {
+					return true;
+				}
+				if(this.parametersTabs[name] && !parseInt(this.parametersTabs[name].visible_opac)) {
+					return false;
+				}
+				return true;
+			},
+			
+			isDefaultSelectedTab: function(name) {
+				if(!this.parametersTabs) {
+					return true;
+				}
+				if(this.parametersTabs[name] && parseInt(this.parametersTabs[name].default_selected_opac)) {
+					return true;
+				}
+				return false;
+			},
 		})
 });

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: shorturl_type_search_tags.class.php,v 1.1 2018-06-21 10:03:55 dgoron Exp $
+// $Id: shorturl_type_search_tags.class.php,v 1.2 2023/08/17 09:47:56 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class shorturl_type_search_tags extends shorturl_type{
 
 		//on ajoute un flag "from_permalink" pour forcer l'enregistrement en session de la recherche dans navigator.inc.php, afin de pouvoir appliquer des facettes
 		$html.= '
-			<script type="text/javascript">
+			<script>
 				document.location = "'.$base_path.'/index.php?lvl=more_results&mode=keyword&user_query='.rawurlencode($context['user_query']).'&tags='.$context['tags'].'&from_permalink=1'.$suite.'";
 			</script>
 			<body></html>';

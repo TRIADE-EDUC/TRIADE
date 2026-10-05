@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Fichier manifest de description des méthodes disponibles
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2020/04/22 08:49:34 dgoron Exp $ -->
+<manifest>
+	<name>pmbesAccessRights</name>
+	<methods>
+		<method name="user_notice" rights="" version="1.0" comment="msg:user_notice_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:user_notice_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:user_notice_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:user_notice_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:user_notice_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:user_notice_result"/>
+			</outputs>
+		</method>
+		<method name="empr_notice" rights="" version="1.0" comment="msg:empr_notice_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_notice_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_notice_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_notice_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_notice_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_notice_result"/>
+			</outputs>
+		</method>
+		<method name="empr_docnum" rights="" version="1.0" comment="msg:empr_docnum_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_docnum_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_docnum_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_docnum_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_docnum_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_docnum_result"/>
+			</outputs>
+		</method>
+		<method name="empr_contribution_area" rights="" version="1.0" comment="msg:empr_contribution_area_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_contribution_area_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_contribution_area_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_contribution_area_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_contribution_area_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_contribution_area_result"/>
+			</outputs>
+		</method>
+		<method name="empr_contribution_scenario" rights="" version="1.0" comment="msg:empr_contribution_scenario_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_contribution_scenario_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_contribution_scenario_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_contribution_scenario_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_contribution_scenario_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_contribution_scenario_result"/>
+			</outputs>
+		</method>
+		<method name="contribution_moderator_empr" rights="" version="1.0" comment="msg:contribution_moderator_empr_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:contribution_moderator_empr_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:contribution_moderator_empr_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:contribution_moderator_empr_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:contribution_moderator_empr_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:contribution_moderator_empr_result"/>
+			</outputs>
+		</method>
+		<method name="empr_cms_section" rights="" version="1.0" comment="msg:empr_cms_section_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_cms_section_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_cms_section_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_cms_section_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_cms_section_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_cms_section_result"/>
+			</outputs>
+		</method>
+		<method name="empr_cms_article" rights="" version="1.0" comment="msg:empr_cms_article_description" language_independant="true">
+			<pmb_requirements>
+				<pmb_requirement start_path="class" file="acces.class.php"/>
+			</pmb_requirements>
+			<inputs>
+				<description>msg:empr_cms_article_input_description</description>
+				<param name="keep_specific_rights" type="scalar" dataType="integer" description="msg:empr_cms_article_keep_specific_rights" optional = "yes" default_value = "1"/>
+				<param name="delete_calculated_rights" type="scalar" dataType="integer" description="msg:empr_cms_article_delete_calculated_rights" optional = "yes" default_value = "0"/>
+			</inputs>
+			<outputs>
+				<description>msg:empr_cms_article_output_description</description>
+				<result name="result" type="scalar" dataType="array" description="msg:empr_cms_article_result"/>
+			</outputs>
+		</method>
+	</methods>
+</manifest>
+

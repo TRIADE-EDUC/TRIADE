@@ -1,0 +1,23 @@
+{% extends 'record_in_result_display.tpl.html' %}
+
+<!-- $Id: record_in_result_display_b.tpl.html,v 1.1.2.1 2025/04/22 14:15:07 jdupuy Exp $ -->
+
+{% block record_tit1 %}
+<!-- Titre propre -->
+	<div class="title_notCourte">
+		<h3>
+			{% block record_title %}
+				<span class="tit1_notCourte"><a href="{{record.permalink}}" title="{{msg.title_link_title}} {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</a></span>
+			{% endblock %}
+		</h3>
+	</div>
+{% endblock %}
+
+{% block record_bul_info %}
+	{% if record.bul_info.bulletin_id %}
+		<li class="in_notCourte">
+			<span class="labelNot">{{ msg.dans_start }} : </span> <!-- Titre du periodique-->
+			<span><a href="{{ record.liens_opac.lien_rech_notice | replace '!!id!!' record.bul_info.id }}" title="{{msg.title_link_base}} {{ record.bul_info.title }} ({{ record.bul_info.numero }} {{ record.bul_info.date }})">{{ record.bul_info.title }}</a></span>
+		</li>
+	{% endif %}
+{% endblock %}

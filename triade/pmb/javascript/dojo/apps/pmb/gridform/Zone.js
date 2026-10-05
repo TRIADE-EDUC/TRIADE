@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // é 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Zone.js,v 1.15 2018-11-21 21:10:46 dgoron Exp $
+// $Id: Zone.js,v 1.16 2021/02/10 14:01:44 gneveu Exp $
 
 
 define([
@@ -319,9 +319,14 @@ define([
 		  getJSONInformations: function(){
 			  
 			  var JSONElements = [];
+			  var computedElements = []; 
 			  if(this.elements.length){
 				  for(var i=0 ; i<this.elements.length ; i++){
-					  JSONElements.push(this.elements[i].getJSONInformations());
+					if(computedElements.indexOf(this.elements[i].nodeId) != -1){
+						continue;
+					}
+					computedElements.push(this.elements[i].nodeId);
+					JSONElements.push(this.elements[i].getJSONInformations());
 				  }
 			  }
 			  

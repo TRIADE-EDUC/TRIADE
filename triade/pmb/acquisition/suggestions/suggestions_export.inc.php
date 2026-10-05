@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_export.inc.php,v 1.2 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: suggestions_export.inc.php,v 1.2 2019/05/28 15:00:01 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -10,7 +10,7 @@ global $class_path, $chk, $base_path, $charset, $export_list, $msg;
 
 require_once($class_path."/suggestions_export.class.php");
 
-//GÃ©nÃ©ration des notices
+//Génération des notices
 if (count($chk)) {
 	$sugg_export=new suggestions_export($chk);
 	$origine=SESSid."_".str_replace(" ","",microtime());

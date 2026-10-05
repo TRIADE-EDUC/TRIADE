@@ -1,19 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sur_location.class.php,v 1.10 2019-06-07 12:35:52 ngantier Exp $
+// $Id: sur_location.class.php,v 1.13.6.2.2.1 2025/04/24 09:50:00 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 // classes de gestion des vues Opac
 
 // inclusions principales
+global $class_path, $include_path;
 require_once("$include_path/templates/sur_location.tpl.php");
 require_once($class_path."/map/map_edition_controler.class.php");
 
 
 class sur_location {
+	public $id;
     public $libelle;
     public $pic;
     public $visible_opac;
@@ -32,108 +34,83 @@ class sur_location {
     public $num_infopage;
     public $css_style;
     public $docs_location_data;
-    
+    public $sur_location_list;
+    public $selector;
+
 	// constructeur
-	public function __construct($id=0) {	
+	public function __construct($id=0) {
 		// si id, allez chercher les infos dans la base
 	    $this->id = intval($id);
 		$this->fetch_data();
 	}
-	    
-	// r√©cup√©ration des infos en base
+
+	// rÈcupÈration des infos en base
 	public function fetch_data() {
-		global $dbh;
 		$this->docs_location_data=array();
 		if($this->id){
 			$requete="SELECT * FROM sur_location WHERE surloc_id='".$this->id."' LIMIT 1";
-			$res = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error()."<br />$requete");
+			$res = pmb_mysql_query($requete) or die(pmb_mysql_error()."<br />$requete");
 			if(pmb_mysql_num_rows($res)) {
 				$row=pmb_mysql_fetch_object($res);
-			}	
+			}
 			$this->libelle=$row->surloc_libelle;
-			$this->pic=$row->surloc_pic; 
-			$this->visible_opac=$row->surloc_visible_opac; 
-			$this->name=$row->surloc_name; 
-			$this->adr1=$row->surloc_adr1; 
-			$this->adr2=$row->surloc_adr2; 
-			$this->cp=$row->surloc_cp; 
-			$this->town=$row->surloc_town; 
-			$this->state=$row->surloc_state; 
-			$this->country=$row->surloc_country; 
-			$this->phone=$row->surloc_phone; 
-			$this->email=$row->surloc_email; 
-			$this->website=$row->surloc_website; 
-			$this->logo=$row->surloc_logo; 
-			$this->comment=$row->surloc_comment; 
-			$this->num_infopage=$row->surloc_num_infopage; 
-			$this->css_style=$row->surloc_css_style;	
-		
-			$requete = "SELECT * FROM docs_location where surloc_num='".$this->id."' or surloc_num=0 ORDER BY location_libelle";		
-		}else{ 
-			$requete = "SELECT * FROM docs_location where surloc_num=0 ORDER BY location_libelle";		
-		}		
-		$myQuery = pmb_mysql_query($requete, $dbh);					
-		while(($r=pmb_mysql_fetch_assoc($myQuery))) {	
+			$this->pic=$row->surloc_pic;
+			$this->visible_opac=$row->surloc_visible_opac;
+			$this->name=$row->surloc_name;
+			$this->adr1=$row->surloc_adr1;
+			$this->adr2=$row->surloc_adr2;
+			$this->cp=$row->surloc_cp;
+			$this->town=$row->surloc_town;
+			$this->state=$row->surloc_state;
+			$this->country=$row->surloc_country;
+			$this->phone=$row->surloc_phone;
+			$this->email=$row->surloc_email;
+			$this->website=$row->surloc_website;
+			$this->logo=$row->surloc_logo;
+			$this->comment=$row->surloc_comment;
+			$this->num_infopage=$row->surloc_num_infopage;
+			$this->css_style=$row->surloc_css_style;
+
+			$requete = "SELECT * FROM docs_location where surloc_num='".$this->id."' or surloc_num=0 ORDER BY location_libelle";
+		}else{
+			$requete = "SELECT * FROM docs_location where surloc_num=0 ORDER BY location_libelle";
+		}
+		$myQuery = pmb_mysql_query($requete);
+		while(($r=pmb_mysql_fetch_assoc($myQuery))) {
 			$this->docs_location_data[]=$r;
 		}
-				
+
 		$this->get_list();
 	}
-		
-	public static function get_info_surloc_from_location($id_docs_location=0){	
-		global $dbh;
+
+	public static function get_info_surloc_from_location($id_docs_location=0){
 		$id_docs_location = intval($id_docs_location);
 		if($id_docs_location){
 			$requete = "SELECT * FROM docs_location where idlocation='$id_docs_location'";
-			$res = pmb_mysql_query($requete, $dbh) or die(pmb_mysql_error()."<br />$requete");
+			$res = pmb_mysql_query($requete) or die(pmb_mysql_error()."<br />$requete");
 			if(pmb_mysql_num_rows($res)) {
 				$row=pmb_mysql_fetch_object($res);
 				if($row->surloc_num){
 					$sur_loc= new sur_location($row->surloc_num);
 					return $sur_loc;
-				}		
+				}
 			}
 		}
-		return $sur_loc= new sur_location();	
+		return $sur_loc= new sur_location();
 	}
-	
-	// fonction g√©n√©rant le tableau de la liste de sur-loc 
-	public function do_list() {
-		global $tpl_sur_location_tableau,$tpl_sur_location_tableau_ligne;	
-		
-		$liste="";
-		for($i=0;$i<count($this->sur_location_list);$i++) {
-			if ($i % 2) $pair_impair = "even"; else $pair_impair = "odd";
-	        $td_javascript="  onmousedown=\"document.location='./admin.php?categ=docs&sub=sur_location&action=add&id=!!surloc_id!!'\" ";
-	        $tr_surbrillance = "onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='".$pair_impair."'\" ";
-			if($this->sur_location_list[$i]->visible_opac) $visible="X" ; else $visible="&nbsp;" ;
-	
-	        $line = str_replace('!!td_javascript!!',$td_javascript , $tpl_sur_location_tableau_ligne);
-	        $line = str_replace('!!tr_surbrillance!!',$tr_surbrillance , $line);
-	        $line = str_replace('!!pair_impair!!',$pair_impair , $line);
-	        
-			$line =str_replace('!!visible_opac!!', $visible, $line);
-			$line =str_replace('!!surloc_id!!', $this->sur_location_list[$i]->id, $line);
-			$line = str_replace('!!name!!', $this->sur_location_list[$i]->libelle, $line);
-			$line = str_replace('!!comment!!', $this->sur_location_list[$i]->comment, $line);	
-						
-			$liste.=$line;
-		}
-		return $tpl = str_replace('!!lignes_tableau!!',$liste , $tpl_sur_location_tableau);
-	}
-	
-	// fonction r√©cup√©rant les infos pour la liste de sur-loc 
+
+	// fonction rÈcupÈrant les infos pour la liste de sur-loc
 	public function get_list($name='form_sur_localisation', $value_selected=0,$no_sel=0) {
-		global $dbh, $msg, $charset;	
-		
+		global $msg, $charset;
+
 		$this->sur_location_list=array();
 		$selector = "<select name='$name' id='$name'>";
-		if($no_sel) {		
+		if($no_sel) {
 			$selector .= "<option value='0'";
 			!$value_selected ? $selector .= ' selected=\'selected\'>' : $selector .= '>';
 	 		$selector .= htmlentities($msg["sur_location_aucune"],ENT_QUOTES, $charset).'</option>';
 		}
-		$myQuery = pmb_mysql_query("SELECT * FROM sur_location order by surloc_libelle ", $dbh);
+		$myQuery = pmb_mysql_query("SELECT * FROM sur_location order by surloc_libelle ");
 		if(pmb_mysql_num_rows($myQuery)){
 			$i=0;
 			while(($r=pmb_mysql_fetch_object($myQuery))) {
@@ -142,63 +119,87 @@ class sur_location {
 				$this->sur_location_list[$i]->libelle=$r->surloc_libelle;
 				$this->sur_location_list[$i]->comment=$r->surloc_comment;
 				$this->sur_location_list[$i]->visible_opac=$r->surloc_visible_opac;
-				
+
 				$selector .= "<option value='".$r->surloc_id."'";
 				$r->surloc_id == $value_selected ? $selector .= ' selected=\'selected\'>' : $selector .= '>';
 				$selector .= htmlentities($r->surloc_libelle,ENT_QUOTES, $charset).'</option>';
-				
-				$i++;			
-			}	
+
+				$i++;
+			}
 		}
-		$selector .= '</select>';   
-		$this->selector=$selector;	
-		return $selector;	
+		$selector .= '</select>';
+		$this->selector=$selector;
+		return $selector;
 	}
-	
-	// fonction de mise √† jour ou de cr√©ation 
-	public function update() {	
-		global $dbh,$msg;
-	    global $form_libelle,$form_location_pic,$form_location_visible_opac,$form_locdoc_name,$form_locdoc_adr1,$form_locdoc_adr2,
-		$form_locdoc_cp,$form_locdoc_town,$form_locdoc_state,$form_locdoc_country,$form_locdoc_phone,$form_locdoc_email,
-		$form_locdoc_website,$form_locdoc_logo,$form_locdoc_commentaire,$form_num_infopage,$form_css_style,$pmb_map_activate;
-		
-		$set_values = "SET 
-			surloc_libelle='$form_libelle', 
-			surloc_pic='$form_location_pic', 
-			surloc_visible_opac='$form_location_visible_opac', 
-			surloc_name= '$form_locdoc_name', 
-			surloc_adr1= '$form_locdoc_adr1', 
-			surloc_adr2= '$form_locdoc_adr2', 
-			surloc_cp= '$form_locdoc_cp', 
-			surloc_town= '$form_locdoc_town', 
-			surloc_state= '$form_locdoc_state', 
-			surloc_country= '$form_locdoc_country',
-			surloc_phone= '$form_locdoc_phone', 
-			surloc_email= '$form_locdoc_email', 
-			surloc_website= '$form_locdoc_website', 
-			surloc_logo= '$form_locdoc_logo', 
-			surloc_comment='$form_locdoc_commentaire', 
-			surloc_num_infopage='$form_num_infopage', 
-			surloc_css_style='$form_css_style' " ;
+
+	public function set_properties_from_form() {
+		global $form_libelle,$form_location_pic,$form_location_visible_opac;
+		global $form_locdoc_name,$form_locdoc_adr1,$form_locdoc_adr2, $form_locdoc_cp,$form_locdoc_town;
+		global $form_locdoc_state,$form_locdoc_country,$form_locdoc_phone,$form_locdoc_email;
+		global $form_locdoc_website,$form_locdoc_logo,$form_locdoc_commentaire;
+		global $form_num_infopage,$form_css_style;
+
+		$this->libelle = stripslashes($form_libelle);
+		$this->pic = stripslashes($form_location_pic);
+		$this->visible_opac = intval($form_location_visible_opac);
+		$this->name = stripslashes($form_locdoc_name);
+		$this->adr1 = stripslashes($form_locdoc_adr1);
+		$this->adr2 = stripslashes($form_locdoc_adr2);
+		$this->cp = stripslashes($form_locdoc_cp);
+		$this->town = stripslashes($form_locdoc_town);
+		$this->state = stripslashes($form_locdoc_state);
+		$this->country = stripslashes($form_locdoc_country);
+		$this->phone = stripslashes($form_locdoc_phone);
+		$this->email = stripslashes($form_locdoc_email);
+		$this->website = stripslashes($form_locdoc_website);
+		$this->logo = stripslashes($form_locdoc_logo);
+		$this->comment = stripslashes($form_locdoc_commentaire);
+		$this->num_infopage = intval($form_num_infopage);
+		$this->css_style = stripslashes($form_css_style);
+
+	}
+
+	// fonction de mise ‡ jour ou de crÈation
+	public function save() {
+	    global $pmb_map_activate;
+
+		$set_values = "SET
+			surloc_libelle='".addslashes($this->libelle)."',
+			surloc_pic='".addslashes($this->pic)."',
+			surloc_visible_opac='".$this->visible_opac."',
+			surloc_name= '".addslashes($this->name)."',
+			surloc_adr1= '".addslashes($this->adr1)."',
+			surloc_adr2= '".addslashes($this->adr2)."',
+			surloc_cp= '".addslashes($this->cp)."',
+			surloc_town= '".addslashes($this->town)."',
+			surloc_state= '".addslashes($this->state)."',
+			surloc_country= '".addslashes($this->country)."',
+			surloc_phone= '".addslashes($this->phone)."',
+			surloc_email= '".addslashes($this->email)."',
+			surloc_website= '".addslashes($this->website)."',
+			surloc_logo= '".addslashes($this->logo)."',
+			surloc_comment='".addslashes($this->comment)."',
+			surloc_num_infopage='".$this->num_infopage."',
+			surloc_css_style='".addslashes($this->css_style)."' " ;
 		if($this->id) {
 			$requete = "UPDATE sur_location $set_values WHERE surloc_id='$this->id' ";
-			$res = pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 		} else {
 			$requete = "INSERT INTO sur_location $set_values ";
-			$res = pmb_mysql_query($requete, $dbh);
-			$this->id = pmb_mysql_insert_id($dbh);
+			pmb_mysql_query($requete);
+			$this->id = pmb_mysql_insert_id();
 		}
-	
+
 		// map
 		if($pmb_map_activate){
 			$map_edition=new map_edition_controler(TYPE_SUR_LOCATION,$this->id);
-			$map_form=$map_edition->save_form();
+			$map_edition->save_form();
 		}
-		
+
 		$requete = "UPDATE docs_location SET surloc_num='0' WHERE surloc_num='$this->id' ";
-		$res = pmb_mysql_query($requete, $dbh);
-		
-		// m√©mo des localisations associ√©es
+		pmb_mysql_query($requete);
+
+		// mÈmo des localisations associÈes
 		foreach($this->docs_location_data as $docs_loc){
 			$selected=0;
 			eval("
@@ -207,96 +208,159 @@ class sur_location {
 			");
 			if($selected){
 				$requete = "UPDATE docs_location SET surloc_num='$this->id' WHERE idlocation=".$docs_loc["idlocation"];
-				$res = pmb_mysql_query($requete, $dbh);
-			}	
-		}	
-		// rafraischissement des donn√©es
+				pmb_mysql_query($requete);
+			}
+		}
+
+		$translation = new translation($this->id, "sur_location");
+		$translation->update("surloc_name", "form_locdoc_name");
+		$translation->update("surloc_adr1", "form_locdoc_adr1");
+		$translation->update("surloc_adr2", "form_locdoc_adr2");
+		$translation->update("surloc_town", "form_locdoc_town");
+
+		// rafraischissement des donnÈes
 		$this->fetch_data();
 	}
-	
-	
-		
-	// fonction g√©n√©rant le form de saisie 
-	public function do_form() {
-		global $msg;	
-		global $tpl_sur_location_form,$tpl_docs_loc_table_line;
+
+	public function get_coords_content_form() {
+	    $interface_content_form = new interface_content_form(static::class);
+	    $interface_content_form->add_element('form_locdoc_name', 'sur_location_details_name')
+	    ->add_input_node('text', $this->name)
+	    ->set_attributes(array('data-translation-fieldname' => 'surloc_name'));
+	    $interface_content_form->add_element('form_locdoc_adr1', 'sur_location_details_adr1')
+	    ->add_input_node('text', $this->adr1)
+	    ->set_attributes(array('data-translation-fieldname' => 'surloc_adr1'));
+	    $interface_content_form->add_element('form_locdoc_adr2', 'sur_location_details_adr2')
+	    ->add_input_node('text', $this->adr2)
+	    ->set_attributes(array('data-translation-fieldname' => 'surloc_adr2'));
+
+	    //Code postal / Ville
+	    $element_cp = $interface_content_form->add_element('form_locdoc_cp', 'sur_location_details_cp');
+	    $element_cp->add_input_node('integer', $this->cp)
+	    ->set_maxlength(15);
+	    $element_cp->set_class('row colonne4');
+	    $element_town = $interface_content_form->add_element('form_locdoc_town', 'sur_location_details_town');
+	    $element_town->add_input_node('text', $this->town)
+	    ->set_attributes(array('data-translation-fieldname' => 'surloc_town'));
+	    $element_town->set_class('colonne_suite');
+
+	    //Etat ou rÈgion / Pays
+	    $element_state = $interface_content_form->add_element('form_locdoc_state', 'sur_location_details_state');
+	    $element_state->add_input_node('text', $this->state)
+	    ->set_class('saisie-20em');
+	    $element_state->set_class('row colonne3');
+	    $element_country = $interface_content_form->add_element('form_locdoc_country', 'sur_location_details_country');
+	    $element_country->add_input_node('text', $this->country)
+	    ->set_class('saisie-20em');
+	    $element_country->set_class('colonne_suite');
+
+	    $interface_content_form->add_element('form_locdoc_phone', 'sur_location_details_phone')
+	    ->add_input_node('text', $this->phone)
+	    ->set_class('saisie-20em')
+	    ->set_maxlength(100);
+	    $interface_content_form->add_element('form_locdoc_email', 'sur_location_details_email')
+	    ->add_input_node('text', $this->email)
+	    ->set_maxlength(255);
+	    $interface_content_form->add_element('form_locdoc_website', 'sur_location_details_website')
+	    ->add_input_node('text', $this->website)
+	    ->set_maxlength(100);
+	    $interface_content_form->add_element('form_locdoc_logo', 'sur_location_details_logo')
+	    ->add_input_node('text', $this->logo)
+	    ->set_maxlength(255);
+	    $interface_content_form->add_element('form_locdoc_commentaire', 'sur_location_comment')
+	    ->add_textarea_node($this->comment, 55, 5);
+
+	    return $interface_content_form->get_display();
+	}
+
+	// fonction gÈnÈrant le form de saisie
+	public function get_form() {
+		global $msg;
+		global $tpl_sur_location_content_form,$tpl_docs_loc_table_line;
 		global $charset;
 		global $pmb_map_activate;
-		
-		$tpl=$tpl_sur_location_form;
-		$tpl = str_replace('!!id!!', $this->id, $tpl);
-	
-		if($this->id) $tpl = str_replace('!!form_title!!', $msg["sur_location_modifier_title"], $tpl);
-		else $tpl = str_replace('!!form_title!!', $msg["sur_location_ajouter_title"], $tpl);
-	
-		$tpl = str_replace('!!libelle!!', htmlentities($this->libelle,ENT_QUOTES, $charset), $tpl);
-		$tpl = str_replace('!!libelle_suppr!!', htmlentities(addslashes($this->libelle),ENT_QUOTES, $charset), $tpl);
-	
-		$tpl = str_replace('!!location_pic!!', htmlentities($this->pic,ENT_QUOTES, $charset), $tpl);
-	
+
+		$content_form = $tpl_sur_location_content_form;
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+
+		$interface_form = new interface_admin_form('surlocform');
+		if(!$this->id){
+			$interface_form->set_label($msg['sur_location_ajouter_title']);
+		}else{
+			$interface_form->set_label($msg['sur_location_modifier_title']);
+		}
+		$content_form = str_replace('!!libelle!!', htmlentities($this->libelle,ENT_QUOTES, $charset), $content_form);
+		$content_form = str_replace('!!location_pic!!', htmlentities($this->pic,ENT_QUOTES, $charset), $content_form);
+
 		if($this->visible_opac) $checkbox="checked"; else $checkbox="";
-		$tpl = str_replace('!!checkbox!!', $checkbox, $tpl);
+		$content_form = str_replace('!!checkbox!!', $checkbox, $content_form);
 		$lines="";
 		$pair="odd";
 		foreach($this->docs_location_data as $docs_loc){
 			$line=$tpl_docs_loc_table_line;
-			if($pair!="odd")$pair="odd"; else $pair="even";		
-			$style = "cursor: pointer;";	
+			if($pair!="odd")$pair="odd"; else $pair="even";
 			if($docs_loc["surloc_num"]==$this->id) $checked = " checked='checked' ";else $checked="";
 			if($docs_loc["location_visible_opac"]) $visible="X" ; else $visible="&nbsp;" ;
-			
-			$line=str_replace('!!docs_loc_visible_opac!!', $visible, $line);	
-			$line=str_replace('!!odd_even!!', $pair, $line);	
+
+			$line=str_replace('!!docs_loc_visible_opac!!', $visible, $line);
+			$line=str_replace('!!odd_even!!', $pair, $line);
 			$line = str_replace('!!docs_loc_id!!', 	$docs_loc["idlocation"]  , $line);
 			$line = str_replace('!!checkbox!!', 	$checked  , $line);
 			$line = str_replace('!!docs_loc_libelle!!', 	htmlentities($docs_loc["location_libelle"],ENT_QUOTES, $charset)     , $line);
 			$line = str_replace('!!docs_loc_comment!!', 	htmlentities($docs_loc["commentaire"],ENT_QUOTES, $charset)     , $line);
-			
+
 			$lines.=$line;
 		}
-		$tpl = str_replace('!!docs_loc_lines!!', 	$lines  , $tpl);
-		
+		$content_form = str_replace('!!docs_loc_lines!!', 	$lines  , $content_form);
+
 		// map
 		if($pmb_map_activate){
 			$map_edition=new map_edition_controler(TYPE_SUR_LOCATION,$this->id);
 			$map_form=$map_edition->get_form();
-			$tpl = str_replace('!!sur_location_map!!', $map_form, $tpl);
-		
+			$content_form = str_replace('!!sur_location_map!!', $map_form, $content_form);
+
 		} else {
-			$tpl = str_replace('!!sur_location_map!!', "", $tpl);
+			$content_form = str_replace('!!sur_location_map!!', "", $content_form);
 		}
-		
-		$tpl = str_replace('!!loc_name!!', 	htmlentities($this->name,ENT_QUOTES, $charset)     , $tpl);
-		$tpl = str_replace('!!loc_adr1!!', 	htmlentities($this->adr1,ENT_QUOTES, $charset)     , $tpl);
-		$tpl = str_replace('!!loc_adr2!!', 	htmlentities($this->adr2,ENT_QUOTES, $charset)     , $tpl);
-		$tpl = str_replace('!!loc_cp!!', 	$this->cp       , $tpl);
-		$tpl = str_replace('!!loc_town!!', 	htmlentities($this->town,ENT_QUOTES, $charset)     , $tpl);
-		$tpl = str_replace('!!loc_state!!', htmlentities($this->state,ENT_QUOTES, $charset)    , $tpl);
-		$tpl = str_replace('!!loc_country!!',htmlentities($this->country,ENT_QUOTES, $charset)  , $tpl);
-		$tpl = str_replace('!!loc_phone!!', $this->phone    , $tpl);
-		$tpl = str_replace('!!loc_email!!', $this->email    , $tpl);
-		$tpl = str_replace('!!loc_website!!',$this->website  , $tpl);
-		$tpl = str_replace('!!loc_logo!!', 	$this->logo     , $tpl);
-		$tpl = str_replace('!!loc_commentaire!!', htmlentities($this->comment,ENT_QUOTES, $charset), $tpl);
-	
+
+		$content_form = str_replace('!!sur_location_coords!!', $this->get_coords_content_form(), $content_form);
+
 		$requete = "SELECT id_infopage, title_infopage FROM infopages where valid_infopage=1 ORDER BY title_infopage ";
 		$infopages = gen_liste ($requete, "id_infopage", "title_infopage", "form_num_infopage", "", $this->num_infopage, 0, $msg['location_no_infopage'], 0,$msg['location_no_infopage'], 0) ;
-		$tpl = str_replace('!!loc_infopage!!', $infopages, $tpl);	
-		$tpl = str_replace('!!css_style!!', $this->css_style, $tpl);
-			
-		return confirmation_delete("./admin.php?categ=docs&sub=sur_location&action=del&id=").$tpl;	
+		$content_form = str_replace('!!loc_infopage!!', $infopages, $content_form);
+		$content_form = str_replace('!!css_style!!', $this->css_style, $content_form);
+
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->name." ?")
+		->set_content_form($content_form)
+		->set_table_name('sur_location')
+		->set_field_focus('form_libelle');
+		return $interface_form->get_display();
 	}
-	
-	
-	public function delete() {
-		global $dbh;
-		
-		if($this->id) {
-			$requete = "UPDATE docs_location SET surloc_num='0' WHERE surloc_num='$this->id' ";
-			$res = pmb_mysql_query($requete, $dbh);
-			pmb_mysql_query("DELETE from sur_location WHERE surloc_id='".$this->id."' ", $dbh);
+
+	public static function delete($id) {
+		$id = intval($id);
+		if($id) {
+			$requete = "UPDATE docs_location SET surloc_num='0' WHERE surloc_num='$id' ";
+			pmb_mysql_query($requete);
+			translation::delete($id, "sur_location");
+			pmb_mysql_query("DELETE from sur_location WHERE surloc_id='".$id."' ");
 		}
-		$this->id=0;
-		$this->get_list();
-	}    
-} // fin d√©finition classe
+	}
+
+	public function get_translated_name() {
+	    return translation::get_translated_text($this->id, 'sur_location', 'surloc_name', $this->name);
+	}
+
+	public function get_translated_adr1() {
+	    return translation::get_translated_text($this->id, 'sur_location', 'surloc_adr1', $this->adr1);
+	}
+
+	public function get_translated_adr2() {
+	    return translation::get_translated_text($this->id, 'sur_location', 'surloc_adr2', $this->adr2);
+	}
+
+	public function get_translated_town() {
+	    return translation::get_translated_text($this->id, 'sur_location', 'surloc_town', $this->town);
+	}
+} // fin dÈfinition classe

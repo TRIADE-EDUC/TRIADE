@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sectionslist_view_carousel_uikit.xml,v 1.1 2019/12/10 16:08:16 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_sectionslist_view_link'>Construction du lien vers une rubrique</entry>
+	<entry code='cms_module_sectionslist_view_carousel_link_desc'>Lien vers la rubrique</entry>
+	<entry code='cms_module_carousel_view_carousel_records_desc'>Tableau des rubriques à afficher</entry>
+</XMLlist>

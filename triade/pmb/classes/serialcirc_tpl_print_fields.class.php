@@ -2,26 +2,27 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_tpl_print_fields.class.php,v 1.5 2018-01-05 15:32:18 dgoron Exp $
+// $Id: serialcirc_tpl_print_fields.class.php,v 1.7 2023/05/04 09:22:14 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/serialcirc_print_fields.class.php");
 
 class serialcirc_tpl_print_fields extends serialcirc_print_fields {
 	
+	public $p_perso;
+
 	public function __construct($id_tpl_serialcirc=0) {
-		$this->id=$id_tpl_serialcirc+0;
+		$this->id=intval($id_tpl_serialcirc);
 		$this->fetch_data();
 	}
 	
 	public function fetch_data() {
-		global $dbh;
-		
 		$this->p_perso = new parametres_perso("empr");
 		$this->circ_tpl=array();
 		$requete="select * from serialcirc_tpl where serialcirctpl_id=".$this->id ;
-		$resultat=pmb_mysql_query($requete,$dbh);
+		$resultat=pmb_mysql_query($requete);
 		if (pmb_mysql_num_rows($resultat)) {
 			$r=pmb_mysql_fetch_object($resultat);
 			if($r->serialcirctpl_tpl) {
@@ -31,16 +32,12 @@ class serialcirc_tpl_print_fields extends serialcirc_print_fields {
 	}
 
 	public function save_form(){
-		global $dbh;
-	
 		$this->get_fields();
 		$req="update serialcirc_tpl set serialcirctpl_tpl='".addslashes(serialize($this->circ_tpl))."' where serialcirctpl_id=".$this->id ;
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 	
 	public function up_order($tablo){	
-		global $dbh;
-		
 		$liste = explode(",",$tablo);
 		$new_circ_tpl=array();
 		$this->get_fields();

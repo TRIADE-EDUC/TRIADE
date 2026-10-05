@@ -34,7 +34,7 @@
     if ($typeExport=="rss") {
       // Si depuis URL PHENIX
       // Date de debut et de fin en fonction des notes de l'utilisateur identifie par l'ID passe en parametre dans l'URL
-      $DB_CX->DbQuery("SELECT util_id, util_format_nom,util_prenom,util_nom,util_langue,util_interface FROM ${PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
+      $DB_CX->DbQuery("SELECT util_id, util_format_nom,util_prenom,util_nom,util_langue,util_interface FROM {$PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
       $idUser = $DB_CX->DbResult(0,0) + 0;
       $FORMAT_NOM_UTIL = ($DB_CX->DbResult(0,1) == "0") ? "util_nom, ' ', util_prenom" : "util_prenom, ' ', util_nom";
       $NOM_UTIL_CREATEUR = str_replace("util_","t1.util_",$FORMAT_NOM_UTIL);
@@ -51,7 +51,7 @@
         $APPLI_STYLE = "Petrole";
       }
       // Recuperation des infos de timezone de l'utilisateur
-      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure FROM ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2, ${PREFIX_TABLE}timezone WHERE t1.util_id=".(($id_partage!="")?$id_partage:$idUser)." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
+      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure FROM {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2, {$PREFIX_TABLE}timezone WHERE t1.util_id=".(($id_partage!="")?$id_partage:$idUser)." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
       $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
       $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
       $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -66,16 +66,16 @@
       // Demande affichage agenda d'un utilisateur different
       if ($id_partage!="") {
         // Recherche du nom de l'utilisateur
-        $DB_CX->DbQuery("SELECT DISTINCT * FROM ${PREFIX_TABLE}planning_partage, ${PREFIX_TABLE}planning_affecte WHERE (paf_util_id=".$id_partage." AND paf_consultant_id=".$idUser.") OR (ppl_util_id=".$id_partage." AND ppl_consultant_id=".$idUser.")");
+        $DB_CX->DbQuery("SELECT DISTINCT * FROM {$PREFIX_TABLE}planning_partage, {$PREFIX_TABLE}planning_affecte WHERE (paf_util_id=".$id_partage." AND paf_consultant_id=".$idUser.") OR (ppl_util_id=".$id_partage." AND ppl_consultant_id=".$idUser.")");
         if ($enr = $DB_CX->DbNextRow()) {
           $idUser = $id_partage;
-          $DB_CX->DbQuery("SELECT DISTINCT CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$id_partage."");
+          $DB_CX->DbQuery("SELECT DISTINCT CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$id_partage."");
           $util_desc = $DB_CX->DbResult(0,0);
         }
       }
       // Selection des dates a partir d'aujourd'hui
       $sql  = "SELECT age_id, age_libelle, age_detail, age_prive, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation, age_createur_id, age_date_modif, age_modificateur_id, age_plage, age_plage_duree, t1.util_semaine_type, age_lieu, age_disponibilite, age_rappel, age_rappel_coeff, age_email, age_cal_id, CONCAT(".$NOM_UTIL_CREATEUR.") AS nomCreateur, CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur, t1.util_email ";
-      $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2 ";
+      $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2 ";
       $sql .= "WHERE aco_util_id=".$idUser." AND age_id=aco_age_id AND t1.util_id=age_createur_id AND t2.util_id=age_modificateur_id";
       if ($idAge!="") {
         $sql .= " AND age_id=".$idAge;
@@ -175,7 +175,7 @@
       if ($subTypeExport == "URL") {
         // Si depuis URL PHENIX
         //Date de debut et de fin en fonction des notes de l'utilisateur identifie par l'ID passe en parametre dans l'URL
-        $DB_CX->DbQuery("SELECT MIN(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), MAX(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), util_id, util_format_nom, util_langue FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_aty_id>1 AND age_mere_id=0 AND age_id=aco_age_id AND aco_util_id=util_id AND util_url_export='".$id."' GROUP BY util_id");
+        $DB_CX->DbQuery("SELECT MIN(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), MAX(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), util_id, util_format_nom, util_langue FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_aty_id>1 AND age_mere_id=0 AND age_id=aco_age_id AND aco_util_id=util_id AND util_url_export='".$id."' GROUP BY util_id");
         if ($DB_CX->DbResult(0,0)!=NULL) {
           $date_dem_deb = $DB_CX->DbResult(0,0);
           $date_dem_fin = $DB_CX->DbResult(0,1);
@@ -196,7 +196,7 @@
       }
 
       // Liste des couleurs
-      $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$idUser." ORDER BY cou_libelle");
+      $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$idUser." ORDER BY cou_libelle");
       $tabCouleur = Array();
       while($enr=$DB_CX->DbNextRow()) {
         $tabCouleur[$enr['cou_libelle']] = $enr['cou_couleur'];
@@ -205,7 +205,7 @@
       @include("lang/$APPLI_LANGUE.php");
 
       // Recuperation des infos de timezone de l'utilisateur
-      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, tzn_zone FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, tzn_zone FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
       $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
       $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
       $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -261,7 +261,7 @@
       //Nom du fichier d'export
       $fileName = "Export_agenda_iCal_".date("Ymd-His",$localTime).".ics";
 
-      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
       if (!$DB_CX->DbNumRows()) {
         if ($subTypeExport == "URL") {
           $contenu = "BEGIN:VCALENDAR\r\nEND:VCALENDAR";
@@ -280,12 +280,12 @@
 
         if ($rdChExport!="1") {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation, age_date_modif, age_plage, age_plage_duree, util_semaine_type, age_lieu, age_disponibilite, age_rappel, age_rappel_coeff, age_email, age_cal_id ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur ";
           $sql .= "WHERE aco_util_id=".$idUser." AND age_id=aco_age_id AND age_aty_id>1 AND age_mere_id=0 AND util_id=age_createur_id";
           $sql .= " AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))>='".$date_dem_deb."' AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))<='".$date_dem_fin."'".$exclusion;
         } else {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation, age_date_modif, age_plage, age_plage_duree, util_semaine_type, age_lieu, age_disponibilite, age_rappel, age_rappel_coeff, age_email, age_cal_id ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur ";
           $sql .= "WHERE aco_util_id=".$idUser." AND age_id=aco_age_id AND age_aty_id>1 AND age_mere_id=0 AND util_id=age_createur_id";
           $sql .= " AND age_date_modif>='".$date_dem_deb."' AND age_date_modif<='".$date_dem_fin."'".$exclusion;
         }
@@ -323,7 +323,7 @@
             if ($enr['age_couleur']!="") {
               $data .= "X-PHENIX-AGENDA-COLOR:".$enr['age_couleur']."\r\n";
               reset ($tabCouleur);
-              while (list($key, $val) = each($tabCouleur)) {
+	    foreach ($tabCouleur as $key => $val) {
                 if ($val == $enr['age_couleur']) $cat_couleur = $key;
               }
             }
@@ -511,14 +511,14 @@
           } else {
             $zlTermine="0";
           }
-          $DB_CX->DbQuery("SELECT aex_util_id FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
+          $DB_CX->DbQuery("SELECT aex_util_id FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
           if ($DB_CX->DbNumRows()) {
-            $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
+            $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
           } else {
-            $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
+            $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
           }
         } else {
-          $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
+          $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
         }
       }
     }
@@ -531,13 +531,13 @@
       include("lang/$APPLI_LANGUE.php");
 
       // Liste des couleurs
-      $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$idUser." ORDER BY cou_libelle");
+      $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}couleurs WHERE cou_util_id=0 OR cou_util_id=".$idUser." ORDER BY cou_libelle");
       $tabCouleur = Array();
       while($enr=$DB_CX->DbNextRow()) {
         $tabCouleur[$enr['cou_libelle']] = $enr['cou_couleur'];
       }
       // Recuperation des infos de timezone de l'utilisateur
-      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
       $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
       $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
       $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -585,7 +585,7 @@
       //Nom du fichier d'export
       $fileName = "Export_agenda_vCal_".date("Ymd-His",$localTime).".vcs";
 
-      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
       if (!$DB_CX->DbNumRows()) {
         $contenu = sprintf(trad("NOTEEXP_ECHEC_CREATION"), $sql);
       } else {
@@ -600,12 +600,12 @@
 
         if ($rdChExport!="1") {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation, age_date_modif, age_plage, age_plage_duree, util_semaine_type, age_lieu, age_disponibilite, age_rappel, age_rappel_coeff, age_email, age_cal_id ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur ";
           $sql .= "WHERE aco_util_id=".$idUser." AND age_id=aco_age_id AND age_aty_id>1 AND age_mere_id=0 AND util_id=age_createur_id";
           $sql .= " AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))>='".$date_dem_deb."' AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))<='".$date_dem_fin."'".$exclusion;
         } else {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive, age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation, age_date_modif, age_plage, age_plage_duree, util_semaine_type, age_lieu, age_disponibilite, age_rappel, age_rappel_coeff, age_email, age_cal_id ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur ";
           $sql .= "WHERE aco_util_id=".$idUser." AND age_id=aco_age_id AND age_aty_id>1 AND age_mere_id=0 AND util_id=age_createur_id";
           $sql .= " AND age_date_modif >='".$date_dem_deb."' AND age_date_modif <='".$date_dem_fin."'".$exclusion;
         }
@@ -712,9 +712,11 @@
               } else {
                 // Gere le cas specifique de l'export vCal pour PalmDesktop qui ne reconnait pas le #n
                 // On cherche la derniere date de repetition de la note
-                $res=mysql_query("SELECT MAX(age_date) FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE aco_age_id=age_id AND aco_util_id=".$idUser." AND age_mere_id=".$enr['age_id']);
-                if (mysql_num_rows($res)) {
-                  $repetNote = str_replace("-","",mysql_result($res,0,0))."T000000Z";
+                $res=mysqli_query("SELECT MAX(age_date) FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE aco_age_id=age_id AND aco_util_id=".$idUser." AND age_mere_id=".$enr['age_id']);
+                if (mysqli_num_rows($res)) {
+			$res->data_seek(0);
+			$row = $res->fetch_row();
+			$repetNote = str_replace("-", "", $row[0]) . "T000000Z";
                 } else {
                   // Si erreur bien que peu probable => on ne gere pas la repetition
                   $repetNote = "";
@@ -797,14 +799,14 @@
         } else {
           $zlTermine="0";
         }
-        $DB_CX->DbQuery("SELECT aex_util_id FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
+        $DB_CX->DbQuery("SELECT aex_util_id FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
         if ($DB_CX->DbNumRows()) {
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
         } else {
-          $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
+          $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
         }
       } else {
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
       }
     }
     //--------------------------------------------------
@@ -816,7 +818,7 @@
       include("lang/$APPLI_LANGUE.php");
 
       // Recuperation des infos de timezone de l'utilisateur
-      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+      $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
       $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
       $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
       $tzHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -860,7 +862,7 @@
       //Nom du fichier d'export
       $fileName = "Export_agenda_csv_".date("Ymd-His",$localTime).".csv";
 
-      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
       if (!$DB_CX->DbNumRows()) {
         $contenu = sprintf(trad("NOTEEXP_ECHEC_CREATION"), $sql);
       } else {
@@ -872,12 +874,12 @@
 
         if ($rdChExport!="1") {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive , age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne ";
           $sql .= "WHERE aco_age_id=age_id AND aco_util_id=".$idUser." AND age_aty_id>1 AND age_mere_id=0";
           $sql .= " AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))>='".$date_dem_deb."' AND CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))<='".$date_dem_fin."'".$exclusion;
         } else {
           $sql  = "SELECT age_id, age_libelle, age_detail, age_prive , age_aty_id, age_date, age_heure_debut, age_heure_fin, age_ape_id, age_periode1, age_periode2, age_periode3, age_periode4, age_couleur, age_date_creation ";
-          $sql .= "FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne ";
+          $sql .= "FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne ";
           $sql .= "WHERE aco_age_id=age_id AND aco_util_id=".$idUser." AND age_aty_id>1 AND age_mere_id=0";
           $sql .= " AND age_date_modif >='".$date_dem_deb."' AND age_date_modif <='".$date_dem_fin."'".$exclusion;
         }
@@ -930,14 +932,14 @@
         } else {
           $zlTermine="0";
         }
-        $DB_CX->DbQuery("SELECT aex_util_id FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
+        $DB_CX->DbQuery("SELECT aex_util_id FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
         if ($DB_CX->DbNumRows()) {
-          $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
+          $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}agenda_export SET aex_creation='".$rdChExport."', aex_html='".$ckExportHtml."', aex_tz='".$ckExportTz."', aex_ch_note='".$zlTermine."', aex_note_aff='".$ckAffecte."'". ($rdChExport!="0" ? ", aex_date_old='".$date_dem_fin."'" : "").", aex_type='".$zlTypeFichier."' WHERE aex_util_id='".$idUser."'");
         } else {
-          $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
+          $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}agenda_export (aex_util_id,aex_creation,aex_html,aex_tz,aex_ch_note,aex_note_aff". ($rdChExport!="0" ? ",aex_date_old" : "").",aex_type) VALUES (".$idUser.",'".$rdChExport."','".$ckExportHtml."','".$ckExportTz."','".$zlTermine."','".$ckAffecte."'". ($rdChExport!="0" ? ",'".$date_dem_fin."'" : "").",'".$zlTypeFichier."')");
         }
       } else {
-        $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
+        $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id='".$idUser."'");
       }
     }
     //--------------------------------------------------
@@ -975,7 +977,7 @@
   // Generation du module d'export dans PHENIX
   else {
     //Date de debut et de fin en fonction des notes de l'utilisateur
-    $DB_CX->DbQuery("SELECT MIN(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), MAX(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))) FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND age_aty_id>1 AND age_mere_id=0");
+    $DB_CX->DbQuery("SELECT MIN(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))), MAX(CONCAT(age_date,' ',RIGHT(CONCAT('0',age_heure_debut),5))) FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$idUser." AND age_aty_id>1 AND age_mere_id=0");
     if ($DB_CX->DbResult(0,0)!=NULL) {
       $ztDateDeb = $DB_CX->DbResult(0,0);
       $ztDateFin = $DB_CX->DbResult(0,1);
@@ -997,7 +999,7 @@
     }
     // Recuperation des parametres de sauvegarde precedents
     $ckSauvSql=0;
-    $DB_CX->DbQuery("SELECT aex_html, aex_tz, aex_creation, aex_type, aex_ch_note, aex_note_aff , DATE_FORMAT(aex_date_old,'%d/%m/%Y') FROM ${PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
+    $DB_CX->DbQuery("SELECT aex_html, aex_tz, aex_creation, aex_type, aex_ch_note, aex_note_aff , DATE_FORMAT(aex_date_old,'%d/%m/%Y') FROM {$PREFIX_TABLE}agenda_export WHERE aex_util_id=".$idUser);
     if ($DB_CX->DbNumRows()) {
       $ckExportHtml = $DB_CX->DbResult(0,0);
       $ckExportTz = $DB_CX->DbResult(0,1);

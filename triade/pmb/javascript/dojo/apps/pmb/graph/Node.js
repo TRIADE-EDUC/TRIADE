@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Node.js,v 1.2 2018-03-13 09:31:55 tsamson Exp $
+// $Id: Node.js,v 1.2 2018/03/13 09:31:55 tsamson Exp $
 
 define([
         "dojo/_base/declare", 

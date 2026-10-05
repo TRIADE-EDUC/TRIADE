@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: CompleteExplnumList.js,v 1.1 2016-01-22 13:25:27 vtouchard Exp $
+// $Id: CompleteExplnumList.js,v 1.1 2016/01/22 13:25:27 vtouchard Exp $
 
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", "dojo/dom-attr", "dijit/registry", "dojo/on", "apps/scan_request/RecordLine","apps/scan_request/BulletinLine", "dojo/dom", "dojo/dom-style"], function(declare, WidgetBase, xhr, lang, topic, domConstruct, domAttr, registry, on, RecordLine, BulletinLine, dom, domStyle){
@@ -9,7 +9,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 	  return declare([WidgetBase], {
 		  elements: null,
 		  seeUrl: "./doc_num.php?explnum_id=",
-		  state: 0, //0 -> pas de document numÃ©rique associÃ©s Ã  la demande ; 1 -> Docnum associÃ© Ã  la demande
+		  state: 0, //0 -> pas de document numérique associés à la demande ; 1 -> Docnum associé à la demande
 		  messageNode: null,
 		  listNode: null,
 		  labelNode: null,
@@ -29,7 +29,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/request/xhr", "dojo/_ba
 			  var seeTh =  domConstruct.create('th', {innerHTML: pmbDojo.messages.getMessage('scan_request', 'scan_request_explnum_see')}, thContainerNode);
 			  if(this.params.elementsData && this.params.elementsData.length){
 				  for(var i=0 ; i<this.params.elementsData.length ; i++){
-					  if(this.params.elementsData[i].explnums.length){ //Si un document numÃ©rique a Ã©tÃ© rattachÃ© Ã  l'Ã©lÃ©ment parcouru 
+					  if(this.params.elementsData[i].explnums.length){ //Si un document numérique a été rattaché à l'élément parcouru 
 						  for(var j=0 ; j<this.params.elementsData[i].explnums.length ; j++){
 							  this.addElement({
 								  id: this.params.elementsData[i].explnums[j].id, 

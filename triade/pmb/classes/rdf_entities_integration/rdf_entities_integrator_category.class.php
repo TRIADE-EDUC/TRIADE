@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_integrator_category.class.php,v 1.7 2018-06-26 14:48:14 apetithomme Exp $
+// $Id: rdf_entities_integrator_category.class.php,v 1.9 2020/11/26 13:29:06 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -20,8 +20,8 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 	
 	protected function init_map_fields() {
 		$this->map_fields = array_merge(parent::init_map_fields(), array(
-				'http://www.pmbservices.fr/ontology#has_thesaurus' => 'num_thesaurus',
-				'http://www.pmbservices.fr/ontology#authority_number' => 'autorite'
+            'http://www.pmbservices.fr/ontology#has_thesaurus' => 'num_thesaurus',
+            'http://www.pmbservices.fr/ontology#authority_number' => 'autorite',
 		));
 		return $this->map_fields;
 	}
@@ -57,13 +57,19 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 	}
 	
 	protected function init_special_fields() {
+	    $this->special_fields = array_merge(parent::init_special_fields(), array(
+	        'http://www.pmbservices.fr/ontology#thumbnail_url' => array(
+	            "method" => array($this,"insert_thumbnail_url"),
+	            "arguments" => array(AUT_TABLE_CATEG)
+	        ),
+	    ));
 		return $this->special_fields;
 	}
 	
 	protected function post_create($uri) {
 		global $thesaurus_defaut, $lang;
 		
-		// On vÃ©rifie les valeurs nÃ©cessaires
+		// On vérifie les valeurs nécessaires
 		$thesaurus_id = $thesaurus_defaut;
 		$query = 'select num_thesaurus, num_parent from noeuds where id_noeud = '.$this->entity_id;
 		$result = pmb_mysql_query($query);
@@ -71,7 +77,7 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 		if ($row->num_thesaurus) {
 			$thesaurus_id = $row->num_thesaurus; 
 		}
-		// On rÃ©cupÃ¨re la catÃ©gorie parente et la langue
+		// On récupère la catégorie parente et la langue
 		$parent_id = $row->num_parent;
 		$thes_lang = $lang;
 		$query = 'select langue_defaut, num_noeud_racine from thesaurus where id_thesaurus = '.$thesaurus_id;
@@ -83,11 +89,11 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 			}
 			$thes_lang = $thesaurus->langue_defaut;
 		}
-		// On met Ã  jour avec les valeurs qui vont bien
+		// On met à jour avec les valeurs qui vont bien
 		$query = 'update noeuds set num_parent = '.$parent_id.', visible = "1", num_thesaurus = '.$thesaurus_id.' where id_noeud = '.$this->entity_id;
 		pmb_mysql_query($query);
 		
-		// On met Ã  jour le chemin
+		// On met à jour le chemin
 		$id_tmp = $this->entity_id;
 		while (true) {
 			$query = "select num_parent from noeuds where id_noeud = '".$id_tmp."' limit 1";
@@ -102,7 +108,7 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 		// On renseigne la table categories
 		$category_label = $this->store->get_property($uri,"pmb:label");
 		if (count($category_label)) {
-			// On supprime si il y a une entrÃ©e dans la table catÃ©gorie
+			// On supprime si il y a une entrée dans la table catégorie
 			pmb_mysql_query('delete from categories where num_noeud = "'.$this->entity_id.'" and langue = "'.$thes_lang.'"');
 			
 			$category_note = $this->store->get_property($uri,"pmb:note");
@@ -115,7 +121,7 @@ class rdf_entities_integrator_category extends rdf_entities_integrator_authority
 		// Audit
 		if ($this->integration_type && $this->entity_id) {
 			$query = 'insert into audit (type_obj, object_id, user_id, type_modif, info, type_user) ';
-			$query.= 'values ("'.AUDIT_CATEG.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.addslashes(json_encode(array("uri" => $uri))).'", "'.$this->contributor_type.'")';
+			$query.= 'values ("'.AUDIT_CATEG.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.$this->create_audit_comment($uri).'", "'.$this->contributor_type.'")';
 			pmb_mysql_query($query);
 			// Indexation
 			categories::update_index($this->entity_id);

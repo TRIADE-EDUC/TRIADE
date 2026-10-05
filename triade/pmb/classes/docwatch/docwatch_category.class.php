@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_category.class.php,v 1.7 2015-04-03 11:16:21 jpermanne Exp $
+// $Id: docwatch_category.class.php,v 1.8 2021/12/22 14:17:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,19 +19,19 @@ class docwatch_category{
 	 /*** Attributes: ***/
 
 	/**
-	 * Identifiant de la catÃ©gorie de classement des veilles
+	 * Identifiant de la catégorie de classement des veilles
 	 * @access public
 	 */
 	protected $id;
 
 	/**
-	 * Nom de la catÃ©gorie
+	 * Nom de la catégorie
 	 * @access public
 	 */
 	protected $title;
 
 	/**
-	 * CatgÃ©orie parente
+	 * Catgéorie parente
 	 * @access public
 	 */
 	protected $parent;
@@ -53,16 +53,15 @@ class docwatch_category{
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		$this->id+= $id;
+		$this->id = intval($id);
 		$this->fetch_data();
 	
 	} // end of member function __construct
 
 	public function get_children() {
-		global $dbh;
 		if(!count($this->children)){
 			$query = "select id_category from docwatch_categories where category_num_parent = '".$this->id."'";
-			$result=pmb_mysql_query($query, $dbh);
+			$result=pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				while($row=pmb_mysql_fetch_object($result)){
 					$this->children[] = $row->id_category;
@@ -88,7 +87,7 @@ class docwatch_category{
 	}
 	
 	public function set_id($id) {
-	  $this->id = $id*1;
+	  $this->id = intval($id);
 	}
 	    
 	public function get_parent() {
@@ -96,17 +95,16 @@ class docwatch_category{
 	}
 	
 	public function set_parent($parent) {
-	  $this->parent = $parent*1;
+	  $this->parent = intval($parent);
 	}
 	
 	public function fetch_data(){
-		global $dbh;
 		$this->title = "";
 		$this->parent = 0;
 		$this->children = array();
 		if($this->id){
 			$query = "select * from docwatch_categories where id_category = '".$this->id."'";
-			$result=pmb_mysql_query($query, $dbh);
+			$result=pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$this->title = $row->category_title;
@@ -118,8 +116,6 @@ class docwatch_category{
 	}
 	
 	public function save(){
-		global $dbh;
-		
 		if($this->id){
 			$query = "update docwatch_categories set ";
 			$clause = " where id_category = '".$this->id."'";
@@ -129,10 +125,10 @@ class docwatch_category{
 		}
 		$query.="category_title='".addslashes($this->title)."',";
 		$query.="category_num_parent='".addslashes($this->parent)."'";
-		$result = pmb_mysql_query($query.$clause,$dbh);
+		$result = pmb_mysql_query($query.$clause);
 		if($result){
 			if(!$this->id){
-				$this->id = pmb_mysql_insert_id($dbh);
+				$this->id = pmb_mysql_insert_id();
 			}
 			return  true;
 		}
@@ -140,25 +136,24 @@ class docwatch_category{
 	}
 	
 	public function delete(){
-		global $dbh;
 		global $msg;
 		if($this->id){
-			//pas de veille sur cette catÃ©g?
+			//pas de veille sur cette catég?
 			$query = "select watch_num_category from docwatch_watches where watch_num_category = '".$this->id."'";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$this->error = $msg['dsi_docwatch_category_error_watch_associated'];
 				return false;
 			}else{
-				//des sous-catÃ©g?
+				//des sous-catég?
 				$query = "select id_category from docwatch_categories where category_num_parent = '".$this->id."'";
-				$result = pmb_mysql_query($query,$dbh);
+				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result)){
 					$this->error = $msg['dsi_docwatch_category_error_sub_categ'];
 					return false;
 				}else{
 					$query = "delete from docwatch_categories where id_category = '".$this->id."'";
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if($result){
 						return true;
 					}else{
@@ -175,8 +170,4 @@ class docwatch_category{
 	public function get_error(){
 		return $this->error;
 	}
-
-	    
-
-
 } // end of docwatch_category

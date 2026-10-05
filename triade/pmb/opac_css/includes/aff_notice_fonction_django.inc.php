@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: aff_notice_fonction_django.inc.php,v 1.1 2015-09-17 14:43:22 apetithomme Exp $
+// $Id: aff_notice_fonction_django.inc.php,v 1.2 2023/05/12 14:31:20 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -24,13 +24,13 @@ function aff_notice_fonction_django($id,$cart,$gen_header,$use_cache,$mode_aff_n
 		$record_css_already_included = true;
 	}
 	
-	//DÃ©but du flux
+	//Début du flux
 	if ($id==-1) {
 		if($layout['TYPE']=='table'){
 			$retour_aff.="<table class='aff_notice_django'>";
 			$aff_notice_table_pos=0;
 		}else{
-			$retour_aff.="<div class='row'>";
+			$retour_aff.="<div class='row' id='aff_notice_django_container'>";
 		}
 	}
 	

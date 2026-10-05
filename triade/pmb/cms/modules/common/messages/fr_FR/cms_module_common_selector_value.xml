@@ -5,8 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_value.xml,v 1.1 2014-11-26 11:24:21 dgoron Exp $ -->
+$Id: cms_module_common_selector_value.xml,v 1.2 2023/02/03 15:24:01 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_value_label">Valeur</entry>
+	<entry code="cms_module_common_selector_value_help">Pour des valeurs multiples, veuillez les séparer par un ";"</entry>
 </XMLlist>

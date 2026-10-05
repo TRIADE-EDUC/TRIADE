@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: camera.tpl.php,v 1.4 2019-05-27 12:49:13 ngantier Exp $
+// $Id: camera.tpl.php,v 1.5 2023/02/01 16:03:22 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -27,7 +27,7 @@ $camera_tpl='
 	var streaming = false;
 
 	// The various HTML elements we need to configure or control. These
-	// will be set by the startup() function.	
+	// will be set by the startup() function.
 	var video = null;
 	var canvas = null;
 	var startbutton = null;
@@ -39,30 +39,18 @@ $camera_tpl='
 	    startbutton = document.getElementById("startbutton");
 	    savebutton = document.getElementById("savebutton");
 	
-		navigator.getMedia = ( 
-			navigator.getUserMedia ||
-			navigator.webkitGetUserMedia ||
-			navigator.mozGetUserMedia ||
-			navigator.msGetUserMedia
-		);
-	
-	    navigator.getMedia({
-				video: true,
-				audio: false
-			},
-			function(stream) {
-				if (navigator.mozGetUserMedia) {
-					video.mozSrcObject = stream;
-				} else {
-					var vendorURL = window.URL || window.webkitURL;
-					video.src = vendorURL.createObjectURL(stream);
-				}
-				video.play();
-			},
-			function(err) {
-				console.log("An error occured! " + err);
-			}
-		);
+        let response = navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: true
+        });
+
+        response.then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        });
+        response.catch(function (err) {
+	        console.log("An error occured! " + err);
+        });
 
 		video.addEventListener("canplay", function(ev){
 			if (!streaming) {
@@ -122,15 +110,15 @@ $camera_tpl='
 			clearphoto();
 		}
 	}
-		
-	function savepicture() {	
+
+	function savepicture() {
 		var dataUrl = canvas.toDataURL("image/jpeg", 0.85);
 		dataUrl=encodeURIComponent(dataUrl);
-		
-	 	var xhr_object = new http_request();					
-		xhr_object.request("./camera_upload.php",true,"imgBase64=" + dataUrl + "&upload_filename=" + init_camera_filename + "&upload_url=" + init_camera_url, true, cback, 0, 0);	
+
+	 	var xhr_object = new http_request();
+		xhr_object.request("./camera_upload.php",true,"imgBase64=" + dataUrl + "&id_empr=" + id_empr, true, cback, 0, 0);
 	}
-		
+
 	function cback(response){
 		var response = JSON.parse(response);
 		if(parseInt(response.status)) {
@@ -139,36 +127,23 @@ $camera_tpl='
 			document.getElementById("uploaded").innerHTML = "'.$msg['camera_photo_fail_uploaded'].' "+response.message;
 		}
 	}
-					
-	window.addEventListener("load_camera", startup, false);			
-			
+
+	window.addEventListener("load_camera", startup, false);
+
 })();
 
-function init_camera(filename, url, field, replace_part) {
-	if (init_camera_filename && init_camera_url){
-		init_camera_filename = filename;
-		init_camera_url = url;		
-		return;
-	}
-							
-	if(field && replace_part){
-		var val = document.getElementById(field).value;		
-		filename=filename.replace(replace_part, val);
-		url=url.replace(replace_part, val);
-	}	
-					
-	init_camera_filename = filename;
-	init_camera_url = url;
-					
+
+function init_camera(idEmpr) {
 	var event = new Event("load_camera");
-	window.dispatchEvent(event);	
+	window.dispatchEvent(event);
+
+	id_empr = idEmpr;
 }
-			
-init_camera_filename = "";
-init_camera_url = "";
-					
-</script>				
-		
+
+id_empr = 0;
+
+</script>
+
 ';
 
 $photo_tpl='
@@ -176,7 +151,7 @@ $photo_tpl='
 	<div id="drop-target" >'.$msg['camera_photo_drop_file'].'</div>
 	<div id="preview" style="width: 166px; height: 100px;">
 		<canvas id="canvas" width="166" height="100"></canvas>
-	</div>		
+	</div>
 </div>
 <input type="button" class="bouton" id="savebutton" value="'.$msg['camera_photo_upload'].'"/>
 <span id="uploaded"></span>
@@ -232,11 +207,11 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 		readImage(e.dataTransfer.files[0]);
 	}, true);
 					
-	function savepicture() {			
+	function savepicture() {
 		var dataUrl = canvas.toDataURL("image/jpeg", 0.85);
 		var dataUrl_encode = encodeURIComponent(dataUrl);
-	 	var xhr_object = new http_request();					
-		xhr_object.request("./camera_upload.php",true,"imgBase64=" + dataUrl_encode + "&upload_filename=" + init_camera_filename + "&upload_url=" + init_camera_url, true, cback, 0, 0);
+	 	var xhr_object = new http_request();
+		xhr_object.request("./camera_upload.php",true,"imgBase64=" + dataUrl_encode + "&id_empr=" + id_empr, true, cback, 0, 0);
 	}
 		
 	function cback(response){
@@ -249,25 +224,10 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 	}
 });
 		
-function init_camera(filename, url, field, replace_part) {
-	if (init_camera_filename && init_camera_url){
-		init_camera_filename = filename;
-		init_camera_url = url;
-		return;
-	}
-											
-	if(field && replace_part){
-		var val = document.getElementById(field).value;		
-		filename=filename.replace(replace_part, val);
-		url=url.replace(replace_part, val);
-	}	
-							
-	init_camera_filename = filename;
-	init_camera_url = url;
-
+function init_camera(idEmpr) {
+	id_empr = idEmpr;
 }
 			
-init_camera_filename = "";
-init_camera_url = "";
+id_empr = 0;
 </script>
 ';		

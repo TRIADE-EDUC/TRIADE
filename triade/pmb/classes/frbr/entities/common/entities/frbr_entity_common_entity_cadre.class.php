@@ -2,71 +2,82 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_entity_cadre.class.php,v 1.23 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_entity_cadre.class.php,v 1.29.4.1 2025/04/24 12:37:04 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/frbr/frbr_entities.class.php");
 require_once($class_path."/frbr/frbr_entity_graph.class.php");
 
 class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
-	
+
 	/**
 	 * Identifiant du cadre
 	 */
 	protected $id;
-	
+
 	/**
-	 * LibellÃ©
+	 * Libellé
 	 * @var string
 	 */
 	protected $name;
-	
+
 	/**
 	 * Description
 	 */
 	protected $comment;
-	
+
 	/**
 	 * CSS sur le cadre
 	 * @var string
 	 */
 	protected $css_class;
-	
+
 	/**
-	 * Instance du jeu de donnÃ©es associÃ©
+	 * Instance du jeu de données associé
 	 * @var frbr_entity_common_entity_datanode
 	 */
 	protected $datanode;
-	
+
 	protected $type = 'cadre';
-	
+
 	protected $view = array();
-	
+
 	protected $parent_datanodes;
-	
+
 	/**
 	 * cadre visible dans le graph
 	 * @var boolean
 	 */
 	protected $visible_in_graph;
-	
+
 	/**
-	 * chemin des jeux de donnÃ©es parent
+	 * chemin des jeux de données parent
 	 * @var string
 	 */
 	protected $datanodes_path;
-	
+
 	/**
-	 * affiche le template mÃªme sans donnÃ©es
+	 * affiche le template même sans données
 	 * @var string
 	 */
 	protected $display_empty_template;
-	
+
+	/**
+	 * nom de la classe
+	 * @var string
+	 */
+	protected $class_name;
+
+	public $sorting;
+
+	protected $object;
+
 	public function __construct($id=0) {
 		parent::__construct($id);
 	}
-	
+
 	protected function fetch_data() {
 		$this->name = '';
 		$this->comment = '';
@@ -81,9 +92,10 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 			$this->visible_in_graph = $row->cadre_visible_in_graph;
 			$this->datanodes_path = $row->cadre_datanodes_path;
 			$this->display_empty_template = $row->cadre_display_empty_template;
+			$this->class_name = $row->cadre_object;
 			$this->set_page_from_num($row->cadre_num_page);
 			$this->set_datanode_from_num($row->cadre_num_datanode);
-			
+
 			$query = "select id_cadre_content,cadre_content_object,cadre_content_type from frbr_cadres_content where cadre_content_num_cadre = '".$this->id."'";
 			$result = pmb_mysql_query($query);
 			if($result && pmb_mysql_num_rows($result)){
@@ -101,18 +113,22 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		}
 	}
 
+	public function get_comment(){
+	    return $this->comment;
+	}
+
 	protected function get_linked_form() {
 		$num_datanode = 0;
 		if (isset($this->datanode) && is_object($this->datanode)) {
 			$num_datanode = $this->datanode->get_id();
 		}
-		$form = "				
+		$form = "
 				<div class='colonne3'>
 					<label class='etiquette' for='".$this->type."_num_parent'>".$this->format_text($this->msg['frbr_entity_common_entity_'.$this->type.'_parent'])."</label>
 				</div>
 				<div class='colonne-suite'>";
 		$form .= $this->get_parent_name_from_page($num_datanode);
-		if ($this->id) {	
+		if ($this->id) {
 			$form .= "<input type='hidden' name='".$this->type."_num_parent' id='".$this->type."_num_parent' value='".$num_datanode."'/>";
 		}
 // 					<input type='text' class='saisie-50em' name='".$this->type."_datanode_name' id='".$this->type."_datanode_name' value='".($this->datanode->get_name() ? $this->datanode->get_name() : "")."' disabled/>
@@ -120,9 +136,9 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		$form .="</div>";
 		return $form;
 	}
-	
+
 	protected function get_views_list_form(){
-		//si aucun datanode n'est liÃ© au cadre, on prend la vue par dÃ©faut de la page
+		//si aucun datanode n'est lié au cadre, on prend la vue par défaut de la page
 		if (!$this->datanode && $this->page) {
 			$entity_type = frbr_entity_common_entity_page::get_entity_type_from_id($this->page->get_id());
 			$this->elements_used['view'] = array('frbr_entity_'.$entity_type.'_view');
@@ -146,17 +162,17 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 			$form = "
 					<input type='hidden' name='cadre_view_choice' id='cadre_view_choice' value='".$this->elements_used['view'][0]."'/>";
 		}
-	
+
 		return $form;
 	}
-	
+
 	protected function get_sorting_list_form(){
 		$form = "";
 		return $form;
 	}
-	
+
 	public function get_parameters_form() {
-		global $msg, $charset;
+		global $charset;
 		$parameters_form = "
 			<div class='row'>
 				<div class='colonne3'>
@@ -199,7 +215,7 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 				<script type='text/javascript'>
 					require(['dojo/topic'],
 					function(topic){
-						topic.publish('ParametersFormsReady', 'frbrEntityLoadElemForm', {elem:'".$view_name."',id:'".$view_id."',domId:'view_form',numPage:'".$this->page->get_id()."'}); 
+						topic.publish('ParametersFormsReady', 'frbrEntityLoadElemForm', {elem:'".$view_name."',id:'".$view_id."',domId:'view_form',numPage:'".$this->page->get_id()."'});
 					});
 				</script>";
 		}
@@ -216,9 +232,9 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 			</div>";
 		return $parameters_form;
 	}
-	
+
 	/**
-	 * DonnÃ©es provenant d'un formulaire
+	 * Données provenant d'un formulaire
 	 */
 	public function set_properties_from_form() {
 		global $cadre_name;
@@ -228,7 +244,7 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		global $cadre_display_empty_template;
 		global $cadre_num_parent;
 		global $num_page;
-		
+
 		$this->name = stripslashes($cadre_name);
 		$this->comment = stripslashes($cadre_comment);
 		$this->css_class = stripslashes($cadre_css_class);
@@ -237,7 +253,7 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		$this->set_datanode_from_num($cadre_num_parent);
 		$this->set_page_from_num($num_page);
 	}
-	
+
 	/**
 	 * Formatage pour la sauvegarde dans la table '_content'
 	 */
@@ -276,7 +292,7 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Sauvegarde
 	 */
@@ -287,14 +303,14 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		} else {
 			$query = 'insert into frbr_cadres set ';
 			$where = '';
-		}		
+		}
 		$query .= '
 				cadre_name = "'.addslashes($this->name).'",
 				cadre_comment = "'.addslashes($this->comment).'",
 				cadre_css_class = "'.addslashes($this->css_class).'",
 				cadre_object = "'.addslashes($this->class_name).'",
 				cadre_num_datanode = "'.(isset($this->datanode) ? $this->datanode->get_id() : 0).'",
-				cadre_num_page = "'.(isset($this->page) ? $this->page->get_id() : 0).'",		
+				cadre_num_page = "'.(isset($this->page) ? $this->page->get_id() : 0).'",
 				cadre_visible_in_graph = "'.addslashes($this->visible_in_graph).'",
 				cadre_datanodes_path = "'.(isset($this->datanode) ? $this->datanode->get_path() : 0).'",
 				cadre_display_empty_template = "'.addslashes($this->display_empty_template).'"
@@ -302,7 +318,7 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		$result = pmb_mysql_query($query);
 		if($result) {
 			if(!$this->id) {
-				$this->id = pmb_mysql_insert_id();				
+				$this->id = pmb_mysql_insert_id();
 			}
 			//vue
 			$saved = $this->save_content('view');
@@ -314,44 +330,42 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Suppression
 	 */
 	public static function delete($id=0){
-		global $msg;
-	
-		$id += 0;
+		$id = intval($id);
 		if($id) {
 			//suppression du placement du cadre
 			frbr_place::delete($id);
 			$query = "delete from frbr_cadres_content where cadre_content_num_cadre = ".$id;
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 			$query = "delete from frbr_cadres where id_cadre = ".$id;
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public function get_id() {
 		return $this->id;
 	}
-	
+
 	public function get_name() {
 		return $this->name;
 	}
-	
+
 	public function get_object() {
 		return $this->object;
 	}
-	
+
 	public function get_type() {
 		return $this->type;
 	}
-	
+
 	public function set_datanode_from_num($num_datanode) {
-		$num_datanode += 0;
+		$num_datanode = intval($num_datanode);
 		if($num_datanode) {
 			$query = 'select datanode_object from frbr_datanodes where id_datanode = '.$num_datanode;
 			$result = pmb_mysql_query($query);
@@ -361,9 +375,9 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 			}
 		}
 	}
-	
+
 	public static function get_class_name_from_id($id_cadre) {
-		$id_cadre+=0;
+		$id_cadre = intval($id_cadre);
 		$class_name = '';
 		$query = '	SELECT cadre_object
 					FROM frbr_cadres
@@ -378,12 +392,12 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 		}
 		return $class_name;
 	}
-	
+
 	public function get_object_id() {
 		global $id;
 		return $id;
 	}
-	
+
 	protected function recursive_parent_datanodes($datanode_instance) {
 		$parent_datanode_id = $datanode_instance->get_parent()->get_id();
 		$this->parent_datanodes = array();
@@ -397,39 +411,50 @@ class frbr_entity_common_entity_cadre extends frbr_entity_common_entity {
 			}
 		}
 	}
-	
-	protected function get_content_cadre($data) {
+
+	protected function get_content_cadre($data, $grouped_data = []) {
 		$content = "";
 		if (count($data) || $this->display_empty_template) {
 			$view = new $this->view['name']($this->view['id']);
-			$content = $view->render($data);
+			$content = $view->render($data, $grouped_data);
 		}
 		return "<div id='".$this->get_dom_id()."'".($this->css_class != '' ? " class='".$this->css_class."'" : "").">".$content."</div>";
 	}
-	
+
 	public function show_cadre($datanodes_data = array()) {
 		if(isset($this->datanode) && is_object($this->datanode)) {
 			if ($this->view['id'] != 0) {
-				if (isset($datanodes_data[$this->datanode->get_id()]) && count($datanodes_data[$this->datanode->get_id()][0])) {
+			    if (!empty($datanodes_data[$this->datanode->get_id()]) && count($datanodes_data[$this->datanode->get_id()][0])) {
 					$datanode_datasource_class_name = $this->datanode->get_datasource()['name'];
 					$datasource = new $datanode_datasource_class_name($this->datanode->get_datasource()['id']);
+					//Gestion de la limite d'éléments à renvoyer
 					$limit = $datasource->get_parameters()->nb_max_elements;
-					
-					$data = array_slice($datanodes_data[$this->datanode->get_id()][0], 0, $limit);
-					return $this->get_content_cadre($data);
+					$data = $datanodes_data[$this->datanode->get_id()][0];
+					if($limit > 0){
+					    $data = array_slice($data, 0, $limit);
+					}
+					$grouped_data = $datanodes_data[$this->datanode->get_id()]["group"] ?? [];
+					return $this->get_content_cadre($data, $grouped_data);
 				} else {
 					return $this->get_content_cadre(array());
 				}
 			}
 		} elseif($this->view['id'] != 0){
-			$view = new $this->view['name']($this->view['id']);
+			//$view = new $this->view['name']($this->view['id']);
 			$data = array($this->get_object_id());
 			return $this->get_content_cadre($data);
 		}
 		return "<div id='".$this->get_dom_id()."'".($this->css_class != '' ? " class='".$this->css_class."'" : "")."></div>";
 	}
-	
+
 	public function get_dom_id(){
 		return $this->class_name."_".$this->id;
-	}	
+	}
+
+	public function get_class_name() {
+	    if (isset($this->class_name)) {
+	        return $this->class_name;
+	    }
+	    return "";
+	}
 }

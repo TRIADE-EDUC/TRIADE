@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requests_ajax.js,v 1.3 2013-04-12 09:25:31 mbertin Exp $
+// $Id: requests_ajax.js,v 1.3 2013/04/12 09:25:31 mbertin Exp $
 
 requete = new Array();
 line=new Array();
@@ -303,7 +303,7 @@ function ajax_show_info(id) {
 				document.getElementById("d"+id).style.top=poss[1]+"px";
 				document.getElementById("d"+id).style.display='block';
 			}
-		} //else alert("Erreur : le serveur a rÃ©pondu "+requete.responseText);
+		} //else alert("Erreur : le serveur a répondu "+requete.responseText);
 	}
 }
 

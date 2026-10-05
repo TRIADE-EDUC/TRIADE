@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -21,13 +21,12 @@ session_start();
 include_once("./common/config.inc.php"); // futur : auto_prepend_file
 include_once("./common/config2.inc.php"); // futur : auto_prepend_file
 include_once("./librairie_php/db_triade.php");
+$cnx=cnx();
 if ($_SESSION["membre"] == "menupersonnel") {
-	$cnx=cnx();
 	if (!verifDroit($_SESSION["id_pers"],"cahiertextes")) {
 		accesNonReserveFen();
 		exit();
 	}
-	Pgclose();
 }else{
 	validerequete("profadmin");	
 }

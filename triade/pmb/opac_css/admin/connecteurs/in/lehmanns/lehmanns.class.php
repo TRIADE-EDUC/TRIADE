@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lehmanns.class.php,v 1.10 2019-06-10 14:42:59 btafforeau Exp $
+// $Id: lehmanns.class.php,v 1.14.10.1 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,7 +10,6 @@ global $class_path,$base_path, $include_path;
 require_once($class_path."/connecteurs.class.php");
 
 if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) {
-    if (PHP_MAJOR_VERSION == "5") @ini_set("zend.ze1_compatibility_mode", "0");
 	require_once($include_path.'/xslt-php4-to-php5.inc.php');
 }
 
@@ -19,41 +18,41 @@ class xml_dom_lehmanns {
 	public $charset;			/*!< Charset courant (iso-8859-1 ou utf-8) */
 	/**
 	 * \brief Arbre des noeuds du document
-	 * 
-	 * L'arbre est composÃ© de noeuds qui ont la structure suivante :
+	 *
+	 * L'arbre est composé de noeuds qui ont la structure suivante :
 	 * \anchor noeud
 	 * \verbatim
 	 $noeud = array(
-	 	NAME	=> Nom de l'Ã©lÃ©ment pour un noeud de type Ã©lÃ©ment (TYPE = 1)
+	 	NAME	=> Nom de l'élément pour un noeud de type élément (TYPE = 1)
 	 	ATTRIBS	=> Tableau des attributs (nom => valeur)
-	 	TYPE	=> 1 = Noeud Ã©lÃ©ment, 2 = Noeud texte
+	 	TYPE	=> 1 = Noeud élément, 2 = Noeud texte
 	 	CHILDS	=> Tableau des noeuds enfants
 	 )
 	 \endverbatim
 	 */
-	public $tree; 
+	public $tree;
 	public $error=false; 		/*!< Signalement d'erreur : true : erreur lors du parse, false : pas d'erreur */
-	public $error_message=""; 	/*!< Message d'erreur correspondant Ã  l'erreur de parse */
+	public $error_message=""; 	/*!< Message d'erreur correspondant à l'erreur de parse */
 	public $depth=0;			/*!< \protected */
 	public $last_elt=array();	/*!< \protected */
 	public $n_elt=array();		/*!< \protected */
 	public $cur_elt=array();	/*!< \protected */
 	public $last_char=false;	/*!< \protected */
-	
+
 	/**
 	 * \protected
 	 */
-	function close_node() {
+	public function close_node() {
 		$this->last_elt[$this->depth-1]["CHILDS"][]=$this->cur_elt;
 		$this->last_char=false;
 		$this->cur_elt=$this->last_elt[$this->depth-1];
 		$this->depth--;
 	}
-	
+
 	/**
 	 * \protected
 	 */
-	function startElement($parser,$name,$attribs) {
+	public function startElement($parser,$name,$attribs) {
 		if ($this->last_char) $this->close_node();
 		$this->last_elt[$this->depth]=$this->cur_elt;
 		$this->cur_elt=array();
@@ -63,19 +62,19 @@ class xml_dom_lehmanns {
 		$this->last_char=false;
 		$this->depth++;
 	}
-	
+
 	/**
 	 * \protected
 	 */
-	function endElement($parser,$name) {
+	public function endElement($parser,$name) {
 		if ($this->last_char) $this->close_node();
 		$this->close_node();
 	}
-	
+
 	/**
 	 * \protected
 	 */
-	function charElement($parser,$char) {
+	public function charElement($parser,$char) {
 		if ($this->last_char) $this->close_node();
 		$this->last_char=true;
 		$this->last_elt[$this->depth]=$this->cur_elt;
@@ -84,18 +83,18 @@ class xml_dom_lehmanns {
 		$this->cur_elt["TYPE"]=2;
 		$this->depth++;
 	}
-	
+
 	/**
 	 * \brief Instanciation du parser
-	 * 
-	 * Le document xml est parsÃ© selon le charset donnÃ© et une reprÃ©sentation sous forme d'arbre est gÃ©nÃ©rÃ©e
+	 *
+	 * Le document xml est parsé selon le charset donné et une représentation sous forme d'arbre est générée
 	 * @param string $xml XML a manipuler
 	 * @param string $charset Charset du document XML
 	 */
-	function __construct($xml,$charset="iso-8859-1") {
+	public function __construct($xml,$charset="iso-8859-1") {
 		$this->charset=$charset;
 		$this->cur_elt=array("NAME"=>"document","TYPE"=>"0");
-		
+
 		//Initialisation du parser
 		$xml_parser=xml_parser_create($this->charset);
 		xml_set_object($xml_parser,$this);
@@ -103,22 +102,24 @@ class xml_dom_lehmanns {
 		xml_parser_set_option( $xml_parser, XML_OPTION_SKIP_WHITE, 1 );
 		xml_set_element_handler($xml_parser, "startElement", "endElement");
 		xml_set_character_data_handler($xml_parser,"charElement");
-		
+
 		if (!xml_parse($xml_parser, $xml)) {
        		$this->error_message=sprintf("XML error: %s at line %d",xml_error_string(xml_get_error_code($xml_parser)),xml_get_current_line_number($xml_parser));
        		$this->error=true;
 		}
 		$this->tree=$this->last_elt[0];
+		xml_parser_free($xml_parser);
+		unset($xml_parser);
 	}
-	
+
 	/**
 	 * \anchor path_node
-	 * \brief RÃ©cupÃ©ration d'un noeud par son chemin
-	 * 
-	 * Recherche un noeud selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin du noeud recherchÃ©
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvÃ©
+	 * \brief Récupération d'un noeud par son chemin
+	 *
+	 * Recherche un noeud selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin du noeud recherché
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return noeud Noeud correspondant au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -130,24 +131,24 @@ class xml_dom_lehmanns {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
-	 a/b/c		Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>)
-	 a/b/c[2]/d	Le premier noeud Ã©lÃ©ment d du deuxiÃ¨me noeud c (<d>Sous texte</d>)
-	 a/b/c[3]	Le troisiÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>) 
-	 a/b/id@c	Le premier noeud Ã©lÃ©ment c (<c id="0">Texte</c>). L'attribut est ignorÃ©
-	 a/b/id@c[3]	Le troisÃ¨me noeud Ã©lÃ©ment c (<c id="2">Texte 2</c>). L'attribut est ignorÃ©
-	 
-	 Les attributs ne peuvent Ãªtre citÃ©s que sur le noeud final.
+
+	 a/b/c		Le premier noeud élément c (<c id="0">Texte</c>)
+	 a/b/c[2]/d	Le premier noeud élément d du deuxième noeud c (<d>Sous texte</d>)
+	 a/b/c[3]	Le troisième noeud élément c (<c id="2">Texte 2</c>)
+	 a/b/id@c	Le premier noeud élément c (<c id="0">Texte</c>). L'attribut est ignoré
+	 a/b/id@c[3]	Le troisème noeud élément c (<c id="2">Texte 2</c>). L'attribut est ignoré
+
+	 Les attributs ne peuvent être cités que sur le noeud final.
 	 \endverbatim
 	 */
-	function get_node($path,$node="") {
-		if ($node=="") $node=&$this->tree;
+	public function get_node($path, $node = array()) {
+		if (empty($node)) $node =& $this->tree;
 		$paths=explode("/",$path);
 		for ($i=0; $i<count($paths); $i++) {
 			if ($i==count($paths)-1) {
 				$pelt=explode("@",$paths[$i]);
-				if (count($pelt)==1) { 
-					$p=$pelt[0]; 
+				if (count($pelt)==1) {
+					$p=$pelt[0];
 				} else {
 					$p=$pelt[1];
 					$attr=$pelt[0];
@@ -164,7 +165,7 @@ class xml_dom_lehmanns {
 			$found=false;
 			for ($j=0; $j<count($node["CHILDS"]); $j++) {
 				if (($node["CHILDS"][$j]["TYPE"]==1)&&($node["CHILDS"][$j]["NAME"]==$name)) {
-					//C'est celui lÃ  !!
+					//C'est celui là !!
 					if ($nc==$n) {
 						$node=&$node["CHILDS"][$j];
 						$found=true;
@@ -176,15 +177,15 @@ class xml_dom_lehmanns {
 		}
 		return $node;
 	}
-	
+
 	/**
 	 * \anchor path_nodes
-	 * \brief RÃ©cupÃ©ration d'un ensemble de noeuds par leur chemin
-	 * 
-	 * Recherche d'un ensemble de noeuds selon le chemin donnÃ© en paramÃ¨tre. Un noeud de dÃ©part peut Ãªtre prÃ©cisÃ©
-	 * @param string $path Chemin des noeuds recherchÃ©s
-	 * @param noeud [$node] Noeud de dÃ©part de la recherche (le noeud doit Ãªtre de type 1)
-	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvÃ©
+	 * \brief Récupération d'un ensemble de noeuds par leur chemin
+	 *
+	 * Recherche d'un ensemble de noeuds selon le chemin donné en paramètre. Un noeud de départ peut être précisé
+	 * @param string $path Chemin des noeuds recherchés
+	 * @param noeud [$node] Noeud de départ de la recherche (le noeud doit être de type 1)
+	 * @return array noeud Tableau des noeuds correspondants au chemin ou \b false si non trouvé
 	 * \note Les chemins ont la syntaxe suivante :
 	 * \verbatim
 	 <a>
@@ -196,13 +197,13 @@ class xml_dom_lehmanns {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
-	 a/b/c		Tous les Ã©lÃ©ments c fils de a/b 
-	 a/b/c[2]/d	Tous les Ã©lÃ©ments d fils de a/b et du deuxiÃ¨me Ã©lÃ©ment c
-	 a/b/id@c	Tous les noeuds Ã©lÃ©ments c fils de a/b. L'attribut est ignorÃ©
+
+	 a/b/c		Tous les éléments c fils de a/b
+	 a/b/c[2]/d	Tous les éléments d fils de a/b et du deuxième élément c
+	 a/b/id@c	Tous les noeuds éléments c fils de a/b. L'attribut est ignoré
 	 \endverbatim
 	 */
-	function get_nodes($path, $node="") {
+	public function get_nodes($path, $node="") {
 		$n = 0;
 		$nodes = array();
 		while ($nod = $this->get_node($path."[$n]", $node)) {
@@ -211,21 +212,21 @@ class xml_dom_lehmanns {
 		}
 		return $nodes;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ©ration des donnÃ©es sÃ©rialisÃ©es d'un noeud Ã©lÃ©ment
-	 * 
-	 * RÃ©cupÃ¨re sous forme texte les donnÃ©es d'un noeud Ã©lÃ©ment :\n
-	 * -Si c'est un Ã©lÃ©ment qui n'a qu'un noeud texte comme fils, renvoie le texte\n
-	 * -Si c'est un Ã©lÃ©ment qui a d'autres Ã©lÃ©ments comme fils, la version sÃ©rialisÃ©e des enfants est renvoyÃ©e
-	 * @param noeud $node Noeud duquel rÃ©cupÃ©rer les donnÃ©es
-	 * @param bool $force_entities true : les donnÃ©es sont renvoyÃ©es avec les entitÃ©s xml, false : les donnÃ©es sont renvoyÃ©es sans entitÃ©s
-	 * @return string donnÃ©es sÃ©rialisÃ©es du noeud Ã©lÃ©ment
+	 * \brief Récupération des données sérialisées d'un noeud élément
+	 *
+	 * Récupère sous forme texte les données d'un noeud élément :\n
+	 * -Si c'est un élément qui n'a qu'un noeud texte comme fils, renvoie le texte\n
+	 * -Si c'est un élément qui a d'autres éléments comme fils, la version sérialisée des enfants est renvoyée
+	 * @param noeud $node Noeud duquel récupérer les données
+	 * @param bool $force_entities true : les données sont renvoyées avec les entités xml, false : les données sont renvoyées sans entités
+	 * @return string données sérialisées du noeud élément
 	 */
-	function get_datas($node,$force_entities=false) {
+	public function get_datas($node,$force_entities=false) {
 		$char="";
 		if ($node["TYPE"]!=1) return false;
-		//Recherche des fils et vÃ©rification qu'il n'y a que du texte !
+		//Recherche des fils et vérification qu'il n'y a que du texte !
 		$flag_text=true;
 		for ($i=0; $i<count($node["CHILDS"]); $i++) {
 			if ($node["CHILDS"][$i]["TYPE"]!=2) $flag_text=false;
@@ -235,7 +236,7 @@ class xml_dom_lehmanns {
 		}
 		for ($i=0; $i<count($node["CHILDS"]); $i++) {
 			if ($node["CHILDS"][$i]["TYPE"]==2)
-				if ($force_entities) 
+				if ($force_entities)
 					$char.=htmlspecialchars($node["CHILDS"][$i]["DATA"],ENT_NOQUOTES,$this->charset);
 				else $char.=$node["CHILDS"][$i]["DATA"];
 			else {
@@ -252,27 +253,27 @@ class xml_dom_lehmanns {
 		}
 		return $char;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ©ration des attributs d'un noeud
-	 * 
-	 * Renvoie le tableau des attributs d'un noeud Ã©lÃ©ment (Type 1)
-	 * @param noeud $node Noeud Ã©lÃ©ment duquel on veut les attributs
+	 * \brief Récupération des attributs d'un noeud
+	 *
+	 * Renvoie le tableau des attributs d'un noeud élément (Type 1)
+	 * @param noeud $node Noeud élément duquel on veut les attributs
 	 * @return mixed Tableau des attributs Nom => Valeur ou false si ce n'est pas un noeud de type 1
 	 */
-	function get_attributes($node) {
+	public function get_attributes($node) {
 		if ($node["TYPE"]!=1) return false;
 		return $node["ATTRIBUTES"];
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un noeud par son chemin
-	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es d'un noeud ou la valeur d'un attribut selon le chemin
-	 * @param string $path chemin du noeud recherchÃ©
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return string DonnÃ©e sÃ©rialsiÃ©e ou valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * \brief Récupère les données ou l'attribut d'un noeud par son chemin
+	 *
+	 * Récupère les données sérialisées d'un noeud ou la valeur d'un attribut selon le chemin
+	 * @param string $path chemin du noeud recherché
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return string Donnée sérialsiée ou valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -283,16 +284,16 @@ class xml_dom_lehmanns {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
+
 	 a/b/c		Renvoie : "Texte"
 	 a/b/c[2]/d	Renvoie : "Sous texte"
 	 a/b/c[2]	Renvoie : "<d>Sous texte</d>"
-	 a/b/c[3]	Renvoie : "Texte 2" 
+	 a/b/c[3]	Renvoie : "Texte 2"
 	 a/b/id@c	Renvoie : "0"
 	 a/b/id@c[3]	Renvoie : "2"
 	 \endverbatim
 	 */
-	function get_value($path,$node="") {
+	public function get_value($path,$node="") {
 		$elt=$this->get_node($path,$node);
 		if ($elt) {
 			$paths=explode("/",$path);
@@ -311,7 +312,7 @@ class xml_dom_lehmanns {
 				$found=false;
 				foreach($elt["ATTRIBS"] as $key=>$val) {
 					if ($key==$attr) {
-						//C'est celui lÃ  !!
+						//C'est celui là !!
 						if ($nc==$n) {
 							$value=$val;
 							$found=true;
@@ -326,15 +327,15 @@ class xml_dom_lehmanns {
 		}
 		return $value;
 	}
-	
+
 	/**
-	 * \brief RÃ©cupÃ¨re les donnÃ©es ou l'attribut d'un ensemble de noeuds par leur chemin
-	 * 
-	 * RÃ©cupÃ¨re les donnÃ©es sÃ©rialisÃ©es ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
-	 * @param string $path chemin des noeuds recherchÃ©s
-	 * @param noeud $node Noeud de dÃ©part de la recherche
-	 * @return array Tableau des donnÃ©es sÃ©rialisÃ©es ou des valeur de l'attribut, \b false si le chemin n'existe pas
-	 * \note Exemples de valeurs renvoyÃ©es selon le chemin :
+	 * \brief Récupère les données ou l'attribut d'un ensemble de noeuds par leur chemin
+	 *
+	 * Récupère les données sérialisées ou la valeur d'un attribut d'un ensemble de noeuds selon le chemin
+	 * @param string $path chemin des noeuds recherchés
+	 * @param noeud $node Noeud de départ de la recherche
+	 * @return array Tableau des données sérialisées ou des valeur de l'attribut, \b false si le chemin n'existe pas
+	 * \note Exemples de valeurs renvoyées selon le chemin :
 	 * \verbatim
 	 <a>
 	 	<b>
@@ -345,13 +346,13 @@ class xml_dom_lehmanns {
 	 		<c id="2">Texte 2</c>
 	 	</b>
 	 </a>
-	 
+
 	 a/b/c		Renvoie : [0]=>"Texte",[1]=>"<d>Sous texte</d>",[2]=>"Texte 2"
 	 a/b/c[2]/d	Renvoie : [0]=>"Sous texte"
 	 a/b/id@c	Renvoie : [0]=>"0",[1]=>"1",[2]=>"2"
 	 \endverbatim
 	 */
-	function get_values($path,$node="") {
+	public function get_values($path,$node="") {
 		$n=0;
 		while ($elt=$this->get_node($path."[$n]",$node)) {
 			$elts[$n]=$elt;
@@ -376,7 +377,7 @@ class xml_dom_lehmanns {
 					$found=false;
 					foreach($elt["ATTRIBS"] as $key=>$val) {
 						if ($key==$attr) {
-							//C'est celui lÃ  !!
+							//C'est celui là !!
 							if ($nc==$n) {
 								$values[]=$val;
 								$found=true;
@@ -395,34 +396,32 @@ class xml_dom_lehmanns {
 }
 
 class lehmanns extends connector {
-	//Variables internes pour la progression de la rÃ©cupÃ©ration des notices
+
+	//Variables internes pour la progression de la récupération des notices
 	public $themes=array(
 		"Humanmedizin",
 		"Psychologie",
 		"Informatik",
-		"VeterinÃ¤rmedizin",
+		"Veterinärmedizin",
 		"Naturwissenschaft",
 		"Technik",
 		"Recht",
 		"Wirtschaft"
 	);
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "lehmanns";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
+
     public function source_get_property_form($source_id) {
     	global $charset;
-    	
+
     	$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			//Affichage du formulaire avec $params["PARAMETERS"]
@@ -430,7 +429,7 @@ class lehmanns extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		if ($themes=="") $themes=array();
 		$form="<br />
@@ -460,7 +459,7 @@ class lehmanns extends connector {
 ";
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $themes,$max_return;
     	if ($themes[0]=="") $themes=array();
@@ -468,23 +467,23 @@ class lehmanns extends connector {
     	$t["max_return"]=$max_return;
 		$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
-	
-	//RÃ©cupÃ©ration  des proriÃ©tÃ©s globales par dÃ©faut du connecteur (timeout, retry, repository, parameters)
+
+	//Récupération  des proriétés globales par défaut du connecteur (timeout, retry, repository, parameters)
 	public function fetch_default_global_values() {
 		parent::fetch_default_global_values();
 		$this->repository=1;
 		$this->parameters=array();
 	}
-	
+
 	//Fonction de recherche
 	public function search($source_id,$query,$search_id) {
 		global $charset;
-		global $opac_curl_proxy;	
+		global $opac_curl_proxy;
 		global $base_path;
-			
+
 		$this->error=false;
 		$this->error_message="";
-		
+
 		$params=$this->get_source_params($source_id);
 		$this->fetch_global_properties();
 		if ($params["PARAMETERS"]) {
@@ -493,12 +492,12 @@ class lehmanns extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
-		
+
 		if (!$max_return) $max_return=100;
-		
-		//Construction de la requÃªte
+
+		//Construction de la requête
 		$boolsearch="";
 		for ($i=0; $i<count($query); $i++) {
 			$term=$query[$i];
@@ -582,12 +581,12 @@ class lehmanns extends connector {
 	 		if ($stop) break;
 		}
 	}
-	
+
 	public function rec_records($noticesxml, $source_id, $search_id) {
 		global $charset,$base_path;
 		if (!trim($noticesxml))
 			return;
-			
+
 		$rec_uni_dom=new xml_dom_lehmanns($noticesxml,"iso-8859-1");
 		$notices=$rec_uni_dom->get_nodes("unimarc/notice");
 		if ($notices) {
@@ -596,12 +595,12 @@ class lehmanns extends connector {
 			}
 		}
 	}
-	
+
 	public function rec_record($rec_uni_dom,$noticenode, $source_id, $search_id) {
 		global $charset,$base_path;
-		
+
 		$date_import=date("Y-m-d H:i:s",time());
-		
+
 		if (!$rec_uni_dom->error) {
 			//Initialisation
 			$ref="";
@@ -610,7 +609,7 @@ class lehmanns extends connector {
 			$field_order=0;
 			$subfield_order=0;
 			$value="";
-			
+
 			$fs=$rec_uni_dom->get_nodes("f", $noticenode);
 			//Recherche du 001
 			for ($i=0; $i<count($fs); $i++) {
@@ -619,7 +618,7 @@ class lehmanns extends connector {
 					break;
 				}
 			}
-			//Mise Ã  jour 
+			//Mise à jour
 			if ($ref) {
 				//Si conservation des anciennes notices, on regarde si elle existe
 				if (!$this->del_old) {
@@ -630,19 +629,19 @@ class lehmanns extends connector {
 					$this->delete_from_entrepot($source_id, $ref, $search_id);
 					$this->delete_from_external_count($source_id, $ref);
 				}
-				//Si pas de conservation ou refÃ©rence inexistante
+				//Si pas de conservation ou reférence inexistante
 				if (($this->del_old)||((!$this->del_old)&&(!$ref_exists))) {
-					//Insertion de l'entÃªte
+					//Insertion de l'entête
 					$n_header["rs"]=$rec_uni_dom->get_value("unimarc/notice/rs");
 					$n_header["ru"]=$rec_uni_dom->get_value("unimarc/notice/ru");
 					$n_header["el"]=$rec_uni_dom->get_value("unimarc/notice/el");
 					$n_header["bl"]=$rec_uni_dom->get_value("unimarc/notice/bl");
 					$n_header["hl"]=$rec_uni_dom->get_value("unimarc/notice/hl");
 					$n_header["dt"]=$rec_uni_dom->get_value("unimarc/notice/dt");
-					
-					//RÃ©cupÃ©ration d'un ID
+
+					//Récupération d'un ID
 					$recid = $this->insert_into_external_count($source_id, $ref);
-					
+
 					$rqt_parallel="insert into entrepot_source_".$source_id." (connector_id,source_id,ref,date_import,ufield,usubfield,field_order,subfield_order,value,i_value,recid,search_id) values";
 					$first=false;
 					foreach($n_header as $hc=>$code) {
@@ -655,7 +654,7 @@ class lehmanns extends connector {
 						'".$hc."','',-1,0,'".addslashes($code)."','',$recid,'".addslashes($search_id)."')";
 						$first=true;
 					}
-					
+
 					for ($i=0; $i<count($fs); $i++) {
 						$ufield=$fs[$i]["ATTRIBS"]["c"];
 						$field_order=$i;

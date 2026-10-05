@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaigns_view.class.php,v 1.4 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: campaigns_view.class.php,v 1.5 2022/02/18 09:55:13 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -23,7 +23,7 @@ class campaigns_view {
 	protected $campaigns;
 	
 	/**
-	 * Instances des vues dÃ©rivÃ©es
+	 * Instances des vues dérivées
 	 * @var campaigns_view
 	 */
 	protected static $instances;
@@ -92,6 +92,9 @@ class campaigns_view {
 	
 		$campaign_charting = $this->get_campaign_charting('opening_and_clicks');
 		
+		$recipients_number = array();
+		$opening_by_campaigns = array();
+		$clicks_by_campaigns = array();
 		$x_labels = array();
 		$i = 1;
 		foreach ($this->campaigns as $campaign) {
@@ -121,10 +124,11 @@ class campaigns_view {
 	 * Nombre d'ouvertures par stats destinataires
 	 */
 	public function get_opening_by_recipients($element) {
-		global $msg, $charset;
+		global $msg;
 	
 		$campaign_charting = $this->get_campaign_charting('opening_by_recipients_'.$element);
 
+		$total_opening = array();
 		$x_labels = array();
 		$i = 1;
 		$series = array();
@@ -157,10 +161,11 @@ class campaigns_view {
 	 * Nombre de clics par stats destinataires
 	 */
 	public function get_clicks_by_recipients($element) {
-		global $msg, $charset;
+		global $msg;
 	
 		$campaign_charting = $this->get_campaign_charting('clicks_by_recipients_'.$element);
 	
+		$total_clicks = array();
 		$x_labels = array();
 		$i = 1;
 		$series = array();

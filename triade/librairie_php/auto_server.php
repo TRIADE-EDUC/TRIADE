@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -64,10 +64,12 @@ $server = new TestServer();
 
 class initObject {
 	// init method for the test class, includes needed files an registers it for ajax
+		
 	function initTest2() {
-		include 'support/test2.class.php';
-		$this->server->registerClass(new test2());
+	//	include 'support/test2.class.php';
+	//	$this->server->registerClass(new test2());
 	}
+
 }
 $init = new initObject();
 $server->registerInitObject($init);

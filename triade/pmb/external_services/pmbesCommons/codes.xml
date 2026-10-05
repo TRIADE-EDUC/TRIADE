@@ -217,10 +217,10 @@
 	<field code="896" label="lien">
 		<subfield code="a" label="URL de la vignette"/>
 	</field>
-	<field code="900" label="Champs personalisés de la notice">
-		<subfield code="a" label="Valeur du champ personalisé"/>
-		<subfield code="l" label="Libellé du champ personalisé"/>
-		<subfield code="n" label="Nom du champ personalisé"/>
+	<field code="900" label="Champs personnalisés de la notice">
+		<subfield code="a" label="Valeur du champ personnalisé"/>
+		<subfield code="l" label="Libellé du champ personnalisé"/>
+		<subfield code="n" label="Nom du champ personnalisé"/>
 	</field>
 	<field code="995" label="Exemplaires">
 		<subfield code="a" label="Localisation"/>
@@ -231,10 +231,10 @@
 		<subfield code="u" label="Message exemplaire"/>
 		<subfield code="z" label="Commentaire non bloquant"/>
 	</field>
-	<field code="999" label="Champs personalisés des exemplaires">
-		<subfield code="a" label="Valeur du champ personalisé"/>
-		<subfield code="l" label="Libellé du champ personalisé"/>
-		<subfield code="n" label="Nom du champ personalisé"/>
+	<field code="999" label="Champs personnalisés des exemplaires">
+		<subfield code="a" label="Valeur du champ personnalisé"/>
+		<subfield code="l" label="Libellé du champ personnalisé"/>
+		<subfield code="n" label="Nom du champ personnalisé"/>
 		<subfield code="f" label="Code barres de l&#039;exemplaire"/>
 	</field>
 </unilabels>

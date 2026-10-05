@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_django.xml,v 1.6 2018-10-31 17:46:06 dgoron Exp $ -->
+$Id: cms_module_common_view_django.xml,v 1.8 2020/02/05 08:12:53 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_django_add_template">Add a template</entry>
@@ -26,6 +26,8 @@ $Id: cms_module_common_view_django.xml,v 1.6 2018-10-31 17:46:06 dgoron Exp $ --
 	<entry code="cms_module_common_view_django_session_vars_opac_url_desc">Variable $opac_url_base</entry>
 	<entry code="cms_module_common_view_django_session_vars_platform_desc">Operating system name</entry>
 	<entry code="cms_module_common_view_django_session_vars_browser_desc">Browser name</entry>
+	<entry code="cms_module_common_view_django_session_vars_server_addr_desc">Adresse IP du serveur</entry>
+	<entry code="cms_module_common_view_django_session_vars_remote_addr_desc">Adresse IP du client</entry>
 	<entry code="cms_module_common_view_django_session_vars_empr_nom_desc">Nom de l'emprunteur</entry>
 	<entry code="cms_module_common_view_django_session_vars_empr_prenom_desc">Prénom de l'emprunteur</entry>
 	<entry code="cms_module_common_view_django_session_vars_empr_mail_desc">Mail de l'emprunteur</entry>

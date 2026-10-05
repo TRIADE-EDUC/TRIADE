@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: stemming.class.php,v 1.4 2017-10-03 14:58:55 tsamson Exp $
+// $Id: stemming.class.php,v 1.5 2019/07/15 14:24:31 btafforeau Exp $
 
 
 class stemming {
 	public $word;
 	public $clean_word="";
 	public $stem;
-	public $vowels = array("a","e","i","o","u","y","Ã¢","Ã ","Ã«","Ã©","Ãª","Ã¨","Ã¯","Ã®","Ã´","Ã»","Ã¹");
+	public $vowels = array("a","e","i","o","u","y","â","à","ë","é","ê","è","ï","î","ô","û","ù");
 	public $standard_suffixes = array(
 		"ance","iqUe","isme","able","iste","eux","ances","iqUes","ismes","ables","istes",
 		"atrice","ateur","ation","atrices","ateurs","ations",
@@ -17,7 +17,7 @@ class stemming {
 		"usion","ution","usions","utions",
 		"ence","ences",
 		"ement","ements",
-		"itÃ©","itÃ©s",
+		"ité","ités",
 		"if","ive","ifs","ives",
 		"eaux",
 		"aux",
@@ -28,19 +28,19 @@ class stemming {
 		"ment","ments"	
 	);
 	public $verbs_suffixes_i = array(
-		"Ã®mes","Ã®t","Ã®tes","i","ie","ies","ir","ira","irai","iraIent","irais","irait","iras","irent","irez","iriez","irions","irons","iront","is","issaIent",
+		"îmes","ît","îtes","i","ie","ies","ir","ira","irai","iraIent","irais","irait","iras","irent","irez","iriez","irions","irons","iront","is","issaIent",
 		"issais","issait","issant","issante","issantes","issants","isse","issent","isses","issez","issiez","issions","issons","it"
 	);
 	public $others_verbs_suffixes= array(
 		"ions",
-		"Ã©","Ã©e","Ã©es","Ã©s","Ã¨rent","er","era","erai","eraIent","erais","erait","eras","erez","eriez","erions","erons","eront","ez","iez",
-		"Ã¢mes","Ã¢t","Ã¢tes","a","ai","aIent","ais","ait","ant","ante","antes","ants","as","asse","assent","asses","assiez","assions"
+		"é","ée","ées","és","èrent","er","era","erai","eraIent","erais","erait","eras","erez","eriez","erions","erons","eront","ez","iez",
+		"âmes","ât","âtes","a","ai","aIent","ais","ait","ant","ante","antes","ants","as","asse","assent","asses","assiez","assions"
 	);
 	public $residual_suffixes = array(
 		"ion",
-		"ier","iÃ¨re","Ier","IÃ¨re",
+		"ier","ière","Ier","Ière",
 		"e",
-		"Ã«"
+		"ë"
 	);
 	
 	public $rv = "";
@@ -62,31 +62,33 @@ class stemming {
 	protected function get_clean_word(){
 		$clean_word = strtolower($this->word);
 		
-		for($i=0; $i<strlen($clean_word) ; $i++){
-			switch($clean_word[$i]){
+		for ($i = 0; $i < strlen($clean_word); $i++) {
+		    $letter_to_search = substr($clean_word, $i, 1);
+		    $letter = substr($this->clean_word, $i-1, 1);
+			switch ($letter_to_search) {
 				case "i" :
-					if(isset($this->clean_word[$i-1]) && in_array($this->clean_word[$i-1],$this->vowels) && isset($clean_word[$i+1]) && in_array($clean_word[$i+1],$this->vowels)){
-						$this->clean_word.= strtoupper($clean_word[$i]);
-					}else{
-						$this->clean_word.= $clean_word[$i];
+					if ($letter && in_array($letter, $this->vowels) && substr($clean_word, $i+1, 1) && in_array(substr($clean_word, $i+1, 1), $this->vowels)) {
+						$this->clean_word .= strtoupper($letter_to_search);
+					} else {
+						$this->clean_word .= $letter_to_search;
 					}
 					break;
 				case "u" :
-					if((isset($this->clean_word[$i-1]) && $this->clean_word[$i-1] == "q") || (isset($this->clean_word[$i-1]) && in_array($this->clean_word[$i-1],$this->vowels) && isset($clean_word[$i+1]) && in_array($clean_word[$i+1],$this->vowels))){
-						$this->clean_word.= strtoupper($clean_word[$i]);
-					}else{
-						$this->clean_word.= $clean_word[$i];
+					if (($letter && $letter == "q") || ($letter && in_array($letter, $this->vowels) && substr($clean_word, $i+1, 1) && in_array(substr($clean_word, $i+1, 1), $this->vowels))) {
+						$this->clean_word .= strtoupper($letter_to_search);
+					} else {
+						$this->clean_word .= $letter_to_search;
 					}
 					break;
 				case "y" :
-					if((isset($this->clean_word[$i-1]) && in_array($this->clean_word[$i-1],$this->vowels)) || (isset($clean_word[$i+1]) && in_array($clean_word[$i+1],$this->vowels))){
-						$this->clean_word.= strtoupper($clean_word[$i]);
-					}else{
-						$this->clean_word.= $clean_word[$i];
+					if (($letter && in_array($letter, $this->vowels)) || (substr($clean_word, $i+1, 1) && in_array(substr($clean_word, $i+1, 1), $this->vowels))) {
+						$this->clean_word .= strtoupper($letter_to_search);
+					} else {
+						$this->clean_word .= $letter_to_search;
 					}
 					break;
 				default :
-					$this->clean_word.= $clean_word[$i];
+					$this->clean_word .= $letter_to_search;
 					break;
 			}
 		}
@@ -101,13 +103,13 @@ class stemming {
 			return $this->rv;
 		}
 		//le mot commence par une double voyelle...
-		if(in_array($this->clean_word[0],$this->vowels) && in_array($this->clean_word[1],$this->vowels)){
+		if (in_array(substr($this->clean_word, 0, 1), $this->vowels) && in_array(substr($this->clean_word, 1, 1), $this->vowels)) {
 			$this->rv = substr($this->clean_word,3);
 			return $this->rv;
 		}
-		//dans le cas gÃ©nÃ©ral c'est aprÃ¨s la premiÃ¨re voyelle dans le mot...
+		//dans le cas général c'est après la première voyelle dans le mot...
 		for($i=1;$i<strlen($this->clean_word) ; $i++){
-			if(in_array($this->clean_word[$i],$this->vowels)){
+			if(in_array(substr($this->clean_word, $i, 1), $this->vowels)){
 				$this->rv = substr($this->clean_word,$i+1);
 				return $this->rv;
 			}
@@ -119,7 +121,7 @@ class stemming {
 	
 	protected function get_r1(){
 		for($i=1 ; $i<strlen($this->clean_word) ; $i++){
-			if(in_array($this->clean_word[$i-1],$this->vowels) && !in_array($this->clean_word[$i],$this->vowels)){
+			if(in_array(substr($this->clean_word, $i-1, 1), $this->vowels) && !in_array(substr($this->clean_word, $i, 1), $this->vowels)){
 				$this->r1 = substr($this->clean_word,$i+1);
 				return $this->r1;
 			}
@@ -130,7 +132,7 @@ class stemming {
 	
 	protected function get_r2(){
 		for($i=1 ; $i<strlen($this->r1) ; $i++){
-			if(in_array($this->r1[$i-1],$this->vowels) && !in_array($this->r1[$i],$this->vowels)){
+			if(in_array(substr($this->r1, $i-1, 1), $this->vowels) && !in_array(substr($this->r1, $i, 1), $this->vowels)){
 				$this->r2 = substr($this->r1,$i+1);
 				return $this->r2;
 			}
@@ -140,7 +142,7 @@ class stemming {
 	protected function standard_suffix_removal(){
 		$end = false;
 		foreach($this->standard_suffixes as $suffix){
-			//si le sufixe correspond, on applique la rÃ¨gle associÃ©e
+			//si le sufixe correspond, on applique la règle associée
 			if(substr($this->stem,-strlen($suffix)) == $suffix){
 				switch ($suffix){
 					case "ance":
@@ -196,12 +198,12 @@ class stemming {
 					case "ements":
 						//supprime le suffixe dans RV
 						$this->delete_if_in_r("rv",$suffix);
-						//sÃ©rie de cas un peu particulier...
+						//série de cas un peu particulier...
 						if($this->preceded_by($suffix,"iv")){
-							//suffixe prÃ©cÃ©dÃ© de ic
+							//suffixe précédé de ic
 							$this->delete_if_in_r("r2","iv");
 							if($this->preceded_by("iv".$suffix,"at")){
-							//suffixe prÃ©cÃ©dÃ© de at
+							//suffixe précédé de at
 							$this->delete_if_in_r("r2","at");
 							}
 						}else if($this->preceded_by($suffix,"eus")){
@@ -211,16 +213,16 @@ class stemming {
 							$this->delete_if_in_r("r2","abl");
 						}else if($this->preceded_by($suffix,"iqU")){
 							$this->delete_if_in_r("r2","iqU");	
-						}else if($this->preceded_by($suffix,"iÃ¨r")){
-							$this->replace_if_in_r("rv","iÃ¨r","i");
-						}else if($this->preceded_by($suffix,"IÃ¨r")){
-							$this->replace_if_in_r("rv","IÃ¨r","i");
+						}else if($this->preceded_by($suffix,"ièr")){
+							$this->replace_if_in_r("rv","ièr","i");
+						}else if($this->preceded_by($suffix,"Ièr")){
+							$this->replace_if_in_r("rv","Ièr","i");
 						}
 						//break(2);
 						$end = true;
 						break;
-					case "itÃ©":
-					case "itÃ©s":
+					case "ité":
+					case "ités":
 						$this->delete_if_in_r("r2",$suffix);
 						if($this->preceded_by($suffix,"abil")){
 							$this->delete_if_in_r_else_replace("r2","abil","abl");
@@ -287,7 +289,7 @@ class stemming {
 					case "ment":
 					case "ments":
 						if(in_array(substr($this->clean_word,-(strlen($suffix)+1),1),$this->vowels)){
-							//la voyelle prÃ©cÃ©dente doit aussi Ãªtre dans RV
+							//la voyelle précédente doit aussi être dans RV
 							if(strpos($this->rv,substr($this->stem,-(strlen($suffix)+1)))!==false){
 								$this->delete_if_in_r("rv",$suffix);	
 							}
@@ -314,7 +316,7 @@ class stemming {
 		foreach($this->verbs_suffixes_i as $suffix){
 			//si le sufixe correspond, on supprime de rv
 			if(substr($this->stem,-strlen($suffix)) == $suffix && !$this->preceded_by_vowel($suffix)){
-				//la non-voyelle prÃ©cÃ©dente doit aussi Ãªtre dans RV
+				//la non-voyelle précédente doit aussi être dans RV
 				if(strpos($this->rv,substr($this->stem,-(strlen($suffix)+1)))!==false){
 					$this->delete_if_in_r("rv",$suffix);
 					break;
@@ -337,11 +339,11 @@ class stemming {
 					case "ions" :
 						$this->delete_if_in_r("r2",$suffix);
 						break;
-					case "Ã©":
-					case "Ã©e":
-					case "Ã©es":
-					case "Ã©s":
-					case "Ã¨rent":
+					case "é":
+					case "ée":
+					case "ées":
+					case "és":
+					case "èrent":
 					case "er":
 					case "era":
 					case "erai":
@@ -358,9 +360,9 @@ class stemming {
 					case "iez":
 						$this->delete_if_in_r("rv",$suffix);
 						break;
-					case "Ã¢mes":
-					case "Ã¢t":
-					case "Ã¢tes":
+					case "âmes":
+					case "ât":
+					case "âtes":
 					case "a":
 					case "ai":
 					case "aIent":
@@ -377,7 +379,7 @@ class stemming {
 					case "assiez":
 					case "assions":
 						$this->delete_if_in_r("rv",$suffix);
-						//prÃ©cÃ©dÃ© d'un e
+						//précédé d'un e
 						if($this->preceded_by($suffix,"e")){
 							//qui est dans RV
 							if(strpos($this->rv,substr($this->clean_word,-(strlen($suffix)+1)))!==false){
@@ -396,7 +398,7 @@ class stemming {
 	}
 	
 	protected function residual_suffixes_process(){
-		if(substr($this->stem,-1,1) == "s" && !in_array(substr($this->stem,-2,1),array("a","i","o","u","Ã¨","s"))){
+		if(substr($this->stem,-1,1) == "s" && !in_array(substr($this->stem,-2,1),array("a","i","o","u","è","s"))){
 			$this->stem = substr($this->stem,0,strlen($this->stem)-1);
 		}
 		$end = false;
@@ -413,9 +415,9 @@ class stemming {
 						$end = true;
 						break;
 					case "ier" :
-					case "iÃ¨re" :
+					case "ière" :
 					case "Ier" :
-					case "IÃ¨re" :
+					case "Ière" :
 						$this->replace_if_in_r("rv",$suffix,"i");
 						//break(2);
 						$end = true;
@@ -425,7 +427,7 @@ class stemming {
 						//break(2);
 						$end = true;
 						break;
-					case "Ã«" :
+					case "ë" :
 						if($this->preceded_by($suffix,"gu")){
 							$this->delete_if_in_r("rv",$suffix);
 						}
@@ -448,12 +450,12 @@ class stemming {
 	protected function unaccent(){
 		$no_vowels = false;
 		for($i=(strlen($this->stem)-1) ; $i>=0 ; $i--){
-			if(!in_array($this->stem[$i],$this->vowels)){
+			if(!in_array(substr($this->stem, $i, 1), $this->vowels)){
 				$no_vowels=true;
 				continue;
 			}else{
-				if($no_vowels && $this->stem[$i] == "Ã©" || $this->stem[$i] == "Ã¨"){
-					$this->stem = substr($this->stem,0,strrpos($this->stem,$this->stem[$i]))."e".substr($this->stem,strrpos($this->stem,$this->stem[$i]));
+			    if($no_vowels && substr($this->stem, $i, 1) == "é" || substr($this->stem, $i, 1) == "è"){
+			        $this->stem = substr($this->stem,0,strrpos($this->stem, substr($this->stem, $i, 1)))."e".substr($this->stem, strrpos($this->stem, substr($this->stem, $i, 1)));
 				}
 				break;
 			}
@@ -583,7 +585,7 @@ class stemming {
 		//step 3
 		if($this->do_step_3){
 			$stem = $this->stem;
-			$this->stem = substr($this->stem,0,strlen($this->stem)-1).str_replace(array("Y","Ã§"),array("i","c"),substr($this->stem,-1,1));
+			$this->stem = substr($this->stem,0,strlen($this->stem)-1).str_replace(array("Y","ç"),array("i","c"),substr($this->stem,-1,1));
 			if($stem != $this->stem){
 				$this->do_step_4 = false;
 			}

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_children_filter.class.php,v 1.3 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_children_filter.class.php,v 1.3 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class frbr_entity_common_children_filter extends frbr_entity_root{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_data(){
 		$this->parameters = new stdClass();
@@ -78,7 +78,7 @@ class frbr_entity_common_children_filter extends frbr_entity_root{
 	}
 
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
 		if($this->id){

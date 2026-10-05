@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormContainer.js,v 1.13 2019-03-29 16:16:25 tsamson Exp $
+// $Id: FormContainer.js,v 1.15 2022/06/27 14:39:30 rtigero Exp $
 
 
 define(["dojo/_base/declare", 
@@ -49,6 +49,9 @@ define(["dojo/_base/declare",
 				case 'collapseAll':			
 					this.treeCollapseAll();
 					break;
+				case 'saved':			
+					this.nodeSaved(evtArgs);
+					break;
 			}			
 		},
 		requestContent: function(item){
@@ -77,18 +80,23 @@ define(["dojo/_base/declare",
 			}).then(lang.hitch(this,this.loadContent));
 		},
 		
-		saveNode : function(form) {
-			xhr(form.action + '&num_page=' + this.numPage,{
-				data :JSON.parse(domForm.toJson(form.id)),
-				handleAs: "json",
-				method:'POST'
-			}).then(lang.hitch(this,function(response){
-				if (response.status) {
-					topic.publish('FormContainer', 'updateTree', response);
-					var item = {id : response.type+'_'+response.status, page : this.numPage, type : response.type};
-					this.requestContent(item);
-				}				
-			}));
+//		saveNode : function(form) {
+//			xhr(form.action + '&num_page=' + this.numPage,{
+//				data :JSON.parse(domForm.toJson(form.id)),
+//				handleAs: "json",
+//				method:'POST'
+//			}).then(lang.hitch(this,function(response){
+//				if (response.status) {
+//					topic.publish('FormContainer', 'updateTree', response);
+//					var item = {id : response.type+'_'+response.status, page : this.numPage, type : response.type};
+//					this.requestContent(item);
+//				}				
+//			}));
+//		},
+		nodeSaved : function(response) {
+			topic.publish('FormContainer', 'updateTree', response);
+			var item = {id : response.type+'_'+response.status, page : this.numPage, type : response.type};
+			this.requestContent(item);
 		},
 		deleteNode : function(params) {
 			xhr('./ajax.php?module=cms&categ=frbr_entities&type='+params.type+'&action=delete&id_element='+params.id+'&num_page=' + this.numPage + '&recursive=' + params.recursive,{

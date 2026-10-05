@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: noeuds.class.php,v 1.15 2017-07-10 13:55:21 dgoron Exp $
+// $Id: noeuds.class.php,v 1.18 2023/02/16 08:57:16 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/thesaurus.class.php");
 
 class noeuds{
@@ -21,13 +22,13 @@ class noeuds{
 	 
 	//Constructeur.	 
 	public function __construct($id=0) {
-		$this->id_noeud = $id+0;
+		$this->id_noeud = intval($id);
 		if ($this->id_noeud) {
 			$this->load();	
 		}
 	}
 
-	// charge le noeud Ã  partir de la base.
+	// charge le noeud à partir de la base.
 	public function load(){
 		$q = "select * from noeuds where id_noeud = '".$this->id_noeud."' ";
 		$r = pmb_mysql_query($q) ;
@@ -44,9 +45,9 @@ class noeuds{
 	
 	// enregistre le noeud en base.
 	public function save(){
-		if (!$this->num_thesaurus) die ('Erreur de crÃ©ation noeud');
+		if (!$this->num_thesaurus) die ('Erreur de création noeud');
 		
-		if ($this->id_noeud) {	//Mise Ã  jour noeud
+		if ($this->id_noeud) {	//Mise à jour noeud
 			
 			$q = 'update noeuds set autorite =\''.addslashes($this->autorite).'\', ';
 			$q.= 'num_parent = \''.$this->num_parent.'\', num_renvoi_voir = \''.$this->num_renvoi_voir.'\', ';
@@ -63,7 +64,7 @@ class noeuds{
 			$this->id_noeud = pmb_mysql_insert_id();
 		}
 
-		// Mis Ã  jour du path de lui-meme, et de tous les fils
+		// Mis à jour du path de lui-meme, et de tous les fils
 		$thes = thesaurus::getByEltId($this->id_noeud);
 
 		$id_top = $thes->num_noeud_racine;
@@ -82,7 +83,7 @@ class noeuds{
 	}
 	
 	public static function process_categ_path($id_noeud=0, $path='') {
-		$id_noeud += 0;
+		$id_noeud = intval($id_noeud);
 		if(!$id_noeud) return;
 		
 		if($path) $path.='/';
@@ -100,15 +101,16 @@ class noeuds{
 
 	//fonctions !!!
 
-	//supprime un noeud et toutes ses rÃ©fÃ©rences
+	//supprime un noeud et toutes ses références
 	public function delete($id_noeud=0) {
+		$id_noeud = intval($id_noeud);
 		if(!$id_noeud && (is_object($this))) $id_noeud = $this->id_noeud; 	
 
 		// Supprime les categories.
 		$q = "delete from categories where num_noeud = '".$id_noeud."' ";
 		pmb_mysql_query($q);
 		
-		//Import d'autoritÃ©
+		//Import d'autorité
 		noeuds::delete_autority_sources($id_noeud);
 		
 		// Supprime les renvois voir_aussi vers ce noeud. 
@@ -138,6 +140,24 @@ class noeuds{
 		$q = "update noeuds set num_renvoi_voir = '0' where num_renvoi_voir = '".$id_noeud."' ";
 		pmb_mysql_query($q);
 		
+			//suppression des associations avec le contenu éditorial
+			$q = "delete from cms_articles_descriptors where num_noeud = '".$id_noeud."' ";
+			pmb_mysql_query($q);
+			$q = "delete from cms_sections_descriptors where num_noeud = '".$id_noeud."' ";
+			pmb_mysql_query($q);
+			
+			//suppression des associations avec les items de veilles
+			$q = "delete from docwatch_items_descriptors where num_noeud = '".$id_noeud."' ";
+			pmb_mysql_query($q);
+			
+			//suppression des associations avec les bannettes
+			$q = "delete from bannettes_descriptors where num_noeud = '".$id_noeud."' ";
+			pmb_mysql_query($q);
+			
+			//suppression des associations avec les campagnes de mails
+			$q = "delete from campaigns_descriptors where num_noeud = '".$id_noeud."' ";
+			pmb_mysql_query($q);
+			
 		// Supprime le noeud.
 		$q = "delete from noeuds where id_noeud = '".$id_noeud."' ";
 		pmb_mysql_query($q);
@@ -145,10 +165,11 @@ class noeuds{
 	}
 
 	// ---------------------------------------------------------------
-	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autoritÃ©
+	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autorité
 	// ---------------------------------------------------------------
 	public static function delete_autority_sources($idnoeud=0){
 		$tabl_id=array();
+		$idnoeud = intval($idnoeud);
 		if(!$idnoeud){
 			$requete="SELECT DISTINCT num_authority FROM authorities_sources LEFT JOIN noeuds ON num_authority=id_noeud  WHERE authority_type = 'category' AND id_noeud IS NULL";
 			$res=pmb_mysql_query($requete);
@@ -161,7 +182,7 @@ class noeuds{
 			$tabl_id[]=$idnoeud;
 		}
 		foreach ( $tabl_id as $value ) {
-			//suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
+			//suppression dans la table de stockage des numéros d'autorités...
 			$query = "select id_authority_source from authorities_sources where num_authority = ".$value." and authority_type = 'category'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -178,6 +199,7 @@ class noeuds{
 	// recherche si une autorite existe deja dans un thesaurus, 
 	// et retourne le noeud associe
 	public function searchAutorite($num_thesaurus, $autorite) {
+		$num_thesaurus = intval($num_thesaurus);
 		$q = "select id_noeud from noeuds where num_thesaurus = '".$num_thesaurus."' ";
 		$q.= "and autorite = '".addslashes($autorite)."' limit 1";
 		$r = pmb_mysql_query($q);
@@ -189,7 +211,7 @@ class noeuds{
 	
 	//recherche si un noeud a des fils
 	public static function hasChild($id_noeud=0) {
-		$id_noeud += 0;
+		$id_noeud = intval($id_noeud);
 		if($id_noeud){
 			$q = "select count(1) from noeuds where num_parent = '".$id_noeud."' ";
 			$r = pmb_mysql_query($q);
@@ -201,7 +223,7 @@ class noeuds{
 		
 	//recherche si un noeud est le renvoi voir d'un autre noeud.
 	public static function isTarget($id_noeud=0) {
-		$id_noeud += 0;
+		$id_noeud = intval($id_noeud);
 		if($id_noeud){
 			$q = "select count(1) from noeuds where num_renvoi_voir = '".$id_noeud."' ";
 			$r = pmb_mysql_query($q);
@@ -211,9 +233,9 @@ class noeuds{
 	}
 
 
-	//Indique si un noeud est protÃ©gÃ© (noeuds ORPHELINS et NONCLASSES).
+	//Indique si un noeud est protégé (noeuds ORPHELINS et NONCLASSES).
 	public static function isProtected($id_noeud=0) {
-		$id_noeud += 0;
+		$id_noeud = intval($id_noeud);
 		$q = "select autorite from noeuds where id_noeud = '".$id_noeud."' ";
 		$r = pmb_mysql_query($q);
 		$a = pmb_mysql_result($r, 0, 0);
@@ -224,30 +246,34 @@ class noeuds{
 
 	//Liste les ancetres d'un noeud et les retourne sous forme d'un tableau 
 	public static function listAncestors($id_noeud=0) {
-		$id_noeud += 0;
+		$id_noeud = intval($id_noeud);
 		$q = "select path from noeuds where id_noeud = '".$id_noeud."' ";
 		$r = pmb_mysql_query($q);
 		if($r && pmb_mysql_num_rows($r)){
 			$path=pmb_mysql_result($r, 0, 0);
 		}
-		if ($path){ 
+		if (!empty($path)){ 
 			$id_list=explode('/',$path);
 			krsort($id_list);
 			return $id_list;		
 		}		
+		
+		//si le chemin est vide, on le construit
 		$thes = thesaurus::getByEltId($id_noeud);
+		$id_top = !empty($thes) ? $thes->num_noeud_racine : null;
 
-		$id_top = $thes->num_noeud_racine;
-		$i = 0;		
-		$id_list[$i] = $id_noeud;
-		while (($id_list[$i] != $id_top)&&($id_list[$i]!=0)) {
-			$q = "select num_parent from noeuds where id_noeud = '".$id_list[$i]."' limit 1";
+		$id_list[] = $id_noeud;
+		$current_id = $id_noeud;
+		while (true) {
+		    $q = "select num_parent from noeuds where id_noeud = $current_id limit 1";
 			$r = pmb_mysql_query($q);
-			$i++;
-			$id_list[$i] = pmb_mysql_result($r, 0, 0);
+		    $current_id = pmb_mysql_result($r, 0, 0);
+		    if ( !$current_id || $current_id == $id_top || in_array($current_id, $id_list) ) {
+		        break;
+		    }
+		    $id_list[] = $current_id;
 		}
 		return $id_list;		
 	}
 		
 }
-?>

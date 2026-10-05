@@ -2,7 +2,7 @@
 /* ========================================================================
    Component: Base
  ========================================================================== */
-/* $Id: uikit.css,v 1.6 2018-04-18 08:40:19 wlair Exp $ */ 
+/* $Id: uikit.css,v 1.7 2021/11/26 13:31:45 lbeguin Exp $ */ 
 /*
  * 1. Set `font-size` to support `rem` units
  *    Not using `font` property because a leading hyphen (e.g. -apple-system) causes the font to break in IE11 and Edge
@@ -830,6 +830,10 @@ a.uk-link-reset:hover,
   font-weight: normal;
   color: #999;
   text-transform: uppercase;
+}
+
+#resa_planning_circ_reader_ui_list.uk-table th {
+	text-align: center;
 }
 /* Cell
  ========================================================================== */

@@ -48,7 +48,7 @@
     $fileExt = substr($ztFormatExport,0,3);
 
     // Recuperation des infos de timezone de l'utilisateur
-    $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
+    $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$idUser." AND tzn_zone=util_timezone");
     $tzLibelle = htmlentities($DB_CX->DbResult(0,"tzn_libelle"));
     $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
     $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -68,7 +68,7 @@
     $fileName = "Export_recherche_".$ztFormatExport."_".date("Ymd-His",$localTime).".".$fileExt;
     
     // On reconstruit la requete
-    $sqlExport = "SELECT DATE_FORMAT(age_date,'%e/%c/%Y') AS ageDate,age_heure_debut,age_heure_fin,age_util_id,CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur,aco_termine,age_libelle,age_id,age_nb_participant,age_createur_id,age_aty_id,age_date_creation,age_date_modif,age_lieu,age_cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage,age_detail FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_aty_id!=1 AND age_id=aco_age_id ".html_entity_decode($sql);
+    $sqlExport = "SELECT DATE_FORMAT(age_date,'%e/%c/%Y') AS ageDate,age_heure_debut,age_heure_fin,age_util_id,CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur,aco_termine,age_libelle,age_id,age_nb_participant,age_createur_id,age_aty_id,age_date_creation,age_date_modif,age_lieu,age_cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage,age_detail FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_aty_id!=1 AND age_id=aco_age_id ".html_entity_decode($sql);
     
     // On recupere les infos en base
     $DB_CX->DbQuery(stripslashes($sqlExport));

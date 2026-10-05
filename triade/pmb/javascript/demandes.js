@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: demandes.js,v 1.3 2010-02-23 16:27:22 kantin Exp $
+// $Id: demandes.js,v 1.3 2010/02/23 16:27:22 kantin Exp $
 
 
 /*

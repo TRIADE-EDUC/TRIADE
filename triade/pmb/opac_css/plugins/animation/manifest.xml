@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!-- Declaration d'un plugin
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2022/09/29 13:57:24 qvarin Exp $ -->
+<manifest>
+	<name>Animation</name>
+	<author>
+		<name>Quentin Varin</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<author>
+		<name>Gregor Neveu</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2021-02-24</created_date>
+	<version>1.0</version>
+	<menus>
+		<menu module='admin'>
+			<tabs>
+				<tab id='animation'>msg:animation_menu_title</tab>
+			</tabs>
+			<items>
+				<item tab='animation' sub='configuration' name='msg:animation_conf_sub_menu_title'></item>
+			</items>
+		</menu>
+	</menus>
+</manifest>

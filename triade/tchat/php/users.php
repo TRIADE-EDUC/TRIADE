@@ -7,6 +7,10 @@
     $date=time();
     $sql = "UPDATE ".PREFIXE."users SET update_sync = '$date' , status = 'Active now' WHERE unique_id= '{$outgoing_id}' ";
     mysqli_query($conn, $sql) or die();
+
+    // Suppression des comptes sans identifiant valide
+    mysqli_query($conn, "DELETE FROM ".PREFIXE."users WHERE unique_id IS NULL OR unique_id = 0");
+
     $sql = "SELECT * FROM ".PREFIXE."users WHERE NOT unique_id = {$outgoing_id} ORDER BY user_id DESC";
     $query = mysqli_query($conn, $sql);
     $output = "";

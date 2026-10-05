@@ -1,9 +1,13 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: subcollection.html,v 1.9 2018-08-03 12:47:00 arenou Exp $ -->
+<!-- $Id: subcollection.html,v 1.10 2022/09/20 07:37:22 qvarin Exp $ -->
 
 {% block element_link %}
-	<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{list_element.isbd |  escape true }}', '{{ global.callback }}', '{{ list_element.get_object_instance.parent }}', '{{list_element.get_object_instance.parent_libelle |  escape true}}', '{{ list_element.get_object_instance.editeur }}', '{{list_element.get_object_instance.editeur_libelle |  escape true}}')">
+	{% if global.caller == 'contribution_area_form'	 %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}','{{ global.callback }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}')">
+	{% else	 %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{list_element.isbd |  escape true }}', '{{ global.callback }}', '{{ list_element.get_object_instance.parent }}', '{{list_element.get_object_instance.parent_libelle |  escape true}}', '{{ list_element.get_object_instance.editeur }}', '{{list_element.get_object_instance.editeur_libelle |  escape true}}')">
+	{% endif %}
 		{% block element_selector_header %}
 			{{ list_element.isbd | safe }}
 		{% endblock %}

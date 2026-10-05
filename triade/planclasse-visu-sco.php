@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -39,11 +41,11 @@ include_once('librairie_php/db_triade.php');
 validerequete("2");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGAFF4?></font></b></td>
 </tr>
@@ -57,35 +59,36 @@ if ($_SESSION["membre"] == "menuadmin") {
 	print "<form method='post' action='planclasse-visu0.php'  target='_blank'  name='formulaire' onsubmit=\"return valide_supp_choix('sClasseGrp','une classe')\" >";
 }
 ?>
-<blockquote><BR>
-               <font class="T2"><?php print LANGPER25 ?> : </font><select name="sClasseGrp">
-					     <option   STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
-<?php
-select_classe(); // creation des options
-Pgclose();
-?>
-</select> <br><br>
-<UL><UL><UL><script language=JavaScript>buttonMagicSubmit("<?php print LANGAFF6 ?>","rien"); //text,nomInput</script></UL></UL></UL><br><br>
-</blockquote>
-</form>
+<div class="na-card" style="margin:5px;">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPER25 ?> :</span>
+    <select name="sClasseGrp" class="cc-select">
+      <option STYLE='color:#000066;background-color:#FCE4BA'><?php print LANGCHOIX ?></option>
+      <?php select_classe(); Pgclose(); ?>
+    </select>
+  </div>
+</div>
 <br>
+<script language=JavaScript>buttonMagicSubmit("<?php print LANGAFF6 ?>","rien");</script>
+<br>
+</form>
 <!-- // fin  -->
 </td></tr></table>
 <?php
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

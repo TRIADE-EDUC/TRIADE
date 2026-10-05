@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: defaultConf.class.php,v 1.6 2019-05-09 10:35:37 ngantier Exp $
+// $Id: defaultConf.class.php,v 1.7 2020/04/24 07:32:34 dgoron Exp $
 
 require_once("$visionneuse_path/classes/XMLClass.class.php");
 
 class defaultConf extends XMLClass{
 	public $defaultMimetype=array();	//tableau associatif mimetype => class  
-	public $file;						//xml Ã  parser
+	public $file;						//xml à parser
 	public $analyseur;					//parseur
 	
 	
@@ -18,7 +18,7 @@ class defaultConf extends XMLClass{
     	$this->analyser();
     }
     
-	//MÃ©thodes
+	//Méthodes
 	public function debutBalise($parser, $nom, $attributs){
 		global $_starttag; $_starttag=true;
 		if($nom == 'MIMETYPE' && $attributs['TYPE'] && $attributs['CLASS']){
@@ -29,7 +29,7 @@ class defaultConf extends XMLClass{
 		}
 	}
 	
-	//on fait tout dans la mÃ©thode dÃ©butBalise....
+	//on fait tout dans la méthode débutBalise....
 	public function finBalise($parser, $nom){//besoin de rien
 	}   
 	public function texte($parser, $data){//la non plus
@@ -57,12 +57,13 @@ class defaultConf extends XMLClass{
 		fclose($fp);
 
 		if ( !xml_parse( $this->analyseur, $data, TRUE ) ) {
-			die( sprintf( "erreur XML %s Ã  la ligne: %d ( $this->file )\n\n",
+			die( sprintf( "erreur XML %s à la ligne: %d ( $this->file )\n\n",
 			xml_error_string(xml_get_error_code( $this->analyseur ) ),
 			xml_get_current_line_number( $this->analyseur) ) );
 		}
 
 		xml_parser_free($this->analyseur);
+		unset($this->analyseur);
  	}
 }
 ?>

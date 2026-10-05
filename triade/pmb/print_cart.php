@@ -1,8 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: print_cart.php,v 1.24 2019-03-18 15:01:00 ngantier Exp $
+// $Id: print_cart.php,v 1.26 2022/07/28 12:35:46 jparis Exp $
+
+global $base_path, $base_auth, $base_title, $class_path, $authorities_caddie, $idcaddie_new, $footer;
 
 //Ajout aux paniers
 
@@ -21,4 +23,4 @@ if (isset($authorities_caddie)) {
     caddie_controller::process_print($idcaddie_new);
 }
 print $footer;
-?>
+html_builder();

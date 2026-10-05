@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sru.class.php,v 1.13 2017-07-12 15:15:02 tsamson Exp $
+// $Id: sru.class.php,v 1.15.4.2 2025/04/16 12:16:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,30 +12,29 @@ require_once($class_path."/search.class.php");
 require_once($base_path."/admin/connecteurs/in/sru/sru_protocol.class.php");
 
 class sru extends connector {
-	//Variables internes pour la progression de la rï¿½cupï¿½ration des notices
+
+	//Variables internes pour la progression de la recuperation des notices
 	public $current_set;			//Set en cours de synchronisation
-	public $total_sets;			//Nombre total de sets sï¿½lectionnï¿½s
-	public $metadata_prefix;		//Prï¿½fixe du format de donnï¿½es courant
-	public $n_recu;				//Nombre de notices reï¿½ues
+	public $total_sets;			//Nombre total de sets selectionnes
+	public $metadata_prefix;		//Prefixe du format de donnees courant
+	public $n_recu;				//Nombre de notices recues
 	public $xslt_transform;		//Feuille xslt transmise
 	public $sets_names;			//Nom des sets pour faire plus joli !!
 	public $schema_config;
-	
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+	public $record_schema;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "sru";
     }
-    
-    //Est-ce un entrepot ?
-	public function is_repository() {
-		return 2;
-	}
-    
-    /*Rï¿½cupï¿½re la grille d'automappage pour le remplissage automatique des champs de recherche
-     * Exemple d'un ï¿½lï¿½ment du rendu: 
+
+    /*Recupere la grille d'automappage pour le remplissage automatique des champs de recherche
+     * Exemple d'un element du rendu:
      *     [dc____title] => Array
      *   (
      *       [0] => 200$a
@@ -60,26 +59,27 @@ class sru extends connector {
 			$attribs = $dom->get_attributes($map);
 			$result[$attribs["set"]."____".$attribs["name"]] = $mmap;
 		}
-		
-			$long_formats = explode("\n", $dom->get_datas($schema));
-			foreach ($long_formats as $long_format) {
-				$trimmed = trim($long_format); 
-				if ($trimmed)
-					$result[$id]['long_formats'][] = $trimmed;
-			}
-		
+
+		$long_formats = explode("\n", $dom->get_datas($schema));
+		foreach ($long_formats as $long_format) {
+			$trimmed = trim($long_format);
+			if ($trimmed)
+				$result[$id]['long_formats'][] = $trimmed;
+		}
+
 		return $result;
     }
-    
-    /*Gï¿½nï¿½re un multi select avec la liste des champs PMB dedans. 
+
+    /**
+     * Genere un multi select avec la liste des champs PMB dedans.
      * Pour le mapping des champs serveur / PMB
      */
-    
+
     public function make_field_combo_box($fiels, $field_name, $selected=array()) {
     	global $msg, $charset;
     	$r="<select MULTIPLE size=\"5\" name='".$field_name."[]' >\n";
     	$r.="<option value='' style='color:#000000'>".htmlentities($msg["multi_select_champ"],ENT_QUOTES,$charset)."</font></option>\n";
-    	
+
     	//Champs fixes
     	$open_optgroup=0;
 		$open_optgroup_deja_affiche=0;
@@ -88,36 +88,32 @@ class sru extends connector {
     	foreach($fiels as $id => $ff) {
    			$r.="<option value='".$id."' style='color:#000000' ".(in_array($id, $selected) ? 'SELECTED' : '').">".htmlentities($ff,ENT_QUOTES,$charset)."</option>\n";
     	}
-    	$r.="</select>";    	
+    	$r.="</select>";
     	return $r;
     }
-    
-    /*Renvoi le formulaire de propriï¿½tï¿½ de la source
+
+    /*Renvoie le formulaire de proprietes de la source
      */
     public function source_get_property_form($source_id) {
-    	global $charset, $base_path;
-//    	
-//Rï¿½cupï¿½ration des paramï¿½tres de la source
-//
+    	global $charset, $base_path, $url;
+
+        //Recuperation des parametres de la source
     	$params=$this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			$vars=unserialize($params["PARAMETERS"]);
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 		if (!isset($allowed_indexes))
 			$allowed_indexes = array();
 		if (!isset($max_record_per_search))
-			$max_record_per_search = 100;	
-			
+			$max_record_per_search = 100;
+
 		if (!isset($style_sheets))
-			$style_sheets = array();		
-		
-//		highlight_string(print_r($style_sheets, true));
-	
-//	
+			$style_sheets = array();
+//
 //URL de la source
 //
 		$form="<div class='row'>
@@ -125,31 +121,30 @@ class sru extends connector {
 				<label for='url'>".$this->msg["sru_url"]."</label>
 			</div>
 			<div class='colonne_suite'>
-				<input type='text' name='url' id='url' class='saisie-60em' value='".htmlentities($url,ENT_QUOTES,$charset)."'/>
+				<input type='text' name='url' id='url' class='saisie-60em' value='".htmlentities($url ?? "", ENT_QUOTES, $charset)."'/>
 			</div>
 		</div>
 		<div class='row'>
 		";
-		
-		if (!$url) 
+
+		if (empty($url)) {
 			$form.="<h3 style='text-align:center'>".$this->msg["rec_addr"]."</h3>";
-		else {
-//	
-//Demande au serveur des propriï¿½tï¿½s de la source
-//
-			$parameters = array('version' => '1.1');
+		} else {
+
+            //Demande au serveur des proprietes de la source
+            $parameters = array('version' => '1.1');
 			$this->get_schemas_config();
 			$request = new sru_request($url, "explain", $parameters, $this->schema_config);
 			if (!$request->error) {
 				$source_properties = $request->analyse_response('ISO-8859-1');
 			}
 			else {
-				print $request->error_message;				
+				print $request->error_message;
 			}
-			
+
 			if ($source_properties) {
 
-//	
+//
 //Titre du serveur
 //
 				if ($source_properties["databaseinfo"]["title"]["value"])
@@ -163,10 +158,10 @@ class sru extends connector {
 							</div>
 						</div>
 						";
-//	
+//
 //Description du serveur
 //
-				
+
 				if ($source_properties["databaseinfo"]["description"]["value"])
 					$form.="
 						<div class='row'>
@@ -178,7 +173,7 @@ class sru extends connector {
 							</div>
 						</div>
 						";
-//	
+//
 //Auteur du serveur
 //
 
@@ -192,9 +187,9 @@ class sru extends connector {
 								".htmlentities($source_properties["databaseinfo"]["author"], ENT_QUOTES, $charset)."
 							</div>
 						</div>
-						";	
-			
-//	
+						";
+
+//
 //Contact du serveur
 //
 				if ($source_properties["databaseinfo"]["contact"])
@@ -209,8 +204,8 @@ class sru extends connector {
 						</div>
 						";
 
-//	
-//Nombre maximum de rï¿½sultats
+//
+//Nombre maximum de resultats
 //
 
 				$nb_max_input = '<input class="saisie-5em" type="text" name="max_record_count" value="'.$max_record_per_search.'">';
@@ -225,11 +220,11 @@ class sru extends connector {
 						</div>
 					</div>
 					";
-						
-//	
+
+//
 //Mapping des champs Serveur / PMB
 //
-						
+
 				$search_fields_keyword = array();
 				$search_field_list = "";
 				$count = 1;
@@ -239,7 +234,7 @@ class sru extends connector {
 //						highlight_string(print_r($source_properties["indexinfo"], true));
 					if (!isset($field_maps))
 						$field_maps = array();
-						
+
 					$auto_map = array();
 					$search_field_list .= "<table>";
 
@@ -255,14 +250,14 @@ class sru extends connector {
 						if (!isset($fixed_field["UNIMARCFIELD"]))
 							continue;
 						$total_fields[$fixed_field["UNIMARCFIELD"]] = $fixed_field["TITLE"];
-					}  
+					}
 					$unimarc_to_indexes = array_flip(array_keys(array_merge(array("000_" => ""), $total_fields)));
 //					print_r($unimarc_to_indexes);
 					$all_field = array(0 => array("title" => $this->msg["sru_global_search"], "lang" => "en"), "map" => "_", "set" => "cql");
 					$source_properties["indexinfo"] = array_merge(array($all_field), $source_properties["indexinfo"]);
 
 					foreach ($source_properties["indexinfo"] as $index_info) {
-						$field_dname = $index_info["set"].'____'.$index_info["map"]; 
+						$field_dname = $index_info["set"].'____'.$index_info["map"];
 
 						$input_options = "";
 						if (in_array($field_dname, $allowed_indexes))
@@ -275,11 +270,11 @@ class sru extends connector {
 						$search_field_list .=  $this->make_field_combo_box($total_fields, "field_map_".$field_dname, $field_value)."<br />\n";
 						$search_field_list .= "</td></tr>";
 						$search_fields_keyword[] = $index_info["map"];
-						
+
 						if ($auto_map_config[$field_dname]) {
 							$auto_map[$field_dname] = $auto_map_config[$field_dname];
 						}
-						
+
 						$count++;
 					}
 					$search_field_list .= "</table>";
@@ -288,7 +283,7 @@ class sru extends connector {
 						function get_index_for_automap(input, value) {
 							for (i=0; i<input.length; i++) {
 								if (input.options[i].value == value)
-									return i;									
+									return i;
 							}
 							return 0;
 						}
@@ -319,11 +314,11 @@ class sru extends connector {
 						</div>
 					</div>
 					";
-					
-//	
-//Choix d'une recherche global en cas d'ï¿½chec de construction CQL.
+
 //
-					
+//Choix d'une recherche globale en cas d'echec de construction CQL.
+//
+
 				$sru_cqlfail_means_global_input = '<input type="checkbox" name="sru_cqlfail_means_global" '.($sru_cqlfail_means_global ? 'CHECKED' : '').'>';
 				$form.="
 					<br /><br />
@@ -336,9 +331,9 @@ class sru extends connector {
 						</div>
 					</div>
 					<br /><br />
-					";	
+					";
 
-//	
+//
 //Choix du schema et mapping des feuilles XSLT
 //
 
@@ -362,47 +357,47 @@ class sru extends connector {
 							".$schema_input."
 						</div>
 					</div>
-					";	
-					
+					";
+
 				/*STYLE SHEETS*/
-				
+
 				$astylesheet_input = "";
 				$xslt_dir_content = scandir("admin/connecteurs/in/sru/xslt");
 //				print_r($xslt_dir_content);
 				$count = 1;
 				$stylesheet_lines = array();
-				//Parce qu'en plus il peut y avoir un gland qui a uploadï¿½ deux fichiers diffï¿½rents avec le mï¿½me nom
+				//Parce qu'en plus il peut y avoir un gland qui a upload� deux fichiers diff�rents avec le m�me nom
 				for($i=0, $localcount=count($style_sheets); $i<$localcount; $i++) {
-					
+
 					if ($style_sheets[$i]["type"] == "custom_file") {
 						$astylesheet_input .= "c_select_values[$count] = '__KEEP_INDEX".$i."';\n";
-						$astylesheet_input .= "c_select_captions[$count] = 'Fichier uploadï¿½ ".$style_sheets[$i]["name"]."';\n";
+						$astylesheet_input .= "c_select_captions[$count] = 'Fichier upload� ".$style_sheets[$i]["name"]."';\n";
 						$stylesheet_lines[$i] = $count;
 						$count++;
 					}
 					else {
 						$stylesheet_lines[$i] = -1;
 					}
-					
+
 				}
-				
+
 //				highlight_string(print_r($automap_style_sheet_js, true));
 				$names_to_indexes = array();
 				foreach($xslt_dir_content as $style_sheet) {
-					if ($style_sheet == '.' || $style_sheet == '..') 
+					if ($style_sheet == '.' || $style_sheet == '..')
 						continue;
 					$astylesheet_input .= "c_select_values[$count] = '".$style_sheet."';\n";
 					$astylesheet_input .= "c_select_captions[$count] = '".$style_sheet."';\n";
 					$names_to_indexes[$style_sheet] = $count;
-					$count++; 
+					$count++;
 				}
-				
+
 				for($i=0, $localcount=count($style_sheets); $i<$localcount; $i++) {
 					if ($stylesheet_lines[$i] == -1) {
-						$stylesheet_lines[$i] = $names_to_indexes[$style_sheets[$i]["name"]]; 
+						$stylesheet_lines[$i] = $names_to_indexes[$style_sheets[$i]["name"]];
 					}
 				}
-				
+
 				$built_in_style_sheets_set = $this->get_schemas_config();
 				$automap_style_sheets_count = 0;
 				$automap_style_sheet_js = "var automap_config = [];\n";
@@ -414,11 +409,11 @@ class sru extends connector {
 						foreach($schema_content["stylesheets"] as $style_sheet_filename) {
 							$automap_style_sheet_js .= "automap_config['$schema_name'][$local_count] = '".$names_to_indexes[$style_sheet_filename]."'\n";
 							$local_count++;
-						}						
+						}
 					}
 				}
 				$automap_style_sheet_js .= "\n\n";
-				
+
 				$full_stylesheet_input = "
 		<input type=\"hidden\" name=\"xslt_count\" value=\"0\">
 		<div id=\"xslt_line_host\">
@@ -444,7 +439,7 @@ class sru extends connector {
 				//Let's clear the area
 				while(document.source_form.xslt_count.value > 0)
 					deleteLine(1, document.source_form.xslt_count.value);
-				
+
 				var i=0; var acount=0;
 				for(i=0, acount=automap_config[schema_id].length; i<acount; i++) {
 //					alert(automap_config[schema_id][i]);
@@ -459,7 +454,7 @@ class sru extends connector {
   	  	  	  	var xslt_line = document.createElement('div');
     	  	  	var divIdName = 'xslt_line_'+number;
     	  	  	xslt_line.setAttribute('id',divIdName);
-    	  	  	
+
 				var xslt_select = document.createElement('select');
 				xslt_select.name = 'xslt_select_'+number;
 				xslt_select.id = 'xslt_select_'+number;
@@ -492,7 +487,7 @@ class sru extends connector {
 				if (document.source_form.xslt_count.value > 1) {
 					document.getElementById('xslt_godown_'+(number-1)).disabled = false;
 				}
-				
+
 				var xslt_godownbutton = document.createElement('input');
 				xslt_godownbutton.type = 'button';
 				xslt_godownbutton.name = 'xslt_godown_'+number;
@@ -500,7 +495,7 @@ class sru extends connector {
 				xslt_godownbutton.value = 'Descendre';
 				xslt_godownbutton.disabled = true;
 				xslt_godownbutton.setAttribute('onclick', 'MoveElementDown('+(number)+', document.source_form.xslt_count.value)');
-								
+
 				xslt_line.appendChild(xslt_select);
 				xslt_line.innerHTML += '&nbsp;';
 				xslt_line.appendChild(xslt_file);
@@ -510,55 +505,55 @@ class sru extends connector {
 				xslt_line.appendChild(xslt_godownbutton);
 				xslt_line.innerHTML += '&nbsp;';
 				xslt_line.appendChild(xslt_removebutton);
-							
+
     	  	  	hostdiv.appendChild(xslt_line);
 	}
 			function ChangeElementId(number, newnumber) {
-					var line_to_move = document.getElementById('xslt_line_'+number);				
+					var line_to_move = document.getElementById('xslt_line_'+number);
 					line_to_move.id = 'xslt_line_'+(newnumber);
-				
-					var select_to_move = document.getElementById('xslt_select_'+number);				
+
+					var select_to_move = document.getElementById('xslt_select_'+number);
 					select_to_move.name = 'xslt_select_'+(newnumber);
 					select_to_move.id = 'xslt_select_'+(newnumber);
-				
-					var file_to_move = document.getElementById('xslt_file_'+number);				
+
+					var file_to_move = document.getElementById('xslt_file_'+number);
 					file_to_move.name = 'xslt_file_'+(newnumber);
 					file_to_move.id = 'xslt_file_'+(newnumber);
-					file_to_move.setAttribute('onchange', 'document.source_form.xslt_select_'+newnumber+'.selectedIndex=0;');			
-				
-					var button_to_move = document.getElementById('xslt_remove_'+number);				
+					file_to_move.setAttribute('onchange', 'document.source_form.xslt_select_'+newnumber+'.selectedIndex=0;');
+
+					var button_to_move = document.getElementById('xslt_remove_'+number);
 					button_to_move.name = 'xslt_remove_'+(newnumber);
 					button_to_move.id = 'xslt_remove_'+(newnumber);
-					button_to_move.setAttribute('onclick', 'deleteLine('+newnumber+', document.source_form.xslt_count.value);');			
-				
-					var button_to_move = document.getElementById('xslt_goup_'+number);				
+					button_to_move.setAttribute('onclick', 'deleteLine('+newnumber+', document.source_form.xslt_count.value);');
+
+					var button_to_move = document.getElementById('xslt_goup_'+number);
 					button_to_move.name = 'xslt_goup_'+(newnumber);
 					button_to_move.id = 'xslt_goup_'+(newnumber);
 					button_to_move.setAttribute('onclick', 'MoveElementDown('+(newnumber-1)+', document.source_form.xslt_count.value)');
-				
-					var button_to_move = document.getElementById('xslt_godown_'+number);				
+
+					var button_to_move = document.getElementById('xslt_godown_'+number);
 					button_to_move.name = 'xslt_godown_'+(newnumber);
 					button_to_move.id = 'xslt_godown_'+(newnumber);
 					button_to_move.setAttribute('onclick', 'MoveElementDown('+(newnumber)+', document.source_form.xslt_count.value)');
 			}
-				
+
 			function MoveElementDown(number, count) {
-					var line_to_move = document.getElementById('xslt_line_'+number);				
+					var line_to_move = document.getElementById('xslt_line_'+number);
 					var line_after = document.getElementById('xslt_line_'+(number+1));
 					var hostdiv = document.getElementById('xslt_line_host');
 					hostdiv.insertBefore(line_after, line_to_move);
-					
+
 					line_to_move.id = 'xslt_line_'+(number+1);
 					line_after.id = 'xslt_line_'+number;
-				
-					var select_to_move = document.getElementById('xslt_select_'+number);				
+
+					var select_to_move = document.getElementById('xslt_select_'+number);
 					var select_after = document.getElementById('xslt_select_'+(number+1));
 					select_to_move.name = 'xslt_select_'+(number+1);
 					select_after.name = 'xslt_select_'+number;
 					select_to_move.id = 'xslt_select_'+(number+1);
 					select_after.id = 'xslt_select_'+number;
-				
-					var file_to_move = document.getElementById('xslt_file_'+number);				
+
+					var file_to_move = document.getElementById('xslt_file_'+number);
 					var file_after = document.getElementById('xslt_file_'+(number+1));
 					file_to_move.name = 'xslt_file_'+(number+1);
 					file_after.name = 'xslt_file_'+number;
@@ -568,8 +563,8 @@ class sru extends connector {
 					file_after.id = 'xslt_file_'+number;
 					file_to_move.setAttribute('onchange', 'document.source_form.xslt_select_'+(number+1)+'.selectedIndex=0;');
 					file_after.setAttribute('onchange', 'document.source_form.xslt_select_'+(number)+'.selectedIndex=0;');
-				
-					var button_to_move = document.getElementById('xslt_remove_'+number);				
+
+					var button_to_move = document.getElementById('xslt_remove_'+number);
 					var button_after = document.getElementById('xslt_remove_'+(number+1));
 					button_to_move.name = 'xslt_remove_'+(number+1);
 					button_after.name = 'xslt_remove_'+number;
@@ -577,10 +572,10 @@ class sru extends connector {
 					button_after.name = 'xslt_remove_'+number;
 					button_to_move.id = 'xslt_remove_'+(number+1);
 					button_after.id = 'xslt_remove_'+number;
-					button_to_move.setAttribute('onclick', 'deleteLine('+(number+1)+', document.source_form.xslt_count.value);'); 
+					button_to_move.setAttribute('onclick', 'deleteLine('+(number+1)+', document.source_form.xslt_count.value);');
 					button_after.setAttribute('onclick', 'deleteLine('+(number)+', document.source_form.xslt_count.value);');
-				
-					var button_to_move = document.getElementById('xslt_goup_'+number);				
+
+					var button_to_move = document.getElementById('xslt_goup_'+number);
 					var button_after = document.getElementById('xslt_goup_'+(number+1));
 					button_to_move.name = 'xslt_goup_'+(number+1);
 					button_after.name = 'xslt_goup_'+number;
@@ -590,11 +585,11 @@ class sru extends connector {
 					button_after.id = 'xslt_goup_'+number;
 					button_to_move.disabled = false;
 					if (number == 1)
-						button_after.disabled = true;				
-					button_to_move.setAttribute('onclick', 'MoveElementDown('+(number)+', document.source_form.xslt_count.value)'); 
+						button_after.disabled = true;
+					button_to_move.setAttribute('onclick', 'MoveElementDown('+(number)+', document.source_form.xslt_count.value)');
 					button_after.setAttribute('onclick', 'MoveElementDown('+(number-1)+', document.source_form.xslt_count.value)');
-				
-					var button_to_move = document.getElementById('xslt_godown_'+number);				
+
+					var button_to_move = document.getElementById('xslt_godown_'+number);
 					var button_after = document.getElementById('xslt_godown_'+(number+1));
 					button_to_move.name = 'xslt_godown_'+(number+1);
 					button_after.name = 'xslt_godown_'+number;
@@ -604,11 +599,11 @@ class sru extends connector {
 					button_after.id = 'xslt_godown_'+number;
 					button_after.disabled = false;
 					if (number+1 == count)
-						button_to_move.disabled = true;				
-					button_to_move.setAttribute('onclick', 'MoveElementDown('+(number+1)+', document.source_form.xslt_count.value)'); 
+						button_to_move.disabled = true;
+					button_to_move.setAttribute('onclick', 'MoveElementDown('+(number+1)+', document.source_form.xslt_count.value)');
 					button_after.setAttribute('onclick', 'MoveElementDown('+(number)+', document.source_form.xslt_count.value)');
 			}
-				
+
 			function deleteLine(number, count) {
 				var line_to_remove = document.getElementById('xslt_line_'+number);
  				var hostdiv = document.getElementById('xslt_line_host');
@@ -616,21 +611,21 @@ class sru extends connector {
 
 				for (i=number+1, acount=count; i<=acount; i++) {
 					ChangeElementId(i, i-1);
-				} 
+				}
 				document.source_form.xslt_count.value = document.source_form.xslt_count.value * 1 -1;
 			}\n\n";
 				for($i=0, $localcount=count($stylesheet_lines); $i<$localcount; $i++) {
 					$full_stylesheet_input .= "document.source_form.xslt_count.value = ".($i+1)."\n";
 					$full_stylesheet_input .= "addLine(".($i+1).");\n";
 					$full_stylesheet_input .= "document.source_form.xslt_select_".($i+1).".selectedIndex = ".($stylesheet_lines[$i] ? $stylesheet_lines[$i] : 0).";\n";
-				}	
+				}
 
 				$full_stylesheet_input .= "
 						</script>
 				";
 //				highlight_string(print_r($stylesheet_lines, true));
 				$full_stylesheet_input .= '';
-				 
+
 				$form.="
 					<div class='row'>
 						<div class='colonne3'>
@@ -640,7 +635,7 @@ class sru extends connector {
 							".$full_stylesheet_input."
 						</div>
 					</div>
-					";	
+					";
 			}
 		}
 		$form.="
@@ -649,7 +644,7 @@ class sru extends connector {
 ";
 		return $form;
     }
-    
+
     public function make_serialized_source_properties($source_id) {
     	global $url,$sets,$formats,$del_deleted,$del_xsl_transform, $chosen_schema, $indexenabled, $max_record_count, $sru_cqlfail_means_global;
 
@@ -664,11 +659,11 @@ class sru extends connector {
     	$t["chosen_schema"]=$chosen_schema;
     	$t["allowed_indexes"] = $indexenabled;
     	$t["max_record_per_search"] = $max_record_count;
-		$t["sru_cqlfail_means_global"] = isset($sru_cqlfail_means_global) ? 1 : 0; 
+		$t["sru_cqlfail_means_global"] = isset($sru_cqlfail_means_global) ? 1 : 0;
 
-    	
+
     	$field_maps = array();
-    	
+
     	if (!$indexenabled) $indexenabled = array();
 
     	foreach($indexenabled as $aninded) {
@@ -682,15 +677,15 @@ class sru extends connector {
     	$t["field_maps"] = $field_maps;
 
 		$style_sheets = array();
-    	global $xslt_count;    	
+    	global $xslt_count;
     	if ($xslt_count) {
     		for ($i=1, $count=$xslt_count; $i<=$count; $i++) {
     			$aname = "xslt_select_".$i;
     			global ${$aname};
-    			
+
     			if (${$aname} == '__CUSTOM__') {
     				$axslt_info = array();
-    				$axslt_info["type"] = "custom_file"; 
+    				$axslt_info["type"] = "custom_file";
     				if (($_FILES["xslt_file_".$i])&&(!$_FILES["xslt_file_".$i]["error"])) {
     					$axslt_info["name"] = $_FILES["xslt_file_".$i]["name"];
     					$axslt_info["content"] = file_get_contents($_FILES["xslt_file_".$i]["tmp_name"]);
@@ -713,15 +708,15 @@ class sru extends connector {
     		}
     	}
     	$t["style_sheets"] = $style_sheets;
-    	
+
 		$this->sources[$source_id]["PARAMETERS"]=serialize($t);
 	}
-	
-	/* Converti une recherche multi-critï¿½re PMB en CQL SRU
-	 * En se servant des options entrï¿½es dans le formulaire de la source
-	 * 
+
+	/* Converti une recherche multi-criteres PMB en CQL SRU
+	 * En se servant des options entrees dans le formulaire de la source
+	 *
 	 */
-	
+
 	public function mterms_to_cql($query, $sru_cqlfail_means_global) {
 		global $allowed_indexes;
 		global $field_maps;
@@ -742,28 +737,28 @@ class sru extends connector {
 				if (in_array($element->ufield, $content))
 					$found[] = $key;
 			}
-			
+
 			foreach ($found as $index_found) {
 				$index_found = str_replace("____", ".", $index_found);
 				if ($index_found != "cql._")
 					$cql .= $index_found.' any "'.$element->values[0].'" ';
-				else 
+				else
 					$cql .= ' "'.$element->values[0].'" ';
 				$cql .= " or ";
 				$gotone = true;
 			}
 			$cql = substr($cql, 0, -4); //On eleve le dernier "or"
-			
+
 			if ($query_count > 1)
 				$cql .= ")";
 		}
 		if (!$gotone) return "";
 		return $cql;
 	}
-	
+
 	//Fonction de recherche
 	public function search($source_id,$query,$search_id) {
-		
+
 		$params=$this->get_source_params($source_id);
 		$this->fetch_global_properties();
 		if ($params["PARAMETERS"]) {
@@ -772,7 +767,7 @@ class sru extends connector {
 			foreach ($vars as $key=>$val) {
 				global ${$key};
 				${$key}=$val;
-			}	
+			}
 		}
 
 		$this->get_schemas_config();
@@ -782,38 +777,38 @@ class sru extends connector {
 			if ($sru_cqlfail_means_global) {
 				$cql = "";
 				foreach ($query as $element) {
-					$cql .= implode(" ", $element->values)." "; 
+					$cql .= implode(" ", $element->values)." ";
 				}
 			}
 			else {
 				print $this->msg["sru_no_query"].'<br />';
-				return;				
+				return;
 			}
 		}
 
 //		print $cql;
-		
+
 		$received_count = 0;
 		$next_record_position = 1;
-		
+
 		$failsafe_count = 0;
-		
+
 		//On en demande tant qu'on en a pas eu assez.
 		while($received_count < $max_record_per_search) {
 			$failsafe_count++;
 			if ($failsafe_count > 100) break; //On ne sait jamais...
-			
+
 			$parameters = array(
-				'version' => '1.1', 
-	//			'recordPacking' => 'xml', 
+				'version' => '1.1',
+	//			'recordPacking' => 'xml',
 				'maximumRecords' => $max_record_per_search,
 				'query' => $cql,
-				'startRecord' => $next_record_position 
+				'startRecord' => $next_record_position
 			);
-			
+
 			if ($chosen_schema != 'default')
-				$parameters['recordSchema'] = "$chosen_schema"; 
-						
+				$parameters['recordSchema'] = "$chosen_schema";
+
 			$request = new sru_request($url, "searchRetrieve", $parameters, $this->schema_config, SR_MODE_STYLESHEETS);
 			$style_sheets_to_apply = array();
 			foreach($style_sheets as $style_sheet) {
@@ -836,40 +831,40 @@ class sru extends connector {
 
 						if (isset($result["next_record_position"]))
 							$next_record_position = $result["next_record_position"];
-						else 
+						else
 							break;
 //						highlight_string(print_r($result["records"], true));
 					}
-					else 
+					else
 						break;
 				}
 				else {
 					$this->error = true;
 					$this->error_message = $request->error_message;
 					return;
-				}				
+				}
 			}
 			else {
 				$this->error = true;
 				$this->error_message = $request->error_message;
-				return;				
+				return;
 			}
-			
+
 		flush();
 		}
-		
+
 	}
-	
+
 	public function get_schemas_config() {
 
-		//Si on l'a dï¿½jï¿½ fait, on s'en souvient
+		//Si on l'a deja fait, on s'en souvient
 		if ($this->schema_config) {
 			return $this->schema_config;
 		}
 		$result = array();
 		$file = file_get_contents('admin/connecteurs/in/sru/schema_xslts.xml');
 		$dom = new xml_dom_sru($file);
-		
+
 		$node = $dom->get_nodes('schemas_xslts/schemas/schema');
 		foreach ($node as $schema) {
 			$attribs = $dom->get_attributes($schema);
@@ -877,12 +872,12 @@ class sru extends connector {
 			$result[$id]['id'] = $id;
 			$long_formats = explode("\n", $dom->get_datas($schema));
 			foreach ($long_formats as $long_format) {
-				$trimmed = trim($long_format); 
+				$trimmed = trim($long_format);
 				if ($trimmed)
 					$result[$id]['long_formats'][] = $trimmed;
 			}
 		}
-		
+
 		$node = $dom->get_nodes('schemas_xslts/schemas_to_pmbunimarc/schema');
 		foreach ($node as $schema) {
 			$attribs = $dom->get_attributes($schema);
@@ -890,25 +885,25 @@ class sru extends connector {
 			$result[$id]['id'] = $id;
 			$long_formats = explode("\n", $dom->get_datas($schema));
 			foreach ($long_formats as $long_format) {
-				$trimmed = trim($long_format); 
+				$trimmed = trim($long_format);
 				if ($trimmed)
 					$result[$id]['stylesheets'][] = $trimmed;
 			}
 		}
-		$this->schema_config = $result; 
+		$this->schema_config = $result;
 		return $result;
 	}
-	
+
 	public function record_schema_to_list_of_style_sheets($schema) {
 		$to_unimarc_style_sheets = array();
 		if ($schema) {
 			$schema_config = $this->get_schemas_config();
 			if (isset($schema_config[$this->record_schema]["stylesheets"]))
-				$to_unimarc_style_sheets = $schema_config[$this->record_schema]["stylesheets"];			
+				$to_unimarc_style_sheets = $schema_config[$this->record_schema]["stylesheets"];
 		}
 		return $to_unimarc_style_sheets;
 	}
-	
+
 	public function rec_record($record, $source_id, $search_id) {
 		global $charset,$base_path;
 		//On a un enregistrement unimarc, on l'enregistre
@@ -922,7 +917,7 @@ class sru extends connector {
 			$subfield_order=0;
 			$value="";
 			$date_import=date("Y-m-d H:i:s",time());
-			
+
 			$fs=$rec_uni_dom->get_nodes("unimarc/notice/f");
 			//Recherche du 001
 			if ($fs)
@@ -933,7 +928,7 @@ class sru extends connector {
 					}
 				}
 			if (!$ref) $ref = md5($record);
-			//Mise ï¿½ jour 
+			//Mise � jour
 			if ($ref) {
 				//Si conservation des anciennes notices, on regarde si elle existe
 				if (!$this->del_old) {
@@ -945,19 +940,19 @@ class sru extends connector {
 //					pmb_mysql_query($requete);
 				}
 				$ref_exists = false;
-				//Si pas de conservation ou refï¿½rence inexistante
+				//Si pas de conservation ou ref�rence inexistante
 				if (($this->del_old)||((!$this->del_old)&&(!$ref_exists))) {
-					//Insertion de l'entï¿½te
+					//Insertion de l'ent�te
 					$n_header["rs"]=$rec_uni_dom->get_value("unimarc/notice/rs");
 					$n_header["ru"]=$rec_uni_dom->get_value("unimarc/notice/ru");
 					$n_header["el"]=$rec_uni_dom->get_value("unimarc/notice/el");
 					$n_header["bl"]=$rec_uni_dom->get_value("unimarc/notice/bl");
 					$n_header["hl"]=$rec_uni_dom->get_value("unimarc/notice/hl");
 					$n_header["dt"]=$rec_uni_dom->get_value("unimarc/notice/dt");
-					
-					//Récupération d'un ID
+
+					//R�cup�ration d'un ID
 					$recid = $this->insert_into_external_count($source_id, $ref);
-					
+
 					foreach($n_header as $hc=>$code) {
 						$this->insert_header_into_entrepot($source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
 					}
@@ -984,6 +979,6 @@ class sru extends connector {
 			}
 		}
 	}
-		
+
 }
 ?>

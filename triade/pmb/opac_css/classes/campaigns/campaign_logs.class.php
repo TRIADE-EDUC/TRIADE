@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_logs.class.php,v 1.2 2018-03-02 16:39:37 dgoron Exp $
+// $Id: campaign_logs.class.php,v 1.4 2023/05/04 09:22:14 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/campaigns/campaign_recipient.class.php');
 
 class campaign_logs {
@@ -17,7 +18,7 @@ class campaign_logs {
 	protected static $instance;
 	
 	public function __construct($num_campaign=0) {
-		$this->num_campaign = $num_campaign+0;
+		$this->num_campaign = intval($num_campaign);
 	}
 	
 	protected function get_url_details($url, $num_recipient) {
@@ -25,8 +26,8 @@ class campaign_logs {
 		
 		$parse_format = parse_format::get_instance('consolidation.inc.php');
 	
-		// On rÃ©cupÃ¨re les get
-		parse_str(parse_url($url, PHP_URL_QUERY), $get);
+		// On récupère les get
+		parse_str(parse_url($url, PHP_URL_QUERY) ?? "", $get);
 	
 		$parse_format->environnement = array(
 				'num_ligne' => $num_recipient,
@@ -70,7 +71,7 @@ class campaign_logs {
 	}
 	
 	public static function add($hash, $url, $id) {
-		$id += 0;
+		$id = intval($id);
 		$campaign_recipient = new campaign_recipient($id);
 		$url = static::clean_url($url);
 		$query = 'insert into campaigns_logs 
@@ -84,7 +85,7 @@ class campaign_logs {
 	 * @return campaign_logs
 	 */
 	public static function get_instance($num_campaign) {
-		$num_campaign += 0;
+		$num_campaign = intval($num_campaign);
 		if(!isset(static::$instance[$num_campaign])) {
 			static::$instance[$num_campaign] = new campaign_logs($num_campaign);
 		}

@@ -10,7 +10,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -48,11 +48,11 @@ if (empty($_SESSION["adminplus"])) {
 	exit;
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript"<?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Archivage des données"?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -83,26 +83,26 @@ if (empty($_SESSION["adminplus"])) {
 
 	if (isset($_POST["etape1"])) {
 
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_notes`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_notes`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_absences`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_absences`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_retards`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_retards`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_discipline_sanction`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_discipline_sanction`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_discipline_retenue`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_discipline_retenue`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_entretieneleve`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_entretieneleve`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_affectations`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_affectations`";
 		execSql($sql);
-		$sql="DROP TABLE IF EXISTS `${prefixe}${annee}_cahiertexte`";
+		$sql="DROP TABLE IF EXISTS `{$prefixe}${annee}_cahiertexte`";
 		execSql($sql);
 
 		//------------------------------------------------------------------------------------------------
 		// GESTION DES NOTES
-		$sql="CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_notes` (
+		$sql="CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_notes` (
 				note_id INT NOT NULL PRIMARY KEY ,
 				elev_id integer NOT NULL,
 				prof_id integer NOT NULL,
@@ -121,7 +121,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_notes();  
 		// note_id,elev_id,prof_id,code_mat,coef,date,sujet,TRUNCATE(note,2),id_classe,id_groupe,typenote
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -136,7 +136,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val12=$data[$i][11];
 			$val13=$data[$i][12];
 			$val14=$data[$i][13];
-			$sql="INSERT INTO `${prefixe}${annee}_notes` (note_id,elev_id,prof_id,code_mat,coef,date,sujet,note,id_classe,id_groupe,typenote,noteexam,notationsur,notevisiblele)  VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14');";
+			$sql="INSERT INTO `{$prefixe}${annee}_notes` (note_id,elev_id,prof_id,code_mat,coef,date,sujet,note,id_classe,id_groupe,typenote,noteexam,notationsur,notevisiblele)  VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14');";
 			execSql($sql);
 
 		}
@@ -157,7 +157,7 @@ if (empty($_SESSION["adminplus"])) {
 	//
 	
 	if (isset($_POST["etape2"])) {
-		$sql="CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_absences` (
+		$sql="CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_absences` (
 				elev_id	integer NOT NULL,
 				date_ab date NOT NULL,
 				date_saisie date NOT NULL,
@@ -177,7 +177,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_abs();  
 		//elev_id, date_ab, date_saisie,origin_saisie,duree_ab ,date_fin, motif,  duree_heure, id_matiere, time
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -193,7 +193,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val13=$data[$i][12];
 			$val14=$data[$i][13];
 			$val15=$data[$i][14];
-			$sql="INSERT INTO `${prefixe}${annee}_absences` (elev_id,date_ab,date_saisie,origin_saisie,duree_ab,date_fin,motif,duree_heure,id_matiere,`time`,justifier,heure_saisie,heuredabsence,idprof,creneaux) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14','$val15');";
+			$sql="INSERT INTO `{$prefixe}${annee}_absences` (elev_id,date_ab,date_saisie,origin_saisie,duree_ab,date_fin,motif,duree_heure,id_matiere,`time`,justifier,heure_saisie,heuredabsence,idprof,creneaux) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14','$val15');";
 			execSql($sql);
 
 		}
@@ -214,7 +214,7 @@ if (empty($_SESSION["adminplus"])) {
 	// GESTION DES rtd
 
 	if (isset($_POST["etape3"])) {
-		$sql="CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_retards` (
+		$sql="CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_retards` (
 				elev_id integer NOT NULL,
 				heure_ret time NOT NULL,
 				date_ret date NOT NULL,
@@ -231,7 +231,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_rtd();  
 		//elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere, justifier , heure_saisie, idprof, creneaux
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -244,7 +244,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val10=$data[$i][9];
 			$val11=$data[$i][10];
 			$val12=$data[$i][11];
-			$sql="INSERT INTO `${prefixe}${annee}_retards` (elev_id,heure_ret,date_ret,date_saisie,origin_saisie,duree_ret,motif,idmatiere,justifier,heure_saisie,idprof,creneaux) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12') ";
+			$sql="INSERT INTO `{$prefixe}${annee}_retards` (elev_id,heure_ret,date_ret,date_saisie,origin_saisie,duree_ret,motif,idmatiere,justifier,heure_saisie,idprof,creneaux) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12') ";
 			execSql($sql);
 
 		}
@@ -264,7 +264,7 @@ if (empty($_SESSION["adminplus"])) {
 	
 	if (isset($_POST["etape4"])) {
 
-		$sql="CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_discipline_sanction` (
+		$sql="CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_discipline_sanction` (
   				id int(11),
 				id_eleve int(11),
 				motif text,
@@ -281,7 +281,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_sanction();  
 		//id,id_eleve,motif,id_category,date_saisie,origin_saisie,enr_en_retenue,signature_parent,attribuer_par,devoir_a_faire
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=addslashes($data[$i][2]);
@@ -294,7 +294,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val10=addslashes($data[$i][9]);
 			$val11=addslashes($data[$i][10]);
 		
-			$sql="INSERT INTO `${prefixe}${annee}_discipline_sanction` (id,id_eleve,motif,id_category,date_saisie,origin_saisie,enr_en_retenue,signature_parent,attribuer_par,devoir_a_faire,description_fait) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11') ";
+			$sql="INSERT INTO `{$prefixe}${annee}_discipline_sanction` (id,id_eleve,motif,id_category,date_saisie,origin_saisie,enr_en_retenue,signature_parent,attribuer_par,devoir_a_faire,description_fait) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11') ";
 			execSql($sql);
 
 		}
@@ -314,7 +314,7 @@ if (empty($_SESSION["adminplus"])) {
 	//------------------------------------------------------------------------------------------------
 	// GESTION DES disciplines retenu
 	if (isset($_POST["etape5"])) {
-		$sql="CREATE TABLE `${prefixe}${annee}_discipline_retenue` (
+		$sql="CREATE TABLE `{$prefixe}${annee}_discipline_retenue` (
 			  id_elev int(11),
 			  date_de_la_retenue date,
 			  heure_de_la_retenue time,
@@ -333,7 +333,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_retenu();  
 		// id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -348,7 +348,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val12=addslashes($data[$i][11]);
 			$val13=addslashes($data[$i][12]);
 		
-			$sql="INSERT INTO `${prefixe}${annee}_discipline_retenue` (id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire,description_fait) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13') ";
+			$sql="INSERT INTO `{$prefixe}${annee}_discipline_retenue` (id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire,description_fait) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13') ";
 			execSql($sql);
 
 			$fp = fopen("./data/archive/archive_${annee}.sql", "w+");
@@ -365,7 +365,7 @@ if (empty($_SESSION["adminplus"])) {
 	//------------------------------------------------------------------------------------------------
 	// GESTION DES ENTRETIENS INDIVIDUELS
 	if (isset($_POST["etape6"])) {
-		$sql="CREATE TABLE `${prefixe}${annee}_entretieneleve` (
+		$sql="CREATE TABLE `{$prefixe}${annee}_entretieneleve` (
 			`ideleve` int(11) NOT NULL,
   			`date` date NOT NULL,
   			`heuredebut` time NOT NULL,
@@ -380,7 +380,7 @@ if (empty($_SESSION["adminplus"])) {
 		execSql($sql);
 		$data=SQLite_entretienEleve();  
 		// ideleve,date,heuredebut,heurefin,nomclasse,objet,recupar,id
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -390,7 +390,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val7=addslashes($data[$i][6]);
 			$val8=$data[$i][7];
 			$val9=$data[$i][8];
-			$sql="INSERT INTO `${prefixe}${annee}_entretieneleve` (ideleve,date,heuredebut,heurefin,nomclasse,objet,recupar,id,preparation) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9') ";
+			$sql="INSERT INTO `{$prefixe}${annee}_entretieneleve` (ideleve,date,heuredebut,heurefin,nomclasse,objet,recupar,id,preparation) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9') ";
 			execSql($sql);
 
 
@@ -401,7 +401,7 @@ if (empty($_SESSION["adminplus"])) {
         //------------------------------------------------------------------------------------------------
         // GESTION DES Affectations
         if (isset($_POST["etape7"])) {
-                execSql("CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_affectations` (
+                execSql("CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_affectations` (
                                   `ordre_affichage` int(6) NOT NULL,
                                   `code_matiere` int(6) NOT NULL,
                                   `code_prof` int(11) NOT NULL,
@@ -419,7 +419,7 @@ if (empty($_SESSION["adminplus"])) {
                                 ");
                 $data=SQLite_affectation();
                 // ordre_affichage, code_matiere, code_prof, code_classe, coef, code_groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects
-                for($i=0;$i<count($data);$i++) {
+                for($i=0;$i<countTriade($data);$i++) {
                         $val1=$data[$i][0];
                         $val2=$data[$i][1];
                         $val3=$data[$i][2];
@@ -432,7 +432,7 @@ if (empty($_SESSION["adminplus"])) {
                         $val10=$data[$i][9];
                         $val11=$data[$i][10];
                         $val12=$data[$i][11];
-                        $sql="INSERT INTO `${prefixe}${annee}_affectations` (ordre_affichage, code_matiere, code_prof, code_classe, coef, groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12');";
+                        $sql="INSERT INTO `{$prefixe}${annee}_affectations` (ordre_affichage, code_matiere, code_prof, code_classe, coef, groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12');";
                         execSql($sql);
 
                 }
@@ -443,7 +443,7 @@ if (empty($_SESSION["adminplus"])) {
 	//------------------------------------------------------------------------------------------------
 	// GESTION DU CAHIER DE TEXTES 
 	if (isset($_POST["etape8"])) {
-		execSql("CREATE TABLE `${prefixe}${annee}_devoir_scolaire` (
+		execSql("CREATE TABLE `{$prefixe}${annee}_devoir_scolaire` (
   				`id` int(11) NOT NULL auto_increment,
 				`id_class_or_grp` int(11) NOT NULL,
 				`matiere_id` int(11) NOT NULL,
@@ -460,7 +460,7 @@ if (empty($_SESSION["adminplus"])) {
 				PRIMARY KEY  (`id`))");
 		$data=SQLite_devoirScolaire();  
 		// ordre_affichage, code_matiere, code_prof, code_classe, coef, code_groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -474,7 +474,7 @@ if (empty($_SESSION["adminplus"])) {
 			$val11=$data[$i][10];
 			$val12=$data[$i][11];
 			$val13=$data[$i][12];
-			$sql="INSERT INTO `${prefixe}${annee}_devoir_scolaire` (id,id_class_or_grp,  matiere_id,  date_saisie,  heure_saisie,  date_devoir,  texte,  classorgrp,  number,  fichier , idprof , tempsestimedevoir,  visadirecteur) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13');";
+			$sql="INSERT INTO `{$prefixe}${annee}_devoir_scolaire` (id,id_class_or_grp,  matiere_id,  date_saisie,  heure_saisie,  date_devoir,  texte,  classorgrp,  number,  fichier , idprof , tempsestimedevoir,  visadirecteur) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13');";
 			execSql($sql);
 
 		}
@@ -486,7 +486,7 @@ if (empty($_SESSION["adminplus"])) {
 	//------------------------------------------------------------------------------------------------
 	// GESTION DU cahier de texte
 	if (isset($_POST["etape9"])) {
-                execSql("CREATE TABLE IF NOT EXISTS  `${prefixe}${annee}_cahiertexte` (
+                execSql("CREATE TABLE IF NOT EXISTS  `{$prefixe}${annee}_cahiertexte` (
                           `id` int(11) NOT NULL,
                           `id_class_or_grp` int(11) NOT NULL,
                           `matiere_id` int(11) NOT NULL,
@@ -509,7 +509,7 @@ if (empty($_SESSION["adminplus"])) {
                         ");
                 $data=SQLite_cahierDeTextes();
                 // id,id_class_or_grp,matiere_id,date_saisie,heure_saisie,classorgrp,number,fichier,idprof,objectif,contenu,date_contenu,number_obj,fichier_obj,blocnote,visadirecteur
-                for($i=0;$i<count($data);$i++) {
+                for($i=0;$i<countTriade($data);$i++) {
                         $val1=$data[$i][0];
                         $val2=$data[$i][1];
                         $val3=$data[$i][2];
@@ -526,7 +526,7 @@ if (empty($_SESSION["adminplus"])) {
                         $val14=addslashes($data[$i][13]);
                         $val15=$data[$i][14];
                         $val16=$data[$i][15];
-                        $sql="INSERT INTO `${prefixe}${annee}_cahiertexte` (id,id_class_or_grp,matiere_id,date_saisie,heure_saisie,classorgrp,number,fichier,idprof,objectif,contenu,date_contenu,number_obj,fichier_obj,blocnote,visadirecteur) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14','$val15','$val16');";
+                        $sql="INSERT INTO `{$prefixe}${annee}_cahiertexte` (id,id_class_or_grp,matiere_id,date_saisie,heure_saisie,classorgrp,number,fichier,idprof,objectif,contenu,date_contenu,number_obj,fichier_obj,blocnote,visadirecteur) VALUES ('$val1','$val2','$val3','$val4','$val5','$val6','$val7','$val8','$val9','$val10','$val11','$val12','$val13','$val14','$val15','$val16');";
                         execSql($sql);
 
                 }
@@ -562,6 +562,6 @@ if (empty($_SESSION["adminplus"])) {
 <br /><br />
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php attente(); ?>
 </BODY></HTML>

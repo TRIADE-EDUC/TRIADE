@@ -1,13 +1,13 @@
 -- +-------------------------------------------------+
 -- © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 -- +-------------------------------------------------+
--- $Id: indexint_dewey.sql,v 1.8 2012-12-05 09:41:51 mbertin Exp $
+-- $Id: indexint_dewey.sql,v 1.9 2021/04/21 15:41:09 rtigero Exp $
 
--- MySQL dump 10.13  Distrib 5.1.55, for mandriva-linux-gnu (i586)
+-- MySQL dump 10.17  Distrib 10.3.25-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: bibli
 -- ------------------------------------------------------
--- Server version	5.1.55-Max
+-- Server version	10.3.25-MariaDB-0ubuntu0.20.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,11 +15,9 @@
 /*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 
 truncate table pclassement;
 truncate table indexint;
@@ -30,7 +28,7 @@ truncate table indexint;
 
 LOCK TABLES `pclassement` WRITE;
 /*!40000 ALTER TABLE `pclassement` DISABLE KEYS */;
-INSERT INTO `pclassement` (`id_pclass`, `name_pclass`, `typedoc`) VALUES (1,'Dewey','abcdefgijklmr');
+INSERT INTO `pclassement` (`id_pclass`, `name_pclass`, `typedoc`, `locations`) VALUES (1,'Dewey','abcdefgijklmr','');
 /*!40000 ALTER TABLE `pclassement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,7 +179,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (139,'025.1','Administration, gestion',' 025 1 administration gestion ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (140,'025.11','Budget, services comptables',' 025 11 budget services comptables ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (141,'025.12','Services de reprographie et des publications',' 025 12 services reprographie publications ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (142,'025.17','Traitement des documents particuliers. Manuscrits, cartes \"non livres\"',' 025 17 traitement documents particuliers manuscrits cartes \"non livres\" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (142,'025.17','Traitement des documents particuliers. Manuscrits, cartes \"non livres\"',' 025 17 traitement documents particuliers manuscrits cartes non livres ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (143,'025.178','Traitement des enregistrements sonores (disques cassettes)',' 025 178 traitement enregistrements sonores disques cassettes ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (144,'025.2','Acquisitions. Accroissement de collections',' 025 2 acquisitions accroissement collections ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (145,'025.21','Sélection',' 025 21 selection ',1);
@@ -190,7 +188,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (148,'025.3','Analyse et contrôle bibliographiques. Indexation catalogage et classification',' 025 3 analyse controle bibliographiques indexation catalogage classification ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (149,'025.31','Le catalogue : forme, structure',' 025 31 catalogue forme structure ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (150,'025.32','Catalogues auteurs. Description bibliographique',' 025 32 catalogues auteurs description bibliographique ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (151,'025.34','Catalogues et indexation des \"non-livres\"',' 025 34 catalogues indexation \"non livres\" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (151,'025.34','Catalogues et indexation des \"non-livres\"',' 025 34 catalogues indexation non livres ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (152,'025.35','Catalogage en coopération',' 025 35 catalogage cooperation ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (153,'025.4','Analyses des sujets',' 025 4 analyses sujets ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (154,'025.42','Classification',' 025 42 classification ',1);
@@ -993,7 +991,7 @@ INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `ind
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (951,'306.9','Comportements relatifs à la mort : classer ici les ouvrages généraux sur la mort. Classer les rites funéraires à 393.9',' 306 9 comportements relatifs mort classer ici ouvrages generaux sur mort classer rites funeraires 393 9 ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (952,'307','Communautés',' 307 communautes ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (953,'307.1','Développement',' 307 1 developpement ',1);
-INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (954,'307.2','Population : composition, mouvements. Classer ici l\'exode rural et le \"retour à la terre\"',' 307 2 population composition mouvements classer ici exode rural \"retour terre\" ',1);
+INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (954,'307.2','Population : composition, mouvements. Classer ici l\'exode rural et le \"retour à la terre\"',' 307 2 population composition mouvements classer ici exode rural retour terre ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (955,'307.3','Structure',' 307 3 structure ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (956,'307.7','Types de communautés',' 307 7 types communautes ',1);
 INSERT INTO `indexint` (`indexint_id`, `indexint_name`, `indexint_comment`, `index_indexint`, `num_pclass`) VALUES (957,'307.72','Rurales',' 307 72 rurales ',1);
@@ -4872,10 +4870,9 @@ UNLOCK TABLES;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-11-29  9:14:31
+-- Dump completed on 2021-04-20 17:11:55

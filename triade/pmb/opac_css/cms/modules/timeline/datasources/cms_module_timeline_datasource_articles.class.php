@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_timeline_datasource_articles.class.php,v 1.2 2017-10-17 10:22:11 apetithomme Exp $
+// $Id: cms_module_timeline_datasource_articles.class.php,v 1.3 2023/08/17 09:47:57 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class cms_module_timeline_datasource_articles extends cms_module_timeline_dataso
 	protected $cp_persos_by_type = array();
 		
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -27,21 +27,21 @@ class cms_module_timeline_datasource_articles extends cms_module_timeline_dataso
 	}
 
 	/**
-	 * DÃ©finition des champs utilisables pour la valorisation 
-	 * de la structure JSON renvoyÃ©e par la source
+	 * Définition des champs utilisables pour la valorisation 
+	 * de la structure JSON renvoyée par la source
 	 */
 	protected function init_usable_fields(){
-		/** Les diffÃ©rents champs de titres + les champs perso non rÃ©petable de type small texte **/
+		/** Les différents champs de titres + les champs perso non répetable de type small texte **/
 		$this->title_fields = array_merge(array(
 			"title" => $this->msg['cms_module_timeline_datasource_articles_title']
 		), $this->get_perso_fields('text', 'small_text'));
 
-		/** Le champs rÃ©sumÃ© + les champs de type text large unique **/
+		/** Le champs résumé + les champs de type text large unique **/
 		$this->resume_fields = array_merge(array(
 			"resume" => $this->msg['cms_module_timeline_datasource_articles_resume']
 		), $this->get_perso_fields('text', 'text'));
 		
-		/** Le champs rÃ©sumÃ© + les champs de type text large unique **/
+		/** Le champs résumé + les champs de type text large unique **/
 		$this->image_fields = array_merge(array(
 				"logo" => $this->msg['cms_module_timeline_datasource_articles_logo']
 		), $this->get_perso_fields('url', 'text'));
@@ -106,7 +106,7 @@ class cms_module_timeline_datasource_articles extends cms_module_timeline_dataso
 		$form = parent::get_form();
 		
 		$form.= '
-				<script type="text/javascript">
+				<script>
 					require(["dojo/query", "dojo/dom", "dojo/on", "dojo/dom-style"], function(query, dom, on, domStyle) {
 						var cp_persos_by_type = '.json_encode($this->cp_persos_by_type).';
 						var selectors = [

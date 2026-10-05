@@ -31,6 +31,7 @@
 	<li><kbd>Esc</kbd>+<kbd>X</kbd>Administration &gt; Param&egrave;tres</li>
 	
 	<h2>Au quotidien</h2>
+	<li><kbd>Esc</kbd>+<kbd>O</kbd>Tableau de bord</li>
 	<li><kbd>Esc</kbd>+<kbd>P</kbd>Pr&eacute;f&eacute;rences de l'utilisateur courant</li>
 	<li><kbd>Esc</kbd>+<kbd>Q</kbd>D&eacute;connexion</li>
 </ul>

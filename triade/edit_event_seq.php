@@ -277,7 +277,7 @@ calendarDim('id32','document.formulaire.periode',$_SESSION["langue"],"1","0");?>
 	
 			<td align='right'><font class='T2'>Couleur :</font></td>
 			<td><?php
-			for($no=0;$no<count($colors);$no++){
+			for($no=0;$no<countTriade($colors);$no++){
 				echo "<div class=\"colorDiv\" id='col$no' onclick=\"selectColor(this,'".$colors[$no]."');\" style=\"background-color:".$colors[$no]."\"><span></span></div>\n";
 				
 			}

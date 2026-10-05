@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.2 2007-03-10 09:03:17 touraine37 Exp $
+// $Id: main.inc.php,v 1.2 2007/03/10 09:03:17 touraine37 Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// page de switch recherche Ã©diteurs/collections
+// page de switch recherche éditeurs/collections
 
 // affichage de l'iframe pour le browser de collections
 require_once($class_path."/searcher.class.php");

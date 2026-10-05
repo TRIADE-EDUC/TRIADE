@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,96 +26,66 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET17 ?></font></b></td></tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGCARNET17 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
-<td valign=top>
-<!-- // fin  -->
-<br><br>
-<table border=0 align=center width=85%>
-<tr>
-<form action='carnet_admin_creation.php' method="post">
-<td align=right ><font class=T2><?php print LANGCARNET9 ?> :</font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print LANGSTAGE3?>","rien"); //text,nomInput</script></td>
-</form>
-</tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr>
-<form action='carnet_admin_modif.php' method="post">
-<td align=right><font class=T2><?php print LANGCARNET10 ?> : </font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print LANGPER30?>","rien"); //text,nomInput</script></td>
-</form>
-</tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr>
-<form  method="post" action='carnet_admin_supp.php' >
-<td align=right><font class=T2><?php print LANGCARNET11 ?> : </font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit3("<?php print LANGBT50?>","rien",""); //text,nomInput</script></td>
-</form>
-</tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr>
-<form action='carnet_admin_consulte.php' method="post">
-<td align=right><font class=T2><?php print LANGCARNET12 ?> : </font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit("<?php print LANGBT28?>","rien"); //text,nomInput</script></td>
-</form>
-</tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr>
-<form  method="post" action="carnet_admin_export.php">
-<td align=right><font class=T2><?php print LANGCARNET13 ?> : </font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit3("<?php print LANGCARNET16?>","rien",""); //text,nomInput</script></td>
-</form>
-</tr>
-<tr><td></td></tr>
-<tr><td></td></tr>
-<tr>
-<form  method="post" action="carnet_admin_import.php" >
-<td align=right><font class=T2><?php print LANGCARNET14 ?> : </font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmit3("<?php print LANGCARNET15?>","rien",""); //text,nomInput</script></td>
-</form>
-</tr>
+<td valign="top">
 
-</table>
-<br><br>
+<div class="dest-list" style="margin:8px 5px;">
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET9 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_creation.php','_parent','')"><?php print LANGSTAGE3 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET10 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_modif.php','_parent','')"><?php print LANGPER30 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET11 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_supp.php','_parent','')"><?php print LANGBT50 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print "Importer domaine de compétence" ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_import_competence.php','_parent','')"><?php print LANGCARNET15 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET12 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_consulte.php','_parent','')"><?php print LANGBT28 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET13 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_export.php','_parent','')"><?php print LANGCARNET16 ?></button>
+  </div>
+  <div class="dest-row">
+    <div class="dest-row-label"><?php print LANGCARNET14 ?></div>
+    <button class="btn-dest" onclick="open('carnet_admin_import.php','_parent','')"><?php print LANGCARNET15 ?></button>
+  </div>
+</div>
 
-<!-- // fin  -->
 </td></tr></table>
 
 <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if ($_SESSION["membre"] == "menuadmin") :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
+if ($_SESSION["membre"] == "menuadmin") {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+} else {
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+}
 ?>
 </BODY></HTML>

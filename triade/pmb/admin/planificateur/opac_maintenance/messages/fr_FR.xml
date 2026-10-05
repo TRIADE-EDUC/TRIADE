@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour le nettoyage de la base PMB
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2019/10/09 09:54:41 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="scheduler_opac_maintenance_default_page">Utiliser la page de la maintenance paramétrée par défaut ?</entry>
+	<entry code="scheduler_opac_maintenance_duration">Durée de la maintenance (en minutes)</entry>
+	<entry code="scheduler_opac_maintenance_customize">Personnalisation de la page de maintenance ci-dessous</entry>
+	<entry code="scheduler_opac_maintenance_title">Titre de la page</entry>
+	<entry code="scheduler_opac_maintenance_content">Contenu de la page</entry>
+	<entry code="scheduler_opac_maintenance_css_style">Style de la page</entry>
+	<entry code="scheduler_opac_maintenance_start">Début de la maintenance à %s</entry>
+	<entry code="scheduler_opac_maintenance_end">Fin de la maintenance à %s</entry>
+</XMLlist>

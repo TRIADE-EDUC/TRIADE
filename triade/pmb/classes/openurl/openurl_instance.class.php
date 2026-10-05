@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_instance.class.php,v 1.2 2016-12-22 16:36:18 dgoron Exp $
+// $Id: openurl_instance.class.php,v 1.3 2019/07/11 10:24:50 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,26 +10,26 @@ require_once($class_path."/openurl/descriptors/openurl_descriptors_kev_mtx.class
 require_once($class_path."/openurl/entities/openurl_entities.class.php");
 require_once($class_path."/openurl/context_object/openurl_context_object_kev_mtx_ctx.class.php");
 require_once($class_path."/openurl/transport/openurl_transport_http.class.php");
-//pour rÃ©cup les infos de notice
+//pour récup les infos de notice
 require_once($base_path."/admin/convert/export.class.php");
 require_once($class_path."/export_param.class.php");
 
-//Cette s'occupe de toute la gestion des classes OpenURL, donc en thÃ©orie, si je m'en sors, cette seule classe peut suffir Ã  l'interface...
+//Cette s'occupe de toute la gestion des classes OpenURL, donc en théorie, si je m'en sors, cette seule classe peut suffir à l'interface...
 
 class openurl_instance {
 	public $notice_id = 0;				// identifiant de la notice
 	public $notice_externe_id = 0;		// identifiant de la notice externe
 	public $parent_id = 0;				// identifiant de la notice parente
-	public $params = array();			// jeu de paramÃ¨tres...
-	public $notice_infos = "";			// informations sur la notice
-	public $parent_infos = "";			// informations sur la notice parente, si disponible...
-	public $serialization = "";		// mode de sÃ©rialization
-	public $referent;					// entitÃ© referent
-	public $referringEntity;			// entitÃ© referring_entity
-	public $requester;					// entitÃ© requester
-	public $serviceType;				// entitÃ© service_type
-	public $resolver;					// entitÃ© resolver
-	public $referrer;					// entitÃ© referrer
+	public $params = array();			// jeu de paramètres...
+	public $notice_infos = array();			// informations sur la notice
+	public $parent_infos = array();			// informations sur la notice parente, si disponible...
+	public $serialization = "";		// mode de sérialization
+	public $referent;					// entité referent
+	public $referringEntity;			// entité referring_entity
+	public $requester;					// entité requester
+	public $serviceType;				// entité service_type
+	public $resolver;					// entité resolver
+	public $referrer;					// entité referrer
 	public $contextObject;				// l'objet contextuel
 	public $transport;					// object pour le transport
 	public $source_id;					// id de la source
@@ -50,7 +50,7 @@ class openurl_instance {
 		if($this->notice_id){
 			//pour une notice de la base...
 			
-			//rÃ©cupÃ¨re les param d'exports
+			//récupère les param d'exports
 			$export_param = new export_param();
 			$param = $export_param->get_parametres($export_param->context);
 			//petit nettoyage pour un bon fonctionnement...
@@ -64,7 +64,7 @@ class openurl_instance {
 	
 			//on regarde si on veut aussi les infos de la notice contenante...
 			if ($this->params['entities']['referring_entity']['allow'] == "yes"){
-				//il nous faut dÃ©jÃ  l'identifiant du parent, s'il existe...
+				//il nous faut déjà l'identifiant du parent, s'il existe...
 				$this->parent_id = 0;
 				switch($this->notice_infos['bl']['value'].$this->notice_infos['hl']['value']){
 					case "a2" :
@@ -98,10 +98,10 @@ class openurl_instance {
 			}
 		}else{
 			//pour une notice externe
-			//TODO : rÃ©cup notice infos
+			//TODO : récup notice infos
 		}
 
-		//on rÃ©cup la sÃ©rialization pour gÃ©rer nos objets
+		//on récup la sérialization pour gérer nos objets
 		switch($this->params['serialization']){
 			case "kev" :
 			default :
@@ -116,7 +116,7 @@ class openurl_instance {
 			if(is_array($type)){
 				foreach($type as $key => $asked){
 					if($asked != 0){
-						//si le descripteur "$key" est demandÃ©
+						//si le descripteur "$key" est demandé
 						$class_desc = "openurl_descriptor_".$desc."_".$this->serialization."_".$key;
 						$descriptors[] = new $class_desc($this->notice_infos);
 					}
@@ -150,7 +150,7 @@ class openurl_instance {
 				if(is_array($type)){
 					foreach($type as $key => $asked){
 						if($asked != 0){
-							//si le descripteur "$key" est demandÃ©
+							//si le descripteur "$key" est demandé
 							$class_desc = "openurl_descriptor_".$desc."_".$this->serialization."_".$key;
 							$descriptors[] = new $class_desc($this->parent_infos);
 						}

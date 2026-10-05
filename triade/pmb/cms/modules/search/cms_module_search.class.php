@@ -2,21 +2,21 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_search.class.php,v 1.7 2018-09-25 08:09:07 pmbs Exp $
+// $Id: cms_module_search.class.php,v 1.10.6.1 2025/01/17 10:40:47 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_search extends cms_module_common_module {
-	
+
 	public function __construct($id=0){
 		$this->module_path = str_replace(basename(__FILE__),"",__FILE__);
 		parent::__construct($id);
 	}
-	
+
 	public function get_manage_form(){
 		global $base_path;
 		global $search_dest;
-		
+
 		$form="
 		<h3>".$this->format_text($this->msg['cms_module_search_admin_form_label'])."</h3>
 		<div dojoType='dijit.layout.BorderContainer' style='width: 100%; height: 800px;'>
@@ -34,7 +34,7 @@ class cms_module_search extends cms_module_common_module {
 			}
 		}
 			$form.="
-				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&search_dest=new'/>".$this->format_text($this->msg['cms_module_search_add_search_dest'])."</a> 
+				<a href='".$base_path."/cms.php?categ=manage&sub=".str_replace("cms_module_","",$this->class_name)."&quoi=module&search_dest=new'>".$this->format_text($this->msg['cms_module_search_add_search_dest'])."</a>
 			";
 		$form.="
 			</div>
@@ -47,13 +47,13 @@ class cms_module_search extends cms_module_common_module {
 		$form.="
 			</div>
 		</div>";
-		return $form;	
-		
+		return $form;
+
 	}
-	
+
 	protected function get_managed_search_dest_form($search_dest){
 		global $opac_opac_view_activate;
-		
+
 		if($search_dest != "new"){
 			$infos = $this->managed_datas['module']['search_dests'][$search_dest];
 		}else{
@@ -64,7 +64,7 @@ class cms_module_search extends cms_module_common_module {
 			);
 		}
 		$form = "";
-		
+
 		//nom
 		$form.="
 			<div class='row'>
@@ -85,6 +85,9 @@ class cms_module_search extends cms_module_common_module {
 					<select name='cms_module_search_page_dest'>";
 		if($opac_opac_view_activate) {
 			$form.= $this->gen_options_opac_view($infos['page']);
+		} else {
+		    $form.="
+                        <option value='0' ".(!$infos['page'] ? "selected='selected'" : "").">".$this->format_text($this->msg['cms_module_search_classique_dest'])."</option>";
 		}
 		//on va chercher les infos pour les pages du portail !
 		$query = "select id_page,page_name from cms_pages order by page_name asc";
@@ -124,7 +127,7 @@ class cms_module_search extends cms_module_common_module {
                 $form.="</select>";
 		return $form;
 	}
-	
+
 	protected function get_opac_views_list(){
 		$opac_views = array();
 		$query = "select opac_view_id, opac_view_name from opac_views";
@@ -136,7 +139,7 @@ class cms_module_search extends cms_module_common_module {
 		}
 		return $opac_views;
 	}
-	
+
 	protected function gen_options_opac_view($selected){
 		$opac_views = $this->get_opac_views_list();
 		$select = "
@@ -151,7 +154,7 @@ class cms_module_search extends cms_module_common_module {
 					</optgroup>";
 		return $select;
 	}
-	
+
 	public function save_manage_form(){
 		global $search_dest;
 		global $search_dest_delete;
@@ -170,17 +173,17 @@ class cms_module_search extends cms_module_common_module {
 			$params['search_dests'][$search_dest] = array(
 					'name' => stripslashes($cms_module_search_search_dest_name),
 					'page' => stripslashes($cms_module_search_page_dest),
-                                        'universe' => stripslashes($cms_module_search_search_dest_search),
+                    'universe' => stripslashes($cms_module_search_search_dest_search),
 			);
 		}
 		return $params;
 	}
-	
+
 	protected static function get_max_search_dest_id($datas){
 		$max = 0;
-		if(count($datas)){
+		if (is_countable($datas) && count($datas)) {
 			foreach	($datas as $key => $val){
-				$key = str_replace("search_dest","",$key)*1;
+				$key = intval(str_replace("search_dest","",$key));
 				if($key>$max) $max = $key;
 			}
 		}

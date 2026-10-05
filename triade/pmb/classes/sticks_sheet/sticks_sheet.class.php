@@ -2,15 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sticks_sheet.class.php,v 1.6 2018-08-10 10:36:39 dgoron Exp $
+// $Id: sticks_sheet.class.php,v 1.10 2022/01/21 08:37:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/sticks_sheet/sticks_sheet.tpl.php");
 require_once($class_path."/encoding_normalize.class.php");
 
 /**
- * Planche d'Ã©tiquettes
+ * Planche d'étiquettes
  */
 class sticks_sheet {
 	
@@ -21,7 +22,7 @@ class sticks_sheet {
 	protected $id;
 	
 	/**
-	 * LibellÃ©
+	 * Libellé
 	 * @var string
 	 */
 	protected $label;
@@ -39,31 +40,31 @@ class sticks_sheet {
 	protected $page_orientation;
 	
 	/**
-	 * UnitÃ©
+	 * Unité
 	 * @var float
 	 */
 	protected $unit;
 	
 	/**
-	 * Nombre d'Ã©tiquettes en largeur
+	 * Nombre d'étiquettes en largeur
 	 * @var int
 	 */
 	protected $nbr_x_sticks;
 	
 	/**
-	 * Nombre d'Ã©tiquettes en hauteur
+	 * Nombre d'étiquettes en hauteur
 	 * @var int
 	 */
 	protected $nbr_y_sticks;
 	
 	/**
-	 * Largeur de l'Ã©tiquette
+	 * Largeur de l'étiquette
 	 * @var float
 	 */
 	protected $stick_width;
 	
 	/**
-	 * Hauteur de l'Ã©tiquette
+	 * Hauteur de l'étiquette
 	 * @var float
 	 */
 	protected $stick_height;
@@ -81,30 +82,30 @@ class sticks_sheet {
 	protected $top_margin;
 
 	/**
-	 * Espace horizontal entre 2 Ã©tiquettes
+	 * Espace horizontal entre 2 étiquettes
 	 * @var float
 	 */
 	protected $x_sticks_spacing;
 	
 	/**
-	 * Espacement vertical entre 2 Ã©tiquettes
+	 * Espacement vertical entre 2 étiquettes
 	 * @var float
 	 */
 	protected $y_sticks_spacing;
 	
 	/**
-	 * Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
+	 * Position courante de l'étiquette (unité : étiquette)
 	 * @var int
 	 */
 	protected $x_stick;
 	
 	/**
-	 * Position courante de l'Ã©tiquette (unitÃ© : Ã©tiquette)
+	 * Position courante de l'étiquette (unité : étiquette)
 	 */
 	protected $y_stick;
 	
 	/**
-	 * NumÃ©ro d'ordre
+	 * Numéro d'ordre
 	 */
 	protected $order;
 	
@@ -118,7 +119,7 @@ class sticks_sheet {
 	protected $image_coords;
 	
 	public function __construct($id=0) {
-		$this->id = $id*1;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -163,7 +164,9 @@ class sticks_sheet {
 				'font_style' => 'B',
 				'font_color' => '000000',
 				'align' => 'C',
-				'rotation' => '0'
+				'rotation' => '0',
+		        'border_size' => '0',
+                'character_line_break' => ''
 		);
 	}
 	
@@ -341,6 +344,14 @@ class sticks_sheet {
 				<input type='text' id='sticks_sheet_cote_coords_rotation' name='sticks_sheet_cote_coords[rotation]' class='saisie-5em' style='text-align:right;' value='".$this->cote_coords['rotation']."' />
 			</div>
 		</div>";
+		$display .= $this->get_display_line_unit_parameter('border_size', 'cote_coords');
+		$display.= "
+		<div class='row'>
+			<div class='colonne25'>".htmlentities($msg['cote_character_line_break'], ENT_QUOTES, $charset)."</div>
+			<div class='colonne_suite'>
+				<input type='text' id='sticks_sheet_cote_coords_character_line_break' name='sticks_sheet_cote_coords[character_line_break]' class='saisie-5em' style='text-align:right;' value='".$this->cote_coords['character_line_break']."' />
+			</div>
+		</div>";
 	
 		return $display;
 	}
@@ -377,32 +388,33 @@ class sticks_sheet {
 	
 	public function get_form() {
 		global $msg;
-		global $base_path;
-		global $sticks_sheet_form;
+		global $sticks_sheet_content_form;
 		
-		$form = $sticks_sheet_form;
+		$content_form = $sticks_sheet_content_form;
+		$interface_form = new interface_form('sticks_sheet_form');
+		$interface_form->set_label($msg['sticks_sheet_form_edit']);
 		
-		$form = str_replace('!!label!!', $this->label, $form);
-		$form = str_replace('!!unit!!', $this->unit, $form);
-		$form = str_replace('!!page_format!!', $this->gen_selector_page_format(), $form);
-		$form = str_replace('!!page_orientation!!', $this->gen_selector_page_orientation(), $form);
-		$form = str_replace('!!nbr_x_sticks!!', $this->nbr_x_sticks, $form);
-		$form = str_replace('!!nbr_y_sticks!!', $this->nbr_y_sticks, $form);
-		$form = str_replace('!!stick_width!!', $this->stick_width, $form);
-		$form = str_replace('!!stick_height!!', $this->stick_height, $form);
-		$form = str_replace('!!left_margin!!', $this->left_margin, $form);
-		$form = str_replace('!!top_margin!!', $this->top_margin, $form);
-		$form = str_replace('!!x_sticks_spacing!!', $this->x_sticks_spacing, $form);
-		$form = str_replace('!!y_sticks_spacing!!', $this->y_sticks_spacing, $form);
-		$form = str_replace('!!cote_coords!!', $this->get_display_cote_coords(), $form);
-		$form = str_replace('!!image_coords!!', $this->get_display_image_coords(), $form);
-		$form = str_replace('!!id!!', $this->id, $form);
-		if($this->id) {
-			$form = str_replace('!!button_delete!!', "<input type='button' class='bouton' id='sticks_sheet_button_delete' name='sticks_sheet_button_delete' value='".$msg['supprimer']."' onclick=\"if(sticks_sheet_delete()) {document.location='".$base_path."/edit.php?categ=sticks_sheet&sub=models&action=delete&id=".$this->id."'}\" />", $form);
-		} else {
-			$form = str_replace('!!button_delete!!', "", $form);
-		}		
-		return $form;
+		$content_form = str_replace('!!label!!', $this->label, $content_form);
+		$content_form = str_replace('!!unit!!', $this->unit, $content_form);
+		$content_form = str_replace('!!page_format!!', $this->gen_selector_page_format(), $content_form);
+		$content_form = str_replace('!!page_orientation!!', $this->gen_selector_page_orientation(), $content_form);
+		$content_form = str_replace('!!nbr_x_sticks!!', $this->nbr_x_sticks, $content_form);
+		$content_form = str_replace('!!nbr_y_sticks!!', $this->nbr_y_sticks, $content_form);
+		$content_form = str_replace('!!stick_width!!', $this->stick_width, $content_form);
+		$content_form = str_replace('!!stick_height!!', $this->stick_height, $content_form);
+		$content_form = str_replace('!!left_margin!!', $this->left_margin, $content_form);
+		$content_form = str_replace('!!top_margin!!', $this->top_margin, $content_form);
+		$content_form = str_replace('!!x_sticks_spacing!!', $this->x_sticks_spacing, $content_form);
+		$content_form = str_replace('!!y_sticks_spacing!!', $this->y_sticks_spacing, $content_form);
+		$content_form = str_replace('!!cote_coords!!', $this->get_display_cote_coords(), $content_form);
+		$content_form = str_replace('!!image_coords!!', $this->get_display_image_coords(), $content_form);
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['sticks_sheet_delete_confirm'])
+		->set_content_form($content_form)
+		->set_table_name('sticks_sheets');
+		return $interface_form->get_display();
 	}
 	
 	public function set_properties_from_form() {
@@ -463,7 +475,7 @@ class sticks_sheet {
 		$query = "select max(sticks_sheet_order)+1 as next_order from sticks_sheets";
 		$result = pmb_mysql_query($query);
 		$row = pmb_mysql_fetch_object($result);
-		return $row->next_order*1;
+		return intval($row->next_order);
 	}
 	
 	public function save() {
@@ -574,11 +586,11 @@ class sticks_sheet {
 	}
 	
 	/**
-	 * Retourne le bouton de sÃ©lection des planches d'Ã©tiquettes
-	 * @param string $dialog_title Titre du dialog Ã  ouvrir
-	 * @param string $button_label LibellÃ© du bouton
+	 * Retourne le bouton de sélection des planches d'étiquettes
+	 * @param string $dialog_title Titre du dialog à ouvrir
+	 * @param string $button_label Libellé du bouton
 	 * @param string $source Source
-	 * @param int $sticks_sheet_selected Identifiant de la plache d'Ã©tiquette Ã  utiliser par dÃ©faut
+	 * @param int $sticks_sheet_selected Identifiant de la plache d'étiquette à utiliser par défaut
 	 * @return mixed[]
 	 */
 	public function get_display_stick_select_button ($dialog_title, $button_label, $source) {

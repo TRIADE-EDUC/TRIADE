@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -51,7 +51,7 @@ endif;
 $clsorgrp=0;
 if ($_GET["clsorgrp"] != 0 ) { $clsorgrp=1 ; }
 $data=affdevoirScolaire($clsorgrp,$_GET["sMat"],$_GET["idclsorgrp"]);
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
 	if (dateFormSimple(dateForm($data[$i][4])) >= date("Ymd") ) {
 	print "<form method=POST>";

@@ -2,14 +2,14 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: plugin.class.php,v 1.1 2016-09-06 09:52:07 vtouchard Exp $
+// $Id: plugin.class.php,v 1.1 2016/09/06 09:52:07 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], '.class.php')) die('no access');
 
 require_once $include_path.'/parser.inc.php';
 
 /**
- * Classe de gestion du sysÃ¨tme de plugins
+ * Classe de gestion du sysètme de plugins
  * @author arenou
  *
  */

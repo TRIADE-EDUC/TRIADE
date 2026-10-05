@@ -1,0 +1,66 @@
+@startuml
+
+namespace PMB {
+  namespace CMS {
+    namespace Library {
+	    namespace ParserXML {
+    
+			class Container {
+				+zone : Zone
+				+xml : DOMXPath
+				+index : array()
+				..
+				+_construct()
+				-parseXML()
+				-searchChildrensOfParentZone(Zone $parentZone)
+				-getAttributesOfDomElement(DOMElement $element)
+				-createTreeElement(array $data): TreeElement
+				+getElementById(string id)
+				+createZone(array $data): Zone
+				+createFrame(array $data): Frame
+			}
+			
+			class TreeElement {
+				+id : string
+				+label : string
+				-before : TreeElement
+				-after : TreeElement
+				-parent : TreeElement
+				..
+				+_construct(array $data, Container $document) 
+				+setBefore(TreeElement $treeElement)
+				+setAfter(TreeElement $treeElement)
+				+setParent(Zone $zone)
+				+getParent()
+				+unsetParent()
+				+unsetAfter()
+				+unsetBefore()
+				+getPrevious() : TreeElement
+				+getNext() : TreeElement
+			}
+			
+			class Zone extends TreeElement{
+				+firstChild : TreeElement
+				..
+				#setFirstChild(TreeElement)
+				+getFirstChild(): TreeElement
+				+unsetFirstChild()
+				+appendChild(TreeElement $treeElement)
+				+removeChild(TreeElement $treeElement)
+				+insertBefore(TreeElement $treeElement, string $idAfter)
+				+insertAfter(TreeElement $treeElement, string $idBefore)
+			}
+			class Frame extends TreeElement{}
+
+			''liens
+			Container *-- Zone : Contient l'élément racine
+			Zone *-- TreeElement : a pour enfant
+		}
+	}
+}
+
+
+
+
+
+@enduml

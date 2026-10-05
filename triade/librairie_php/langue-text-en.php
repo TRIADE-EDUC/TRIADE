@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -22,9 +22,9 @@
 /* TRADUCTION PAR FABRICE RAUD */
 // --------------------------- //
 
-if (!defined(INTITULEDIRECTION)) { define("INTITULEDIRECTION","direction"); }
-if (!defined(INTITULEELEVE)) { define("INTITULEELEVE","student"); }
-if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","students"); }
+if (!defined("INTITULEDIRECTION")) { define("INTITULEDIRECTION","direction"); }
+if (!defined("INTITULEELEVE")) { define("INTITULEELEVE","student"); }
+if (!defined("INTITULEELEVES")) { define("INTITULEELEVES","students"); }
 
 
 // fichier pour langue cote admin.
@@ -36,7 +36,7 @@ define("CLICKICI","Enter");
 define("VALIDATE","Enter");
 define("VALIDER","Enter");
 define("LANGTP22"," WARNING - class test request - class test request - RUBRIQUE");
-define("LANGTP3"," Class test calendar ");
+define("LANGTP33"," Class test calendar ");
 define("LANGCHOIX","Select ...");
 define("LANGCHOIX2","no class");
 define("LANGCHOIX3","--- Select ---");
@@ -1034,7 +1034,7 @@ define("LANGAPROPOS3","User's Licence ");
 define("LANGAPROPOS4","Product ID");
 
 define("LANGTELECHARGER","Download");
-define("LANGPIEDPAGE","<p> La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Pour visualiser ce site de façon optimale : Internet Explorer 5 et Mozilla ----- résolution minimale : 800x600 <br>  © 2000/".date("Y")." Triade - Tous droits réservés");
+define("LANGPIEDPAGE","<p> La <b>T</b>ransparence et la <b>R</b>apidité de l'<b>I</b>nformatique <b>A</b>u service <b>D</b>e l'<b>E</b>nseignement<br>Accessibility : Not compliant <br>  © 2000/".date("Y")." Triade - Tous droits réservés");
 define("LANGAJOUT1","For status : possible choice(<b>FTR</b>(Full Time Resident),<b>DR</b> (Day Resident), <b>HR</b> (Half resident)<br>");
 define("LANGIMP44","This file does not have a valid format.");
 define("LANGBASE16"," Colums are represented as follow :<b>login last name; login first name; Parent password; Student assword </b>");
@@ -2168,7 +2168,7 @@ define("LANGMODIF26","Modify sub-course");
 //define("LANGPROF38","Trimester grade"); le 02/09/2014
 define("LANGPROF38","Grades/Marks");
 define("LANGPROF39","More information");
-define("LANGCIRCU21","Availbl for"); // abréviation for "Available for"
+define("LANGCIRCU211","Availbl for"); // abréviation for "Available for"
 
 define("LANGTELECHARGE","download"); //  downloader
 
@@ -2391,8 +2391,15 @@ define("LANGDISP25","Number of updated students");
 define("LANGDISP26","File must be in xls format");
 
 
+
+
+
+
+
 // --------- FIN Traduction //------------
 // ----Traduit le 18/05/2014 par sam
+define("LANGCARNET633","Import Carnet de Suivi terminé");
+define("LANGCARNET64","Liste des sanctions");
 define("LANGCARNET67","disciplinary penalty");
 define("LANGCARNET68","Schedule");
 
@@ -3607,6 +3614,45 @@ define("LANGPUR4","WARNING : You are running a module that will delete selected 
 
 define("LANGNEW100","Punishment(s)");
 define("LANGNEW101","Forecast");
+define("LANGMESS3655","Actualités  de la 1er page");
+
+define("LANGTT2","Impression du tableau de bulletin");
 
 
+// --- SIECLE-BEE Export ---
+define('LANG_SIECLE_EXPORT_TITRE', 'SIECLE-BEE Export (XML / ZIP)');
+define('LANG_SIECLE_EXPORT_DESC', 'Generate standard ZIP archive compliant with national standards for importing into SIECLE-BEE.');
+define('LANG_SIECLE_PROFIL', 'SIECLE Schema Profile');
+define('LANG_SIECLE_PROFIL_STANDARD', 'Standard (Contracted - XSD 4.0)');
+define('LANG_SIECLE_PROFIL_EPHC', 'Private Non-Contract (EPHC - XSD 1.1)');
+define('LANG_SIECLE_UAI', 'School UAI (RNE) Code');
+define('LANG_SIECLE_ANNEE', 'School Year');
+define('LANG_SIECLE_VALIDATION_XSD', 'Validate XSD compliance before export');
+define('LANG_SIECLE_PERIMETRE', 'Export Scope');
+define('LANG_SIECLE_BTN_EXPORTER', 'Generate and download ZIP archive');
+
+define('LANG_CODE_MEF', 'MEF Code (SIECLE)');
+
+// --- Password change (Private Space) ---
+define('LANG_CHG_PASS_TITLE', 'Password');
+define('LANG_CHG_PASS_ACTUEL', 'Current password');
+define('LANG_CHG_PASS_NOUVEAU', 'New password');
+define('LANG_CHG_PASS_CONFIRM', 'Confirm new password');
+define('LANG_CHG_PASS_BTN', 'Change password');
+define('LANG_CHG_PASS_OK', 'Your password has been changed successfully.');
+define('LANG_CHG_PASS_ERR_ACTUEL', 'Current password is incorrect.');
+define('LANG_CHG_PASS_ERR_CONFIRM', 'The new password and confirmation do not match.');
+define('LANG_CHG_PASS_ERR_EMPTY', 'Please fill in all password fields.');
+define('LANG_CHG_PASS_ERR_SECURITY', 'The new password does not meet the security criteria of the institution.');
+define('LANG_CHG_PASS_DISABLED', 'Password modification is disabled by your institution.');
+define('LANG_CHG_PASS_STRENGTH_LABEL', 'Password strength:');
+define('LANG_CHG_PASS_STRENGTH_1', 'Very weak');
+define('LANG_CHG_PASS_STRENGTH_2', 'Weak');
+define('LANG_CHG_PASS_STRENGTH_3', 'Medium');
+define('LANG_CHG_PASS_STRENGTH_4', 'Strong');
+define('LANG_CHG_PASS_MAIL_SUBJECT', 'TRIADE: Password change confirmation');
+define('LANG_CHG_PASS_MAIL_BODY1', 'Hello');
+define('LANG_CHG_PASS_MAIL_BODY2', 'We confirm that the password for your TRIADE account was successfully changed on');
+define('LANG_CHG_PASS_MAIL_BODY3', 'at');
+define('LANG_CHG_PASS_MAIL_BODY4', 'If you did not initiate this change, please immediately contact the administrator or management of your institution.');
 ?>

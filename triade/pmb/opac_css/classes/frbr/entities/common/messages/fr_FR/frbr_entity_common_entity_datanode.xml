@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_common_entity_datanode.xml,v 1.5 2018-08-22 16:23:31 tsamson Exp $ -->
+$Id: frbr_entity_common_entity_datanode.xml,v 1.8 2021/02/24 13:25:49 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code="frbr_entity_common_entity_datanode_edit">Modification de jeu de données - %s</entry>
@@ -36,4 +36,7 @@ $Id: frbr_entity_common_entity_datanode.xml,v 1.5 2018-08-22 16:23:31 tsamson Ex
 	<entry code='frbr_entity_common_datasource_used_in_custom_fields'>Entité parent utilisée dans un champs personnalisé</entry>
 	<entry code='frbr_entity_common_datanode_operator_and'>Et</entry>
 	<entry code='frbr_entity_common_datanode_operator_or'>Ou</entry>
+	<entry code='frbr_entity_common_datasource_expl'>Exemplaires utilisant cette autorité</entry>
+	<entry code='frbr_entity_common_datasource_used_in_qualification'>Entités utilisant cette autorité dans une qualification</entry>	<entry code='frbr_entity_common_datasource_merge_data'>Regroupement de jeux de données</entry>
+	<entry code='frbr_entity_common_datasource_merge_data'>Regroupement de jeux de données</entry>	
 </XMLlist>

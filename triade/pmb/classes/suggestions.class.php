@@ -1,11 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions.class.php,v 1.45 2019-05-31 08:06:01 ngantier Exp $
+// $Id: suggestions.class.php,v 1.53 2023/09/28 09:03:49 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
+require_once($class_path.'/suggestions_map.class.php');
 require_once($class_path.'/z3950_notice.class.php');
 
 class suggestions{
@@ -16,24 +18,24 @@ class suggestions{
 	public $auteur = '';							//Auteur ouvrage
 	public $code = '';								//ISBN, ISSN, ...				
 	public $prix = '0.00';							//Prix indicatif
-	public $nb = 1;								//QuantitÃ© Ã  commander
+	public $nb = 1;								//Quantité à commander
 	public $commentaires = '';						//Commentaires sur la suggestion
 	public $commentaires_gestion = '';				//Commentaires de gestion sur la suggestion
 	public $date_creation = '0000-00-00';			
-	public $date_decision = '0000-00-00';			//Date de la dÃ©cision
+	public $date_decision = '0000-00-00';			//Date de la décision
 	public $statut = '1';							//Statut de la suggestion 
 	public $num_produit = 0;						//Identifiant du type de produit 
-	public $num_entite = 0;						//Identifiant de l'entitÃ© sur laquelle est affectÃ©e la suggestion
+	public $num_entite = 0;						//Identifiant de l'entité sur laquelle est affectée la suggestion
 	public $num_rubrique = 0;						//Identifiant de la rubrique budgetaire d'affectation
-	public $num_fournisseur = 0;					//Identifiant du fournisseur associÃ©
-	public $num_notice = 0;						//Identifiant de notice si cataloguÃ©e			
+	public $num_fournisseur = 0;					//Identifiant du fournisseur associé
+	public $num_notice = 0;						//Identifiant de notice si cataloguée			
 	public $index_suggestion = '';					//Champ de recherche fulltext
 	public $url_suggestion = '';					//URL
 	public $num_categ = '1';						//Categorie associee a la suggestion
 	public $sugg_location = 0;					//localisation
 	public $date_publi='0000-00-00';			//date de publication
 	public $sugg_src=0;						//source de la suggestion
-	public $sugg_explnum=0;						//explnum attachÃ©
+	public $sugg_explnum=0;						//explnum attaché
 	public $sugg_noti_unimarc='';				//notice unimarc
 	
 	//Constructeur.	 
@@ -45,48 +47,44 @@ class suggestions{
 	}
 	
 	
-	// charge une suggestion Ã  partir de la base.
+	// charge une suggestion à partir de la base.
 	public function load(){
-	
-		global $dbh;
-		
 		$q = "select * from suggestions left join explnum_doc_sugg on num_suggestion=id_suggestion where id_suggestion = '".$this->id_suggestion."' ";
-		$r = pmb_mysql_query($q, $dbh) ;
-		$obj = pmb_mysql_fetch_object($r);
-		$this->titre = $obj->titre;
-		$this->editeur = $obj->editeur;
-		$this->auteur = $obj->auteur;
-		$this->code = $obj->code;
-		$this->prix = $obj->prix;
-		$this->nb = $obj->nb;
-		$this->commentaires = $obj->commentaires;
-		$this->commentaires_gestion = $obj->commentaires_gestion;
-		$this->date_creation = $obj->date_creation;
-		$this->date_decision = $obj->date_decision;
-		$this->statut = $obj->statut;
-		$this->num_produit = $obj->num_produit;
-		$this->num_entite = $obj->num_entite;
-		$this->num_rubrique  = $obj->num_rubrique ;
-		$this->num_fournisseur = $obj->num_fournisseur;
-		$this->num_notice = $obj->num_notice;
-		$this->index_suggestion = $obj->index_suggestion;
-		$this->url_suggestion = $obj->url_suggestion;
-		$this->num_categ = $obj->num_categ;
-		$this->sugg_location = $obj->sugg_location;
-		$this->date_publi = $obj->date_publication;
-		$this->sugg_src = $obj->sugg_source;
-		$this->sugg_explnum = $obj->num_explnum_doc;
-		$this->sugg_noti_unimarc = $obj->notice_unimarc;
+		$r = pmb_mysql_query($q) ;
+		if(pmb_mysql_num_rows($r)) {
+    		$obj = pmb_mysql_fetch_object($r);
+    		$this->titre = $obj->titre;
+    		$this->editeur = $obj->editeur;
+    		$this->auteur = $obj->auteur;
+    		$this->code = $obj->code;
+    		$this->prix = $obj->prix;
+    		$this->nb = $obj->nb;
+    		$this->commentaires = $obj->commentaires;
+    		$this->commentaires_gestion = $obj->commentaires_gestion;
+    		$this->date_creation = $obj->date_creation;
+    		$this->date_decision = $obj->date_decision;
+    		$this->statut = $obj->statut;
+    		$this->num_produit = $obj->num_produit;
+    		$this->num_entite = $obj->num_entite;
+    		$this->num_rubrique  = $obj->num_rubrique ;
+    		$this->num_fournisseur = $obj->num_fournisseur;
+    		$this->num_notice = $obj->num_notice;
+    		$this->index_suggestion = $obj->index_suggestion;
+    		$this->url_suggestion = $obj->url_suggestion;
+    		$this->num_categ = $obj->num_categ;
+    		$this->sugg_location = $obj->sugg_location;
+    		$this->date_publi = $obj->date_publication;
+    		$this->sugg_src = $obj->sugg_source;
+    		$this->sugg_explnum = $obj->num_explnum_doc;
+    		$this->sugg_noti_unimarc = $obj->notice_unimarc;
+		}
 	}
-
 	
 	// enregistre une suggestion en base.
 	public function save($explnum_doc=""){
-		
-		global $dbh;
-		
-		if(($this->titre == '') || ((($this->editeur == '') && ($this->auteur == '')) && (!$this->code) && (!$this->sugg_explnum && !$explnum_doc))) 
-			die("Erreur de crÃ©ation suggestions");
+		if(($this->titre == '') || ((($this->editeur == '') && ($this->auteur == '')) && (!$this->code) && (!$this->sugg_explnum && !$explnum_doc))) {
+		    throw new Exception("Erreur de création suggestions");
+		}
 	
 		if ($this->id_suggestion) {
 			
@@ -102,7 +100,7 @@ class suggestions{
 			$q.= "date_publication = '".$this->date_publi."', ";
 			$q.= "sugg_source = '".$this->sugg_src."' ";
 			$q.= "where id_suggestion = '".$this->id_suggestion."' ";
-			pmb_mysql_query($q, $dbh);
+			pmb_mysql_query($q);
 			
 		} else {
 			$q = "insert into suggestions set titre = '".addslashes($this->titre)."', editeur = '".addslashes($this->editeur)."', ";
@@ -116,55 +114,41 @@ class suggestions{
 			$q.= "sugg_location = '".$this->sugg_location."', ";
 			$q.= "date_publication = '".$this->date_publi."', ";
 			$q.= "sugg_source = '".$this->sugg_src."' "; 			
-			pmb_mysql_query($q, $dbh);
-			$this->id_suggestion = pmb_mysql_insert_id($dbh);
-		
+			pmb_mysql_query($q);
+			$this->id_suggestion = pmb_mysql_insert_id();
 		}
 		
-		if($explnum_doc) {
+		if(!empty($explnum_doc)){
 			$explnum_doc->save();
 			$req = "insert into explnum_doc_sugg set 
 				num_explnum_doc='".$explnum_doc->explnum_doc_id."',
 				num_suggestion='".$this->id_suggestion."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
 	}
 
-
-	//VÃ©rifie si une suggestion existe dÃ©jÃ  en base
+	//Vérifie si une suggestion existe déjà en base
 	public static function exists($origine, $titre, $auteur, $editeur, $isbn) {
-
-		global $dbh;
-		
-		$q = "select count(1) from suggestions_origine, suggestions where origine = '".$origine."' and titre = '".$titre."' and id_suggestion = num_suggestion and auteur='".$auteur."' and editeur = '".$editeur."' and code = '".$isbn."' ";
+		$q = "select count(1) from suggestions_origine, suggestions where origine = '".addslashes($origine)."' and titre = '".$titre."' and id_suggestion = num_suggestion and auteur='".$auteur."' and editeur = '".$editeur."' and code = '".$isbn."' ";
 		$q.= "and statut in (1,2,8) ";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		return pmb_mysql_result($r, 0, 0);
-
 	}
-
 
 	//supprime une suggestion de la base
-	public function delete($id_suggestion= 0) {
-		
-		global $dbh;
-
-		if(!$id_suggestion) $id_suggestion = $this->id_suggestion; 	
-
-		$q = "delete from suggestions where id_suggestion = '".$id_suggestion."' ";
-		pmb_mysql_query($q, $dbh);
-		
-		$q = "delete ed,eds from explnum_doc ed join explnum_doc_sugg eds on ed.id_explnum_doc=eds.num_explnum_doc where eds.num_suggestion=$id_suggestion";
-		pmb_mysql_query($q, $dbh);
-		
+	public static function delete($id_suggestion= 0) {
+		$id_suggestion = intval($id_suggestion);
+		if($id_suggestion) {
+    		$q = "delete from suggestions where id_suggestion = '".$id_suggestion."' ";
+    		pmb_mysql_query($q);
+    		
+    		$q = "delete ed,eds from explnum_doc ed join explnum_doc_sugg eds on ed.id_explnum_doc=eds.num_explnum_doc where eds.num_suggestion=$id_suggestion";
+    		pmb_mysql_query($q);
+		}
 	}
 
-
-	//Compte le nb de suggestion par statut pour une bibliothÃ¨que
-	public static function getNbSuggestions($id_bibli=0, $statut='-1', $num_categ='-1', $mask, $aq=0, $location=0, $user_input='',$source=0, $user_id=array(), $user_statut=array(), $date_inf='', $date_sup='') {
-		
-		global $dbh;
-		
+	//Compte le nb de suggestion par statut pour une bibliothèque
+	public static function getNbSuggestions($id_bibli=0, $statut='-1', $num_categ='-1', $mask='', $aq=0, $location=0, $user_input='',$source=0, $user_id=array(), $user_statut=array(), $date_inf='', $date_sup='') {
 		if($source) 
 			$filtre_src = " sugg_source = '".$source."' ";
 		else $filtre_src=" 1 ";
@@ -311,13 +295,12 @@ class suggestions{
 			}
 		}
 
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 		return pmb_mysql_result($r, 0, 0); 
 	}
 	
-	
-	//Retourne une requete pour liste des suggestions par statut pour une bibliothÃ¨que
-	public static function listSuggestions($id_bibli=0, $statut='-1', $num_categ='-1', $mask, $debut=0, $nb_per_page=0, $aq=0, $order='',$location=0, $user_input='',$source=0, $user_id=0, $user_statut='-1', $date_inf='', $date_sup='') {
+	//Retourne une requete pour liste des suggestions par statut pour une bibliothèque
+	public static function listSuggestions($id_bibli=0, $statut='-1', $num_categ='-1', $mask='', $debut=0, $nb_per_page=0, $aq=0, $order='',$location=0, $user_input='',$source=0, $user_id=0, $user_statut = array(), $date_inf='', $date_sup='') {
 		
 		if($source) 
 			$filtre_src = " sugg_source = '".$source."' ";
@@ -485,27 +468,23 @@ class suggestions{
 		if ($debut && $nb_per_page) $q.= "limit ".$debut.",".$nb_per_page;
 		return $q;				
 	}
-
 	
 	//Retourne  une requete pour liste des suggestions par origine 
 	//type_origine: 0=utilisateur, 1=lecteur, 2=visiteur
-	public static function listSuggestionsByOrigine($id_origine, $type_origine='1') { 
-		
-		$q = "select * from suggestions_origine, suggestions where origine = '".$id_origine."' ";
+	public static function listSuggestionsByOrigine($origine, $type_origine='1') {
+		$q = "select * from suggestions_origine, suggestions where origine = '".addslashes($origine)."' ";
 		if ($type_origine != '-1') $q.= "and type_origine = '".$type_origine."' ";
 		$q.= "and id_suggestion=num_suggestion order by date_suggestion ";		
 		return $q;				
 	}
 
-
 	//Retourne un tableau des origines pour une suggestion
 	public function getOrigines($id_suggestion=0) {
-		
-		global $dbh;
 		$tab_orig=array();
+		$id_suggestion = intval($id_suggestion);
 		if (!$id_suggestion) $id_suggestion = $this->id_suggestion;
 		$q = "select * from suggestions_origine where num_suggestion=$id_suggestion order by date_suggestion, type_origine ";
-		$r = pmb_mysql_query($q, $dbh);
+		$r = pmb_mysql_query($q);
 			
 		for($i=0;$i<pmb_mysql_num_rows($r);$i++) {
 			$tab_orig[] = pmb_mysql_fetch_array($r,PMB_MYSQL_ASSOC); 
@@ -513,23 +492,16 @@ class suggestions{
 		return $tab_orig;
 	}
 	
-	
 	//optimization de la table suggestions
 	public function optimize() {
-		
-		global $dbh;
-		
-		$opt = pmb_mysql_query('OPTIMIZE TABLE suggestions', $dbh);
+		$opt = pmb_mysql_query('OPTIMIZE TABLE suggestions');
 		return $opt;
-				
 	}
 	
-	//RÃ©cupÃ©ration du docnum associÃ©
+	//Récupération du docnum associé
 	public function get_explnum($champ=''){
-		global $dbh;
-		
 		$req = "select * from explnum_doc join explnum_doc_sugg on num_explnum_doc=id_explnum_doc where num_suggestion='".$this->id_suggestion."'";
-		$res= pmb_mysql_query($req,$dbh);
+		$res= pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			$tab = pmb_mysql_fetch_array($res);
 			switch($champ){				
@@ -554,18 +526,13 @@ class suggestions{
 	 * On catalogue la notice
 	 */
 	public function catalog_notice(){
-		global $dbh;
-		
 		if($this->sugg_noti_unimarc && !$this->num_notice){
 			$z=new z3950_notice("unimarc",$this->sugg_noti_unimarc);
 			$z->var_to_post();
 			$ret=$z->insert_in_database();
-			//On attache la notice Ã  la suggestion
+			//On attache la notice à la suggestion
 			$req = " update suggestions set num_notice='".$ret[1]."' where id_suggestion='".$this->id_suggestion."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
-		
 	}
-	
 }
-?>

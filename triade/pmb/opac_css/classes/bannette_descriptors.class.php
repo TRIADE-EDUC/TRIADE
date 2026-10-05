@@ -1,11 +1,12 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bannette_descriptors.class.php,v 1.1 2017-11-13 10:24:05 dgoron Exp $
+// $Id: bannette_descriptors.class.php,v 1.3 2022/02/16 08:13:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/categories.class.php");
 
 class bannette_descriptors{
@@ -13,13 +14,11 @@ class bannette_descriptors{
 	public $descriptors;
 	
 	public function __construct($num_bannette) {
-		$this->num_bannette = $num_bannette+0;		
+		$this->num_bannette = intval($num_bannette);		
 		$this->fetch_data();
 	}
 	
 	public function fetch_data() {		
-		global $msg,$dbh,$charset;
-		
 		$this->descriptors=array();
 		// les descripteurs...
 		$rqt = "select num_noeud from bannettes_descriptors where num_bannette = '".$this->num_bannette."' order by bannette_descriptor_order";
@@ -32,7 +31,7 @@ class bannette_descriptors{
 	}
 	
 	public function get_form(){
-		global $msg, $charset,$lang;
+		global $charset,$lang;
 		global $dsi_desc_field;
 		global $dsi_desc_first_desc,$dsi_desc_other_desc;
 	
@@ -81,7 +80,7 @@ class bannette_descriptors{
 	}
 	
 	public static function delete($num_bannette=0) {
-		$num_bannette += 0;
+		$num_bannette = intval($num_bannette);
 		$del = "delete from bannettes_descriptors where num_bannette = '".$num_bannette."'";
 		pmb_mysql_query($del);
 	}

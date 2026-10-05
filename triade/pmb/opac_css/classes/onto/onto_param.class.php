@@ -9,7 +9,7 @@ class onto_param extends stdClass{
 	private $tab_param=array();
 	
 	public function __construct($tab_param=array()){
-		if(!sizeof($tab_param)){
+		if(empty($tab_param)){
 			$this->tab_param=array('categ'=>'','sub'=>'','action'=>'','page'=>'1','nb_per_page'=>'20');
 		}else{
 			$this->tab_param=$tab_param;

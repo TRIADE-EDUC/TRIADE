@@ -22,7 +22,7 @@
   $ztAction = "INSERT";
   $titrePage = trad("ANNIV_TITRE_ENREG");
   if ($id) {
-    $DB_CX->DbQuery("SELECT age_id, DATE_FORMAT(age_date,'%d/%m/%Y') AS ageDate, age_libelle FROM ${PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser." AND age_aty_id=1");
+    $DB_CX->DbQuery("SELECT age_id, DATE_FORMAT(age_date,'%d/%m/%Y') AS ageDate, age_libelle FROM {$PREFIX_TABLE}agenda WHERE age_id=".$id." AND age_util_id=".$idUser." AND age_aty_id=1");
     if ($enr = $DB_CX->DbNextRow()) {
       $ztAction = "UPDATE";
       $titrePage = trad("ANNIV_TITRE_MODIF");
@@ -82,7 +82,7 @@
   </FORM>
 <?php
   //Liste des differents anniversaire de l'utilisateur
-  $DB_CX->DbQuery("SELECT age_id, DATE_FORMAT(age_date,'%d/%m/%Y') AS ageDate, age_libelle FROM ${PREFIX_TABLE}agenda WHERE age_util_id=".$idUser." AND age_aty_id=1 ORDER BY age_libelle");
+  $DB_CX->DbQuery("SELECT age_id, DATE_FORMAT(age_date,'%d/%m/%Y') AS ageDate, age_libelle FROM {$PREFIX_TABLE}agenda WHERE age_util_id=".$idUser." AND age_aty_id=1 ORDER BY age_libelle");
   if ($DB_CX->DbNumRows()) {
     echo ("  <BR>
   <FORM>

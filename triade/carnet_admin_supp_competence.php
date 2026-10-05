@@ -46,11 +46,11 @@ if ((isset($_POST["idcarnet"])) &&  ($_POST["idcarnet"] > 0)){
 }
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Modification du Carnet de Suivi : <font id='color2'> $nom_carnet </font>" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -64,8 +64,8 @@ if (isset($_POST["suppdirect_competence"])) { supprimerCompetence($idcarnet,$_PO
 print "<form action='carnet_admin_supp_competence.php' method='post'>";
 print "<table>";
 $data=listeCompetence($idcarnet); // id,idcarnet,libelle,ordre
-if (count($data) > 0 ) {
-	for($i=0;$i<count($data);$i++) {
+if (countTriade($data) > 0 ) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "<tr>";
 		print "<td><font class=T2>".trunchaine($data[$i][2],46)."</font></td>";
 		print "<td align=left><input type=radio name='idcompetence' value=\"".$data[$i][0]."\" ></td>";
@@ -98,17 +98,17 @@ if (count($data) > 0 ) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

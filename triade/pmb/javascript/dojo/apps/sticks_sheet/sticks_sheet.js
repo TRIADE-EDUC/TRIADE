@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sticks_sheet.js,v 1.2 2017-01-19 14:25:39 apetithomme Exp $
+// $Id: sticks_sheet.js,v 1.2 2017/01/19 14:25:39 apetithomme Exp $
 
 define([
         "dojo/_base/declare",

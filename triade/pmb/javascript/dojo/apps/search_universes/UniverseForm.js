@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: UniverseForm.js,v 1.3 2018-04-13 13:59:37 apetithomme Exp $
+// $Id: UniverseForm.js,v 1.5 2020/10/16 13:02:33 qvarin Exp $
 
 
 define([
@@ -35,14 +35,20 @@ define([
 				if (domAttr.get(node, 'onClick')) {
 					domAttr.remove(node, 'onClick');
 				}
-				on(node, "click", lang.hitch(this, function() {
-					request.get('ajax.php?module=admin&categ=search_universes&sub=segment&action=edit&id='+domAttr.get(node, 'segmentId'), {
+				
+				var segementId = domAttr.get(node, 'segmentId');
+				if (!segementId) {
+					segementId = domAttr.get(node.parentNode, 'segmentId');
+				}
+				on(node, "click", lang.hitch(this, function(e) {
+					request.get('ajax.php?module=admin&categ=search_universes&sub=segment&action=edit&id='+segementId, {
 						handleAs : 'html'
 					}).then(lang.hitch(this, function(html) {
 						var data = {};
 						data.html = html;
 						data.addNewEntity = true;
 						topic.publish('formButton', 'loadNewContent', data);
+						topic.publish('formButton', 'selectSegementNode', {'universeId': this.id, 'segementId': segementId});
 					}));
 				}))
 			});

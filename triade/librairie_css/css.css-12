@@ -123,19 +123,19 @@ A.m {color:#000000; text-decoration:none; font-weight:bold; font-size:12px;}
 
 #imgombre{background-image:url('../image/inc/omb.gif')}
 
-#coulBar0{
+#coulBar0, .coulBar0 {
 	background-color:#09C
 }   					/* Couleur de la barre de menu avec Quitter id='coulBar0' */
-#menumodule1{font-family:Trebuchet MS; font-size:11px; color: #000000;}  	/* couleur du texte de la barre de menu avec quitter id='menumodule1' */ 
+#menumodule1, .menumodule1 {font-family:Trebuchet MS; font-size:11px; color: #000000;}  	/* couleur du texte de la barre de menu avec quitter id='menumodule1' */ 
 #cadreCentral0{background-image:url('../../Images/bg.png')}  	/* id='cadreCentral0' */
 
 
-#coulModule0{
+#coulModule0, .coulModule0 {
 	background-color:#09C
 } 					/* Couleur du fond des menus dans les modules  */
-#menumodule0{font-family:Trebuchet MS; font-size:11px; color: #FFFFFF;}  	/* couleur de fond du text */
+#menumodule0, .menumodule0 {font-family:Trebuchet MS; font-size:11px; color: #FFFFFF;}  	/* couleur de fond du text */
 
-#coulTitre0{
+#coulTitre0, .coulTitre0 {
 	background-color:#8CE2FF
 } 					/* Couleur du fond des titres dans les modules  */
 #bordure { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 0px; border-left-width : 0px; }

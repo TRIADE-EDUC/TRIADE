@@ -170,7 +170,7 @@ langmenuscolaire15="Gestione circulari";
 langmenuscolaire16="Gestione C.A.";
 // #########################
 // pied di pagina
-langmenupied="<p> La <b>T</b>rasparenza e la <b>R</b>apidità dell'<b>I</b>nformatica <b>A</b>l servzio <b>D</b>ell'<b>I</b>nsegnamento<br>Per visualizzare questo sito in modo ottimale : risoluzione minima : 800x600 <br>   T.R.I.A.D.E. ©  2024 - Tutti i diritti riservati";
+langmenupied="<p> La <b>T</b>rasparenza e la <b>R</b>apidità dell'<b>I</b>nformatica <b>A</b>l servzio <b>D</b>ell'<b>I</b>nsegnamento<br>Per visualizzare questo sito in modo ottimale : risoluzione minima : 800x600 <br>   T.R.I.A.D.E. ©  2026 - Tutti i diritti riservati";
 img_logo_pied="<img src='./image/commun/triade-xhtml.jpg' alt='XHTML'>  <img src='./image/commun/triade-w3C.jpg' alt='w3C'> <img src='./image/commun/triade-css.png' alt='css' > <a href='http://www.triade-educ.com/accueil/don-triade.php' target='_blank' ><img border='0' src='./image/commun/triade_paypal.png' alt='Paypal' ></a><br /><br />";
 // --------------
 // #########################

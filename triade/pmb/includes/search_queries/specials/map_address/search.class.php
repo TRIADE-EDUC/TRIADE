@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.3 2019-05-16 13:40:02 dgoron Exp $
+// $Id: search.class.php,v 1.3 2019/05/16 13:40:02 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,7 +22,7 @@ class map_address {
     	$this->search=&$search;
     }
     
-    //fonction de rÃ©cupÃ©ration des opÃ©rateurs disponibles pour ce champ spÃ©cial (renvoie un tableau d'opÃ©rateurs)
+    //fonction de récupération des opérateurs disponibles pour ce champ spécial (renvoie un tableau d'opérateurs)
     public function get_op() {
     	global $msg;
     	$operators = array();
@@ -31,7 +31,7 @@ class map_address {
     	return $operators;
     }
     
-    //fonction de rÃ©cupÃ©ration de l'affichage de la saisie du critÃ¨re
+    //fonction de récupération de l'affichage de la saisie du critère
     public function get_input_box() {
     	global $msg;
     	global $charset;
@@ -40,7 +40,7 @@ class map_address {
 
     	//$this->s = new search(false,"search_simple_fields.xml");
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -53,12 +53,12 @@ class map_address {
     public function transform_input() {
     }
     
-    //fonction de crÃ©ation de la requÃªte (retourne une table temporaire)
+    //fonction de création de la requête (retourne une table temporaire)
     public function make_search() {
     	global $search;
     	global $base_path;
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$address_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$address_};
     	$address=${$address_};
@@ -117,13 +117,13 @@ class map_address {
 		return array();
     }
     	    
-    //fonction de traduction littÃ©rale de la requÃªte effectuÃ©e (renvoie un tableau des termes saisis)
+    //fonction de traduction littérale de la requête effectuée (renvoie un tableau des termes saisis)
     public function make_human_query() {
 		global $search;
 		global $base_path,$charset;
 		global $msg;
     	
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
 		$address_="field_".$this->n_ligne."_s_".$this->id;
 		global ${$address_};
 		$address=${$address_};
@@ -136,12 +136,12 @@ class map_address {
     	return $litteral;
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	
     }
     
-     //fonction de dÃ©coupage d'une chaine trop longue
+     //fonction de découpage d'une chaine trop longue
     public function cutlongwords($valeur,$size=50) {
     	if (strlen($valeur)>=$size) {
     		$pos=strrpos(substr($valeur,0,$size)," ");

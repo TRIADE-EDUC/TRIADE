@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts_retard.inc.php,v 1.1 2011-06-27 15:26:59 ngantier Exp $
+// $Id: abts_retard.inc.php,v 1.2 2023/02/08 07:38:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $action;
 
 require_once("$class_path/abts_pointage.class.php");
 

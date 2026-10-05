@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_type_article_generic.class.php,v 1.4 2016-02-24 11:13:07 dgoron Exp $
+// $Id: cms_module_common_selector_type_article_generic.class.php,v 1.4 2016/02/24 11:13:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -37,7 +37,7 @@ class cms_module_common_selector_type_article_generic extends cms_module_common_
 	}
 	
 	protected function gen_select(){
-		//si on est en crÃ©ation de cadre
+		//si on est en création de cadre
 		if(!$this->id){
 			$this->parameters = array();
 		}
@@ -65,7 +65,7 @@ class cms_module_common_selector_type_article_generic extends cms_module_common_
 		return parent::save_form();
 	}
 	/*
-	 * Retourne la valeur sÃ©lectionnÃ©
+	 * Retourne la valeur sélectionné
 	 */
 	public function get_value(){
 		// recup id de l'article dans le sous selecteur

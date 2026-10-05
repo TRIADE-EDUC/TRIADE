@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
-<!-- messages localisés en français pour la classe datasource
+<!-- messages localisés en anglais pour la classe filter
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_filter.xml,v 1.4 2018-02-26 10:45:34 arenou Exp $ -->
+$Id: cms_module_common_filter.xml,v 1.7 2021/02/22 08:47:26 btafforeau Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_filter_selector_choice">Choisissez un sélecteur pour le filtre</entry>
@@ -15,5 +15,7 @@ $Id: cms_module_common_filter.xml,v 1.4 2018-02-26 10:45:34 arenou Exp $ -->
 	<entry code="cms_module_common_filter_compare_from">Champ à comparer</entry>
 	<entry code="cms_module_common_selector_empr_infos">Informations de l'emprunteur</entry>
 	<entry code="cms_module_common_selector_value">Valeur manuelle</entry>
+	<entry code="cms_module_common_selector_session_var">Variable de session</entry>
 	<entry code="cms_module_common_selector_global_var">Variable globale</entry>
+	<entry code="cms_module_common_filter_selector_by_choice_default">Choisissez une variable</entry>
 </XMLlist>

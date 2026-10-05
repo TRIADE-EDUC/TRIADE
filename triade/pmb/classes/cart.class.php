@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart.class.php,v 1.12 2017-04-20 16:25:28 dgoron Exp $
+// $Id: cart.class.php,v 1.14 2020/11/04 10:40:46 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,29 +16,29 @@ function array_clean($var) {
 }
 
 class cart {
-	// propriÃ©tÃ©s
-	public $path = './'				;	// rÃ©pertoire de stockage des paniers
+	// propriétés
+	public $path = './'				;	// répertoire de stockage des paniers
 	public $file = ''					;	// nom du fichier XML
-	public $name = ''					;	// nom de rÃ©fÃ©rence
+	public $name = ''					;	// nom de référence
 	public $description = ''			;	// description du contenu du panier
 	public $entry						;	// tableau accueillant les items du panier	
-	public $parser						;	// rÃ©f. sur le parser
+	public $parser						;	// réf. sur le parser
 	public $nb_items = 0				;	// nombre d'enregistrements dans le panier
 	public $dtd_path = 'cart.dtd'		;	// path et nom de la DTD
 
-	// mÃ©thodes
+	// méthodes
 
 	// le constructeur
 
 	public function __construct($xml_file='', $path='') {
-		// le fichier a un nom, on rÃ©cupÃ¨re les donnÃ©es dedans
+		// le fichier a un nom, on récupère les données dedans
 		$this->path = $path;
 		$this->clean_path();
 		$this->entry = array();
 		if($xml_file) {
 			$this->file = $this->path.$xml_file;
 			$this->get_cart();
-			$this->nb_items = sizeof($this->entry);
+			$this->nb_items = count($this->entry);
 		} else {
 			$this->create_cart();
 		}
@@ -46,7 +46,7 @@ class cart {
 	}
 
 
-	// mise Ã  jour de la description
+	// mise à jour de la description
 
 	public function set_description($desc='') {
 		$this->description = $desc;
@@ -96,7 +96,7 @@ class cart {
 
 	}
 
-	// crÃ©ation d'un panier vide
+	// création d'un panier vide
 	
 	public function create_cart() {
 		$this->name = 'CART'.time();
@@ -115,17 +115,19 @@ class cart {
 		if(!(int)$item || in_array($item, $this->entry))
 			return;
 		$this->entry[] = $item;
-		$this->nb_items = sizeof($this->entry);
+		$this->nb_items = count($this->entry);
 	}
 
 
 	// suppression d'un item
 
-	public function del_item($item=0) {
-		if(!(int)$item)
+	public function del_item($item = 0) {
+	    if (!(int)$item) {
 			return;
-		for($i=0 ; $i < sizeof($this->entry); $i++) {
-			if( (int) $this->entry[$i] == $item) {
+	    }
+		$nb_entries = count($this->entry);
+		for ($i = 0; $i < $nb_entries; $i++) {
+			if ((int) $this->entry[$i] == $item) {
 				$this->entry[$i] = 0;
 				$this->nb_items--;
 			}
@@ -149,29 +151,31 @@ class cart {
 	// sauvegarde du panier
 
 	public function save_cart() {
-		if($fp = @fopen($this->file, 'w')) {
+		if ($fp = @fopen($this->file, 'w')) {
 			$header = "";
-			$header .= "\n<!DOCTYPE cart SYSTEM \"".$this->dtd_path."\">";
-			$header .= "\n<cart name=\"".$this->name;
-			$header .= "\" description=\"".$this->description."\">";
-			fputs($fp, $header);
-			// Ã©limination des valeurs nulles
+			$header .= "\n<!DOCTYPE cart SYSTEM \"$this->dtd_path\">";
+			$header .= "\n<cart name=\"$this->name";
+			$header .= "\" description=\"$this->description\">";
+			fwrite($fp, $header);
+			// élimination des valeurs nulles
 			$this->entry = array_filter($this->entry, 'array_clean');
-			for($i=0 ; $i < sizeof($this->entry); $i++) {
-				if( (int) $this->entry[$i])
-					fputs($fp, "\n\t<item>".$this->entry[$i]."</item>");
+			$nb_entries = count($this->entry);
+			for ($i = 0; $i < $nb_entries; $i++) {
+			    if ((int) $this->entry[$i]) {
+					fwrite($fp, "\n\t<item>$this->entry[$i]</item>");
+			    }
 			}
 			$footer = "\n</cart>\n";
-			fputs($fp, $footer);
+			fwrite($fp, $footer);
 			fflush($fp);
 			fclose($fp);
 		} else {
-			die( "<strong>PMB cart parser error</strong>&nbsp;: can't store datas in ".$this->file);
+			die("<strong>PMB cart parser error</strong>&nbsp;: can't store datas in $this->file");
 		}
 		
 	}
 
-	// fonctions du gestionnaire d'Ã©lÃ©ments
+	// fonctions du gestionnaire d'éléments
 	
 	public function debutBalise($parser, $nom, $attributs) {
 		switch($nom) {
@@ -191,7 +195,7 @@ class cart {
 		return;
 	}
 
-	// content() -> gestionnaire de donnÃ©es
+	// content() -> gestionnaire de données
 
 	public function content($parser, $data) {
 		if((int)$data) {
@@ -202,7 +206,7 @@ class cart {
 
 
 
-	// get_cart() : ouvre un fichier et rÃ©cupÃ¨re le panier
+	// get_cart() : ouvre un fichier et récupère le panier
 	public function get_cart() {
 		global $charset;
 		if(! $fp = @fopen($this->file, 'r')) {
@@ -232,8 +236,6 @@ class cart {
 		}
 	}
 
-} // fin de dÃ©claration de la classe cart
+} // fin de déclaration de la classe cart
   
-} # fin de dÃ©claration du fichier cart.class
-
-?>
+} # fin de déclaration du fichier cart.class

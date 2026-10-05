@@ -1,779 +1,495 @@
 <html>
 <head>
-<title>Interface d'administration du forum Triade</title>
-<META http-equiv="CacheControl" content = "no-cache">
-<META http-equiv="pragma" content = "no-cache">
-<META http-equiv="expires" content = -1>
+<title>Administration du forum Triade</title>
+<META http-equiv="CacheControl" content="no-cache">
+<META http-equiv="pragma" content="no-cache">
+<META http-equiv="expires" content="-1">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="../librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css">
 <script language="JavaScript" src="../librairie_js/clickdroit2.js"></script>
 <script language="JavaScript" src="../librairie_js/function.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { background: #f0f2fa; margin: 0; padding: 16px; font-family: Electrolize, Arial, sans-serif; font-size: 13px; }
+.fa-wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.fa-title { font-size: 15px; font-weight: 700; color: #080A66; margin-bottom: 4px; }
+.fa-sub { font-size: 12px; color: #666; }
+.fa-error { color: #c62828; font-weight: 700; font-size: 12px; margin: 6px 0; }
+.fa-success { color: #2e7d32; font-weight: 700; font-size: 12px; margin: 6px 0; }
+.fa-btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.fa-msg-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.fa-msg-table th { background: #f0f2fa; color: #080A66; font-weight: 700; padding: 7px 10px; border-bottom: 2px solid #dde0f0; text-align: left; }
+.fa-msg-table td { padding: 6px 10px; border-bottom: 1px solid #eef0f8; vertical-align: middle; }
+.fa-msg-table tr:hover td { background: #f5f7ff; }
+.fa-msg-id { font-weight: 700; color: #080A66; text-align: center; }
+.fa-indent { display: inline-block; }
+</style>
 </head>
-<body bgcolor="#ffffff">
+<body>
 
 <?php
 
-
-// #############################################################################
-// =============================================================================
-// FouleTexte 1.5 - (c) 2000 Thierry Arsicaud (deltascripts@ifrance.com)
-// =============================================================================
-//
-//
-// *****************************************************************************
-// Création du fichier "index.dat" s'il n'existe pas encore
-// *****************************************************************************
+error_reporting(0);
 
 global $repForum;
 
-if (isset($_GET["repforum"])) {
-	$repForum=$_GET["repforum"];
-}
-if (isset($_POST["repforum"])) {
-	$repForum=$_POST["repforum"];
-}
+if (isset($_GET["repforum"]))  $repForum = $_GET["repforum"];
+if (isset($_POST["repforum"])) $repForum = $_POST["repforum"];
 
-if ( ! file_exists("../data/forum") ) {
-	@mkdir("../data/forum",0755);
-	$text="<Files \"*\">\n";
-	$text.="Order Deny,Allow\n";
-	$text.="Deny from all\n";
-	$text.="</Files>";
-	$fp = fopen("../data/forum/.htaccess", "w");
-	fwrite($fp,$text);
-	fclose($fp);
+if (!file_exists("../data/forum")) {
+    @mkdir("../data/forum", 0755);
+    $text = "<Files \"*\">\nOrder Deny,Allow\nDeny from all\n</Files>";
+    $fp = fopen("../data/forum/.htaccess", "w"); fwrite($fp, $text); fclose($fp);
 }
 
-$reperForum="../data/forum/$repForum";
+$reperForum = "../data/forum/$repForum";
 
-if ( ! file_exists($reperForum) ) {
-	@mkdir("$reperForum",0755);
-	$text="<Files \"*\">\n";
-	$text.="Order Deny,Allow\n";
-	$text.="Deny from all\n";
-	$text.="</Files>";
-	$fp = fopen("${reperForum}/.htaccess", "w");
-	fwrite($fp,$text);
-	fclose($fp);
+if (!file_exists($reperForum)) {
+    @mkdir("$reperForum", 0755);
+    $text = "<Files \"*\">\nOrder Deny,Allow\nDeny from all\n</Files>";
+    $fp = fopen("${reperForum}/.htaccess", "w"); fwrite($fp, $text); fclose($fp);
 }
-
 
 if (!file_exists("${reperForum}/index.dat")) {
-  $crfic=fopen("${reperForum}/index.dat","w+");
-  fputs($crfic,"Fichier Index. Ne pas éditer !");
-  fclose($crfic);
+    $crfic = fopen("${reperForum}/index.dat", "w+");
+    fputs($crfic, "Fichier Index. Ne pas éditer !");
+    fclose($crfic);
 }
 
-if (isset($_POST["mdputil"])) { $mdputil=$_POST["mdputil"]; }
-if (isset($_POST["idaction"])) {$idaction=$_POST["idaction"]; }
-if (isset($_POST["pass"])) { $pass=$_POST["pass"]; }
-if (isset($_POST["idmsgsup"])) { $idmsgsup=$_POST["idmsgsup"]; }
-if (isset($_POST["rangsupmin"])) { $rangsupmin=$_POST["rangsupmin"]; }
-if (isset($_POST["rangsupmax"])) { $rangsupmax=$_POST["rangsupmax"]; }
+$mdputil    = isset($_POST["mdputil"])    ? $_POST["mdputil"]    : "";
+$idaction   = isset($_POST["idaction"])   ? $_POST["idaction"]   : "";
+$pass       = isset($_POST["pass"])       ? $_POST["pass"]       : "";
+$idmsgsup   = isset($_POST["idmsgsup"])   ? $_POST["idmsgsup"]   : "";
+$rangsupmin = isset($_POST["rangsupmin"]) ? $_POST["rangsupmin"] : "";
+$rangsupmax = isset($_POST["rangsupmax"]) ? $_POST["rangsupmax"] : "";
 
-
-if(!isset($_POST["idaction"])) $idaction="";
-if(!isset($_POST["pass"])) $pass="";
-
-
-// #############################################################################
-// *****************************************************************************
-// Définition de diverses fonctions, utilisées par la suite dans le script
-// *****************************************************************************
-// =============================================================================
-// Définition de la fonction ROT13, utilisée pour le codage/décodage du mot de passe
-// =============================================================================
-
- function ROT13($chaine) {
-  $chaine=strtolower($chaine);
-  $chainecod="";
-  $longueurchaine=strlen($chaine);
-  for ($compt=0;$compt<$longueurchaine;$compt++) {
-    $caract1=substr($chaine,$compt,1);
-    $codecaract1=ord($caract1);
-    if (($codecaract1>=97) and ($codecaract1<=122)) {
-      if ($codecaract1<=109) {
-        $codecaract2=$codecaract1+13;
-      }
-      else {
-        $codecaract2=$codecaract1-13;
-      }
+function ROT13($chaine) {
+    $chaine = strtolower($chaine);
+    $chainecod = "";
+    for ($compt = 0; $compt < strlen($chaine); $compt++) {
+        $codecaract1 = ord(substr($chaine, $compt, 1));
+        if ($codecaract1 >= 97 && $codecaract1 <= 122)
+            $codecaract2 = ($codecaract1 <= 109) ? $codecaract1 + 13 : $codecaract1 - 13;
+        else
+            $codecaract2 = $codecaract1;
+        $chainecod .= chr($codecaract2);
     }
-    else {
-      $codecaract2=$codecaract1;
+    return $chainecod;
+}
+
+function tabulation($n = 1) {
+    return (30 * ($n - 1) + 20);
+}
+
+function hiddenPassRepforum($pass, $repForum) {
+    return "<input type='hidden' name='pass' value='$pass'><input type='hidden' name='repforum' value='$repForum'>";
+}
+
+function renderMsgTable($index, $from, $to) {
+    echo "<table class='fa-msg-table'>";
+    echo "<thead><tr><th style='width:60px;text-align:center;'>N°</th><th>Intitulé du message</th></tr></thead><tbody>";
+    for ($c = $from; $c <= $to; $c++) {
+        $prefix = ($index[$c][2] == 1) ? '<span style="color:#080A66;font-weight:700;">#</span>' : '<span style="color:#888;">&rsaquo;</span>';
+        $indent = tabulation($index[$c][2] - 1);
+        echo "<tr>";
+        echo "<td class='fa-msg-id'>" . $index[$c][1] . "</td>";
+        echo "<td><span class='fa-indent' style='width:{$indent}px;'></span> {$prefix} <strong>" . stripslashes(htmlentities(strip_tags($index[$c][5]))) . "</strong> &mdash; " . stripslashes(htmlentities(strip_tags($index[$c][4]))) . " <span style='color:#888;'>(" . $index[$c][3] . ")</span></td>";
+        echo "</tr>";
     }
-    $caract2=chr($codecaract2);
-    $chainecod=$chainecod.$caract2;
-  }
-  return($chainecod);
+    echo "</tbody></table>";
 }
 
-// =============================================================================
-// Définition de la fonction "tabulation", utilisée pour matérialiser
-// la hierarchie du forum
-// =============================================================================
+if (file_exists("../common/mdep.php")) include("../common/mdep.php");
 
-function tabulation($n=1) {
-  $espacevide=(30*($n-1)+40);
-  return($espacevide);
-}
-
-// =============================================================================
-// Définition de la fonction ImprimFormInterrogMDP() qui imprime le formulaire
-// correspondant à la demande "Veuillez entrer le mot de passe"
-// =============================================================================
-
-function ImprimFormInterrogMDP() {
-  global $repForum;
-  print("<center> \n");
-  print("<form method=\"POST\" action=\"admin.php\"> \n");
-  print("Mot de passe :<br> \n");
-  print("<input type=\"password\" name=\"mdputil\" size=\"30\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><br>");
-  print("<input type=\"hidden\" name=\"idaction\" value=\"verifMDP\"> \n");
-  print("<br> \n");
-  print("<input type=\"submit\" value=\"Envoyer\" name=\"A1\">");
-  print("</form>");
-  print("</center>");
-}
-
-// =============================================================================
-// Définition de la fonction ImprimFormChoixMDP() qui imprime le formulaire correspondant
-// à la demande "Veuillez choisir votre mot de passe"
-// =============================================================================
-
-function ImprimFormChoixMDP() {
-  global $pass;  // en cas de demande de changement de mot de passe
-  global $repForum;
-  print("<center> \n");
-  print("<form method=\"POST\" action=\"admin.php\"> \n");
-  print("Choix du mot de passe : <br> \n");
-  print("<input type=\"password\" name=\"mdputil1\" size=\"10\"><br> \n");
-  print("Veuillez le ressaisir pour confirmation : <br> \n");
-  print("<input type=\"password\" name=\"mdputil2\" size=\"10\"><br> \n");
-  print("<input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"> \n");
-  print("<input type=\"hidden\" name=\"idaction\" value=\"testChoixMDP\"> \n");
-  print("<br><input type=\"submit\" value=\"Envoyer\" name=\"A1\">");
-  print("</form>");
-  print("</center>");
-}
-// #############################################################################
+$forumLabels = [
+    'menuadmin'     => 'Direction',
+    'menuscolaire'  => 'Vie Scolaire',
+    'menuprof'      => 'Enseignant',
+    'menueleve'     => 'Élève',
+    'menuparent'    => 'Parent d\'élève',
+];
+$forumLabel = $forumLabels[$repForum] ?? $repForum;
 ?>
+
+<div class="fa-wrap">
+
+<!-- Header -->
+<div class="card">
+  <div class="card-header card-header-primary">
+    <span><i class="bi bi-chat-dots-fill" style="margin-right:6px;"></i>Administration du forum — <?php print htmlspecialchars($forumLabel) ?></span>
+  </div>
+</div>
 
 <?php
-// #############################################################################
-// *****************************************************************************
-// Récupération du mot de passe (si un mot de passe a déjà été choisi
-// par l'administrateur du forum de discussion)
-// *****************************************************************************
 
-if(file_exists("../common/mdep.php")) {
-  include("../common/mdep.php");
-  // Note : le mot de passe est stocké dans la valeur "$MDP"
+// ============================================================
+// MODULE : idaction = "" (premier lancement)
+// ============================================================
+if ($idaction == "") {
+    if (!file_exists("../common/mdep.php")): ?>
+    <div class="card">
+      <div class="card-header card-header-primary"><span><i class="bi bi-lock-fill" style="margin-right:6px;"></i>Définir le mot de passe administrateur</span></div>
+      <div class="card-body">
+        <p class="fa-sub" style="margin:0 0 12px;">Ce mot de passe vous sera demandé à chaque connexion pour gérer les messages.</p>
+        <form method="POST" action="admin.php">
+          <div class="form-row">
+            <label class="form-lbl">Mot de passe :</label>
+            <input type="password" name="mdputil1" size="20" class="bouton2">
+          </div>
+          <div class="form-row" style="margin-top:6px;">
+            <label class="form-lbl">Confirmation :</label>
+            <input type="password" name="mdputil2" size="20" class="bouton2">
+          </div>
+          <input type="hidden" name="idaction" value="testChoixMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row">
+            <button type="submit" name="A1" class="btn btn-primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <?php else: ?>
+    <div class="card">
+      <div class="card-header card-header-primary"><span><i class="bi bi-shield-lock-fill" style="margin-right:6px;"></i>Identification</span></div>
+      <div class="card-body">
+        <form method="POST" action="admin.php">
+          <div class="form-row">
+            <label class="form-lbl">Mot de passe :</label>
+            <input type="password" name="mdputil" size="20" class="bouton2" autofocus>
+          </div>
+          <input type="hidden" name="idaction" value="verifMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row">
+            <button type="submit" name="A1" class="btn btn-primary">Se connecter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <?php endif;
 }
-// #############################################################################
+
+// ============================================================
+// MODULE : testChoixMDP
+// ============================================================
+if ($idaction == "testChoixMDP") {
+    $mdputil1 = strtolower($_POST["mdputil1"] ?? "");
+    $mdputil2 = strtolower($_POST["mdputil2"] ?? "");
+
+    if (file_exists("../common/mdep.php") && $pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Erreur : <a href='admin.php?repforum={$repForum}'>identifiez-vous</a> à nouveau.</p></div></div>";
+    } elseif ($mdputil1 == "") { ?>
+    <div class="card">
+      <div class="card-body">
+        <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Veuillez saisir un mot de passe.</p>
+        <form method="POST" action="admin.php">
+          <div class="form-row"><label class="form-lbl">Mot de passe :</label><input type="password" name="mdputil1" size="20" class="bouton2"></div>
+          <div class="form-row" style="margin-top:6px;"><label class="form-lbl">Confirmation :</label><input type="password" name="mdputil2" size="20" class="bouton2"></div>
+          <input type="hidden" name="idaction" value="testChoixMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row"><button type="submit" name="A1" class="btn btn-primary">Enregistrer</button></div>
+        </form>
+      </div>
+    </div>
+    <?php } elseif ($mdputil1 != $mdputil2) { ?>
+    <div class="card">
+      <div class="card-body">
+        <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Les deux mots de passe ne correspondent pas.</p>
+        <form method="POST" action="admin.php">
+          <div class="form-row"><label class="form-lbl">Mot de passe :</label><input type="password" name="mdputil1" size="20" class="bouton2"></div>
+          <div class="form-row" style="margin-top:6px;"><label class="form-lbl">Confirmation :</label><input type="password" name="mdputil2" size="20" class="bouton2"></div>
+          <input type="hidden" name="idaction" value="testChoixMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row"><button type="submit" name="A1" class="btn btn-primary">Enregistrer</button></div>
+        </form>
+      </div>
+    </div>
+    <?php } else {
+        $ficmdep = fopen("../common/mdep.php", "w+");
+        fputs($ficmdep, "<?php \n\$MDP=\"$mdputil1\"; \n?>");
+        fclose($ficmdep);
+        $MDP     = $mdputil1;
+        $MDPcode = ROT13($MDP); ?>
+    <div class="card">
+      <div class="card-body">
+        <p class="fa-success"><i class="bi bi-check-circle-fill"></i> Mot de passe enregistré.</p>
+        <form method="POST" action="admin.php">
+          <input type="hidden" name="idaction" value="menuGen">
+          <input type="hidden" name="pass" value="<?php print $MDPcode ?>">
+          <input type="hidden" name="repforum" value="<?php print $repForum ?>">
+          <div class="fa-btn-row"><button type="submit" name="A1" class="btn btn-primary">Accéder au menu</button></div>
+        </form>
+      </div>
+    </div>
+    <?php }
+}
+
+// ============================================================
+// MODULE : verifMDP
+// ============================================================
+if ($idaction == "verifMDP") {
+    $mdputil = strtolower($_POST["mdputil"] ?? "");
+    if (crypt(md5($mdputil), "T2") != $MDP) { ?>
+    <div class="card">
+      <div class="card-body">
+        <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Mot de passe incorrect.</p>
+        <form method="POST" action="admin.php">
+          <div class="form-row"><label class="form-lbl">Mot de passe :</label><input type="password" name="mdputil" size="20" class="bouton2" autofocus></div>
+          <input type="hidden" name="idaction" value="verifMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row"><button type="submit" name="A1" class="btn btn-primary">Se connecter</button></div>
+        </form>
+      </div>
+    </div>
+    <?php } else {
+        $idaction = "menuGen";
+        $MDPcode  = ROT13($MDP);
+        $pass     = $MDPcode;
+    }
+}
+
+// ============================================================
+// MODULE : menuGen
+// ============================================================
+if ($idaction == "menuGen") {
+    if ($pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Session expirée. <a href='admin.php?repforum={$repForum}'>Se reconnecter</a></p></div></div>";
+    } else { ?>
+    <div class="card">
+      <div class="card-header card-header-primary"><span><i class="bi bi-grid-fill" style="margin-right:6px;"></i>Menu général</span></div>
+      <div class="card-body">
+        <div class="fa-btn-row">
+          <form method="POST" action="admin.php" style="margin:0;">
+            <input type="hidden" name="idaction" value="menuSupMsgs">
+            <?php print hiddenPassRepforum($pass, $repForum) ?>
+            <button type="submit" name="A1" class="btn btn-primary"><i class="bi bi-trash3" style="margin-right:5px;"></i>Supprimer des messages</button>
+          </form>
+          <button type="button" class="btn btn-secondary" onclick="parent.window.close()"><i class="bi bi-box-arrow-right" style="margin-right:5px;"></i>Quitter</button>
+        </div>
+      </div>
+    </div>
+    <?php }
+}
+
+// ============================================================
+// MODULE : menuSupMsgs
+// ============================================================
+if ($idaction == "menuSupMsgs") {
+    if ($pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Session expirée. <a href='admin.php?repforum={$repForum}'>Se reconnecter</a></p></div></div>";
+    } else {
+        $tabindex   = file("${reperForum}/index.dat");
+        $nombremsgs = count($tabindex) - 1;
+        for ($compt = 1; $compt <= $nombremsgs; $compt++) {
+            $index[$compt][1] = strtok($tabindex[$compt], "#");
+            $index[$compt][2] = strtok("#");
+            $chainetemp       = strtok("#");
+            $index[$compt][3] = strtok($chainetemp, "|");
+            $index[$compt][4] = strtok("|");
+            $index[$compt][5] = strtok("|");
+        }
+
+        if ($nombremsgs < 1) { ?>
+        <div class="card">
+          <div class="card-body">
+            <p class="fa-sub" style="color:#888;font-style:italic;">Aucun message dans ce forum.</p>
+            <form method="POST" action="admin.php" style="margin:0;">
+              <input type="hidden" name="idaction" value="menuGen">
+              <?php print hiddenPassRepforum($pass, $repForum) ?>
+              <button type="submit" name="A1" class="btn btn-secondary">Retour au menu</button>
+            </form>
+          </div>
+        </div>
+        <?php } else { ?>
+        <div class="card">
+          <div class="card-header card-header-primary"><span><i class="bi bi-list-ul" style="margin-right:6px;"></i>Messages du forum (<?php print $nombremsgs ?>)</span></div>
+          <?php renderMsgTable($index, 1, $nombremsgs); ?>
+        </div>
+
+        <div class="card">
+          <div class="card-header card-header-primary"><span><i class="bi bi-trash3-fill" style="margin-right:6px;"></i>Supprimer un message</span></div>
+          <div class="card-body">
+            <div class="alert alert-danger" style="font-size:11px;margin-bottom:12px;">
+              <i class="bi bi-exclamation-triangle-fill" style="margin-right:5px;"></i>
+              La suppression d'un message entraîne automatiquement la suppression des réponses associées.
+            </div>
+            <form method="POST" action="admin.php">
+              <div class="form-row">
+                <label class="form-lbl">N° du message :</label>
+                <input type="text" name="idmsgsup" size="6" class="bouton2" style="width:70px;text-align:center;" placeholder="ex: 3">
+              </div>
+              <input type="hidden" name="idaction" value="demandConfirmSuppMsg">
+              <?php print hiddenPassRepforum($pass, $repForum) ?>
+              <div class="fa-btn-row">
+                <button type="submit" name="A1" class="btn btn-danger">Supprimer</button>
+                <form method="POST" action="admin.php" style="margin:0;">
+                  <input type="hidden" name="idaction" value="menuGen">
+                  <?php print hiddenPassRepforum($pass, $repForum) ?>
+                  <button type="submit" name="A1" class="btn btn-secondary">Retour au menu</button>
+                </form>
+              </div>
+            </form>
+          </div>
+        </div>
+        <?php }
+    }
+}
+
+// ============================================================
+// MODULE : demandConfirmSuppMsg
+// ============================================================
+if ($idaction == "demandConfirmSuppMsg") {
+    if ($pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Session expirée. <a href='admin.php?repforum={$repForum}'>Se reconnecter</a></p></div></div>";
+    } else {
+        $tabindex   = file("${reperForum}/index.dat");
+        $nombremsgs = count($tabindex) - 1;
+        for ($compt = 1; $compt <= $nombremsgs; $compt++) {
+            $index[$compt][1] = strtok($tabindex[$compt], "#");
+            $index[$compt][2] = strtok("#");
+            $chainetemp       = strtok("#");
+            $index[$compt][3] = strtok($chainetemp, "|");
+            $index[$compt][4] = strtok("|");
+            $index[$compt][5] = strtok("|");
+        }
+
+        if ($idmsgsup == "") { ?>
+        <div class="card"><div class="card-body">
+          <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Aucun numéro saisi.</p>
+          <form method="POST" action="admin.php" style="margin:0;"><input type="hidden" name="idaction" value="menuSupMsgs"><?php print hiddenPassRepforum($pass, $repForum) ?><button type="submit" name="A1" class="btn btn-secondary">Retour</button></form>
+        </div></div>
+        <?php exit; }
+
+        if ($idmsgsup < 0 || !file_exists("${reperForum}/msg".$idmsgsup.".dat")) { ?>
+        <div class="card"><div class="card-body">
+          <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Ce message n'existe pas ou a déjà été supprimé.</p>
+          <form method="POST" action="admin.php" style="margin:0;"><input type="hidden" name="idaction" value="menuSupMsgs"><?php print hiddenPassRepforum($pass, $repForum) ?><button type="submit" name="A1" class="btn btn-secondary">Retour</button></form>
+        </div></div>
+        <?php exit; }
+
+        $rangMsgSupP = 1;
+        while (@$index[$rangMsgSupP][1] != $idmsgsup) $rangMsgSupP++;
+        $rangMsgSupD = $rangMsgSupP;
+        while (@$index[$rangMsgSupD + 1][2] > $index[$rangMsgSupP][2]) $rangMsgSupD++;
+        ?>
+        <div class="card">
+          <div class="card-header card-header-primary"><span><i class="bi bi-exclamation-triangle-fill" style="margin-right:6px;"></i>Confirmer la suppression</span></div>
+          <div class="card-body">
+            <p class="fa-sub" style="margin-bottom:10px;">Vous êtes sur le point de supprimer le(s) message(s) suivant(s) :</p>
+            <?php renderMsgTable($index, $rangMsgSupP, $rangMsgSupD); ?>
+            <div class="fa-btn-row" style="margin-top:14px;">
+              <form method="POST" action="admin.php" style="margin:0;">
+                <input type="hidden" name="idaction" value="suppresMsgs">
+                <?php print hiddenPassRepforum($pass, $repForum) ?>
+                <input type="hidden" name="rangsupmin" value="<?php print $rangMsgSupP ?>">
+                <input type="hidden" name="rangsupmax" value="<?php print $rangMsgSupD ?>">
+                <button type="submit" name="A1" class="btn btn-danger"><i class="bi bi-trash3" style="margin-right:5px;"></i>Confirmer la suppression</button>
+              </form>
+              <form method="POST" action="admin.php" style="margin:0;">
+                <input type="hidden" name="idaction" value="menuGen">
+                <?php print hiddenPassRepforum($pass, $repForum) ?>
+                <button type="submit" name="A1" class="btn btn-secondary">Annuler</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    <?php }
+}
+
+// ============================================================
+// MODULE : suppresMsgs
+// ============================================================
+if ($idaction == "suppresMsgs") {
+    if ($pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Session expirée. <a href='admin.php?repforum={$repForum}'>Se reconnecter</a></p></div></div>";
+    } else {
+        $tabindex   = file("${reperForum}/index.dat");
+        $nombremsgs = count($tabindex) - 1;
+        for ($compt = 1; $compt <= $nombremsgs; $compt++) {
+            $index[$compt][1] = strtok($tabindex[$compt], "#");
+            $index[$compt][2] = strtok("#");
+            $chainetemp       = strtok("#");
+            $index[$compt][3] = strtok($chainetemp, "|");
+            $index[$compt][4] = strtok("|");
+            $index[$compt][5] = strtok("|");
+        }
+
+        if ($rangsupmax > $nombremsgs) { ?>
+        <div class="card"><div class="card-body">
+          <p class="fa-error"><i class="bi bi-exclamation-triangle-fill"></i> Actualisation détectée — opération annulée pour éviter d'endommager la structure du forum.</p>
+          <form method="POST" action="admin.php" style="margin:0;"><input type="hidden" name="idaction" value="menuGen"><?php print hiddenPassRepforum($pass, $repForum) ?><button type="submit" name="A1" class="btn btn-secondary">Retour au menu</button></form>
+        </div></div>
+        <?php exit; }
+
+        $erreur = false;
+        $msgs   = []; ?>
+        <div class="card">
+          <div class="card-header card-header-primary"><span><i class="bi bi-check-circle-fill" style="margin-right:6px;"></i>Résultat de la suppression</span></div>
+          <div class="card-body">
+        <?php
+        for ($compt = $rangsupmin; $compt <= $rangsupmax; $compt++) {
+            $testsup = unlink("${reperForum}/msg".$index[$compt][1].".dat");
+            if ($testsup) {
+                echo "<p class='fa-success'><i class='bi bi-check-circle-fill'></i> Message n° " . $index[$compt][1] . " supprimé.</p>";
+            } else {
+                echo "<p class='fa-error'><i class='bi bi-x-circle-fill'></i> Impossible de supprimer le message n° " . $index[$compt][1] . ".</p>";
+                $erreur = true;
+            }
+        }
+
+        if (!$erreur) {
+            $ficindex = fopen("${reperForum}/index.dat", "w+");
+            fputs($ficindex, "Fichier Index. Ne pas éditer !\n");
+            for ($compt = 1; $compt <= $rangsupmin - 1; $compt++) fputs($ficindex, $tabindex[$compt]);
+            for ($compt = $rangsupmax + 1; $compt <= $nombremsgs; $compt++) fputs($ficindex, $tabindex[$compt]);
+            fclose($ficindex);
+
+            $tabindverif    = file("${reperForum}/index.dat");
+            $nombremsgsnouv = count($tabindverif) - 1;
+
+            if ($nombremsgsnouv != ($nombremsgs - ($rangsupmax - $rangsupmin + 1))) {
+                echo "<p class='fa-error'><i class='bi bi-exclamation-triangle-fill'></i> Erreur lors de la mise à jour de l'index.</p>";
+            } else {
+                echo "<p class='fa-success'><i class='bi bi-check-circle-fill'></i> Index mis à jour.</p>";
+            }
+        }
+        ?>
+            <div class="fa-btn-row" style="margin-top:10px;">
+              <form method="POST" action="admin.php" style="margin:0;"><input type="hidden" name="idaction" value="menuGen"><?php print hiddenPassRepforum($pass, $repForum) ?><button type="submit" name="A1" class="btn btn-primary">Retour au menu</button></form>
+              <form method="POST" action="admin.php" style="margin:0;"><input type="hidden" name="idaction" value="menuSupMsgs"><?php print hiddenPassRepforum($pass, $repForum) ?><button type="submit" name="A1" class="btn btn-secondary">Autres suppressions</button></form>
+            </div>
+          </div>
+        </div>
+    <?php }
+}
+
+// ============================================================
+// MODULE : menuChangeMDP
+// ============================================================
+if ($idaction == "menuChangeMDP") {
+    if ($pass != ROT13($MDP)) {
+        echo "<div class='card'><div class='card-body'><p class='fa-error'>Session expirée. <a href='admin.php?repforum={$repForum}'>Se reconnecter</a></p></div></div>";
+    } else { ?>
+    <div class="card">
+      <div class="card-header card-header-primary"><span><i class="bi bi-key-fill" style="margin-right:6px;"></i>Changer le mot de passe</span></div>
+      <div class="card-body">
+        <form method="POST" action="admin.php">
+          <div class="form-row"><label class="form-lbl">Nouveau mot de passe :</label><input type="password" name="mdputil1" size="20" class="bouton2"></div>
+          <div class="form-row" style="margin-top:6px;"><label class="form-lbl">Confirmation :</label><input type="password" name="mdputil2" size="20" class="bouton2"></div>
+          <input type="hidden" name="idaction" value="testChoixMDP">
+          <?php print hiddenPassRepforum($pass, $repForum) ?>
+          <div class="fa-btn-row"><button type="submit" name="A1" class="btn btn-primary">Enregistrer</button></div>
+        </form>
+      </div>
+    </div>
+    <?php }
+}
 ?>
 
-<?php
-// #############################################################################
-// *****************************************************************************
-// *****************************************************************************
-// Modules de choix et de véfification du mot de passe
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-// MODULE idaction=""
-// cas de figure où IDaction n'est pas renseigné (premier lancement du script) :
-// Vérifie si un mot de passe a déjà été choisi
-// - si non : imprime le formulaire de choix de mot de passe
-// - si oui : imprime le formulaire d'interrogation de mot de passe
-// *****************************************************************************
-
-if ($idaction=="") {
-
-  if(!file_exists("../common/mdep.php")) {
-  // aucun mot de passe n'a été choisi
-    print("<center> \n");
-    print("<br> \n");
-    print("<font size=\"+1\"><b>Bienvenue sur l'interface d'administration<br>du forum de discussion</b></font> \n");
-    print("<br><br> \n");
-    print("Veuillez choisir le mot de passe administrateur. <br><br> \n");
-    print("Ce mot de passe vous sera demandé chaque fois<br>que vous souhaiterez accéder à cette interface, notamment<br> \n");
-    print("si vous décidez de supprimer certains messages postés par les utilisateurs. <br><br> \n");
-    print("</center> \n");
-
-    ImprimFormChoixMDP();
-  }
-
-  else {
-  // un mot de passe a déjà été choisi et enregistré
-    print("<center> \n");
-    print("<br> \n");
-    print("<font size=\"+1\"><b>Bienvenue sur l'interface d'administration<br>du forum de discussion</b></font> \n");
-    print("<br><br> \n");
-    print("Veuillez vous identifier SVP. <br> \n");
-    print("</center> \n");
-    print("<br> \n");
-    ImprimFormInterrogMDP();
-  }
-}
-
-// *****************************************************************************
-// Module idaction="testChoixMDP" :
-// Vérifie si les deux valeurs "Mot de Passe"  entrées par l'utilisateur sont
-// équivalentes
-// - si non : envoie un message d'avertissement et imprime à nouveau
-// le formulaire de choix du mot de passe
-// - si oui : enregistre le mot de passe dans le fichier mdep.php et crée
-// la variable "$pass" nécessaire pour accéder au menu des actions possibles
-// *****************************************************************************
-
-if ($idaction=="testChoixMDP") {
-
-   // conversion des deux valeurs en minuscule
-   $mdputil1=strtolower($mdputil1);
-   $mdputil2=strtolower($mdputil2);
-
-  if(file_exists("../common/mdep.php") and $pass!=ROT13($MDP)) {
-    // protection contre des appels du script destinés à "faire sauter"
-    // le mot de passe
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-    exit;
-  }
-
-  if($mdputil1=="") {
-    // cas de figure où l'utilisateur a validé le formulaire précédent
-    // sans entrer de valeurs
-    print("<br> \n");
-    print("<center> \n");
-    print("Veillez recommencer l'opération SVP.");
-    print("</center> \n");
-    ImprimFormChoixMDP();
-    exit;
-  }
-
-  if ($mdputil1!=$mdputil2) {
-  // cas de figure où les deux valeurs entrées par l'utilisateur ne coincident pas
-    print("<center> \n");
-    print("<br> \n");
-    print("Les deux valeurs que vous avez entrées ne coincident pas. Veuiller recommencer SVP. <br> \n");
-    print("</center>");
-    ImprimFormChoixMDP();
-  }
-
-  else {
-  // cas de figure où les deux valeurs entrées par l'utilisateur coincident
-
-    // --- Enregistrement du mot de passe dans le fichier mdep.php
-    $ficmdep=fopen("../common/mdep.php","w+");
-    fputs($ficmdep,"<?php \n");
-    fputs($ficmdep,"\$MDP=\"$mdputil1\"; \n");
-    fputs($ficmdep,"?>");
-    fclose($ficmdep);
-
-    // Définition de la valeur "$pass", qui sera nécessaire pour les
-    // opérations de configuration ou de suppression de messages
-    // Note : "$pass" est produit à partir du mot de passe (codé)
-
-    $MDP=$mdputil1;
-    $MDPcode=ROT13($MDP);
-
-    // --- Affichage d'un message de confirmation et impression
-    // d'un bouton "Passage à la suite".
-
-    print("<center> \n");
-    print("<br> \n");
-    print("Le mot de passe a bien été enregistré. <br> \n");
-    print("<form method=\"POST\" action=\"admin.php\"> \n");
-    print("<input type=\"hidden\" name=\"idaction\" value=\"menuGen\"> \n");
-    print("<input type=\"hidden\" name=\"pass\" value=\"$MDPcode\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"> \n");
-    print("<input type=\"submit\" value=\"Passer à la suite\" name=\"A1\"> \n");
-    print("</form> \n");
-    print("</center> \n");
-  }
-}
-
-// *****************************************************************************
-// MODULE idaction="verifMDP" :
-// Vérifie si le mot de passe entré par l'utilisateur est correct
-// - si non : envoie un message d'avertissement et imprime à nouveau
-// le formulaire d'interrogration du mot de passe
-// - si oui : crée la variable "$pass" nécessaire pour accéder au menu
-// des actions possibles
-// *****************************************************************************
-
-if ($idaction=="verifMDP") {
-
-  // la valeur entrée par l'utilisateur est convertie en minuscules
-  $mdputil=$_POST["mdputil"];
-  $mdputil=strtolower($mdputil);
-
-  if(crypt(md5($mdputil),"T2")!=$MDP) {
-  // cas de figure où la valeur entrée par l'utilisateur n'est pas correcte
-    print("<center> \n");
-    print("<br> \n");
-    print("Le mot de passe entré n'est pas valable. Veuillez à nouveau vous identifier.");
-    print("</center> \n");
-    ImprimFormInterrogMDP();
-  }
-
-  else {
-  // cas de figure où la valeur entrée par l'utilisateur correspond au mot de passe
-      $idaction="menuGen";
-      $MDPcode=ROT13($MDP);
-      $pass=$MDPcode;
-  // -------------------------------------------
-  // ------ On passe à la suite du script ------
-  // -------------------------------------------
-  }
-}
-
-
-// #############################################################################
-// *****************************************************************************
-// *****************************************************************************
-// Modules correspondant aux fonctions d'administration
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-// Module idaction="menuGen" :
-// Affiche le menu général des actions possibles
-// *****************************************************************************
-
-if ($idaction=="menuGen") {
-  if ($pass!=ROT13($MDP)) {
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-  }
-  else {
-    print("<center> \n");
-    print("<br> \n");
-    print("<b>MENU GENERAL :</b><br><br> \n");
-    print("Vous pouvez accomplir les actions d'administration suivantes : <br><br> \n");
-    print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuSupMsgs\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"1/  Supprimer des messages\" name=\"A1\">
-	    <br /><br /><input type=\"button\" value=\"2/  Quitter ce module\" onclick='parent.window.close();'>
-	    </form> \n");
-//    print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuChangeMDP\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"submit\" value=\"2/  Changer le mot de passe\" name=\"A2\"></form> \n");
-    print("</center> \n");
-  }
-}
-
-// *****************************************************************************
-// Module idaction="menuSupMsgs" :
-// Affiche le menu "Suppression de messages"
-// *****************************************************************************
-
-if ($idaction=="menuSupMsgs") {
-  if ($pass!=ROT13($MDP)) {
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-  }
-  else {
-
-    // ==========================================================================
-    // Lecture du fichier "index.dat" et stockage des données (identifiant,
-    // niveau, date, nom et sujet) dans le tableau "$index"
-    // ==========================================================================
-
-    $tabindex=file("${reperForum}/index.dat");
-    $nombremsgs=count($tabindex)-1;
-
-    for($compt=1;$compt<=$nombremsgs;$compt++) {
-      $index[$compt][1]=strtok($tabindex[$compt],"#"); // identifiant du message
-      $index[$compt][2]=strtok("#");                   // niveau du message
-      $chainetemp=strtok("#");                         // chaine date+nom+sujet
-      $index[$compt][3]=strtok($chainetemp,"|");       // date
-      $index[$compt][4]=strtok("|");                   // nom de l'auteur
-      $index[$compt][5]=strtok("|");                   // sujet
-    }
-
-    // ==========================================================================
-    // Cas de figure où aucun message n'a  encore été posté dans le forum de discussion
-    // ==========================================================================
-
-    if($nombremsgs<1) {
-      print("<br> \n");
-      print("<center> \n");
-      print("Aucun message n'a été posté dans ce forum de discussion. <br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu général\" name=\"A1\"></form> \n");
-      print("</center> \n");
-      exit;
-    }
-
-    // ==========================================================================
-    // Message d'explication destiné à l'utilisateur
-    // ==========================================================================
-
-    print("<br> \n");
-    print("<center><b><font size=\"+1\">Suppression de messages</font></b></center><br> \n");
-
-    print("<center>Le tableau suivant affiche la liste des messages postés dans le forum de discussion.<br> \n");
-    print("Note : les sujets de discussion sont affichés ici <b>des plus anciens aux plus récents</b>.</center><br> \n");
-
-    // ==========================================================================
-    // Affichage des intitulés des messages dans un tableau (utilisant les
-    // paramètres précisés plus haut)
-    // ==========================================================================
-
-    print("<table border=\"1\" align=\"center\"> \n");
-
-    print("<tr><td bgcolor=\"#eeeeee\"><center><b>&nbsp;Ident.&nbsp;</b></center></td><td bgcolor=\"#eeeeee\"><b><center>INTITULE du message</center></b></td></tr> \n");
-
-      for($compt=1;$compt<=$nombremsgs;$compt++) {
-
-        // insertion d'un tableau à une ligne et deux colonnes
-        // destiné à matérialiser la hierarche du forum
-
-        print("<tr> \n");
-
-        print("<td bgcolor=\"#eeeeee\"> \n");
-        print("<center>".$index[$compt][1]."</center>");
-        print("</td> \n");
-
-        print("<td> \n");
-        print("<table border=\"0\"> \n");
-        print("<tr> \n");
-        print("<td width=\"".tabulation($index[$compt][2]-1)."\"></td> \n");
-        print("<td> \n");
-        if($index[$compt][2]==1) {
-          print("# \n");
-        }
-        else {
-          print("> \n");
-        }
-        print("<b>".stripslashes(htmlentities(strip_tags($index[$compt][5])))."</b> - ");
-        print("<b>".stripslashes(htmlentities(strip_tags($index[$compt][4])))."</b> (".$index[$compt][3].") <br> \n");
-        print("</td> \n");
-        print("</tr> \n");
-        print("</table> \n");
-        print("</td> \n");
-
-        print("</tr> \n");
-      }
-
-    print("</table> \n");
-
-    // ==========================================================================
-    // Impression d'un message d'avertissement et du formulaire de saisie
-    // d'identifiant de message à supprimer
-    // ==========================================================================
-
-    print("<br> \n");
-    print("<table cellpadding=\"5\" border=\"1\" bgcolor=\"#fffff0\" align=\"center\"> \n");
-    print("<tr><td align=\"center\"> \n");
-    print("Pour supprimer un message du forum,<br> entrez ici son <b>numéro d'identification</b> : <br> \n");
-    print("<form method=\"POST\" action=\"admin.php\"> \n");
-    print("<input type=\"text\" name=\"idmsgsup\" size=\"5\"><br> \n");
-    print("<input type=\"hidden\" name=\"idaction\" value=\"demandConfirmSuppMsg\"> \n");
-    print("<input type=\"hidden\" name=\"pass\" value=\"$pass\"> \n");
-    print("<input type=\"hidden\" name=\"repforum\" value=\"$repForum\"> \n");
-    print("<br> \n");
-    print("<input type=\"submit\" value=\"Envoyer\" name=\"A1\">");
-    print("</form> \n");
-    print("<b>Attention !</b> la suppression d'un message entraine automatiquement<br> la suppression des messages qui le suivent dans le fil de discussion<br>(même sujet de discussion). \n");
-    print("</td></tr> \n");
-    print("</table> \n");
-    print("<br> \n");
-    print("<center> \n");
-    print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"  Retour au menu général  \" name=\"A1\"></form> \n");
-    print("</center> \n");
-  }
-}
-
-// *****************************************************************************
-// Module idaction="demandConfirmSuppMsg" :
-// Affiche la page de demande de confirmation de suppression
-// *****************************************************************************
-
-if ($idaction=="demandConfirmSuppMsg") {
-  if ($pass!=ROT13($MDP)) {
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-  }
-  else {
-
-    // ==========================================================================
-    // Lecture du fichier "index.dat" et stockage des données (identifiant,
-    // niveau, date, nom et sujet) dans le tableau "$index"
-    // ==========================================================================
-
-    $tabindex=file("${reperForum}/index.dat");
-    $nombremsgs=count($tabindex)-1;
-
-    for($compt=1;$compt<=$nombremsgs;$compt++) {
-      $index[$compt][1]=strtok($tabindex[$compt],"#"); // identifiant du message
-      $index[$compt][2]=strtok("#");                   // niveau du message
-      $chainetemp=strtok("#");                         // chaine date+nom+sujet
-      $index[$compt][3]=strtok($chainetemp,"|");       // date
-      $index[$compt][4]=strtok("|");                   // nom de l'auteur
-      $index[$compt][5]=strtok("|");                   // sujet
-    }
-
-
-    // ==========================================================================
-    // Cas de figure où l'utilisateur a entré une "valeur vide"
-    // ==========================================================================
-
-    if($idmsgsup=="") {
-      print("<br> \n");
-      print("<center> \n");
-      print("Erreur ! Vous n'avez saisi aucune valeur. <br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuSupMsgs\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu de suppression de messages\" name=\"A1\"></form> \n");
-      print("</center> \n");
-      exit;
-    }
-
-    // ==========================================================================
-    // Cas de figure où le numéro de message à supprimer est aberrant
-    // ==========================================================================
-
-    if(($idmsgsup<0) or (!file_exists("${reperForum}/msg".$idmsgsup.".dat"))) {
-      print("<br> \n");
-      print("<center> \n");
-      print("Erreur ! Ce message n'existe pas<br> ou a déjà été supprimé par l'administrateur du forum de discussion. <br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuSupMsgs\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu de suppression de messages\" name=\"A1\"></form> \n");
-      print("</center> \n");
-      exit;
-    }
-
-    // ==========================================================================
-    // Cas de figure où le message a déjà été supprimé par l'administrateur
-    // ==========================================================================
-
-    if(!file_exists("${reperForum}/msg".$idmsgsup.".dat")) {
-      print("Ce message a déjà été supprimé par l'administrateur. <br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuSupMsgs\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu de suppression de messages\" name=\"A1\"></form> \n");
-      exit;
-    }
-
-    // ==========================================================================
-    // Recherche du rang du premier message à supprimer
-    // ==========================================================================
-
-    $rangMsgSupP=1;
-
-    while(@ $index[$rangMsgSupP][1]!=$idmsgsup) {
-      $rangMsgSupP++;
-    }
-
-    // le rang du premier message à supprimer est stocké dans $rangMsgSupP
-
-    // ==========================================================================
-    // Recherche du rang du dernier message à supprimer
-    // ==========================================================================
-
-    $rangMsgSupD=$rangMsgSupP;
-
-    while(@ $index[$rangMsgSupD+1][2]>$index[$rangMsgSupP][2]) {
-      $rangMsgSupD++;
-    }
-
-    // le rang du dernier message à supprimer est stocké dans $rangMsgSupD
-
-    // ==========================================================================
-    // Affichage d'un message d'avertissement
-    // ==========================================================================
-
-    print("<br> \n");
-
-    print("<table border=\1\" bgcolor=\"#fffff0\" align=\"center\" cellpadding=\"15\"> \n");
-    print("<tr><td align=\"center\"> \n");
-      print("<center><b>Vous êtes sur le point de supprimer le(s) message(s) suivant(s)</b> : </center><br> \n");
-
-      // ==========================================================================
-      // Affichage des intitulés des messages à supprimer dans un tableau
-      // ==========================================================================
-
-      print("<table border=\"1\" align=\"center\" bgcolor=\"#ffffff\"> \n");
-
-      print("<tr><td bgcolor=\"#eeeeee\"><center><b>&nbsp;Ident.&nbsp;</b></center></td><td bgcolor=\"#eeeeee\"><b><center>INTITULE du message</center></b></td></tr> \n");
-
-        for($compt=$rangMsgSupP;$compt<=$rangMsgSupD;$compt++) {
-
-          // insertion d'un tableau à une ligne et deux colonnes
-          // destiné à matérialiser la hierarche du forum
-
-          print("<tr> \n");
-
-          print("<td bgcolor=\"#eeeeee\"> \n");
-          print("<center>".$index[$compt][1]."</center>");
-          print("</td> \n");
-
-          print("<td> \n");
-          print("<table border=\"0\"> \n");
-          print("<tr> \n");
-          print("<td width=\"".tabulation($index[$compt][2]-1)."\"></td> \n");
-          print("<td> \n");
-          if($index[$compt][2]==1) {
-            print("# \n");
-          }
-          else {
-            print("> \n");
-          }
-          print("<b>".stripslashes(htmlentities(strip_tags($index[$compt][5])))."</b> - ");
-          print("<b>".stripslashes(htmlentities(strip_tags($index[$compt][4])))."</b> (".$index[$compt][3].") <br> \n");
-          print("</td> \n");
-          print("</tr> \n");
-          print("</table> \n");
-          print("</td> \n");
-
-          print("</tr> \n");
-        }
-
-      print("</table> \n");
-
-      // ==========================================================================
-      // Affichage de la demande de confirmation
-      // ==========================================================================
-
-      print("<center> \n");
-      print("<form method=\"POST\" action=\"admin.php\"> \n");
-      print("<input type=\"hidden\" name=\"idaction\" value=\"suppresMsgs\"> \n");
-      print("<input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"> \n");
-      print("<input type=\"hidden\" name=\"rangsupmin\" value=\"$rangMsgSupP\"> \n");
-      print("<input type=\"hidden\" name=\"rangsupmax\" value=\"$rangMsgSupD\"> \n");
-      print("<input type=\"submit\" value=\"Confirmer la suppression\" name=\"A1\"> \n");
-      print("</form> \n");
-      print("</center> \n");
-
-    print("</td></tr> \n");
-    print("</table> \n");
-
-    print("<center> \n");
-    print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Annuler (retour au menu général)\" name=\"A1\"></form> \n");
-    print("</center> \n");
-    print("</center> \n");
-
-  }
-}
-
-// *****************************************************************************
-// Module idaction="suppresMsgs" :
-// Affiche la page de confirmation de suppression définitive de messages
-// *****************************************************************************
-
-if ($idaction=="suppresMsgs") {
-  if ($pass!=ROT13($MDP)) {
-    print("<br> \n");
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-  }
-  else {
-
-    // ==========================================================================
-    // Lecture du fichier "index.dat" et stockage des données dans le tableau
-    // $index
-    // ==========================================================================
-
-      $tabindex=file("${reperForum}/index.dat");
-      $nombremsgs=count($tabindex)-1;
-
-      for($compt=1;$compt<=$nombremsgs;$compt++) {
-        $index[$compt][1]=strtok($tabindex[$compt],"#"); // identifiant du message
-        $index[$compt][2]=strtok("#");                   // niveau du message
-        $chainetemp=strtok("#");                         // chaine date+nom+sujet
-        $index[$compt][3]=strtok($chainetemp,"|");       // date
-        $index[$compt][4]=strtok("|");                   // nom de l'auteur
-        $index[$compt][5]=strtok("|");                   // sujet
-     }
-
-    // ==========================================================================
-    // Suppression des fichiers msg__.dat
-    // ==========================================================================
-
-    if($rangsupmax>$nombremsgs) {
-      print("<br> \n");
-      print("<center> \n");
-      print("Vous avez probablement tenté d'actualiser la page de confirmation de suppression de message. <br> \n");
-      print("Cette opération n'a pas eu de conséquences dans ce cas précis.<br> \n");
-      print("Elle aurait toutefois pu causer une erreur et endommager la structure du forum de discussion.<br><br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu général\" name=\"A1\"></form> \n");
-      exit;
-    }
-
-    print("<br> \n");
-    print("<center> \n");
-    for($compt=$rangsupmin;$compt<=$rangsupmax;$compt++) {
-      $testsup=unlink("${reperForum}/msg".$index[$compt][1].".dat");
-      if($testsup) {
-        print("Le message n° ".$index[$compt][1]." a bien été supprimé. <br> \n");
-      }
-      else {
-       print("Impossible de supprimer le message n° ".$index[$compt][1].". <br> \n");
-       print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu général\" name=\"A1\"></form> \n");
-       exit;
-      }
-    }
-    print("</center> \n");
-
-   // ==========================================================================
-    // Recopie du fichier "index.dat", avec omission des lignes concernant les
-    // messages à supprimer
-    // ==========================================================================
-
-    $ficindex=fopen("${reperForum}/index.dat","w+");
-
-    fputs($ficindex,"Fichier Index. Ne pas éditer !\n");
-
-    // --- recopie des premières lignes du fichier index.dat ---
-
-    for($compt=1;$compt<=$rangsupmin-1;$compt++) {
-      fputs($ficindex,$tabindex[$compt]);
-    }
-
-    // --- recopie des dernières lignes du fichier index.dat ---
-
-    for($compt=$rangsupmax+1;$compt<=$nombremsgs;$compt++) {
-      fputs($ficindex,$tabindex[$compt]);
-    }
-
-    fclose($ficindex);
-
-    // ==========================================================================
-    // Vérification du bon déroulement de l'opération de réécriture
-    // du fichier "index.dat"
-    // ==========================================================================
-
-    $tabindverif=file("${reperForum}/index.dat");
-    $nombremsgsnouv=count($tabindverif)-1;
-
-    if($nombremsgsnouv!=(($nombremsgs-($rangsupmax-$rangsupmin+1)))) {
-      print("Erreur durant l'opération de mise à jour du fichier index.<br> \n");
-      print("La structure du forum a peut-être été endommagée.<br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Annuler (retour au menu général)\" name=\"A1\"></form> \n");
-      exit;
-    }
-
-    else {
-      print("<center> \n");
-      print("Mise à jour de l'index terminée.<br> \n");
-      print("<br> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuGen\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu général\" name=\"A1\"></form> \n");
-      print("<form method=\"POST\" action=\"admin.php\"><input type=\"hidden\" name=\"idaction\" value=\"menuSupMsgs\"><input type=\"hidden\" name=\"pass\" value=\"$pass\"><input type=\"hidden\" name=\"repforum\" value=\"$repForum\"><input type=\"submit\" value=\"Retour au menu de suppression de messages\" name=\"A1\"></form> \n");
-      print("</center> \n");
-    }
-
-  }
-}
-
-// *****************************************************************************
-// Module idaction="menuChangeMDP" :
-// Affiche le menu permettant de changer le mot de passe
-// *****************************************************************************
-
-if ($idaction=="menuChangeMDP") {
-  if ($pass!=ROT13($MDP)) {
-    print("Erreur : Veuillez vous <a href=\"admin.php\">identifier</a> à nouveau.");
-  }
-  else {
-    print("<center> \n");
-    print("<br> \n");
-    print("<b>Définition d'un nouveau mot de passe</b> <br> \n");
-    ImprimFormChoixMDP();
-    print("</center> \n");
-  }
-}
-
-// #############################################################################
-?>
-
-
+</div><!-- /.fa-wrap -->
 </body>
 </html>

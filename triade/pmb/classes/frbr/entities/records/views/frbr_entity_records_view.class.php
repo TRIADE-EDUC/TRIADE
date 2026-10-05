@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_records_view.class.php,v 1.3 2017-07-11 14:35:50 tsamson Exp $
+// $Id: frbr_entity_records_view.class.php,v 1.6 2023/05/03 15:15:15 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,17 +11,20 @@ require_once($class_path."/notice_tpl.class.php");
 class frbr_entity_records_view extends frbr_entity_common_view_django{
 	
 	
+	public $default_template;
+
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->default_template = "{{record.content}}";
 	}
 		
-	public function render($datas){	
-		//on rajoute nos Ã©lÃ©ments...
+	public function render($datas, $grouped_datas = []){	
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
 		$render_datas['title'] = $this->msg["frbr_entity_records_view_title"];
 		$render_datas['record']['content'] = record_display::get_display_extended($datas[0], (isset($this->parameters->django_directory) ? $this->parameters->django_directory : ""));
+		$render_datas['record']['object'] = new record_datas($datas[0]);
 		//on rappelle le tout...
 		return parent::render($render_datas);
 	}
@@ -39,7 +42,11 @@ class frbr_entity_records_view extends frbr_entity_common_view_django{
 					array(
 						'var' => "record.content",
 						'desc'=> $this->msg['frbr_entity_records_view_record_content_desc']
-					)
+					),
+					array(
+						'var' => "record.object",
+						'desc'=> $this->msg['frbr_entity_records_view_record_object_desc']
+					),
 				)
 		);
 		$format[] = $record;

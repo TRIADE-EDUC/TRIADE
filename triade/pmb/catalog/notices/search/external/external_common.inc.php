@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external_common.inc.php,v 1.25 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: external_common.inc.php,v 1.29 2023/12/19 08:03:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -104,7 +104,7 @@ function do_sources() {
 		$img_plus=${$open}?get_url_icon('minus.gif'):get_url_icon('plus.gif');
 		$r .= '</div><div id="elconn'.$count.'Parent" class="parent" width="100%">
 		<h3>
-			<img src="'.$img_plus.'" class="img_plus" name="imEx" id="elconn'.$count.'Img" title="'.$msg["connector_external_plus_detail"].'" style="border:0px; margin:3px 3px" onClick="expandBase(\'elconn'.$count.'\', true); if (document.getElementById(\'elconn'.$count.'Child\').style.display==\'none\') document.search_form.open_'.$count.'.value=0; else  document.search_form.open_'.$count.'.value=1; return false;">&nbsp;
+			<img src="'.$img_plus.'" class="img_plus" name="imEx" id="elconn'.$count.'Img" title="'.htmlentities($msg["connector_external_plus_detail"], ENT_QUOTES, $charset).'" alt="'.htmlentities($msg["connector_external_plus_detail"], ENT_QUOTES, $charset).'" onClick="expandBase(\'elconn'.$count.'\', true); if (document.getElementById(\'elconn'.$count.'Child\').style.display==\'none\') document.search_form.open_'.$count.'.value=0; else  document.search_form.open_'.$count.'.value=1; return false;" />&nbsp;
 			'.$category_name.'
 		</h3>
 		</div><div id=\'elconn'.$count.'Child\' class=\'child\' '.(${$open}?"startOpen='Yes'":"").' style=\'display:none\'><input type="hidden" name="open_'.$count.'" id="open_'.$count.'" value="'.${$open}.'"/>';
@@ -152,36 +152,36 @@ function do_sources() {
 //Instanciation de la classe de recherche
 //Si c'est une multi
 if ($_SESSION["ext_type"]=="multi") {
-	$sc=new search(false,"search_fields_unimarc");
+	$sc=new search(true,"search_fields_unimarc");
 	$sc->remove_forbidden_fields();
 } else {
-	$sc=new search(false,"search_simple_fields_unimarc");
+    $sc=new search(true,"search_simple_fields_unimarc");
 }
 
 //Si c'est une simple 
 if ($_SESSION["ext_type"]=="simple") {
-	//Si Ã§a vient d'une autre recherche, on transforme !
+	//Si ça vient d'une autre recherche, on transforme !
  	if ((string)$from_mode!="") {
- 		//RÃ©cupÃ©ration des variables
+ 		//Récupération des variables
  		switch ($from_mode) {
  			case "0":
  				if ($code) {
  					$op_="STARTWITH";
 					
 					$search[0]="f_31";
-					//opÃ©rateur
+					//opérateur
 		    		$op="op_0_".$search[0];
 		    		global ${$op};
 		    		${$op}=$op_;
 		    		    			
 		    		//contenu de la recherche
-		    		$field="field_0_".$search[0];
-		    		$field_=array();
-		    		$field_[0]=$code;
+		    		$field = "field_0_".$search[0];
+		    		$field_array_ = array();
+		    		$field_array_[0] = $code;
 		    		global ${$field};
-		    		${$field}=$field_;
+		    		${$field} = $field_array_;
 		    	    	
-		    		//opÃ©rateur inter-champ
+		    		//opérateur inter-champ
 		    		$inter="inter_0_".$search[0];
 		    		global ${$inter};
 		    		${$inter}="";
@@ -199,6 +199,10 @@ if ($_SESSION["ext_type"]=="simple") {
 			case "3":
 				searcher_publisher::convert_simple_multi_unimarc($_SESSION["CURRENT"]);
 				break;
+			case "7":
+			    // recherche externe
+			    $serialized_search = $_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["serialized_search"];
+				break;
  		}
  	} else {
 		if ($external_env) {
@@ -211,32 +215,39 @@ if ($_SESSION["ext_type"]=="simple") {
  	}
 } else {
 	if ($from_mode==6) {
-		//RÃ©cupÃ©ration de l'environnement
+		//Récupération de l'environnement
 		$search=$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"]["search"];
    		//Pour chaque champ
+		if(empty($search)) {
+			$search = array();
+		}
    		for ($i=0; $i<count($search); $i++) {
-	   	 	//RÃ©cupÃ©ration de l'opÃ©rateur
+	   	 	//Récupération de l'opérateur
 	   	 	$op="op_".$i."_".$search[$i];
 	   	 	global ${$op};
 	   	 	${$op}=$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"][$op];
 	   	 			    			
-	    	//RÃ©cupÃ©ration du contenu de la recherche
+	    	//Récupération du contenu de la recherche
 	    	$field_="field_".$i."_".$search[$i];
 	    	global ${$field_};
 	    	${$field_}=$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"][$field_];
 	    	$field=${$field_};
 	    	
-	    	//RÃ©cupÃ©ration de l'opÃ©rateur inter-champ
+	    	//Récupération de l'opérateur inter-champ
 	    	$inter="inter_".$i."_".$search[$i];
 	    	global ${$inter};
 	    	${$inter}=$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"][$inter];
 	    	    		
-	    	//RÃ©cupÃ©ration des variables auxiliaires
+	    	//Récupération des variables auxiliaires
 	    	$fieldvar_="fieldvar_".$i."_".$search[$i];
 	    	global ${$fieldvar_};
 	    	${$fieldvar_}=$_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["POST"][$fieldvar_];
 	    	$fieldvar=${$fieldvar_};
 	    }
+	}
+	if ($from_mode==7) {
+	    // recherche externe
+	    $serialized_search = $_SESSION["session_history"][$_SESSION["CURRENT"]]["QUERY"]["serialized_search"];
 	}
 }
 

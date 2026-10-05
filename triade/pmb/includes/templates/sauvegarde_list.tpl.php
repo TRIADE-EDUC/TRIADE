@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauvegarde_list.tpl.php,v 1.12 2019-05-27 14:55:51 btafforeau Exp $
+// $Id: sauvegarde_list.tpl.php,v 1.12.14.1 2024/09/18 12:48:48 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -23,7 +23,7 @@ $form='<h1>'.$msg["sauv_list_titre"].'</h1>
 <input type="submit" value="'.$msg["sauv_list_filtrer"].'" class="bouton" onClick="this.form.act.value=\'\';" />
 </td></tr></table>
 !!sauvegarde_list!!
-<div clas="row">
+<div class="row">
 <input type="submit" value="'.$msg["sauv_list_del_sets"].'" class="bouton" onClick="if (confirm(\''.$msg["sauv_list_confirm_delete"].'\')) {this.form.act.value=\'delete\';} else return false;" />
 </div>
 </form>';

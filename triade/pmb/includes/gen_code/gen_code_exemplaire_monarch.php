@@ -1,14 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: gen_code_exemplaire_monarch.php,v 1.2 2015-04-03 11:16:26 jpermanne Exp $
+// $Id: gen_code_exemplaire_monarch.php,v 1.4 2022/03/10 14:06:00 dgoron Exp $
 
-function init_gen_code_exemplaire($notice_id,$bull_id)
-{
-	global $dbh;
-	$requete="select max(expl_cb)as cb from exemplaires WHERE expl_cb like 'GEN%'";
-	$query = pmb_mysql_query($requete, $dbh);
+function init_gen_code_exemplaire($notice_id,$bull_id){
+	$requete="select max(expl_cb)as cb from exemplaires WHERE expl_pnb_flag=0 and expl_cb like 'GEN%'";
+	$query = pmb_mysql_query($requete);
 	if(pmb_mysql_num_rows($query)) {	
     	if(($cb = pmb_mysql_fetch_object($query)))
 			$code_exemplaire= $cb->cb;
@@ -17,15 +15,14 @@ function init_gen_code_exemplaire($notice_id,$bull_id)
 	return $code_exemplaire;  	   						
 }
 
-function gen_code_exemplaire($notice_id,$bull_id,$code_exemplaire)
-{
+function gen_code_exemplaire($notice_id,$bull_id,$code_exemplaire){
 	$code_exemplaire++;
 	return $code_exemplaire;
 }
 
 /*
- * Fonction de calcul de la clÃ© MONARCH
- * Non utilisÃ© pour l'instant
+ * Fonction de calcul de la clé MONARCH
+ * Non utilisé pour l'instant
  */
 function monarch_key($barreCode){
 	if(strlen($barreCode) == 13){

@@ -4,23 +4,31 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: domain.xml,v 1.5 2017-09-06 15:33:47 tsamson Exp $ -->
+$Id: domain.xml,v 1.6 2020/07/03 16:09:07 dbellamy Exp $ -->
 
 <domain>
 	<!--  empr -->
-	<user lib="msg:379" properties="1,2" >
+	<user lib="msg:379" properties="1,2,5" >
 		<ref type="table" name="empr" key="id_empr" />
+		
+		<!--  champ emprunteur categorie de lecteur  -->
 		<property_link with="1">
-			<r_query type="field" value="empr_categ" />					<!--  champ emprunteur categorie de lecteur  -->
+			<r_query type="field" value="empr_categ" />
 		</property_link>
+		
+		<!--  champ emprunteur localisation  -->
 		<property_link with="2">
-			<r_query type="field" value="empr_location" />				<!--  champ emprunteur localisation  -->
+			<r_query type="field" value="empr_location" />
 		</property_link>
-		<property_link with="5">
-			<r_query type="session" value="opac_view" />				<!--  variable session vue OPAC  -->
+		
+		<!--  variable session vue OPAC  -->
+		<property_link with="5" enable="check_param|opac,view_activate,1">
+			<r_query type="session" value="opac_view" />
 		</property_link>
+		
+		<!--  champ emprunteur code statistique de lecteur  -->
 		<property_link with="6">
-			<r_query type="field" value="empr_codestat" />				<!--  champ emprunteur code statistique de lecteur  -->
+			<r_query type="field" value="empr_codestat" />
 		</property_link>
 	</user>
 

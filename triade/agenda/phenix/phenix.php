@@ -2,42 +2,49 @@
 <?php
   /**************************************************************************\
   * Phenix Agenda                                                            *
-  * http://phenix.gapi.fr                                                    *
-  * Written by    Stephane TEIL            <phenix-agenda@laposte.net>       *
-  * Contributors  Christian AUDEON (Omega) <christian.audeon@gmail.com>      *
-  *               Maxime CORMAU (MaxWho17) <maxwho17@free.fr>                *
-  *               Mathieu RUE (Frognico)   <matt_rue@yahoo.fr>               *
-  *               Bernard CHAIX (Berni69)  <ber123456@free.fr>               *
   * --------------------------------------------                             *
   *  This program is free software; you can redistribute it and/or modify it *
   *  under the terms of the GNU General Public License as published by the   *
   *  Free Software Foundation; either version 2 of the License, or (at your  *
   *  option) any later version.                                              *
   \**************************************************************************/
+  error_reporting(0);
+
   require("inc/nocache.inc.php");
   require("inc/html.inc.php");
   include("inc/param.inc.php");
   include("inc/fonctions.inc.php");
+
+  $ztLogin = $ztLogin ?? '';
+  $ztPasswdMD5 = $ztPasswdMD5 ?? '';
+  $autoLogin = $autoLogin ?? 0;
+  $lienAdmin = $lienAdmin ?? "";
+  $nomsUtils = [];
+  $urlsUtils = [];
+  $idUtil = [];
+
+
   if (!isset($sid)) {
     // Identification depuis le cookie
     if ($COOKIE_AUTH && empty($ztLogin)) {
       if (!empty($_COOKIE) && isset($_COOKIE[$COOKIE_NOM]))
         $tabLog = explode(":",$_COOKIE[$COOKIE_NOM]);
-      elseif (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS[$COOKIE_NOM]))
-        $tabLog = explode(":",$HTTP_COOKIE_VARS[$COOKIE_NOM]);
+      elseif (isset($_COOKIE[$COOKIE_NOM]))
+        $tabLog = explode(":",$_COOKIE[$COOKIE_NOM]);
       $ztLogin   = (get_magic_quotes_gpc()) ? stripslashes($tabLog[0]) : $tabLog[0];
       $ztPasswdMD5  = (get_magic_quotes_gpc()) ? stripslashes($tabLog[1]) : $tabLog[1];
       $hdScreen  = (get_magic_quotes_gpc()) ? stripslashes($tabLog[3]) : $tabLog[3];
       $autoLogin = $tabLog[2];
     }
     // Recherche de l'utilisateur correspondant
-    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_login = '".$ztLogin."' AND util_passwd = '".$ztPasswdMD5."'");
-
+    $ztLogin=addslashes($ztLogin);
+    $ztPasswdMD5=addslashes($ztPasswdMD5);
+    $DB_CX->DbQuery("SELECT util_id, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_login = '".$ztLogin."' AND util_passwd = '".$ztPasswdMD5."'");
     if ($DB_CX->DbNumRows()) {
       // L'utilisateur existe
       $idUser = $DB_CX->DbResult(0,0);
       // On genere un nouveau sid
-      mt_srand((double)microtime()*1000000);
+      // mt_srand((double)microtime()*1000000);
       $hdScreen += 0;
       $sid = SessionId(8, $idUser, $DB_CX->DbResult(0,1), $hdScreen, false);
       $autoLogin += 0;
@@ -47,10 +54,9 @@
         $lienAdmin = "&tcMenu="._MENU_ADMIN;
       else
         $lienAdmin = "";
-    }
-    else {
+    }else {
       // L'utilisateur n'existe pas
-      @session_destroy();
+ //      @session_destroy();
       // Fermeture BDD
       $DB_CX->DbDeconnect();
       Header("location: index.php?msg=1");
@@ -64,7 +70,7 @@
   include("lang/$APPLI_LANGUE.php");
 
   // Recherche du nom de l'utilisateur
-  $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_url_export FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT DISTINCT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_url_export FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$idUser." OR (util_partage_planning='1') OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.") ORDER BY nomUtil");
 
   $urlsUtils = array();
   while ($enr = $DB_CX->DbNextRow()) {

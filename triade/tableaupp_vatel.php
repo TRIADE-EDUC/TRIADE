@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,6 +18,8 @@ session_start();
  *   (at your option) any later version.
  *
  ***************************************************************************/
+
+
 include_once("./librairie_php/lib_licence.php");
 include_once("./common/config.inc.php");
 include_once("./librairie_php/lib_get_init.php");
@@ -25,7 +27,6 @@ $id=php_ini_get("safe_mode");
 if ($id != 1) {
 	set_time_limit(900);
 }
-
 ?>
 <HTML>
 <HEAD>
@@ -40,28 +41,26 @@ if ($id != 1) {
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
+<body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Impression du tableau de bulletin </font></b></td>
+<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTT2 ?></font></b></td>
 </tr>
 <tr id='cadreCentral0'>
 <td >
 <!-- // fin  --><br> <br>
 <?php
-
 include_once('librairie_php/db_triade.php');
 include_once('librairie_php/fonctions_vatel.php');
 validerequete("3");
-$cnx=cnx();
 $anneeScolaire=$_POST["annee_scolaire"];
 $valeur=visu_affectation_detail($_POST["saisie_classe"],$anneeScolaire);
-
+$typeExamen=$_POST['NoteExam'];
 
 
 if (MODNAMUR0 == "oui") {
@@ -75,7 +74,7 @@ if (MODNAMUR0 == "oui") {
 	$nbaffichematiere=20;
 }
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre="1er TRIMESTRE"; $Trimestre = "1er  TRIMESTRE"; }
@@ -91,6 +90,11 @@ if ($_POST["typetrisem"] == "semestre") {
 if ($_POST["typetrisem"] == "annuel") {
 	$textTrimestre="ANNUEL";$Trimestre = "ANNUEL";$ue_semestre = "3";   // modif ambis
 }
+/*
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+ */
 
 // recupe du nom de la classe
 $titre=$_POST["saisie_titre"];
@@ -109,10 +113,9 @@ $classe_nom=$data[0][1];
 <?php
 include_once('librairie_php/recupnoteperiode.php');
 
-// recuperation des coordonnées
-// de l etablissement
+// recuperation des coordonnées de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=strtolower(trim($data[$i][1]));
        $postal=trim($data[$i][2]);
@@ -130,21 +133,21 @@ for($i=0;$i<count($data);$i++) {
 
 if (($ue_semestre==3) && ($_POST["saisie_trimestre"]=='')) {// Modif ambis 28/04/10 Tableau demandé pour un an
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 	}
 	$dateDebut=dateForm($dateDebut);
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateFin=$dateRecup[$j][1];
 	}
 	$dateFin=dateForm($dateFin);
 
-} else { // Modif ambis 28/04/10 Tableau demandé pour un trimestre
+}else{ // Modif ambis 28/04/10 Tableau demandé pour un trimestre
 	if ($_POST["saisie_trimestre"] == "Semestre 2") $_POST["saisie_trimestre"]="trimestre2";
 	if ($_POST["saisie_trimestre"] == "Semestre 1") $_POST["saisie_trimestre"]="trimestre1";
 	$dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"],$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 		$dateDebut=$dateRecup[$j][0];
 		$dateFin=$dateRecup[$j][1];
 	}
@@ -154,7 +157,6 @@ if (($ue_semestre==3) && ($_POST["saisie_trimestre"]=='')) {// Modif ambis 28/04
 $idClasse=$_POST["saisie_classe"];
 $ordre=ordre_matiere($_POST["saisie_classe"],$anneeScolaire); // recup ordre matiere
 $ue=gestion_ue($idClasse,$ue_semestre,false,$anneeScolaire); 
-
 
 // creation PDF
 //
@@ -174,7 +176,7 @@ $nb_mat_gen=0;
 $nbeleve=0;
 
 // pour le calcul de moyenne classe
-$moyenClasseGenPartiel=calculMoyenClasseVatel($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,'partiel');
+$moyenClasseGenPartiel=calculMoyenClasseVatel($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,$typeExamen);
 $moyenClasseGenPeriode=calculMoyenClasseVatel($idClasse,$eleveT,$dateDebut,$dateFin,$ordre,'periode');
 if ($moyenClasseGen < 0 ) { $moyenClasseGen=""; }
 
@@ -190,11 +192,11 @@ if ($moyenClasseGen < 0 ) { $moyenClasseGen=""; }
 $periode = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>''),2=> array ('min'=>'','max'=>''),3=> array ('min'=>'','max'=>''),4=> array ('min'=>'','max'=>''),5=> array ('min'=>'','max'=>''),6=> array ('min'=>'','max'=>''),7=> array ('min'=>'','max'=>''),8=> array ('min'=>'','max'=>''),9=> array ('min'=>'','max'=>''),10=> array ('min'=>'','max'=>''),11=> array ('min'=>'','max'=>''),12=> array ('min'=>'','max'=>''),13=> array ('min'=>'','max'=>''),14=> array ('min'=>'','max'=>''),15=> array ('min'=>'','max'=>''));
 $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>''),2=> array ('min'=>'','max'=>''),3=> array ('min'=>'','max'=>''),4=> array ('min'=>'','max'=>''),5=> array ('min'=>'','max'=>''),6=> array ('min'=>'','max'=>''),7=> array ('min'=>'','max'=>''),8=> array ('min'=>'','max'=>''),9=> array ('min'=>'','max'=>''),10=> array ('min'=>'','max'=>''),11=> array ('min'=>'','max'=>''),12=> array ('min'=>'','max'=>''),13=> array ('min'=>'','max'=>''),14=> array ('min'=>'','max'=>''),15=> array ('min'=>'','max'=>''));
 		
-			$moyenne_par=array();
-			$moyenne_per=array();
+		$moyenne_par=array();
+		$moyenne_per=array();
 			
-			$moyenne_matiere_part=array();
-			$moyenne_matiere_per=array();
+		$moyenne_matiere_part=array();
+		$moyenne_matiere_per=array();
 		
 		$partiel_gen_min=1000;
 		$partiel_gen_max='';
@@ -202,7 +204,7 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 		$periode_gen_max='';
 		
 		
-		for($g=0;$g<count($eleveT);$g++) { // pour chaque eleve
+		for($g=0;$g<countTriade($eleveT);$g++) { // pour chaque eleve
 			// variable eleve
 		
 			$ecrit='';
@@ -216,7 +218,7 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 			$nb_mat_per=0;
 			$idEleve=$eleveT[$g][4];	
 		
-			for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
+			for ($nb_ue=0;$nb_ue<countTriade($ue);$nb_ue++) { // boucle pour chaque UE
 				$idMatiere=$ue[$nb_ue][4];
 				$ordre_recup=recup_ordre($idMatiere,$idClasse);
 				$idprof=recherche_prof($idMatiere,$idClasse,$ordre_recup);
@@ -267,9 +269,9 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 					if ($moyenne_ue!=''){$moyenne_ue=$moyenne_ue/$somme_coef;}
 				}
 			
-				$notepartiel = recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse);
+				$notepartiel = recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse,$typeExamen);
 				
-				if ($notepartiel[0][0] >=0) {
+				if (($notepartiel[0][0] >=0) && ($notepartiel[0][0] != "")) {
 					$nb_mat+=1;
 					$moyenne_ue+=$notepartiel[0][6]*$notepartiel[0][0];
 					$somme_coef+=$notepartiel[0][6];
@@ -281,8 +283,8 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 				$moyenne_periode='';
 				$nb_note_periode=0;
 				$somme_coef_periode=0;
-				for ($nb_note=0;$nb_note<count($noteperiode);$nb_note++) { 
-					if ($noteperiode[$nb_note][0]>=0 && count($noteperiode)>0) {
+				for ($nb_note=0;$nb_note<countTriade($noteperiode);$nb_note++) { 
+					if ($noteperiode[$nb_note][0]>=0 && countTriade($noteperiode)>0) {
 						$moyenne_periode+=$noteperiode[$nb_note][0]*$noteperiode[$nb_note][6];
 						$nb_note_periode+=1;
 						$somme_coef_periode+=$noteperiode[$nb_note][6];
@@ -296,7 +298,7 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 					$moyenne_matiere_per[$idMatiere][]=$moyenne_periode;
 				}
 				if ($nb_note_periode>0) {$nb_note_periode_ue++;$nb_mat_per++;}
-				if ($nb_ue==count($ue)-1) {$id_ue = $ue[$nb_ue][0];}
+				if ($nb_ue==countTriade($ue)-1) {$id_ue = $ue[$nb_ue][0];}
 			} // fin boucle UE
 		
 			// moyenne UE de partiel
@@ -320,16 +322,19 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 				if ($moyenne_periode_ue < $periode[$id_ue]['min']) { $periode[$id_ue]['min']=$moyenne_periode_ue; }
 				if ($moyenne_periode_ue > $periode[$id_ue]['max']) { $periode[$id_ue]['max']=$moyenne_periode_ue; }
 			}		
-			$moyenne_periode_gen=$moyenne_periode_gen / ($nb_mat_gen);
-		
-			$moyenne_per[]= $moyenne_periode_gen;
+			if ($nb_mat_gen != 0) {
+				$moyenne_periode_gen=$moyenne_periode_gen / ($nb_mat_gen);
+				$moyenne_per[]= $moyenne_periode_gen;
+			}
 				
 			$moyenne_ue='';
 			$moyenne_periode_ue='';
 			$nb_mat=1;
 		
-			$moyenne_gen_partiel= ($moyenne_gen_partiel / $somme_coef_gen_partiel);
-			$moyenne_par[]=$moyenne_gen_partiel;
+			if ($somme_coef_gen_partiel != 0) {	
+				$moyenne_gen_partiel=$moyenne_gen_partiel / $somme_coef_gen_partiel;
+				$moyenne_par[]=$moyenne_gen_partiel;
+			}
 			
 			$moyenne_gen_partiel='';
 			$somme_coef_gen_partiel=0;
@@ -337,7 +342,7 @@ $partiel = array(0=> array ('min'=>'','max'=>''),1=> array ('min'=>'','max'=>'')
 		// fin notes
 		}
 		rsort($moyenne_par);
-		array_multisort($moyenne_matiere_per[4], SORT_ASC );
+		if (is_array($moyenne_matiere_per[4])) 	array_multisort($moyenne_matiere_per[4], SORT_ASC );
 		
 		
 		//////////////// ICI ///////////////////////// resterecup nombre de note pour calcul moyenne avec array search du end
@@ -364,15 +369,15 @@ $calc_moy_per_tot=0;
 $calc_nb_mat_per_tot=0;
 
 $deb=18;
+if ($_POST['margeGauche'] > 0) { $deb+=$_POST['margeGauche']; $deb+=0; } 
 $hauteurMatiere=6;
 $largeurBloc=12;
 $lMat_mid = 6 ;   //   Attention  $lMat_mid + $lMat_mid2 = $deb
 $lMat_mid2 = 6 ;
 $lMat=$lMat_mid+$lMat_mid2;
 
+	$pdf->AddPage('L');
 
-
-	$pdf->AddPage(L);
 	// mise en place du logo
 	$logo="./image/banniere/banniere2-vatel.jpg";					 // AMBIS mettre logo vatel
 	if (file_exists($logo)) {
@@ -382,86 +387,94 @@ $lMat=$lMat_mid+$lMat_mid2;
 		$ycoor0=3;
 		$pdf->Image($logo,0,0);
 	}
+	if (trim($_POST['margeHaut']) != "") { $margeH=$_POST['margeHaut']; } 
 	// fin du logo
-			$pdf->SetXY(0,15);
-			$pdf->SetFont('Arial','',4);
-			$pdf->MultiCell(18,4,strftime ('%d/%m/%y, %H:%M'),0,'C',0);
+		$pdf->SetXY(0,15+$margeH);
+		$pdf->SetFont('Arial','',4);
+		$pdf->MultiCell(18,4,strftime ('%d/%m/%y, %H:%M'),0,'C',0);
 	
-	$pdf->SetTitle("E DES NOTES");
-	$pdf->SetCreator("VATEL");
+	$pdf->SetTitle("RELEVE DES NOTES");
+	$pdf->SetCreator("TRIADE");
 	$pdf->SetSubject("Période $textTrimestre ");                // AJOUTER DETE DE DEBUT et FIN DE PERIODES
 	$pdf->SetAuthor("VATEL - www.vatel.fr"); 
 	// declaration variable
 	$coordonne0=$adresse;
-	$coordonne0.=" - ".$postal." - ".ucwords($ville)." - France";
+	$coordonne0.=" - ".$postal." - ".ucwords($ville)." ";
 	$coordonne1="Tel : ".$tel."<BR>";
 	$coordonne2="$urlsite";
 
 	$Xmat=$deb;
 	$Ymat=8;
+	$margeH=0;
+	if (trim($_POST['margeHaut']) != "") { $Ymat=$_POST['margeHaut']; $margeH=$Ymat; } 
 	$h_ligne=4;
 	$Xmat_ue=$deb;
 	$Xmat_t=$deb;
 	$ecrit_ue = 1;
 	$pdf->SetFont('Arial','B',8);
-	$pdf->SetXY($Xmat+50,$Ymat);
-	$pdf->MultiCell(180,$h_ligne,strtoupper($classe_nom).' - RELEVE DES NOTES - '.$Trimestre.' Année scolaire '.$anneeScolaire ,1,'C',0);
-	$pdf->SetFont('Arial','',4);$pdf->SetFillColor(198,209,229);
-	$pdf->SetXY($Xmat+230,$Ymat);
+	$pdf->SetXY($Xmat+20,$Ymat);
+	$pdf->MultiCell(180,$h_ligne,ucfirst($classe_nom).' - RELEVE DES NOTES - '.$Trimestre.' Année scolaire '.$anneeScolaire ,1,'C',0);
+	$pdf->SetFont('Arial','',4);
+	$pdf->SetFillColor(198,209,229);
+	$pdf->SetXY($Xmat+200,$Ymat);
 	$pdf->MultiCell(10,$h_ligne,'Notes de ...',0,'C',0);
-	$pdf->SetFont('Arial','',4);$pdf->SetFillColor(198,209,229);
-	$pdf->SetXY($Xmat+241,$Ymat);
+	$pdf->SetFont('Arial','',4);
+	$pdf->SetFillColor(198,209,229);
+	$pdf->SetXY($Xmat+211,$Ymat);
 	$pdf->MultiCell(10,$h_ligne,'Partiels',1,'C',1);
 	$pdf->SetFont('Arial','',4);
-	$pdf->SetXY($Xmat+252,$Ymat);
+	$pdf->SetXY($Xmat+222,$Ymat);
 	$pdf->MultiCell(10,$h_ligne,'C. Continu',1,'C',0);
 
 	$pdf->SetXY(0,$Ymat+=8);
 //	$pdf->MultiCell(280,$h_ligne,'',1,'C',0);
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY(0,28);
+		$pdf->SetXY(0,28+$margeH);
 		$pdf->MultiCell($deb,4,'Moyenne Min.','R','R',0);
 		
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY(0,32);
+		$pdf->SetXY(0,32+$margeH);
 		$pdf->MultiCell($deb,4,'Moyenne ','R','R',0);
 
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY(0,36);
+		$pdf->SetXY(0,36+$margeH);
 		$pdf->MultiCell($deb,4,'Moyenne Max.','R','R',0);
 
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY(0,44);
+		$pdf->SetXY(0,44+$margeH);
 		$pdf->MultiCell($deb,4,'Coeff. Partiel | Continu',0,'R',0);
 		
-
 		
 // boucle pour affiche premieres ligne avec UE , matiere et coeffs		
-for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
+for ($nb_ue=0;$nb_ue<countTriade($ue);$nb_ue++) {
 	// affiche  UE
 		if ($ecrit_ue==1) {
 			$pdf->SetFont('Arial','',4);
-			$pdf->SetXY($Xmat_t,13);
-			$pdf->line($Xmat_ue,16,$Xmat_ue,28);
-			$pdf->SetXY($Xmat_ue,15);
-			$pdf->WriteHTML(''.trunchaine(strtoupper(sansaccent(strtolower($ue[$nb_ue][2]))),30).'');
+			$pdf->SetXY($Xmat_t,13+$margeH);
+			$pdf->line($Xmat_ue,16+$margeH,$Xmat_ue,28+$margeH);
+			$pdf->SetXY($Xmat_ue,15+$margeH);
+			$pdf->WriteHTML(''.trunchaine($ue[$nb_ue][2],30).'');
 			$ecrit_ue=$ue[$nb_ue][2];
 			$id_ue=$ue[$nb_ue][0];	
 		} elseif ($ecrit_ue!=$ue[$nb_ue][2]) {
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,16);
+			$pdf->SetXY($Xmat,16+$margeH);
 			$pdf->MultiCell($lMat,4,'','T','C',0);
-			$pdf->SetFont('Arial','B',4);$pdf->SetLineWidth(0.3);
-			$pdf->SetXY($Xmat,20);
+			$pdf->SetFont('Arial','B',4);
+			$pdf->SetLineWidth(0.3);
+			$pdf->SetXY($Xmat,20+$margeH);
 			$pdf->MultiCell($lMat_mid*2,8,'MOYENNES','LRB','C',0);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,28); $pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,28+$margeH); 
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($partiel[$id_ue]['min']),1,'C',1); // affiche moyenne Partiel UE Min
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,32); $pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,32+$margeH); 
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_part/$calc_nb_mat_part),1,'C',1);	 // affiche moyenne Partiel UE 	 	
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,36); $pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,36+$margeH); 
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($partiel[$id_ue]['max']),1,'C',1); // affiche moyenne Partiel UE Max
 
 			$calc_moy_part_tot+=$calc_moy_part; // somme des moyennes partiel pour moyenne generale
@@ -471,13 +484,13 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 			$calc_nb_mat_part=0;
 						
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat+=$lMat_mid,28);
+			$pdf->SetXY($Xmat+=$lMat_mid,28+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($periode[$id_ue]['min']),1,'C',0);  // affiche moyenne Periode UE Min
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,32);
+			$pdf->SetXY($Xmat,32+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_per/$calc_nb_mat_per),1,'C',0);  // affiche moyenne Periode UE 
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,36);
+			$pdf->SetXY($Xmat,36+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($periode[$id_ue]['max']),1,'C',0);	// affiche moyenne Periode UE Max	
 			$pdf->SetLineWidth(0.2);
 
@@ -488,10 +501,10 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 			
 			$Xmat_ue+=$lMat_mid*2;
 			$pdf->SetFont('Arial','',4);
-			$pdf->SetXY($Xmat_t,13);
-			$pdf->line($Xmat_ue,16,$Xmat_ue,20);
-			$pdf->SetXY($Xmat_ue,15);
-			$pdf->WriteHTML(''.trunchaine(strtoupper(sansaccent(strtolower($ue[$nb_ue][2]))),30).'');
+			$pdf->SetXY($Xmat_t,13+$margeH);
+			$pdf->line($Xmat_ue,16+$margeH,$Xmat_ue,20+$margeH);
+			$pdf->SetXY($Xmat_ue,15+$margeH);
+			$pdf->WriteHTML(''.trunchaine($ue[$nb_ue][2],30).'');
 			$ecrit_ue=$ue[$nb_ue][2];
 			$Xmat=$Xmat_ue;
 			$id_ue=$ue[$nb_ue][0];
@@ -503,16 +516,21 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 		$Nom_matiere = str_replace("informatique","Info.",$Nom_matiere);				
 		$Nom_matiere = str_replace("economie","Eco.",$Nom_matiere);
 		$Nom_matiere = str_replace("professionnelle","Prof.",$Nom_matiere);
-		if (strlen($Nom_matiere>15)) {$ht=4;} else {$ht=4;}; // modif cyril 9/02/09 else {$ht=8;} pour reduire la hauteur des mateieres
+		if (strlen($Nom_matiere>15)) {$ht=4;} else {$ht=4;}; // modif cyril 9/02/09 else {$ht=8;} pour reduire la hauteur des matieres
 	
 		$pdf->SetFont('Arial','',4);
-		$pdf->SetXY($Xmat,20);
-		$pdf->MultiCell($lMat,$ht,trunchaine(strtoupper(sansaccent(strtolower($Nom_matiere))),16),1,'C',0);
+		$pdf->SetXY($Xmat,20+$margeH);
+		if ($_POST['affmatiere'] == "non") {
+			$code_matiere=recupCodeMatiere($ue[$nb_ue][4]);
+			$pdf->MultiCell($lMat,$ht*2,trunchaine($code_matiere,16),1,'C',0);
+		}else{
+			$pdf->MultiCell($lMat,$ht,trunchaine($Nom_matiere,16),1,'C',0);
+		}
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat,28);
+		$pdf->SetXY($Xmat,28+$margeH);
 		$pdf->MultiCell($lMat,4,'',0,'C',0);
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat,16);
+		$pdf->SetXY($Xmat,16+$margeH);
 		$pdf->MultiCell($lMat,4,'','TB','C',0);
 	// affiche moyenne min , moyenne, moyenne max par matiere selon id recupéré de $ue[$nb_ue][4] pour partiel et C continu
 		$moy_mat="";
@@ -521,17 +539,20 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 		if ($moy_mat['moy'] == 0) $moy_mat['moy']="";
 	// moyenne min
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat,28); $pdf->SetFillColor(198,209,229);
+		$pdf->SetXY($Xmat,28+$margeH); 
+		$pdf->SetFillColor(198,209,229);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['min']),1,'C',1);
 	// moyenne 
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat,32); $pdf->SetFillColor(198,209,229);
+		$pdf->SetXY($Xmat,32+$margeH); 
+		$pdf->SetFillColor(198,209,229);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['moy']),1,'C',1);
 		$calc_moy_part+=$moy_mat['moy'];
 		$calc_nb_mat_part++;
 	// moyenne min
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat,36); $pdf->SetFillColor(198,209,229);
+		$pdf->SetXY($Xmat,36+$margeH); 
+		$pdf->SetFillColor(198,209,229);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['max']),1,'C',1);
 
 	// PERIODE	
@@ -539,50 +560,59 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 		if ($moy_mat['moy'] == 0) $moy_mat['moy']="";
 	// moyenne min
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat+$lMat_mid,28);
+		$pdf->SetXY($Xmat+$lMat_mid,28+$margeH);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['min']),1,'C',0);
 	// moyenne 
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat+$lMat_mid,32);
+		$pdf->SetXY($Xmat+$lMat_mid,32+$margeH);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['moy']),1,'C',0);
 		$calc_moy_per+=$moy_mat['moy'];
 		$calc_nb_mat_per++;
 	// moyenne min
 		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY($Xmat+$lMat_mid,36);
+		$pdf->SetXY($Xmat+$lMat_mid,36+$margeH);
 		$pdf->MultiCell($lMat_mid,4,format_moyenne($moy_mat['max']),1,'C',0);	
 		
 	// recup et affiche coef partiel / matiere 
 		$coeff_recup = recup_coef($ue[$nb_ue][4],$idClasse);
-		$pdf->SetXY($Xmat,44);
+		$pdf->SetXY($Xmat,44+$margeH);
 		$pdf->SetFillColor(198,209,229);  // couleur du cadre de l'eleve
 		$pdf->MultiCell($lMat_mid,4,$coeff_recup,1,'C',1);
 		$Xmat+=$lMat_mid;
 	// reaffiche coef continu / matiere
-		$pdf->SetXY($Xmat,44);
+		$pdf->SetXY($Xmat,44+$margeH);
 		$pdf->MultiCell($lMat_mid2,4,"1",1,'C',0);		
 		$Xmat+=$lMat_mid2;	
 		$Xmat_t+=$lMat;
 		$Xmat_ue = $Xmat;
 		
-		if ($nb_ue==count($ue)-1) {$id_ue = $ue[$nb_ue][0];}
+		if ($nb_ue==countTriade($ue)-1) {$id_ue = $ue[$nb_ue][0];}
 }
 /// on traite la derniere UE
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,16);
+			$pdf->SetXY($Xmat,16+$margeH);
 			$pdf->MultiCell($lMat,4,'','T','C',0);
-			$pdf->SetFont('Arial','B',4);$pdf->SetLineWidth(0.3);
-			$pdf->SetXY($Xmat,20);
-			$pdf->MultiCell($lMat_mid*2,8,'MOYENNES','LRB','C',0);$pdf->SetLineWidth(0.2);
+			$pdf->SetFont('Arial','B',4);
+			$pdf->SetLineWidth(0.3);
+			$pdf->SetXY($Xmat,20+$margeH);
+			$pdf->MultiCell($lMat_mid*2,8,'MOYENNES','LRB','C',0);
+			$pdf->SetLineWidth(0.2);
 		// affiche moy. min max derniere UE partiel / continu			
-			$pdf->SetFont('Arial','B',4);		$pdf->SetFillColor(198,209,229);
-			$pdf->SetXY($Xmat,28);
+			$pdf->SetFont('Arial','B',4);		
+			$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,28+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($partiel[$id_ue]['min']),1,'C',1);
-			$pdf->SetFont('Arial','B',4);		$pdf->SetFillColor(198,209,229);
-			$pdf->SetXY($Xmat,32);
-			$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_part/$calc_nb_mat_part),1,'C',1);
-			$pdf->SetFont('Arial','B',4);		$pdf->SetFillColor(198,209,229);
-			$pdf->SetXY($Xmat,36);
+			$pdf->SetFont('Arial','B',4);		
+			$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,32+$margeH);
+			if ($calc_nb_mat_part != 0) {
+				$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_part/$calc_nb_mat_part),1,'C',1);
+			}else{
+				$pdf->MultiCell($lMat_mid,4,'',1,'C',1);
+			}
+			$pdf->SetFont('Arial','B',4);		
+			$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,36+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($partiel[$id_ue]['max']),1,'C',1);
 
 			$calc_moy_part_tot+=$calc_moy_part; // somme des moyennes partiel pour moyenne generale
@@ -591,13 +621,17 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 			$calc_nb_mat_part=0;
 	
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat+=$lMat_mid,28);
+			$pdf->SetXY($Xmat+=$lMat_mid,28+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($periode[$id_ue]['min']),1,'C',0);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,32);
-			$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_per/$calc_nb_mat_per),1,'C',0);
+			$pdf->SetXY($Xmat,32+$margeH);
+			if ($calc_nb_mat_per != 0) {
+				$pdf->MultiCell($lMat_mid,4,format_moyenne($calc_moy_per/$calc_nb_mat_per),1,'C',0);
+			}else{
+				$pdf->MultiCell($lMat_mid,4,'0',1,'C',0);
+			}
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,36);
+			$pdf->SetXY($Xmat,36+$margeH);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($periode[$id_ue]['max']),1,'C',0);		
 
 			$calc_moy_per_tot+=$calc_moy_per; // somme des moyennes periode pour moyenne generale
@@ -608,52 +642,63 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) {
 			
 			$Xmat_ue+=$lMat_mid*2;
 			$pdf->SetFont('Arial','',4);
-			$pdf->SetXY($Xmat_t,13);
-			$pdf->line($Xmat_ue,16,$Xmat_ue,20);
+			$pdf->SetXY($Xmat_t,13+$margeH);
+			$pdf->line($Xmat_ue,16+$margeH,$Xmat_ue,20+$margeH);
 			$ecrit_ue=$ue[$nb_ue][2];
 			$Xmat=$Xmat_ue;
 			
-		$pdf->SetLineWidth(0.3);
+			$pdf->SetLineWidth(0.3);
 			
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,16);
+			$pdf->SetXY($Xmat,16+$margeH);
 			$pdf->MultiCell($lMat_mid2*2+$lMat_mid-2,4,'MOY. GENERALES',1,'C',0);
 			$pdf->SetFont('Arial','B',4);
 			
-			$pdf->SetXY($Xmat,20);		$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,20+$margeH);		
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid+$lMat_mid2-2,4,'Partiels',1,'C',1);
-			$pdf->SetXY($Xmat+$lMat_mid+$lMat_mid2-2,20);
+			$pdf->SetXY($Xmat+$lMat_mid+$lMat_mid2-2,20+$margeH);
 			$pdf->MultiCell($lMat_mid2,4,'Cont.',1,'C',0);
 
 		// affiche moy. min max general partiel / continu
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,24);		$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,24+$margeH);		
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid2,4,'Moy.',1,'C',1);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,28);
+			$pdf->SetXY($Xmat,28+$margeH);
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne(end($moyenne_par)),1,'C',1);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,32);
-			$pdf->MultiCell($lMat_mid2,4,format_moyenne($calc_moy_part_tot/$calc_nb_mat_part_tot),1,'C',1);			
+			$pdf->SetXY($Xmat,32+$margeH);
+			if ($calc_nb_mat_part_tot != 0) {
+				$pdf->MultiCell($lMat_mid2,4,format_moyenne($calc_moy_part_tot/$calc_nb_mat_part_tot),1,'C',1);					       }else{
+				$pdf->MultiCell($lMat_mid2,4,'',1,'C',1);
+			}
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,36);		$pdf->SetFillColor(198,209,229);
+			$pdf->SetXY($Xmat,36+$margeH);		
+			$pdf->SetFillColor(198,209,229);
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne($moyenne_par[0]),1,'C',1);			
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat+=$lMat_mid2,24);		$pdf->SetFillColor(198,209,229);
-			$pdf->MultiCell($lMat_mid-2,4,'Rg'.'/'.count($eleveT),1,'C',1);
+			$pdf->SetXY($Xmat+=$lMat_mid2,24+$margeH);		
+			$pdf->SetFillColor(198,209,229);
+			$pdf->MultiCell($lMat_mid-2,4,'Rg'.'/'.countTriade($eleveT),1,'C',1);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat+=$lMat_mid-2,24);
+			$pdf->SetXY($Xmat+=$lMat_mid-2,24+$margeH);
 			$pdf->MultiCell($lMat_mid2,4,'Moy.',1,'C',0);
 
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,28);
+			$pdf->SetXY($Xmat,28+$margeH);
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne($moyenne_per[0]),1,'C',0);
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,32);
-			$pdf->MultiCell($lMat_mid2,4,format_moyenne($calc_moy_per_tot/$calc_nb_mat_per_tot),1,'C',0);
+			$pdf->SetXY($Xmat,32+$margeH);
+			if ($calc_nb_mat_per_tot != 0) {
+				$pdf->MultiCell($lMat_mid2,4,format_moyenne($calc_moy_per_tot/$calc_nb_mat_per_tot),1,'C',0);
+			}else{
+				$pdf->MultiCell($lMat_mid2,4,'0',1,'C',0);
+			}
 
 			$pdf->SetFont('Arial','B',4);
-			$pdf->SetXY($Xmat,36);
+			$pdf->SetXY($Xmat,36+$margeH);
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne(end($moyenne_per)),1,'C',0);					
 		$pdf->SetLineWidth(0.2);						
 			
@@ -664,10 +709,10 @@ $Xmat_t = $deb;
 $Xmat = $deb;
 $largeurMat=13;
 $hauteurMatiere=4; // taille du cadre matiere
-$Ymat=48;
+$Ymat=48+$margeH;
 $moy_per_tot=0;
 $nb_ue_per=0;		
-for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for ($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 
 	// ecrtiure entete tableau si premier eleve
 
@@ -696,7 +741,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// adresse de l'élève
 	// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 	$dataadresse=chercheadresse($idEleve);
-	for ($ik=0;$ik<=count($dataadresse);$ik++) {
+	for ($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -734,13 +779,13 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$nb_mat=1;
 	$nb_mat_gen=0;
 	$nb_note_periode_ue=0;
-		$nb_mat_per=0;
+	$nb_mat_per=0;
 
-		$pdf->SetFont('Arial','B',4);
-		$pdf->SetXY(0,$Ymat); 
-		$pdf->MultiCell(20,4,$nomprenom,1,'L',0);
+	$pdf->SetFont('Arial','B',4);
+	$pdf->SetXY($Xmat-20,$Ymat); 
+	$pdf->MultiCell(20,4,$nomprenom,1,'L',0);
 		
-for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
+for ($nb_ue=0;$nb_ue<countTriade($ue);$nb_ue++) { // boucle pour chaque UE
 		$id_ue =$ue[$nb_ue][0];
 		$idMatiere=$ue[$nb_ue][4];
 		$ordre_recup=recup_ordre($idMatiere,$idClasse);
@@ -758,21 +803,21 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 		// mise en place des matieres
 
 	if ($ecrit==$ue[$nb_ue][0]) {
-	//		$moyenne_ue+=$notepartiel[0][6]*$notepartiel[0][0];
-	//		$somme_coef+=$notepartiel[0][6];
-	//		if ($noteperiode[0][0]!=0 && $noteperiode[0][0]!='') {$nb_mat+=1;}
-	} else {
+		// $moyenne_ue+=$notepartiel[0][6]*$notepartiel[0][0];
+		// $somme_coef+=$notepartiel[0][6];
+		// if ($noteperiode[0][0]!=0 && $noteperiode[0][0]!='') {$nb_mat+=1;}
+	}else{
 		if ($ecrit!='') {
-				$Xmat+=$lMat;
+			$Xmat+=$lMat;
 			$id_ue = $ecrit;
-							//		print ('$moyenne_gen_partiel : '.$moyenne_gen_partiel.' - $somme_coef_gen_partiel : '.$somme_coef_gen_partiel.'</br>');
+			//		print ('$moyenne_gen_partiel : '.$moyenne_gen_partiel.' - $somme_coef_gen_partiel : '.$somme_coef_gen_partiel.'</br>');
 			if (($moyenne_ue>=0) && is_numeric($moyenne_ue)) {$moyenne_gen_partiel+=$moyenne_ue;$moyenne_ue=$moyenne_ue/$somme_coef;$somme_coef_gen_partiel+=$somme_coef;}
 			
 			// Affiche la moy. partiel UE de l'etudiant
-			if (format_moyenne($moyenne_ue) >=0 ) {
-			$affiche_note = format_moyenne($moyenne_ue) ;
+			if ((format_moyenne($moyenne_ue) >=0 ) && (format_moyenne($moyenne_ue) != "")) {
+				$affiche_note = format_moyenne($moyenne_ue) ;
 			} else {
-			$affiche_note = "";
+				$affiche_note = "";
 			}
 			$pdf->SetFont('Arial','',4);$pdf->SetLineWidth(0.3);
 			$pdf->SetXY($Xmat-$lMat_mid-$lMat_mid2,$Ymat);
@@ -797,7 +842,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 			$pdf->SetFont('Arial','',4);
 			$pdf->SetXY($Xmat-$lMat_mid2,$Ymat);
 			$pdf->MultiCell($lMat_mid,4,format_moyenne($moyenne_periode_ue),1,'C',0);$pdf->SetLineWidth(0.2);
-			if ($moyenne_periode_ue >=0) {$nb_mat_gen++;}
+			if (($moyenne_periode_ue >=0) && ($moyenne_periode_ue != "")) {$nb_mat_gen++;}
 			$moyenne_periode_ue='';
 			$Xmat=$Xmat-$lMat_mid2+$lMat_mid;
 			$nb_mat=1;
@@ -811,21 +856,21 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 
 		// mise en place coef + note partiel
 			// coeff
-		$notepartiel = recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse);
+		$notepartiel = recupNotepartiel($idEleve,$idMatiere,$dateDebut,$dateFin,$idClasse,$typeExamen);
 //		print_r($notepartiel);
 
-			if ($notepartiel[0][0] >=0) {$nb_mat+=1;
-					$moyenne_ue+=$notepartiel[0][6]*$notepartiel[0][0];
-		$somme_coef+=$notepartiel[0][6];
-			}
+		if (($notepartiel[0][0] >=0) && ($notepartiel[0][0] != "") ) {$nb_mat+=1;
+			$moyenne_ue+=$notepartiel[0][6]*$notepartiel[0][0];
+			$somme_coef+=$notepartiel[0][6];
+		}
 		$pdf->SetFont('Arial','',6);
 		$pdf->SetXY($Xmat,$Ymat);
 
 // affiche note de partiel
-		if ($notepartiel[0][0]>=0) { 
-		$affiche_note=number_format($notepartiel[0][0],2,'.','') ;
+		if (($notepartiel[0][0]>=0) && ($notepartiel[0][0] != '')) { 
+			$affiche_note=number_format($notepartiel[0][0],2,'.','') ;
 		} else {
-		$affiche_note="";
+			$affiche_note="";
 		}
 
 		$pdf->SetFont('Arial','',4);
@@ -848,8 +893,8 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 		$liste_note='';
 		$moyenne_periode='';
 		$nb_note_periode=0;
-		for ($nb_note=0;$nb_note<count($noteperiode);$nb_note++) { 
-			if ($noteperiode[$nb_note][0] >=0 && count($noteperiode)>0  ) {
+		for ($nb_note=0;$nb_note<countTriade($noteperiode);$nb_note++) { 
+			if ($noteperiode[$nb_note][0] >=0 && countTriade($noteperiode)>0  ) {
 				$moyenne_periode+=$noteperiode[$nb_note][0]*$noteperiode[$nb_note][6];
 				$liste_note = $liste_note.$noteperiode[$nb_note][0]." - ";
 				$nb_note_periode+=1;
@@ -897,7 +942,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 //		$pdf->WriteHTML(trunchaine($profAff,20));
 		$YprofVal=$YprofVal + $hauteurMatiere ;	
 	
-		if ($nb_ue==count($ue)-1) {$id_ue = $ue[$nb_ue][0];}
+		if ($nb_ue==countTriade($ue)-1) {$id_ue = $ue[$nb_ue][0];}
 	
 //	} // fin boucle matiere
 } // fin boucle UE
@@ -915,17 +960,18 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 			}
 			$pdf->SetFont('Arial','',4);$pdf->SetLineWidth(0.3);
 			$pdf->SetXY($Xmat,$Ymat);
-			$pdf->MultiCell($lMat_mid,4,format_moyenne($affiche_note),1,'C',1);$pdf->SetLineWidth(0.2);
+			$pdf->MultiCell($lMat_mid,4,format_moyenne($affiche_note),1,'C',1);
+			$pdf->SetLineWidth(0.2);
 			$moyenne_ue='';
 
 	// moyenne UE de periode			
 	// print ('nbre mat: '.$nb_mat_per. '<br>');
 
 			if ($moyenne_periode_ue!=''){$moyenne_periode_ue=$moyenne_periode_ue/($nb_mat_per);}
-			$moyenne_periode_gen+=$moyenne_periode_ue;
+			$moyenne_periode_gen+= (float) $moyenne_periode_ue;
 			$som_coef_periode_ue_total+= $som_coef_periode_ue;
 			$som_coef_periode_ue=0;
-			$moy_per_tot+=$moyenne_periode_ue;
+			if ($moyenne_periode_ue >= 0) $moy_per_tot+= (float) $moyenne_periode_ue;
 			$nb_ue_per++;
 			
 			if ($moyenne_periode_ue>=0 && $moyenne_periode_ue!='') { 
@@ -937,7 +983,8 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 			$pdf->SetLineWidth(0.3);
 			$pdf->SetFont('Arial','',4);
 			$pdf->SetXY($Xmat+$lMat_mid,$Ymat);
-			$pdf->MultiCell($lMat_mid,4,''.($affiche_note),1,'C',0);$pdf->SetLineWidth(0.2);
+			$pdf->MultiCell($lMat_mid,4,''.($affiche_note),1,'C',0);
+			$pdf->SetLineWidth(0.2);
 			
 			
 			if (($moyenne_periode_ue >=0 ) && is_numeric($moyenne_periode_ue)) {$nb_mat_gen++;}
@@ -957,8 +1004,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 //print_r ($partiel);
 //print ('<br>--periode--<br>');;
 //print_r ($periode);
-
-			$moyenne_gen_partiel=$moyenne_gen_partiel/$somme_coef_gen_partiel;
+			if ($somme_coef_gen_partiel != 0) $moyenne_gen_partiel=$moyenne_gen_partiel/$somme_coef_gen_partiel;
 		//	$pdf->SetFont('Arial','',7);
 		//	$pdf->SetXY($Xmat,$Ymat+4);
 		//	$pdf->MultiCell(80,8,'',1,'C',1);
@@ -969,7 +1015,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 		//	$pdf->WriteHTML('<b>MOYENNES GENERALES / 20</b>');
 			$pdf->SetFont('Arial','B',4); $pdf->SetFillColor(198,209,229);
 			$pdf->SetXY($Xmat+=($lMat_mid*2),$Ymat);
-//			$pdf->WriteHTML('<b>'.format_moyenne($moyenne_gen_partiel).'</b>' .((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.count($eleveT).' '.format_moyenne(end($moyenne_par)).' '.format_moyenne($moyenne_par[0]).'');
+//			$pdf->WriteHTML('<b>'.format_moyenne($moyenne_gen_partiel).'</b>' .((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.countTriade($eleveT).' '.format_moyenne(end($moyenne_par)).' '.format_moyenne($moyenne_par[0]).'');
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne($moyenne_gen_partiel),1,'C',1);
 			
 			$pdf->SetFont('Arial','',4);$pdf->SetFillColor(198,209,229);
@@ -984,7 +1030,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 			
 //			$pdf->SetFont('Arial','',4);
 //			$pdf->SetXY($Xmat+6,$Ymat+4);
-//			$pdf->WriteHTML('Rang  : '.((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.count($eleveT).'  - (min.:'.format_moyenne(end($moyenne_par)).' - max:'.format_moyenne($moyenne_par[0]).')');
+//			$pdf->WriteHTML('Rang  : '.((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.countTriade($eleveT).'  - (min.:'.format_moyenne(end($moyenne_par)).' - max:'.format_moyenne($moyenne_par[0]).')');
 			$moyenne_gen_partiel='';
 			$somme_coef_gen_partiel=0;
 //			$pdf->SetFont('Arial','',7);
@@ -998,7 +1044,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 
 
 // modif ambis 16/12/08			$moyenne_periode_gen = $moy_per_tot / $nb_ue_per;
-			$moyenne_periode_gen=$moyenne_periode_gen / ($nb_mat_gen);
+			if ($nb_mat_gen != 0) $moyenne_periode_gen=$moyenne_periode_gen / ($nb_mat_gen);
 			$pdf->SetFont('Arial','B',4);
 			$pdf->SetXY($Xmat+=$lMat_mid-2,$Ymat);
 			$pdf->MultiCell($lMat_mid2,4,format_moyenne($moyenne_periode_gen),1,'C',0);
@@ -1026,12 +1072,12 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 	$nbjoursabs=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	$nbretard=count($nbretard);
+	$nbretard=countTriade($nbretard);
 	
 	// recherche le nombre d absence
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	for($o=0;$o<=count($nbabs);$o++) {
+	for($o=0;$o<=countTriade($nbabs);$o++) {
 		if ($nbabs[$o][4] > 0) {
 	       		$nbjoursabs = $nbjoursabs + $nbabs[$o][4];
 		}else{
@@ -1077,7 +1123,7 @@ $pdf->SetFont('Arial','',8);
 //FIN appréciation
 // sortie dans le fichier
 
-		if ($Ymat>=165) {$pdf->AddPage(L);$Ymat=8;} else {$Ymat+=4;}
+		if ($Ymat>=165) {$pdf->AddPage('L');$Ymat=8;} else {$Ymat+=4;}
 	//	$pdf->WriteHTML('<b>'.$Ymat);
 		$Xmat = $deb;
 } // fin du for on passe à l'eleve suivant
@@ -1149,7 +1195,7 @@ Pgclose();
 ?>
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <script language=JavaScript>attente_close();</script>
 </BODY></HTML>
 

@@ -34,7 +34,7 @@ $eleveT=recupEleve($idclasse); // recup liste eleve
 //************************************************************/
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse("trimestre1",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
   	$dateDebut1=$dateRecup[$j][0];
   	$dateFin1=$dateRecup[$j][1];
 }
@@ -42,7 +42,7 @@ $dateDebutT1=dateForm($dateDebut1);
 $dateFinT1=dateForm($dateFin1);
 //-----/
 $dateRecup=recupDateTrimByIdclasse("trimestre2",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        	$dateDebut2=$dateRecup[$j][0];
         $dateFin2=$dateRecup[$j][1];
 }
@@ -50,7 +50,7 @@ $dateDebutT2=dateForm($dateDebut2);
 $dateFinT2=dateForm($dateFin2);
 //-----/
 $dateRecup=recupDateTrimByIdclasse("trimestre3",$idclasse);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
        	$dateDebut3=$dateRecup[$j][0];
         $dateFin3=$dateRecup[$j][1];
 }
@@ -75,14 +75,14 @@ if (($moyenClasseGenT3 == "") || ($moyenClasseGenT3 < 0)) {$moyenClasseGenT3="";
 function moyenEleveGraph($eleveT,$idclasse,$dateDebut,$dateFin,$ordre,$ideleverecup,$tri,$validenoteviescolaire) {
 	$noteMoyEleG=0;
 	$coefEleG=0;
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne
         	// variable eleve
 	        $lv1Eleve=$eleveT[$j][2];
 	        $lv2Eleve=$eleveT[$j][3];
 	        $idEleve=$eleveT[$j][4];
 	        if ($idEleve != $ideleverecup) { continue; }
 		$coeffaffTotal=0;
-		for($i=0;$i<count($ordre);$i++) {
+		for($i=0;$i<countTriade($ordre);$i++) {
 		        $idMatiere=$ordre[$i][0];
 		        //$matiere=chercheMatiereNom($idMatiere);
 		        $verifGroupe=verifMatiereAvecGroupe($idMatiere,$idEleve,$idclasse,$ordre[$i][2]);

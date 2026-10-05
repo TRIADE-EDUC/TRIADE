@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: history.php,v 1.48 2019-02-20 14:39:07 dgoron Exp $
+// $Id: history.php,v 1.48.16.1 2025/02/11 09:20:04 dgoron Exp $
 
 //Transmission ensuite du fichier converti
 $base_path = ".";
@@ -10,12 +10,13 @@ $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[histo_title]";
 $base_nobody=1;
 
+global $msg, $act, $sel;
 
 include($base_path."/includes/error_report.inc.php") ;
 if (isset($_POST["act"]) && $_POST["act"]=="export") {
 	if (isset($_POST["sel"])) $base_noheader=1;
 	$base_nosession=0;
-	// ATTENTION : Ã©tait Ã  1 pour permettre l'envoi du header et pas du ccokie avant, bug IE mais finalement, marche arriÃ¨re...
+	// ATTENTION : était à 1 pour permettre l'envoi du header et pas du ccokie avant, bug IE mais finalement, marche arrière...
 }
 require($base_path."/includes/init.inc.php");
 
@@ -26,7 +27,7 @@ if (isset($act) && $act) {
 		case 'del':
 			require_once($base_path."/includes/history_functions.inc.php");
 			
-			//parcours du tableau des recherches de l'historique cochÃ©es
+			//parcours du tableau des recherches de l'historique cochées
 					
 			for ($i=0;$i<=count($sel)-1;$i++) {
 				$t1=array();
@@ -56,7 +57,7 @@ if (isset($act) && $act) {
 		case 'delall':
 			$_SESSION["session_history"]=array();
 			$_SESSION["CURRENT"]=false;
-			//vide Ã©galement l'historique stockÃ© en base
+			//vide également l'historique stocké en base
 			$requete="delete from admin_session where userid=".SESSuserid;
 			$r=pmb_mysql_query($requete);
 			break;
@@ -131,10 +132,13 @@ if (isset($act) && $act) {
 			if ($error) $alert=$msg["histo_upload_failed"];
 			break;
 		case 'save':
-			$save=serialize($_SESSION['session_history']);
-			$requete="replace into admin_session values(".SESSuserid.",'".addslashes($save)."')";
-			$r=pmb_mysql_query($requete);
-			if (!$r) $alert=$msg["histo_save_fail"]; else $alert=$msg["histo_save_done"];
+		    $admin_session = new admin_session();
+		    $saved = $admin_session->save_property('session_history');
+			if (!$saved) {
+			    $alert=$msg["histo_save_fail"]; 
+			} else {
+			    $alert=$msg["histo_save_done"];
+			}
 			break;
 	}
 }

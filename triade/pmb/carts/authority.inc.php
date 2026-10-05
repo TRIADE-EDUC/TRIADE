@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority.inc.php,v 1.7 2019-05-29 12:42:11 btafforeau Exp $
+// $Id: authority.inc.php,v 1.7 2019/05/29 12:42:11 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -18,7 +18,7 @@ switch($action) {
 	case 'add_item':
 		// cas du click sur le lien du panier
 		if($idcaddie)$caddie[0]=$idcaddie;
-		// Pour tous les paniers cochÃ©s
+		// Pour tous les paniers cochés
 		foreach($caddie  as $idcaddie) {
 			$myCart = new authorities_caddie($idcaddie);
 			$myCart->add_item($item,$object_type);

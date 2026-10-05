@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ajax_search.inc.php,v 1.5 2019-01-16 17:01:42 dgoron Exp $
+// $Id: ajax_search.inc.php,v 1.6 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -93,7 +93,7 @@ function charset_pmb_normalize($mixed){
 			 else $mixed->$key=charset_pmb_normalize($value);
 		}
 	}elseif ($charset!="utf-8") {
-		$mixed =utf8_encode($mixed);	
+		$mixed =encoding_normalize::utf8_normalize($mixed);	
 	} 
 	return $mixed;
 }

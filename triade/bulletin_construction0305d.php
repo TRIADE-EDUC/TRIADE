@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -22,7 +22,7 @@ error_reporting(0);
 include_once("./librairie_php/lib_licence.php");
 include_once("./common/config.inc.php");
 include_once("./librairie_php/lib_get_init.php");
-$nofooterPDF=NOFOOTERPDF; 
+if (defined("NOFOOTERPDF")) $nofooterPDF=NOFOOTERPDF;
 $id=php_ini_get("safe_mode");
 if ($id != 1) {	set_time_limit(900); }
 ?>
@@ -41,11 +41,11 @@ if ($id != 1) {	set_time_limit(900); }
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -70,7 +70,7 @@ config_param_ajout($ismappadmis,"ismappadmis");
 
 $debut=deb_prog();
 $valeur=visu_affectation_detail_bulletin($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 	if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -107,7 +107,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // de l etablissement
 /*
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -162,11 +162,11 @@ $plageEleve=$_POST["plageEleve"];
 if (preg_match('/^E_/',$plageEleve)) { 
 	$plageEleve=preg_replace('/E_/','',$plageEleve);
 	$eleveT=recupEleveViaIdEleve($plageEleve); 
-	$dep=0; $nbEleveT=count($eleveT);
+	$dep=0; $nbEleveT=countTriade($eleveT);
 }
 
 $classe_nom_aff=preg_replace('/_/',' ',$classe_nom);
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "1") { $dep=0; $nbEleveT=1; }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
@@ -174,7 +174,7 @@ if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
@@ -192,11 +192,11 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$nbjoursabs=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	$nbretard=count($nbretard);
+	$nbretard=countTriade($nbretard);
 	// recherche le nombre d absence
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	for($o=0;$o<=count($nbabs);$o++) {
+	for($o=0;$o<=countTriade($nbabs);$o++) {
 		if ($nbabs[$o][4] > 0) {
 	       		$nbjoursabs = $nbjoursabs + $nbabs[$o][4];
 		}else{
@@ -356,7 +356,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$hauteurMatiere=9; // taille du cadre matiere
 
 	$nbmatiere='0';
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$verifGroupe=verifMatiereAvecGroupe($ordre[$i][0],$idEleve,$idClasse,$ordre[$i][2]);
 		if ($verifGroupe) { continue; }
 		$nbmatiere++;
@@ -393,7 +393,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$iiii=0;
 
 	$TT=1;
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$i][2]);
@@ -433,7 +433,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		$sousmatiere=trim($ordre[$i][4]);   
 		$libelleMatiere=$ordre[$i][5]; 
 		$ii=$i+1;
-		while($ii < count($ordre)) {
+		while($ii < countTriade($ordre)) {
 			$verifGroup=verifMatiereGroupe($ordre[$ii][0],$idEleve,$idClasse,$ordre[$ii][2]);
 			if ($verifGroup == 0) {  break; }
 			if (verifElevDansGroupe($verifGroup,$idEleve)) { break; }
@@ -740,7 +740,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: medline2pmbxml.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: medline2pmbxml.class.php,v 1.3 2022/07/22 15:32:29 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$include_path/isbn.inc.php");
 require_once($base_path."/admin/convert/convert.class.php");
@@ -16,6 +17,7 @@ class medline2pmbxml extends convert {
 		$res = array();
 		
 		for($i=0;$i<count($tab_line);$i++){
+			$matches = array();
 			if(preg_match("/([A-Z]{1,4}) *- (.*)/",$tab_line[$i],$matches)){
 				$champ = $matches[1];
 				if($res[$champ]) {
@@ -123,7 +125,7 @@ class medline2pmbxml extends convert {
 					}
 					break;
 				case 'IP':
-					//NumÃ©ro de bulletin
+					//Numéro de bulletin
 					$bull_num = $value;
 					break;
 				case 'VI':
@@ -131,11 +133,11 @@ class medline2pmbxml extends convert {
 					$bull_vol = $value;
 					break;
 				case 'AB':
-					//RÃ©sumÃ©
+					//Résumé
 					$resume = $value;
 					break;
 				case 'JT':
-					//Titre du pÃ©rio
+					//Titre du pério
 					$perio_title = $value;
 					break;
 				case 'LA':
@@ -192,37 +194,17 @@ class medline2pmbxml extends convert {
 			$data.=htmlspecialchars($pubmed_id,ENT_QUOTES,$charset);
 			$data.="</f>\n";
 		}
-		if($infos_isbn){
-			$data.=" <f c='010' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($infos_isbn,ENT_QUOTES,$charset)."</s>";
-			$data.="</f>\n";
-		} 
-		if($langue){
-			$data.="<f c='101' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($langue,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}	
+		$data.=static::get_converted_field_uni('010', 'a', $infos_isbn);
+		$data.=static::get_converted_field_uni('101', 'a', $langue);
 		if($titre){
 			$data.="<f c='200' ind='  '>\n";								
 			$data.="	<s c='a'>".htmlspecialchars($titre,ENT_QUOTES,$charset)."</s>\n";
 			if($titre_parallele) $data.="	<s c='d'>".htmlspecialchars($titre_parallele,ENT_QUOTES,$charset)."</s>\n";
 			$data.="</f>\n";
 		}
-		if($editeur){
-			$data.="<f c='210' ind='  '>\n";				
-			if($editeur) $data.="	<s c='c'>".htmlspecialchars($editeur,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}
-		if($pagination){
-			$data.="<f c='215' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($pagination,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}	
-		if($resume){
-			$data.="<f c='330' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($resume,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}	 
+		$data.=static::get_converted_field_uni('210', 'c', $editeur);
+		$data.=static::get_converted_field_uni('215', 'a', $pagination);
+		$data.=static::get_converted_field_uni('330', 'a', $resume);
 		if($perio_title){
 			$data.="<f c='461' ind='  '>\n";				
 			$data.="	<s c='t'>".htmlspecialchars($perio_title,ENT_QUOTES,$charset)."</s>\n";	
@@ -248,31 +230,24 @@ class medline2pmbxml extends convert {
 			$data.="</f>\n";
 		}
 		
-		if($collectivite){
-			if($auteur){
-				for($i=0;$i<count($auteur);$i++){
-					$data.="<f c='701' ind='  '>\n";								
-					$data.="	<s c='a'>".htmlspecialchars($auteur[$i],ENT_QUOTES,$charset)."</s>\n";
-					$data.="</f>\n";
-				}
-			}
-			$coll = explode(",",$collectivite,2);
-			$data.="<f c='710' ind='0 '>\n";								
-			$data.="	<s c='a'>".htmlspecialchars($coll[0],ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='e'>".htmlspecialchars($coll[1],ENT_QUOTES,$charset)."</s>\n";
-			$data.="</f>\n";
-		} else if($auteur){		
-			$data.="<f c='700' ind='  '>\n";								
-			$data.="	<s c='a'>".htmlspecialchars($auteur[0],ENT_QUOTES,$charset)."</s>\n";
-			$data.="</f>\n";
-			if($auteur){
-				for($i=1;$i<count($auteur);$i++){
-					$data.="<f c='701' ind='  '>\n";								
-					$data.="	<s c='a'>".htmlspecialchars($auteur[$i],ENT_QUOTES,$charset)."</s>\n";
-					$data.="</f>\n";
-				}
-			}
+		$coll_code = "710";
+		if($auteur){
+		    $data.=static::get_converted_field_uni('700', 'a', $auteur[0]);
+		    if($auteur){
+		        for($i=1;$i<count($auteur);$i++){
+		            $data.=static::get_converted_field_uni('701', 'a', $auteur[$i]);
+		        }
+		    }
+		    $coll_code = "711";
 		}
+		if($collectivite){
+		    $coll = explode(",",$collectivite,2);
+		    $data.="<f c='$coll_code' ind='0 '>\n";
+		    $data.="	<s c='a'>".htmlspecialchars($coll[0],ENT_QUOTES,$charset)."</s>\n";
+		    $data.="	<s c='e'>".htmlspecialchars($coll[1],ENT_QUOTES,$charset)."</s>\n";
+		    $data.="</f>\n";
+		}
+		
 		
 		if($doc_type){
 			switch($doc_type){
@@ -328,34 +303,17 @@ class medline2pmbxml extends convert {
 				default:
 					$doctype = "Article";
 					break;
-			} 
-			if($doctype){
-				$data.="<f c='900' ind='  '>\n";
-				$data.="	<s c='a'>".htmlspecialchars($doctype,ENT_QUOTES,$charset)."</s>\n";
-				$data.="	<s c='l'>Sub-Type</s>\n";
-				$data.="	<s c='n'>subtype</s>\n";
-				$data.="</f>\n";
 			}
+			$data.=static::get_converted_field_uni('900', 'a', $doctype, array('l' => 'Sub-Type', 'n' => 'subtype'));
 		}
-		if($doi){
-			$data.="<f c='900' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($doi,ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='l'>DOI Id</s>\n";
-			$data.="	<s c='n'>cp_doi_identifier</s>\n";
-			$data.="</f>\n";
-		}
+		$data.=static::get_converted_field_uni('900', 'a', $doi, array('l' => 'DOI Id', 'n' => 'cp_doi_identifier'));
 		if($pubmed_id){		
-			$data .="<f c='856' ind='  '>\n";
-			$data.="	<s c='u'>http://www.ncbi.nlm.nih.gov/pubmed/$pubmed_id</s>\n";
-			$data.="</f>\n";
-			$data.="<f c='900' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($pubmed_id,ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='l'>PUBMED Id</s>\n";
-			$data.="	<s c='n'>cp_pubmed_identifier</s>\n";
-			$data.="</f>\n";
+			$data.=static::get_converted_field_uni('856', 'u', 'http://www.ncbi.nlm.nih.gov/pubmed/'.$pubmed_id);
+			$data.=static::get_converted_field_uni('900', 'a', $pubmed_id, array('l' => 'PUBMED Id', 'n' => 'cp_pubmed_identifier'));
 		}
 		$data .= "</notice>\n";
 			
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

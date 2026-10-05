@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: start_export.class.php,v 1.23 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: start_export.class.php,v 1.26 2022/01/04 08:41:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once ("$include_path/parser.inc.php");
 require_once ("$base_path/admin/convert/export.class.php");
 require_once("$class_path/export_param.class.php");
 require_once ($base_path."/admin/convert/start_import.class.php");
 require_once ($base_path."/admin/convert/start_export.class.php");
 
-//RÃ©cupÃ©ration du chemin du fichier de paramÃ©trage de l'import
+//Récupération du chemin du fichier de paramétrage de l'import
 function _item_start_export_($param) {
 	global $export_type;
 	global $i;
@@ -42,7 +43,7 @@ function _item_export_list_($param) {
 	$iall++;
 }
 
-//RÃ©cupÃ©ration du paramÃ¨tre d'import
+//Récupération du paramètre d'import
 function _output_start_export_($param) {
 	global $output;
 	global $output_type;
@@ -66,14 +67,14 @@ function _input_start_export_($param) {
 	} else $specialexport=false;
 }
 
-//RÃ©cupÃ©ration des Ã©tapes de conversion
+//Récupération des étapes de conversion
 function _step_start_export_($param) {
 	global $step;
 
 	$step[] = $param;
 }
 
-//RÃ©cupÃ©ration du nom de l'import
+//Récupération du nom de l'import
 function _import_name_start_export_($param) {
 	global $import_name;
 
@@ -102,12 +103,12 @@ class start_export {
 			global $include_path;
 			
 			$step=array();    		
-			$this->id_notice=$id_notice+0;
+			$this->id_notice=intval($id_notice);
     		if ($this->id_notice) {
     			$this->export_type=$type_export;
     			$export_type=$type_export;
     			
-    			//RÃ©cupÃ©ration du rÃ©pertoire
+    			//Récupération du répertoire
 				$i = 0;
 				$param_path = "";
 				if (file_exists("$base_path/admin/convert/imports/catalog_subst.xml"))
@@ -116,11 +117,11 @@ class start_export {
 					$fic_catal = "$base_path/admin/convert/imports/catalog.xml";
 				_parser_($fic_catal, array("ITEM" => "_item_start_export_"), "CATALOG");
 
-				//Lecture des paramÃ¨tres
+				//Lecture des paramètres
 				
 				_parser_("$base_path/admin/convert/imports/".$param_path."/params.xml", array("IMPORTNAME" => "_import_name_start_export_","STEP" => "_step_start_export_","OUTPUT" => "_output_start_export_","INPUT" => "_input_start_export_"), "PARAMS");
 
-				//Si l'export est spÃ©cial, on charge la fonction d'export
+				//Si l'export est spécial, on charge la fonction d'export
 				if ($specialexport) {
 	    			if(file_exists($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php")) {
 						require_once($base_path."/admin/convert/imports/".$param_path."/".$param_path.".class.php");
@@ -137,7 +138,7 @@ class start_export {
 				else $notice_exporte=array();
 				/*if($_SESSION["param_export"]["bulletin_exporte"]) $bulletin_exporte = $_SESSION["param_export"]["bulletin_exporte"]; 
 				else $bulletin_exporte=array();*/
-				// Inutile car pas d'exemplaires exportÃ©s
+				// Inutile car pas d'exemplaires exportés
 				if (!$specialexport) {
 					$param = new export_param(EXP_DEFAULT_OPAC);
 					$e = new export(array($this->id_notice),$notice_exporte);
@@ -249,7 +250,7 @@ class start_export {
     	
     	$notice=$this->prepared_notice;
     	
-    	//Inclusion des librairies Ã©ventuelles
+    	//Inclusion des librairies éventuelles
 		for ($i = 0; $i < count($step); $i ++) {
 			if ($step[$i]['TYPE'] == "custom") {
 				//echo "$base_path/admin/convert/imports/".$param_path."/".$step[$i][SCRIPT][0][value];
@@ -259,7 +260,7 @@ class start_export {
 
 		require_once ("xmltransform.php");
 
-		//En fonction du type de fichier d'entrÃ©e, inclusion du script de gestion des entrÃ©es
+		//En fonction du type de fichier d'entrée, inclusion du script de gestion des entrées
 		$input_instance = start_import::get_instance_from_input_type($input_type);
 
 		for ($i = 0; $i < count($step); $i ++) {
@@ -295,27 +296,27 @@ class start_export {
 		return $notice;
     }
 
-	// RÃ©cupÃ©ration de l'id Ã  partir du nom de l'export
+	// Récupération de l'id à partir du nom de l'export
 	public static function get_id_by_path($path) {
 	   	global $export_list;
-		if (!count($export_list)) start_export::get_exports() ;
+	   	if (empty($export_list)) start_export::get_exports() ;
 		for ($i=0;$i<count($export_list);$i++) {
 			if ($export_list[$i]["PATH"]==$path) return $export_list[$i]["IDALL"] ;
 		}
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration de la notice unimarc par l'entrepot
+	 * Récupération de la notice unimarc par l'entrepot
 	 */
 	public function entrepot_to_xml($recid) {
-		global $dbh,$base_path;
+		global $base_path;
 		
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($recid).";";
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$source_id = pmb_mysql_result($myQuery, 0, 0);
 		
 		$requete="select * from entrepot_source_$source_id where recid='".addslashes($recid)."' group by ufield,usubfield,field_order,subfield_order,value order by ufield,field_order,usubfield,subfield_order";
-		$resultat = pmb_mysql_query($requete, $dbh);
+		$resultat = pmb_mysql_query($requete);
 		$entete="";
 		
 		$field_order = "";

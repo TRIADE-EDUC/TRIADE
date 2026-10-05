@@ -1,14 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: perio_a2z.class.php,v 1.81 2019-05-29 12:45:32 ngantier Exp $
+// $Id: perio_a2z.class.php,v 1.97.2.1.2.1 2025/02/10 14:15:28 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des perio a2z
+// définition de la classe de gestion des perio a2z
 if ( ! defined( 'PERIO_CLASS' ) ) {
   define( 'PERIO_CLASS', 1 );
+  
+  global $base_path, $class_path, $include_path;
   
 require_once($base_path."/includes/templates/perio_a2z.tpl.php");
 require_once($base_path."/classes/notice_info.class.php");
@@ -37,7 +39,7 @@ require_once($include_path."/notice_affichage.inc.php");
 
 class perio_a2z {
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------
 	public $tab_alpha_notice = array();
 	public $onglets_contens = array();
@@ -45,11 +47,11 @@ class perio_a2z {
 	public $max_per_onglet = 12;
 	public $location = 0;
 	public $surlocation = 0;
-	public $titles = array(); //Liste des titres de pÃ©riodiques
-	public $titles_filter = array(); //Liste des titres de pÃ©riodiques filtrÃ©s
+	public $titles = array(); //Liste des titres de périodiques
+	public $titles_filter = array(); //Liste des titres de périodiques filtrés
 	
-	protected $start = "";//Pour filtrer par dÃ©but de titre
-	protected $start_len = 0;//Pour filtrer par dÃ©but de titre
+	protected $start = "";//Pour filtrer par début de titre
+	protected $start_len = 0;//Pour filtrer par début de titre
 	
 	// ---------------------------------------------------------------
 	//		perio_a2z : constructeur
@@ -79,7 +81,6 @@ class perio_a2z {
 	}
 	
 	public function getData() {
-		global $dbh;
 		global $filtre_select;
 		
 		$this->titles=array();
@@ -88,11 +89,11 @@ class perio_a2z {
 		$ongletInc=0;
 		$req=$this->getQuery();
 		$resultat=pmb_mysql_query($req);
-		if ($nb_notices=pmb_mysql_num_rows($resultat)) {
+		if (pmb_mysql_num_rows($resultat)) {
 			while($r=pmb_mysql_fetch_object($resultat)){
 				$index_sew_trim=trim($r->index_sew);
 				if(pmb_substr($r->notice_id,0,pmb_strlen("es)"))=="es" &&  $filtre_select!=2){
-					// si cataloguÃ©e, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
+					// si cataloguée, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
 					if ($this->get_doublon_ex($this->extract_external_id($r->notice_id))) continue;
 				}
 				$letter=pmb_substr(pmb_strtolower($index_sew_trim),0,1);
@@ -112,10 +113,10 @@ class perio_a2z {
 				$qtOngletCours++;
 				$this->onglets_contens[$ongletInc]["last_label"]=pmb_strtoupper($index_sew_trim);
 				
-				//Sous-onglet (uniquement pour compatibilitÃ© avec affichage abÃ©cÃ©daire
+				//Sous-onglet (uniquement pour compatibilité avec affichage abécédaire
 				$this->onglets_sub_contens[$ongletInc][1]["id"][]=$r->notice_id;
 				
-				//On mÃ©morise le couple onglet/sous-onglet pour la recherche ajax
+				//On mémorise le couple onglet/sous-onglet pour la recherche ajax
 				$t=array();
 				$t["onglet"]=$ongletInc.'_1';
 				$t["label"]=pmb_strtoupper($index_sew_trim);
@@ -147,7 +148,7 @@ class perio_a2z {
 			$this->onglets_contens[$lastOnglet]["last_label"]=$mesTermes[1];
 			foreach($this->onglets_contens as $onglet=>$myOnglet){
 				$this->onglets_contens[$onglet]["label"]=$this->onglets_contens[$onglet]["first_label"]." - ".$this->onglets_contens[$onglet]["last_label"];
-				//Cas particulier des inclassables et numÃ©riques
+				//Cas particulier des inclassables et numériques
 				if($this->onglets_contens[$onglet]["letter"]==" "){
 					$this->onglets_contens[$onglet]["label"]=" # ";
 				}elseif(is_numeric($this->onglets_contens[$onglet]["letter"])){
@@ -158,7 +159,7 @@ class perio_a2z {
 	}
 	
 	public function getDataAbc() {
-		global $dbh,$filtre_select;
+		global $filtre_select;
 	
 		$this->titles=array();
 		$this->titles_filter=array();
@@ -168,15 +169,15 @@ class perio_a2z {
 		
 		$req=$this->getQuery();
 		$resultat=pmb_mysql_query($req);
-		if ($nb_notices=pmb_mysql_num_rows($resultat)) {
+		if (pmb_mysql_num_rows($resultat)) {
 			while($r=pmb_mysql_fetch_object($resultat)){
 				$index_sew_trim=trim($r->index_sew);
 				if(pmb_substr($r->notice_id,0,pmb_strlen("es)"))=="es" && $filtre_select!=2){
-					// si cataloguÃ©e, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
+					// si cataloguée, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
 					if ($this->get_doublon_ex($this->extract_external_id($r->notice_id))) continue;
 				}
 				$letter=pmb_substr(trim(pmb_strtolower($r->index_sew)),0,1);
-				//On classe selon la premiÃ¨re lettre
+				//On classe selon la première lettre
 				if(is_numeric($letter)){
 					$letter="0";
 				}
@@ -208,7 +209,7 @@ class perio_a2z {
 				if(count($this->onglets_sub_contens[$onglet][$ongletSubInc]["id"])==$this->max_per_onglet){
 					$ongletSubInc++;
 				}
-				//On mÃ©morise le couple onglet/sous-onglet pour la recherche ajax
+				//On mémorise le couple onglet/sous-onglet pour la recherche ajax
 				$t=array();
 				$t["onglet"]=$onglet.'_'.$ongletSubInc;
 				$t["label"]=pmb_strtoupper($index_sew_trim);
@@ -266,8 +267,8 @@ class perio_a2z {
 		global $gestion_acces_active, $gestion_acces_empr_notice;
 		global $filtre_select;
 	
-		$this->location=$location;
-		$this->surlocation=$surloc;
+		$this->location = intval($location);
+		$this->surlocation = intval($surloc);
 		
 		if($abt_actif){
 			$from_abt_actif = " ,abts_abts ";
@@ -294,40 +295,37 @@ class perio_a2z {
 			$statut_j=',notice_statut ';
 			$statut_r="and statut=id_notice_statut and ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
 		}
-		
-		if($location){
-			
+		if($this->location){
 			$req="
 			SELECT distinct serial_id as notice_id, index_sew, tit1 FROM (
 				(
 					SELECT DISTINCT bulletin_notice as serial_id ,index_sew, tit1 FROM notices $acces_j, bulletins, exemplaires $from_abt_actif $statut_j
-					WHERE notice_id=bulletin_notice and bulletin_id = expl_bulletin  and expl_location=$location  $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=bulletin_notice and bulletin_id = expl_bulletin  and expl_location=".$this->location."  $opac_view_restrict $where_abt_actif $statut_r
 				)union( 
 					SELECT DISTINCT id_serial as serial_id ,index_sew, tit1 from notices $acces_j, collections_state $from_abt_actif $statut_j
-					WHERE notice_id=id_serial and location_id=$location  $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=id_serial and location_id=".$this->location."  $opac_view_restrict $where_abt_actif $statut_r
 				)union(
 					SELECT DISTINCT bulletin_notice as serial_id ,index_sew, tit1 FROM notices $acces_j, bulletins, explnum, explnum_location $from_abt_actif $statut_j
-					WHERE notice_id=bulletin_notice and bulletin_id = explnum_bulletin AND num_explnum=explnum_id and num_location=$location $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=bulletin_notice and bulletin_id = explnum_bulletin AND num_explnum=explnum_id and num_location=".$this->location." $opac_view_restrict $where_abt_actif $statut_r
 				)
 			) AS sub order by index_sew	
 			";		
 			
-		} elseif($surloc) {
-			
+		} elseif($this->surlocation) {
 			$req="
 			SELECT distinct serial_id as notice_id, index_sew, tit1 FROM (
 				(
 					SELECT DISTINCT bulletin_notice as serial_id ,index_sew, tit1 FROM notices $acces_j, bulletins, exemplaires $from_abt_actif $statut_j
-					WHERE notice_id=bulletin_notice and bulletin_id = expl_bulletin AND expl_location in( select idlocation from  docs_location where surloc_num= $surloc) $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=bulletin_notice and bulletin_id = expl_bulletin AND expl_location in( select idlocation from  docs_location where surloc_num = ".$this->surlocation.") $opac_view_restrict $where_abt_actif $statut_r
 				)union( 
 					SELECT DISTINCT id_serial as serial_id ,index_sew, tit1 from notices $acces_j, collections_state $from_abt_actif $statut_j
-					WHERE notice_id=id_serial and location_id in( select idlocation from  docs_location where surloc_num= $surloc) $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=id_serial and location_id in( select idlocation from  docs_location where surloc_num = ".$this->surlocation.") $opac_view_restrict $where_abt_actif $statut_r
 				)union(
 					SELECT DISTINCT notice_id as serial_id ,index_sew, tit1 FROM notices $acces_j, bulletins, explnum, explnum_location $from_abt_actif $statut_j
-					WHERE notice_id=bulletin_notice and bulletin_id = explnum_bulletin AND num_explnum=explnum_id and num_location in( select idlocation from docs_location  where surloc_num= $surloc) $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=bulletin_notice and bulletin_id = explnum_bulletin AND num_explnum=explnum_id and num_location in( select idlocation from docs_location  where surloc_num = ".$this->surlocation.") $opac_view_restrict $where_abt_actif $statut_r
 				)union(
 					SELECT DISTINCT notice_id as serial_id ,index_sew, tit1 FROM notices $acces_j, bulletins, explnum, explnum_location, analysis $from_abt_actif $statut_j
-					WHERE notice_id=bulletin_notice and bulletin_id = explnum_notice and analysis_bulletin=bulletin_id AND num_explnum=explnum_id and num_location in( select idlocation from docs_location  where surloc_num= $surloc) $opac_view_restrict $where_abt_actif $statut_r
+					WHERE notice_id=bulletin_notice and bulletin_id = explnum_notice and analysis_bulletin=bulletin_id AND num_explnum=explnum_id and num_location in( select idlocation from docs_location  where surloc_num = ".$this->surlocation.") $opac_view_restrict $where_abt_actif $statut_r
 				)
 			) AS sub order by index_sew	
 			";
@@ -391,7 +389,7 @@ class perio_a2z {
 		}
 		return $req;
 	}
-	/* MB - 28/12/2018: Plus utilisÃ©, tout passe par filterSearch
+	/* MB - 28/12/2018: Plus utilisé, tout passe par filterSearch
 	public function startwith($elt) {
 		if (pmb_substr(strip_empty_words($elt["title"]),0,pmb_strlen(strip_empty_words($this->start)))==strip_empty_words($this->start)) {
 			return true;
@@ -408,8 +406,6 @@ class perio_a2z {
 	}*/
 	
 	public function filterSearch($datas) {
-		global $dbh;
-		
 		//commence par
 		if($this->start){
 			$titles = $this->titles_filter;
@@ -417,21 +413,21 @@ class perio_a2z {
 			$titles = $this->titles;
 		}
 		
-		//on complÃ¨te si besoin
+		//on complète si besoin
 		if((count($titles)<20) && $this->start && count($this->titles)){
-			//Liste des identifiants de pÃ©riodiques disponibles
+			//Liste des identifiants de périodiques disponibles
 			$listeId="";
 			$title_tmp=array();
 			foreach($this->titles as $title){
 				if ($listeId) $listeId.= ",";
-				// prÃ©sence id notice externe es_...
+				// présence id notice externe es_...
 				$listeId.= "'" . $title["id"] . "'";
 				$title_tmp[$title["id"]] = $title;
 			}
 			
 			$aq=new analyse_query(stripslashes($datas."*"));
 			$query=$aq->get_query("notices", "index_sew", "index_sew", "notice_id", "niveau_biblio='s' AND niveau_hierar='1' AND notice_id IN (".$listeId.")");
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if ($result) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					if($title_tmp[$row->notice_id] && (!in_array($title_tmp[$row->notice_id],$titles))){
@@ -457,11 +453,13 @@ class perio_a2z {
 	}
 		
 	public function get_form($onglet_sel='1_1',$flag_empty=0,$flag_ajax=0){
-		global $dbh,$msg,$charset;
+	    global $msg;
 		global $a2z_perio_display,$onglet_a2z,$ongletSub_a2z,$ongletSubList_a2z, $a2z_perio,$a2z_tpl;
 		global $abt_actif;
 		global $avis_tpl_form_script;
 		global $filtre_select;
+		
+		$a2z_tpl = common::format_title($msg["a2z_title"]).$a2z_tpl;
 		
 		$myArray = explode("_",$onglet_sel);
 		$onglet_sel = $myArray[0];
@@ -469,11 +467,17 @@ class perio_a2z {
 		if(!empty($myArray[1])) $ongletSub_sel = $myArray[1];
 	
 		if(!$this->onglets_contens){
-			if($flag_ajax)$form=$a2z_tpl;
-			else $form="<div id='perio_a2z'>\n".$a2z_tpl."</div>";
+		    if($flag_ajax) {
+		        $form = $a2z_tpl;
+		    } else {
+		        $form="<div id='perio_a2z'>\n".$a2z_tpl."</div>";
+		    }
 			$form = str_replace('!!perio_display!!',"", $form);
-			if($abt_actif) $check_abt_actif=" checked='checked' ";
-			else $check_abt_actif="";
+			if($abt_actif) {
+			    $check_abt_actif=" checked='checked' ";
+			} else {
+			    $check_abt_actif="";
+			}
 		
 			$form = str_replace('!!check_abt_actif!!',$check_abt_actif, $form);
 			$form = str_replace('!!onglet_sel!!',"", $form);
@@ -487,8 +491,11 @@ class perio_a2z {
 			$form = str_replace('!!filtre!!',"", $form);
 			return $form;
 		}
-		if($flag_ajax)$form=$avis_tpl_form_script.$a2z_tpl;
-		else $form=$avis_tpl_form_script."<div id='perio_a2z'>\n".$a2z_tpl."</div>";
+		if($flag_ajax) {
+		    $form=$avis_tpl_form_script.$a2z_tpl;
+		} else {
+		    $form=$avis_tpl_form_script."<div id='perio_a2z'>\n".$a2z_tpl."</div>";
+		}
 		$form_list="";
 		$form_sublist="";
 		$perio_id_list = '';
@@ -515,7 +522,7 @@ class perio_a2z {
 			if($onglet_num==$onglet_sel && !$flag_empty){
 				foreach($this->onglets_sub_contens[$onglet_num] as $ongletSub_num => $ongletSub){
 					if($ongletSub_num==$ongletSub_sel){
-						// liste des pÃ©riodiques
+						// liste des périodiques
 						$perio_list="";
 						$view=0;
 						$perio_id_list="";
@@ -525,7 +532,7 @@ class perio_a2z {
 							$es_queries = array();
 							foreach($ongletSub["id"] as $id){
 								if(strpos($id,"es")!==false){
-									// si cataloguÃ©e, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
+									// si cataloguée, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
 									if ($filtre_select==2 || !$this->get_doublon_ex($this->extract_external_id($id))){
 										$elems = explode("_",$id);
 										$query = "select * from external_count where rid =".$elems[2];
@@ -556,7 +563,7 @@ class perio_a2z {
 							}else if ($int_query){ 
 								$query = $int_query." order by index_sew";
 							}
-							$result = pmb_mysql_query($query,$dbh);
+							$result = pmb_mysql_query($query);
 							if ($result) {
 								while ($notice = pmb_mysql_fetch_object($result)) {
 									if(!$perio_id_list)$perio_id_list="'".$notice->notice_id."'";else	$perio_id_list.=",'".$notice->notice_id."'";
@@ -579,17 +586,24 @@ class perio_a2z {
 									$perio_list.= $perio;
 									if(!$view){
 										$view++;
-										$form = str_replace('!!perio_display!!',$this->get_perio($notice->notice_id), $form);			
+										$form = str_replace('!!perio_display!!',$this->get_perio($notice->notice_id), $form);	
+										$perio_list = str_replace('!!perio_btn_pressed!!','true', $perio_list);	
+										$perio_list = str_replace('!!perio_active!!','perio_active', $perio_list);				
+									}else{
+										$perio_list = str_replace('!!perio_btn_pressed!!','false', $perio_list);		
+										$perio_list = str_replace('!!perio_active!!','perio_inactive', $perio_list);		
 									}
 								}
 							}
 						}
 						$line = str_replace('!!onglet_class!!',"isbd_public_active", $line);
+						$line = str_replace('!!onglet_btn_pressed!!',"true", $line);
 						$lineSub = str_replace('!!ongletSub_display!!','block', $lineSub);
 					}
 				}
 			}else{
 				$line = str_replace('!!onglet_class!!',"isbd_public_inactive", $line);
+				$line = str_replace('!!onglet_btn_pressed!!',"false", $line);
 				$lineSub = str_replace('!!ongletSub_display!!','none', $lineSub);	
 			}
 			
@@ -633,7 +647,7 @@ class perio_a2z {
 	}	
 	
 	public function get_onglet($onglet_sel='1_1'){
-		global $dbh,$msg,$charset,$base_path;
+		global $msg,$charset,$base_path;
 		global $a2z_perio_display,$onglet_a2z, $a2z_perio,$a2z_tpl_ajax;
 		global $filtre_select;
 		$myArray = explode("_",$onglet_sel);
@@ -644,12 +658,12 @@ class perio_a2z {
 		$form=$a2z_tpl_ajax;
 		$form_list="";
 		$line = '';
-		if(count($this->onglets_sub_contens[$onglet_sel])){
+		if(is_countable($this->onglets_sub_contens[$onglet_sel]) && count($this->onglets_sub_contens[$onglet_sel])){
 			foreach($this->onglets_sub_contens[$onglet_sel] as $onglet_num => $onglet){
 				if($onglet_num==$ongletSub_sel){
 					// onglet actif
 					$line = str_replace('!!onglet_class!!',"isbd_public_active", $line);
-					// liste des pÃ©riodiques
+					// liste des périodiques
 					$perio_list="";
 					$view=0;
 					$perio_id_list="";
@@ -660,14 +674,14 @@ class perio_a2z {
 							if(pmb_substr($id_brute,0,2)=="es"){
 								//notice externe					
 								if( $filtre_select!=2){
-									// si cataloguÃ©e, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
+									// si cataloguée, on ne l'affiche pas. sauf si on filtre par fonds externe ($filtre_select!=2)
 									if ($this->get_doublon_ex($this->extract_external_id($id_brute))) continue;
 								}
 								$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($this->extract_external_id($id_brute));
-								$myQuery = pmb_mysql_query($requete, $dbh);
+								$myQuery = pmb_mysql_query($requete);
 								$source_id = pmb_mysql_result($myQuery, 0, 0);		
 								$query="select ufield,value from entrepot_source_$source_id where recid='".addslashes($this->extract_external_id($id_brute))."' and ((ufield='200' and usubfield='a') or (ufield='461' and usubfield='t') or (ufield='bl') or (ufield='hl')) ";						
-								$result = pmb_mysql_query($query,$dbh);
+								$result = pmb_mysql_query($query);
 								if ($result) {
 									while($row= pmb_mysql_fetch_object($result)){
 										$infos[$row->ufield] = $row->value;
@@ -697,7 +711,7 @@ class perio_a2z {
 							}else{
 								$query = "select notice_id,tit1 from notices where notice_id =$id_brute";
 								//print $query."<br>";
-								$result = pmb_mysql_query($query,$dbh);
+								$result = pmb_mysql_query($query);
 								if ($result) {
 									if ($notice = pmb_mysql_fetch_object($result)) {
 										$perio = $a2z_perio;
@@ -737,9 +751,8 @@ class perio_a2z {
 	
 	
 	public function get_doublon_ex($id){
-		global $dbh;
 		$requete = "SELECT source_id FROM external_count WHERE rid=".addslashes($id);
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		$source_id = pmb_mysql_result($myQuery, 0, 0);		
 		
 		$rqt = "select value from entrepot_source_".$source_id." where recid='".addslashes($id)."' and ufield='011' and usubfield='a'";
@@ -827,21 +840,115 @@ class perio_a2z {
 		return $tpl;		
 	}	
 	
+	public function get_bulletins_search_form($id) {
+	    global $msg, $charset;
+	    global $page;
+	    global $bull_num_deb, $bull_date_start, $bull_date_end;
+	    global $opac_rgaa_active;
+	    global $opac_bull_results_per_page;
+	    
+	    if(!$page) $page=1;
+	    
+	    $bull_results_per_page = $opac_bull_results_per_page ?? 12;
+	    if (isset($this->max_per_onglet)) {
+	        $bull_results_per_page = $this->max_per_onglet;
+	    }
+
+	    //Recherche par numéro
+	    $num_field_start = "
+		<input type='hidden' name='f_bull_deb_id' id='f_bull_deb_id' />
+		<input id='bull_num_deb' name='bull_num_deb' type='text' size='" . ($opac_rgaa_active ? '2' : '10') ."' value='".$bull_num_deb."' onkeypress='if (event.keyCode==13){ show_perio($id);}' />";
+                 
+	    $search_form = "
+       <form name=\"form_values\" action=\"./index.php?lvl=notice_display&id=$id\" >\n
+			<input type=\"hidden\" name=\"premier\" value=\"\">\n
+			<input type=\"hidden\" id='bull_page' name=\"page\" value=\"".htmlentities($page, ENT_QUOTES, $charset)."\">\n
+			<input type=\"hidden\" id='bull_nb_per_page' name=\"nb_per_page_custom\" value=\"".htmlentities($bull_results_per_page, ENT_QUOTES, $charset)."\">\n";
+	    if($opac_rgaa_active) {
+	        $search_form .= "
+            <fieldset>
+                <legend class='visually-hidden'>".$msg["search_bull"]."</legend>
+                <div class='bulletin_search_filter d-flex flex-wrap'>
+                    <label for='bull_num_deb'>".$msg["search_per_bull_num"]." : ".$msg["search_bull_exact"]."</label>
+                    ".$num_field_start."
+                </div>
+                <div class='bulletin_search_filter d-flex flex-wrap'>
+                    <div class='inputs_bull_date inputs_bull_date_start d-flex flex-wrap'>
+                        <label for='bull_date_start'>".$msg["search_per_bull_date"]." : ".$msg["search_bull_start"]."</label>
+                        ".get_input_date('bull_date_start', 'bull_date_start', $bull_date_start, false, '')."
+                    </div>
+                    <div class='inputs_bull_date inputs_bull_date_end d-flex flex-wrap'>
+                        <label for='bull_date_end'>".$msg["search_bull_end"]."</label>
+                        ".get_input_date('bull_date_end', 'bull_date_end', $bull_date_end, false, '')."
+                    </div>
+                </div>
+                <div class='bulletin_search_button'>
+                    <input type='button' class='boutonrechercher' value='".$msg["142"]."' onclick='show_perio($id);' />
+                </div>
+            </fieldset>";
+	    } else {
+	        $search_form .= "
+	        <table role='presentation'>
+				<tr>
+					<td>
+                        <label for='bull_num_deb'><strong>".$msg["search_per_bull_num"]." : ".$msg["search_bull_exact"]."</strong></label>
+					</td>
+					<td>$num_field_start</td>
+				</tr>
+				<tr>
+					<td>
+                        <label for='bull_date_start'>
+                            <strong>".$msg["search_per_bull_date"]." : ".$msg["search_bull_start"]."</strong>
+                        </label>
+                    </td>
+					<td>
+                        <div id='inputs_bull_date_start' class='inputs_bull_date_start'>
+                            " . get_input_date('bull_date_start', 'bull_date_start', $bull_date_start, false, '') . "
+                        </div>
+                    </td>
+					<td>
+                        <label for='bull_date_end'>
+                            <strong>".$msg["search_bull_end"]."</strong>
+                        </label>
+                    </td>
+					<td>
+                        <div id='inputs_bull_date_end' class='inputs_bull_date_end'>
+                            " . get_input_date('bull_date_end', 'bull_date_end', $bull_date_end, false, '') . "
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td colspan='4'><input type='button' class='boutonrechercher' value='".$msg["142"]."' onclick='show_perio($id);' /></td>
+				</tr>
+			</table>";
+	    }
+	    $search_form .= "
+		</form>";
+	    
+	    return $search_form;
+	}
+	
 	public function get_perio($id) {
 		//on simplifie les appels..
 		if(strpos($id,"es") !== false){
 			return $this->get_perio_ex($id);
 		}
 			
-		global $msg,$charset,$dbh;
+		global $msg;
 		global $f_bull_deb_id,$opac_bull_results_per_page,$page,$opac_fonction_affichage_liste_bull,$bull_date_start,$bull_date_end;
 		global $bull_num_deb;
 		global $flag_no_get_bulletin;
 		global $recherche_ajax_mode;
 		
-		//on surcharge pour l'affichage des pÃ©rios en affichage django
+		//on surcharge pour l'affichage des périos en affichage django
 		global $lvl;
 		global $opac_notices_format;
+		
+		$bull_results_per_page = $opac_bull_results_per_page ?? 12;
+		if (isset($this->max_per_onglet)) {
+		    $bull_results_per_page = $this->max_per_onglet;
+		}
+
 		if($opac_notices_format==AFF_ETA_NOTICES_TEMPLATE_DJANGO){
 			$lvl='notice_display';
 		}
@@ -859,9 +966,9 @@ class perio_a2z {
 		$resultat_aff .= $notice->result;	
 		*/
 		$requete = "SELECT notice_id, niveau_biblio,typdoc,opac_visible_bulletinage FROM notices WHERE notice_id='$id'  and (opac_visible_bulletinage&0x1) LIMIT 1";	
-		$res = @pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		if (($obj=pmb_mysql_fetch_object($res))) {
-			//Recherche dans les numÃ©ros	
+			//Recherche dans les numéros	
 			$start_num = $bull_num_deb;
 			$restrict_num = "";
 			$restrict_date = "";
@@ -871,146 +978,82 @@ class perio_a2z {
 				$restrict_num = " and bulletin_numero like '%".$start_num."%' ";
 			}
 			
-			// Recherche dans les dates et libellÃ©s de pÃ©riode
+			// Recherche dans les dates et libellés de période
 			if(!$restrict_num) 
 				$restrict_date = $this->compare_date($bull_date_start,$bull_date_end);
 												
-			// nombre de rÃ©fÃ©rences par pages (12 par dÃ©faut)
-			if (!isset($opac_bull_results_per_page)) $opac_bull_results_per_page=12; 
-			if(!$page) $page=1;
-			$debut =($page-1)*$opac_bull_results_per_page;
-			$limiter = " LIMIT $debut,$opac_bull_results_per_page";
+			// nombre de références par pages (12 par défaut)
+			if(!$page) {
+			    $page=1;
+			}
+			$debut =($page-1)*$bull_results_per_page;
+			$limiter = " LIMIT $debut,$bull_results_per_page";
 			
-			//Recherche par numÃ©ro
-			$num_field_start = "
-				<input type='hidden' name='f_bull_deb_id' id='f_bull_deb_id' />
-				<input id='bull_num_deb' name='bull_num_deb' type='text' size='10' value='".$start_num."' onkeypress='if (event.keyCode==13){ show_perio($id);}' />";
-			
-			//Recherche par date
-			$deb_value = str_replace("-","",$bull_date_start);
-			$fin_value = str_replace("-","",$bull_date_end);
-			$date_deb_value = ($deb_value ? formatdate($deb_value) : '...');
-			$date_fin_value = ($fin_value ? formatdate($fin_value) : '...');
-			$date_debut = "<div id='inputs_bull_date_start'>
-			    <input type='text' style='width: 10em;' name='bull_date_start' id='bull_date_start' 
-					data-dojo-type='dijit/form/DateTextBox' required='false' value='".$bull_date_start."' />
-				<input type='button' class='bouton' name='del' value='X' onclick=\"empty_dojo_calendar_by_id('bull_date_start');\" />
-				</div>
-			";
-			$date_fin = "<div id='inputs_bull_date_end'>
-			    <input type='text' style='width: 10em;' name='bull_date_end' id='bull_date_end' 
-					data-dojo-type='dijit/form/DateTextBox' required='false' value='".$bull_date_end."' />
-				<input type='button' class='bouton' name='del' value='X' onclick=\"empty_dojo_calendar_by_id('bull_date_end');\" />
-				</div>
-			";
 			$bulletin_retard=$this->get_bulletin_retard($id);			
 			$tableau = "		
-			<a name='tab_bulletin'></a>
+			<a id='tab_bulletins_serial_".$id."' name='tab_bulletin'></a>
 			<h3><span class='titre_exemplaires'>".$msg["a2z_perio_list_bulletins"]."</span></h3>
 			<div id='form_search_bull'>
-				
-					<script src='./includes/javascript/ajax.js'></script>
-					<form name=\"form_values\" action=\"./index.php?lvl=notice_display&id=$id\" >\n
-						<input type=\"hidden\" name=\"premier\" value=\"\">\n
-						<input type=\"hidden\" id='page' name=\"page\" value=\"$page\">\n
-						<table>
-							<tr>
-								
-								<td ><strong>".$msg["search_per_bull_num"]." : ".$msg["search_bull_exact"]."</strong></td>
-								<td >$num_field_start</td>						
-								<td >&nbsp;</td>
-								
-								<td class='align_left' rowspan=2><input type='button' class='boutonrechercher' value='".$msg["142"]."' onclick='show_perio($id);' /></td>
-							</tr>
-							<tr>
-								<td ><strong>".$msg["search_per_bull_date"]." : ".$msg["search_bull_start"]."</strong></td>
-								<td>$date_debut</td>
-								<td><strong>".$msg["search_bull_end"]."</strong> $date_fin</td>
-								
-							</tr>
-						</table>
-					</form>
+				<script src='./includes/javascript/ajax.js'></script>
+				".$this->get_bulletins_search_form($id)."
 				<div class='row'></div><br />
 			</div>\n";
 			$resultat_aff.= $tableau;
 			
 			
-	//		$resultat_aff.= "<script type='text/javascript'>ajax_parse_dom();</script>";	
+	//		$resultat_aff.= "<script>ajax_parse_dom();</script>";	
 			$resultat_aff.=$bulletin_retard;
-			// A EXTERNALISER ENSUITE DANS un bulletin_list.inc.php
-			//AVANT
-			$requete="SELECT bulletins.*,count(explnum_id) as nbexplnum FROM bulletins LEFT JOIN explnum ON explnum_bulletin = bulletin_id where bulletin_id in(
-			SELECT bulletin_id FROM bulletins WHERE bulletin_notice='$id' $restrict_num $restrict_date and num_notice=0
-			) or bulletin_id in(
-			SELECT bulletin_id FROM bulletins,notice_statut, notices WHERE bulletin_notice='$id' $restrict_num $restrict_date 
-			and notice_id=num_notice
-			and statut=id_notice_statut 
-			and((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")) 
-			GROUP BY bulletins.bulletin_id ";
-			
-			//MAINTENANT
-			global $gestion_acces_active, $gestion_acces_empr_notice, $gestion_acces_empr_docnum, $opac_show_links_invisible_docnums;
-			$join_docnum_noti = $join_docnum_bull = "";
-			if ($gestion_acces_active==1 && $gestion_acces_empr_notice==1) {
-				$ac = new acces();
-				$dom_2= $ac->setDomain(2);
-				$join_noti = $dom_2->getJoin($_SESSION["id_empr_session"],4,"bulletins.num_notice");
-				$join_bull = $dom_2->getJoin($_SESSION["id_empr_session"],4,"bulletins.bulletin_notice");
-				if(!$opac_show_links_invisible_docnums){
-					$join_docnum_noti = $dom_2->getJoin($_SESSION["id_empr_session"],16,"bulletins.num_notice");
-					$join_docnum_bull = $dom_2->getJoin($_SESSION["id_empr_session"],16,"bulletins.bulletin_notice");
-				}
-			}else{
-				$join_noti = "join notices on bulletins.num_notice = notices.notice_id join notice_statut on notices.statut = notice_statut.id_notice_statut AND ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
-				$join_bull = "join notices on bulletins.bulletin_notice = notices.notice_id join notice_statut on notices.statut = notice_statut.id_notice_statut AND ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
-				if(!$opac_show_links_invisible_docnums){
-					$join_docnum_noti = "join notices on bulletins.num_notice = notices.notice_id join notice_statut on notices.statut = notice_statut.id_notice_statut AND ((explnum_visible_opac=1 and explnum_visible_opac_abon=0)".($_SESSION["user_code"]?" or (explnum_visible_opac_abon=1 and explnum_visible_opac=1)":"").")";
-					$join_docnum_bull = "join notices on bulletins.bulletin_notice = notices.notice_id join notice_statut on notices.statut = notice_statut.id_notice_statut AND ((explnum_visible_opac=1 and explnum_visible_opac_abon=0)".($_SESSION["user_code"]?" or (explnum_visible_opac_abon=1 and explnum_visible_opac=1)":"").")";
-				}	
+    	      if(!empty($opac_fonction_affichage_liste_bull) && $opac_fonction_affichage_liste_bull == 'affichage_liste_bulletins_tableau') {
+			    $filters = [];
+			    $filters['serial_id'] = $id;
+			    $filters['bulletin_numero'] = $bull_num_deb;
+			    $filters['date_date_start'] = $bull_date_start;
+			    $filters['date_date_end'] = $bull_date_end;
+			    $pager = [];
+			    if(!empty($page)) {
+			        $pager['page'] = $page;
+			        $pager['nb_per_page'] = $bull_results_per_page;
+			    }
+			    $resultat_aff.= list_opac_bulletins_a2z_ui::get_instance($filters, $pager)->get_display_list();
+			    $resultat_aff.= "<br /><br />";
+			} else {
+			    $record_datas = record_display::get_record_datas($id);
+			    $requete = $record_datas->get_query_bulletins_list($restrict_num, $restrict_date);
+			    $rescount1=pmb_mysql_query($requete);
+    			$count1=pmb_mysql_num_rows($rescount1);
+    						
+    			//si on recherche par date ou par numéro, le résultat sera trié par ordre croissant
+    			if (($restrict_num)||($restrict_date)) $requete.=" ORDER BY date_date, bulletin_numero*1 ";
+    			else $requete.=" ORDER BY date_date DESC, bulletin_numero*1 DESC";
+    			$requete.=$limiter;
+    			$res = @pmb_mysql_query($requete);
+    			$count=pmb_mysql_num_rows($res);
+    			if ($count) {
+    				ob_start();
+    				if ($opac_fonction_affichage_liste_bull) {
+    				    eval("\$opac_fonction_affichage_liste_bull (\$res);");
+    				} else {
+    				    affichage_liste_bulletins_normale($res);
+    				}
+    				$resultat_aff.=ob_get_contents();
+    				ob_end_clean();
+    			} else {
+    			    $resultat_aff.= "<strong>".$msg["bull_no_found"]."</strong>";
+    			}
+    			//$resultat_aff.= "<br />";		
+    			
+    			// constitution des liens
+    			if (!$count1) $count1=$count;
+    			$nbepages = ceil($count1/$bull_results_per_page);
+    			$action = "show_perio($id);return false;";
+    			$url_page = "javascript:changepage(!!page!!,$id, this)";
+    			if ($nbepages>1) {
+    			    $navBar = getNavbar($page, $count1, $bull_results_per_page, $url_page, '', '#');
+    			    $navBar->setOnsubmit($action);
+    			    $form = $navBar->getPaginatorPerio();
+    			}
 			}
-			$join_docnum_explnum = "";
-			if(!$opac_show_links_invisible_docnums) {
-				if ($gestion_acces_active==1 && $gestion_acces_empr_docnum==1) {
-					$ac = new acces();
-					$dom_3= $ac->setDomain(3);
-					$join_docnum_explnum = $dom_3->getJoin($_SESSION["id_empr_session"],16,"explnum_id");
-				}else{
-					$join_docnum_explnum = "join explnum_statut on explnum_docnum_statut=id_explnum_statut and ((explnum_visible_opac=1 and explnum_visible_opac_abon=0)".($_SESSION["user_code"]?" or (explnum_visible_opac_abon=1 and explnum_visible_opac=1)":"").")";
-				}
-			}
-			$requete_docnum_noti = "select bulletin_id, count(explnum_id) as nbexplnum from explnum join bulletins on explnum_bulletin = bulletin_id and explnum_notice = 0 ".$join_docnum_explnum." where bulletin_notice = ".$id." and explnum_bulletin in (select bulletin_id from bulletins ".$join_docnum_noti." where bulletin_notice = ".$id.") group by bulletin_id";
-			$requete_docnum_bull = "select bulletin_id, count(explnum_id) as nbexplnum from explnum join bulletins on explnum_bulletin = bulletin_id and explnum_notice = 0 ".$join_docnum_explnum." where bulletin_notice = ".$id." and explnum_bulletin in (select bulletin_id from bulletins ".$join_docnum_bull." where bulletin_notice = ".$id.") group by bulletin_id";
-			$requete_noti = "select bulletins.*,ifnull(nbexplnum,0) as nbexplnum from bulletins ".$join_noti." left join ($requete_docnum_noti) as docnum_noti on bulletins.bulletin_id = docnum_noti.bulletin_id where bulletins.num_notice != 0 and bulletin_notice = ".$id." $restrict_num $restrict_date GROUP BY bulletins.bulletin_id";
-			$requete_bull = "select bulletins.*,ifnull(nbexplnum,0) as nbexplnum from bulletins ".$join_bull." left join ($requete_docnum_bull) as docnum_bull on bulletins.bulletin_id = docnum_bull.bulletin_id where bulletins.num_notice = 0 and bulletin_notice = ".$id." $restrict_num $restrict_date GROUP BY bulletins.bulletin_id";
-			
-			$requete = "select * from (".$requete_noti." union ".$requete_bull.") as uni where 1 ".$restrict_num." ".$restrict_date;
-			$rescount1=pmb_mysql_query($requete);
-			$count1=pmb_mysql_num_rows($rescount1);
-						
-			//si on recherche par date ou par numÃ©ro, le rÃ©sultat sera triÃ© par ordre croissant
-			if (($restrict_num)||($restrict_date)) $requete.=" ORDER BY date_date, bulletin_numero*1 ";
-			else $requete.=" ORDER BY date_date DESC, bulletin_numero*1 DESC";
-			$requete.=$limiter;
-			$res = @pmb_mysql_query($requete, $dbh);
-			$count=pmb_mysql_num_rows($res);
-			if ($count) {
-				ob_start();
-				if ($opac_fonction_affichage_liste_bull) eval("\$opac_fonction_affichage_liste_bull (\$res);");
-				else affichage_liste_bulletins_normale($res);
-				$resultat_aff.=ob_get_contents();
-				ob_end_clean();
-			} else $resultat_aff.= "<strong>".$msg["bull_no_found"]."</strong>";
-			//$resultat_aff.= "<br />";		
-			
-			// constitution des liens
-			if (!$count1) $count1=$count;
-			$nbepages = ceil($count1/$opac_bull_results_per_page);
-			$url_page = "";//javascript:if (document.getElementById(\"onglet_isbd$id\")) if (document.getElementById(\"onglet_isbd$id\").className==\"isbd_public_active\") document.form_values.premier.value=\"ISBD\"; else document.form_values.premier.value=\"PUBLIC\"; document.form_values.page.value=!!page!!; document.form_values.submit()";
-			$action = "show_perio($id);return false;";
-			if ($nbepages>1) $form="<div class='row'></div>\n<div id='navbar_perio'>".printnavbar_onclick($page, $nbepages, $url_page,$action)."</div>";
-		
 		}
-		
 		return $resultat_aff.$form;
 	}
 	
@@ -1034,10 +1077,9 @@ class perio_a2z {
 	}
 	
 	public function get_external_sources_list(){
-		global $dbh;
 		$es_list = array();
 		$query = "select source_id,parameters from connectors_sources where id_connector = 'es_list'";
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				$source_params = unserialize($row->parameters);
@@ -1075,7 +1117,7 @@ class perio_a2z {
 		return $icon;
 	}
 
-} # fin de dÃ©finition de la classe 
+} # fin de définition de la classe 
 
 
-} # fin de dÃ©claration
+} # fin de déclaration

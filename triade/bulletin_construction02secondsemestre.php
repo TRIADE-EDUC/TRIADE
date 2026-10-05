@@ -6,7 +6,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -71,11 +71,11 @@ $CIE_FORM_coul_fleche_stagn = "#000000"; // gris :  #666666
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -96,7 +96,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"]);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre=LANGBULL22; }
@@ -163,7 +163,7 @@ include_once('librairie_php/recupnoteperiode.php');
 // recuperation des coordonnées
 // de l'etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -178,7 +178,7 @@ for($i=0;$i<count($data);$i++) {
 // recherche des dates de debut et fin
 //$dateRecup=recupDateTrim($_POST["saisie_trimestre"]);
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -234,7 +234,7 @@ $dateFin=dateForm($dateFin);
 $_POST["saisie_trimestre"] = "trimestre2";
 if ($_POST["saisie_trimestre"] == "trimestre2" ) {
 	$dateRecup_P1=recupDateTrim("trimestre1");
-	for($j=0;$j<count($dateRecup_P1);$j++) {
+	for($j=0;$j<countTriade($dateRecup_P1);$j++) {
 		$dateDebut_P1=$dateRecup_P1[$j][0];
 		$dateFin_P1=$dateRecup_P1[$j][1];
 	}
@@ -298,14 +298,14 @@ if ($moyenClasseGen ==  -1 ) { $moyenClasseGen=""; }
     */	
 //fin ab	
 	
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$noteMoyEleG=0;
 		$coefEleG=0;
 		$moyenEleve2="";
 		$ii=0;
-		for($t=0;$t<count($ordre);$t++) {
+		for($t=0;$t<countTriade($ordre);$t++) {
 			$idMatiere=$ordre[$t][0];
 			$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$t][2]);
 			$noteaff=moyenneEleveMatiere($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idprof);
@@ -412,7 +412,7 @@ if (strlen($CIE_FORM_moy[$idEleveMoyen]) == 2) {$CIE_FORM_moy[$idEleveMoyen] = $
 	echo '</table>';
 	echo "- Préparation du classement : ok</br>"; // affichage d'informations
     // calcul du nb d'étudiants dans la classe
-    $CIE_FORM_nb_etudiant_classe = count($CIE_FORM_moy);
+    $CIE_FORM_nb_etudiant_classe = countTriade($CIE_FORM_moy);
     $rang_a_donner = 0;
     foreach($CIE_FORM_moy as $k => $v) {
     $rang_a_donner++;
@@ -439,17 +439,17 @@ if (strlen($CIE_FORM_moy[$idEleveMoyen]) == 2) {$CIE_FORM_moy[$idEleveMoyen] = $
 
 //ab le 11062009
 $plageEleve=$_POST["plageEleve"]="tous";
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
 if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 
 //fin ab0
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -468,11 +468,11 @@ $nbabsnj=0;
 $nbsanctions=0;
 
 $nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-$nbretard=count($nbretard);
+$nbretard=countTriade($nbretard);
 
 // recherche le nombre d'absence justif
 $nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-for($o=0;$o<=count($nbabs);$o++) {
+for($o=0;$o<=countTriade($nbabs);$o++) {
         $nbretard1= $nbretard1 + $nbabs[$o][4];
 }
 if ($nbabs > 1) {
@@ -483,7 +483,7 @@ if ($nbabs > 1) {
 
 // recherche le nombre d'absence non justif
 $nbabsnj=nombre_absnj($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-for($o=0;$o<=count($nbabsnj);$o++) {
+for($o=0;$o<=countTriade($nbabsnj);$o++) {
         $nbretard2= $nbretard2 + $nbabsnj[$o][4];
 
 }
@@ -496,11 +496,11 @@ if ($nbabsnj > 1) {
 // recherche le nombre de sanction
 
 $nbsanctions=nombre_Sanc($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-$nbsanctions=count($nbsanctions);
+$nbsanctions=countTriade($nbsanctions);
 //
 
 $nbexclusions=nombre_Exclu($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-$nbexclusions=count($nbexclusions);
+$nbexclusions=countTriade($nbexclusions);
 
 
 //---------------------------------//
@@ -810,8 +810,8 @@ $coefEleG=0;
 $ii=0;
 //
 //J'enlève du décompte la dernière matière (ORDRE D'AFFICHAGE) qui doit obligatoirement être les commentaires généraux avec ma variable $ledecompte
-//$ledecompte=count($ordre) - 1;
-$ledecompte=count($ordre);
+//$ledecompte=countTriade($ordre) - 1;
+$ledecompte=countTriade($ordre);
 	for($i=0;$i<$ledecompte;$i++) {
 	$matiere=chercheMatiereNom($ordre[$i][0]);
 	$idMatiere=$ordre[$i][0];
@@ -1265,7 +1265,7 @@ Contenu original
 
 		$max="";
 		$min=1000;
-		for($g=0;$g<count($eleveT);$g++) {
+		for($g=0;$g<countTriade($eleveT);$g++) {
 			// variable eleve
 			$idEleveMoyen=$eleveT[$g][4];
 			
@@ -1283,7 +1283,7 @@ Contenu original
 		$max="";
 		$min=1000;
 		$eleveTg=listeEleveDansGroupe($idgroupe);
-		for($g=0;$g<count($eleveTg);$g++) {
+		for($g=0;$g<countTriade($eleveTg);$g++) {
 			// variable eleve
 			$idEleveMoyen=$eleveTg[$g];
 			$valeur=moyenneEleveMatiereGroupe($idEleveMoyen,$idMatiere,$dateDebut,$dateFin,$idgroupe,$idprof);
@@ -1841,7 +1841,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -1880,7 +1880,7 @@ else {
 </form>
 
 <!-- // fin  --></td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <script language=JavaScript>attente_close();</script>
 </BODY></HTML>
 <?php

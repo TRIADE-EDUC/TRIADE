@@ -1,10 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bul_expl_update.inc.php,v 1.37 2017-08-09 10:20:19 dgoron Exp $
+// $Id: bul_expl_update.inc.php,v 1.40 2023/10/24 09:57:08 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $msg, $charset;
+global $gestion_acces_active, $gestion_acces_user_notice, $PMBuserid, $current_module;
+global $expl_id, $org_cb, $f_ex_cb, $f_ex_location, $f_ex_nbparts, $expl_bulletin, $abt_id, $serial_circ_add;
 
 require_once("$class_path/serialcirc_diff.class.php");
 require_once($class_path."/serialcirc.class.php");
@@ -27,7 +31,7 @@ if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 	$dom_1= $ac->setDomain(1);
 	$acces_j = $dom_1->getJoin($PMBuserid,8,'bulletin_notice');
 	$q = "select count(1) from bulletins $acces_j where bulletin_id=".$expl_bulletin;
-	$r = pmb_mysql_query($q, $dbh);
+	$r = pmb_mysql_query($q);
 	if(pmb_mysql_result($r,0,0)==0) {
 		$acces_m=0;
 	}
@@ -55,7 +59,7 @@ if ($acces_m==0) {
 		// si le nouveau code-barre est deja utilise, on reste sur l'ancien
 		$requete = "SELECT expl_id FROM exemplaires WHERE expl_cb='$f_ex_cb'";
 		
-		$myQuery = pmb_mysql_query($requete, $dbh);
+		$myQuery = pmb_mysql_query($requete);
 		if(!($result=pmb_mysql_result($myQuery, 0, 0))) {
 			$expl_cb = $f_ex_cb;
 		} else {
@@ -81,39 +85,23 @@ if ($acces_m==0) {
 	$exemplaire = new exemplaire($expl_cb, $expl_id, 0, $expl_bulletin);
 	$exemplaire->set_properties_from_form();
 	$exemplaire->save();
-		
+	if(!$expl_id) {
+		$expl_id = $exemplaire->expl_id;
+	}
 	if(isset($abt_id) && $abt_id && isset($serial_circ_add) && $serial_circ_add) {		
 		$serialcirc_diff=new serialcirc_diff(0,$abt_id);
-			// Si c'est à faire circuler
+			// Si c'est � faire circuler
 		if($serialcirc_diff->id){ 
 			$serialcirc_diff->add_circ_expl($expl_id);
 		}
 	}
 		
 	// Mise a jour de la table notices_mots_global_index pour toutes les notices en relation avec l'exemplaire
-	$req_maj="SELECT bulletin_notice,num_notice, analysis_notice FROM bulletins LEFT JOIN analysis ON analysis_bulletin=bulletin_id WHERE bulletin_id='".$expl_bulletin."'";
-	$res_maj=pmb_mysql_query($req_maj);
-	if($res_maj && pmb_mysql_num_rows($res_maj)){
-		$first=true;//Pour la premiere ligne de résultat on doit indexer aussi la notice de périodique et de bulletin au besoin
-		while ( $ligne=pmb_mysql_fetch_object($res_maj) ) {
-			if($first){
-				if($ligne->bulletin_notice){
-					notice::majNoticesMotsGlobalIndex($ligne->bulletin_notice,'expl');
-				}
-				if($ligne->num_notice){
-					notice::majNoticesMotsGlobalIndex($ligne->num_notice,'expl');
-				}
-			}
-			if($ligne->analysis_notice){
-				notice::majNoticesMotsGlobalIndex($ligne->analysis_notice,'expl');
-			}
-			$first=false;
-		}
-	}
+	exemplaire::majNoticesMotsGlobalIndex($expl_id);
 	
 	$id_form = md5(microtime());
 	print "<div class='row'><div class='msg-perio'>".$msg['maj_encours']."</div></div>";
-	$retour = "./catalog.php?categ=serials&sub=view&sub=bulletinage&action=view&bul_id=$expl_bulletin";
+	$retour = "./catalog.php?categ=serials&sub=view&sub=bulletinage&action=view&bul_id=" . intval($expl_bulletin);
 	
 	if (isset($pointage) && $pointage) {
 		$templates="<script type='text/javascript'>

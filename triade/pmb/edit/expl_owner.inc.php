@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_owner.inc.php,v 1.22 2019-06-05 06:41:19 btafforeau Exp $
+// $Id: expl_owner.inc.php,v 1.24 2021/04/21 08:10:49 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-//RÃ©cupÃ©ration des variables postÃ©es, on en aura besoin pour les liens
+//Récupération des variables postées, on en aura besoin pour les liens
 $page="./edit.php";
 
-//Requete et calcul du nombre de pages Ã  afficher selon la taille de la base 'pret'
+//Requete et calcul du nombre de pages à afficher selon la taille de la base 'pret'
 //********************************************************************************
 $sql = "";
 $sql = "SELECT notices_m.notice_id as m_id, notices_s.notice_id s_id, section_libelle, expl_cote, expl_cb, idlender, lender_libelle , trim(concat(ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date, concat(' (',mention_date,')') ,''))) as tit ";
@@ -25,17 +25,17 @@ $req_nombre_lignes_pret = pmb_mysql_query($sql);
 
 $nombre_lignes_pret = pmb_mysql_num_rows($req_nombre_lignes_pret);
 
-//Si aucune limite_page n'a Ã©tÃ© passÃ©e, valeur par dÃ©faut : 10
+//Si aucune limite_page n'a été passée, valeur par défaut : 10
 if ($limite_page=="") {$limite_page = 10; }
 $nbpages= $nombre_lignes_pret / $limite_page; 
 
-// on arondi le nombre de page pour ne pas avoir de virgules, ici au chiffre supÃ©rieur 
+// on arondi le nombre de page pour ne pas avoir de virgules, ici au chiffre supérieur 
 $nbpages_arrondi = ceil($nbpages); 
 
-// on enlÃ¨ve 1 au nombre de pages, car la 1ere page affichÃ©e ne fait pas partie des pages suivantes
+// on enlève 1 au nombre de pages, car la 1ere page affichée ne fait pas partie des pages suivantes
 $nbpages_arrondi = $nbpages_arrondi - 1; 
 
-// si par un quelconque hasard, on se retrouve aprÃ¨s le dernier enregistrement, rechargement de la liste au premier ouvrage
+// si par un quelconque hasard, on se retrouve après le dernier enregistrement, rechargement de la liste au premier ouvrage
 if ($numero_page > $nbpages_arrondi) {
 	switch($dest) {
 		case "TABLEAU":
@@ -48,8 +48,8 @@ if ($numero_page > $nbpages_arrondi) {
 		}
 	}
 
-// si la variable numero de page a une valeur ou est diffÃ©rente de 0,
-// on multiplie la limite par le numero de la page passÃ©e par l'url
+// si la variable numero de page a une valeur ou est différente de 0,
+// on multiplie la limite par le numero de la page passée par l'url
 // sinon, pas de variable numero_page
 if(isset($numero_page) || $numero_page != 0 ) { 
 	$limite_mysql = $limite_page * $numero_page; 
@@ -72,19 +72,17 @@ switch($dest) {
 		$col=0;
 		break;
 	case "TABLEAUHTML":
-		echo "<h1>".$msg[1110]."&nbsp;:&nbsp;".$msg[1113]."</h1>";  
 		echo "<table class='fiche-lecteur' width=100%>";
  		echo "<tr><td class='jauge' colspan='2'>".$msg['circ_preteur']."</td><td class='jauge'>".$msg[296]."</td><td class='jauge'>".$msg['circ_CB']."</td><td class='jauge'>".$msg[233]."</td><td class='jauge'>".$msg[234]."</td></tr>"; 
 		break;
 	default:
 		$sql = $sql." LIMIT ".$limite_mysql.", ".$limite_page; 
-		echo "<h1>".$msg[1110]."&nbsp;:&nbsp;".$msg[1113]."</h1>";  
 		echo "<table class='fiche-lecteur' width=100%>";
  		echo "<tr><td class='jauge' colspan='2'>".$msg['circ_preteur']."</td><td class='jauge'>".$msg[296]."</td><td class='jauge'>".$msg['circ_CB']."</td><td class='jauge'>".$msg[233]."</td><td class='jauge'>".$msg[234]."</td></tr>"; 
 		break;
 	}
 	
-// on lance la requÃªte (mysql_query) et on impose un message d'erreur si la requÃªte ne se passe pas bien (or die) 
+// on lance la requête (mysql_query) et on impose un message d'erreur si la requête ne se passe pas bien (or die) 
 $req = pmb_mysql_query($sql) or die("Erreur SQL !<br />".$sql."<br />".pmb_mysql_error()); 
 
 // on va scanner tous les tuples un par un 
@@ -96,7 +94,7 @@ while ($data = pmb_mysql_fetch_array($req)) {
 	
 	$header_aut ? $auteur=$header_aut : $auteur="";
 		
-	// on affiche les rÃ©sultats 
+	// on affiche les résultats 
 	switch($dest) {
 		case "TABLEAU":
 			$row++;
@@ -135,8 +133,8 @@ while ($data = pmb_mysql_fetch_array($req)) {
 			echo "<td>".$data['lender_libelle']."</td>"; 
 			echo "<td>".$data['expl_cote']."</td>"; 
 			echo "<td><a href='catalog.php?categ=edit_expl&id=".$data['expl_id']."&cb=".$data['expl_cb']."'>".$data['expl_cb']."</a></td>";    
-			if ($data['m_id']) echo "<td><b><a href='catalog.php?categ=isbd&id=".$data['m_id']."'>".$data['tit']."</a></b></td>";
-				else echo "<td><b><a href='catalog.php?categ=serials&sub=serial_form&id=".$data['s_id']."'>".$data['tit']."</a></b></td>";
+			if ($data['m_id']) echo "<td><b><a href='".notice::get_permalink($data['m_id'])."'>".$data['tit']."</a></b></td>";
+				else echo "<td><b><a href='".serial::get_permalink($data['s_id'])."'>".$data['tit']."</a></b></td>";
 			echo "<td>".$auteur."</td>";
 			echo "</tr>";
 			break;
@@ -154,24 +152,24 @@ switch($dest) {
 	default:
 		echo "</table>";
 		//LIENS PAGE SUIVANTE et PAGE PRECEDENTE
-		// si le nombre de page n'est pas 0 et si la variable numero_page n'est pas dÃ©finie
-		// dans cette condition, la variable numero_page est incrÃ©mentÃ© et est infÃ©rieure Ã  $nombre 
+		// si le nombre de page n'est pas 0 et si la variable numero_page n'est pas définie
+		// dans cette condition, la variable numero_page est incrémenté et est inférieure à $nombre 
 		
 		if( $nbpages_arrondi != 0 && empty($numero_page)) {
  			print '< '.$msg[48].' <a href="'.$page.'?categ='.$categ.'&sub='.$sub.'&limite_page='.$limite_page;
- 			print '&numero_page=1">'.$msg[49].' ></a>'; // on passe la variable numero page Ã  1
+ 			print '&numero_page=1">'.$msg[49].' ></a>'; // on passe la variable numero page à 1
 			} elseif ($nbpages_arrondi !='0' && isset($numero_page) && $numero_page < $nbpages_arrondi) {
 				$suivant = $numero_page + 1; // on ajoute 1 au numero de page en cours 
 				$precedent = $numero_page - 1;
 				print '<a href="'.$page.'?categ='.$categ.'&sub='.$sub.'&limite_page='.$limite_page.'&numero_page='.$precedent;
- 				print '">< '.$msg[48].'</a>'; // retour page prÃ©cÃ©dente
+ 				print '">< '.$msg[48].'</a>'; // retour page précédente
 				print '<a href="'.$page.'?categ='.$categ.'&sub='.$sub.'&limite_page='.$limite_page.'&numero_page='.$suivant;
  				print '">'.$msg[49].' ></a>'; //le lien pour les pages suivantes
-				} // dans cette condition, le lien qui sera affichÃ© lorsque le nombre de page a Ã©tÃ© atteint
+				} // dans cette condition, le lien qui sera affiché lorsque le nombre de page a été atteint
 				  elseif ( $nbpages_arrondi !='0' && isset($numero_page) && $numero_page >= $nbpages_arrondi ) { 
 					$precedent = $numero_page - 1;
 					print '<a href="'.$page.'?categ='.$categ.'&sub='.$sub.'&limite_page='.$limite_page.'&numero_page='.$precedent;
- 					print '">< '.$msg[48].'</a>'; // retour page prÃ©cÃ©dente
+ 					print '">< '.$msg[48].'</a>'; // retour page précédente
 					}
 		
 		echo "<p class='align_left pn-normal' size='-3'>

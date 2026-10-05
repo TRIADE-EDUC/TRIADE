@@ -1,15 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_file_ui.class.php,v 1.3 2017-09-13 12:38:32 tsamson Exp $
+// $Id: onto_common_datatype_file_ui.class.php,v 1.6.8.1 2025/02/12 12:34:06 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 
 /**
  * class onto_common_datatype_small_text_ui
- * 
+ *
  */
 class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 
@@ -21,10 +21,10 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 
 
 	/**
-	 * 
 	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 *
+	 * @param property property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -35,21 +35,21 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 	 */
 	public static function get_form($item_uri,$property, $restrictions,$datas, $instance_name,$flag) {
 		global $msg,$charset,$ontology_tpl;
-		
+
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
-		
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
+
 		$content='';
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
-			
+
 			$form=str_replace("!!onto_new_order!!",$new_element_order , $form);
-			
+
 			foreach($datas as $key=>$data){
 				$row=$ontology_tpl['form_row_content'];
-				
+
 				if($data->get_order()){
 					$order=$data->get_order();
 				}else{
@@ -57,13 +57,14 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 				}
 				$inside_row = (!empty($ontology_tpl['form_row_content_file']) ? $ontology_tpl['form_row_content_file'] : "");
 				$inside_row .= (!empty($ontology_tpl['form_row_content_type']) ? $ontology_tpl['form_row_content_type'] : "");
-				//test sur le nom du prÃ©cÃ©dent fichier uploadÃ©
-				//par dÃ©faut $data->get_value() est un tableau
-				//Ã  voir si cela est nÃ©cessaire
+				//test sur le nom du précédent fichier uploadé
+				//par défaut $data->get_value() est un tableau
+				//à voir si cela est nécessaire
 				if ($data->get_value() && !is_array($data->get_value())) {
-					$ontofile = self::get_onto_file($data->get_value());
+				    //[Modération Contribution] $data->get_value() contient le nom du fichier
+					//$ontofile = self::get_onto_file($data->get_value());
 					$inside_row=str_replace("!!onto_contribution_last_file!!", $ontology_tpl['form_row_content_last_file'],$inside_row);
-					$inside_row=str_replace("!!onto_row_content_file_value!!", $ontofile->get_filename(),$inside_row);
+					$inside_row=str_replace("!!onto_row_content_file_value!!", $data->get_value(),$inside_row);
 					$inside_row=str_replace("!!onto_row_content_file_id!!", $data->get_value(),$inside_row);
 				} else {
 					$inside_row=str_replace("!!onto_contribution_last_file!!","",$inside_row);
@@ -71,39 +72,39 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 					$inside_row=str_replace("!!onto_row_content_file_id!!","",$inside_row);
 				}
 				$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
-				
+
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
-				
+
 				$input='';
 				if($first){
 					if($restrictions->get_max()<$i || $restrictions->get_max()===-1){
 						$input=$ontology_tpl['form_row_content_input_add_file'];
 					}
-					
+
 				}
 				$input.=$ontology_tpl['form_row_content_input_del'];
-				
+
 				$row=str_replace("!!onto_row_inputs!!",$input , $row);
 				$row=str_replace("!!onto_row_order!!",$order , $row);
-				
+
 				$content.=$row;
 				$first=false;
 				$i++;
 			}
 		}else{
 			$form=str_replace("!!onto_new_order!!","0" , $form);
-			
+
 			$row=$ontology_tpl['form_row_content'];
-			
+
 			$inside_row=$ontology_tpl['form_row_content_file'];
-			
-			//Revue 28/07 template non prÃ©sent dans ontology.tpl.php un erreur est gÃ©nÃ©rÃ©e, Ã  revoir
+
+			//Revue 28/07 template non présent dans ontology.tpl.php un erreur est générée, à revoir
 // 			$inside_row .= $ontology_tpl['form_row_content_type'];
 
 			$inside_row=str_replace("!!onto_contribution_last_file!!", '',$inside_row);
 			$inside_row=str_replace("!!onto_row_content_file_value!!","",$inside_row);
 			$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
-			
+
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
 			$input='';
 			if($restrictions->get_max()!=1){
@@ -111,44 +112,44 @@ class onto_common_datatype_file_ui extends onto_common_datatype_ui {
 			}
 			$input.=$ontology_tpl['form_row_content_input_del'];
 			$row=str_replace("!!onto_row_inputs!!",$input , $row);
-			
+
 			$row=str_replace("!!onto_row_order!!","0" , $row);
-			
+
 			$content.=$row;
 		}
-		
+
 		$form=str_replace("!!onto_rows!!",$content ,$form);
 		$form=str_replace("!!onto_row_id!!",$instance_name.'_'.$property->pmb_name , $form);
-		
+
 		return $form;
 	} // end of member function get_form
 
 	/**
-	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 *
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
-	 * 
+	 *
 	 * @return string
 	 * @access public
 	 */
 	public function get_display($datas, $property, $instance_name) {
-		
+
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
 		$display.='</p>';
 		$display.='</div>';
 		return $display;
-		
+
 	} // end of member function get_display
-	
+
 	public static function get_onto_file($id){
-		$id = $id*1;
+	    $id = intval($id);
 		$document = new onto_files($id);
 		return $document;
 	}

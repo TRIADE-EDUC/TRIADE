@@ -1,0 +1,26 @@
+{
+	"search_fields" : {
+		"AUT_BY=" 	: "Auteur",
+		"ILL=" 		: "Image",
+		"LEAD=" 	: "Introduction",
+		"LG=" 		: "Longueur",
+		"PAGE=" 	: "Page",
+		"SO_SEC=" 	: "Publications regroupées",
+		"INDUSTRY=" : "Secteurs d'activités",
+		"SUJ_KW_T="	: "Sujets",
+		"TEXT="		: "Texte",
+		"TIT_HEAD="	: "Titre"
+	},
+	"europresse" : {
+		"search_fields" : {
+			"XXX" : ["TEXT="],
+			"200$a" : ["TIT_HEAD="],
+			"60X" : ["SUJ_KW_T="],
+			"7XX" : ["AUT_BY="]
+		},
+		"language_text_to_language_code" : {
+			"en"		:	"eng",
+			"fr"		:	"fre"
+		}
+	}
+}

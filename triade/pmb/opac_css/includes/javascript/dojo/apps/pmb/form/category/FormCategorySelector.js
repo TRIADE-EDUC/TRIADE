@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormCategorySelector.js,v 1.2 2018-10-11 08:08:20 vtouchard Exp $
+// $Id: FormCategorySelector.js,v 1.5 2021/11/12 13:52:04 dgoron Exp $
 
 define([
         'dojo/_base/declare',
@@ -14,9 +14,10 @@ define([
         'apps/pmb/form/category/SubTabHierarchicalSearch',
         'apps/pmb/form/category/SubTabTermsSearch',
         'apps/pmb/form/category/SubTabAutoindexSearch',
+        'apps/pmb/form/category/SubTabCategoryAdd',
         'apps/pmb/form/category/SubTabCategoryResults',
         'apps/pmb/form/FormSelector',
-        ], function(declare, lang, topic, query, on, request, domAttr, SubTabHierarchicalSearch, SubTabTermsSearch, SubTabAutoindexSearch, SubTabCategoryResults, FormSelector){
+        ], function(declare, lang, topic, query, on, request, domAttr, SubTabHierarchicalSearch, SubTabTermsSearch, SubTabAutoindexSearch, SubTabCategoryAdd, SubTabCategoryResults, FormSelector){
 		return declare([FormSelector], {
 			hierarchicalSearchTab: null,   //Onglet rech hiérarchique
 			termsSearchTab: null,   //Onglet rech par termes
@@ -75,15 +76,21 @@ define([
 //				this.termsSearchTab.resize();
 //				this.termsSearchTab.startup();
 				
-				if(this.parameters.autoindex_class) {
+				if(this.isVisibleTab('indexation_auto') && this.parameters.autoindex_class && this.parameters.auto_index_notice_fields) {
 					this.autoindexSearchTab = new SubTabAutoindexSearch({title: pmbDojo.messages.getMessage('selector', 'selector_tab_indexation_auto'), style: 'width:90%; height:100%;', parameters: this.parameters});
 					this.autoindexSearchTab.href = this.parameters.selectorURL+'&action=autoindex_search&search_type=autoindex';
+					if(this.isDefaultSelectedTab('indexation_auto')) {
+						this.autoindexSearchTab.selected = true;
+					}
 					
 					this.addChild(this.autoindexSearchTab);
 					
 					this.autoindexSearchTab.resize();
 					this.autoindexSearchTab.startup();
 				}
+				
+				//this.newTab = new SubTabCategoryAdd({title: pmbDojo.messages.getMessage('selector', 'selector_tab_add'), style: 'width:95%; height:100%;', loadScripts: true, parameters: this.parameters});
+				//this.newTab.href = this.parameters.selectorURL+'&action=add&form_display_mode=2';
 				
 				this.inherited(arguments);
 			},

@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_persopac.class.php,v 1.24 2018-11-08 13:02:57 dgoron Exp $
+// $Id: search_persopac.class.php,v 1.29 2024/04/22 14:29:39 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// classes de gestion des recherches personnalisÃ©es
+// classes de gestion des recherches personnalisées
 
 // inclusions principales
+global $class_path, $include_path;
 require_once("$include_path/templates/search_persopac.tpl.php");
 require_once("$class_path/search.class.php");
 require_once("$class_path/translation.class.php");
@@ -17,6 +18,7 @@ class search_persopac {
 	public $id=0;
 	public $name="";
 	public $shortname="";
+	public $buttonlabel="";
 	public $query="";
 	public $human="";
 	public $directlink="";
@@ -24,31 +26,38 @@ class search_persopac {
 	public $order;
 	public $empr_categ_restrict = array();
 	public $url_base='./index.php?';
-	
+	public $search_persopac_list = array();
+	public $directlink_user;
+	public $directlink_user_form;
+
+
 	// constructeur
-	public function __construct($id=0) {	
-		$this->id = $id+0;
-		if($this->id) {
+	public function __construct($id=0) {
+		$this->id = intval($id);
+		if ($this->id) {
 			$this->fetch_data();
-		}else $this->get_link();
+		} else {
+			$this->get_link();
+		}
 	}
-    
-	// rÃ©cupÃ©ration des infos en base
+
+	// récupération des infos en base
 	public function fetch_data() {
 		$result = pmb_mysql_query("SELECT * FROM search_persopac WHERE search_id='".$this->id."'");
 		$row= pmb_mysql_fetch_object($result);
 		$this->name=translation::get_text($this->id,"search_persopac","search_name",$row->search_name);
-		$this->shortname=translation::get_text($this->id,"search_persopac","search_shortname",$row->search_shortname);	
+		$this->shortname=translation::get_text($this->id,"search_persopac","search_shortname",$row->search_shortname);
+		$this->buttonlabel = $row->search_button_label ?? "";
 		$this->query=$row->search_query;
 		$this->human=$row->search_human;
 		$this->directlink=$row->search_directlink;
 		$this->limitsearch=$row->search_limitsearch;
-	
+
 		$this->empr_categ_restrict = array();
 		$query  = "select id_categ_empr from search_persopac_empr_categ where id_search_persopac = ".$this->id;
 		$result = pmb_mysql_query($query);
-		if(pmb_mysql_num_rows($result)){
-			while ($row = pmb_mysql_fetch_object($result)){
+		if (pmb_mysql_num_rows($result)){
+			while ($row = pmb_mysql_fetch_object($result)) {
 				$this->empr_categ_restrict[]=$row->id_categ_empr;
 			}
 		}
@@ -57,14 +66,14 @@ class search_persopac {
 	public function get_tab() {
 		global $base_path;
 		global $onglet_persopac;
-		
-		if($this->directlink == 2) {
-			$js_launch_search= "document.forms['search_form".$this->id."'].action = '".$base_path."/index.php?lvl=more_results&mode=extended';";
+
+		if ($this->directlink == 2) {
+			$js_launch_search= "document.forms['search_form".$this->id."'].action = '".$base_path."/index.php?lvl=more_results&mode=extended&search_type_asked=extended_search';";
 		} else {
 			$js_launch_search= "";
 		}
-		
-		$tab = "<li ".($onglet_persopac==$this->id ? " id='current' " : "")." >
+
+		$tab = "<li ".($onglet_persopac==$this->id ? " id='current' aria-current='page' " : "")." >
 			<a href=\"javascript:".$js_launch_search."document.forms['search_form".$this->id."'].submit();\" data-search-perso-id='".$this->id."'>".($this->shortname ? $this->shortname : $this->name)."</a>";
 		
 		$my_search=new search();
@@ -78,7 +87,6 @@ class search_persopac {
 	}
 	
 	public function get_link() {
-		global $onglet_persopac,$launch_search;	
 		global $opac_view_filter_class;
 		$myQuery = pmb_mysql_query("SELECT search_persopac.*, group_concat(id_categ_empr) as categ_restrict FROM search_persopac left join search_persopac_empr_categ on id_search_persopac = search_id group by search_id order by search_order, search_name ");
 		
@@ -87,7 +95,7 @@ class search_persopac {
 		$forms_search="";
 		if(pmb_mysql_num_rows($myQuery)){
 			$i=0;
-			//on rÃ©cupÃ¨re la catÃ©gorie du lecteur...
+			//on récupère la catégorie du lecteur...
 			if($_SESSION['id_empr_session']){
 				$req = "select empr_categ from empr where id_empr = ".$_SESSION['id_empr_session'];
 				$res =pmb_mysql_query($req);
@@ -122,7 +130,7 @@ class search_persopac {
 		return true;
 	}
 
-	// fonction gÃ©nÃ©rant le form de saisie 
+	// fonction générant le form de saisie 
 	public function do_list() {
 		global $tpl_search_persopac_liste_tableau,$tpl_search_persopac_liste_tableau_ligne;
 		$forms_search = '';
@@ -179,4 +187,4 @@ class search_persopac {
 		return $forms_search.$links;
 	}
 
-} // fin dÃ©finition classe
+} // fin définition classe

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_docnumslist_view_docnumslist.class.php,v 1.2 2015-10-07 14:36:00 arenou Exp $
+// $Id: cms_module_docnumslist_view_docnumslist.class.php,v 1.3 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class cms_module_docnumslist_view_docnumslist extends cms_module_common_view {
 		foreach($datas as $data){
 			$datastore = array_merge($datastore,self::recurse_datas($data));
 		}
-		return self::utf8_normalize($datastore);
+		return encoding_normalize::utf8_normalize($datastore);
 	}
 	
 	public function get_headers($datas=array()){

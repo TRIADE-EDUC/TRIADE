@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -47,10 +47,18 @@ include("./librairie_php/lib_licence.php");
 <!-- // debut form  -->
 <?php
 if (!file_exists("./common/config-mailing.php")) {
-	include("../common/config2.inc.php"); 
+	include("../common/config2.inc.php");
 	$url=$_SERVER['SERVER_NAME'];
 	$graph=GRAPH;
-	print "<iframe width='100%' height=500 src='https://support.triade-educ.org/support/mailing-inscription.php?url=$url&inc=$graph' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 ></iframe>";
+	// Lire ou générer le productId (identifiant unique de cet établissement)
+	if (file_exists("../common/productId.php")) {
+		include_once("../common/productId.php");
+		$productId = PRODUCTID;
+	} else {
+		$productId = md5(uniqid($url, true));
+		file_put_contents("../common/productId.php", "<?php\ndefine(\"PRODUCTID\",\"$productId\");\n?>\n");
+	}
+	print "<iframe width='100%' height=970 src='https://support.triade-educ.org/support/mailing-inscription.php?url=$url&inc=$graph&productId=".urlencode($productId)."' MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 ></iframe>";
 }else{
 	print "<center><font class=T2>Votre établissement a déjà un compte d'inscrit au service SMS</font></center>";
 

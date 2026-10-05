@@ -36,7 +36,7 @@
   include("lang/$APPLI_LANGUE.php");
 
   // On recherche si on a des infos a afficher
-  $DB_CX->DbQuery("SELECT info_id, info_date, info_commentaire, info_heure_rappel FROM ${PREFIX_TABLE}information WHERE info_destinataire_id=".$idUser." AND info_heure_rappel<=".gmmktime()." ORDER BY info_id");
+  $DB_CX->DbQuery("SELECT info_id, info_date, info_commentaire, info_heure_rappel FROM {$PREFIX_TABLE}information WHERE info_destinataire_id=".$idUser." AND info_heure_rappel<=".gmmktime()." ORDER BY info_id");
   // Parcours et affichage des resultats
   $nbInfoTrouvees = $DB_CX->DbNumRows();
   if ($nbInfoTrouvees>0) {
@@ -136,7 +136,7 @@
 </HEAD>
 <BODY onLoad="javascript: window.focus(); OnLoad_Event();" style='<?php echo $AgendaPopUpFondImage; ?>'>
 <?php  // Mod Son 
-  $DB_CX->DbQuery("SELECT util_rappel_son, util_choix_son FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+  $DB_CX->DbQuery("SELECT util_rappel_son, util_choix_son FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   if ($DB_CX->DbNumRows() && $enr = $DB_CX->DbNextRow()) {
     if ($enr['util_rappel_son'] == 'O') 
     { 

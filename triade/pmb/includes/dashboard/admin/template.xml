@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: template.xml,v 1.2 2016-03-09 13:59:54 mbertin Exp $ -->
+$Id: template.xml,v 1.4 2021/02/12 15:29:40 dgoron Exp $ -->
 <template default_lang='fr_FR'>
 	<content lang='fr_FR'><![CDATA[
 		<h2>Gestion des tâches</h2>
@@ -19,6 +19,13 @@ $Id: template.xml,v 1.2 2016-03-09 13:59:54 mbertin Exp $ -->
 			<div class='title'>En attente : </div>
 			<div class='value'>{{nb_taches_en_attente.0.total}}</div>
 		</div>
+		{% if sphinx_status %}
+			<div class='row'>&nbsp;</div>
+			<h2>Sphinx</h2>
+			<div class='row'>
+				<div class='title'>{{ sphinx_status }}</div>
+			</div>
+		{% endif %}
 		]]>
 	</content>
 	
@@ -36,6 +43,13 @@ $Id: template.xml,v 1.2 2016-03-09 13:59:54 mbertin Exp $ -->
 			<div class='title'>Waiting : </div>
 			<div class='value'>{{nb_taches_en_attente.0.total}}</div>
 		</div>
+		{% if sphinx_status == false %}
+			<div class='row'>&nbsp;</div>
+			<h2>Sphinx</h2>
+			<div class='row'>
+				<div class='title'>Sphinx service is not activated</div>
+			</div>
+		{% endif %}
 		]]>
 	</content>
 </template>

@@ -1,12 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_portfolio.class.php,v 1.6 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_common_view_portfolio.class.php,v 1.10.2.2 2025/01/17 10:40:43 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_common_view_portfolio extends cms_module_common_view_django{
+	
 	
 	public function __construct($id=0){
 		parent::__construct($id);
@@ -30,6 +31,7 @@ class cms_module_common_view_portfolio extends cms_module_common_view_django{
 <div class='row'></div>";
 	}
 	
+	
 	public function get_form(){
 		$form = "
 		<div class='row'>
@@ -46,35 +48,45 @@ class cms_module_common_view_portfolio extends cms_module_common_view_django{
 		return $form;
 	}
 	
+	
 	public function save_form(){
 		$this->parameters['visionneuse'] = $this->get_value_from_form("visionneuse");
 		$this->parameters['visionneuse'] = 0;
 		return parent::save_form();
 	}
 	
+	
 	public function get_headers($datas=array()){
+		
 		$headers = array();
-		$headers[] = "<script type='text/javascript' src='visionneuse/javascript/visionneuse.js'></script>";
-		$headers[] = "<script type='text/javascript' src='visionneuse/javascript/visionneuse.js'></script>";
+		$headers[] = "<script src='visionneuse/javascript/visionneuse.js'></script>";
 		return $headers;
 	}
 	
+	
 	public function render($datas){
 		$render =  parent::render($datas);
-		if($this->parameters['visionneuse']){
-			for($i=0 ; $i<count($datas['documents']) ; $i++){
-				$str_to_replace = substr($render,strpos($render,$datas['documents'][$i]['url'])-1,strlen($datas['documents'][$i]['url'])+2);
+		
+		if($this->parameters['visionneuse'] && is_countable($datas['documents'])){
+			$documents = array_reverse($datas['documents']);
+			for($i=0 ; $i<count($documents) ; $i++){
+				$str_to_replace = substr($render,strpos($render,$documents[$i]['url'])-1,strlen($documents[$i]['url'])+2);
 				if(trim($str_to_replace)){
-					$render = str_replace($str_to_replace, "'#' onclick='open_visionneuse(open_cms_visionneuse_".$this->id.",".$datas['documents'][$i]['id'].");return false;'", $render);
+					$render = str_replace($str_to_replace, "'#' onclick='open_visionneuse(open_cms_visionneuse_".$this->id.",".$documents[$i]['id'].",".$i.");return false;'", $render);
 				}
 			}
 			$render.= "
-			<script type='text/javascript'>
-				function open_cms_visionneuse_".$this->id."(id){
+			<script>
+				function open_cms_visionneuse_".$this->id."(id, position){
 					var url = 'visionneuse.php?driver=pmb_document&lvl=visionneuse&cms_type=".$datas['type_object']."&num_type=".$datas['num_object']."';
 					if(id){
 						url+='&explnum='+id;
 					}
+
+					if(position >= 0) {
+						url+='&position='+position;
+					}
+
 					document.getElementById('visionneuseIframe').src = url;
 				}
 			</script>";
@@ -82,8 +94,28 @@ class cms_module_common_view_portfolio extends cms_module_common_view_django{
 		return $render;
 	}
 
+	
 	public function get_format_data_structure(){
 		$datasource = new cms_module_common_datasource_portfolio();
-		return array_merge($datasource->get_format_data_structure(),parent::get_format_data_structure());
+		$format = $datasource->get_format_data_structure();
+		$format[] = array(
+		    'var' => "paginator",
+		    'desc' => $this->msg['cms_module_common_view_list_paging_title'],
+		    'children' => array(
+		        array(
+		            'var' => "paginator.paginator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_paginator_title']
+		        ),
+		        array(
+		            'var' => "paginator.nbPerPageSelector",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_nb_per_page_title']
+		        ),
+		        array(
+		            'var' => "paginator.navigator",
+		            'desc' => $this->msg['cms_module_common_view_list_paging_navigator_title']
+		        )
+		    )
+		);
+		return array_merge($format,parent::get_format_data_structure());
 	}
 }

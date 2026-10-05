@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: commandes.tpl.php,v 1.78 2019-05-27 16:04:40 btafforeau Exp $
+// $Id: commandes.tpl.php,v 1.85 2020/11/04 11:32:40 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -10,6 +10,7 @@ global $id_bibli, $id_cde, $id_exercice, $cdelist_form, $current_module, $msg, $
 global $acquisition_budget, $acquisition_type_produit, $deflt3lgstatcde, $modif_cde_sel_typ_for_checked, $modif_cde_sel_rub_for_checked, $modif_cde_row_form, $first_applicant_line;
 global $others_applicants_line, $sel_date_pay_mod, $sel_date_liv_mod, $sel_date_liv_fix, $bt_enr, $bt_val, $bt_dup, $bt_sup, $bt_arc, $bt_imp, $valid_cde_form, $bt_enr_valid;
 global $bt_rec, $bt_fac, $bt_sol, $bt_audit, $valid_cde_row_form, $applicants_common_tpl;
+global $acquisition_increase_rate_percent;
 
 if(!isset($id_bibli)) $id_bibli = 0;
 if(!isset($id_cde)) $id_cde = 0;
@@ -409,8 +410,8 @@ switch ($acquisition_gestion_tva) {
 						<th style='width:20%'>".htmlentities($msg['acquisition_act_tab_typ'], ENT_QUOTES, $charset)."<br />".htmlentities($msg['acquisition_remise'], ENT_QUOTES, $charset)."</th>";
 		break;
 }
-$modif_cde_form.="		<th style='width:20%'>".htmlentities($msg['acquisition_act_tab_bud'], ENT_QUOTES, $charset)."</th>
-						<th style='width:10%'>".htmlentities($msg['acquisition_lgstat'], ENT_QUOTES, $charset)."</th>
+$modif_cde_form.="		<th style='width:12%'>".htmlentities($msg['acquisition_act_tab_bud'], ENT_QUOTES, $charset)."</th>
+						<th style='width:12%'>".htmlentities($msg['acquisition_lgstat'], ENT_QUOTES, $charset)."</th>
 						<th style='width:0px' ></th>
 					</tr>
 					<!-- lignes -->
@@ -426,17 +427,21 @@ $modif_cde_form.="		<th style='width:20%'>".htmlentities($msg['acquisition_act_t
 		<div class='row'>
 			<div class='right'>
 				<label class='etiquette'>".htmlentities($msg['acquisition_action_check_line'], ENT_QUOTES, $charset)."</label>
-				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_act_apply_type_to_checked']."' onclick=\"act_applyTypeToChecked();\" />
-				<!-- sel_type_for_checked -->
-				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_act_apply_budget_to_checked']."' onclick=\"act_applyBudgetToChecked();\" />
-				<!-- sel_budget_for_checked -->
-				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_action_check_line_duplicate']."' onclick=\"act_line_action('duplicate');\" />
-				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_action_check_line_transfer']."' onclick=\"act_line_action('transfer');\" />
+				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_copy_chk_lig']."' onclick=\"act_copyLines();\" />
 				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_del_chk_lig']."' onclick=\"act_delLines();\" />
+				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_action_check_line_increase_rate']."' onclick=\"act_increaseRate();\" />
+                <input type='text' id='increase_rate_percent' class='saisie-2em' value='".htmlentities($acquisition_increase_rate_percent, ENT_QUOTES, $charset)."' />".$msg['acquisition_action_check_line_increase_rate_percent']."
+				<!-- sel_type_for_checked -->
+				<!-- sel_budget_for_checked -->
 				<input type='button' class='bouton_small' style='width:20px;' tabindex='1' value='+' onclick='act_switchCheck();' />
 			</div>
 		</div>
-
+		<div class='row'>
+			<div class='right'>
+				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_action_check_line_duplicate']."' onclick=\"act_line_action('duplicate');\" />
+				<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_action_check_line_transfer']."' onclick=\"act_line_action('transfer');\" />
+			</div>
+		</div>
 		<div class='row'></div>
 		<hr />
 
@@ -467,6 +472,7 @@ $modif_cde_form.= "
 
 	<div class='row'>
 			<label class='etiquette'>".$msg['acquisition_act_tab_pri_exposant_label']."</label>
+			<br /><label class='etiquette'>".$msg['acquisition_lig_frais_annexes']."</label>
 	</div>
 	<div class='row'>
 		<div class='left'>
@@ -521,15 +527,17 @@ $modif_cde_form.= "
 <!-- jscript -->";
 
 $modif_cde_sel_typ_for_checked = "
+		<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_act_apply_type_to_checked']."' onclick=\"act_applyTypeToChecked();\" />
 		<input type='hidden' id='typ_for_checked' value='0' />
 		<input type='hidden' id='rem_for_checked' value='0.00' />
 		<input type='hidden' id='tva_for_checked' value='0.00' />
-		<input type='text' id='lib_typ_for_checked' tabindex='1' completion='types_produits' linkfield='id_fou' autfield='typ_for_checked' autocomplete='off'  callback='callBackTypeProduit' class='in_cell_ro' value='' />
+		<input type='text' id='lib_typ_for_checked' tabindex='1' completion='types_produits' linkfield='id_fou' autfield='typ_for_checked' autocomplete='off'  callback='callbackUpdateType' class='in_cell_ro' value='' />
 		<input type='button' tabindex='1' id='sel_typ_for_checked' class='bouton_small' style='width:20px' value='".$msg['parcourir']."' onclick=\"act_getType(this);\" />
 		<input type='button' tabindex='1' id='del_typ_for_checked' class='bouton_small' style='width:20px;' value='".$msg['raz']."' onclick=\"act_delType(this);\" />";
 
 
 $modif_cde_sel_rub_for_checked = "
+		<input type='button' tabindex='1' class='bouton_small' value='".$msg['acquisition_act_apply_budget_to_checked']."' onclick=\"act_applyBudgetToChecked();\" />
 		<input type='hidden' id='rub_for_checked' value='0' />
 		<input type='text' id='lib_rub_for_checked' tabindex='1' completion='rubriques' param1='!!id_bibli!!' param2='!!id_exer!!' autfield='rub_for_checked' autocomplete='off' class='in_cell_ro' value='' />
 		<input type='button' id='sel_rub_for_checked' tabindex='1' class='bouton_small' style='width:20px;' value='".$msg['parcourir']."' onclick=\"act_getRubrique(this);\" />
@@ -537,10 +545,10 @@ $modif_cde_sel_rub_for_checked = "
 
 
 //	------------------------------------------------------------------------------
-//	template de crÃ©ation/modification pour les lignes de commande
+//	template de création/modification pour les lignes de commande
 //	------------------------------------------------------------------------------
 $modif_cde_row_form = "
-<tr id='R_!!no!!'>
+<tr id='R_!!no!!' class='act_typ_lig_!!typ_lig!!'>
 	<td style='overflow:visible; width:0px'>
 		<img onclick=\"javascript:expandRow('C_!!no!!_', true);\"  src='".get_url_icon('plus.gif')."' name='C_!!no!!_Img' id='C_!!no!!_Img' class='act_cell_img_plus' />
 	</td>
@@ -624,16 +632,12 @@ $others_applicants_line = "<div class='row'>
 						</div>";
 
 //Date paiement modifiable
-$sel_date_pay_mod ="<input type='hidden' id='date_pay' name='date_pay' value='!!date_pay!!' />
-			<input type='button' id='date_pay_lib' class='bouton_small' value='!!date_pay_lib!!' onclick=\"openPopUp('./select.php?what=calendrier&caller='+this.form.name+'&date_caller=&param1=date_pay&param2=date_pay_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\" />
-			<input type='button' class='bouton_small' style='width:20px;' value='".$msg['raz']."' onclick=\"this.form.elements['date_pay_lib'].value='".$msg['parperso_nodate']."'; this.form.elements['date_pay'].value='';\" />";
+$sel_date_pay_mod = "<input type='date' id='date_pay' name='date_pay' value='!!date_pay!!' />";
 
 //Date livraison modifiable
-$sel_date_liv_mod ="<input type='hidden' id='date_liv' name='date_liv' value='!!date_liv!!' />
-			<input type='button' id='date_liv_lib' class='bouton_small' value='!!date_liv_lib!!' onclick=\"openPopUp('./select.php?what=calendrier&caller='+this.form.name+'&date_caller=&param1=date_liv&param2=date_liv_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\" />
-			<input type='button' class='bouton_small' style='width:20px;' value='".$msg['raz']."' onclick=\"this.form.elements['date_liv_lib'].value='".$msg['parperso_nodate']."'; this.form.elements['date_liv'].value='';\" />";
+$sel_date_liv_mod = "<input type='date' id='date_liv' name='date_liv' value='!!date_liv!!' />";
 //Date livraison non modifiable
-$sel_date_liv_fix ="<input type='hidden' id='date_liv' name='date_liv' value='!!date_liv!!' />!!date_liv_lib!!";
+$sel_date_liv_fix = "<input type='hidden' id='date_liv' name='date_liv' value='!!date_liv!!' />!!date_liv_lib!!";
 
 
 $bt_enr = "<input type='button' class='bouton' value='".$msg['77']."'
@@ -673,7 +677,7 @@ $bt_imp = "<input type='button' class='bouton' value='".$msg['imprimer']."' titl
 
 
 //	------------------------------------------------------------------------------
-//	$valid_cde_form : template de visualisation pour les commandes validÃ©es non modifiables
+//	$valid_cde_form : template de visualisation pour les commandes validées non modifiables
 //	------------------------------------------------------------------------------
 $valid_cde_form = $modif_cde_duplicate_transfer_jscript."
 <form class='form-".$current_module."' id='act_modif' name='act_modif' method='post' action=\"\">
@@ -1076,5 +1080,3 @@ $applicants_common_tpl = "<tr !!applicants_visibility!!>
 								!!std_applicants!!
 							</td>
 						</tr>";
-
-?>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -69,8 +69,8 @@ if (isset($_POST["sClasseGrp"])) {
 
 $nommatiere=chercheMatiereNom($idmatiere);
 $listTmp=explode(":",$sClasseGrp);
-$HPV[cid]=$listTmp[0];
-$HPV[gid]=$listTmp[1];
+$HPV['cid']=$listTmp[0];
+$HPV['gid']=$listTmp[1];
 $list2=$listTmp[1];
 $list1=$listTmp[0];
 unset($listTmp);
@@ -80,7 +80,7 @@ $nomclasse=chercheClasse($idclasse);
 ?>
 <HTML>
 <HEAD>
-<title>Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -184,7 +184,7 @@ for($i=0;$i<=$nb;$i++) {
 
 	print "<td valign=top width=33%>";
 	$cumultempsestime=0;
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		if (($data[$j][1] != "$idmatiere") && ($idmatiere != "tous")) { continue; }
 		$tempsestime=$data[$j][11];
 		$cumultempsestime+=conv_en_seconde($data[$j][11]);
@@ -234,7 +234,7 @@ for($i=0;$i<=$nb;$i++) {
 	$devoirvisu=2;
 	print "<td valign=top  width=33%>";
 	$cumultempsestime=0;
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		if (($data[$j][1] != "$idmatiere") && ($idmatiere != "tous")) { continue; }
 		$tempsestime=$data[$j][11];
 		$cumultempsestime+=conv_en_seconde($data[$j][11]);
@@ -287,7 +287,7 @@ for($i=0;$i<=$nb;$i++) {
 	
 	print "<td valign=top  width=33%>";
 	$cumultempsestime=0;
-	for($j=0;$j<count($data);$j++) {
+	for($j=0;$j<countTriade($data);$j++) {
 		if (($data[$j][1] != "$idmatiere") && ($idmatiere != "tous")) { continue; }	
 		$tempsestime=$data[$j][11];
 		$cumultempsestime+=conv_en_seconde($data[$j][11]);

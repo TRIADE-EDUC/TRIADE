@@ -1,114 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: explnum_licence.tpl.php,v 1.9 2019-05-27 10:43:47 ngantier Exp $
+// $Id: explnum_licence.tpl.php,v 1.13 2023/08/30 07:18:11 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $what, $admin_explnum_licence_content_form, $msg, $charset, $admin_explnum_licence_list, $current_module, $admin_explnum_licence_list_row;
-global $admin_explnum_licence_settings_menu, $admin_explnum_licence_profile_list, $admin_explnum_licence_profile_list_row, $admin_explnum_licence_right_list, $admin_explnum_licence_right_list_row, $explnum_licence_selector, $explnum_licence_selector_script, $base_path, $explnum_licence_profiles_form_list_item, $explnum_licence_profile_details, $explnum_licence_pdf_container_template, $explnum_licence_right_details, $explnum_licence_info_picto, $explnum_licence_script_dialog, $explnum_licence_profile_quotation;
-
-if (!isset($what)) {
-	$what = 'profiles';
-}
-
-//statuts de contribution
-$admin_explnum_licence_content_form = "
-<div class='row'>
-	<label class='etiquette' for='explnum_licence_label'>".htmlentities($msg["docnum_statut_libelle"], ENT_QUOTES, $charset)."</label>
-</div>
-<div class='row'>
-	<input type='text' class='saisie-50em' id='explnum_licence_label' name='explnum_licence_label' value='!!explnum_licence_label!!' data-translation-fieldname='explnum_licence_label'>
-</div>
-<div class='row'>
-	<label class='etiquette' for='explnum_licence_uri'>".htmlentities($msg["explnum_licence_uri"], ENT_QUOTES, $charset)."</label>
-</div>
-<div class='row'>
-	<input type='text' class='saisie-50em' id='explnum_licence_uri' name='explnum_licence_uri' value='!!explnum_licence_uri!!' data-translation-fieldname='explnum_licence_uri'>
-</div>";
-
-$admin_explnum_licence_list = '
-		<script type="text/javascript">
-			document.title="'.$msg['admin_menu_noti_licence'].'";
-			window.status="'.$msg['admin_menu_noti_licence'].'";
-		</script>
-		<form class="form-'.$current_module.'" id="explnum_licence_form" name="explnum_licence_form" method="post" action="#">
-			<input name="action" type="hidden">
-			<table>	
-				<tbody>
-					<tr>
-						<th>'.$msg["docnum_statut_libelle"].'</th>			
-						<th>'.$msg["explnum_licence_uri"].'</th>
-						<th></th>
-					</tr>
-					!!admin_explnum_licence_list_rows!!
-				</tbody>
-			</table>
-		</form>';
-
-$admin_explnum_licence_list_row = '
-					<tr class="!!odd_even!!" onmouseover="this.className=\'surbrillance\'" onmouseout="this.className=\'!!odd_even!!\'">
-						<td onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=edit&id=!!id!!\';" style="cursor: pointer">!!explnum_licence_libelle!!</td>
-						<td onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=edit&id=!!id!!\';" style="cursor: pointer">!!explnum_licence_uri!!</td>
-						<td><input type="button" class="bouton" onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!\';" value="'.$msg['explnum_licence_settings'].'" /></td>
-					</tr>';
+global $what, $msg, $charset;
+global $admin_explnum_licence_settings_menu, $explnum_licence_selector, $explnum_licence_selector_script, $base_path, $explnum_licence_profiles_form_list_item, $explnum_licence_profile_details, $explnum_licence_pdf_container_template, $explnum_licence_right_details, $explnum_licence_info_picto, $explnum_licence_script_dialog, $explnum_licence_profile_quotation;
 
 $admin_explnum_licence_settings_menu = '
 		<div class="hmenu">
-			<span '.(($what == 'profiles') ? 'class="selected"' : '').'>
+			<span '.((empty($what) || $what == 'profiles') ? 'class="selected"' : '').'>
 				<a title="'.$msg['explnum_licence_profiles'].'" href="./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!&what=profiles">'.$msg['explnum_licence_profiles'].'</a>
 			</span>
 			<span '.(($what == 'rights') ? 'class="selected"' : '').'>
 				<a title="'.$msg['explnum_licence_rights'].'" href="./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!&what=rights">'.$msg['explnum_licence_rights'].'</a>
 			</span>
 		</div>';
-
-$admin_explnum_licence_profile_list = '
-		<script type="text/javascript">
-			document.title="'.$msg['explnum_licence_profiles'].'";
-			window.status="'.$msg['explnum_licence_profiles'].'";
-		</script>
-		<form class="form-'.$current_module.'" id="explnum_licence_form" name="explnum_licence_form" method="post" action="#">
-			<input name="action" type="hidden">
-			<table>
-				<tbody>
-					<tr>
-						<th>'.$msg["docnum_statut_libelle"].'</th>
-						<th>'.$msg["explnum_licence_uri"].'</th>
-					</tr>
-					!!admin_explnum_licence_profile_list_rows!!
-				</tbody>
-			</table>
-		</form>';
-
-$admin_explnum_licence_profile_list_row = '
-		<tr class="!!odd_even!!" onmouseover="this.className=\'surbrillance\'" onmouseout="this.className=\'!!odd_even!!\'">
-			<td onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!&what=profiles&profileaction=edit&profileid=!!profileid!!\';" style="cursor: pointer">!!explnum_licence_profile_libelle!!</td>
-			<td onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!&what=profiles&profileaction=edit&profileid=!!profileid!!\';"  style="cursor: pointer">!!explnum_licence_profile_uri!!</td>
-		</tr>';
-
-$admin_explnum_licence_right_list = '
-		<script type="text/javascript">
-			document.title="'.$msg['explnum_licence_rights'].'";
-			window.status="'.$msg['explnum_licence_rights'].'";
-		</script>
-		<form class="form-'.$current_module.'" id="explnum_licence_form" name="explnum_licence_form" method="post" action="#">
-			<input name="action" type="hidden">
-			<table>
-				<tbody>
-					<tr>
-						<th>'.$msg["docnum_statut_libelle"].'</th>
-					</tr>
-					!!admin_explnum_licence_right_list_rows!!
-				</tbody>
-			</table>
-		</form>';
-
-$admin_explnum_licence_right_list_row = '
-		<tr class="!!odd_even!!" onmouseover="this.className=\'surbrillance\'" onmouseout="this.className=\'!!odd_even!!\'">
-			<td onclick="document.location=\'./admin.php?categ=docnum&sub=licence&action=settings&id=!!id!!&what=rights&rightaction=edit&rightid=!!rightid!!\';" style="cursor: pointer">!!explnum_licence_right_libelle!!</td>
-		</tr>';
 
 $explnum_licence_selector = '
 		<select name="explnum_licence[]" id="explnum_licence_selector_!!selector_index!!" class="explnum_licence_selector">

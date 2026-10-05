@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,9 +38,14 @@ if (file_exists("./common/config-module.php")) include_once("./common/config-mod
 include_once("lib_error.php");
 include_once("licence_triade.php");
 
+$VERSIONPATCH="";
+$VERSIONMD5="";
+
 if (file_exists("./common/lib_patch.php")){
 	include_once('./common/lib_patch.php');
-	$rev="<br />Rev : <strong>".VERSIONPATCH."</strong>  - <i>".VERSIONMD5."</i>";
+	if (defined('VERSIONPATCH')) $VERSIONPATCH=VERSIONPATCH;
+	if (defined('VERSIONMD5')) $VERSIONPATCH=VERSIONMD5;
+	$rev="<br />Rev : <strong>".$VERSIONPATCH."</strong>  - <i>".$VERSIONMD5."</i>";
 }
 
 if (file_exists("./common/lib_triade_interne.php")) {
@@ -59,36 +64,13 @@ if (!defined('INTITULECLASSE')) { define("INTITULECLASSE","classe"); }
 if (!defined('INTITULEENSEIGNANT')) { define("INTITULEENSEIGNANT","enseignant"); }
 
 
-// pour internet explorer
-if (preg_match('/msie/i', $_SERVER['HTTP_USER_AGENT']) && !preg_match('/opera/i', $_SERVER['HTTP_USER_AGENT']))
-{
-print "<div id='menu' class='fond' style='background-image:url(./image/commun/fond_inscrip.jpg);position:absolute;z-index:2;' >";
-print "<div class='intitules' url='' align=left>";
-print "<br /><img src='./image/commun/logo_triade_licence.gif'alt='logo' />";
-print "        <br /><br />Version : <strong>".VERSION."</strong>";
-print "	       $rev";
-print "        <br /> Tous droits réservés <br />";
-print "                Licence d'utilisation : ".LICENCE."<br />";
-print "                Product&nbsp;ID&nbsp;=&nbsp;<font class='T1'>".PRODUCTID."</font>";
-print "        <br />";
-print "        <textarea cols=55 rows=5 STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>";
-droit();
-print "</textarea>";
-print "        <hr /><table width=95%><tr><td align=left> <font size=2>Triade©, 2000 - ".date("Y")." </font></td><td align=right><input type=button value='Fermer Fenêtre' onclick='masque_menu()' class='bouton2'></td></tr></table>";
-
-print "<br /></div></div>";
-print "\n<script type=\"text/javascript\">";
-print "document.getElementById('menu').style.visibility='hidden'";
-print "</script>\n";
-}
-
 //------------------------------------------------------------------------------
 // declaration de variables
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
 //------------------------------------------------------------------------------
 function droit() {
-	print DROITRIADE;
+	if (defined('DROITRIADE')) print DROITRIADE;
 }
 
 
@@ -106,7 +88,13 @@ print "var INTITULEDIRECTION='".ucfirst(INTITULEDIRECTION)."'; ";
 print "var INTITULEELEVE='".ucfirst(TextNoAccent(INTITULEELEVE))."'; ";
 print "var INTITULEENSEIGNANT='".ucfirst(TextNoAccent(INTITULEENSEIGNANT))."'; ";
 
-print "var GRAPH='".GRAPH."'; ";
+
+print "var GRAPH='GRAPH'; ";
+print "var banniere='BANNIEREDISPO';";
+
+if (defined("GRAPH")) 		print "var GRAPH='".GRAPH."'; ";
+if (defined("BANNIEREDISPO"))	print "var banniere='".BANNIEREDISPO."';";
+if (defined("BANNIEREHAUTEUR"))	print "var bannierehauteur='".BANNIEREHAUTEUR."';";
 
 if (defined('FOOTERSPECIAL')) { 
 	print "var footer=\"".FOOTERSPECIAL."\";";

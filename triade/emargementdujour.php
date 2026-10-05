@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,7 +25,15 @@ session_start();
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
+<meta charset="utf-8">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="librairie_css/css-v4.css">
+<link rel="stylesheet" href="librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/alertify.min.css">
+<link rel="stylesheet" href="./alertifyjs/css/themes/default.min.css">
+<script src="./alertifyjs/alertify.min.js"></script>
+<script>window.alert=function(msg){alertify.error(msg);};</script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -34,21 +42,21 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<?php 
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<?php
 if (!isset($_POST["datedujourfin"])) {
 	$title="Emargement du ".$_POST["datedujour"]." au ".$_POST["datedujour"];
 }else{
 	$title="Emargement du ".$_POST["datedujour"]." au ".$_POST["datedujourfin"];
 }
 ?>
-<tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print $title ?></font></b></td></tr>
-<tr id='cadreCentral0' >
+<tr id='coulBar0' bgcolor="#0B3A0C"><td height="28" style="padding:4px 10px"><b><font id='menumodule1'><i class="bi bi-calendar-check-fill" style="margin-right:6px"></i><?php print $title ?></font></b></td></tr>
+<tr id='cadreCentral0'><td style="padding:16px">
 <td >
 <?php
 include_once('librairie_php/db_triade.php');
@@ -60,7 +68,7 @@ $idprof=$_POST["saisie_prof"];
 $idclasse=$_POST["saisie_classe"];
 
 $dataJ=recupCoursduJour2($_POST["datedujour"],$_POST["datedujourfin"],$idprof,$idclasse); 
-if (count($dataJ) > 0) {
+if (countTriade($dataJ) > 0) {
 
 $nomClasse=chercheClasse_nom($idClasse);
 define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
@@ -72,7 +80,7 @@ $hauteur=$_POST["hauteur"];
 
 $pdf=new PDF();  // declaration du constructeur
 
-for($a=0;$a<count($dataJ);$a++) { // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere,coursannule,emargement,emargementeval,emargementpedago,idgroupe
+for($a=0;$a<countTriade($dataJ);$a++) { // id,code,enseignement,date,heure,duree,bgcolor,idclasse,idprof,prestation,idmatiere,coursannule,emargement,emargementeval,emargementpedago,idgroupe
 
 	$infObjet=affEvalHoraireMotif($dataJ[$a][9]); //id,libelle,taux,type_prestation
 	$ObjetFiche=$infObjet[0][1]." - Prestation : ".$infObjet[0][3];
@@ -178,7 +186,7 @@ if ($idgroupe == 0) {
 	$tabEleveT=listeEleveDansGroupe($idgroupe);
 	$i=0;
 	foreach ($tabEleveT as $key=>$value) {
-		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM ${prefixe}eleves WHERE elev_id='$value' ";
+		$sql="SELECT nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone,numero_eleve,tel_fixe_eleve FROM {$prefixe}eleves WHERE elev_id='$value' ";
 		$curs=execSql($sql);
 		$liste=chargeMat($curs);
 		$eleveT[$i][0]=$liste[0][0];
@@ -197,7 +205,7 @@ if ($idgroupe == 0) {
 		$i++;
 	}
 }
-for($j=0;$j<count($eleveT);$j++) {  
+for($j=0;$j<countTriade($eleveT);$j++) {  
 	// variable eleve
 	$nomEleve=strtoupper($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -303,7 +311,7 @@ $Y+=$hauteur;
 
 include_once('librairie_php/recupnoteperiode.php');
 $eleveT=recupEleve($idClasse); // nom,prenom,lv1,lv2,elev_id,date_naissance,lieu_naissance,adr1,code_post_adr1,commune_adr1,telephone, numero_eleve
-for($j=0;$j<count($eleveT);$j++) {  
+for($j=0;$j<countTriade($eleveT);$j++) {  
 	// variable eleve
 	$nomEleve=strtoupper($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -521,45 +529,39 @@ $fichier="./data/pdf_certif/emargementvierge_".$idClasse.".pdf";
 $pdf->output('F',$fichier);
 $pdf->close();
 $bttexte=LANGPARAM33;
-?>
-<br><br>
-<center>
-<?php 
 $url="visu_pdf_scolaire.php";
-if ($_SESSION["membre"] == "menuprof") { $url="visu_pdf_prof.php"; }	
+if ($_SESSION["membre"] == "menuprof") { $url="visu_pdf_prof.php"; }
 ?>
-<input type=button onclick="open('<?php print $url?>?id=<?php print $fichier?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
-</center>
+<div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+  <div class="card" style="max-width:380px;width:100%;text-align:center">
+  <div class="card-body" style="padding:20px">
+    <i class="bi bi-file-earmark-pdf-fill" style="font-size:2.5rem;color:#c0392b;display:block;margin-bottom:8px"></i>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <input type="button" onclick="open('<?php print $url?>?id=<?php print $fichier?>','_blank','')" value="<?php print $bttexte ?>" class="btn btn-primary" style="font-size:12px">
+      <script language=JavaScript>buttonMagicRetour2("Javascript:history.go(-1)","_self","Retour");</script>
+    </div>
+  </div>
+  </div>
+</div>
 
-<?php 
+<?php
 }else{
 ?>
-
-<center><font class="T2">Aucun cours définis sur l'emploi du temps.</font></center>
-
+<div class="alert alert-warning" style="font-size:12px;margin-top:12px"><i class="bi bi-calendar-x" style="margin-right:6px"></i>Aucun cours définis sur l'emploi du temps.</div>
 <?php } ?>
 
-
-<br /><br />
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
+</td></tr>
+</table>
+</div>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."2.js'></SCRIPT>";
+} else {
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION["membre"]."33.js'></SCRIPT>";
+}
+PgClose();
 ?>
-</BODY></HTML>
-<?php PgClose(); ?>
+</BODY>
+</HTML>

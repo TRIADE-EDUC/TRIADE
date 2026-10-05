@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_authorities.tpl.php,v 1.4 2018-10-08 13:59:40 vtouchard Exp $
+// $Id: sel_authorities.tpl.php,v 1.5 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
-// templates des sÃ©lecteurs d'autoritÃ©s
+// templates des sélecteurs d'autorités
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -18,7 +18,7 @@ global $add_field, $field_id, $field_name_id;
 global $max_field;
 
 $jscript_common_authorities_unique ="
-	<script type='text/javascript'>
+	<script>
 		<!--
 		function set_parent(f_caller, id_value, libelle_value, callback){
 			var w = window;
@@ -32,7 +32,7 @@ $jscript_common_authorities_unique ="
 			var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 			var flag = 1;
 			
-			//VÃ©rification que l'Ã©lÃ©ment n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+			//Vérification que l'élément n'est pas déjà sélectionnée
 			for (var i=0; i<n_element; i++) {
 				if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 					alert('".$msg["term_already_in_use"]."');
@@ -59,15 +59,15 @@ $jscript_common_authorities_unique ="
 		-->
 	</script>";
 
-// Pour les liens entre autoritÃ©s
+// Pour les liens entre autorités
 $jscript_common_authorities_link = "
-	<script type='text/javascript'>
+	<script>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, callback){
 		var w = window;
 		n_aut_link=w.parent.document.forms[f_caller].elements['max_aut_link'].value;
 		flag = 1;
-		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'autorité n'est pas déjà sélectionnée
 		for (i=0; i<n_aut_link; i++) {
 			if (w.parent.document.getElementById('f_aut_link_id'+i).value==id_value && w.parent.document.getElementById('f_aut_link_table'+i).value==!!param1!!) {
 				alert('".$msg["term_already_in_use"]."');

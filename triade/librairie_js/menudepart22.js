@@ -1,6 +1,6 @@
 <!--
 document.write("  &nbsp;&nbsp;<br> <br>");
-document.write("<table width='100%' border='0' cellspacing='1' cellpadding='1'><tr>");
+document.write("<table role='presentation' width='100%' border='0' cellspacing='1' cellpadding='1'><tr>");
 document.write("<td colspan='3'>&nbsp;</td></tr>");
 document.write("<tr><td colspan='3'>&nbsp;</td></tr>");
 document.write("</table>");

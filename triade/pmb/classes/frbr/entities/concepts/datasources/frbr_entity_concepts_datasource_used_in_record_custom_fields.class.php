@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_concepts_datasource_used_in_record_custom_fields.class.php,v 1.1 2018-06-29 13:02:47 tsamson Exp $
+// $Id: frbr_entity_concepts_datasource_used_in_record_custom_fields.class.php,v 1.1 2018/06/29 13:02:47 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

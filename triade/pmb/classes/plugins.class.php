@@ -2,15 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: plugins.class.php,v 1.15 2019-06-10 14:42:54 btafforeau Exp $
+// $Id: plugins.class.php,v 1.18.6.1 2024/06/12 07:01:47 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], '.class.php')) die('no access');
 
+global $class_path, $include_path;
 require_once $include_path.'/parser.inc.php';
 require_once($class_path.'/plugin.class.php');
 
 /**
- * Classe de gestion du sysÃ¨tme de plugins
+ * Classe de gestion du sysètme de plugins
  * @author arenou
  *
  */
@@ -42,8 +43,8 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode de parcours du rÃ©pertoire de plugins...
-	 * Elle dÃ©clenche l'analyse de chaque plugin prÃ©sent
+	 * Méthode de parcours du répertoire de plugins...
+	 * Elle déclenche l'analyse de chaque plugin présent
 	 */
 	private function parse(){
 		global $base_path;
@@ -60,7 +61,7 @@ class plugins {
 	}
 	
 	/**
-	 * DÃ©termine si un plugin est activÃ© ou non. Toujours vrai pour le moment, cela permet d'envisager une Ã©volution plus tard!
+	 * Détermine si un plugin est activé ou non. Toujours vrai pour le moment, cela permet d'envisager une évolution plus tard!
 	 * @param string $plugin_path
 	 * @return boolean
 	 */
@@ -69,7 +70,7 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode d'analyse d'un plugin
+	 * Méthode d'analyse d'un plugin
 	 * @param string $plugin_path
 	 */
 	private function analyze($plugin_path){
@@ -98,7 +99,7 @@ class plugins {
 				for($i=0 ; $i<count($manifest['MENUS'][0]['MENU']) ; $i++){
 					$menu = $manifest['MENUS'][0]['MENU'][$i];
 					$this->plugins[basename($plugin_path)]['menus'][$menu['MODULE']] = array();
-					if(is_array($menu['TABS'])){
+					if(isset($menu['TABS']) && is_array($menu['TABS'])){
 						for ($j=0 ; $j<count($menu['TABS'][0]['TAB']) ; $j++){	
 							$this->plugins[basename($plugin_path)]['menus'][$menu['MODULE']][$menu['TABS'][0]['TAB'][$j]['ID']] = array(
 								'name' => $menu['TABS'][0]['TAB'][$j]['value'],
@@ -139,7 +140,7 @@ class plugins {
 	}
 	
 	/**
-	 * MÃ©thode qui construit le menu pour un module de PMB
+	 * Méthode qui construit le menu pour un module de PMB
 	 * @param string $module
 	 */
 	public function get_menu($module){
@@ -199,8 +200,8 @@ class plugins {
 	}
 
 	public function proceed($module, $plugin, $sub, $layout = "!!menu_contextuel!!"){
-		global $base_path;
-		
+	    global $base_path, $dest;
+
 		$module = plugins::clean_string($module);
 		$plugin = plugins::clean_string($plugin);
 		$sub = plugins::clean_string($sub);
@@ -208,7 +209,14 @@ class plugins {
 		if(strpos($layout,'!!menu_contextuel!!') !== false){
 			$layout = str_replace('!!menu_contextuel!!',$this->get_context_menu($module,$plugin,$sub),$layout);
 		}
-		print $layout;
+		switch ($dest) {
+		    case "TABLEAU":
+		    case "TABLEAUCSV":
+		        break;
+		    default:
+		        print $layout;
+		        break;
+		}
 		if(file_exists($base_path . '/plugins/'.$plugin.'/'.$module.'/main.inc.php')){
 			return $base_path . '/plugins/'.$plugin.'/'.$module.'/main.inc.php';
 		}
@@ -249,5 +257,21 @@ class plugins {
 			return $msg[$code];
 		}
 		return $code;
+	}
+	
+	public static function get_all_messages($plugin) {
+	    global $base_path, $lang;
+	    if(!isset(self::$messages[$plugin])){
+	        if(file_exists($base_path.'/plugins/'.$plugin.'/includes/messages/'.$lang.'.xml')){
+	            $xml = new XMLlist($base_path.'/plugins/'.$plugin.'/includes/messages/'.$lang.'.xml');
+	            $xml->analyser();
+	            self::$messages[$plugin] = $xml->table;
+	        }
+	    }
+	    return self::$messages[$plugin];
+	}
+	
+	public function get_plugins() {
+	    return $this->plugins;
 	}
 }

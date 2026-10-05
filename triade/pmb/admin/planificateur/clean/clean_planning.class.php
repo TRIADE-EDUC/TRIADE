@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: clean_planning.class.php,v 1.3 2019-04-29 11:04:20 dgoron Exp $
+// $Id: clean_planning.class.php,v 1.6.2.1 2024/09/18 07:32:27 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
@@ -10,7 +10,7 @@ require_once($class_path."/netbase/netbase.class.php");
 		
 class clean_planning extends scheduler_planning {
 	
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
 		$netbase = new netbase();
 			
@@ -33,16 +33,18 @@ class clean_planning extends scheduler_planning {
     	global $clean_series, $clean_titres_uniformes, $clean_indexint;
     	global $clean_relations, $clean_notices, $index_acquisitions;
     	global $gen_signature_notice, $gen_phonetique, $nettoyage_clean_tags, $clean_categories_path;
-    	global $gen_date_publication_article, $gen_date_tri, $reindex_docnum;
-    	global $clean_opac_search_cache, $clean_cache_amende, $clean_cache_temporary_files;
+    	global $gen_date_publication_article, $gen_date_tri, $reindex_docnum, $gen_ark, $gen_docnum_thumbnail;
+    	global $clean_opac_search_cache, $clean_cache_amende, $clean_cache_temporary_files, $clean_cache_apcu;
     	global $index_rdfstore, $index_synchrordfstore;
     	global $index_faq, $index_cms, $index_concept, $hash_empr_password;
     	global $index_authorities;
-
+    	global $gen_signature_docnum, $clean_records_thumbnail, $index_date_flot, $clean_entities_data, $clean_docnum_thumbnail;
+    	global $index_sphinx_records, $index_sphinx_authorities, $index_sphinx_concepts;
+    	
 		$t = parent::make_serialized_task_params();
 		
 		$t_clean = array();
-		//Ordre d'exÃ©cution
+		//Ordre d'exécution
 		if($clean_notices) $t_clean["clean_notices"] = $clean_notices;
 		if($clean_subcollections) $t_clean["clean_subcollections"] = $clean_subcollections;
 		if($clean_collections) $t_clean["clean_collections"] = $clean_collections;
@@ -66,6 +68,7 @@ class clean_planning extends scheduler_planning {
 		if($clean_opac_search_cache) $t_clean["clean_opac_search_cache"] = $clean_opac_search_cache;
 		if($clean_cache_amende) $t_clean["clean_cache_amende"] = $clean_cache_amende;
 		if($clean_cache_temporary_files) $t_clean["clean_cache_temporary_files"] = $clean_cache_temporary_files;
+		if($clean_cache_apcu) $t_clean["clean_cache_apcu"] = $clean_cache_apcu;
 		if($index_rdfstore) $t_clean["index_rdfstore"] = $index_rdfstore;
 		if($index_synchrordfstore) $t_clean["index_synchrordfstore"] = $index_synchrordfstore;
 		if($index_faq) $t_clean["index_faq"] = $index_faq;
@@ -73,7 +76,16 @@ class clean_planning extends scheduler_planning {
 		if($index_concept) $t_clean["index_concept"] = $index_concept;
 		if($hash_empr_password) $t_clean["hash_empr_password"] = $hash_empr_password;
 		if($index_authorities) $t_clean["index_authorities"] = $index_authorities;
-		
+		if($gen_signature_docnum) $t_clean["gen_signature_docnum"] = $gen_signature_docnum;
+		if($clean_records_thumbnail) $t_clean["clean_records_thumbnail"] = $clean_records_thumbnail;
+		if($index_date_flot) $t_clean["index_date_flot"] = $index_date_flot;
+		if($clean_entities_data) $t_clean["clean_entities_data"] = $clean_entities_data;
+		if($clean_docnum_thumbnail) $t_clean["clean_docnum_thumbnail"] = $clean_docnum_thumbnail;
+		if($gen_ark) $t_clean["gen_ark"] = $gen_ark;
+		if($gen_docnum_thumbnail) $t_clean["gen_docnum_thumbnail"] = $gen_docnum_thumbnail;
+		if($index_sphinx_records) $t_clean["index_sphinx_records"] = $index_sphinx_records;
+		if($index_sphinx_authorities) $t_clean["index_sphinx_authorities"] = $index_sphinx_authorities;
+		if($index_sphinx_concepts) $t_clean["index_sphinx_concepts"] = $index_sphinx_concepts;
 		$t["clean"] = $t_clean;
 
     	return serialize($t);

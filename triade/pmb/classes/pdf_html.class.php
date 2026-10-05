@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pdf_html.class.php,v 1.2 2017-07-03 09:07:10 dgoron Exp $
+// $Id: pdf_html.class.php,v 1.2 2017/07/03 09:07:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 // fonction hex2dec
-// retourne un tableau associatif (clÃ©s : R,V,B) Ã 
+// retourne un tableau associatif (clés : R,V,B) à
 // partir d'un code html de couleur hexa (ex : #3FE5AA)
 function hex2dec($couleur = "#000000"){
     $R = substr($couleur, 1, 2);
@@ -23,7 +23,7 @@ function hex2dec($couleur = "#000000"){
     return $tbl_couleur;
 }
 
-//conversion pixel -> millimÃ¨tre en 72 dpi
+//conversion pixel -> millimètre en 72 dpi
 function px2mm($px){
     return $px*25.4/72;
 }
@@ -69,8 +69,8 @@ class PDF_HTML extends FPDF {
 	public function WriteHTML($html) {
 	    //Parseur HTML
 	    $html=strip_tags($html,"<b><u><i><a><img><p><br><strong><em><font><tr><blockquote><th><td>"); //supprime tous les tags sauf ceux reconnus
-	    $html=str_replace("\n",' ',$html); //remplace retour Ã  la ligne par un espace
-	    $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE); //Ã©clate la chaÃ®ne avec les balises
+	    $html=str_replace("\n",' ',$html); //remplace retour à la ligne par un espace
+	    $a=preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE); //éclate la chaîne avec les balises
 	    
 	    foreach($a as $i=>$e) {
 	        if($i%2==0) {
@@ -189,7 +189,7 @@ class PDF_HTML extends FPDF {
 	}
 	
 	public function SetStyle($tag, $enable) {
-	    //Modifie le style et sÃ©lectionne la police correspondante
+	    //Modifie le style et sélectionne la police correspondante
 	    $this->$tag+=($enable ? 1 : -1);
 	    $style='';
 	    foreach(array('B','I','U') as $s) {

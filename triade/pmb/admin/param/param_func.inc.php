@@ -2,16 +2,17 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: param_func.inc.php,v 1.26 2018-07-02 14:30:16 vtouchard Exp $
-if (stristr($_SERVER['REQUEST_URI'], ".inc.php"))
-    die("no access");
+// $Id: param_func.inc.php,v 1.36 2024/03/21 15:28:59 dbellamy Exp $
+if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// affichage du form de cr�ation/modification param�tres
+global $class_path, $include_path;
+
+// affichage du form de creation/modification parametres
+require_once ($class_path . '/translation.class.php');
 require_once ($include_path . '/templates/admin.tpl.php');
 require_once ($include_path . "/parser.inc.php");
 
-function param_form($id_param = 0, $type_param = "", $sstype_param = "", $valeur_param = "", $comment_param = "")
-{
+function param_form($id_param = 0, $type_param = "", $sstype_param = "", $valeur_param = "", $comment_param = "") {
     global $msg;
     global $admin_param_form;
     global $form_ajax;
@@ -25,14 +26,19 @@ function param_form($id_param = 0, $type_param = "", $sstype_param = "", $valeur
     $admin_param_form = str_replace('!!sstype_param!!', $sstype_param, $admin_param_form);
     $admin_param_form = str_replace('!!valeur_param!!', htmlentities($valeur_param, ENT_QUOTES, $charset), $admin_param_form);
     $admin_param_form = str_replace('!!comment_param!!', htmlentities($comment_param, ENT_QUOTES, $charset), $admin_param_form);
+    $is_translated = parameter::is_translated($type_param, $sstype_param);
+    if($is_translated) {
+        $admin_param_form = str_replace('!!data-translation!!', "data-translation-fieldname='valeur_param'", $admin_param_form);
+    } else {
+        $admin_param_form = str_replace('!!data-translation!!', "", $admin_param_form);
+    }
     if ($form_ajax) {
         $admin_param_form = encoding_normalize::utf8_normalize($admin_param_form);
     }
     print $admin_param_form;
 }
 
-function _section_($param)
-{
+function _section_($param) {
     global $section_table;
     
     $section_table[$param["NAME"]]["LIB"] = $param["value"];
@@ -43,14 +49,13 @@ function _section_($param)
     }
 }
 
-function show_param($dbh)
-{
+function show_param() {
     global $msg;
     global $begin_result_liste;
     global $form_type_param, $form_sstype_param; // si modif , ces valeurs sont connues, on va faire une ancre avec
     global $lang;
     global $include_path;
-    global $section_table;
+    global $section_table, $charset;
     
     $allow_section = 0;
     
@@ -63,7 +68,7 @@ function show_param($dbh)
     print $begin_result_liste;
     
     $requete = "select * from parametres where gestion=0 order by type_param, section_param, sstype_param ";
-    $res = pmb_mysql_query($requete, $dbh);
+    $res = pmb_mysql_query($requete);
     $i = 0;
     $type_param = '';
     $section_param = '';
@@ -97,7 +102,7 @@ function show_param($dbh)
                 $lab_param = $type_param;
             
             print "\n<div id=\"el" . $type_param . "Parent\" class='parent' width=\"100%\">
-					<img src=\"" . get_url_icon('plus.gif') . "\" class=\"img_plus\" name=\"imEx\" id=\"el" . $type_param . "Img\" title=\"" . $msg['admin_param_detail'] . "\" border=\"0\" onClick=\"expandBase('el" . $type_param . "', true); return false;\" hspace=\"3\">
+                    ".get_expandBase_button('el' . $type_param)."
 					<span class='heada'>" . $lab_param . "</span>
 					<br />
 					</div>\n
@@ -131,15 +136,26 @@ function show_param($dbh)
         if ($param->type_param == $form_type_param && $param->sstype_param == $form_sstype_param) {
             print "\n<tr data-param-id='" . $param->id_param . "' data-search='" . strtolower(encoding_normalize::json_encode(array(
                 'search_value' => $type_param . ' ' . $param->sstype_param . ' ' . $param->comment_param . ' ' . $param->valeur_param
-            ))) . "'   class='$class_liste' $tr_javascript style='cursor: pointer;'>
+            ),JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP)) . "'   class='$class_liste' $tr_javascript style='cursor: pointer;'>
 				<td style='vertical-align:top'><a name='justmodified'></a>$param->sstype_param</td>";
         } else {
             print "\n<tr data-param-id='" . $param->id_param . "' data-search='" . strtolower(encoding_normalize::json_encode(array(
                 'search_value' => $type_param . ' ' . $param->sstype_param . ' ' . $param->comment_param . ' ' . $param->valeur_param
-            ))) . "' class='$class_liste' $tr_javascript style='cursor: pointer'>
+            ),JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP)) . "' class='$class_liste' $tr_javascript style='cursor: pointer'>
 					<td style='vertical-align:top'>$param->sstype_param</td>";
         }
-        print "<td class='ligne_data'>$param->valeur_param</td><td style='vertical-align:top'>$param->comment_param</td>\n</tr>";
+        
+        $valeur_param = $param->valeur_param;
+        // Si $param->valeur_param contient un balise html... on formate la valeur pour l'affichage
+        if (preg_match("/<.+>/", $param->valeur_param)) {
+            $valeur_param = "<pre class='params_pre'>"
+                                .htmlentities($param->valeur_param, ENT_QUOTES, $charset).
+                            "</pre>";
+        }
+        print " <td class='ligne_data'>
+                    $valeur_param
+                </td>
+                <td style='vertical-align:top'>$param->comment_param</td>\n</tr>";
     } // fin while
     print "</table></div>";
     print "<script type='text/javascript'>

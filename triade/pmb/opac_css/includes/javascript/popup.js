@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: popup.js,v 1.6 2019-05-14 12:39:46 ccraig Exp $
+// $Id: popup.js,v 1.15.2.1.2.1 2025/02/26 16:46:45 dgoron Exp $
 
 // openPopUp : permet d'afficher une popup de la taille et � la position donn�e
 //		la fonction gere aussi l'autoCentrage de la popup
@@ -14,7 +14,8 @@
 //MyLeft :	entier indiquant la position du haut de la fenetre en pixels (-1 pour centrer, -2 pour laisser le navigateur g�rer)
 //MyTop :	entier indiquant la position gauche de la fenetre en pixels (-1 pour centrer, -2 pour laisser le navigateur g�rer)
 //MyParam :	Les parametres supplementaires pour la methode open (par def :infobar=no, status=no, scrollbars=no, menubar=no)
-function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
+//ForceSelectorDialog : forçage de l'ouverture en pop-up
+function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam,ForceSelectorDialog) {
 	var ns4 = (document.layers)? true:false;		//NS 4
 	var ie4 = (document.all)? true:false;			//IE 4
 	var dom = (document.getElementById)? true:false;	//DOM
@@ -22,6 +23,7 @@ function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
 
 	//les valeurs par d�faut
 	MyParam = MyParam || 'infobar=no, status=no, scrollbars=yes, toolbar=no, menubar=no';
+	ForceSelectorDialog = ForceSelectorDialog || false;
 	//MyTop = MyTop || -1;
 	MyTop=0;
 	//MyLeft = MyLeft || -1;
@@ -88,6 +90,7 @@ function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
 				MyWidth = '250';
 				MyHeight = '300';
 				MyParam = 'toolbar=no, dependent=yes, resizable=yes';
+				ForceSelectorDialog = true;
 				break;
 			case 'getcb':
 				MyWidth = '220';
@@ -120,6 +123,17 @@ function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
 				MyWidth = '600';
 				MyHeight = '500';
 				MyParam = 'toolbar=no, dependent=yes, resizable=yes';
+				break;
+			case 'ajouter_un_tag':
+			case 'exporter_la_notice':
+			    MyWidth = '500';
+			    MyHeight = '400';
+			    MyParam = 'scrollbars=yes, resizable=yes';
+			    break;
+			case 'avis':
+			 	MyWidth = '600';
+			    MyHeight = '290';
+				MyParam = 'scrollbars=yes, resizable=yes';
 				break;
 		}
 	}
@@ -158,15 +172,20 @@ function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
 			 * marqué part l'attribut "data-advanced-form" et si l'url du openPopup pointe bien vers
 			 * une page select.php
 			 */
-			if(form && domAttr.get(form, 'data-advanced-form') && (MyFile.split('?')[0].indexOf('select.php') != -1)){
+			if(!ForceSelectorDialog && form && domAttr.get(form, 'data-advanced-form') && (MyFile.split('?')[0].indexOf('select.php') != -1)){
 				topic.publish('openPopup', 'openPopup', 'buttonClicked', {
 					params: params,
 					url: MyFile,
 					button: clickedElement
 				});
 			}else{ //Dans le reste des cas, on conserve le cas standard de la popup
+				var http = new http_request();
+		    	var MyFileTitleUrl = MyFile.replace('select.php?', 'ajax.php?module=selectors&is_iframe=1&')+'&action=title';
+		    	http.request(MyFileTitleUrl);
+		    	var MyFileTitle = http.get_text();
 				var dialog = new PMBSelectorDialog();
-				var iframe = domConstruct.create('iframe', {popupFrame: 'true', seamless: '', frameborder: 0, 'class': 'selectorsIframe', style:{minWidth:"200px", width: '100%', height:'100%'}, src: MyFile});				
+				MyFile += '&iframe=1';
+				var iframe = domConstruct.create('iframe', {popupFrame: 'true', seamless: '', 'class': 'selectorsIframe', style:{minWidth:"200px", width: '100%', height:'100%'}, src: MyFile, title : MyFileTitle});				
 				dialog.set('content', iframe);
 				dialog.startup();
 				dialog.show();
@@ -204,18 +223,50 @@ function openPopUp(MyFile,MyWindow,MyWidth,MyHeight,MyLeft,MyTop,MyParam) {
 			w = window.open(MyFile,MyWindow,fParam);
 		}
 	
-		//on force la taille 
-		w.window.resizeTo(MyWidth,MyHeight);
+		if(MyFile) {
+			//on force la taille 
+			w.window.resizeTo(MyWidth,MyHeight);
+			
+			//on force la position  uniquement si on est pas en mode -2 (position g�r�e par le navigateur)
+			if ((MyTop!=-2)&&(MyLeft!=-2)) {
+				w.window.moveTo(xOffset,yOffset);
+			}
 		
-		//on force la position  uniquement si on est pas en mode -2 (position g�r�e par le navigateur)
-		if ((MyTop!=-2)&&(MyLeft!=-2)) {
-			w.window.moveTo(xOffset,yOffset);
+			//on force le focus
+			w.window.focus();
 		}
-	
-		//on force le focus
-		w.window.focus();
 		return w;
 	}
+}
+
+function openPopUpSelector(MyFile,ForceSelectorDialog) {
+	switch(ForceSelectorDialog) {
+		case '1':
+			ForceSelectorDialog = true;
+			break;
+		case '0':
+			ForceSelectorDialog = false;
+			break;
+		default:
+			ForceSelectorDialog = ForceSelectorDialog || false;
+			break;
+	}
+	return openPopUp(MyFile,'selector',0,0,0,0,'',ForceSelectorDialog)
+}
+
+function openPopUpSelectorCategory(MyFile,ForceSelectorDialog) {
+	switch(ForceSelectorDialog) {
+		case '1':
+			ForceSelectorDialog = true;
+			break;
+		case '0':
+			ForceSelectorDialog = false;
+			break;
+		default:
+			ForceSelectorDialog = ForceSelectorDialog || false;
+			break;
+	}
+	return openPopUp(MyFile,'selector_category',0,0,0,0,'',ForceSelectorDialog)
 }
 
 function getSelectedObjects(context) {

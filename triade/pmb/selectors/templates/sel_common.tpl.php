@@ -1,16 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_common.tpl.php,v 1.6 2018-10-29 09:02:07 dgoron Exp $
+// $Id: sel_common.tpl.php,v 1.8 2023/04/07 14:38:40 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 // templates communs
 global $jscript_common_selector_simple;
 global $jscript_common_selector;
+global $what;
 
 $jscript_common_selector_simple = "
+	<div id='indexation_infos' style='display:none;'></div>
 	<script type='text/javascript'>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, callback){
@@ -25,12 +27,13 @@ $jscript_common_selector_simple = "
 		if(callback) {
 			w.parent[callback]('!!infield!!');
 		}
-		closeCurrentEnv();
+		closeCurrentEnv('$what');
 	}
 	-->
 	</script>";
 
 $jscript_common_selector = "
+	<div id='indexation_infos' style='display:none;'></div>
 	<script type='text/javascript'>
 	<!--
 	function set_parent(f_caller, id_value, libelle_value, callback){
@@ -62,7 +65,7 @@ $jscript_common_selector = "
 			if(callback)
 				w.parent[callback](p1.replace('_id','')+'_'+i_element);
 		} else {
-			//on enlÃ¨ve le dernier _X
+			//on enlève le dernier _X
 			var tmp_p1 = p1.split('_');
 			var tmp_p1_length = tmp_p1.length;
 			tmp_p1.pop();
@@ -99,7 +102,7 @@ $jscript_common_selector = "
 				set_parent_value(f_caller,'!!param2!!', reverse_html_entities(libelle_value));
 				if(callback)
 					w.parent[callback]('$infield');
-				closeCurrentEnv();
+				closeCurrentEnv('$what');
 			}
 		}
 	}

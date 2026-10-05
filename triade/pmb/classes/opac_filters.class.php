@@ -2,17 +2,20 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_filters.class.php,v 1.3 2018-11-26 14:32:02 dgoron Exp $
+// $Id: opac_filters.class.php,v 1.4.10.1 2025/03/14 13:27:45 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/parser.inc.php");
 require_once($class_path."/upload_folder.class.php");
 
 
 class opac_filters {
 	
-	public $catalog=array();			//Liste des filtres declares
+    public $id_vue=0;
+	public $catalog = array();			//Liste des filtres declares
+	public $msg = array();
 	
 	//Constructeur
 	public function __construct($id_vue) {
@@ -117,5 +120,3 @@ class opac_filters {
 		$form=$filter->save_form();			
 	}		
 }
-
-?>

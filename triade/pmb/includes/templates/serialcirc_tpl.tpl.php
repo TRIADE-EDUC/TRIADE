@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_tpl.tpl.php,v 1.7 2019-05-27 12:32:47 ngantier Exp $
+// $Id: serialcirc_tpl.tpl.php,v 1.8 2021/02/01 14:03:23 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -46,6 +46,7 @@ $serialcirc_tpl_content_form = "
 <div class='row'>
 	<textarea type='text' name='piedpage' id='piedpage' class='saisie-50em' rows='4' cols='50' >!!pied_page!!</textarea>
 </div>
+<input type='hidden' id='id_tpl' name='id_tpl' value='!!id_tpl!!' />
 <input type='hidden' id='order_tpl' name='order_tpl' value='!!order_tpl!!' />
 <script src='./javascript/ace/ace.js' type='text/javascript' charset='utf-8'></script>
 <script type='text/javascript'>

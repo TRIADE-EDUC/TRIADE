@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: comptes.class.php,v 1.6 2017-01-25 16:43:50 dgoron Exp $
+// $Id: comptes.class.php,v 1.7 2023/03/21 13:35:34 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,7 +26,7 @@ class comptes {
     	global $msg;
 
     	if ($id_compte) {
-    		//VÃ©rification que le compte existe
+    		//Vérification que le compte existe
     		$requete="select id_compte,type_compte_id from comptes where id_compte='".$id_compte."'";
     		$resultat=pmb_mysql_query($requete);
     		if (@pmb_mysql_num_rows($resultat)) {
@@ -60,18 +60,18 @@ class comptes {
     public function create_compte($libelle,$typ_compte,$proprio_id,$droits) {
     	global $msg;
 
-    	//VÃ©rification validitÃ© du type de compte
+    	//Vérification validité du type de compte
     	if (!$this->is_typ_compte($typ_compte)) {
     		$this->error=true;
     		$this->error_message=sprintf($msg["cmpt_bad_typ_compte"],$typ_compte);
     		$this->error_action=CMPTE_CREATE;
     		return false;
     	}  else {
-    		//VÃ©rification propriÃ©taire
+    		//Vérification propriétaire
 
-    		//VÃ©rification unicitÃ© si nÃ©cessaire
+    		//Vérification unicité si nécessaire
     		if ($this->must_be_unique()) {
-    			//Y-a-t-il dÃ©jÃ  un compte existant pour ce propriÃ©taire ?
+    			//Y-a-t-il déjà un compte existant pour ce propriétaire ?
     			$requete="select count(1) from comptes where type_compte_id='".$typ_compte."' and proprio_id='".$proprio_id."'";
     			$resultat=pmb_mysql_query($requete);
     			if (pmb_mysql_result($resultat,0,0)) {
@@ -81,7 +81,7 @@ class comptes {
     				return false;
     			}
     		}
-    		//CrÃ©ation
+    		//Création
     		$requete="insert into comptes (libelle,type_compte_id,proprio_id,droits) values('".addslashes($libelle)."',$typ_compte,$proprio_id,'".addslashes($droits)."')";
     		$resultat=pmb_mysql_query($requete);
     		if (!$resultat) {
@@ -104,14 +104,14 @@ class comptes {
     	global $msg;
     	global $PMBuserid, $PMBusername;
     	if ($this->is_valid()) {
-    		//VÃ©rification du sens
+    		//Vérification du sens
     		if (($sens!=-1)&&($sens!=1)) {
     			$this->error=false;
     			$this->error_message=$msg["cmpt_bad_sens"];
     			$this->error_action=CMPTE_REC_TRANSACTION;
     			return false;
     		}
-    		//RÃ©cupÃ©ration des infos annexes
+    		//Récupération des infos annexes
     		$machine=$_SERVER["REMOTE_ADDR"];
     		if (!$date_prevue) $date_prevue=date("Y-m-d");
     		$requete="insert into transactions (compte_id,user_id,user_name,machine,date_enrgt,date_prevue,montant,sens,commentaire,encaissement) values(".$this->id_compte.",$PMBuserid,'".addslashes($PMBusername)."','$machine',now(),'".$date_prevue."','$montant',$sens,'".addslashes($comment)."',$encaissement)";
@@ -246,7 +246,7 @@ class comptes {
     	$requete="select id_compte from comptes where proprio_id='$empr_id' and type_compte_id='".$typ_compte."'";
     	$resultat=pmb_mysql_query($requete);
     	if (@pmb_mysql_num_rows($resultat)==0) {
-    		//Compte inexistant : crÃ©ation
+    		//Compte inexistant : création
     		$requete="insert into comptes (libelle,type_compte_id,solde,prepay_mnt,proprio_id) values('Created on ".date("Y-m-d")."',$typ_compte,0,0,$empr_id)";
      		$r=pmb_mysql_query($requete);
     		if ($r) return pmb_mysql_insert_id(); else return false;
@@ -288,6 +288,9 @@ class comptes {
     			break;
     		case 3:
     			$r=$msg["finance_cmpte_prets"];
+    			break;
+    		case 22:
+    			$r=$msg["finance_cmpte_animation"];
     			break;
     		default:
     			$requete="select libelle from type_comptes where id_type_compte=".$id_typ_compte;

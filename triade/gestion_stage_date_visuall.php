@@ -12,7 +12,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,7 +52,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
 $cnx=cnx();
 if ($_SESSION["membre"] != "menupersonnel") { validerequete("3"); }
 $data=listestagenum();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$data22=$data[$i][0];
 	$nomstage=$data[$i][1];
 	$datanum[$data22]=$nomstage;
@@ -66,7 +66,7 @@ foreach($datanum as $key => $value) {
 }
 print "</tr>";
 $data=listestageclasse();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
         $data22=$data[$i][0];
 	$dataclasse[$data22]=$data22;
 }

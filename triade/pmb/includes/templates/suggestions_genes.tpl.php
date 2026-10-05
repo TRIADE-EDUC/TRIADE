@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_genes.tpl.php,v 1.7 2019-05-27 16:19:33 btafforeau Exp $
+// $Id: suggestions_genes.tpl.php,v 1.8 2020/11/04 11:01:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -53,5 +53,3 @@ $sug_list_form.="
 	<!-- nav_bar -->
 </div>
 ";
-
-?>

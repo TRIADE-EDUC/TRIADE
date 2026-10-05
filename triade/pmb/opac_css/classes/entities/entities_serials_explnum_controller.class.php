@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_serials_explnum_controller.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: entities_serials_explnum_controller.class.php,v 1.2 2022/02/16 12:38:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/entities/entities_serials_controller.class.php");
 
 class entities_serials_explnum_controller extends entities_serials_controller {
@@ -50,6 +51,6 @@ class entities_serials_explnum_controller extends entities_serials_controller {
 	}
 	
 	public function set_serial_id($serial_id=0) {
-		$this->serial_id = $serial_id+0;
+	    $this->serial_id = (int) $serial_id;
 	}
 }

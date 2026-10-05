@@ -1,4 +1,4 @@
-<!-- $Id: gabarit.html,v 1.32 2019-01-23 10:22:26 ngantier Exp $ -->
+<!-- $Id: gabarit.html,v 1.33 2023/12/22 08:50:19 dgoron Exp $ -->
 
 <style type="text/css">
 .aut_display_row {
@@ -13,14 +13,14 @@
 
 <div class="notice-parent" id="el{{ list_element.uid }}{{ list_element.id }}Parent">
 		{% if list_element.context_parameters.in_search %}
-			<span class='notice-selection'><input type='checkbox' id='object_selection_{{ list_element.id }}' name='objects_selection' value='{{ list_element.id }}' /></span>
+			<span class='notice-selection'><input type='checkbox' id='object_selection_{{ list_element.id }}' name='objects_selection' value='{{ list_element.id }}' title='{{ msg.list_ui_selection_checkbox | escape }}' /></span>
 		{% endif %}
-  		<img style="border:0px; margin:3px 3px" onclick="expandBase('el{{ list_element.uid }}{{ list_element.id }}', true); return false;" id="el{{list_element.uid}}{{list_element.id}}Img" name="imEx" class="img_plus" src="{{ img.plus.gif }}">
+  		<img onclick="expandBase('el{{ list_element.uid }}{{ list_element.id }}', true); return false;" id="el{{list_element.uid}}{{list_element.id}}Img" name="imEx" class="img_plus" src="{{ img.plus.gif }}" title="{{ msg.plus_detail | escape}}" alt="{{ msg.plus_detail | escape}}">
 		<span class="notice-heada">
 			<small>
 				<span class='{{list_element.statut_class_html}}' style='margin-right: 3px;'>
 					<a href=# onmouseover="z=document.getElementById('zoom_statut{{ list_element.id }}'); z.style.display='';" onmouseout="z=document.getElementById('zoom_statut{{list_element.id}}'); z.style.display='none';">
-						<img src="{{ img.spacer.gif }}" width="10" height="10" />
+						<img src="{{ img.spacer.gif }}" style='width:10px; height:10px' alt="{{ list_element.statut_label | escape }}" />
 					</a>
 				</span>
 			</small>

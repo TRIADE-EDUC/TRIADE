@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,10 +19,9 @@ session_start();
  *
  ***************************************************************************/
 session_set_cookie_params(0);
-$_SESSION['nom_admin_triade1'] = array();
-$_SESSION['membre'] = array();
+$_SESSION = array();
 session_unset();
-$ok=session_destroy();
+$ok = session_destroy();
 ?>
 <HTML>
 <HEAD>

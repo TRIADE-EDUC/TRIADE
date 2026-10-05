@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_articleslist_view_slideshow.xml,v 1.1 2019/12/12 15:49:07 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_articleslist_view_link'>Construction du lien vers un article</entry>
+	<entry code='cms_module_articleslist_view_carousel_link_desc'>Lien vers l'article</entry>
+	<entry code='cms_module_carousel_view_carousel_records_desc'>Tableau des articles à afficher</entry>
+</XMLlist>

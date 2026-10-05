@@ -1,0 +1,137 @@
+@startuml
+	namespace ark {
+	
+		class Ark {
+			#int id
+			#string arkIdentifier
+			#string naan
+			#string shoulder
+			#string qualifiers
+			#ArkEntity arkEntity
+			+const RULES
+			+const LABEL
+			
+			+construct(string ark, int entityId)
+			-fetchData()
+			-getShoulder() : string
+			-getNaan() : int
+			-getQualifiers() : string
+			-generateArkIdentifier() : string
+			+getArkIdentifier() : string
+			+setArkEntity(ArkEntity)
+			+isValid(): bool
+			+save() : bool
+			+getId()
+			+getOpacUrl()
+			+getReplacedBy()
+		}
+	
+		class ArkModel {
+			#int type
+			#array types
+			#string naan
+			#string shoulder
+			
+			+__construct()
+			-getNaan(): int
+			-getShoulders(int typeObject, int numObject):string
+			#getArkFromEntity(ArkEntity arkEntity): Ark
+			#saveArkFromEntity(ArkEntity arkEntity):Ark
+			#getArkEntityFromEntity(entity) : ArkEntity
+			#resolve(naan, identifier, qualifiers)
+			-getArkInstance(arkIdentifier, arkIdentifiers)
+			
+		}
+		
+	
+		class ArkEntity {
+			#array metadata
+			#int id
+			#int entityId
+			#int arkId
+			#string qualifiers
+			
+			+construct(int entity_id)
+			#fetchData()
+			+getArkId(): int
+			+setArkId(arkId)
+			+getPermalink() : string
+			+getMetadata():array
+			+updateMetadata():array
+			+markAsDeleted():bool
+			#register()
+			+save()
+			#updateMetadata() : bool
+			#getOpacUrl()
+			+setQualifiers(qualifiers)
+			#generateQualifiedURL()
+			+__call(name, arguments)
+		}
+		
+		class ArkEntityPmb extends ArkEntity {
+			const string ENTITY_TYPE
+			#int arkTypeObject
+			#lvl
+			const string OPAC_ENTRY_POINT
+			
+			+construct(int entityId)
+			#fetchData()
+			+markAsDeleted():bool
+			+save() : bool
+			+getArkId() : int
+			#updateMetadata()
+			+getArkTypeObject() : int
+			+markAsReplaced(replacedBy) : ArkEntity
+			#deleteEntity()
+			+getEntityFromArkId()
+			#getEntityClassFromType(entityType, entityId)
+			+getOpacUrl()
+		}
+		
+		class ArkRecord extends ArkEntityPmb {
+			#int arkTypeObject
+			#string lvl
+			+construct(int entity_id)
+			#updateMetadata() : bool
+			+getThumbnail()
+			
+		}
+		
+		class ArkAuthority extends ArkEntityPmb {
+			#int arkTypeObject
+			-authority
+			+construct(int authorityId)
+			#updateMetadata() : bool
+			+getOpacUrl()
+		}
+
+		class ArkBulletin extends ArkEntityPmb {
+			#int arkTypeObject
+			#string lvl
+			
+			#updateMetadata() : bool
+		}
+		
+		ArkModel::resolve --o Ark
+		ArkModel::resolve --o ArkEntity
+	
+		class ArkRouterRest {
+			#generateRoutes()
+			#call()
+		}
+		
+		class ArkAPIController{
+			#int naan
+			#string identifier
+			#string qualifiers
+			
+			+__construct()
+			+resolve(naan, identifier, qualifiers)
+			-checkNaan()
+		}
+		 
+		ArkRouterRest::call --> ArkAPIController
+		ArkAPIController::resolve --> ArkModel
+	}
+@enduml
+

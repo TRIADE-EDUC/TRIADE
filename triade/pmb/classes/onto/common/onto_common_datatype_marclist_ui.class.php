@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_marclist_ui.class.php,v 1.5 2018-10-23 14:48:35 apetithomme Exp $
+// $Id: onto_common_datatype_marclist_ui.class.php,v 1.7 2019/08/14 08:02:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -31,7 +31,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param Array() class_uris URI des classes de l'ontologie listÃ©es dans le sÃ©lecteur
+	 * @param Array() class_uris URI des classes de l'ontologie listées dans le sélecteur
 
 	 * @return void
 	 * @access public
@@ -42,9 +42,9 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param string class_uri URI de la classe d'instances Ã  lister
+	 * @param string class_uri URI de la classe d'instances à lister
 
-	 * @param integer page NumÃ©ro de page Ã  afficher
+	 * @param integer page Numéro de page à afficher
 
 	 * @return Array()
 	 * @access public
@@ -59,7 +59,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 
 	 * @param string class_uri Rechercher iniquement les instances de la classe
 
-	 * @param integer page Page du rÃ©sultat de recherche Ã  afficher
+	 * @param integer page Page du résultat de recherche à afficher
 
 	 * @return Array()
 	 * @access public
@@ -71,8 +71,8 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_property $property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param onto_common_property $property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -85,12 +85,12 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 		global $msg,$charset,$ontology_tpl;
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
 		
 		$marc_list = new marc_list($property->pmb_marclist_type);
 		$content='';
 		$list_values_to_display = static::get_list_values_to_display($property);
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -176,9 +176,9 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	
 	/**
 	 
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
 
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param property property la propriété à utiliser
 
 	 * @param string instance_name nom de l'instance
 
@@ -189,7 +189,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -200,7 +200,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	}
 	
 	/**
-	 * A dÃ©river pour filtrer la liste des valeurs Ã  afficher dans le sÃ©lecteur
+	 * A dériver pour filtrer la liste des valeurs à afficher dans le sélecteur
 	 * @return array
 	 */
 	public static function get_list_values_to_display($property) {

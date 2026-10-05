@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_perso.tpl.php,v 1.15 2019-05-27 14:55:51 btafforeau Exp $
+// $Id: search_perso.tpl.php,v 1.17 2020/11/04 11:01:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $tpl_search_perso_liste_tableau, $tpl_search_perso_liste_tableau_ligne, $tpl_search_perso_form, $base_path, $msg, $current_module, $charset;
+global $tpl_search_perso_liste_tableau, $tpl_search_perso_liste_tableau_ligne, $tpl_search_perso_form, $base_path, $msg, $current_module, $charset, $type;
 
 //*******************************************************************
-// Définition des templates pour les listes en edition
+// D�finition des templates pour les listes en edition
 //*******************************************************************
 $tpl_search_perso_liste_tableau = "
 <script type='text/javascript' src='".$base_path."/javascript/search_perso_drop.js'></script>
 <h1>".$msg["search_perso_title"]."</h1>
 <div class='hmenu'>
-	<span><a href='./".$current_module.".php?categ=search_perso'>".$msg["search_perso_list_title"]."</a></span>!!preflink!!
+	<span><a href='./".$current_module.".php?categ=search_perso".($type ? '&type='.$type : '')."'>".$msg["search_perso_list_title"]."</a></span>!!preflink!!
 </div>
 <hr />
 <h3>".$msg["search_perso_list"]."</h3>
@@ -48,7 +48,7 @@ $tpl_search_perso_liste_tableau_ligne = "
 	<td !!td_javascript!! ><b>!!name!!</b>!!comment!!</td>
 	<td !!td_javascript!! >!!shortname!!</td>
 	<td !!td_javascript!! >!!human!!</td>
-	<td><input class='bouton_small' value='".$msg["search_perso_modifier"]."' type='button'  onClick=\"document.location='./".$current_module.".php?categ=search_perso&sub=form&id=!!id!!'\" ></td>
+	<td><input class='bouton_small' value='".$msg["search_perso_modifier"]."' type='button'  onClick=\"document.location='./".$current_module.".php?categ=search_perso".($type ? '&type='.$type : '')."&sub=form&id=!!id!!'\" ></td>
 </tr>
 ";
 
@@ -68,7 +68,7 @@ function confirm_delete() {
     result = confirm(\"".$msg['confirm_suppr']."\");
     if(result) {
         unload_off();
-        document.location='./".$current_module.".php?categ=search_perso&sub=delete&id=!!id!!';
+        document.location='!!url_base!!&sub=delete&id=!!id!!';
 	} else
         document.forms['search_perso_form'].elements['name'].focus();
 }
@@ -79,7 +79,7 @@ function check_link(id) {
 </script>
 
 <h1>".$msg["search_perso_form_title"]."</h1>
-<form class='form-$current_module' name='search_perso_form' method='post' action='./".$current_module.".php?categ=search_perso&sub=save'>
+<form class='form-$current_module' name='search_perso_form' method='post' action='!!url_base!!&sub=save'>
 	<h3>!!libelle!!</h3>
 	<div class='form-contenu'>
 		<!--	nom	-->
@@ -154,4 +154,3 @@ function check_link(id) {
 	document.forms['search_perso_form'].elements['name'].focus();
 </script>
 ";
-?>

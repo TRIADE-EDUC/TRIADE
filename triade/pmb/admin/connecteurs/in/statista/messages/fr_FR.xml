@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en anglais pour le connecteur Statista
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2 2020/07/01 14:12:49 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="statista_ws">Web Service</entry>
+	<entry code="statista_url">URL</entry>
+	<entry code="statista_api_key">Clé d'API</entry>
+	<entry code="statista_search_params">Paramétrage de la recherche</entry>
+	<entry code="statista_content_type">Type de contenu</entry>
+	<entry code="statista_content_type_statistics">Statistiques</entry>
+	<entry code="statista_content_type_infographics">Infographies</entry>
+	<entry code="statista_content_type_studies">Etudes</entry>
+	<entry code="statista_platform">Plateforme de contenu</entry>
+	<entry code="statista_platform_">Toutes les plateformes</entry>
+	<entry code="statista_platform_de">Allemand</entry>
+	<entry code="statista_platform_en">Anglais</entry>
+	<entry code="statista_platform_fr">Français</entry>
+	<entry code="statista_platform_es">Espagnol</entry>
+	<entry code="statista_premium">Inclure le contenu payant</entry>
+	<entry code="statista_limit">Nombre maximum de résultats renvoyés</entry>
+</XMLlist>	

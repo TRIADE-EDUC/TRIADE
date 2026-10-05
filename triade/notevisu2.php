@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,8 +28,8 @@ include("librairie_php/db_triade.php");
 $cnx=cnx();
 
 //variables utiles
-$mySession[Sn]=$_SESSION["nom"];
-$mySession[Sp]=$_SESSION["prenom"];
+$mySession['Sn']=$_SESSION["nom"];
+$mySession['Sp']=$_SESSION["prenom"];
 $pid=$_SESSION["id_pers"];
 
 $cgrp=$_POST["sClasseGrp"];
@@ -47,7 +47,7 @@ $libel=$nomClasse." ".$nomGrp." / ".$nomMat;
 ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -75,7 +75,7 @@ $libel=$nomClasse." ".$nomGrp." / ".$nomMat;
 <!-- // fin  -->
 <?php
 $valeur=recupDateTrimIdclasse($cid,$anneeScolaire);
-if (count($valeur)) {
+if (countTriade($valeur)) {
 ?>
 <iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0  name="visunote" src="visunoteprof.php?sClasseGrp=<?php print $_POST["sClasseGrp"]?>&sMat=<?php print $_POST["sMat"]?>&anneeScolaire=<?php print $anneeScolaire?>" width="100%" height="100%" ></iframe>
 <?php
@@ -92,17 +92,17 @@ if (count($valeur)) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")):
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

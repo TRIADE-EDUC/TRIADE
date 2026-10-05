@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: search_fields_ontology.xml,v 1.1 2023/02/07 15:31:40 arenou Exp $ -->
+<pmbfields>
+
+	<!-- Zone fixedFields :
+		Liste des champs de recherche possibles de la base de données
+		Chaque champ est modélisé par le tag <field> :
+		<field @att=id,title,memoryEngineForbidden> 
+			-id : numéro unique arbitraire
+			-title : Texte qui sera affiché dans l'écran de recherche
+			-memoryEngineForbidden : "yes" interdit l'utilisation du moteur memory pour la création des tables temporaires
+			<field> contient les sous tags :
+				<input @type> : type de saisie
+					-type (text|list) : 
+						@type=list (dans le cas d'une saisie par liste), input contient les sous champs :
+						 	<queryList> : requete pour récupérer les values de la liste. La requete doit avoir 2 colonnes
+										  -la première donne le code à retourner
+										  -la deuxième donne le libellé dans la liste
+										  
+				<query> : requete associée au champ et à l'opérateur
+				<query @att=for,multipleWords,regDiacrit>
+					-for : nom de l'opérateur auquel correspond la requete 
+					 (les opérateurs non listés ne seront pas pris en compte), 
+					-multipleWords (yes|no) : la requete tient compte de plusieurs termes saisis avec des espaces
+					-regDiacrit (yes|no) : les termes sont passés par la fonction de nettoyage des mots vides et des accents
+			 		<query> contient les sous tags :
+					
+						<main> : Corps principal de la requete, 
+							-!!p!! sera remplacé dans la requete par le texte saisi pour la recherche, 
+							-!!multiple_term!! (uniquement si multipleWords="yes") sera remplacé par la série 
+							 de tests de la clause where pour chaque mot saisi
+						
+						<multipleTerm> : terme de condition utilisé pour remplacer !!multiple_term!!
+						<multipleOperator> : opérateur utilisé entre les termes de conditions 
+	-->
+	<keyname>id_item</keyname>
+	<memoryEngineAllowed>yes</memoryEngineAllowed>
+	<fixedFields>
+		<field title="msg:global_search" id="42">
+			<input type="text"/>
+			<query for="BOOLEAN" wordSearch="yes" >
+				<class type="ontologies"></class>
+			</query>
+		</field>
+	</fixedFields>
+	<dynamicFields>
+		<option order="" />
+		<fieldType type="onto" prefix="o">
+			<field dataType="small_text" id="1">
+				<query for="BOOLEAN" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="CONTAINS" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="STARTWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"^!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="ENDWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!$"))
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="date" id="2">
+				<query for="EQ" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> "!!p!!" . 
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="url" id="3">
+				<query for="CONTAINS" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="STARTWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"^!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="ENDWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!$"))
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="text" id="4">
+				<query for="CONTAINS" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="STARTWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"^!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="ENDWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!$"))
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="small_text_link" id="5">
+				<query for="CONTAINS" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="STARTWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"^!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="ENDWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!$"))
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="small_text_card" id="6">
+				<query for="CONTAINS" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="STARTWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"^!!p!!"))
+					}
+					]]></main>
+				</query>
+				<query for="ENDWITH" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (regex(?value,"!!p!!$"))
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="resource_pmb_selector" id="7">
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="resource_selector" id="8">
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+				<query for="AUTHORITY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> <!!p!!> . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="file" id="9">
+				
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+			<field dataType="marclist" id="10">
+				<query for="EQ" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> <!!p!!> . 
+					}
+					]]></main>
+				</query>
+				<query for="ISEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						optional {?entity <!!predicat!!> ?value . } .
+						filter (!bound(?value))
+					}
+					]]></main>
+				</query>
+				<query for="ISNOTEMPTY" mode="sparql">
+					<main><![CDATA[
+					select ?entity where { 
+						?entity rdf:type <!!type!!> . 
+						?entity <!!predicat!!> ?value . 
+					}
+					]]></main>
+				</query>
+			</field>
+		</fieldType>
+	</dynamicFields>	
+	
+	
+	<specialFields>
+		<field group="1001" type="combine" title="msg:histo_title" id="1"/>
+		<field type="facette" title="msg:search_facette" id="3" opacVisibility="no"/>
+		<field type="simple_search" title="msg:search_persopac_table_humanquery" id="4" opacVisibility="no" visible="no"/>										
+		<field type="permalink" title="msg:search_permalink" id="9" opacVisibility="no" visible="no"/>		
+		<field type="search_segment" title="msg:search_segment" id="10" opacVisibility="no" visible="no"/>	
+		<field type="combine_extended_search" title="msg:combine_extended_search" id="11" opacVisibility="no"/>		
+		<field type="map_circle" group="6" title="msg:search_extended_map_circle" id="104" opacVisibility="no" visible="no"/>
+		<field group="1001" type="dynamic_value" title="msg:dynamic_value_field" id="12" />
+	</specialFields>
+	
+	<operators>
+		<operator name="BOOLEAN">msg:expr_bool_query</operator>
+		<operator name="CONTAINS">msg:284</operator>
+		<operator name="CONTAINS_ALL">msg:contient_tous_mots_query</operator>
+		<operator name="CONTAINS_AT_LEAST">msg:contient_plus_un_mot_query</operator>
+		<operator name="STARTWITH">msg:commence_par_query</operator>
+		<operator name="ENDWITH">msg:finit_par_query</operator>
+		<operator name="EXACT">msg:exactement_comme_query</operator>
+		<operator name="EQ">msg:eq_query</operator>
+		<operator name="NOTEQ">msg:noteq_query</operator>
+		<operator name="GT">msg:gt_query</operator>
+		<operator name="LT">msg:lt_query</operator>
+		<operator name="GTEQ">msg:gteq_query</operator>
+		<operator name="LTEQ">msg:lteq_query</operator>
+		<operator name="ISEMPTY" emptyAllowed="yes">msg:est_vide_query</operator>
+		<operator name="ISNOTEMPTY" emptyAllowed="yes">msg:pas_vide_query</operator>
+		<operator name="AUTHORITY">msg:authority_query</operator>
+		<operator name="AERASUP">msg:map_multisearch_aerasup</operator>
+		<operator name="AERAINF">msg:map_multisearch_aerainf</operator>
+		<operator name="INTERSECTS">msg:map_multisearch_intersects</operator>
+		<operator name="BETWEEN">msg:search_between_query</operator>
+		<operator name="NEAR">msg:parperso_option_duration_type0</operator>
+		<operator name="LESS_THAN_DAYS">msg:less_than_days_query</operator>
+		<operator name="MORE_THAN_DAYS">msg:more_than_days_query</operator>
+		<operator name="THIS_WEEK" emptyAllowed="yes">msg:this_week_query</operator>
+		<operator name="LAST_WEEK" emptyAllowed="yes">msg:last_week_query</operator>
+		<operator name="THIS_MONTH" emptyAllowed="yes">msg:this_month_query</operator>
+		<operator name="LAST_MONTH" emptyAllowed="yes">msg:last_month_query</operator>
+		<operator name="THIS_YEAR" emptyAllowed="yes">msg:this_year_query</operator>
+		<operator name="CUSTOM_SEARCH" special="yes">msg:custom_search</operator> 	
+	</operators>
+	
+	<!-- Les groupes sont associés aux champs (fields) et permettent d'amener une notion de classement -->
+	<groups>
+		<group id="1001">
+			<order>17</order>
+			<label>msg:recherches_query</label>
+		</group>
+	</groups>
+</pmbfields>

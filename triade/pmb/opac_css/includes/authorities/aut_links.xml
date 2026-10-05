@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: aut_links.xml,v 1.4 2023/01/23 10:43:16 tsamson Exp $ -->
+
+<aut_links>
+	<links>
+		<authority code="author"> <!-- Autorités qu'il est possible de lier à un auteur -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="category"> <!-- Autorités qu'il est possible de lier à une catégorie -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="publisher"> <!-- Autorités qu'il est possible de lier à un éditeur -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="collection"> <!-- Autorités qu'il est possible de lier à une collection -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="subcollection"> <!-- Autorités qu'il est possible de lier à une sous collection -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="serie"> <!-- Autorités qu'il est possible de lier à une série -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="titre_uniforme"> <!-- Autorités qu'il est possible de lier à un titre uniforme -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="indexint"> <!-- Autorités qu'il est possible de lier à une indexation décimale -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="authperso"> <!-- Autorités qu'il est possible de lier à une autorité perso -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+		<authority code="concept"> <!-- Autorités qu'il est possible de lier à un concept -->
+			<authority_allowed>author</authority_allowed>
+			<authority_allowed>category</authority_allowed>
+			<authority_allowed>publisher</authority_allowed>
+			<authority_allowed>collection</authority_allowed>
+			<authority_allowed>subcollection</authority_allowed>
+			<authority_allowed>serie</authority_allowed>
+			<authority_allowed>titre_uniforme</authority_allowed>
+			<authority_allowed>indexint</authority_allowed>
+			<authority_allowed>authperso</authority_allowed>
+			<authority_allowed>concept</authority_allowed>
+		</authority>
+	</links>
+	
+	<definition>
+		<entry code="author">1</entry>
+		<entry code="category">2</entry>
+		<entry code="publisher">3</entry>
+		<entry code="collection">4</entry>
+		<entry code="subcollection">5</entry>
+		<entry code="serie">6</entry>
+		<entry code="titre_uniforme">7</entry>
+		<entry code="indexint">8</entry>
+		<entry code="authperso">9</entry>
+		<entry code="concept">10</entry>
+	</definition>
+
+</aut_links>

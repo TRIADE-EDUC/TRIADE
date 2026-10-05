@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: mmnuni2bretagneuni.xsl,v 1.2.42.1 2024/08/28 14:10:15 rtigero Exp $ -->
+
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-	
+
 	<xsl:output method="xml" encoding="ISO-8859-1" indent="yes"/>
-	
+
 	<xsl:template match="/unimarc">
 		<unimarc>
 			<xsl:apply-templates select="notice"/>
 		</unimarc>
 	</xsl:template>
-	
+
 	<xsl:template match="notice">
 		<notice>
 			<xsl:apply-templates select="*"/>
 		</notice>
 	</xsl:template>
-	
+
 	<xsl:template match="f[@c='463']">
 		<xsl:choose>
 			<xsl:when test="../bl='a'">
@@ -37,7 +43,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="/unimarc/notice/f[@c='463']/s[@c='v']">
 		<xsl:element name="s">
 			<xsl:attribute name="c">v</xsl:attribute>
@@ -48,13 +54,13 @@
 			<xsl:value-of select="substring-after(.,', ')"/>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template match="f[@c='215']">
 		<xsl:if test="../bl!='a'">
 			<xsl:copy-of select="."/>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="*">
 		<xsl:copy-of select="."/>
 	</xsl:template>

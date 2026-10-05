@@ -2,11 +2,12 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authority_page.class.php,v 1.32 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: authority_page.class.php,v 1.49.2.4.2.1 2025/04/24 08:05:57 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($base_path.'/classes/facette_search.class.php');
+global $class_path;
+require_once($class_path.'/facette_search.class.php');
 require_once($class_path."/suggest.class.php");
 require_once($class_path."/sort.class.php");
 require_once($class_path."/acces.class.php");
@@ -14,7 +15,7 @@ require_once ($class_path."/frbr/frbr_build.class.php");
 
 /**
  * class authority_page
- * Controler GÃ©nÃ©rique d'une page d'autoritÃ©
+ * Controler Générique d'une page d'autorité
  */
 class authority_page {	
 
@@ -24,6 +25,7 @@ class authority_page {
 	 */
 	protected $authority;
 	
+	protected $id;
 	protected $acces_j;
 	protected $statut_j;
 	protected $statut_r;
@@ -34,7 +36,7 @@ class authority_page {
 	
 	/**
 	 * Constructeur
-	 * @param authority $authority Instance d'autoritÃ©
+	 * @param authority $authority Instance d'autorité
 	 */
 	public function __construct($authority){
 		$this->authority = $authority;
@@ -42,22 +44,22 @@ class authority_page {
 	
 	public function proceed($entity_type,$context=array()){
 		global $facettes_tpl;
-		global $charset;
+		global $msg, $charset;
 		
 		facettes_root::set_facet_type('notices');
 		
 		if(!isset($this->authority) || !is_object($this->authority)) {
-			//AutoritÃ© inconnue
+			print "<h3>".htmlentities($msg['authority_display_forbidden'],ENT_QUOTES,$charset).'</h3>';
 			return;
 		}
 		static::$template_directory = "";		
 		
-		$frbr_build = frbr_build::get_instance($this->id, $entity_type);
+		$frbr_build = $this->get_frbr_build_instance($entity_type);
 		
 		$facettes_tpl = '';
 		$display_graph = false;
 		if($frbr_build->has_page() && $frbr_build->has_cadres()) {
-			//Nous avons aussi besoin de calculer les notices si les facettes sont affichÃ©es 
+			//Nous avons aussi besoin de calculer les notices si les facettes sont affichées 
 			if($frbr_build->get_page()->get_parameter_value('records_list') || $frbr_build->get_page()->get_parameter_value('facettes_list')) {
 				// LISTE DE NOTICES ASSOCIEES
 				if ($frbr_build->get_page()->get_parameter_value('record_template_directory')) {
@@ -65,7 +67,7 @@ class authority_page {
 				}
 				$this->authority->set_recordslist($this->get_recordslist());
 			}
-			//rÃ©cupÃ©ration des donnÃ©es des jeux de donnÃ©es
+			//récupération des données des jeux de données
 			$datanodes_data = $frbr_build->get_datanodes_data();
 			$this->dom = new DOMDocument();
 			$this->dom->encoding = $charset;
@@ -83,17 +85,20 @@ class authority_page {
 			if (!$this->dom->getElementById('aut_details')) {
 				$this->dom = $this->setAllId($this->dom);
 			}
-			
 			foreach ($frbr_build->get_cadres() as $cadre) {
 				if ($cadre['place_visibility']) {
 					if($cadre['cadre_type']) {
-						switch ($cadre['cadre_type']) {
-							case 'isbd':
-								$this->dom->getElementById("aut_details")->parentNode->appendChild($this->dom->importNode($this->dom->getElementById("aut_see"),true));
-								break;
-							case 'records_list':
-								$this->dom->getElementById("aut_details")->parentNode->appendChild($this->dom->importNode($this->dom->getElementById("aut_details_liste"),true));
-								break;
+					    switch ($cadre['cadre_type']) {
+					        case 'isbd':
+					            if ($this->dom->getElementById("aut_see")) {
+					                $this->dom->getElementById("aut_details")->parentNode->appendChild($this->dom->importNode($this->dom->getElementById("aut_see"),true));
+					            }
+					            break;
+					        case 'records_list':
+					            if ($this->dom->getElementById("aut_details_liste")) {
+					                $this->dom->getElementById("aut_details")->parentNode->appendChild($this->dom->importNode($this->dom->getElementById("aut_details_liste"),true));
+					            }
+					            break;
 							case 'frbr_graph' :
 								$graph_node = $this->dom->createElement("div");
 								$graph_node->setAttribute('id', 'frbr_entity_graph');
@@ -166,7 +171,10 @@ class authority_page {
 			$this->statut_r='';
 		} else {
 			$this->statut_j=',notice_statut';
-			$this->statut_r="and statut=id_notice_statut and ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
+			if (!empty($this->get_clause_authority_id_recordslist())) {
+			    $this->statut_r .= 'and ';
+			}
+			$this->statut_r .= "statut=id_notice_statut and ((notice_visible_opac=1 and notice_visible_opac_abon=0)".($_SESSION["user_code"]?" or (notice_visible_opac_abon=1 and notice_visible_opac=1)":"").")";
 		}
 		if(isset($_SESSION["opac_view"]) && $_SESSION["opac_view"] && isset($_SESSION["opac_view_query"]) && $_SESSION["opac_view_query"] ){
 			$opac_view_restrict=" notice_id in (select opac_view_num_notice from  opac_view_notices_".$_SESSION["opac_view"].") ";
@@ -175,11 +183,11 @@ class authority_page {
 	}
 	
 	/**
-	 * Retourne les notices associÃ©es
+	 * Retourne les notices associées
 	 */
 	public function get_recordslist($only_records = false) {
 		global $msg, $base_path, $class_path, $include_path;
-		global $opac_visionneuse_allow, $opac_photo_filtre_mimetype, $link_to_visionneuse, $sendToVisionneuseByGet;
+		global $opac_visionneuse_allow, $opac_photo_filtre_mimetype, $link_to_visionneuse_authority, $sendToVisionneuseAuthorityDisplay;
 		global $opac_allow_bannette_priv, $allow_dsi_priv;
 		global $opac_nb_aut_rec_per_page;
 		global $opac_search_allow_refinement, $opac_allow_external_search;
@@ -189,12 +197,15 @@ class authority_page {
 		global $add_cart_link;
 		global $from;
 		global $nb_per_page_custom;
+		global $charset, $opac_rgaa_active;
 		
+		$nb_per_page_custom = intval($nb_per_page_custom);
+		$nbr_lignes = intval($nbr_lignes);
 		
 		//droits d'acces emprunteur/notice
 		$this->calculate_restrict_access_rights();
 		
-		// comptage des notices associÃ©es
+		// comptage des notices associées
 		if(!$nbr_lignes) {
 			$requete = "SELECT COUNT(distinct notice_id) FROM notices ".$this->get_join_recordslist()." ".$this->acces_j." ".$this->statut_j;
 			$requete.= " where ".$this->get_clause_authority_id_recordslist()." $this->statut_r ";
@@ -237,28 +248,49 @@ class authority_page {
 				}
 			}
 		}
-		$recordslist = "<h3><span class=\"aut_details_liste_titre\">".$this->get_title_recordslist()." (" . $nbr_lignes . ")</span></h3>\n";
+		if($opac_rgaa_active) {
+			$recordslist = "<p><span class=\"aut_details_liste_titre\"><span id='nb_aut_details'>" . htmlentities($nbr_lignes, ENT_QUOTES, $charset) .' '. $this->get_title_recordslist()."</span></span></p>\n";
+		} else {
+			$recordslist = "<h3><span class=\"aut_details_liste_titre\">".$this->get_title_recordslist()." (<span id='nb_aut_details'>" . htmlentities($nbr_lignes, ENT_QUOTES, $charset) . "</span>)</span></h3>\n";
+		}
 		
 		if (!$only_records) {
-			// pour la DSI - crÃ©ation d'une alerte
+			// Ouverture du div resultatrech_liste
+			$recordslist.= "<div id='resultatrech_liste'>";
+			if($opac_rgaa_active){
+			    // ouverture div pour contenir toutes les fonctionnalités
+			    $recordslist.= "<div id='resultatrech_tools' class='result_tools'>";
+			}
+			
+			// pour la DSI - création d'une alerte
 			if ($nbr_lignes && $opac_allow_bannette_priv && $allow_dsi_priv && ((isset($_SESSION['abon_cree_bannette_priv']) && $_SESSION['abon_cree_bannette_priv']==1) || $opac_allow_bannette_priv==2)) {
-				$recordslist.= "<input type='button' class='bouton' name='dsi_priv' value=\"".$msg['dsi_bt_bannette_priv']."\" onClick=\"document.mc_values.action='./empr.php?lvl=bannette_creer'; document.mc_values.submit();\"><span class=\"espaceResultSearch\">&nbsp;</span>";
+			    if ($opac_rgaa_active) {
+			        $recordslist.= "<a href='".$base_path."/empr.php?lvl=bannette_creer' class='bouton btn_dsi btn_dsi_add' onClick=\"document.mc_values.action='./empr.php?lvl=bannette_creer'; document.mc_values.submit();\">$msg[dsi_bt_bannette_priv]</a>";
+			    }else{
+			        $recordslist.= "<input role='link' type='button' class='bouton btn_dsi btn_dsi_add' name='dsi_priv' value='".htmlspecialchars($msg['dsi_bt_bannette_priv'], ENT_QUOTES, $charset)."' onClick=\"document.mc_values.action='./empr.php?lvl=bannette_creer'; document.mc_values.submit();\">";
+			    }
+			    $recordslist.="<span class=\"espaceResultSearch\">&nbsp;</span>";
 			}
 			
 			// pour la DSI - Modification d'une alerte
-			if ($nbr_lignes && $opac_allow_bannette_priv && $allow_dsi_priv && (isset($_SESSION['abon_edit_bannette_priv']) && $_SESSION['abon_edit_bannette_priv']==1)) {
-				$recordslist.= "<input type='button' class='bouton' name='dsi_priv' value=\"".$msg['dsi_bannette_edit']."\" onClick=\"document.mc_values.action='./empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."'; document.mc_values.submit();\"><span class=\"espaceResultSearch\">&nbsp;</span>";
+			if(!empty($_SESSION['abon_edit_bannette_priv']) && !empty($_SESSION['abon_edit_bannette_priv_visibility_until']) && $_SESSION['abon_edit_bannette_priv_visibility_until'] < time()) {
+				unset($_SESSION['abon_edit_bannette_priv']);
 			}
-			
-			// Ouverture du div resultatrech_liste
-			$recordslist.= "<div id='resultatrech_liste'>";
+			if ($nbr_lignes && $opac_allow_bannette_priv && $allow_dsi_priv && (isset($_SESSION['abon_edit_bannette_priv']) && $_SESSION['abon_edit_bannette_priv']==1)) {
+			    if ($opac_rgaa_active) {
+			        $recordslist.= "<a href='".$base_path."/empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."' class='bouton btn_dsi btn_dsi_edit' onClick=\"document.mc_values.action='./empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."'; document.mc_values.submit();\">$msg[dsi_bannette_edit]</a>";
+			    }else{
+			        $recordslist.= "<input role='link' type='button' class='bouton btn_dsi btn_dsi_edit' name='dsi_priv' value='".htmlspecialchars($msg['dsi_bannette_edit'], ENT_QUOTES, $charset)."' onClick=\"document.mc_values.action='./empr.php?lvl=bannette_edit&id_bannette=".$_SESSION['abon_edit_bannette_id']."'; document.mc_values.submit();\">";
+			    }
+			    $recordslist.="<span class=\"espaceResultSearch\">&nbsp;</span>";
+			}
 		}
 		
 		if(!$page) $page=1;
 		$debut =($page-1)*$opac_nb_aut_rec_per_page;
 		
 		if($nbr_lignes) {
-			// on lance la requÃªte de sÃ©lection des notices
+			// on lance la requête de sélection des notices
 			$requete = "SELECT distinct notices.notice_id FROM notices ".$this->get_join_recordslist()." ".$this->acces_j." ".$this->statut_j;
 			$requete.= " WHERE ".$this->get_clause_authority_id_recordslist()." $this->statut_r ";
 		
@@ -267,7 +299,6 @@ class authority_page {
 			$requete = sort::get_sort_query($requete, $nbr_lignes, $debut, "notices", "notice_id", $opac_nb_aut_rec_per_page);
 			
 			$res = pmb_mysql_query($requete);
-		
 
 			if (!$only_records) {
 				if ($opac_notices_depliable) $recordslist.= $begin_result_liste;
@@ -278,10 +309,10 @@ class authority_page {
 				$recordslist.= $add_cart_link;
 			
 				if($opac_visionneuse_allow && $nbexplnum_to_photo){
-					$recordslist.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;&nbsp;</span>".$link_to_visionneuse;
-					$sendToVisionneuseByGet = str_replace("!!mode!!", $this->get_mode_recordslist(),$sendToVisionneuseByGet);
-					$sendToVisionneuseByGet = str_replace("!!idautorite!!",$this->id,$sendToVisionneuseByGet);
-					$recordslist.= $sendToVisionneuseByGet;
+				    $recordslist.= "<span class=\"espaceResultSearch\">&nbsp;&nbsp;&nbsp;</span>".$link_to_visionneuse_authority;
+					$sendToVisionneuseAuthorityDisplay = str_replace("!!mode!!", $this->get_mode_recordslist(),$sendToVisionneuseAuthorityDisplay);
+					$sendToVisionneuseAuthorityDisplay = str_replace("!!idautorite!!",$this->id,$sendToVisionneuseAuthorityDisplay);
+					$recordslist.= $sendToVisionneuseAuthorityDisplay;
 				}
 			
 				$recordslist.=suggest::get_add_link();
@@ -290,7 +321,7 @@ class authority_page {
 				//enregistrement de l'endroit actuel dans la session
 				rec_last_authorities();
 			
-				// Gestion des alertes Ã  partir de la recherche simple
+				// Gestion des alertes à partir de la recherche simple
 				include_once($include_path."/alert_see.inc.php");
 				$recordslist.= $alert_see_mc_values;
 			
@@ -304,23 +335,36 @@ class authority_page {
 				if ($opac_allow_external_search) $recordslist.=  "<span class=\"espaceResultSearch\">&nbsp;&nbsp;</span><span class=\"search_bt_external\"><a href='$base_path/index.php?search_type_asked=external_search&mode_aff=aff_simple_search&external_type=simple' title='".$msg["connecteurs_external_search_sources"]."'>".$msg["connecteurs_external_search_sources"]."</a></span>";
 				//fin etendre
 				
-				/*****SpÃ©cifique au catÃ©gories***/
+				/*****Spécifique au catégories***/
 				if(static::class == 'authority_page_category') {
 					global $auto_postage_form;
 					if ($auto_postage_form) $recordslist.= "<div id='autopostageform'>".$auto_postage_form."</div>";
 				}
-				/*****SpÃ©cifique au catÃ©gories***/
+				/*****Spécifique au catégories***/
 			}
 			
-			$only_recordslist = "<blockquote>\n";
+			if($opac_rgaa_active){
+			    // fermeture div fonctionnalités
+			    $recordslist.= "</div>";
+			}
+			
+			global $count;
+			$count = $nbr_lignes;
+			
+			$only_recordslist = "<blockquote role='presentation'>\n";
 			$only_recordslist.= aff_notice(-1);
 			$nb=0;
 			$recherche_ajax_mode=0;
+			
 			while(($obj=pmb_mysql_fetch_object($res))) {
 				global $infos_notice;
 				if($nb++>4) $recherche_ajax_mode=1;
 				$only_recordslist.= pmb_bidi(aff_notice($obj->notice_id, 0, 1, 0, "", "", 0, 0, $recherche_ajax_mode, 1, static::$template_directory));
-				$infos_notice['nb_pages'] = ceil($nbr_lignes/$opac_nb_aut_rec_per_page);
+				if ($opac_nb_aut_rec_per_page) {
+				    $infos_notice['nb_pages'] = ceil($nbr_lignes/$opac_nb_aut_rec_per_page);
+				} else {
+				    $infos_notice['nb_pages'] = 0;
+				}
 			}
 			$only_recordslist.= aff_notice(-2);
 			$only_recordslist.= "</blockquote>\n";
@@ -337,11 +381,21 @@ class authority_page {
 			if (!isset($l_typdoc)) {
 			   $l_typdoc = '';
 			}
-			$recordslist.= "<div id='navbar'><hr /><div style='text-align:center'>".printnavbar($page, $nbr_lignes, $opac_nb_aut_rec_per_page, "./index.php?lvl=".$this->get_mode_recordslist()."&id=".$this->id."&page=!!page!!&nbr_lignes=$nbr_lignes&l_typdoc=".rawurlencode($l_typdoc).($nb_per_page_custom ? "&nb_per_page_custom=".$nb_per_page_custom : ''))."</div></div>\n";
+			
+			$recordmodes = record_display_modes::get_instance();
+			$nav_displayed = (is_object($recordmodes) ? $recordmodes->is_nav_displayed($recordmodes->get_current_mode()) : true);
+			if ($nav_displayed) {
+				$recordslist.= "<div id='navbar'><hr /><div style='text-align:center'>".printnavbar($page, $nbr_lignes, $opac_nb_aut_rec_per_page, "./index.php?lvl=".$this->get_mode_recordslist()."&id=".$this->id."&page=!!page!!&nbr_lignes=$nbr_lignes&l_typdoc=".rawurlencode($l_typdoc).($nb_per_page_custom ? "&nb_per_page_custom=".$nb_per_page_custom : ''))."</div></div>\n";
+			}
 		} else {
+		    if($opac_rgaa_active){
+		        // fermeture div fonctionnalités
+		        $recordslist.= "</div>";
+		    }
+		    
 		    switch (static::class) {
 				case 'authority_page_indexint':
-					$recordslist.= "<blockquote>".$msg['categ_empty']."</blockquote>";
+					$recordslist.= "<blockquote role='presentation'>".$msg['categ_empty']."</blockquote>";
 					break;
 				case 'authority_page_category':
 					$recordslist.= $msg["categ_empty"];
@@ -349,8 +403,8 @@ class authority_page {
 					if($auto_postage_form) $recordslist.= "<br />".$auto_postage_form;
 					break;
 				default:
-					$recordslist.= $msg["no_document_found"];
-					break;
+				    print "<p id='no_result_paragraph'>". $msg['no_document_found'] ."</p>";
+				    break;
 			}
 		}
 		$recordslist.= "</div>"; // Fermeture du div resultatrech_liste
@@ -361,7 +415,7 @@ class authority_page {
 		if(!isset($this->acces_j)) {
 			$this->calculate_restrict_access_rights();
 		}
-		// on lance la requÃªte de sÃ©lection des notices
+		// on lance la requête de sélection des notices
 		$query = "SELECT distinct notices.notice_id FROM notices ".$this->get_join_recordslist()." ".$this->acces_j." ".$this->statut_j;
 		$query .= " WHERE ".$this->get_clause_authority_id_recordslist()." $this->statut_r ";
 		$result = pmb_mysql_query($query);
@@ -379,7 +433,7 @@ class authority_page {
 			$this->calculate_restrict_access_rights();
 		}
 		$facettes_tpl = '';
-		//comparateur de facettes : on rÃ©-initialise
+		//comparateur de facettes : on ré-initialise
 		$_SESSION['facette']=array();
 		if($nbr_lignes){
 			$query = "SELECT distinct notices.notice_id FROM notices ".$this->get_join_recordslist()." ".$this->acces_j." ".$this->statut_j;
@@ -410,10 +464,8 @@ class authority_page {
 		$html = '';
 		
 		$frbr_entity_graph = frbr_entity_graph::get_entity_graph($this->authority, 'authority');
-		$frbr_entity_graph->get_entities_graphed(true);
-		$content = $frbr_entity_graph->get_json_entities_graphed();		
-		
 		$entities_graphed = $frbr_entity_graph->get_entities_graphed();
+		$content = $frbr_entity_graph->get_json_entities_graphed();	
 		
 		if (count($entities_graphed['links'])) {
 			$template_path = $include_path.'/templates/frbr_entities_graph.tpl.html';
@@ -422,7 +474,7 @@ class authority_page {
 			}
 			if(file_exists($template_path)){
 				$h2o = H2o_collection::get_instance($template_path);
-				// Content -> Structure json Ã  passer au constructeur de la classe dojo permettant de gÃ©nÃ©rer le graphe
+				// Content -> Structure json à passer au constructeur de la classe dojo permettant de générer le graphe
 					
 				$graph = array('nodes'=> $content['nodes'], 'links' => $content['links']);
 				$html = $h2o->render(array('graph' => $graph));
@@ -454,5 +506,9 @@ class authority_page {
 			}
 		}
 		return $DOMNode;
+	}
+	
+	protected function get_frbr_build_instance($entity_type) {
+	    return frbr_build::get_instance($this->id, $entity_type);
 	}
 }

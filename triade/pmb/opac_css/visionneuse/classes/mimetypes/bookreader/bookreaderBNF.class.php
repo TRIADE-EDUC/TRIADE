@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bookreaderBNF.class.php,v 1.5 2017-07-03 09:07:10 dgoron Exp $
+// $Id: bookreaderBNF.class.php,v 1.5 2017/07/03 09:07:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class bookreaderBNF {
-	public $doc;		//le document BNF Ã  traiter
+	public $doc;		//le document BNF à traiter
 	public $bnfClass;
 	
 	public function __construct($doc){

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_datasource_record.class.php,v 1.5 2015-02-05 09:06:57 dgoron Exp $
+// $Id: cms_module_common_datasource_record.class.php,v 1.6.8.1 2025/01/17 10:40:42 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ class cms_module_common_datasource_record extends cms_module_common_datasource{
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -27,11 +27,11 @@ class cms_module_common_datasource_record extends cms_module_common_datasource{
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+	    if(is_countable($this->selectors) && $this->parameters['selector'] != ""){
 			for($i=0 ; $i<count($this->selectors) ; $i++){
 				if($this->selectors[$i]['name'] == $this->parameters['selector']){
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
@@ -41,7 +41,14 @@ class cms_module_common_datasource_record extends cms_module_common_datasource{
 			//$notice = new notice_info($selector->get_value());
 			$notice=$selector->get_value();
 			if(is_array($notice)){
+				$notice = $this->filter_datas("notices",$notice);
+			} else {
+				$notice = $this->filter_datas("notices",array($notice));
+			}
+			if(!empty($notice[0])) {
 				$notice = $notice[0];
+			} else {
+				$notice = 0;
 			}
 			return $notice;
 		}

@@ -1,18 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_piwik_datasource_piwik.class.php,v 1.4 2016-09-20 10:25:41 apetithomme Exp $
+// $Id: cms_module_piwik_datasource_piwik.class.php,v 1.5.6.1 2025/01/17 10:40:44 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
-	
+
+	public $datas;
+
 	public function __construct($id=0){
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -24,12 +26,11 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 		$form = parent::get_form();
 		return $form;
 	}
-	
+
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		global $dbh;
 		global $user_query;
 		global $opac_autolevel2,$mode,$get_last_query;
 		if(!$this->datas){
@@ -40,16 +41,16 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 				if(pmb_mysql_num_rows($result)){
 					$box = pmb_mysql_result($result,0,0);
 					$infos =unserialize($box);
-					$server = $infos['module']['servers'][$selector->get_value()]; 
+					$server = $infos['module']['servers'][$selector->get_value()];
 				}
 				$type_page = cms_module_common_datasource_typepage_opac::get_type_page();
 				$server['page']['type'] = cms_module_common_datasource_typepage_opac::get_label($type_page);
 				$ss_type_page = cms_module_common_datasource_typepage_opac::get_subtype_page();
 				$server['page']['subtype'] = cms_module_common_datasource_typepage_opac::get_label($ss_type_page);
 				if($_SESSION['id_empr_session']){
-					//rÃ©cupÃ©ration des informations liÃ©s au lecteur
+					//récupération des informations liés au lecteur
 					$query = "select empr_year, empr_sexe, empr_categ.libelle as categ, empr_codestat.libelle as codestat, location_libelle as location , empr_ville from empr join empr_categ on id_categ_empr = empr_categ join empr_codestat on idcode = empr_codestat join docs_location on idlocation = empr_location where id_empr = '".($_SESSION['id_empr_session']*1)."'";
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
 							$server['visitor']['year'] = $row->year;
@@ -64,9 +65,9 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 				switch($type_page){
 					//recherche
 					case "1" :
-						
+
 						break;
-					//rÃ©sultats
+					//résultats
 					case "2" :
 						switch($ss_type_page){
 							case "204" :
@@ -78,7 +79,7 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 								break;
 							case "202" :
 							case "206" :
-								//RMC - PrÃ©dÃ©finie
+								//RMC - Prédéfinie
 								global $searcher_extended;
 								$server['search']['user_query'] = strip_tags($_SESSION['human_query'.$_SESSION['nb_queries']]);
 								$server['search']['type'] =   $_SESSION['search_type'.$_SESSION['nb_queries']];
@@ -95,13 +96,13 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 										$server['search']['count'] = 0;
 									}else{
 										$server['search']['user_query'] = $user_query;
-										if(count($_SESSION['level1']) >1 ){
+										if (is_countable($_SESSION['level1']) && count($_SESSION['level1']) >1 ){
 											$server['search']['type'] = $_SESSION['search_type']." / tous";
 											$server['search']['count'] = $_SESSION['level1']['tous']['count'];
-										}else if(count($_SESSION['level1']) == 1 ){
+										} else if (is_countable($_SESSION['level1']) && count($_SESSION['level1']) == 1 ){
 											foreach ($_SESSION['level1'] as $lvl=>$level1){
 												$server['search']['type'] = $_SESSION['search_type']." / ".$lvl;
-												$server['search']['count'] = $_SESSION['level1'][$lvl]['count'];
+												$server['search']['count'] = $level1['count'];
 											}
 										}else {
 											$server['search']['type'] = $_SESSION['search_type']." / tous";
@@ -111,9 +112,9 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 								}
 								break;
 						}
-					
+
 						break;
-					//rÃ©sultats notices
+					//résultats notices
 					case "3" :
 						if($opac_autolevel2 == 2 && !$get_last_query){
 							switch($ss_type_page){
@@ -135,8 +136,8 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 									break;
 							}
 						}
-						break;	
-					//rÃ©sultats autoritÃ©s
+						break;
+					//résultats autorités
 					case "4" :
 						global $count;
 						switch($ss_type_page){
@@ -149,7 +150,7 @@ class cms_module_piwik_datasource_piwik extends cms_module_common_datasource{
 								}
 						}
 						break;
-						
+
 				}
 				$this->datas = $server;
 			}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.6 2020/08/05 12:37:36 jlaurent Exp $ -->
+<sort reference="authorities" referencekey="id_authority" ppersoprefix="indexint" typeobject="8">
+
+	<!--Pertinence-->
+	<field name="pertinence" type="num" typefield="internal" id="1">
+		<tablefield>pert</tablefield>
+	</field>
+	
+	<!--Name-->
+	<field name="indexint_nom" type="text" typefield="select" id="2">
+		<table name="indexint">
+			<tablefield>index_indexint</tablefield>
+			<tablekey>indexint_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=8</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Created Date-->
+	<field name="date_creation_query" type="num" typefield="select" id="3">
+		<table name="indexint">
+			<tablefield>indexint_id</tablefield>
+			<tablekey>indexint_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=8</referencefield>
+			</link>
+		</table>
+	</field>
+	
+	<!--Commentaire-->
+	<field name="indexint_comment" type="text" typefield="select" id="4">
+		<table name="indexint">
+			<tablefield>indexint_comment</tablefield>
+			<tablekey>indexint_id</tablekey>
+			<link type="1n">
+				<referencefield>num_object and type_object=8</referencefield>
+			</link>
+		</table>
+	</field>
+	
+</sort>

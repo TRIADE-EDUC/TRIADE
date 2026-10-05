@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_animationslist.xml,v 1.12 2023/09/20 14:52:16 gneveu Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_datasource_animations_by_categories'>Animations indexées par des catégories</entry>
+	<entry code='cms_module_common_view_animationslist'>Template Django</entry>
+	<entry code='cms_module_animationslist_view_django_directory'>Vue depuis un répertoire de templates</entry>
+	<entry code='cms_module_animationslist_view_carousel_uikit'>Vue en Carrousel Uikit</entry>
+	<entry code='cms_module_animationslist_view_slideshow'>Vue en Slideshow</entry>
+	<entry code='cms_module_common_datasource_animations_by_concepts'>Animations indexées par des concepts</entry>
+	<entry code='cms_module_animationslist_view_calendar'>Vue en Calendrier</entry>
+	<entry code='cms_module_animationslist_datasource_animations_by_type'>Animations d'un ou plusieurs types d'évènement</entry>
+	<entry code='cms_module_animationslist_datasource_all_animations'>Toutes les animations</entry>
+	<entry code='cms_module_animationslist_view_calendar_django'>Vue en Calendrier Django</entry>
+    <entry code='cms_module_common_filter_animations_by_cp'>Par valeur de champs perso</entry>
+    <entry code='cms_module_common_datasource_animations_by_cp_val'>Animations par valeur d'un champ perso</entry>
+    <entry code='cms_module_common_filter_animations_by_start_date'>Filtre par date de début de l'évenement</entry>
+</XMLlist>

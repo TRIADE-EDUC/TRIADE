@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_reviewslist.xml,v 1.3 2022/11/17 11:29:57 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_reviewslist_datasource_records_reviews'>Avis sur les notices</entry>
+	<entry code='cms_module_reviewslist_datasource_articles_reviews'>Avis sur les articles</entry>
+	<entry code='cms_module_reviewslist_datasource_sections_reviews'>Avis sur les rubriques</entry>
+	<entry code='cms_module_reviewslist_filter_validated'>Avis validés seulement</entry>
+</XMLlist>

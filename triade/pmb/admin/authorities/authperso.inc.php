@@ -1,13 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authperso.inc.php,v 1.3 2017-10-26 14:25:01 ngantier Exp $
+// $Id: authperso.inc.php,v 1.5 2021/03/05 08:38:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($auth_action)) $auth_action = '';
-if(!isset($id_authperso)) $id_authperso = 0;
+global $class_path, $base_path, $auth_action, $id_authperso;
 
 require_once($class_path."/authperso_admin.class.php");
 
@@ -18,33 +17,27 @@ switch($auth_action) {
 		break;
 	case 'save':
 		$authperso=new authperso_admin($id_authperso);
+		$authperso->set_properties_from_form();
 		print $authperso->save();
-		$authpersos=new authperso_admins();
-		print $authpersos->get_list();
+		print list_configuration_authorities_authperso_ui::get_instance()->get_display_list();
 		break;	
 	case 'delete':
-		$authperso=new authperso_admin($id_authperso);
-		print $authperso->delete();
-		$authpersos=new authperso_admins();
-		print $authpersos->get_list();
+		$deleted = authperso_admin::delete($id_authperso);
+		if($deleted) {
+			print list_configuration_authorities_authperso_ui::get_instance()->get_display_list();
+		} else {
+			pmb_error::get_instance('authperso_admin')->display(1, $base_path."/admin.php?categ=authorities&sub=authperso");
+		}
 		break;			
 	case 'edition': // gestion des champs persos (liste ,cration, edition, suppression...
 		$authperso=new authperso_admin($id_authperso);		
 		$authperso->fields_edition();		
-		break;	
-	case 'save_edition':
-		$authperso=new authperso_admin($id_authperso);
-		print $authperso->field_save();
-		$authpersos=new authperso_admins();
-		print $authpersos->get_list();
-		break;		
+		break;
 	case 'update_global_index':
 		print authperso::update_all_global_index($id_authperso);
-		$authpersos=new authperso_admins();
-		print $authpersos->get_list();
+		print list_configuration_authorities_authperso_ui::get_instance()->get_display_list();
 		break;	
 	default:
-		$authpersos=new authperso_admins();
-		print $authpersos->get_list();
+		print list_configuration_authorities_authperso_ui::get_instance()->get_display_list();
 		break;
 }

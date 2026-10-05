@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_metadatas_datasource_metadatas_record.class.php,v 1.9 2018-08-23 15:09:39 tsamson Exp $
+// $Id: cms_module_metadatas_datasource_metadatas_record.class.php,v 1.11.2.1 2025/01/17 10:40:47 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_metadatas_datasource_metadatas_record extends cms_module_metadatas_datasource_metadatas_generic{
 	
@@ -13,7 +15,7 @@ class cms_module_metadatas_datasource_metadatas_record extends cms_module_metada
 	}
 	
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	*/
 	public function get_available_selectors(){
 		return array(
@@ -29,6 +31,7 @@ class cms_module_metadatas_datasource_metadatas_record extends cms_module_metada
 	
 	protected function get_record_content($notice_class) {
 		global $opac_notices_format;
+		global $opac_notice_affichage_class;
 		global $opac_notices_format_django_directory;
 		global $record_css_already_included;
 		global $include_path;
@@ -48,23 +51,24 @@ class cms_module_metadatas_datasource_metadatas_record extends cms_module_metada
 				}
 				$content .= record_display::get_display_extended($notice_class->id);
 			}else {
-				$notice_class->do_isbd();
-				$content = $notice_class->notice_isbd;
+				if ($opac_notice_affichage_class) $notice_affichage = $opac_notice_affichage_class; else $notice_affichage = "notice_affichage";
+				$notice_affichage = new $notice_affichage($notice_class->id);
+				$notice_affichage->do_isbd();
+				$content = $notice_affichage->notice_isbd;
 			}
 		}
 		return $content;
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	*/
 	public function get_datas(){
 		global $opac_show_book_pics;
 		global $opac_book_pics_url;
-		global $opac_url_base;
 		global $base_path;
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
-		if($this->parameters['selector'] != ""){
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
+		if(is_countable($this->selectors) && $this->parameters['selector'] != ""){
 			for($i=0 ; $i<count($this->selectors) ; $i++){
 				if($this->selectors[$i]['name'] == $this->parameters['selector']){
 					$selector = new $this->parameters['selector']($this->selectors[$i]['id']);
@@ -83,8 +87,9 @@ class cms_module_metadatas_datasource_metadatas_record extends cms_module_metada
 				$datas = array();
 				$notice_class = new notice($notice);
 				$url_vign = "";
-				if (($notice_class->code || $notice_class->thumbnail_url) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $notice_class->thumbnail_url))) {
-					$url_vign = getimage_url($notice_class->code, $notice_class->thumbnail_url);
+				if ($opac_show_book_pics=='1') {
+				    $thumbnailSourcesHandler = new ThumbnailSourcesHandler();
+				    $url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $notice_class->id);
 				}
 				$datas = array(
 						'id' => $notice_class->id,

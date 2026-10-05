@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Node.js,v 1.5 2018-10-17 14:25:40 ccraig Exp $
+// $Id: Node.js,v 1.8 2022/12/20 10:23:03 qvarin Exp $
 
 define([
         "dojo/_base/declare", 
@@ -138,7 +138,13 @@ define([
 			}
 		},
 		getPicto: function(entity) {
-			switch(entity) {
+		
+			let entityType = entity;
+			if (Array.isArray(entity) && entity.length == 1) {
+				entityType = entity[0];
+			}
+		
+			switch(entityType) {
 				case 'work':
 					return './images/authorities/titre_uniforme_icon.png';
 				case 'record':
@@ -146,6 +152,12 @@ define([
 				case 'docnum':
 					return './images/icone_nouveautes.png';
 				default:
+					if (entity.indexOf('authperso') >= 0){
+						return './images/authorities/authperso_icon.png';
+					}
+					if (Array.isArray(entity) && entity.length > 1) {
+						return './images/authorities/author_icon.png';
+					}
 					return './images/authorities/' + entity + '_icon.png';
 			}
 		},

@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: titre_uniforme.class.php,v 1.186 2019-06-06 11:51:06 ngantier Exp $
+// $Id: titre_uniforme.class.php,v 1.224.4.2 2025/03/04 16:31:17 dgoron Exp $
 if (stristr ( $_SERVER ['REQUEST_URI'], ".class.php" ))
     die ( "no access" );
 
+use Pmb\Ark\Entities\ArkEntityPmb;
+    
+global $class_path, $include_path;
 require_once($class_path."/notice.class.php");
 require_once("$class_path/aut_link.class.php");
 require_once("$class_path/aut_pperso.class.php");
@@ -38,30 +41,32 @@ if (!isset($fonction_auteur)) {
 class titre_uniforme {
 	
 	// ---------------------------------------------------------------
-	//		propriÃ©tÃ©s de la classe
+	//		propriétés de la classe
 	// ---------------------------------------------------------------	
 	public $id; // MySQL id in table 'titres_uniformes'
 	public $name; // titre_uniforme name
 	public $tonalite; // tonalite de l'oeuvre musicale
 	public $tonalite_marclist; // tonalite de l'oeuvre musicale (valeur issue de la liste music_key.xml)
+	public $tonalite_marclist_name; // tonalite de l'oeuvre musicale (valeur issue de la liste music_key.xml)
 	public $comment; // Commentaire, peut contenir du HTML
-	public $import_denied = 0; // boolÃ©en pour interdire les modification depuis un import d'autoritÃ©s
-	public $tu_form; // catÃ©gorie Ã  laquelle appartient l'oeuvre (roman, piÃ¨ce de thÃ©atre, poeme, ...)
-	public $form_marclist; // catÃ©gorie Ã  laquelle appartient l'oeuvre (roman, piÃ¨ce de thÃ©atre, poeme, ...) (valeur issue de la liste music_form.xml)
-	public $date; // date de crÃ©ation originelle de l'oeuvre (telle que saisie)
-	public $date_date; // date formatÃ©e yyyy-mm-dd
-	public $characteristic; // caractÃ©ristique permettant de distinguer une oeuvre d'une autre peuvre portant le mÃªme titre
-	public $intended_termination; // complÃ©tude d'une oeuvre est finie ou se poursuit indÃ©finiment
-	public $intended_audience; // categorie de personnes Ã  laquelle l'oeuvre s'adresse
-	public $context; // contexte historique, social, intellectuel, artistique ou autre au sein duquel l'oeuvre a Ã©tÃ© conÃ§ue
-	public $coordinates; // coordonnees d'une oeuvre gÃ©ographique (degrÃ©s, minutes et secondes de longitude et latitude ou angles de dÃ©clinaison et d'ascension des limiets de la zone reprÃ©sentÃ©e)
-	public $equinox; // annÃ©e de rÃ©fÃ©rence pour une carte ou un modÃ¨le cÃ©leste
+	public $import_denied = 0; // booléen pour interdire les modification depuis un import d'autorités
+	public $tu_form; // catégorie à laquelle appartient l'oeuvre (roman, pièce de théatre, poeme, ...)
+	public $form_marclist; // catégorie à laquelle appartient l'oeuvre (roman, pièce de théatre, poeme, ...) (valeur issue de la liste music_form.xml)
+	public $date; // date de création originelle de l'oeuvre (telle que saisie)
+	public $date_date; // date formatée yyyy-mm-dd
+	public $characteristic; // caractéristique permettant de distinguer une oeuvre d'une autre peuvre portant le même titre
+	public $intended_termination; // complétude d'une oeuvre est finie ou se poursuit indéfiniment
+	public $intended_audience; // categorie de personnes à laquelle l'oeuvre s'adresse
+	public $context; // contexte historique, social, intellectuel, artistique ou autre au sein duquel l'oeuvre a été conçue
+	public $coordinates; // coordonnees d'une oeuvre géographique (degrés, minutes et secondes de longitude et latitude ou angles de déclinaison et d'ascension des limiets de la zone représentée)
+	public $equinox; // année de référence pour une carte ou un modèle céleste
 	public $subject; // contenu de l'oeuvre et sujets qu'elle aborde
 	public $place; // pays ou juridiction territoriale dont l'oeuvre est originaire
 	public $history; // informations concernant l'histoire de l'oeuvre
-	public $display; // usable form for displaying ( _name_ (_date_) / _author_name_ _author_rejete_ )
+	private $display; // usable form for displaying ( _name_ (_date_) / _author_name_ _author_rejete_ )
+	private $libelle;
 	public $tu_isbd; // affichage isbd du titre uniforme AFNOR Z 44-061 (1986)
-	public $responsabilites = array (); // Auteurs rÃ©pÃ©tables
+	private $responsabilites = null; // Auteurs répétables
 	public $oeuvre_nature; // Nature de l'oeuvre
 	public $oeuvre_nature_name; // Label de la Nature de l'oeuvre
 	public $oeuvre_nature_nature; // Nature de la nature de l'oeuvre	
@@ -70,37 +75,43 @@ class titre_uniforme {
 	public $oeuvre_expressions = null; // tableau Expression de l'oeuvre
 	public $other_links; // tableau Expression de l'oeuvre
 	public $oeuvre_expressions_from; // tableau A pour Expression
-	public $oeuvre_events; // EvÃ¨nements de l'oeuvre
+	public $oeuvre_events; // Evènements de l'oeuvre
 	public $num_statut = 1;
+	public $recursif = 0;
+	public $distrib = array();
+	public $ref = array();
+	public $subdiv = array();
 	protected $oeuvre_expressions_list_ui;
 	protected $oeuvre_expressions_from_list_ui;
-	protected $sorted_responsabilities; // Tableau triÃ© des responsabilitÃ©s
+	protected $sorted_responsabilities; // Tableau trié des responsabilités
 	protected $error_message = '';
-	protected $authors =null;
+	private $authors = null;
 	protected $isbd_calculated = "";
 	protected $tu_notices;
 	public $cp_error_message;
 	protected static $deleted_index = false;
 	protected static $controller;
+	protected $oeuvre_expressions_grouped_list_ui = [];
 	
 	// ---------------------------------------------------------------
 	//		titre_uniforme($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0,$recursif=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		if($this->id) {
-			// on cherche Ã  atteindre une notice existante
-			$this->recursif=$recursif+0;
+			// on cherche à atteindre une notice existante
+			$this->recursif=intval($recursif);
 		}
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos titre_uniforme
+	//		getData() : récupération infos titre_uniforme
 	// ---------------------------------------------------------------
 	public function getData() {
-		global $dbh,$msg;
 		global $mapper;
+		
+		$music_key = new marc_list('music_key');
 		
 		$this->name = '';			
 		$this->tonalite = '';
@@ -109,7 +120,6 @@ class titre_uniforme {
 		$this->distrib=array();
 		$this->ref=array();
 		$this->subdiv=array();
-		$this->libelle="";
 		$this->import_denied=0;
 		$this->tu_form = '';
 		$this->form_marclist = '';
@@ -124,22 +134,22 @@ class titre_uniforme {
 		$this->subject = '';
 		$this->place = '';
 		$this->history = '';
-		$this->display = '';
 		$this->oeuvre_nature = '';
 		$this->oeuvre_nature_nature = '';
 		$this->oeuvre_type = '';
-		$this->responsabilites["responsabilites"]=array();
 		$this->num_statut = 1;
 		if($this->id) {
 			$requete = "SELECT * FROM titres_uniformes WHERE tu_id=$this->id LIMIT 1 ";
-			$result = @pmb_mysql_query($requete, $dbh);
+			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
-				$temp = pmb_mysql_fetch_object($result);				
+				$temp = pmb_mysql_fetch_object($result);
+				pmb_mysql_free_result($result);
 				
 				$this->id	= $temp->tu_id;
 				$this->name	= $temp->tu_name;
 				$this->tonalite	= $temp->tu_tonalite;
 				$this->tonalite_marclist = $temp->tu_tonalite_marclist;
+				$this->tonalite_marclist_name = ($music_key->table[$this->tonalite_marclist] ?? "") ;
 				$this->comment	= $temp->tu_comment	;
 				$this->import_denied = $temp->tu_import_denied;
 				$this->tu_form = $temp->tu_forme;
@@ -161,74 +171,41 @@ class titre_uniforme {
 				$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, ['num_object'=>$this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 				$this->num_statut = $authority->get_num_statut();
 
-				$libelle[]=$this->name;
-				
 				$mc_oeuvre_type = marc_list_collection::get_instance('oeuvre_type');
-				$this->oeuvre_type_name=$mc_oeuvre_type->table[$this->oeuvre_type];
+				$this->oeuvre_type_name= array_key_exists($this->oeuvre_type, $mc_oeuvre_type->table) ? $mc_oeuvre_type->table[$this->oeuvre_type] : "";
 				$mc_oeuvre_nature = marc_list_collection::get_instance('oeuvre_nature');
-				$this->oeuvre_nature_name=$mc_oeuvre_nature->table[$this->oeuvre_nature];
+				$this->oeuvre_nature_name=  array_key_exists($this->oeuvre_nature, $mc_oeuvre_nature->table) ? $mc_oeuvre_nature->table[$this->oeuvre_nature] : "";
 				$this->oeuvre_nature_nature=$temp->tu_oeuvre_nature_nature;
 				
-				if ($this->tonalite)
-					$libelle [] = $this->tonalite;
 				$requete = "SELECT * FROM tu_distrib WHERE distrib_num_tu='$this->id' order by distrib_ordre";
-				$result = pmb_mysql_query($requete, $dbh);
+				$result = pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($result)) {
 					while(($param=pmb_mysql_fetch_object($result))) {
 						$this->distrib[]["label"]=$param->distrib_name;
-						$libelle[]=$param->distrib_name;
-					}	
+					}
+					pmb_mysql_free_result($result);
 				}					
 				$requete = "SELECT *  FROM tu_ref WHERE ref_num_tu='$this->id' order by ref_ordre";
-				$result = pmb_mysql_query($requete, $dbh);
+				$result = pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($result)) {
 					while(($param=pmb_mysql_fetch_object($result))) {
 						$this->ref[]["label"]=$param->ref_name;
-						$libelle[]=$param->ref_name;
-					}	
+					}
+					pmb_mysql_free_result($result);
 				}			
 				$requete = "SELECT *  FROM tu_subdiv WHERE subdiv_num_tu='$this->id' order by subdiv_ordre";
-				$result = pmb_mysql_query($requete, $dbh);
+				$result = pmb_mysql_query($requete);
 				if(pmb_mysql_num_rows($result)) {
 					while(($param=pmb_mysql_fetch_object($result))) {
 						$this->subdiv[]["label"]=$param->subdiv_name;
-						$libelle[]=$param->subdiv_name;
-					}	
+					}
+					pmb_mysql_free_result($result);
 				}	
-				
-				$this->display = $this->name;
-				if($this->date){
-					$this->display.=" (".$this->date.")";
-				}/*
-				   * if($this->num_author){
-				   * $tu_auteur = new auteur($this->num_author);
-				   * $libelle[] = $tu_auteur->display;
-				   * $this->display.=" / ".$tu_auteur->rejete." ".$tu_auteur->name;
-				   * }
-				   */
-				$this->responsabilites = $this->get_authors();
-				
-				$as = array_keys ($this->responsabilites["responsabilites"], "0" ) ;
-				if (count ( $as ))
-					$this->display .= ", ";
-				for ($i = 0 ; $i < count($as) ; $i++) {
-					$indice = $as[$i] ;
-					$auteur_0 = $this->responsabilites["auteurs"][$indice] ;
-					$auteur = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur_0["id"]);
-					
-					if ($i > 0)
-						$this->display .= " / "; // entre auteurs
-					
-					$libelle[] = $auteur->display;
-					$this->display.= $auteur->rejete." ".$auteur->name;
-				}
-				
-				$this->libelle=implode("; ",$libelle);
 			} else {
-				// pas trouvÃ© avec cette clÃ©
+				// pas trouvé avec cette clé
 				$this->id = 0;			
 			}
-		}else if(isset($mapper)){
+		}elseif(isset($mapper)){
 			$this->oeuvre_nature = $mapper['oeuvre_nature'];
 			$this->oeuvre_type = $mapper['oeuvre_type'];
 		}
@@ -289,68 +266,73 @@ class titre_uniforme {
 	
 	public function get_authors() {
 		
-		if($this->authors === null){
-		global $dbh, $fonction_auteur;
-		$responsabilites = array() ;
-		$auteurs = array() ;
+		if($this->authors === null) {
+			global $fonction_auteur;
+			
+			$responsabilites = array() ;
+			$auteurs = array() ;
+			
 			$this->authors["responsabilites"] = array() ;
 			$this->authors["auteurs"] = array() ;
-		$this->sorted_responsabilities = array(
-				'authors' => array(),
-				'performers' => array()
-		);
-		
-		$rqt = "select author_id, responsability_tu_fonction, responsability_tu_type, id_responsability_tu ";
-		$rqt.= "from responsability_tu, authors where responsability_tu_num='".$this->id."' and responsability_tu_author_num=author_id order by responsability_tu_type, responsability_tu_ordre " ;
-	
-		$res_sql = pmb_mysql_query($rqt, $dbh);
-		$i = 0;
-		while ($resp_tu=pmb_mysql_fetch_object($res_sql)) {
-			$responsabilites[] = $resp_tu->responsability_tu_type;
-			$qualif_id = vedette_composee::get_vedette_id_from_object($resp_tu->id_responsability_tu, (!$resp_tu->responsability_tu_type ? TYPE_TU_RESPONSABILITY : TYPE_TU_RESPONSABILITY_INTERPRETER));
-			$qualif = null;
-			if($qualif_id){
-				$qualif = new vedette_composee($qualif_id);
-			}
-			$fonction_label = '';
-			if (!empty($resp_tu->responsability_tu_fonction) && isset($fonction_auteur[$resp_tu->responsability_tu_fonction])) {
-				$fonction_label = $fonction_auteur[$resp_tu->responsability_tu_fonction];
-			}
-			$data = array( 
-				'id' => $resp_tu->author_id,
-				'id_responsability_tu' => $resp_tu->id_responsability_tu,
-				'fonction' => $resp_tu->responsability_tu_fonction,
-				'fonction_label' => $fonction_label,
-				'qualif' => $qualif,
-				'qualif_label' => ($qualif ? $qualif->get_label() : ''),
-				'responsability' => $resp_tu->responsability_tu_type,
-				'objet' => authorities_collection::get_authority(AUT_TABLE_AUTHORS, $resp_tu->author_id)
-			) ;
-			$auteurs[] = $data;
-			$data['attributes'][] = array(
-					'fonction' => $data['fonction'],
-					'fonction_label' => $data['fonction_label'],
-					'qualif' => $data['qualif'],
-					'qualif_label' => $data['qualif_label']
+			$this->sorted_responsabilities = array(
+					'authors' => array(),
+					'performers' => array()
 			);
-			unset($data['fonction']);
-			unset($data['fonction_label']);
-			unset($data['qualif']);
-			unset($data['qualif_label']);
-			if (!$resp_tu->responsability_tu_type) {
-				if (!isset($this->sorted_responsabilities['authors'][$data['id']])) {
-					$this->sorted_responsabilities['authors'][$data['id']] = $data;
-				} else {
-					$this->sorted_responsabilities['authors'][$data['id']]['attributes'][] = $data['attributes'][0];
+		
+			$rqt = "select author_id, responsability_tu_fonction, responsability_tu_type, id_responsability_tu ";
+			$rqt.= "from responsability_tu, authors where responsability_tu_num='".$this->id."' and responsability_tu_author_num=author_id order by responsability_tu_type, responsability_tu_ordre " ;
+	
+			$res_sql = pmb_mysql_query($rqt);
+			if (pmb_mysql_num_rows($res_sql)) {
+				while ($resp_tu=pmb_mysql_fetch_object($res_sql)) {
+					$responsabilites[] = $resp_tu->responsability_tu_type;
+					$qualif_id = vedette_composee::get_vedette_id_from_object($resp_tu->id_responsability_tu, (!$resp_tu->responsability_tu_type ? TYPE_TU_RESPONSABILITY : TYPE_TU_RESPONSABILITY_INTERPRETER));
+					$qualif = null;
+					if($qualif_id){
+						$qualif = new vedette_composee($qualif_id);
+					}
+					$fonction_label = '';
+					if (!empty($resp_tu->responsability_tu_fonction) && isset($fonction_auteur[$resp_tu->responsability_tu_fonction])) {
+						$fonction_label = $fonction_auteur[$resp_tu->responsability_tu_fonction];
+					}
+					
+					$data = array( 
+						'id' => $resp_tu->author_id,
+						'id_responsability_tu' => $resp_tu->id_responsability_tu,
+						'fonction' => $resp_tu->responsability_tu_fonction,
+						'fonction_label' => $fonction_label,
+						'qualif' => $qualif,
+						'qualif_label' => ($qualif ? $qualif->get_label() : ''),
+						'responsability' => $resp_tu->responsability_tu_type,
+						'objet' => authorities_collection::get_authority(AUT_TABLE_AUTHORS, $resp_tu->author_id)
+					) ;
+					$auteurs[] = $data;
+					
+					$data['attributes'][] = array(
+						'fonction' => $data['fonction'],
+						'fonction_label' => $data['fonction_label'],
+						'qualif' => $data['qualif'],
+						'qualif_label' => $data['qualif_label']
+					);
+					
+					unset($data['fonction'], $data['fonction_label'], $data['qualif'], $data['qualif_label']);
+					
+					if (!$resp_tu->responsability_tu_type) {
+						if (!isset($this->sorted_responsabilities['authors'][$data['id']])) {
+							$this->sorted_responsabilities['authors'][$data['id']] = $data;
+						} else {
+							$this->sorted_responsabilities['authors'][$data['id']]['attributes'][] = $data['attributes'][0];
+						}
+					} else {
+						if (!isset($this->sorted_responsabilities['performers'][$data['id']])) {
+							$this->sorted_responsabilities['performers'][$data['id']] = $data;
+						} else {
+							$this->sorted_responsabilities['performers'][$data['id']]['attributes'][] = $data['attributes'][0];
+						}
+					}
 				}
-			} else {
-				if (!isset($this->sorted_responsabilities['performers'][$data['id']])) {
-					$this->sorted_responsabilities['performers'][$data['id']] = $data;
-				} else {
-					$this->sorted_responsabilities['performers'][$data['id']]['attributes'][] = $data['attributes'][0];
-				}
+				pmb_mysql_free_result($res_sql);
 			}
-		}
 			$this->authors["responsabilites"] = $responsabilites ;
 			$this->authors["auteurs"] = $auteurs ;
 		}
@@ -483,275 +465,292 @@ class titre_uniforme {
 		$template.="</div><div id='add".$item."'/>
 		</div>";
 		return $template;		
-	}	
+	}
+	
+	protected function get_content_form() {
+	    global $msg, $charset;
+	    global $charset, $thesaurus_concepts_active;
+	    global $titre_uniforme_content_form;
+	    global $value_deflt_fonction;
+	    global $tu_authors_tpl, $tu_authors_all_tpl, $pmb_authors_qualification;
+	    
+	    $fonction = new marc_list('function');
+	    $music_key = new marc_list('music_key');
+	    $music_form = new marc_list('music_form');
+	    
+	    $content_form = $titre_uniforme_content_form;
+	    
+	    // Auteurs
+	    $this->get_responsabilites();
+	    $as = array_keys ($this->responsabilites["responsabilites"], "0" ) ;
+	    $max_aut0 = (count($as)) ;
+	    $tu_auteurs="";
+	    if ($max_aut0 == 0) {
+	        $max_aut0 = 1;
+	    }
+        for ($i = 0 ; $i < $max_aut0 ; $i++) {
+            if (isset($as[$i]) && $as[$i]!== FALSE && $as[$i]!== NULL) {
+                $indice = $as[$i] ;
+                $auteur_0 = $this->responsabilites["auteurs"][$indice] ;
+            } else {
+                $auteur_0 = array(
+                    'id' => 0,
+                    'fonction' => ($value_deflt_fonction ? $value_deflt_fonction : ''),
+                    'responsability' => '',
+                    'id_responsability_tu' => 0
+                );
+            }
+            $authority_isbd = "";
+            if($auteur_0["id"] != 0){
+                $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $auteur_0["id"], 'type_object' => AUT_TABLE_AUTHORS]);
+                $authority_isbd = trim($authority_instance->get_isbd());
+            }
+            
+            $ptab_aut_tu=$tu_authors_tpl;
+            $ptab_aut_tu = str_replace('!!n!!', 0, $ptab_aut_tu) ;
+            $ptab_aut_tu = str_replace('!!iaut!!', $i, $ptab_aut_tu) ;
+            $ptab_aut_tu = str_replace('!!title!!',$msg["tu_authors_list"], $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!vedettetype!!', 'role', $ptab_aut_tu);
+            
+            if($i){
+                $ptab_aut_tu = str_replace('!!title_display!!', 'display:none', $ptab_aut_tu);
+                $ptab_aut_tu = str_replace('!!bouton_add_display!!', 'display:none', $ptab_aut_tu);
+            } else {
+                $ptab_aut_tu = str_replace('!!title_display!!', '', $ptab_aut_tu);
+                $ptab_aut_tu = str_replace('!!bouton_add_display!!', '', $ptab_aut_tu);
+            }
+            
+            $ptab_aut_tu = str_replace('!!aut0_id!!', $auteur_0["id"], $ptab_aut_tu);
+            $button_add = '';
+            if ($i == ($max_aut0 - 1)) {
+                $button_add = "<input id='button_add_titre_uniforme_aut_composed_0' type='button' class='bouton' value='+' onClick=\"add_aut(0);\"/>";
+            }
+            $ptab_aut_tu = str_replace('!!button_add_aut!!', $button_add, $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!aut0!!',				htmlentities($authority_isbd,ENT_QUOTES, $charset), $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!f0_code!!',			$auteur_0["fonction"], $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!f0!!',				($auteur_0["fonction"] ? $fonction->table[$auteur_0["fonction"]] : ''), $ptab_aut_tu);
+            if($pmb_authors_qualification){
+                $vedette_ui = new vedette_ui(new vedette_composee(vedette_composee::get_vedette_id_from_object($auteur_0["id_responsability_tu"],TYPE_TU_RESPONSABILITY), 'tu_authors'));
+                $ptab_aut_tu = str_replace('!!vedette_author!!', $vedette_ui->get_form('role', $i, 'saisie_titre_uniforme'), $ptab_aut_tu);
+            }else{
+                $ptab_aut_tu = str_replace('!!vedette_author!!', "", $ptab_aut_tu);
+            }
+            $tu_auteurs .= $ptab_aut_tu ;
+        }
+        // Script à l'intérieur de $tu_authors_all_tpl
+        $tu_authors_all_tpl = str_replace('!!max_aut0!!', $max_aut0, $tu_authors_all_tpl);
+        $tu_authors_all_tpl = str_replace('!!authors_list0!!', $tu_auteurs, $tu_authors_all_tpl);
+        
+        // Interpretes
+        $as = array_keys ($this->responsabilites["responsabilites"], "1" ) ;
+        $max_aut1 = (count($as));
+        $tu_auteurs="";
+        if ($max_aut1 == 0) {
+            $max_aut1 = 1;
+        }
+        for ($i = 0 ; $i < $max_aut1 ; $i++) {
+            if (isset($as[$i]) && $as[$i]!== FALSE && $as[$i]!== NULL) {
+                $indice = $as[$i] ;
+                $auteur_1 = $this->responsabilites["auteurs"][$indice] ;
+            } else {
+                $auteur_1 = array(
+                    'id' => 0,
+                    'fonction' => ($value_deflt_fonction ? $value_deflt_fonction : ''),
+                    'responsability' => '',
+                    'id_responsability_tu' => 0
+                );
+            }
+            $authority_isbd = "";
+            if($auteur_1["id"] != 0){
+                $authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $auteur_1["id"], 'type_object' => AUT_TABLE_AUTHORS]);
+                $authority_isbd = trim($authority_instance->get_isbd());
+            }
+            $ptab_aut_tu=$tu_authors_tpl;
+            $ptab_aut_tu = str_replace('!!n!!', 1, $ptab_aut_tu) ;
+            $ptab_aut_tu = str_replace('!!iaut!!', $i, $ptab_aut_tu) ;
+            $ptab_aut_tu = str_replace('!!title!!',$msg["tu_interpreter_list"], $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!vedettetype!!', 'role_autre', $ptab_aut_tu);
+            
+            if($i){
+                $ptab_aut_tu = str_replace('!!title_display!!', 'display:none', $ptab_aut_tu);
+                $ptab_aut_tu = str_replace('!!bouton_add_display!!', 'display:none', $ptab_aut_tu);
+            }else{
+                $ptab_aut_tu = str_replace('!!title_display!!', '', $ptab_aut_tu);
+                $ptab_aut_tu = str_replace('!!bouton_add_display!!', '', $ptab_aut_tu);
+            }
+            $ptab_aut_tu = str_replace('!!aut1_id!!',			$auteur_1["id"], $ptab_aut_tu);
+            $button_add = '';
+            if ($i == ($max_aut1 - 1)) {
+                $button_add = "<input id='button_add_titre_uniforme_aut_composed_1' type='button' class='bouton' value='+' onClick=\"add_aut(1);\"/>";
+            }
+            $ptab_aut_tu = str_replace('!!button_add_aut!!', $button_add, $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!aut1!!',				htmlentities($authority_isbd,ENT_QUOTES, $charset), $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!f1_code!!',			$auteur_1["fonction"], $ptab_aut_tu);
+            $ptab_aut_tu = str_replace('!!f1!!',				($auteur_1["fonction"] ? $fonction->table[$auteur_1["fonction"]] : ''), $ptab_aut_tu);
+            if($pmb_authors_qualification){
+                $vedette_ui = new vedette_ui(new vedette_composee(vedette_composee::get_vedette_id_from_object($auteur_1["id_responsability_tu"],TYPE_TU_RESPONSABILITY_INTERPRETER), 'tu_authors'));
+                $ptab_aut_tu = str_replace('!!vedette_author!!', $vedette_ui->get_form('role_autre', $i, 'saisie_titre_uniforme'), $ptab_aut_tu);
+            }else{
+                $ptab_aut_tu = str_replace('!!vedette_author!!', "", $ptab_aut_tu);
+            }
+            $tu_auteurs .= $ptab_aut_tu ;
+        }
+        $tu_authors_all_tpl = str_replace('!!max_aut1!!', $max_aut1, $tu_authors_all_tpl);
+        $tu_authors_all_tpl = str_replace('!!authors_list1!!', $tu_auteurs, $tu_authors_all_tpl);
+        
+        $aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
+        $content_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_titre_uniforme') , $content_form);
+        
+        $aut_pperso= new aut_pperso("tu",$this->id);
+        $content_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $content_form);
+        
+        $content_form = str_replace('!!id!!',				$this->id,		$content_form);
+	            
+	            
+        $select_oeuvre_type = new marc_select ( 'oeuvre_type', 'oeuvre_type', $this->oeuvre_type, "",'','',array(array('name'=>'data-form-name','value'=>'oeuvre_type')) );
+        $content_form = str_replace ( '!!oeuvre_type!!', $select_oeuvre_type->display, $content_form );
+        
+        $select_oeuvre_nature = new marc_select ( 'oeuvre_nature', 'oeuvre_nature', $this->oeuvre_nature, "",'','',array(array('name'=>'data-form-name','value'=>'oeuvre_nature')) );
+        $content_form = str_replace ( '!!oeuvre_nature!!', $select_oeuvre_nature->display, $content_form );
+        
+        $content_form = str_replace ( '!!oeuvre_expression!!', $this->gen_oeuvre_expression_form (), $content_form );
+        $content_form = str_replace ( '!!other_link!!', $this->gen_other_link_form (), $content_form );
+        $content_form = str_replace ( '!!oeuvre_expression_from!!', $this->gen_oeuvre_expression_from_form (), $content_form );
+        $content_form = str_replace ( '!!oeuvre_event!!', $this->gen_oeuvre_event_form (), $content_form );
+        $content_form = str_replace('!!nom!!',				htmlentities($this->name,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!authors!!',			$tu_authors_all_tpl, $content_form);
+        $content_form = str_replace('!!tu_form!!',			htmlentities($this->tu_form,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!music_form_id!!',		$this->form_marclist,	$content_form);
+        $content_form = str_replace('!!music_form!!',		($this->form_marclist ? $music_form->table[$this->form_marclist] : ''),	$content_form);
+        $content_form = str_replace('!!date!!',				htmlentities($this->date,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!subject!!',			htmlentities($this->subject,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!place!!',				htmlentities($this->place,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!history!!',			htmlentities($this->history,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!intended_audience!!',	htmlentities($this->intended_audience,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!context!!',			htmlentities($this->context,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!tonalite!!',			htmlentities($this->tonalite,ENT_QUOTES, $charset),	$content_form);
+        $content_form = str_replace('!!music_key_id!!',		$this->tonalite_marclist,	$content_form);
+        $content_form = str_replace('!!music_key!!',			($this->tonalite_marclist ? $music_key->table[$this->tonalite_marclist] : ''),	$content_form);
+        $content_form = str_replace('!!coordinates!!',		htmlentities($this->coordinates,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!equinox!!',			htmlentities($this->equinox,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!characteristic!!',	htmlentities($this->characteristic,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!comment!!',			htmlentities($this->comment,ENT_QUOTES, $charset),	$content_form);
+        /**
+         * Gestion du selecteur de statut d'autorité
+         */
+        $content_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_TITRES_UNIFORMES, $this->num_statut), $content_form);
+        
+        // complétude
+        $intended_termination_id = $this->intended_termination;
+        $select_0 = "";
+        $select_1 = "";
+        $select_2 = "";
+        if($intended_termination_id == 1){
+            $select_1 = "selected";
+        } elseif($intended_termination_id == 2){
+            $select_2 = "selected";
+        } else {
+            $select_0 = "selected";
+        }
+        $content_form = str_replace('!!intended_termination_0!!',	htmlentities($select_0,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!intended_termination_1!!',	htmlentities($select_1,ENT_QUOTES, $charset), $content_form);
+        $content_form = str_replace('!!intended_termination_2!!',	htmlentities($select_2,ENT_QUOTES, $charset), $content_form);
+        // distribution
+        $distribution_form=static::gen_input_selection($msg["aut_titre_uniforme_form_distribution"],"saisie_titre_uniforme","distrib",$this->distrib,"","saisie-80em");
+        $content_form = str_replace("<!--	Distribution instrumentale et vocale (pour la musique)	-->",$distribution_form, $content_form);
+        // reference
+        $ref_num_form=static::gen_input_selection($msg["aut_titre_uniforme_form_ref_numerique"],"saisie_titre_uniforme","ref",$this->ref,"","saisie-80em");
+        $content_form = str_replace("<!--	Référence numérique (pour la musique)	-->",$ref_num_form, $content_form);
+        // subdivision
+        $sub_form=static::gen_input_selection($msg["aut_titre_uniforme_form_subdivision_forme"],"saisie_titre_uniforme","subdiv",$this->subdiv,"","saisie-80em");
+        $content_form = str_replace('<!-- Subdivision de forme -->',	$sub_form, $content_form);
+	            
+        if($this->import_denied == 1 || !$this->id){
+            $import_denied_checked = "checked='checked'";
+        }else{
+            $import_denied_checked = "";
+        }
+        $content_form = str_replace('!!tu_import_denied!!', $import_denied_checked, $content_form);
+        if($thesaurus_concepts_active == 1){
+            $index_concept = new index_concept($this->id, TYPE_TITRE_UNIFORME);
+            $content_form = str_replace('!!concept_form!!',	$index_concept->get_form('saisie_titre_uniforme'),$content_form);
+        }else{
+            $content_form = str_replace('!!concept_form!!',	"",	$content_form);
+        }
+        $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
+        $content_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $content_form);
+        
+        /**************** Notices liées ********************/
+        $content_form = str_replace('!!tu_notices!!', tu_notice::gen_input_selection($msg["notice_relations"], 'saisie_titre_uniforme', 'tu_notices', $this->get_tu_notices(), 'notice','saisie-80emr'), $content_form);
+        return $content_form;
+	}
+	
+	/**
+	 * Retourne le formulaire
+	 * @param boolean $duplicate
+	 * @return string
+	 */
+	//ATTENTION : ne pas utiliser le nom de méthode get_form car cela entre en conflit avec le django
+	public function get_interface_form($duplicate = false) {
+	    global $msg;
+	    global $user_input, $nbr_lignes, $page;
+	    
+	    $interface_form = new interface_entity_titre_uniforme_form('saisie_titre_uniforme');
+	    if(isset(static::$controller) && is_object(static::$controller)) {
+	        $interface_form->set_controller(static::$controller);
+	    }
+	    $interface_form->set_enctype('multipart/form-data');
+	    if($this->id && !$duplicate) {
+	        $interface_form->set_label($msg["aut_titre_uniforme_modifier"]);
+	    } else {
+	        $interface_form->set_label($msg["aut_titre_uniforme_ajouter"]);
+	    }
+	    if ($this->name) {
+	        $interface_form->set_document_title($this->name.' - '.$interface_form->get_label());
+	    } else {
+	        $interface_form->set_document_title($interface_form->get_label());
+	    }
+	    $interface_form->set_object_id(($duplicate ? 0 : $this->id))
+	    ->set_num_statut($this->num_statut)
+	    ->set_content_form($this->get_content_form())
+	    ->set_table_name('titres_uniformes')
+	    ->set_field_focus('tu_name')
+	    ->set_url_base(static::format_url())
+	    ->set_duplicable(true);
+	    
+	    $interface_form->set_page($page)
+	    ->set_nbr_lignes($nbr_lignes)
+	    ->set_user_input($user_input);
+	    //Gestion de la duplication
+	    if($duplicate) {
+	        $interface_form->set_is_duplication("1");
+	    }
+	    return $interface_form->get_display();
+	}
+	
 	// ---------------------------------------------------------------
 	//		show_form : affichage du formulaire de saisie
 	// ---------------------------------------------------------------
 	public function show_form($duplicate=false) {
-	
-		global $msg;
-		global $titre_uniforme_form;
-		global $charset;
-		global $user_input, $nbr_lignes, $page ;
-		global $pmb_type_audit;
-		global $thesaurus_concepts_active;
-		global $value_deflt_fonction;
-		global $tu_authors_tpl,$tu_authors_all_tpl;
-		global $pmb_authors_qualification;
-		
-		$fonction = new marc_list('function');
-		$music_key = new marc_list('music_key');
-		$music_form = new marc_list('music_form');
-		if($this->id && !$duplicate) {
-			$action = static::format_url("&sub=update&id=".$this->id);
-			$libelle = $msg["aut_titre_uniforme_modifier"];
-			$button_remplace = "<input type='button' class='bouton' value='$msg[158]' ";
-			$button_remplace .= "onclick='unload_off();document.location=\"".static::format_url('&sub=replace&id='.$this->id)."\"'>";
-			
-			$button_voir = "<input type='button' class='bouton' value='$msg[voir_notices_assoc]' ";
-			$button_voir .= "onclick='unload_off();document.location=\"./catalog.php?categ=search&mode=9&etat=aut_search&aut_type=titre_uniforme&aut_id=$this->id\"'>";
-			
-			$button_delete = "<input type='button' class='bouton' value='$msg[63]' ";
-			$button_delete .= "onClick=\"confirm_delete();\">";
-			
-		} else {
-			$action = static::format_url('&sub=update&id=');
-			$libelle = $msg["aut_titre_uniforme_ajouter"];
-			$button_remplace = '';
-			$button_voir = '';
-			$button_delete ='';
-		}
-		
-		if($this->import_denied == 1 || !$this->id){
-			$import_denied_checked = "checked='checked'";
-		}else{
-			$import_denied_checked = "";
-		}	
-		
-		// Auteurs		
-		$as = array_keys ($this->responsabilites["responsabilites"], "0" ) ;
-		$max_aut0 = (count($as)) ;
-		$tu_auteurs="";
-		if ($max_aut0 == 0)
-			$max_aut0 = 1;
-		for ($i = 0 ; $i < $max_aut0 ; $i++) {
-			if (isset($as[$i]) && $as[$i]!== FALSE && $as[$i]!== NULL) {
-				$indice = $as[$i] ;
-				$auteur_0 = $this->responsabilites["auteurs"][$indice] ;
-			} else {
-				$auteur_0 = array(
-						'id' => 0,
-						'fonction' => ($value_deflt_fonction ? $value_deflt_fonction : ''),
-						'responsability' => '',
-						'id_responsability_tu' => 0
-				);
-			}
-			$authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $auteur_0["id"], 'type_object' => AUT_TABLE_AUTHORS]);
-			
-			$ptab_aut_tu=$tu_authors_tpl;
-			$ptab_aut_tu = str_replace('!!n!!', 0, $ptab_aut_tu) ;
-			$ptab_aut_tu = str_replace('!!iaut!!', $i, $ptab_aut_tu) ;
-			$ptab_aut_tu = str_replace('!!title!!',$msg["tu_authors_list"], $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!vedettetype!!', 'role', $ptab_aut_tu);
-
-			if($i){
-				$ptab_aut_tu = str_replace('!!title_display!!', 'display:none', $ptab_aut_tu);
-				$ptab_aut_tu = str_replace('!!bouton_add_display!!', 'display:none', $ptab_aut_tu);
-			} else {
-				$ptab_aut_tu = str_replace('!!title_display!!', '', $ptab_aut_tu);	
-				$ptab_aut_tu = str_replace('!!bouton_add_display!!', '', $ptab_aut_tu);			
-			}
-			
-			$ptab_aut_tu = str_replace('!!aut0_id!!', $auteur_0["id"], $ptab_aut_tu);
-			$button_add = '';
-			if ($i == ($max_aut0 - 1)) {
-				$button_add = "<input id='button_add_titre_uniforme_aut_composed_0' type='button' class='bouton' value='+' onClick=\"add_aut(0);\"/>";
-			}
-			$ptab_aut_tu = str_replace('!!button_add_aut!!', $button_add, $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!aut0!!',				htmlentities($authority_instance->get_isbd(),ENT_QUOTES, $charset), $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!f0_code!!',			$auteur_0["fonction"], $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!f0!!',				($auteur_0["fonction"] ? $fonction->table[$auteur_0["fonction"]] : ''), $ptab_aut_tu);
-			if($pmb_authors_qualification){
-				$vedette_ui = new vedette_ui(new vedette_composee(vedette_composee::get_vedette_id_from_object($auteur_0["id_responsability_tu"],TYPE_TU_RESPONSABILITY), 'tu_authors'));
-				$ptab_aut_tu = str_replace('!!vedette_author!!', $vedette_ui->get_form('role', $i, 'saisie_titre_uniforme'), $ptab_aut_tu);
-			}else{
-				$ptab_aut_tu = str_replace('!!vedette_author!!', "", $ptab_aut_tu);
-			}
-			$tu_auteurs .= $ptab_aut_tu ;
-		}
-		// Script Ã  l'intÃ©rieur de $tu_authors_all_tpl
-		$tu_authors_all_tpl = str_replace('!!max_aut0!!', $max_aut0, $tu_authors_all_tpl);
-		$tu_authors_all_tpl = str_replace('!!authors_list0!!', $tu_auteurs, $tu_authors_all_tpl);
-	
-		// Interpretes
-		$as = array_keys ($this->responsabilites["responsabilites"], "1" ) ;
-		$max_aut1 = (count($as));
-		$tu_auteurs="";
-		if ($max_aut1 == 0)
-			$max_aut1 = 1;
-		for ($i = 0 ; $i < $max_aut1 ; $i++) {
-			if (isset($as[$i]) && $as[$i]!== FALSE && $as[$i]!== NULL) {
-				$indice = $as[$i] ;
-				$auteur_1 = $this->responsabilites["auteurs"][$indice] ;
-			} else {
-				$auteur_1 = array(
-						'id' => 0,
-						'fonction' => ($value_deflt_fonction ? $value_deflt_fonction : ''),
-						'responsability' => '',
-						'id_responsability_tu' => 0
-				);
-			}
-			$authority_instance = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $auteur_1["id"], 'type_object' => AUT_TABLE_AUTHORS]);
-			
-			$ptab_aut_tu=$tu_authors_tpl;
-			$ptab_aut_tu = str_replace('!!n!!', 1, $ptab_aut_tu) ;
-			$ptab_aut_tu = str_replace('!!iaut!!', $i, $ptab_aut_tu) ;
-			$ptab_aut_tu = str_replace('!!title!!',$msg["tu_interpreter_list"], $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!vedettetype!!', 'role_autre', $ptab_aut_tu);
-
-			if($i){
-				$ptab_aut_tu = str_replace('!!title_display!!', 'display:none', $ptab_aut_tu);
-				$ptab_aut_tu = str_replace('!!bouton_add_display!!', 'display:none', $ptab_aut_tu);
-			}else{
-				$ptab_aut_tu = str_replace('!!title_display!!', '', $ptab_aut_tu);
-				$ptab_aut_tu = str_replace('!!bouton_add_display!!', '', $ptab_aut_tu);
-			}
-			$ptab_aut_tu = str_replace('!!aut1_id!!',			$auteur_1["id"], $ptab_aut_tu);
-			$button_add = '';
-			if ($i == ($max_aut1 - 1)) {
-				$button_add = "<input id='button_add_titre_uniforme_aut_composed_1' type='button' class='bouton' value='+' onClick=\"add_aut(1);\"/>";
-			}
-			$ptab_aut_tu = str_replace('!!button_add_aut!!', $button_add, $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!aut1!!',				htmlentities($authority_instance->get_isbd(),ENT_QUOTES, $charset), $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!f1_code!!',			$auteur_1["fonction"], $ptab_aut_tu);
-			$ptab_aut_tu = str_replace('!!f1!!',				($auteur_1["fonction"] ? $fonction->table[$auteur_1["fonction"]] : ''), $ptab_aut_tu);
-			if($pmb_authors_qualification){
-				$vedette_ui = new vedette_ui(new vedette_composee(vedette_composee::get_vedette_id_from_object($auteur_1["id_responsability_tu"],TYPE_TU_RESPONSABILITY_INTERPRETER), 'tu_authors'));
-				$ptab_aut_tu = str_replace('!!vedette_author!!', $vedette_ui->get_form('role_autre', $i, 'saisie_titre_uniforme'), $ptab_aut_tu);
-			}else{
-				$ptab_aut_tu = str_replace('!!vedette_author!!', "", $ptab_aut_tu);
-			}
-			$tu_auteurs .= $ptab_aut_tu ;
-		}
-		$tu_authors_all_tpl = str_replace('!!max_aut1!!', $max_aut1, $tu_authors_all_tpl);
-		$tu_authors_all_tpl = str_replace('!!authors_list1!!', $tu_auteurs, $tu_authors_all_tpl);	
-	
-		$aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
-		$titre_uniforme_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_titre_uniforme') , $titre_uniforme_form);
-		
-		$aut_pperso= new aut_pperso("tu",$this->id);
-		$titre_uniforme_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $titre_uniforme_form);
-		
-		$titre_uniforme_form = str_replace('!!id!!',				$this->id,		$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!action!!',			$action,		$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!cancel_action!!', 	static::format_back_url(), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!libelle!!',			$libelle,		$titre_uniforme_form);
-		
-		$select_oeuvre_type = new marc_select ( 'oeuvre_type', 'oeuvre_type', $this->oeuvre_type, "",'','',array(array('name'=>'data-form-name','value'=>'oeuvre_type')) );
-		$titre_uniforme_form = str_replace ( '!!oeuvre_type!!', $select_oeuvre_type->display, $titre_uniforme_form );
-		
-		$select_oeuvre_nature = new marc_select ( 'oeuvre_nature', 'oeuvre_nature', $this->oeuvre_nature, "",'','',array(array('name'=>'data-form-name','value'=>'oeuvre_nature')) );
-		$titre_uniforme_form = str_replace ( '!!oeuvre_nature!!', $select_oeuvre_nature->display, $titre_uniforme_form );
-		
-		$titre_uniforme_form = str_replace ( '!!oeuvre_expression!!', $this->gen_oeuvre_expression_form (), $titre_uniforme_form );
-		$titre_uniforme_form = str_replace ( '!!other_link!!', $this->gen_other_link_form (), $titre_uniforme_form );		
-		$titre_uniforme_form = str_replace ( '!!oeuvre_expression_from!!', $this->gen_oeuvre_expression_from_form (), $titre_uniforme_form );		
-		$titre_uniforme_form = str_replace ( '!!oeuvre_event!!', $this->gen_oeuvre_event_form (), $titre_uniforme_form );
-		$titre_uniforme_form = str_replace('!!nom!!',				htmlentities($this->name,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!authors!!',			$tu_authors_all_tpl, $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!tu_form!!',			htmlentities($this->tu_form,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!music_form_id!!',		$this->form_marclist,	$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!music_form!!',		($this->form_marclist ? $music_form->table[$this->form_marclist] : ''),	$titre_uniforme_form);		
-		$titre_uniforme_form = str_replace('!!date!!',				htmlentities($this->date,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!subject!!',			htmlentities($this->subject,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!place!!',				htmlentities($this->place,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!history!!',			htmlentities($this->history,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!intended_audience!!',	htmlentities($this->intended_audience,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!context!!',			htmlentities($this->context,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!tonalite!!',			htmlentities($this->tonalite,ENT_QUOTES, $charset),	$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!music_key_id!!',		$this->tonalite_marclist,	$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!music_key!!',			($this->tonalite_marclist ? $music_key->table[$this->tonalite_marclist] : ''),	$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!coordinates!!',		htmlentities($this->coordinates,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!equinox!!',			htmlentities($this->equinox,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!characteristic!!',	htmlentities($this->characteristic,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!comment!!',			htmlentities($this->comment,ENT_QUOTES, $charset),	$titre_uniforme_form);
-		/**
-		 * Gestion du selecteur de statut d'autoritÃ©
-		 */
-		$titre_uniforme_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_TITRES_UNIFORMES, $this->num_statut), $titre_uniforme_form);
-	
-		// complÃ©tude
-		$intended_termination_id = $this->intended_termination;
-		$select_0 = "";
-		$select_1 = "";
-		$select_2 = "";
-		if($intended_termination_id == 1){
-			$select_1 = "selected";
-		} elseif($intended_termination_id == 2){
-			$select_2 = "selected";
-		} else {
-			$select_0 = "selected";
-		}
-		$titre_uniforme_form = str_replace('!!intended_termination_0!!',	htmlentities($select_0,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!intended_termination_1!!',	htmlentities($select_1,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!intended_termination_2!!',	htmlentities($select_2,ENT_QUOTES, $charset), $titre_uniforme_form);		
-		// distribution
-		$distribution_form=static::gen_input_selection($msg["aut_titre_uniforme_form_distribution"],"saisie_titre_uniforme","distrib",$this->distrib,"","saisie-80em");
-		$titre_uniforme_form = str_replace("<!--	Distribution instrumentale et vocale (pour la musique)	-->",$distribution_form, $titre_uniforme_form);
-		// reference
-		$ref_num_form=static::gen_input_selection($msg["aut_titre_uniforme_form_ref_numerique"],"saisie_titre_uniforme","ref",$this->ref,"","saisie-80em");
-		$titre_uniforme_form = str_replace("<!--	RÃ©fÃ©rence numÃ©rique (pour la musique)	-->",$ref_num_form, $titre_uniforme_form);
-		// subdivision
-		$sub_form=static::gen_input_selection($msg["aut_titre_uniforme_form_subdivision_forme"],"saisie_titre_uniforme","subdiv",$this->subdiv,"","saisie-80em");
-		ini_set('xdebug.var_display_max_data', -1);
-		$titre_uniforme_form = str_replace('<!-- Subdivision de forme -->',	$sub_form, $titre_uniforme_form);
-		
-		$titre_uniforme_form = str_replace('!!remplace!!', $button_remplace, $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!voir_notices!!', $button_voir, $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!delete!!',$button_delete,	$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!delete_action!!', static::format_delete_url("&id=".$this->id), $titre_uniforme_form);
-		
-		$titre_uniforme_form = str_replace('!!user_input!!', htmlentities($user_input,ENT_QUOTES, $charset), $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!nbr_lignes!!', $nbr_lignes, $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!page!!', $page, $titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!tu_import_denied!!', $import_denied_checked, $titre_uniforme_form);	
-		if($thesaurus_concepts_active == 1 ){
-			$index_concept = new index_concept($this->id, TYPE_TITRE_UNIFORME);
-			$titre_uniforme_form = str_replace('!!concept_form!!',	$index_concept->get_form('saisie_titre_uniforme'),$titre_uniforme_form);
-		}else{
-			$titre_uniforme_form = str_replace('!!concept_form!!',	"",	$titre_uniforme_form);
-		}
-		if ($this->name) {
-			$titre_uniforme_form = str_replace('!!document_title!!', addslashes($this->name.' - '.$libelle), $titre_uniforme_form);
-		} else {
-			$titre_uniforme_form = str_replace('!!document_title!!', addslashes($libelle), $titre_uniforme_form);
-		}
-		$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
-		$titre_uniforme_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $titre_uniforme_form);
-		if ($pmb_type_audit && $this->id && !$duplicate) {
-			$bouton_audit= audit::get_dialog_button($this->id, AUDIT_TITRE_UNIFORME);
-		} else {
-			$bouton_audit= "";
-		}
-		$titre_uniforme_form = str_replace('!!audit_bt!!',$bouton_audit,$titre_uniforme_form);
-		$titre_uniforme_form = str_replace('!!controller_url_base!!', static::format_url(), $titre_uniforme_form);
-		/**************** Notices liÃ©es ********************/
-		$titre_uniforme_form = str_replace('!!tu_notices!!', tu_notice::gen_input_selection($msg["notice_relations"], 'saisie_titre_uniforme', 'tu_notices', $this->get_tu_notices(), 'notice','saisie-80emr'), $titre_uniforme_form);
-		print $titre_uniforme_form;
+		print $this->get_interface_form($duplicate);
 	}
 	
 	public function gen_oeuvre_expression_form() {
 		global $oeuvre_expression_tpl, $oeuvre_expression_tpl_first, $oeuvre_expression_tpl_other, $charset;
 		
-		//initialisation des propriÃ©tÃ©s
+		//initialisation des propriétés
 		$oeuvre_expressions = $this->get_oeuvre_expressions_datas();
+		$tab_link_order = "";
 		
 		// oeuvre expression repetables
 		$oeuvre_expression_repetables = '';
-		if (sizeof ( $oeuvre_expressions ) == 0)
+		if (empty($oeuvre_expressions)) {
 			$max_oeuvre_expression = 1;
-		else
-			$max_oeuvre_expression = sizeof ( $oeuvre_expressions );
+			$oeuvre_expression_new_order = 0;
+		} else {
+			$max_oeuvre_expression = count($oeuvre_expressions);
+			$oeuvre_expression_new_order = $max_oeuvre_expression-1;
+		}
 		for($i = 0; $i < $max_oeuvre_expression; $i ++) {
 			$button_add = '';
 			if ($i) {
@@ -765,7 +764,7 @@ class titre_uniforme {
 			}
 			$ptab_expression = str_replace( '!!button_add_oeuvre_expression!!', $button_add, $ptab_expression);
 			
-			if (sizeof ( $oeuvre_expressions ) == 0) {
+			if (empty($oeuvre_expressions)) {
 				$ptab_expression = str_replace ( '!!expression_type!!', $this->get_selector('expression_of', 'f_oeuvre_expression_type0', ''), $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression_code!!', '', $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression!!', '', $ptab_expression );
@@ -773,8 +772,15 @@ class titre_uniforme {
 			    $tu_object = authorities_collection::get_authority(AUT_TABLE_AUTHORITY, 0, [ 'num_object' => $oeuvre_expressions[$i]["to_id"], 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 				$ptab_expression = str_replace ( '!!expression_type!!', $this->get_selector('expression_of', 'f_oeuvre_expression_type'.$i, $oeuvre_expressions[$i]['type']), $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression_code!!', $oeuvre_expressions [$i] ["to_id"], $ptab_expression );
-				$ptab_expression = str_replace ( '!!oeuvre_expression!!', htmlentities ($tu_object->get_isbd(), ENT_QUOTES, $charset ), $ptab_expression );
+				$isbd = $tu_object->get_isbd();
+				if (empty($tu_object->get_isbd_template())) {
+				    //si on a pas de template django d'isbd, on fait le htmlentities
+				    $isbd = htmlentities($isbd, ENT_QUOTES, $charset);
+				}
+				$ptab_expression = str_replace ( '!!oeuvre_expression!!', $isbd, $ptab_expression );
 			}
+			if($tab_link_order!="") $tab_link_order.=",";
+			$tab_link_order.= $i;
 			$oeuvre_expression_repetables .= $ptab_expression;
 		}
 		$tpl = "
@@ -786,39 +792,42 @@ class titre_uniforme {
 		
 		$tpl = str_replace ( '!!myid!!', $this->id, $tpl );
 		$tpl = str_replace ( '!!max_oeuvre_expression!!', $max_oeuvre_expression, $tpl );
+		$tpl = str_replace ( '!!oeuvre_expression_new_order!!', $oeuvre_expression_new_order, $tpl );
 		$tpl = str_replace ( '!!oeuvre_expression_repetables!!', $oeuvre_expression_repetables, $tpl );
+		$tpl = str_replace ( '!!tab_oeuvre_expression_order!!', $tab_link_order, $tpl);
 		return $tpl;
 	}
 
 	public function gen_oeuvre_expression_from_form() {
 		global $oeuvre_expression_from_tpl, $oeuvre_expression_from_tpl_first, $oeuvre_expression_from_tpl_other, $charset;
 
-		//initialisation des propriÃ©tÃ©s
+		//initialisation des propriétés
 		$oeuvre_expressions_from = $this->get_oeuvre_expressions_from_datas();
+		$tab_link_order = "";
 		
 		// oeuvre expression repetables
 		$oeuvre_expression_from_repetables = '';
-		if (sizeof ( $oeuvre_expressions_from ) == 0)
+		if (empty($oeuvre_expressions_from)) {
 			$max_oeuvre_expression_from = 1;
-		else
-			$max_oeuvre_expression_from = sizeof ( $oeuvre_expressions_from );
+			$oeuvre_expression_from_new_order = 0;
+		} else {
+			$max_oeuvre_expression_from = count( $oeuvre_expressions_from );
+			$oeuvre_expression_from_new_order = $max_oeuvre_expression_from-1;
+		}
 		
 		for($i = 0; $i < $max_oeuvre_expression_from; $i ++) {
-			if ($i) {
-				$ptab_expression = str_replace ( '!!ioeuvre_expression_from!!', $i, $oeuvre_expression_from_tpl_other );				
-				$button_add = '';
-				// TODO : Changer cette merde
-				if ($i == ($max_oeuvre_expression_from - 1)) {
-					$button_add = "<input id='button_add_f_oeuvre_expression_from' type='button' class='bouton' value='+' onClick=\"add_oeuvre_expression_from();\"/>";
-				}
-				$ptab_expression = str_replace( '!!button_add_oeuvre_expression_from!!', $button_add, $ptab_expression);
-			}
-			else {
-				$ptab_expression = str_replace ( '!!ioeuvre_expression_from!!', $i, $oeuvre_expression_from_tpl_first );
-				$button_add = "<input id='button_add_f_oeuvre_expression_from' type='button' class='bouton' value='+' onClick=\"add_oeuvre_expression_from();\"/>";
-				$ptab_expression = str_replace( '!!button_add_oeuvre_expression_from!!', $button_add, $ptab_expression);			
-			}
-			if (sizeof ( $oeuvre_expressions_from ) == 0) {
+		    $button_add = '';
+		    if ($i) {
+		        $ptab_expression = str_replace ( '!!ioeuvre_expression_from!!', $i, $oeuvre_expression_from_tpl_other );
+		    } else {
+		        $ptab_expression = str_replace ( '!!ioeuvre_expression_from!!', $i, $oeuvre_expression_from_tpl_first );
+		    }
+		    if ($i == ($max_oeuvre_expression_from - 1)) {
+		        $button_add = "<input id='button_add_f_oeuvre_expression_from' type='button' class='bouton' value='+' onClick=\"add_oeuvre_expression_from();\"/>";
+		    }
+		    $ptab_expression = str_replace( '!!button_add_oeuvre_expression_from!!', $button_add, $ptab_expression);
+
+			if (empty($oeuvre_expressions_from)) {
 				$ptab_expression = str_replace ( '!!expression_type!!', $this->get_selector('have_expression', 'f_oeuvre_expression_from_type0', ''), $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression_from_code!!', '', $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression_from!!', '', $ptab_expression );
@@ -826,8 +835,15 @@ class titre_uniforme {
 			    $tu_object = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $oeuvre_expressions_from[$i]["to_id"], 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 				$ptab_expression = str_replace ( '!!expression_type!!', $this->get_selector('have_expression', 'f_oeuvre_expression_from_type'.$i, $oeuvre_expressions_from[$i]['type']), $ptab_expression );
 				$ptab_expression = str_replace ( '!!oeuvre_expression_from_code!!', $oeuvre_expressions_from [$i] ["to_id"], $ptab_expression );
-				$ptab_expression = str_replace ( '!!oeuvre_expression_from!!', htmlentities ($tu_object->get_isbd(), ENT_QUOTES, $charset ), $ptab_expression );
+				$isbd = $tu_object->get_isbd();
+				if (empty($tu_object->get_isbd_template())) {
+				    //si on a pas de template django d'isbd, on fait le htmlentities
+				    $isbd = htmlentities($isbd, ENT_QUOTES, $charset);
+				}
+				$ptab_expression = str_replace ( '!!oeuvre_expression_from!!', $isbd, $ptab_expression );
 			}
+			if($tab_link_order!="") $tab_link_order.=",";
+			$tab_link_order.= $i;
 			$oeuvre_expression_from_repetables .= $ptab_expression;
 		}
 		$tpl = "
@@ -839,24 +855,26 @@ class titre_uniforme {
 	
 		$tpl = str_replace ( '!!myid!!', $this->id, $tpl );
 		$tpl = str_replace ( '!!max_oeuvre_expression_from!!', $max_oeuvre_expression_from, $tpl );
+		$tpl = str_replace ( '!!oeuvre_expression_from_new_order!!', $oeuvre_expression_from_new_order, $tpl );
 		$tpl = str_replace ( '!!oeuvre_expression_from_repetables!!', $oeuvre_expression_from_repetables, $tpl );
+		$tpl = str_replace ( '!!tab_oeuvre_expression_from_order!!', $tab_link_order, $tpl);
 		return $tpl;
 	}
 	
 	public function gen_oeuvre_event_form() {
-		global $oeuvre_event_tpl, $oeuvre_event_tpl_first, $oeuvre_event_tpl_other, $charset;
+	    global $oeuvre_event_tpl, $oeuvre_event_tpl_first, $oeuvre_event_tpl_other, $charset, $default_event_type;
 		
 		//on initialise oeuvre_events 
 		$this->get_oeuvre_events();
 		
 		// oeuvre event repetables
 		$oeuvre_event_repetables = '';
-		if (sizeof ( $this->oeuvre_events ) == 0)
+		if (empty($this->oeuvre_events)) {
 			$max_oeuvre_event = 1;
-		else
-			$max_oeuvre_event = sizeof ( $this->oeuvre_events );
-
-		for($i = 0; $i < $max_oeuvre_event; $i ++) {
+		} else {
+			$max_oeuvre_event = count($this->oeuvre_events);
+		}
+		for ($i = 0; $i < $max_oeuvre_event; $i ++) {
 			if ($i) {
 				$ptab_event = str_replace ( '!!ioeuvre_event!!', $i, $oeuvre_event_tpl_other );
 			} else {
@@ -864,34 +882,74 @@ class titre_uniforme {
 			}
 			$button_add = '';
 			if ($i == ($max_oeuvre_event - 1)) {
-				$button_add = "<input id='button_add_f_oeuvre_event' type='button' class='bouton' value='+' onClick=\"add_oeuvre_event();\"/>";
+				$button_add = "<input id='button_add_f_oeuvre_event' type='button' class='bouton' value='+' onClick=\"add_oeuvre_event($i);\"/>";
 			}
-			$ptab_event = str_replace( '!!button_add_oeuvre_event!!', $button_add, $ptab_event);
+			$ptab_event = str_replace('!!button_add_oeuvre_event!!', $button_add, $ptab_event);
 			
-			if (sizeof ( $this->oeuvre_events ) == 0) {
-				$ptab_event = str_replace ( '!!oeuvre_event_code!!', '', $ptab_event );
-				$ptab_event = str_replace ( '!!oeuvre_event!!', '', $ptab_event );
+			if (empty($this->oeuvre_events)) {
+				$ptab_event = str_replace('!!oeuvre_event_code!!', '', $ptab_event);
+				$ptab_event = str_replace('!!oeuvre_event!!', '', $ptab_event);
+    			$ptab_event = str_replace('!!oeuvre_event_type!!', $this->get_selector_event($i), $ptab_event);
+    			$ptab_event = str_replace('!!oeuvre_event_type_value!!', $default_event_type, $ptab_event);
+    			$ptab_event = str_replace('!!type!!', $default_event_type, $ptab_event);
 			} else {
-				$ptab_event = str_replace ( '!!oeuvre_event_code!!', $this->oeuvre_events[$i]["id"], $ptab_event);
-				$ptab_event = str_replace ( '!!oeuvre_event!!', htmlentities($this->oeuvre_events[$i]["isbd"], ENT_QUOTES, $charset), $ptab_event );
+				$ptab_event = str_replace('!!oeuvre_event_code!!', $this->oeuvre_events[$i]["id"], $ptab_event);
+				$ptab_event = str_replace('!!oeuvre_event!!', htmlentities($this->oeuvre_events[$i]["isbd"], ENT_QUOTES, $charset), $ptab_event);
+				$ptab_event = str_replace('!!oeuvre_event_type!!', $this->get_selector_event($i, $this->oeuvre_events[$i]["type_oeuvre_event"]), $ptab_event);
+				$ptab_event = str_replace('!!oeuvre_event_type_value!!', $this->oeuvre_events[$i]["type_oeuvre_event"], $ptab_event);
+				$ptab_event = str_replace('!!type!!', $this->oeuvre_events[$i]["type_oeuvre_event"], $ptab_event);
 			}
 			$oeuvre_event_repetables .= $ptab_event;
 		}
-		$tpl = "
-		$oeuvre_event_tpl
+		$oeuvre_event_tpl = str_replace('!!event_type_default!!', $default_event_type, $oeuvre_event_tpl);
+		$tpl = "$oeuvre_event_tpl
 		<input type='hidden' id='max_oeuvre_event' name='max_oeuvre_event' value=\"!!max_oeuvre_event!!\" />
 		!!oeuvre_event_repetables!!
 		<div id='addoeuvre_event'/>
 		</div>";
 	
-		$tpl = str_replace ( '!!max_oeuvre_event!!', $max_oeuvre_event, $tpl );
-		$tpl = str_replace ( '!!oeuvre_event_repetables!!', $oeuvre_event_repetables, $tpl );
+		$tpl = str_replace('!!max_oeuvre_event!!', $max_oeuvre_event, $tpl);
+		$tpl = str_replace('!!oeuvre_event_repetables!!', $oeuvre_event_repetables, $tpl);
 		return $tpl;
 	}
 	
+	public function get_selector_event($rep_number, $type_oeuvre_event = '') {
+	    global $msg, $default_event_type;
+
+	    $selector = '';
+	    $options = '';
+	    $default_event_type = '';
+	    
+	    $query = "SELECT id_authperso, authperso_name FROM authperso WHERE authperso_oeuvre_event=1";
+	    $res = pmb_mysql_query($query);
+	    if (!empty($res)) {
+	        if (pmb_mysql_num_rows($res) == 1) {
+	            $row = pmb_mysql_fetch_assoc($res);
+	            $selector = "<input type='hidden' id='f_oeuvre_type_event$rep_number' name='f_oeuvre_type_event$rep_number' data-form-name='f_oeuvre_type_event' value='".$row['id_authperso']."'/>";
+	            $default_event_type = $row['id_authperso'];
+	        } else {
+        	    $selector = "<select id='f_oeuvre_type_event$rep_number' name='f_oeuvre_type_event$rep_number' data-form-name='f_oeuvre_type_event' onchange='onchange_oeuvre_type_event($rep_number)'>";
+    	        while ($row = pmb_mysql_fetch_assoc($res)) {
+    	            if ($row['id_authperso'] == $type_oeuvre_event) {
+    	                $options .= "<option value='".$row['id_authperso']."' selected>".$row['authperso_name']."</option>";
+    	                $default_event_type = $row['id_authperso'];
+    	            } else {
+    	                $options .= "<option value='".$row['id_authperso']."'>".$row['authperso_name']."</option>";
+    	                if (empty($default_event_type)) $default_event_type = $row['id_authperso'];
+    	            }
+    	        }
+        	    if (empty($options)) {
+                    $selector .= "<option value=''>".$msg['authority_marc_list_empty_filter']."</option>";
+        	    } else {
+        	        $selector .= $options;
+        	    }
+        	    $selector.= '</select>';
+	        }
+	    }
+	    return $selector;
+	}
+	
 	public function update_oeuvre_expression($value) {
-		global $dbh;
-		
 		$this->delete_oeuvre_expression ();
 		if(!is_array($value)) return;
 		$rqt_ins = "insert into tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ";
@@ -899,7 +957,7 @@ class titre_uniforme {
 		foreach ( $value as $val ) {
 			if ($val['code']) {
 				$rqt = $rqt_ins . " ('".$this->id."', '".$val['code']."','".$val['type']."', 1, 0, ".$ordre.") ";
-				pmb_mysql_query ( $rqt, $dbh );
+				pmb_mysql_query ( $rqt );
 				$ordre ++;
 				$this->save_expression_inversed_link($this->id,$val['code'], $val['type'],0);
 			}
@@ -907,25 +965,22 @@ class titre_uniforme {
 	}
 
 	public function delete_oeuvre_expression() {
-		global $dbh;
 		if(!$this->id) return;
 		$rqt_del = "delete from tu_oeuvres_links where oeuvre_link_from='".$this->id."' and oeuvre_link_other_link = 0 ";
-		pmb_mysql_query ( $rqt_del, $dbh );		
+		pmb_mysql_query ( $rqt_del );		
 		
 		$rqt_del = "delete from tu_oeuvres_links where oeuvre_link_to='".$this->id."' and oeuvre_link_other_link = 0 ";
-		pmb_mysql_query ( $rqt_del, $dbh );
+		pmb_mysql_query ( $rqt_del );
 	}
 	
 	public function update_oeuvre_expression_from($value) {
-		global $dbh;
-		
 		if(!is_array($value)) return;
 		$rqt_ins = "insert into tu_oeuvres_links ( oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ";
 		$ordre = 0;
 		foreach ( $value as $val ) {
 			if ($val['code']) {
 				$rqt = $rqt_ins . " ('".$this->id."', '".$val['code']."','".$val['type']."', 0, 0, ".$ordre.") ";
-				pmb_mysql_query ( $rqt, $dbh );
+				pmb_mysql_query ( $rqt );
 				$ordre ++;
 				$this->save_expression_inversed_link($this->id,$val['code'], $val['type'],1);
 			}
@@ -934,8 +989,6 @@ class titre_uniforme {
 	}
 		
 	public function get_oeuvre_links() {
-		global $dbh;
-		
 		if($this->oeuvre_expressions === null){
 			$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
 			$this->oeuvre_expressions = array();
@@ -945,8 +998,8 @@ class titre_uniforme {
 		
 			$query = 'select oeuvre_link_to, tu_name, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link 
 				from tu_oeuvres_links join titres_uniformes on tu_id = oeuvre_link_to where oeuvre_link_from = "'.$this->id.'" 
-				order by oeuvre_link_type, index_tu, oeuvre_link_order';
-			$result = pmb_mysql_query($query, $dbh);
+				order by oeuvre_link_order, oeuvre_link_type, index_tu';
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($link = pmb_mysql_fetch_object($result)) {				
 					if ($link->oeuvre_link_other_link) {
@@ -995,20 +1048,22 @@ class titre_uniforme {
 	}
 	
 	public function get_oeuvre_events() {	
-		global $dbh;
 		if(!isset($this->oeuvre_events)){
 			$this->oeuvre_events = array();
-			$query = 'select oeuvre_event_authperso_authority_num
-				from tu_oeuvres_events where oeuvre_event_tu_num = "'.$this->id.'"
-				order by oeuvre_event_order';
-			$result = pmb_mysql_query($query, $dbh);
+			$query = "SELECT oeuvre_event_authperso_authority_num, authperso_authority_authperso_num
+				FROM tu_oeuvres_events, authperso_authorities
+				WHERE oeuvre_event_authperso_authority_num = id_authperso_authority
+				AND oeuvre_event_tu_num = $this->id
+				ORDER BY oeuvre_event_order";
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($auth = pmb_mysql_fetch_object($result)) {				    
 				    $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $auth->oeuvre_event_authperso_authority_num, 'type_object' => AUT_TABLE_AUTHPERSO]);
 					$authperso = $authority->get_object_instance();
-					$this->oeuvre_events[]=array(
+					$this->oeuvre_events[] = array(
 					        'id' => $auth->oeuvre_event_authperso_authority_num,
-							'isbd'=> $authperso->get_isbd()
+					        'type_oeuvre_event' => $auth->authperso_authority_authperso_num,
+							'isbd' => $authperso->get_isbd()
 					);
 				}
 			}
@@ -1025,13 +1080,18 @@ class titre_uniforme {
 		global $other_link_tpl, $other_link_tpl_first, $other_link_tpl_other, $charset;
 		
 		$other_links = $this->get_oeuvre_others_links_datas();
+		$tab_link_order = "";
 		
 		// oeuvre expression repetables
 		$other_link_repetables = '';
-		if (sizeof ( $other_links ) == 0)
+		if (empty($other_links)) {
 			$max_other_link = 1;
-		else
-			$max_other_link = sizeof ( $other_links );
+			$other_link_new_order = 0;
+		} else {
+			$max_other_link = count($other_links);
+			$other_link_new_order = $max_other_link-1;
+		}
+		
 		for($i = 0; $i < $max_other_link; $i ++) {
 			if ($i) {
 				$ptab_expression = str_replace ( '!!iother_link!!', $i, $other_link_tpl_other );
@@ -1043,16 +1103,23 @@ class titre_uniforme {
 				$button_add = "<input id='button_add_f_other_link' type='button' class='bouton' value='+' onClick=\"add_other_link();\"/>";
 			}
 			$ptab_expression = str_replace( '!!button_add_other_link!!', $button_add, $ptab_expression);
-			if (sizeof ( $other_links ) == 0) {
+			if (empty($other_links)) {
 				$ptab_expression = str_replace ( '!!other_link_code!!', '', $ptab_expression );
 				$ptab_expression = str_replace ( '!!other_link!!', '', $ptab_expression );
 				$ptab_expression = str_replace ( '!!link_type!!', $this->get_selector('other_link', 'f_oeuvre_other_link0', ''), $ptab_expression);
 			} else {
 			    $tu_object = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $other_links[$i]["to_id"], 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 				$ptab_expression = str_replace ( '!!other_link_code!!', $other_links [$i] ["to_id"], $ptab_expression );
-				$ptab_expression = str_replace ( '!!other_link!!', htmlentities ($tu_object->get_isbd(), ENT_QUOTES, $charset ), $ptab_expression );
+				$isbd = $tu_object->get_isbd();
+				if (empty($tu_object->get_isbd_template())) {
+				    //si on a pas de template django d'isbd, on fait le htmlentities
+				    $isbd = htmlentities($isbd, ENT_QUOTES, $charset);
+				}
+				$ptab_expression = str_replace ( '!!other_link!!', $isbd, $ptab_expression );
 				$ptab_expression = str_replace ( '!!link_type!!', $this->get_selector('other_link', 'f_oeuvre_other_link'.$i, $other_links[$i]["type"]), $ptab_expression );
 			}
+			if($tab_link_order!="") $tab_link_order.=",";
+			$tab_link_order.= $i;
 			$other_link_repetables .= $ptab_expression;
 		}
 		$tpl = "
@@ -1064,13 +1131,13 @@ class titre_uniforme {
 		
 		$tpl = str_replace ( '!!max_other_link!!', $max_other_link, $tpl );
 		$tpl = str_replace ( '!!other_link_repetables!!', $other_link_repetables, $tpl );
+		$tpl = str_replace ( '!!other_link_new_order!!', $other_link_new_order, $tpl );
 		$tpl = str_replace ( '!!myid!!', $this->id, $tpl );
+		$tpl = str_replace ( '!!tab_other_link_order!!', $tab_link_order, $tpl);
 		return $tpl;
 	}
 	
 	public function update_other_link($value) {
-		global $dbh;
-		
 		$this->delete_other_link ();
 		if(!is_array($value)) return;
 		$rqt_ins = "insert into tu_oeuvres_links(oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ";
@@ -1079,15 +1146,13 @@ class titre_uniforme {
 			if ($val['code']) {
 				$this->save_inversed_link($this->id,$val['code'], $val['type']);
 				$rqt = $rqt_ins."('".$this->id."', '".$val['code']."', '".$val['type']."', 0, 1, ".$ordre.") ";
-				pmb_mysql_query($rqt, $dbh);
+				pmb_mysql_query($rqt);
 				$ordre++;
 			}
 		}
 	}
 			
 	public function update_oeuvre_event($value) {
-		global $dbh;
-	
 		$this->delete_oeuvre_event();
 		if(!is_array($value)) return;
 		$rqt_ins = "insert into tu_oeuvres_events(oeuvre_event_tu_num, oeuvre_event_authperso_authority_num, oeuvre_event_order) VALUES ";
@@ -1095,71 +1160,67 @@ class titre_uniforme {
 		foreach ($value as $val) {
 			if ($val ['code']) {
 				$rqt = $rqt_ins."('".$this->id."', '".$val['code']."',  ".$ordre.") ";
-				pmb_mysql_query ( $rqt, $dbh );
+				pmb_mysql_query ( $rqt );
+				indexation_stack::push($val ['code'], TYPE_AUTHPERSO, "event");
 				$ordre ++;
 			}
 		}
 	}
 	
 	public function delete_oeuvre_event(){
-		global $dbh;
 		if(!$this->id) return;
 		$rqt_del = "delete from tu_oeuvres_events where oeuvre_event_tu_num=".$this->id ;
-		pmb_mysql_query ( $rqt_del, $dbh );
+		pmb_mysql_query ( $rqt_del );
 	}
 
 	private function save_expression_inversed_link($from, $to, $type,$sens=0) {
-		global $dbh;
 		global $include_path;
-		$to+=0;
-		$from+=0;
+		$to = intval($to);
+		$from = intval($from);
 		$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
 		if(!isset($oeuvre_link->inverse_of[$type])){
 			return;
 		}
 		$select = 'select oeuvre_link_type from tu_oeuvres_links where oeuvre_link_from = "'.$to.'" and oeuvre_link_to= "'.$from.'" and oeuvre_link_type = "'.$oeuvre_link->inverse_of[$type].'" ';
-		$result = pmb_mysql_query($select,$dbh);
+		$result = pmb_mysql_query($select);
 		if(pmb_mysql_num_rows($result)>0){
 			return;
 		}
 		$max_query = 'select max(oeuvre_link_order) from tu_oeuvres_links where oeuvre_link_from = "'.$to.'"';
-		$result = pmb_mysql_query($max_query,$dbh);
+		$result = pmb_mysql_query($max_query);
 		$max_order = pmb_mysql_result($result, 0, 0);
 		$query = 'insert into tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ("'.$to.'","'.$from.'","'.$oeuvre_link->inverse_of[$type].'", '.$sens.', 0, "'.($max_order+1).'")';
 
-		pmb_mysql_query ( $query, $dbh );
+		pmb_mysql_query ( $query );
 	}
 	
 	private function save_inversed_link($from, $to, $type) {
-		global $dbh;
 		global $include_path;
-		$to+=0;
-		$from+=0;
+		$to = intval($to);
+		$from = intval($from);
 		$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
 		if(!isset($oeuvre_link->inverse_of[$type])){	
 			return;	
 		}
 		$select = 'select oeuvre_link_type from tu_oeuvres_links where oeuvre_link_from = "'.$to.'" and oeuvre_link_to= "'.$from.'" and oeuvre_link_type = "'.$oeuvre_link->inverse_of[$type].'" ';
-		$result = pmb_mysql_query($select,$dbh);
+		$result = pmb_mysql_query($select);
 		if(pmb_mysql_num_rows($result)>0){
 			return;
 		}
 		$max_query = 'select max(oeuvre_link_order) from tu_oeuvres_links where oeuvre_link_from = "'.$to.'"';
-		$result = pmb_mysql_query($max_query,$dbh);
+		$result = pmb_mysql_query($max_query);
 		$max_order = pmb_mysql_result($result, 0, 0);
 		$query = 'insert into tu_oeuvres_links (oeuvre_link_from, oeuvre_link_to, oeuvre_link_type, oeuvre_link_expression, oeuvre_link_other_link, oeuvre_link_order) VALUES ("'.$to.'","'.$from.'","'.$oeuvre_link->inverse_of[$type].'", 0, 1, "'.($max_order+1).'")';
-		pmb_mysql_query ( $query, $dbh );
+		pmb_mysql_query ( $query );
 		$indexation_authority = indexations_collection::get_indexation(AUT_TABLE_TITRES_UNIFORMES);
 		$indexation_authority->maj($to,'oeuvre_link');
 	}
 	
 	public function delete_other_link() {
-		global $dbh;
-
 		if(!$this->id) return;
 		$to_delete = array();
 		$select = 'select oeuvre_link_to, oeuvre_link_type from tu_oeuvres_links where oeuvre_link_from="'.$this->id.'"';
-		$result = pmb_mysql_query($select,$dbh);
+		$result = pmb_mysql_query($select);
 		
 		if(pmb_mysql_num_rows($result)){
 			$oeuvre_link= marc_list_collection::get_instance('oeuvre_link');
@@ -1180,12 +1241,12 @@ class titre_uniforme {
 					}
 					$delete.= '(oeuvre_link_from = "'.$del['from'].'" and oeuvre_link_to = "'.$this->id.'" and oeuvre_link_type = "'.$del['type'].'" and oeuvre_link_other_link = 1 and oeuvre_link_expression = 0)';
 				}
-				$result = pmb_mysql_query('delete from tu_oeuvres_links where '.$delete,$dbh);
+				$result = pmb_mysql_query('delete from tu_oeuvres_links where '.$delete);
 			}
 		}
 		
 		$rqt_del = "delete from tu_oeuvres_links where oeuvre_link_from='" . $this->id . "' and oeuvre_link_other_link = 1 and oeuvre_link_expression = 0";
-		pmb_mysql_query ( $rqt_del, $dbh );
+		pmb_mysql_query ( $rqt_del );
 	}
 	
 	// ---------------------------------------------------------------
@@ -1224,22 +1285,31 @@ class titre_uniforme {
 		$event->set_titre_uniforme_isbd($this->get_isbd());
 		$evt_handler->send($event);
 		if(!$event->get_error_message()){
+		    //On vérifie que l'oeuvre n'est pas lié
+		    $requete = "SELECT oeuvre_link_to FROM tu_oeuvres_links WHERE oeuvre_link_from='$this->id' ";
+		    
+		    $res = pmb_mysql_query($requete);
+		    $nbr_lignes = pmb_mysql_result($res, 0, 0);
+		    if($nbr_lignes) {
+		        $message .=  '<strong>'.$this->display."</strong><br />{$msg['titre_uniforme_delete_linked']}<br /><br />";
+		    }
+		    
 			if(($usage=aut_pperso::delete_pperso(AUT_TABLE_TITRES_UNIFORMES, $this->id,0) )){
-				// Cette autoritÃ© est utilisÃ©e dans des champs perso, impossible de supprimer
+				// Cette autorité est utilisée dans des champs perso, impossible de supprimer
 				$message .= '<strong>'.$this->display.'</strong><br />'.$msg['autority_delete_error'].'<br /><br />'.$usage['display'];
 			}
 			// effacement dans les notices
-			// rÃ©cupÃ©ration du nombre de notices affectÃ©es
+			// récupération du nombre de notices affectées
 			$requete = "SELECT count(1) FROM notices_titres_uniformes WHERE ntu_num_tu='$this->id' ";
 			
 			$res = pmb_mysql_query($requete);
 			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 			if($nbr_lignes) {
-				// Ce titre uniforme est utilisÃ© dans des notices, impossible de le supprimer
-				$message .=  '<strong>'.$this->display."</strong><br />${msg['titre_uniforme_delete']}";
+				// Ce titre uniforme est utilisé dans des notices, impossible de le supprimer
+				$message .=  '<strong>'.$this->display."</strong><br />{$msg['titre_uniforme_delete']}";
 			}
 			
-			// On regarde si l'autoritÃ© est utilisÃ©e dans des vedettes composÃ©es
+			// On regarde si l'autorité est utilisée dans des vedettes composées
 			$attached_vedettes = vedette_composee::get_vedettes_built_with_element($this->id, TYPE_TITRE_UNIFORME);
 			if(count($attached_vedettes)){
 				if(isset($event->get_elements()['concept'])){
@@ -1259,13 +1329,16 @@ class titre_uniforme {
 	//		delete() : suppression 
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
 		global $msg;
+		global $forcing;
 				
-		if(!$this->id)	// impossible d'accÃ©der Ã  cette notice titre uniforme
+		if(!$this->id)	// impossible d'accéder à cette notice titre uniforme
 			return $msg[403];
-		
-		$is_used = $this->check_uses();
+	       
+		$is_used = '';
+		if (!$forcing){
+    		$is_used = $this->check_uses();
+		}
 		if(!$is_used){
 			$evt_handler = events_handler::get_instance();
 			$event = new event_titre_uniforme("titre_uniforme", "delete");
@@ -1282,16 +1355,16 @@ class titre_uniforme {
 			
 			// effacement dans la table des titres_uniformes
 			$requete = "DELETE FROM titres_uniformes WHERE tu_id='$this->id' ";
-			pmb_mysql_query($requete, $dbh);
-			// delete les champs rÃ©pÃ©tables
+			pmb_mysql_query($requete);
+			// delete les champs répétables
 			$requete = "DELETE FROM tu_distrib WHERE distrib_num_tu='$this->id' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 			$requete = "DELETE FROM tu_ref WHERE ref_num_tu='$this->id' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 			$requete = "DELETE FROM tu_subdiv WHERE subdiv_num_tu='$this->id' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 			
-			//suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
+			//suppression dans la table de stockage des numéros d'autorités...
 			titre_uniforme::delete_autority_sources($this->id);
 			
 			$this->delete_other_link();
@@ -1303,7 +1376,7 @@ class titre_uniforme {
 			$rqt_del = "delete from responsability_tu where responsability_tu_num='".$this->id."' ";
 			pmb_mysql_query($rqt_del);
 			
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
 			$aut_link->delete();
 			
@@ -1317,7 +1390,7 @@ class titre_uniforme {
 			// nettoyage indexation
 			indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_TITRES_UNIFORMES);
 			
-		// effacement de l'identifiant unique d'autoritÃ©
+		// effacement de l'identifiant unique d'autorité
 			$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 			$authority->delete();
 			
@@ -1330,11 +1403,9 @@ class titre_uniforme {
 
 	// Clean des vedettes
 	public static function delete_vedette_links($id) {	
-		global $dbh;
-		
 		$id_vedettes=array();
 		$rqt_responsability = 'select id_responsability_tu, responsability_tu_type from responsability_tu where responsability_tu_num="'.$id.'" ';
-		$res_responsability=pmb_mysql_query($rqt_responsability, $dbh);
+		$res_responsability=pmb_mysql_query($rqt_responsability);
 		if (pmb_mysql_num_rows($res_responsability)) {
 			while($r=pmb_mysql_fetch_object($res_responsability)){
 				$object_id=$r->id_responsability_tu;
@@ -1355,7 +1426,7 @@ class titre_uniforme {
 	}
 	
 	// ---------------------------------------------------------------
-	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autoritÃ©
+	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autorité
 	// ---------------------------------------------------------------
 	public static function delete_autority_sources($idtu=0){
 		$tabl_id=array();
@@ -1371,7 +1442,7 @@ class titre_uniforme {
 			$tabl_id[]=$idtu;
 		}
 		foreach ( $tabl_id as $value ) {
-	       //suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
+	       //suppression dans la table de stockage des numéros d'autorités...
 			$query = "select id_authority_source from authorities_sources where num_authority = ".$value." and authority_type = 'uniform_title'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -1391,8 +1462,8 @@ class titre_uniforme {
 	public function replace($by,$link_save) {
 	
 		global $msg;
-		global $dbh;
 		global $pmb_synchro_rdf;
+		global $pmb_ark_activate;
 		
 		if (($this->id == $by) || (!$this->id))  {
 			return $msg[223];
@@ -1407,38 +1478,40 @@ class titre_uniforme {
 		$evt_handler->send($event);
 		
 		$aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
-		// "Conserver les liens entre autoritÃ©s" est demandÃ©
+		// "Conserver les liens entre autorités" est demandé
 		if($link_save) {
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link->add_link_to(AUT_TABLE_TITRES_UNIFORMES,$by);		
 		}
 		$aut_link->delete();
 
 		vedette_composee::replace(TYPE_TITRE_UNIFORME, $this->id, $by);
 		
-		// remplacement liens de type expression et autres liens
-		$requete = 'update tu_oeuvres_links set oeuvre_link_from="'.$by.'" where oeuvre_link_from="'.$this->id.'"';
-		$result = pmb_mysql_query($requete,$dbh);
-		$requete = 'update tu_oeuvres_links set oeuvre_link_to="'.$by.'" where oeuvre_link_to="'.$this->id.'"';
-		$result = pmb_mysql_query($requete,$dbh);		
+ 		// remplacement liens de type expression et autres liens
+		$requete = 'UPDATE tu_oeuvres_links set oeuvre_link_from="'.$by.'" WHERE oeuvre_link_from="'.$this->id.'"';
+		@pmb_mysql_query($requete);
 		
-		// remplacement dans les responsabilitÃ©s
+		$requete = 'UPDATE tu_oeuvres_links set oeuvre_link_to="'.$by.'" WHERE oeuvre_link_to="'.$this->id.'"';
+		@pmb_mysql_query($requete);
+		
+		// En cas de doublons restant sur l'oeuvre on supprime le lien
+		$requete = 'DELETE FROM tu_oeuvres_links where oeuvre_link_from="'.$this->id.'" OR oeuvre_link_to="'.$this->id.'"';
+		pmb_mysql_query($requete);
+		
+		// remplacement dans les responsabilités
 		$requete = "UPDATE notices_titres_uniformes SET ntu_num_tu='$by' WHERE ntu_num_tu='$this->id' ";
-		@pmb_mysql_query($requete, $dbh);
+		@pmb_mysql_query($requete);
 		
 		$requete = "UPDATE responsability_tu set responsability_tu_num ='$by' where responsability_tu_num='".$this->id."' ";
 		@pmb_mysql_query($requete);		
 
-		// effacement dans la table des titres_uniformes
-		$requete = "DELETE FROM titres_uniformes WHERE tu_id='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
-		// delete les champs rÃ©pÃ©tables
+		// delete les champs répétables
 		$requete = "DELETE FROM tu_distrib WHERE distrib_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "DELETE FROM tu_ref WHERE ref_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "DELETE FROM tu_subdiv WHERE subdiv_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
 		//nettoyage d'autorities_sources
 		$query = "select * from authorities_sources where num_authority = ".$this->id." and authority_type = 'uniform_title'";
@@ -1446,20 +1519,24 @@ class titre_uniforme {
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				if($row->authority_favorite == 1){
-					//on suprime les rÃ©fÃ©rences si l'autoritÃ© a Ã©tÃ© importÃ©e...
+					//on suprime les références si l'autorité a été importée...
 					$query = "delete from notices_authorities_sources where num_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 					$query = "delete from authorities_sources where id_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 				}else{
 					//on fait suivre le reste
-					$query = "update authorities_sources set num_authority = ".$by." where num_authority_source = ".$row->id_authority_source;
+					$query = "update authorities_sources set num_authority = ".$by." where id_authority_source = ".$row->id_authority_source;
 					pmb_mysql_query($query);
 				}
 			}
 		}
 		
-		//Remplacement dans les champs persos sÃ©lecteur d'autoritÃ©
+		// nettoyage indexation concepts
+		$index_concept = new index_concept($this->id, TYPE_TITRE_UNIFORME);
+		$index_concept->delete();
+		
+		//Remplacement dans les champs persos sélecteur d'autorité
 		aut_pperso::replace_pperso(AUT_TABLE_TITRES_UNIFORMES, $this->id, $by);
 		
 		audit::delete_audit(AUDIT_TITRE_UNIFORME,$this->id);
@@ -1467,13 +1544,26 @@ class titre_uniforme {
 		// nettoyage indexation
 		indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_TITRES_UNIFORMES);
 		
-		// effacement de l'identifiant unique d'autoritÃ©
+		if ($pmb_ark_activate) {
+		    $idReplaced = authority::get_authority_id_from_entity($this->id, AUT_TABLE_TITRES_UNIFORMES);
+		    $idReplacing = authority::get_authority_id_from_entity($by, AUT_TABLE_TITRES_UNIFORMES);
+		    if ($idReplaced && $idReplacing) {
+		        $arkEntityReplaced = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplaced);
+		        $arkEntityReplacing = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplacing);
+		        $arkEntityReplaced->markAsReplaced($arkEntityReplacing);
+		    }
+		}
+		// effacement de l'identifiant unique d'autorité
 		$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
 		$authority->delete();
 		
+		// effacement dans la table des titres_uniformes
+		$requete = "DELETE FROM titres_uniformes WHERE tu_id='$this->id' ";
+		pmb_mysql_query($requete);
+		
 		titre_uniforme::update_index($by);
 		
-		//mise Ã  jour de l'oeuvre rdf
+		//mise à jour de l'oeuvre rdf
 		if($pmb_synchro_rdf){
 			$synchro_rdf = new synchro_rdf();
 			$synchro_rdf->replaceAuthority($this->id,$by,'oeuvre');
@@ -1521,11 +1611,9 @@ class titre_uniforme {
 	}
 	
 	// ---------------------------------------------------------------
-	//		update($value) : mise Ã  jour 
+	//		update($value) : mise à jour 
 	// ---------------------------------------------------------------
 	public function update($value, $forcing = false ) {
-	
-		global $dbh;
 		global $msg;
 		global $include_path;
 		global $pmb_synchro_rdf;
@@ -1534,6 +1622,7 @@ class titre_uniforme {
 		global $mapping_source_type;
 		global $mapping_source_id;
 		global $opac_enrichment_bnf_sparql;
+		global $is_duplication;
 		
 		$value = array_merge(static::get_default_data(), $value);
 		
@@ -1568,7 +1657,7 @@ class titre_uniforme {
 			}
 		}
 		
-		// nettoyage des chaÃ®nes en entrÃ©e		
+		// nettoyage des chaînes en entrée		
 		$value['name'] = clean_string($value['name']);
 		$value['tu_form'] = clean_string($value['tu_form']);
 		$value['form'] = clean_string($value['tu_form']);
@@ -1593,7 +1682,7 @@ class titre_uniforme {
     		if($titre){
     			//require_once("$include_path/user_error.inc.php");
     			//warning($msg["aut_titre_uniforme_creation"], $msg["aut_titre_uniforme_doublon_erreur"]);
-    		    print $this->warning_tu_exist($msg["aut_titre_uniforme_creation"], $msg["aut_titre_uniforme_doublon_erreur"], $value);
+    		    print $this->warning_already_exist($msg["aut_titre_uniforme_creation"], $msg["aut_titre_uniforme_doublon_erreur"], $value);
     			
     			return FALSE;
     		}
@@ -1628,7 +1717,7 @@ class titre_uniforme {
 			$requete = 'UPDATE titres_uniformes '.$requete;
 			$requete .= ' WHERE tu_id='.$this->id.' ;';
 			
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$flag_index=1;
 			} else {
 				require_once("$include_path/user_error.inc.php"); 
@@ -1640,7 +1729,7 @@ class titre_uniforme {
 		} else {
 			// creation
 			$requete = 'INSERT INTO titres_uniformes '.$requete.' ';
-			$result = pmb_mysql_query($requete,$dbh);
+			$result = pmb_mysql_query($requete);
 			if($result) {
 				$this->id=pmb_mysql_insert_id();				
 			} else {
@@ -1662,60 +1751,68 @@ class titre_uniforme {
 		$this->update_tu_notices ($value['tu_notices']);
 		
 		
-		// Clean des vedettes
-		$id_vedettes_links_deleted=titre_uniforme::delete_vedette_links($this->id);
-		
-		// traitement des auteurs
-		// la variable $f_aut a Ã©tÃ© renseignÃ©e au dÃ©but de la fonction
-		// pour gÃ©rer les auteurs dans la recherche des doublons
-		$rqt_del = "delete from responsability_tu where responsability_tu_num='".$this->id."' ";
-		$res_del = pmb_mysql_query($rqt_del);
-		$rqt_ins = "INSERT INTO responsability_tu (responsability_tu_author_num, responsability_tu_num, responsability_tu_fonction, responsability_tu_type, responsability_tu_ordre) VALUES ";		
-		$i=0;	
-		$var_name='saisie_titre_uniforme_role_composed';
-		global ${$var_name};
-		$role_composed=${$var_name};
-		$var_name='saisie_titre_uniforme_role_autre_composed';
-		global ${$var_name};
-		$role_composed_autre=${$var_name};
-		$id_vedettes_used=array();
-		while ($i<=count ($f_aut)-1) {
-			$id_aut=$f_aut[$i]['id'];
-			if ($id_aut) {
-				$fonc_aut = $f_aut[$i]['fonction'];
-				$type_aut = $f_aut[$i]['type'];
-				$ordre_aut = $f_aut[$i]['ordre'];
-				$rqt = $rqt_ins . " ('".$id_aut."','".$this->id."','".$fonc_aut."','".$type_aut."', '".$ordre_aut."') ";				
-				$res_ins = @pmb_mysql_query($rqt);
-				$id_responsability_tu=pmb_mysql_insert_id();
-				if($pmb_authors_qualification){
-					switch($type_aut){
-						case 0: 
-							$id_vedette=$this->update_vedette(stripslashes_array($role_composed[$ordre_aut]),$id_responsability_tu,TYPE_TU_RESPONSABILITY);
-						break;
-						case 1:  
-							$id_vedette=$this->update_vedette(stripslashes_array($role_composed_autre[$ordre_aut]),$id_responsability_tu,TYPE_TU_RESPONSABILITY_INTERPRETER);
-						break;			
-					}
-					if($id_vedette)$id_vedettes_used[]=$id_vedette; 
-				}
-			}
-			$i++;
-		}
-		foreach ($id_vedettes_links_deleted as $id_vedette){
-			if(!in_array($id_vedette,$id_vedettes_used)){
-				$vedette_composee = new vedette_composee($id_vedette);
-				$vedette_composee->delete();
-			}
-		}	
-		$aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
-		$aut_link->save_form();
+			// Clean des vedettes
+			$id_vedettes_links_deleted=titre_uniforme::delete_vedette_links($this->id);
 			
-		$aut_pperso= new aut_pperso("tu",$this->id);
-		if($aut_pperso->save_form()){
-			$this->cp_error_message = $aut_pperso->error_message; 
-			return false;
-		}
+			// traitement des auteurs
+			// la variable $f_aut a été renseignée au début de la fonction
+			// pour gérer les auteurs dans la recherche des doublons
+			$rqt_del = "delete from responsability_tu where responsability_tu_num='".$this->id."' ";
+			$res_del = pmb_mysql_query($rqt_del);
+			$rqt_ins = "INSERT INTO responsability_tu (responsability_tu_author_num, responsability_tu_num, responsability_tu_fonction, responsability_tu_type, responsability_tu_ordre) VALUES ";		
+			$i=0;	
+			$var_name='saisie_titre_uniforme_role_composed';
+			global ${$var_name};
+			$role_composed=${$var_name};
+			$var_name='saisie_titre_uniforme_role_autre_composed';
+			global ${$var_name};
+			$role_composed_autre=${$var_name};
+			$id_vedettes_used=array();
+			while ($i<=count ($f_aut)-1) {
+				$id_aut=$f_aut[$i]['id'];
+				if ($id_aut) {
+					$fonc_aut = $f_aut[$i]['fonction'];
+					$type_aut = $f_aut[$i]['type'];
+					$ordre_aut = $f_aut[$i]['ordre'];
+					$rqt = $rqt_ins . " ('".$id_aut."','".$this->id."','".$fonc_aut."','".$type_aut."', '".$ordre_aut."') ";				
+					$res_ins = @pmb_mysql_query($rqt);
+					$id_responsability_tu=pmb_mysql_insert_id();
+					if($pmb_authors_qualification){
+						switch($type_aut){
+							case 0:
+								//On duplique la vedette en mode duplication
+								if(! empty($is_duplication) && $is_duplication == 1) {
+									$role_composed[$ordre_aut]["id"] = 0;
+								}
+								$id_vedette=$this->update_vedette(stripslashes_array($role_composed[$ordre_aut]),$id_responsability_tu,TYPE_TU_RESPONSABILITY);
+							break;
+							case 1:
+								if(! empty($is_duplication) && $is_duplication == 1) {
+									$role_composed_autre[$ordre_aut]["id"] = 0;
+								} 
+								$id_vedette=$this->update_vedette(stripslashes_array($role_composed_autre[$ordre_aut]),$id_responsability_tu,TYPE_TU_RESPONSABILITY_INTERPRETER);
+							break;			
+						}
+						if($id_vedette)$id_vedettes_used[]=$id_vedette; 
+					}
+				}
+				$i++;
+			}
+			foreach ($id_vedettes_links_deleted as $id_vedette){
+				if(!in_array($id_vedette,$id_vedettes_used)){
+					$vedette_composee = new vedette_composee($id_vedette);
+					$vedette_composee->delete();
+				}
+			}	
+			$aut_link= new aut_link(AUT_TABLE_TITRES_UNIFORMES,$this->id);
+			$aut_link->save_form();
+				
+			$aut_pperso= new aut_pperso("tu",$this->id);
+			if($aut_pperso->save_form()){
+				$this->cp_error_message = $aut_pperso->error_message; 
+				return false;
+			}
+		// }
 		
 		//update authority informations
 		$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $this->id, 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
@@ -1729,16 +1826,16 @@ class titre_uniforme {
 			$index_concept->save();
 		}
 		
-		// Mise Ã  jour des vedettes composÃ©es contenant cette autoritÃ©
+		// Mise à jour des vedettes composées contenant cette autorité
 		vedette_composee::update_vedettes_built_with_element($this->id, TYPE_TITRE_UNIFORME);
 		
-		// Gestion des champ rÃ©pÃ©tables
+		// Gestion des champ répétables
 		$requete = "DELETE FROM tu_distrib WHERE distrib_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "DELETE FROM tu_ref WHERE ref_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		$requete = "DELETE FROM tu_subdiv WHERE subdiv_num_tu='$this->id' ";
-		pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 		
 		// Distribution instrumentale et vocale (pour la musique)
 		if(is_array($value['distrib'])) {
@@ -1747,17 +1844,17 @@ class titre_uniforme {
 				distrib_num_tu='$this->id',
 				distrib_name='".$value['distrib'][$i]."',
 				distrib_ordre='$i' ";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 			}
 		}
-		// RÃ©fÃ©rence numÃ©rique (pour la musique)
+		// Référence numérique (pour la musique)
 		if(is_array($value['ref'])) {
 			for($i=0;$i<count($value['ref']);$i++) {
 				$requete = "INSERT INTO tu_ref SET
 				ref_num_tu='$this->id',
 				ref_name='".$value['ref'][$i]."',
 				ref_ordre='$i' ";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 			}
 		}
 		// Subdivison de forme
@@ -1767,15 +1864,15 @@ class titre_uniforme {
 				subdiv_num_tu='$this->id',
 				subdiv_name='".$value['subdiv'][$i]."',
 				subdiv_ordre='$i' ";
-				pmb_mysql_query($requete, $dbh);
+				pmb_mysql_query($requete);
 			}
 		}
 		
-		// mise Ã  jour du champ index du titre uniforme
+		// mise à jour du champ index du titre uniforme
 		if ($this->id)
 			titre_uniforme::update_index_tu ( $this->id );
 		
-		// rÃ©indexation de la notice
+		// réindexation de la notice
 		titre_uniforme::update_index($this->id);
 
 		//Enrichissement
@@ -1783,13 +1880,13 @@ class titre_uniforme {
 			titre_uniforme::tu_enrichment($this->id);
 		}
 		
-		//mise Ã  jour de l'oeuvre rdf
+		//mise à jour de l'oeuvre rdf
 		if($flag_index && $pmb_synchro_rdf){
 			$synchro_rdf = new synchro_rdf();
 			$synchro_rdf->updateAuthority($this->id,'oeuvre');
 		}		
 		
-		//Evenement publiÃ© Ã  chaque mise Ã  jour d'un titre uniforme
+		//Evenement publié à chaque mise à jour d'un titre uniforme
 		$evt_handler = events_handler::get_instance();
 		$event = new event_titre_uniforme("titre_uniforme", "update");
 		$event->set_titre_uniforme_id($this->id);
@@ -1811,9 +1908,9 @@ class titre_uniforme {
 			if ($data["value"]) {
 				$vedette_composee->set_label($data["value"]);
 			}	
-			// On commence par rÃ©initialiser le tableau des Ã©lÃ©ments de la vedette composÃ©e
+			// On commence par réinitialiser le tableau des éléments de la vedette composée
 			$vedette_composee->reset_elements();	
-			// On remplit le tableau des Ã©lÃ©ments de la vedette composÃ©e
+			// On remplit le tableau des éléments de la vedette composée
 			$vedette_composee_id=0;
 			$tosave=false;
 			foreach ($data["elements"] as $subdivision => $elements) {
@@ -1848,8 +1945,6 @@ class titre_uniforme {
 	// ---------------------------------------------------------------
 	// fonction d'import de notice titre_uniforme 
 	public static function import($value,$from_form=0) {
-		global $dbh;
-		
 		$value = array_merge(static::get_default_data(), $value);
 		
 		// Si vide on sort
@@ -1930,13 +2025,13 @@ class titre_uniforme {
 					}
 				}
 				if(!$value['authors'][$i]['id']){
-					// crÃ©ation ou dÃ©jÃ  existant. auteur::import addslashes les champs
+					// création ou déjà existant. auteur::import addslashes les champs
 					$value['authors'][$i]['id']=auteur::import($value['authors'][$i]); 
 				}
 			}
 		}	
 				
-		// $value dÃ©jÃ  addslashes plus haut -> 1 
+		// $value déjà addslashes plus haut -> 1 
 		$titre=titre_uniforme::import_tu_exist($value,1);
 		if($titre){
 			return $titre;
@@ -1965,8 +2060,8 @@ class titre_uniforme {
 		//AR - 17/02/16 - Pour le moment, ce n'existe toujours pas dans PMB
 		//$requete .= "tu_databnf_uri='".$value["databnf_uri"]."' ";
 		
-		// insertion du titre uniforme	et mise Ã  jour de l'index tu
-		if(pmb_mysql_query($requete, $dbh)) {
+		// insertion du titre uniforme	et mise à jour de l'index tu
+		if(pmb_mysql_query($requete)) {
 			$tu_id=pmb_mysql_insert_id();			
 		} else {
 			return FALSE;
@@ -1990,15 +2085,15 @@ class titre_uniforme {
 			distrib_num_tu='$tu_id',
 			distrib_name='".$value['distrib'][$i]."',
 			distrib_ordre='$i' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 		}
-		// RÃ©fÃ©rence numÃ©rique (pour la musique)
+		// Référence numérique (pour la musique)
 		for($i=0;$i<count($value['ref']);$i++) {
 			$requete = "INSERT INTO tu_ref SET
 			ref_num_tu='$tu_id',
 			ref_name='".$value['ref'][$i]."',
 			ref_ordre='$i' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 		}
 		// Subdivision de forme
 		for($i=0;$i<count($value['subdiv']);$i++) {
@@ -2006,7 +2101,7 @@ class titre_uniforme {
 			subdiv_num_tu='$tu_id',
 			subdiv_name='".$value['subdiv'][$i]."',
 			subdiv_ordre='$i' ";
-			pmb_mysql_query($requete, $dbh);
+			pmb_mysql_query($requete);
 		}
 		
 		audit::insert_creation(AUDIT_TITRE_UNIFORME, $tu_id) ;		
@@ -2017,7 +2112,7 @@ class titre_uniforme {
 		$authority->set_thumbnail_url($value['thumbnail_url']);
 		$authority->update();
 		
-		// mise Ã  jour du champ index du titre uniforme
+		// mise à jour du champ index du titre uniforme
 		if($tu_id) {
 			titre_uniforme::update_index_tu($tu_id);
 			titre_uniforme::tu_enrichment($tu_id);		
@@ -2027,10 +2122,9 @@ class titre_uniforme {
 	}
 	
 	// ---------------------------------------------------------------
-	//		import_tu_exist() : Recherche si le titre uniforme existe dÃ©jÃ 
+	//		import_tu_exist() : Recherche si le titre uniforme existe déjà
 	// ---------------------------------------------------------------
 	public static function import_tu_exist($value,$from_form=0,$tu_id=0) {
-		global $dbh;
 		// Si vide on sort
 		if (trim ( $value ['name'] ) == '')
 			return FALSE;
@@ -2038,6 +2132,21 @@ class titre_uniforme {
 		$marc_key = new marc_list("music_key");
 		$marc_form = new marc_list("music_form");
 
+		if(!is_array($value['distrib'])) {
+		    $value['distrib'] = [];
+		}
+		if(!is_array($value['ref'])) {
+		    $value['ref'] = [];
+		}
+		if(!is_array($value['authors'])) {
+		    $value['authors'] = [];
+		}
+		if(!is_array($value['oeuvre_event'])) {
+		    $value['oeuvre_event'] = [];
+		}
+		if(!is_array($value['subdiv'])) {
+		    $value['subdiv'] = [];
+		}
 		if(!$from_form) {
 			$value['name'] = addslashes($value['name']);
 			$value['tonalite'] = addslashes($value['tonalite']);
@@ -2069,7 +2178,7 @@ class titre_uniforme {
 		}	
 		$flag_form = false;
 		$flag_key = false;
-		//Si une valeur est prÃ©sente pour la forme, on vÃ©rifie si la valeur est existante dans la marclist, si oui, on set le champs marclist en base (flag)
+		//Si une valeur est présente pour la forme, on vérifie si la valeur est existante dans la marclist, si oui, on set le champs marclist en base (flag)
 		if(!empty($value['form'])){
 			foreach ($marc_form->table as $key=>$form_value){
 				if($key == $value['form']){
@@ -2077,7 +2186,7 @@ class titre_uniforme {
 				}
 			}
 		}
-		//Si une valeur est prÃ©sente pour la tonalitÃ©, on vÃ©rifie si la valeur est existante dans la marclist, si oui, on set le champs marclist en base (flag)
+		//Si une valeur est présente pour la tonalité, on vérifie si la valeur est existante dans la marclist, si oui, on set le champs marclist en base (flag)
 		if($value['tonalite']){
 			foreach ($marc_key->table as $key=>$tonalite_value){
 				if($key == $value['tonalite']){
@@ -2092,74 +2201,74 @@ class titre_uniforme {
 		$dummy.= "AND tu_public='".$value['intended_audience']."' AND tu_contexte='".$value['context']."' AND tu_coordonnees='".$value['coordinates']."' ";
 		$dummy .= "AND tu_equinoxe='" . $value ['equinox'] . "' AND tu_oeuvre_nature='" . $value ['oeuvre_nature'] . "' AND tu_oeuvre_type='" . $value ['oeuvre_type'] . "' ";
 		if ($tu_id) {
-			$dummy = $dummy . "and tu_id!='" . $tu_id . "'"; // Pour la crÃ©ation ou la mise Ã  jour par l'interface
+			$dummy = $dummy . "and tu_id!='" . $tu_id . "'"; // Pour la création ou la mise à jour par l'interface
 		}
 		
-		$check = pmb_mysql_query($dummy, $dbh);
+		$check = pmb_mysql_query($dummy);
 		
 		if (pmb_mysql_error()=="" && pmb_mysql_num_rows($check)) {
 			while($row = pmb_mysql_fetch_object($check)){
 				$tu_id=$row->tu_id;
 				$different=false;
 				
-				//Test si les titres de mÃªme nom ont aussi la (ou les) mÃªme distribution
+				//Test si les titres de même nom ont aussi la (ou les) même distribution
 				if(count($value['distrib']) == 0){ //Si le titre que je veux ajouter n'a pas de distribution je regarde si celui qui existe en a une
 					$requete = "select distrib_num_tu from tu_distrib where  
 					distrib_num_tu='$tu_id' ";
-					$test = pmb_mysql_query($requete, $dbh);
+					$test = pmb_mysql_query($requete);
 					if (pmb_mysql_num_rows($test)) {
-						$different = true; //S'il a une distribution, le titre que je veux ajouter est diffÃ©rent
+						$different = true; //S'il a une distribution, le titre que je veux ajouter est différent
 					}
 					
 				}else{
 					//On teste s'il y a autant de distribution
 					$requete = "select distrib_num_tu from tu_distrib where distrib_num_tu='$tu_id' ";
-					$nb=pmb_mysql_num_rows(pmb_mysql_query($requete, $dbh));
-					if($nb != count($value['distrib'])){ //Si il y en a pas autant c'est un titre diffÃ©rent
+					$nb=pmb_mysql_num_rows(pmb_mysql_query($requete));
+					if($nb != count($value['distrib'])){ //Si il y en a pas autant c'est un titre différent
 						$different = true;
-					}else{ //Sinon on regarde si ce sont les mÃªmes
+					}else{ //Sinon on regarde si ce sont les mêmes
 						$nb_occurence=array_count_values($value['distrib']);//avoir le nombre d'occurence de chaque terme
 						for($i=0;$i<count($value['distrib']);$i++) {
 							$requete = "select count(distrib_num_tu) from tu_distrib where  
 							distrib_num_tu='$tu_id' and 
 							distrib_name='".$value['distrib'][$i]."' group by distrib_num_tu "; 
-							$test = pmb_mysql_query($requete, $dbh);
+							$test = pmb_mysql_query($requete);
 							$nb=@pmb_mysql_result($test,0,0);
 							if (!$nb) {
-								$different = true; //Si une des distributions n'existe pas c'est un titre uniforme diffÃ©rent
+								$different = true; //Si une des distributions n'existe pas c'est un titre uniforme différent
 							}elseif($nb != $nb_occurence[$value['distrib'][$i]]){
-								$different = true; //Si le nombre de cette distribution est diffÃ©rent c'est un titre uniforme diffÃ©rent
+								$different = true; //Si le nombre de cette distribution est différent c'est un titre uniforme différent
 							}
 						}	
 					}
 				}
-				//Test si les titres de mÃªme nom ont aussi la (ou les) mÃªme rÃ©ference
-				if(count($value['ref']) == 0){ //Si le titre que je veux ajouter n'a pas de rÃ©fÃ©rence, je regarde si celui qui existe en a une
+				//Test si les titres de même nom ont aussi la (ou les) même réference
+				if(count($value['ref']) == 0){ //Si le titre que je veux ajouter n'a pas de référence, je regarde si celui qui existe en a une
 					$requete = "select ref_num_tu from tu_ref where  
 					ref_num_tu='$tu_id' ";
-					$test = pmb_mysql_query($requete, $dbh);
+					$test = pmb_mysql_query($requete);
 					if (pmb_mysql_num_rows($test)) {
-						$different = true; //S'il a une rÃ©ference, le titre que je veux ajouter est diffÃ©rent
+						$different = true; //S'il a une réference, le titre que je veux ajouter est différent
 					}
 					
 				}else{
-					//On teste s'il y a autant de rÃ©ference
+					//On teste s'il y a autant de réference
 					$requete = "select ref_num_tu from tu_ref where ref_num_tu='$tu_id' ";
-					$nb=pmb_mysql_num_rows(pmb_mysql_query($requete, $dbh));
-					if($nb != count($value['ref'])){ //Si il y en a pas autant c'est un titre diffÃ©rent
+					$nb=pmb_mysql_num_rows(pmb_mysql_query($requete));
+					if($nb != count($value['ref'])){ //Si il y en a pas autant c'est un titre différent
 						$different = true;
-					}else{ //Sinon on regarde si ce sont les mÃªmes
+					}else{ //Sinon on regarde si ce sont les mêmes
 						$nb_occurence=array_count_values($value['ref']);//avoir le nombre d'occurence de chaque terme
 						for($i=0;$i<count($value['ref']);$i++) {
 							$requete = "select count(ref_num_tu) from tu_ref where  
 							ref_num_tu='$tu_id' and 
 							ref_name='".$value['ref'][$i]."' group by ref_num_tu "; 
-							$test = pmb_mysql_query($requete, $dbh);
+							$test = pmb_mysql_query($requete);
 							$nb=@pmb_mysql_result($test,0,0);
 							if (!$nb) {
-								$different = true; //Si une des rÃ©ference n'existe pas c'est un titre uniforme diffÃ©rent
+								$different = true; //Si une des réference n'existe pas c'est un titre uniforme différent
 							}elseif($nb != $nb_occurence[$value['ref'][$i]]){
-								$different = true; //Si le nombre de cette rÃ©ference est diffÃ©rent c'est un titre uniforme diffÃ©rent
+								$different = true; //Si le nombre de cette réference est différent c'est un titre uniforme différent
 							}
 						}	
 					}
@@ -2167,7 +2276,7 @@ class titre_uniforme {
 				// Auteurs				
 				$rqt = "select author_id, responsability_tu_fonction, responsability_tu_type ";
 				$rqt.= "from responsability_tu, authors where responsability_tu_num='$tu_id' and responsability_tu_author_num=author_id order by responsability_tu_type, responsability_tu_ordre ";			
-				$res_sql = pmb_mysql_query($rqt, $dbh);				
+				$res_sql = pmb_mysql_query($rqt);				
 				
 				if (pmb_mysql_num_rows($res_sql) != count($value['authors'])) {
 					$different = true;
@@ -2186,7 +2295,7 @@ class titre_uniforme {
 				}
 				
 				/**
-				 * Ajout du test de dÃ©doublonnages sur les evenements
+				 * Ajout du test de dédoublonnages sur les evenements
 				 */
 				if(count($value['oeuvre_event'])){
 					foreach($value['oeuvre_event'] as $value_subarray){
@@ -2201,7 +2310,7 @@ class titre_uniforme {
 					}
 				}
 				
-				if($different == false){ //Si le titre n'est pas diffÃ©rent on retourne l'id du titre identique
+				if($different == false){ //Si le titre n'est pas différent on retourne l'id du titre identique
 					return $tu_id;
 				}
 			}
@@ -2244,7 +2353,7 @@ class titre_uniforme {
 	public static function update_index($id, $datatype = 'all') {
 		indexation_stack::push($id, TYPE_TITRE_UNIFORME, $datatype);
 		
-		// On cherche tous les n-uplet de la table notice correspondant Ã  ce titre_uniforme.
+		// On cherche tous les n-uplet de la table notice correspondant à ce titre_uniforme.
 		$query = "select distinct ntu_num_notice as notice_id from notices_titres_uniformes where ntu_num_tu = ".$id;
 		authority::update_records_index($query, 'uniformtitle');
 	}
@@ -2301,11 +2410,9 @@ class titre_uniforme {
 	}
 	
 	// ---------------------------------------------------------------
-	//		majIndexTu() : mise Ã  jour du champ tu_index d'un titre uniforme
+	//		majIndexTu() : mise à jour du champ tu_index d'un titre uniforme
 	// ---------------------------------------------------------------
 	public static function update_index_tu($tu_id){
-		global $dbh;
-		global $msg;
 		global $include_path;
 		
 		if($tu_id){
@@ -2316,51 +2423,52 @@ class titre_uniforme {
 			$index = $oeuvre->name." ".$oeuvre->tonalite." ".$oeuvre->subject." ".$oeuvre->place." ".$oeuvre->history." ";
 			$index.= $oeuvre->date." ".$oeuvre->context." ".$oeuvre->equinox." ".$oeuvre->coordinates." ";
 			
-			$as = array_keys ($oeuvre->responsabilites["responsabilites"], "0" ) ;
-			for ($i = 0 ; $i < count($as) ; $i++) {
-				$indice = $as[$i] ;
-				$auteur_0 = $oeuvre->responsabilites["auteurs"][$indice] ;
-				$auteur = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur_0["id"]);
-				$index .= $auteur->name . " " . $auteur->rejete . " ";
-				;
+			if (!empty($oeuvre->responsabilites)) {
+				$as = array_keys ($oeuvre->responsabilites["responsabilites"], "0" ) ;
+				for ($i = 0 ; $i < count($as) ; $i++) {
+					$indice = $as[$i] ;
+					$auteur_0 = $oeuvre->responsabilites["auteurs"][$indice] ;
+					$auteur = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur_0["id"]);
+					$index .= $auteur->name . " " . $auteur->rejete . " ";
+				}
 			}
 				
 			
 			$req = "SELECT distrib_name FROM tu_distrib WHERE distrib_num_tu='$tu_id' ";
-			$res = pmb_mysql_query($req, $dbh);
+			$res = pmb_mysql_query($req);
 			if($distrib=pmb_mysql_fetch_object($res)){
 				$index.= $distrib->distrib_name." ";
 			}
 			$req = "SELECT ref_name FROM tu_ref WHERE ref_num_tu='$tu_id' ";
-			$res = pmb_mysql_query($req, $dbh);
+			$res = pmb_mysql_query($req);
 			if($ref=pmb_mysql_fetch_object($res)){
 				$index.= $ref->ref_name." ";
 			}
 			
 			$requete .= "' ".addslashes(strip_empty_chars($index))." ' WHERE tu_id=".$tu_id;
-			pmb_mysql_query($requete,$dbh);
+			pmb_mysql_query($requete);
 		}
 		return ;		
 	}
 	
 	// ---------------------------------------------------------------
-	// do_old_isbd() : gÃ©nÃ©ration de l'isbd du titre uniforme (AFNOR Z 44-061 de 1986)
+	// do_old_isbd() : génération de l'isbd du titre uniforme (AFNOR Z 44-061 de 1986)
 	// ---------------------------------------------------------------
 	public function do_old_isbd() {
-		global $msg;
-	
 		$this->tu_isbd="";
 		if (! $this->id)
 			return;
 		
-		$as = array_keys ($this->responsabilites["responsabilites"], "0" ) ;
-		for ($i = 0 ; $i < count($as) ; $i++) {
-			$indice = $as[$i] ;
-			$auteur_0 = $this->responsabilites["auteurs"][$indice] ;
-			$auteur = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur_0["id"]);
-			if ($i > 0)
-				$this->tu_isbd .= " / ";
-			$this->tu_isbd.= $auteur->display.". ";			
+		if(!empty($this->responsabilites)) {
+			$as = array_keys ($this->responsabilites["responsabilites"], "0" ) ;
+			for ($i = 0 ; $i < count($as) ; $i++) {
+				$indice = $as[$i] ;
+				$auteur_0 = $this->responsabilites["auteurs"][$indice] ;
+				$auteur = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur_0["id"]);
+				if ($i > 0)
+					$this->tu_isbd .= " / ";
+				$this->tu_isbd.= $auteur->display.". ";			
+			}
 		}
 		if ($i)
 			$this->tu_isbd .= ". ";
@@ -2373,12 +2481,10 @@ class titre_uniforme {
 	}
 	
 	// ---------------------------------------------------------------
-	// do_isbd() : gÃ©nÃ©ration de l'isbd complete de l'oeuvre
+	// do_isbd() : génération de l'isbd complete de l'oeuvre
 	// ---------------------------------------------------------------
 	public function do_isbd() {
-		global $msg;
-		
-		//initialisation des propriÃ©tÃ©s
+		//initialisation des propriétés
 		//$other_links = $this->get_oeuvre_others_links_datas();
 		//$oeuvre_expressions = $this->get_oeuvre_expressions_datas();
 		$this->tu_isbd=$this->get_isbd_simple();
@@ -2387,10 +2493,9 @@ class titre_uniforme {
 	}
 
 	// ---------------------------------------------------------------
-	// get_isbd_simple() : gÃ©nÃ©ration de l'isbd minimaliste du titre uniforme (AFNOR Z 44-061 de 1986)
+	// get_isbd_simple() : génération de l'isbd minimaliste du titre uniforme (AFNOR Z 44-061 de 1986)
 	// ---------------------------------------------------------------
-	public function get_isbd_simple() {
-		global $msg;
+	public function get_isbd_simple($with_responsabilites = true) {
 		global $fonction_auteur;
 		$isbd_simple = "";
 		if ($this->name) {
@@ -2403,20 +2508,25 @@ class titre_uniforme {
 			$isbd_simple.= ($this->oeuvre_type ? $this->oeuvre_type_name : '');
 			$isbd_simple.= ']';
 		}
-		$as = array_keys($this->responsabilites["responsabilites"], "0");
-		for($i = 0; $i < count($as); $i++) {
-			$indice = $as[$i];
-			$auteur_0 = $this->responsabilites["auteurs"][$indice];
-			$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, ['num_object' => $auteur_0["id"],'type_object'=> AUT_TABLE_AUTHORS]);//new authority(0, $auteur_0["id"], AUT_TABLE_AUTHORS);
-			$auteur = $authority->get_object_instance();
-			$isbd_simple .= " / ";
-			$isbd_simple .= $auteur->display;
-			if($this->responsabilites['auteurs'][$i]['fonction']){
-				$isbd_simple.= ', '.$fonction_auteur[$this->responsabilites['auteurs'][$i]['fonction']];
-			}
-			if(is_object($this->responsabilites['auteurs'][$i]['qualif'])){
-				$isbd_simple.= ' ('.$this->responsabilites['auteurs'][$i]['qualif']->get_label().')';
-			}
+		
+		if ($with_responsabilites) {
+    		$responsabilites = $this->get_responsabilites();
+    		if (!empty($responsabilites)) {
+        		$as = array_keys($this->responsabilites["responsabilites"], "0");
+        		for($i = 0; $i < count($as); $i++) {
+        			$indice = $as[$i];
+        			$auteur_0 = $this->responsabilites["auteurs"][$indice];
+        			$authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, ['num_object' => $auteur_0["id"],'type_object'=> AUT_TABLE_AUTHORS]);//new authority(0, $auteur_0["id"], AUT_TABLE_AUTHORS);
+        			$isbd_simple .= " / ";
+        			$isbd_simple .= $authority->get_isbd();
+        			if($this->responsabilites['auteurs'][$i]['fonction'] && array_key_exists($this->responsabilites['auteurs'][$i]['fonction'], $fonction_auteur)){
+        				$isbd_simple.= ', '.$fonction_auteur[$this->responsabilites['auteurs'][$i]['fonction']];
+        			}
+        			if(is_object($this->responsabilites['auteurs'][$i]['qualif'])){
+        				$isbd_simple.= ' ('.$this->responsabilites['auteurs'][$i]['qualif']->get_label().')';
+        			}
+        		}
+    		}
 		}
 		if ($this->date) {
 			$isbd_simple .= ' ('.$this->date.')';
@@ -2432,12 +2542,10 @@ class titre_uniforme {
 	}
 	
 	public static function get_data_bnf_uri($isbn) {
-		global $dbh,$charset;
-		
 		$isbn13=formatISBN($isbn,13);
 		$isbn10=formatISBN($isbn,10);
 		
-		//RÃ©cupÃ©ration de l'URI data.bnf.fr Ã  partir d'un isbn
+		//Récupération de l'URI data.bnf.fr à partir d'un isbn
 		// definition des endpoints databnf et dbpedia
 		$configbnf = array(
 				'remote_store_endpoint' => 'http://data.bnf.fr/sparql'
@@ -2454,10 +2562,10 @@ class titre_uniforme {
 		}";
 		$ret=false;
 		$rows = $storebnf->query($sparql, 'rows');
-		// On vÃ©rifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
+		// On vérifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
 		$err = $storebnf->getErrors();
 		if (!$err) {
-			//print $rows[0]['oeuvre']; On Ã©vite d'afficher des messages incomprÃ©hensibles pour l'utilisateur ;-)
+			//print $rows[0]['oeuvre']; On évite d'afficher des messages incompréhensibles pour l'utilisateur ;-)
 			if (!$rows[0]['oeuvre']) {
 				$sparql = "
 					PREFIX bnf-onto: <http://data.bnf.fr/ontology/bnf-onto/>
@@ -2498,7 +2606,7 @@ class titre_uniforme {
 			
 		$ret=false;
 		$rows = $storebnf->query($sparql, 'rows');
-		// On vÃ©rifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
+		// On vérifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
 		$err = $storebnf->getErrors();
 		if (!$err) {
 			for($i=0;$i<count($rows); $i++) {
@@ -2514,11 +2622,10 @@ class titre_uniforme {
 	}
 	
 	public static function tu_enrichment($id) {
-		global $dbh;
 		$requete="select tu_databnf_uri from titres_uniformes where tu_id=$id";
-		$resultat=pmb_mysql_query($requete,$dbh);
-		if ($resultat && pmb_mysql_num_rows($resultat,$dbh)) {
-			$uri=pmb_mysql_result($resultat,0,0,$dbh);
+		$resultat=pmb_mysql_query($requete);
+		if ($resultat && pmb_mysql_num_rows($resultat)) {
+			$uri=pmb_mysql_result($resultat,0,0);
 		} else
 			$uri = "";
 		
@@ -2541,7 +2648,7 @@ class titre_uniforme {
 			} group by ?title ?date ?editeur";
 			$ret=false;
 			$rows = $storebnf->query($sparql, 'rows');
-			// On vÃ©rifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
+			// On vérifie qu'il n'y a pas d'erreur sinon on stoppe le programme et on renvoi une chaine vide
 			$err = $storebnf->getErrors();
 			$tr=array();
 			if (!$err) {
@@ -2559,7 +2666,7 @@ class titre_uniforme {
 			//Stockage du tableau
 			$requete="update titres_uniformes set tu_enrichment='".addslashes(serialize($tr))."', tu_enrichment_last_update=now() where tu_id=$id";
 			// tu_enrichment n'existe pas ...
-			// pmb_mysql_query($requete,$dbh);
+			// pmb_mysql_query($requete);
 		}
 	}
 	
@@ -2654,6 +2761,7 @@ class titre_uniforme {
 	}
 	
 	public function get_sorted_responsabilities() {
+	    $this->get_responsabilites();
 		return $this->sorted_responsabilities;
 	}
 
@@ -2726,8 +2834,6 @@ class titre_uniforme {
 	}	
 	
 	public function update_tu_notices($value) {
-		global $dbh;
-		
 		$this->delete_tu_notices();
 		if(!is_array($value)) {
 			return;
@@ -2737,13 +2843,12 @@ class titre_uniforme {
 			if ($value[$i]) {
 				$rqt = "INSERT INTO notices_titres_uniformes (ntu_num_tu, ntu_num_notice, ntu_titre, ntu_date, ntu_sous_vedette, ntu_langue, ntu_version, ntu_mention, ntu_ordre) 
 						VALUES ('".$this->id."', '".$value[$i]['ntu_num_notice']."', '".$value[$i]['ntu_titre']."', '".$value[$i]['ntu_date']."', '".$value[$i]['ntu_sous_vedette']."', '".$value[$i]['ntu_langue']."', '".$value[$i]['ntu_version']."', '".$value[$i]['ntu_mention']."','".$i."')";
-				pmb_mysql_query($rqt, $dbh);
+				pmb_mysql_query($rqt);
 			}
 		}
 	}
 	
 	public function delete_tu_notices($notice_id = 0){
-		global $dbh;
 		if(!$this->id) {
 			return;
 		}
@@ -2753,7 +2858,7 @@ class titre_uniforme {
 		if($notice_id) {
 			$rqt_del .= " AND ntu_num_notice = '".$notice_id."'";
 		}
-		pmb_mysql_query ($rqt_del, $dbh);
+		pmb_mysql_query ($rqt_del);
 	}
 		
 	public function get_gestion_link(){
@@ -2997,9 +3102,12 @@ class titre_uniforme {
 		}
 	}
 	
-	protected static function format_delete_url($url='') {
+	public static function format_delete_url($url='', $forcing = false) {
 		global $base_path;
 			
+		if ($forcing && $url) {
+			return static::format_url("&sub=delete".$url);
+		}
 		if(isset(static::$controller) && is_object(static::$controller)) {
 			return 	static::$controller->get_delete_url();
 		} else {
@@ -3063,68 +3171,179 @@ class titre_uniforme {
 		return $responsibilities_id;
 	}
 	
-	protected function warning_tu_exist($error_title, $error_message, $values)  {
-	    global $tu_warning_tu_exist;
-	    global $max_aut0, $max_aut1;
+	protected function warning_already_exist($error_title, $error_message, $values=array())  {
+	    global $msg;
+		global $max_aut0, $max_aut1;
 	    
-	    if ($this->id) {
-	        $action = static::format_url('&sub=update&id='.$this->id.'&forcing=1');
-	    } else {
-	        $action = static::format_url('&sub=update&id=&forcing=1');
-	    }
+	    $authority = new authority(0, $this->id, AUT_TABLE_TITRES_UNIFORMES);
+	    $display = $authority->get_display_authority_already_exist($error_title, $error_message, $values);
+	    $display = str_replace("!!action!!", static::format_url('&sub=update&id='.$this->id.'&forcing=1'), $display);
+	    $display = str_replace("!!forcing_button!!", $authority->get_display_forcing_button($msg[287]), $display);
+	    $hidden_specific_values = $authority->put_global_in_hidden_field("saisie_titre_uniforme_role_composed");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("saisie_titre_uniforme_role_autre_composed");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("tab_concept_order");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("concept");
 	    
-	    $html = $tu_warning_tu_exist;
-	    $html = str_replace("!!error_title!!", $error_title, $html);
-	    $html = str_replace("!!error_message!!", $error_message, $html);
-	    $html = str_replace("!!action!!", $action, $html);
-	    $html = str_replace("!!forcing_values!!", encoding_normalize::json_encode($values), $html);
-	    $hidden_values = $this->put_global_in_hidden_field("saisie_titre_uniforme_role_composed");
-	    $hidden_values .= $this->put_global_in_hidden_field("saisie_titre_uniforme_role_autre_composed");
-	    
-	    $hidden_values .= $this->put_global_in_hidden_field("max_aut0");
-	    $hidden_values .= $this->put_global_in_hidden_field("max_aut1");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("max_aut0");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("max_aut1");
+	    $hidden_specific_values .= $authority->put_global_in_hidden_field("is_duplication");
 	    
 	    for ($i=0; $i<$max_aut0; $i++) {
-	        $hidden_values .= $this->put_global_in_hidden_field("f_aut0_id".$i);
-	        $hidden_values .= $this->put_global_in_hidden_field("f_f0_code".$i);
+	    	$hidden_specific_values .= $authority->put_global_in_hidden_field("f_aut0_id".$i);
+	    	$hidden_specific_values .= $authority->put_global_in_hidden_field("f_f0_code".$i);
 	    }
 	    
 	    for ($i=0; $i<$max_aut1; $i++) {
-	        $hidden_values .= $this->put_global_in_hidden_field("f_aut1_id".$i);
-	        $hidden_values .= $this->put_global_in_hidden_field("f_f1_code".$i);
+	    	$hidden_specific_values .= $authority->put_global_in_hidden_field("f_aut1_id".$i);
+	    	$hidden_specific_values .= $authority->put_global_in_hidden_field("f_f1_code".$i);
 	    }
-	    
-	    //champs perso
-	    $param_perso = new parametres_perso('tu');
-	    
-	    foreach($param_perso->get_t_fields() as $field) {
-	        $hidden_values .= $this->put_global_in_hidden_field($field['NAME']);
-	    }
-	    $html = str_replace('!!hidden_values!!', $hidden_values, $html);
-	    
-	    return $html;
+	    $display = str_replace('!!hidden_specific_values!!', $hidden_specific_values, $display);
+	    return $display;
 	}
 	
-	protected function put_global_in_hidden_field($global_name) {
-	    global ${$global_name};
-	    $global_var = ${$global_name};
-	    
-        $hidden_global_field = $this->create_hidden_field($global_name, $global_var);
-	    return $hidden_global_field;	    
+	public function __get($attribute)
+	{
+	    if (method_exists($this, "get_".$attribute)) {
+	        return call_user_func_array(array($this, "get_".$attribute), array());
+	    } else if (method_exists($this, $attribute)) {
+	        return call_user_func_array(array($this, $attribute), array());
+	    } else if (is_object($this) && isset($this->{$attribute})) {
+	        return $this->{$attribute};
+	    }
+	    return null;
 	}
 	
-	protected function create_hidden_field($name, $var) {
-	    global $charset;
+	public function get_responsabilites() 
+	{
+	    if (!isset($this->responsabilites)) {	        
+    	    $this->responsabilites = array();
+    	    $this->responsabilites["responsabilites"] = array();
+    	    $this->responsabilites = $this->get_authors();
+	    }
+	    return $this->responsabilites;
+	}
+	
+	public function get_display() 
+	{
+	    if (!isset($this->display)) {	        
+    	    $this->display = '';
+    	    $this->display = $this->name;
+    	    if ($this->date) {
+    	        $this->display .=" (".$this->date.")";
+    	    }
+    	    
+    	    /*
+    	    if ($this->num_author) {
+    	        $tu_auteur = new auteur($this->num_author);
+    	        $this->display .=" / ".$tu_auteur->rejete." ".$tu_auteur->name;
+    	    }
+    	    */
+    	    
+    	    $responsabilites = $this->get_responsabilites();
+    	    if (!empty($responsabilites)) {
+        	    $keys = array_keys($responsabilites["responsabilites"], "0");
+        	    $index = count($keys);
+        	    if ($index) {
+        	        for ($i = 0 ; $i < $index; $i++) {
+        	            $indice = $keys[$i];
+        	            $auteur = $this->responsabilites["auteurs"][$indice] ;
+        	            $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur["id"]);
+        	            if ($i > 0) {
+        	                $this->display .= " / "; // entre auteurs
+        	            }
+        	            $this->display .= $authority->rejete." ".$authority->name;
+        	        }
+        	    }
+    	    }
+	    }
 	    
-	    $html = "";
-	    if (is_array($var)) {
-	        foreach($var as $key => $value) {
-	            $html .= $this->create_hidden_field($name."[".$key."]", $value); 
+	    return $this->display;
+	}
+	
+	public function get_libelle() 
+	{
+	    if (!isset($this->libelle)) {
+	        $this->libelle = "";
+	        
+	        $separator = "; ";
+	        $libelle = "";
+	        $libelle = $this->name;
+	        
+	        if ($this->tonalite) {	            
+	            $libelle .= $separator.$this->tonalite;
 	        }
-	    } else {
-	        $html .= "<input type='hidden' name='".$name."' value='" . htmlentities(stripslashes($var), ENT_QUOTES, $charset) . "'/>";
+	        
+	        $index = count($this->distrib);
+	        for ($i = 0; $i < $index; $i++) {
+	            $libelle .= $separator.$this->distrib[$i]['label'];
+	        }
+	        
+	        $index = count($this->ref);
+	        for ($i = 0; $i < $index; $i++) {
+	            $libelle .= $separator.$this->ref[$i]['label'];
+	        }
+	        
+	        $index = count($this->subdiv);
+	        for ($i = 0; $i < $index; $i++) {
+	            $libelle .= $separator.$this->subdiv[$i]['label'];
+	        }
+	        
+	        /*
+            if ($this->num_author) {
+                $tu_auteur = new auteur($this->num_author);
+                $libelle .= $separator.$tu_auteur->display;
+            }
+            */
+	        
+	        $responsabilites = $this->get_responsabilites();
+	        if (!empty($responsabilites)) {
+    	        $keys = array_keys($responsabilites["responsabilites"], "0");
+    	        $index = count($keys);
+    	        if ($index) {
+    	            for ($i = 0 ; $i < $index; $i++) {
+    	                $indice = $keys[$i];
+    	                $auteur = $this->responsabilites["auteurs"][$indice] ;
+    	                $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORS, $auteur["id"]);
+    	                $libelle .= $separator.$authority->display;
+    	            }
+    	        }
+	        }
+	        
+	        $this->libelle = $libelle;
 	    }
-	    return $html;
+	    
+	    return $this->libelle;
+	}
+	
+	public function get_isbd_without_responsabilites() {
+	    return $this->get_isbd_simple(false);
+	}
+	
+	public function get_oeuvre_expressions_grouped_list_ui() {
+	    $contents = array();
+	    if(count($this->get_oeuvre_expressions_datas())){
+	        foreach ($this->get_oeuvre_expressions_datas() as $expression) {
+	            if (!isset($contents[$expression["type"]])) {
+	                $contents[$expression["type"]] = [];
+	                $contents[$expression["type"]] = [
+	                    "nb_result" => 0,
+	                    "label" => ucfirst($expression["type_label"]),
+	                    "content" => [],
+	                    "display" => ""
+	                ];
+	            }
+	            $contents[$expression["type"]]["nb_result"]++;
+	            
+	            $authority = authorities_collection::get_authority(AUT_TABLE_AUTHORITY,0, [ 'num_object' => $expression['to_id'], 'type_object' => AUT_TABLE_TITRES_UNIFORMES]);
+	            $contents[$expression["type"]]["content"][] = $authority->get_id();
+	        }
+	        
+	        foreach ($contents as $key => $value) {
+	            $contents[$key]["display"] = new elements_authorities_list_ui($contents[$key]["content"], $contents[$key]["nb_result"], false);
+	        }
+	        $this->oeuvre_expressions_grouped_list_ui = $contents;
+	    }
+	    return $this->oeuvre_expressions_grouped_list_ui;
 	}
 } // class titre uniforme
 

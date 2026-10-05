@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ImagesStore.js,v 1.1 2017-11-30 10:22:23 dgoron Exp $
+// $Id: ImagesStore.js,v 1.1 2017/11/30 10:22:23 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/topic", "dojo/_base/lang","dojo/request/xhr", "dojo/store/Memory"], function(declare, PMBStore, topic, lang, xhr, Memory){

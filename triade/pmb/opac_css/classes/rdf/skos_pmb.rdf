@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: skos_pmb.rdf,v 1.8 2019-05-09 14:07:17 ccraig Exp $ -->
+<!-- $Id: skos_pmb.rdf,v 1.12 2022/03/02 16:12:18 tsamson Exp $ -->
 
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:dct="http://purl.org/dc/terms/"
@@ -151,6 +151,7 @@
     <pmb:flag>conceptscheme_selector_form</pmb:flag>
     <pmb:flag>collection_selector_form</pmb:flag>
     <pmb:flag>orderedcollection_selector_form</pmb:flag>
+    <pmb:formOrder>1</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
@@ -168,6 +169,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#hiddenLabel"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
     <pmb:name>altlabel</pmb:name>
+    <pmb:formOrder>2</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#hiddenLabel">
@@ -184,6 +186,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
     <pmb:name>hiddenlabel</pmb:name>
+    <pmb:formOrder>3</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#notation">
@@ -196,6 +199,7 @@
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#small_text"/>
     <pmb:name>notation</pmb:name>
+    <pmb:formOrder>4</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#note">
@@ -208,6 +212,7 @@
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>note</pmb:name>
+    <pmb:formOrder>5</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#changeNote">
@@ -221,6 +226,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>changenote</pmb:name>
+    <pmb:formOrder>6</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#definition">
@@ -234,6 +240,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>definition</pmb:name>
+    <pmb:formOrder>7</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#editorialNote">
@@ -246,6 +253,7 @@
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>editorialnote</pmb:name>
+    <pmb:formOrder>8</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#example">
@@ -259,6 +267,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>example</pmb:name>
+    <pmb:formOrder>9</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#historyNote">
@@ -272,6 +281,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>historynote</pmb:name>
+    <pmb:formOrder>10</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#scopeNote">
@@ -285,6 +295,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#text"/>
     <pmb:name>scopenote</pmb:name>
+    <pmb:formOrder>11</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#semanticRelation">
@@ -299,6 +310,8 @@
     <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>semanticrelation</pmb:name>
+    <pmb:undisplayed>1</pmb:undisplayed>
+    <pmb:formOrder>12</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broader">
@@ -321,6 +334,7 @@
     <pmb:defaultValueType rdf:resource="http://www.pmbservices.fr/ontology#variable"/>
     <pmb:defaultValue>parent_id</pmb:defaultValue>
     <pmb:flag>concept_selector_form</pmb:flag>
+    <pmb:formOrder>13</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrower">
@@ -340,6 +354,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>narrower</pmb:name>
+    <pmb:formOrder>14</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#related">
@@ -359,46 +374,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>related</pmb:name>
-  </rdf:Description>
-
-  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broaderTransitive">
-    <rdfs:label xml:lang="en">has broader transitive</rdfs:label>
-    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
-    <skos:definition>skos:broaderTransitive is a transitive superproperty of skos:broader.</skos:definition>
-    <skos:scopeNote xml:lang="en">By convention, skos:broaderTransitive is not used to make assertions. Rather, the properties can be used to draw inferences about the transitive closure of the hierarchical relation, which is useful e.g. when implementing a simple query expansion algorithm in a search application.</skos:scopeNote>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
-    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
-    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#narrowerTransitive"/>
-    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
-    <pmb:name>broadertransitive</pmb:name>
-  </rdf:Description>
-
-  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrowerTransitive">
-    <rdfs:label xml:lang="en">has narrower transitive</rdfs:label>
-    <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2004/02/skos/core"/>
-    <skos:definition>skos:narrowerTransitive is a transitive superproperty of skos:narrower.</skos:definition>
-    <skos:scopeNote xml:lang="en">By convention, skos:narrowerTransitive is not used to make assertions. Rather, the properties can be used to draw inferences about the transitive closure of the hierarchical relation, which is useful e.g. when implementing a simple query expansion algorithm in a search application.</skos:scopeNote>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
-    <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#noAssertionProperty"/>
-    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#semanticRelation"/>
-    <owl:inverseOf rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
-    <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#broaderTransitive"/>
-    <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
-    <pmb:name>narrowertransitive</pmb:name>
+    <pmb:formOrder>15</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#member">
@@ -411,6 +387,7 @@
     <rdfs:range rdf:nodeID="b3799927661_arc92ccb1"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>member</pmb:name>
+    <pmb:formOrder>16</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:nodeID="b3799927661_arc92ccb1">
@@ -441,6 +418,7 @@
       skos:memberList property is also a value of the skos:member property.</rdfs:comment>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>memberlist</pmb:name>
+    <pmb:formOrder>17</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#mappingRelation">
@@ -456,6 +434,7 @@
     <rdfs:domain rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>mappingrelation</pmb:name>
+    <pmb:formOrder>18</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broadMatch">
@@ -475,6 +454,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>broadmatch</pmb:name>
+    <pmb:formOrder>19</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrowMatch">
@@ -494,6 +474,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>narrowmatch</pmb:name>
+    <pmb:formOrder>20</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#relatedMatch">
@@ -514,6 +495,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>relatedmatch</pmb:name>
+    <pmb:formOrder>21</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#exactMatch">
@@ -535,6 +517,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>exactmatch</pmb:name>
+    <pmb:formOrder>22</pmb:formOrder>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#closeMatch">
@@ -553,6 +536,7 @@
     <pmb:distinctWith rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
     <pmb:datatype rdf:resource="http://www.pmbservices.fr/ontology#resource_selector"/>
     <pmb:name>closematch</pmb:name>
+    <pmb:formOrder>23</pmb:formOrder>
   </rdf:Description>
   
   <!-- ces propriétés sont calculées directement dans PMB
@@ -600,7 +584,7 @@
   <rdf:Description rdf:nodeID="conceptindex">
     <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
     <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
-    <pmb:pound>130</pmb:pound>
+    <pmb:pound>150</pmb:pound>
  	<pmb:field>1</pmb:field>
  	<pmb:subfield>1</pmb:subfield>
     <owl:unionOf rdf:nodeID="conceptindex_1"/>
@@ -734,7 +718,7 @@
     <pmb:pound>130</pmb:pound>
     <owl:unionOf rdf:nodeID="conceptschemeindex_3"/>
   </rdf:Description>  
-  <rdf:Description rdf:nodeID="conceptschemeindex_3">
+  <!-- <rdf:Description rdf:nodeID="conceptschemeindex_3">
     <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
     <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
     <pmb:useProperty rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel"/>
@@ -742,7 +726,7 @@
  	<pmb:field>103</pmb:field>
  	<pmb:subfield>1</pmb:subfield>
     <owl:unionOf rdf:nodeID="conceptschemeindex_4'"/>
-  </rdf:Description>
+  </rdf:Description> -->
   <rdf:Description rdf:nodeID="conceptschemeindex_4">
     <rdf:type rdf:resource="http://www.pmbservices.fr/ontology#indexation"/>
     <owl:onProperty rdf:resource="http://www.w3.org/2004/02/skos/core#inScheme"/>

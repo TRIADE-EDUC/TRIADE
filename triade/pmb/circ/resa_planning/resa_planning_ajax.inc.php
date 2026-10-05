@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: resa_planning_ajax.inc.php,v 1.1 2011-12-23 11:30:43 dgoron Exp $
+// $Id: resa_planning_ajax.inc.php,v 1.3 2020/11/05 10:02:21 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 require_once("$class_path/resa_planning.class.php");
 
 switch($sub){	
-	// Mise Ã  jour de la prÃ©vision
+	// Mise à jour de la prévision
 	case 'update_resa_planning':
 		if ($id && $date) {
-			//On vÃ©rifie la date
+			//On vérifie la date
 			$tresa_date = explode('-', extraitdate($date));
 			if (strlen($tresa_date[2])==1) $tresa_date[2] = '0'.$tresa_date[2];
 			if (strlen($tresa_date[1])==1) $tresa_date[1] = '0'.$tresa_date[1];
@@ -38,6 +38,11 @@ switch($sub){
 		ajax_http_send_response($date_resa);
 		break;
 	default :
+	    switch ($action) {
+	        case "list":
+	            lists_controller::proceed_ajax($object_type, 'resa_planning');
+	            break;
+	    }
 	break;		
 	
 }

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dashboard.inc.php,v 1.4 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: dashboard.inc.php,v 1.4 2019/05/29 12:03:09 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -16,7 +16,7 @@ $dashboard_module_name = substr($current_dashboard,0,strpos($current_dashboard,"
 
 
 if(file_exists($class_path."/dashboard/dashboard_module_".$dashboard_module_name.".class.php")){
-	//on rÃ©cupÃ¨re la classe;
+	//on récupère la classe;
 	require_once($class_path."/dashboard/dashboard_module_".$dashboard_module_name.".class.php");
 	$dashboard_class_name = "dashboard_module_".$dashboard_module_name;
 	$dash = new $dashboard_class_name();

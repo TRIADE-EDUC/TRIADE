@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epires2uni_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: epires2uni_input.class.php,v 1.2 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,18 +19,18 @@ class epires2uni_input extends convert_input {
 		$content="";
 		$index=array();
 		$n=1;
-		//Lecture du fichier d'entrÃ©e
+		//Lecture du fichier d'entrée
 		while (!$stop) {
 			
 			//Recherche de +++
 			$pos_deb=strpos($content,"+++");
 			while (($pos_deb===false)&&(!feof($fi))) {
 				$tmp_content=fread($fi,4096);
-				if($_SESSION["encodage_fic_source"]){//On a forcÃ© l'encodage
+				if($_SESSION["encodage_fic_source"]){//On a forcé l'encodage
 					if(($charset == "utf-8") && ($_SESSION["encodage_fic_source"] == "iso8859")){
-						$tmp_content=utf8_encode($tmp_content);
+						$tmp_content=encoding_normalize::utf8_normalize($tmp_content);
 					}elseif(($charset == "iso-8859-1" && ($_SESSION["encodage_fic_source"] == "utf8"))){
-						$tmp_content=utf8_decode($tmp_content);
+						$tmp_content=encoding_normalize::utf8_decode($tmp_content);
 					}
 				}
 				$content.=$tmp_content;
@@ -40,9 +40,9 @@ class epires2uni_input extends convert_input {
 				$pos_deb=strpos($content,"+++");
 			}
 			
-			//DÃ©but accrochÃ©
+			//Début accroché
 			if ($pos_deb!==false) {
-				//Notice = dÃ©but jusqu'au +++
+				//Notice = début jusqu'au +++
 				$notice=substr($content,0,$pos_deb);
 				$content=substr($content,$pos_deb+3);
 			} else {
@@ -51,13 +51,13 @@ class epires2uni_input extends convert_input {
 				$stop=true;
 			}
 			
-			//Si c'est la premiÃ¨re notice, c'est la ligne d'intitulÃ©s !!
+			//Si c'est la première notice, c'est la ligne d'intitulés !!
 			if ($first) {
 				$cols=explode(";;",$notice);
 				$infos["COLS"]=$cols;
 				$filename=explode("/",$file_in);
 				$filename=explode(".",$filename[count($filename)-1]);
-				//Supression du numÃ©ro origine
+				//Supression du numéro origine
 				$filename=str_replace($origine,"",$filename);
 				$infos["FILENAME"]=$filename[0];
 				$fcols=fopen("$base_path/temp/".$origine."_cols.txt","w+");

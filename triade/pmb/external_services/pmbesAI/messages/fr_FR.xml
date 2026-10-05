@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- messages localisés en français pour la classe de fonctions pmbesMySQL
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.3 2024/01/25 15:07:56 rtigero Exp $ -->
+
+<!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
+<XMLlist>
+    <entry code="getDocnumsContentDescription">Retourne un tableau récupérant le contenu des documents numériques</entry>
+    <entry code="getDocnumsContentReturnDescription">Contenu des documents numériques</entry>
+    <entry code="fromIdDocnums">Identifiant d'exemplaire numérique à partir duquel commencer le tableau</entry>
+    <entry code="getSummariesContentDescription">Retourne un tableau récupérant le résumé des notices</entry>
+    <entry code="getSummariesContentReturnDescription">Contenu du résumé des notices</entry>
+    <entry code="fromIdNotices">Identifiant de notice à partir duquel commencer le tableau</entry>
+    <entry code="idSearchPerso">Identifiant de la recherches prédéfinies</entry>
+</XMLlist>

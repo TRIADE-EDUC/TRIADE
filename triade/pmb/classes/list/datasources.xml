@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: datasources.xml,v 1.2 2024/01/26 09:14:36 dgoron Exp $ -->
+
+<lists>
+	<directory>
+		<path></path>
+		<label>msg:list_ui_objects_not_grouped</label>
+		<list name="campaigns" label="msg:campaigns" />
+		<list name="rss" label="msg:dsi_menu_flux" />
+	</directory>
+	<directory>
+		<path>accounting</path>
+		<label>msg:acquisition_menu_ach</label>
+		<list name="accounting_budgets" label="msg:acquisition_menu_ref_budget" />
+		<list name="accounting_commandes" label="msg:acquisition_menu_ach_cmde" />
+		<list name="accounting_devis" label="msg:acquisition_menu_ach_devi" />
+		<list name="accounting_invoices" label="msg:acquisition_menu_ach_fact" />
+		<list name="accounting_livraisons" label="msg:acquisition_menu_ach_livr" />
+	</directory>
+	<directory>
+		<path>audit</path>
+		<label>msg:audit_titre</label>
+		<list name="audit" label="msg:audit_titre" />
+	</directory>
+	<directory>
+		<path>authorities</path>
+		<label>msg:acquisition_menu_ach</label>
+		<list name="authorities_authors" label="msg:133" />
+		<list name="authorities_categories" label="msg:134" />
+		<list name="authorities_collections" label="msg:136" />
+		<list name="authorities_indexint" label="msg:indexint_menu" />
+		<list name="authorities_publishers" label="msg:135" />
+		<list name="authorities_series" label="msg:333" />
+		<list name="authorities_subcollections" label="msg:137" />
+		<list name="authorities_titres_uniformes" label="msg:aut_menu_titre_uniforme" />
+	</directory>
+	<directory>
+		<path>bannettes</path>
+		<label>msg:dsi_menu_bannettes</label>
+		<list name="bannettes" label="msg:dsi_menu_bannettes" />
+		<list name="equations" label="msg:dsi_menu_equations" />
+	</directory>
+	<directory>
+		<path>bulletins</path>
+		<label>msg:bulletin_query</label>
+		<list name="bulletins" label="msg:bulletin_query" />
+	</directory>
+	<directory>
+		<path>collstate</path>
+		<label>msg:abts_onglet_collstate</label>
+		<list name="collstate" label="msg:abts_onglet_collstate" />
+	</directory>
+	<directory>
+		<path>demandes</path>
+		<label>msg:demandes_menu</label>
+		<list name="demandes" label="msg:demandes_menu" />
+	</directory>
+	<directory>
+		<path>explnum</path>
+		<label>msg:docnum</label>
+		<list name="explnum" label="msg:docnum" />
+	</directory>
+	<directory>
+		<path>groups</path>
+		<label>msg:903</label>
+		<list name="groups" label="msg:903" />
+	</directory>
+	<directory>
+		<path>items</path>
+		<label>msg:editions_datasource_items</label>
+		<list name="items" label="msg:editions_datasource_items" />
+	</directory>
+	<directory>
+		<path>loans</path>
+		<label>msg:1110</label>
+		<list name="loans" label="msg:1110" />
+		<list name="loans_groups" label="msg:1114" />
+		<list name="loans_archives" label="msg:loans_archives" />
+	</directory>
+	<directory>
+		<path>readers</path>
+		<label>msg:1120</label>
+		<list name="readers" label="msg:1120" />
+	</directory>
+	<directory>
+		<path>records</path>
+		<label>msg:editions_datasource_notices</label>
+		<list name="records" label="msg:editions_datasource_notices" />
+	</directory>
+	<directory>
+		<path>recouvr</path>
+		<label>msg:relance_recouvrement</label>
+		<list name="recouvr" label="msg:relance_recouvrement" />
+	</directory>
+	<directory>
+		<path>reservations</path>
+		<label>msg:350</label>
+		<list name="reservations" label="msg:350" />
+	</directory>
+	<directory>
+		<path>scan_requests</path>
+		<label>msg:admin_menu_scan_request</label>
+		<list name="scan_requests" label="msg:admin_menu_scan_request" />
+	</directory>
+	<directory>
+		<path>statopac</path>
+		<label>msg:stat_opac_menu</label>
+		<list name="statopac" label="msg:stat_opac_menu" />
+	</directory>
+	<directory>
+		<path>suggestions</path>
+		<label>msg:acquisition_menu_sug</label>
+		<list name="suggestions" label="msg:acquisition_menu_sug" />
+	</directory>
+	<directory>
+		<path>transferts</path>
+		<label>msg:transferts_edition_titre</label>
+		<list name="transferts" label="msg:transferts_edition_titre" />
+	</directory>
+	<directory>
+		<path>users</path>
+		<label>msg:25</label>
+		<list name="users" label="msg:25" />
+	</directory>
+</lists>

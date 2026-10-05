@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: getgif.php,v 1.11 2018-02-21 16:28:17 dgoron Exp $
+// $Id: getgif.php,v 1.14.10.2 2025/05/06 13:05:04 dgoron Exp $
 
 require_once("./includes/apache_functions.inc.php");
 
-//on ajoute des entÃªtes qui autorisent le navigateur Ã  faire du cache...
+//on ajoute des entêtes qui autorisent le navigateur à faire du cache...
 $headers = getallheaders();
-//une journÃ©e
+//une journée
 $offset = 60 * 60 * 24 ;
 if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) <= time())) {
 	header('Last-Modified: '.$headers['If-Modified-Since'], true, 304);
@@ -24,27 +24,33 @@ require_once($base_path."/includes/error_report.inc.php") ;
 require_once($base_path."/includes/global_vars.inc.php");
 require_once($base_path.'/includes/opac_config.inc.php');
 
-// rÃ©cupÃ©ration paramÃ¨tres MySQL et connection Ã  la base
+// récupération paramètres MySQL et connection à la base
 require_once($base_path.'/includes/opac_db_param.inc.php');
 require_once($base_path.'/includes/opac_mysql_connect.inc.php');
 $dbh = connection_mysql();
 
 require_once($base_path."/includes/misc.inc.php");
 
-//Sessions !! Attention, ce doit Ãªtre impÃ©rativement le premer include (Ã  cause des cookies)
+//Sessions !! Attention, ce doit être impérativement le premer include (à cause des cookies)
 require_once($base_path."/includes/session.inc.php");
 require_once($base_path.'/includes/start.inc.php');
 
 session_write_close();
+
+global $optionnel, $nomgif, $opac_notices_depliable_plus, $opac_notices_depliable_moins;
 
 if(!isset($optionnel) || !$optionnel){//Dans le cas ou l'image est obligatoire (si elle sert de lien cliquable par exemple)
 	if($nomgif == "plus"){
 		$chemin=get_url_icon("plus.gif");
 	}elseif($nomgif == "moins"){
 		$chemin=get_url_icon("minus.gif");
+	} else {
+	    $chemin='';
 	}
-	$content_type_gif="Content-Type: image/gif";
-	$fp=@fopen($chemin, "rb");
+	if($chemin){
+    	$content_type_gif="Content-Type: image/gif";
+    	$fp=@fopen($chemin, "rb");
+	}
 }else{
 	$chemin="";
 	$content_type_gif="Content-Type: image/png";
@@ -72,7 +78,10 @@ if($chemin){
 		fclose($fp) ;
 		$fp=$fp2;
 		if(function_exists("finfo_open") && function_exists("finfo_file") && ($tmp=finfo_file(finfo_open(FILEINFO_MIME_TYPE), $chemin))){
-			$content_type_gif="Content-Type: ".$tmp;
+		    if($tmp == 'image/svg') {
+		        $tmp = 'image/svg+xml';
+		    }
+		    $content_type_gif="Content-Type: ".$tmp;
 		}elseif(function_exists("mime_content_type") && ($tmp=mime_content_type($chemin))){
 			$content_type_gif="Content-Type: ".$tmp;
 		}

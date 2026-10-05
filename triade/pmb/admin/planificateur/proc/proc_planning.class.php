@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: proc_planning.class.php,v 1.3 2017-07-27 12:38:28 dgoron Exp $
+// $Id: proc_planning.class.php,v 1.4.8.1 2025/04/25 14:16:44 qvarin Exp $
 
 global $class_path, $include_path;
 require_once($include_path.'/fields.inc.php');
@@ -15,9 +15,9 @@ if(!defined('EXTERNAL')) {define ('EXTERNAL',2);}
 
 class proc_planning extends scheduler_planning {
 
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
-		global $dbh, $msg, $charset;
+		global $msg, $charset;
 		global $subaction,$aff_list;
 		global $pmb_procedure_server_credentials, $pmb_procedure_server_address;
 
@@ -64,7 +64,7 @@ class proc_planning extends scheduler_planning {
 			}
 		</script>";
 
-		// ProcÃ©dure interne ou ProcÃ©dure distante ??
+		// Procédure interne ou Procédure distante ??
 		$form_task .= "
 		<div class='row'>
 			<div class='colonne3'>
@@ -77,9 +77,9 @@ class proc_planning extends scheduler_planning {
 		</div>
 		<div class='row'>&nbsp;</div>";
 
-		//procÃ©dure interne
+		//procédure interne
 		if ($type_proc == 'internal') {
-			//Choix d'une procÃ©dure
+			//Choix d'une procédure
 			$form_task .= "
 		<div class='row'>
 			<div class='colonne3'>
@@ -89,7 +89,7 @@ class proc_planning extends scheduler_planning {
 				<select id='form_procs' class='saisie-60em' name='form_procs' onchange='reload(this);'>
 					<option value='' >".$this->msg['planificateur_proc_choice']."</option>";
 						$requete = "SELECT idproc, name FROM procs order by name";
-						$result = pmb_mysql_query($requete,$dbh);
+						$result = pmb_mysql_query($requete);
 						while ($row = pmb_mysql_fetch_object($result)) {
 							$form_task .=
 					"<option value='".$row->idproc."' ".($form_procs == $row->idproc ? 'selected=\'selected\'' : '' ).">".$row->name."</option>";
@@ -122,7 +122,7 @@ class proc_planning extends scheduler_planning {
 			</div>
 			<div class='colonne_suite'>";
 
-			//ProcÃ©dures Externes
+			//Procédures Externes
 			$pmb_procedure_server_credentials_exploded = explode("\n", $pmb_procedure_server_credentials);
 			if ($pmb_procedure_server_address && (count($pmb_procedure_server_credentials_exploded) == 2)) {
 				$aremote_procedure_client = new remote_procedure_client($pmb_procedure_server_address, trim($pmb_procedure_server_credentials_exploded[0]), trim($pmb_procedure_server_credentials_exploded[1]));
@@ -166,11 +166,11 @@ class proc_planning extends scheduler_planning {
 						$the_procedure = $procedure['procedure'];
 						if ($the_procedure->params && ($the_procedure->params != "NULL")) {
 							$sql = "CREATE TEMPORARY TABLE remote_proc LIKE procs";
-							pmb_mysql_query($sql, $dbh) or die(pmb_mysql_error());
+							pmb_mysql_query($sql) or die(pmb_mysql_error());
 
 							$sql = "INSERT INTO remote_proc (idproc, name, requete, comment, autorisations, parameters, num_classement) VALUES (0, '".pmb_mysql_escape_string($the_procedure->name)."', '".pmb_mysql_escape_string($the_procedure->sql)."', '".pmb_mysql_escape_string($the_procedure->comment)."', '', '".pmb_mysql_escape_string($the_procedure->params)."', 0)";
-							pmb_mysql_query($sql, $dbh) or die(pmb_mysql_error());
-							$idproc = pmb_mysql_insert_id($dbh);
+							pmb_mysql_query($sql) or die(pmb_mysql_error());
+							$idproc = pmb_mysql_insert_id();
 
 							$hp=new parameters($idproc,"remote_proc");
 							if (preg_match_all("|!!(.*)!!|U",$hp->proc->requete,$query_parameters)) {
@@ -230,7 +230,7 @@ class proc_planning extends scheduler_planning {
 
 	public function make_serialized_task_params() {
 
-    	global $dbh, $type_proc, $form_procs, $form_procs_remote;
+    	global $type_proc, $form_procs, $form_procs_remote;
     	global $tocsv_checked, $tocsv_sep, $tocsv_filepath, $tocsv_enclosure;
     	global $pmb_procedure_server_credentials, $pmb_procedure_server_address;
 
@@ -238,7 +238,7 @@ class proc_planning extends scheduler_planning {
 
 		$t['type_proc'] = stripslashes($type_proc);
 		$t['form_procs'] = stripslashes($form_procs);
-		$t['form_procs_remote'] = stripslashes($form_procs_remote);
+		$t['form_procs_remote'] = stripslashes($form_procs_remote ?? '');
 
 		$t['tocsv']['checked'] = $tocsv_checked;
 		$t['tocsv']['sep'] = stripslashes($tocsv_sep);
@@ -259,11 +259,11 @@ class proc_planning extends scheduler_planning {
 					$the_procedure = $procedure['procedure'];
 					if ($the_procedure) {
 						$sql = "CREATE TEMPORARY TABLE remote_proc LIKE procs";
-						pmb_mysql_query($sql, $dbh) or die(pmb_mysql_error());
+						pmb_mysql_query($sql) or die(pmb_mysql_error());
 
 						$sql = "INSERT INTO remote_proc (idproc, name, requete, comment, autorisations, parameters, num_classement) VALUES (0, '".pmb_mysql_escape_string($the_procedure->name)."', '".pmb_mysql_escape_string($the_procedure->sql)."', '".pmb_mysql_escape_string($the_procedure->comment)."', '', '".pmb_mysql_escape_string($the_procedure->params)."', 0)";
-						pmb_mysql_query($sql, $dbh) or die(pmb_mysql_error());
-						$idproc = pmb_mysql_insert_id($dbh);
+						pmb_mysql_query($sql) or die(pmb_mysql_error());
+						$idproc = pmb_mysql_insert_id();
 
 						$hp=new parameters($idproc,"remote_proc");
 						$t['envt']=$hp->make_serialized_parameters_params();

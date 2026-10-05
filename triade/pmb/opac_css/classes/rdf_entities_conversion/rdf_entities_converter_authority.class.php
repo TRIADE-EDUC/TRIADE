@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_converter_authority.class.php,v 1.1 2018-09-24 13:39:21 tsamson Exp $
+// $Id: rdf_entities_converter_authority.class.php,v 1.2 2020/11/26 13:29:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -35,5 +35,26 @@ class rdf_entities_converter_authority extends rdf_entities_converter {
             ),
         ));
         return $this->linked_entities;
+    }
+    
+    public function get_thumbnail_url($authority_type)
+    {
+        if (empty($authority_type) || empty($this->entity_id)) {
+            return false;
+        }
+        
+        $thumbnail_url = '';
+        
+        $query = 'SELECT 1 FROM authorities WHERE type_object = ' . $authority_type .' AND num_object = ' . $this->entity_id;
+        $result = pmb_mysql_query($query);
+        if (pmb_mysql_num_rows($result)) {
+            $query = 'SELECT thumbnail_url FROM authorities WHERE type_object = ' . $authority_type .' AND num_object = ' . $this->entity_id;
+            $result = pmb_mysql_query($query);
+            if (pmb_mysql_num_rows($result)) {
+                $thumbnail_url = pmb_mysql_result($result, 0, 0);
+            }
+        }
+        
+        return new onto_assertion($this->uri, "http://www.pmbservices.fr/ontology#thumbnail_url", $thumbnail_url, "http://www.w3.org/2000/01/rdf-schema#Literal", array('type'=>"literal"));
     }
 }

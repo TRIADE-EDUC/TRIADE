@@ -1,11 +1,11 @@
 <?php
-      session_start();
+session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,27 +32,24 @@
 <title>Administration du calendrier événement</title>
 </head>
 <body id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
-<?php include("./librairie_php/lib_licence.php"); ?>
-<?php
+<?php 
+include("./librairie_php/lib_licence.php"); 
 include_once('librairie_php/db_triade.php');
 if (CALPROF == "oui") {
         validerequete("3");
 }else{
         validerequete("2");
 }
-$cnx=cnx();
-if (isset($_POST[creat])) {
-	$cr=suppression_evenement($_POST[saisie_id_supp]) ;
-        if($cr):
+if (isset($_POST['creat'])) {
+	$cr=suppression_evenement($_POST['saisie_id_supp']) ;
+        if($cr) {
               // alertJs("Entrée supprimée --  Service Triade");
-		history_cmd($_SESSION[nom],"SUPPRESSION","EVENEMENT");
-        else:
+		history_cmd($_SESSION['nom'],"SUPPRESSION","EVENEMENT");
+	}else{
                 error(0);
-        endif;
+	}
 }
 
-?>
-<?php
 $saisiejour=$_GET["saisiejour"];
 $saisiemois=$_GET["saisiemois"];
 $saisieannee=$_GET["saisieannee"];
@@ -89,10 +86,10 @@ $saisieannee=$_GET["saisieannee"];
 
 </UL>
 <center>
-<table width=90% border=1 bordercolor=#000000">
+<table width=90% border=1 bordercolor=#000000" style='border-collapse: collapse;' >
 <tr >
-<TD bgcolor=yellow align=center><?php print LANGCALEN1?></TD>
-<TD bgcolor=yellow align=center width=5%><?php print LANGBT50?></TD>
+<TD bgcolor=yellow align=center>&nbsp;<?php print LANGCALEN1?>&nbsp;</TD>
+<TD bgcolor=yellow align=center width=5%>&nbsp;<?php print LANGBT50?>&nbsp;</TD>
 </TR>
 
 <?php
@@ -100,7 +97,7 @@ $data=affEvenement();
 
 $tab_j=array();
 // $data : tab bidim - soustab 3 champs
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
 {
         $date_recup_jma=dateFormBase($date);
 	if ($date_recup_jma == $data[$i][1]) {

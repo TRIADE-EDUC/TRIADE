@@ -33,7 +33,7 @@
 
   include("lang/$APPLI_LANGUE.php");
 
-  $DB_CX->DbQuery("SELECT lib_detail FROM ${PREFIX_TABLE}libelle WHERE lib_id=".$id);
+  $DB_CX->DbQuery("SELECT lib_detail FROM {$PREFIX_TABLE}libelle WHERE lib_id=".$id);
   if ($enr = $DB_CX->DbNextRow()) {
     $detail = str_replace(chr(13),"",str_replace(chr(10),"\\n",addslashes($enr['lib_detail'])));
     if ($AUTORISE_HTML && $AUTORISE_FCKE) {

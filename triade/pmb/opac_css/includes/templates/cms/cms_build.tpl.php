@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_build.tpl.php,v 1.6 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: cms_build.tpl.php,v 1.8 2023/11/30 10:43:56 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -27,7 +27,7 @@ function cms_gen_objet_css($name){
 }
 
 $cms_edit_css="
-	<script type='text/javascript'>
+	<script>
 		
 		function cms_change_css_format_number(obj,id_number){
 			obj_number=document.getElementById(id_number);
@@ -188,7 +188,7 @@ $cms_objet_type_selection="
 	</h3>
 	<div class='row'>
 	
-		<table border='0' style='width:100%' cellspacing='0'>
+		<table style='border:0px; width:100%; border-spacing: 0px'>
 		<tr>
 			<td>"
 				.$msg["cms_dragable_type"]."		
@@ -219,7 +219,7 @@ $cms_objet_type_selection="
 	";
 				
 $cms_edit_objet="	
-	<script type='text/javascript'>
+	<script>
 	
 		function cms_opac_loaded(){
 			document.getElementById('cms_drag_activate_button').setAttribute('active','1')
@@ -262,7 +262,7 @@ $cms_edit_objet="
 
 ";	
 $cms_build_cadres_tpl="
-	<script type='text/javascript'>
+	<script>
 		var cms_cadre_portail_list=new Array();
 		!!cms_cadre_portail_list!!
 	</script>
@@ -285,7 +285,7 @@ $cms_build_cadre_tpl_item="
 
 $cms_build_pages_tpl="
 
-<script type='text/javascript'>
+<script>
     dojo.require('dijit.form.Button');
     dojo.require('dijit.Dialog');    
     dojo.require('dojo.parser');
@@ -339,7 +339,7 @@ $cms_build_pages_ajax_tpl="
 	!!items!!
 ";
 $cms_build_modules_tpl="
-  <script type='text/javascript'>
+  <script>
         function cms_build_load_module(module,action,id){
             if(!module.match('cms_module_')){
                  module = 'cms_module_'+module;
@@ -388,7 +388,7 @@ $cms_build_block_tpl="
 <script src='./javascript/cms/cms_drop.js'></script>
 <script src='./javascript/cms/cms_pages.js'></script>
 
-<script type='text/javascript'>
+<script>
 	dojo.require('dojo.parser');
 	dojo.require('dijit.layout.BorderContainer');
 	dojo.require('dijit.layout.TabContainer');
@@ -415,7 +415,7 @@ $cms_build_block_tpl="
 								<h3>".$msg["cms_edit_sel_objet_list"]."</h3>
 								</div>		
 								<div class='row' id='cms_edit_sel_objet_list'>
-									<table id='cms_edit_sel_objet_list_table' border='0' style='width:100%' cellspacing='0'>
+									<table id='cms_edit_sel_objet_list_table' style='border:0px; width:100%; border-spacing: 0px'>
 									</table>
 								</div>		
 								<div class='row'>
@@ -428,7 +428,7 @@ $cms_build_block_tpl="
 									<h3>".$msg["cms_edit_sel_cadre_list"]."</h3>
 								</div>
 								<div class='row' id='cms_edit_sel_cadre_list'>
-									<table id='cms_edit_sel_cadre_list_table' border='0' style='width:100%' cellspacing='0'>
+									<table id='cms_edit_sel_cadre_list_table' style='border:0px; width:100%; border-spacing: 0px'>
 									</table>
 								</div>			
 								<div class='row'>
@@ -452,7 +452,7 @@ $cms_build_block_tpl="
 	</div>
 </div>	
 
-<script type='text/javascript'>
+<script>
 	var cms_contener_list=new Array();
 	var cms_zone_list=new Array();
 	var cms_objet_list=new Array();

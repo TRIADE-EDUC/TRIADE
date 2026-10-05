@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions_agroparistech.tpl.php,v 1.2 2019-05-27 13:21:32 ngantier Exp $
+// $Id: suggestions_agroparistech.tpl.php,v 1.3 2020/11/04 11:01:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -54,5 +54,3 @@ $sug_list_form.="
 	<!-- nav_bar -->
 </div>
 ";
-
-?>

@@ -1,28 +1,27 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_marc_list.class.php,v 1.4 2017-12-08 09:32:10 jpermanne Exp $
-  
+// $Id: selector_marc_list.class.php,v 1.7.4.1 2025/01/16 10:24:11 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 
 class selector_marc_list extends selector {
-	
+
 	protected $search;
-	
+
 	protected $search_xml_file;
-	
+
 	protected $search_field_id;
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 	}
 
 	public function proceed() {
-		global $page;
-	
 		print $this->get_sel_header_template();
 		print $this->get_js_script();
 		if(!$this->user_input) {
@@ -31,7 +30,7 @@ class selector_marc_list extends selector {
 		print $this->get_display_list();
 		print $this->get_sel_footer_template();
 	}
-	
+
 	protected function get_marc_list_instance() {
 		if($this->search_field_id) {
 			if(!isset($this->search)) {
@@ -43,7 +42,7 @@ class selector_marc_list extends selector {
 			}
 		}
 	}
-	
+
 	protected function filter_from_search($marc_list_instance) {
 		$p=explode('_', $this->search_field_id);
 		if($p[0] == 'f') {
@@ -52,39 +51,32 @@ class selector_marc_list extends selector {
 		}
 		return $marc_list_instance;
 	}
-	
+
 	protected function get_display_list() {
-		global $nb_per_page;
-		global $page;
 		global $letter;
 		global $msg;
-		
+
 		$display_list = '';
-		if(!$page) {
-			$debut = 0;
-		} else {
-			$debut = ($page-1)*$nb_per_page;
-		}
 		$marc_list_instance = $this->get_marc_list_instance();
 		if(isset($this->search)) {
 			$marc_list_instance = $this->filter_from_search($marc_list_instance);
 		}
 		$amarc_list=$marc_list_instance->table;
-		
+
 		$special = false;
 		$favorite = false;
 		$alphabet = array();
-		
-		//attention pour le tri aux valeurs accentuÃ©es + minuscules/majuscules
+
+		//attention pour le tri aux valeurs accentuées + minuscules/majuscules
 		$tmp=array();
-		$tmp=array_map("convert_diacrit",$amarc_list);//On enlÃ¨ve les accents
+		$tmp=array_map("convert_diacrit",$amarc_list);//On enlève les accents
 		$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 		asort($tmp);//Tri sur les valeurs en majuscule sans accent
 		foreach ( $tmp as $key => $value ) {
-			$tmp[$key]=$amarc_list[$key];//On reprend les bons couples clÃ© / libellÃ©
+			$tmp[$key]=$amarc_list[$key];//On reprend les bons couples clé / libellé
 		}
 		$amarc_list=$tmp;
-		
+
 		foreach($amarc_list as $key => $val) {
 			if ($key>=900) {
 				$special=true;
@@ -94,17 +86,17 @@ class selector_marc_list extends selector {
 			if (isset($marc_list_instance->tablefav[$key])) $favorite=true;
 		}
 		$alphabet = array_unique($alphabet);
-		
+
 		if(!$letter) {
 			if ($favorite) {
 				$letter = "Fav";
-			} elseif ($special) { 
+			} elseif ($special) {
 				$letter="My";
 			} else {
 				$letter = "a";
 			}
 		}
-			
+
 		// affichage d'un sommaire par lettres
 		$display_list .= "<div class='row'>";
 		if ($favorite) {
@@ -120,18 +112,19 @@ class selector_marc_list extends selector {
 			else
 				$display_list .= "<strong><u>#</u></strong> ";
 		}
-		foreach($alphabet as $dummykey=>$char) {
-			
+		foreach($alphabet as $char) {
+
 			//attention accents + maj/minuscules sur pmb_grep_preg
 			$tmp=array();
-			$tmp=array_map("convert_diacrit",$amarc_list);//On enlÃ¨ve les accents
+			$tmp=array_map("convert_diacrit",$amarc_list);//On enlève les accents
 			$tmp=array_map("strtoupper",$tmp);//On met en majuscule
-			
+
 			$present = pmb_preg_grep("/^$char/i", $tmp);
-			if(sizeof($present) && strcasecmp($letter, $char))
+			if (!empty($present) && strcasecmp($letter, $char)) {
 				$display_list .= "<a href='".static::get_base_url()."&letter=$char'>$char</a> ";
-			else if(!strcasecmp($letter, $char))
+			} else if(!strcasecmp($letter, $char)) {
 				$display_list .= "<strong><u>$char</u></strong> ";
+			}
 		}
 		$display_list .= "</div><hr />";
 		$display = array();
@@ -140,20 +133,20 @@ class selector_marc_list extends selector {
 				$display[] = $this->get_display_element($index, $value);
 			}
 		}
-		
+
 		$display_list .= "<div class='row'>";
-		foreach($display as $dummykey=>$link) {
+		foreach($display as $link) {
 			$display_list .= $link;
 		}
 		$display_list .= "</div>";
 		return $display_list;
 	}
-	
+
 	protected function get_display_element($index='', $value='') {
 		global $charset;
 		global $caller;
 		global $callback;
-		
+
 		$display = "
 			<div class='row'>
 				<div class='colonne2' style='width: 80%;'>
@@ -168,12 +161,12 @@ class selector_marc_list extends selector {
 
 	public static function get_params_url() {
 		global $search_xml_file, $search_field_id;
-		
+
 		$params_url = parent::get_params_url();
 		$params_url .= ($search_xml_file ? "&search_xml_file=".$search_xml_file : "").($search_field_id ? "&search_field_id=".$search_field_id : "");
 		return $params_url;
 	}
-	
+
 	public function get_title() {
 		$title = "";
 		if($this->search_field_id) {
@@ -185,11 +178,11 @@ class selector_marc_list extends selector {
 		}
 		return $title;
 	}
-	
+
 	public function set_search_xml_file($search_xml_file) {
 		$this->search_xml_file = $search_xml_file;
 	}
-	
+
 	public function set_search_field_id($search_field_id) {
 		$this->search_field_id = $search_field_id;
 	}

@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,6 +25,7 @@ include_once("./librairie_php/lib_get_init.php");
 $id=php_ini_get("safe_mode");
 if ($id != 1) {	set_time_limit(900); }
 
+
 ?>
 <HTML>
 <HEAD>
@@ -41,11 +42,11 @@ if ($id != 1) {	set_time_limit(900); }
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -84,7 +85,7 @@ $recupNoteNotanet=$_POST["recupNoteNotanet"];
 config_param_ajout($recupNoteNotanet,"recupNoteNotanet");
 
 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 	// recupe du nom de la classe
 	$data=chercheClasse($_POST["saisie_classe"]);
@@ -110,7 +111,7 @@ if (count($valeur)) {
 	// recuperation des coordonnées
 	// de l etablissement
 	$data=visu_param(); // nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	       $nom_etablissement=trim(TextNoAccent($data[$i][0]));
 	       $adresse=trim($data[$i][1]);
 	       $postal=trim($data[$i][2]);
@@ -140,7 +141,7 @@ if (count($valeur)) {
 	$merge=new FPDF_Merge();
 
 	$eleveT=recupEleve($idClasse); // recup liste eleve
-	$nbEleveT=count($eleveT);
+	$nbEleveT=countTriade($eleveT);
 	for($j=0;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		$nomEleve=ucwords($eleveT[$j][0]);
@@ -179,7 +180,7 @@ if (count($valeur)) {
 
 		$XX=20;
 		$photo=recup_photo_bulletin();
-		if (count($photo) > 0) {
+		if (countTriade($photo) > 0) {
 			$logo="./data/image_pers/".$photo[0][0];
 			if (file_exists($logo)) {
 				$xlogo=$largeurlogo;
@@ -319,7 +320,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Français",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -347,7 +348,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 		
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") {  $noteT=$noteT + $note; $nb++; }
@@ -388,7 +389,7 @@ if (count($valeur)) {
 
 		$tab=rechercheMatiereBrevet("Mathématiques",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -416,7 +417,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 		
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -459,7 +460,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Langue vivante 1",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if (!verifMatiereLangue($idEleve,$idMatiere,'LV1',$idClasse)) { continue; } 
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -488,7 +489,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -528,7 +529,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Prévention Santé",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if ($examenPREV_SANTE_ENV == "oui") {
 				if ( "biologie" == strtolower(chercheMatiereNomBrevet($idMatiere))) {
@@ -564,7 +565,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if ($examenPREV_SANTE_ENV == "oui") {
 				if ( "biologie" == strtolower(chercheMatiereNomBrevet($idMatiere))) {
@@ -613,7 +614,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Prevention Sante Environnement",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -641,7 +642,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 		
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -682,7 +683,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Education physique et sportive",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if ($examenEPS == "oui") {
 				$note=moyenneEleveMatiereBrevetViaExamen($idEleve,$idMatiere,$dateDebut,$dateFin,"Brevet EPS");
@@ -714,7 +715,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if ($examenEPS == "oui") {
 				$note=moyeMatGenBrevetExamen($idMatiere,$dateDebut,$dateFin,$idClasse,"Brevet EPS");
@@ -758,7 +759,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Education Socioculturelle",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -786,7 +787,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -828,7 +829,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Sciences Biologiques",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -856,7 +857,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -897,7 +898,7 @@ if (count($valeur)) {
 		
 		$tab=rechercheMatiereBrevet("Techno Secteur Agricoles",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -907,6 +908,7 @@ if (count($valeur)) {
 			}
 		}
 		if ($nb > 0) $note = $noteT / $nb ;
+		$note = (float) $note;
 		$note=$note*3;
 		$codeEpreuve=recupCodeEpreuve($serie,"TechnoAgricole");
 		if ($recupNoteNotanet == 1) $note=RecupNoteBrevet($INE,$codeEpreuve,"brevetcollege",$idEleve);
@@ -926,7 +928,7 @@ if (count($valeur)) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -1025,7 +1027,7 @@ if ($viescolaire == 1) {
 	
 		$tab=rechercheMatiereBrevet("",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			if (!verifMatiereLangue($idEleve,$idMatiere,'OPT',$idClasse)) { continue; } 
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
@@ -1053,7 +1055,7 @@ if ($viescolaire == 1) {
 		$noteEleve=$note;
 
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }
@@ -1104,7 +1106,7 @@ if ($viescolaire == 1) {
 
 		$tab=rechercheMatiereBrevet("Histoire - Géographie - Civique",$idClasse);
 		$nb=0;$noteT="";$note="";$moyenMatiere="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyenneEleveMatiereBrevet($idEleve,$idMatiere,$dateDebut,$dateFin);
 			if ($note != "") { 
@@ -1132,7 +1134,7 @@ if ($viescolaire == 1) {
 		$noteEleve=$note;
 		
 		$nb=0;$noteT="";$note="";
-		for($i=0;$i<count($tab);$i++) {
+		for($i=0;$i<countTriade($tab);$i++) {
 			$idMatiere=$tab[$i][0];
 			$note=moyeMatGenBrevet($idMatiere,$dateDebut,$dateFin,$idClasse);
 			if ($note != "") { $noteT=$noteT + $note; $nb++; }

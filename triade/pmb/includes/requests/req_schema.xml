@@ -1443,7 +1443,7 @@
             <field name="num_notice" id="1095-2" desc="Identifiant de la notice" type="BIGINT" length="20" precision="" unsigned="1" autoincrement="" enum="" defval="'0'"/>
             <field name="linked_notice" id="1095-3" desc="Identifiant de la notice liée" type="BIGINT" length="20" precision="" unsigned="1" autoincrement="" enum="" defval="'0'"/>
             <field name="relation_type" id="1095-4" desc="Type de relation entre la notice liée et la notice d'origine " type="CHAR" length="1" precision="" unsigned="" autoincrement="" enum="" defval="''"/>
-            <field name="rank" id="1095-5" desc="Numéro d'ordre des notices liées" type="INTEGER" length="11" precision="" unsigned="" autoincrement="" enum="" defval="'0'"/>
+            <field name="ranking" id="1095-5" desc="Numéro d'ordre des notices liées" type="INTEGER" length="11" precision="" unsigned="" autoincrement="" enum="" defval="'0'"/>
          </fields>
       </table>
       <table name="pclassement" id="1096" desc="Plans de classement" pkid="2">

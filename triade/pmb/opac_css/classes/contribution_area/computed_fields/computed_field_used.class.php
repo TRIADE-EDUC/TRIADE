@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: computed_field_used.class.php,v 1.6 2019-03-06 11:25:02 tsamson Exp $
+// $Id: computed_field_used.class.php,v 1.7 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -15,7 +15,7 @@ class computed_field_used {
 	protected $id;
 	
 	/**
-	 * Identifiant unique du champ dans l'arbre des scÃ©narios
+	 * Identifiant unique du champ dans l'arbre des scénarios
 	 */
 	protected $field_num;
 	
@@ -26,19 +26,19 @@ class computed_field_used {
 	protected $value;
 	
 	/**
-	 * Identifiant du champ calculÃ© associÃ©
+	 * Identifiant du champ calculé associé
 	 * @var int
 	 */
 	protected $origine_field_num;
 	
 	/**
-	 * Valeurs associÃ©es Ã  l'emprunteur connectÃ©
+	 * Valeurs associées à l'emprunteur connecté
 	 * @var array
 	 */
 	protected static $empr_values;
 	
 	public function __construct($id) {
-		$id*= 1;
+		$id = intval($id);
 		$this->id = $id;
 		$this->fetch_data();
 	}

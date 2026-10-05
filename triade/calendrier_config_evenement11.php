@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,10 @@
         <META http-equiv="expires" content = -1>
         <meta name="Copyright" content="Triade©, 2001">
  <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<style>
+.cal-wrap{margin:4px 0;font-family:Arial,sans-serif}.cal-title{font-size:12px;font-weight:700;color:#080A66;text-align:center;padding:6px 4px;background:#f0f2fa;border:1px solid #dde0f0;border-bottom:none;border-radius:6px 6px 0 0}.cal-table{border-collapse:collapse;width:100%;background:#fff;border:1px solid #dde0f0;border-radius:0 0 6px 6px}.cal-head th{background:#080A66;color:#fff;font-size:11px;font-weight:600;padding:4px 2px;text-align:center}.cal-day{text-align:center;padding:3px 2px;font-size:11px;color:#333;border:1px solid #f0f2fa}.cal-day a{color:#080A66;text-decoration:none;font-weight:600}.cal-day-today{display:inline-flex;align-items:center;justify-content:center;background:#080A66;color:#fff;border-radius:50%;width:20px;height:20px;font-weight:700}.cal-day-event{background:#e8f5e9}.cal-day-dst{background:#fce4ec}.cal-day-ferie{background:#e8eaf6;color:#5c35be}.cal-year-grid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:8px}.cal-info{margin-top:6px;padding:10px 14px;background:#fffbe6;border:1px solid #f5c842;border-radius:6px;font-size:12px;color:#5a4000;line-height:1.6}
+</style>
  <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
        <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
        <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
@@ -41,7 +45,7 @@
         $cnx=cnx();
         error($cnx);
         ?>
-        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+        <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 
              <!-- // texte du menu qui defile   -->
                <?php include("./librairie_php/lib_defilement.php"); ?>
@@ -53,7 +57,7 @@
          <div align='center'><?php top_h(); ?>
              <!--  -->
 
-             <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+             <SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
      <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
      <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCALEN6?></font></b></td>
      </tr>
@@ -68,6 +72,7 @@
         // On passe en paramètre le numéro du mois et l'année
         annee(<?php print "$saisie_annee_choix"?>);
       //--></SCRIPT>
+<div id="cal-info" class="cal-info" style="display:none;margin:8px 0"></div>
 <?php
 $saisie_annee_plus=$saisie_annee_choix;
 $saisie_annee_plus++;
@@ -85,17 +90,17 @@ $saisie_annee_moin--;
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

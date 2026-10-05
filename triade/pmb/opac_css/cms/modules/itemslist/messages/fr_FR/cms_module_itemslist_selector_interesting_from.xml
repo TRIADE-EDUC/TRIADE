@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_itemslist_selector_interesting_from.xml,v 1.1 2022/05/03 09:30:26 dgoron Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_itemslist_selector_interesting_from">Items intéressants seulement</entry>
+</XMLlist>

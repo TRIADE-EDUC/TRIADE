@@ -25,6 +25,7 @@ if ($email == '')
 	<script type="text/javascript" src="./librairie_js/clickdroit.js"></script>
 	<script type="text/javascript" src="./librairie_js/function.js"></script>
 	<script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
+	<script type="text/javascript" src="./librairie_js/logo.js"></script>
   <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
   <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 	<?php
@@ -54,7 +55,7 @@ if ($email == '')
 	        print "<script type=text/javascript src='librairie_js/languefrfunction-depart.js'></script>\n";
         	include_once("./librairie_php/langue-text-fr.php");
 	}
-	if (POPUP == "non") {
+	if ((defined("POPUP")) && (POPUP == "non")) {
 		print "<script type='text/javascript'>var popup='non';</script>\n";
 	}else {
 		print "<script type='text/javascript'>var popup='oui';</script>\n";

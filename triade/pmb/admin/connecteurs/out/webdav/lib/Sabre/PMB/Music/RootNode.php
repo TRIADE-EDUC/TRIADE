@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: RootNode.php,v 1.4 2016-03-22 08:12:16 vtouchard Exp $
+// $Id: RootNode.php,v 1.4 2016/03/22 08:12:16 vtouchard Exp $
 namespace Sabre\PMB\Music;
 
 class RootNode extends Collection {

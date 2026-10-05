@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_sphinx_authperso.class.php,v 1.4 2019-05-27 12:55:59 arenou Exp $
+// $Id: searcher_sphinx_authperso.class.php,v 1.4 2019/05/27 12:55:59 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -37,7 +37,7 @@ class searcher_sphinx_authperso extends searcher_sphinx_authorities {
 		} elseif ($id_authperso) {
 		    return $sphinx_indexes_prefix.$this->index_name.'_'.$id_authperso.'_'.$lang.','.$sphinx_indexes_prefix.$this->index_name.'_'.$id_authperso;
 		}
-		// On cherche dans toutes les autoritÃ©s persos
+		// On cherche dans toutes les autorités persos
 		$indexes = '';
 		$result = pmb_mysql_query('select id_authperso from authperso');
 		if (pmb_mysql_num_rows($result)) {

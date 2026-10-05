@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: authorities.xml,v 1.24 2018-11-23 16:31:07 arenou Exp $ -->
+<!-- $Id: authorities.xml,v 1.31 2021/10/14 13:28:10 gneveu Exp $ -->
 <pmbtabs>
 	<url_target>autorites.php?categ=search</url_target>
 	<default_mode>0</default_mode>
 	<default_selector_mode>9</default_selector_mode>
+	
+	<selector_mode>
+		  <mode>
+		    <type>authors</type>
+		    <value>1</value>
+		  </mode>
+		  <mode>
+		    <type>categories</type>
+		    <value>2</value>
+		  </mode>
+		  <mode>
+		    <type>publishers</type>
+		    <value>3</value>
+		  </mode>
+		  <mode>
+		    <type>collections</type>
+		    <value>4</value>
+		  </mode>
+		  <mode>
+		    <type>subcollections</type>
+		    <value>5</value>
+		  </mode>
+		  <mode>
+		    <type>series</type>
+		    <value>6</value>
+		  </mode>
+		  <mode>
+		    <type>titres_uniformes</type>
+		    <value>7</value>
+		  </mode>
+		  <mode>
+		    <type>indexint</type>
+		    <value>8</value>
+		  </mode>
+	</selector_mode>
+	
 	<tabs>
 		<tab title="msg:search_authorities" mode="0" objects_type='mixed'>
 			<searchFields>
@@ -22,6 +58,7 @@
 			</filterFields>
 		</tab>
 		<tab title="msg:133" mode="1" objects_type='authors' show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=auteurs&sub=author_form&type_autorite=]]></add>		
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -42,7 +79,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1" />
 					<class type='authors'>
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -56,6 +93,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 2
+						join authors on author_id = authorities.num_object
+						and authorities.type_object= 1 
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>
 			</searchFields>			
 			<filterFields>
@@ -75,6 +119,13 @@
 						<query allChoice="yes" titleAllChoice="msg:searcher_all_status">select id_authorities_statut, authorities_statut_label from authorities_statuts where authorities_statut_available_for like '%"1"%' or id_authorities_statut=1 order by authorities_statut_label</query>
 					</input>
 					<globalvar>authority_statut</globalvar>
+				</field>
+				<field title="msg:filter_authority_id" id="3">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
 				</field>
 			</filterFields>
 		</tab>
@@ -99,7 +150,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1"/>
 					<class type="categories">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -112,6 +163,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 3
+						join categories on num_noeud = authorities.num_object
+						and authorities.type_object= 2 
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -131,9 +189,17 @@
 					</input>
 					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="3">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:135" mode="3" objects_type="publishers" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=editeurs&sub=editeur_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -154,7 +220,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1" />
 					<class type="publishers">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -167,6 +233,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 4
+						join publishers on ed_id = authorities.num_object
+						and authorities.type_object= 3 
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -176,9 +249,17 @@
 					</input>
 					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="2">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:136" mode="4" objects_type="collections" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=collections&sub=collection_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -199,7 +280,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1" />
 					<class type="collections">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -212,6 +293,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 5
+						join collections on collection_id = authorities.num_object
+						and authorities.type_object= 4 
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -221,9 +309,17 @@
 					</input>
 -					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="2">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:137" mode="5" objects_type="subcollections" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=souscollections&sub=collection_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -244,7 +340,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1"/>
 					<class type="subcollections">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -257,6 +353,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 6
+						join sub_collections on sub_coll_id = authorities.num_object
+						and authorities.type_object= 5
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -266,9 +369,17 @@
 					</input>
 -					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="2">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:333" mode="6" objects_type="series" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=series&sub=serie_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -289,7 +400,7 @@
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1"/>
 					<class type="series">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -302,6 +413,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 7
+						join series on serie_id = authorities.num_object
+						and authorities.type_object= 6
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -311,9 +429,17 @@
 					</input>
 -					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="2">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:aut_menu_titre_uniforme" mode="7" objects_type="titres_uniformes" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=titres_uniformes&sub=titre_uniforme_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<var name="pmb_use_uniform_title" visibility="yes">
 				<value visibility="no">0</value>
@@ -342,6 +468,13 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+					    select distinct id_authority from authorities 
+					    join responsability_tu on type_object = 7 and num_object = responsability_tu_num 
+					    join titres_uniformes on responsability_tu_num = tu_id 
+					    where responsability_tu_author_num in (!!p!!)
+						and responsability_tu_type = 0
+					</queryid>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_interpreter" id="5">
 					<input type="authoritie" ajax="authors" selector="auteur"/>
@@ -352,12 +485,19 @@
 							<op>and</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities join
+						responsability_tu on type_object = 7 and num_object = responsability_tu_num 
+					    join titres_uniformes on responsability_tu_num = tu_id 
+						where responsability_tu_author_num in (!!p!!) 
+						and responsability_tu_type = 1
+					</queryid>
 				</field>
 				<field title="msg:search_extended_titre_uniforme_concepts" id="4">
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1" />
 					<class type='titres_uniformes'>
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -370,6 +510,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 8
+						join titres_uniformes on tu_id = authorities.num_object
+						and authorities.type_object= 7
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>				
 			</searchFields>
 			<filterFields>
@@ -393,9 +540,17 @@
 					</input>
 -					<globalvar>oeuvre_nature_selector</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="4">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:indexint_menu" mode="8" objects_type="indexint" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=indexint&sub=indexint_form]]></add>
 			<var name="concept_scheme" visibility="no"></var>
 			<searchFields>
 				<field title="msg:global_search" id="1">
@@ -412,11 +567,21 @@
 						</fieldrestrict>
 					</class>
 				</field>
-				<field title="msg:search_extended_indexint_concepts" id="3">
+				<field title="msg:search_extended_indexint_comment" id="3">
+					<input type="text"/>
+					<class type="indexint">
+						<fieldrestrict>
+							<field>code_champ</field>
+							<values>8002</values>
+							<op>and</op>
+						</fieldrestrict>
+					</class>
+				</field>
+				<field title="msg:search_extended_indexint_concepts" id="4">
 					<var name="thesaurus_concepts_active" visibility="yes">
 						<value visibility="no">0</value>
 					</var>
-					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" />
+					<input type="authoritie" ajax="onto" att_id_filter="http://www.w3.org/2004/02/skos/core#Concept" param2="1"/>
 					<class type="indexint">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -429,6 +594,13 @@
 							<op>or</op>
 						</fieldrestrict>
 					</class>
+					<queryid>
+						select distinct id_authority from authorities 
+						join index_concept on index_concept.type_object = 9
+						join indexint on indexint_id = authorities.num_object
+						and authorities.type_object= 8
+						and authorities.num_object = index_concept.num_object where num_concept in (!!p!!) 
+					</queryid>
 				</field>
 			</searchFields>
 			<filterFields>
@@ -444,9 +616,17 @@
 					</input>
 -					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="3">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:ontology_skos_menu" objects_type="concepts" mode="9" show_in_selector='yes'>
+			<add><![CDATA[./autorites.php?categ=concepts&sub=concept&id=&action=edit&concept_scheme=0&parent_id=]]></add>
 			<var name="thesaurus_concepts_active" visibility="yes">
 				<value visibility="no">0</value>
 			</var>
@@ -477,6 +657,13 @@
 					</input>
 -					<globalvar>authority_statut</globalvar>
 				</field>
+				<field title="msg:filter_authority_id" id="4">
+					<var name="pmb_show_authority_id" visibility="yes">
+						<value visibility="no">0</value>
+					</var>
+					<input type="text" />
+					<globalvar>f_authority_id</globalvar>
+				</field>
 			</filterFields>
 		</tab>
 		<tab title="msg:search_extended" mode="10" multiSearchCriteria="yes" />
@@ -484,12 +671,12 @@
 		<!-- 
 		<tab title="Recherche prédéfinie" mode="11" multiSearchCriteria="yes" predefinedSearch="14" />
 		 -->
-		<!-- 		Exemple Autorité perso -->
-		<!--
+		<!-- 		Exemple Autorité perso -->		
+		<!-- 
 		<tab title="Evenement" mode="1001" objects_type="authperso">
 			<searchFields>
 				<field title="msg:global_search" id="1">
-					<input type="text"/>
+					<input type="text" ifSearchEmpty="*" />
 					<class type="authpersos">
 						<fieldrestrict>
 							<field>code_champ</field>
@@ -500,9 +687,8 @@
 				</field>
 			</searchFields>
 			<filterFields>
-				
 			</filterFields>
 		</tab>
-		-->		
+			 -->
 	</tabs>
 </pmbtabs>

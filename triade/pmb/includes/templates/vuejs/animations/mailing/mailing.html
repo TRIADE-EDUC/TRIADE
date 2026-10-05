@@ -1,0 +1,21 @@
+<div id="mailing">
+	<template v-if="'add' == action || 'edit' == action">
+		<mailingform :pmb="pmb" :mailingstypes="mailingsTypes" :action="action"  :senders="senders" :type="type" :img="img" :typecomisset="typeComIsSet"></mailingform>
+	</template>
+	<template v-else-if="'mailingTemplate' == action ">
+		<h1 class="section-title">
+			{{ pmb.getMessage("animation", "mailing_communication") }}
+		</h1>
+		<mailingtemplate :pmb="pmb" :animation="animation" :action="action" :img="img" :registration="registration"
+			:formdata="formData" :deflt_associated_campaign="deflt_associated_campaign"></mailingtemplate>
+	</template>
+	<template v-else-if="'mailingDetail' == action" >
+		<h1 class="section-title">
+			{{ pmb.getMessage("animation", "mailing_send_detail") }}
+		</h1>
+		<mailingtemplate :pmb="pmb" :animation="animation" :action="action" :img="img" :registration ="registration" :formdata="formData" :mailingdetail="mailingDetail"></mailingtemplate>
+	</template>
+	<template v-else>
+		<mailinglist :pmb="pmb" :mailingstypes="mailingsTypes" :typecomisset="typeComIsSet"></mailinglist>
+	</template>
+</div>

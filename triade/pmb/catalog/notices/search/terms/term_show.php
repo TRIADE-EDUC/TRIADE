@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_show.php,v 1.14 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: term_show.php,v 1.16 2023/05/05 12:34:46 qvarin Exp $
 
 global $base_path, $base_auth, $javascript_path, $base_query, $term, $first, $id_thes, $jscript_term;
 
 
-$base_path="../../../..";                            
-$base_auth = ""; 
+$base_path="../../../..";
+$base_auth = "";
 
 require_once ("$base_path/includes/init.inc.php"); 
 require_once("$class_path/term_show.class.php"); 
 require_once ("$javascript_path/misc.inc.php");
 
-//RÃ©cupÃ©ration des paramÃ¨tres du formulaire appellant
-$base_query = "history=".rawurlencode(stripslashes($term))."&history_thes=".rawurlencode(stripslashes($id_thes));
+//Récupération des paramètres du formulaire appellant
+$base_query = "history=".rawurlencode(stripslashes($term ?? ""))."&history_thes=".rawurlencode(stripslashes($id_thes ?? ""));
 
 echo $jscript_term;
 
@@ -50,7 +50,7 @@ if ($term) {
 	}
 }
 if (!$first) {
-	$ts=new term_show(stripslashes($term), "term_show.php", $base_query, "parent_link", 0, $id_thes);
+	$ts = new term_show(stripslashes($term), "term_show.php", $base_query, "parent_link", 0, $id_thes, false);
 	echo $ts->show_notice();
 }
 ?>

@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cart_div.js,v 1.6 2018-02-14 15:46:18 dgoron Exp $ */
+// $Id: cart_div.js,v 1.7 2020/06/24 09:21:03 dgoron Exp $ */
 
 var info_div_show = 0;
 var flag_mouseover_info_div = false;
@@ -61,6 +61,8 @@ function show_div_access_carts_suite(event,id_object,type_object,show_on_left) {
 	posxdown=pos[0];
 	posydown=pos[1];
 	if (show_on_left != null) {
+		posxdown=posxdown-300;
+	} else if (posxdown > (document.body.clientWidth-300)) {
 		posxdown=posxdown-300;
 	}
 	var pannel=document.createElement("div");

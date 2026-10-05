@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: surligner.inc.php,v 1.29 2019-05-29 10:59:42 ccraig Exp $
+// $Id: surligner.inc.php,v 1.34 2023/08/17 09:47:54 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "inc.php")) die("no access");
 
@@ -21,37 +21,53 @@ $carac = $carac_spec->table;
 		
 reset($carac_spec->table);
 
-//Nettoyage de la chaine recherchÃ©e
-function nettoyer_chaine($tree="",&$tableau,&$tableau_l,$aq,$not) {
+//Nettoyage de la chaine recherchée
+function nettoyer_chaine($tree = array(), &$tableau = [], &$tableau_l = [], $aq = null, $not = 1) {
 	global $empty_word,$charset;
 	
-	if ($tree=="") $tree=$aq->tree;	
-	
-	for ($i=0; $i<count($tree); $i++) {
-		$mot = "";
-		if ($tree[$i]->not) $mul=-1; else $mul=1; 
-		if ($tree[$i]->sub==null) {
-			if ($not*$mul==1) { 
-				$mot = str_replace("*","\w*",$tree[$i]->word);
-				$mot = str_replace("+","\w+",$mot);
-				if ($tree[$i]->literal){
-					$mot=pmb_strtolower(convert_diacrit($mot));
-					if($mot && !in_array($mot,$tableau_l) && !in_array($mot,$tableau))
-						$tableau_l[]= $mot;
-				} else{
-					if(strlen($tree[$i]->word)<=1) 
-						$mot = "";				
-				    if($mot && !in_array($mot,$tableau) && !in_array($mot,$tableau_l)){			    	
-						$tableau[]= $mot;
-				    }
-				}
-			}
-		} else { 
-			$not=$not*$mul;
-			nettoyer_chaine($tree[$i]->sub,$tableau,$tableau_l,$aq,$not); 
-		}
+	if (empty($aq)) {
+	    global $user_query, $opac_stemming_active;
+	    $aq = new analyse_query(stripslashes($user_query), 0, 0, 1, 0, $opac_stemming_active);
 	}
-}	
+	if (empty($tree)) {
+	    $tree = $aq->tree;
+	}
+	
+	if (is_countable($tree)) {
+
+    	for ($i=0; $i<count($tree); $i++) {
+    		$mot = "";
+    		if ($tree[$i]->not) {
+    		    $mul = -1;
+    		} else {
+    		    $mul = 1;
+    		}
+
+    		if ($tree[$i]->sub == null) {
+    			if (($not * $mul) == 1) {
+    				$mot = str_replace("*","\w*",$tree[$i]->word);
+    				$mot = str_replace("+","\w+",$mot);
+    				if ($tree[$i]->literal) {
+    					$mot=pmb_strtolower(convert_diacrit($mot));
+    					if ($mot && !in_array($mot,$tableau_l) && !in_array($mot,$tableau)) {
+    						$tableau_l[]= $mot;
+    					}
+    				} else {
+    				    if (strlen($tree[$i]->word)<=1) {
+    						$mot = "";
+    				    }
+    				    if ($mot && !in_array($mot,$tableau) && !in_array($mot,$tableau_l)) {
+    						$tableau[]= $mot;
+    				    }
+    				}
+    			}
+    		} else {
+    			$not = $not*$mul;
+    			nettoyer_chaine($tree[$i]->sub, $tableau, $tableau_l, $aq, $not);
+    		}
+    	}
+	}
+}
 
 $tableau=array();
 $tableau_l=array();
@@ -62,11 +78,11 @@ if (!empty($user_query) && (trim($user_query) !== "*")) {
 	}
 }
 
-//On calcule des variables de session qui seront utilisÃ©es dans surligner.js.php
+//On calcule des variables de session qui seront utilisées dans surligner.js.php
 $_SESSION['surligner_tableau'] = strip_tags(implode("','",$tableau));
 $_SESSION['surligner_tableau_l'] = strip_tags(implode("','",addslashes_array($tableau_l)));
 
-$_SESSION['surligner_codes'] = "";
+$_SESSION['surligner_codes'] = "window.codes = {};\n";
 $j=0;
 foreach($carac_spec->table as $key=>$val) {
 	$values=explode("|",substr($val,1,strlen($val)-2));
@@ -90,12 +106,14 @@ foreach($carac_spec->table as $key=>$val) {
 	$_SESSION['surligner_key_carac'] .= "	chaine=chaine.replace(reg, '".$key."');\n";
 }		
 
-$inclure_recherche = "<script type='text/javascript' src='./includes/javascript/misc.js'></script>";
-$inclure_recherche .= "<script type='text/javascript'>
+$inclure_recherche = "<script src='./includes/javascript/misc.js'></script>";
+$inclure_recherche .= "<script>
 	var terms=new Array('".(isset($_SESSION['surligner_tableau'])?$_SESSION['surligner_tableau']:'')."');
 	var terms_litteraux=new Array('".(isset($_SESSION['surligner_tableau_l'])?$_SESSION['surligner_tableau_l']:'')."');
-	var codes=new Array();
-			
+	if (!codes) {
+		var codes = {};
+	}
+
 	function remplacer_carac(mot) {
 		var x;
 		var reg;				
@@ -104,6 +122,10 @@ $inclure_recherche .= "<script type='text/javascript'>
 		return(chaine);		
 	}
 </script>";
-$inclure_recherche .= "<script type='text/javascript' src='./includes/javascript/surligner.js.php'></script>";
-$inclure_recherche .= "<script type='text/javascript' src='./includes/javascript/surligner.js'></script>";
+
+// Ne pas déplacer l'inclusion - Ce fichier la variable de session $_SESSION['surligner_codes']
+require_once("$include_path/javascript/surligner.js.php");
+//$inclure_recherche .= "<script src='./includes/javascript/surligner.js.php'></script>";
+$inclure_recherche .= "<script src='./temp/surligner_codes.js'></script>";
+$inclure_recherche .= "<script src='./includes/javascript/surligner.js'></script>";
 ?>

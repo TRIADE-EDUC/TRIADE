@@ -1,11 +1,11 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_instruments_list_ui.js,v 1.28 2016-11-29 13:00:29 vtouchard Exp $
+// $Id: nomenclature_instruments_list_ui.js,v 1.28 2016/11/29 13:00:29 vtouchard Exp $
 
 define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instrument_ui","apps/nomenclature/nomenclature_instrument", "dojo/on", "dojo/dom-construct","dojo/dom", "dojo/_base/lang", "dojo/topic", "dijit/registry", "dijit/_WidgetBase"], function(declare, Instrument_ui, Instrument, on, domConstruct, dom, lang, topic, registry, _WidgetBase){
 	/*
-	 *Classe nomenclature_instruments_list_ui. Classe gÃ©nÃ©rant la partie du formulaire liÃ©e a un pupitre
+	 *Classe nomenclature_instruments_list_ui. Classe générant la partie du formulaire liée a un pupitre
 	 */
 	  return declare("nomenclature_instruments_list_ui",[_WidgetBase], {
 			
@@ -118,7 +118,7 @@ define(["dojo/_base/declare", "apps/nomenclature/nomenclature_instrument_ui","ap
 				    		innerHTML:this.instruments_list.nomenclature.record_formation.get_exotic_instruments_note()
 				    	}, content_note);
 				    	this.own(on(this.textarea_note, 'keyup', lang.hitch(this, this.update_exotic_instruments_note)));
-				    	/** CrÃ©ation de l'input hidden de la note en vue de la sauvegarde **/
+				    	/** Création de l'input hidden de la note en vue de la sauvegarde **/
 				    	this.hidden_note = domConstruct.create('input', {type:'hidden', name:this.instruments_list.nomenclature.record_formation.get_hidden_field_name('exotic_instruments_note'), value:this.instruments_list.nomenclature.record_formation.get_exotic_instruments_note()}, content_note);
 				    	break;
 		    		case "workshop":

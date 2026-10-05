@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pmb_3m.js,v 1.6 2013-04-22 15:15:53 ngantier Exp $
+// $Id: pmb_3m.js,v 1.6 2013/04/22 15:15:53 ngantier Exp $
 
 var f_empr_client;
 var f_expl_client;
@@ -116,7 +116,7 @@ function result_read_uid (retVal) {
 	if(f_ack_read_uid) f_ack_read_uid(liste_uid);
 }
 
-// Detect prÃ©sence d'Ã©lement rfid
+// Detect présence d'élement rfid
 function init_rfid_detect(ack_detect) {
 	if(!flag_rfid_active) return;
 	f_ack_detect=ack_detect;
@@ -150,7 +150,7 @@ function result_erase(retVal) {
 
 var write_etiquette_data=new Array();
 	
-// Programme une Ã©tiquette
+// Programme une étiquette
 function init_rfid_write_etiquette (cb,nbtags,ack_write) {
 	f_ack_write=ack_write;
 	if(!flag_rfid_active) return;
@@ -181,7 +181,7 @@ function result_write_empr(retVal) {
 	if(f_ack_write_empr)f_ack_write_empr(retVal.error);
 }     
 
-// Active / dÃ©sactive un antivol
+// Active / désactive un antivol
 function init_rfid_antivol (cb,level,ack_antivol) {
 	if(!flag_rfid_active) return;
 	f_ack_antivol=ack_antivol;
@@ -233,7 +233,7 @@ function rfid_antivol_suite_1 (retVal) {
 }
 
 
-// Active / dÃ©sactive tous les antivols
+// Active / désactive tous les antivols
 var rfid_antivol_all_data=new Array();
 
 function init_rfid_antivol_all (level,ack_antivol) {
@@ -286,7 +286,7 @@ function mode1_init_rfid_read_cb(empr_client,expl_client){
 
 
 
-// Pour le prÃªt a la chaine mode1
+// Pour le prêt a la chaine mode1
 
 function mode1_read_cb() {		
 	flag_semaphore_rfid_read=1;

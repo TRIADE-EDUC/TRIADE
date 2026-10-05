@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_workshop.class.php,v 1.15 2016-03-30 13:13:27 apetithomme Exp $
+// $Id: nomenclature_workshop.class.php,v 1.20 2024/04/22 14:41:48 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 /**
  * class nomenclature_workshop
- * ReprÃ©sente un atelier dans une nomenclature
+ * Représente un atelier dans une nomenclature
  */
 class nomenclature_workshop{
 
@@ -35,6 +35,11 @@ class nomenclature_workshop{
 	protected $instruments =array();
 	protected $instruments_data =array();
 
+	/**
+	 * Tableau d'instances
+	 * @var array
+	 */
+	protected static $instances = array();
 
 	/**
 	 * Constructeur
@@ -45,15 +50,11 @@ class nomenclature_workshop{
 	 * @access public
 	 */
 	public function __construct($id=0) {
-		if($id){
-			$this->id = $id*1;
-		}
+		$this->id = intval($id);
 		$this->fetch_datas();
 	} // end of member function __construct
 
 	public function fetch_datas(){
-		global $dbh;
-		
 		$this->instruments =array();
 		$this->instruments_data=array();
 		$this->label = "";
@@ -63,19 +64,19 @@ class nomenclature_workshop{
 		if($this->id){
 			//le nom de l'atelier
 			$query = "select * from nomenclature_workshops where id_workshop = ".$this->id ." order by workshop_order asc, workshop_label";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				if($row = pmb_mysql_fetch_object($result)){
 					$this->label = $row->workshop_label;
 					$this->num_nomenclature = $row->workshop_num_nomenclature;
 					$this->order= $row->workshop_order;
 					$this->defined= $row->workshop_defined;
-					//rÃ©cupÃ©ration des instruments
+					//récupération des instruments
 					$query = "select id_workshop_instrument, workshop_instrument_num_instrument, workshop_instrument_number,workshop_instrument_order from nomenclature_workshops_instruments where workshop_instrument_num_workshop = ".$this->id." order by workshop_instrument_order asc";
-					$result = pmb_mysql_query($query,$dbh);
+					$result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
-							$this->add_instrument($row->id_workshop_instrument, new nomenclature_instrument($row->workshop_instrument_num_instrument));							
+							$this->add_instrument($row->id_workshop_instrument, nomenclature_instrument::get_instance($row->workshop_instrument_num_instrument));							
 							$this->instruments_data[$row->id_workshop_instrument]['effective']=$row->workshop_instrument_number;
 							$this->instruments_data[$row->id_workshop_instrument]['order']=$row->workshop_instrument_order;
 							$this->instruments_data[$row->id_workshop_instrument]['id_workshop_instrument'] = $row->id_workshop_instrument;
@@ -90,18 +91,18 @@ class nomenclature_workshop{
 		$this->instruments[$id_workshop_instrument] = $instrument;
 	}
 	
-	public function get_data(){
+	public function get_data($duplicate = false){
 		$data_intruments=array();
 		foreach ($this->instruments as $key => $instrument)	{			
-			$data=$instrument->get_data();
+		    $data=$instrument->get_data($duplicate);
 			$data['effective'] = $this->instruments_data[$key]['effective'];
 			$data['order'] = $this->instruments_data[$key]['order'];
-			$data['id_workshop_instrument'] = $key;
+			$data['id_workshop_instrument'] = ($duplicate ? 0 : $key);
 			$data_intruments[] = $data;
 		}
 		return(
 			array(
-				"id" => $this->id,
+			    "id" => ($duplicate ? 0 : $this->id),
 				"label" => $this->label,
 				"num_nomenclature" => $this->num_nomenclature,
 				"instruments" => $data_intruments,
@@ -119,27 +120,27 @@ class nomenclature_workshop{
 	public function save_form($data){
 		
 		$this->label=stripslashes($data["label"]);
-		$this->num_nomenclature=$data["num_nomenclature"]*1;		
-		$this->order=$data["order"]*1;
-		$this->defined=$data["defined"]*1;
-		
-		$this->delete_old_instruments($data);
+		$this->num_nomenclature=intval($data["num_nomenclature"]);		
+		$this->order=intval($data["order"]);
+		$this->defined=intval($data["defined"]);
+		//On ne supprime pas sur un nouveau workshop
+		if($data["id"]) {
+			$this->delete_old_instruments($data);
+		}
 		
 		$this->instruments_data=array();
 		if(is_array($data["instruments"])){
 			foreach ($data["instruments"] as $form_id => $instrument){
-				$this->instruments_data[$form_id]['id']=$instrument['id']*1;
-				$this->instruments_data[$form_id]['effective']=$instrument['effective']*1;
-				$this->instruments_data[$form_id]['order']=$instrument['order']*1;
-				$this->instruments_data[$form_id]['id_workshop_instrument']=$instrument['id_workshop_instrument']*1;
+				$this->instruments_data[$form_id]['id']=intval($instrument['id']);
+				$this->instruments_data[$form_id]['effective']=intval($instrument['effective']);
+				$this->instruments_data[$form_id]['order']=intval($instrument['order']);
+				$this->instruments_data[$form_id]['id_workshop_instrument']=intval($instrument['id_workshop_instrument']);
 			}	
 		}
 		$this->save();
 	}		
 	
 	public function save(){	
-		global $dbh;	
-		
 		$fields="
 			workshop_label='". addslashes($this->label) ."',
 			workshop_num_nomenclature='".$this->num_nomenclature."',
@@ -149,10 +150,10 @@ class nomenclature_workshop{
 		
 		if($this->id){
 			$query = "UPDATE nomenclature_workshops SET ".$fields." where id_workshop=".$this->id;
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 		}else{
 			$query = "INSERT INTO nomenclature_workshops SET ".$fields;
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 			$this->id = pmb_mysql_insert_id();
 		}
 		
@@ -171,26 +172,24 @@ class nomenclature_workshop{
 				$query = "INSERT INTO nomenclature_workshops_instruments SET ".$fields;
 			}
 				
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 		}
 		$this->fetch_datas();
 	}
 	
 	public function delete(){
-		global $dbh;	
-		
 		$req = "DELETE FROM nomenclature_workshops_instruments WHERE workshop_instrument_num_workshop='$this->id' ";
-		pmb_mysql_query($req, $dbh);	
+		pmb_mysql_query($req);	
 		
 		$req = "DELETE FROM nomenclature_workshops WHERE id_workshop='$this->id' ";
-		pmb_mysql_query($req, $dbh);
+		pmb_mysql_query($req);
 		
 		$this->id=0;
 		$this->fetch_datas();
 	}	
 	
 // 	/**
-// 	 * MÃ©thode qui indique si l'atelier est complet et cohÃ©rent
+// 	 * Méthode qui indique si l'atelier est complet et cohérent
 // 	 *
 // 	 * @return bool
 // 	 * @access public
@@ -258,7 +257,7 @@ class nomenclature_workshop{
 	/**
 	 * Setter
 	 *
-	 * @param string abbreviation Nomenclature abrÃ©gÃ©e
+	 * @param string abbreviation Nomenclature abrégée
 	
 	 * @return void
 	 * @access public
@@ -278,16 +277,16 @@ class nomenclature_workshop{
 	} // end of member function get_abbreviation
 	
 	/**
-	 * Calcule et affecte la nomenclature abrÃ©gÃ©e Ã Â  partir de l'arbre
+	 * Calcule et affecte la nomenclature abrégée à  partir de l'arbre
 	 *
 	 * @return void
 	 * @access public
 	 */
 	public function calc_abbreviation( ) {
-		$tinstruments = array();
+		$tmusicstands = array();
 		if(is_array($this->instruments)) {
 // 			foreach ($this->musicstands as $musicstand) {
-// 				$nomenclature_musicstand = new nomenclature_musicstand($musicstand->get_id());
+// 				$nomenclature_musicstand = nomenclature_musicstand::get_instance($musicstand->get_id());
 // 				$nomenclature_musicstand->calc_abbreviation();
 // 				$tmusicstands[] = $nomenclature_musicstand->get_abbreviation();
 // 			}
@@ -296,11 +295,10 @@ class nomenclature_workshop{
 	} // end of member function calc_abbreviation
 	
 	/**
-	 * Fonction de suppression des instruments des workshops non repostÃ©s Ã  l'enregistrement d'une notice
-	 * @param array $data (donnÃ©es de workshops reÃ§ues depuis un formulaire)
+	 * Fonction de suppression des instruments des workshops non repostés à l'enregistrement d'une notice
+	 * @param array $data (données de workshops reçues depuis un formulaire)
 	 */
 	public function delete_old_instruments($data){
-		global $dbh;
 		$ids_workshop_instruments = array();
 		if(is_array($data['instruments'])){
 			foreach($data['instruments'] as $instrument){
@@ -311,9 +309,16 @@ class nomenclature_workshop{
 			foreach($this->instruments_data as $instrument){
 				if(!in_array($instrument['id_workshop_instrument'], $ids_workshop_instruments)){
 					$query = 'DELETE FROM nomenclature_workshops_instruments WHERE id_workshop_instrument='.$instrument['id_workshop_instrument'];
-					pmb_mysql_query($query, $dbh);
+					pmb_mysql_query($query);
 				}
 			}
 		}
+	}
+	
+	public static function get_instance($id) {
+		if((!isset(static::$instances[$id])) || $id == 0) {
+			static::$instances[$id] = new nomenclature_workshop($id);
+		}
+		return static::$instances[$id];
 	}
 } // end of nomenclature_workshop

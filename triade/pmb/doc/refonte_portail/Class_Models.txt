@@ -1,0 +1,244 @@
+@startuml
+
+namespace PMB {
+	namespace CMS {
+		namespace Semantics {
+			interface NodeSemantic {
+				+getNode(): DomNode
+				+getContainerNode(): DomNode
+	        }
+        
+			class rootSemantic extends PortalRootModel implements NodeSemantic {
+				+idTag: string
+				+classes: array()
+				-node: null
+				-containerNode: null
+				..
+				+getIdTag()
+				+setIdTag(string $idTag)
+				+getClasses()
+				+addClass(string $class)
+				+removeAllClass()
+				+removeClass(string $class)
+				+getClassSemanticList()
+			}
+
+			class HtmlSemantic extends rootSemantic {
+				+tag: string
+				..
+				+getTag()
+				+setTag(string $tag)
+				+getSemanticList()
+			}
+		}
+	}
+}
+    
+namespace PMB {
+  namespace CMS {
+    namespace Models {
+    
+        interface treeInterfaceModel {
+            +getChildrens() : Array
+            +replaceChild(int $index, $child)
+            +appendChild($child)
+            
+        }
+        
+        interface ConditionInterfaceModel {
+            +check()
+        }
+        class ConditionModel implements ConditionInterfaceModel {
+            #data: null
+            +{static}getConditionList()
+        }
+        class ConditionEnvModel extends ConditionModel {
+        	+formatData()
+        }
+        class ConditionOpacViewModel extends ConditionModel {
+        	+formatData()
+        	-opac_view_defined()
+        }
+        class ConditionFRBRModel  extends ConditionModel {}
+		
+        class LayoutNodeModel implements treeInterfaceModel {
+        	+ROOT_CONTAINER_ID: "container"
+            #name
+        	#children
+        	..
+        	+moveChildBefore(int $currentIndex, int $beforeIndex)
+        	+insert(int $index, $child)
+        	+apendChild($child)
+        	+getAllFrames()
+        	+getAllZones()
+        	+removeZone($id)
+        	+removeFrame($id)
+        	+removeElementByIdTag($idTag)
+        	+getElementByIdTag(string $idTag)
+        	+getChildrenWithOpacElements()
+        	+getParentByChildrenIdTag()
+        }
+
+        class PageModel {
+            #name
+            #type
+            #subType
+            #contexts: Array
+            #bookmarkContext
+            ..
+            +getPageParent()
+            +getGabaritLayout()
+            +getPageLayout()
+            +getConditions()
+            +generateTree()
+            -updateTree(LayoutContainerModel $zone, array $childrenPageLayout)
+            +setPageParent(PageModel $parentPage)
+            +unsetPageParent()
+            +unsetGabarit()
+            +setGabarit(GabaritLayoutModel $gabaritLayout)
+            +setPageLayout($pageLayout)
+            +setDataFromForm($data)
+            +getAllFrames()
+            +getParentByIdTag($id_tag, $checkInPageLayout = true)
+            +addContext($context)
+            +editContext($context, $indexContext)
+            +removeContext($indexContext)
+            +setBookmarkContext($indexBookmark)
+            +getBookmarkContext()
+            +unsetBookmarkContext()
+        }
+        
+        class PageFRBRModel extends PageModel {}
+        class PagePortalModel extends PageModel {}
+
+        class LayoutModel extends LayoutNodeModel {}
+
+        class PageLayoutModel extends LayoutModel {
+        	+appendChild($child)
+        	+insert(int $index, $child)
+        	-mergeChild($child, $clone = true)
+        	-mergeChildrenInContainer(LayoutContainerModel $zone)
+        }
+        class GabaritLayoutModel extends LayoutModel {
+            #default
+            #classement
+            ..
+            +isDefault()
+            +getClassement()
+            +setClassement(string $classement)
+            +setDataFromForm(array $data) 
+            +associatedPages(array $pages)
+            +disassociatedPages()
+            +generateTree()
+            +init()
+        }
+
+        class LayoutContainerModel extends LayoutNodeModel {
+            #name
+            #classement
+			+isHidden: false
+            ..
+            +getSemantic()
+        }
+        
+        abstract ZoneAbstractModel extends LayoutContainerModel {}
+        class ZoneOpacModel extends ZoneAbstractModel {}
+        class ZoneCMSModel extends ZoneAbstractModel {}
+        
+        class LayoutElementModel {
+            #name
+            ..
+            +getSemantic()
+            +setSemantic(RootSemantic $semantic)
+            +getClassement()
+            +setClassement(string $classement)
+            +{static}getClassementOfFrame(string $idTagFrame)
+            +{static}addFrameClassement(string $classement, string $idTag)
+            +init()
+            +serialize()
+            +unserialize(array $data, PortalModel $portal)
+        }
+        abstract FrameAbstractModel extends LayoutElementModel {}
+        class FrameOPACModel extends FrameAbstractModel {}
+        class FrameCMSModel extends FrameAbstractModel {}
+        class FrameFRBRModel extends FrameAbstractModel {}
+        
+        class PortalModel {
+            #name
+            #idVersion
+            #isDefault
+            #version
+            #versions
+            #pages
+            #gabaritLayouts
+            ..
+            +__construct(int $idVersion = 0)
+            #fetchData($idVersion)
+            +getPages()
+            +getGabaritLayouts()
+            +getCurrentPage()
+            -initNewPortal()
+            -fetchTree(TreeElement $element): array
+            -treeElementToArray(TreeElement $element): array
+            -getClassNameOfTreeElement(TreeElement $element): string
+            {static} +getVerions(int $portal = 0) : Array
+            {static} +getCurrentPortal() : int
+            {static} +getPortals() : Array
+            {static} +getIdVersion(int $portal) : int
+            {static} +getPortal(int $version = 0, int $portal = 0) : PortalModel
+            +serialize()
+            +fetchVersions()
+            +getDefaultGabarit()
+            +addPage($page)
+            +removePage($id)
+            +addGabarit($gabarit)
+            +removeGabarit($id)
+            +save()
+            -generateDefaultPage(string $type = "", string $subtype = "")
+            +getFrameList(): array
+        }
+        
+        class PortalRootModel {
+        	+id
+        	+portal
+        	..
+        	{static}+$nbInstance
+        	{static}+$instances
+        	..
+        	__construct(array $data = [], PortalModel $portalModel)
+        	+{static}getInstance(int $id)
+        	+{static}exist(int $id)
+        	+getId(): int
+        	+serialize()
+        	+unserialize(array $data, PortalModel $portalModel)
+        	-makeInstance(array $instanceData, PortalModel $portalModel)
+        	+__get(string $prop)
+        	+__set(string $prop, $value)
+        	+__clone()
+        	+init()
+        }
+        note "Toutes les classes dérives de PortalRootModel" as Note
+        
+        ''Lien
+        LayoutModel o-- LayoutModel : Herite de >
+        LayoutModel o-- LayoutContainerModel : Contient >
+        
+        LayoutContainerModel o-- LayoutContainerModel : Contenu dans >
+        LayoutContainerModel *-- LayoutElementModel : Contient >
+        
+        LayoutElementModel *-- rootSemantic : Contient >
+        LayoutContainerModel *-- rootSemantic : Contient >
+        
+        PageModel o-- ConditionModel : Contient >
+        PageModel --o PageModel : Dérive de
+        PageModel o-- LayoutModel : Contient >
+        PageModel o-- PageLayoutModel : Associé >
+        
+        PortalModel *-- PageModel : Contient >
+        PortalModel *-- GabaritLayoutModel : Contient >
+    }
+  }
+}
+
+
+@enduml

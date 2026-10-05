@@ -1,121 +1,139 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : ...                                                           |
 // +-------------------------------------------------+
-// $Id: func_other.inc.php,v 1.18 2017-07-12 15:15:00 tsamson Exp $
+// $Id: func_other.inc.php,v 1.22 2023/10/11 10:09:01 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// enregistrement de la notices dans les catÃ©gories
+// enregistrement de la notices dans les catégories
 function traite_categories_enreg($notice_retour,$categories,$thesaurus_traite=0) {
-
-	global $dbh;
-	
-	// si $thesaurus_traite fourni, on ne delete que les catÃ©gories de ce thesaurus, sinon on efface toutes
-	//  les indexations de la notice sans distinction de thesaurus
-	if (!$thesaurus_traite) $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' ";
-	else $rqt_del = "delete from notices_categories where notcateg_notice='$notice_retour' and num_noeud in (select id_noeud from noeuds where num_thesaurus='$thesaurus_traite' and id_noeud=notices_categories.num_noeud) ";
-	$res_del = @pmb_mysql_query($rqt_del, $dbh);
-	
-	$rqt_ins = "insert into notices_categories (notcateg_notice, num_noeud, ordre_categorie) VALUES ";
-	
-	for($i=0 ; $i< sizeof($categories) ; $i++) {
-		$id_categ=$categories[$i]['categ_id'];
-		if ($id_categ) {
-			$rqt = $rqt_ins . " ('$notice_retour','$id_categ', $i) " ; 
-			$res_ins = @pmb_mysql_query($rqt, $dbh);
-		}
-	}
+	z3950_notice::traite_categories_enreg($notice_retour, $categories, $thesaurus_traite);
 }
 
-function traite_categories_for_form($tableau_600="",$tableau_601="",$tableau_602="",$tableau_605="",$tableau_606="",$tableau_607="",$tableau_608="") {
+function traite_categories_for_form($tableau_600 = array(), $tableau_601 = array(), $tableau_602 = array(), $tableau_605 = array(), $tableau_606 = array(), $tableau_607 = array(), $tableau_608 = array()) {
 	global $charset, $msg, $pmb_keyword_sep, $rameau;
-	$rameau = "" ;
-	$info_606_a = $tableau_606["info_606_a"] ;
-	$info_606_j = $tableau_606["info_606_j"] ;
-	$info_606_x = $tableau_606["info_606_x"] ;
-	$info_606_y = $tableau_606["info_606_y"] ;
-	$info_606_z = $tableau_606["info_606_z"] ;
+	$rameau = "";
+	$info_606_a = (isset($tableau_606["info_606_a"]) ? $tableau_606["info_606_a"] : '');
+	$info_606_j = (isset($tableau_606["info_606_j"]) ? $tableau_606["info_606_j"] : '');
+	$info_606_x = (isset($tableau_606["info_606_x"]) ? $tableau_606["info_606_x"] : '');
+	$info_606_y = (isset($tableau_606["info_606_y"]) ? $tableau_606["info_606_y"] : '');
+	$info_606_z = (isset($tableau_606["info_606_z"]) ? $tableau_606["info_606_z"] : '');
 	
-	$champ_rameau="";
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
-		$libelle_final="";
-		$libelle_j="";
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
-			if (!$libelle_j) $libelle_j .= trim($info_606_j[$a][$j]) ;
-				else $libelle_j .= " ** ".trim($info_606_j[$a][$j]) ;
+	$champ_rameau = "";
+	$nb_infos_606_a = (is_array($info_606_a) ? count($info_606_a) : 0);
+	for ($a = 0; $a < $nb_infos_606_a; $a++) {
+		$libelle_final = "";
+		$libelle_j = "";
+		
+		$nb_infos_606_j = count($info_606_j[$a]);
+		for ($j = 0; $j < $nb_infos_606_j; $j++) {
+			if (empty($libelle_j)) {
+				$libelle_j .= trim($info_606_j[$a][$j]);
+			} else {
+				$libelle_j .= " ** ".trim($info_606_j[$a][$j]);
+			}
 		}
-		if (!$libelle_j) $libelle_final = trim($info_606_a[$a][0]) ; else $libelle_final = trim($info_606_a[$a][0])." ** ".$libelle_j ;
-		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_606_x[$a]); $j++) {
-			$libelle_final .= " : ".trim($info_606_x[$a][$j]) ;
+		
+		if (empty($libelle_j)) {
+			$libelle_final = trim($info_606_a[$a][0]);
+		} else {
+			$libelle_final = trim($info_606_a[$a][0])." ** $libelle_j";
 		}
-		for ($j=0; $j<sizeof($info_606_y[$a]); $j++) {
-			$libelle_final .= " : ".trim($info_606_y[$a][$j]) ;
+		if (empty($libelle_final)) {
+			break;
 		}
-		for ($j=0; $j<sizeof($info_606_z[$a]); $j++) {
-			$libelle_final .= " : ".trim($info_606_z[$a][$j]) ;
+		
+		$nb_infos_606_x = count($info_606_x[$a]);
+		for ($j = 0; $j < $nb_infos_606_x; $j++) {
+			$libelle_final .= " : ".trim($info_606_x[$a][$j]);
 		}
-		if ($champ_rameau) $champ_rameau.=" @@@ ";
-		$champ_rameau.=$libelle_final;
-	} 
+		
+		$nb_infos_606_y = count($info_606_y[$a]);
+		for ($j = 0; $j < $nb_infos_606_y; $j++) {
+			$libelle_final .= " : ".trim($info_606_y[$a][$j]);
+		}
+		
+		$nb_infos_606_z = count($info_606_z[$a]);
+		for ($j = 0; $j < $nb_infos_606_z; $j++) {
+			$libelle_final .= " : ".trim($info_606_z[$a][$j]);
+		}
+		
+		if (!empty($champ_rameau)) {
+			$champ_rameau .= " @@@ ";
+		}
+		$champ_rameau .= $libelle_final;
+	}
 	
 	return array(
-		"form" => "",
-		"message" => htmlentities($msg['traite_categ_ignore'].$champ_rameau,ENT_QUOTES,$charset)
+			"form" => "",
+			"message" => htmlentities($msg['traite_categ_ignore'].$champ_rameau, ENT_QUOTES, $charset)
 	);
 }
 
 
 function traite_categories_from_form() {
-	global $max_categ ;
-	$categories = array () ;
-	for ($i=0; $i< $max_categ ; $i++) {
-		$var_categ = "f_categ_id$i" ;
-		global ${$var_categ} ;
-		if (${$var_categ}) {
-			$categories[] = array('categ_id' => ${$var_categ} );
-		}
-	}
-	return $categories ;
+	return z3950_notice::traite_categories_from_form();
 }
 
 function traite_concepts_for_form($tableau_606 = array()) {
 	global $charset, $msg, $pmb_keyword_sep, $rameau;
-	$rameau = "" ;
-	$info_606_a = $tableau_606["info_606_a"] ;
-	$info_606_j = $tableau_606["info_606_j"] ;
-	$info_606_x = $tableau_606["info_606_x"] ;
-	$info_606_y = $tableau_606["info_606_y"] ;
-	$info_606_z = $tableau_606["info_606_z"] ;
+	$rameau = "";
+	$info_606_a = $tableau_606["info_606_a"];
+	$info_606_j = $tableau_606["info_606_j"];
+	$info_606_x = $tableau_606["info_606_x"];
+	$info_606_y = $tableau_606["info_606_y"];
+	$info_606_z = $tableau_606["info_606_z"];
 
-	$champ_rameau="";
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
-		$libelle_final="";
-		$libelle_j="";
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) {
-			if (!$libelle_j) $libelle_j .= trim($info_606_j[$a][$j]) ;
-			else $libelle_j .= " -- ".trim($info_606_j[$a][$j]) ;
+	$champ_rameau = "";
+	$nb_infos_606_a = count($info_606_a);
+	for ($a = 0; $a < $nb_infos_606_a; $a++) {
+		$libelle_final = "";
+		$libelle_j = "";
+		
+		$nb_infos_606_j = count($info_606_j[$a]);
+		for ($j = 0; $j < $nb_infos_606_j; $j++) {
+		    if (empty($libelle_j)) {
+		        $libelle_j .= trim($info_606_j[$a][$j]);
+		    } else {
+		        $libelle_j .= " -- ".trim($info_606_j[$a][$j]);
+		    }
 		}
-		if (!$libelle_j) $libelle_final = trim($info_606_a[$a][0]) ; else $libelle_final = trim($info_606_a[$a][0])." -- ".$libelle_j ;
-		if (!$libelle_final) break ;
-		for ($j=0; $j<sizeof($info_606_x[$a]); $j++) {
-			$libelle_final .= " -- ".trim($info_606_x[$a][$j]) ;
+		
+		if (empty($libelle_j)) {
+		    $libelle_final = trim($info_606_a[$a][0]);
+		} else {
+		    $libelle_final = trim($info_606_a[$a][0])." -- $libelle_j";
 		}
-		for ($j=0; $j<sizeof($info_606_y[$a]); $j++) {
-			$libelle_final .= " -- ".trim($info_606_y[$a][$j]) ;
+		if (empty($libelle_final)) {
+		    break;
 		}
-		for ($j=0; $j<sizeof($info_606_z[$a]); $j++) {
-			$libelle_final .= " -- ".trim($info_606_z[$a][$j]) ;
+		
+		$nb_infos_606_x = count($info_606_x[$a]);
+		for ($j = 0; $j < $nb_infos_606_x; $j++) {
+			$libelle_final .= " -- ".trim($info_606_x[$a][$j]);
 		}
-		if ($champ_rameau) $champ_rameau.=" @@@ ";
-		$champ_rameau.=$libelle_final;
+		
+		$nb_infos_606_y = count($info_606_y[$a]);
+		for ($j = 0; $j < $nb_infos_606_y; $j++) {
+			$libelle_final .= " -- ".trim($info_606_y[$a][$j]);
+		}
+		
+		$nb_infos_606_z = count($info_606_z[$a]);
+		for ($j = 0; $j < $nb_infos_606_z; $j++) {
+			$libelle_final .= " -- ".trim($info_606_z[$a][$j]);
+		}
+		
+		if (!empty($champ_rameau)) {
+		    $champ_rameau .= " @@@ ";
+		}
+		$champ_rameau .= $libelle_final;
 	}
 
 	return array(
 			"form" => "",
-			"message" => htmlentities($champ_rameau,ENT_QUOTES,$charset)
+			"message" => htmlentities($champ_rameau, ENT_QUOTES, $charset)
 	);
 }

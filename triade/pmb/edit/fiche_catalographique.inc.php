@@ -1,17 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fiche_catalographique.inc.php,v 1.16 2019-06-06 13:42:32 btafforeau Exp $
+// $Id: fiche_catalographique.inc.php,v 1.17 2021/12/08 12:56:22 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $exemplaire, $expl_cb, $expl_id, $notice, $index, $length, $width, $height, $header;
+global $class_path, $include_path, $fpdf;
+global $exemplaire, $expl_cb, $expl_id, $notice, $index, $length, $width, $height, $header, $auteur;
 
 // PDF de fiche catalographique
-/* reÃ§oit : un cb ou id d'exemplaire */
+/* reçoit : un cb ou id d'exemplaire */
 
-// modules propres Ã  pdf.php ou Ã  ses sous-modules
+// modules propres à pdf.php ou à ses sous-modules
 require_once($class_path."/fpdf.class.php");
 require_once($class_path."/notice.class.php");
 require_once($class_path."/expl.class.php");

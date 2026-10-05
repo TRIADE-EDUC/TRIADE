@@ -2,22 +2,22 @@
 // +-------------------------------------------------+
 // | PMB                                                                      |
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_ontology.tpl.php,v 1.6 2018-10-12 10:16:18 tsamson Exp $
+// $Id: sel_ontology.tpl.php,v 1.9 2023/08/17 09:47:53 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-global $dyn,$jscript,$infield,$msg,$sel_search_form,$list_form,$element_form,$list_range_links_form,$range_link_form, $p1, $p2;
+global $dyn,$jscript,$infield,$msg,$sel_search_form,$list_form,$element_form,$list_range_links_form,$range_link_form, $p1, $p2, $param1, $param2;
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
 //-------------------------------------------
 if($dyn==1){
 	$jscript = "
-	<script type='text/javascript'>
+	<script>
 	
 	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback)
 	{
@@ -26,7 +26,7 @@ if($dyn==1){
 		flag = 1;
 		var order_concept = new Array();
 	
-		//VÃ©rification que la catÃ©gorie n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que la catégorie n'est pas déjà sélectionnée
 		for (i=0; i<n_concept; i++) {
 			order_concept[i] = i;
 			if (w.parent.document.getElementById(element+'_'+i+'_value') && w.parent.document.getElementById(element+'_'+i+'_value').value==id_value) {
@@ -67,16 +67,16 @@ if($dyn==1){
 	
 	</script>
 	";
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = "
-	<script type='text/javascript'>
+	<script>
 	<!--
 	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback)
 	{	
 		w=window;
 		n_aut_link=w.parent.document.forms[f_caller].elements['max_aut_link'].value;
 		flag = 1;	
-		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'autorité n'est pas déjà sélectionnée
 		for (i=0; i<n_aut_link; i++) {
 			if (w.parent.document.getElementById('f_aut_link_id'+i).value==id_value && w.parent.document.getElementById('f_aut_link_table'+i).value==$p1) {
 				alert('".$msg["term_already_in_use"]."');
@@ -103,12 +103,12 @@ if($dyn==1){
 	";
 }elseif ($dyn==3) { // aut_pperso
 	$jscript = "
-	<script type='text/javascript'>
+	<script>
 	<!--
 	function set_parent(f_caller, element, id_value, libelle_value, type_value, callback)
 	{	
  		w=window;
-		//dÃ©but Copier/Coller depuis le template sel_editeur.tpl.php
+		//début Copier/Coller depuis le template sel_editeur.tpl.php
 		var i=0;
 		if(!(typeof w.parent.$add_field == 'function')) {
 			w.parent.document.getElementById('$field_id').value = id_value;
@@ -119,7 +119,7 @@ if($dyn==1){
 		var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 		var flag = 1;
 		
-		//VÃ©rification que l'Ã©lÃ©ment n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'élément n'est pas déjà sélectionnée
 		for (var i=0; i<n_element; i++) {
 			if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 				alert('".$msg["term_already_in_use"]."');
@@ -137,10 +137,10 @@ if($dyn==1){
 		}	
 		//fin Copier/Coller
 
-// Ce bloc lÃ , il Ã©tait commitÃ©, mais on ne peut pas changÃ© de terme une fois sÃ©lectionnÃ©!
+// Ce bloc là, il était commité, mais on ne peut pas changé de terme une fois sélectionné!
 // 		var n_aut = eval('w.parent.document.'+f_caller+'.n_".$p1.".value');							
 // 		flag = 1;	
-// 		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e		
+// 		//Vérification que l'autorité n'est pas déjà sélectionnée		
 // 		for (var i=0; i<n_aut; i++) {
 // 			if (w.parent.document.getElementById('".$p1."_'+i) && w.parent.document.getElementById('".$p1."_'+i).value==id_value) {
 // 				alert('".$msg["term_already_in_use"]."');
@@ -161,13 +161,21 @@ if($dyn==1){
 	</script>
 	";
 }elseif ($dyn==4) {
-	//Recherche multi-critÃ¨res
+	//Recherche multi-critères
 	$jscript = "
-		<script type='text/javascript'>
+		<script>
 			function set_parent(f_caller, element, id_value, libelle_value, type_value, callback){
-				var p1 = '$p1';
-				var p2 = '$p2';
-				//on enlÃ¨ve le dernier _X
+				if ('$p1') {
+    			    var p1 = '$p1';
+				} else {
+    			    var p1 = '$param1';
+                }
+				if ('$p2') {
+    			    var p2 = '$p2';
+				} else {
+    			    var p2 = '$param2';
+                }
+				//on enlève le dernier _X
 				var tmp_p1 = p1.split('_');
 				var tmp_p1_length = tmp_p1.length;
 				tmp_p1.pop();
@@ -199,23 +207,38 @@ if($dyn==1){
 					}
 					if(callback)
 						window.parent[callback](p1bis.replace('_id','')+'_'+i_aut);
-				}else{
-					window.parent.document.forms[f_caller].elements['".$p1."'].value = id_value;
-					window.parent.document.forms[f_caller].elements['".$p2."'].value = reverse_html_entities(libelle_value);
-					if(callback)
+				} else {
+				    if (p1) {
+    					window.parent.document.forms[f_caller].elements[p1].value = id_value;
+                    }
+				    if (p2) {
+    					window.parent.document.forms[f_caller].elements[p2].value = reverse_html_entities(libelle_value);
+                    }
+					if (callback) {
 						window.parent[callback]('$infield');
+                    }
 					window.close();
 				}
 			}
 		</script>	
 	";
 }else{
-	// Pour les vedettes composÃ©es
+	// Pour les vedettes composées
 	$jscript = "
-	<script type='text/javascript'>
+	<script>
+        if ('$p1') {
+		    var p1 = '$p1';
+		} else {
+		    var p1 = '$param1';
+        }
+		if ('$p2') {
+		    var p2 = '$p2';
+		} else {
+		    var p2 = '$param2';
+        }
 		function set_parent(f_caller, element, id_value, libelle_value, type_value, callback){
-			window.parent.document.forms[f_caller].elements['".$p1."'].value = id_value;
-			window.parent.document.forms[f_caller].elements['".$p2."'].value = reverse_html_entities(libelle_value);
+			window.parent.document.forms[f_caller].elements[p1].value = id_value;
+			window.parent.document.forms[f_caller].elements[p2].value = reverse_html_entities(libelle_value);
 			if(callback)
 				window.parent[callback]('$infield');
 			window.close();
@@ -234,7 +257,7 @@ $sel_search_form ="
 	&nbsp;
 	<input type='submit' class='bouton_small' value='".$msg['142']."' />
 </form>
-<script type='text/javascript'>
+<script>
 	if(document.forms['search_form'].elements['deb_rech']){
 		document.forms['search_form'].elements['deb_rech'].focus();
 	}

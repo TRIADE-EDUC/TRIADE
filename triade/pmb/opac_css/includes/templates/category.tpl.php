@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: category.tpl.php,v 1.2 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: category.tpl.php,v 1.5 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -12,18 +12,17 @@ global $add_see_also;
 global $categ0, $categ1;
 global $form_categ_parent, $form_renvoivoir, $form_renvoivoiraussi;
 global $form_num_aut;
-global $form_categ_replace;
 global $categories_liaison_tpl;
 global $traduction_na_tpl, $traduction_cm_tpl;
 
 global $pmb_form_authorities_editables, $PMBuserid;
 global $pmb_autorites_verif_js, $base_path;
 
-// templates pour la gestion des catÃ©gories
+// templates pour la gestion des catégories
 // require_once($include_path."/javascript/misc.inc.php");
-require_once("$include_path/misc.inc.php"); 
+require_once("$include_path/misc.inc.php");
 
-// $categ_browser : template du browser de catÃ©gories
+// $categ_browser : template du browser de catégories
 
 
 $categ_browser = "
@@ -34,27 +33,27 @@ $categ_browser = "
 	!!browser_header!!<hr />
 </div>
 <div class='row'>
-	<script type='text/javascript' src='./javascript/sorttable.js'></script>
+	<script src='./javascript/sorttable.js'></script>
 	<table border='0' class='sortable'>
 		!!browser_content!!
 	</table>
 </div>";
 
-// $category_form : template du form de catÃ©gories
+// $category_form : template du form de catégories
 $category_form = jscript_unload_question();
 
-$category_form.= $pmb_autorites_verif_js!= "" ? "<script type='text/javascript' src='$base_path/javascript/$pmb_autorites_verif_js'></script>":"";
+$category_form.= $pmb_autorites_verif_js!= "" ? "<script src='$base_path/javascript/$pmb_autorites_verif_js'></script>":"";
 
 $category_form.= "
 <script src='javascript/ajax.js'></script>
-<script type='text/javascript'>
+<script>
 	require(['dojo/ready', 'apps/pmb/gridform/FormEdit'], function(ready, FormEdit){
 	     ready(function(){
 	     	new FormEdit();
 	     });
 	});
 </script>
-<script type='text/javascript'>
+<script>
 <!--
 	function test_form(form){
 		";
@@ -73,7 +72,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 		unload_off();
 		return true;
 	}
-	
+
 	function confirm_delete() {
         result = confirm(\"".$msg['confirm_suppr']."\");
         if(result) {
@@ -84,7 +83,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
     }
 -->
 </script>
-<script type='text/javascript'>
+<script>
 	document.title='!!document_title!!';
 </script>
 <form class='form-$current_module' id='categ_form' name='categ_form' method='post' action='!!action!!' enctype='multipart/form-data'>
@@ -111,8 +110,8 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 </div>
 <div class='form-contenu'>
 	<div class='row'>
-		<a onclick='expandAll();return false;' href='#'><img border='0' id='expandall' src='".get_url_icon('expand_all.gif')."'></a>
-		<a onclick='collapseAll();return false;' href='#'><img border='0' id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>
+		<a onclick='expandAll();return false;' href='#'><img id='expandall' src='".get_url_icon('expand_all.gif')."'></a>
+		<a onclick='collapseAll();return false;' href='#'><img id='collapseall' src='".get_url_icon('collapse_all.gif')."'></a>
 	</div>
 	<div id='zone-container'>
 		<!-- libelle defaut -->
@@ -137,7 +136,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 				<div class='row'></div>
 			</div>
 		</div>
-		
+
 		<div id='el0Child_1' class='row'>
 			<!--	note application defaut -->
 			<div id='el0Child_1_a' class='colonne2' movable='yes' title=\"".htmlentities($msg['categ_na'], ENT_QUOTES, $charset)."\">
@@ -153,7 +152,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 					!!na_trad!!
 				</div>
 			</div>
-		
+
 			<!--	commentaire defaut -->
 			<div id='el0Child_1_b' class='colonne_suite' movable='yes' title=\"".htmlentities($msg['categ_commentaire'], ENT_QUOTES, $charset)."\">
 				<div class='row'>
@@ -169,7 +168,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 				</div>
 			</div>
 		</div>
-			
+
 		<!--categ_parent -->
 		<!-- renvoivoir -->
 		<!-- renvoivoiraussi -->
@@ -193,7 +192,7 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 		<div id='el0Child_6' class='row' movable='yes' title=\"".htmlentities($msg['authority_import_denied'], ENT_QUOTES, $charset)."\">
 			<label class='etiquette' for='authority_import_denied'>".$msg['authority_import_denied']."</label> &nbsp;
 			<input type='checkbox' id='authority_import_denied' name='authority_import_denied' value='1' !!authority_import_denied!!/>
-		</div>		
+		</div>
 		<!-- aut_link -->
 		<div id='el0Child_8' class='row' movable='yes'>
 			<!-- map -->
@@ -220,13 +219,13 @@ $category_form.= "if(document.getElementById('category_libelle_defaut').value.re
 </div>
 <div class='row'></div>
 </form>
-<script type='text/javascript'>
+<script>
 	document.forms['categ_form'].elements['category_libelle!!lang_def_cle!!'].focus();
 	ajax_parse_dom();
 
 	function bascule_trad(item) {
 		var elt = document.getElementById(item);
-		if (elt.style.display == 'none') elt.style.display = ''; else elt.style.display = 'none'; 
+		if (elt.style.display == 'none') elt.style.display = ''; else elt.style.display = 'none';
 	}
 </script>";
 
@@ -259,12 +258,12 @@ $add_see_also="
 		f_categ.className='saisie-80emr';
 		f_categ.setAttribute('readonly','');
 		f_categ.setAttribute('value','');
-		
+
 		f_categ_rec = document.createElement('input');
 		f_categ_rec.name = 'f_categ_rec'+suffixe;
 		f_categ_rec.setAttribute('id','f_categ_rec'+suffixe);
 		f_categ_rec.setAttribute('type','checkbox');
-		f_categ_rec.setAttribute('value','1');		
+		f_categ_rec.setAttribute('value','1');
 
 		del_f_categ = document.createElement('input');
 		del_f_categ.setAttribute('id','del_f_categ'+suffixe);
@@ -273,13 +272,13 @@ $add_see_also="
 		del_f_categ.className='bouton_small';
 		del_f_categ.setAttribute('readonly','');
 		del_f_categ.setAttribute('value','$msg[raz]');
-		
+
 		f_categ_id = document.createElement('input');
 		f_categ_id.name='f_categ_id'+suffixe;
 		f_categ_id.setAttribute('type','hidden');
 		f_categ_id.setAttribute('id','f_categ_id'+suffixe);
 		f_categ_id.setAttribute('value','');
-		
+
 		categ.appendChild(f_categ);
 		space=document.createTextNode(' ');
 		categ.appendChild(space);
@@ -289,7 +288,7 @@ $add_see_also="
 		categ.appendChild(f_categ_id);
 
 		template.appendChild(categ);
-		
+
 		if(document.getElementById('tab_categ_order')) {
 			tab_categ_order = document.getElementById('tab_categ_order');
 			if (tab_categ_order.value != '') tab_categ_order.value += ','+suffixe;
@@ -298,7 +297,7 @@ $add_see_also="
 		document.categ_form.max_categ.value=suffixe*1+1*1 ;
 	}
 </script>";
-	
+
 $categ0 = "
 	<div class='row'>
 		<input type='text' class='saisie-80emr' id='f_categ!!icateg!!' name='f_categ!!icateg!!' readonly value=\"!!categ_libelle!!\" /><input type='checkbox' id='f_categ_rec!!icateg!!' name='f_categ_rec!!icateg!!' !!chk!! />
@@ -306,7 +305,7 @@ $categ0 = "
 		<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; this.form.f_categ_rec!!icateg!!.checked=false; \" />
 		<input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' /><input type='button' class='bouton_small' value='+' onClick=\"add_categ();\"/>
 	</div>";
-	
+
 $categ1 = "
 	<div class='row'>
 		<input type='text' class='saisie-80emr' id='f_categ!!icateg!!' name='f_categ!!icateg!!' readonly value=\"!!categ_libelle!!\" /><input type='checkbox' id='f_categ_rec!!icateg!!' name='f_categ_rec!!icateg!!' !!chk!! />&nbsp;<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; \" /><input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
@@ -348,42 +347,12 @@ $form_renvoivoiraussi = "
 
 $form_num_aut = "
 	<input type='text' class='saisie-20em' id='num_aut' name='num_aut' value=\"!!num_aut!!\" />";
-	
-// $categ_replace : form remplacement categorie
-$form_categ_replace = "
-<script src='javascript/ajax.js'></script>
-<form class='form-$current_module' name='categ_replace' method='post' action='!!controller_url_base!!&sub=categ_replace&id=!!id!!&parent=!!parent!!' onSubmit=\"return false\" >
-<h3>$msg[159] !!old_categ_libelle!! </h3>
-<div class='form-contenu'>
-	<div class='row'>
-		<label class='etiquette' for='par'>".htmlentities($msg[160], ENT_QUOTES, $charset)."</label>
-	</div>
-	<div class='row'>
-		<input type='text' class='saisie-80emr' name='by_libelle' id='by_libelle' value=\"\" completion=\"categories_mul\" autfield=\"by\" />
-		<input type='button' class='bouton_small' onclick=\"openPopUp('./select.php?what=categorie&caller=categ_replace&p1=by&p2=by_libelle&keep_tilde=1&parent=0&deb_rech='+".pmb_escape()."(this.form.by_libelle.value), 'selector_category')\" value='$msg[parcourir]' />
-		<input type='button' class='bouton_small' value='$msg[raz]' onclick=\"this.form.by_libelle.value=''; this.form.by.value='0'; \" />
-		<input type='hidden' name='by' id='by' value='0'>
-	</div>
-	<div class='row'>		
-		<input id='aut_link_save' name='aut_link_save' type='checkbox' checked='checked' value='1'>".$msg["aut_replace_link_save"]."
-	</div>	
-</div>
-<div class='row'>
-	<input type='button' class='bouton' value='$msg[76]' id='btcancel' onClick=\"document.location='!!cancel_action!!';\">
-	<input type='button' class='bouton' value='$msg[159]' id='btsubmit' onClick=\"this.form.submit();\" >
-</div>
-</form>
-<script type='text/javascript'>
-	ajax_parse_dom();
-	document.forms['categ_replace'].elements['by_libelle'].focus();
-</script>
-";
 
 $categories_liaison_tpl = "
 <div id='el0Child_7' class='row' movable='yes' title=\"".htmlentities($msg['categ_links'], ENT_QUOTES, $charset)."\">
 	<div id='el1Parent' class='parent' >
 		<h3>
-	    	<img src='".get_url_icon('minus.gif')."' class='img_plus align_bottom' name='imEx' id='el1Img' title='".$msg['categ_links']."' border='0' onClick=\"expandBase('el1', true); return false;\" />
+	    	<img src='".get_url_icon('minus.gif')."' class='img_plus align_bottom' name='imEx' id='el1Img' title='".$msg['categ_links']."' onClick=\"expandBase('el1', true); return false;\" />
 	    	".$msg['categ_links']."
 	    </h3>
 	</div>
@@ -406,5 +375,5 @@ $traduction_cm_tpl = "
 <label class='etiquette'>(!!lang_value!!) </label>
 <br />
 <textarea class='saisie-50em' id='category_cm' name='category_cm[!!lang!!]'  cols='40' rows='2' wrap='virtual'>!!commentaire!!</textarea>";
-   
+
 ?>

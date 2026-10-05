@@ -1,8 +1,8 @@
 <?php 
 // +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_forms.tpl.php,v 1.8 2019-05-27 10:33:57 ngantier Exp $
+// $Id: contribution_area_forms.tpl.php,v 1.12 2023/12/20 09:43:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -11,7 +11,7 @@ global $contribution_area_entity_line, $msg, $contribution_area_form_line, $cont
 $contribution_area_entity_line = '
 		<div id="!!entity_id!!" class="notice-parent contribution_forms">
 			<div class="row item-expandable">
-				<img src="'.get_url_icon('plus.gif').'" class="img_plus" name="imEx" id="!!entity_id!!Img" title="détail" style="border:0px; margin:3px 3px" onclick="expandBase(\'!!entity_id!!\', true);  return false;">
+                '.get_expandBase_button("!!entity_id!!").'
 				<span class="notice-heada">
 					!!entity_name!! !!forms_number!!
 				</span>
@@ -38,8 +38,9 @@ $contribution_area_form_line = '
 				!!form_name!!
 			</td>
 			<td>
+                <input type="button" class="bouton" value="'.$msg['pricing_system_edit_grid'].'" onclick="window.location.href=\'./modelling.php?categ=contribution_area&sub=form&action=grid&form_id=!!form_id!!\'"/>
 				<input type="button" class="bouton" value="'.$msg['duplicate'].'" onclick=\'document.location="./modelling.php?categ=contribution_area&sub=form&type=!!form_type!!&action=duplicate&form_id=!!form_id!!";\'/>
-				<input type="button" class="bouton" value="'.$msg['supprimer'].'" onclick="if(confirm(\''.$msg['confirm_suppr_de'].'!!form_name!! ?\')) document.location=\'./modelling.php?categ=contribution_area&sub=form&type=!!form_type!!&action=delete&form_id=!!form_id!!\';"/>
+				<input type="button" title="!!disabled_message!!" !!disabled!! class="bouton !!disabled!!" value="'.$msg['supprimer'].'" onclick="if(confirm(`'.$msg['confirm_suppr_de'].'!!form_name!! ?`)) document.location=\'./modelling.php?categ=contribution_area&sub=form&type=!!form_type!!&action=delete&form_id=!!form_id!!\';"/>
 			</td>
 		</tr>	
 ';

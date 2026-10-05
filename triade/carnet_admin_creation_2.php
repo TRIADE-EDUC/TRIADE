@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -38,11 +38,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("./librairie_php/db_triade.php"); 
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET19 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -58,37 +58,41 @@ $nom_carnet=preg_replace('/"/',"'",$_POST["saisie_nom_carnet"]);
 <font class="T2">&nbsp;&nbsp;<b>Gestion du carnet "<?php print $nom_carnet ?>"</b></font><br /><br />
 
 <form action='carnet_admin_creation_3.php' method="post">
-<table border=0 align=center width=85%>
+<table border=0 align=center width=85% >
 <tr><td align="left" colspan=2><font class="T2"><?php print LANGCARNET20 ?> : </font></td></tr>
+<tr><td><td colspan=2 height='20'></td></tr>
+<!-- 
 <tr><td align="right" width=50%><font class="T2"><?php print LANGCARNET21 ?> : </font></td><td><input type=checkbox name="code_lettre" value="1" >*</td></tr>
 <tr><td align="right"><font class="T2"><?php print LANGCARNET22 ?> : </font></td><td><input type=checkbox name="code_chiffre" value="1">*</td></tr>
 <tr><td align="right"><font class="T2"><?php print LANGCARNET23 ?> : </font></td><td><input type=checkbox name="code_couleur"  value="1">*</td></tr>
 <tr><td align="right"><font class="T2"><?php print LANGCARNET24 ?> : </font></td><td><input type=checkbox name="code_note"  value="1"> <?php print LANGCARNET25 ?> </td></tr>
 <tr><td align="right"><font class="T2"><?php print "Commentaire" ?> : </font></td><td><input type=checkbox name="code_commentaire"  value="1"></td></tr>
 <tr><td align="right"><font class="T2"><?php print "Spécif.&nbsp;Lycée&nbsp;Jules&nbsp;VERNE"  ?> : </font></td><td><input type=checkbox name="code_julesverne"  value="1"> **  </td></tr>
+-->
+<tr><td align="right" width='50%' ><font class="T2"><?php print "Education Nationale" ?> : </font></td><td><input type=radio name="code_educnation"  value="1" checked='checked' >  </td></tr>
 
-
+<!--
 
 <tr><td align="left" colspan=2><br /><br /><font class="T2">* <?php print LANGCARNET26 ?> : </font></td></tr>
 <tr><td colspan="2">
-<table border=1 bordercolor="#000000" bgcolor="#FFFFFF">
-<tr><td align=center  bgcolor="yellow"><i><?php print LANGCARNET27 ?></i></td><td   bgcolor="yellow" align=center><i><?php print LANGCARNET28 ?></i></td>
-<td   bgcolor="yellow" align=center><i><?php print LANGCARNET30 ?></i></td><td   bgcolor="yellow" align=center><i><?php print LANGCARNET29 ?></i></td>
-<td   bgcolor="yellow" align=center><i><?php print LANGCARNET31 ?></i></td></tr>
+<table border=1 bordercolor="#000000" bgcolor="#FFFFFF" style='border-collapse: collapse;'>
+<tr><td align=center  bgcolor="yellow">&nbsp;<i><?php print LANGCARNET27 ?></i>&nbsp;</td><td   bgcolor="yellow" align=center>&nbsp;<i><?php print LANGCARNET28 ?></i>&nbsp;</td>
+<td   bgcolor="yellow" align=center>&nbsp;<i><?php print LANGCARNET30 ?></i>&nbsp;</td><td   bgcolor="yellow" align=center>&nbsp;<i><?php print LANGCARNET29 ?></i>&nbsp;</td>
+<td   bgcolor="yellow" align=center><i>&nbsp;<?php print LANGCARNET31 ?></i>&nbsp;</td></tr>
 <tr><td align=center>A</td><td align=center>B</td><td align=center>C</td><td align=center>D</td><td align=center>X</td></tr>
 <tr><td align=center>1</td><td align=center>2</td><td align=center>4</td><td align=center>4</td><td align=center>X</td></tr>
-<tr><td align=center><?php print LANGCARNET32 ?></td><td align=center><?php print LANGCARNET33 ?></td><td align=center><?php print LANGCARNET34 ?></td><td align=center><?php print LANGCARNET35 ?></td><td align=center>X</td></tr>
+<tr><td align=center>&nbsp;<?php print LANGCARNET32 ?>&nbsp;</td><td align=center>&nbsp;<?php print LANGCARNET33 ?>&nbsp;</td><td align=center>&nbsp;<?php print LANGCARNET34 ?>&nbsp;</td><td align=center>&nbsp;<?php print LANGCARNET35 ?>&nbsp;</td><td align=center>&nbsp;X&nbsp;</td></tr>
 </table></td></tr>
 
 <tr><td align="left" colspan=2><br /><br /><font class="T2">** <?php print LANGCARNET26 ?> : </font></td></tr>
 <tr><td colspan="2">
-<table border=1 bordercolor="#000000" bgcolor="#FFFFFF">
-<tr><td align=center  bgcolor="yellow"><i>Notation</i></td><td   bgcolor="yellow" align=center><i><?php print "Désignation" ?></i></td></td></tr>
+<table border=1 bordercolor="#000000" bgcolor="#FFFFFF" style='border-collapse: collapse;'>
+<tr><td align=center  bgcolor="yellow">&nbsp;<i>Notation</i>&nbsp;</td><td   bgcolor="yellow" align=center>&nbsp;<i><?php print "Désignation" ?></i>&nbsp;</td></td></tr>
 <tr><td align=center>A </td><td> Compétence acquise et bien installé.</td></tr>
 <tr><td align=center>AR </td><td> Comp&eacute;tence acquise, mais mal install&eacute; &agrave; renforcer) </td></tr>
 </table></td></tr>
 
-
+-->
 
 <tr><td align=center colspan="2"><br />
 <table><tr><td><script language=JavaScript>buttonMagicRetour2("carnet_admin.php","_parent","<?php print LANGCIRCU14?>");</script>
@@ -107,17 +111,17 @@ $nom_carnet=preg_replace('/"/',"'",$_POST["saisie_nom_carnet"]);
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_watcheslist_view_django.class.php,v 1.4 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: cms_module_watcheslist_view_django.class.php,v 1.5.2.1 2025/01/17 10:40:44 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class cms_module_watcheslist_view_django extends cms_module_common_view_django{
 {% else %}			
 <img src='{{watch.logo_url}}' alt=''/>
 {% endif %}
-<blockquote>{{watch.desc}}</blockquote>
+<div>{{watch.desc}}</div>
 {% endfor %}
 </div>";
 	}
@@ -44,9 +44,11 @@ class cms_module_watcheslist_view_django extends cms_module_common_view_django{
 	}
 	
 	public function render($datas){
-		for($i=0 ; $i<count($datas['watches']) ; $i++){
-			$datas['watches'][$i]['link'] = $this->get_constructed_link('watch',$datas['watches'][$i]['id']);
-		}
+	    if (is_countable($datas['watches'])) {
+    		for($i=0 ; $i<count($datas['watches']) ; $i++){
+    			$datas['watches'][$i]['link'] = $this->get_constructed_link('watch',$datas['watches'][$i]['id']);
+    		}
+	    }
 		return parent::render($datas);
 	}
 	

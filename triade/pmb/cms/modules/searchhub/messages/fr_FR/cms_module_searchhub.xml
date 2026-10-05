@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_searchhub.xml,v 1.1.2.9.2.2 2025/04/10 06:56:04 tsamson Exp $ -->
+
+<XMLlist>
+    <entry code="cms_module_searchhub_add_profile">Ajouter un profil</entry>
+    <entry code="cms_module_searchhub_profile_name">Nom du profil :</entry>
+    <entry code="cms_module_searchhub_profile_search">Recherches :</entry>
+    <entry code="cms_module_searchhub_profile_search_order">Ordre</entry>
+    <entry code="cms_module_searchhub_profile_search_name">Nom de recherche</entry>
+    <entry code="cms_module_searchhub_profile_search_type">Type de recherche</entry>
+    <entry code="cms_module_searchhub_profile_search_dest">Page de destination</entry>
+    <entry code="cms_module_searchhub_profile_add_search">Ajouter une recherche</entry>
+    <entry code="cms_module_searchhub_profile_action">Action</entry>
+    <entry code="cms_module_searchhub_profile_search_type_universe">Univers de recherche</entry>
+	<entry code="cms_module_searchhub_profile_confirm_delete">Voulez-vous vraiment supprimer ce profil ?</entry>
+	<entry code="cms_module_searchhub_profile_search_confirm_delete">Voulez-vous vraiment supprimer cette recherche ?</entry>
+    <entry code="cms_module_searchhub_profile_search_name_label">Nom de la recherche :</entry>
+    <entry code="cms_module_searchhub_profile_search_description_label">Description de la recherche :</entry>
+	<entry code="cms_module_searchhub_profile_search_type_label">Type de recherche :</entry>
+	<entry code="cms_module_searchhub_profile_search_type_none">Sélectionnez un type de recherche</entry>
+	<entry code="cms_module_searchhub_profile_search_universe">Univers de recherche :</entry>
+	<entry code="cms_module_searchhub_profile_search_universe_none">Sélectionnez un univers de recherche</entry>
+	<entry code="cms_module_searchhub_profile_search_segments">Segments de recherche :</entry>
+    <entry code="cms_module_searchhub_profile_search_segments_none">Sélectionnez des segments de recherche</entry>
+    <entry code="cms_module_searchhub_profile_search_segments_order">Ordre</entry>
+    <entry code="cms_module_searchhub_profile_search_segments_name">Segment</entry>
+    <entry code="cms_module_searchhub_profile_search_placeholder">Text indicatif par défaut :</entry>
+    <entry code="cms_module_searchhub_profile_search_visibility">Visibilité :</entry>
+    <entry code="cms_module_searchhub_profile_search_visibility_none">Sélectionnez une visibilité</entry>
+    <entry code="cms_module_searchhub_profile_search_visibility_all">Tout le temps</entry>
+    <entry code="cms_module_searchhub_profile_search_visibility_connected">Uniquement pour les utilisateurs connectés</entry>
+    <entry code="cms_module_searchhub_profile_search_visibility_categories">Uniquement pour des catégories d'utilisateurs</entry>
+    <entry code="cms_module_searchhub_profile_search_categories_label">Listes de catégories :</entry>
+    <entry code="cms_module_searchhub_profile_search_segments_action">Action</entry>
+    <entry code="cms_module_searchhub_profile_search_other_link">Autres liens :</entry>
+    <entry code="cms_module_searchhub_profile_search_link">Liens :</entry>
+    <entry code="cms_module_searchhub_profile_search_link_check">Vérifier</entry>
+    <entry code="cms_module_searchhub_profile_search_link_label">Libellé :</entry>
+    <entry code="cms_module_searchhub_profile_search_link_title">Title :</entry>
+    <entry code="cms_module_searchhub_profile_search_link_target_blank">Nouvel onglet</entry>
+    <entry code="cms_module_searchhub_profile_search_type_external">Recherche externe</entry>
+    <entry code="cms_module_searchhub_profile_search_form_action">Page de destination :</entry>
+    <entry code="cms_module_searchhub_profile_search_form_input_name">Nom du paramètre de la recherche :</entry>
+    <entry code="cms_module_searchhub_profile_search_form_method">Méthode d'envoi :</entry>
+    <entry code="cms_module_searchhub_profile_search_form_method_none">Sélectionnez une méthode</entry>
+    <entry code="cms_module_searchhub_profile_search_form_method_get">Méthode GET</entry>
+    <entry code="cms_module_searchhub_profile_search_form_method_post">Méthode POST</entry>
+    <entry code="cms_module_searchhub_profile_search_type_cms_editorial">Contenu éditorial</entry>
+	<entry code="cms_module_searchhub_profile_search_cms_page">Page de portail</entry>
+	<entry code="cms_module_searchhub_profile_search_cms_page_none">Sélectionnez une page de portail</entry>
+	<entry code="cms_module_searchhub_profile_search_type_simple">Recherche simple</entry>
+    <entry code="cms_module_searchhub_profile_search_active">Activer la recherche en OPAC :</entry>
+</XMLlist>

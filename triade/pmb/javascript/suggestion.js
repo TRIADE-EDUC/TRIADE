@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestion.js,v 1.2 2017-09-28 09:23:37 dgoron Exp $
+// $Id: suggestion.js,v 1.2 2017/09/28 09:23:37 dgoron Exp $
 
 //selection origine
 function sel_orig() {

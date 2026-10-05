@@ -1,0 +1,17 @@
+{% extends 'contribution_area_scenario.tpl.html' %}
+<!-- $Id: contribution_area_sub_scenario.tpl.html,v 1.2 2020/12/17 09:15:02 qvarin Exp $ -->
+
+
+{% block breadcrumb %}
+
+{% endblock %}
+
+{% block link_form %}
+<a href='#' title="{{ form.name }}" data-form_url="{{ form.url }}">
+	{% if form.response %}
+		{{ form.response }}
+	{% else %}
+		{{ form.name }}
+	{% endif %}
+</a>
+{% endblock %}

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_bannette_view_bannette_from_tpl.class.php,v 1.3 2018-06-19 13:43:38 dgoron Exp $
+// $Id: cms_module_bannette_view_bannette_from_tpl.class.php,v 1.5 2022/02/18 08:53:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/bannette.class.php") ;
 
 class cms_module_bannette_view_bannette_from_tpl extends cms_module_common_view_django{
@@ -64,23 +65,13 @@ class cms_module_bannette_view_bannette_from_tpl extends cms_module_common_view_
 		global $cms_module_bannette_view_django_template_record_content;
 		global $cms_module_bannette_view_django_template_bannette_content;
 		
-		$this->parameters['nb_notices'] = $cms_module_bannette_view_bannette_nb_notices+0;
+		$this->parameters['nb_notices'] = (int) $cms_module_bannette_view_bannette_nb_notices;
 		$this->parameters['used_record_template'] = $cms_module_bannette_view_django_template_record_content;
 		$this->parameters['used_bannette_template'] = $cms_module_bannette_view_django_template_bannette_content;
 		return parent::save_form();
 	}
 		
 	public function render($datas){
-		global $dbh;
-		global $opac_url_base;
-		global $opac_show_book_pics;
-		global $opac_book_pics_url;
-		global $opac_notice_affichage_class;
-		global $opac_bannette_notices_depliables;
-		global $opac_bannette_notices_format;
-		global $opac_bannette_notices_order;
-		global $liens_opac;
-		
 		if($datas['id']) {
 			$bannette = new bannette($datas['id']);
 			$info_header = $bannette->construit_liens_HTML();

@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if (isset($_POST["formattrombi"])) {
 	setcookie("formattrombi",$_POST["formattrombi"],time()+36000*24*30);
 	$formattrombi=$_POST["formattrombi"];
@@ -11,7 +12,7 @@ if (isset($_POST["formattrombi"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,6 +33,8 @@ if (isset($_POST["formattrombi"])) {
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Trombinoscope</title>
 </head>
@@ -70,12 +73,12 @@ if (isset($_POST["newcoord"])) {
 	
 }
 
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$idclasse' AND code_class='$idclasse' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 $cl=$data[0][0];
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 
 	if ($data[$i][1] > 0) {
 		$x=cherchePlanX($data[$i][1],$idclasse);
@@ -94,7 +97,7 @@ for($i=0;$i<count($data);$i++) {
 							
 	}
 ?>
-	<a><div align="center" id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:<?php print $width ?>;height:<?php print $height ?>"><img <?php print "$width $height" ?>  src="image_trombi.php?idE=<?php print $data[$i][1]?>" /><div style='background-color:#CCCCCC;width:<?php print $width ?>; ' ><?php print strtoupper($data[$i][2])."<br>".ucwords($data[$i][3])?></div></a>
+	<a><div align="center" id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:<?php print $width ?>;height:<?php print $height ?>"><img <?php print "$width $height" ?>  src="image_trombi.php?idE=<?php print $data[$i][1]?>" style='box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;' /><div style='background-color:#CCCCCC;width:<?php print $width ?>; ' ><?php print strtoupper($data[$i][2])."<br>".ucwords($data[$i][3])?></div></a>
 	</div>
 <?php 
 	$listeDiv.="\"$idid\",";
@@ -109,7 +112,7 @@ if ($y == "-1") {
 }
 $idid="B".$idclasse;
 ?>
-	<div id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:130px;height:50px;background-color:#CCCCCC; border: solid #000 1px; text-align: center;text-valign: center;font-weight: bold;" ><br>BUREAU</div>
+	<div id="<?php print $idid ?>" style="position:absolute;top:<?php print $y?>;left:<?php print $x?>;z-index:1;width:130px;height:50px;background-color:#CCCCCC; border: solid #000 1px; text-align: center;text-valign: center;font-weight: bold; box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;" ><br>BUREAU</div>
 
 <?php
 // deconnexion en fin de fichier
@@ -159,7 +162,7 @@ SET_DHTML(CURSOR_MOVE, TRANSPARENT, <?php print $listeDiv ?>);
 function capture_position() {
 	var valeur="";
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		print "\tval0=\"E".$data[$i][1]."\";\n";
 		//o0.x; o0.y;
 		print "\to0=dd.elements[val0]; \n";

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: it_IT.xml,v 1.2 2014-09-18 08:00:54 arenou Exp $ -->
+$Id: it_IT.xml,v 1.2 2014/09/18 08:00:54 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="long_name">Droits d'accès Emprunteurs - Documents numériques</entry>

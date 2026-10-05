@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_sort.class.php,v 1.11 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_entity_common_sort.class.php,v 1.14 2020/01/09 08:11:16 jlaurent Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,6 +12,7 @@ class frbr_entity_common_sort extends frbr_entity_root{
 	protected $indexation_type;
 	protected $indexation_path;
 	protected $fields;
+	protected $details;
 	
 	public function __construct($id=0){
 	    $this->id = (int) $id;
@@ -22,8 +23,12 @@ class frbr_entity_common_sort extends frbr_entity_root{
 	    $this->num_datanode = (int) $id;
 	}
 	
+	public function get_num_datanode(){
+	    return $this->num_datanode;
+	}
+	
 	/*
-	 * RÃ©cupÃ©ration des informations en base
+	 * Récupération des informations en base
 	 */
 	protected function fetch_data(){
 		$this->parameters = new stdClass();
@@ -46,28 +51,44 @@ class frbr_entity_common_sort extends frbr_entity_root{
 		global $charset;
 		
 		$human_query = "";
-		$frbr_instance_fields = new frbr_filter_fields($this->indexation_type, $this->indexation_path);
+		$details = $this->managed_datas[$this->manage_id]['details'];
+		$frbr_instance_fields = new frbr_sort_fields($this->indexation_type, $this->indexation_path, $details);
 		foreach ($this->managed_datas[$this->manage_id]['fields'] as $field) {
 			$f=explode("_",$field['NAME']);
-			if($f[2]) {
+			$title = "";			
+			if ($f[0] == "authperso") {
+			    $groups = $frbr_instance_fields->grouped();
+			    foreach($groups as $group) {
+			        foreach ($group as $id => $label) {
+			            if ($id == $field['NAME']) {
+			                $title = $label;
+			                break;
+			            }
+			        }
+			    }
+			}else if($f[2] && isset($frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["TABLE"])) {
 				$title = $msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["TABLE"][0]["TABLEFIELD"][$f[2]]["NAME"]];
-			} else {
+			} elseif (isset($msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"]])) {
 				$title = $msg[$frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"]];
+			} else {
+			    $title = $frbr_instance_fields::$fields[$frbr_instance_fields->type]["FIELD"][$f[1]]["NAME"];
 			}
-			if ($human_query) $human_query .= ", ";
+			if ($human_query) {
+			    $human_query .= ", ";
+			}
 			$human_query .= " <i><strong>".htmlentities($title,ENT_QUOTES,$charset)."</strong> ".htmlentities(get_msg_to_display(frbr_sort_fields::get_types()[$field['TYPE']]),ENT_QUOTES,$charset)." (".htmlentities(get_msg_to_display(frbr_sort_fields::get_directions()[$field['ASC_DESC']]),ENT_QUOTES,$charset).")</i> ";
 		}
 		return $human_query;
 	}
 	
 	/*
-	 * MÃ©thode de gÃ©nÃ©ration du formulaire... 
+	 * Méthode de génération du formulaire... 
 	 */
 	public function get_form(){	
 		$form = "";
 		if (isset($this->manage_id) && $this->manage_id) {		
 			$form = $this->get_human_query();
-			$form .= "<img src='".get_url_icon('b_edit.png')."' data-pmb-evt='{\"class\":\"EntityForm\", \"type\":\"click\", \"method\":\"loadDialog\", \"parameters\":{\"element\":\"sort\", \"idElement\":\"".$this->num_datanode."\", \"manageId\": \"".str_replace("sort", "", $this->manage_id)."\", \"quoi\" : \"sorting\", \"numPage\":\"".static::get_num_page_from_num_datanode($this->num_datanode)."\"}}' title=\"".$this->format_text($this->msg['frbr_entity_common_sort_edit'])."\" />";
+			$form .= "<img src='".get_url_icon('b_edit.png')."' alt='".$this->format_text($this->msg['frbr_entity_common_sort_edit'])."' data-pmb-evt='{\"class\":\"EntityForm\", \"type\":\"click\", \"method\":\"loadDialog\", \"parameters\":{\"element\":\"sort\", \"idElement\":\"".$this->num_datanode."\", \"manageId\": \"".str_replace("sort", "", $this->manage_id)."\", \"quoi\" : \"sorting\", \"numPage\":\"".static::get_num_page_from_num_datanode($this->num_datanode)."\"}}' title=\"".$this->format_text($this->msg['frbr_entity_common_sort_edit'])."\" />";
 		}
 		return $form;
 	}
@@ -108,7 +129,7 @@ class frbr_entity_common_sort extends frbr_entity_root{
 	}
 
 	/*
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	 */
 	public function delete(){
 		if($this->id){
@@ -124,8 +145,12 @@ class frbr_entity_common_sort extends frbr_entity_root{
 
 	public function sort_datas($datas){
 		$sorted_datas = array();
+		if (empty($this->fields)) {
+		    shuffle($datas);
+		    return $datas;
+		}
 		if(is_array($this->parameters->id) && is_array($datas) && count($this->parameters->id) && count($datas)){
-			$frbr_sort_fields = new frbr_sort_fields($this->indexation_type, $this->indexation_path);
+			$frbr_sort_fields = new frbr_sort_fields($this->indexation_type, $this->indexation_path, $this->details);
 			$frbr_sort_fields->unformat_fields($this->fields);
 			$sorted_datas = $frbr_sort_fields->sort_datas($datas);
 		}
@@ -138,7 +163,10 @@ class frbr_entity_common_sort extends frbr_entity_root{
 	}
 
 	public function set_manage_id($manage_id){
-		$this->manage_id = $manage_id;
+	    //tri aleatoire
+	    if ($manage_id != "sortRandom") {
+			$this->manage_id = $manage_id;
+		}
 	}
 	
 	public function set_indexation_type($indexation_type) {
@@ -151,5 +179,9 @@ class frbr_entity_common_sort extends frbr_entity_root{
 	
 	public function set_fields($fields) {
 		$this->fields = $fields;
+	}
+	
+	public function set_details($details) {
+	    $this->details = $details;
 	}
 }

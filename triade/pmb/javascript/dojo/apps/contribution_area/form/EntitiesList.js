@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntitiesList.js,v 1.2 2017-01-20 09:54:51 tsamson Exp $
+// $Id: EntitiesList.js,v 1.2 2017/01/20 09:54:51 tsamson Exp $
 
 
 define([

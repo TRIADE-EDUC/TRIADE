@@ -6,7 +6,7 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -23,14 +23,13 @@ include_once("./librairie_php/lib_error.php");
 include("common/config.inc.php");
 include("librairie_php/db_triade.php");
 $cnx=cnx();
-//error($cnx);
 $libel=urldecode($_GET["libel"]);
 $data=$_GET["args"];
 $data=urldecode($data);
 $data=explode(";",$data);
 array_shift($data);
 $i=1;
-$l=count($data);
+$l=countTriade($data);
 while($i<$l){
 	unset($data[$i]);
 	$i=$i+2;
@@ -78,7 +77,7 @@ $sql .= "
 	n.typenote,
 	n.notationsur
 FROM
-	${prefixe}notes n, ${prefixe}eleves e
+	{$prefixe}notes n, {$prefixe}eleves e
 WHERE
 	sujet = '$sujet'
 AND date  = '$date'
@@ -90,15 +89,17 @@ AND n.elev_id = e.elev_id
 ORDER BY e.nom,e.prenom
 ";
 
+
+$curs=execSql($sql);
+$mat=chargeMat($curs);
+
 $sujet2=$sujet;
 $notationsur=$mat[0][5];
 if (trim($mat[0][4]) == "en") { $note_usa=1;$typenote="en";$titre="Note en mode USA";}
 if ((trim($mat[0][4]) == "fr") || (trim($mat[0][4]) == "")) { $note_usa=0;$typenote="fr";$titre="Note de 0 a $notationsur";}
 
-$curs=execSql($sql);
-$mat=chargeMat($curs);
-for($i=0;$i<count($mat);$i++){
-	for($j=0;$j<count($mat[$i]);$j++){
+for($i=0;$i<countTriade($mat);$i++){
+	for($j=0;$j<countTriade($mat[$i]);$j++){
 		if($mat[$i][$j] == -1){
 			$mat[$i][$j] = 'abs';
 		} elseif ($mat[$i][$j] == -2) {
@@ -121,18 +122,25 @@ for($i=0;$i<count($mat);$i++){
 
 }
 
-$mySession[Sn]=$_SESSION["nom"];
-$mySession[Sp]=$_SESSION["prenom"];
+$mySession['Sn']=$_SESSION["nom"];
+$mySession['Sp']=$_SESSION["prenom"];
 $note_en=0;
 ?>
 <html>
 <head>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<style>
+.na-card  { background:#fff !important; border:1px solid #c5cae9 !important; border-radius:8px !important; padding:14px 16px !important; margin:10px 0 10px !important; }
+.na-row   { display:flex !important; align-items:center !important; margin-bottom:8px !important; gap:8px !important; flex-wrap:wrap !important; }
+.na-lbl   { font-size:12px !important; font-weight:600 !important; color:#333 !important; min-width:140px !important; flex-shrink:0 !important; }
+.na-foot  { margin-top:8px !important; overflow:hidden !important; }
+</style>
 <script language="JavaScript" src="./librairie_js/lib_note.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -148,51 +156,43 @@ $note_en=0;
 <div align='center'><?php top_h(); ?></div>
 <SCRIPT language="JavaScript" src="./librairie_js/menuprof1.js"></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPROF22 ?> </b><font id="color2"><?php print urldecode($_GET["libel"])?></font> </font></td></tr>
+<tr id='coulBar0' ><td height="2"><b><font id='menumodule1' ><?php print LANGPROF22 ?> </b><font id="color2"><?php print urldecode($_GET["libel"])?></font> </font></td></tr>
 <tr id='cadreCentral0' >
 <td valign=top>
 <br />
-<!-- // fin  -->
-<table border='0' align='center' style="border-collapse: collapse;"  width='500' >
-<tr><td>
-<table border="1" width='300' >
-        <tr>
-            	<td bgcolor="#FFFFFF" align='right' >&nbsp;<?php print LANGPROF6 ?> : &nbsp;</td>
-            	<td bgcolor="#FFFFFF">&nbsp;<?php print stripslashes($sujet2)?>&nbsp;</td>
-            </tr>
-            <tr>
-            	<td bgcolor="#FFFFFF" align='right' >&nbsp;<?php print LANGTE7 ?> : &nbsp;</td>
-            	<td bgcolor="#FFFFFF">&nbsp;<?php print dateForm($date)?>&nbsp;</td>
-            </tr>
-            <tr>
-            	<td bgcolor="#FFFFFF" align='right' >&nbsp;<?php print LANGPER19 ?> : &nbsp;</td>
-            	<td bgcolor="#FFFFFF">&nbsp;<?php print $coef?>&nbsp;</td>
-            </tr>
-            <tr>
-            	<td bgcolor="#FFFFFF" align='right' >&nbsp;<?php print "Notation sur" ?> : &nbsp;</td>
-            	<td bgcolor="#FFFFFF">&nbsp;<?php print "$notationsur" ?>&nbsp;</td>
-            </tr>
-
-            </table>
-</td><td align="center" width="80%">
-<table width='100%'>
 <?php
 $fichier="./data/pdf_bull/edition_".$_SESSION["id_pers"].".pdf";
 ?>
-<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="open('visu_pdf_prof.php?id=<?php print $fichier?>','_blank','');"><img src="image/commun/print.gif" border=0 ></a></td><td>
-<?php 
-if ($_SESSION["membre"] == "menuprof") { ?>
-	<form method='post' action="devoirvisu2.php" >
-	<input type='hidden' name="sClasseGrp" value="<?php print $_SESSION["sClasseGrp"] ?>" />
-	<input type='hidden' name="sMat" value="<?php print $_SESSION["sMat"] ?>" />
-	<input type='hidden' name="anneeScolaire" value="<?php print $anneeScolaire ?>" />
-	<script>buttonMagicSubmit("Retour","create",'')</script>
-	</form>
-<?php } ?>
-</td></tr></table>
-</td></tr></table>
+<div class="na-card">
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPROF6 ?> :</span>
+    <span><?php print stripslashes($sujet2) ?></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGTE7 ?> :</span>
+    <span><?php print dateForm($date) ?></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl"><?php print LANGPER19 ?> :</span>
+    <span><?php print $coef ?></span>
+  </div>
+  <div class="na-row">
+    <span class="na-lbl">Notation sur :</span>
+    <span><?php print $notationsur ?></span>
+  </div>
+</div>
+<div class="na-foot">
+  <script language=JavaScript>buttonMagic('Imprimer','visu_pdf_prof.php?id=<?php print $fichier?>','_blank','','');</script>
+  <?php if ($_SESSION["membre"] == "menuprof") { ?>
+  <form method='post' action="devoirvisu2.php">
+    <input type='hidden' name="sClasseGrp" value="<?php print $_SESSION["sClasseGrp"] ?>" />
+    <input type='hidden' name="sMat" value="<?php print $_SESSION["sMat"] ?>" />
+    <input type='hidden' name="anneeScolaire" value="<?php print $anneeScolaire ?>" />
+    <script>buttonMagicSubmit("Retour","create",'')</script>
+  </form>
+  <?php } ?>
+</div>
 <br /><br />
-<ul>
 <?php
 // creation PDF
 define('FPDF_FONTPATH','./librairie_pdf/fpdf/font/');
@@ -216,24 +216,31 @@ $pdf->SetXY($xcoor,$ycoor);
 $pdf->WriteHTML($texte3);
 $ycoor+=20;
 ?>
-            <table border="1" style="border-collapse: collapse;" >
-            <?php
+<table class="brs-table" width="100%">
+<thead>
+<tr>
+  <th class="brs-th" style="text-align:left !important;">Élève</th>
+  <th class="brs-th" style="width:80px !important; text-align:center !important;">Note</th>
+</tr>
+</thead>
+<tbody>
+<?php
 	    $nb=0;
 	    $notetotal=0;
 	    $ii=0;
 	    $note_en=0;
-            for($ai=0;$ai<count($mat);$ai++){
+            for($ai=0;$ai<countTriade($mat);$ai++){
             	print "<tr class=\"tabnormal\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\">\n";
 	    		$note=$mat[$ai][2];
 	    		if ($note == "néant") {$note="";}
-	       	 	$noteaff=$note;
-	       	 	if (trim($mat[$ai][4]) == "en") {
-	       	 			$note_en=1;
+       	 	$noteaff=$note;
+       	 	if (trim($mat[$ai][4]) == "en") {
+       	 			$note_en=1;
 			           	$noteaff=recherche_note_en($note);
             		}
 
-	       	 	print "<td>&nbsp;".trunchaine($mat[$ai][1],30)."&nbsp;</td>\n";
-        		print "<td>&nbsp;".$noteaff."&nbsp;</td>\n";
+       	 	print "<td class='brs-td'>&nbsp;".trunchaine($mat[$ai][1],30)."&nbsp;</td>\n";
+        		print "<td class='brs-td'>&nbsp;".$noteaff."&nbsp;</td>\n";
            		print "</tr>\n";
 
 			if (($note >= 0) && (is_numeric($note))) {
@@ -291,7 +298,7 @@ $ycoor+=20;
 		if ($note_en) {
 			$moyenneleveaff=recherche_note_en($moy);
 		}
-		print "<tr><td align=right><b>Moyenne du devoir :&nbsp;</b></td><td align=center><b>$moyenneleveaff</b></td></tr>";
+		print "<tr><td class='brs-td' style='text-align:right;'><b>Moyenne du devoir :&nbsp;</b></td><td class='brs-td' style='width:80px;text-align:center;'><b>$moyenneleveaff</b></td></tr>";
 		$pdf->SetXY($xcoor,$ycoor);
 		$pdf->MultiCell(50,10,"Moyenne du devoir : ",1,'R',0);
 		$xcoor+=50;
@@ -359,9 +366,8 @@ $image="./data/pdf_bull/graph_".$_SESSION["id_pers"].".jpg";
 $graph->Stroke("$image");
 $pdf->Image($image,$xlogo,$ylogo);
 ?>
-
-            </table>
-</ul>
+</tbody>
+</table>
 <br><br>
 <?php
 if (file_exists($fichier)) unlink($fichier);
@@ -375,17 +381,17 @@ $pdf->output('F',$fichier);
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

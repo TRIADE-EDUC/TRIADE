@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PopupZone.js,v 1.2 2017-09-05 12:42:33 vtouchard Exp $
+// $Id: PopupZone.js,v 1.2 2017/09/05 12:42:33 vtouchard Exp $
 
 
 define(['dojo/_base/declare', 

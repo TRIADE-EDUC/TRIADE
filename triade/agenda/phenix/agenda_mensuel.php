@@ -25,7 +25,7 @@
   ?> <SCRIPT> HelpPhenixCtx="{E78236EE-3D7C-4A38-86DF-B9C6A8993542}.htm"; </SCRIPT> <?php
   // Mod Aide
   // Mod D&D
-  $DB_CX->DbQuery("SELECT util_dd FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
+  $DB_CX->DbQuery("SELECT util_dd FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$idUser);
   $util_dd = $DB_CX->DbResult(0,0);  
   if (!$callByDDUpdate) {
     // D&D : est ce que l'utilisateur a le droit de modifier l'agenda en cours
@@ -179,14 +179,14 @@
 	// Fin Mod D&D
     $lienAjout = ((($USER_SUBSTITUE==$idUser || $AFFECTE_NOTE) and ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR)) or ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION)) ? "&nbsp;<A href=\"javascript: nvNote('".$tsJour."','','');\"><IMG src=\"image/ajout_note.gif\" width=\"13\" height=\"15\" border=\"0\" align=\"top\" vspace=\"1\" hspace=\"1\" title=\"".trad("MENSUEL_AJOUT_NOTE_J")."\"></A>" : "";
     // Evenements du jour
-    $DB_CX->DbQuery("SELECT DISTINCT eve_id, eve_libelle, eve_util_id, eve_type, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin FROM ${PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$tsJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$tsJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+    $DB_CX->DbQuery("SELECT DISTINCT eve_id, eve_libelle, eve_util_id, eve_type, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin FROM {$PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$tsJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$tsJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
     while ($enr = $DB_CX->DbNextRow()) {
       $dureeEvent = ($enr['dateDebut']!=$enr['dateFin']) ? "<BR>".sprintf(trad("COMMUN_DUREE_EVENEMENT"), $enr['dateDebut'], $enr['dateFin']) : "";
       $lienModif = (($MODIF_PARTAGE || $enr['eve_util_id']==$idUser) && ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR)) ? " href=\"javascript: affEvent('".$enr['eve_id']."')\"" : "";
       $ligneEvenement .= "<A".$lienModif."><IMG src=\"image/evenement/evenement".$enr['eve_type'].".gif\" width=\"15\" height=\"15\" border=\"0\" align=\"absmiddle\" vspace=\"1\"".infoPopup($enr['eve_libelle'].$dureeEvent)."></A>&nbsp;";
     }
     // Anniversaire(s) du calepin (y compris les contacts partages)
-    $DB_CX->DbQuery("SELECT DISTINCT cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage,cal_date_naissance FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$tsJour));
+    $DB_CX->DbQuery("SELECT DISTINCT cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage,cal_date_naissance FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$tsJour));
     while ($enr = $DB_CX->DbNextRow()) {
       $tabDate = explode("-",$enr['cal_date_naissance']);
       $infoAge = afficheAge($enr['cal_date_naissance'],$tsJour);
@@ -198,7 +198,7 @@
     $tzHiver = calculBasculeDST($tzDateHiver,date("Y",$tsJour),$tzHeureHiver,$tzGmt,1);
     //Preparation au decalage horaire
     list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$tsJour);
-    $DB_CX->DbQuery("SELECT age_id,age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_util_id,CONCAT(".$NOM_UTIL_CREATEUR.") AS nomCreateur,age_detail,aco_termine,age_prive,age_couleur,age_rappel,age_rappel_coeff,age_mere_id,age_nb_participant,age_createur_id,age_date,age_date_creation,age_date_modif,age_modificateur_id,CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_id,cal_util_id,cal_partage,cal_societe,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2 WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND (((($age_date='".$leJour."' OR ($age_dateAvant='".$leJour."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id IN (2,3))".$whereCouleur.") OR (age_date LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$tsJour)." AND age_aty_id=1)) AND t1.util_id=age_createur_id AND t2.util_id=age_modificateur_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
+    $DB_CX->DbQuery("SELECT age_id,age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_util_id,CONCAT(".$NOM_UTIL_CREATEUR.") AS nomCreateur,age_detail,aco_termine,age_prive,age_couleur,age_rappel,age_rappel_coeff,age_mere_id,age_nb_participant,age_createur_id,age_date,age_date_creation,age_date_modif,age_modificateur_id,CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_id,cal_util_id,cal_partage,cal_societe,cal_adresse,cal_cp,cal_ville,cal_pays,cal_domicile,cal_travail,cal_portable,cal_fax,cal_email,cal_emailpro FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2 WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND (((($age_date='".$leJour."' OR ($age_dateAvant='".$leJour."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id IN (2,3))".$whereCouleur.") OR (age_date LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$tsJour)." AND age_aty_id=1)) AND t1.util_id=age_createur_id AND t2.util_id=age_modificateur_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
     if ($DB_CX->DbNumRows()) {
       while ($enr = $DB_CX->DbNextRow()) {
         //Recuperation des droits de l'utilisateur sur la note
@@ -264,7 +264,7 @@
           }
           //Mod Emplacement Plus
           $DB = new Db($DB_CX->ConnexionID);
-          $DB->DbQuery("SELECT empl_type FROM ${PREFIX_TABLE}emplacement WHERE empl_nom='".$enr['age_lieu']."'");
+          $DB->DbQuery("SELECT empl_type FROM {$PREFIX_TABLE}emplacement WHERE empl_nom='".$enr['age_lieu']."'");
           if ($empl = $DB->DbNextRow()) $emplType = $empl['empl_type'];
           else $emplType = 0;
            if ($emplType!=0)

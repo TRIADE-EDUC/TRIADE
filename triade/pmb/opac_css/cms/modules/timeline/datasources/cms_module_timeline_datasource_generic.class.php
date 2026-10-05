@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_timeline_datasource_generic.class.php,v 1.3 2017-10-17 10:22:11 apetithomme Exp $
+// $Id: cms_module_timeline_datasource_generic.class.php,v 1.3 2017/10/17 10:22:11 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class cms_module_timeline_datasource_generic extends cms_module_common_datasource {
 	
-	protected static $prefix = ''; /** PrÃ©fixe Ã  dÃ©river selon les entitÃ©s enfants **/
+	protected static $prefix = ''; /** Préfixe à dériver selon les entités enfants **/
 	
 	public function __construct($id=0){
 		parent::__construct($id);
@@ -17,7 +17,7 @@ class cms_module_timeline_datasource_generic extends cms_module_common_datasourc
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$datas = array();

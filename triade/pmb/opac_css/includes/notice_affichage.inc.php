@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_affichage.inc.php,v 1.63 2019-06-13 09:11:46 arenou Exp $
+// $Id: notice_affichage.inc.php,v 1.69.2.1 2024/05/22 10:22:59 pmallambic Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -15,7 +15,7 @@ require_once($class_path."/notice_onglet.class.php");
 require_once($class_path."/record_display.class.php");
 require_once($class_path."/record_display_modes.class.php");
 
-//afin d'inclure les fichiers contenant les fonctions particuliÃ¨res d'affichage
+//afin d'inclure les fichiers contenant les fonctions particulières d'affichage
 // require_once($include_path."/func_phototheque.inc.php"); EST REMPLACE PAR LE CODE CI-DESSOUS
 global $opac_notice_groupe_fonction;
 if ($opac_notice_groupe_fonction) {
@@ -36,31 +36,33 @@ function get_aff_function() {
 	global $class_path,$include_path;
 	global $is_aff_notice_fonction;
 	global $opac_notices_display_modes;
-	
+
 	if (!$is_aff_notice_fonction) {
-		
-		//on utilise le systÃ¨me de choix des modes d'affichage
+
+		//on utilise le système de choix des modes d'affichage
 		$recordmodes = record_display_modes::get_instance();
-		if($opac_notices_display_modes && $recordmodes){
-			if($mode_id=$recordmodes->get_current_mode()){
-				$aff_notice_fonction=$recordmodes->get_aff_function($mode_id);
-				
-				if($aff_notice_fonction){
-					$is_aff_notice_fonction=true;
+		if ($opac_notices_display_modes && $recordmodes) {
+			if ($mode_id=$recordmodes->get_current_mode()) {
+				$aff_notice_fonction = $recordmodes->get_aff_function($mode_id);
+
+				if ($aff_notice_fonction) {
+					$is_aff_notice_fonction = true;
 					return $aff_notice_fonction;
 				}
 			}
 		}
-		
-		$couples=explode(";",$opac_notice_groupe_fonction);
+
+		$couples=explode(";", $opac_notice_groupe_fonction ?? "");
 		for ($i=0; $i<count($couples); $i++) {
-			$c=explode(" ",trim($couples[$i]));
-			$t_typdoc_o[]=explode(",",trim($c[0]));
-			//Tri du tableau
-			$fonction[]=(isset($c[1]) ? trim($c[1]) : '');
+			$c = explode(" ", trim($couples[$i] ?? ""));
+			$t_typdoc_o[] = explode(",", trim($c[0] ?? ""));
+
+			// Tri du tableau
+			$fonction[] = (isset($c[1]) ? trim($c[1]) : '');
 		}
-		$t_typdoc=explode(",",$l_typdoc);
-		//Pour chaque t_typdoc, recherche des Ã©lÃ©ments qui le contienne
+
+		$t_typdoc = explode(",", $l_typdoc ?? "");
+		// Pour chaque t_typdoc, recherche des éléments qui le contienne
 		for ($i=0; $i<count($t_typdoc); $i++) {
 			for ($j=0; $j<count($t_typdoc_o); $j++) {
 				$as=array_search($t_typdoc[$i],$t_typdoc_o[$j]);
@@ -74,7 +76,7 @@ function get_aff_function() {
 					$j--;
 				}
 			}
-		}	
+		}
 		if ((count($t_typdoc_o))&&($fonction[0])) {
 			$aff_notice_fonction=$fonction[0];
 		}
@@ -101,15 +103,16 @@ function aff_notice($id, $nocart=0, $gen_header=1, $use_cache=0, $mode_aff_notic
 	global $opac_notices_format_onglets;
 	global $lvl,$search_type_asked;
 	global $record_css_already_included; // Pour pas inclure la css 10 fois
+	global $opac_rgaa_active;
 	
-	$retour_aff = '';
+	$retour_aff = "";
 	if ((($opac_cart_allow)&&(!$opac_cart_only_for_subscriber))||(($opac_cart_allow)&&($_SESSION["user_code"]))) {
 		$cart=1; 
 	} else {
 		$cart=0;
 	}
 	if ($nocart) $cart=0;
-	$id+=0;	
+	$id = intval($id);
 	//Recherche des fonctions d'affichage
 	$entete='';
 	$recordmodes = record_display_modes::get_instance();
@@ -186,20 +189,39 @@ function aff_notice($id, $nocart=0, $gen_header=1, $use_cache=0, $mode_aff_notic
 						}
 						$record_css_already_included = true;
 					}
-					// Si on l'appelle par le tag {% etagere_see %}, on veut tout le temps le rÃ©duit...
+					// Si on l'appelle par le tag {% etagere_see %}, on veut tout le temps le réduit...
 					$trace = debug_backtrace();
 					$count_trace = count($trace);
 					$from_etagesee_tag = false;
+					$from_recordsee_tag = false;
 					for ($i = 2; $i < $count_trace; $i++) {
-					    if (get_class($trace[$i]['object']) === "Etageresee_Tag") {
+					    if (isset($trace[$i]['object']) && get_class($trace[$i]['object']) === "Etageresee_Tag") {
 					        $from_etagesee_tag=true;
+					    }
+					    if (isset($trace[$i]['object']) && get_class($trace[$i]['object']) === "Recordsee_Tag") {
+					        $from_recordsee_tag=true;
 					    }
 					}
 					if($from_etagesee_tag === true){
 					    $retour_aff .= record_display::get_display_in_result($id, $template_directory);
+					}elseif($from_recordsee_tag === true){
+					    $retour_aff .= record_display::get_display_in_result($id, $template_directory);
 					}else{
     					switch ($lvl) {
     						case 'notice_display' :
+    						    $from_serial_analysis = false;
+    						    if(!empty($_GET['id']) && $_GET['id'] != $id) {
+    						        if(notice::get_niveau_biblio($_GET['id']) == 's' && notice::get_niveau_biblio($id) == 'a') {
+    						            $from_serial_analysis = true;
+    						        }
+    						    }
+    						    if($from_serial_analysis) {
+    						        $retour_aff .= record_display::get_display_in_result($id, $template_directory);
+    						    } else {
+    						        $retour_aff .= record_display::get_display_extended($id, $template_directory);
+    						    }
+    						    
+    						    break;
     						case 'bulletin_display' :
     						case 'resa' :
     							$retour_aff .= record_display::get_display_extended($id, $template_directory);
@@ -252,7 +274,12 @@ function aff_notice($id, $nocart=0, $gen_header=1, $use_cache=0, $mode_aff_notic
 				$retour_aff=$onglet_perso->insert_onglets($id,$retour_aff);
 			}
 			if(!$depliable && $opac_notice_enrichment && $enrichment==1){
-				$retour_aff.="<script type='text/javascript'>getEnrichment('$id');</script>";
+				$retour_aff.="<script>getEnrichment('$id');</script>";
+			}
+		}
+		if($opac_rgaa_active){
+			if(strpos($retour_aff, '<article>') === false){
+				$retour_aff ="<article>". $retour_aff."</article>";
 			}
 		}
 	}	
@@ -267,6 +294,7 @@ function aff_notice_unimarc($id,$nocart=0, $entrepots_localisations=array(), $mo
 	global $opac_cart_only_for_subscriber;
 	global $msg;
 	global $record_css_already_included;
+	global $opac_rgaa_active;
 
 	$retour_aff = '';
 	if ((($opac_cart_allow)&&(!$opac_cart_only_for_subscriber))||(($opac_cart_allow)&&($_SESSION["user_code"]))) $cart=1; else $cart=0;
@@ -337,6 +365,11 @@ function aff_notice_unimarc($id,$nocart=0, $entrepots_localisations=array(), $mo
 				$retour_aff .= $current->result ;
 				break ;
 		}
+		if($opac_rgaa_active){
+			if(strpos($retour_aff, '<article>') === false){
+				$retour_aff ="<article>". $retour_aff."</article>";
+			}
+		}
 	}
 	
 	return $retour_aff;
@@ -349,6 +382,7 @@ function aff_serial_unimarc($id,$nocart=0, $entrepots_localisations=array()) {
 	global $opac_cart_allow;
 	global $opac_cart_only_for_subscriber;
 	global $msg;
+	global $opac_rgaa_active;
 
 	$retour_aff = '';
 	if ((($opac_cart_allow)&&(!$opac_cart_only_for_subscriber))||(($opac_cart_allow)&&($_SESSION["user_code"]))) $cart=1; else $cart=0;
@@ -399,6 +433,11 @@ function aff_serial_unimarc($id,$nocart=0, $entrepots_localisations=array()) {
 				$current->genere_double($depliable, 'autre') ;
 				$retour_aff .= $current->result ;
 				break ;
+		}
+		if($opac_rgaa_active){
+			if(strpos($retour_aff, '<article>') === false){
+				$retour_aff ="<article>". $retour_aff."</article>";
+			}
 		}
 	}
 	return $retour_aff;

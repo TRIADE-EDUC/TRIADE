@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE semantics>
+
+<semantics>
+	<semantic>
+		<label>msg:portal_semantic_html</label>
+		<class_name>HtmlSemantic</class_name>
+	</semantic>
+</semantics>

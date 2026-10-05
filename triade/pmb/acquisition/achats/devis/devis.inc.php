@@ -1,16 +1,29 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: devis.inc.php,v 1.55 2019-05-28 15:12:23 btafforeau Exp $
+// $Id: devis.inc.php,v 1.64 2023/08/02 07:36:48 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $id_dev, $id_exer, $id_bibli, $class_path, $include_path, $base_path, $msg, $charset, $action, $chk, $sugchk, $by_mail;
+global $id, $id_dev, $id_exer, $id_bibli, $class_path, $include_path, $base_path, $msg, $charset, $chk, $sugchk, $by_mail;
 
-if(!isset($id_dev)) $id_dev = 0; else $id_dev += 0;
-if(!isset($id_exer)) $id_exer = 0; else $id_exer += 0;
-if(!isset($id_bibli)) $id_bibli = 0; else $id_bibli += 0;
+if(!isset($id)) {
+	$id = 0;
+}
+$id = intval($id);
+if(!isset($id_dev)) {
+	$id_dev = 0;
+}
+$id_dev=intval($id_dev);
+if(!isset($id_exer)) {
+	$id_exer = 0;
+}
+$id_exer = intval($id_exer);
+if(!isset($id_bibli)) {
+	$id_bibli = 0;
+}
+$id_bibli = intval($id_bibli);
 
 // gestion des devis
 require_once("$class_path/entites.class.php");
@@ -26,23 +39,23 @@ require_once("$base_path/acquisition/suggestions/func_suggestions.inc.php");
 require_once ("$class_path/notice.class.php");
 require_once("$class_path/sel_display.class.php");
 require_once("$class_path/lettre_devis.class.php");
-require_once($class_path."/list/accounting/list_accounting_devis_ui.class.php");
+require_once($class_path.'/accounting/accounting_devis_controller.class.php');
 require_once("$class_path/user.class.php");
 
 //Affiche la liste des devis pour un etablissement
 function show_list_dev($id_bibli) {
 	global $accounting_devis_ui_user_input;
 	global $accounting_devis_ui_status;
-	
+
 	$filters = array();
-	$filters['user_input'] = stripslashes($accounting_devis_ui_user_input);
+	$filters['user_input'] = stripslashes($accounting_devis_ui_user_input ?? "");
 	$filters['status'] = $accounting_devis_ui_status;
-	
+
 	$list_accounting_devis_ui = new list_accounting_devis_ui($filters);
 	print $list_accounting_devis_ui->get_display_list();
 }
 
-//Affiche le formulaire de crÃ©ation/modification de devis
+//Affiche le formulaire de création/modification de devis
 function show_dev($id_bibli, $id_dev) {
 	global $msg, $charset;
 	global $modif_dev_form,  $bt_enr, $bt_dup, $bt_sup, $bt_cde, $bt_imp;
@@ -54,7 +67,7 @@ function show_dev($id_bibli, $id_dev) {
 	$bibli = new entites($id_bibli);
 	$lib_bibli = htmlentities($bibli->raison_sociale, ENT_QUOTES, $charset);
 
-	//Prise en compte des adresses utilisateurs par dÃ©faut
+	//Prise en compte des adresses utilisateurs par défaut
 	$tab1 = explode('|', user::get_param($PMBuserid, 'speci_coordonnees_etab'));
 	$tab_adr=array();
 	foreach ($tab1 as $v) {
@@ -147,7 +160,7 @@ function show_dev($id_bibli, $id_dev) {
 
 		//Creation selecteur statut
 		$sel_statut = "<select class='saisie-25em' id='statut' name='statut' >";
-		$list_statut = actes::getStatelist(TYP_ACT_DEV, FALSE);
+		$list_statut = actes::getStatelist(TYP_ACT_DEV, false);
 		foreach($list_statut as $k=>$v){
 			$sel_statut.="<option value='".$k."'>".htmlentities($v, ENT_QUOTES, $charset)."</option>";
 		}
@@ -272,7 +285,7 @@ function show_lig_dev($id_dev) {
 		$form = str_replace('!!id_lig!!', $row->id_ligne, $form);
 		$form = str_replace('!!typ_lig!!', $row->type_ligne, $form);
 		$form = str_replace('!!id_prod!!', $row->num_produit, $form);
-			
+
 	}
 	$t = array(0=>$i, 1=>$form);
 	return $t;
@@ -328,7 +341,7 @@ function show_dev_from_sug($id_bibli, $sugchk) {
 	$bibli = new entites($id_bibli);
 	$lib_bibli = htmlentities($bibli->raison_sociale, ENT_QUOTES, $charset);
 
-	//Prise en compte des adresses utilisateurs par dÃ©faut
+	//Prise en compte des adresses utilisateurs par défaut
 	$tab1 = explode('|', user::get_param($PMBuserid, 'speci_coordonnees_etab'));
 	$tab_adr=array();
 	foreach ($tab1 as $v) {
@@ -575,7 +588,7 @@ function update_dev() {
 			$lig_dev->save();
 		}
 
-		//Mise Ã  jour du statut des suggestions et envoi email suivi de suggestion
+		//Mise à jour du statut des suggestions et envoi email suivi de suggestion
 		$sug_map = new suggestions_map();
 		$sug_map->doTransition('ESTIMATED', $id_sug);
 	} else {		//Modification de devis
@@ -598,7 +611,7 @@ function update_dev() {
 		$dev->reference = trim($ref);
 		$dev->devise = trim($devise);
 		$dev->save();
-			
+
 		//maj des lignes de devis
 		foreach($tab_lig as $k=>$v) {
 			$lig_dev = new lignes_actes($v);
@@ -710,7 +723,7 @@ function duplicate_dev($id_bibli, $id_dev) {
 	print $form;
 }
 
-function print_dev($id_bibli=0, $id_dev=0, $by_mail=FALSE) {
+function print_dev($id_bibli=0, $id_dev=0, $by_mail=false) {
 	global $charset, $base_path, $acquisition_pdfdev_print, $msg;
 	global $acquisition_pdfdev_obj_mail, $acquisition_pdfdev_text_mail;
 	global $acquisition_pdfdev_by_mail,$PMBuseremailbcc;
@@ -726,38 +739,21 @@ function print_dev($id_bibli=0, $id_dev=0, $by_mail=FALSE) {
 	$fou = new entites($id_fou);
 	$fou_coord = pmb_mysql_fetch_object(entites::get_coordonnees($id_fou,1));
 
-	$no_mail=FALSE;
-	if ( $by_mail==FALSE || !($acquisition_pdfdev_by_mail && strpos($bib_coord->email,'@') && strpos($fou_coord->email,'@')) ) {
-		$no_mail=TRUE;
+	$no_mail=false;
+	if ( $by_mail==false || !($acquisition_pdfdev_by_mail && strpos($bib_coord->email,'@') && strpos($fou_coord->email,'@')) ) {
+		$no_mail=true;
 	} else {
-		$dest_name='';
-		if($fou_coord->libelle) {
-			$dest_name = $fou_coord->libelle;
-		} else {
-			$dest_name = $fou->raison_sociale;
-		}
-		if($fou_coord->contact) $dest_name.=" ".$fou_coord->contact;
-		$dest_mail=$fou_coord->email;
-		$obj_mail = $acquisition_pdfdev_obj_mail;
-		$text_mail = $acquisition_pdfdev_text_mail;
-		$bib_name = $bib_coord->raison_sociale;
-		$bib_mail = $bib_coord->email;
-
-		$lettre = lettreDevis_factory::make();
-		$lettre->doLettre($id_bibli,$id_dev);
-		$piece_jointe=array();
-		$piece_jointe[0]['contenu']=$lettre->getLettre('S');
-		$piece_jointe[0]['nomfichier']=$lettre->getFileName();
-
-		//         mailpmb($to_nom="", $to_mail,   $obj="",   $corps="",  $from_name="", $from_mail, $headers, $copie_CC="", $copie_BCC="", $faire_nl2br=0, $pieces_jointes=array())
-		$res_envoi=mailpmb($dest_name, $dest_mail, $obj_mail, $text_mail ,$bib_name, $bib_mail, "Content-Type: text/plain; charset=\"$charset\"", '', $PMBuseremailbcc, 1, $piece_jointe);
+	    $mail_accounting_devis = new mail_accounting_devis();
+	    $mail_accounting_devis->set_id_bibli($id_bibli);
+	    $mail_accounting_devis->set_id_acte($id_dev);
+	    $res_envoi = $mail_accounting_devis->send_mail();
 		if (!$res_envoi) {
-			$no_mail=TRUE;
+			$no_mail=true;
 		}
 		if (!$no_mail) {
-			print "<h3>".sprintf($msg["acquisition_print_emailsucceed"],$dest_mail)."</h3>";
+		    print "<h3>".sprintf($msg["acquisition_print_emailsucceed"],$mail_accounting_devis->get_dest_mail())."</h3>";
 		} else {
-			print "<h3>".sprintf($msg["acquisition_print_emailfailed"],$dest_mail)."</h3>";
+		    print "<h3>".sprintf($msg["acquisition_print_emailfailed"],$mail_accounting_devis->get_dest_mail())."</h3>";
 		}
 	}
 	if ($no_mail) {
@@ -773,52 +769,6 @@ function print_dev($id_bibli=0, $id_dev=0, $by_mail=FALSE) {
 	}
 }
 
-//Traitement des actions
-print "<h1>".htmlentities($msg['acquisition_ach_ges'],ENT_QUOTES, $charset)."&nbsp;:&nbsp;".htmlentities($msg['acquisition_ach_dev'],ENT_QUOTES, $charset)."</h1>";
-
-switch($action) {
-	case 'list':
-		entites::setSessionBibliId($id_bibli);
-		show_list_dev($id_bibli);
-		break;
-	case 'modif':
-		show_dev($id_bibli, $id_dev);
-		break;
-	case 'delete' :
-		actes::delete($id_dev);
-		liens_actes::delete($id_dev);
-		show_list_dev($id_bibli);
-		break;
-	case 'update' :
-		update_dev();
-		show_list_dev($id_bibli);
-		break;
-	case 'from_sug' :
-		show_list_biblio_from_sug($chk);
-		break;
-	case 'from_sug_next' :
-		show_dev_from_sug($id_bibli, $sugchk);
-		break;
-	case 'duplicate' :
-		duplicate_dev($id_bibli, $id_dev);
-		break;
-	case 'list_delete' :
-		list_accounting_devis_ui::run_action_list('delete');
-		show_list_dev($id_bibli);
-		break;
-	case 'list_rec':
-		list_accounting_devis_ui::run_action_list('rec');
-		show_list_dev($id_bibli);
-		break;
-	case 'list_arc':
-		list_accounting_devis_ui::run_action_list('arc');
-		show_list_dev($id_bibli);
-		break;
-	case 'print' :
-		print_dev($id_bibli, $id_dev, $by_mail);
-		show_list_dev($id_bibli);
-		break;
-	default:
-		print entites::show_list_biblio('show_list_dev');
-		break;
-}
+accounting_devis_controller::set_id_bibli($id_bibli);
+accounting_devis_controller::set_id_acte($id_dev);
+accounting_devis_controller::proceed($id);

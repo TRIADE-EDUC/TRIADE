@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -37,67 +39,32 @@ session_start();
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
-<?php print "Gestion d'examen" ?></font></b></td>
-</tr>
-<tr id='cadreCentral0'>
-<td >
-<br><br>
-<!-- // debut form  -->
-<table align="center">
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<div class="dest-wrap">
+<div style="background:#080A66;color:#fff;border-radius:8px 8px 0 0;padding:8px 14px;font-size:13px;font-weight:700;">Gestion d'examen</div>
+<div class="dest-list" style="border-radius:0 0 8px 8px;">
 
-<!--
-<tr>
-<form action='gestion_examen_b2i.php' method="post"  >
-<input type=hidden name="type_notation" value="B2I" />
-<td align=right><font class="T2"><?php print "<s>Notation B2I</s>" ?> :</font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmitAtt("<?php print "Accèder"?>","rien","disabled"); //text,nomInput</script></td>
-</form>
-</tr>
+  <form action="gestion_examen_b2i.php" method="post" style="display:contents">
+    <input type="hidden" name="type_notation" value="A2R">
+    <div class="dest-row">
+      <span class="dest-row-label">Notation niveau A2 de langue régionale</span>
+      <button type="submit" class="btn-dest">Accéder</button>
+    </div>
+  </form>
 
+  <form action="notanet_export.php" method="post" style="display:contents">
+    <div class="dest-row">
+      <span class="dest-row-label">Export Notanet</span>
+      <button type="submit" class="btn-dest">Accéder</button>
+    </div>
+  </form>
 
-<tr><td height=20></td></tr>
-<tr>
-<form action='gestion_examen_b2i.php'  method="post"  >
-<input type=hidden name="type_notation" value="A2" />
-<td align=right><font class="T2"><?php print "<s>Notation niveau A2 de langue étrangère</s>" ?> :</font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmitAtt("<?php print "Accèder"?>","rien","disabled"); //text,nomInput</script></td>
-</form>
-</tr>
--->
-
-<tr><td height=20></td></tr>
-<tr>
-<form action='gestion_examen_b2i.php'  method="post"  >
-<input type=hidden name="type_notation" value="A2R" />
-<td align=right><font class="T2"><?php print "Notation niveau A2 de langue régionale" ?> :</font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmitAtt("<?php print "Accèder"?>","rien",""); //text,nomInput</script></td>
-</form>
-</tr>
-
-<tr><td height=20></td></tr>
-<tr>
-<form action='notanet_export.php'  method="post"  >
-<td align=right><font class="T2"><?php print "Export Notanet" ?> :</font></td>
-<td align=left><script language=JavaScript>buttonMagicSubmitAtt("<?php print "Accèder"?>","rien",""); //text,nomInput</script></td>
-</form>
-</tr>
-
-
-
-
-</table><br><br>
-
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<?php brmozilla($_SESSION["navigateur"]); ?>
-<!-- // fin form -->
-</td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+</div>
+</div>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: infos.xml,v 1.2 2014-01-07 14:34:02 touraine37 Exp $ -->
+$Id: infos.xml,v 1.3 2023/07/25 12:22:59 dgoron Exp $ -->
 <informations>
  	<information>
 		<name>categ</name>
@@ -16,6 +16,48 @@ $Id: infos.xml,v 1.2 2014-01-07 14:34:02 touraine37 Exp $ -->
 		<name>author</name>
 		<fonction type='internal'>
 			<method>get_authors_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>publishers</name>
+		<fonction type='internal'>
+			<method>get_publishers_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>collections</name>
+		<fonction type='internal'>
+			<method>get_collections_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>sub_collections</name>
+		<fonction type='internal'>
+			<method>get_sub_collections_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>series</name>
+		<fonction type='internal'>
+			<method>get_series_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>titres_uniformes</name>
+		<fonction type='internal'>
+			<method>get_titres_uniformes_informations</method>
+		</fonction>
+		<action></action>
+	</information>
+	<information>
+		<name>indexint</name>
+		<fonction type='internal'>
+			<method>get_indexint_informations</method>
 		</fonction>
 		<action></action>
 	</information>

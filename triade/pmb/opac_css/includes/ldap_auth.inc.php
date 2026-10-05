@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ldap_auth.inc.php,v 1.11 2015-04-01 12:22:01 mbertin Exp $
+// $Id: ldap_auth.inc.php,v 1.12 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// paramÃ¨tres d'accÃ¨s Ã  le serveur LDAP
+// paramètres d'accès à le serveur LDAP
 
 define ('LDAP_SERVER',$ldap_server);  //url server ldap
 define ('LDAP_BASEDN',$ldap_basedn);  //search base
@@ -21,11 +21,11 @@ function auth_ldap($uid,$pwd){
 	if ($pwd){
 		//Gestion encodage
 		if(($ldap_encoding_utf8) && ($charset != "utf-8")){
-			$uid=utf8_encode($uid);
-			$pwd=utf8_encode($pwd);
+			$uid=encoding_normalize::utf8_normalize($uid);
+			$pwd=encoding_normalize::utf8_normalize($pwd);
 		}elseif((!$ldap_encoding_utf8) && ($charset == "utf-8")){
-			$uid=utf8_decode($uid);
-			$pwd=utf8_decode($pwd);
+			$uid=encoding_normalize::utf8_decode($uid);
+			$pwd=encoding_normalize::utf8_decode($pwd);
 		}
 		$dn=str_replace('UID',$uid,LDAP_BINDDN);
 		$conn=@ldap_connect(LDAP_SERVER,LDAP_PORT);  // must be a valid LDAP server!

@@ -2,7 +2,7 @@
 	****************************************************************************************
 	© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 	****************************************************************************************
-	$Id: manifest.xml,v 1.1 2010-06-23 00:40:57 erwanmartin Exp $ --><manifest>
+	$Id: manifest.xml,v 1.1 2010/06/23 00:40:57 erwanmartin Exp $ --><manifest>
 	<name>pmbesRepositories</name>
 	<description>msg:pmbesRepositories_description</description>
 	<requirements>

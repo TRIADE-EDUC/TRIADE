@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.5 2012-08-20 08:06:32 ngantier Exp $
+// $Id: main.inc.php,v 1.5 2012/08/20 08:06:32 ngantier Exp $
 
 
 if (stristr ( $_SERVER ['REQUEST_URI'], ".inc.php" ))
@@ -20,17 +20,17 @@ switch ($sub) {
 	break;
 		
 	case 'valid' :
-		//l'Ã©tape de validation
+		//l'étape de validation
 		include ("./circ/transferts/validation.inc.php");
 	break;
 	
 	case 'recep' :
-		//l'Ã©tape de rÃ©ception 
+		//l'étape de réception 
 		include ("./circ/transferts/reception.inc.php");
 	break;
 	
 	case 'envoi' :
-		//l'Ã©tape d'envoi 
+		//l'étape d'envoi 
 		include ("./circ/transferts/envoi.inc.php");
 	break;
 	

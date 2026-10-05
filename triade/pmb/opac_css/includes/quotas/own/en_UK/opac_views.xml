@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2017 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: opac_views.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
+$Id: opac_views.xml,v 1.4 2021/07/05 14:46:02 dgoron Exp $ -->
 <pmbquotas table="quotas_opac_views">
 	<elements>
 	  	<element name="READER_CATEG" id="1" comment="Categories of readers">
@@ -47,9 +47,9 @@ $Id: opac_views.xml,v 1.3 2017-07-04 07:58:24 mbertin Exp $ -->
 			<tablelinked>empr</tablelinked>
 			<linkedfield>id_empr</linkedfield>
 			<linkedid>id_empr</linkedid>
-			<table>empr_categ</table>
-			<field>id_categ_empr</field>
-			<label>libelle</label>
+			<table>empr</table>
+			<field>id_empr</field>
+			<label>concat(empr_nom,' ',empr_prenom)</label>
 		</element>
 	</elements>
 	

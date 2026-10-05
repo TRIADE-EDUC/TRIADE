@@ -67,15 +67,15 @@ A.m {color:#FFFFFF; text-decoration:none; font-weight:bold; font-size:14px;}
 
 #imgombre{background-image:url('../image/inc/omb.gif')}
 
-#coulBar0{background-color:#F1B100}   					/* Couleur de la barre de menu avec Quitter  */
-#coulModule0{background-color:#FFE664} 					/* Couleur du fond des menus dans les modules  */
+#coulBar0, .coulBar0 {background-color:#F1B100}   					/* Couleur de la barre de menu avec Quitter  */
+#coulModule0, .coulModule0 {background-color:#FFE664} 					/* Couleur du fond des menus dans les modules  */
 #cadreCentral0{background-color:#FFE664}  				/* id='cadreCentral0' */
 
 
-#coulTitre0{background-color:#F1B100} 					/* Couleur du fond des titres dans les modules  */
+#coulTitre0, .coulTitre0 {background-color:#F1B100} 					/* Couleur du fond des titres dans les modules  */
 
-#menumodule0{font-family:Verdana; font-size:10px; color: #660033;}
-#menumodule1{font-family:ae_AlBattar; font-size:13px; color: #660033;}
+#menumodule0, .menumodule0 {font-family:Verdana; font-size:10px; color: #660033;}
+#menumodule1, .menumodule1 {font-family:ae_AlBattar; font-size:13px; color: #660033;}
 #bordure { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 0px; border-left-width : 0px; }
 #color2 { color:yellow } 						/* importance des titre */
 #color3 { color:red } 						/* importance des titre */

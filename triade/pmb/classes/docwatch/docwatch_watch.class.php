@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Ã‚Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_watch.class.php,v 1.53 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: docwatch_watch.class.php,v 1.59.6.2.2.2 2025/04/29 09:37:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/docwatch/docwatch_root.class.php");
 require_once($class_path."/docwatch/docwatch_category.class.php");
 require_once($class_path."/docwatch/datasources/docwatch_datasource.class.php");
@@ -21,7 +22,7 @@ require_once($class_path."/docwatch/docwatch_logo.class.php");
 
 /**
  * class docwatch_watch
- * 
+ *
  */
 class docwatch_watch extends docwatch_root{
 
@@ -32,11 +33,11 @@ class docwatch_watch extends docwatch_root{
 	 /*** Attributes: ***/
 
 	/**
-	 * Identifiant de la veille dans la base de donnÃ©es
-	 * 
+	 * Identifiant de la veille dans la base de données
+	 *
 	 */
 	protected $id;
-	
+
 	/**
 	 * Nom de la veille
 	 * @access protected
@@ -50,19 +51,19 @@ class docwatch_watch extends docwatch_root{
 	protected $last_date;
 
 	/**
-	 * CrÃ©ateur de la veille. Attention, on ne met que les items notices visibles par
+	 * Créateur de la veille. Attention, on ne met que les items notices visibles par
 	 * le documentaliste s'ils viennent de PMB
 	 * @access protected
 	 */
 	protected $owner;
 
 	/**
-	 * Tableau des utilisateurs autorisÃ©s
+	 * Tableau des utilisateurs autorisés
 	 * @access protected
 	 */
 	protected $allowed_users;
 	/**
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected $num_category;
@@ -73,115 +74,115 @@ class docwatch_watch extends docwatch_root{
 	 */
 	protected $items;
 
-	
+
 	/**
-	 * Temps de validitÃ© des items de la veille 
+	 * Temps de validité des items de la veille
 	 * @access protected
 	 */
 	protected $ttl;
-	
+
 	/**
 	 * Description de la source
 	 * @access protected
 	 */
 	protected $desc;
-	
+
 	/**
 	 * Url du logo de la source
 	 * @access protected
 	 */
 	protected $logo_url;
-	
+
 	/**
-	 * Tableau des sources de donnÃ©es autorisÃ©es
+	 * Tableau des sources de données autorisées
 	 * @access protected
 	 */
 	protected $datasources = array();
-	
+
 	/**
-	 * Tableau des instances de sources de donnÃ©es autorisÃ©es
+	 * Tableau des instances de sources de données autorisées
 	 * @access protected
 	 */
 	protected $datasources_objects = array();
-	
+
 	/**
 	 * Tableau des parametre de la veille
 	 * @access protected
 	 */
 	protected $parameters = array();
-	
+
 	/**
-	 * Tableau des id / dates des datasources mises Ã  jour
+	 * Tableau des id / dates des datasources mises à jour
 	 * @access protected
 	 */
 	protected $datasources_synced = array();
-	
+
 	/**
-	 * Id du type de notice par dÃ©faut pour les notices crÃ©es Ã  partir des items de cette veille
+	 * Id du type de notice par défaut pour les notices crées à partir des items de cette veille
 	 * @access protected
 	 */
 	protected $record_default_type;
-	
+
 	/**
-	 * Id du status de notice par dÃ©faut pour les notices crÃ©es Ã  partir des items de cette veille
+	 * Id du status de notice par défaut pour les notices crées à partir des items de cette veille
 	 * @access protected
 	 */
 	protected $record_default_status;
-	
+
 	/**
-	 * Code de la langue d'indexation de notice par dÃ©faut pour les notices crÃ©es Ã  partir des items de cette veille
+	 * Code de la langue d'indexation de notice par défaut pour les notices crées à partir des items de cette veille
 	 * @access protected
 	 */
 	protected $record_default_index_lang;
-	
+
 	/**
-	 * Code de la langue par dÃ©faut pour les notices crÃ©es Ã  partir des items de cette veille
+	 * Code de la langue par défaut pour les notices crées à partir des items de cette veille
 	 * @access protected
 	 */
 	protected $record_default_lang;
-	
+
 	/**
-	 * Valeur du statut nouveautÃ© par dÃ©faut pour les notices crÃ©es Ã  partir des items de cette veille
+	 * Valeur du statut nouveauté par défaut pour les notices crées à partir des items de cette veille
 	 * @access protected
 	 */
 	protected $record_default_is_new;
-	
+
 	/**
-	 * Id du parent par dÃ©faut pour les articles crÃ©es via les items de cette veille
+	 * Id du parent par défaut pour les articles crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $article_default_parent;
-	
+
 	/**
-	 * Id du type de contenun par dÃ©faut pour les articles crÃ©es via les items de cette veille
+	 * Id du type de contenun par défaut pour les articles crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $article_default_content_type;
-	
+
 	/**
-	 * Id du status de publication par dÃ©faut pour les articles crÃ©es via les items de cette veille
+	 * Id du status de publication par défaut pour les articles crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $article_default_publication_status;
-	
+
 	/**
-	 * Id du parent par dÃ©faut pour les rubriques crÃ©es via les items de cette veille
+	 * Id du parent par défaut pour les rubriques crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $section_default_parent;
-	
+
 	/**
-	 * Id du type de contenun par dÃ©faut pour les rubriques crÃ©es via les items de cette veille
+	 * Id du type de contenun par défaut pour les rubriques crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $section_default_content_type;
-	
+
 	/**
-	 * Id du status de publication par dÃ©faut pour les rubriques crÃ©es via les items de cette veille
+	 * Id du status de publication par défaut pour les rubriques crées via les items de cette veille
 	 * @access protected
 	 */
 	protected $section_default_publication_status;
-	
+
 	/**
 	 * Options RSS
 	 */
@@ -192,36 +193,35 @@ class docwatch_watch extends docwatch_root{
 	protected $watch_rss_webmaster;
 	protected $watch_rss_image_title;
 	protected $watch_rss_image_website;
-	
+
 	/**
-	 * Expression boolÃ©Ã¨nne
+	 * Expression booléènne
 	 * @var string
 	 */
 	protected $boolean_expression;
-	
+
 	/**
-	 * 
+	 *
 	 * @access protected
 	 */
 	protected $error;
-	
-	
+
+
 	/**
 	 * @return void
 	 * @access public
 	 */
 	public function __construct($id=0) {
-	    $this->id = (int) $id;
+		$this->id = intval($id);
 		$this->fetch_datas();
 	} // end of member function __construct
-	
-	
+
+
 	/**
 	 * Fetch datas
-	 * 
+	 *
 	 */
 	public function fetch_datas(){
-		global $dbh;
 		$this->title = "";
 		$this->last_date = "0000-00-00 00:00:00";
 		$this->num_category = 0;
@@ -242,7 +242,7 @@ class docwatch_watch extends docwatch_root{
 		if($this->id){
 			//Query
 			$query = "select * from docwatch_watches where id_watch = '".$this->id."'";
-			$result=pmb_mysql_query($query, $dbh);
+			$result=pmb_mysql_query($query);
 			if (pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
 				$this->title = $row->watch_title;
@@ -273,7 +273,7 @@ class docwatch_watch extends docwatch_root{
 				$this->watch_rss_image_website = $row->watch_rss_image_website;
 				$this->boolean_expression = $row->watch_boolean_expression;
 				$query = "select id_datasource, datasource_type from docwatch_datasources where datasource_num_watch = ".$this->id;
-				$result = pmb_mysql_query($query,$dbh);
+				$result = pmb_mysql_query($query);
 				if($result && pmb_mysql_num_rows($result)){
 					$this->datasources = array();
 					while ($row=pmb_mysql_fetch_object($result)) {
@@ -283,17 +283,17 @@ class docwatch_watch extends docwatch_root{
 			}
 		}
 	}
-	
+
 	/**
 	 * Renvoie le formulaire
 	 *
 	 */
 	public function get_form(){
-		return $form;
+		return "";
 	}
-	
+
 	/**
-	 * Set les propriÃ©tÃ©s de l'instance depuis le formulaire
+	 * Set les propriétés de l'instance depuis le formulaire
 	 *
 	 * @return void
 	 * @access public
@@ -315,13 +315,13 @@ class docwatch_watch extends docwatch_root{
 		global $docwatch_watch_watch_rss_image_title;
 		global $docwatch_watch_watch_rss_image_website;
 		global $docwatch_watch_boolean_expression;
-		
+
 		if (is_array($datasources_choice) && count($datasources_choice)) {
 			foreach ($datasources_choice as $datasource_choice) {
 				$this->parameters['datasources'][] = $datasource_choice;
 			}
 		}
-	
+
 		$this->title = strip_tags(stripslashes($docwatch_watch_title));
 		$this->owner = $docwatch_watch_owner;
 		$this->allowed_users = $docwatch_watch_allowed_users;
@@ -337,18 +337,16 @@ class docwatch_watch extends docwatch_root{
 		$this->watch_rss_image_title = $docwatch_watch_watch_rss_image_title;
 		$this->watch_rss_image_website = $docwatch_watch_watch_rss_image_website;
 		$this->boolean_expression = stripslashes($docwatch_watch_boolean_expression);
-		
+
 	} // end of member function set_from_form
-	
+
 	/**
-	 * Sauvegarde des propriÃ©tÃ©s
+	 * Sauvegarde des propriétés
 	 *
 	 * @return void
 	 * @access public
 	 */
 	public function save(){
-		global $dbh;
-		
 		if($this->id){
 			$query = "update docwatch_watches set ";
 			$clause = " where id_watch = ".$this->id;
@@ -385,14 +383,14 @@ class docwatch_watch extends docwatch_root{
 			watch_rss_image_website = '".addslashes($this->watch_rss_image_website)."',
 			watch_boolean_expression = '".addslashes($this->boolean_expression)."'
 			".$clause;
-	
-		$result = pmb_mysql_query($query,$dbh);
+
+		$result = pmb_mysql_query($query);
 		if($result){
 			if(!$this->id){
-				$this->id = pmb_mysql_insert_id($dbh);
+				$this->id = pmb_mysql_insert_id();
 			}
 			if(isset($this->parameters['datasources']) && $this->parameters['datasources']){
-				foreach ($this->parameters['datasources'] as $key=>$datasource_type) {
+				foreach ($this->parameters['datasources'] as $datasource_type) {
 					if (in_array($datasource_type, $this->datasources)) {
 						$datasource_id = array_search($datasource_type,$this->datasources);
 					} else {
@@ -410,34 +408,31 @@ class docwatch_watch extends docwatch_root{
 		}
 		return false;
 	}
-	
+
 	/**
-	 * MÃ©thode de suppression
+	 * Méthode de suppression
 	*/
 	public function delete(){
-		global $dbh;
 		global $msg;
 		if($this->id && $this->check_rights()){
-			//on commence par Ã©liminer les sources de donnÃ©es et sÃ©lecteurs associÃ©s...
+			//on commence par éliminer les sources de données et sélecteurs associés...
 			$query = "select id_datasource from docwatch_datasources where datasource_num_watch = ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$query = "select id_selector from docwatch_selectors where selector_num_datasource = ".$row->id_datasource;
-					$sel_result = pmb_mysql_query($query,$dbh);
+					$sel_result = pmb_mysql_query($query);
 					if(pmb_mysql_num_rows($sel_result)){
-						while($sel_row = pmb_mysql_fetch_object($sel_result)){
-							$query = "delete from docwatch_selectors where selector_num_datasource = ".$row->id_datasource;
-							pmb_mysql_query($query,$dbh);
-						}
+						$query = "delete from docwatch_selectors where selector_num_datasource = ".$row->id_datasource;
+						pmb_mysql_query($query);
 					}
 					$query = "delete from docwatch_datasources where datasource_num_watch = ".$this->id;
-					pmb_mysql_query($query,$dbh);
+					pmb_mysql_query($query);
 				}
 			}
-			//il faut ensuite Ã©liminer les items..
+			//il faut ensuite éliminer les items..
 			$query = "select id_item from docwatch_items where item_num_watch = ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				while($row = pmb_mysql_fetch_object($result)){
 					$docwatch_item = new docwatch_item($row->id_item);
@@ -445,7 +440,7 @@ class docwatch_watch extends docwatch_root{
 				}
 			}
 			$query = "delete from docwatch_watches where id_watch = ".$this->id;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result){
 				return true;
 			}else{
@@ -456,16 +451,31 @@ class docwatch_watch extends docwatch_root{
 			$this->error = $msg['dsi_docwatch_watch_error_dont_exist'];
 		}
 	}
-	
+
+	public function purge_items_mark_as_deleted() {
+	    if($this->id && $this->check_rights()){
+	        $query = "select id_item from docwatch_items where item_status = 2 and item_num_watch = '".$this->id."'";
+	        $result = pmb_mysql_query($query);
+	        if (pmb_mysql_num_rows($result)) {
+	            while($row = pmb_mysql_fetch_object($result)){
+	                $item = new docwatch_item($row->id_item);
+	                $item->mark_as_purged();
+	            }
+	            return true;
+	        }
+	        return false;
+	    }
+	}
+
 	/**
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	*/
 	public function get_datas(){
 
 	}
-	
+
 	/**
-	 * Retourne les sources de donnÃ©es associÃ©es
+	 * Retourne les sources de données associées
 	 *
 	 */
 	public function get_datasources() {
@@ -476,41 +486,43 @@ class docwatch_watch extends docwatch_root{
 			//TODO: checkifisuptodate
 		}
 	}
-	
+
 	public function get_items() {
 		return $this->items;
 	}
-	
+
 	/**
-	 * Renvoie le nombre d'items collectÃ©s
+	 * Renvoie le nombre d'items collectés
 	 *
 	 * @return int
 	 * @access public
 	 */
-	public function fill_items( ) {
-	} // end of member function fill_items
+	public function fill_items( )
+	{
+		return 0;
+	}
 
 	/**
-	 * 
+	 * Suppression d'un item
 	 *
-	 * @param int item_id Identifiant de l'item Ã Â  supprimer
-
+	 * @param int item_id Identifiant de l'item à  supprimer
 	 * @return bool
 	 * @access public
 	 */
-	public function del_item( $item_id ) {
-	} // end of member function del_item
+	public function del_item( $item_id )
+	{
+		return false;
+	}
 
 	/**
-	 * Suppression des items pÃ©rimÃ©s de sources supprimÃ©es
+	 * Suppression des items périmés de sources supprimées
 	 */
 	protected function del_outdated_of_datasource_removed() {
-		global $dbh;
-		$query = "select id_item from docwatch_items 
+		$query = "select id_item from docwatch_items
 				left join docwatch_datasources on item_num_datasource=id_datasource
-				where date_add(item_added_date, INTERVAL ".$this->ttl." hour) < now() 
-				and id_datasource is null and item_status = 2 and item_num_watch = '".$this->id."'";
-		$result = pmb_mysql_query($query, $dbh);
+				where date_add(item_added_date, INTERVAL ".$this->ttl." hour) < now()
+				and id_datasource is null and item_status IN (2,3) and item_num_watch = '".$this->id."'";
+		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			while($row = pmb_mysql_fetch_object($result)){
 				$item = new docwatch_item($row->id_item);
@@ -519,31 +531,30 @@ class docwatch_watch extends docwatch_root{
 		}
 		return true;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 *
 	 * @return bool
 	 * @access public
 	 */
 	public function del_outdated( ) {
-		global $dbh;
 		$query = "select id_item from docwatch_items where date_add(item_added_date, INTERVAL ".$this->ttl." hour) < now() and item_num_watch = '".$this->id."'";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if (pmb_mysql_num_rows($result)) {
 			while($row = pmb_mysql_fetch_object($result)){
 				$item = new docwatch_item($row->id_item);
 				$item->mark_as_deleted();
 			}
 			return true;
-		}	
+		}
 		return false;
 	} // end of member function del_outdated
 
 	/**
 	 * del_outdated + fill_items
 	 *
-	 * @return bool
+	 * @return void
 	 * @access public
 	 */
 	public function sync() {
@@ -562,181 +573,180 @@ class docwatch_watch extends docwatch_root{
 			}
 			$this->update_last_date();
 		}
-	} // end of member function sync
+	}
 
 	public function update_last_date(){
-		global $dbh;
 		$this->set_last_date(date("Y-m-d H:i:s"));
 		$query = "update docwatch_watches set watch_last_date = '".$this->last_date."' where id_watch = '".$this->id."'";
-		if(!pmb_mysql_query($query, $dbh)){
+		if(!pmb_mysql_query($query)){
 			return false;
 		}
 		return true;
 	}
-	
+
 	public function get_id() {
 		return $this->id;
 	}
-	
+
 	public function set_id($id) {
-	    $this->id = (int) $id;
+		$this->id = intval($id);
 	}
-	
+
 	public function get_title() {
 		return $this->title;
 	}
-	
+
 	public function set_title($title) {
 		$this->title = $title;
 	}
-	
+
 	public function get_last_date() {
 		return $this->last_date;
 	}
-	
+
 	public function set_last_date($last_date) {
 		$this->last_date = $last_date;
 	}
-	
+
 	public function get_owner() {
 		return $this->owner;
 	}
-	
+
 	public function set_owner($owner) {
-	    $this->owner = (int) $owner;
+		$this->owner = intval($owner);
 	}
-	 
+
 	public function get_allowed_users() {
 		return $this->allowed_users;
 	}
-	
+
 	public function set_allowed_users($allowed_users) {
 		foreach ($allowed_users as $key => $value){
-		    $allowed_users[$key] = (int) $value;	
+			$allowed_users[$key] = intval($value);
 		}
 		$this->allowed_users = $allowed_users;
 	}
-	
+
 	public function get_num_category() {
 		return $this->num_category;
 	}
-	
+
 	public function set_num_category($num_category) {
-	    $this->num_category = (int) $num_category;
+		$this->num_category = intval($num_category);
 	}
-	
+
 	public function set_items($items) {
 		$this->items = $items;
 	}
-	 
+
 	public function get_ttl() {
 		return $this->ttl;
 	}
-	
+
 	public function set_ttl($ttl) {
-	    $this->ttl = (int) $ttl;
+		$this->ttl = intval($ttl);
 	}
-	
+
 	public function get_desc() {
 		return $this->desc;
 	}
-	
+
 	public function set_desc($desc) {
 		$this->desc = $desc;
 	}
-	
+
 	public function get_logo_url() {
 		return $this->logo_url;
 	}
-	
+
 	public function set_logo_url($logo_url) {
 		$this->logo_url = $logo_url;
 	}
-	    
+
 	public function get_record_default_type() {
 	  return $this->record_default_type;
 	}
-	
+
 	public function set_record_default_type($record_default_type) {
 	  $this->record_default_type = $record_default_type;
 	}
-	    
+
 	public function get_record_default_status() {
 	  return $this->record_default_status;
 	}
-	
+
 	public function set_record_default_status($record_default_status) {
 	    $this->record_default_status = (int) $record_default_status;
 	}
-	
+
 	public function get_record_default_index_lang() {
 		return $this->record_default_index_lang;
 	}
-	
+
 	public function set_record_default_index_lang($record_default_index_lang) {
 		$this->record_default_index_lang= $record_default_index_lang;
 	}
-	
+
 	public function get_record_default_lang() {
 		return $this->record_default_lang;
 	}
-	
+
 	public function set_record_default_lang($record_default_lang) {
 		$this->record_default_lang= $record_default_lang;
 	}
-	
+
 	public function get_record_default_is_new() {
 		return $this->record_default_is_new;
 	}
-	
+
 	public function set_record_default_is_new($record_default_is_new) {
 	    $this->record_default_is_new= (int) $record_default_is_new;
 	}
-	    
+
 	public function get_article_default_parent() {
 	  return $this->article_default_parent;
 	}
-	
+
 	public function set_article_default_parent($article_default_parent) {
 	    $this->article_default_parent = (int) $article_default_parent;
 	}
-	    
+
 	public function get_article_default_content_type() {
 	  return $this->article_default_content_type;
 	}
-	
+
 	public function set_article_default_content_type($article_default_content_type) {
 	    $this->article_default_content_type = (int) $article_default_content_type;
 	}
-	
+
 	public function get_article_default_publication_status() {
 	  return $this->article_default_publication_status;
 	}
-	
+
 	public function set_article_default_publication_status($article_default_publication_status) {
 	    $this->article_default_publication_status = (int) $article_default_publication_status;
 	}
-	
+
 	public function get_section_default_parent() {
 		return $this->section_default_parent;
 	}
-	
+
 	public function set_section_default_parent($section_default_parent) {
 	    $this->section_default_parent = (int) $section_default_parent;
 	}
-	 
+
 	public function get_section_default_content_type() {
 		return $this->section_default_content_type;
 	}
-	
+
 	public function set_section_default_content_type($section_default_content_type) {
 	    $this->section_default_content_type = (int) $section_default_content_type;
 	}
-	
+
 	public function get_section_default_publication_status() {
 		return $this->section_default_publication_status;
 	}
-	
+
 	public function set_section_default_publication_status($section_default_publication_status) {
 	    $this->section_default_publication_status = (int) $section_default_publication_status;
 	}
@@ -744,55 +754,55 @@ class docwatch_watch extends docwatch_root{
 	public function get_watch_rss_link() {
 		return $this->watch_rss_link;
 	}
-	
+
 	public function set_watch_rss_link($watch_rss_link) {
 		$this->watch_rss_link = $watch_rss_link;
 	}
-	
+
 	public function get_watch_rss_lang() {
 		return $this->watch_rss_lang;
 	}
-	
+
 	public function set_watch_rss_lang($watch_rss_lang) {
 		$this->watch_rss_lang = $watch_rss_lang;
 	}
-	
+
 	public function get_watch_rss_copyright() {
 		return $this->watch_rss_copyright;
 	}
-	
+
 	public function set_watch_rss_copyright($watch_rss_copyright) {
 		$this->watch_rss_copyright = $watch_rss_copyright;
 	}
-	
+
 	public function get_watch_rss_editor() {
 		return $this->watch_rss_editor;
 	}
-	
+
 	public function set_watch_rss_editor($watch_rss_editor) {
 		$this->watch_rss_editor = $watch_rss_editor;
 	}
-	
+
 	public function get_watch_rss_webmaster() {
 		return $this->watch_rss_webmaster;
 	}
-	
+
 	public function set_watch_rss_webmaster($watch_rss_webmaster) {
 		$this->watch_rss_webmaster = $watch_rss_webmaster;
 	}
-	
+
 	public function get_watch_rss_image_title() {
 		return $this->watch_rss_image_title;
 	}
-	
+
 	public function set_watch_rss_image_title($watch_rss_image_title) {
 		$this->watch_rss_image_title = $watch_rss_image_title;
 	}
-	
+
 	public function get_watch_rss_image_website() {
 		return $this->watch_rss_image_website;
 	}
-	
+
 	public function set_watch_rss_image_website($watch_rss_image_website) {
 		$this->watch_rss_image_website = $watch_rss_image_website;
 	}
@@ -800,13 +810,13 @@ class docwatch_watch extends docwatch_root{
 	public function get_boolean_expression() {
 		return $this->boolean_expression;
 	}
-	
+
 	public function set_boolean_expression($boolean_expression) {
 		$this->boolean_expression = $boolean_expression;
 	}
-	
+
 	public function get_informations(){
-		global $dbh, $pmb_opac_url;
+		global $pmb_opac_url;
 		$datas = new stdClass();
 		$datas->id = $this->id;
 		$datas->type = "watch";
@@ -841,7 +851,7 @@ class docwatch_watch extends docwatch_root{
 		$datas->allowed_users = $this->allowed_users;
 		$datas->sources = array();
 		$query = "select id_datasource, datasource_title from docwatch_datasources where datasource_num_watch = ".$this->id;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if($result && pmb_mysql_num_rows($result)){
 			while ($row=pmb_mysql_fetch_object($result)) {
 				$datas->sources[] = array("id"=>1*$row->id_datasource, "title"=>$row->datasource_title, "type"=>"source");
@@ -853,6 +863,7 @@ class docwatch_watch extends docwatch_root{
 		}
 		if($this->record_default_lang){
 		    $create_lang = new marc_list('lang');
+		    $langs = array();
 		    $langs[] = array(
 		        'lang_code' => $this->record_default_lang,
 		        'langue' => $create_lang->table[$this->record_default_lang]
@@ -861,14 +872,13 @@ class docwatch_watch extends docwatch_root{
 		}
 		return $datas;
 	}
-	
+
 	public function get_normalized_watch(){
-		global $dbh;
 		global $pmb_opac_url;
 		$categories = array();
 		if ($this->num_category) {
 			$query = "select id_category, category_title from docwatch_categories where id_category = ".$this->num_category;
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if($result && pmb_mysql_num_rows($result)){
 				while ($row=pmb_mysql_fetch_object($result)) {
 					$categories = array("id"=>$row->id_category, "title"=>$row->category_title);
@@ -876,14 +886,14 @@ class docwatch_watch extends docwatch_root{
 			}
 		}
 		$items = array();
-		if($this->items){
+		if(!empty($this->items)){
 			foreach($this->items as $item){
 				$items[] = $item->get_normalized_item();
 			}
 		}
-		
+
 		$logo = new docwatch_logo($this->id);
-		
+
 		return array(
 			'id' => $this->id,
 			'title' => $this->title,
@@ -904,7 +914,7 @@ class docwatch_watch extends docwatch_root{
 			'items' => $items
 		);
 	}
-	
+
 	public function get_normalized_datasources(){
 		$this->get_datasources();
 		$array_datasources_normalized = array();
@@ -916,28 +926,31 @@ class docwatch_watch extends docwatch_root{
 		$array_retour["watch_id"] = $this->id;
 		return $array_retour;
 	}
-	
+
 	public function get_normalized_items(){
 		$array_items_normalized = array();
 		$array_retour = array();
 		if($this->items){
 			foreach($this->items as $item){
 				$array_items_normalized[] = $item->get_normalized_item();
-			}	
+			}
 		}
 		$array_retour["items"] = $array_items_normalized;
 		$array_retour["watch_id"] = $this->id;
 		return $array_retour;
 	}
-	
-	public function fetch_items($interesting_only=false){
-		global $dbh;
+
+	public function fetch_items($interesting_only=false, $limit=0){
 		if($this->check_rights()){
-			$query = "select id_item from docwatch_items where item_num_watch = ".$this->id." ";
+			$query = "select id_item from docwatch_items where item_num_watch = ".$this->id." and item_status != '3' ";
 			if($interesting_only){
 				$query.= " and item_interesting= 1";
 			}
-			$result = pmb_mysql_query($query,$dbh);
+			$limit = intval($limit);
+			if($limit) {
+			    $query .= " limit ".$limit;
+			}
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					if(!$this->items){
@@ -950,7 +963,7 @@ class docwatch_watch extends docwatch_root{
 			}
 		}
 	}
-	
+
 	public static function get_available_datasources(){
 		global $msg;
 		return array(
@@ -983,7 +996,7 @@ class docwatch_watch extends docwatch_root{
 				'label'=>$msg['dsi_docwatch_datasource_monitoring_website']
 			)
 		);
-		
+
 	}
 
 	/**
@@ -992,7 +1005,7 @@ class docwatch_watch extends docwatch_root{
 	 */
 	public function get_xmlrss(){
 		global $charset, $pmb_bdd_version;
-		
+
 		if (!$this->id) return;
 		$xmlrss = "<?xml version=\"1.0\" encoding=\"".$charset."\"?>
 			<!-- RSS generated by PMB on ".addslashes(date("D, d/m/Y H:i:s"))." -->
@@ -1018,8 +1031,8 @@ class docwatch_watch extends docwatch_root{
 		}
 		$xmlrss .= "		!!items!!
 				</channel>
-			</rss>";								
-					
+			</rss>";
+
 		$xmlrss = str_replace("!!items!!", $this->get_items_xmlrss(), $xmlrss);
 		if($charset=='utf-8') {
 			$xmlrss = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
@@ -1034,17 +1047,17 @@ class docwatch_watch extends docwatch_root{
 		}
 		return $xmlrss;
 	}
-	
-	function get_items_xmlrss() {
+
+	public function get_items_xmlrss() {
 		global $charset;
-		
+
 		$items_xmlrss = "";
-		
+
 		if (is_array($this->items) && count($this->items)) {
 			foreach ($this->items as $item) {
 				if ($item->get_interesting()) {
 					if ($item->get_logo_url() != "") {
-						$image = "<img src='".$item->get_logo_url()."' align='right' hspace='4' vspace='2' />";
+						$image = "<img src='".$item->get_logo_url()."' alt='' class='align_right vignetteimg' style='max-width: 140px;max-height: 200px;'/>";
 					} else {
 						$image = "";
 					}
@@ -1062,7 +1075,7 @@ class docwatch_watch extends docwatch_root{
 					if (is_array($descriptors) && count($descriptors)) {
 						foreach ($descriptors as $descriptor) {
 							$items_xmlrss .= "
-						<category>".htmlspecialchars ($descriptor,ENT_QUOTES, $charset)."</category>";
+						<category>".htmlspecialchars ($descriptor['label'],ENT_QUOTES, $charset)."</category>";
 						}
 					}
 					$items_xmlrss .= "
@@ -1075,7 +1088,7 @@ class docwatch_watch extends docwatch_root{
 	public function get_synced_datasources(){
 		return $this->datasources_synced;
 	}
-	
+
 	public static function get_format_data_structure(){
 		global $msg;
 		$datas = array(
@@ -1108,6 +1121,34 @@ class docwatch_watch extends docwatch_root{
 				'var' => "rss_link",
 				'desc' => $msg['cms_module_watch_datasource_desc_rss_link']
 			),
+		    array(
+		        'var' => "watch_rss_link",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_link']
+		    ),
+		    array(
+		        'var' => "watch_rss_lang",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_lang']
+		    ),
+		    array(
+		        'var' => "watch_rss_copyright",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_copyright']
+		    ),
+		    array(
+		        'var' => "watch_rss_editor",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_editor']
+		    ),
+		    array(
+		        'var' => "watch_rss_webmaster",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_webmaster']
+		    ),
+		    array(
+		        'var' => "watch_rss_image_title",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_image_title']
+		    ),
+		    array(
+		        'var' => "watch_rss_image_website",
+		        'desc' => $msg['cms_module_watch_datasource_desc_watch_rss_image_website']
+		    ),
 			array(
 				'var' => "category",
 				'desc' => $msg['cms_module_watch_datasource_desc_category'],
@@ -1131,21 +1172,21 @@ class docwatch_watch extends docwatch_root{
 		return $datas;
 	}
 	/**
-	 * MÃ©thode appellÃ©e aprÃ¨s le fetch_datas
+	 * Méthode appellée après le fetch_datas
 	 * @return true if user have rights, false otherwise
 	 */
 	public function check_rights(){
 		global $PMBuserid;
-		
+
 		if(in_array(SESSuserid, $this->allowed_users) || $PMBuserid == 1){
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static function check_watch_rights($watch_id){
 		global $PMBuserid;
-		
+
 		if($watch_id){
 			$query = "select watch_allowed_users from docwatch_watches where id_watch = '".$watch_id."'";
 			$result = pmb_mysql_query($query);
@@ -1161,7 +1202,7 @@ class docwatch_watch extends docwatch_root{
 			return true;
 		}
 	}
-	
+
 	public function get_error(){
 		return $this->error;
 	}

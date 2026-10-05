@@ -11,6 +11,6 @@ vos aficha de per la <b>partida inferiora mai d'informacions</b> subre la catego
 <hr />
 <p>En cliquar los ligams de la partida inferiora, vos desplaçatz d'una categoria a una autra.</p>
 <hr />
-<p>Per seleccionar una categoria e n'afichar los obratges, clicatz la lópia <img src='images/search.gif' align='absmiddle'>plaçada en debuta de linha.</p>
+<p>Per seleccionar una categoria e n'afichar los obratges, clicatz la lópia <img src='images/search.gif' >plaçada en debuta de linha.</p>
 <hr />
 <p>Se la lópia s'aficha pas, cap d'obratge correspond pas a la categoria.</p>

@@ -1,0 +1,55 @@
+{% comment %}
+$Id: gabarit.html,v 1.1 2022/11/17 15:20:52 arenou Exp $
+{% endcomment %}
+<style type="text/css">
+	.aut_display_row {
+		display: table-row;
+	}
+	
+	.aut_display_cell {
+		display: table-cell;
+		padding-right: 5px;
+	}
+</style>
+<td style='vertical-align:top'>
+	{% block detail %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.ontology_object_uri }} :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ entity.uri }}
+			</div>
+		</div>
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b> Type :</b>
+			</div>
+			<div class="aut_display_cell">
+				{{ entity.typeLabel | join " / " }}
+			</div>
+		</div>
+		{% for key, elem in entity.infos %}
+			{% if key == "indexwith" or key == "" %}
+			{% else %}
+				<div class="aut_display_row">
+					<div class="aut_display_cell">
+						<b> {{elem.label}} :</b>
+					</div>
+					<div class="aut_display_cell">
+						
+						{% for value in elem.values %}
+						    {% if !loop.first %} / {% endif %}
+							{% if value.object %}
+								<a href='./{{item.get_framework_params.base_resource}}?ontology_id={{get_vars.ontology_id}}&categ=ontologies&sub={{value.object.type.0}}&action=see&id={{value.object.id}}''>{{value.object.isbd}}</a>
+							{% else %}
+								{{value}}
+							{% endif %}
+							
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}	
+		{% endfor %}	
+	{% endblock detail %}
+</td>

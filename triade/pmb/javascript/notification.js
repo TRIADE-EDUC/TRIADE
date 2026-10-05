@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notification.js,v 1.5 2018-01-30 14:27:27 ngantier Exp $
+// $Id: notification.js,v 1.6 2020/03/19 14:07:06 btafforeau Exp $
 
 var notification = function (module,empty_msg,new_msg,new_icon,empty_icon){
 	this.dom; //Objet DOM du div de notification...
@@ -98,20 +98,22 @@ var notification = function (module,empty_msg,new_msg,new_icon,empty_icon){
 		}
 	}
 	
-	this.load_new_icon = function(){
-		this.img.src =  this.new_icon;
-		this.img.title = this.new_msg;
-		this.img.alt = this.img.title;
-		//wlair ajout class si notif present
-		if (!this.dom.classList.contains('ui-active') ){
-			this.dom.className += " ui-active";	
+	this.load_new_icon = function() {
+		this.img.src = this.new_icon;
+		this.dom.title = this.new_msg;
+		this.img.alt = this.dom.title;
+		if (!this.dom.classList.contains('ui-active')) {
+			this.dom.classList.add('ui-active');
 		}
 	}
 	
-	this.load_empty_icon = function(){
-		this.img.src =this.empty_icon;
-		this.img.title = this.empty_msg;
-		this.img.alt = this.img.title;
+	this.load_empty_icon = function() {
+		this.img.src = this.empty_icon;
+		this.dom.title = this.empty_msg;
+		this.img.alt = this.dom.title;
+		if (this.dom.classList.contains('ui-active')) {
+			this.dom.classList.remove('ui-active');
+		}
 	}
 	
 	this.open_close = function(e){

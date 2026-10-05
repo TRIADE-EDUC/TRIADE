@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bbcode.inc.php,v 1.5 2019-02-15 10:37:13 apetithomme Exp $
+// $Id: bbcode.inc.php,v 1.6 2019/06/18 07:57:08 btafforeau Exp $
 
 require_once ($include_path . "/misc.inc.php");
 	
@@ -46,7 +46,7 @@ function do_bbcode($text){
 			return "</p><div class='quotebox'><cite>".str_replace(array('[', '\\"'), array('&#91;', '"'), $matches[2])." ".$lang_common['wrote'].":</cite><blockquote><p>";
 		}, $text);
 		$text = preg_replace('#\[quote\]\s*#', '</p><div class="quotebox"><blockquote><p>', $text);
-		$text = preg_replace('#\s*\[\/quote\]#S', '</p></blockquote></div><p>', $text);
+		$text = preg_replace('#\s*\[\/quote\]#', '</p></blockquote></div><p>', $text);
 	}
 	
 	$patterns_and_callbacks['#\[img\]((ht|f)tps?://)([^\s<"]*?)\[/img\]#'] = function($matches){

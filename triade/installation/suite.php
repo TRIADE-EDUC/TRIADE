@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET 
+ *   copyright            : (C) 2000 E. TAESCH -  
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -48,9 +48,8 @@ if (file_exists($fichier)) {
 
 <?php
 	$messerror = "";
-
 	if (isset($_GET["erreur"])) {
-		$messerror = utf8_encode("<script type=\"text/javascript\">alert('Tous les champs doivent être remplis. ')</script>");
+		$messerror = "<script type=\"text/javascript\">alert('Tous les champs doivent être remplis. ')</script>";
 	}
 ?>
 
@@ -58,8 +57,7 @@ if (file_exists($fichier)) {
 
 	<div style="text-align: center;">
 		<div id="mainInst3">
-			<img src="./image/logo_triade_licence.gif"
-			     alt="logo triade licence" />
+			<img src="./image/logo_triade_licence.png" width='300' alt="logo triade licence" />
 <!--
 <tr>
 <td  align=right><font class=T1> Choix de la langue :</font></td>
@@ -96,16 +94,13 @@ if (file_exists($fichier)) {
 						<option style="color:#000066;background-color:#CCCCFF" value="">Choix</option>
 						<optgroup label="Serveur D&eacute;di&eacute;">
 						<option style="color:#000066;background-color:#FCE4BA" value="LINUX">Linux</option>
-						<option style="color:#000066;background-color:#FCE4BA" value="LINUX">Unix</option>
 						</optgroup>
-						<optgroup label="Serveur Cl&eacute;s en mains">
-                                                <option style="color:#000066;background-color:#FCE4BA" value="FREEEOS">Free-OS</option>
-                                                </optgroup>
 						<optgroup label="Serveur Windows">
 						<option style="color:#000066;background-color:#FCE4BA" value="EASYPHP">Easyphp</option>
 						<option style="color:#000066;background-color:#FCE4BA" value="WAMP310">WampServer</option>
-<!--						<option style="color:#000066;background-color:#FCE4BA" value="IIS">Serveur IIS</option> -->
+<!-- 						<option style="color:#000066;background-color:#FCE4BA" value="IIS">Serveur IIS</option>  -->
 						</optgroup>
+<!--
 						<optgroup label="Serveur Mutualis&eacute;">
 						<option style="color:#000066;background-color:#FCE4BA" value="SERVEURFREE">Serveur Free</option>
 						<option style="color:#000066;background-color:#FCE4BA" value="SERVEURKWARTZ">Serveur KWARTZ</option>
@@ -117,6 +112,7 @@ if (file_exists($fichier)) {
 						<option style="color:#000066;background-color:#FCE4BA" value="SERVEURVIPDOMAINE">Serveur VIPDOMAINE</option>
 						<option style="color:#000066;background-color:#FCE4BA" value="SERVEURMUTUA">autre...</option>
 						</optgroup>
+-->
 						</select>
 						</td>
 					</tr>
@@ -198,7 +194,7 @@ if (file_exists($fichier)) {
 							<span class="T2">Pr&eacute;fixe des tables&nbsp;:</span>
 						</td>
 						<td>
-							<input type="text" name="prefixe" value="tria_" />
+							<input type="text" name="prefixe" value="tria_" readonly='readonly' />
 						</td>
 					</tr>
 

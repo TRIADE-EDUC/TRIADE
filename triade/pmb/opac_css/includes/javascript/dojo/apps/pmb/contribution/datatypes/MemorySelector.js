@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: MemorySelector.js,v 1.2 2018-12-12 16:26:40 apetithomme Exp $
+// $Id: MemorySelector.js,v 1.2 2018/12/12 16:26:40 apetithomme Exp $
 
 
 define([

@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -44,7 +44,7 @@ $date=date("Y");
 </table>
 <br />
 <?php print "La Transparence et la Rapidité de l'Informatique Au service De l'Enseignement<br />
-Pour visualiser ce site de façon optimale : résolution minimale : 800x600 <br />
+Acessibilité : Non conforme <br />
 © 2000 - $date TRIADE - Tous droits réservés<br /> " ?>
 </center>
 <BR><BR>

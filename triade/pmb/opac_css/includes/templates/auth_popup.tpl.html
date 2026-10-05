@@ -1,0 +1,60 @@
+<!-- $Id: auth_popup.tpl.html,v 1.9.4.1 2025/02/27 14:05:55 dgoron Exp $ -->
+
+{% block connexion %}
+	<div id='connexion'>
+	    <span id='login_form'>
+	        <form action="{{ global.opac_url_base }}ajax.php?module=ajax&categ=auth&action=check_auth&mobile_app={{mobile_app}}" method="post" name="myform">
+	            <h3 id="mypopupform-title">{{ message }}</h3>
+            	<input type="text" id="mypopupform-login" name="login" class="login" autocomplete="off" size="14" value="" placeholder="{{ msg.common_tpl_cardnumber }}" />
+            	<label for="mypopupform-login" class="visually-hidden">".$msg["common_tpl_cardnumber"]."</label>
+	            <div class="myform-password-text-visually">
+	            	<input type="password" id="mypopupform-password" name="password" class="password" autocomplete="off" size="8" value="" placeholder="{{ msg.common_tpl_empr_password }}" />
+	            	<label for="mypopupform-password" class="visually-hidden">{{ msg.common_tpl_empr_password }}</label>
+	            	<button type="button" role="switch" aria-checked="false" class="fa fa-eye" id="mypopupform-password-visually" onclick="toggle_password(this, 'mypopupform-password');" title="{{ msg.rgaa_password_field_desc }}">
+						<span class="visually-hidden">{{ msg.rgaa_password_field_desc }}</span>
+					</button>
+	            </div>
+	            {% if error_message %}
+	            <p class='connexion_error'>{{ error_message }}</p>
+	            {% endif %}
+	            <div class='login_form_buttons'>
+		            <input type="hidden" name="auth_from" value="auth_popup" />
+		            <input type="hidden" name="callback_func" value="{{ callback_func|urlencode }}" />
+		            <input type="hidden" name="callback_url" value="{{ callback_url|urlencode }}" />
+		            <input type="hidden" name="new_tab" value="{{ new_tab }}" />
+		            <input type="hidden" name="popup_mode" value="{{popup_mode}}" />
+		            <input type="submit" name="ok" value="{{ msg.connection }}" class="bouton" />
+	            </div>
+	        </form>
+	    </span>
+	</div>
+	{% if popup_mode != 1 %}
+		{%if global.opac_password_forgotten_show %}
+			<a class="mdp_forgotten" href="#" onclick="window.parent.location = '{{ global.opac_url_base }}askmdp.php';">{{ msg.mdp_forgotten }}</a>
+		{% endif %}
+
+		{%if global.opac_websubscribe_show %}
+			<br /><a class="subs_not_yet_subscriber" href="#" onclick="window.parent.location = '{{ global.opac_url_base }}subscribe.php';">{{ msg.subs_not_yet_subscriber }}</a>
+		{% endif %}
+	{% endif %}
+	{% if popup_mode == 1 %}
+		<button id="trigger_popup_button" class="uk-hidden" data-uk-toggle="{ target:'#connexion', cls:'hide' }" />
+		<script>
+			window.onload = function() {
+				let triggerButton = document.getElementById("trigger_popup_button");
+				let connexion = document.getElementById("connexion");
+
+				//Si on a la classe hide présente on toggle la popup pour l'afficher
+				if(triggerButton !== undefined && (connexion !== undefined && connexion.classList.contains("hide"))) {
+					triggerButton.click();
+				}
+			}
+		</script>
+	{% endif %}
+
+    {{ ext_auth_form }}
+
+{% endblock %}
+
+{% block ext_auth %}
+{% endblock %}

@@ -65,7 +65,7 @@
       $sql .= "       age_date_modif, age_modificateur_id, CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur, age_id,";
       $sql .= "       age_lieu, CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact, age_date, age_rappel,";
       $sql .= "       age_rappel_coeff, age_mere_id, age_ape_id, cal_id, aco_termine, cal_partage, age_nb_participant";
-      $sql .= " FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2";
+      $sql .= " FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2";
       $sql .= " WHERE aco_util_id=".$sUtilID;
       $sql .= "  AND age_id=aco_age_id";
       $sql .= "  AND ($age_date='".$leJour."' OR ($age_dateAvant='".$leJour."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0))";
@@ -374,7 +374,7 @@
       $NblignUtil++;
 
       // Pour chaque utilisateur on verifie si on a acces a son planning en modification
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sId." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sId." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR)) || ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION and $droit_AGENDAS >= _DROIT_AGENDA_TOUS) || $sId==$idUser) {
         $autoriseAffect = true;
         $aAutoAffect[$sId] = 1;
@@ -387,7 +387,7 @@
       else
         $styleUTC = "";
       // Pour chaque utilisateur on verifie si on a acces a son planning en consultation
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sId." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sId." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_AGENDAS < _DROIT_AGENDA_TOUS)) || ($droit_AGENDAS >= _DROIT_AGENDA_TOUS) || $sId==$idUser) {
         $output = "    <TD class=\"nomUtil\" style=\"padding-left:3px;padding-right:3px;\" height=\"43\" valign=\"middle\"><A href=\"javascript: substUser('".$sId."');\" title=\"".trad("PLGL_PLANNING_UTIL")."\">".$sNom."</A>".$styleUTC."</TD>\n";
         $autoriseConsult = true;

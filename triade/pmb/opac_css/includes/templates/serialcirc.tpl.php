@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc.tpl.php,v 1.10 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: serialcirc.tpl.php,v 1.12 2023/12/21 11:11:56 dgoron Exp $
 
-// templates pour gestion des autoritÃ©s collections
+// templates pour gestion des autorités collections
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -21,16 +21,16 @@ global $msg, $charset;
 $serialcirc_circ_list_tpl ="
 		<table>
 			<tr>
-				<th></th>
-				<th>".htmlentities($msg['serialcirc_serial_name'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_circ_mode'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['bulletin_retard_libelle_numero'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_start_date'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['codebarre_sort'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_nb'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_expected_date'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_transmission_date'],ENT_QUOTES,$charset)."</th>
-				<th>".htmlentities($msg['serialcirc_actions'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'></th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_serial_name'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_circ_mode'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['bulletin_retard_libelle_numero'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_start_date'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['codebarre_sort'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_nb'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_expected_date'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_transmission_date'],ENT_QUOTES,$charset)."</th>
+				<th role='columnheader'>".htmlentities($msg['serialcirc_actions'],ENT_QUOTES,$charset)."</th>
 			</tr>
 			!!rows!!
 		</table>
@@ -38,7 +38,7 @@ $serialcirc_circ_list_tpl ="
 			<input type='hidden' value='' name='unsubscribe_list[]' id='unsubscribe_list'/>
 			<input type='submit' class='bouton' onclick='get_checkboxes();' value='".htmlentities($msg['serialcirc_unsubscribe_checked'],ENT_QUOTES,$charset)."'/>
 		</form>
-		<script type='text/javascript'>
+		<script>
 			function get_checkboxes(){
 				var unsubscribe_list = document.getElementById('unsubscribe_list');
 				var inputs = document.getElementsByName('unsubscribe');
@@ -69,7 +69,7 @@ $serialcirc_copy_resume ="
 $ask_transmission_mail="
 <p>Bonjour,</p>
 
-<p>Vous Ãªtes actuellement en possession du bulletin suivant : !!issue!!.<br />
+<p>Vous êtes actuellement en possession du bulletin suivant : !!issue!!.<br />
 Le prochain destinataire vous remercie de bien vouloir lui transmettre.</p>
 
 <p>Cordialement,<br />
@@ -77,13 +77,13 @@ $opac_biblio_name</p>";
 
 $report_late_mail="
 <p>Bonjour,</p>
-<p>Je vous signale que le bulletin !!issue!! ne m'a toujours pas Ã©tÃ© transmis.</p>
+<p>Je vous signale que le bulletin !!issue!! ne m'a toujours pas été transmis.</p>
 <p>Cordialement,<br />
 !!empr!!</p>";
 
 $transmission_accepted_mail="
 <p>Bonjour,</p>
-<p>La demande de transmission concernant le bulletin !!issue!! a Ã©tÃ© acceptÃ©e.<br />
+<p>La demande de transmission concernant le bulletin !!issue!! a été acceptée.<br />
 Il devrait vous parvenir rapidement.</p>
 <p>Cordialement,<br />
 $opac_biblio_name</p>";
@@ -91,13 +91,13 @@ $opac_biblio_name</p>";
 $ret_accepted_mail="
 <p>Bonjour,</p>
 <p>J'ai pris connaissance de votre demande de retour concernant le bulletin !!issue!!.<br />
-Je vous le ferai parvenir dans les meilleurs dÃ©lais.</p>
+Je vous le ferai parvenir dans les meilleurs délais.</p>
 <p>Cordialement,<br />
 !!empr!!</p>";
 
 $serialcirc_hold_mail ="
 <p>Bonjour,</p>
-<p>Je souhaiterais rÃ©server le document suivant Ã  l'issue de sa circulation : <br />
+<p>Je souhaiterais réserver le document suivant à l'issue de sa circulation : <br />
 !!issue!!</p>
 <p>Cordialement,<br />
 !!empr!!</p>

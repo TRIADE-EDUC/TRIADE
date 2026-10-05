@@ -1,0 +1,20 @@
+@startuml
+entity "Portal" as portal {
+  *id : number <<generated>>
+  --
+  name : text
+  default : bool
+}
+
+entity "Version" as version {
+  *id : number <<generated>>
+  --
+  name : text
+  create_at : datetime
+  data : mediumBlob
+}
+
+portal }|..|| version : A plusieurs
+portal ||..|| version : Associée A
+
+@enduml

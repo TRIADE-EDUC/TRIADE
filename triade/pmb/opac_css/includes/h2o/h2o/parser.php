@@ -1,5 +1,13 @@
 <?php
+// +-------------------------------------------------+
+// | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: parser.php,v 1.7 2024/03/06 11:14:05 dgoron Exp $
+
 class H2o_Lexer {
+    public $options;
+    public $pattern;
+
     public function __construct($options = array()) {
         $this->options = $options;
 
@@ -41,10 +49,15 @@ class H2o_Lexer {
 }
 
 class H2o_Parser {
+    public $options;
+    public $lexer;
+    public $tokenstream;
     public $first;
     public $storage = array();
     public $filename;
     public $runtime;
+    public $searching;
+    public $token;
 
     public function __construct($source, $filename, $runtime, $options) {
         $this->options = $options;
@@ -108,7 +121,7 @@ class H2o_Parser {
     }
 
     # Parse arguments
-    static public function parseArguments($source = null, $fpos = 0){
+    public static function parseArguments($source = null, $fpos = 0){
         $parser = new ArgumentLexer($source, $fpos);
         $result = array();
         $current_buffer = &$result;
@@ -159,9 +172,9 @@ class H2o_Parser {
 }
 
 class H2O_RE {
-    static $whitespace, $seperator, $parentheses, $pipe, $filter_end, $operator, $boolean, $number,  $string, $i18n_string, $name, $named_args;
+    public static $whitespace, $seperator, $parentheses, $pipe, $filter_end, $operator, $boolean, $number,  $string, $i18n_string, $name, $named_args;
 
-    static public function init() {
+    public static function init() {
         $r = 'strip_regex';
 
         self::$whitespace   = '/\s+/m';
@@ -268,7 +281,7 @@ class ArgumentLexer {
 
     # String scanner
     public function scan($regexp) {
-        if (preg_match($regexp . 'A', $this->source, $match, null, $this->pos)) {
+        if (preg_match($regexp . 'A', $this->source, $match, 0, $this->pos)) {
             $this->match = $match[0];
             $this->pos += strlen($this->match);
             return true;

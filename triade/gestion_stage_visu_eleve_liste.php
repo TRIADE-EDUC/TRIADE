@@ -12,7 +12,7 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,6 +33,8 @@ if ( ($_SESSION["membre"] == "menupersonnel") && (verifDroit($_SESSION["id_pers"
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -47,22 +49,25 @@ include_once("./librairie_php/lib_licence.php");
 if ($_SESSION["membre"] != "menupersonnel") { validerequete("3"); }
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method=post onsubmit="return valide_consul_classe()" name="formulaire">
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'><?php print "Liste des étudiants en entreprise"  ?> <?php if ($_GET["tous"] != 1) print "actuellement" ?></font></b></td></tr>
 <tr id='cadreCentral0'>
 <td valign=top>
-<table width=100% border=1 bordercolor="#000000" style='border-collapse: collapse;' >
-<tr>
-<td bgcolor="yellow" >&nbsp;Nom Prénom</td>
-<td bgcolor="yellow" >&nbsp;Classe</td>
-<td bgcolor="yellow" >&nbsp;Entreprise</td>
+<table class="cc-data-table">
+<thead>
+<tr class="cc-thead-row">
+<th class="cc-th">Nom Prénom</th>
+<th class="cc-th">Classe</th>
+<th class="cc-th">Entreprise</th>
 </tr>
+</thead>
+<tbody>
 <!-- // debut  -->
 <?php
 $fichier="gestion_stage_visu_eleve_liste.php?tous=".$_GET['tous'];
@@ -79,7 +84,7 @@ if (isset($_GET["nba"])) {
 
 
 $data=liste_eleve_entreprise();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	if (trim(recherche_eleve($data[$i][1])) == "") {
 		deleteListeEleveEntr($data[$i][0]);
 	}
@@ -127,7 +132,7 @@ $pdf->SetFillColor(255);
 $pdf->SetFont('Arial','',9);
 $data=liste_eleve_entreprise_limit($depart,$nbaff);
 // id  id_eleve  id_entreprise  id_prof_visite  lieu_stage  visite_effectuer  ville_stage  code_p  tuteur_stage  jour_repos  info_plus  loger  nourri  passage_x_service  raison  date_visite_prof  num_stage  ,alternance ,jour_alternance ,dateDebutAlternance ,dateFinAlternance
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$idclasse=chercheIdClasseDunEleve($data[$i][1]);
 	$info=recherchedatestage3($data[$i][16],$idclasse);
 	// idclasse,datedebut,datefin,numstage,id,nom_stage
@@ -178,10 +183,10 @@ for($i=0;$i<count($data);$i++) {
 	$pdf->MultiCell(70,3,"$lieu",0,'L',0);
 
 ?>
-	<tr>
-	<td bgcolor="#FFFFFFF" >&nbsp;<?php print $nomprenom ?></td>
-	<td bgcolor="#FFFFFFF" >&nbsp;<?php print $nomclass ?></td>
-	<td bgcolor="#FFFFFFF" >&nbsp;<?php print $nomentreprise ?></td>
+	<tr class="cc-tr-data">
+	<td class="cc-td">&nbsp;<?php print $nomprenom ?></td>
+	<td class="cc-td">&nbsp;<?php print $nomclass ?></td>
+	<td class="cc-td">&nbsp;<?php print $nomentreprise ?></td>
 	</tr>
 
 <?php	
@@ -191,7 +196,7 @@ for($i=0;$i<count($data);$i++) {
 $pdf->output('F',$fichierPDF);
 
 ?>
-</table>
+</tbody></table>
 <table width=100% border=0 >
 <tr><td align=left width=33%><br>&nbsp;<?php precedent2($fichier,$table,$depart,$nbaff); ?><br><br></td>
 <td width=33%>
@@ -214,17 +219,17 @@ if ($_SESSION["membre"] == "menuprof") {
        // Test du membre pour savoir quel fichier JS je dois executer
        if ($_SESSION["membre"] == "menuadmin") :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

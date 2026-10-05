@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_suggestions.inc.php,v 1.27 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: func_suggestions.inc.php,v 1.30 2021/12/16 06:50:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $include_path;
+global $class_path, $include_path, $msg, $charset, $current_module;
 
 // gestion des suggestions
 require_once($class_path.'/entites.class.php');
@@ -17,6 +17,8 @@ require_once($include_path.'/mail.inc.php');
 require_once($include_path.'/explnum.inc.php');
 require_once($class_path.'/explnum_doc.class.php');
 require_once($class_path.'/z3950_notice.class.php');
+require_once($class_path.'/notice.class.php');
+require_once($class_path.'/serials.class.php');
 
 //Supprime la suggestion
 function sup_sug() {
@@ -31,17 +33,14 @@ function sup_sug() {
 
 //Enregistre la suggestion
 function update_sug() {
-
 	global $id_bibli, $id_sug,$id_notice;	
 	global $tit, $edi, $aut, $cod, $pri, $com, $com_gestion, $date_publi;
 	global $statut, $orig, $typ, $url_sug, $sug_src;	
 	global $sug_map;
-	global $acquisition_sugg_categ, $acquisition_sugg_categ_default;
 	global $num_categ;
 	global $sugg_location_id;
 	global $nombre_expl;
 	global $creator_orig_id;
-	global $dbh;
 	
 	if (!$id_sug && suggestions::exists($orig, $tit, $aut, $edi, $cod)) return;
 	
@@ -111,13 +110,10 @@ function update_sug() {
 }
 
 
-//Fusionne les suggestions cochÃ©es
-//En cours/ValidÃ©es
+//Fusionne les suggestions cochées
+//En cours/Validées
 function sug_fusChk(){
-
-	global $dbh;
 	global $msg, $charset;
-	global $error;
 	global $current_module;
 	global $chk;
 	global $bt_fusVal, $script;
@@ -125,15 +121,12 @@ function sug_fusChk(){
 	
 	$tab_enc = array();
 	$tab_val = array();
-	foreach($chk as $key=>$id_sug) {
+	foreach($chk as $id_sug) {
 		$sug = new suggestions($id_sug);
-			
 		$state_name = $sug_map->getStateNameFromId($sug->statut);
 		$merge=$sug_map->getState_MERGE($state_name);
 		if ($merge == 'FROM') $tab_enc[] = $sug;
 		if ($merge == 'TO') $tab_val[] = $sug;			
-
-
 	}
 	
 	$titre = htmlentities($msg['acquisition_sug_fus'].' : '.$msg['acquisition_sug'], ENT_QUOTES, $charset);
@@ -156,9 +149,9 @@ function sug_fusChk(){
 				
 	$parity=1;
 
-	if(count($tab_val) != 0) {	//S'il y a des suggestions validÃ©es, on ne peut fusionner qu'avec l'une d'elles.
+	if(count($tab_val) != 0) {	//S'il y a des suggestions validées, on ne peut fusionner qu'avec l'une d'elles.
 		
-		foreach($tab_val as $key=>$sug) {
+		foreach($tab_val as $sug) {
 						
 			$lib_statut = htmlentities($msg['acquisition_sug_val'], ENT_QUOTES, $charset);
 			
@@ -181,7 +174,7 @@ function sug_fusChk(){
 						</td>
 					</tr>");
 		}
-		foreach($tab_enc as $key=>$sug) {
+		foreach($tab_enc as $sug) {
 						
 			$lib_statut = htmlentities($msg['acquisition_sug_enc'], ENT_QUOTES, $charset);
 			
@@ -207,7 +200,7 @@ function sug_fusChk(){
 		
 	} else {	//Sinon on peut fusionner avec n'importe quelle suggestion.
 
-		foreach($tab_val as $key=>$sug) {
+		foreach($tab_val as $sug) {
 						
 			$lib_statut = htmlentities($msg['acquisition_sug_val'], ENT_QUOTES, $charset);
 			
@@ -230,7 +223,7 @@ function sug_fusChk(){
 						</td>
 					</tr>");
 		}
-		foreach($tab_enc as $key=>$sug) {
+		foreach($tab_enc as $sug) {
 						
 			$lib_statut = htmlentities($msg['acquisition_sug_enc'], ENT_QUOTES, $charset);
 			
@@ -274,18 +267,16 @@ function sug_fusChk(){
 
 //Valide la fusion de suggestions
 function sug_fusVal(){
-	
-	global $dbh; 
 	global $msg, $charset;
 	global $chk, $sug;
 
 	$fus = new suggestions($chk[0]);
 	$q = suggestions_origine::listOccurences($chk[0], 1);
-	$tab_orig = pmb_mysql_query($q, $dbh);
+	$tab_orig = pmb_mysql_query($q);
 	$row_orig = pmb_mysql_fetch_object($tab_orig);
 	$orig = $row_orig->origine;
 	
-	foreach($sug as $key=>$id_sug) {
+	foreach($sug as $id_sug) {
 		if ($id_sug != $chk[0]){
 			suggestions::delete($id_sug);
 			suggestions_origine::fusionne($orig, $id_sug, $chk[0]);
@@ -309,12 +300,12 @@ function setSessionSugState($statut) {
 	return;
 }
 
-//Catalogue la notice Ã  partir du blob unimarc
+//Catalogue la notice à partir du blob unimarc
 function save_unimarc_notice(){
-	global $msg, $idbibli, $id_sug, $dbh;
+	global $msg, $charset, $current_module, $idbibli, $id_sug, $page;
 	
 	$req_uni = "select notice_unimarc from suggestions where id_suggestion='".$id_sug."'";
-	$res = pmb_mysql_query($req_uni,$dbh);
+	$res = pmb_mysql_query($req_uni);
 	if(pmb_mysql_num_rows($res)){
 		$notice_uni = pmb_mysql_result($res,0,0);
 	}
@@ -339,9 +330,8 @@ function save_unimarc_notice(){
 		</div>
 		<div class='row'>";
 		
-		if($z->bull_id && $z->perio_id)
-			$url_view = "catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$z->bull_id&art_to_show=$ret[1]";
-		else $url_view = "catalog.php?categ=isbd&id=".$ret[1];
+		if($z->bull_id && $z->perio_id) $url_view = analysis::get_permalink($ret[1], $z->bull_id);
+		else $url_view = notice::get_permalink($ret[1]);
 		$retour .= "
 		<form class='form-$current_module' name='dummy' >
 			<input type='hidden' name='page' value='".htmlentities($page,ENT_QUOTES,$charset)."'/>	
@@ -355,9 +345,9 @@ function save_unimarc_notice(){
 		";
 		print $retour;
 		
-		//On attache la notice Ã  la suggestion
+		//On attache la notice à la suggestion
 		$req = " update suggestions set num_notice='".$ret[1]."' where id_suggestion='".$id_sug."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 		
 	} else if ($ret[1]){
 		if($z->bull_id && $z->perio_id){
@@ -376,9 +366,8 @@ function save_unimarc_notice(){
 			</div>
 		</div>
 		<div class='row'>";
-		if($z->bull_id && $z->perio_id)
-			$url_view = "catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$z->bull_id&art_to_show=$ret[1]";
-		else $url_view = "catalog.php?categ=isbd&id=".$ret[1];
+		if($z->bull_id && $z->perio_id) $url_view = analysis::get_permalink($ret[1], $z->bull_id);
+		else $url_view = notice::get_permalink($ret[1]);
 		$retour .= "
 		<form class='form-$current_module' name='dummy'>
 			<input type='hidden' name='page' value='".htmlentities($page,ENT_QUOTES,$charset)."'/>	
@@ -392,9 +381,9 @@ function save_unimarc_notice(){
 		";
 		print $retour;
 		
-		//On attache la notice Ã  la suggestion
+		//On attache la notice à la suggestion
 		$req = " update suggestions set num_notice='".$ret[1]."' where id_suggestion='".$id_sug."'";
-		pmb_mysql_query($req,$dbh);
+		pmb_mysql_query($req);
 	}
 	else {
 		$retour = "<script src='javascript/tablist.js'></script>";
@@ -407,7 +396,7 @@ function save_unimarc_notice(){
  * Formulaire de validation de la suppression de notice
  */
 function catalog_notice_form(){
-	global $msg, $chk, $statut;
+	global $msg, $chk, $statut, $current_module;
 	
 	$display = "
 	<form class='form-$current_module' name='cat_noti'  method='post' action='./acquisition.php?categ=sug&action=list&statut=$statut'>
@@ -436,4 +425,3 @@ function catalog_notice_form(){
 	print $display;
 }
 ?>
-

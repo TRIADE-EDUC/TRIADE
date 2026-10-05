@@ -1,23 +1,5 @@
-<?php
+﻿<?php
 session_start();
-/***************************************************************************
- *                              T.R.I.A.D.E
- *                            ---------------
- *
- *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
- *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
 include_once("./librairie_php/lib_error.php");
 include_once("./common/config.inc.php");
 include_once("./common/config2.inc.php");
@@ -57,20 +39,57 @@ if(isset($_POST["nb"])) {
 ?>
 <HTML>
 <HEAD>
-<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
-<script language="JavaScript" src="./librairie_js/function.js"></script>
-<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<script language="JavaScript" src="./librairie_js/clickdroit2.js"></script>
+<LINK TYPE="text/css" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TYPE="text/css" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<LINK TYPE="text/css" rel="stylesheet" HREF="./librairie_css/css-v4-2.css">
+<link rel="stylesheet" href="./librairie_css/bootstrap-icons.min.css">
+<script src="./librairie_js/function.js"></script>
+<script src="./librairie_js/lib_css.js"></script>
+<script src="./librairie_js/clickdroit2.js"></script>
+<style>
+.bc4-wrap {
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:60px;
+  min-height:100vh;
+  box-sizing:border-box;
+}
+.bc4-card {
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 4px 24px rgba(8,10,102,.13);
+  padding:40px 48px 32px;
+  text-align:center;
+  max-width:420px;
+  width:90%;
+}
+.bc4-icon {
+  font-size:48px;
+  color:#2e7d32;
+  margin-bottom:16px;
+  display:block;
+}
+.bc4-msg {
+  font-family:Electrolize,Arial,sans-serif;
+  font-size:15px;
+  color:#080A66;
+  font-weight:600;
+  margin-bottom:28px;
+  background:#fff;
+  padding:10px 16px;
+  border-radius:6px;
+}
+</style>
 </head>
-<body id='bodyfond2' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" style="background:#CACCEF">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<br><br>
-	<center><font class="T2"><?php print LANGRESA69 ?>.</font><br><br>
-
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagic("<?php print LANGMESS138 ?>","bulletincomprof.php","_parent","","");</script>
-</td></tr></table>
-</center>
-</br>
+<div class="bc4-wrap">
+  <div class="bc4-card">
+    <i class="bi bi-check-circle-fill bc4-icon"></i>
+    <div class="bc4-msg"><?php print LANGRESA69 ?>.</div>
+    <script>buttonMagic("<?php print LANGMESS138 ?>","bulletincomprof.php","_parent","","");</script>
+  </div>
+</div>
 </body>
 </html>

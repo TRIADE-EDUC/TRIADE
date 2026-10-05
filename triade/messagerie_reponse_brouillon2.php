@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -127,7 +127,7 @@ $cnx=cnx();
 <td valign='top' >
 <!-- // fin  -->
 <?php
-$data=affichage_messagerie_message($_GET["saisie_id_message"]);
+$data=affichage_messagerie_message($_GET["saisie_id_message"],$_SESSION['id_pers']);
 // $data : tab bidim - soustab 3 champs
 if ($_SESSION["navigateur"] == "IE") {
 	$action="./messagerie_enr.php";
@@ -135,7 +135,7 @@ if ($_SESSION["navigateur"] == "IE") {
 	$action="./messagerie_enr_firefox.php";
 }
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 	$qui_envoi=$data[$i][9];
 	$number=$data[$i][10];
 	if ((trim($data[$i][7]) == "ADM")||(trim($data[$i][7]) == "ENS")||(trim($data[$i][7]) == "MVS")||(trim($data[$i][7]) == "TUT")) {

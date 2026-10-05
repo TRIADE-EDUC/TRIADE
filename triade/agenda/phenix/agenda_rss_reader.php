@@ -60,7 +60,7 @@ function embed_wmedia(width, height, link) {
 }
 </script>  
 <?php
-$DB_CX->DbQuery("SELECT count(*) FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+$DB_CX->DbQuery("SELECT count(*) FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 if ($DB_CX->DbResult(0,0)==0)
   $_GET['config']="ok";
 if ($_POST['action']=="lire_flux") {
@@ -72,12 +72,12 @@ if ($_POST['action']=="lire_flux") {
 	<form id="form" action="" method="POST"> 
 	<?php
 	echo trad("TITRE_RSS_READER3");
-	$DB_CX->DbQuery("SELECT count(*) FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	$DB_CX->DbQuery("SELECT count(*) FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	$nb_rss = $DB_CX->DbNextRow();
 	if ($nb_rss[0] >0) {
 	  echo '<select name="url" onchange="showRSS(this.value,\'form\')">';
 	  echo '<option value=""></option>';
-	  $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	  $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	  while ($enr = $DB_CX->DbNextRow()) {
 	    $selected = "";
 		if ($_POST["url"] == $enr['rr_rss_url']) $selected = "SELECTED";
@@ -101,11 +101,11 @@ if ($_POST['action']=="lire_flux") {
 <br>
 <?php
 // On récupère les infos de configuration globale du mod RSS # ici l'affichage de la vidéo ou non
-$DB_CX->DbQuery("SELECT valeur FROM ${PREFIX_TABLE}configuration WHERE param='RSS_VIDEOS'");
+$DB_CX->DbQuery("SELECT valeur FROM {$PREFIX_TABLE}configuration WHERE param='RSS_VIDEOS'");
 $rss_videos = $DB_CX->DbResult(0,0);
 
 // On récupère les infos de configuration de l'utilisateur
-$DB_CX->DbQuery("SELECT util_rss_reader FROM ${PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
+$DB_CX->DbQuery("SELECT util_rss_reader FROM {$PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
 list($nb_items,$nb_col_acc,$nb_items_acc,$refresh) = explode(";",$DB_CX->DbResult(0,0));
 if ($nb_items == "") $nb_items = 10;
 if ($refresh == "") $refresh = 600;
@@ -223,10 +223,10 @@ elseif ($_GET['config']=="ok") {
   if (count($_POST)>0) {
     if ($_POST['action']=="ajout") {
 	  $_POST['titre'] = addslashes($_POST['titre']);
-      $DB_CX->DbQuery("INSERT INTO ${PREFIX_TABLE}rss_reader (rr_util_id,rr_rss_url,rr_rss_titre,rr_rss_accueil) VALUES ('".$idUser."','".$_POST['url']."','".$_POST['titre']."','0')");
+      $DB_CX->DbQuery("INSERT INTO {$PREFIX_TABLE}rss_reader (rr_util_id,rr_rss_url,rr_rss_titre,rr_rss_accueil) VALUES ('".$idUser."','".$_POST['url']."','".$_POST['titre']."','0')");
 	}
     if ($_POST['action']=="supp") {
-      $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}rss_reader WHERE rr_rss_id='".$_POST['sup_id']."'");
+      $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}rss_reader WHERE rr_rss_id='".$_POST['sup_id']."'");
 	}
     if ($_POST['action']=="enreg") {
 	  $nb_item = (count($_POST)-2)/5;
@@ -235,7 +235,7 @@ elseif ($_GET['config']=="ok") {
 	    else $checked = 0;
 		if (($_POST['rss_ordre'.$i] == "") || ($_POST['rss_ordre'.$i] == " ")) $_POST['rss_ordre'.$i] = "x";
 		$_POST['rss_titre'.$i] = addslashes($_POST['rss_titre'.$i]);
-	    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}rss_reader SET rr_rss_accueil='".$checked."',rr_rss_titre='".$_POST['rss_titre'.$i]."', rr_rss_url='".$_POST['rss_url'.$i]."', rr_rss_ordre='".$_POST['rss_ordre'.$i]."' WHERE rr_rss_id='".$_POST['rss_id'.$i]."'");
+	    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}rss_reader SET rr_rss_accueil='".$checked."',rr_rss_titre='".$_POST['rss_titre'.$i]."', rr_rss_url='".$_POST['rss_url'.$i]."', rr_rss_ordre='".$_POST['rss_ordre'.$i]."' WHERE rr_rss_id='".$_POST['rss_id'.$i]."'");
 	  }
 	}
   }
@@ -278,7 +278,7 @@ function enregRSS() {
   </FORM>
   <BR>
   <?php
-	$DB_CX->DbQuery("SELECT count(*) FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	$DB_CX->DbQuery("SELECT count(*) FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	$nb_flux = $DB_CX->DbResult(0,0);
 	if ($nb_flux>0) {
   ?>
@@ -292,7 +292,7 @@ function enregRSS() {
 	<TD width="60" height="30" align="center" class="bordTLRB">&nbsp;</TD>
 	</TR>
   	<?php
-	$DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	$DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	$i=0;
 	while ($enr = $DB_CX->DbNextRow()) {
 	  $titre_rss = htmlspecialchars(stripslashes($enr['rr_rss_titre']),ENT_QUOTES);
@@ -323,7 +323,7 @@ elseif ($_GET['options']=="ok") {
   // MAJ des options de l'utilisateur -> action du FORM
   if ($_POST['action']=="options_maj") {
 	$rss_opt = $_POST['rss_nb_items'].";".$_POST['rss_nb_col_acc'].";".$_POST['rss_nb_items_acc'].";".$_POST['rss_refresh'];
-    $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}utilisateur SET util_rss_reader='".$rss_opt."' WHERE util_id='".$_POST['id_user']."'");	  
+    $DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}utilisateur SET util_rss_reader='".$rss_opt."' WHERE util_id='".$_POST['id_user']."'");	  
   }
 ?>
   <TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
@@ -342,7 +342,7 @@ elseif ($_GET['options']=="ok") {
 	<TD width="250" align="center" height="30" class="bordTLRB"><B><?php echo trad("RSS_OPT_VAL");?></B></TD>
 	</TR>
   	<?php
-	$DB_CX->DbQuery("SELECT util_rss_reader FROM ${PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
+	$DB_CX->DbQuery("SELECT util_rss_reader FROM {$PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
 	list($nb_items,$nb_col_acc,$nb_items_acc,$refresh) = explode(";",$DB_CX->DbResult(0,0));
 	if ($nb_items == "") $nb_items = 10;
 	if ($nb_col_acc == "") $nb_col_acc = 3;
@@ -366,10 +366,10 @@ else {
 // Page d'accueil RSS Reader
 // MAJ du nombre d'objets par flux (si nécessaire)
 if ($_POST['action']=="Change nb obj") {
-$DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}rss_reader SET rr_rss_nb_obj=".$_POST['nb_obj_new']." WHERE rr_rss_id=".$_POST['rss_id']);
+$DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}rss_reader SET rr_rss_nb_obj=".$_POST['nb_obj_new']." WHERE rr_rss_id=".$_POST['rss_id']);
 }
 if ($_POST['action']=="Sup flux accueil") {
-$DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}rss_reader SET rr_rss_accueil='0' WHERE rr_rss_id=".$_POST['rss_id']);
+$DB_CX->DbQuery("UPDATE {$PREFIX_TABLE}rss_reader SET rr_rss_accueil='0' WHERE rr_rss_id=".$_POST['rss_id']);
 }
 ?>
   <TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
@@ -379,12 +379,12 @@ $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}rss_reader SET rr_rss_accueil='0' WHERE r
 	<form id="form" action="" method="POST"> 
 	<?php
 	echo trad("TITRE_RSS_READER3");
-	$DB_CX->DbQuery("SELECT count(*) FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	$DB_CX->DbQuery("SELECT count(*) FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	$nb_rss = $DB_CX->DbNextRow();
 	if ($nb_rss[0] >0) {
 	  echo '<select name="url" onchange="showRSS(this.value,\'form\')">';
 	  echo '<option value=""></option>';
-	  $DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
+	  $DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." Order By rr_rss_titre");
 	  while ($enr = $DB_CX->DbNextRow()) {
   	    echo "<option value=\"".$enr['rr_rss_url']."\">".htmlspecialchars(stripslashes($enr['rr_rss_titre']),ENT_QUOTES)."</option>";
 	  }
@@ -401,7 +401,7 @@ $DB_CX->DbQuery("UPDATE ${PREFIX_TABLE}rss_reader SET rr_rss_accueil='0' WHERE r
   <BR> 
 <?php
 // On récupère les infos de configuration de l'utilisateur
-$DB_CX->DbQuery("SELECT util_rss_reader FROM ${PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
+$DB_CX->DbQuery("SELECT util_rss_reader FROM {$PREFIX_TABLE}utilisateur WHERE util_id='".$idUser."'");
 list($nb_items,$nb_col_acc,$nb_items_acc,$refresh) = explode(";",$DB_CX->DbResult(0,0));
 if ($nb_col_acc == "") $nb_col_acc = 3;
 if ($nb_items_acc == "") $nb_items_acc = 6;
@@ -481,7 +481,7 @@ unset($feed);
 echo '<TABLE cellspacing="0" cellpadding="5" width="99%" border="0"><TR><TD></TD>';
 $i=0;
 $width = 100/$nb_col_acc;
-$DB_CX->DbQuery("SELECT * FROM ${PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." and rr_rss_accueil=1 Order By rr_rss_ordre,rr_rss_titre ASC");
+$DB_CX->DbQuery("SELECT * FROM {$PREFIX_TABLE}rss_reader WHERE rr_util_id=".$idUser." and rr_rss_accueil=1 Order By rr_rss_ordre,rr_rss_titre ASC");
 while ($enr = $DB_CX->DbNextRow()) {
   $reste = $i%$nb_col_acc;
   if ($reste == 0) echo '</TR><TR>';

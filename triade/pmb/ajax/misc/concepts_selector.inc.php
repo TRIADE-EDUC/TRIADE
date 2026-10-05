@@ -1,19 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: concepts_selector.inc.php,v 1.3 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: concepts_selector.inc.php,v 1.4 2022/04/15 12:16:06 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 global $class_path, $parent_id, $scheme_id, $page, $msg;
 
 //En fonction de $categ, il inclut les fichiers correspondants
-
-require_once $class_path.'/autoloader.class.php';
-
-$autoloader = new autoloader();
-$autoloader->add_register('onto_class');
 
 $query = "";
 
@@ -25,7 +20,7 @@ if(isset($parent_id)){
 if(isset($scheme_id)){
     $scheme_id = intval($scheme_id);
 }
-// TODO utiliser un paramÃ¨tre utilisateur existant ?
+// TODO utiliser un paramètre utilisateur existant ?
 $limit=30;
 if(isset($page)){
     $page = intval($page);

@@ -1,30 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_affichage_ctles.class.php,v 1.36 2019-06-06 09:56:19 btafforeau Exp $
+// $Id: notice_affichage_ctles.class.php,v 1.41.2.1.2.1 2025/03/27 09:48:48 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/notice_affichage.class.php");
 
 class notice_affichage_ctles extends notice_affichage {
 
-	protected $display_childs = false; //Filles affichÃ©es dans la mÃ©thode do_public
+	protected $display_childs = false; //Filles affichées dans la méthode do_public
 
-	// gÃ©nÃ©ration de l'affichage public----------------------------------------
+	// génération de l'affichage public----------------------------------------
 	public function do_public($short=0,$ex=1) {
-		global $dbh;
 		global $msg;
-		global $tdoc;
 		global $charset;
-		global $memo_notice;
-		global $opac_notice_affichage_class;
 
 		$this->notice_public= $this->genere_in_perio ();
 		if(!$this->notice_id) return;
 
-		/* dÃ©but modif */
+		/* début modif */
 		// Notices parentes
 		//$this->notice_public.=$this->parents;
 		/* fin modif */
@@ -46,7 +43,7 @@ class notice_affichage_ctles extends notice_affichage {
 		if ($this->notice->mention_edition)  $this->notice_public .= "&nbsp;-&nbsp;".$this->notice->mention_edition ;
 		$this->notice_public.="</span></td></tr>";
 
-	//PrÃ©paration des champs personnalisÃ©s
+	//Préparation des champs personnalisés
 	if (!$this->p_perso->no_special_fields) {
 		if(!isset($this->memo_perso_) || !$this->memo_perso_) $this->memo_perso_=$this->p_perso->show_fields($this->notice_id);
 	}
@@ -99,14 +96,14 @@ class notice_affichage_ctles extends notice_affichage {
 
 		//if ($tdoc->table[$this->notice->typdoc]) $this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['typdocdisplay_start']."</span></td><td>".$tdoc->table[$this->notice->typdoc]."</td></tr>";
 
-		// mention d'Ã©dition
+		// mention d'édition
 		//if ($this->notice->mention_edition) $this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['mention_edition_start']."</span></td><td>".$this->notice->mention_edition."</td></tr>";
 
-	// AnnÃ©es de publication
+	// Années de publication
 		if ($this->notice->year)
-			$this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".($charset != "utf-8"?"AnnÃ©es de publication":utf8_encode("AnnÃ©es de publication"))." :</span></td><td>".$this->notice->year."</td></tr>" ;
+			$this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".($charset != "utf-8"?"Années de publication":encoding_normalize::utf8_normalize("Années de publication"))." :</span></td><td>".$this->notice->year."</td></tr>" ;
 
-	// $annee est vide si ajoutÃ©e avec l'Ã©diteur, donc si pas Ã©diteur, on l'affiche ici
+	// $annee est vide si ajoutée avec l'éditeur, donc si pas éditeur, on l'affiche ici
 		/*$this->notice_public .= $annee ;
 		if ($this->notice->ed1_id) {
 			$editeur = new publisher($this->notice->ed1_id);
@@ -123,7 +120,7 @@ class notice_affichage_ctles extends notice_affichage {
 			$this->publishers[]=$editeur;
 			$this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['other_editor']."</span></td><td>".inslink($editeur_2->display,  str_replace("!!id!!", $this->notice->ed2_id, $this->lien_rech_editeur))."</td></tr>" ;
 		}*/
-	// NumÃ©rotation
+	// Numérotation
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "numerotation207")){
@@ -153,7 +150,7 @@ class notice_affichage_ctles extends notice_affichage {
 			$this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['711']." :</span></td><td>".$this->construit_liste_langues($this->languesorg)."</td></tr>";
 		}
 
-	// PÃ©riodicitÃ©
+	// Périodicité
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "periodicite110")){
@@ -163,13 +160,13 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 
-	// Note gÃ©nÃ©rale
+	// Note générale
 		if ($this->notice->n_gen) {
 			$zoneNote = nl2br(htmlentities($this->notice->n_gen,ENT_QUOTES, $charset));
 			$this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['n_gen_start']."</span></td><td>".$zoneNote."</td></tr>";
 		}
 
-	// PÃ©riodicitÃ©
+	// Périodicité
 		if (!$this->p_perso->no_special_fields) {
 			if(!$this->memo_perso_) $this->memo_perso_=$this->p_perso->show_fields($this->notice_id);
 			foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
@@ -182,10 +179,10 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 
-	// CatÃ©gories
+	// Catégories
 		if ($this->categories_toutes) $this->notice_public .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>Sujets :</span></td><td>".$this->categories_toutes."</td></tr>";
 
-	// Titre clÃ©
+	// Titre clé
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "titrecle530")){
@@ -195,7 +192,7 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 
-	// Titre abrÃ©gÃ©
+	// Titre abrégé
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "titreabrege531")){
@@ -205,7 +202,7 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 
-	// Titre(s) parallÃ¨le(s)
+	// Titre(s) parallèle(s)
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "titreparallele510")){
@@ -254,7 +251,7 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 
-	// Titre dÃ©veloppÃ©
+	// Titre développé
 		foreach ( $this->memo_perso_["FIELDS"] as $i => $value ) {
 			$p=$this->memo_perso_["FIELDS"][$i];
 			if ($p["AFF"] && ($p["NAME"] == "titredeveloppe532")){
@@ -332,7 +329,7 @@ class notice_affichage_ctles extends notice_affichage {
 		//etat des collections
 		if ($this->notice->niveau_biblio=='s' && $this->notice->niveau_hierar==1) $this->notice_public.=$this->affichage_etat_collections();
 
-		// exemplaires, rÃ©sas et compagnie
+		// exemplaires, résas et compagnie
 		if ($ex) $this->affichage_resa_expl = $this->aff_resa_expl() ;
 
 		return;
@@ -369,26 +366,26 @@ class notice_affichage_ctles extends notice_affichage {
 			}
 		}
 		if ($type_reduit=="E" || $type_reduit=="P" ) {
-			// peut-Ãªtre veut-on des personnalisÃ©s ?
+			// peut-être veut-on des personnalisés ?
 			$perso_voulus_temp = substr($this->notice_reduit_format,2) ;
 			if ($perso_voulus_temp!="") $perso_voulus = explode(",",$perso_voulus_temp);
 		}
 	
 		if ($type_reduit=="E") {
-			// zone de l'Ã©diteur
+			// zone de l'éditeur
 			if ($this->notice->ed1_id) {
 				$editeur = new publisher($this->notice->ed1_id);
 				$editeur_reduit = $editeur->display ;
 				if ($this->notice->year) $editeur_reduit .= " (".$this->notice->year.")";
 			} elseif ($this->notice->year) {
-				// annÃ©e mais pas d'Ã©diteur et si pas un article
+				// année mais pas d'éditeur et si pas un article
 				if($this->notice->niveau_biblio != 'a' && $this->notice->niveau_hierar != 2) 	$editeur_reduit = $this->notice->year." ";
 			}
 		} else $editeur_reduit = "" ;
 	
-		//Champs personalisÃ©s Ã  ajouter au rÃ©duit
+		//Champs personalisés à ajouter au réduit
 		if (!$this->p_perso->no_special_fields) {
-			if (count($perso_voulus)) {
+			if (!empty($perso_voulus)) {
 				$this->p_perso->get_values($this->notice_id) ;
 				for ($i=0; $i<count($perso_voulus); $i++) {
 					$perso_voulu_aff .= $this->p_perso->get_formatted_output($this->p_perso->values[$perso_voulus[$i]],$perso_voulus[$i])." " ;
@@ -407,7 +404,7 @@ class notice_affichage_ctles extends notice_affichage {
 			$aff_bullperio_title = "<span class='isbulletinof'><i> ".($this->parent_date?sprintf($msg["bul_titre_perio"],$this->parent_title):sprintf($msg["bul_titre_perio"],$this->parent_title.", ".$this->parent_numero." [".$this->parent_aff_date_date."]"))."</i></span>";
 		} else $aff_bullperio_title="";
 	
-		// rÃ©cupÃ©ration du titre de sÃ©rie
+		// récupération du titre de série
 		// constitution de la mention de titre
 		if($this->notice->serie_name) {
 			$notice_header = $this->notice->serie_name;
@@ -431,7 +428,7 @@ class notice_affichage_ctles extends notice_affichage {
 		//$notice_header_without_html = $notice_header;
 	
 		$notice_header = "<span !!zoteroNotice!! class='header_title'>".$notice_header."</span>";
-		//on ne propose Ã  Zotero que les monos et les articles...
+		//on ne propose à Zotero que les monos et les articles...
 		if($this->notice->niveau_biblio == "m" ||($this->notice->niveau_biblio == "a" && $this->notice->niveau_hierar == 2)) {
 			$notice_header =str_replace("!!zoteroNotice!!"," notice='".$this->notice_id."' ",$notice_header);
 		}else $notice_header =str_replace("!!zoteroNotice!!","",$notice_header);
@@ -441,9 +438,9 @@ class notice_affichage_ctles extends notice_affichage {
 		$notice_header_suite = "";
 		if ($type_reduit=="T" && $this->notice->tit4) $notice_header_suite = " : ".$this->notice->tit4;
 		if ($type_reduit!='3' && $this->auteurs_principaux) $notice_header_suite .= "<span class='header_authors'> / ".$this->auteurs_principaux."</span>";
-		if ($editeur_reduit) $notice_header_suite .= " / ".$editeur_reduit ;
-		if ($perso_voulu_aff) $notice_header_suite .= " / ".$perso_voulu_aff ;
-		if ($aff_perio_title) $notice_header_suite .= " ".$aff_perio_title;
+		if (!empty($editeur_reduit)) $notice_header_suite .= " / ".$editeur_reduit ;
+		if (!empty($perso_voulu_aff)) $notice_header_suite .= " / ".$perso_voulu_aff ;
+		if (!empty($aff_perio_title)) $notice_header_suite .= " ".$aff_perio_title;
 		//$notice_header_without_html .= $notice_header_suite ;
 		//$notice_header .= $notice_header_suite."</span>";
 		//Un  span de trop ?
@@ -467,10 +464,10 @@ class notice_affichage_ctles extends notice_affichage {
 
 	public function aff_suite() {
 		global $msg;
-		global $charset,$opac_categories_affichage_ordre,$lang,$pmb_keyword_sep;
-		global $opac_allow_tags_search, $opac_permalink, $opac_url_base;
+		global $opac_categories_affichage_ordre,$lang,$pmb_keyword_sep;
+		global $opac_permalink, $opac_url_base;
 
-		// afin d'Ã©viter de recalculer un truc dÃ©jÃ  calculÃ©...
+		// afin d'éviter de recalculer un truc déjà calculé...
 		if (isset($this->affichage_suite_flag) && $this->affichage_suite_flag) return $this->affichage_suite ;
 
 		$ret = '';
@@ -481,7 +478,7 @@ class notice_affichage_ctles extends notice_affichage {
 		// toutes indexations
 		$ret_index = "";
 
-		// Affectation du libellÃ© mots clÃ©s ou tags en fonction de la recherche prÃ©cÃ©dente
+		// Affectation du libellé mots clés ou tags en fonction de la recherche précédente
 		//if($opac_allow_tags_search == 1) $libelle_key = $msg['tags'];
 		//else $libelle_key = 	$msg['motscle_start'];
 
@@ -499,16 +496,16 @@ class notice_affichage_ctles extends notice_affichage {
 			//$ret.="<tr class='tr_spacer'><td colspan='2' class='td_spacer'>&nbsp;</td></tr>";
 		//}
 
-		// rÃ©sumÃ©
+		// résumé
 		//if($this->notice->n_resume) $ret .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['n_resume_start']."</span></td><td class='td_resume'>".nl2br($this->notice->n_resume)."</td></tr>";
 
 		// note de contenu
 		//if($this->notice->n_contenu) $ret .= "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$msg['n_contenu_start']."</span></td><td>".nl2br(htmlentities($this->notice->n_contenu,ENT_QUOTES, $charset))."</td></tr>";
 
-		//Champs personalisÃ©s
+		//Champs personalisés
 		$perso_aff = "" ;
 		/*if (!$this->p_perso->no_special_fields) {
-			// $this->memo_perso_ permet au affichages personalisÃ©s dans notice_affichage_ex de gagner du temps
+			// $this->memo_perso_ permet au affichages personalisés dans notice_affichage_ex de gagner du temps
 			if(!$this->memo_perso_) $this->memo_perso_=$this->p_perso->show_fields($this->notice_id);
 			for ($i=0; $i<count($this->memo_perso_["FIELDS"]); $i++) {
 				$p=$this->memo_perso_["FIELDS"][$i];
@@ -553,7 +550,7 @@ class notice_affichage_ctles extends notice_affichage {
 				$categ_id=$res_categ->id_noeud 	;
 				$libelle_categ=$res_categ->categ_libelle ;
 				$comment_public=$res_categ->comment_public ;
-				// Si il y a prÃ©sence d'un commentaire affichage du layer
+				// Si il y a présence d'un commentaire affichage du layer
 				$result_com = categorie::zoom_categ($categ_id, $comment_public);
 				$libelle_aff_complet = inslink($libelle_categ,  str_replace("!!id!!", $categ_id, $this->lien_rech_categ), $result_com['java_com']);
 				$libelle_aff_complet .= $result_com['zoom'];
@@ -575,9 +572,6 @@ class notice_affichage_ctles extends notice_affichage {
 
 	// Construction des parents-----------------------------------------------------
 	public function do_parents() {
-		global $dbh;
-		global $msg;
-		global $charset;
 		global $memo_notice;
 		global $opac_notice_affichage_class;
 
@@ -602,9 +596,9 @@ class notice_affichage_ctles extends notice_affichage {
 							$parent_notice->do_header();
 						}
 					}
-					//PrÃ©sentation diffÃ©rente si il y en a un ou plusieurs
+					//Présentation différente si il y en a un ou plusieurs
 					/*if ($this->notice_relations->get_nb_parents()==1) {
-						// si une seule, peut-Ãªtre est-ce une notice de bulletin, aller cherche $this>bulletin_id
+						// si une seule, peut-être est-ce une notice de bulletin, aller cherche $this>bulletin_id
 						$this->parents.="<br /><b>".notice_relations::$liste_type_relation['up']->table[$relation_type]."</b> ";
 						if ($this->lien_rech_notice) $this->parents.="<a href='".str_replace("!!id!!",$parent->get_linked_notice(),$this->lien_rech_notice)."&seule=1'>";
 						//$this->parents.=$parent_notice->notice_header;
@@ -615,7 +609,7 @@ class notice_affichage_ctles extends notice_affichage {
 						}
 						if ($this->lien_rech_notice) $this->parents.="</a>";
 						$this->parents.="<br /><br />";
-						// si une seule, peut-Ãªtre est-ce une notice de bulletin, aller cherche $this->bulletin_id
+						// si une seule, peut-être est-ce une notice de bulletin, aller cherche $this->bulletin_id
 						$rqbull="select bulletin_id from bulletins where num_notice=".$this->notice_id;
 						$rqbullr=pmb_mysql_query($rqbull);
 						$rqbulld=@pmb_mysql_fetch_object($rqbullr);
@@ -639,7 +633,7 @@ class notice_affichage_ctles extends notice_affichage {
 							$this->parents.=$memo_notice[$parent->get_linked_notice()]["header_without_doclink"];
 						}
 						if ($this->lien_rech_notice) $this->parents.="</a>";
-						$this->parents.="</br>\n";
+						$this->parents.="<br/>\n";
 					/*}*/
 				}
 				//if($this->notice_relations->get_nb_parents() > 1) {
@@ -652,8 +646,6 @@ class notice_affichage_ctles extends notice_affichage {
 	} // fin do_parents()
 
 	protected function genere_childs_relation($relation_type, $child_notices) {
-		global $msg;
-	
 		$notice_childs = "<tr><td class='align_left bg-grey'><span class='etiq_champ'>".$relation_type." :</span></td>";
 		if (!$this->seule) {
 			$notice_childs .= "<td>";
@@ -675,11 +667,8 @@ class notice_affichage_ctles extends notice_affichage {
 	}
 	
 	public function genere_notice_childs() {
-		global $msg, $opac_notice_affichage_class ;
-		global $memo_notice;
-	
-		/* dÃ©but modif */
-		//Je ne veux que les liens vers les notices liÃ©es, pas de notices dÃ©pliables.
+		/* début modif */
+		//Je ne veux que les liens vers les notices liées, pas de notices dépliables.
 		$this->seule=0;
 		/* fin modif */
 		$this->notice_childs = parent::genere_notice_childs();
@@ -704,17 +693,16 @@ class notice_affichage_ctles extends notice_affichage {
 		return $affichage;
 	} // fin affichage_etat_collections()
 
-	//RÃ©cupÃ©rer de l'affichage complet
+	//Récupérer de l'affichage complet
 	public function coll_state_list($base_url,$filtre,$debut=0,$page=0, $type=0) {
-		global $dbh, $msg,$nb_per_page_a_search, $tpl_collstate_surloc_liste, $tpl_collstate_surloc_liste_line;
+		global $msg;
 		global $opac_sur_location_activate, $opac_view_filter_class;
 		global $opac_collstate_order, $opac_url_base;
 		global $empr_location;
-		global $include_path;
 		global $script_coll_modif_ctles_is_include;
 
 		$tpl_collstate_liste="
-		<table class='exemplaires' cellpadding='2' width='100%'>
+		<table class='exemplaires' style='padding:2px; width:100%'>
 		<tbody>
 		<tr>
 		<th>Biblioth&egrave;que</th>
@@ -733,9 +721,9 @@ class notice_affichage_ctles extends notice_affichage {
 		if(!$script_coll_modif_ctles_is_include){
 			$script_coll_modif_ctles_is_include=true;
 			$tpl_collstate_liste="
-<script type=\"text/javascript\">
+<script>
 function coll_modif_update(id,sql_field,texte){
-	// rÃ©cupÃ©ration du form d'Ã©dition de la collection
+	// récupération du form d'édition de la collection
 	var action = new http_request();
 	var url = \"./ajax.php?module=ajax&categ=extend&id=\"+id+\"&quoifaire=coll_save&texte=\"+texte+\"&sql_field=\"+sql_field;
 	url = encodeURI(url);
@@ -778,7 +766,7 @@ function coll_modif_update(id,sql_field,texte){
 			if ($opac_collstate_order) $req .= " ORDER BY ".$opac_collstate_order;
 			else $req .= " ORDER BY ".($type?"location_libelle, ":"")."archempla_libelle, collstate_cote";
 		}
-		$myQuery = pmb_mysql_query($req, $dbh);
+		$myQuery = pmb_mysql_query($req);
 
 		if(($this->coll_state_list_nbr = pmb_mysql_num_rows($myQuery))) {
 
@@ -810,7 +798,7 @@ function coll_modif_update(id,sql_field,texte){
 					// modif des notes
 					$tpl_note_modif="
 					<a onclick=\"document.getElementById('note_modif_".$coll->collstate_id."').style.display='block'; return false;\"  href=\"#\">
-					<img align='absmiddle' style='border:0px' alt='Editer' title='Editer' src='".get_url_icon('tag.png')."'>
+					<img style='border:0px' alt='Editer' title='Editer' src='".get_url_icon('tag.png')."'>
 					</a>
 					<div id='note_modif_".$coll->collstate_id."' style='display:none'>
 					<textarea id='note_modif_text_".$coll->collstate_id."' class='saisie-80em'' wrap='virtual' rows='4' cols='40' name='note_modif_text_".$coll->collstate_id."'>".$my_collstate->note."</textarea><br />
@@ -857,7 +845,7 @@ function coll_modif_update(id,sql_field,texte){
 
 	}
 
-	// requÃªte de rÃ©cupÃ©ration des categories ------------------------------------------------------------------
+	// requête de récupération des categories ------------------------------------------------------------------
 	public function get_query_categories() {
 		global $lang;
 		global $opac_categories_affichage_ordre;

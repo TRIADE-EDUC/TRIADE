@@ -1,17 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // | creator : Eric ROBERT                                                    |
 // | modified : Marco VANINETTI                                                           |
 // +-------------------------------------------------+
-// $Id: z_progression_cache.php,v 1.43 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: z_progression_cache.php,v 1.47 2024/03/22 15:31:04 qvarin Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "";
 $base_nobody = 1;
 require_once ("$base_path/includes/init.inc.php");
+
+global $class_path, $include_path, $msg;
+global $pmb_indexation_lang;
+global $selection_bib, $bool1, $crit1, $val1, $crit2, $val2, $limite_notices;
+global $attr_titre, $attr_mots, $attr_resume, $attr_type_doc, $attr_auteur, $attr_sujet, $attr_isbn;
+global $attr_issn, $attr_isrn, $attr_ismn, $attr_mk, $attr_cbsonores, $attr_ean, $attr_notice_id, $attr_allfields;
 
 // les requis par z_progression_main.php ou ses sous modules
 require_once ("$include_path/isbn.inc.php");
@@ -23,23 +29,23 @@ require ('notice.inc.php');
 require_once ("z3950_sutrs.inc.php");
 require_once("$class_path/z3950_notice.class.php");
 
-//Correction mystÃ©rieuse : visiblement la fonction yaz_search impacte la variable global $limite... modifiÃ© en $limite_notices
-$limite_notices+=0;
+//Correction mystérieuse : visiblement la fonction yaz_search impacte la variable global $limite... modifié en $limite_notices
+$limite_notices = intval($limite_notices);
 function critere_isbn ($val1) {
 	$val=$val1;
 	if(isEAN($val1)) {
 		// la saisie est un EAN -> on tente de le formater en ISBN
 		$val1 = z_EANtoISBN($val1);
-		// si Ã©chec, on prend l'EAN comme il vient
+		// si échec, on prend l'EAN comme il vient
 		if(!$val1) $val1 = $val;
 	} else {
 		if(isISBN($val1)) {
 			// si la saisie est un ISBN
 			$val1 = z_formatISBN($val1,13);
-			// si Ã©chec, ISBN erronÃ© on le prend sous cette forme
+			// si échec, ISBN erroné on le prend sous cette forme
 			if(!$val1) $val1 = $val;
 		} else {
-			// ce n'est rien de tout Ã§a, on prend la saisie telle quelle
+			// ce n'est rien de tout ça, on prend la saisie telle quelle
 			$val1 = $val;
 		}
 	}
@@ -61,8 +67,8 @@ $mioframe="frame1";
 // Fase 1: we prepare the query and the connection fore each biblio
 ///////////////////////////////////////////////////////////////////
 
-//si puÃ² mettere prima del ciclo while principale....?
-// Remise Ã  "" de tous les attributs de critÃ¨re de recherche
+//si può mettere prima del ciclo while principale....?
+// Remise à "" de tous les attributs de critère de recherche
 $map=array();
 
 $rqt_bib_attr=pmb_mysql_query("select attr_libelle from z_attr group by attr_libelle ");
@@ -72,6 +78,7 @@ while ($linea=pmb_mysql_fetch_array($rqt_bib_attr)) {
 	${$var} = "" ;
 }
 
+$formato=array();
 $rq_bib_z3950=pmb_mysql_query("select * from z_bib $selection_bib order by bib_nom, bib_id ");
 while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
     	$bib_id=$ligne["bib_id"];
@@ -85,7 +92,7 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 		$auth=$auth_user.$auth_pass;
 		$formato[$bib_id]=$format;
 
-	// chargement des attributs de la bib sÃ©lectionnÃ©e
+	// chargement des attributs de la bib sélectionnée
 	$rqt_bib_attr=pmb_mysql_query("select * from z_attr where attr_bib_id='$bib_id'");
 	while ($linea=pmb_mysql_fetch_array($rqt_bib_attr)) {
 		$attr_libelle=$linea["attr_libelle"];
@@ -94,7 +101,7 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 		${$var} = $attr_attr ;
 	}
 
-	// On dÃ©termine la requÃªte Ã  envoyer
+	// On détermine la requête à envoyer
 	$booleen="";
 	$critere1="";
 	$critere2="";
@@ -125,7 +132,7 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 		case "isbn" :
 			$critere1=$attr_isbn;
 			//$val1=critere_isbn($val1);
-			// On enlÃ¨ve les tirets pour de meilleurs rÃ©sultats
+			// On enlève les tirets pour de meilleurs résultats
 			$val1 = str_replace('-', '', $val1);
 			break;
 		case "issn" :
@@ -179,7 +186,7 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 		case "isbn" :
 			$critere2=$attr_isbn;
 			//$val2=critere_isbn($val2);
-			// On enlÃ¨ve les tirets pour de meilleurs rÃ©sultats
+			// On enlève les tirets pour de meilleurs résultats
 			$val2 = str_replace('-', '', $val2);
 			break;
 		case "issn" :
@@ -232,7 +239,12 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 			affiche_jsscript ($msg['z3950_echec_no_valid_attr'], "z3950_failed", $bib_id);
 		}
 	} else {
-
+	    // On envoie toujours en UTF-8 #140711
+	    global $charset;
+	    if($charset == "iso-8859-1") {
+	        $term = html_entity_decode(encoding_normalize::utf8_normalize($term), ENT_QUOTES, 'UTF-8');
+	    }
+	    
 		//////////////////////////////////////////////////////////////////////////////////
 		// the query is ok we prepare the Z 3950 process for this biblio and
 		// save the $id to be able later to retrieve the records from the servers
@@ -257,14 +269,14 @@ while ($ligne=pmb_mysql_fetch_array($rq_bib_z3950)) {
 ///////////////////////////////////////////////////////////////////////////
 // Fase 2: all the possible connections are ready now start the researches
 //////////////////////////////////////////////////////////////////////////
-//Correction mystÃ©rieuse : visiblement la fonction yaz_search impacte la variable global $limite... modifiÃ© en $limite_notices
+//Correction mystérieuse : visiblement la fonction yaz_search impacte la variable global $limite... modifié en $limite_notices
 
 affiche_jsscript ($msg['z3950_zmsg_wait'], "", $mioframe);
 
 $options=array("timeout"=>45);
 $t1=time();
 
-//Override le timeout du serveur mysql, pour Ãªtre sÃ»r que le socket dure assez longtemps pour aller jusqu'aux ajouts des rÃ©sultats dans la base.
+//Override le timeout du serveur mysql, pour être sûr que le socket dure assez longtemps pour aller jusqu'aux ajouts des résultats dans la base.
 $sql = "set wait_timeout = 120";
 pmb_mysql_query($sql);
 
@@ -287,7 +299,7 @@ foreach ($map as $bib_id => $id) {
 			yaz_close ($id);
 		} else {
 			$hits = yaz_hits($id);
-			$hits+=0;
+			$hits = intval($hits);
 			if ($hits>$limite_notices) {
 				$lim_recherche=$limite_notices;
 				$msg1 = str_replace ("!!limite!!", $limite_notices, $msg['z3950_recup_encours']) ;
@@ -355,7 +367,7 @@ foreach ($map as $bib_id => $id) {
 					$sql2.="values(0,'$last_query_id', '$bib_id', '$lu_isbn', '".addslashes($lu_titre)."', '".addslashes($lu_auteur)."', '".addslashes($lu_isbd)."','".addslashes($rec)."') ";
 					pmb_mysql_query($sql2);
 					$ID_notice = pmb_mysql_insert_id();
-				} // fin du if qui vÃ©rifie que la notice n'est pas vide
+				} // fin du if qui vérifie que la notice n'est pas vide
 			} // fin for
 			yaz_close ($id);
 			$msg1 = str_replace ("!!total!!", $total, $msg['z3950_recup_fini']) ;

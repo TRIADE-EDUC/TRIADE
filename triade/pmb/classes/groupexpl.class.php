@@ -2,12 +2,12 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: groupexpl.class.php,v 1.11 2017-02-01 09:22:10 dgoron Exp $
+// $Id: groupexpl.class.php,v 1.17 2024/01/15 15:07:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once("$include_path/templates/groupexpl.tpl.php");
-
 require_once("$include_path/expl_info.inc.php") ;
 require_once("$include_path/bull_info.inc.php") ;
 require_once($class_path."/session.class.php");
@@ -20,14 +20,13 @@ class groupexpl {
 	public $info_message="";
 	
 	public function __construct($id=0) {
-		$this->id=$id+0;
+		$this->id=intval($id);
 		$this->error_message="";
 		$this->info_message="";
 		$this->fetch_data();
 	}
 	
 	public function fetch_data() {
-		global $dbh;
 		$this->info=array();
 		$this->info['id']= 0;
 		$this->info['name']= '';
@@ -39,7 +38,7 @@ class groupexpl {
 		$this->info['expl']=array();
 		if(!$this->id) return;
 		$req="select * from groupexpl where id_groupexpl=". $this->id;		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		if (pmb_mysql_num_rows($resultat)) {
 			$r=pmb_mysql_fetch_object($resultat);		
 			$this->info['id']= $r->id_groupexpl;	
@@ -52,7 +51,7 @@ class groupexpl {
 		}
 		
 		$req="select * from groupexpl_expl, exemplaires where expl_id=groupexpl_expl_num and groupexpl_num=". $this->id;		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		$i=0;
 		$this->info['checked']=0;
 		if(!isset($this->info['not_checked'])) $this->info['not_checked']=0;
@@ -63,13 +62,13 @@ class groupexpl {
 				if(!$r->groupexpl_checked){
 					$this->info['not_checked']++;
 				}
-				// rÃ©cup des infos de l'expl					
+				// récup des infos de l'expl					
 				$this->info['expl'][$i]['cb']= $r->expl_cb;
 				$this->info['expl_list'][$r->expl_cb]=1;
-				// est-il en prÃªt
+				// est-il en prêt
 				$this->info['expl'][$i]['pret']=array();
 				$req_pret="select * from pret, empr where id_empr=pret_idempr and pret_idexpl=". $r->groupexpl_expl_num;
-				$res_pret=pmb_mysql_query($req_pret,$dbh);
+				$res_pret=pmb_mysql_query($req_pret);
 				if (pmb_mysql_num_rows($res_pret)) {
 					$r_pret=pmb_mysql_fetch_object($res_pret);	
 					
@@ -112,9 +111,8 @@ class groupexpl {
 	}
 	
 	public function get_expl_id($cb) {
-		global $dbh;	
 		$req="select expl_id from exemplaires where expl_cb='$cb' ";		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		if (!pmb_mysql_num_rows($resultat)) {			
 			return 0;
 		}	
@@ -123,14 +121,13 @@ class groupexpl {
 	}
 	
 	public function raz_check($cb='') {
-		global $dbh;
 		if($cb)	{
 			if(!($expl_id=$this->get_expl_id($cb))) return 0;
 			$req="update groupexpl_expl SET groupexpl_checked=0 where groupexpl_expl_num=".$expl_id;			
-			pmb_mysql_query($req, $dbh);		
+			pmb_mysql_query($req);		
 		}else{
 			$req="update groupexpl_expl SET groupexpl_checked=0 where groupexpl_num=".$this->id;			
-			pmb_mysql_query($req, $dbh);					
+			pmb_mysql_query($req);					
 		}	
 				
 		$this->fetch_data();	
@@ -138,38 +135,35 @@ class groupexpl {
 	}
 	
 	public function do_check($cb='') {
-		global $dbh;
 		if($cb)	{
 			if(!($expl_id=$this->get_expl_id($cb))) return 0;
 			$req="update groupexpl_expl SET groupexpl_checked=1 where groupexpl_expl_num=".$expl_id;			
-			pmb_mysql_query($req, $dbh);		
+			pmb_mysql_query($req);		
 		}else{
 			$req="update groupexpl_expl SET groupexpl_checked=1 where groupexpl_num=".$this->id;			
-			pmb_mysql_query($req, $dbh);					
+			pmb_mysql_query($req);					
 		}					
 		$this->fetch_data();			
 	}	
 	
 	public function get_name_group_from_id($id) {
-		global $dbh;
 		$req="select groupexpl_name from groupexpl where id_groupexpl='$id' ";
-		$resultat=pmb_mysql_query($req,$dbh);
+		$resultat=pmb_mysql_query($req);
 		if (!pmb_mysql_num_rows($resultat)) return 0;
 		$r=pmb_mysql_fetch_object($resultat);
 		return $r->groupexpl_name;
 	}
 	
 	public function get_id_group_from_cb($cb) {
-		global $dbh;
 		$req="select id_groupexpl from groupexpl, groupexpl_expl, exemplaires where expl_id=groupexpl_expl_num and groupexpl_num=id_groupexpl and expl_cb='$cb' ";		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		if (!pmb_mysql_num_rows($resultat)) return 0;
 		$r=pmb_mysql_fetch_object($resultat);
 		return $r->id_groupexpl;
 	}	
 	
 	public function add_expl($cb) {
-		global $dbh,$msg,$charset;
+		global $msg;
 		
 		$this->error_message="";
 		$this->info_message="";
@@ -178,7 +172,7 @@ class groupexpl {
 			return 0;
 		} 
 		if($id_group=$this->get_id_group_from_cb($cb)){
-			// l'exemplaire appartient dÃ©ja Ã  un group
+			// l'exemplaire appartient déja à un group
 			if($id_group!=$this->id){
 				// group autre
 				$this->error_message=$msg['groupexpl_form_error_already_in_group'];
@@ -191,10 +185,10 @@ class groupexpl {
 			}
 		}		
 		$req="INSERT INTO groupexpl_expl SET groupexpl_num=".$this->id.", groupexpl_expl_num=".$expl_id;		
-		pmb_mysql_query($req, $dbh);
+		pmb_mysql_query($req);
 
 		$req="update exemplaires set expl_statut=".$this->info['statut_others']." where expl_id=".$expl_id;				
-		pmb_mysql_query($req, $dbh);		
+		pmb_mysql_query($req);		
 		
 		$this->fetch_data();
 		$this->info_message=$msg['groupexpl_form_info_insert'];
@@ -202,19 +196,15 @@ class groupexpl {
 	}
 	
     public function del_expl($cb) {
-    	global $dbh,$msg,$charset;
-    	
 		$this->error_message="";		
 		if(!($expl_id=$this->get_expl_id($cb))) return 0;
 		$req="DELETE from groupexpl_expl WHERE groupexpl_expl_num=".$expl_id;			
-		pmb_mysql_query($req, $dbh);		
+		pmb_mysql_query($req);		
 		$this->fetch_data();
 		return 1;    	
     } 
     
     public function get_expl_display($tpl,$id){    
-    	global 	$msg,$dbh;
-		
 		$expl = get_expl_info($id,1);
 		$tpl=str_replace('!!cb!!',$expl->expl_cb ,$tpl);
 		$tpl=str_replace('!!notice!!',$expl->aff_reduit ,$tpl);
@@ -226,155 +216,135 @@ class groupexpl {
 		return $tpl;
     }
  
+    public function get_content_form() {
+        global $msg;
+        global $pmb_lecteurs_localises,$deflt_docs_location;
+        
+        $interface_content_form = new interface_content_form(static::class);
+        $interface_content_form->add_element('name', 'groupexpl_form_name')
+        ->add_input_node('text', $this->info['name']);
+        if($pmb_lecteurs_localises){
+            if(!$this->info['location']) {
+                $f_loc=$deflt_docs_location;
+            } else {
+                $f_loc=$this->info['location'];
+            }
+            $interface_content_form->add_element('f_loc', 'groupexpl_form_location')
+            ->add_query_node('select', 'SELECT idlocation, location_libelle FROM docs_location order by location_libelle', $f_loc)
+            ->set_first_option(0, $msg['all_location']);
+        }
+        $interface_content_form->add_element('statut_principal', 'groupexpl_form_statut_principal')
+        ->add_html_node(do_selector('docs_statut', 'statut_principal', $this->info['statut_principal']));
+        $interface_content_form->add_element('statut_others', 'groupexpl_form_statut_others')
+        ->add_html_node(do_selector('docs_statut', 'statut_others', $this->info['statut_others']));
+        $interface_content_form->add_element('comment', 'groupexpl_form_comment')
+        ->add_textarea_node($this->info['comment'], 50, 2);
+        if ($this->id) {
+            $interface_content_form->add_element('expl_list')
+            ->add_html_node(list_items_group_edit_ui::get_instance(array('expl_group' => $this->id))->get_display_list());
+        }
+        return $interface_content_form->get_display();
+    }
+    
 	public function get_form() {
-		global $groupexpl_form_tpl,$groupexpl_form_add_expl_tpl,$msg,$charset,$dbh;		
-		global $pmb_lecteurs_localises,$deflt_docs_location;
-		global $groupexpl_form_list_line_tpl;
+		global $groupexpl_form_add_expl_tpl,$msg,$charset;		
 		
-		$tpl=$groupexpl_form_tpl;
-		if($this->id){
-			$tpl=str_replace('!!msg_title!!',$msg['groupexpl_form_edit'],$tpl);
-			$tpl=str_replace('!!delete!!',"<input type='button' class='bouton' value='".$msg['admin_mailtpl_delete']."'  onclick=\"document.getElementById('action').value='delete';this.form.submit();\"  />", $tpl);
-			$tpl=str_replace('!!see_button!!',"<input type='button' class='bouton' value='".$msg['groupexpl_list_see']."' onClick=\"document.location='./circ.php?categ=groupexpl&action=see_form&id=!!id!!'\">",$tpl);
-			
-		}else{ 
-			$tpl=str_replace('!!msg_title!!',$msg['groupexpl_form_add'],$tpl);
-			$tpl=str_replace('!!delete!!',"",$tpl);
-			$tpl=str_replace('!!see_button!!',"",$tpl);
-		}		
-		$tpl=str_replace('!!statut_principal!!',do_selector('docs_statut', 'statut_principal', $this->info['statut_principal']),$tpl);
-		$tpl=str_replace('!!statut_others!!',do_selector('docs_statut', 'statut_others', $this->info['statut_others']),$tpl);
-		
-		$loc_select = '';
-		if($pmb_lecteurs_localises){
-			if(!$this->info['location'])$f_loc=$deflt_docs_location;
-			else $f_loc=$this->info['location'];
-			
-			$loc_select .= "
-			<div class='row'>
-				<label class='etiquette' for='name'>".$msg['groupexpl_form_location']."</label>
-			</div>
-			<div class='row'>	
-				<select name='f_loc' >";
-			$res = pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location order by location_libelle",$dbh);
-			$loc_select .= "<option value='0'>".$msg["all_location"]."</option>";
-			while ($value = pmb_mysql_fetch_array($res)) {
-				$loc_select .= "<option value='".$value[0]."'";
-				if ($value[0]==$f_loc)	$loc_select .= " selected ";		
-				$loc_select .= ">".htmlentities($value[1],ENT_QUOTES,$charset)."</option>";
-			}
-			$loc_select .= "
-				</select>
-			</div>";
+		$interface_form = new interface_form('groupexpl_form');
+		if(!$this->id){
+			$interface_form->set_label($msg['groupexpl_form_add']);
+		}else{
+			$interface_form->set_label($msg['groupexpl_form_edit']);
 		}
-		
-		$items="";
-		$odd_even="odd";
-		foreach($this->info['expl'] as $expl){
-			$item=$groupexpl_form_list_line_tpl;
-			if($odd_even=='odd')$odd_even="even";
-			else $odd_even="odd";
-			$item=str_replace('!!odd_even!!',$odd_even, $item);
-			$item=str_replace('!!cb!!',$expl['cb'], $item);
-			if($expl['checked'])$checked="x";else $checked="";
-			$item=str_replace('!!checked!!',$checked, $item);
-			
-			if($expl['id']==$this->info['resp_expl_num']) $item=str_replace('!!resp_expl_num_checked!!',"checked='checked'", $item);
-			else $item=str_replace('!!resp_expl_num_checked!!',"", $item);
-			$item=str_replace('!!expl_num!!',$expl['id'], $item);
-			$item=$this->get_expl_display($item,$expl['id']);
-			
-			$items.=$item;
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->info['name']." ?")
+		->set_content_form($this->get_content_form())
+		->set_table_name('groupexpl')
+		->set_field_focus('name');
+		if($this->id) {
+			$interface_form->add_action_extension('see_button', $msg['groupexpl_list_see'], './circ.php?categ=groupexpl&action=see_form&id='.$this->id);
 		}
-		$tpl=str_replace('!!location!!',$loc_select, $tpl);
-		$tpl=str_replace('!!expl_list!!',$items,$tpl);
-		$tpl=str_replace('!!name!!',htmlentities($this->info['name'],ENT_QUOTES,$charset),$tpl);
-		$tpl=str_replace('!!comment!!',htmlentities($this->info['comment'],ENT_QUOTES,$charset),$tpl);
+		$display = $interface_form->get_display();
 		if ($this->id) {
-			$tpl=str_replace('!!add_expl!!',$groupexpl_form_add_expl_tpl,$tpl);
-			$tpl=str_replace('!!error_message!!',htmlentities($this->error_message,ENT_QUOTES,$charset), $tpl);
-			$tpl=str_replace('!!error_html_message!!',$this->error_html_message, $tpl);
-			$tpl=str_replace('!!info_message!!',htmlentities($this->info_message,ENT_QUOTES,$charset), $tpl);
-		} else {
-			$tpl=str_replace('!!add_expl!!','',$tpl);
-			$tpl=str_replace('!!error_message!!','', $tpl);
-			$tpl=str_replace('!!error_html_message!!','', $tpl);
-			$tpl=str_replace('!!info_message!!','', $tpl);
+			$content_form_add_expl = $groupexpl_form_add_expl_tpl;
+			$content_form_add_expl=str_replace('!!error_message!!',htmlentities($this->error_message,ENT_QUOTES,$charset), $content_form_add_expl);
+			$content_form_add_expl=str_replace('!!error_html_message!!',$this->error_html_message, $content_form_add_expl);
+			$content_form_add_expl=str_replace('!!info_message!!',htmlentities($this->info_message,ENT_QUOTES,$charset), $content_form_add_expl);
+			$content_form_add_expl = str_replace('!!id!!', $this->id, $content_form_add_expl);
+			$display .= $content_form_add_expl;
 		}
-		$tpl=str_replace('!!id!!',$this->id,$tpl);
-		 
-		return $tpl;
+		return $display;
 	}
 
-	public function save($data) {
-		global $dbh;
-		$data['resp_expl_num']+=0;
-		$data['location']+=0;
-		$data['statut_principal']+=0;
-		$data['statut_others']+=0;
+	public function set_properties_from_form() {
+		global $name, $comment, $f_loc, $statut_principal, $statut_others, $resp_expl_num;
+		
+		$this->info['name'] = stripslashes($name);
+		$this->info['resp_expl_num'] = intval($resp_expl_num);
+		$this->info['location'] = intval($f_loc);
+		$this->info['statut_principal']	= intval($statut_principal);
+		$this->info['statut_others'] = intval($statut_others);
+		$this->info['comment'] = stripslashes($comment);
+	}
+	
+	public function save() {
 		$fields="
-			groupexpl_name='".$data['name']."',
-			groupexpl_resp_expl_num='".$data['resp_expl_num']."',
-			groupexpl_comment='".$data['comment']."',
-			groupexpl_location='".$data['location']."',
-			groupexpl_statut_resp='".$data['statut_principal']."',
-			groupexpl_statut_others='".$data['statut_others']."'			
+			groupexpl_name='".addslashes($this->info['name'])."',
+			groupexpl_resp_expl_num='".$this->info['resp_expl_num']."',
+			groupexpl_comment='".addslashes($this->info['comment'])."',
+			groupexpl_location='".$this->info['location']."',
+			groupexpl_statut_resp='".$this->info['statut_principal']."',
+			groupexpl_statut_others='".$this->info['statut_others']."'			
 		";		
 		if(!$this->id){ // Ajout
 			$req="INSERT INTO groupexpl SET $fields ";	
-			pmb_mysql_query($req, $dbh);
-			$this->id = pmb_mysql_insert_id($dbh);
+			pmb_mysql_query($req);
+			$this->id = pmb_mysql_insert_id();
 		} else {
 			$req="UPDATE groupexpl SET $fields where id_groupexpl=".$this->id;	
-			pmb_mysql_query($req, $dbh);				
+			pmb_mysql_query($req);				
 		}
 		session::set_last_used("groupexpl", $this->id);
-		$req="update exemplaires set expl_statut=".$this->info['statut_principal']." where expl_id=".$data['resp_expl_num'];				
-		pmb_mysql_query($req, $dbh);	
+		$req="update exemplaires set expl_statut=".$this->info['statut_principal']." where expl_id=".$this->info['resp_expl_num'];				
+		pmb_mysql_query($req);	
 		$this->fetch_data();
 	}	
 	
-	public function delete() {
-		global $dbh;
-		
-		$req="DELETE from groupexpl WHERE id_groupexpl=".$this->id;
-		pmb_mysql_query($req, $dbh);		
-		$req_pret="delete from groupexpl_expl where groupexpl_num=".$this->id;
-		pmb_mysql_query($req_pret, $dbh);
-					
-		$this->fetch_data();	
+	public static function delete($id) {
+		$id = intval($id);
+		if($id) {
+			$req="DELETE from groupexpl WHERE id_groupexpl=".$id;
+			pmb_mysql_query($req);
+			$req_pret="delete from groupexpl_expl where groupexpl_num=".$id;
+			pmb_mysql_query($req_pret);
+		}
+		return true;
 	}	
    
 	public function get_see_form() {
-		global $groupexpl_see_form_tpl,$msg,$charset,$dbh;		
-		global $pmb_lecteurs_localises,$deflt_docs_location;
-		global $groupexpl_see_form_list_line_tpl,$groupexpl_see_form_principale_tpl;
+		global $groupexpl_see_form_tpl,$msg,$charset;		
+		global $pmb_lecteurs_localises;
+		global $groupexpl_see_form_principale_tpl;
 		
 		$tpl=$groupexpl_see_form_tpl;				
+		$location_libelle = '';
 		if($pmb_lecteurs_localises){			
-			$res = pmb_mysql_query("SELECT location_libelle FROM docs_location where idlocation=".$this->info['location'],$dbh);			
+			$res = pmb_mysql_query("SELECT location_libelle FROM docs_location where idlocation=".$this->info['location']);			
 			if ($r = pmb_mysql_fetch_object($res)) {
 				$location_libelle="<label class='etiquette'>".$msg["groupexpl_see_form_location"]."</label>".$r->location_libelle;
 			}
 		}		
-		$items="";
 		foreach($this->info['expl'] as $expl){
-			$item=$groupexpl_see_form_list_line_tpl;
-			$item=str_replace('!!cb!!',$expl['cb'], $item);
 			if($expl['checked']){	
-				$checked="x";
 				$tpl=str_replace('!!responsable!!',$this->get_expl_display($groupexpl_see_form_principale_tpl,$expl['id']),$tpl);
-			}else $checked="";
-			$item=str_replace('!!checked!!',$checked, $item);
-			$item=$this->get_expl_display($item,$expl['id']);
-			
-			$items.=$item;
+			}
 		}
 		$tpl=str_replace('!!responsable!!',"",$tpl);
 		$tpl=str_replace('!!error_message!!',htmlentities($this->error_message,ENT_QUOTES,$charset), $tpl);
 		$tpl=str_replace('!!info_message!!',htmlentities($this->info_message,ENT_QUOTES,$charset), $tpl);
 		$tpl=str_replace('!!location!!',$location_libelle, $tpl);
-		$tpl=str_replace('!!expl_list!!',$items,$tpl);
+		if($this->id) {
+		    $tpl=str_replace('!!expl_list!!',list_items_group_see_ui::get_instance(array('expl_group' => $this->id))->get_display_list(),$tpl);
+		}
 		$tpl=str_replace('!!name!!',htmlentities($this->info['name'],ENT_QUOTES,$charset),$tpl);
 		$tpl=str_replace('!!comment!!',htmlentities($this->info['comment'],ENT_QUOTES,$charset),$tpl);
 		$tpl=str_replace('!!id!!',$this->id,$tpl);
@@ -383,39 +353,21 @@ class groupexpl {
 	}	
 	
 	public function get_confirm_form($cb) {
-		global $dbh;
 		global $groupexpl_confirm_form_tpl,$msg,$charset;		
-		global $pmb_lecteurs_localises,$deflt_docs_location;
-		global $groupexpl_confirm_form_list_line_tpl;
+		global $pmb_lecteurs_localises;
 		
 		$is_doc_header=$this->is_doc_header($cb);	
 		$tpl=$groupexpl_confirm_form_tpl;
 		if(!$is_doc_header)	$message="<span class='erreur'>".$msg["groupexpl_see_form_warrning"]."</span><br >";
 		if($pmb_lecteurs_localises){			
-			$res = pmb_mysql_query("SELECT location_libelle FROM docs_location where idlocation=".$this->info['location'],$dbh);			
+			$res = pmb_mysql_query("SELECT location_libelle FROM docs_location where idlocation=".$this->info['location']);			
 			if ($r = pmb_mysql_fetch_object($res)) {
 				$location_libelle="<label class='etiquette'>".$msg["groupexpl_see_form_location"]."</label>".$r->location_libelle;
 			}
 		}		
-		$items="";
-		foreach($this->info['expl'] as $expl){
-			$item=$groupexpl_confirm_form_list_line_tpl;
-			$item=str_replace('!!cb!!',$expl['cb'], $item);
-			if($expl['checked'])$checked="x";else $checked="";
-			$item=str_replace('!!checked!!',$checked, $item);
-			$item=$this->get_expl_display($item,$expl['id']);
-			if(count($expl['pret'])){
-				$item=str_replace('!!tr_color!!'," style='color:#FF0000'", $item);
-				$item=str_replace('!!emprunteur!!',"<br />".$msg["groupexpl_confirm_emprunteur"]." ".$expl['pret']['emprunteur'], $item);
-			}else {
-				$item=str_replace('!!tr_color!!',"", $item);
-				$item=str_replace('!!emprunteur!!',"", $item);
-			}	
-			$items.=$item;
-		}
 		$tpl=str_replace('!!message!!',$message, $tpl);
 		$tpl=str_replace('!!location!!',$location_libelle, $tpl);
-		$tpl=str_replace('!!expl_list!!',$items,$tpl);
+		$tpl=str_replace('!!expl_list!!',list_items_group_confirm_ui::get_instance(array('expl_group' => $this->id))->get_display_list(),$tpl);
 		$tpl=str_replace('!!name!!',htmlentities($this->info['name'],ENT_QUOTES,$charset),$tpl);
 		$tpl=str_replace('!!comment!!',htmlentities($this->info['comment'],ENT_QUOTES,$charset),$tpl);
 		$tpl=str_replace('!!id!!',$this->id,$tpl);
@@ -440,9 +392,8 @@ class groupexpls {
 	}
 	
 	public function fetch_data() {
-		global $dbh;
 		global $f_loc,$montrerquoi;
-		$f_loc+=0;
+		$f_loc = intval($f_loc);
 		$this->info=array();
 		$this->error_message="";	
 		$this->info_message="";	
@@ -451,8 +402,7 @@ class groupexpls {
 		if($f_loc){
 			$req.=" where groupexpl_location =$f_loc ";			
 		}		
-		$i=0;		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		if (pmb_mysql_num_rows($resultat)) {
 			while($r=pmb_mysql_fetch_object($resultat)){	
 				$groupexpl= new groupexpl($r->id_groupexpl);
@@ -468,16 +418,16 @@ class groupexpls {
 	}	
 	
 	public function get_list() {
-		global $dbh,$charset;
+		global $charset;
 		global $pmb_lecteurs_localises,$groupexpl_list_tpl,$groupexpl_list_line_tpl,$msg;
 		global $f_loc,$montrerquoi;
 		
-		//SÃ©lection de la localisation		
+		//Sélection de la localisation		
 		$loc_select="";		
 		if($pmb_lecteurs_localises){
 			$loc_select .= "<br />".$msg["groupexpl_location"];
 			$loc_select .= "<select name='f_loc' onchange='document.check_resa.submit();'>";
-			$res = pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location order by location_libelle",$dbh);
+			$res = pmb_mysql_query("SELECT idlocation, location_libelle FROM docs_location order by location_libelle");
 			$loc_select .= "<option value='0'>".$msg["all_location"]."</option>";
 			while ($value = pmb_mysql_fetch_array($res)) {
 				$loc_select .= "<option value='".$value[0]."'";
@@ -534,9 +484,8 @@ class groupexpls {
 	}	
 	
 	public static function get_group_expl($cb){
-		global $dbh;		
 		$req="select id_groupexpl from groupexpl, groupexpl_expl, exemplaires where expl_id=groupexpl_expl_num and groupexpl_num=id_groupexpl and expl_cb='$cb' ";		
-		$resultat=pmb_mysql_query($req,$dbh);	
+		$resultat=pmb_mysql_query($req);	
 		if (!pmb_mysql_num_rows($resultat)){
 			return 0;
 		} 
@@ -545,9 +494,8 @@ class groupexpls {
 	}
 	
 	public static function get_group_name_expl($cb){
-		global $dbh;
 		$req="select groupexpl_name from groupexpl, groupexpl_expl, exemplaires where expl_id=groupexpl_expl_num and groupexpl_num=id_groupexpl and expl_cb='$cb' ";
-		$resultat=pmb_mysql_query($req,$dbh);
+		$resultat=pmb_mysql_query($req);
 		if (!pmb_mysql_num_rows($resultat)){
 			return "";
 		}

@@ -1,0 +1,178 @@
+<div id="semantic_search" class="semantic_search">
+	<template v-if="action && (action == 'add' || action == 'edit')">
+		<semanticsearchform
+			:action = "action"
+			:semanticsearch = "semanticsearch"
+			:caddieslist = "caddieslist"
+		/>
+	</template>
+	<template v-else>
+		<semanticsearchlist :semanticsearchlist="semanticsearchlist"></semanticsearchlist>
+	</template>
+</div>
+
+<script defer>
+	window.addEventListener("startTree", function (event) {
+        require([
+            "dojo/data/ItemFileReadStore",
+            "dijit/tree/ForestStoreModel",
+            "dijit/Tree",
+            "dijit/Tooltip",
+        ], function (Memory, ForestStoreModel, Tree, Tooltip) {
+
+            let structTreeUser = document.createElement('div');
+            let structTreeSystem = document.createElement('div');
+            let structTreeSystemTips = document.createElement('div');
+
+            structTreeUser.id = 'struct_tree_user';
+            structTreeSystem.id = 'struct_tree_system';
+            structTreeSystemTips.id = 'struct_tree_system_tips';
+
+            let djangoTreeUser = document.getElementById('django_tree_user');
+            let djangoTreeSystem = document.getElementById('django_tree_system');
+            let djangoTreeSystemTips = document.getElementById('django_tree_system_tips');
+
+            djangoTreeUser.appendChild(structTreeUser);
+            djangoTreeSystem.appendChild(structTreeSystem);
+            djangoTreeSystemTips.appendChild(structTreeSystemTips);
+
+            let datas = {
+                identifier: "var",
+                label: "var",
+            };
+
+            const tree_user = [
+                {
+                    var: "user",
+                    desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user'),
+                    children: [
+                        { var: "user.query", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_query') },
+                        { var: "user.language", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_language') },
+                    ],
+                }
+            ];
+            const tree_system = [
+                {
+                    var: "user",
+                    desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user'),
+                    children: [
+                        { var: "user.query", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_query') },
+                        { var: "user.language", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_language') },
+                    ],
+                },
+                {
+                    var: "documents",
+                    desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents'),
+                    children: [
+                        { var: "documents[i].id", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_id') },
+                        { var: "documents[i].content", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_content') },
+                        { var: "documents[i].entity_data.<variable>", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_entity_data') },
+                    ],
+                },
+            ];
+            const tree_system_tips = [
+                {
+                    var: "user",
+                    desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user'),
+                    children: [
+                        { var: "user.query", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_query') },
+                        { var: "user.language", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_user_language') },
+                    ],
+                },
+                {
+                    var: "documents",
+                    desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents'),
+                    children: [
+                        { var: "documents[i].id", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_id') },
+                        { var: "documents[i].content", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_content') },
+                        { var: "documents[i].entity_data.<variable>", desc: pmbDojo.messages.getMessage('ai_search_semantic', 'admin_documents_entity_data') },
+                    ],
+                },
+            ];
+
+            datas.items = tree_system;
+            new Tree(
+                {
+                    model: new ForestStoreModel({
+                        store: Memory({ data: datas }),
+                        rootId: "root",
+                        rootLabel: "Vars",
+                    }),
+                    showRoot: false,
+                    onDblClick: function (item) {
+                        if (pmbDojo.aceManager.getEditor("prompt_system")) {
+                            pmbDojo.aceManager.getEditor("prompt_system").insert(`{{ ${item.var[0]} }}`);
+                        } else {
+                            document.getElementById("prompt_system").value += `{{ ${item.var[0]} }}`;
+                        }
+                    },
+                },
+                "struct_tree_system"
+            );
+
+            datas.items = tree_system_tips;
+            new Tree(
+                {
+                    model: new ForestStoreModel({
+                        store: Memory({ data: datas }),
+                        rootId: "root",
+                        rootLabel: "Vars",
+                    }),
+                    showRoot: false,
+                    onDblClick: function (item) {
+                        if (pmbDojo.aceManager.getEditor("prompt_system_tips")) {
+                            pmbDojo.aceManager.getEditor("prompt_system_tips").insert(`{{ ${item.var[0]} }}`);
+                        } else {
+                            document.getElementById("prompt_system_tips").value += `{{ ${item.var[0]} }}`;
+                        }
+                    },
+                },
+                "struct_tree_system_tips"
+            );
+
+            datas.items = tree_user;
+            new Tree(
+                {
+                    model: new ForestStoreModel({
+                        store: Memory({ data: datas }),
+                        rootId: "root",
+                        rootLabel: "Vars",
+                    }),
+                    showRoot: false,
+                    onDblClick: function (item) {
+                        if (pmbDojo.aceManager.getEditor("prompt_user")) {
+                            pmbDojo.aceManager.getEditor("prompt_user").insert(`{{ ${item.var[0]} }}`);
+                        } else {
+                            document.getElementById("prompt_user").value += `{{ ${item.var[0]} }}`;
+                        }
+                    },
+                },
+                "struct_tree_user"
+            );
+
+            new Tooltip({
+                connectId: "struct_tree_system",
+                selector: "span",
+                getContent: function (matchedNode) {
+                    return dijit.getEnclosingWidget(matchedNode).item.desc[0];
+                },
+            });
+
+            new Tooltip({
+                connectId: "struct_tree_system_tips",
+                selector: "span",
+                getContent: function (matchedNode) {
+                    return dijit.getEnclosingWidget(matchedNode).item.desc[0];
+                },
+            });
+
+            new Tooltip({
+                connectId: "struct_tree_user",
+                selector: "span",
+                getContent: function (matchedNode) {
+                    return dijit.getEnclosingWidget(matchedNode).item.desc[0];
+                },
+            });
+        });
+    });
+</script>

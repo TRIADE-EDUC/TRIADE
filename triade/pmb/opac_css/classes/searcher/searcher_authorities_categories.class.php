@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_categories.class.php,v 1.1 2017-01-06 16:10:51 tsamson Exp $
+// $Id: searcher_authorities_categories.class.php,v 1.4 2023/08/08 08:35:09 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/searcher/searcher_autorities.class.php');
 
 class searcher_authorities_categories extends searcher_autorities {
@@ -38,17 +39,15 @@ class searcher_authorities_categories extends searcher_autorities {
 		return $str_to_hash;
 	}
 	
-	// Ã  rÃ©Ã©crire au besoin...
+	// à réécrire au besoin...
 	protected function _sort($start,$number){
-		global $dbh;
-		global $last_param, $tri_param, $limit_param;
 		global $lang;
 		
 		if($this->table_tempo != ""){
 			$query = "select * from ".$this->table_tempo." order by pert desc limit ".$start.",".$number;
-			$res = pmb_mysql_query($query,$dbh);
+			$res = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($res)){
-				$this->result=array();
+				$this->result = array();
 				while($row = pmb_mysql_fetch_object($res)){
 					$this->result[] = $row->{$this->object_key};
 				}
@@ -57,17 +56,17 @@ class searcher_authorities_categories extends searcher_autorities {
 			$query = $this->get_full_results_query();
 			// On va chercher le thesaurus
 			$query .= ' join thesaurus on '.$this->object_table.'.num_thesaurus = thesaurus.id_thesaurus';
-			// On va chercher le libellÃ© dans la langue par dÃ©faut du thesaurus
-			$query .= ' left join categories as defcateg on '.$this->object_table.'.'.$this->object_key.' = defcateg.num_noeud and thesaurus.langue_defaut = defcateg.langue';
-			// On va chercher le libellÃ© dans la langue de l'interface
-			$query .= ' left join categories as lgcateg on '.$this->object_table.'.'.$this->object_key.' = lgcateg.num_noeud and lgcateg.langue = "'.$lang.'"';
+			// On va chercher le libellé dans la langue par défaut du thesaurus
+			$query .= ' left join categories as defcateg on '.$this->object_table.'.'.$this->object_table_key.' = defcateg.num_noeud and thesaurus.langue_defaut = defcateg.langue';
+			// On va chercher le libellé dans la langue de l'interface
+			$query .= ' left join categories as lgcateg on '.$this->object_table.'.'.$this->object_table_key.' = lgcateg.num_noeud and lgcateg.langue = "'.$lang.'"';
 			// On va chercher les filtres
 			$query .= ' where '.implode(' and ', $this->_get_authorities_filters());
 			// On trie
 			$query .= ' order by lgcateg.index_categorie, defcateg.index_categorie';
 			// On limite
 			$query .= ' limit '.$start.', '.$number;
-			$res = pmb_mysql_query($query,$dbh);
+			$res = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($res)){
 				$this->result=array();
 				while($row = pmb_mysql_fetch_object($res)){
@@ -75,5 +74,21 @@ class searcher_authorities_categories extends searcher_autorities {
 				}
 			}
 		}
+	}
+	
+	protected function _get_human_queries() {
+		global $msg;
+		global $id_thes;
+		
+		$human_queries = parent::_get_human_queries();
+		if ($id_thes && ($id_thes != '-1')) {
+			$thes_label = pmb_mysql_result(pmb_mysql_query('select libelle_thesaurus from thesaurus where id_thesaurus = '.$id_thes), 0, 0);
+			$human_queries[] = array(
+					'name' => $msg['search_extended_category_thesaurus'],
+					'value' => $thes_label
+			);
+		}
+		
+		return $human_queries;
 	}
 }

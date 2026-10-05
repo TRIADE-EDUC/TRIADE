@@ -1,0 +1,26 @@
+{% extends 'record_unimarc_in_result_display.tpl.html' %}
+
+<!-- $Id: record_unimarc_in_result_display_a.tpl.html,v 1.2 2023/03/22 14:06:42 jparis Exp $ -->
+
+<!-- Article -->
+
+<!-- Entete de la notice -->
+{% block record_header %}
+	<span class="tit1_notCourte">
+		{{ record.tit1 }}
+		{% if record.tit4 %} : {{record.tit4}}{% endif %}
+		{% if record.auteurs_principaux%} / {{record.auteurs_principaux}}{% endif %}
+		{% if record.perio_title %}<i>in {{ record.perio_title }} ({{ record.bull_num }}, {{ record.parent_date }})</i>{% endif %}
+	</span>	
+{% endblock %}
+
+<!-- Contenu de la notice -->
+ {% block record_in %}
+	 <tr class="record_in">
+	 	<td>
+	 		<br />
+	 		{% if record.perio_title %}<i>in &gt; {{ record.perio_title }} ({{ record.bull_num }}, {{ record.parent_date }})</i>{% endif %}
+	 	</td>
+	 </tr>
+ {% endblock %}
+ 

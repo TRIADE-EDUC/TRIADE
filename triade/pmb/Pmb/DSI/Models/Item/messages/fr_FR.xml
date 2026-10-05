@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2023/03/30 09:27:52 qvarin Exp $
+-->
+
+<XMLlist>
+    <entry code="tree_env_vars_desc">Variables d'environnement</entry>
+	<entry code="tree_env_vars_script_desc">Variable $_SERVER['SCRIPT_NAME']</entry>
+	<entry code="tree_env_vars_request_desc">Variable $_SERVER['REQUEST_URI']</entry>
+	<entry code="tree_env_vars_opac_url_desc">Variable $opac_url_base</entry>
+	<entry code="tree_env_vars_platform_desc">Nom du système d'exploitation</entry>
+	<entry code="tree_env_vars_browser_desc">Nom du navigateur</entry>
+	<entry code="tree_env_vars_server_addr_desc">Adresse IP du serveur</entry>
+	<entry code="tree_env_vars_remote_addr_desc">Adresse IP du client</entry>
+</XMLlist>

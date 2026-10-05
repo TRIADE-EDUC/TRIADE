@@ -1,0 +1,48 @@
+<!-- $Id: record_in_result_display.tpl.html,v 1.2 2023/08/25 13:34:07 rtigero Exp $ -->
+
+<div id="record_container_{{ record.id }}" class="parentNotCourteTimeline uk-clearfix uk-flex uk-flex-middle">
+	{% block record_case_traitement %}
+		{% if global.cart_aff_case_traitement %}
+			{% if global.opac_rgaa_active %}
+				<label for='record-selection-{{record.id}}' class='visually-hidden'>{{ msg.rgaa_element_checkbox_select }}</label>
+			{% endif %}
+			<input id='record-selection-{{record.id}}' type='checkbox' class='checkboxNot' title='{{ msg.rgaa_element_checkbox_select }}' value='{{ record.id }}' name='notice[]'/>
+		{% endif %}
+	{% endblock %}
+	
+	{% block record_content %}
+	
+
+			<!-- Contenu de la notice -->
+			<div class="notice_corps notice_corpsTimeline">
+
+					{% block record_coins_span %}
+						{{ record.display_coins_span }}
+					{% endblock %}
+				                                        
+                    {% block record_typdoc %}
+                        {% if record.tdoc %}
+                            <div class="typDocTimeline">
+                                <p><span>{{record.tdoc}}</span></p>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+					
+					{% block record_titre_uniforme %}
+                                            <div class="voirFicheSuivi">
+							{% for tu_data in record.titre_uniforme.ntu_data %}
+									<p>
+											<a href="{{ record.linked_permalink.titre_uniforme | replace '!!id!!' tu_data.num_tu }}&opac_view=1">Voir la fiche</a>										
+									</p>
+									
+							{% endfor %}
+                                            </div>
+					{% endblock %}
+
+			</div>
+	{% endblock %}
+	
+
+	
+	<div class='clear'></div>
+</div>

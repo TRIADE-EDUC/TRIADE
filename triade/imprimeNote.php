@@ -11,7 +11,7 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 	// recuperation des coordonnées
 	// de l etablissement
 	$data=visu_paramViaIdSite(chercheIdSite($idClasse));
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 	       	$nom_etablissement=trim($data[$i][0]);
 	       	$adresse=trim($data[$i][1]);
 	       	$postal=trim($data[$i][2]);
@@ -26,7 +26,7 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 	$ordre=ordre_matiere_visubull($idClasse,$anneeScolaire); // recup ordre matiere
 
 	$eleveT=recupEleve($idClasse); // recup liste eleve
-	for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+	for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 		// variable eleve
 		if ($id_eleve != $eleveT[$j][4]) continue ;
 	
@@ -155,7 +155,7 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 		// adresse de l'élève
 		// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 		$dataadresse=chercheadresse($idEleve);
-		for($ik=0;$ik<=count($dataadresse);$ik++) {
+		for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 			$nomtuteur=$dataadresse[$ik][1];
 			$prenomtuteur=$dataadresse[$ik][2];
 			$adr1=$dataadresse[$ik][3];
@@ -205,7 +205,7 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 
 	
 	
-		for($i=0;$i<count($ordre);$i++) {
+		for($i=0;$i<countTriade($ordre);$i++) {
 			$matiere=chercheMatiereNom($ordre[$i][0]);
 			$nomprof=recherche_personne2($ordre[$i][1]);
 			$verifGroupe=verifMatiereAvecGroupe($ordre[$i][0],$idEleve,$idClasse,$ordre[$i][2]);
@@ -234,7 +234,7 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 			$note=recupNote2($idEleve,$ordre[$i][0],$dateDebut,$dateFin,$ordre[$i][1]);
 			// note,elev_id,code_mat,date,sujet,typenote,notationsur	
 			$aaa=0;
-			for($b=0;$b<count($note);$b++) {
+			for($b=0;$b<countTriade($note);$b++) {
 				$aaa++;
 				$noteaff=$note[$b][0];
 				$sujet=$note[$b][4];
@@ -338,15 +338,15 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 		// Info abs, rtd et retenu
 		$nb_retenue=0;
 		$data_1=affRetenuTotal_par_eleve_trimestre($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-		if (count($data_1) > 0) { $nb_retenue=count($data_1); }
+		if (countTriade($data_1) > 0) { $nb_retenue=countTriade($data_1); }
 	
 	
 		$data_2=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
 		// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 		$cumulabs=0;
 		$cumulabsheure=0;
-		$nbabs=count($data_2);
-		for($ja=0;$ja<count($data_2);$ja++) {
+		$nbabs=countTriade($data_2);
+		for($ja=0;$ja<countTriade($data_2);$ja++) {
 			if ($data_2[$ja][4] > 0) {
 				$cumulabs=$cumulabs + $data_2[$ja][4];
 			}else {
@@ -356,8 +356,8 @@ function &imprimeNote($pdf,$idClasse,$id_eleve,$dateDebut,$anneeScolaire) {
 		
 		$data_3=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
 		$cumulrtds=0;
-		$nbrtd=count($data_3);
-		for($ja=0;$ja<count($data_3);$ja++) {
+		$nbrtd=countTriade($data_3);
+		for($ja=0;$ja<countTriade($data_3);$ja++) {
 			$nbminute=preg_replace('/mn/','',$data_3[$ja][5]);
 			if (preg_match('/[0-9]h/',$data_3[$ja][5])) {
 				$minute=0;
@@ -388,14 +388,14 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 
 	$listclasse=affClasse();
 	
-	for($c=0;$c<count($listclasse);$c++) {
+	for($c=0;$c<countTriade($listclasse);$c++) {
 		$idClasse=$listclasse[$c][0];
 
 		if ($idClasse != $id_classe) continue ;
 
 		$eleveT=recupEleve($idClasse);      // recup liste eleve
 		$classe=chercheClasse_nom($idClasse);
-		$nbeleve=count($eleveT);
+		$nbeleve=countTriade($eleveT);
 	
 		$idsite=chercheIdSite($idClasse);	
 		$dataInfo=visu_paramViaIdSite($idsite);
@@ -408,7 +408,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 		$directeur=trim($dataInfo[0][6]);
 		$urlsite=trim($dataInfo[0][7]);
 
-		for($i=0;$i<count($eleveT);$i++) {
+		for($i=0;$i<countTriade($eleveT);$i++) {
 			$idEleve=$eleveT[$i][4];
 			if ($idEleve != $id_eleve) continue;
 		
@@ -467,7 +467,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 				// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure, id_matiere, time, justifier,creneaux
 				$listeabs=affAbsence2_via_date($idEleve,$dateDebut1,$dateFin1);
 				$ycoor0+=7;
-				for($j=0;$j<count($listeabs);$j++) {
+				for($j=0;$j<countTriade($listeabs);$j++) {
 					$pdf->SetFont('Arial','',7);
 					$xcoor0="5";
 					$matiere=chercheMatiereNom($listeabs[$j][8]);
@@ -484,7 +484,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 		
 					$dataRattrapage=recupRattrappage($listeabs[$j][12]); // date,heure_depart,duree,valider
 			                $infoRattrapage="";
-	        		        for($k=0;$k<count($dataRattrapage);$k++) {
+	        		        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 		                	        $rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
 		                        	$infoRattrapage.="\n- Rattrapage le ".dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." Effectuer : $rattragefait";
 			                }
@@ -511,7 +511,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 						$ycoor0+=7;
 					}
 					if ($ycoor0 >= 250) { $pdf->AddPage(); $ycoor0=10; }
-		        	        for($k=0;$k<count($dataRattrapage);$k++) {
+		        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 	        	              		$date=$dataRattrapage[$k][0];
 						$heure_depart=$dataRattrapage[$k][1];
 						$duree=$dataRattrapage[$k][2];
@@ -546,7 +546,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 				$listeabs=affRetard_via_date($idEleve,$dateDebut1,$dateFin1); 
 				//elev_id, heure_ret, date_ret, date_saisie, origin_saisie, duree_ret, motif, idmatiere,justifier,heure_saisie,creneaux, idrattrapage
 				$ycoor0+=7;
-				for($j=0;$j<count($listeabs);$j++) {
+				for($j=0;$j<countTriade($listeabs);$j++) {
 					$pdf->SetFont('Arial','',7);
 					$xcoor0="5";
 					$matiere=chercheMatiereNom($listeabs[$j][7]);		
@@ -559,7 +559,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 					if (trim($creneaux) == ": - :") { $creneaux="non précisé";}
 					$dataRattrapage=recupRattrappage($listeabs[$j][11]); // date,heure_depart,duree,valider
 			                $infoRattrapage="";
-		        	        for($k=0;$k<count($dataRattrapage);$k++) {
+		        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 		                	        $rattragefait=($dataRattrapage[$k][3] == 1) ? LANGOUI : LANGNON;
 		                        	$infoRattrapage.="\n- Rattrapage le ".dateForm($dataRattrapage[$k][0])." à ".timeForm($dataRattrapage[$k][1])." durant ".timeForm($dataRattrapage[$k][2])." Effectuer : $rattragefait";
 			                }
@@ -588,7 +588,7 @@ function &imprimeABSRts($pdf,$id_classe,$id_eleve,$dateDebut1) {
 		                        }
 		                        $pdf->SetFont('Arial','',12);
 					if ($ycoor0 >= 250) { $pdf->AddPage(); $ycoor0=10; }
-		        	        for($k=0;$k<count($dataRattrapage);$k++) {
+		        	        for($k=0;$k<countTriade($dataRattrapage);$k++) {
 		                      		$date=$dataRattrapage[$k][0];
 						$heure_depart=$dataRattrapage[$k][1];
 						$duree=$dataRattrapage[$k][2];
@@ -649,7 +649,7 @@ function &imprimeSavoirEtre($pdf,$id_classe,$id_eleve,$dateDebut1,$anneeScolaire
         $pdf->SetXY($xcoor0+=50,$ycoor0);
         $pdf->MultiCell(30,7,"Date de saisie",1,'L',1);
 	$ycoor0+=7;
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
         	$pdf->SetFont('Arial','',9);
 		$ponc=$data[$i][0];
 		$date=dateForm($data[$i][4]);
@@ -691,7 +691,7 @@ function &imprimeSavoirEtre($pdf,$id_classe,$id_eleve,$dateDebut1,$anneeScolaire
         $ycoor0+=7;
 
 
-        for($i=0;$i<count($data);$i++) {
+        for($i=0;$i<countTriade($data);$i++) {
         	$pdf->SetFont('Arial','',9);
                 $ponc=$data[$i][1];
                 $date=dateForm($data[$i][4]);
@@ -731,7 +731,7 @@ function &imprimeSavoirEtre($pdf,$id_classe,$id_eleve,$dateDebut1,$anneeScolaire
         $pdf->MultiCell(30,7,"Date de saisie",1,'L',1);
         $ycoor0+=7;
 
-        for($i=0;$i<count($data);$i++) {
+        for($i=0;$i<countTriade($data);$i++) {
         	$pdf->SetFont('Arial','',9);
                 $ponc=$data[$i][2];
                 $date=dateForm($data[$i][4]);

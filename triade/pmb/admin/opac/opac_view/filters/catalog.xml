@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: catalog.xml,v 1.4 2016-12-05 16:17:12 dgoron Exp $ -->
+$Id: catalog.xml,v 1.4 2016/12/05 16:17:12 dgoron Exp $ -->
 
 <catalog>
 	<item name="Etageres" path="etageres" active="1" id="1"/>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd">
 
 <!-- 
 ****************************************************************************************
 © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: section.xml,v 1.7 2018-06-19 11:19:18 dgoron Exp $ -->
+$Id: section.xml,v 1.8 2024/04/05 07:39:30 dbellamy Exp $ -->
 
 <indexation>
 

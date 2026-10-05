@@ -1,34 +1,43 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: mail_reader_resa.class.php,v 1.3 2019-05-24 15:54:20 dgoron Exp $
+// $Id: mail_reader_resa.class.php,v 1.8 2022/12/13 08:47:32 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once("$class_path/mail/reader/mail_reader.class.php");
-
+global $include_path;
 require_once ($include_path."/mail.inc.php") ;
 
 class mail_reader_resa extends mail_reader {
 	
-	protected function get_parameter_prefix() {
+    protected static function get_parameter_prefix() {
 		return "pdflettreresa";
 	}
 	
-	protected function get_mail_object($empr) {
-		global $msg, $charset;
+	protected function get_mail_headers() {
+		global $charset;
 		
-		return sprintf($msg["mail_obj_resa_validee"], " : ".$empr->empr_prenom." ".mb_strtoupper($empr->empr_nom,$charset)." (".$empr->empr_cb.")");
+		$headers  = "MIME-Version: 1.0\n";
+		$headers .= "Content-type: text/html; charset=".$charset."\n";
+		return $headers;
 	}
 	
-	protected function get_mail_content($empr) {
+	protected function get_mail_object() {
+		global $msg, $charset;
+		
+		return sprintf($msg["mail_obj_resa_validee"], " : ".$this->empr->empr_prenom." ".mb_strtoupper($this->empr->empr_nom,$charset)." (".$this->empr->empr_cb.")");
+	}
+	
+	protected function get_mail_content() {
 		global $msg, $charset;
 		global $pmb_transferts_actif, $transferts_choix_lieu_opac;
 		global $opac_url_base;
 		
+		$empr = $this->empr;
+		
 		$mail_content = "<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><meta charset=\"".$charset."\" /></head><body>" ;
-		$mail_content .= $this->get_text_madame_monsieur($empr->id_empr);
+		$mail_content .= $this->get_text_madame_monsieur();
 		$mail_content .= "<br />".$this->get_parameter_value('before_list');
 		if($empr->niveau_biblio == 'm' || $empr->niveau_biblio == 'b'){
 			$affichage=new mono_display($empr->id_notice,0,'','','','','','','','','','','',true,'','');
@@ -82,19 +91,10 @@ class mail_reader_resa extends mail_reader {
 		return $mail_content;
 	}
 	
-	public function send_mail($empr) {
-		global $msg, $charset;
-		global $biblio_name, $biblio_email, $PMBuseremailbcc;
-		
-// 		$coords = $this->get_empr_coords($id_empr, $id_groupe);
-		$headers  = "MIME-Version: 1.0\n";
-		$headers .= "Content-type: text/html; charset=".$charset."\n";
-		$mail_content = $this->get_mail_content($empr);
-		if(is_resa_confirme($empr->id_resa)) {
-			$res_envoi=mailpmb($empr->empr_prenom." ".$empr->empr_nom, $empr->empr_mail, $this->get_mail_object($empr),$mail_content,$biblio_name, $biblio_email, $headers, "", $PMBuseremailbcc, 1);
-		} else {
-			$res_envoi=false;
+	public function send_mail() {
+		if(static::class == 'mail_reader_resa' && !is_resa_confirme($this->empr->id_resa)) {
+			return false;
 		}
-		return $res_envoi;
+		return parent::send_mail();
 	}
 }

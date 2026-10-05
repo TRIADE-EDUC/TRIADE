@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_concept.class.php,v 1.1 2016-04-07 15:35:24 apetithomme Exp $
+// $Id: cms_concept.class.php,v 1.1 2016/04/07 15:35:24 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

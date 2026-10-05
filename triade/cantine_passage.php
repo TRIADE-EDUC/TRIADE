@@ -5,17 +5,8 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
  *
  ***************************************************************************/
 ?>
@@ -24,314 +15,415 @@ session_start();
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
-<script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f0f2fa;margin:0;padding:0;font-size:14px}
+
+/* Header */
+.cp-header{background:#080A66;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cp-header-title{font-size:16px;font-weight:700}
+.cp-header-info{font-size:11px;opacity:.8}
+
+/* Layout */
+.cp-body{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.cp-panel{background:#fff;border-radius:10px;padding:14px;border:1px solid #dde0f0}
+
+/* Badge */
+.cp-badge-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.cp-badge-label{font-size:13px;font-weight:700;color:#080A66;white-space:nowrap}
+.cp-badge-input{flex:1;font-size:16px;padding:10px 12px;border:2px solid #dde0f0;border-radius:8px;color:#000066;background:#eef0ff;height:46px}
+.cp-badge-input:focus{border-color:#080A66;outline:none}
+.cp-badge-btn{background:#080A66;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;height:46px;white-space:nowrap;touch-action:manipulation}
+.cp-badge-btn:active{background:#0b0f8a}
+.cp-badge-btn.reading{background:#e65100}
+
+.cp-confirm-msg{color:#c62828;font-weight:700;font-size:13px;min-height:20px;margin-bottom:8px}
+.cp-ok-msg{color:#2e7d32;font-weight:700;font-size:13px;min-height:20px;margin-bottom:8px}
+
+/* Meal buttons */
+.cp-meals-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #eef0f8}
+.cp-meals{display:flex;flex-wrap:wrap;gap:10px}
+.cp-meal-btn{background:#FFA54A;color:#7a0000;border:none;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:700;cursor:pointer;min-height:58px;min-width:110px;flex:1;box-shadow:0 3px 8px rgba(0,0,0,.2);touch-action:manipulation;transition:transform .1s,box-shadow .1s}
+.cp-meal-btn:active{transform:scale(.97);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.cp-meal-btn:disabled{background:#e0d8c0;color:#aaa;cursor:not-allowed;box-shadow:none}
+
+/* Person card */
+.cp-person-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.cp-person-photo{width:90px;height:90px;border-radius:12px;object-fit:cover;box-shadow:0 3px 10px rgba(0,0,0,.2);flex-shrink:0}
+.cp-person-details{flex:1}
+.cp-person-name{font-size:18px;font-weight:700;color:#080A66;line-height:1.2}
+.cp-person-prenom{font-size:16px;color:#333;margin-top:2px}
+.cp-person-fonction{font-size:12px;color:#777;margin-top:4px;font-style:italic}
+.cp-alerte{color:#c62828;font-weight:700;font-size:14px}
+.cp-alerte2{color:#c62828;font-weight:700;font-size:14px;margin-top:6px}
+
+/* Plateau */
+.cp-plateau-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.cp-plateau-list{background:#f8f9ff;border:1px solid #dde0f0;border-radius:8px;padding:8px 10px;min-height:70px;max-height:110px;overflow-y:auto;font-size:13px;color:#333}
+.cp-total-row{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.cp-total-label{font-size:15px;font-weight:700;color:#080A66}
+.cp-total-val{font-size:20px;font-weight:700;color:#080A66}
+.cp-solde{font-size:12px;color:#555;margin-top:4px}
+
+/* Action buttons */
+.cp-actions{display:flex;gap:8px;margin-top:14px}
+.cp-btn{border:none;border-radius:10px;padding:14px 12px;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation;transition:filter .15s}
+.cp-btn:active{filter:brightness(.9)}
+.cp-btn-cancel{flex:1;background:#c62828;color:#fff}
+.cp-btn-confirm{flex:2;background:#735770;color:#fff}
+.cp-btn-confirm.active{background:#C60417}
+.cp-btn-credit{flex:1;background:#1565c0;color:#fff}
+.cp-btn:disabled{background:#bbb;cursor:not-allowed}
+
+/* History table */
+.cp-history{padding:0 12px 12px}
+.cp-history-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-top:4px}
+.cp-hist-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #dde0f0;font-size:12px}
+.cp-hist-table thead th{background:#080A66;color:#fff;padding:8px 10px;text-align:left;font-weight:600}
+.cp-hist-table tbody tr{border-bottom:1px solid #eef0f8}
+.cp-hist-table tbody tr.credit{background:#e8f5e9}
+.cp-hist-table tbody tr.debit{background:#fce4ec}
+.cp-hist-table td{padding:7px 10px;vertical-align:middle}
+.cp-hist-total{background:#f0f2fa;font-weight:700}
+
+/* Credit modal */
+.cp-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:center;justify-content:center}
+.cp-modal-overlay.visible{display:flex}
+.cp-modal{background:#fff;border-radius:14px;padding:24px;width:420px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.cp-modal-title{font-size:16px;font-weight:700;color:#080A66;margin-bottom:18px}
+.cp-modal-field{margin-bottom:14px}
+.cp-modal-label{font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:5px}
+.cp-modal-input{width:100%;padding:10px 12px;border:1px solid #dde0f0;border-radius:8px;font-size:14px}
+.cp-modal-actions{display:flex;gap:10px;margin-top:18px}
+.cp-modal-btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.cp-modal-btn-save{background:#080A66;color:#fff}
+.cp-modal-btn-close{background:#f0f2fa;color:#333;border:1px solid #dde0f0}
+.cp-modal-result{color:#c62828;font-size:12px;margin-top:8px;min-height:18px}
+
+/* No-plat warning */
+.cp-noPlat-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:center;justify-content:center}
+.cp-noPlat-overlay.visible{display:flex}
+.cp-noPlat-box{background:#fff;border-radius:14px;padding:30px 24px;text-align:center;width:340px;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.cp-noPlat-msg{font-size:16px;font-weight:700;color:#c62828;margin-bottom:20px}
+.cp-noPlat-close{background:#080A66;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:15px;font-weight:700;cursor:pointer}
+</style>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
-<script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script type="text/javascript" src="./librairie_js/prototype.js"></script>
 <script type="text/javascript" src="./librairie_js/scriptaculous.js"></script>
 <script type="text/javascript" src="./librairie_js/ajax_cantine.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 <script language="JavaScript" src="./librairie_js/xorax_serialize.js"></script>
+<title>Passage cantine</title>
 <script>
-ajaxCherchePlateau = function (id) {
-	var myAjax = new Ajax.Request("ajaxCherchePlateauCantine.php",{method:"post",parameters:"id="+id,asynchronous:true,timeout: 5000,onComplete: displayText});
+ajaxCherchePlateau = function(id) {
+    var myAjax = new Ajax.Request("ajaxCherchePlateauCantine.php",{method:"post",parameters:"id="+id,asynchronous:true,timeout:5000,onComplete:displayText});
 }
 
-displayText = function (request) {
-	var tab=unserialize(request.responseText);
-	var listing=document.getElementById("menucantine");
-	var chaine=tab[0][2];
-	var reg1=new RegExp(" ", "g");
-	var tableau=chaine.split(reg1);
-	var prix=tableau[0];
-	var unite=tableau[1];
-	var reg=new RegExp(",", "g");
-	prix.replace(reg,".");
-	prix=parseFloat(prix);
-	prix=(Math.round(prix*100))/100;
-	listing.innerHTML+="&nbsp;&nbsp;&nbsp;<img src='image/lu.gif' >&nbsp;<font class='T2'>"+unescape(tab[0][1])+" : "+prix+" "+unite+"</font><br>";
-	var somme=document.getElementById("somme");
-	if (window.ActiveXObject){
-		var newElementList = document.createElement("<input name='plat[]' >");	
-	}else{
-		var newElementList = document.createElement("input");
-		newElementList.setAttribute("name","plat[]");	
-	}
-	newElementList.setAttribute("type","hidden");
-	newElementList.setAttribute("value",tab[0][4]+"#||#"+tab[0][1]);
-	newElementList.setAttribute("readonly","readonly");
-	somme.appendChild(newElementList);
-	document.formulaire.platok.value='1';
-
-	var total=parseFloat(getInnerText(document.getElementById("total")));
-	var nb=parseFloat(tab[0][4]);
-	total=total+nb;
-	document.getElementById("total").innerHTML=total;
+displayText = function(request) {
+    var tab = unserialize(request.responseText);
+    var listing = document.getElementById("menucantine");
+    var chaine = tab[0][2];
+    var reg1 = new RegExp(" ","g");
+    var tableau = chaine.split(reg1);
+    var prix = tableau[0];
+    var unite = tableau[1];
+    var reg = new RegExp(",","g");
+    prix.replace(reg,".");
+    prix = parseFloat(prix);
+    prix = (Math.round(prix*100))/100;
+    listing.innerHTML += "<div style='padding:3px 0;border-bottom:1px solid #eef0f8'>✓ "+unescape(tab[0][1])+" &mdash; <b>"+prix+" "+unite+"</b></div>";
+    var somme = document.getElementById("somme");
+    var newElementList = document.createElement("input");
+    newElementList.setAttribute("name","plat[]");
+    newElementList.setAttribute("type","hidden");
+    newElementList.setAttribute("value",tab[0][4]+"#||#"+tab[0][1]);
+    newElementList.setAttribute("readonly","readonly");
+    somme.appendChild(newElementList);
+    document.formulaire.platok.value = '1';
+    var total = parseFloat(getInnerText(document.getElementById("total")));
+    var nb = parseFloat(tab[0][4]);
+    total = total + nb;
+    document.getElementById("total").innerHTML = total;
 }
 
+function ajoutPlateau(val) { ajaxCherchePlateau(val); }
 
-function ajoutPlateau(val) {
-	ajaxCherchePlateau(val);
-}
-
-</script>
-<script type="text/javascript">
 function valideFormulaire() {
-	if (document.formulaire.platok.value == "0") {
-		new Effect.Grow('validationnon', 1); 
-		return false;
-	}else{
-		document.formulaire.valide.value=1;
-		document.formulaire.submit();
-	}
+    if (document.formulaire.platok.value == "0") {
+        document.getElementById('cp-noPlat').classList.add('visible');
+        return false;
+    } else {
+        document.formulaire.valide.value = 1;
+        document.formulaire.submit();
+    }
+}
+
+function activerLectureBadge() {
+    var btn = document.getElementById('action');
+    document.formulaire.codebar.focus();
+    btn.classList.add('reading');
+    btn.textContent = 'Lecture en cours…';
+    var enreff = document.getElementById('enreff');
+    if (enreff) enreff.style.display = 'none';
 }
 
 function listenKey(code) {
-	//	 alert("vous avez frapper la touche:"+code);
-	if (code == "113") {
-		document.formulaire.codebar.focus();
-		document.getElementById('action').value='Lecture en cours...'; 
-		document.getElementById('enreff').style.display='none'; 
-	}
-
-	if (code == "119") { valideFormulaire(); }
+    if (code == "113") { activerLectureBadge(); }
+    if (code == "119") { valideFormulaire(); }
 }
-if (navigator.appName=="Microsoft Internet Explorer") {
- function toucheA() {listenKey(event.keyCode)};
- document.onkeydown = toucheA;
+if (navigator.appName == "Microsoft Internet Explorer") {
+    function toucheA() { listenKey(event.keyCode); }
+    document.onkeydown = toucheA;
+} else {
+    function toucheB(evnt) { listenKey(evnt.keyCode); }
+    document.onkeydown = toucheB;
 }
-else {
- function toucheB(evnt) {listenKey(evnt.keyCode)};
- document.onkeydown = toucheB;
-}
-
 
 function verifScrool() {
-	element = document.getElementById('menucantine');
-        element.scrollTop = element.scrollHeight;
-	window.setTimeout('verifScrool()','300');
+    var element = document.getElementById('menucantine');
+    if (element) element.scrollTop = element.scrollHeight;
+    window.setTimeout('verifScrool()','300');
+}
+
+function ouvrirCredit() {
+    document.getElementById('cp-credit-modal').classList.add('visible');
+}
+function fermerCredit() {
+    document.getElementById('cp-credit-modal').classList.remove('visible');
 }
 </script>
-
 </head>
-<body  id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="verifScrool();" >
+<body onload="verifScrool();">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="100%">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >
-<?php print "Passage cantine" ?></font></b> - 
-<?php 
-include_once("./librairie_php/lib_conexpersistant.php"); 
-connexpersistance("color:black;font-size:11px;"); 
-?>
 
-</td>
-</tr>
-<tr id='cadreCentral0'>
-<td valign=top>
 <?php
 include_once('./librairie_php/db_triade.php');
-$cnx=cnx();
-$image="idP=''";
-if ((verifDroit($_SESSION["id_pers"],"cantine")) || ($_SESSION["membre"] == "menuadmin" )) { 
-/*
-	if (isset($_GET["idsupp"])) {
-		$idpers2=$_GET["idpers2"];
-		$membre2=$_GET["membre"];
-		if ($membre2 == "menueleve") {
-			$nom2=recherche_eleve_nom($idpers2);
-			$prenom2=recherche_eleve_prenom($idpers2); 
-			$nomprenom2="$nom2 $prenom2";
-		}else{
-			$membre2=renvoiTypePersonneMembre(recherche_type_personne($idpers2)); 
-			$nomprenom2=recherche_personne2($idpers2);
-		}
-		$cr=suppOperationCantine($_GET["idsupp"]);
-		if ($cr) { history_cmd($_SESSION["nom"],"CANTINE","Suppression Opération sur ($nomprenom2) ");}
-	}
- */
+$cnx = cnx();
+$image = "idP=''";
+if ((verifDroit($_SESSION["id_pers"],"cantine")) || ($_SESSION["membre"] == "menuadmin")) {
 
-	$alerteButton=1;
-	$ideleve="";
-	$membre="";
-	$valide="";
+    $alerteButton = 1;
+    $ideleve = "";
+    $membre = "";
+    $valide = "";
+    $colorB = "735770";
+    $disabled2 = "disabled";
+    $ALERTE = ""; $ALERTE2 = ""; $ALERTCONFIRM = "";
+    $nom = ""; $prenom = ""; $fonction = "";
 
-	$colorB="735770";
-	$disabled2="disabled='disabled'";
+    if (isset($_POST["codebar"])) {
+        $data = rechercheIdPersViaCodeBarre(trim($_POST["codebar"]));
+        if (countTriade($data) > 0) {
+            $ideleve = $data[0][0];
+            $valide  = $data[0][1];
+            $membre  = $data[0][2];
+            $membre2 = 'NONELE';
+        }
+        if ($membre == "menueleve")    { $fonction = "Élève en ".chercheClasse_nom(chercheClasseEleve($ideleve)); $membre2='ELE'; $attribue="menueleve"; $image="idE=$ideleve"; }
+        if ($membre == "menuprof")     { $fonction = "Enseignant"; $attribue="menuautre"; $indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
+        if ($membre == "menuadmin")    { $fonction = "Direction"; $attribue="menuautre"; $indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
+        if ($membre == "menuscolaire") { $fonction = "Vie Scolaire"; $attribue="menuautre"; $indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
+        if ($membre == "menupersonnel"){ $fonction = "Personnel"; $attribue="menuautre"; $indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
 
-	if (isset($_POST["codebar"])) {
-		
+        if ($valide == 1) {
+            $nom      = strtoupper(recherche_personne_nom($ideleve,$membre2));
+            $prenom   = ucwords(recherche_personne_prenom($ideleve,$membre2));
+            $nomprenom = "$nom $prenom";
+            $alerteButton = 0;
+            $colorB = "C60417";
+            $disabled2 = "";
+            $verif = verifCompteDejaPasse($ideleve,$membre);
+            if ($verif > 0) { $ALERTE2 = "BADGE DÉJÀ UTILISÉ !"; }
+        } elseif ($valide == 0) {
+            $ALERTE = "BADGE NON VALIDE !";
+        } else {
+            $ALERTE = "BADGE NON LU !";
+        }
+    }
 
-		$data=rechercheIdPersViaCodeBarre(trim($_POST["codebar"])); // id,valide,membre
-		if (count($data) > 0) {
-			$ideleve=$data[0][0];
-			$valide=$data[0][1];
-			$membre=$data[0][2];
-			$membre2='NONELE';
-		}
+    if (isset($_POST["reset"])) { $ALERTE = ""; }
 
-		if ($membre == "menueleve") { $fonction="Elève en ".chercheClasse_nom(chercheClasseEleve($ideleve)); $membre2='ELE'; $attribue="menueleve"; $image="idE=$ideleve"; } 
-		if ($membre == "menuprof")  { $fonction="Enseignant"; $attribue="menuautre"; $indiceSalairePers=recupIndiceSalairePers($ideleve);$image="idP=$ideleve";  }
-		if ($membre == "menuadmin") { $fonction="Direction"; $attribue="menuautre";$indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
-		if ($membre == "menuscolaire") { $fonction="Vie Scolaire"; $attribue="menuautre";$indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
-		if ($membre == "menupersonnel") { $fonction="Personnel"; $attribue="menuautre";$indiceSalairePers=recupIndiceSalairePers($ideleve); $image="idP=$ideleve"; }
-		
+    if ((isset($_POST["valide"])) && ($_POST["valide"] == 1)) {
+        $ALERTE = "";
+        $idpers = $_POST["idpers"];
+        $plat   = $_POST["plat"];
+        $membre = $_POST["membre"];
+        $cr = enrPlateauCompte($idpers,$plat,$membre);
+        $ALERTCONFIRM = "<span id='enreff' style='color:#2e7d32;font-weight:700'>&#10003; Enregistrement effectué</span>";
+    }
 
-		if ($valide == 1) {
-			$nom=strtoupper(recherche_personne_nom($ideleve,$membre2));
-			$prenom=ucwords(recherche_personne_prenom($ideleve,$membre2));
-			$nomprenom="$nom $prenom";
-			$alerteButton=0;
-			$colorB="C60417";
-			$disabled2="";
-			$verif=verifCompteDejaPasse($ideleve,$membre);
-			if ($verif > 0) {
-				$ALERTE2="<font class='T2' color='red'>BADGE DEJA UTILISE !!!</font>";
-			}
-
-		}elseif ($valide == 0) {
-			$fonction="";
-			$ALERTE="<font class='T2' color='red'>BADGE NON VALIDE !!!</font>";
-		}else{
-			$prenom="";
-			$ALERTE="<font class='T2' color='red'>BADGE NON LU !!!</font>";
-		}
-	}
-
-	if (isset($_POST["reset"])) { $ALERTE=""; }
-
-	if ((isset($_POST["valide"])) && ($_POST["valide"] == 1)) { 
-		$ALERTE=""; 
-		$idpers=$_POST["idpers"];
-		$plat=$_POST["plat"];
-		$membre=$_POST["membre"];
-		$cr=enrPlateauCompte($idpers,$plat,$membre);
-		$ALERTCONFIRM="<span id='enreff'>&nbsp;&nbsp;<b><font color=red class=T2 >Enregistrement effectué</font></b></span>";
-	}
+    $btnConfirmClass = ($disabled2 == "") ? "cp-btn cp-btn-confirm active" : "cp-btn cp-btn-confirm";
+    $btnCreditClass  = ($disabled2 == "") ? "cp-btn cp-btn-credit" : "cp-btn cp-btn-credit";
 ?>
-<div id="validationnon" style="position:absolute;top:140;left:330;display:none;width:350px;height:130px;padding:1px;border:1px #666 solid;background-color:yellow;z-index:1000">
-	<center>
-	<br><br>
-	<b><font class=T2 color=red>AUCUN PLAT D'ENREGISTRE</font></b><br><br>
-	<input type='button' value='<?php print LANGFERMERFEN ?>' class='button' onclick="new Effect.Shrink('validationnon', 1)" />
-	</center>
+
+<!-- No-plat modal -->
+<div id="cp-noPlat" class="cp-noPlat-overlay" onclick="this.classList.remove('visible')">
+    <div class="cp-noPlat-box" onclick="event.stopPropagation()">
+        <div class="cp-noPlat-msg">Aucun plat enregistré !</div>
+        <button class="cp-noPlat-close" onclick="document.getElementById('cp-noPlat').classList.remove('visible')">Fermer</button>
+    </div>
 </div>
-<div id="viscredit" style="position:absolute;top:140;left:330;display:none;width:450px;height:290px;padding:1px;border:1px #666 solid;background-color:#ddd;z-index:1000">
-		<?php   ?>
-		<form><br /><br />
-		&nbsp;&nbsp;&nbsp;<font class=T2><b>Créditer le compte de <?php print $nomprenom ?></b></font>
-		<br /><br />
-		<ul><table border='0' >	
-		<tr><td align='right'><font class='T2'>&nbsp;Date :</font></td><td><input type='text' name='date' size='10' value='<?php print dateDMY() ?>' /></td></tr>
-		<tr><td height=20></td></tr>
-		<tr><td align='right'><font class='T2'>&nbsp;Crédit :</font></td><td><input type='text' name='credit' size='10' value='0' onclick="this.value=''" /></td></tr>
-		<tr><td height=20></td></tr>	
-		<tr><td align='right'><font class='T2'>&nbsp;Détail :</font></td><td><input type='text' name='detail' size='50' maxlength='250' /></td></tr>
-		<tr><td height=20></td></tr>
-		<tr><td align='right' colspan='2' ><input type='button' onclick="enrCreditCantine('<?php print $ideleve ?>','<?php print $membre ?>',this.form.date.value,this.form.credit.value,this.form.detail.value,'retourenr0')" value="<?php print LANGENR ?>" class='bouton2' />
-		
-		&nbsp;&nbsp;<input type='button' value='<?php print LANGFERMERFEN ?>' class='button' onclick="new Effect.Shrink('viscredit', 1)" /><br><br>
-		<span id='retourenr0' style='color:red; '></span>		
-		</table></ul>
-		</form>
-	</div>
+
+<!-- Credit modal -->
+<div id="cp-credit-modal" class="cp-modal-overlay" onclick="fermerCredit()">
+    <div class="cp-modal" onclick="event.stopPropagation()">
+        <div class="cp-modal-title">Créditer le compte de <?php print $nomprenom ?></div>
+        <form>
+        <div class="cp-modal-field">
+            <label class="cp-modal-label">Date</label>
+            <input type="text" name="date" class="cp-modal-input" value="<?php print dateDMY() ?>">
+        </div>
+        <div class="cp-modal-field">
+            <label class="cp-modal-label">Crédit</label>
+            <input type="text" name="credit" class="cp-modal-input" value="0" onclick="this.value=''">
+        </div>
+        <div class="cp-modal-field">
+            <label class="cp-modal-label">Détail</label>
+            <input type="text" name="detail" class="cp-modal-input" maxlength="250">
+        </div>
+        <div class="cp-modal-actions">
+            <button type="button" class="cp-modal-btn cp-modal-btn-save"
+                onclick="enrCreditCantine('<?php print $ideleve ?>','<?php print $membre ?>',this.form.date.value,this.form.credit.value,this.form.detail.value,'cp-credit-result')">
+                Enregistrer
+            </button>
+            <button type="button" class="cp-modal-btn cp-modal-btn-close" onclick="fermerCredit()">Fermer</button>
+        </div>
+        <div id="cp-credit-result" class="cp-modal-result"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Header -->
+<div class="cp-header">
+    <div class="cp-header-title">&#127869; Passage cantine</div>
+    <div class="cp-header-info">
+        <?php include_once("./librairie_php/lib_conexpersistant.php"); connexpersistance("color:rgba(255,255,255,.8);font-size:11px;"); ?>
+    </div>
+</div>
+
+<form name="formulaire" method="post" action="cantine_passage.php">
+
+<div class="cp-body">
+
+    <!-- LEFT: badge + meal buttons -->
+    <div class="cp-panel">
+        <div class="cp-ok-msg"><?php print $ALERTCONFIRM ?></div>
+
+        <!-- Badge scan -->
+        <div class="cp-badge-row">
+            <span class="cp-badge-label">Badge :</span>
+            <input type="text" name="codebar" id="codebar" class="cp-badge-input" autocomplete="off">
+            <button type="button" id="action" class="cp-badge-btn" onclick="activerLectureBadge()">
+                &#128247; Lire [F2]
+            </button>
+        </div>
+
+        <div style="border-top:1px solid #eef0f8;margin:10px 0 12px"></div>
+
+        <div class="cp-meals-title">Repas disponibles</div>
+        <div class="cp-meals">
+        <?php
+        $data = recupConfigCantine();
+        for ($i=0; $i<countTriade($data); $i++) {
+            $platdefault  = $data[$i][5];
+            $indiceSalaire = $data[$i][4];
+            $dis = "disabled";
+            if ($data[$i][3] == "tous") { $dis = ""; }
+            if ( (($data[$i][3] == $attribue) && ($indiceSalairePers == $indiceSalaire)) || (($data[$i][3] == $attribue) && ($indiceSalairePers == 0)) ) { $dis = ""; }
+            if (trim($data[$i][1]) == "") continue;
+            print "<button type='button' class='cp-meal-btn' $dis onclick=\"ajoutPlateau('".$data[$i][0]."')\">".$data[$i][1]."</button>";
+            if (($platdefault == 1) && ($dis != "disabled")) {
+                print "<script>ajoutPlateau('".$data[$i][0]."')</script>";
+            }
+        }
+        ?>
+        </div>
+    </div>
+
+    <!-- RIGHT: person info + plateau + actions -->
+    <div class="cp-panel">
+        <div class="cp-person-top">
+            <img src="image_trombi.php?<?php print $image ?>" id="photopersonne" class="cp-person-photo" alt="">
+            <div class="cp-person-details">
+                <?php if ($ALERTE): ?>
+                <div class="cp-alerte"><?php print $ALERTE ?></div>
+                <?php endif; ?>
+                <div class="cp-person-name"><?php print $nom ?></div>
+                <div class="cp-person-prenom"><?php print $prenom ?></div>
+                <div class="cp-person-fonction"><?php print $fonction ?></div>
+                <?php if ($ALERTE2): ?>
+                <div class="cp-alerte2">&#9888; <?php print $ALERTE2 ?></div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="cp-plateau-title">Contenu du plateau</div>
+        <div class="cp-plateau-list" id="menucantine"></div>
+
+        <div class="cp-total-row">
+            <span class="cp-total-label">Total :</span>
+            <span class="cp-total-val" id="total">0</span>
+            <span style="font-size:14px;color:#080A66;font-weight:700"><?php print unitemonnaie() ?></span>
+        </div>
+        <?php
+        if ($ideleve > 0) { $sommeComptePers = sommeComptaPers($ideleve,$membre); } else { $sommeComptePers = 0; }
+        ?>
+        <div class="cp-solde">Solde du compte : <b><?php print $sommeComptePers ?> <?php print unitemonnaie() ?></b></div>
+
+        <div class="cp-actions">
+            <button type="submit" name="reset" class="cp-btn cp-btn-cancel">&#10005; Annuler</button>
+            <button type="button" class="<?php print $btnConfirmClass ?>" onclick="valideFormulaire()" <?php print $disabled2 ?>>&#10003; Confirmer [F8]</button>
+            <button type="button" class="<?php print $btnCreditClass ?>" onclick="ouvrirCredit()" <?php print $disabled2 ?>>+ Crédit</button>
+        </div>
+
+        <div style="font-size:11px;color:#888;margin-top:10px;text-align:right">
+            <?php print nbpassagecantine() ?> passage(s) aujourd'hui &mdash; <?php print dateDMY() ?>
+        </div>
+    </div>
+
+</div><!-- /.cp-body -->
+
+<input type="hidden" name="idpers" value="<?php print $ideleve ?>">
+<input type="hidden" name="membre" value="<?php print $membre ?>">
+<input type="hidden" name="valide" value="0">
+<input type="hidden" name="platok" value="0">
+<p id="somme"></p>
+</form>
+
+<!-- History -->
 <?php
-
-	print "<form name='formulaire' method='post' action='cantine_passage.php'>";
-	print "<table width='100%' border='1' style='padding:10px;border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px;' >";
-	print "<tr><td width='50%' bgcolor='#FFFFFF' valign='top' >";
-	print "$ALERTCONFIRM <br> <font class=T2>&nbsp;N° Badge : </font>";
-	print "<input type=text name='codebar' STYLE='color:#000066;background-color:#CCCCFF;height: 15px; width:70px ; overflow:hidden'>&nbsp;<input type='button' value='Activer Lecture Badge [F2] ' STYLE='border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px;color:#000066;background-color:#CCCCFF;height: 35px;box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-moz-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-webkit-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);' onclick=\"document.formulaire.codebar.focus();this.value='Lecture en cours...'; document.getElementById('enreff').style.display='none'; \"  name='action' id='action' /><br /><br /><hr><br />";
-	$data=recupConfigCantine(); // id,libelle,prix,attribue,indice_salaire,platdefault
-	for($i=0;$i<count($data);$i++) {
-		$platdefault=$data[$i][5];
-		$color="BFB580";
-		$disabled="disabled='disabled'";
-		$indiceSalaire=$data[$i][4];
-		if ($data[$i][3] == "tous") { $disabled="";  $color="FFA54A";  }
-		if ( (($data[$i][3] == $attribue ) && ($indiceSalairePers == $indiceSalaire)) || (($data[$i][3] == $attribue ) && ($indiceSalairePers == 0)) )  { $disabled="";  $color="FFA54A";  }
-		if (trim($data[$i][1]) == "") continue ;
-		print "<input type='button' value='".$data[$i][1]."' class='shadow' STYLE='box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-moz-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-webkit-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px;color:#800000;background-color:#$color;font-size:larger;font-weight: bold ; height:45px;margin:15px;' $disabled onclick=\"ajoutPlateau('".$data[$i][0]."')\" /> ";
-		if (($platdefault == 1) && ($disabled != "disabled='disabled'")) {
-			print "<script>ajoutPlateau('".$data[$i][0]."')</script>";
-		}
-	}
-	print "</td>";
-
-	print "<td bgcolor='#FFFFFF'  valign='top' >";
-	print "&nbsp;<img src='image_trombi.php?$image' id='photopersonne' align='left' style=\"box-shadow: 5px 5px 5px #656565;border-radius: 20px;\" >";
-	print "&nbsp;&nbsp;<table border=0>";
-	print "<tr><td align='right' >&nbsp;&nbsp;<font class='T2'>Nom : </font></td><td><font class='T2 shadow'>$ALERTE$nom</font></td></tr>";
-	print "<tr><td height='7' ></td></tr>";
-	print "<tr><td align='right' >&nbsp;&nbsp;<font class='T2'>Prénom : </font></td><td><font class='T2 shadow'>$prenom</font></td></tr>";
-	print "<tr><td height='7' ></td></tr>";
-	print "<tr><td align='right' >&nbsp;&nbsp;<font class='T2'>Fonction : </font></td><td><font class='T2 shadow'>$fonction</font></td></tr>";
-	print "</table>";
-	print "<br><br>";
-	print "&nbsp;&nbsp;&nbsp;<font class='T2 shadow' ><b>Contenu du plateau</b></font><br><br>";
-	print "<div id='menucantine' style='height:100px;overflow:auto' ></div>";
-	print "<br>&nbsp;&nbsp;&nbsp;<font class='T2 shadow' ><b> Total : <span id='total' >0</span> ".unitemonnaie()." </b></font>";
-	if ($ideleve > 0) {
-		$sommeComptePers=sommeComptaPers($ideleve,$membre);
-	}else{
-		$sommeComptePers=0;
-	}
-	print "<font class='T2'>&nbsp;&nbsp;&nbsp;(Compte restant : ".$sommeComptePers." ".unitemonnaie().")</font>";
-	print "<br>";
-	print "&nbsp;&nbsp;&nbsp;<input type=submit name='reset' value='Annuler' class='shadow' STYLE='box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-moz-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-webkit-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px;color:#FFFFFF;background-color:#C60417;font-size:larger;font-weight: bold ; height:45px;margin:15px;'>";
-	print "&nbsp;&nbsp;&nbsp;<input type=button  onclick='valideFormulaire();' class='shadow'  value='Confirmer [F8] ' STYLE='box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-moz-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-webkit-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px; color:#FFFFFF;background-color:#$colorB;font-size:larger;font-weight: bold ; height:45px;margin:15px;' $disabled2 >";
-	print "&nbsp;&nbsp;&nbsp;<input type=button value='Créditer' class='shadow' STYLE='box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-moz-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);-webkit-box-shadow: 5px 6px 5px 0px rgba(119, 119, 119, 0.71);border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px; color:#FFFFFF;background-color:#$colorB;font-size:larger;font-weight: bold ; height:45px;margin:15px;' $disabled2 onclick=\"new Effect.Grow('viscredit', 1); return false;\" >";
-	print "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='red' class='T2'><b>$ALERTE2</b></font><br>";
-	print "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Nombre de passage aujourd'hui : <b>".nbpassagecantine()."</b>&nbsp;&nbsp;&nbsp;(".dateDMY().") </i><br><br>" ;
-	print "</td>";
-	print "</tr>";
-	print "</table>";
-	print "<input type='hidden' name='idpers' value='$ideleve' >";
-	print "<input type='hidden' name='membre' value='$membre' >";
-	print "<input type='hidden' name='valide' value='0' >";
-	print "<input type='hidden' name='platok' value='0' >";
-	print "<p id='somme' ></p>";
-	print "</form>";
-?>
-<table border='1' width=100% bgcolor='#FFFFFF' style="padding:5px;border: 1px solid #bbbbbb;border-radius: 16px;-moz-border-radius: 16px;-webkit-border-radius: 16px;border-collapse: collapse;" >
-<tr>
-<td bgcolor='yellow' width=5%><font class='T2'><b>&nbsp;Date&nbsp;</b></font></td>
-<td bgcolor='yellow'><font class='T2'><b>&nbsp;Détail&nbsp;</b><i><font class=T1>(<i>les 10 dernières enregistrements</i>)</font></i></font></td>
-<td bgcolor='yellow' width=5% align='right' colspan=2 ><font class='T2'><b>&nbsp;Montant&nbsp;<?php print unitemonnaie() ?>&nbsp;</b></font></td>
-</tr>
-
-<?php 
 unset($data);
-if ($ideleve > 0) {
-	$data=recupComptaPers($ideleve,$membre); //date,prix,plateau,id
-}
-for($i=0;$i<count($data);$i++) {
-	if ($i < 10) {
-		$bgcolor=($data[$i][1] < 0) ? "bgcolor='#FF6262'" : "bgcolor='#B7FFB7'" ;
-		print "<tr $bgcolor>";
-		print "<td ><font class='T2'>&nbsp;".dateForm($data[$i][0])."</font></td>";
-		print "<td ><font class='T2'>&nbsp;".urldecode($data[$i][2])."</font></td>";
-		print "<td align='right' $bgcolor ><font class='T2'>".affichageFormatMonnaie($data[$i][1])."</font></td>";
-		print "</tr>";
-	}
-	$total+=$data[$i][1];
-}
-	print "<tr bgcolor='#CCCCCC' >";
-	print "<td colspan=2 align='right' id='bordure' ><font class='T2'>Totaux : </font></td>";
-	print "<td align='right'  id='bordure'  ><font class='T2'><b>".affichageFormatMonnaie($total)."</b></font></td>";
-	
-	print "</tr>";
+if ($ideleve > 0) { $data = recupComptaPers($ideleve,$membre); }
+$total = 0;
 ?>
+<div class="cp-history">
+    <div class="cp-history-title">10 dernières opérations</div>
+    <table class="cp-hist-table">
+    <thead><tr><th>Date</th><th>Détail</th><th style="text-align:right">Montant <?php print unitemonnaie() ?></th></tr></thead>
+    <tbody>
+    <?php for ($i=0; $i<countTriade($data); $i++): if ($i >= 10) break; ?>
+    <tr class="<?php print ($data[$i][1] < 0) ? 'debit' : 'credit' ?>">
+        <td><?php print dateForm($data[$i][0]) ?></td>
+        <td><?php print urldecode($data[$i][2]) ?></td>
+        <td style="text-align:right;font-weight:600"><?php print affichageFormatMonnaie($data[$i][1]) ?></td>
+    </tr>
+    <?php $total += $data[$i][1]; endfor; ?>
+    <tr class="cp-hist-total">
+        <td colspan="2" style="text-align:right">Total :</td>
+        <td style="text-align:right"><?php print affichageFormatMonnaie($total) ?></td>
+    </tr>
+    </tbody>
+    </table>
+</div>
 
-</table>
-<br>
-
-
-<?php }else{ ?>
-<br><font class="T2" id="color3"><center><img src="image/commun/img_ssl.gif" align='center' /> Accès réservé</center></font>
-<br><br>
-<?php } ?>
-</td></tr></table>
+<?php
+} else {
+    print "<div style='text-align:center;padding:40px;color:#c62828;font-weight:700'>Accès réservé</div>";
+}
+?>
 </BODY></HTML>

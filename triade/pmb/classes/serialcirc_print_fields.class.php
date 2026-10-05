@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_print_fields.class.php,v 1.20 2019-06-12 07:09:41 ngantier Exp $
+// $Id: serialcirc_print_fields.class.php,v 1.21 2021/12/21 15:01:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/parametres_perso.class.php");
 
 class serialcirc_print_fields {
@@ -14,13 +15,11 @@ class serialcirc_print_fields {
 	public $piedpage="";
 	
 	public function __construct($id_serialcirc=0) {
-		$this->id=$id_serialcirc+0;
+		$this->id = intval($id_serialcirc);
 		$this->fetch_data();
 	}
 	
 	public function fetch_data() {
-		global $dbh;
-		
 		$this->p_perso = new parametres_perso("empr");
 		$this->circ_tpl=array();
 		$this->piedpage="";
@@ -29,10 +28,10 @@ class serialcirc_print_fields {
 		if (pmb_mysql_num_rows($resultat)) {
 			$r=pmb_mysql_fetch_object($resultat);
 			if($r->serialcirc_tpl) {
-				//On va rÃ©cupÃ©rer le template prÃ©dÃ©fini
+				//On va récupérer le template prédéfini
 				if (intval($r->serialcirc_tpl) > 0) {
 					$query = "select * from serialcirc_tpl where serialcirctpl_id=".$r->serialcirc_tpl;
-					$res = pmb_mysql_query($query,$dbh);
+					$res = pmb_mysql_query($query);
 					if ($res) {
 						$row=pmb_mysql_fetch_object($res);
 						if($row->serialcirctpl_tpl) {
@@ -62,7 +61,7 @@ class serialcirc_print_fields {
 	
 	public function get_header_list(){
 		$header_list=array();
-		foreach($this->circ_tpl as $cpt => $line){
+		foreach($this->circ_tpl as $line){
 			if($line['type']=="libre"){
 				$header_list[]=$line['label'];
 			}else {
@@ -91,13 +90,13 @@ class serialcirc_print_fields {
 			$pp=$this->p_perso->show_fields($data['empr_id']);
 		}
 		
-		foreach($this->circ_tpl as $cpt => $line){
+		foreach($this->circ_tpl as $line){
 			switch($line['type']){
 				case 'pp':
 					$found=0;
 					foreach($pp['FIELDS'] as $pp_data){
 						if($pp_data['ID']==$line['id']){
-							//on dÃ©code les entitÃ©s html puis toutes les valeur sont rÃ©encodÃ©es Ã  l'affichage
+							//on décode les entités html puis toutes les valeur sont réencodées à l'affichage
 							$elt[]=html_entity_decode($pp_data['AFF'],ENT_QUOTES,$charset);
 							$found=1;
 						}
@@ -142,7 +141,7 @@ class serialcirc_print_fields {
 	}	
 	
 	public function get_select_form($name="select_field",$selected=0,$onchange="serialcirc_print_add_button();") {
-		global $charset,$msg,$base_path;
+		global $charset,$msg;
 		
 		$sel=htmlentities($msg["serialcirc_diff_option_form_fiche_format_add_field"], ENT_QUOTES, $charset)."
 		<div class='row'>
@@ -294,7 +293,6 @@ class serialcirc_print_fields {
 	}	
 	
 	public function up_order($tablo){	
-		global $dbh;	
 		$liste = explode(",",$tablo);
 		$new_circ_tpl=array();
 		for($i=0;$i<count($liste);$i++){			
@@ -325,25 +323,25 @@ class serialcirc_print_fields {
 	}
 	
 	public function change_fields(){
-		global $dbh, $form_serialcirc_tpl;
+		global $form_serialcirc_tpl;
 		if ($form_serialcirc_tpl) {
 			$requete = "select serialcirctpl_tpl from serialcirc_tpl where serialcirctpl_id=".$form_serialcirc_tpl;
-			$result = pmb_mysql_query($requete,$dbh);
+			$result = pmb_mysql_query($requete);
 			if ($result) {
 				if (pmb_mysql_num_rows($result) == 1) {
 					$req="update serialcirc set serialcirc_tpl='".$form_serialcirc_tpl."' where id_serialcirc=".$this->id;
-					pmb_mysql_query($req,$dbh);
+					pmb_mysql_query($req);
 				}
 			}
 		} else {
 			$req="update serialcirc set serialcirc_tpl='' where id_serialcirc=".$this->id;
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
  		$this->fetch_data();
 	}
 	
 	public function get_sort_form($name="sort_field",$selected=0,$onchange="serialcirc_diff_sort_button();") {
-		global $charset,$msg,$base_path;
+		global $charset,$msg;
 	
 		$sel="
 		<div class='row'>

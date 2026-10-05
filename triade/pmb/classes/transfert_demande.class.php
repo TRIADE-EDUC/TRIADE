@@ -2,9 +2,13 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: transfert_demande.class.php,v 1.4 2018-01-24 13:39:24 dgoron Exp $
+// $Id: transfert_demande.class.php,v 1.5 2021/12/23 13:46:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $class_path;
+require_once($class_path.'/expl.class.php');
+require_once($class_path.'/transfert.class.php');
 
 class transfert_demande {
 	
@@ -48,8 +52,12 @@ class transfert_demande {
 	
 	protected $resa_arc_trans;
 	
+	protected $exemplaire;
+	
+	protected $transfert;
+	
 	public function __construct($id) {
-		$this->id = $id += 0;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
@@ -99,6 +107,14 @@ class transfert_demande {
 		}
 	}
 		
+	public function get_id() {
+		return $this->id;
+	}
+	
+	public function get_num_transfert() {
+		return $this->num_transfert;
+	}
+	
 	public function get_date_creation() {
 		return $this->date_creation;
 	}
@@ -107,12 +123,20 @@ class transfert_demande {
 		return $this->formatted_date_creation;
 	}
 	
+	public function get_sens_transfert() {
+		return $this->sens_transfert;
+	}
+	
 	public function get_num_location_source() {
 		return $this->num_location_source;
 	}
 	
 	public function get_num_location_dest() {
 		return $this->num_location_dest;
+	}
+	
+	public function get_etat_demande() {
+		return $this->etat_demande;
 	}
 	
 	public function get_date_visualisee() {
@@ -145,5 +169,19 @@ class transfert_demande {
 	
 	public function get_resa_trans() {
 		return $this->resa_trans;
+	}
+	
+	public function get_exemplaire() {
+		if(!isset($this->exemplaire)) {
+			$this->exemplaire = new exemplaire('', $this->num_expl);
+		}
+		return $this->exemplaire;
+	}
+	
+	public function get_transfert() {
+		if(!isset($this->transfert)) {
+			$this->transfert = new transfert($this->num_transfert);
+		}
+		return $this->transfert;
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: bcdi.xsl,v 1.10 2018-01-29 15:17:15 jpermanne Exp $ -->
+<!-- $Id: bcdi.xsl,v 1.10 2018/01/29 15:17:15 jpermanne Exp $ -->
 <!DOCTYPE stylesheet [
 	<!ENTITY MAJUSCULE "ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 	<!ENTITY MINUSCULE "abcdefghijklmnopqrstuvwxyz">

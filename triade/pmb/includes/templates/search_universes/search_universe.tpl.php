@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_universe.tpl.php,v 1.9 2019-05-27 09:12:07 ngantier Exp $
+// $Id: search_universe.tpl.php,v 1.20 2023/11/02 13:27:04 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -14,6 +14,7 @@ global $search_universe_segments_form;
 global $search_universe_tree_interface, $msg;
 
 $search_universe_content_form ="
+!!universe_id_field!!
 <div class='row'>
 	<label class='etiquette' for='universe_label'>".$msg['search_universe_label']."</label>
 </div>
@@ -26,6 +27,19 @@ $search_universe_content_form ="
 <div class='row'>
 	<textarea name='universe_description' id='universe_description' rows='5' data-translation-fieldname='universe_description'>!!universe_description!!</textarea>
 </div>
+<div class='row'>
+	<input type='checkbox' name='universe_rmc_enabled' id='universe_rmc_enabled' value='1' !!universe_rmc_enabled!! />
+	<label class='etiquette' for='universe_rmc_enabled'>{$msg['search_universe_rmc_enabled']}</label> <i class='fa fa-info-circle' title='{$msg['search_universe_rmc_explication']}'></i>
+</div>
+<div class='row'>
+	<input type='checkbox' name='universe_perio_enabled' id='universe_perio_enabled' value='1' !!universe_perio_enabled!! />
+	<label class='etiquette' for='universe_perio_enabled'>{$msg['search_universe_perio_enabled']}</label>
+</div>
+<div class='row'>
+	<input type='checkbox' name='universe_autocomplete' id='universe_autocomplete' value='1' !!universe_autocomplete!! />
+	<label class='etiquette' for='universe_autocomplete'>{$msg['search_universe_autocomplete']}</label>
+</div>
+!!universe_permalink_field!!
 !!universe_opac_views!!
 !!universe_segments_form!!
 
@@ -68,10 +82,15 @@ $search_universe_opac_views = "
 ";
 
 $search_universe_segment = "
-<td style=\"cursor: pointer; text-align:center;\" onclick='document.location=\"admin.php?categ=search_universes&sub=segment&action=edit&id=!!segment_id!!\"' segmentId='!!segment_id!!'>
-	<div><label>!!segment_label!!</label></div>
-	<div>!!segment_logo!!</div>
-</td>
+<tr class=\"!!even_odd!!\" 
+    style=\"cursor: pointer; text-align:center;\"
+    segmentId='!!segment_id!!'
+    onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='!!even_odd!!'\">
+
+    <td>!!segment_label!!</td>
+    <td>!!segment_type!!</td>
+    <td>!!segment_logo!!</td>
+</tr>
 ";
 
 $search_universe_segments_form = "
@@ -81,7 +100,16 @@ $search_universe_segments_form = "
 	</div>
 	<div class='row'>
 		<table class='universe_segments_table'>
+            <thead>
+                <tr>
+                    <th>".$msg['search_segment_label']."</th>
+                    <th>".$msg['search_segment_type']."</th>
+                    <th>".$msg['search_segment_logo']."</th>
+                </tr>
+            </thead>
+            <tbody>
 			!!universe_segments!!
+            </tbody>
 		</table>
 		<input type='button' class='bouton' id='add_segment' name='add_segment' Value='".$msg['ajouter']."' data-pmb-evt='{\"class\":\"UniverseForm\", \"type\":\"click\", \"method\":\"addSegment\", \"parameters\":{\"entity_id\" : \"!!universe_id!!\", \"entity_type\" : \"universe\"}}'/>
 	</div>

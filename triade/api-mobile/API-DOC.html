@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T.R.I.A.D.E — Documentation API Mobile</title>
+<style>
+  :root {
+    --primary:   #1a56db;
+    --primary-dk:#1240a0;
+    --green:     #057a55;
+    --orange:    #c27803;
+    --red:       #c81e1e;
+    --gray:      #6b7280;
+    --bg:        #f9fafb;
+    --card:      #ffffff;
+    --border:    #e5e7eb;
+    --text:      #111827;
+    --text2:     #6b7280;
+    --code-bg:   #1e1e2e;
+    --code-fg:   #cdd6f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* ── Layout ── */
+  .layout   { display: flex; min-height: 100vh; }
+  .sidebar  { width: 260px; min-width: 260px; background: var(--card); border-right: 1px solid var(--border);
+              position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 0; }
+  .content  { flex: 1; max-width: 960px; padding: 40px 48px; }
+
+  /* ── Sidebar ── */
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .sidebar-logo h2 { font-size: 16px; color: var(--primary); font-weight: 800; }
+  .sidebar-logo p  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .nav-group  { padding: 12px 20px 4px; font-size: 10px; font-weight: 800;
+                text-transform: uppercase; letter-spacing: .8px; color: var(--text2); }
+  .nav-item   { display: block; padding: 6px 20px; font-size: 13px; color: var(--text2);
+                text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+  .nav-item:hover,
+  .nav-item.active { color: var(--primary); border-left-color: var(--primary); background: #eff6ff; }
+
+  /* ── Content ── */
+  .page-header { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .page-header h1  { font-size: 28px; font-weight: 900; color: var(--primary); }
+  .page-header p   { margin-top: 8px; color: var(--text2); font-size: 15px; }
+  .meta-row { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px;
+                background: #eff6ff; color: var(--primary); border-radius: 20px;
+                padding: 4px 12px; font-weight: 600; }
+
+  /* ── Section / Endpoint ── */
+  .section-title { font-size: 20px; font-weight: 800; color: var(--text); margin: 48px 0 20px;
+                   padding-bottom: 10px; border-bottom: 2px solid var(--primary); }
+  .endpoint { background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+              margin-bottom: 24px; overflow: hidden; }
+  .endpoint-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+                     background: #f8faff; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .endpoint-header h3 { font-size: 15px; font-weight: 700; color: var(--text); flex: 1; }
+  .method { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px;
+            font-weight: 800; letter-spacing: .5px; }
+  .GET  { background: #d1fae5; color: var(--green); }
+  .POST { background: #fef3c7; color: var(--orange); }
+  .url  { font-family: 'Courier New', monospace; font-size: 13px; color: var(--primary);
+          background: #eff6ff; padding: 4px 10px; border-radius: 6px; }
+  .auth-badge { font-size: 11px; padding: 3px 10px; border-radius: 6px; font-weight: 700; }
+  .auth-session { background: #e0e7ff; color: #3730a3; }
+  .auth-prof    { background: #fce7f3; color: #9d174d; }
+  .auth-public  { background: #d1fae5; color: var(--green); }
+  .auth-admin   { background: #e0f2f1; color: #00695c; }
+
+  .endpoint-body { padding: 20px; }
+  .endpoint-body p { font-size: 14px; color: var(--text2); margin-bottom: 16px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+  th    { background: var(--bg); font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+          padding: 8px 12px; text-align: left; font-weight: 700; color: var(--text2);
+          border-bottom: 2px solid var(--border); }
+  td    { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .req  { background: #fef3c7; color: var(--orange); font-size: 10px; font-weight: 700;
+          padding: 2px 7px; border-radius: 4px; }
+  .opt  { background: var(--bg); color: var(--gray); font-size: 10px; font-weight: 700;
+          padding: 2px 7px; border-radius: 4px; }
+  .param-name { font-family: monospace; font-weight: 700; color: var(--primary); }
+  .type-str  { color: #059669; font-size: 12px; }
+  .type-int  { color: #7c3aed; font-size: 12px; }
+  .type-bool { color: #b45309; font-size: 12px; }
+  .type-json { color: #0284c7; font-size: 12px; }
+  .type-b64  { color: #db2777; font-size: 12px; }
+
+  /* ── Code ── */
+  .code-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+                color: var(--text2); margin-bottom: 6px; }
+  pre { background: var(--code-bg); color: var(--code-fg); padding: 16px; border-radius: 8px;
+        font-size: 12px; overflow-x: auto; line-height: 1.7; margin-bottom: 16px; }
+  .k  { color: #89b4fa; }   /* key */
+  .s  { color: #a6e3a1; }   /* string */
+  .n  { color: #fab387; }   /* number */
+  .b  { color: #f5c2e7; }   /* bool */
+  .c  { color: #585b70; font-style: italic; } /* comment */
+
+  /* ── Misc ── */
+  .note { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px;
+          padding: 12px 16px; font-size: 13px; color: #78350f; margin-bottom: 16px; }
+  .note strong { font-weight: 700; }
+  .security { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px;
+              padding: 12px 16px; font-size: 13px; color: #7f1d1d; margin-bottom: 16px; }
+  .security strong { font-weight: 700; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  .resp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .resp-grid { grid-template-columns: 1fr; } }
+  .label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+           margin-bottom: 6px; color: var(--text2); }
+
+  /* ── TOC active tracking ── */
+  .toc-link { cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>T.R.I.A.D.E</h2>
+    <p>API Mobile — Back-end PHP</p>
+  </div>
+
+  <span class="nav-group">Configuration</span>
+  <a class="nav-item" href="#phone-version">get-phone-version.php</a>
+  <a class="nav-item" href="#codeqr">codeQR.php</a>
+  <a class="nav-item" href="#options">get-options.php</a>
+  <a class="nav-item" href="#barcode">get-barcode.php</a>
+
+  <span class="nav-group">Authentification</span>
+  <a class="nav-item" href="#login">login.php</a>
+  <a class="nav-item" href="#a2f">a2f.php</a>
+  <a class="nav-item" href="#logout">logout.php</a>
+
+  <span class="nav-group">Utilisateur</span>
+  <a class="nav-item" href="#user">user.php</a>
+  <a class="nav-item" href="#whois">whois.php</a>
+  <a class="nav-item" href="#etablissement">etablissement.php</a>
+  <a class="nav-item" href="#avatar">get-avatar.php</a>
+  <a class="nav-item" href="#person-photo">get-person-photo.php</a>
+
+  <span class="nav-group">Notifications push</span>
+  <a class="nav-item" href="#push-token">save-push-token.php</a>
+  <a class="nav-item" href="#unread-count">get-unread-count.php</a>
+  <a class="nav-item" href="#viesco-count">get-viesco-count.php</a>
+
+  <span class="nav-group">Pédagogie</span>
+  <a class="nav-item" href="#notes">get-notes.php</a>
+  <a class="nav-item" href="#notes-v2">get-notes-v2.php</a>
+  <a class="nav-item" href="#edt">get-edt.php</a>
+  <a class="nav-item" href="#edt2">get-edt-2.php</a>
+  <a class="nav-item" href="#agenda">get-agenda.php</a>
+  <a class="nav-item" href="#cdt">get-cahierdetextes.php</a>
+  <a class="nav-item" href="#actus">get-actus.php</a>
+  <a class="nav-item" href="#meteo">get-meteo.php</a>
+
+  <span class="nav-group">Vie scolaire</span>
+  <a class="nav-item" href="#viescolaire">get-viescolaire.php</a>
+
+  <span class="nav-group">Direction / Vie Sco</span>
+  <a class="nav-item" href="#eleves-search">get-eleves-search.php</a>
+  <a class="nav-item" href="#classes">get-classes.php</a>
+  <a class="nav-item" href="#sanctions-categories">get-sanctions-categories.php</a>
+  <a class="nav-item" href="#save-sanction">save-sanction.php</a>
+  <a class="nav-item" href="#save-retenue">save-retenue.php</a>
+  <a class="nav-item" href="#eleve-viescolaire">get-eleve-viescolaire.php</a>
+
+  <span class="nav-group">Enseignant</span>
+  <a class="nav-item" href="#affectations">get-affectations-prof.php</a>
+  <a class="nav-item" href="#notes-classe">get-notes-classe.php</a>
+  <a class="nav-item" href="#eleves-absence">get-eleves-absence.php</a>
+  <a class="nav-item" href="#eleves-classe">get-eleves-classe.php</a>
+  <a class="nav-item" href="#eleve-profil">get-eleve-profil.php</a>
+  <a class="nav-item" href="#eleve-photo">get-eleve-photo.php</a>
+  <a class="nav-item" href="#save-absences">save-absences.php</a>
+  <a class="nav-item" href="#save-devoir-notes">save-devoir-notes.php</a>
+
+  <span class="nav-group">MSN / Chat instantané</span>
+  <a class="nav-item" href="#msn-init">msn-init.php</a>
+  <a class="nav-item" href="#msn-users">msn-users.php</a>
+  <a class="nav-item" href="#msn-get-chat">msn-get-chat.php</a>
+  <a class="nav-item" href="#msn-send">msn-send.php</a>
+
+  <span class="nav-group">Géolocalisation</span>
+  <a class="nav-item" href="#save-gps">save-gps.php</a>
+  <a class="nav-item" href="#gps-parent">get-gps-parent.php</a>
+
+  <span class="nav-group">Messagerie</span>
+  <a class="nav-item" href="#destinataires">get-destinataires.php</a>
+  <a class="nav-item" href="#boite">get-boite.php</a>
+  <a class="nav-item" href="#message">get-message.php</a>
+  <a class="nav-item" href="#send">send-message.php</a>
+  <a class="nav-item" href="#action">action-message.php</a>
+  <a class="nav-item" href="#pj">download-piecejointe.php</a>
+</nav>
+
+<!-- ══════════════════════ CONTENT ══════════════════════ -->
+<main class="content">
+
+  <div class="page-header">
+    <h1>API Mobile — Documentation Technique</h1>
+    <p>Back-end PHP du système T.R.I.A.D.E v4 — Endpoints consommés par l'application mobile TriadePhone.</p>
+    <div class="meta-row">
+      <span class="meta-badge">📁 /triade/api-mobile/</span>
+      <span class="meta-badge">🔐 Auth : Session PHP</span>
+      <span class="meta-badge">📦 Format : JSON (UTF-8)</span>
+      <span class="meta-badge">📅 Mis à jour : Lundi 8 juin 2026</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Convention d'authentification.</strong>
+    Toutes les routes (sauf <code>etablissement.php</code> et <code>login.php</code>) nécessitent une session PHP active (<code>$_SESSION["connecte"] === true</code>).
+    Un code <strong>403</strong> est retourné sinon. Les routes réservées aux enseignants vérifient en plus <code>$_SESSION["membre"] === 'menuprof'</code>.
+  </div>
+
+  <!-- ════════════════ CONFIGURATION ════════════════ -->
+  <h2 class="section-title" id="config-section">Configuration</h2>
+
+  <!-- get-phone-version.php -->
+  <div class="endpoint" id="phone-version">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-phone-version.php</span>
+      <span class="auth-badge auth-public">Public</span>
+      <h3>Version de compatibilité TRIADE-PHONE</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la version de l'API attendue par ce serveur TRIADE. Appelé par l'application mobile au démarrage pour vérifier la compatibilité avant toute authentification. Endpoint public — aucune session requise.</p>
+      <div class="note">
+        <strong>Fichier source :</strong> <code>common/config-phone.php</code> — définit la constante <code>API-PHONE-VERSION</code>.<br>
+        Incrémenter cette valeur à chaque rupture de compatibilité entre le serveur TRIADE et l'application mobile (nouveau endpoint requis, changement de format de réponse, suppression de fonctionnalité…).
+      </div>
+      <div class="label">Réponse (200)</div>
+      <pre>{ <span class="k">"version"</span>: <span class="s">"4.0"</span> }</pre>
+      <div class="note">
+        <strong>Comportement côté client (SplashScreen.js).</strong>
+        La constante <code>APP_PHONE_VERSION = "4.0"</code> est définie dans l'application.
+        Au démarrage, si l'URL serveur est connue, l'app compare les deux versions :
+        <ul style="margin: 8px 0 0 18px; line-height: 1.8;">
+          <li>Versions identiques → flux normal.</li>
+          <li>Versions différentes → Alert proposant de continuer quand même ou de fermer.</li>
+          <li>Endpoint absent (ancienne installation) → silence, compatibilité préservée.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- codeQR.php -->
+  <div class="endpoint" id="codeqr">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <h3>codeQR.php</h3>
+      <span class="badge gray">/triade/codeQR.php</span>
+    </div>
+    <div class="endpoint-body">
+      <p>Endpoint de configuration automatique de l'application TRIADE-PHONE par scan de QR code. Supporte deux formats selon le paramètre <code>cd</code>.</p>
+
+      <h4>Format QR mobile (JSON)</h4>
+      <p>Déclenché quand <code>cd</code> contient 6 champs séparés par des virgules se terminant par <code>QR</code>.<br>
+      Ce format est généré par <code>triade-phone.php</code> via <code>$text="$protocol,$adresseurl,$compte,$nom,$prenom,QR"</code>.</p>
+
+      <table class="param-table">
+        <thead><tr><th>Paramètre GET</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>cd</code></td><td>string</td><td>Données QR au format <code>protocol,host/path,compte,nom,prenom,QR</code></td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Exemple :</strong></p>
+      <pre><code>GET /triade/codeQR.php?cd=http,mon-ecole.fr/triade/,4,Dupont,Marie,QR</code></pre>
+
+      <p><strong>Réponse JSON :</strong></p>
+      <pre><code>{
+  "server": "http://mon-ecole.fr/triade/",
+  "nom":    "Dupont",
+  "prenom": "Marie",
+  "profil": "4"
+}</code></pre>
+
+      <table class="param-table">
+        <thead><tr><th>Champ</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>server</code></td><td>URL complète du serveur Triade (avec slash final)</td></tr>
+          <tr><td><code>nom</code></td><td>Nom de l'utilisateur (depuis la session serveur)</td></tr>
+          <tr><td><code>prenom</code></td><td>Prénom de l'utilisateur</td></tr>
+          <tr><td><code>profil</code></td><td>Type de compte : 1=Élève, 2=Parent, 3=Enseignant, 4=Direction, 5=Vie scolaire</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Format badge / code-barres (texte brut)</h4>
+      <p>Déclenché quand <code>cd</code> est un identifiant numérique. Retourne le nom et prénom de la personne en texte brut, ou <code>Error</code> si le compte est inactif.</p>
+      <pre><code>GET /triade/codeQR.php?cd=42   →   "Dupont Marie"</code></pre>
+
+      <h4>Comportement côté application mobile</h4>
+      <p>TRIADE-PHONE scanne le QR code affiché dans <code>triade-phone.php</code>. Le contenu scanné peut être :</p>
+      <ul style="margin: 8px 0 8px 20px; line-height: 1.8;">
+        <li>Le texte brut <code>protocol,host,compte,nom,prenom,QR</code></li>
+        <li>Une URL complète <code>http://serveur/codeQR.php?cd=protocol,host,compte,nom,prenom,QR</code></li>
+      </ul>
+      <p>Dans les deux cas, l'app extrait le paramètre <code>cd</code>, parse les champs et pré-remplit le formulaire de connexion (serveur, profil, nom, prénom). L'utilisateur n'a plus qu'à saisir son mot de passe.</p>
+    </div>
+  </div>
+
+  <!-- get-options.php -->
+  <div class="endpoint" id="options">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-options.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Options de configuration</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne toutes les valeurs de configuration de l'établissement définies dans <code>common/config2.inc.php</code> et <code>common/config-module.php</code>. Accessible à tous les profils connectés. Les constantes sensibles de <code>config.inc.php</code> (credentials DB, HOST…) sont automatiquement exclues via un snapshot avant/après inclusion.</p>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"options"</span>: {
+    <span class="k">"LAN"</span>:                      <span class="s">"oui"</span>,
+    <span class="k">"TIMEZONE"</span>:                 <span class="s">"0"</span>,
+    <span class="k">"ACCESNOTEELEVE"</span>:           <span class="s">"oui"</span>,
+    <span class="k">"ACCESNOTEPARENT"</span>:          <span class="s">"oui"</span>,
+    <span class="k">"MODULEMESSAGERIEPROF"</span>:     <span class="s">"oui"</span>,
+    <span class="k">"MODULEPARENTLOCALISATION"</span>: <span class="s">"oui"</span>,
+    <span class="c">// … toutes les constantes des deux fichiers</span>
+  }
+}</pre>
+      <div class="note"><strong>Utilisation côté client.</strong> Appeler au démarrage de session pour adapter l'UI aux modules activés (ex. masquer l'onglet Notes si <code>ACCESNOTEELEVE==="non"</code>, afficher la carte de localisation si <code>MODULEPARENTLOCALISATION==="oui"</code>).</div>
+    </div>
+  </div>
+
+  <!-- get-barcode.php -->
+  <div class="endpoint" id="barcode">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-barcode.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Génération code-barres</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Génère un code-barres <strong>Code 39</strong> à partir du texte fourni et le retourne en PNG encodé en Base64. Utilisé pour afficher le code-barres de l'étudiant (numéro de badge, carte d'identité scolaire).</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">text</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Texte à encoder (converti en majuscules). Ex. : numéro de badge, code élève.</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"image"</span>: <span class="s">"&lt;base64 PNG&gt;"</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — text vide</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+<span class="c">// 500 — erreur génération GD</span>
+{ <span class="k">"code"</span>: <span class="s">"500"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note"><strong>Format :</strong> PNG 40px de hauteur, fond blanc, barres bleu marine (<code>#080A66</code>). Police intégrée GD (pas de dépendance FreeType). Côté client : <code>data:image/png;base64,{image}</code>.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ AUTHENTIFICATION ════════════════ -->
+  <h2 class="section-title" id="auth-section">Authentification</h2>
+
+  <!-- login.php -->
+  <div class="endpoint" id="login">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">login.php</span>
+      <span class="auth-badge auth-public">Public</span>
+      <h3>Connexion</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Authentifie un utilisateur et ouvre la session PHP. Supporte tous les profils : élève, parent, enseignant, direction et vie scolaire.</p>
+      <div class="note"><strong>Mapping profil → membre.</strong> Le paramètre <code>profil</code> est converti en chaîne <code>membre</code> avant l'appel <code>acces()</code> : <code>1→eleve</code>, <code>2→parent</code>, <code>3→enseignant</code>, <code>4→administrateur</code>, <code>5→vie scolaire</code>.</div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">profil</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>1</code> = élève, <code>2</code> = parent, <code>3</code> = enseignant, <code>4</code> = direction, <code>5</code> = vie scolaire</td></tr>
+        <tr><td><span class="param-name">nom</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Nom de famille</td></tr>
+        <tr><td><span class="param-name">prenom</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Prénom</td></tr>
+        <tr><td><span class="param-name">mdp</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Mot de passe</td></tr>
+        <tr><td><span class="param-name">a2f</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Code 2FA si activé</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{
+  <span class="k">"code"</span>:     <span class="s">"200"</span>,
+  <span class="k">"message"</span>:  <span class="s">"Authentification réussie"</span>,
+  <span class="k">"id"</span>:       <span class="s">"42"</span>,
+  <span class="k">"idclasse"</span>: <span class="s">"5"</span>,
+  <span class="k">"membre"</span>:   <span class="s">"menueleve"</span>
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 401 — identifiants incorrects</span>
+{
+  <span class="k">"code"</span>:    <span class="s">"401"</span>,
+  <span class="k">"message"</span>: <span class="s">"Erreur de connexion"</span>
+}
+
+<span class="c">// 401-A — 2FA requis</span>
+{
+  <span class="k">"code"</span>:    <span class="s">"401-A"</span>,
+  <span class="k">"message"</span>: <span class="s">"Authentification supplémentaire nécessaire"</span>
+}
+
+<span class="c">// 403 — compte désactivé (avant acces())</span>
+{
+  <span class="k">"code"</span>:    <span class="s">"403"</span>,
+  <span class="k">"message"</span>: <span class="s">"Votre compte est désactivé. Veuillez contacter l'administration de votre établissement."</span>
+}</pre>
+        </div>
+      </div>
+      <div class="security">
+        <strong>Blocage compte désactivé.</strong> Avant l'appel à <code>acces()</code>, le serveur vérifie directement en base si le compte est désactivé et retourne HTTP <strong>403</strong> avec <code>code: "403"</code> pour permettre au client d'afficher un message explicite. Champs vérifiés : <code>compte_inactif</code> dans <code>tria_eleves</code> (profils 1 et 2), <code>offline</code> dans <code>tria_personnel</code> (profils 3, 4, 5). Cette vérification précède <code>acces()</code> car cette fonction bloque aussi les comptes inactifs mais sans code de retour différencié. Côté client (<code>triadeApi.js</code>), l'appel login utilise <code>skip403: true</code> pour que le 403 ne soit pas intercepté par le handler global de session expirée — le code <code>'403'</code> est traité explicitement dans <code>OnboardingScreen.js</code>.
+      </div>
+    </div>
+  </div>
+
+  <!-- a2f.php -->
+  <div class="endpoint" id="a2f">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">a2f.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Validation 2FA (TOTP)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Valide le code TOTP Google Authenticator après une première authentification réussie.</p>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">code</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code TOTP à 6 chiffres</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }   <span class="c">// ou { "code": "403", "message": "Code invalide" }</span></pre>
+    </div>
+  </div>
+
+  <!-- logout.php -->
+  <div class="endpoint" id="logout">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">logout.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Déconnexion</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Détruit la session PHP en cours.</p>
+      <div class="label">Réponse (200)</div>
+      <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+    </div>
+  </div>
+
+  <!-- ════════════════ UTILISATEUR ════════════════ -->
+  <h2 class="section-title" id="user-section">Utilisateur</h2>
+
+  <!-- user.php -->
+  <div class="endpoint" id="user">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">user.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Informations utilisateur connecté</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le profil complet de l'utilisateur connecté depuis les données de session et la BDD. Vérifie également si le compte a été désactivé depuis la connexion.</p>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{
+  <span class="k">"profil"</span>:    <span class="s">"1"</span>,          <span class="c">// 1=élève, 2=parent, 3=enseignant, 4=direction, 5=vie scolaire</span>
+  <span class="k">"nom"</span>:       <span class="s">"Dupont"</span>,
+  <span class="k">"prenom"</span>:    <span class="s">"Jean"</span>,
+  <span class="k">"id"</span>:        <span class="s">"42"</span>,
+  <span class="k">"membre"</span>:    <span class="s">"menueleve"</span>,
+  <span class="k">"codebarre"</span>: <span class="s">"AB12345"</span>,
+  <span class="k">"regime"</span>:    <span class="s">"D"</span>,          <span class="c">// I=interne, D=demi-pensionnaire, E=externe</span>
+  <span class="k">"ine"</span>:       <span class="s">"0750123456A"</span>,  <span class="c">// élève uniquement</span>
+  <span class="k">"a2f"</span>:       <span class="b">false</span>
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Compte désactivé (200)</div>
+          <pre>{
+  <span class="k">"code"</span>:    <span class="s">"disabled"</span>,
+  <span class="k">"message"</span>: <span class="s">"Votre compte a été désactivé par l'administration. Vous allez être déconnecté."</span>
+}</pre>
+          <div class="label" style="margin-top:12px">Réponse — Non connecté (403)</div>
+          <pre>{
+  <span class="k">"code"</span>:    <span class="s">"403"</span>,
+  <span class="k">"message"</span>: <span class="s">"Accès interdit, vous n'êtes pas connecté"</span>
+}</pre>
+        </div>
+      </div>
+      <div class="security">
+        <strong>Détection de désactivation en cours de session.</strong> Après chaque retour sur l'onglet Accueil, <code>AccueilScreen.js</code> appelle <code>user.php</code> via <code>useFocusEffect</code>. Si le compte a été désactivé par l'administration entre-temps, le serveur retourne HTTP <strong>200</strong> avec <code>code: "disabled"</code> (et non HTTP 403, pour éviter l'interception par le handler global de session expirée). Le client affiche alors une alerte non-dismissable « Compte désactivé » puis déconnecte l'utilisateur et le redirige vers l'écran de connexion. Champs vérifiés : <code>compte_inactif</code> dans <code>tria_eleves</code> (profils 1 et 2), <code>offline</code> dans <code>tria_personnel</code> (profils 3, 4, 5).
+      </div>
+    </div>
+  </div>
+
+  <!-- whois.php -->
+  <div class="endpoint" id="whois">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">whois.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Identification rapide</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne une identification minimale (vérification de session active).</p>
+    </div>
+  </div>
+
+  <!-- etablissement.php -->
+  <div class="endpoint" id="etablissement">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">etablissement.php</span>
+      <span class="auth-badge auth-public">Public</span>
+      <h3>Informations établissement</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le nom, logo et informations de l'établissement. Appelé avant connexion pour vérifier l'URL serveur.</p>
+    </div>
+  </div>
+
+  <!-- get-avatar.php -->
+  <div class="endpoint" id="avatar">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-avatar.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Photo de l'utilisateur connecté</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la photo trombinoscope de l'utilisateur connecté. Si aucune photo n'existe, retourne la photo par défaut (<code>photo_vide.jpg</code>).</p>
+      <div class="note"><strong>Format :</strong> <code>text/plain</code> — image encodée en Base64 (JPEG). À préfixer de <code>data:image/jpeg;base64,</code> pour utilisation en <code>&lt;Image&gt;</code> React Native.</div>
+      <div class="label">Fichiers source</div>
+      <pre><span class="c">// Photo : ../data/image_eleve/{filename}
+// Défaut : ../image/commun/photo_vide.jpg</span></pre>
+    </div>
+  </div>
+
+  <!-- get-person-photo.php -->
+  <div class="endpoint" id="person-photo">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-person-photo.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Photo d'une personne (usage messagerie)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la photo trombinoscope d'une personne identifiée par son <code>id</code> et son <code>type</code>. Retourne la photo par défaut si aucune photo n'est disponible. Utilisé notamment pour afficher les avatars dans la liste des messages.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant de la personne</td></tr>
+        <tr><td><span class="param-name">type</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>ELE</code> | <code>ENS</code> | <code>ADM</code> | <code>PER</code> | <code>MVS</code> | <code>TUT</code> | <code>PAR</code></td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"data"</span>: <span class="s">"&lt;base64&gt;"</span>,   <span class="c">// image encodée en Base64</span>
+  <span class="k">"type"</span>: <span class="s">"image/jpeg"</span>   <span class="c">// ou image/png, image/gif</span>
+}</pre>
+      <div class="note"><strong>Fallback :</strong> si la personne n'a pas de photo, retourne la photo par défaut (<code>photo_vide.jpg</code>). Côté client, construire l'URI : <code>data:{type};base64,{data}</code>.</div>
+      <div class="label">Fichiers source</div>
+      <pre><span class="c">// ELE → ../data/image_eleve/{filename}
+// Autres → ../data/image_pers/{filename}
+// Défaut  → ../image/commun/photo_vide.jpg</span></pre>
+    </div>
+  </div>
+
+  <!-- ════════════════ NOTIFICATIONS PUSH ════════════════ -->
+  <h2 class="section-title" id="notif-section">Notifications push</h2>
+
+  <div class="note">
+    <strong>Infrastructure.</strong> Les tokens Expo Push sont stockés dans <code>tria_push_tokens</code> (colonnes <code>user_type</code>, <code>user_id</code>, <code>token</code>, <code>updated_at</code>). Un même utilisateur ne possède qu'un token à la fois (contrainte <code>UNIQUE KEY unique_user(user_type, user_id)</code>). Les notifications sont envoyées via l'API Expo (<code>https://exp.host/--/api/v2/push/send</code>). Elles ne fonctionnent <strong>pas</strong> dans Expo Go SDK 53+ — un build de développement ou de production est requis.
+    <br><br><strong>Couverture mobile + web.</strong> Les API mobiles (<code>save-absences.php</code>, <code>save-sanction.php</code>, <code>save-retenue.php</code>) déclenchent le push via <code>api-mobile/push_helper.php</code>. L'interface web Triade passe quant à elle par les fonctions <code>create_absent()</code>, <code>create_retard()</code>, <code>create_discipline_sanction()</code> et <code>create_discipline_retenue()</code> de <code>librairie_php/db_triade.php</code>, qui appellent directement <code>notifyEleve()</code> depuis <code>librairie_php/push_notif.php</code> — garantissant que toute saisie, quelle que soit son origine, déclenche la notification push. Les messages envoyés via <code>envoi_messagerie()</code> (cas simple, <code>brouillon=0</code>) sont eux aussi pushés depuis <code>db_triade.php</code> ; la notification est envoyée au <code>user_type</code> / <code>user_id</code> du destinataire.
+  </div>
+
+  <!-- save-push-token.php -->
+  <div class="endpoint" id="push-token">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-push-token.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Enregistrer / mettre à jour le token push</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Enregistre ou met à jour le token Expo Push de l'utilisateur connecté. Appelé automatiquement après chaque connexion réussie (OnboardingScreen) et au démarrage si une session active est détectée (SplashScreen). Le type utilisateur est déduit de <code>$_SESSION["membre"]</code>.</p>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">token</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Token Expo Push (<code>ExponentPushToken[...]</code>)</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — token vide ou session invalide</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note"><strong>Mapping membre → user_type.</strong> <code>menueleve</code> → <code>ELE</code>, <code>menuparent</code> → <code>PAR</code>, <code>menuprof</code> → <code>ENS</code>, <code>menuadmin</code> → <code>ADM</code>, <code>menuscolaire</code> → <code>MVS</code>. Le <code>user_id</code> est <code>$_SESSION["id_pers"]</code> — pour ELE et PAR, il s'agit de l'<code>elev_id</code>, ce qui permet de notifier simultanément l'élève et son parent via une seule requête sur <code>user_id</code>.</div>
+    </div>
+  </div>
+
+  <!-- get-unread-count.php -->
+  <div class="endpoint" id="unread-count">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-unread-count.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Nombre de messages non lus</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le nombre de messages non lus dans la boîte de réception de l'utilisateur connecté. Interrogé toutes les 30 secondes par l'application pour mettre à jour le badge sur l'icône Messagerie.</p>
+      <div class="label">Réponse (200)</div>
+      <pre>{ <span class="k">"count"</span>: <span class="n">3</span> }</pre>
+      <div class="note"><strong>Requête SQL.</strong> <code>SELECT COUNT(*) FROM tria_messageries WHERE brouillon='0' AND type_personne_dest='$type' AND destinataire='$id' AND lu='0' AND (repertoire IS NULL OR repertoire='0')</code>. Utilise <code>type_personne_dest</code> (type du destinataire) et non <code>type_personne</code> (type de l'émetteur).</div>
+    </div>
+  </div>
+
+  <!-- get-viesco-count.php -->
+  <div class="endpoint" id="viesco-count">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-viesco-count.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Compteurs vie scolaire</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le nombre d'absences, retards, sanctions et retenues de l'élève ou du parent connecté pour l'année scolaire en cours. Interrogé toutes les 30 secondes par l'application (conjointement avec <code>get-unread-count.php</code>) pour détecter de nouvelles entrées et afficher le badge <code>!</code> sur l'onglet Vie Sco. Retourne des zéros pour tout profil autre qu'élève (1) ou parent (2).</p>
+      <div class="label">Réponse (200) — élève / parent</div>
+      <pre>{
+  <span class="k">"total"</span>:     <span class="n">7</span>,
+  <span class="k">"absences"</span>:  <span class="n">3</span>,
+  <span class="k">"retards"</span>:   <span class="n">2</span>,
+  <span class="k">"sanctions"</span>: <span class="n">1</span>,
+  <span class="k">"retenues"</span>:  <span class="n">1</span>
+}</pre>
+      <div class="label">Réponse (200) — autre profil</div>
+      <pre>{ <span class="k">"total"</span>: <span class="n">0</span>, <span class="k">"absences"</span>: <span class="n">0</span>, <span class="k">"retards"</span>: <span class="n">0</span>, <span class="k">"sanctions"</span>: <span class="n">0</span>, <span class="k">"retenues"</span>: <span class="n">0</span> }</pre>
+      <div class="note"><strong>Logique de détection.</strong> Le client compare <code>total</code> avec la valeur précédente (<code>prevViescoTotal</code>). Si le total augmente, un badge <code>!</code> est posé sur l'onglet et un toast apparaît en haut de l'écran. Le badge est effacé à la première consultation de l'onglet Vie Sco (<code>onVieScoPress</code>). Les profils 1 et 2 (élève et parent) partagent le même <code>id_pers</code> = <code>elev_id</code>, d'où la compatibilité directe avec les fonctions <code>affAbsence()</code>, <code>affRetard()</code>, etc.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ PÉDAGOGIE ════════════════ -->
+  <h2 class="section-title" id="peda-section">Pédagogie</h2>
+
+  <!-- get-notes.php -->
+  <div class="endpoint" id="notes">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-notes.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Notes (v1 — par mois)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les notes de l'élève connecté pour un mois donné.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">annee</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Année (ex. 2025)</td></tr>
+        <tr><td><span class="param-name">mois</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Mois 1–12</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- get-notes-v2.php -->
+  <div class="endpoint" id="notes-v2">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-notes-v2.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Notes (v2 — par année scolaire ou mois)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Version enrichie. Peut retourner toutes les notes d'une année scolaire complète ou d'un mois précis.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">annee_scolaire</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Format <code>2024-2025</code> — retourne toute l'année</td></tr>
+        <tr><td><span class="param-name">annee</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>Année (si mode mensuel)</td></tr>
+        <tr><td><span class="param-name">mois</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>Mois 1–12 (si mode mensuel)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- get-edt.php -->
+  <div class="endpoint" id="edt">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-edt.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Emploi du temps (v1)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne l'emploi du temps de l'utilisateur pour une date donnée.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">date</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Format ISO <code>YYYY-MM-DD</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- get-edt-2.php -->
+  <div class="endpoint" id="edt2">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-edt-2.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Emploi du temps (v2)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Version enrichie de l'EDT : salle, enseignant, couleur, statut annulation, rapport DST et description. Fonctionne pour les profils élève <em>et</em> enseignant (<code>$_SESSION["membre"] === 'menuprof'</code>).</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">date</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Lundi de la semaine souhaitée, format ISO <code>YYYY-MM-DD</code></td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"semaine"</span>: <span class="s">"2026-05-11"</span>,
+  <span class="k">"jours"</span>: [{
+    <span class="k">"date"</span>: <span class="s">"2026-05-11"</span>,
+    <span class="k">"nom"</span>:  <span class="s">"Lundi"</span>,
+    <span class="k">"cours"</span>: [{
+      <span class="k">"id"</span>:          <span class="s">"123"</span>,
+      <span class="k">"idclasse"</span>:    <span class="s">"4"</span>,              <span class="c">// code classe (edt_seances.idclasse)</span>
+      <span class="k">"idmatiere"</span>:   <span class="s">"7"</span>,              <span class="c">// code matière (edt_seances.idmatiere)</span>
+      <span class="k">"nomclasse"</span>:   <span class="s">"5ième"</span>,          <span class="c">// libellé classe via chercheClasse_nom(), "" si introuvable</span>
+      <span class="k">"matiere"</span>:     <span class="s">"Mathématiques"</span>,
+      <span class="k">"enseignant"</span>:  <span class="s">"MARTIN Sophie"</span>, <span class="c">// nom de l'enseignant (prof connecté en mode menuprof)</span>
+      <span class="k">"salle"</span>:       <span class="s">"A12"</span>,
+      <span class="k">"groupe"</span>:      <span class="s">"Groupe 1"</span>,      <span class="c">// "" si classe entière</span>
+      <span class="k">"heuredebut"</span>:  <span class="s">"08:00"</span>,
+      <span class="k">"heurefin"</span>:    <span class="s">"09:00"</span>,
+      <span class="k">"annule"</span>:      <span class="b">false</span>,
+      <span class="k">"bgcolor"</span>:     <span class="s">"#4A90D9"</span>,       <span class="c">// couleur définie dans le back-end EDT, "" si non définie</span>
+      <span class="k">"description"</span>: <span class="s">"Révision chapitre 3"</span>, <span class="c">// HTML décodé en texte brut, "" si vide</span>
+      <span class="k">"docdst"</span>:      <span class="b">false</span>,           <span class="c">// true = document DST associé</span>
+      <span class="k">"reportle"</span>:    <span class="s">"14/05/2026"</span>,   <span class="c">// date de report (format dd/mm/yyyy), "" si aucun</span>
+      <span class="k">"reporta"</span>:     <span class="s">"10:00"</span>          <span class="c">// heure de report, "" si non précisée</span>
+    }]
+  }]
+}</pre>
+      <div class="note"><strong>Côté client.</strong> Utiliser <code>bgcolor</code> avec 18 % d'opacité pour le fond de la carte et la couleur pleine pour la bordure gauche. Fallback sur une palette prédéfinie si <code>bgcolor</code> est vide.</div>
+      <div class="note"><strong>Profil enseignant.</strong> Pour <code>menuprof</code>, les champs <code>idclasse</code>, <code>idmatiere</code> et <code>nomclasse</code> permettent de lancer l'appel directement depuis un cours de l'EDT via <code>save-absences.php</code>. L'app affiche <code>nomclasse</code> dans la carte du cours et dans la modale de détail à la place du nom de l'enseignant (redondant pour lui). Le créneau EDT est construit client-side : <code>EDT#heuredebut#heurefin</code>.</div>
+    </div>
+  </div>
+
+  <!-- get-agenda.php -->
+  <div class="endpoint" id="agenda">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-agenda.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Agenda (DST &amp; événements)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les devoirs surveillés (DST) et événements pour une date ou une plage.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">mode</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>date</code> | <code>semaine</code> | <code>mois</code></td></tr>
+        <tr><td><span class="param-name">date</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Format ISO <code>YYYY-MM-DD</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- get-cahierdetextes.php -->
+  <div class="endpoint" id="cdt">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-cahierdetextes.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Cahier de textes</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les contenus de cours, objectifs et devoirs. Fonctionne en mode <strong>élève/parent</strong> (classe depuis la session) ou <strong>enseignant</strong> (classe + matière obligatoires, affectation vérifiée).</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">mode</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td><code>devoirs</code> (défaut) | <code>cours</code> | <code>jour</code> | <code>calendrier</code></td></tr>
+        <tr><td><span class="param-name">date</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Format ISO <code>YYYY-MM-DD</code> — utilisé pour modes <code>devoirs</code>, <code>cours</code>, <code>jour</code></td></tr>
+        <tr><td><span class="param-name">annee</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>Année — mode <code>calendrier</code> uniquement</td></tr>
+        <tr><td><span class="param-name">mois</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>Mois 1–12 — mode <code>calendrier</code> uniquement</td></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="opt">Prof uniquement</span></td><td>Code classe de l'affectation</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="opt">Prof uniquement</span></td><td>Code matière de l'affectation</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — mode calendrier</div>
+          <pre>{
+  <span class="k">"annee"</span>: <span class="n">2025</span>,
+  <span class="k">"mois"</span>:  <span class="n">5</span>,
+  <span class="k">"jours"</span>: {
+    <span class="k">"2025-05-12"</span>: {
+      <span class="k">"cours"</span>:    <span class="b">true</span>,
+      <span class="k">"objectif"</span>: <span class="b">false</span>,
+      <span class="k">"devoirs"</span>:  <span class="n">2</span>
+    }
+  }
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — mode jour</div>
+          <pre>{
+  <span class="k">"date"</span>:    <span class="s">"12/05/2025"</span>,
+  <span class="k">"nombre"</span>: <span class="n">3</span>,
+  <span class="k">"entries"</span>: [{
+    <span class="k">"type"</span>:    <span class="s">"devoir"</span>,
+    <span class="k">"matiere"</span>: <span class="s">"Français"</span>,
+    <span class="k">"contenu"</span>: <span class="s">"Lire chapitre 3"</span>,
+    <span class="k">"duree"</span>:   <span class="s">"30min"</span>
+  }]
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- get-actus.php -->
+  <div class="endpoint" id="actus">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-actus.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Actualités</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les actualités publiées par l'établissement.</p>
+    </div>
+  </div>
+
+  <!-- get-meteo.php -->
+  <div class="endpoint" id="meteo">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-meteo.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Météo</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les données météo locales (configurées au niveau de l'établissement).</p>
+    </div>
+  </div>
+
+  <!-- ════════════════ VIE SCOLAIRE ════════════════ -->
+  <h2 class="section-title" id="viesco-section">Vie scolaire</h2>
+
+  <!-- get-viescolaire.php -->
+  <div class="endpoint" id="viescolaire">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-viescolaire.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Vie scolaire (élève/parent)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les données de vie scolaire de l'élève connecté selon la catégorie demandée.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">categorie</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>absences</code> | <code>retards</code> | <code>dispenses</code> | <code>sanctions</code> | <code>retenues</code></td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"nombre"</span>: <span class="s">"5"</span>,
+  <span class="k">"contenu"</span>: {
+    <span class="k">"1"</span>: { <span class="k">"date"</span>: <span class="s">"12/05/2025"</span>, <span class="k">"motif"</span>: <span class="s">"inconnu"</span>, ... },
+    ...
+  }
+}</pre>
+    </div>
+  </div>
+
+  <!-- ════════════════ DIRECTION / VIE SCOLAIRE ════════════════ -->
+  <h2 class="section-title" id="admin-section">Direction / Vie Scolaire</h2>
+
+  <div class="note">
+    <strong>Restriction de profil.</strong> Les endpoints de cette section sont réservés à <code>menuadmin</code> (Direction, profil 4) et <code>menuscolaire</code> (Vie Scolaire, profil 5).
+  </div>
+
+  <!-- get-eleves-search.php -->
+  <div class="endpoint" id="eleves-search">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleves-search.php</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Recherche d'étudiants par nom</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Recherche les élèves actifs dont le nom ou le prénom contient la chaîne fournie. Retourne jusqu'à 50 résultats avec le libellé de classe. Minimum 2 caractères requis.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">q</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Chaîne de recherche (min 2 caractères). Recherche dans <code>nom</code> et <code>prenom</code> (insensible à la casse).</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Résultats (200)</div>
+          <pre>{
+  <span class="k">"eleves"</span>: [{
+    <span class="k">"id"</span>:        <span class="s">"42"</span>,
+    <span class="k">"nom"</span>:       <span class="s">"DUPONT"</span>,
+    <span class="k">"prenom"</span>:    <span class="s">"Jean"</span>,
+    <span class="k">"libclasse"</span>: <span class="s">"6ième"</span>
+  }]
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Requête trop courte</div>
+          <pre>{
+  <span class="k">"eleves"</span>: []
+}
+
+<span class="c">// Retourné si mb_strlen(q) &lt; 2</span>
+<span class="c">// Pas d'erreur, tableau vide</span>
+<span class="c">// Limité à 50 résultats (ORDER BY nom, prenom)</span></pre>
+        </div>
+      </div>
+      <div class="note"><strong>Côté client.</strong> Déclencher la requête à partir de 2 caractères saisis, avec un debounce de 400 ms. Afficher le champ <code>libclasse</code> dans chaque ligne de résultat pour identifier facilement l'élève.</div>
+    </div>
+  </div>
+
+  <!-- get-classes.php -->
+  <div class="endpoint" id="classes">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-classes.php</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Liste des classes</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne toutes les classes de l'établissement triées par libellé. Utilisé pour sélectionner une classe avant d'accéder à la liste des élèves ou à la saisie d'absences.</p>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"classes"</span>: [{
+    <span class="k">"id"</span>:      <span class="s">"3"</span>,
+    <span class="k">"libelle"</span>: <span class="s">"6ième"</span>
+  }]
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-sanctions-categories.php -->
+  <div class="endpoint" id="sanctions-categories">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-sanctions-categories.php</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Catégories de sanctions / retenues</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la liste des catégories disponibles pour la saisie d'une sanction ou d'une retenue (<code>tria_type_sanction</code>). Partagée par les deux formulaires.</p>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"categories"</span>: [{
+    <span class="k">"id"</span>:      <span class="s">"1"</span>,
+    <span class="k">"libelle"</span>: <span class="s">"Bavardage"</span>
+  }]
+}</pre>
+    </div>
+  </div>
+
+  <!-- save-sanction.php -->
+  <div class="endpoint" id="save-sanction">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-sanction.php</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Enregistrer une sanction</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Crée une sanction disciplinaire pour un élève dans <code>tria_discipline_sanction</code>. L'auteur (<code>attribuer_par</code>) est résolu automatiquement depuis <code>tria_personnel</code> via <code>id_pers</code> de session.</p>
+      <div class="security">
+        <strong>Sécurité.</strong> Session + POST + rôle <code>menuadmin</code> | <code>menuscolaire</code>. L'<code>elev_id</code> est casté en <code>intval</code> et vérifié dans <code>tria_eleves</code> (compte actif). Tous les champs texte passent par <code>addslashes()</code>.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">elev_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant élève</td></tr>
+        <tr><td><span class="param-name">id_category</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>ID de la catégorie (<code>tria_type_sanction.id_sanc</code>)</td></tr>
+        <tr><td><span class="param-name">motif</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Motif de la sanction</td></tr>
+        <tr><td><span class="param-name">description_fait</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Description détaillée des faits</td></tr>
+        <tr><td><span class="param-name">devoir_a_faire</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Travail demandé</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — paramètre manquant</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+
+<span class="c">// 404 — élève introuvable</span>
+{ <span class="k">"code"</span>: <span class="s">"404"</span>, <span class="k">"message"</span>: <span class="s">"Étudiant introuvable"</span> }
+
+<span class="c">// 500 — erreur BDD</span>
+{ <span class="k">"ok"</span>: <span class="b">false</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note"><strong>Table impactée :</strong> <code>tria_discipline_sanction</code>. Colonnes <code>enr_en_retenue</code> et <code>signature_parent</code> initialisées à <code>'false'</code>, <code>origi_saisie</code> à <code>'App mobile'</code>.</div>
+      <div class="note"><strong>Notification push.</strong> Après insertion réussie, une notification push est envoyée à l'élève (<code>ELE</code>) et à son parent (<code>PAR</code>) via <code>tria_push_tokens</code>. Titre : <em>Sanction disciplinaire</em>. Corps : <em>Une sanction a été enregistrée</em>.</div>
+    </div>
+  </div>
+
+  <!-- save-retenue.php -->
+  <div class="endpoint" id="save-retenue">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-retenue.php</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Enregistrer une retenue</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Programme une retenue pour un élève dans <code>tria_discipline_retenue</code>. L'auteur est résolu depuis <code>tria_personnel</code>. Les formats de date et heure sont convertis avant insertion.</p>
+      <div class="security">
+        <strong>Sécurité.</strong> Session + POST + rôle <code>menuadmin</code> | <code>menuscolaire</code>. <code>elev_id</code> casté en <code>intval</code> et vérifié dans <code>tria_eleves</code>. Tous les champs texte passent par <code>addslashes()</code>.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">elev_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant élève</td></tr>
+        <tr><td><span class="param-name">id_category</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>ID de la catégorie</td></tr>
+        <tr><td><span class="param-name">motif</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Motif de la retenue</td></tr>
+        <tr><td><span class="param-name">date_retenue</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Date format <code>DD/MM/YYYY</code> — converti en <code>YYYY-MM-DD</code> via <code>dateFormBase()</code></td></tr>
+        <tr><td><span class="param-name">heure_retenue</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Heure format <code>HH:MM</code> — stocké <code>HH:MM:SS</code></td></tr>
+        <tr><td><span class="param-name">duree_retenu</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Durée format <code>HH:MM</code> — stocké <code>HH:MM:SS</code>. Valeurs standards : <code>00:30</code> | <code>01:00</code> | <code>01:30</code> | <code>02:00</code> | <code>02:30</code> | <code>03:00</code></td></tr>
+        <tr><td><span class="param-name">description_fait</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Description détaillée</td></tr>
+        <tr><td><span class="param-name">devoir_a_faire</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Travail demandé pendant la retenue</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — paramètre manquant</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+
+<span class="c">// 404 — élève introuvable</span>
+{ <span class="k">"code"</span>: <span class="s">"404"</span>, <span class="k">"message"</span>: <span class="s">"Étudiant introuvable"</span> }
+
+<span class="c">// 500 — erreur BDD (avec détail)</span>
+{ <span class="k">"ok"</span>: <span class="b">false</span>, <span class="k">"message"</span>: <span class="s">"..."</span>, <span class="k">"sql"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note"><strong>Table impactée :</strong> <code>tria_discipline_retenue</code>. Colonnes <code>retenue_effectuer</code> et <code>signature_parent</code> initialisées à <code>'false'</code>, <code>origi_saisie</code> à <code>'App mobile'</code>, <code>date_de_saisie</code> à la date du jour.</div>
+      <div class="note"><strong>Notification push.</strong> Après insertion réussie, une notification push est envoyée à l'élève (<code>ELE</code>) et à son parent (<code>PAR</code>) via <code>tria_push_tokens</code>. Titre : <em>Retenue</em>. Corps : <em>Une retenue est prévue le DD/MM/YYYY</em>.</div>
+    </div>
+  </div>
+
+  <!-- get-eleve-viescolaire.php -->
+  <div class="endpoint" id="eleve-viescolaire">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleve-viescolaire.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Vie scolaire d'un élève</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les événements de vie scolaire d'un élève identifié (absences, retards, sanctions, retenues). Pour les <strong>enseignants</strong> : l'affectation à la classe de l'élève est vérifiée. Pour <strong>Admin/Vie Sco</strong> : accès libre à tout élève actif.</p>
+      <div class="note"><strong>Résolution des noms.</strong> Le champ <code>attribuer_par</code> est résolu automatiquement : si la valeur stockée en BDD est un identifiant numérique, une requête sur <code>tria_personnel</code> retourne le prénom et nom correspondants.</div>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">elev_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant élève</td></tr>
+        <tr><td><span class="param-name">categorie</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>absences</code> | <code>retards</code> | <code>discipline-sanctions</code> | <code>discipline-retenues</code></td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — absences / retards</div>
+          <pre>{
+  <span class="k">"nombre"</span>: <span class="n">3</span>,
+  <span class="k">"items"</span>: [{
+    <span class="k">"date"</span>:   <span class="s">"12/05/2026"</span>,
+    <span class="k">"heure"</span>:  <span class="s">"08:00"</span>,
+    <span class="k">"motif"</span>:  <span class="s">"inconnu"</span>,
+    <span class="k">"duree"</span>:  <span class="s">"2h"</span>          <span class="c">// retards uniquement</span>
+  }]
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — discipline-sanctions</div>
+          <pre>{
+  <span class="k">"nombre"</span>: <span class="n">1</span>,
+  <span class="k">"items"</span>: [{
+    <span class="k">"date"</span>:        <span class="s">"12/05/2026"</span>,
+    <span class="k">"categorie"</span>:   <span class="s">"Bavardage"</span>,
+    <span class="k">"motif"</span>:       <span class="s">"Perturbation"</span>,
+    <span class="k">"description"</span>: <span class="s">"..."</span>,
+    <span class="k">"devoir"</span>:      <span class="s">"Rédaction"</span>,
+    <span class="k">"par"</span>:         <span class="s">"Martin Sophie"</span>  <span class="c">// nom résolu depuis tria_personnel</span>
+  }]
+}</pre>
+        </div>
+      </div>
+      <div class="label">Réponse — discipline-retenues</div>
+      <pre>{
+  <span class="k">"nombre"</span>: <span class="n">1</span>,
+  <span class="k">"items"</span>: [{
+    <span class="k">"date"</span>:        <span class="s">"16/05/2026"</span>,
+    <span class="k">"heure"</span>:       <span class="s">"08:00"</span>,
+    <span class="k">"duree"</span>:       <span class="s">"01:30:00"</span>,
+    <span class="k">"categorie"</span>:   <span class="s">"Bavardage"</span>,
+    <span class="k">"motif"</span>:       <span class="s">"Bavardage en cours"</span>,
+    <span class="k">"description"</span>: <span class="s">"..."</span>,
+    <span class="k">"devoir"</span>:      <span class="s">"..."</span>,
+    <span class="k">"par"</span>:         <span class="s">"Martin Sophie"</span>,
+    <span class="k">"effectuee"</span>:   <span class="s">"false"</span>
+  }]
+}</pre>
+    </div>
+  </div>
+
+  <!-- ════════════════ ENSEIGNANT ════════════════ -->
+  <h2 class="section-title" id="prof-section">Enseignant</h2>
+
+  <div class="note">
+    <strong>Restriction de profil.</strong> Les endpoints <code>get-affectations-prof.php</code> et <code>get-notes-classe.php</code> exigent <code>$_SESSION["membre"] === 'menuprof'</code> et vérifient l'affectation dans <code>tria_affectations</code>.<br><br>
+    <strong>Endpoints partagés Prof + Admin/Vie Sco.</strong> <code>get-eleves-absence.php</code>, <code>get-eleves-classe.php</code> et <code>save-absences.php</code> acceptent aussi <code>menuadmin</code> et <code>menuscolaire</code>. Pour ces rôles : <code>idmatiere</code> n'est pas requis (passer <code>0</code>), la vérification d'affectation est ignorée, et <code>seanceEdt</code> n'est pas retourné.<br><br>
+    <strong>Exception.</strong> <code>get-eleve-profil.php</code> et <code>get-eleve-photo.php</code> sont également accessibles à <code>menuadmin</code> et <code>menuscolaire</code>, sans vérification d'affectation pour ces deux rôles.
+  </div>
+
+  <!-- get-affectations-prof.php -->
+  <div class="endpoint" id="affectations">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-affectations-prof.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <h3>Affectations de l'enseignant</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la liste des couples classe/matière auxquels l'enseignant est affecté pour une année scolaire.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">annee_scolaire</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Format <code>2024-2025</code>. Par défaut : année la plus récente dans <code>tria_affectations</code></td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"annee_scolaire"</span>: <span class="s">"2024-2025"</span>,
+  <span class="k">"affectations"</span>: [{
+    <span class="k">"idclasse"</span>:   <span class="s">"3"</span>,
+    <span class="k">"libclasse"</span>:  <span class="s">"6ième"</span>,
+    <span class="k">"idmatiere"</span>:  <span class="s">"5"</span>,
+    <span class="k">"libmatiere"</span>: <span class="s">"Français"</span>,
+    <span class="k">"idgroupe"</span>:   <span class="s">"0"</span>,
+    <span class="k">"libgroupe"</span>:  <span class="s">"Classe entière"</span>
+  }]
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-notes-classe.php -->
+  <div class="endpoint" id="notes-classe">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-notes-classe.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <h3>Notes d'une classe</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les notes saisies par l'enseignant pour une classe/matière donnée, par trimestre.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code classe</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code matière</td></tr>
+        <tr><td><span class="param-name">idgroupe</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Code groupe (<code>0</code> = classe entière)</td></tr>
+        <tr><td><span class="param-name">trimestre</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Filtre sur un trimestre précis</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- get-eleves-absence.php -->
+  <div class="endpoint" id="eleves-absence">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleves-absence.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Liste élèves + état absences du jour</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la liste des élèves de la classe avec leur état d'absence/retard du jour et les créneaux configurés. Pour les <strong>enseignants</strong> : affectation vérifiée avec mécanisme de fallback — priorité à <code>prof+classe+matière</code>, puis <code>prof+classe</code> seul (utile lorsque l'appel est déclenché depuis l'EDT et que la matière EDT ne correspond pas exactement à l'affectation). Séance EDT en cours incluse dans la réponse. Pour <strong>Admin/Vie Sco</strong> : <code>idmatiere</code> non requis (passer <code>0</code>), pas de vérification d'affectation, <code>seanceEdt</code> absent de la réponse.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code classe</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Prof uniquement</span></td><td>Code matière (passer <code>0</code> pour Admin/Vie Sco)</td></tr>
+        <tr><td><span class="param-name">idgroupe</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Code groupe (<code>0</code> = tous)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"eleves"</span>: [{
+    <span class="k">"id"</span>:         <span class="s">"42"</span>,
+    <span class="k">"nom"</span>:        <span class="s">"DUPONT Jean"</span>,
+    <span class="k">"dejaAbs"</span>:    <span class="b">false</span>,
+    <span class="k">"dejaRetard"</span>: <span class="b">false</span>
+  }],
+  <span class="k">"creneaux"</span>: [{
+    <span class="k">"value"</span>: <span class="s">"M1#09:00:00#10:00:00"</span>,
+    <span class="k">"label"</span>: <span class="s">"M1 : 09:00 - 10:00"</span>
+  }],
+  <span class="k">"seanceEdt"</span>: { <span class="c">// null si aucune séance en cours</span>
+    <span class="k">"value"</span>: <span class="s">"EDT#09:00:00#10:00:00"</span>,
+    <span class="k">"label"</span>: <span class="s">"EDT : 09:00 - 10:00"</span>
+  },
+  <span class="k">"date"</span>:       <span class="s">"12/05/2025"</span>,
+  <span class="k">"nomclasse"</span>:  <span class="s">"6ième"</span>,
+  <span class="k">"nommatiere"</span>: <span class="s">"Français"</span>
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-eleves-classe.php -->
+  <div class="endpoint" id="eleves-classe">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleves-classe.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Liste élèves (annuaire)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la liste allégée des élèves actifs d'une classe. Pour les <strong>enseignants</strong> : <code>idmatiere</code> requis pour vérification d'affectation. Pour <strong>Admin/Vie Sco</strong> : <code>idmatiere</code> non requis (passer <code>0</code>), pas de vérification d'affectation.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code classe</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Prof uniquement</span></td><td>Code matière (passer <code>0</code> pour Admin/Vie Sco)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"eleves"</span>: [{
+    <span class="k">"id"</span>:     <span class="s">"42"</span>,
+    <span class="k">"nom"</span>:    <span class="s">"DUPONT"</span>,
+    <span class="k">"prenom"</span>: <span class="s">"Jean"</span>
+  }]
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-eleve-profil.php -->
+  <div class="endpoint" id="eleve-profil">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleve-profil.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Fiche complète d'un étudiant</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne toutes les informations d'un étudiant organisées par thématique. Pour les <strong>enseignants</strong> (<code>menuprof</code>), l'affectation à la classe de l'élève est vérifiée dans <code>tria_affectations</code>. Pour la <strong>Direction</strong> (<code>menuadmin</code>) et la <strong>Vie Scolaire</strong> (<code>menuscolaire</code>), tous les élèves actifs sont accessibles sans restriction.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">elev_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant élève (<code>tria_eleves.elev_id</code>)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"id"</span>:               <span class="n">42</span>,
+  <span class="c">// Identité</span>
+  <span class="k">"nom"</span>:             <span class="s">"DUPONT"</span>,      <span class="k">"prenom"</span>:        <span class="s">"Jean"</span>,
+  <span class="k">"age"</span>:             <span class="n">15</span>,             <span class="k">"date_naissance"</span>: <span class="s">"10/03/2010"</span>,
+  <span class="k">"lieu_naissance"</span>:  <span class="s">"Paris"</span>,        <span class="k">"nationalite"</span>:   <span class="s">"Française"</span>,
+  <span class="k">"sexe"</span>:            <span class="s">"M"</span>,
+  <span class="c">// Scolarité</span>
+  <span class="k">"libclasse"</span>:       <span class="s">"6ième"</span>,        <span class="k">"ine"</span>:           <span class="s">"0750123456A"</span>,
+  <span class="k">"numero_eleve"</span>:    <span class="s">"AB123"</span>,        <span class="k">"regime"</span>:        <span class="s">"D"</span>,
+  <span class="k">"lv1"</span>:             <span class="s">"Anglais"</span>,      <span class="k">"boursier"</span>:      <span class="s">"N"</span>,
+  <span class="c">// Contact élève</span>
+  <span class="k">"email_eleve"</span>:     <span class="s">"jean@mail.fr"</span>, <span class="k">"tel_eleve"</span>:     <span class="s">"0612..."</span>,
+  <span class="k">"adr_eleve"</span>:       <span class="s">"10 rue..."</span>,
+  <span class="c">// Parent 1</span>
+  <span class="k">"nom_parent1"</span>:    <span class="s">"DUPONT Marie"</span>, <span class="k">"email_parent1"</span>:  <span class="s">"m@mail.fr"</span>,
+  <span class="k">"tel_parent1"</span>:    <span class="s">"0600..."</span>,      <span class="k">"prof_parent1"</span>:  <span class="s">"Infirmière"</span>,
+  <span class="c">// Parent 2 (si renseigné)</span>
+  <span class="k">"nom_parent2"</span>:    <span class="s">"DUPONT Paul"</span>,
+  <span class="c">// Informations libres</span>
+  <span class="k">"information"</span>:    <span class="s">"PAI en cours"</span>
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-eleve-photo.php -->
+  <div class="endpoint" id="eleve-photo">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-eleve-photo.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <h3>Photo d'un étudiant</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la photo trombinoscope d'un élève. Si aucune photo n'existe, retourne <code>photo_vide.jpg</code>. Même mécanisme que <code>get-avatar.php</code>.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">elev_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant élève</td></tr>
+      </table>
+      <div class="note"><strong>Format :</strong> <code>text/plain</code> — image JPEG encodée en Base64. Préfixer de <code>data:image/jpeg;base64,</code> pour <code>&lt;Image&gt;</code> React Native.</div>
+    </div>
+  </div>
+
+  <!-- save-absences.php -->
+  <div class="endpoint" id="save-absences">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-absences.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <span class="auth-badge auth-admin">Admin / Vie Sco</span>
+      <h3>Enregistrement absences / retards</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Enregistre les absences et retards d'une classe pour la séance en cours. Accessible aux enseignants <em>et</em> à la Direction/Vie Scolaire.</p>
+      <div class="security">
+        <strong>Sécurité renforcée.</strong>
+        (1) Session + rôle <code>menuprof</code> | <code>menuadmin</code> | <code>menuscolaire</code>.
+        (2) Pour <code>menuprof</code> uniquement : vérification affectation avec fallback — d'abord <code>prof+classe+matière</code> dans <code>tria_affectations</code>, puis <code>prof+classe</code> seul si la première vérification échoue (cas d'appel depuis l'EDT où <code>idmatiere</code> peut valoir <code>0</code> ou ne pas correspondre à l'affectation exacte).
+        (3) Chaque <code>elev_id</code> reçu est validé contre la liste des élèves actifs de la classe (whitelist BDD) — impossible d'injecter un élève d'une autre classe.
+        (4) <code>duree</code> castée en <code>intval</code>.
+        (5) Format <code>heure</code> validé par regex <code>/^\d{2}:\d{2}(:\d{2})?$/</code>.
+        (6) <code>push_helper.php</code> utilise des gardes <code>function_exists()</code> pour <code>sendExpoPush()</code> et <code>notifyEleve()</code> — évite les conflits de redéclaration avec <code>librairie_php/push_notif.php</code> inclus via la config globale.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code classe</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code matière</td></tr>
+        <tr><td><span class="param-name">nomclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Libellé classe (pour historique)</td></tr>
+        <tr><td><span class="param-name">nommatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Libellé matière (pour historique)</td></tr>
+        <tr><td><span class="param-name">creneau</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Format <code>libelle#HH:MM:SS#HH:MM:SS</code></td></tr>
+        <tr><td><span class="param-name">eleves</span></td><td><span class="type-json">JSON</span></td><td><span class="req">Requis</span></td><td>Tableau JSON : <code>[{id, statut, duree}]</code><br><code>statut</code> : <code>retard</code> | <code>absent</code> | <code>rien</code></td></tr>
+        <tr><td><span class="param-name">aucun</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td><code>oui</code> = aucun absent/retard (appel <code>aucun_retard()</code>)</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{
+  <span class="k">"ok"</span>:    <span class="b">true</span>,
+  <span class="k">"nbabs"</span>: <span class="n">1</span>,
+  <span class="k">"nbrtd"</span>: <span class="n">2</span>
+}
+
+<span class="c">// Mode aucun :</span>
+{
+  <span class="k">"ok"</span>:    <span class="b">true</span>,
+  <span class="k">"aucun"</span>: <span class="b">true</span>,
+  <span class="k">"nbabs"</span>: <span class="n">0</span>,
+  <span class="k">"nbrtd"</span>: <span class="n">0</span>
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur SQL (500)</div>
+          <pre>{
+  <span class="k">"ok"</span>:  <span class="b">false</span>,
+  <span class="k">"err"</span>: <span class="s">"message d'erreur BDD"</span>
+}
+
+<span class="c">// Tables impactées :</span>
+<span class="c">// tria_retards</span>
+<span class="c">// tria_absences</span>
+<span class="c">// tria_history_cmd</span></pre>
+        </div>
+      </div>
+      <div class="note"><strong>Notification push.</strong> Après chaque absence ou retard enregistré avec succès, une notification push est envoyée à l'élève concerné (<code>ELE</code>) et à son parent (<code>PAR</code>) via <code>tria_push_tokens</code>. Titre : <em>Absence</em> ou <em>Retard</em>. Corps : <em>... enregistré(e) le DD/MM/YYYY</em>. Non envoyé en mode <code>aucun=oui</code>.</div>
+    </div>
+  </div>
+
+  <!-- save-devoir-notes.php -->
+  <div class="endpoint" id="save-devoir-notes">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-devoir-notes.php</span>
+      <span class="auth-badge auth-prof">Prof</span>
+      <h3>Saisir un devoir avec notes</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Crée une évaluation pour une classe/matière : insère une note dans <code>tria_notes</code> pour chaque élève fourni dans le tableau <code>notes</code>, puis crée optionnellement une entrée dans le cahier de textes (<code>tria_devoir_scolaire</code>) si un texte de devoir est fourni.</p>
+      <div class="security">
+        <strong>Sécurité.</strong>
+        (1) Session + POST + rôle <code>menuprof</code> uniquement.
+        (2) Affectation vérifiée : <code>prof + classe + matière</code> dans <code>tria_affectations</code>.
+        (3) Whitelist <code>elev_id</code> : chaque identifiant est validé contre <code>tria_eleves</code> (élèves actifs de la classe, <code>compte_inactif != '1'</code>) — impossible d'injecter un élève d'une autre classe.
+        (4) <code>addslashes()</code> sur les champs texte, <code>intval()</code> sur le barème, <code>floatval()</code> sur le coefficient.
+        (5) Format <code>date_devoir</code> validé par regex <code>/^\d{4}-\d{2}-\d{2}$/</code>.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">idclasse</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code classe</td></tr>
+        <tr><td><span class="param-name">idmatiere</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Code matière</td></tr>
+        <tr><td><span class="param-name">sujet</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Intitulé de l'évaluation</td></tr>
+        <tr><td><span class="param-name">date_devoir</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Date de l'évaluation, format <code>YYYY-MM-DD</code>. Défaut : date du jour.</td></tr>
+        <tr><td><span class="param-name">bareme</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>Barème de notation. Défaut : <code>20</code>. Minimum : <code>1</code>.</td></tr>
+        <tr><td><span class="param-name">coef</span></td><td><span class="type-str">float</span></td><td><span class="opt">Optionnel</span></td><td>Coefficient. Défaut : <code>1</code>. Minimum : <code>0.01</code>. Accepte la virgule comme séparateur décimal.</td></tr>
+        <tr><td><span class="param-name">texte</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Texte du devoir à afficher dans le cahier de textes. Si vide, aucune entrée n'est créée dans <code>tria_devoir_scolaire</code>.</td></tr>
+        <tr><td><span class="param-name">tempsestime</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Temps estimé du devoir (ex. <code>30min</code>). Utilisé uniquement si <code>texte</code> est fourni.</td></tr>
+        <tr><td><span class="param-name">notes</span></td><td><span class="type-json">JSON</span></td><td><span class="req">Requis</span></td><td>Tableau JSON <code>[{"id": elev_id, "note": valeur}]</code>. Les élèves sans note peuvent être omis ou avoir une note vide.</td></tr>
+      </table>
+      <div class="note">
+        <strong>Valeurs de note acceptées.</strong>
+        <code>abs</code> → −1 (absent) · <code>disp</code> → −2 (dispensé) · <code>""</code> / <code>néant</code> → −3 (néant) · <code>dnn</code> → −4 (DNN) · <code>dnr</code> → −5 (DNR) · <code>val</code> → −6 (VAL) · valeur numérique → <code>floatval()</code> stocké tel quel.
+        Les entrées à note vide ou omises sont ignorées (pas d'INSERT).
+      </div>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{
+  <span class="k">"ok"</span>:       <span class="b">true</span>,
+  <span class="k">"nb_notes"</span>: <span class="n">23</span>,   <span class="c">// nombre d'INSERT réalisés</span>
+  <span class="k">"devoir"</span>:   <span class="b">true</span>   <span class="c">// false si texte vide</span>
+}</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — paramètre manquant</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+
+<span class="c">// 403 — affectation non trouvée</span>
+{ <span class="k">"code"</span>: <span class="s">"403"</span>, <span class="k">"message"</span>: <span class="s">"Accès non autorisé"</span> }
+
+<span class="c">// Erreur SQL (arrêt immédiat)</span>
+{ <span class="k">"ok"</span>: <span class="b">false</span>, <span class="k">"err"</span>: <span class="s">"message BDD"</span> }</pre>
+        </div>
+      </div>
+      <div class="note">
+        <strong>Tables impactées.</strong>
+        <code>tria_notes</code> — un INSERT par élève avec note non vide (colonnes : <code>elev_id</code>, <code>prof_id</code>, <code>code_mat</code>, <code>coef</code>, <code>date</code>, <code>sujet</code>, <code>note</code>, <code>id_classe</code>, <code>notationsur</code>).
+        <code>tria_devoir_scolaire</code> — une entrée créée via <code>create_devoirscolaire()</code> si <code>texte</code> non vide. Cette fonction est idempotente : elle fait un UPDATE si une entrée existe déjà pour le même triplet classe+date+matière+prof, sinon un INSERT.
+      </div>
+      <div class="note">
+        <strong>Côté client (SaisieNoteScreen.js).</strong> L'appel est déclenché depuis l'onglet Notes (profil enseignant) via le bouton FAB <code>+</code>. La classe et la matière courantes sont passées en paramètre de navigation. La liste des élèves est préalablement chargée via <code>get-eleves-classe.php</code>. Chaque élève dispose de boutons rapides <strong>ABS / DISP / DNN</strong> et d'un champ numérique. Seuls les élèves avec une note saisie sont envoyés dans le tableau <code>notes</code>.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ MSN / CHAT INSTANTANÉ ════════════════ -->
+  <h2 class="section-title" id="msn-section">MSN / Chat instantané</h2>
+
+  <div class="note">
+    <strong>Principe.</strong> Le module MSN TRIADE est une messagerie instantanée locale entre tous les utilisateurs de l'établissement (personnel, enseignants, élèves, parents). Les messages sont stockés dans <code>tria_messages</code> et les comptes dans <code>tria_users</code>.<br><br>
+    <strong>Authentification bridge.</strong> Ces endpoints créent automatiquement un compte MSN lié à la session TRIADE via le couple <code>id_pers + membre</code> (identifiant composite unique). L'email synthétique <code>{id_pers}_{membre}@msn.triade</code> est dérivé de ce couple. L'utilisateur n'a pas de mot de passe MSN supplémentaire à saisir. Appeler <code>msn-init.php</code> en premier pour initialiser <code>$_SESSION['unique_id']</code> — les autres endpoints en dépendent.<br><br>
+    <strong>Schéma <code>tria_users</code>.</strong> La table comporte deux colonnes ajoutées : <code>id_pers INT</code> et <code>membre VARCHAR(50)</code>, avec contrainte <code>UNIQUE(id_pers, membre)</code>. Les comptes créés avant migration ont ces colonnes à <code>NULL</code> — elles sont mises à jour automatiquement lors de la prochaine connexion via <code>msn_auto_init.php</code>.<br><br>
+    <strong>Sécurité création.</strong> Un compte ne peut être créé que si au moins un identifiant exploitable est présent : email valide <strong>ou</strong> couple <code>id_pers + membre</code>. Les comptes sans <code>unique_id</code> valide (<code>NULL</code> ou <code>0</code>) sont purgés automatiquement à chaque chargement de la liste des contacts.
+  </div>
+
+  <!-- msn-init.php -->
+  <div class="endpoint" id="msn-init">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">msn-init.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Initialiser le compte MSN</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Crée ou vérifie le compte MSN lié à la session TRIADE courante, puis positionne <code>$_SESSION['unique_id']</code>. À appeler une fois avant tout autre endpoint MSN. Met à jour prénom/nom si l'utilisateur a changé ses infos TRIADE. Côté API mobile, appelé depuis <code>MsnListScreen</code> au chargement ; <code>MsnChatScreen</code> fait confiance à la session déjà initialisée et charge les messages directement.</p>
+      <div class="security">
+        <strong>Sécurité.</strong> Session TRIADE requise. Si des paramètres GET <code>idpers</code> et <code>membre</code> sont fournis, ils sont comparés aux valeurs de session — une divergence retourne 403 (protection cross-account). Deux requêtes PostgreSQL séparées au lieu d'un OR pour contourner un bug du driver PGSQL avec <code>LOWER() OR</code>.
+      </div>
+      <div class="note">
+        <strong>3 chemins de résolution :</strong><br>
+        1. <strong>id_pers + membre</strong> (chemin sûr) — lookup direct, met à jour l'email.<br>
+        2. <strong>Rétrocompatibilité email</strong> — compte existant avec email <code>@msn.triade</code>, remplit <code>id_pers/membre</code>.<br>
+        3. <strong>Auto-création</strong> — INSERT avec <code>unique_id</code> = <code>abs(crc32($email))</code>, résolution de collision par <code>rand()</code>.
+      </div>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"ok"</span>:        <span class="b">true</span>,
+  <span class="k">"unique_id"</span>: <span class="n">3847291</span>,
+  <span class="k">"fname"</span>:     <span class="s">"Jean"</span>,
+  <span class="k">"lname"</span>:     <span class="s">"DUPONT"</span>
+}</pre>
+      <div class="note"><strong>Tables impactées.</strong> <code>tria_users</code> — INSERT si compte inexistant (colonnes <code>id_pers</code> et <code>membre</code> incluses), UPDATE fname/lname + email + status/update_sync sinon.</div>
+    </div>
+  </div>
+
+  <!-- msn-users.php -->
+  <div class="endpoint" id="msn-users">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">msn-users.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Liste des contacts</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne tous les utilisateurs MSN inscrits (sauf soi-même), avec leur statut en ligne et l'aperçu du dernier message échangé. Supporte la recherche par nom/prénom.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">q</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td>Filtre par nom ou prénom (recherche <code>LIKE</code>)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"users"</span>: [{
+    <span class="k">"unique_id"</span>:    <span class="n">3847291</span>,
+    <span class="k">"fname"</span>:        <span class="s">"Marie"</span>,
+    <span class="k">"lname"</span>:        <span class="s">"MARTIN"</span>,
+    <span class="k">"online"</span>:       <span class="b">true</span>,         <span class="c">// true = "Active now" (update_sync &lt; 1000s)</span>
+    <span class="k">"last_msg"</span>:     <span class="s">"Bonjour !"</span>,  <span class="c">// "" si aucun message</span>
+    <span class="k">"last_from_me"</span>: <span class="b">false</span>
+  }]
+}</pre>
+      <div class="note"><strong>Tri.</strong> En ligne d'abord (<code>status ASC</code>), puis ordre alphabétique. Met à jour le statut de l'appelant à "Active now".</div>
+    </div>
+  </div>
+
+  <!-- msn-get-chat.php -->
+  <div class="endpoint" id="msn-get-chat">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">msn-get-chat.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Récupérer une conversation</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les messages échangés entre l'utilisateur connecté et un contact. Supporte le chargement incrémental via le paramètre <code>since</code> pour le polling : seuls les messages dont <code>msg_id</code> est supérieur sont renvoyés.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">incoming_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>unique_id du contact</td></tr>
+        <tr><td><span class="param-name">since</span></td><td><span class="type-int">int</span></td><td><span class="opt">Optionnel</span></td><td>msg_id du dernier message connu — retourne uniquement les messages plus récents (polling toutes les 3s côté client)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"messages"</span>: [{
+    <span class="k">"msg_id"</span>:  <span class="n">142</span>,
+    <span class="k">"msg"</span>:     <span class="s">"Bonjour !"</span>,
+    <span class="k">"from_me"</span>: <span class="b">false</span>       <span class="c">// true = envoyé par l'utilisateur connecté</span>
+  }],
+  <span class="k">"contact"</span>: {
+    <span class="k">"fname"</span>:  <span class="s">"Marie"</span>,
+    <span class="k">"lname"</span>:  <span class="s">"MARTIN"</span>,
+    <span class="k">"online"</span>: <span class="b">true</span>
+  }
+}</pre>
+    </div>
+  </div>
+
+  <!-- msn-send.php -->
+  <div class="endpoint" id="msn-send">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">msn-send.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Envoyer un message</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Insère un message dans <code>tria_messages</code> et marque l'expéditeur comme "Active now".</p>
+      <div class="security">
+        <strong>Sécurité.</strong> Session + POST + <code>$_SESSION['unique_id']</code> initialisé. Contenu passé par <code>addslashes()</code>. <code>incoming_id</code> casté en <code>intval()</code>.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">incoming_id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>unique_id du destinataire</td></tr>
+        <tr><td><span class="param-name">message</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Texte du message (max 1000 caractères)</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 400 — champ manquant</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+<span class="c">// 403 — MSN non initialisé</span>
+{ <span class="k">"code"</span>: <span class="s">"403"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note"><strong>Côté client (MsnChatScreen.js).</strong> Après envoi réussi, un appel immédiat à <code>msn-get-chat.php?since=lastId</code> récupère le message inséré. Le polling toutes les 3s assure la réception des messages entrants.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ GÉOLOCALISATION ════════════════ -->
+  <h2 class="section-title" id="gps-section">Géolocalisation</h2>
+
+  <div class="note">
+    <strong>Principe.</strong> La géolocalisation est réservée au profil élève (<code>menueleve</code>). Les coordonnées GPS sont capturées automatiquement à chaque connexion réussie via <code>sendGpsReport()</code> (SplashScreen.js) et enregistrées dans <code>tria_gps_eleve</code>. La permission <code>ACCESS_FINE_LOCATION</code> est demandée à l'utilisateur lors du premier appel — elle n'est sollicitée qu'une seule fois par le système OS.<br><br>
+    <strong>Table SQL à créer (MySQL) :</strong>
+    <pre style="margin-top:8px;">CREATE TABLE `tria_gps_eleve` (
+  `id`          INT AUTO_INCREMENT PRIMARY KEY,
+  `id_eleve`    INT NOT NULL,
+  `date_gps`    DATE NOT NULL,
+  `heure_gps`   TIME NOT NULL,
+  `latitude`    DECIMAL(10,7) NOT NULL,
+  `longitude`   DECIMAL(10,7) NOT NULL,
+  `precision_m` FLOAT DEFAULT NULL,
+  INDEX `idx_eleve_date` (`id_eleve`, `date_gps`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
+  </div>
+
+  <!-- save-gps.php -->
+  <div class="endpoint" id="save-gps">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">save-gps.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Enregistrer la position GPS d'un élève</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Insère une entrée de géolocalisation dans <code>tria_gps_eleve</code> pour l'élève connecté. L'identifiant élève est résolu depuis la session (<code>$_SESSION["id_pers"]</code>), la date et l'heure sont générées côté serveur au moment de la requête.</p>
+      <div class="security">
+        <strong>Sécurité.</strong> Session + POST + rôle <code>menueleve</code> exclusivement. <code>id_eleve</code> issu de la session uniquement — impossible de soumettre pour un autre élève. Coordonnées castées en <code>floatval()</code>.
+      </div>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">latitude</span></td><td><span class="type-str">float</span></td><td><span class="req">Requis</span></td><td>Latitude décimale (ex. <code>48.8566</code>)</td></tr>
+        <tr><td><span class="param-name">longitude</span></td><td><span class="type-str">float</span></td><td><span class="req">Requis</span></td><td>Longitude décimale (ex. <code>2.3522</code>)</td></tr>
+        <tr><td><span class="param-name">precision</span></td><td><span class="type-str">float</span></td><td><span class="opt">Optionnel</span></td><td>Précision GPS en mètres fournie par <code>coords.accuracy</code> (expo-location)</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur</div>
+          <pre><span class="c">// 403 — non connecté ou profil non élève</span>
+{ <span class="k">"code"</span>: <span class="s">"403"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+
+<span class="c">// 400 — coordonnées nulles (0,0) ou id_pers absent</span>
+{ <span class="k">"code"</span>: <span class="s">"400"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+      </div>
+      <div class="note">
+        <strong>Côté client (SplashScreen.js + utils/gpsReport.js).</strong>
+        Après chaque login réussi d'un élève (<code>res.membre === 'menueleve'</code>), <code>sendGpsReport()</code> est appelé en fire-and-forget (sans <code>await</code>). La fonction demande la permission <code>foreground</code> si nécessaire, récupère la position avec <code>Accuracy.Balanced</code> puis appelle cet endpoint. Les erreurs sont silencieusement ignorées pour ne pas bloquer la navigation.<br><br>
+        <strong>Permissions requises (app.json) :</strong> plugin <code>expo-location</code> + <code>android.permission.ACCESS_FINE_LOCATION</code> + <code>ACCESS_COARSE_LOCATION</code>. Un rebuild natif est requis après ajout du plugin.
+      </div>
+      <div class="note"><strong>Table impactée.</strong> <code>tria_gps_eleve</code> — INSERT à chaque connexion. <code>date_gps</code> et <code>heure_gps</code> : <code>date('Y-m-d')</code> et <code>date('H:i:s')</code> serveur au moment de la requête.</div>
+    </div>
+  </div>
+
+  <!-- get-gps-parent.php -->
+  <div class="endpoint" id="gps-parent">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">get-gps-parent.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Historique GPS de l'élève (côté parent)</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne les 200 derniers points GPS enregistrés pour l'élève rattaché au parent connecté. L'identifiant élève est résolu depuis <code>$_SESSION["id_pers"]</code> (= <code>elev_id</code> pour le profil parent). Réservé au profil parent (<code>menuparent</code>).</p>
+      <div class="security">
+        <strong>Restriction profil.</strong> Session + GET + <code>$_SESSION["membre"] === "menuparent"</code>. L'élève est implicitement celui de la session — impossible de consulter les positions d'un autre élève.
+      </div>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"eleve"</span>: {
+    <span class="k">"nom"</span>:    <span class="s">"DUPONT"</span>,
+    <span class="k">"prenom"</span>: <span class="s">"Jean"</span>
+  },
+  <span class="k">"points"</span>: [{
+    <span class="k">"date"</span>:      <span class="s">"07/06/2026"</span>,   <span class="c">// format dd/mm/yyyy</span>
+    <span class="k">"heure"</span>:     <span class="s">"08:32"</span>,
+    <span class="k">"latitude"</span>:  <span class="n">48.8566</span>,
+    <span class="k">"longitude"</span>: <span class="n">2.3522</span>,
+    <span class="k">"precision"</span>: <span class="n">12.5</span>            <span class="c">// null si non renseignée</span>
+  }]
+}</pre>
+      <div class="note"><strong>Ordre.</strong> Points triés du plus récent au plus ancien (<code>ORDER BY date_gps DESC, heure_gps DESC LIMIT 200</code>). Aucun filtre de date — retourne l'historique complet disponible jusqu'à 200 entrées.</div>
+      <div class="note"><strong>Côté client.</strong> Afficher les points sur une carte Leaflet (OSM). Le premier point du tableau est la dernière position connue. Utiliser le champ <code>precision</code> pour afficher un cercle d'incertitude autour du marqueur.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ MESSAGERIE ════════════════ -->
+  <h2 class="section-title" id="msg-section">Messagerie</h2>
+
+  <!-- get-destinataires.php -->
+  <div class="endpoint" id="destinataires">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">messagerie/get-destinataires.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Liste des destinataires</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne la liste des contacts disponibles pour la composition d'un message.</p>
+    </div>
+  </div>
+
+  <!-- get-boite.php -->
+  <div class="endpoint" id="boite">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">messagerie/get-boite.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Boîte de messagerie</h3>
+    </div>
+    <div class="endpoint-body">
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">boite</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>std-reception</code> | <code>std-envoyer</code> | <code>std-corbeille</code></td></tr>
+        <tr><td><span class="param-name">curseur</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Offset pour pagination</td></tr>
+        <tr><td><span class="param-name">lot</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Nombre de messages par page (max 50)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"nombre"</span>: <span class="n">5</span>,
+  <span class="k">"contenu"</span>: {
+    <span class="k">"0"</span>: {
+      <span class="k">"id"</span>:             <span class="n">123</span>,
+      <span class="k">"emetteur_id"</span>:   <span class="n">42</span>,           <span class="c">// id expéditeur (réception) ou destinataire (envoyés)</span>
+      <span class="k">"type_emetteur"</span>: <span class="s">"ENS"</span>,        <span class="c">// ELE|ENS|ADM|PER|MVS|TUT|PAR — pour get-person-photo</span>
+      <span class="k">"date"</span>:          <span class="s">"12/05/2026"</span>,
+      <span class="k">"horodatage"</span>:    <span class="s">"09:30"</span>,
+      <span class="k">"expediteur"</span>:    <span class="s">"DUPONT Marie"</span>,  <span class="c">// "À : Nom" si boite envoyés</span>
+      <span class="k">"objet"</span>:         <span class="s">"Réunion parents"</span>,
+      <span class="k">"estlu"</span>:         <span class="b">false</span>,            <span class="c">// réception : lu par le destinataire (col lu)</span>
+                                            <span class="c">// envoyés  : lu par le destinataire (col lu_par_utilisateur, mis à 1 par valide_message_lu_envoyer)</span>
+      <span class="k">"hasPJ"</span>:         <span class="b">true</span>              <span class="c">// true seulement si enregistrement réel dans tria_piecejointe (etat=1)</span>
+    }
+  }
+}</pre>
+    </div>
+  </div>
+
+  <!-- get-message.php -->
+  <div class="endpoint" id="message">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">messagerie/get-message.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Détail d'un message</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le contenu déchiffré d'un message. Marque automatiquement le message comme lu (réception). La fonction <code>lireMessage()</code> normalise tous les encodages de sauts de ligne avant et après chaque <code>stripslashes()</code> pour garantir l'affichage correct quelle que soit l'origine du message (app mobile ou interface web FCKeditor).</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant du message</td></tr>
+        <tr><td><span class="param-name">source</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td><code>envoi</code> → cherche dans <code>messagerie_envoyer</code> ; tout autre valeur → <code>messagerie</code> (réception)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"expediteur"</span>:    <span class="s">"DUPONT Marie"</span>,   <span class="c">// "À : Nom Prénom" si source=envoi</span>
+  <span class="k">"emetteur_id"</span>:   <span class="s">"42"</span>,             <span class="c">// expéditeur (réception) ou destinataire (envoi)</span>
+  <span class="k">"type_emetteur"</span>: <span class="s">"ENS"</span>,
+  <span class="k">"date"</span>:          <span class="s">"12/05/26"</span>,
+  <span class="k">"horodatage"</span>:    <span class="s">"09:30"</span>,
+  <span class="k">"objet"</span>:         <span class="s">"Réunion parents"</span>,
+  <span class="k">"message"</span>:       <span class="s">"Bonjour,\n\nMerci de confirmer..."</span>,  <span class="c">// sauts de ligne réels</span>
+  <span class="k">"estlu"</span>:         <span class="b">true</span>,                                   <span class="c">// source=envoi seulement : destinataire a lu (lu_par_utilisateur=1)</span>
+  <span class="k">"piecejointes"</span>:  [                                        <span class="c">// [] si aucune PJ</span>
+    { <span class="k">"nom"</span>: <span class="s">"rapport.pdf"</span>, <span class="k">"md5"</span>: <span class="s">"a3f8c2..."</span> }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <!-- send-message.php -->
+  <div class="endpoint" id="send">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">messagerie/send-message.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Envoyer un message</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Chiffre et enregistre un message. Avant chiffrement, tous les encodages de sauts de ligne (<code>\r\n</code>, <code>\r</code>, séquence littérale <code>\n</code>) sont normalisés en <code>\n</code> réel pour garantir un affichage correct à la réception.</p>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">dest_id</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>ID du destinataire</td></tr>
+        <tr><td><span class="param-name">type_dest</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Type : <code>eleve</code> | <code>prof</code> | <code>parent</code> | …</td></tr>
+        <tr><td><span class="param-name">objet</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Sujet du message</td></tr>
+        <tr><td><span class="param-name">message</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Corps du message (texte brut ou HTML). Côté client, encoder avec <code>encodeURIComponent</code> (et non <code>URLSearchParams</code>) pour préserver les <code>\n</code>.</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{ <span class="k">"ok"</span>: <span class="b">true</span> }</pre>
+      <div class="note"><strong>Notification push.</strong> Après envoi réussi, le token push du destinataire est recherché dans <code>tria_push_tokens</code>. Si présent, une notification est envoyée via l'API Expo. Titre : nom de l'émetteur. Corps : objet du message. L'échec de la notification n'affecte pas la réponse.</div>
+    </div>
+  </div>
+
+  <!-- action-message.php -->
+  <div class="endpoint" id="action">
+    <div class="endpoint-header">
+      <span class="method POST">POST</span>
+      <span class="url">messagerie/action-message.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Actions sur un message</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Effectue une action sur un message existant. La suppression utilise <code>$cnx->affectedRows()</code> pour détecter un échec réel (0 ligne supprimée).</p>
+      <div class="label">Paramètres POST</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">action</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td><code>marquer-lu</code> | <code>corbeille</code> | <code>restaurer</code> | <code>supprimer</code></td></tr>
+        <tr><td><span class="param-name">id</span></td><td><span class="type-int">int</span></td><td><span class="req">Requis</span></td><td>Identifiant du message</td></tr>
+        <tr><td><span class="param-name">source</span></td><td><span class="type-str">string</span></td><td><span class="opt">Optionnel</span></td><td><code>reception</code> (défaut) | <code>envoyes</code> — détermine si l'action porte sur <code>tria_messageries</code> (destinataire) ou <code>tria_messagerie_envoyer</code> (émetteur)</td></tr>
+      </table>
+      <div class="resp-grid">
+        <div>
+          <div class="label">Réponse — Succès (200)</div>
+          <pre>{ <span class="k">"code"</span>: <span class="s">"200"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }</pre>
+        </div>
+        <div>
+          <div class="label">Réponse — Erreur (500)</div>
+          <pre>{ <span class="k">"code"</span>: <span class="s">"500"</span>, <span class="k">"message"</span>: <span class="s">"..."</span> }
+<span class="c">// Retourné si affectedRows() = 0
+// (message introuvable ou non autorisé)</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- download-piecejointe.php -->
+  <div class="endpoint" id="pj">
+    <div class="endpoint-header">
+      <span class="method GET">GET</span>
+      <span class="url">messagerie/download-piecejointe.php</span>
+      <span class="auth-badge auth-session">Session</span>
+      <h3>Télécharger une pièce jointe</h3>
+    </div>
+    <div class="endpoint-body">
+      <p>Retourne le contenu d'une pièce jointe encodé en Base64, identifiée par son hash MD5. Le nom d'origine et le type MIME sont fournis pour permettre l'enregistrement et l'ouverture côté client.</p>
+      <div class="label">Paramètres GET</div>
+      <table>
+        <tr><th>Paramètre</th><th>Type</th><th>Requis</th><th>Description</th></tr>
+        <tr><td><span class="param-name">md5</span></td><td><span class="type-str">string</span></td><td><span class="req">Requis</span></td><td>Hash MD5 du fichier (clé dans <code>tria_piecejointe.md5</code>, nom du fichier sur disque)</td></tr>
+      </table>
+      <div class="label">Réponse (200)</div>
+      <pre>{
+  <span class="k">"nom"</span>:  <span class="s">"rapport_stage.pdf"</span>,  <span class="c">// nom d'origine du fichier</span>
+  <span class="k">"type"</span>: <span class="s">"application/pdf"</span>,    <span class="c">// type MIME</span>
+  <span class="k">"data"</span>: <span class="s">"&lt;base64&gt;"</span>            <span class="c">// contenu encodé en Base64</span>
+}</pre>
+      <div class="security"><strong>Sécurité :</strong> le paramètre <code>md5</code> est restreint aux caractères hexadécimaux. Le chemin réel est vérifié avec <code>realpath()</code> pour prévenir toute traversée de répertoire. L'utilisateur doit être connecté ; l'entrée doit exister dans <code>tria_piecejointe</code> avec <code>etat=1</code>.</div>
+      <div class="label">Fichier source</div>
+      <pre><span class="c">// ./data/fichiersj/{md5}   (sans extension sur le disque)</span></pre>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <p style="text-align:center; color: var(--text2); font-size: 12px; padding-bottom: 32px;">
+    T.R.I.A.D.E v4 — API Mobile Back-end — Mis à jour le vendredi 6 juin 2026
+  </p>
+
+</main>
+</div>
+
+<script>
+  // Highlight active nav item on scroll
+  const items = document.querySelectorAll('.nav-item');
+  const sections = [...items].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        items.forEach(a => a.classList.remove('active'));
+        const active = [...items].find(a => a.getAttribute('href') === '#' + e.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

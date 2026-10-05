@@ -1,20 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: parser.inc.php,v 1.24 2019-06-11 08:53:16 btafforeau Exp $
+// $Id: parser.inc.php,v 1.24 2019/06/11 08:53:16 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 /*----------------------------------------------------------------------------------------
  Fonctions pour parser un fichier XML
- La fonction Ã  appeler est _parser_ avec comme arguments :
+ La fonction à appeler est _parser_ avec comme arguments :
      $nom_fichier : le nom du fichier XML
-     $fonction : la lise des fonctions associÃ©es aux tags de niveau 2
-     $rootelement : l'Ã©lÃ©ment root du fichier XML
+     $fonction : la lise des fonctions associées aux tags de niveau 2
+     $rootelement : l'élément root du fichier XML
 ----------------------------------------------------------------------------------------*/
 
-// Lecture rÃ©cursive de la structure et stockage des paramÃ¨tres
+// Lecture récursive de la structure et stockage des paramètres
 
 function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	$nb_vals = count($vals);
@@ -52,7 +52,7 @@ function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	}
 }
 
-//Parse le fichier [nom_fichier] et exÃ©cute les fonctions liÃ©es aux tags
+//Parse le fichier [nom_fichier] et exécute les fonctions liées aux tags
 
 function _parser_($nom_fichier, $fonction, $rootelement) {
 	global $charset;
@@ -64,7 +64,7 @@ function _parser_($nom_fichier, $fonction, $rootelement) {
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
+		//encodages supportés par les fonctions suivantes
 		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
@@ -110,7 +110,7 @@ function _parser_text_($xml, $fonction, $rootelement) {
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
+		//encodages supportés par les fonctions suivantes
 		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
@@ -157,7 +157,7 @@ function _parser_text_no_function_($xml, $rootelement="", $full_path = '') {
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
 		if (preg_match($rx, $simple, $m)) $encoding = strtoupper($m[1]);
 			else $encoding = "ISO-8859-1";
-		//encodages supportÃ©s par les fonctions suivantes
+		//encodages supportés par les fonctions suivantes
 		if (($encoding != "ISO-8859-1") && ($encoding != "UTF-8") && ($encoding != "US-ASCII")) $encoding = "ISO-8859-1";
 		$p = xml_parser_create($encoding);
 		xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, $charset);		
@@ -179,7 +179,7 @@ function _parser_text_no_function_($xml, $rootelement="", $full_path = '') {
 				$param_var = $param[$rootelement][0];
 			} else $param_var = $param;
 			
-			//ParamÃ©trage de substitution par l'interface
+			//Paramétrage de substitution par l'interface
 			if($full_path) {
 				$path = substr($full_path, 0, strrpos($full_path, '/'));
 				$filename = substr($full_path, strrpos($full_path, '/')+1);

@@ -1,0 +1,85 @@
+<!-- $Id: record_in_result_display.tpl.html,v 1.3.4.1 2025/02/14 10:04:42 dgoron Exp $ -->
+
+<div id="record_container_{{ record.id }}" class="docParent">
+	<div class="uk-grid uk-grid-small">
+		<div class="uk-width-large-7-10 uk-width-medium-7-10 uk-width-1-1">
+			{% block record_case_traitement %}
+				{% if global.cart_aff_case_traitement %}
+					<input id='record-selection-{{record.id}}' type='checkbox' class='checkboxNot' aria-labelledby='record-selection-accessibility-label-{{record.id}}' value='{{ record.id }}' name='notice[]'/>
+				{% endif %}
+			{% endblock %}
+			<a href="{% if record.explnums_datas.explnums.0.consultation %}{{ record.explnums_datas.explnums.0.access_datas.href }}{% else %}{{record.permalink}}{% endif %}" {% if record.explnums_datas.explnums.0.consultation %}target="_blank"{% endif %} title="{{ record.tit1 }}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+				{% block record_coins_span %}
+					{{ record.display_coins_span }}
+				{% endblock %}
+				{% block record_vignDoc %}
+					<div class="vignDoc">
+						{% if record.explnums_datas.explnums.0.consultation %}
+								{% if record.explnums_datas.explnums %}
+									<img src="{{ record.explnums_datas.explnums.0.thumbnail_url }}" alt="{{ record.tit1 }}" />
+								{% endif %}
+							{% else %}
+								{% if record.get_picture_url %}
+									<img src= "{{ record.get_picture_url }}" alt="{{ record.tit1 }}" />
+								{% endif %}	
+							
+						{% endif %}
+					</div>
+				{% endblock %}
+				{% block record_title %}
+					<div class="title_notCourte">
+						<h3 id='record-selection-accessibility-label-{{record.id}}'>
+							<span class="tit1_notCourte">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+						</h3>
+					</div>
+				{% endblock %}
+			</a>
+		</div>
+		<div class="uk-width-large-2-10 uk-width-medium-2-10 uk-width-4-5">
+			{% block record_responsabilites %}
+					{% for auteur in record.responsabilites.auteurs %}
+						{% if loop.first %}
+							<div class="auteur_doc">
+						{% else %}
+							 ; 
+						{% endif %}
+							<a href="{{ record.liens_opac.lien_rech_auteur | replace '!!id!!' auteur.id }}">{{ auteur.auteur_titre }}</a>
+						{% if loop.last %}
+							</div>
+						{% endif %}
+					{% endfor %}
+			{% endblock %}
+		</div>
+		<div class="uk-width-large-1-10 uk-width-medium-1-10 uk-width-1-5">
+			<div class="doc_Option">
+				<div data-uk-dropdown="{mode:'click'}">
+				    <div class="btPlus_doc"><i class="fas fa-plus-square"></i></div>
+				    <div class="uk-dropdown">
+				    	<ul>
+				    		{% block record_cart%}
+								{% if record.cart_allow %}
+									{% if global.lvl != 'show_cart' %}
+										<li>
+											<div id="record_container_{{ record.id }}_cart" >
+												{% if record.in_cart %}
+													<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" title="{{ msg.notice_basket_remove }}" target="cart_info" class="img_basketNotCourte">
+														<span class="icon_basketNot"><img src="{{ img.record_in_basket.png }}" style="border:0px" alt="{{ msg.notice_basket_remove }}" /></span>
+													</a>
+												{% else %}
+													<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" >
+														<span class="icon_basketNot"><img src="{{ img.white_basket.png }}" style="border:0px" alt="{{ msg.record_display_add_to_cart }}"/></span>
+													</a>
+												{% endif %}
+											</div>
+										</li>
+									{% endif %}
+								{% endif %}		
+							{% endblock %}
+				    		<li><a href="{{record.permalink}}" title="Plus de détails" class="seeDoc"><i class="fas fa-arrow-right"></i></a></li>
+				    	</ul>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

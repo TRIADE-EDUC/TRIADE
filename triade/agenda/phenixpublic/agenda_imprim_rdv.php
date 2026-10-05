@@ -35,7 +35,7 @@ $idUser = Session_ok($sid);
 
 include_once("../../common/config.inc.php");
 $prefixe=PREFIXE;
-$DB_CX->DbQuery("SELECT nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire FROM ${prefixe}info_ecole");
+$DB_CX->DbQuery("SELECT nom_ecole,adresse,postal,ville,tel,email,directeur,urlsite,academie,pays,departement,annee_scolaire FROM {$prefixe}info_ecole");
 $nom_ecole = $DB_CX->DbResult(0,0);
 $adresse = $DB_CX->DbResult(0,1);
 $postal = $DB_CX->DbResult(0,2);

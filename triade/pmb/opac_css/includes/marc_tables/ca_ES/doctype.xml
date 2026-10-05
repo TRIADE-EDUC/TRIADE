@@ -3,7 +3,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des type de documents en UNIMARC (français)
-$Id: doctype.xml,v 1.3 2012-03-30 12:23:47 dgoron Exp $ -->
+$Id: doctype.xml,v 1.3 2012/03/30 12:23:47 dgoron Exp $ -->
 
 <XMLlist>
 <entry code="a">text imprès</entry>

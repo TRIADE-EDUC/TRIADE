@@ -1,0 +1,99 @@
+@startuml
+
+
+namespace PMB {
+  namespace CMS {
+    namespace Library {
+	    namespace Build {
+	    
+			class PortalBuild {
+				+pageModel PageModel
+				-portalModel
+				-portalDocument
+				+$elementNodeContainer: Array
+				..
+				+__construct()
+				+transformHTML(string $html): string
+				+parse(LayoutContainerModel $layoutContainer)
+				+getPortalModel()
+				+setPortalModel(PortalModel $portalModel)
+				+getPortalDocument()
+				+setPortalDocument(PortalDocument $portalDocument)
+			}
+			
+			class PortalDocument extends DOMDocument {
+				-ROOT_CONTAINER_ID = "container"
+				+substituteContainer: DOMElement
+				+elementNodeContainer: array
+				#deleted: array
+				..
+				+__construct(string $version = "1.0", string $encoding = "")
+				+getDomNodeById($id): DOMNode
+				+insertDomNode(DOMNode $node, string $idParent = "", string $idPrevious = ""): DomNode
+				+loadHTML($source, $options = null)
+				-cleanHTML(string $source)
+				+getBody()
+				+saveHTML($node = null)			
+				+switchParent(\DomNode $parent, \DomNode $newParent)
+				+mergeDomNodeAttributes(\DomNode $nodeOld, \DomNode $nodeNew): \DomNode
+				+isDeleted($id_tag)
+			}
+			
+			interface PortalNodeInterfaceBuild {
+				+getHeader()
+				+buildNode(): DOMNode
+			}
+			
+			class ZoneBuild implements PortalNodeInterfaceBuild {
+				#layoutContainer
+				#portalDocument
+				..
+				-__construct(LayoutContainerModel $layoutContainer, PortalDocument $portalDocument)
+				+{static}getInstance(LayoutContainerModel $layoutContainer, PortalDocument $portalDocument)
+				+getLayoutContainer()
+				+setLayoutContainer(LayoutContainerModel $layoutContainer)
+			}
+			class FrameBuild implements PortalNodeInterfaceBuild {
+				#layoutElement
+				#portalDocument
+				..
+				-__construct(LayoutElementModel $layoutElement, PortalDocument $portalDocument)
+				+{static}getInstance(LayoutElementModel $layoutElement, PortalDocument $portalDocument)
+				+getLayoutElement()
+				+setLayoutElement(LayoutElementModel $layoutElement)
+				
+			}
+			class OpacZoneBuild extends ZoneBuild {}
+			class OpacFrameBuild extends FrameBuild {}
+			class CMSZoneBuild extends ZoneBuild {}
+			class CMSFrameBuild extends FrameBuild {
+				-buildCMSNode()
+				-getCMSCadre()
+				-buildHTMLError(string $error)
+			}
+			class FRBRFrameBuild extends FrameBuild {}
+			
+			class PortalModel {
+				+getCurrentPage()
+			}
+			
+			class PageModel {
+			    +generateTree(): LayoutContainerModel
+			}
+			
+			''liens
+			PortalModel *-- PageModel : Contient >
+			PortalBuild *-- PortalModel : Contient >
+			PortalBuild *-- PortalDocument : Contient >
+			
+			ZoneBuild *-- PortalDocument : Contient >
+			'' LayoutContainerModel provient de Pmb\CMS\Models
+			ZoneBuild *-- LayoutContainerModel : Contient >
+			
+			FrameBuild *-- PortalDocument : Contient >
+			'' layoutElementModel provient de Pmb\CMS\Models
+			FrameBuild *-- layoutElementModel : Contient >
+		}
+	}
+}
+@enduml

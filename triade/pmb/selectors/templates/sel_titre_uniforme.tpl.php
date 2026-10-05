@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_titre_uniforme.tpl.php,v 1.24 2018-01-24 10:54:46 vtouchard Exp $
+// $Id: sel_titre_uniforme.tpl.php,v 1.25 2021/04/30 09:52:01 jlaurent Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
-// templates du sÃ©lecteur auteur
+// templates du sélecteur auteur
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
@@ -37,7 +37,7 @@ if ($dyn==3) {
 		var n_element=w.parent.document.forms[f_caller].elements['$max_field'].value;
 		var flag = 1;
 		
-		//VÃ©rification que l'Ã©lÃ©ment n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'élément n'est pas déjà sélectionnée
 		for (var i=0; i<n_element; i++) {
 			if (w.parent.document.getElementById('$field_id'+i).value==id_value) {
 				alert('".addslashes($msg["aut_oeuvre_already_in_use"])."');
@@ -56,7 +56,7 @@ if ($dyn==3) {
 		
 			if (i==n_element) w.parent.$add_field();
 			w.parent.document.getElementById('$field_id'+i).value = id_value;
-			w.parent.document.getElementById('$field_name_id'+i).value = reverse_html_entities(libelle_value);
+			w.parent.document.getElementById('$field_name_id'+i+'_display_label').value = reverse_html_entities(libelle_value);
 		    if(callback){
 			 if(typeof w.parent[callback] == 'function'){
                 w.parent[callback](id_value);
@@ -65,7 +65,7 @@ if ($dyn==3) {
 		}	
 	}
 </script>";
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = $jscript_common_authorities_link;
 }elseif ($dyn!=1) {
 	$jscript = $jscript_common_selector;

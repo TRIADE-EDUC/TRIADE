@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: concept.class.php,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: concept.class.php,v 1.2 2022/01/05 15:25:28 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/onto/common/onto_common_uri.class.php");
 require_once($class_path."/onto/onto_store_arc2.class.php");
 require_once($class_path."/onto/onto_index.class.php");
@@ -50,13 +51,13 @@ class concept {
 	private $scheme;
 	
 	/**
-	 * Tableau des identifiants de notices indexÃ©es par le concept
+	 * Tableau des identifiants de notices indexées par le concept
 	 * @var array
 	 */
 	private $indexed_notices;
 	
 	/**
-	 * Vedette composÃ©e associÃ©e au concept
+	 * Vedette composée associée au concept
 	 * @var vedette_composee
 	 */
 	private $vedette;
@@ -65,7 +66,7 @@ class concept {
 	
 	/**
 	 * Constructeur d'un concept
-	 * @param int $id Identifiant en base du concept. Si nul, fournir les paramÃ¨tres suivants.
+	 * @param int $id Identifiant en base du concept. Si nul, fournir les paramètres suivants.
 	 * @param string $uri [optional] URI du concept
 	 * @param string $type [optional] URI de la classe de l'ontologie
 	 * @param string $display_label [optional] Label du concept
@@ -127,13 +128,13 @@ class concept {
 				skos_datastore::query($query);
 				if(skos_datastore::num_rows()){
 					$results = skos_datastore::get_result();
-					foreach($results as $key=>$result){
+					foreach($results as $result){
 						if(isset($result->label_lang) && $result->label_lang==substr($lang,0,2)){
 							$this->display_label = $result->label;
 							break;
 						}
 					}
-					//pas de langue de l'interface trouvÃ©e
+					//pas de langue de l'interface trouvée
 					if (!$this->display_label){
 						$this->display_label = $result->label;
 					}
@@ -153,8 +154,6 @@ class concept {
 	}
 	
 	public function update_display_label($label) {
-		global $base_path;
-
 		// On commence par supprimer le label existant
 		$query = "delete {
 				<".$this->get_uri()."> <http://www.w3.org/2004/02/skos/core#prefLabel> ?obj
@@ -175,11 +174,11 @@ class concept {
 	}
 	
 	public function get_scheme() {
-		global $dbh, $lang;
+		global $lang;
 		
 		if (!$this->scheme) {
 			$query = "select value, lang from skos_fields_global_index where id_item = ".$this->id." and code_champ = 4 and code_ss_champ = 1";
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					$this->scheme = $row->value;
@@ -193,17 +192,15 @@ class concept {
 	}
 
 	/**
-	 * Retourne les identifiants des notices indexÃ©es par le concept
-	 * @return array Tableau des notices indexÃ©es par le concept
+	 * Retourne les identifiants des notices indexées par le concept
+	 * @return array Tableau des notices indexées par le concept
 	 */
 	public function get_indexed_notices() {
-		global $dbh;
-	
 		if (!$this->indexed_notices) {
 			$this->indexed_notices = array();
 			
 			$query = "select num_object from index_concept where num_concept = ".$this->id." and type_object = ".TYPE_NOTICE;
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)) {
 					$this->indexed_notices[] = $row->num_object;
@@ -214,7 +211,7 @@ class concept {
 	}
 	
 	/**
-	 * Retourne la vedette composÃ©e associÃ©e au concept
+	 * Retourne la vedette composée associée au concept
 	 * @return vedette_composee
 	 */
 	public function get_vedette() {
@@ -272,12 +269,12 @@ class concept {
 	}
 	
 	/**
-	 * RÃ©cupÃ©ration de l'identifiant du concept composÃ©
-	 * Soit on rÃ©cupÃ¨re celui existant (si il y'en a un) soit on le crÃ©e
+	 * Récupération de l'identifiant du concept composé
+	 * Soit on récupère celui existant (si il y'en a un) soit on le crée
 	 */
 	public static function get_concepts_composed_with_entity($object_id, $object_type, $grammar, $subdivision_type){
 		
-		//Filtre sur la subdivision dans le cas ou elle est passÃ©e en paramÃ¨tre
+		//Filtre sur la subdivision dans le cas ou elle est passée en paramètre
 		$sub_request_subdivision = '';
 		$end_condition = '';
 		$concept_id = array();

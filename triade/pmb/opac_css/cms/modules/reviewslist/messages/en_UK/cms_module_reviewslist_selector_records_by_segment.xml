@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_reviewslist_selector_records_by_segment.xml,v 1.2 2022/09/16 07:57:57 tsamson Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_reviewslist_selector_records_by_segment_filter'>Filtrez sur les notices d'un segment</entry>
+	<entry code='cms_module_reviewslist_selector_records_by_segment_no_segment'>Aucun segment sélectionné</entry>
+	<entry code='cms_module_reviewslist_selector_records_by_segment_current_segment'>Segment courant</entry>
+</XMLlist>

@@ -37,7 +37,7 @@ class FColor {
 			$this->g = intval($args[1]);
 			$this->b = intval($args[2]);
 		} elseif ($c === 1) {
-			if (is_string($args[0]) && strlen($args[0]) === 7 && $args[0]{0} === '#') {		// Hex Value in String
+			if (is_string($args[0]) && strlen($args[0]) === 7 && $args[0][0] === '#') {		// Hex Value in String
 				$this->r = intval(substr($args[0], 1, 2), 16);
 				$this->g = intval(substr($args[0], 3, 2), 16);
 				$this->b = intval(substr($args[0], 5, 2), 16);

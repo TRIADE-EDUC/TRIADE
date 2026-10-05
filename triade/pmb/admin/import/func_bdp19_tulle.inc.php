@@ -1,16 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_bdp19_tulle.inc.php,v 1.5 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: func_bdp19_tulle.inc.php,v 1.9 2022/04/25 14:43:37 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// DEBUT paramÃ©trage propre Ã  la base de donnÃ©es d'importation :
+global $class_path;
+require_once ($class_path."/import/import_expl_bdp.class.php");
+
+// DEBUT paramétrage propre à la base de données d'importation :
 $section_bdp19=array("BD adulte","Roman adulte","Roman policier adulte","Roman science fiction adulte",
-"Documentaire adulte","Livre+CD adulte","Livre+K7 adulte","Large vision","Fond rÃ©gional","Revues",
+"Documentaire adulte","Livre+CD adulte","Livre+K7 adulte","Large vision","Fond régional","Revues",
 "Album jeunes","BD jeunes","Contes jeunes","Roman jeune","Roman enfant","Documentaire jeune","Livre+CD jeune",
-"Livre+K7 jeune","Diapositives","CD","Disque","K7","DVD","K7 VidÃ©o");
+"Livre+K7 jeune","Diapositives","CD","Disque","K7","DVD","K7 Vidéo");
 
 $corresp_bdp19=array(
 	array("BD"),
@@ -92,9 +95,9 @@ $sec_search_bdp19=array(
 	"V",
 	"F");
 // 995 $r = type documents
-// aucun : sont insÃ©rÃ©s en base de donnÃ©es avec les bons codages 995$r :
+// aucun : sont insérés en base de données avec les bons codages 995$r :
 /*
-insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("ImprimÃ©s",15,15,"az");
+insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Imprimés",15,15,"az");
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Disque vinyle",15,15,"jz"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("K7 audio",15,15,"jd"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("K7 lue",15,15,"ld"); 
@@ -103,16 +106,16 @@ insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import)
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("CD-lu",15,15,"ie"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Livre CD",15,15,"me"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("DVD audio",15,15,"jf"); 
-insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("K7 vidÃ©o",15,15,"gd"); 
-insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("DVD-vidÃ©o",15,15,"gf"); 
+insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("K7 vidéo",15,15,"gd"); 
+insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("DVD-vidéo",15,15,"gf"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Affiches estampes",15,15,"ka");
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Cartes postales",15,15,"kb"); 
-insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Diapositives - IcÃ´nes",15,15,"kc");
+insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Diapositives - Icônes",15,15,"kc");
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("CD-Rom",15,15,"le"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("DVD-rom",15,15,"lf"); 
 insert into docs_type (tdoc_libelle, duree_pret, duree_resa, tdoc_codage_import) values ("Exposition",15,15,"mz"); 
 */
-// FIN paramÃ©trage 
+// FIN paramétrage 
 
 function recup_noticeunimarc_suite($notice) {
 	global $aut_700,$aut_701,$aut_702,$aut_710,$aut_711,$aut_712;
@@ -143,10 +146,9 @@ function recup_noticeunimarc_suite($notice) {
 			$aut_712[$i]["f"]="";
 		}
 	}
-	} // fin recup_noticeunimarc_suite = fin rÃ©cupÃ©ration des variables propres Ã  la BDP02
+	} // fin recup_noticeunimarc_suite = fin récupération des variables propres à la BDP02
 	
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 	
 	global $index_sujets ;
@@ -159,13 +161,12 @@ function import_new_notice_suite() {
 	
 	$mots_cles ? $index_matieres = strip_empty_words($mots_cles) : $index_matieres = '';
 	$rqt_maj = "update notices set index_l='".addslashes($mots_cles)."', index_matieres=' ".addslashes($index_matieres)." ' where notice_id='$notice_id' " ;
-	$res_ajout = pmb_mysql_query($rqt_maj, $dbh);
+	pmb_mysql_query($rqt_maj);
 
 } // fin import_new_notice_suite
 			
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
 	global $nb_expl_ignores ;
 	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, 
 		$section_bdp19, $sec_search_bdp19,$corresp_bdp19,$sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
@@ -174,19 +175,20 @@ function traite_exemplaires () {
 	// lu en 010$d de la notice
 	$price = $prix[0];
 	
-	// la zone 995 est rÃ©pÃ©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est répétable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 		
-		/* prÃ©paration du tableau Ã  passer Ã  la mÃ©thode */
+		/* préparation du tableau à passer à la méthode */
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
 		$expl['notice']     = $notice_id ;
 		
-		// $expl['typdoc']     = $info_995[$nb_expl]['r']; chargÃ© en base lors de l'installation, voir plus haut
+		// $expl['typdoc']     = $info_995[$nb_expl]['r']; chargé en base lors de l'installation, voir plus haut
 		$data_doc=array();
-		$data_doc['tdoc_libelle'] = "LibellÃ© crÃ©Ã© ".$info_995[$nb_expl]['r'];
-		$data_doc['duree_pret'] = 15 ; /* valeur par dÃ©faut */
+		$data_doc['tdoc_libelle'] = "Libellé créé ".$info_995[$nb_expl]['r'];
+		$data_doc['duree_pret'] = 15 ; /* valeur par défaut */
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
 			else $data_doc['tdoc_owner'] = 0 ;
@@ -197,13 +199,13 @@ function traite_exemplaires () {
 		// traitement des sections en fonction de la cote
 		// cote[1] ?? G L ou U
 		// -Non
-		//		trouver le dÃ©but de la cote dans le tableau
-		//		crÃ©er la section si besoin
+		//		trouver le début de la cote dans le tableau
+		//		créer la section si besoin
 		// -Oui
-		//		tronquer de cette premiÃ¨re lettre
-		//		trouver le nouveau dÃ©but dans le tableau
-		//		remettre la premiÃ¨re lettre
-		//		crÃ©er la section si besoin
+		//		tronquer de cette première lettre
+		//		trouver le nouveau début dans le tableau
+		//		remettre la première lettre
+		//		créer la section si besoin
 		$car = (string)$info_995[$nb_expl]['k'][0];
 		switch ($car) {
 			case 'U':
@@ -240,7 +242,7 @@ function traite_exemplaires () {
 				}
 		
 		
-		// $expl['section']    = $info_995['8']; Ã  chercher dans docs_section
+		// $expl['section']    = $info_995['8']; à chercher dans docs_section
 		$data_doc=array();
 		$data_doc['section_libelle'] = $libelle_section_lu;
 		$data_doc['sdoc_codage_import'] = $codage_section_lu ;
@@ -254,25 +256,29 @@ function traite_exemplaires () {
 		
 		$expl['location'] = $book_location_id;
 		
-		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisÃ©, Ã©ventuellement Ã  fixer par combo_box
+		// $expl['codestat']   = $info_995[$nb_expl]['q']; 'q' utilisé, éventuellement à fixer par combo_box
 		$data_doc=array();
-		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visÃ© importÃ© (".$book_lender_id.")";
+		//$data_doc['codestat_libelle'] = $info_995[$nb_expl]['q']." -Pub visé importé (".$book_lender_id.")";
 		$data_doc['codestat_libelle'] = $codstatdoc_995[$info_995[$nb_expl]['q']];
 		$data_doc['statisdoc_codage_import'] = $info_995[$nb_expl]['q'] ;
 		if ($statisdoc_codage) $data_doc['statisdoc_owner'] = $book_lender_id ;
 			else $data_doc['statisdoc_owner'] = 0 ;
 		$expl['codestat'] = docs_codestat::import($data_doc);
 		
-		// $expl['creation']   = $info_995[$nb_expl]['']; Ã  prÃ©ciser
-		// $expl['modif']      = $info_995[$nb_expl]['']; Ã  prÃ©ciser
+		// $expl['creation']   = $info_995[$nb_expl]['']; à préciser
+		// $expl['modif']      = $info_995[$nb_expl]['']; à préciser
                       	
 		$expl['note']       = $info_995[$nb_expl]['u'];
 		$expl['prix']       = $price;
 		$expl['expl_owner'] = $book_lender_id ;
 		$expl['cote_mandatory'] = $cote_mandatory ;
 		
-		$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;      
-		$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		if (!empty($info_995[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_995[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		}
 		
 		$expl_id = exemplaire::import($expl);
 		if ($expl_id == 0) {
@@ -298,50 +304,19 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction spÃ©cifique d'export de la zone 995
+// fonction spécifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
-	global $msg, $dbh, $opac_biblio_name ;
+	global $opac_biblio_name ;
+	
+	$subfields = import_expl::export_traite_exemplaires($ex);
 	
 	$subfields["a"] = $opac_biblio_name;
-	//$subfields["a"] = $ex -> lender_libelle;
-	//$subfields["c"] = $ex -> lender_libelle;
-	$subfields["f"] = $ex -> expl_cb;
-	$subfields["k"] = $ex -> expl_cote;
-
-	if ($ex->statusdoc_codage_import) $subfields["o"] = $ex -> statusdoc_codage_import;
-	if ($ex -> statisdoc_codage_import) $subfields["q"] = $ex -> statisdoc_codage_import;
-		else $subfields["q"] = "u";
-	if ($ex -> tdoc_codage_import) $subfields["r"] = $ex -> tdoc_codage_import;
-		else $subfields["r"] = "uu";
-	$subfields["u"] = $ex -> expl_note;
+	unset($subfields["c"]);
 	
-	global $export996 ;
-	$export996['f'] = $ex -> expl_cb ;
-	$export996['k'] = $ex -> expl_cote ;
-	$export996['u'] = $ex -> expl_note ;
-
-	$export996['m'] = substr($ex -> expl_date_depot, 0, 4).substr($ex -> expl_date_depot, 5, 2).substr($ex -> expl_date_depot, 8, 2) ;
-	$export996['n'] = substr($ex -> expl_date_retour, 0, 4).substr($ex -> expl_date_retour, 5, 2).substr($ex -> expl_date_retour, 8, 2) ;
-
-	$export996['a'] = $ex -> lender_libelle;
-	$export996['b'] = $ex -> expl_owner;
-
-	$export996['v'] = $ex -> location_libelle;
-	$export996['w'] = $ex -> ldoc_codage_import;
-
-	$export996['x'] = $ex -> section_libelle;
-	$export996['y'] = $ex -> sdoc_codage_import;
-
-	$export996['e'] = $ex -> tdoc_libelle;
-	$export996['r'] = $ex -> tdoc_codage_import;
-
-	$export996['1'] = $ex -> statut_libelle;
-	$export996['2'] = $ex -> statusdoc_codage_import;
-	$export996['3'] = $ex -> pret_flag;
-	
-	global $export_traitement_exemplaires ;
-	$export996['0'] = $export_traitement_exemplaires ;
-	
+	if ($ex -> statisdoc_codage_import) {
+		$subfields["q"] = $ex -> statisdoc_codage_import;
+	} else {
+		$subfields["q"] = "u";
+	}
 	return 	$subfields ;
-
-	}	
+}

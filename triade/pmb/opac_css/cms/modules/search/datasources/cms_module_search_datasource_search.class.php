@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_search_datasource_search.class.php,v 1.4 2016-09-20 10:25:42 apetithomme Exp $
+// $Id: cms_module_search_datasource_search.class.php,v 1.6.8.1 2024/07/09 10:22:19 jparis Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -29,7 +29,16 @@ class cms_module_search_datasource_search extends cms_module_common_datasource{
 				$box = pmb_mysql_result($result,0,0);
 				$infos =unserialize($box);
 				foreach($dests as $dest){
-					$datas[]=$infos['module']['search_dests'][$dest];
+					if(!empty($infos['module']['search_dests'][$dest])){
+						$destination = $infos['module']['search_dests'][$dest];
+						$destination['default_segment'] = 0;
+						if(!empty($destination['universe']) && $destination['universe'] != 0){
+							$query = "select search_universe_default_segment from search_universes where id_search_universe = ".$destination['universe'];
+							$result = pmb_mysql_query($query);
+							$destination['default_segment'] = pmb_mysql_result($result,0,0);
+						}
+						$datas[]=$destination;
+					}
 				}
 			}
 		}

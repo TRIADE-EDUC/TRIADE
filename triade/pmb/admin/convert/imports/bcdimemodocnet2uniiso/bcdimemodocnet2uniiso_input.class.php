@@ -1,12 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bcdimemodocnet2uniiso_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: bcdimemodocnet2uniiso_input.class.php,v 1.3 2023/08/23 10:25:54 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path;
 require_once ($base_path."/admin/convert/convert_input.class.php");
+require_once $class_path."/import/import_records.class.php";
 
 class bcdimemodocnet2uniiso_input extends convert_input {
 	
@@ -23,14 +25,17 @@ class bcdimemodocnet2uniiso_input extends convert_input {
 			$i=strpos($fcontents,"<".$input_params['NOTICEELEMENT'].">");
 			if ($i===false) $i=strpos($fcontents,"<".$input_params['NOTICEELEMENT']." ");
 			if ($i!==false) {
-				//on pense Ã  rÃ©cup le charset du xml
+				//on pense à récup le charset du xml
 				if($encoding === ""){
 					$s=strpos($fcontents,"<?xml");
 					$e=strpos($fcontents,"?>");
 					if(isset($s) && isset($e)){
-						$entete = substr($fcontents,$s,$e+2);
+						$entete = pmb_substr($fcontents,$s,$e+2);
 						$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
-						if (preg_match($rx,$entete, $m)) $encoding = strtoupper($m[1]);
+						$m = array();
+						if (preg_match($rx,$entete, $m)) {
+							$encoding = strtoupper($m[1]);
+						}
 					}
 				} 
 				$i1=strpos($fcontents,"</".$input_params['NOTICEELEMENT'].">");
@@ -40,7 +45,7 @@ class bcdimemodocnet2uniiso_input extends convert_input {
 					$i1=strpos($fcontents,"</".$input_params['NOTICEELEMENT'].">");
 				}
 				
-				// nouvelles versions de BCDI : la notice mere et la notice fille sont dans 1 seule notice => si on a une fille (=notice partie), on extrait la mere (notice generale) pour envoyer le bon nombre de noties Ã  traiter
+				// nouvelles versions de BCDI : la notice mere et la notice fille sont dans 1 seule notice => si on a une fille (=notice partie), on extrait la mere (notice generale) pour envoyer le bon nombre de noties à traiter
 				$i_notpartie=strpos($fcontents,"<NOTICE_PARTIE>");
 				$i1_notpartie=strpos($fcontents,"</NOTICE_PARTIE>");
 				$i_notgenerale=strpos($fcontents,"<NOTICE_GENERALE>");
@@ -48,13 +53,15 @@ class bcdimemodocnet2uniiso_input extends convert_input {
 				if($i_notpartie!==false && $i1_notpartie!==false) {
 					if($i_notgenerale!==false && $i1_notgenerale!==false){
 						// envoi de la notice mere 
-						$notice="<".$input_params['NOTICEELEMENT'].">".substr($fcontents,$i_notgenerale,$i1_notgenerale+strlen("</NOTICE_GENERALE>")-$i_notgenerale)."</".$input_params['NOTICEELEMENT'].">";
+						$notice="<".$input_params['NOTICEELEMENT'].">".substr($fcontents,$i_notgenerale,intval($i1_notgenerale) + strlen("</NOTICE_GENERALE>") - intval($i_notgenerale))."</".$input_params['NOTICEELEMENT'].">";
+						$notice=import_records::get_encoded_buffer($notice);
 						$requete="insert into import_marc (no_notice, notice, origine, encoding) values($n,'".addslashes($notice)."','$origine','$encoding')";
 						pmb_mysql_query($requete);
 						$n++;
 						$index[]=$n;
 						// envoi de la notice fille
-						$notice=substr($fcontents,$i,$i1+strlen("</".$input_params['NOTICEELEMENT'].">")-$i);
+						$notice=substr($fcontents,$i,intval($i1) + strlen("</".$input_params['NOTICEELEMENT'].">") - intval($i));
+						$notice=import_records::get_encoded_buffer($notice);
 						$requete="insert into import_marc (no_notice, notice, origine, encoding) values($n,'".addslashes($notice)."','$origine','$encoding')";
 						pmb_mysql_query($requete);
 						$n++;
@@ -63,9 +70,10 @@ class bcdimemodocnet2uniiso_input extends convert_input {
 						$i=false;					
 					}				
 				} 
-				// si pas de fille, on traite la notice de maniÃ¨re standard
+				// si pas de fille, on traite la notice de manière standard
 				elseif ($i1!==false) {
-					$notice=substr($fcontents,$i,$i1+strlen("</".$input_params['NOTICEELEMENT'].">")-$i);
+					$notice=substr($fcontents,$i,intval($i1) + strlen("</".$input_params['NOTICEELEMENT'].">") - intval($i));
+					$notice=import_records::get_encoded_buffer($notice);
 					$requete="insert into import_marc (no_notice, notice, origine, encoding) values($n,'".addslashes($notice)."','$origine','$encoding')";
 					pmb_mysql_query($requete);
 					$n++;

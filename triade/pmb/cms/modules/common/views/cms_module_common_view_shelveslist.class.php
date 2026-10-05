@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_shelveslist.class.php,v 1.14 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_common_view_shelveslist.class.php,v 1.14 2019/06/13 15:26:51 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -73,7 +73,7 @@ class cms_module_common_view_shelveslist extends cms_module_common_view_django{
 	public function render($datas){
 		global $opac_etagere_notices_format;
 				
-		//on gÃ¨re l'affichage des notices
+		//on gère l'affichage des notices
 		foreach($datas["shelves"] as $i => $shelve) {
 			$datas['shelves'][$i]['records'] = contenu_etagere($shelve['id'],$this->parameters["nb_notices"],$opac_etagere_notices_format,"",1,'./index.php?lvl=etagere_see&id=!!id!!',$this->parameters['django_directory']);
 			$datas['shelves'][$i]['cart_link'] = $this->get_constructed_link('shelve_to_cart', $shelve['id']);

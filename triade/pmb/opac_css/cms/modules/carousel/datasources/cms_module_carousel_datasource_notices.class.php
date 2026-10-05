@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_carousel_datasource_notices.class.php,v 1.10 2017-07-05 07:42:37 mbertin Exp $
+// $Id: cms_module_carousel_datasource_notices.class.php,v 1.11 2023/06/07 10:27:46 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_carousel_datasource_notices extends cms_module_common_datasource_records{
 	
@@ -13,7 +15,7 @@ class cms_module_carousel_datasource_notices extends cms_module_common_datasourc
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		global $opac_url_base;
@@ -26,11 +28,12 @@ class cms_module_carousel_datasource_notices extends cms_module_common_datasourc
 		$result = pmb_mysql_query($query);
 		$notices = array();
 		if(pmb_mysql_num_rows($result)){
+		    $thumbnailSourcesHandler = new ThumbnailSourcesHandler();
 			while($row = pmb_mysql_fetch_object($result)){
-				$url_vign = "";
-				if (($row->code || $row->thumbnail_url) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $row->thumbnail_url))) {
-						$url_vign = getimage_url($row->code, $row->thumbnail_url);
-				}
+			    $url_vign = "";
+			    if ($opac_show_book_pics=='1') {
+			        $url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $row->notice_id);
+			    }
 				$notices[] = array(
 					'title' => $row->tit1,
 					'link' => $opac_url_base."?lvl=notice_display&id=".$row->notice_id,

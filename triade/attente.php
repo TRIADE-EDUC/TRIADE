@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,7 +19,7 @@ session_start();
  *
  ***************************************************************************/
 include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET);
-include("librairie_php/lib_licence.php");
+include_once("librairie_php/lib_licence.php");
 ?>
 <HTML>
 <HEAD>

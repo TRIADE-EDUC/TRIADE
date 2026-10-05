@@ -1671,7 +1671,7 @@ $LG['ABOUT_TRADUCTION'] = "traductions non officielles";
 $LG['ABOUT_PHENIX'] = "Phenix Agenda";
 $LG['ABOUT_PHP'] = "PHP Logo";
 $LG['ABOUT_MYSQL'] = "MySQL Logo";
-$LG['ABOUT_COPYRIGHT'] = "<B>&copy; 2005-2008 - <A href=\"mailto:phenix-agenda@laposte.net\" class=\"about\">St&eacute;phane TEIL</A> - Tous Droits R&eacute;serv&eacute;s.</B>";
+$LG['ABOUT_COPYRIGHT'] = "<B>&copy; 2005-2008 - <A href=\"mailto:phenix-agenda@laposte.net\" class=\"about\">St&eacute;phane TEIL</A> | &copy; 2009-".date("Y")." - T.R.I.A.D.E. - Tous Droits R&eacute;serv&eacute;s.</B>";
 // FIN - En accord avec la licence GPL sous laquelle Phenix est distribue, merci de ne pas supprimer ou modifier le code qui precede
 // Fichiers langue des MODs, NE PAS MODIFER OU SUPPRIMER la ligne ci-dessous
 include "mods/mod_lang.php";

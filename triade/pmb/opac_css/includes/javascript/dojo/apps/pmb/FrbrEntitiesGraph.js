@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FrbrEntitiesGraph.js,v 1.2 2017-06-01 09:18:47 tsamson Exp $
+// $Id: FrbrEntitiesGraph.js,v 1.4.6.1.2.1 2025/04/29 12:27:40 rtigero Exp $
 
 
 define(["dojo/_base/declare",
@@ -19,6 +19,7 @@ define(["dojo/_base/declare",
     return declare(EntitiesGraph, { 
     	memoryNodes : null,
     	memoryLinks : null,
+    	defaultHeigt : 500,
 
     	postCreate : function () {
     		this.memoryNodes = new Memory({
@@ -35,7 +36,10 @@ define(["dojo/_base/declare",
         },
         
         nodeClicked: function(node) {
-        	if(node.type != 'root' && node.type != 'subroot'){
+			if (node.type == 'additionnal_nodes') {
+				// On appel la methode parente
+            	this.inherited(arguments);    
+			} else if(node.type != 'root' && node.type != 'subroot'){
 	        	if (this.hasChildren(node)) {
 	        		this.hideChildren(node);
 	        	}else {
@@ -90,7 +94,21 @@ define(["dojo/_base/declare",
                 .style("opacity", 1e-6);
         },
         
-        loadSubGraph: function(data){
+        loadSubGraph: function(data) {
+			if (typeof data == 'string') {
+				try {				
+					data = this.formatString(data)
+	        	    data = JSON.parse(data);
+				} catch(e) {
+					// on affiche l'erreur
+					console.error(e);
+					// on evite de bloquer la page
+					data = {nodes: [], links: []};
+				}
+			} else if (!data || !data.nodes || !data.links) {
+				data = {nodes: [], links: []};
+			}
+			
         	for(var i=0 ; i<data.nodes.length ; i++){
         		if(this.nodeChecker(data.nodes[i].id)){
         			this.nodes.push(data.nodes[i]);
@@ -118,7 +136,9 @@ define(["dojo/_base/declare",
 	        			return  "stroke: rgb("+d.color+")";	
 	        		}
 	        		return  "stroke: #999";
-	        	});
+	        	})
+	        	.attr("marker-end", "url(#arrow)");
+			
 			this.linkSvg = linkEnter.merge(this.linkSvg);
 			//this.linkSvg.exit().remove();
 			

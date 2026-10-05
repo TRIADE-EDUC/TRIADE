@@ -1,13 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bulletin.inc.php,v 1.16 2019-05-29 12:42:11 btafforeau Exp $
+// $Id: bulletin.inc.php,v 1.18 2022/01/18 10:20:30 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $item, $action, $idcaddie, $include_child, $what, $aff, $msg;
+global $what, $action, $aff, $msg;
+global $item, $idcaddie, $include_child, $include_analysis, $selected_objects;
 
+if(empty($item) && !empty($selected_objects)) {
+	$item = $selected_objects;
+}
 if($item) {
 	$item_list = explode(',', $item);
 	if(!count($item_list)) $item_list[0]=$item;
@@ -20,7 +24,10 @@ if($item) {
 	
 	switch($action) {
 		case 'add_item':
-			if($idcaddie)$caddie[0]=$idcaddie;
+			if($idcaddie) {
+				$caddie=array();
+				$caddie[0]=$idcaddie;
+			}
 			foreach($caddie  as $idcaddie) {
 				$myCart = new caddie($idcaddie);
 				foreach ($item_list as $elt) {
@@ -33,6 +40,14 @@ if($item) {
 						}	
 					} else {
 						$myCart->add_item($elt,"BULL",$what);
+					}
+					if($include_analysis && $myCart->type == 'NOTI') {
+					    $tab_list_child=bulletinage::get_list_analysis($elt);
+					    if(count($tab_list_child)) {
+					        foreach ($tab_list_child as $notice_id) {
+					            $myCart->add_item($notice_id,"NOTI");
+					        }
+					    }
 					}
 				}
 				$myCart->compte_items();

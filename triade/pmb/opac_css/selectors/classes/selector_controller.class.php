@@ -1,23 +1,25 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_controller.class.php,v 1.2 2018-10-11 08:08:19 vtouchard Exp $
-  
+// $Id: selector_controller.class.php,v 1.5.6.3 2025/01/17 07:46:29 dgoron Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class selector_controller {
-	
+
 	protected $user_input;
-	
+
 	public function __construct($user_input=''){
 		$this->user_input = $user_input;
 	}
 
 	public function proceed() {
 		global $what, $caller;
-		global $bt_ajouter;
-		
+		global $bt_ajouter, $action;
+		global $search_xml_file, $search_field_id;
+		global $selector_data;
+
 		switch($what) {
 			case 'auteur':
 				$bt_ajouter ="no";
@@ -73,17 +75,17 @@ class selector_controller {
 				$selector = new selector_music_form($this->user_input);
 				break;
 			case 'query_list':
-				$selector = new selector_query_list(stripslashes($user_input));
+				$selector = new selector_query_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
 			case 'list':
-				$selector = new selector_list(stripslashes($user_input));
+			    $selector = new selector_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
 			case 'marc_list':
-				$selector = new selector_marc_list(stripslashes($user_input));
+			    $selector = new selector_marc_list($this->user_input);
 				$selector->set_search_xml_file($search_xml_file);
 				$selector->set_search_field_id($search_field_id);
 				break;
@@ -153,11 +155,29 @@ class selector_controller {
 				break;
 			case 'commande':
 // 				include ('./selectors/commande.inc.php');
+			    break;
+			case 'contribution':
+			    $selector = new selector_contribution($this->user_input);
+			    break;
+		    case 'search_segment':
+		        $selector = new selector_search_segment($this->user_input);
 				break;
 			default:
 				break;
 		}
-		$selector->proceed();
+		if (isset($selector) && is_object($selector)) {
+    		if (isset($selector_data)) {
+    		    $selector->set_data(stripslashes($selector_data));
+    		}
+    		switch ($action) {
+    		    case 'title':
+    		        print $selector->get_title();
+    		        break;
+    		    default :
+    		        $selector->proceed();
+    		        break;
+    		}
+		}
 	}
 }
 ?>

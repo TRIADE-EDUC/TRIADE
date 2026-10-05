@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+****************************************************************************************
+© 2002-2024 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: params.xml,v 1.1.18.2 2024/09/10 11:57:46 rtigero Exp $ -->
+
 <params>
 	<!-- Nom de l'import -->
 	<importname>PMB XML MARC -&gt; RIS Zotero</importname>
@@ -9,8 +15,8 @@
 	<input type="xml" rootelement="*" noticeelement="notice"/>
 
 	<!-- Type de la sortie -->
-	<output importable="no" type="txt" suffix="ris" charset='utf-8' mimetype="text/text"/>
-	
+	<output importable="no" type="txt" suffix="ris" charset='utf-8' mimetype="application/x-research-info-systems"/>
+
 	<step type="xmltransform">
 		<!-- Conversion en html -->
 		<xslfile>pmbxml2ris_zotero.xsl</xslfile>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,128 +26,91 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
-<script language="JavaScript" src="./librairie_js/lib_circulaire.js"></script>
-<script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<script language="JavaScript">
+function tout() {
+	document.querySelectorAll('input[name="saisie_classe[]"]').forEach(function(cb){ cb.checked = true; });
+}
+</script>
+<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS336 ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td >
-<!-- // fin  -->
-<form method=post  action='./reglement_ajout2.php' name=formulaire ENCTYPE="multipart/form-data">
-<table  width=100%  border="0" align="center" >
-<tr  >
-<td align="right"><font class="T2"><?php print LANGCIRCU6 ?> :</font> </TD>
-<TD align="left"><input type="text" name="saisie_titre" size=30 maxlength=28 ></td>
-</tr>
-<tr  >
-<td align="right"><font class="T2"><?php print LANGCIRCU7 ?> :</font> </TD>
-<TD align="left"><input type="text" name="saisie_ref" size=30 maxlength=28 ></td>
-</tr>
-<tr>
-<td align="right"  ><font class="T2"><?php print LANGMESS337 ?> :</font> </TD>
-<?php 
-include_once('librairie_php/db_triade.php');
-$mess="Format PDF (Max 2Mo)";
-$information="Attention";
-if ((LAN == "oui") && (AGENTWEB == "oui")) {
-	$information="Agent Web";
-	$vocal=urlencode(stripHTMLtags(LANGTMESS462));
-	$mess="<iframe width=100 height=100 src=\'http://www.triade-educ.org/agentweb/agentmel.php?inc=5&mess=$vocal\'  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe>".$mess ;
-}
-?>
-<TD  align="left">
-<input type="file" name="fichier" size=30 >
-<A href='#' onMouseOver="AffBulle3('<?php print $information ?>','./image/commun/warning.jpg','<?php print $mess?>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A>
-</td>
-    </tr>
-    <tr>
-      <td width=35% align="right"  ><font class="T2"><?php print LANGCIRCU9 ?> :</font> </TD>
-<?php
-$mess=LANGMESS70;
-$information="Information";
-if ((LAN == "oui") && (AGENTWEB == "oui")) {
-	$information="Agent Web";
-	$vocal=urlencode(stripHTMLtags(LANGTMESS463));
-	$mess="<iframe width=100 height=100 src=\'http://www.triade-educ.org/agentweb/agentmel.php?inc=5&mess=$vocal\'  MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no align=left ></iframe>".$mess ;
-}
-?>
-      <TD  align="left"><input type="checkbox" name="saisie_envoi_prof" id="btradio1" value="1" > <A href='#' onMouseOver="AffBulle3('<?php print $information ?>','./image/commun/info.jpg','<?php print $mess ?>'); window.status=''; return true;" onMouseOut='HideBulle()'><img src='./image/help.gif' align=center width='15' height='15'  border=0></A>
-      </td>
-    </tr>
-    <tr>
-      <td  align="right" valign=top><font class="T2"><?php print LANGMESS338 ?> : </font></td>
-      <TD  align="left">
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS336 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td>
 <?php
 include_once('librairie_php/db_triade.php');
-$cnx=cnx();
-$data=affclasse();
+$cnx = cnx();
+$data = affclasse();
 ?>
-<SCRIPT LANGUAGE=JavaScript>
-nbcase="<?php print count($data)?>";
-nbcase+=4;
-function tout() {
-	for (i=4;i<=nbcase;i++) {
-                document.formulaire.elements[i].checked=true;
-	}
-}
-</SCRIPT>
+<form method="post" action="./reglement_ajout2.php" name="formulaire" enctype="multipart/form-data">
+<div class="na-card">
+
+  <div style="display:grid;grid-template-columns:180px 1fr;gap:10px 14px;align-items:start;max-width:600px;">
+
+    <div style="text-align:right;padding-top:5px;font-size:13px;color:#555;font-weight:600;"><?php print LANGCIRCU6 ?> :</div>
+    <div><input type="text" name="saisie_titre" class="cc-select" style="width:220px;" maxlength="28"></div>
+
+    <div style="text-align:right;padding-top:5px;font-size:13px;color:#555;font-weight:600;"><?php print LANGCIRCU7 ?> :</div>
+    <div><input type="text" name="saisie_ref" class="cc-select" style="width:220px;" maxlength="28"></div>
+
+    <div style="text-align:right;padding-top:5px;font-size:13px;color:#555;font-weight:600;"><?php print LANGMESS337 ?> :</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="file" name="fichier" size="30">
+      <span class="htip-wrap"><img src='./image/help.gif' width='15' height='15' border='0'><span class="htip">Format PDF (Max 2Mo)</span></span>
+    </div>
+
+    <div style="text-align:right;padding-top:5px;font-size:13px;color:#555;font-weight:600;"><?php print LANGCIRCU9 ?> :</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" name="saisie_envoi_prof" id="envoi_prof" value="1">
+      <label for="envoi_prof" style="font-size:13px;color:#444;cursor:pointer;"><?php print LANGCIRCU9 ?></label>
+      <span class="htip-wrap"><img src='./image/help.gif' width='15' height='15' border='0'><span class="htip"><?php print LANGMESS70 ?></span></span>
+    </div>
+
+    <div style="text-align:right;padding-top:8px;font-size:13px;color:#555;font-weight:600;"><?php print LANGMESS338 ?> :</div>
+    <div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 18px;">
 <?php
-$j=0;
-for($i=0;$i<count($data);$i++)
-     {
-      if ($j == 4 ) { $j=0; print "<br/>"; }
-      print "<input type=checkbox  id='btradio1'  name='saisie_classe[]' value='".$data[$i][0]."' />".trim($data[$i][1])."\n";
-      $j++;
-     }
+for ($i = 0; $i < countTriade($data); $i++) {
+	print "<label style='font-size:12px;cursor:pointer;white-space:nowrap;'><input type='checkbox' name='saisie_classe[]' value='" . $data[$i][0] . "'> " . trim($data[$i][1]) . "</label>\n";
+}
 ?>
-<br>
-<BR><div align=right><a HREF="#" onclick="tout();"><?php print LANGCIRCU13?></a></DIV>
-<br>
-</td>
-</tr></table><BR>
-<table align=center><tr><td>
-<script language=JavaScript>buttonMagic("<?php print LANGCIRCU14 ?>","Javascript:history.go(-1)","_parent","","");</script>
-<script language=JavaScript>buttonMagicSubmit3("<?php print LANGENR?>","rien","onclick='AfficheAttente();'"); //text,nomInput</script>&nbsp;&nbsp;
-</td></tr></table>
+      </div>
+      <div style="text-align:right;margin-top:6px;">
+        <a href="#" onclick="tout(); return false;" style="font-size:12px;color:#3c4a8a;"><?php print LANGCIRCU13 ?></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="na-foot">
+  <button type="button" class="btn-retour" onclick="history.go(-1)"><?php print LANGCIRCU14 ?></button>
+  <button type="submit" class="btn-enr" onclick="attente()"><?php print LANGENR ?></button>
+</div>
 </form>
-<BR>
 
-
-     <!-- // fin  -->
-     </td></tr></table>
-     <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
-	    Pgclose();
-	    attente();
-     ?>
-<SCRIPT language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
+</td></tr></table>
+<?php
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+Pgclose();
+attente();
+?>
 </BODY></HTML>

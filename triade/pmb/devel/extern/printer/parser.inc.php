@@ -1,19 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: parser.inc.php,v 1.7 2019-06-11 08:53:16 btafforeau Exp $
+// $Id: parser.inc.php,v 1.8 2019/06/19 08:03:40 btafforeau Exp $
 
 
 /*----------------------------------------------------------------------------------------
  Fonctions pour parser un fichier XML
- La fonction Ã  appeler est _parser_ avec comme arguments :
+ La fonction à appeler est _parser_ avec comme arguments :
      $nom_fichier : le nom du fichier XML
-     $fonction : la lise des fonctions associÃ©es aux tags de niveau 2
-     $rootelement : l'Ã©lÃ©ment root du fichier XML
+     $fonction : la lise des fonctions associées aux tags de niveau 2
+     $rootelement : l'élément root du fichier XML
 ----------------------------------------------------------------------------------------*/
 $charset="iso-8859-1";
-// Lecture rÃ©cursive de la structure et stockage des paramÃ¨tres
+// Lecture récursive de la structure et stockage des paramètres
 
 function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	if ($indice > count($vals))
@@ -46,7 +46,7 @@ function _recursive_(&$indice, $niveau, &$param, &$tag_count, &$vals) {
 	}
 }
 
-//Parse le fichier [nom_fichier] et exÃ©cute les fonctions liÃ©es aux tags
+//Parse le fichier [nom_fichier] et exécute les fonctions liées aux tags
 
 function _parser_($nom_fichier, $fonction, $rootelement) {
 	global $charset;
@@ -76,11 +76,11 @@ function _parser_($nom_fichier, $fonction, $rootelement) {
 				exit;
 			}
 			$param_var = $param[$rootelement][0];
-			for ($i = 0; $i < count($param_var); $i ++) {
-				if (isset($fonction[$i])) {
-				    for ($j = 0; $j < count($param_var[$i]); $j ++) {
-				        $param_fonction = $param_var[$i][$j];
-						eval($fonction[$i]."(\$param_fonction);");
+			foreach ($param_var as $key => $val) {
+				if (isset($fonction[$key])) {
+					for ($j = 0; $j < count($val); $j ++) {
+						$param_fonction = $val[$j];
+						eval($fonction[$key]."(\$param_fonction);");
 					}
 				}
 			}
@@ -116,11 +116,11 @@ function _parser_text_($xml, $fonction, $rootelement) {
 				exit;
 			}
 			$param_var = $param[$rootelement][0];
-			for ($i = 0; $i < count($param_var); $i ++) {
-				if (isset($fonction[$i])) {
-					for ($j = 0; $j < count($param_var[$i]); $j ++) {
-						$param_fonction = $param_var[$i][$j];
-						eval($fonction[$i]."(\$param_fonction);");
+			foreach ($param_var as $key => $val) {
+				if (isset($fonction[$key])) {
+					for ($j = 0; $j < count($val); $j ++) {
+						$param_fonction = $val[$j];
+						eval($fonction[$key]."(\$param_fonction);");
 					}
 				}
 			}
@@ -159,7 +159,7 @@ function _parser_text_no_function_($xml, $rootelement, $full_path = '') {
 			}
 			$param_var = $param[$rootelement][0];
 			
-			//ParamÃ©trage de substitution par l'interface
+			//Paramétrage de substitution par l'interface
 			if($full_path) {
 				$path = substr($full_path, 0, strrpos($full_path, '/'));
 				$filename = substr($full_path, strrpos($full_path, '/')+1);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_recordslist_view_carousel_uikit.xml,v 1.1 2019/12/10 16:08:16 btafforeau Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_recordslist_view_link'>Construction du lien vers une notice</entry>
+	<entry code='cms_module_common_view_record_header_desc'>Header de la notice</entry>
+	<entry code='cms_module_recordslist_view_add_cart_link'>Ajouter au panier</entry>
+	<entry code='cms_module_recordslist_view_add_cart_link_desc'>Lien d'ajout des éléments dans un panier</entry>
+</XMLlist>

@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: marguerite_browser.inc.php,v 1.14 2017-11-07 15:51:41 ngantier Exp $
+// $Id: marguerite_browser.inc.php,v 1.15 2022/01/03 10:52:03 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $msg, $charset, $decimal_see_header, $decimal_see_footer;
 
 $marguerite_img ="<SCRIPT LANGUAGE=\"JavaScript\"><!--
 var js = 1.0;
@@ -130,7 +132,7 @@ if (js > 1.0) {
 <img NAME=\"boxImage\" src=\"images/marg.gif\" style='border:0px; width:348px; height:341px;' USEMAP=\"#image-map\">";
 
 $rqt = " select indexint_id, indexint_comment, indexint_name from indexint where indexint_name in ('000','100','200','300','400','500','600','700','800','900') ";
-$res = pmb_mysql_query($rqt, $dbh);
+$res = pmb_mysql_query($rqt);
 while($indexint=pmb_mysql_fetch_object($res)) {
 	$indexint->indexint_comment = pmb_preg_replace('/\r/', ' ', $indexint->indexint_comment);
 	$indexint->indexint_comment = pmb_preg_replace('/\n/', ' ', $indexint->indexint_comment);

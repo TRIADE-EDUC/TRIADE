@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
-<!-- messages localisŽs en franais pour le connecteur fichier
+<!-- messages localisés en Allemand pour le connecteur fichier
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: de_DE.xml,v 1.1 2011-10-11 17:57:44 touraine37 Exp $ -->
+$Id: de_DE.xml,v 1.1.32.1 2025/04/16 12:16:50 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="cfile_conversion">Conversion to apply</entry>
@@ -15,4 +15,5 @@ $Id: de_DE.xml,v 1.1 2011-10-11 17:57:44 touraine37 Exp $ -->
 	<entry code="cfile_xsl_exemplaire">Style sheet to apply to the records</entry>
 	<entry code="cfile_keep_xsl_exemplaire">Keep the file %s</entry>
 	<entry code="cfile_delete_xsl_exemplaire">Remove / Replace the current file</entry>
+	<entry code="cfile_sync_filepath">Chemin du fichier à importer</entry>
 </XMLlist>

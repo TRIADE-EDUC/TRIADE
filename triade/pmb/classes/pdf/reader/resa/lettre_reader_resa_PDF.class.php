@@ -1,17 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lettre_reader_resa_PDF.class.php,v 1.2 2019-04-26 15:59:53 dgoron Exp $
+// $Id: lettre_reader_resa_PDF.class.php,v 1.6.2.1 2024/06/06 13:51:10 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/pdf/reader/lettre_reader_PDF.class.php");
 
 class lettre_reader_resa_PDF extends lettre_reader_PDF {
 	
-	protected function get_parameter_prefix() {
+    protected static function get_parameter_prefix() {
 		return "pdflettreresa";
+	}
+	
+	protected function _init_default_parameters() {
+	    $this->_init_parameter_value('list_order', 'resa_date_debut');
 	}
 	
 	protected function _init_default_positions() {
@@ -20,13 +25,21 @@ class lettre_reader_resa_PDF extends lettre_reader_PDF {
 		$this->_init_position_values('madame_monsieur', array($this->get_parameter_value('marge_page_gauche'),125,0,0,12));
 	}
 	
-	protected function get_query($id_empr) {
-		return "select id_resa from resa where resa_idempr='$id_empr' and resa_cb is not null and resa_cb!='' order by resa_date_debut ";
+	protected function get_query_list_order() {
+	    return "order by ".$this->get_parameter_value('list_order');
+	}
+	    
+	protected function get_query_list($id) {
+		$id = intval($id);
+	    return "select id_resa from resa where resa_idempr='$id' and resa_cb is not null and resa_cb!='' ".$this->get_query_list_order();
 	}
 	
 	public function doLettre($id_empr) {
-		global $msg , $nb_page;
+		global $nb_page;
 		global $pmb_afficher_numero_lecteur_lettres;
+		
+		//Génération de la lettre dans la langue du lecteur
+		$this->set_language(emprunteur::get_lang_empr($id_empr));
 		
 		$this->PDF->addPage();
 		$this->display_biblio_info() ;
@@ -34,7 +47,7 @@ class lettre_reader_resa_PDF extends lettre_reader_PDF {
 		
 		$this->display_madame_monsieur($id_empr);
 		$this->PDF->multiCell($this->w, 8, $this->get_parameter_value('before_list'), 0, 'J', 0);
-		$req = pmb_mysql_query($this->get_query($id_empr));
+		$req = pmb_mysql_query($this->get_query_list($id_empr));
 		
 		$i=0;
 		$nb_page=0;
@@ -57,7 +70,7 @@ class lettre_reader_resa_PDF extends lettre_reader_PDF {
 			$indice_page++;
 		}
 		$this->PDF->setFont($this->font, '', 12);
-		// dÃ©passement sur autre page de cette partie
+		// dépassement sur autre page de cette partie
 		if (($pos_page+$this->get_parameter_value('taille_bloc_expl'))>$this->get_parameter_value('limite_after_list')) {
 			$this->PDF->addPage();
 			$pos_after_list = $this->get_parameter_value('debut_expl_page');
@@ -68,37 +81,51 @@ class lettre_reader_resa_PDF extends lettre_reader_PDF {
 		$this->PDF->multiCell($this->w, 8, $this->get_parameter_value('after_list')."\n\n", 0, 'J', 0);
 		$this->PDF->setFont($this->font, 'I', 12);
 		$this->PDF->multiCell($this->w, 8, $this->get_parameter_value('fdp'), 0, 'R', 0);
+		
+		//Restauration de la langue de l'interface
+		$this->restaure_language();
 	}
 	
-	// ************************* Imprime la ligne de resa pour une notice sur la lettre de confirmation de rÃ©servation
+	protected function get_query_notice_resa($id_resa_print) {
+		global $msg;
+		
+		$dates_resa_sql = " date_format(resa_date_debut, '".$msg["format_date"]."') as aff_resa_date_debut, date_format(resa_date_fin, '".$msg["format_date"]."') as aff_resa_date_fin " ;
+		$query = "SELECT notices_m.notice_id as m_id, notices_s.notice_id as s_id, resa_date_debut, resa_date_fin, resa_cb, resa_loc_retrait, ";
+		$query .= "trim(concat(if(series_m.serie_name <>'', if(notices_m.tnvol <>'', concat(series_m.serie_name,', ',notices_m.tnvol,'. '), concat(series_m.serie_name,'. ')), if(notices_m.tnvol <>'', concat(notices_m.tnvol,'. '),'')), ";
+		$query .= "if(series_s.serie_name <>'', if(notices_s.tnvol <>'', concat(series_s.serie_name,', ',notices_s.tnvol,'. '), series_s.serie_name), if(notices_s.tnvol <>'', concat(notices_s.tnvol,'. '),'')), ";
+		$query .= "ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date, concat(' (',mention_date,')') ,''))) as tit, ".$dates_resa_sql ;
+		$query .= "FROM (((resa LEFT JOIN notices AS notices_m ON resa_idnotice = notices_m.notice_id ";
+		$query .= "LEFT JOIN series AS series_m ON notices_m.tparent_id = series_m.serie_id ) ";
+		$query .= "LEFT JOIN bulletins ON resa_idbulletin = bulletins.bulletin_id) ";
+		$query .= "LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id ";
+		$query .= "LEFT JOIN series AS series_s ON notices_s.tparent_id = series_s.serie_id ) ";
+		$query .= "WHERE id_resa='".$id_resa_print."' ";
+		return $query;
+	}
+	
+	protected function get_query_detail_notice_resa($id_resa_print) {
+		$query_detail = "select resa_confirmee, resa_cb,location_libelle, expl_cote from resa
+		left join exemplaires on expl_cb=resa_cb
+		left join docs_location on idlocation=expl_location
+		where id_resa =$id_resa_print  and resa_cb is not null and resa_cb!='' ";
+		return $query_detail;
+	}
+	
+	// ************************* Imprime la ligne de resa pour une notice sur la lettre de confirmation de réservation
 	protected function display_notice_resa($id_resa_print, $x, $y, $largeur, $retrait) {
 		global $msg;
 		global $pmb_transferts_actif,$transferts_choix_lieu_opac;
 	
-		$dates_resa_sql = " date_format(resa_date_debut, '".$msg["format_date"]."') as aff_resa_date_debut, date_format(resa_date_fin, '".$msg["format_date"]."') as aff_resa_date_fin " ;
-		$requete = "SELECT notices_m.notice_id as m_id, notices_s.notice_id as s_id, resa_date_debut, resa_date_fin, resa_cb, resa_loc_retrait, ";
-		$requete .= "trim(concat(if(series_m.serie_name <>'', if(notices_m.tnvol <>'', concat(series_m.serie_name,', ',notices_m.tnvol,'. '), concat(series_m.serie_name,'. ')), if(notices_m.tnvol <>'', concat(notices_m.tnvol,'. '),'')), ";
-		$requete .= "if(series_s.serie_name <>'', if(notices_s.tnvol <>'', concat(series_s.serie_name,', ',notices_s.tnvol,'. '), series_s.serie_name), if(notices_s.tnvol <>'', concat(notices_s.tnvol,'. '),'')), ";
-		$requete .= "ifnull(notices_m.tit1,''),ifnull(notices_s.tit1,''),' ',ifnull(bulletin_numero,''), if (mention_date, concat(' (',mention_date,')') ,''))) as tit, ".$dates_resa_sql ;
-		$requete .= "FROM (((resa LEFT JOIN notices AS notices_m ON resa_idnotice = notices_m.notice_id ";
-		$requete .= "LEFT JOIN series AS series_m ON notices_m.tparent_id = series_m.serie_id ) ";
-		$requete .= "LEFT JOIN bulletins ON resa_idbulletin = bulletins.bulletin_id) ";
-		$requete .= "LEFT JOIN notices AS notices_s ON bulletin_notice = notices_s.notice_id ";
-		$requete .= "LEFT JOIN series AS series_s ON notices_s.tparent_id = series_s.serie_id ) ";
-		$requete .= "WHERE id_resa='".$id_resa_print."' ";
-	
-		$res = pmb_mysql_query($requete);
+		$query = $this->get_query_notice_resa($id_resa_print);
+		$res = pmb_mysql_query($query);
 		$expl = pmb_mysql_fetch_object($res);
 	
 		$responsabilites = get_notice_authors(($expl->m_id+$expl->s_id)) ;
 		$header_aut= gen_authors_header($responsabilites);
 		$header_aut ? $auteur=" / ".$header_aut : $auteur="";
 	
-		$rqt_detail = "select resa_confirmee, resa_cb,location_libelle, expl_cote from resa
-		left join exemplaires on expl_cb=resa_cb
-		left join docs_location on idlocation=expl_location
-		where id_resa =$id_resa_print  and resa_cb is not null and resa_cb!='' ";
-		$res_detail = pmb_mysql_query($rqt_detail) ;
+		$query_detail = $this->get_query_detail_notice_resa($id_resa_print);
+		$res_detail = pmb_mysql_query($query_detail) ;
 		$expl_detail = pmb_mysql_fetch_object($res_detail);
 	
 		$this->PDF->SetXY ($x,$y);

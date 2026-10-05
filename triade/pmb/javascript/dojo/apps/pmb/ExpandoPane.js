@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ExpandoPane.js,v 1.1 2018-01-25 11:19:49 vtouchard Exp $
+// $Id: ExpandoPane.js,v 1.1 2018/01/25 11:19:49 vtouchard Exp $
 
 define(["dojo/_base/declare", 
         "dojox/layout/ExpandoPane", 

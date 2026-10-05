@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -49,11 +49,11 @@ if ($_SESSION["membre"] == "menupersonnel") {
 	$visu2=1;
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGTRONBI11?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -78,20 +78,20 @@ if (isset($_POST["saisie_type"])) {
 	if ($_POST["saisie_type"] != "0") $sqlsuite=" type_pers='".$_POST["saisie_type"]."' ";
 }
 
-$sql="SELECT pers_id,nom,prenom FROM ${prefixe}personnel WHERE $sqlsuite AND  offline='0' ORDER BY nom";
+$sql="SELECT pers_id,nom,prenom FROM {$prefixe}personnel WHERE $sqlsuite AND  offline='0' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
 print "<table width='100%'>";
-if( count($data) <= 0 )	{
+if( countTriade($data) <= 0 )	{
 	print("<tr id='cadreCentral0' ><td align=center valign=center>"."AUCUN COMPTE DE DISPONIBLE"."</td></tr>");
 } else {
 	print "<tr>";
 	$j=0;
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$j++;
 	?>	
-		<td align=center><img src="image_trombi.php?idP=<?php print $data[$i][0]?>" border=0 /><br><?php print recherche_personne($data[$i][0])?></td>
+		<td align=center><img src="image_trombi.php?idP=<?php print $data[$i][0]?>" border=0  style='box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); border-radius: 8px;' /><br><br><?php print stripslashes(recherche_personne($data[$i][0]))?><br><br></td>
 <?php
 		if ($j == 3) { print "</tr><tr>"; $j=0; }
 	}

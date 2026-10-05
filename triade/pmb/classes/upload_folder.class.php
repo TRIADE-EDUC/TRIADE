@@ -1,12 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: upload_folder.class.php,v 1.14 2019-06-07 13:21:30 ngantier Exp $
+// $Id: upload_folder.class.php,v 1.24.4.1 2025/01/30 09:08:06 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($include_path."/templates/upload_folder.tpl.php");
+global $include_path;
+
+require_once $include_path."/templates/upload_folder.tpl.php";
 
 class upload_folder {
 	
@@ -18,19 +20,21 @@ class upload_folder {
 	public $repertoire_path='';
 	public $repertoire_navigation=0;
 	public $repertoire_hachage=0;
-	public $repertoire_subfolder=0;
-	public $repertoire_utf8=0;
+	public $repertoire_subfolder=20;
+	public $repertoire_utf8=1;
+    
+	protected $up = [];
 	
-	public function __construct($id=0, $action=''){
-		global $dbh;
-		
+	protected static $upload_folders = null;
+	
+	public function __construct($id=0, $action='')
+	{
 		$this->repertoire_id = intval($id);
 		$this->action = $action;	
 		
 		if($this->repertoire_id){
-			//Modification
 			$req="select repertoire_nom, repertoire_url, repertoire_path, repertoire_navigation, repertoire_hachage, repertoire_subfolder, repertoire_utf8 from upload_repertoire where repertoire_id='".$this->repertoire_id."'";
-			$res=pmb_mysql_query($req,$dbh);
+			$res=pmb_mysql_query($req);
 			if(pmb_mysql_num_rows($res)){
 				$item = pmb_mysql_fetch_object($res);
 				$this->repertoire_nom=$item->repertoire_nom;
@@ -40,34 +44,16 @@ class upload_folder {
 				$this->repertoire_hachage=$item->repertoire_hachage;
 				$this->repertoire_subfolder=$item->repertoire_subfolder;
 				$this->repertoire_utf8=$item->repertoire_utf8;
-			} else {
-				$this->repertoire_nom='';
-				$this->repertoire_url='';
-				$this->repertoire_path='';
-				$this->repertoire_navigation=0;
-				$this->repertoire_hachage=0;
-				$this->repertoire_subfolder=0;
-				$this->repertoire_utf8=0;
 			}
-		} else {
-			//Cr√©ation
-			$this->repertoire_nom='';
-			$this->repertoire_url='';
-			$this->repertoire_path='';
-			$this->repertoire_navigation=0;
-			$this->repertoire_hachage=0;
-			$this->repertoire_subfolder=20;
-			$this->repertoire_utf8=0;
 		}
 	}
 	
 	/**
 	 * Gestion des actions
 	 */
-	public function proceed(){
-			
+	public function proceed()
+	{
 		switch($this->action){
-			
 			case 'add':
 				$this->show_edit_form();
 				break;
@@ -86,49 +72,157 @@ class upload_folder {
 				$this->show_form();
 				break;
 		}
-		
 	}
 	
 	/**
-	 * Formulaire qui liste les r√©pertoires
+	 * Recupere les repertoires 
+	 * 
+	 * @return array
 	 */
-	public function show_form(){
-		global $liste_rep_form, $dbh, $charset, $msg;
-		
-		$rep_line = '';
-		$req="select repertoire_id, repertoire_nom, repertoire_url, repertoire_path, repertoire_navigation, repertoire_hachage, repertoire_subfolder, repertoire_utf8 from upload_repertoire order by repertoire_nom";
-		$res=pmb_mysql_query($req,$dbh);
-		$nbr = pmb_mysql_num_rows($res);
-
-		$parity=1;
-		for($i=0;$i<$nbr;$i++) {
-			$rep=pmb_mysql_fetch_object($res);
-			if ($parity % 2)
-				$pair_impair = "even";
-			 else 
-				$pair_impair = "odd";
-			$parity += 1;
-			$tr_javascript=" onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\" onmousedown=\"document.location='./admin.php?categ=docnum&sub=rep&action=modif&id=$rep->repertoire_id';\" ";
-			
-			$rep_line .= "<tr class='$pair_impair' $tr_javascript style='cursor: pointer'>
-						<td ><strong>".htmlentities($rep->repertoire_nom,ENT_QUOTES,$charset)."</strong></td>";
-				// "<td >".htmlentities($rep->repertoire_url,ENT_QUOTES,$charset)."</td>
-			$rep_line .= "<td >".htmlentities($rep->repertoire_path,ENT_QUOTES,$charset)."</td>
-							<td >".htmlentities(($rep->repertoire_navigation ? $msg['upload_repertoire_yes']: $msg['upload_repertoire_no']),ENT_QUOTES,$charset)."</td>
-							<td >".htmlentities(($rep->repertoire_hachage ? $msg['upload_repertoire_yes']:$msg['upload_repertoire_no'] ),ENT_QUOTES,$charset)."</td>
-							<td >".htmlentities(($rep->repertoire_utf8 ? $msg['upload_repertoire_yes']:$msg['upload_repertoire_no'] ),ENT_QUOTES,$charset)."</td>
-							<td >".htmlentities(($rep->repertoire_hachage ? $rep->repertoire_subfolder : ''),ENT_QUOTES,$charset)."</td>						
-					</tr>";
-		}
-		$liste_rep_form = str_replace("!!liste_rep!!",$rep_line,$liste_rep_form);
-		print $liste_rep_form;
+	public static function getFolders() 
+	{
+	    
+	    if( !is_null(static::$upload_folders) ) {
+	        return static::$upload_folders;
+	    }
+	    static::$upload_folders = [];
+	    $q = "select * from upload_repertoire order by repertoire_nom";
+	    $r = pmb_mysql_query($q);
+	    if ( !pmb_mysql_num_rows($r) ) {
+	        return static::$upload_folders;
+	    }
+	    while( $row = pmb_mysql_fetch_assoc($r) ) {
+	        static::$upload_folders[$row['repertoire_id']] = $row;
+	    }
+	    return static::$upload_folders;
+	}
+	
+	
+	/**
+	 * Recupere les sous-repertoires 
+	 * 
+	 * @param string $path : chemin a partir duquel on recupere les sous-repertoires
+	 * @return array
+	 */
+	public function getSubFolders($path, $force_utf8 = false)
+	{
+	    if ( !$this->repertoire_id ) {
+	        return [];
+	    }	       
+	    if ( !is_string($path) ) {
+	        return [];
+	    }
+	    if( $this->repertoire_navigation != 1) {
+	        return [];
+	    }
+	    
+	    $root_path = $this->repertoire_path;
+	    if( substr($root_path, -1) == '/' ) {
+	        $root_path.= '/';
+	    }
+	    $full_path = $root_path.$path;
+	    if( substr($full_path, -1) != '/' ) {
+	        $full_path.= '/';
+	    }
+	    	    
+	    $files = @scandir($full_path);
+	    if( false === $files ) {
+	        return [];
+	    }
+	    $sub_folders = [];
+       
+	    for($i = 0; $i < count($files); $i++) {
+	        if ( ($files[$i] != '.') && ($files[$i] != '..')  && is_dir($full_path.$files[$i]) ) {
+	            
+	            $sub_folder_name = $files[$i];
+	            $sub_folder_path = (($path != '') ? $path.'/'.$files[$i] : $files[$i]);
+	            if ($force_utf8) {
+	                $sub_folder_name = $this->convertToUtf8($sub_folder_name);
+	                $sub_folder_path = $this->convertToUtf8($sub_folder_path);
+	            } else {
+	                $sub_folder_name = $this->convertToPmbCharset($sub_folder_name);
+	                $sub_folder_path = $this->convertToPmbCharset($sub_folder_path);
+	            }	            
+	            $sub_folders[] = [
+	                'id'    => $this->repertoire_id,
+	                'name' => $sub_folder_name,
+	                'path' => $sub_folder_path,
+	            ]; 
+	        }
+	    }
+	    return $sub_folders;
+	}
+	
+	
+	/**
+	 * Transforme un nom de fichier en UTF8
+	 *
+	 * @param $str : chaine a convertir
+	 *
+	 * @return string
+	 */
+	public function convertToUtf8($str = '')
+	{
+	    if( !$this->isUtf8() ) {
+	        return encoding_normalize::utf8_normalize($str);
+	    }
+	    return $str;
+	}
+	
+	
+	/**
+	 * Transforme un nom de fichier dans le charset de PMB
+	 * 
+	 * @param $str : chaine a convertir
+	 * 
+	 * @return string
+	 */
+	public function convertToPmbCharset($str = '')
+	{
+	    global $charset;
+	    if( $this->isUtf8() && ($charset != 'utf-8') ) {
+	        return encoding_normalize::utf8_decode($str);
+	    }
+	    if( !$this->isUtf8() && ($charset == 'utf-8') ) {
+	        return encoding_normalize::utf8_normalize($str);
+	    }
+	    return $str;
+	}
+	
+	
+	/**
+	 * Transforme un nom de fichier dans le charset du systeme de fichiers
+	 * 
+	 * @param $str : chaine a convertir
+	 * @param $charset : charset de la chaine 
+	 *
+	 * @return string
+	 */
+	public function convertToFileSystemCharset($str = '', $charset = 'utf-8')
+	{
+	    if( $this->isUtf8() && ($charset != 'utf-8') ) {
+	        return mb_convert_encoding($str, 'utf-8', $charset);
+	    }
+	    if( !$this->isUtf8() && ($charset == 'utf-8') ) {
+	        return mb_convert_encoding($str, 'iso-8859-1', $charset);
+	    }
+	    return $str;
+	}
+	
+	
+	/**
+	 * Formulaire qui liste les rÈpertoires
+	 */
+	public function show_form()
+	{
+		print list_configuration_explnum_rep_ui::get_instance()->get_display_list();
 	}
 	
 	/**
-	 * Formulaire de cr√©ation/√©dition d'un r√©pertoire
+	 * Formulaire de crÈation/Èdition d'un rÈpertoire
 	 */
-	public function show_edit_form(){
-		
+	public function show_edit_form()
+	{
 		global $rep_edit_form, $msg, $charset;
 		
 		if(!$this->repertoire_id)
@@ -170,41 +264,42 @@ class upload_folder {
 	}
 	
 	/**
-	 * Suppression d'un r√©pertoire
+	 * Suppression d'un rÈpertoire
 	 */
-	public function delete($id){
-		global $msg,$dbh;
+	public function delete($id)
+	{
+		global $msg;
 		
 		$req="select explnum_id from explnum where explnum_repertoire='".$id."'";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			error_form_message($msg["upload_repertoire_no_del"]);
 		} else{		
 			$req = "delete from upload_repertoire where repertoire_id='".$id."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		}
 	}
 	
 	/**
-	 * Enregistrement d'un r√©pertoire
+	 * Enregistrement d'un rÈpertoire
 	 */
-	public function enregistrer($id=0){
-		
-		global $rep_nom, $rep_url, $rep_path, $rep_hash, $rep_navig, $rep_sub, $dbh, $rep_utf8, $msg; 
+	public function enregistrer($id=0)
+	{
+		global $rep_nom, $rep_url, $rep_path, $rep_hash, $rep_navig, $rep_sub, $rep_utf8, $msg; 
 		
 		if(substr($rep_path,strlen($rep_path)-1) !== '/') $rep_path=$rep_path."/";
 				 
 		if($id) {
 			$req = "update upload_repertoire set repertoire_nom='".$rep_nom."', repertoire_url='".$rep_url."', repertoire_path='".$rep_path."', repertoire_navigation='".$rep_navig."', repertoire_hachage='".$rep_hash."', repertoire_utf8='".$rep_utf8."' where repertoire_id='".$id."'";
-			pmb_mysql_query($req,$dbh);
+			pmb_mysql_query($req);
 		} else{			
 			$req = "select repertoire_id from upload_repertoire where repertoire_nom='".$rep_nom."'";
-			$res = pmb_mysql_query($req,$dbh);
+			$res = pmb_mysql_query($req);
 			if(pmb_mysql_num_rows($res)){
 				error_form_message($msg["upload_repertoire_name_exists"]);
 			} else {		
 				$req="insert into upload_repertoire (repertoire_nom, repertoire_url, repertoire_path, repertoire_navigation, repertoire_hachage, repertoire_subfolder,repertoire_utf8) values ('".$rep_nom."', '".$rep_url."', '".$rep_path."', '".$rep_navig."', '".$rep_hash."', '".$rep_sub."', '".$rep_utf8."')";
-				pmb_mysql_query($req,$dbh);
+				pmb_mysql_query($req);
 			}
 		}
 		
@@ -213,11 +308,10 @@ class upload_folder {
 	/**
 	 * Compte le nombre d'enregistrement
 	 */	
-	public function compte_repertoire(){
-		global $dbh;
-		
+	public function compte_repertoire()
+	{
 		$req = "select count(repertoire_id) from upload_repertoire";
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		if(pmb_mysql_num_rows($res)){
 			$this->nb_enregistrement =  pmb_mysql_result($res,0,0);
 		} else 	$this->nb_enregistrement = 0;
@@ -225,72 +319,10 @@ class upload_folder {
 	}
 	
 	/**
-	 * Construit l'arbre des r√©pertoires
-	 */
-	public function make_tree(){
-		global $msg, $charset, $dbh;
-		
-		print "<script type='text/javascript' src='../../javascript/dtree.js'></script>";
-		print "<script type='text/javascript' src='../../javascript/upload.js'></script>";
-		
-		$dtree = "<script type='text/javascript'>\n";
-		$dtree .= "var tab_libelle = new Array();";
-		
-		$dtree.= "_dt_fiel_ = new dTree('_dt_fiel_');\n";
-				
-		//Creation racine liens depuis les champs de la table de reference
-		$dtree.="_dt_fiel_.add('Rep_0',-1,'&nbsp;&nbsp;".addslashes($msg["upload_repertoire_my_folder"])."');\n";
-			
-		$req = "select * from upload_repertoire order by repertoire_nom";
-		$res=pmb_mysql_query($req,$dbh);
-		while(($rep=pmb_mysql_fetch_object($res))){	
-			$up = new upload_folder($rep->repertoire_id);
-			$dtree .= "tab_libelle[\"Rep_".$rep->repertoire_id."\"] = \"".addslashes($up->formate_path_to_nom($rep->repertoire_path)). "\";";  		
-			$dtree.="_dt_fiel_.add('Rep_".$rep->repertoire_id."','Rep_0','".addslashes($rep->repertoire_nom)."','','javascript:copy_to_div(\'Rep_".$rep->repertoire_id."\', \'".$rep->repertoire_id."\');');\n";
-			if($rep->repertoire_navigation && !$rep->repertoire_hachage){
-				$this->getNodes($rep->repertoire_path, "Rep_".$rep->repertoire_id, $dtree);
-			}			
-		}
-		
-		$dtree.= "_dt_fiel_.icon.root='../../images/req_fiel.gif';";	
-		$dtree.= "_dt_fiel_.icon.node='../../images/dtree/folder.gif';";				
-		$dtree.= "document.getElementById('up_fiel_tree').innerHTML = _dt_fiel_;\n";
-		$dtree.= "</script>\n";
-		return $dtree;
-	}
-	
-	/**
-	 * Construit les noeuds de l'arborescence
-	 */
-	public function getNodes($chemin='', $id, &$tree){		
-
-		if($chemin && is_dir($chemin)){			
-			if(($files = @scandir($chemin)) !== false){
-				for($i=0;$i<sizeof($files);$i++){
-					if($files[$i] != '.' && $files[$i] != '..'){
-						$id_noeud = $id."_".$i;
-						$id_parent = $id;
-						$dir_name = $files[$i];
-						$path = $chemin.$dir_name."/"; 
-						if(is_dir($path)){
-							$id_copy = explode("_",$id_parent);
-							$up = new upload_folder($id_copy[1]);
-							//$tree .= "tab_libelle[\"$id_noeud\"] = \"".$up->decoder_chaine(addslashes($up->formate_path_to_nom($path))). "\";";
-							$tree .= "tab_libelle[\"$id_noeud\"] = \"".addslashes($up->formate_path_to_nom($chemin).$up->decoder_chaine($dir_name)."/"). "\";";   
-							$tree .="_dt_fiel_.add('$id_noeud','$id_parent','".addslashes($up->decoder_chaine($dir_name))."','','javascript:copy_to_div(\'".$id_noeud."\',\'".$up->repertoire_id."\');');\n";	
-							$this->getNodes($path,$id_noeud, $tree);
-						}
-					}
-				}
-			}
-		}
-		return $tree;
-	}
-	
-	/**
 	 * Formate le nom du chemin en utilisant le nom de rep
 	 */
-	public function formate_path_to_nom($chemin){			
+	public function formate_path_to_nom($chemin)
+	{			
 		$chemin = str_replace($this->repertoire_path,$this->repertoire_nom."/",$chemin);
 		$chemin = str_replace('//','/',$chemin);
 		
@@ -298,9 +330,10 @@ class upload_folder {
 	}
 	
 	/**
-	 * Formate le nom du chemin en utilisant l'id du r√©pertoire
+	 * Formate le nom du chemin en utilisant l'id du rÈpertoire
 	 */
-	public function formate_path_to_id($chemin){			
+	public function formate_path_to_id($chemin)
+	{			
 		$chemin = str_replace($this->repertoire_path,$this->repertoire_id."/",$chemin);
 		$chemin = str_replace('//','/',$chemin);
 		
@@ -310,7 +343,8 @@ class upload_folder {
 	/**
 	 * Formate le nom du chemin en utilisant le nom de rep
 	 */
-	public function formate_nom_to_path($chemin){	
+	public function formate_nom_to_path($chemin)
+	{	
 		$chemin = str_replace($this->repertoire_nom,$this->repertoire_path,$chemin);
 		$chemin = str_replace('//','/',$chemin);
 		
@@ -318,9 +352,10 @@ class upload_folder {
 	}
 	
 	/**
-	 * Formate le chemin pour la sauvegarde dans les exemplaires num√©riques
+	 * Formate le chemin pour la sauvegarde dans les exemplaires numÈriques
 	 */
-	public function formate_path_to_save($chemin){
+	public function formate_path_to_save($chemin)
+	{
 		$chemin = str_replace($this->repertoire_nom,'/',$chemin);
 		$chemin = str_replace('//','/',$chemin);
 		
@@ -328,24 +363,26 @@ class upload_folder {
 	}
 	
 	/*
-	 * Retourne si le repertoire est hach√©
+	 * Retourne si le repertoire est hachÈ
 	 */
-	public function isHashing(){
+	public function isHashing()
+	{
 		return $this->repertoire_hachage;
 	}
 	
 	/*
 	 * Retourne si le repertoire est en utf8
 	 */
-	public function isUtf8(){
+	public function isUtf8()
+	{
 		return $this->repertoire_utf8;
 	}
 	
 	/*
 	 * Hache le nom de fichier pour le classer
 	 */
-	public function hachage($nom_fichier){
-								
+	public function hachage($nom_fichier)
+	{
 		$chemin= $this->repertoire_path;
 		$nb_dossier = $this->repertoire_subfolder;
 		$total=0;
@@ -360,15 +397,16 @@ class upload_folder {
 	}
 	
 	/*
-	 * d√©code la chaine dans le bon charset
+	 * dÈcode la chaine dans le bon charset
 	 */
-	public function decoder_chaine($chaine){
+	public function decoder_chaine($chaine)
+	{
 		global $charset;
 		
 		if($charset != 'utf-8' && $this->isUtf8()) {
-			return utf8_decode($chaine);
+			return encoding_normalize::utf8_decode($chaine);
 		} else if($charset == 'utf-8' && !$this->isUtf8()) {
-			return utf8_encode($chaine);
+			return encoding_normalize::utf8_normalize($chaine);
 		}
 		return $chaine;
 	}
@@ -376,25 +414,28 @@ class upload_folder {
 	/*
  	 * encode la chaine dans le bon charset
 	 */
-	public function encoder_chaine($chaine){
+	public function encoder_chaine($chaine)
+	{
 		global $charset;
 		
 		if($charset != 'utf-8' && $this->isUtf8()) {
-			return utf8_encode($chaine);
+			return encoding_normalize::utf8_normalize($chaine);
 		} else if($charset == 'utf-8' && !$this->isUtf8()) {
-			return utf8_decode($chaine);
+			return encoding_normalize::utf8_decode($chaine);
 		}
 		return $chaine;
 	}
 	
-	public function get_path($filename){
+	public function get_path($filename)
+	{
 		$path = "";
 		if($this->isHashing()) $path = $this-> hachage($filename);
 		else $path = $this->repertoire_path;
 		return $path;
 	}
 	
-	public static function get_upload_folders() {
+	public static function get_upload_folders() 
+	{
 		$folders = array();
 		$query = "
 				SELECT repertoire_id AS id, 
@@ -431,24 +472,27 @@ class upload_folder {
 	 * @param number $occurence
 	 * @return array:
 	 */
-	public static function get_sub_folders($folder_path, $upload_folder, $nb_levels = 20, $occurence = 1) {
+	public static function get_sub_folders($folder_path, $upload_folder, $nb_levels = 20, $occurence = 1) 
+	{
 		$tree = array();
 		if ($occurence <= $nb_levels) {
 			$occurence++;
 			if ($folder_path && is_dir($folder_path)) {
 				if(($files = @scandir($folder_path)) !== false) {
-					for ($i=0;$i<sizeof($files);$i++) {
-						if($files[$i] != '.' && $files[$i] != '..'){
-							$dir_name = $files[$i];
-							$path = $folder_path.$dir_name."/";
-							if (is_dir($path)) {
-								$tree[] = array(
-										'name' => addslashes($upload_folder->decoder_chaine($dir_name)),
-										'path' => addslashes($upload_folder->decoder_chaine($path)),
-										'formatted_path_name' => $upload_folder->formate_path_to_nom($path),
-										'formatted_path_id' => $upload_folder->formate_path_to_id($path),
-										'sub_folders' => self::get_sub_folders($path, $upload_folder, $nb_levels, $occurence),
-								);
+					if (is_countable($files)) {
+						for ($i=0;$i<sizeof($files);$i++) {
+							if($files[$i] != '.' && $files[$i] != '..'){
+								$dir_name = $files[$i];
+								$path = $folder_path.$dir_name."/";
+								if (is_dir($path)) {
+									$tree[] = array(
+											'name' => addslashes($upload_folder->decoder_chaine($dir_name)),
+											'path' => addslashes($upload_folder->decoder_chaine($path)),
+											'formatted_path_name' => $upload_folder->formate_path_to_nom($path),
+											'formatted_path_id' => $upload_folder->formate_path_to_id($path),
+											'sub_folders' => self::get_sub_folders($path, $upload_folder, $nb_levels, $occurence),
+									);
+								}
 							}
 						}
 					}
@@ -458,5 +502,21 @@ class upload_folder {
 		return $tree;
 	}
 	
+	public static function rrmdir($dir)
+	{
+	    if (is_dir($dir)) {
+	        $objects = scandir($dir);
+	        foreach ($objects as $object) {
+	            if ($object != "." && $object != "..") {
+	                if (filetype($dir."/".$object) == "dir"){
+	                    self::rrmdir($dir."/".$object);
+	                }else{
+	                    unlink($dir."/".$object);
+	                }
+	            }
+	        }
+	        reset($objects);
+	        rmdir($dir);
+	    }
+	}
 }
-?>

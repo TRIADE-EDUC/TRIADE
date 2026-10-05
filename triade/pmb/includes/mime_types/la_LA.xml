@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: la_LA.xml,v 1.8 2018-06-22 09:55:45 ngantier Exp $ -->
+<!-- $Id: la_LA.xml,v 1.11 2023/05/12 10:07:43 dgoron Exp $ -->
 <!DOCTYPE mimeTypeList SYSTEM "./mimes_types.dtd">
 <mimeTypeList>
 	
@@ -187,6 +187,10 @@
 
 <mimeType name="image/cgm" label="Computer Graphics Metafile" icon="image.gif" embeded="no" plugin="">
 	<extension>cgm</extension>
+	</mimeType>
+	
+<mimeType name="image/svg" label="Scalable Vector Graphics" icon="svg-dist.png" embeded="no" plugin="">
+	<extension>svg</extension>
 	</mimeType>
 
 <mimeType name="drawing/x-dwf" label="Autocad WHIP vector drawings" icon="image.gif" embeded="yes" plugin="">
@@ -408,9 +412,9 @@
 <mimeType name="video/x-flv" label="Fichier flv" icon="flv-dist.png" embeded="no" plugin="">
 	<extension>flv</extension>
 	</mimeType>
-	
-<mimeType name="application/octet-stream" label="Octet stream" icon="epub-dist.png" embeded="no" plugin="">
-	<extension>epub</extension>
+			
+<mimeType name="audio/mp3" label="Fichier son mp3" icon="mp3-dist.png" embeded="yes" plugin="LiveAudio">
+	<extension>mp3</extension>
 	</mimeType>
 	
 </mimeTypeList>

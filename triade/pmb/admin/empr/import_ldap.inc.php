@@ -2,29 +2,31 @@
 // +-------------------------------------------------+
 // ? 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_ldap.inc.php,v 1.19 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: import_ldap.inc.php,v 1.22 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $include_path, $action, $msg;
 
 require_once("$include_path/ldap_param.inc.php");
 require_once("$include_path/templates/ldap_users.tpl.php");
 
 # IMPORTANT NOTE:
-# the $fields ldap variable (list of ldap fields to read) MUST BEGIN with 
-# uid, sn, cn (or givenName), ....   
+# the $fields ldap variable (list of ldap fields to read) MUST BEGIN with
+# uid, sn, cn (or givenName), ....
 # sn MUST contain the last name
-# cn (or,now, givenName) MUST contain the first name 
-# in my scheme the ldap fields holds 
+# cn (or,now, givenName) MUST contain the first name
+# in my scheme the ldap fields holds
 # departmentNumber = student class
 # employeenumber = codice fiscale (taxoffice code)
 # employeetype = sex
 # postofficebox = city
 # postalcode = cap
 # postaladdress = address
-# homephone = tel 
+# homephone = tel
 
-define ('INDEX_NOM',1);  
-define ('INDEX_PRENOM',2);  
+define ('INDEX_NOM',1);
+define ('INDEX_PRENOM',2);
 define ('SEX','employeetype');
 
 // return list of ldap users of a declared group (LDAP_GROUPS list)
@@ -49,9 +51,9 @@ function users_ldap($gid){
 	$filter = str_replace('GID',$gid,LDAP_FILTER);
 	//Gestion encodage
 	if(($ldap_encoding_utf8) && ($charset != "utf-8")){
-		$filter=utf8_encode($filter);
+		$filter=encoding_normalize::utf8_normalize($filter);
 	}elseif((!$ldap_encoding_utf8) && ($charset == "utf-8")){
-		$filter=utf8_decode($filter);
+		$filter=encoding_normalize::utf8_decode($filter);
 	}
 	$conn = ldap_connect( LDAP_SERVER, LDAP_PORT);
 
@@ -61,7 +63,7 @@ function users_ldap($gid){
 	$r = ldap_search($conn, LDAP_BASEDN,$filter,$fields,0,0);
 
 	$info = ldap_get_entries($conn, $r);
-	ldap_close($conn);
+	ldap_unbind($conn);
 
 # DEBUG
 #	printr ($info);
@@ -73,54 +75,57 @@ function users_ldap($gid){
 		#print "fieldcount=".count($fields)."<br />";
 
 		for($j = 0; $j<count($fields) ; $j++) {
-			
+			if(isset($info[$k][strtolower($fields[$j])][0])) {
 				$v=rtrim($info[$k][strtolower($fields[$j])][0],',');
 				//Gestion encodage
 				if(($ldap_encoding_utf8) && ($charset != "utf-8")){
-					$v=utf8_decode($v);
+					$v=encoding_normalize::utf8_decode($v);
 				}elseif((!$ldap_encoding_utf8) && ($charset == "utf-8")){
-					$v=utf8_encode($v);
+					$v=encoding_normalize::utf8_normalize($v);
 				}
-# DEBUG
-#				$y=strtolower($fields[$j]);
-#				$z=$info[$k][$y][0];			
-#				print "$j = $y = $z<br />";
-
-				if ($j==0){ // after uid , lang
-					$ret .= "$v|".LDAP_LANG."|";
-					
-//				}elseif ($fields[$j]=="gecos" || $fields[$j]=="displayname"){
-//
-//					$v=ucwords(strtolower($v));
-//					$cn=explode(' ',$v);
-//					$c=$n="";
-//					for ($i=0;$i<count($cn)-1;$i++){$c .= $cn[$i];}
-//					$n=$cn[count($cn)-1];
-//					$ret .= "$c|$n|";
-
-				}elseif ($j==INDEX_NOM){
-
-					$c = norm_name($v);
-					$ret .= "$c|";
-
-
-				}elseif ($j==INDEX_PRENOM){  
-					
-					$n = norm_name($v);
-					$ret .= "$n|";
-
-				}elseif ($fields[$j]==SEX){  
-
-					$s=strtolower($v);
-					if ($s=='m')		$s = "1|";
-					elseif ($s=='f')	$s = "2|";
-					else				$s = "0|";
-						
-					$ret .= "$s|";
-
-				}else{
-					$ret .= "$v|";
-				}
+			} else {
+				$v='';
+			}
+			# DEBUG
+			#				$y=strtolower($fields[$j]);
+			#				$z=$info[$k][$y][0];
+			#				print "$j = $y = $z<br />";
+			
+			if ($j==0){ // after uid , lang
+				$ret .= "$v|".LDAP_LANG."|";
+				
+				//				}elseif ($fields[$j]=="gecos" || $fields[$j]=="displayname"){
+				//
+				//					$v=ucwords(strtolower($v));
+				//					$cn=explode(' ',$v);
+				//					$c=$n="";
+				//					for ($i=0;$i<count($cn)-1;$i++){$c .= $cn[$i];}
+				//					$n=$cn[count($cn)-1];
+				//					$ret .= "$c|$n|";
+				
+			}elseif ($j==INDEX_NOM){
+				
+				$c = norm_name($v);
+				$ret .= "$c|";
+				
+				
+			}elseif ($j==INDEX_PRENOM){
+				
+				$n = norm_name($v);
+				$ret .= "$n|";
+				
+			}elseif ($fields[$j]==SEX){
+				
+				$s=strtolower($v);
+				if ($s=='m')		$s = "1|";
+				elseif ($s=='f')	$s = "2|";
+				else				$s = "0|";
+				
+				$ret .= "$s|";
+				
+			}else{
+				$ret .= "$v|";
+			}
 		}
 		$ret = rtrim($ret,'|');
 		$ret .= ";";
@@ -133,54 +138,53 @@ function users_ldap($gid){
 
 
 // return the gidnumber of a ldap group
-function gid_ldap($grp){
-	global $charset,$ldap_encoding_utf8;
-	$ret=0;
+function gid_ldap($grp) {
+	global $charset, $ldap_encoding_utf8;
+	$ret = 0;
 	$fields = array('gidnumber');
-	$conn = ldap_connect( LDAP_SERVER, LDAP_PORT);
+	$conn = ldap_connect(LDAP_SERVER, LDAP_PORT);
 	ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, LDAP_PROTO);
 	$b = ldap_bind($conn);
 	//Gestion encodage
-	if(($ldap_encoding_utf8) && ($charset != "utf-8")){
-		$grp=utf8_encode($grp);
-	}elseif((!$ldap_encoding_utf8) && ($charset == "utf-8")){
-		$grp=utf8_decode($grp);
+	if (!empty($ldap_encoding_utf8) && $charset != "utf-8") {
+		$grp = encoding_normalize::utf8_normalize($grp);
+	} elseif (empty($ldap_encoding_utf8) && $charset == "utf-8") {
+		$grp = encoding_normalize::utf8_decode($grp);
 	}
-	$r = ldap_search($conn, LDAP_BASEDN, "cn=$grp",$fields);
+	$r = ldap_search($conn, LDAP_BASEDN, "cn=$grp", $fields);
 	$info = ldap_get_entries($conn, $r);
-	ldap_close($conn);
-	$ret=$info[0]['gidnumber'][0];
+	ldap_unbind($conn);
+	$ret = $info[0]['gidnumber'][0];
 	//Gestion encodage
-	if(($ldap_encoding_utf8) && ($charset != "utf-8")){
-		$ret=utf8_decode($ret);
-	}elseif((!$ldap_encoding_utf8) && ($charset == "utf-8")){
-		$ret=utf8_encode($ret);
+	if (!empty($ldap_encoding_utf8) && $charset != "utf-8") {
+		$ret = encoding_normalize::utf8_decode($ret);
+	} elseif (empty($ldap_encoding_utf8) && $charset == "utf-8") {
+		$ret = encoding_normalize::utf8_normalize($ret);
 	}
 	return $ret;
 }
 
 // check id server ldap is ok
-function ldap_ok(){
+function ldap_ok() {
 	global $msg;
-	$ldap_error=1;
-	$ret=0;
-	if (LDAP_SERVER){
-		$conn=@ldap_connect(LDAP_SERVER,LDAP_PORT);  // must be a valid LDAP server!
+	$ldap_error = 1;
+	$ret = 0;
+	if (LDAP_SERVER) {
+		$conn = @ldap_connect(LDAP_SERVER, LDAP_PORT);  // must be a valid LDAP server!
 		ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, LDAP_PROTO);
-		if ($conn) {
-			$x=@ldap_read($conn,LDAP_BASEDN,LDAP_FILTER);
-			if (preg_match('/resource/i',(string)$x))
-			{
-				$ldap_error=0;
-				$ret=1;
-				ldap_close($conn);
+		if (!empty($conn)) {
+			$x = @ldap_read($conn, LDAP_BASEDN, LDAP_FILTER);
+			if (preg_match('/resource/i', (string) $x))	{
+				$ldap_error = 0;
+				$ret = 1;
+				ldap_unbind($conn);
 			}
 		}
-		if ($ldap_error) {
+		if (!empty($ldap_error)) {
 			print "<h2>".$msg["ldap_error"]."</h2>";
 			print "<h2>".$msg["ldap_erro2"]."</h2>";
 		}
-	}else{
+	} else {
 		print "<h2>".$msg["ldap_noserver"]."</h2>";
 	}
 	return $ret;
@@ -188,14 +192,11 @@ function ldap_ok(){
 
 // phase1 = choice of ldap group
 function choice_ldap_group() {
-	global $msg;
-	global $charset;
-	global $current_module ;
 	global $form_ldap_groups;
 	if (ldap_ok()){
 		$lista_grp=explode(',',LDAP_GROUPS);
 		$opz_grp='';
-		foreach($lista_grp as $dummykey=>$v) {
+		foreach($lista_grp as $v) {
 			$opz_grp .= "<option value='".$v."'>$v</option>";
 		}
 		$form_ldap_groups=str_replace('!!opz_grp!!',$opz_grp,$form_ldap_groups);
@@ -208,40 +209,30 @@ function choice_ldap_group() {
 
 function show_users_ldap($uu,$pag,$npp) {
 	global $msg;
-	global $charset;
-	global $current_module ;
 	global $form_show_ldap_users;
-
+	
 	$auu=explode(';',$uu);
 	$nuu=count($auu);
 	if (!$npp) $npp=10;
 	$npag = ceil($nuu/$npp);
 	$nextp = $pag+1;
 	$precp = $pag-1;
-
-
+	
+	
 	$npp_ctrl="
 	<input type='text' class='saisie-4emc' name='npp' value='$npp' />
-	<input type='image' src='".get_url_icon('tick.gif')."' border='0' alt='$msg[708]' hspace='0' title='$msg[708]'  class='align_middle bouton-nav' name='btsubmit' value='=' />
+	<input type='hidden' class='saisie-4emc' name='pag_operator' value='' />
+	<input type='image' src='".get_url_icon('tick.gif')."' border='0' alt='$msg[708]' hspace='0' title='$msg[708]'  class='align_middle bouton-nav' name='btsubmit' value='=' onclick=\"this.form.elements['pag_operator'].value='='; this.form.submit();\" />
 	";
-
-	if($precp > 0){
-		//$nav_bar .= "<input type='submit' class='bouton' name='btsubmit' value='<' />";
-		$nav_barL = "<input type='image' src='".get_url_icon('left.gif')."' border='0' alt='$msg[48]' hspace='0' title='$msg[48]' class='align_middle bouton-nav' name='btsubmit' value='<' />";
-	}else{
-		//$nav_bar .= "<input type='submit' class='bouton' name='btsubmit' value='<' />";
-		$nav_barL = "<input  disabled type='image' src='".get_url_icon('left.gif')."' border='0' alt='$msg[48]' hspace='0' title='$msg[48]' class='align_middle bouton-nav' name='btsubmit' value='<' />";
-	}
-
+	
+	$nav_barL = "<input  ".(empty($precp) ? "disabled" : "")." type='image' src='".get_url_icon('left.gif')."' border='0' alt='$msg[48]' hspace='0' title='$msg[48]' class='align_middle bouton-nav' name='btsubmit' value='<' onclick=\"this.form.elements['pag_operator'].value='<'; this.form.submit();\" />";
+	
 	$nav_barC = "$pag/$npag";
-
-	if($nextp<=$npag) {
-		$nav_barR .= "<input type='image' src='".get_url_icon('right.gif')."' border='0' alt='$msg[49]' hspace='0' title='$msg[48]'  class='align_middle bouton-nav' name='btsubmit' value='>' />";
-	}else{
-		$nav_barR = "<input disabled type='image' src='".get_url_icon('right.gif')."' border='0' alt='$msg[49]' hspace='0' title='$msg[48]'  class='align_middle bouton-nav' name='btsubmit' value='>' /> ";
-	}
-
-
+	
+	$nav_barR = "<input ".($nextp<=$npag ? "" : "disabled")." type='image' src='".get_url_icon('right.gif')."' border='0' alt='$msg[49]' hspace='0' title='$msg[48]'  class='align_middle bouton-nav' name='btsubmit' value='>' onclick=\"this.form.elements['pag_operator'].value='>'; this.form.submit();\"/> ";
+	
+	$usr_list = '';
+	
 	if(!$pag) $pag=1;
 
 	$iniz=($pag-1)*$npp;
@@ -273,12 +264,9 @@ function show_users_ldap($uu,$pag,$npp) {
 										<td style='vertical-align:top'>$usr_entry</td>
 							</tr>";
 		}
-
 		$r++;
-
 	}
-
-//    $pag++;
+	//    $pag++;
 	$hid_vars="
 		<input type='hidden' name='pag' value='$pag' />
 		<input type='hidden' name='uu' value='$uu'>";
@@ -289,17 +277,14 @@ function show_users_ldap($uu,$pag,$npp) {
 	$form_show_ldap_users=str_replace('!!nav_barR!!',$nav_barR,$form_show_ldap_users);
 	$form_show_ldap_users=str_replace('!!usr_list!!',$usr_list,$form_show_ldap_users);
 	$form_show_ldap_users=str_replace('!!hid_vars!!',$hid_vars,$form_show_ldap_users);
-
-
 	print $form_show_ldap_users;
-
 }
 
 //        <input type='submit' class='bouton' name='indietro' value='indietro'/>
 //        <input type='submit' class='bouton' name='avanti' value='avanti'/>
 
 
-	// affichage du lien pr?c?dent si n?c?ssaire
+// affichage du lien pr?c?dent si n?c?ssaire
 //    if($precp > 0){
 //        $nav_bar .= "<a href='$PHP_SELF?action=categ=empr&sub=ldap&action=ldapOK&xpag=$precp'>
 //                     <img src='".get_url_icon('left.gif')."' border='0' alt='$msg[48]' hspace='6' class='align_middle' title='$msg[48]' ///></a>";
@@ -317,60 +302,59 @@ function show_users_ldap($uu,$pag,$npp) {
 
 
 //------------------- main -------------------
-$op=$_POST['btsubmit'];
-switch($action)
-{
+if(!empty($_POST['pag_operator'])) {
+	$op=$_POST['pag_operator'];
+} else {
+	$op='';
+}
+switch($action) {
 	case 'ldapOK':
-
 		switch($op){
-				case '=':
-					//$pag=$_POST['pag'];
-					$npp=$_POST['npp'];
-					show_users_ldap($uu,1,$npp);
-					break;
-				case '<':
-					$pag=max(1,$_POST['pag']-1);
-					$npp=$_POST['npp'];
-					show_users_ldap($uu,$pag,$npp);
-					break;
-
-				case '>':
-					$pag=$_POST['pag']+1;
-					show_users_ldap($uu,$pag,$npp);
-					break;
-
-				case $msg['del_ldap_usr']:
-					$xx=$_POST['usrdel'];
-					$uu=$_POST['uu'];
-					$pag=$_POST['pag'];
-					$npp=$_POST['npp'];
-					foreach ($xx as $dummykey=>$x){
-						$u="/$x"."[^;]+;/";
-						$uu=preg_replace($u,'',$uu,1);
-					}
-					show_users_ldap($uu,$pag,$npp);
-					break;
-				case $msg['import_ldap_exe']:
-					$uu=$_POST['uu'];
-					$uu=str_replace(';',"\n",$uu);
+			case '=':
+				//$pag=$_POST['pag'];
+				$npp=$_POST['npp'];
+				show_users_ldap($uu,1,$npp);
+				break;
+			case '<':
+				$pag=max(1,$_POST['pag']-1);
+				$npp=$_POST['npp'];
+				show_users_ldap($uu,$pag,$npp);
+				break;
+			case '>':
+				$pag=$_POST['pag']+1;
+				show_users_ldap($uu,$pag,$npp);
+				break;
+			case $msg['del_ldap_usr']:
+				$xx=$_POST['usrdel'];
+				$uu=$_POST['uu'];
+				$pag=$_POST['pag'];
+				$npp=$_POST['npp'];
+				foreach ($xx as $x){
+					$u="/$x"."[^;]+;/";
+					$uu=preg_replace($u,'',$uu,1);
+				}
+				show_users_ldap($uu,$pag,$npp);
+				break;
+			case $msg['import_ldap_exe']:
+				$uu=$_POST['uu'];
+				$uu=str_replace(';',"\n",$uu);
 #					$uu=str_replace('|',',',$uu);
-					$fp=fopen("./temp/ldap_users.txt","w");
-					fwrite($fp,$uu);
-					fclose($fp);
-					$action="";
-					$from_ldap='1';
-					require_once("./admin/empr/import_empr.inc.php");
-					break;
-				default:
-					$uu=users_ldap(gid_ldap($_POST['ldap_grp']));
-					$pag=$_POST['pag'];
-					$npp=$_POST['npp'];
-					if (!$pag) $pag=1;
-					show_users_ldap($uu,$pag,$npp);
-					break;
+				$fp=fopen("./temp/ldap_users.txt","w");
+				fwrite($fp,$uu);
+				fclose($fp);
+				$action="";
+				$from_ldap='1';
+				require_once("./admin/empr/import_empr.inc.php");
+				break;
+			default:
+				$uu=users_ldap(gid_ldap($_POST['ldap_grp']));
+				$pag=(!empty($_POST['pag']) ? intval($_POST['pag']) : 0);
+				$npp=(!empty($_POST['npp']) ? intval($_POST['npp']) : 0);
+				if (!$pag) $pag=1;
+				show_users_ldap($uu,$pag,$npp);
+				break;
 		}
 		break;
-
 	default:
 		choice_ldap_group();
 		break;

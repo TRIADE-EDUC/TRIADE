@@ -1,0 +1,341 @@
+{
+    "template": {
+        "__COMMENT__": "Template de remplissage d'un champ",
+        "215a": "{pages}",
+        "215a_pages_unit": " p.",
+        "215c": "{volume} {typeVolume} {reliure} {mentionIllustration}",
+        "215d": "{dimensions} {poids}",
+        "215d_dimensions_sep": "x",
+        "215d_dimensions_unit": " cm",
+        "215d_poids_unit": " gr"
+    },
+    "functions": {
+        "__COMMENT__": "Relation entre les fonctions Electre (typeContribution) et les functions PMB",
+        "__DEFAULT__": "070",
+        "Acteur": "005",
+        "Auteur": "070",
+        "Auteur (artiste)": "040",
+        "Auteur (illustrateur)": "440",
+        "Auteur (photographe)": "600",
+        "Auteur adapté": "010",
+        "Auteur douteux, prétendu": "330",
+        "Auteur de l'idée originale": "070",
+        "Auteur du matériel d'accompagnement": "770",
+        "Auteur du texte": "070",
+        "Auteur originel": "070",
+        "Autres": "570",
+        "Autres interprètes": "590",
+        "Calligraphe": "170",
+        "Cartographe": "180",
+        "Chef d'une interprétation musicale": "250",
+        "Chorégraphe": "200",
+        "Collaborateur": "205",
+        "Coloriste": "410",
+        "Commentateur audio": "210",
+        "Commentateur de texte": "212",
+        "Compositeur": "230",
+        "Concepteur": "245",
+        "Danseur": "275",
+        "Directeur artistique": "632",
+        "Directeur de collection": "651",
+        "Directeur de publication": "651",
+        "Editeur scientifique (ou intellectuel)": "340",
+        "Fondateur d'une revue, d'une collection": "395",
+        "Groupe musical": "070",
+        "Illustrateur": "440",
+        "Inconnu": "070",
+        "Infographiste": "440",
+        "Interviewer": "490",
+        "Librettiste": "480",
+        "Maquettiste": "130",
+        "Narrateur": "550",
+        "Organisateur d'un congrès": "557",
+        "Organisateur d'une exposition": "557",
+        "Parolier": "520",
+        "Personne interviewée": "560",
+        "Photographe": "600",
+        "Photographe (film)": "600",
+        "Postfacier": "075",
+        "Préfacier": "080",
+        "Producteur": "630",
+        "Programmeur": "635",
+        "Réalisateur de film": "300",
+        "Rédacteur / Rapporteur": "710",
+        "Scénariste": "690",
+        "Soliste instrumental": "545",
+        "Soliste vocal": "755",
+        "Traducteur": "730"
+    },
+    "supports": {
+        "__COMMENT__": "Relation entre les supports Electre et les types de notices PMB",
+        "__DEFAULT__": { "typdoc": "a" },
+        "LIV": {
+            "label": "Livre",
+            "typdoc": "a"
+        },
+        "LAC": {
+            "label": "Livret d’accompagnement",
+            "typdoc": "a"
+        },
+        "LFA": {
+            "label": "Fascicule",
+            "typdoc": "a"
+        },
+        "LBR": {
+            "label": "Brochure",
+            "typdoc": "a"
+        },
+        "LBA": {
+            "label": "Livre pour le bain",
+            "typdoc": "a"
+        },
+        "LTI": {
+            "label": "Livre en tissu",
+            "typdoc": "a"
+        },
+        "LCA": {
+            "label": "Livre tout carton",
+            "typdoc": "a"
+        },
+        "LSO": {
+            "label": "Livre souvenirs",
+            "typdoc": "a"
+        },
+        "LYK": {
+            "label": "Almanach ou agenda à contenu rédactionnel majoritaire",
+            "typdoc": "a"
+        },
+        "LJE": {
+            "label": "Livre jeu",
+            "typdoc": "a"
+        },
+        "REV": {
+            "label": "Revue",
+            "typdoc": "a"
+        },
+        "MIM": {
+            "label": "Partition",
+            "typdoc": "c"
+        },
+        "FIC": {
+            "label": "Fiches",
+            "typdoc": "a"
+        },
+        "FMO": {
+            "label": "Feuillets mobiles",
+            "typdoc": "a"
+        },
+        "FPH": {
+            "label": "Feuilles à photocopier",
+            "typdoc": "a"
+        },
+        "FDE": {
+            "label": "Dépliant",
+            "typdoc": "a"
+        },
+        "FPL": {
+            "label": "Planche",
+            "typdoc": "k"
+        },
+        "FRI": {
+            "label": "Frise",
+            "typdoc": "k"
+        },
+        "FDI": {
+            "label": "Diapositives",
+            "typdoc": "g"
+        },
+        "JSO": {
+            "label": "Jeu de société",
+            "typdoc": "r"
+        },
+        "JPU": {
+            "label": "Puzzle",
+            "typdoc": "r"
+        },
+        "JOU": {
+            "label": "Jouet, Livre jouet",
+            "typdoc": "r"
+        },
+        "PKG": {
+            "label": "Agenda (contenu éditorial minoritaire)",
+            "typdoc": "a"
+        },
+        "PCA": {
+            "label": "Carnet d’adresses",
+            "typdoc": "a"
+        },
+        "PKM": {
+            "label": "Calendrier",
+            "typdoc": "a"
+        },
+        "PCP": {
+            "label": "Carte postale",
+            "typdoc": "k"
+        },
+        "PCM": {
+            "label": "Carte murale",
+            "typdoc": "k"
+        },
+        "PAL": {
+            "label": "Papier à lettre",
+            "typdoc": "a"
+        },
+        "PCH": {
+            "label": "Cahier",
+            "typdoc": "a"
+        },
+        "PAP": {
+            "label": "Affiche-Poster",
+            "typdoc": "k"
+        },
+        "PCO": {
+            "label": "Album de coloriage, points à relier etc.",
+            "typdoc": "k"
+        },
+        "AMU": {
+            "label": "Musique",
+            "typdoc": "c"
+        },
+        "AER": {
+            "label": "Enregistrement radiophonique",
+            "typdoc": "i"
+        },
+        "ADS": {
+            "label": "Document sonore",
+            "typdoc": "i"
+        },
+        "ALL": {
+            "label": "Livre lu",
+            "typdoc": "i"
+        },
+        "VFI": {
+            "label": "Film",
+            "typdoc": "g"
+        },
+        "VDA": {
+            "label": "Dessins animés",
+            "typdoc": "g"
+        },
+        "VST": {
+            "label": "Série télévisée",
+            "typdoc": "g"
+        },
+        "EAC": {
+            "label": "Art et culture",
+            "typdoc": "a"
+        },
+        "EST": {
+            "label": "Sciences et techniques",
+            "typdoc": "a"
+        },
+        "EVP": {
+            "label": "Vie pratique",
+            "typdoc": "a"
+        },
+        "EEN": {
+            "label": "Entreprise",
+            "typdoc": "a"
+        },
+        "ELA": {
+            "label": "Langues",
+            "typdoc": "a"
+        },
+        "EBU": {
+            "label": "Utilitaire de bureautique",
+            "typdoc": "a"
+        },
+        "EDU": {
+            "label": "Education (scolaire et parascolaire)",
+            "typdoc": "a"
+        },
+        "ELE": {
+            "label": "Ludo-éducatif et jeux enfant",
+            "typdoc": "r"
+        },
+        "EJA": {
+            "label": "Jeux adultes",
+            "typdoc": "r"
+        },
+        "CAP": {
+            "label": "Carte à plat",
+            "typdoc": "e"
+        },
+        "CRO": {
+            "label": "Carte roulée",
+            "typdoc": "e"
+        },
+        "CPL": {
+            "label": "Carte pliée",
+            "typdoc": "e"
+        },
+        "CMU": {
+            "label": "Carte murale",
+            "typdoc": "e"
+        },
+        "CAR": {
+            "label": "Atlas routier",
+            "typdoc": "e"
+        },
+        "ISI": {
+            "label": "Site Internet",
+            "typdoc": "l"
+        },
+        "IBL": {
+            "label": "Blog",
+            "typdoc": "l"
+        },
+        "IFA": {
+            "label": "Fichier audio à télécharger",
+            "typdoc": "i"
+        },
+        "IFV": {
+            "label": "Fichier vidéo à télécharger",
+            "typdoc": "g"
+        },
+        "IFN": {
+            "label": "Fichier numérique à télécharger de type « Ecrit » (texte + images fixes)",
+            "typdoc": "a"
+        },
+        "KPL": {
+            "label": "Packs libraires",
+            "typdoc": "a"
+        },
+        "IFS": {
+            "label": "Fichier numérique accessible en ligne de type « Ecrit » (texte + images fixes)",
+            "typdoc": "l"
+        },
+        "IFM": {
+            "label": "Fichier numérique multiformat accessible en ligne de type « Ecrit » (texte + images fixes)",
+            "typdoc": "m"
+        },
+        "JEU": {
+            "label": "Jeu",
+            "typdoc": "r"
+        },
+        "JOB": {
+            "label": "Objet",
+            "typdoc": "r"
+        },
+        "VTE": {
+            "label": "Téléfilm",
+            "typdoc": "g"
+        },
+        "VMU": {
+            "label": "Musique",
+            "typdoc": "j"
+        },
+        "VDO": {
+            "label": "Documentaire",
+            "typdoc": "a"
+        },
+        "ECD": {
+            "label": "Logiciels, jeux électroniques",
+            "typdoc": "m"
+        },
+        "EJV": {
+            "label": "Jeux vidéo",
+            "typdoc": "m"
+        }
+    }
+}

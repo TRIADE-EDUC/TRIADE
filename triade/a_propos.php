@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,6 +28,7 @@
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
+<script type="text/javascript" src="./librairie_js/logo.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade</title>
 </head>
@@ -81,35 +82,45 @@ include_once("./common/config2.inc.php");
 			print ""; 
 		} ?>"; </script>
 
-<script type="text/javascript" >var urlcontact2="<?php if (URLCONTACT2 != "") { print URLCONTACT2; }else{ print ""; }  ?>"; </script>
-<script type="text/javascript" >var urlnomcontact2="<?php if (URLNOMCONTACT2 != "") { print URLNOMCONTACT2; }else{ print ""; } ?>"; </script>
-<script type="text/javascript" >var urlcontact3="<?php if (URLCONTACT3 != "") { print URLCONTACT3; }else{ print ""; }  ?>"; </script>
-<script type="text/javascript" >var urlnomcontact3="<?php if (URLNOMCONTACT3 != "") { print URLNOMCONTACT3; }else{ print ""; } ?>"; </script>
-<script type="text/javascript" >var urlcontact4="<?php if (URLCONTACT4 != "") { print URLCONTACT4; }else{ print ""; }  ?>"; </script>
-<script type="text/javascript" >var urlnomcontact4="<?php if (URLNOMCONTACT4 != "") { print URLNOMCONTACT4; }else{ print ""; } ?>"; </script>
+<script type="text/javascript" >var urlcontact2="<?php if ((URLCONTACT2 != "")  && (defined("URLCONTACT2")))  { print URLCONTACT2; }else{ print ""; }  ?>"; </script>
+<script type="text/javascript" >var urlnomcontact2="<?php if ((URLNOMCONTACT2 != "")  && (defined("URLNOMCONTACT2"))) { print URLNOMCONTACT2; }else{ print ""; } ?>"; </script>
+<script type="text/javascript" >var urlcontact3="<?php if ((URLCONTACT3 != "")  && (defined("URLCONTACT3"))) { print URLCONTACT3; }else{ print ""; }  ?>"; </script>
+<script type="text/javascript" >var urlnomcontact3="<?php if ((URLNOMCONTACT3 != "")  && (defined("URLNOMCONTACT3"))) { print URLNOMCONTACT3; }else{ print ""; } ?>"; </script>
+<script type="text/javascript" >var urlcontact4="<?php if ((URLCONTACT4 != "")  && (defined("URLCONTACT4"))) { print URLCONTACT4; }else{ print ""; }  ?>"; </script>
+<script type="text/javascript" >var urlnomcontact4="<?php if ((URLNOMCONTACT4 != "")  && (defined("URLNOMCONTACT4"))) { print URLNOMCONTACT4; }else{ print ""; } ?>"; </script>
 <SCRIPT language="JavaScript" src="librairie_js/menudepart.js"></SCRIPT>
 <?php 
-include("librairie_php/lib_defilement.php");
+include_once("librairie_php/lib_defilement.php");
 include_once("./common/config2.inc.php");
-if (HTTPS == "non") {
+if ((HTTPS == "non") && (defined("HTTPS")))  {
 	print "<script type='text/javascript'>var http='http://';</script>\n";
 }else{
 	print "<script type='text/javascript'>var http='https://';</script>\n";
 }
-if (POPUP == "non") {
-        print "<script language='JavaScript'>var popup='non';</script>";
-}else {
-        print "<script language='JavaScript'>var popup='oui';</script>";
+if (defined("POPUP")) {
+	if (POPUP == "non") {
+	        print "<script language='JavaScript'>var popup='non';</script>";
+	}else {
+        	print "<script language='JavaScript'>var popup='oui';</script>";
+	}
+}else{
+	print "<script language='JavaScript'>var popup='oui';</script>";
 }
-
 print "<script type='text/javascript'>var vocalmess='apropos';</script>\n";
-print "<script type='text/javascript'>var inc='".GRAPH."';</script>\n";
-
-
+if (defined("GRAPH")) {  
+	print "<script type='text/javascript'>var inc='".GRAPH."';</script>\n"; 
+}else{
+	print "<script type='text/javascript'>var inc='0';</script>\n"; 
+}
 if (file_exists("./common/lib_patch.php")){
 	include_once('./common/lib_patch.php');
-	$rev="<br>Rev : <i>".VERSIONPATCH."</i> ";
-	if (defined(VERSIONMD5)) $rev.=" - <i>".VERSIONMD5."</i>";
+	if (!defined("VERSIONPATCH")) {
+		$VERSIONPATCH="";
+	}else{
+		$VERSIONPATCH=VERSIONPATCH;
+	}
+	$rev="<br>Rev : <i>".$VERSIONPATCH."</i> ";
+	if (defined("VERSIONMD5")) $rev.=" - <i>".VERSIONMD5."</i>";
 }
 
 ?>
@@ -117,27 +128,34 @@ if (file_exists("./common/lib_patch.php")){
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
 <SCRIPT language="JavaScript" src="librairie_js/menudepart1.js"></SCRIPT>
-<table border="1" bgcolor=#FFFFFF  bordercolor="#000000" cellpadding="3" cellspacing="1" width="100%"  height="85" style="box-shadow: 10px 10px 5px #656565;border-radius: 25px;";
+<table border="1" bgcolor=#FFFFFF  bordercolor="#000000" cellpadding="3" cellspacing="1" width="100%"  height="85" style="box-shadow: 0 8px 32px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.08);border-radius: 25px;"
 >
 
 <tr ><td  id='bordure'> <p align="left"><font color="#000000">
 <!-- // debut de la saisie -->
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src='./image/commun/logo_triade_licence.gif'>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src='./image/commun/logo_triade_licence.png' width='50%' />
 <ul>
 <?php
-include_once("common/version.php");
+if (file_exists('./common/version.php')) 	include_once("./common/version.php");
+if (file_exists('../common/version.php')) 	include_once("../common/version.php");
 ?>
 <BR><BR><?php print LANGAPROPOS1 ?> : <b><?php print VERSION?></b>
 <?php print $rev ?>
 <BR><?php print LANGAPROPOS2 ?> <BR>
 <?php print LANGAPROPOS3 ?>  : <?php print LICENCE?> <BR>
-<?php print LANGAPROPOS4 ?> = <font class='T1'>  <?php print PRODUCTID?> </font>
 <BR><BR>
-<textarea cols=60 rows=8 STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'>
+<textarea cols=40 rows=10 style="display:block;margin:16px 16px 16px 0;width:calc(100% - 16px);box-sizing:border-box;padding:14px 18px;border:1px solid #c5cae9;border-radius:8px;font-family:monospace;font-size:11px;color:#333;background:#f8f9ff;resize:vertical;line-height:1.5">
 <?php droit(); ?>
 </textarea>
 <br><br>
+<?php 
+if (defined("DATEOUT")) {
+	$DATEOUT=DATEOUT;
+}else{
+	$DATEOUT="";
+}
+?>
 Triade &copy;, <?php print DATEOUT ?> <br>
 <a href="http://www.triade-educ.org" target="_blank">www.triade-educ.org</a>
 </ul>

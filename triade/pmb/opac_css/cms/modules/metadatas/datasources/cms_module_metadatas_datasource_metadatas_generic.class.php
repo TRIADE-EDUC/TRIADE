@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_metadatas_datasource_metadatas_generic.class.php,v 1.9 2017-11-28 15:33:39 dgoron Exp $
+// $Id: cms_module_metadatas_datasource_metadatas_generic.class.php,v 1.16 2023/08/17 09:47:55 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ class cms_module_metadatas_datasource_metadatas_generic extends cms_module_commo
 	}
 	
 	/*
-	 * Sauvegarde du formulaire, revient √† remplir la propri√©t√© parameters et appeler la m√©thode parente...
+	 * Sauvegarde du formulaire, revient ‡ remplir la propriÈtÈ parameters et appeler la mÈthode parente...
 	 */
 	public function save_form(){
 		global $selector_choice;
@@ -31,7 +31,7 @@ class cms_module_metadatas_datasource_metadatas_generic extends cms_module_commo
 	}
 
 	/*
-	 * R√©cup√©ration des m√©tadatas utilisable pour cette source de donn√©e
+	 * RÈcupÈration des mÈtadatas utilisable pour cette source de donnÈe
 	*/
 	public function get_metas_list(){
 		$metadatas = new cms_module_metadatas();
@@ -107,10 +107,10 @@ class cms_module_metadatas_datasource_metadatas_generic extends cms_module_commo
 		$html = "
 		<div id='struct_tree' class='row'>
 		</div>
-		<script type='text/javascript'>
+		<script>
 			require(['dojo/data/ItemFileReadStore', 'dijit/tree/ForestStoreModel', 'dijit/Tree','dijit/Tooltip'],function(Memory,ForestStoreModel,Tree,Tooltip){
 				var datas = {identifier:'var',label:'var'};
-				datas.items = ".json_encode($this->utf8_encode($this->get_format_data_structure())).";
+				datas.items = ".encoding_normalize::json_encode($this->get_format_data_structure()).";
 	
 				var store = Memory({
 					data :datas
@@ -197,20 +197,25 @@ class cms_module_metadatas_datasource_metadatas_generic extends cms_module_commo
 	}
 	
 	/*
-	 * R√©cup√©ration des groupes de m√©ta-donn√©es...
+	 * RÈcupÈration des groupes de mÈta-donnÈes...
 	*/
 	public function get_group_metadatas(){
 		$datas = array();
 		$metadatas_list = $this->get_metas_list();
 		foreach ($metadatas_list as $i=>$metadata_list) {
-			// !isset <=> activ√© par d√©faut pour ne pas avoir √† √©diter tous les cadres
+			// !isset <=> activÈ par dÈfaut pour ne pas avoir ‡ Èditer tous les cadres
 			if (!isset($this->parameters[$this->get_form_value_name($i."_active")]) || $this->parameters[$this->get_form_value_name($i."_active")]) {
 				$data = array();
 				$data['replace'] = (isset($metadata_list['replace']) && $metadata_list['replace'] != "" ? true : false);
 				$data["group_template"] = $metadata_list["group_template"];
 				foreach ($metadata_list["items"] as $key=>$metadata) {
 					if (isset($this->parameters[$this->get_form_value_name($i."_".$key)])) {
-						$data["metadatas"][$metadata_list["prefix"].$metadata_list["separator"].$key] = $this->parameters[$this->get_form_value_name($i."_".$key)];
+					    // On Èvite la boulette si pas de prÈfixe
+					    if($metadata_list["prefix"] != ""){
+					        $data["metadatas"][$metadata_list["prefix"].$metadata_list["separator"].$key] = $this->parameters[$this->get_form_value_name($i."_".$key)];
+					    }else{
+					        $data["metadatas"][$key] = $this->parameters[$this->get_form_value_name($i."_".$key)];
+					    }
 					}
 				}
 				$datas[] = $data;
@@ -220,27 +225,46 @@ class cms_module_metadatas_datasource_metadatas_generic extends cms_module_commo
 	}
 	
 	/*
-	 * R√©cup√©ration des donn√©es de la source...
+	 * RÈcupÈration des donnÈes de la source...
 	*/
-	public function get_datas(){
+	public function get_datas() {
 		$datas = array();
 
-		if(!isset($datas['id']) || !$datas['id']){
-			$datas['id'] = $this->get_module_dom_id();
+		$datas['id'] = $this->get_module_dom_id();
+		$datas['get_vars'] = $_GET;
+		$datas['post_vars'] = $_POST;
+		$datas['session_vars']['view'] = (isset($_SESSION['opac_view']) ? $_SESSION['opac_view'] : '');
+		$datas['session_vars']['id_empr'] = $_SESSION['id_empr_session'];
+		$datas['env_vars']['script'] = basename($_SERVER['SCRIPT_NAME']);
+		$datas['env_vars']['request'] = basename($_SERVER['REQUEST_URI']);
+		
+		return $datas;
+	}
+	
+	public function get_object_datas($datas) {
+	    if (!is_object($datas)) {
+	       return null; 
+	    }
+	    
+	    if ((method_exists($datas, "get_id") === false && empty($datas->id)) || (method_exists($datas, "get_id") && empty($datas->get_id()))) {
+			$datas->id = $this->get_module_dom_id();
 		}
-		if(!isset($datas['get_vars']) || !$datas['get_vars']){
-			$datas['get_vars'] = $_GET;
+		if (empty($datas->get_vars)) {
+			$datas->get_vars = $_GET;
 		}
-		if(!isset($datas['post_vars']) || !$datas['post_vars']){
-			$datas['post_vars'] = $_POST;
+		if (empty($datas->post_vars)) {
+			$datas->post_vars = $_POST;
 		}
-		if(!isset($datas['session_vars']) || !$datas['session_vars']){
-			$datas['session_vars']['view'] = (isset($_SESSION['opac_view']) ? $_SESSION['opac_view'] : '');
-			$datas['session_vars']['id_empr'] = $_SESSION['id_empr_session'];
+		
+		if (empty($datas->session_vars)) {
+		    $datas->session_vars = array();
+		    $datas->session_vars['view'] = (isset($_SESSION['opac_view']) ? $_SESSION['opac_view'] : '');
+			$datas->session_vars['id_empr'] = $_SESSION['id_empr_session'];
 		}
-		if(!isset($datas['env_vars']) || !$datas['env_vars']){
-			$datas['env_vars']['script'] = basename($_SERVER['SCRIPT_NAME']);
-			$datas['env_vars']['request'] = basename($_SERVER['REQUEST_URI']);
+		if (empty($datas->env_vars)) {
+		    $datas->env_vars = array();
+		    $datas->env_vars['script'] = basename($_SERVER['SCRIPT_NAME']);
+		    $datas->env_vars['request'] = basename($_SERVER['REQUEST_URI']);
 		}
 		
 		return $datas;

@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.2 2015-06-26 08:14:27 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.7.2.1 2024/09/18 09:38:37 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -16,8 +16,16 @@ pmbesClean
 indexGlobal
 -->
   <entry code="indexGlobal_description">Reindex the global index</entry>
+  <entry code="indexGlobal_step_name">Nom de l'étape (main - custom_field - authperso - authperso_link - callables)</entry>
+  <entry code="indexGlobal_fields">Liste des codes champs</entry>
   <entry code="indexGlobal_output_description"></entry>
   <entry code="indexGlobal_result">Result of the base reindexing</entry> 
+<!--
+indexSphinxRecords
+-->
+  <entry code="indexSphinxRecords_description">Réindexer les notices dans Sphinx</entry>
+  <entry code="indexSphinxRecords_output_description"></entry>
+  <entry code="indexSphinxRecords_result">Résultat de la réindexation des notices dans Sphinx</entry> 
 <!--
 indexNotices
 -->
@@ -96,12 +104,24 @@ genSignatureNotice
   <entry code="genSignatureNotice_description">Generate all type of records signature</entry>
   <entry code="genSignatureNotice_output_description"></entry>
   <entry code="genSignatureNotice_result">Result of the generation of records signature ?</entry>
+  <!--
+genSignatureDocnum
+-->
+  <entry code="genSignatureDocnum_description">Générer toutes les signatures de documents numériques</entry>
+  <entry code="genSignatureDocnum_output_description"></entry>
+  <entry code="genSignatureDocnum_result">Résultat de la génération des signatures de documents numériques</entry>
 <!--
 genPhonetique
 -->
   <entry code="genPhonetique_description">Generate the index for the search by "stemming" in the OPAC</entry>
   <entry code="genPhonetique_output_description"></entry>
   <entry code="genPhonetique_result">Result of the generation of the index for the search by "stemming" in the OPAC</entry>
+<!--
+genAutLink
+-->
+  <entry code="genAutLink_description">Générer les liens entre autorités</entry>
+  <entry code="genAutLink_output_description"></entry>
+  <entry code="genAutLink_result">Résultat de la génération des liens entre autorités</entry>
 <!--
 nettoyageCleanTags
 -->
@@ -161,5 +181,47 @@ concept
 -->
   <entry code="cleanConcept_description">Reindex the concepts</entry>
   <entry code="cleanConcept_output_description"></entry>
-  <entry code="cleanConcept_result">Result of the reindexing of the concepts</entry>   
+  <entry code="cleanConcept_result">Result of the reindexing of the concepts</entry>
+  <!--
+indexSphinxConcepts
+-->
+  <entry code="indexSphinxConcepts_description">Réindexer les concepts dans Sphinx</entry>
+  <entry code="indexSphinxConcepts_output_description"></entry>
+  <entry code="indexSphinxConcepts_result">Résultat de la réindexation des concepts dans Sphinx</entry>
+    <!--
+hashEmprPassword
+-->
+  <entry code="hashEmprPassword_description">Encoder les mots de passe lecteurs pour la connexion à l'Opac</entry>
+  <entry code="hashEmprPassword_output_description"></entry>
+  <entry code="hashEmprPassword_result">Résultat du réencodage des mots de passe</entry>
+<!--
+indexAuthorities
+-->
+  <entry code="indexAuthorities_description">Réindexer toutes les autorités</entry>
+  <entry code="indexAuthorities_input_description"></entry>
+  <entry code="indexAuthorities_filters">Indexer seulement certains types d'autorités</entry>
+  <entry code="indexAuthorities_step_name">Nom de l'étape (main - custom_field - authperso - authperso_link - callables)</entry>
+  <entry code="indexAuthorities_fields">Liste des codes champs</entry>
+  <entry code="indexAuthorities_output_description"></entry>
+  <entry code="indexAuthorities_result">Résultat de la réindexation des autorités</entry>   
+  <!--
+indexSphinxAuthorities
+-->
+  <entry code="indexSphinxAuthorities_description">Réindexer toutes les autorités dans Sphinx</entry>
+  <entry code="indexSphinxAuthorities_input_description"></entry>
+  <entry code="indexSphinxAuthorities_filters">Indexer seulement certains types d'autorités</entry>
+  <entry code="indexSphinxAuthorities_output_description"></entry>
+  <entry code="indexSphinxAuthorities_result">Résultat de la réindexation des autorités dans Sphinx</entry>   
+<!--
+genArk
+-->
+  <entry code="genArk_description">Générer les ARK</entry>
+  <entry code="genArk_output_description"></entry>
+  <entry code="genArk_result">Résultat de la génération des ARK</entry>   
+<!--
+genDocnumThumbnail
+-->
+  <entry code="genDocnumThumbnail_description">Générer les vignettes de document numérique</entry>
+  <entry code="genDocnumThumbnail_output_description"></entry>
+  <entry code="genDocnumThumbnail_result">Résultat de la génération des vignettes de document numérique</entry>   
 </XMLlist>

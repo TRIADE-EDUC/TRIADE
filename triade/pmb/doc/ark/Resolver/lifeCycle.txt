@@ -1,0 +1,84 @@
+@startuml
+	== Notice existante ==
+	activate ArkRouterRest
+		ArkRouterRest -> ArkRouterRest : generateRouts() 
+		ArkRouterRest -> ArkRouterRest : proceed() 
+		ArkRouterRest -> ArkRouterRest: call(route)
+		ArkRouterRest -> ArkAPIController: resolve(naan, identifier, qualifiers)
+	deactivate ArkRouterRest
+	
+	activate ArkAPIController
+		ArkAPIController -> ArkAPIController :checkNaan()
+		ArkAPIController -> ArkModel :resolve(naan, identifier, qualifiers)
+
+	
+		activate ArkModel
+			ArkModel -> Ark : getArkInstance()
+			activate Ark
+				ArkModel <-- Ark : Ark
+				ArkModel -> Ark : getId()
+				ArkModel <-- Ark : arkId
+			deactivate Ark
+			
+			activate ArkEntity
+				ArkModel -> ArkEntityPmb : getEntityFromArkId(arkId)
+				activate ArkEntityPmb
+					ArkEntityPmb -> ArkEntityPmb : getEntityClassFromType(entityType)
+					ArkModel <-- ArkEntityPmb : ArkEntityPmb
+					ArkModel -> ArkEntity : setQualifiers(qualifiers)
+					ArkModel -> ArkEntityPmb : getOpacUrl()
+					ArkEntityPmb -> ArkRecord : generateQualifiedURL()
+					activate ArkRecord
+						ArkRecord -> ArkRecord : getThumbnail()
+						ArkEntityPmb <-- ArkRecord : url
+					deactivate ArkRecord
+					ArkModel <-- ArkEntityPmb : url
+				deactivate ArkEntityPmb
+			deactivate ArkEntity
+			
+			ArkAPIController <-- ArkModel : url
+		deactivate ArkModel
+	
+		ArkAPIController -> ArkAPIController : header(location: url, true, 302)
+	deactivate ArkAPIController
+	
+	
+	== Notice supprimée ==
+	activate ArkRouterRest
+		ArkRouterRest -> ArkRouterRest : generateRouts() 
+		ArkRouterRest -> ArkRouterRest : proceed() 
+		ArkRouterRest -> ArkRouterRest: call(route)
+		ArkRouterRest -> ArkAPIController: resolve(naan, identifier, qualifiers)
+	deactivate ArkRouterRest
+	
+	activate ArkAPIController
+		ArkAPIController -> ArkAPIController :checkNaan()
+		ArkAPIController -> ArkModel :resolve(naan, identifier, qualifiers)
+
+		activate ArkModel
+			ArkModel -> Ark : getArkInstance()
+			activate Ark
+				ArkModel <-- Ark : Ark
+				ArkModel -> Ark : getId()
+				ArkModel <-- Ark : arkId
+			deactivate Ark
+			
+			activate ArkEntity
+				ArkModel -> ArkEntityPmb : getEntityFromArkId(arkId)
+				activate ArkEntityPmb
+					ArkEntityPmb -> ArkEntityPmb : getEntityClassFromType(entityType)
+					ArkModel <-- ArkEntityPmb : null
+				deactivate ArkEntityPmb
+			deactivate ArkEntity
+			
+			ArkModel -> Ark : getOpacUrl()
+			activate Ark
+				ArkModel <-- Ark : url
+			deactivate Ark
+			
+			ArkAPIController <-- ArkModel : url
+		deactivate ArkModel
+	
+		ArkAPIController -> ArkAPIController : header(location: url, true, 302)
+	deactivate ArkAPIController
+@enduml

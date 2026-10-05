@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_menu_datasource_menu_editorial.class.php,v 1.12 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: cms_module_menu_datasource_menu_editorial.class.php,v 1.17 2022/02/18 08:53:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -12,7 +12,7 @@ class cms_module_menu_datasource_menu_editorial extends cms_module_menu_datasour
 		parent::__construct($id);
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -52,11 +52,11 @@ class cms_module_menu_datasource_menu_editorial extends cms_module_menu_datasour
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
 		$selector = $this->get_selected_selector();
-		//le sÃ©lecteur nous retourne l'identifiant de la rubrique racine de la construction du menu ( pour tous avoir...)
+		//le sélecteur nous retourne l'identifiant de la rubrique racine de la construction du menu ( pour tous avoir...)
 		if($selector){
 			return array(
 				'name' => '',
@@ -67,18 +67,21 @@ class cms_module_menu_datasource_menu_editorial extends cms_module_menu_datasour
 	}
 	
 	protected function build_tree_sections($id_parent,$depth=0){
-		global $dbh;
-		
 		if($this->parameters['max_depth'] == 0 || $depth < $this->parameters['max_depth']){
 			$items = $ids = $rows = array();
-			$query = "select id_section,section_title from cms_sections where section_num_parent = '".($id_parent*1)."' order by section_order asc";
-			$result = pmb_mysql_query($query, $dbh);
+			$id_parent = intval($id_parent);
+			$query = "select id_section,section_title from cms_sections where section_num_parent = '".$id_parent."' order by section_order asc";
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$ids[] = $row->id_section;
 					$rows[] = $row;
 				}
 				$ids = $this->filter_datas("sections",$ids);
+				$links = [
+				    "article" => $this->get_constructed_link("article", "!!id!!"),
+				    "section" => $this->get_constructed_link("section", "!!id!!")
+				];
 				foreach($rows as $row){
 					if(in_array($row->id_section,$ids)){
 						$section = new cms_section($row->id_section);
@@ -86,10 +89,10 @@ class cms_module_menu_datasource_menu_editorial extends cms_module_menu_datasour
 							'id' => $row->id_section,
 							'title' => $row->section_title,
 							'link' => $this->get_constructed_link("section",$row->id_section),
-							'details' => $section->format_datas(false,false)
+							'details' => $section->format_datas($links)
 						);
-						$sub_query = "select count(id_section) from cms_sections where section_num_parent = '".($row->id_section*1)."'";
-						$sub_result = pmb_mysql_query($sub_query,$dbh);
+						$sub_query = "select count(id_section) from cms_sections where section_num_parent = '".$row->id_section."'";
+						$sub_result = pmb_mysql_query($sub_query);
 						if(pmb_mysql_num_rows($result) && pmb_mysql_result($sub_result,0,0)>0){
 							$item['children'] = $this->build_tree_sections($row->id_section,$depth+1);
 						}

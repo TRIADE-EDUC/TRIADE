@@ -1,0 +1,7 @@
+<!-- $Id: contribution_alert_mail.tpl.html,v 1.2 2021/02/18 14:28:23 gneveu Exp $ -->
+
+{% block user_info %}
+	<h2>Bonjour {{ user.username }}</h2>
+	L'emprunteur {{ empr.empr_nom }} {{ empr.empr_prenom }} a soumis une contribution.
+	<a href='{{ url }}'><span style='color:green'><strong>Lien vers la liste des contributions</strong></span></a>
+{% endblock %}

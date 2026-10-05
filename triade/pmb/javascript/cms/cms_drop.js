@@ -1,23 +1,23 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_drop.js,v 1.6 2014-11-19 08:17:09 ngantier Exp $ */
+// $Id: cms_drop.js,v 1.6 2014/11/19 08:17:09 ngantier Exp $ */
 
 var cms_memo_opacdrop =new Array();
 
  // Fonction pour placer les cadres de l'opac
  
 function opacdrop_opacdrop(dragged,target,x,y,xorig,yorig){
-	//On rÃ©cupÃ¨re les enfants du cadre rÃ©cepteur
+	//On récupère les enfants du cadre récepteur
 	var childs=target.childNodes;
 	var flag_moved=false;	
 	for (var i=0; i<childs.length; i++) {
 		var child_block=childs[i];
 		if((child_block.offsetWidth!=0)&&(child_block.offsetHeight!=0)) {
 			left_coords=cms_findPos(child_block);
-			//On a trouvÃ© !
+			//On a trouvé !
 			if (((x>=left_coords[0])&&(x<=left_coords[0]+child_block.offsetWidth))&&((y>=left_coords[1])&&(y<=left_coords[1]+child_block.offsetHeight))) {
-				//J'enlÃ¨ve le noeud d'origine
+				//J'enlève le noeud d'origine
 				if(dragged.id != child_block.id){			
 					
 					
@@ -48,7 +48,7 @@ function opacdrop_moved(target,x,y,xorig,yorig) {
 	//console.log("xdepose,ydepose,xorigine,yorigine ",x,y,xorig,yorig);
 	var depx=x-xorig;
 	var depy=y-yorig;
-	//console.log("DÃ©placement ",depx,depy);
+	//console.log("Déplacement ",depx,depy);
 	var position=window.getComputedStyle(target).position;
 	if (position=="static") {
 		target.style.position="relative";
@@ -62,7 +62,7 @@ function opacdrop_moved(target,x,y,xorig,yorig) {
 		var ytarget=window.getComputedStyle(target).top;
 		xtarget=xtarget.substring(0,xtarget.length-2)*1;
 		ytarget=ytarget.substring(0,ytarget.length-2)*1;
-		//console.log("Position relative actuelle avant dÃ©placement ",xtarget,ytarget);
+		//console.log("Position relative actuelle avant déplacement ",xtarget,ytarget);
 		depx=depx+xtarget;
 		depy=depy+ytarget;	
 		

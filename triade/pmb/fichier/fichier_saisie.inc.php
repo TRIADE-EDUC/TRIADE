@@ -1,19 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fichier_saisie.inc.php,v 1.4 2017-04-20 16:25:28 dgoron Exp $
+// $Id: fichier_saisie.inc.php,v 1.5 2021/02/12 22:26:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($idfiche)) $idfiche = 0;
-if(!isset($act)) $act = '';
+global $class_path, $act, $msg, $idfiche;
+
+$idfiche = intval($idfiche);
 
 require_once($class_path."/fiche.class.php");
 
 $fiche = new fiche($idfiche);
 switch($act){
-	
 	case 'save_and_new':
 		$p_perso=new parametres_perso('gestfic0');
 		$nberrors=$p_perso->check_submited_fields();
@@ -24,7 +24,6 @@ switch($act){
 			print $fiche->show_edit_form();
 		}
 		break;
-		
 	case 'update':
 		$p_perso=new parametres_perso('gestfic0');
 		$nberrors=$p_perso->check_submited_fields();
@@ -34,7 +33,6 @@ switch($act){
 			$fiche->save();
 		}
 		break;
-		
 	default:
 		print $fiche->show_edit_form();
 		break;

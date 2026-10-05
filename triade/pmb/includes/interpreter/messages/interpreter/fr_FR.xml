@@ -4,7 +4,7 @@
 ***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)*
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)***(?)*
-$Id: fr_FR.xml,v 1.1 2015-07-24 12:52:42 vdesiles Exp $ -->
+$Id: fr_FR.xml,v 1.2 2022/06/20 12:06:00 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../../includes/XMLlist.dtd" >
 <XMLlist>
@@ -244,7 +244,10 @@ $Id: fr_FR.xml,v 1.1 2015-07-24 12:52:42 vdesiles Exp $ -->
   
   <!-- #1ucasew($param); -->
   <entry code="1ucasew_description">Affiche un texte avec les premières lettres des mots en majuscule</entry>
-  <entry code="1ucasew_input_description">param[0] = texte</entry>
+  <entry code="1ucasew_input_description">
+  param[0] = texte
+  param[1] = séparateur
+  </entry>
   <entry code="1ucasew_output_description">Exemple : Si param[0]="logiciel pmb", on aura "Logiciel Pmb"</entry>
   
   <!-- #i2char($param); -->

@@ -2,13 +2,12 @@
 // +-------------------------------------------------+
 // ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntityTree.js,v 1.10 2018-09-25 09:49:57 tsamson Exp $
+// $Id: EntityTree.js,v 1.16 2023/09/08 09:31:56 rtigero Exp $
 
 
 define(["dojo/_base/declare",
         "apps/pmb/tree_interface/EntityTree",
         "dojo/store/Memory",
-        "dijit/tree/ObjectStoreModel",
         "dojo/_base/lang",
         "dijit/form/Button",
         "dojo/dom-construct",
@@ -17,8 +16,9 @@ define(["dojo/_base/declare",
         "dijit/tree/dndSource",
         "dojo/dom",
         "dojo/aspect",
-        "dojo/store/Observable"
-], function(declare, EntityTree, Memory, ObjectStoreModel, lang, Button, domConstruct, topic, Standby, dndSource, dom, aspect, Observable){
+        "dojo/store/Observable",
+        "apps/search_universes/ObjectStoreModel",
+], function(declare, EntityTree, Memory, lang, Button, domConstruct, topic, Standby, dndSource, dom, aspect, Observable, ObjectStoreModel){
     return declare([EntityTree], {
         id : 'frbrTree',
         currentParentId: 0,
@@ -33,10 +33,6 @@ define(["dojo/_base/declare",
                 store: this.memoryStore,
                 labelType: 'html',
                 query: {root:true},
-                mayHaveChildren : function(item) {
-                    return true;
-                },
-                onChildrenChange : lang.hitch(this, this.childrenChanged)
             });
         },
         
@@ -54,11 +50,16 @@ define(["dojo/_base/declare",
 //        },
 //        
         checkAcceptance: function(source, node) {
-            var item = source.tree.selectedItem;
-            if (item.entity_type == 'facet' || item.entity_type == 'segment') {
-                return true;
+            if(source.tree) {
+            	var item = source.tree.selectedItem;
+                if (item.entity_type == 'facet' && item.name != pmbDojo.messages.getMessage('search_universes', 'search_universes_facet')) {
+                    return true;
+                }
+                if (item.entity_type == 'segment') {
+                	return true;
+                }
+                return false;
             }
-            return false;
         },
 
         checkItemAcceptance: function(target, source, position) {
@@ -77,17 +78,13 @@ define(["dojo/_base/declare",
 	            	break;
             	case 'segment':
             		if((target_item.parent == current_item.parent) && (position != "over")){
-            			return true;	
+            			return true;
             		}
-            		return false;
+            		break;
             }
             return false;
         },
         
-        childrenChanged: function(parent, children) {
-        	console.log(arguments);
-        },
-
         postCreate:function(){
             this.inherited(arguments);
         },
@@ -103,6 +100,12 @@ define(["dojo/_base/declare",
                 case 'checkChildrenToDelete':
                     this.checkChildrenToDelete(evtArgs);
                     break;
+                case 'startDuplicateSegment':
+                    this.startDuplicateSegment(evtArgs);
+                    break;
+                case 'startDuplicateUniverse':
+                    this.startDuplicateUniverse(evtArgs);
+                    break;
             }
         },
         formatData : function(data) {
@@ -116,7 +119,7 @@ define(["dojo/_base/declare",
 
             formatData.push({
                 id: 'universes',
-                name: 'Univers de recherche',
+                name: pmbDojo.messages.getMessage('search_universes', 'search_universes_univers'),
                 parent: fakeRootId,
                 link_edit: data.creation_links.universe,
                 entity_type: 'universe',
@@ -125,24 +128,34 @@ define(["dojo/_base/declare",
 
             formatData.push({
                 id: 'facet',
-                name: 'Facettes',
+                name: pmbDojo.messages.getMessage('search_universes', 'search_universes_facet'),
                 entity_type: 'facet',
                 parent: fakeRootId
             });
 
+            /*
             formatData.push({
                 id: 'search_perso',
-                name: 'Recherches',
+                name: pmbDojo.messages.getMessage('search_universes', 'search_universes_search'),
                 parent: fakeRootId,
                 entity_type: 'search_perso',
-                link_edit: data.creation_links.search,
-                link_save: data.save_links.search
+                link_edit: data.creation_links.search_perso,
+                link_save: data.save_links.search_perso
             });
-            var facetsNode = this.generateTypeNodes('facet', {link_edit: data.creation_links.facet, link_save: data.save_links.facet});
-            var searchNode = this.generateTypeNodes('search_perso', {link_edit: data.creation_links.search, link_save: data.save_links.search});
+            */
+
+            /**
+             * generateTypeNodes
+             */
+            var facetsNode = this.generateTypeNodes('facet', {link_edit: data.creation_links.facet, link_save: data.save_links.facet}, data.type);
+            //var searchNode = this.generateTypeNodes('search_perso', {link_edit: data.creation_links.search_perso, link_save: data.save_links.search_perso}, data.type);
 
             formatData = formatData.concat(facetsNode);
-            formatData = formatData.concat(searchNode);
+            //formatData = formatData.concat(searchNode);
+            
+            /**
+             * Univers de recherche 
+             */
             if(typeof data.universes != "undefined"){
                 for(var key in data.universes){
                     data.universes[key].parent = 'universes';
@@ -151,30 +164,44 @@ define(["dojo/_base/declare",
                     for(var subKey in data.universes[key].segments){
                     	data.universes[key].segments[subKey].parent = 'universe_'+key;
                         formatData = formatData.concat(this.generateRootNodes(data, 'facet', key, subKey, 'Facettes'));
-                        formatData = formatData.concat(this.generateRootNodes(data, 'search_perso', key, subKey, 'Recherches'));
+                        //formatData = formatData.concat(this.generateRootNodes(data, 'search_perso', key, subKey, 'Recherches'));
 
                         data.universes[key].segments[subKey].id = 'universe_'+key+'_'+subKey;
                         formatData.push(data.universes[key].segments[subKey]);
                     };
                 };
             }
+            
+            /**
+             * Facettes
+             */
             if(typeof data.facet != "undefined"){
                 for(var key in data.facet){
-                    var facet_type = data.facet[key].type;
-                    data.facet[key].parent = 'facet_' + this.getType(facet_type),
-                    data.facet[key].id = data.facet[key].parent + '_' + key;
-                    data.facet[key].link_edit = data.creation_links.facet + '&segment_type=' + this.getType(facet_type) + '&id=' + key,
-                    data.facet[key].link_save = data.save_links.facet + '&segment_type=' + this.getType(facet_type) + '&id=' + key,
+            		var facet = data.facet[key];
+            		var facet_type = this.getType(facet.type)
+                    data.facet[key].parent = 'facet_' + facet_type,
+                    data.facet[key].id = facet.parent + '_' + key;
+                    data.facet[key].link_edit = facet.link_edit + '&segment_type=' + facet_type,
+                    data.facet[key].link_save = facet.link_save + '&segment_type=' + facet_type,
                     formatData.push(data.facet[key]);
                 }
             }
 
-//            if(typeof data.search_perso != "undefined"){
-//                for(var key in data.search_perso){
-//                    data.search_perso[key].parent = researchRootId;
-//                    formatData.push(data.search_perso[key]);
-//                }
-//            }
+            /**
+             * Recherche
+            if(typeof data.search_perso != "undefined"){
+                for(var key in data.search_perso){
+                	var search_perso = data.search_perso[key];
+                    formatData.push({
+                        id : 'search_perso_' + this.getType(search_perso.search_type) + '_' + key,
+                        name : search_perso.name,
+                        link_edit: search_perso.link_edit,
+                        link_save: "",
+                        parent: 'search_perso_' + this.getType(search_perso.search_type)
+                    });
+                }
+            } 
+             */
 
             return formatData;
         },
@@ -210,46 +237,44 @@ define(["dojo/_base/declare",
         },
         //Ici type est "facets" ou "search_perso"
         generateRootNodes: function(data, type, key, subKey, name){
-            /**
-             * TODO: Factoriser la création des clÃ©s racines pour les segments.
-             */
+            
             var formatData = [];
+            
+            /**
+             * Groupe "Facette" / "Recherche Prédefinie"
+             */
             formatData.push({
                 id: 'universe_'+key+'_'+subKey+'_'+type,
                 name: name,
                 parent: 'universe_'+key+'_'+subKey,
                 entity_type: type,
-                type: data.universes[key].segments[subKey].type
+                type: data.universes[key].segments[subKey].type,
+                id_universe: data.universes[key].real_id,
+                segment_id: data.universes[key].segments[subKey].real_id,
+                update_facet: data.universes[key].segments[subKey].update_facet
             });
+            
+            /**
+             * Enfant du groupe (liste des facettes ...)
+             */
             data.universes[key].segments[subKey][type].forEach(element => {
-                formatData.push({
-                    id: 'universe_'+key+'_'+subKey+'_'+type+'_'+element,
-                    name: data[type][element].name,
-                    link_edit: data[type][element].link_edit + '&segment_type=' + this.getType(data[type][element].type),
-                    link_save: data[type][element].link_save + '&segment_type=' + this.getType(data[type][element].type),
-                    real_id: data[type][element].real_id,
-                    parent:'universe_'+key+'_'+subKey+'_'+type,
-                    entity_type: type
-                });
+            	if (data[type][element]) {
+	                formatData.push({
+	                    id: 'universe_'+key+'_'+subKey+'_'+type+'_'+element,
+	                    name: data[type][element].name,
+	                    link_edit: data[type][element].link_edit + '&segment_type=' + this.getType(data[type][element].type),
+	                    link_save: data[type][element].link_save + '&segment_type=' + this.getType(data[type][element].type),
+	                    real_id: data[type][element].real_id,
+	                    parent:'universe_'+key+'_'+subKey+'_'+type,
+	                    entity_type: type
+	                });
+            	} 
             });
-
+            
             return formatData;
         },
-        generateTypeNodes: function(parentID, links){
+        generateTypeNodes: function(parentID, links, types){
             var formatData = [];
-            var types = {
-                 'record' : 'Notices',
-                 'author' : 'Auteur',
-                 'category' : 'Categorie',
-                 'publisher' : 'Editeur',
-                 'collection' : 'Collection',
-                 'subcollection' : 'Sous-collection',
-                 'serie' : 'Serie',
-                 'titre_uniforme' : 'Titre uniforme',
-                 'indexint' : 'Indexation',
-                 'concept': 'Concept',
-                 'authperso': 'Autorite personnalisee'
-            };
             Object.keys(types).forEach((type) => {
                 formatData.push({
                     id : parentID + '_' + this.getType(type),
@@ -321,7 +346,29 @@ define(["dojo/_base/declare",
                 case 'authpersos':
                 case '12':
                     return 12;
+                default:
+                	return type;
             }
+        },
+        startDuplicateSegment : function(args) {
+			let action = './ajax.php?module=admin&categ=search_universes&sub=segment&action=duplicate&id='+args.id+'&selected_universes=';
+			let selector = dom.byId('select_universes');
+			if(! selector.selectedOptions.length) {
+                alert(pmbDojo.messages.getMessage('search_universes', 'universe_required'));
+				return;
+			}
+			for(let option of selector.selectedOptions) {
+				action += option.value;
+				action += ',';
+			}
+			if(action.endsWith(',')) {
+				action = action.slice(0, action.length - 1);
+			}
+            topic.publish('formButton', 'duplicateSegment', { action : action });
+		},
+        startDuplicateUniverse : function(args) {
+            let action = './ajax.php?module=admin&categ=search_universes&sub=universe&action=duplicate&id='+args.id;
+            topic.publish('formButton', 'duplicateUniverse', { action : action });
         }
     });
 });

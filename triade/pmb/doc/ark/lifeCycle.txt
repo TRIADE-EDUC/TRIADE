@@ -1,0 +1,80 @@
+@startuml
+	==Génération==
+	Entite -> ArkModel: saveArkFromEntity($this)
+	activate ArkModel
+		
+		ArkModel -> ArkModel : getArkEntityFromEntity()
+		ArkModel -> ArkEntity: new ArkRecord(entityId)
+		activate ArkEntity
+			ArkEntity -> ArkEntity: fetchData()
+
+			ArkModel <-- ArkEntity: ArkRecord
+		deactivate ArkEntity
+		ArkModel -> ArkEntity : getArkId()
+		activate ArkEntity
+			ArkModel <-- ArkEntity : ark id : 0
+		deactivate ArkEntity
+		
+			
+				
+			
+		ArkModel -> Ark : new Ark()
+		activate Ark
+			
+			ArkModel <-- Ark : Ark
+		deactivate Ark
+		ArkModel -> Ark : setArkEntity(arkEntity)
+		activate Ark
+			Ark -> Ark : fetchData()
+			ArkModel -> Ark : generateArkIdentifier()
+		deactivate Ark
+	
+		ArkModel -> Ark : save(arkIdentifier)
+		activate Ark
+			Ark -> ArkEntity : save()
+				activate ArkEntity
+					ArkEntity -> ArkEntity : updateMetadata()
+					Ark <-- ArkEntity : true
+				deactivate ArkEntity
+			ArkModel <-- Ark : arkId
+		deactivate Ark
+		ArkModel --> Entite : Ark
+	deactivate ArkModel
+	
+	
+	==Mise à jour==
+	Entite -> ArkModel: saveArkFromEntity($this)
+	activate ArkModel
+		
+		ArkModel -> ArkModel : getArkEntityFromEntity()
+		ArkModel -> ArkEntity: new ArkRecord(entityId)
+		activate ArkEntity
+			ArkEntity -> ArkEntity: fetchData()
+
+			ArkModel <-- ArkEntity: ArkRecord
+		deactivate ArkEntity
+		ArkModel -> ArkEntity : getArkId()
+		activate ArkEntity
+			ArkModel <-- ArkEntity : ark id : arkId
+		deactivate ArkEntity
+		ArkModel -> ArkEntity : save()
+		activate ArkEntity
+			ArkEntity -> ArkEntity : updateMetadata
+			ArkModel <-- ArkEntity : true
+		deactivate ArkEntity
+		ArkModel --> Entite : true
+	deactivate ArkModel
+	
+	==Suppression==
+		
+	Entite -> ArkEntity: new ArkRecord(notice_id)
+	activate ArkEntity
+		ArkEntity -> ArkEntity: fetchData()
+		Entite <-- ArkEntity : ArkRecord
+	deactivate ArkEntity
+	Entite -> ArkEntity : markAsDeleted()
+	activate ArkEntity
+		Entite <-- ArkEntity : true
+	deactivate ArkEntity
+	
+@enduml

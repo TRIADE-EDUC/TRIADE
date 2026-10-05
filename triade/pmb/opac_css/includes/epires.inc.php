@@ -1,25 +1,30 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: epires.inc.php,v 1.9 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: epires.inc.php,v 1.10.10.1 2025/03/21 13:05:06 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 function search_other_function_filters() {
 	global $typ_notice,$charset,$annee_parution;
-	$r="";
-	$r.="AnnÃ©e de parution <input type='text' size='5' name='annee_parution' value='".htmlentities($annee_parution,ENT_QUOTES,$charset)."'/>&nbsp;Restreindre Ã  <input type='checkbox' name=\"typ_notice[a]\" value='1' ".($typ_notice['a']?"checked":"")."/>&nbsp;Articles de revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".($typ_notice['m']?"checked":"")."/>&nbsp;Tout sauf revues";
-	return $r;
+	
+	if (!is_array($typ_notice)) {
+	    $typ_notice = array();
+	}
+	return "Année de parution <input type='text' size='5' name='annee_parution' value='".htmlentities($annee_parution,ENT_QUOTES,$charset)."'/>&nbsp;Restreindre à <input type='checkbox' name=\"typ_notice[a]\" value='1' ".(isset($typ_notice['a']) && $typ_notice['a'] ? "checked":"")."/>&nbsp;Articles de revues&nbsp;<input type='checkbox' name=\"typ_notice[m]\" value='1' ".(isset($typ_notice['m']) && $typ_notice['m'] ? "checked" : "")."/>&nbsp;Tout sauf revues";
 }
 
 function search_other_function_clause() {
 	global $typ_notice,$annee_parution;
-	reset($typ_notice);
+	
 	$t_n_tab=array();
 	$r = "";
-	foreach ($typ_notice as $key => $val) {
-	    $t_n_tab[]=$key;
+	if (is_array($typ_notice)) {
+        reset($typ_notice);
+    	foreach ($typ_notice as $key => $val) {
+    	    $t_n_tab[]=$key;
+    	}
 	}
 	$t_n=implode("','",$t_n_tab);
 	if ($t_n) {
@@ -38,7 +43,11 @@ function search_other_function_clause() {
 
 function search_other_function_has_values() {
 	global $typ_notice, $annee_parution;
-	if ((count($typ_notice))||($annee_parution)) return true; else return false;
+	if ((is_countable($typ_notice) && count($typ_notice))||($annee_parution)) {
+	    return true;
+	} else {
+	    return false;
+	}
 }
 
 function search_other_function_get_values(){
@@ -62,10 +71,10 @@ function search_other_function_get_history($n) {
 function search_other_function_human_query($n) {
 	global $typ_notice,$annee_parution;
 	$r="";
-	$notices_t=array("m"=>"Monographies","s"=>"PÃ©riodiques","a"=>"Articles");
+	$notices_t=array("m"=>"Monographies","s"=>"Périodiques","a"=>"Articles");
 	$typ_notice=$_SESSION["typ_notice".$n];
 	$annee_parution=$_SESSION["annee_parution".$n];
-	if (count($typ_notice)) {
+	if (is_array($typ_notice) && count($typ_notice)) {
 		$r.="pour les types de notices ";
 		reset($typ_notice);
 		$t_l=array();
@@ -82,13 +91,21 @@ function search_other_function_human_query($n) {
 }
 
 function search_other_function_post_values() {
-	global $typ_notice,$annee_parution;
+	global $typ_notice, $annee_parution, $charset;
 	$ret = "";
-	if ($typ_notice["m"] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[m]\" value=\"".$typ_notice["m"]."\">";
-	if ($typ_notice["s"] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[s]\" value=\"".$typ_notice["s"]."\">";
-	if ($typ_notice["b"] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[b]\" value=\"".$typ_notice["b"]."\">";
-	if ($typ_notice["a"] != "") $ret .= "<input type=\"hidden\" name=\"typ_notice[a]\" value=\"".$typ_notice["a"]."\">";
-	return "<input type=\"hidden\" name=\"annee_parution\" value=\"".$annee_parution."\">".$ret."\n";
+	if (is_array($typ_notice)) {
+	    if (isset($typ_notice["m"]) && $typ_notice["m"] != "") {
+    	    $ret .= "<input type=\"hidden\" name=\"typ_notice[m]\" value=\"".htmlentities($typ_notice["m"], ENT_QUOTES, $charset)."\">";
+    	}
+    	if (isset($typ_notice["s"]) && $typ_notice["s"] != "") {
+    	    $ret .= "<input type=\"hidden\" name=\"typ_notice[s]\" value=\"".htmlentities($typ_notice["s"], ENT_QUOTES, $charset)."\">";
+    	}
+    	if (isset($typ_notice["b"]) && $typ_notice["b"] != "") {
+    	    $ret .= "<input type=\"hidden\" name=\"typ_notice[b]\" value=\"".htmlentities($typ_notice["b"], ENT_QUOTES, $charset)."\">";
+    	}
+    	if (isset($typ_notice["a"]) && $typ_notice["a"] != "") {
+    	    $ret .= "<input type=\"hidden\" name=\"typ_notice[a]\" value=\"".htmlentities($typ_notice["a"], ENT_QUOTES, $charset)."\">";
+    	}
+	}
+	return "<input type=\"hidden\" name=\"annee_parution\" value=\"".htmlentities($annee_parution, ENT_QUOTES, $charset)."\">".$ret."\n";
 }
-
-?>

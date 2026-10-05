@@ -1,65 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abts_pointage.tpl.php,v 1.20 2019-05-27 12:23:40 ngantier Exp $
+// $Id: abts_pointage.tpl.php,v 1.23 2023/12/20 08:26:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $pointage_list, $pointage_form, $msg, $current_module, $abts_gestion_retard_form_filter, $abts_gestion_retard_fournisseur_first, $abts_gestion_retard_fournisseur_suite, $abts_gestion_retard_form, $charset, $abts_gestion_retard_perio, $abts_gestion_retard_bulletin, $abts_gestion_retard_bulletin_relance;
-
-$pointage_list ="
-<script type='text/javascript' src='./javascript/sorttable.js'></script>
-<a href='javascript:expandAll()'><img src='".get_url_icon('expand_all.gif')."' border='0' id='expandall'></a>
-<a href='javascript:collapseAll()'><img src='".get_url_icon('collapse_all.gif')."' border='0' id='collapseall'></a>
-	!!a_recevoir!!
-	!!prochain_numero!!
-	!!en_retard!!
-	!!en_alerte!!
-	!!alerte_fin_abonnement!!
-	!!alerte_abonnement_depasse!!
-";
+global $pointage_form, $msg, $current_module, $abts_gestion_retard_form_filter, $abts_gestion_retard_fournisseur_first, $abts_gestion_retard_fournisseur_suite, $abts_gestion_retard_form, $charset, $abts_gestion_retard_perio, $abts_gestion_retard_bulletin, $abts_gestion_retard_bulletin_relance;
 
 $pointage_form = "
 <script type='text/javascript' src='./javascript/tablist.js'></script>
 <h1>".$msg["4000"]." : ".$msg["pointage_libelle_form"]."</h1>
-<form class='form-$current_module' id='form_pointage' name='form_pointage' method='post' action='!!action!!'>
-	<h3>".$msg["4000"].":".$msg["pointage_libelle_form"]."</h3>
-	<div class='form-contenu'>
-		<input type='hidden' name='num_notice' id='num_notice' value='!!num_notice!!'/>
-		<div class='row'>
-			<div class='colonne2'>
-				<div class='row'>
-					<label for='form_pointage' class='etiquette'>".$msg["pointage_titre_filtre"]."</label>
-				</div>
-				<div class='row'>
-					".$msg["pointage_label_localisation"]." : !!localisation!!
-				</div>
-			</div>
-		</div>
-		<div class='row'>
-			<div class='colonne2'>
-				<div class='row'>
-					<label for='abonnement_name' class='etiquette'>".$msg["pointage_titre_abonnements_liste"]."</label>
-				</div>
-			</div>
-		</div>		
-		<div class='row'>
-			!!bultinage!!		
-		</div>
-		<!-- Fin du contenu -->
-		<div class='row'>
-			&nbsp;	
-		</div>			
-	</div>
-	<input type='hidden' id='act' name='act' value='' />
-	<div class='left'><input type=\"submit\" class='bouton' value='".$msg["actualiser"]."' onClick=\"document.getElementById('act').value='';if(test_form(this.form)==true) this.form.submit();else return false;\"/>&nbsp;
+!!abts_pointage_list!!
+!!alerte_fin_abonnement!!
+!!alerte_abonnement_depasse!!
+<div class='left'>
 		!!imprimer!!
 		!!imprime_abts_depasse!!
 		!!gestion_retard!!
-	</div>			
-	<div class='row'></div>
-</form>
+	</div>
 ";			
 
 $abts_gestion_retard_form_filter = "
@@ -292,7 +251,7 @@ $abts_gestion_retard_form = "
 
 $abts_gestion_retard_perio = "	
 <div id='perio_retard!!num_perio!!' class='notice-parent'>
-	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='perio_retard!!num_perio!!Img' title='".addslashes($msg['plus_detail'])."' border='0' onClick=\"expandBase('perio_retard!!num_perio!!', true); return false;\" hspace='3'>
+    ".get_expandBase_button('perio_retard!!num_perio!!')."
 	<span class='notice-heada'>
     	<small>
     		<span  class='statutnot1'  style='margin-right: 3px;'>
@@ -388,4 +347,3 @@ $abts_gestion_retard_bulletin_relance="
 	</td>	
 </tr>
 ";	
-?>

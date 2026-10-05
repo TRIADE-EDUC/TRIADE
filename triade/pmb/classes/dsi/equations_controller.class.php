@@ -1,81 +1,70 @@
 <?php 
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: equations_controller.class.php,v 1.3 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: equations_controller.class.php,v 1.7 2021/04/23 06:46:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/equation.class.php");
 
-class equations_controller{
+class equations_controller extends lists_controller {
 	
-	protected $id;
+	protected static $model_class_name = 'equation';
+	protected static $list_ui_class_name = 'list_equations_ui';
 	
-	public function __construct($id=0) {
-	    $this->id = (int) $id;
-	}
-	
-	public function proceed($suite) {
-		global $msg;
+	public static function proceed($id=0) {
+		global $suite;
 		global $requete;
-		global $form_cb;
-		global $nom_equation;
 		global $proprio_equation;
-		global $database_window_title;
 		
 		switch($suite) {
 			case 'acces':
-				$equation = $this->get_object_instance();
-				print $equation->show_form();
+				$model_instance = static::get_model_instance($id);
+				print $model_instance->show_form();
 				break;
 			case 'add':
-				$equation = $this->get_object_instance();
-				print $equation->show_form();
+				$model_instance = static::get_model_instance($id);
+				print $model_instance->show_form();
 				break;
 			case 'transform':
-				$equation = $this->get_object_instance();
-				if (!$this->id) {
-					$equation->num_classement = 1;
-					$equation->nom_equation = "";
-					$equation->comment_equation = "";
-					$equation->proprio_equation = 0;
+				$model_instance = static::get_model_instance($id);
+				if (!$id) {
+					$model_instance->num_classement = 1;
+					$model_instance->nom_equation = "";
+					$model_instance->comment_equation = "";
+					$model_instance->proprio_equation = 0;
 				}
-				$equation->requete = stripslashes($requete);
-				print $equation->show_form();
+				$model_instance->requete = stripslashes($requete);
+				print $model_instance->show_form();
 				break;
 			case 'delete':
-				$equation = $this->get_object_instance();
-				$equation->delete();
-				print get_equation ($msg['dsi_equ_search'], $msg['dsi_equ_search_nom'], './dsi.php?categ=equations', stripslashes($form_cb));
-				print pmb_bidi(dsi_list_equations($form_cb)) ;
+				$model_instance = static::get_model_instance($id);
+				$model_instance->delete();
+				$list_ui_instance = static::get_list_ui_instance();
+				print $list_ui_instance->get_display_list();
 				break;
 			case 'update':
 				if(!isset($proprio_equation)) $proprio_equation = 0;
-				$equation = $this->get_object_instance();
-				$equation->set_properties_from_form();
-				$equation->save();
-				print get_equation ($msg['dsi_equ_search'], $msg['dsi_equ_search_nom'], './dsi.php?categ=equations', stripslashes($nom_equation));
-				print pmb_bidi(dsi_list_equations($nom_equation));
+				$model_instance = static::get_model_instance($id);
+				$model_instance->set_properties_from_form();
+				$model_instance->save();
+				$list_ui_instance = static::get_list_ui_instance(array('name' => $model_instance->nom_equation));
+				print $list_ui_instance->get_display_list();
 				break;
 			case 'duplicate':
-				$equation = $this->get_object_instance();
-				$equation->id_equation = 0;
-				print $equation->show_form();
+				$model_instance = static::get_model_instance($id);
+				$model_instance->id_equation = 0;
+				print $model_instance->show_form();
 				break;
 			case 'search':
-				print get_equation ($msg['dsi_equ_search'], $msg['dsi_equ_search_nom'], './dsi.php?categ=equations', stripslashes($form_cb));
-				print pmb_bidi(dsi_list_equations($form_cb));
+				$list_ui_instance = static::get_list_ui_instance();
+				print $list_ui_instance->get_display_list();
 				break;
 			default:
-				echo window_title($database_window_title.$msg['dsi_menu_title']);
-				print get_equation ($msg['dsi_equ_search'], $msg['dsi_equ_search_nom'], './dsi.php?categ=equations', stripslashes($form_cb));
-				print pmb_bidi(dsi_list_equations($form_cb));
+				parent::proceed($id);
 				break;
 		}
 	}
-	
-	public function get_object_instance() {
-		return new equation($this->id);
-	}	
 }// end class

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: stats_planning.class.php,v 1.2 2017-09-28 09:23:37 dgoron Exp $
+// $Id: stats_planning.class.php,v 1.4 2022/03/10 14:06:00 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
@@ -10,11 +10,11 @@ require_once ($class_path . "/consolidation.class.php");
 
 class stats_planning extends scheduler_planning {
 
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
-		global $base_path,$dbh, $charset, $msg;
+		global $charset, $msg;
 				
-		//paramÃ¨tres prÃ©-enregistrÃ©
+		//paramètres pré-enregistré
 		$liste_views = array();
 		if (isset($param['list_view'])) {
 			foreach ($param['list_view'] as $id_view) {
@@ -27,7 +27,7 @@ class stats_planning extends scheduler_planning {
 		$date_ech = (isset($param["date_ech"]) ? $param["date_ech"] : '');
 		
 		$requete = "SELECT id_vue, date_consolidation, nom_vue, comment FROM statopac_vues";
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nb_rows = pmb_mysql_num_rows($res);
 		//taille du selecteur
 		if ($nb_rows < 3) $nb=3;
@@ -40,7 +40,7 @@ class stats_planning extends scheduler_planning {
 		}
 		$select_view .= "</select>";
 		
-		//liste des vues Ã  consolider
+		//liste des vues à consolider
 		$form_task = "
 		<div class='row'>
 			<div class='colonne3'>
@@ -52,7 +52,7 @@ class stats_planning extends scheduler_planning {
 		</div>
 		<div class='row'>&nbsp;</div>";
 
-		/*appui sur la fin de la mÃ©thode do_form de la classe stat_view*/
+		/*appui sur la fin de la méthode do_form de la classe stat_view*/
 		$form_task .= "<div class='row'>
 			<div class='colonne3'>
 				<label for='stats'>".$this->msg["planificateur_stats_options"]."</label>
@@ -66,14 +66,11 @@ class stats_planning extends scheduler_planning {
 					<label for='id_debut'>$msg[stat_echeance_consolidation]</label><br>
 			</div>
 		</div>";
-		$btn_date_deb = "<input type='hidden' name='date_deb' value='!!date_deb!!'/><input type='button' name='date_deb_lib' class='bouton_small' value='!!date_deb_lib!!'   
-			onClick=\"openPopUp('./select.php?what=calendrier&caller=planificateur_form&date_caller=!!date_deb!!&param1=date_deb&param2=date_deb_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\" />";
-		$btn_date_fin = "<input type='hidden' name='date_fin' value='!!date_fin!!'/><input type='button' name='date_fin_lib' class='bouton_small'   value='!!date_fin_lib!!'
-			onClick=\"openPopUp('./select.php?what=calendrier&caller=planificateur_form&date_caller=!!date_fin!!&param1=date_fin&param2=date_fin_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\" />";
-		$btn_date_echeance = "<input type='hidden' name='date_ech' value='!!date_ech!!'/><input type='button' name='date_ech_lib' class='bouton_small' value='!!date_ech_lib!!'  
-			onClick=\"openPopUp('./select.php?what=calendrier&caller=planificateur_form&date_caller=!!date_ech!!&param1=date_ech&param2=date_ech_lib&auto_submit=NO&date_anterieure=YES', 'calendar')\" />";
+		$btn_date_deb = "<input type='date' name='date_deb' value='!!date_deb!!'/>";
+		$btn_date_fin = "<input type='date' name='date_fin' value='!!date_fin!!'/>";
+		$btn_date_echeance = "<input type='date' name='date_ech' value='!!date_ech!!'/>";
 			
-		if (!$date_deb) // -- si nouvelle tÃ¢che = pas de params prÃ©-enregistrÃ©s
+		if (!$date_deb) // -- si nouvelle tâche = pas de params pré-enregistrés
 			$date_deb = strftime("%Y-%m-%d", mktime(0, 0, 0, date('m'), date('d')-1, date('y'))); 
 		$btn_date_deb=str_replace("!!date_deb!!",$date_deb,$btn_date_deb);
 		$btn_date_deb=str_replace("!!date_deb_lib!!",formatdate($date_deb),$btn_date_deb);

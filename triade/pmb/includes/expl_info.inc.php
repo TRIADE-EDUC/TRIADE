@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_info.inc.php,v 1.65 2019-05-31 07:03:23 ngantier Exp $
+// $Id: expl_info.inc.php,v 1.71.4.2 2025/05/02 12:27:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once("$class_path/audit.class.php");
 require_once($class_path."/sur_location.class.php");
 require_once($class_path."/encoding_normalize.class.php");
@@ -19,17 +20,21 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 	global $pmb_droits_explr_localises,$explr_visible_mod;
 	// $expl est l'objet exemplaire rempli avec ce qu'il faut
 	// $mode_affichage : 
-	//	0 en liste dÃ©pliable : le contenu est affichÃ© dans le div
-	//	1 : le contenu est affichÃ© APRES l'isbd, sans liste dÃ©pliable
-	//	2 : le contenu n'est pas affichÃ© du tout
+	//	0 en liste dépliable : le contenu est affiché dans le div
+	//	1 : le contenu est affiché APRES l'isbd, sans liste dépliable
+	//	2 : le contenu n'est pas affiché du tout
+	//  3 : mode simplifié pour les exports HTML et tableur 
 	
 	if(!is_object($expl)) die("serious application error occured in ./circ/visu_ex.inc [print_info()]. Please contact developpment team");
 
+	if ($mode_affichage == 3) {
+	    return $msg[376]."&nbsp;".$expl->expl_cb." / ".$expl->aff_reduit;
+	}
 	switch($mode_affichage) {
 		case '0':
 			$temp= "
 				<div id='el!!id!!Parent' class='notice-parent'>
-	    			<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el!!id!!Img' title='".$msg['admin_param_detail']."' border='0' onClick=\"expandBase('el!!id!!', true); return false;\" hspace='3'>
+                    ".get_expandBase_button('el!!id!!')."
 	    			<span class='notice-heada'>!!heada!!</span>
 	    			<br />
 				</div>
@@ -50,13 +55,13 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 			break;
 		case '1':
 			$cart_click_expl = "onClick=\"openPopUp('./cart.php?object_type=EXPL&item=".$expl->expl_id."', 'cart')\"";
-			$cart_click_expl = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_expl>" ;
+			$cart_click_expl = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_expl>" ;
 			if ($expl->expl_notice) {
 				$cart_click_isbd = "onClick=\"openPopUp('./cart.php?object_type=NOTI&item=$expl->expl_notice', 'cart')\"";
 			} elseif ($expl->expl_bulletin) {
 				$cart_click_isbd = "onClick=\"openPopUp('./cart.php?object_type=BULL&item=".$expl->expl_bulletin."', 'cart')\"";
 			} 
-			$cart_click_isbd = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"${msg[400]}\" $cart_click_isbd>" ;
+			$cart_click_isbd = "<img src='".get_url_icon('basket_small_20x20.gif')."' class='align_middle' alt='basket' title=\"{$msg[400]}\" $cart_click_isbd>" ;
 			if (SESSrights & CATALOGAGE_AUTH) {
 				$link_cb_not="<a href='./catalog.php?categ=edit_expl&id=".$expl->expl_notice."&expl_id=".$expl->expl_id."'>";
 				$link_cb_bull="<a href='./catalog.php?categ=serials&sub=bulletinage&action=expl_form&bul_id=".$expl->expl_bulletin."&expl_id=".$expl->expl_id."'>";
@@ -70,11 +75,11 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 					}
 				}
 				if ($expl->expl_bulletin){
-					$temp= "<div class='row'><h1>$cart_click_expl&nbsp;$link_cb_bull${msg[376]}&nbsp;".$expl->expl_cb."$link_cb_end : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
+					$temp= "<div class='row'><h1>$cart_click_expl&nbsp;$link_cb_bull{$msg[376]}&nbsp;".$expl->expl_cb."$link_cb_end : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
 				} else {
-					$temp= "<div class='row'><h1>$cart_click_expl&nbsp;$link_cb_not${msg[376]}&nbsp;".$expl->expl_cb."$link_cb_end : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
+					$temp= "<div class='row'><h1>$cart_click_expl&nbsp;$link_cb_not{$msg[376]}&nbsp;".$expl->expl_cb."$link_cb_end : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
 				}
-			} else $temp= "<div class='row'><h1>$cart_click_expl&nbsp;${msg[376]}&nbsp;".$expl->expl_cb." : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
+			} else $temp= "<div class='row'><h1>$cart_click_expl&nbsp;{$msg[376]}&nbsp;".$expl->expl_cb." : $cart_click_isbd&nbsp;".$expl->aff_reduit."</h1></div><div class='row'><b>".$expl->isbd."</b></div>";
 			break;
 		}
 	
@@ -84,12 +89,12 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 	$__isbd.= "</div>";
 	$__modif_cb = '';
 	if(SESSrights & (CATALOGAGE_AUTH + CATAL_MODIF_CB_EXPL_AUTH)){
-		$__modif_cb.= "<hr /><div class='row'><input type='button' id='button_edit_cb' class='bouton' value='$msg[circ_edit_cb]'/><br/>";
-		$__modif_cb.= "<input type='text' id='input_edit_cb' style='display:none;'/>";
-		$__modif_cb.= "<input type='button' class='bouton' value='".$msg['transferts_popup_btValider']."' id='button_send_edit' style='display:none;'/>";
+	    $__modif_cb.= "<hr /><div class='row'><input type='button' id='button_edit_cb_".$expl->expl_id."' class='bouton' value='$msg[circ_edit_cb]'/><br/>";
+		$__modif_cb.= "<input type='text' id='input_edit_cb_".$expl->expl_id."' style='display:none;'/>";
+		$__modif_cb.= "<input type='button' class='bouton' value='".$msg['transferts_popup_btValider']."' id='button_send_edit_".$expl->expl_id."' style='display:none;'/>";
 		$__modif_cb.= "</div>";
 		$__modif_cb.="<script>
-						var editButton = document.getElementById('button_edit_cb');
+						var editButton = document.getElementById('button_edit_cb_".$expl->expl_id."');
 						var callbackEnter = function(evt){
 							var key = evt.which || evt.keyCode;
 							if (key === 13) { 
@@ -105,7 +110,7 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 						
 						var launchUpdateRequest = function(){
 							var request = new http_request();
-							var inputCb = document.getElementById('input_edit_cb');
+							var inputCb = document.getElementById('input_edit_cb_".$expl->expl_id."');
 							var callback = function(response){
 								response = JSON.parse(response);
 								if(response.status == 1){
@@ -118,7 +123,7 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 						}
 						
 						var callbackButton = function(evt){
-							var inputCb = document.getElementById('input_edit_cb');
+							var inputCb = document.getElementById('input_edit_cb_".$expl->expl_id."');
 							if(inputCb.value.replace(/^\s+$/g,'').length == 0) {
 								alert('$msg[326]');
 								inputCb.focus();
@@ -128,8 +133,8 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 							}
 						}
 						var showCbInput = function(evt){
-							var inputCb = document.getElementById('input_edit_cb');
-							var buttonValid = document.getElementById('button_send_edit');
+							var inputCb = document.getElementById('input_edit_cb_".$expl->expl_id."');
+							var buttonValid = document.getElementById('button_send_edit_".$expl->expl_id."');
 							if(inputCb.style.display == 'none' && buttonValid.style.display == 'none'){
 								inputCb.style.display = '';
 								inputCb.addEventListener('keypress', callbackEnter, true);
@@ -159,13 +164,13 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 			$msg[295]:&nbsp;<b>".$expl->section_libelle."</b>&nbsp;&nbsp;
 			$msg[296]:&nbsp;<b>".$expl->expl_cote."</b><br />";
 	$__local.= "$msg[297]:&nbsp;".$expl->statut_libelle;
-	// tester si rÃ©servÃ©
+	// tester si réservé
 	$sql="SELECT resa_cb from resa_ranger where resa_cb='".addslashes($expl->expl_cb)."'";
 	$execute_query=pmb_mysql_query($sql);
-	if(pmb_mysql_num_rows($execute_query))$situation = $msg['resa_menu_a_ranger'];  // exemplaire Ã  ranger
-	elseif($expl->expl_retloc)$situation = $msg['resa_menu_a_traiter'];  // exemplaire Ã  traiter
-	elseif(verif_cb_utilise($expl->expl_cb)) $situation = $msg['expl_reserve']; // exemplaire rÃ©servÃ©
-	elseif ($expl->pret_flag && !$expl->pret_idempr) $situation = "${msg[359]}"; // exemplaire disponible
+	if(pmb_mysql_num_rows($execute_query))$situation = $msg['resa_menu_a_ranger'];  // exemplaire à ranger
+	elseif($expl->expl_retloc)$situation = $msg['resa_menu_a_traiter'];  // exemplaire à traiter
+	elseif(verif_cb_utilise($expl->expl_cb)) $situation = $msg['expl_reserve']; // exemplaire réservé
+	elseif ($expl->pret_flag && !$expl->pret_idempr) $situation = "{$msg[359]}"; // exemplaire disponible
 	else $situation = "";
 	$__local.= "&nbsp;&nbsp;<b>".$situation."</b><br />";
 	$__local.=$msg[299].":&nbsp;<b>".$expl->codestat_libelle."</b><br />";
@@ -180,8 +185,8 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 			$__empr.= "<hr /><div class='row'><b>$msg[380]</b><br /> ";
 			$link = "<a href='./circ.php?categ=pret&form_cb=".rawurlencode($expl->empr_cb)."'>";
 			$__empr.= $link.$expl->empr_prenom." ".$expl->empr_nom." (".$expl->empr_cb.")</a>";
-			$__empr.= "&nbsp;${msg[381]}&nbsp;".$expl->aff_pret_date;
-			$__empr.= ".&nbsp;${msg[358]}&nbsp;".$expl->aff_pret_retour.".";
+			$__empr.= "&nbsp;{$msg[381]}&nbsp;".$expl->aff_pret_date;
+			$__empr.= ".&nbsp;{$msg[358]}&nbsp;".$expl->aff_pret_retour.".";
 			$__empr.= "</div>";
 		}
 		
@@ -197,22 +202,29 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 	if ($affichage_zone_notes) {
 		// zone du message exemplaire
 		$__note = "<hr /><div class='row'>";
-		$__note.= "<b>${msg[377]}</b><br />";
-		if ($expl->expl_note) $__note.= "<div class='message_important'>".$expl->expl_note."</div>";
+		$__note.= "<b>{$msg[377]}</b><br />";
+		if ($expl->expl_note) $__note.= "<div class='message_important'>".nl2br($expl->expl_note)."</div>";
 		if ($expl->expl_comment) {
 			$__note.= "<b>".$msg['expl_zone_comment']."</b><br />";
-			$__note.= "<div class='expl_comment'>".$expl->expl_comment."</div>";
+			$__note.= "<div class='expl_comment'>".nl2br($expl->expl_comment)."</div>";
 		}
 		$__note.= "<br /><input type='button' class='bouton' value='$msg[378]' onclick=\"document.location='./circ.php?categ=note_ex&cb=".rawurlencode($expl->expl_cb)."&id=".$expl->expl_id."'\" />";
 		$__note.= "</div><hr />";
 	}
-	// zone des rÃ©servations
+	// zone des réservations
 	$__resa = check_resa_liste($expl);
 	if ($__resa) {
 		$__resa = "<div class=\"row\"><b>".$msg["reserv_en_cours_doc"]."</b><br />".$__resa;
 		$__resa.= "</div>";
+	} else {
+	    // dernière réservation validée archivée
+	    $__resa = check_resa_archive_liste($expl, 1);
+	    if ($__resa) {
+	        $__resa = "<hr /><div class=\"row\"><b>".$msg["reserv_last_doc"]."</b><br />".$__resa;
+	        $__resa.= "</div>";
+	    }
 	}
-	// zone des rÃ©servations prÃ©visionnelles
+	// zone des réservations prévisionnelles
 	if ($pmb_location_resa_planning) {
 		$__resa_planning = check_resa_planning_liste($expl);
 		if ($__resa_planning) {
@@ -237,9 +249,8 @@ function print_info ($expl, $mode_affichage = 0, $affichage_emprunteurs = 1, $af
 	return $temp;
 }
 
-// rÃ©cupÃ©ration des infos exemplaires
+// récupération des infos exemplaires
 function get_expl_info($id, $lien_notice=1) {
-	global $dbh;
 	global $cart_link_non;
 	global $pmb_sur_location_activate;
 	
@@ -251,7 +262,7 @@ function get_expl_info($id, $lien_notice=1) {
 	$query .= " and statut.idstatut=expl.expl_statut";
 	$query .= " and dtype.idtyp_doc=expl.expl_typdoc";
 	$query .= " and codestat.idcode=expl.expl_codestat";
-	$result = pmb_mysql_query($query, $dbh);
+	$result = pmb_mysql_query($query);
 	if(pmb_mysql_num_rows($result)) {
 		$expl = pmb_mysql_fetch_object($result);
 		if($expl->expl_notice) {
@@ -265,7 +276,7 @@ function get_expl_info($id, $lien_notice=1) {
 			$bl = new bulletinage_display($expl->expl_bulletin);
 			$expl->isbd  = $bl->display;
 			if ($cart_link_non) $expl->aff_reduit = $bl->header;
-			else $expl->aff_reduit = "<a href='./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$expl->expl_bulletin'>".$bl->header."</a>";
+			else $expl->aff_reduit = "<a href='./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=" . intval($expl->expl_bulletin) . "'>".$bl->header."</a>";
 		}
 		if ($expl->expl_lastempr) {
 			$lastempr = new emprunteur($expl->expl_lastempr, '', FALSE, 0) ;
@@ -292,10 +303,9 @@ function get_expl_info($id, $lien_notice=1) {
 
 }
 
-// rÃ©cupÃ©re les rÃ©servations associÃ©es Ã  la notice
-// de l'exemplaire concernÃ©
+// récupére les réservations associées à la notice
+// de l'exemplaire concerné
 function check_resa_liste($expl) {
-	global $dbh;
 	global $msg ;
 	
 	if(!$expl || !is_object($expl))
@@ -308,7 +318,7 @@ function check_resa_liste($expl) {
 	$requete .= " and empr.id_empr=resa.resa_idempr";
 	$requete .= " and (resa.resa_cb = '".addslashes($expl->expl_cb)."' or resa.resa_cb='')";
 	$requete .= " order by resa.resa_date";
-	$query = @pmb_mysql_query($requete, $dbh);
+	$query = pmb_mysql_query($requete);
 	if(pmb_mysql_num_rows($query)) {
 		while($resa = pmb_mysql_fetch_object($query)) {
 			$link = "<a href=\"./circ.php?categ=pret&form_cb=".rawurlencode($resa->empr_cb)."\">";
@@ -327,10 +337,9 @@ function check_resa_liste($expl) {
 	return $resa_list;
 } 
 
-// teste les rÃ©servations sur l'exemplaire et le cas Ã©chÃ©ant,
-// retourne les infos de rÃ©servation dans l'objet spÃ©cifiÃ©
+// teste les réservations sur l'exemplaire et le cas échéant,
+// retourne les infos de réservation dans l'objet spécifié
 function check_resa($expl) {
-	global $dbh;
 	global $msg; 
 	
 	if(!is_object($expl))
@@ -354,11 +363,11 @@ function check_resa($expl) {
 	if (!$expl->expl_bulletin) $expl->expl_bulletin=0 ;
 	$rqt = "select *, IF(resa_date_fin>sysdate(),0,1) as perimee, date_format(resa_date_fin, '".$msg["format_date"]."') as aff_resa_date_fin, date_format(resa_date, '".$msg["format_date"]."') as aff_resa_date from resa where resa_idnotice='".$expl->expl_notice."' and resa_idbulletin='".$expl->expl_bulletin."' order by resa_date limit 1 ";
 	
-	$result = pmb_mysql_query($rqt, $dbh) or die (pmb_mysql_error()) ;
+	$result = pmb_mysql_query($rqt) or die (pmb_mysql_error()) ;
 	if(pmb_mysql_num_rows($result)) {
 
-		// des rÃ©servations ont Ã©tÃ© trouvÃ©es ->
-		// rÃ©cupÃ©ration des infos rÃ©sa
+		// des réservations ont été trouvées ->
+		// récupération des infos résa
 		$resa = pmb_mysql_fetch_object($result);
 		$expl->id_resa = $resa->id_resa;
 		$expl->resa_idempr = $resa->resa_idempr;
@@ -370,11 +379,11 @@ function check_resa($expl) {
 		$expl->aff_resa_date_fin = $resa->aff_resa_date_fin;
 		$expl->resa_cb = $resa->resa_cb;
 		
-		// rÃ©cupÃ©ration des infos sur le rÃ©servataire
+		// récupération des infos sur le réservataire
 		$query = "select empr_nom, empr_prenom, empr_cb, id_empr from empr where id_empr=".$resa->resa_idempr." limit 1";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)) {
-			// stockage des infos sur le rÃ©servataire
+			// stockage des infos sur le réservataire
 			$empr = pmb_mysql_fetch_object($result);
 			$expl->cb_reservataire = $empr->empr_cb;
 			$expl->nom_reservataire = $empr->empr_nom;
@@ -386,20 +395,54 @@ function check_resa($expl) {
 	return $expl;
 }
 
-// rÃ©cupÃ©re les rÃ©servations plannifiÃ©es associÃ©es Ã  la notice
-// de l'exemplaire concernÃ©
+// récupére les réservations validées archivées associées à la notice
+// de l'exemplaire concerné
+function check_resa_archive_liste($expl, $limit=0) {
+    global $msg;
+    
+    if(!$expl || !is_object($expl))
+        return '';
+        
+        $resa_archive_list = '';
+        $requete = "select empr_nom, empr_prenom, empr_cb, resarc_date, resarc_debut, resarc_fin, date_format(resarc_date, '".$msg["format_date"]."') as aff_resarc_date from empr, resa_archive";
+        if($expl->expl_notice) $requete .= " where resa_archive.resarc_idnotice=".$expl->expl_notice;
+        elseif($expl->expl_bulletin) $requete .= " where resa_archive.resarc_idbulletin=".$expl->expl_bulletin;
+        $requete .= " and empr.id_empr=resa_archive.resarc_id_empr";
+        $requete .= " and (resa_archive.resarc_cb = '".addslashes($expl->expl_cb)."')";
+        $requete .= " order by resa_archive.resarc_date DESC";
+        if($limit) {
+            $requete .= " limit ".$limit;
+        }
+        $query = @pmb_mysql_query($requete);
+        if(pmb_mysql_num_rows($query)) {
+            while($resa = pmb_mysql_fetch_object($query)) {
+                $link = "<a href=\"./circ.php?categ=pret&form_cb=".rawurlencode($resa->empr_cb)."\">";
+                $resa_archive_list .= $link.$resa->empr_prenom.'&nbsp;'.$resa->empr_nom;
+                $resa_archive_list .= "&nbsp;(".$resa->empr_cb.')</a>';
+                $resa_archive_list .= '&nbsp;<i>'.$resa->aff_resarc_date.'</i>';
+                $resa_archive_list .= " &gt;&gt; <b>".$msg['resa_date_debut'].":</b> ".formatdate($resa->resarc_debut)."&nbsp;<b>".$msg['resa_date_fin'].":</b> ".formatdate($resa->resarc_fin)."&nbsp;" ;
+                $resa_archive_list .= "<br />";
+            }
+        }
+        
+        return $resa_archive_list;
+}
+
+// récupére les réservations plannifiées associées à la notice
+// de l'exemplaire concerné
 function check_resa_planning_liste($expl) {
-	global $dbh;
 	global $msg ;
 	
-	if(!$expl || !is_object($expl) || !$expl->expl_notice)
+	if(!$expl || !is_object($expl) || !$expl->expl_notice) {
 		return '';
+	}
+	$resa__planning_list = '';
 	
-	$requete = "select empr_nom, empr_prenom, empr_cb, resa_date, resa_date_debut, resa_date_fin, IF(resa_date_fin>sysdate(),0,1) as perimee, date_format(resa_date, '".$msg["format_date"]."') as aff_resa_date from empr, resa_planning";
+	$requete = "select empr_nom, empr_prenom, empr_cb, resa_date, resa_date_debut, resa_date_fin, IF(resa_date_fin>sysdate(),0,1) as perimee, date_format(resa_date, '".$msg["format_date"]."') as aff_resa_date, resa_validee from empr, resa_planning";
 	$requete .= " where resa_planning.resa_idnotice=".$expl->expl_notice;
 	$requete .= " and empr.id_empr=resa_planning.resa_idempr";
 	$requete .= " order by resa_planning.resa_date";
-	$query = @pmb_mysql_query($requete, $dbh);
+	$query = pmb_mysql_query($requete);
 	if(pmb_mysql_num_rows($query)) {
 		while($resa_planning = pmb_mysql_fetch_object($query)) {
 			$link = "<a href=\"./circ.php?categ=pret&form_cb=".rawurlencode($resa_planning->empr_cb)."\">";
@@ -417,10 +460,9 @@ function check_resa_planning_liste($expl) {
 	return $resa__planning_list;
 } 
 
-// teste les rÃ©servations plannifiÃ©es sur l'exemplaire et le cas Ã©chÃ©ant,
-// retourne les infos de rÃ©servation dans l'objet spÃ©cifiÃ©
+// teste les réservations plannifiées sur l'exemplaire et le cas échéant,
+// retourne les infos de réservation dans l'objet spécifié
 function check_resa_planning($expl) {
-	global $dbh;
 	global $msg; 
 	
 	if(!is_object($expl))
@@ -442,11 +484,11 @@ function check_resa_planning($expl) {
 	if (!$expl->expl_notice) $expl->expl_notice=0;
 	$rqt = "select *, IF(resa_date_fin>sysdate(),0,1) as perimee, date_format(resa_date_fin, '".$msg["format_date"]."') as aff_resa_date_fin, date_format(resa_date, '".$msg["format_date"]."') as aff_resa_date from resa_planning where resa_idnotice='".$expl->expl_notice."' order by resa_date limit 1 ";
 	
-	$result = pmb_mysql_query($rqt, $dbh) or die (pmb_mysql_error()) ;
+	$result = pmb_mysql_query($rqt) or die (pmb_mysql_error()) ;
 	if(pmb_mysql_num_rows($result)) {
 
-		// des rÃ©servations prÃ©visionnelles ont Ã©tÃ© trouvÃ©es ->
-		// rÃ©cupÃ©ration des infos rÃ©sa
+		// des réservations prévisionnelles ont été trouvées ->
+		// récupération des infos résa
 		$resa_planning = pmb_mysql_fetch_object($result);
 		$expl->id_resa = $resa_planning->id_resa;
 		$expl->resa_idempr = $resa_planning->resa_idempr;
@@ -457,11 +499,11 @@ function check_resa_planning($expl) {
 		$expl->aff_resa_date_fin = $resa_planning->aff_resa_date_fin;
 		$expl->resa_cb = $resa_planning->resa_cb;
 		
-		// rÃ©cupÃ©ration des infos sur le rÃ©servataire
+		// récupération des infos sur le réservataire
 		$query = "select empr_nom, empr_prenom, empr_cb, id_empr from empr where id_empr=".$resa_planning->resa_idempr." limit 1";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)) {
-			// stockage des infos sur le rÃ©servataire
+			// stockage des infos sur le réservataire
 			$empr = pmb_mysql_fetch_object($result);
 			$expl->cb_reservataire = $empr->empr_cb;
 			$expl->nom_reservataire = $empr->empr_nom;
@@ -473,10 +515,9 @@ function check_resa_planning($expl) {
 	return $expl;
 }
 
-// teste la situation de l'exemplaire et le cas Ã©chÃ©ant,
-// retourne les infos de pret dans l'objet spÃ©cifiÃ©
+// teste la situation de l'exemplaire et le cas échéant,
+// retourne les infos de pret dans l'objet spécifié
 function check_pret($expl) {
-	global $dbh;
 	global $msg;
 	
 	if(!is_object($expl))
@@ -512,15 +553,15 @@ function check_pret($expl) {
 	$expl->empr_msg = '';
 	$expl->groupes = '';
 	$expl->pnb_flag = '';
-	// rÃ©cupÃ©ration des infos du prÃªt
+	// récupération des infos du prêt
 	$query = "select *, date_format(pret_date, '".$msg["format_date"]."') as aff_pret_date, date_format(pret_retour, '".$msg["format_date"]."') as aff_pret_retour, IF(pret_retour>sysdate(),0,1) as retard from pret where pret_idexpl=".$expl->expl_id." limit 1";
-	$result = pmb_mysql_query($query, $dbh);
+	$result = pmb_mysql_query($query);
 
 	if(pmb_mysql_num_rows($result)) {
 		$pret = pmb_mysql_fetch_object($result);
 
-		// le document Ã©tait bien en prÃªt ->
-		// rÃ©cupÃ©ration des infos du prÃªt
+		// le document était bien en prêt ->
+		// récupération des infos du prêt
 		$expl->pret_idempr = $pret->pret_idempr;
 		$expl->pret_idexpl = $pret->pret_idexpl;
 		$expl->pret_date = $pret->pret_date;
@@ -533,9 +574,9 @@ function check_pret($expl) {
 		$expl->printed = $pret->printed;
 		$expl->cpt_prolongation  = $pret->cpt_prolongation;	
 		$expl->short_loan_flag = $pret->short_loan_flag;
-		// rÃ©cupÃ©ration des infos emprunteur
+		// récupération des infos emprunteur
 		$query = "select * from empr where id_empr=".$pret->pret_idempr." limit 1";
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)) {
 
 			// stockage des infos sur l'emprunteur
@@ -558,7 +599,8 @@ function check_pret($expl) {
 			$expl->type_abt = $empr->type_abt;
 			$expl->empr_msg = $empr->empr_msg;
 			$query_groupe = "select libelle_groupe from groupe, empr_groupe where empr_id='".$pret->pret_idempr."' and groupe_id=id_groupe";
-			$result_g = pmb_mysql_query($query_groupe, $dbh);
+			$result_g = pmb_mysql_query($query_groupe);
+			$groupesarray = array();
 			while ($groupes=pmb_mysql_fetch_object($result_g)) $groupesarray[]=$groupes->libelle_groupe ;
 			$expl->groupes = @implode("/",$groupesarray);
 		}
@@ -566,19 +608,17 @@ function check_pret($expl) {
 	return $expl;
 }
 
-// permet de savoir si un CB expl est dÃ©jÃ  en prÃªt
+// permet de savoir si un CB expl est déjà en prêt
 function verif_cb_utilise_en_pret ($cb) {
-	global $dbh ;
 	$rqt = "select count(1) from pret, exemplaires where expl_cb='".$cb."' and pret_idexpl=expl_id";
-	$res = pmb_mysql_query($rqt, $dbh) ;
+	$res = pmb_mysql_query($rqt) ;
 	return pmb_mysql_result($res, 0, 0) ;
 }
 	
 // permet de savoir si un CB expl existe simplement
 function verif_cb_expl ($cb) {
-	global $dbh ;
 	$rqt = "select count(1) from exemplaires where expl_cb='".$cb."' ";
-	$res = pmb_mysql_query($rqt, $dbh) ;
+	$res = pmb_mysql_query($rqt) ;
 	return pmb_mysql_result($res, 0, 0) ;
 }
 	

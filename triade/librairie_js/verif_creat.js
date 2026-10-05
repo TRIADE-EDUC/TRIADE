@@ -110,9 +110,20 @@ function valideTab() {
 	if (!Validselect(document.formulaire.annee_scolaire.options.selectedIndex)) {
         error2(langfunc81); }
 	if (!errfound) { document.getElementById('attenteDiv').style.visibility='visible'; }
-//	if (!errfound) { document.formulaire.rien.disabled=true }
-//	if (!errfound) { document.formulairean.rien.disabled=true }
-//	if (!errfound) { document.formulaire3.rien.disabled=true }
+	return !errfound; /* vrai si il ya pas d'erreur */
+}
+
+function validTabSpe() {
+	errfound=false;
+	if (!Validselect(document.formulaire7.type_releve.options.selectedIndex)) {
+        error2("Indiquer le choix du relevé, S.V.P\n\nL'Equipe Triade"); }	
+	if (!Validselect(document.formulaire7.saisie_classe.options.selectedIndex)) {
+        error2(langfunc11); }	
+	if (!Validselect(document.formulaire7.typetrisem.options.selectedIndex)) {
+        error2(langfunc24); }
+	if (!Validselect(document.formulaire7.annee_scolaire.options.selectedIndex)) {
+        error2(langfunc81); }
+	if (!errfound) { document.getElementById('attenteDiv').style.visibility='visible'; }
 	return !errfound; /* vrai si il ya pas d'erreur */
 }
 

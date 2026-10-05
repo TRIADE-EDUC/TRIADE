@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: calendar.class.php,v 1.19 2017-08-09 07:44:07 jpermanne Exp $
+// $Id: calendar.class.php,v 1.19.16.1 2025/03/27 10:03:28 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,7 +17,7 @@ class calendar {
     	global $pmb_pret_calcul_retard_date_debut_incluse;
     	
     	//on stocke la timezone actuelle pour se baser sur l'utc
-    	//sinon, avec une date en heure d'Ã©tÃ© et une autre en heure d'hiver, les soustractions de mktime renvoient un float
+    	//sinon, avec une date en heure d'été et une autre en heure d'hiver, les soustractions de mktime renvoient un float
     	$tmp_timezone = date_default_timezone_get();
     	date_default_timezone_set('UTC'); //pour les calculs
     	
@@ -65,30 +65,36 @@ class calendar {
     	global $pmb_utiliser_calendrier;
     	global $deflt2docs_location;
     	
+    	$dd = intval($dd);
+    	$md = intval($md);
+    	$yd = intval($yd);
+    	$days = intval($days);
     	if ($pmb_utiliser_calendrier) {
-    		if (!$loc_calendar && !$for_amendes) { //Si flag for_amendes, la statique est appelÃ©e depuis les amendes oÃ¹ loc_calendar est dÃ©ja calculÃ© et peut Ãªtre Ã©gal Ã  0
+    		if (!$loc_calendar && !$for_amendes) { //Si flag for_amendes, la statique est appelée depuis les amendes où loc_calendar est déja calculé et peut être égal à 0
 	   			$loc_calendar = $deflt2docs_location;
 	   		}	
  		   	$requete="select min(date_ouverture) from ouvertures where ouvert=1 and num_location=".$loc_calendar." and date_ouverture>=adddate('".$yd."-".$md."-".$dd."', interval $days day)";
-   		 	$resultat=pmb_mysql_query($requete) or die ($requete." ".pmb_mysql_error());;
-   		 	if (!@pmb_mysql_num_rows($resultat)) {
+   		 	$resultat=pmb_mysql_query($requete);
+   		 	if (!pmb_mysql_num_rows($resultat)) {
    		 		$requete="select adddate('".$yd."-".$md."-".$dd."', interval $days day)";
-    			$resultat=pmb_mysql_query($requete) or die ($requete." ".pmb_mysql_error());;
+    			$resultat=pmb_mysql_query($requete);
    		 	}
    		 	if($date=pmb_mysql_result($resultat,0,0)){
    		 		return $date;
 	    	} 
     	}
     	$requete="select adddate('".$yd."-".$md."-".$dd."', interval $days day)";
-    	$resultat=pmb_mysql_query($requete) or die ($requete." ".pmb_mysql_error());
+    	$resultat=pmb_mysql_query($requete);
 
     	$date=pmb_mysql_result($resultat,0,0);
     	return $date;	
     }
  
  	public static function maketime($mysql_date) {
- 		$t_date=explode("-",$mysql_date);
- 		return mktime(0,0,0,$t_date[1],$t_date[2],$t_date[0]);
+ 	    if (!empty($mysql_date)) {
+            $t_date=explode("-",$mysql_date);
+     		return mktime(0,0,0,$t_date[1],$t_date[2],$t_date[0]);
+ 	    }
+ 	    return false;
  	}
 }
-?>

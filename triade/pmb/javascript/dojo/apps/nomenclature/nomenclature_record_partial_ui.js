@@ -1,11 +1,11 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_partial_ui.js,v 1.8 2016-11-29 13:00:29 vtouchard Exp $
+// $Id: nomenclature_record_partial_ui.js,v 1.8 2016/11/29 13:00:29 vtouchard Exp $
 
 define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo/_base/lang", "dojo/topic", "dijit/registry", "dijit/_WidgetBase", "apps/nomenclature/nomenclature_record_partial"], function(declare, domConstruct, dom, on, lang, topic, registry, _WidgetBase, record_partial){
 	/*
-	 *Classe nomenclature_record_formations_ui. Classe gÃ©nÃ©rant le formulaire permettant de reprÃ©senter les formations d'une notice
+	 *Classe nomenclature_record_formations_ui. Classe générant le formulaire permettant de représenter les formations d'une notice
 	 */
 	return declare("nomenclature_record_partial_ui",[_WidgetBase], {
 		num_record:null,
@@ -39,12 +39,12 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo
 		},
 		
 		buildRendering: function(){
-			//noeud racine du Widget, il a dÃ©jÃ  un ID, il lui faut une classe...
+			//noeud racine du Widget, il a déjà un ID, il lui faut une classe...
 			this.domNode = domConstruct.create('div',{
 				class:'notice-child'
 			},this.parent_node);
 
-			//on ajoute les Ã©lÃ©ments du formulaire....
+			//on ajoute les éléments du formulaire....
 			//la formation
 			var label = domConstruct.create("div",{
 				class:"row"
@@ -227,7 +227,7 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo
 				if(zone){
 					var inputs = zone.getElementsByTagName("input");	
 					for(var i=0; i<inputs.length ; i++){
-						//on recherche le bouton d'ajouts de maniÃ¨re un peu sauvage...
+						//on recherche le bouton d'ajouts de manière un peu sauvage...
 						if(inputs[i].getAttribute("type") == "button" && inputs[i].getAttribute("onclick") == "add_rel();"){
 							this.own(on(inputs[i], "click", lang.hitch(this,this.init_handlers)));
 						}
@@ -235,7 +235,7 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo
 				}
 				if(this.current_form.max_rel){
 					for(var i=0 ; i<this.current_form.max_rel.value ; i++){
-						//TODO handler sur le change d'une notice liÃ©e pas juste son type...
+						//TODO handler sur le change d'une notice liée pas juste son type...
 						this.own(on(this.current_form['f_rel_type_'+i], "change", function(){topic.publish("record_partial_ui", "relation_changed")}));
 						//this.own(on(this.current_form['f_rel_'+(this.current_form.max_rel.value-1)], "blur", lang.hitch(this,this.check_if_is_a_child)));
 					}
@@ -282,7 +282,7 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo
 			if(this.current_form !== false){
 				if(this.current_form.max_rel && this.current_form.max_rel.value){
 					for(var i=0 ; i<this.current_form.max_rel.value ; i++){
-						//recherche si la notice est liÃ©e Ã  quelque chose...
+						//recherche si la notice est liée à quelque chose...
 						if(this.current_form['f_rel_id_'+i].value!= ""){
 							//oui? alors on regarde la liaison
 							if(this.current_form['f_rel_type_'+i].options[this.current_form['f_rel_type_'+i].selectedIndex].value == this.relation_code){
@@ -301,7 +301,7 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom", "dojo/on", "dojo
 		init_handlers: function(){
 			if(this.current_form !== false){
 				if(this.current_form.max_rel){
-					//TODO handler sur le change d'une notice liÃ©e pas juste son type...
+					//TODO handler sur le change d'une notice liée pas juste son type...
 					this.own(on(this.current_form['f_rel_type_'+(this.current_form.max_rel.value-1)], "change", topic.publish("record_partial_ui", "relation_changed")));
 					//this.own(on(this.current_form['f_rel_'+(this.current_form.max_rel.value-1)], "blur", lang.hitch(this,this.check_if_is_a_child)));
 				}

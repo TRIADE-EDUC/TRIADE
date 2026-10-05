@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_musicstand.js,v 1.27 2016-03-02 10:44:50 vtouchard Exp $
+// $Id: nomenclature_musicstand.js,v 1.27 2016/03/02 10:44:50 vtouchard Exp $
 
 define(["dojo/_base/declare",  "apps/nomenclature/nomenclature_instrument", "apps/nomenclature/nomenclature_family", "dijit/registry"], function(declare, Instrument, Family, registry){
 	/*
@@ -195,7 +195,7 @@ define(["dojo/_base/declare",  "apps/nomenclature/nomenclature_instrument", "app
 				var instruments_reordered = this.get_instruments();
 				instruments_reordered.sort(this.sort_array);
 				if((!this.get_divisable() && !this.get_used_by_workshops())){
-					//Flag indique si dans le pupitre, des crochets seront nÃ©cessaire.
+					//Flag indique si dans le pupitre, des crochets seront nécessaire.
 					var flag = false;
 					for(var i=0; i<instruments_reordered.length ; i++){
 						//Si l'instrument n'est pas standard, ou si ils comprend des instruments annexe ou si sa partie est != de 0 (pupitre des cordes)
@@ -240,7 +240,7 @@ define(["dojo/_base/declare",  "apps/nomenclature/nomenclature_instrument", "app
 				this.set_abbreviation(abbreviation);
 			},
 			/**
-			 * Tri tableau des instrument selon l'order dÃ©fini en property
+			 * Tri tableau des instrument selon l'order défini en property
 			 */
 			sort_array: function(a, b){
 				if(a.get_order() < b.get_order()){
@@ -257,7 +257,7 @@ define(["dojo/_base/declare",  "apps/nomenclature/nomenclature_instrument", "app
 				var total_effective = 0;
 				this.valid = true;
 				var undefined_musicstand = false;
-				//on commence par vÃ©rifier les instruments...
+				//on commence par vérifier les instruments...
 				for(var i=0 ; i<this.instruments.length ; i++){
 					if(!this.instruments[i].check()){
 						this.valid = false;

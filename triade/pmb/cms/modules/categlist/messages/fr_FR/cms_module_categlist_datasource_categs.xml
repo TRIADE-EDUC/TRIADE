@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_categlist_datasource_categs.xml,v 1.2 2015-09-22 13:34:21 vtouchard Exp $ -->
+$Id: cms_module_categlist_datasource_categs.xml,v 1.2 2015/09/22 13:34:21 vtouchard Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_categlist_datasource_terms_nom_desc'>Tableau des catégories renvoyées</entry>

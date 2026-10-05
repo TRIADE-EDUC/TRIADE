@@ -1,4 +1,9 @@
 <?php
+// +-------------------------------------------------+
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +-------------------------------------------------+
+// $Id: sip2_trame.class.php,v 1.9.4.1 2025/04/04 08:57:37 dgoron Exp $
+
 define("UNKNOWN_ORIGIN"				, 1);
 define("UNKNOWN_MESSAGE_ID"			, 2);
 define("UNKNOWN_MESSAGE_NAME"		, 3);
@@ -16,9 +21,9 @@ define("CS_AZ_MISSING"				,14);
 define("BAD_CHECKSUM"				,15);
 
 /**
- * \brief Construit/VÃ©rifie/DÃ©compose les trames SIP2
+ * \brief Construit/Vérifie/Décompose les trames SIP2
  * 
- * GÃ¨re les trames SIP2 en lecture / Ã©criture / vÃ©rification en fonction des rÃ¨gles de la classe protocol
+ * Gère les trames SIP2 en lecture / écriture / vérification en fonction des règles de la classe protocol
  * \ingroup sip2_protocol
  */
 class sip2_trame {
@@ -49,7 +54,7 @@ class sip2_trame {
 		if (($from!='ACS')&&($from!='SC')) {
 			$this->error=true;
 			$this->error_code=UNKNOWN_ORIGIN;
-			$this->error_message="La provenance du message doit Ãªtre ACS ou SC";
+			$this->error_message="La provenance du message doit être ACS ou SC";
 			return false;
 		} else {
 			$this->from=$from;
@@ -66,7 +71,7 @@ class sip2_trame {
 		} else {
 			$this->error=true;
 			$this->error_code=UNKNOWN_MESSAGE_ID;
-			$this->error_message="Le numÃ©ro de message ".$id." n'existe pas";
+			$this->error_message="Le numéro de message ".$id." n'existe pas";
 			return false;
 		}
 	}
@@ -87,7 +92,7 @@ class sip2_trame {
 		if (((string)($sqn*1)!=(string)$sqn)||(strlen($sqn)!=1)) {
 			$this->error=true;
 			$this->error_code=INVALID_SEQUENCE_NUMBER;
-			$this->error_message="NumÃ©ro de sÃ©quence ".$sqn." invalide";
+			$this->error_message="Numéro de séquence ".$sqn." invalide";
 			return false;
 		} else {
 			$this->sequence_number=$sqn;
@@ -99,72 +104,79 @@ class sip2_trame {
 		if (!$this->message_id) {
 			$this->error=true;
 			$this->error_code=MESSAGE_UNDEFINED;
-			$this->error_message="Il n'y a pas de message dÃ©fini !";
+			$this->error_message="Il n'y a pas de message défini !";
 		} else {
-			$fixedf=$this->message_structure["FIXEDFIELDS"];
-			//VÃ©rification des champs fixes
-			for ($i=0; $i<count($fixedf); $i++) {
-				$v=$values[$fixedf[$i]];
-				if ((string)$v=="") {
-					$this->error=true;
-					$this->error_code=FIXED_FIELD_MISSING;
-					$this->error_message="Il manque le champ fixe obligatoire ".$fixedf[$i];
-					return false;
-				} else {
-					//VÃ©rification de la longueur de la valeur
-					$field=$this->proto->fields[$fixedf[$i]];
-					if (strlen((string)$v)!=$field["LEN"]) {
-						$this->error=true;
-						$this->error_code=BAD_LENGTH_FIELD_VALUE;
-						$this->error_message="Le champ ".$fixedf[$i]." ne fait pas la bonne taille (".$field["LEN"].")";
-						return false;
-					}
-				}
-			}
+		    if (!empty($this->message_structure["FIXEDFIELDS"])) {
+    			$fixedf=$this->message_structure["FIXEDFIELDS"];
+    			//Vérification des champs fixes
+    			for ($i=0; $i<count($fixedf); $i++) {
+    				$v=$values[$fixedf[$i]];
+    				if ((string)$v=="") {
+    					$this->error=true;
+    					$this->error_code=FIXED_FIELD_MISSING;
+    					$this->error_message="Il manque le champ fixe obligatoire ".$fixedf[$i];
+    					return false;
+    				} else {
+    					//Vérification de la longueur de la valeur
+    					$field=$this->proto->fields[$fixedf[$i]];
+    					if (strlen((string)$v)!=$field["LEN"]) {
+    						$this->error=true;
+    						$this->error_code=BAD_LENGTH_FIELD_VALUE;
+    						$this->error_message="Le champ ".$fixedf[$i]." ne fait pas la bonne taille (".$field["LEN"].")";
+    						return false;
+    					}
+    				}
+    			}
+		    }
 			//Les champs fixes sont OK
-			//VÃ©rifications des autres
-			$optionals=$this->message_structure["OPTIONALS"];
-	    	if (!$optionals) $optionals=array();
-	    	foreach($values as $ifield=>$val) {
-	    		if (array_search($ifield,$this->message_structure["FIXEDFIELDS"])===false) {
-	    			//Est-ce un champ connu ?
-	    			if (array_search($ifield,$this->message_structure["FIELDS"])!==false) {
-	    				if (!$optionals[$ifield]) $optionals[$ifield]=1;
-	    				//VÃ©rification de la conformitÃ© du champ
-	    				$field=$this->proto->fields[$ifield];
-	    				for ($v=0; $v<count($val); $v++) {
-		    				if ($field["TYPE"]=="identify_fixed") {
-		    					if (strlen((string)$val[$v])!=$field["LEN"]) {
-		    						$this->error=true;
-		    						$this->error_code=BAD_LENGTH_FIELD_VALUE;
-									$this->error_message="Le champ ".$ifield." ne fait pas la bonne taille (".$field["LEN"].")";
-									return false;
-		    					} 
-		    				} else {
-		    					if (strlen((string)$val[$v])>$field["LEN"]) {
-		    						$this->error=true;
-		    						$this->error_code=FIELD_TOO_LARGE;
-									$this->error_message="Le champ ".$fixedf[$i]." est trop grand (>".$field["LEN"]." caractÃ¨res)";
-									return false;
-		    					} 
-		    				}
-	    				}
-	    			} else {
-	    				$this->error=true;
-	    				$this->error_code=UNKNOWN_FIELD;
-	    				$this->error_message="Champ ".$ifield." inconnu dans ce message";
-	    				return false;
-	    			}
-	    		}
-	    	}
-	    	//VÃ©rification des champs obligatoires
+			//Vérifications des autres
+		    if (!empty($this->message_structure["OPTIONALS"])) {
+		        $optionals=$this->message_structure["OPTIONALS"];
+		    } else {
+		        $optionals=array();
+		    }
+		    if (!empty($values) && is_countable($values)) {
+    	    	foreach($values as $ifield=>$val) {
+    	    		if (array_search($ifield,$this->message_structure["FIXEDFIELDS"])===false) {
+    	    			//Est-ce un champ connu ?
+    	    			if (array_search($ifield,$this->message_structure["FIELDS"])!==false) {
+    	    				if (!$optionals[$ifield]) $optionals[$ifield]=1;
+    	    				//Vérification de la conformité du champ
+    	    				$field=$this->proto->fields[$ifield];
+    	    				for ($v=0; $v<count($val); $v++) {
+    		    				if ($field["TYPE"]=="identify_fixed") {
+    		    					if (strlen((string)$val[$v])!=$field["LEN"]) {
+    		    						$this->error=true;
+    		    						$this->error_code=BAD_LENGTH_FIELD_VALUE;
+    									$this->error_message="Le champ ".$ifield." ne fait pas la bonne taille (".$field["LEN"].")";
+    									return false;
+    		    					} 
+    		    				} else {
+    		    					if (strlen((string)$val[$v])>$field["LEN"]) {
+    		    						$this->error=true;
+    		    						$this->error_code=FIELD_TOO_LARGE;
+    									$this->error_message="Le champ ".$fixedf[$i]." est trop grand (>".$field["LEN"]." caractères)";
+    									return false;
+    		    					} 
+    		    				}
+    	    				}
+    	    			} else {
+    	    				$this->error=true;
+    	    				$this->error_code=UNKNOWN_FIELD;
+    	    				$this->error_message="Champ ".$ifield." inconnu dans ce message";
+    	    				return false;
+    	    			}
+    	    		}
+    	    	}
+		    }
+	    	//Vérification des champs obligatoires
 	    	$all_opt=true;
     		$err_opt=array();
     		foreach ($optionals as $fo=>$opt_value) {
     			$all_opt=(($all_opt)&&($opt_value));
     			if (!$opt_value) $err_opt[]=$fo;
     		}
-    		//Tous les champs obligatoires n'ont pas Ã©tÃ©s lus
+    		//Tous les champs obligatoires n'ont pas étés lus
     		if (!$all_opt) {
     			$this->error=true;
     			$this->error_code=MISSING_FIELDS;
@@ -178,18 +190,24 @@ class sip2_trame {
 	public function make_trame() {
 		$trame=$this->message_id;
 		//Ajout des champs fixes
-		$fixedf=$this->message_structure["FIXEDFIELDS"];
-		for ($i=0; $i<count($fixedf); $i++) {
-			$trame.=$this->message_values[$fixedf[$i]];
+		if (!empty($this->message_structure["FIXEDFIELDS"])) {
+    		$fixedf=$this->message_structure["FIXEDFIELDS"];
+    		for ($i=0; $i<count($fixedf); $i++) {
+    		    $value = str_replace(["\n\r", "\n", "\r"], " ", $this->message_values[$fixedf[$i]]);
+    		    $trame.=$value;
+    		}
 		}
-		//Champs identifiÃ©s
-		$fields=$this->message_structure["FIELDS"];
-		for ($i=0; $i<count($fields); $i++) {
-			if ($this->message_values[$fields[$i]]) {
-				for ($j=0; $j<count($this->message_values[$fields[$i]]); $j++) {
-					$trame.=$this->proto->fields[$fields[$i]]["IDENTIFIER"].$this->message_values[$fields[$i]][$j]."|";
-				}
-			}
+		//Champs identifiés
+		if (!empty($this->message_structure["FIELDS"])) {
+    		$fields=$this->message_structure["FIELDS"];
+    		for ($i=0; $i<count($fields); $i++) {
+    			if (isset($this->message_values[$fields[$i]]) && is_countable($this->message_values[$fields[$i]])) {
+    			    for ($j=0; $j<count($this->message_values[$fields[$i]]); $j++) {
+    			        $value = str_replace(["\n\r", "\n", "\r"], " ", $this->message_values[$fields[$i]][$j]);
+    			        $trame.=$this->proto->fields[$fields[$i]]["IDENTIFIER"].$value."|";
+    				}
+    			}
+    		}
 		}
 		if ($this->checksum) {
 			$sum=0;
@@ -223,7 +241,7 @@ class sip2_trame {
 	    		$trame=substr($trame,0,strlen($trame)-1);
 	    	}
 	    	
-	    	//NumÃ©ro de message
+	    	//Numéro de message
 	    	$message_id=substr($trame,0,2);
 	    	if ($this->message_structure=$this->message_exists($message_id)) {
 	    		$this->message_id=substr($trame,0,2);
@@ -233,7 +251,15 @@ class sip2_trame {
 	    		//Lecture des champs fixes
 	    		$fixedf=$this->message_structure["FIXEDFIELDS"];
 	    		$start_field=2;
+	    		$ff=0;
 	    		for ($i=0; $i<count($fixedf); $i++) {
+					$ff++;
+					if($ff >= 1000){
+						$this->error=true;
+						$this->error_code=BAD_CHECKSUM;
+						$this->error_message="Soucis de boucle infinie";
+						return;
+					}
 	    			$field=$this->proto->fields[$fixedf[$i]];
 	    			if (!$field) {
 	    				$this->error=true;
@@ -251,14 +277,22 @@ class sip2_trame {
 	    				}
 	    			}
 	    		}
-	    		//Lecture des champs identifiÃ©s
+	    		//Lecture des champs identifiés
 	    		//Recherche des champs obligatoires
 	    		$optionals=$this->message_structure["OPTIONALS"];
 	    		if (!$optionals) $optionals=array();
 	    		$fields=$this->message_structure["FIELDS"];
 	    		if (!$fields) $fields=array();
 	    		$flag_end=false;
+	    		$ff=0;
 	    		while (!$flag_end) {
+					$ff++;
+					if($ff >= 1000){
+						$this->error=true;
+						$this->error_code=BAD_CHECKSUM;
+						$this->error_message="Soucis de boucle infinie 2";
+						return;
+					}
 	    			$end_field=strpos($trame,"|",$start_field);
 	    			if ($end_field===false) {
 	    				$flag_end=true;
@@ -269,7 +303,7 @@ class sip2_trame {
 	    					$end_field=strlen($trame); 
 	    			}
 	    			if ($end_field!==false) {
-	    				$f=substr($trame,$start_field,$end_field-$start_field);
+	    				$f=substr($trame,$start_field,intval($end_field) - intval($start_field));
 	    				if ((substr($f,0,2)!="AY")&&((substr($f,0,2)!="AZ")||($this->message_id!=97))) {
 		    				$start_field=$end_field+1;
 		    				//Recherche du champ
@@ -277,14 +311,14 @@ class sip2_trame {
 		    				if ($this->proto->identifiers[$identifier]) {
 		    					$fname=$this->proto->identifiers[$identifier];
 		    					$field=$this->proto->fields[$fname];
-		    					//Est-ce un champ autorisÃ© ?
+		    					//Est-ce un champ autorisé ?
 		    					if (array_search($fname,$fields)!==false) {
 		    						$this->message_values[$fname][]=substr($f,2);
 		    						if (!$optionals[$fname]) $optionals[$fname]=1;
 		    					} else {
 		    						$this->error=true;
 		    						$this->error_code=UNAUTHORIZED_FIELD;
-		    						$this->error_message="Le champ ".$fname." n'est pas autorisÃ© pour le message ".$this->message_structure["NAME"]." (".$this->message_id.")";
+		    						$this->error_message="Le champ ".$fname." n'est pas autorisé pour le message ".$this->message_structure["NAME"]." (".$this->message_id.")";
 		    						return;
 		    					}
 		    				} else {
@@ -297,10 +331,10 @@ class sip2_trame {
 	    					$this->checksum=true;
 	    					if ($this->message_id!=97) {
 	    						if ((string)($f[2]*1)!=(string)$f[2]) {
-	    							//Erreur, le numÃ©ro de sÃ©quence est faux
+	    							//Erreur, le numéro de séquence est faux
 	    							$this->error=true;
 	    							$this->error_code='BAD_SEQUENCE_NUMBER';
-	    							$this->error_message="Le numÃ©ro de sÃ©quence n'est pas conforme";
+	    							$this->error_message="Le numéro de séquence n'est pas conforme";
 	    							return;
 	    						} else {
 	    							$this->sequence_number=$f[2];
@@ -310,7 +344,7 @@ class sip2_trame {
 	    						$this->sequence_number="";
 	    						$offset=0;
 	    					}
-    						//RÃ©cupÃ©ration du checksum
+    						//Récupération du checksum
     						if (substr($f,$offset,2)!="AZ") {
     							$this->error=true;
     							$this->error_code=CS_AZ_MISSING;
@@ -324,10 +358,10 @@ class sip2_trame {
 									$sum+=ord($trame[$i]);
 								}
 								$sum=($sum+hexdec($checksum))&65535;
-								//ProblÃ¨me avec l'UTF-8
+								//Problème avec l'UTF-8
 								global $charset;
 								if (($sum!=0) && ($charset == "utf-8")) {
-									$trame=utf8_decode($trame);
+									$trame=encoding_normalize::utf8_decode($trame);
 									//Calcul de la checksum
 									$sum=0;
 									for ($i=0; $i<strlen($trame)-4; $i++) {
@@ -345,14 +379,14 @@ class sip2_trame {
 	    				}
 	    			} else $flag_end=true;
 	    		}
-	    		//Test que tous les champs obligatoires ont Ã©tÃ© lus
+	    		//Test que tous les champs obligatoires ont été lus
 	    		$all_opt=true;
 	    		$err_opt=array();
 	    		foreach ($optionals as $fo=>$opt_value) {
 	    			$all_opt=(($all_opt)&&($opt_value));
 	    			if (!$opt_value) $err_opt[]=$fo;
 	    		}
-	    		//Tous les champs obligatoires n'ont pas Ã©tÃ©s lus
+	    		//Tous les champs obligatoires n'ont pas étés lus
 	    		if (!$all_opt) {
 	    			$this->error=true;
 	    			$this->error_code=MISSING_FIELDS;
@@ -368,4 +402,3 @@ class sip2_trame {
     	}
     }
 }
-?>

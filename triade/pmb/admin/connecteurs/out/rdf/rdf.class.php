@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf.class.php,v 1.2 2014-03-27 15:18:44 jpermanne Exp $
+// $Id: rdf.class.php,v 1.3 2019/07/05 13:25:15 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,25 +16,25 @@ require_once($class_path."/synchro_rdf.class.php");
 
 class rdf extends connecteur_out {
 	
-	function get_config_form() {
+	public function get_config_form() {
 		$result = $this->msg["rdf_no_configuration_required"];
 		return $result;
 	}
 	
-	function update_config_from_form() {
+	public function update_config_from_form() {
 		return;
 	}
 	
-	function instantiate_source_class($source_id) {
+	public function instantiate_source_class($source_id) {
 		return new rdf_source($this, $source_id, $this->msg);
 	}
 	
-	//On chargera nous mÃªme les messages si on en a besoin
-	function need_global_messages() {
+	//On chargera nous même les messages si on en a besoin
+	public function need_global_messages() {
 		return false;
 	}
 	
-	function process($source_id, $pmb_user_id) {
+	public function process($source_id, $pmb_user_id) {
 		global $class_path;
 		global $include_path;
 		
@@ -47,7 +47,7 @@ class rdf extends connecteur_out {
 
 class rdf_source extends connecteur_out_source {
 
-	function get_config_form() {
+	public function get_config_form() {
 		global $charset;
 		$result = parent::get_config_form();
 	

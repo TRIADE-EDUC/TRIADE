@@ -1,25 +1,25 @@
 <?php
 // +-------------------------------------------------
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: term_search.php,v 1.21 2019-05-09 10:35:37 ngantier Exp $
+// $Id: term_search.php,v 1.22.4.1 2025/04/07 14:53:18 dgoron Exp $
 //
-// Recherche des termes correspondants Ã  la saisie
+// Recherche des termes correspondants à la saisie
 
-$base_path=".";                            
-$base_auth = ""; 
+$base_path=".";
+$base_auth = "";
 $base_title="Recherche par termes";
 
 require_once ("$base_path/includes/init.inc.php");
 
-//fichiers nÃ©cessaires au bon fonctionnement de l'environnement
+//fichiers nécessaires au bon fonctionnement de l'environnement
 require_once($base_path."/includes/common_includes.inc.php");
 
 require_once($base_path.'/includes/templates/common.tpl.php');
 
 require_once ("$class_path/term_search.class.php");
 
-// si paramÃ©trage authentification particuliÃ¨re et pour la re-authentification ntlm
+// si paramétrage authentification particulière et pour la re-authentification ntlm
 if (file_exists($base_path.'/includes/ext_auth.inc.php')) require_once($base_path.'/includes/ext_auth.inc.php');
 
 // RSS
@@ -31,11 +31,12 @@ $short_header= str_replace("<body>","<body class='searchTerm'>",$short_header);
 
 echo $short_header;
 
-//RÃ©cupÃ©ration des paramÃ¨tres du formulaire appellant
+//Récupération des paramètres du formulaire appellant
 $base_query = "";
 
-$page+= 0;
-$id_thes+= 0;
+$page = intval($page);
+$id_thes = intval($id_thes);
+
 //Page en cours d'affichage
 $n_per_page=$opac_term_search_n_per_page;
 
@@ -49,4 +50,3 @@ parent.parent.document.term_search_form.page_search.value='".$page."';
 ";
 
 print $short_footer;
-?>

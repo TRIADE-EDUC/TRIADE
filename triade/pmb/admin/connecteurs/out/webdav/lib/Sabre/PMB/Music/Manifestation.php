@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Manifestation.php,v 1.8 2016-03-30 13:13:27 apetithomme Exp $
+// $Id: Manifestation.php,v 1.9 2019/07/05 13:25:14 btafforeau Exp $
 namespace Sabre\PMB\Music;
 
 class Manifestation extends Collection {
 	private $notice_id;
 	public $type;
 
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		$this->notice_id = substr($this->get_code_from_name($name),1);
 		$this->type = "manifestation";
 		$this->config = $config;
 	}
 	
-	function getChildren() {
+	public function getChildren() {
 		global $pmb_nomenclature_music_concept_before, $pmb_nomenclature_music_concept_after, $pmb_nomenclature_music_concept_blank;
 		
 		$children = array();
@@ -43,7 +43,7 @@ class Manifestation extends Collection {
 					}
 				}
 				break;
-			case 'scan_request': //On est dans un webdav de demande de numÃ©risation
+			case 'scan_request': //On est dans un webdav de demande de numérisation
 				$query = "select scan_request_explnum_num_explnum as explnum_id from scan_request_explnum join explnum on scan_request_explnum_num_explnum = explnum_id where explnum_mimetype!= 'URL' and scan_request_explnum_num_notice = ".$this->notice_id." and scan_request_explnum_num_bulletin = 0 and scan_request_explnum_num_request = ".$this->get_parent_by_type('scan_request')->get_scan_request()->get_id();
 				$query = $this->filterExplnums($query);
 				$result = pmb_mysql_query($query);
@@ -71,7 +71,7 @@ class Manifestation extends Collection {
 		return $children;
 	}
 
-	function getName() {
+	public function getName() {
 		$query = "select notices.tit1 as title from notices where notices.notice_id= ".$this->notice_id;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -81,7 +81,7 @@ class Manifestation extends Collection {
 		return $this->format_name($name);
 	}
 	
-    function get_submanifestations(){
+    public function get_submanifestations(){
     	global $pmb_nomenclature_record_children_link;
     
     	$query = 'select num_notice as notice_id from notices_relations where relation_type = "'.$pmb_nomenclature_record_children_link.'" and linked_notice = '.$this->notice_id;

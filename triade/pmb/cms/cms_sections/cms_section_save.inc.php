@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_section_save.inc.php,v 1.2 2013-07-12 07:48:01 apetithomme Exp $
+// $Id: cms_section_save.inc.php,v 1.3 2019/10/25 06:51:30 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -14,3 +14,4 @@ $section->get_from_form();
 $section->save();
 
 print cms_editorial_tree::get_listing();
+print cms_editorial_tree::set_tree_selected_item($section->get_id(), 'section');

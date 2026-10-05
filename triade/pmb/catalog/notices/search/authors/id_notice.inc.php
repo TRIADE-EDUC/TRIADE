@@ -1,12 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: id_notice.inc.php,v 1.4 2019-06-05 09:04:42 btafforeau Exp $
+// $Id: id_notice.inc.php,v 1.9 2023/09/06 06:55:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $include_path;
 global $acces_j, $gestion_acces_active, $gestion_acces_user_notice, $class_path, $PMBuserid, $pmb_show_notice_id, $f_notice_id, $msg;
+
+require_once($include_path."/templates/serials.tpl.php");
 
 //droits d'acces lecture notice
 $acces_j='';
@@ -18,11 +21,12 @@ if ($gestion_acces_active==1 && $gestion_acces_user_notice==1) {
 }
 
 $param_notice_id = explode(",",$pmb_show_notice_id);
-$prefix_id = $param_notice_id[1];
+$prefix_id = (!empty($param_notice_id[1]) ? $param_notice_id[1] : '');
 if($prefix_id){
 	$f_notice_id = str_replace($prefix_id,"",$f_notice_id);
 }
 
+$f_notice_id = intval($f_notice_id);
 $rqt = "select * from notices where notice_id='".$f_notice_id."'";
 $res = pmb_mysql_query($rqt);
 
@@ -36,14 +40,17 @@ if(pmb_mysql_num_rows($res)){
 		if(pmb_mysql_num_rows($res_bull)){
 			$ident_bull = pmb_mysql_result($res_bull,0,0);
 			print "<script type=\"text/javascript\">";
-			print "document.location = \"./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=$ident_bull&art_to_show=".$ident->notice_id."\"";
+			print "document.location = \"".analysis::get_permalink($ident->notice_id, $ident_bull)."\"";
 			print "</script>";
+		} else {
+		    print "<script type=\"text/javascript\">";
+		    print "document.location = \"".$base_path."/catalog.php?categ=serials&sub=analysis&action=analysis_orphan_form&analysis_id=".$f_notice_id."\"";
+		    print "</script>";
 		}
-	
 	//C'est une notice de periodique
 	} elseif ($ident->niveau_biblio == 's' && $ident->niveau_hierar == '1'){
 		print "<script type=\"text/javascript\">";
-		print "document.location = \"./catalog.php?categ=serials&sub=view&serial_id=".$ident->notice_id."\"";
+		print "document.location = \"".serial::get_permalink($ident->notice_id)."\"";
 		print "</script>";
 		
 	//C'est une notice de bulletin
@@ -53,14 +60,14 @@ if(pmb_mysql_num_rows($res)){
 		if(pmb_mysql_num_rows($res_bull)){	
 			$ident_bull = pmb_mysql_result($res_bull,0,0);	
 			print "<script type=\"text/javascript\">";
-			print "document.location = \"./catalog.php?categ=serials&sub=bulletinage&action=view&bul_id=".$ident_bull."\"";
+			print "document.location = \"".bulletinage::get_permalink($ident_bull)."\"";
 			print "</script>";
 		}
 	
 	//C'est une notice de monographie
 	} else {
 		print "<script type=\"text/javascript\">";
-		print "document.location = \"./catalog.php?categ=isbd&id=".$ident->notice_id."\"";
+		print "document.location = \"".notice::get_permalink($ident->notice_id)."\"";
 		print "</script>";
 	}
 } else {

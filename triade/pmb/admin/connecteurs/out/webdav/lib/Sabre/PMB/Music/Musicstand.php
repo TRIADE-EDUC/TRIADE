@@ -1,21 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: Musicstand.php,v 1.7 2016-03-30 15:31:13 apetithomme Exp $
+// $Id: Musicstand.php,v 1.8 2019/07/05 13:25:14 btafforeau Exp $
 
 namespace Sabre\PMB\Music;
 
 class Musicstand extends Collection {
 	protected $musicstand;
 	
-	function __construct($name,$config) {
+	public function __construct($name,$config) {
 		parent::__construct($config);
 		$this->musicstand = new \nomenclature_musicstand(substr($this->get_code_from_name($name),1));
 		$this->type = "musicstand";
 	}
 
-	function getName() {
+	public function getName() {
 		global $msg;
 		if ($this->musicstand->get_id()) {
 			return $this->format_name($this->musicstand->get_family()->get_order().$this->musicstand->get_order().' - '.$this->musicstand->get_name()." (P".$this->musicstand->get_id().")");
@@ -25,7 +25,7 @@ class Musicstand extends Collection {
 	}
 	
 
-	function getChildren() {
+	public function getChildren() {
 		$children = array();
 		if ($this->musicstand->get_used_by_workshops()) {
 			// On va chercher les ateliers
@@ -47,7 +47,7 @@ class Musicstand extends Collection {
 		return $children;
 	}
 	
-	function get_submanifestations(){
+	public function get_submanifestations(){
 		if ($this->musicstand->get_used_by_workshops()) {
 			// Pour les ateliers
 			$query = 'select child_record_num_record as notice_id from nomenclature_children_records where child_record_num_workshop != 0';
@@ -59,7 +59,7 @@ class Musicstand extends Collection {
 		return $this->sub_manifestations;
 	}
 	
-	function get_musicstand(){
+	public function get_musicstand(){
 		return $this->musicstand;
 	}
 }

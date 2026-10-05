@@ -1,33 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edit.php,v 1.78 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: edit.php,v 1.95.2.1.2.1 2025/03/06 08:09:03 dbellamy Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
-$base_path=".";                            
-$base_auth = "EDIT_AUTH";  
+// définition du minimum nécéssaire
+$base_path=".";
+$base_auth = "EDIT_AUTH";
 $base_title = "\$msg[6]";
 $base_noheader=1;
 $base_use_dojo = true;
 
-if(!isset($dest)) $dest = '';
+global $msg, $charset, $class_path, $include_path;
+global $categ, $sub, $action, $dest, $current_module;
+global $pmb_indexation_lang;
+global $id;
 
-if ((isset($_GET["dest"])) && ($_GET["dest"]=="TABLEAUCSV" || $_GET["dest"]=="EXPORT_NOTI")) {
-	
-	$base_nosession=1;
-	$base_nocheck = 1 ;
-	$include_path = $base_path."/includes" ;
-	require_once("$include_path/db_param.inc.php");
-	require_once("$include_path/mysql_connect.inc.php");
-	$dbh = connection_mysql();
-	// on checke si l'utilisateur existe et si le mot de passe est OK
-	$query = "SELECT count(1) FROM users WHERE username='".$_GET["user"]."' AND pwd=password('".$_GET["password"]."') ";
-	$result = pmb_mysql_query($query, $dbh);
-	$valid_user = pmb_mysql_result($result, 0, 0);
-	if (!$valid_user) exit;
-}
 require_once ("$base_path/includes/init.inc.php");
+require_once($class_path."/modules/module_edit.class.php");
 require_once("$include_path/marc_tables/$pmb_indexation_lang/empty_words");
 require_once("$class_path/marc_table.class.php");
 require_once("$class_path/docs_location.class.php");
@@ -41,46 +31,30 @@ require_once("$include_path/explnum.inc.php");
 require_once($class_path."/serialcirc_diff.class.php");
 require_once($class_path."/serialcirc_print_fields.class.php");
 require_once ($class_path."/spreadsheetPMB.class.php");
-// modules propres Ã  edit.php ou Ã  ses sous-modules
+// modules propres à edit.php ou à ses sous-modules
 require("$include_path/templates/edit.tpl.php");
 require_once ($class_path."/campaigns/campaigns_controller.class.php");
+require_once ($class_path."/visits_statistics/visits_statistics_controller.class.php");
+require_once ($class_path."/visits_statistics/visits_statistics_date_controller.class.php");
 
-// crÃ©ation de la page
+// création de la page
 switch($dest) {
 	case "TABLEAU":
 		break;
 	case "TABLEAUHTML":
-		header("Content-Type: application/download\n");
-		header("Content-Disposition: atttachement; filename=\"tableau.html\"");
-		print "<!DOCTYPE html><html lang='".get_iso_lang_code()."'><head><meta charset=\"".$charset."\" /></head>
-				<body>";
 		break;
 	case "TABLEAUCSV":
-		// header ("Content-Type: text/html; charset=".$charset);
-		header("Content-Type: application/download\n");
-		header("Content-Disposition: atachement; filename=\"tableau.csv\"");
 		break;
 	case "EXPORT_NOTI":
-		// header ("Content-Type: text/html; charset=".$charset);
-		header("Content-Type: application/download\n");
-		header("Content-Disposition: atachement; filename=\"notices.doc\"");
 		break;
 	case "PLUGIN_FILE": // utiliser pour les plugins
 		break;
 	default:
         header ("Content-Type: text/html; charset=".$charset);
 		print $std_header."<body class='$current_module claro' id='body_current_module' page_name='$current_module'>";
-		print "<div id='att' style='z-Index:1000'></div>";
-		echo window_title($database_window_title.$msg["1100"].$msg["1003"].$msg["1001"]);
-		print $menu_bar;
-		print $extra;
-		print $extra2;
-		if($use_shortcuts) {
-			include("$include_path/shortcuts/circ.sht");
-			}
-		print $edit_layout;
 		break;
-	}
+}
+module_edit::get_instance()->proceed_header();
 
 switch($categ) {
 	// EDITIONS LIEES AUX NOTICES
@@ -91,7 +65,7 @@ switch($categ) {
 				include("./edit/notices.inc.php");
 				break;
 			}
-		break;	
+		break;
 	case "serialcirc_diff":
 		switch($sub) {
 			case "export_empr" :
@@ -104,7 +78,7 @@ switch($categ) {
 
 				$i = 2;
 				$j = 0;
-				// On rÃ©cupÃ¨re les noms de colonnes
+				// On récupère les noms de colonnes
 				$header_list = $gen_tpl->get_header_list();
 				foreach ($header_list as $header) {
 					$worksheet->write($i, $j, $header);
@@ -141,8 +115,8 @@ switch($categ) {
 							}
 						}
 					}
-				}		
-				$worksheet->download('Circulation.xls');	
+				}
+				$worksheet->download('Circulation.xls');
 			break;
 		}
 	break;
@@ -151,21 +125,18 @@ switch($categ) {
 		$restrict="";
 		switch($sub) {
 			case "limite" :
-				$titre_page = $msg["1120"].": ".$msg["edit_titre_empr_abo_limite"];  
 				$restrict = " ((to_days(empr_date_expiration) - to_days(now()) ) <=  $pmb_relance_adhesion ) and empr_date_expiration >= now() ";
 				include("./edit/empr_list.inc.php");
 				break;
 			case "depasse" :
-				$titre_page = $msg["1120"].": ".$msg["edit_titre_empr_abo_depasse"];  
 				$restrict = " empr_date_expiration < now() ";
 				include("./edit/empr_list.inc.php");
 				break;
 			case "cashdesk" :
-				$titre_page = $msg["1120"].": ".$msg["cashdesk_edition_menu"];  
+				$titre_page = $msg["1120"].": ".$msg["cashdesk_edition_menu"];
 				include("./edit/cashdesk.inc.php");
 				break;
 			case "categ_change" :
-				$titre_page = $msg["1120"].": ".$msg["edit_titre_empr_categ_change"];
 				if (isset($categ_action) && $categ_action=="change_categ_empr") {
 					if(isset($readers_edition_ui_selected_objects)) {
 						for ($i=0; $i<count($readers_edition_ui_selected_objects); $i++) {
@@ -173,7 +144,7 @@ switch($categ) {
 							if(!empty($readers_edition_ui_categ_change[$id_empr])) {
 								$act = $readers_edition_ui_categ_change[$id_empr];
 								if ($act!=0) {
-									// on modifie la catÃ©gorie du lecteur si demandÃ©
+									// on modifie la catégorie du lecteur si demandé
 									if($id_empr){
 										$requete="update empr set empr_categ=$act where id_empr=$id_empr";
 										pmb_mysql_query($requete);
@@ -189,42 +160,28 @@ switch($categ) {
 			default :
 			case "encours" :
 				$sub = "encours" ;
-				$titre_page = $msg["1120"].": ".$msg["1121"];  
 				$restrict = " empr_date_expiration >= now() ";
 				include("./edit/empr_list.inc.php");
 				break;
-		}
-			
-		if (($sub=="limite")||($sub=="depasse")) {
-			if (($action)&&($action=="print_all")) {
-				print "<script>openPopUp('./pdf.php?pdfdoc=lettre_relance_adhesion&action=print_all&empr_location_id=$empr_location_id&empr_statut_edit=$empr_statut_edit&restricts=".rawurlencode(stripslashes($restrict))."', 'lettre');</script>";	
-				if ($empr_relance_adhesion==1) print "<script>openPopUp('./mail.php?type_mail=mail_relance_adhesion&action=print_all&empr_location_id=$empr_location_id&empr_statut_edit=$empr_statut_edit&restricts=".rawurlencode(stripslashes($restrict))."', 'mail');</script>";
-			} 	
 		}
 		break ;
 	// EDITIONS LIEES AUX PERIODIQUES
 	case "serials":
 		switch($sub) {
-			/* en attente d'une gestion correcte du bulletinage, actuellement absente de la base de donnÃ©es. 
+			/* en attente d'une gestion correcte du bulletinage, actuellement absente de la base de données.
 			case "manquant" :
-				echo "<h1>".$msg["1150"]."&nbsp;:&nbsp;".$msg["1154"]."</h1>";
 				include("./edit/serials_manq.inc.php");
 				break;
 			*/
 			case "circ_state" :
-				if (!$dest) {
-					echo "<h1>".$msg["1150"]."&nbsp;:&nbsp;".$msg["serial_circ_state_edit"]."</h1>";
-				}
 				include("./edit/serials_circ_state.inc.php");
 				break;
 			case "simple_circ" :
-				echo "<h1>".$msg["1150"]."&nbsp;:&nbsp;".$msg["serial_simple_circ_edit"]."</h1>";
 				include("./edit/serials_simple_circ.inc.php");
 				break;
 			case "collect" :
 			default :
 				$sub = "collect" ;
-				echo "<h1>".$msg["1150"]."&nbsp;:&nbsp;".$msg["1151"]."</h1>";
 				include("./edit/serials_coll.inc.php");
 				break;
 			}
@@ -246,7 +203,6 @@ switch($categ) {
 			default :
 			case "libre" :
 				$sub = "libre" ;
-				echo "<h1>".$msg["1140"]."&nbsp;:&nbsp;".$msg["1141"]."</h1>";  
 				include("./edit/cbgenlibre.inc.php");
 				break;
 			}
@@ -256,38 +212,53 @@ switch($categ) {
 	case "transferts" :
 		require_once ("./edit/transferts.inc.php");
 	break;
-	
+
+	//DEMANDES DE TRANSFERTS
+	case "transferts_demandes" :
+		print list_transferts_demandes_ui::get_instance()->get_display_list();
+		break;
+
 	//STATISTIQUES DE L'OPAC
 	case "stat_opac" :
-		//echo "<h1>".$msg["opac_admin_menu"]."&nbsp;:&nbsp;".$msg["stat_opac_menu"]."</h1>";
 		include("./edit/stat_opac.inc.php");
 		break;
-	
+
 	//OPAC
 	case "opac" :
 		switch($sub) {
 			case "campaigns" :
 				campaigns_controller::proceed($id);
 				break;
+			case 'visits_statistics':
+			    global $visits_statistics_ui_date;
+			    if (!empty($visits_statistics_ui_date)) {
+			        $matches = [];
+			        if(pmb_preg_match("#(\d{4})[-/\.](\d{2})[-/\.](\d{2})#",$visits_statistics_ui_date, $matches)) {
+			            visits_statistics_controller::proceed($id);
+			        }
+			    } else {
+			        visits_statistics_date_controller::proceed($id);
+			    }
+				break;
 		}
 		break;
-		
+
 	// Edition Template de notices
 	case "tpl" :
 		switch($sub) {
 			case "serialcirc" :
-				echo "<h1>".$msg["edit_tpl_menu"]."&nbsp;:&nbsp;".$msg["edit_serialcirc_tpl_menu"]."</h1>";
 				include("./edit/serialcirc_tpl.inc.php");
 				break;
 			case "notice" :
 			default :
-				echo "<h1>".$msg["edit_tpl_menu"]."&nbsp;:&nbsp;".$msg["edit_notice_tpl_menu"]."</h1>";
 				include("./edit/notice_tpl.inc.php");
 			break;
 			case "bannette" :
-				echo "<h1>".$msg["edit_tpl_menu"]."&nbsp;:&nbsp;".$msg["edit_bannette_tpl_menu"]."</h1>";
 				include("./edit/bannette_tpl.inc.php");
-			break;
+				break;
+			case "print_cart_tpl" :
+			    include("./edit/print_cart_tpl.inc.php");
+			    break;
 		}
 	break;
 	case "state" :
@@ -296,60 +267,62 @@ switch($categ) {
 	case "pnb" :
 		include($base_path."/edit/pnb.inc.php");
 		break;
+	case 'contribution_area':
+	    lists_controller::set_list_ui_class_name("list_contributions_ui");
+	    lists_controller::proceed();
+	    break;
 	// EDITIONS LIEES AUX EXEMPLAIRES
 	default:
 	case "expl":
 		$categ = "expl" ;
 		switch($sub) {
 				case "ppargroupe" :
-					$critere_requete=" order by libelle_groupe, empr_nom, empr_prenom, pret_retour ";
 					include("./edit/expl_groupe.inc.php");
 					break;
 				case "rpargroupe" :
-					$critere_requete=" and pret_retour < curdate() order by libelle_groupe, empr_nom, empr_prenom, pret_retour ";
 					include("./edit/expl_groupe.inc.php");
-					break;	
+					break;
 				case "retard" :
-					$titre_page = $msg[1110]." : ".$msg[1112];
 					include("./edit/expl.inc.php");
 					break;
 				case "retard_par_date" :
-					$titre_page = $msg[1110]." : ".$msg['edit_expl_retard_par_date'];
 					include("./edit/expl.inc.php");
 					break;
 				case "owner" :
 					$critere_requete=" order by idlender, expl_cote, expl_cb ";
 					include("./edit/expl_owner.inc.php");
 					break;
-				case "relance" :
-					include("./edit/relance.inc.php");
-					break;					
 				case 'short_loans' :
-					$titre_page = $msg['current_short_loans'];
 					include("./edit/expl.inc.php");
 					break;
 				case 'unreturned_short_loans' :
-					$titre_page = $msg['unreturned_short_loans'];
 					include("./edit/expl.inc.php");
 					break;
 				case 'overdue_short_loans' :
-					$titre_page = $msg['overdue_short_loans'];
 					include("./edit/expl.inc.php");
-					break;					
+					break;
+				case 'archives' :
+					include("./edit/expl.inc.php");
+					break;
 				default :
 				case "encours" :
 					$sub = "encours" ;
-					$titre_page = $msg[1110]." : ".$msg[1111];
-					$critere_requete=" order by pret_retour ";
 					include("./edit/expl.inc.php");
 					break;
 				}
 			break;
 		case 'sticks_sheet' :
-			echo "<h1>".$msg["sticks_sheet"]." : ".$msg["sticks_sheet_models"]."</h1>";
 			switch($sub) {
 				case 'models' :
 					include("./edit/sticks_sheet_models.inc.php");
+					break;
+			}
+			break;
+		case 'barcodes_sheets' :
+			switch($sub) {
+				case 'models' :
+					require_once($class_path."/barcodes_sheets/barcodes_sheets_controller.class.php");
+					barcodes_sheets_controller::proceed($id);
 					break;
 			}
 			break;
@@ -360,21 +333,19 @@ switch($categ) {
 				include $file;
 			}
 			break;
-	}
-	switch($dest) {
-		case "TABLEAU":
-		case "TABLEAUCSV":
-		case "EXPORT_NOTI":
-		case "PLUGIN_FILE":
-			break;
-		case "TABLEAUHTML":
-			print $footer;
-			break;
-		default:
-			print $edit_layout_end;
-			print $footer;
-			print "</body>" ;
-			break;
-	}
-	
-pmb_mysql_close($dbh);
+}
+module_edit::get_instance()->proceed_footer();
+switch($dest) {
+	case "TABLEAU":
+	case "TABLEAUCSV":
+	case "EXPORT_NOTI":
+	case "PLUGIN_FILE":
+		break;
+	case "TABLEAUHTML":
+		break;
+	default:
+		print "</body>" ;
+		break;
+}
+
+pmb_mysql_close();

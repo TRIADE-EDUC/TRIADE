@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: aut_links.xml,v 1.3 2023/01/23 10:43:16 tsamson Exp $ -->
 
 <aut_links>
 	<links>
-		<authority code="author"> <!-- AutoritÃ©s qu'il est possible de lier Ã  un auteur -->
+		<authority code="author"> <!-- Autorités qu'il est possible de lier à un auteur -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -14,7 +19,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="category"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une catÃ©gorie -->
+		<authority code="category"> <!-- Autorités qu'il est possible de lier à une catégorie -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -26,7 +31,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="publisher"> <!-- AutoritÃ©s qu'il est possible de lier Ã  un Ã©diteur -->
+		<authority code="publisher"> <!-- Autorités qu'il est possible de lier à un éditeur -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -38,7 +43,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="collection"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une collection -->
+		<authority code="collection"> <!-- Autorités qu'il est possible de lier à une collection -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -50,7 +55,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="subcollection"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une sous collection -->
+		<authority code="subcollection"> <!-- Autorités qu'il est possible de lier à une sous collection -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -62,7 +67,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="serie"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une sÃ©rie -->
+		<authority code="serie"> <!-- Autorités qu'il est possible de lier à une série -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -74,7 +79,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="titre_uniforme"> <!-- AutoritÃ©s qu'il est possible de lier Ã  un titre uniforme -->
+		<authority code="titre_uniforme"> <!-- Autorités qu'il est possible de lier à un titre uniforme -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -86,7 +91,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="indexint"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une indexation dÃ©cimale -->
+		<authority code="indexint"> <!-- Autorités qu'il est possible de lier à une indexation décimale -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -98,7 +103,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="authperso"> <!-- AutoritÃ©s qu'il est possible de lier Ã  une autoritÃ© perso -->
+		<authority code="authperso"> <!-- Autorités qu'il est possible de lier à une autorité perso -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>
@@ -110,7 +115,7 @@
 			<authority_allowed>authperso</authority_allowed>
 			<authority_allowed>concept</authority_allowed>
 		</authority>
-		<authority code="concept"> <!-- AutoritÃ©s qu'il est possible de lier Ã  un concept -->
+		<authority code="concept"> <!-- Autorités qu'il est possible de lier à un concept -->
 			<authority_allowed>author</authority_allowed>
 			<authority_allowed>category</authority_allowed>
 			<authority_allowed>publisher</authority_allowed>

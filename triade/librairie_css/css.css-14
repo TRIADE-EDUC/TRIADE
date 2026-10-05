@@ -62,15 +62,15 @@ A.m {color:#FFFFFF; font-family:Arial; text-decoration:none; font-weight:bold; f
 
 #imgombre{background-image:url('../image/inc/omb.gif')}
 
-#coulBar0{background-image:url('../image/inc/14/bg.png');  }   					/* Couleur de la barre de menu avec Quitter id='coulBar0' */
-#menumodule1{font-family:Arial; font-size:11px; color: #FFFFFF;padding-left:5px }  	/* couleur du texte de la barre de menu avec quitter id='menumodule1' */ 
+#coulBar0, .coulBar0 {background-image:url('../image/inc/14/bg.png');  }   					/* Couleur de la barre de menu avec Quitter id='coulBar0' */
+#menumodule1, .menumodule1 {font-family:Arial; font-size:11px; color: #FFFFFF;padding-left:5px }  	/* couleur du texte de la barre de menu avec quitter id='menumodule1' */ 
 #cadreCentral0{background-image:url('../image/inc/01/bg.png')}  	/* id='cadreCentral0' */
 
 
-#coulModule0{background-color:#506E87} 					/* Couleur du fond des menus dans les modules  */
-#menumodule0{font-family:Arial; font-size:11px; color: #FFFFFF;}  	/* couleur de fond du text */
+#coulModule0, .coulModule0 {background-color:#506E87} 					/* Couleur du fond des menus dans les modules  */
+#menumodule0, .menumodule0 {font-family:Arial; font-size:11px; color: #FFFFFF;}  	/* couleur de fond du text */
 
-#coulTitre0{background-image:url('../image/inc/14/bg.png');} 					/* Couleur du fond des titres dans les modules  */
+#coulTitre0, .coulTitre0 {background-image:url('../image/inc/14/bg.png');} 					/* Couleur du fond des titres dans les modules  */
 #bordure { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 0px; border-left-width : 0px; }
 #color2 { color:red } 						/* importance des titre */
 #color3 { color:red } 						/* importance des titre */

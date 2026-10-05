@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ChatUsersList.js,v 1.8 2019-01-02 14:10:25 ngantier Exp $
+// $Id: ChatUsersList.js,v 1.9 2020/09/25 07:50:13 moble Exp $
 
 
 define([
@@ -67,7 +67,16 @@ define([
 				topic.subscribe('Chat', lang.hitch(this, this.handleEvents))
 			);
 			this.chatGroup = new ChatGroup();
-		},	
+			//impossible d'utiliser startup pour appeler la transfomration en element dragable
+			//on doit donc attendre que l'élément soit créé dans le DOM
+			setTimeout(function(){ 
+				dragElement();
+			}, 4000);
+		},
+		
+		startup: function(){
+			
+		},
 		
 		handleEvents: function(evtType,evtArgs) {
 			switch(evtType) {
@@ -98,7 +107,7 @@ define([
 					id: 'chatUsersList',
 					region: 'center',
 					splitter: 'true',
-			        style: 'width: 100%;'
+			        style: 'width: 100%; background-color: #f1f1f1;'
 				});
 				this.container.addChild(this.topContainer);
 				this.container.addChild(this.userListContainer);				
@@ -150,7 +159,6 @@ define([
 		},
 		
 		setExpandCollspace: function(users_list, noPublish) {
-			
 			if(this.expandCollspace != 1) {
 				domStyle.set(dom.byId('chatUsersList'), 'display', 'none');
 				domStyle.set(dom.byId('chatUsersListWindow'), 'height', '50px');
@@ -199,11 +207,24 @@ define([
 		        style: "float:right;",
                 }
 			);
-			on(expandCollspace, 'click',  lang.hitch(this, function() {	
+			on(expandCollspace, 'click',  lang.hitch(this, function() {
 				this.setExpandCollspace(users_list, 0);				
 	        }));
 			domConstruct.place(expandCollspace, content);
-					
+			
+			var img_src = './images/move.png';	
+			var dragButton = domConstruct.create('img', {
+                id: 'dragButton',	
+				className: 'dragButton',
+				src: img_src,
+	            alt: pmbDojo.messages.getMessage('chat', 'chat_dragable'),
+	            title: pmbDojo.messages.getMessage('chat', 'chat_dragable'),
+		        style: "float:right; height:20px; margin-right:20px;",
+                }
+			);
+			
+			domConstruct.place(dragButton, content);
+			
 			var value = 0;
 			var img_src = './images/new_msg_tgl.png';
 			if (data.users_list_state.chatNotifFilter == 1) {
@@ -380,10 +401,9 @@ define([
 				}
 			}
 			topic.publish('Chat', 'chat_expandCollspace', {
-				id: id, 
+				id: id,
 				open: 0,
 			});
 		},
-		
 	});
 });

@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_empr_diff.class.php,v 1.4 2017-05-05 09:12:15 dgoron Exp $
+// $Id: serialcirc_empr_diff.class.php,v 1.4.18.1 2025/02/12 12:34:06 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($include_path."/mail.inc.php");
@@ -14,14 +14,14 @@ class serialcirc_empr_diff {
 	public $virtual;				//circulation virtuelle
 	public $rank = false;			//rang
 	public $expl_id;				//id exemplaire
-	public $check_activate;		//boolÃ©en dÃ©finissant si pointage 
+	public $check_activate;		//booléen définissant si pointage
 	public $expl_infos = array();	//infos exemplaires
-	public $serial_infos=array();	//infos pÃ©riodiques
-	public $current_empr;			//id de lecteur en possession du pÃ©rio
-	public $state;					//flag : circulation dÃ©butÃ©e au non
+	public $serial_infos=array();	//infos périodiques
+	public $current_empr;			//id de lecteur en possession du pério
+	public $state;					//flag : circulation débutée au non
 	public $bulletine_date;		//date de bulletinnage...
-	public $duration_before_start;	// durÃ©e avt le dÃ©marrage de la circulation
-	public $start_date;			// date de dÃ©marrage de la circulation
+	public $duration_before_start;	// durée avt le démarrage de la circulation
+	public $start_date;			// date de démarrage de la circulation
 
 
 	public function __construct($empr_id,$id_serialcirc,$expl_id=0){
@@ -41,8 +41,8 @@ class serialcirc_empr_diff {
 				$this->state = $row->serialcirc_expl_state_circ;
 				$this->virtual = $row->serialcirc_virtual;
 				$this->check_activate = $row->serialcirc_checked;
-				$this->num_abt = $row->num_serialcirc_abt*1;
-				$this->expl_id = $row->num_serialcirc_expl_id*1;
+				$this->num_abt = intval($row->num_serialcirc_abt);
+				$this->expl_id = intval($row->num_serialcirc_expl_id);
 				$this->duration_before_start = $row->serialcirc_duration_before_send;
 				$this->bulletine_date = $row->serialcirc_expl_bulletine_date;
 				$this->get_expl_infos();
@@ -54,11 +54,11 @@ class serialcirc_empr_diff {
 			}
 		}
 	}
-	
+
 	public function get_rank(){
 		if($this->state == SERIALCIRC_EXPL_STATE_CIRC_inprogress){
 			$start_rank = "select 1 from serialcirc_expl where num_serialcirc_expl_id =".$this->expl_id." and serialcirc_expl_start_date!=0 ";
-			$res = pmb_mysql_query($start_rank); 
+			$res = pmb_mysql_query($start_rank);
 			if(pmb_mysql_num_rows($res)){
 				$rank=0;
 			}else $rank =1;
@@ -117,7 +117,7 @@ class serialcirc_empr_diff {
 			$this->rank = "";
 		}
 	}
-	
+
 	protected function empr_is_subscribe($empr_id){
 		$is_subscribe = false;
 		if($this->virtual){
@@ -132,9 +132,9 @@ class serialcirc_empr_diff {
 		}
 		return $is_subscribe;
 	}
-	
+
 	public function get_expl_infos(){
-	
+
 		$this->expl_infos = array();
 		if($this->expl_id != 0){
 			$query = "select expl_id,expl_cb,bulletin_titre,mention_date,bulletin_numero from exemplaires join bulletins on bulletin_id = expl_bulletin where expl_id =".$this->expl_id;
@@ -145,10 +145,10 @@ class serialcirc_empr_diff {
 			$this->expl_infos['issue'] = $infos->bulletin_numero;
 			if($infos->mention_date) $this->expl_infos['issue'].=" ".$infos->mention_date;
 			if($expl_infos->bulletin_titre) $this->expl_infos['issue'].=" ".$infos->bulletin_titre;
-			$this->expl_infos['cb'] = $infos->expl_cb;		
+			$this->expl_infos['cb'] = $infos->expl_cb;
 		}
 	}
-	
+
 	public function get_serial_infos(){
 		$this->serial_infos = array();
 		$query = "select tit1 from notices join abts_abts on num_notice = notice_id where abt_id = ".$this->num_abt;
@@ -180,39 +180,39 @@ class serialcirc_empr_diff {
 					$infos = pmb_mysql_fetch_object($res);
 					//si on a l'utilisateur courant
 					if($this->rank == 0){
-						//retour demandÃ©
+						//retour demandé
 						if($infos->serialcirc_expl_ret_asked == SERIALCIRC_EXPL_RET_asked){
 							$form.="
 						<input type='hidden' name='ret_accepted' value='1' />
 						<input type='button' class='imp_bouton' value='".htmlentities($msg['serialcirc_ret_asked'],ENT_QUOTES,$charset)."' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();'/>";
-						//transmission demandÃ© par le centre de doc
+						//transmission demandé par le centre de doc
 						}else if($infos->serialcirc_expl_trans_doc_asked == SERIALCIRC_EXPL_TRANS_DOC_asked) {
 							$form.="
 						<input type='hidden' name='trans_doc_accepted' value='1' />
 						<input type='button' class='imp_bouton' value='".htmlentities($msg['serialcirc_trans_doc_asked'],ENT_QUOTES,$charset)."' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();'/>";
-						//transmission demandÃ©e
+						//transmission demandée
 						}else if($infos->serialcirc_expl_trans_asked == SERIALCIRC_EXPL_TRANS_asked){
 							$form.="
 						<input type='hidden' name='trans_accepted' value='1' />
-						<input type='button' class='imp_bouton' value='".htmlentities($msg['serialcirc_trans_asked'],ENT_QUOTES,$charset)."' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();'/>";	
+						<input type='button' class='imp_bouton' value='".htmlentities($msg['serialcirc_trans_asked'],ENT_QUOTES,$charset)."' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();'/>";
 						}
 					//le suivant
 					}else if($this->rank == 1 && $this->start_date){
 						$form.="
 						<input type='hidden' name='report_late' value='1' />
 						<input type='hidden' name='ask_transmission' value='1' />";
-						
+
 						if($infos->serialcirc_expl_trans_doc_asked != SERIALCIRC_EXPL_TRANS_DOC_ask ){
 							$form.="
 						<input type='button' class='bouton' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].report_late.value=1;document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].ask_transmission.value=0;document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();' value='".htmlentities($msg['serialcirc_report_late'].($circ_infos->serialcirc_circ_trans_doc_asked*1 >0 ? " (".$circ_infos->serialcirc_circ_trans_doc_asked.")":""),ENT_QUOTES,$charset)."'/>";
 						}else{
 							$form.="
 						<input type='button' class='bouton' disabled='disabled' value='".htmlentities($msg['serialcirc_late_reported'],ENT_QUOTES,$charset)."'/>";
-								
+
 						}
 						$form.="
 						<input type='button' class='bouton' onclick='document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].ask_transmission.value=1;document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].report_late.value=0;document.forms[\"actions_form_".$this->id_serialcirc.$this->expl_id."\"].submit();' value='".htmlentities($msg['serialcirc_ask_transmission'].($circ_infos->serialcirc_circ_trans_asked*1 >0 ? " (".$circ_infos->serialcirc_circ_trans_asked.")":""),ENT_QUOTES,$charset)."'/>";
-	
+
 					}
 				}
 				if($this->virtual && $this->state == SERIALCIRC_EXPL_STATE_CIRC_pending){
@@ -232,7 +232,7 @@ class serialcirc_empr_diff {
 					}else{
 						$form.="
 					<input type='button' class='bouton' disabled='disabled' value='".htmlentities(sprintf($msg['serialcirc_subscribe_list'],formatdate($end_subscription)),ENT_QUOTES,$charset)."' />";
-						
+
 					}
 
 				}
@@ -242,5 +242,5 @@ class serialcirc_empr_diff {
 				</form>";
 		}
 		return $form;
-	}	
+	}
 }

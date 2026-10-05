@@ -1,0 +1,15 @@
+# Security headers — api-mobile
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-XSS-Protection "1; mode=block"
+    # HSTS : activer uniquement si HTTPS confirmé
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# Cookies de session sécurisés
+php_flag session.cookie_httponly On
+php_value session.cookie_samesite Strict
+# Activer uniquement si HTTPS :
+# php_flag session.cookie_secure On

@@ -317,7 +317,7 @@
       <TD class="tabIntitule"><?php echo trad("RECHERCHE_CHERCHER");?></TD>
       <TD class="tabInput"><?php
   //Liste des libelles personnalises de l'utilisateur connecte et partages
-  $DB_CX->DbQuery("SELECT lib_id, lib_nom FROM ${PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR (lib_util_id!=".$idUser." AND lib_partage='O') ORDER BY lib_nom");
+  $DB_CX->DbQuery("SELECT lib_id, lib_nom FROM {$PREFIX_TABLE}libelle WHERE lib_util_id=".$idUser." OR (lib_util_id!=".$idUser." AND lib_partage='O') ORDER BY lib_nom");
   if ($DB_CX->DbNumRows()) {
     echo ("<SELECT name=\"zlLibelle\" onchange=\"javascript: addLib(this);\">
         <OPTION value=\"0\">-- ".trad("RECHERCHE_LIBELLES_PERSO")." --</OPTION>\n");
@@ -326,7 +326,7 @@
 		//Mod Emplacement Plus
     echo ("      </SELECT>");
   }
-  $DB_CX->DbQuery("SELECT empl_id, empl_nom FROM ${PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom");
+  $DB_CX->DbQuery("SELECT empl_id, empl_nom FROM {$PREFIX_TABLE}emplacement WHERE empl_util_id=".$idUser.(($MODIF_PARTAGE) ? " OR (empl_util_id!=".$idUser." AND empl_partage='O')" : "")." ORDER BY empl_nom");
   if ($DB_CX->DbNumRows()) {
     echo ("&nbsp;&nbsp;<SELECT name=\"zlLieu\" onchange=\"javascript: addLib(this);\">
         <OPTION value=\"0\">-- ".trad("EMPL_NOTE_PERSO")." --</OPTION>\n");
@@ -367,7 +367,7 @@
     //Construction de la liste des couleurs/categories de notes
     reset($tabCouleur);
     echo "<SELECT name=\"zlCouleur\" style=\"background-color:".((!empty($zlCouleur)) ? $zlCouleur : $FormulaireFondInput).";\" onchange=\"javascript: changeCouleurListe(this,null);\">\n";
-    while (list($key, $val) = each($tabCouleur)) {
+    foreach ($tabCouleur as $key => $val) {
       $selected = ($val==$zlCouleur) ? " selected" : "";
       echo "        <OPTION value=\"".$val."\" style=\"background-color:".(($val!="") ? $val : $FormulaireFondInput).";\"".$selected.">".$key."</OPTION>\n";
     }
@@ -376,7 +376,7 @@
     </TR>
 <?php
     // Recuperation des contacts de l'utilisateur et ceux qui sont partages
-    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ',cal_prenom)) AS nomContact FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE aco_util_id=".$USER_SUBSTITUE." AND age_id=aco_age_id AND cal_id=age_cal_id ORDER BY nomContact");
+    $DB_CX->DbQuery("SELECT DISTINCT cal_id, LTRIM(CONCAT(cal_nom,' ',cal_prenom)) AS nomContact FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE aco_util_id=".$USER_SUBSTITUE." AND age_id=aco_age_id AND cal_id=age_cal_id ORDER BY nomContact");
     // Le choix du contact n'est pas affiche si le calepin est vide
     if ($DB_CX->DbNumRows()) {
 ?>
@@ -565,9 +565,9 @@
       $rchEtend="AND aco_util_id=".$USER_SUBSTITUE.$sql." AND util_id=age_createur_id";
     } else {
       if ($rdEtendue==2)
-        $DB_CX->DbQuery("SELECT DISTINCT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.")");
+        $DB_CX->DbQuery("SELECT DISTINCT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser.")");
       if ($rdEtendue==3)
-        $DB_CX->DbQuery("SELECT DISTINCT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.")");
+        $DB_CX->DbQuery("SELECT DISTINCT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser.")");
       $ageAutorises="";
       while ($enr = $DB_CX->DbNextRow()) $ageAutorises.=$enr['util_id'].",";
       $ageAutorises=substr($ageAutorises,0,-1);
@@ -584,7 +584,7 @@
       $sqlExport = "AND aco_util_id=".$USER_SUBSTITUE.$sql." AND util_id=age_createur_id".$exclusion.$orderBy;
     }
     // Fin MOD Export recherche
-    $DB_CX->DbQuery("SELECT DATE_FORMAT(age_date,'%e/%c/%Y') AS ageDate,age_heure_debut,age_heure_fin,age_util_id,CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur,aco_termine,age_libelle,age_id,age_nb_participant,age_createur_id,age_aty_id,age_date_creation,age_date_modif,age_lieu,age_cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage".$affDetail." FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_aty_id!=1 AND age_id=aco_age_id ".$rchEtend.$exclusion.$orderBy);
+    $DB_CX->DbQuery("SELECT DATE_FORMAT(age_date,'%e/%c/%Y') AS ageDate,age_heure_debut,age_heure_fin,age_util_id,CONCAT(".$FORMAT_NOM_UTIL.") AS nomCreateur,aco_termine,age_libelle,age_id,age_nb_participant,age_createur_id,age_aty_id,age_date_creation,age_date_modif,age_lieu,age_cal_id,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,cal_util_id,cal_partage".$affDetail." FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_aty_id!=1 AND age_id=aco_age_id ".$rchEtend.$exclusion.$orderBy);
     $nb = $DB_CX->DbNumRows();
     $pluriel = ($nb > 1) ? trad("COMMUN_PLURIEL") : "";
     if ($nb == 0)

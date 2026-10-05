@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,7 +32,7 @@ if ($id != 1) {
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
+<meta name="Copyright" content="Triadeï¿½, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -42,11 +42,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onLoad="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -61,7 +61,7 @@ $debut=deb_prog();
 $valeur=visu_affectation_detail($_POST["saisie_classe"]);
 $dateDebut='';
 $dateFin='';
-if (count($valeur)) {
+if (countTriade($valeur)) {
 
 if ($_POST["typetrisem"] == "trimestre") {
 	if ($_POST["saisie_trimestre"] == "trimestre1" ) { $textTrimestre="1er TRIMESTRE"; $Trimestre = "1er  TRIMESTRE"; }
@@ -78,7 +78,7 @@ if ($_POST["typetrisem"] == "semestre") {
 $titre=$_POST["saisie_titre"];
 $data=chercheClasse($_POST["saisie_classe"]);
 $classe_nom=$data[0][1];
-// recup année scolaire
+// recup annï¿½e scolaire
 $anneeScolaire=$_POST["annee_scolaire"];
 ?>
 <ul>
@@ -92,10 +92,10 @@ $anneeScolaire=$_POST["annee_scolaire"];
 <?php
 include_once('librairie_php/recupnoteperiode.php');
 
-// recuperation des coordonnées
+// recuperation des coordonnï¿½es
 // de l etablissement
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=strtolower(trim($data[$i][1]));
        $postal=trim($data[$i][2]);
@@ -111,7 +111,7 @@ for($i=0;$i<count($data);$i++) {
 
 // recherche des dates de debut et fin
 $dateRecup=recupDateTrimByIdclasse($_POST["saisie_trimestre"],$_POST["saisie_classe"]);
-for($j=0;$j<count($dateRecup);$j++) {
+for($j=0;$j<countTriade($dateRecup);$j++) {
 	$dateDebut=$dateRecup[$j][0];
 	$dateFin=$dateRecup[$j][1];
 }
@@ -167,7 +167,7 @@ $partiel_gen_max='';
 $periode_gen_min=1000;
 $periode_gen_max='';
 
-for($g=0;$g<count($eleveT);$g++) {
+for($g=0;$g<countTriade($eleveT);$g++) {
 	// variable eleve
 
 	$ecrit='';
@@ -181,7 +181,7 @@ for($g=0;$g<count($eleveT);$g++) {
 	$nb_mat_per=0;
 	$idEleve=$eleveT[$g][4];	
 
-	for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
+	for ($nb_ue=0;$nb_ue<countTriade($ue);$nb_ue++) { // boucle pour chaque UE
 		$idMatiere=$ue[$nb_ue][4];
 		$ordre_recup=recup_ordre($idMatiere,$idClasse);
 //		$matiere=chercheMatiereNom($idMatiere);
@@ -251,7 +251,7 @@ for($g=0;$g<count($eleveT);$g++) {
 //		}
 
 // ajout modif AMBIS 04/06/10
-		for ($nb_note=0;$nb_note<count($notepartiel);$nb_note++) { 
+		for ($nb_note=0;$nb_note<countTriade($notepartiel);$nb_note++) { 
 //			if ($notepartiel[$nb_note][0]> -1  && $notepartiel[$nb_note][0]!='' ||  $notepartiel[$nb_note][0]==0  ) {
 			if ($notepartiel[$nb_note][0]>=0 ) {
 				$nb_mat+=1;
@@ -272,8 +272,8 @@ for($g=0;$g<count($eleveT);$g++) {
 		$moyenne_periode='';
 		$nb_note_periode=0;
 		$somme_coef_periode=0;
-		for ($nb_note=0;$nb_note<count($noteperiode);$nb_note++) { 
-			if ($noteperiode[$nb_note][0] >=0 && is_numeric($noteperiode[$nb_note][0]) && count($noteperiode)>0) {
+		for ($nb_note=0;$nb_note<countTriade($noteperiode);$nb_note++) { 
+			if ($noteperiode[$nb_note][0] >=0 && is_numeric($noteperiode[$nb_note][0]) && countTriade($noteperiode)>0) {
 				$moyenne_periode+=$noteperiode[$nb_note][0]*$noteperiode[$nb_note][6];
 //				$liste_note = $liste_note.$noteperiode[$nb_note][0]." - ";
 				$nb_note_periode+=1;
@@ -285,7 +285,7 @@ for($g=0;$g<count($eleveT);$g++) {
 		$moyenne_periode=$moyenne_periode/$somme_coef_periode;
 		$moyenne_periode_ue+=$moyenne_periode; 
 		if ($nb_note_periode>0) {$nb_note_periode_ue++;$nb_mat_per++;}
-		if ($nb_ue==count($ue)-1) {$id_ue = $ue[$nb_ue][0];}
+		if ($nb_ue==countTriade($ue)-1) {$id_ue = $ue[$nb_ue][0];}
 	} // fin boucle UE
 
 	// moyenne UE de partiel
@@ -352,7 +352,7 @@ $somme_coef=0;
 $somme_coef_gen_partiel=0;
 $moyenne_gen_partiel='';
 $nb_mat=1;
-for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for ($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
@@ -364,7 +364,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 //	$pdf->SetTitle("RELEVE DES NOTES - $nomEleve $prenomEleve");
 	$pdf->SetTitle("RELEVE DES NOTES - $classe_nom");
 	$pdf->SetCreator("VATEL");
-	$pdf->SetSubject("Période $textTrimestre ");                // AJOUTER DETE DE DEBUT et FIN DE PERIODES
+	$pdf->SetSubject("Pï¿½riode $textTrimestre ");                // AJOUTER DETE DE DEBUT et FIN DE PERIODES
 	$pdf->SetAuthor("VATEL - www.vatel.fr"); 
 
 
@@ -405,7 +405,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// insertion de la Annee SCOLAIRE
 //	$pdf->SetFont('Arial','',8);
 //	$pdf->SetXY(175,0);
-//	$pdf->MultiCell(25,10,"$Trimestre Année scolaire $anneeScolaire",1,'C',0);
+//	$pdf->MultiCell(25,10,"$Trimestre Annï¿½e scolaire $anneeScolaire",1,'C',0);
 	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY(165,0);
 	$pdf->MultiCell(25,24,"",1,'C',0);
@@ -414,7 +414,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 			$pdf->WriteHTML($Trimestre);
 			
 			$pdf->SetXY(167,8);
-			$pdf->WriteHTML("Année scolaire");
+			$pdf->WriteHTML("Annï¿½e scolaire");
 			
 			$pdf->SetXY(169,16);
 			$pdf->WriteHTML($anneeScolaire);
@@ -424,8 +424,8 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 
 
 
-	// Debut création PDF
-	// mise en place des coordonnées
+	// Debut crï¿½ation PDF
+	// mise en place des coordonnï¿½es
 	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY(55,23);
 	$pdf->WriteHTML($coordonne0);
@@ -434,10 +434,10 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$pdf->SetXY(55,23+6);
 	$pdf->WriteHTML($coordonne2);
 
-	// adresse de l'élève
+	// adresse de l'ï¿½lï¿½ve
 	// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 	$dataadresse=chercheadresse($idEleve);
-	for ($ik=0;$ik<=count($dataadresse);$ik++) {
+	for ($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -454,7 +454,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 		$Yv1=10;
 		$pdf->SetFont('Arial','',10);
 		$pdf->SetXY($Xv1,$Yv1); 
-		$pdf->WriteHTML("<b>NOM Prénom</b> : $nomprenom");
+		$pdf->WriteHTML("<b>NOM Prï¿½nom</b> : $nomprenom");
 		$pdf->SetXY($Xv1,$Yv1+4);
 		
 		// Modif AMBIS 03/11/09
@@ -463,20 +463,20 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 		if (strtolower(substr($classe_nom,0,1))=='m' && ($pos_annee==1 || $pos_annee==2 || $pos_annee==3)) {
 			//print ('**'.$pos_annee.'**');
 			if ($pos_annee+0==1) {
-				$lib_classe= " Licence 1ère année "; 
+				$lib_classe= " Licence 1ï¿½re annï¿½e "; 
 			} else {
-				$lib_classe= " Licence ".$pos_annee."ème année "; 
+				$lib_classe= " Licence ".$pos_annee."ï¿½me annï¿½e "; 
 			}
 		} elseif (strtolower(substr($classe_nom,0,1))=='m' && $pos_annee=='4')  {
-			$lib_classe= " Master 1ère année";
+			$lib_classe= " Master 1ï¿½re annï¿½e";
 		} elseif (strtolower(substr($classe_nom,0,1))=='m' && $pos_annee=='5')  {
-			$lib_classe= " Master 2ème année";	
+			$lib_classe= " Master 2ï¿½me annï¿½e";	
 		} elseif (strtolower(substr($classe_nom,0,1))=='p') {
-			$lib_classe= " Classe Préparatoire";
+			$lib_classe= " Classe Prï¿½paratoire";
 		} elseif (strtolower(substr($classe_nom,0,1))=='b') {
 			$lib_classe= " Bachelor";
 		}  else {
-			$lib_classe= " A définir";
+			$lib_classe= " A dï¿½finir";
 		}
 		
 		// Modif AMBIS 03/11/09
@@ -484,10 +484,10 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 			
 //		if (substr($classe_nom,-1,1)=='1' || substr($classe_nom,-1,1)=='A') {
 //		if (substr($classe_nom,-1,1)=='1') { // modif AMBIS 20/03/09
-//			$lib_classe .=" 1ère année ";
+//			$lib_classe .=" 1ï¿½re annï¿½e ";
 //		} elseif (substr($classe_nom,-1,1)=='2'  || substr($classe_nom,-1,1)=='B') { 
 //		} elseif (substr($classe_nom,-1,1)=='2' ) { // modif AMBIS 20/03/09
-//			$lib_classe .=" 2ème année ";
+//			$lib_classe .=" 2ï¿½me annï¿½e ";
 //		}
 
 
@@ -504,7 +504,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$pdf->MultiCell(180,7,'RELEVE DES NOTES ',1,'C',0);
 	$pdf->SetFont('Arial','B',8);
 	$pdf->SetXY($Xmat+117,$Ymat+1);
-	$pdf->WriteHTML('Période du '.$dateDebut.' au '.$dateFin);
+	$pdf->WriteHTML('Pï¿½riode du '.$dateDebut.' au '.$dateFin);
 
 	// Mise en place des matieres
 
@@ -518,7 +518,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 // premiere ligne
 	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY($Xmat,$Ymat);
-	$pdf->MultiCell($largeurMat,6,"Unités d'Enseignement",1,'L',0);
+	$pdf->MultiCell($largeurMat,6,"Unitï¿½s d'Enseignement",1,'L',0);
 	$pdf->SetXY($Xmat+$largeurMat,$Ymat);
 	$pdf->SetFillColor(198,209,229);  // couleur du cadre de l'eleve
 	$pdf->MultiCell(30,6,'PARTIELS',1,'C',1);
@@ -532,7 +532,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 // deuxieme ligne
 	$pdf->SetFont('Arial','',8);
 	$pdf->SetXY($Xmat,$Ymat);
-	$pdf->MultiCell($largeurMat,6,'Matières',1,'C',0);
+	$pdf->MultiCell($largeurMat,6,'Matiï¿½res',1,'C',0);
 	$pdf->SetXY($Xmat+$largeurMat,$Ymat);
 	$pdf->SetFillColor(198,209,229);  // couleur du cadre de l'eleve
 	$pdf->MultiCell(15,6,'Coef.',1,'C',1);
@@ -570,7 +570,7 @@ for ($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
 	$som_coef_periode_ue_total=0;
 
 	
-for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
+for ($nb_ue=0;$nb_ue<countTriade($ue);$nb_ue++) { // boucle pour chaque UE
 
 		$id_ue =$ue[$nb_ue][0];
 		$idMatiere=$ue[$nb_ue][4];
@@ -666,7 +666,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 		$moy_partiel_eu='';
 		$som_coef_partiel_eu=0;
 		// modif ambis 09/03/10 pour calcul moyenne des notes de partiels dans le cas ou il y a plusieurs  notes de partiel
-		for ($nb_note=0;$nb_note<count($notepartiel);$nb_note++) { 
+		for ($nb_note=0;$nb_note<countTriade($notepartiel);$nb_note++) { 
 			if ($notepartiel[$nb_note][0]>=0 && is_numeric($notepartiel[$nb_note][0])) {$nb_mat+=1;
 				$moy_partiel_eu+=$notepartiel[$nb_note][6]*$notepartiel[$nb_note][0];
 				$som_coef_partiel_eu+=$notepartiel[$nb_note][6];
@@ -678,8 +678,8 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 				$affich_coef_partiel="";}
 		}
 		$moy_coef_partiel="";
-		if (count($notepartiel)>0) {$moy_coef_partiel=$som_coef_partiel_eu/count($notepartiel);}
-		//print ($idEleve.'**'.$idMatiere.'**'.count($notepartiel).'**'.$moy_coef_partiel.'<br>');
+		if (countTriade($notepartiel)>0) {$moy_coef_partiel=$som_coef_partiel_eu/countTriade($notepartiel);}
+		//print ($idEleve.'**'.$idMatiere.'**'.countTriade($notepartiel).'**'.$moy_coef_partiel.'<br>');
 		$pdf->SetFont('Arial','',7);
 		$pdf->SetXY($Xmat+$largeurMat,$Ymat);
 		$pdf->MultiCell(15,$hauteurMatiere,$moy_coef_partiel  ,'LR','C',1);
@@ -716,8 +716,8 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 		$moyenne_periode='';
 		$nb_note_periode=0;
 		$som_coef_periode=0;
-		for ($nb_note=0;$nb_note<count($noteperiode);$nb_note++) { 
-			if ($noteperiode[$nb_note][0]>=0 && is_numeric($noteperiode[$nb_note][0]) && count($noteperiode)>0) {
+		for ($nb_note=0;$nb_note<countTriade($noteperiode);$nb_note++) { 
+			if ($noteperiode[$nb_note][0]>=0 && is_numeric($noteperiode[$nb_note][0]) && countTriade($noteperiode)>0) {
 				$moyenne_periode+=$noteperiode[$nb_note][0]*$noteperiode[$nb_note][6];
 				if ($noteperiode[$nb_note][6]>1) {$aff_coef='('.$noteperiode[$nb_note][6].')';} else {$aff_coef='';}
 				$liste_note = $liste_note.$noteperiode[$nb_note][0].$aff_coef." - ";
@@ -767,7 +767,7 @@ for ($nb_ue=0;$nb_ue<count($ue);$nb_ue++) { // boucle pour chaque UE
 
 		$Xmat=20;
 		$Ymat=$Ymat+$hauteurMatiere;
-		if ($nb_ue==count($ue)-1) {$id_ue = $ue[$nb_ue][0];}	
+		if ($nb_ue==countTriade($ue)-1) {$id_ue = $ue[$nb_ue][0];}	
 //	} // fin boucle matiere
 } // fin boucle UE
 // fin de la mise en place des matieres<br>
@@ -836,7 +836,7 @@ $Ymat=237; // pour decaller le bloc en bas de la page 230
 			$pdf->WriteHTML('<b> PARTIELS :                              '.format_moyenne($moyenne_gen_partiel).'</b>');
 			$pdf->SetFont('Arial','',7);
 			$pdf->SetXY($Xmat+30,$Ymat+8);
-			$pdf->WriteHTML('Rang  : '.((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.count($eleveT).'  - (min.:'.format_moyenne(end($moyenne_par)).' - max:'.format_moyenne($moyenne_par[0]).')');
+			$pdf->WriteHTML('Rang  : '.((array_search($moyenne_gen_partiel, $moyenne_par))+1).'/'.countTriade($eleveT).'  - (min.:'.format_moyenne(end($moyenne_par)).' - max:'.format_moyenne($moyenne_par[0]).')');
 			$moyenne_gen_partiel='';
 			$somme_coef_gen_partiel=0;
 //			$pdf->SetFont('Arial','',7);
@@ -869,12 +869,12 @@ $Ymat=237; // pour decaller le bloc en bas de la page 230
 	$nbjoursabs=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	$nbretard=count($nbretard);
+	$nbretard=countTriade($nbretard);
 	
 	// recherche le nombre d absence
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	for($o=0;$o<=count($nbabs);$o++) {
+	for($o=0;$o<=countTriade($nbabs);$o++) {
 		if ($nbabs[$o][4] > 0) {
 	       		$nbjoursabs = $nbjoursabs + $nbabs[$o][4];
 		}else{
@@ -887,10 +887,10 @@ $Ymat=237; // pour decaller le bloc en bas de la page 230
 	$pdf->MultiCell(180,5,'',1,'',0);
 	$pdf->SetXY($Xmat+2,$Ymat+2);
 	$pdf->SetFont('Arial','',8);
-	$pdf->WriteHTML("<b>Nombre de 1/2 journées d'absences : </b>".$nbabs .' - <b>Nombre de retards :</b> '.$nbretard);
+	$pdf->WriteHTML("<b>Nombre de 1/2 journï¿½es d'absences : </b>".$nbabs .' - <b>Nombre de retards :</b> '.$nbretard);
 	//---------------------------------//
 
-// cadre appréciation
+// cadre apprï¿½ciation
 $Ycom=$Ymat+7;
 $Xcom=$Xmat;
 $hauteurcom=20;
@@ -922,7 +922,7 @@ $pdf->SetDrawColor(0);
 
 //$pdf->SetFillColor(000);  // couleur du cadre de l'eleve
 //$pdf->SetXY($largeurcom+20,$Yappreciation);
-//$pdf->WriteHTML("Félicitations :");
+//$pdf->WriteHTML("Fï¿½licitations :");
 //$pdf->SetXY($largeurcom+50,$Yappreciation+1);
 //$pdf->MultiCell(3,3,'',1,'',$checkedmont1);
 
@@ -966,20 +966,20 @@ $pdf->close();
 bulletin_archivage($_POST["saisie_trimestre"],$anneeScolaire,$fichier,$idEleve,$classe_nom,$nomEleve,$prenomEleve);
 $merge->add("$fichier");
 $pdf=new PDF();
-} // fin du for on passe à l'eleve suivant
+} // fin du for on passe ï¿½ l'eleve suivant
 $merge->output("./data/pdf_bull/$classe_nom/liste_complete.pdf");
 include_once('./librairie_php/pclzip.lib.php');
 @unlink('./data/pdf_bull/'.$classe_nom.'.zip');
 $archive = new PclZip('./data/pdf_bull/'.$classe_nom.'.zip');
 $archive->create('./data/pdf_bull/'.$classe_nom,PCLZIP_OPT_REMOVE_PATH, 'data/pdf_bull/');
 $fichier='./data/pdf_bull/'.$classe_nom.'.zip';
-$bttexte="Récupérer le fichier ZIP des bulletins";
+$bttexte="Rï¿½cupï¿½rer le fichier ZIP des bulletins";
 @nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
 @rmdir('./data/pdf_bull/'.$classe_nom);
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -1016,7 +1016,7 @@ Pgclose();
 <!-- // fin  -->
 </td></tr></table>
 <script language=JavaScript>attente_close();</script>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>
 <?php
 $cnx=cnx();

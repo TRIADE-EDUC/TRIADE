@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: abonnement_duplique.php,v 1.3 2017-11-22 14:51:56 wlair Exp $
+// $Id: abonnement_duplique.php,v 1.3 2017/11/22 14:51:56 wlair Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire
+// définition du minimum nécéssaire
 $base_path="./../../..";
 $base_auth = "CATALOGAGE_AUTH";
 $base_title = "\$msg[6]";

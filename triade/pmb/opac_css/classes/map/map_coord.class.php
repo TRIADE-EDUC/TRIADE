@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_coord.class.php,v 1.4 2016-11-05 14:49:08 ngantier Exp $
+// $Id: map_coord.class.php,v 1.4 2016/11/05 14:49:08 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -20,13 +20,13 @@ class map_coord {
 	/*** Attributes: ***/
 
 	/**
-   	* Latitude (notation dÃ©cimale)
+   	* Latitude (notation décimale)
    	* @access protected
    	*/
   	protected $lat;
 
   	/**
-   	* Longitude (notation dÃ©cimale)
+   	* Longitude (notation décimale)
    	* @access protected
    	*/
   	protected $long;
@@ -34,9 +34,9 @@ class map_coord {
   	/**
   	 * Constructeur, il utilise les setters de la classe
   	 *
-  	 * @param float lat Latitude au format degrÃ© dÃ©cimal
+  	 * @param float lat Latitude au format degré décimal
   	
-  	 * @param float long Longitude au format degrÃ© dÃ©cimal
+  	 * @param float long Longitude au format degré décimal
   	
   	
   	 * @return void
@@ -52,7 +52,7 @@ class map_coord {
   	/**
    	* 
    	*
-   	* @param float lat Latitude Ã  insÃ©rer
+   	* @param float lat Latitude à insérer
 
    	* @return void
    	* @access public
@@ -66,7 +66,7 @@ class map_coord {
   	/**
    	* 
    	*
-   	* @param float long Longitude Ã Â insÃ©rer
+   	* @param float long Longitude à insérer
 
    	* @return void
    	* @access public
@@ -80,9 +80,9 @@ class map_coord {
   	/**
    	* 
    	*
-   	* @param float long Longitude Ã Â insÃ©rer
+   	* @param float long Longitude à insérer
 
-   	* @param float lat Latitude Ã Â insÃ©rer
+   	* @param float lat Latitude à insérer
 
    	* @return void
    	* @access public
@@ -95,7 +95,7 @@ class map_coord {
   	} // end of member function set_coords
 
   	/**
-   	* Retourne la longitude au format dÃ©cimal
+   	* Retourne la longitude au format décimal
    	*
    	* @return float
    	* @access public
@@ -107,7 +107,7 @@ class map_coord {
   	} // end of member function get_decimal_long
 
   	/**
-   	* Retourne la latitude au format dÃ©cimal
+   	* Retourne la latitude au format décimal
    	*
    	* @return float
    	* @access public
@@ -119,7 +119,7 @@ class map_coord {
   	} // end of member function get_decimal_lat
 
   	/**
-   	* Retourne la latitude en degrÃ©s minutes secondes
+   	* Retourne la latitude en degrés minutes secondes
    	*
    	* @return string
    	* @access public
@@ -131,7 +131,7 @@ class map_coord {
   	} // end of member function get_sexagesimal_lat
 
   	/**
-   	* Retourne la longitude en degrÃ©s minutes secondes
+   	* Retourne la longitude en degrés minutes secondes
    	*
    	* @return string
    	* @access public
@@ -145,7 +145,7 @@ class map_coord {
   	/**
    	* 
    	*
-   	* @param float value Valeur en degrÃ© dÃ©cimal Ã Â  convertir  au format degrÃ©Â°minutes'secondes''
+   	* @param float value Valeur en degré décimal à  convertir  au format degré°minutes'secondes''
 
    	* @return string
    	* @static
@@ -197,7 +197,7 @@ class map_coord {
   		$dms=str_replace("!!degres!!", $deg,$dms);
   		$dms=str_replace("!!minutes!!", $min,$dms);
   		$dms=str_replace("!!secondes!!", $sec,$dms);
-  		//$dms = $deg."Â°".$min."'".$sec."''";
+  		//$dms = $deg."°".$min."'".$sec."''";
   		return $dms; 
   		
   	} // end of member function convert_decimal_to_sexagesimal
@@ -205,7 +205,7 @@ class map_coord {
   	/**
    	* 
    	*
-   	* @param string value Valeur en degrÃ©Â°minutes'secondes''Ã Â  convertir  au format degrÃ© dÃ©cimal
+   	* @param string value Valeur en degré°minutes'secondes''à  convertir  au format degré décimal
 
    	* @return float
    	* @static
@@ -213,7 +213,7 @@ class map_coord {
    	*/
   	public static function convert_sexagesimal_to_decimal( $value) {
   
-  		$dms = str_replace(array("Â°","'","''"), " ", $value);
+  		$dms = str_replace(array("°","'","''"), " ", $value);
   		$vars = explode(" ", $dms);
   		
   		return $vars[0]+((($vars[1]*60)+($vars[2]))/3600);

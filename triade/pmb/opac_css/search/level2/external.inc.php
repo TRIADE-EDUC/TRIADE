@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: external.inc.php,v 1.18 2019-06-03 09:04:08 arenou Exp $
+// $Id: external.inc.php,v 1.19 2019/06/20 13:06:32 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -35,6 +35,6 @@ $es->show_results_unimarc("./index.php?lvl=more_results&mode=external","./index.
 //Enregistrement des stats
 global $pmb_logs_activate;
 if($pmb_logs_activate){
-	global $nb_results_tab;
+    global $nb_results_tab, $count;
 	$nb_results_tab['external'] = $count;
 }

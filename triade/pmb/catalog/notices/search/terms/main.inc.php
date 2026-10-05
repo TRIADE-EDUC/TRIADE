@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.24 2019-06-07 08:05:39 btafforeau Exp $
+// $Id: main.inc.php,v 1.24 2019/06/07 08:05:39 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -57,9 +57,9 @@ $search_form_term = "
 	";
 	
 	
-//affichage du selectionneur de thesaurus et du lien vers les thÃ©saurus
+//affichage du selectionneur de thesaurus et du lien vers les thésaurus
 $lien_thesaurus = '';
-if ($thesaurus_mode_pmb != 0) {	 //la liste des thesaurus n'est pas affichÃ©e en mode monothesaurus
+if ($thesaurus_mode_pmb != 0) {	 //la liste des thesaurus n'est pas affichée en mode monothesaurus
 	$lien_thesaurus = "<a href='./autorites.php?categ=categories&sub=thes'>".$msg['thes_lien']."</a>";
 }	
 $search_form_term=str_replace("<!-- sel_thesaurus -->",thesaurus::getSelector($id_thes, './catalog.php?categ=search&mode=5'),$search_form_term);

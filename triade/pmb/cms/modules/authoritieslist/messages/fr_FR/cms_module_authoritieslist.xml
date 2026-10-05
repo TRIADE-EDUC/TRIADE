@@ -5,11 +5,13 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_authoritieslist.xml,v 1.2 2016-05-12 16:31:43 apetithomme Exp $ -->
+$Id: cms_module_authoritieslist.xml,v 1.3 2019/12/16 08:06:02 btafforeau Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_condition_authentificated'>Personnes Authentifiées</entry>
 	<entry code='cms_module_common_condition_page'>Page</entry>
 	<entry code='cms_module_common_view_authoritieslist'>Template Django</entry>
+	<entry code='cms_module_authoritieslist_view_carousel_uikit'>Vue en Carrousel Uikit</entry>
+	<entry code='cms_module_authoritieslist_view_slideshow'>Vue en Slideshow</entry>
 	<entry code='cms_module_common_view_authoritieslist_from_template_folder'>Sélection d'un répertoire de templates d'autorités</entry>
 </XMLlist>

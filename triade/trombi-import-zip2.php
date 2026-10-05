@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,13 +35,13 @@
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php");
 include_once('librairie_php/db_triade.php');
 ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Import photo" ?></font></b></td></tr>
 <tr id='cadreCentral0' >
@@ -93,7 +93,7 @@ if ((!empty($fichier)) && ($size <= 20000000)) {
 				$nomFichier=strtolower($nomFichier);
 				if ($type_compte == "personnel") {
 					$data=cherchePersonnelPhotoId(); // pers_id,nom,prenom
-					for($i=0;$i<count($data);$i++) { 
+					for($i=0;$i<countTriade($data);$i++) { 
 						$idPers=$data[$i][0];			
 						if ($type_nommage == 'nomprenom') { $nomprenom=strtolower($data[$i][1]).strtolower($data[$i][2]); }
 						if ($type_nommage == 'prenomnom') { $nomprenom=strtolower($data[$i][2]).strtolower($data[$i][1]); }
@@ -116,7 +116,7 @@ if ((!empty($fichier)) && ($size <= 20000000)) {
 	
 				if ($type_compte == "eleves") {
 					$data=chercheElevePhotoId(); // elev_id,nom,prenom
-					for($i=0;$i<count($data);$i++) { 
+					for($i=0;$i<countTriade($data);$i++) { 
 						$idPers=$data[$i][0];			
 						if ($type_nommage == 'nomprenom') { $nomprenom=strtolower($data[$i][1]).strtolower($data[$i][2]); }
 						if ($type_nommage == 'prenomnom') { $nomprenom=strtolower($data[$i][2]).strtolower($data[$i][1]); }

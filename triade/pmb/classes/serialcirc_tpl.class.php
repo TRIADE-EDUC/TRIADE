@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc_tpl.class.php,v 1.8 2018-01-05 15:32:18 dgoron Exp $
+// $Id: serialcirc_tpl.class.php,v 1.13 2021/12/21 15:01:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/template.class.php");
 require_once($include_path."/templates/serialcirc_tpl.tpl.php");
 require_once($class_path."/serialcirc_tpl_print_fields.class.php");
@@ -18,10 +19,9 @@ class serialcirc_tpl extends template {
 	protected $piedpage; // pied de page
 		
 	// ---------------------------------------------------------------
-	//		fetch_data() : rÃ©cupÃ©ration infos 
+	//		fetch_data() : récupération infos 
 	// ---------------------------------------------------------------
 	public function fetch_data() {
-		global $msg;
 		$this->name	="";
 		$this->comment ="";
 		$this->content ="";
@@ -36,22 +36,14 @@ class serialcirc_tpl extends template {
  				$this->content = $temp->serialcirctpl_tpl;
  				$this->piedpage = $temp->serialcirctpl_piedpage;
 			} else {
-				// pas trouvÃ© avec cette clÃ©
+				// pas trouvé avec cette clé
 				$this->id = 0;								
 			}
 		}
 	}
 	
-	public static function get_template_instance($id) {
-		return new serialcirc_tpl($id);
-	}
-	
-	public static function get_list_query() {
-		return "SELECT serialcirctpl_id as id_template FROM serialcirc_tpl ORDER BY serialcirctpl_name ";
-	}	
-	
 	public function get_fields_options() {
-		global $msg, $charset;
+		global $msg;
 	
 		$fields_options="<option value='{{last_empr.nom}}'>".$msg['serialcirc_fiche_circu_last_empr_first_name']."</option>";
 		$fields_options.="<option value='{{last_empr.prenom}}'>".$msg['serialcirc_fiche_circu_last_empr_last_name']."</option>";
@@ -99,7 +91,8 @@ class serialcirc_tpl extends template {
 		$content_form=str_replace('!!fields_options!!', $fields_options, $content_form);
 		
 		$content_form=str_replace('!!pied_page!!', $this->piedpage, $content_form);
-		$content_form = str_replace("!!order_tpl!!",		implode(",",array_keys($fields->circ_tpl)), $content_form);
+		$content_form=str_replace('!!id_tpl!!', $this->id, $content_form);
+		$content_form = str_replace("!!order_tpl!!", implode(",",array_keys($fields->circ_tpl)), $content_form);
 		return $content_form;
 	}
 	
@@ -127,7 +120,7 @@ class serialcirc_tpl extends template {
 	}
 	
 	// ---------------------------------------------------------------
-	//		save : mise Ã  jour
+	//		save : mise à jour
 	// ---------------------------------------------------------------
 	public function save() {
 		global $msg;
@@ -172,21 +165,26 @@ class serialcirc_tpl extends template {
 	// ---------------------------------------------------------------
 	//		delete() : suppression 
 	// ---------------------------------------------------------------
-	public function delete() {
+	public static function delete($id) {
 		global $msg;
 		
-		if(!$this->id)	return $msg[403]; 
+		$id = intval($id);
+		if(!$id) {
+		    pmb_error::get_instance(static::class)->add_message("", $msg[403]);
+		    return false;
+		}
 
 		$total = 0;
-		$total = pmb_mysql_result(pmb_mysql_query("select count(1) from serialcirc where serialcirc_tpl ='".$this->id."' "), 0, 0);
+		$total = pmb_mysql_result(pmb_mysql_query("select count(1) from serialcirc where serialcirc_tpl ='".$id."' "), 0, 0);
 		if ($total==0) {
 			// effacement dans la table
-			$query = "DELETE FROM serialcirc_tpl WHERE serialcirctpl_id='".$this->id."' ";
+			$query = "DELETE FROM serialcirc_tpl WHERE serialcirctpl_id='".$id."' ";
 			pmb_mysql_query($query);
 		} else {
-			error_message(	$msg["edit_tpl_serialcirc_delete"], $msg["edit_tpl_serialcirc_delete_forbidden"], 1, static::get_base_url().'&action=');
+			pmb_error::get_instance(static::class)->add_message($msg["edit_tpl_serialcirc_delete"], $msg["edit_tpl_serialcirc_delete_forbidden"]);
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	public static function get_base_url() {
@@ -202,23 +200,6 @@ class serialcirc_tpl extends template {
 		
 		$query = "SELECT serialcirctpl_id, concat(serialcirctpl_name,'. ',serialcirctpl_comment) as nom  FROM serialcirc_tpl ORDER BY serialcirctpl_name ";
 		return gen_liste ($query, "serialcirctpl_id", "nom", $select_name, $onchange, $selected_id, 0, $msg["serialcirc_tpl_list_default"], 0,$msg["serialcirc_tpl_list_default"], 0) ;
-	}
-	
-	public static function proceed($id) {
-		global $action;
-		
-		$id += 0;
-		switch ($action) {
-			case 'add_field':
-				print static::get_template_instance($id)->get_form();
-				break;
-			case 'del_field':
-				print static::get_template_instance($id)->get_form();
-				break;
-			default:
-				parent::proceed($id);
-				break;
-		}
 	}
 
 } // fin class 

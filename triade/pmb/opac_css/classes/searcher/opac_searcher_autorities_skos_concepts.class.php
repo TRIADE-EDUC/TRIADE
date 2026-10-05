@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_searcher_autorities_skos_concepts.class.php,v 1.4 2016-06-15 14:59:56 arenou Exp $
+// $Id: opac_searcher_autorities_skos_concepts.class.php,v 1.5 2021/12/27 08:17:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/searcher/opac_searcher_autorities.class.php");
 
 class opac_searcher_autorities_skos_concepts extends opac_searcher_autorities {
@@ -28,12 +29,11 @@ class opac_searcher_autorities_skos_concepts extends opac_searcher_autorities {
 		return parent::_get_search_type()."_concepts";
 	}
 	
- 	// Ã  rÃ©Ã©crire au besoin...
+ 	// à réécrire au besoin...
  	protected function _sort($start,$number){
- 		global $dbh;
  		if($this->table_tempo != ""){
  			$query = "select * from ".$this->table_tempo." join ".$this->object_fields_table." on ".$this->table_tempo.".".$this->object_key." = ".$this->object_fields_table.".".$this->object_index_key." where code_champ= 1 order by pert desc,".$this->object_fields_table.".".$this->object_fields_value." asc limit ".$start.",".$number;
- 			$result = pmb_mysql_query($query,$dbh);
+ 			$result = pmb_mysql_query($query);
  			if(pmb_mysql_num_rows($result)){
  				$this->result=array();
  				while($row = pmb_mysql_fetch_object($result)){
@@ -53,20 +53,20 @@ class opac_searcher_autorities_skos_concepts extends opac_searcher_autorities {
  	}
  	
  	protected function _filter_results(){
- 		global $dbh,$concept_scheme;
+ 		global $concept_scheme;
  		
  		$query = "";
 
  		if (($concept_scheme !== null) && ($concept_scheme*1 === 0)) {
- 			// On cherche dans les concepts sans schÃ©ma
+ 			// On cherche dans les concepts sans schéma
  			$query = "select ".$this->object_key." from ".$this->object_fields_table." where ".$this->object_key." not in (select ".$this->object_key." from ".$this->object_fields_table." where code_champ = 4) and code_champ = 1 and ".$this->object_key." in (".$this->objects_ids.")";
  		} else if ($concept_scheme && ($concept_scheme != -1)) {
  			// On cherche dans un schema en particulier
  			$query = "select ".$this->object_key." from ".$this->object_fields_table." where code_champ = 4 and authority_num = ".($concept_scheme*1)." and ".$this->object_key." in (".$this->objects_ids.")";
  		}
- 		// Pas de filtre si on cherche dans tous les schÃ©mas
+ 		// Pas de filtre si on cherche dans tous les schémas
  		if ($query) {
- 			$result = pmb_mysql_query($query,$dbh);
+ 			$result = pmb_mysql_query($query);
  			$this->objects_ids ="";
  			if($result && pmb_mysql_num_rows($result)){
  				while($row = pmb_mysql_fetch_object($result)){
@@ -81,7 +81,7 @@ class opac_searcher_autorities_skos_concepts extends opac_searcher_autorities {
 		global $concept_scheme;
 		$query = "select ".$this->object_key." from ".$this->object_fields_table." where code_champ = 1";
 		if ($concept_scheme*1 === 0) {
-			// On cherche dans les concepts sans schÃ©ma
+			// On cherche dans les concepts sans schéma
 			$query.= " and ".$this->object_key." not in (select ".$this->object_key." from ".$this->object_fields_table." where code_champ = 4)";
 		} else if ($concept_scheme && ($concept_scheme != -1)) {
 			// On cherche dans un schema en particulier

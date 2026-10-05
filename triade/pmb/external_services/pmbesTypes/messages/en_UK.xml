@@ -4,31 +4,36 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.3 2015-06-26 08:31:04 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.6 2023/03/16 14:53:08 dgoron Exp $ -->
 
 <!DOCTYPE XMLlist SYSTEM "../../../includes/XMLlist.dtd" >
 <XMLlist>
-<!--
-pmbesTypes
--->
+
+    <!-- pmbesTypes -->
 	<entry code="pmbesTypes_description">Describes some type of data usable by the other groups</entry>
-<!--
-item
--->
-	<entry code="item_description">Describes a copy</entry>
-	<entry code="item_id">Id of the copy</entry>
-	<entry code="item_cb">Barcode of the copy</entry>
-	<entry code="item_cote">Call number of the copy</entry>
-	<entry code="item_location_id">Id of the location of this copy</entry>
-	<entry code="item_location_caption">Label of the location of the copy</entry>
-	<entry code="item_section_id">Id of the section of the copy</entry>
-	<entry code="item_section_caption">Label of the section of the copy</entry>
-	<entry code="item_statut">Status of the copy</entry>
-	<entry code="item_support">Support of the copy</entry>
-	<entry code="item_situation">Situation of the copy</entry>
-<!--
-reader
--->
+	
+    <!-- item -->
+	<entry code="item_description">Describes an item</entry>
+	<entry code="item_id">Identifier</entry>
+	<entry code="item_cb">Barcode</entry>
+    <entry code="item_title">Record or issue title</entry>
+	<entry code="item_cote">Call number</entry>
+	<entry code="item_location_id">Location identifier</entry>
+	<entry code="item_location">Location</entry>
+	<entry code="item_section_id">Section identifier</entry>
+	<entry code="item_section">Section</entry>
+	<entry code="item_statut">Status</entry>
+	<entry code="item_support">Support</entry>
+	<entry code="item_codestat">Statistical code</entry>
+	<entry code="item_pret_flag">Loanability indicator (O/1)</entry>
+    <entry code="item_pret_date">Loan date (display)</entry>
+    <entry code="item_pret_date_raw">Loan date (YYYY-MM-DD HH:MM:SS)</entry>
+    <entry code="item_pret_retour">Return date (display)</entry>
+    <entry code="item_pret_retour_raw">Return date (YYYY-MM-DD)</entry>
+    <entry code="item_situation">Situation</entry>
+    <entry code="item_pnb_flag">Digital loan indicator (O/1)</entry>
+	
+    <!-- reader -->
 	<entry code="reader_description">Describes a borrower</entry>
 	<entry code="reader_id">id of the borrower</entry>
 	<entry code="reader_cb">Barcode</entry>
@@ -48,9 +53,8 @@ reader
 	<entry code="reader_location_caption">Label of the location</entry>
 	<entry code="reader_adhesion_date">Date of creation of the subscription</entry>
 	<entry code="reader_expiration_date">Date of expiry of the subscription</entry>
-<!--
-loan
--->
+	
+    <!-- loan -->
 	<entry code="loan_description">Describes a loan</entry>
 	<entry code="loan_empr_id">Id of the borrower linked to the loan</entry>
 	<entry code="loan_notice_id">Id of the document's record</entry>
@@ -65,9 +69,8 @@ loan
 	<entry code="loan_expl_libelle">Label of the copy</entry>
 	<entry code="loan_loan_startdate">Date of loan</entry>
 	<entry code="loan_loan_returndate">Date of return</entry>
-<!--
-resa
--->
+	
+    <!-- resa -->
 	<entry code="resa_description">Describes a reservation</entry>
 	<entry code="resa_resa_id">Id of the reservation</entry>
 	<entry code="resa_empr_id">Id of the borrower</entry>
@@ -77,31 +80,28 @@ resa
 	<entry code="resa_resa_dateend">Date of end of validity of the reservation</entry>
 	<entry code="resa_resa_retrait_location_id">Id of the location of withdrawal of the reservation</entry>
 	<entry code="resa_resa_retrait_location">Label of the location of withdrawal of the reservation</entry>
-<!--
-suggestion
--->
+	
+	<!-- suggestion -->
 	<entry code="suggestion_description">Describes a suggestion</entry>
 	<entry code="suggestion_sugg_date">Date of the suggestion</entry>
 	<entry code="suggestion_sugg_title">Title of the work</entry>
 	<entry code="suggestion_sugg_editor">Editor of the work of the suggestion</entry>
 	<entry code="suggestion_sugg_author">Auteur of the work of the suggestion</entry>
 	<entry code="suggestion_sugg_state">State of the suggestion</entry>
-<!--
-location
--->
+	
+    <!-- location-->
 	<entry code="location_description">Describes a location</entry>
 	<entry code="location_location_id">Id of the location</entry>
 	<entry code="location_location_caption">Label of the location</entry>
-<!--
-section
---><entry code="section_description">Describes a section</entry>
-   <entry code="section_section_id">Id of the section</entry>
-   <entry code="section_section_location">Location of the section</entry>
-   <entry code="section_section_caption">Label of the section</entry>
-   <entry code="section_section_image">Image linked to the section</entry>
-<!--
-abonnement
--->
+	
+    <!-- section -->
+    <entry code="section_description">Describes a section</entry>
+    <entry code="section_section_id">Id of the section</entry>
+    <entry code="section_section_location">Location of the section</entry>
+    <entry code="section_section_caption">Label of the section</entry>
+    <entry code="section_section_image">Image linked to the section</entry>
+   
+    <!-- abonnement -->
 	<entry code="abonnement_description">Describes a subscription (DSI)</entry>
 	<entry code="abonnement_abonnement_id">Id of the subscription</entry>
 	<entry code="abonnement_abonnement_type">Type of the subscription, PUBLIC or PRIVATE</entry>
@@ -110,9 +110,8 @@ abonnement
 	<entry code="abonnement_abonnement_equation_human">Search equation</entry>
 	<entry code="abonnement_abonnement_notice_count">Number of records</entry>
 	<entry code="abonnement_empr_subscriber">Precises if the borrower is a subscriber</entry>
-<!--
-search_field
--->
+	
+    <!-- search_field -->
 	<entry code="search_field_description">Describes a search field</entry>
 	<entry code="search_field_id">Id of the search field</entry>
 	<entry code="search_field_label">Description of the field</entry>
@@ -130,9 +129,8 @@ search_field
 	<entry code="search_field_fieldvar_values">If preset values</entry>
 	<entry code="search_field_fieldvar_values_value_id">Value</entry>
 	<entry code="search_field_fieldvar_values_value_caption">Label</entry>
-<!--
-explNum
--->
+	
+    <!-- explNum -->
 	<entry code="explNum_description">Describes a digital copy</entry>
 	<entry code="explNum_id">Id of the digital copy</entry>
 	<entry code="explNum_noticeId">Id of the record linked to the digital copy</entry>
@@ -144,16 +142,14 @@ explNum
 	<entry code="explNum_filesize">Size of the digital copy</entry>			
 	<entry code="explNum_url">URL of the digital copy, if applicable</entry>
 	<entry code="explNum_downloadUrl">URL to download the digital copy</entry>
-<!--
-shelf
--->
+	
+    <!-- shelf -->
 	<entry code="shelf_description">Describes a shelf</entry>
 	<entry code="shelf_id">Id of the shelf</entry>
 	<entry code="shelf_name">Name of the shelf</entry>
 	<entry code="shelf_comment">Comment of the shelf</entry>
-<!--
-author
--->
+	
+    <!-- author -->
 	<entry code="author_description">Describes an author</entry>
 	<entry code="author_author_id">Id fo the author</entry>
 	<entry code="author_author_type">Type of author (70 = physical person, 71 = community ou 72 = congress)</entry>
@@ -168,9 +164,8 @@ author
 	<entry code="author_author_pays">Country of the congress</entry>
 	<entry code="author_author_subdivision">Information of subdivision for conventions or communities</entry>
 	<entry code="author_author_numero">Numbering information for conventions or communities</entry>
-<!--
-	publisher
--->
+
+    <!-- publisher -->
 	<entry code="publisher_description">Describes a publisher</entry>
 	<entry code="publisher_publisher_id">Id of the publisher</entry>
 	<entry code="publisher_publisher_name">Name of the publisher</entry>
@@ -181,27 +176,24 @@ author
 	<entry code="publisher_publisher_country">Country of the publisher</entry>
 	<entry code="publisher_publisher_web">Publisher's website</entry>
 	<entry code="publisher_publisher_comment">Publisher's comment</entry>
-<!--
-collection
--->
+	
+    <!-- collection -->
 	<entry code="collection_description">Describes a collection</entry>
 	<entry code="collection_collection_id">Id of the collection</entry>
 	<entry code="collection_collection_name">Name of the collection</entry>
 	<entry code="collection_collection_parent">Id of the publisher of the collection</entry>
 	<entry code="collection_collection_issn">ISSN of the collection</entry>
 	<entry code="collection_collection_web">Website of the collection</entry>
-<!--
-	sous_collection
--->
+	
+    <!-- sous_collection -->
 	<entry code="sous_collection_description">Describes a sub-collection</entry>
 	<entry code="sous_collection_sous_collection_id">Id of the sub-collection</entry>
 	<entry code="sous_collection_sous_collection_name">Name of the sub-collection</entry>
 	<entry code="sous_collection_sous_collection_parent">Id of the linked collection</entry>
 	<entry code="sous_collection_sous_collection_issn">ISSN of the sub-collection</entry>
 	<entry code="sous_collection_sous_collection_web">Website of a sub-collection</entry>
-<!--
-bulletin
--->	
+	
+    <!-- bulletin -->	
 	<entry code="bulletin_description">Describes an issue</entry>
 	<entry code="bulletin_bulletin_id">Id of the issue</entry>
 	<entry code="bulletin_serial_id">Id of the periodical record linked to the issue</entry>
@@ -211,10 +203,9 @@ bulletin
 	<entry code="bulletin_bulletin_date_caption">Label of the date of the issue</entry>
 	<entry code="bulletin_bulletin_date">Release date of the issue</entry>
 	<entry code="bulletin_bulletin_title">Title of the issue</entry>
-	<entry code="bulletin_bulletin_barcode">Barcode of the issue</entry>	
-<!--
-collstate
--->
+	<entry code="bulletin_bulletin_barcode">Barcode of the issue</entry>
+		
+    <!-- collstate -->
 	<entry code="collstate_description">Describes a holdings statement</entry>
 	<entry code="collstate_collstate_id">Id of the holdings statement</entry>
 	<entry code="collstate_collstate_location_libelle">Label of the holdings statement</entry>
@@ -225,9 +216,8 @@ collstate
 	<entry code="collstate_collstate_origine">Origin of the holdings statement</entry>
 	<entry code="collstate_collstate_state_collections">Status of the holdings statement</entry>
 	<entry code="collstate_collstate_lacune">Gaps in the holdings statement</entry>
-<!-- 
-planificateur
--->
+	
+    <!-- planificateur -->
 	<entry code="planificateur_id_planificateur">Identifier of the scheduling</entry>
 	<entry code="planificateur_num_type_tache">Identifier of the type of tasks</entry>
 	<entry code="planificateur_libelle_tache">Label of the scheduling</entry>
@@ -236,9 +226,8 @@ planificateur
 	<entry code="planificateur_statut">Scheduling state (enabled=1, disabled=0)</entry>
 	<entry code="planificateur_calc_next_date_deb">Scheduled date for the next execution</entry>
 	<entry code="planificateur_calc_next_heure_deb">Scheduled hour for the next execution</entry>
-<!-- 
-task
--->	
+	
+    <!-- task -->	
 	<entry code="task_id_tache">Identifier of the task</entry>
 	<entry code="task_libelle_tache">Label of the task</entry>
 	<entry code="task_desc_tache">Description of the task</entry>
@@ -247,9 +236,7 @@ task
 	<entry code="task_indicat_progress">Progression of the execution</entry>
 	<entry code="task_status">State of the task (WAITING,RUNNING,..)</entry>
 	
-<!-- 
-bannette
--->
+    <!-- bannette -->
 	<entry code="bannette_description">Automatic SDI basket</entry>
 	<entry code="bannette_id_bannette">Id of the SDI basket</entry>
 	<entry code="bannette_nom_bannette">Name of the SDI basket</entry>
@@ -259,32 +246,25 @@ bannette
 	<entry code="bannette_bannette_auto">Automatic SDI basket (yes/no)</entry>
 	<entry code="bannette_nb_notices_diff">Number of records ready for dissemination</entry>
 
-<!-- 
-proc
--->
+    <!-- proc -->
 	<entry code="proc_description">Procedure</entry>
 	<entry code="proc_idproc">Identifier of the procedure</entry>
 	<entry code="proc_name">Name of the procedure</entry>
 	<entry code="proc_requete">Linked query</entry>
 	<entry code="proc_comment">Procedure's comment</entry>
 
-<!-- 
-sync
--->
+    <!-- sync -->
 	<entry code="sync_description">Synchronization</entry>
 	<entry code="sync_source_id">Id of the source</entry>
 	<entry code="sync_id_connector">Id of the entering connector</entry>
 	<entry code="sync_comment">Comment of the source</entry>
 	<entry code="sync_name_connector_in">Name of the synchronization (source incoming connector)</entry>
 
-<!-- 
-resa_extend
-	
+    <!-- resa_extend
 	<entry code="resa_extend_description">Réservation</entry>
+	-->
 	
---><!-- 
-setBackup
--->		
+	<!-- setBackup -->		
 	<entry code="setBackup_description">Backup set</entry>
 	<entry code="setBackup_sauv_sauvegarde_id">Id of the backup</entry>
 	<entry code="setBackup_sauv_sauvegarde_nom">Name of the backup</entry>
@@ -297,16 +277,14 @@ setBackup
 	<entry code="setBackup_sauv_sauvegarde_crypt">Crypting key (yes/no)</entry>
 	<!--<entry code="setBackup_sauv_sauvegarde_key1">Phrase de sécurité n°1</entry>
 	<entry code="setBackup_sauv_sauvegarde_key2">Phrase de sécurité n°2</entry>-->
-<!-- 
-groupTables
--->
+	
+    <!-- groupTables    -->
 	<entry code="groupTables_description">Group of tables</entry>
 	<entry code="groupTables_sauv_table_id">Identifier of the group of tables</entry>
 	<entry code="groupTables_sauv_table_nom">Name of the group of tables</entry>
 	<entry code="groupTables_sauv_table_tables">List of tables (separator ",")</entry>
-<!-- 
-backupPerformed
--->	
+	
+    <!-- backupPerformed -->	
 	<entry code="backupPerformed_description">Backup performed</entry>
 	<entry code="backupPerformed_sauv_log_id">Backup performed</entry>
 	<entry code="backupPerformed_sauv_log_start_date">Date of start</entry>
@@ -314,17 +292,15 @@ backupPerformed
 	<entry code="backupPerformed_sauv_log_succeed">Backup succeeded (yes/no)</entry>
 	<entry code="backupPerformed_sauv_log_messages">Messages</entry>
 	<entry code="backupPerformed_name">User</entry>
-<!-- 
-view
--->	
+	
+    <!-- view -->	
 	<entry code="view_description">View</entry>
 	<entry code="view_id_vue">Id of the view</entry>
 	<entry code="view_date_consolidation">Date of the last consolidation</entry>
 	<entry code="view_nom_vue">Name of the view</entry>
 	<entry code="view_comment">Comment of the view</entry>
-<!-- 
-readerSubscription
- -->
+	
+    <!-- readerSubscription  -->
 	<entry code="readerSubscription_description">Reader subscription</entry>
 	<entry code="readerSubscription_id_empr">Id of the borrower</entry>
 	<entry code="readerSubscription_empr_cb">Barcode of the borrower</entry>
@@ -336,48 +312,51 @@ readerSubscription
 	<entry code="readerSubscription_empr_year">Year of birth of the borrower</entry>
 	<entry code="readerSubscription_aff_empr_date_expiration">Expiry date of the subscription</entry>
 	<entry code="readerSubscription_statut_libelle">Borrower's status</entry>
-<!-- 
-sendMailing
- -->
+	
+    <!-- sendMailing  -->
 	<entry code="sendMailing_description">E-mail template dissemination</entry>
 	<entry code="sendMailing_name">Name of the E-mail template</entry>
 	<entry code="sendMailing_object_mail">Object of the e-mail</entry>
 	<entry code="sendMailing_nb_mail">Number of predicted e-mails</entry>
 	<entry code="sendMailing_nb_mail_sended">Sent</entry>
 	<entry code="sendMailing_nb_mail_failed">Sending(s) failed</entry>
-<!-- 
-noticeAdministrative
- -->
+	
+    <!-- noticeAdministrative -->
 	<entry code="noticeAdministrative_description">Informations about the management of a record</entry>
 	<entry code="noticeAdministrative_statut_id">Id of the status</entry>
 	<entry code="noticeAdministrative_statut_lib">Opac label of the status</entry>
 	<entry code="noticeAdministrative_comment_admin">Management comment</entry>
 	<entry code="noticeAdministrative_thumbnail_url">URL of the thumbnail</entry>
-<!-- 
-links	
- -->
+	
+    <!-- links -->
 	<entry code="links_description">Informations about the links between authorities</entry>
 	<entry code="links_autlink_to">Type of the linked authority:
-1 -&gt; Author,
-2 -&gt; Category,
-3 -&gt; Editor,
-4 -&gt; Collection,
-5 -&gt; Sub-collection,
-6 -&gt; Title of a series,
-7 -&gt; Uniform title,
-8 -&gt; Indexing
+        1 -&gt; Author,
+        2 -&gt; Category,
+        3 -&gt; Editor,
+        4 -&gt; Collection,
+        5 -&gt; Sub-collection,
+        6 -&gt; Title of a series,
+        7 -&gt; Uniform title,
+        8 -&gt; Indexing
 	</entry>
 	<entry code="links_autlink_to_id">Id of the linked authority</entry>
 	<entry code="links_autlink_to_libelle">Label of the linked authority</entry>
 	<entry code="links_autlink_type">Code of the type of link</entry>
 	<entry code="links_autlink_reciproc">Is the link reciprocal (0 or 1) ?</entry>
 	<entry code="links_autlink_comment">Comment associated with the link</entry>
-<!-- 
-cms_article	
- -->
+	
+    <!-- cms_article -->
 	<entry code="cms_article_description">Describes an editorial article</entry>
 	<entry code="cms_id_article">Id of the article</entry>
 	<entry code="cms_article_title">Title of the article</entry>
 	<entry code="cms_article_resume">Recap of the article</entry>
 	<entry code="cms_article_contenu">Content of the article</entry>
-	</XMLlist>
+	
+	<!-- groupe clean -->
+    <entry code="cleanGroup_description">Décrit une opération de nettoyage</entry>
+    <entry code="cleanGroup_title">Titre de l'action réalisée</entry>
+    <entry code="cleanGroup_message">Message de l'action réalisée</entry>
+    <entry code="cleanGroup_affected">Nombre d'éléments affectés par l'action</entry>
+    <entry code="cleanGroup_bad_user_rights">L'utilisateur a-t-il eu le droit de lancer cette opération (0 ou 1) ?</entry>
+</XMLlist>

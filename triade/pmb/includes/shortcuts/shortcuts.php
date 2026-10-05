@@ -1,14 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: shortcuts.php,v 1.13 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: shortcuts.php,v 1.14 2021/04/28 07:48:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "shortcuts.php")) die("no access");
 
 if ( ! defined( 'SHORTCUTS' ) ) {
   define( 'SHORTCUTS', 1 );
 
+global $raclavier, $msg;
+  
 $escape = 27;
 
 print "
@@ -64,7 +66,7 @@ function backhome(e){
 
 	if(key == $escape) {
 		propagate=true;
-		//RÃ©cupÃ©ration de l'objet d'origine
+		//Récupération de l'objet d'origine
 		if (e.target) origine=e.target; else origine=e.srcElement;
 	    if (origine.getAttribute('completion')) {
 			id=origine.getAttribute('id');
@@ -92,6 +94,6 @@ function ShowShortcuts(){
 </script>
 
 ";
-} # fin dÃ©claration
+} # fin déclaration
 
 ?>

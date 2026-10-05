@@ -2,19 +2,20 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_searcher_explnums.class.php,v 1.3 2018-11-29 09:04:17 dgoron Exp $
+// $Id: opac_searcher_explnums.class.php,v 1.4 2021/12/28 10:06:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/searcher/opac_searcher_generic.class.php');
 //require_once($include_path.'/misc.inc.php');
 
 // log::$log_now=true;
 // log::$log_format='html';
 
-// pmb_mysql_query("set global max_tmp_tables=100",$dbh);
-// pmb_mysql_query("set global tmp_table_size=2000000000",$dbh);
-// pmb_mysql_query("set global max_heap_table_size=2000000000",$dbh);
+// pmb_mysql_query("set global max_tmp_tables=100");
+// pmb_mysql_query("set global tmp_table_size=2000000000");
+// pmb_mysql_query("set global max_heap_table_size=2000000000");
 
 
 class opac_searcher_explnums extends opac_searcher_generic {
@@ -47,7 +48,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 				
 			//highlight_string(print_r($this->aq->tree,true));
 	
-			//SÃ©paration des analyses de mots et d'expressions rÃ©guliÃ¨res
+			//Séparation des analyses de mots et d'expressions régulières
 			$w_to_del = array();
 			$l_to_del = array();
 			if(count($this->aq->tree)) {
@@ -79,7 +80,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 	}
 */	
 
-//1 Modification analyse_query et _get_search_query pour recherche des mots dans les expressions litÃ©rales avant restriction avec index_wew
+//1 Modification analyse_query et _get_search_query pour recherche des mots dans les expressions litérales avant restriction avec index_wew
 /*
 	protected function _analyse(){
 		
@@ -174,9 +175,6 @@ class opac_searcher_explnums extends opac_searcher_generic {
 // // 	}
 	
 // 	protected function get_query_frag($t_frag=array()) {
-		
-// 		global $dbh;
-		
 // 		if(count($t_frag)) {
 // 			$first=0;
 // 			$last=count($t_frag)*1-1;
@@ -225,7 +223,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 // 				$t[$k]['qf'] = $qf;
 			
 // 				$t[$k]['qt'] = $qt;
-// 				$rt = pmb_mysql_query($qt,$dbh);
+// 				$rt = pmb_mysql_query($qt);
 // 				log::print_message($qt);
 // 				$t[$k]['time'] = microtime(true);
 				
@@ -234,16 +232,16 @@ class opac_searcher_explnums extends opac_searcher_generic {
 // 				} else {
 // 					log::print_message("Tps requete = ".(($t[$k]['time'])*1 - $t0)." s");
 // 				}
-// 				if(pmb_mysql_error($dbh)) {
-// 					log::print_message(pmb_mysql_error($dbh));
+// 				if(pmb_mysql_error()) {
+// 					log::print_message(pmb_mysql_error());
 // 				}
-// 				//$rd = pmb_mysql_query($qd,$dbh);
+// 				//$rd = pmb_mysql_query($qd);
 			
 // 			}
 			
 // 			$ql = "select distinct(num_obj) from frag_searcher_".$t[$k]['md5'];
 			
-// 			$rl = pmb_mysql_query($ql,$dbh);
+// 			$rl = pmb_mysql_query($ql);
 // 			$x = pmb_mysql_num_rows($rl);
 // 			$object_ids='';
 // 			if($x) {
@@ -255,8 +253,8 @@ class opac_searcher_explnums extends opac_searcher_generic {
 // 			}
 			
 // 			$t1 = microtime(true);
-// 			log::print_message("Nb de rÃ©sultats= ".$x);
-// 			log::print_message("Liste des rÃ©sultats= ".$object_ids);
+// 			log::print_message("Nb de résultats= ".$x);
+// 			log::print_message("Liste des résultats= ".$object_ids);
 // 			log::print_message("Tps requetes = ".($t1-$t0)*1)." s";
 // 			@pmb_mysql_free_result($res);
 // 			log::print_message('*******************************');
@@ -265,7 +263,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 // 	}
 	
 	
-//1 Modification analyse_query et _get_search_query pour recherche des mots dans les expressions litÃ©rales avant restriction avec index_wew
+//1 Modification analyse_query et _get_search_query pour recherche des mots dans les expressions litérales avant restriction avec index_wew
 /*	
 	protected function _get_search_query() {
 		

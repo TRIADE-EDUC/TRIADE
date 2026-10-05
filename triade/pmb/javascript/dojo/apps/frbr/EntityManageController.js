@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntityManageController.js,v 1.5 2017-11-30 10:53:34 dgoron Exp $
+// $Id: EntityManageController.js,v 1.5 2017/11/30 10:53:34 dgoron Exp $
 
 define(['dojo/_base/declare',
         'dijit/layout/ContentPane',

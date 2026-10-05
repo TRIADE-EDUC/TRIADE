@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ChatGroup.js,v 1.2 2018-11-07 07:51:55 ngantier Exp $
+// $Id: ChatGroup.js,v 1.2 2018/11/07 07:51:55 ngantier Exp $
 
 
 define([

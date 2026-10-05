@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -37,18 +37,16 @@ if (isset($_POST["anneeScolaire"])) {
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("librairie_php/db_triade.php");
-$cnx=cnx();
-error($cnx);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGGRP14?></font></b></td></tr>
      <tr id='cadreCentral0'  >
@@ -56,11 +54,15 @@ error($cnx);
      <!-- // debut form  -->
 <br>
 <form method='post'>
+<table><tr><td>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class="T2"><?php print LANGBULL3?> : </font><select name="anneeScolaire" size="1" onChange="this.form.submit()">
 <?php
 filtreAnneeScolaireSelectAnterieur("$anneeScolaire",10); // creation des options
 ?>
 </select>
+</td>
+<td>&nbsp;&nbsp;&nbsp;<input type='button' value="Retour menu" onClick="open('gestion_groupe.php','_self','')" class='BUTTON' />
+</td></tr></table>
 </form>
 <br>
 <TABLE border=1 width=100% Bordercolor="#000000" style="border-collapse: collapse;">
@@ -70,16 +72,16 @@ filtreAnneeScolaireSelectAnterieur("$anneeScolaire",10); // creation des options
 <td bgcolor="yellow"  align=center width=5%><?php print LANGBULL3?></TD></TR>
 <?php
 if ($_GET["choix"] == "2") {	
-	$sql="SELECT libelle FROM ${prefixe}classes ORDER BY libelle ";
+	$sql="SELECT libelle FROM {$prefixe}classes ORDER BY libelle ";
 	$res=execSql($sql);
 	$data_classe=chargeMat($res);
-	for($i=0;$i<count($data_classe);$i++) {
+	for($i=0;$i<countTriade($data_classe);$i++) {
 		$nom_classe=$data_classe[$i][0];
 		$matGroup=matGroup($nom_classe);
 		if ($matGroup == "") { continue; }
 		print "<TR class=\"tabnormal2\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal2'\" >";
 		print "<TD width=30%>";
-		for($j=0;$j<count($matGroup);$j++){
+		for($j=0;$j<countTriade($matGroup);$j++){
 			$val=$matGroup[$j][0];
 			$lib=$matGroup[$j][1];
 			$click.="<input type=button onclick=\"open('liste_groupe_eleve.php?gid=$val','liste_groupe_eleve','width=600,height=500,scrollbars=yes')\" value=\"$lib\" STYLE=\"font-family:Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;\"> ";
@@ -93,12 +95,12 @@ if ($_GET["choix"] == "2") {
 	}
 
 }else {
-	$sql="SELECT group_id,libelle,liste_elev FROM ${prefixe}groupes WHERE annee_scolaire='$anneeScolaire' ORDER BY libelle";
+	$sql="SELECT group_id,libelle,liste_elev FROM {$prefixe}groupes WHERE annee_scolaire='$anneeScolaire' ORDER BY libelle";
 
 $res=execSql($sql);
 $liste_gid=chargeMat($res);
 
-for($cpt=0;$cpt<count($liste_gid);$cpt++) {
+for($cpt=0;$cpt<countTriade($liste_gid);$cpt++) {
 	if ($liste_gid[$cpt][0] != 0) {
 		$classesDsGroupe[$liste_gid[$cpt][0]."|".$liste_gid[$cpt][1]] = $liste_gid[$cpt][2] ;
 	}
@@ -108,10 +110,10 @@ foreach($classesDsGroupe as $cle => $value) {
 	$liste_eleves = substr($value,1);
 	$liste_eleves = substr($liste_eleves,0,strlen($liste_eleves)-1);
 	if (trim($liste_eleves) != "") {
-		$sql = "SELECT libelle FROM ${prefixe}classes e, ${prefixe}eleves f WHERE f.classe = e.code_class AND f.elev_id IN ($liste_eleves)";
+		$sql = "SELECT libelle FROM {$prefixe}classes e, {$prefixe}eleves f WHERE f.classe = e.code_class AND f.elev_id IN ($liste_eleves)";
 		$res = execSql($sql);
 		$data =  chargeMat($res);
-		for($cpt2=0;$cpt2<count($data);$cpt2++){
+		for($cpt2=0;$cpt2<countTriade($data);$cpt2++){
 			$classesDsGroupe_tmp[$cle][] = $data[$cpt2][0];
 		}
 	}else{

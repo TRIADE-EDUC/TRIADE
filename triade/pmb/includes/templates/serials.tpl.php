@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serials.tpl.php,v 1.242 2019-05-27 13:34:31 btafforeau Exp $
+// $Id: serials.tpl.php,v 1.249.2.1.2.1 2025/03/12 15:39:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $user_query, $issn_query, $serial_header, $serial_footer, $serial_access_form, $current_module, $msg, $filter_abo_actif, $nb_onglets, $ptab, $charset, $ptab_bul;
-global $serial_top_form, $pmb_catalog_verif_js, $base_path, $PMBuserid, $pmb_form_editables, $message_search, $serial_action_bar, $z3950_accessible, $acquisition_active;
-global $scan_request_record_button, $pmb_scan_request_activate, $bul_action_bar, $serial_bul_form, $pdeptab, $analysis_top_form, $pmb_use_uniform_title, $notice_bulletin_form;
+global $serial_top_content_form, $base_path, $message_search, $serial_action_bar, $z3950_accessible, $acquisition_active;
+global $scan_request_record_button, $pmb_scan_request_activate, $bul_action_bar, $serial_bul_content_form, $pdeptab, $analysis_top_content_form, $pmb_use_uniform_title, $notice_bulletin_form;
 global $liste_script, $liste_debut, $liste_fin, $pmb_numero_exemplaire_auto, $num_exemplaire_test, $pmb_rfid_activate, $num_exemplaire_rfid_test, $bul_cb_form, $pmb_rfid_serveur_url;
 global $pmb_rfid_driver, $script_erase, $rfid_script_catalog, $rfid_js_header, $rfid_program_button, $serial_edit_access, $serial_list_tmpl, $perio_replace, $deflt_notice_replace_links;
 global $bulletin_replace, $rfid_script_bulletine, $expl_bulletinage_tpl, $bul_expl_form1, $analysis_type_form, $perio_replace_categories, $perio_replace_category;
-global $bulletin_replace_categories, $bulletin_replace_category, $analysis_move;
+global $bulletin_replace_categories, $bulletin_replace_category, $analysis_move, $bulletin_move;
+global $pmb_form_editables;
 
 if(!isset($user_query)) $user_query = '';
 if(!isset($issn_query)) $issn_query = '';
@@ -90,30 +91,9 @@ $ptab[0] = "
 </div>
 
 <div id='el0Child' class='child' etirable='yes' title='".htmlentities($msg[236],ENT_QUOTES, $charset)."' >
-	<div id='el0Child_0' title='".htmlentities($msg[237],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit1'>$msg[237]</label>
-		</div>
-		<div class='row'>
-			<input id='f_tit1' type='text' class='saisie-80em' name='f_tit1' value=\"!!tit1!!\" data-pmb-deb-rech='1'/>
-		</div>
-	</div>
-	<div id='el0Child_1' title='".htmlentities($msg[239],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit3'>$msg[239]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' type='text' id='f_tit3' name='f_tit3' value=\"!!tit3!!\" />
-		</div>
-	</div>
-	<div id='el0Child_2' title='".htmlentities($msg[240],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit4'>$msg[240]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' id='f_tit4' type='text' name='f_tit4' value=\"!!tit4!!\"  />
-		</div>
-	</div>
+	!!element_tit1!!
+	!!element_tit3!!
+	!!element_tit4!!
 </div>
 ";
 
@@ -121,28 +101,14 @@ $ptab_bul[0] = "
 <!-- onglet 0 -->
 <div id='el0Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' class='align_top' name='imEx' id='el0Img' title='$msg[236]' border='0' onClick=\"expandBase('el0', true); return false;\" />
+        ".get_expandBase_button('el0', '236')."
 		$msg[712]
 	</h3>
 </div>
 
 <div id='el0Child' class='child' etirable='yes' title='".htmlentities($msg[236],ENT_QUOTES, $charset)."' >
-	<div id='el0Child_0' title='".htmlentities($msg[239],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit3'>$msg[239]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' type='text' id='f_tit3' name='f_tit3' value=\"!!tit3!!\" />
-		</div>
-	</div>
-	<div id='el0Child_1' title='".htmlentities($msg[240],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit4'>$msg[240]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' id='f_tit4' type='text' name='f_tit4' value=\"!!tit4!!\"  />
-		</div>
-	</div>
+	!!element_tit3!!
+	!!element_tit4!!
 </div>
 ";
 
@@ -153,7 +119,7 @@ $ptab[2] = "
 <!-- onglet 2 -->
 <div id='el2Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el2Img' border='0' onClick=\"expandBase('el2', true); return false;\" />
+        ".get_expandBase_button('el2')."
 		".$msg['serial_onglet_editeurs']."
 	</h3>
 </div>
@@ -165,13 +131,13 @@ $ptab[2] = "
 		</div>
 		<div id='el2Child_0b' class='row'>
 			<input type='text' completion='publishers' autfield='f_ed1_id' id='f_ed1' name='f_ed1' data-form-name='f_ed1' value=\"!!ed1!!\" class='saisie-30emr' />
-			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=editeur&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed1.value), 'selector')\" />
+			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=editeur&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed1.value), '!!force_dialog_publisher!!', '!!force_popup_publisher!!')\" />
 			<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_ed1.value=''; this.form.f_ed1_id.value='0'; \" />
 			<input type='hidden' name='f_ed1_id' id='f_ed1_id' data-form-name='f_ed1_id' value=\"!!ed1_id!!\" />
 		</div>
 	</div>
 	<div id='el2Child_4' title='".htmlentities($msg[252],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    AnnÃ©e    -->
+		<!--    Année    -->
 			<div id='el2Child_4a' class='row'>
 				<label for='f_year' class='etiquette'>$msg[252]</label>
 			</div>
@@ -180,13 +146,13 @@ $ptab[2] = "
 			</div>
 		</div>
 	<div id='el2Child_7' title='".htmlentities($msg[254],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Autre Ã©diteur    -->
+		<!--    Autre éditeur    -->
 		<div id='el2Child_7a' class='row'>
 			<label for='f_ed2' class='etiquette'>$msg[254]</label>
 		</div>
 		<div id='el2Child_7b' class='row'>
 	    	<input type='text' completion='publishers' autfield='f_ed2_id' id='f_ed2' name='f_ed2' data-form-name='f_ed2' value=\"!!ed2!!\" class='saisie-30emr' />
-	    	<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=editeur&caller=notice&p1=f_ed2_id&p2=f_ed2&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed2.value), 'selector')\" />
+	    	<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=editeur&caller=notice&p1=f_ed2_id&p2=f_ed2&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed2.value), '!!force_dialog_publisher!!', '!!force_popup_publisher!!')\" />
 	    	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_ed2.value=''; this.form.f_ed2_id.value='0'; \" />
 	    	<input type='hidden' name='dummy' />
 	    	<input type='hidden' name='f_ed2_id' id='f_ed2_id' data-form-name='f_ed2_id' value=\"!!ed2_id!!\" />
@@ -203,7 +169,7 @@ $ptab[30] = "
 <!-- onglet 30 -->
 <div id='el30Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el30Img' title='$msg[255]' border='0' onClick=\"expandBase('el30', true); return false;\" />
+        ".get_expandBase_button('el30', '255')."
 		$msg[serial_ISSN]
 	</h3>
 </div>
@@ -231,13 +197,13 @@ $ptab[41] = "
 <!-- onglet 41 -->
 <div id='el41Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el41Img' title='$msg[257]' border='0' onClick=\"expandBase('el41', true); return false;\" />
+        ".get_expandBase_button('el41', '257')."
 		$msg[258]
 	</h3>
 </div>
 <div id='el41Child' class='child' etirable='yes' title='".htmlentities($msg[258],ENT_QUOTES, $charset)."'>
 	<div id='el41Child_0' title='".htmlentities($msg[259],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Importance matÃ©rielle (nombre de pages, d'Ã©lÃ©ments...)    -->
+		<!--    Importance matérielle (nombre de pages, d'éléments...)    -->
 		<div id='el41Child_0a' class='row'>
 			<label for='f_npages' class='etiquette'>$msg[259]</label>
 		</div>
@@ -246,7 +212,7 @@ $ptab[41] = "
 		</div>
 	</div>
 	<div id='el41Child_1' title='".htmlentities($msg[260],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Autres caractÃ¨ristiques matÃ©rielle (ill., ...)    -->
+		<!--    Autres caractèristiques matérielle (ill., ...)    -->
 		<div id='el41Child_1a' class='row'>
 			<label for='f_ill' class='etiquette'>$msg[260]</label>
 		</div>
@@ -273,7 +239,7 @@ $ptab[41] = "
 		</div>
 	</div>
 	<div id='el41Child_4' title='".htmlentities($msg[262],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    MatÃ©riel d'accompagnement    -->
+		<!--    Matériel d'accompagnement    -->
 		<div id='el41Child_4a' class='row'>
 			<label for='f_accomp' class='etiquette'>$msg[262]</label>
 		</div>
@@ -285,126 +251,34 @@ $ptab[41] = "
 ";
 
 //	----------------------------------------------------
-// 	  $form_notice : Nouveau pÃ©riodique
+// 	  $form_notice : Nouveau périodique
 //	----------------------------------------------------
-$serial_top_form = jscript_unload_question();
-$serial_top_form.= "
-<!-- script de gestion des onglets -->
-<script type='text/javascript' src='./javascript/tabform.js'></script>
-".($pmb_catalog_verif_js!= "" ? "<script type='text/javascript' src='$base_path/javascript/$pmb_catalog_verif_js'></script>":"")."
-<script type='text/javascript'>
-<!--
-	function test_notice(form)
-	{
-	";
-if($pmb_catalog_verif_js!= ""){
-	$serial_top_form.= "
-		if('function' == typeof(check_perso_serial_form)){
-			var check = check_perso_serial_form();
-			if(check == false) return false;
-		} ";
-}
-$serial_top_form.= "
-		titre1 = form.f_tit1.value;
-		titre1 = titre1.replace(/^\s+|\s+$/g, ''); //trim la valeur
-		if(titre1.length == 0)
-			{
-				alert(\"$msg[277]\");
-				return false;
-			}
-		return check_form();
-	}
--->
-</script>
-<script src='javascript/ajax.js'></script>
-<script src='javascript/move.js'></script>
-<script type='text/javascript'>
-	var msg_move_to_absolute_pos='".addslashes($msg['move_to_absolute_pos'])."';
-	var msg_move_to_relative_pos='".addslashes($msg['move_to_relative_pos'])."';
-	var msg_move_saved_ok='".addslashes($msg['move_saved_ok'])."';
-	var msg_move_saved_error='".addslashes($msg['move_saved_error'])."';
-	var msg_move_up_tab='".addslashes($msg['move_up_tab'])."';
-	var msg_move_down_tab='".addslashes($msg['move_down_tab'])."';
-	var msg_move_position_tab='".addslashes($msg['move_position_tab'])."';
-	var msg_move_position_absolute_tab='".addslashes($msg['move_position_absolute_tab'])."';
-	var msg_move_position_relative_tab='".addslashes($msg['move_position_relative_tab'])."';
-	var msg_move_invisible_tab='".addslashes($msg['move_invisible_tab'])."';
-	var msg_move_visible_tab='".addslashes($msg['move_visible_tab'])."';
-	var msg_move_inside_tab='".addslashes($msg['move_inside_tab'])."';
-	var msg_move_save='".addslashes($msg['move_save'])."';
-	var msg_move_first_plan='".addslashes($msg['move_first_plan'])."';
-	var msg_move_last_plan='".addslashes($msg['move_last_plan'])."';
-	var msg_move_first='".addslashes($msg['move_first'])."';
-	var msg_move_last='".addslashes($msg['move_last'])."';
-	var msg_move_infront='".addslashes($msg['move_infront'])."';
-	var msg_move_behind='".addslashes($msg['move_behind'])."';
-	var msg_move_up='".addslashes($msg['move_up'])."';
-	var msg_move_down='".addslashes($msg['move_down'])."';
-	var msg_move_invisible='".addslashes($msg['move_invisible'])."';
-	var msg_move_visible='".addslashes($msg['move_visible'])."';
-	var msg_move_saved_onglet_state='".addslashes($msg['move_saved_onglet_state'])."';
-	var msg_move_open_tab='".addslashes($msg['move_open_tab'])."';
-	var msg_move_close_tab='".addslashes($msg['move_close_tab'])."';
-</script>
-<script type='text/javascript'>document.title = '!!document_title!!';</script>
-<form class='form-$current_module' id='notice' name='notice' method='post' action='!!controller_url_base!!&sub=update' enctype='multipart/form-data' >
-<div class='row'>
-<div class='left'><h3>!!form_title!!</h3></div><div class='right'>";
-if ($PMBuserid==1 && $pmb_form_editables==1) $serial_top_form.="<input type='button' class='bouton_small' value='".$msg["catal_edit_format"]."' onClick=\"expandAll(); move_parse_dom(relative)\" id=\"bt_inedit\"/><input type='button' class='bouton_small' value='Relatif' onClick=\"expandAll(); move_parse_dom((!relative))\" style=\"display:none\" id=\"bt_swap_relative\"/>";
-if ($pmb_form_editables==1) $serial_top_form.="<input type='button' class='bouton_small' value=\"".$msg["catal_origin_format"]."\" onClick=\"get_default_pos(); expandAll();  ajax_parse_dom(); if (inedit) move_parse_dom(relative); else initIt();\"/>";
-$serial_top_form.="</div>
-</div>
-<div class='form-contenu'>
-<div class='row'>
-	!!doc_type!! !!location!!
-	</div>
-<div class='row'>
-	<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-	<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>";
-$serial_top_form .= "
-	<input type='hidden' name='b_level' value='!!b_level!!' />
-	<input type='hidden' name='h_level' value='!!h_level!!' />
-	<input type='hidden' name='serial_id' value='!!id!!' />
-	<input type='hidden' name='id_form' value='!!id_form!!' />
-	</div>
-	!!tab0!!
-	<hr class='spacer' />
-	!!tab1!!
-	<hr class='spacer' />
-	!!tab2!!
-	<hr class='spacer' />
-	!!tab30!!
-	<hr class='spacer' />
-	!!tab3!!
-	<hr class='spacer' />
-	!!tab4!!
-	<hr class='spacer' />
-	!!tab5!!
-	<hr class='spacer' />
-	!!tab6!!
-	<hr class='spacer' />
-	!!tab7!!
-	<hr class='spacer' />
-	!!tab13!!
-	<hr class='spacer' />
-	!!tab14!!
-	<hr class='spacer' />
-	!!tab8!!
-	<hr class='spacer' />
-	!!authperso!!
-</div>
-<div class='row'>
-	<input type='button' class='bouton' value='$msg[76]' !!annul!!>&nbsp;
-	<input type='button' class='bouton' value='$msg[77]' id='btsubmit' onClick=\"if (test_notice(this.form)) {unload_off();this.form.submit();}\" />
-	!!link_duplicate!!
-	!!link_audit!!
-	</div>
-</form>
-<script type='text/javascript'>
-	get_pos();
-	ajax_parse_dom();
-	document.forms['notice'].elements['f_tit1'].focus();
-</script>
+$serial_top_content_form = "
+!!tab0!!
+<hr class='spacer' />
+!!tab1!!
+<hr class='spacer' />
+!!tab2!!
+<hr class='spacer' />
+!!tab30!!
+<hr class='spacer' />
+!!tab3!!
+<hr class='spacer' />
+!!tab4!!
+<hr class='spacer' />
+!!tab5!!
+<hr class='spacer' />
+!!tab6!!
+<hr class='spacer' />
+!!tab7!!
+<hr class='spacer' />
+!!tab13!!
+<hr class='spacer' />
+!!tab14!!
+<hr class='spacer' />
+!!tab8!!
+<hr class='spacer' />
+!!authperso!!
 ";
 
 $message_search = "
@@ -467,6 +341,9 @@ $serial_action_bar.="
 if ($acquisition_active) {
 	$serial_action_bar.="<input type='button' class='bouton' value='".$msg["acquisition_sug_do"]."' onclick=\"document.location='./catalog.php?categ=sug&action=modif&id_bibli=0&id_notice=!!serial_id!!'\" />&nbsp;";
 }
+if((SESSrights & CIRCULATION_AUTH) && $pmb_scan_request_activate){
+	$serial_action_bar .= "<input type='button' class='bouton' value='".$msg["scan_request_record_button"]."' onclick='document.location=\"./circ.php?categ=scan_request&sub=request&action=edit&from_record=!!serial_id!!\"' />";
+}
 global $pmb_type_audit;
 if ($pmb_type_audit){
 	$serial_action_bar.="<input class='bouton' type='button' onClick=\"openPopUp('./audit.php?type_obj=1&object_id=!!serial_id!!', 'audit_popup', 700, 500, -2, -2, 'sdg')\" title='$msg[audit_button]' value='$msg[audit_button]'/>";
@@ -526,141 +403,59 @@ $bul_action_bar = "
 <div class='row'></div>
 ";
 
-$serial_bul_form = jscript_unload_question();
-$serial_bul_form.= "
-".($pmb_catalog_verif_js!= "" ? "<script type='text/javascript' src='./javascript/$pmb_catalog_verif_js'></script>":"")."
-<script type='text/javascript'>
-<!--
-	function test_form(form)
-	{";
-if($pmb_catalog_verif_js!= ""){
-	$serial_bul_form.= "
-		var check = check_perso_bull_form()
-		if(check == false) return false;";
-}
-$serial_bul_form.= "
-		test1 = form.bul_no.value+form.bul_date.value+form.bul_titre.value;// concatÃ©nation des valeurs Ã  tester
-		test = test1.replace(/^\s+|\s+$/g, ''); //trim de la valeur
-		if(test.length == 0)
-			{
-				alert(\"$msg[serial_BulletinDate]\");
-				form.bul_no.focus();
-				return false;
-			}";
-
-$serial_bul_form.= "
-		return true;
-	}
--->
-</script>
-<script type='text/javascript' src='javascript/tabform.js'></script>
-<script type='text/javascript' src='javascript/ajax.js'></script>
-";
-if ($pmb_form_editables) {
-	$serial_bul_form.="<script type='text/javascript' src='javascript/move.js'></script>
-		<script type='text/javascript'>
-			var msg_move_to_absolute_pos='".addslashes($msg['move_to_absolute_pos'])."';
-			var msg_move_to_relative_pos='".addslashes($msg['move_to_relative_pos'])."';
-			var msg_move_saved_ok='".addslashes($msg['move_saved_ok'])."';
-			var msg_move_saved_error='".addslashes($msg['move_saved_error'])."';
-			var msg_move_up_tab='".addslashes($msg['move_up_tab'])."';
-			var msg_move_down_tab='".addslashes($msg['move_down_tab'])."';
-			var msg_move_position_tab='".addslashes($msg['move_position_tab'])."';
-			var msg_move_position_absolute_tab='".addslashes($msg['move_position_absolute_tab'])."';
-			var msg_move_position_relative_tab='".addslashes($msg['move_position_relative_tab'])."';
-			var msg_move_invisible_tab='".addslashes($msg['move_invisible_tab'])."';
-			var msg_move_visible_tab='".addslashes($msg['move_visible_tab'])."';
-			var msg_move_inside_tab='".addslashes($msg['move_inside_tab'])."';
-			var msg_move_save='".addslashes($msg['move_save'])."';
-			var msg_move_first_plan='".addslashes($msg['move_first_plan'])."';
-			var msg_move_last_plan='".addslashes($msg['move_last_plan'])."';
-			var msg_move_first='".addslashes($msg['move_first'])."';
-			var msg_move_last='".addslashes($msg['move_last'])."';
-			var msg_move_infront='".addslashes($msg['move_infront'])."';
-			var msg_move_behind='".addslashes($msg['move_behind'])."';
-			var msg_move_up='".addslashes($msg['move_up'])."';
-			var msg_move_down='".addslashes($msg['move_down'])."';
-			var msg_move_invisible='".addslashes($msg['move_invisible'])."';
-			var msg_move_visible='".addslashes($msg['move_visible'])."';
-			var msg_move_saved_onglet_state='".addslashes($msg['move_saved_onglet_state'])."';
-			var msg_move_open_tab='".addslashes($msg['move_open_tab'])."';
-			var msg_move_close_tab='".addslashes($msg['move_close_tab'])."';
-		</script>";
-}
-$serial_bul_form .= "
-<!-- serial_bul_form -->
-<script type='text/javascript'>document.title = '!!document_title!!';</script>
-<form class='form-$current_module' id='notice' name='notice' method='post' action='!!controller_url_base!!&action=update' onSubmit='return false;' enctype='multipart/form-data' >
-<h3><div class='left'>!!form_title!!</div><div class='right'>";
-if ($PMBuserid==1 && $pmb_form_editables==1) $serial_bul_form.="<input type='button' class='bouton_small' value='Editer format' onClick=\"expandAll(); move_parse_dom(relative)\" id=\"bt_inedit\"/><input type='button' class='bouton_small' value='Relatif' onClick=\"expandAll(); move_parse_dom((!relative))\" style=\"display:none\" id=\"bt_swap_relative\"/>";
-if ($pmb_form_editables==1) $serial_bul_form.="<input type='button' class='bouton_small' value=\"Format d'origine\" onClick=\"get_default_pos(); expandAll();  ajax_parse_dom(); if (inedit) move_parse_dom(relative); else initIt();\"/>";
-$serial_bul_form.="</div></h3>
-<div class='row'></div>
-<div class='form-contenu'>
-<div class='row'>
-	!!doc_type!! !!location!!
-	</div>
-<div class='row'>
-		<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-		<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>
-		<input type=\"hidden\" name=\"b_level\" value=\"!!b_level!!\">
-		<input type=\"hidden\" name=\"h_level\" value=\"!!h_level!!\">
-</div>
-
+$serial_bul_content_form = "
 <!-- onglet bul -->
 <div id='elbulParent' class='parent'>
-	<div class='row'>
-		<h3>
-			<img src='".get_url_icon('minus.gif')."' class='img_plus' class='align_top' name='imEx' id='elbulImg' title=\"".$msg["perio_bull_form_info_bulletin"]."\" border='0' onClick=\"expandBase('elbul', true); return false;\"/>
-			".$msg["perio_bull_form_info_bulletin"]."
-		</h3>
-	</div>
+	<h3>
+		<img src='".get_url_icon('minus.gif')."' class='img_plus' class='align_top' name='imEx' id='elbulImg' title=\"".$msg["perio_bull_form_info_bulletin"]."\" border='0' onClick=\"expandBase('elbul', true); return false;\"/>
+		".$msg["perio_bull_form_info_bulletin"]."
+	</h3>
 </div>
-<div id='elbulChild' class='child' title='".htmlentities($msg["perio_bull_form_info_bulletin"],ENT_QUOTES, $charset)."' >
-<div class='colonne2'>
-	<div class='row'>
-		<label class='etiquette' for='bul_no'>$msg[4025]</label>
-	</div>
-	<div class='row'>
-		<input type='text' id='bul_no' name='bul_no' value='!!bul_no!!' class='saisie-20em' />
-		<input type='hidden' name='bul_id' value='!!bul_id!!' />
-		<input type='hidden' name='serial_id' value='!!serial_id!!' />
-	</div>
-</div>
-<div class='colonne_suite'>
-	<div class='row'>
-		<label class='etiquette' for='bul_cb'>$msg[bulletin_code_barre]</label>
+<div id='elbulChild' class='child' etirable='yes' title='".htmlentities($msg["perio_bull_form_info_bulletin"],ENT_QUOTES, $charset)."' >
+	<div id='elbulChild_0' class='colonne2' title='".htmlentities($msg[4025],ENT_QUOTES, $charset)."' movable='yes'>
+		<div id='elbulChild_0a' class='row'>
+			<label class='etiquette' for='bul_no'>$msg[4025]</label>
 		</div>
-	<div class='row'>
-		<input class='saisie-20emr' id='bul_cb' name='bul_cb' readonly value=\"!!bul_cb!!\" />
-		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./catalog/setcb.php?formulaire_appelant=notice&objet_appelant=bul_cb&bulletin=1&notice_id=!!bul_id!!', 'getcb')\" />
-		<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.bul_cb.value=''; \" />
+		<div id='elbulChild_0b' class='row'>
+			<input type='text' id='bul_no' name='bul_no' value='!!bul_no!!' class='saisie-20em' />
+			<input type='hidden' name='bul_id' value='!!bul_id!!' />
+			<input type='hidden' name='serial_id' value='!!serial_id!!' />
 		</div>
 	</div>
-<div class='colonne3'>
-	<div class='row'>
-		<label class='etiquette' >$msg[4026]</label>
+	<div id='elbulChild_1' class='colonne_suite' title='".htmlentities($msg['bulletin_code_barre'],ENT_QUOTES, $charset)."' movable='yes'>
+		<div id='elbulChild_1a' class='row'>
+			<label class='etiquette' for='bul_cb'>$msg[bulletin_code_barre]</label>
+		</div>
+		<div id='elbulChild_1b' class='row'>
+			<input class='saisie-20emr' id='bul_cb' name='bul_cb' readonly value=\"!!bul_cb!!\" />
+			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./catalog/setcb.php?formulaire_appelant=notice&objet_appelant=bul_cb&bulletin=1&notice_id=!!bul_id!!', 'getcb')\" />
+			<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.bul_cb.value=''; \" />
+		</div>
 	</div>
-	<div class='row'>
-		!!date_date!!
+	<div id='elbulChild_2' class='".($pmb_form_editables == 2 ? 'colonne2' : 'colonne3')."' title='".htmlentities($msg['4026'],ENT_QUOTES, $charset)."' movable='yes'>
+		<div id='elbulChild_2a' class='row'>
+			<label class='etiquette' >$msg[4026]</label>
+		</div>
+		<div id='elbulChild_2b' class='row'>
+			!!date_date!!
+		</div>
 	</div>
-</div>
-<div class='colonne_suite'>
-	<div class='row'>
-		<label class='etiquette' >$msg[bulletin_mention_periode]</label>
+	<div id='elbulChild_3' class='colonne_suite' title='".htmlentities($msg['bulletin_mention_periode'],ENT_QUOTES, $charset)."' movable='yes'>
+		<div id='elbulChild_3a' class='row'>
+			<label class='etiquette' >$msg[bulletin_mention_periode]</label>
+		</div>
+		<div id='elbulChild_3b' class='row'>
+			<input type='text' id='bul_date' name='bul_date' value='!!bul_date!!' class='saisie-50em' />
+		</div>
 	</div>
-	<div class='row'>
-		<input type='text' id='bul_date' name='bul_date' value='!!bul_date!!' class='saisie-50em' />
+	<div id='elbulChild_4' class='row' title='".htmlentities($msg['bulletin_mention_titre'],ENT_QUOTES, $charset)."' movable='yes'>
+		<div id='elbulChild_4a' class='row'>
+			<label class='etiquette' >$msg[bulletin_mention_titre]</label>
+		</div>
+		<div id='elbulChild_4b' class='row'>
+			<input type='text' id='bul_titre' name='bul_titre' value='!!bul_titre!!' class='saisie-50em' />&nbsp;!!create_notice_bul!!
+		</div>
 	</div>
-</div>
-<div class='row'>
-	<div class='row'>
-		<label class='etiquette' >$msg[bulletin_mention_titre]</label>
-	</div>
-	<div class='row'>
-		<input type='text' id='bul_titre' name='bul_titre' value='!!bul_titre!!' class='saisie-50em' />&nbsp;!!create_notice_bul!!
-	</div>
-</div>
 </div>
 <!-- Formulaire de notice de bulletin -->
 !!tab0!!
@@ -690,25 +485,9 @@ $serial_bul_form.="</div></h3>
 !!tab8!!
 <hr class='spacer' />
 !!authperso!!
-</div>
-<div class='row'>
-	<input type=\"button\" class=\"bouton\" value=\"$msg[76]\" onClick=\"unload_off();history.go(-1);\" />&nbsp;<input type=\"button\" class=\"bouton\" value=\"$msg[77]\" onClick=\"if (test_form(this.form)) {unload_off();this.form.submit();}\" />
-	!!link_audit!!
-	!!link_duplicate!!
-	</div>
-</form>
-<script type='text/javascript'>".($pmb_form_editables?"get_pos(); ":"")."
-	ajax_parse_dom();
-	if (document.forms['notice']) {
-		if (document.forms['notice'].elements['f_tit1']) document.forms['notice'].elements['f_tit1'].focus();
-			else document.forms['notice'].elements['bul_no'].focus();
-	} else document.forms['serial_bul_form'].elements['bul_no'].focus();
-
-</script>
-
 ";
 
-/* Ã  partir d'ici, template du forme de catalogage de dÃ©pouillement */
+/* à partir d'ici, template du forme de catalogage de dépouillement */
 //	----------------------------------------------------
 // 	  $pdeptab[0] : contenu de l'onglet 0 (zone de titre)
 
@@ -721,30 +500,9 @@ $pdeptab[0] = "
 	</h3>
 </div>
 <div id='el0Child' class='child' etirable='yes' title='".htmlentities($msg[236],ENT_QUOTES, $charset)."' >
-	<div id='el0Child_0' title='".htmlentities($msg[237],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit1'>$msg[237]</label>
-		</div>
-		<div class='row'>
-			<input id='f_tit1' type='text' class='saisie-80em' name='f_tit1' value=\"!!tit1!!\" data-pmb-deb-rech='1'/>
-		</div>
-	</div>
-	<div id='el0Child_1' title='".htmlentities($msg[239],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit3'>$msg[239]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' type='text' id='f_tit3' name='f_tit3' value=\"!!tit3!!\" />
-		</div>
-	</div>
-	<div id='el0Child_2' title='".htmlentities($msg[240],ENT_QUOTES, $charset)."' movable='yes'>
-		<div class='row'>
-			<label class='etiquette' for='f_tit4'>$msg[240]</label>
-		</div>
-		<div class='row'>
-			<input class='saisie-80em' id='f_tit4' type='text' name='f_tit4' value=\"!!tit4!!\"  />
-		</div>
-	</div>
+	!!element_tit1!!
+	!!element_tit3!!
+	!!element_tit4!!
 </div>
 ";
 
@@ -755,7 +513,7 @@ $pdeptab[2] = "
 <!-- onglet 2 -->
 <div id='el2Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el2Img' title=\"pagination\" border='0' onClick=\"expandBase('el2', true); return false;\">
+        ".get_expandBase_button('el2', 'serial_Pagination')."
 		$msg[serial_Pagination]
 	</h3>
 </div>
@@ -771,157 +529,33 @@ $pdeptab[2] = "
 </div>
 ";
 
-//	-----------------------------------------------------------
-// 	  $analysis_top : formulaire de notice de dÃ©pouillement
-global $pmb_catalog_verif_js;
-$analysis_top_form = jscript_unload_question();
-$analysis_top_form.= "
-<!-- script de gestion des onglets -->
-<script type='text/javascript' src='./javascript/tabform.js'></script>
-".($pmb_catalog_verif_js!= "" ? "<script type='text/javascript' src='./javascript/$pmb_catalog_verif_js'></script>":"")."
-<script type='text/javascript'>
-<!--
-	function test_notice(form)
-	{";
-if($pmb_catalog_verif_js!= ""){
-	$analysis_top_form.= "
-		var check = check_perso_analysis_form();
-		if(check == false) return false;";
-}
-$analysis_top_form.="
-		if(form.f_tit1.value.length == 0)
-			{
-				alert(\"$msg[277]\");
-				return false;
-			}
-
-		if(document.forms['notice'].elements['perio_type_use_existing']){
-			var perio_type = document.forms['notice'].elements['perio_type_use_existing'].checked;
-			var bull_type =  document.forms['notice'].elements['bull_type_use_existing'].checked;
-			var perio_type_new = document.forms['notice'].elements['perio_type_new'].checked;
-			var bull_type_new =  document.forms['notice'].elements['bull_type_new'].checked;
-
-			if(!perio_type && bull_type) {
-				alert(\"".$msg['z3950_bull_already_linked']."\")
-				return false;
-			}
-			if(perio_type_new && (document.getElementById('f_perio_new').value == '')){
-				alert(\"".$msg['z3950_serial_title_mandatory']."\")
-				return false;
-			}
-
-			if(bull_type_new && (document.getElementById('f_bull_new_titre').value == '') && (document.getElementById('f_bull_new_mention').value == '')
-			&& (document.getElementById('f_bull_new_date').value == '') && (document.getElementById('f_bull_new_num').value == '')){
-				alert(\"".$msg['z3950_fill_bull']."\")
-				return false;
-			}
-
-			if(perio_type && bull_type && (document.getElementById('bul_id').value) == '0'){
-					alert(\"".$msg['z3950_no_bull_selected']."\")
-					return false;
-			}
-		}";
-
-$analysis_top_form.= "
-		return check_form();
-	}
--->
-</script>
-<script src='javascript/ajax.js'></script>
-<script src='javascript/move.js'></script>
-<script type='text/javascript'>
-	var msg_move_to_absolute_pos='".addslashes($msg['move_to_absolute_pos'])."';
-	var msg_move_to_relative_pos='".addslashes($msg['move_to_relative_pos'])."';
-	var msg_move_saved_ok='".addslashes($msg['move_saved_ok'])."';
-	var msg_move_saved_error='".addslashes($msg['move_saved_error'])."';
-	var msg_move_up_tab='".addslashes($msg['move_up_tab'])."';
-	var msg_move_down_tab='".addslashes($msg['move_down_tab'])."';
-	var msg_move_position_tab='".addslashes($msg['move_position_tab'])."';
-	var msg_move_position_absolute_tab='".addslashes($msg['move_position_absolute_tab'])."';
-	var msg_move_position_relative_tab='".addslashes($msg['move_position_relative_tab'])."';
-	var msg_move_invisible_tab='".addslashes($msg['move_invisible_tab'])."';
-	var msg_move_visible_tab='".addslashes($msg['move_visible_tab'])."';
-	var msg_move_inside_tab='".addslashes($msg['move_inside_tab'])."';
-	var msg_move_save='".addslashes($msg['move_save'])."';
-	var msg_move_first_plan='".addslashes($msg['move_first_plan'])."';
-	var msg_move_last_plan='".addslashes($msg['move_last_plan'])."';
-	var msg_move_first='".addslashes($msg['move_first'])."';
-	var msg_move_last='".addslashes($msg['move_last'])."';
-	var msg_move_infront='".addslashes($msg['move_infront'])."';
-	var msg_move_behind='".addslashes($msg['move_behind'])."';
-	var msg_move_up='".addslashes($msg['move_up'])."';
-	var msg_move_down='".addslashes($msg['move_down'])."';
-	var msg_move_invisible='".addslashes($msg['move_invisible'])."';
-	var msg_move_visible='".addslashes($msg['move_visible'])."';
-	var msg_move_saved_onglet_state='".addslashes($msg['move_saved_onglet_state'])."';
-	var msg_move_open_tab='".addslashes($msg['move_open_tab'])."';
-	var msg_move_close_tab='".addslashes($msg['move_close_tab'])."';
-</script>
-<script type='text/javascript'>document.title = '!!document_title!!';</script>
-<form class='form-$current_module' id='notice' name='notice' method='post' action='!!controller_url_base!!&action=update' enctype='multipart/form-data'>
-<h3><div class='left'>!!form_title!!</div><div class='right'>";
-if ($PMBuserid==1 && $pmb_form_editables==1) $analysis_top_form.="<input type='button' class='bouton_small' value='Editer format' onClick=\"expandAll(); move_parse_dom(relative)\" id=\"bt_inedit\"/><input type='button' class='bouton_small' value='Relatif' onClick=\"expandAll(); move_parse_dom((!relative))\" style=\"display:none\" id=\"bt_swap_relative\"/>";
-if ($pmb_form_editables==1) $analysis_top_form.="<input type='button' class='bouton_small' value=\"Format d'origine\" onClick=\"get_default_pos(); expandAll();  ajax_parse_dom(); if (inedit) move_parse_dom(relative); else initIt();\"/>";
-$analysis_top_form.="</div></h3>&nbsp;
-<div class='form-contenu'>
-<div class='row'>
-	!!doc_type!!  !!location!!
-</div>
-<div class='row'>
-	<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-	<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>";
-
-$analysis_top_form .= "
-	<input type=\"hidden\" name=\"b_level\" value=\"!!b_level!!\">
-	<input type=\"hidden\" name=\"h_level\" value=\"!!h_level!!\">
-	<input type=\"hidden\" name=\"serial_id\" id=\"serial_id\" value=\"!!id!!\">
-	<input type=\"hidden\" name=\"bul_id\" id=\"bul_id\" value=\"!!bul_id!!\">
-	<input type=\"hidden\" name=\"analysis_id\" value=\"!!analysis_id!!\">
-	<input type=\"hidden\" name=\"id_form\" value=\"!!id_form!!\">
-	</div>
-	!!type_catal!!
-	!!tab0!!
-	<hr class='spacer' />
-	!!tab1!!
-	<hr class='spacer' />
-	!!tab2!!
-	<hr class='spacer' />
-	!!tab3!!
-	<hr class='spacer' />
-	!!tab4!!
-	<hr class='spacer' />
-	!!tab5!!
-	<hr class='spacer' />
-	!!tab6!!";
-if ($pmb_use_uniform_title) $analysis_top_form .= "<hr class='spacer' />!!tab230!!";
-$analysis_top_form .= "<hr class='spacer' />
-	<hr class='spacer' />
-	!!tab7!!
-	<hr class='spacer' />
-	!!tab13!!
-	<hr class='spacer' />
-	!!tab14!!
-	<hr class='spacer' />
-	!!tab8!!
-	<hr class='spacer' />
-	!!authperso!!
-	</div>
-<div class='row'>
-	<div class='left'>
-		<input type='button' class='bouton' value='$msg[76]' onClick=\"unload_off();history.go(-1);\" />
-		<input type='button' class='bouton' value='$msg[77]' id='btsubmit' onClick=\"if (test_notice(this.form)) {unload_off();this.form.submit();}\" />
-		!!link_duplicate!!
-		!!link_move!!
-		!!link_audit!!
-	</div>
-	<div class='right'>!!link_supp!!</div>
-</div>
-<div class='row'></div>
-</form>
-<script type='text/javascript'>".($pmb_form_editables?"get_pos(); ":"")."
-	ajax_parse_dom();
-	document.forms['notice'].elements['f_tit1'].focus();
-	</script>
+$analysis_top_content_form.= "
+!!type_catal!!
+!!tab0!!
+<hr class='spacer' />
+!!tab1!!
+<hr class='spacer' />
+!!tab2!!
+<hr class='spacer' />
+!!tab3!!
+<hr class='spacer' />
+!!tab4!!
+<hr class='spacer' />
+!!tab5!!
+<hr class='spacer' />
+!!tab6!!";
+if ($pmb_use_uniform_title) $analysis_top_content_form .= "<hr class='spacer' />!!tab230!!";
+$analysis_top_content_form .= "<hr class='spacer' />
+<hr class='spacer' />
+!!tab7!!
+<hr class='spacer' />
+!!tab13!!
+<hr class='spacer' />
+!!tab14!!
+<hr class='spacer' />
+!!tab8!!
+<hr class='spacer' />
+!!authperso!!
 ";
 
 function notice_bul_form() {
@@ -975,8 +609,8 @@ $liste_debut ="
 
 $liste_fin = "";
 
-// template pour le form de saisie code barre (pÃ©riodiques)
-// crÃ©ation d'un exemplaire rattachÃ© Ã  un bulletin
+// template pour le form de saisie code barre (périodiques)
+// création d'un exemplaire rattaché à un bulletin
 //if($pmb_numero_exemplaire_auto>0) $num_exemplaire_test="if(eval(form.option_num_auto.checked == false ))";
 if($pmb_numero_exemplaire_auto==1 || $pmb_numero_exemplaire_auto==3) {
 	$num_exemplaire_test="var r=false;try { r=form.option_num_auto.checked;} catch(e) {};if(r==false) ";
@@ -1274,7 +908,7 @@ function calcule_section(selectBox) {
 			</div>
 		</div>
 		<div class='colonne3'>
-			<!-- propriÃ©taire -->
+			<!-- propriétaire -->
 			<label class='etiquette' for='expl_owner'>$msg[651]</label>
 			<div class='row'>
 				!!owner!!
@@ -1532,7 +1166,7 @@ $bulletin_replace_category = "
 	<input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
 </div>";
 
-// $analysis_move : form dÃ©placement dÃ©pouillement
+// $analysis_move : form déplacement dépouillement
 $analysis_move = "
 <form class='form-$current_module' name='analysis_move' method='post' action='./catalog.php?categ=serials&sub=analysis&action=analysis_move&bul_id=!!bul_id!!&analysis_id=!!analysis_id!!'>
 <div class='form-contenu'>
@@ -1558,6 +1192,26 @@ $analysis_move = "
 <div class='row'>
 <input type='button' class='bouton' value='".$msg['76']."' onClick=\"history.go(-1);\">
 <input type='button' class='bouton' value='".$msg['analysis_move_bouton']."' onClick=\"var to_bul=document.getElementById('to_bul').value; if(to_bul!=0){document.forms['analysis_move'].submit();}else{ alert('".$msg['analysis_move_sel_bull_choose']."'); }\">
+</div>
+</form>
+";
+
+// $bulletin_move : form déplacement bulletin
+$bulletin_move = "
+<form class='form-$current_module' name='bulletin_move' method='post' action='./catalog.php?categ=serials&sub=bulletinage&action=bul_move&bul_id=!!bul_id!!'>
+<div class='form-contenu'>
+<div class='row'>
+<label class='etiquette'>".$msg['bulletin_move_sel_perio']."</label>
+</div>
+<div class='row'>
+<input type='text' class='saisie-50emr' value='' id='serial_libelle' name='serial_libelle' readonly>
+<input class='bouton' type='button' onclick=\"openPopUp('./select.php?what=perio&caller=analysis_move&param1=to_serial&param2=serial_libelle', 'selector_notice')\" title='".$msg['157']."' value='".$msg['parcourir']."' />
+<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.serial_libelle.value=''; this.form.to_serial.value='0'; \" />
+<input type='hidden' id='to_serial' name='to_serial' value='0'>
+</div>
+<div class='row'>
+<input type='button' class='bouton' value='".$msg['76']."' onClick=\"history.go(-1);\">
+<input type='button' class='bouton' value='".$msg['bulletin_move_bouton']."' onClick=\"var to_serial=document.getElementById('to_serial').value; if(to_serial!=0){document.forms['bulletin_move'].submit();}else{ alert('".$msg['bulletin_move_sel_perio_choose']."'); }\">
 </div>
 </form>
 ";

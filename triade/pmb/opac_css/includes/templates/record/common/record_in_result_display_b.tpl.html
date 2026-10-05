@@ -1,6 +1,18 @@
 {% extends 'record_in_result_display.tpl.html' %}
 
-<!-- $Id: record_in_result_display_b.tpl.html,v 1.5 2017-04-27 12:28:05 cgil Exp $ -->
+<!-- $Id: record_in_result_display_b.tpl.html,v 1.6 2021/03/09 15:39:12 dgoron Exp $ -->
+
+{% block record_case_traitement %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_picture_tdoc %}
+	{{ block.super }}
+{% endblock %}
+
+{% block record_aside_content %}
+	{{ block.super }}
+{% endblock %}
 
 {% block record_tit1 %}
 	<div class="title_notCourte">

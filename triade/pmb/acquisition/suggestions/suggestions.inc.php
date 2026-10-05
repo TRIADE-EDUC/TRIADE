@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: suggestions.inc.php,v 1.39 2019-05-28 15:00:01 btafforeau Exp $
+// $Id: suggestions.inc.php,v 1.42 2021/04/22 09:00:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -12,7 +12,7 @@ if(!isset($transition)) $transition = '';
 if(!isset($catnoti)) $catnoti = '';
 if(!isset($id_sug)) $id_sug = 0;
 
-//URL de retour du form de crÃ©ation/modification de suggestion
+//URL de retour du form de création/modification de suggestion
 $back_url = "onClick=\"document.location='./acquisition.php?categ=sug&action=list'\"";
 
 require_once($base_path.'/acquisition/suggestions/func_suggestions.inc.php');
@@ -42,10 +42,7 @@ if ($acquisition_sugg_categ== '1' && $action == 'to_categ') {
 	$sug_map->changeCateg($chk, $to_categ);
 }
 
-
 //Traitement des actions
-print "<h1>".htmlentities($msg['acquisition_sug_ges'],ENT_QUOTES, $charset)."</h1>";
-
 switch($action) {
 
 	case 'list':
@@ -114,7 +111,7 @@ switch($action) {
 	case 'empr_sug':
 		break;
 	case 'record_uni':		
-		//Recherche de la fonction auxiliaire d'intÃ©gration
+		//Recherche de la fonction auxiliaire d'intégration
 		if ($z3950_import_modele) { 
 			if (file_exists($base_path."/catalog/z3950/".$z3950_import_modele)) {
 				require_once($base_path."/catalog/z3950/".$z3950_import_modele);
@@ -134,6 +131,4 @@ switch($action) {
 		break;
 		
 }
-
 ?>
-

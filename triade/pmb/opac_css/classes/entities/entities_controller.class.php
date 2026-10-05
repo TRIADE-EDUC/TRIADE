@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: entities_controller.class.php,v 1.2 2018-10-11 08:08:20 vtouchard Exp $
+// $Id: entities_controller.class.php,v 1.4 2023/08/17 09:47:54 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/acces.class.php");
 require_once($class_path."/onto/onto_pmb_entities_mapping.class.php");
 
@@ -28,7 +29,7 @@ class entities_controller {
 	protected $delete_url = '';
 	
 	public function __construct($id=0) {
-		$this->id = $id+0;
+	    $this->id = intval($id);
 	}
 	
 	public function get_model_class_name() {
@@ -84,7 +85,7 @@ class entities_controller {
 			"<form class='form-$current_module' name=\"dummy\" method=\"post\" action=\"".$this->get_permalink()."\" style=\"display:none\">
 				<input type=\"hidden\" name=\"id_form\" value=\"".md5(microtime())."\">
 			</form>
-			<script type=\"text/javascript\">document.dummy.submit();</script>";
+			<script>document.dummy.submit();</script>";
 	}
 	
 	public function proceed_explnum_form() {
@@ -180,7 +181,7 @@ class entities_controller {
 		}
 		
 		return '
-			<script type="text/javascript">
+			<script>
 				window.addEventListener("load", ()=> {
 					var linkType = "'.$link_type.'";
 					var linkFormName = "'.$link.'";
@@ -228,7 +229,7 @@ class entities_controller {
 		// Titre de la page
 		$title = $this->get_document_title();
 		if($title) {
-			print '<script type="text/javascript">document.title = "'.addslashes(strip_tags(pmb_bidi($title))).'";</script>';
+			print '<script>document.title = "'.addslashes(strip_tags(pmb_bidi($title))).'";</script>';
 		}
 	}
 }

@@ -2,17 +2,12 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: module_modelling.class.php,v 1.12 2019-01-17 08:15:10 apetithomme Exp $
+// $Id: module_modelling.class.php,v 1.30.8.1 2025/04/29 09:51:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-/**
- * class concept
- * Un concept
- */
-
+global $class_path, $include_path;
 require_once($class_path.'/modules/module.class.php');
-require_once($class_path.'/autoloader.class.php');
 require_once($class_path.'/contribution_area/contribution_area_status.class.php');
 require_once($class_path.'/contribution_area/contribution_area.class.php');
 require_once($class_path.'/contribution_area/contribution_area_forms_controller.class.php');
@@ -25,40 +20,20 @@ require_once($include_path.'/templates/contribution_area/contribution_area_forms
 require_once($include_path.'/templates/modules/module_modelling.tpl.php');
 require_once($class_path.'/frbr/cataloging/frbr_cataloging_schemes_controler.class.php');
 require_once($class_path.'/contribution_area/computed_fields/computed_field.class.php');
+require_once($class_path.'/contribution_area/contribution_area_clipboard.class.php');
 
 
 class module_modelling extends module{
 	
-	public function get_menu_ontologies() {
-		global $msg;
-		global $module_modelling_menu_ontologies;
-	
-		$menu = $module_modelling_menu_ontologies;
-	
-		$sub_tabs = $this->get_sub_tab('general', $msg["ontologies_general"]);
-	
-		$menu = str_replace('!!sub_tabs!!', $sub_tabs, $menu);
-		return $menu;
-	}
-	
 	public function proceed_ontologies(){
-		global $sub, $msg, $act, $ontology_id;
-		
-		$autoloader = new autoloader();
-		$autoloader->add_register("onto_class",true);
-		
-		$ontologies = new ontologies();
-		
-		$layout_template = $this->get_layout_template();
-		$layout_template = str_replace("!!menu_contextuel!!", $this->get_menu_ontologies(), $layout_template);
-		$layout_template = str_replace("!!ontologies_menu!!", $ontologies->get_modelling_menu(), $layout_template);
+		global $sub, $act, $ontology_id;
+				
 		switch($sub){
 		 	case 'general':
-		 		print str_replace("!!menu_sous_rub!!",$msg['ontologies_general'],$layout_template);
+		 		$ontologies = new ontologies();
 		  		$ontologies->admin_proceed($act, $ontology_id);
 		 		break;
 		 	default :	
-		 		print str_replace("!!menu_sous_rub!!","",$layout_template);
 		 		$ontology = new ontology($ontology_id);
 		 		$ontology->exec_onto_framework();
 		 		break;
@@ -66,46 +41,15 @@ class module_modelling extends module{
 	}
 	
 	public function proceed_frbr(){
-		global $sub, $msg;
-		$layout_template = $this->get_layout_template();
-		$layout_template = str_replace("!!menu_contextuel!!", $this->get_menu_frbr(), $layout_template);
-		$layout_template = str_replace("!!ontologies_menu!!", "", $layout_template);
+		global $sub;
+		
 		switch($sub){
 		 	case 'cataloging_schemes':
 		 	default :
-		 		print str_replace("!!menu_sous_rub!!", $msg['frbr_cataloging_schemes'], $layout_template);
 		 		$frbr_cataloging_schemes_controler = new frbr_cataloging_schemes_controler();
 		 		print $frbr_cataloging_schemes_controler->proceed();
 		 		break;
 		}
-	}
-	
-	public function get_menu_frbr() {
-		global $msg;
-		global $module_modelling_menu_frbr;
-	
-		$menu = $module_modelling_menu_frbr;
-	
-		$sub_tabs = $this->get_sub_tab('cataloging_schemes', $msg["frbr_cataloging_schemes"]);
-	
-		$menu = str_replace('!!sub_tabs!!', $sub_tabs, $menu);
-		return $menu;		
-	}
-	
-	public function get_menu_contribution_area() {
-		global $msg;
-		global $module_modelling_menu_contribution_area;
-		
-		$menu = $module_modelling_menu_contribution_area;
-		
-		$sub_tabs = $this->get_sub_tab('area', $msg["admin_contribution_area"]);
-		$sub_tabs .= $this->get_sub_tab('form', $msg["admin_contribution_area_form"]);
-		$sub_tabs .= $this->get_sub_tab('status', $msg["admin_contribution_area_status"]);
-		$sub_tabs .= $this->get_sub_tab('equation', $msg["admin_contribution_area_equation"]);
-		$sub_tabs .= $this->get_sub_tab('param', $msg["admin_contribution_area_param"]);
-		
-		$menu = str_replace('!!sub_tabs!!', $sub_tabs, $menu);
-		return $menu;
 	}
 	
 	public function proceed_contribution_area(){
@@ -114,20 +58,6 @@ class module_modelling extends module{
 		global $database_window_title;
 		global $include_path, $lang;
 		
-		$autoloader = new autoloader();
-		$autoloader->add_register("onto_class",true);
-		
-		$layout_template = $this->get_layout_template();
-		
-		$layout_template = str_replace ( '!!menu_contextuel!!', $this->get_menu_contribution_area(), $layout_template);
-		$message_key = 'admin_contribution_area';
-		if($sub){
-			if($sub != 'area'){
-				$message_key.= "_".$sub;
-			}
-		}
-		$layout_template = str_replace('!!menu_sous_rub!!', $msg[$message_key], $layout_template);
-		print $layout_template;
 		switch($sub) {
 			case 'area':
 				$this->proceed_contribution_area_area();
@@ -189,6 +119,32 @@ class module_modelling extends module{
 				$contribution_area = new contribution_area($this->object_id);
 				print $contribution_area->get_computed_form();
 				break;
+			case "up";
+			    print '<div class="row"><div class="msg-perio">'.$msg['maj_encours'].'</div></div>';
+				$contribution_area = new contribution_area($this->object_id);
+				$contribution_area->up_order();
+				print '
+				<script type="text/javascript">
+					document.location = "'.$base_path.'/modelling.php?categ=contribution_area&sub=area";
+				</script>';
+			    break;
+			case "down";
+			    print '<div class="row"><div class="msg-perio">'.$msg['maj_encours'].'</div></div>';
+				$contribution_area = new contribution_area($this->object_id);
+				$contribution_area->down_order();
+				print '
+				<script type="text/javascript">
+					document.location = "'.$base_path.'/modelling.php?categ=contribution_area&sub=area";
+				</script>';
+			    break;
+			case 'default':
+			    $contribution_area = new contribution_area($this->object_id);
+			    $contribution_area->set_area_default();
+			    print '
+				<script type="text/javascript">
+					document.location = "'.$base_path.'/modelling.php?categ=contribution_area&sub=area";
+				</script>';
+			    break;
 			default:
 				print contribution_area::get_list();
 				break;
@@ -203,15 +159,14 @@ class module_modelling extends module{
 		global $area;
 		global $base_path;
 		
+		$form_id = intval($form_id);
 		switch($action) {
 			case 'grid':
-	            $form_id+=0;
 	            $form =  new contribution_area_form('', $form_id);
 	            print $form->render();
 	            break;
 		    case 'save' :
 	    		print '<div class="row"><div class="msg-perio">'.$msg['sauv_misc_running'].'</div></div>';
-	       		$form_id+=0;
 	       		$form = new contribution_area_form($type, $form_id);
 	       		$form->set_from_form();
 	       		$result = $form->save();
@@ -222,7 +177,6 @@ class module_modelling extends module{
 	       		break;
 		    case 'delete':
 	    		print '<div class="row"><div class="msg-perio">'.$msg['catalog_notices_suppression'].'</div></div>';
-	       		$form_id+=0;
 	       		$form = new contribution_area_form($type, $form_id);
 	       		$form->delete();
 	       		print $form->get_redirection();
@@ -231,17 +185,15 @@ class module_modelling extends module{
 	    		if(!isset($area)){
 	    			$area = 0;
 	    		}
-	       		$form_id+=0;
 	       		$form = new contribution_area_form($type, $form_id);
-	       		print $form->get_form($area*1);
+	       		print $form->get_form(intval($area));
 	       		break;
 		    case 'duplicate':
 		    	if(!isset($area)){
 		    		$area = 0;
 		    	}
-		    	$form_id+=0;
 		    	$form = new contribution_area_form($type, $form_id);
-		    	print $form->get_duplication_form($area*1);
+		    	print $form->get_duplication_form(intval($area));
 		    	break;
 			default:
 				print contribution_area_forms_controller::display_forms_list();
@@ -347,6 +299,18 @@ class module_modelling extends module{
 				$contribution_area->set_quick_param($contribution_area_quick_param_user_id);
 				print "<script type='text/javascript'>window.location.href='./modelling.php?categ=contribution_area&sub=param'</script>";
 				break;
+			case "empty_store":
+			    print '<div class="row"><div class="msg-perio">'.$msg['admin_purge_contribution_store'].'</div></div>';
+			    $area_store = new contribution_area_store();
+			    $area_store->empty_store();
+				print "<script type='text/javascript'>window.location.href='./modelling.php?categ=contribution_area&sub=param'</script>";
+			    break;
+			case "clear_drafts":
+			    print '<div class="row"><div class="msg-perio">'.$msg['admin_clear_contribution_store_drafts_in_progress'].'</div></div>';
+			    $area_store = new contribution_area_store();
+			    $area_store->clear_drafts();
+				print "<script type='text/javascript'>window.location.href='./modelling.php?categ=contribution_area&sub=param'</script>";
+			    break;
 			default:
 				print $contribution_area->get_form();
 				break;
@@ -361,10 +325,7 @@ class module_modelling extends module{
 		global $type;
 		global $form_id;
 		global $action;
-		
-		$autoloader = new autoloader();
-		$autoloader->add_register("onto_class",true);
-		
+
 		switch($sub) {
 			case 'area':
 				switch($action){
@@ -372,25 +333,66 @@ class module_modelling extends module{
 						$area = new contribution_area($area_id);
 						$area->save_graph($data, $current_scenario);
 						break;
+					case "list":
+					    print encoding_normalize::json_encode(contribution_area::get_list_ajax());
+						break;
+					case "duplicate_scenario":
+					    $area = new contribution_area($area_id);
+					    $area->duplicate_scenario_to_area();
+						break;
+					case 'clipboard':
+					    print encoding_normalize::json_encode(contribution_area_clipboard::push_clipboard());
+					    break;
+					case 'get_clipboard':
+					    global $id_clipboard;
+					    print encoding_normalize::json_encode(contribution_area_clipboard::get_clipboard(intval($id_clipboard)));
+					    break;
+					case 'clipboard_valid':
+					    global $id_clipboard;
+					    print encoding_normalize::json_encode(contribution_area_clipboard::is_valid(intval($id_clipboard)));
+					    break;
+					case 'delete_clipboard':
+					    global $id_clipboard;
+					    print encoding_normalize::json_encode(contribution_area_clipboard::delete_clipboard(intval($id_clipboard)));
+					    break;
 				}
 				break;
+			case 'form_grid':
+			    global $datas, $class_path;
+			    require_once($class_path."/grid.class.php");
+			    grid::proceed($datas);
+			    break;
 			case 'form':
+			    $form_id = intval($form_id);
 				switch($action){
 					case 'save' :
-						$form_id+=0;
 						$form = new contribution_area_form($type, $form_id);
 						$form->set_from_form();
 						$result = $form->save(true);
 						print encoding_normalize::json_encode($result);
 						break;
 					case 'delete':
-						$form_id+=0;
 						$form = new contribution_area_form($type, $form_id);
 						print encoding_normalize::json_encode($form->delete(true));
 						break;
+					case 'duplicate':
+					    if(!isset($area)){
+					        $area = 0;
+					    }
+					    $form = new contribution_area_form($type, $form_id);
+					    print $form->generate_duplication_form(true);
+					    break;
+					case 'duplicate_computed_field':
+					    global $form_identifier, $new_form_identifier, $new_area_id;
+					    computed_field::duplicate_all_computed_field($area_id, $form_identifier, $new_form_identifier, $new_area_id);
+					    break;
+					case 'check_draft':
+					    global $uri;
+					    $response = contribution_area_form::has_draft_contribution_from_uri($uri);
+					    print encoding_normalize::json_encode($response);
+					    break;
 					default :
 						if($type){
-							$form_id+=0;
 							$form = new contribution_area_form($type, $form_id);
 							print $form->get_form();
 						}else{
@@ -419,13 +421,14 @@ class module_modelling extends module{
 						break;
 				}
 				break;
+			case 'equation' :
+			    switch ($action){
+			        case 'get_list':
+			            print encoding_normalize::json_encode(contribution_area_equation::get_list_by_type($type));
+			            break;
+			    }
+			    break;
 		}
-	}
-	
-	public function get_left_menu() {
-		global $module_modelling_left_menu;
-		
-		return $module_modelling_left_menu;
 	}
 	
 	public function proceed_ajax_computed_fields() {
@@ -435,6 +438,10 @@ class module_modelling extends module{
 				$computed_field = new computed_field($computed_field_id);
 				$computed_field->set_from_form();
 				$computed_field->save();
+				$return = [
+				    "id" => $computed_field->get_id()
+				];
+				print encoding_normalize::json_encode($return);
 				break;
 			case 'get_data':
 				$computed_field = computed_field::get_computed_field_from_field_num($field_num);
@@ -478,6 +485,11 @@ class module_modelling extends module{
 				usort($return, array($this, 'sort_entities_properties'));
 				print encoding_normalize::json_encode($return);
 				break;
+				
+			case 'delete':
+			    $computed_field = new computed_field($computed_field_id);
+			    $computed_field->delete();
+			    break;
 			default:
 				break;
 		}
@@ -491,5 +503,14 @@ class module_modelling extends module{
 			return 1;
 		}
 		return 0;
+	}
+	
+	// AR - 13/09/22 j'aime pas trop cette idée de faire ça comme ça, mais pour le moment, l'objet n'est pas de refaire le framework !
+	public function get_display_subtabs() {
+	    global $ontology_id;
+	    global $sub;
+	    if(!isset($ontology_id) || $sub == "general"){
+	        return parent::get_display_subtabs();
+	    }
 	}
 } // end of concept

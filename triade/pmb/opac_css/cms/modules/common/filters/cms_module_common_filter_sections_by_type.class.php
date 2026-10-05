@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_filter_sections_by_type.class.php,v 1.4 2016-09-21 15:38:44 vtouchard Exp $
+// $Id: cms_module_common_filter_sections_by_type.class.php,v 1.5.8.1 2025/01/16 09:48:05 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,8 +25,8 @@ class cms_module_common_filter_sections_by_type extends cms_module_common_filter
 
 		$selector_by = $this->get_selected_selector("by");
 		$field_by = $selector_by->get_value();
-		if(count($field_by)){
-			array_walk($field_by, 'static::int_caster');
+		if(is_array($field_by) && count($field_by)){
+			$field_by = $this->array_int_caster($field_by);
 			$query = "select id_section from cms_sections where section_num_type in ('".implode("','",$field_by)."')";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){

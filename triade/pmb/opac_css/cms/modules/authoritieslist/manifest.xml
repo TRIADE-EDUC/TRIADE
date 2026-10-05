@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2016-05-12 16:31:43 apetithomme Exp $ -->
+$Id: manifest.xml,v 1.5 2019/12/16 08:06:02 btafforeau Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Liste d'autorités</name>
@@ -24,6 +24,8 @@ $Id: manifest.xml,v 1.2 2016-05-12 16:31:43 apetithomme Exp $ -->
 		<views>
 			<view>cms_module_common_view_authoritieslist</view>
 			<view>cms_module_common_view_authoritieslist_from_template_folder</view>
+			<view>cms_module_authoritieslist_view_carousel_uikit</view>
+			<view>cms_module_authoritieslist_view_slideshow</view>
 		</views>
 		<conditions>
 			<condition>cms_module_common_condition_global_var</condition>

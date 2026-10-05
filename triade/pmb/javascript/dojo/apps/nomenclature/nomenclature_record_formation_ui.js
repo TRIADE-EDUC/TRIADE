@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature_record_formation_ui.js,v 1.28 2017-11-30 10:53:34 dgoron Exp $
+// $Id: nomenclature_record_formation_ui.js,v 1.28 2017/11/30 10:53:34 dgoron Exp $
 
 define(["dojo/_base/declare", "dojo/dom-construct", "dojo/topic", "apps/nomenclature/nomenclature_nomenclature_ui","apps/nomenclature/nomenclature_nomenclature","dijit/registry", "dojo/on", "dojo/_base/lang", "apps/nomenclature/nomenclature_nomenclature_voices_ui", "dijit/_WidgetBase"], function(declare, domConstruct, topic , NomenclatureUi, Nomenclature, registry, on, lang, Nomenclature_voices_ui, _WidgetBase){
 	/*

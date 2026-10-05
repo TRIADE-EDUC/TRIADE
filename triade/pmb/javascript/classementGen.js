@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: classementGen.js,v 1.3 2017-08-28 14:41:34 jpermanne Exp $ */
+// $Id: classementGen.js,v 1.4 2021/06/21 14:20:42 dgoron Exp $ */
 
 require(["dojo/request"], function(request) {
     function classementGen_save(object_type, object_id, url_callback){
@@ -16,6 +16,8 @@ require(["dojo/request"], function(request) {
         }).then(function(data){
             if (url_callback) {
                 window.location=url_callback;
+            } else {
+            	window.location.reload();
             }
         });
     }

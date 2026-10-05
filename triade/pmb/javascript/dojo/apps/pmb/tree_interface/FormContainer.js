@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormContainer.js,v 1.2 2018-04-11 12:27:02 vtouchard Exp $
+// $Id: FormContainer.js,v 1.3 2020/05/18 15:12:39 tsamson Exp $
 
 
 define(["dojo/_base/declare", 
@@ -25,7 +25,8 @@ define(["dojo/_base/declare",
 			this.set('executeScripts', true);
 			this.own(	topic.subscribe('EntityTree', lang.hitch(this, this.handleEvents)),
 						topic.subscribe('formButton', lang.hitch(this, this.handleEvents)),
-						topic.subscribe('TreeContainer', lang.hitch(this, this.handleEvents))						
+						topic.subscribe('TreeContainer', lang.hitch(this, this.handleEvents)),						
+						topic.subscribe('EntityForm', lang.hitch(this, this.handleEvents))						
 			);
 		},
 		

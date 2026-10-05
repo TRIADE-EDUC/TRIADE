@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_entity.class.php,v 1.11 2019-06-11 08:53:57 btafforeau Exp $
+// $Id: frbr_entity_common_entity.class.php,v 1.18.4.1 2025/02/12 12:34:08 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,18 +10,18 @@ require_once($class_path."/frbr/frbr_filter_fields.class.php");
 
 class frbr_entity_common_entity extends frbr_entity_root{
 	protected $manifest;
-	protected $have_child; //PropriÃ©tÃ© booleene nous indiquant si l'entitÃ© Ã  des enfants ou non (cadres ou datanode)
+	protected $have_child; //Propriété booleene nous indiquant si l'entité à des enfants ou non (cadres ou datanode)
 	public $informations = array();
 	public $elements_used = array();
-	
+
 	/**
-	 * instance de la page associÃ©e
+	 * instance de la page associée
 	 * @var frbr_page
 	 */
 	protected $page;
-	
+
 	public function __construct($id=0){
-		$this->id = $id+0;		
+	    $this->id = (int) $id;
 		$infos = self::read_manifest();
 		if (isset($infos['informations'])) {
 			$this->informations = $infos['informations'];
@@ -32,39 +32,38 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		parent::__construct();
 		$this->fetch_managed_datas();
 	}
-	
+
 	public static function get_informations(){
 		$infos = self::read_manifest();
 		return $infos['informations'];
 	}
-	
+
 	public static function read_manifest(){
 		global $class_path, $include_path, $lang;
 		$informations = array();
-		@ini_set("zend.ze1_compatibility_mode", "0");
 		$manifest = new domDocument();
 		$entity_path = realpath(dirname($class_path."/frbr/entities/".str_replace(array("frbr_entity_", "_datanode", "_cadre", "_page"),"",static::class)."/".static::class.".class.php"));
-		$manifest_path = $entity_path."/manifest.xml";		
-		
+		$manifest_path = $entity_path."/manifest.xml";
+
 		if (file_exists($manifest_path)) {
 			$manifest->load($manifest_path);
-			
-			// on rÃ©cupÃ¨re la langue par dÃ©faut du module...
+
+			// on récupère la langue par défaut du module...
 	// 		$informations['informations']['default_language'] = self::get_module_default_language($manifest);
-			
+
 			// chemin d'indexation ?
-			$path_indexation = $manifest->getElementsByTagName("path_indexation");	
-			
+			$path_indexation = $manifest->getElementsByTagName("path_indexation");
+
 			$informations['informations']['indexation']['type'] = $path_indexation->item(0)->attributes->getNamedItem('directory')->nodeValue;
 			$informations['informations']['indexation']['path'] = $include_path."/indexation/".(!empty($path_indexation->item(0)->attributes->getNamedItem('directory')->nodeValue) ? $path_indexation->item(0)->attributes->getNamedItem('directory')->nodeValue."/" : "").$manifest->getElementsByTagName("path_indexation")->item(0)->nodeValue."/champs_base.xml";
-			
+
 			$informations['informations']['indexation']['sub_type'] = "";
 			$item = $manifest->getElementsByTagName("sub_type")->item(0);
 			if (!empty($item)) {
 			    $informations['informations']['indexation']['sub_type'] = constant($manifest->getElementsByTagName("sub_type")->item(0)->nodeValue);
 			}
-			
-			//on rÃ©cupÃ¨re le nom
+
+			//on récupère le nom
 			$names = $manifest->getElementsByTagName("name");
 			$name = array();
 			for ($i = 0; $i < $names->length; $i++) {
@@ -78,59 +77,55 @@ class frbr_entity_common_entity extends frbr_entity_root{
 				}
 			}
 			$informations['informations']['name'] = encoding_normalize::charset_normalize(isset($name[$lang]) ? $name[$lang] : $name['default'],"utf-8");
-			
-			//on rÃ©cupÃ¨re le(les) auteur(s)
+
+			//on récupère le(les) auteur(s)
 			$informations['informations']['author'] = array();
 			$authors = $manifest->getElementsByTagName("author");
 			for($i=0 ; $i<$authors->length ; $i++){
 				$author = array();
-				//on rÃ©cupÃ¨re son nom
+				//on récupère son nom
 				$author['name'] = encoding_normalize::charset_normalize($authors->item($i)->getElementsByTagName('name')->item(0)->nodeValue,"utf-8");
-				//on rÃ©cupÃ¨re son organisation
+				//on récupère son organisation
 				$organisation = $authors->item($i)->getElementsByTagName("organisation");
 				if($organisation->length>0){
 					$author['organisation'] = encoding_normalize::charset_normalize($organisation->item(0)->nodeValue,"utf-8");
 				}
 				$informations['informations']['author'][] = $author;
 			}
-			
-			//on rÃ©cupÃ¨re les dates
+
+			//on récupère les dates
 			$created_date = $manifest->getElementsByTagName("created_date")->item(0);
 			$informations['informations']['created_date']= encoding_normalize::charset_normalize($created_date->nodeValue,"utf-8");
 			$updated_date = $manifest->getElementsByTagName("updated_date");
 			if($updated_date->length>0){
 				$informations['informations']['updated_date'] = encoding_normalize::charset_normalize($updated_date->item(0)->nodeValue,"utf-8");
 			}
-			//on rÃ©cupÃ¨re la version
+			//on récupère la version
 			$version = $manifest->getElementsByTagName("version")->item(0);
 			$informations['informations']['version']= encoding_normalize::charset_normalize($version->nodeValue,"utf-8");
-			
+
 			// administrable?
 	// 		$informations['informations']['managed'] = ($manifest->getElementsByTagName("managed") && $manifest->getElementsByTagName("managed")->item(0)->nodeValue == "true" ? true : false);
-			
+
 			//fournisseur de liens?
 			if(isset($manifest->getElementsByTagName("extension_form")->item(0)->nodeValue)) {
 				$informations['informations']['extension_form'] = ($manifest->getElementsByTagName("extension_form")->item(0)->nodeValue == "true" ? true : false);
 			} else {
 				$informations['informations']['extension_form'] = '';
 			}
-			
-			@ini_set("zend.ze1_compatibility_mode", "0");
-			//on rÃ©cupÃ¨re la listes des Ã©lÃ©ments utilisÃ©s par le module...
+
+			//on récupère la listes des éléments utilisés par le module...
 			$use = $manifest->getElementsByTagName("use")->item(0);
 			$informations['elements_used'] = self::read_elements_used($use);
-			@ini_set("zend.ze1_compatibility_mode", "1");
 		}
-		
 		return $informations;
 	}
-	
+
 	protected function fetch_data(){
-		
+
 	}
-	
+
 	public static function read_elements_used($use_node){
-		@ini_set("zend.ze1_compatibility_mode", "0");
 		$elements_used = array();
 		$types = array(
 			'view',
@@ -149,18 +144,18 @@ class frbr_entity_common_entity extends frbr_entity_root{
 				}
 			}
 		}
-		@ini_set("zend.ze1_compatibility_mode", "1");
 		return $elements_used;
 	}
-		
+
 	protected function get_js_form() {
 		$js_form = "
-			<script type='text/javascript'>
+			<script>
 				require(['apps/frbr/EntityForm'], function(EntityForm){
 					new EntityForm(".encoding_normalize::json_encode(array(
 							"id" => $this->id,
 							"type" => $this->type,
-							"className" => $this->class_name,
+    					    "className" => $this->class_name,
+    					    "numPage" => !empty($this->page) ? $this->page->get_id() : 0,
 							"indexation" => (isset($this->informations['indexation']) ? $this->informations['indexation'] : ''),
 							"msg" => $this->msg
 					)).");
@@ -168,7 +163,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 			</script>";
 		return $js_form;
 	}
-	
+
 	protected function get_buttons_form() {
 		$buttons_form = "
 		<div class='left'>
@@ -181,11 +176,11 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		</div>";
 		return $buttons_form;
 	}
-	
+
 	public function get_form($ajax= true) {
 		global $msg, $charset;
 		global $current_module;
-	
+
 		if($ajax){
 			$action = "./ajax.php?module=cms&categ=frbr_entities&elem=".$this->class_name."&action=save_form";
 		}
@@ -218,7 +213,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 					</div>
 					<hr />
 					<div class='row'>&nbsp;</div>
-					<div id='parameters_form'> ";	
+					<div id='parameters_form'> ";
 		$form.= $this->get_parameters_form();
 		$form.= "	</div>
 				<hr />
@@ -228,18 +223,18 @@ class frbr_entity_common_entity extends frbr_entity_root{
 				</div>
 			<div class='row'></div>
 			</form>
-			<script type='text/javascript'>
+			<script>
 				document.forms['".$this->class_name."_form'].elements['".$this->type."_name'].focus();
 			</script>
 			";
 		return $form;
 	}
-	
+
 	public function get_manage_menu(){
 		$manage_menu = "";
 		return $manage_menu;
 	}
-	
+
 	protected function get_element_manage_form($quoi){
 		global $base_path;
 		global $elem;
@@ -279,11 +274,11 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		</div>";
 		return $form;
 	}
-	
+
 	protected function get_managed_form($quoi){
-		
+
 	}
-	
+
 	public function get_already_selected_fields($quoi) {
 		global $add_field;
 		switch ($quoi) {
@@ -303,7 +298,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		}
 		return $frbr_instance_fields->get_already_selected();
 	}
-	
+
 	protected function fetch_managed_datas($type=""){
 		$query = "select managed_entity_box from frbr_managed_entities where managed_entity_name = '".$this->class_name."'";
 		$result = pmb_mysql_query($query);
@@ -312,14 +307,14 @@ class frbr_entity_common_entity extends frbr_entity_root{
 			$this->managed_datas = $this->stripslashes($this->managed_datas);
 		}
 	}
-	
+
 	protected function get_manage_form($quoi){
 		global $msg, $current_module;
 		global $base_path;
 		global $manage_id;
 		global $num_page;
 		global $charset;
-		
+
 		$entity_manage_controller = "";
 		$frbr_fields_class_name = '';
 		switch ($quoi) {
@@ -340,7 +335,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 				break;
 		}
 		$frbr_instance_fields = new $frbr_fields_class_name($this->informations['indexation']['type'], $this->informations['indexation']['path']);
-		$manage_id += 0;
+		$manage_id = intval($manage_id);
 		if($manage_id) {
 			$frbr_instance_fields->unformat_fields($this->managed_datas[$quoi][$type.$manage_id]['fields']);
 			$name = $this->managed_datas[$quoi][$type.$manage_id]['name'];
@@ -366,7 +361,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 								".$msg["frbr_".$type."_name"]."
 							</label>
 						</div>
-						<div class='colonne-suite'>				
+						<div class='colonne-suite'>
 							<input type='text' id='".$type."_name' name='".$type."_name' value='".htmlentities($name, ENT_QUOTES, $charset)."' class='saisie-80em' />
 						</div>
 					</div>
@@ -392,7 +387,7 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		$form .= "
 		<div id='".$this->class_name."_".$type."_".$manage_id."_manage_dnd_container' dojoType='dijit.layout.BorderContainer' data-dojo-props='splitter:true' style='width: 100%; height: 800px;'>
 		</div>
-		<script type='text/javascript'>
+		<script>
 			require(['apps/frbr/".$entity_manage_controller."', 'dojo/domReady!'], function(EntityManageController){
 				var params = {id:'".$this->id."', elem:'".$this->class_name."', type:'".$type."', manage_id:'".$manage_id."'};
 				var entityManageController = new EntityManageController(params);
@@ -400,11 +395,11 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		</script>";
 		return $form;
 	}
-	
+
 	public function save_manage_form(){
 		global $quoi;
 		global $manage_id;
-		
+
 		if(!isset($this->managed_datas[$quoi])) $this->managed_datas[$quoi] = array();
 		$params = $this->managed_datas[$quoi];
 		switch ($quoi) {
@@ -419,8 +414,9 @@ class frbr_entity_common_entity extends frbr_entity_root{
 						$manage_id = static::get_max_manage_id("filter",$this->managed_datas[$quoi])+1;
 					}
 					$params["filter".$manage_id] = array(
-							'name' => stripslashes($filter_name),
-							'fields' => $frbr_instance_fields->format_fields()
+						'name' => stripslashes($filter_name),
+					    'fields' => $frbr_instance_fields->format_fields(),
+					    'details' => $this->get_additional_managed_datas(),
 					);
 				}
 				break;
@@ -436,7 +432,8 @@ class frbr_entity_common_entity extends frbr_entity_root{
 					}
 					$params["sort".$manage_id] = array(
 						'name' => stripslashes($sort_name),
-						'fields' => $frbr_instance_fields->format_fields()
+						'fields' => $frbr_instance_fields->format_fields(),
+					    'details' => $this->get_additional_managed_datas(),
 					);
 				}
 				break;
@@ -459,13 +456,13 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		}
 		return $params;
 	}
-	
+
 	public function get_manage_forms(){
 		global $base_path;
 		global $quoi;
-		
+
 		$form = "
-			<script type='text/javascript'>
+			<script>
 				require(['dijit/layout/BorderContainer','dijit/layout/ContentPane']);
 			</script>";
 		switch($quoi){
@@ -480,11 +477,11 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		}
 		return $form;
 	}
-	
+
 	public function save_manage_forms(){
 		global $quoi,$elem;
-			
-		//on sauvegarde les infos modifiÃ©es
+
+		//on sauvegarde les infos modifiées
 		switch ($quoi){
 			case "views" :
 				$this->managed_datas[$quoi][$elem] = call_user_func(array($elem,"save_manage_form"),$this->managed_datas[$quoi][$elem]);
@@ -498,27 +495,27 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		return true;
 	}
 
-	protected function get_max_manage_id($property="entity", $datas){
+	protected function get_max_manage_id($property="entity", $datas=array()){
 		$max = 0;
 		if(count($datas)){
 			foreach	($datas as $key => $val){
-				$key = str_replace($property,"",$key)*1;
+			    $key = intval(str_replace($property,"",$key));
 				if($key>$max) $max = $key;
 			}
 		}
 		return $max;
 	}
-	
+
 	protected function get_parent_name_from_page($parent_id) {
 		global $num_page, $charset;
-		
+
 		$selector = "<select name='".$this->type."_num_parent' id='".$this->type."_num_parent' ".($this->id ? "disabled" :"")." data-pmb-evt='{\"class\":\"EntityForm\", \"type\":\"change\", \"method\":\"loadParametersForm\", \"parameters\":{\"type\":\"".$this->type."\", \"page\":\"".($num_page ? $num_page : 0)."\"}}'>";
 		if (isset($this->page) && $this->page) {
 			$selector .=	'
 						<optgroup label="'.$this->msg['frbr_entity_common_entity_page_label'].'">
 							<option value="0" '.(!$parent_id ? 'selected="selected"' : '').'>'.htmlentities($this->page->get_name(), ENT_QUOTES, $charset).'</option>
 						</optgroup>';
-		}		
+		}
 		if ($num_page) {
 			$query = '	SELECT id_datanode, datanode_name
 						FROM frbr_datanodes
@@ -536,17 +533,17 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		$selector .= '</select>';
 		return $selector;
 	}
-	
+
 	public function set_entity_type($entity_type){
 		$this->entity_type = $entity_type;
 	}
-	
+
 	public function get_page() {
 		return $this->page;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param frbr_page $page
 	 * @return frbr_entity_common_entity
 	 */
@@ -554,12 +551,20 @@ class frbr_entity_common_entity extends frbr_entity_root{
 		$this->page = $page;
 		return $this;
 	}
-	
-	/** 
+
+	/**
 	 * @param int $num_page
 	 */
 	public function set_page_from_num($num_page) {
-		$num_page += 0;
+	    $num_page = intval($num_page);
 		$this->page = new frbr_entity_common_entity_page($num_page);
+	}
+
+	/**
+	 * donnees complementaires
+	 * @return array
+	 */
+	public function get_additional_managed_datas() {
+	    return [];
 	}
 }

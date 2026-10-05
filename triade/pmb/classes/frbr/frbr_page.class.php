@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_page.class.php,v 1.20 2019-06-13 15:26:51 btafforeau Exp $
+// $Id: frbr_page.class.php,v 1.21 2022/01/21 08:37:14 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/frbr/frbr_page.tpl.php");
 require_once($class_path."/frbr/frbr_entities.class.php");
 require_once($class_path."/opac_views.class.php");
@@ -21,7 +22,7 @@ class frbr_page {
 	protected $id;
 	
 	/**
-	 * LibellÃ© de la page
+	 * Libellé de la page
 	 * @var string
 	 */
 	protected $name;
@@ -32,12 +33,12 @@ class frbr_page {
 	protected $comment;
 	
 	/**
-	 * Type d'entitÃ©
+	 * Type d'entité
 	 */
 	protected $entity;
 	
 	/**
-	 * ParamÃ¨tres spÃ©cifiques
+	 * Paramètres spécifiques
 	 */
 	protected $parameters;
 	
@@ -192,7 +193,7 @@ class frbr_page {
 	}
 	
 	/**
-	 * DonnÃ©es provenant d'un formulaire
+	 * Données provenant d'un formulaire
 	 */
 	public function set_properties_from_form() {
 		global $page_name;
@@ -248,10 +249,9 @@ class frbr_page {
 	 * Suppression
 	 */
 	public static function delete($id=0){
-		global $msg;
-		$id += 0;
+		$id = intval($id);
 		if($id) {
-			//suppression des datanodes associÃ©s
+			//suppression des datanodes associés
 			$query = "SELECT id_datanode FROM frbr_datanodes WHERE datanode_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -259,7 +259,7 @@ class frbr_page {
 					frbr_entity_common_entity_datanode::delete($row->id_datanode, true);
 				}
 			}
-			//suppression des cadres associÃ©s
+			//suppression des cadres associés
 			$query = "SELECT id_cadre FROM frbr_cadres WHERE cadre_num_datanode = 0 AND cadre_num_page = '".$id."'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -312,7 +312,7 @@ class frbr_page {
 	protected function get_max_order() {
 		$query = "select max(page_order) as max_order from frbr_pages where page_entity = '".$this->entity."'";
 		$result = pmb_mysql_query($query);
-		return pmb_mysql_result($result, 0, 'max_order')+0;
+		return intval(pmb_mysql_result($result, 0, 'max_order'));
 	}
 	
 	public static function get_id_from_order($entity, $order) {
@@ -374,7 +374,7 @@ class frbr_page {
 						SET place_visibility = "'.(isset($this->parameters->{$cadre_type}) ? $this->parameters->{$cadre_type}->value : 0).'" 
 						WHERE place_num_page = "'.$this->id.'"
 						AND place_cadre_type = "'.$cadre_type.'"';
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 		}
 	}
 }

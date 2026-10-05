@@ -104,7 +104,7 @@ function convert_delphe($notice, $s, $islast, $isfirst, $param_path) {
 		</f>";
 	}
 
-	//titre pÃ©rio
+	//titre pério
 	if($perio_name){
 		$data .= "
 		<f c='461' ind='  '>
@@ -156,7 +156,7 @@ function convert_delphe($notice, $s, $islast, $isfirst, $param_path) {
 		}		
 	}
 	
-	//descripteurs gÃ©o
+	//descripteurs géo
 	if($desc_geo_fre){
 		$desc= explode("|",$desc_geo_fre);
 		if(count($desc)){
@@ -187,7 +187,7 @@ function convert_delphe($notice, $s, $islast, $isfirst, $param_path) {
 			}
 		}		
 	}	
-	//mots-clÃ©s
+	//mots-clés
 	if($mots){
 		$keywords= explode("|",$mots);
 		if(count($keywords)){
@@ -222,7 +222,7 @@ function convert_delphe($notice, $s, $islast, $isfirst, $param_path) {
 		}
 	}
 	
-	//collectivitÃ©s
+	//collectivités
 	$aut_coll = array();
 	if($auteur_moraux) $aut_coll = explode("|",$auteur_moraux);
 	if(count($aut_coll)){

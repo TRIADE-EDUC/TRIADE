@@ -1,5 +1,5 @@
-<?PHP
-// $Id: empty_words,v 1.5 2013-04-29 12:50:58 dgoron Exp $
+<?php
+// $Id: empty_words,v 1.5.28.2 2025/01/16 10:24:13 qvarin Exp $
 
 // tableau contenant les mots vides
 
@@ -78,7 +78,7 @@ $empty_word[] = 'encara';
 $empty_word[] = 'enrera';
 $empty_word[] = 'enrere';
 $empty_word[] = 'entre';
-$empty_word[] = 'és';
+$empty_word[] = 'es';
 $empty_word[] = 'esta';
 $empty_word[] = 'estant';
 $empty_word[] = 'estar';

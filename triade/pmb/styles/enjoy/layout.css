@@ -1,7 +1,7 @@
 /* +--------------------------------------------------------------------------+
 // 2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +--------------------------------------------------------------------------+
-// $Id: layout.css,v 1.58 2018-10-18 14:39:20 dgoron Exp $ */
+// $Id: layout.css,v 1.73 2024/02/21 10:08:30 gneveu Exp $ */
 
 
 /* ---------------------------------------------------------------------------*/
@@ -25,14 +25,15 @@ body {
 	background-color: #ffffff;
 }
 
-input, select {
+button, input, select {
    	font-family: Arial,Helvetica,Sans-serif;
 }
 
 body.index, body.main, body.circ, body.catalog, body.autorites, body.edit, body.dsi, body.acquisition, body.demandes, body.fichier, body.cms, body.extensions, body.admin, body.account, body.dashboard,
 body.frbr,
 body.modelling,
-body.semantic  {
+body.semantic,
+body.animations  {
 	background-image: url("./images/body.jpg");
 	background-repeat: repeat-x;
 	background-position: top left;
@@ -136,12 +137,17 @@ td {
 /* ------------------ input ------------------ */
 
 
-input, select, textarea {
+button, 
+input, 
+select, 
+textarea {
 	border: 1px solid #cccccc;
 	margin: 2px;
 }
 
-input, textarea {
+button, 
+input, 
+textarea {
 	padding: 2px 4px;
 }
 
@@ -150,7 +156,10 @@ textarea {
 	min-width: 50%;
 }
 
-input.bouton, input.bouton_small {
+button.bouton, 
+button.bouton_small, 
+input.bouton, 
+input.bouton_small {
 	color: #333333;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease;
@@ -171,7 +180,10 @@ input.bouton, input.bouton_small {
 	border-radius: 15px;
 }
 
-input.bouton:hover, input.bouton_small:hover {
+button.bouton:hover,
+button.bouton_small:hover,
+input.bouton:hover,
+input.bouton_small:hover {
 	color: #000000;
 	background: #7f7f7f; /* Old browsers */
 	background: -moz-linear-gradient(top, #7f7f7f 0%, #bfbfbf 49%, #a8a8a8 100%); /* FF3.6+ */
@@ -660,7 +672,10 @@ table tr.surbrillance, .sortable tr:hover {
 	color: #ffffff;
 }
 
-input, select, textarea {
+button,
+input,
+select,
+textarea {
 	-moz-box-shadow: 1px 1px 1px #645d5d inset;
 	-o-box-shadow: 1px 1px 1px #645d5d inset;
 	-webkit-box-shadow: 1px 1px 1px #645d5d inset;
@@ -747,7 +762,14 @@ body.circ table tr.surbrillance, body.circ .sortable tr:hover, .circ table tr.su
 	color: #ffffff;
 }
 
-body.circ input, body.circ select, body.circ textarea, .circ input, .circ select, .circ textarea {
+body.circ button, 
+body.circ input, 
+body.circ select, 
+body.circ textarea, 
+.circ button, 
+.circ input, 
+.circ select, 
+.circ textarea {
 	-moz-box-shadow: 1px 1px 1px #0b658c inset;
 	-o-box-shadow: 1px 1px 1px #0b658c inset;
 	-webkit-box-shadow: 1px 1px 1px #0b658c inset;
@@ -831,7 +853,13 @@ body.catalog table tr.surbrillance, body.catalog .sortable tr:hover, .catalog ta
 	color: #ffffff;
 }
 
-body.catalog input, body.catalog select, body.catalog textarea, .catalog input, .catalog select, .catalog textarea {
+body.catalog button, 
+body.catalog input, 
+body.catalog select, 
+body.catalog textarea, 
+.catalog button, 
+.catalog select, 
+.catalog textarea {
 	-moz-box-shadow: 1px 1px 1px #c15805 inset;
 	-o-box-shadow: 1px 1px 1px #c15805 inset;
 	-webkit-box-shadow: 1px 1px 1px #c15805 inset;
@@ -942,7 +970,14 @@ body.autorites table tr.surbrillance, .autorites .sortable tr:hover, .autorites 
 	color: #ffffff;
 }
 
-body.autorites input, body.autorites select, body.autorites textarea, .autorites input, .autorites select, .autorites textarea {
+body.autorites button, 
+body.autorites input, 
+body.autorites select,
+body.autorites textarea, 
+.autorites button, 
+.autorites input, 
+.autorites select, 
+.autorites textarea {
 	-moz-box-shadow: 1px 1px 1px #16076f inset;
 	-o-box-shadow: 1px 1px 1px #16076f inset;
 	-webkit-box-shadow: 1px 1px 1px #16076f inset;
@@ -1024,7 +1059,14 @@ body.edit table tr.surbrillance, body.edit .sortable tr:hover, .edit table tr.su
 	color: #ffffff;
 }
 
-body.edit input, body.edit select, body.edit textarea, .edit input, .edit select, .edit textarea {
+body.edit button, 
+body.edit input, 
+body.edit select, 
+body.edit textarea, 
+.edit button, 
+.edit input, 
+.edit select, 
+.edit textarea {
 	-moz-box-shadow: 1px 1px 1px #6c0436 inset;
 	-o-box-shadow: 1px 1px 1px #6c0436 inset;
 	-webkit-box-shadow: 1px 1px 1px #6c0436 inset;
@@ -1107,7 +1149,14 @@ body.dsi table tr.surbrillance, body.dsi .sortable tr:hover,  .dsi table tr.surb
 	color: #ffffff;
 }
 
-body.dsi input, body.dsi select, body.dsi textarea, .dsi input, .dsi select, .dsi textarea {
+body.dsi button, 
+body.dsi input, 
+body.dsi select, 
+body.dsi textarea, 
+.dsi button, 
+.dsi input, 
+.dsi select, 
+.dsi textarea {
 	-moz-box-shadow: 1px 1px 1px #802aa1 inset;
 	-o-box-shadow: 1px 1px 1px #802aa1 inset;
 	-webkit-box-shadow: 1px 1px 1px #802aa1 inset;
@@ -1187,7 +1236,14 @@ body.acquisition table tr.surbrillance, body.acquisition .sortable tr:hover, .ac
 	color: #ffffff;
 }
 
-body.acquisition input, body.acquisition select, body.acquisition textarea, .acquisition input, .acquisition select, .acquisition textarea  {
+body.acquisition button, 
+body.acquisition input, 
+body.acquisition select, 
+body.acquisition textarea, 
+.acquisition button, 
+.acquisition input, 
+.acquisition select, 
+.acquisition textarea  {
 	-moz-box-shadow: 1px 1px 1px #0c6940 inset;
 	-o-box-shadow: 1px 1px 1px #0c6940 inset;
 	-webkit-box-shadow: 1px 1px 1px #0c6940 inset;
@@ -1203,7 +1259,10 @@ body.acquisition .tab_sug td textarea, .acquisition .tab_sug td textarea{
 	max-width: 390px;
 }
 
-body.acquisition .tab_sug td input.bouton, .acquisition .tab_sug td input.bouton {
+body.acquisition .tab_sug td button.bouton, 
+body.acquisition .tab_sug td input.bouton, 
+.acquisition .tab_sug td button.bouton,
+.acquisition .tab_sug td input.bouton {
 	width: inherit;
 }
 
@@ -1277,7 +1336,14 @@ body.demandes table tr.surbrillance, body.demandes .sortable tr:hover, .demandes
 	color: #ffffff;
 }
 
-body.demandes input, body.demandes select, body.demandes textarea, .demandes input, .demandes select, .demandes textarea {
+body.demandes button, 
+body.demandes input, 
+body.demandes select, 
+body.demandes textarea, 
+.demandes button, 
+.demandes input, 
+.demandes select, 
+.demandes textarea {
 	-moz-box-shadow: 1px 1px 1px #734d2b inset;
 	-o-box-shadow: 1px 1px 1px #734d2b inset;
 	-webkit-box-shadow: 1px 1px 1px #734d2b inset;
@@ -1353,7 +1419,14 @@ body.fichier table tr.surbrillance, body.fichier .sortable tr:hover, .fichier ta
 	color: #ffffff;
 }
 
-body.fichier input, body.fichier select, body.fichier textarea, .fichier input, .fichier select, .fichier textarea {
+body.fichier button, 
+body.fichier input, 
+body.fichier select, 
+body.fichier textarea, 
+.fichier button, 
+.fichier input, 
+.fichier select, 
+.fichier textarea {
 	-moz-box-shadow: 1px 1px 1px #452705 inset;
 	-o-box-shadow: 1px 1px 1px #452705 inset;
 	-webkit-box-shadow: 1px 1px 1px #452705 inset;
@@ -1429,7 +1502,14 @@ body.cms table tr.surbrillance, body.cms .sortable tr:hover, .cms table tr.surbr
 	color: #ffffff;
 }
 
-body.cms input, body.cms select, body.cms textarea, .cms input, .cms select, .cms textarea {
+body.cms button, 
+body.cms input, 
+body.cms select, 
+body.cms textarea, 
+.cms button, 
+.cms input, 
+.cms select, 
+.cms textarea {
 	-moz-box-shadow: 1px 1px 1px #3187D9 inset;
 	-o-box-shadow: 1px 1px 1px #3187D9 inset;
 	-webkit-box-shadow: 1px 1px 1px #3187D9 inset;
@@ -1590,7 +1670,14 @@ body.admin table tr.surbrillance, body.admin .sortable tr:hover,  .admin table t
 	color: #ffffff;
 }
 
-body.admin input, body.admin select, body.admin textarea, .admin input, .admin select, .admin textarea {
+body.admin button, 
+body.admin input, 
+body.admin select, 
+body.admin textarea, 
+.admin button, 
+.admin input, 
+.admin select, 
+.admin textarea {
 	-moz-box-shadow: 1px 1px 1px #690303 inset;
 	-o-box-shadow: 1px 1px 1px #690303 inset;
 	-webkit-box-shadow: 1px 1px 1px #690303 inset;
@@ -2210,7 +2297,7 @@ iframe#alerte {
 iframe#history {
 	width:40%;
 	height:97%;
-	position:absolute;
+	position:fixed;
 	top:1%;
 	left:1%;
 	z-index:1000;
@@ -2511,11 +2598,11 @@ body.alter #contenu-frame .bdd_updade_link {
 }
 
 .in_cell_nb {
-	width: 30px;;
+	width: 60px;
 }
 
 .in_cell_ro {
-	width: 60px;;
+	width: 60px;
 }
 
 .in_cell_ro, .in_cell_nb_ro {
@@ -2761,4 +2848,111 @@ ul.sel_navbar li a {
 
 .table-no-border td {
 	vertical-align: middle;
+}
+
+button.bouton.disabled:hover, 
+button.bouton_small.disabled:hover,
+input.bouton.disabled:hover, 
+input.bouton_small.disabled:hover {
+    box-shadow:none;
+    background: #a5a5a5;
+    background: -moz-linear-gradient(top, #a5a5a5 0%, #e5e5e5 12%, #d1d1d1 51%, #ededed 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a5a5a5), color-stop(12%,#e5e5e5), color-stop(51%,#d1d1d1), color-stop(100%,#ededed));
+    background: -webkit-linear-gradient(top, #a5a5a5 0%,#e5e5e5 12%,#d1d1d1 51%,#ededed 100%);
+    background: -o-linear-gradient(top, #a5a5a5 0%,#e5e5e5 12%,#d1d1d1 51%,#ededed 100%);
+    background: -ms-linear-gradient(top, #a5a5a5 0%,#e5e5e5 12%,#d1d1d1 51%,#ededed 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a5a5a5', endColorstr='#ededed',GradientType=0 );
+    background: linear-gradient(top, #a5a5a5 0%,#e5e5e5 12%,#d1d1d1 51%,#ededed 100%);
+    -moz-box-shadow: 1px 1px 1px #c15805 inset;
+    -o-box-shadow: 1px 1px 1px #c15805 inset;
+    -webkit-box-shadow: 1px 1px 1px #c15805 inset;
+    box-shadow: 1px 1px 1px #c15805 inset;
+} 
+ 
+/* Correction d'un bug Drag & Drop dojo dans Firefox
+https://github.com/dojo/dijit/issues/161 */
+.dijitTree {
+    -moz-user-select: none;
+}
+
+
+/* ------------------ Vignette Administration ------------------ */
+.admin .accordion-trigger:focus, 
+.admin .accordion-trigger:hover {
+	background: #b23c3c !important;
+	color: white;
+}
+
+
+/* ------------------ Refonte Dsi ------------------ */
+.dsi-tabs .dsi-tab-registers button.active-tab,
+#views .accordion .accordion-trigger,
+#views .accordion .accordion-trigger:focus,
+#views .accordion .accordion-trigger:hover,
+#diffusionsPending .accordion .accordion-trigger,
+#diffusionsPending .accordion .accordion-trigger:focus,
+#diffusionsPending .accordion .accordion-trigger:hover,
+#subscriberList .accordion .accordion-trigger,
+#subscriberList .accordion .accordion-trigger:focus,
+#subscriberList .accordion .accordion-trigger:hover,
+#products .accordion .accordion-trigger,
+#products .accordion .accordion-trigger:focus,
+#products .accordion .accordion-trigger:hover,
+#diffusions .accordion .accordion-trigger,
+#diffusions .accordion .accordion-trigger:focus,
+#diffusions .accordion .accordion-trigger:hover {
+	background-repeat: repeat-x;
+	background-image: url("./images/dsi.jpg");
+	background-position: left bottom;
+	background-color: #c379db;
+	color: white;
+}
+
+.accordion-trigger:focus .accordion-title {
+	border-color: white !important;
+}
+
+.accordion-trigger:focus .accordion-icon, 
+.accordion-trigger:hover .accordion-icon {
+	border-color: white;
+}	
+
+.source-list .source-item {
+	display: flex;
+}
+
+.source-list .source-item::before {
+	content: "\2022"; 
+	color: #b23c3c;
+	display: inline-block; 
+	width: 1em;
+	margin-left: -1em
+}
+
+.pagination button.bouton-page.active {
+	background-color: #c379db;
+	color: white;
+}
+
+/* ------------------ Refonte Dashboard ------------------ */
+#dashboard .bouton {
+	-moz-box-shadow: 1px 1px 1px #0280cc inset;
+    -o-box-shadow: 1px 1px 1px #0280cc inset;
+    -webkit-box-shadow: 1px 1px 1px #0280cc inset;
+    box-shadow: 1px 1px 1px #0280cc inset;
+}
+
+/* ---------------------------------------------------------------------------*/
+/*					  Artificial Intelligence                                 */
+/* ---------------------------------------------------------------------------*/
+
+.ai_slider {
+	width: 100%;
+	height: 25px;
+	background: #d3d3d3;
+	accent-color: #a8a8a8;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
 }

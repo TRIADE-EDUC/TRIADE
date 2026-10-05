@@ -1,0 +1,128 @@
+/* +--------------------------------------------------------------------------+
+// ? 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// +--------------------------------------------------------------------------+
+// $Id: calendar.css,v 1.1 2023/03/10 08:47:37 gneveu Exp $ */
+
+/*
+--------------------------------------------------------------------------
+    Componants Vue.js Calendar
+--------------------------------------------------------------------------
+*/
+
+.calendar {
+    border: 1px solid #00000047;
+    border-radius: 3px;
+    width: auto;
+}
+
+.calendar .calendar-wrapper {
+    height: 401px;
+    max-width: 730px;
+    margin: 0 auto;
+}
+
+.calendar .calendar-header {
+    background-color: #8080804a;
+    height: 100%;
+    padding: 20px;
+    color: #fff;
+    font-weight: 300;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.calendar .header-background {
+    height: 50px;
+    background-position: center right;
+    background-size: cover;
+}
+
+.calendar .calendar-content {
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.calendar .table-body .table-col:hover,
+.calendar .table-body .table-col:focus {
+    cursor: pointer;
+    background-color: #E0E0E0;
+}
+
+.calendar .table-body .table-col.current-date {
+    color: #D30E0E !important;
+}
+
+.calendar .empty-day:hover,
+.calendar .empty-day:focus {
+    cursor: default !important;
+    background-color: #fff !important;
+}
+
+.calendar .table-header .table-row .table-col {
+    padding: 2%;
+}
+
+.calendar .table-body .table-row .table-col {
+    padding: 4%;
+}
+
+.calendar .table-row {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.calendar .table-body .table-col {
+    border: 1px solid transparent;
+}
+
+.calendar .table-body .table-col.selected {
+    font-weight: bold;
+    background-color: #8080804a;
+}
+
+.calendar .table-col {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+}
+
+.calendar .table-body .table-row {
+    margin-bottom: 0;
+}
+
+.calendar .calendar-table {
+    text-align: center;
+}
+
+.calendars-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 5px;
+    row-gap: 5px;
+    margin-top: 5px;
+}
+
+.calendars-container .row {
+    width: 20%;
+}
+
+.calendars-container .header-title {
+    width: 100% !important;
+}
+
+.calendars-container .repeater-calendar-box {
+	display: flex;
+	flex-wrap: wrap;
+	width: 25%;
+	column-gap: 15px;
+}
+
+.calendars-container .repeater-calendar-box > * {
+    flex: 0 0 auto;
+}
+

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_view_concepts.tpl.php,v 1.10 2018-08-22 16:04:59 tsamson Exp $
+// $Id: skos_view_concepts.tpl.php,v 1.11 2023/11/07 08:24:10 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 global $skos_view_concepts_list_in_notice;
@@ -49,28 +49,30 @@ $skos_view_concepts_list_in_authority = "
 $skos_view_concepts_narrowers_list = "
 {% for scheme, concepts in concepts_list.elements %}
 	{% if loop.first %}
-		{{ concepts_list.title }}<br />
+		<strong>{{ concepts_list.title }}<br /></strong>
 	{% endif %}
 	{% if parameters.concepts_in_line %}
 		{% if !loop.first %}<br />{% endif %}<b>{{ scheme }}</b><br />
 	{% endif %}
 	{% for concept in concepts %}
-				{% if !parameters.concepts_in_line %}[{{ scheme }}]{% endif %}
-{{ concept }}
+		<p>{% if !parameters.concepts_in_line %}[{{ scheme }}]{% endif %} {{ concept }}
 		{% if !loop.last %}
 			{% if parameters.concepts_in_line %} ; {% else %}<br />{% endif %}
 		{% endif %}
+		</p>
 	{% endfor %}
 {% endfor %}";
 
 $skos_view_concepts_broaders_list = "
 {% for scheme, concepts in concepts_list.elements %}
 	{% if loop.first %}
-		{{ concepts_list.title }}<br />
-	{% endif %}	
-	<h4>{{scheme}}</h4>
+		<strong>{{ concepts_list.title }}<br /></strong>
+	{% endif %}
+	{% if parameters.concepts_in_line %}
+		{% if !loop.first %}<br />{% endif %}<b>{{ scheme }}</b><br />
+	{% endif %}
 	{% for concept in concepts %}
-		<p>{{concept}}</p>
+		<p>{% if !parameters.concepts_in_line %}[{{ scheme }}]{% endif %} {{concept}}</p>
 	{% endfor %}
 {% endfor %}";
 

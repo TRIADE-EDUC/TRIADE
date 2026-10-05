@@ -1,20 +1,21 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serie.class.php,v 1.18 2018-07-26 15:25:52 tsamson Exp $
+// $Id: serie.class.php,v 1.19 2022/02/10 08:18:42 dgoron Exp $
 
-// dÃ©finition de la classe de gestion des 'titres de sÃ©ries'
+// définition de la classe de gestion des 'titres de séries'
 
 if ( ! defined( 'SERIE_CLASS' ) ) {
   define( 'SERIE_CLASS', 1 );
 
+global $base_path;
 require_once($base_path.'/includes/templates/serie.tpl.php');
   
 class serie {
 
 	// ---------------------------------------------------------------
-	//  propriÃ©tÃ©s de la classe
+	//  propriétés de la classe
 	// ---------------------------------------------------------------
 
 	public $id       = 0;        // MySQL serie_id in table 'series'
@@ -23,16 +24,16 @@ class serie {
 	public $num_statut = 1; //Statut
 
 	// ---------------------------------------------------------------
-	//  sÃ©rie($id) : constructeur
+	//  série($id) : constructeur
 	// ---------------------------------------------------------------
 
 	public function __construct($id) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos du titre
+	//		getData() : récupération infos du titre
 	// ---------------------------------------------------------------
 
 	public function getData() {
@@ -55,14 +56,14 @@ class serie {
 	}
 
 	// ---------------------------------------------------------------
-	//  print_resume($level) : affichage d'informations sur la sÃ©rie
+	//  print_resume($level) : affichage d'informations sur la série
 	// ---------------------------------------------------------------
 
 	public function print_resume($level = 2,$css='') {
 		global $css;
 		if(!$this->id) return;
 
-		// adaptation par rapport au niveau de dÃ©tail souhaitÃ©
+		// adaptation par rapport au niveau de détail souhaité
 		switch ($level) {
 			// case x :
 			case 2 :
@@ -111,7 +112,7 @@ class serie {
 		$formatted_data = array_merge($authority->format_datas(), $formatted_data);
 		return $formatted_data;
 	}
-} # fin de dÃ©finition de la classe serie
+} # fin de définition de la classe serie
 
-} # fin de dÃ©laration
+} # fin de délaration
 

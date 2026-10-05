@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -34,11 +34,11 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGETUDE45 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -56,11 +56,11 @@ if (isset($_GET["id"])) {
 	supp_etude_eleve($_GET["id"],$id_etude);
 }
 ?>
-<table width=95% bordercolor='#000000' border=1 align=center>
+<table width=95% bordercolor='#000000' border=1 align=center style="border-collapse: collapse;">
 <tr><td bgcolor=yellow><b>Nom</b></td><td bgcolor=yellow><b>Prénom</b></td><td bgcolor=yellow><b>Classe</b></td><td bgcolor=yellow><b>Supprimer</b></td><tr>
 <?php
 $data=liste_eleve_etude($id_etude);
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'"   bordercolor='#FFFFFF'>
 <?php
@@ -73,8 +73,9 @@ print "<td>".strtoupper(recherche_eleve_nom($data[$i][0]))."</td><td>".strtolowe
 <?php } ?>
 </table>
 <br><br>
-
-
+<table>
+<tr><td><script> buttonMagic('Retour','gestion_etude.php','_self','','') </script></td></tr>
+</table>
 
 
 <br><br>
@@ -86,17 +87,17 @@ print "<td>".strtoupper(recherche_eleve_nom($data[$i][0]))."</td><td>".strtolowe
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")):
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

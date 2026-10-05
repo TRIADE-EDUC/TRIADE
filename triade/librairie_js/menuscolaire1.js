@@ -1,4 +1,4 @@
-document.write("</div></td>");
+﻿document.write("</div></td>");
 document.write("</tr>");
 document.write("</table>");
 document.write("<table border='0' cellpadding='0' cellspacing='0' width='100%' height='20' bgcolor='#175216'>");
@@ -42,7 +42,7 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 }else{	
 	if ((webrad == "oui") && (moduleradio == "oui"))  { 
 		document.write("<tr>");
-		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.org/webradio/infomusic.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
+		document.write("<td colspan='3' id='coulTitre0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;' ><a href='#' onMouseOver=\"AffBulleRadioAvecQuit('','','<div id=affradio ><iframe src=https://www.triade-educ.org/webradio/infomusic-2.php  height=100 MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=NO ></iframe></div>'); window.status=''; return true;\" onMouseOut='HideBulleRadio()' onclick=\"open('webradio.php','webradio','width=329,height=195');return false\" ><img src='image/commun/webradio.jpg' align='center' border='0' style='-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); moz-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); -webkit-box-shadow: 0px 0px 10px 4px rgba(119, 119, 119, 0.75); ' /></a></td>"); 
 		document.write("</tr>");
 		document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
 	}else{
@@ -51,13 +51,14 @@ if ((GRAPH == '20') || (GRAPH == '21'))  {
 	}
 }	
 document.write("<tr>");
-document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>"+langmenuadmin07+"</font></b></td>");
+document.write(" <td colspan='3'  id='coulTitre0' ><b><font id='menumodule1'>&#128274; "+langmenuadmin07+"</font></b></td>");
 document.write("</tr>");
 document.write(" <tr>");
 document.write("<td colspan='3' id='coulModule0' >");
 document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='gescompte.php' id='menumodule0'  >"+langmenugeneral01+"</a><br>");
 document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='memo.php' id='menumodule0'  >"+langmenugeneral01a+"</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./triade-phone.php' id='menumodule0' >Triade-Phone</a><br>");
 if (modulestockageviescolaire == "oui") {  document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' onclick=\"open('stockage.php','stockage','scrollbars=yes,resizable=yes,width=850,height=500')\" id='menumodule0' >"+langmenuadmin06+"</a><br>"); }
 if (moduleintramsnviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./intra-msn.php' id='menumodule0' >"+langmenuadmin100+"</a><br>"); }
 if (moduleagendaviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='#' id='menumodule0' onclick=\"open('./agenda/phenix/index.php','timecop','');\" >"+langmenuadmin00+"</a><br>"); }
@@ -75,7 +76,7 @@ document.write("<td colspan='3' height=19>&nbsp;</td>");
 document.write(" </tr>")
 if (modulemessagerieviescolaire == "oui") {
 	document.write("<tr>");
-	document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>"+langmenuadmin0+"</font></b></td>");
+	document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>&#9993; "+langmenuadmin0+"</font></b></td>");
 	document.write("</tr>");
 	document.write("<tr>");
 	document.write("<td colspan='3'  id='coulModule0'>");
@@ -95,7 +96,7 @@ if (modulemessagerieviescolaire == "oui") {
 
 
 document.write("<tr>");
-document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>"+langmenuscolaire0+"</font></b></td>");
+document.write("<td colspan='3' id='coulTitre0' ><b><font  id='menumodule1'>&#128218; "+langmenuscolaire0+"</font></b></td>");
 document.write("</tr>");
 document.write("<tr>");
 document.write("<td colspan='3' id='coulModule0'>");
@@ -116,6 +117,21 @@ document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumod
 if (modulecirculaireviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./circulaire_admin.php'>"+langmenuscolaire15+"</a><br>"); }
 if (moduledstviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./calendrier_config_dst1.php'>"+langmenuscolaire16+"</a><br>"); }
 if (modulestageviescolaire == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_stage.php'>"+langmenuadmin517+"</a><br>"); }
+document.write("</p>");
+document.write("</td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3' height=19>&nbsp;</td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3' id='coulTitre0' style='border-radius: 5px 5px 0px 0px; padding-left:5px'><b><font id='menumodule1'>&#128249; Visioconf&#233;rence</font></b></td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3' id='coulModule0'>");
+document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visio/rooms.php'>Salles actives</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visio/index.php'>Cr&#233;er une salle</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visio/dashboard.php'>Tableau de bord</a><br>");
 document.write("</p>");
 document.write("</td>");
 document.write("</tr>");
@@ -156,9 +172,34 @@ function CnxEnCours() {
 	}
 }
 
+function VerifNotif() {
+        var requete = getRequete2();
+        if (requete != null) {
+                requete.open("POST","verifNotification.php",true);
+                requete.onreadystatechange = function() {
+                        if(requete.readyState == 4) {
+                                if(requete.status == 200) {
+                                        if (requete.responseText != "") {
+                                                var notification = new Notification('TRIADE-NOTIF', {
+                                                     icon: '/image/commun/triade-ico.gif',
+                                                     body: requete.responseText
+                                                });
+                                                notification.onclick = function () {
+                                                   // window.open('http://');
+                                                };
+                                        }
+                                }
+                        };
+                }
+                requete.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                requete.send();
+        }
+}
+
 var nb=0;
 function CnxAjax() {
 	CnxEnCours(nb);
+	VerifNotif();
 	nb++;
 	window.setTimeout("CnxAjax()","300000"); //300000 -> 5 minutes
 }

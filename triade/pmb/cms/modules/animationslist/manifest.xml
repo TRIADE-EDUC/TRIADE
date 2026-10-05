@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.10 2023/09/20 14:52:16 gneveu Exp $ -->
+
+<manifest>
+	<name>Liste d'animations</name>
+	<author>
+		<name>Bastien TAFFOREAU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2021-03-16</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_common_datasource_animations_by_categories</datasource>
+			<datasource conditionParam="thesaurus_concepts_active">cms_module_common_datasource_animations_by_concepts</datasource>
+			<datasource>cms_module_animationslist_datasource_animations_by_type</datasource>
+			<datasource>cms_module_animationslist_datasource_all_animations</datasource>
+			<datasource>cms_module_common_datasource_animations_by_cp_val</datasource>
+		</datasources>
+		<filters>
+            <filter>cms_module_common_filter_animations_by_cp</filter>
+            <filter>cms_module_common_filter_animations_by_start_date</filter>
+		</filters>
+		<views>
+			<view>cms_module_common_view_animationslist</view>
+			<view>cms_module_animationslist_view_calendar</view>
+			<view>cms_module_animationslist_view_django_directory</view>
+			<view>cms_module_animationslist_view_carousel_uikit</view>
+			<view>cms_module_animationslist_view_slideshow</view>
+			<view>cms_module_animationslist_view_calendar_django</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

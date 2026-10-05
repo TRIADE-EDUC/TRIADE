@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.3 2024/03/19 14:16:03 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="europresse_ws">Web Service</entry>
+	<entry code="europresse_url">URL</entry>
+	<entry code="europresse_login">Login</entry>
+	<entry code="europresse_pwd">Password</entry>
+	<entry code="europresse_save_to_continue">You must save the Web Service access settings to continue</entry>
+	<entry code="europresse_search_params">Search settings</entry>
+	<entry code="europresse_documentBase">Document type</entry>
+	<entry code="europresse_documentBase_News">Documents</entry>
+	<entry code="europresse_documentBase_Biographies">Biographies</entry>
+	<entry code="europresse_documentBase_Companies">Company profiles</entry>
+	<entry code="europresse_domain">Search domain</entry>
+	<entry code="europresse_domain_All">All content</entry>
+	<entry code="europresse_dateRange">Date range</entry>
+	<entry code="europresse_dateRange_TODAY">Today</entry>
+	<entry code="europresse_dateRange_SINCE_YESTERDAY">Since yesterday</entry>
+	<entry code="europresse_dateRange_DAYS_3">Last 3 days</entry>
+	<entry code="europresse_dateRange_DAYS_7">Last 7 days</entry>
+	<entry code="europresse_dateRange_DAYS_30">Last 30 days</entry>
+	<entry code="europresse_dateRange_MONTHS_3">Last 3 months</entry>
+	<entry code="europresse_dateRange_MONTHS_6">Last 6 months</entry>
+	<entry code="europresse_dateRange_YEARS_1">Last year</entry>
+	<entry code="europresse_dateRange_YEARS_2">Last 2 years</entry>
+	<entry code="europresse_dateRange_ALL">In all archives</entry>
+	<entry code="europresse_maxCount">Maximum number of results returned</entry>
+	<entry code="europresse_ws_error">Access error, please check the Web Service settings.</entry>
+</XMLlist>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.1 2023/07/10 14:45:15 qvarin Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Grouper sur la valeur d'un champ perso</entry>
+	<entry code="select_empty_Label">Aucun champ perso</entry>
+	<entry code="criteria">champ perso :</entry>
+</XMLlist>

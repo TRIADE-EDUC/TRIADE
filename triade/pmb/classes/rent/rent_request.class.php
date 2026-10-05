@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rent_request.class.php,v 1.6 2019-06-12 12:48:05 btafforeau Exp $
+// $Id: rent_request.class.php,v 1.7 2023/08/28 14:01:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -34,7 +34,7 @@ class rent_request extends rent_account {
 		$h2o = H2o_collection::get_instance($tpl);
 		$command_tpl = $h2o->render(array('account' => $this));
 		if($charset != "utf-8"){
-			$command_tpl=utf8_encode($command_tpl);
+			$command_tpl=encoding_normalize::utf8_normalize($command_tpl);
 		}
 		$html2pdf = new Html2Pdf('L','A4','fr');
 		$html2pdf->writeHTML($command_tpl);

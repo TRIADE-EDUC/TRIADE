@@ -1,0 +1,16 @@
+<div id="nav_history" class="transition" :style="advanceModeStyle">
+	<svghistory :svg="svg" :routes="routes" :pmbmessages="pmbMessages"></svghistory>
+	<controls :svg="svg" :routes="routes" :pmbmessages="pmbMessages" :img_expand_arrows="img_expand_arrows" :navhistory="navHistory"></controls>
+	<tooltips :svg="svg"></tooltips>
+	<div id="overlay" :class="[svg.load ? 'show' : 'hidden']">
+		<div class="waiting">
+			<span>.</span>
+		</div>
+		<div class="waiting">
+			<span>.</span>
+		</div>
+		<div class="waiting">
+			<span>.</span>
+		</div>
+	</div>
+</div>

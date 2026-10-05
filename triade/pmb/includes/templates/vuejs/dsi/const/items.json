@@ -1,0 +1,8 @@
+{
+    "itemModelIgnoreKeys" : ["item", "preview", "subscriber"],
+    "itemIgnoreKeys" : ["model", "numModel", "id", "idItem"],
+    "types" : {
+        "aggregator" : 2
+    },
+    "availableItemSources" : [1, 14, 19, 24, 13, 21]
+}

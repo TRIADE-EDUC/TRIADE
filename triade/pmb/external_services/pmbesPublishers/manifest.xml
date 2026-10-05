@@ -3,7 +3,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.4 2013-02-20 16:09:28 mbertin Exp $ -->
+$Id: manifest.xml,v 1.5 2019/08/28 06:48:51 ngantier Exp $ -->
 <manifest>
 	<name>pmbesPublishers</name>
 	<requirements>
@@ -34,7 +34,7 @@ $Id: manifest.xml,v 1.4 2013-02-20 16:09:28 mbertin Exp $ -->
 			<inputs>
 				<description>msg:list_publisher_notices_input_description</description>
 				<param name="publisher_id" type="scalar" dataType="integer" description="msg:list_publisher_notices_publisher_id"/>
-				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_publisher_notices_OPACUserId"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" description="msg:list_publisher_notices_OPACUserId" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<description>msg:list_publisher_notices_output_description</description>
@@ -51,7 +51,7 @@ $Id: manifest.xml,v 1.4 2013-02-20 16:09:28 mbertin Exp $ -->
 			</requirements>
 			<inputs>
 				<param name="publisher_id" type="scalar" dataType="integer"/>
-				<param name="OPACUserId" type="scalar" dataType="integer"/>
+				<param name="OPACUserId" type="scalar" dataType="integer" optional="yes" default_value="-1"/>
 			</inputs>
 			<outputs>
 				<result name="information" type="scalar" dataType="publisher"/>

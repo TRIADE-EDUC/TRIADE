@@ -5,7 +5,7 @@
 PMB
 table des langues supportées
 PMB est sous licence GPL, la réutilisation du code est cadrée
-$Id: languages.xml,v 1.15 2011-10-11 17:57:47 touraine37 Exp $
+$Id: languages.xml,v 1.15 2011/10/11 17:57:47 touraine37 Exp $
 -->
 
 <XMLlist>

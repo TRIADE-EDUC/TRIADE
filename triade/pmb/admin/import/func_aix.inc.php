@@ -1,13 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_aix.inc.php,v 1.11 2019-01-17 13:44:06 dgoron Exp $
-
+// $Id: func_aix.inc.php,v 1.15 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr ( $_SERVER ['REQUEST_URI'], ".inc.php" ))
 	die ( "no access" );
 
+global $categ, $sub, $action, $msg, $current_module;
+	
 if ($categ == 'import' && $sub == 'import_inv' && $action == 'afterupload') {
 
 	print "<div id='contenu-frame'>";
@@ -26,8 +27,8 @@ if ($categ == 'import' && $sub == 'update_aut' && $action == 'afterupload') {
 	die ();
 }
 
-// DEBUT paramÃ©trage propre Ã  la base de donnÃ©es d'importation :
-global $class_path; //NÃ©cessaire pour certaines inclusions
+// DEBUT paramétrage propre à la base de données d'importation :
+global $class_path; //Nécessaire pour certaines inclusions
 require_once ($class_path . "/notice.class.php");
 require_once ($class_path . "/serials.class.php");
 require_once ($class_path . "/categories.class.php");
@@ -124,11 +125,10 @@ function recup_noticeunimarc_suite($notice) {
 	$info_905 = $record->get_subfield_array_array ( "905", "a" );
 	$info_906 = $record->get_subfield_array_array ( "906", "a" );
 
-} // fin recup_noticeunimarc_suite = fin rÃ©cupÃ©ration des variables propres Ã  la bretagne
+} // fin recup_noticeunimarc_suite = fin récupération des variables propres à la bretagne
 
 
 function import_new_notice_suite() {
-	global $dbh;
 	global $notice_id, $bulletin_ex;
 
 	global $info_461, $info_463, $info_464;
@@ -168,16 +168,16 @@ function import_new_notice_suite() {
 		$resultat = pmb_mysql_query( $requete );
 		if (@pmb_mysql_num_rows( $resultat )) {
 
-			//Si oui, rÃ©cupÃ©ration id
+			//Si oui, récupération id
 			$chapeau_id = pmb_mysql_result( $resultat, 0, 0 );
 			//Bulletin existe-t-il ?
 			$requete = "select bulletin_id from bulletins where bulletin_numero='" . addslashes ( $info_463 [0] ['v'] ) . "' and  mention_date='" . addslashes ( $info_463 [0] ['e'] ) . "' and bulletin_notice=$chapeau_id ";
 			$resultat = pmb_mysql_query( $requete );
 			if (@pmb_mysql_num_rows( $resultat )) {
-				//Si oui, rÃ©cupÃ©ration id bulletin
+				//Si oui, récupération id bulletin
 				$bulletin_id = pmb_mysql_result( $resultat, 0, 0 );
 			} else {
-				//Si non, crÃ©ation bulletin
+				//Si non, création bulletin
 				$info = array ();
 				$bulletin = new bulletinage ( "", $chapeau_id );
 				$info ['bul_titre'] = "Bulletin " . $info_463 [0] ['v'];
@@ -205,7 +205,7 @@ function import_new_notice_suite() {
 
 		} else {
 
-			//Si non, crÃ©ation notice chapeau et bulletin
+			//Si non, création notice chapeau et bulletin
 			$chapeau = new serial ( );
 			$info = array ();
 			$info ['tit1'] = addslashes ( $info_461 [0] ['t'] );
@@ -213,7 +213,7 @@ function import_new_notice_suite() {
 			$info ['niveau_hierar'] = '1';
 			$info ['typdoc'] = $r->typdoc;
 			$chapeau->update ( $info );
-			$chapeau_id = $chapeau->serial_id;
+			$chapeau_id = $chapeau->id;
 
 			$bulletin = new bulletinage ( "", $chapeau_id );
 			$info = array ();
@@ -261,7 +261,7 @@ function import_new_notice_suite() {
 
 	if (! $is_object) {
 
-		//Traitement du thÃ©saurus
+		//Traitement du thésaurus
 		$unknown_desc = array ();
 		$ordre_categ = 0;
 		for($i = 0; $i < count ( $info_606_a ); $i ++) {
@@ -274,7 +274,7 @@ function import_new_notice_suite() {
 
 				if ($categ_id) {
 					$requete = "INSERT INTO notices_categories (notcateg_notice,num_noeud,ordre_categorie) values($notice_id,$categ_id,$ordre_categ)";
-					pmb_mysql_query( $requete, $dbh );
+					pmb_mysql_query( $requete );
 					$ordre_categ ++;
 				} else {
 					$unknown_desc [] = $descripteur;
@@ -285,20 +285,20 @@ function import_new_notice_suite() {
 			$mots_cles = implode ( $pmb_keyword_sep, $unknown_desc );
 			$il = '';
 			$qil = "select index_l from notices where notice_id=$notice_id ";
-			$ril = pmb_mysql_query( $qil, $dbh );
+			$ril = pmb_mysql_query( $qil );
 			$il = trim ( pmb_mysql_result( $ril, 0, 0 ) );
 			if ($il)
 				$mots_cles = $il . $pmb_keyword_sep . $mots_cles;
 
 			$requete = "update notices set index_l='" . addslashes ( $mots_cles ) . "', index_matieres=' " . addslashes ( strip_empty_words ( $mots_cles ) ) . " ' where notice_id=$notice_id";
-			pmb_mysql_query( $requete, $dbh );
+			pmb_mysql_query( $requete );
 		}
 
 		$notes = '';
 
-		//ThÃ¨me
+		//Thème
 		$qn = "select idchamp from notices_custom where name='theme' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_theme = pmb_mysql_result( $rn, 0, 0 );
 		}
@@ -307,14 +307,14 @@ function import_new_notice_suite() {
 			for($i = 0; $i < count ( $info_900 ); $i ++) {
 				for($j = 0; $j < count ( $info_900 [$i] ); $j ++) {
 					$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_900 [$i] [$j] ) . "' and notices_custom_champ=$idc_theme ";
-					$resultat = pmb_mysql_query( $requete, $dbh );
+					$resultat = pmb_mysql_query( $requete );
 					if (pmb_mysql_num_rows( $resultat )) {
 						$value = pmb_mysql_result( $resultat, 0, 0 );
 						$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_theme,$notice_id,$value)";
-						pmb_mysql_query( $requete, $dbh );
+						pmb_mysql_query( $requete );
 					} else {
 						//sinon dans notes
-						$notes .= 'thÃ¨me : ' . $info_900 [$i] [$j];
+						$notes .= 'thème : ' . $info_900 [$i] [$j];
 					}
 				}
 			}
@@ -322,7 +322,7 @@ function import_new_notice_suite() {
 
 		//Genres
 		$qn = "select idchamp from notices_custom where name='genre' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_genre = pmb_mysql_result( $rn, 0, 0 );
 		}
@@ -331,11 +331,11 @@ function import_new_notice_suite() {
 			for($i = 0; $i < count ( $info_901 ); $i ++) {
 				for($j = 0; $j < count ( $info_901 [$i] ); $j ++) {
 					$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_901 [$i] [$j] ) . "' and notices_custom_champ=$idc_genre ";
-					$resultat = pmb_mysql_query( $requete, $dbh );
+					$resultat = pmb_mysql_query( $requete );
 					if (pmb_mysql_num_rows( $resultat )) {
 						$value = pmb_mysql_result( $resultat, 0, 0 );
 						$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_genre,$notice_id,$value)";
-						pmb_mysql_query( $requete, $dbh );
+						pmb_mysql_query( $requete );
 					} else {
 						//sinon dans notes
 						if ($notes)
@@ -348,7 +348,7 @@ function import_new_notice_suite() {
 
 		//Discipline
 		$qn = "select idchamp from notices_custom where name='discipline' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_discipline = pmb_mysql_result( $rn, 0, 0 );
 		}
@@ -357,11 +357,11 @@ function import_new_notice_suite() {
 			for($i = 0; $i < count ( $info_902 ); $i ++) {
 				for($j = 0; $j < count ( $info_902 [$i] ); $j ++) {
 					$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_902 [$i] [$j] ) . "' and notices_custom_champ=$idc_discipline ";
-					$resultat = pmb_mysql_query( $requete, $dbh );
+					$resultat = pmb_mysql_query( $requete );
 					if (pmb_mysql_num_rows( $resultat )) {
 						$value = pmb_mysql_result( $resultat, 0, 0 );
 						$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_discipline,$notice_id,$value)";
-						pmb_mysql_query( $requete, $dbh );
+						pmb_mysql_query( $requete );
 					} else {
 						//sinon dans notes
 						if ($notes)
@@ -374,17 +374,17 @@ function import_new_notice_suite() {
 
 		//Type de nature
 		$qn = "select idchamp from notices_custom where name='type_nature' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_type_nature = pmb_mysql_result( $rn, 0, 0 );
 		}
 		$qn = "select idchamp from notices_custom where name='pays' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_pays = pmb_mysql_result( $rn, 0, 0 );
 		}
 		$qn = "select idchamp from notices_custom where name='periode' ";
-		$rn = pmb_mysql_query( $qn, $dbh );
+		$rn = pmb_mysql_query( $qn );
 		if (pmb_mysql_num_rows( $rn )) {
 			$idc_periode = pmb_mysql_result( $rn, 0, 0 );
 		}
@@ -397,11 +397,11 @@ function import_new_notice_suite() {
 					$done = FALSE;
 					if ($idc_type_nature) {
 						$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_905 [$i] [$j] ) . "' and notices_custom_champ=$idc_type_nature ";
-						$resultat = pmb_mysql_query( $requete, $dbh );
+						$resultat = pmb_mysql_query( $requete );
 						if (pmb_mysql_num_rows( $resultat )) {
 							$value = pmb_mysql_result( $resultat, 0, 0 );
 							$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_type_nature,$notice_id,$value)";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 							$done = TRUE;
 						}
 					}
@@ -409,11 +409,11 @@ function import_new_notice_suite() {
 					//essai dans genre
 					if (! $done && $idc_genre) {
 						$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_905 [$i] [$j] ) . "' and notices_custom_champ=$idc_genre ";
-						$resultat = pmb_mysql_query( $requete, $dbh );
+						$resultat = pmb_mysql_query( $requete );
 						if (pmb_mysql_num_rows( $resultat )) {
 							$value = pmb_mysql_result( $resultat, 0, 0 );
 							$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_genre,$notice_id,$value)";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 							$done = TRUE;
 						}
 					}
@@ -421,11 +421,11 @@ function import_new_notice_suite() {
 					//essai dans theme
 					if (! $done && $idc_theme) {
 						$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_905 [$i] [$j] ) . "' and notices_custom_champ=$idc_theme ";
-						$resultat = pmb_mysql_query( $requete, $dbh );
+						$resultat = pmb_mysql_query( $requete );
 						if (pmb_mysql_num_rows( $resultat )) {
 							$value = pmb_mysql_result( $resultat, 0, 0 );
 							$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_theme,$notice_id,$value)";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 							$done = TRUE;
 						}
 					}
@@ -433,11 +433,11 @@ function import_new_notice_suite() {
 					//essai dans discipline
 					if (! $done && $idc_discipline) {
 						$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_905 [$i] [$j] ) . "' and notices_custom_champ=$idc_discipline ";
-						$resultat = pmb_mysql_query( $requete, $dbh );
+						$resultat = pmb_mysql_query( $requete );
 						if (pmb_mysql_num_rows( $resultat )) {
 							$value = pmb_mysql_result( $resultat, 0, 0 );
 							$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_discipline,$notice_id,$value)";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 							$done = TRUE;
 						}
 					}
@@ -448,14 +448,14 @@ function import_new_notice_suite() {
 						if (! $done && $idc_pays) {
 							$i_pays = strip_empty_chars ( $info_905 [$i] [$j] );
 							$requete = "select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ=$idc_pays ";
-							$resultat = pmb_mysql_query( $requete, $dbh );
+							$resultat = pmb_mysql_query( $requete );
 							if (pmb_mysql_num_rows( $resultat )) {
 								while ( ($row = pmb_mysql_fetch_object( $resultat )) ) {
 									$r_pays = strip_empty_chars ( $row->notices_custom_list_lib );
 									if (strpos ( $i_pays, $r_pays ) !== FALSE) {
 										$value = $row->notices_custom_list_value;
 										$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_pays,$notice_id,$value)";
-										pmb_mysql_query( $requete, $dbh );
+										pmb_mysql_query( $requete );
 										$done_pa = TRUE;
 										break;
 									}
@@ -468,14 +468,14 @@ function import_new_notice_suite() {
 						if (! $done && $idc_periode) {
 							$i_periode = strip_empty_chars ( $info_905 [$i] [$j] );
 							$requete = "select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ=$idc_periode ";
-							$resultat = pmb_mysql_query( $requete, $dbh );
+							$resultat = pmb_mysql_query( $requete );
 							if (pmb_mysql_num_rows( $resultat )) {
 								while ( ($row = pmb_mysql_fetch_object( $resultat )) ) {
 									$r_periode = strip_empty_chars ( $row->notices_custom_list_lib );
 									if (strpos ( $i_periode, $r_periode ) !== FALSE) {
 										$value = $row->notices_custom_list_value;
 										$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_periode,$notice_id,$value)";
-										pmb_mysql_query( $requete, $dbh );
+										pmb_mysql_query( $requete );
 										$done_pe = TRUE;
 										break;
 									}
@@ -500,18 +500,18 @@ function import_new_notice_suite() {
 		//Niveau
 		if (count ( $info_906 )) {
 			$qn = "select idchamp from notices_custom where name='niveau' ";
-			$rn = pmb_mysql_query( $qn, $dbh );
+			$rn = pmb_mysql_query( $qn );
 			if (pmb_mysql_num_rows( $rn )) {
 				$idc_niveau = pmb_mysql_result( $rn, 0, 0 );
 
 				for($i = 0; $i < count ( $info_906 ); $i ++) {
 					for($j = 0; $j < count ( $info_906 [$i] ); $j ++) {
 						$requete = "select notices_custom_list_value from notices_custom_lists where notices_custom_list_lib='" . addslashes ( $info_906 [$i] [$j] ) . "' and notices_custom_champ=$idc_niveau ";
-						$resultat = pmb_mysql_query( $requete, $dbh );
+						$resultat = pmb_mysql_query( $requete );
 						if (pmb_mysql_num_rows( $resultat )) {
 							$value = pmb_mysql_result( $resultat, 0, 0 );
 							$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_integer) values($idc_niveau,$notice_id,$value)";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 						} else {
 							//sinon dans notes
 							if ($notes)
@@ -528,28 +528,28 @@ function import_new_notice_suite() {
 			$notes .= "\n";
 			$notes = addslashes ( $notes );
 			$q = "update notices set n_contenu=concat('" . $notes . "',n_contenu) where notice_id='" . $notice_id . "' ";
-			pmb_mysql_query( $q, $dbh );
+			pmb_mysql_query( $q );
 		}
 
-		//AnnÃ©e de pÃ©remption
+		//Année de péremption
 		if ($info_903 [0]) {
 			$qn = "select idchamp from notices_custom where name='annee_peremption' ";
-			$rn = pmb_mysql_query( $qn, $dbh );
+			$rn = pmb_mysql_query( $qn );
 			if (pmb_mysql_num_rows( $rn )) {
 				$idc_ap = pmb_mysql_result( $rn, 0, 0 );
 				$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_small_text) values($idc_ap,$notice_id,'" . addslashes ( $info_903 [0] ) . "')";
-				pmb_mysql_query( $requete, $dbh );
+				pmb_mysql_query( $requete );
 			}
 		}
 
 		//Date de saisie
 		if ($info_904 [0]) {
 			$qn = "select idchamp from notices_custom where name='date_creation' ";
-			$rn = pmb_mysql_query( $qn, $dbh );
+			$rn = pmb_mysql_query( $qn );
 			if (pmb_mysql_num_rows( $rn )) {
 				$idc_ds = pmb_mysql_result( $rn, 0, 0 );
 				$requete = "insert into notices_custom_values (notices_custom_champ,notices_custom_origine,notices_custom_date) values($idc_ds,$notice_id,'" . $info_904 [0] . "')";
-				pmb_mysql_query( $requete, $dbh );
+				pmb_mysql_query( $requete );
 			}
 		}
 	}
@@ -559,22 +559,22 @@ function import_new_notice_suite() {
 
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires() {
-	global $msg, $dbh;
-
-	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, $section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage, $cote_mandatory;
+	global $nb_expl_ignores;
+	global $prix, $notice_id, $info_995, $book_lender_id, $book_statut_id, $cote_mandatory;
 
 	global $info_461, $bulletin_ex;
 
 	// lu en 010$d de la notice
 	$price = $prix [0];
 
-	// la zone 995 est rÃ©pÃ©table
-	for($nb_expl = 0; $nb_expl < sizeof ( $info_995 ); $nb_expl ++) {
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est répétable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl ++) {
 
 		/* RAZ expl */
 		$expl = array ();
 
-		/* prÃ©paration du tableau Ã  passer Ã  la mÃ©thode */
+		/* préparation du tableau à passer à la méthode */
 		$expl ['cb'] = $info_995 [$nb_expl] ['f'];
 		if (($bulletin_ex) && (is_array ( $info_461 ))) {
 			$expl ['bulletin'] = $bulletin_ex;
@@ -585,7 +585,7 @@ function traite_exemplaires() {
 		}
 
 		$data_doc = array ();
-		$data_doc ['duree_pret'] = 0; /* valeur par dÃ©faut */
+		$data_doc ['duree_pret'] = 0; /* valeur par défaut */
 		$data_doc ['tdoc_codage_import'] = $info_995 [$nb_expl] ['r'];
 		$data_doc ['tdoc_libelle'] = $info_995 [$nb_expl] ['r'];
 		$data_doc ['tdoc_owner'] = 0;
@@ -651,16 +651,15 @@ function traite_exemplaires() {
 } // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
 
-// fonction spÃ©cifique d'export de la zone 995
+// fonction spécifique d'export de la zone 995
 function export_traite_exemplaires($ex = array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }
 
 function import_inv() {
-	global $dbh;
 	global $text, $n, $t_xml;
 
-	//La structure du fichier xml doit Ãªtre la suivante :
+	//La structure du fichier xml doit être la suivante :
 	/*
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<inm:Results productTitle="Superdoc Premium" productVersion="9.00" xmlns:inm="http://www.inmagic.com/webpublisher/query">
@@ -687,7 +686,7 @@ function import_inv() {
 		print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
 		exit ();
 	} elseif (! (move_uploaded_file ( $_FILES ['userfile'] ['tmp_name'], "../../temp/" . basename ( $_FILES ['userfile'] ['tmp_name'] ) ))) {
-		print "Le fichier n'a pas pu Ãªtre t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
+		print "Le fichier n'a pas pu être t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
 		print_r ( $_FILES ) . "<p>";
 		exit ();
 	}
@@ -743,14 +742,14 @@ function import_inv() {
 				xml_set_character_data_handler ( $parser, "texte" );
 
 				if (! xml_parse ( $parser, $buffer, TRUE )) {
-					die ( sprintf ( "erreur XML %s Ã  la ligne: %d", xml_error_string ( xml_get_error_code ( $parser ) ), xml_get_current_line_number ( $parser ) ) );
+					die ( sprintf ( "erreur XML %s à la ligne: %d", xml_error_string ( xml_get_error_code ( $parser ) ), xml_get_current_line_number ( $parser ) ) );
 				}
 				xml_parser_free ( $parser );
 
 				//traitement des enregistrements
 				for($i = 1; $i <= count ( $t_xml ); $i ++) {
 
-					//il faut un cb exemplaire et un nÂ° d'inventaire
+					//il faut un cb exemplaire et un n° d'inventaire
 					$t_xml [$i] ['INM:CODE-BARRE'] [0] = trim ( $t_xml [$i] ['INM:CODE-BARRE'] [0] );
 					$t_xml [$i] ['INM:NUMERO-INVENTAIRE'] [0] = trim ( $t_xml [$i] ['INM:NUMERO-INVENTAIRE'] [0] );
 
@@ -759,7 +758,7 @@ function import_inv() {
 						//id exemplaire
 						$expl_id = 0;
 						$q = "select expl_id from exemplaires where expl_cb='" . $t_xml [$i] ['INM:CODE-BARRE'] [0] . "' ";
-						$r = pmb_mysql_query( $q, $dbh );
+						$r = pmb_mysql_query( $q );
 						if (pmb_mysql_num_rows( $r )) {
 							$expl_id = pmb_mysql_result( $r, 0, 0 );
 						} else {
@@ -767,13 +766,13 @@ function import_inv() {
 							continue;
 						}
 
-						//insert nÂ° inventaire
+						//insert n° inventaire
 						$qn = "select idchamp from expl_custom left join expl_custom_values on expl_custom_origine=idchamp where name='no_inventaire' and expl_custom_small_text is null ";
-						$rn = pmb_mysql_query( $qn, $dbh );
+						$rn = pmb_mysql_query( $qn );
 						if (pmb_mysql_num_rows( $rn )) {
 							$idc = pmb_mysql_result( $rn, 0, 0 );
 							$requete = "insert into expl_custom_values (expl_custom_champ,expl_custom_origine,expl_custom_small_text) values($idc,$expl_id,'" . addslashes ( $t_xml [$i] ['INM:NUMERO-INVENTAIRE'] [0] ) . "')";
-							pmb_mysql_query( $requete, $dbh );
+							pmb_mysql_query( $requete );
 							$nb_ok ++;
 						}
 
@@ -787,12 +786,12 @@ function import_inv() {
 		print "Traitement du fichier termin&eacute;.";
 		print "<br /><hr />";
 
-		print "Nombre de nÂ° d&apos;inventaire import&eacute;s : " . $nb_ok . "<br />";
+		print "Nombre de n° d&apos;inventaire import&eacute;s : " . $nb_ok . "<br />";
 		print "Nombre d'erreurs de traitement : " . count ( $tab_err ) . "<br /><hr />";
 
 		if (count ( $tab_err )) {
 			for($i = 0; $i < count ( $tab_err ); $i ++) {
-				print "Erreur &agrave; l&apos;enregistrement nÂ° " . $tab_err [$i] . "<br />";
+				print "Erreur &agrave; l&apos;enregistrement n° " . $tab_err [$i] . "<br />";
 			}
 			print "<hr /><br />";
 		}
@@ -805,17 +804,16 @@ function import_inv() {
 require_once ($class_path . "/author.class.php");
 
 function update_aut() {
-	global $dbh;
 	global $text, $n, $t_xml;
 
-	//Reprise des auteurs sans Ã©lÃ©ment rejetÃ© et des titres de notices lorsque tronquÃ©s.
+	//Reprise des auteurs sans élément rejeté et des titres de notices lorsque tronqués.
 
 	//Upload du fichier
 	if (! ($_FILES ['userfile'] ['tmp_name'])) {
 		print "Cliquez sur Pr&eacute;c&eacute;dent et choisissez un fichier";
 		exit ();
 	} elseif (! (move_uploaded_file ( $_FILES ['userfile'] ['tmp_name'], "../../temp/" . basename ( $_FILES ['userfile'] ['tmp_name'] ) ))) {
-		print "Le fichier n'a pas pu Ãªtre t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
+		print "Le fichier n'a pas pu être t&eacute;l&eacute;charg&eacute;. Voici plus d'informations :<br />";
 		print_r ( $_FILES ) . "<p>";
 		exit ();
 	}
@@ -873,7 +871,7 @@ function update_aut() {
 				xml_set_character_data_handler ( $parser, "texte" );
 
 				if (! xml_parse ( $parser, $buffer, TRUE )) {
-					die ( sprintf ( "erreur XML %s Ã  la ligne: %d", xml_error_string ( xml_get_error_code ( $parser ) ), xml_get_current_line_number ( $parser ) ) );
+					die ( sprintf ( "erreur XML %s à la ligne: %d", xml_error_string ( xml_get_error_code ( $parser ) ), xml_get_current_line_number ( $parser ) ) );
 				}
 				xml_parser_free ( $parser );
 
@@ -886,7 +884,7 @@ function update_aut() {
 
 					$t_xml [$i] ['INM:CODE-BARRE'] [0] = trim ( $t_xml [$i] ['INM:CODE-BARRE'] [0] );
 					$q = "select notice_id,tit1 from notices join exemplaires on expl_notice=notice_id where expl_cb='" . $t_xml [$i] ['INM:CODE-BARRE'] [0] . "' ";
-					$r = pmb_mysql_query( $q, $dbh );
+					$r = pmb_mysql_query( $q );
 
 					if (pmb_mysql_num_rows( $r )) {
 
@@ -902,23 +900,23 @@ function update_aut() {
 							$t_xml [$i] ['INM:AUTEUR'] [$k] = trim ( $v );
 							if (strpos ( $v, ',' ) === FALSE) {
 								$compte ++;
-								$tmp_val [$compte] ['name'] = clean_string ( utf8_decode ( $v ) );
+								$tmp_val [$compte] ['name'] = clean_string ( encoding_normalize::utf8_decode ( $v ) );
 								$tmp_val [$compte] ['type'] = '70';
 								$aut = auteur::import ( $tmp_val [$compte] );
 								$q1 = "select count(*) from responsability join authors on author_id=responsability_author where responsability_notice='" . $n . "' and responsability_type='0' ";
-								$r1 = pmb_mysql_query( $q1, $dbh );
+								$r1 = pmb_mysql_query( $q1 );
 								$n1 = pmb_mysql_result( $r1, 0, 0 );
 								if ($n1) {
 									$q2 = "select max(ordre)*1+1 from responsability join authors on author_id=responsability_author where responsability_notice_id='" . $n . "' and responsability_type='1' ";
-									$r2 = pmb_mysql_query( $q2, $dbh );
+									$r2 = pmb_mysql_query( $q2 );
 									$n2 = pmb_mysql_result( $r2, 0, 0 );
 									$q3 = "insert ignore into responsability (responsability_author,responsability_notice,responsability_fonction,responsability_type,responsability_ordre) ";
 									$q3 .= "values ('" . $aut . "','" . $n . "','','1','" . $n2 . "') ";
-									pmb_mysql_query( $q3, $dbh );
+									pmb_mysql_query( $q3 );
 								} else {
 									$q3 = "insert ignore into responsability (responsability_author,responsability_notice,responsability_fonction,responsability_type,responsability_ordre) ";
 									$q3 .= "values ('" . $aut . "','" . $n . "','','0','0') ";
-									pmb_mysql_query( $q3, $dbh );
+									pmb_mysql_query( $q3 );
 								}
 							}
 						}
@@ -926,23 +924,23 @@ function update_aut() {
 							$t_xml [$i] ['INM:AUTEUR-COLLECTIF'] = trim ( $v );
 							if (strpos ( $v, ',' ) === FALSE) {
 								$compte ++;
-								$tmp_val [$compte] ['name'] = clean_string ( utf8_decode ( $v ) );
+								$tmp_val [$compte] ['name'] = clean_string ( encoding_normalize::utf8_decode ( $v ) );
 								$tmp_val [$compte] ['type'] = '71';
 								$aut = auteur::import ( $tmp_val [$compte] );
 								$q1 = "select count(*) from responsability join authors on author_id=responsability_author where responsability_notice='" . $n . "' and responsability_type='0' ";
-								$r1 = pmb_mysql_query( $q1, $dbh );
+								$r1 = pmb_mysql_query( $q1 );
 								$n1 = pmb_mysql_result( $r1, 0, 0 );
 								if ($n1) {
 									$q2 = "select max(ordre)*1+1 from responsability join authors on author_id=responsability_author where responsability_notice_id='" . $n . "' and responsability_type='1' ";
-									$r2 = pmb_mysql_query( $q2, $dbh );
+									$r2 = pmb_mysql_query( $q2 );
 									$n2 = pmb_mysql_result( $r2, 0, 0 );
 									$q3 = "insert ignore into responsability (responsability_author,responsability_notice,responsability_fonction,responsability_type,responsability_ordre) ";
 									$q3 .= "values ('" . $aut . "','" . $n . "','','1','" . $n2 . "') ";
-									pmb_mysql_query( $q3, $dbh );
+									pmb_mysql_query( $q3 );
 								} else {
 									$q3 = "insert ignore into responsability (responsability_author,responsability_notice,responsability_fonction,responsability_type,responsability_ordre) ";
 									$q3 .= "values ('" . $aut . "','" . $n . "','','0','0') ";
-									pmb_mysql_query( $q3, $dbh );
+									pmb_mysql_query( $q3 );
 								}
 							}
 						}
@@ -950,20 +948,20 @@ function update_aut() {
 							$t_xml [$i] ['INM:AUTEUR-SECONDAIRE'] [$k] = trim ( $v );
 							if (strpos ( $v, ',' ) === FALSE) {
 								$compte ++;
-								$tmp_val [$compte] ['name'] = clean_string ( utf8_decode ( $v ) );
+								$tmp_val [$compte] ['name'] = clean_string ( encoding_normalize::utf8_decode ( $v ) );
 								$tmp_val [$compte] ['type'] = '70';
 								$aut = auteur::import ( $tmp_val [$compte] );
 								$q2 = "select max(ordre)*1+1 from responsability join authors on author_id=responsability_author where responsability_notice_id='" . $n . "' and responsability_type='2' ";
-								$r2 = pmb_mysql_query( $q2, $dbh );
+								$r2 = pmb_mysql_query( $q2 );
 								$n2 = pmb_mysql_result( $r2, 0, 0 );
 								$q3 = "insert ignore into responsability (responsability_author,responsability_notice,responsability_fonction,responsability_type,responsability_ordre) ";
 								$q3 .= "values ('" . $aut . "','" . $n . "','','2','" . $n2 . "') ";
-								pmb_mysql_query( $q3, $dbh );
+								pmb_mysql_query( $q3 );
 							}
 						}
 
 						if ($compte != $tmp_compte) {
-							print 'notice nÂ° ' . $n . ' - ' . $t . '<br />';
+							print 'notice n° ' . $n . ' - ' . $t . '<br />';
 							foreach($tmp_val as $v) {
 								print $v['name'].'<br />';
 							}
@@ -986,7 +984,7 @@ function update_aut() {
 
 		if (count ( $tab_err )) {
 			for($i = 0; $i < count ( $tab_err ); $i ++) {
-				print "Erreur &agrave; l&apos;enregistrement nÂ° " . $tab_err [$i] . "<br />";
+				print "Erreur &agrave; l&apos;enregistrement n° " . $tab_err [$i] . "<br />";
 			}
 			print "<hr /><br />";
 		}
@@ -996,7 +994,7 @@ function update_aut() {
 	}
 }
 
-//MÃ©thodes du parser
+//Méthodes du parser
 function debutBalise($parser, $tag, $att) {
 	return;
 }

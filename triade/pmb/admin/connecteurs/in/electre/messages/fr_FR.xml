@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
 
 <!-- messages localisés en français pour le connecteur OAI
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.2 2018-03-05 15:24:13 arenou Exp $ -->
+$Id: fr_FR.xml,v 1.3 2024/03/19 14:16:03 dbellamy Exp $ -->
 
 <XMLlist>
-	<entry code="electre_clientID">Client ID</entry>
-	<entry code="electre_clientSecret">Client Secret</entry>
-	<entry code="electre_maxresults">Nombre maximum de résultats par recherche</entry>
+    <entry code="electre_ws">Web Service</entry>
+    <entry code="electre_base_url">URL de base de l'API</entry>
+    <entry code="electre_token_url">URL de récupération d'un token d'authentification</entry>
+    <entry code="electre_client_id">Identifiant client</entry>
+    <entry code="electre_client_user">Nom utilisateur</entry>
+    <entry code="electre_client_secret">Mot de passe utilisateur</entry>
+
+    <entry code="electre_search_params">Paramétrage de la recherche</entry>
+    <entry code="electre_max_results">Nombre maximum de résultats</entry>
 </XMLlist>

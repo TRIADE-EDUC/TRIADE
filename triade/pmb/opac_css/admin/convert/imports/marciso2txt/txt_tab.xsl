@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- $Id: txt_tab.xsl,v 1.2 2006-04-28 05:35:04 touraine37 Exp $ -->
+<!-- $Id: txt_tab.xsl,v 1.2 2006/04/28 05:35:04 touraine37 Exp $ -->
 <xsl:stylesheet version = '1.0'
      xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 

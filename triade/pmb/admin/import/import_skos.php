@@ -1,10 +1,10 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_skos.php,v 1.2 2013-08-19 07:16:11 mbertin Exp $
+// $Id: import_skos.php,v 1.3 2019/07/12 10:25:27 btafforeau Exp $
 
-// dÃ©finition du minimum nÃ©cÃ©ssaire 
+// définition du minimum nécéssaire 
 $base_path="../..";                            
 $base_auth = "ADMINISTRATION_AUTH";  
 $base_title = "";    
@@ -62,7 +62,7 @@ switch ($action) {
 			print "<SCRIPT>setTimeout(\"document.afterupload.submit()\",2000);</SCRIPT>";
 			break;
 		}
-		//Si rien n'a Ã©tÃ© sÃ©lectionnÃ© on rÃ©afiche la page de chargement
+		//Si rien n'a été sélectionné on réafiche la page de chargement
 		print $form_download_files;
 	case 'afterupload':
 		$files=unserialize(urldecode($files_post));
@@ -133,4 +133,3 @@ switch ($action) {
 		break;
 }
 ?>
-

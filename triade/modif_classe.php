@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -35,11 +35,11 @@
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form  method=post onsubmit="return verifcreatclasse()" name="formulaire" >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS407 ?></font></b></td>
@@ -64,10 +64,11 @@ if(isset($_POST["modif"])):
 	$saisie_classe_long=$_POST["saisie_classe_long"];
 	$saisie_classe_long=str_replace("\"","",$saisie_classe_long);
 	$specification=$_POST["specification"];
+	$code_mef=isset($_POST["code_mef"]) ? preg_replace('/[^0-9]/', '', (string)$_POST["code_mef"]) : '';
 	$offline=0;
         if ($_POST["offline"] == "1") $offline=1 ;
 	$id=$_POST["id"];
-        $cr=modif_classe22($classenom,$id,$saisie_classe_long,$_POST["saisie_site"],$saisie_langue,$saisie_niveau,$specification);
+        $cr=modif_classe22($classenom,$id,$saisie_classe_long,$_POST["saisie_site"],$saisie_langue,$saisie_niveau,$specification,$code_mef);
         if($cr):
 		modifOffline($id,$offline);
                 alertJs(LANGCLAS2);
@@ -91,6 +92,7 @@ $idsite=chercherIdSiteClasse($id);
 $langue=chercherLangueClasse($id);
 $niveau=chercherNiveauClasse($id);
 $specification=chercherSpecificationClasse($id);
+$code_mef=chercherCodeMefClasse($id);
 $offline=chercherOfflineClasse($id);
 
 ?>
@@ -99,6 +101,7 @@ $offline=chercherOfflineClasse($id);
 &nbsp;&nbsp;<font class=T2><?php print LANGMESS410 ?></font> : <input type=text name="saisie_classe_long" size=60  maxlength='250'  value="<?php print stripslashes($saisie_classe_long) ?>" ><BR><br>
 &nbsp;&nbsp;<font class=T2><?php print LANGMESS411 ?></font> : <select name="saisie_site"><?php select_site($idsite) ?></select><BR><br>
 &nbsp;&nbsp;<font class=T2><?php print LANGTMESS506 ?></font> : <input type=text name="specification" size=60  maxlength='200' value="<?php print stripslashes($specification) ?>" ><BR><br>
+&nbsp;&nbsp;<font class=T2><?php print defined('LANG_CODE_MEF') ? LANG_CODE_MEF : 'Code MEF (SIECLE)' ?></font> : <input type=text name="code_mef" size=20  maxlength='11' placeholder='Ex: 10010012110' value="<?php print html_quotes($code_mef) ?>" ><BR><br>
 &nbsp;&nbsp;<font class=T2><?php print "Langue de la classe" ?></font> : <select name="saisie_langue">
                                                                          <option value='Français / French' id='select1' <?php if ($langue == "Français / French") print "selected='selected'" ?> >Français / French</option>
                                                                          <option value='Anglais / English' id='select1'  <?php if ($langue == "Anglais / English") print "selected='selected'" ?> >Anglais / English</option>
@@ -145,6 +148,6 @@ if ($cr == 1) {
 <!-- // fin  -->
 </td></tr></table>
 </form>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY></HTML>
 <?php Pgclose(); ?>

@@ -1,12 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: grid.class.php,v 1.1 2017-01-06 16:10:49 tsamson Exp $
+// $Id: grid.class.php,v 1.1 2017/01/06 16:10:49 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe d'une grille
+// définition de la classe d'une grille
 
 require_once($class_path."/encoding_normalize.class.php");
 
@@ -31,7 +31,7 @@ class grid {
 	protected $status = false;
 
 	/**
-	 * DonnÃ©es de la grille
+	 * Données de la grille
 	 * @var string
 	 */
 	protected $data = '';
@@ -48,7 +48,7 @@ class grid {
 	}
 
 	/**
-	 * DonnÃ©es de la grille
+	 * Données de la grille
 	 */
 	protected function fetch_data() {
 		$query = 'select grid_generic_data from grids_generic

@@ -1,20 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_bannetteslist_datasource_bannetteslist.class.php,v 1.4 2017-11-27 10:37:25 tsamson Exp $
+// $Id: cms_module_bannetteslist_datasource_bannetteslist.class.php,v 1.7 2022/02/18 08:53:36 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+global $class_path;
+require_once($class_path."/bannette.class.php");
 
 class cms_module_bannetteslist_datasource_bannetteslist extends cms_module_common_datasource_list{
 	
 	public function __construct($id=0){
 		parent::__construct($id);
-		$this->sortable = false;
+		$this->sortable = true;
 		$this->limitable = false;
 	}
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -23,39 +26,44 @@ class cms_module_bannetteslist_datasource_bannetteslist extends cms_module_commo
 	}
 	
 	/*
-	 * On dÃ©fini les critÃ¨res de tri utilisable pour cette source de donnÃ©e
+	 * On défini les critères de tri utilisable pour cette source de donnée
 	 */
 	protected function get_sort_criterias() {
 		return array (
-			"title"
+			"nom_bannette",
+			"comment_public",
+			"date_last_remplissage",
+			"date_last_envoi",
 		);
 	}
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		global $opac_url_base;
-		
 		$selector = $this->get_selected_selector();
 		if ($selector) {
 			$return = array();
 			if (is_array($selector->get_value()) && count($selector->get_value()) > 0) {				
 				foreach ($selector->get_value() as $value) {
-					$return[] = $value*1;
+					$return[] = intval($value);
 				}
 			}
 			
-			if(count($return)){
-				$query = "select id_bannette, nom_bannette, comment_public, nb_notices_diff from bannettes where id_bannette in ('".implode("','",$return)."')";
-
+			if(count($return)) {
+			    $bannettes = $this->filter_datas("bannetteslist", $return);
+			    $query = "select id_bannette, nom_bannette, comment_public, nb_notices_diff from bannettes where id_bannette in ('".implode("','",$bannettes)."')";
+				if (!empty($this->parameters["sort_by"])) {
+				    $query .= " order by " . addslashes($this->parameters["sort_by"]);
+				    if (!empty($this->parameters["sort_order"])) $query .= " ".addslashes($this->parameters["sort_order"]);
+				}
 				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result)){
 					$return = array();
 					while($row=pmb_mysql_fetch_object($result)){
 						$flux_rss = array();
 						$i=0;
-						$query2 = "select * from rss_flux_content, rss_flux where id_rss_flux =num_rss_flux and type_contenant='BAN' and num_contenant='".($row->id_bannette*1)."'";
+						$query2 = "select * from rss_flux_content, rss_flux where id_rss_flux =num_rss_flux and type_contenant='BAN' and num_contenant='".$row->id_bannette."'";
 						$result2 = pmb_mysql_query($query2);						
 						if (pmb_mysql_num_rows($result2)) {
 							while ($row2 = pmb_mysql_fetch_object($result2)) {
@@ -81,7 +89,8 @@ class cms_module_bannetteslist_datasource_bannetteslist extends cms_module_commo
 								$i++;
 							}
 						}
-						$return[] = array("id" => $row->id_bannette, "name" => $row->nom_bannette, "comment" => $row->comment_public, "record_number" => $row->nb_notices_diff, "flux_rss" => $flux_rss);
+						$bannette = bannette::get_instance($row->id_bannette);
+						$return[] = array("id" => $row->id_bannette, "name" => $row->nom_bannette, "comment" => $bannette->get_render_comment_public(), "record_number" => $row->nb_notices_diff, "flux_rss" => $flux_rss);
 					}
 				}
 			}

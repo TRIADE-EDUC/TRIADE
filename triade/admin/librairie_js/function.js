@@ -84,84 +84,58 @@ function imprimer() {
 ////////////////////////////////////////////////////////
 // Fonction quitter session
 function quitter_session() {
-         var confirmation=confirm('Souhaitez-vous fermer votre session ? \n\n Service Triade')
-         if (confirmation) {
-             PopupCentrer('/'+REPECOLE+'/'+REPADMIN+'/librairie_php/deconnection.php','250','100','','quitte');
-             parent.window.close();
-         }
+    if (confirm('Souhaitez-vous fermer votre session ?')) {
+        PopupCentrer('/'+REPECOLE+'/'+REPADMIN+'/librairie_php/deconnection.php','250','100','','quitte');
+        parent.window.close();
+    }
 }
 
 ////////////////////////////////////////////////////////
 // Fonction quitter avant session
 function quitter_avant_session() {
-         var confirmation=confirm('Souhaitez-vous fermer votre session ? \n\n Service Triade')
-         if (confirmation) {
-             parent.window.close();
-         }
+    if (confirm('Souhaitez-vous fermer votre session ?')) {
+        parent.window.close();
+    }
 }
 
 ////////////////////////////////////////////////////////
 // Fonction quitter session  compte admin_triade
 function quitter_session_admin() {
-         var confirmation=confirm('Souhaitez-vous fermer votre session ? \n\n Service Triade')
-         if (confirmation) {
-             PopupCentrer('/'+REPECOLE+'/'+REPADMIN+'/deconnection.php','250','100','','quitte');
-             parent.window.close();
-             location.href="/"
-         }
+    if (confirm('Souhaitez-vous fermer votre session ?')) {
+        PopupCentrer('/'+REPECOLE+'/'+REPADMIN+'/deconnection.php','250','100','','quitte');
+        parent.window.close();
+        location.href="/";
+    }
 }
+
+var _ajsStyle = document.createElement('style');
+_ajsStyle.textContent = '.alertify .ajs-dialog{min-height:0!important;max-width:380px!important;padding:12px 12px 0 12px!important}.alertify .ajs-header{margin:-12px!important;margin-bottom:0!important;padding:8px 12px!important}.alertify .ajs-body{min-height:0!important}.alertify .ajs-body .ajs-content{padding:8px 12px!important}.alertify .ajs-footer{margin-left:-12px!important;margin-right:-12px!important;min-height:0!important}';
+(document.head || document.documentElement).appendChild(_ajsStyle);
 
 //////////////////////////////////////////////////////
 // function pour les bouton
-// appel de la fonction
-// <script language=Javascript>buttonMagic("autre","#' onclick=\"open('essai.html','acces_compte','width=500,height=200')\""); // value,lien</script>
 function buttonMagic(value,lien,name,option,actionpossible) {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        document.write("<div class='btncenter1'><a href='#' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\"  >"+value+"</a></div>");
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\">");
 }
 
 function buttonMagicSubmit(value,name) {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        document.write("<div class='btncenter1'><input type=submit value='"+value+"' name='"+name+"' ></div>");
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"'>");
 }
 
 function buttonMagicSubmit2(value,name,action) {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        document.write("<div class='btncenter1'><input type=submit value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\" ></div>");
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' onclick=\"this.value='"+action+"'\">");
 }
 
 function buttonMagicSubmit3(value,lien,name,option,action,actionpossible) {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        document.write("<div class='btncenter1'><input type=submit value='"+value+"' name='"+name+"' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\" ></div>");
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' onclick=\"open('"+lien+"','"+name+"','"+option+"')"+actionpossible+"\">");
 }
 
 function buttonMagicSubmit4(value,name,action) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type=submit value='"+value+"' name='"+name+"' "+action+"></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' value='"+value+"' name='"+name+"' "+action+">");
 }
 
-
 function buttonMagicFermeture() {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        document.write("<div class='btncenter1'><input type=button value='Fermer la fenêtre' onclick=\"parent.window.close();\"></div>");
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	document.write("<input type='button' class='btn btn-secondary' value='Fermer la fenêtre' onclick=\"parent.window.close();\">");
 }
 
 function compter(f,max,sortie) {
@@ -177,23 +151,15 @@ function compter(f,max,sortie) {
 
 
 function buttonMagicSubmitAtt(value,name,attribut) {
-	document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-	document.write("<div class='btnleft1'></div>");
-	document.write("<div class='btncenter1'><input type=submit "+attribut+" value='"+value+"' name='"+name+"' ></div>");
-	document.write("<div class='btnright1'></div>");
-	document.write("</div>");
+	document.write("<input type='submit' class='btn btn-primary' "+attribut+" value='"+value+"' name='"+name+"'>");
 }
 
 function buttonMagic2(value,lien,name,option,disabled) {
-        document.write("<div style='float:left;margin-left:4px;' class='button1'>");
-        document.write("<div class='btnleft1'></div>");
-        if (disabled == 1) {
-                document.write("<div class='btncenter1'><a href='javascript:return(true)' disabled='disabled'   style='font-weight:bold;color:#000080' >"+value+"</a></div>");
-        }else{
-                document.write("<div class='btncenter1'><a href='#' onclick=\"open('"+lien+"','"+name+"','"+option+"');\"   style='font-weight:bold;color:#000080' >"+value+"</a></div>");
-        }
-        document.write("<div class='btnright1'></div>");
-        document.write("</div>");
+	if (disabled == 1) {
+		document.write("<input type='button' class='btn btn-primary' disabled value=\""+value+"\">");
+	} else {
+		document.write("<input type='button' class='btn btn-primary' value=\""+value+"\" onclick=\"open('"+lien+"','"+name+"','"+option+"');\">");
+	}
 }
 
 <!-- Matomo -->

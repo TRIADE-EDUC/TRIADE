@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.12 2015-06-26 12:35:02 pmbs Exp $ -->
+$Id: en_UK.xml,v 1.12 2015/06/26 12:35:02 pmbs Exp $ -->
 
 <XMLlist>
 	<entry code="amazon_key">AWSAccessKeyID Key</entry>

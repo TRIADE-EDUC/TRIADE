@@ -1,0 +1,360 @@
+
+<!-- $Id: record_in_result_display.tpl.html,v 1.1.2.1 2025/04/22 14:15:08 jdupuy Exp $ -->
+
+<div id="record_container_{{ record.id }}" class="noticeNot_{{record.niveau_biblio}}{{record.typdoc}} parentNotCourte uk-clearfix">
+	{% block record_case_traitement %}
+		{% if global.cart_aff_case_traitement %}
+			<input type='checkbox' class='checkboxNot' value='{{ record.id }}' name='notice[]'/>
+		{% endif %}
+	{% endblock %}
+
+	{% block record_container_not %}
+		<div class="noticeCourteTop">
+			{% block record_picture_tdoc %}
+				<div class="vignetteimgNot">
+					{% block record_picture %}
+						{% if record.get_picture_url %}
+							<!-- Vignette de la notice -->
+							<div class="vignetteDocNot">
+								<a href="{{ record.permalink }}" tabindex="-1">
+									<img class="vignetteNot" src="{{ record.get_picture_url }}" aria-hidden="true" alt="" />
+								</a>
+							</div>													
+						{% endif %}	
+					{% endblock %}
+					
+					{% block record_tdoc %}
+						{*{% block record_icon_doc %}
+							{% if record.icon_doc %}
+								<!-- icon type de document -->
+								<img src="{{img.nom_de_mon_icon.png}}">
+							{% endif %}
+						{% endblock %}*}
+
+						<!-- Type de document -->
+						<div class="notice_tdoc">
+							{% if record.niveau_biblio == 'm' %}
+								{{ record.tdoc }}
+							{% else %}
+								{{ record.biblio_doc }}{% if record.biblio_doc != record.tdoc %} : {{ record.tdoc }}{% endif %}
+							{% endif %}
+						</div>
+					{% endblock %} 
+				</div>
+			{% endblock %}
+		
+			{% block record_content %}
+				<!-- Contenu de la notice -->
+				<div class="notice_corps">
+					{% block record_new %}
+						{% if record.new %}
+							<!-- Nouveaute-->
+							<div class="notice_new">
+								{{ msg.record_display_new }}
+							</div>
+						{% endif %}
+					{% endblock %}
+					
+					{% block record_tit1 %}
+						<!-- Titre propre -->
+						<h3 class="title_notCourte">
+							<a href="{{ record.permalink }}" title="{{msg.title_link_title}} {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}">
+								{% block record_serie %}
+									{% if record.serie.id %}
+										<!-- Serie -->
+										<span class="serie_notCourte">{{ record.serie.name }}{% if record.tnvol %}, {{ record.tnvol }}. {% endif %}</span>
+									{% else %}
+										{% if record.tnvol %}
+											<span class="serie_notCourte">{{ record.tnvol }}. </span>
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+								
+								{% block record_title %}
+									<span class="tit1_notCourte">{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</span>
+								{% endblock %}
+							</a>
+						</h3>
+					{% endblock %}
+					
+					{% block record_infoCompl %}
+						<ul class="infoCompl_notCourte">
+								<!-- auteurs -->
+								{% block record_responsabilites %}
+									{% if record.responsabilites.auteurs %}
+										<li>
+											{% for auteur in record.responsabilites.auteurs %}
+												{% if loop.length == 1 %}
+													<span class="record_responsabilites">
+														<a href="{{ record.liens_opac.lien_rech_auteur | replace '!!id!!' auteur.id }}" title="{{msg.title_link_author}} {{ auteur.auteur_titre }}">{{ auteur.auteur_titre }}</a>{% if auteur.fonction_aff %}, {{ auteur.fonction_aff }}{% endif %}{% if auteur.qualification %} ({{ auteur.qualification }}){% endif %}
+													</span>
+												{% else %}
+														{% if loop.first %}
+															<ul class="record_responsabilites">
+														{% else %}
+															; 
+														{% endif %}
+															<li><a href="{{ record.liens_opac.lien_rech_auteur | replace '!!id!!' auteur.id }}" title="{{msg.title_link_author}} {{ auteur.auteur_titre }}">{{ auteur.auteur_titre }}</a>{% if auteur.fonction_aff %}, {{ auteur.fonction_aff }}{% endif %}{% if auteur.qualification %} ({{ auteur.qualification }}){% endif %}</li>
+														{% if loop.last %}
+															</ul>
+														{% endif %}
+												{% endif %}
+											{% endfor %}
+										</li>
+									{% endif %}
+								{% endblock %}
+
+								{% block record_publishers_year %}
+									{% if record.publishers.0.isbd %}
+										<!-- Editeurs -->
+										<li class="record-publisher">
+											<span class="labelNot">{{ msg.editeur_start }}</span>
+											<span class="label-content"><a href="{{ record.liens_opac.lien_rech_editeur | replace '!!id!!' record.publishers.0.id }}" title="{{msg.title_link_editor}} {{ record.publishers.0.isbd }}">{{ record.publishers.0.isbd }}</a></span>
+
+											{% if record.publishers.1.isbd %}
+												;
+												<!-- autre editeur -->
+												<a href="{{ record.linked_permalink.publisher | replace '!!id!!' record.publishers.1.id }}" title="{{msg.title_link_editor}} {{ record.publishers.1.isbd }}">{{ record.publishers.1.isbd }}</a>
+											{% endif %}
+											
+										{% block record_year %}
+											<!-- Annee -->
+											{% if record.year %}
+												{% if record.responsabilites.auteurs %}
+													{% if record.publishers.0.isbd or record.publishers.1.isbd %} | {% endif %}
+												{% endif %}
+												<span class="annee-notCourte">{{ record.year }}</span>
+											{% endif %}
+										{% endblock %}
+										</li>
+									{% endif %}
+								{% endblock %}
+								
+								{% block record_bul_info %}{% endblock %}
+								
+						</ul>
+					{% endblock %}
+					
+					{% block record_resume %}
+						<!-- Resume -->
+						{% if record.resume %}
+							<div class="resume_notCourte">
+								<span>{{ record.resume | strip_tags  | limitstring 250 }}</span>
+							</div>
+						{% endif %}
+					{% endblock %}
+
+					{% block record_permalink %}
+						<!-- Plus d'informations -->
+						<a class="pmb-button-see-more" href="{{ record.permalink }}" title="{{msg.title_link_title}} {{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}">{{svg.see_more.svg}}{{ msg.location_more_info }}</a>
+					{% endblock %}
+				</div>
+			{% endblock %}
+			
+			{% block record_aside_content %}
+				<div class="aside_notCourte" data-highlight="off">				
+					{% block record_cart%}
+						{% if record.cart_allow %}
+							{% if global.lvl != 'show_cart' %}
+								<!-- Ajouter au panier -->
+								<div class="onglet_basketNoticeCourte ui-panel-basket-item">
+									<div id="record_container_{{ record.id }}_cart" class="ui-flex ui-flex-middle">
+										{% if record.in_cart %}
+											<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" tabindex="-1">
+												<span class="icon_basketNot">
+													<img src="{{ img.record_in_basket.png }}" alt="{{ msg.notice_basket_remove }}" tabindex="-1"/>
+												</span>
+											</a>
+											<a href="./index.php?lvl=show_cart" class="label_basketNotCourte">
+												<span class="label_basketNot">{{ msg.notice_title_basket_exist }}</span>
+											</a>
+										{% else %}
+											<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" tabindex="-1">
+												<span class="icon_basketNot">
+													<img src="{{ img.white_basket.png }}" alt="{{ msg.record_display_add_to_cart }}" tabindex="-1"/>
+												</span>
+											</a>
+											<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte">
+												<span class="label_basketNot">{{ msg.record_display_add_to_cart }}</span>
+											</a>
+										{% endif %}
+									</div>
+								</div>
+							{% endif %}
+						{% endif %}		
+					{% endblock %}	
+
+					{% block record_avis %}
+						{% if record.avis_allowed %}
+							<!-- Avis sur la notice -->
+							<div class="avisNCourte">
+								<span class="imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" style="border:0px" alt="Commentaires"/></span><span class="only_stars">{{ record.display_avis }}</span>
+							</div>
+						{% endif %}
+					{% endblock %}
+					
+					{% block record_tag %}
+						{% if record.tag_allowed %}
+							<!--  Tag sur la notice -->
+							<div class="tagsNCourte">
+								<span class="imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" style="border:0px" alt="Tags"/></span><span class="tagsN">{{ record.display_tag }}</span>
+							</div>
+						{% endif %}
+					{% endblock %}
+			
+					{% block record_suggest %}
+						{% if record.sugg_allowed %}
+							<!--  Suggestion sur la notice -->
+							<div class="suggestNCourte">
+								<span class="imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" style="border:0px" alt="Suggestions"/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
+							</div>
+						{% endif %}
+					{% endblock %}
+					
+					{% block record_liste_lecture %}	
+						{% if record.liste_lecture_allowed %}
+							<!--  Associer la notice a une liste de lecture -->
+							<div class="listeLectureNCourte">
+								{{ record.display_liste_lecture }}
+							</div>
+						{% endif %}
+					{% endblock %}
+					
+					{% block record_lien %}
+						{% if record.lien %}
+							<div class="lienNCourte avisNCourte">
+							<span class="imgLienN imgComment"><img src="{{img.globe_w.png}}" alt="open_link_url_notice"/></span>
+							<span class="lienN "><a href="{{record.lien}}" target="_blank" rel="noopener noreferrer"  title="{% if record.eformat %}{{record.eformat}} - {{msg.newtab}} {% else %} {{msg.open_link_url_notice}} - {{msg.newtab}} {% endif %}"  >{{msg.lien_start | replace, " : ",""}}</a></span>
+							</div>
+						{% endif %}
+					{% endblock %}
+							
+					{% block record_docnum %}
+						<!-- Documents numeriques -->
+						{% if record.explnums_datas.nb_explnums %}
+							{{ record.explnums_datas.visionneuse_script }}
+							{% if record.explnums_datas.nb_explnums == 1 %}
+								{% if record.explnums_datas.explnums.0.consultation %}
+									{{ record.explnums_datas.explnums.0.access_datas.script }}
+									<div class="docnumNCourte">
+										<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+										<span class="docNumN">
+											<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" aria-label="{{msg.aria_list_docnum}}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+												{{ msg.explnum_singular_label }}
+											</a>
+										</span>
+									</div>
+								{% else %}
+									<div class="docnumNCourte docnumNCourtePermalink">
+										<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+										<span class="docNumN">
+											<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" aria-label="{{msg.aria_list_docnum}}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+												{{ msg.explnum_singular_label }}
+											</a>
+										</span>
+									</div>
+								{% endif %}
+							{% else %}
+								<div class="docnumNCourte docnumNCourtePermalink">
+									<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+									<span class="docNumN"><a href="{{ record.permalink }}#docnum" aria-label="{{msg.aria_list_docnum}}">{{ msg.explnum }}</a></span>
+								</div>
+							{% endif %}
+						{% endif %}
+					{% endblock %}
+
+					{% block record_pnb_availability %}
+						{% if record.availability.availability != 'none' %}
+							{% if record.availability.availability != 'empty' %}
+								{% block record_pnb %}
+									<!-- Bouton de pnb -->
+									{% if record.pnb_datas.flag_pnb_visible %}
+										<div id="pnb_notice-{{ record.id }}" class="pnb_notice">
+											<h3>
+												<a href="#" id="bt_pnb_NotCourte-{{ record.id }}" onclick="{{ record.pnb_datas.onclick }}" class="bt_pnb_NotCourte">{{ msg.empr_bt_checkout }}</a>
+											</h3> 									
+											<div id="response_pnb_pret_{{ record.id }}">
+											</div>
+										</div>   
+									{% endif %}						
+								{% endblock %}
+							{% endif %}
+						{% endif %}
+					{% endblock %}
+					{% block record_resa_availability %}
+						{% if record.availability.availability != 'none' %}
+							{% if record.availability.availability != 'empty' %}
+								{% block record_resa %}
+									<!-- Bouton de reservation -->
+									{% if record.resas_datas.flag_resa_visible %}
+										{% if record.resas_datas.flag_resa_possible %}
+											{% if !record.resas_datas.flag_max_resa %}
+												<div id="resa_notice-{{ record.id }}" class="resa_notice">
+													<h3>
+														<a href="{{ record.resas_datas.href }}" onclick="{{ record.resas_datas.onclick }}" id="bt_resa_NotCourte-{{ record.id }}" class="bt_resa_NotCourte">{{ msg.record_display_expl_reserve }}</a>
+													</h3>
+												</div>
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+							{% endif %}
+						{% endif %}
+					{% endblock %}
+				{% endblock %}
+			</div>	
+		</div>
+		<div class="noticeCourteBottom">
+			{% block record_exemplaire %}
+				<!-- affiche les localisations ou un exemplaire est actuellement empruntable -->
+				{% sqlvalue record_expl_available %}
+					select distinct(expl_location), location_libelle from exemplaires join docs_location on expl_location=idlocation and
+					expl_notice={{ record.id }} where expl_id not in(select pret_idexpl from pret) and expl_statut in (select idstatut from docs_statut
+					where pret_flag = 1);
+				{% endsqlvalue %}
+				<!-- affiche les localisations ou des exemplaires sont empruntables mais actuellement non disponible -->
+				{% sqlvalue record_expl_not_available %}
+					select distinct(expl_location), location_libelle from exemplaires join docs_location on expl_location=idlocation and
+					expl_notice={{ record.id }} where (expl_location not in(select expl_location from exemplaires where expl_notice={{ record.id }} and expl_id
+					not in(select pret_idexpl from pret))) or (expl_statut in (select idstatut from docs_statut where pret_flag = 0));
+				{% endsqlvalue %}
+				{% if record_expl_available or record_expl_not_available %}
+					<div class="record_expl_list">
+						{% for expl in record_expl_available %}
+							<div tabindex="0" class="record_expl_avaible">
+								<div aria-describedby="tooltip_{{expl.expl_location}}">
+									<span class="pmb-img-dispo" aria-hidden="true">{{svg.disponibilites.svg}}</span>
+									<span>{{ expl.location_libelle }}</span>
+								</div>
+								<span class="pmb-tooltip" id="tooltip_{{expl.expl_location}}" role="tooltip">{{msg.notDispo}}</span>
+							</div>
+						{% endfor %}
+						{% for expl in record_expl_not_available %}
+							{% if record_expl_available | count expl.expl_location 'expl_location' ; < 1 %}
+								<div tabindex="0" class="record_expl_not_avaible">
+									<div aria-describedby="tooltip_na_{{expl.expl_location}}">
+										<span class="pmb-img-indispo" aria-hidden="true">{{svg.disponibilites.svg}}</span>
+										<span>{{ expl.location_libelle }}</span>
+									</div>
+									<span class="pmb-tooltip" id="tooltip_na_{{expl.expl_location}}" role="tooltip">{{msg.notIndispo}}</span>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				{% endif %}
+			{% endblock %}
+		</div>
+	{% endblock %}
+	
+	{% block record_expl %}
+		{% if record.external_parameters.expl %}
+			<!-- Sortie externe - Exemplaires -->
+			{% if record.availability.availability != 'none' %}
+				<!-- Exemplaire -->
+				<div id="zone_exemplaires-{{ record.id }}">
+					{{ record.display_expl_responsive_list }}
+				</div>
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+</div>

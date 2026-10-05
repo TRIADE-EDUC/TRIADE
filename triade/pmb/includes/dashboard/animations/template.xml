@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: template.xml,v 1.1 2021/04/07 12:31:09 btafforeau Exp $ -->
+<template default_lang='fr_FR'>
+	<content lang='fr_FR'><![CDATA[
+		<h2>Animations</h2>
+		<div class='row'>
+			<div class='title'>Inscriptions à valider : </div>
+			<div class='value'>{{nb_registrations_to_validate.0.total}}</div>
+		</div>
+		<div class='row'>
+			<div class='title'>Animations : </div>
+			<div class='value'>{{nb_animations.0.total}}</div>
+		</div>
+		<div class='row'>&nbsp;</div>
+		
+		]]>
+	</content>
+	
+	<content lang='en_UK'><![CDATA[
+		
+		]]>
+	</content>
+</template>

@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: edit.php,v 1.23 2019-06-05 09:04:41 btafforeau Exp $
+// $Id: edit.php,v 1.23 2019/06/05 09:04:41 btafforeau Exp $
 
 global $class_path, $base_auth, $base_title, $base_noheader, $use_opac_url_base, $opac_url_base, $prefix_url_image, $no_aff_doc_num_image;
 global $fichier_temp_nom, $idcaddie, $mode, $dest;
 
-// dÃ©finition du minimum nÃ©cessaire 
+// définition du minimum nécessaire 
 $base_path="../../..";                            
 $base_auth = "CATALOGAGE_AUTH";  
 $base_title = "";
@@ -26,7 +26,7 @@ $fichier_temp_nom=str_replace("0.","",$fichier_temp_nom);
 
 $myCart = new caddie($idcaddie);
 if (!$myCart->idcaddie) die();
-// crÃ©ation de la page
+// création de la page
 if(empty($mode)) $mode = 'simple';
 switch($dest) {
 	case "TABLEAU":

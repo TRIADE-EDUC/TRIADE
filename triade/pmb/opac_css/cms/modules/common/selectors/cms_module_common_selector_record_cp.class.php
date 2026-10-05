@@ -1,19 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_selector_record_cp.class.php,v 1.2 2018-02-26 10:45:34 arenou Exp $
+// $Id: cms_module_common_selector_record_cp.class.php,v 1.2.16.1 2025/05/07 14:49:15 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 //require_once($base_path."/cms/modules/common/selectors/cms_module_selector.class.php");
 class cms_module_common_selector_record_cp extends cms_module_common_selector{
-    
+
     public function __construct($id=0){
         parent::__construct($id);
     }
-    
+
     public function get_form(){
-        $form.=parent::get_form();
+        // $form.=parent::get_form();
         $form = "
 			<div class='row'>
 				<div class='colonne3'>
@@ -25,7 +25,7 @@ class cms_module_common_selector_record_cp extends cms_module_common_selector{
 			</div>";
         return $form;
     }
-    
+
     public function gen_select(){
         $query = "select idchamp,titre from notices_custom";
         $result = pmb_mysql_query($query);
@@ -40,15 +40,15 @@ class cms_module_common_selector_record_cp extends cms_module_common_selector{
         }
         return $select;
     }
-    
-    
+
+
     public function save_form(){
         $this->parameters['cp'] = $this->get_value_from_form("cp");
         return parent ::save_form();
     }
-    
+
     /*
-     * Retourne la valeur sÃ©lectionnÃ©
+     * Retourne la valeur sélectionné
      */
     public function get_value(){
         if(!$this->value){

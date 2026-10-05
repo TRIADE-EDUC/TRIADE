@@ -1,0 +1,64 @@
+{% comment %}
+$Id: gabarit.html,v 1.1 2023/02/07 15:31:40 arenou Exp $
+{% endcomment %}
+<div class="aut_container">
+	<div class="title_aut"  class="title_aut" id="el{{ list_element.uid }}{{ list_element.id }}Parent" >
+	<h3>
+		<span class="tit1_autCourte">
+			{% block status %}
+			{% endblock %}
+			{% if list_element.context_parameters.in_selector %}
+				<a href="#" data-element-id="{{ list_element.id }}" data-element-type="onto" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd |  escape true }}','{{ global.callback }}')">
+			{% else %}
+				<a href="{{ base_url }}&id={{ list_element.id }}" data-element-id="{{ list_element.id }}" data-element-type="onto">
+			{% endif %}
+				{% block element_title %}
+					
+			{% if list_element.type_icon %}
+				<img class="align_top" src="{{ list_element.type_icon }}" title="{{ list_element.type_label }}" alt="{{ list_element.type_label }}"/>
+			{% endif %}
+			<div id="zoom_statut{{ list_element.id }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;">
+				<b>
+					{{ list_element.statut_label }}
+				</b>
+			</div>
+						{% if list_element.display %}
+					{{ list_element.display | safe }}
+						{% else %}
+							{{list_element.isbd | safe}}
+						{% endif %}
+						
+					{% endblock %}
+				</a>
+			</span>
+		</h3>
+	</div>
+    {% block aut_subtitle %}
+    {% endblock %}
+	<div style="margin-bottom: 6px; display: block;" class="parentAutCourte uk-clearfix" startOpen="Yes" id="el{{ list_element.uid }}{{ list_element.id }}Child">
+		<!-- Vignette -->
+		<div class="vignetteimgAut">
+			{% block aut_picture %}
+				<div class="vignetteDocAut">
+	    {% if list_element.thumbnail_url %}
+	    	<div class="vignAut">{{list_element.thumbnail}}</div>
+			    	{% else %}
+			    		<div class="vignAut">
+							{% block aut_no_image %}
+							{% endblock%}
+						</div>
+	    			{% endif %}
+				</div>
+			{% endblock %}
+		</div>
+	    
+		<img class="align_middle" href="#"/>
+		{{ list_element.caddie }}
+		<div style="overflow:hidden;">
+				{% block element_content %}
+					{{ list_element.detail | safe }}
+				{% endblock element_content %}
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>

@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: wmo.inc.php,v 1.5 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: wmo.inc.php,v 1.5.14.1 2025/03/25 07:32:25 dgoron Exp $
 
 function search_other_function_filters() {
-	global $annee_parution,$dbh,$doc_num,$free, $code_langue_restrict,$lang,$nocoll,$tdnocoll;
+	global $annee_parution,$doc_num,$free, $code_langue_restrict,$lang,$nocoll,$tdnocoll;
 	global $charset,$msg,$marc_liste_langues;
 	global $topics, $regions, $wmo_pub;
 	
+	$r="";
 	/*//champ theme
 	$r.="<select name='topics' class='search_label'>";
 	$r.="<option value=''>".$msg['all_topics']."</option>";
@@ -42,7 +43,7 @@ function search_other_function_filters() {
 	$r.="<option value=''>".$msg['all_languages']."</option>";
 	$requete="select distinct code_langue from notices_langues where code_langue is not null and (code_langue='eng' OR code_langue='fre' OR code_langue='spa' OR code_langue='rus' OR code_langue='chi' OR code_langue='ara') order by 1";
 	$resultat=pmb_mysql_query($requete);
-	// on met les balises <option> dans un tableau, index√© par le nom traduit de la langue
+	// on met les balises <option> dans un tableau, indexÈ par le nom traduit de la langue
     $t=array();
     while ($res=pmb_mysql_fetch_object($resultat)) {
         if ($marc_liste_langues->table[$res->code_langue]) {
@@ -61,7 +62,7 @@ function search_other_function_filters() {
 
     $r.="</select>";
 
-	//champ ann√©e : op√©rateur + boite texte
+	//champ annÈe : opÈrateur + boite texte
 	$r.="<p class='br'><span class='search2_label'>$msg[sdate]&nbsp;</span><input type='text' size='5' name='annee_parution' value='".htmlentities($annee_parution,ENT_QUOTES,$charset)."'/>";
 	
 	//champ typdoc
@@ -76,13 +77,13 @@ function search_other_function_filters() {
 		 <option value=6>".$msg['typnoti_6']."</option>
 		 </select></p>";*/
 	
-	//case √† cocher wmo publications only
+	//case ‡ cocher wmo publications only
 	$r.="<div class='scheckbox'><input type='checkbox' name=\"wmo_pub\" value='1' ".($wmo_pub?"checked='checked'":"")."/>".$msg['swmo_pub'];
 	
-	//champ wmo no collection : op√©rateur + boite texte
+	//champ wmo no collection : opÈrateur + boite texte
 	$r.="<br/><span class='tabulation2' style='margin-left:30px;'></span><span class='search2_label'>".$msg['nocoll']." &nbsp;</span><input type='text' size='5' name='nocoll' value='".htmlentities($nocoll,ENT_QUOTES,$charset)."'/>";
 	
-	//champ td no collection : op√©rateur + boite texte
+	//champ td no collection : opÈrateur + boite texte
 	$r.="<span class='search2_label' style='margin-left:10px'>".$msg['tdnocoll']." &nbsp;</span><input type='text' size='5' name='tdnocoll' value='".htmlentities($tdnocoll,ENT_QUOTES,$charset)."'/></div>";
 	
 	/*//case a cocher free full text
@@ -189,6 +190,7 @@ function search_other_function_get_values() {
 }
 
 function search_other_function_rec_history($n) {
+    global $msg;
 	global $code_langue_restrict,$annee_parution,$doc_num,$free,$topics, $wmo_pub, $regions, $typnoti, $nocoll, $tdnocoll;
 	$_SESSION["code_langue_restrict".$n]=$code_langue_restrict;
 	$_SESSION["annee_parution".$n]=$annee_parution;
@@ -200,11 +202,11 @@ function search_other_function_rec_history($n) {
 	$_SESSION["nocoll".$n]=$nocoll;
 	$_SESSION["tdnocoll".$n]=$tdnocoll;
 	
-$_SESSION["typnoti".$n]=$typnoti;
+    $_SESSION["typnoti".$n]=$typnoti;
 	
-if ($_SESSION["typnoti".$n]) {
+	if ($_SESSION["typnoti".$n]) {
 		$r2=sprintf($msg["simple_search_history_doc_type"],$doctype->table[$_SESSION["typdoc".$n]]);
-		} else $r2=$msg["simple_search_history_all_doc_types"];
+	} else $r2=$msg["simple_search_history_all_doc_types"];
 }
 
 function search_other_function_get_history($n) {
@@ -283,7 +285,7 @@ function search_other_function_human_query($n) {
 		$r.=$topics;
 	}
 	
-	//message  r√©gions
+	//message  rÈgions
 	if (!$regions) {
 	$regions=$_SESSION["regions".$n];
 	}
@@ -338,6 +340,3 @@ function search_other_function_human_query($n) {
         
 	return $r;
 }
-
-
-?>

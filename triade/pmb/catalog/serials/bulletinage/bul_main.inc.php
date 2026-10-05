@@ -1,22 +1,33 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: bul_main.inc.php,v 1.12 2016-05-06 12:44:27 jpermanne Exp $
+// $Id: bul_main.inc.php,v 1.14 2022/02/23 14:47:31 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// page de switch gestion du bulletinage pÃ©riodiques
+global $class_path, $include_path, $action, $msg, $serial_header;
+global $bul_id, $serial_id, $explnum_id, $f_explnum_id, $f_bulletin;
+
+// page de switch gestion du bulletinage périodiques
 
 switch($action) {
 	case 'view':
 		include('./catalog/serials/bulletinage/bul_view.inc.php');
 		break;
 	case 'bul_form':
-		include('./catalog/serials/bulletinage/bul_form.inc.php');
+		require_once($class_path."/entities/entities_bulletinage_controller.class.php");
+		$entities_bulletinage_controller = new entities_bulletinage_controller($bul_id);
+		$entities_bulletinage_controller->set_serial_id($serial_id);
+		$entities_bulletinage_controller->set_action('form');
+		$entities_bulletinage_controller->proceed();
 		break;
 	case 'bul_duplicate':
-		include('./catalog/serials/bulletinage/bul_duplicate.inc.php');
+		require_once($class_path."/entities/entities_bulletinage_controller.class.php");
+		$entities_bulletinage_controller = new entities_bulletinage_controller($bul_id);
+		$entities_bulletinage_controller->set_serial_id($serial_id);
+		$entities_bulletinage_controller->set_action('duplicate');
+		$entities_bulletinage_controller->proceed();
 		break;
 	case 'bul_del_notice':
 		include('./catalog/serials/bulletinage/bul_del_notice.inc.php');
@@ -49,8 +60,11 @@ switch($action) {
 	case 'copy_isdone':
 		include('./catalog/serials/bulletinage/copy_isdone.inc.php');
 		break;
+	case 'bul_move':
+	    include('./catalog/serials/bulletinage/bul_move.inc.php');
+	    break;
 	default:
-		echo "case default -> Ã  traiter (retour vers info pÃ©riodique ou accueil pÃ©riodiques)";
+		echo "case default -> à traiter (retour vers info périodique ou accueil périodiques)";
 		break;
 }
 ?>

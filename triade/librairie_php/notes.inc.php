@@ -3,12 +3,12 @@
 
 
 class Note {
-	var $note_id; 		// val de sequence dans base
-	var $elev_id; 		// elev_id
+	var $note_id; 	// val de sequence dans base
+	var $elev_id; 	// elev_id
 	var $note; 	// valeur
 	var $nom_elev;
 
-	function Note($nom_elev,$elev_id,$note,$note_id=false){
+	function __construct($nom_elev,$elev_id,$note,$note_id=false){
 		$this->note_id=$note_id;
 		$this->elev_id=$elev_id;
 		$this->nom_elev=$nom_elev;
@@ -90,7 +90,7 @@ class ListeNotes {
 	var $notationSur;
 	var $notevisiblele;
 
-	function ListeNotes($lid,$prof_id,$code_mat,$coef,$date,$sujet,$notes,$idcl,$idgrp,$typenote,$noteExam,$notationSur,$notevisiblele){
+	function __construct($lid,$prof_id,$code_mat,$coef,$date,$sujet,$notes,$idcl,$idgrp,$typenote,$noteExam,$notationSur,$notevisiblele){
 		$this->lid=$lid;
 		$this->prof_id=$prof_id;
 		$this->code_mat=$code_mat;
@@ -112,11 +112,13 @@ class ListeNotes {
 
 
 function persist(){
+
+
 	global $cnx;
 	global $prefixe;
 
 $sqlD=<<<SQL
-INSERT INTO ${prefixe}notes(
+INSERT INTO {$prefixe}notes(
 		elev_id,
 		prof_id,
 		code_mat,
@@ -135,7 +137,7 @@ SQL;
 $sqlF=")";
 		execSql("BEGIN");
 		$n=$this->notes;
-		for($i=0;$i<count($n);$i++){
+		for($i=0;$i<countTriade($n);$i++){
 			$sql  = $sqlD;
 			$sql .= "'".$n[$i]->getElevId()."',";
 			$sql .= "'".$this->prof_id."',";
@@ -186,7 +188,7 @@ $sqlF=")";
 		print "<td bgcolor='#000000' bordercolor='#FFFFFF' >&nbsp;&nbsp;<font color='#FFFFFF' >".LANGCARNET24."</font>&nbsp;&nbsp;</td></tr>";
 		
 		
-		for($i=0;$i<count($n);$i++){
+		for($i=0;$i<countTriade($n);$i++){
 			print "<tr>\n";
 			
 			$color=($color=="#87C1E6") ? $color="#BCDAF0" : $color="#87C1E6" ;
@@ -224,10 +226,10 @@ $sqlF=")";
 
 			if ($this->typenote == "en") {
 					if (trim($notaff) != "" ) {
-						$sql="SELECT  libelle,min,max FROM ${prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
+						$sql="SELECT  libelle,min,max FROM {$prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
 						$res=execSql($sql);
-							$data=chargeMat($res);
-						if (count($data) > 0) {
+						$data=chargeMat($res);
+						if (countTriade($data) > 0) {
 							$notaff=$data[0][0];
 						}
 					}
@@ -241,6 +243,11 @@ $sqlF=")";
 			}
 
 		}
+		
+		if (!is_array($noteTab1)) { $noteTab1 = []; }
+		if (!is_array($noteTab2)) { $noteTab2 = []; }
+		if (!is_array($Nbnote2))  { $Nbnote2 = [];  }
+		
 		@ksort($noteTab1);
 		foreach ($noteTab1 as $cle => $value) {
 			$noteTab2[]=$cle;
@@ -259,10 +266,10 @@ $sqlF=")";
 		}else {
 			$not=round($moy/$nbNotes,2);
 			if ($this->typenote == "en") {
-					$sql="SELECT  libelle,min,max FROM ${prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
+					$sql="SELECT  libelle,min,max FROM {$prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
 					$res=execSql($sql);
 					$data=chargeMat($res);
-					if (count($data) > 0) {
+					if (countTriade($data) > 0) {
 						$not=$data[0][0];
 					}
 			}
@@ -289,40 +296,24 @@ function affHtml(){
 	global $prefixe;
 	$n=$this->notes;
 	$sujetdevoir=$this->sujet;
-	print "<br />";
-	print "<ul>";
-	print "Sujet : <b>".stripslashes($this->sujet)."</B>";
-	print "<BR><BR>\n";
-	print "<table border=\"1\" style=\"border-collapse: collapse;\" >\n";
-	for($i=0;$i<count($n);$i++){
-		print "<tr>\n";
+
+	print '<div class="n3-result-block">';
+	print '<div class="n3-subject">Sujet : <b>'.stripslashes($this->sujet).'</b></div>';
+	print '<table class="n3-table"><thead><tr><th>Élève</th><th>Note</th></tr></thead><tbody>';
+
+	for($i=0;$i<countTriade($n);$i++){
 		$infoAffiche=$n[$i]->getNomElev();
 		$infoAffiche=preg_replace('/\\\\/','',$infoAffiche);
-		print "<td bgcolor='#FFFFFF'>".stripslashes($infoAffiche)."</td>";
 		$not=$n[$i]->getNote();
-		
+
 		switch($not){
-			case -1 :
-				$not='abs';
-				break;
-			case -2 :
-				$not='disp';
-				break;
-			case -3 :
-				$not='';
-				break;
-			case -4 :
-				$not='DNN';
-				break;
-			case -5 :
-				$not='DNR';
-				break;
-			case -6 :
-				$not='VAL';
-				break;
-			case -7 :
-				$not='NVAL';
-				break;
+			case -1 : $not='abs';  break;
+			case -2 : $not='disp'; break;
+			case -3 : $not='';     break;
+			case -4 : $not='DNN';  break;
+			case -5 : $not='DNR';  break;
+			case -6 : $not='VAL';  break;
+			case -7 : $not='NVAL'; break;
 			default:
 				$moy += $not;
 				$nbNotes++;
@@ -330,25 +321,28 @@ function affHtml(){
 		$notaff=$not;
 
 		if ($this->typenote == "en") {
-				if (trim($notaff) != "" ) {
-					$sql="SELECT  libelle,min,max FROM ${prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
-					$res=execSql($sql);
-				    	$data=chargeMat($res);
-					if (count($data) > 0) {
-						$notaff=$data[0][0];
-					}
-				}
+			if (trim($notaff) != "") {
+				$sql="SELECT libelle,min,max FROM {$prefixe}config_note_usa WHERE min <= '$not' AND max >= '$not'";
+				$res=execSql($sql);
+				$data=chargeMat($res);
+				if (countTriade($data) > 0) { $notaff=$data[0][0]; }
+			}
 		}
-		
-		print "<td bgcolor='#FFFFFF'>&nbsp;&nbsp;".$notaff."&nbsp;&nbsp;</td>";
-		print "</tr>\n";
+
+		$special = !is_numeric($notaff) || $notaff === '';
+		$tdcls   = $special ? ' class="n3-special"' : '';
+		print "<tr><td>".stripslashes($infoAffiche)."</td><td$tdcls>$notaff</td></tr>";
 
 		if (($not >= 0) && (is_numeric($not))) {
 			$notEntier=intval($not);
 			$noteTab1[$notEntier]++;
 		}
-
 	}
+
+	if (!is_array($noteTab1)) { $noteTab1 = []; }
+	if (!is_array($noteTab2)) { $noteTab2 = []; }
+	if (!is_array($Nbnote2))  { $Nbnote2 = []; }
+
 	@ksort($noteTab1);
 	foreach ($noteTab1 as $cle => $value) {
 		$noteTab2[]=$cle;
@@ -360,30 +354,26 @@ function affHtml(){
 	$typenoteg=$this->typenote;
 
 	if ($nbNotes == 0) {
-		print "<tr><td>&nbsp;&nbsp;<b>Moyenne </b>&nbsp;&nbsp;</td><td></td></tr>";
-
-
-	}else {
+		print '<tr class="n3-moy-row"><td><b>Moyenne</b></td><td>—</td></tr>';
+	} else {
 		$not=round($moy/$nbNotes,2);
 		if ($this->typenote == "en") {
-				$sql="SELECT  libelle,min,max FROM ${prefixe}config_note_usa WHERE  min <= '$not' AND  max >= '$not' ";
-				$res=execSql($sql);
-			    $data=chargeMat($res);
-				if (count($data) > 0) {
-					$not=$data[0][0];
-				}
+			$sql="SELECT libelle,min,max FROM {$prefixe}config_note_usa WHERE min <= '$not' AND max >= '$not'";
+			$res=execSql($sql);
+			$data=chargeMat($res);
+			if (countTriade($data) > 0) { $not=$data[0][0]; }
 		}
-		print "<tr><td><b>Moyenne </b></td><td>&nbsp;".$not."&nbsp;</td></tr>";
-
-
+		print '<tr class="n3-moy-row"><td><b>Moyenne</b></td><td>'.$not.'</td></tr>';
 	}
-		print "</table>\n";
-		print "</ul>";
-		$sujetdevoir=preg_replace('/"/','',$sujetdevoir);
-		$sujetdevoir=addslashes($sujetdevoir);
-		$notationsur=$this->notationSur;
-		print "<br><script language=JavaScript>buttonMagic(\"Statistiques de ce devoir\",\"grap_matiere.php?notesur=$notationsur&id=$noteTab&nomdudevoir=$sujetdevoir&nombre=$Nbnote&typenote=$typenoteg\",\"\",\"height=300,width=650,scrollbars=no,status=no\",\"\");</script>";
-		print "<br><br>";
+
+	print '</tbody></table>';
+
+	$sujetdevoir=preg_replace('/"/','',$sujetdevoir);
+	$sujetdevoir=addslashes($sujetdevoir);
+	$notationsur=$this->notationSur;
+	$url="grap_matiere.php?notesur=$notationsur&id=$noteTab&nomdudevoir=$sujetdevoir&nombre=$Nbnote&typenote=$typenoteg";
+	print "<div class='n3-stat-link'><a href='#' onclick=\"window.open('$url','','height=300,width=650,scrollbars=no,status=no');return false;\">&#x1F4CA; Statistiques de ce devoir</a></div>";
+	print '</div>';
 	}
 }
 ?>

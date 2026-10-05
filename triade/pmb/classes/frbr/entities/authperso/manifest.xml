@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.4 2018-06-11 14:18:45 vtouchard Exp $ -->
+$Id: manifest.xml,v 1.9.10.1 2025/04/25 13:27:01 rtigero Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Autorités personnalisées</name>
@@ -16,14 +16,21 @@ $Id: manifest.xml,v 1.4 2018-06-11 14:18:45 vtouchard Exp $ -->
 	<version>1.0</version>
 	<default_language>fr_FR</default_language>
 	<path_indexation directory="authorities">authperso</path_indexation>
+	<sub_type>AUT_TABLE_AUTHPERSO</sub_type>
 	<use>
 		<datasources>
+			<datasource>frbr_entity_authperso_datasource_records</datasource>
 			<datasource>frbr_entity_authperso_datasource_concepts</datasource>
 			<datasource>frbr_entity_authperso_datasource_works</datasource>
 			<datasource>frbr_entity_common_datasource_custom_fields</datasource>
 			<datasource>frbr_entity_common_datasource_aut_link</datasource>
 			<datasource>frbr_entity_common_datasource_composed_concepts</datasource>
-		</datasources>		
+			<datasource>frbr_entity_authperso_datasource_used_in_custom_fields</datasource>
+			<datasource>frbr_entity_common_datasource_used_in_qualification</datasource>
+			<datasource>frbr_entity_common_datasource_merge_data</datasource>
+			<datasource>frbr_entity_authperso_datasource_responsabilities</datasource>
+			<datasource>frbr_entity_authperso_datasource_authperso</datasource>
+		</datasources>
 		<views>
 			<view>frbr_entity_authperso_view_authpersolist</view>
 		</views>

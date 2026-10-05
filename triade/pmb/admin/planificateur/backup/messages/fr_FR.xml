@@ -4,11 +4,11 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.1 2011-07-29 12:32:13 dgoron Exp $ -->
+$Id: fr_FR.xml,v 1.2 2023/04/28 10:35:15 dbellamy Exp $ -->
 
 <XMLlist>
 	<entry code="planificateur_backup_choice">Choix du(des) jeu(x) de sauvegarde</entry>
-	<entry code="sauv_unknown_sets">Aucun jeu(x) choisi(s)</entry>
+	<entry code="sauv_unknown_sets">Aucun jeu choisi</entry>
 	<entry code="sauv_sets">Jeu(x) de sauvegarde</entry>
 	<entry code="sauv_launch">Sauvegarde du jeu</entry>
 	<entry code="backup_no_proceed">Aucun traitement pour le(s) jeu(x) de sauvegarde suivant(s)</entry>

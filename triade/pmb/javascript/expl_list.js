@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: expl_list.js,v 1.2 2015-08-05 15:43:32 dgoron Exp $ */
+// $Id: expl_list.js,v 1.3 2020/04/30 07:48:45 dgoron Exp $ */
 
 function check_all_expl(elem, expl_list_id) {
 	if(expl_list_id != "") {
@@ -56,5 +56,53 @@ function get_expl_checked(expl_list_id) {
 		return expl.join(",");
 	} else {
 		return "";
+	}
+}
+
+function is_visible_section_from_location(selector_node, num_location) {
+	var is_visible = false;
+	if(selector_node) {
+		var options = selector_node.options;
+		for(var i=0; i<options.length; i++) {
+			if(options[i].value == selector_node.value) {
+				var num_locations = new Array();
+				if(options[i].getAttribute('data-num-locations')) {
+					num_locations = options[i].getAttribute('data-num-locations').split(',');
+				}
+				if(num_locations.indexOf(num_location) != -1) {
+					is_visible = true;
+				}
+			}
+		}
+	}
+	if(is_visible) {
+		return true;
+	} else {
+		return false;
+	}
+}
+function refresh_sections_from_location(selector_node, num_location, has_selected_item) {
+	if(selector_node) {
+		var options = selector_node.options;
+		for(var i=0; i<options.length; i++) {
+			var disabled = false;
+			var num_locations = new Array();
+			if(options[i].getAttribute('data-num-locations')) {
+				num_locations = options[i].getAttribute('data-num-locations').split(',');
+				if(num_locations.indexOf(num_location) == -1) {
+					disabled = true;
+				}
+			} 
+			if(disabled) {
+				options[i].setAttribute('disabled', 'disabled');
+				options[i].removeAttribute('selected');
+			} else {
+				options[i].removeAttribute('disabled');
+				if(!has_selected_item) {
+					selector_node.value = options[i].value;
+					has_selected_item = true;
+				}
+			}
+		}
 	}
 }

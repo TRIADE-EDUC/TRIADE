@@ -1,0 +1,114 @@
+/* ---------------------------------------------------------------------------*/
+/*                                 Animations                                 */
+/* ---------------------------------------------------------------------------*/
+
+body.animations h1, .animations h1 {
+	background: #0D9B7A;
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	color: #FFFFFF;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.animations h2, body.animations h3, .animations h2, .animations h3 {
+	color: #0D9B7A;
+}
+
+body.animations #conteneur #menu li a:hover, .animations #conteneur #menu li a:hover  {
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-repeat: repeat-x;
+	background-position: left top;
+	background-color: #0D9B7A;
+	color: #FFFFFF;
+}
+
+body.animations .hmenu span.selected a, .animations .hmenu span.selected a{
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-color: #0D9B7A;
+	color: #FFFFFF;
+}
+
+body.animations table th, .animations table th{
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-position: left bottom;
+	background-color: #0D9B7A;
+	color: #FFFFFF;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 15px;
+}
+
+body.animations table th h3, .animations table th h3  {
+	color: #FFFFFF;
+}
+
+body.animations table tr.surbrillance, .animations .sortable tr:hover, .animations table tr.surbrillance, .animations .sortable tr:hover{
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-position: left top;
+	background-color: #017557;
+	color: #FFFFFF;
+}
+
+body.animations input, body.animations select, body.animations textarea, .animations input, .animations select, .animations textarea {
+	-moz-box-shadow: 1px 1px 1px #017557 inset;
+	-o-box-shadow: 1px 1px 1px #017557 inset;
+	-webkit-box-shadow: 1px 1px 1px #017557 inset;
+	box-shadow: 1px 1px 1px #017557 inset;
+}
+
+body.animations .saisie-contenu, body.animations .astuce,  .animations .saisie-contenu, .animations .astuce{
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-position: left bottom;
+	background-color: #0D9B7A;
+}
+
+body.animations #content_onglet_perio span.onglet-perio-selected a, .animations #content_onglet_perio span.onglet-perio-selected a{
+	background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+	background-position: left bottom;
+	background-color: #0D9B7A;
+	color: #FFFFFF;
+}
+
+.animations .saisie-5emr, .animations .saisie-10emr, .animations .saisie-15emr, .animations .saisie-20emr, .animations .saisie-30emr, .animations .saisie-50emr, .animations .saisie-80emr {
+	background-color: #0D9B7A;
+	color: #FFFFFF;
+	-moz-box-shadow: 1px 1px 10px #0D9B7A inset;
+	-o-box-shadow: 1px 1px 10px #0D9B7A inset;
+	-webkit-box-shadow: 1px 1px 10px #0D9B7A inset;
+	box-shadow: 1px 1px 10px #0D9B7A inset;
+}
+
+#navbar ul li#navbar-animations a {
+    background: #0D9B7A;
+    background: -moz-linear-gradient(top, #169880 0%, #0D9B7A 49%, #017557 100%); 
+	background: linear-gradient(to bottom, #169880 0%,#0D9B7A 49%,#017557 100%); 
+}
+
+#navbar ul li#navbar-animations a.current {
+    background: #FFF;
+    color: #0D9B7A;
+    box-shadow: inset 0 0 0 20px rgba(0, 0, 0, 0.0);
+}
+
+#conteneur.animations #menu h3 {
+	background: transparent url("./images/themes/h3_menu_animations.png") no-repeat 0 0;
+}
+
+.animations-perio {
+	border: 1px solid #DDD;
+	padding: 1em;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}

@@ -3,7 +3,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH 
  *   Site                 : http://www.triade-educ.com
  *
  * 
@@ -19,22 +19,23 @@
 document.write("<p><br></p>");
 document.write("</td>");
 document.write("<td valign='top' width='123' align='right' height='160'>");
-document.write("<table width='100%' border='0' cellspacing='1' cellpadding='1' height='232'>");
+document.write("<nav aria-label=\"Menu d'actualités et outils Direction\" class='menu-side-nav'>");
+document.write("<table role='presentation' width='100%' border='0' cellspacing='1' cellpadding='1' height='232'>");
 
 
 if (rubriqueactualite != "non") { 
 	document.write("<tr>");
-	document.write(" <td colspan='3'  id='coulTitre0' height='9' align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><font id='menumodule1'>"+langtitre1+"</font></b></td>");
+	document.write(" <td colspan='3' class='coulTitre0' height='9' align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px' ><b><span class='menumodule1'><span aria-hidden='true'>&#128240; </span>"+langtitre1+"</span></b></td>");
 	document.write("</tr>");
 	document.write(" <tr>");
-	document.write("<td colspan='3' height='38' id='coulModule0' align='left'  >");
+	document.write("<td colspan='3' height='38' class='coulModule0' align='left' >");
 	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./newsactualite.php' id='menumodule0' >"+langmenuadmin01A+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./actualiteetablissement.php' id='menumodule0' >"+langmenuadmin01B+"</a><br>");
-	if (moduleadminnewsdefilant != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./newsdefil.php' id='menumodule0' >"+langmenuadmin01C+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./commaudio.php' id='menumodule0' >"+langmenuadmin05+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a href='./commvideo.php' id='menumodule0' >"+langmenuadmin055+"</a><br>");
-	document.write(" </p>");
+	document.write("<span data-title=\"Gestion de l'actualité\" data-step='10' data-intro =\"Ces modules vous permettent de renseigner vos utilisateurs via la page de connexion ou encore des actualités affichées sur la page d'accueil.\" ><img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a href='./newsactualite.php' class='menumodule0' >"+langmenuadmin01A+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a href='./actualiteetablissement.php' class='menumodule0' >"+langmenuadmin01B+"</a><br>");
+	//if (moduleadminnewsdefilant != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a href='./newsdefil.php' class='menumodule0' >"+langmenuadmin01C+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a href='./commaudio.php' class='menumodule0' >"+langmenuadmin05+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a href='./commvideo.php' class='menumodule0' >"+langmenuadmin055+"</a><br>");
+	document.write(" </span></p>");
 	document.write("</td>");
 	document.write("</tr>");
 }
@@ -44,20 +45,20 @@ if (rubriqueetudiant != "non") {
 	document.write("<tr>");
 	document.write("<td colspan='3' height=19>&nbsp;</td>");
 	document.write("</tr>");
-	document.write("<tr><td colspan='3' id='coulTitre0' align='left' style='border-radius:5px 5px 0px 0px; padding-left:5px'><b><font id='menumodule1'>"+langmenuadmin5+"</font></b></td></tr>");
-	document.write("<tr><td colspan='3' id='coulModule0'  align='left' >");
+	document.write("<tr><td colspan='3' class='coulTitre0' align='left' style='border-radius:5px 5px 0px 0px; padding-left:5px'><b><span class='menumodule1'><span aria-hidden='true'>&#128101; </span>"+langmenuadmin5+"</span></b></td></tr>");
+	document.write("<tr><td colspan='3' class='coulModule0' align='left' >");
 	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./consult_classe.php'>"+langmenuadmin52+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./ficheeleve.php'>"+langmenuprof32+"</a><br>");
-	if (moduleadminentretienindividuel != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./entretien.php'>"+langmenuadmin39+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./certificat.php'>"+langmenuadmin53+"</a><br>");
-	if (moduleadminplanclasse == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./planclasse-visu-sco.php'>"+langmenuprof46+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./carnetnote.php'>"+langmenuadmin55+"</a><br>");
-	if (moduleadmincarnetsuivi != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./carnet_admin.php' >"+langmenuadmin48+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./cahiertextesadmin.php'>"+langmenuparent27+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='emargement.php' >"+langmenuadmin97+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='publipostage.php' >"+langmenueleve518+"</a><br>");
-	if (moduleadmindosmedical == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./ficheelevemedical.php'>"+langmenuadmin56+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./consult_classe.php'>"+langmenuadmin52+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <span data-title=\"Info étudiants\" data-step='12' data-intro =\"Accès aux informations de vos étudiants, modification,recherche, etc...\" ><a class='menumodule0' href='./ficheeleve.php'>"+langmenuprof32+"</a></span><br>");
+	if (moduleadminentretienindividuel != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./entretien.php'>"+langmenuadmin39+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./certificat.php'>"+langmenuadmin53+"</a><br>");
+	if (moduleadminplanclasse == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./planclasse-visu-sco.php'>"+langmenuprof46+"</a><br>");
+	document.write("<span data-title=\"Info étudiants\" data-step='13' data-intro =\"Tout sur la gestion des notes de vos étudiants.\" ><img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./carnetnote.php'>"+langmenuadmin55+"</a></span><br>");
+	if (moduleadmincarnetsuivi != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./carnet_admin.php' >"+langmenuadmin48+"</a><br>");
+	document.write("<span data-title=\"Info étudiants\" data-step='14' data-intro =\"Accès aux informations sur le cahier de texte des classes, vous permettant d'intervenir dessus.\" ><img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./cahiertextesadmin.php'>"+langmenuparent27+"</a></span><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='emargement.php' >"+langmenuadmin97+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='publipostage.php' >"+langmenueleve518+"</a><br>");
+	if (moduleadmindosmedical == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./ficheelevemedical.php'>"+langmenuadmin56+"</a><br>");
 	document.write("</p></td></tr>");
 }
 
@@ -66,111 +67,127 @@ if (rubriqueviescolaire != "non") {
 	document.write("<tr>");
 	document.write("<td colspan='3' height=19>&nbsp;</td>");
 	document.write("</tr>");
-	document.write("<tr><td colspan='3' id='coulTitre0'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><font id='menumodule1'>"+langmenuparent2+"</font></b></td></tr>");
-	document.write("<tr><td colspan='3' id='coulModule0'  align='left' >");
-	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./calendrier_config_dst1.php'>"+langmenuadmin57+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./calendrier_config_evenement1.php'>"+langmenuadmin58+"</a><br>");
+	document.write("<tr><td colspan='3' class='coulTitre0' align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px' ><b><span class='menumodule1'><span aria-hidden='true'>&#128218; </span>"+langmenuparent2+"</span></b></td></tr>");
+	document.write("<tr><td colspan='3' class='coulModule0' align='left' >");
+	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'><span data-title=\"Vie Scolaire\" data-step='16' data-intro =\"Cette rubrique vous permet de gérer les plannings, les absences, les retenues, tout ce qui concerne le vie scolaire de vos étudiants. Mais également toutes les activités liées aux stages de formation.\" > ");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./calendrier_config_dst1.php'>"+langmenuadmin57+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./calendrier_config_evenement1.php'>"+langmenuadmin58+"</a><br>");
 	if (moduleadminabsrtd == "oui" )  {
-	       	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_abs_retard_du_jour.php'>"+langmenuadmin59+"</a><br>");
-		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_abs_retard.php'>"+langmenuadmin510+"</A><BR> ");
+	       	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_abs_retard_du_jour.php'>"+langmenuadmin59+"</a><br>");
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_abs_retard.php'>"+langmenuadmin510+"</A><BR> ");
 	}
-	if (moduleadmingestiondispense == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_dispence.php'>"+langmenuadmin511+"</a><br>");
-	if (moduleadminsanctiondujour == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_sanction_du_jour.php'>"+langmenuadmin523+"</A><br>");
-	if (moduleadminretenudj == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_discipline_du_jour.php'>"+langmenuadmin512+"</A><br>");
-	if (moduleadmingestiondiscipline == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_discipline.php'>"+langmenuadmin513+"</A><br>");
-	if (moduleadmingestionsavoiretre == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./savoiretre.php'>"+langmenuadmin912+"</A><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./circulaire_admin.php'>"+langmenuadmin514+"</a><br>");
-	if (moduleadmingestionetude == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_etude.php'>"+langmenuadmin520+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_stage.php'>"+langmenuadmin517+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_central_stage.php'>"+langmenuadmin531+"</a><br>");
-	document.write("</p></td>");
+	if (moduleadmingestiondispense == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_dispence.php'>"+langmenuadmin511+"</a><br>");
+	if (moduleadminsanctiondujour == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_sanction_du_jour.php'>"+langmenuadmin523+"</A><br>");
+	if (moduleadminretenudj == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_discipline_du_jour.php'>"+langmenuadmin512+"</A><br>");
+	if (moduleadmingestiondiscipline == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_discipline.php'>"+langmenuadmin513+"</A><br>");
+	if (moduleadmingestionsavoiretre == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./savoiretre.php'>"+langmenuadmin912+"</A><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./circulaire_admin.php'>"+langmenuadmin514+"</a><br>");
+	if (moduleadmingestionetude == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_etude.php'>"+langmenuadmin520+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_stage.php'>"+langmenuadmin517+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_central_stage.php'>"+langmenuadmin531+"</a><br>");
+	document.write("</span></p></td>");
 }
 
+document.write("<tr><td colspan='3' height=19>&nbsp;</td></tr>");
+document.write("<tr>");
+document.write("<td colspan='3' class='coulTitre0' style='border-radius: 5px 5px 0px 0px; padding-left:5px'><b><span class='menumodule1'><span aria-hidden='true'>&#128249; </span>Visioconf&#233;rence</span></b></td>");
+document.write("</tr>");
+document.write("<tr>");
+document.write("<td colspan='3' class='coulModule0'>");
+document.write("<p style='margin-left: 2; margin-top:5; margin-bottom:5'>");
+document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./tvisio.php?p=rooms'>Salles actives</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./tvisio.php?p=create'>Cr&#233;er une salle</a><br>");
+document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./tvisio.php?p=dashboard'>Tableau de bord</a><br>");
+document.write("</p>");
+document.write("</td>");
+document.write("</tr>");
 
 if (modulefinanciervateladmin == "oui") {
 	document.write("</tr><tr><td colspan='3' height=19>&nbsp;</td></tr>");
-	document.write("<tr id='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><font id='menumodule1'>"+langmenuadmin9000+"</font></b></td></tr>");
+	document.write("<tr class='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><span class='menumodule1'><span aria-hidden='true'>&#128182; </span>"+langmenuadmin9000+"</span></b></td></tr>");
 	document.write(" <tr>");
-	document.write("<td colspan='3' height='27' id='coulModule0'  align='left' >");
+	document.write("<td colspan='3' height='27' class='coulModule0'  align='left' >");
 	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'> ");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_financier/inscription_rechercher.php'>"+langmenuadmin9001+"</a><br />");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_financier/parametrage.php'>"+langmenuadmin9002+"</a><br />");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_financier/paiements.php'>"+langmenuadmin9003+"</a><br />");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_financier/editions.php'>"+langmenuadmin9004+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_financier/inscription_rechercher.php'>"+langmenuadmin9001+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_financier/parametrage.php'>"+langmenuadmin9002+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_financier/paiements.php'>"+langmenuadmin9003+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_financier/editions.php'>"+langmenuadmin9004+"</a><br />");
 	document.write("</td>");
 	document.write("</tr>");
 }
 if (modulechambrevateladmin == "oui") {
 	document.write("</tr><tr><td colspan='3' height=19>&nbsp;</td></tr>");
-	document.write("<tr id='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><font id='menumodule1'>"+langmenuadmin9100+"</font></b></td></tr>");
+	document.write("<tr class='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><span class='menumodule1'><span aria-hidden='true'>&#128719; </span>"+langmenuadmin9100+"</span></b></td></tr>");
 	document.write(" <tr>");
-	document.write("<td colspan='3' height='27' id='coulModule0'  align='left' >");
+	document.write("<td colspan='3' height='27' class='coulModule0'  align='left' >");
 	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'> ");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./planning_liste0.php'>"+langmenuadmin9101+"</a><br />");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_chambres/reservation_liste.php'>"+langmenuadmin9102+"</a><br />");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='module_chambres/parametrage.php'>"+langmenuadmin9103+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./planning_liste0.php'>"+langmenuadmin9101+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_chambres/reservation_liste.php'>"+langmenuadmin9102+"</a><br />");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='module_chambres/parametrage.php'>"+langmenuadmin9103+"</a><br />");
 	document.write("</td>");
 	document.write("</tr>");
 }
 
 if (rubriquebulletin != "non") { 
 	document.write("</tr><tr><td colspan='3' height=19>&nbsp;</td></tr>");
-	document.write("<tr id='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><font id='menumodule1'>"+langmenuadmin6+"</font></b></td></tr>");
+	document.write("<tr class='coulTitre0'><td colspan='3'  align='left' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  ><b><span class='menumodule1'><span aria-hidden='true'>&#128209; </span>"+langmenuadmin6+"</span></b></td></tr>");
 	document.write(" <tr>");
-	document.write("<td colspan='3' height='27' id='coulModule0'  align='left'>");
+	document.write("<td colspan='3' height='27' class='coulModule0'  align='left'>");
+	document.write("<span data-title=\"Les Bulletins de notes\" data-step='17' data-intro =\"Au sein de cette rubrique vous pourrait, vérifier, modifier, éditer vos bulletins et relevés de notes.\" >");
 	document.write("<p style='margin-left: 2px; margin-top:5px; margin-bottom:5px'> ");
-	if (moduleadminverifbulletin != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('./editer_bulletin.php','editer_bulletin','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\">"+langmenuadmin67+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./visa_direction.php'>"+langmenuadmin68+"</a> <br>");
-	if (moduleadminnoteviescolaire != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./note_scolaire.php'>"+langmenuadmin73+"</a> <br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./imprimer_tableaupp.php'>"+langmenuadmin66+"</a> <br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./imprimer_trimestre.php'>"+langmenuadmin63+"</a><br>");
-	if (moduleadminimprperiode != "non") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./imprimer_periode.php'>"+langmenuadmin64+"</a><br>");
-	if (moduleadminexambrevet == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./gestion_examen.php'>"+langmenuadmin70+"</a><br>");
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('./video-proj-index.php','video','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin65+"</a></td>");
-	document.write("</tr>");
+	if (moduleadminverifbulletin != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='#' onClick=\"open('./editer_bulletin.php','editer_bulletin','width=850,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes'); return false;\" role='button'>"+langmenuadmin67+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./visa_direction.php'>"+langmenuadmin68+"</a> <br>");
+	if (moduleadminnoteviescolaire != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./note_scolaire.php'>"+langmenuadmin73+"</a> <br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./imprimer_tableaupp.php'>"+langmenuadmin66+"</a> <br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./imprimer_trimestre.php'>"+langmenuadmin63+"</a><br>");
+	if (moduleadminimprperiode != "non") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./imprimer_periode.php'>"+langmenuadmin64+"</a><br>");
+	if (moduleadminexambrevet == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./gestion_examen.php'>"+langmenuadmin70+"</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='#' onClick=\"open('./video-proj-index.php','video','width=800,height=600,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes'); return false;\" role='button'>"+langmenuadmin65+"</a></td>");
+	document.write("</span></tr>");
 }
 
 
-if (rubriqueannexe != "non") {
+if (rubriqueannexe != "non") { 
 	document.write("<tr><td colspan='3' height='19'>&nbsp;</td></tr>");
 	document.write("<tr>");
-	document.write("<td colspan='3' height='13' id='coulTitre0' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  align='left' ><b><font id='menumodule1'>"+langmenuadmin47+"</font></b></td>");
+	document.write("<td colspan='3' height='13' class='coulTitre0' style='border-radius: 5px 5px 0px 0px; padding-left:5px'  align='left' ><b><span class='menumodule1'><span aria-hidden='true'>&#128295; </span>Annexes</span></b></td>");
 	document.write("</tr>");
 	document.write("<tr>");
-	document.write("<td valign='top' colspan='3'  id='coulModule0'  align='left' >");
+	document.write("<td valign='top' colspan='3'  class='coulModule0'  align='left' >");
+	document.write("<span data-title=\"Et bien d'autres encore\" data-step='18' data-intro =\"Plusieurs modules à disposition : La signature électronique, un elearning, un module complet pour la gestion du CDI etc... \" >");
 	document.write("<p style='margin-left: 2px; margin-bottom:5px; margin-top:5px'>");
-	if (lan == "oui") {
-		if (moduleadminfourniture == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onClick=\"open('http://support.triade-educ.com/support/triade-shop.php','triadeshop','width=1024,height=760,resizable=yes,personalbar=no,toolbar=no,statusbar=no,locationbar=no,menubar=no,scrollbars=yes');\" >"+langmenuadmin526+"</a><br>");
-	}
-	
-	document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='https://www.triade-educ.org/accueil/triade-sign.php?key="+SIGNKEY+"' target='_blank' >Triade-Sign</a><br>");
+	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='triade-sign-envoi.php'>Triade-Sign</a><br>");
+//	document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='triade-pedago.php'  >Triade-Pedago</a><br>");
 
 	if (moduleelearning == "dokeos") {
-		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./acces_dokeos.php' target='_blank' >"+langmenuadmin103+"</a><br>");
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./acces_dokeos.php' target='_blank' rel='noopener noreferrer' aria-label=\""+langmenuadmin103+" (nouvelle fenêtre)\" >"+langmenuadmin103+"</a><br>");
 	}else{
-		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./moodle/' target='_blank' >"+langmenuadmin103+"</a><br>");
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./moodleacces.php' >"+langmenuadmin103+"</a><br>");
 	}
 
-	if (modulehistoryadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./history_cmd.php'>"+langmenuadmin44+"</a><br>"); }
+	if (modulehistoryadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./history_cmd.php'>"+langmenuadmin44+"</a><br>"); }
 	if (moduleresaadmin == "oui") {
-		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./resr_admin.php#salle' >"+langmenuadmin40+"</a><br>");
-		document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./resr_admin.php' >"+langmenuadmin40bis+"</a><br>");
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./resr_admin.php#salle' >"+langmenuadmin40+"</a><br>");
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./resr_admin.php' >"+langmenuadmin40bis+"</a><br>");
 	}
 	
 
-	if (moduleadminnotanet == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./notanet.php' >"+langmenuadmin524+"</a><br>");
-	//document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onclick='pasdispo();'><s>"+langmenuadmin516+"</s></a><br>");
-	//document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onclick='pasdispo1();'><s>"+langmenuadmin41+"</s></a><br>");
-	//document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='#' onclick='pasdispo1();'><s>"+langmenuadmin42+"</s></a><br>");
-	if (moduleadmincdi == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./pmb/index.php' target='_blank' >"+langmenuadmin43+"</a><br>"); 
-	if (modulecantineadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='./cantine.php' >"+langmenupersonnel2+"</a><br>"); }
-	if (moduleadminevalens == "oui") document.write("<img src='./image/cube.gif' width='4' height='4'> <a id='menumodule0' href='evalensadm.php' target='_blank' >"+langmenuadmin913+"</a><br>");
+	if (moduleadminnotanet == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./notanet.php' >"+langmenuadmin524+"</a><br>");
+	//document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='#' onclick='pasdispo();'><s>"+langmenuadmin516+"</s></a><br>");
+	//document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='#' onclick='pasdispo1();'><s>"+langmenuadmin41+"</s></a><br>");
+	//document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='#' onclick='pasdispo1();'><s>"+langmenuadmin42+"</s></a><br>");
+	if (moduleadmincdi == "oui") { 
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./pmb/index.php' target='_blank' rel='noopener noreferrer' aria-label=\""+langmenuadmin43+" (nouvelle fenêtre)\" >"+langmenuadmin43+"</a><br>"); 
+		document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./passagecdi.php' >Passage "+langmenuadmin43+"</a><br>"); 
 
+	}
+	if (modulecantineadmin == "oui") { document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='./cantine.php' >"+langmenupersonnel2+"</a><br>"); }
+	if (moduleadminevalens == "oui") document.write("<img src='./image/cube.gif' width='4' height='4' alt='' aria-hidden='true'> <a class='menumodule0' href='evalensadm.php' target='_blank' rel='noopener noreferrer' aria-label=\""+langmenuadmin913+" (nouvelle fenêtre)\" >"+langmenuadmin913+"</a><br>");
 	document.write("</td></tr>");
 }
 	document.write("<tr><td colspan='3' height='19'>&nbsp;</td></tr>");
 	document.write("</table>");
+	document.write("</nav>");
 	document.write("</td>");
 	document.write("</tr>");
 	document.write("<tr valign='middle'>");

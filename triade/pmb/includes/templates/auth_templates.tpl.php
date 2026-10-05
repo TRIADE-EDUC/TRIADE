@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: auth_templates.tpl.php,v 1.4 2019-05-27 13:47:15 btafforeau Exp $
+// $Id: auth_templates.tpl.php,v 1.4 2019/05/27 13:47:15 btafforeau Exp $
 
 global $auth_template_form, $msg;
 

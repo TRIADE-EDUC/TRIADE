@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_selector_generic_authorities_concepts.xml,v 1.4 2016-06-28 10:19:48 dgoron Exp $ -->
+$Id: cms_module_common_selector_generic_authorities_concepts.xml,v 1.5 2021/03/31 08:47:34 qvarin Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_sub_choice_label">Récupérer les concepts via</entry>
@@ -22,4 +22,5 @@ $Id: cms_module_common_selector_generic_authorities_concepts.xml,v 1.4 2016-06-2
 	<entry code="cms_module_common_selector_type_section_generic">Un champ générique d'un article</entry>
 	<entry code="cms_module_common_selector_authorities_used_by_composed_concepts">Des concepts composés</entry>
 	<entry code="cms_module_common_selector_permalink">Un permalink</entry>
+	<entry code="cms_module_common_selector_authorities_concepts_by_animation">Une animation</entry>
 </XMLlist>

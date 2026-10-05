@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: records_tabs.class.php,v 1.11 2019-06-06 14:04:45 ngantier Exp $
+// $Id: records_tabs.class.php,v 1.13 2022/01/04 09:23:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/elements_list_tab.class.php');
 require_once($class_path.'/skos/skos_concept.class.php');
 require_once($class_path.'/indexation.class.php');
@@ -16,7 +17,7 @@ require_once($class_path.'/entity_graph.class.php');
 class records_tabs {
 	
 	/**
-	 * Instance de la classe notice associÃ©e
+	 * Instance de la classe notice associée
 	 * @var notice
 	 */
 	protected $record;
@@ -29,7 +30,7 @@ class records_tabs {
 	
 	/**
 	 * Constructeur
-	 * @param notice $notice Instance de la classe notice associÃ©e
+	 * @param notice $notice Instance de la classe notice associée
 	 */
 	public function __construct($record){
 		$this->record = $record;
@@ -51,7 +52,7 @@ class records_tabs {
 	
 	/**
 	 * Ajoute un onglet au tableau
-	 * @param elements_list_tab $tab Onglet Ã  ajouter
+	 * @param elements_list_tab $tab Onglet à ajouter
 	 */
 	protected function add_tab($tab) {
 		if ($tab) {
@@ -60,21 +61,19 @@ class records_tabs {
 	}
 	
 	/**
-	 * Retourne l'onglet contenant les notices associÃ©es Ã  l'autoritÃ©
-	 * (Ã  dÃ©river)
-	 * @return authority_tab Onglet
+	 * Retourne l'onglet contenant les notices associées à l'autorité
+	 * (à dériver)
+	 * @return elements_list_tab Onglet
 	 */
 	protected function get_tab_records(){
 		return null;
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les ids des notices indexÃ©es avec un concept utilisant cette notice
-	 * @return authority_tab Onglet
+	 * Méthode permettant de récupérer les ids des notices indexées avec un concept utilisant cette notice
+	 * @return elements_list_tab Onglet
 	 */
 	protected function get_tab_records_indexed_with_concept(){
-		global $dbh;
-		global $tab_page;
 		global $msg;
 		
 		$concept_ids = array();
@@ -87,7 +86,7 @@ class records_tabs {
 			}
 			$nb_results = 0;
 			$query = 'select group_concat(distinct notice_id) from notices join index_concept on index_concept.num_object = notices.notice_id and index_concept.type_object = "'.TYPE_NOTICE.'" where index_concept.num_concept in ('.implode(',', $concept_ids).') ';
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				$notices_ids = pmb_mysql_result($result, 0, 0);
 				if ($notices_ids) {
@@ -100,8 +99,8 @@ class records_tabs {
 			if ($nb_results) {
 				$query = 'select group_concat(distinct notice_id separator ",") from notices join index_concept on index_concept.num_object = notices.notice_id and index_concept.type_object = "'.TYPE_NOTICE.'" where index_concept.num_concept in ('.implode(',', $concept_ids).') ';
 				$query.= $this->get_records_sort();
-				// on lance la requÃªte
-				$result = pmb_mysql_query($query, $dbh);
+				// on lance la requête
+				$result = pmb_mysql_query($query);
 				$records_ids = array();
 				if($result && pmb_mysql_num_rows($result)){
 					$elements_ids = $this->get_filtered_results(pmb_mysql_result($result, 0,0));
@@ -115,11 +114,11 @@ class records_tabs {
 	}
 	
 	/**
-	 * MÃ©thode permettant de rÃ©cupÃ©rer les autoritÃ©s indexÃ©es avec un concept utilisant cette notice
-	 * @return authority_tab Onglet
+	 * Méthode permettant de récupérer les autorités indexées avec un concept utilisant cette notice
+	 * @return elements_list_tab Onglet
 	 */
 	protected function get_tab_authorities_indexed_with_concept(){
-		global $dbh, $msg;
+		global $msg;
 		
 		$concept_ids = array();
 		$tab = new elements_list_tab('records_authorities_indexed', $msg['record_tabs_authorities_indexed'], 'authorities');
@@ -131,12 +130,12 @@ class records_tabs {
 				$concept_ids[] = vedette_composee::get_object_id_from_vedette_id($vedette_id, TYPE_CONCEPT_PREFLABEL);
 			}
 			$query = 'select count(distinct num_object, type_object) from index_concept where num_concept in ('.implode(',', $concept_ids).') and type_object in ('.implode(',', $types_needed).')';
-			$nb_results = pmb_mysql_result(pmb_mysql_query($query, $dbh), 0, 0);
+			$nb_results = pmb_mysql_result(pmb_mysql_query($query), 0, 0);
 			
 			$tab->set_nb_results($nb_results);
 			
 			if ($nb_results) {
-				// On dÃ©finit les filtres
+				// On définit les filtres
 				$filter = array(
 						'name' => 'records_authorities_indexed_by_types',
 						'label' => $msg['authority_tabs_common_indexed_authorities_by_types']
@@ -144,7 +143,7 @@ class records_tabs {
 				$tab->set_filters(array($filter));
 				$groups = array();
 				$query = 'select count(distinct num_object) as nb, type_object, id_authperso, authperso_name from index_concept left join authperso_authorities on num_object = id_authperso_authority and type_object = '.TYPE_AUTHPERSO.' left join authperso on id_authperso = authperso_authority_authperso_num where num_concept in ('.implode(',', $concept_ids).') and type_object in ('.implode(',', $types_needed).') group by type_object, id_authperso';
-				$result = pmb_mysql_query($query, $dbh);
+				$result = pmb_mysql_query($query);
 				if ($result && pmb_mysql_num_rows($result)) {
 					while ($row = pmb_mysql_fetch_object($result)) {
 						if (($row->type_object == TYPE_AUTHPERSO) && !isset($groups[1000 + $row->id_authperso])) {
@@ -188,14 +187,14 @@ class records_tabs {
 					$query = 'select SQL_CALC_FOUND_ROWS num_object, type_object, authperso_authority_authperso_num';
 					$query.= ' from index_concept left join authperso_authorities on num_object = id_authperso_authority and type_object = '.TYPE_AUTHPERSO;
 					$query.= ' where num_concept in ('.implode(',', $concept_ids).') and type_object in ('.implode(',', $types_needed).')';
-					// si on a des filtres sur des authoritÃ©s persos
+					// si on a des filtres sur des authorités persos
 					if (count($authpersos_needed)) {
 						$query.= ' and (authperso_authority_authperso_num is null or authperso_authority_authperso_num in ('.implode(',', $authpersos_needed).'))';
 					}
 					$query.= $this->get_authorities_sort();
 					$query.= $this->get_limit();
-					// on lance la requÃªte
-					$result = pmb_mysql_query($query, $dbh);
+					// on lance la requête
+					$result = pmb_mysql_query($query);
 					$records_ids = array();
 					if($result && pmb_mysql_num_rows($result)){
 						while($row = pmb_mysql_fetch_object($result)){
@@ -213,9 +212,9 @@ class records_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour le tri des notices
-	 * @param string $sort Tri Ã  appliquer
-	 * @return string Portion de la requÃªte 
+	 * Retourne la portion de requête pour le tri des notices
+	 * @param string $sort Tri à appliquer
+	 * @return string Portion de la requête 
 	 */
 	protected function get_records_sort($sort=''){
 		switch($sort){
@@ -225,9 +224,9 @@ class records_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour le tri des autoritÃ©s
-	 * @param string $sort Tri Ã  appliquer
-	 * @return string Portion de la requÃªte
+	 * Retourne la portion de requête pour le tri des autorités
+	 * @param string $sort Tri à appliquer
+	 * @return string Portion de la requête
 	 */
 	protected function get_authorities_sort($sort=''){
 		switch($sort){
@@ -237,8 +236,8 @@ class records_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour la limite des rÃ©sultats
-	 * @return string Portion de la requÃªte
+	 * Retourne la portion de requête pour la limite des résultats
+	 * @return string Portion de la requête
 	 */
 	protected function get_limit(){
 		global $pmb_nb_elems_per_tab;
@@ -274,8 +273,8 @@ class records_tabs {
 	}
 	
 	/**
-	 * Retourne la portion de requÃªte pour la limite des rÃ©sultats
-	 * @return string Portion de la requÃªte
+	 * Retourne la portion de requête pour la limite des résultats
+	 * @return string Portion de la requête
 	 */
 	protected static function get_limit_array($records_ids){
 		global $pmb_nb_elems_per_tab;
@@ -292,18 +291,16 @@ class records_tabs {
 	}
 	
 	protected function get_tab_entities_graphed(){
-		global $msg;
+	    global $msg, $quoi;
 		global $pmb_entity_graph_recursion_lvl;
 		global $pmb_entity_graph_activate;
 		
 		$tab = new elements_list_tab('records_entities_graphed', $msg['authority_tabs_entities_graphed'], 'graph');
-		
-		if(!$pmb_entity_graph_activate){
-			$tab->set_nb_results(0);
-		}else{
+		$tab->set_nb_results(0);
+
+		if($pmb_entity_graph_activate && $quoi == $tab->get_name()) {
 			$entity_graph = entity_graph::get_entity_graph($this->record, 'record');
 			$entity_graph->get_recursive_graph($pmb_entity_graph_recursion_lvl);
-			$tab->set_nb_results($entity_graph->get_nb_nodes_graphed());
 			$tab->set_contents($entity_graph->get_json_entities_graphed());
 		}
 		return $tab;

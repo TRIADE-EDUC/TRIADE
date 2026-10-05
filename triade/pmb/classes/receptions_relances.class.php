@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: receptions_relances.class.php,v 1.10 2019-05-24 15:47:38 dgoron Exp $
+// $Id: receptions_relances.class.php,v 1.13 2020/01/09 11:34:46 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -36,7 +36,7 @@ class lettreRelance_PDF extends lettre_accounting_PDF {
 	public $l_num_cli = 0;				//Largeur num commande
 	public $h_num_cli = 10;			//Hauteur num commande
 	public $fs_num_cli = 16;			//Taille police num commande/devis
-	public $text_num_cli = '';			//Texte numÃ©ro client
+	public $text_num_cli = '';			//Texte numéro client
 	public $x_col1 = '';
 	public $w_col1 = '';
 	public $txt_header_col1 = '';
@@ -62,7 +62,7 @@ class lettreRelance_PDF extends lettre_accounting_PDF {
 	}
 	
 	protected function _init() {
-		global $msg, $charset, $pmb_pdf_font;
+		global $msg;
 			
 		parent::_init();
 		
@@ -137,15 +137,15 @@ class lettreRelance_PDF extends lettre_accounting_PDF {
 	}
 	
 	public function doLettre(&$bib, &$bib_coord, &$fou, &$fou_coord, &$tab_act) {
-		
-		global $msg;
-		
 		foreach($tab_act as $id_act=>$tab_lig) {
 			foreach($tab_lig as $id_lig) {
 				$this->id_acte = $id_lig;
 				break;
 			}
 		}
+		$this->bib = $bib;
+		$this->fou = $fou;
+		$this->coord_fou = $fou_coord;
 		
 		$this->h_header = $this->h_tab * max( 	$this->PDF->NbLines($this->w_col1, $this->txt_header_col1 ),
 				$this->PDF->NbLines($this->w_col2,$this->txt_header_col2),
@@ -242,7 +242,7 @@ class lettreRelance_PDF extends lettre_accounting_PDF {
 				$col4 = $lig->getNbDelivered();
 				$col5 = $col3-$col4;
 				
-				//Est ce qu'on dÃ©passe ?		
+				//Est ce qu'on dépasse ?		
 				$this->h = $this->h_tab * max( 	$this->PDF->NbLines($this->w_col1, $col1),
 							$this->PDF->NbLines($this->w_col2, $col2),
 							$this->PDF->NbLines($this->w_col3, $col3),
@@ -337,6 +337,19 @@ class lettreRelance_PDF extends lettre_accounting_PDF {
 	
 }
 
+class lettreRelance_PDF_factory {
+    
+    public static function make() {
+        
+        global $acquisition_pdfrel_print, $base_path;
+        $className = 'lettreRelance_PDF';
+        if (file_exists("$base_path/classes/$acquisition_pdfrel_print.class.php")) {
+            require_once("$base_path/classes/$acquisition_pdfrel_print.class.php");
+            $className = $acquisition_pdfrel_print;
+        }
+        return new $className();
+    }
+}
 
 class lettreRelance_RTF {
 	
@@ -368,7 +381,7 @@ class lettreRelance_RTF {
 	public $l_date = 0;				//Largeur date
 	public $h_date = 6;				//Hauteur date
 	public $fs_date = 8;				//Taille police date
-	public $sep_ville_date = '';		//SÃ©parateur entre ville et date
+	public $sep_ville_date = '';		//Séparateur entre ville et date
 	public $x_adr_rel = 1;				//Distance adr relance / bord gauche de page
 	public $y_adr_rel = 3.5;			//Distance adr relance / bord haut de page
 	public $l_adr_rel = 6;				//Largeur adr relance
@@ -400,9 +413,9 @@ class lettreRelance_RTF {
 	public $l_num_cli = 0;				//Largeur num commande
 	public $h_num_cli = 1;				//Hauteur num commande
 	public $fs_num_cli = 16;			//Taille police num commande/devis
-	public $text_num_cli = '';			//Texte numÃ©ro client
+	public $text_num_cli = '';			//Texte numéro client
 	public $text_before = '';			//texte avant table relances
-	public $text_after = '';			//texte aprÃ¨s table relances
+	public $text_after = '';			//texte après table relances
 	public $h_tab = 0.5;				//Hauteur de ligne table relance
 	public $fs_tab = 10;				//Taille police table relance
 	public $x_tab = 1;					//position table relance / bord droit page 
@@ -437,10 +450,10 @@ class lettreRelance_RTF {
 	
 	public function __construct() {
 		
-		global $msg, $charset, $pmb_pdf_font;
+		global $msg, $pmb_pdf_font;
 		global $acquisition_pdfrel_orient_page, $acquisition_pdfrel_text_size, $acquisition_pdfrel_format_page, $acquisition_pdfrel_marges_page;
-		global $acquisition_pdfrel_pos_logo, $acquisition_pdfrel_pos_raison, $acquisition_pdfrel_pos_date, $acquisition_pdfrel_pos_adr_fac;
-		global $acquisition_pdfrel_pos_adr_liv, $acquisition_pdfrel_pos_adr_fou, $acquisition_pdfrel_pos_num, $acquisition_pdfrel_text_before;
+		global $acquisition_pdfrel_pos_logo, $acquisition_pdfrel_pos_raison, $acquisition_pdfrel_pos_date;
+		global $acquisition_pdfrel_pos_adr_rel, $acquisition_pdfrel_pos_adr_fou, $acquisition_pdfrel_pos_num, $acquisition_pdfrel_text_before;
 		global $acquisition_pdfrel_text_after, $acquisition_pdfrel_tab_rel, $acquisition_pdfrel_pos_sign, $acquisition_pdfrel_text_sign;
 		global $acquisition_pdfrel_pos_footer, $acquisition_pdfrel_pos_titre, $acquisition_pdfrel_pos_num_cli ;
 		
@@ -464,7 +477,7 @@ class lettreRelance_RTF {
 		
 		$this->font = $pmb_pdf_font;
 		if($acquisition_pdfrel_text_size) $this->fs = $acquisition_pdfrel_text_size;
-		$this->fonts['standard'] = new Font($this->fs, $this->font);
+		$this->fonts['standard'] = new PHPRtfLite_Font($this->fs, $this->font);
 		
 		$pos_logo = explode(',', $acquisition_pdfrel_pos_logo);
 		if ($pos_logo[0]) $this->x_logo = $pos_logo[0] / 10;
@@ -478,7 +491,7 @@ class lettreRelance_RTF {
 		if ($pos_raison[2]) $this->l_raison = $pos_raison[2] / 10;
 		if ($pos_raison[3]) $this->h_raison = $pos_raison[3] / 10;
 		if ($pos_raison[4]) $this->fs_raison = $pos_raison[4];
-		$this->fonts['raison'] = new Font($this->fs_raison, $this->font);
+		$this->fonts['raison'] = new PHPRtfLite_Font($this->fs_raison, $this->font);
 		
 		$pos_date = explode(',', $acquisition_pdfrel_pos_date);
 		if ($pos_date[0]) $this->x_date = $pos_date[0] / 10;
@@ -486,7 +499,7 @@ class lettreRelance_RTF {
 		if ($pos_date[2]) $this->l_date = $pos_date[2] / 10;
 		if ($pos_date[3]) $this->h_date = $pos_date[3] / 10;
 		if ($pos_date[4]) $this->fs_date = $pos_date[4];
-		$this->fonts['date'] = new Font($this->fs_date, $this->font);
+		$this->fonts['date'] = new PHPRtfLite_Font($this->fs_date, $this->font);
 		$this->sep_ville_date = $msg['acquisition_act_sep_ville_date'];
 		
 		$pos_adr_rel = explode(',', $acquisition_pdfrel_pos_adr_rel);
@@ -495,7 +508,7 @@ class lettreRelance_RTF {
 		if ($pos_adr_rel[2]) $this->l_adr_rel = $pos_adr_rel[2] / 10;
 		if ($pos_adr_rel[3]) $this->h_adr_rel = $pos_adr_rel[3] / 10;
 		if ($pos_adr_rel[4]) $this->fs_adr_rel = $pos_adr_rel[4];
-		$this->fonts['adr_rel'] = new Font($this->fs_adr_rel, $this->font);
+		$this->fonts['adr_rel'] = new PHPRtfLite_Font($this->fs_adr_rel, $this->font);
 		$this->text_adr_tel = $msg['acquisition_tel'].".";
 		$this->text_adr_fax = $msg['acquisition_fax'].".";
 		$this->text_adr_email = $msg['acquisition_mail']." :";
@@ -506,7 +519,7 @@ class lettreRelance_RTF {
 		if ($pos_adr_fou[2]) $this->l_adr_fou = $pos_adr_fou[2] / 10;
 		if ($pos_adr_fou[3]) $this->h_adr_fou = $pos_adr_fou[3] / 10;
 		if ($pos_adr_fou[4]) $this->fs_adr_fou = $pos_adr_fou[4];
-		$this->fonts['adr_fou'] = new Font($this->fs_adr_fou, $this->font);
+		$this->fonts['adr_fou'] = new PHPRtfLite_Font($this->fs_adr_fou, $this->font);
 		
 		$pos_titre = explode(',', $acquisition_pdfrel_pos_titre);
 		if ($pos_titre[0]) $this->x_titre = $pos_titre[0] / 10;
@@ -514,7 +527,7 @@ class lettreRelance_RTF {
 		if ($pos_titre[2]) $this->l_titre = $pos_titre[2] / 10;
 		if ($pos_titre[3]) $this->h_titre = $pos_titre[3] / 10;
 		if ($pos_titre[4]) $this->fs_titre = $pos_titre[4];
-		$this->fonts['titre'] = new Font($this->fs_titre, $this->font);
+		$this->fonts['titre'] = new PHPRtfLite_Font($this->fs_titre, $this->font);
 		$this->text_titre = $msg['acquisition_recept_lettre_titre'];
 		
 		$pos_num = explode(',', $acquisition_pdfrel_pos_num);
@@ -522,7 +535,7 @@ class lettreRelance_RTF {
 		if ($pos_num[2]) $this->l_num = $pos_num[1] / 10;
 		if ($pos_num[3]) $this->h_num = $pos_num[2] / 10;
 		if ($pos_num[4]) $this->fs_num = $pos_num[3];
-		$this->fonts['num'] = new Font($this->fs_num, $this->font);
+		$this->fonts['num'] = new PHPRtfLite_Font($this->fs_num, $this->font);
 		$this->text_num = $msg['acquisition_act_num_cde'];
 		$this->text_ech = $msg['acquisition_recept_lettre_ech'];
 				
@@ -532,7 +545,7 @@ class lettreRelance_RTF {
 		if ($pos_num_cli[2]) $this->l_num_cli = $pos_num_cli[1] / 10;
 		if ($pos_num_cli[3]) $this->h_num_cli = $pos_num_cli[2] / 10;
 		if ($pos_num_cli[4]) $this->fs_num_cli = $pos_num_cli[3];
-		$this->fonts['num_cli'] = new Font($this->fs_num_cli, $this->font);
+		$this->fonts['num_cli'] = new PHPRtfLite_Font($this->fs_num_cli, $this->font);
 		$this->text_num_cli = $msg['acquisition_num_cp_client'];
 		
 		$this->text_before = $acquisition_pdfrel_text_before;
@@ -549,11 +562,11 @@ class lettreRelance_RTF {
 		if ($pos_sign[1]) $this->l_sign = $pos_sign[1] / 10;
 		if ($pos_sign[2]) $this->h_sign = $pos_sign[2] / 10;
 		if ($pos_sign[3]) $this->fs_sign = $pos_sign[3];
-		$this->fonts['sign'] = new Font($this->fs_sign, $this->font);
+		$this->fonts['sign'] = new PHPRtfLite_Font($this->fs_sign, $this->font);
 		
 			
 		if ($acquisition_pdfrel_text_sign) $this->text_sign = $acquisition_pdfrel_text_sign; 
-			else $text_sign = $msg['acquisition_act_sign'];
+		else $this->text_sign = $msg['acquisition_act_sign'];
 		
 		$pos_footer = explode(',', $acquisition_pdfrel_pos_footer);
 		if ($pos_footer[0]) $this->PDF->y_footer = $pos_footer[0] / 10;
@@ -588,10 +601,7 @@ class lettreRelance_RTF {
 	}
 	
 	public function doLettre(&$bib, &$bib_coord, &$fou, &$fou_coord, &$tab_act) {
-		
-		global $msg;
-		
-		$this->sect = &$this->RTF->addSection();
+		$this->sect = $this->RTF->addSection();
 		//$this->RTF->footers[] = $this->msg_footer; 
 		
 		$tab1 = $this->sect->addTable();
@@ -605,13 +615,13 @@ class lettreRelance_RTF {
 		
 		//Affichage logo
 		if($bib->logo != '') {
-			$par_logo = new ParFormat();
-			$tab1->addImageToCell(1, 1, $bib->logo, new ParFormat(), $this->l_logo, $this->h_logo);		
+			$par_logo = new PHPRtfLite_ParFormat();
+			$tab1->addImageToCell(1, 1, $bib->logo, $par_logo, $this->l_logo, $this->h_logo);		
 		}
 		
 		//Affichage raison sociale
 		$raison = $this->RTF->to_utf8($bib->raison_sociale);
-		$par_raison = new ParFormat();
+		$par_raison = new PHPRtfLite_ParFormat();
 		$tab1->writeToCell(1,2,$raison, $this->fonts['raison'], $par_raison);
 		
 		//Affichage date ville
@@ -620,10 +630,10 @@ class lettreRelance_RTF {
 		else $ville=$bib_coord->ville;
 		$date = $ville.$this->sep_ville_date.format_date(today());
 		$date = $this->RTF->to_utf8($date);
-		$par_ville = new ParFormat();
+		$par_ville = new PHPRtfLite_ParFormat();
 		$tab1->writeToCell(1,3,$date, $this->fonts['date'], $par_ville);
 				
-		$this->sect->writeText('', $this->fonts['standard'], new parFormat());
+		$this->sect->writeText('', $this->fonts['standard'], new PHPRtfLite_ParFormat());
 		
 		$tab2 = $this->sect->addTable();
 		$tab2->addRows(1,0);
@@ -644,11 +654,11 @@ class lettreRelance_RTF {
 		if($bib_coord->fax != '') $adr_rel.= $this->text_adr_fax." ".$bib_coord->fax."\r\n";
 		if($bib_coord->email != '') $adr_rel.= $this->text_adr_email." ".$bib_coord->email."\r\n";
 		$adr_rel = $this->RTF->to_utf8($adr_rel);
-		$par_adr_rel = new parFormat();
+		$par_adr_rel = new PHPRtfLite_ParFormat();
 		$tab2->writeToCell(1,1,$adr_rel, $this->fonts['adr_rel'], $par_adr_rel);
 										
 		//Affichage coordonnees fournisseur
-		//si pas de raison sociale dÃ©finie, on reprend le libellÃ©
+		//si pas de raison sociale définie, on reprend le libellé
 		//si il y a une raison sociale, pas besoin 
 		if($fou->raison_sociale != '') {
 			$adr_fou = $fou->raison_sociale."\r\n";
@@ -661,19 +671,19 @@ class lettreRelance_RTF {
 		if($fou_coord->ville != '') $adr_fou.= $fou_coord->ville."\r\n\r\n";
 		if ($fou_coord->contact != '') $adr_fou.= $fou_coord->contact;
 		$adr_fou = $this->RTF->to_utf8($adr_fou);
-		$par_adr_fou = new parFormat();
+		$par_adr_fou = new PHPRtfLite_ParFormat();
 		$tab2->writeToCell(1,3,$adr_fou, $this->fonts['adr_fou'], $par_adr_fou);
 		
 		
 		//Affichage numero client
 		$numero_cli = $this->RTF->to_utf8($this->text_num_cli." ".$fou->num_cp_client);
-		$par_numero_cli = new parFormat();
+		$par_numero_cli = new PHPRtfLite_ParFormat();
 		$par_numero_cli->setSpaceAfter(10);
 		$this->sect->writeText($numero_cli, $this->fonts['num_cli'], $par_numero_cli);
 		
 		//Affichage titre
 		$text_titre = $this->RTF->to_utf8($this->text_titre);
-		$par_titre = new parFormat();
+		$par_titre = new PHPRtfLite_ParFormat();
 		$par_titre->setSpaceAfter(10);
 		$par_titre->setIndentLeft($this->x_titre - $this->marge_gauche);
 		$this->sect->writeText($text_titre, $this->fonts['titre'], $par_titre);
@@ -681,7 +691,7 @@ class lettreRelance_RTF {
 		//Affichage texte before
 		if ($this->text_before != '') {
 			$text_before = $this->RTF->to_utf8($this->text_before);
-			$par_before = new parFormat();
+			$par_before = new PHPRtfLite_ParFormat();
 			$this->sect->writeText($text_before, $this->fonts['standard'], $par_before);
 		}
 		//Affichage des lignes de relances
@@ -712,26 +722,26 @@ class lettreRelance_RTF {
 													$this->w_col5
 												)
 											);
-				$border_format = new BorderFormat(0.5, "#000000");
+				$border_format = new PHPRtfLite_Border_Format(0.5, "#000000");
 
 				$txt_col1 = $this->RTF->to_utf8($col1);
-				$par_col1 = new parFormat();
+				$par_col1 = new PHPRtfLite_ParFormat();
 				$this->tab->writeToCell($this->row,1,$txt_col1, $this->fonts['standard'], $par_col1);
 				
 				$txt_col2 = $this->RTF->to_utf8($col2);
-				$par_col2 = new parFormat();
+				$par_col2 = new PHPRtfLite_ParFormat();
 				$this->tab->writeToCell($this->row,2,$txt_col2, $this->fonts['standard'], $par_col2);
 
 				$txt_col3 = $this->RTF->to_utf8($col3);
-				$par_col3 = new parFormat();
+				$par_col3 = new PHPRtfLite_ParFormat();
 				$this->tab->writeToCell($this->row,3,$txt_col3, $this->fonts['standard'], $par_col3);
 				
 				$txt_col4 = $this->RTF->to_utf8($col4);
-				$par_col4 = new parFormat();
+				$par_col4 = new PHPRtfLite_ParFormat();
 				$this->tab->writeToCell($this->row,4,$txt_col4, $this->fonts['standard'], $par_col4);
 				
 				$txt_col5 = $this->RTF->to_utf8($col5);
-				$par_col5 = new parFormat();
+				$par_col5 = new PHPRtfLite_ParFormat();
 				$this->tab->writeToCell($this->row,5,$txt_col5, $this->fonts['standard'], $par_col5);
 				
 				$this->tab->setBordersOfCells($border_format, 1, 1, $this->row, 5);
@@ -743,14 +753,14 @@ class lettreRelance_RTF {
 		//Affichage texte after
 		if ($this->text_after != '') {
 			$text_after = $this->RTF->to_utf8($this->text_after);
-			$par_after = new parFormat();
+			$par_after = new PHPRtfLite_ParFormat();
 			
 			$this->sect->writeText($text_after, $this->fonts['standard'], $par_after);
 		}
 		
 		//Affichage signature
 		$text_sign = $this->RTF->to_utf8($this->text_sign);
-		$par_sign = new parFormat();
+		$par_sign = new PHPRtfLite_ParFormat();
 		$par_sign->setSpaceBefore(10);
 		$par_sign->setIndentLeft($this->x_sign - $this->marge_gauche);
 		$this->sect->writeText($text_sign, $this->fonts['sign'], $par_sign);
@@ -770,7 +780,7 @@ class lettreRelance_RTF {
 	public function doEntete() {
 
 		$text_num_ech = $this->RTF->to_utf8($this->text_num_ech);
-		$par_num_ech = new parFormat();
+		$par_num_ech = new PHPRtfLite_ParFormat();
 		$par_num_ech->setSpaceBefore(10);
 		$par_num_ech->setSpaceAfter(10);
 		$this->sect->writeText($text_num_ech, $this->fonts['standard'], $par_num_ech);
@@ -786,21 +796,21 @@ class lettreRelance_RTF {
 											$this->w_col5
 										)
 									);
-		$border_format = new BorderFormat(0.5, "#000000");
+		$border_format = new PHPRtfLite_Border_Format(0.5, "#000000");
 		$txt_header_col1 = $this->RTF->to_utf8($this->txt_header_col1);
-		$par_header_col1 = new parFormat();
+		$par_header_col1 = new PHPRtfLite_ParFormat();
 		$this->tab->writeToCell($this->row,1,$txt_header_col1, $this->fonts['standard'], $par_header_col1);
 		$txt_header_col2 = $this->RTF->to_utf8($this->txt_header_col2);
-		$par_header_col2 = new parFormat();
+		$par_header_col2 = new PHPRtfLite_ParFormat();
 		$this->tab->writeToCell($this->row,2,$txt_header_col2, $this->fonts['standard'], $par_header_col2);
 		$txt_header_col3 = $this->RTF->to_utf8($this->txt_header_col3);
-		$par_header_col3 = new parFormat();
+		$par_header_col3 = new PHPRtfLite_ParFormat();
 		$this->tab->writeToCell($this->row,3,$txt_header_col3, $this->fonts['standard'], $par_header_col3);
 		$txt_header_col4 = $this->RTF->to_utf8($this->txt_header_col4);
-		$par_header_col4 = new parFormat();
+		$par_header_col4 = new PHPRtfLite_ParFormat();
 		$this->tab->writeToCell($this->row,4,$txt_header_col4, $this->fonts['standard'], $par_header_col4);
 		$txt_header_col5 = $this->RTF->to_utf8($this->txt_header_col5);
-		$par_header_col5 = new parFormat();
+		$par_header_col5 = new PHPRtfLite_ParFormat();
 		$this->tab->writeToCell($this->row,5,$txt_header_col5, $this->fonts['standard'], $par_header_col5);
 		$this->tab->setBordersOfCells($border_format, 1, 1, 1, 5);
 		$this->tab->setBackgroundOfCells('#D3D3D3', 1, 1, 1, 5); 

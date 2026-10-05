@@ -2,15 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_build.class.php,v 1.17 2019-05-28 15:16:26 btafforeau Exp $
+// $Id: frbr_build.class.php,v 1.26.2.1 2024/12/16 11:30:34 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/autoloader.class.php");
-if(!isset($autoloader)) {
-	$autoloader = new autoloader();
-}
-$autoloader->add_register("frbr_entities",true);
+global $class_path;
 
 require_once($class_path."/frbr/frbr_pages.class.php");
 
@@ -19,6 +15,8 @@ class frbr_build {
 	protected $object_id;
 	
 	protected $object_type;
+	
+	protected $authperso_type;
 	
 	protected $page;
 	
@@ -36,17 +34,23 @@ class frbr_build {
 	 */
 	protected $datanodes;
 	
-	public function __construct($object_id=0, $object_type='') {
-		$this->object_id = $object_id+0;
+	public function __construct($object_id=0, $object_type='', $authperso_type = 0) {
+		$this->object_id = intval($object_id);
 		$this->object_type = $object_type;
+		$this->authperso_type = $authperso_type;
 		$this->fetch_data();
 	}
 	
 	protected function fetch_data() {
 		$this->cadres = array();
 		if($this->object_id && $this->object_type) {
+		    //on donne les infos aux datasources
+		    frbr_entity_common_datasource::set_main_entity($this->object_id, $this->object_type);
 			$num_page = 0;
 			$frbr_pages = new frbr_pages($this->object_type);
+			if ($this->authperso_type) {
+			    $frbr_pages->filter_pages_by_authperso_type($this->authperso_type);
+			}
 			foreach ($frbr_pages->get_pages() as $page) {
 				$frbr_entity_class_name = 'frbr_entity_'.$page->get_entity().'_page';
 				$frbr_entity_instance = new $frbr_entity_class_name($page->get_id());
@@ -55,7 +59,7 @@ class frbr_build {
 					$indice = 'backbone'.$frbr_entity_instance->get_backbone()['data']->id;
 					$to_unformat = $frbr_entity_instance->get_managed_datas()['backbones'][$indice]['fields'];
 					$frbr_backbone_fields->unformat_fields($to_unformat);
-					$filtered_data = $frbr_backbone_fields->filter_datas(array($this->object_id));
+					$filtered_data = $frbr_backbone_fields->filter_data(array($this->object_id));
 					if(isset($filtered_data[0]) && $filtered_data[0] == $this->object_id) {
 						$num_page = $page->get_id();
 						break;
@@ -70,10 +74,12 @@ class frbr_build {
 				$query = 'SELECT * FROM frbr_place
 					LEFT JOIN frbr_cadres ON place_num_cadre = id_cadre 
 					LEFT JOIN frbr_cadres_content ON cadre_content_num_cadre = id_cadre
-					WHERE place_num_page = "'.$this->page->get_id().'" AND (place_visibility=1 OR cadre_visible_in_graph = 1) ORDER BY place_order';
+					WHERE place_num_page = "'.$this->page->get_id().'" ORDER BY place_order';
 				$result = pmb_mysql_query($query);
 				while ($row = pmb_mysql_fetch_object($result)) {
-					$this->cadres[] = array(
+				    // les cadres de bases (graph, ISBD et records_list) n'ont pas d'identifiant
+				    $index = $row->id_cadre ?? $row->place_cadre_type;
+				    $this->cadres[$index] = array(
 							'id' => $row->id_cadre,
 							'name' => $row->cadre_name,
 							'cadre_object' => $row->cadre_object,
@@ -150,16 +156,7 @@ class frbr_build {
 				$datanode_ids = explode('/',$cadre['cadre_datanodes_path']);
 				for ($i = 0; $i < count($datanode_ids); $i++) {
 					if (!isset($this->datanodes_data[$datanode_ids[$i]])) {
-						$datanode = frbr_entity_common_entity_datanode::get_instance($datanode_ids[$i]);
-						$raw_data = $datanode->get_datanode_datas($parent_data);
-						$filter_data = $datanode->filter_data($raw_data);
-						if ($datanode->has_children_filter()) {
-						    $operator = $datanode->get_children_filter()['data']->children_filter_operator;
-						    //$this->filter_by_children_data($datanode_ids[$i], $this->datanodes_data[$datanode_ids[$i]][0]);
-						    $children_filter_data = $this->filter_by_children_data($datanode_ids[$i], ($operator == "and" ? $filter_data : $raw_data));
-						    $filter_data = $this->merge_datanode_data($filter_data, $children_filter_data, $operator);
-						}						
-						$this->datanodes_data[$datanode_ids[$i]] = $datanode->sort_data($filter_data);
+					    $datanode = $this->compute_datanode_data($datanode_ids[$i], $parent_data);
 					}
 					if (isset($this->datanodes_data[$datanode_ids[$i]][0])) {
 						$parent_data = $this->datanodes_data[$datanode_ids[$i]][0];
@@ -184,6 +181,20 @@ class frbr_build {
 		}
 		$this->set_graph_data();
 		return $this->datanodes_data;
+	}
+	
+	private function compute_datanode_data($id_datanode, $parent_data) {
+	    $datanode = frbr_entity_common_entity_datanode::get_instance($id_datanode);
+	    $raw_data = $datanode->get_datanode_datas($parent_data);
+	    $filter_data = $datanode->filter_data($raw_data);
+	    if ($datanode->has_children_filter()) {
+	        $operator = $datanode->get_children_filter()['data']->children_filter_operator;
+	        //$this->filter_by_children_data($datanode_ids[$i], $this->datanodes_data[$datanode_ids[$i]][0]);
+	        $children_filter_data = $this->filter_by_children_data($id_datanode, ($operator == "and" ? $filter_data : $raw_data));
+	        $filter_data = $this->merge_datanode_data($filter_data, $children_filter_data, $operator);
+	    }
+	    $this->datanodes_data[$id_datanode] = $datanode->sort_data($filter_data);
+	    return $datanode;
 	}
 	
 	protected function set_graph_data($parent_datanode = 0, $parent_type = '', $parent_id = '', $parent_node_id= '') {
@@ -244,7 +255,7 @@ class frbr_build {
     	                continue;
     	            }
     	            if (!isset($this->datanodes_data[$id])) {
-                        $child_raw_data = $this->datanodes[$id]->get_datanode_datas($parent_data[0]);
+                        $child_raw_data = $this->datanodes[$id]->get_datanode_datas($parent_data[0] ?? []);
                         $child_data = $this->datanodes[$id]->filter_data($child_raw_data);
                         if ($this->datanodes[$id]->has_children_filter()) {
                             $operator = $this->datanodes[$id]->get_children_filter()['data']->children_filter_operator;
@@ -305,12 +316,19 @@ class frbr_build {
 		return '';
 	}
 	
-	public static function get_instance($object_id=0, $object_type='') {
+	/**
+	 * 
+	 * @param number $object_id
+	 * @param string $object_type
+	 * @param number $authperso_type
+	 * @return frbr_build
+	 */
+	public static function get_instance($object_id=0, $object_type='', $authperso_type = 0) {
 	    if (!isset(static::$instances[$object_type])) {
 	        static::$instances[$object_type] = array();
 	    }
 	    if (!isset(static::$instances[$object_type][$object_id])) {
-	        static::$instances[$object_type][$object_id] = new frbr_build($object_id, $object_type);
+	        static::$instances[$object_type][$object_id] = new frbr_build($object_id, $object_type, $authperso_type);
 	    }
 	    return static::$instances[$object_type][$object_id];
 	}
@@ -331,5 +349,40 @@ class frbr_build {
 	        }
 	    }
 	    return $data_merged;
+	}
+	
+	public function get_datanode_data($id_datanode) {
+	    if (isset($this->datanodes_data[$id_datanode])) {
+	        return $this->datanodes_data[$id_datanode];
+	    }
+	    $path = $this->get_datanode_path($id_datanode);
+	    
+	    $parent_data = array($this->object_id);
+	    $datanode_ids = explode('/',$path);
+        for ($i = 0; $i < count($datanode_ids); $i++) {
+            if (!isset($this->datanodes_data[$datanode_ids[$i]])) {
+                $this->compute_datanode_data($datanode_ids[$i], $parent_data);
+            }
+            if (isset($this->datanodes_data[$datanode_ids[$i]][0])) {
+                $parent_data = $this->datanodes_data[$datanode_ids[$i]][0];
+            } else {
+                $parent_data = array();
+            }            
+        }
+        return $this->datanodes_data[$id_datanode];
+	}
+	
+	private function get_datanode_path($id_datanode, $path = "") {
+	    $query = "SELECT datanode_num_parent FROM frbr_datanodes WHERE id_datanode = ".$id_datanode;
+	    $result = pmb_mysql_query($query);
+	    if(pmb_mysql_num_rows($result)) {
+	        $row = pmb_mysql_fetch_assoc($result);
+	        if ($row["datanode_num_parent"]) {
+	            $path .= $this->get_datanode_path($row["datanode_num_parent"], $path)."/".$id_datanode;
+	        } else {
+	            $path .= $id_datanode.$path;
+	        }
+	    }
+	    return $path;
 	}
 }

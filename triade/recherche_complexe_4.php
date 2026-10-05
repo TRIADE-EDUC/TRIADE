@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,13 +32,13 @@ session_start();
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
-<?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
-<?php include("./librairie_php/lib_defilement.php"); ?>
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
+<?php include_once("./librairie_php/lib_licence.php"); ?>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
+<?php include_once("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCHER1?></font></b></td>
 </tr>
@@ -49,6 +49,7 @@ session_start();
 <?php
 $ret="\n";
 if (PHP_OS == "WINNT") {  $ret="\r\n"; }
+
 
 $listeaffiche=$_POST["saisie_recherche"];
 $listeaffiche=preg_replace('/,/',", ",$listeaffiche);
@@ -75,9 +76,7 @@ $listeaffiche=preg_replace('/,/',", ",$listeaffiche);
                case "choix":  print "<script language=JavaScript>alert('".LANGCHER17."');history.go(-1); </script>"; break;
         }
   }
-  ?>
 
-<?php
 //-------------------------
 // liste critere avec valeur
 //-------------------------
@@ -106,7 +105,7 @@ function verif_critere($critere) {
 	$prefixe=PREFIXE;
 	foreach ($critere as $value) {
 		switch ($value) {
-			case "classe":   $select="${prefixe}classes c"; break;
+			case "classe":   $select="{$prefixe}classes c"; break;
 		}
 	}
 	return $select;
@@ -270,11 +269,8 @@ function requete2($x , $y, $nb,$op){
 // module de recherche dans la base
 // --------------------------------
 
-include_once("librairie_php/db_triade.php");
 validerequete("3");
 $prefixe=PREFIXE;
-$cnx=cnx(); // connexion à la base
-error($cnx);
 
 $positionClasse=-1;
 $positionNaissance=-1;
@@ -282,49 +278,49 @@ $compt_element=0;
 $nbTable=0;
 $nbTableok=1;
 $liste = preg_split ("/,/", $_POST["saisie_recherche"]);
-$nbElems = count($liste);
-$nbElems3 = count($liste);
+$nbElems = countTriade($liste);
+$nbElems3 = countTriade($liste);
 $verifCritere=verif_critere($_POST["saisie_critere"]); // verification du critere pour le type de lecture
 if ($verifCritere == "0") { $nbTableok = 1; } else { $table2[]=$verifCritere; $nbTableok =2; }
 foreach ($liste as $value) {
 	switch ($value) {
 
-case "nom":$libelle.="nom";$libelle2.="e.nom";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "prenom":$libelle.="prenom";$libelle2.="e.prenom";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "classe":$libelle.="classe";$libelle2.="c.libelle";$table="${prefixe}eleves";$positionClasse=$compt_element;$table2[]=""; break;
-case "adresse":$libelle.="adr1";$libelle2.="e.adr1";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "ville":$libelle.="commune_adr1";$libelle2.="e.commune_adr1";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "LV1":$libelle.="lv1";$libelle2.="e.lv1";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "LV2":$libelle.="lv2";$libelle2.="e.lv2";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "option":$libelle.="option";$libelle2.="e.option";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "regime":$libelle.="regime";$libelle2.="e.regime";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "naissance":$libelle.="date_naissance";$libelle2.="e.date_naissance";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";$positionNaissance=$compt_element;break;
-case "nationalite":$libelle.="nationalite";$libelle2.="e.nationalite";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "profession pere":$libelle.="profession_pere";$libelle2.="e.profession_pere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "profession mere":$libelle.="profession_mere";$libelle2.="e.profession_mere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "numero etablissement":$libelle.="numero_etablissement";$libelle2.="e.numero_etablissement";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "email parent":$libelle.="email";$libelle2.="e.email";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "email tuteur 2":$libelle.="email_resp_2";$libelle2.="e.email_resp_2";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "email eleve":$libelle.="email_eleve";$libelle2.="e.email_eleve";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "tel eleve":$libelle.="tel_eleve";$libelle2.="e.tel_eleve";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "idnational":$libelle.="numero_eleve";$libelle2.="e.numero_eleve";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "codepostal":$libelle.="code_post_adr1";$libelle2.="e.code_post_adr1";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "classe_anterieure":$libelle.="class_ant";$libelle2.="e.class_ant";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
+case "nom":$libelle.="nom";$libelle2.="e.nom";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "prenom":$libelle.="prenom";$libelle2.="e.prenom";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "classe":$libelle.="classe";$libelle2.="c.libelle";$table="{$prefixe}eleves";$positionClasse=$compt_element;$table2[]=""; break;
+case "adresse":$libelle.="adr1";$libelle2.="e.adr1";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "ville":$libelle.="commune_adr1";$libelle2.="e.commune_adr1";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "LV1":$libelle.="lv1";$libelle2.="e.lv1";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "LV2":$libelle.="lv2";$libelle2.="e.lv2";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "option":$libelle.="option";$libelle2.="e.option";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "regime":$libelle.="regime";$libelle2.="e.regime";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "naissance":$libelle.="date_naissance";$libelle2.="e.date_naissance";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";$positionNaissance=$compt_element;break;
+case "nationalite":$libelle.="nationalite";$libelle2.="e.nationalite";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "profession pere":$libelle.="profession_pere";$libelle2.="e.profession_pere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "profession mere":$libelle.="profession_mere";$libelle2.="e.profession_mere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "numero etablissement":$libelle.="numero_etablissement";$libelle2.="e.numero_etablissement";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "email parent":$libelle.="email";$libelle2.="e.email";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "email tuteur 2":$libelle.="email_resp_2";$libelle2.="e.email_resp_2";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "email eleve":$libelle.="email_eleve";$libelle2.="e.email_eleve";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "tel eleve":$libelle.="tel_eleve";$libelle2.="e.tel_eleve";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "idnational":$libelle.="numero_eleve";$libelle2.="e.numero_eleve";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "codepostal":$libelle.="code_post_adr1";$libelle2.="e.code_post_adr1";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "classe_anterieure":$libelle.="class_ant";$libelle2.="e.class_ant";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
 
-case "nomT1":$libelle.="nomtuteur";$libelle2.="e.nomtuteur";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "prenomT1":$libelle.="prenomtuteur";$libelle2.="e.prenomtuteur";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "nomT2":$libelle.="nom_resp_2";$libelle2.="e.nom_resp_2";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "prenomT2":$libelle.="prenom_resp_2";$libelle2.="e.prenom_resp_2";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "telephone":$libelle.="telephone";$libelle2.="e.telephone";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "profpere":$libelle.="profession_pere";$libelle2.="e.profession_pere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "telprofpere":$libelle.="tel_prof_pere";$libelle2.="e.tel_prof_pere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "profmere":$libelle.="profession_mere";$libelle2.="e.profession_mere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "telprofmere":$libelle.="tel_prof_mere";$libelle2.="e.tel_prof_mere";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "telport1":$libelle.="tel_port_1";$libelle2.="e.tel_port_1";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "telport2":$libelle.="tel_port_2";$libelle2.="e.tel_port_2";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "lieudenaissance":$libelle.="lieu_naissance";$libelle2.="e.lieu_naissance";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "sexe":$libelle.="sexe";$libelle2.="e.sexe";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
-case "code_compta":$libelle.="code_compta";$libelle2.="e.code_compta";$table="${prefixe}eleves";$table2[]="${prefixe}eleves e";break;
+case "nomT1":$libelle.="nomtuteur";$libelle2.="e.nomtuteur";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "prenomT1":$libelle.="prenomtuteur";$libelle2.="e.prenomtuteur";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "nomT2":$libelle.="nom_resp_2";$libelle2.="e.nom_resp_2";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "prenomT2":$libelle.="prenom_resp_2";$libelle2.="e.prenom_resp_2";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "telephone":$libelle.="telephone";$libelle2.="e.telephone";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "profpere":$libelle.="profession_pere";$libelle2.="e.profession_pere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "telprofpere":$libelle.="tel_prof_pere";$libelle2.="e.tel_prof_pere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "profmere":$libelle.="profession_mere";$libelle2.="e.profession_mere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "telprofmere":$libelle.="tel_prof_mere";$libelle2.="e.tel_prof_mere";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "telport1":$libelle.="tel_port_1";$libelle2.="e.tel_port_1";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "telport2":$libelle.="tel_port_2";$libelle2.="e.tel_port_2";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "lieudenaissance":$libelle.="lieu_naissance";$libelle2.="e.lieu_naissance";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "sexe":$libelle.="sexe";$libelle2.="e.sexe";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
+case "code_compta":$libelle.="code_compta";$libelle2.="e.code_compta";$table="{$prefixe}eleves";$table2[]="{$prefixe}eleves e";break;
 
 
 	}
@@ -338,7 +334,7 @@ foreach ($table2 as $value) {
 	sort ($table2);
 	$table2 = array_unique ($table2);
 }
-$nbElems2 = count($table2);
+$nbElems2 = countTriade($table2);
 //alertJs($nbElems2);
 foreach ($table2 as $value) {
 	if ($value != "") {
@@ -362,11 +358,11 @@ if ($nbTableok == 1 ) {
 		//print("<h1>$libelle</h1>");
 		$res = execSql($sql);
 		$data =  chargeMat($res);
-		$totaltrouve=count($data);
+		$totaltrouve=countTriade($data);
 		//alertJs($sql);
 		//print $sql;
 		// $data : tab bidim - soustab 3 champs
-		for($i=0;$i<count($data);$i++)
+		for($i=0;$i<countTriade($data);$i++)
 		{
 			$jj=$_POST["saisie_nb_recherche"];
 			for($j=0;$j<$_POST["saisie_nb_recherche"];$j++) {
@@ -404,8 +400,8 @@ if ($nbTableok == 2) {
 		//alertJs($sql);
 		//print $sql;
 		// $data : tab bidim - soustab 3 champs
-		$totaltrouve=count($data);
-		for($i=0;$i<count($data);$i++)
+		$totaltrouve=countTriade($data);
+		for($i=0;$i<countTriade($data);$i++)
 		{
 			$jj=$_POST["saisie_nb_recherche"];
 			for($j=0;$j<$_POST["saisie_nb_recherche"];$j++) {
@@ -454,6 +450,6 @@ print $reponse;
 </td></tr></table>
 <br /><br />
 <script type="text/JavaScript">InitBulle('#000000','#CCCCFF','red',1);</script>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 </BODY>
 </HTML>

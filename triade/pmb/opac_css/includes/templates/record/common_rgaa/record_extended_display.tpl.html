@@ -1,0 +1,906 @@
+
+<!-- $Id: record_extended_display.tpl.html,v 1.1.2.1 2025/04/22 14:15:07 jdupuy Exp $ -->
+
+<div id="noticeNot" data-record-id="{{ record.id }}" class="noticeNot_{{record.niveau_biblio}}{{record.typdoc}}">
+	<div id="notice_container">
+		<!-- Affichage des onglets d'enrichissement -->
+		{% if record.enrichment_sources %}
+			<ul id="onglets_isbd_public{{ record.id }}" class="onglets_isbd_publicNot">
+				<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
+				{% if record.onglets_perso%}
+					{% for onglet in record.onglets_perso %}
+						{{ onglet.onglet_title }}
+					{% endfor %}				
+				{% endif %}	
+			</ul>
+		{% else %}
+			{% if record.onglets_perso%}
+				<ul id="onglets_isbd_public{{ record.id }}" class="onglets_isbd_publicNot">
+					<li id="onglet_detail{{ record.id }}" class="isbd_public_active"><a href="#" onclick="display_tab(this, 'detail', {{ record.id }}); return false;"><span>{{ msg.demandes_action_detail }}</span></a></li>
+						{% for onglet in record.onglets_perso %}
+							{{ onglet.onglet_title }}
+						{% endfor %}	
+				</ul>
+			{% endif %}
+		{% endif %}
+		{% block record_map %}
+			{% if record.map.map %}
+				<div class="map_notice">
+					{{ record.map.map }}
+				</div>
+			{% endif %}
+		{% endblock %}
+		
+		<!-- div conteneurs des onglets perso -->
+		{% for onglet in record.onglets_perso %}
+			{{ onglet.onglet_content }}
+		{% endfor %}
+		
+		<!-- div conteneur des enrichissements -->
+		<div id="div_detail{{ record.id }}">
+			<div class="notice_description">
+				{% block record_aside_content %}
+					<aside class="notice_aside">
+
+						{% block record_picture %}
+							{% if record.picture_url %}
+								<!-- Vignette de la notice -->
+								<div class="vignetteimgNot">
+									<img class="vignetteNot" src="{{ record.picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+								</div>
+							{% endif %}
+						{% endblock %}
+
+						{*{% block record_icon_doc %}
+							{% if record.icon_doc %}
+								<!-- icon type de document -->
+								<img src="{{img.nom_de_mon_icon.png}}">
+							{% endif %}
+						{% endblock %}*}
+
+						{% block boutons_fonctionnalites %}
+							<div class="pmb_btn_Not">
+								{% block record_statut_not %}
+									{% if record.statut_notice %}
+										<!-- Statut de la notice -->
+										<div class="statutNot">
+											{{ record.statut_notice }}
+										</div>
+									{% endif %}
+								{% endblock %}
+								
+								{% block record_cart%}
+									{% if record.cart_allow %}
+										{% if global.lvl != 'show_cart' %}
+											<!-- Ajouter au panier -->
+											<div class="onglet_basketNoticeCourte ui-panel-basket-item">
+												<div id="record_container_{{ record.id }}_cart" class="ui-flex ui-flex-middle">
+													{% if record.in_cart %}
+											<a href="cart_info.php?action=remove&id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" tabindex="-1">
+												<span class="icon_basketNot">
+													<img src="{{ img.record_in_basket.png }}" alt="{{ msg.notice_basket_remove }}" tabindex="-1"/>
+												</span>
+											</a>
+											<a href="./index.php?lvl=show_cart" class="label_basketNotCourte" title="{{ msg.notice_title_basket_exist }}">
+												<span class="label_basketNot">{{ msg.notice_title_basket_exist }}</span>
+											</a>
+										{% else %}
+											<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="img_basketNotCourte" title="{{ msg.record_display_add_to_cart }}" tabindex="-1">
+												<span class="icon_basketNot">
+													<img src="{{ img.white_basket.png }}" alt="{{ msg.record_display_add_to_cart }}" tabindex="-1"/>
+												</span>
+											</a>
+											<a href="cart_info.php?id={{ record.id }}&amp;header={{ record.tit1 | urlencode }}" target="cart_info" class="label_basketNotCourte">
+												<span class="label_basketNot">{{ msg.record_display_add_to_cart }}</span>
+											</a>
+										{% endif %}
+												</div>
+											</div>
+										{% endif %}
+									{% endif %}		
+								{% endblock %}	
+
+								{% block record_pnb %}
+									<!-- Bouton de pnb -->
+									{% if record.pnb_datas.flag_pnb_visible %}
+										<div class="statutPartN">
+											<span class="imgStatutPartN">
+												<img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.record_display_new }}"/>
+											</span>
+											<span class="StatutPartN">
+												<a href="#" id="bt_pnb_NotCourte-{{ record.id }}" onclick="{{ record.pnb_datas.onclick }}" class="bt_pnb_NotCourte">{{ msg.empr_bt_checkout }}</a>
+											</span>										
+											<div id="response_pnb_pret_{{ record.id }}">
+											</div>
+										</div>   
+									{% endif %}						
+								{% endblock %}
+								{% block record_edit %}
+									<!-- Bouton edition -->
+									{% if record.edit_link %}
+										<div class="statutPartN">
+											<span class="imgStatutPartN">
+												<img class="imgStatutPartN" src="{{ img.new_w.png }}" style="border:0px" alt="{{ msg.record_display_new }}"/>
+											</span>
+											<span class="StatutPartN">
+												<a href="{{record.edit_link}}" title="editer">
+													<span class="bt_record_edit">{{ msg.edit_record }}</span>
+												</a>
+											</span>										
+										</div>   
+									{% endif %}				
+								{% endblock %}
+
+								{% block record_docnum %}
+									<!-- Documents numeriques -->
+									{% if record.explnums_datas.nb_explnums %}
+										{{ record.explnums_datas.visionneuse_script }}
+										{% if record.explnums_datas.nb_explnums == 1 %}
+											{% if record.explnums_datas.explnums.0.consultation %}
+												{{ record.explnums_datas.explnums.0.access_datas.script }}
+												<div class="docnumNCourte">
+													<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+													<span class="docNumN">
+														<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" title="{{msg.aria_list_docnum}}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+															{{ msg.explnum_singular_label }}
+														</a>
+													</span>
+												</div>
+											{% else %}
+												<div class="docnumNCourte docnumNCourtePermalink">
+													<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+													<span class="docNumN">
+														<a href="{{ record.explnums_datas.explnums.0.access_datas.href }}" title="{{msg.aria_list_docnum}}" {% if record.explnums_datas.explnums.0.access_datas.onclick %}onclick="{{ record.explnums_datas.explnums.0.access_datas.onclick }}"{% endif %}>
+															{{ msg.explnum_singular_label }}
+														</a>
+													</span>
+												</div>
+											{% endif %}
+										{% else %}
+											<div class="docnumNCourte docnumNCourtePermalink">
+												<span class="imgDocNum"><img src="{{ img.doc_num_w.png }}" style="border:0px" alt="Document numeriques"/></span>
+												<span class="docNumN"><a href="{{ record.permalink }}#docnum" title="{{msg.aria_list_docnum}}">{{ msg.explnum }}</a></span>
+											</div>
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+								
+								{% block record_avis %}
+									{% if record.avis_allowed %}
+										{% if global.opac_avis_display_mode == '0' %}
+											<!-- Avis sur la notice -->
+											<div class="avisN">
+												<span class="ExtnotCom imgComment"><img class="imgComment" src="{{ img.comment_w.png }}" style="border:0px" alt="Commentaires"/></span><span class="avisN">{{ record.display_avis | safe }}</span>
+											</div>
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+
+								{% block record_tag %}
+									{% if record.tag_allowed %}
+										<!--  Tag sur la notice -->
+										<div class="tagsN">
+											<span class="ExtnotCom imgTag"><img class="imgTag" src="{{ img.tag_w.png }}" style="border:0px" alt="Tags"/></span><span class="tagsN">{{ record.display_tag }}</span>
+										</div>
+									{% endif %}
+								{% endblock %}
+
+								{% block record_suggestion %}
+									{% if record.sugg_allowed %}
+										<!--  Suggestion sur la notice -->
+										<div class="suggestN">
+											<span class="ExtnotCom imgSuggest"><img class="imgSuggest" src="{{ img.suggest_w.png }}" style="border:0px" alt="Suggestions"/></span><span class="suggestsN">{{ record.display_suggestion }}</span>
+										</div>
+									{% endif %}
+								{% endblock %}
+
+								{% block record_liste_lecture %}
+									{% if record.liste_lecture_allowed %}
+										<!--  Associer la notice a une liste de lecture -->
+										<div class="listeLectureN">
+											{{ record.display_liste_lecture }}
+										</div>
+									{% endif %}
+								{% endblock %}
+
+								{% block record_resa %}
+									{% if !record.is_numeric %}
+										{% if record.availability.availability != 'none' %}
+											{% if record.availability.availability != 'empty' %}
+												<!-- Bouton de reservation -->
+												{% if record.resas_datas.flag_resa_visible %}
+													{% if record.resas_datas.flag_resa_possible %}
+														{% if !record.resas_datas.flag_max_resa %}
+															<div id="resa_notice-{{ record.id }}" class="resa_notice">
+																<a href="{{ record.resas_datas.href }}" onclick="{{ record.resas_datas.onclick }}" id="bt_resa_NotCourte-{{ record.id }}" class="bt_resa_NotCourte">{{ msg.record_display_expl_reserve }}</a>
+																{% if record.resas_datas.nb_resas %}
+																	<p class='record_nb_resas'>{{ msg.resa_nb_deja_resa | replace '!!nbresa!!' record.resas_datas.nb_resas }}</p>
+																{% endif %}
+															</div>
+														{% endif %}
+													{% endif %}
+												{% endif %}
+											{% endif %}
+										{% endif %}
+									{% endif %}
+								{% endblock %}
+							</div>
+						{% endblock %}
+					</aside>
+				
+					{% block record_external_picture %}
+						{% if record.external_parameters.vignette %}
+							<!-- Sortie externe - Vignette de la notice -->
+							{% if record.picture_url %}
+								<!-- Vignette de la notice -->
+								<div class="vignetteimgNot">
+									<div class="vignetteDocNot">
+										<img class="vignetteNot" src="{{ record.picture_url }}" alt="{% if record.niveau_biblio == 'b' %}{{ record.bul_info.title }}, {% endif %}{% if record.picture_title %}{{record.picture_title}}{% else %}{{ record.tit1 }}{% endif %}" />
+									</div>
+								</div>
+							{% endif %}
+						{% endif %}
+					{% endblock %}
+
+				{% endblock%}
+				<!-- Contenu de la notice -->
+				<section class="notice_contenu">
+					{% block record_content %}
+						{% block new_tdoc %}
+							<div class="notice_new_tdoc">
+								{% block record_new %}
+									{% if record.new %}
+										<!-- Nouveaute-->
+										<div class="notice_new">
+											{{ msg.record_display_new }}
+										</div>
+									{% endif %}
+								{% endblock %}
+
+								{% block record_tdoc %}
+									{% if record.tdoc %}
+										<!-- Type de document -->
+										<div class="notice_tdoc">
+											{% if record.niveau_biblio == 'm' %}
+												{{ record.tdoc }}
+											{% else %}
+												{{ record.biblio_doc }}{% if record.biblio_doc != record.tdoc %} : {{ record.tdoc }}{% endif %}
+											{% endif %}
+										</div>
+									{% endif %}
+								{% endblock %}
+							</div>
+						{% endblock %}
+
+						{% block record_tit1 %}
+							<!-- Titre propre -->
+							<h1 id="notice_main_title">{% if record.serie.id %}<a href="{{ record.linked_permalink.serie | replace '!!id!!' record.serie.id }}" title="{{msg.title_link_record}} {{ record.serie.name }}">{{ record.serie.name }}</a>{% if record.tnvol %}, {{ record.tnvol }}{% endif %}. {% endif %}{{ record.tit1 }}{% if record.tit4 %} : {{record.tit4}}{% endif %}</h1>
+						{% endblock %}
+
+						<ul class="notice_content">
+							{% block record_responsabilites %}
+								{% for auteur in record.responsabilites.auteurs %}
+									<!-- auteurs -->
+									{% if loop.first %}
+										<li class="record_responsabilites">
+											<span class="labelContent">
+											<span>
+									{% else %}
+									<span class="notice_separator">;</span>
+									{% endif %}
+									<a href="{{ record.linked_permalink.author | replace '!!id!!' auteur.id }}" title="{{msg.title_link_author}} {{ auteur.auteur_titre }}">{{ auteur.auteur_titre }}</a>{% if auteur.fonction_aff %}, {{ auteur.fonction_aff }}{% endif %}{% if auteur.qualification %} ({{ auteur.qualification }}){% endif %}
+									{% if loop.last %}
+												</span>
+											</span>
+										</li>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+
+							{% block record_publishers %}
+								{% if record.publishers.0.isbd %}
+									<!-- Edition, Annee, mention -->
+									<li class="record_publishers">
+										<span class="labelNot">{{ msg.editeur_start }}</span>
+											<span class="label-content"><a href="{{ record.liens_opac.lien_rech_editeur | replace '!!id!!' record.publishers.0.id }}"  title="{{msg.title_link_editor}} {{ record.publishers.0.isbd }}">{{ record.publishers.0.isbd }}</a></span>
+
+											{% if record.publishers.1.isbd %}
+												;
+												<!-- autre editeur -->
+												<a href="{{ record.linked_permalink.publisher | replace '!!id!!' record.publishers.1.id }}" title="{{msg.title_link_editor}} {{ record.publishers.1.isbd }}">{{ record.publishers.1.isbd }}</a>
+											{% endif %}
+											<span>{% if record.year %}| {{ record.year }}{% endif %}</span><span>{% if record.mention_edition %}, {{ record.mention_edition }}{% endif %}</span>
+									</li>
+								{% else %}
+									{% if record.year %}
+										<!-- Annee edition -->
+										<li class="record_year">
+											<span class="labelNot">
+												<span>{{ msg.year_start }}</span> 
+											</span>
+											<span class="labelContent">
+												<span>{{ record.year }}</span>
+											</span>
+										</li>
+									{% endif %}
+								{% endif %}
+							{% endblock %}
+
+							{% block record_bul_info %}{% endblock %}
+		
+							{% block record_npages %}{% endblock %}
+
+							{% block record_collection %}
+								{% if record.collection.isbd %}
+								<!-- Collection et numero -->
+									<li class="record_collection">
+										<span class="labelNot">
+											{{ msg.coll_start }}
+										</span>
+										<span class="labelContent">
+											<a href="{{ record.linked_permalink.collection | replace '!!id!!' record.collection.id }}" title="{{msg.title_link_collection}} {{ record.collection.isbd }}">{{ record.collection.isbd }}</a>{% if !record.subcollection.isbd %}{% if record.nocoll %}, num. {{ record.nocoll }}{% endif %}{% endif %}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_subcollection %}
+								{% if record.subcollection.isbd %}
+									<!-- Sous-collection et numero -->
+									<li class="record_subcollection">
+										<span class="labelNot">
+											{{ msg.subcoll_start }}
+										</span>
+										<span class="labelContent">
+											<a href="{{ record.linked_permalink.subcollection | replace '!!id!!' record.subcollection.id }}" title="{{msg.title_link_subcollection}} {{ record.subcollection.name }}">{{ record.subcollection.name }}</a>{% if record.nocoll %}, num. {{ record.nocoll }}{% endif %}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+
+							{% block record_tit3 %}
+								{% if record.tit3 %}
+									<!-- Titre parallele -->
+									<li class="record_tit3">
+										<span class="labelNot">
+											{{ msg.other_title_t3_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.tit3 }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_tit2 %}
+								{% if record.tit2 %}
+									<!-- Titre propre auteur different -->
+									<li class="record_tit2">
+										<span class="labelNot">
+											<span>{{ msg.other_title_t2_start }}</span>
+										</span>
+										<span class="labelContent">
+											<span id="exempl_title3Not">{{ record.tit2 }}</span>
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_titre_uniforme %}
+								{% for tu_data in record.titre_uniforme.ntu_data %}
+									<!-- Titre uniforme -->
+									{% if loop.first %}
+										<li class="record_titre_uniforme">
+											<span class="labelNot">
+												<span>{{ msg.titre_uniforme_aff_public }}</span>
+											</span>
+											<span class="labelContent">
+									{% endif %}
+										<a href="{{ record.linked_permalink.titre_uniforme | replace '!!id!!' tu_data.num_tu }}" title="{{msg.title_link_autority}} {{ msg.titre_uniforme_aff_public }}">{% if tu_data.tu.isbd %}{{ tu_data.tu.isbd }}{%else%}{{tu_data.tu.name}}{%endif%}</a>
+										{% if tu_data.date %}<span class="tu_date">{% if !tu_data.tu.name %}: {% else %}; {% endif %}{{tu_data.date}}</span>{% endif %}
+										{% if tu_data.sous_vedette %}<span class="tu_sous_vedette">{% if !tu_data.date %}{% if !tu_data.tu.name %}: {% else %}; {% endif %}{% else %}; {% endif %}{{tu_data.sous_vedette}}</span>{% endif %}
+										{% if tu_data.langue %}<span class="tu_langue">{% if !tu_data.sous_vedette %}{% if !tu_data.date %}{% if !tu_data.tu.name %}: {% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{{tu_data.langue}}</span>{% endif %}
+										{% if tu_data.version %}<span class="tu_version">{% if !tu_data.langue %}{% if !tu_data.sous_vedette %}{% if !tu_data.date %}{% if !tu_data.tu.name %}: {% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{{tu_data.version}}</span>{% endif %}
+										{% if tu_data.mention %}<span class="tu_mention">{% if !tu_data.version %}{% if !tu_data.langue %}{% if !tu_data.sous_vedette %}{% if !tu_data.date %}{% if !tu_data.tu.name %}: {% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{% else %}; {% endif %}{{tu_data.mention}}</span>{% endif %}											
+									{% if loop.last %}
+											</span>
+										</li>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+
+							{% block record_code %}
+							<!-- ISBN ou ISSN -->
+								{% if record.code %}
+									<li class="record_code">
+										<span class="labelNot">
+											{{ msg.code_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.code }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+
+							{% block record_relations_up %}
+								{% for relation in record.relations_up %}
+									{% if relation.relation_type !="b" %}
+										<!-- Relations verticales -->
+										<li class="record_relation_up">
+											<span class="labelNot">
+												{{ relation.label }} :
+											</span>
+											<span class="labelContent">
+												<ul>
+													{% for parent in relation.parents %}
+														<li><a href="{{ parent.get_permalink }}" title="{{msg.title_link_title}} {{ parent.tit1 }}">{{ parent.tit1 }}</a></li>
+													{% endfor %}
+												</ul>
+											</span>
+										</li>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+							
+							{% block record_relations_both %}
+							<!-- Relations horizontales -->
+								{% for relation in record.relations_both %}
+									{% if relation.relation_type!="b"%}		
+										<div class="record_relation_both">
+											<span class="labelNot">
+												{{ relation.label }} :
+											</span>
+											<span class="labelContent">
+												<ul>
+													{% for child in relation.pairs %}
+														<li><a href="{{ child.get_permalink }}" title="{{msg.title_link_title}} {{ child.tit1 }}">
+															{% if child.serie %}<span class="serie_reldown">{{ child.serie.name }}{% if child.tnvol %}, {{ child.tnvol }}. {% endif %}</span>{% endif %}
+															{% if child.bul_info.title %}<span class="bulinfo_reldown">{{ child.bul_info.title }}, </span>{% endif %}
+															<span class="title_reldown">{{ child.tit1 }}</span>
+														</a>
+														/
+														<a href="./index.php?lvl=author_see&id={{ child.responsabilites.auteurs.0.id }}" title="{{msg.title_link_author}} {{ child.responsabilites.auteurs.0.auteur_titre }}">
+															{% if child.responsabilites.auteurs.0.auteur_titre %} 
+															<span class="auteur_reldown"> {{ child.responsabilites.auteurs.0.auteur_titre }} 
+																{% endif %}
+															{% if child.year %}<span class="date_reldown"> ({{ child.year }})</span>{% endif %}
+														</a>
+													</li>
+													{% endfor %}
+												</ul>
+											</span>
+										</div>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+									
+							{% block record_relations_down %}
+							<!-- Notices filles -->
+								{% for relation in record.relations_down %}
+									{% if relation.relation_type!="b"%}		
+										<div class="record_relation_down">
+											<span class="labelNot">
+												{{ relation.label }} :
+											</span>
+											<span class="labelContent">
+												<ul>
+													{% for child in relation.children %}
+														<li>
+															<a href="{{ child.get_permalink }}" title="pouet{{msg.title_link_title}} {{ child.tit1 }}">
+															{% if child.serie %}<span class="serie_reldown">{{ child.serie.name }}{% if child.tnvol %}, {{ child.tnvol }}. {% endif %}</span>{% endif %}
+															{% if child.bul_info.title %}<span class="bulinfo_reldown">{{ child.bul_info.title }}, </span>{% endif %}
+															<span class="title_reldown">{{ child.tit1 }}</span>
+															</a>
+															/
+															<a href="./index.php?lvl=author_see&id={{ child.responsabilites.auteurs.0.id }}" title="{{msg.title_link_author}} {{ child.responsabilites.auteurs.0.auteur_titre }}">
+																{% if child.responsabilites.auteurs.0.auteur_titre %} 
+																<span class="auteur_reldown"> {{ child.responsabilites.auteurs.0.auteur_titre }} 
+																	{% endif %}
+																{% if child.year %}<span class="date_reldown"> ({{ child.year }})</span>{% endif %}
+															</a>
+														</li>
+													{% endfor %}
+												</ul>
+											</span>
+										</div>
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+						{% endblock record_content %}
+										
+							{% block record_resume %}
+								{% if record.resume %}
+									<!-- Resume -->
+									<li class="record_resume">
+										<span class="labelNot">
+											{{ msg.n_resume_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.resume | nl2br }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+
+							{% block record_contenu %}
+								{% if record.contenu %}
+									<!-- Note de contenu -->
+									<li class="record_contenu">
+										<span class="labelNot">
+											{{ msg.n_contenu_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.contenu | nl2br }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+											
+							{% block record_n_gen %}
+								{% if record.n_gen %}
+								<!-- Note generale -->
+									<li class="record_n_gen">
+										<span class="labelNot">
+											{{ msg.n_gen_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.n_gen | nl2br }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+
+							{% block record_indexint %}
+								{% if record.indexint %}
+									<!-- Indexation decimale -->
+									<li class="record_indexint">
+										<span class="labelNot">
+											{{ msg.indexint_start }}
+										</span>
+										<span class="labelContent">
+											<a href="{{ record.linked_permalink.indexint | replace '!!id!!' record.indexint.indexint_id }}" title="{{msg.title_link_record}} {{ record.indexint.display }}">{{ record.indexint.display }}</a>
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}	
+
+							{% block record_categories %}
+								{% for id_thes,thesaurus in record.categories %}
+									{% if global.opac_thesaurus %}
+										<!-- Categories -->
+										{% if loop.first %}
+											<li class="record_categories">
+												<span class="labelNot">
+													{{ msg.categories_start }}
+												</span>
+												<span class="labelContent">
+										{% endif %}
+										{% for categorie in thesaurus %}
+											{% if global.opac_categories_categ_in_line %}
+												{% if loop.first %}
+													<p><strong>{{ categorie.object.thes.libelle_thesaurus }}</strong></p>
+												{% else %}
+													{{ global.pmb_keyword_sep }}
+												{% endif %}
+												<span><a href="{{ record.linked_permalink.category | replace '!!id!!' categorie.object.id }}" {% if global.opac_show_infobulles_categ %} title="{{msg.title_link_categories}} {{ categorie.format_label }}"{% endif %}>{{ categorie.format_label }}</a></span>
+											{% else %}
+												[{{ categorie.object.thes.libelle_thesaurus }}] <a href="{{ record.liens_opac.lien_rech_categ | replace '!!id!!' categorie.object.id }}" title="{{msg.title_link_categories}} {{ categorie.format_label }}">{{ categorie.format_label }}</a>
+											{% endif %}
+										{% endfor %}
+										{% if loop.last %}
+												</span>
+											</li>
+										{% endif %}
+									{% else %}
+										{% if id_thes == global.opac_thesaurus_defaut %}
+											<li class="record_categories">
+												<span class="labelNot">
+													<span>{{ msg.categories_start }}</span>
+												</span>
+												<span class="labelContent">
+											{% for categorie in thesaurus %}
+												{% if global.opac_categories_categ_in_line %}
+													{% if !loop.first %}
+														{{ global.pmb_keyword_sep }}
+													{% endif %}
+													<span><a href="{{ record.linked_permalink.category | replace '!!id!!' categorie.object.id }}" title="{{msg.title_link_categories}} {{ categorie.format_label }}">{{ categorie.format_label }}</a></span>
+												{% else %}
+													<a href="{{ record.linked_permalink.category | replace '!!id!!' categorie.object.id }}" title="{{msg.title_link_categories}} {{ categorie.format_label }}">{{ categorie.format_label }}</a>
+												{% endif %}
+											{% endfor %}
+													</span>
+												</li>
+										{% endif %}
+									{% endif %}
+								{% endfor %}
+							{% endblock %}
+
+							{% block record_size %}
+								<!-- Format (champs de collation) -->
+								{% if record.display_size %}
+									<li class="record_size">
+										<span class="labelNot">
+											{{ msg.size_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.display_size }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_accomp %}
+								{% if record.accomp %}
+									<!-- Materiel accompagnement -->
+									<li class="record_accomp">
+										<span class="labelNot">
+											{{ msg.accomp_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.accomp }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+
+							{*{% block record_prix %}
+								{% if record.prix %}
+									<!-- Prix -->
+									<li class="record_prix">
+										<span class="labelNot">
+											{{ msg.price_start }}
+										</span>
+										<span class="labelContent">
+											{{ record.prix }}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}*}
+									
+							{% block record_langues %}
+								{% if record.langues.langues %}
+									<!-- Langues de publication -->
+									<li class="record_langues">
+										<span class="labelNot">
+											{{ msg.langues_start }}
+										</span>
+										<span class="labelContent">
+											{% for langue in record.langues.langues %}
+												{% if loop.first%}
+													<span>{{langue.langue}}</span>
+												{% else %}
+													{{global.pmb_keyword_sep}} <span>{{langue.langue}}</span>
+												{% endif %}
+											{% endfor %}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_langues_org %}
+								{% if record.langues.languesorg %}
+									<!-- Langues originales -->
+									<li class="record_langues_org">
+										<span class="labelNot">
+											{{ msg.langues_org_start }}
+										</span>
+										<span class="labelContent">
+											{% for langue in record.langues.languesorg %}
+												{% if loop.first%}
+													<span>{{langue.langue}}</span>
+												{% else %}	
+													{{global.pmb_keyword_sep}} <span>{{langue.langue}}</span>
+												{% endif %}
+											{% endfor %}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+							
+							{% block record_concepts %}
+								{% if record.concepts_list.concepts %}
+									<!-- Liste des concepts -->
+									<li class="record_concepts">
+										<span class="labelNot">
+											{{ msg.concepts_start }}
+										</span>
+										<span class="labelContent">
+											{% for concept in record.concepts_list.concepts %}
+												{% if !loop.first %}
+													{% if global.thesaurus_concepts_concept_in_line == "0" %}
+														<br />
+													{% else %}
+														{{global.pmb_keyword_sep}}
+													{% endif %}
+												{% endif %}
+												<a href="{{concept.permalink}}" title="{{msg.title_link_base}}{{concept.display_label}}">{{concept.display_label}}</a>
+											{% endfor %}
+										</span>
+									</li>
+								{%endif%}
+							{% endblock %}
+		
+							{% block record_motes_cles %}
+								{% if record.mots_cles %}
+									<!-- Mots-cles -->
+									<li class="record_mots_cles">
+										<span class="labelNot">
+											{% if global.opac_allow_add_tag == "0" %}
+												{{ msg.keywords_start }}
+											{% else %}
+												{{ msg.tags }}
+											{% endif %}
+										</span>
+										<span class="labelContent">
+											{% for mot in record.mots_cles %}
+												{% if loop.counter!=1 %}
+													{{global.pmb_keyword_sep}}
+												{% endif %}
+												<a href="./index.php?lvl=more_results&mode=keyword&user_query={{mot | urlencode}}&tags=ok" title="{{msg.title_link_tags}} {{ mot }}"> {{mot}} </a>
+											{% endfor %}
+										</span>
+									</li>
+								{% endif %}
+							{% endblock %}
+									
+							{% block record_p_perso %}
+								<!-- Champs persos -->
+								{% for cp in record.p_perso %}
+									<li class="record_p_perso">
+										<span class="labelNot">
+											{{ cp.TITRE_CLEAN }} :
+										</span>
+										<span class="labelContent">
+											{{ cp.AFF }}
+										</span>
+									</li>
+								{% endfor %}
+							{% endblock %}
+									
+							{% block record_authperso %}
+								<!--Autorites persos-->
+								{% for authperso in record.authpersos_ranked %}
+									{% for auth in authperso %}
+										{% if loop.first%}
+											<li class="record_authperso">
+												<span class="labelNot">
+													{{ auth.type_label }} :
+												</span>
+												<span class="labelContent">
+										{% endif %}
+										{% if loop.counter!=1 %}{{global.pmb_keyword_sep}}{% endif %}
+													<a href="{{global.opac_url_base}}index.php?lvl=authperso_see&id={{auth.num_object}}" title="{{msg.title_link_base}} {{ auth.isbd }}">{{ auth.isbd }}</a>
+										{% if loop.last %}
+												</span>
+											</li>
+										{%endif%}
+									{% endfor %}
+								{% endfor %}
+							{% endblock %}
+									
+							{% block record_lien %}
+								{% if record.lien %}
+									<!-- URL associee -->
+									<li class="record_link">
+											<span class="labelNot">
+												{{ msg.lien_start }}
+											</span>
+											<span class="labelContent">
+												<a href="{{record.lien}}" target="_blank" rel="noopener noreferrer" aria-label="{% if record.eformat %}{{record.eformat}} - {{msg.newtab}} {% else %} {{msg.open_link_url_notice}} - {{msg.newtab}} {% endif %}">
+													{% block record_lien_content %}
+														{{ record.lien }}
+													{% endblock %}	
+												</a>
+											</span>
+									</li>
+									{% endif %}
+							{% endblock %}
+						</ul>		
+				</section>
+			</div>
+		</div>
+	</div>
+		
+	{% block articles %}
+	{% endblock articles %}
+	
+	{% block record_expl_docnum %}
+		<section class="expl_doc_num">
+			{% block record_expl %}
+				{% if record.is_numeric %}
+					{% if record.numeric_expl_availability.availability != 'none' %}
+						{% if session_vars.id_empr %}
+							{{ record.display_pnb_loan_button }}
+						{% endif %}
+					{% endif %}
+				{% else %}
+					{% if record.availability.availability != 'none' %}
+						<!-- Exemplaire -->
+						 {% if record.expls_datas.expls %}
+							<h2 class="pmb-title-2">{{msg.exemplaries}} {% for nb in record.expls_datas.expls %}({{ loop.length }}){% endfor %}</h2>
+							<div id="zone_exemplaires">
+								{{ record.display_expl_responsive_list }}
+							</div>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			{% endblock %}
+	
+			{% block record_explnums %} 
+				{% if record.explnums_datas.explnums %} 
+					<div id="docnum"> 
+						<h3>{{ msg.explnum }} ({{ record.explnums_datas.nb_explnums }})</h3> 
+						<ul class="docnum_list"> 
+							{% for docnum in record.explnums_datas.explnums %} 
+								<li class="docnum_list_item docnum"> 
+									{% if docnum.consultation != '' or global.opac_visionneuse_allow and docnum.access_datas.onclick %} 
+										<button class="uk-flex uk-flex-middle docnum_list_item_button" type="button" onclick="{{ docnum.access_datas.onclick }}"> 
+											<span class="imgdocNumNContainer">
+											<span class="pmb-img-doc">{{svg.doc_num.svg}}</span>							
+											<h4>{{ docnum.name }}</h4> 
+										</button> 
+									{% else %} 
+										<a class="uk-flex uk-flex-middle docnum_list_item_button" href="{{ docnum.access_datas.href }}" target="_blank" title="{{msg.title_link_docNum}} {{ docnum.name }} - {{newtab}}"> 
+											<span class="pmb-img-doc">{{svg.doc_num.svg}}</span>
+											<h4 class="textDocNumN">{{ docnum.name }}</h4> 
+										</a> 
+										<span>{{docnum.file_size | filesize "1"; }}</span>
+									{% endif %} 
+								</li> 
+							{% endfor %} 
+						</ul> {{ record.explnums_datas.visionneuse_script }} 
+					</div> 
+				{% endif %} 
+			{% endblock %}
+		</section>
+	{% endblock %}
+	
+	{% block record_perio_options %}
+		{% if record.niveau_biblio == 's' %}
+			{{record.display_links_for_serials}}
+		{% endif %}
+	{% endblock %}
+	
+	{% block record_collstate %}
+		{% if record.niveau_biblio == 's' %}
+			{% if record.niveau_hierar == 1 %}
+				{{ record.display_collstate }}
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+	
+	{% block record_other_readings %}
+		{% if record.display_other_readings %}
+			{{ record.display_other_readings }}
+		{% endif %}
+	{% endblock %}
+	
+	{% block scan_request %}
+		{% if record.display_scan_request %}
+				<div class="scan_request">
+						<div class="pmb_button">
+							{{ record.display_scan_request }}
+						</div>
+				</div>
+		{% endif %}
+	{% endblock %} 
+	
+	{% block record_serialcirc_form_actions %}
+		{% if global.opac_serialcirc_active %}
+			{% if global.id_empr %}
+				{% if global.allow_serialcirc %}
+					{{ record.display_serialcirc_form_actions }}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+
+	{% block record_avis_detail %}
+		{% if record.avis_allowed %}
+			{% if global.opac_avis_display_mode == '1' %}
+				{{ record.display_avis_detail }}
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+</div>

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -28,24 +28,21 @@ session_start();
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom]" ?></title> </head>
+<title>Triade - Compte de <?php print $_SESSION['nom']." ".$_SESSION['prenom'] ?></title> </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include_once("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include_once("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<?php 
-$today=dateDMY(); 
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
+<?php
+$today=dateDMY();
 include_once("librairie_php/db_triade.php");
 include_once("common/config2.inc.php");
 $cnx=cnx();
 validerequete("2");
 $cr=create_news($_POST["saisie_titre_news"],$_POST["resultat"],$_SESSION["nom"],$_SESSION["prenom"],$_POST["id"]);
-if($cr == 1){
-	if (DEV != 1) prevenir("actu",$_SESSION["nom"],$_SESSION["prenom"],stripslashes($_POST["resultat"]));
-}
 Pgclose();
 ?>
 <!-- // debut de la saisie -->
@@ -64,20 +61,30 @@ Pgclose();
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;
+
+       // Envoi des notifications APRES rendu de la page pour ne pas bloquer l'affichage
+       if ($cr == 1 && DEV != 1) {
+            @ob_end_flush();
+            flush();
+            if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+            $cnx2 = cnx();
+            prevenir("actu",$_SESSION["nom"],$_SESSION["prenom"],stripslashes($_POST["resultat"]));
+            Pgclose();
+       }
      ?>
 </body>
 </html>

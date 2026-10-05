@@ -1,0 +1,2 @@
+# Protège les clés RSA — aucun accès HTTP direct
+Require all denied

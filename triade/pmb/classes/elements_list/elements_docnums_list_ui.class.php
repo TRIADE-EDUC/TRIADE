@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: elements_docnums_list_ui.class.php,v 1.5 2019-02-12 15:10:29 dgoron Exp $
+// $Id: elements_docnums_list_ui.class.php,v 1.5 2019/02/12 15:10:29 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ require_once($class_path.'/notice.class.php');
 // require_once($class_path.'/serials.class.php'); // Entraine une fatal sur index.php
 
 /**
- * Classe d'affichage d'un onglet qui affiche une liste de documents numÃ©riques
+ * Classe d'affichage d'un onglet qui affiche une liste de documents numériques
  * @author vtouchard
  *
  */

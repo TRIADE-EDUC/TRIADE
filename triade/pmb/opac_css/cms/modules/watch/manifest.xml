@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2016-09-20 10:25:42 apetithomme Exp $ -->
+$Id: manifest.xml,v 1.2 2016/09/20 10:25:42 apetithomme Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Veille documentaire</name>

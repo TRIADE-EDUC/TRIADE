@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: config.xml,v 1.3 2017-12-12 08:13:47 mbertin Exp $ -->
+<!-- $Id: config.xml,v 1.3 2017/12/12 08:13:47 mbertin Exp $ -->
 <stats>
 	<main type="nb_visits" name="msg:dashboard_visits_statistics_nb_visits" color="#FB454E" show_shortcut="yes"/>
 	<services>

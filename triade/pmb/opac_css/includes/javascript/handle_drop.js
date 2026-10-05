@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: handle_drop.js,v 1.4 2013-06-19 07:05:30 ngantier Exp $
+// $Id: handle_drop.js,v 1.4 2013/06/19 07:05:30 ngantier Exp $
 
 function title_textfield(dragged,target) {
 	target.value=dragged.firstChild.data;

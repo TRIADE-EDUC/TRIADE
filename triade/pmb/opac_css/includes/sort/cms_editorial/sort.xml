@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: sort.xml,v 1.1 2023/04/27 09:22:28 qvarin Exp $ -->
+<sort reference="cms_editorial" referencekey="num_object" ppersoprefix="cms_editorial">
+
+	<!--Name-->
+	<field name="search_universe_cms_article_title" type="text" typefield="select" id="3">
+		<table>
+			<tablefield>article_title</tablefield>
+		</table>
+	</field>
+
+</sort>

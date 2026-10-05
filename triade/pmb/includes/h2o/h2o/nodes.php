@@ -29,7 +29,7 @@ class NodeList extends H2o_Node implements IteratorAggregate  {
 	}
 	
     public function append($node) {
-        array_push($this->list, $node);
+        $this->list[] = $node;
     }
 
     public function extend($nodes) {
@@ -40,8 +40,9 @@ class NodeList extends H2o_Node implements IteratorAggregate  {
         return count($this->list);
     }
     
-    public function getIterator() {
-        return new ArrayIterator( $this->list );
+    public function getIterator(): \Traversable
+    {
+        return new ArrayIterator($this->list);
     }
 }
 

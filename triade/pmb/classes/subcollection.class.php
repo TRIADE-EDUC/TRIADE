@@ -1,16 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: subcollection.class.php,v 1.93 2019-05-16 15:53:51 dgoron Exp $
+// $Id: subcollection.class.php,v 1.106.4.1 2025/02/28 13:38:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// dÃ©finition de la classe de gestion des 'sous-collections'
+// définition de la classe de gestion des 'sous-collections'
+use Pmb\Ark\Entities\ArkEntityPmb;
 
 if ( ! defined( 'SUB_COLLECTION_CLASS' ) ) {
   define( 'SUB_COLLECTION_CLASS', 1 );
 
+  global $class_path;
+  
 require_once($class_path."/notice.class.php");
 require_once("$class_path/aut_link.class.php");
 require_once($class_path."/subcollection.class.php");
@@ -23,11 +26,12 @@ require_once($class_path."/indexation_authority.class.php");
 require_once($class_path."/authority.class.php");
 require_once ($class_path.'/indexations_collection.class.php');
 require_once ($class_path.'/indexation_stack.class.php');
+require_once ($class_path.'/interface/entity/interface_entity_subcollection_form.class.php');
 
 class subcollection {
 
 // ---------------------------------------------------------------
-//		propriÃ©tÃ©s de la classe
+//		propriétés de la classe
 // ---------------------------------------------------------------
 	public $id;				// MySQL id in table 'collections'
 	public $name;				// collection name
@@ -52,12 +56,12 @@ class subcollection {
 	//		subcollection($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos sous collection
+	//		getData() : récupération infos sous collection
 	// ---------------------------------------------------------------
 	public function getData() {
 		$this->name				=	'';
@@ -77,6 +81,8 @@ class subcollection {
 			$result = pmb_mysql_query($requete);
 			if(pmb_mysql_num_rows($result)) {
 				$row = pmb_mysql_fetch_object($result);
+				pmb_mysql_free_result($result);
+				
 				$this->id = $row->sub_coll_id;
 				$this->name = $row->sub_coll_name;
 				$this->parent = $row->sub_coll_parent;
@@ -85,7 +91,7 @@ class subcollection {
 				$this->comment = $row->subcollection_comment;
 				$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
 				$this->num_statut = $authority->get_num_statut();
-				if($row->subcollection_web) $this->subcollection_web_link = " <a href='$row->subcollection_web' target=_blank><img src='".get_url_icon('globe.gif')."' border=0 /></a>";
+				if($row->subcollection_web) $this->subcollection_web_link = " <a href='$row->subcollection_web' target=_blank><img src='".get_url_icon('globe.gif')."' style='border:0px;' /></a>";
 				else $this->subcollection_web_link = "" ;
 				$parent = authorities_collection::get_authority(AUT_TABLE_COLLECTIONS, $row->sub_coll_parent);
 				$this->parent_libelle = $parent->name;
@@ -96,8 +102,8 @@ class subcollection {
 				$this->editor_isbd = $editeur->get_isbd();
 				$this->issn ? $this->isbd_entry = $this->parent_libelle.'. '.$this->name.', ISSN '.$this->issn : $this->isbd_entry = $this->parent_libelle.'. '.$this->name ;
 				$this->display = $this->parent_libelle.'. '.$this->name.' ('.$this->editeur_libelle.')';
-				// Ajoute un lien sur la fiche sous-collection si l'utilisateur Ã  accÃ¨s aux autoritÃ©s
-				if (SESSrights & AUTORITES_AUTH) {
+				// Ajoute un lien sur la fiche sous-collection si l'utilisateur à accès aux autorités
+				if (defined('SESSrights') && (SESSrights & AUTORITES_AUTH)) {
 					if ($this->issn){
 						$lien_lib = $this->name.', ISSN '.$this->issn ;
 					}else{ 
@@ -144,40 +150,39 @@ class subcollection {
 	//		delete() : suppression de la sous collection
 	// ---------------------------------------------------------------
 	public function delete() {
-		global $dbh;
 		global $msg;
 		
 		if(!$this->id)
-			// impossible d'accÃ©der Ã  cette notice de sous-collection
+			// impossible d'accéder à cette notice de sous-collection
 			return $msg[406];
 
 		if(($usage=aut_pperso::delete_pperso(AUT_TABLE_SUB_COLLECTIONS, $this->id,0) )){
-			// Cette autoritÃ© est utilisÃ©e dans des champs perso, impossible de supprimer
+			// Cette autorité est utilisée dans des champs perso, impossible de supprimer
 			return '<strong>'.$this->display.'</strong><br />'.$msg['autority_delete_error'].'<br /><br />'.$usage['display'];
 		}
 		
-		// rÃ©cupÃ©ration du nombre de notices affectÃ©es
+		// récupération du nombre de notices affectées
 		$requete = "SELECT COUNT(1) FROM notices WHERE ";
 		$requete .= "subcoll_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		$res = pmb_mysql_query($requete);
 		$nbr_lignes = pmb_mysql_result($res, 0, 0);
 		if(!$nbr_lignes) {
 
-			// On regarde si l'autoritÃ© est utilisÃ©e dans des vedettes composÃ©es
+			// On regarde si l'autorité est utilisée dans des vedettes composées
 			$attached_vedettes = vedette_composee::get_vedettes_built_with_element($this->id, TYPE_SUBCOLLECTION);
 			if (count($attached_vedettes)) {
-				// Cette autoritÃ© est utilisÃ©e dans des vedettes composÃ©es, impossible de la supprimer
+				// Cette autorité est utilisée dans des vedettes composées, impossible de la supprimer
 				return '<strong>'.$this->display."</strong><br />".$msg["vedette_dont_del_autority"].'<br/>'.vedette_composee::get_vedettes_display($attached_vedettes);
 			}
 			
-			// sous collection non-utilisÃ©e dans des notices : Suppression OK
+			// sous collection non-utilisée dans des notices : Suppression OK
 			// effacement dans la table des collections
 			$requete = "DELETE FROM sub_collections WHERE sub_coll_id=".$this->id;
-			$result = pmb_mysql_query($requete, $dbh);
-			//suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
-			//Import d'autoritÃ©
+			pmb_mysql_query($requete);
+			//suppression dans la table de stockage des numéros d'autorités...
+			//Import d'autorité
 			subcollection::delete_autority_sources($this->id);
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link= new aut_link(AUT_TABLE_SUB_COLLECTIONS,$this->id);
 			$aut_link->delete();
 			$aut_pperso= new aut_pperso("subcollection",$this->id);
@@ -190,20 +195,20 @@ class subcollection {
 			// nettoyage indexation
 			indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_SUB_COLLECTIONS);
 			
-			// effacement de l'identifiant unique d'autoritÃ©
+			// effacement de l'identifiant unique d'autorité
 			$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
 			$authority->delete();
 			
 			audit::delete_audit(AUDIT_SUB_COLLECTION,$this->id);
 			return false;
 		} else {
-			// Cette collection est utilisÃ© dans des notices, impossible de la supprimer
-			return '<strong>'.$this->display."</strong><br />${msg[407]}";
+			// Cette collection est utilisé dans des notices, impossible de la supprimer
+			return '<strong>'.$this->display."</strong><br />{$msg[407]}";
 		}
 	}
 	
 	// ---------------------------------------------------------------
-	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autoritÃ©
+	//		delete_autority_sources($idcol=0) : Suppression des informations d'import d'autorité
 	// ---------------------------------------------------------------
 	public static function delete_autority_sources($idsubcol=0){
 		$tabl_id=array();
@@ -219,7 +224,7 @@ class subcollection {
 			$tabl_id[]=$idsubcol;
 		}
 		foreach ( $tabl_id as $value ) {
-	       //suppression dans la table de stockage des numÃ©ros d'autoritÃ©s...
+	       //suppression dans la table de stockage des numéros d'autorités...
 			$query = "select id_authority_source from authorities_sources where num_authority = ".$value." and authority_type = 'subcollection'";
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
@@ -237,9 +242,8 @@ class subcollection {
 	//		replace($by) : remplacement de la collection
 	// ---------------------------------------------------------------
 	public function replace($by,$link_save=0) {
-	
 		global $msg;
-		global $dbh;
+	    global $pmb_ark_activate;
 	
 		if(!$by) {
 			// pas de valeur de remplacement !!!
@@ -247,7 +251,7 @@ class subcollection {
 		}
 	
 		if (($this->id == $by) || (!$this->id))  {
-			// impossible de remplacer une collection par elle-mÃªme
+			// impossible de remplacer une collection par elle-même
 			return $msg[226];
 		}
 		// a) remplacement dans les notices
@@ -260,9 +264,9 @@ class subcollection {
 		}
 		
 		$aut_link= new aut_link(AUT_TABLE_SUB_COLLECTIONS,$this->id);
-		// "Conserver les liens entre autoritÃ©s" est demandÃ©
+		// "Conserver les liens entre autorités" est demandé
 		if($link_save) {
-			// liens entre autoritÃ©s
+			// liens entre autorités
 			$aut_link->add_link_to(AUT_TABLE_SUB_COLLECTIONS,$by);		
 		}
 		$aut_link->delete();
@@ -272,139 +276,160 @@ class subcollection {
 		$requete = "UPDATE notices SET ed1_id=".$n_collection->editeur;
 		$requete .= ", coll_id=".$n_collection->parent;
 		$requete .= ", subcoll_id=$by WHERE subcoll_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
+		pmb_mysql_query($requete);
 	
-		// b) suppression de la collection
-		$requete = "DELETE FROM sub_collections WHERE sub_coll_id=".$this->id;
-		$res = pmb_mysql_query($requete, $dbh);
-		
 		//nettoyage d'autorities_sources
 		$query = "select * from authorities_sources where num_authority = ".$this->id." and authority_type = 'subcollection'";
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			while($row = pmb_mysql_fetch_object($result)){
 				if($row->authority_favorite == 1){
-					//on suprime les rÃ©fÃ©rences si l'autoritÃ© a Ã©tÃ© importÃ©e...
+					//on suprime les références si l'autorité a été importée...
 					$query = "delete from notices_authorities_sources where num_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 					$query = "delete from authorities_sources where id_authority_source = ".$row->id_authority_source;
-					pmb_mysql_result($query);
+					pmb_mysql_query($query);
 				}else{
 					//on fait suivre le reste
-					$query = "update authorities_sources set num_authority = ".$by." where num_authority_source = ".$row->id_authority_source;
+					$query = "update authorities_sources set num_authority = ".$by." where id_authority_source = ".$row->id_authority_source;
 					pmb_mysql_query($query);
 				}
 			}
-		}	
+		}			
+		// nettoyage indexation concepts
+		$index_concept = new index_concept($this->id, TYPE_SUBCOLLECTION);
+		$index_concept->delete();
 		
-		//Remplacement dans les champs persos sÃ©lecteur d'autoritÃ©
+		//Remplacement dans les champs persos sélecteur d'autorité
 		aut_pperso::replace_pperso(AUT_TABLE_SUB_COLLECTIONS, $this->id, $by);
 		
 		audit::delete_audit (AUDIT_SUB_COLLECTION, $this->id);
 		
 		// nettoyage indexation
 		indexation_authority::delete_all_index($this->id, "authorities", "id_authority", AUT_TABLE_SUB_COLLECTIONS);
-		
-		// effacement de l'identifiant unique d'autoritÃ©
+		if ($pmb_ark_activate) {
+		    $idReplaced = authority::get_authority_id_from_entity($this->id, AUT_TABLE_SUB_COLLECTIONS);
+		    $idReplacing = authority::get_authority_id_from_entity($by, AUT_TABLE_SUB_COLLECTIONS);
+		    if ($idReplaced && $idReplacing) {
+		        $arkEntityReplaced = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplaced);
+		        $arkEntityReplacing = ArkEntityPmb::getEntityClassFromType(TYPE_AUTHORITY, $idReplacing);
+		        $arkEntityReplaced->markAsReplaced($arkEntityReplacing);
+		    }
+		}
+		// effacement de l'identifiant unique d'autorité
 		$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
 		$authority->delete();
+		
+		// b) suppression de la collection
+		$requete = "DELETE FROM sub_collections WHERE sub_coll_id=".$this->id;
+		pmb_mysql_query($requete);
 		
 		subcollection::update_index($by);
 	
 		return FALSE;
 	}
 	
+	protected function get_content_form() {
+		global $charset, $thesaurus_concepts_active;
+		global $sub_collection_content_form;
+		
+		$content_form = $sub_collection_content_form;
+		
+		//Nom
+		$element = interface_entity_element::get_instance('el0Child_0_a', 'collection_nom', '67');
+		$element->set_class('colonne2');
+		$element->add_input_node('text', $this->name, ['data-pmb-deb-rech' => '1'])
+		->set_class('saisie-30em');
+// 		->set_size(40);
+		$content_form = str_replace('!!element_collection_nom!!', $element->get_display(), $content_form);
+		
+		//ISSN 
+		$element = interface_entity_element::get_instance('el0Child_0_b', 'issn', '165');
+		$element->set_class('colonne2');
+		$element->add_input_node('text', $this->issn)
+		->set_class('saisie-20em')
+		->set_maxlength(50);
+		$content_form = str_replace('!!element_issn!!', $element->get_display(), $content_form);
+		
+		//Sous-collection de
+		$content_form = str_replace('!!coll_id!!', $this->parent, $content_form);
+		$content_form = str_replace('!!coll_libelle!!', htmlentities($this->parent_libelle,ENT_QUOTES, $charset), $content_form);
+		
+		//Editeur
+		$content_form = str_replace('!!ed_libelle!!', htmlentities($this->editeur_libelle,ENT_QUOTES, $charset), $content_form);
+		$content_form = str_replace('!!ed_id!!', $this->editeur, $content_form);
+		
+		// Web
+		$element = interface_entity_element::get_instance('el0Child_2', 'subcollection_web', '147');
+		$element->add_input_node('url', $this->subcollection_web);
+		$content_form = str_replace('!!element_subcollection_web!!', $element->get_display(), $content_form);
+		
+		//Commentaire
+		$element = interface_entity_element::get_instance('el0Child_3', 'comment', 'subcollection_comment');
+		$element->add_textarea_node($this->comment, 62, 4)
+		->set_class('saisie-80em')
+		->set_attributes(array('wrap' => 'virtual'));
+		$content_form = str_replace('!!element_comment!!', $element->get_display(), $content_form);
+
+		$aut_link= new aut_link(AUT_TABLE_SUB_COLLECTIONS,$this->id);
+		$content_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_sub_collection') , $content_form);
+		
+		$aut_pperso= new aut_pperso("subcollection",$this->id);
+		$content_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $content_form);
+		
+		if( $thesaurus_concepts_active == 1){
+			$index_concept = new index_concept($this->id, TYPE_SUBCOLLECTION);
+			$content_form = str_replace('!!concept_form!!',			$index_concept->get_form('saisie_sub_collection'),	$content_form);
+		}else{
+			$content_form = str_replace('!!concept_form!!',			"",	$content_form);
+		}
+		$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
+		$content_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $content_form);
+		
+		return $content_form;
+	}
+	
+	public function get_form($duplicate = false) {
+		global $msg;
+		global $user_input, $nbr_lignes, $page ;
+		
+		$interface_form = new interface_entity_subcollection_form('saisie_sub_collection');
+		if(isset(static::$controller) && is_object(static::$controller)) {
+			$interface_form->set_controller(static::$controller);
+		}
+		$interface_form->set_enctype('multipart/form-data');
+		if($this->id && !$duplicate) {
+			$interface_form->set_label($msg['178']);
+			$interface_form->set_document_title($this->name.' - '.$msg['178']);
+		} else {
+			$interface_form->set_label($msg['177']);
+			$interface_form->set_document_title($msg['177']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_num_statut($this->num_statut)
+		->set_content_form($this->get_content_form())
+		->set_table_name('sub_collections')
+		->set_field_focus('collection_nom')
+		->set_url_base(static::format_url());
+		
+		$interface_form->set_page($page)
+		->set_nbr_lignes($nbr_lignes)
+		->set_user_input($user_input);
+		return $interface_form->get_display();
+	}
 	
 	// ---------------------------------------------------------------
 	//		show_form : affichage du formulaire de saisie
 	// ---------------------------------------------------------------
 	public function show_form($duplicate = false) {
-	
-		global $msg;
-		global $sub_collection_form;
-		global $charset;
-		global $pmb_type_audit;
-		global $thesaurus_concepts_active;
-	
-		if($this->id && ! $duplicate) {
-			$action = static::format_url("&sub=update&id=".$this->id);
-			$libelle = $msg[178];
-			$button_replace = "<input type='button' class='bouton' value='$msg[158]' ";
-			$button_replace .= "onClick=\"unload_off();document.location='".static::format_url('&sub=replace&id='.$this->id)."';\">";
-	
-			$button_voir = "<input type='button' class='bouton' value='$msg[voir_notices_assoc]' ";
-			$button_voir .= "onclick='unload_off();document.location=\"./catalog.php?categ=search&mode=2&etat=aut_search&aut_type=subcoll&aut_id=$this->id\"'>";
-	
-			$button_delete = "<input type='button' class='bouton' value='$msg[63]' ";
-			$button_delete .= "onClick=\"confirm_delete();\">";
-		} else {
-			$action = static::format_url('&sub=update&id=');
-			$libelle = $msg[177];
-			$button_replace = '';
-			$button_voir = '';
-			$button_delete ='';
-		}
-		$aut_link= new aut_link(AUT_TABLE_SUB_COLLECTIONS,$this->id);
-		$sub_collection_form = str_replace('<!-- aut_link -->', $aut_link->get_form('saisie_sub_collection') , $sub_collection_form);
-		
-		$aut_pperso= new aut_pperso("subcollection",$this->id);
-		$sub_collection_form = str_replace('!!aut_pperso!!',	$aut_pperso->get_form(), $sub_collection_form);
-		
-		$sub_collection_form = str_replace('!!id!!', $this->id, $sub_collection_form);
-		$sub_collection_form = str_replace('!!libelle!!', $libelle, $sub_collection_form);
-		$sub_collection_form = str_replace('!!action!!', $action, $sub_collection_form);
-		$sub_collection_form = str_replace('!!cancel_action!!', static::format_back_url(), $sub_collection_form);
-		$sub_collection_form = str_replace('!!collection_nom!!', htmlentities($this->name,ENT_QUOTES, $charset), $sub_collection_form);
-		$sub_collection_form = str_replace('!!coll_id!!', $this->parent, $sub_collection_form);
-		$sub_collection_form = str_replace('!!coll_libelle!!', htmlentities($this->parent_libelle,ENT_QUOTES, $charset), $sub_collection_form);
-		$sub_collection_form = str_replace('!!ed_libelle!!', htmlentities($this->editeur_libelle,ENT_QUOTES, $charset), $sub_collection_form);
-		$sub_collection_form = str_replace('!!ed_id!!', $this->editeur, $sub_collection_form);
-		$sub_collection_form = str_replace('!!issn!!', $this->issn, $sub_collection_form);
-		$sub_collection_form = str_replace('!!delete!!', $button_delete, $sub_collection_form);
-		$sub_collection_form = str_replace('!!delete_action!!', static::format_delete_url("&id=".$this->id), $sub_collection_form);
-		$sub_collection_form = str_replace('!!remplace!!', $button_replace, $sub_collection_form);
-		$sub_collection_form = str_replace('!!voir_notices!!', $button_voir, $sub_collection_form);
-		$sub_collection_form = str_replace('!!subcollection_web!!',		htmlentities($this->subcollection_web,ENT_QUOTES, $charset),	$sub_collection_form);
-		$sub_collection_form = str_replace('!!comment!!',		htmlentities($this->comment,ENT_QUOTES, $charset),	$sub_collection_form);
-		/**
-		 * Gestion du selecteur de statut d'autoritÃ©
-		 */
-		$sub_collection_form = str_replace('!!auth_statut_selector!!', authorities_statuts::get_form_for(AUT_TABLE_SUB_COLLECTIONS, $this->num_statut), $sub_collection_form);
-		// pour retour Ã  la bonne page en gestion d'autoritÃ©s
-		// &user_input=".rawurlencode(stripslashes($user_input))."&nbr_lignes=$nbr_lignes&page=$page
-		global $user_input, $nbr_lignes, $page ;
-		$sub_collection_form = str_replace('!!user_input!!',			htmlentities($user_input,ENT_QUOTES, $charset),		$sub_collection_form);
-		$sub_collection_form = str_replace('!!nbr_lignes!!',			$nbr_lignes,										$sub_collection_form);
-		$sub_collection_form = str_replace('!!page!!',					$page,												$sub_collection_form);
-		if( $thesaurus_concepts_active == 1){
-			$index_concept = new index_concept($this->id, TYPE_SUBCOLLECTION);
-			$sub_collection_form = str_replace('!!concept_form!!',			$index_concept->get_form('saisie_sub_collection'),	$sub_collection_form);
-		}else{
-			$sub_collection_form = str_replace('!!concept_form!!',			"",	$sub_collection_form);
-		}
-		if ($this->name) {
-			$sub_collection_form = str_replace('!!document_title!!', addslashes($this->name.' - '.$libelle), $sub_collection_form);
-		} else {
-			$sub_collection_form = str_replace('!!document_title!!', addslashes($libelle), $sub_collection_form);
-		}
-		$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
-		$sub_collection_form = str_replace('!!thumbnail_url_form!!', thumbnail::get_form('authority', $authority->get_thumbnail_url()), $sub_collection_form);
-		if ($pmb_type_audit && $this->id && !$duplicate) {
-			$bouton_audit= audit::get_dialog_button($this->id, AUDIT_SUB_COLLECTION);
-		} else {
-			$bouton_audit= "";
-		}
-		$sub_collection_form = str_replace('!!audit_bt!!',				$bouton_audit,												$sub_collection_form);
-		$sub_collection_form = str_replace('!!controller_url_base!!', static::format_url(), $sub_collection_form);
-		
-		print $sub_collection_form;
+		print $this->get_form($duplicate);
 	}
 	
 	// ---------------------------------------------------------------
 	//		replace_form : affichage du formulaire de remplacement
 	// ---------------------------------------------------------------
 	public function replace_form() {
-		global $sub_coll_rep_form;
+		global $sub_coll_rep_content_form;
 		global $msg;
 		global $include_path;
 		
@@ -414,10 +439,17 @@ class subcollection {
 			return false;
 		}
 	
-		$sub_coll_rep_form=str_replace('!!id!!', $this->id, $sub_coll_rep_form);
-		$sub_coll_rep_form=str_replace('!!subcoll_name!!', $this->display, $sub_coll_rep_form);
-		$sub_coll_rep_form=str_replace('!!controller_url_base!!', static::format_url(), $sub_coll_rep_form);
-		print $sub_coll_rep_form;
+		$content_form = $sub_coll_rep_content_form;
+		$content_form = str_replace('!!id!!', $this->id, $content_form);
+		
+		$interface_form = new interface_autorites_replace_form('saisie_sub_collection');
+		$interface_form->set_object_id($this->id)
+		->set_label($msg["159"]." ".$this->display)
+		->set_content_form($content_form)
+		->set_table_name('sub_collections')
+		->set_field_focus('sub_coll_nom')
+		->set_url_base(static::format_url());
+		print $interface_form->get_display();
 	}
 	
 	/**
@@ -438,11 +470,9 @@ class subcollection {
 	}
 	
 	// ---------------------------------------------------------------
-	//		?? update($value) : mise Ã  jour de la collection
+	//		?? update($value) : mise à jour de la collection
 	// ---------------------------------------------------------------
 	public function update($value,$force_creation = false) {
-	
-		global $dbh;
 		global $msg,$charset;
 		global $include_path;
 		global $thesaurus_concepts_active;
@@ -452,8 +482,8 @@ class subcollection {
 		//si on a pas d'id, on peut avoir les infos de la collection 
 		if(!$value['parent']){
 			if($value['collection']){
-				//on les a, on crÃ©e l'Ã©diteur
-				$value['collection']=stripslashes_array($value['collection']);//La fonction d'import fait les addslashes contrairement Ã  l'update
+				//on les a, on crée l'éditeur
+				$value['collection']=stripslashes_array($value['collection']);//La fonction d'import fait les addslashes contrairement à l'update
 				$value['parent'] = collection::import($value['collection']);
 			}
 		}
@@ -461,10 +491,10 @@ class subcollection {
 		if(!$value['name'] || !$value['parent'])
 			return false;
 	
-		// nettoyage des valeurs en entrÃ©e
+		// nettoyage des valeurs en entrée
 		$value['name'] = clean_string($value['name']);
 	
-		// construction de la requÃªte
+		// construction de la requête
 		$requete = 'SET sub_coll_name="'.$value['name'].'", ';
 		$requete .= 'sub_coll_parent="'.$value['parent'].'", ';
 		$requete .= 'sub_coll_issn="'.$value["issn"].'", ';
@@ -476,12 +506,12 @@ class subcollection {
 			// update
 			$requete = 'UPDATE sub_collections '.$requete;
 			$requete .= ' WHERE sub_coll_id='.$this->id.' ';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$requete = "select collection_parent from collections WHERE collection_id='".$value['parent']."' ";
-				$res = pmb_mysql_query($requete, $dbh) ;
+				$res = pmb_mysql_query($requete) ;
 				$ed_parent = pmb_mysql_result($res, 0, 0);
 				$requete = "update notices set ed1_id='$ed_parent', coll_id='".$value['parent']."' WHERE subcoll_id='".$this->id."' ";
-				$res = pmb_mysql_query($requete, $dbh) ;
+				$res = pmb_mysql_query($requete) ;
 				
 				audit::insert_modif (AUDIT_SUB_COLLECTION, $this->id) ;
 				
@@ -499,16 +529,16 @@ class subcollection {
 			}
 		} else {
 			if(!$force_creation){
-				// crÃ©ation : s'assurer que la sous-collection n'existe pas dÃ©jÃ 
+				// création : s'assurer que la sous-collection n'existe pas déjà
 				if ($id_subcollection_exists = subcollection::check_if_exists($value)) {
 					$subcollection_exists = new subcollection($id_subcollection_exists);
 					require_once("$include_path/user_error.inc.php");
-					warning($msg[177],htmlentities($msg[219]." -> ".$subcollection_exists->display,ENT_QUOTES, $charset));
+					print $this->warning_already_exist($msg[177], $msg[219]." -> ".$subcollection_exists->display, $value);
 					return FALSE;
 				}
 			}
 			$requete = 'INSERT INTO sub_collections '.$requete.';';
-			if(pmb_mysql_query($requete, $dbh)) {
+			if(pmb_mysql_query($requete)) {
 				$this->id=pmb_mysql_insert_id();
 
 				audit::insert_creation (AUDIT_SUB_COLLECTION, $this->id) ;
@@ -538,7 +568,7 @@ class subcollection {
 			$index_concept->save();
 		}
 
-		// Mise Ã  jour des vedettes composÃ©es contenant cette autoritÃ©
+		// Mise à jour des vedettes composées contenant cette autorité
 		vedette_composee::update_vedettes_built_with_element($this->id, TYPE_SUBCOLLECTION);
 		
 		subcollection::update_index($this->id);
@@ -551,24 +581,21 @@ class subcollection {
 	// ---------------------------------------------------------------
 	// fonction d'import de sous-collection (membre de la classe 'subcollection');
 	public static function import($data) {
-	
-		// cette mÃ©thode prend en entrÃ©e un tableau constituÃ© des informations Ã©diteurs suivantes :
+		// cette méthode prend en entrée un tableau constitué des informations éditeurs suivantes :
 		//	$data['name'] 	Nom de la collection
-		//	$data['coll_parent']	id de l'Ã©diteur parent de la collection
-		//	$data['issn']	numÃ©ro ISSN de la collection
+		//	$data['coll_parent']	id de l'éditeur parent de la collection
+		//	$data['issn']	numéro ISSN de la collection
 		//	$data['statut']	statut de la collection
 	
-		global $dbh;
-	
-		// check sur le type de  la variable passÃ©e en paramÃ¨tre
-		if(!sizeof($data) || !is_array($data)) {
+		// check sur le type de  la variable passée en paramètre
+		if (!is_array($data) || empty($data)) {
 			// si ce n'est pas un tableau ou un tableau vide, on retourne 0
 			return 0;
 		}
 	
 		$data = array_merge(static::get_default_data(), $data);
 		
-		// check sur les Ã©lÃ©ments du tableau (data['name'] est requis).
+		// check sur les éléments du tableau (data['name'] est requis).
 		if(!isset(static::$long_maxi_name)) {
 			static::$long_maxi_name = pmb_mysql_field_len(pmb_mysql_query("SELECT sub_coll_name FROM sub_collections limit 1"),0);
 		}
@@ -577,29 +604,29 @@ class subcollection {
 		//si on a pas d'id, on peut avoir les infos de la collection 
 		if(!$data['coll_parent']){
 			if($data['collection']){
-				//on les a, on crÃ©e l'Ã©diteur
+				//on les a, on crée l'éditeur
 				$data['coll_parent'] = collection::import($data['collection']);
 			}
 		}	
 		
-		if($data['name']=="" || $data['coll_parent']==0) /* il nous faut impÃ©rativement une collection parente */
+		if($data['name']=="" || $data['coll_parent']==0) /* il nous faut impérativement une collection parente */
 			return 0;
 	
-		// prÃ©paration de la requÃªte
+		// préparation de la requête
 		$key0 = addslashes($data['name']);
 		$key1 = $data['coll_parent'];
 		$key2 = addslashes($data['issn']);
 		
-		/* vÃ©rification que la collection existe bien ! */
-		$query = "SELECT collection_id FROM collections WHERE collection_id='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vérification que la collection existe bien ! */
+		$query = "SELECT collection_id FROM collections WHERE collection_id='{$key1}' LIMIT 1 ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT colections ".$query);
 		if (pmb_mysql_num_rows($result)==0) 
 			return 0;
 	
-		/* vÃ©rification que la sous-collection existe */
-		$query = "SELECT sub_coll_id FROM sub_collections WHERE sub_coll_name='${key0}' AND sub_coll_parent='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vérification que la sous-collection existe */
+		$query = "SELECT sub_coll_id FROM sub_collections WHERE sub_coll_name='{$key0}' AND sub_coll_parent='{$key1}' LIMIT 1 ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT sub_collections ".$query);
 		$subcollection  = pmb_mysql_fetch_object($result);
 	
@@ -607,16 +634,16 @@ class subcollection {
 		if($subcollection->sub_coll_id)
 			return $subcollection->sub_coll_id;
 	
-		// id non-rÃ©cupÃ©rÃ©e, il faut crÃ©er la forme.
+		// id non-récupérée, il faut créer la forme.
 		$query = 'INSERT INTO sub_collections SET sub_coll_name="'.$key0.'", ';
 		$query .= 'sub_coll_parent="'.$key1.'", ';
 		$query .= 'sub_coll_issn="'.$key2.'", ';
 		$query .= 'subcollection_web="'.addslashes($data['subcollection_web']).'", ';
 		$query .= 'subcollection_comment="'.addslashes($data['comment']).'", ';
 		$query .= 'index_sub_coll=" '.strip_empty_words($key0).' '.strip_empty_words($key2).' " ';
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = @pmb_mysql_query($query);
 		if(!$result) die("can't INSERT into sub_collections".$query);
-		$id=pmb_mysql_insert_id($dbh);
+		$id=pmb_mysql_insert_id();
 		
 		audit::insert_creation (AUDIT_SUB_COLLECTION, $id) ;
 		
@@ -654,7 +681,7 @@ class subcollection {
 	public static function update_index($id, $datatype = 'all') {
 		indexation_stack::push($id, TYPE_SUBCOLLECTION, $datatype);
 		
-		// On cherche tous les n-uplet de la table notice correspondant Ã  cette sous-collection.
+		// On cherche tous les n-uplet de la table notice correspondant à cette sous-collection.
 		$query = "select distinct notice_id from notices where subcoll_id='".$id."'";
 		authority::update_records_index($query, 'subcollection');
 	}
@@ -690,25 +717,23 @@ class subcollection {
 	}
 	
 	public static function check_if_exists($data){
-		global $dbh;
-	
 		if (!$data['coll_parent'] && $data['parent']) $data['coll_parent'] = $data['parent'];
 		//si on a pas d'id, on peut avoir les infos de la collection 
 		if(!$data['coll_parent']){
 			if($data['collection']){
-				//on les a, on crÃ©e l'Ã©diteur
+				//on les a, on crée l'éditeur
 				$data['coll_parent'] = collection::check_if_exists($data['collection']);
 			}
 		}	
 	
-		// prÃ©paration de la requÃªte
+		// préparation de la requête
 		$key0 = addslashes($data['name']);
 		$key1 = $data['coll_parent'];
-		$key2 = addslashes($data['issn']);
+		//$key2 = addslashes($data['issn']);
 		
-		/* vÃ©rification que la sous-collection existe */
-		$query = "SELECT sub_coll_id FROM sub_collections WHERE sub_coll_name='${key0}' AND sub_coll_parent='${key1}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vérification que la sous-collection existe */
+		$query = "SELECT sub_coll_id FROM sub_collections WHERE sub_coll_name='{$key0}' AND sub_coll_parent='{$key1}' LIMIT 1 ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT sub_collections ".$query);
 		if(pmb_mysql_num_rows($result)) {
 			$subcollection  = pmb_mysql_fetch_object($result);
@@ -809,14 +834,24 @@ class subcollection {
 	}
 	
 	protected static function format_delete_url($url='') {
-		global $base_path;
-			
 		if(isset(static::$controller) && is_object(static::$controller)) {
 			return 	static::$controller->get_delete_url();
 		} else {
 			return static::format_url("&sub=delete".$url);
 		}
 	}
-} # fin de dÃ©finition de la classe subcollection
+	
+	protected function warning_already_exist($error_title, $error_message, $values=array())  {
+		global $msg;
+		
+		$authority = new authority(0, $this->id, AUT_TABLE_SUB_COLLECTIONS);
+		$display = $authority->get_display_authority_already_exist($error_title, $error_message, $values);
+		$display = str_replace("!!action!!", static::format_url('&sub=update&id='.$this->id.'&forcing=1'), $display);
+		$label = (empty($this->id) ? $msg[287] : $msg['force_modification']);
+		$display = str_replace("!!forcing_button!!", $authority->get_display_forcing_button($label) , $display);
+		$display = str_replace('!!hidden_specific_values!!', '', $display);
+		return $display;
+	}
+} # fin de définition de la classe subcollection
 
-} # fin de dÃ©laration
+} # fin de délaration

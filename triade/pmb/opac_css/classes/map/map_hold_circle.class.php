@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_hold_circle.class.php,v 1.3 2018-12-14 13:38:18 ngantier Exp $
+// $Id: map_hold_circle.class.php,v 1.4 2023/04/21 06:42:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 require_once($class_path."/map/map_hold.class.php");
@@ -44,12 +44,12 @@ class map_hold_circle extends map_hold_polygon {
   /**
    * 
    *
-   * @param map_coord coord CoordonnÃ©es du centre
+   * @param map_coord coord Coordonnées du centre
 
    * @return void
    * @access public
    */
-  public function set_center( $coord) {
+  public function set_center( $center) {
   } // end of member function set_center
 
   /**
@@ -64,7 +64,7 @@ class map_hold_circle extends map_hold_polygon {
   } // end of member function set_nb_points
 
   /**
-   * Retourne de nombre de points utilisÃ©s pour le polygone approchant
+   * Retourne de nombre de points utilisés pour le polygone approchant
    *
    * @return int
    * @access public
@@ -73,7 +73,7 @@ class map_hold_circle extends map_hold_polygon {
   } // end of member function get_nb_points
 
   /**
-   * Retourne la classe reprÃ©sentant les coordonnÃ©es du centre du cercle
+   * Retourne la classe représentant les coordonnées du centre du cercle
    *
    * @return map_coord
    * @access public
@@ -108,7 +108,7 @@ class map_hold_circle extends map_hold_polygon {
 
    * @param float radius Rayon du cercle
 
-   * @param int nb_points Nombre de points pour gÃ©nÃ©rer le polygone approchant
+   * @param int nb_points Nombre de points pour générer le polygone approchant
 
    * @return void
    * @access public
@@ -127,7 +127,7 @@ class map_hold_circle extends map_hold_polygon {
 
 
   /**
-   * MÃ©thode qui calcule les points du polygone approchant
+   * Méthode qui calcule les points du polygone approchant
    *
    * @return void
    * @access protected

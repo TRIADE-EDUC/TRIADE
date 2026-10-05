@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -32,17 +32,17 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php 
 include_once("./librairie_php/lib_licence.php"); 
 include_once("./librairie_php/db_triade.php"); 
 validerequete("menuadmin");
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGCARNET19 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -58,18 +58,11 @@ $code_couleur=$_POST["code_couleur"];
 $code_note=$_POST["code_note"];
 $code_julesverne=$_POST["code_julesverne"];
 $code_commentaire=$_POST["code_commentaire"];
+$code_educnational=$_POST["code_educnational"];
 $nb_periode=$_POST["saisie_nb_periode"];
 $section=$_POST["section"];
 
-
-for($i=0;$i<4;$i++) {
-	$nb=$_POST["ordre"][$i];
-	if ($nb != "") { $tab1[$nb]=$section[$i]; }
-}
-
-
-$cnx=cnx();
-create_carnet($nom_carnet,$code_lettre,$code_chiffre,$code_couleur,$code_note,$tab1,$nb_periode,$code_julesverne,$code_commentaire);
+create_carnet($nom_carnet,$code_lettre,$code_chiffre,$code_couleur,$code_note,$section,$nb_periode,$code_julesverne,$code_commentaire,$code_educnational);
 
 ?>
 

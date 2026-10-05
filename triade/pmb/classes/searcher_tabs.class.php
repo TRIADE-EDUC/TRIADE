@@ -1,11 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_tabs.class.php,v 1.70.2.1 2019-06-17 13:22:32 arenou Exp $
+// $Id: searcher_tabs.class.php,v 1.98.4.4 2025/02/25 16:15:36 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+use Pmb\Common\Library\Navbar\Navbar;
+
+global $class_path;
 require_once($class_path."/searcher/searcher_authorities_tab.class.php");
 require_once($class_path."/search.class.php");
 require_once($class_path."/elements_list/elements_authorities_list_ui.class.php");
@@ -28,6 +31,11 @@ class searcher_tabs {
 	protected $nbepage = 0;
 	protected $js_dynamic_check_form = "";
 	protected $default_selector_mode = 0;
+	private $search_failed = false;
+	protected $default_authority_selector_mode = array();
+	protected $redirect_link = "";
+	protected $objects_all_ids = "";
+	protected $objects_ids = array();
 	
     public function __construct($xml_file="",$full_path='') {
     	$this->xml_file = $xml_file;
@@ -36,7 +44,7 @@ class searcher_tabs {
     }
     
     /**
-     * VisibilitÃ© d'un onglet / d'un champ de recherche
+     * Visibilité d'un onglet / d'un champ de recherche
      * @param array $element
      */
     protected function parse_visibility($element) {
@@ -76,10 +84,12 @@ class searcher_tabs {
     	   $parsed_field['INPUT_TYPE'] = $field['INPUT'][0]['TYPE'];
     	   $parsed_field['INPUT_OPTIONS']=$field['INPUT'][0];
     	}
-    	$parsed_field['GLOBALVAR']=(isset($field['GLOBALVAR']) ? $field['GLOBALVAR'] : '');
-    	$parsed_field['VALUE']=(isset($field['VALUE']) ? $field['VALUE'] : '');
-    	if(isset($field['CLASS']) && is_array($field['CLASS'])) {
-	    	if(isset($field['CLASS'][0]['TYPE'])){
+    	$parsed_field['GLOBALVAR'] = (isset($field['GLOBALVAR']) ? $field['GLOBALVAR'] : '');
+    	$parsed_field['VALUE'] = (isset($field['VALUE']) ? $field['VALUE'] : '');
+    	$parsed_field['KEEP_EMPTY_WORDS'] = ((isset($field['CLASS'][0]['KEEP_EMPTYWORD']) && $field['CLASS'][0]['KEEP_EMPTYWORD'] == 'yes') ? 1 : 0);
+    	
+    	if (isset($field['CLASS']) && is_array($field['CLASS'])) {
+	    	if (isset($field['CLASS'][0]['TYPE'])) {
 	    		$parsed_field['TYPE'] = $field['CLASS'][0]['TYPE'];
 	    		if(isset($field['CLASS'][0]['MODE'])){
 	    			$parsed_field['MODE'] = $field['CLASS'][0]['MODE'];
@@ -146,16 +156,22 @@ class searcher_tabs {
     	if(isset($field['QUERYFILTER'])){
     	    foreach($field['QUERYFILTER'] as $queryfilter){
     	        $parsed_field['QUERYFILTER'][$queryfilter['FILTER']] = $queryfilter['value'];
-    	    }  
+    	    }
     	}
+		if (!empty($field["DETAILS"])) {
+    		$parsed_field['DETAILS'] = [];
+    		foreach ($field["DETAILS"][0] as $name => $info) {
+    		    $parsed_field['DETAILS'][$name] = $info[0]['value'];
+    		}
+		}
     	$parsed_field['VARVIS'] = $this->parse_visibility($field);
     	return $parsed_field;
     }
     
     //Parse du fichier de configuration
 	protected function parse_search_file() {
-    	global $base_path, $charset, $include_path;
-    	global $msg, $KEY_CACHE_FILE_XML;
+    	global $base_path, $charset, $include_path, $what;
+    	global $msg, $KEY_CACHE_FILE_XML, $mode;
     	
     	if(!$this->xml_file) {
     		$this->xml_file = "authorities";
@@ -183,20 +199,21 @@ class searcher_tabs {
     		$key_file=$KEY_CACHE_FILE_XML.md5($key_file);
     		if($tmp_key = $cache_php->getFromCache($key_file)){
     			if($cache = $cache_php->getFromCache($tmp_key)){
-    				if(count($cache) == 4){
+    				if(count($cache) == 5){
     					$this->url_target = $cache[0];
 		    			$this->default_mode = $cache[1];
 		    			$this->default_selector_mode = $cache[2];
 		    			$this->tabs = $cache[3];
+		    			$this->default_authority_selector_mode = $cache[4];
     					$dejaParse = true;
     				}
     			}
     		}
     	}else{
 	    	if (file_exists($tempFile) ) {
-	    		//Le fichier XML original a-t-il Ã©tÃ© modifiÃ© ultÃ©rieurement ?
+	    		//Le fichier XML original a-t-il été modifié ultérieurement ?
 	    		if (filemtime($filepath) > filemtime($tempFile)) {
-	    			//on va re-gÃ©nÃ©rer le pseudo-cache
+	    			//on va re-générer le pseudo-cache
 	    			unlink($tempFile);
 	    		} else {
 	    			$dejaParse = true;
@@ -206,11 +223,12 @@ class searcher_tabs {
 	    		$tmp = fopen($tempFile, "r");
 	    		$cache = unserialize(fread($tmp,filesize($tempFile)));
 	    		fclose($tmp);
-	    		if(count($cache) == 4){
+	    		if(count($cache) == 5){
 	    			$this->url_target = $cache[0];
 	    			$this->default_mode = $cache[1];
 	    			$this->default_selector_mode = $cache[2];
 	    			$this->tabs = $cache[3];
+	    			$this->default_authority_selector_mode = $cache[4];
 	    		}else{
 	    			//SOUCIS de cache...
 	    			unlink($tempFile);
@@ -226,13 +244,21 @@ class searcher_tabs {
 			fclose($fp);
 			$param=_parser_text_no_function_($xml, "PMBTABS", $filepath);
 	
-			//Lecture du mode par dÃ©faut
-			if($param['DEFAULT_MODE']) {
+			//Lecture du mode par défaut
+			if(!empty($param['DEFAULT_MODE'])) {
 				$this->default_mode = $param['DEFAULT_MODE'][0]['value']; 
 			}
 			
-			//Lecture du mode par dÃ©faut pour les sÃ©lÃ©cteurs de concepts 
-			if(isset($param['DEFAULT_SELECTOR_MODE'])) {
+			//Lecture du mode par défaut pour les autorités
+			if (!empty($param["SELECTOR_MODE"][0]["MODE"])) {
+    			$selector_mode = $param["SELECTOR_MODE"][0]["MODE"];
+    		    for ($i = 0; $i < count($selector_mode); $i++) {
+    		        $element = $selector_mode[$i];
+    		        $this->default_authority_selector_mode[$element["TYPE"][0]["value"]] = $element["VALUE"][0]["value"];
+    		    }
+			}
+			//Lecture du mode par défaut pour les sélécteurs de concepts 
+			if(!empty($param['DEFAULT_SELECTOR_MODE'])) {
 				$this->default_selector_mode = $param['DEFAULT_SELECTOR_MODE'][0]['value'];
 			}
 			
@@ -249,6 +275,10 @@ class searcher_tabs {
 				$tab['OBJECTS_TYPE'] = (isset($p_tab['OBJECTS_TYPE']) ? $p_tab['OBJECTS_TYPE'] : '');
 				$tab['SHOW_IN_SELECTOR'] = (isset($p_tab['SHOW_IN_SELECTOR']) ? $p_tab['SHOW_IN_SELECTOR'] : '');
 				$tab['MULTISEARCHCRITERIA']=0;
+				if(isset($p_tab['ADD'])){
+				    $tab['ADD'] = $p_tab['ADD'];
+				}
+				
 				if(isset($p_tab['MULTISEARCHCRITERIA'])) {
 					if($p_tab['MULTISEARCHCRITERIA']=='yes'){
 						$tab['MULTISEARCHCRITERIA']=1;
@@ -288,9 +318,10 @@ class searcher_tabs {
 				$this->tabs[$tab['MODE']] = $tab;
 			}
 			
+			//mise en cache
 			if($key_file){
-				$key_file_content=$KEY_CACHE_FILE_XML.md5(serialize(array($this->url_target,$this->default_mode, $this->default_selector_mode,$this->tabs)));
-				$cache_php->setInCache($key_file_content, array($this->url_target,$this->default_mode, $this->default_selector_mode,$this->tabs));
+			    $key_file_content=$KEY_CACHE_FILE_XML.md5(serialize(array($this->url_target,$this->default_mode, $this->default_selector_mode, $this->tabs, $this->default_authority_selector_mode)));
+			    $cache_php->setInCache($key_file_content, array($this->url_target,$this->default_mode, $this->default_selector_mode,$this->tabs, $this->default_authority_selector_mode));
 				$cache_php->setInCache($key_file,$key_file_content);
 			}else{
 				$tmp = fopen($tempFile, "wb");
@@ -299,6 +330,7 @@ class searcher_tabs {
 						$this->default_mode,
 						$this->default_selector_mode,
 						$this->tabs,
+						$this->default_authority_selector_mode
 				)));
 				fclose($tmp);
 			}
@@ -310,7 +342,7 @@ class searcher_tabs {
     	global $msg;
     	global $lang;
     	
-    	//RÃ©cupÃ©ration des valeurs du POST
+    	//Récupération des valeurs du POST
     	$field_name = $this->get_field_name($field, $type);
     	$values = $this->get_values_from_field($field_name, $type);
     	if (empty($values) && !empty($field['GLOBALVAR'])) {
@@ -331,7 +363,10 @@ class searcher_tabs {
     		case "authoritie":
 				if(!isset($values[0])) $values[0] = '';
     			if ($values[0] != 0) {
-					switch ($field ['INPUT_OPTIONS'] ['SELECTOR']) {
+    			    if(!isset($field ['INPUT_OPTIONS'] ['SELECTOR'])) {
+    			        $field ['INPUT_OPTIONS'] ['SELECTOR'] = '';
+    			    }
+    			    switch ($field ['INPUT_OPTIONS'] ['SELECTOR']) {
 						case "auteur" :
 							$aut = new auteur($values[0]);
 							$libelle = $aut->get_isbd();
@@ -424,8 +459,12 @@ class searcher_tabs {
 						}
 					}
 				}
-				
-				$display .= "<select name='".$field_name."[]' style='width:40em;'>";
+				if (isset($field["INPUT_OPTIONS"]["MULTIPLE"]) && $field["INPUT_OPTIONS"]["MULTIPLE"] == 'yes') {
+					$multiple = true;
+				} else {
+					$multiple = false;
+				}
+				$display .= "<select name='".$field_name."[]' style='width:40em;' ".($multiple ? "multiple=''" : "").">";
 				if(isset($field["INPUT_OPTIONS"]["QUERY"][0]["ALLCHOICE"]) && $field["INPUT_OPTIONS"]["QUERY"][0]["ALLCHOICE"] == "yes"){
 					$display .= "<option value='".(isset($field["INPUT_OPTIONS"]["QUERY"][0]["VALUEALLCHOICE"]) ? $field["INPUT_OPTIONS"]["QUERY"][0]["VALUEALLCHOICE"] : "")."'>".htmlentities(get_msg_to_display($field["INPUT_OPTIONS"]["QUERY"][0]["TITLEALLCHOICE"]), ENT_QUOTES, $charset)."</option>";
 				}
@@ -440,7 +479,12 @@ class searcher_tabs {
 				break;
 			case "list":
 				$options=$field["INPUT_OPTIONS"]["OPTIONS"][0];
-				$display .= "<select name='".$field_name."[]' style='width:40em;'>";
+				if (isset($field["INPUT_OPTIONS"]["MULTIPLE"]) && $field["INPUT_OPTIONS"]["MULTIPLE"] == 'yes') {
+					$multiple = true;
+				} else {
+					$multiple = false;
+				}
+				$display .= "<select name='".$field_name."[]' style='width:40em;' ".($multiple ? "multiple=''" : "").">";
 				sort($options["OPTION"]);
 				for ($i=0; $i<count($options["OPTION"]); $i++) {
 					$display .= "<option value='".htmlentities($options["OPTION"][$i]["VALUE"],ENT_QUOTES,$charset)."' ";
@@ -458,11 +502,11 @@ class searcher_tabs {
 				$options=marc_list_collection::get_instance($field["INPUT_OPTIONS"]["NAME"][0]["value"]);
 				$tmp=array();
 				$tmp = $options->table;
-				$tmp=array_map("convert_diacrit",$tmp);//On enlÃ¨ve les accents
+				$tmp=array_map("convert_diacrit",$tmp);//On enlève les accents
 				$tmp=array_map("strtoupper",$tmp);//On met en majuscule
 				asort($tmp);//Tri sur les valeurs en majuscule sans accent
 				foreach ( $tmp as $key => $value ) {
-					$tmp[$key]=$options->table[$key];//On reprend les bons couples clÃ© / libellÃ©
+					$tmp[$key]=$options->table[$key];//On reprend les bons couples clé / libellé
 				}
 				$options->table=$tmp;
 				reset($options->table);
@@ -478,8 +522,12 @@ class searcher_tabs {
 						}
 					}
 				}
-			
-				$display .= "<select name='".$field_name."[]' class=\"ext_search_txt\">";
+				if (isset($field["INPUT_OPTIONS"]["MULTIPLE"]) && $field["INPUT_OPTIONS"]["MULTIPLE"] == 'yes') {
+					$multiple = true;
+				} else {
+					$multiple = false;
+				}
+				$display .= "<select name='".$field_name."[]' class=\"ext_search_txt\" ".($multiple ? "multiple=''" : "").">";
 				if($field["INPUT_OPTIONS"]["RESTRICTQUERY"][0]["ALLCHOICE"] == "yes"){
 					$display .= "<option value=''>".htmlentities(get_msg_to_display($field["INPUT_OPTIONS"]["RESTRICTQUERY"][0]["TITLEALLCHOICE"]), ENT_QUOTES, $charset)."</option>";
 				}
@@ -512,6 +560,20 @@ class searcher_tabs {
 				}
 				$display .= get_input_date($field_name."[]", $field_name, htmlentities($values[0],ENT_QUOTES,$charset));
 				break;
+			case "date_flot":
+			    $input_placeholder = '';
+			    if(isset($field['INPUT_OPTIONS']['PLACEHOLDER'])) {
+			        if (substr($field['INPUT_OPTIONS']["PLACEHOLDER"],0,4)=="msg:") {
+			            $input_placeholder = $msg[substr($field['INPUT_OPTIONS']["PLACEHOLDER"],4,strlen($field['INPUT_OPTIONS']["PLACEHOLDER"])-4)];
+			        } else {
+			            $input_placeholder = $field['INPUT_OPTIONS']["PLACEHOLDER"];
+			        }
+			    }
+			    if(empty($values)){
+			        $values[0] = "";
+			    }
+			    $display .= get_input_date_flot($field_name."[0]", $field_name, htmlentities($values[0],ENT_QUOTES,$charset));
+			    break;
     	}
     	$display .= "</div>";
     	
@@ -521,7 +583,7 @@ class searcher_tabs {
     public function get_script_js_form($form_name='') {
     	$form_name = $form_name ? $form_name : 'search_'.$this->xml_file;
     	return "
-    		<script type='text/javascript'>
+    		<script>
     			document.forms['".$form_name."'].elements[0].focus();
 	    		function searcher_tabs_check_form(obj) {
 	    			var searchIsEmpty = true;
@@ -557,7 +619,7 @@ class searcher_tabs {
 					}
 				}
 		</script>
-    		<script type='text/javascript' src='./javascript/ajax.js'></script>
+    		<script src='./javascript/ajax.js'></script>
 			<script>ajax_parse_dom();</script>";
     }
     
@@ -566,7 +628,6 @@ class searcher_tabs {
     	
     	$form = "";
     	$tab=$this->get_current_tab();
-
     	if (!is_null($tab['SEARCHFIELDS'])) {
 	    	foreach ($tab['SEARCHFIELDS'] as $search_field) {
 	    		if($this->visibility($search_field)) {
@@ -601,7 +662,6 @@ class searcher_tabs {
     	
     	$form = "";
     	$tab=$this->get_current_tab();
-    	
     	$form .= "
     		<form id='search_".$this->xml_file."' class='form-".$current_module."' action='".$this->url_target."&mode=".$tab['MODE']."' method='post' onSubmit='return searcher_tabs_check_form(this);'>
     		<h3>".get_msg_to_display($tab['TITLE'])."</h3>
@@ -612,7 +672,12 @@ class searcher_tabs {
 	    		</div>
 	    		<div class='row'>
 	    			<input type='hidden' name='action' value='search' />
-	    			<input class='bouton' type='submit' value='".$msg['search']."' />
+	    			<input class='bouton' type='submit' value='".$msg['search']."' />";
+    	if(isset($tab['ADD'])){
+    	    $form .= "
+                     <input class='bouton' type='button' onclick='document.location=\"".$tab['ADD'][0]['value']."\"' value='".$msg['ajouter']."' />";
+    	}
+    	$form .= "
 	    		</div>
     		</form>";
     	$form .= $this->get_script_js_form();
@@ -648,20 +713,26 @@ class searcher_tabs {
     }
 
     protected function get_values_from_field($field_name) {
-    	global ${$field_name};
-    	//pour le cas des champs autocomplÃ©s
-    	global ${$field_name."_id"};
-    	if(!empty(${$field_name."_id"})){
-    	    return array(
-    	        'id' => ${$field_name."_id"},
-    	        'values' => ${$field_name}
-    	    );
-    	}
-    	if(is_array(${$field_name})) {
-    		return ${$field_name};
-    	} else {
-    		return array();
-    	}
+        global ${$field_name};
+        //pour le cas des champs autocomplés
+        global ${$field_name."_id"};
+        if(!empty(${$field_name."_id"})){
+            return array(
+                'id' => ${$field_name."_id"},
+                'values' => ${$field_name}
+            );
+        }
+        if(is_array(${$field_name})) {
+            //cas tres particulier pour les dates flottantes
+            if (isset(${$field_name}[0]["date_begin"])) {
+                if (${$field_name}[0]["date_begin"] === "") {
+                    return array();
+                }
+            }
+            return ${$field_name};
+        } else {
+            return array();
+        }
     }
     
     private function get_field_name($field, $type = 'search') {
@@ -674,15 +745,20 @@ class searcher_tabs {
     }
     
     private function get_values_from_form() {
-
+        
+        $search_empty = 0;
+        
     	$data = array();
     	$tab=$this->get_current_tab();
     	foreach ($tab['SEARCHFIELDS'] as $search_field) {
     		$t = array();
     		$t['id'] = $search_field['ID'];
     		$t['values'] = $this->get_values_from_field($this->get_field_name($search_field, 'search'));
+    		if (empty($t['values'])) {
+    		    $search_empty++;
+    		}
     		$t['class'] = (isset($search_field['CLASS']) ? $search_field['CLASS'] : '');
-    		$t['type'] = $search_field['TYPE'];
+    		$t['type'] = $search_field['TYPE'] ?? "";
     		$t['mode'] = (isset($search_field['MODE']) ? $search_field['MODE'] : '');
     		$t['query'] = (isset($search_field['QUERY']) ? $search_field['QUERY'] : '');
     		if(isset($search_field['FIELDRESTRICT']) && is_array($search_field['FIELDRESTRICT'])) {
@@ -694,7 +770,14 @@ class searcher_tabs {
     		if(isset($search_field['QUERYFILTER'])) {
     		    $t['queryfilter'] = $search_field['QUERYFILTER'];
     		}
+    		if(isset($search_field['DETAILS'])) {
+    		    $t['details'] = $search_field['DETAILS'];
+    		}
     		$data['SEARCHFIELDS'][]= $t;
+    	}
+    	if ($search_empty === count($tab['SEARCHFIELDS'])) {
+    	    // On a récupèrer aucune valeur rechercher, il faut rediriger sur le formulaire.
+    	    $this->search_failed = true;
     	}
     	foreach ($tab['FILTERFIELDS'] as $filter_field) {
     		$t = array();
@@ -704,18 +787,70 @@ class searcher_tabs {
     		}else{
     			$t['values'] = $this->get_values_from_field($this->get_field_name($filter_field, 'filter'));
     		}
-    		$t['globalvar'] = $filter_field['GLOBALVAR'][0]['value'];
+    		$t['globalvar'] = $filter_field['GLOBALVAR'][0]['value'] ??'';
+    		$t['multiple'] = (isset($filter_field['INPUT_OPTIONS']['MULTIPLE']) ? $filter_field['INPUT_OPTIONS']['MULTIPLE'] : '');
+    		if(isset($filter_field['FIELDRESTRICT']) && is_array($filter_field['FIELDRESTRICT'])) {
+    		    $t['fieldrestrict'] = $filter_field['FIELDRESTRICT'];
+    		}
+    		$t['type'] = $filter_field['TYPE'] ?? "";
+    		$t['mode'] = $filter_field['MODE'] ?? "";
+    		$t['query'] = $filter_field['QUERY'] ?? "";
+    		$t['keep_empty_words'] = $filter_field['KEEP_EMPTY_WORDS'] ?? "";
+    		if(isset($search_field['QUERYFILTER'])) {
+    		    $t['queryfilter'] = $search_field['QUERYFILTER'];
+    		}
+    		if(isset($search_field['DETAILS'])) {
+    		    $t['details'] = $search_field['DETAILS'];
+    		}
     		$data['FILTERFIELDS'][]= $t;
     	}
     	return $data;
     }
     
     protected function search() {
-    	global $page, $nb_per_page_search;
+    	global $page;
+    	global $pmb_show_authority_id, $mode, $msg;
+    	
     	$values = $this->get_values_from_form();
-    	$searcher_entities_tab = $this->get_instance_entities_tab($values);
-    	$this->objects_ids = $searcher_entities_tab->get_sorted_result("default",$page*$nb_per_page_search,$nb_per_page_search);
-    	$this->search_nb_results = $searcher_entities_tab->get_nb_results();
+    	// On test si on a le champ pour recherche sur l'identifiant d'une authorité
+    	if ($pmb_show_authority_id) {
+    	    $tab = $this->get_current_tab();
+        	$filters = $values["FILTERFIELDS"];
+        	$index = count($filters);
+        	for ($i = 0; $i < $index; $i++) {
+        	    if (!empty($filters[$i]["globalvar"]) && "f_authority_id" == $filters[$i]["globalvar"]) {
+        	        $id = intval($filters[$i]["values"][0]);
+        	        if (empty($id)) {
+        	            break;
+        	        }
+        	        $aut_const = authority::get_const_type_object($tab['OBJECTS_TYPE']);
+        	        if (authority::check_available_autority($id, $aut_const)) {
+            	        $url = authority::get_url_from_type($tab['OBJECTS_TYPE']);
+            	        $this->redirect_link = str_replace("!!id!!", $id, $url);
+            	        return;
+        	        } else {
+        	            error_message($msg[235], $msg['authority_id_query_failed']." ".$id, 1, "./autorites.php?categ=search&mode=".$mode);
+        	            die();
+        	        }
+        	    }
+        	}
+    	}
+    	
+    	if (!$this->search_failed) {    
+    		$searcher_entities_tab = $this->get_instance_entities_tab($values);
+    		if(static::class == 'searcher_selectors_tabs' && method_exists($searcher_entities_tab, 'add_context_parameter')) {
+        		$searcher_entities_tab->add_context_parameter('in_selector', true);
+        	}
+        	$page = intval($page);
+        	if($page) {
+        	    $start_page = $this->get_nb_per_page() * ($page-1);
+        	} else {
+        	    $start_page = 0;
+        	}
+        	$this->objects_ids = $searcher_entities_tab->get_sorted_result("default", $start_page, $this->get_nb_per_page());
+        	$this->objects_all_ids = $searcher_entities_tab->get_objects_ids();
+        	$this->search_nb_results = $searcher_entities_tab->get_nb_results();
+    	}
     }
     
     protected function get_current_tab(){
@@ -723,7 +858,6 @@ class searcher_tabs {
     }
 
     protected function make_hidden_form() {
-    	global $charset;
     	global $mode;
     	
     	$tab=$this->get_current_tab();
@@ -765,8 +899,9 @@ class searcher_tabs {
     }
     
     protected function get_human_field($field, $values) {
-    	global $msg, $charset;
+    	global $msg;
     	
+    	$field_aff = [];
 		switch ($field["INPUT_TYPE"]) {
 			case "list":
 				$options=$field["INPUT_OPTIONS"]["OPTIONS"][0];
@@ -783,28 +918,41 @@ class searcher_tabs {
 				}
 				break;
 			case "query_list":
-				$requete=$field["INPUT_OPTIONS"]["QUERY"][0]["value"];
+				$requete = $field["INPUT_OPTIONS"]["QUERY"][0]["value"];
 				if (isset($field["FILTERING"]) && $field["FILTERING"] == "yes") {
 					$requete = str_replace("!!acces_j!!", "", $requete);
 					$requete = str_replace("!!statut_j!!", "", $requete);
 					$requete = str_replace("!!statut_r!!", "", $requete);
 				}
-				if (isset($field["INPUT_OPTIONS"]["QUERY"][0]["USE_GLOBAL"]) && $field["INPUT_OPTIONS"]["QUERY"][0]["USE_GLOBAL"]) {
+				
+				if (!empty($field["INPUT_OPTIONS"]["QUERY"][0]["USE_GLOBAL"])) {
 					$use_global = explode(",", $field["INPUT_OPTIONS"]["QUERY"][0]["USE_GLOBAL"]);
-					for($j=0; $j<count($use_global); $j++) {
+					$nb_globals = count($use_global);
+					for ($j = 0; $j < $nb_globals; $j++) {
 						$var_global = $use_global[$j];
 						global ${$var_global};
-						$requete = str_replace("!!".$var_global."!!", ${$var_global}, $requete);
+						$requete = str_replace("!!$var_global!!", ${$var_global}, $requete);
 					}
 				}
-				$resultat=pmb_mysql_query($requete);
-				$opt=array();
-				while ($r_=@pmb_mysql_fetch_row($resultat)) {
-					$opt[$r_[0]]=$r_[1];
+				$resultat = pmb_mysql_query($requete);
+				
+				$opt = array();
+				while ($r_ = @pmb_mysql_fetch_row($resultat)) {
+					$opt[$r_[0]] = $r_[1];
 				}
-				for ($j=0; $j<count($values); $j++) {
-					if($values[$j]>=0)	$field_aff[$j]=$opt[$values[$j]]; // $opt[$values[$j]] peut etre Ã  -1
-					else $field_aff[$j]='';
+				
+				$nb_values = count($values);
+				for ($j = 0; $j < $nb_values; $j++) {
+				    $field_aff[$j] = '';
+				    if ($values[$j] >= 0) {
+			            // $opt[$values[$j]] peut être à -1
+				        $value = html_entity_decode($values[$j]);
+				        $field_aff[$j] = $opt[$value];
+				        if (substr($opt[$values[$j]], 0, 4) == "msg:") {
+				            // Cas particulier du message "Sans schéma"
+				            $field_aff[$j] = get_msg_to_display($opt[$values[$j]]);
+				        }
+				    }
 				}
 				break;
 			case "marc_list":
@@ -816,11 +964,32 @@ class searcher_tabs {
 			case "date":
 				$field_aff[0]=format_date($values[0]);
 				break;
+			case "date_flot":
+			    $field_aff[0] = "";
+			    switch($values[0]["value"]) {
+			        case "NEAR":
+			            $field_aff[0] = $msg['parperso_option_duration_type0']." ".$values[0]["date_begin"];
+			            break;
+			        case "LTEQ":
+			            $field_aff[0] = $msg['parperso_option_duration_type1']." ".$values[0]["date_begin"];
+			            break;
+			        case "GTEQ":
+			            $field_aff[0] = $msg['parperso_option_duration_type2']." ".$values[0]["date_begin"];
+			            break;
+			        case "EQ":
+			            $field_aff[0] = $msg['parperso_option_duration_type3']." ".$values[0]["date_begin"];
+			            break;
+			        case "BETWEEN":
+			            $field_aff[0] = $msg['parperso_option_duration_type4']." ".$values[0]["date_begin"]." - ".$values[0]["date_end"];
+			            break;
+			    }
+				break;
 			case "authoritie":
 			    if(!empty($values['values'])){
 			        $field_aff= $values['values'];
 			    }else{
-    				for($j=0 ; $j<sizeof($values) ; $j++){
+			        $nb_values = count($values);
+			        for ($j = 0; $j < $nb_values; $j++) {
     					if(is_numeric($values[$j]) && (${$op} == "AUTHORITY")){
     						switch ($field['INPUT_OPTIONS']['SELECTOR']){
     							case "categorie" :
@@ -876,7 +1045,6 @@ class searcher_tabs {
     
     protected function make_human_query($without_tags = false) {
     	global $msg;
-    	global $charset;
     	
     	$human_queries = array();
     	$tab = $this->get_current_tab();
@@ -886,7 +1054,7 @@ class searcher_tabs {
     		if(is_array($values) && isset($values[0]) && ($values[0] != '')) {
     			$human_queries[] = $this->get_human_field($search_field, $values);
     		}
-    		//AutcomplÃ©tion
+    		//Autcomplétion
     		if(is_array($values) && isset($values['values'][0]) && ($values['values'][0] != '')) {
                 $human_queries[] = $this->get_human_field($search_field, $values);
     		}
@@ -898,14 +1066,13 @@ class searcher_tabs {
     		if(is_array($values) && isset($values[0]) && ($values[0] != '')) {
     		    $human_queries[] = $this->get_human_field($filter_field, $values);
     		}
-    		//AutcomplÃ©tion
+    		//Autcomplétion
     		if(is_array($values) && isset($values['values'][0]) && ($values['values'][0] != '')) {
     		    $human_queries[] = $this->get_human_field($filter_field, $values);
     		}
     	}
     	
     	$research = implode(', ', $human_queries);
-    	
     	if($this->search_nb_results) {
     		$research .= " => ".sprintf($msg["searcher_results"], $this->search_nb_results);
     	} else {
@@ -917,37 +1084,30 @@ class searcher_tabs {
     	return "<div class='othersearchinfo'>".$research."</div>";
     }
     	
-    protected function pager() {
-    	global $msg;
-    	global $page, $nb_per_page_search;
-    
-    	if (!$this->search_nb_results) return;
+    protected function get_nb_per_page() {
+    	global $nb_per_page_search;
     	
-    	if($page) $this->page = $page;
-    	$this->nbepage=ceil($this->search_nb_results/$nb_per_page_search);
-    	$suivante = $this->page+1;
-    	$precedente = $this->page-1;
-    	if (!$this->page) $page_en_cours=0 ;
-    	else $page_en_cours=$this->page ;
+    	$nb_per_page_search = intval($nb_per_page_search);
+    	return $nb_per_page_search;
+    }
     
-    	// affichage du lien prÃ©cÃ©dent si nÃ©cÃ©ssaire
-    	$nav_bar = '';
-    	if($precedente >= 0)
-    		$nav_bar .= "<a href='#' onClick=\"document.store_search.page.value=$precedente; document.store_search.submit(); return false;\"><img src='".get_url_icon('left.gif')."' style='border:0px; margin:3px 3px'  title='$msg[48]' alt='[$msg[48]]' class='align_middle'></a>";
+    protected function pager() {
+    	global $page;
     
-    	$deb = $page_en_cours - 10 ;
-    	if ($deb<0) $deb=0;
-    	for($i = $deb; ($i < $this->nbepage) && ($i<$page_en_cours+10); $i++) {
-    		if($i==$page_en_cours) $nav_bar .= "<strong>".($i+1)."</strong>";
-    		else $nav_bar .= "<a href='#' onClick=\"document.store_search.page.value=$i; document.store_search.submit(); return false;\">".($i+1)."</a>";
-    		if($i<$this->nbepage) $nav_bar .= " ";
+    	if (!$this->search_nb_results) {
+    	    return;
     	}
-    
-    	if($suivante<$this->nbepage)
-    		$nav_bar .= "<a href='#' onClick=\"document.store_search.page.value=$suivante; document.store_search.submit(); return false;\"><img src='".get_url_icon('right.gif')."' style='border:0px; margin:3px 3px' title='$msg[49]' alt='[$msg[49]]' class='align_middle'></a>";
-    
+    	$page = intval($page);
+    	if($page) {
+    	    $this->page = $page;
+    	    $current_page = $page;
+    	} else {
+    	    $current_page = 1 ;
+    	}
+    	$navbar = new Navbar($current_page, $this->search_nb_results, $this->get_nb_per_page());
+    	$navbar->setHiddenFormName('store_search');
     	// affichage de la barre de navigation
-    	print "<div class='center'>$nav_bar</div>";
+    	print "<div id='results_pager' class='center'>".$navbar->render()."</div>";
     }
     
     public function show_result() {
@@ -965,14 +1125,42 @@ class searcher_tabs {
     		    case "records" :
     		        searcher_records::get_caddie_link();
     		        print searcher::get_quick_actions();
+            		print searcher::get_search_back_button('', 'NOTI');
     		        break;
     		    default :
+    		        $tab = $this->get_current_tab();
     		        search_authorities::get_caddie_link();
+    		        search_authorities::get_sort_link($this->search_nb_results, $tab['OBJECTS_TYPE']);
     		        print searcher::get_quick_actions('AUT');
+            		print searcher::get_search_back_button('', 'AUT');
     		        break;
     		}
     		print searcher::get_check_uncheck_all_buttons();
-    		print $elements;
+    		
+    		//Réinitialisation des facettes
+    		facettes::destroy_global_env();
+    		
+    		if($this->is_multi_search_criteria()){
+    		    session::set_value('search', ['authorities' => ['extended_search' => $this->objects_all_ids]]);
+    		    facettes::set_facet_type('authorities');
+    		} else {
+    		    $tab=$this->get_current_tab();
+    		    facettes::set_search_mode('simple_search');
+    		    if($tab['OBJECTS_TYPE'] == 'mixed') {
+    		        facettes::set_facet_type('authorities');
+    		        session::set_value('search', ['authorities' => ['simple_search' => $this->objects_all_ids]]);
+    		    } else {
+    		        facettes::set_facet_type($tab['OBJECTS_TYPE']);
+    		        session::set_value('search', [$tab['OBJECTS_TYPE'] => ['simple_search' => $this->objects_all_ids]]);
+    		    }
+    		}
+    		print "
+            <div class='content_details'>
+        		<div id='facettes_list' class='facettes_list'>".facettes::call_ajax_facettes()."</div>
+            		<div id='results_list' class='results_list'>
+            		".$elements."
+        		</div>
+    		</div>";
     		print $end_result_liste;
     		$this->pager();
     	}
@@ -1032,9 +1220,20 @@ class searcher_tabs {
     		$this->set_session_history($sc->make_human_query(), $tab, $this->get_type());
     	} else {
     		$this->search();
-    		$this->set_session_history($this->make_human_query(true), $tab, "QUERY");
-    		print $this->show_result();
-    		$this->set_session_history($this->make_human_query(true), $tab, $this->get_type(), "simple");
+    		// si lien de redirection on redirige
+    		if ($this->redirect_link) {
+    		    print "<script type=\"text/javascript\">";
+    		    print "document.location = \"".$this->redirect_link."\"";
+    		    print "</script>";
+    		}
+    		if ($this->search_failed) {
+    		    // échec à la recherche on redirige sur le formulaire.
+    		    $this->proceed_form();    	
+    		} else {
+        		$this->set_session_history($this->make_human_query(true), $tab, "QUERY");
+        		print $this->show_result();
+        		$this->set_session_history($this->make_human_query(true), $tab, $this->get_type(), "simple");
+    		}
     	}
     }
     
@@ -1096,24 +1295,24 @@ class searcher_tabs {
     	
     	//on peut en avoir plusieurs, ca fonctionne avec un ET
     	for ($i=0; $i<count($element['VARVIS']); $i++) {
-    	    //rÃ©cupÃ©ration du nom de la variable
+    	    //récupération du nom de la variable
     	    $name=$element['VARVIS'][$i]["NAME"] ;
     		global ${$name};
-    		//quelle est la visibilitÃ© standard sur cette variable
+    		//quelle est la visibilité standard sur cette variable
             $result=$element['VARVIS'][$i]["VISIBILITY"];
-            //si la variable n'est pas prÃ©sente ou que le tableau est vide, on inverse la visiblitÃ©
+            //si la variable n'est pas présente ou que le tableau est vide, on inverse la visiblité
             if(empty(${$name}) ){
                 $result = !$result;
     		}
-    		//on peut avoir un changement de visibilitÃ© sur des valeurs particuliÃ¨res
+    		//on peut avoir un changement de visibilité sur des valeurs particulières
     		if (isset($element['VARVIS'][$i]["VALUE"])){
     		    // si la variable est un tableau, on veut checker pour chacune de ses valeurs avec un OU
         		if(is_array(${$name})){
         		    $sub_result = false;
         		    foreach(${$name} as $elem){
-        		        // si l'une des valeurs de la variable est dans les valeurs spÃ©cifiques
+        		        // si l'une des valeurs de la variable est dans les valeurs spécifiques
         		        if (isset($element['VARVIS'][$i]["VALUE"][$elem])) {
-        		            //on rÃ©cupÃ¨re la visiblitÃ© associÃ©e
+        		            //on récupère la visiblité associée
         		            $sub_result = $element['VARVIS'][$i]["VALUE"][$elem];
         		            //si vrai, on sort parce qu'on veut faire un ou
         		            if($sub_result){
@@ -1130,7 +1329,7 @@ class searcher_tabs {
                             $result = $element['VARVIS'][$i]["VALUE"][0] ;
         		        }
         		    }else if (isset($element['VARVIS'][$i]["VALUE"][${$name}])) {
-            		    //on rÃ©cupÃ¨re la visiblitÃ© associÃ©e
+            		    //on récupère la visiblité associée
             		    $result = $element['VARVIS'][$i]["VALUE"][${$name}] ;
         		    }
         		}
@@ -1138,7 +1337,7 @@ class searcher_tabs {
     		//si pas visible, alors on ne teste pas la suite.
     		if(!$result) return false;
     	} // fin for
-    	// normalement, Ã  ce moment, $result vaut toujours true
+    	// normalement, à ce moment, $result vaut toujours true
     	return $result;
     }
     
@@ -1184,24 +1383,25 @@ class searcher_tabs {
     	if(!isset($_SESSION["session_history"])) $_SESSION["session_history"] = array();
     	switch ($type) {
     		case 'QUERY' :
-    			if ((string) $page == "") {
+    			if ((string) $page == "" || $page == 0) {
     				$_SESSION["CURRENT"]=count($_SESSION["session_history"]);
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["URI"] = $this->url_target."&mode=".$tab["MODE"];
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["POST"] = $_POST;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["GET"] = $_GET;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["GET"]["sub"] = "";
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["POST"]["sub"] = "";
+    				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["POST"]["action"] = "";
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["HUMAN_QUERY"] = $human_query;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["HUMAN_TITLE"] = "[".$msg["132"]."] ".get_msg_to_display($tab["TITLE"]);
-    				$_POST["page"] = 0;
-    				$page = 0;
+    				$_POST["page"] = 1;
+    				$page = 1;
     			}
     			break;
     		case 'AUT' :
     		case 'NOTI' :
     			if ($_SESSION["CURRENT"] !== false) {
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["URI"] = $this->url_target."&mode=".$tab["MODE"]."&action=search";
-    				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["PAGE"] = $page+1;
+    				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["PAGE"] = $page;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["POST"] = $_POST;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["GET"] = $_GET;
     				$_SESSION["session_history"][$_SESSION["CURRENT"]][$type]["HUMAN_QUERY"] = $human_query;
@@ -1220,8 +1420,22 @@ class searcher_tabs {
     }
     
     public function set_current_mode($mode='') {
+        global $what;
     	if(!$mode) {
-    		$this->current_mode=$this->default_mode;
+    	    if ($what) {
+    	        //on converti what en constante PMB
+    	        $entity_type = entities::get_constant_from_what_parameter($what);
+    	        if (is_numeric($entity_type)) {
+        	        //puis en chaine
+        	        $entity_type = entities::get_string_from_const_type($entity_type);
+        	        $this->current_mode=$this->default_authority_selector_mode[$entity_type];
+    	        } else {
+    	            $this->current_mode=$this->default_mode;
+    	        }
+    	    }
+    	    else {
+        		$this->current_mode=$this->default_mode;
+    	    }
     	} else {
     		$this->current_mode=$mode;
     	}
@@ -1237,7 +1451,7 @@ class searcher_tabs {
     			return new search_authorities(true, 'search_fields_authorities');
     			break;
     		case 'records':
-    			return new search();
+    			return new search(true);
     			break;
     	}
     }
@@ -1256,12 +1470,14 @@ class searcher_tabs {
     public function get_instance_entities_tab($values) {
     	switch ($this->xml_file) {
     		case 'authorities':
-    			return new searcher_authorities_tab($values);
+    			$searcher = new searcher_authorities_tab($values);
     			break;
     		case 'records':
-    			return new searcher_records_tab($values);
+    			$searcher = new searcher_records_tab($values);
     			break;
     	}
+    	$searcher->add_restrict_no_display();
+    	return $searcher;
     }
     
     public function get_instance_elements_list_ui() {
@@ -1290,5 +1506,7 @@ class searcher_tabs {
     	return $this->default_selector_mode;
     }
     
+    public function get_search_nb_results() {
+        return $this->search_nb_results;
+    }
 }
-?>

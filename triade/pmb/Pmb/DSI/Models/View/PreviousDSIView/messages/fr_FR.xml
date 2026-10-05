@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2.4.2 2024/10/01 08:24:24 jparis Exp $
+-->
+
+<XMLlist>
+	<entry code="name">Ancienne D.S.I.</entry>
+	<entry code="bannette-tpl">Template de bannette :</entry>
+	<entry code="notices-tpl">Template de notices :</entry>
+	<entry code="header-tpl">Entête :</entry>
+	<entry code="footer-tpl">Pied de page :</entry>
+	<entry code="linked-grouping-view">Lié à une vue de groupement :</entry>
+	<entry code="linked-grouping-view-select">Aucune vue de groupement</entry>
+	<entry code="display_nb_result">Afficher le nombre de résultats :</entry>
+</XMLlist>

@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: endnote2pmbxml.class.php,v 1.1 2018-07-25 06:19:17 dgoron Exp $
+// $Id: endnote2pmbxml.class.php,v 1.2 2022/04/21 07:34:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path, $class_path, $include_path;
 require_once("$class_path/marc_table.class.php");
 require_once("$include_path/isbn.inc.php");
 require_once($base_path."/admin/convert/convert.class.php");
@@ -16,6 +17,7 @@ class endnote2pmbxml extends convert {
 		$res = array();
 		
 		for($i=0;$i<count($tab_line);$i++){
+			$matches = array();
 			if(preg_match("/(%[A-Z0-9@+]{1}) (.*)/",$tab_line[$i],$matches)){
 				$champ = $matches[1];
 				if($res[$champ]) {
@@ -35,7 +37,7 @@ class endnote2pmbxml extends convert {
 		global $base_path,$origine;
 		global $tab_functions;
 		global $lot;
-		//global $charset;
+		global $charset;
 		
 		if (!$tab_functions) $tab_functions=new marc_list('function');
 		$fields=explode("\n",$notice);
@@ -165,7 +167,7 @@ class endnote2pmbxml extends convert {
 					$collectivite = $value;
 				break;
 				case '%N':
-					//NumÃ©ro de bulletin
+					//Numéro de bulletin
 					$bull_num = $value;
 					break;
 				case '%V':
@@ -173,11 +175,11 @@ class endnote2pmbxml extends convert {
 					$bull_vol = $value;
 					break;
 				case '%X':
-					//RÃ©sumÃ©
+					//Résumé
 					$resume = $value;
 					break;
 				case '%J':
-					//Titre du pÃ©rio
+					//Titre du pério
 					$perio_title = $value;
 					break;
 				case '%G':
@@ -208,21 +210,10 @@ class endnote2pmbxml extends convert {
 		$data.=htmlspecialchars($id_endnote,ENT_QUOTES,$charset);
 		$data.="</f>\n";
 		
-		if($infos_isbn){
-			$data.="<f c='010' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($infos_isbn,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}
-		if($infos_issn){
-			$data.="<f c='011' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($infos_issn,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}
-		if($langue){
-			$data.="<f c='101' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($langue,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}	
+		$data.=static::get_converted_field_uni('010', 'a', $infos_isbn);
+		$data.=static::get_converted_field_uni('011', 'a', $infos_issn);
+		$data.=static::get_converted_field_uni('101', 'a', $langue);
+		
 		if($titre){
 			$data.="<f c='200' ind='  '>\n";								
 			$data.="	<s c='a'>".htmlspecialchars($titre,ENT_QUOTES,$charset)."</s>";
@@ -230,16 +221,9 @@ class endnote2pmbxml extends convert {
 			if($titre_parallel) $data.="	<s c='d'>".htmlspecialchars($titre_parallel,ENT_QUOTES,$charset)."</s>";
 			$data.="</f>\n";
 		}
-		if($publisher){
-			$data.="<f c='210' ind='  '>\n";				
-			$data.="	<s c='c'>".htmlspecialchars($publisher,ENT_QUOTES,$charset)."</s>\n";	
-			$data.="</f>\n";
-		}	
-		if($page){
-			$data.="<f c='215' ind='  '>\n";				
-			if($page) $data.="	<s c='a'>".htmlspecialchars($page,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}	
+		$data.=static::get_converted_field_uni('210', 'c', $publisher);
+		$data.=static::get_converted_field_uni('215', 'a', $page);
+			
 		if($notes){
 			$note = explode('###',$notes);
 			$doi ="";
@@ -253,24 +237,16 @@ class endnote2pmbxml extends convert {
 					if(strlen($note[$i]) > 9000){
 						$word =wordwrap($note[$i],9000,"####");
 						$words = explode("####",$word);
-						for($j=0;$j<count($words);$j++){						
-							$data.="<f c='300' ind='  '>\n";
-							$data.="	<s c='a'>".htmlspecialchars($words[$j],ENT_QUOTES,$charset)."</s>\n";
-							$data.="</f>\n";						
+						for($j=0;$j<count($words);$j++){
+							$data.=static::get_converted_field_uni('300', 'a', $words[$j]);
 						}
 					} else {
-						$data.="<f c='300' ind='  '>\n";
-						$data.="	<s c='a'>".htmlspecialchars($note[$i],ENT_QUOTES,$charset)."</s>\n";
-						$data.="</f>\n";
+						$data.=static::get_converted_field_uni('300', 'a', $note[$i]);
 					}
 				}
 			}	
 		}
-		if($resume){
-			$data.="<f c='330' ind='  '>\n";				
-			$data.="	<s c='a'>".htmlspecialchars($resume,ENT_QUOTES,$charset)."</s>\n";			
-			$data.="</f>\n";
-		}		
+		$data.=static::get_converted_field_uni('330', 'a', $resume);
 		if($perio_title){
 			$data.="<f c='461' ind='  '>\n";				
 			$data.="	<s c='t'>".htmlspecialchars($perio_title,ENT_QUOTES,$charset)."</s>\n";	
@@ -353,20 +329,11 @@ class endnote2pmbxml extends convert {
 			}
 		}
 		
-		if($url){
-			$data.="<f c='856' ind='  '>\n";
-			$data.="	<s c='u'>".htmlspecialchars($url,ENT_QUOTES,$charset)."</s>";
-			$data.="</f>\n";
-		}	
-		if($subtype){
-			$data.="<f c='900' ind='  '>\n";
-			$data.="	<s c='a'>".htmlspecialchars($subtype,ENT_QUOTES,$charset)."</s>\n";
-			$data.="	<s c='l'>Sub-Type</s>\n";
-			$data.="	<s c='n'>subtype</s>\n";
-			$data.="</f>\n";
-		}
+		$data.=static::get_converted_field_uni('856', 'u', $url);
+		$data.=static::get_converted_field_uni('900', 'a', $subtype, array('l' => 'Sub-Type', 'n' => 'subtype'));
 		$data .= "</notice>\n";
 	
+		$r = array();
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

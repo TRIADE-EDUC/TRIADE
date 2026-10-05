@@ -1,3 +1,14 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: category.html,v 1.5 2018-02-16 15:45:42 apetithomme Exp $ -->
+<!-- $Id: category.html,v 1.6 2022/09/14 08:26:24 qvarin Exp $ -->
+{% block element_link %}
+	{% if list_element.voir_id %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.voir_id }}', '{{ list_element.renvoivoir.libelle | strip_tags | escape true }}','{{ global.callback }}')">
+			{{ list_element.libelle | strip_tags | safe }} -&gt; <i>{{ list_element.renvoivoir.libelle | strip_tags | safe }}@</i>
+		</a>
+	{% else %}
+		<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}','{{ global.callback }}')">
+			{{ list_element.isbd | strip_tags | safe }}
+		</a>
+	{% endif %}
+{% endblock %}

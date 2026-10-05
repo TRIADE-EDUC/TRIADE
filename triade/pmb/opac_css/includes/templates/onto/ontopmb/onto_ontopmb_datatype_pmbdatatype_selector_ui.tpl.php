@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_ontopmb_datatype_pmbdatatype_selector_ui.tpl.php,v 1.1 2017-01-06 16:10:52 tsamson Exp $
+// $Id: onto_ontopmb_datatype_pmbdatatype_selector_ui.tpl.php,v 1.1 2017/01/06 16:10:52 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

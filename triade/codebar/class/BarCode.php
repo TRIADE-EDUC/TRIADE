@@ -127,7 +127,7 @@ abstract class BarCode {
 		$colornumber = $start;
 		$c = strlen($code);
 		for ($i = 0; $i < $c; $i++) {
-			for ($j = 0; $j < intval($code{$i}) + 1; $j++) {
+			for ($j = 0; $j < intval($code[$i]) + 1; $j++) {
 				$this->DrawSingleBar($im, $currentColor);
 				$this->nextX();
 			}

@@ -1,24 +1,25 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: subcollection.class.php,v 1.25 2018-10-16 09:50:56 dgoron Exp $
+// $Id: subcollection.class.php,v 1.26 2022/02/10 08:18:42 dgoron Exp $
 
-// dÃ©finition de la classe de gestion des 'sous-collections'
+// définition de la classe de gestion des 'sous-collections'
 
 if ( ! defined( 'SUB_COLLECTION_CLASS' ) ) {
   define( 'SUB_COLLECTION_CLASS', 1 );
 
+global $class_path;
 require_once($class_path."/authorities_collection.class.php");
 
 class subcollection {
 
 	// ---------------------------------------------------------------
-	//  propriÃ©tÃ©s de la classe
+	//  propriétés de la classe
 	// ---------------------------------------------------------------
 
-	// note : '//' signifie appartenant Ã  la table concernÃ©e
-	//        '////' signifie devinÃ© avec des requÃªtes sur d'autres tables
+	// note : '//' signifie appartenant à la table concernée
+	//        '////' signifie deviné avec des requêtes sur d'autres tables
 	public $id;                  // MySQL id in table 'collections'
 	public $name;                // collection name
 	public $parent;              // MySQL id of parent collection
@@ -39,12 +40,12 @@ class subcollection {
 	// ---------------------------------------------------------------
 
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos sous collection
+	//		getData() : récupération infos sous collection
 	// ---------------------------------------------------------------
 	public function getData() {
 		$this->name               = '';
@@ -93,7 +94,7 @@ class subcollection {
 		if(!$this->id)
 			return;
 
-		// adaptation par rapport au niveau de dÃ©tail souhaitÃ©
+		// adaptation par rapport au niveau de détail souhaité
 		switch ($level) {
 			// case x :
 			case 2 :
@@ -188,6 +189,6 @@ class subcollection {
 	public function get_authority() {
 		return authorities_collection::get_authority('authority', 0, ['num_object' => $this->id, 'type_object' => AUT_TABLE_SUB_COLLECTIONS]);
 	}
-} # fin de dÃ©finition de la classe subcollection
+} # fin de définition de la classe subcollection
 
-} # fin de dÃ©laration
+} # fin de délaration

@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: pdf.class.php,v 1.12 2017-07-21 12:41:19 vtouchard Exp $
+// $Id: pdf.class.php,v 1.17 2023/12/07 15:18:26 dgoron Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 
 class pdf extends affichage{
-	public $doc;					//le document numÃ©rique Ã  afficher
+	public $doc;					//le document numérique à afficher
 	public $driver;				//class driver de la visionneuse
-	public $params;				//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();	//tableau des infos Ã  afficher	
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;				//paramètres éventuels
+	public $toDisplay= array();	//tableau des infos à afficher	
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
  
     public function __construct($doc=0) {
     	if($doc){
@@ -24,16 +25,24 @@ class pdf extends affichage{
     }
     
     public function fetchDisplay(){
-    	global $visionneuse_path,$base_path;
+        global $visionneuse_path, $charset;
+        
      	//le titre
     	$this->toDisplay["titre"] = $this->doc->titre;
     	//le pdf
     	$this->toDisplay["doc"] = "
-		<iframe name='docnum' id='docnum' src='".$this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id.$this->doc->search)."' width='".$this->parameters["size_x"]."' height='".$this->parameters["size_y"]."'></iframe>
+		<iframe 
+            title='". htmlentities($this->doc->titre, ENT_QUOTES, $charset) ."'
+            name='docnum' 
+            id='docnum' 
+            src='".$this->driver->getVisionneuseUrl("lvl=afficheur&explnum=".$this->doc->id.$this->doc->search)."' 
+            width='".$this->parameters["size_x"]."' 
+            height='".$this->parameters["size_y"]."'>
+        </iframe>
 		<div id='wait'>
 			<img src='$visionneuse_path/images/ajax-loader.gif' />
 		</div>
-		<script type='text/javascript'>
+		<script>
 			window.onload = function(){
 				var wait = document.getElementById('wait');
 				if(wait) wait.style.display = 'none';
@@ -42,7 +51,7 @@ class pdf extends affichage{
 		</script>";
 		if ($this->parameters['autoresize'] == 1)
 		$this->toDisplay["doc"].= "
-		<script type='text/javascript'>
+		<script>
 			function checkSize(){
 				var iframe= document.getElementById('docnum');
 				if (isNaN(iframe.width) || iframe.width/getFrameWidth() <= 0.9 || iframe.width/getFrameWidth() >= 1){
@@ -58,6 +67,9 @@ class pdf extends affichage{
     
     public function render(){
     	header("Content-Type: application/pdf");
+    	if(!empty($this->doc->path)) {
+    		header('Content-disposition: inline; filename="'.basename($this->doc->path).'"');
+    	}
     	print $this->driver->openCurrentDoc();
     }
     
@@ -79,8 +91,8 @@ class pdf extends affichage{
 	public function getParamsPerso(){
 		$params = $this->driver->getClassParam('pdf');
 		$this->unserializeParams($params);
-		if($this->parameters['size_x'] == 0) $this->parameters['size_x'] = $this->driver->getParam("maxX");
-		if($this->parameters['size_y'] == 0) $this->parameters['size_y'] = $this->driver->getParam("maxY");
+		if(empty($this->parameters['size_x'])) $this->parameters['size_x'] = $this->driver->getParam("maxX");
+		if(empty($this->parameters['size_y'])) $this->parameters['size_y'] = $this->driver->getParam("maxY");
 	}
 	
 	public function unserializeParams($paramsToUnserialized){

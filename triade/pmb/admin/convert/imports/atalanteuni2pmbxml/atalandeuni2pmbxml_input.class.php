@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: atalandeuni2pmbxml_input.class.php,v 1.2 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: atalandeuni2pmbxml_input.class.php,v 1.2 2019/06/10 08:57:12 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -17,7 +17,7 @@ class atalandeuni2pmbxml_input extends convert_input {
 		$n=1;
 		$len=0;
 		$notices=array();
-		//Deux premiÃ¨res lignes ignorÃ©es
+		//Deux premières lignes ignorées
 		$p=strpos($fcontents,"\r\n");
 		if ($p!==false) {
 			$fcontents=substr($fcontents,$p+2);

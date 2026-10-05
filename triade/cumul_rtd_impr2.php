@@ -10,7 +10,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
 $cnx=cnx();
 $classe=chercheClasse_nom($_POST["saisie_classe"]);
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85" >
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Impression des absences et retards de la classe"." <font id='color2'>".$classe."</font>" ?></font></b></td></tr>
 <tr id='cadreCentral0' ><td >
@@ -92,7 +92,7 @@ include_once('./librairie_pdf/html2pdf.php');
 $pdf=new PDF();  // declaration du constructeur
 
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -107,7 +107,7 @@ include_once('librairie_php/recupnoteperiode.php');
 
 $listclasse=affClasse();
 
-	for($c=0;$c<count($listclasse);$c++) {
+	for($c=0;$c<countTriade($listclasse);$c++) {
 		$idClasse=$listclasse[$c][0];
 		if ($_POST["saisie_classe"] != "-10") {
 			if ($_POST["saisie_classe"] != $idClasse) {
@@ -116,7 +116,7 @@ $listclasse=affClasse();
 		}
 	$eleveT=recupEleve($idClasse);      // recup liste eleve
 	$classe=chercheClasse_nom($idClasse);
-	$nbeleve=count($eleveT);
+	$nbeleve=countTriade($eleveT);
 
 	
 	$pdf->AddPage();
@@ -158,7 +158,7 @@ $listclasse=affClasse();
 
 	$pdf->SetFont('Arial','',11);
 
-for($j=0;$j<count($eleveT);$j++) { 
+for($j=0;$j<countTriade($eleveT);$j++) { 
 	$nomEleve=ucwords($eleveT[$j][0]);
 	$prenomEleve=ucfirst($eleveT[$j][1]);
 	$idEleve=$eleveT[$j][4];	
@@ -312,15 +312,15 @@ if (($_SESSION['membre'] == "menuprof") && (PROFPACCESABSRTD == "oui")) {
        // Test du membre pour savoir quel fichier JS je dois executer
    if ($_SESSION["membre"] == "menuadmin") :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
       top_d();
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
       print "</SCRIPT>";
     endif ;
 

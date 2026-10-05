@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_series.class.php,v 1.2 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: searcher_authorities_series.class.php,v 1.2 2018/10/08 13:59:39 vtouchard Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

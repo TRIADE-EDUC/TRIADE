@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
 // | 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: vedette_grammar.js,v 1.2 2019-04-10 12:54:08 tsamson Exp $ */
+// $Id: vedette_grammar.js,v 1.2 2019/04/10 12:54:08 tsamson Exp $ */
 
 var vedetteTabalreadyParsed = [];
 

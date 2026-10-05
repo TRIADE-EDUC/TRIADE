@@ -1,15 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: admin.php,v 1.66 2019-03-26 14:05:19 apetithomme Exp $
+// $Id: admin.php,v 1.96.4.1 2025/03/06 08:09:03 dbellamy Exp $
 
-// dÃ©finition du minimum nÃ©cessaire 
-$base_path=".";                            
-$base_auth = "ADMINISTRATION_AUTH";  
-$base_title = "\$msg[7]"; 
-$base_use_dojo = 1;   
-require_once ("$base_path/includes/init.inc.php");  
+// définition du minimum nécessaire
+$base_path=".";
+$base_auth = "ADMINISTRATION_AUTH";
+$base_title = "\$msg[7]";
+$base_use_dojo = 1;
+
+global $msg, $class_path, $include_path;
+global $categ, $sub, $lang, $database_window_title;
+
+if (isset($_POST['dest']) && ($_POST['dest'] == "TABLEAU" || $_POST['dest'] == "TABLEAUHTML" || $_POST['dest'] == "TABLEAUCSV")) {
+	$base_noheader = 1;
+} elseif (isset($_GET['dest']) && ($_GET['dest'] == "TABLEAU" || $_GET['dest'] == "TABLEAUHTML" || $_GET['dest'] == "TABLEAUCSV")) {
+	$base_noheader = 1;
+}
+
+require_once ("$base_path/includes/init.inc.php");
+require_once($class_path."/modules/module_admin.class.php");
+require_once($class_path.'/interface/admin/interface_admin_form.class.php');
 
 // les requis par admin.php ou ses sous modules
 require("$include_path/account.inc.php");
@@ -22,202 +34,188 @@ if ($pmb_show_help) {
 	$extra = str_replace("!!help_link!!","<a href=# onclick=\"openPopUp('doc/index.php?doc_script_name=".$doc_script_name."&doc_categ=".$categ."&doc_sub=".$sub."&doc_lang=".$lang."', 'documentation', 480, 550, -2, -2, 'toolbar=0,menubar=0,dependent=0,resizable=1,alwaysRaised=1');return false;\">?</a>",$extra);
 }
 
-print "<div id='att' style='z-Index:1000'></div>";
-print $menu_bar;
-print $extra;
-print $extra2;
-print $extra_info;
+switch($categ) {
+	case 'quotas':
+		require_once($class_path."/quotas.class.php");
+		module_admin::get_instance()->proceed_header();
+		break;
+	case 'plugin':
+	case 'finance':
+		print "<div id='att' style='z-Index:1000'></div>";
+		print $menu_bar;
+		print $extra;
+		print $extra2;
+		print $extra_info;
 
-if($use_shortcuts) {
-	include("$include_path/shortcuts/circ.sht");
-	}
+		if($use_shortcuts) {
+			include("$include_path/shortcuts/circ.sht");
+		}
+		break;
+	default:
+		module_admin::get_instance()->proceed_header();
+		break;
+}
+
+if(empty($base_noheader) && $pmb_javascript_office_editor){
+	print $pmb_javascript_office_editor;
+	print "<script type='text/javascript'>
+        pmb_include('$base_path/javascript/tinyMCE_interface.js');
+    </script>";
+}
 
 switch($categ) {
+	case 'plugin':
+		//Menu affiché plus tard..
+		break;
+	case 'finance':
+		$admin_layout = str_replace('!!menu_contextuel!!', module_admin::get_instance()->get_display_subtabs(), $admin_layout);
+		if(!in_array($sub, array('prets', 'amendes', 'amendes_relance'))) {
+			print $admin_layout;
+		}
+		break;
+	default:
+		break;
+}
+switch($categ) {
 	case 'users':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_users, $admin_layout);
 		include("./admin/users/main.inc.php");
 		break;
 	case 'netbase':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/netbase/main.inc.php");
 		break;
 	case 'chklnk':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/netbase/chklnk.inc.php");
 		break;
 	case 'infopages':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_infopages, $admin_layout);
 		include("./admin/misc/infopages.inc.php");
 		break;
 	case 'docs':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_docs, $admin_layout);
 		include("./admin/docs/main.inc.php");
 		break;
 	case 'notices':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_notices, $admin_layout);
 		include("./admin/notices/main.inc.php");
 		break;
 	case 'collstate':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_collstate, $admin_layout);
 		include("./admin/collstate/main.inc.php");
-		break;	
+		break;
 	case 'abonnements':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_abonnements, $admin_layout);
 		include("./admin/abonnements/main.inc.php");
-		break;		
+		break;
 	case 'empr':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_empr, $admin_layout);
 		include("./admin/empr/main.inc.php");
 		break;
 	case 'misc':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/misc/main.inc.php");
 		break;
 	case 'import':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_import, $admin_layout);
 		include("./admin/import/main.inc.php");
 		break;
 	case 'log':
-		echo window_title($database_window_title.$msg["216"].$msg["1003"].$msg["1001"]);
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/view_log.inc.php");
 		break;
 	case 'param':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/param/main.inc.php");
 		break;
 	case 'z3950':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_z3950, $admin_layout);
 		include("./admin/z3950/main.inc.php");
 		break;
 	case 'alter':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_misc, $admin_layout);
 		include("./admin/misc/alter.inc.php");
 		break;
 	case 'sauvegarde':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_sauvegarde, $admin_layout);
 		include("./admin/sauvegarde/main.inc.php");
 		break;
 	case 'convert':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_convert, $admin_layout);
 		include("./admin/convert/main.inc.php");
 		break;
 	case 'finance':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_finance, $admin_layout);
 		include("./admin/finance/main.inc.php");
 		break;
 	case 'cashdesk':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_cashdesk, $admin_layout);
 		include("./admin/finance/main.inc.php");
 		break;
 	case 'transaction':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_transaction, $admin_layout);
 		include("./admin/finance/main.inc.php");
 		break;
 	case 'quotas':
 		include("./admin/quotas/main.inc.php");
 		break;
 	case 'calendrier':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_calendrier, $admin_layout);
 		include("./admin/calendrier/main.inc.php");
 		break;
-	case 'acquisition':		
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_acquisition, $admin_layout);
+	case 'acquisition':
 		include("./admin/acquisition/main.inc.php");
-		break;			
-	case 'html_editor':		
-		$admin_layout = str_replace('!!menu_contextuel!!', "", $admin_layout);
+		break;
+	case 'html_editor':
 		include("./admin/misc/html_editor.inc.php");
-		break;			
+		break;
 	case 'connecteurs':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_connecteurs, $admin_layout);
 		include("./admin/connecteurs/main.inc.php");
-		break;		
+		break;
 	case 'selfservice':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_selfservice, $admin_layout);
 		include("./admin/selfservice/main.inc.php");
 		break;
 	case 'proc':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_act, $admin_layout);
 		include("./admin/proc/main.inc.php");
-		break;	
+		break;
 	case 'transferts' :
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_transferts, $admin_layout );
 		include ("./admin/transferts/main.inc.php");
 		break;
 	case 'acces':
 		include("./admin/acces/main.inc.php");
-		break;		
+		break;
 	case 'opac':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_opac, $admin_layout );		
 		include("admin/opac/main.inc.php");
 		break;
 	case 'docnum':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_upload_docnum, $admin_layout );		
 		include("./admin/upload/main.inc.php");
 		break;
 	case 'external_services':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_external_services, $admin_layout );
 		include("./admin/external_services/main.inc.php");
 		break;
 	case 'demandes':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_demandes, $admin_layout );		
 		include("./admin/demandes/main.inc.php");
 		break;
 	case 'visionneuse':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_visionneuse, $admin_layout );		
 		include("./admin/visionneuse/main.inc.php");
 		break;
 	case 'planificateur':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_planificateur, $admin_layout );		
 		include("./admin/planificateur/main.inc.php");
 		break;
 	case 'harvest':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_harvest, $admin_layout );		
 		include("./admin/harvest/main.inc.php");
 		break;
 	case 'authorities':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_authorities, $admin_layout );		
 		include("./admin/authorities/main.inc.php");
 		break;
 	case 'mailtpl':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_mailtpl, $admin_layout );		
 		include("./admin/mailtpl/main.inc.php");
 		break;
 	case "cms_editorial" :
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_cms_editorial, $admin_layout );	
-		include ("./admin/cms/editorial/main.inc.php");	
+		include ("./admin/cms/editorial/main.inc.php");
 		break;
 	case 'faq':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_faq, $admin_layout );
 		include("./admin/faq/main.inc.php");
 		break;
 	case 'family':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_nomenclature, $admin_layout );
 		include("./admin/nomenclature/main.inc.php");
 		break;
 	case 'formation':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_formation, $admin_layout );
 		include("./admin/nomenclature/main.inc.php");
 		break;
 	case 'voice':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_voice, $admin_layout );
 		include("./admin/nomenclature/main.inc.php");
 		break;
 	case 'instrument':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_instrument, $admin_layout );
 		include("./admin/nomenclature/main.inc.php");
 		break;
 	case 'loans':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_loans, $admin_layout);
 		include("./admin/loans/main.inc.php");
 		break;
 	case 'pnb':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_pnb, $admin_layout);
 		include("./admin/pnb/main.inc.php");
 		break;
 	case 'scan_request':
-		$admin_layout = str_replace('!!menu_contextuel!!', $admin_menu_scan_request, $admin_layout);
 		include("./admin/scan_request/main.inc.php");
 		break;
 	case 'plugin' :
@@ -228,53 +226,87 @@ switch($categ) {
 		}
 		break;
 	case 'material':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_material, $admin_layout );
 		include("./admin/nomenclature/main.inc.php");
 		break;
-	case 'contact_form':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_contact_form, $admin_layout );
-		include("./admin/contact_form/main.inc.php");
+	case 'contact_forms':
+		include("./admin/contact_forms/main.inc.php");
 		break;
-	case 'search_universes':  
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_menu_search_universes, $admin_layout );
+	case 'search_universes':
 		if ($opac_search_universes_activate) {
-		    require_once($class_path."/modules/module_admin.class.php");
-		    $module_admin = new module_admin();
+			$module_admin = module_admin::get_instance();
 		    $module_admin->set_url_base($base_path."/admin.php?categ=search_universes");
-		    if(!isset($id)) $id = 0;
+		    $id = intval($id);
 		    $module_admin->set_object_id($id);
 		    $module_admin->proceed_search_universes();
 		}
 		break;
 	case 'mails_waiting':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', '', $admin_layout );
-		print $admin_layout;
 		if ($pmb_mails_waiting) {
-			require_once($class_path."/modules/module_admin.class.php");
-			$module_admin = new module_admin();
+			$module_admin = module_admin::get_instance();
 			$module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
 			$module_admin->proceed_mails_waiting();
 		}
 		break;
-	case 'vignette':
-	    $admin_layout = str_replace('!!menu_contextuel!!', $admin_vignette_menu, $admin_layout);
-	    include("./admin/vignette/main.inc.php");
-	    break;
 	case 'composed_vedettes':
-		$admin_layout = str_replace ( '!!menu_contextuel!!', $admin_composed_vedettes_menu, $admin_layout );
 		include("./admin/composed_vedettes/main.inc.php");
 		break;
+	case 'animations':
+		include("./admin/animations/main.inc.php");
+		break;
+	case 'ark':
+	    include("./admin/ark/main.inc.php");
+	    break;
+	case 'digital_signature':
+		include("./admin/digital_signature/main.inc.php");
+		break;
+	case 'mails':
+		$module_admin = module_admin::get_instance();
+		$module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
+		$module_admin->set_object_id($id);
+		$module_admin->proceed_mails();
+		break;
+	case 'interface':
+		$module_admin = module_admin::get_instance();
+		$module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
+		$module_admin->set_object_id($id);
+		$module_admin->proceed_interface();
+		break;
+	case 'supervision':
+		$module_admin = module_admin::get_instance();
+		$module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
+		$module_admin->set_object_id($id);
+		$module_admin->proceed_supervision();
+		break;
+	case 'thumbnail':
+	    include("./admin/thumbnail/main.inc.php");
+	    break;
+	case 'auth':
+	    include("./admin/authentication/main.inc.php");
+	    break;
+	case 'mfa':
+	    $module_admin = module_admin::get_instance();
+	    $module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
+	    $module_admin->set_object_id($id);
+	    $module_admin->proceed_mfa();
+	    break;
+	case 'ai':
+		include "./admin/ai/main.inc.php";
+		break;
+	case 'gestion':
+	    $module_admin = module_admin::get_instance();
+	    $module_admin->set_url_base($base_path.'/admin.php?categ='.$categ.'&sub='.$sub);
+	    $module_admin->set_object_id($id);
+	    $module_admin->proceed_gestion();
+	    break;
 	default:
-		$admin_layout = str_replace('!!menu_contextuel!!', "", $admin_layout);
-		$admin_layout = str_replace('!!menu_sous_rub!!', "", $admin_layout);
-		print $admin_layout;
 		echo window_title($database_window_title.$msg["7"].$msg["1003"].$msg["1001"]);
 		include("$include_path/messages/help/$lang/admin.txt");
 		break;
-	}
+}
 
-print $admin_layout_end;
-print $footer;
+module_admin::get_instance()->proceed_footer();
+
+html_builder();
 
 // deconnection MYSql
-pmb_mysql_close($dbh);
+pmb_mysql_close();

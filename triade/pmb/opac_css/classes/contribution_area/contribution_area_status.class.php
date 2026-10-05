@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: contribution_area_status.class.php,v 1.3 2018-08-24 08:44:59 plmrozowski Exp $
+// $Id: contribution_area_status.class.php,v 1.5 2023/10/24 09:57:08 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/contribution_area/contribution_area.class.php");
 
 class contribution_area_status{
@@ -32,7 +33,7 @@ class contribution_area_status{
 			}
 			print "
 			<tr  class='$pair_impair' style='cursor: pointer' onmouseover=\"this.className='surbrillance'\" onmouseout=\"this.className='$pair_impair'\">
-				<td onclick='document.location=\"./admin.php?categ=contribution_area&sub=status&action=edit&id=".$id."\"'><span class='".$statut['class_html']."' style='margin-right:3px;'><img width='10' height='10' src='".get_url_icon('spacer.gif')."' alt=''/></span>".htmlentities($statut['label'], ENT_QUOTES, $charset)."</td>
+				<td onclick='document.location=\"./admin.php?categ=contribution_area&sub=status&action=edit&id=".intval($id)."\"'><span class='".$statut['class_html']."' style='margin-right:3px;'><img width='10' height='10' src='".get_url_icon('spacer.gif')."' alt=''/></span>".htmlentities($statut['label'], ENT_QUOTES, $charset)."</td>
 			</tr>";
 			$i++;
 		}
@@ -44,8 +45,6 @@ class contribution_area_status{
 	}
 	
 	public static function get_list(){
-		global $dbh;
-		
 		if(!static::$status_fetched){
 			static::$status = array();
 			$query = "select contribution_area_status_id, contribution_area_status_gestion_libelle,contribution_area_status_class_html, contribution_area_status_available_for from contribution_area_status order by contribution_area_status_gestion_libelle";
@@ -71,7 +70,7 @@ class contribution_area_status{
 		global $admin_contribution_area_status_form;
 		
 		static::get_list();
-		$id+=0;
+		$id = intval($id);
 		$form = $admin_contribution_area_status_form;
 		
 		if(isset(static::$status[$id])){
@@ -87,6 +86,7 @@ class contribution_area_status{
 		}
 		
 		$form = str_replace("!!form_title!!", $form_title, $form);
+		$couleur = array();
 		for ($i=1;$i<=20; $i++) {
 			if ($statut['class_html'] == "statutnot".$i){
 			    $checked = "checked";
@@ -144,8 +144,7 @@ class contribution_area_status{
 	}
 	
 	public static function save($statut){
-		global $dbh;
-		$statut['id'] += 0; 
+		$statut['id'] = intval($statut['id']); 
 		if($statut['label'] != ""){ 
 			if($statut['id'] != 0){
 				$query = " update contribution_area_status set ";
@@ -158,7 +157,7 @@ class contribution_area_status{
 				contribution_area_status_gestion_libelle = '".addslashes($statut['label'])."',
 				contribution_area_status_class_html = '".addslashes($statut['class_html'])."',
 				contribution_area_status_available_for = '".addslashes(serialize($statut['available_for']))."' ";
-			$result = pmb_mysql_query($query.$where,$dbh);
+			$result = pmb_mysql_query($query.$where);
 			if($result){
 				static::$status_fetched = false;
 			}else{
@@ -169,13 +168,12 @@ class contribution_area_status{
 	}
 	
 	public static function delete($id) {
-		global $dbh;
-		$id+=0;
+		$id = intval($id);
 		if($id==1) return true;
 		
-		if(!count($used = static::check_used($id))){
+		if(!count(static::check_used($id))){
 			$query = "delete from contribution_area_status where contribution_area_status_id = ".$id;
-			pmb_mysql_query($query,$dbh);
+			pmb_mysql_query($query);
 			return true;
 		}
 		return false;	
@@ -183,15 +181,12 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction qui controle si le status de contribution est utilisÃ©
+	 * Fonction qui controle si le status de contribution est utilisé
 	 * @param integer $id 
 	 * @return array:
 	 */
 	public static function check_used($id){
-		global $dbh,$msg;
-		global $base_path;
-		
-		$id+=0;
+		$id = intval($id);
 		$used = array();
 		return $used;
 	}
@@ -201,15 +196,15 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction permettant de gÃ©nÃ©rer le selecteur des statut dÃ©finis pour un type d'autoritÃ©
-	 * @param integer $auth_type Constante type d'autoritÃ© (ou 1000+id authperso)
-	 * @param integer $auth_statut_id Identifiant du statut enregistrÃ© pour l'autoritÃ© courante 
-	 * @param boolean $selector_search SÃ©lÃ©cteur affichÃ© dans la page de recherche
+	 * Fonction permettant de générer le selecteur des statut définis pour un type d'autorité
+	 * @param integer $auth_type Constante type d'autorité (ou 1000+id authperso)
+	 * @param integer $auth_statut_id Identifiant du statut enregistré pour l'autorité courante 
+	 * @param boolean $selector_search Sélécteur affiché dans la page de recherche
 	 * @return string
 	 */
 	public static function get_form_for($pmb_entity, $contribution_area_id, $search=false){
 	    global $msg;
-	    $id+=0;
+	    
         $status_defined = static::get_status_for($pmb_entity);
         $on_change='';
         if($search){
@@ -227,13 +222,13 @@ class contribution_area_status{
 	}
 	
 	/**
-	 * Fonction retournant un tableau des statut dÃ©fini pour le type d'autoritÃ© passÃ© en parametre
-	 * @param integer $auth_type Type d'autoritÃ©
-	 * @return array $status_found Tableau des status disponible pour le type d'autoritÃ© passÃ© en parametre
+	 * Fonction retournant un tableau des statut défini pour le type d'autorité passé en parametre
+	 * @param integer $auth_type Type d'autorité
+	 * @return array $status_found Tableau des status disponible pour le type d'autorité passé en parametre
 	 */
 	private static function get_status_for($pmb_entity){
 	    /**
-	     * TODO test sur auth_type pour les authoritÃ©s perso
+	     * TODO test sur auth_type pour les authorités perso
 	     */
 	    static::get_list();
 	    $status_found = array();

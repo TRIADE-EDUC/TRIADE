@@ -1,26 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: collection.class.php,v 1.34 2018-10-16 09:50:56 dgoron Exp $
+// $Id: collection.class.php,v 1.35 2021/12/28 13:30:46 dgoron Exp $
 
-// dÃ©finition de la classe de gestion des collections
+// définition de la classe de gestion des collections
 // inclure :
 // classes/publisher.class.php
 
 if ( ! defined( 'COLLECTION_CLASS' ) ) {
   define( 'COLLECTION_CLASS', 1 );
 
+global $class_path;
 require_once($class_path."/authorities_collection.class.php");
 
 class collection {
 
 	// ---------------------------------------------------------------
-	//  propriÃ©tÃ©s de la classe
+	//  propriétés de la classe
 	// ---------------------------------------------------------------
 
-	// note : '//' signifie appartenant Ã  la table concernÃ©e
-	//        '////' signifie devinÃ© avec des requÃªtes sur d'autres tables
+	// note : '//' signifie appartenant à la table concernée
+	//        '////' signifie deviné avec des requêtes sur d'autres tables
 	public $id;                 // MySQL id in table 'collections'
 	public $name;               // collection name
 	public $parent;             // MySQL id of parent publisher
@@ -45,12 +46,12 @@ class collection {
 	//  collection($id) : constructeur
 	// ---------------------------------------------------------------
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 	
 	// ---------------------------------------------------------------
-	//		getData() : rÃ©cupÃ©ration infos collection
+	//		getData() : récupération infos collection
 	// ---------------------------------------------------------------
 	public function getData() {
 		global $charset;
@@ -98,7 +99,7 @@ class collection {
 		if(!$this->id)
 			return;
 	
-		// adaptation par rapport au niveau de dÃ©tail souhaitÃ©
+		// adaptation par rapport au niveau de détail souhaité
 		switch ($level) {
 			// case x :
 			case 2 :
@@ -126,9 +127,8 @@ class collection {
 		}
 	
 		if (preg_match("#!!subcolls!!#", $print)) {
-			global $dbh;
 			$query = "select sub_coll_id, sub_coll_name from sub_collections where sub_coll_parent=".$this->id;
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)) {
 				$remplacement = $msg["subcollection_attached"]."\n<ul>\n";
 				while ($obj = pmb_mysql_fetch_object($result)) 
@@ -214,6 +214,6 @@ class collection {
 	public function get_authority() {
 		return authorities_collection::get_authority('authority', 0, ['num_object' => $this->id, 'type_object' => AUT_TABLE_COLLECTIONS]);
 	}
-} # fin de dÃ©finition de la classe collection
+} # fin de définition de la classe collection
 
-} # fin de dÃ©laration
+} # fin de délaration

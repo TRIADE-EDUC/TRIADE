@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -178,6 +178,8 @@ $moduleadminevalens=$_POST['moduleadminevalens'];
 $radio=$_POST['radio'];
 $modulefourniturescolaire=$_POST['modulefourniturescolaire'];
 $moduledelegueparent=$_POST['moduledelegueparent'];
+$moduleparentlocalisation=$_POST['moduleparentlocalisation'];
+$moduletriadecoach=$_POST['moduletriadecoach'];
 
 $texte="<?php\n";
 $texte.="define(\"PREINSCRIPTION\",\"$preinscription\");\n";
@@ -373,6 +375,12 @@ $texte.="define(\"MODULEADMINEVALENS\",\"$moduleadminevalens\");\n";
 $texte.="define(\"MODULERADIO\",\"$radio\");\n";
 $texte.="define(\"MODULEFOURNITURESCOLAIRE\",\"$modulefourniturescolaire\");\n";
 $texte.="define(\"MODULEDELEGUEPARENT\",\"$moduledelegueparent\");\n";
+$texte.="define(\"MODULEPARENTLOCALISATION\",\"$moduleparentlocalisation\");\n";
+$texte.="define(\"MODULETRIADECOACH\",\"$moduletriadecoach\");\n";
+$modulepacteadmin=$_POST["modulepacteadmin"];
+$modulepacteprof=$_POST["modulepacteprof"];
+$texte.="define(\"MODULEPACTEADMIN\",\"$modulepacteadmin\");\n";
+$texte.="define(\"MODULEPACTEPROF\",\"$modulepacteprof\");\n";
 
 
 $texte.="?>\n";

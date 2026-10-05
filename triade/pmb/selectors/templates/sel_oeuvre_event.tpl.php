@@ -1,19 +1,19 @@
 <?php
 // +-------------------------------------------------+
 
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sel_oeuvre_event.tpl.php,v 1.7 2019-05-21 09:12:35 ngantier Exp $
+// $Id: sel_oeuvre_event.tpl.php,v 1.7 2019/05/21 09:12:35 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
 //-------------------------------------------
 //	$jscript : script de m.a.j. du parent
 //-------------------------------------------
-/* pour $dyn=3, renseigner les champs suivants: (passÃ© dans l'url)
+/* pour $dyn=3, renseigner les champs suivants: (passé dans l'url)
  *
 * $max_field : nombre de champs existant
-* $field_id : id de la clÃ©
+* $field_id : id de la clé
 * $field_name_id : id  du champ text
 * $add_field : nom de la fonction permettant de rajouter un champ
 *
@@ -29,7 +29,7 @@ if ($dyn==3) {
 		
 		var n_auth=w.parent.document.forms[f_caller].elements['".$max_field."'].value;
 		var flag = 1;
-		//VÃ©rification pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification pas déjà sélectionnée
 		for (var i=0; i<n_auth; i++) {
 			if (w.parent.document.getElementById('".$field_id."'+i).value==id_value) {
 				alert('".$msg["term_already_in_use"]."');
@@ -51,7 +51,7 @@ if ($dyn==3) {
 	
 	}
 </script>";
-}elseif ($dyn==2) { // Pour les liens entre autoritÃ©s
+}elseif ($dyn==2) { // Pour les liens entre autorités
 	$jscript = "
 	<script type='text/javascript'>
 	<!--
@@ -60,7 +60,7 @@ if ($dyn==3) {
 		w=window;
 		n_aut_link=w.parent.document.forms[f_caller].elements['max_aut_link'].value;
 		flag = 1;	
-		//VÃ©rification que l'autoritÃ© n'est pas dÃ©jÃ  sÃ©lectionnÃ©e
+		//Vérification que l'autorité n'est pas déjà sélectionnée
 		for (i=0; i<n_aut_link; i++) {
 			if (w.parent.document.getElementById('f_aut_link_id'+i).value==id_value && w.parent.document.getElementById('f_aut_link_table'+i).value==$param1) {
 				alert('".$msg["term_already_in_use"]."');

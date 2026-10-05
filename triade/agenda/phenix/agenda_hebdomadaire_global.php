@@ -63,7 +63,7 @@
         //Coloration des jours feries
         $ferie = date("j-m",$leJour);
         //Coloration des jours feries
-        $DB_CX->DbQuery("SELECT DISTINCT eve_id, eve_libelle, eve_util_id, eve_type, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin FROM ${PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$leJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$leJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+        $DB_CX->DbQuery("SELECT DISTINCT eve_id, eve_libelle, eve_util_id, eve_type, DATE_FORMAT(eve_date_debut,'%d/%m/%Y') AS dateDebut, DATE_FORMAT(eve_date_fin,'%d/%m/%Y') AS dateFin FROM {$PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$leJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$leJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
         $foundEvent = ($DB_CX->DbNumRows()>0);
 
         if (in_array($ferie,$tabJourFerie)) {
@@ -122,7 +122,7 @@
               if (($formatHeure == "h:ia" and $heure > 12))
                 $heure=$heure-12;
               if (strlen($heure)==2 and $tailleCell<16)
-                $heure=$heure{0}."<br>".$heure{1};
+                $heure=$heure[0]."<br>".$heure[1];
               $sOutput1 .="    <TD align=\"center\" class=\"jourPlanning\" width=\"".$tailleCell."\" nowrap>".$heure."</TD>\n";
             }
             $sOutput .="    <TD align=\"center\" colspan=\"".$NbCell."\"height=\"18\" ".$affJourSem[$i]."</B></A></TD>\n";
@@ -138,7 +138,7 @@
       $NblignUtil++;
 
       // Pour chaque utilisateur on verifie si on a acces a son planning en modification
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sUtilID." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_affecte ON paf_util_id=util_id WHERE util_id=".$sUtilID." AND (util_autorise_affect='1' OR (util_autorise_affect IN ('2','3') AND paf_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_NOTES >= _DROIT_NOTE_STANDARD_SANS_APPR)) || ($droit_NOTES >= _DROIT_NOTE_MODIF_CREATION and $droit_AGENDAS >= _DROIT_AGENDA_TOUS) || $sUtilID==$idUser) {
         $autoriseAffect = true;
         $aAutoAffect[$sUtilID] = 1;
@@ -153,7 +153,7 @@
 
       $sOutput .= "  <TR height=\"17\">\n";
       // Pour chaque utilisateur on verifie si on a acces a son planning en consultation
-      $DB_CX->DbQuery("SELECT util_id FROM ${PREFIX_TABLE}utilisateur LEFT JOIN ${PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sUtilID." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
+      $DB_CX->DbQuery("SELECT util_id FROM {$PREFIX_TABLE}utilisateur LEFT JOIN {$PREFIX_TABLE}planning_partage ON ppl_util_id=util_id WHERE util_id=".$sUtilID." AND (util_partage_planning='1' OR (util_partage_planning='2' AND ppl_consultant_id=".$idUser."))");
       if (($DB_CX->DbNumRows() && ($droit_AGENDAS < _DROIT_AGENDA_TOUS)) || ($droit_AGENDAS >= _DROIT_AGENDA_TOUS) || $sUtilID==$idUser) {
         $sOutput .= "    <TD class=\"nomUtil\" style=\"padding-left:3px;padding-right:3px;\" height=\"33\" valign=\"middle\"><A href=\"javascript: substUser('".$sUtilID."');\" title=\"".trad("PLGL_PLANNING_UTIL")."\">".$sNomUtil."</A>".$styleUTC."</TD>\n";
         $autoriseConsult = true;
@@ -182,7 +182,7 @@
           $sql .= "       age_date_modif, age_modificateur_id, CONCAT(".$NOM_UTIL_MODIFICATEUR.") AS nomModificateur, age_id,";
           $sql .= "       age_lieu, CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact, age_date, age_rappel, ";
           $sql .= "       age_rappel_coeff, age_mere_id, age_ape_id, cal_id, aco_termine, cal_partage, age_nb_participant";
-          $sql .= " FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2";
+          $sql .= " FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2";
           $sql .= " WHERE aco_util_id=".$sUtilID;
           $sql .= "  AND age_id=aco_age_id";
           $sql .= "  AND ($age_date='".date("Y-m-d",$dateCrt)."' OR ($age_dateAvant='".date("Y-m-d",$dateCrt)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0))";
@@ -303,7 +303,7 @@
                     $puce = "&nbsp;<IMG src='image/".$imgTemoin."' width='6' height='6' border='0' title='".$TitleTemoin."'>&nbsp;";
                     //Mod Emplacement Plus
                     $DB = new Db($DB_CX->ConnexionID);
-                    $DB->DbQuery("SELECT empl_type FROM ${PREFIX_TABLE}emplacement WHERE empl_nom='".$enr['age_lieu']."'");
+                    $DB->DbQuery("SELECT empl_type FROM {$PREFIX_TABLE}emplacement WHERE empl_nom='".$enr['age_lieu']."'");
                     if ($empl = $DB->DbNextRow()) $emplType = $empl['empl_type'];
                     else $emplType = 0;
                      if ($emplType!=0)

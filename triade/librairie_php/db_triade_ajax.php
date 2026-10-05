@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -109,24 +109,25 @@ function chargeMat2_ajax($res) {
 	for($i=0;$i<$l;$i++)
 	{
 		$ligne = & $res->fetchRow();
-		$mat[$i] = $ligne[0];
+		$mat[$i] = $ligne['0'];
 	}
 	freeResult_ajax($res);
+	if ($mat == NULL) return(array());
 	return $mat;
 }
 
 function recherche_ajax_eleve($motif,$prefixe) {
 	global $cnx;
-	$sql="SELECT nom FROM ${prefixe}eleves WHERE  nom LIKE '$motif%' ORDER BY nom ";
+	$sql="SELECT nom FROM {$prefixe}eleves WHERE  nom LIKE '$motif%' ORDER BY nom ";
 	$res=execSql_ajax($sql);
-  	$data=chargeMat2_ajax($res);
+	$data=chargeMat2_ajax($res);
    	return $data;
 }
 
 
 function recherche_ajax_entreprise($motif,$prefixe) {
 	global $cnx;
-	$sql="SELECT nom FROM ${prefixe}stage_entreprise  WHERE  nom LIKE '$motif%' ORDER BY nom ";
+	$sql="SELECT nom FROM {$prefixe}stage_entreprise  WHERE  nom LIKE '$motif%' ORDER BY nom ";
 	$res=execSql_ajax($sql);
   	$data=chargeMat2_ajax($res);
    	return $data;
@@ -135,7 +136,7 @@ function recherche_ajax_entreprise($motif,$prefixe) {
 
 function recherche_ajax_matiere($motif,$prefixe) {
         global $cnx;
-        $sql="SELECT CONCAT(libelle,' ',sous_matiere) FROM ${prefixe}matieres  WHERE  lower(CONCAT(libelle,' ',sous_matiere)) LIKE '$motif%' AND offline='0'";
+        $sql="SELECT CONCAT(libelle,' ',sous_matiere) FROM {$prefixe}matieres  WHERE  lower(CONCAT(libelle,' ',sous_matiere)) LIKE '$motif%' AND offline='0'";
         $res=execSql_ajax($sql);
         $data=chargeMat2_ajax($res);
         return $data;
@@ -145,7 +146,7 @@ function recherche_ajax_matiere($motif,$prefixe) {
 
 function recherche_ajax_sanction($motif,$prefixe) {
 	global $cnx;
-	$sql="SELECT libelle FROM  ${prefixe}type_sanction  WHERE  id_category='$motif' ORDER BY 1 ";
+	$sql="SELECT libelle FROM  {$prefixe}type_sanction  WHERE  id_category='$motif' ORDER BY 1 ";
 	$res=execSql_ajax($sql);
   	$data=chargeMat2_ajax($res);
    	if (count($data) > 0) {

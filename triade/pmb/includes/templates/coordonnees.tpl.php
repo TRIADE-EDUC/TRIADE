@@ -1,121 +1,98 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: coordonnees.tpl.php,v 1.32 2019-05-27 14:08:06 ngantier Exp $
+// $Id: coordonnees.tpl.php,v 1.36 2023/12/20 08:26:49 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $coord_form;
-global $current_module, $msg, $charset, $ptab, $script;
+global $coord_content_form;
+global $msg, $charset, $ptab, $script;
 
 //	------------------------------------------------------------------------------
-//	$coord_form : template form des coordonnÃ©es des bibliothÃ¨ques 
+//	$coord_content_form : template form des coordonnées des bibliothèques 
 //	------------------------------------------------------------------------------
 
-$coord_form = "
-<form class='form-".$current_module."' id='coordform' name='coordform' method='post' action=\"./admin.php?categ=acquisition&sub=entite&action=update&id=!!id!!\">
-<h3>!!form_title!!</h3>
-<!--    Contenu du form    -->
-<div class='form-contenu'>
-
-	<div class='row'>
-		<label class='etiquette' for='raison'>".htmlentities($msg['acquisition_raison_soc'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<input type=text id='raison' name='raison' value=\"!!raison!!\" class='saisie-50em' />
-	</div>
-	<div class= 'row'>
-		!!contact!!
-	</div>
-	<hr />
-	<div class='row'>
-		<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_commentaires'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!commentaires!!</textarea>
-	</div>
-	<div class= 'colonne2'>
-		<div class='row'>
-			<label class='etiquette' for='siret'>".htmlentities($msg['acquisition_siret'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='row'>
-			<input type='text' id='siret' name='siret' value='!!siret!!' class='saisie-30em' />
-		</div>
-	</div>
-
-	<div class='colonne_suite'>
-		<div class='row'>
-			<label class='etiquette' for='rcs'>".htmlentities($msg['acquisition_rcs'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='row'>
-			<input type='text' id='rcs' name='rcs' value='!!rcs!!' class='saisie-30em' />
-		</div>
-	</div>
-
-	<div class= 'colonne2'>
-		<div class='row'>
-			<label class='etiquette' for='naf' >".htmlentities($msg['acquisition_naf'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='row'>
-			<input type='text' id='naf' name='naf' value='!!naf!!' class='saisie-10em' />
-		</div>
-	</div>
-
-	<div class='colonne_suite'>
-		<div class='row'>
-			<label class='etiquette' for='tva'>".htmlentities($msg['acquisition_tva'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='row'>
-			<input type='text' id='tva' name='tva' value='!!tva!!' class='saisie-30em' />
-		</div>
-	</div>
-	<div class='row'>
-		<label class='etiquette' for='site_web'>".htmlentities($msg['acquisition_site_web'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<input type='text' id='site_web' name='site_web' value='!!site_web!!' class='saisie-30em' />
-	</div>
-	<div class='row'>
-		<label class='etiquette' for='co_logo'>".htmlentities($msg['acquisition_logo'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<input type='text' id='co_logo' name='logo' value='!!logo!!' class='saisie-30em' />
-	</div>
-
-	<br /><hr />
-	<div class='row'>
-		<input type='hidden' id='auto_id_list' name='auto_id_list' value='!!auto_id_list!!' >
-		<label class='etiquette'>$msg[acquisition_autorisations]</label>
-		<input type='button' class='bouton_small align_middle' value='".$msg['tout_cocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,1);'>
-		<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,0);'>
-	</div>
-	<div class='row'>
-		<!-- autorisations -->
-	</div>
-	<div class='row'></div>
-</div>	
-<!-- Boutons -->
+$coord_content_form = "
 <div class='row'>
-	<div class='left'>
-		<input class='bouton' type='button' value=' $msg[76] ' onclick=\"document.location='./admin.php?categ=acquisition&sub=entite'\" />&nbsp;
-		<input class='bouton' type='submit' value=' $msg[77] ' onclick=\"return test_form(this.form)\" />
-	</div>
-	<div class='right'>
-		<!-- bouton_sup -->
-	</div>
-	<div class='row'></div>
+	<label class='etiquette' for='raison'>".htmlentities($msg['acquisition_raison_soc'],ENT_QUOTES,$charset)."</label>
 </div>
-</form>
-<div class='row'></div>
-<script type='text/javascript'>
-	document.forms['coordform'].elements['raison'].focus();
-</script>
+<div class='row'>
+	<input type=text id='raison' name='raison' value=\"!!raison!!\" class='saisie-50em' />
+</div>
+<div class= 'row'>
+	!!contact!!
+</div>
+<hr />
+<div class='row'>
+	<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_commentaires'],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!commentaires!!</textarea>
+</div>
+<div class= 'colonne2'>
+	<div class='row'>
+		<label class='etiquette' for='siret'>".htmlentities($msg['acquisition_siret'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='row'>
+		<input type='text' id='siret' name='siret' value='!!siret!!' class='saisie-30em' />
+	</div>
+</div>
+
+<div class='colonne_suite'>
+	<div class='row'>
+		<label class='etiquette' for='rcs'>".htmlentities($msg['acquisition_rcs'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='row'>
+		<input type='text' id='rcs' name='rcs' value='!!rcs!!' class='saisie-30em' />
+	</div>
+</div>
+
+<div class= 'colonne2'>
+	<div class='row'>
+		<label class='etiquette' for='naf' >".htmlentities($msg['acquisition_naf'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='row'>
+		<input type='text' id='naf' name='naf' value='!!naf!!' class='saisie-10em' />
+	</div>
+</div>
+
+<div class='colonne_suite'>
+	<div class='row'>
+		<label class='etiquette' for='tva'>".htmlentities($msg['acquisition_tva'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='row'>
+		<input type='text' id='tva' name='tva' value='!!tva!!' class='saisie-30em' />
+	</div>
+</div>
+<div class='row'>
+	<label class='etiquette' for='site_web'>".htmlentities($msg['acquisition_site_web'],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<input type='text' id='site_web' name='site_web' value='!!site_web!!' class='saisie-30em' />
+</div>
+<div class='row'>
+	<label class='etiquette' for='co_logo'>".htmlentities($msg['acquisition_logo'],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<input type='text' id='co_logo' name='logo' value='!!logo!!' class='saisie-30em' />
+</div>
+
+<br /><hr />
+<div class='row'>
+	<input type='hidden' id='auto_id_list' name='auto_id_list' value='!!auto_id_list!!' >
+	<label class='etiquette'>$msg[acquisition_autorisations]</label>
+	<input type='button' class='bouton_small align_middle' value='".$msg['tout_cocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,1);'>
+	<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,0);'>
+</div>
+<div class='row'>
+	<!-- autorisations -->
+</div>
 ";
 
 
 //    ----------------------------------------------------
-//    CoordonnÃ©es pour bibliothÃ¨que
+//    Coordonnées pour bibliothèque
 //    ----------------------------------------------------
 
 $ptab[1] = "
@@ -131,7 +108,7 @@ $ptab[1] = "
 		<input type='hidden' name='no_[1]' id='no_[1]' value='!!id1!!' /> 
 		<input type='hidden' name='mod_[1]' id='mod_[1]' value='0' />
    		<div class='colonne80'>
-			<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el_1_Img' border='0' onclick=\"expandBase('el_1_', true); return false;\" />
+            ".get_expandBase_button('el_1_')."
 			<label class='etiquette'>!!adresse!!</label>
 		</div>
 	</div>
@@ -256,8 +233,14 @@ $ptab[1] = "
 				</div>
 			</div>
 		</div>
-							
-		<div class='row'>
+		!!button_adr_fac!!
+	</div>
+
+	<br />
+";
+
+$ptab[12] = "
+        <div class='row'>
 			<div class='colonne' style='width:95%;'>
 				<div class='colonne10' style='text-align:right; margin-right:0.25em'>
 					&nbsp;
@@ -266,18 +249,14 @@ $ptab[1] = "
 					<input type='button' class='bouton' id='button_resume_[1]' name='button_resume_[1]' value='".htmlentities($msg['acquisition_adr_liv_resume'])."' onclick=\"copy_coord_el('1', '2'); \" />
 				</div>
 			</div>
-		</div>
-	</div>
-
-	<br />
-";
+		</div>";
 
 $ptab[10] = "
 	<div id='el2Child' class='row'>
 		<input type='hidden' name='no_[2]' id='no_[2]' value='!!id2!!' /> 
 		<input type='hidden' name='mod_[2]' id='mod_[2]' value='0' />
    		<div class='colonne80'>
-			<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el_2_Img' border='0' onclick=\"expandBase('el_2_', true); return false;\" />
+            ".get_expandBase_button('el_2_')."
 			<label class='etiquette'>".htmlentities($msg['acquisition_adr_liv'],ENT_QUOTES,$charset)."</label>
 		</div>
 	</div>
@@ -429,14 +408,14 @@ $ptab[11] = "
 ";
 
 //    ----------------------------------------------------
-//     CoordonnÃ©es rÃ©pÃ©tables
+//     Coordonnées répétables
 //    ----------------------------------------------------
 $ptab[2] = "
 	<div id='el!!no_X!!Child' class='row'>
 		<input type='hidden' name='no_[!!no_X!!]' id='no_[!!no_X!!]' value='!!idX!!' /> 
 		<input type='hidden' name='mod_[!!no_X!!]' id='mod_[!!no_X!!]'value='0' />
 		<div class='colonne80'>
-			<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='elX_!!no_X!!_Img' border='0' onclick=\"expandBase('elX_!!no_X!!_', true); return false;\" />
+            ".get_expandBase_button('elX_!!no_X!!_')."
 			<label class='etiquette'>".htmlentities($msg['acquisition_adr'].' !!no_X!!',ENT_QUOTES,$charset)."</label>
 		</div>
 	</div>	
@@ -562,13 +541,6 @@ $ptab[2] = "
 
 ";
 
-
-//    ----------------------------------------------------
-//     Bouton de suppression
-//    ----------------------------------------------------
-$ptab[3] = "<input class='bouton' type='button' value=' $msg[supprimer] ' onclick=\"javascript:confirmation_delete('!!id!!', '!!raison_suppr!!')\" />";
-
-
 //    ----------------------------------------------------
 //     table autorisations
 //    ----------------------------------------------------
@@ -584,20 +556,8 @@ $script = "
 <script type='text/javascript' src='./javascript/tabform.js'></script>
 
 <script type='text/javascript'>
-
-function test_form(form)
-{
-	if(form.raison.value.replace(/^\s+|\s+$/g, '').length == 0)
-	{
-		alert('".$msg['acquisition_raison_soc_vide']."');
-		document.forms['coordform'].elements['raison'].focus();
-		return false;	
-	}
-	return true;
-}
-
 function copy_coord_el(el, target) {
-	document.getElementById('mod_['+target+']').value='1'; //Indique que l'Ã©lement est modifiÃ©
+	document.getElementById('mod_['+target+']').value='1'; //Indique que l'élement est modifié
 	document.getElementById('lib_['+target+']').value = document.getElementById('lib_['+el+']').value;
 	document.getElementById('cta_['+target+']').value = document.getElementById('cta_['+el+']').value;
 	document.getElementById('ad1_['+target+']').value = document.getElementById('ad1_['+el+']').value;
@@ -613,7 +573,7 @@ function copy_coord_el(el, target) {
 }
 				
 function raz_coord_el(el) {
-	document.getElementById('mod_['+el+']').value='-1'; //Indique que l'Ã©lement est supprimÃ©
+	document.getElementById('mod_['+el+']').value='-1'; //Indique que l'élement est supprimé
 	document.getElementById('lib_['+el+']').value='';
 	document.getElementById('cta_['+el+']').value='';
 	document.getElementById('ad1_['+el+']').value='';
@@ -630,7 +590,7 @@ function raz_coord_el(el) {
     
 function raz_coord() {
 	var el = this.getAttribute('id').substring(4);
-	document.getElementById('mod_['+el+']').value='-1'; //Indique que l'Ã©lement est supprimÃ©
+	document.getElementById('mod_['+el+']').value='-1'; //Indique que l'élement est supprimé
 	document.getElementById('lib_['+el+']').value='';
 	document.getElementById('cta_['+el+']').value='';
 	document.getElementById('ad1_['+el+']').value='';
@@ -646,13 +606,13 @@ function raz_coord() {
 }
     
 function mod_coord_el(el) {
-	document.getElementById('mod_['+el+']').value='1'; //Indique que l'Ã©lement est modifiÃ©
+	document.getElementById('mod_['+el+']').value='1'; //Indique que l'élement est modifié
 }
 
 function mod_coord() {
 	var el = this.getAttribute('id').substring(5);
 	el = el.substring(0, el.length-1);
-	document.getElementById('mod_['+el+']').value='1'; //Indique que l'Ã©lement est modifiÃ©
+	document.getElementById('mod_['+el+']').value='1'; //Indique que l'élement est modifié
 }
 
 function expandElement() {
@@ -665,7 +625,7 @@ function add_coord() {
 
     template = document.getElementById('racine');
 
-	//rÃ©cup numÃ©ro coordonnÃ©e+1
+	//récup numéro coordonnée+1
 	suf = document.coordform.max_coord;
 	suf.value++;
 	suffixe = suf.value;
@@ -1111,4 +1071,3 @@ template.appendChild(ret2);
 </script>";
 
 ?>
-

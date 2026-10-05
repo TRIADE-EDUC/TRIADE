@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_filter_records_by_doctype.class.php,v 1.3 2016-09-21 15:38:44 vtouchard Exp $
+// $Id: cms_module_common_filter_records_by_doctype.class.php,v 1.3.18.1 2025/01/17 10:40:45 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -21,11 +21,11 @@ class cms_module_common_filter_records_by_doctype extends cms_module_common_filt
 	}
 	
 	public function filter($datas){
-		$filtered_datas= $filter = array();
+	    $filtered_datas = array();
 
 		$selector_by = $this->get_selected_selector("by");
 		$field_by = $selector_by->get_value();
-		if(count($field_by) && count($datas)){
+		if((is_countable($field_by) && count($field_by)) && (is_countable($datas) && count($datas))){
 			array_walk($field_by, 'static::int_caster');
 			array_walk($datas, 'static::int_caster');
 			$query = "select notice_id from notices where notice_id in ('".implode("','",$datas)."') and typdoc in ('".implode("','",$field_by)."')";

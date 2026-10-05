@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
@@ -35,11 +37,11 @@ session_start();
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1'><?php print LANGSTAGE49 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -68,14 +70,16 @@ if (isset($_GET["id"])) {
 $data=listestage();
 print "<br>&nbsp;&nbsp;<font class='T2'>Suppression de toutes les dates non affectées : <input type=button value='".LANGBT50."' onclick=\"open('gestion_stage_date_supp.php?id=tous','_parent','');\" STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;' /></font><br><br>";
 
-print "<table width=100% border=1 bordercolor='#000000' >";
-print "<tr bgcolor='yellow'  ><td ><font class=T2>&nbsp;".LANGELE4."&nbsp;</font></td>";
-print "<td width=5><font class=T2>&nbsp;".LANGSTAGE50."&nbsp;N°&nbsp;</font></td>";
-print "<td><font class=T2>&nbsp;".LANGSTAGE51."&nbsp;</font></td>";
-print "<td align=center><font class=T2>&nbsp;".LANGBT50."&nbsp;</font></td></tr>";
+print "<table class='cc-data-table'>";
+print "<thead><tr class='cc-thead-row'>";
+print "<th class='cc-th'>".LANGELE4."</th>";
+print "<th class='cc-th' style='width:5%'>".LANGSTAGE50." N°</th>";
+print "<th class='cc-th'>".LANGSTAGE51."</th>";
+print "<th class='cc-th cc-th-center'>".LANGBT50."</th>";
+print "</tr></thead><tbody>";
 // idclasse,datedebut,datefin,numstage,id
-for($i=0;$i<count($data);$i++) {
-	print "<tr class='tabnormal' onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\">";
+for($i=0;$i<countTriade($data);$i++) {
+	print "<tr class='cc-tr-data'>";
 	$nomclasse=chercheClasse_nom($data[$i][0]);
 	print "<td id=bordure align=left><font class=T1>".trunchaine($nomclasse,15)."</font></td>";
 	print "<td id=bordure align=center><font class=T1>".$data[$i][3]."</font></td>";
@@ -83,7 +87,7 @@ for($i=0;$i<count($data);$i++) {
 	print "<td id=bordure width=5><input type=button value='".LANGBT50."' onclick=\"open('gestion_stage_date_supp.php?id=".$data[$i][4]."','_parent','');\" STYLE='font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;'></td>";
 	print "</tr>";
 }
-print "</table>";
+print "</tbody></table>";
 ?>
 <!-- // fin  -->
 </td></tr></table>

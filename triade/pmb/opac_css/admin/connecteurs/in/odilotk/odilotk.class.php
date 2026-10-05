@@ -1,50 +1,63 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: odilotk.class.php,v 1.4 2017-11-30 16:18:20 apetithomme Exp $
+// $Id: odilotk.class.php,v 1.7.4.1 2025/04/16 12:16:50 dbellamy Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
 	die("no access");
 
 global $class_path, $base_path, $include_path;
 require_once ($class_path . "/connecteurs.class.php");
 require_once ($class_path . "/curl.class.php");
+
 class odilotk extends connector {
-	// Variables internes pour la progression de la rÃ©cupÃ©ration des notices
-	public $n_recu; // Nombre de notices reÃ§ues
-	public $n_total; // Nombre total de notices Ã  recevoir
-	public $n_total_inactive; // Nombre de notices dÃ©sactivÃ©es chez Odilo
+
+	// Variables internes pour la progression de la récupération des notices
+	public $n_recu; // Nombre de notices reçues
+	public $n_total; // Nombre total de notices à recevoir
+	public $n_total_inactive; // Nombre de notices désactivées chez Odilo
 	protected $limit = 100;
 	protected $page = 0;
 
-	public function get_id() {
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::get_id()
+	 */
+	public function get_id()
+	{
 		return "odilotk";
 	}
-	
-	// Est-ce un entrepot ?
-	public function is_repository() {
-		return 1;
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::is_repository()
+	 */
+	public function is_repository()
+	{
+	    return connector::REPOSITORY_YES;
 	}
-    
+
     public function get_token(){
     	global $empr_cb, $empr_mail;
 
     	if (!$_SESSION['user_code'] || !$empr_cb) {
     		return '';
     	}
-    	
+
     	$this->fetch_global_properties();
     	$infos = unserialize($this->parameters);
     	if (!$infos['shared_secret_key'] || !$infos['endpoint_url']) {
     		return '';
     	}
-    	
+
     	$today = date('Ymd');
     	$hash = md5($empr_cb.$today.$infos['shared_secret_key']);
-    	
+
     	return $infos['endpoint_url'].'/opac/auth?uid='.$empr_cb.'&date='.$today.'&hash='.$hash.($empr_mail ? '&email='.$empr_mail : '').'&rsc=';
     }
-    
+
     public function get_odilotk_link($source_id, $record_id) {
     	$link = $this->get_token();
     	if (!$link || !$source_id || !$record_id) {
@@ -57,17 +70,17 @@ class odilotk extends connector {
     	if (empty($vars['cp_field'])) {
     		return $link;
     	}
-    	
+
     	$result = pmb_mysql_query('select notices_custom_small_text from notices_custom_values where notices_custom_origine = "'.$record_id.'" and notices_custom_champ = "'.$vars['cp_field'].'"');
     	if (pmb_mysql_num_rows($result)) {
     		$link.= pmb_mysql_result($result, 0, 0);
     	}
     	return $link;
     }
-    
+
    	public function source_get_property_form($source_id) {
     	global $charset;
-    	
+
     	$params = $this->get_source_params($source_id);
 		if ($params["PARAMETERS"]) {
 			// Affichage du formulaire avec $params["PARAMETERS"]
@@ -77,8 +90,8 @@ class odilotk extends connector {
 				${$key} = $val;
 			}
 		}
-		
-		// Champ perso de notice Ã  utiliser
+
+		// Champ perso de notice à utiliser
 		$form = "<div class='row'>
 				<div class='colonne3'><label for='source_name'>" . $this->msg["odilotk_source_field"] . "</label></div>
 				<div class='colonne-suite'>
@@ -98,21 +111,21 @@ class odilotk extends connector {
     				</select>
 				</div>
 			</div>";
-		
+
 		$form .= "<div class='row'></div>";
 		return $form;
     }
 
     public function make_serialized_source_properties($source_id) {
     	global $cp_field;
-    	
+
     	$t["cp_field"] = $cp_field;
-    	
+
     	$this->sources[$source_id]["PARAMETERS"]=serialize($t);
     }
 
 	/**
-	 * Formulaire des propriÃ©tÃ©s gÃ©nÃ©rales
+	 * Formulaire des propriétés générales
 	 */
 	public function get_property_form() {
 		global $charset;
@@ -157,7 +170,7 @@ class odilotk extends connector {
 
     public function make_serialized_properties() {
     	global $endpoint_url, $api_endpoint_url, $client_id, $client_secret, $shared_secret_key;
-    	//Mise en forme des paramÃ¨tres Ã  partir de variables globales (mettre le rÃ©sultat dans $this->parameters)
+    	//Mise en forme des paramètres à partir de variables globales (mettre le résultat dans $this->parameters)
     	$keys = array();
 
     	$keys['endpoint_url'] = $endpoint_url;
@@ -167,54 +180,54 @@ class odilotk extends connector {
     	$keys['shared_secret_key'] = $shared_secret_key;
     	$this->parameters = serialize($keys);
     }
-        
+
 	public function maj_entrepot($source_id, $callback_progress = "", $recover = false, $recover_env = "") {global $form_from;
 		global $form_radio;
 		global $form_from;
 		global $charset, $base_path;
-    	
+
     	$this->fetch_global_properties();
     	$keys = unserialize($this->parameters);
 
 		$this->callback_progress = $callback_progress;
 		$this->source_id = $source_id;
 		$this->n_recu = 0;
-				
+
 		$curl = new Curl();
 		$curl->set_option('CURLOPT_USERPWD', $keys['client_id'].':'.$keys['client_secret']);
 		$response = $curl->post($keys['api_endpoint_url'] . '/token', array(
-				'grant_type' => 'client_credentials' 
+				'grant_type' => 'client_credentials'
 		));
 		if ($response->headers['Status-Code'] != 200) {
  			$this->error = true;
  			$this->error_message = $this->msg["odilotk_authentication_failed"];
 		}
-		
+
 		$content = json_decode($response->body);
 		$authentication_token = $content->token;
 		$authentication_type = $content->type;
-		
+
 		$curl->options = array();
 		$curl->set_option('CURLOPT_HTTPHEADER', array(
 				'Authorization: '.$authentication_type.' '.$authentication_token
 		));
-		
+
 		$this->n_total = 0;
 		$this->n_total_inactive = 0;
-		
+
 		$source_params = $this->unserialize_source_params($source_id);
 		$p = $source_params["PARAMETERS"];
-		
+
 		$query = "select name from notices_custom where idchamp = ".$p['cp_field'];
 		$result = pmb_mysql_query($query);
 		if ($row = pmb_mysql_fetch_object($result)) {
 			$cp_odilotk = array(
-					'cp_odilotk' => $row->name 
+					'cp_odilotk' => $row->name
 			);
 		} else {
 			$cp_odilotk = array();
 		}
-		
+
 		$modification_date = '';
 		if ($form_radio == 'last_sync') {
 			$sql = " SELECT MAX(UNIX_TIMESTAMP(date_import)) FROM entrepot_source_" . $source_id;
@@ -223,7 +236,7 @@ class odilotk extends connector {
 		} else if ($form_radio == 'date_sync') {
 			$modification_date = $form_from;
 		}
-		
+
 		do {
 			$response = $curl->get($keys['api_endpoint_url'] . '/records?limit=' . $this->limit . '&offset=' . ($this->limit * $this->page) . ($modification_date ? '&modificationDate='.$modification_date : ''));
 			if ($response->headers['Status-Code'] != 200) {
@@ -232,7 +245,7 @@ class odilotk extends connector {
 			}
 			$content = json_decode($response->body);
 			$this->n_total += count($content);
-			
+
 		foreach ($content as $record) {
 				if (! $record->active) {
 					$this->n_total--;
@@ -249,7 +262,7 @@ class odilotk extends connector {
 		} while ( count($content) );
 		return $this->n_recu;
     }
-    
+
     public function progress() {
     	$callback_progress = $this->callback_progress;
 		if ($this->n_total) {
@@ -263,12 +276,12 @@ class odilotk extends connector {
 		}
 		call_user_func($callback_progress, $percent, $nlu, $ntotal);
     }
-       	
+
 	public function odilotk_2_uni($nt, $cp) {
 		global $charset;
 
 		$unimarc = array();
-		
+
 		// Construction du 001
 		$unimarc["001"][0] = md5(serialize($nt));
 
@@ -277,24 +290,24 @@ class odilotk extends connector {
 			$unimarc["900"][0]["a"][0] = $nt->id;
 			$unimarc["900"][0]["n"][0] = $cp['cp_odilotk'];
 		}
-		
+
 		// source
 		$unimarc["801"][0]["a"][0] = 'EN';
 		$unimarc["801"][0]["b"][0] = 'OdiloTK';
 
 		// title
 		if (!empty($nt->title)) {
-			// Dans la majoritÃ© des cas, il y a l'auteur aprÃ¨s un /, on l'enlÃ¨ve
+			// Dans la majorité des cas, il y a l'auteur après un /, on l'enlève
 			$title = $nt->title;
 			if (strpos($title, '/') !== false) {
 				$title = substr($title, 0, strrpos($title, '/'));
 			}
 			$unimarc["200"][0]["a"][0] = $title;
 		}
-		
+
 		// author
 		if (!empty($nt->author)) {
-			// 2 types de prÃ©sentation de l'auteur ("Doe, John" et "John Doe")
+			// 2 types de présentation de l'auteur ("Doe, John" et "John Doe")
 			if (strpos($nt->author, ',') !== false) {
 				// "Doe, John"
 				$author_names = explode(',', $nt->author);
@@ -309,40 +322,40 @@ class odilotk extends connector {
 				$unimarc['700'][0]['4'][0] = '070';
 			}
 		}
-		
+
 		// thumbnail
 		if (!empty($nt->coverImageUrl)) {
 			$unimarc["896"][0]["a"][0] = $nt->coverImageUrl;
 		}
-		
+
 		if (!empty($nt->description)) {
 			$unimarc["330"][0]["a"][0] = $nt->description;
 		}
-		
+
 		if (!empty($nt->formats)) {
-			$unimarc["215"][0]["d"][0] = implode(', ', $nt->formats); 
+			$unimarc["215"][0]["d"][0] = implode(', ', $nt->formats);
 		}
-		
+
 		if (!empty($nt->gradeLevel)) {
 			//TODO
 		}
-		
+
 		if (!empty($nt->isbn)) {
 			$unimarc["010"][0]["a"][0] = $nt->isbn;
 		}
-		
+
 		if (!empty($nt->language)) {
 			$unimarc["101"][0]["a"][0] = $nt->language;
 		}
-		
+
 		if (!empty($nt->publicationDate)) {
 			$unimarc["210"][0]["d"][0] = str_replace('.', '', $nt->publicationDate);
 		}
-		
+
 		if (!empty($nt->publisher)) {
 			$unimarc["210"][0]["c"][0] = str_replace(',', '', $nt->publisher);
 		}
-		
+
 		if (!empty($nt->releaseDate)) {
 			// TODO
 		}
@@ -358,27 +371,27 @@ class odilotk extends connector {
 				$unimarc["610"][0]["a"][0].= trim($subjects[$i]);
 			}
 		}
-		
+
 		if (!empty($nt->type)) {
 			// TODO
 		}
 
 		return $unimarc;
 	}
-        
+
     public function rec_record($record, $source_id, $search_id) {
 		global $charset, $base_path, $url, $search_index;
 
     	$date_import = date("Y-m-d H:i:s",time());
-    	
+
     	//Recherche du 001
     	$ref = $record["001"][0];
-    	//Mise Ã  jour
+    	//Mise à jour
     	if ($ref) {
     		$ref_exists = $this->has_ref($source_id, $ref);
 			if ($ref_exists)
 				return false;
-    		
+
     		//Si conservation des anciennes notices, on regarde si elle existe
     		$ref_exists = false;
     		if (!$this->del_old) {
@@ -390,7 +403,7 @@ class odilotk extends connector {
     			$this->delete_from_external_count($source_id, $ref);
     		}
     		if (($this->del_old) || ((!$this->del_old)&&(!$ref_exists))) {
-    			//Insertion de l'entÃªte
+    			//Insertion de l'entête
 				$n_header["rs"] = "*";
 				$n_header["ru"] = "*";
 				$n_header["el"] = "1";
@@ -398,7 +411,7 @@ class odilotk extends connector {
 				$n_header["hl"] = "0";
 				$n_header["dt"] = "a";
 
-				//RÃ©cupÃ©ration d'un ID
+				//Récupération d'un ID
 				$recid = $this->insert_into_external_count($source_id, $ref);
 				foreach($n_header as $hc=>$code) {
 					$this->insert_header_into_entrepot($source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
@@ -411,19 +424,19 @@ class odilotk extends connector {
 							foreach ($val[$i] as $sfield=>$vals) {
 								for ($j=0; $j<count($vals); $j++) {
 									if ($charset != "utf-8")
-										$vals[$j] = utf8_decode($vals[$j]);
+										$vals[$j] = encoding_normalize::utf8_decode($vals[$j]);
 									$this->insert_content_into_entrepot($source_id, $ref, $date_import, $field, $sfield, $field_order, $j, $vals[$j], $recid, $search_id);
 								}
 							}
 						} else {
 							if ($charset != "utf-8")
-								$vals[$i] = utf8_decode($vals[$i]);
+								$vals[$i] = encoding_normalize::utf8_decode($vals[$i]);
 							$this->insert_content_into_entrepot($source_id, $ref, $date_import, $field, '', $field_order, 0, $val[$i], $recid, $search_id);
 						}
 						$field_order++;
 					}
 				}
-				$this->rec_isbd_record($source_id, $ref, $recid);    		
+				$this->rec_isbd_record($source_id, $ref, $recid);
     		}
     		$this->n_recu++;
     		$this->progress();
@@ -431,36 +444,47 @@ class odilotk extends connector {
     	return true;
     }
 
-	public function form_pour_maj_entrepot($source_id, $sync_form = "sync_form") {
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::getSynchroForm()
+     */
+    public function getSynchroForm($source_id, $sync_form = "sync_form")
+    {
 		global $form_from;
 		global $form_radio;
-		
-		$source_id = $source_id + 0;
-		
+
+		$source_id = intval($source_id);
+		$sync_form = in_array($sync_form, [ "sync_form", "planificateur_form"]) ? $sync_form : "sync_form";
+
 		$sql = " SELECT MAX(UNIX_TIMESTAMP(date_import)) FROM entrepot_source_" . $source_id;
 		$res = pmb_mysql_result(pmb_mysql_query($sql), 0, 0);
 		$latest_date_database_string = $res ? formatdate(date("Y-m-d", $res)) : "<i>" . $this->msg["odilotk_nonotice_sync"] . "</i>";
-		
+
 		$dateuntil = "";
-		$form = "<blockquote>";
+		$form = "<blockquote role='presentation'>";
 		$form .= "
 				" . $this->msg["odilotk_get_notices"] . "
 				<br /><br />
 				<input type='radio' name='form_radio' value='last_sync' " . ((($form_radio == "last_sync") || !$form_radio) ? "checked" : "") . " />" . $this->msg["odilotk_last_sync"] . " <br />
-				<input type='radio' name='form_radio' value='date_sync' " . (($form_radio == "date_sync") ? "checked" : "") . " />" . $this->msg["odilotk_sync_from"] . " 
+				<input type='radio' name='form_radio' value='date_sync' " . (($form_radio == "date_sync") ? "checked" : "") . " />" . $this->msg["odilotk_sync_from"] . "
 				<input type='hidden' name='form_from' value='" . ($form_from ? $form_from : date("Y-m-d", $form_from)) . "' />
 				<input type=\"text\" readonly size=\"10\" name=\"form_from_lib\" value=\"" . (($form_from != '') ? formatdate($form_from) : formatdate(date("Y-m-d", $form_from))) . "\">
-				<input class='bouton' type='button' name='form_from_button' value='".$this->msg['odilotk_form_from_select']."' onClick=\"openPopUp('./select.php?what=calendrier&caller=$sync_form&date_caller=" . date("Ymd", $form_from) . "&param1=form_from&param2=form_from_lib&auto_submit=NO&date_anterieure=YES', 'date_adhesion', 250, 300, -2, -2, 'toolbar=no, dependent=yes, resizable=yes')\"   />
+				<input class='bouton' type='button' name='form_from_button' value='".$this->msg['odilotk_form_from_select']."' onClick=\"openPopUp('./select.php?what=calendrier&caller=sync_form&date_caller=" . date("Ymd", $form_from) . "&param1=form_from&param2=form_from_lib&auto_submit=NO&date_anterieure=YES', 'date_adhesion', 250, 300, -2, -2, 'toolbar=no, dependent=yes, resizable=yes')\"   />
     			<br />
     					";
-		
+
 		$form .= "<br />" . sprintf($this->msg["odilotk_syncinfo_date_baserecent"], $latest_date_database_string) . "<br /><br />";
-		
+
 		$form .= "</blockquote>";
 		return $form;
 	}
-	
-	//NÃ©cessaire pour passer les valeurs obtenues dans form_pour_maj_entrepot au javascript asynchrone
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see connector::get_maj_environnement()
+	 */
 	public function get_maj_environnement($source_id) {
 		global $form_from;
 		global $form_radio;

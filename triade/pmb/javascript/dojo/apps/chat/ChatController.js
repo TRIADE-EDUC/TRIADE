@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ChatController.js,v 1.2 2018-11-02 14:12:24 ngantier Exp $
+// $Id: ChatController.js,v 1.3 2020/12/17 15:05:02 arenou Exp $
 
 /*
  * 
@@ -43,7 +43,7 @@ function(
 		domStyle
 		) {
 	return declare(null, {
-		timerHandle: null,
+		callback: null,
 		lastPoll: null,
 		chatUsersList: null,
 		ChatsList: new Array(),
@@ -60,7 +60,9 @@ function(
 			topic.subscribe('ChatGroup', lang.hitch(this, this.handleEvents));
 				
 			this.chatUsersList = new ChatUsersList();
-			this.timerHandle = setTimeout(lang.hitch(this, this.pool), 5000);
+			on(window,'blur',lang.hitch(this,this.disableCall))
+			on(window,'focus',lang.hitch(this,this.initCall));
+			this.initCall();
 		},
 		
 		handleEvents: function(evtType,evtArgs) {
@@ -92,13 +94,26 @@ function(
 			}			
 		},
 		
+		
+		initCall : function(){
+			this.disableCall();
+			this.pool();
+			if(window.document.hasFocus() && this.callback == null){
+				this.callback = setInterval(lang.hitch(this, this.pool), 5000);
+			}
+		},
+		  
+		disableCall : function(){
+			if(this.callback){
+				clearInterval(this.callback);
+			}
+		},
 		pool: function() {				
 			var chatsList = '';
 			if (this.firstAcess) {								
 			} else {
 				chatsList = this.chatUsersList.getChatsList();
 			}	
-			this.timerHandle = 0;
 			this.xhrPost({
 				method: 'get_chat',
 				params: {
@@ -134,7 +149,6 @@ function(
 			}			
 			topic.publish('ChatController', 'ChatController_SendResponses', response);
 			this.firstAcess = 0;
-			if(!this.timerHandle) this.timerHandle = setTimeout(lang.hitch(this, this.pool), 5000);	
 		},
 		
 		getChatType: function(id) {
@@ -151,8 +165,6 @@ function(
 		},
 		
 		sendMessageCallback: function(response) {
-			clearTimeout(this.timerHandle);
-			this.timerHandle = 0;
 			this.pool();
 		},
 

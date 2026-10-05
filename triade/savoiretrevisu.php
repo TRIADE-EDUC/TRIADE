@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,6 +27,7 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
@@ -34,83 +35,92 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php 
-include("./librairie_php/lib_licence.php"); 
-// connexion (après include_once lib_licence.php obligatoirement)
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
+<?php
+include("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Savoir / être" ?></font></b></td></tr>
+<tr id='coulBar0'><td><b><font id='menumodule1'>Savoir / être</font></b></td></tr>
 <tr id='cadreCentral0'>
-<td valign='top' >
-<!-- // debut form  -->
-<table border='1' width='100%' style="border-collapse: collapse;" >
-<tr >
-<td bgcolor="yellow"><?php print "Date" ?></td>
-<td bgcolor="yellow"><?php print "Enseignant" ?></td>
-<td bgcolor="yellow"><?php print "Aptitude à manifester de l'intérêt pour son travail" ?></td>
-<td bgcolor="yellow"><?php print "Aptitude à la méthode et au soin" ?></td>
-<td bgcolor="yellow"><?php print "Aptitude à écouter" ?></td>
-</tr>
-<?php
-$anneeScolaire=anneeScolaireViaIdClasse($_SESSION["idClasse"]);
-$dataInfo=recupSavoirEtre($_SESSION["id_pers"],$_SESSION["idClasse"],$anneeScolaire);
-// ponctualite,motivation,dynamisme,id,date,idpers,idmatiere
-for($j=0;$j<count($dataInfo);$j++) { 
-	$ponct=stripslashes($dataInfo[$j][0]);
-	$motiv=stripslashes($dataInfo[$j][1]);
-	$dynam=stripslashes($dataInfo[$j][2]);
-	$nommatiere=chercheMatiereNom($dataInfo[$j][6]);
-	$id=$dataInfo[$j][3];
-	if (($ponct == "") && ($motiv == "") && ($dynam == "")) {
-		deleteSavoirEtre2($id); 
-		continue; 
-	}
-	$id=$dataInfo[$j][3];
-	$date=dateForm($dataInfo[$j][4]);
-	$idpers=$dataInfo[$j][5];
-        $personne=preg_replace('/ /','&nbsp;',recherche_personne2($idpers));
+<td valign='top'>
 
-	$motiv=preg_replace('/"/',"&quot;",$motiv);
-	$dynam=preg_replace('/"/',"&quot;",$dynam);
-	$ponct=preg_replace('/"/',"&quot;",$ponct); 
-	print "<tr bgcolor='#FFFFFF' >";
-	print "<td width='10%' valign='top' ><font class='T1'>$date</font></td>";
-	print "<td width='10%' valign='top' ><font class='T1'>$personne<br>Matière&nbsp;:&nbsp;$nommatiere</font></td>";
-	print "<td width='30%' valign='top' ><font class='T2'>$ponct</font></td>";
-	print "<td width='30%' valign='top' ><font class='T2'>$motiv</font></td>";			
-	print "<td width='30%' valign='top' ><font class='T2'>$dynam</font></td>";
+<?php
+$anneeScolaire = anneeScolaireViaIdClasse($_SESSION["idClasse"]);
+$dataInfo = recupSavoirEtre($_SESSION["id_pers"],$_SESSION["idClasse"],$anneeScolaire);
+// ponctualite, motivation, dynamisme, id, date, idpers, idmatiere
+
+$items = [];
+for ($j=0; $j<countTriade($dataInfo); $j++) {
+    $ponct = stripslashes($dataInfo[$j][0]);
+    $motiv = stripslashes($dataInfo[$j][1]);
+    $dynam = stripslashes($dataInfo[$j][2]);
+    $id    = $dataInfo[$j][3];
+    if (($ponct == "") && ($motiv == "") && ($dynam == "")) {
+        deleteSavoirEtre2($id);
+        continue;
+    }
+    $items[] = [
+        'date'    => dateForm($dataInfo[$j][4]),
+        'personne'=> recherche_personne2($dataInfo[$j][5]),
+        'matiere' => chercheMatiereNom($dataInfo[$j][6]),
+        'ponct'   => htmlspecialchars($ponct, ENT_QUOTES),
+        'motiv'   => htmlspecialchars($motiv, ENT_QUOTES),
+        'dynam'   => htmlspecialchars($dynam, ENT_QUOTES),
+    ];
+}
+
+if (empty($items)) {
+    echo "<div class='sev-empty'>Aucune évaluation enregistrée.</div>";
+} else {
+    echo "<div class='sev-list'>";
+    foreach ($items as $it) {
+        echo "<div class='sev-card'>";
+        echo   "<div class='sev-card-head'>";
+        echo     "<span class='sev-card-date'>".$it['date']."</span>";
+        echo     "<span class='sev-card-teacher'><b>".htmlspecialchars($it['personne'])."</b><br>".htmlspecialchars($it['matiere'])."</span>";
+        echo   "</div>";
+        echo   "<div class='sev-card-body'>";
+        if ($it['ponct'] != "") {
+            echo "<div class='sev-aptitude'>"
+               . "<div class='sev-apt-label'>Aptitude à manifester de l'intérêt pour son travail</div>"
+               . "<div class='sev-apt-value'>".$it['ponct']."</div>"
+               . "</div>";
+        }
+        if ($it['motiv'] != "") {
+            echo "<div class='sev-aptitude'>"
+               . "<div class='sev-apt-label'>Aptitude à la méthode et au soin</div>"
+               . "<div class='sev-apt-value'>".$it['motiv']."</div>"
+               . "</div>";
+        }
+        if ($it['dynam'] != "") {
+            echo "<div class='sev-aptitude'>"
+               . "<div class='sev-apt-label'>Aptitude à écouter</div>"
+               . "<div class='sev-apt-value'>".$it['dynam']."</div>"
+               . "</div>";
+        }
+        echo   "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
 }
 ?>
-</table>
+
 </td></tr></table>
 <?php
-       // Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")):
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
-
-// deconnexion en fin de fichier
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
 Pgclose();
 ?>
 </BODY>

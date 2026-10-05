@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,55 +18,67 @@
  *
  ***************************************************************************/
 
-// Nous allons faire notre propre gestion
+// Gestion personnalisée des erreurs
 error_reporting(0);
-include_once("../common/lib_admin.php");
 
+include_once __DIR__ . "/../common/lib_admin.php";
 
-// Fonction spÃ©ciale de gestion des erreurs
-function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars)
+/**
+ * Gestionnaire d'erreurs personnalisé
+ *
+ * @param int    $errno
+ * @param string $errmsg
+ * @param string $filename
+ * @param int    $linenum
+ * @return bool
+ */
+function userErrorHandler(int $errno, string $errmsg, string $filename, int $linenum): bool
 {
     // Date et heure de l'erreur
-    $dt = date("d/m/Y  H:i:s");
+    $dt = date("d/m/Y H:i:s");
 
-    // DÃ©finit un tableau associatif avec les chaÃ®nes d'erreur
-    // En fait, les seuls niveaux qui nous interessent
-    // sont E_WARNING, E_NOTICE, E_USER_ERROR,
-    // E_USER_WARNING et E_USER_NOTICE
-    $errortype = array (
-                E_ERROR           => "Erreur",
-                E_WARNING         => "Alerte",
-                E_PARSE           => "Erreur d'analyse",
-                E_NOTICE          => "Note",
-                E_CORE_ERROR      => "Core Error",
-                E_CORE_WARNING    => "Core Warning",
-                E_COMPILE_ERROR   => "Compile Error",
-                E_COMPILE_WARNING => "Compile Warning",
-                E_USER_ERROR      => "Erreur spÃ©cifique",
-                E_USER_WARNING    => "Alerte spÃ©cifique",
-                E_USER_NOTICE     => "Note spÃ©cifique",
-                E_STRICT          => "Runtime Notice"
-                );
-    // Les niveaux qui seront enregistrÃ©s
-    //$user_errors = array(E_USER_ERROR, E_USER_WARNING, E_ERROR, E_WARNING);
-   
-     if (($errortype[$errno] != "Note") && ($errortype[$errno] != "Runtime Notice" )) { 
-	
- 
-    	$err = "$dt <b>$_SERVER[PHP_SELF]</b> <font color=red>$errortype[$errno]</font> <br /><i>$errmsg</i> <br />\n";
-	$err .= $filename ;
-    	$err .= "<br> --> ligne :  ". $linenum . "<br>";
+    // Types d'erreurs
+    $errortype = [
+        E_ERROR             => "Erreur",
+        E_WARNING           => "Alerte",
+        E_PARSE             => "Erreur d'analyse",
+        E_NOTICE            => "Note",
+        E_CORE_ERROR        => "Core Error",
+        E_CORE_WARNING      => "Core Warning",
+        E_COMPILE_ERROR     => "Compile Error",
+        E_COMPILE_WARNING   => "Compile Warning",
+        E_USER_ERROR        => "Erreur spécifique",
+        E_USER_WARNING      => "Alerte spécifique",
+        E_USER_NOTICE       => "Note spécifique",
+        E_STRICT            => "Runtime Notice",
+        E_DEPRECATED        => "Déprécié",
+        E_USER_DEPRECATED   => "Déprécié spécifique"
+    ];
 
-    	if (in_array($errno, $user_errors)) {
-	//$err .= "<center><textarea rows=3 cols=50>".wddx_serialize_value($vars,"Variables")."</textarea></center>";
-    	}
-	$err .="<hr><br>";
-    
-    	// sauvegarde de l'erreur, et mail si c'est critique
-    	error_log($err, 3, "../data/erreurs.log");
+    // Type inconnu
+    $type = $errortype[$errno] ?? 'Erreur inconnue';
+
+    // On ignore les Notes et Runtime Notices
+    if ($type !== "Note" && $type !== "Runtime Notice" && $type !== "Alerte" )  {
+
+        $script = $_SERVER['PHP_SELF'] ?? 'CLI';
+
+        $err  = "$dt <b>$script</b> ";
+        $err .= "<font color='red'>".utf8_encode($type)."</font><br />";
+        $err .= "<i>$errmsg</i><br />";
+        $err .= "$filename<br />";
+        $err .= "--> ligne : $linenum<br />";
+        $err .= "<hr><br />";
+
+        // Log fichier
+        error_log($err, 3, __DIR__ . "/../data/erreurs.log");
     }
+
+    // Empêche le handler PHP par défaut
+    return true;
 }
 
-$old_error_handler = set_error_handler("userErrorHandler");
+// Activation du gestionnaire
+set_error_handler("userErrorHandler");
 
 ?>

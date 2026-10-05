@@ -1,9 +1,9 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_hold_multipolygon.class.php,v 1.3 2019-02-26 15:58:50 tsamson Exp $
+// $Id: map_hold_multipolygon.class.php,v 1.3 2019/02/26 15:58:50 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
     die("no access");
@@ -42,7 +42,7 @@ class map_hold_multipolygon extends map_hold {
                 $infos = array();
                 $coord = $coords[$i];
                 $infos = explode(" ", $coord);
-                //on ne met pas la derniÃ¨re coordonnÃ©e, c'est la mÃªme que la 1ere
+                //on ne met pas la dernière coordonnée, c'est la même que la 1ere
                 if (0 == $i || $coords[0] != $coords[$i]) {
                     $coords_polygon[] = new map_coord($infos[0], $infos[1]);
                 }

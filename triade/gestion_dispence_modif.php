@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -26,6 +26,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_absrtdplanifier.js"></script>
@@ -40,16 +42,11 @@ include_once("librairie_php/db_triade.php");
 validerequete("2");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
-<table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' > <?php print LANGTITRE28?> </font></b></td>
-</tr>
-<tr id='cadreCentral0' >
-<td >
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <!-- // fin  -->
 
 <?php
@@ -113,7 +110,7 @@ $motif=strtolower(trim($_POST["saisie_nom_eleve"]));
 $sql=<<<EOF
 
 SELECT c.libelle,e.nom,e.prenom,e.elev_id
-FROM ${prefixe}eleves e, ${prefixe}classes c
+FROM {$prefixe}eleves e, {$prefixe}classes c
 WHERE lower(e.nom) LIKE '%$motif%'
 AND c.code_class = e.classe
 ORDER BY c.libelle, e.nom, e.prenom
@@ -127,12 +124,12 @@ $data=chargeMat($res);
 ?>
 
 <?php
-if( count($data) <= 0 )
+if( countTriade($data) <= 0 )
         {
         print("<BR><center><font size=3>".LANGDISP1." </font><BR><BR></center>");
         }
 else {
-for($i=0;$i<count($data);$i++)
+for($i=0;$i<countTriade($data);$i++)
         {
         ?>
 <table border="1" bordercolor="#000000" width="100%">
@@ -147,16 +144,16 @@ for($i=0;$i<count($data);$i++)
 </table>
 <table border="1" bordercolor="#000000" width="100%">
 <TR>
-<TD bgcolor='yellow' align=center width=10%><?php print LANGPARENT10?> </td>
-<TD bgcolor='yellow' align=center ><?php print LANGABS12 ?> </td>
-<TD bgcolor='yellow' align=center width=5%> <?php print LANGTE6 ?>  </td>
-<TD bgcolor='yellow' align=center width=10%> <?php print LANGTE12 ?>  </td>
-<TD bgcolor='yellow' align=center width=10%><?php print LANGPER30?></td>
+<th class="cc-th" style="width:10%"><?php print LANGPARENT10 ?></th>
+<th class="cc-th"><?php print LANGABS12 ?></th>
+<th class="cc-th" style="width:5%"><?php print LANGTE6 ?></th>
+<th class="cc-th" style="width:10%"><?php print LANGTE12 ?></th>
+<th class="cc-th" style="width:10%"><?php print LANGPER30 ?></th>
 </TR>
 <?php
 $data_2=affDispence($data[$i][3]);
 // $data : tab bidim - soustab 3 champs
-for($j=0;$j<count($data_2);$j++)
+for($j=0;$j<countTriade($data_2);$j++)
         {
 	$jj++;
 	if ($data_2[$j][10] != " ") {
@@ -169,13 +166,13 @@ for($j=0;$j<count($data_2);$j++)
         }
 
 $k=$data_2[$j][1];
-$sql="SELECT code_mat, libelle FROM ${prefixe}matieres WHERE  code_mat='$k' ORDER BY code_mat";
+$sql="SELECT code_mat, libelle FROM {$prefixe}matieres WHERE  code_mat='$k' ORDER BY code_mat";
 $res=execSql($sql);
 $data_matiere=chargeMat($res);
 
 ?>
 
-	<TR  class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'">
+	<TR class="cc-tr-data">
 	<form method=POST name="formulaire_<?php print $jj?>" >
 <TD align=center valign=top id='bordure' ><?php print dateForm($data_2[$j][2])?>
 	<br>au <br> <input type=text value="<?php print dateForm($data_2[$j][3])?>" name="saisie_date_fin"  size=11>
@@ -238,7 +235,7 @@ document.formulaire_<?php print $jj?>.saisie_jour_<?php print $a?>.options[0].te
 
 ?>
 </td>
-<TD align=center><input type=submit name="modif_dispence" value="Valider" STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<TD align=center><button type="submit" name="modif_dispence" class="btn-dest">Valider</button>
 	<input type=hidden name=saisie_eleve_id value="<?php print $data[$i][3]?>">
 	<input type=hidden name=saisie_date_debut value="<?php print $data_2[$j][2]?>">
 	<input type=hidden name=saisie_nom_eleve value="<?php print $data[$i][1]?>">
@@ -262,22 +259,21 @@ Derniere  modif: <?php print dateForm($data_2[$j][4])?>
       }
 ?>
      <!-- // fin  -->
-     </td></tr></table>
      <?php
        // Test du membre pour savoir quel fichier JS je dois executer
    if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
        print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+       print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
        print "</SCRIPT>";
    else :
       print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+      print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
       print "</SCRIPT>";
 
       top_d();
 
       print "<SCRIPT language='JavaScript' ";
-     print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+     print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
      print "</SCRIPT>";
 
        endif ;

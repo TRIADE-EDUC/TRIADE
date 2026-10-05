@@ -1,18 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: backup_planning.class.php,v 1.1 2017-07-10 15:50:01 dgoron Exp $
+// $Id: backup_planning.class.php,v 1.1 2017/07/10 15:50:01 dgoron Exp $
 
 global $class_path;
 require_once($class_path."/scheduler/scheduler_planning.class.php");
 
 class backup_planning extends scheduler_planning {
 	
-	//formulaire spÃ©cifique au type de tÃ¢che
+	//formulaire spécifique au type de tâche
 	public function show_form ($param=array()) {
 		
-		//paramÃ¨tres prÃ©-enregistrÃ©
+		//paramètres pré-enregistré
 		$value_param = array();
 		if (isset($param['form_jeu_sauv'])) {
 			foreach ($param['form_jeu_sauv'] as $jeu_sauvegarde) {

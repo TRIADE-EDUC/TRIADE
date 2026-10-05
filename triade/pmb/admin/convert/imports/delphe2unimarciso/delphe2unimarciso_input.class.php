@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: delphe2unimarciso_input.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: delphe2unimarciso_input.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,7 +19,7 @@ class delphe2unimarciso_input extends convert_input {
 		$index=array();
 		$n=1;
 		$i=0;
-		//Lecture du fichier d'entrÃ©e
+		//Lecture du fichier d'entrée
 		while (!feof($fi)) {
 			$notice=fgets($fi,4096);
 			if ($i>0 && $notice) {

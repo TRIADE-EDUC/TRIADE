@@ -136,7 +136,7 @@
 <BODY onLoad="javascript: window.focus();" topmargin=0 leftmargin=1 marginwidth=1 marginheight=0>
 <?php
   // Recuperation des infos de timezone de l'utilisateur
-  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure, t2.util_timezone_partage FROM ${PREFIX_TABLE}utilisateur t1, ${PREFIX_TABLE}utilisateur t2, ${PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
+  $DB_CX->DbQuery("SELECT tzn_libelle, tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, t2.util_format_heure, t2.util_timezone_partage FROM {$PREFIX_TABLE}utilisateur t1, {$PREFIX_TABLE}utilisateur t2, {$PREFIX_TABLE}timezone WHERE t1.util_id=".$USER_SUBSTITUE." AND t2.util_id=".$idUser." AND ((tzn_zone=t1.util_timezone AND t2.util_timezone_partage='O') OR (tzn_zone=t2.util_timezone AND t2.util_timezone_partage='N'))");
   $tzLibelle = htmlentities($DB_CX->DbResult(0,"tzn_libelle"));
   $tzGmt = $DB_CX->DbResult(0,"tzn_gmt");
   $tzDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
@@ -161,7 +161,7 @@
   $jourEnCours  = @date("d", $sd);
   $moisEnCours  = @date("m", $sd);
   $anneeEnCours = @date("Y", $sd);
-  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_UTIL.") FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
   $nomUtil = $DB_CX->DbResult(0,0);
 
 //---------------------------------------------------------
@@ -215,14 +215,14 @@ if (!$vu) {
   $dateCrt = $anneeEnCours."-".$moisEnCours."-".$jourEnCours;
   $ligneAnniv = $premiereLettre = "";
   // Anniversaire(s) de l'agenda
-  $DB_CX->DbQuery("SELECT age_libelle FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND age_date LIKE '%".substr($dateCrt,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$sd)." AND age_aty_id=1");
+  $DB_CX->DbQuery("SELECT age_libelle FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND age_date LIKE '%".substr($dateCrt,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$sd)." AND age_aty_id=1");
   while ($enr = $DB_CX->DbNextRow()) {
     if (empty($premiereLettre))
       $premiereLettre = strtolower(substr($enr['age_libelle'],0,1));
     $ligneAnniv .= $enr['age_libelle']." / ";
   }
   // Anniversaire(s) du calepin (y compris les contacts partages)
-  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($dateCrt,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$sd));
+  $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($dateCrt,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$sd));
   while ($enr = $DB_CX->DbNextRow()) {
     if (empty($premiereLettre))
       $premiereLettre = strtolower(substr($enr['nomContact'],0,1));
@@ -248,13 +248,13 @@ if (!$vu) {
   }
 
   //Parametres de la journee choisis par l'utilisateur
-  $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee FROM ${PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
+  $DB_CX->DbQuery("SELECT util_debut_journee, util_fin_journee FROM {$PREFIX_TABLE}utilisateur WHERE util_id=".$USER_SUBSTITUE);
   $debutJournee = $DB_CX->DbResult(0,0);
   $finJournee   = $DB_CX->DbResult(0,1);
   //Decalage des bornes de la journee en fonction du timezone
   if ($tzPartage!="O") {
     // Recuperation des infos de timezone de l'utilisateur
-    $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM ${PREFIX_TABLE}utilisateur, ${PREFIX_TABLE}timezone WHERE util_id=".$USER_SUBSTITUE." AND tzn_zone=util_timezone");
+    $DB_CX->DbQuery("SELECT tzn_gmt, tzn_date_ete, tzn_heure_ete, tzn_date_hiver, tzn_heure_hiver, util_format_heure FROM {$PREFIX_TABLE}utilisateur, {$PREFIX_TABLE}timezone WHERE util_id=".$USER_SUBSTITUE." AND tzn_zone=util_timezone");
     $tzUtilGmt = $DB_CX->DbResult(0,"tzn_gmt");
     $tzUtilDateEte = $DB_CX->DbResult(0,"tzn_date_ete");
     $tzUtilHeureEte = $DB_CX->DbResult(0,"tzn_heure_ete");
@@ -270,7 +270,7 @@ if (!$vu) {
   list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,mktime(0,0,0,$moisEnCours,$jourEnCours,$anneeEnCours));
 
   //Heure de debut et de fin en fonction des notes non affichees
-  $DB_CX->DbQuery("SELECT MIN($age_heure_debut), MAX($age_heure_fin), MAX(IF($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0,1,0)), MAX(IF($age_date='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin,1,0)) FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id=2".$whereCouleur);
+  $DB_CX->DbQuery("SELECT MIN($age_heure_debut), MAX($age_heure_fin), MAX(IF($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0,1,0)), MAX(IF($age_date='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin,1,0)) FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND age_aty_id=2".$whereCouleur);
   if ($DB_CX->DbResult(0,0)!=NULL) {
     $debutJournee = min($debutJournee,$DB_CX->DbResult(0,0));
     if (($debutJournee-floor($debutJournee)==0.25) || ($debutJournee-floor($debutJournee)==0.75))
@@ -288,7 +288,7 @@ if (!$vu) {
   $maxNote = 1;
   $tabIdNoteMultiple = array();
   for ($hCrt=$debutJournee;$hCrt<$finJournee;$hCrt=$hCrt+0.5) {
-    $DB_CX->DbQuery("SELECT DISTINCT(age_id) FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin>$hCrt)) AND ((($age_heure_debut<=".$hCrt." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND ($age_heure_fin>".$hCrt." OR $age_heure_debut>=$age_heure_fin)) OR (($age_heure_debut<=".($hCrt+0.25)." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND ($age_heure_fin>".($hCrt+0.25)." OR $age_heure_debut>=$age_heure_fin))) AND age_aty_id=2".$whereCouleur);
+    $DB_CX->DbQuery("SELECT DISTINCT(age_id) FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin>$hCrt)) AND ((($age_heure_debut<=".$hCrt." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND ($age_heure_fin>".$hCrt." OR $age_heure_debut>=$age_heure_fin)) OR (($age_heure_debut<=".($hCrt+0.25)." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0)) AND ($age_heure_fin>".($hCrt+0.25)." OR $age_heure_debut>=$age_heure_fin))) AND age_aty_id=2".$whereCouleur);
     if ($DB_CX->DbNumRows() > 1) {
       while ($enr = $DB_CX->DbNextRow()) {
         if (!in_array($enr['age_id'], $tabIdNoteMultiple))
@@ -316,7 +316,7 @@ if (!$vu) {
   $aGlobale = array();
 
   // Evenement(s) du jour (affiche(s) comme des notes globales)
-  $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$sd)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$sd)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+  $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$sd)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$sd)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
   while ($enr = $DB_CX->DbNextRow()) {
     // Couleur de l'evenement
     if (empty($enr['eve_couleur']))
@@ -327,7 +327,7 @@ if (!$vu) {
   }
 
   //Lecture des notes couvrant la totalite d'une journee
-  $DB_CX->DbQuery("SELECT age_heure_debut,age_heure_fin,age_ape_id,age_libelle,age_detail,age_util_id,age_prive,age_couleur,age_aty_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND age_date='".$dateCrt."' AND age_aty_id=3 AND util_id=age_util_id".$whereCouleur." ORDER BY age_heure_debut ASC");
+  $DB_CX->DbQuery("SELECT age_heure_debut,age_heure_fin,age_ape_id,age_libelle,age_detail,age_util_id,age_prive,age_couleur,age_aty_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND age_date='".$dateCrt."' AND age_aty_id=3 AND util_id=age_util_id".$whereCouleur." ORDER BY age_heure_debut ASC");
   while ($enr = $DB_CX->DbNextRow()) {
     //Formatage des informations sur la note
     getInfoNote($enr);
@@ -339,7 +339,7 @@ if (!$vu) {
   //Lecture des notes de la journee
   for ($hCrt=$debutJournee;$hCrt<$finJournee;$hCrt=$hCrt+0.5) {
     $iMat = ($hCrt-$debutJournee)*2;
-    $DB_CX->DbQuery("SELECT age_heure_debut,age_heure_fin,age_ape_id,age_libelle,age_detail,age_util_id,age_prive,age_couleur,age_aty_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,age_id,age_date,age_date_creation,age_date_modif FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $hCrt=0 AND $age_heure_fin!=0)) AND ($age_heure_debut=".$hCrt." OR $age_heure_debut=".($hCrt+0.25)." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $hCrt=0)) AND age_aty_id=2 AND util_id=age_util_id".$whereCouleur." ORDER BY age_date, age_heure_debut ASC");
+    $DB_CX->DbQuery("SELECT age_heure_debut,age_heure_fin,age_ape_id,age_libelle,age_detail,age_util_id,age_prive,age_couleur,age_aty_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,age_id,age_date,age_date_creation,age_date_modif FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ($age_date='".$dateCrt."' OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $hCrt=0 AND $age_heure_fin!=0)) AND ($age_heure_debut=".$hCrt." OR $age_heure_debut=".($hCrt+0.25)." OR ($age_dateAvant='".$dateCrt."' AND $age_heure_debut>=$age_heure_fin AND $hCrt=0)) AND age_aty_id=2 AND util_id=age_util_id".$whereCouleur." ORDER BY age_date, age_heure_debut ASC");
     while ($enr = $DB_CX->DbNextRow()) {
       //Decalage des notes en fonction du fuseau horaire
       list($enr['age_heure_debut'],$enr['age_heure_fin'],$enr['dateCreation'],$enr['dateModif']) = decaleNote($tzGmt,$tzDateEte,$tzHeureEte,$tzDateHiver,$tzHeureHiver,$dateCrt,$enr['age_date'],$enr['age_heure_debut'],$enr['age_heure_fin'],$enr['age_date_creation'],$enr['age_date_modif']);
@@ -440,7 +440,7 @@ elseif ($vu==_MENU_PLG_HEBDO) {
       $tzHiver = calculBasculeDST($tzDateHiver,date("Y",$leJour),$tzHeureHiver,$tzGmt,1);
       //Preparation au decalage horaire
       list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$leJour);
-      $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_detail,age_prive,age_couleur,age_util_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,age_date,age_date_creation,age_date_modif FROM ${PREFIX_TABLE}agenda LEFT JOIN ${PREFIX_TABLE}calepin ON cal_id=age_cal_id, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ((($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))".$whereCouleur.") OR (age_date LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$leJour)." AND age_aty_id=1)) AND util_id=age_util_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
+      $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_ape_id,age_detail,age_prive,age_couleur,age_util_id,age_lieu,CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact,age_date,age_date_creation,age_date_modif FROM {$PREFIX_TABLE}agenda LEFT JOIN {$PREFIX_TABLE}calepin ON cal_id=age_cal_id, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ((($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))".$whereCouleur.") OR (age_date LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$leJour)." AND age_aty_id=1)) AND util_id=age_util_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
       $ligneAnniv = $ligneNote = $premiereLettre = "";
       for ($j=0;$j<$DB_CX->DbNumRows();$j++) {
         $enr = $DB_CX->DbNextRow();
@@ -482,7 +482,7 @@ elseif ($vu==_MENU_PLG_HEBDO) {
       }
 
       // Evenement(s) du jour (affiche(s) comme des notes globales)
-      $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$leJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$leJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+      $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$leJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$leJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
       while ($enr = $DB_CX->DbNextRow()) {
         // Couleur de l'evenement
         if (empty($enr['eve_couleur']))
@@ -492,7 +492,7 @@ elseif ($vu==_MENU_PLG_HEBDO) {
       }
 
       // Anniversaire(s) du calepin (y compris les contacts partages)
-      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$leJour));
+      $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".date("m-d",$leJour)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$leJour));
       while ($enr = $DB_CX->DbNextRow()) {
         if (empty($premiereLettre))
           $premiereLettre = strtolower(substr($enr['nomContact'],0,1));
@@ -565,7 +565,7 @@ elseif ($vu==_MENU_PLG_MENSUEL) {
     }
     $ligneAnniv = $plageNote = "";
     // Evenement(s) du jour (affiche(s) comme des notes globales)
-    $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM ${PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$tsJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$tsJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
+    $DB_CX->DbQuery("SELECT DISTINCT eve_libelle, eve_couleur FROM {$PREFIX_TABLE}evenement WHERE DATE_FORMAT(eve_date_debut,'%Y%m%d')<='".date("Ymd",$tsJour)."' AND DATE_FORMAT(eve_date_fin,'%Y%m%d')>='".date("Ymd",$tsJour)."'".(($USER_SUBSTITUE==$idUser) ? " AND (eve_util_id=".$idUser." OR eve_partage='O')" : " AND eve_partage='O'"));
     while ($enr = $DB_CX->DbNextRow()) {
       // Couleur de l'evenement
       if (empty($enr['eve_couleur']))
@@ -574,7 +574,7 @@ elseif ($vu==_MENU_PLG_MENSUEL) {
       $plageNote .= "<DIV style=\"padding:1px;background-color:".$enr['eve_couleur'].";\">".trad("COMMUN_EVENEMENT")."&rsaquo;".$enr['eve_libelle']."</DIV>";
     }
     // Anniversaire(s) du calepin (y compris les contacts partages)
-    $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM ${PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$tsJour));
+    $DB_CX->DbQuery("SELECT CONCAT(".$FORMAT_NOM_CONTACT.") AS nomContact FROM {$PREFIX_TABLE}calepin WHERE (cal_util_id=".$USER_SUBSTITUE." OR cal_partage='O') AND cal_date_naissance LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(cal_date_naissance,'%Y%m%d')<=".date("Ymd",$tsJour));
     while ($enr = $DB_CX->DbNextRow())
       $ligneAnniv .= $enr['nomContact']."/";
     // Recalcul des bascules ete/hiver en tenant compte de l'annee affichee
@@ -582,7 +582,7 @@ elseif ($vu==_MENU_PLG_MENSUEL) {
     $tzHiver = calculBasculeDST($tzDateHiver,date("Y",$tsJour),$tzHeureHiver,$tzGmt,1);
     //Preparation au decalage horaire
     list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$tsJour);
-    $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_prive,age_couleur,age_util_id,age_lieu,age_date,age_date_creation,age_date_modif FROM ${PREFIX_TABLE}agenda, ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ((($age_date='".$leJour."' OR ($age_dateAvant='".$leJour."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))".$whereCouleur.") OR (age_date LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$tsJour)." AND age_aty_id=1)) AND util_id=age_util_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
+    $DB_CX->DbQuery("SELECT age_aty_id,age_heure_debut,age_heure_fin,age_libelle,age_prive,age_couleur,age_util_id,age_lieu,age_date,age_date_creation,age_date_modif FROM {$PREFIX_TABLE}agenda, {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}utilisateur WHERE age_id=aco_age_id AND aco_util_id=".$USER_SUBSTITUE." AND ((($age_date='".$leJour."' OR ($age_dateAvant='".$leJour."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))".$whereCouleur.") OR (age_date LIKE '%".substr($leJour,4)."' AND DATE_FORMAT(age_date,'%Y%m%d')<=".date("Ymd",$tsJour)." AND age_aty_id=1)) AND util_id=age_util_id ORDER BY age_aty_id DESC, age_date, age_heure_debut ASC");
     if ($DB_CX->DbNumRows()) {
       while ($enr = $DB_CX->DbNextRow()) {
         //Decalage des notes en fonction du fuseau horaire
@@ -693,7 +693,7 @@ elseif ($vu==_MENU_DISP_HEBDO) {
   <H4 align=\"center\">".sprintf(trad("IMPRESSION_AGENDA_DE"), prefixeMot(strtolower(substr($nomUtil,0,1)),trad("COMMUN_PREFIXE_D"),trad("COMMUN_PREFIXE_DE")).$nomUtil)."<BR>".sprintf(trad("IMPRESSION_SEMAINE_DU"), date("W",$aVar[4]), $premierJourSemaine." ".strtolower($tabMois[$moisEnCours+0])." ".$anneeEnCours, date("d",$aVar[5])." ".strtolower($tabMois[date("n",$aVar[5])])." ".date("Y",$aVar[5]))."</H4>\n");
   $sOutput .= "  <P align=\"center\"><B><U>".trad("IMPRESSION_DISPO_TITRE")."</U> :</B><BR>";
   // Info sur les utilisateurs selectionnes
-  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_debut_journee, util_fin_journee, util_semaine_type FROM ${PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY nomUtil");
+  $DB_CX->DbQuery("SELECT util_id, CONCAT(".$FORMAT_NOM_UTIL.") AS nomUtil, util_debut_journee, util_fin_journee, util_semaine_type FROM {$PREFIX_TABLE}utilisateur WHERE util_id IN (".$sChoix.") ORDER BY nomUtil");
   // Tableau contenant les id => horaires (case 1 et 2) et semaine type de l'utilisateur (case 3)
   $aUtil = array();
   //Compteur pour savoir combien d'utilisateur ont ete selectionnes
@@ -726,7 +726,7 @@ elseif ($vu==_MENU_DISP_HEBDO) {
     $sOutput .= "    <TD class=\"libre\">";
 
     // On commence par positionner les indisponibilites des utilisateurs en fonction de leur horaires et de leur semaine type
-    while (list($sUtilID,$aInfoUtil)=each($aUtil)) {
+    foreach ($aUtil as $sUtilID => $aInfoUtil) {
       // Semaine type
       if (substr($aInfoUtil[2],date("w",$leJour),1)=="0") {
       // Journee hors profil semaine type => indisponibilite toute la journee
@@ -753,7 +753,7 @@ elseif ($vu==_MENU_DISP_HEBDO) {
     list($age_date,$age_dateAvant,$age_heure_debut,$age_heure_fin) = prepareDecalageH($tzGmt,$tzEte,$tzHiver,$leJour);
     // Recuperation des horaires des notes dans la table agenda_concerne
     $sql  = "SELECT age_heure_debut, age_heure_fin, age_aty_id, age_date, age_date_creation, age_date_modif";
-    $sql .= " FROM ${PREFIX_TABLE}agenda_concerne, ${PREFIX_TABLE}agenda";
+    $sql .= " FROM {$PREFIX_TABLE}agenda_concerne, {$PREFIX_TABLE}agenda";
     $sql .= " WHERE aco_util_id IN (".$sChoix.")";
     $sql .= "  AND age_id=aco_age_id";
     $sql .= "  AND ($age_date='".date("Y-m-d",$leJour)."' OR ($age_dateAvant='".date("Y-m-d",$leJour)."' AND $age_heure_debut>=$age_heure_fin AND $age_heure_fin!=0 AND age_aty_id=2))";
@@ -891,7 +891,7 @@ elseif ($vu==_MENU_CONTACT) {
       $strOutput .= "  </TR>\n";
     }
   } else { // Affichage de l'integralite des contacts au format porte-cartes format A4 - Portrait - 80 lignes - 2 colones
-    $DB_CX->DbQuery("SELECT ${PREFIX_TABLE}calepin.*, cgr_id, cgr_nom FROM ${PREFIX_TABLE}calepin, ${PREFIX_TABLE}calepin_appartient, ${PREFIX_TABLE}calepin_groupe WHERE (cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) OR (cal_util_id!=".$idUser." AND cal_partage='O' AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
+    $DB_CX->DbQuery("SELECT {$PREFIX_TABLE}calepin.*, cgr_id, cgr_nom FROM {$PREFIX_TABLE}calepin, {$PREFIX_TABLE}calepin_appartient, {$PREFIX_TABLE}calepin_groupe WHERE (cal_util_id=".$idUser." AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) OR (cal_util_id!=".$idUser." AND cal_partage='O' AND cap_cal_id=cal_id AND cgr_id=cap_cgr_id) ORDER BY cal_nom ASC, cal_prenom ASC, cal_societe ASC");
     $lettreCrt = "";              // Lettre de l'alphabet en cours de traitement
     $nbCol   = 0;                 // Flag (0,1) pour savoir dans quelle colonne on se situe (gauche ou droite)
     $newCol  = false;             // Flag pour indiquer si on doit changer de colonne ou de page

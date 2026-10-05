@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: concepts.inc.php,v 1.3 2019-06-03 07:04:57 btafforeau Exp $
+// $Id: concepts.inc.php,v 1.4 2024/03/22 15:31:05 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -18,7 +18,7 @@ $tpl = $aut_concepts_menu;
 $op = new ontology_parser("$class_path/rdf/skos_pmb.rdf");
 $sh = new skos_handler($op);
 
-$page+=0;
+$page = intval($page);
 if(!$page) $page=1;	
 $limit=$nb_per_page_gestion;
 

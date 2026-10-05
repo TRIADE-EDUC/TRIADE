@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../../../../../includes/XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur C3rb
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: fr_FR.xml,v 1.2.4.2 2025/03/25 10:21:10 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="c3rb_authentication_source">Source d'authentification C3RB</entry>
+	<entry code="c3rb_authentication_source_error">Vous devez définir une source d'authentification C3RB pour continuer</entry>
+</XMLlist>

@@ -1,0 +1,271 @@
+{% extends 'gabarit.html' %}
+
+<!-- $Id: author.html,v 1.3 2021/10/08 08:36:11 qvarin Exp $ -->
+
+{% block header %}
+	<h3><span>{{ authority.display }}</span></h3>
+{% endblock %}
+
+{% block aut_see %}
+	<div class="authorlevel2">
+		{{block.super}}
+	</div>
+{% endblock %}
+
+{% block title %}
+{% endblock %} 
+
+{% block details %}
+	{% if authority.author_comment %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.comment }} :</b>
+			</div>
+			<div class='aut_comment aut_display_cell'>{{authority.author_comment | nl2br }}</div>
+		</div>
+	{% endif %}
+	{% if authority.author_see %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.author_see }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				<span class='number_results'><a href="./index.php?lvl=author_see&id={{ authority.see }}">{{authority.author_see}}</a></span>
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.reverse_authors_see %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.reverse_authors_see }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				{% for reverse_author_see in authority.reverse_authors_see %}
+					{% if !loop.first %}<br/>{% endif %}
+					<span class='number_results'><a href="./index.php?lvl=author_see&id={{ reverse_author_see.id }}">{{ reverse_author_see.display }}</a></span>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block enrichment %}
+	{% if authority.enrichment %}
+	<div class='aut_enrichment'>
+	
+		<div class='row'>
+			<div id='enrichment_depiction' style='float:right'>
+				{% if authority.enrichment.depictions.depiction_dbpedia %}
+					<img src='{{authority.enrichment.depictions.depiction_dbpedia}}' style="max-width:160px; max-height:180px"/>
+				{% else %}
+					{% if authority.enrichment.depictions.depictions_bnf %}
+						<img src='{{authority.enrichment.depictions.depictions_bnf.0}}' style="max-width:160px; max-height:180px"/>
+					{% endif %}
+				{% endif %}
+			</div>
+		
+			<div id='enrichment_description'>
+				<table >
+					<tr>
+						<td class="enrichment_tab_col">Naissance&nbsp;:</td>
+						<td>
+							{{authority.enrichment.bio.birthdate}}
+							</br>
+							{{authority.enrichment.bio.birthplace}}
+						</td>
+					</tr>
+					
+					{% if authority.enrichment.bio.deathdate %}
+					<tr>
+						<td class="enrichment_tab_col">Décès&nbsp;:</td>
+						<td>
+							{{authority.enrichment.bio.deathdate}}
+							</br>
+							{{authority.enrichment.bio.deathplace}}
+						</td>
+					</tr>
+					{% endif %}
+					
+					{% if authority.enrichment.bio.biography_bnf %}
+					<tr>
+						<td class="enrichment_tab_col">Activité (BnF)&nbsp;:</td>
+						<td>{{ authority.enrichment.bio.biography_bnf}}</td>
+					</tr>
+					{% endif %}
+					
+					{% if authority.enrichment.genre %}
+					<tr>
+						<td class="enrichment_tab_col">Genres attachés à l'auteur&nbsp;:</td>
+						{% for genre in authority.enrichment.genre %}
+							<td>{{genre.title}}</td>
+						{% endfor %}
+					</tr>
+					{% endif %}
+					
+					{% if authority.enrichment.movement %}
+					<tr>
+						<td class="enrichment_tab_col">Mouvements attachés à l'auteur&nbsp;:</td>
+						<td>
+							{% for movement in authority.enrichment.movement %}
+								{% if !loop.first %}<br/>{% endif %}{{movement.title}}
+							{% endfor %}
+						</td>
+					</tr>
+					{% endif %}
+					
+				</table>
+			</div>
+			<div class='row'></div>
+		</div>
+		
+		<!-- Détails de l'auteur (data.bnf et dbpedia) -->
+		<div id="enrichment_accordion" style="display:none">
+			{% if authority.enrichment.genre %}
+			<div id="enrichment_genre">
+			<h3>Auteur(s) de même genre</h3>
+			<table>
+				{% for genres in authority.enrichment.genre %}
+				<tr>
+					<td class="enrichment_tab_col">{{genres.title}}&nbsp;:</td>
+						<td>
+							{% for aauthor in genres.authors %}
+							{% if aauthor.pmb_id %} 
+								<a href="index.php?lvl=author_see&amp;id={{aauthor.pmb_id}}">{{aauthor.name}}</a>{%if !loop.last %},{% endif %}
+							{% endif %}
+							{% endfor %}
+						</td>
+				</tr>
+				{% endfor %}
+			</table>
+			</div>
+			{% endif %}
+			
+			
+			{% if authority.enrichment.movement %}
+			<div id="enrichment_movement">
+			<h3>Auteur(s) de même mouvement</h3>
+			<table>
+				{% for movements in authority.enrichment.movement %}
+				<tr>
+					<td class="enrichment_tab_col">{{movements.title}}&nbsp;:</td>
+						<td>
+							{% for mauthor in movements.authors %}
+							{% if mauthor.pmb_id %} 
+								<a href="index.php?lvl=author_see&amp;id={{mauthor.pmb_id}}">{{mauthor.name}}</a>{%if !loop.last %},{% endif %}
+							{% endif %}
+							{% endfor %}
+						</td>
+				</tr>
+				{% endfor %}
+			</table>
+			</div>
+			{% endif %}
+			
+			<div id="enrichment_biography">
+			{% if authority.enrichment.bio.biography_dbpedia %}
+				<h3>Biographie (DBpedia)</h3>
+				<p>{{ authority.enrichment.bio.biography_dbpedia}}</p>
+			{% endif %}
+			</div>
+			<div id="enrichment_vignettes">
+			{% if authority.enrichment.depictions.depictions_bnf %}
+				<h3>Vignettes (BnF)</h3>
+				<div class='center'>
+					<div style='overflow-x:scroll;overflow-y:auto;width:100%;'>
+						<table style='width:100%'>
+							<tr>
+								{% for depiction in authority.enrichment.depictions.depictions_bnf %}
+								<td class='center'><img src='{{depiction}}'/></td>
+							{% endfor %}
+							</tr>
+						</table>
+					</div>
+				</div>
+			{% endif %}
+			</div>
+			<div id="enrichment_biblio">
+			{% if authority.enrichment.biblio %}
+				<h3>Oeuvre(s) principale(s) (BNF)</h3>
+				<div class='center'>
+					<div style='overflow-x:scroll;overflow-y:auto;width:100%;'>
+						<table>
+							<tr>
+							{% for bibli in authority.enrichment.biblio %}
+							<td style='background:#DDDDDD;'>{% if bibli.date %}{{bibli.date}}{% else %}&nbsp;{% endif %}</td>
+							{% endfor %}
+							</tr>
+							<tr>
+								{% for bibli in authority.enrichment.biblio %}
+									<td {% if loop.odd %}style='background:#EEEEEE;'{% endif %}>
+										{% if loop.odd %}
+											{% if bibli.url %}
+												{% if bibli.notice_id %}
+													<a href='index.php?lvl=notice_display&id={{bibli.notice_id}}'><img src='{{bibli.url}}' style='max-height:50px'/></a>
+												{% else %}
+													<img src='{{bibli.url}}' style='max-height:50px'/>
+												{% endif %}
+											{% else %}
+												&nbsp;
+											{% endif %}
+											{% if bibli.gallica %}
+												<a href='{{bibli.gallica}}' target='_blank'><img width='50px' src='http://gallica.bnf.fr/images/dynamic/perso/logo_gallica.png' /></a>
+											{% endif %}
+											<br />
+											{% if bibli.notice_id %}
+													<a href='index.php?lvl=notice_display&id={{bibli.notice_id}}'>{{bibli.title}}</a>
+											{% else %}
+													{{bibli.title}}
+											{% endif %}
+										{% else %}&nbsp;{% endif %}
+									</td>
+								{% endfor %}
+							</tr>
+							<tr>
+								{% for bibli in authority.enrichment.biblio %}
+									<td {% if loop.even %}style='background:#EEEEEE;'{% endif %}>
+									{% if loop.even %}
+										{% if bibli.url %}
+												{% if bibli.notice_id %}
+													<a href='index.php?lvl=notice_display&id={{bibli.notice_id}}'><img src='{{bibli.url}}' style='max-height:50px'/></a>
+												{% else %}
+													<img src='{{bibli.url}}' style='max-height:50px'/>
+												{% endif %}
+											{% else %}
+												&nbsp;
+											{% endif %}
+											{% if bibli.gallica %}
+												<a href='{{bibli.gallica}}' target='_blank'><img width='50px' src='http://gallica.bnf.fr/images/dynamic/perso/logo_gallica.png' /></a>
+											{% endif %}
+											<br />
+											{% if bibli.notice_id %}
+													<a href='index.php?lvl=notice_display&id={{bibli.notice_id}}'>{{bibli.title}}</a>
+											{% else %}
+													{{bibli.title}}
+											{% endif %}
+										{% else %}&nbsp;{% endif %}
+								  	</td>
+								{% endfor %}
+							</tr>
+						</table>
+					</div>
+				</div>
+			{% endif %}
+			</div>
+			<div id="enrichment_links">
+			{% if authority.enrichment.links.uri_dbpedia %}
+			<h3>Liens</h3>					
+			<ul>
+				<li><a href='{{authority.enrichment.links.uri_bnf}}'>{{authority.enrichment.links.uri_bnf}}</a></li>
+				<li><a href='{{authority.enrichment.links.uri_dbpedia}}'>{{authority.enrichment.links.uri_dbpedia}}</a></li>
+			</ul>
+			{% else %}
+			<h3>Lien</h3>
+			<ul>
+				<li><a href='{{authority.enrichment.links.uri_bnf}}'>{{authority.enrichment.links.uri_bnf}}</a></li>
+			</ul>
+			{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+{% endblock %} 

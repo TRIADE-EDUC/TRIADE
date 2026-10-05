@@ -1,43 +1,65 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: visionneuse.tpl.php,v 1.18 2017-07-21 13:05:58 vtouchard Exp $
+// $Id: visionneuse.tpl.php,v 1.20.2.1.2.1 2025/02/27 14:05:54 dgoron Exp $
 
-$visionneuse ="
-	<div style='overflow:hidden;position:absolute;top:0%;left:0%;text-align:center;height:100%;width:100%'>
-		<div id='visio_current_object' style='overflow-y:auto;'>
-			<div id='visio_current_titre'><h1>!!titre!!</h1></div>
-			!!download!!
-			!!explnum_licence_picto!!
-			<div id='visio_current_doc'>!!doc!!</div>
-			<div id='visio_current_description'>!!desc!!</div>
-		</div>
-		<div id='visio_navigator' >
-			<form method='POST' action='' name='docnumForm' id='docnumForm'>
-				!!hiddenFields!!
-				<input type='hidden' id='position' name='position' value='!!position!!' />
-				<table style='text-align:center;width:100%'>
-					<tr>
-						<td style='width:45%;text-align:right;'>
-							<img src='".$visionneuse_path."/images/prev.gif' id='previous' style='display:!!previous_style!!' onclick='visionneuseNav(\"previous\");' />
-						</td>
-						<td style='width:10%;'>!!current_position!!</td>
-						<td style='width:45%;text-align:left;'>
-							<img src='".$visionneuse_path."/images/next.gif'  id='next' style='display:!!next_style!!' onclick='visionneuseNav(\"next\");'/>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	</div>
-	<div class='close'><a href='#' onclick='close_visonneuse();return false;'>!!close!!</a></div>
-	<div class='linkFullscreen'><a href='#' id='linkFullscreen' onclick='open_fullscreen();if(typeof(resizeDivConteneur) != \"undefined\"){resizeDivConteneur();}return false;'>!!fullscreen!!</a></div>
-	<script type='text/javascript'>
-		document.body.style.background = 'none';
+global $opac_rgaa_active;
 
+
+if($opac_rgaa_active){
+	$visionneuse = "
+		<div id='visio_container'>
+			<div id='visio-header'>
+				<div class='close'>
+					<button type='button' onclick='close_visonneuse();return false;'>!!close!!</button>
+				</div>
+				<div class='linkFullscreen'>
+					<button type='button' id='linkFullscreen' onclick='open_fullscreen();if(typeof(resizeDivConteneur) != \"undefined\"){resizeDivConteneur();}return false;'>!!fullscreen!!</button>
+				</div>
+			</div>
+			<div id='visio_current_object' style='overflow-y:auto;'>
+				<div id='visio_current_titre'><h1 id='visio_main_title'>!!titre!!</h1></div>
+				!!download!!
+				!!explnum_licence_picto!!
+				<div id='visio_current_doc'>!!doc!!</div>
+				<h2>!!record_section_title!!</h2>
+				<div id='visio_current_description'>!!desc!!</div>
+			</div>
+			<div id='visio_navigator'>
+				!!visio_navigator!!
+			</div>
+		</div>";
+}else{
+	$visionneuse ="
+		<div style='overflow:hidden;position:absolute;top:0%;left:0%;text-align:center;height:100%;width:100%'>
+			<div id='visio_current_object' style='overflow-y:auto;'>
+				<div id='visio_current_titre'><h1>!!titre!!</h1></div>
+				!!download!!
+				!!explnum_licence_picto!!
+				<div id='visio_current_doc'>!!doc!!</div>
+				<div id='visio_current_description'>!!desc!!</div>
+			</div>
+			<div id='visio_navigator' >
+				!!visio_navigator!!
+			</div>
+		</div>
+		<div class='close'><a href='#' onclick='close_visonneuse();return false;'>!!close!!</a></div>
+		<div class='linkFullscreen'><a href='#' id='linkFullscreen' onclick='open_fullscreen();if(typeof(resizeDivConteneur) != \"undefined\"){resizeDivConteneur();}return false;'>!!fullscreen!!</a></div>
+	";
+}
+
+$visionneuse .="
+	<script type='text/javascript' src='./includes/javascript/select.js'></script>
+	<script>
 		function visionneuseNav(where){
 			switch(where){
+				case 'first' :
+					document.forms['docnumForm'].position.value= 0;
+					break;
+				case 'last' :
+					document.forms['docnumForm'].position.value= !!max_pos!!;
+					break;
 				case 'next' :
 					if ((document.forms['docnumForm'].position.value*1+1)> !!max_pos!!){
 						document.forms['docnumForm'].position.value= !!max_pos!!;
@@ -127,6 +149,13 @@ $visionneuse ="
 				return window.parent.innerWidth;
 			}
 		}
+
+		".(!empty($opac_rgaa_active) ? "
+            if (typeof focus_trap == 'function') {
+                focus_trap(document.getElementById('visio_container'));
+            }
+        
+        " : "")."
 	</script>
 ";
 ?>

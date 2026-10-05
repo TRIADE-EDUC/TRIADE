@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_cataloging_schemes_controler.class.php,v 1.3 2018-02-02 10:10:43 tsamson Exp $
+// $Id: frbr_cataloging_schemes_controler.class.php,v 1.3.16.1 2025/02/12 12:34:07 dbellamy Exp $
 if (stristr($_SERVER ['REQUEST_URI'], ".class.php"))
 	die("no access");
 
@@ -10,16 +10,16 @@ require_once($class_path.'/frbr/cataloging/frbr_cataloging_schemes.class.php');
 require_once($class_path.'/frbr/cataloging/frbr_cataloging_scheme.class.php');
 
 class frbr_cataloging_schemes_controler {
-	
+
 	/**
-	 * 
+	 *
 	 * @return string contenu html
 	 */
 	public function proceed() {
 		global $pmb_url_base, $action, $scheme_id;
 
-		$scheme_id = $scheme_id*1;
-		
+		$scheme_id = intval($scheme_id);
+
 		switch ($action) {
 			case 'edit' :
 				$return = $this->proceed_edit($scheme_id);
@@ -42,27 +42,27 @@ class frbr_cataloging_schemes_controler {
 		}
 		return $return;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return string liste des schemes de catalogage
 	 */
 	protected function proceed_list() {
 		$schemes = new frbr_cataloging_schemes();
 		return $schemes->get_schemes_list();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer identifiant du formulaire a editer
 	 */
 	protected function proceed_edit($id) {
 		$scheme = new frbr_cataloging_scheme($id);
 		return $scheme->get_form();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer identifiant du formulaire a sauvegarder
 	 */
 	protected function proceed_save($id) {
@@ -70,27 +70,27 @@ class frbr_cataloging_schemes_controler {
 		$scheme->set_values_from_form();
 		return $scheme->save();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer identifiant du formulaire a supprimer
 	 */
 	protected function proceed_delete($id) {
 		$scheme = new frbr_cataloging_scheme($id);
 		$scheme->delete();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer identifiant du formulaire a sauvegarder
 	 */
 	protected function proceed_select() {
 		$schemes = new frbr_cataloging_schemes();
 		return $schemes->get_schemes_select();
 	}
-	
+
 	/**
-	 * fonction qui retourne le message associÃ© au type d'entite
+	 * fonction qui retourne le message associé au type d'entite
 	 * @param string $type
 	 * @return string message de l'entite
 	 */

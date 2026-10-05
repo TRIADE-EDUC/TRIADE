@@ -1,0 +1,97 @@
+<!-- $Id: expl_table.tpl.html,v 1.3.2.1 2025/01/10 09:02:53 jparis Exp $ -->
+<table class='exemplaires' style='width:100%; border-spacing:2px'>
+	{% if global.opac_rgaa_active %}
+	<caption class='visually-hidden'>{{ msg.list_opac_items_ui_dataset_title }}</caption>
+	{% endif %}
+	{% setglobalvalue header_found_p_perso "false" %}
+	<tr class='thead'>
+		{% for column in expls_datas.columns %}
+			{% if column.column | substr_count "#" %}
+				{% if !memo_p_perso_expl.no_special_fields %}
+					<th class='expl_header_{{column.name}}' role='columnheader'>{{ column.title }}</th>
+				{% endif %}
+			{% else %}
+				<th class='expl_header_{{ column.column }}' role='columnheader'>{{ column.msg }}</th>
+			{% endif %}
+			
+			{% for expl in expls_datas.expls %}
+				{% if !memo_p_perso_expl.no_special_fields %}
+					{% for p_perso in expl.expl_p_perso.FIELDS %}
+						{% if p_perso.OPAC_SHOW and p_perso.NOT_IN_COLUMNS == "true" %}
+							{% if header_found_p_perso == "false" %}
+								<th class='expl_header_tdoc_libelle' role='columnheader'>{{ p_perso.TITRE_CLEAN }}</th>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+				{% setglobalvalue header_found_p_perso "true" %}
+			{% endfor %}
+		{% endfor %}
+		<th class='expl_header_statut' role='columnheader'>{{ msg.statut }}</th>
+	</tr>
+	{% if expls_datas.expls | length; == 0 and global.opac_show_empty_items_block %}
+		<tr class=even>
+			<td colspan='{{ expls_datas.nb_colspan }}'>{{ msg.no_expl }}</td>
+		</tr>
+	{% else %}
+		{% for expl in expls_datas.expls %}
+			<tr class='{{ expl.parity }} item_expl {{ expl.class_statut }}'>
+				{% for column in expls_datas.columns %}
+					{% setvalue locked "false" %}
+					{% if column.column | substr_count "#" %}
+						{% if !memo_p_perso_expl.no_special_fields %}
+							<td class='{{ column.name }}' data-column-name='{{ column.title }}'>{{ column.entry }}</td>
+						{% endif %}
+						{% setvalue locked "true" %}
+					{% endif %}
+					{% if column.column == "location_libelle" and expl.num_infopage %}
+						<td class='{{ column.column }}' data-column-name='{{ column.msg }}'>
+							<a href='{{ env_vars.opac_url }}index.php?lvl=infopages&pagesid={{ expl.num_infopage }}&location={{ expl.expl_location }}{{expl.param_surloc}}' title='{{ msg.location_more_info }}'>
+								{{ expl.location_libelle }}
+							</a>
+						</td>
+						{% setvalue locked "true" %}
+					{% endif %}
+					{% if column.column == "expl_comment" %}
+						<td class='{{ column.column }}' data-column-name='{{ column.msg }}'>
+							{{ expl.expl_comment | nl2br }}
+						</td>
+						{% setvalue locked "true" %}
+					{% endif %}
+					{% if column.column == "expl_cb" %}
+						<td class='{{ column.column }}' data-column-name='{{ column.msg }}'>
+							{{ expl.expl_cb }}
+						</td>
+						{% setvalue locked "true" %}
+					{% endif %}
+					{% if column.column == "section_libelle" %}
+						<td id='expl_{{ expl.expl_id }}' class='{{ column.column }}' data-column-name='{{ column.msg }}'>
+							{% if expl.section_libelle_opac %}
+								{{ expl.section_libelle_opac }}
+							{% else %}
+								{{ expl.section_libelle}}
+							{% endif %}
+						</td>
+						{% setvalue locked "true" %}
+					{% endif %}
+					{% if locked == "false" %}
+						<td class='{{ column.column }}' data-column-name='{{ column.msg }}'>{{ expl | getItem column.column }}</td>
+					{% endif %}
+				{% endfor %}
+				<td class='expl_situation' data-column-name='{{ msg.statut }}'>{{ expl.expl_situation }}</td>
+
+				{% if !memo_p_perso_expl.no_special_fields %}
+					{% for p_perso in expl.expl_p_perso.FIELDS %}
+						{% if p_perso.OPAC_SHOW and p_perso.NOT_IN_COLUMNS == "true" %}
+							{% if p_perso.AFF != '' %}
+								<td class='p_perso' data-column-name='{{ p_perso.TITRE_CLEAN }}'>{{ p_perso.AFF }}</td>
+							{% else %}
+								<td class='p_perso' data-column-name='{{ p_perso.TITRE_CLEAN }}'>&nbsp;</td>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</tr>
+		{% endfor %}
+	{% endif %}
+</table>

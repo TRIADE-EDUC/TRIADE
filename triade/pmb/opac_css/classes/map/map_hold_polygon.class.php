@@ -1,21 +1,20 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_hold_polygon.class.php,v 1.4 2019-02-26 15:58:50 tsamson Exp $
+// $Id: map_hold_polygon.class.php,v 1.5 2022/04/20 07:52:39 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
-require_once($class_path."/map/map_hold.class.php");
 
+global $class_path;
+require_once($class_path."/map/map_hold.class.php");
 
 /**
  * class map_hold_polygon
  * 
  */
 
-
-
-//TODO, la prÃ©sence d'un deuxiÃ¨me polygone n'est un autre mais un trou dans le premier
+//TODO, la présence d'un deuxième polygone n'est un autre mais un trou dans le premier
 class map_hold_polygon extends map_hold {
 
 	/** Aggregations: */
@@ -57,7 +56,7 @@ class map_hold_polygon extends map_hold {
   					$infos =array();
   					$coord = $coords[$i];
   					$infos = explode(" ",$coord);
-  					//on ne met pas la derniÃ¨re coordonnÃ©e, c'est la mÃªme que la 1ere
+  					//on ne met pas la dernière coordonnée, c'est la même que la 1ere
   					if (0 == $i || $coords[0] != $coords[$i]) {
   						$coords_polygon[] = new map_coord($infos[0],$infos[1]);
   					}
@@ -72,7 +71,7 @@ class map_hold_polygon extends map_hold {
   				$infos =array();
   				$coord = $coords[$i];
   				$infos = explode(" ",$coord);
-  				//on ne met pas la derniÃ¨re coordonnÃ©e, c'est la mÃªme que la 1ere
+  				//on ne met pas la dernière coordonnée, c'est la même que la 1ere
   				if (0 == $i || $coords[0] != $coords[$i]) {
   					$this->coords[] = new map_coord($infos[0],$infos[1]);
   				}
@@ -82,23 +81,35 @@ class map_hold_polygon extends map_hold {
   	}
   	
   	protected function build_transcription(){
-  		$this->transcription="(";
-  		if($this->coords[0]->get_decimal_long() >=0 ) $this->transcription.="E ";
-  		else $this->transcription.="W ";
-  		$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[0]->get_decimal_long());
-  		$this->transcription.=" - ";
-  		if($this->coords[1]->get_decimal_long() >=0 ) $this->transcription.="E ";
-  		else $this->transcription.="W ";
-  		$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[1]->get_decimal_long());
-  		$this->transcription.=" / ";
-  		if($this->coords[2]->get_decimal_lat() >=0 ) $this->transcription.="N ";
-  		else $this->transcription.="S ";
-  		$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[2]->get_decimal_lat());
-  		$this->transcription.=" - ";
-  		if($this->coords[0]->get_decimal_lat() >=0 ) $this->transcription.="N ";
-  		else $this->transcription.="S ";
-  		$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[0]->get_decimal_lat());
-  		$this->transcription.=")";
+  		if ($this->multiple) {
+  			//A traiter plus tard si besoin
+  		} else {
+  			$this->transcription="(";
+  			if(!empty($this->coords[0]) && $this->coords[0]->get_decimal_long() >= 0) $this->transcription.="E ";
+  			else $this->transcription.="W ";
+  			if(!empty($this->coords[0])) {
+  				$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[0]->get_decimal_long());
+  			}
+  			$this->transcription.=" - ";
+  			if(!empty($this->coords[1]) && $this->coords[1]->get_decimal_long() >= 0) $this->transcription.="E ";
+  			else $this->transcription.="W ";
+  			if(!empty($this->coords[1])) {
+  				$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[1]->get_decimal_long());
+  			}
+  			$this->transcription.=" / ";
+  			if(!empty($this->coords[2]) && $this->coords[2]->get_decimal_lat() >= 0) $this->transcription.="N ";
+  			else $this->transcription.="S ";
+  			if(!empty($this->coords[2])) {
+  				$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[2]->get_decimal_lat());
+  			}
+  			$this->transcription.=" - ";
+  			if(!empty($this->coords[0]) && $this->coords[0]->get_decimal_lat() >= 0) $this->transcription.="N ";
+  			else $this->transcription.="S ";
+  			if(!empty($this->coords[0])) {
+  				$this->transcription.=map_coord::convert_decimal_to_sexagesimal($this->coords[0]->get_decimal_lat());
+  			}
+  			$this->transcription.=")";
+  		}
   	}
  	
 	protected function build_wkt(){

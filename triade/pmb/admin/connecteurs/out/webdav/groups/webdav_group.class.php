@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: webdav_group.class.php,v 1.2 2017-11-22 11:07:35 dgoron Exp $
+// $Id: webdav_group.class.php,v 1.4 2020/11/25 11:07:50 arenou Exp $
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 
@@ -31,11 +31,11 @@ class webdav_group {
 	protected function get_collections_tree(){
 		global $charset;
 		global $base_path;
-		if(!$this->config['tree']){
+		if(empty($this->config['tree'])){
 			$this->config['tree'] = array();
 		}
 		
-		$result.="<div id='collection_container'>
+		$result="<div id='collection_container'>
 					<div class='row'>
 						<label for='tree'>".htmlentities($this->msg['webdav_tree'],ENT_QUOTES,$charset)."</label>
 					</div>
@@ -51,7 +51,7 @@ class webdav_group {
 		foreach($this->config['tree'] as $pos => $elem){
 			$result.="
 						<tr id='tree_elem_tr".$pos."'>
-							<td recept='yes' recepttype='tree_elem' highlight='tree_elem_show_recept' downlight='tree_elem_hide_recept' id='tree_elem_td".$pos."' draggable='yes' callback_after='move_tree_elem' dragtype='tree_elem' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='".htmlentities($group_collection[$elem], ENT_QUOTES, $charset)."'>
+							<td recept='yes' recepttype='tree_elem' highlight='tree_elem_show_recept' downlight='tree_elem_hide_recept' id='tree_elem_td".$pos."' draggable='yes' callback_after='move_tree_elem' dragtype='tree_elem' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext=''>
 								<input type='hidden' name='tree[]' value='".$elem."' />
 										<img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle'/>".htmlentities($this->collections[$elem], ENT_QUOTES, $charset)."</td>
 							<td onclick='tree_elem_delete(\"tree_elem_tr".$pos."\");'><img src=\"".get_url_icon('trash.png')."\" /></td>

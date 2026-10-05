@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: skos_view_concept.class.php,v 1.11 2019-04-19 09:40:05 ccraig Exp $
+// $Id: skos_view_concept.class.php,v 1.13 2020/06/02 10:12:08 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -19,8 +19,8 @@ class skos_view_concept {
 	
 	/**
 	 * Retourne l'affichage d'un concept
-	 * @param array $datas DonnÃ©es
-	 * @param string $template Nom du template Ã  utiliser
+	 * @param array $datas Données
+	 * @param string $template Nom du template à utiliser
 	 * @return string
 	 */
 	static protected function render($datas, $template) {
@@ -29,7 +29,7 @@ class skos_view_concept {
 	}
 	
 	/**
-	 * Retourne la gÃ©nÃ©ration d'un concept avec un lien vers chaque Ã©lÃ©ment de sa composition s'il s'agit d'un concept composÃ©
+	 * Retourne la génération d'un concept avec un lien vers chaque élément de sa composition s'il s'agit d'un concept composé
 	 * @param skos_concept $concept
 	 * @return string
 	 */
@@ -55,21 +55,27 @@ class skos_view_concept {
 	}
 	
 	/**
-	 * Retourne la gÃ©nÃ©ration d'un concept classique
+	 * Retourne la génération d'un concept classique
 	 * @param skos_concept $concept
 	 * @return string
 	 */
 	static public function get_concept_in_list($concept) {
-
+	    global $use_opac_url_base, $opac_url_base;
+	    
+	    if($use_opac_url_base) {
+	        $link = $opac_url_base."index.php?lvl=concept_see&id=".$concept->get_id();
+	    } else {
+	        $link = "./autorites.php?categ=see&sub=concept&id=".$concept->get_id();
+	    }
 		$datas = array(
 			'label' => $concept->get_display_label(),
- 			'link' =>  "./autorites.php?categ=see&sub=concept&id=".$concept->get_id()
+ 			'link' => $link 
 		);
 		return self::render($datas, "skos_view_concept_concept_in_list");
 	}
 
 	/**
-	 * Met en forme le libellÃ© d'un concept
+	 * Met en forme le libellé d'un concept
 	 * @param skos_concept $concept
 	 * @return string
 	 */
@@ -81,7 +87,7 @@ class skos_view_concept {
 	}
 	
 	/**
-	 * Retourne le libellÃ© d'un concept sans mise en forme
+	 * Retourne le libellé d'un concept sans mise en forme
 	 * @param skos_concept $concept
 	 * @return string
 	 */
@@ -94,7 +100,7 @@ class skos_view_concept {
 	
 	
 	/**
-	 * GÃ¨re l'affichage de la grammaire si concept composÃ©
+	 * Gère l'affichage de la grammaire si concept composé
 	 * @param skos_concept $concept
 	 * @return string
 	 */
@@ -117,16 +123,18 @@ class skos_view_concept {
 			    foreach ($vedette_elements as $subdivision => $elements) {
 			        if($subdivision_header['code'] == $subdivision) {
     			        foreach ($elements as $element) {
-    			        	if (isset($element->get_params()['authperso_name'])) {
-    			        		$type = $element->get_params()['authperso_name'];
-    			        	} else {
-    			        		$type = get_msg_to_display($concept->get_vedette()->get_at_available_field_num($element->get_type())['name']);
-    			        	}
-    			            $display_datas['composed_concept_elements'][$vedette->get_subdivision_name_by_code($subdivision)][] = array(
-    			                'type' => $type,
-    			                'label' => $element->get_isbd(),
-    			                'link' => str_replace("!!id!!", $element->get_db_id(), $element->get_link_see())
-    			            );
+    			            if ($element->get_db_id()) {
+        			        	if (isset($element->get_params()['authperso_name'])) {
+        			        		$type = $element->get_params()['authperso_name'];
+        			        	} else {
+        			        		$type = get_msg_to_display($concept->get_vedette()->get_at_available_field_num($element->get_type())['name']);
+        			        	}
+        			            $display_datas['composed_concept_elements'][$vedette->get_subdivision_name_by_code($subdivision)][] = array(
+        			                'type' => $type,
+        			                'label' => $element->get_isbd(),
+        			                'link' => str_replace("!!id!!", $element->get_db_id(), $element->get_link_see())
+        			            );
+    			            }
     			        }
 			        }
 			    }
@@ -151,7 +159,7 @@ class skos_view_concept {
 	}
 	
 	/**
-	 * Retourne l'affichage de la liste des autoritÃ©s indexÃ©es avec le concept
+	 * Retourne l'affichage de la liste des autorités indexées avec le concept
 	 * @param skos_concept $concept
 	 * @return string
 	 */

@@ -1,18 +1,19 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: images.class.php,v 1.12 2017-07-03 09:07:10 dgoron Exp $
+// $Id: images.class.php,v 1.14.6.1.2.1 2025/04/03 14:19:40 dgoron Exp $
 
+global $visionneuse_path;
 require_once($visionneuse_path."/classes/mimetypes/affichage.class.php");
 
 class images extends affichage{
-	public $doc;				//le document numÃ©rique Ã  afficher
+	public $doc;				//le document numérique à afficher
 	public $driver;			//class driver de la visionneuse
-	public $params;			//paramÃ¨tres Ã©ventuels
-	public $toDisplay= array();//tableau des infos Ã  afficher
-	public $tabParam = array();	//tableau dÃ©crivant les paramÃ¨tres de la classe
-	public $parameters = array();	//tableau des paramÃ¨tres de la classe
+	public $params;			//paramètres éventuels
+	public $toDisplay= array();//tableau des infos à afficher
+	public $tabParam = array();	//tableau décrivant les paramètres de la classe
+	public $parameters = array();	//tableau des paramètres de la classe
 	
     public function __construct($doc="") {
       	if($doc){
@@ -24,7 +25,6 @@ class images extends affichage{
     }
     
     public function fetchDisplay(){
-    	global $base_path;
     	//le titre
     	$this->toDisplay["titre"] = $this->doc->titre;
     	//l'image
@@ -43,7 +43,19 @@ class images extends affichage{
     public function resizeToDisplay(){
 
     	$src_img = imagecreatefromstring($this->driver->openCurrentDoc());
-
+    	
+    	if($src_img === false && extension_loaded('imagick')){
+    	    $im = new Imagick();
+    	    $document = $this->driver->openCurrentDoc();
+    	    if (!empty($document)) {
+    	        $im->readimageblob($document);
+        	    $file = tempnam(sys_get_temp_dir(), 'imagick');
+        	    $im->writeImage($file.".png");
+        	    $src_img = imagecreatefrompng($file.".png");
+        	    unlink($file.".png");
+    	    }
+    	}
+    	
 		if ($src_img) {
 			$photo_mean_size_x=imagesx($src_img);
 			$photo_mean_size_y=imagesy($src_img);
@@ -51,11 +63,12 @@ class images extends affichage{
 			$photo_mean_size_x=200 ;
 			$photo_mean_size_y=200 ;
 		}
-		$maxX = $this->parameters["size_x"];
-		$maxY =$this->parameters["size_y"];
-
-		if ($maxX) $photo_mean_size_x=$maxX;
-		if ($maxY) $photo_mean_size_y=$maxY;
+		if (!empty($this->parameters["size_x"])) {
+		    $photo_mean_size_x = intval($this->parameters["size_x"]);
+		}
+		if (!empty($this->parameters["size_y"])) {
+		    $photo_mean_size_y = intval($this->parameters["size_y"]);
+		}
 	
 		if ($src_img) {
 			$rs=$photo_mean_size_x/$photo_mean_size_y;
@@ -140,6 +153,10 @@ class images extends affichage{
     }
      
     public function getTabParam(){
+    	if(!isset($this->parameters['size_x'])) $this->parameters['size_x'] = '';
+    	if(!isset($this->parameters['size_y'])) $this->parameters['size_y'] = '';
+    	if(!isset($this->parameters['watermark'])) $this->parameters['watermark'] = '';
+    	if(!isset($this->parameters['transparence'])) $this->parameters['transparence'] = '';
 		$this->tabParam = array(
 			"size_x"=>array("type"=>"text","name"=>"size_x","value"=>$this->parameters['size_x'],"desc"=>"Largeur maximale de l'image"),
 			"size_y"=>array("type"=>"text","name"=>"size_y","value"=>$this->parameters['size_y'],"desc"=>"Hauteur maximale de l'image"),

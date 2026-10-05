@@ -1,0 +1,45 @@
+<form data-dojo-type='dijit/form/Form' id='formCreationForm' encType='multipart/form-data' action='' method=''> 
+	<label for='name'>!!msg_form_name!!</label><br/>
+	<input type="hidden" name="id" id="id" value="!!idForm!!" data-dojo-type="dijit/form/TextBox"/>
+	<input type="text" name="name" value="!!formName!!" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="trim:true, required:true" id="name"/><br/>
+	<br/>
+	<label for="response">!!msg_form_response!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="response" name="response">!!formResponse!!</textarea>
+	<br/>
+	<label for="orderResponse">!!msg_order_response!!</label>
+	<br/>
+	<input data-dojo-type="dijit/form/NumberTextBox" id="orderResponse" name="orderResponse" value="!!formOrderResponse!!"/>
+	<br/>
+	<label for="comment">!!msg_form_comment!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="comment" name="comment">!!formComment!!</textarea>
+	<br/>
+	<button data-dojo-type="dijit/form/Button" id="formCreationValidate" data-dojo-id="formCreationValidate" data-dojo-props="" type="button">
+    	!!msg_form_validate!!
+    	<script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+	        require(["dojo/dom", "dijit/registry", "dojo/topic"], function(dom, registry, topic){
+				var popup = registry.byId('createFormPopup');
+				var form = registry.byId('formCreationForm');
+				if(form.validate()){
+					if(popup.callback){
+						popup.callback();
+					}
+					var idForm = dom.byId("id").value;
+					if (idForm) {
+						topic.publish("Dialog", "editForm", form.getValues());
+					}
+					popup.hide();
+					popup.destroyRecursive();
+					popup.destroy();
+				}
+        	});
+    	</script>
+	</button>
+	<hr>
+	<label for="formName">!!admin_contribution_area_form_name!!</label><br/>
+	<input id="formName" type="text" name="formName" value="!!formNameValue!!" class="saisie-50em" disabled/>
+	<button data-dojo-type="dijit/form/Button" type="button" id='formEditField' data-dojo-id="formEditField">
+		!!admin_contribution_area_edit_form_fields!!
+	</button>
+</form>

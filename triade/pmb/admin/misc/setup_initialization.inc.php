@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: setup_initialization.inc.php,v 1.2 2017-10-19 07:46:23 ngantier Exp $
+// $Id: setup_initialization.inc.php,v 1.3 2021/12/23 08:02:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/aut_link.class.php");
 require_once($class_path."/indexation_authority.class.php");
 require_once($class_path."/emprunteur.class.php");
@@ -20,11 +21,11 @@ function pmb_indexation_display($title="", $message="") {
 }
 
 function pmb_init_indexation_authorities() {
-	global $dbh, $msg;
+	global $msg;
 	global $include_path;
 	
 	// => Authors
-	$result = pmb_mysql_query("SELECT author_id as id from authors", $dbh);
+	$result = pmb_mysql_query("SELECT author_id as id from authors");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -37,7 +38,7 @@ function pmb_init_indexation_authorities() {
 	}
 	
 	// => Publishers
-	$result = pmb_mysql_query("SELECT ed_id as id from publishers", $dbh);
+	$result = pmb_mysql_query("SELECT ed_id as id from publishers");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -50,7 +51,7 @@ function pmb_init_indexation_authorities() {
 	}
 	
 	// => Categories
-	$result = pmb_mysql_query("select distinct num_noeud as id from categories", $dbh);
+	$result = pmb_mysql_query("select distinct num_noeud as id from categories");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -63,7 +64,7 @@ function pmb_init_indexation_authorities() {
 	}
 	
 	// => Collections
-	$result = pmb_mysql_query("SELECT collection_id as id from collections", $dbh);
+	$result = pmb_mysql_query("SELECT collection_id as id from collections");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -76,7 +77,7 @@ function pmb_init_indexation_authorities() {
 	}
 	
 	// => Sous collections
-	$result = pmb_mysql_query("SELECT sub_coll_id as id from sub_collections", $dbh);
+	$result = pmb_mysql_query("SELECT sub_coll_id as id from sub_collections");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -88,8 +89,8 @@ function pmb_init_indexation_authorities() {
 		}
 	}
 	
-	// => SÃ©ries
-	$result = pmb_mysql_query("SELECT serie_id as id from series", $dbh);
+	// => Séries
+	$result = pmb_mysql_query("SELECT serie_id as id from series");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -101,8 +102,8 @@ function pmb_init_indexation_authorities() {
 		}
 	}
 	
-	// => Index. DÃ©cimales
-	$result = pmb_mysql_query("SELECT indexint_id as id from indexint", $dbh);
+	// => Index. Décimales
+	$result = pmb_mysql_query("SELECT indexint_id as id from indexint");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -115,7 +116,7 @@ function pmb_init_indexation_authorities() {
 	}
 	
 	// => Titres uniformes
-	$result = pmb_mysql_query("SELECT tu_id as id from titres_uniformes", $dbh);
+	$result = pmb_mysql_query("SELECT tu_id as id from titres_uniformes");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
@@ -129,18 +130,18 @@ function pmb_init_indexation_authorities() {
 }
 
 function pmb_init_indexation_records() {
-	global $dbh, $msg;
+	global $msg;
 	
-	$result = pmb_mysql_query("select notice_id from notices", $dbh);
+	$result = pmb_mysql_query("select notice_id from notices");
 	if($result) {
 		$count = pmb_mysql_num_rows($result);
 		if($count) {
 			while($mesNotices = pmb_mysql_fetch_assoc($result)) {
 				// permet de charger la bonne langue, mot vide...
 				$info=notice::indexation_prepare($mesNotices['notice_id']);
-				// Mise Ã  jour de la table "notices_global_index"
+				// Mise à jour de la table "notices_global_index"
 				notice::majNoticesGlobalIndex($mesNotices['notice_id']);
-				// Mise Ã  jour de la table "notices_mots_global_index"
+				// Mise à jour de la table "notices_mots_global_index"
 				notice::majNoticesMotsGlobalIndex($mesNotices['notice_id']);
 				// restaure l'environnement de langue
 				notice::indexation_restaure($info);
@@ -151,10 +152,10 @@ function pmb_init_indexation_records() {
 }
 
 function pmb_init_hash_passwords() {
-	global $dbh, $msg;
+	global $msg;
 	
 	//Encodage des mots de passe lecteurs
-	 $result = pmb_mysql_query("SELECT id_empr, empr_password, empr_login FROM empr where empr_password_is_encrypted=0", $dbh);
+	 $result = pmb_mysql_query("SELECT id_empr, empr_password, empr_login FROM empr where empr_password_is_encrypted=0");
 	 if($result) {
 	 	$count = pmb_mysql_num_rows($result);
 	 	if($count) {
@@ -178,5 +179,5 @@ pmb_init_indexation_records();
 // Readers encoding passwords
 pmb_init_hash_passwords();
 
-pmb_mysql_query("update parametres set valeur_param='0' where type_param='pmb' and sstype_param='indexation_must_be_initialized'", $dbh);
+pmb_mysql_query("update parametres set valeur_param='0' where type_param='pmb' and sstype_param='indexation_must_be_initialized'");
 echo "</table>";

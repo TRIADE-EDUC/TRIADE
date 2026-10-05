@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en espagnol pour la vue du module de recherche
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_search_view_search.xml,v 1.6 2024/03/05 16:00:18 pmallambic Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_search_button_label'>Buscar</entry>
+	<entry code='cms_module_search_view_help'>Visualizar el botón de ayuda</entry>
+	<entry code='cms_module_search_view_yes'>Sí</entry>
+	<entry code='cms_module_search_view_no'>No</entry>
+	<entry code='cms_module_search_help'>Ayuda</entry>
+	<entry code='cms_module_search_view_title'>Título del marco de búsqueda</entry>
+	<entry code='cms_module_search_view_link_search_advanced'>Mostrar el enlace de búsqueda avanzada</entry>
+	<entry code='cms_module_search_view_link_search_advanced_display'>Búsqueda avanzada</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab'>Destination du lien de recherche avancée</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_simple_search'>Recherche simple</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_search_perso'>Recherches prédéfinies</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_extended_search'>Recherches multi-critères</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_extended_search_authorities'>Recherche multi-critères autorités</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_term_search'>Recherche par termes</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_tags_search'>Recherche par tags</entry>
+	<entry code='cms_module_search_view_link_search_advanced_go_tab_perio_a2z'>Périodiques</entry>
+	<entry code='cms_module_search_view_input_placeholder'>Texto indicativo predeterminado</entry>
+	<entry code='cms_module_search_view_advanced_parameters'>Configuración avanzada</entry>
+	<entry code='cms_module_search_view_others_links'>Otros enlaces :</entry>
+	<entry code='cms_module_search_view_link_url'>Enlace :</entry>
+	<entry code='cms_module_search_view_link_check'>Consultar</entry>
+	<entry code='cms_module_search_view_link_label'>Nombre :</entry>
+	<entry code='cms_module_search_view_link_target'>Abrir en una nueva pestaña</entry>
+	<entry code='cms_module_search_view_nofill'>Vacíar la entrada de búsqueda después de haber realizado una búsqueda</entry>
+	<entry code='cms_module_search_view_limit_completion'>Limiter la complétion automatique à 3 car. minimum</entry>
+	<entry code='cms_module_search_selector_aff_input_search'>Affichage de la liste de recherche</entry>
+	<entry code='cms_module_search_selector_aff_input_radio'>Bouton Radio</entry>
+	<entry code='cms_module_search_selector_aff_input_dropdown'>Sélecteur</entry>
+	<entry code='cms_module_search_view_link_title'>Title :</entry>
+</XMLlist>

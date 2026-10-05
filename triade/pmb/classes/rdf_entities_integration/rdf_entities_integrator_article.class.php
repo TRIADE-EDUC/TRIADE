@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_integrator_article.class.php,v 1.1 2018-03-12 16:44:30 vtouchard Exp $
+// $Id: rdf_entities_integrator_article.class.php,v 1.2 2020/07/13 15:00:07 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -65,7 +65,7 @@ class rdf_entities_integrator_article extends rdf_entities_integrator {
 		// Audit
 		if ($this->integration_type && $this->entity_id) {
 			$query = 'insert into audit (type_obj, object_id, user_id, type_modif, info, type_user) ';
-			$query.= 'values ("'.AUDIT_EDITORIAL_ARTICLE.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.addslashes(json_encode(array("uri" => $uri))).'", "'.$this->contributor_type.'")';
+			$query.= 'values ("'.AUDIT_EDITORIAL_ARTICLE.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.$this->create_audit_comment($uri).'", "'.$this->contributor_type.'")';
 			pmb_mysql_query($query);
 		}
 		if ($this->entity_id) {			
@@ -74,12 +74,12 @@ class rdf_entities_integrator_article extends rdf_entities_integrator {
 		}
 	}
 	public function set_cms_type($cms_type){
-		// On dÃ©finit les valeurs par dÃ©faut
+		// On définit les valeurs par défaut
 		$this->cms_type = $cms_type;
 	}
 	
 	protected function init_base_query_elements() {
-		// On dÃ©finit les valeurs par dÃ©faut
+		// On définit les valeurs par défaut
 		$this->base_query_elements = parent::init_base_query_elements();
 		$this->base_query_elements = array_merge($this->base_query_elements, array(
 				'article_num_type' => $this->cms_type,

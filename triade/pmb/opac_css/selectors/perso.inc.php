@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: perso.inc.php,v 1.1 2018-07-27 08:54:03 dgoron Exp $
+// $Id: perso.inc.php,v 1.4.4.1 2025/01/30 09:08:07 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -10,6 +10,8 @@ $base_url = "./select.php?what=perso&caller=$caller&p1=$p1&p2=$p2&perso_id=$pers
 
 require_once('./selectors/templates/sel_perso.tpl.php');
 require_once($base_path.'/classes/parametres_perso.class.php');
+
+$nb_per_page = intval($nb_per_page);
 
 $persos=new parametres_perso($custom_prefixe);
 
@@ -42,11 +44,11 @@ if ($type=="list") {
 } elseif ($type=="marclist") {
 	$marclist_type = new marc_list($options['DATA_TYPE'][0]['value']);
 	$marclist_tab_count=count($marclist_type->table);
-	
+
 	switch($options['DATA_TYPE'][0]['value']) {
 		case "lang" :
 		case "country" :
-		case "function" :	
+		case "function" :
 			$favorite = false;
 			// affichage d'un sommaire par lettres
 			foreach($marclist_type->table as $key => $val) {
@@ -54,7 +56,7 @@ if ($type=="list") {
 				if (isset($marclist_type->tablefav[$key]) && $marclist_type->tablefav[$key]) $favorite=true;
 			}
 			$alphabet = array_unique($alphabet);
-			
+
 			if(!isset($letter) || !$letter) {
 				if ($favorite)
 					$letter = "Fav";
@@ -71,10 +73,11 @@ if ($type=="list") {
 			}
 			foreach($alphabet as $dummykey=>$char) {
 				$present = pmb_preg_grep("/^$char/i", $marclist_type->table);
-				if(sizeof($present) && strcasecmp($letter, $char))
-						print "<a href='$base_url&letter=$char'>$char</a> ";
-				else if(!strcasecmp($letter, $char))
-						print "<strong><u>$char</u></strong> ";
+				if(is_countable($present) && sizeof($present) && strcasecmp($letter, $char)) {
+					print "<a href='$base_url&letter=$char'>$char</a> ";
+				} else if(!strcasecmp($letter, $char)) {
+					print "<strong><u>$char</u></strong> ";
+				}
 			}
 			print "</div><hr />";
 
@@ -89,10 +92,10 @@ if ($type=="list") {
 			} elseif (($options['METHOD_SORT_VALUE'][0]['value']=="3") && ($options['METHOD_SORT_ASC'][0]['value']=="2")) {
 				$marclist_type->table = array_reverse($marclist_type->table, true);
 			}
-			// Sinon on ne fait rien, le tableau est dÃ©jÃ  triÃ© avec l'attribut order
-			
+			// Sinon on ne fait rien, le tableau est déjà trié avec l'attribut order
+
 			reset($marclist_type->table);
-			
+
 			foreach($marclist_type->table as $code=>$libelle ) {
 				if((preg_match("/^$letter/i", convert_diacrit($libelle))) ||(($letter=='Fav')&&($marclist_type->tablefav[$code]))) {
 					$marclist_tab[$code] = $libelle;
@@ -113,10 +116,10 @@ if ($type=="list") {
 			} elseif (($options['METHOD_SORT_VALUE'][0]['value']=="3") && ($options['METHOD_SORT_ASC'][0]['value']=="2")) {
 				$marclist_type->table = array_reverse($marclist_type->table, true);
 			}
-			// Sinon on ne fait rien, le tableau est dÃ©jÃ  triÃ© avec l'attribut order
-			
+			// Sinon on ne fait rien, le tableau est déjà trié avec l'attribut order
+
 			reset($marclist_type->table);
-			
+
 			if ($f_user_input) {
 				$recherche=$f_user_input;
 				$marclist_filter = array();
@@ -146,11 +149,11 @@ if ($type=="list") {
 			}
 			break;
 	}
-	
+
 } else {
-	$requete="create temporary table temp_perso_list ENGINE=MyISAM ".$options['QUERY'][0]['value'];
+	$requete="create temporary table temp_perso_list ENGINE={$default_tmp_storage_engine} ".$options['QUERY'][0]['value'];
 	pmb_mysql_query($requete);
-	
+
 	$resultat=pmb_mysql_query("show columns from temp_perso_list");
 	if($resultat && pmb_mysql_num_rows($resultat)){
 		$id_field=pmb_mysql_result($resultat,0,0);
@@ -163,7 +166,7 @@ if ($type=="list") {
 			$requete.=" where ".$lib_field." like '%".$f_user_input."%'";
 			$requete_count.=" where ".$lib_field." like '%".$f_user_input."%'";
 		}
-		
+
 		$requete.=" order by $lib_field limit ".($page*$nb_per_page).",$nb_per_page";
 		$resultat_count=pmb_mysql_query($requete_count);
 	}
@@ -206,15 +209,15 @@ if ($has_paginated) {
 	$nbepages = ceil($nbr_lignes/$nb_per_page);
 	$suivante = $page+1;
 	$precedente = $page-1;
-	// affichage du lien prÃ©cÃ©dent si nÃ©cÃ©ssaire
+	// affichage du lien précédent si nécéssaire
 	print "<div class='row'>&nbsp;<hr /></div><div class='center'>";
 	if($precedente >= 0) {
-		print "<a href='$base_url&page=$precedente&nbr_lignes=$nbr_lignes&recherche=".rawurlencode($recherche)."'><img src='".get_url_icon('left.gif')."' border='0' title='$msg[48]' alt='[$msg[48]]' hspace='3' class='align_middle' /></a>";
+		print "<a href='$base_url&page=$precedente&nbr_lignes=$nbr_lignes&recherche=".rawurlencode($recherche)."'><img src='".get_url_icon('left.gif')."' title='$msg[48]' alt='[$msg[48]]' class='align_middle' /></a>";
 	}
 	print "<b>".($page+1)."/$nbepages</b>";
-	
+
 	if($suivante<$nbepages)
-		print "<a href='$base_url&page=$suivante&nbr_lignes=$nbr_lignes&recherche=".rawurlencode($recherche)."'><img src='".get_url_icon('right.gif')."' border='0' title='$msg[49]' alt='[$msg[49]]' hspace='3' class='align_middle' /></a>";
+		print "<a href='$base_url&page=$suivante&nbr_lignes=$nbr_lignes&recherche=".rawurlencode($recherche)."'><img src='".get_url_icon('right.gif')."' title='$msg[49]' alt='[$msg[49]]' class='align_middle' /></a>";
 	print '</div>';
 }
 

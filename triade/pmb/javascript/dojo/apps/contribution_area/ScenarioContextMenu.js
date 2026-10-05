@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ScenarioContextMenu.js,v 1.2 2017-08-29 14:16:51 tsamson Exp $
+// $Id: ScenarioContextMenu.js,v 1.2 2017/08/29 14:16:51 tsamson Exp $
 
 define([
         "dojo/_base/declare", 

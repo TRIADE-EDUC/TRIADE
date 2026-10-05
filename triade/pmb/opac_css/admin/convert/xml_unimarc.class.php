@@ -1,18 +1,22 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: xml_unimarc.class.php,v 1.11 2018-11-05 14:09:15 mbertin Exp $
+// $Id: xml_unimarc.class.php,v 1.12.8.1.2.1 2025/04/16 12:16:50 dbellamy Exp $
 
 //Classe de conversion unimarc/xml ou xml/unimarc
 
-if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+if (stristr($_SERVER['REQUEST_URI'], ".class.php")) {
+    die("no access");
+}
 
-require_once("$base_path/classes/iso2709.class.php");
+global $base_path;
+
+require_once $base_path . "/classes/iso2709.class.php";
 
 class xml_unimarc {
 
-	public $n_traitees;		//Nombre de notices traitÃ©es
+	public $n_traitees;		//Nombre de notices traitées
 	public $n_valid;			//Nombre de notices valides
 	public $n_invalid;			//Nombre de notices invalides
 
@@ -22,10 +26,10 @@ class xml_unimarc {
 	public $field_ind;			//Indicateur du champ en cours de traitement
 	public $sub_field_array;	//Tableau des sous champs
 	public $s_field;			//Sous champ en cours de traitement
-	public $new_field;			//Le champ en cours vient-il d'Ãªtre crÃ©Ã©
-	public $new_subfield;		//Le sous champ en cours vient-il d'Ãªtre crÃ©Ã©
-	public $special;			//Champ spÃ©cial d'amorÃ§age de la notice
-	public $n_;				//$n_=1 : Le dÃ©but de traitement des notices Ã  commencÃ©
+	public $new_field;			//Le champ en cours vient-il d'être créé
+	public $new_subfield;		//Le sous champ en cours vient-il d'être créé
+	public $special;			//Champ spécial d'amorçage de la notice
+	public $n_;				//$n_=1 : Le début de traitement des notices à commencé
 	public $field_value;		//Valeur du champ en cours
 	public $notices_;			//Tableau de notices converties du XML
 	public $notices_xml_;		//Tableau de notices XML converties du iso
@@ -69,7 +73,7 @@ class xml_unimarc {
 			$n = new iso2709_record($notice);
 
 			if ($n->valid()) {
-				//RÃ©cupÃ©ration des infos
+				//Récupération des infos
 
 				//Taille code sous-champ
 				$sl = $n -> inner_guide["sl"];
@@ -91,14 +95,14 @@ class xml_unimarc {
 					$content = substr($n -> inner_data[$i]["content"], 0, strlen($n -> inner_data[$i]["content"]) - 1);
 					$sub_fields = explode(chr(31), $content);
 					if (count($sub_fields) == 1) {
-						fwrite($fp, ">".htmlspecialchars($n -> ISO_decode($sub_fields[0]),ENT_QUOTES,$charset)."</f>\n");
+						fwrite($fp, ">".htmlspecialchars($n -> ISO_decode($sub_fields[0]),ENT_NOQUOTES,$charset)."</f>\n");
 					} else {
 						if (strlen($sub_fields[0])>2) {
 							$sub_fields[0]=substr($sub_fields[0],strlen($sub_fields[0])-2);
 						}
 						fwrite($fp, " ind=\"".$sub_fields[0]."\">\n");
 						for ($j = 1; $j < count($sub_fields); $j ++) {
-							fwrite($fp, "      <s c=\"".substr($sub_fields[$j], 0, 1)."\">".htmlspecialchars($n -> ISO_decode(substr($sub_fields[$j], 1)),ENT_QUOTES,$charset)."</s>\n");
+							fwrite($fp, "      <s c=\"".substr($sub_fields[$j], 0, 1)."\">".htmlspecialchars($n -> ISO_decode(substr($sub_fields[$j], 1)),ENT_NOQUOTES,$charset)."</s>\n");
 						}
 						fwrite($fp, "    </f>\n");
 					}
@@ -147,14 +151,14 @@ class xml_unimarc {
 				}
 			}
 			if ($n->valid()) {
-				//RÃ©cupÃ©ration des infos
+				//Récupération des infos
 
 				//Taille code sous-champ
 				$sl = $n -> inner_guide["sl"];
 				//Taille des inticateurs 
 				$il = $n -> inner_guide["il"];
 
-				$data.="  <notice>\n";
+				$data ="  <notice>\n";
 
 				//Etat de la notice
 				$values = array("rs", "dt", "bl", "hl", "el", "ru");
@@ -169,14 +173,14 @@ class xml_unimarc {
 					$content = substr($n -> inner_data[$i]["content"], 0, strlen($n -> inner_data[$i]["content"]) - 1);
 					$sub_fields = explode(chr(31), $content);
 					if (count($sub_fields) == 1) {
-						$data.=">".htmlspecialchars($n->ISO_decode($sub_fields[0]),ENT_QUOTES,$charset)."</f>\n";
+						$data.=">".htmlspecialchars($n->ISO_decode($sub_fields[0]),ENT_NOQUOTES,$charset)."</f>\n";
 					} else {
 						if (strlen($sub_fields[0])>2) {
 							$sub_fields[0]=substr($sub_fields[0],strlen($sub_fields[0])-2);
 						}
 						$data.=" ind=\"".$sub_fields[0]."\">\n";
 						for ($j = 1; $j < count($sub_fields); $j ++) {
-							$data.="      <s c=\"".substr($sub_fields[$j], 0, 1)."\">".htmlspecialchars($n->ISO_decode(substr($sub_fields[$j], 1)),ENT_QUOTES,$charset)."</s>\n";
+							$data.="      <s c=\"".substr($sub_fields[$j], 0, 1)."\">".htmlspecialchars($n->ISO_decode(substr($sub_fields[$j], 1)),ENT_NOQUOTES,$charset)."</s>\n";
 						}
 						$data.="    </f>\n";
 					}
@@ -206,7 +210,7 @@ class xml_unimarc {
 			break;
 			case "F":
 				$this->field=$attrs["C"];
-				$this->field_ind=$attrs["IND"];
+				$this->field_ind=(isset($attrs["IND"]) ? $attrs["IND"] : '');
 				$this->sub_field_array=array();
 				$this->field_value="";
 				$this->new_field=true;
@@ -260,11 +264,34 @@ class xml_unimarc {
 		if ($this->n_) {
 			if ($this->special) {
 				if ($data=="*") $data=" ";
-				eval("\$this->n->set_".strtolower($this->special)."('".$data."');");
+				switch(strtolower($this->special)) {
+					case "rs" :
+						$this->n->set_rs($data);
+						break;
+					case "dt" :
+						$this->n->set_dt($data);
+						break;
+					case "bl" :
+						$this->n->set_bl($data);
+						break;
+					case "hl" :
+						$this->n->set_hl($data);
+						break;
+					case "el" :
+						$this->n->set_el($data);
+						break;
+					case "ru" :
+						$this->n->set_ru($data);
+						break;
+					default:
+						$this->error_msg[] = "Le guide (".$this->special.") de la notice est inconnu !!";
+						$this->n->errors ="x";
+						$this->n_invalid++;
+				}
 				return;
 			}
 			if ($this->s_field!=="") {
-				//Gestion des entitÃ©s
+				//Gestion des entités
 				if ($this->new_subfield) {
 					$t=array();
 					$t[0]=$this->s_field;
@@ -278,7 +305,7 @@ class xml_unimarc {
 				}
 			}
 			if ($this->field) {
-				//Gestion des entitÃ©s
+				//Gestion des entités
 				if ($this->new_field) {
 					$this->field_value=$data;
 					$this->new_field=false;
@@ -325,11 +352,14 @@ class xml_unimarc {
    		     $this->error_msg[]=sprintf("XML error: %s at line %d, column %d",
        	     xml_error_string(xml_get_error_code($xml_parser)),
        	     xml_get_current_line_number($xml_parser), xml_get_current_column_number($xml_parser));
+   		     fclose($fp);
+   		     fclose($this->fpw);
        	     return 0;
  	   		}
 		}
 		xml_parser_free($xml_parser);
-
+		unset($xml_parser);
+		fclose($fp);
 		fclose($this->fpw);
 		return $this->n_traitees;
     }
@@ -365,7 +395,7 @@ class xml_unimarc {
 		}
 	}
     
-    public function XMLtoiso2709_notice($notice,$encoding) {
+    public function XMLtoiso2709_notice($notice,$encoding = '') {
     	global $charset;
  		$this->n_traitees=0;
 		$this->n_valid=0;
@@ -380,13 +410,19 @@ class xml_unimarc {
 		$this->error_msg=array();
 		
 		if (strpos($notice,"<?xml")===false) {
-			if (!$encoding) $encoding = $charset; 
+		    if (!$encoding) {
+		        $encoding = $charset; 
+		    }
 			$notice="<?xml version='1.0' encoding='".$encoding."' ?>\n".$notice;
 		}
 		
 		$rx = "/<?xml.*encoding=[\'\"](.*?)[\'\"].*?>/m";
-		if (preg_match($rx, $notice, $m)) $encoding = strtoupper($m[1]);
-		else if (!$encoding) $encoding =$charset;	
+		$m = [];
+		if (preg_match($rx, $notice, $m)) {
+		    $encoding = strtoupper($m[1]);
+		} else if (!$encoding) {
+		    $encoding =$charset;	
+		}
 		$this->current_encoding = $encoding;
 		
 		$xml_parser = xml_parser_create($this->current_encoding);
@@ -395,14 +431,15 @@ class xml_unimarc {
 		xml_set_element_handler($xml_parser, "startElement", "endElement_notice");
 		xml_set_character_data_handler($xml_parser, "characterData");
 	    if (!xml_parse($xml_parser, $notice, 1)) {
-	    	$this->error_msg[]=sprintf("XML error: %s at line %d, colomn %d -- $notice",
+	    	$this->error_msg[]=sprintf("XML error: %s at line %d, column %d ",
        	     xml_error_string(xml_get_error_code($xml_parser)),
-       	     xml_get_current_line_number($xml_parser), xml_get_current_column_number($xml_parser));
+       	     xml_get_current_line_number($xml_parser),
+	    	 xml_get_current_column_number($xml_parser))." -- ".$notice;
    		     return 0;
  	   	}
 		xml_parser_free($xml_parser);
-
+		unset($xml_parser);
+		
 		return $this->n_traitees;
     }
 }
-?>

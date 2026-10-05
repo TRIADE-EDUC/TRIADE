@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1.4.2 2025/05/21 08:03:12 rtigero Exp $
+-->
+
+<manifest>
+	<namespace>Pmb\DSI\Models\Source\Item\Entities\Animation\AnimationList\AnimationList</namespace>
+	<type>source</type>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2025-05-21</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<compatibility>
+		<selector>Pmb\DSI\Models\Selector\Item\Entities\Animation\ByDate\AnimationByDateSelector</selector>
+		<selector>Pmb\DSI\Models\Selector\Item\Entities\Animation\AllFields\AnimationAllFieldsSelector</selector>
+	</compatibility>
+</manifest>

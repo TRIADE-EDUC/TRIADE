@@ -1,21 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: catal_form.tpl.php,v 1.193 2019-05-27 12:41:51 ngantier Exp $
+// $Id: catal_form.tpl.php,v 1.205.2.1.2.2 2025/03/12 15:39:17 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $base_path;
-global $value_deflt_relation;
 global $value_deflt_fonction;
-global $pmb_url_base;
 global $pmb_authors_qualification;
-global $pmb_form_editables;
-global $PMBuserid;
 global $pmb_use_uniform_title;
 global $deflt_notice_replace_links;
-global $ptab, $msg, $charset, $notice_tab_uniform_title_form_tpl, $pmb_authors_qualification, $notice_tab_isbn_form_tpl, $notice_tab_notes_form_tpl, $notice_tab_indexation_form_tpl, $notice_indexation_first_form_tpl, $notice_indexation_next_form_tpl, $notice_tab_lang_form_tpl, $notice_lang_first_form_tpl, $notice_lang_next_form_tpl, $notice_langorg_first_form_tpl, $notice_langorg_next_form_tpl, $notice_tab_links_form_tpl, $notice_tab_map_form_tpl, $notice_tab_customs_perso_form_tpl, $notice_tab_gestion_fields_form_tpl, $form_notice, $notice_replace,  $notice_replace_categories, $notice_replace_category;
+global $ptab, $msg, $charset, $current_module, $notice_tab_uniform_title_form_tpl, $pmb_authors_qualification, $notice_tab_isbn_form_tpl, $notice_tab_notes_form_tpl, $notice_tab_indexation_form_tpl, $notice_indexation_first_form_tpl, $notice_indexation_next_form_tpl, $notice_tab_lang_form_tpl, $notice_lang_first_form_tpl, $notice_lang_next_form_tpl, $notice_langorg_first_form_tpl, $notice_langorg_next_form_tpl, $notice_tab_links_form_tpl, $notice_tab_map_form_tpl, $notice_tab_customs_perso_form_tpl, $notice_tab_gestion_fields_form_tpl, $notice_content_form, $notice_replace,  $notice_replace_categories, $notice_replace_category;
 
 // template pour le form de catalogage
 
@@ -37,39 +32,15 @@ $ptab[0] = "
     <div id='el0Child_0' title='".htmlentities($msg[237],ENT_QUOTES, $charset)."' movable='yes'>
 	    <!--    Titre    -->
 		<div id='el0Child_0a' class='row'>
-	        <label for='f_tit1' class='etiquette'>$msg[237]</label>
-	        </div>
+	        <label for='f_tit1' title='".$msg['is_required']."' class='etiquette'>$msg[237] <sup>*</sup></label>
+        </div>
 	    <div id='el0Child_0b' class='row'>
-	        <input type='text' class='saisie-80em' id='f_tit1' name='f_tit1' data-form-name='f_tit1' data-pmb-deb-rech='1' value=\"!!tit1!!\"/>
+	        <input type='text' class='saisie-80em required' id='f_tit1' name='f_tit1' data-form-name='f_tit1' data-pmb-deb-rech='1' value=\"!!tit1!!\"/>
         </div>
 	</div>
-    <div id='el0Child_1' title='".htmlentities($msg[238],ENT_QUOTES, $charset)."' movable='yes'>
-	    <!--    Titre propre d'un auteur diffÃ©rent    -->
-	    <div id='el0Child_1a' class='row'>
-	        <label for='f_tit2' class='etiquette'>$msg[238]</label>
-        </div>
-	    <div id='el0Child_1b' class='row'>
-	        <input type='text' class='saisie-80em' id='f_tit2' name='f_tit2' data-form-name='f_tit2' value=\"!!tit2!!\" />
-        </div>
-	</div>
-    <div id='el0Child_2' title='".htmlentities($msg[239],ENT_QUOTES, $charset)."' movable='yes'>
-	    <!--    Titre parallÃ¨le    -->
-	    <div id='el0Child_2a' class='row'>
-	        <label for='f_tit3' class='etiquette'>$msg[239]</label>
-        </div>
-	    <div id='el0Child_2b' class='row'>
-	        <input type='text' class='saisie-80em' id='f_tit3' name='f_tit3' data-form-name='f_tit3' value=\"!!tit3!!\" />
-        </div>
-	</div>
-    <div id='el0Child_3' title='".htmlentities($msg[240],ENT_QUOTES, $charset)."' movable='yes'>
-	    <!--    ComplÃ©ment du titre    -->
-	    <div id='el0Child_3a' class='row'>
-	        <label for='f_tit4' class='etiquette'>$msg[240]</label>
-        </div>
-	    <div id='el0Child_3b' class='row'>
-	        <input type='text' class='saisie-80em' id='f_tit4' name='f_tit4' data-form-name='f_tit4' value=\"!!tit4!!\" />
-        </div>
-	</div>
+    !!element_tit2!!
+    !!element_tit3!!
+    !!element_tit4!!
     <div id='el0Child_4' title='".htmlentities($msg[241],ENT_QUOTES, $charset)."' movable='yes'>
 	    <!--    Partie de    -->
 	    <div class='row'>
@@ -77,7 +48,7 @@ $ptab[0] = "
 	            <label for='f_tparent' class='etiquette'>$msg[241]</label>
 	            <div class='row'>
 			        <input type='text' class='saisie-30emr' id='f_tparent' name='f_tparent' data-form-name='f_tparent' value=\"!!tparent!!\" completion=\"serie\" autfield=\"f_tparent_id\" />
-	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=serie&caller=notice&param1=f_tparent_id&param2=f_tparent&deb_rech='+".pmb_escape()."(this.form.f_tparent.value), 'selector')\" />
+	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=serie&caller=notice&param1=f_tparent_id&param2=f_tparent&deb_rech='+".pmb_escape()."(this.form.f_tparent.value), '!!force_dialog_serie!!', '!!force_popup_serie!!')\" />
 	                <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_tparent.value=''; this.form.f_tparent_id.value='0'; \" />
 	                <input type='hidden' name='f_tparent_id' id='f_tparent_id' data-form-name='f_tparent_id' value=\"!!tparent_id!!\" />
                 </div>
@@ -118,8 +89,8 @@ if ($pmb_use_uniform_title) {
 } else $notice_tab_uniform_title_form_tpl = "";
 
 //    ----------------------------------------------------
-//    Mention de responsabilitÃ©
-//       $notice_tab_responsabilities_form_tpl : contenu de l'onglet 1 (mention de responsabilitÃ©)
+//    Mention de responsabilité
+//       $notice_tab_responsabilities_form_tpl : contenu de l'onglet 1 (mention de responsabilité)
 //    ----------------------------------------------------
 $aut_fonctions= marc_list_collection::get_instance('function');
 if($pmb_authors_qualification){
@@ -128,7 +99,7 @@ if($pmb_authors_qualification){
 	        <div  id='el1Child_2a_vedettes' style='float:left;'>
 	            <label for='f_aut0' class='etiquette'>".$msg['notice_vedette_composee_author']."</label>
 				<div class='row'>
-					<img class='img_plus' hspace='3' border='0' onclick=\"expand_vedette(this,'vedette0'); return false;\" title='dÃ©tail' name='imEx' src='".get_url_icon('plus.gif')."'>
+					<img class='img_plus' onclick=\"expand_vedette(this,'vedette0'); return false;\" title='détail' name='imEx' src='".get_url_icon('plus.gif')."'>
 					<input type='text' class='saisie-30emr'  readonly='readonly'  name='notice_role_composed_0_vedette_composee_apercu_autre' id='notice_role_composed_0_vedette_composee_apercu_autre'  data-form-name='vedette_composee' value=\"!!vedette_apercu!!\" />
 					<input type='button' class='bouton' value='$msg[raz]' onclick=\"del_vedette('role',!!iaut!!);\" />
 				</div>
@@ -149,7 +120,7 @@ $notice_tab_responsabilities_form_tpl = "
     function fonction_selecteur_auteur() {
         name=this.getAttribute('id').substring(4);
         name_id = name.substr(0,6)+'_id'+name.substr(6);
-        openPopUp('./select.php?what=auteur&caller=notice&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+".pmb_escape()."(document.getElementById(name).value), 'selector');
+        openPopUpSelector('./select.php?what=auteur&caller=notice&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+".pmb_escape()."(document.getElementById(name).value), '!!force_dialog_author!!', '!!force_popup_author!!');
     }
     function fonction_selecteur_auteur_change(field) {
     	// id champ text = 'f_aut'+n+suffixe
@@ -157,7 +128,7 @@ $notice_tab_responsabilities_form_tpl = "
     	// select.php?what=auteur&caller=notice&param1=f_aut0_id&param2=f_aut0&deb_rech='+t
         name=field.getAttribute('id');
         name_id = name.substr(0,6)+'_id'+name.substr(6);
-        openPopUp('./select.php?what=auteur&caller=notice&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+".pmb_escape()."(document.getElementById(name).value), 'selector');
+        openPopUpSelector('./select.php?what=auteur&caller=notice&param1='+name_id+'&param2='+name+'&dyn=1&deb_rech='+".pmb_escape()."(document.getElementById(name).value), '!!force_dialog_author!!', '!!force_popup_author!!');
     }
     function fonction_raz_auteur() {
         name=this.getAttribute('id').substring(4);
@@ -168,7 +139,7 @@ $notice_tab_responsabilities_form_tpl = "
     function fonction_selecteur_fonction() {
         name=this.getAttribute('id').substring(4);
         name_code = name.substr(0,4)+'_code'+name.substr(4);
-        openPopUp('./select.php?what=function&caller=notice&param1='+name_code+'&param2='+name+'&dyn=1', 'selector');
+        openPopUpSelector('./select.php?what=function&caller=notice&param1='+name_code+'&param2='+name+'&dyn=1', '!!force_dialog_func!!', '!!force_popup_func!!');
     }
     function fonction_raz_fonction() {
         name=this.getAttribute('id').substring(4);
@@ -250,7 +221,7 @@ $notice_tab_responsabilities_form_tpl = "
         f_f0.setAttribute('id',nom_id);
         f_f0.setAttribute('type','text');
         f_f0.className='saisie-15emr';
-        f_f0.setAttribute('value','".(isset($value_deflt_fonction) && $value_deflt_fonction ? $aut_fonctions->table[$value_deflt_fonction] : '')."');
+        f_f0.setAttribute('value','".(!empty($value_deflt_fonction) ? $aut_fonctions->table[$value_deflt_fonction] : '')."');
 		f_f0.setAttribute('completion','fonction');
         f_f0.setAttribute('autfield','f_f'+n+'_code'+suffixe);
 
@@ -283,6 +254,11 @@ $notice_tab_responsabilities_form_tpl = "
 		duplicate.setAttribute('readonly','readonly');
 		duplicate.setAttribute('value','".$msg["duplicate"]."');
 
+		add_aut_node = document.getElementById('button_add_f_aut'+n);
+        add_aut_node_clone = add_aut_node.cloneNode();
+        parent = add_aut_node.parentNode;
+        parent.removeChild(add_aut_node);
+
         row.appendChild(f_f0);
         space=document.createTextNode(' ');
         row.appendChild(space);
@@ -291,15 +267,16 @@ $notice_tab_responsabilities_form_tpl = "
         row.appendChild(space);
         row.appendChild(del_f_f0);
         row.appendChild(f_f0_code);
-		if(!('".$pmb_authors_qualification."'*1)){
+		if(!('$pmb_authors_qualification'*1)){
 			space=document.createTextNode(' ');
 			row.appendChild(space);
 			row.appendChild(duplicate);
+			row.appendChild(add_aut_node_clone);
 		}
         colonne.appendChild(row);
         aut.appendChild(colonne);
 
-		if('".$pmb_authors_qualification."'*1){
+		if('$pmb_authors_qualification'*1){
 	        var role_field='role';
 	        if(n==1) role_field='role_autre';
 	        if(n==2) role_field='role_secondaire';
@@ -327,8 +304,6 @@ $notice_tab_responsabilities_form_tpl = "
 			img_plus.name='img_plus'+suffixe;
 			img_plus.setAttribute('id','img_plus'+suffixe+'_'+role_field);
 			img_plus.className='img_plus';
-			img_plus.setAttribute('hspace','3');
-			img_plus.setAttribute('border','0');
 			img_plus.setAttribute('src','".get_url_icon('plus.gif')."');
 			img_plus.setAttribute('onclick','expand_vedette(this, \"vedette'+suffixe+'_'+role_field+'\")');
 
@@ -373,20 +348,20 @@ $notice_tab_responsabilities_form_tpl = "
 		init_drag();
     }
 
-	function duplicate(n,suffixe){
+	function duplicate(n, suffixe) {
 		add_aut(n);
         new_suffixe = eval('document.notice.max_aut'+n+'.value')-1;
         document.getElementById('f_aut'+n+new_suffixe).value = document.getElementById('f_aut'+n+suffixe).value;
         document.getElementById('f_aut'+n+'_id'+new_suffixe).value = document.getElementById('f_aut'+n+'_id'+suffixe).value;
 
-        document.getElementById('f_f'+n+new_suffixe).value = '';
-        document.getElementById('f_f'+n+'_code'+new_suffixe).value = '';
+        document.getElementById('f_f'+n+new_suffixe).value = document.getElementById('f_f'+n+suffixe).value;
+        document.getElementById('f_f'+n+'_code'+new_suffixe).value = document.getElementById('f_f'+n+'_code'+suffixe).value;
 	}
 
     function fonction_selecteur_categ() {
         name=this.getAttribute('id').substring(4);
         name_id = name.substr(0,7)+'_id'+name.substr(7);
-        openPopUp('./select.php?what=categorie&caller=notice&p1='+name_id+'&p2='+name+'&dyn=1', 'selector_category');
+        openPopUpSelectorCategory('./select.php?what=categorie&caller=notice&p1='+name_id+'&p2='+name+'&dyn=1', '!!force_dialog_category!!', '!!force_popup_category!!');
     }
     function fonction_raz_categ() {
         name=this.getAttribute('id').substring(4);
@@ -462,6 +437,11 @@ $notice_tab_responsabilities_form_tpl = "
         tab_categ_order = document.getElementById('tab_categ_order');
 		if (tab_categ_order.value != '') tab_categ_order.value += ','+suffixe;
 
+        add_categ_node = document.getElementById('add_categ_btn');
+        add_categ_node_clone = add_categ_node.cloneNode();
+        document.getElementById('drag_'+(suffixe-1)).removeChild(add_categ_node);
+        categ.appendChild(add_categ_node_clone);
+
 		document.notice.max_categ.value=suffixe*1+1*1 ;
         ajax_pack_element(f_categ);
         init_drag();
@@ -469,7 +449,7 @@ $notice_tab_responsabilities_form_tpl = "
     function fonction_selecteur_lang() {
         name=this.getAttribute('id').substring(4);
         name_id = name.substr(0,6)+'_code'+name.substr(6);
-        openPopUp('./select.php?what=lang&caller=notice&p1='+name_id+'&p2='+name, 'selector');
+        openPopUpSelector('./select.php?what=lang&caller=notice&p1='+name_id+'&p2='+name, '!!force_dialog_lang!!', '!!force_popup_lang!!');
     }
     function add_lang() {
     	templates.add_completion_selection_field('f_lang', 'f_lang_code', 'langue', fonction_selecteur_lang);
@@ -478,7 +458,7 @@ $notice_tab_responsabilities_form_tpl = "
     function fonction_selecteur_langorg() {
         name=this.getAttribute('id').substring(4);
         name_id = name.substr(0,9)+'_code'+name.substr(9);
-        openPopUp('./select.php?what=lang&caller=notice&p1='+name_id+'&p2='+name, 'selector');
+        openPopUpSelector('./select.php?what=lang&caller=notice&p1='+name_id+'&p2='+name, '!!force_dialog_lang!!', '!!force_popup_lang!!');
     }
     function add_langorg() {
     	templates.add_completion_selection_field('f_langorg', 'f_langorg_code', 'langue', fonction_selecteur_langorg);
@@ -504,7 +484,7 @@ $notice_tab_responsabilities_form_tpl = "
 </script>
 <div id='el1Parent' class='parent'>
     <h3>
-    	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el1Img' onClick=\"expandBase('el1', true); return false;\" title='$msg[243]' border='0' />
+        ".get_expandBase_button('el1', '243')."
     	$msg[243]
     </h3>
 </div>
@@ -516,7 +496,7 @@ $notice_tab_responsabilities_form_tpl = "
 	            <label for='f_aut0' class='etiquette'>$msg[244]</label>
 	            <div class='row' >
 					<input type='text' completion='authors' autfield='f_aut0_id' id='auteur0' class='saisie-30emr' name='f_aut0' data-form-name='f_aut0' value=\"!!aut0!!\" />
-	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=auteur&caller=notice&param1=f_aut0_id&param2=f_aut0&deb_rech='+".pmb_escape()."(this.form.f_aut0.value), 'selector')\" />
+	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=auteur&caller=notice&param1=f_aut0_id&param2=f_aut0&deb_rech='+".pmb_escape()."(this.form.f_aut0.value), '!!force_dialog_author!!', '!!force_popup_author!!')\" />
 	              	<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_aut0.value=''; this.form.f_aut0_id.value='0'; \" />
 	               	<input type='hidden' name='f_aut0_id' data-form-name='f_aut0_id' id='f_aut0_id' value=\"!!aut0_id!!\" />
 	            </div>
@@ -526,7 +506,7 @@ $notice_tab_responsabilities_form_tpl = "
 	            <label for='f_f0' class='etiquette'>$msg[245]</label>
 	            <div class='row'>
 			        <input type='text' class='saisie-15emr' id='f_f0' name='f_f0' data-form-name='f_f0' value=\"!!f0!!\" completion=\"fonction\" autfield=\"f_f0_code\" />
-	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=function&caller=notice&p1=f_f0_code&p2=f_f0', 'selector')\" />
+	                <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=function&caller=notice&p1=f_f0_code&p2=f_f0', '!!force_dialog_func!!', '!!force_popup_func!!')\" />
 	                <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_f0.value=''; this.form.f_f0_code.value='0'; \" />
 	                <input type='hidden' name='f_f0_code' data-form-name='f_f0_code' id='f_f0_code' value=\"!!f0_code!!\" />
                 </div>
@@ -574,7 +554,7 @@ if($pmb_authors_qualification){
 	$authors_qualification_tpl="
 		<!--    Vedettes    -->
         <div id='el1Child_2b_others_vedettes' style='float:left;'>
-			<img class='img_plus' hspace='3' border='0' onclick=\"expand_vedette(this,'vedette!!iaut!!_autre'); return false;\" title='dÃ©tail' name='imEx' src='".get_url_icon('plus.gif')."'>
+			<img class='img_plus' onclick=\"expand_vedette(this,'vedette!!iaut!!_autre'); return false;\" title='détail' name='imEx' src='".get_url_icon('plus.gif')."'>
 			<input type='text' class='saisie-30emr'  readonly='readonly'  name='notice_role_autre_composed_!!iaut!!_vedette_composee_apercu_autre' id='notice_role_autre_composed_!!iaut!!_vedette_composee_apercu_autre'  data-form-name='vedette_composee_autre' value=\"!!vedette_apercu!!\" />
 			<input type='button' class='bouton' value='$msg[raz]' onclick=\"del_vedette('role_autre',!!iaut!!);\" />
 			<input class='bouton' type='button' onclick='duplicate(1,!!iaut!!);' value='".$msg['duplicate']."'>
@@ -597,16 +577,17 @@ $notice_responsabilities_others_form_tpl = "
 	<div class='row'>
         <div id='el1Child_2b_first' style='float:left;margin-right:10px;'>
        		<input type='text' class='saisie-30emr' completion='authors' autfield='f_aut1_id!!iaut!!' id='f_aut1!!iaut!!' name='f_aut1!!iaut!!' data-form-name='f_aut1' value=\"!!aut1!!\" />
-			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=auteur&caller=notice&param1=f_aut1_id!!iaut!!&param2=f_aut1!!iaut!!&deb_rech='+".pmb_escape()."(this.form.f_aut1!!iaut!!.value), 'selector')\" />
+			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=auteur&caller=notice&param1=f_aut1_id!!iaut!!&param2=f_aut1!!iaut!!&deb_rech='+".pmb_escape()."(this.form.f_aut1!!iaut!!.value), '!!force_dialog_author!!', '!!force_popup_author!!')\" />
             <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_aut1!!iaut!!.value=''; this.form.f_aut1_id!!iaut!!.value='0'; \" />
             <input type='hidden' name='f_aut1_id!!iaut!!' data-form-name='f_aut1_id' id='f_aut1_id!!iaut!!' value=\"!!aut1_id!!\" />
         </div>
     	<!--    Fonction    -->
         <div id='el1Child_2b_others' style='float:left;margin-right:10px;'>
             <input type='text' class='saisie-15emr' id='f_f1!!iaut!!' name='f_f1!!iaut!!' data-form-name='f_f1' completion='fonction' autfield='f_f1_code!!iaut!!' value=\"!!f1!!\" />
-            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=function&caller=notice&p1=f_f1_code!!iaut!!&p2=f_f1!!iaut!!', 'selector')\" />
+            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=function&caller=notice&p1=f_f1_code!!iaut!!&p2=f_f1!!iaut!!', '!!force_dialog_func!!', '!!force_popup_func!!')\" />
             <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_f1!!iaut!!.value=''; this.form.f_f1_code!!iaut!!.value='0'; \" />
             $authors_add_aut_button_tpl
+            !!button_add_aut1!!
             <input type='hidden' name='f_f1_code!!iaut!!' data-form-name='f_f1_code' id='f_f1_code!!iaut!!' value=\"!!f1_code!!\" />
         </div>
 		$authors_qualification_tpl
@@ -616,12 +597,12 @@ $notice_responsabilities_others_form_tpl = "
 //    ----------------------------------------------------
 //    Autres secondaires
 //    ----------------------------------------------------
-if($pmb_authors_qualification){
-	$authors_add_aut_button_tpl="";
-	$authors_qualification_tpl="
+if (!empty($pmb_authors_qualification)) {
+	$authors_add_aut_button_tpl = "";
+	$authors_qualification_tpl = "
         <!--    Vedettes    -->
         <div id='el1Child_3b_others_vedettes' style='float:left;'>
-			<img class='img_plus' hspace='3' border='0' onclick=\"expand_vedette(this,'vedette!!iaut!!_secondaire'); return false;\" title='dÃ©tail' name='imEx' src='".get_url_icon('plus.gif')."'>
+			<img class='img_plus' onclick=\"expand_vedette(this,'vedette!!iaut!!_secondaire'); return false;\" title='détail' name='imEx' src='".get_url_icon('plus.gif')."'>
 			<input type='text' class='saisie-30emr'  readonly='readonly'  name='notice_role_secondaire_composed_!!iaut!!_vedette_composee_apercu_autre' id='notice_role_secondaire_composed_!!iaut!!_vedette_composee_apercu_autre'  data-form-name='vedette_composee' value=\"!!vedette_apercu!!\" />
 			<input type='button' class='bouton' value='$msg[raz]' onclick=\"del_vedette('role_secondaire',!!iaut!!);\" />
 			<input class='bouton' type='button' onclick='duplicate(2,!!iaut!!);' value='".$msg['duplicate']."'>
@@ -634,25 +615,25 @@ if($pmb_authors_qualification){
 			vedette_composee_update_all('notice_role_secondaire_composed_!!iaut!!_vedette_composee_subdivisions');
 		</script>
 	";
-}else{
-	$authors_add_aut_button_tpl="
+} else {
+	$authors_add_aut_button_tpl = "
 		<input class='bouton' type='button' onclick='duplicate(2,!!iaut!!);' value='".$msg['duplicate']."'>
-		<input type='button' style='!!bouton_add_display!!' class='bouton' value='+' onClick=\"add_aut(2);\"/>	";
-	$authors_qualification_tpl="";
+		!!button_add_aut2!!";
+	$authors_qualification_tpl = "";
 }
 global $notice_responsabilities_secondary_form_tpl;
 $notice_responsabilities_secondary_form_tpl = "
 	<div class='row'>
         <div id='el1Child_3b_first' style='float:left;margin-right:10px;'>
             <input type='text' class='saisie-30emr' completion='authors' autfield='f_aut2_id!!iaut!!' id='f_aut2!!iaut!!' name='f_aut2!!iaut!!' data-form-name='f_aut2' value=\"!!aut2!!\" />
-			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=auteur&caller=notice&param1=f_aut2_id!!iaut!!&param2=f_aut2!!iaut!!&deb_rech='+".pmb_escape()."(this.form.f_aut2!!iaut!!.value), 'selector')\" />
+			<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=auteur&caller=notice&param1=f_aut2_id!!iaut!!&param2=f_aut2!!iaut!!&deb_rech='+".pmb_escape()."(this.form.f_aut2!!iaut!!.value), '!!force_dialog_author!!', '!!force_popup_author!!')\" />
             <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_aut2!!iaut!!.value=''; this.form.f_aut2_id!!iaut!!.value='0'; \" />
             <input type='hidden' name='f_aut2_id!!iaut!!' data-form-name='f_aut2_id' id='f_aut2_id!!iaut!!' value=\"!!aut2_id!!\" />
         </div>
         <!--    Fonction    -->
         <div id='el1Child_3b_others' style='float:left;margin-right:10px;'>
             <input type='text' class='saisie-15emr' id='f_f2!!iaut!!' name='f_f2!!iaut!!' data-form-name='f_f2' completion='fonction' autfield='f_f2_code!!iaut!!' value=\"!!f2!!\" />
-            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=function&caller=notice&p1=f_f2_code!!iaut!!&p2=f_f2!!iaut!!', 'selector')\" />
+            <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=function&caller=notice&p1=f_f2_code!!iaut!!&p2=f_f2!!iaut!!', '!!force_dialog_func!!', '!!force_popup_func!!')\" />
             <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_f2!!iaut!!.value=''; this.form.f_f2_code!!iaut!!.value='0'; \" />
             $authors_add_aut_button_tpl
             <input type='hidden' name='f_f2_code!!iaut!!' data-form-name='f_f2_code' id='f_f2_code!!iaut!!' value=\"!!f2_code!!\" />
@@ -662,13 +643,13 @@ $notice_responsabilities_secondary_form_tpl = "
     " ;
 
 //    ----------------------------------------------------
-//    Adresse, Ã©diteurs, collection
+//    Adresse, éditeurs, collection
 //    ----------------------------------------------------
 $ptab[2] = "
 <!-- onglet 2 -->
 <div id='el2Parent' class='parent'>
     <h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el2Img' border='0' onClick=\"expandBase('el2', true); return false;\" />
+        ".get_expandBase_button('el2')."
 	    $msg[249]
     </h3>
 </div>
@@ -684,7 +665,7 @@ $ptab[2] = "
 				}
 			</script>
 			<input type='text' completion='publishers' autfield='f_ed1_id' id='f_ed1' name='f_ed1' data-form-name='f_ed1' value=\"!!ed1!!\" class='saisie-30emr' callback='f_ed1_id_callback' />
-		    <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=editeur&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_ed1.value), 'selector')\" />
+		    <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=editeur&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_ed1.value), '!!force_dialog_publisher!!', '!!force_popup_publisher!!')\" />
 		    <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_ed1.value=''; this.form.f_ed1_id.value='0'; \" />
 		    <input type='hidden' name='f_ed1_id' data-form-name='f_ed1_id' id='f_ed1_id' value=\"!!ed1_id!!\" />
 		</div>
@@ -701,7 +682,7 @@ $ptab[2] = "
 					}
 				</script>
 				<input type='text' completion='collections' autfield='f_coll_id' id='f_coll' name='f_coll' data-form-name='f_coll' value=\"!!coll!!\" class='saisie-30emr' linkfield='f_ed1_id' callback='f_coll_id_callback'/>
-		        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=collection&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_coll.value), 'selector')\" />
+		        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=collection&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_coll.value), '!!force_dialog_collection!!', '!!force_popup_collection!!')\" />
 		        <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_coll.value=''; this.form.f_coll_id.value='0'; \" />
 		        <input type='hidden' name='f_coll_id' data-form-name='f_coll_id' id='f_coll_id' value=\"!!coll_id!!\" />
 		        </div>
@@ -728,7 +709,7 @@ $ptab[2] = "
 					</script>
 					<input type='text' completion='subcollections' autfield='f_subcoll_id' id='f_subcoll' name='f_subcoll' data-form-name='f_subcoll' value=\"!!subcoll!!\" class='saisie-30emr' linkfield='f_coll_id' callback='f_subcoll_id_callback'/>
 			
-					<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=subcollection&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_subcoll.value), 'selector')\" />
+					<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=subcollection&caller=notice&p1=f_ed1_id&p2=f_ed1&p3=f_coll_id&p4=f_coll&p5=f_subcoll_id&p6=f_subcoll&deb_rech='+".pmb_escape()."(this.form.f_subcoll.value), '!!force_dialog_subcollection!!', '!!force_popup_subcollection!!')\" />
 					<input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_subcoll.value=''; this.form.f_subcoll_id.value='0'; \" />
 					<input type='hidden' id='f_subcoll_id' name='f_subcoll_id' data-form-name='f_subcoll_id' value=\"!!subcoll_id!!\" />
 				</div>
@@ -737,7 +718,7 @@ $ptab[2] = "
 		<div id='el2Child_4' title='".htmlentities($msg[252],ENT_QUOTES, $charset)."' movable='yes'>
 			<div id='el2Child_4a' class='row'>&nbsp;</div>
 			<div class='row'>
-			    <!--    AnnÃ©e    -->
+			    <!--    Année    -->
 			    <div id='el2Child_5a' class='colonne2'>
 			        <label for='f_year' class='etiquette'>$msg[252]</label>
 			        <div class='row'>
@@ -754,13 +735,13 @@ $ptab[2] = "
 	    </div>
 	</div>
 	<div id='el2Child_7' title='".htmlentities($msg[254],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Autre Ã©diteur    -->
+		<!--    Autre éditeur    -->
 		<div id='el2Child_7a' class='row'>
 		    <label for='f_ed2' class='etiquette'>$msg[254]</label>
 		</div>
 		<div id='el2Child_7b' class='row'>
 		    <input type='text' completion='publishers' autfield='f_ed2_id' id='f_ed2' name='f_ed2' data-form-name='f_ed2' value=\"!!ed2!!\" class='saisie-30emr' />
-		    <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=editeur&caller=notice&p1=f_ed2_id&p2=f_ed2&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed2.value), 'selector')\" />
+		    <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=editeur&caller=notice&p1=f_ed2_id&p2=f_ed2&p3=dummy&p4=dummy&p5=dummy&p6=dummy&deb_rech='+".pmb_escape()."(this.form.f_ed2.value), '!!force_dialog_publisher!!', '!!force_popup_publisher!!')\" />
 		    <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_ed2.value=''; this.form.f_ed2_id.value='0'; \" />
 		    <input type='hidden' name='dummy' />
 		    <input type='hidden' name='f_ed2_id' id='f_ed2_id' data-form-name='f_ed2_id' value=\"!!ed2_id!!\" />
@@ -777,7 +758,7 @@ $notice_tab_isbn_form_tpl = "
 <!-- onglet 3 -->
 <div id='el3Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el3Img' title='$msg[255]' border='0' onClick=\"expandBase('el3', true); return false;\" />
+        ".get_expandBase_button('el3', '255')."
 	    $msg[255]
 	</h3>
 </div>
@@ -805,56 +786,16 @@ $ptab[4] = "
 <!-- onglet 4 -->
 <div id='el4Parent' class='parent'>
     <h3>
-        <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el4Img' title='$msg[257]' border='0' onClick=\"expandBase('el4', true); return false;\" />
+        ".get_expandBase_button('el4', '257')."
         $msg[258]
     </h3>
 </div>
 <div id='el4Child' class='child' etirable='yes' title='".htmlentities($msg[258],ENT_QUOTES, $charset)."'>
-	<div id='el4Child_0' title='".htmlentities($msg[259],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Importance matÃ©rielle (nombre de pages, d'Ã©lÃ©ments...)    -->
-		<div id='el4Child_0a' class='row'>
-		    <label for='f_npages' class='etiquette'>$msg[259]</label>
-		</div>
-		<div id='el4Child_0b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_npages' name='f_npages' data-form-name='f_npages' value=\"!!npages!!\" />
-		</div>
-	</div>
-	<div id='el4Child_1' title='".htmlentities($msg[260],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Autres caractÃ¨ristiques matÃ©rielle (ill., ...)    -->
-		<div id='el4Child_1a' class='row'>
-		    <label for='f_ill' class='etiquette'>$msg[260]</label>
-		</div>
-		<div id='el4Child_1b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_ill' name='f_ill' data-form-name='f_ill' value=\"!!ill!!\" />
-		</div>
-	</div>
-	<div id='el4Child_2' title='".htmlentities($msg[261],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Format    -->
-		<div id='el4Child_2a' class='row'>
-		    <label for='f_size' class='etiquette'>$msg[261]</label>
-		</div>
-		<div id='el4Child_2b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_size' name='f_size' data-form-name='f_size' value=\"!!size!!\" />
-		</div>
-	</div>
-	<div id='el4Child_3' title='".htmlentities($msg[4050],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Prix    -->
-		<div id='el4Child_3a' class='row'>
-		    <label for='f_prix' class='etiquette'>$msg[4050]</label>
-		</div>
-		<div id='el4Child_3b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_prix' name='f_prix' data-form-name='f_prix' value=\"!!prix!!\" />
-		</div>
-	</div>
-	<div id='el4Child_4' title='".htmlentities($msg[262],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    MatÃ©riel d'accompagnement    -->
-		<div id='el4Child_4a' class='row'>
-		    <label for='f_accomp' class='etiquette'>$msg[262]</label>
-		</div>
-		<div id='el4Child_4b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_accomp' name='f_accomp' data-form-name='f_accomp' value=\"!!accomp!!\" />
-		</div>
-	</div>
+	!!element_npages!!
+    !!element_ill!!
+    !!element_size!!
+    !!element_prix!!
+    !!element_accomp!!
 </div>
 ";
 
@@ -865,38 +806,14 @@ $ptab[4] = "
 $notice_tab_notes_form_tpl = "
 <div id='el5Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el5Img' title='$msg[263]' border='0' onClick=\"expandBase('el5', true); return false;\" />
+        ".get_expandBase_button('el5', '263')."
 	    $msg[264]
 	</h3>
 </div>
 <div id='el5Child' class='child' etirable='yes' title='".htmlentities($msg[264],ENT_QUOTES, $charset)."'>
-	<div id='el5Child_0' title='".htmlentities($msg[265],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Note gÃ©nÃ©rale    -->
-		<div id='el5Child_0a' class='row'>
-		    <label for='f_n_gen' class='etiquette'>$msg[265]</label>
-		</div>
-		<div id='el5Child_0b' class='row'>
-		    <textarea id='f_n_gen' class='saisie-80em' name='f_n_gen' data-form-name='f_n_gen' rows='3' wrap='virtual'>!!n_gen!!</textarea>
-		</div>
-	</div>
-	<div id='el5Child_1' title='".htmlentities($msg[266],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Note de contenu    -->
-		<div id='el5Child_1a' class='row'>
-		    <label for='f_n_contenu' class='etiquette'>$msg[266]</label>
-		</div>
-		<div id='el5Child_1b' class='row'>
-		    <textarea id='f_n_contenu' class='saisie-80em' name='f_n_contenu' data-form-name='f_n_contenu' rows='5' wrap='virtual'>!!n_contenu!!</textarea>
-		</div>
-	</div>
-	<div id='el5Child_2' title='".htmlentities($msg[267],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    RÃ©sumÃ©/extrait    -->
-		<div id='el5Child_2a' class='row'>
-		    <label for='f_n_resume' class='etiquette'>$msg[267]</label>
-		</div>
-		<div id='el5Child_2b' class='row'>
-		    <textarea class='saisie-80em' id='f_n_resume' name='f_n_resume' data-form-name='f_n_resume' rows='5' wrap='virtual'>!!n_resume!!</textarea>
-		</div>
-	</div>
+	!!element_n_gen!!
+    !!element_n_contenu!!
+    !!element_n_resume!!
 </div>
 ";
 
@@ -908,13 +825,13 @@ $notice_tab_indexation_form_tpl = "
     <!-- onglet 6 -->
 <div id='el6Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el6Img' title=\"$msg[268]\" border='0' onClick=\"expandBase('el6', true);recalc_recept(); return false;\" />
+	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el6Img' title=\"$msg[268]\" onClick=\"expandBase('el6', true);recalc_recept(); return false;\" />
 	    $msg[269]
 	</h3>
 </div>
 <div id='el6Child' class='child' etirable='yes' title='".htmlentities($msg[269],ENT_QUOTES, $charset)."'>
 	<div id='el6Child_0' title='".htmlentities($msg[134],ENT_QUOTES, $charset)."' movable='yes'>
-	    <!--    CatÃ©gories    -->
+	    <!--    Catégories    -->
 	    <div id='el6Child_0a' class='row'>
 	        <label for='f_categ' class='etiquette'>".$msg['categories_catal_title']."</label>
 	    </div>
@@ -930,7 +847,7 @@ $notice_tab_indexation_form_tpl = "
 	    </div>
 	    <div id='el6Child_1b' class='row'>
 	        <input type='text' class='saisie-80emr' id='f_indexint' name='f_indexint' data-form-name='f_indexint' value=\"!!indexint!!\" completion=\"indexint\" autfield=\"f_indexint_id\"  typdoc=\"typdoc\" />
-	        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=indexint&caller=notice&param1=f_indexint_id&param2=f_indexint&parent=0&deb_rech='+".pmb_escape()."(this.form.f_indexint.value)+'&typdoc='+(this.form.typdoc.value)+'&num_pclass=!!num_pclass!!', 'selector')\" />
+	        <input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=indexint&caller=notice&param1=f_indexint_id&param2=f_indexint&parent=0&deb_rech='+".pmb_escape()."(this.form.f_indexint.value)+'&typdoc='+(this.form.typdoc.value)+'&num_pclass=!!num_pclass!!', '!!force_dialog_indexint!!', '!!force_popup_indexint!!')\" />
 	        <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_indexint.value=''; this.form.f_indexint_id.value='0'; \" />
 	        <input type='hidden' name='f_indexint_id' data-form-name='f_indexint_id' id='f_indexint_id' value='!!indexint_id!!' />
 	    </div>
@@ -952,13 +869,13 @@ $notice_tab_indexation_form_tpl = "
 ";
 
 //    ----------------------------------------------------
-//     CatÃ©gories rÃ©pÃ©tables
+//     Catégories répétables
 //       $ptab[60]
 //    ----------------------------------------------------
 $notice_indexation_first_form_tpl = "
 	<script type='text/javascript' src='./javascript/categ_drop.js'></script>
 	<input type='hidden' name='tab_categ_order' id='tab_categ_order' value='!!tab_categ_order!!' />
-	<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=categorie&caller=notice&autoindex_class=autoindex_record&indexation_lang=!!indexation_lang_sel!!&p1=f_categ_id!!icateg!!&p2=f_categ!!icateg!!&dyn=1&parent=0&deb_rech=', 'selector_category')\" />
+	<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelectorCategory('./select.php?what=categorie&caller=notice&autoindex_class=autoindex_record&indexation_lang=!!indexation_lang_sel!!&p1=f_categ_id!!icateg!!&p2=f_categ!!icateg!!&dyn=1&parent=0&deb_rech=', '!!force_dialog_category!!', '!!force_popup_category!!')\" />
     <input type='button' class='bouton' value='+' onClick=\"add_categ();\"/>
   	<div id='drag_!!icateg!!'  class='row' dragtype='categ' draggable='yes' recept='yes' recepttype='categ' handler='handle_!!icateg!!'
 		dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!categ_libelle!!' downlight=\"categ_downlight\" highlight=\"categ_highlight\"
@@ -968,6 +885,7 @@ $notice_indexation_first_form_tpl = "
         <input type='text' class='saisie-80emr' id='f_categ!!icateg!!' name='f_categ!!icateg!!' data-form-name='f_categ' value=\"!!categ_libelle!!\" completion=\"categories_mul\" autfield=\"f_categ_id!!icateg!!\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; \" />
        	<input type='hidden' name='f_categ_id!!icateg!!' data-form-name='f_categ_id' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
+       	!!add_categ_btn!!
 	</div>
     ";
 $notice_indexation_next_form_tpl = "
@@ -979,6 +897,7 @@ $notice_indexation_next_form_tpl = "
     	<input type='text' class='saisie-80emr' id='f_categ!!icateg!!' name='f_categ!!icateg!!' value=\"!!categ_libelle!!\" completion=\"categories_mul\" autfield=\"f_categ_id!!icateg!!\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_categ!!icateg!!.value=''; this.form.f_categ_id!!icateg!!.value='0'; \" />
         <input type='hidden' name='f_categ_id!!icateg!!' id='f_categ_id!!icateg!!' value='!!categ_id!!' />
+        !!add_categ_btn!!
 	</div>
     ";
 
@@ -990,12 +909,12 @@ $notice_indexation_next_form_tpl = "
 $notice_tab_lang_form_tpl = "
 <div id='el7Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el7Img' title='langues' border='0' onClick=\"expandBase('el7', true); return false;\" />
+        ".get_expandBase_button('el7', '537')."
 	    $msg[710]
 	</h3>
 </div>
-<div id='el7Child' class='child' etirable='yes' title='".htmlentities($msg[710],ENT_QUOTES, $charset)."'>
-	<div id='el7Child_0' title='".htmlentities($msg[710],ENT_QUOTES, $charset)."' movable='yes'>
+<div id='el7Child' class='child' etirable='yes' title='".htmlentities($msg[710], ENT_QUOTES, $charset)."'>
+	<div id='el7Child_0' title='".htmlentities($msg[710], ENT_QUOTES, $charset)."' movable='yes'>
 	    <!--    Langues    -->
 	    <div id='el7Child_0a' class='row'>
 	        <label for='f_langue' class='etiquette'>$msg[710]</label>
@@ -1021,34 +940,35 @@ $notice_tab_lang_form_tpl = "
 ";
 
 //    ----------------------------------------------------
-//     Langues rÃ©pÃ©tables
+//     Langues répétables
 //    ----------------------------------------------------
 $notice_lang_first_form_tpl = "
     <div id='el7Child_0a' class='row'>
         <input type='text' class='saisie-30emr' id='f_lang!!ilang!!' name='f_lang!!ilang!!' data-form-name='f_lang' value=\"!!lang!!\" completion=\"langue\" autfield=\"f_lang_code!!ilang!!\" />
-		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_lang_code!!ilang!!&p2=f_lang!!ilang!!', 'selector')\" />
+		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=lang&caller=notice&p1=f_lang_code!!ilang!!&p2=f_lang!!ilang!!', '!!force_dialog_lang!!', '!!force_popup_lang!!')\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_lang!!ilang!!.value=''; this.form.f_lang_code!!ilang!!.value=''; \" />
+        !!button_add_lang!!
         <input type='hidden' name='f_lang_code!!ilang!!' data-form-name='f_lang_code' id='f_lang_code!!ilang!!' value='!!lang_code!!' />
-        <input id='button_add_f_lang_code' type='button' class='bouton' value='+' onClick=\"add_lang();\"/>
     </div>
     ";
 
 $notice_lang_next_form_tpl = "
     <div id='el7Child_0a' class='row'>
         <input type='text' class='saisie-30emr' id='f_lang!!ilang!!' name='f_lang!!ilang!!' value=\"!!lang!!\" completion=\"langue\" autfield=\"f_lang_code!!ilang!!\" />
-		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_lang_code!!ilang!!&p2=f_lang!!ilang!!', 'selector')\" />
+		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=lang&caller=notice&p1=f_lang_code!!ilang!!&p2=f_lang!!ilang!!', '!!force_dialog_lang!!', '!!force_popup_lang!!')\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_lang!!ilang!!.value=''; this.form.f_lang_code!!ilang!!.value=''; \" />
+        !!button_add_lang!!
         <input type='hidden' name='f_lang_code!!ilang!!' id='f_lang_code!!ilang!!' value='!!lang_code!!' />
     </div>
     ";
 
 //    ----------------------------------------------------
-//     Langues originales rÃ©pÃ©tables
+//     Langues originales répétables
 //    ----------------------------------------------------
 $notice_langorg_first_form_tpl = "
     <div id='el7Child_0b' class='row'>
         <input type='text' class='saisie-30emr' id='f_langorg!!ilangorg!!' name='f_langorg!!ilangorg!!' data-form-name='f_langorg' value=\"!!langorg!!\" completion=\"langue\" autfield=\"f_langorg_code!!ilangorg!!\" />
-		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_langorg_code!!ilangorg!!&p2=f_langorg!!ilangorg!!', 'selector')\" />
+		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=lang&caller=notice&p1=f_langorg_code!!ilangorg!!&p2=f_langorg!!ilangorg!!', '!!force_dialog_lang!!', '!!force_popup_lang!!')\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_langorg!!ilangorg!!.value=''; this.form.f_langorg_code!!ilangorg!!.value=''; \" />
         <input type='hidden' name='f_langorg_code!!ilangorg!!' data-form-name='f_langorg_code' id='f_langorg_code!!ilangorg!!' value='!!langorg_code!!' />
         <input id='button_add_f_langorg_code' type='button' class='bouton' value='+' onClick=\"add_langorg();\"/>
@@ -1057,7 +977,7 @@ $notice_langorg_first_form_tpl = "
 $notice_langorg_next_form_tpl = "
     <div id='el7Child_0b' class='row'>
         <input type='text' class='saisie-30emr' id='f_langorg!!ilangorg!!' name='f_langorg!!ilangorg!!' value=\"!!langorg!!\" completion=\"langue\" autfield=\"f_langorg_code!!ilangorg!!\" />
-		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_langorg_code!!ilangorg!!&p2=f_langorg!!ilangorg!!', 'selector')\" />
+		<input type='button' class='bouton' value='$msg[parcourir]' onclick=\"openPopUpSelector('./select.php?what=lang&caller=notice&p1=f_langorg_code!!ilangorg!!&p2=f_langorg!!ilangorg!!', '!!force_dialog_lang!!', '!!force_popup_lang!!')\" />
         <input type='button' class='bouton' value='$msg[raz]' onclick=\"this.form.f_langorg!!ilangorg!!.value=''; this.form.f_langorg_code!!ilangorg!!.value=''; \" />
         <input type='hidden' name='f_langorg_code!!ilangorg!!' id='f_langorg_code!!ilangorg!!' value='!!langorg_code!!' />
     </div>
@@ -1070,6 +990,7 @@ $notice_langorg_next_form_tpl = "
 
 $notice_tab_links_form_tpl = "
 <script>
+const tabTokens_catal_url = !!tokens_csrf!!;
 function chklnk_f_lien(element){
 	if(element.value != ''){
 		var wait = document.createElement('img');
@@ -1078,33 +999,47 @@ function chklnk_f_lien(element){
 		while(document.getElementById('f_lien_check').firstChild){
 			document.getElementById('f_lien_check').removeChild(document.getElementById('f_lien_check').firstChild);
 		}
+
+		var csrf_token = tabTokens_catal_url[0];
+		tabTokens_catal_url.splice(0, 1);
+
 		document.getElementById('f_lien_check').appendChild(wait);
 		var testlink = encodeURIComponent(element.value);
 		var req = new XMLHttpRequest();
-		req.open('GET', './ajax.php?module=ajax&categ=chklnk&timeout=!!pmb_curl_timeout!!&link='+testlink, true);
+		req.open('GET', './ajax.php?module=ajax&categ=chklnk&timeout=!!pmb_curl_timeout!!&link='+testlink+'&csrf_token='+csrf_token, true);
 		req.onreadystatechange = function (aEvt) {
-		  if (req.readyState == 4) {
-		  	if(req.status == 200){
+			if(req.status == 200){
 				var img = document.createElement('img');
-			    var src='';
-			    var type_status=req.responseText.substr(0,1);
-			    if(type_status == '2' || type_status == '3'){
-			    	if((element.value.substr(0,7) != 'http://') && (element.value.substr(0,8) != 'https://')) element.value = 'http://'+element.value;
+				var src='';
+				var type_status=req.responseText.substr(0,1);
+				if(type_status == '2' || type_status == '3'){
+					if((element.value.substr(0,7) != 'http://') && (element.value.substr(0,8) != 'https://')) element.value = 'http://'+element.value;
 					//impec, on print un petit message de confirmation
 					src = '".get_url_icon('tick.gif')."';
 				}else{
-			      //problÃ¨me...
+					//problème...
 					src = '".get_url_icon('error.png')."';
 					img.setAttribute('style','height:1.5em;');
-			    }
-			    img.setAttribute('src',src);
+				}
+				img.setAttribute('src',src);
 				img.setAttribute('align','top');
 				while(document.getElementById('f_lien_check').firstChild){
 					document.getElementById('f_lien_check').removeChild(document.getElementById('f_lien_check').firstChild);
 				}
 				document.getElementById('f_lien_check').appendChild(img);
-			}
-		  }
+			} else {
+                var img = document.createElement('img');
+				var src='';
+				//problème...
+				src = '".get_url_icon('error.png')."';
+				img.setAttribute('style','height:1.5em;');
+                img.setAttribute('src',src);
+				img.setAttribute('align','top');
+				while(document.getElementById('f_lien_check').firstChild){
+					document.getElementById('f_lien_check').removeChild(document.getElementById('f_lien_check').firstChild);
+				}
+				document.getElementById('f_lien_check').appendChild(img);
+            }
 		};
 		req.send(null);
 	}
@@ -1112,31 +1047,23 @@ function chklnk_f_lien(element){
 </script>
 <div id='el8Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el8Img' onClick=\"expandBase('el8', true); return false;\" title='$msg[274]' border='0' />
+        ".get_expandBase_button('el8', '274')."
 	    $msg[274]
 	</h3>
 </div>
 <div id='el8Child' class='child' etirable='yes' title='".htmlentities($msg[274],ENT_QUOTES, $charset)."'>
 	<div id='el8Child_0' title='".htmlentities($msg[275],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    URL associÃ©e    -->
+		<!--    URL associée    -->
 		<div id='el8Child_0a' class='row'>
 		    <label for='f_l' class='etiquette'>$msg[275]</label>
 		</div>
 		<div id='el8Child_0b' class='row'>
 			<div id='f_lien_check' style='display:inline'></div>
-		    <input name='f_lien' data-form-name='f_lien' type='text' class='saisie-80em' id='f_lien' onchange='chklnk_f_lien(this);' value=\"!!lien!!\" maxlength='255' />
+		    <input name='f_lien' data-form-name='f_lien' type='text' class='saisie-80em' id='f_lien' onchange='chklnk_f_lien(this);' value=\"!!lien!!\" />
 		    <input class='bouton' type='button' onClick=\"var l=document.getElementById('f_lien').value; eval('window.open(\''+l+'\')');\" title='$msg[CheckLink]' value='$msg[CheckButton]' />
 		</div>
 	</div>
-	<div id='el8Child_1' title='".htmlentities($msg[276],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Format Ã©lectronique de la ressource    -->
-		<div id='el8Child_1a' class='row'>
-		    <label for='f_eformat' class='etiquette'>$msg[276]</label>
-		</div>
-		<div id='el8Child_1b' class='row'>
-		    <input type='text' class='saisie-80em' id='f_eformat' name='f_eformat' data-form-name='f_eformat' value=\"!!eformat!!\" />
-		</div>
-	</div>
+	!!element_eformat!!
 </div>
 ";
 
@@ -1149,20 +1076,12 @@ if ($pmb_map_activate) {
 	<!-- onglet 14 -->
 	<div id='el14Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el14Img' onClick=\"expandBase('el14', true); return false;\" title='".$msg["notice_map_onglet_title"]."' border='0' /> ".$msg["notice_map_onglet_title"]."
+        ".get_expandBase_button('el14', 'notice_map_onglet_title')." ".$msg["notice_map_onglet_title"]."
 	</h3>
 	</div>
 	
 	<div id='el14Child' class='child' etirable='yes' title='".htmlentities($msg['notice_map_onglet_title'],ENT_QUOTES, $charset)."'>
-		<div id='el14Child_0' title='".htmlentities($msg['notice_map'],ENT_QUOTES, $charset)."' movable='yes'>
-			<div id='el14Child_0a' class='row'>
-			    <label class='etiquette'>$msg[notice_map]</label>
-			</div>
-			<div id='el14Child_0b' class='row'>
-				!!notice_map!!
-		    </div>
-		</div>
-	
+		!!element_notice_map!!
 	</div>
 	";
 } else {
@@ -1179,7 +1098,7 @@ $ptab[15] = "
 <!-- onglet 15 -->
 <div id='el15Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el15Img' onClick=\"expandBase('el15', true); return false;\" title='".$msg["notice_nomenclature_onglet_title"]."' border='0' /> ".$msg["notice_nomenclature_onglet_title"]."
+        ".get_expandBase_button('el15', 'notice_nomenclature_onglet_title')." ".$msg["notice_nomenclature_onglet_title"]."
 	</h3>
 </div>
 <div id='el15Child' class='child' etirable='yes' title='".htmlentities($msg['notice_nomenclature_onglet_title'],ENT_QUOTES, $charset)."'>
@@ -1194,8 +1113,8 @@ $ptab[15] = "
 ";
 
 //    ----------------------------------------------------
-//    Champs personalisÃ©s
-//       $notice_tab_customs_perso_form_tpl : Contenu de l'onglet 9 (champs personalisÃ©s)
+//    Champs personalisés
+//       $notice_tab_customs_perso_form_tpl : Contenu de l'onglet 9 (champs personalisés)
 //    ----------------------------------------------------
 
 $notice_tab_customs_perso_form_tpl = "
@@ -1217,20 +1136,13 @@ $notice_tab_customs_perso_form_tpl = "
 $notice_tab_gestion_fields_form_tpl = "
 <div id='el10Parent' class='parent'>
 <h3>
-    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el10Img' onClick=\"expandBase('el10', true); return false;\" title='".$msg["notice_champs_gestion"]."' border='0' /> ".$msg["notice_champs_gestion"]."
+    ".get_expandBase_button('el10', 'notice_champs_gestion')." ".$msg["notice_champs_gestion"]."
 </h3>
 </div>
 <div id='el10Child' class='child' etirable='yes' title='".htmlentities($msg["notice_champs_gestion"],ENT_QUOTES, $charset)."'>
-	<div id='el10Child_0' title='".htmlentities($msg["notice_statut_gestion"],ENT_QUOTES, $charset)."' movable='yes'>
-		<div id='el10Child_0a' class='row'>
-		    <label for='f_notice_statut' class='etiquette'>$msg[notice_statut_gestion]</label>
-		</div>
-		<div id='el10Child_0b' class='row'>
-			!!notice_statut!!
-	    </div>
-	</div>
+	!!element_notice_statut!!
 	<div id='el10Child_7' title='".htmlentities($msg["notice_is_new_gestion"],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    NouveautÃ©    -->
+		<!--    Nouveauté    -->
 		<div id='el10Child_7a' class='row'>
 		    <label for='f_new_gestion' class='etiquette'>".$msg["notice_is_new_gestion"]."</label>
 		</div>
@@ -1239,15 +1151,7 @@ $notice_tab_gestion_fields_form_tpl = "
 		    <input type='radio' name='f_notice_is_new' id='f_notice_is_new' !!checked_yes!! value='1'><label for='f_notice_is_new'>".$msg["notice_is_new_gestion_yes"]."</label><br>
 		</div>
 	</div>
-	<div id='el10Child_1' title='".htmlentities($msg["notice_commentaire_gestion"],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    commentaire de gestion    -->
-		<div id='el10Child_1a' class='row'>
-			<label for='f_commentaire_gestion' class='etiquette'>$msg[notice_commentaire_gestion]</label>
-		</div>
-		<div id='el10Child_1b' class='row'>
-			<textarea class='saisie-80em' id='f_commentaire_gestion' name='f_commentaire_gestion' rows='1' wrap='virtual'>!!commentaire_gestion!!</textarea>
-		</div>
-	</div>
+	!!element_commentaire_gestion!!
 	<div id='el10Child_2' title='".htmlentities($msg["notice_thumbnail_url"],ENT_QUOTES, $charset)."' movable='yes'>
 		<!--    URL vignette speciale    -->
 		<div id='el10Child_2a' class='row'>
@@ -1257,17 +1161,12 @@ $notice_tab_gestion_fields_form_tpl = "
 			<div id='f_thumbnail_check' style='display:inline'></div>
 			<input type='text' class='saisie-80em' id='f_thumbnail_url' name='f_thumbnail_url' rows='1' wrap='virtual' value=\"!!thumbnail_url!!\" onchange='chklnk_f_thumbnail_url(this);' />
 		</div>
-	</div>
-	<div id='el10Child_3' title='".htmlentities($msg["numeric_record"],ENT_QUOTES, $charset)."' movable='yes'>
-		<!--    Notice numÃ©rique ?    -->
-		<div id='el10Child_3a' class='row'>
-		    <label for='f_is_numeric' class='etiquette'>".$msg["numeric_record"]."</label>
-		</div>
-		<div id='el10Child_3b' class='row'>
-		    <input type='radio' name='f_is_numeric' id='f_is_not_numeric' !!is_numeric_no!! value='0'><label for='f_is_not_numeric'>".$msg["notice_is_new_gestion_no"]."</label><br>
-		    <input type='radio' name='f_is_numeric' id='f_is_numeric' !!is_numeric_yes!! value='1'><label for='f_is_numeric'>".$msg["notice_is_new_gestion_yes"]."</label><br>
-		</div>
 	</div>";
+if(dilicom::is_pnb_active()) {
+	$notice_tab_gestion_fields_form_tpl.= "
+        !!element_is_numeric!!
+		";
+}
 global $pmb_notice_img_folder_id;
 if($pmb_notice_img_folder_id)
 	$notice_tab_gestion_fields_form_tpl.= "
@@ -1279,20 +1178,39 @@ if($pmb_notice_img_folder_id)
 			<div id='el10Child_6b' class='row'>
 			    <input type='file' class='saisie-80em' id='f_img_load' name='f_img_load' rows='1' wrap='virtual' value='' />
 			</div>
+			<div id='el10Child_6c' class='row'>
+				<img id='f_img_loaded' alt='' src='!!f_img_loaded_src!!'/>
+                <button id='reset_thumbnail_button' name='reset_thumbnail_button' onclick='reset_thumbnail()'>
+                    <img alt='delete thumbnail' src='./images/cross.png'/>
+                </button>
+                <input type='hidden' id='f_reset_thumbnail' name='f_reset_thumbnail' value='0' />
+                <script>
+                    function displayResetThumbnailButton() {
+                        var imgThumbnail = document.getElementById('f_img_loaded');
+                        if (imgThumbnail && imgThumbnail.src == '') {
+                            document.getElementById('reset_thumbnail_button').style.display = 'none';
+                        }
+                    }
+                    function reset_thumbnail() {
+                        if (confirm('Voulez-vous supprimer cette vignette ?')) {
+                            let inputReset = document.getElementById('f_reset_thumbnail');
+                            if (inputReset) {
+                                inputReset.value = 1;
+                            }
+                            document.getElementById('f_img_loaded').src = '';
+                            displayResetThumbnailButton();
+                        }
+                    }
+                    displayResetThumbnailButton();
+                </script>
+			</div>
 		</div>";
 $notice_tab_gestion_fields_form_tpl.= "
 	<div id='el10Child_3' title='".htmlentities($msg['admin_menu_acces'],ENT_QUOTES, $charset)."' movable='yes'>
 		<!-- Droits d'acces -->
 		<!-- rights_form -->
 	</div>
-	<div id='el10Child_4' title='".htmlentities($msg['indexation_lang_select'],ENT_QUOTES, $charset)."' movable='yes'>
-		<div id='el10Child_4a' class='row'>
-		    <label for='f_notice_lang' class='etiquette'>".$msg["indexation_lang_select"]."</label>
-		</div>
-		<div id='el10Child_4b' class='row'>
-		   !!indexation_lang!!
-		</div>
-	</div>
+	!!element_indexation_lang!!
 ";
 global $pmb_notices_show_dates;
 if($pmb_notices_show_dates)
@@ -1303,129 +1221,11 @@ if($pmb_notices_show_dates)
 			</div>
 		</div>";
 $notice_tab_gestion_fields_form_tpl.= "
-	<div id='el10Child_10' title='".htmlentities($msg['notice_usage_libelle'],ENT_QUOTES, $charset)."' movable='yes'>
-		<div id='el10Child_10a' class='row'>
-		    <label for='f_notice_usage' class='etiquette'>".$msg['notice_usage_libelle']."</label>
-		</div>
-		<div id='el10Child_10b' class='row'>
-			!!num_notice_usage!!
-	    </div>
-	</div>
+	!!element_notice_usage!!
 </div>
 ";
 
-// $form_notice : formulaire de notice
-global $pmb_catalog_verif_js;
-$form_notice = jscript_unload_question();
-
-if ($pmb_use_uniform_title) {
-	if(form_mapper::isMapped('notice')){
-		$form_notice.= "
-			<!-- dojo manif from expression -->
-			<script type='text/javascript'>
-				require(['dojo/ready', 'apps/form_mapper/FormMapper', 'dojo/_base/lang'], function(ready, FormMapper, lang){
-				     ready(function(){
-				     	var formMapper = new FormMapper('notice', 'notice');
-				     	window['formMapperCallback'] = lang.hitch(formMapper, formMapper.selectorCallback, 'tu');
-				     });
-				});
-			</script>";
-	}
-}
-$form_notice.= "
-<!-- script de gestion des onglets -->
-<script type='text/javascript' src='./javascript/tabform.js'></script>
-".($pmb_catalog_verif_js!= "" ? "<script type='text/javascript' src='$base_path/javascript/$pmb_catalog_verif_js'></script>":"")."
-<script type='text/javascript'>
-<!--
-    function test_notice(form)
-    {
-    ";
-if($pmb_catalog_verif_js!= ""){
-	$form_notice.= "
-		var check = check_perso_form()
-		if(check == false) return false;";
-}
-if ($pmb_nomenclature_activate){
-	$form_notice.= "
-			if(!dijit.byId('nomenclature_record_ui_0').check_validate())
-				return false;
-			";
-}
-$form_notice.= "
-		titre1 = form.f_tit1.value;
-		titre1 = titre1.replace(/^\s+|\s+$/g, ''); //trim la valeur
-        if(titre1.length == 0) {
-           alert(\"$msg[277]\");
-           return false;
-		}
-		return check_form();
-    }
--->
-</script>
-<script src='javascript/ajax.js'></script>
-<script src='javascript/move.js'></script>
-<script type='text/javascript'>
-	var msg_move_to_absolute_pos='".addslashes($msg['move_to_absolute_pos'])."';
-	var msg_move_to_relative_pos='".addslashes($msg['move_to_relative_pos'])."';
-	var msg_move_saved_ok='".addslashes($msg['move_saved_ok'])."';
-	var msg_move_saved_error='".addslashes($msg['move_saved_error'])."';
-	var msg_move_up_tab='".addslashes($msg['move_up_tab'])."';
-	var msg_move_down_tab='".addslashes($msg['move_down_tab'])."';
-	var msg_move_position_tab='".addslashes($msg['move_position_tab'])."';
-	var msg_move_position_absolute_tab='".addslashes($msg['move_position_absolute_tab'])."';
-	var msg_move_position_relative_tab='".addslashes($msg['move_position_relative_tab'])."';
-	var msg_move_invisible_tab='".addslashes($msg['move_invisible_tab'])."';
-	var msg_move_visible_tab='".addslashes($msg['move_visible_tab'])."';
-	var msg_move_inside_tab='".addslashes($msg['move_inside_tab'])."';
-	var msg_move_save='".addslashes($msg['move_save'])."';
-	var msg_move_first_plan='".addslashes($msg['move_first_plan'])."';
-	var msg_move_last_plan='".addslashes($msg['move_last_plan'])."';
-	var msg_move_first='".addslashes($msg['move_first'])."';
-	var msg_move_last='".addslashes($msg['move_last'])."';
-	var msg_move_infront='".addslashes($msg['move_infront'])."';
-	var msg_move_behind='".addslashes($msg['move_behind'])."';
-	var msg_move_up='".addslashes($msg['move_up'])."';
-	var msg_move_down='".addslashes($msg['move_down'])."';
-	var msg_move_invisible='".addslashes($msg['move_invisible'])."';
-	var msg_move_visible='".addslashes($msg['move_visible'])."';
-	var msg_move_saved_onglet_state='".addslashes($msg['move_saved_onglet_state'])."';
-	var msg_move_open_tab='".addslashes($msg['move_open_tab'])."';
-	var msg_move_close_tab='".addslashes($msg['move_close_tab'])."';
-</script>
-<script type='text/javascript'>
-	function focus_tit1(){
-		var f_tit1 = document.getElementById('f_tit1');
-		if (f_tit1) {
-			f_tit1.focus();
-		}
-	}
-</script>
-<script type='text/javascript'>document.title = '!!document_title!!';</script>
-<script type='text/javascript'>
-	require(['dojo/ready', 'apps/pmb/form/FormController'], function(ready, FormController){
-	     ready(function(){
-	     	new FormController();
-	     });
-	});
-</script>
-<form data-advanced-form='true' class='form-$current_module' id='notice' name='notice' method='post' action='!!action!!' enctype='multipart/form-data' >
-<div class='row'>
-<div class='left'><h3>!!libelle_form!!</h3></div><div class='right'>";
-if ($PMBuserid==1 && $pmb_form_editables==1) $form_notice.="<input type='button' class='bouton_small' value='".$msg["catal_edit_format"]."' onClick=\"expandAll(); move_parse_dom(relative)\" id=\"bt_inedit\"/><input type='button' class='bouton_small' value='Relatif' onClick=\"expandAll(); move_parse_dom((!relative))\" style=\"display:none\" id=\"bt_swap_relative\"/>";
-if ($pmb_form_editables==1) $form_notice.="<input type='button' class='bouton_small' value=\"".$msg["catal_origin_format"]."\" onClick=\"get_default_pos(); expandAll();  ajax_parse_dom(); if (inedit) move_parse_dom(relative); else initIt();\"/>";
-$form_notice.="</div>
-</div>
-<div class='form-contenu'>
-<div class='row'>
-    	!!doc_type!! !!location!!
-    </div>
-<div class='row'>
-	<a href=\"#\" onclick=\"expandAll();return false;\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-	<a href=\"#\" onclick=\"collapseAll();return false;\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>";
-$form_notice .= "	<input type='hidden' name='b_level' value='!!b_level!!' />
-	<input type='hidden' name='h_level' value='!!h_level!!' />
-	</div>
+$notice_content_form = "
 !!tab0!!
 <hr class='spacer' />
 !!tab1!!
@@ -1439,8 +1239,8 @@ $form_notice .= "	<input type='hidden' name='b_level' value='!!b_level!!' />
 !!tab5!!
 <hr class='spacer' />
 !!tab6!!";
-if ($pmb_use_uniform_title) $form_notice .= "<hr class='spacer' />!!tab230!!";
-$form_notice .= "<hr class='spacer' />
+if ($pmb_use_uniform_title) $notice_content_form .= "<hr class='spacer' />!!tab230!!";
+$notice_content_form .= "<hr class='spacer' />
 !!tab7!!
 <hr class='spacer' />
 !!tab8!!
@@ -1456,24 +1256,6 @@ $form_notice .= "<hr class='spacer' />
 !!tab10!!
 <hr class='spacer' />
 !!authperso!!
-</div>
-<div class='row'>
-	<div class='left'>
-    !!link_annul!!
-    <input type='button' class='bouton' value='$msg[77]' id='btsubmit' onClick=\"if (test_notice(this.form)) {unload_off();this.form.submit();}\" />
-    !!link_remplace!!
-    !!link_duplicate!!
-    !!link_audit!!
-    !!link_z3950!!
-	</div>
-	<div class='right'>
-    !!link_supp!!
-	</div>
-</div>
-<div class='row'></div>
-</form>
-<script>".($pmb_form_editables?"get_pos(); ":"")."ajax_parse_dom(); focus_tit1(); </script>
-	!!plugins_form!!
 ";
 
 // $notice_replace : form remplacement notice
@@ -1485,10 +1267,10 @@ $notice_replace = "
 	        <label class='etiquette' for='par'>".$msg['160']."</label>
 		</div>
 	    <div class='row'>
-	        <input type='text' class='saisie-50emr' value='' name='notice_libelle' readonly>
+	        <input type='text' class='saisie-50emr' value='' id='notice_libelle' name='notice_libelle' completion='notice' autfield='by' autexclude='!!id!!'>
 	        <input class='bouton' type='button' onclick=\"openPopUp('./select.php?what=notice&caller=notice_replace&param1=by&param2=notice_libelle&no_display=!!id!!', 'selector_notice')\" title='".$msg['157']."' value='".$msg['parcourir']."' />
 	        <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.notice_libelle.value=''; this.form.by.value='0'; \" />
-	        <input type='hidden' name='by' value=''>
+	        <input type='hidden' id='by' name='by' value=''>
 	    </div>
 		!!notice_replace_categories!!
 		<div class='row'>
@@ -1502,6 +1284,10 @@ $notice_replace = "
 	    <input type='submit' class='bouton' value='".$msg['159']."'>
 	</div>
 </form>
+<script src='javascript/ajax.js'></script>
+<script type='text/javascript'>
+	ajax_parse_dom();
+</script>
 ";
 
 $notice_replace_categories = "

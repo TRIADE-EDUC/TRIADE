@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: convert.class.php,v 1.6 2019-06-05 13:13:19 btafforeau Exp $
+// $Id: convert.class.php,v 1.7 2020/04/30 06:58:07 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,7 +10,7 @@ require_once ("$include_path/parser.inc.php");
 require_once ($base_path."/admin/convert/start_import.class.php");
 require_once ($base_path."/admin/convert/start_export.class.php");
 
-//RÃ©cupÃ©ration du chemin du fichier de paramÃ©trage de l'import
+//Récupération du chemin du fichier de paramétrage de l'import
 function _item_($param) {
 	global $export_type;
 	global $i;
@@ -40,7 +40,7 @@ function _item_export_list_convert_($param) {
 	$iall++;
 }
 
-//RÃ©cupÃ©ration du paramÃ¨tre d'import
+//Récupération du paramètre d'import
 function _output_($param) {
 	global $output;
 	global $output_type;
@@ -64,14 +64,14 @@ function _input_($param) {
 	} else $specialexport=false;
 }
 
-//RÃ©cupÃ©ration des Ã©tapes de conversion
+//Récupération des étapes de conversion
 function _step_($param) {
 	global $step;
 
 	$step[] = $param;
 }
 
-//RÃ©cupÃ©ration du nom de l'import
+//Récupération du nom de l'import
 function _import_name_($param) {
 	global $import_name;
 
@@ -105,7 +105,7 @@ class convert {
 		$this->export_type=$type_convert;
 		$export_type=$type_convert;
 			
-		//RÃ©cupÃ©ration du rÃ©pertoire
+		//Récupération du répertoire
 		$i = 0;
 		$param_path = "";
 		if (file_exists("$base_path/admin/convert/imports/catalog_subst.xml")) {
@@ -115,7 +115,7 @@ class convert {
 		}
 		_parser_($fic_catal, array("ITEM" => "_item_"), "CATALOG");
 
-		//Lecture des paramÃ¨tres
+		//Lecture des paramètres
 		_parser_("$base_path/admin/convert/imports/".$param_path."/params.xml", array("IMPORTNAME" => "_import_name_","STEP" => "_step_","OUTPUT" => "_output_","INPUT" => "_input_"), "PARAMS");
 		
 		//En fonction du type de fichier de sortie, inclusion du script de gestion des sorties
@@ -187,7 +187,7 @@ class convert {
     	
     	$notice=$this->prepared_notice;
     	
-    	//Inclusion des librairies Ã©ventuelles
+    	//Inclusion des librairies éventuelles
 		for ($i = 0; $i < count($step); $i ++) {
 			if ($step[$i]['TYPE'] == "custom") {
 				//echo "imports/".$param_path."/".$step[$i][SCRIPT][0][value];
@@ -197,7 +197,7 @@ class convert {
 
 		require_once ("xmltransform.php");
 
-		//En fonction du type de fichier d'entrÃ©e, inclusion du script de gestion des entrÃ©es
+		//En fonction du type de fichier d'entrée, inclusion du script de gestion des entrées
 		$input_instance = start_import::get_instance_from_input_type($input_type);
 
 		for ($i = 0; $i < count($step); $i ++) {
@@ -233,10 +233,10 @@ class convert {
 		return $notice;
     }
 
-	// RÃ©cupÃ©ration de l'id Ã  partir du nom de l'export
+	// Récupération de l'id à partir du nom de l'export
 	public function get_id_by_path($path) {
 	   	global $export_list;
-		if (!count($export_list)) start_export::get_exports() ;
+	   	if (empty($export_list)) start_export::get_exports() ;
 		for ($i=0;$i<count($export_list);$i++) {
 			if ($export_list[$i]["PATH"]==$path) return $export_list[$i]["IDALL"] ;
 		}

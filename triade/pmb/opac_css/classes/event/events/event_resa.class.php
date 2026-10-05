@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: event_resa.class.php,v 1.2 2018-03-27 09:49:07 arenou Exp $
+// $Id: event_resa.class.php,v 1.2 2018/03/27 09:49:07 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

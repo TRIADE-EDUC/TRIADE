@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.15 2019-05-20 10:28:43 arenou Exp $ -->
+$Id: manifest.xml,v 1.19 2021/10/13 12:46:29 qvarin Exp $ -->
 
 <manifest>
 	<name lang="fr_FR">Liste d'articles</name>
@@ -40,6 +40,9 @@ $Id: manifest.xml,v 1.15 2019-05-20 10:28:43 arenou Exp $ -->
 			<view>cms_module_common_view_articleslist</view>
 			<view>cms_module_articleslist_view_carousel</view>
 			<view>cms_module_articleslist_view_carousel_responsive</view>
+			<view>cms_module_articleslist_view_carousel_uikit</view>
+			<view>cms_module_articleslist_view_slideshow</view>
+			<view>cms_module_articleslist_view_dynamic_grid</view>
 		</views>
 		<conditions>
 			<condition>cms_module_common_condition_global_var</condition>

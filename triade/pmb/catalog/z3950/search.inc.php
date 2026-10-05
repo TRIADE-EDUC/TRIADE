@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.inc.php,v 1.16 2018-03-12 14:43:14 apetithomme Exp $
+// $Id: search.inc.php,v 1.18 2023/12/22 13:54:41 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $msg, $issn, $isbn, $z3950_search_tpl, $id_notice;
 
 if(!isset($issn)) $issn = '';
 if(!isset($isbn)) $isbn = '';
@@ -32,23 +34,15 @@ else
 
 $select_bib="";
 $requete_bib = "SELECT bib_id, bib_nom, base FROM z_bib where search_type='CATALOG' ORDER BY bib_nom, base ";
-$res_bib = pmb_mysql_query($requete_bib, $dbh);
+$res_bib = pmb_mysql_query($requete_bib);
 
 while(($liste_bib=pmb_mysql_fetch_object($res_bib))) {
-	
 	$pos = array_search($liste_bib->bib_id, $bibli_selectionees);
-
-	if ($pos === false) { 
-		$select_bib.= "<input type='checkbox' name='bibli[]' value='".
-			$liste_bib->bib_id."' class='checkbox' />&nbsp;".
-			$liste_bib->bib_nom." - ".$liste_bib->base."\n";
-	} else {
-		$select_bib.= "<input type='checkbox' name='bibli[]' value='".
-			$liste_bib->bib_id."' checked class='checkbox' />&nbsp;".
-			$liste_bib->bib_nom." - ".$liste_bib->base."\n";
-	}
-	
-	$select_bib.="<br />";
+	$select_bib.= "
+    <div class='row'>
+        <input type='checkbox' id='bibli_".$liste_bib->bib_id."' name='bibli[]' value='".$liste_bib->bib_id."' class='checkbox' ".($pos === false ? "" : "checked='checked'")."/>&nbsp;
+		<label for='bibli_".$liste_bib->bib_id."'>".$liste_bib->bib_nom." - ".$liste_bib->base."</label>
+    </div>";
 }
 
 $z3950_search_tpl = str_replace('!!liste_bib!!', $select_bib, $z3950_search_tpl);

@@ -1,0 +1,80 @@
+<!-- $Id: gabarit.html,v 1.1 2022/11/25 14:59:27 arenou Exp $ -->
+
+<style type="text/css">
+.aut_display_row {
+	display: table-row;
+}
+
+.aut_display_cell {
+	display: table-cell;
+	padding-right: 5px;
+}
+</style>
+
+<div class="notice-parent" id="el{{ list_element.uid }}{{ list_element.id }}Parent">
+		{% if list_element.context_parameters.in_search %}
+			{% comment %}
+			<span class='notice-selection'><input type='checkbox' id='object_selection_{{ list_element.id }}' name='objects_selection' value='{{ list_element.id }}' /></span>
+			{% endcomment %}
+		{% endif %}
+  		<img style="border:0px; margin:3px 3px" onclick="expandBase('el{{ list_element.uid }}{{ list_element.id }}', true); return false;" id="el{{list_element.uid}}{{list_element.id}}Img" name="imEx" class="img_plus" src="{{ img.plus.gif }}">
+		<span class="notice-heada">
+			{% comment %}
+			<small>
+				<span class='{{list_element.statut_class_html}}' style='margin-right: 3px;'>
+					<a href=# onmouseover="z=document.getElementById('zoom_statut{{ list_element.id }}'); z.style.display='';" onmouseout="z=document.getElementById('zoom_statut{{list_element.id}}'); z.style.display='none';">
+						<img src="{{ img.spacer.gif }}" width="10" height="10" />
+					</a>
+				</span>
+			</small>
+			{% endcomment %}
+			{% if list_element.type_icon %}
+				<img class="align_top" src="{{ list_element.type_icon }}" title="{{ list_element.type_label }}" alt="{{ list_element.type_label }}"/>
+			{% endif %}
+			{{ list_element.icon_pointe_in_cart }}
+			{{ list_element.icon_del_in_cart }}
+			{% comment %}
+			<div id="zoom_statut{{ list_element.id }}" style="border: solid 2px #555555; background-color: #FFFFFF; position: absolute; display:none; z-index: 2000;">
+				<b>
+					{{ list_element.statut_label }}
+				</b>
+			</div>
+			{% endcomment %}
+			{% if list_element.context_parameters.in_selector %}
+				{% block element_link %}
+				<a href="#" data-element-id="{{ list_element.id }}" data-element-type="authorities" onclick="set_parent('{{ global.caller }}', '{{ list_element.num_object }}', '{{ list_element.isbd | strip_tags | escape true }}','{{ global.callback }}')">
+					{% block element_selector_header %}
+						{{ list_element.isbd | strip_tags | safe }}
+					{% endblock %}
+				</a>
+				{% endblock %}
+			{% else %}
+				<a href='./{{base_url}}?categ=&sub={{list_element.type.0}}&action=see&id={{list_element.id}}' data-element-id="{{ list_element.id }}" data-element-type="onto">
+					{% block element_header %}
+						{{ list_element.isbd | safe }}
+					{% endblock %}
+				</a>
+			{% endif %}
+		</span>
+  		<br>
+</div>
+
+<div style="margin-bottom: 6px; display: block;" class="notice-child" startOpen="no" id="el{{ list_element.uid }}{{ list_element.id }}Child">
+    <div class="vignAut">{{list_element.thumbnail}}</div>
+	<img class="align_middle" href="#"/>
+	<h3>{{ list_element.type_label }}</h3>
+	{{ list_element.caddie }}
+	{% if list_element.context_parameters.in_selector %}
+		<a title='{{ msg.authority_list_see_label }}' href='{{ list_element.authority_link }}' target='_blank'>
+    		<i class='fa fa-eye'></i>
+		</a>
+	{% endif %}
+	<div style="overflow:hidden;"><table width="100%">
+		<tr>
+			{% block element_content %}
+				{{ list_element.detail | safe }}
+			{% endblock element_content %}
+		</tr>
+	</table></div>
+	<div class="clear"></div>
+</div>

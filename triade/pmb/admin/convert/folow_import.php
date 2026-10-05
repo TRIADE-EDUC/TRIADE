@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: folow_import.php,v 1.13 2018-02-26 17:01:59 apetithomme Exp $
+// $Id: folow_import.php,v 1.14 2023/04/28 12:18:21 dgoron Exp $
 
 //Transmission ensuite du fichier converti
 $base_path = "../..";
@@ -12,6 +12,9 @@ $base_noheader=1;
 $base_nobody=1;
 $base_nosession=0;
 require ($base_path."/includes/init.inc.php");
+
+global $msg, $charset, $mimetype, $deliver;
+global $file_in, $func_import, $suffix;
 
 //Supression du fichier transmis
 @unlink("$base_path/temp/$file_in");
@@ -23,7 +26,7 @@ if (count($f) > 1) {
 }
 $file_out = implode(".", $f).".".$suffix."~";
 
-//TÃ©lÃ©chargement
+//Téléchargement
 if (!file_exists("$base_path/temp/$file_out")) {
 	header("Content-type: text/html; charset=".$charset);
 		print $std_header;
@@ -31,7 +34,7 @@ if (!file_exists("$base_path/temp/$file_out")) {
 		error_message_history($msg['admin_convert_erreur_destination'],$msg['admin_convert_fichier_existe'],0);
 		exit;
 }
-
+$deliver = intval($deliver);
 if ($deliver==3) {
 	if (!$mimetype) {
 		header("Content-Type: application/download");

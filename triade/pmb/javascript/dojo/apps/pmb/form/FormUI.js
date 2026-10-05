@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // + 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormUI.js,v 1.3 2017-10-16 09:20:30 vtouchard Exp $
+// $Id: FormUI.js,v 1.4 2020/06/04 08:51:04 dgoron Exp $
 
 
 define(['dojo/_base/declare', 
@@ -28,6 +28,7 @@ define(['dojo/_base/declare',
 		  tabContainer: null,
 		  contentPane: null,
 		  saveScroll: null,
+		  text_areas_with_tinymce: null,
 		  constructor:function(context){
 			 this.context = context;
 			 topic.subscribe('openPopup', lang.hitch(this, this.handleEvents));
@@ -59,6 +60,7 @@ define(['dojo/_base/declare',
 			  this.tabContainer.addTab(evtArgs);			
 		  },
 		  initEnvironment: function(){
+			  this.removeTinyEditor();
 			  this.saveScroll = document.body.scrollTop;
 			  this.tabContainer = new FormContainer({doLayout: false,  style: "height: 100%; width: 100%;"});
 			  this.tabContainer.startup();
@@ -81,18 +83,21 @@ define(['dojo/_base/declare',
 //				  this.tabContainer.placeAt("tab_container", 'last');
 //			  }
 			  this.tabContainer.resize();
+			  this.addTinyEditor();
 		  },
 		  switchView: function(){
 			  /**
 			   * Nous n'avons plus que le formulaire initial
 			   * Suppression de l'onglet, repassage en formulaire basique
 			   */
+			  this.removeTinyEditor();
 			  var formNodes = this.contentPane.containerNode.childNodes;
 			  formNodes = Array.prototype.slice.call(formNodes);
 			  formNodes.forEach(lang.hitch(this, function(node){
 				  domConstruct.place(node, this.context, 'last');
 			  }));
 			  this.destroyEnv();
+			  this.addTinyEditor();
 		  },
 		  destroyEnv: function(){
 			  this.contentPane.destroyRecursive();
@@ -101,6 +106,29 @@ define(['dojo/_base/declare',
 			  this.contentPane = null;
 			  this.tabContainer = null;
 			  document.body.scrollTop = this.saveScroll;
-		  }
+		  },
+		  removeTinyEditor: function() {
+			  if(typeof(tinyMCE)!= 'undefined') {
+				  var text_areas = document.getElementsByTagName('textarea');
+				  this.text_areas_with_tinymce = new Array();
+				  if (text_areas.length >0) {
+					  for (var j=0; j<text_areas.length; j++) {
+						  if (tinyMCE_getInstance(text_areas[j].getAttribute("id")) != null) {
+							  tinyMCE_execCommand('mceRemoveControl', true, text_areas[j].getAttribute("id"));
+							  this.text_areas_with_tinymce.push(text_areas[j].getAttribute("id"));
+						  }
+					  }
+				  }
+			  }
+		  },
+		  addTinyEditor: function() {
+			  if(typeof(tinyMCE)!= 'undefined') {
+				  if (this.text_areas_with_tinymce.length >0) {
+					  for (var j=0; j<this.text_areas_with_tinymce.length; j++) {
+						  tinyMCE_execCommand('mceAddControl', true, this.text_areas_with_tinymce[j]);
+					  }
+				  }
+			  }
+		  },
 	  });
 });

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le connecteur OAI
+****************************************************************************************
+© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: en_UK.xml,v 1.2 2020/05/13 09:14:46 dbellamy Exp $ -->
+
+<XMLlist>
+	<entry code="marketline_ftp">FTP settings</entry>
+	<entry code="marketline_ftp_url">Server URL</entry>
+	<entry code="marketline_ftp_login">Login</entry>
+	<entry code="marketline_ftp_pwd">Password</entry>
+	<entry code="marketline_ftp_dir">Directory</entry>
+	<entry code="marketline_files_filter">File filter</entry>
+	<entry code="marketline_files_filter_format"><![CDATA[&nbsp;(#regular expression#)]]></entry>	
+	<entry code="marketline_ftp_connect_error">Connexion error</entry>
+	<entry code="marketline_ftp_auth_error">Authentication error</entry>
+	<entry code="marketline_ftp_pasv_error">Error when switching to passive mode</entry>
+	<entry code="marketline_ftp_chdir_error">Error changing directory</entry>
+	<entry code="marketline_ftp_nlist_error">Directory read error</entry>
+	<entry code="marketline_progress_connect">FTP connection </entry>
+	<entry code="marketline_progress_list_files">File list</entry>
+	<entry code="marketline_progress_dl_file">Downloading file :  %1s (%2s of %3s)</entry>
+	<entry code="marketline_progress_unknown">unknown</entry>
+	<entry code="marketline_progress_convert_file">Converting file :  %1s (%2s of %3s)</entry>
+	<entry code="marketline_progress_import_file">Importing file :  %1s (%2s of %3s)</entry>
+</XMLlist>

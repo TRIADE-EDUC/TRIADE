@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_series_view.class.php,v 1.3 2018-06-13 10:34:01 vtouchard Exp $
+// $Id: frbr_entity_series_view.class.php,v 1.4 2021/08/09 13:48:24 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,8 +16,8 @@ class frbr_entity_series_view extends frbr_entity_common_view_django{
 </div>";
 	}
 		
-	public function render($datas){	
-		//on rajoute nos Ã©lÃ©ments...
+	public function render($datas, $grouped_datas = []){	
+		//on rajoute nos éléments...
 		//le titre
 		$render_datas = array();
 		$render_datas['title'] = $this->msg["frbr_entity_series_view_title"];

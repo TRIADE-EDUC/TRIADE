@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: searcher_authorities_series.class.php,v 1.5 2018-03-08 16:06:08 apetithomme Exp $
+// $Id: searcher_authorities_series.class.php,v 1.5 2018/03/08 16:06:08 apetithomme Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

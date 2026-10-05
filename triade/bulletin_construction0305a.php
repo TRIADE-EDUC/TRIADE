@@ -6,7 +6,7 @@ error_reporting(0);
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -33,7 +33,7 @@ if ($id != 1) {
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
-<meta name="Copyright" content="Triade©, 2001">
+<meta name="Copyright" content="Triadeï¿½, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
@@ -43,11 +43,11 @@ if ($id != 1) {
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGBULL5?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -91,7 +91,7 @@ config_param_ajout($ismappdatefin,"ismappdatefin");
 config_param_ajout($ismappdatedebut,"ismappdatedebut");
 config_param_ajout($ismappects,"ismappects");
 
-$textTrimestre="Relevé annuel";
+$textTrimestre="Relevï¿½ annuel";
 
 // recupe du nom de la classe
 $data=chercheClasse($_POST["saisie_classe"]);
@@ -118,7 +118,7 @@ config_param_ajout($hauteurphoto,"hauteurphoto");
 config_param_ajout($largeurphoto,"largeurphoto");
  */
 
-// recup année scolaire
+// recup annï¿½e scolaire
 $anneeScolaire=$_POST["annee_scolaire"];
 ?>
 <ul>
@@ -132,11 +132,11 @@ $anneeScolaire=$_POST["annee_scolaire"];
 <?php
 include_once('librairie_php/recupnoteperiode.php');
 
-// recuperation des coordonnées
+// recuperation des coordonnï¿½es
 // de l etablissement
 /*
 $data=visu_param();
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -200,14 +200,14 @@ $coefEleG1=0; // pour la moyenne  general
 //-------------------------
 	$max="";
 	$min=1000;
-	for($g=0;$g<count($eleveT);$g++) {
+	for($g=0;$g<countTriade($eleveT);$g++) {
 		// variable eleve
 		$idEleveMoyen=$eleveT[$g][4];
 		$noteMoyEleG=0;
 		$coefEleG=0;
 		$moyenEleve2="";
 
-		for($t=0;$t<count($ordre);$t++) {
+		for($t=0;$t<countTriade($ordre);$t++) {
 			$idMatiere=$ordre[$t][0];
 			$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$t][2]);
 			
@@ -252,11 +252,11 @@ $plageEleve=$_POST["plageEleve"];
 if (preg_match('/^E_/',$plageEleve)) { 
 	$plageEleve=preg_replace('/E_/','',$plageEleve);
 	$eleveT=recupEleveViaIdEleve($plageEleve); 
-	$dep=0; $nbEleveT=count($eleveT);
+	$dep=0; $nbEleveT=countTriade($eleveT);
 }
 
 
-if ($plageEleve == "tous") { $dep=0; $nbEleveT=count($eleveT); }
+if ($plageEleve == "tous") { $dep=0; $nbEleveT=countTriade($eleveT); }
 if ($plageEleve == "1") { $dep=0; $nbEleveT=1; }
 if ($plageEleve == "10") { $dep=0; $nbEleveT=9; }
 if ($plageEleve == "20") { $dep=9; $nbEleveT=19; }
@@ -264,7 +264,7 @@ if ($plageEleve == "30") { $dep=19; $nbEleveT=29; }
 if ($plageEleve == "40") { $dep=29; $nbEleveT=39; }
 if ($plageEleve == "50") { $dep=39; $nbEleveT=49; }
 if ($plageEleve == "60") { $dep=49; $nbEleveT=59; }
-if ($nbEleveT > count($eleveT)) { $nbEleveT=count($eleveT); }
+if ($nbEleveT > countTriade($eleveT)) { $nbEleveT=countTriade($eleveT); }
 for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$noteectsglobal=0;
 	// variable eleve
@@ -282,11 +282,11 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$nbjoursabs=0;
 	$nbabs=0;
 	$nbretard=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	$nbretard=count($nbretard);
+	$nbretard=countTriade($nbretard);
 	// recherche le nombre d absence
 	// elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 	$nbabs=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin)); // ideleve,debutdate,findate
-	for($o=0;$o<=count($nbabs);$o++) {
+	for($o=0;$o<=countTriade($nbabs);$o++) {
 		if ($nbabs[$o][4] > 0) {
 	       		$nbjoursabs = $nbjoursabs + $nbabs[$o][4];
 		}else{
@@ -341,7 +341,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$appreciation=LANGBULL39;
 
-	$appreciationbis="($nbretard retard(s) / $nbabs demi-journée d'absence(s) / $nbheureabs heure(s) d'absence(s) ) " ;
+	$appreciationbis="($nbretard retard(s) / $nbabs demi-journï¿½e d'absence(s) / $nbheureabs heure(s) d'absence(s) ) " ;
 
 	$barre="____________________________________________________________________________________________";
 	$appreciation2=LANGBULL40;
@@ -358,7 +358,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	// mise en place du logo
 	/*
 	$photo=recup_photo_bulletin();
-	if (count($photo) > 0) {
+	if (countTriade($photo) > 0) {
 		$logo="./data/image_pers/".$photo[0][0];
 		if (file_exists($logo)) {
 			$xlogo=$largeurlogo;
@@ -376,23 +376,23 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$profp=recherche_personne2($idprofp);
 
 
-	// Debut création PDF
-	// mise en place des coordonnées
+	// Debut crï¿½ation PDF
+	// mise en place des coordonnï¿½es
 	$pdf->SetFont('Arial','',11);
 	$pdf->SetXY($xcoor0,$ycoor0);
 	$pdf->SetFillColor(230,230,255);
 	$pdf->RoundedRect($xcoor0, $ycoor0, 100, 23, 3.5, 'DF');
 	
 	$pdf->SetXY($xcoor0,$ycoor0+2);
-	$pdf->MultiCell(100,3,"Institut Supérieur du Management Public et Politique",0,'C',0);
+	$pdf->MultiCell(100,3,"Institut Supï¿½rieur du Management Public et Politique",0,'C',0);
 	$pdf->SetXY($xcoor0,$ycoor0+6);
 	
 	$pdf->SetFont('Arial','I',8);
-	$pdf->MultiCell(100,3,"Etablissement d'enseignement supérieur privé reconnu par l'état",0,'C',0);
+	$pdf->MultiCell(100,3,"Etablissement d'enseignement supï¿½rieur privï¿½ reconnu par l'ï¿½tat",0,'C',0);
 
 	$pdf->SetFont('Arial','',11);
 	$pdf->SetXY($xcoor0,$ycoor0+17);
-	$pdf->MultiCell(100,3,"Année académique $anneeScolaire",0,'C',0);
+	$pdf->MultiCell(100,3,"Annï¿½e acadï¿½mique $anneeScolaire",0,'C',0);
 	$pdf->SetFillColor(255);
 	$pdf->SetXY($xcoor0,$ycoor0+13);
 	$pdf->SetFont('Arial','',9);
@@ -429,15 +429,15 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 
 	$pdf->SetXY($xcoor0,$ycoor0+2);
 	$pdf->SetFont('Arial','',8);
-	$pdf->MultiCell(145,3,"  Absences non justifiées : $appreciationbis2",0,'L',0);
+	$pdf->MultiCell(145,3,"  Absences non justifiï¿½es : $appreciationbis2",0,'L',0);
 
 	$pdf->SetXY($xcoor0,$ycoor0+6);
 	$pdf->SetFont('Arial','',8);
-	$pdf->MultiCell(145,3,"  Retards non justifiées : $appreciationbis3",0,'L',0);
+	$pdf->MultiCell(145,3,"  Retards non justifiï¿½es : $appreciationbis3",0,'L',0);
 
 	$pdf->SetXY($xcoor0,$ycoor0+10);
 	$pdf->SetFont('Arial','',8);
-	$pdf->MultiCell(145,3,"  Absences justifiées POLSPE-IP : $appreciationbis4",0,'L',0);
+	$pdf->MultiCell(145,3,"  Absences justifiï¿½es POLSPE-IP : $appreciationbis4",0,'L',0);
 
 	$pdf->SetXY($xcoor0,$ycoor0+14);
 	$pdf->SetFont('Arial','',8);
@@ -470,10 +470,10 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	}
 */
 /*
-	// adresse de l'élève
+	// adresse de l'ï¿½lï¿½ve
 	// elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 	$dataadresse=chercheadresse($idEleve);
-	for($ik=0;$ik<=count($dataadresse);$ik++) {
+	for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 		$nomtuteur=$dataadresse[$ik][1];
 		$prenomtuteur=$dataadresse[$ik][2];
 		$adr1=$dataadresse[$ik][3];
@@ -506,7 +506,7 @@ for($j=$dep;$j<$nbEleveT;$j++) {  // premiere ligne de la creation PDF
 	$pdf->SetX(133);
 if ($ismappects == 1) $pdf->WriteHTML("ects");
 	$pdf->SetX(154);
-	$pdf->WriteHTML("Appréciations");
+	$pdf->WriteHTML("Apprï¿½ciations");
 	// fin des titres
 	$pdf->SetTextColor(0);
 	$nbs=0;
@@ -522,7 +522,7 @@ if ($ismappects == 1) $pdf->WriteHTML("ects");
 	$hauteurMatiere=10.5; // taille du cadre matiere
 
         $nbmatiere='0';
-        for($i=0;$i<count($ordre);$i++) {
+        for($i=0;$i<countTriade($ordre);$i++) {
                 $verifGroupe=verifMatiereAvecGroupe($ordre[$i][0],$idEleve,$idClasse,$ordre[$i][2]);
                 if ($verifGroupe) { continue; }
                 $nbmatiere++;
@@ -560,7 +560,7 @@ if ($ismappects == 1) $pdf->WriteHTML("ects");
 	$iiii=0;
 
 	$TT=1;
-	for($i=0;$i<count($ordre);$i++) {
+	for($i=0;$i<countTriade($ordre);$i++) {
 		$matiere=chercheMatiereNom($ordre[$i][0]);
 		$idMatiere=$ordre[$i][0];
 		$idprof=recherche_prof($idMatiere,$idClasse,$ordre[$i][2]);
@@ -683,7 +683,7 @@ if ($ismappects == 1) $pdf->WriteHTML("ects");
 		
 
 
-		$listeExamen=array("CC","DST","Dad","Soutenance","Rapport","Fiche de lecture","Exposé","Partiel","Lecture","Examen écrit","Recopiage vocabulaire","Mémoire Ip","Evaluation Tutorat");
+		$listeExamen=array("CC","DST","Dad","Soutenance","Rapport","Fiche de lecture","Exposï¿½","Partiel","Lecture","Examen ï¿½crit","Recopiage vocabulaire","Mï¿½moire Ip","Evaluation Tutorat");
 
 		$epreuve="";
 		$moyenneTT="";
@@ -701,12 +701,12 @@ if ($ismappects == 1) $pdf->WriteHTML("ects");
 				 if ($value == "Soutenance") { $valcoef="3"; }
 				 if ($value == "Rapport") 	  { $valcoef="3"; }
 				 if ($value == "Fiche de lecture") { $valcoef="2"; }
-				 if ($value == "Exposé")     { $valcoef="1"; }
+				 if ($value == "Exposï¿½")     { $valcoef="1"; }
 				 if ($value == "Dad")        { $valcoef="1"; }
 				 if ($value == "Lecture") { $valcoef="3"; }
-                                 if ($value == "Examen écrit")   { $valcoef="2"; }
+                                 if ($value == "Examen ï¿½crit")   { $valcoef="2"; }
                                  if ($value == "Recopiage vocabulaire") { $valcoef="1"; }
- 				 if ($value == "Mémoire Ip")            { $valcoef="2"; }
+ 				 if ($value == "Mï¿½moire Ip")            { $valcoef="2"; }
                                  if ($value == "Evaluation Tutorat")    { $valcoef="2"; }
 
 
@@ -908,7 +908,7 @@ if ($ismappects == 1) $pdf->WriteHTML("ects");
 
 $noteMoyEleG=$noteMoyEleG/$coefEleG;
 
-$noteMoyEleG=$noteMoyEleG-$ptenmoinsMoyen; // point en moins par assuidité
+$noteMoyEleG=$noteMoyEleG-$ptenmoinsMoyen; // point en moins par assuiditï¿½
 
 $noteMoyEleGAff=number_format($noteMoyEleG,2,',','');
 
@@ -943,7 +943,7 @@ if ($noteMoyEleG < 10) {
 $pdf->SetXY($xcoor0+7,$ycoor0+17);
 $pdf->MultiCell(3,3,'',1,'L',1);
 $pdf->SetXY($xcoor0+11,$ycoor0+16);
-$pdf->MultiCell(20,5,'Ajourné(e)',0,'L',0);
+$pdf->MultiCell(20,5,'Ajournï¿½(e)',0,'L',0);
 
 if ($ismappects == 1) {
 	$pdf->SetXY($xcoor0+45,$ycoor0+12);
@@ -953,7 +953,7 @@ if ($ismappects == 1) {
 $pdf->SetXY($xcoor0+110,$ycoor0+4);
 $date=dateDMY();
 $pdf->SetFont('Arial','',10);
-$pdf->MultiCell(70,3," Fait à Paris, le $date",0,'L',0);
+$pdf->MultiCell(70,3," Fait ï¿½ Paris, le $date",0,'L',0);
 
 
 
@@ -981,7 +981,7 @@ bulletin_archivage($_POST["saisie_trimestre"],$anneeScolaire,$fichier,$idEleve,$
 if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') { $merge->add("$fichier"); }
 $listing.="$fichier ";
 $pdf=new PDF();
-} // fin du for on passe à l'eleve suivant
+} // fin du for on passe ï¿½ l'eleve suivant
 $merge->output("./data/pdf_bull/$classe_nom/liste_complete.pdf");
 if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN') {
 	$cmd="gs -q -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=./data/pdf_bull/$classe_nom/liste_complete.pdf -dBATCH $listing";
@@ -992,13 +992,13 @@ include_once('./librairie_php/pclzip.lib.php');
 $archive = new PclZip('./data/pdf_bull/'.$classe_nom.'.zip');
 $archive->create('./data/pdf_bull/'.$classe_nom,PCLZIP_OPT_REMOVE_PATH, 'data/pdf_bull/');
 $fichier='./data/pdf_bull/'.$classe_nom.'.zip';
-$bttexte="Récupérer le fichier ZIP des bulletins";
+$bttexte="Rï¿½cupï¿½rer le fichier ZIP des bulletins";
 @nettoyage_repertoire('./data/pdf_bull/'.$classe_nom);
 @rmdir('./data/pdf_bull/'.$classe_nom);
 // --------------------------------------------------------------------------------------------------------------------------
 ?>
 <br><ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <?php // ----------------------------------------------------------------------------------------------------------------------------   ?>
 
@@ -1011,7 +1011,7 @@ $bttexte="Récupérer le fichier ZIP des bulletins";
 $cr=historyBulletin($fichier,$classe_nom,$_POST["saisie_trimestre"],$dateDebut,$dateFin);
 if($cr == 1){
 		history_cmd($_SESSION["nom"],"CREATION BULLETIN","Classe : $classe_nom");
-        	// alertJs("Bulletin créé -- Service Triade");
+        	// alertJs("Bulletin crï¿½ï¿½ -- Service Triade");
 }else{
 	error(0);
 }

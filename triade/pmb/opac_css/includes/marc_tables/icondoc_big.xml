@@ -5,7 +5,7 @@
 	-premier caractère et niveau bibliographique : m a s 
 	-deuxième caractère : recordtype
 	CE FICHIER EST UTILISE EN OPAC, PAS EN GESTION, IL N'EST RECOPIE EN GESTION QUE POUR UNE QUESTION DE COHERENCE
-$Id: icondoc_big.xml,v 1.2 2010-05-18 16:30:51 arenou Exp $ -->
+$Id: icondoc_big.xml,v 1.2 2010/05/18 16:30:51 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="ma">icon_a.gif</entry>

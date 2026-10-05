@@ -1,16 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: budgets.tpl.php,v 1.20 2019-05-27 13:34:31 btafforeau Exp $
+// $Id: budgets.tpl.php,v 1.23 2023/12/20 09:43:15 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
-global $search_form, $current_module, $msg, $charset, $acquisition_gestion_tva, $en_tete_view_bud_form, $view_bud_form, $view_lig_rub_form, $budg_form, $mnt_form, $pmb_gestion_devise;
-global $sel_typ_form, $rub_form, $mnt_rub_form, $ptab, $lig_rub, $lig_rub_img, $lig_indent, $bt_add_lig;
+global $budg_search_form, $current_module, $msg, $charset, $acquisition_gestion_tva, $en_tete_view_bud_form, $view_bud_form, $view_lig_rub_form, $budg_js_form, $budg_content_form, $mnt_form, $pmb_gestion_devise;
+global $sel_typ_form, $rub_js_form, $rub_content_form, $mnt_rub_form, $lig_rub, $lig_rub_img, $lig_indent, $bt_add_lig;
+global $autorisations_selection_content_form, $autorisations_user_content_form;
 
 //Template de choix du budget
-$search_form = "
+$budg_search_form = "
 <form class='form-".$current_module."' id='search' name='search' method='post' action=\"\">
 	<h3>!!form_title!!</h3>
 	<!--    Contenu du form    -->
@@ -120,7 +121,6 @@ $search_form = "
 
 		<!-- tableau rubriques budgetaires -->
 
-		</table>
 		<div class='row'>
 			<a href=\"javascript:expandAllImb()\"><img src='".get_url_icon('expand_all.gif')."' id='expandall' /></a>
 			<a href=\"javascript:collapseAllImb()\"><img src='".get_url_icon('collapse_all.gif')."' id='collapseall' /></a>
@@ -168,7 +168,6 @@ $search_form = "
 		}
 
 		</script>	
-		</div>
 	</div>
 </div>
 <form name='print_bud' method='post' action='./print_acquisition.php?categ=ach&sub=bud&action=print_budget&id_bibli=!!id_bibli!!&id_bud=!!id_bud!!' target='_blank'>
@@ -288,135 +287,9 @@ $view_tot_rub_form = "
 	</div>";
 
 //Template de modification du formulaire de budget
-$budg_form = "
-<form class='form-".$current_module."' id='budgform' name='budgform' method='post' action=\"./admin.php?categ=acquisition&sub=budget&action=update&id_bibli=!!id_bibli!!&id_bud=!!id_bud!!\">
-<h3>!!form_title!!</h3>
-<!--    Contenu du form    -->
-<div class='form-contenu'>
-	<div class='row'>
-		<label class='etiquette' for='libelle'>".htmlentities($msg[103],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<input type=text id='libelle' name='libelle' value=\"!!libelle!!\" class='saisie-60em' />
-	</div>
-
-	<div class='row'>
-		<div class='colonne5'>
-			<label class='etiquette'>".htmlentities($msg['acquisition_budg_exer'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='colonne5'>
-			<label class='etiquette'>".htmlentities($msg['acquisition_budg_montant'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='colonne5'>
-			<label class='etiquette'>".htmlentities($msg['acquisition_budg_aff_lib'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='colonne5'>
-			<label class='etiquette' for='seuil'>".htmlentities($msg['acquisition_budg_seuil'],ENT_QUOTES,$charset)."</label>
-		</div>
-		<div class='colonne5'>
-			<input type='hidden' id='val_statut' name='val_statut' value='!!val_statut!!' />
-			<label class='etiquette'>".htmlentities($msg['acquisition_statut'],ENT_QUOTES,$charset)."</label>
-		</div>
-	</div>
-
-	<div class='row'>
-		<div class='colonne5'>
-			!!exer!!
-		</div>
-		<div class='colonne5' >
-			!!montant!!
-		</div>
-		<div class='colonne5' >
-			!!sel_typ!!
-		</div>
-		<div class='colonne5'>
-			<input type='text' id='seuil' name='seuil' value=\"!!seuil!!\" class='saisie-5em' style='text-align:right'/>
-			<label class='etiquette'>&nbsp;%</label>
-		</div>
-		<div class='colonne5'>
-			!!statut!!
-		</div>
-	</div>
-
-	<div class='row'>
-		<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_budg_comment'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!comment!!</textarea>
-	</div>
-	<div class='row'></div>
-
-	
-	<div class='row'><hr /></div>
-
-	<!-- tableau rubriques budgetaires -->
-
-	<table>
-
-		<th style='width:65%'>".htmlentities($msg['acquisition_rub'], ENT_QUOTES, $charset)."</th>
-		<th style='width:10%'>!!lib_mnt!!</th>
-		<th style='width:25%'>".htmlentities($msg['acquisition_num_cp_compta'], ENT_QUOTES, $charset)."</th>
-	
-	</table>
-
-	<div class='colonne'>
-		<a href=\"javascript:expandAllImb()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id='expandall'></a>
-		<a href=\"javascript:collapseAllImb()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id='collapseall'></a>
-	</div>
-
-		<!-- rubriques -->
-
-	
-	<div class='row'>
-		<!-- bouton_lig -->
-	</div>
-
-</div>
-
-<!-- Boutons -->
-
-<div class='row'>
-	<div class='left'>
-		<input class='bouton' type='button' value=' $msg[76] ' onClick=\"document.location='./admin.php?categ=acquisition&sub=budget&action=list&id_bibli=!!id_bibli!!' \" />&nbsp;
-		<input class='bouton' type='submit' value=' $msg[77] ' onClick=\"return test_form(this.form);\" />&nbsp;
-		<!-- bouton_dup -->
-	</div>
-	<div class='right'>
-		<!-- bouton_act -->
-		<!-- bouton_clot -->
-		<!-- bouton_sup -->
-	</div>
-</div>
-<div class='row'>
-</div>
-</form>
+$budg_js_form = "
+<script type='text/javascript' src='./javascript/tabform.js'></script>
 <script type='text/javascript'>
-	document.forms['budgform'].elements['libelle'].focus();
-</script>
-
-<script type='text/javascript'>
-function test_form(form) {
-	if(form.libelle.value.replace(/^\s+|\s+$/g, '').length == 0)
-	{
-		alert(\"".$msg[98]."\");
-		document.forms['budgform'].elements['libelle'].focus();
-		return false;
-	}
-	return true;
-}
-
-
-function confirmation_cloture(param,element) {
-	
-	result = confirm(\"".$msg['acquisition_budg_confirm_clot']." \"+element+\" ?\" );
-   	if (result) {
-   		document.forms['budgform'].elements['val_statut'].value = '2';
-   		return true;	
-   	}
-   	return false;
-}
-
-
 function expandAllImb() {
   var tempColl    = document.getElementsByTagName('DIV');
   var tempCollCnt = tempColl.length;
@@ -448,11 +321,77 @@ function collapseAllImb() {
      }
   }
 }
-
 </script>
-
 ";
 
+$budg_content_form = "
+<div class='row'>
+	<label class='etiquette' for='libelle'>".htmlentities($msg[103],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<input type=text id='libelle' name='libelle' value=\"!!libelle!!\" class='saisie-60em' />
+</div>
+<div class='row'>
+	<div class='colonne5'>
+		<label class='etiquette'>".htmlentities($msg['acquisition_budg_exer'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='colonne5'>
+		<label class='etiquette'>".htmlentities($msg['acquisition_budg_montant'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='colonne5'>
+		<label class='etiquette'>".htmlentities($msg['acquisition_budg_aff_lib'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='colonne5'>
+		<label class='etiquette' for='seuil'>".htmlentities($msg['acquisition_budg_seuil'],ENT_QUOTES,$charset)."</label>
+	</div>
+	<div class='colonne5'>
+		<input type='hidden' id='val_statut' name='val_statut' value='!!val_statut!!' />
+		<label class='etiquette'>".htmlentities($msg['acquisition_statut'],ENT_QUOTES,$charset)."</label>
+	</div>
+</div>
+<div class='row'>
+	<div class='colonne5'>
+		!!exer!!
+	</div>
+	<div class='colonne5' >
+		!!montant!!
+	</div>
+	<div class='colonne5' >
+		!!sel_typ!!
+	</div>
+	<div class='colonne5'>
+		<input type='text' id='seuil' name='seuil' value=\"!!seuil!!\" class='saisie-5em' style='text-align:right'/>
+		<label class='etiquette'>&nbsp;%</label>
+	</div>
+	<div class='colonne5'>
+		!!statut!!
+	</div>
+</div>
+<div class='row'>
+	<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_budg_comment'],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!comment!!</textarea>
+</div>
+<div class='row'></div>
+<div class='row'><hr /></div>
+
+<!-- tableau rubriques budgetaires -->
+
+<table>
+	<th style='width:65%'>".htmlentities($msg['acquisition_rub'], ENT_QUOTES, $charset)."</th>
+	<th style='width:10%'>!!lib_mnt!!</th>
+	<th style='width:25%'>".htmlentities($msg['acquisition_num_cp_compta'], ENT_QUOTES, $charset)."</th>
+</table>
+<div class='colonne'>
+	<a href=\"javascript:expandAllImb()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id='expandall'></a>
+	<a href=\"javascript:collapseAllImb()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id='collapseall'></a>
+</div>
+	<!-- rubriques -->
+<div class='row'>
+	<!-- bouton_lig -->
+</div>
+";
 
 //Template du montant total
 $mnt_form[0] = "
@@ -472,102 +411,9 @@ $sel_typ_form = "
 
 
 //Template du formulaire des rubriques
-$rub_form = "
-<form class='form-".$current_module."' id='rubform' name='rubform' method='post' action=\"./admin.php?categ=acquisition&sub=budget&action=update_rub&id_bibli=!!id_bibli!!&id_bud=!!id_bud!!&id_rub=!!id_rub!!&id_parent=!!id_parent!!\">
-<h3>!!form_title!!</h3>
-<!--    Contenu du form    -->
-<div class='form-contenu'>
-
-	<div class='row'><!-- nav_form --></div>
-	<div class='row'>&nbsp;</div>
-	<div class='row'>
-		<label class='etiquette' for='libelle'>".htmlentities($msg[103],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<input type=text id='libelle' name='libelle' value=\"!!libelle!!\" class='saisie-60em' />
-	</div>
-
-	<div class='row'>
-		<!-- lib_mnt -->
-		<div class='colonne4'>
-			<!-- label_ncp -->
-		</div>
-	</div>
-
-	<div class='row'>
-		<!-- montant --> 
-		<div class='colonne4'>
-			!!ncp!!
-		</div>
-	</div>
-
-	<div class='row'>
-		<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_budg_comment'],ENT_QUOTES,$charset)."</label>
-	</div>
-	<div class='row'>
-		<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!comment!!</textarea>
-	</div>
-	<div class='row'></div>
-
-	
-	<div class='row'><hr /></div>
-
-	<!-- tableau rubriques budgetaires -->
-
-	<table>
-
-		<th style='width:65%;'>".htmlentities($msg['acquisition_rub'], ENT_QUOTES, $charset)."</th>
-		<th style='width:10%'>!!lib_mnt!!</th>
-		<th style='width:25%;'>".htmlentities($msg['acquisition_num_cp_compta'], ENT_QUOTES, $charset)."</th>
-	
-	</table>
-
-	<div class='colonne'>
-		<a href=\"javascript:expandAllImb()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id='expandall'></a>
-		<a href=\"javascript:collapseAllImb()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id='collapseall'></a>
-	</div>
-
-		<!-- rubriques -->
-
-	
-	<div class='row'>
-		<!-- bouton_lig -->
-	</div>
-
-		<!-- autorisations -->		
-
-	<div class='row'></div>
-</div>
-
-<!-- Boutons -->
-<div class='row'>
-	<div class='left'>
-		<input class='bouton' type='button' value=' $msg[76] ' onClick=\"document.location='./admin.php?categ=acquisition&sub=budget&action=!!undo!!&id_bibli=!!id_bibli!!&id_bud=!!id_bud!!&id_rub=!!id_parent!!' \" />&nbsp;
-		<input class='bouton' type='submit' value=' $msg[77] ' onClick=\"return test_form(this.form);\" />
-	</div>
-	<div class='right'>
-		<!-- bouton_sup -->
-	</div>
-</div>
-<div class='row'>
-</div>
-</form>
+$rub_js_form = "
+<script type='text/javascript' src='./javascript/tabform.js'></script>
 <script type='text/javascript'>
-	document.forms['rubform'].elements['libelle'].focus();
-</script>
-
-<script type='text/javascript'>
-function test_form(form) {
-	if(form.libelle.value.replace(/^\s+|\s+$/g, '').length == 0)
-	{
-		alert(\"".$msg[98]."\");
-		document.forms['rubform'].elements['libelle'].focus();
-		return false;	
-	}
-	return true;
-}
-
-
 function expandAllImb() {
   var tempColl    = document.getElementsByTagName('DIV');
   var tempCollCnt = tempColl.length;
@@ -599,10 +445,68 @@ function collapseAllImb() {
      }
   }
 }
-
-
 </script>
+";
 
+$rub_content_form = "
+<div class='row'><!-- nav_form --></div>
+<div class='row'>&nbsp;</div>
+<div class='row'>
+	<label class='etiquette' for='libelle'>".htmlentities($msg[103],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<input type=text id='libelle' name='libelle' value=\"!!libelle!!\" class='saisie-60em' />
+</div>
+
+<div class='row'>
+	<!-- lib_mnt -->
+	<div class='colonne4'>
+		<!-- label_ncp -->
+	</div>
+</div>
+
+<div class='row'>
+	<!-- montant --> 
+	<div class='colonne4'>
+		!!ncp!!
+	</div>
+</div>
+
+<div class='row'>
+	<label class='etiquette' for='comment'>".htmlentities($msg['acquisition_budg_comment'],ENT_QUOTES,$charset)."</label>
+</div>
+<div class='row'>
+	<textarea id='comment' name='comment' class='saisie-80em' cols='62' rows='6' wrap='virtual'>!!comment!!</textarea>
+</div>
+<div class='row'></div>
+
+
+<div class='row'><hr /></div>
+
+<!-- tableau rubriques budgetaires -->
+
+<table>
+
+	<th style='width:65%;'>".htmlentities($msg['acquisition_rub'], ENT_QUOTES, $charset)."</th>
+	<th style='width:10%'>!!lib_mnt!!</th>
+	<th style='width:25%;'>".htmlentities($msg['acquisition_num_cp_compta'], ENT_QUOTES, $charset)."</th>
+
+</table>
+
+<div class='colonne'>
+	<a href=\"javascript:expandAllImb()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id='expandall'></a>
+	<a href=\"javascript:collapseAllImb()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id='collapseall'></a>
+</div>
+
+<!-- rubriques -->
+
+<div class='row'>
+	<!-- bouton_lig -->
+</div>
+
+<!-- autorisations -->		
+
+<div class='row'></div>
 ";
 
 $mnt_rub_form[0] = "
@@ -615,12 +519,6 @@ $mnt_rub_form[1] = "
 <input type='text' id='mnt' name='mnt' class='saisie-10em' style='text-align:right' value='!!mnt_rub!!' /><label class='etiquette'>&nbsp;".$pmb_gestion_devise."</label>
 </div>
 ";
-
-
-$ptab[0] = "<input class='bouton' type='submit' value=' ".$msg['acquisition_budg_clot']." ' onClick=\"javascript:if(confirmation_cloture('!!id!!', '!!libelle_suppr!!')){return test_form(this.form);}else return false;\" />&nbsp;&nbsp;";
-$ptab[1] = "<input class='bouton' type='button' value=' ".$msg['supprimer']." ' onClick=\"javascript:confirmation_delete('!!id!!', '!!libelle_suppr!!')\" />";
-$ptab[2] = "<input class='bouton' type='submit' value=' ".$msg['acquisition_budg_act']." ' onClick=\"this.form.val_statut.value='1';return test_form(this.form);\" />&nbsp;&nbsp;";
-
 
 $lig_rub[0] = "
 	<div id='el!!id_rub!!Child' class='row' >
@@ -646,7 +544,7 @@ $lig_rub[0] = "
 	</div>	
 ";
 
-$lig_rub_img = "<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el_!!id_rub!!_Img'  onclick=\"expandBase('el_!!id_rub!!_', true); return false;\" />";
+$lig_rub_img = get_expandBase_button('el_!!id_rub!!_');
 
 $lig_indent = "<span class='child' >&nbsp;</span>";
 
@@ -654,10 +552,10 @@ $bt_add_lig = "<input class='bouton' type='button' value=' ".$msg['acquisition_r
 
 
 //    ----------------------------------------------------
-//     entÃªte et table autorisations
+//     entête et table autorisations
 //    ----------------------------------------------------
-	
-$ptab[3] ="	<div class='row'><hr /></div>
+
+$autorisations_selection_content_form ="	<div class='row'><hr /></div>
 			<div class='row'>
 				<input type='hidden' id='auto_id_list' name='auto_id_list' value='!!auto_id_list!!' >
 				<label class='etiquette'>".htmlentities($msg['acquisition_autorisations'], ENT_QUOTES, $charset)."</label>
@@ -665,16 +563,9 @@ $ptab[3] ="	<div class='row'><hr /></div>
 				<input type='button' class='bouton_small align_middle' value='".$msg['tout_decocher_checkbox']."' onclick='check_checkbox(document.getElementById(\"auto_id_list\").value,0);'>
 			</div>";
 
-$ptab[4] = "
+$autorisations_user_content_form = "
 	<span class='usercheckbox'>
 		<input  type='checkbox' id='user_aut[!!user_id!!]' name='user_aut[!!user_id!!]' !!checked!! value='!!user_id!!' />
 	<label for='user_aut[!!user_id!!]' >!!user_name!!</label>
 	</span>&nbsp;
 ";
-
-$ptab[5] = "<input class='bouton' type='button' value=' ".$msg['acquisition_bud_bt_dup']." ' onClick=\"document.location='./admin.php?categ=acquisition&sub=budget&action=dup&id_bibli=!!id_bibli!!&id_bud=!!id_bud!!' \" />";
-?>
-
-<script type='text/javascript' src='./javascript/tabform.js'></script>
-
-

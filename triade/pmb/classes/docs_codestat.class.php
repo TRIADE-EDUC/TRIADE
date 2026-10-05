@@ -1,12 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docs_codestat.class.php,v 1.9 2017-01-03 11:14:01 dgoron Exp $
+// $Id: docs_codestat.class.php,v 1.22 2023/07/26 15:07:58 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-// d√©finition de la classe de gestion des 'docs_codestat'
+global $class_path;
+require_once($class_path."/translation.class.php");
+
+// dÈfinition de la classe de gestion des 'docs_codestat'
 
 if ( ! defined( 'DOCSCODESTAT_CLASS' ) ) {
   define( 'DOCSCODESTAT_CLASS', 1 );
@@ -14,7 +17,7 @@ if ( ! defined( 'DOCSCODESTAT_CLASS' ) ) {
 class docs_codestat {
 
 	/* ---------------------------------------------------------------
-		propri√©t√©s de la classe
+		propriÈtÈs de la classe
    --------------------------------------------------------------- */
 
 	public $id=0;
@@ -27,24 +30,25 @@ class docs_codestat {
    --------------------------------------------------------------- */
 
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		$this->getData();
 	}
 
 	/* ---------------------------------------------------------------
-		getData() : r√©cup√©ration des propri√©t√©s
+		getData() : rÈcupÈration des propriÈtÈs
    --------------------------------------------------------------- */
 
 	public function getData() {
-		global $dbh;
-	
 		if(!$this->id) return;
 	
-		/* r√©cup√©ration des informations du code statistique */
+		/* rÈcupÈration des informations du code statistique */
 	
 		$requete = 'SELECT * FROM docs_codestat WHERE idcode='.$this->id.' LIMIT 1;';
-		$result = @pmb_mysql_query($requete, $dbh);
-		if(!pmb_mysql_num_rows($result)) return;
+		$result = @pmb_mysql_query($requete);
+		if(!pmb_mysql_num_rows($result)) {
+			pmb_error::get_instance(static::class)->add_message("not_found", "not_found_object");
+			return;
+		}
 			
 		$data = pmb_mysql_fetch_object($result);
 		$this->id = $data->idcode;		
@@ -54,24 +58,93 @@ class docs_codestat {
 
 	}
 
+	public function get_content_form() {
+		global $msg;
+		
+		$interface_content_form = new interface_content_form(static::class);
+		$interface_content_form->add_element('form_libelle', '103')
+		->add_input_node('text', $this->libelle)
+		->set_attributes(array('data-translation-fieldname' => 'codestat_libelle'));
+		$interface_content_form->add_element('form_statisdoc_codage_import', 'proprio_codage_interne')
+		->add_input_node('text', $this->statisdoc_codage_import)
+		->set_class('saisie-20em');
+		$interface_content_form->add_element('form_statisdoc_owner', 'proprio_codage_proprio')
+		->add_query_node('select', "select idlender, lender_libelle from lenders order by lender_libelle ", $this->statisdoc_owner)
+		->set_empty_option(0, $msg[556])
+		->set_first_option(0, $msg["proprio_generique_biblio"])
+		->set_class('saisie-20em');
+		
+		return $interface_content_form->get_display();
+	}
+	
+	public function get_form() {
+		global $msg;
+		
+		$interface_form = new interface_admin_form('typdocform');
+		if(!$this->id){
+			$interface_form->set_label($msg['101']);
+		}else{
+			$interface_form->set_label($msg['102']);
+		}
+		$interface_form->set_object_id($this->id)
+		->set_confirm_delete_msg($msg['confirm_suppr_de']." ".$this->libelle." ?")
+		->set_content_form($this->get_content_form())
+		->set_table_name('docs_codestat')
+		->set_field_focus('form_libelle');
+		return $interface_form->get_display();
+	}
+	
+	public function set_properties_from_form() {
+		global $form_libelle, $form_statisdoc_codage_import, $form_statisdoc_owner;
+		
+		$this->libelle = stripslashes($form_libelle);
+		$this->statisdoc_codage_import = stripslashes($form_statisdoc_codage_import);
+		$this->statisdoc_owner = intval($form_statisdoc_owner);
+	}
+	
+	public function get_query_if_exists() {
+		return " SELECT count(1) FROM docs_codestat WHERE (codestat_libelle='".addslashes($this->libelle)."' AND idcode!='".$this->id."' )";
+	}
+	
+	public function save() {
+		// O.K.  if item already exists UPDATE else INSERT
+		if($this->id) {
+			$requete = "UPDATE docs_codestat SET codestat_libelle='".addslashes($this->libelle)."', statisdoc_codage_import='".addslashes($this->statisdoc_codage_import)."', statisdoc_owner='".$this->statisdoc_owner."' WHERE idcode=".$this->id;
+			pmb_mysql_query($requete);
+		} else {
+			$requete = "INSERT INTO docs_codestat (idcode,codestat_libelle,statisdoc_codage_import,statisdoc_owner) VALUES ('', '".addslashes($this->libelle)."','".addslashes($this->statisdoc_codage_import)."','".$this->statisdoc_owner."') ";
+			pmb_mysql_query($requete);
+			$this->id = pmb_mysql_insert_id();
+		}
+		$translation = new translation($this->id, "docs_codestat");
+		$translation->update("codestat_libelle", "form_libelle");
+		return true;
+	}
+	
+	public static function check_data_from_form() {
+		global $form_libelle;
+		
+		if(empty($form_libelle)) {
+			return false;
+		}
+		return true;
+	}
+	
 	// ---------------------------------------------------------------
 	//		import() : import d'un code statistique de document
 	// ---------------------------------------------------------------
 	public static function import($data) {
-	
-		// cette m√©thode prend en entr√©e un tableau constitu√© des informations suivantes :
+		// cette mÈthode prend en entrÈe un tableau constituÈ des informations suivantes :
 		//	$data['codestat_libelle'] 	
 		//	$data['statisdoc_codage_import']
 		//	$data['statisdoc_owner']
-	
-		global $dbh;
-	
-		// check sur le type de la variable pass√©e en param√®tre
-		if(!sizeof($data) || !is_array($data)) {
+
+		// check sur le type de la variable passÈe en paramËtre
+		if ((empty($data) && !is_array($data)) || !is_array($data)) {
 			// si ce n'est pas un tableau ou un tableau vide, on retourne 0
 			return 0;
-			}
-		// check sur les √©l√©ments du tableau
+		}
+		// check sur les ÈlÈments du tableau
 		
 		$long_maxi = pmb_mysql_field_len(pmb_mysql_query("SELECT codestat_libelle FROM docs_codestat limit 1"),0);
 		$data['codestat_libelle'] = rtrim(substr(preg_replace('/\[|\]/', '', rtrim(ltrim($data['codestat_libelle']))),0,$long_maxi));
@@ -81,39 +154,63 @@ class docs_codestat {
 		if($data['statisdoc_owner']=="") $data['statisdoc_owner'] = 0;
 		if($data['codestat_libelle']=="") return 0;
 		/* statisdoc_codage_import est obligatoire si statisdoc_owner != 0 */
-		// comment√© depuis le choix de quel codage rec995 on r√©cup√®re if(($data['statisdoc_owner']!=0) && ($data['statisdoc_codage_import']=="")) return 0;
+		// commentÈ depuis le choix de quel codage rec995 on rÈcupËre if(($data['statisdoc_owner']!=0) && ($data['statisdoc_codage_import']=="")) return 0;
 		
-		// pr√©paration de la requ√™te
+		// prÈparation de la requÍte
 		$key0 = addslashes($data['codestat_libelle']);
 		$key1 = addslashes($data['statisdoc_codage_import']);
 		$key2 = $data['statisdoc_owner'];
 		
-		/* v√©rification que le code statistique existe */
-		$query = "SELECT idcode FROM docs_codestat WHERE statisdoc_codage_import='${key1}' and statisdoc_owner = '${key2}' LIMIT 1 ";
-		$result = @pmb_mysql_query($query, $dbh);
+		/* vÈrification que le code statistique existe */
+		$query = "SELECT idcode FROM docs_codestat WHERE statisdoc_codage_import='{$key1}' and statisdoc_owner = '{$key2}' LIMIT 1 ";
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't SELECT docs_codestat ".$query);
-		$docs_codestat  = pmb_mysql_fetch_object($result);
+		if(pmb_mysql_num_rows($result)) {
+			$docs_codestat  = pmb_mysql_fetch_object($result);
+			/* le code statistique de doc existe, on retourne l'ID */
+			if($docs_codestat->idcode) {
+				return $docs_codestat->idcode;
+			}
+		}
 	
-		/* le code statistique de doc existe, on retourne l'ID */
-		if($docs_codestat->idcode) return $docs_codestat->idcode;
-	
-		// id non-r√©cup√©r√©e, il faut cr√©er la forme.
+		// id non-rÈcupÈrÈe, il faut crÈer la forme.
 		
 		$query  = "INSERT INTO docs_codestat SET ";
 		$query .= "codestat_libelle='".$key0."', ";
 		$query .= "statisdoc_codage_import='".$key1."', ";
 		$query .= "statisdoc_owner='".$key2."' ";
-		$result = @pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if(!$result) die("can't INSERT into docs_codestat ".$query);
 	
-		return pmb_mysql_insert_id($dbh);
+		return pmb_mysql_insert_id();
 
-	} /* fin m√©thode import */
+	} /* fin mÈthode import */
 
-	/* une fonction pour g√©n√©rer des combo Box 
-	   param√™tres :
-		$selected : l'√©l√©ment s√©lection√© le cas √©ch√©ant
-	   retourne une chaine de caract√®res contenant l'objet complet */
+	public static function delete($id) {
+		global $msg, $admin_liste_jscript;
+		
+		$id = intval($id);
+		if($id) {
+			$total = pmb_mysql_result(pmb_mysql_query("select count(1) from exemplaires where expl_codestat ='".$id."' "), 0, 0);
+			if ($total==0) {
+				translation::delete($id, "docs_codestat");
+				$requete = "DELETE FROM docs_codestat WHERE idcode=$id ";
+				pmb_mysql_query($requete);
+				return true;
+			} else {
+				$msg_suppr_err = $admin_liste_jscript;
+				$msg_suppr_err .= $msg[1701]." <a href='#' onclick=\"showListItems(this);return(false);\" what='codestat_docs' item='".$id."' total='".$total."' alt=\"".$msg["admin_docs_list"]."\" title=\"".$msg["admin_docs_list"]."\"><img src='".get_url_icon('req_get.gif')."'></a>" ;
+				pmb_error::get_instance(static::class)->add_message('294', $msg_suppr_err);
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/* une fonction pour gÈnÈrer des combo Box 
+	   paramÍtres :
+		$selected : l'ÈlÈment sÈlectionÈ le cas ÈchÈant
+	   retourne une chaine de caractËres contenant l'objet complet */
 	public static function gen_combo_box ( $selected ) {
 		global $msg;
 		$requete="select idcode, codestat_libelle from docs_codestat order by codestat_libelle ";
@@ -151,8 +248,11 @@ class docs_codestat {
 		return $gen_liste_str ;
 	} /* fin gen_combo_box */
 
-} /* fin de d√©finition de la classe */
+	public function get_translated_libelle() {
+		return translation::get_translated_text($this->id, 'docs_codestat', 'codestat_libelle', $this->libelle);
+	}
+} /* fin de dÈfinition de la classe */
 
-} /* fin de d√©laration */
+} /* fin de dÈlaration */
 
 

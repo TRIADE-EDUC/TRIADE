@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -84,7 +84,7 @@ Planning du <input type=text name=saisiedate value='<?php print "$date" ?>' size
 	print "<td valign=top >&nbsp;".LANGRESA24."&nbsp;</td>";
 	print "<td  valign=top >&nbsp;".LANGBT50."&nbsp;</td>";
 	print "</tr>";
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 		$res="";
         if (DBTYPE == "mysql") {
              if ($data[$i][7] == 0)  {

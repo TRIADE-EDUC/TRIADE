@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: PMBSelectorDialog.js,v 1.2 2017-10-13 13:36:23 vtouchard Exp $
+// $Id: PMBSelectorDialog.js,v 1.3 2020/07/09 09:27:00 dgoron Exp $
 
 
 define(["dojo/_base/declare", 
@@ -21,7 +21,9 @@ define(["dojo/_base/declare",
 				case 'SelectorTab':
 					switch(evtType){
 						case 'closeCurrentTab':
-							this.hide();
+							if(!evtArgs.what || (this.params && evtArgs.what == this.params.what)) {
+								this.hide();
+							}
 							break;
 					}
 					break;

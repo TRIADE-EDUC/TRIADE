@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -43,11 +43,11 @@ if ($_SESSION["membre"] == "menuprof") {
 	verif_profp_class($_SESSION["id_pers"],$saisie_classe);
 	$nomClasse=chercheClasse_nom($saisie_classe);
 	$donne=$_SESSION["id_suppleant"];
-	$sql="SELECT idprof,idclasse FROM ${prefixe}prof_p WHERE idprof='$donne'";
+	$sql="SELECT idprof,idclasse FROM {$prefixe}prof_p WHERE idprof='$donne'";
 	$curs=execSql($sql);
 	$data=chargeMat($curs);
 	// patch pour problème sous-matière à 0
-	for($i=0;$i<count($data);$i++){
+	for($i=0;$i<countTriade($data);$i++){
 		$nomclasse=chercheClasse($data[$i][1]);
 		$nomclasse=$nomclasse[0][1];
 		$option.="<option STYLE='color:#000066;background-color:#CCCCFF' value='".$data[$i][1]."'>$nomclasse</option>\n";
@@ -64,7 +64,7 @@ if ($_SESSION["membre"] == "menuprof") {
 }
 
 $gid=$_GET['gid'];
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 
 $res=execSql($sql);
 $data=chargeMat($res);

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_datatype_marclist_ui.class.php,v 1.6 2019-01-03 16:10:38 apetithomme Exp $
+// $Id: onto_common_datatype_marclist_ui.class.php,v 1.8.10.1 2025/01/30 09:08:06 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -31,7 +31,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param Array() class_uris URI des classes de l'ontologie listÃ©es dans le sÃ©lecteur
+	 * @param Array() class_uris URI des classes de l'ontologie listées dans le sélecteur
 
 	 * @return void
 	 * @access public
@@ -42,9 +42,9 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param string class_uri URI de la classe d'instances Ã  lister
+	 * @param string class_uri URI de la classe d'instances à lister
 
-	 * @param integer page NumÃ©ro de page Ã  afficher
+	 * @param integer page Numéro de page à afficher
 
 	 * @return Array()
 	 * @access public
@@ -59,7 +59,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 
 	 * @param string class_uri Rechercher iniquement les instances de la classe
 
-	 * @param integer page Page du rÃ©sultat de recherche Ã  afficher
+	 * @param integer page Page du résultat de recherche à afficher
 
 	 * @return Array()
 	 * @access public
@@ -71,8 +71,8 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_property $property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
+	 * @param onto_common_property $property la propriété concernée
+	 * @param restriction $restrictions le tableau des restrictions associées à la propriété 
 	 * @param array datas le tableau des datatypes
 	 * @param string instance_name nom de l'instance
 	 * @param string flag Flag
@@ -86,7 +86,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 		
 		
 		$form=$ontology_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset), $form);
+		$form=str_replace("!!onto_row_label!!", htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset), $form);
 		
 		$marc_list = new marc_list($property->pmb_marclist_type);		
 
@@ -94,7 +94,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 		
 		$list_values_to_display = static::get_list_values_to_display($property);
 		
-		if(sizeof($datas)){
+		if(is_countable($datas) && sizeof($datas)){
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -110,20 +110,21 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 					$order=$key;
 				}
 				$inside_row = $ontology_tpl['form_row_content_marclist'];
-				$inside_row .= $ontology_tpl['form_row_content_type'];				
-				$options = '';
+				$inside_row .= $ontology_tpl['form_row_content_type'];
 				
+				$options = '';
 				foreach($marc_list->table as $value => $label){
-					if (count($list_values_to_display) && !in_array($value, $list_values_to_display)) {
-						continue;
-					}
-					if ($options) {
-						$options .= ',';
-					}
-					$options.= '{value:"'.$value.'", label:"'.$label.'"'.($data->get_formated_value() == $value ? ', selected : true' : '').'}';				
+				    if (count($list_values_to_display) && !in_array($value, $list_values_to_display)) {
+				        continue;
+				    }
+				    $selected = ($data->get_formated_value() == $value ? "selected=''" : '');
+				    $options.= '<option value="'.htmlentities($value, ENT_QUOTES, $charset).'" '.$selected.' >'.
+				                    htmlentities($label, ENT_QUOTES, $charset)
+				                .'</option>';
 				}
+				
 				/*generate rows *///htmlentities($data->get_formated_value() ,ENT_QUOTES,$charset)
-				$inside_row=str_replace('!!onto_row_content_marclist_options!!', htmlentities($options, ENT_QUOTES, $charset), $inside_row);
+				$inside_row=str_replace('!!onto_row_content_marclist_options!!', $options, $inside_row);
 				$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
 		
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -154,16 +155,15 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 
 			$options = '';
 			foreach($marc_list->table as $value => $label){
-				if (count($list_values_to_display) && !in_array($value, $list_values_to_display)) {
-					continue;
-				}
-				if ($options) {
-					$options .= ',';
-				}
-				$options.= '{value:"'.$value.'", label:"'.$label.'"}';
-			}			
+			    if (count($list_values_to_display) && !in_array($value, $list_values_to_display)) {
+			        continue;
+			    }
+			    $options.= '<option value="'.htmlentities($value, ENT_QUOTES, $charset).'">'.
+			                 htmlentities($label, ENT_QUOTES, $charset)
+		                    .'</option>';
+			}
 			
-			$inside_row=str_replace("!!onto_row_content_marclist_options!!", htmlentities($options, ENT_QUOTES, $charset), $inside_row);
+			$inside_row=str_replace("!!onto_row_content_marclist_options!!", $options, $inside_row);
 			$inside_row=str_replace("!!onto_row_content_range!!",$property->range[0] , $inside_row);
 				
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -188,9 +188,9 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	
 	/**
 	 
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
 
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param property property la propriété à utiliser
 
 	 * @param string instance_name nom de l'instance
 
@@ -201,7 +201,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}
@@ -212,7 +212,7 @@ class onto_common_datatype_marclist_ui extends onto_common_datatype_ui {
 	}
 	
 	/**
-	 * A dÃ©river pour filtrer la liste des valeurs Ã  afficher dans le sÃ©lecteur
+	 * A dériver pour filtrer la liste des valeurs à afficher dans le sélecteur
 	 * @return array
 	 */
 	public static function get_list_values_to_display($property) {

@@ -1,0 +1,8 @@
+<div id="types">
+	<template v-if="'add' == action || 'edit' == action">
+		<typesform :pmb="pmb" :types="types" :action="action" :img="img"></typesform>
+	</template>
+	<template v-else>
+		<typeslist :pmb="pmb" :typeslist="types"></typeslist>
+	</template>
+</div>

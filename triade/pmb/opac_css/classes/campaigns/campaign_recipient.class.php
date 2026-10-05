@@ -1,8 +1,8 @@
-<?php 
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: campaign_recipient.class.php,v 1.3 2018-03-06 08:43:30 dgoron Exp $
+// $Id: campaign_recipient.class.php,v 1.6 2023/05/11 10:00:35 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,9 +11,10 @@ class campaign_recipient{
 	protected $hash;
 	protected $num_campaign;
 	protected $details;
+	public $recipients;
 	
 	public function __construct($id=0) {
-		$this->id = $id+0;
+		$this->id = intval($id);
 		if($this->id) {
 			$this->fetch_data();
 		}
@@ -142,7 +143,7 @@ class campaign_recipient{
 	}
 	
 	public function set_num_campaign($num_campaign) {
-		$this->num_campaign = $num_campaign+0;
+		$this->num_campaign = intval($num_campaign);
 	}
 
 }// end class

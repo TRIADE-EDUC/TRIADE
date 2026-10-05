@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_works_datasource_works_other_links.class.php,v 1.7 2017-10-16 15:31:05 tsamson Exp $
+// $Id: frbr_entity_works_datasource_works_other_links.class.php,v 1.9 2021/02/25 16:27:00 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,10 +11,10 @@ class frbr_entity_works_datasource_works_other_links extends frbr_entity_works_d
 	protected static $type = "other_link";
 	
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas($datas=array()){
-		$query = "select distinct oeuvre_link_to as id, oeuvre_link_from as parent FROM tu_oeuvres_links
+		$query = "SELECT DISTINCT oeuvre_link_to AS id, oeuvre_link_from AS parent, oeuvre_link_type AS group_key FROM tu_oeuvres_links
 			WHERE oeuvre_link_other_link = 1 AND oeuvre_link_from IN (".implode(',', $datas).")";
 		if (!empty($this->work_link_type)) {
 			if (is_array($this->work_link_type)) {
@@ -23,6 +23,7 @@ class frbr_entity_works_datasource_works_other_links extends frbr_entity_works_d
 				$query .= " AND oeuvre_link_type = '".$this->work_link_type."'";
 			}
 		}
+		$query .= " ORDER BY oeuvre_link_order ASC";
 		$datas = $this->get_datas_from_query($query);
 		$datas = parent::get_datas($datas);		
 		return $datas;

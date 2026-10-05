@@ -1,28 +1,28 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_views.class.php,v 1.4 2017-03-30 13:57:48 dgoron Exp $
+// $Id: opac_views.class.php,v 1.6.8.1 2025/04/29 08:54:01 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 // classes d'affectation des vues aux utilisateurs OPAC
-// on rÃ©utilise la mÃ©canique des quotas...
+// on réutilise la mécanique des quotas...
+global $class_path;
 require_once($class_path."/quotas.class.php");
 
 
 class opac_views  extends quota {
-	
+
 	public function __construct(){
-		global $include_path,$lang;
-		
+
 	}
-	
+
 	//formulaire d'un champ de quota...
-	public function get_quota_form($prefix,$value){
+	public static function get_quota_form($prefix,$value){
 		global $msg, $charset;
-		
-		$value= unserialize($value);
+
+		$value= !empty($value) ? unserialize($value) : null;
 		if(!is_array($value)){
 			$value = array(
 				'allowed' => array(0),
@@ -68,18 +68,18 @@ class opac_views  extends quota {
 			</tr>";
 			}
 		}
-		$form.="	
+		$form.="
 		</table>";
 		return $form;
 	}
-	
-	function get_storable_value($value){
+
+	public static function get_storable_value($value) {
 		return addslashes(serialize($value));
 	}
-	
+
 	public static function get_selector($name, $selected = array()) {
 		global $msg, $charset;
-		
+
 		$query = "SELECT opac_view_id,opac_view_name FROM opac_views order by opac_view_name";
 		$result = pmb_mysql_query($query);
 		$select_view = "<select id='".$name."' name='".$name."[]' multiple>";

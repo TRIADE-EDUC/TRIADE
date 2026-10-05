@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.2 2021/04/29 13:51:37 btafforeau Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Liste de flux RSS</name>
+	<name lang="en_UK">RSS feed list</name>
+	<author>
+		<name>Bastien TAFFOREAU</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2021-04-28</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<managed>true</managed>
+	<use>
+		<datasources>
+			<datasource>cms_module_common_datasource_rsslist</datasource>
+		</datasources>
+		<views>
+			<view>cms_module_common_view_rsslist</view>
+		</views>
+		<conditions>
+			<condition>cms_module_common_condition_global_var</condition>
+		</conditions>
+	</use>
+</manifest>

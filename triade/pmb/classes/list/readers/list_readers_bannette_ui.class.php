@@ -2,11 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_readers_bannette_ui.class.php,v 1.4 2019-03-13 15:18:35 dgoron Exp $
+// $Id: list_readers_bannette_ui.class.php,v 1.17.4.1 2025/02/20 09:18:48 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/readers/list_readers_ui.class.php");
+global $class_path, $include_path;
 require_once($include_path."/templates/list/readers/list_readers_bannette_ui.tpl.php");
 require_once($class_path."/bannette.class.php");
 
@@ -16,14 +16,15 @@ class list_readers_bannette_ui extends list_readers_ui {
 	
 	protected $bannette;
 	
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
-	
 	protected function get_form_title() {
 		global $msg, $charset;
 		
 		return htmlentities($msg['dsi_ban_lec_assoce'], ENT_QUOTES, $charset)." : ".$this->get_bannette()->nom_bannette;
+	}
+	
+	protected function init_default_settings() {
+		parent::init_default_settings();
+		$this->set_setting_filter('codestat_one', 'visible', 0);
 	}
 	
 	protected function init_default_selected_filters() {
@@ -43,12 +44,12 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	protected function get_search_filter_has_affected() {
-		global $msg, $charset;
+		global $msg;
 	
 		return "
-			<input type='radio' id='".$this->objects_type."_has_affected_no' name='".$this->objects_type."_has_affected' value='0' ".(!$this->filters['has_affected'] ? "checked='checked'" : "")." onchange=\"this.form.submit();\" />
+			<input type='radio' id='".$this->objects_type."_has_affected_no' name='".$this->objects_type."_has_affected' value='0' ".(!$this->filters['has_affected'] ? "checked='checked'" : "")." />
 			<label for='".$this->objects_type."_has_affected_no'>".$msg['39']."</label>		
-			<input type='radio' id='".$this->objects_type."_has_affected_yes' name='".$this->objects_type."_has_affected' value='1' ".($this->filters['has_affected'] ? "checked='checked'" : "")." onchange=\"this.form.submit();\" />
+			<input type='radio' id='".$this->objects_type."_has_affected_yes' name='".$this->objects_type."_has_affected' value='1' ".($this->filters['has_affected'] ? "checked='checked'" : "")." />
 			<label for='".$this->objects_type."_has_affected_yes'>".$msg['40']."</label>";
 	}
 	
@@ -68,7 +69,7 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	/**
-	 * Jointure externes SQL pour les lecteurs affectÃ©s
+	 * Jointure externes SQL pour les lecteurs affectés
 	 */
 	protected function _get_query_join_filter_affected() {
 		
@@ -76,7 +77,7 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	/**
-	 * Filtre SQL pour les lecteurs affectÃ©s
+	 * Filtre SQL pour les lecteurs affectés
 	 */
 	protected function _get_query_filter_affected() {
 		global $id_bannette;
@@ -93,17 +94,15 @@ class list_readers_bannette_ui extends list_readers_ui {
 		global $msg;
 		global $form_cb;
 		
-		return "
-			<input type='button' class='bouton' value=\"".$msg['bt_retour']."\" onClick=\"document.location='".$base_path."/dsi.php?categ=bannettes&sub=pro&id_bannette=&suite=search&form_cb=".$form_cb."';\" />
-			<input type='button' class='bouton' value=\"".$msg['dsi_ban_affect_equation']."\" onclick=\"document.location='".$base_path."/dsi.php?categ=bannettes&sub=pro&suite=affect_equation&id_bannette=".$this->id_bannette."&form_cb=".$form_cb."'\"/>
-			";
+		return $this->get_interface_button($msg['bt_retour'], ['location' => $base_path."/dsi.php?categ=bannettes&sub=pro&id_bannette=&suite=search&form_cb=".$form_cb]);
 	}
 	
 	protected function add_column_mails_selection() {
 		$this->columns[] = array(
 				'property' => 'mails_selection',
 				'label' => "",
-				'html' => ""
+				'html' => "",
+                'exportable' => false
 		);
 	}
 	
@@ -143,7 +142,8 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	protected function get_display_html_content_selection() {
-		return "<div class='center'><input type='checkbox' id='".$this->objects_type."_selection_!!id!!' name='".$this->objects_type."_selection[!!id!!]' class='".$this->objects_type."_selection' value='!!id!!' !!subscribed!!></div>";
+	    global $msg, $charset;
+		return "<div class='center'><input type='checkbox' id='".$this->get_name_selection_objects()."_!!id!!' name='".$this->get_name_selection_objects()."[!!id!!]' class='list_ui_selection ".$this->objects_type."_selection' value='!!id!!' title='".htmlentities($msg['list_ui_selection_checkbox'], ENT_QUOTES, $charset)."' !!subscribed!!></div>";
 	}
 	
 	protected function get_display_cell_html_value($object, $value) {
@@ -170,21 +170,18 @@ class list_readers_bannette_ui extends list_readers_ui {
 		}
 	}
 	
-	protected function get_selection_actions() {
+	protected function init_default_selection_actions() {
 		global $msg;
 		global $base_path;
 		global $id_bannette;
 		
-		if(!isset($this->selection_actions)) {
-			$this->selection_actions = array();
-			if($this->id_bannette || $id_bannette) {
-				$link = array();
-				$link['href'] = $base_path."/dsi.php?categ=bannettes&sub=pro&id_bannette=".($this->id_bannette ? $this->id_bannette : $id_bannette)."&suite=affect_lecteurs&faire=enregistrer";
-					
-				$this->selection_actions[] = $this->get_selection_action('save', $msg['77'], 'sauv.gif', $link);
-			}
+		$this->selection_actions = array();
+		if($this->id_bannette || $id_bannette) {
+			$link = array(
+					'href' => $base_path."/dsi.php?categ=bannettes&sub=pro&id_bannette=".($this->id_bannette ? $this->id_bannette : $id_bannette)."&suite=affect_lecteurs&faire=enregistrer"
+			);
+			$this->add_selection_action('save', $msg['77'], 'sauv.gif', $link);
 		}
-		return $this->selection_actions;
 	}
 
 	protected function add_events_on_selection_actions() {
@@ -232,6 +229,13 @@ class list_readers_bannette_ui extends list_readers_ui {
 								});
 								domConstruct.place(selected_mails_hidden, selected_objects_form);
 							});
+							var page_hidden = domConstruct.create('input', {
+								type : 'hidden',
+								id : '".$this->objects_type."_page',
+								name : '".$this->objects_type."_page',
+								value : document.getElementById('".$this->objects_type."_page').value
+							});
+							domConstruct.place(page_hidden, selected_objects_form);
 							domConstruct.place(selected_objects_form, dom.byId('list_ui_selection_actions'));
 							dom.byId('".$this->objects_type."_selected_objects_form').submit();
 							"
@@ -247,7 +251,12 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	public function get_export_icons() {
-		return '';
+		global $msg, $base_path, $form_cb;
+		
+		if($this->get_setting('display', 'search_form', 'export_icons')) {
+			return $this->get_interface_button($msg['dsi_ban_affect_equation'], ['location' => $base_path."/dsi.php?categ=bannettes&sub=pro&suite=affect_equation&id_bannette=".$this->id_bannette."&form_cb=".$form_cb]);
+		}
+		return "";
 	}
 	
 	public static function get_controller_url_base() {
@@ -258,22 +267,35 @@ class list_readers_bannette_ui extends list_readers_ui {
 	}
 	
 	public function run_action_affect_lecteurs() {
-		$selected_objects = static::get_selected_objects();
-		if(count($selected_objects)) {
+	    $selected_objects = static::get_selected_objects();
+		if(is_array($selected_objects)) {
 			$name = $this->objects_type."_mails_selection";
 			global ${$name};
 			$sel_mail = ${$name};
-			foreach ($this->objects as $object) {
-				pmb_mysql_query("delete from bannette_abon where num_empr='".$object->id."' and num_bannette='".$this->id_bannette."'");
-				if(in_array($object->id, $selected_objects)) {
-					pmb_mysql_query("insert into bannette_abon set num_empr='".$object->id."', num_bannette='".$this->id_bannette."', bannette_mail='".$sel_mail[$object->id]."'");
+			$objects = $this->objects;
+			foreach ($objects as $indice=>$object) {
+				$query = "select count(*) from bannette_abon where num_empr='".$object->id."' and num_bannette='".$this->id_bannette."'";
+				$result = pmb_mysql_query($query);
+				if(pmb_mysql_result($result, 0, 0)) {
+					if(!in_array($object->id, $selected_objects)) {
+						pmb_mysql_query("delete from bannette_abon where num_empr='".$object->id."' and num_bannette='".$this->id_bannette."'");
+						if($this->filters['has_affected']) {
+							unset($this->objects[$indice]);
+							$this->pager['nb_results']--;
+						}
+					}
+					
+				} else {
+					if(in_array($object->id, $selected_objects)) {
+						pmb_mysql_query("insert into bannette_abon set num_empr='".$object->id."', num_bannette='".$this->id_bannette."', bannette_mail='".$sel_mail[$object->id]."'");
+					}
 				}
 			}
 		}
 	}
 	
 	public function set_id_bannette($id_bannette) {
-		$this->id_bannette = $id_bannette+0;
+		$this->id_bannette = intval($id_bannette);
 	}
 	
 	public function get_bannette() {

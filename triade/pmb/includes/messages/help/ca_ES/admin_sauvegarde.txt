@@ -1,11 +1,11 @@
-<h2>Còpia de seguretat</h2>
+<h2>C&ograve;pia de seguretat</h2>
 </p><p>
-<b>Lloc</b> localització al disc de les còpies de seguretat
+<b>Lloc</b> localitzaci&oacute; al disc de les c&ograve;pies de seguretat
 </p><p>
 <b>Grups de taules</b> a guardar
 </p><p>
-<b>Joc de còpies de seguretat</b> correspondència llocs/grups de taules
+<b>Joc de c&ograve;pies de seguretat</b> correspond&egrave;ncia llocs/grups de taules
 </p><p>
-<b>Llançament</b> 
+<b>Llan&ccedil;ament</b> 
 </p><p>
-<b>Còpies de seguretat realitzades</b> llistat de còpies de seguretat realitzades</p>
+<b>C&ograve;pies de seguretat realitzades</b> llistat de c&ograve;pies de seguretat realitzades</p>

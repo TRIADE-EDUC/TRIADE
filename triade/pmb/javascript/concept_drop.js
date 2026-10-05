@@ -1,7 +1,7 @@
 /* +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: concept_drop.js,v 1.2 2016-09-29 13:44:41 dgoron Exp $ */
+// $Id: concept_drop.js,v 1.2 2016/09/29 13:44:41 dgoron Exp $ */
 
 
 /**********************************

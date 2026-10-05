@@ -10,12 +10,12 @@ if (isset($_POST["identreprise"])) {
 	$cnx=cnx();
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT pers_id, civ, nom, prenom, identifiant, offline FROM ${prefixe}personnel WHERE type_pers='TUT' AND id_societe_tuteur='".$_POST["identreprise"]."' ORDER BY nom";
+	$sql="SELECT pers_id, civ, nom, prenom, identifiant, offline FROM {$prefixe}personnel WHERE type_pers='TUT' AND id_societe_tuteur='".$_POST["identreprise"]."' ORDER BY nom";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$data2=array();
-	if (count($data) > 0) {
-		for($i=0;$i<count($data);$i++) {
+	if (countTriade($data) > 0) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$data2[$i][0]=$data[$i][0];	
 			$data2[$i][1]=$data[$i][1];	
 			$data2[$i][2]=sansaccent($data[$i][2]);	

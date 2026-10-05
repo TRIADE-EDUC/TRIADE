@@ -1,27 +1,22 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: author.html,v 1.17 2018-07-09 11:47:22 dgoron Exp $ -->
+<!-- $Id: author.html,v 1.20.4.1 2025/03/27 09:49:36 tsamson Exp $ -->
 
-{% block header %}
-	<h3><span>{% if authority.type == 72 %}{{msg.congres_see_title}}: {% else %}{{msg.author_see_title}}{% endif %}</span></h3>
-{% endblock %}
+{% block title %}
+	{% title authority_isbd %}
+		{% if authority.type == 72 %}{{msg.congres_libelle}}: {% else %}{{msg.author_tpl_author}}{% endif %}
+		{{ authority.display }} 
+		{% if authority.date %} ({{authority.date}}){% endif %}
+		{% if authority.author_web %} <a title='{{msg.subs_f_web}}' target="_blank" href="{{authority.author_web}}"><img src='{{ img.globe.gif }}' /></a>{% endif %}
+		{% if authority.enrichment %} <a href="#" onclick="(enrichment_accordion.style.display=='none'?enrichment_accordion.style.display='block':enrichment_accordion.style.display='none'); return false;" ><span style='float:right'><img src='http://data.bnf.fr/data/d33bdf57d4c5db403a4ee12d090359dd/logo-data.gif' title="Détails sur l'auteur" alt="Détails sur l'auteur"/> ></span></a>{% endif %}
+	{% endtitle %}
+{% endblock %} 
 
 {% block aut_see %}
 	<div class="authorlevel2">
 		{{block.super}}
 	</div>
 {% endblock %}
-
-{% block title %}
-	<h3>
-		{% if authority.type == 72 %}{{msg.congres_libelle}}: {% else %}{{msg.author_tpl_author}}{% endif %}
-		{{ authority.display }} 
-		{% if authority.date %} ({{authority.date}}){% endif %}
-		{% if authority.author_web %} <a target="_blank" href="{{authority.author_web}}"><img src='{{ img.globe.gif }}'/></a>{% endif %}
-		{% if authority.enrichment %} <a href="#" onclick="(enrichment_accordion.style.display=='none'?enrichment_accordion.style.display='block':enrichment_accordion.style.display='none'); return false;" ><span style='float:right'><img src='http://data.bnf.fr/data/d33bdf57d4c5db403a4ee12d090359dd/logo-data.gif' title="Détails sur l'auteur" alt="Détails sur l'auteur"/> ></span></a>{% endif %}
-	</h3>
-	
-{% endblock %} 
 
 {% block details %}
 	{% if authority.author_comment %}
@@ -39,6 +34,19 @@
 			</div>
 			<div class='aut_display_cell'>
 				<span class='number_results'><a href="./index.php?lvl=author_see&id={{ authority.see }}">{{authority.author_see}}</a></span>
+			</div>
+		</div>
+	{% endif %}
+	{% if authority.reverse_authors_see %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.reverse_authors_see }} :</b>
+			</div>
+			<div class='aut_display_cell'>
+				{% for reverse_author_see in authority.reverse_authors_see %}
+					{% if !loop.first %}<br/>{% endif %}
+					<span class='number_results'><a href="./index.php?lvl=author_see&id={{ reverse_author_see.id }}">{{ reverse_author_see.display }}</a></span>
+				{% endfor %}
 			</div>
 		</div>
 	{% endif %}
@@ -65,7 +73,7 @@
 						<td class="enrichment_tab_col">Naissance&nbsp;:</td>
 						<td>
 							{{authority.enrichment.bio.birthdate}}
-							</br>
+							<br/>
 							{{authority.enrichment.bio.birthplace}}
 						</td>
 					</tr>
@@ -75,7 +83,7 @@
 						<td class="enrichment_tab_col">Décès&nbsp;:</td>
 						<td>
 							{{authority.enrichment.bio.deathdate}}
-							</br>
+							<br/>
 							{{authority.enrichment.bio.deathplace}}
 						</td>
 					</tr>

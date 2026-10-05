@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: de_DE.xml,v 1.2 2017-09-15 10:29:40 apetithomme Exp $ -->
+$Id: de_DE.xml,v 1.2 2017/09/15 10:29:40 apetithomme Exp $ -->
 
 <XMLlist>
 	<entry code="id_pmb">Identifiant PMB (à transmettre à Cairn.info)</entry>

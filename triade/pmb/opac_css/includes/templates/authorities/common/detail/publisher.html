@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: publisher.html,v 1.1 2018-04-05 10:39:42 dgoron Exp $ -->
+<!-- $Id: publisher.html,v 1.2 2023/09/20 14:30:38 dgoron Exp $ -->
 
 {% block detail %}
 	{% if element.link %}
@@ -16,7 +16,7 @@
 	{% if element.ed_comment %}
 		<div class="aut_display_row">
 			<div class="aut_display_cell">
-				<b>{{msg.707}} :</b>
+				<b>{{msg.ed_comment}} :</b>
 			</div>
 			<div class="aut_display_cell">
 				{{ element.ed_comment | nl2br }}
@@ -53,15 +53,5 @@
 				</div>
 			{% endif %}
 		{% endif %}
-	{% endif %}
-	{% if element.supplier.id_entite %}
-		<div class="aut_display_row">
-			<div class="aut_display_cell">
-				<b>{{ msg.acquisition_ach_fou2 }} :</b>
-			</div>
-			<div class='aut_display_cell'>
-				{{ element.supplier.raison_sociale }}
-			</div>
-		</div>
 	{% endif %}
 {% endblock detail %}

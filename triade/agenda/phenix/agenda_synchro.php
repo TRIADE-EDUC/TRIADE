@@ -29,7 +29,7 @@ if (!isset($id) || empty($id) || strlen($id)!=32) {
 }
 
 // On recupere l'identifiant et le mot de passe de l'utilisateur identifie par l'ID passe en parametre dans l'URL
-$DB_CX->DbQuery("SELECT util_login, util_passwd FROM ${PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
+$DB_CX->DbQuery("SELECT util_login, util_passwd FROM {$PREFIX_TABLE}utilisateur WHERE util_url_export='".$id."'");
 $login_util = $DB_CX->DbResult(0,0);
 $passwd_util = $DB_CX->DbResult(0,1);
 // Si l'identifiant ou le mot de passe est vierge on refuse la synchro

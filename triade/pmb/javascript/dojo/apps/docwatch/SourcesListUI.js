@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SourcesListUI.js,v 1.34 2015-03-19 09:46:59 dgoron Exp $
+// $Id: SourcesListUI.js,v 1.34 2015/03/19 09:46:59 dgoron Exp $
 
 
 define(["dojo/_base/declare", "dijit/layout/ContentPane","dojo/_base/lang", "dojo/topic", "dojox/grid/DataGrid", "dojo/data/ObjectStore", "dojo/store/Memory", "dojo/ready", "apps/docwatch/SourcesStore", "dijit/form/Button", "dojo/dom-construct", "dijit/DropDownMenu", "dijit/MenuItem", "dijit/form/DropDownButton", "dojo/Deferred", "dojo/date/locale"], function(declare,ContentPane,lang,topic,DataGrid,ObjectStore,Memory,ready,SourcesStore, Button, domConstruct, DropDownMenu, MenuItem, DropDownButton, Deferred, locale){

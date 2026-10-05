@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_modules_parser.class.php,v 1.14 2018-11-28 15:53:50 dgoron Exp $
+// $Id: cms_modules_parser.class.php,v 1.18.4.3 2025/04/30 07:28:37 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,8 +16,8 @@ class cms_modules_parser {
 
 	public function __construct($path=""){
 		global $base_path;
-		if($path == "") $path = $base_path."/cms/modules/";			
-		$this->path = $path;	
+		if($path == "") $path = $base_path."/cms/modules/";
+		$this->path = $path;
 		$this->cadres_classement_list=array();
 	}
 
@@ -25,11 +25,11 @@ class cms_modules_parser {
 		if(count($this->folders_list) == 0){
 			if(is_dir($this->path)){
 				$dh = opendir($this->path);
-				//on parcours tout le rÃ©pertoire
+				//on parcours tout le répertoire
 				while(($dir = readdir($dh)) !== false){
-					//le rÃ©pertoire parent et common ne sont pas des modules
-					if($dir != "common"  & substr($dir,0,1) != "."){
-						$this->folders_list[] = $dir;
+					//le répertoire parent et common ne sont pas des modules
+				    if($dir != "common" && substr($dir,0,1) != "." && $dir != "CVS"){
+				        $this->folders_list[] = $dir;
 					}
 				}
 				closedir($dh);
@@ -50,9 +50,10 @@ class cms_modules_parser {
 					global ${$hash_var};
 					$size = (is_array(${$hash_var}) ? count(${$hash_var}) : 0);
 					self::$modules_list[$module_name] = $module_class_name::get_informations();
-					//c'est la mÃªme histoire...
+					//c'est la même histoire...
 					$other_size = (is_array(${$hash_var}) ? count(${$hash_var}) : 0);
-					if($size!= $other_size){
+					if ($size!= $other_size) {
+						$module = new $module_class_name();
 						array_unshift(${$hash_var},$module->get_hash());
 					}
 					$tri[$module_name]=self::$modules_list[$module_name]['name'];
@@ -81,12 +82,11 @@ class cms_modules_parser {
 	}
 
 	public function get_cadres_list(){
-		global $dbh;
 		if(count($this->cadres_list) == 0){
 			$this->cadres_list= array();
 			$this->cadres_classement_list= array();
 			$query = "select * from cms_cadres order by cadre_classement, cadre_name";
-			$result = pmb_mysql_query($query,$dbh);
+			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){
 				while($row = pmb_mysql_fetch_object($result)){
 					$this->cadres_list[] = $row;
@@ -98,26 +98,38 @@ class cms_modules_parser {
 	}
 
 	public static function get_module_class_by_id($id){
-		global $dbh;
-		$id+=0;
+		$id = intval($id);
 		$query = "select * from cms_cadres where id_cadre = ".$id;
-		$result = pmb_mysql_query($query,$dbh);
+		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
 			$row = pmb_mysql_fetch_object($result);
 			return new $row->cadre_object($row->id_cadre);
 		}
 	}
-	
+
+	public static function get_module_class_content($class_name,$id){
+	    $id = intval($id);
+	    if(class_exists($class_name)){
+	        if(!isset(self::$modules_classes_content[$class_name][$id])){
+	           self::$modules_classes_content[$class_name][$id] = new $class_name($id);
+	        }
+	        return self::$modules_classes_content[$class_name][$id];
+	    }
+	    return false;
+	}
+
 	public function get_managed_modules(){
 		global $base_path;
-		
+
 		$this->managed_modules = array();
 		if(count($this->managed_modules) == 0){
 			foreach($this->get_modules_list() as $key => $module){
-				if($module['managed']){
+				if($module['managed'] && ((SESSrights & CMS_BUILD_AUTH) || $module['managedWithoutBuild'])){
 					$this->managed_modules[] = array(
 						'name' => $module['name'],
-						'link' => $base_path."/cms.php?categ=manage&sub=".$key."&action=get_form"
+						'link' => $base_path."/cms.php?categ=manage&sub=".$key."&action=get_form",
+					    'url' => $base_path."/cms.php?categ=manage&sub=".$key,
+						'sub' => $key
 					);
 				}else{
 					continue;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Articleslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_sectionslist_view_dynamic_grid.xml,v 1.2 2021/10/13 12:46:28 qvarin Exp $ -->
+
+<XMLlist>
+	<entry code='cms_module_common_view_django_default_template_id'>Date de création</entry>
+	<entry code='cms_module_common_view_django_default_template_id_desc'>Date de création décroissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title'>Titre croissant</entry>
+	<entry code='cms_module_common_view_django_default_template_title_desc'>Titre décroissant</entry>
+	<entry code='cms_module_sectionslist_view_link'>Construction du lien vers une rubrique</entry>
+	<entry code='cms_module_sectionslist_view_dynamic_grid_link_desc'>Lien vers la rubrique</entry>
+	<entry code='cms_module_sectionslist_view_dynamic_grid_sections_desc'>Tableau des rubriques à afficher</entry>
+</XMLlist>

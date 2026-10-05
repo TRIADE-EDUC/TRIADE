@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: frbr_entity_common_datasource_composed_concepts.class.php,v 1.4 2018-06-12 14:17:33 vtouchard Exp $
+// $Id: frbr_entity_common_datasource_composed_concepts.class.php,v 1.5 2021/11/18 09:16:37 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -18,7 +18,7 @@ class frbr_entity_common_datasource_composed_concepts extends frbr_entity_common
 	    $return_datas = array();
 	    $return_datas[0] = array();
 	    foreach ($datas as $data) {
-	        $skos_concepts->set_composed_concepts_built_with_element($data, $this->get_element_type_from_entity_type($this->get_parent_type()));
+	        $skos_concepts->set_composed_concepts_built_with_element($data, $this->get_type_from_entity_type($this->get_parent_type()));
 	        $concepts = $skos_concepts->get_concepts();
 	        $concepts_ids = array();
 	        foreach($concepts as $concept){

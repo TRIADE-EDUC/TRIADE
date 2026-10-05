@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: DemandeSource.xml,v 1.1 2024/02/26 14:28:53 dbellamy Exp $ -->
+
+<source>
+   <methods>
+    
+        <!-- Nb de demandes -->
+        <nb_demande>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes</query>
+        </nb_demande>
+        
+        <!-- Nb de demandes à valider -->
+        <nb_demande_to_valid>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=1</query>
+        </nb_demande_to_valid>
+        
+        <!-- Nb de demandes validées -->
+        <nb_demande_validated>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=2</query>
+        </nb_demande_validated>
+        
+        <!-- Nb de demandes refusées -->
+        <nb_demande_refused>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=3</query>
+        </nb_demande_refused>
+        
+        <!-- Nb de demandes terminées -->
+        <nb_demande_ended>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=4</query>
+        </nb_demande_ended>
+        
+        <!-- Nb de demandes abandonnées -->
+        <nb_demande_abandoned>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=5</query>
+        </nb_demande_abandoned>
+        
+        <!-- Nb de demandes archivées -->
+        <nb_demande_filed>
+            <type>sql</type>
+            <query>SELECT COUNT(*) FROM demandes WHERE etat_demande=6</query>
+        </nb_demande_filed>
+    </methods>
+</source>

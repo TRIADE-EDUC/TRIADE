@@ -13,6 +13,6 @@ hace aparecer en la <b>parte inferior m&aacute;s informaci&oacute;n</b> sobre la
 <p>Haciendo clic en uno de los enlaces de la parte inferior, usted se deplaza de categor&iacute;a en categor&iacute;a.</p>
 <hr />
 <p>Para seleccionar una categor&iacute;a y que aparezcan las obras correspondientes, haga clic en la lupa 
-<img src='images/search.gif' align='absmiddle'>ubicada al comienzo de la l&iacute;nea.</p>
+<img src='images/search.gif' >ubicada al comienzo de la l&iacute;nea.</p>
 <hr />
 <p>Si la lupa no aparece, significa que no hay obras que correspondan a esa categor&iacute;a.</p>

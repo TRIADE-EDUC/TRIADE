@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// � 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_ui.class.php,v 1.4 2018-02-15 16:23:18 apetithomme Exp $
+// $Id: onto_common_ui.class.php,v 1.9 2022/09/15 14:30:39 arenou Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -25,7 +25,7 @@ class onto_common_ui extends onto_root_ui{
 	
 	/**
 	 * 
-	 * Renvoie le formulaire de recherche pour le selecteur d'autorité
+	 * Renvoie le formulaire de recherche pour le selecteur d'autorit�
 	 * 
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
@@ -38,6 +38,8 @@ class onto_common_ui extends onto_root_ui{
 		
 		if($params->objs){
 			$property = $controler->get_onto_property_from_pmb_name($params->objs);
+			// AR - 15/09/22 Pas d'ordre naturel à la lecture de l'ontologie, donc on trie arbitrairement pour garantir une cohérence dans les ids d'onglets
+			sort($property->range);
 			$element = $property->range[$params->range];
 			$type = $controler->get_class_pmb_name($element);
 		}else {
@@ -74,7 +76,7 @@ class onto_common_ui extends onto_root_ui{
 	}
 	
 	/**
-	 * Renvoie l'affichage html de la liste pour le selecteur d'autorité
+	 * Renvoie l'affichage html de la liste pour le selecteur d'autorit�
 	 *
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
@@ -109,12 +111,10 @@ class onto_common_ui extends onto_root_ui{
 				$item_label = (isset($item[substr($lang,0,2)]) ? $item[substr($lang,0,2)] : $item['default']);
 				$current_element_form = str_replace("!!item_libelle!!", htmlentities($item_label,ENT_QUOTES,$charset), $current_element_form);
 				if($multiple_range){
-					$item = "[".$controler->get_class_label($element)."] ".$item_label;
-				}else{
-					$item = $item_label;
+				    $item_label = "[".$controler->get_class_label($element)."] ".$item_label;
 				}
 				
-				$current_element_form = str_replace("!!item!!", addslashes($item), $current_element_form);
+				$current_element_form = str_replace("!!item!!", addslashes($item_label), $current_element_form);
 				$elements_form.= $current_element_form;
 			}
 			$list = str_replace("!!elements_form!!", $elements_form, $list);
@@ -168,37 +168,45 @@ class onto_common_ui extends onto_root_ui{
 	 * @param onto_common_controler $controler
 	 * @param array $errors
 	 */
-	public static function display_errors($controler,$errors){
+	public static function display_errors($controler,$errors, $return_messages = false){
 		global $msg;
 		
 		$messages = array();
-		foreach ($errors as $property => $error){
-			if(isset($error['type'])){
-				switch($error['type']){
-					case "card" :
-						if($error['error'] == "no minima"){
-							$messages[] = sprintf($msg['onto_error_no_minima'],$controler->get_label($property));
-						}else if( $error['error'] == "too much values"){
-							$messages[] = sprintf($msg['onto_error_too_much_values'],$controler->get_label($property));
-						}
-						break;
-					case "must be distinct" :
-						$messages[] = sprintf($msg['onto_error_must_be_distinct'],$controler->get_label($property),$controler->get_label($error['error']));
-						break;
-					case "unvalid datas" :
-						$messages[] = sprintf($msg['onto_error_unvalid_datas'],$controler->get_label($property));
-						break;
-					default :
-						var_dump($error);
-						break;
-				}
-			}
+		if (!empty($errors)) {
+    		foreach ($errors as $property => $error){
+    			if(isset($error['type'])){
+    				switch($error['type']){
+    					case "card" :
+    						if($error['error'] == "no minima"){
+    							$messages[] = sprintf($msg['onto_error_no_minima'],$controler->get_label($property));
+    						}else if( $error['error'] == "too much values"){
+    							$messages[] = sprintf($msg['onto_error_too_much_values'],$controler->get_label($property));
+    						}
+    						break;
+    					case "must be distinct" :
+    						$messages[] = sprintf($msg['onto_error_must_be_distinct'],$controler->get_label($property),$controler->get_label($error['error']));
+    						break;
+    					case "unvalid datas" :
+    						$messages[] = sprintf($msg['onto_error_unvalid_datas'],$controler->get_label($property));
+    						break;
+    					case "sparql" :
+    					    $messages[] = $error['message'] ?? $msg['error'];
+    						break;
+    					default :
+    						var_dump($error);
+    						break;
+    				}
+    			}
+    		}
+		}
+		if ($return_messages) {
+		    return $messages;
 		}
 		//error_message($msg['540'], implode("<br/>",$messages), 1);
 	}
 	
 	/**
-	 * Retourne la liste des assertions contenant l'item susceptible d'être supprimé
+	 * Retourne la liste des assertions contenant l'item susceptible d'�tre supprim�
 	 * @param onto_common_controler $controler
 	 * @param onto_param $params
 	 * @param onto_assertion $assertions
@@ -223,5 +231,20 @@ class onto_common_ui extends onto_root_ui{
 		$list = str_replace("!!href_continue!!", "./".$controler->get_base_resource()."categ=".$params->categ."&sub=".$params->sub."&id=".$params->id."&action=delete", $list);
 		
 		return $list;
+	}
+	
+	/**
+	 * retourne le message associe au label
+	 * @param string $label
+	 * @return string
+	 */
+	public static function get_message($label) {
+	    global $msg;
+	    if (substr($label,0,4)=="msg:") {
+	        if (isset($msg[substr($label,4)])) {
+	            return  $msg[substr($label,4)];
+	        }
+	    }
+	    return $label;
 	}
 }

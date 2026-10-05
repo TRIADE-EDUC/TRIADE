@@ -1,10 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: analysis_main.inc.php,v 1.10 2015-11-05 09:15:07 jpermanne Exp $
+// $Id: analysis_main.inc.php,v 1.13 2023/09/06 06:55:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
+
+global $class_path, $action, $msg, $serial_header;
+global $serial_id, $bul_id, $analysis_id, $explnum_id, $f_explnum_id;
+
+require_once($class_path."/entities/entities_analysis_controller.class.php");
+require_once($class_path."/entities/entities_analysis_explnum_controller.class.php");
 
 function abort() {
 	echo "<script type=\"text/javascript\">
@@ -15,32 +21,64 @@ function abort() {
 
 switch($action) {
 	case 'analysis_form':
-		include('./catalog/serials/analysis/analysis_form.inc.php');
+		$entities_analysis_controller = new entities_analysis_controller($analysis_id);
+		$entities_analysis_controller->set_bulletin_id($bul_id);
+		$entities_analysis_controller->set_action('form');
+		$entities_analysis_controller->proceed();
 		break;
 	case 'analysis_duplicate':
-		include('./catalog/serials/analysis/analysis_duplicate.inc.php');
+		$entities_analysis_controller = new entities_analysis_controller($analysis_id);
+		$entities_analysis_controller->set_bulletin_id($bul_id);
+		$entities_analysis_controller->set_action('duplicate');
+		$entities_analysis_controller->proceed();
 		break;
 	case 'update':
 		include('./catalog/serials/analysis/analysis_update.inc.php');
 		break;
 	case 'delete':
-		include('./catalog/serials/analysis/analysis_delete.inc.php');
+		$entities_analysis_controller = new entities_analysis_controller($analysis_id);
+		$entities_analysis_controller->set_bulletin_id($bul_id);
+		$entities_analysis_controller->set_serial_id($serial_id);
+		$entities_analysis_controller->set_action('delete');
+		$entities_analysis_controller->proceed();
 		break;
 	case 'explnum_delete':
-		include('./catalog/serials/analysis/ana_explnum_delete.inc.php');
+		// suppression d'un exemplaire de bulletinage
+		echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg['explnum_doc_associe'], $serial_header);
+		
+		$entities_analysis_explnum_controller = new entities_analysis_explnum_controller($explnum_id);
+		$entities_analysis_explnum_controller->set_bulletin_id($bul_id);
+		$entities_analysis_explnum_controller->set_action('explnum_delete');
+		$entities_analysis_explnum_controller->proceed();
 		break;
 	case 'explnum_update':
-		include('./catalog/serials/analysis/ana_explnum_update.inc.php');
+		echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg['explnum_doc_associe'], $serial_header);
+		
+		$entities_analysis_explnum_controller = new entities_analysis_explnum_controller($f_explnum_id);
+		$entities_analysis_explnum_controller->set_bulletin_id($bul_id);
+		$entities_analysis_explnum_controller->set_action('explnum_update');
+		$entities_analysis_explnum_controller->proceed();
 		break;	
 	case 'explnum_form':
-		include('./catalog/serials/analysis/ana_explnum_form.inc.php');
+		echo str_replace('!!page_title!!', $msg[4000].$msg[1003].$msg['explnum_doc_associe'], $serial_header);
+		
+		$entities_analysis_explnum_controller = new entities_analysis_explnum_controller($explnum_id);
+		$entities_analysis_explnum_controller->set_bulletin_id($bul_id);
+		$entities_analysis_explnum_controller->set_analysis_id($analysis_id);
+		$entities_analysis_explnum_controller->set_action('explnum_form');
+		$entities_analysis_explnum_controller->proceed();
+		
 		break;
 	case 'analysis_move':
 		include('./catalog/serials/analysis/analysis_move.inc.php');
 		break;
+	case 'analysis_orphan_form':
+	    $entities_analysis_controller = new entities_analysis_controller($analysis_id);
+	    $entities_analysis_controller->set_action('orphan_form');
+	    $entities_analysis_controller->proceed();
+	    break;
 	default:
 		abort();
 		break;
 }
 ?>
-

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -104,23 +104,23 @@ if (isset($_POST["create"])) {
 	$info_eleve=$_POST["saisie_info_eleve"];
 	
 	// on ecris la requete sql 
-	$sql = "SELECT * FROM ${prefixe}preinscription_eleves WHERE nom='$nom' AND prenom='$prenom' AND date_naissance='$date_naissance' ";
+	$sql = "SELECT * FROM {$prefixe}preinscription_eleves WHERE nom='$nom' AND prenom='$prenom' AND date_naissance='$date_naissance' ";
 	$data=ChargeMat(execSql($sql));
-	if (count($data) > 0) {
+	if (countTriade($data) > 0) {
 		alertJs("Candidature déjà enregistrée");
 	}else{
-		$sql = "INSERT INTO ${prefixe}preinscription_eleves (nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,date_demande,annee_scolaire,information,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve) VALUES ('$nom','$prenom','$classe','$lv1','$lv2','$regime','$date_naissance','$lieu_naissance','$nationalite','$passwd','$passwd_eleve','$civ_1','$nomtuteur','$prenomtuteur','$adr1','$code_post_adr1','$commune_adr1','$tel_port_1','$civ_2','$nom_resp_2','$prenom_resp_2','$adr2','$code_post_adr2','$commune_adr2','$tel_port_2','$telephone','$profession_pere','$tel_prof_pere','$profession_mere','$tel_prof_mere','$nom_etablissement','$numero_etablissement','$code_postal_etablissement','$commune_etablissement','$numero_eleve','$photo','$email','$email_eleve','$email_resp_2','$class_ant','$annee_ant','$tel_eleve','$sexe','$option2','$datedemande','$annee_scolaire','$info_eleve','$adresse_eleve','$code_post_adr_eleve','$commune_adr_eleve','$tel_fixe_eleve','$pays_eleve');";
+		$sql = "INSERT INTO {$prefixe}preinscription_eleves (nom,prenom,classe,lv1,lv2,regime,date_naissance,lieu_naissance,nationalite,passwd,passwd_eleve,civ_1,nomtuteur,prenomtuteur,adr1,code_post_adr1,commune_adr1,tel_port_1,civ_2,nom_resp_2,prenom_resp_2,adr2,code_post_adr2,commune_adr2,tel_port_2,telephone,profession_pere,tel_prof_pere,profession_mere,tel_prof_mere,nom_etablissement,numero_etablissement,code_postal_etablissement,commune_etablissement,numero_eleve,photo,email,email_eleve,email_resp_2,class_ant,annee_ant,tel_eleve,sexe,option2,date_demande,annee_scolaire,information,adr_eleve,ccp_eleve,commune_eleve,tel_fixe_eleve,pays_eleve) VALUES ('$nom','$prenom','$classe','$lv1','$lv2','$regime','$date_naissance','$lieu_naissance','$nationalite','$passwd','$passwd_eleve','$civ_1','$nomtuteur','$prenomtuteur','$adr1','$code_post_adr1','$commune_adr1','$tel_port_1','$civ_2','$nom_resp_2','$prenom_resp_2','$adr2','$code_post_adr2','$commune_adr2','$tel_port_2','$telephone','$profession_pere','$tel_prof_pere','$profession_mere','$tel_prof_mere','$nom_etablissement','$numero_etablissement','$code_postal_etablissement','$commune_etablissement','$numero_eleve','$photo','$email','$email_eleve','$email_resp_2','$class_ant','$annee_ant','$tel_eleve','$sexe','$option2','$datedemande','$annee_scolaire','$info_eleve','$adresse_eleve','$code_post_adr_eleve','$commune_adr_eleve','$tel_fixe_eleve','$pays_eleve');";
 		execSql($sql);
 		alertJs("Candidature enregistrée");
 	}	
 }
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT languaige="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Liste des pré-inscriptions" ?></font></b></td></tr>
 <tr id='cadreCentral0' >

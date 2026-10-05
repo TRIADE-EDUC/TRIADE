@@ -23,7 +23,7 @@
   if (isset($_GET['sid']) || isset($HTTP_GET_VARS['sid'])) {
     // Destruction de la session
     include("inc/param.inc.php");
-    $DB_CX->DbQuery("DELETE FROM ${PREFIX_TABLE}sid WHERE sid_id='".$sid."'");
+    $DB_CX->DbQuery("DELETE FROM {$PREFIX_TABLE}sid WHERE sid_id='".$sid."'");
     // Fermeture BDD
     $DB_CX->DbDeconnect();
     // Destruction du cookie

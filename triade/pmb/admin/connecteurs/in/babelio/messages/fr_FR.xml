@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: fr_FR.xml,v 1.2 2011-06-24 08:25:06 arenou Exp $ -->
+$Id: fr_FR.xml,v 1.2 2011/06/24 08:25:06 arenou Exp $ -->
 
 <XMLlist>
 	<entry code="babelio_no_infos">Aucunes informations disponibles.</entry>

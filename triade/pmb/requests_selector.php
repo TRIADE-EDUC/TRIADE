@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: requests_selector.php,v 1.4 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: requests_selector.php,v 1.4 2019/06/10 08:57:12 btafforeau Exp $
 
 $base_path=".";
 $base_noheader=1;
@@ -22,7 +22,7 @@ $rqt = new requester();
 
 switch($completion):
 	case 'req_fiel':
-		// rÃ©cupÃ©ration des champs accessibles Ã  partir de l'univers dÃ©fini
+		// récupération des champs accessibles à partir de l'univers défini
 		if (!$req_univ) die;
 		$t = $rqt->getFieldUnivList($req_univ);
 		

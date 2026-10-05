@@ -2,17 +2,18 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rent_pricing_system_grid.class.php,v 1.10 2018-03-27 13:01:21 arenou Exp $
+// $Id: rent_pricing_system_grid.class.php,v 1.12.4.1 2025/03/19 11:33:34 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($include_path."/templates/rent/rent_pricing_system_grid.tpl.php");
 require_once($class_path."/rent/rent_pricing_system.class.php");
 
 class rent_pricing_system_grid {
 	
 	/**
-	 * Instance du systÃ¨me de tarification rattachÃ©
+	 * Instance du système de tarification rattaché
 	 * @var rent_pricing_system
 	 */
 	protected $pricing_system;
@@ -30,6 +31,7 @@ class rent_pricing_system_grid {
 	protected $percents;
 	
 	public function __construct($id_pricing_system) {
+	    $id_pricing_system = intval($id_pricing_system);
 		$this->pricing_system = new rent_pricing_system($id_pricing_system);
 		$this->fetch_data();
 	}
@@ -55,80 +57,124 @@ class rent_pricing_system_grid {
 		}
 	}
 	
+	protected function get_interval_content_form($time_start=0, $time_end=5, $price='', $indice=0) {
+	    global $rent_pricing_system_grid_content_form_interval_tpl;
+	    
+	    $interval_tpl = $rent_pricing_system_grid_content_form_interval_tpl;
+	    $interval_tpl = str_replace("!!time_start!!", $time_start, $interval_tpl);
+	    $interval_tpl = str_replace("!!time_end!!", $time_end, $interval_tpl);
+	    $interval_tpl = str_replace("!!price!!", $price, $interval_tpl);
+	    $interval_tpl = str_replace("!!indice!!", $indice, $interval_tpl);
+	    return $interval_tpl;
+	}
+	
+	protected function get_intervals_content_form() {
+	    global $msg, $charset;
+	    
+	    $content_form = '';
+	    $count_interval = 0;
+	    if(count($this->grid)){
+	        foreach ($this->grid as $element) {
+	            if($element['type'] == 1) {
+	                $interval_tpl_temp = $this->get_interval_content_form($element['time_start'], $element['time_end'], $element['price'], $count_interval);
+	                if($count_interval) {
+	                    $button_raz = "<input class='bouton' type='button' value='".htmlentities($msg['raz'], ENT_QUOTES, $charset)."' onClick=\"pricing_system_grid_delete_interval('pricing_system_grid_interval_".$count_interval."');\" />";
+	                    $interval_tpl_temp = str_replace("!!button_raz!!",$button_raz,$interval_tpl_temp);
+	                } else {
+	                    $interval_tpl_temp = str_replace("!!button_raz!!",'',$interval_tpl_temp);
+	                }
+	                $content_form .=$interval_tpl_temp;
+	                $count_interval++;
+	            }
+	        }
+	    } else {
+	        $content_form = $this->get_interval_content_form();
+	    }
+	    return $content_form;
+	}
+	
+	protected function get_percentage_content_form($percent='', $indice=0) {
+	    global $rent_pricing_system_grid_content_form_percent_tpl;
+	    
+	    $percent_tpl = $rent_pricing_system_grid_content_form_percent_tpl;
+	    $percent_tpl = str_replace('!!percent!!', $percent, $percent_tpl);
+	    $percent_tpl = str_replace('!!indice!!', $indice, $percent_tpl);
+	    return $percent_tpl;
+	}
+	
+	protected function get_percentages_content_form() {
+	    $content_form = '';
+	    $percents = $this->pricing_system->get_percents();
+	    if(is_array($percents) && count($percents)) {
+	        foreach ($percents as $indice=>$percent) {
+	            $content_form .= $this->get_percentage_content_form($percent, $indice);
+	        }
+	    } else {
+	        $content_form = $this->get_percentage_content_form();
+	    }
+	    return $content_form;
+	}
+	
+	/**
+	 * Contenu du formulaire
+	 */
+	public function get_content_form(){
+	    global $rent_pricing_system_grid_content_form_tpl;
+	    
+	    $content_form = $rent_pricing_system_grid_content_form_tpl;
+	    $count_interval = 0;
+	    if(count($this->grid)){
+	        foreach ($this->grid as $element) {
+	            if($element['type'] == 1) {
+	                $count_interval++;
+	            }
+	            if($element['type'] == 2) {
+	                $content_form = str_replace("!!extra_time!!",$element['time_start'], $content_form);
+	                $content_form = str_replace("!!extra_price!!", $element['price'], $content_form);
+	            }
+	            if($element['type'] == 3) {
+	                $content_form = str_replace("!!not_used_price!!", $element['price'], $content_form);
+	            }
+	        }
+	    } else {
+	        $content_form = str_replace("!!extra_time!!", 15, $content_form);
+	        $content_form = str_replace("!!extra_price!!", '', $content_form);
+	        $content_form = str_replace("!!not_used_price!!", '', $content_form);
+	    }
+	    $content_form = str_replace("!!grid_form_interval_tpl!!", $this->get_intervals_content_form(), $content_form);
+	    $content_form = str_replace("!!grid_form_percent_tpl!!", $this->get_percentages_content_form(), $content_form);
+	    
+	    $content_form = str_replace("!!interval_max!!", $count_interval, $content_form);
+	    
+	    $count_percent = 1;
+	    $percents = $this->pricing_system->get_percents();
+	    if(is_array($percents) && is_countable($percents) && count($percents)) {
+	        $count_percent = count($percents);
+	    }
+	    $content_form = str_replace("!!percent_max!!", $count_percent, $content_form);
+	    
+	    return $content_form;
+	}
+	
 	/**
 	 * Formulaire
 	 */
 	public function get_form(){
-		global $msg,$charset;
+		global $msg;
 		global $id_entity;
-		global $rent_pricing_system_grid_form_tpl;
-		global $rent_pricing_system_grid_form_interval_tpl;
-		global $rent_pricing_system_grid_form_percent_tpl;
+		global $rent_pricing_system_grid_js_form_tpl;
 		
-		$form = $rent_pricing_system_grid_form_tpl;
+		$form = $rent_pricing_system_grid_js_form_tpl;
 		
-		$interval_tpl = '';
-		$extra_tpl = '';
-		$not_used_tpl = '';
-		$count_interval=0;
-		if(count($this->grid)){
-			foreach ($this->grid as $element) {
-				if($element['type'] == 1) {
-					$interval_tpl_temp = $rent_pricing_system_grid_form_interval_tpl;
-					$interval_tpl_temp = str_replace("!!time_start!!",$element['time_start'],$interval_tpl_temp);
-					$interval_tpl_temp = str_replace("!!time_end!!",$element['time_end'],$interval_tpl_temp);
-					$interval_tpl_temp = str_replace("!!price!!",$element['price'],$interval_tpl_temp);
-					$interval_tpl_temp = str_replace("!!indice!!",$count_interval,$interval_tpl_temp);
-					if($count_interval) {
-						$button_raz = "<input class='bouton' type='button' value='".$msg['raz']."' onClick=\"pricing_system_grid_delete_interval('pricing_system_grid_interval_".$count_interval."');\" />";
-						$interval_tpl_temp = str_replace("!!button_raz!!",$button_raz,$interval_tpl_temp);
-					} else {
-						$interval_tpl_temp = str_replace("!!button_raz!!",'',$interval_tpl_temp);
-					}
-					$interval_tpl .=$interval_tpl_temp;
-					$count_interval++;
-				}
-				if($element['type'] == 2) {
-					$form = str_replace("!!extra_time!!",$element['time_start'],$form);
-					$form = str_replace("!!extra_price!!",$element['price'],$form);
-				}
-				if($element['type'] == 3) {
-					$form = str_replace("!!not_used_price!!",$element['price'],$form);			
-				}
-			}
-		} else {
-			$interval_tpl = $rent_pricing_system_grid_form_interval_tpl;
-			$interval_tpl = str_replace("!!time_start!!",0,$interval_tpl);
-			$interval_tpl = str_replace("!!time_end!!",5,$interval_tpl);
-			$interval_tpl = str_replace("!!price!!",'',$interval_tpl);
-			$interval_tpl = str_replace("!!indice!!",0,$interval_tpl);
-			$form = str_replace("!!extra_time!!",15,$form);
-			$form = str_replace("!!extra_price!!",'',$form);
-			$form = str_replace("!!not_used_price!!",'',$form);		
-		}	
-		$form = str_replace("!!grid_form_interval_tpl!!",$interval_tpl,$form);
-		$count_percent=0;
-		$percent_tpl = '';
-		$percents = $this->pricing_system->get_percents();
-		if(is_array($percents) && count($percents)) {
-			$count_percent = count($percents);
-			foreach ($percents as $indice=>$percent) {
-				$percent_tpl_temp = $rent_pricing_system_grid_form_percent_tpl;
-				$percent_tpl_temp = str_replace('!!indice!!', $indice, $percent_tpl_temp);
-				$percent_tpl_temp = str_replace('!!percent!!', $percent, $percent_tpl_temp);
-				$percent_tpl .= $percent_tpl_temp;
-			}
-		} else {
-			$percent_tpl = $rent_pricing_system_grid_form_percent_tpl;
-			$percent_tpl = str_replace('!!indice!!', 0, $percent_tpl);
-			$percent_tpl = str_replace('!!percent!!', '', $percent_tpl);
-			$count_percent++;
-		}
-		$form = str_replace("!!grid_form_percent_tpl!!", $percent_tpl, $form);
-		$form = str_replace("!!id_entity!!",$id_entity,$form);
-		$form = str_replace("!!id!!",$this->pricing_system->get_id(),$form);
-		$form = str_replace("!!interval_max!!",$count_interval,$form);
-		$form = str_replace("!!percent_max!!",$count_percent,$form);
+		
+		$interface_form = new interface_admin_acquisition_form('pricing_system_grid_form');
+		$interface_form->set_label($msg['pricing_system_grid_form_edit']);
+		$interface_form->set_object_id($this->pricing_system->get_id())
+		->set_id_entity($id_entity)
+		->set_content_form($this->get_content_form())
+		->set_table_name('rent_pricing_system_grids');
+		$form .= $interface_form->get_display();
+		
 		return $form;
 	}
 
@@ -179,7 +225,6 @@ class rent_pricing_system_grid {
 	 * Sauvegarde
 	 */
 	public function save(){
-		
 		$this->delete();
 		foreach ($this->grid as $element) {
 			$query = 'insert into rent_pricing_system_grids set
@@ -204,7 +249,7 @@ class rent_pricing_system_grid {
 		
 		if($this->pricing_system->get_id()) {
 			$query = "delete from rent_pricing_system_grids where pricing_system_grid_num_system= ".$this->pricing_system->get_id();
-			$result = pmb_mysql_query($query);
+			pmb_mysql_query($query);
 			return true;
 		}
 	}
@@ -275,7 +320,7 @@ class rent_pricing_system_grid {
 	}
 	
 	/**
-	 * Valeurs par dÃ©faut en crÃ©ation d'un systÃ¨me de tarification
+	 * Valeurs par défaut en création d'un système de tarification
 	 */
 	public function init_default_grid() {
 		$this->grid = 
@@ -338,7 +383,7 @@ class rent_pricing_system_grid {
 	}
 	protected function calc_price($time = 0, $percent = 100){
 		$price = 0;
-		$time += 0;
+		$time = intval($time);
 		$defined_price = false;
 		foreach($this->grid as $element) {
 			if(!$defined_price) {

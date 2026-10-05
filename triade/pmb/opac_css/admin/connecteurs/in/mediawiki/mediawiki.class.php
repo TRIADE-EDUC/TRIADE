@@ -3,24 +3,18 @@ global $class_path;
 require_once($class_path."/curl.class.php");
 
 class mediawiki extends connector {
-    public function __construct($connector_path="") {
-    	parent::__construct($connector_path);
-    }
-    
-    public function get_id() {
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see connector::get_id()
+     */
+    public function get_id()
+    {
     	return "mediawiki";
     }
-    
-    //Est-ce un entrepot ?
-    public function is_repository() {
-            return 2;
-    }
-    
-    public function enrichment_is_allow(){
-        return false;
-    }
-    
-     //Formulaire des propriÃ©tÃ©s gÃ©nÃ©rales
+
+    //Formulaire des propriétés générales
     public function source_get_property_form($source_id) {
         global $charset;
         $params=$this->get_source_params($source_id);
@@ -62,18 +56,18 @@ class mediawiki extends connector {
                 ";
         return $form;
     }
-    
-    public function make_serialized_source_properties($source_id) { 	
+
+    public function make_serialized_source_properties($source_id) {
         global $url,$limit,$typedoclabel;
 	$this->sources[$source_id]["PARAMETERS"]=serialize(['url'=>$url,'limit'=>$limit,'typedoclabel'=>$typedoclabel]);
     }
-    
-    //RÃ©cupÃ©ration  des proriÃ©tÃ©s globales par dÃ©faut du connecteur (timeout, retry, repository, parameters)
+
+    //Récupération  des proriétés globales par défaut du connecteur (timeout, retry, repository, parameters)
     public function fetch_default_global_values() {
             parent::fetch_default_global_values();
             $this->repository=2;
     }
-    
+
     public function rec_record($record,$source_id,$search_id,$url,$typedoclabel) {
         //Initialisation
         $ref="";
@@ -83,11 +77,11 @@ class mediawiki extends connector {
         $subfield_order=0;
         $value="";
         $date_import=date("Y-m-d H:i:s",time());
-        
+
         $params=$this->get_source_params($source_id);
-        
+
         $ref = md5($record->title);
-        
+
         //Si conservation des anciennes notices, on regarde si elle existe
         if (!$this->del_old) {
                 $ref_exists = $this->has_ref($source_id, $ref);
@@ -98,9 +92,9 @@ class mediawiki extends connector {
                 $this->delete_from_external_count($source_id, $ref);
         }
         $ref_exists = false;
-        //Si pas de conservation ou refÃ¯Â¿Â½rence inexistante
+        //Si pas de conservation ou refï¿½rence inexistante
         if (($this->del_old)||((!$this->del_old)&&(!$ref_exists))) {
-            //Insertion de l'entÃ¯Â¿Â½te
+            //Insertion de l'entï¿½te
             $n_header["rs"]="*";
             $n_header["ru"]="*";
             $n_header["el"]="*";
@@ -108,18 +102,18 @@ class mediawiki extends connector {
             $n_header["hl"]="0";
             $n_header["dt"]="a";
 
-            //RÃ©cupÃ©ration d'un ID
+            //Récupération d'un ID
             $recid = $this->insert_into_external_count($source_id, $ref);
 
             foreach($n_header as $hc=>$code) {
                 $this->insert_header_into_entrepot($source_id, $ref, $date_import, $hc, $code, $recid, $search_id);
             }
-            
+
             $fields=[
                 "title"=>[["200","a"]],
                 "snippet"=>[["327","a"]],
             ];
-            
+
             foreach($record as $key=>$value) {
                 for ($i=0; $i<count($fields[$key]); $i++) {
                     $ufield=$fields[$key][$i][0];
@@ -140,20 +134,20 @@ class mediawiki extends connector {
             $this->n_recu++;
         }
     }
-    
+
     //Fonction de recherche
     public function search($source_id,$query,$search_id) {
         global $base_path;
 
         $params=$this->get_source_params($source_id);
         $params_source=unserialize($params["PARAMETERS"]);
-        
+
         $url=$params_source['url'];
         $limit=$params_source['limit'];
         $typedoclabel=$params_source['typedoclabel'];
-        
+
         if (!$limit) $limit=100;
-        
+
         foreach($query as $amterm) {
            switch ($amterm->ufield) {
                case 'XXX':
@@ -163,13 +157,14 @@ class mediawiki extends connector {
                    break;
            }
         }
-        //RequÃªte CURL au webservice...
+        //Requête CURL au webservice...
         $get=$url."?action=query&list=search&srwhat=text&srsearch=".$criterias['q']."&format=json";
         //Appel Curl
         $curl =  new Curl();
+        $curl->set_option('CURLOPT_SSL_VERIFYPEER',false);
         $result = $curl->get($get);
         if ($result) {
-            $result=json_decode($result);   
+            $result=json_decode($result);
             $continue=(!empty($result->continue)?$result->continue:null);
             $result=$result->query;
             //Nombre :
@@ -203,6 +198,6 @@ class mediawiki extends connector {
                     } else break;
                 }
             }
-        }     
+        }
     }
 }

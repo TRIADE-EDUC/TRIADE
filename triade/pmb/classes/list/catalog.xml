@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Catalogue de connecteurs
+****************************************************************************************
+© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: catalog.xml,v 1.12.2.1.2.1 2025/05/02 12:27:17 dgoron Exp $ -->
+
+<lists>
+	<directory>
+		<path></path>
+		<label>msg:list_ui_objects_not_grouped</label>
+		<list name="campaigns" />
+		<list name="abts_pointage" />
+		<list name="rss" />
+	</directory>
+	<directory>
+		<path>accounting</path>
+		<label>msg:acquisition_menu_ach</label>
+		<list name="accounting_budgets" label="msg:acquisition_menu_ref_budget" />
+		<list name="accounting_commandes" />
+		<list name="accounting_devis" />
+		<list name="accounting_invoices" />
+		<list name="accounting_livraisons" />
+	</directory>
+	<directory>
+		<path>bannettes</path>
+		<label>msg:dsi_menu_bannettes</label>
+		<list name="bannettes_diffusion" />
+		<list name="bannettes" />
+		<list name="bannettes_abo" />
+		<list name="equations" />
+		<list name="bannettes_abon_pub" />
+		<list name="bannettes_abon_priv" />
+	</directory>
+	<directory>
+		<path>caddie_content</path>
+		<label>Contenu des paniers</label>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>AUTHORS</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>CATEGORIES</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>PUBLISHERS</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>COLLECTIONS</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>SUBCOLLECTIONS</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>SERIES</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>TITRES_UNIFORMES</object_type>
+			</properties>
+		</list>
+		<list name="authorities_caddie_content">
+			<properties>
+				<object_type>INDEXINT</object_type>
+			</properties>
+		</list>
+		<list name="caddie_content">
+			<properties>
+				<object_type>NOTI</object_type>
+			</properties>
+		</list>
+		<list name="caddie_content">
+			<properties>
+				<object_type>BULL</object_type>
+			</properties>
+		</list>
+		<list name="caddie_content">
+			<properties>
+				<object_type>EXPL</object_type>
+			</properties>
+		</list>
+		<list name="empr_caddie_content">
+			<properties>
+				<object_type>EMPR</object_type>
+			</properties>
+		</list>
+	</directory>
+	<directory>
+		<path>caddies</path>
+		<label>msg:caddie_menu</label>
+		<list name="authorities_caddies" />
+		<list name="caddies" />
+		<list name="empr_caddies" />
+	</directory>
+	<directory>
+		<path>configuration</path>
+		<label>msg:search_extended_predefined_search</label>
+		<list name="configuration_search_perso" />
+		<list name="configuration_opac_search_persopac" />
+	</directory>
+	<directory>
+		<path>contact_forms</path>
+		<label>msg:admin_opac_contact_forms</label>
+		<list name="contact_forms" />
+		<list name="contact_forms_objects" />
+	</directory>
+	<directory>
+		<path>demandes</path>
+		<label>msg:demandes_menu</label>
+		<list name="demandes" />
+	</directory>
+	<directory>
+		<path>etageres</path>
+		<label>msg:etagere_menu</label>
+		<list name="etageres" />
+	</directory>
+	<directory>
+		<path>fiches</path>
+		<label>msg:onglet_fichier</label>
+		<list name="fiches" />
+	</directory>
+	<directory>
+		<path>groups</path>
+		<label>msg:903</label>
+		<list name="groups" />
+	</directory>
+	<directory>
+		<path>items</path>
+		<label>msg:admin_menu_exemplaires</label>
+		<list name="items_treat" />
+	</directory>
+	<directory>
+		<path>loans</path>
+		<label>msg:1110</label>
+		<list name="loans_edition" />
+		<list name="loans_groups_edition" />
+	</directory>
+	<directory>
+		<path>parameters</path>
+		<label>msg:1600</label>
+		<list name="parameters" />
+	</directory>
+	<directory>
+		<path>procs</path>
+		<label>msg:30</label>
+		<list name="procs" />
+		<list name="procs_edition" />
+	</directory>
+	<directory>
+		<path>readers</path>
+		<label>msg:1120</label>
+		<list name="readers_bannette" />
+		<list name="readers_bannettes" />
+		<list name="readers_circ" />
+		<list name="readers_edition" />
+		<list name="readers_group" />
+		<list name="readers_recouvr" />
+		<list name="readers_relances" />
+	</directory>
+	<directory>
+		<path>recouvr</path>
+		<label>msg:relance_recouvrement</label>
+		<list name="recouvr_reader" />
+	</directory>
+	<directory>
+		<path>rent</path>
+		<label>msg:acquisition_menu_rent</label>
+		<list name="rent_requests" />
+		<list name="rent_accounts" />
+		<list name="rent_invoices" />
+	</directory>
+	<directory>
+		<path>resa_planning</path>
+		<label>msg:resa_menu_planning</label>
+		<list name="resa_planning_circ_reader" />
+		<list name="resa_planning_circ" />
+		<list name="resa_planning_edition" />
+	</directory>
+	<directory>
+		<path>reservations</path>
+		<label>msg:350</label>
+		<list name="reservations_circ" />
+		<list name="reservations_circ_outdated" />
+		<list name="reservations_edition" />
+		<list name="reservations_edition_treat" />
+	</directory>
+	<directory>
+		<path>scan_requests</path>
+		<label>msg:admin_menu_scan_request</label>
+		<list name="scan_requests" />
+	</directory>
+	<directory>
+		<path>serialcirc</path>
+		<label>msg:serialcirc_circ_title</label>
+		<list name="serialcirc_ask" />
+		<list name="serialcirc_expl" />
+		<list name="serialcirc_state" />
+	</directory>
+	<directory>
+		<path>statopac</path>
+		<label>msg:stat_opac_menu</label>
+		<list name="statopac" />
+		<list name="statopac_edition" />
+	</directory>
+	<directory>
+		<path>sticks_sheets</path>
+		<label>msg:sticks_sheet_models</label>
+		<list name="sticks_sheets" />
+	</directory>
+	<directory>
+		<path>suggestions</path>
+		<label>msg:acquisition_menu_sug</label>
+		<list name="suggestions" />
+		<list name="suggestions_empr" />
+	</directory>
+	<directory>
+		<path>transferts</path>
+		<label>msg:transferts_edition_titre</label>
+		<list name="transferts_envoi" />
+		<list name="transferts_reception" />
+		<list name="transferts_retours" />
+		<list name="transferts_validation" />
+		<list name="transferts_refus" />
+		<list name="transferts_edition" />
+	</directory>
+	<directory>
+		<path>users</path>
+		<label>msg:25</label>
+		<list name="users" />
+	</directory>
+</lists>

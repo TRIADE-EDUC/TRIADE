@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -25,7 +25,7 @@
  * 
  * This file define droit() function to print GNU license
  * @author Taesch Eric <eric.taesch@triade-educ.com>
- * @copyright  E. TAESCH - T. TRACHET - F. ORY 2000
+ * @copyright  E. TAESCH -  - F. ORY 2000
  * @version 1.0
  * @package licence
  *

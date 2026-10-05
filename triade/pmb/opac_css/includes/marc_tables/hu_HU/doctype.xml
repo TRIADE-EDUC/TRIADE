@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des type de documents en UNIMARC (hongrois)
-$Id: doctype.xml,v 1.4 2009-08-17 21:18:50 bencze Exp $ -->
+$Id: doctype.xml,v 1.4 2009/08/17 21:18:50 bencze Exp $ -->
 
 <XMLlist>
 	<entry code="a">nyomtatott szöveg</entry>

@@ -5,17 +5,8 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
- *
- *
- ***************************************************************************/
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
  *
  ***************************************************************************/
 ?>
@@ -26,6 +17,8 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" href="./librairie_css/css-v4.css">
+<link rel="stylesheet" href="./librairie_css/css-v4-2.css">
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/info-bulle.js"></script>
@@ -33,160 +26,111 @@ session_start();
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();">
 <?php
 include_once("./librairie_php/lib_licence.php");
 include_once('./librairie_php/db_triade.php');
 validerequete("2");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPARENT19 ?></font></b></td></tr>
-<tr id='cadreCentral0' >
-<td valign=top>
-<!-- // fin  -->
-<br>
-<?php
-$data=listeCatCirculaire();
-?>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGTMESS486 ?></font></b></td></tr>
+<tr id='cadreCentral0'>
+<td valign="top">
 
-<form>
-<table style="border-collapse: collapse;" ><tr><td>
-&nbsp;&nbsp;<font class='T2'>Cat&eacute;gorie : </font><select name='filtre' onChange="this.form.submit()" >
-				<option value="" id='select0' ><?php print LANGCHOIX ?></option>
-				<?php 
-				for ($i=0;$i<count($data);$i++) {
-					$selected='';
-					if ($_GET["filtre"] == $data[$i][0]) $selected="selected='selected'"; 
-					print "<option id='select1' $selected  value=\"".$data[$i][0]."\">".$data[$i][0]."</option>";
-				}	
-				?>
-				</select></td><td>
-<?php 
-if ($_SESSION["membre"] == "menuadmin") {
-	print "<script>buttonMagicRetour('circulaire_admin.php','_self')</script>";
-}
-?>
-</td></tr></table><br>
+<!-- ── Filtre catégorie ── -->
+<?php $data=listeCatCirculaire(); ?>
+<form method="get" action="circulaire_modif.php">
+<div class="na-card" style="margin-bottom:10px;">
+  <div class="na-row">
+    <span class="na-lbl">Catégorie :</span>
+    <select name="filtre" class="cc-select" onchange="this.form.submit()">
+      <option value=""><?php print LANGCHOIX ?></option>
+      <?php
+      for ($i=0; $i<countTriade($data); $i++) {
+          $selected = ($_GET["filtre"] == $data[$i][0]) ? "selected='selected'" : '';
+          print "<option $selected value=\"".$data[$i][0]."\">".$data[$i][0]."</option>";
+      }
+      ?>
+    </select>
+    <a href="circulaire_admin.php" class="btn-retour" style="text-decoration:none;">&larr; Administration</a>
+  </div>
+</div>
 </form>
 
-<table bgcolor=#FFFFFF border=1 bordercolor="#CCCCCC" width=100% style="border-collapse: collapse;" >
-
-
-
-
-
-
+<!-- ── Tableau ── -->
 <?php
-
 $filtre=$_GET["filtre"];
-
-if (!isset($_GET["tri"])) {
-	$imgDate="<img src='image/commun/za2.png'>";
-	$imgRef="";
-	$imgObj="";
-	$tri="date";
-}else{
-	if ($_GET["tri"] == "date") $imgDate="<img src='image/commun/za2.png'>";
-	if ($_GET["tri"] == "refence") $imgRef="<img src='image/commun/za2.png'>";
-	if ($_GET["tri"] == "sujet") $imgObj="<img src='image/commun/za2.png'>";
-	$tri=$_GET["tri"];
-}
+$tri = isset($_GET["tri"]) ? $_GET["tri"] : "date";
+$imgDate = ($tri=="date")    ? "<img src='image/commun/za2.png'>" : "";
+$imgRef  = ($tri=="refence") ? "<img src='image/commun/za2.png'>" : "";
+$imgObj  = ($tri=="sujet")   ? "<img src='image/commun/za2.png'>" : "";
 ?>
 
-
-<tr>
-<td bgcolor='yellow'><a href="circulaire_liste.php?tri=date&filtre=<?php print $filtre ?>">Date</a> <?php print $imgDate ?></td>
-<td bgcolor='yellow'>Cat&eacute;gorie</td>
-<td bgcolor='yellow'><a href="circulaire_liste.php?tri=refence&filtre=<?php print $filtre ?>">Référence</a> <?php print $imgRef ?></td>
-<td bgcolor='yellow'><a href="circulaire_liste.php?tri=sujet&filtre=<?php print $filtre ?>">Objet</a> <?php print $imgObj ?></td>
-<td bgcolor='yellow'>Modifier</td>
+<table class="cc-data-table">
+<thead>
+<tr class="cc-thead-row">
+  <th class="cc-th"><a href="circulaire_modif.php?tri=date&filtre=<?php print urlencode($filtre) ?>" style="color:#080A66;text-decoration:none">Date <?php print $imgDate ?></a></th>
+  <th class="cc-th">Catégorie</th>
+  <th class="cc-th"><a href="circulaire_modif.php?tri=refence&filtre=<?php print urlencode($filtre) ?>" style="color:#080A66;text-decoration:none">Référence <?php print $imgRef ?></a></th>
+  <th class="cc-th"><a href="circulaire_modif.php?tri=sujet&filtre=<?php print urlencode($filtre) ?>" style="color:#080A66;text-decoration:none">Objet <?php print $imgObj ?></a></th>
+  <th class="cc-th cc-th-center">Modifier</th>
 </tr>
-
-
+</thead>
+<tbody>
 <?php
-if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
+if (in_array($_SESSION["membre"], ["menuadmin","menuscolaire"])) {
+	$data = ($_SESSION["membre"] == "menuscolaire")
+		? circulaireAffVieScolaire($tri,$filtre)
+		: circulaireAffAdmin($tri,$filtre);
 
-	if ($_SESSION["membre"] == "menuscolaire") {
-		$data=circulaireAffVieScolaire($tri,$filtre);
-	}else{
-		$data=circulaireAffAdmin($tri,$filtre); //id_circulaire,sujet,refence,file,date,enseignant,classe
-	}
-
-	for($i=0;$i<count($data);$i++) {
-?>
-	<tr  class="tabnormal" onmouseover="this.className='tabover'" onmouseout="this.className='tabnormal'">
-	<td valign=top>&nbsp;<?php print dateForm($data[$i][4])?>&nbsp;</td>
-	<td valign=top><?php print $data[$i][7]?></td>
-	<td valign=top><?php print $data[$i][2]?></td>
-	<td valign=top><?php print $data[$i][1]?></td>
-	<td valign=top>[&nbsp;<a href="circulaire_ajout.php?idcirculaire=<?php print $data[$i][0] ?>"><font color="blue"><?php print "Modifier" ?></font></a>&nbsp;]</td>
-	</tr>
-	<tr><td></td><td colspan='3'><i>
-	<?php
-	if ($data[$i][5] == 1) {
-		print LANGPER6." - ";
-	}
-
-	// liste des classes
-	$ligne=$data[$i][6];
-	$ligne=substr("$ligne", 1); // retire le "{"
-	$ligne=substr("$ligne", 0, -1); // retire le "}"
-	$nbsep=substr_count("$ligne", ",");
-	if ($nbsep == 0) {
-		$val=chercheClasse_nom($ligne);
-		print " $val";
-	}else {
-		for ($j=0;$j<=$nbsep;$j++) {
-			list ($valeur) = preg_split('/,/', $ligne);
-			$sql="SELECT code_class,libelle FROM ${prefixe}classes WHERE  code_class='$valeur'";
-			$res=execSql($sql);
-			$data_7=chargeMat($res);
-			for($a=0;$a<count($data_7);$a++) {
-				print $data_7[$a][1]." - ";
-			}
-			$ligne = stristr($ligne, ',');
-			$ligne=substr("$ligne", 1);
-		}
-	}
-
-	?>
-	</i></td></tr>
-	<tr><td colspan=4 id=bordure><hr></td></tr>
-<?php
-	}
-}
-?>
+	for ($i=0; $i<countTriade($data); $i++) { ?>
+<tr class="cc-tr-data">
+  <td class="cc-td"><?php print dateForm($data[$i][4]) ?></td>
+  <td class="cc-td"><?php print htmlspecialchars($data[$i][7]) ?></td>
+  <td class="cc-td"><?php print htmlspecialchars($data[$i][2]) ?></td>
+  <td class="cc-td"><?php print htmlspecialchars($data[$i][1]) ?></td>
+  <td class="cc-td cc-td-center">
+    <a href="circulaire_ajout.php?idcirculaire=<?php print $data[$i][0] ?>" class="btn-dest" style="text-decoration:none;display:inline-block;">Modifier</a>
+  </td>
+</tr>
+<tr>
+  <td colspan="5" class="cc-td" style="font-size:11px;color:#666;font-style:italic;padding-top:0;">
+    <?php
+    if ($data[$i][5] == 1) print LANGPER6." — ";
+    $ligne = substr($data[$i][6],1,-1);
+    $vals = explode(',', $ligne);
+    $noms = [];
+    foreach ($vals as $val) {
+        $val = trim($val);
+        if ($val !== "") { $n = chercheClasse_nom($val); if ($n) $noms[] = htmlspecialchars(ucwords(strtolower($n))); }
+    }
+    print implode(' — ', $noms);
+    ?>
+  </td>
+</tr>
+<?php }
+} ?>
+</tbody>
 </table>
 <br>
-<br>
 
-     <!-- // fin  -->
 </td></tr></table>
+
 <?php
-// Test du membre pour savoir quel fichier JS je dois executer
-       if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
-            print "<SCRIPT language='JavaScript' ";
-       print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-            print "</SCRIPT>";
-       else :
-            print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-            print "</SCRIPT>";
-
-            top_d();
-
-            print "<SCRIPT language='JavaScript' ";
-      print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-            print "</SCRIPT>";
-
-       endif ;
-     Pgclose();
-     ?>
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."2.js'></SCRIPT>";
+else :
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."22.js'></SCRIPT>";
+	top_d();
+	print "<SCRIPT language='JavaScript' src='./librairie_js/".$_SESSION['membre']."33.js'></SCRIPT>";
+endif;
+Pgclose();
+?>
 <SCRIPT language="JavaScript">InitBulle("#000000","#FCE4BA","red",1);</SCRIPT>
 </BODY></HTML>

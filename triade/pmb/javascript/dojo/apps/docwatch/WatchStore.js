@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: WatchStore.js,v 1.28 2019-03-13 14:48:22 dgoron Exp $
+// $Id: WatchStore.js,v 1.29 2019/10/25 07:56:16 dgoron Exp $
 
 
 define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/lang", "dojo/topic"], function(declare,PMBStore, xhr, lang, topic){
@@ -13,6 +13,7 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/
 			topic.subscribe("watch",lang.hitch(this,this.handleEvents));
 			topic.subscribe("sourcesStore", lang.hitch(this,this.handleEvents));
 			topic.subscribe("watchesUI",lang.hitch(this,this.handleEvents));
+			topic.subscribe("itemsListUI",lang.hitch(this,this.handleEvents));
 		},
 		
 		handleEvents: function(evtType,evtArgs){
@@ -29,6 +30,9 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/
 					break
 				case "deleteWatch":
 					this.deleteWatch(evtArgs.watchId);
+					break;
+				case "purgeItemsMarkAsDeleted":
+					this.purgeItemsMarkAsDeleted(evtArgs.watchId);
 					break;
 				case "sourceSaved":
 					this.sourceSaved(evtArgs.source);
@@ -236,6 +240,23 @@ define(["dojo/_base/declare", "apps/pmb/Store", "dojo/request/xhr", "dojo/_base/
 				this.remove(this.getIdentity(searched[0]));
 				topic.publish("watchStore","needTreeRefresh", {});
 				topic.publish("watchStore","watchDeleted", {});
+				topic.publish("watchStore", "needWatchUpdate", {watchId:response.elementId, needItems:false});
+			}else {
+				topic.publish("watchStore","deleteWatchError",{message: response.response})
+			}
+		},
+		
+		purgeItemsMarkAsDeleted: function(watchId){
+			xhr(this.url+"&action=purge_items_mark_as_deleted&id="+watchId,{
+				handleAs: "json"
+			}).then(lang.hitch(this,this.purgedItemsMarkAsDeleted));
+		},
+		
+		purgedItemsMarkAsDeleted: function(response){
+			if(response.result){
+				var searched = this.query({id:response.elementId});
+				topic.publish("watchStore","needTreeRefresh", {});
+				topic.publish("watchStore","itemsMarkAsDeletedPurged", {watchId:response.elementId});
 				topic.publish("watchStore", "needWatchUpdate", {watchId:response.elementId, needItems:false});
 			}else {
 				topic.publish("watchStore","deleteWatchError",{message: response.response})

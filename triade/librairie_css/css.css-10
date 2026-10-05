@@ -57,15 +57,15 @@ A.m {color:#FFFFFF; text-decoration:none; font-weight:bold; font-size:11px;}
 #coulfond2{background-color:#94C11F}   					/* Couleur fond banniere  */
 
 #imgombre    { background-image: url('../image/inc/omb.gif') }
-#coulBar0 { background-color:#94C11F}   					/* Couleur de la barre de menu avec Quitter  */
-#coulModule0 {background-color:#739618} 					/* Couleur du fond des menus dans les modules  */
+#coulBar0, .coulBar0 { background-color:#94C11F}   					/* Couleur de la barre de menu avec Quitter  */
+#coulModule0, .coulModule0 {background-color:#739618} 					/* Couleur du fond des menus dans les modules  */
 #cadreCentral0 {background-color:#739618}  				/* id='cadreCentral0' */
 
 
-#coulTitre0 {background-color:#94C11F} 					/* Couleur du fond des titres dans les modules  */
+#coulTitre0, .coulTitre0 {background-color:#94C11F} 					/* Couleur du fond des titres dans les modules  */
 
-#menumodule0 {font-family:Verdana; font-size:10px; color: #000000;}
-#menumodule1 {font-family:Verdana; font-size:10px; color: #FFFFFF;}
+#menumodule0, .menumodule0 {font-family:Verdana; font-size:10px; color: #000000;}
+#menumodule1, .menumodule1 {font-family:Verdana; font-size:10px; color: #FFFFFF;}
 #bordure { border-top-width : 0px; border-right-width : 0px; border-bottom-width : 0px; border-left-width : 0px; }
 #color2 { color:yellow } 						/* importance des titre */
 #color3 { color:red } 						/* importance des titre */

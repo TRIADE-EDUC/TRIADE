@@ -1,11 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: main.inc.php,v 1.8 2017-09-29 09:53:23 dgoron Exp $
+// $Id: main.inc.php,v 1.9 2024/01/03 14:38:19 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $base_path, $class_path, $current_module, $msg, $charset;
+global $thesaurus_mode_pmb;
+global $id_thes, $id_empr, $groupID, $unq, $search_term;
+
+$id_empr = intval($id_empr);
+$groupID = intval($groupID);
 // page de switch recherche sujets
 
 // inclusions principales
@@ -45,14 +51,14 @@ $search_form_term = "
 	";
 	
 	
-//affichage du selectionneur de thesaurus et du lien vers les thÃ©saurus
+//affichage du selectionneur de thesaurus et du lien vers les thésaurus
 $liste_thesaurus = thesaurus::getThesaurusList();
 $sel_thesaurus = '';
 $lien_thesaurus = '';
 
-if ($thesaurus_mode_pmb != 0) {	 //la liste des thesaurus n'est pas affichÃ©e en mode monothesaurus
-	$sel_thesaurus = "<select class='saisie-30em' id='id_thes' name='id_thes' ";
-	$sel_thesaurus.= "onchange = \"document.location = './circ.php?categ=resa_planning&resa_action=search_resa&mode=5&id_empr=$id_empr&groupID=$groupID&unq=$unq&id_thes='+document.getElementById('id_thes').value; \">" ;
+if ($thesaurus_mode_pmb != 0) {	 //la liste des thesaurus n'est pas affichée en mode monothesaurus
+	$sel_thesaurus = "<select class='saisie-30em' name='id_thes' ";
+	$sel_thesaurus.= "onchange = \"document.location = './circ.php?categ=resa_planning&resa_action=search_resa&mode=5&id_empr=$id_empr&groupID=$groupID&unq=$unq&id_thes='+this.value; \">" ;
 	foreach($liste_thesaurus as $id_thesaurus=>$libelle_thesaurus) {
 		$sel_thesaurus.= "<option value='".$id_thesaurus."' "; ;
 		if ($id_thesaurus == $id_thes) $sel_thesaurus.= " selected";

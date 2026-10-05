@@ -7,7 +7,7 @@
 		© 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs
 		(voir www.sigb.net)
 		****************************************************************************************
-		$Id: fr_FR.xml,v 1.12 2016-03-31 08:55:44 dgoron Exp $
+		$Id: fr_FR.xml,v 1.14 2020/11/25 11:07:50 arenou Exp $
 	-->
 
 <XMLlist>
@@ -45,4 +45,7 @@
 	<entry code="webdav_collection_music_concept_before">Concept à associer aux partitions avant exécution</entry>
 	<entry code="webdav_collection_music_concept_after">Concept à associer aux partitions après exécution</entry>
 	<entry code="webdav_collection_music_concept_blank">Concept à associer aux partitions originales</entry>
+	<entry code="webdav_collection_concept">Concept</entry>
+	<entry code="webdav_collection_oeuvre">Oeuvre</entry>
+	<entry code="webdav_user_schema">Schéma à utiliser pour la navigation</entry>
 </XMLlist>

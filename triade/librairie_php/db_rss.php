@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -36,13 +36,13 @@ function ajoutRss($idpers,$url,$membre) {
 	global $prefixe;
 	include_once("./magpierss/rss_fetch.inc");
 
-	$sql="SELECT idpers,membre,url  FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
+	$sql="SELECT idpers,membre,url  FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
 	$res=execSql($sql);
         $data=chargeMat($res);
 	if (count($data) > 0) {
 		return ;
 	}
-	$sql="INSERT INTO ${prefixe}rssgen (idpers,membre,url) VALUES ('$idpers','$membre','$url')";
+	$sql="INSERT INTO {$prefixe}rssgen (idpers,membre,url) VALUES ('$idpers','$membre','$url')";
 	execSql($sql);
 }
 /*
@@ -59,7 +59,7 @@ function ajoutRss($idpers,$url,$membre) {
 			$date=date("r");
 		}
 		$title=addslashes($title);
-	        $sql="INSERT INTO ${prefixe}rss (idgen,conx,datemodif,title) VALUES ('$id','non','$date','$title')";
+	        $sql="INSERT INTO {$prefixe}rss (idgen,conx,datemodif,title) VALUES ('$id','non','$date','$title')";
        		execSql($sql);
 	}
 }
@@ -68,7 +68,7 @@ function ajoutRss($idpers,$url,$membre) {
 function consultRss($idpers,$membre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT id,idpers,membre,url  FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre'";
+	$sql="SELECT id,idpers,membre,url  FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
         unset($sql);
@@ -79,15 +79,15 @@ function miseAjour($title,$idrss) {
 	global $cnx;
 	global $prefixe;
 	$title=addslashes($title);
-	$sql="SELECT idgen  FROM ${prefixe}rss WHERE title='$title' AND idgen='$idrss' ";
+	$sql="SELECT idgen  FROM {$prefixe}rss WHERE title='$title' AND idgen='$idrss' ";
 	$res=execSql($sql);
         $data=chargeMat($res);
 	if (count($data) > 0) {
-		$sql="UPDATE ${prefixe}rss SET conx='oui' WHERE title='$title' AND idgen='$idrss' ";
+		$sql="UPDATE {$prefixe}rss SET conx='oui' WHERE title='$title' AND idgen='$idrss' ";
 		execSql($sql);
 		return $data;
 	}else{
-		$sql="INSERT INTO ${prefixe}rss (idgen,conx,title) VALUES ('$idrss','oui','$title')";
+		$sql="INSERT INTO {$prefixe}rss (idgen,conx,title) VALUES ('$idrss','oui','$title')";
        		execSql($sql);
 	}
         unset($sql);
@@ -97,7 +97,7 @@ function miseAjour($title,$idrss) {
 function recupUrl($idRss) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT url  FROM ${prefixe}rssgen WHERE id='$idRss' ";
+	$sql="SELECT url  FROM {$prefixe}rssgen WHERE id='$idRss' ";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	return($data[0][0]);
@@ -106,7 +106,7 @@ function recupUrl($idRss) {
 function rechercheId($url,$idpers,$membre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT id  FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
+	$sql="SELECT id  FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
 	$res=execSql($sql);
         $data=chargeMat($res);
 	return $data[0][0];
@@ -119,10 +119,10 @@ function suppRss($url,$idpers,$membre) {
         global $prefixe;
         $idRss=rechercheId($url,$idpers,$membre);
         if ($idRss > 0) {
-                $sql="DELETE FROM ${prefixe}rss WHERE idgen='$idRss' ";
+                $sql="DELETE FROM {$prefixe}rss WHERE idgen='$idRss' ";
                 execSql($sql);
         }
-        $sql="DELETE FROM ${prefixe}rssgen WHERE url='$url' AND idpers='$idpers' AND  membre='$membre' ";
+        $sql="DELETE FROM {$prefixe}rssgen WHERE url='$url' AND idpers='$idpers' AND  membre='$membre' ";
         execSql($sql);
 }
 
@@ -132,7 +132,7 @@ function suppRss($url,$idpers,$membre) {
 function idRss($url,$idpers,$membre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT id  FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
+	$sql="SELECT id  FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	return($data[0][0]);
@@ -142,13 +142,13 @@ function idRss($url,$idpers,$membre) {
 function RssDejaLu($title,$url,$idpers,$membre) {
 	global $cnx;
 	global $prefixe;
-	$sql="SELECT id  FROM ${prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
+	$sql="SELECT id  FROM {$prefixe}rssgen WHERE idpers='$idpers' AND membre='$membre' AND url='$url'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$id=$data[0][0];
 
 	$title=addslashes($title);
-	$sql="SELECT idgen,conx FROM ${prefixe}rss WHERE title='$title' AND idgen='$id'";
+	$sql="SELECT idgen,conx FROM {$prefixe}rss WHERE title='$title' AND idgen='$id'";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	if (count($data) > 0) {

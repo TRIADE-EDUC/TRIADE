@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_integrator_author.class.php,v 1.5 2018-06-26 14:48:14 apetithomme Exp $
+// $Id: rdf_entities_integrator_author.class.php,v 1.6 2020/07/13 15:00:09 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -64,7 +64,7 @@ class rdf_entities_integrator_author extends rdf_entities_integrator_authority {
 		// Audit
 		if ($this->integration_type && $this->entity_id) {
 			$query = 'insert into audit (type_obj, object_id, user_id, type_modif, info, type_user) ';
-			$query.= 'values ("'.AUDIT_AUTHOR.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.addslashes(json_encode(array("uri" => $uri))).'", "'.$this->contributor_type.'")';
+			$query.= 'values ("'.AUDIT_AUTHOR.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.$this->create_audit_comment($uri).'", "'.$this->contributor_type.'")';
 			pmb_mysql_query($query);
 			// Indexation
 			auteur::update_index($this->entity_id);

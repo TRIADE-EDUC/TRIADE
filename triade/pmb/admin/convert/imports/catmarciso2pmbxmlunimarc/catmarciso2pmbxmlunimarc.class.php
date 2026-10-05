@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: catmarciso2pmbxmlunimarc.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: catmarciso2pmbxmlunimarc.class.php,v 1.1 2018/07/25 06:19:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -22,7 +22,7 @@ class catmarciso2pmbxmlunimarc extends convert {
 		} else {	
 				$error="Registre buit";
 		}
-		if ((!$data)&&(!$error)) $error="DerniÃ¨re notice : ne pas tenir compte !";
+		if ((!$data)&&(!$error)) $error="Dernière notice : ne pas tenir compte !";
 		if (!$error) $r['VALID'] = true; else $r['VALID']=false;
 		$r['ERROR'] = $error;
 		$r['DATA'] = $data;

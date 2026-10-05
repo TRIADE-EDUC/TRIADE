@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_shelveslist.xml,v 1.3 2018-02-12 15:56:01 dgoron Exp $ -->
+$Id: cms_module_common_view_shelveslist.xml,v 1.3 2018/02/12 15:56:01 dgoron Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_view_shelveslist_build_shelve_link">Creation of the link to a shelf</entry>

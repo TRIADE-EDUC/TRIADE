@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -81,7 +81,7 @@ $saisieannee=$_GET["saisieannee"];
 	<?php 
 	     for($a=1;$a<10;$a++) {
 	?>
-             D.S.T  <input type=text name="saisie_dst<?php print $a ?>" size="30" maxlength="30" > &nbsp;&nbsp;<?php print LANGDST11?> &nbsp;&nbsp;
+             D.S.T  <input type=text name="saisie_dst<?php print $a ?>" size="15" maxlength="30" > &nbsp;&nbsp;<?php print LANGDST11?> &nbsp;&nbsp;
                      <select name="dst<?php print $a ?>" >
                      <option value="choix" id="select0"><?php print LANGCHOIX?></option>
 <?php select_classe_nom_2() ?>
@@ -112,7 +112,7 @@ $saisieannee=$_GET["saisieannee"];
 					<?php
 					$data=list_salle();
 					// id,libelle,info,type
-					for($i=0;$i<count($data);$i++) {
+					for($i=0;$i<countTriade($data);$i++) {
 						print "<option value='".$data[$i][0]."' id='select1' >".$data[$i][1]."</option>";
 					} 
 					?>

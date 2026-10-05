@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -36,14 +36,20 @@ if ($id != 1) { set_time_limit(900); }
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<style>
+input.btn-primary{background:#080A66;color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:'Trebuchet MS',Arial}
+input.btn-primary:hover{background:#1a237e}
+input.btn-secondary{background:#fff;color:#080A66;border:1px solid #080A66;border-radius:5px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:'Trebuchet MS',Arial}
+input.btn-secondary:hover{background:#e8eaf6}
+</style>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
 <?php include("./librairie_php/lib_attente.php"); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGPER1?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -83,7 +89,7 @@ if ($_POST["nom_periode"] == "periode9") { $period="9eme"; }
 // recuperation des coordonnées
 // de l etablissement
 $data=visu_paramViaIdSite(chercheIdSite($_POST["saisie_classe"]));
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
        $nom_etablissement=trim($data[$i][0]);
        $adresse=trim($data[$i][1]);
        $postal=trim($data[$i][2]);
@@ -110,7 +116,7 @@ include_once('./librairie_pdf/html2pdf.php');
 $pdf=new PDF();  // declaration du constructeur
 
 $eleveT=recupEleve($_POST["saisie_classe"]); // recup liste eleve
-for($j=0;$j<count($eleveT);$j++) {  // premiere ligne de la creation PDF
+for($j=0;$j<countTriade($eleveT);$j++) {  // premiere ligne de la creation PDF
 	// variable eleve
 	$nomEleve=trim(ucwords($eleveT[$j][0]));
 	$prenomEleve=trim(ucfirst($eleveT[$j][1]));
@@ -248,7 +254,7 @@ $pdf->WriteHTML($infoeleveclasse);
 // adresse de l'élève
 // elev_id, nomtuteur, prenomtuteur, adr1, code_post_adr1, commune_adr1, adr2, code_post_adr2, commune_adr2, numeroEleve, class_ant, date_naissance, regime, civ_1, civ_2
 $dataadresse=chercheadresse($idEleve);
-for($ik=0;$ik<=count($dataadresse);$ik++) {
+for($ik=0;$ik<=countTriade($dataadresse);$ik++) {
 	$nomtuteur=$dataadresse[$ik][1];
 	$prenomtuteur=$dataadresse[$ik][2];
 	$adr1=$dataadresse[$ik][3];
@@ -315,7 +321,7 @@ $YnotVal=$Ynote ;
 $YsujetNote=$YnotVal + 2;
 $hauteurMatiere=$_POST["hauteur"];
 
-for($i=0;$i<count($ordre);$i++) {
+for($i=0;$i<countTriade($ordre);$i++) {
 	$matiere=chercheMatiereNom($ordre[$i][0]);
 	$nomprof=recherche_personne2($ordre[$i][1]);
 	$verifGroupe=verifMatiereAvecGroupe($ordre[$i][0],$idEleve,$idClasse,$ordre[$i][2]);
@@ -344,7 +350,7 @@ for($i=0;$i<count($ordre);$i++) {
 	$note=recupNote2($idEleve,$ordre[$i][0],$dateDebut,$dateFin,$ordre[$i][1]);
 	// note,elev_id,code_mat,date,sujet,typenote,notationsur	
 	$aaa=0;
-	for($b=0;$b<count($note);$b++) {
+	for($b=0;$b<countTriade($note);$b++) {
 		$aaa++;
 		$noteaff=$note[$b][0];
 		$sujet=$note[$b][4];
@@ -454,15 +460,15 @@ $pos4 = $pos3 + 5;
 // Info abs, rtd et retenu
 $nb_retenue=0;
 $data_1=affRetenuTotal_par_eleve_trimestre($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
-if (count($data_1) > 0) { $nb_retenue=count($data_1); }
+if (countTriade($data_1) > 0) { $nb_retenue=countTriade($data_1); }
 
 
 $data_2=nombre_abs($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
 // elev_id, date_ab, date_saisie, origin_saisie, duree_ab ,date_fin, motif, duree_heure
 $cumulabs=0;
 $cumulabsheure=0;
-$nbabs=count($data_2);
-for($ja=0;$ja<count($data_2);$ja++) {
+$nbabs=countTriade($data_2);
+for($ja=0;$ja<countTriade($data_2);$ja++) {
 	if ($data_2[$ja][4] > 0) {
 		$cumulabs=$cumulabs + $data_2[$ja][4];
 	}else {
@@ -472,8 +478,8 @@ for($ja=0;$ja<count($data_2);$ja++) {
 
 $data_3=nombre_retard($idEleve,dateFormBase($dateDebut),dateFormBase($dateFin));
 $cumulrtds=0;
-$nbrtd=count($data_3);
-for($ja=0;$ja<count($data_3);$ja++) {
+$nbrtd=countTriade($data_3);
+for($ja=0;$ja<countTriade($data_3);$ja++) {
 	$nbminute=preg_replace('/mn/','',$data_3[$ja][5]);
 	if (preg_match('/[0-9]h/',$data_3[$ja][5])) {
 		$minute=0;
@@ -559,7 +565,7 @@ if ($_POST["type_pdf"] == "pers"){
 
 <br>
 <ul><ul>
-<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;">
+<input type=button onclick="open('visu_pdf_bulletin.php?id=<?php print $fichier?>&idclasse=<?php print $_POST["saisie_classe"] ?>','_blank','');" value="<?php print $bttexte ?>" style="background:#080A66;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-family:'Trebuchet MS',Arial;font-weight:bold;cursor:pointer;">
 </ul></ul>
 <br /><br />
      <!-- // fin  -->
@@ -588,7 +594,7 @@ endif ;
 // gestion d'historie
 /*
 $data=destructionPeriode($fichier,$classe_nom,$_POST[nom_periode],$dateDebut,$dateFin);
-for ($i=0;$i<count($data);$i++) {
+for ($i=0;$i<countTriade($data);$i++) {
 	unlink($data[$i][1]);
 	supp_history_periode($data[$i][0]);
 }

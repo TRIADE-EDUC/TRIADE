@@ -1,48 +1,52 @@
 <?php
 // +-------------------------------------------------+
-// Ã¯Â¿Â½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// ï¿½ 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_contribution_datatype_text_ui.class.php,v 1.3 2017-09-13 12:38:33 tsamson Exp $
+// $Id: onto_contribution_datatype_text_ui.class.php,v 1.8 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-
+global $include_path;
 require_once($include_path.'/templates/onto/contribution/onto_contribution_datatype_ui.tpl.php');
+
 /**
  * class onto_contribution_datatype_text_ui
- * 
  */
 class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 
-	/** Aggregations: */
-
-	/** Compositions: */
-
-	 /*** Attributes: ***/
-
-
 	/**
 	 * 
-	 *
-	 * @param property property la propriÃ©tÃ© concernÃ©e
-	 * @param restriction $restrictions le tableau des restrictions associÃ©es Ã  la propriÃ©tÃ© 
-	 * @param array datas le tableau des datatypes
-	 * @param string instance_name nom de l'instance
-	 * @param string flag Flag
-
+	 * @param string $item_uri
+	 * @param onto_common_property $property la propriété concernée
+	 * @param onto_restriction $restrictions le tableau des restrictions associées à la propriété 
+	 * @param array $datas le tableau des datatypes
+	 * @param string $instance_name nom de l'instance
+	 * @param string $flag Flag
 	 * @return string
-	 * @static
-	 * @access public
 	 */
-	public static function get_form($item_uri,$property, $restrictions,$datas, $instance_name,$flag) {
-		global $msg,$charset,$ontology_contribution_tpl;
+	public static function get_form($item_uri, $property, $restrictions, $datas, $instance_name,$flag) {
+	    global $charset, $ontology_contribution_tpl, $msg;
 		
-		$form=$ontology_contribution_tpl['form_row'];
-		$form=str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->label, 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		$form = $ontology_contribution_tpl['form_row'];
+		$form = str_replace("!!onto_row_label!!",htmlentities(encoding_normalize::charset_normalize($property->get_label(), 'utf-8') ,ENT_QUOTES,$charset) , $form);
+		
+		$tab_lang = array();
+		if ($property->multilingue && $property->is_cp()) {
+		    // Champ perso multilingue
+		    $lang = new marc_list('lang');
+		    if (!empty($lang->table)) {
+		        $tab_lang = $lang->table;
+		    }
+		    // Sans langue
+		    $tab_lang[''] = htmlentities($msg['onto_common_datatype_ui_no_lang'], ENT_QUOTES, $charset);
+		}
+		
+		if ($property->multilingue && $property->use_lang_concept) {
+		    $tab_lang =  onto_common_datatype_ui::get_concepts_liste_trad();
+		}
 		
 		$content='';
-		
-		if(sizeof($datas)){
+		if (!empty($datas)) {
 			$i=1;
 			$first=true;
 			$new_element_order=max(array_keys($datas));
@@ -59,14 +63,20 @@ class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 				}
 				$inside_row=$ontology_contribution_tpl['form_row_content_text'];
 				
-				$inside_row=str_replace("!!onto_row_content_text_value!!",htmlentities(pmb_utf8_array_decode($data->get_formated_value()) ,ENT_QUOTES,$charset) ,$inside_row);
+				$inside_row=str_replace("!!onto_row_content_text_value!!",htmlentities(encoding_normalize::utf8_decode($data->get_formated_value()) ,ENT_QUOTES,$charset) ,$inside_row);
+				
+				$multilingue = "";
+				if ($property->multilingue) {		        
+				    $multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'['.$order.'][lang]', $instance_name.'_'.$property->pmb_name.'_'.$order.'_lang', $data->get_lang(), 1, '', $tab_lang);
+				} 
+				$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 				$inside_row=str_replace("!!onto_row_content_text_range!!",$property->range[0] , $inside_row);
 				
 				$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
 				
 				$input='';
 				if($first){
-					if($restrictions->get_max()<$i || $restrictions->get_max()===-1){
+					if($restrictions->get_max() < $i || $restrictions->get_max()===-1){
 						$input=$ontology_contribution_tpl['form_row_content_input_add'];
 					}
 				}else{
@@ -80,7 +90,7 @@ class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 				$first=false;
 				$i++;
 			}
-		}else{
+		} else {
 			$form=str_replace("!!onto_new_order!!","0" , $form);
 			
 			$row=$ontology_contribution_tpl['form_row_content'];
@@ -88,6 +98,11 @@ class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 			$inside_row=$ontology_contribution_tpl['form_row_content_text'];
 			
 			$inside_row=str_replace("!!onto_row_content_text_value!!","" ,$inside_row);
+			$multilingue = "";
+			if ($property->multilingue) {
+			    $multilingue = self::get_combobox_lang($instance_name.'_'.$property->pmb_name.'[0][lang]',$instance_name.'_'.$property->pmb_name.'_0_lang', "", 1, '', $tab_lang);
+			}
+			$inside_row=str_replace("!!onto_row_combobox_lang!!", $multilingue, $inside_row);
 			$inside_row=str_replace("!!onto_row_content_text_range!!",$property->range[0] , $inside_row);
 			
 			$row=str_replace("!!onto_inside_row!!",$inside_row , $row);
@@ -111,8 +126,8 @@ class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 	/**
 	 * 
 	 *
-	 * @param onto_common_datatype datas Tableau des valeurs Ã  afficher associÃ©es Ã  la propriÃ©tÃ©
-	 * @param property property la propriÃ©tÃ© Ã  utiliser
+	 * @param onto_common_datatype datas Tableau des valeurs à afficher associées à la propriété
+	 * @param property property la propriété à utiliser
 	 * @param string instance_name nom de l'instance
 	 * 
 	 * @return string
@@ -122,7 +137,7 @@ class onto_contribution_datatype_text_ui extends onto_common_datatype_ui {
 		
 		$display='<div id="'.$instance_name.'_'.$property->pmb_name.'">';
 		$display.='<p>';
-		$display.=$property->label.' : ';
+		$display.=$property->get_label().' : ';
 		foreach($datas as $data){
 			$display.=$data->get_formated_value();
 		}

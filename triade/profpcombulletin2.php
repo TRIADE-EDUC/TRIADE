@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -40,11 +40,11 @@ include_once("./librairie_php/lib_licence.php");
 include_once("librairie_php/db_triade.php");
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Visa du Professeur Principal." ?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -58,8 +58,8 @@ $anneeScolaire=$_COOKIE["anneeScolaire"];
 <?php
 if (isset($_POST["consult"])) {
 	$saisie_classe=$_POST["saisie_classe"];
-//	$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
-	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves, ${prefixe}classes  WHERE classe='$saisie_classe' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM ${prefixe}eleves e ,${prefixe}classes c, ${prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
+//	$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' AND annee_scolaire='$anneeScolaire' ORDER BY nom";
+	$sql="SELECT s.* FROM ( SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves, {$prefixe}classes  WHERE classe='$saisie_classe' AND code_class=classe AND annee_scolaire='$anneeScolaire' AND compte_inactif != 1 UNION ALL SELECT c.libelle, e.elev_id,e.nom,e.prenom FROM {$prefixe}eleves e ,{$prefixe}classes c, {$prefixe}eleves_histo h WHERE h.idclasse='$saisie_classe' AND e.elev_id=h.ideleve AND h.idclasse=c.code_class AND h.annee_scolaire='$anneeScolaire') s  ORDER BY 3";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 
@@ -93,13 +93,13 @@ if (isset($_POST["consult"])) {
 	if (defined("NBCARBULLPROFP")) { $nbcar=NBCARBULLPROFP;  }else{ $nbcar="500"; }
 
 	print "<table align=center width=100%>";
-	if( count($data) > 0 ) {
+	if( countTriade($data) > 0 ) {
 			
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$ideleve=$data[$i][1];
 			$photoeleve="image_trombi.php?idE=".$ideleve;
 			print "<tr>";
-			print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left'></td>";
+			print "<td valign='top' width='5' ><img src='$photoeleve' $taille align='left' style='box-shadow: 0 4px 12px rgba(0,0, 0, 0.3); border-radius: 8px;' ></td>";
 			print "<td valign='top' >";
 			print "<input type=hidden value=\"".$data[$i][1]."\" name='eleveid[]' />";
 			print " <b> ".ucfirst($data[$i][3])." ".strtoupper($data[$i][2])."</b>";
@@ -130,7 +130,7 @@ if (isset($_POST["consult"])) {
 		print "<tr><td colspan=2 ><hr><script language=JavaScript>buttonMagicSubmit('$valider','create');</script></td></tr>";
 		print '<input type=hidden name="saisie_trimestre" value="'.$tri.'" />';
 		print "<input type=hidden name='saisie_classe' value=\"".$_POST["saisie_classe"]."\" />";
-		print "<input type=hidden name='saisie_nb' value='".count($data)."' />";
+		print "<input type=hidden name='saisie_nb' value='".countTriade($data)."' />";
 		print "<input type=hidden name='type_bulletin' value='".$_POST["type_bulletin"]."' />";
 		print "</form>";	
 	}else{
@@ -148,15 +148,15 @@ if (isset($_POST["consult"])) {
 // Test du membre pour savoir quel fichier JS je dois executer
 if ($_SESSION["membre"] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 // deconnexion en fin de fichier

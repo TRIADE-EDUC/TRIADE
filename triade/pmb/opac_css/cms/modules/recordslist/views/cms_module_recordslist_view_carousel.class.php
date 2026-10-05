@@ -1,10 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_recordslist_view_carousel.class.php,v 1.19 2017-07-27 14:50:32 tsamson Exp $
+// $Id: cms_module_recordslist_view_carousel.class.php,v 1.23 2023/06/07 10:27:46 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
+
+use Pmb\Thumbnail\Models\ThumbnailSourcesHandler;
 
 class cms_module_recordslist_view_carousel extends cms_module_carousel_view_carousel{
 	
@@ -33,36 +35,36 @@ class cms_module_recordslist_view_carousel extends cms_module_carousel_view_caro
 		return parent::save_form();
 	}
 	
-	public function render($records){
-		$datas = array();
-		global $opac_url_base;
+	public function render($datas){
 		global $opac_show_book_pics;
 		global $opac_book_pics_url;
 		global $opac_notice_affichage_class;
 		
-		if(!$opac_notice_affichage_class){
+		$render_datas = array();
+		if(empty($opac_notice_affichage_class)){
 			$opac_notice_affichage_class ="notice_affichage";
 		}
 		$add_to_cart_link = '';
-		if(is_array($records['records']) && count($records['records'])){
-			$query = "select notice_id,tit1,thumbnail_url,code from notices where notice_id in ('".implode("','",$records['records'])."') order by field( notice_id, '".implode("','",$records['records'])."')";
+		if(is_array($datas['records']) && count($datas['records'])){
+			$query = "select notice_id,tit1,thumbnail_url,code from notices where notice_id in ('".implode("','",$datas['records'])."') order by field( notice_id, '".implode("','",$datas['records'])."')";
 			$result = pmb_mysql_query($query);
 			if($result && pmb_mysql_num_rows($result)){
+			    $thumbnailSourcesHandler = new ThumbnailSourcesHandler();
 				while($row = pmb_mysql_fetch_object($result)){
-					$url_vign = "";
-					if (($row->code || $row->thumbnail_url) && ($opac_show_book_pics=='1' && ($opac_book_pics_url || $row->thumbnail_url))) {
-						$url_vign = getimage_url($row->code, $row->thumbnail_url);
-					}
+				    $url_vign = "";
+				    if ($opac_show_book_pics=='1') {
+				        $url_vign = $thumbnailSourcesHandler->generateUrl(TYPE_NOTICE, $row->notice_id);
+				    }
 					$notice_class = new $opac_notice_affichage_class($row->notice_id,"");
 					$notice_class->do_header();
-					if($this->parameters['used_template']){
+					if (isset($this->parameters['used_template']) && $this->parameters['used_template']) {
 						$tpl = notice_tpl_gen::get_instance($this->parameters['used_template']);
 						$content = $tpl->build_notice($row->notice_id);
 					}else{
 						$notice_class->do_isbd();
 						$content = $notice_class->notice_isbd;
 					}
-					$datas[] = array(
+					$render_datas[] = array(
 						'id' => $row->notice_id,
 						'title' => $row->tit1,
 						'link' => $this->get_constructed_link("notice",$row->notice_id),
@@ -73,16 +75,16 @@ class cms_module_recordslist_view_carousel extends cms_module_carousel_view_caro
 					
 				}
 				$add_to_cart_link = '<span class="addCart">
-							<a title="'.$this->msg['cms_module_recordslist_view_add_cart_link'].'" target="cart_info" href="cart_info.php?notices='.implode(",",$records['records']).'">'.$this->msg['cms_module_recordslist_view_add_cart_link'].'</a>
+							<a title="'.$this->msg['cms_module_recordslist_view_add_cart_link'].'" target="cart_info" href="cart_info.php?notices='.implode(",",$datas['records']).'">'.$this->msg['cms_module_recordslist_view_add_cart_link'].'</a>
 						  </span>';
 			}
 		}
-		$datas = array(
-			'title' => $records['title'],
-			'records' => $datas,
+		$render_datas = array(
+			'title' => (!empty($datas['title'])) ? $datas['title'] : '',
+			'records' => $render_datas,
 			'add_to_cart_link' => $add_to_cart_link
 		);
-		return parent::render($datas);
+		return parent::render($render_datas);
 	}
 	
 	public function get_format_data_structure(){

@@ -2,22 +2,16 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: list_accounting_devis_ui.class.php,v 1.2 2018-04-23 13:25:26 dgoron Exp $
+// $Id: list_accounting_devis_ui.class.php,v 1.7.10.2 2025/02/20 15:31:54 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
-require_once($class_path."/list/accounting/list_accounting_ui.class.php");
-
 class list_accounting_devis_ui extends list_accounting_ui {
-		
-	public function __construct($filters=array(), $pager=array(), $applied_sort=array()) {
-		parent::__construct($filters, $pager, $applied_sort);
-	}
 	
 	protected function get_button_add() {
 		global $msg;
 	
-		return "<input class='bouton' type='button' value='".$msg['acquisition_ajout_'.$this->get_initial_name()]."' onClick=\"document.location='".static::get_controller_url_base()."&action=modif&id_bibli=".$this->filters['entite']."&id_".$this->get_initial_name()."=0';\" />";
+		return $this->get_interface_button($msg['acquisition_ajout_'.$this->get_initial_name()], ['location' => static::get_controller_url_base()."&action=modif&id_bibli=".$this->filters['entite']."&id_".$this->get_initial_name()."=0"]);;
 	}
 	
 	/**
@@ -31,7 +25,9 @@ class list_accounting_devis_ui extends list_accounting_ui {
 						'num_fournisseur' => 'acquisition_ach_fou2',
 						'date_acte' => 'acquisition_cde_date_cde',
 						'statut' => 'acquisition_statut',
-						'print_mail' => ''
+    				    'commentaires' => 'acquisition_commentaires',
+    				    'commentaires_i' => 'acquisition_commentaires_i',
+						'print_mail' => 'print_mail'
 				)
 		);
 	}
@@ -47,27 +43,24 @@ class list_accounting_devis_ui extends list_accounting_ui {
 		$this->add_column('print_mail');
 	}
 	
-	protected function get_selection_actions() {
+	protected function init_default_selection_actions() {
 		global $msg;
-	
-		if(!isset($this->selection_actions)) {
-			$this->selection_actions = array();
-			if($this->filters['status'] != STA_ACT_ALL) {
-				//Bouton recevoir
-				if ($this->filters['status'] == STA_ACT_ENC){
-					$this->selection_actions[] = $this->get_selection_action('rec', $msg['acquisition_dev_bt_rec'], 'save.gif', $this->get_link_action('list_rec', 'rec'));
-				}
-					
-				//Bouton archiver
-				if ($this->filters['status'] == STA_ACT_REC || $this->filters['status'] == STA_ACT_ENC){
-					$this->selection_actions[] = $this->get_selection_action('archive', $msg['acquisition_act_bt_arc'], 'folderclosed.gif', $this->get_link_action('list_arc', 'arc'));
-				}
-					
-				//Bouton supprimer
-				$this->selection_actions[] = $this->get_selection_action('delete', $msg['63'], 'interdit.gif', $this->get_link_action('list_delete', 'sup'));
+		
+		parent::init_default_selection_actions();
+		if($this->filters['status'] != STA_ACT_ALL) {
+			//Bouton recevoir
+			if ($this->filters['status'] == STA_ACT_ENC){
+				$this->add_selection_action('rec', $msg['acquisition_dev_bt_rec'], 'save.gif', $this->get_link_action('list_rec', 'rec'));
 			}
+			
+			//Bouton archiver
+			if ($this->filters['status'] == STA_ACT_REC || $this->filters['status'] == STA_ACT_ENC){
+				$this->add_selection_action('archive', $msg['acquisition_act_bt_arc'], 'folderclosed.gif', $this->get_link_action('list_arc', 'arc'));
+			}
+			
+			//Bouton supprimer
+			$this->add_selection_action('delete', $msg['63'], 'interdit.gif', $this->get_link_action('list_delete', 'sup'));
 		}
-		return $this->selection_actions;
 	}
 	
 	public function get_type_acte() {
@@ -94,7 +87,7 @@ class list_accounting_devis_ui extends list_accounting_ui {
 	
 	public static function run_delete_object($object) {
 		if ($object->type_acte==TYP_ACT_DEV) {
-			$object->delete();
+		    actes::delete($object->id_acte);
 		}
 	}
 }

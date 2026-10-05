@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: en_UK.xml,v 1.2 2009-04-27 07:36:58 pmb-translation Exp $ -->
+$Id: en_UK.xml,v 1.2 2009/04/27 07:36:58 pmb-translation Exp $ -->
 
 <XMLlist>
 	<entry code="z3950_url">Z39.50 Server Address</entry>

@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_sectionslist_view_carousel.xml,v 1.2 2017-07-27 14:50:32 tsamson Exp $ -->
+$Id: cms_module_sectionslist_view_carousel.xml,v 1.2 2017/07/27 14:50:32 tsamson Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_sectionslist_view_link'>Creation of a link to the rubric</entry>

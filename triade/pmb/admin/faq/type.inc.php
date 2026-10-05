@@ -1,13 +1,16 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: type.inc.php,v 1.1 2014-04-01 13:45:46 arenou Exp $
+// $Id: type.inc.php,v 1.4 2021/01/21 08:52:53 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-require_once($class_path."/faq_types.class.php");
+global $class_path, $id;
 
-$faq_types= new faq_types("faq_types","id_type","libelle_type",$id_liste);
-$faq_types->proceed($act);
-?>
+require_once($class_path."/faq_type.class.php");
+require_once($class_path."/configuration/configuration_controller.class.php");
+
+configuration_controller::set_model_class_name('faq_type');
+configuration_controller::set_list_ui_class_name('list_configuration_faq_type_ui');
+configuration_controller::proceed($id);

@@ -1,14 +1,14 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: aff_notice_fonction_template.inc.php,v 1.1 2015-05-11 13:37:58 abacarisse Exp $
+// $Id: aff_notice_fonction_template.inc.php,v 1.1 2015/05/11 13:37:58 abacarisse Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
 /**
  * 
- * Fonction par dÃ©faut d'affichage d'un template (DJANGO ou en base)
+ * Fonction par défaut d'affichage d'un template (DJANGO ou en base)
  */
 function aff_notice_fonction_template($id,$cart,$gen_header,$use_cache,$mode_aff_notice,$depliable,$nodocnum,$enrichment,$recherche_ajax_mode,$show_map,$recordmodes){
 
@@ -22,7 +22,7 @@ function aff_notice_fonction_template($id,$cart,$gen_header,$use_cache,$mode_aff
 	$current_mode=$recordmodes->get_current_mode();
 	$layout=$recordmodes->get_layout($current_mode);
 	
-	//DÃ©but du flux
+	//Début du flux
 	if ($id==-1) {
 		if($layout['TYPE']=='table'){
 			$retour_aff.="<table class='aff_notice_template'>";

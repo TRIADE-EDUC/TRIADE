@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_concept_form.tpl.php,v 1.15 2019-05-27 12:26:22 btafforeau Exp $
+// $Id: index_concept_form.tpl.php,v 1.15.16.2 2025/03/13 11:54:44 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -11,46 +11,48 @@ global $select_concept_prop, $index_concept_form, $index_concept_add_button_form
 
 $select_concept_prop = "scrollbars=yes, toolbar=no, dependent=yes, resizable=yes";
 
-$index_concept_form = "
-		<div id='el6Child_3' class='row' title='".htmlentities($msg['index_concept_label'],ENT_QUOTES, $charset)."' movable='yes'>
-			<!--    Concepts    -->
-			<div id='el6Child_3a' class='row'>
-				<label for='f_categ' class='etiquette'>".$msg['index_concept_label']."</label>
-			</div>
-			<input type='hidden' id='concept_new_order' name='max_concepts' value=\"!!max_concepts!!\" />
-			!!concepts_repetables!!
-			<div id='addconcept'>
-			</div>
-		</div>";
-
-$index_concept_add_button_form = "
-		<script type='text/javascript' src='./javascript/concept_drop.js'></script>
-		<input type='hidden' name='tab_concept_order' id='tab_concept_order' value='!!tab_concept_order!!' />
-		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('select.php?what=ontology&caller=!!caller!!&objs=&element=concept&dyn=1&deb_rech=', 'selector_ontology')\" />
-		<input type='button' class='bouton' value='+' onClick=\"onto_add('concept',0);\"/>";
-
-$index_concept_text_form = "
-		<div id='concept_!!iconcept!!' class='row' dragtype='concept' draggable='yes' recept='yes' recepttype='concept' handler='concept_!!iconcept!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!concept_display_label!!' downlight=\"concept_downlight\" highlight=\"concept_highlight\" order='!!iconcept!!' style='' >
-            <img id='concept_!!iconcept!!_options_Img' name='imEx' class='img_plus' src='".get_url_icon('plus.gif')."' alt='' title='' onclick='expandBase(this.id.substring(0,this.id.length - 3), true); return false;'/>
-			<span id='concept_!!iconcept!!_handle' style='float:left;padding-right:7px;'>
-                <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
-            </span>
-			<input type='text' class='saisie-80emr' id='concept_!!iconcept!!_display_label' name='concept[!!iconcept!!][display_label]' data-form-name='concept_label' value=\"!!concept_display_label!!\" completion='onto' att_id_filter='http://www.w3.org/2004/02/skos/core#Concept' autfield=\"concept_!!iconcept!!_value\" autocomplete='off'/>
-			<input type='button' class='bouton' id='concept_!!iconcept!!_del' value='".$msg['raz']."' onclick=\"onto_remove_selector_value('concept', !!iconcept!!)\" />
-			!!button_add_field!!
-			<input type='hidden' name='concept[!!iconcept!!][value]' data-form-name='concept_value' id='concept_!!iconcept!!_value' value='!!concept_uri!!' />
-			<input type='hidden' name='concept[!!iconcept!!][type]' data-form-name='concept_type' id='concept_!!iconcept!!_type' value='!!concept_type!!' />
-            <div id='concept_!!iconcept!!_options_Child' style='display : none;'>
-                <div class='row'>
-                    <label class='etiquette'>".$msg[707]."</label>
-                    <input type='checkbox' id='concept_!!iconcept!!_comment_visible_opac' name='concept[!!iconcept!!][comment_visible_opac]' !!concept_comment_visible_opac!! />
-                    <label>".$msg['scan_request_status_visible']."</label>
+if (!empty($msg)) {
+    $index_concept_form = "
+    		<div id='el6Child_3' class='row' title='".htmlentities($msg['index_concept_label'],ENT_QUOTES, $charset)."' movable='yes'>
+    			<!--    Concepts    -->
+    			<div id='el6Child_3a' class='row'>
+    				<label for='concept_0_display_label' class='etiquette'>".$msg['index_concept_label']."</label>
+    			</div>
+    			<input type='hidden' id='concept_new_order' name='max_concepts' value=\"!!max_concepts!!\" />
+    			!!concepts_repetables!!
+    			<div id='addconcept'>
+    			</div>
+    		</div>";
+    
+    $index_concept_add_button_form = "
+    		<script type='text/javascript' src='./javascript/concept_drop.js'></script>
+    		<input type='hidden' name='tab_concept_order' id='tab_concept_order' value='!!tab_concept_order!!' />
+    		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('select.php?what=ontology&caller=!!caller!!&objs=&element=concept&dyn=1&deb_rech=', 'selector_ontology')\" />
+    		<input type='button' class='bouton' value='+' onClick=\"onto_add('concept',0);\"/>";
+    
+    $index_concept_text_form = "
+    		<div id='concept_!!iconcept!!' class='row' dragtype='concept' draggable='yes' recept='yes' recepttype='concept' handler='concept_!!iconcept!!_handle' dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='!!concept_display_label!!' downlight=\"concept_downlight\" highlight=\"concept_highlight\" order='!!iconcept!!' style='' >
+                <img id='concept_!!iconcept!!_options_Img' name='imEx' class='img_plus' src='".get_url_icon('plus.gif')."' alt='' title='' onclick='expandBase(this.id.substring(0,this.id.length - 3), true); return false;'/>
+    			<span id='concept_!!iconcept!!_handle' style='float:left;padding-right:7px;'>
+                    <img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' />
+                </span>
+    			<input type='text' class='saisie-80emr' id='concept_!!iconcept!!_display_label' name='concept[!!iconcept!!][display_label]' data-form-name='concept_label' value=\"!!concept_display_label!!\" completion='onto' att_id_filter='http://www.w3.org/2004/02/skos/core#Concept' autfield=\"concept_!!iconcept!!_value\" autocomplete='off'/>
+    			<input type='button' class='bouton' id='concept_!!iconcept!!_del' value='".$msg['raz']."' onclick=\"onto_remove_selector_value('concept', !!iconcept!!)\" />
+    			!!button_add_field!!
+    			<input type='hidden' name='concept[!!iconcept!!][value]' data-form-name='concept_value' id='concept_!!iconcept!!_value' value='!!concept_uri!!' />
+    			<input type='hidden' name='concept[!!iconcept!!][type]' data-form-name='concept_type' id='concept_!!iconcept!!_type' value='!!concept_type!!' />
+                <div id='concept_!!iconcept!!_options_Child' style='display : none;'>
+                    <div class='row'>
+                        <label class='etiquette'>".$msg[707]."</label>
+                        <input type='checkbox' id='concept_!!iconcept!!_comment_visible_opac' name='concept[!!iconcept!!][comment_visible_opac]' !!concept_comment_visible_opac!! />
+                        <label>".$msg['scan_request_status_visible']."</label>
+                    </div>
+                    <div class='row'>
+                        <textarea id='concept_!!iconcept!!_comment' name='concept[!!iconcept!!][comment]'>!!concept_comment!!</textarea>
+                    </div>                
                 </div>
-                <div class='row'>
-                    <textarea id='concept_!!iconcept!!_comment' name='concept[!!iconcept!!][comment]'>!!concept_comment!!</textarea>
-                </div>                
-            </div>
-		</div>";
+    		</div>";
+}
 
 $index_concept_script = "
 <script type='text/javascript'>
@@ -70,7 +72,7 @@ $index_concept_script = "
 		var parent = document.getElementById('el6Child_3');
 		var new_child='';
 		var buttonAdd = null;
-		//on trouve le noeud visÃ©, et on le clone
+		//on trouve le noeud visé, et on le clone
 		for(var i in parent.childNodes){
 			if(parent.childNodes[i].nodeType == Node.ELEMENT_NODE){
 				if(parent.childNodes[i].getAttribute('id')==element_name+'_'+element_order){

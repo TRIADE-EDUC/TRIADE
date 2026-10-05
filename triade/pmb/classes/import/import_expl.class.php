@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 //  2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: import_expl.class.php,v 1.3 2019-01-24 16:51:48 dgoron Exp $
+// $Id: import_expl.class.php,v 1.5.6.1 2024/09/18 12:34:22 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/import/import_entities.class.php");
 
 class import_expl extends import_entities {
@@ -56,15 +57,13 @@ class import_expl extends import_entities {
 		$hidden_form .= static::get_input_hidden_variable('import_force_notice_is_new');
 		$hidden_form .= static::get_input_hidden_variable('import_notice_existing_replace');
 		$hidden_form .= static::get_input_hidden_variable('notice_replace_links');
+		$hidden_form .= static::get_input_hidden_variable('import_without_index');
 		$hidden_form .= static::get_hidden_caddies_form();
 		$hidden_form .= "</FORM>";
 		return $hidden_form;
 	}
 	
 	public static function get_caddies_form() {
-		global $msg;
-		global $PMBuserid;
-		
 		$caddies_form = static::get_caddie_form('NOTI', 'idcaddie', 'caddie');
 		$caddies_form .= static::get_caddie_form('BULL', 'idcaddie', 'caddie');
 		$caddies_form .= static::get_caddie_form('EXPL', 'idcaddie', 'caddie');
@@ -85,8 +84,13 @@ class import_expl extends import_entities {
 		return $links_caddies;
 	}
 	
-	public static function export_traite_exemplaires ($ex=array()) {
+	public static function traite_exemplaires($function_name='') {
+		
+	}
 	
+	public static function export_traite_exemplaires($ex=array()) {
+	
+		$subfields=array();
 		$subfields["a"] = $ex -> lender_libelle;
 		$subfields["c"] = $ex -> lender_libelle;
 		$subfields["f"] = $ex -> expl_cb;
@@ -119,7 +123,7 @@ class import_expl extends import_entities {
 		$export996['b'] = $ex -> expl_owner;
 	
 		$export996['v'] = $ex -> location_libelle;
-		$export996['w'] = $ex -> ldoc_codage_import;
+		$export996['w'] = $ex -> locdoc_codage_import;
 	
 		$export996['x'] = $ex -> section_libelle;
 		$export996['y'] = $ex -> sdoc_codage_import;

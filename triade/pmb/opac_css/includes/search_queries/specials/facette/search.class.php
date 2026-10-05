@@ -1,14 +1,15 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.21 2018-09-14 10:25:50 dgoron Exp $
+// $Id: search.class.php,v 1.25.8.1 2025/06/04 06:01:55 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $include_path;
 require_once($include_path."/rec_history.inc.php");
 
-//Classe de gestion de la recherche spÃ©cial "facette"
+//Classe de gestion de la recherche spécial "facette"
 
 class facette_search {
 	public $id;
@@ -25,8 +26,8 @@ class facette_search {
     	$this->params=$params;
     	$this->search=&$search;
     	
-    	//les facettes sont dÃ©sormais un tableau de tableaux
-    	//il faut parfois les desÃ©rialiser quand on est passÃ© par un formulaire
+    	//les facettes sont désormais un tableau de tableaux
+    	//il faut parfois les desérialiser quand on est passé par un formulaire
     	$field_name="field_".$this->n_ligne."_s_".$this->id;
     	global ${$field_name},$launch_search;
     	$valeur = ${$field_name};
@@ -51,18 +52,25 @@ class facette_search {
     }
     
     public function make_search(){
-        global $dbh;
         global $mode;
+        global $opac_facettes_operator;
         
         $prefix = '';
         
         switch($this->xml_file){
             case 'search_fields_authorities':
+            case 'search_fields_authorities_gestion':
+            case 'search_fields_authorities_gestion_subst':
             case 'search_fields_authorities_subst':
                 $plural_prefix = 'authorities';
                 $prefix = 'authority';
                 $tempo_key_name = 'id_authority';
                 break;
+            case 'search_fields_unimarc_gestion':
+            case 'search_fields_unimarc_gestion_subst':
+            case 'search_fields_unimarc':
+            case 'search_fields_unimarc_subst':
+                $mode = "external";
             default:
                 $plural_prefix = 'notices'; 
                 $prefix = 'notice';
@@ -83,10 +91,10 @@ class facette_search {
         }
         $filter_array = ${$valeur};
         
-        //TODO : c'est lÃ  qu(il faut tout faire
+        $t_ids=array();
         $ids = '';
         if(is_array($filter_array)) {
-	        foreach ($filter_array as $k=>$v) {
+	        foreach ($filter_array as $v) {
 	            
 	            $filter_value = $v[1];
 	            $filter_field = $v[2];
@@ -100,7 +108,7 @@ class facette_search {
 	                    }
 	                    break;
 	                default:
-	                    $qs = 'SELECT id_'.$prefix.' FROM '.$plural_prefix.'_fields_global_index WHERE code_champ = '.($filter_field+0).' AND code_ss_champ = '.($filter_subfield+0).' AND (';
+	                    $qs = 'SELECT id_'.$prefix.' FROM '.$plural_prefix.'_fields_global_index WHERE code_champ = '.(intval($filter_field)).' AND code_ss_champ = '.(intval($filter_subfield)).' AND (';
 	                    foreach ($filter_value as $k2=>$v2) {
 	                        if ($k2) {
 	                            $qs .= ' OR ';
@@ -113,18 +121,22 @@ class facette_search {
 	                    }
 	                    break;
 	            }
-	            $rs = pmb_mysql_query($qs, $dbh) or die (mysql_error());
+	            $rs = pmb_mysql_query($qs) ;
 	            
-	            $t_ids=array();
-	            
-	            if(pmb_mysql_num_rows($rs)) {
-	                $ids='';
+	            //Opérateur "AND", on repart d'un tableau vide
+	            if($opac_facettes_operator == 'and') {
+	            	$t_ids=array();
+                    if(!pmb_mysql_num_rows($rs)) {
+                        break;
+                    }
+                    while ($o=pmb_mysql_fetch_object($rs)) {
+                        $t_ids[]= $o->{'id_'.$prefix};
+                    }
+                    $ids = implode(',',$t_ids);
+	            } else {
 	                while ($o=pmb_mysql_fetch_object($rs)) {
 	                    $t_ids[]= $o->{'id_'.$prefix};
 	                }
-	                $ids = implode(',',$t_ids);
-	            }else{
-	                break;
 	            }
 	        }
         }
@@ -132,17 +144,17 @@ class facette_search {
 //         $t_ids = array_slice($t_ids, 0, 5);
         $last_table = 'table_facette_temp_'.$this->n_ligne.'_'.md5(microtime());
         $qc_last_table = 'create temporary table '.$last_table.' ('.$tempo_key_name.' int, index i_'.$prefix.'_id('.$tempo_key_name.'))';
-        pmb_mysql_query($qc_last_table,$dbh) or die ();
+        pmb_mysql_query($qc_last_table);
         if(count($t_ids)) {
             $qi_last_table = 'insert ignore into '.$last_table.' values ('.implode('),(', $t_ids).')';
-            pmb_mysql_query($qi_last_table,$dbh) or die ();
+            pmb_mysql_query($qi_last_table);
         }
         unset($t_ids);
         return $last_table;
     } 
     
     public function make_human_query(){
-		global $dbh, $champ_base, $msg;
+        global $opac_facettes_operator, $msg;
 		global $mode;
 		
 		$literral_words = array();
@@ -152,35 +164,37 @@ class facette_search {
     	$valeur = ${$valeur};
     	$item_literal_words = array();
     	if(is_array($valeur)) {
-	    	foreach ($valeur as $k=>$v) {
+	    	foreach ($valeur as $v) {
 		    	$filter_value = $v[1];
 		    	$filter_name = $v[0];
 		    	$filter_field = $v[2];
 		    	$filter_subfield = $v[3];
 		    	
 		    	$libValue = "";
-		    	foreach ($filter_value as $value) {
-		    		if ($libValue) $libValue .= ' '.$msg["search_or"].' ';
-		    		switch ($mode) {
-		    			case 'external':
-		    				$libValue .= facettes_external::get_formatted_value($filter_field, $filter_subfield, $value);
-		    				break;
-		    			default:
-		    				$libValue .= facettes::get_formatted_value($filter_field, $filter_subfield, $value);
-		    				break;
-		    		}
+		    	if (is_array($filter_value)) {
+    		    	foreach ($filter_value as $value) {
+    		    		if ($libValue) $libValue .= ' '.$msg["search_or"].' ';
+    		    		switch ($mode) {
+    		    			case 'external':
+    		    				$libValue .= facettes_external::get_formatted_value($filter_field, $filter_subfield, $value);
+    		    				break;
+    		    			default:
+    		    				$libValue .= facettes::get_formatted_value($filter_field, $filter_subfield, $value);
+    		    				break;
+    		    		}
+    		    	}
 		    	}
 				$item_literal_words[] = stripslashes($filter_name)." : '".stripslashes($libValue)."'";
 	    	}
     	}
     	
-    	$literral_words[] = implode(' '.$msg["search_and"].' ',$item_literal_words);
+    	$literral_words[] = implode(' '.$msg["search_".$opac_facettes_operator].' ',$item_literal_words);
     	
     	return $literral_words;
     }
     
     public function make_unimarc_query(){
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -188,7 +202,7 @@ class facette_search {
     }
     
     public function get_input_box() {
-    	global $charset, $dbh, $msg;
+        global $charset, $opac_facettes_operator, $msg;
     	
     	$field_name="field_".$this->n_ligne."_s_".$this->id;
     	global ${$field_name},$launch_search;
@@ -197,11 +211,11 @@ class facette_search {
     	$item_literal_words = array();
     	
     	if(is_array($valeur)) {
-	    	foreach ($valeur as $k=>$v) {
+	    	foreach ($valeur as $v) {
 		    	$filter_value = $v[1];
 		    	$filter_name = $v[0];
 	
-		    	if (count($filter_value)==1) {
+		    	if (is_array($filter_value) && count($filter_value)==1) {
 		    		$libValue = $filter_value[0];
 		    	} else {
 		    		$libValue = implode(' '.$msg["search_or"].' ',$filter_value);
@@ -210,7 +224,7 @@ class facette_search {
 	    	}
     	}
     	
-    	$literral_words = implode(' '.$msg["search_and"].' ',$item_literal_words);
+    	$literral_words = implode(' '.$msg["search_".$opac_facettes_operator].' ',$item_literal_words);
     	
     	$form=$literral_words;
     	$form.="<input type='hidden' name='".$field_name."[]' value=\"".htmlentities(serialize($valeur),ENT_QUOTES,$charset)."\"/>";
@@ -223,4 +237,3 @@ class facette_search {
     }
     
 }
-?>

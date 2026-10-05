@@ -1,0 +1,6 @@
+<h2>S&eacute;curit&eacute;</h2>
+</p><p>
+Gestion des authentifications.
+</p>
+<p><b>Authentification</b> : Gestion des authentifications externes.</p>
+<p><b>MFA</b> : Authentification multi-facteurs.</p>

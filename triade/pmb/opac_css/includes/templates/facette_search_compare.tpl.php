@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: facette_search_compare.tpl.php,v 1.6 2018-01-25 10:13:28 dgoron Exp $
+// $Id: facette_search_compare.tpl.php,v 1.7 2023/08/17 09:47:52 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], "tpl.php")) die("no access");
 
@@ -20,39 +20,39 @@ $facette_search_compare_wrapper="
 		width:100%;
 		height:100%;
 	}
-	
+
 	.first_collumn {
 		width:!!first_collumn_size!!%;
 	}
-	
+
 	.compare_hearder{
 		width:!!cullumn_size!!%;
 		max-width:!!cullumn_size!!%;
 	}
-	
+
 	.compare_element{
 		width:!!cullumn_size!!%;
 		max-width:!!cullumn_size!!%;
 	}
-	
+
 	.compare_hidden_element{
 		width:!!cullumn_size!!%;
 		max-width:!!cullumn_size!!%;
 	}
-	
+
 	.compare_hidden_element a:hover {
 		cursor:pointer;
 	}
-	
+
 </style>
 
-<script src='$base_path/includes/javascript/select.js' type='text/javascript'></script>
+<script src='$base_path/includes/javascript/select.js' ></script>
 
-<script type='text/javascript'>
-	
+<script>
+
 	function expandAll_compare(){
 		var tmpColl=document.getElementsByClassName('compare_line');
-		
+
 		for(var i=0;i<tmpColl.length;i++){
 			if(tmpColl[i].nextElementSibling.style.display=='none'){
 				toggle_hidden_line(tmpColl[i],tmpColl[i].nextElementSibling.getAttribute('id'));
@@ -62,7 +62,7 @@ $facette_search_compare_wrapper="
 
 	function collapseAll_compare(){
 		var tmpColl=document.getElementsByClassName('compare_line');
-		
+
 		for(var i=0;i<tmpColl.length;i++){
 			if(tmpColl[i].nextElementSibling.style.display!='none'){
 				toggle_hidden_line(tmpColl[i],tmpColl[i].nextElementSibling.getAttribute('id'));
@@ -72,7 +72,7 @@ $facette_search_compare_wrapper="
 
 	function toggle_hidden_line(current_line,hidden_line_id){
 		var line=document.getElementById(hidden_line_id);
-		
+
 		if(line.style.display=='none'){
 			line.style.display='';
 			line.previousElementSibling.setAttribute('class',line.previousElementSibling.getAttribute('class')+' compare_line_toggled');
@@ -80,30 +80,30 @@ $facette_search_compare_wrapper="
 				current_line.firstElementChild.lastElementChild.setAttribute('src','".get_url_icon("minus.gif")."');
 				current_line.firstElementChild.lastElementChild.setAttribute('class','img_plus');
 			}
-			
+
 		}else{
 			line.style.display='none';
 			var line_classes=line.previousElementSibling.getAttribute('class');
 			line.previousElementSibling.setAttribute('class',line_classes.replace(' compare_line_toggled',''));
-			
+
 			if(current_line.firstElementChild.lastElementChild && current_line.firstElementChild.lastElementChild.nodeName=='IMG'){
 				current_line.firstElementChild.lastElementChild.setAttribute('src','".get_url_icon("plus.gif")."');
 				current_line.firstElementChild.lastElementChild.setAttribute('class','img_plus');
 			}
 		}
 	}
-	
+
 	function open_notice_popup(notice_id,notice_affichage_cmd,notice_enrichment){
 		var req = new http_request();
-		
+
 		req.request(\"./ajax.php?module=expand_notice&categ=expand\",true,'notice_affichage_cmd='+notice_affichage_cmd,true,function(data){
 			var text=data;
-			
+
 			var el='el'+notice_id;
 			var whichEl = document.getElementById('notice');
-				
+
 			open_popup(whichEl,text);
-			
+
 			if (notice_enrichment){
 				getEnrichment(notice_id);
 			}
@@ -120,28 +120,28 @@ $facette_search_compare_wrapper="
 				if (surligne[0].value == 1) rechercher(1);
 			}
 			ReinitializeAddThis();
-			
+
 		});
 	}
-	
-	
-	
-	
+
+
+
+
 	function compare_see_more(hidden_element,notices_ids){
 		var req = new http_request();
 		var sended_datas={'json_notices_ids':notices_ids};
 		req.request(\"./ajax.php?module=ajax&categ=!!categ!!&sub=compare_see_more\",true,'sended_datas='+encodeURIComponent(JSON.stringify(sended_datas)),true,function(data){
 			var jsonArray = JSON.parse(data);
-			
+
 			var parent=hidden_element.parentElement;
 			hidden_element.parentNode.removeChild(hidden_element);
 			parent.firstElementChild.innerHTML+=jsonArray['notices'];
 			if(jsonArray['see_more']){
 				parent.innerHTML+=jsonArray['see_more'];
 			}
-		});	
+		});
 	}
-	
+
 	!!compare_wrapper_script!!
 </script>
 <div id='notice'></div>
@@ -185,7 +185,7 @@ $facette_search_compare_hidden_element="
 	<td class='compare_hidden_element'>
 		<ul>
 			!!compare_hidden_element_libelle!!
-		</ul>	
+		</ul>
 		!!compare_hidden_line_see_more!!
 	</td>
 ";

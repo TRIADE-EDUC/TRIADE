@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: txt2pmbxml.class.php,v 1.1 2018-07-25 06:19:18 dgoron Exp $
+// $Id: txt2pmbxml.class.php,v 1.2 2019/07/15 14:24:31 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -16,41 +16,41 @@ class txt2pmbxml extends convert {
 		
 		$is_notice_objet=false;
 		
-		//--------------------dÃ©claration tableau d'autoritÃ©s-----------------------------
-			//dÃ©claration du tableau de correspondance du support physique
+		//--------------------déclaration tableau d'autorités-----------------------------
+			//déclaration du tableau de correspondance du support physique
 		if (!count($TabSupport)) {
 			$TabSupport["affiche"]="a";
 			$TabSupport["audiocassette"]="i"; // ?? i ou j
 			$TabSupport["carte"]="e";	// ?? e ou f
-			$TabSupport["cÃ©dÃ©rom"]="m";
+			$TabSupport["cédérom"]="m";
 			$TabSupport["diapositive"]="g";
 			$TabSupport["disque compact audio"]="i";	// ?? i ou j
 			$TabSupport["disque vinyle"]="i";	// ?? i ou j
 			$TabSupport["disquette"]="l"; // ?? l ou m
 			$TabSupport["DVD-ROM"]="m";
-			$TabSupport["DVD-vidÃ©o"]="m";
-			$TabSupport["fichier numÃ©rique"]="l";
+			$TabSupport["DVD-vidéo"]="m";
+			$TabSupport["fichier numérique"]="l";
 			$TabSupport["film"]="g";
 			$TabSupport["livre"]="a"; 
-			$TabSupport["pÃ©riodique"]="a"; 
+			$TabSupport["périodique"]="a"; 
 			$TabSupport["photographie"]="k";
 			$TabSupport["site Internet"]="l";
 			$TabSupport["transparent"]="g";
-			$TabSupport["vidÃ©ocassette"]="g";
+			$TabSupport["vidéocassette"]="g";
 			$TabSupport["texte manuscrit"]="b";
-			$TabSupport["partition musicale imprimÃ©e"]="c";
+			$TabSupport["partition musicale imprimée"]="c";
 			$TabSupport["partition musicale manuscrite"]="d";
-			$TabSupport["document cartographique imprimÃ©"]="e";
+			$TabSupport["document cartographique imprimé"]="e";
 			$TabSupport["document cartographique manuscrit"]="f";
 			$TabSupport["enregistrement sonore non musical"]="i";
 			$TabSupport["enregistrement sonore musical"]="j";
-			$TabSupport["document graphique Ã  deux dimensions"]="k";
-			$TabSupport["document Ã©lectronique"]="l";
-			$TabSupport["document multimÃ©dia"]="m";
-			$TabSupport["objet Ã  3 dimensions"]="r";
+			$TabSupport["document graphique à deux dimensions"]="k";
+			$TabSupport["document électronique"]="l";
+			$TabSupport["document multimédia"]="m";
+			$TabSupport["objet à 3 dimensions"]="r";
 			
 		}
-			//dÃ©claration du tableau de correspondance des fonctions des auteurs secondaires
+			//déclaration du tableau de correspondance des fonctions des auteurs secondaires
 		if (!count($TabFonction)) {
 			$TabFonction["adaptateur"]="010";
 			$TabFonction["Adaptateur"]="010";
@@ -70,8 +70,8 @@ class txt2pmbxml extends convert {
 			$TabFonction["Conceptrice"]="545";	
 			$TabFonction["conseiller"]="695";
 			$TabFonction["Conseiller"]="695";
-			$TabFonction["conseillÃ¨re"]="695";
-			$TabFonction["ConseillÃ¨re"]="695";
+			$TabFonction["conseillère"]="695";
+			$TabFonction["Conseillère"]="695";
 			$TabFonction["dessinateur"]="150";
 			$TabFonction["Dessinateur"]="150";
 			$TabFonction["dessinatrice"]="150";
@@ -88,16 +88,16 @@ class txt2pmbxml extends convert {
 			$TabFonction["Interviewer"]="470";
 			$TabFonction["photographe"]="600";
 			$TabFonction["Photographe"]="600";
-			$TabFonction["prÃ©facier"]="080";
-			$TabFonction["PrÃ©facier"]="080";
-			$TabFonction["prÃ©faciere"]="080";
-			$TabFonction["PrÃ©faciere"]="080";
-			$TabFonction["rÃ©alisateur"]="370";
-			$TabFonction["RÃ©alisateur"]="370";
-			$TabFonction["rÃ©alisatrice"]="370";
-			$TabFonction["RÃ©alisatrice"]="370";
-			$TabFonction["scÃ©nariste"]="690";
-			$TabFonction["ScÃ©nariste"]="690";
+			$TabFonction["préfacier"]="080";
+			$TabFonction["Préfacier"]="080";
+			$TabFonction["préfaciere"]="080";
+			$TabFonction["Préfaciere"]="080";
+			$TabFonction["réalisateur"]="370";
+			$TabFonction["Réalisateur"]="370";
+			$TabFonction["réalisatrice"]="370";
+			$TabFonction["Réalisatrice"]="370";
+			$TabFonction["scénariste"]="690";
+			$TabFonction["Scénariste"]="690";
 			$TabFonction["traducteur"]="730";
 			$TabFonction["Traducteur"]="730";
 			$TabFonction["traductrice"]="730";
@@ -114,32 +114,32 @@ class txt2pmbxml extends convert {
 				"chinois"=>"chi",
 				"danois"=>"dan",
 				"espagnol"=>"spa",
-				"franÃ§ais"=>"fre",
-				"franÃ§ais ancien"=>"fro",
+				"français"=>"fre",
+				"français ancien"=>"fro",
 				"grec classique"=>"grc",
 				"grec moderne"=>"gre",
-				"hÃ©breu"=>"heb",
+				"hébreu"=>"heb",
 				"hongrois"=>"hun",
 				"indien"=>"hin",
 				"irlandais"=>"iri",
 				"italien"=>"ita",
 				"japonais"=>"jpn",
 				"latin"=>"lat",
-				"nÃ©erlandais"=>"dut",
-				"norvÃ©gien"=>"nor",
+				"néerlandais"=>"dut",
+				"norvégien"=>"nor",
 				"polonais"=>"pol",
 				"portugais"=>"por",
 				"roumain"=>"rum",
 				"russe"=>"rus",
-				"suÃ©dois"=>"swe",
-				"tchÃ¨que"=>"cze",
+				"suédois"=>"swe",
+				"tchèque"=>"cze",
 				"turc"=>"tus",
 				"yiddish"=>"yid"
 			);
 		}
 		
 		if (!count($TabMonth)) {
-			$TabMonth=array("janvier","fÃ©vrier","mars","avril","mai","juin","juillet","aoÃ»t","septembre","octobre","novembre","dÃ©cembre");
+			$TabMonth=array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
 		}
 		
 		if (!$sf) {
@@ -149,7 +149,7 @@ class txt2pmbxml extends convert {
 			}
 		} 
 		
-		//-----------------------dÃ©but de la notice---------------------------- 
+		//-----------------------début de la notice---------------------------- 
 		$data="<notice>\n<rs>n</rs>\n";
 		
 		//Explosion des champs dans un tableau
@@ -161,15 +161,17 @@ class txt2pmbxml extends convert {
 				$contenu.=" ".trim($lignes[$i]);
 			} else {
 				if ($before) {
-					if ($contenu[strlen($contenu)-1]=="/") $contenu=substr($contenu,0,strlen($contenu)-1);
+				    if (substr($contenu, strlen($contenu)-1, 1) == "/") {
+				        $contenu = substr($contenu,0,strlen($contenu)-1);
+				    }
 					if (substr($contenu,0,3)=="#_#") {
-						$f["URL"][0]=substr($contenu,3,strlen($contenu)-6);
+						$f["URL"][0] = substr($contenu,3,strlen($contenu)-6);
 					} else {
-						$contenu=explode("/",$contenu);
-						for ($j=0; $j<count($contenu); $j++) {
-							$contenu[$j]=trim($contenu[$j]);
+						$contenu_array = explode("/",$contenu);
+						for ($j=0; $j<count($contenu_array); $j++) {
+						    $contenu_array[$j] = trim($contenu_array[$j]);
 						}
-						$f[$index]=$contenu;
+						$f[$index] = $contenu_array;
 					}
 				}
 				$ligne=explode(": ",trim($lignes[$i]));
@@ -194,10 +196,10 @@ class txt2pmbxml extends convert {
 			}
 		}
 		
-		//Champs gÃ©nÃ©raux
+		//Champs généraux
 		$valeur=$f[$sf["support_physique"]];
 		$dt=$TabSupport[$valeur[0]];
-		if (strtolower($valeur[0])=="pÃ©riodique") {$bl="s";} else {$bl="m";}
+		if (strtolower($valeur[0])=="périodique") {$bl="s";} else {$bl="m";}
 		$data.="<dt>".$dt."</dt>\n";
 		$data.="<bl>".$bl."</bl>\n";
 		$data.="<hl>*</hl>\n<el>1</el>\n<ru>i</ru>\n";
@@ -238,7 +240,7 @@ class txt2pmbxml extends convert {
 		}
 		$data.="</f>\n";
 		
-		//SÃ©rie
+		//Série
 		$valeurs=$f[$sf["serie"]];
 		if (($valeurs[0])&&(!$is_notice_objet)) {
 			$valeurs_=explode(".",$valeurs[0]);
@@ -324,15 +326,15 @@ class txt2pmbxml extends convert {
 		if (($f[$sf["editeur"]][0])&&(!$is_notice_objet)) {
 			$data.="<f c='210' ind='  '>\n";
 			$data.="<s c='c'>".htmlspecialchars($f[$sf["editeur"]][0],ENT_QUOTES,$charset)."</s>\n";
-			if (($f[$sf["annee_edition"]][0])&&($f[$sf["support_physique"]][0]!="pÃ©riodique")) {
+			if (($f[$sf["annee_edition"]][0])&&($f[$sf["support_physique"]][0]!="périodique")) {
 				$data.="<s c='d'>".htmlspecialchars($f[$sf["annee_edition"]][0],ENT_QUOTES,$charset)."</s>\n";
 			}
 			$data.="</f>\n";
 		}
 		
 		
-		//PÃ©riodique
-		if ($f[$sf["support_physique"]][0]=="pÃ©riodique") {
+		//Périodique
+		if ($f[$sf["support_physique"]][0]=="périodique") {
 			$data.="<f c='464'>\n";
 			//Nom de la revue
 			if ($f[$sf["article_nom_revue"]][0]) {
@@ -375,7 +377,7 @@ class txt2pmbxml extends convert {
 		}
 		
 		//Collation
-		if (($f[$sf["collation_pagination"]][0])&&($f[$sf["support_physique"]][0]!="pÃ©riodique")) {
+		if (($f[$sf["collation_pagination"]][0])&&($f[$sf["support_physique"]][0]!="périodique")) {
 			$data.="<f c='215'>\n";
 				$data.="<s c='a'>".htmlspecialchars($f[$sf["collation_pagination"]][0],ENT_QUOTES,$charset)."</s>\n";
 			$data.="</f>\n";
@@ -395,7 +397,7 @@ class txt2pmbxml extends convert {
 			$data.="</f>\n";
 		}
 		
-		//RÃ©sumÃ©
+		//Résumé
 		if ($f[$sf["resume"]][0]) {
 			$resume=implode("/",$f[$sf["resume"]]);
 			$data.="<f c='330'>\n";
@@ -426,7 +428,7 @@ class txt2pmbxml extends convert {
 			$data.="</f>\n";
 		}
 		
-		//Mots clÃ©s
+		//Mots clés
 		if ($f[$sf["mots_cles"]][0]) {
 			$data.="<f c='610'>\n";
 			$mcle=array();
@@ -438,7 +440,7 @@ class txt2pmbxml extends convert {
 			$data.="</f>\n";
 		}
 		
-		//ThÃ©saurus
+		//Thésaurus
 		if (($f[$sf["descripteurs"]][0])&&(!$is_notice_objet)) {
 			for ($i=0; $i<count($f[$sf["descripteurs"]]); $i++) {
 				$data.="<f c='606'>\n";
@@ -462,7 +464,7 @@ class txt2pmbxml extends convert {
 		}
 		
 		//Champs bizarres en 90x
-		//ThÃ¨mes
+		//Thèmes
 		if ($f[$sf["themes"]][0]) {
 			for ($i=0; $i<count($f[$sf["themes"]]); $i++) {
 				$data.="<f c='900'>\n";
@@ -489,7 +491,7 @@ class txt2pmbxml extends convert {
 			}
 		}
 		
-		//AnnÃ©e de pÃ©remption
+		//Année de péremption
 		if ($f[$sf["annee_peremption"]][0]) {
 			$data.="<f c='903'>\n";
 			$data.="<s c='a'>".htmlspecialchars($f[$sf["annee_peremption"]][0],ENT_QUOTES,$charset)."</s>\n";
@@ -535,7 +537,7 @@ class txt2pmbxml extends convert {
 				if ($f[$sf["code_stat"]][0]) {
 					$data.="<s c='q'>".htmlspecialchars($f[$sf["code_stat"]][0],ENT_QUOTES,$charset)."</s>\n";
 				}
-				//NumÃ©ro d'exemplaire
+				//Numéro d'exemplaire
 				$data.="<s c='f'>".htmlspecialchars($f[$sf["numero_ex"]][$i],ENT_QUOTES,$charset)."</s>\n";
 				if ($f[$sf["cote"]][0]) {
 				    $cote_bretagne=implode("/",$f[$sf["cote"]]);

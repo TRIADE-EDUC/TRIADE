@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: avis_articles.class.php,v 1.4 2017-11-07 15:17:24 ngantier Exp $
+// $Id: avis_articles.class.php,v 1.4 2017/11/07 15:17:24 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

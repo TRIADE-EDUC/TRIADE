@@ -1,28 +1,27 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_list.class.php,v 1.1 2017-01-19 10:25:16 dgoron Exp $
-  
+// $Id: selector_list.class.php,v 1.3.4.1 2025/01/16 10:24:12 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 
 class selector_list extends selector {
-	
+
 	protected $search;
-	
+
 	protected $search_xml_file;
-	
+
 	protected $search_field_id;
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 	}
-		
+
 	public function proceed() {
-		global $page;
-	
 		print $this->get_sel_header_template();
 		print $this->get_js_script();
 		if(!$this->user_input) {
@@ -31,7 +30,7 @@ class selector_list extends selector {
 		print $this->get_display_list();
 		print $this->get_sel_footer_template();
 	}
-	
+
 	protected function get_values_list() {
 		$values_list = array();
 		if($this->search_field_id) {
@@ -45,30 +44,21 @@ class selector_list extends selector {
 		}
 		return $values_list;
 	}
-	
+
 	protected function get_display_list() {
-		global $nb_per_page;
-		global $page;
-		global $msg;
-		
 		$display_list = '';
-		if(!$page) {
-			$debut = 0;
-		} else {
-			$debut = ($page-1)*$nb_per_page;
-		}
 		$values_list = $this->get_values_list();
 		foreach($values_list as $index=>$value ) {
 			$display_list .= $this->get_display_element($index, $value);
 		}
 		return $display_list;
 	}
-	
+
 	protected function get_display_element($index='', $value='') {
 		global $charset;
 		global $caller;
 		global $callback;
-		
+
 		$display = "
 			<div class='row'>
 				<div class='colonne2' style='width: 80%;'>
@@ -77,7 +67,7 @@ class selector_list extends selector {
 			</div>";
 		return $display;
 	}
-	
+
 	public function get_title() {
 		$title = "";
 		if($this->search_field_id) {
@@ -91,19 +81,19 @@ class selector_list extends selector {
 		}
 		return $title;
 	}
-	
+
 	public static function get_params_url() {
 		global $search_xml_file, $search_field_id;
-	
+
 		$params_url = parent::get_params_url();
 		$params_url .= ($search_xml_file ? "&search_xml_file=".$search_xml_file : "").($search_field_id ? "&search_field_id=".$search_field_id : "");
 		return $params_url;
 	}
-	
+
 	public function set_search_xml_file($search_xml_file) {
 		$this->search_xml_file = $search_xml_file;
 	}
-	
+
 	public function set_search_field_id($search_field_id) {
 		$this->search_field_id = $search_field_id;
 	}

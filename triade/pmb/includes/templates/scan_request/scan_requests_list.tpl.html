@@ -1,4 +1,4 @@
-<!-- $Id: scan_requests_list.tpl.html,v 1.6 2016-11-08 10:27:23 ngantier Exp $ -->
+<!-- $Id: scan_requests_list.tpl.html,v 1.7 2023/12/07 13:19:07 dgoron Exp $ -->
 {% for scan_request in scan_requests.scan_requests %}
 	{% if loop.first %}
 		<table>
@@ -28,7 +28,7 @@
 				<th onclick='scan_request_search_order("status");' style='cursor:pointer;'>
 					{{ msg.scan_request_status }}&nbsp;<i class='fa fa-sort{% if global.scan_request_order_by == "status" %}-{{ global.scan_request_order_by_sens }}{% endif %}'></i>
 				</th>
-				<th></th>
+				<th>{{ msg.scan_request_actions }}</th>
 			</tr>
 	{% endif %}
 	{{ scan_request.display_in_list | safe }}

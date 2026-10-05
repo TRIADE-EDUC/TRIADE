@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: EntitiesGraph.js,v 1.7 2018-03-28 09:06:42 tsamson Exp $
+// $Id: EntitiesGraph.js,v 1.10 2021/12/21 10:30:24 qvarin Exp $
 
 
 define(["dojo/_base/declare",
@@ -32,7 +32,6 @@ define(["dojo/_base/declare",
              * Todo: cr�er un param�tre contenant une structure JSON d�finissant la taille du svg, les couleurs des diff�rents �l�ments
              */
             window.d3 = d3;
-            console.log(this);
         },
         postCreate: function () {
             this.inherited(arguments);
@@ -79,11 +78,14 @@ define(["dojo/_base/declare",
                 		return  "stroke: rgb("+d.color+")";	
                 	}
                 	return  "stroke: #999";
-                });
+                })
+	        	.attr("marker-end", "url(#arrow)");
 
             
             this.initNodes();
-
+            // On initialise les markers
+		    this.setDefs();
+		    
             this.simulation
                 .nodes(this.nodes)
                 .on("tick", lang.hitch(this, this.ticked));
@@ -131,12 +133,27 @@ define(["dojo/_base/declare",
                 .attr("y1", function (d) {
                 	return d.source.y;
                 })
-                .attr("x2", function (d) {
-                	return d.target.x;
-                })
-                .attr("y2", function (d) {
-                	return d.target.y;
-                });
+                .attr("x2", function(d) {
+		        	  var sx = d.source.x;
+		        	  var sy = d.source.y;
+		        	  var tx = d.target.x;
+		        	  var ty = d.target.y;
+		        	  
+		        	  // Notre ami Thal�s nous permet de raccourcir les liens pour y faire apparaitre des fl�ches
+		        	  var h = (d.target.radius*Math.abs(tx-sx))/Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
+		        	  
+		        	  return ((tx > sx) ? (tx - h) : (tx + h));
+		          })
+		          .attr("y2", function(d) {
+		        	  var sx = d.source.x;
+		        	  var sy = d.source.y;
+		        	  var tx = d.target.x;
+		        	  var ty = d.target.y;
+		        	  
+		        	  var h = (d.target.radius*Math.abs(ty-sy))/Math.sqrt((tx-sx)*(tx-sx)+(ty-sy)*(ty-sy));
+		        	  
+		        	  return ((ty > sy) ? (ty - h) : (ty + h));
+		          });
 
             this.nodeSvg.attr("transform", function (d) {
                 return "translate(" + d.x + ", " + d.y + ")";
@@ -177,7 +194,31 @@ define(["dojo/_base/declare",
         			data: node.ajaxParams
         		}).then(lang.hitch(this, this.loadSubGraph));
         		node.ajaxParams = null;
-        	}
+        	} else if (node.type == "additionnal_nodes") {
+				
+				var elements = node.elements.slice(0, node.limit);
+				node.elements.splice(0, node.limit);
+				
+				if (node.elements.length > 0) {
+					var new_name = node.name.replace(/^([0-9]+)/, node.elements.length);
+					this.renameNode(node.id, new_name);
+				} else {
+					this.removeNode(node.id);
+				}
+				
+				node.info.elements = elements;
+        		domStyle.set(this.svgNode, 'cursor', 'wait');
+        		this.svgNode.addEventListener('click', this.clickCapturingFct, true);
+        		if(this.centerNode){
+        			this.centerNode.fx = null;
+        			this.centerNode.fy = null;
+        		}
+        		this.centerNode = node;
+
+    			xhr.post('./ajax.php?module=ajax&categ=entity_graph&sub=get_next_additionnal', {
+        			data: {node: JSON.stringify(node.info)}
+        		}).then(lang.hitch(this, this.loadSubGraph)); 
+			}
         },
         labelClicked: function(node){
         	if(node.url){
@@ -257,18 +298,24 @@ define(["dojo/_base/declare",
     		}
         	return true;
         },
-        loadSubGraph: function(data){
-        	data = JSON.parse(data);
-        	
+        loadSubGraph: function(data) {
+			try {				
+				data = this.formatString(data)
+	        	data = JSON.parse(data);
+			} catch(e) {
+				// on affiche l'erreur
+				console.error(e);
+				// on evite de bloquer la page
+				data = {nodes: [], links: []};
+			}
         	for(var i=0 ; i<data.nodes.length ; i++){
-        		if(this.nodeChecker(data.nodes[i].id)){
+        		if(this.nodeChecker(data.nodes[i].id)) {
         			this.nodes.push(data.nodes[i]);
         		}
         	}
         	for(var i=0 ; i<data.links.length ; i++){
         		this.links.push(data.links[i]);
         	}
-        	
       
     		this.linkSvg = this.svg.select('#graph_links_container').selectAll("line")
 	        	.data(this.links);
@@ -283,7 +330,8 @@ define(["dojo/_base/declare",
 	        			return  "stroke: rgb("+d.color+")";	
 	        		}
 	        		return  "stroke: #999";
-	        	});
+	        	})
+	        	.attr("marker-end", "url(#arrow)");
     		this.linkSvg = linkEnter.merge(this.linkSvg);
     		this.linkSvg.exit().remove();
     		
@@ -391,5 +439,71 @@ define(["dojo/_base/declare",
 	            })
 	            .on("click", lang.hitch(this, this.nodeClicked));
         },
+	    
+	    setDefs: function() {
+		    this.svg.append("defs")
+		    	.append('marker')
+			    	.attr("id", "arrow")
+			    	.attr("viewBox", "0 0 10 10")
+			    	.attr("refX", "10")
+			    	.attr("refY", "5")
+			    	.attr("markerUnits", "strokeWidth")
+			    	.attr("markerWidth", "5")
+			    	.attr("markerHeight", "5")
+			    	.attr("orient", "auto")
+			    	.append("path")
+			    	.attr("d", "M 0 0 L 10 5 L 0 10 z")
+		    	;
+	    },
+	    renameNode: function (id, name) {
+			var node = d3.select("g[machin='" + id + "']");
+			if (node) {
+				node.select('text').text(function(d){ return name; });
+				node.select('image').text(function(d){ return name; });
+				for(var i=0 ; i < this.nodes.length; i++){
+	        		if(this.nodes[i].id == id) {
+						this.nodes[i].name = name;
+	        			break;
+	    			}	
+	    		}
+			}
+		},
+	    removeNode: function (id) {
+			var node = d3.select("g[machin='" + id + "']");
+			if (node) {
+				node.remove();
+			}
+
+			for (var i=0; i < this.nodes.length; i++) {
+        		if(this.nodes[i].id == id) {
+		    		this.nodes.splice(i, 1);
+        			break;
+    			}	
+    		}
+    		
+    		var length = this.links.length;
+			for (var i=0; i < length; i++) {
+        		if (this.links[i].source.id == id || this.links[i].target.id == id) {
+	    			// On supprime le lien
+	    			var index = this.links[i].index
+	    			this.linkSvg.filter(function (d, i) { 
+						return i == index;
+					}).remove();
+	    			this.links.splice(i, 1);
+	    			
+	    			// On recommence a 0
+	    			length = this.links.length;
+	    			i = 0;
+    			}
+    		}
+		},
+		formatString : function (encodedStr) {
+            var parser = new DOMParser();
+            // convertie les "&eacute;" en "é", etc.
+            var dom = parser.parseFromString(encodedStr, 'text/html');
+            // remplace les multiples espaces en 1 seul
+            var str = dom.body.textContent.replace(/(\s){2,}/gm, ' ');
+            return str.trim();
+        }
     });
 });

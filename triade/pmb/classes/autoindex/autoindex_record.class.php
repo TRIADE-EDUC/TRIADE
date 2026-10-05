@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: autoindex_record.class.php,v 1.18 2019-06-10 08:57:12 btafforeau Exp $
+// $Id: autoindex_record.class.php,v 1.22 2023/08/28 14:04:12 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -76,7 +76,7 @@ class autoindex_record extends autoindex_document {
 	}
 		
 	/**
-	 * RÃ©cupÃ¨re le contenu des champs de la notice Ã  indexer
+	 * Récupère le contenu des champs de la notice à indexer
 	 *
 	 * @global autoindex  
 	 * json array(
@@ -101,7 +101,7 @@ class autoindex_record extends autoindex_document {
 				if(!is_null($v['value']) && $v['value']!=='') {
 					$this->raw_text[$k]['value']=rawurldecode($v['value']);
 					if($charset!='utf-8') {
-						$this->raw_text[$k]['value'] = utf8_decode($this->raw_text[$k]['value']);
+						$this->raw_text[$k]['value'] = encoding_normalize::utf8_decode($this->raw_text[$k]['value']);
 					}
 				} else {
 					unset($this->raw_text[$k]);
@@ -109,7 +109,7 @@ class autoindex_record extends autoindex_document {
 			}
 		}		
 //TODO
-// echo "ElÃ©ments postÃ©s =<br />";
+// echo "Eléments postés =<br />";
 // print $autoindex_txt."<br />";
 // highlight_string(print_r($this->raw_text,true));
 // echo "<br />";
@@ -119,7 +119,7 @@ class autoindex_record extends autoindex_document {
 	
 	
 	/**
-	 * RÃ©cupÃ¨re la langue de l'interface
+	 * Récupère la langue de l'interface
 	 *
 	 * @return string
 	 * @access public
@@ -147,7 +147,7 @@ class autoindex_record extends autoindex_document {
 	
 	
 	/**
-	 * RÃ©cupÃ¨re l'identifiant du thÃ©saurus Ã  utiliser pour la recherche de termes.
+	 * Récupère l'identifiant du thésaurus à utiliser pour la recherche de termes.
 	 *
 	 * @return integer
 	 * @access public
@@ -165,7 +165,7 @@ class autoindex_record extends autoindex_document {
 				
 		global $charset;
 		global $msg;
-		global $caller,$thesaurus_auto_index_notice_fields,$lang,$include_path,$search_type,$user_lang;
+		global $caller,$thesaurus_auto_index_notice_fields,$lang,$include_path,$search_type,$user_lang,$xmlta_indexation_lang;
 		global $htmlfieldstype;
 		
 		if(!$htmlfieldstype) {
@@ -174,8 +174,8 @@ class autoindex_record extends autoindex_document {
 		
 		$tpl_index_auto="";
 		if ($caller=='notice' && $thesaurus_auto_index_notice_fields) {
-			
-			$fields=explode(';',$thesaurus_auto_index_notice_fields);
+			$auto_index_notice_fields = str_replace(array("\\n","\\r","\n","\r"), "", $thesaurus_auto_index_notice_fields);
+			$fields=explode(';',$auto_index_notice_fields);
 		
 			$notice_fields=new notice_doublon();
 			$tpl_field = array();
@@ -185,16 +185,28 @@ class autoindex_record extends autoindex_document {
 			
 			foreach($fields as $k=>$field){
 				$pos = stripos($field,'=');
+				$pos_selected = stripos($field, '|');
+				$field_default_selected = 0;
 				if($pos!==false) {
 					$field_name = trim(substr($field,0,$pos));
-					$field_pond = trim(substr($field,$pos+1));
+					if($pos_selected!==false) {
+						$field_pond = trim(substr($field,$pos+1, $pos_selected));
+						$field_default_selected = trim(substr($field,$pos_selected+1));
+					} else {
+						$field_pond = trim(substr($field,$pos+1));
+					}
 					$field_pond = (float) str_replace(',','.',$field_pond);
-					if($field_pond > 1 && $field_pond <=100) { 
+					if($field_pond > 1 && $field_pond <=100) {
 						$field_pond = $field_pond / 100;
 						$field_pond = round($field_pond,2);
 					}
 				} else {
-					$field_name = trim($field);
+					if($pos_selected!==false) {
+						$field_name = trim(substr($field,0,$pos_selected));
+						$field_default_selected = trim(substr($field,$pos_selected+1));
+					} else {
+						$field_name = trim($field);
+					}
 					$field_pond = 1;
 				}			
 				
@@ -219,14 +231,16 @@ class autoindex_record extends autoindex_document {
 					}	
 					
 					$checked = '';
-					if( ($search_type!='autoindex') || (isset($_POST['chk_'.$tpl_field[$i]['name']])) ) {
+					if( ($search_type!='autoindex') || (isset($_POST['chk_'.$tpl_field[$i]['name']])) 
+							|| (!isset($_POST['chk'.$tpl_field[$i]['name']]) && !isset($_POST['chk_hidden'.$tpl_field[$i]['name']]) && $field_default_selected) ) {
 						$checked="checked='checked'";
 					}
 					
 					if($j%3==0) {
 						$tpl_selector_field.= '</tr><tr>';
 					}
-					$tpl_selector_field.= "<td><input type='checkbox' id='chk_".$tpl_field[$i]['name']."' name='chk_".$tpl_field[$i]['name']."' value='1' ".$checked." />&nbsp;";
+					$tpl_selector_field.= "<td><input type='checkbox' id='chk_".$tpl_field[$i]['name']."' name='chk_".$tpl_field[$i]['name']."' value='1' ".$checked." />";
+					$tpl_selector_field.= "<input type='hidden' id='chk_hidden_".$tpl_field[$i]['name']."' name='chk_hidden_".$tpl_field[$i]['name']."' value='1' />&nbsp;";
 					$tpl_selector_field.= "<label for='chk_".$tpl_field[$i]['name']."'>".htmlentities($notice_fields::$fields[$field_name]['label'],ENT_QUOTES,$charset)."</label></td>";
 					$j++;
 					$i++;
@@ -249,6 +263,10 @@ class autoindex_record extends autoindex_document {
 				<div id='autoindex_selectors' $display >
 				<div id='autoindex_selector_lang'>".$msg["autoindex_selector_lang"].
 				"<select name='user_lang' id='user_lang' class='saisie-20em' \">";
+			//Langue par défaut d'indexation de notice
+			if(empty($user_lang)) {
+				$user_lang = $xmlta_indexation_lang;
+			}
 			if(!$user_lang) {
 				$combo .= "<option value='' selected='selected' >--</option>";
 			} else {
@@ -315,7 +333,7 @@ class autoindex_record extends autoindex_document {
 		return $tpl_index_auto;
 	}
 		
-	function index_list(){
+	public function index_list(){
 		global $charset,$base_path,$base_url;
 		global $categ_browser_autoindex;
 		global $thesaurus_mode_pmb;
@@ -362,7 +380,7 @@ class autoindex_record extends autoindex_document {
 				$display .= $tcateg->libelle;
 			}
 			if($tcateg->has_child) {
-				//$browser_content .= "<a href='$base_url".$tcateg->id."&id2=".$tcateg->id.'&id_thes='.$tcateg->thes->id_thesaurus."'>";//On mets le bon identifiant de thÃ©saurus
+				//$browser_content .= "<a href='$base_url".$tcateg->id."&id2=".$tcateg->id.'&id_thes='.$tcateg->thes->id_thesaurus."'>";//On mets le bon identifiant de thésaurus
 				$browser_content .= "<img src='".get_url_icon('folderclosed.gif')."' style='border:0px; margin:3px 3px'/>";
 			} else {
 				$browser_content .= "<img src='".get_url_icon('doc.gif')."' style='border:0px; margin:3px 3px'/>";

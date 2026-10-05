@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -154,7 +154,7 @@ function enrg(i) {
 	</tr>
 <?php
 $saisie_classe=$_POST["saisie_classe"];
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 $cl=$data[0][0];
@@ -166,7 +166,7 @@ if (file_exists("./common/config.centralStageClient.php")) {
 	$p=PASSCENTRALSTAGE;
 }
 
-for($i=0;$i<count($data);$i++) {
+for($i=0;$i<countTriade($data);$i++) {
 		print "<tr id=\"tr$i\" class=\"tabnormal\" onmouseover=\"this.className='tabover'\" onmouseout=\"this.className='tabnormal'\" >";
 		$nomprenom="<font class='T2'>".ucwords($data[$i][2])." ".ucfirst($data[$i][3])."</font>";
 		print "<td valign='top' >&nbsp;<input type='hidden' name='ideleve_$i' value='".$data[$i][1]."' id='ideleve_$i'  />";
@@ -180,7 +180,7 @@ for($i=0;$i<count($data);$i++) {
 		$nourri="";
 		$indemnitestage="";
 		$datastageeleve=affiche_stage_multiple($data[$i][1]);
-		for($j=0;$j<count($datastageeleve);$j++) {
+		for($j=0;$j<countTriade($datastageeleve);$j++) {
 			$num_stage=$datastageeleve[$j][0];
 			$id_entreprise=$datastageeleve[$j][1];
 			$service=$datastageeleve[$j][2];

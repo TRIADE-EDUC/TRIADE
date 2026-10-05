@@ -33,7 +33,7 @@ function recupOral($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -51,7 +51,7 @@ function recupOral($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -102,7 +102,7 @@ function recupCont1($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -120,7 +120,7 @@ function recupCont1($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -171,7 +171,7 @@ function recupCont2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -189,7 +189,7 @@ function recupCont2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -240,7 +240,7 @@ function recupTecrit($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -258,7 +258,7 @@ function recupTecrit($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -309,7 +309,7 @@ function recupTrvx($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -327,7 +327,7 @@ function recupTrvx($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -378,7 +378,7 @@ function recupEval1($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -396,7 +396,7 @@ function recupEval1($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -447,7 +447,7 @@ function recupEval2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -465,7 +465,7 @@ function recupEval2($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -516,7 +516,7 @@ function recupCont($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -534,7 +534,7 @@ function recupCont($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -585,7 +585,7 @@ function recupSynth($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNC(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'
@@ -603,7 +603,7 @@ function recupSynth($idEleve,$idMatiere,$dateDebut,$dateFin,$idprof) {
 		TRUNCATE(coef,2),
 		notationsur
 	FROM
-		${prefixe}notes
+		{$prefixe}notes
 	WHERE
 		elev_id='$idEleve'
 	AND code_mat='$idMatiere'

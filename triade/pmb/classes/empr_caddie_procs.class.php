@@ -1,19 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: empr_caddie_procs.class.php,v 1.2 2016-11-18 13:16:05 dgoron Exp $
+// $Id: empr_caddie_procs.class.php,v 1.3.12.1 2025/03/20 08:37:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once ($class_path."/caddie_procs.class.php");
 
-// dÃ©finition de la classe de gestion des procÃ©dures de paniers
+// définition de la classe de gestion des procédures de paniers
 
 class empr_caddie_procs extends caddie_procs {
 	
-	static $module = 'circ';
-	static $table = 'empr_caddie_procs';
+	public static $module = 'circ';
+	public static $table = 'empr_caddie_procs';
+	
+	protected static function get_interface_form_instance() {
+	    return new interface_circ_form('maj_proc');
+	}
 	
 	public static function get_parameters_remote() {
 		$allowed_proc_types = array("PEMPS", "PEMPA");

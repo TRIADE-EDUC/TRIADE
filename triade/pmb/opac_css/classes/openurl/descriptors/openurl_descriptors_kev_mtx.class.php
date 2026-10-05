@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: openurl_descriptors_kev_mtx.class.php,v 1.5 2019-02-21 11:04:30 ngantier Exp $
+// $Id: openurl_descriptors_kev_mtx.class.php,v 1.6 2020/12/10 13:42:45 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -210,7 +210,7 @@ class openurl_descriptor_identifier_kev_mtx_referrer extends openurl_descriptor_
 	}
 	
 	public function serialize_infos($debug=false){
-		//TODO : vÃ©rifier ce info:sid
+		//TODO : vérifier ce info:sid
 		$this->infos = array();
 		$this->infos[$this->entityType.'_id'] = "info:sid/".$this->adr;
 		if($debug) highlight_string("Referrer (identifier):".print_r($this->infos,true));
@@ -300,7 +300,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
      				);   				
     				break;
     			case "edition" :
-    				//mention d'Ã©dition
+    				//mention d'édition
      				 $this->search_infos[] =array(
     					'id' => $this->crit_id['mention_edition'],
     					'op' => "BOOLEAN",
@@ -331,7 +331,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
     				);      				
     				break;
     			case "place" :
-					//lieu d'Ã©dition
+					//lieu d'édition
     				$this->search_infos[] =array(
     					'id' => $this->crit_id['pub_place'],
     					'op' => "BOOLEAN",
@@ -339,7 +339,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
     				);      				
     				break;
     			case "date" :
-    				//annÃ©e d'Ã©dition
+    				//année d'édition
     				$this->search_infos[] =array(
     					'id' => $this->crit_id['year_edition'],
     					'op' => "CONTAINS_AT_LEAST",
@@ -431,7 +431,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
 				case "205" :
 					foreach($f['s'] as $s){
 						switch($s['c']){
-							//mention d'Ã©dition
+							//mention d'édition
 							case "a" :
 								$this->infos[$this->entityType.'.edition'] = $s['value'];
 								break;
@@ -566,6 +566,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
 					}
 					break;
 				case "210" :
+				case "214" :
 				case "219":
 					foreach($f['s'] as $s){
 						switch($s['c']){
@@ -573,7 +574,7 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
 							case "a" :
 								$this->infos[$this->entityType.'.place'] = $s['value'];
 								break;
-							//Ã©diteur
+							//éditeur
 							case "c" :
 								$this->infos[$this->entityType.'.pub'] = $s['value'];
 								break;
@@ -613,14 +614,15 @@ class openurl_descriptor_byval_kev_mtx_book extends openurl_descriptor_byval_kev
 					}
 					break;
 				case "210" :
-				case "219":
+				case "214" :
+				case "219" :
 					foreach($f['s'] as $s){
 						switch($s['c']){
 							//lieu de publication
 							case "a" :
 								$this->infos[$this->entityType.'.place'] = $s['value'];
 								break;
-							//Ã©diteur
+							//éditeur
 							case "c" :
 								$this->infos[$this->entityType.'.pub'] = $s['value'];
 								break;
@@ -949,6 +951,7 @@ class openurl_descriptor_byval_kev_mtx_journal extends openurl_descriptor_byval_
 					}
 					break;
 				case "210" :
+				case "214" :
 				case "219":
 					foreach($f['s'] as $s){
 						switch($s['c']){
@@ -981,6 +984,7 @@ class openurl_descriptor_byval_kev_mtx_journal extends openurl_descriptor_byval_
 					}
 					break;
 				case "210" :
+				case "214" :
 				case "219":
 					foreach($f['s'] as $s){
 						switch($s['c']){
@@ -1003,7 +1007,7 @@ class openurl_descriptor_byval_kev_mtx_journal extends openurl_descriptor_byval_
 						}
 					}
 					break;
-				//lien avec le pÃ©rio pour un article
+				//lien avec le pério pour un article
 				case "461" :
 					foreach($f['s'] as $s){
 						switch($s['c']){
@@ -1044,7 +1048,7 @@ class openurl_descriptor_byval_kev_mtx_journal extends openurl_descriptor_byval_
 						}
 					}
 					break;	
-				//lien avec le pÃ©rio pour un article
+				//lien avec le pério pour un article
 				case "461" :
 					foreach($f['s'] as $s){
 						switch($s['c']){

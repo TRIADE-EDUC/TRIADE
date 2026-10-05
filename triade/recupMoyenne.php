@@ -21,7 +21,7 @@ $moyenClasseGenT3="";
 
 if ($tri == "trimestre1") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre1",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
        	 	$dateDebut=$dateRecup[$j][0];
 	       	 $dateFin=$dateRecup[$j][1];
 	}
@@ -35,7 +35,7 @@ if ($tri == "trimestre1") {
 
 if ($tri == "trimestre2") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre2",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
 	       	 $dateDebut=$dateRecup[$j][0];
         	$dateFin=$dateRecup[$j][1];	
 	}
@@ -49,7 +49,7 @@ if ($tri == "trimestre2") {
 	
 if ($tri == "trimestre3") {
 	$dateRecup=recupDateTrimByIdclasse("trimestre3",$idclasse,$anneeScolaire);
-	for($j=0;$j<count($dateRecup);$j++) {
+	for($j=0;$j<countTriade($dateRecup);$j++) {
         	$dateDebut=$dateRecup[$j][0];
 	        $dateFin=$dateRecup[$j][1];
 	}

@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET
+ *   copyright            : (C) 2000 E. TAESCH - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -29,8 +29,8 @@ include("librairie_php/db_triade.php");
 $cnx=cnx();
 
 //variables utiles
-$mySession[Sn]=$_SESSION["nom"];
-$mySession[Sp]=$_SESSION["prenom"];
+$mySession['Sn']=$_SESSION["nom"];
+$mySession['Sp']=$_SESSION["prenom"];
 $pid=$_SESSION["id_pers"];
 
 $cgrp=$_POST["sClasseGrp"];
@@ -49,7 +49,7 @@ $libel=$nomClasse." ".$nomGrp." ".$nomMat;
 ?>
 <HTML>
 <HEAD>
-<title>Enseignant - Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
@@ -60,7 +60,7 @@ $libel=$nomClasse." ".$nomGrp." ".$nomMat;
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 </head>
-<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
+<body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <?php include("./librairie_php/lib_licence.php"); ?>
 <SCRIPT language="JavaScript" src="./librairie_js/<?php print $_SESSION["membre"]?>.js"></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
@@ -80,7 +80,7 @@ $libel=$nomClasse." ".$nomGrp." ".$nomMat;
 <?php
 $idclasse=$_POST["sClasseGrp"];
 $valeur=recupDateTrimIdclasse($idclasse,$anneeScolaire); 
-if (count($valeur)) {
+if (countTriade($valeur)) {
 ?>
 	<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0  name="visunote" src="noteviescolaire3.php?sClasseGrp=<?php print $_POST["sClasseGrp"]?>&sMat=<?php print "-10"?>&examen=<?php print $examen ?>" width=100% height=100%></iframe>
 <?php
@@ -97,17 +97,17 @@ if (count($valeur)) {
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

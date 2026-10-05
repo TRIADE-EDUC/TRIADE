@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// ¬© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_atal.inc.php,v 1.9 2019-01-17 13:44:06 dgoron Exp $
+// $Id: func_atal.inc.php,v 1.11 2021/12/09 14:22:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// r√©cup√©ration des donn√©es d'un concurrent :
-/* 	la 995 reconstitu√©e est du type : 
+// rÈcupÈration des donnÈes d'un concurrent :
+/* 	la 995 reconstituÈe est du type : 
   <f c='995' ind='  '>
     <s c='6'>Roman</s>
     <s c='f'>01000040</s>
@@ -16,38 +16,37 @@ if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
     <s c='5'>ADU</s>
   </f>
 
-$4 1 : serait l√† pour dire livre ? >> type doc 
-$5 : ADU = public vis√© ? : >> dans les stats
+$4 1 : serait l‡ pour dire livre ? >> type doc 
+$5 : ADU = public visÈ ? : >> dans les stats
 $6 : la section, en l'absence on pencherait pour les documentaires >> docs section
-$a : propri√©taire mais mal renseign√©
+$a : propriÈtaire mais mal renseignÈ
 $k : cote
-$f : code barre : distinguer le propri√©taire avec le CB de la BDP d√©positaire...
+$f : code barre : distinguer le propriÈtaire avec le CB de la BDP dÈpositaire...
 */
 
 
 function recup_noticeunimarc_suite($notice) {
-	} // fin recup_noticeunimarc_suite = fin r√©cup√©ration des variables propres BDP : rien de plus
+	} // fin recup_noticeunimarc_suite = fin rÈcupÈration des variables propres BDP : rien de plus
 	
 function import_new_notice_suite() {
 	} // fin import_new_notice_suite
 			
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
-	
 	global $prix, $notice_id, $info_995, $typdoc_995, $tdoc_codage, $book_lender_id, 
-		$section_995, $sdoc_codage, $book_statut_id, $locdoc_codage, $codstatdoc_995, $statisdoc_codage,
-		$cote_mandatory, $book_location_id ;
+		$sdoc_codage, $book_statut_id, $codstatdoc_995, $statisdoc_codage,
+		$cote_mandatory, $book_location_id, $nb_expl_ignores;
 		
 	// lu en 010$d de la notice
 	$price = $prix[0];
 	
-	// la zone 995 est r√©p√©table
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
+	$nb_infos_995 = count($info_995);
+	// la zone 995 est rÈpÈtable
+	for ($nb_expl = 0; $nb_expl < $nb_infos_995; $nb_expl++) {
 		/* RAZ expl */
 		$expl = array();
 		
-		/* pr√©paration du tableau √† passer √† la m√©thode */
+		/* prÈparation du tableau ‡ passer ‡ la mÈthode */
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
 		$expl['notice']     = $notice_id ;
 		$expl['cote'] 		= $info_995[$nb_expl]['k'];
@@ -57,7 +56,7 @@ function traite_exemplaires () {
 		$data_doc=array();
 		$data_doc['tdoc_libelle'] = $typdoc_995[$info_995[$nb_expl]['4']];
 		if (!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle'] = "Reprise LIVRE -".$info_995[$nb_expl]['4']."-" ;
-		$data_doc['duree_pret'] = 15 ; /* valeur par d√©faut */
+		$data_doc['duree_pret'] = 15 ; /* valeur par dÈfaut */
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['4'] ;
 		if ($tdoc_codage) $data_doc['tdoc_owner'] = $book_lender_id ;
 			else $data_doc['tdoc_owner'] = 0 ;
@@ -85,7 +84,7 @@ function traite_exemplaires () {
 			else $data_doc['statisdoc_owner'] = 0 ;
 		$expl['codestat'] = docs_codestat::import($data_doc);
 		
-		// calcul du propr√©taire sur le CB car les 995 ne sont pas propres propres
+		// calcul du proprÈtaire sur le CB car les 995 ne sont pas propres propres
 		if (substr((string)$expl['cb'],0,6)=="337000") $expl['expl_owner'] = 1 ;
 			else  $expl['expl_owner']= 2 ;
 		
@@ -96,7 +95,7 @@ function traite_exemplaires () {
 		$expl_id = exemplaire::import($expl);
 		if ($expl_id == 0) {
 			$nb_expl_ignores++;
-			}
+		}
                       	
 		//debug : affichage zone 995 
 		/*
@@ -119,7 +118,7 @@ function traite_exemplaires () {
 		} // fin for
 	} // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction sp√©cifique d'export de la zone 995
+// fonction spÈcifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

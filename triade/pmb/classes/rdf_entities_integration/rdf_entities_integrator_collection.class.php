@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: rdf_entities_integrator_collection.class.php,v 1.5 2018-06-26 14:48:14 apetithomme Exp $
+// $Id: rdf_entities_integrator_collection.class.php,v 1.7 2020/11/26 13:29:06 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -48,7 +48,11 @@ class rdf_entities_integrator_collection extends rdf_entities_integrator_authori
 	}
 	
 	protected function init_special_fields() {
-		$this->special_fields = array_merge(parent::init_special_fields(), array(
+	    $this->special_fields = array_merge(parent::init_special_fields(), array(
+	        'http://www.pmbservices.fr/ontology#thumbnail_url' => array(
+	            "method" => array($this,"insert_thumbnail_url"),
+	            "arguments" => array(AUT_TABLE_COLLECTIONS)
+	        ),
 		));
 		return $this->special_fields;
 	}
@@ -57,7 +61,7 @@ class rdf_entities_integrator_collection extends rdf_entities_integrator_authori
 		// Audit
 		if ($this->integration_type && $this->entity_id) {
 			$query = 'insert into audit (type_obj, object_id, user_id, type_modif, info, type_user) ';
-			$query.= 'values ("'.AUDIT_COLLECTION.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.addslashes(json_encode(array("uri" => $uri))).'", "'.$this->contributor_type.'")';
+			$query.= 'values ("'.AUDIT_COLLECTION.'", "'.$this->entity_id.'", "'.$this->contributor_id.'", "'.$this->integration_type.'", "'.$this->create_audit_comment($uri).'", "'.$this->contributor_type.'")';
 			pmb_mysql_query($query);
 			// Indexation
 			collection::update_index($this->entity_id);

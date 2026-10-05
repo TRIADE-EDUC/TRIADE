@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_timeline_datasource_records.class.php,v 1.4 2019-01-07 12:40:18 ngantier Exp $
+// $Id: cms_module_timeline_datasource_records.class.php,v 1.4 2019/01/07 12:40:18 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -20,7 +20,7 @@ class cms_module_timeline_datasource_records extends cms_module_timeline_datasou
 	}
 		
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	 */
 	public function get_available_selectors(){
 		return array(
@@ -29,23 +29,23 @@ class cms_module_timeline_datasource_records extends cms_module_timeline_datasou
 	}
 
 	/**
-	 * DÃ©finition des champs utilisables pour la valorisation 
-	 * de la structure JSON renvoyÃ©e par la source
+	 * Définition des champs utilisables pour la valorisation 
+	 * de la structure JSON renvoyée par la source
 	 */
 	protected function init_usable_fields(){
-		/** Les diffÃ©rents champs de titres + les champs perso non rÃ©petable de type small texte **/
+		/** Les différents champs de titres + les champs perso non répetable de type small texte **/
 		$this->title_fields = array_merge(array(
 			"tit1" => $this->msg['cms_module_timeline_datasource_records_main_title'],
 			"tit2" => $this->msg['cms_module_timeline_datasource_records_other_title'],
 			"tit3" => $this->msg['cms_module_timeline_datasource_records_parallel_title']
 		), $this->get_perso_fields('text', 'small_text'));
 
-		/** Le champs rÃ©sumÃ© + les champs de type text large unique **/
+		/** Le champs résumé + les champs de type text large unique **/
 		$this->resume_fields = array_merge(array(
 			"n_resume" => $this->msg['cms_module_timeline_datasource_records_resume']
 		), $this->get_perso_fields('text', 'text'));
 		
-		/** Le champs rÃ©sumÃ© + les champs de type text large unique **/
+		/** Le champs résumé + les champs de type text large unique **/
 		$this->image_fields = array_merge(array(
 				"thumbnail_url" => $this->msg['cms_module_timeline_datasource_records_thumbnail_url']
 		), $this->get_perso_fields('url', 'text'));

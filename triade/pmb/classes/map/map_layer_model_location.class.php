@@ -1,18 +1,18 @@
 <?php
 
 // +-------------------------------------------------+
-// Â© 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_layer_model_location.class.php,v 1.3 2016-11-05 14:49:07 ngantier Exp $
+// $Id: map_layer_model_location.class.php,v 1.4.8.2 2025/04/25 12:05:30 qvarin Exp $
 
-if (stristr($_SERVER['REQUEST_URI'], ".class.php"))
-    die("no access");
+if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path . "/map/map_layer_model.class.php");
 
 /**
  * class map_layer_model_location
- * Classe reprÃ©sentant le modÃ¨le de donnÃ©es pour des localisations
+ * Classe représentant le modèle de données pour des localisations
  */
 class map_layer_model_location extends map_layer_model {
     /** Aggregations: */
@@ -23,21 +23,20 @@ class map_layer_model_location extends map_layer_model {
 
     /**
      * Va chercher et instancier les emprises correspondantes.
-     * Peut appeler la classe map_model_authority pour les emprises des autoritÃ©s
-     * utilisÃ©es pour indexer la notice
+     * Peut appeler la classe map_model_authority pour les emprises des autorités
+     * utilisées pour indexer la notice
      *
      * @return void
      * @access public
      */
     public function fetch_datas() {
-        global $dbh;
         global $pmb_map_holds_location_color;
 
         $this->holds = array();
 
         if (count($this->ids) > 0) {
             $req = "select map_emprises.map_emprise_id, map_emprises.map_emprise_obj_num, AsText(map_emprises.map_emprise_data) as map, map_hold_areas.bbox_area as bbox_area, map_hold_areas.center as center from map_emprises join map_hold_areas on map_emprises.map_emprise_id = map_hold_areas.id_obj where map_emprises.map_emprise_type=" . TYPE_LOCATION . " and map_emprises.map_emprise_obj_num in (" . implode(",", $this->ids) . ")";
-            $res = pmb_mysql_query($req, $dbh);
+            $res = pmb_mysql_query($req);
             if (pmb_mysql_num_rows($res)) {
                 while ($r = pmb_mysql_fetch_object($res)) {
                     $geometric = strtolower(substr($r->map, 0, strpos($r->map, "(")));
@@ -54,8 +53,6 @@ class map_layer_model_location extends map_layer_model {
         $this->color = $pmb_map_holds_location_color;
     }
 
-// end of member function fetch_datas
-
     public function get_layer_model_type() {
         return "location";
     }
@@ -68,5 +65,3 @@ class map_layer_model_location extends map_layer_model {
         $this->name = $name;
     }
 }
-
-// end of map_layer_model_records

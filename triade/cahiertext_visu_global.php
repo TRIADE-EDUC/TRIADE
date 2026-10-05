@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -31,7 +31,7 @@ $ident=array('nom','Sn','prenom','Sp','membre','Sm','id_pers','Spid');
 $mySession=hashSessionVar($ident);
 unset($ident);
 if (($_SESSION["membre"] == "menueleve") || ($_SESSION["membre"] == "menuparent")) {
-	$idclasse=chercheIdClasseDunEleve($mySession[Spid]);
+	$idclasse=chercheIdClasseDunEleve($mySession['Spid']);
 }
 if (isset($_GET["saisie_classe"])) { 
 	$idclasse=$_GET["saisie_classe"]; 
@@ -47,12 +47,26 @@ $nomclasse=chercheClasse($idclasse);
 <?php include_once("./common/config5.inc.php"); header('Content-type: text/html; charset='.CHARSET); ?>
 <HTML>
 <HEAD>
-<title>Triade - Compte de <?php print ucwords($mySession[Sp])." ".strtoupper($mySession[Sn])?></title>
+<title>Triade - Compte de <?php print ucwords($mySession['Sp'])." ".strtoupper($mySession['Sn'])?></title>
 <META http-equiv="CacheControl" content = "no-cache">
 <META http-equiv="pragma" content = "no-cache">
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css-v4.css">
+<style>
+.visu-form { background:#fff; border:1px solid #dde0f0; border-radius:10px; padding:10px 14px; margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:Electrolize,Trebuchet MS,Arial,sans-serif; }
+.visu-lbl  { font-size:13px; font-weight:700; color:#080A66; white-space:nowrap; }
+.btn-action { font-size:12px; font-weight:700; color:#fff; border:none; border-radius:6px; padding:7px 14px; cursor:pointer; transition:background .12s; font-family:Electrolize,Trebuchet MS,Arial,sans-serif; }
+.btn-vdevoir   { background:#1565c0; }
+.btn-vcontenu  { background:#283593; }
+.btn-vobjectif { background:#4527a0; }
+.btn-vprint    { background:#37474f; }
+.btn-action:hover { filter:brightness(1.12); }
+.nav-row { display:flex; justify-content:space-between; align-items:center; margin:10px 4px; }
+.btn-nav { font-size:12px; font-weight:700; color:#fff; background:#1565c0; border:none; border-radius:6px; padding:7px 16px; cursor:pointer; font-family:Electrolize,Trebuchet MS,Arial,sans-serif; }
+.btn-nav:hover { background:#1976d2; }
+</style>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
@@ -105,21 +119,19 @@ if (isset($_GET["devoirvisu"])) {
 <table width='100%' border='0' >
 <ul>
 <tr><td colspan=2>
-<form method=post name="formulaire" action="cahiertext_visu_global.php">
-<table border=0>
-<tr><td>
-<?php print LANGPROFN ?> <input type=text value="<?php print $date ?>" name='saisie_date' size='12' class='bouton2' />
-<?php
-include_once("librairie_php/calendar.php");
-calendar('id1','document.formulaire.saisie_date',$_SESSION["langue"],"0");
-?>
-</td><td>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS98 ?>","create"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS92 ?>","contenu"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicSubmit("<?php print LANGMESS95 ?>","objectif"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicImprimer(); //text,nomInput</script>&nbsp;&nbsp;
-</td></tr></table>
-<input type="hidden" name="saisie_classe" value="<?php print $idclasse?>" />
+<form method="post" name="formulaire" action="cahiertext_visu_global.php">
+<div class="visu-form">
+  <span class="visu-lbl"><?php print LANGPROFN ?></span>
+  <div style="display:inline-flex;align-items:center;gap:5px;">
+    <input type="text" value="<?php print $date ?>" name="saisie_date" size="13" class="bouton2">
+    <?php include_once("librairie_php/calendar.php"); calendar('id1','document.formulaire.saisie_date',$_SESSION["langue"],"0"); ?>
+  </div>
+  <button type="submit" name="create"   value="1" class="btn-action btn-vdevoir"><?php print LANGMESS98 ?></button>
+  <button type="submit" name="contenu"  value="1" class="btn-action btn-vcontenu"><?php print LANGMESS92 ?></button>
+  <button type="submit" name="objectif" value="1" class="btn-action btn-vobjectif"><?php print LANGMESS95 ?></button>
+  <button type="button" onclick="window.print()" class="btn-action btn-vprint">Imprimer</button>
+</div>
+<input type="hidden" name="saisie_classe" value="<?php print $idclasse ?>">
 </form>
 </ul>
 <?php 
@@ -162,6 +174,8 @@ function envoiDevoir(iddevoir) {
 
 <?php
 $nb=4; // nombre de jour à afficher
+
+
 print "<table border=0    align='center' height='100%' width='100%' >";
 print "<tr >";
 for($i=0;$i<=$nb;$i++) {
@@ -178,17 +192,14 @@ for($i=0;$i<=$nb;$i++) {
 	$date2=dateForm($date2);
 	if ($devoirvisu == 0) {
 		$data=affcontenuScolaireParent($idclasse,$date2,"date_contenu");
-		// id_class_or_grp, matiere_id, date_saisie, heure_saisie, date_contenu, contenu, classorgrp, id, number, idprof
 		$sujet=LANGMESS92;
 		$devoirvisu=0;
 	}elseif ($devoirvisu == 2) {
 		$data=affobjectifScolaireParent($idclasse,$date2,"date_contenu");
-		// id_class_or_grp, matiere_id, date_saisie, heure_saisie, date_contenu, objectif, classorgrp, id, number_obj, idprof
 		$sujet=LANGMESS95;
 		$devoirvisu=2;
 	}else{
 		$data=affdevoirScolaireParent($idclasse,$date2,"date_devoir");
-		// id_class_or_grp, matiere_id, date_saisie, heure_saisie, date_devoir, texte, classorgrp, id, number, idprof,tempsestimedevoir
 		$sujet=LANGMESS98;
 		$devoirvisu=1;
 		$devoir=1;
@@ -198,19 +209,19 @@ for($i=0;$i<=$nb;$i++) {
 	print "<img src='image/commun/on1.gif' align=center width=8 height=8> <b><u>$sujet</u> :</b><br>";
 	print "</div>";
 	$cumultempsestime=0;
-	for($j=0;$j<count($data);$j++) {
-		$tempsestime=$data[$j][11];
-		$cumultempsestime+=conv_en_seconde($data[$j][10]);
+	$bgcolor="#CCCCCC";
+	$affiche=0;
+	for($j=0;$j<countTriade($data);$j++) {
+		$tempsestime=$data[$j][10] ?? null;
+		if ($devoirvisu == 1 && isset($data[$j][10]) && trim((string)$data[$j][10]) != '') {
+			$cumultempsestime+=conv_en_seconde($data[$j][10]);
+		}
 		if (($tempsestime != "00:00:00") && ($devoirvisu==1) && (trim($tempsestime) != "") ) {
 			$tempsestime="<br /><font class='T1'>".LANGMESS104." ".timeForm($tempsestime)."</font>";
 		}
-		if (isset($_POST["contenu"])) {
-			$contenu=$data[$j][5];
-			if (trim($contenu) == "") { continue; }
-		}else{
-			$contenu=$data[$j][5];
-			if (trim($contenu) == "") { continue; }
-		}
+		$contenu=$data[$j][5];
+		if (trim($contenu) == "") { continue; }
+		$affiche=1;
 
 		$number=$data[$j][8];
 		if ($bgcolor == "#CCCCCC") {
@@ -221,14 +232,15 @@ for($i=0;$i<=$nb;$i++) {
 
 		$datafile=recupPieceJointe($number); //md5,nom,etat,idpiecejointe
 		$lienFichier="<br>";
-		for($F=0;$F<count($datafile);$F++) {
+		for($F=0;$F<countTriade($datafile);$F++) {
 			$fichier=$datafile[$F][1];
 			$md5=$datafile[$F][0];
 			$lienFichier.="<img src='image/stockage/defaut.gif' align='center'> ".LANGMESS105." : <a href='telecharger.php?fichier=data/DevoirScolaire/${md5}&fichiername=$fichier' target='_blank' >".trunchaine($fichier,20)."</a><br>";
-			
+
 		}
-		print "<div style=\"  border:solid 1px black;background-color:$bgcolor \"> ";
+		print "<div style=\"  border:solid 1px black;background-color:$bgcolor;padding:3px \"> ";
 		if ($_SESSION["membre"] == "menuprof") {
+			$id=$data[$j][7];
 			if ($devoirvisu == "0") $verifedit=verifEditeContenu($id,$_SESSION["id_pers"]);
 			if ($devoirvisu == "2") $verifedit=verifEditeObjectif($id,$_SESSION["id_pers"]);
 			if ($devoirvisu == "1") $verifedit=verifEditeDevoir($id,$_SESSION["id_pers"]);
@@ -244,8 +256,11 @@ for($i=0;$i<=$nb;$i++) {
 		print "$lienFichier";
 		print "</div>";
 	}
+	if ($affiche == 0) {
+		print "<font class='T1'><i>-</i></font>";
+	}
 	if ($devoir == 1)
-	print "<br><div style=' height:20; border:solid 1px black;' id='coulBar0' ><font class='T1'  id='menumodule1' >&nbsp;".LANGMESS108."&nbsp;:&nbsp;".timeForm(calcul_hours($cumultempsestime))."</font></div>";
+	print "<br><div style=' height:20; border:solid 1px black;' id='coulBar0' ><font class='T1' id='menumodule1' >&nbsp;<font size=1>".LANGMESS108."&nbsp;:&nbsp;".timeForm(calcul_hours($cumultempsestime))."</font></font></div>";
 	print "</td>";
 }
 print "</tr>";
@@ -257,15 +272,10 @@ $nb=$nb + 1;
 $dateS=datesuivante_nb($date,$nb);
 $dateP=dateprecedent_nb($date,$nb);
 ?>
-<table border='0' width='100%' align='center' >
-<tr><td align=left>
-&nbsp;&nbsp;<input type=button value="<-- <?php print LANGPROF35 ?>"  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" onclick="open('cahiertext_visu_global.php?iddate=<?php print $dateP ?>&id=<?php print $idclasse?>&devoirvisu=<?php print $devoirvisu?>','devoir','')" >
-</td>
-<td align=right>
-&nbsp;&nbsp;
-<input type=button value="<?php print LANGPROF36 ?> --> "  STYLE="font-family: Arial;font-size:10px;color:#CC0000;background-color:#CCCCFF;font-weight:bold;" onclick="open('cahiertext_visu_global.php?iddate=<?php print $dateS ?>&id=<?php print $idclasse?>&devoirvisu=<?php print $devoirvisu?>','devoir','')" >
-</td></tr>
-</table>
+<div class="nav-row">
+  <button type="button" class="btn-nav" onclick="open('cahiertext_visu_global.php?iddate=<?php print $dateP ?>&id=<?php print $idclasse?>&devoirvisu=<?php print $devoirvisu?>','devoir','')">&#8592; <?php print LANGPROF35 ?></button>
+  <button type="button" class="btn-nav" onclick="open('cahiertext_visu_global.php?iddate=<?php print $dateS ?>&id=<?php print $idclasse?>&devoirvisu=<?php print $devoirvisu?>','devoir','')"> <?php print LANGPROF36 ?> &#8594;</button>
+</div>
 </td></tr></table>
 </BODY>
 </HTML>

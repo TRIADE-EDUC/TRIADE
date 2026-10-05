@@ -5,8 +5,9 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_common_view_charte.xml,v 1.1 2019-05-09 09:26:02 ccraig Exp $ -->
+$Id: cms_module_common_view_charte.xml,v 1.2 2019/10/25 09:10:34 jlaurent Exp $ -->
 
 <XMLlist>
 	<entry code='cms_module_common_view_charte_css'>CSS associée</entry>
+	<entry code='cms_module_common_view_charte_modal_only_connected'>Afficher uniquement aux utilisateurs connectés</entry>
 </XMLlist>

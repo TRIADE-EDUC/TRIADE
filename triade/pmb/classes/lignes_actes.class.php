@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2005 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: lignes_actes.class.php,v 1.33 2019-03-04 10:13:22 dbellamy Exp $
+// $Id: lignes_actes.class.php,v 1.37 2021/12/08 13:54:58 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,27 +10,27 @@ if(!defined('TYP_ACT_CDE')) define('TYP_ACT_CDE', 0);	//				0 = Commande
 if(!defined('TYP_ACT_DEV')) define('TYP_ACT_DEV', 1);	//				1 = Demande de devis
 if(!defined('TYP_ACT_LIV')) define('TYP_ACT_LIV', 2);	//				2 = Bon de Livraison
 if(!defined('TYP_ACT_FAC')) define('TYP_ACT_FAC', 3);	//				3 = Facture
-if(!defined('TYP_ACT_RENT_ACC')) define('TYP_ACT_RENT_ACC', 4);	//		4 = Demande/DÃ©compte de location
+if(!defined('TYP_ACT_RENT_ACC')) define('TYP_ACT_RENT_ACC', 4);	//		4 = Demande/Décompte de location
 if(!defined('TYP_ACT_RENT_INV')) define('TYP_ACT_RENT_INV', 5);	//		5 = Facture de Location
 
 if(!defined('STA_ACT_ALL')) define('STA_ACT_ALL', -1);	//Statut acte	-1 = Tous
 if(!defined('STA_ACT_AVA')) define('STA_ACT_AVA', 1);	//				1 = A valider
 if(!defined('STA_ACT_ENC')) define('STA_ACT_ENC', 2);	//				2 = En cours
-if(!defined('STA_ACT_REC')) define('STA_ACT_REC', 4);	//				4 = ReÃ§u/LivrÃ©
-if(!defined('STA_ACT_FAC')) define('STA_ACT_FAC', 8);	//				8 = FacturÃ©
-if(!defined('STA_ACT_PAY')) define('STA_ACT_PAY', 16);	//				16 = PayÃ©
-if(!defined('STA_ACT_ARC')) define('STA_ACT_ARC', 32);	//				32 = ArchivÃ©
+if(!defined('STA_ACT_REC')) define('STA_ACT_REC', 4);	//				4 = Reçu/Livré
+if(!defined('STA_ACT_FAC')) define('STA_ACT_FAC', 8);	//				8 = Facturé
+if(!defined('STA_ACT_PAY')) define('STA_ACT_PAY', 16);	//				16 = Payé
+if(!defined('STA_ACT_ARC')) define('STA_ACT_ARC', 32);	//				32 = Archivé
 
 class lignes_actes{
 
 
 	public $id_ligne = 0;					//Identifiant de la ligne d'acte
 	public $type_ligne = 0;				//type de ligne de commande (0=texte, 1=notice, 2=bulletin, 3=frais, 4=abt, 5=article)
-	public $num_acte = 0;					//Identifiant de l'acte auquel est rattachÃ©e la ligne
-	public $lig_ref = 0;					//Identifiant de la ligne de l'acte Ã  laquelle est liÃ©e cette ligne (pour commande ->livraison)
-	public $num_acquisition = 0;			//Identifiant de la suggestion ayant dÃ©clenchÃ© la commande (optionnel)
-	public $num_rubrique = 0;				//Identifiant du numÃ©ro de rubrique budgÃ©taire Ã  laquelle est affectÃ©e la ligne d'acte
-	public $num_produit = '';				//Identifiant de notice ou 0 si produit non gÃ©rÃ©
+	public $num_acte = 0;					//Identifiant de l'acte auquel est rattachée la ligne
+	public $lig_ref = 0;					//Identifiant de la ligne de l'acte à laquelle est liée cette ligne (pour commande ->livraison)
+	public $num_acquisition = 0;			//Identifiant de la suggestion ayant déclenché la commande (optionnel)
+	public $num_rubrique = 0;				//Identifiant du numéro de rubrique budgétaire à laquelle est affectée la ligne d'acte
+	public $num_produit = '';				//Identifiant de notice ou 0 si produit non géré
 	public $num_type = '0';				//Identifiant du type de produit
 	public $libelle = '';					//Libelle de la ligne de commande, reprend titre, editeur, auteur, collection, ...
 	public $code = '';						//ISBN, ISSN, ...
@@ -38,24 +38,24 @@ class lignes_actes{
 	public $tva = '0.00';					//Tva applicable sur l'ouvrage
 	public $remise = '0.00';				//Remise sur ligne
 	public $nb = 0;						//nb d'articles
-	public $date_ech = '0000-00-00';		//Date d'Ã©chÃ©ance
-	public $date_cre = '0000-00-00';		//Date de crÃ©ation de ligne
+	public $date_ech = '0000-00-00';		//Date d'échéance
+	public $date_cre = '0000-00-00';		//Date de création de ligne
 	public $statut = 1;					//Statut de reception
 	public $index_ligne = '';				//Index de recherche
 	public $debit_tva = 0;
 	public $commentaires_gestion = '';
 	public $commentaires_opac = '';
-	public $applicants = array(); 			//Demandeurs (utilisÃ© seulement pour les commandes) prÃ©chargement des demendeurs issus des suggestions)
+	public $applicants = array(); 			//Demandeurs (utilisé seulement pour les commandes) préchargement des demendeurs issus des suggestions)
 
 	//Constructeur.
 	public function __construct($id_ligne= 0) {
-		$this->id_ligne = $id_ligne+0;
+		$this->id_ligne = intval($id_ligne);
 		if ($this->id_ligne) {
 			$this->load();
 		}
 	}
 
-	// charge une ligne d'acte Ã  partir de la base.
+	// charge une ligne d'acte à partir de la base.
 	public function load(){
 		global $acquisition_gestion_tva;
 
@@ -91,7 +91,7 @@ class lignes_actes{
 
 		if(!$this->debit_tva)$this->debit_tva=$acquisition_gestion_tva;
 
-		if (!$this->num_acte) die("Erreur de crÃ©ation Lignes_Actes");
+		if (!$this->num_acte) die("Erreur de création Lignes_Actes");
 
 		if ($this->id_ligne) {
 
@@ -102,7 +102,7 @@ class lignes_actes{
 			$q.= "commentaires_gestion = '".$this->commentaires_gestion."', commentaires_opac = '".$this->commentaires_opac."', ";
 			$q.= "index_ligne = ' ".strip_empty_words($this->libelle)." '";
 			$q.= "where id_ligne = '".$this->id_ligne."' ";
-			$r = pmb_mysql_query($q);
+			pmb_mysql_query($q);
 
 		} else {
 
@@ -111,7 +111,7 @@ class lignes_actes{
 			$q.= "remise = '".$this->remise."', date_ech = '".$this->date_ech."', date_cre = '".today()."', statut = '".$this->statut."', ";
 			$q.= "commentaires_gestion = '".$this->commentaires_gestion."', commentaires_opac = '".$this->commentaires_opac."', ";
 			$q.= "index_ligne = ' ".strip_empty_words($this->libelle)." '";
-			$r = pmb_mysql_query($q);
+			pmb_mysql_query($q);
 			$this->id_ligne = pmb_mysql_insert_id();
 
 		}
@@ -123,12 +123,12 @@ class lignes_actes{
 		if(!$id_ligne) $id_ligne = $this->id_ligne;
 
 		$q = "delete from lignes_actes where id_ligne = '".$id_ligne."' ";
-		$r = pmb_mysql_query($q);
+		pmb_mysql_query($q);
 	}
 
 
 	//retourne les lignes de livraison pour une ligne de commande
-	//Si num_acte est indiquÃ©, recherche uniquement dans les enregistrements de l'acte correspondant
+	//Si num_acte est indiqué, recherche uniquement dans les enregistrements de l'acte correspondant
 	public static function getLivraisons($id_lig, $num_acte=0) {
 		if ($num_acte) {
 			$q = "select * from lignes_actes where lig_ref = '".$id_lig."' and num_acte = '".$num_acte."' order by id_ligne ";
@@ -142,7 +142,7 @@ class lignes_actes{
 
 
 	//retourne les lignes de facture pour une ligne de commande
-	//Si num_acte est indiquÃ©, recherche uniquement dans les enregistrements de l'acte correspondant
+	//Si num_acte est indiqué, recherche uniquement dans les enregistrements de l'acte correspondant
 	public static function getFactures($id_lig, $num_acte=0) {
 		if ($num_acte) {
 			$q = "select * from lignes_actes where lig_ref = '".$id_lig."' and num_acte = '".$num_acte."' order by id_ligne ";
@@ -162,8 +162,8 @@ class lignes_actes{
 	}
 
 	//modification des lignes par lot
-	public function updateFields($t_id=array(), $t_fields=array()) {
-		if (count($t_id) && count($t_fields)) {
+	public static function updateFields($t_id = array(), $t_fields = array()) {
+		if (!empty($t_id) && !empty($t_fields)) {
 			$t=array();
 			foreach($t_fields as $f=>$v) {
 				$t[]= $f."='".$v."' ";
@@ -190,7 +190,7 @@ class lignes_actes{
 		global $msg;
 		$tab = array();
 		if ($id_lig) {
-			$q = "select num_ligne, date_format(date_relance, '".$msg["format_date"]."') as date_rel ";
+			$q = "select num_ligne, date_format(date_relance, '".$msg["format_date_heure"]."') as date_rel ";
 			$q.= "from lignes_actes_relances where num_ligne ='".$id_lig."' ";
 			$q.= "order by num_ligne, date_relance desc ";
 			$r = pmb_mysql_query($q);
@@ -204,14 +204,30 @@ class lignes_actes{
 		return $tab;
 	}
 
-
+	//retourne la date de la dernière relance sur une ligne
+	public static function getLastDayRelance ($id_lig=0) {
+	    $lastRelance = '';
+	    if ($id_lig) {
+	        $q = "select num_ligne, date_relance ";
+	        $q.= "from lignes_actes_relances where num_ligne ='".$id_lig."' ";
+	        $q.= "order by num_ligne, date_relance desc ";
+	        $q.= "limit 1";
+	        $r = pmb_mysql_query($q);
+	        if (pmb_mysql_num_rows($r)) {
+	            $row = pmb_mysql_fetch_object($r);
+	            $lastRelance = substr($row->date_relance, 0, 10);
+	        }
+	    }
+	    return $lastRelance;
+	}
+	
 	//retourne un tableau des lignes de relances pour un fournisseur
 	public static function getRelancesBySupplier ($id_fou=0) {
 		global $msg;
 		$tab = array();
 		if ($id_fou) {
 			$q = "select id_acte, type_acte, date_format(date_acte, '".$msg["format_date"]."') as date_acte, numero as numero, ";
-			$q.= "num_ligne, date_format(date_relance, '".$msg["format_date"]."') as date_rel , type_ligne, num_acquisition, num_rubrique, num_produit, num_type, ";
+			$q.= "num_ligne, date_format(date_relance, '".$msg["format_date_heure"]."') as date_rel , type_ligne, num_acquisition, num_rubrique, num_produit, num_type, ";
 			$q.= "libelle, code, prix, tva, nb, lignes_actes_relances.statut as statut, remise, debit_tva, commentaires_gestion, commentaires_opac ";
 			$q.= "from actes join lignes_actes_relances on num_acte=id_acte where num_fournisseur ='".$id_fou."' ";
 			$q.= "order by date_relance desc, num_acte ";
@@ -233,7 +249,7 @@ class lignes_actes{
 			$r1 = pmb_mysql_query($q1);
 			if (pmb_mysql_num_rows($r1)) {
 				while ($row=pmb_mysql_fetch_object($r1)) {
-					$q2 = "insert ignore into lignes_actes_relances set num_ligne = '".$row->id_ligne."' ,date_relance=curdate(), type_ligne = '".$row->type_ligne."', num_acte = '".$row->num_acte."', lig_ref = '".$row->lig_ref."', num_acquisition = '".$row->num_acquisition."', num_rubrique = '".$row->num_rubrique."', ";
+					$q2 = "insert ignore into lignes_actes_relances set num_ligne = '".$row->id_ligne."' ,date_relance=now(), type_ligne = '".$row->type_ligne."', num_acte = '".$row->num_acte."', lig_ref = '".$row->lig_ref."', num_acquisition = '".$row->num_acquisition."', num_rubrique = '".$row->num_rubrique."', ";
 					$q2.= "num_produit = '".$row->num_produit."', num_type = '".$row->num_type."', libelle = '".addslashes($row->libelle)."', code = '".addslashes($row->code)."', prix = '".$row->prix."', tva = '".$row->tva."', nb = '".$row->nb."', debit_tva = '".$row->debit_tva."', ";
 					$q2.= "remise = '".$row->remise."', date_ech = '".$row->date_ech."', date_cre = '".today()."', statut = '".$row->statut."', ";
 					$q2.= "commentaires_gestion = '".addslashes($row->commentaires_gestion)."', commentaires_opac = '".addslashes($row->commentaires_opac)."', ";
@@ -270,7 +286,7 @@ class lignes_actes{
 				$query = "select empr_num from lignes_actes_applicants where ligne_acte_num = ".$this->id_ligne;
 				$result = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($result)){
-					$applicants = array();
+					$this->applicants = array();
 					while($row = pmb_mysql_fetch_row($result)){
 						$this->applicants[] = $row[0];
 					}
@@ -314,7 +330,7 @@ class lignes_actes{
 	}
 
 
-	//RÃ©cupÃ©ration sans instanciation. respect de ce qui est fait actuellement dans le fichier commmande.inc.php
+	//Récupération sans instanciation. respect de ce qui est fait actuellement dans le fichier commmande.inc.php
 	public static function getApplicantsFromId($id_ligne=0){
 		$applicants = array();
 		$query = 'select lignes_actes_applicants.empr_num from lignes_actes_applicants where lignes_actes_applicants.ligne_acte_num = '.$id_ligne;
@@ -343,7 +359,7 @@ class lignes_actes{
 			return $ret;
 		}
 		$tab_ids_line = [];
-		foreach($tmp_ids_line as $k=>$v) {
+		foreach($tmp_ids_line as $v) {
 			$v1 = intval($v);
 			if($v1) {
 				$tab_ids_line[] = $v1;
@@ -359,7 +375,6 @@ class lignes_actes{
 		$id_entite_dest = 0;
 		$id_exercice_org = 0;
 		$id_exercice_dest = 0;
-		$transfert_budget = false;
 
 		$q_org = "select actes.num_entite, actes.num_exercice from actes join lignes_actes on lignes_actes.num_acte=actes.id_acte where lignes_actes.id_ligne=".$tab_ids_line[0];
 		$r_org = pmb_mysql_query($q_org);
@@ -373,7 +388,7 @@ class lignes_actes{
 			$id_entite_dest = pmb_mysql_result($r_dest,0,0);
 			$id_exercice_dest = pmb_mysql_result($r_dest,0,1);
 		}
-		if ( !($id_entite_org & $id_entite_dest  & $id_exercice_org & $id_exercice_dest) ) {
+		if ( !($id_entite_org && $id_entite_dest  && $id_exercice_org && $id_exercice_dest) ) {
 			return $ret;
 		}
 

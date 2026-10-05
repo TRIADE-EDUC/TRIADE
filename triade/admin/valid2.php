@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -18,7 +18,7 @@ session_start();
  *   (at your option) any later version.
  *
  ***************************************************************************/
-//error_reporting(0);
+error_reporting(0);
 include_once("./librairie_php/langue.php");
 include_once("./librairie_php/lib_verif.php");
 include_once("../common/lib_ecole.php");
@@ -54,62 +54,66 @@ include_once("./librairie_php/lib_licence.php");
 <br><center>
 <?php
 //----------------------------------------------------------------------------
-include_once("./librairie_php/db_triade_admin.php");
-$cnx=cnx();
 
-@delete_global();
-@verif_secu_rep();
-
-$cr=@validGroup();
-if ($cr) {
-	$cr=@validperson();
-}
-if ($cr) {
-	$cr=@validtriade($_POST["nom"],$_POST["prenom"],$_POST["mdp"]);
-}
-if ($cr) {
-	$cr=@validabsretard();
-}
-
-$fichier_info="../common/md5sum.log";
-if (file_exists($fichier_info)) {
-
-	$fic=fopen($fichier_info,"r");
-	$lines=file ("$fichier_info");
-	foreach ($lines as $line_num => $line) {
-		if(preg_match('/ /',$line)){
-			list($md5,$fichier)= preg_split ("/  /", $line, 2);
-			updateMd5($md5,$fichier);
-
-		}
-	}
-	
-}
-
-
-// actif le compte
-$http=protohttps(); // return http:// ou https://
-if ($cr) {
-	$date=date("d/m/Y \à G:i:s");
-	$fp=fopen("../data/install_log/valid.inc","a+");
-	fwrite($fp, "Actif le $date \n");
-	fclose($fp);
-	?>
-	<b><?php print LANGVAL1?></b>.<br>
-	<br>
-	<?php print LANGVAL3?>
-	<br><br>
-	<b><?php print $http.$_SERVER["SERVER_NAME"]?>/<?php print REPECOLE?>/</b>
-	<br><br><br>
-	<font color=red class=T1>Vous avez un dernier message --> <a href="index1.php"><b>ici</b></a></font>
-	<br><br>
-	<?php
-}else {
-
+if (file_exists('../data/install_log/valid.inc')) {
 ?>
+	<center>TRIADE est d&eacute;j&agrave; activ&eacute;.</center>	
+<?php
+}else{
+	include_once("./librairie_php/db_triade_admin.php");
+	$cnx=cnx();
 
-	<b><?php print LANGVAL4?></b>.<br>
-	<br>
+	@delete_global();
+	@verif_secu_rep();
+
+	$cr=@validGroup();
+	if ($cr) {
+		$cr=@validperson();
+	}
+	if ($cr) {
+		$cr=@validtriade($_POST["nom"],$_POST["prenom"],$_POST["mdp"]);
+	}
+	if ($cr) {
+		$cr=@validabsretard();
+	}
+
+	
+	$fichier_info="../common/md5sum.log";
+	if (file_exists($fichier_info)) {
+	
+		$fic=fopen($fichier_info,"r");
+		$lines=file ("$fichier_info");
+		foreach ($lines as $line_num => $line) {
+			if(preg_match('/ /',$line)){
+				list($md5,$fichier)= preg_split ("/  /", $line, 2);
+				updateMd5($md5,$fichier);
+	
+			}
+		}	
+	}
+
+
+	// actif le compte
+	$http=protohttps(); // return http:// ou https://
+	if ($cr) {
+		$date=date("d/m/Y \à G:i:s");
+		$fp=fopen("../data/install_log/valid.inc","a+");
+		fwrite($fp, "Actif le $date \n");
+		fclose($fp);
+		?>
+		<b><?php print LANGVAL1?></b>.<br>
+		<br>
+		<?php print LANGVAL3?>
+		<br><br>
+		<b><?php print $http.$_SERVER["SERVER_NAME"]?>/<?php print REPECOLE?>/</b>
+		<br><br><br>
+		<font color=red class=T1>Vous avez un dernier message --> <a href="index1.php"><b>ici</b></a></font>
+		<br><br>
+		<?php
+	}else {
+?>
+		<b><?php print LANGVAL4?></b>.<br>
+		<br>
 		- <?php print LANGVAL5?> <br>
 		<br><br>
 		- <?php print LANGVAL6?>
@@ -119,12 +123,12 @@ if ($cr) {
 		<b>contact@triade-educ.com</b> <br>
 		<br>
 		 <i>(Objet du message : Erreur 1 - Triade)</i> <br>
-	<br>
-
-
-<?php
+		<br>
+	<?php
+	}
 }
-?>
+	?>
+
 <br><br>
 </center>
 <!-- // fin de la saisie -->

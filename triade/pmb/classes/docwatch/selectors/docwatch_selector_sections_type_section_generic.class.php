@@ -2,14 +2,13 @@
 // +-------------------------------------------------+
 // © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: docwatch_selector_sections_type_section_generic.class.php,v 1.1 2019-03-19 14:38:56 dgoron Exp $
+// $Id: docwatch_selector_sections_type_section_generic.class.php,v 1.2 2024/01/26 13:15:20 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
 class docwatch_selector_sections_type_section_generic extends docwatch_selector {
 	
 	public function get_form(){
-		global $msg,$charset;
 		$form ="
 		<div class='row'>
 			<div class='colonne3'>

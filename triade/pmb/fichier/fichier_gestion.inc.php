@@ -1,12 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: fichier_gestion.inc.php,v 1.6 2017-04-20 16:25:28 dgoron Exp $
+// $Id: fichier_gestion.inc.php,v 1.9 2021/02/12 22:26:33 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-if(!isset($act)) $act = '';
+global $class_path, $mode, $sub, $act, $msg, $charset;
+global $prefix, $perso_word, $page;
 
 require_once($class_path."/parametres_perso.class.php");
 require_once($class_path."/fiche.class.php");
@@ -19,6 +20,7 @@ switch($mode){
 		$option_visibilite["obligatoire"]="block";
 		$option_visibilite["search"]="block";
 		$option_visibilite["export"]="none";
+		$option_visibilite["filters"]="none";
 		$option_visibilite["exclusion"]="none";
 		$option_visibilite["opac_sort"]="none";
 		$p_perso=new parametres_perso($prefix,"./fichier.php?categ=gerer&mode=champs",$option_visibilite);
@@ -26,7 +28,7 @@ switch($mode){
 		break;
 	case 'reindex':
 		$fiche = new fiche();
-		switch($act){
+		switch($sub){
 			case 'run':
 				$fiche->reindex_all();
 				break;
@@ -39,17 +41,12 @@ switch($mode){
 		$fiche = new fiche();
 		switch($sub){
 			case 'position':
-				$fichier_menu_display = str_replace("!!menu_sous_rub!!",htmlentities($msg['fichier_display_position'],ENT_QUOTES,$charset),$fichier_menu_display);
-				print $fichier_menu_display;
 				break;
 			case 'list':
 				$fiche->show_search_list($act,"./fichier.php?categ=consult&mode=search&perso_word=$perso_word",$page);
 				break;	
 			default:
-				$fichier_menu_display = str_replace("!!menu_sous_rub!!","",$fichier_menu_display);
-				print $fichier_menu_display;
 				break;
 		}		
-		
 		break;
 }

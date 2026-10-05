@@ -1,0 +1,46 @@
+{% extends 'record_extended_display.tpl.html' %}
+
+<!-- $Id: record_for_pdf_extended.tpl.html,v 1.2 2023/03/22 14:06:41 jparis Exp $ -->
+
+{% block css_style %}
+	<style type="text/css">
+		table.descr_notice td.labelNot {
+			width:156;
+		}
+		table.descr_notice td.labelContent {
+			width:551;
+		}
+	</style>
+{% endblock %}
+
+{% block record_map %}
+{% endblock %}
+
+{% block record_aside_content %}
+{% endblock %}
+
+{% block record_resa %}
+{% endblock %}
+
+{% block articles %}
+{% endblock articles %}
+
+{% block record_expl %}
+	{% if record.external_parameters.expl %}
+		{{ block.super }}
+	{% endif %}
+{% endblock %}
+											
+{% block record_avis_detail %}
+{% endblock %}
+
+{% block record_simili_search %}
+{% endblock %}
+
+{% block record_serialcirc_form_actions %}
+{% endblock %}
+
+{% block record_lien_content %}
+	{{ record.lien | limitstring 50 }}
+{% endblock %}
+					

@@ -1,16 +1,17 @@
-<?PHP
+<?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: selector_authorities.class.php,v 1.10 2019-06-11 08:53:57 btafforeau Exp $
-  
+// $Id: selector_authorities.class.php,v 1.16.2.1 2025/01/16 11:24:29 qvarin Exp $
+
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $base_path;
 require_once($base_path."/selectors/classes/selector.class.php");
 // require_once($base_path."/selectors/templates/sel_authorities.tpl.php");
 
 class selector_authorities extends selector {
-	
+
 	public function __construct($user_input=''){
 		parent::__construct($user_input);
 	}
@@ -20,7 +21,7 @@ class selector_authorities extends selector {
 		global $action;
 		global $pmb_allow_authorities_first_page;
 		global $form_display_mode;
-		
+
 		$entity_form = '';
 		switch($action){
 			case 'simple_search':
@@ -77,10 +78,10 @@ class selector_authorities extends selector {
 		    print encoding_normalize::utf8_normalize($entity_form);
 		}
 	}
-	
+
 	protected function get_advanced_categ() {
 		global $what;
-		
+
 		$categ = '';
 		switch($what) {
 			case 'auteur':
@@ -113,26 +114,26 @@ class selector_authorities extends selector {
 		}
 		return $categ;
 	}
-	
+
 	protected function get_advanced_form() {
 		global $form_display_mode;
-		
+
 		$entities_controller = $this->get_entities_controller_instance();
 		$entities_controller->set_url_base(static::get_base_url()."&action=update&form_display_mode=".$form_display_mode);
 		$entities_controller->proceed_form();
 	}
-	
+
 	protected function get_advanced_save() {
 		$entities_controller = $this->get_entities_controller_instance();
 		$entities_controller->set_url_base(static::get_base_url());
 		return $entities_controller->proceed_update();
 	}
-	
+
 	protected function get_add_link() {
 		global $no_display;
 		global $pmb_popup_form_display_mode;
 		global $form_display_mode;
-		
+
 		$link = static::get_base_url();
 		if(!$form_display_mode) {
 			$form_display_mode = $pmb_popup_form_display_mode;
@@ -144,16 +145,16 @@ class selector_authorities extends selector {
 		$link .= "&action=add&deb_rech='+this.form.f_user_input.value+'&no_display=".$no_display;
 		return $link;
 	}
-	
+
 	protected function get_add_label() {
 		global $msg;
 		return $msg[static::class.'_add'];
 	}
-	
+
 	protected function get_search_form() {
 		global $charset;
 		global $bt_ajouter;
-		
+
 		$sel_search_form = $this->get_sel_search_form_template();
 		if($bt_ajouter == "no"){
 			$sel_search_form = str_replace("!!bouton_ajouter!!", '', $sel_search_form);
@@ -163,22 +164,13 @@ class selector_authorities extends selector {
 		}
 		return $sel_search_form;
 	}
-	
+
 	protected function get_display_list() {
-		global $nb_per_page;
-		global $page;
-		global $no_display;
-		
 		$display_list = '';
-		if(!$page) {
-			$debut = 0;
-		} else {
-			$debut = ($page-1)*$nb_per_page;
-		}
 		$searcher_instance = $this->get_searcher_instance();
 		$this->nbr_lignes = $searcher_instance->get_nb_results();
 		if($this->nbr_lignes) {
-			$sorted_objects = $searcher_instance->get_sorted_result('default', $debut, $nb_per_page);
+			$sorted_objects = $searcher_instance->get_sorted_result('default', $this->get_start_list(), $this->get_nb_per_page_list());
 			foreach ($sorted_objects as $object_id) {
 				$display_list .= $this->get_display_object($object_id);
 			}
@@ -188,10 +180,10 @@ class selector_authorities extends selector {
 		}
 		return $display_list;
 	}
-	
+
 	public function get_sel_search_form_template() {
 		global $msg, $charset;
-		
+
 		$sel_search_form ="
 			<form name='".$this->get_sel_search_form_name()."' method='post' action='".static::get_base_url()."'>
 				<input type='text' name='f_user_input' value=\"".htmlentities($this->user_input,ENT_QUOTES,$charset)."\">
@@ -199,7 +191,7 @@ class selector_authorities extends selector {
 				<input type='submit' class='bouton_small' value='".$msg[142]."' />
 				!!bouton_ajouter!!
 			</form>
-			<script type='text/javascript'>
+			<script>
 				<!--
 				document.forms['".$this->get_sel_search_form_name()."'].elements['f_user_input'].focus();
 				-->
@@ -207,16 +199,16 @@ class selector_authorities extends selector {
 		";
 		return $sel_search_form;
 	}
-	
+
 	protected function get_message_not_found() {
 		global $msg;
 		return $msg['no_'.str_replace('selector_', '', static::class).'_found'];
 	}
-	
+
 	protected function get_change_link($display_mode) {
 		global $no_display;
 		global $deb_rech;
-		
+
 		$link = static::get_base_url();
 		if($display_mode == 2) {
 			$link .= "&categ=".$this->get_advanced_categ()."&sub=form";
@@ -225,30 +217,40 @@ class selector_authorities extends selector {
 		$link .= "&action=add&deb_rech=".$deb_rech."&no_display=".$no_display;
 		return $link;
 	}
-	
+
 	protected function get_html_button($location='', $label='') {
 		global $charset;
-		
+
 		return "<input type='button' class='bouton_small' onclick=\"document.location='".$location."'\" value='".htmlentities($label, ENT_QUOTES, $charset)."' />";
 	}
-	
+
 	protected function get_search_fields_filtered_objects_types() {
 		return array($this->get_objects_type(), "authorities");
 	}
-	
+
 	protected function get_searcher_tabs_instance() {
 		if(!isset($this->searcher_tabs_instance)) {
 			$this->searcher_tabs_instance = new searcher_selectors_tabs('authorities');
 		}
 		return $this->searcher_tabs_instance;
 	}
-	
+
 	protected function get_search_perso_instance($id=0) {
 		return new search_perso($id, 'AUTHORITIES');
 	}
-	
+
 	protected function get_search_instance() {
-		return new search_authorities('search_fields_authorities');
+		$search = new search_authorities('search_fields_authorities');
+		$search->add_context_parameter('in_selector', true);
+		return $search;
+	}
+
+	protected function get_searcher_instance() {
+		$searcher = searcher_factory::get_searcher($this->objects_type, '', $this->user_input);
+		if(method_exists($searcher, 'add_context_parameter')) {
+			$searcher->add_context_parameter('in_selector', true);
+		}
+		return $searcher;
 	}
 }
 ?>

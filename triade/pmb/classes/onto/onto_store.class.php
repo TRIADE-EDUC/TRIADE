@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_store.class.php,v 1.14 2018-12-20 11:00:19 mbertin Exp $
+// $Id: onto_store.class.php,v 1.17 2023/08/28 14:01:13 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -26,13 +26,13 @@ abstract class onto_store {
 	protected $config;
 
 	/**
-	 * Tableau de rÃ©sultat de la derniÃ¨re requÃªte
+	 * Tableau de résultat de la dernière requête
 	 * @access private
 	 */
 	protected $result;
 
 	/**
-	 * Noms d'espaces Ã  insÃ©rer dans toutes les requÃªtes SPARQL
+	 * Noms d'espaces à insérer dans toutes les requêtes SPARQL
 	 * @access private
 	 */
 	protected $namespaces = array();
@@ -64,7 +64,7 @@ abstract class onto_store {
 	public abstract function connect(); // end of member function connect
 
 	/**
-	 * DÃ©connexion du store
+	 * Déconnexion du store
 	 *
 	 * @return bool
 	 * @access public
@@ -74,7 +74,7 @@ abstract class onto_store {
 	/**
 	 * Charge un fichier RDF dans le store
 	 *
-	 * @param string onto_filepath Chemin du fichier RDF Ã Â  charger dans le store
+	 * @param string onto_filepath Chemin du fichier RDF à  charger dans le store
 	
 	 * @return bool
 	 * @access public
@@ -82,10 +82,10 @@ abstract class onto_store {
 	public abstract function load($onto_filepath); // end of member function load
 	
 	/**
-	 * ExÃ©cute une requÃªte SPARQL dans le store
+	 * Exécute une requête SPARQL dans le store
 	 * Rempli le result de l'instance, sous forme de tableau de class std
 	 *
-	 * @param string query RequÃªte sparql Ã Â  exÃ©cuter dans le store
+	 * @param string query Requête sparql à  exécuter dans le store
 
 	 * @return bool
 	 * @access public
@@ -93,7 +93,7 @@ abstract class onto_store {
 	public abstract function query($query,$prefix=""); // end of member function query
 
 	/**
-	 * Renvoie le tableau de dÃ©clarations rÃ©sultat de la derniÃ¨re requÃªte.
+	 * Renvoie le tableau de déclarations résultat de la dernière requête.
 	 *
 	 * @return array
 	 * @access public
@@ -103,13 +103,16 @@ abstract class onto_store {
 	} // end of member function get_result
 
 	/**
-	 * Renvoie le nombre de rÃ©sultat de la derniÃ¨re requÃªte.
+	 * Renvoie le nombre de résultat de la dernière requête.
 	 *
 	 * @return int
 	 * @access public
 	 */
-	public function num_rows(){
-		return sizeof($this->result);
+	public function num_rows() {
+	    if (empty($this->result)) {
+	        $this->result = array();
+	    }
+		return count($this->result);
 	}
 
 	/**
@@ -153,15 +156,7 @@ abstract class onto_store {
 	public function charset_normalize($string){
 		global $charset;
 		if($charset != "utf-8"){
-			$string = utf8_decode($string);
-		}
-		return $string;
-	}
-
-	public function utf8_normalize($string){
-		global $charset;
-		if($charset != "utf-8"){
-			$string = utf8_encode($string);
+			$string = encoding_normalize::utf8_decode($string);
 		}
 		return $string;
 	}

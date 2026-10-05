@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: editions_state_view_group.class.php,v 1.4 2019-06-05 06:41:21 btafforeau Exp $
+// $Id: editions_state_view_group.class.php,v 1.7 2023/05/04 14:15:47 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path."/editions_state_view.class.php");
 
 class editions_state_view_group extends editions_state_view {
@@ -14,28 +15,27 @@ class editions_state_view_group extends editions_state_view {
 	private $my_function=array("sum","min","max","avg","count","group_concat","val");
 	
 	public function __construct($datas,$id,$param=array()){
-		//on gÃ¨re les propriÃ©tÃ©s communes dans la classe parente
+		//on gère les propriétés communes dans la classe parente
 		parent::__construct($datas,$id,$param);
 		$this->sqlite_db_open();
-		$this->set_param_group($param["group"]);
+		$this->set_param_group($param["group"] ?? array());
 	}
 	
 	private function sqlite_db_open(){
-		global $base_path;
 		if(!class_exists('SQLite3')){
 			$this->sqlite_error="SQLite 3 NOT supported";
 			return;
 		}
 		try{
 			$this->sqlite_resource=new SQLite3(":memory:");
-			//CrÃ©ation de la table
+			//Création de la table
 			$list_champ=array();
 			$query="CREATE TABLE datas(";
 			foreach ( $this->datas[0] as $key => $value ) {
 				$list_champ[]="champ_".$key;
 				$query.="champ_".$key." text,";
 			}
-			$query=substr($query, 0, -1);//On enlÃ¨ve la derniÃ¨re virgule
+			$query=substr($query, 0, -1);//On enlève la dernière virgule
 			$query.=");";
 			$res=$this->sqlite_resource->exec($query);
 			if(!$res){
@@ -43,13 +43,13 @@ class editions_state_view_group extends editions_state_view {
 				return;				
 			}
 			
-			//Insertion des donnÃ©es
+			//Insertion des données
 			for ($i = 1; $i < count($this->datas); $i++) {
 				$query="INSERT INTO datas(".implode(", ",$list_champ).") VALUES(";
 				foreach ( $this->datas[$i] as $value ) {
-					$query.="'".$this->sqlite_resource->escapeString($value)."',";
+					$query.="'".$this->sqlite_resource->escapeString($value ?? "")."',";
 				}
-				$query=substr($query, 0, -1);//On enlÃ¨ve la derniÃ¨re virgule
+				$query=substr($query, 0, -1);//On enlève la dernière virgule
 				$query.=");";
 				$res=$this->sqlite_resource->query($query);
 				if(!$res){
@@ -92,14 +92,14 @@ class editions_state_view_group extends editions_state_view {
 					$query.="champ_".$value." AS alias_".$value.",";
 				}
 			}
-			$query=substr($query, 0, -1);//On enlÃ¨ve la derniÃ¨re virgule
+			$query=substr($query, 0, -1);//On enlève la dernière virgule
 			$query.=" FROM datas ";
 			if(count($group_fields)){
 				$query.=" GROUP BY ";
 				foreach ( $group_fields as $value ) {
 					$query.="champ_".$value.",";
 				}
-				$query=substr($query, 0, -1);//On enlÃ¨ve la derniÃ¨re virgule
+				$query=substr($query, 0, -1);//On enlève la dernière virgule
 			}
 			$res=$this->sqlite_resource->query($query);
 			if($res){
@@ -222,7 +222,7 @@ class editions_state_view_group extends editions_state_view {
 		if(count($show_fields_tabl)){
 			$html.="
 				<table class='sortable'>";
-			//1Ã¨re ligne
+			//1ère ligne
 			$html.="<thead>";
 			$html.="<tr class='sorttop'>";
 			foreach ( $group_fields_tabl as $value ) {
@@ -232,7 +232,7 @@ class editions_state_view_group extends editions_state_view {
        			$html.="<th>".htmlentities($this->datas[0][$value],ENT_QUOTES,$charset)."</th>";
 			}
 			$html.="</tr>";
-			//2Ã¨me ligne
+			//2ème ligne
 			$html.="<tr>";
 			foreach ( $group_fields_tabl as $value ) {
        			$html.="<td>".htmlentities($msg["editions_state_view_group_distinct"],ENT_QUOTES,$charset)."</td>";
@@ -242,7 +242,7 @@ class editions_state_view_group extends editions_state_view {
 			}
 			$html.="</tr>";
 			$html.="</thead>";
-			//RÃ©sultat
+			//Résultat
 			if(count($new_data)){
 				foreach ( $new_data as $key => $ligne_result ) {
       				 $html.="<tr>";
@@ -280,7 +280,7 @@ class editions_state_view_group extends editions_state_view {
 	
 		
 		if(count($show_fields_tabl)){
-			//1Ã¨re ligne
+			//1ère ligne
 			$nb_ligne=0;
 			$nb_colonne=0;
 			foreach ( $group_fields_tabl as $value ) {
@@ -291,7 +291,7 @@ class editions_state_view_group extends editions_state_view {
        			$worksheet->write($nb_ligne,$nb_colonne,$this->datas[0][$value]);
 				$nb_colonne++;
 			}
-			//2Ã¨me ligne
+			//2ème ligne
 			$nb_ligne++;
 			$nb_colonne=0;
 			foreach ( $group_fields_tabl as $value ) {
@@ -302,7 +302,7 @@ class editions_state_view_group extends editions_state_view {
 				$worksheet->write($nb_ligne,$nb_colonne,$msg["editions_state_view_group_filter_".$this->my_param["group"]["function_fields"]["function_field_".$value]]);
 				$nb_colonne++;
 			}
-			//RÃ©sultat
+			//Résultat
 			$new_data=$this->sqlite_calc_group();
 			if(count($new_data)){
 				foreach ( $new_data as $ligne_result ) {

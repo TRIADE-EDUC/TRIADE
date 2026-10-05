@@ -2,7 +2,7 @@
 <!DOCTYPE XMLlist SYSTEM "../../XMLlist.dtd">
 
 <!-- liste des codes langue en UNIMARC (português)
-$Id: lang.xml,v 1.8 2013-04-26 07:37:08 apetithomme Exp $ -->
+$Id: lang.xml,v 1.8 2013/04/26 07:37:08 apetithomme Exp $ -->
 
 <XMLlist>
 	<entry code="aar">Afar</entry>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: show_log.php,v 1.7 2017-10-23 10:13:00 ngantier Exp $
+// $Id: show_log.php,v 1.7 2017/10/23 10:13:00 ngantier Exp $
 
 $base_path="../..";
 $base_auth="ADMINISTRATION_AUTH";

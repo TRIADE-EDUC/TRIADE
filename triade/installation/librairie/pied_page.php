@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -30,24 +30,14 @@ print '
 		La <b>T</b>ransparence et la <b>R</b>apidit&eacute; de l\'<b>I</b>nformatique
 		<b>A</b>u service <b>D</b>e l\'<b>E</b>nseignement<br />
 		Pour visualiser ce site de fa&ccedil;on optimale&nbsp;: r&eacute;solution minimale&nbsp;: 800x600<br />
-		  S.A.R.L. - T.R.I.A.D.E. &copy; 2000 - '.date("Y").' - Tous droits r&eacute;serv&eacute;s - Licence GNU/GPL
+		  T.R.I.A.D.E. &copy; 2000 - '.date("Y").' - Tous droits r&eacute;serv&eacute;s - Licence GNU/GPL
 	</div>
 	<div style="margin-left: auto; margin-right: auto;">
-		<a style="text-decoration:none;"
-		   href="http://validator.w3.org/check?uri=referer" target="validXhtml" >
-			<!-- <img style="height: 31px; width: 88px; border: 0;" -->
-			     <img style="border: 0;" 
-			     src="image/valid-xhtml10.jpg"
-			     alt="Valid XHTML 1.0 Strict" />
-		</a>
-		<a href="http://www.w3.org/" target="w3C" >
-		<img src="image/triade_w3C.jpg" alt="W3C" style="border: 0;" /></a>
+		<img src="../image/commun/triade-xhtml.jpg" alt="XHTML" />  
+		<img src="../image/commun/triade-w3C.jpg" alt="w3C" /> 
+		<img src="../image/commun/triade-css.png" alt="css" />
+		<a href="https://www.triade-educ.com/accueil/don-triade.php" target="_blank" ><img border="0" src="../image/commun/triade_paypal.png" alt="Paypal" /></a>
 
-		<a href="http://jigsaw.w3.org/css-validator/validator-uri.html" target="CSS" >
-		<img src="image/triade_80x15_css.png" alt="CSS" style="border: 0;" /></a>
-
-		<a href="http://www.triade-educ.com/accueil/don-triade.php" target="paypal" >
-		<img src="image/rss_paypal.png" alt="PayPal" style="border: 0;" /></a>
 	</div>
 </div>
 ';

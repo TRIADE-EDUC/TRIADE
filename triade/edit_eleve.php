@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -49,11 +49,11 @@ if ($_SESSION["membre"] == "menupersonnel") {
 }
 $cnx=cnx();
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 
 <?php
 // affichage de l'élève (lecture seule)
@@ -124,7 +124,7 @@ SELECT
 	information,
 	classe
 FROM
-	${prefixe}eleves, ${prefixe}classes c
+	{$prefixe}eleves, {$prefixe}classes c
 WHERE
 	elev_id='$eid'
 AND	c.code_class=classe
@@ -137,19 +137,19 @@ $idClasse=$data[0][58];
 <table border="1" cellpadding="3" cellspacing="1" width="100%"  height="85" style="border-collapse: collapse;" >
 <tr id='coulBar0' ><td height="2" colspan=2><b><font   id='menumodule1' ><?php print LANGRECHE1?></B></font></td></tr>
 <?php
-if( count($data) <= 0 ) {
+if( countTriade($data) <= 0 ) {
 	print("<tr><td align=center valign=center>".LANGEDIT1."</td></tr>");
 } else { //debut else
 ?>
 <tr>
 <td align="center">
-	<a href="#" onclick="open('photoajouteleve.php?ideleve=<?php print $eid?>','photo','width=450,height=280')"><img src="image_trombi.php?idE=<?php print $eid ?>" border=0 ></a><br />[ <a href="#" class="bouton2"  onclick="open('photoajouteleve.php?ideleve=<?php print $eid?>','photo','width=450,height=280')" >modifier</a> ]
+	<a href="#" onclick="open('photoajouteleve.php?ideleve=<?php print $eid?>','photo','width=450,height=280')"><img src="image_trombi.php?idE=<?php print $eid ?>" border=0  style='box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); border-radius: 8px;' ></a><br /><br />[ <a href="#" class="bouton2"  onclick="open('photoajouteleve.php?ideleve=<?php print $eid?>','photo','width=450,height=280')" >modifier</a> ]
 </td>
 <td valign='top'>
 <table border="0" cellpadding="0" cellspacing="5" align="center">
 <tr><td align="center" height='10'><br><input type=button value="<?php print LANGBT52?>" onclick="open('modif_eleve.php?eid=<?php print $data[0][0]?>','_parent','')"  class="bouton2"><br><br></td>
 </tr>
-<?php if ((FINANCIERVATEL == "oui") && ($_SESSION["membre"] == "menuadmin")) { ?>
+<?php if ( (defined('FINANCIERVATEL')) && (FINANCIERVATEL == "oui") && ($_SESSION["membre"] == "menuadmin")) { ?>
 <!--/****** APRES_MAJ_TRIADE_AUTO - [APRES_MAJ_TRIADE_AUTO_DATE_TRAITEMENT] - [APRES_MAJ_TRIADE_AUTO_ENTITE] : CODE AJOUTE AUTOMATIQUEMENT PAR SCRIPT 'admin_apres_maj_triade' ****** -->
     	<tr>
         	<td align="center" height='10'>
@@ -264,9 +264,9 @@ if ($_SESSION["membre"] == "menuadmin") { ?>
 </table>
 </td></tr>
 <?php
-	$nom_cellule=array( id, LANGELE2, LANGELE3, LANGELE4, "Lv1/Spé", "Lv2/Spé", LANGELE5, LANGELE6, LANGELE10, LANGEDIT6, LANGELE11, LANGIMP51,LANGIMP52, "adresse élève","commune élève","code postal élève","téléphone fixe élève","Boursier","Montant de la bourse","Indemnité de stage","Email Universitaire","N° Rangement / Info","Inscription à la bibliothèque","Inscription au BDE" , "Situation Familiale", LANGEDIT7, LANGEDIT8, LANGEL12,  LANGEL14, LANGEL15, LANGEL16, LANGEDIT2,  LANGEDIT3, LANGEDIT4, LANGEDIT5, LANGEL18, LANGEL19, LANGEL20, LANGEDIT9, LANGEL21, LANGEL22, LANGEL23, LANGEL24, LANGEL25, LANGEL26, LANGEL27, LANGEL28, LANGEL29, LANGEL30,  LANGELE244. LANGEDIT10, LANGEDIT11,LANGbasededoni41, LANGbasededoni42,LANGEDIT12,LANGEDIT13,"sexe","Code comptabilité","Information");
+	$nom_cellule=array( 'id', LANGELE2, LANGELE3, LANGELE4, "Lv1/Spé", "Lv2/Spé", LANGELE5, LANGELE6, LANGELE10, LANGEDIT6, LANGELE11, LANGIMP51,LANGIMP52, "adresse élève","commune élève","code postal élève","téléphone fixe élève","Boursier","Montant de la bourse","Indemnité de stage","Email Universitaire","N° Rangement / Info","Inscription à la bibliothèque","Inscription au BDE" , "Situation Familiale", LANGEDIT7, LANGEDIT8, LANGEL12,  LANGEL14, LANGEL15, LANGEL16, LANGEDIT2,  LANGEDIT3, LANGEDIT4, LANGEDIT5, LANGEL18, LANGEL19, LANGEL20, LANGEDIT9, LANGEL21, LANGEL22, LANGEL23, LANGEL24, LANGEL25, LANGEL26, LANGEL27, LANGEL28, LANGEL29, LANGEL30,  LANGELE244. LANGEDIT10, LANGEDIT11,LANGbasededoni41, LANGbasededoni42,LANGEDIT12,LANGEDIT13,"sexe","Code comptabilité","Information");
 		
-for($i=1;$i<count($data[0]);$i++)
+for($i=1;$i<countTriade($data[0]);$i++)
 {//debut for
 		if ($i == 58) continue;
 		if(preg_match('/[a-zA-Z0-9äâîïûüèé]{1,}/',trim($data[0][$i]))) {
@@ -302,7 +302,7 @@ for($i=1;$i<count($data[0]);$i++)
 print "</table>";
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php
 // deconnexion en fin de fichier
 Pgclose();

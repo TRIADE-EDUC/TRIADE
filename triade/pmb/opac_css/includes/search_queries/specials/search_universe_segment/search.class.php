@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search.class.php,v 1.2 2018-05-14 08:22:07 tsamson Exp $
+// $Id: search.class.php,v 1.4.8.1.2.1 2025/04/23 08:26:49 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -10,7 +10,7 @@ global $base_path,$include_path,$class_path,$msg;
 require_once($class_path.'/search_universes/search_segment_set.class.php');
 require_once($class_path.'/search_universes/search_segment.class.php');
 
-//Classe de gestion de la recherche spÃ©cial "facette"
+//Classe de gestion de la recherche spécial "facette"
 
 class search_universe_segment_search {
 	public $id;
@@ -37,15 +37,15 @@ class search_universe_segment_search {
     
     public function make_search(){
     	$this->get_segment_set();
-    	
+    	// si pas de jeu de données, on ne fait pas de recherche
+    	if (empty($this->segment_set->get_data_set())) {
+    	    return "";
+    	}
     	//enregistrement de l'environnement courant
     	$this->search->push();
-    	
-    	$table_tempo = $this->segment_set->make_search("tempo_".$this->n_ligne);
-    	
+    	$table_tempo = $this->segment_set->make_search("s10_tmp_".$this->n_ligne);
     	//restauration de l'environnement courant
     	$this->search->pull();
-    	
     	return $table_tempo;
     }
     
@@ -66,7 +66,7 @@ class search_universe_segment_search {
     }
     
     public function make_unimarc_query(){
-    	//RÃ©cupÃ©ration de la valeur de saisie
+    	//Récupération de la valeur de saisie
     	$valeur_="field_".$this->n_ligne."_s_".$this->id;
     	global ${$valeur_};
     	$valeur=${$valeur_};
@@ -81,7 +81,7 @@ class search_universe_segment_search {
 		//enregistrement de l'environnement courant
 		$this->search->push();
 		
-    	//on gÃ©nÃ¨re une human_query
+    	//on génère une human_query
     	$r = $this->segment_set->get_human_query();
     	$r.="<span><input type='hidden' name='field_".$this->n_ligne."_s_".$this->id."[]' value='".htmlentities($valeur[0],ENT_QUOTES,$charset)."'/></span>";
     	
@@ -91,7 +91,7 @@ class search_universe_segment_search {
     	return $r;
     }
     
-    //fonction de vÃ©rification du champ saisi ou sÃ©lectionnÃ©
+    //fonction de vérification du champ saisi ou sélectionné
     public function is_empty($valeur) {
     	if (count($valeur)) {
     		if ($valeur[0]=="") return true;
@@ -107,9 +107,14 @@ class search_universe_segment_search {
     	}
     	$value = "field_".$this->n_ligne."_s_".$this->id;
     	global ${$value};
-    	$this->segment_set = new search_segment_set(${$value}[0]);
+		
+		//On privilégie le passage par le get_instance du segment pour remplir la static current_instance
+		//Utilisée dans certains critères d'univers (sinon on perd le segment dans le cas des RMC d'univers)
+		$segment = search_segment::get_instance(${$value}[0]);
+    	$this->segment_set = $segment->get_set();
+    	$this->segment_set->set_search_instance($this->search);
+    	
     	return $this->segment_set;
     }
     
 }
-?>

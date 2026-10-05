@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: search_universes_fields.xml,v 1.5.2.5 2025/01/20 13:10:30 gneveu Exp $ -->
+
+<!-- 
+
+	Pour configurer la RMC dans les univers
+
+	Pour choisir sur quels champs on veut chercher, il nous faut une balise <field>
+		- id : unique
+		- group : permet d'ordonner le menu déroulent et de faire des groupes de recherche
+		- title : titre du champ de recherche
+
+	On la type de saisie <input>
+		- type : text, list, ...
+
+	On a la définiton des segments <segments>
+		- type : type des segments paramétrés en gestion
+		- field : Sur quel champ on cherche (ce referer au search_field.xml)
+
+		Pour les segments d'autorités, pour rechercher sur les champs perso
+		On met le type d'autorité + l'id du cp
+			Exemple : authors_2
+
+		Pour les segments d'autorités perso, pour rechercher sur les champs perso
+		On met le type a + l'id du cp
+			Exemple : a_2
+
+	On a la définiton des opérateur <operators>
+		- type : BOOLEAN, CONTAINS, ...
+
+ -->
+
+<pmbfields>
+	<memoryEngineAllowed>yes</memoryEngineAllowed>
+	<universesFields>
+		<!--tous champs-->
+		<field id='1' group='1' title='msg:103'>
+			<input type="text"/>
+			<segments>
+				<segment type="1" field="f_42"/>
+				<segment type="2" field="f_1102"/>
+				<segment type="8" field="f_7102"/>
+			</segments>
+			<operators>
+				<operator type="BOOLEAN"/>
+				<operator type="STARTWITH"/>
+			</operators>
+		</field>
+		<!-- Titres -->
+		<field id='2' group='1' title='msg:title'>
+			<input type="text"/>
+			<segments>
+				<segment type="1" field="f_1"/>
+				<segment type="8" field="f_7003"/>
+			</segments>
+			<operators>
+				<operator type="BOOLEAN"/>
+				<operator type="STARTWITH"/>
+			</operators>
+		</field>
+		<field id="3" group="1" title="msg:type_doc_sort">
+			<input type="marc_list">
+				<name>doctype</name>
+				<restrictquery>SELECT group_concat(distinct typdoc SEPARATOR ',') as all_typdoc from notices !!restrictview!!</restrictquery>
+				<restrictview> JOIN opac_view_notices_!!opac_view!! ON notice_id = opac_view_num_notice</restrictview>
+			</input>
+				<segment type="1" field="f_15"/>
+			<operators>
+				<operator type="EQ"/>
+			</operators>
+		</field>
+		<!--auteurs-->
+		<field id='4' group='1' title='msg:234'>
+			<input type="authoritie" ajax="authors" selector="auteur" p1="param1" p2="param2"/>
+			<segments>
+				<segment type="1" field="f_2"/>
+				<!-- Si on veux faire fonctionne cette recherche -->
+				<!-- Il faut rajouter la query suivante dans le search_field -->
+				<!-- Il faut rajouter la query suivante dans le search_field_authorities -->
+				<!-- 
+					<query for="AUTHORITY">
+						<main><![CDATA[
+							select distinct id_authority 
+							from authorities 
+							join authors on author_id = authorities.num_object 
+							and authorities.type_object = 1 
+							where author_id = '!!p!!'
+						]]></main>
+					</query>
+				-->
+				<!-- <segment type="2" field="f_1102"/> -->
+				<segment type="8" field="f_7007"/>
+			</segments>
+			<operators>
+				<operator type="BOOLEAN"/>
+				<operator type="AUTHORITY"/>
+			</operators>
+		</field>
+		<!--interpretes-->
+		<field id='5' group='1' title='msg:search_extended_titre_uniforme_interpreter'>
+			<input type="authoritie" ajax="authors" selector="auteur" p1="param1" p2="param2"/>
+			<segments>
+				<segment type="8" field="f_7027"/>
+            </segments>
+            <operators>
+                <operator type="BOOLEAN"/>
+                <operator type="AUTHORITY"/>
+            </operators>
+		</field>
+		<!-- Date -->
+        <field id='6' group='1' title='Année'>
+            <input type="text"/>
+            <segments>
+				<segment type="1" field="f_112"/>
+				<segment type="8" field="f_7030"/>
+            </segments>
+            <operators>
+                <operator type="LTEQ"/>
+                <operator type="GTEQ"/>
+                <operator type="EQ"/>
+                <operator type="BETWEEN"/>
+            </operators>
+        </field>
+        <!-- Concept -->
+         <field id='7' group='1' title='msg:onto_common_concept'>
+			<input type="authoritie" ajax="onto" selector="ontology" p1="param1" p2="param2"/>
+			<segments>
+				<segment type="1" field="f_1000"/>
+            	<segment type="2" field="f_1013"/>
+            	<segment type="8" field="f_7025"/>
+            </segments>
+            <operators>
+                <operator type="BOOLEAN"/>
+                <operator type="AUTHORITY"/>
+            </operators>
+		</field>
+	</universesFields>
+	
+	<specialFields>
+	</specialFields>
+	
+	<operators>
+		<operator name="BOOLEAN">msg:expr_bool_query</operator>
+		<operator name="CONTAINS">msg:contient_search</operator>
+		<operator name="CONTAINS_ALL">msg:contient_tous_mots_query</operator>
+		<operator name="CONTAINS_AT_LEAST">msg:contient_plus_un_mot_query</operator>
+		<operator name="STARTWITH">msg:commence_par_query</operator>
+		<operator name="ENDWITH">msg:finit_par_query</operator>
+		<operator name="EXACT">msg:exactement_comme_query</operator>
+		<operator name="EQ">msg:eq_query</operator>
+		<operator name="NOTEQ">msg:noteq_query</operator>
+		<operator name="GT">msg:gt_query</operator>
+		<operator name="LT">msg:lt_query</operator>
+		<operator name="GTEQ">msg:gteq_query</operator>
+		<operator name="LTEQ">msg:lteq_query</operator>
+		<operator name="ISEMPTY" emptyAllowed="yes">msg:est_vide_query</operator>
+		<operator name="ISNOTEMPTY" emptyAllowed="yes">msg:pas_vide_query</operator>
+		<operator name="AUTHORITY">msg:authority_query</operator>
+		<operator name="AERASUP">msg:map_multisearch_aerasup</operator>
+		<operator name="AERAINF">msg:map_multisearch_aerainf</operator>
+		<operator name="INTERSECTS">msg:map_multisearch_intersects</operator>
+		<operator name="BETWEEN">msg:search_between_query</operator>
+		<operator name="NEAR">msg:parperso_option_duration_type0</operator>
+		<operator name="LESS_THAN_DAYS">msg:less_than_days_query</operator>
+		<operator name="MORE_THAN_DAYS">msg:more_than_days_query</operator>
+		<operator name="THIS_WEEK" emptyAllowed="yes">msg:this_week_query</operator>
+		<operator name="LAST_WEEK" emptyAllowed="yes">msg:last_week_query</operator>
+		<operator name="THIS_MONTH" emptyAllowed="yes">msg:this_month_query</operator>
+		<operator name="LAST_MONTH" emptyAllowed="yes">msg:last_month_query</operator>
+		<operator name="THIS_YEAR" emptyAllowed="yes">msg:this_year_query</operator>
+		<operator name="CUSTOM_SEARCH" special="yes">msg:custom_search</operator> 	
+	</operators>
+	
+	<!-- Les groupes sont associés aux champs (fields) et permettent d'amener une notion de classement -->
+	<groups>
+		<group id="1">
+			<order>1</order>
+			<label>msg:champs_principaux_query</label>
+		</group>
+	</groups>
+</pmbfields>

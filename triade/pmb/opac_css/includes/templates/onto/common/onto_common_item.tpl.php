@@ -1,27 +1,27 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: onto_common_item.tpl.php,v 1.4 2019-02-19 10:17:52 tsamson Exp $
+// $Id: onto_common_item.tpl.php,v 1.15 2023/08/17 09:47:56 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $ontology_tpl,$msg,$base_path,$ontology_id, $pmb_form_authorities_editables, $PMBuserid;
 
 $ontology_tpl['form_body'] = '
-<script type="text/javascript" src="./includes/javascript/ajax.js"></script>
-<form id="!!onto_form_id!!" name="!!onto_form_name!!" method="POST" action="!!onto_form_action!!" class="form-autorites" onSubmit="return false;" >
+<script src="./includes/javascript/ajax.js"></script>
+<form id="!!onto_form_id!!" name="!!onto_form_name!!" method="POST" action="!!onto_form_action!!" class="form-autorites uk-clearfix" onSubmit="return false;" >
 	<input type="hidden" name="item_uri" value="!!uri!!"/>	
 	<div class="left">
 		<h3>!!onto_form_title!!</h3>
+	    <br/>
 	</div>
-	<div id="form-contenu">
-		<div class="row">&nbsp;</div>
+	<div id="form-contenu uk-clearfix">
 		<div id="zone-container">
 			!!onto_form_content!!
 		</div>
+	    <br/>
 	</div>
-	<div class="row">&nbsp;</div>
 	<div class="left">
 		!!onto_form_history!!
 		!!onto_form_submit!!
@@ -36,7 +36,7 @@ $ontology_tpl['form_body'] = '
 ';
 
 $ontology_tpl['form_scripts'] = '
-<script type="text/javascript">
+<script>
 	require(["dojo/ready", "apps/pmb/contribution/datatypes/ButtonFunctions", "dojo/query!css3", "dijit/registry"], function(ready, ButtonFunctions, query, registry) {
 		ready(function(){
 			var buttonFunctions = new ButtonFunctions({formId : "!!onto_form_id!!"});
@@ -57,9 +57,11 @@ $ontology_tpl['form_scripts'] = '
 		}
 		if(error_message != ""){
 			alert(error_message);
+			return false;
 		}else{
 			document.forms["!!onto_form_name!!"].submit();
 		}
+		return true;
 	}	
 		
 	!!onto_form_del_script!!
@@ -83,14 +85,61 @@ $ontology_tpl['form_scripts'] = '
 	}
 	
 	if(typeof onto_remove_selector_value == "undefined") {		
-		function onto_remove_selector_value(element_name,element_order){
-			document.getElementById(element_name+"_"+element_order+"_value").value = "";
-			document.getElementById(element_name+"_"+element_order+"_display_label").value = "";
-			document.getElementById(element_name+"_"+element_order+"_ressource_template").innerHTML = "";
+		function onto_remove_selector_value(element_name,element_order) {
+
+            var node_value = document.getElementById(element_name+"_"+element_order+"_value");
+            if (node_value) {
+                node_value.value = "";
+            }	
+		
+            var node_is_draft = document.getElementById(element_name+"_"+element_order+"_is_draft");
+            if (node_is_draft) {
+                node_is_draft.value = "0";
+            }
+
+            var node_label = document.getElementById(element_name+"_"+element_order+"_display_label");
+            if (node_label) {
+                node_label.value = "";
+            }
+	
+            var node_resource_template = document.getElementById(element_name+"_"+element_order+"_resource_template");
+            if (node_resource_template) {
+                node_resource_template.innerHTML = "";
+            }
+
+            var node_function_value = document.getElementById(element_name+"_"+element_order+"_function_value");			
+            if (node_function_value) {
+                node_function_value.value= "";
+            }	
+
+            var node_element_order = document.getElementById(element_name+"_"+element_order);		
+            if (node_element_order) {
+                node_element_order.classList.remove("contribution_draft");
+            }
+
+            var node_etiquette_draft = document.getElementById(element_name+"_etiquette_draft");
+            if (node_etiquette_draft) {
+                node_etiquette_draft.remove();
+            }
+            
+            var node_edit = document.getElementById(element_name+"_"+element_order+"_edit");
+            if (node_edit) {
+                node_edit.type= "hidden";
+                node_edit.removeAttribute("data-form_url");
+
+                // Si le bouton ajouter est masquer on le ré-affiche
+                var node_sel = document.getElementById(element_name+"_"+element_order+"_sel");
+                if (node_sel && node_sel.type == "hidden") {
+                    node_sel.type= "button";
+                }
+            }
+
+            //on empeche le changement de page tant que l\'utilisateur n\'a pas ré-enregistré
+            if (typeof unloadOn == "function") {
+                unloadOn();
+            }
 		}
 	}
-				
-	ajax_parse_dom();
 </script>';
 
 $ontology_tpl['form_movable_div'] = '

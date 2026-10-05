@@ -2,7 +2,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: module_admin.tpl.php,v 1.4 2019-05-27 09:43:35 ngantier Exp $
+// $Id: module_admin.tpl.php,v 1.4 2019/05/27 09:43:35 ngantier Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: sauvegardes_form.tpl.php,v 1.8 2019-05-27 14:05:40 btafforeau Exp $
+// $Id: sauvegardes_form.tpl.php,v 1.8 2019/05/27 14:05:40 btafforeau Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
@@ -10,13 +10,13 @@ global $form, $msg;
 
 $form='
 <script>
-//VÃ©rification de la saisie du formulaire
+//Vérification de la saisie du formulaire
 function checkForm()
 {
 	f=document.sauv_sauvegardes;
 	if (f.act.value!="cancel")
 	{
-		//vÃ©rifications avant post
+		//vérifications avant post
 		if (f.sauv_sauvegarde_nom.value=="") {
 			alert("'.$msg["sauv_sauvegardes_valid_form_name"].'");
 			return false;

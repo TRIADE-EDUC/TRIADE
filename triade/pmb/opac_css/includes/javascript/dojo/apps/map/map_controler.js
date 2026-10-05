@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: map_controler.js,v 1.16 2019-02-26 13:48:41 tsamson Exp $
+// $Id: map_controler.js,v 1.19 2022/09/23 09:50:50 tsamson Exp $
 
 const TYPE_RECORD = 11;
 const TYPE_LOCATION = 15;
@@ -38,9 +38,8 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 id_img_plus:"",
 		//Les param�tres du constructeur sont un noeud dom auquel sera rattach� la carte OpenLayers & un objet json repr�sentant les donn�es de l'emprises
 		constructor:function(){
-			//console.log(this);
 			//Conversion de degree decimaux en metre (la projection 4326 d�finie la terre en tant qu'une elipse alors que la 900913 la d�finie en tant qu'une sph�re)
-                    this.projFrom = new OpenLayers.Projection("EPSG:4326");
+            this.projFrom = new OpenLayers.Projection("EPSG:4326");
 		    this.projTo = new OpenLayers.Projection("EPSG:900913");
 		    this.formatWKT = new OpenLayers.Format.WKT();
 		    this.mode = arguments[0]['mode'];
@@ -52,16 +51,17 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                 case "search_result" :
                 case "facette" :
                 case "visualization" : 
+                case "cms" :
                     if(arguments[0]['searchId']){
                             this.searchId = arguments[0]['searchId'];
                     }
                     if(arguments[0]['layers_url']){
                             this.layersURL = arguments[0]['layers_url'];
                     }else{
-                        this.dataLayers=arguments[0]['layers'];	
+                        this.dataLayers=arguments[0]['layers'];
                         //Set la vue initiale sur la carte (la vue initiale contient toutes les emprises)
-                        this.initialBounds =new OpenLayers.Bounds(this.transformInitialBounds(arguments[0]['initialFit']));
-                        this.initialBounds=this.initialBounds.transform(this.projFrom,this.projTo);
+                        this.initialBounds = new OpenLayers.Bounds(this.transformInitialBounds(arguments[0]['initialFit']));
+                        this.initialBounds = this.initialBounds.transform(this.projFrom,this.projTo);
                     }
                     if(arguments[0]['data']){
                         this.data = arguments[0].data;
@@ -72,7 +72,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                     if(arguments[0]['id_img_plus']) {
                         this.id_img_plus = arguments[0]['id_img_plus'];
                     }
-                
                     break;
                 case "edition" :
                     this.hiddenField = arguments[0]['hiddenField'];
@@ -109,6 +108,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 			this.map.olMap.addControl(new OpenLayers.Control.PanZoomBar());
 			switch(this.mode){
 				case 'search_result':
+					this.map.olMap.addControl(new OpenLayers.Control.LayerSwitcher());
+					break;
+				case 'cms':
 					this.map.olMap.addControl(new OpenLayers.Control.LayerSwitcher());
 					break;
 				case 'visualization':
@@ -161,6 +163,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				case "facette" :
 				case "visualization" :
 				case "search_result" :
+				case "cms" :
 					var bounds = this.map.olMap.calculateBounds();
 					var geom = bounds.toGeometry();
 					geom = geom.transform(this.projTo, this.projFrom);
@@ -171,7 +174,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 							'handleAs' : "application/json",
 						}).then(callbackLayers);
 			            
-					}else{						
+					}else{
 						//TODO ajax sur un autre mode que la recherche
 						for(var i=0 ; i<this.dataLayers.length ; i++){
 							
@@ -290,16 +293,13 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				};
 				var featureI = this.formatWKT.read(layerParam.holds[i].wkt);
 				featureI.geometry.transform(this.projFrom, this.projTo);
-//				featureI.attributes.records_length = layerParam.holds[i].objects.record.length;
-//				featureI.attributes.class = featureI.geometry.CLASS_NAME;
 				featureI.records_ids = layerParam.holds[i].objects.record;
-				if(this.mode == "search_result" || this.mode == "visualization" || this.mode == "facette"){
+				if(this.mode == "search_result" || this.mode == "visualization"  || this.mode == "cms" || this.mode == "facette"){
 					featureI.style = styleEmprise;
-					if(layerParam.holds[i].color!=null){
+					if (layerParam.holds[i].color) {
 						featureI.style.fillColor = layerParam.holds[i].color;
 						featureI.style.strokeColor = layerParam.holds[i].color;
 					}
-					
 					if(featureI.geometry.CLASS_NAME == "OpenLayers.Geometry.Point"){
 						featureI.style.pointRadius = 8;
 						if(this.mode == "search_result"){
@@ -340,6 +340,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 					break;
 				case "facette" :
 				case 'visualization':
+				case 'cms':
 					break;
 			}
 			this.nbLayers++;
@@ -495,7 +496,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 						});
 					}
 				});			
-				
 			}
 			switch (this.mode){
 				case 'edition':	
@@ -505,6 +505,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				case "facette" :
 				case 'visualization':
 				case 'search_result':
+				case 'cms':
 					var callbackHover = lang.hitch(this, "highlightHolds");
 					var callbackOut = lang.hitch(this, "downlightHolds");
 					var callbackMapOut = lang.hitch(this, "downlightAll");
@@ -549,41 +550,10 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				}
 				for(var i=0 ; i<toHighlight.length ; i++){
 					this.highlightNotice(toHighlight[i]);
-                	this.highlightFeatures(this.featureByNotice[toHighlight[i]], "rgba(0,0,0,0.3)");
+//                    this.highlightFeatures(this.featureByNotice[toHighlight[i]], "rgba(0,0,0,0.3)");
 					
 				}
-			
-		},
-		/*
-		 * Fonction de clonage des features, r�cup�re la g�ometrie & les propri�t�s de base (les ids et le layer sont chang�s afin d'�viter tout bug) 
-		 * 
-		 */
-		cloneFeature:function(feature){
-		var clonedObj = {};
-		  for(var key in feature){
-			  if(key == 'layer'){
-				  clonedObj[key]= null;
-			  }
-			  else if(key == 'geometry'){
-				  clonedObj[key] = {};
-				  for(var key2 in feature[key])
-					  {
-						  if(key2 == 'id'){
-							  clonedObj[key][key2]= 'new id'+feature[key][key2];
-						  }
-						  else{
-							  clonedObj[key][key2]= feature[key][key2];  
-						  }
-					  }
-			  }
-			  else if(key == '_sketch'){
-				  //Nothing
-			  }
-			  else{
-				  clonedObj[key] = feature[key];
-			  }
-		  }
-		  return clonedObj;
+        	this.highlightFeatures([e.feature], "rgba(0,0,0,0.3)");
 		},
 			
 		downlightRecord:function(e){
@@ -593,11 +563,12 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 			var index = this.hoveredFeature.indexOf(e.feature);
 			this.hoveredFeature.splice(index, 1);
 				for(var i=0 ; i<listeIds.length ; i++){
-				this.destroyEmpriseById(listeIds[i]);
+//                this.destroyEmpriseById(listeIds[i]);
 					this.downlightNotice(listeIds[i]);
 				}
-		},
+            this.destroyEmpriseByFeatures([e.feature]);
 		
+        },
 		downlightAll:function(){
 			var style = {fillColor: "#0000ff", strokeColor: "#0000ff", strokeWidth: 1, fillOpacity: 0.4};
 			if(this.layerHighlight==null){
@@ -645,7 +616,9 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				}
 				var style = {fillColor: color, strokeWidth: 1, strokeColor: color, fillOpacity: 0.7, title: libelle};
 				for(var i=0 ; i<arrayFeature.length ; i++){
-					var clonedFeature = this.cloneFeature(arrayFeature[i]);
+                	//on utilise la fonction native de l'objet feature
+                	//c'est plus propre pour la duplication des components (pas de conflit d'id, pas d'emprise qui disparait)
+					var clonedFeature = arrayFeature[i].clone();
 					var numLayer = arrayFeature[i].layer.name.split('_');
 					var numFeature = arrayFeature[i].id.split('_');		
 					clonedFeature.id = numLayer[numLayer.length-1]+'_'+numFeature[numFeature.length-1];				
@@ -702,6 +675,14 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 		destroyEmpriseById:function(id){
 			if(this.layerHighlight!=null){
 				var arrayFeat = this.featureByNotice[id];	
+                this.destroyEmpriseByFeatures(arrayFeat);
+            }
+        },
+        /**
+         * destruction d'une emprise en fonction des features et pas un id de notice
+         */
+        destroyEmpriseByFeatures: function (arrayFeat) {
+            if (this.layerHighlight != null) {
 				if(arrayFeat){
 					var idHighlighted = [];
 					var arrayHigh = [];
@@ -732,7 +713,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 			var indiceFeature = e.feature.id.split('_');
 			var indiceLayer = e.feature.layer.name.split('_');
 			var listeIds = this.dataLayers[indiceLayer[indiceLayer.length-1]].holds[indiceFeature[indiceFeature.length-1]].objects['record'];
-			
 			if(listeIds.length >= 1){
 				if(this.popup == null ){
 					this.popup = new DialogNotice({
@@ -984,6 +964,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	    		break;
 	    	case "facette" :
 	    	case 'visualization':
+	    	case 'cms':
 	    		switch(e.object.CLASS_NAME){
 		    		case "OpenLayers.Control.SelectFeature":
 	    				if(this.featureSelected != null){
@@ -1500,6 +1481,16 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 						this.alreadyZoomed = true;
 					}
 					break;
+				case 'cms':
+					this.initPanel();
+					this.initToggleCluster();
+					this.addToPanel();
+					this.map_controls.toggleCluster.activate();
+					this.initControleAffinage();
+					layer.events.register("featureclick", this, this.showFeaturePage);
+					layer.events.register("featureover", this, this.highlightRecord);
+					layer.events.register("featureout", this, this.downlightRecord);
+					break;
 				case "facette" :
 				case 'visualization':
 					this.initPanel();
@@ -1763,85 +1754,66 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
                     this.box.activate();
                 },
                 affinage: function (bounds) {
-	                	var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom)); 
-	                    var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top)); 
-	                    var boundsBox = new OpenLayers.Bounds();
-	                    boundsBox.extend(new OpenLayers.LonLat(ll.lon,ll.lat));
-	                    boundsBox.extend(new OpenLayers.LonLat(ur.lon,ur.lat));
-	        			var geom = boundsBox.toGeometry();
-	        			geom = geom.transform(self.projTo, self.projFrom);
-						var boundsBefore = self.map.olMap.calculateBounds();
-						var zoomLevel = self.map.olMap.zoom;
-						self.map.olMap.zoomToExtent(boundsBox);
-						if(zoomLevel != self.map.olMap.zoom){
-						//self.map.olMap.baseLayer.events.register('loadend' , false, function(){  
-							self.standby.onHide = function(){
-							if(confirm(pmbDojo.messages.getMessage("carto","carto_refinement_popup"))){
-								if(document.affineRecherche == undefined){
-									domConstruct.place("<form method='post' name='affineRecherche' action='./catalog.php?categ=search&mode=6&sub=launch'>" +
-											"<input type='hidden' name='search[0]' value='s_1' />" +
-											"<input type='hidden' name='search[1]' value='f_78' />" +
-											"<input type='hidden' name='inter_0_s_1' value='' />" +
-											"<input type='hidden' name='op_0_s_1' value='EQ' />" +
-											"<input type='hidden' name='field_0_s_1[]' value='"+self.searchId+"' />" +
-											"<input type='hidden' name='inter_1_f_78' value='and' />" +
-											"<input type='hidden' name='op_1_f_78' value='CONTAINS' />" +
-											"<input type='hidden' id='wktAffinage' name='field_1_f_78[]' value='"+self.formatWKT.extractGeometry(geom)+"' />" +
-											"<input type='hidden' name='explicit_search' value='1' />" +
-											"<input type='hidden' name='launch_search' value='1' />" +
-											"<input type='button' class='bouton' value='"+ pmbDojo.messages.getMessage("carto","carto_btn_affiner") +"' id='affinageButton'/>"+		
-											"</form>", dom.byId('map_search'), "after");		
-											on(dom.byId('affinageButton'), 'click', lang.hitch(self, self.callbackAffinage));
-								}else{
-									dom.byId('wktAffinage').value = self.formatWKT.extractGeometry(geom);
-								}
-							    /*html2canvas(document.getElementById('map_search'), {onrendered: function(canvas) {
-							       	var ctxMap = canvas.getContext("2d");
-							    	//G�n�ration d'une chaine a partir du svg des emprises & creation du canvas sur lequel limage va �tre apos�e
-							    	
-							    	var svgXml = (new XMLSerializer()).serializeToString(document.querySelector('svg'));
-							    	var img = new Image();
-							    	//img.setAttribute('crossOrigin','anonymous');
-							    	
-							    	img.src = "data:image/svg+xml;base64," + btoa(svgXml);
-							    	img.onload = function(){
-							    		ctxMap.drawImage(img, 0,0 );
-							    		localStorage[self.searchId] = canvas.toDataURL();
-							    		document.affineRecherche.submit();
-							    	}
-							    },taintTest:false,allowTaint:true});*/
-									document.affineRecherche.submit();
-								}else{
-									self.map.olMap.zoomToExtent(boundsBefore);
-									self.standby.onHide = "";
-								}
+                	var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom)); 
+                    var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top)); 
+                    var boundsBox = new OpenLayers.Bounds();
+                    boundsBox.extend(new OpenLayers.LonLat(ll.lon,ll.lat));
+                    boundsBox.extend(new OpenLayers.LonLat(ur.lon,ur.lat));
+        			var geom = boundsBox.toGeometry();
+        			geom = geom.transform(self.projTo, self.projFrom);
+					var boundsBefore = self.map.olMap.calculateBounds();
+					var zoomLevel = self.map.olMap.zoom;
+					self.map.olMap.zoomToExtent(boundsBox);
+					if(zoomLevel != self.map.olMap.zoom){
+						self.standby.onHide = function(){
+						if(confirm(pmbDojo.messages.getMessage("carto","carto_refinement_popup"))){
+							if(document.affineRecherche == undefined){
+								domConstruct.place("<form method='post' name='affineRecherche' action='./catalog.php?categ=search&mode=6&sub=launch'>" +
+										"<input type='hidden' name='search[0]' value='s_1' />" +
+										"<input type='hidden' name='search[1]' value='f_78' />" +
+										"<input type='hidden' name='inter_0_s_1' value='' />" +
+										"<input type='hidden' name='op_0_s_1' value='EQ' />" +
+										"<input type='hidden' name='field_0_s_1[]' value='"+self.searchId+"' />" +
+										"<input type='hidden' name='inter_1_f_78' value='and' />" +
+										"<input type='hidden' name='op_1_f_78' value='CONTAINS' />" +
+										"<input type='hidden' id='wktAffinage' name='field_1_f_78[]' value='"+self.formatWKT.extractGeometry(geom)+"' />" +
+										"<input type='hidden' name='explicit_search' value='1' />" +
+										"<input type='hidden' name='launch_search' value='1' />" +
+										"<input type='button' class='bouton' value='"+ pmbDojo.messages.getMessage("carto","carto_btn_affiner") +"' id='affinageButton'/>"+		
+										"</form>", dom.byId('map_search'), "after");		
+										on(dom.byId('affinageButton'), 'click', lang.hitch(self, self.callbackAffinage));
+							}else{
+								dom.byId('wktAffinage').value = self.formatWKT.extractGeometry(geom);
 							}
-						}else{
-							if(confirm(pmbDojo.messages.getMessage("carto","carto_refinement_popup"))){
-								if(document.affineRecherche == undefined){
-									domConstruct.place("<form method='post' name='affineRecherche' action='./catalog.php?categ=search&mode=6&sub=launch'>" +
-											"<input type='hidden' name='search[0]' value='s_1' />" +
-											"<input type='hidden' name='search[1]' value='f_78' />" +
-											"<input type='hidden' name='inter_0_s_1' value='' />" +
-											"<input type='hidden' name='op_0_s_1' value='EQ' />" +
-											"<input type='hidden' name='field_0_s_1[]' value='"+self.searchId+"' />" +
-											"<input type='hidden' name='inter_1_f_78' value='and' />" +
-											"<input type='hidden' name='op_1_f_78' value='CONTAINS' />" +
-											"<input type='hidden' id='wktAffinage' name='field_1_f_78[]' value='"+self.formatWKT.extractGeometry(geom)+"' />" +
-											"<input type='hidden' name='explicit_search' value='1' />" +
-											"<input type='hidden' name='launch_search' value='1' />" +
-											"<input type='button' class='bouton' value='"+ pmbDojo.messages.getMessage("carto","carto_btn_affiner") +"' id='affinageButton'/>"+		
-											"</form>", dom.byId('map_search'), "after");		
-											on(dom.byId('affinageButton'), 'click', lang.hitch(self, self.callbackAffinage));
-								}else{
-									dom.byId('wktAffinage').value = self.formatWKT.extractGeometry(geom);
-								}
 								document.affineRecherche.submit();
+							}else{
+								self.map.olMap.zoomToExtent(boundsBefore);
+								self.standby.onHide = "";
 							}
 						}
-						
-					
-        			//
+					}else{
+						if(confirm(pmbDojo.messages.getMessage("carto","carto_refinement_popup"))){
+							if(document.affineRecherche == undefined){
+								domConstruct.place("<form method='post' name='affineRecherche' action='./catalog.php?categ=search&mode=6&sub=launch'>" +
+										"<input type='hidden' name='search[0]' value='s_1' />" +
+										"<input type='hidden' name='search[1]' value='f_78' />" +
+										"<input type='hidden' name='inter_0_s_1' value='' />" +
+										"<input type='hidden' name='op_0_s_1' value='EQ' />" +
+										"<input type='hidden' name='field_0_s_1[]' value='"+self.searchId+"' />" +
+										"<input type='hidden' name='inter_1_f_78' value='and' />" +
+										"<input type='hidden' name='op_1_f_78' value='CONTAINS' />" +
+										"<input type='hidden' id='wktAffinage' name='field_1_f_78[]' value='"+self.formatWKT.extractGeometry(geom)+"' />" +
+										"<input type='hidden' name='explicit_search' value='1' />" +
+										"<input type='hidden' name='launch_search' value='1' />" +
+										"<input type='button' class='bouton' value='"+ pmbDojo.messages.getMessage("carto","carto_btn_affiner") +"' id='affinageButton'/>"+		
+										"</form>", dom.byId('map_search'), "after");		
+										on(dom.byId('affinageButton'), 'click', lang.hitch(self, self.callbackAffinage));
+							}else{
+								dom.byId('wktAffinage').value = self.formatWKT.extractGeometry(geom);
+							}
+							document.affineRecherche.submit();
+						}
+					}
                 }
             });
             this.map_controls.affinage = control;
@@ -2332,7 +2304,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	    	this.inherited(arguments);
 	    },
 	    callbackCluster:function(i,zoomLevel, data){
-	    	//console.log('CallbackCluster indice:', i, ' zoom level: ', zoomLevel);
 	    	if(!this.featuresByZoom){
 	    		this.featuresByZoom = {};
 	    	}
@@ -2341,7 +2312,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	    	}
     		if(!this.featuresByZoom[zoomLevel][i]){
     			this.featuresByZoom[zoomLevel][i] = new Array();
-	    		//this.dataLayers[i].holds = [];
 		    	for(var j=0 ; j<data.length ; j++){
 		    		var styleEmprise = {
 						    strokeWidth: 2,
@@ -2354,9 +2324,6 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 		    		if(featureI.geometry.CLASS_NAME == "OpenLayers.Geometry.Point"){
 						featureI.style.pointRadius = 8;
 						featureI.style.label = data[j].objects.record.length.toString();
-//						if(data[j].objects.record.length>20){
-//							featureI.style.pointRadius = 20; 
-//						}
 						if(data[j].objects.record.length > 20){
 							featureI.style.pointRadius = 14;
 							if(data[j].objects.record.length > 100){
@@ -2368,51 +2335,43 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 		    		featureI.attributes.records_length = data[j].objects.record.length;
 		    		featureI.attributes.class = featureI.geometry.CLASS_NAME;
 		    		featureI.id = i+"_"+"feature_"+this.map.olMap.id+"_"+j;
-		    		//this.dataLayers[i].holds.push(data[j]);
 		    		featureI.geometry.transform(this.projFrom, this.projTo);
 		    		this.featuresByZoom[zoomLevel][i].push(featureI);
 
 		    	}	
     		}
-	    	//console.log(this.featuresByZoom);
-	    	//console.log('data received', data, i, zoomLevel);
 	    	//Stocker avec le niveau de zoom;
 	    	this.printByZoomLevel(zoomLevel, i);
 	    },
 	    printByZoomLevel:function(zoomLevel, i){
-	    	//console.log('i, print by zoomlvl', i);
 	    	var currentLayer = this.map.olMap.getLayersByName(this.dataLayers[i].name+"_"+i)[0];
 	    	currentLayer.removeAllFeatures();
-	    	//this.map.olMap.layers[i].destroyFeatures();
-	    	//console.log('features zoom length', this.featuresByZoom[zoomLevel][i].length);
-                var features = new Array();
-                if(this.featuresByZoom[zoomLevel][i]){
-                    currentLayer.addFeatures(this.featuresByZoom[zoomLevel][i]);
-                    this.dataLayers[i].holds = [];
-                    for(var j=0 ; j<this.featuresByZoom[zoomLevel][i].length ; j++){
-                            var obj = {};
-                            obj.objects = {};
-                            obj.objects.record = this.featuresByZoom[zoomLevel][i][j].records_ids;
-                            this.dataLayers[i].holds.push(obj);
-                    }
-                    this.initFeatureByNotice();
+            var features = new Array();
+            if(this.featuresByZoom[zoomLevel][i]){
+                currentLayer.addFeatures(this.featuresByZoom[zoomLevel][i]);
+                this.dataLayers[i].holds = [];
+                for(var j=0 ; j<this.featuresByZoom[zoomLevel][i].length ; j++){
+                        var obj = {};
+                        obj.objects = {};
+                        obj.objects.record = this.featuresByZoom[zoomLevel][i][j].records_ids;
+                        this.dataLayers[i].holds.push(obj);
+                }
+                this.initFeatureByNotice();
 	    	}
-                this.nbLayersReceived++;
+            this.nbLayersReceived++;
 
-                if(this.nbLayersReceived==(this.dataLayers.length)){
-                        this.hidePatience();	
-                }  
-                
-                this.map.olMap.updateSize(); 
+            if(this.nbLayersReceived==(this.dataLayers.length)){
+                this.hidePatience();
+            }
+            
+            this.map.olMap.updateSize(); 
 	    },
 	    zoomEnd:function(event){
 	    	if(this.cluster){
 	    		this.showPatience();
-		    	//console.log('moveEnd', event);
 		    	var bounds = this.map.olMap.calculateBounds();
 				var geom = bounds.toGeometry();
 				geom = geom.transform(this.projTo, this.projFrom);
-					//console.log('features displayed: ', this.displayedFeaturesFromExtent(this.map.olMap.getExtent()));
 				this.nbLayersReceived = 0;
 				for(var j=0 ; j<this.dataLayers.length ; j++){
 					var currentLayer = this.map.olMap.getLayersByName(this.dataLayers[j].name+"_"+j)[0];
@@ -2429,10 +2388,17 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 				}else{
 					for(var i=0 ; i<this.dataLayers.length ; i++){
 						var callbackHolds = lang.hitch(this,"callbackCluster", i, event.object.zoom);
-						request.post(this.dataLayers[i].data_url,{
-							'data': "indice="+i+"&search_id="+this.searchId+"&wkt_map_hold="+geom+"&zoom_level="+event.object.zoom+"&cluster="+this.cluster,
-							'handleAs' : "json",	
-						}).then(callbackHolds);
+						if (this.dataLayers[i].ajax) {
+							request.post(this.dataLayers[i].data_url,{
+								'data': "indice="+i+"&search_id="+this.searchId+"&wkt_map_hold="+geom+"&zoom_level="+event.object.zoom+"&cluster="+this.cluster,
+								'handleAs' : "json",
+							}).then(callbackHolds);
+						} else {
+							for(var i=0 ; i<this.dataLayers.length ; i++){	
+								this.callbackCluster();
+								this.printByZoomLevel(event.object.zoom, i);
+							}
+						}
 					}
 				}		
 	    	}
@@ -2487,20 +2453,17 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 					domConstruct.destroy('cancelLastEdit');
 				}	
 	    	}
-//	    	this.map.olMap.layers[0].selectedFeatures = [backFeat];
-//	    	lastEdit['featureId'];
-//	    	lastEdit['clonedFeature'];
-//	    	lastEdit['control'];
 	    },
+	    
 	    getCurrentActivatedControl: function(){
-	    	//var controls = this.map.olMap.getControlsByClass('OpenLayers.Control.ModifyFeature');
 	    	for(var key in this.map_controls){
 	    		if(this.map_controls[key].active){
 	    			return this.map_controls[key];
 	    		}
 	    	}
 	    	return false;
-	    }, 
+	    },
+	    
 	    deactivateAllControls:function(){
 	    	for(var key in this.map_controls){
 				if(typeof this.map_controls[key].unselectAll == "function"){
@@ -2580,11 +2543,7 @@ define(["dojo/_base/declare", "apps/pmb/PMBDialog", "dojo/dom", "dojox/widget/St
 	    				lastState.control.select(this.map.olMap.layers[0].getFeatureById(lastState.selectedFeature));
 	    			}
 	    		}
-//	    		if(typeof lastState.control.selectFeature == "function"){
-//	    			lastState.control.selectFeature(feat);
-//		    	}
 	    	}
-	    	//this.editionStates.pop();
 	    	if(this.editionStates.length == 1){
 	    		if(dom.byId('cancelLastEdit')!=null){
 					domConstruct.destroy('cancelLastEdit');

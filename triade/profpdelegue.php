@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -41,16 +41,16 @@
 	validerequete("menuprof");
 	$cnx=cnx();
 	?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <?php
 // affichage de la classe
 $saisie_classe=$_GET["sClasseGrp"];
 verif_profp_class($_SESSION["id_pers"],$saisie_classe);
-$sql="SELECT libelle,elev_id,nom,prenom FROM ${prefixe}eleves ,${prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
+$sql="SELECT libelle,elev_id,nom,prenom FROM {$prefixe}eleves ,{$prefixe}classes  WHERE classe='$saisie_classe' AND code_class='$saisie_classe' ORDER BY nom";
 $res=execSql($sql);
 $data=chargeMat($res);
 
@@ -69,7 +69,7 @@ if (isset($_POST["create"])) {
 	$data=aff_delegue($_GET["sClasseGrp"]); //idclasse,nomparent1,nomparent2,eleve1,eleve2
 }	
 
-if (count($data) > 0) {
+if (countTriade($data) > 0) {
 	$idparent1=$data[0][1];
 	$idparent2=$data[0][2];
 	$ideleve1=$data[0][3];
@@ -81,7 +81,7 @@ if (count($data) > 0) {
 	$ideleve2="";
 }
  
-$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM ${prefixe}eleves a,${prefixe}classes b WHERE a.classe='$_GET[sClasseGrp]' AND b.code_class='$_GET[sClasseGrp]' ORDER BY nom";
+$sql="SELECT b.libelle,a.elev_id,a.nom,a.prenom FROM {$prefixe}eleves a,{$prefixe}classes b WHERE a.classe='$_GET[sClasseGrp]' AND b.code_class='$_GET[sClasseGrp]' ORDER BY nom";
 $res=execSql($sql);
 $data_eleve=chargeMat($res);
 ?>
@@ -97,7 +97,7 @@ $data_eleve=chargeMat($res);
     <?php print $parent1 ?>
     <option value="null" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
     <?php
-for ($j=0;$j<count($data_eleve);$j++) {
+for ($j=0;$j<countTriade($data_eleve);$j++) {
 		if ($idparent1 == $data_eleve[$j][1]) { $selected1="selected='selected'"; }else{ $selected1=""; }
 		print "<option STYLE='color:#000066;background-color:#CCCCFF' $selected1 value=\"".$data_eleve[$j][1]."\">".ucwords(trim($data_eleve[$j][2]))." ".trunchaine(trim($data_eleve[$j][3]),15)."</option>";
     }
@@ -111,7 +111,7 @@ for ($j=0;$j<count($data_eleve);$j++) {
     <?php print $parent2 ?>
     <option value="null" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
     <?php
-for ($j=0;$j<count($data_eleve);$j++) {
+for ($j=0;$j<countTriade($data_eleve);$j++) {
 		if ($idparent2 == $data_eleve[$j][1]) { $selected2="selected='selected'"; }else{ $selected2=""; }
 		print "<option STYLE='color:#000066;background-color:#CCCCFF' $selected2 value=\"".$data_eleve[$j][1]."\">".ucwords(trim($data_eleve[$j][2]))." ".trunchaine(trim($data_eleve[$j][3]),15)."</option>";
     }
@@ -125,7 +125,7 @@ for ($j=0;$j<count($data_eleve);$j++) {
     <?php print $eleve1 ?>
     <option value="null" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
 <?php
-for ($j=0;$j<count($data_eleve);$j++) {
+for ($j=0;$j<countTriade($data_eleve);$j++) {
 		if ($ideleve1 == $data_eleve[$j][1]) { $selected3="selected='selected'"; }else{ $selected3=""; }
 		print "<option STYLE='color:#000066;background-color:#CCCCFF' $selected3 value=\"".$data_eleve[$j][1]."\">".ucwords(trim($data_eleve[$j][2]))." ".trunchaine(trim($data_eleve[$j][3]),15)."</option>";
     }
@@ -140,7 +140,7 @@ for ($j=0;$j<count($data_eleve);$j++) {
     <?php print $eleve2 ?>
     <option value="null" STYLE="color:#000066;background-color:#FCE4BA"><?php print LANGCHOIX ?></option>
 <?php
-for ($j=0;$j<count($data_eleve);$j++) {
+for ($j=0;$j<countTriade($data_eleve);$j++) {
 		if ($ideleve2 == $data_eleve[$j][1]) { $selected4="selected='selected'"; }else{ $selected4=""; }
 		print "<option STYLE='color:#000066;background-color:#CCCCFF' $selected4 value=\"".$data_eleve[$j][1]."\">".ucwords(trim($data_eleve[$j][2]))." ".trunchaine(trim($data_eleve[$j][3]),15)."</option>";
     }
@@ -173,17 +173,17 @@ for ($j=0;$j<count($data_eleve);$j++) {
 
 <?php
 // Test du membre pour savoir quel fichier JS je dois executer
-if ($_SESSION[membre] == "menuadmin") :
+if ($_SESSION['membre'] == "menuadmin") :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
 print "</SCRIPT>";
 else :
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
 print "</SCRIPT>";
 top_d();
 print "<SCRIPT language='JavaScript' ";
-print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
 print "</SCRIPT>";
 endif ;
 ?>

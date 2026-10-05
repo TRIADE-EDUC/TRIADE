@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: frbr_entity_records_datanode.xml,v 1.4 2019-01-09 15:55:35 apetithomme Exp $ -->
+$Id: frbr_entity_records_datanode.xml,v 1.7 2022/08/31 08:05:17 rtigero Exp $ -->
 
 <XMLlist>
 	<entry code='frbr_entity_records_datasource_authors'>Auteurs</entry>
@@ -16,7 +16,12 @@ $Id: frbr_entity_records_datanode.xml,v 1.4 2019-01-09 15:55:35 apetithomme Exp 
 	<entry code='frbr_entity_records_datasource_concepts'>Concepts</entry>
 	<entry code='frbr_entity_records_datasource_indexint'>Indexations décimales</entry>
 	<entry code='frbr_entity_records_datasource_works'>Oeuvres</entry>
-    <entry code='frbr_entity_records_datasource_works'>Oeuvres parentes</entry>
+    <entry code='frbr_entity_records_datasource_parent_works'>Oeuvres parentes</entry>
 	<entry code='frbr_entity_records_datasource_records'>Notices</entry>
 	<entry code='frbr_entity_records_datasource_linked_records'>Notices liées</entry>
+    <entry code='frbr_entity_works_datasource_authperso'>Autorités personnalisées</entry>
+    <entry code='frbr_entity_records_datasource_linked_bulletins'>Bulletins liés</entry>
+    <entry code='frbr_entity_records_datasource_serials'>Périodique</entry>
+    <entry code='frbr_entity_records_datasource_bulletins'>Bulletins</entry>
+    <entry code='frbr_entity_records_datasource_analysis'>Articles</entry>
 </XMLlist>

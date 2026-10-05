@@ -11,7 +11,6 @@
 <?php
 include_once("./common/config.inc.php");
 include_once("./librairie_php/db_triade.php");
-$cnx=cnx();
 $idReference=recupcomptegoogleanalytic();
 if (trim($idReference) != "") { ?>
     var websiteIdDuplicate = <?php print $idReference ?>;
@@ -22,5 +21,3 @@ if (trim($idReference) != "") { ?>
   })();
 </script>
 <!-- End Matomo Code -->
-
-

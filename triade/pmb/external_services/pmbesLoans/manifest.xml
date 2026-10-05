@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
+$Id: manifest.xml,v 1.4 2019/08/27 13:34:04 jlaurent Exp $ -->
 <manifest>
 	<name>pmbesLoans</name>
 	<description>msg:Loans_functions_description</description>
@@ -16,7 +16,7 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 			<inputs>
 				<description>msg:filterLoansReaders_input_description</description>
 				<param name="filter_name" type="scalar" dataType="string" description="msg:filterLoansReaders_filter_name"/>
-				<param name="filter_source" type="scalar" dataType="string" description="msg:filterLoansReaders_filter_source"/>
+				<param name="filter_source" type="scalar" dataType="string" description="msg:filterLoansReaders_filter_source" optional = "yes"/>
 				<param name="display" type="scalar" dataType="string" description="msg:filterLoansReaders_display"/>
 				<param name="filter" type="scalar" dataType="string" description="msg:filterLoansReaders_filter"/>
 				<param name="sort" type="scalar" dataType="string" description="msg:filterLoansReaders_sort"/>
@@ -56,14 +56,14 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 		<method name="listLoansReaders" rights="" version="1.0" comment="msg:listLoansReaders_description" language_independant="true">
 			<inputs>
 				<description>msg:listLoansReaders_input_description</description>
-				<param name="loan_type" type="scalar" dataType="integer" description="msg:listLoansReaders_loan_type"/>
-				<param name="f_loc" type="scalar" dataType="integer" description="msg:listLoansReaders_f_loc"/>
-				<param name="f_categ" type="scalar" dataType="integer" description="msg:listLoansReaders_f_categ"/>
-				<param name="f_group" type="scalar" dataType="integer" description="msg:listLoansReaders_f_group"/>			
-				<param name="f_codestat" type="scalar" dataType="integer" description="msg:listLoansReaders_f_codestat"/>
-				<param name="sort_by" type="scalar" dataType="integer" description="msg:listLoansReaders_sort_by"/>			
-				<param name="limite_mysql" type="scalar" dataType="integer" description="msg:listLoansReaders_limite_mysql"/>
-				<param name="limite_page" type="scalar" dataType="integer" description="msg:listLoansReaders_limite_page"/>
+				<param name="loan_type" type="scalar" dataType="integer" description="msg:listLoansReaders_loan_type" optional = "yes"  default_value = "0"/>
+				<param name="f_loc" type="scalar" dataType="integer" description="msg:listLoansReaders_f_loc" optional = "yes" default_value = "0"/>
+				<param name="f_categ" type="scalar" dataType="integer" description="msg:listLoansReaders_f_categ" optional = "yes" default_value = "0"/>
+				<param name="f_group" type="scalar" dataType="integer" description="msg:listLoansReaders_f_group" optional = "yes" default_value = "0"/>			
+				<param name="f_codestat" type="scalar" dataType="integer" description="msg:listLoansReaders_f_codestat" optional = "yes" default_value = "0"/>
+				<param name="sort_by" type="scalar" dataType="integer" description="msg:listLoansReaders_sort_by" optional = "yes" default_value = "0"/>			
+				<param name="limite_mysql" type="scalar" dataType="integer" description="msg:listLoansReaders_limite_mysql" optional = "yes"/>
+				<param name="limite_page" type="scalar" dataType="integer" description="msg:listLoansReaders_limite_page" optional = "yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:listLoansReaders_output_description</description>
@@ -73,9 +73,9 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 		<method name="listLoansGroups" rights="" version="1.0" comment="msg:listLoansGroups_description" language_independant="true">
 			<inputs>
 				<description>msg:listLoansGroups_input_description</description>
-				<param name="loan_type" type="scalar" dataType="integer" description="msg:listLoansGroups_loan_type"/>
-				<param name="limite_mysql" type="scalar" dataType="integer" description="msg:listLoansGroups_limite_mysql"/>
-				<param name="limite_page" type="scalar" dataType="integer" description="msg:listLoansGroups_limite_page"/>
+				<param name="loan_type" type="scalar" dataType="integer" description="msg:listLoansGroups_loan_type" optional = "yes" default_value = "0"/>
+				<param name="limite_mysql" type="scalar" dataType="integer" description="msg:listLoansGroups_limite_mysql" optional = "yes"/>
+				<param name="limite_page" type="scalar" dataType="integer" description="msg:listLoansGroups_limite_page" optional = "yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:listLoansByGroup_output_description</description>
@@ -91,8 +91,8 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 			<inputs>
 				<description>msg:buildPdfLoansDelayReaders_input_description</description>
 				<param name="t_empr" type="scalar" dataType="array" description="msg:buildPdfLoansDelayReaders_t_empr"/>
-				<param name="biblio_location" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReaders_biblio_location"/>
-				<param name="niveau_relance" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReaders_niveau_relance"/>
+				<param name="biblio_location" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReaders_biblio_location" optional = "yes" default_value = "0"/>
+				<param name="niveau_relance" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReaders_niveau_relance" optional = "yes" default_value = "0"/>
 			</inputs>
 			<outputs>
 				<description>msg:buildPdfLoansDelayReaders_output_description</description>
@@ -107,7 +107,7 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:buildPdfLoansRunningGroup_input_description</description>
-				<param name="id_groupe" type="scalar" dataType="integer" description="msg:buildPdfLoansRunningGroup_id_groupe"/>
+				<param name="id_groupe" type="scalar" dataType="integer" description="msg:buildPdfLoansRunningGroup_id_groupe" optional = "yes"/>
 			</inputs>
 			<outputs>
 				<description>msg:buildPdfLoansRunningGroup_output_description</description>
@@ -150,8 +150,8 @@ $Id: manifest.xml,v 1.2 2018-06-08 10:21:33 vtouchard Exp $ -->
 			</pmb_requirements>
 			<inputs>
 				<description>msg:buildPdfLoansDelayReader_input_description</description>
-				<param name="id_empr" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReader_id_empr"/>
-				<param name="biblio_location" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReader_biblio_location"/>
+				<param name="id_empr" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReader_id_empr" />
+				<param name="biblio_location" type="scalar" dataType="integer" description="msg:buildPdfLoansDelayReader_biblio_location" optional ="yes"  default_value = "0"/>
 			</inputs>
 			<outputs>
 				<description>msg:buildPdfLoansDelayReader_output_description</description>

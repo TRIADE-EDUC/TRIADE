@@ -1,11 +1,12 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: index_concept.class.php,v 1.3 2017-02-28 11:43:27 dgoron Exp $
+// $Id: index_concept.class.php,v 1.8 2023/05/04 14:15:47 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/skos/skos_concept.class.php");
 require_once($include_path."/templates/index_concept_form.tpl.php");
 
@@ -60,19 +61,19 @@ if(!defined('TYPE_CMS_ARTICLE')){
 class index_concept {
 	
 	/**
-	 * Type d'objet Ã  indexer
+	 * Type d'objet à indexer
 	 * @var int
 	 */
 	private $object_type;
 	
 	/**
-	 * Identifiant de l'objet indexÃ© (si il existe)
+	 * Identifiant de l'objet indexé (si il existe)
 	 * @var int
 	 */
 	private $object_id;
 	
 	/**
-	 * Tableau des concepts associÃ©s Ã  l'objet
+	 * Tableau des concepts associés à l'objet
 	 * @var skos_concept
 	 */
 	private $concepts = array();
@@ -144,7 +145,7 @@ class index_concept {
 	}
 	
 	/**
-	 * Instancie les concepts d'aprÃ¨s les donnÃ©es du formulaire
+	 * Instancie les concepts d'après les données du formulaire
 	 */
 	public function get_from_form() {
 		global $concept, $tab_concept_order;
@@ -166,7 +167,7 @@ class index_concept {
 		global $concept;
 		
 		if (count($concept)) {
-			foreach ($concept as $index => $object) {
+			foreach ($concept as $object) {
 				if (isset($object['value']) && $object['value']) {
 					return true;
 				}
@@ -179,11 +180,9 @@ class index_concept {
 	 * Sauvegarde
 	 */
 	public function save($from_form = true) {
-		global $dbh;
-		
 		// On commence par supprimer l'existant
 		$query = "delete from index_concept where num_object = ".$this->object_id." and type_object = ".$this->object_type;
-		pmb_mysql_query($query, $dbh);
+		pmb_mysql_query($query);
 		
 		// On sauvegarde les infos transmise par le formulaire
 		if($from_form){
@@ -191,18 +190,18 @@ class index_concept {
 		}
 		foreach ($this->concepts as $order => $concept) {
 			$query = "insert into index_concept (num_object, type_object, num_concept, order_concept) values (".$this->object_id.",".$this->object_type.",".$concept->get_id().",".$order.")";
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 		}
 	}
 	
 	public function get_concepts() {
-		global $dbh;
 		if (!count($this->concepts) && $this->object_id) {
+			$this->concepts = array();
 			$query = "select num_concept, order_concept from index_concept where num_object = ".$this->object_id." and type_object = ".$this->object_type." order by order_concept";
-			$result = pmb_mysql_query($query, $dbh);
+			$result = pmb_mysql_query($query);
 			if ($result && pmb_mysql_num_rows($result)) {
 				while ($row = pmb_mysql_fetch_object($result)){
-					$this->concepts[$row->order_concept] = new skos_concept($row->num_concept);
+					$this->concepts[] = new skos_concept($row->num_concept);
 				}
 			}
 		}
@@ -210,7 +209,7 @@ class index_concept {
 	}
 	
 	/**
-	 * Retourne la liste des concepts pour l'affichage dans l'aperÃ§u de notice
+	 * Retourne la liste des concepts pour l'affichage dans l'aperçu de notice
 	 * @return string
 	 */
 	public function get_isbd_display() {
@@ -240,7 +239,7 @@ class index_concept {
 				$sorted_concepts[$scheme][$concept->get_id()] = $concept->get_display_label();
 			}
 			
-			//On gÃ©nÃ¨re la liste
+			//On génère la liste
 			foreach ($sorted_concepts as $scheme => $concepts) {
 				$isbd_display .= "<br />";
 				// Si affichage en ligne, on affiche le nom du schema qu'une fois
@@ -250,14 +249,14 @@ class index_concept {
 				
 				$concepts_list = "";
 				
-				// On trie par ordre alphabÃ©tique si spÃ©cifiÃ© en paramÃ¨tre
+				// On trie par ordre alphabétique si spécifié en paramètre
 				if ($thesaurus_concepts_affichage_ordre != 1) {
 					asort($concepts);
 				}
 				foreach ($concepts as $concept_id => $concept_display_label) {
 					$current_concept = "";
 					
-					// Si affichage les uns en dessous des autres, on affiche le schema Ã  chaque fois
+					// Si affichage les uns en dessous des autres, on affiche le schema à chaque fois
 					if ($thesaurus_concepts_concept_in_line != 1) {
 						$current_concept = "[".$scheme."] ";
 					}
@@ -266,7 +265,7 @@ class index_concept {
 					$current_concept = str_replace("!!concept_display_label!!", $concept_display_label, $current_concept);
 					
 					if ($concepts_list) {
-						// On va chercher le sÃ©parateur spÃ©cifiÃ© dans les paramÃ¨tres
+						// On va chercher le séparateur spécifié dans les paramètres
 						if ($thesaurus_concepts_concept_in_line == 1) {
 							$concepts_list .= " ; ";
 						} else {
@@ -283,11 +282,11 @@ class index_concept {
 	}
 
 	/**
-	 * Retourne les donnÃ©es des concepts pour l'affichage dans les template
+	 * Retourne les données des concepts pour l'affichage dans les template
 	 * @return string
 	 */
 	public function get_data() {
-		global $thesaurus_concepts_affichage_ordre, $thesaurus_concepts_concept_in_line;
+		global $thesaurus_concepts_affichage_ordre;
 		global $index_concept_isbd_display_concept_link;
 		global $msg;
 	
@@ -307,17 +306,17 @@ class index_concept {
 				}
 				$sorted_concepts[$scheme][$concept->get_id()] = $concept->get_display_label();
 			}				
-			//On gÃ©nÃ¨re la liste
+			//On génère la liste
 			foreach ($sorted_concepts as $scheme => $concepts) {	
-				// On trie par ordre alphabÃ©tique si spÃ©cifiÃ© en paramÃ¨tre
+				// On trie par ordre alphabétique si spécifié en paramètre
 				if ($thesaurus_concepts_affichage_ordre != 1) {
 					asort($concepts);
 				}
 				foreach ($concepts as $concept_id => $concept_display_label) {
 					$concept_data = array();
 					$concept_data['sheme']=$scheme;
-					$link=str_replace("!!concept_id!!", $concept_id, $index_concept_isbd_display_concept_link);
-					$link=str_replace("!!concept_display_label!!", $concept_display_label, $link);
+					$link=str_replace("!!concept_id!!", $concept_id ?? "", $index_concept_isbd_display_concept_link);
+					$link=str_replace("!!concept_display_label!!", $concept_display_label ?? "", $link);
 					$concept_data['link']=$link;
 					$concept_data['id']=$concept_id;
 					$concept_data['label']=$concept_display_label;	
@@ -332,19 +331,16 @@ class index_concept {
 	 * Suppression
 	 */
 	public function delete() {
-		global $dbh;
-	
 		if ($this->object_id) {
 			$query = "delete from index_concept where num_object = ".$this->object_id." and type_object = ".$this->object_type;
-			pmb_mysql_query($query, $dbh);
+			pmb_mysql_query($query);
 		}
 	}
 	
 	public static function update_linked_elements($num_concept){
-		global $dbh;
-		$num_concept+=0;
+		$num_concept = intval($num_concept);
 		$query = "select num_object,type_object from index_concept where num_concept = ".$num_concept;
-		$result = pmb_mysql_query($query, $dbh);
+		$result = pmb_mysql_query($query);
 		if ($result && pmb_mysql_num_rows($result)) {
 			while ($row = pmb_mysql_fetch_object($result)) {
 				switch($row->type_object){
@@ -372,4 +368,4 @@ class index_concept {
 	public function set_object_id($object_id) {
 		$this->object_id = $object_id;
 	}
-} // fin de dÃ©finition de la classe index_concept
+} // fin de définition de la classe index_concept

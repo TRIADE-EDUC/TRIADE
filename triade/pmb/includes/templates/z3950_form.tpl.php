@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: z3950_form.tpl.php,v 1.105 2019-05-28 07:21:53 ngantier Exp $
+// $Id: z3950_form.tpl.php,v 1.110.4.1 2025/03/11 11:02:31 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 global $nb_onglets, $ptab, $msg, $base_path, $charset, $form_notice, $current_module, $zone_article_form, $bt_undo, $zone_categ_form;
-
+global $deflt_notice_catalog_categories_auto;
 // template pour le form de catalogage
 
 // nombre de parties du form
@@ -20,7 +20,7 @@ $ptab[0] = "
 <!-- onglet 0 -->
 <div id='el0Parent' class='parent'>
 	<h3>
-	<img src='".get_url_icon('minus.gif')."' class='img_plus' class='align_bottom' name='imEx' id='el0Img' title='$msg[236]' border='0' onClick=\"expandBase('el0', true); return false;\" />
+	<img src='".get_url_icon('minus.gif')."' class='img_plus' class='align_bottom' name='imEx' id='el0Img' title='$msg[236]' onClick=\"expandBase('el0', true); return false;\" />
 	$msg[712]
 	</h3>
 </div>
@@ -33,24 +33,24 @@ $ptab[0] = "
 	<div class='row'>
 		<input type='text' class='saisie-80em' id='f_title_0' name='f_title_0' value=\"!!title_0!!\" />
 	</div>
-	
-	<!--	Titre propre d'un auteur diffÃ©rent	-->
+
+	<!--	Titre propre d'un auteur différent	-->
 	<div class='row'>
 		<label for='f_title_1' class='etiquette'>$msg[238]</label>
 	</div>
 	<div class='row'>
 		<input type='text' class='saisie-80em' id='f_title_1' name='f_title_1' value=\"!!title_1!!\" />
 	</div>
-	
-	<!--	Titre parallÃ¨le	-->
+
+	<!--	Titre parallèle	-->
 	<div class='row'>
 		<label for='f_title_2' class='etiquette'>$msg[239]</label>
 	</div>
 	<div class='row'>
 		<input type='text' class='saisie-80em' id='f_title_2' name='f_title_2' value=\"!!title_2!!\" />
 	</div>
-	
-	<!--	ComplÃ©ment du titre	-->
+
+	<!--	Complément du titre	-->
 	<div class='row'>
 		<label for='f_title_3' class='etiquette'>$msg[240]</label>
 	</div>
@@ -61,12 +61,26 @@ $ptab[0] = "
 		<!--	Partie de	-->
 		<div class='colonne2'>
 			<label for='f_serie' class='etiquette'>$msg[241]</label>
-			<div class='row'>
-				<input type='text' class='saisie-30emr' id='f_serie' name='f_serie' value=\"!!serie!!\" />
-				<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('$base_path/select.php?what=serie&caller=notice&param1=f_serie_id&param2=f_serie', 'selector')\" />
-				<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_serie.value='';\" />
-				<input type='hidden' name='f_serie_id' />
-			</div>
+            <div class='row'>
+    			<input type=\"radio\" name=\"serie_type\" value=\"use_existing\" !!serie_type_use_existing!! id=\"serie_type_use_existing\" /><label for=\"serie_type_use_existing\">".$msg['notice_integre_serie_use_existing']."</label>
+                <blockquote>
+    				<input type='text' class='saisie-30emr' id='f_serie' name='f_serie' value=\"!!serie!!\" completion='serie' autfield='f_serie_id' autocomplete='off' />
+    				<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('$base_path/select.php?what=serie&caller=notice&param1=f_serie_id&param2=f_serie', 'selector')\" />
+    				<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_serie.value='';\" />
+    				<input type='hidden' name='f_serie_id' id='f_serie_id' value='!!serie_id!!' />
+                </blockquote>
+    			<input type='radio' name=\"serie_type\" value=\"insert_new\" !!serie_type_insert_new!! id=\"serie_type_insert_new\" /><label for=\"serie_type_insert_new\">".$msg['notice_integre_serie_new']."</label>
+    	        <blockquote>
+                    <div class='row'>
+    			        <div class='colonne' style='margin-right:5px'>
+    						<label for='f_serie_new' class='etiquette'>".$msg['233']."</label>
+    						<div class='row'>
+    							<input type='text' class='saisie-50em' id='f_serie_new' name='f_serie_new' value=\"!!serie_new_name!!\" />
+    						</div>
+    				    </div>
+    				</div>
+                </blockquote>
+            </div>
 		</div>
 		<!--	Partie de	-->
 		<div class='colonne2'>
@@ -80,8 +94,8 @@ $ptab[0] = "
 ";
 
 //	----------------------------------------------------
-//	Mention de responsabilitÃ©
-// 	  $ptab[1] : contenu de l'onglet 1 (mention de responsabilitÃ©)
+//	Mention de responsabilité
+// 	  $ptab[1] : contenu de l'onglet 1 (mention de responsabilité)
 //	----------------------------------------------------
 
 $ptab[1] = "
@@ -172,7 +186,7 @@ $ptab[1] = "
         row.appendChild(f_aut0_type);
         colonne.appendChild(row);
         aut.appendChild(colonne);
-		
+
         // fonction
         colonne=document.createElement('div');
         colonne.className='colonne_suite';
@@ -227,7 +241,7 @@ $ptab[1] = "
         ajax_pack_element(f_aut0);
 		ajax_pack_element(f_f0);
     }
-    
+
     function changeAuthorType(indice){
     	var select_name = 'f_author_type_'+indice;
     	var date_label =  'l_author_date_'+indice;
@@ -243,7 +257,7 @@ $ptab[1] = "
     	var ville_div = 'div_author_ville_'+indice;
     	var subdivision_div = 'div_author_subdivision_'+indice;
     	var numero_div = 'div_author_numero_'+indice;
-    	var web_div = 'div_author_web_'+indice;    	
+    	var web_div = 'div_author_web_'+indice;
     	if(document.getElementById(select_name).value == '70'){
     		document.getElementById(date_label).classname = 'colonne2';
     		document.getElementById(date_div).classname = 'colonne2';
@@ -276,7 +290,7 @@ $ptab[1] = "
     		document.getElementById(web_div).style.display = '';
     	}
     }
-    
+
     function check_link(id) {
 		w=window.open(document.getElementById(id).value);
 		w.focus();
@@ -286,12 +300,12 @@ $ptab[1] = "
 <!-- onglet 1 -->
 <div id='el1Parent' class='parent'>
 	<h3>
-	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el1Img' onClick=\"expandBase('el1', true); return false;\" title='$msg[243]' border='0' />
+    ".get_expandBase_button('el1', '243')."
 	$msg[243]
 	</h3>
 </div>
 <div id='el1Child' class='child' >
-	<!--	Auteur principal	-->	
+	<!--	Auteur principal	-->
 	<label for='f_aut0' class='etiquette'>$msg[244]</label><br />
 	<input type=\"radio\" id=\"author0_type_use_existing\" !!author0_type_use_existing!! value=\"use_existing\" name=\"author0_type\" /><label for=\"author0_type_use_existing\">".$msg['notice_integre_author_use_existing']."</label>
 	<blockquote>
@@ -328,7 +342,7 @@ $ptab[1] = "
 					<option value='71' !!author_type_71_0!!>$msg[204]</option>
 					<option value='72' !!author_type_72_0!!>".$msg['congres_libelle']."</option>
 				</select>
-			</div>					
+			</div>
 			<div class='colonne_suite'>
 				<label for='f_author_function_label_0' class='etiquette'>$msg[245]</label>
 			</div>
@@ -338,7 +352,7 @@ $ptab[1] = "
 				<input type='text' class='saisie-20em' name='f_author_name_0' value=\"!!author_name_0!!\" />
 				<input type='text' class='saisie-15em' name='f_author_rejete_0' value=\"!!author_rejete_0!!\" />
 				<input type='text' class='saisie-15em' name='f_authority_number_0' value=\"!!authority_number_0!!\" />
-			</div>					
+			</div>
 			<div class='colonne_suite'>
 				<input type='text' class='saisie-15emr' id='f_author_function_label_0' name='f_author_function_label_0' completion=\"fonction\" autfield=\"f_author_function_0\" value=\"!!author_function_label_0!!\" />
 				<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=function&caller=notice&p1=f_author_function_0&p2=f_author_function_label_0', 'selector')\" />
@@ -366,7 +380,7 @@ $ptab[1] = "
 			</div>
 			<div class='colonne_suite' id='div_author_pays_0' style='display:!!display_0!!'>
 				<input type='text' class='saisie-20em' name='f_author_pays_0' id='f_author_pays_0' value=\"!!author_pays_0!!\" />
-			</div>					
+			</div>
 		</div>
 		<div class='row'>
 			<div class='colonne4' id='l_author_ville_0' style='display:!!display_0!!'>
@@ -388,7 +402,7 @@ $ptab[1] = "
 			</div>
 			<div class='colonne_suite' id='div_author_numero_0' style='display:!!display_0!!'>
 				<input type='text' class='saisie-20em' name='f_author_numero_0' id='f_author_numero_0' value=\"!!author_numero_0!!\" />
-			</div>					
+			</div>
 		</div>
 		<div class='row'>
 			<div class='colonne' id='l_author_web_0' style='display:!!display_0!!'>
@@ -413,7 +427,7 @@ $ptab[1] = "
 		</div>
 	</blockquote>
 	<br clear=\"all\" /><br />
-	
+
 	<!--	autres auteurs	-->
 	<div class='row'>
 		<div class='row'>
@@ -496,14 +510,14 @@ if ($pmb_use_uniform_title) {
 	<!-- onglet 230 -->
 	<div id='el230Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el230Img' title='titres_uniformes' border='0' onClick=\"expandBase('el230', true); return false;\" />
+        ".get_expandBase_button('el230', 'titres_uniformes')."
 	    ".$msg['catal_onglet_titre_uniforme']."
 	</h3>
 	</div>
 	<div id='el230Child' class='child' etirable='yes' title='".htmlentities($msg['aut_menu_titre_uniforme'],ENT_QUOTES, $charset)."'>
 		<div id='el230Child_0' title='".htmlentities($msg['aut_menu_titre_uniforme'],ENT_QUOTES, $charset)."' movable='yes'>
-			<!--    Titres uniformes    -->    
-			!!titres_uniformes!!   
+			<!--    Titres uniformes    -->
+			!!titres_uniformes!!
 		</div>
 	</div>
 	";
@@ -577,13 +591,13 @@ $ptab[11] = "<br />
 			<div class='row'>
 				<div class='colonne4' id='div_author_date_1!!iaut!!'>
 					<input type='text' class='saisie-20emr' name='f_author_date_1!!iaut!!' id='f_author_date_1!!iaut!!' value=\"!!author_date_1!!\" />
-				</div>	
+				</div>
 				<div class='colonne4' id='div_author_lieu_1!!iaut!!' style='display:!!display_1!!iaut!!!!'>
 					<input type='text' class='saisie-20emr' name='f_author_lieu_1!!iaut!!' id='f_author_lieu_1!!iaut!!' value=\"!!author_lieu_1!!\" />
 				</div>
 				<div class='colonne_suite' id='div_author_pays_1!!iaut!!' style='display:!!display_1!!iaut!!!!'>
 					<input type='text' class='saisie-20emr' name='f_author_pays_1!!iaut!!' id='f_author_pays_1!!iaut!!' value=\"!!author_pays_1!!\" />
-				</div>	
+				</div>
 			</div>
 			<div class='row'>
 					<div class='colonne4' id='l_author_ville_1!!iaut!!' style='display:!!display_1!!iaut!!!!'>
@@ -605,7 +619,7 @@ $ptab[11] = "<br />
 					</div>
 					<div class='colonne_suite' id='div_author_numero_1!!iaut!!' style='display:!!display_1!!iaut!!!!'>
 						<input type='text' class='saisie-20emr' name='f_author_numero_1!!iaut!!' id='f_author_numero_1!!iaut!!' value=\"!!author_numero_1!!\" />
-					</div>					
+					</div>
 				</div>
 				<div class='row'>
 					<div class='colonne' id='l_author_web_1!!iaut!!' style='display:!!display_1!!iaut!!!!'>
@@ -658,7 +672,7 @@ $ptab[12] = "<br />
 	            </div>
 	        </div>
 		</blockquote>
-		
+
 		<br clear=\"all\" />
 		<input type=\"radio\" id=\"author2_type_insert_new_!!iaut!!\" !!author2_type_insert_new_!! value=\"insert_new\" name=\"author2_type_!!iaut!!\" /><label for=\"author2_type_insert_new_!!iaut!!\">".$msg['notice_integre_author_new']."</label>
 		<blockquote>
@@ -707,7 +721,7 @@ $ptab[12] = "<br />
 				</div>
 				<div class='colonne_suite' id='div_author_pays_2!!iaut!!' style='display:!!display_2!!iaut!!!!'>
 					<input type='text' class='saisie-20em' name='f_author_pays_2!!iaut!!' id='f_author_pays_2!!iaut!!' value=\"!!author_pays_2!!\" />
-				</div>	
+				</div>
 			</div>
 			<div class='row'>
 					<div class='colonne4' id='l_author_ville_2!!iaut!!' style='display:!!display_2!!iaut!!!!'>
@@ -729,7 +743,7 @@ $ptab[12] = "<br />
 					</div>
 					<div class='colonne_suite' id='div_author_numero_2!!iaut!!' style='display:!!display_2!!iaut!!!!'>
 						<input type='text' class='saisie-20em' name='f_author_numero_2!!iaut!!' id='f_author_numero_2!!iaut!!' value=\"!!author_numero_2!!\" />
-					</div>					
+					</div>
 				</div>
 				<div class='row'>
 					<div class='colonne' id='l_author_web_2!!iaut!!' style='display:!!display_2!!iaut!!!!'>
@@ -752,21 +766,21 @@ $ptab[12] = "<br />
 						<textarea class='saisie-80em' id='f_author_comment_2!!iaut!!' name='f_author_comment_2!!iaut!!' cols='62' rows='4' wrap='virtual'>!!author_comment_2!!</textarea>
 					</div>
 				</div>
-			<br />	
+			<br />
 			<hr style='margin: 2px 0 2px 0;'>
 		</blockquote>
 	" ;
 
 
 //	----------------------------------------------------
-//	Adresse, Ã©diteurs, collection
+//	Adresse, éditeurs, collection
 // 	  $ptab[2] : contenu de l'onglet 2
 //	----------------------------------------------------
 $ptab[2] = "
 <!-- onglet 2 -->
 <div id='el2Parent' class='parent'>
 	<h3>
-	<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el2Img' title=\"zone de l'adresse\" border='0' onClick=\"expandBase('el2', true); return false;\" />
+    ".get_expandBase_button('el2')."
 	$msg[249]
 	</h3>
 </div>
@@ -822,7 +836,7 @@ $ptab[2] = "
 					</div>
 				</div>
 			</div>
-			
+
 			<!--	No. dans la collection	-->
 			<div class='colonne_suite'>
 				<label for='f_nbr_in_collection' class='etiquette'>$msg[253]</label>
@@ -855,7 +869,7 @@ $ptab[2] = "
 		</div>
 	</blockquote>
 	<br clear=\"all\" /><br /><br /><br />
-	
+
 	<!--	Sous collection	-->
 	<input type=\"radio\" id=\"subcollection_type_use_existing\" value=\"use_existing\" !!subcollection_type_use_existing!! name=\"subcollection_type\" /><label for=\"subcollection_type_use_existing\">".$msg['notice_integre_subcollection_use_existing']."</label>
 	<blockquote>
@@ -891,7 +905,7 @@ $ptab[2] = "
 	<br clear=\"all\" /><br /><br />
 
 	<div class='row'>
-		<!--	AnnÃ©e	-->
+		<!--	Année	-->
 		<div class='colonne2'>
 			<label for='f_year' class='etiquette'>$msg[252]</label>
 			<div class='row'>
@@ -908,8 +922,8 @@ $ptab[2] = "
 		</div>
 	</div>
 	<br clear=\"all\" /><br /><br />
-	
-	<!--	Autre Ã©diteur	-->
+
+	<!--	Autre éditeur	-->
 	<div class='row'>
 		<label for='f_ed2' class='etiquette'>$msg[254]</label>
 	</div>
@@ -959,7 +973,7 @@ $ptab[3] = "
 <!-- onglet 3 -->
 <div id='el3Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el3Img' title='$msg[255]' border='0' onClick=\"expandBase('el3', true); return false;\" />
+        ".get_expandBase_button('el3', '255')."
 		$msg[255]
 	</h3>
 </div>
@@ -986,13 +1000,13 @@ $ptab[4] = "
 <!-- onglet 4 -->
 <div id='el4Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el4Img' title='$msg[257]' border='0' onClick=\"expandBase('el4', true); return false;\" />
+        ".get_expandBase_button('el4', '257')."
 		$msg[258]
 	</h3>
 </div>
 
 <div id='el4Child' class='child' >
-	<!--	Importance matÃ©rielle (nombre de pages, d'Ã©lÃ©ments...)	-->
+	<!--	Importance matérielle (nombre de pages, d'éléments...)	-->
 	<div class='row'>
 		<label for='f_page_nbr' class='etiquette'>$msg[259]</label>
 	</div>
@@ -1000,14 +1014,14 @@ $ptab[4] = "
 		<input type='text' class='saisie-80em' id='f_page_nbr' name='f_page_nbr' value=\"!!page_nbr!!\" />
 	</div>
 
-	<!--	Autres caractÃ¨ristiques matÃ©rielle (ill., ...)	-->
+	<!--	Autres caractèristiques matérielle (ill., ...)	-->
 	<div class='row'>
 		<label for='f_illustration' class='etiquette'>$msg[260]</label>
 	</div>
 	<div class='row'>
 		<input type='text' class='saisie-80em' id='f_illustration' name='f_illustration' value=\"!!illustration!!\" />
 	</div>
-	
+
 	<!--	Format	-->
 	<div class='row'>
 		<label for='f_size' class='etiquette'>$msg[261]</label>
@@ -1024,7 +1038,7 @@ $ptab[4] = "
 		<input type='text' class='saisie-80em' id='f_prix' name='f_prix' value=\"!!prix!!\" />
 	</div>
 
-	<!--	MatÃ©riel d'accompagnement	-->
+	<!--	Matériel d'accompagnement	-->
 	<div class='row'>
 		<label for='f_accompagnement' class='etiquette'>$msg[262]</label>
 	</div>
@@ -1043,14 +1057,14 @@ $ptab[5] = "
 <!-- onglet 5 -->
 <div id='el5Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el5Img' title='$msg[263]' border='0' onClick=\"expandBase('el5', true); return false;\" />
+        ".get_expandBase_button('el5', '263')."
 		$msg[264]
 	</h3>
 </div>
 
 <div id='el5Child' class='child' >
 
-	<!--	Note gÃ©nÃ©rale	-->
+	<!--	Note générale	-->
 	<div class='row'>
 		<label for='f_general_note' class='etiquette'>$msg[265]</label>
 	</div>
@@ -1066,7 +1080,7 @@ $ptab[5] = "
 		<textarea id='f_content_note' class='saisie-80em' name='f_content_note' cols='62' rows='3' wrap='virtual'>!!content_note!!</textarea>
 	</div>
 
-	<!--	RÃ©sumÃ©/extrait	-->
+	<!--	Résumé/extrait	-->
 	<div class='row'>
 		<label for='f_abstract_note' class='etiquette'>$msg[267]</label>
 	</div>
@@ -1083,7 +1097,7 @@ $ptab[5] = "
 //	----------------------------------------------------
 
 
-// Correction du bug d'ajout de catÃ©gorie dans l'onglet indexation
+// Correction du bug d'ajout de catégorie dans l'onglet indexation
 // Reprise du traitement de catal_form.tpl.php et de notice.class.php .NG72
 
 // nombre de parties du form
@@ -1106,8 +1120,8 @@ $ptab[6] = "
         categ=document.createElement('div');
         categ.className='row';
 
-        suffixe = eval('document.notice.max_categ.value');  
-        
+        suffixe = eval('document.notice.max_categ.value');
+
         categ.setAttribute('id','drag_'+suffixe);
         categ.setAttribute('order',suffixe);
         categ.setAttribute('highlight','categ_highlight');
@@ -1117,8 +1131,8 @@ $ptab[6] = "
         categ.setAttribute('recepttype','categ');
         categ.setAttribute('recept','yes');
         categ.setAttribute('dragtype','categ');
-        categ.setAttribute('draggable','yes');        
-        
+        categ.setAttribute('draggable','yes');
+
         nom_id = 'f_categ'+suffixe
         f_categ = document.createElement('input');
         f_categ.setAttribute('name',nom_id);
@@ -1128,7 +1142,7 @@ $ptab[6] = "
         f_categ.setAttribute('value','');
 		f_categ.setAttribute('completion','categories_mul');
         f_categ.setAttribute('autfield','f_categ_id'+suffixe);
- 
+
         del_f_categ = document.createElement('input');
         del_f_categ.setAttribute('id','del_f_categ'+suffixe);
         del_f_categ.onclick=fonction_raz_categ;
@@ -1141,23 +1155,23 @@ $ptab[6] = "
         f_categ_id.name='f_categ_id'+suffixe;
         f_categ_id.setAttribute('type','hidden');
         f_categ_id.setAttribute('id','f_categ_id'+suffixe);
-        f_categ_id.setAttribute('value','');       
-        
+        f_categ_id.setAttribute('value','');
+
         var f_categ_span_handle = document.createElement('span');
         f_categ_span_handle.setAttribute('id','handle_'+suffixe);
         f_categ_span_handle.style.float='left';
-        f_categ_span_handle.style.paddingRight='7px';        
-        
+        f_categ_span_handle.style.paddingRight='7px';
+
         var f_categ_drag_img = document.createElement('img');
         f_categ_drag_img.setAttribute('src','".get_url_icon('sort.png')."');
         f_categ_drag_img.style.width='12px';
         f_categ_drag_img.style.verticalAlign='middle';
-        
+
         f_categ_span_handle.appendChild(f_categ_drag_img);
         f_categ_span_handle.appendChild(f_categ_drag_img);
-        
+
         categ.appendChild(f_categ_span_handle);
-        
+
         categ.appendChild(f_categ);
         space=document.createTextNode(' ');
         categ.appendChild(space);
@@ -1168,21 +1182,21 @@ $ptab[6] = "
 
         document.notice.tab_categ_order.value= document.notice.tab_categ_order.value + ',' +document.notice.max_categ.value;
         document.notice.max_categ.value=suffixe*1+1*1 ;
-       
+
         ajax_pack_element(f_categ);
-        init_drag();   
+        init_drag();
     }
 </script>
 <!-- onglet 6 -->
 <div id='el6Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el6Img' title=\"$msg[268]\" border='0' onClick=\"expandBase('el6', true);recalc_recept(); return false;\" />
+	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el6Img' title=\"$msg[268]\" onClick=\"expandBase('el6', true);recalc_recept(); return false;\" />
 	    $msg[269]
 	</h3>
 </div>
 <div id='el6Child' class='child' etirable='yes' title='".htmlentities($msg[269],ENT_QUOTES, $charset)."'>
 	!!zone_categ_form!!
-	
+
 	<div id='el6Child_1' title='".htmlentities($msg['indexint_catal_title'],ENT_QUOTES, $charset)."' movable='yes'>
     	<!--    indexation interne    -->
     	<div id='el6Child_1a' class='row'>
@@ -1239,7 +1253,7 @@ $ptab[6] = "
 ";
 
 //    ----------------------------------------------------
-//     CatÃ©gories rÃ©pÃ©tables
+//     Catégories répétables
 //       $ptab[60]
 //    ----------------------------------------------------
 $ptab[60] = "
@@ -1276,7 +1290,7 @@ $ptab[7] = "
 <!-- onglet 7 -->
 <div id='el7Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el7Img' title='langues' border='0' onClick=\"expandBase('el7', true); return false;\" />
+        ".get_expandBase_button('el7', '537')."
 	    $msg[710]
 	</h3>
 </div>
@@ -1285,6 +1299,7 @@ $ptab[7] = "
 	    <!--    Langues    -->
 	    <div id='el7Child_0a' class='row'>
 	        <label class='etiquette'>$msg[710]</label>
+	        <input type='button' class='bouton' value='+' onClick=\"add_lang();\"/>
 	    </div>
 	    <input type='hidden' id='max_lang' name='max_lang' value=\"!!max_lang!!\" />
 	    !!langues_repetables!!
@@ -1295,6 +1310,7 @@ $ptab[7] = "
 	    <!--    Langues    -->
 	    <div id='el7Child_1a' class='row'>
 	        <label class='etiquette'>$msg[711]</label>
+	        <input type='button' class='bouton' value='+' onClick=\"add_langorg();\"/>
 	    </div>
 	    <input type='hidden' id='max_langorg' name='max_langorg' value=\"!!max_langorg!!\" />
 	    !!languesorg_repetables!!
@@ -1305,7 +1321,7 @@ $ptab[7] = "
 ";
 
 //    ----------------------------------------------------
-//     Langues rÃ©pÃ©tables
+//     Langues répétables
 //       $ptab[70]
 //    ----------------------------------------------------
 $ptab[70] = "
@@ -1314,7 +1330,7 @@ $ptab[70] = "
 		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_lang_code!!ilang!!&p2=f_lang!!ilang!!', 'selector')\" />
         <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_lang!!ilang!!.value=''; this.form.f_lang_code!!ilang!!.value=''; \" />
         <input type='hidden' name='f_lang_code!!ilang!!' id='f_lang_code!!ilang!!' value='!!lang_code!!' />
-        <input type='button' class='bouton' value='+' onClick=\"add_lang();\"/>
+        <input type='button' id='button_add_f_lang_code' class='bouton' value='+' onClick=\"add_lang();\"/>
     </div>
     ";
 
@@ -1328,7 +1344,7 @@ $ptab[701] = "
     ";
 
 //    ----------------------------------------------------
-//     Langues originales rÃ©pÃ©tables
+//     Langues originales répétables
 //       $ptab[71]
 //    ----------------------------------------------------
 $ptab[71] = "
@@ -1337,7 +1353,7 @@ $ptab[71] = "
 		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=lang&caller=notice&p1=f_langorg_code!!ilangorg!!&p2=f_langorg!!ilangorg!!', 'selector')\" />
         <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_langorg!!ilangorg!!.value=''; this.form.f_langorg_code!!ilangorg!!.value=''; \" />
         <input type='hidden' name='f_langorg_code!!ilangorg!!' id='f_langorg_code!!ilangorg!!' value='!!langorg_code!!' />
-        <input type='button' class='bouton' value='+' onClick=\"add_langorg();\"/>
+        <input type='button' id='button_add_f_langorg_code' class='bouton' value='+' onClick=\"add_langorg();\"/>
     </div>
     ";
 $ptab[711] = "
@@ -1359,19 +1375,19 @@ $ptab[8] = "
 <!-- onglet 8 -->
 <div id='el8Parent' class='parent'>
 	<h3>
-		<img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el8Img' onClick=\"expandBase('el8', true); return false;\" title='$msg[274]' border='0' />
+        ".get_expandBase_button('el8', '274')."
 		$msg[274]
 	</h3>
 </div>
 <div id='el8Child' class='child'>
-	<!--	URL associÃ©e	-->
+	<!--	URL associée	-->
 	<div class='row'>
 		<label for='f_link_url' class='etiquette'>$msg[275]</label>
 	</div>
 	<div class='row'>
 		<input type='text' class='saisie-80em' id='f_link_url' name='f_link_url' value=\"!!link_url!!\" />
 	</div>
-	<!--	Format Ã©lectronique de la ressource	-->
+	<!--	Format électronique de la ressource	-->
 	<div class='row'>
 		<label for='f_link_format' class='etiquette'>$msg[276]</label>
 	</div>
@@ -1382,14 +1398,14 @@ $ptab[8] = "
 ";
 
 //    ----------------------------------------------------
-//    Champs personalisÃ©s
-//       $ptab[9] : Contenu de l'onglet 9 (champs personalisÃ©s)
+//    Champs personalisés
+//       $ptab[9] : Contenu de l'onglet 9 (champs personalisés)
 //    ----------------------------------------------------
 $ptab[9] = "
 <!-- onglet 9 -->
 <div id='el9Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el9Img' onClick=\"expandBase('el9', true); recalc_recept(); return false;\" title='".$msg['notice_champs_perso']."' border='0' /> ".$msg['notice_champs_perso']."
+	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el9Img' onClick=\"expandBase('el9', true); recalc_recept(); return false;\" title='".$msg['notice_champs_perso']."' /> ".$msg['notice_champs_perso']."
 	</h3>
 </div>
 <div id='el9Child' class='child'>
@@ -1401,7 +1417,7 @@ $ptab[10] = "
 <!-- onglet 10 -->
 <div id='el10Parent' class='parent'>
 <h3>
-    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el10Img' onClick=\"expandBase('el10', true); return false;\" title='".$msg['notice_champs_gestion']."' border='0' /> ".$msg['notice_champs_gestion']."
+    ".get_expandBase_button('el10', 'notice_champs_gestion')." ".$msg['notice_champs_gestion']."
 </h3>
 </div>
 <div id='el10Child' class='child'>
@@ -1455,14 +1471,14 @@ $ptab[10] .= "
 ";
 
 //    ----------------------------------------------------
-//    Documents NumÃ©riques
-//       $ptab[11] : Contenu de l'onglet 11 (documents numÃ©riques)
+//    Documents Numériques
+//       $ptab[11] : Contenu de l'onglet 11 (documents numériques)
 //    ----------------------------------------------------
 $ptab[1110] = "
 <!-- onglet 11 -->
 <div id='el11Parent' class='parent'>
 	<h3>
-	    <img src='".get_url_icon('plus.gif')."' class='img_plus' name='imEx' id='el11Img' onClick=\"expandBase('el11', true); return false;\" title='".$msg['noticeintegre_docnum']."' border='0' /> ".$msg['noticeintegre_docnum']."
+	    ".get_expandBase_button('el11', 'noticeintegre_docnum')." ".$msg['noticeintegre_docnum']."
 	</h3>
 </div>
 
@@ -1520,22 +1536,22 @@ if($pmb_catalog_verif_js_integration!= ""){
 		if(check == false) {
 			return false;
 		}";
-}    
-	$form_notice.= "
-		titre0 = form.f_title_0.value; 
+}
+$form_notice.= "
+		titre0 = form.f_title_0.value;
 		titre0 = titre0.replace(/^\s+|\s+$/g, ''); //trim la valeur
         if(titre0.length == 0) {
              alert(\"$msg[277]\");
              return false;
         }
-        
+
         var selector = document.forms['notice'].elements['biblio_notice'].value;
         if(selector == 'art'){
         	var perio_type = document.forms['notice'].elements['perio_type_use_existing'].checked;
         	var bull_type =  document.forms['notice'].elements['bull_type_use_existing'].checked;
         	var perio_type_new = document.forms['notice'].elements['perio_type_new'].checked;
         	var bull_type_new =  document.forms['notice'].elements['bull_type_new'].checked;
-        	
+
         	if(!perio_type && bull_type) {
         		alert(\"".$msg['z3950_bull_already_linked']."\")
         		return false;
@@ -1544,19 +1560,19 @@ if($pmb_catalog_verif_js_integration!= ""){
         		alert(\"".$msg['z3950_serial_title_mandatory']."\")
         		return false;
         	}
-        	
+
         	if(bull_type_new && (document.getElementById('f_bull_new_titre').value == '') && (document.getElementById('f_bull_new_mention').value == '')
         	&& (document.getElementById('f_bull_new_date').value == '') && (document.getElementById('f_bull_new_num').value == '')){
         		alert(\"".$msg['z3950_fill_bull']."\")
         		return false;
         	}
-        	
+
         	if(perio_type && bull_type && (document.getElementById('f_bull_existing_id').value == '')){
         		alert(\"".$msg['z3950_no_bull_selected']."\")
         		return false;
         	}
         }
-        
+
 		return true;
     }
 -->
@@ -1567,17 +1583,22 @@ if($pmb_catalog_verif_js_integration!= ""){
 <form class='form-$current_module' id='notice' name='notice' method='post' action='!!action!!' enctype='multipart/form-data'>
 <!--!!form_title!!-->
 <div class='form-contenu'>
-<div class='row'>
-	<select id='biblio_notice' name='biblio_notice' onChange='hide_perio();'>
-		<option value='mono' !!checked_mono!!>".$msg['acquisition_type_mono']."</option>
-		<option value='perio' !!checked_perio!!>".$msg['acquisition_type_serial']."</option>
-		<option value='art' !!checked_art!!>".$msg['acquisition_type_art']."</option>
-	</select>
+<div id='notice_type'>
+	<div class='row'>
+		<select id='biblio_notice' name='biblio_notice' onChange='hide_perio();'>
+			<option value='mono' !!checked_mono!!>".$msg['acquisition_type_mono']."</option>
+			<option value='perio' !!checked_perio!!>".$msg['acquisition_type_serial']."</option>
+			<option value='art' !!checked_art!!>".$msg['acquisition_type_art']."</option>
+		</select>
+	</div>
+	<div class='row'>
+		!!document_type!!
+	</div>
 </div>
-!!document_type!!
-<br />
-<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
-<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>
+<div class='row'>
+	<a href=\"javascript:expandAll()\"><img src='".get_url_icon('expand_all.gif')."' border='0' id=\"expandall\"></a>
+	<a href=\"javascript:collapseAll()\"><img src='".get_url_icon('collapse_all.gif')."' border='0' id=\"collapseall\"></a>
+</div>
 <input type='hidden' id='b_level' name='b_level' value='!!b_level!!' />
 <input type='hidden' id='h_level' name='h_level' value='!!h_level!!' />
 <input type='hidden' name='f_orinot_nom' value='!!orinot_nom!!' />
@@ -1629,7 +1650,7 @@ $form_notice .= "<hr class='spacer' />
 </form>
 <script type='text/javascript'>
 	function hide_perio(){
-		var selector = document.forms['notice'].elements['biblio_notice'].value;	
+		var selector = document.forms['notice'].elements['biblio_notice'].value;
 		if(selector == 'mono'){
 			document.getElementById('zone_article').style.display = 'none';
 			document.getElementById('b_level').value = 'm';
@@ -1646,13 +1667,13 @@ $form_notice .= "<hr class='spacer' />
 			ajax_parse_dom();
 		}
 	}
-	
-	function set_ajax_attributes(){	
+
+	function set_ajax_attributes(){
 		var selector = document.forms['notice'].elements['biblio_notice'].value;
 		if(!document.forms['notice'].elements['f_perio_existing'].getAttribute('completion') && selector == 'art'){
 			document.forms['notice'].elements['f_perio_existing'].setAttribute('completion','perio');
 			document.forms['notice'].elements['f_perio_existing'].setAttribute('autfield','f_perio_existing_id');
-			
+
 			document.forms['notice'].elements['f_bull_existing'].setAttribute('completion','bull');
 			document.forms['notice'].elements['f_bull_existing'].setAttribute('autfield','f_bull_existing_id');
 			document.forms['notice'].elements['f_bull_existing'].setAttribute('linkfield','f_perio_existing_id');
@@ -1664,7 +1685,7 @@ $form_notice .= "<hr class='spacer' />
 ";
 
 $zone_article_form = "
-	<div class='row' id='zone_article' style='display:!!display_zone_article!!'>		
+	<div class='row' id='zone_article' style='display:!!display_zone_article!!'>
 		<div class='colonne3'>
 			<h3>".$msg['acquisition_catal_perio']."</h3>
 			<input type=\"radio\" id=\"perio_type_use_existing\"  value=\"use_existing\" name=\"perio_type\"  !!perio_type_use_existing!! /><label for=\"perio_type_use_existing\">".$msg['acquisition_catal_perio_exist']."</label>
@@ -1676,7 +1697,7 @@ $zone_article_form = "
 		                <input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=perio&caller=notice&param1=f_perio_existing_id&param2=f_perio_existing&deb_rech='+".pmb_escape()."(this.form.f_perio_existing.value), 'selector_notice');this.form.f_bull_existing.value=''; this.form.f_bull_existing_id.value='0';\" />
 		              	<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_perio_existing.value=''; this.form.f_perio_existing_id.value='0'; this.form.f_bull_existing.value=''; this.form.f_bull_existing_id.value='0';\" />
 		               	<input type='hidden' name='f_perio_existing_id' id='f_perio_existing_id' value=\"!!f_perio_existing_id!!\" />
-		            </div>					
+		            </div>
 				</div>
 			</blockquote>
 			<input type=\"radio\" id=\"perio_type_new\"  value=\"insert_new\" name=\"perio_type\" !!perio_type_new!! /><label for=\"perio_type_new\">".$msg['acquisition_catal_perio_new']."</label>
@@ -1685,13 +1706,13 @@ $zone_article_form = "
 		            <label for='f_perio_new' class='etiquette'>".$msg[233]."</label>
 		            <div class='row' >
 						<input type='text' id='f_perio_new' class='saisie-30em' name='f_perio_new' value=\"!!perio_titre!!\"/>
-		            </div>					
+		            </div>
 				</div>
 				<div class='row'>
 		            <label for='f_perio_new_issn' class='etiquette'>".$msg['z3950_issn']."</label>
 		            <div class='row' >
 						<input type='text' id='f_perio_new_issn' class='saisie-20em' name='f_perio_new_issn' value=\"!!perio_issn!!\"/>
-		            </div>					
+		            </div>
 				</div>
 			</blockquote>
 		</div>
@@ -1706,7 +1727,7 @@ $zone_article_form = "
 		                <input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=bulletin&caller=notice&param1=f_bull_existing_id&param2=f_bull_existing&no_display='+this.form.f_bull_existing_id.value+'&deb_rech='+".pmb_escape()."(this.form.f_bull_existing.value)+'&idperio='+this.form.f_perio_existing_id.value, 'selector_notice')\" />
 		              	<input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_bull_existing.value=''; this.form.f_bull_existing_id.value='0'; \" />
 		               	<input type='hidden' name='f_bull_existing_id' id='f_bull_existing_id' value=\"!!f_bull_existing_id!!\" />
-		            </div>					
+		            </div>
 				</div>
 			</blockquote>
 			<input type=\"radio\" id=\"bull_type_new\" !!bull_type_new!! value=\"insert_new\" name=\"bull_type\" /><label for=\"bull_type_new\">".$msg['acquisition_catal_bull_new']."</label>
@@ -1718,16 +1739,16 @@ $zone_article_form = "
 						</div>
 			            <div class='row' >
 							<input type='text' id='f_bull_new_num' class='saisie-10em' name='f_bull_new_num' value=\"!!bull_num!!\"/>
-			            </div>	
-		         	</div>	
+			            </div>
+		         	</div>
 		         	<div class='colonne2'>
 			    		<div class='row' >
 			            	<label for='f_bull_new_titre' class='etiquette'>".$msg[233]."</label>
 						</div>
 			            <div class='row' >
 							<input type='text' id='f_bull_new_titre' class='saisie-30em' name='f_bull_new_titre' value=\"!!bull_titre!!\" />
-			            </div>	
-		         	</div>				
+			            </div>
+		         	</div>
 				</div>
 				<div class='row'>
 					<div class='colonne2'>
@@ -1755,7 +1776,7 @@ $zone_article_form = "
 $bt_undo = "&nbsp;<input type='button' class='bouton' value=\"!!value!!\" onclick=\"!!action!!\" />";
 
 $zone_categ_form = "
-	<input type=\"radio\" checked onclick=\"document.getElementById('div_categorisation_manual').style.display='none'; document.getElementById('div_categorisation_auto').style.display=''\" checked id=\"categorisation_auto\" name=\"categorisation_type\" value=\"categorisation_auto\" /><label for=\"categorisation_auto\">".$msg['notice_integre_categorisation_auto']."</label>
+	<input type=\"radio\" onclick=\"document.getElementById('div_categorisation_manual').style.display='none'; document.getElementById('div_categorisation_auto').style.display=''\" id=\"categorisation_auto\" name=\"categorisation_type\" value=\"categorisation_auto\" /><label for=\"categorisation_auto\">".$msg['notice_integre_categorisation_auto']."</label>
 	<div id=\"div_categorisation_auto\">
 		<blockquote>
 		!!message_rameau!!
@@ -1763,27 +1784,37 @@ $zone_categ_form = "
 		</blockquote>
 	</div>
 	<br clear=\"all\" /><br />
- 
+
 	<input type=\"radio\" onclick=\"document.getElementById('div_categorisation_manual').style.display=''; document.getElementById('div_categorisation_auto').style.display='none'; if (!document.getElementById('f_categ0').getAttribute('completion')) {document.getElementById('f_categ0').setAttribute('completion','categories_mul'); ajax_pack_element(document.getElementById('f_categ0'));}\" id=\"categorisation_manual\" name=\"categorisation_type\" value=\"categorisation_manual\" /><label for=\"categorisation_manual\">".$msg['notice_integre_categorisation_manual']."</label>
 	<div id=\"div_categorisation_manual\" class='child'>
 		!!manual_categorisation!!
 		<br />
-		<input type='hidden' name='max_categ' value=\"1\" />	
+		<input type='hidden' name='max_categ' value=\"1\" />
 		<script type='text/javascript' src='./javascript/categ_drop.js'></script>
-		<input type='hidden' name='tab_categ_order' id='tab_categ_order' value='0' />       
+		<input type='hidden' name='tab_categ_order' id='tab_categ_order' value='0' />
 		<input type='button' class='bouton' value='".$msg['parcourir']."' onclick=\"openPopUp('./select.php?what=categorie&caller=notice&autoindex_class=autoindex_record&htmlfieldstype=html_ext&indexation_lang=!!indexation_lang_sel!!&p1=f_categ_id&p2=f_categ&dyn=1&parent=0', 'selector_category')\" />
-		<input type='button' class='bouton' value='+' onClick=\"add_categ();\"/>	
+		<input type='button' class='bouton' value='+' onClick=\"add_categ();\"/>
 	   	<div id='el6Child_0'>
-		  	<div id='drag_0'  class='row' dragtype='categ' draggable='yes' recept='yes' recepttype='categ' handler='handle_0'		
-				dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='' downlight=\"categ_downlight\" highlight=\"categ_highlight\"			
+		  	<div id='drag_0'  class='row' dragtype='categ' draggable='yes' recept='yes' recepttype='categ' handler='handle_0'
+				dragicon='".get_url_icon('icone_drag_notice.png')."' dragtext='' downlight=\"categ_downlight\" highlight=\"categ_highlight\"
 				order='0' style='' >
 		 		<span id=\"handle_0\" style=\"float:left; padding-right : 7px\"><img src='".get_url_icon('sort.png')."' style='width:12px; vertical-align:middle' /></span>
 		        <input type='text' class='saisie-80emr' id='f_categ0' name='f_categ0' value=\"\" completion=\"categories_mul\" autfield=\"f_categ_id0\" />
 		        <input type='button' class='bouton' value='".$msg['raz']."' onclick=\"this.form.f_categ0.value=''; this.form.f_categ_id0.value='0'; \" />
-		        <input type='hidden' name='f_categ_id0' id='f_categ_id0' value='0' />   
-			</div>	
+		        <input type='hidden' name='f_categ_id0' id='f_categ_id0' value='0' />
+			</div>
 			<div id='addcateg'></div>
-		</div>		
+		</div>
 	</div>
 	<br clear=\"all\" /><br />
+    <script type='text/javascript'>
+        var categ_auto = " . ($deflt_notice_catalog_categories_auto ? 1 : 0) . "
+        setTimeout(() => {
+           if(0 == categ_auto) {
+            document.getElementById('categorisation_manual').click()
+            } else {
+                document.getElementById('categorisation_auto').click()
+            }
+        }, 2500);
+    </script>
 ";

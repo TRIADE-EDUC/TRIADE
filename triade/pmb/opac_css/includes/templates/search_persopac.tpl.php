@@ -1,13 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: search_persopac.tpl.php,v 1.4 2019-05-29 11:23:32 btafforeau Exp $
+// $Id: search_persopac.tpl.php,v 1.5 2023/12/04 13:07:59 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".tpl.php")) die("no access");
 
 //*******************************************************************
-// Définition des templates 
+// D�finition des templates 
 //*******************************************************************
 
 global $tpl_search_persopac_liste_tableau;
@@ -19,7 +19,7 @@ $tpl_search_persopac_liste_tableau = "
 <h3>".$msg["search_persopac_list"]."</h3>
 
 	<div class='row'>
-		<table cellpadding='2' style='width:100%'>
+		<table style='width:100%; padding:2px'>
 		<tr>
 			<th>".$msg["search_persopac_table_name"]."</th>
 			<th>".$msg["search_persopac_table_humanquery"]."</th>

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_metadatas_datasource_metadatas_section.class.php,v 1.1 2014-12-18 10:20:10 dgoron Exp $
+// $Id: cms_module_metadatas_datasource_metadatas_section.class.php,v 1.6 2023/05/05 08:40:14 qvarin Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -13,7 +13,7 @@ class cms_module_metadatas_datasource_metadatas_section extends cms_module_metad
 	}
 	
 	/*
-	 * On dÃ©fini les sÃ©lecteurs utilisable pour cette source de donnÃ©e
+	 * On défini les sélecteurs utilisable pour cette source de donnée
 	*/
 	public function get_available_selectors(){
 		return array(
@@ -24,30 +24,41 @@ class cms_module_metadatas_datasource_metadatas_section extends cms_module_metad
 	}
 			
 	/*
-	 * RÃ©cupÃ©ration des donnÃ©es de la source...
+	 * Récupération des données de la source...
 	 */
 	public function get_datas(){
-		//on commence par rÃ©cupÃ©rer l'identifiant retournÃ© par le sÃ©lecteur...
+	    global $base_path;
+		//on commence par récupérer l'identifiant retourné par le sélecteur...
 		$selector = $this->get_selected_selector();
 		if($selector){
 			$section_id = $selector->get_value();
 			$section_ids = $this->filter_datas("sections",array($section_id));
-			if($section_ids[0]){
+			if (!empty($section_ids[0])) {
 				$group_metadatas = parent::get_group_metadatas();
 				
-				$datas = array();
 				$section = new cms_section($section_ids[0]);
-				$datas = $section->format_datas();
-				$datas["details"] = $datas;
+				$links = [
+				    "article" => $this->get_constructed_link("article", "!!id!!"),
+				    "section" => $this->get_constructed_link("section", "!!id!!")
+				];
+				$datas = $section->format_datas($links);
+				$datas->details = $datas;
 				$datas = array_merge($datas,parent::get_datas());
-				$datas['link'] = $this->get_constructed_link("section",$section_ids[0]);
-				$datas['logo_url'] = $datas["logo"]["big"];
+				$datas->logo_url = $datas->logo["big"];
+				//Passage en tableau pour le render
+				$datas = [$datas];
 				foreach ($group_metadatas as $i=>$metadatas) {
-					if (is_array($metadatas["metadatas"])) {
+				    if (isset($metadatas["metadatas"]) && is_array($metadatas["metadatas"])) {
 						foreach ($metadatas["metadatas"] as $key=>$value) {
 							try {
-								$group_metadatas[$i]["metadatas"][$key] = H2o::parseString($value)->render($datas);
+								$template_path = $base_path.'/temp/'.LOCATION.'_datasource_metadatas_section_'.$section_ids[0].'_'.md5($value);
+ 							    if(!file_exists($template_path) || (md5($value) != md5_file($template_path))){
+							        file_put_contents($template_path, $value);
+ 							    }
+							    $H2o = H2o_collection::get_instance($template_path);
+							    $group_metadatas[$i]["metadatas"][$key] = $H2o->render($datas);
 							}catch(Exception $e){
+							    
 							}
 						}
 					}

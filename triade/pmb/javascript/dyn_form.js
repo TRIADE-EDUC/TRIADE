@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: dyn_form.js,v 1.6 2016-04-22 09:43:53 jpermanne Exp $
+// $Id: dyn_form.js,v 1.6 2016/04/22 09:43:53 jpermanne Exp $
 
 function make_form(id){
 	

@@ -1,0 +1,34 @@
+<form data-dojo-type='dijit/form/Form' id='attachmentCreationForm' encType='multipart/form-data' action='' method=''> 
+	<input type="hidden" name="id" id="id" value="!!idForm!!" data-dojo-type="dijit/form/TextBox"/>
+	<input type="hidden" name="name" value="!!formName!!" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="trim:true, required:true" id="name"/><br/>
+	<br/>
+	<label for="question">!!msg_attachment_question!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="question" name="question">!!attachmentQuestion!!</textarea>
+	<br/>
+	<label for="comment">!!msg_form_comment!!</label>
+	<br/>
+	<textarea data-dojo-type="dijit/form/Textarea" id="comment" name="comment">!!attachmentComment!!</textarea>
+	<br/>
+	<button data-dojo-type="dijit/form/Button" id="formCreationValidate" data-dojo-id="formCreationValidate" data-dojo-props="" type="button">
+    	!!msg_form_validate!!
+    	<script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+	        require(["dojo/dom", "dijit/registry", "dojo/topic"], function(dom, registry, topic){
+				var popup = registry.byId('editAttachmentPopup');
+				var form = registry.byId('attachmentCreationForm');
+				if(form.validate()){
+					if(popup.callback){
+						popup.callback();
+					}
+					var idForm = dom.byId("id").value;
+					if (idForm) {
+						topic.publish("Dialog", "editAttachment", form.getValues());
+					}
+					popup.hide();
+					popup.destroyRecursive();
+					popup.destroy();
+				}
+        	});
+    	</script>
+	</button>
+</form>

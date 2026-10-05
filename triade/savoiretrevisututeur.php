@@ -10,7 +10,7 @@ if (isset($_POST["anneeScolaire"])) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -68,7 +68,7 @@ if (isset($_SESSION["idelevetuteur"])) {
 
 if ((trim($Seid) == "") && ($_SESSION["membre"] == "menututeur")) {
          $list=listEleveTuteur2($_SESSION["id_pers"]);
-         if (count($list) == 1) {
+         if (countTriade($list) == 1) {
 		$Seid=$list[0][0];
         	$Scid=chercheClasseEleve($Seid);
 		$idClasse=$Scid;
@@ -93,7 +93,7 @@ if (($_SESSION["membre"] == "menututeur") && (isset($_POST["create"]))) {
 			$email_expediteur=recupEmail($_SESSION["membre"],$idpers,'');
 			$nom_expediteur=strtoupper($_SESSION["nom"])." ".ucfirst($_SESSION["prenom"]);
 			$data=rechercheprofpMulti($idclasse);
-			for($i=0;$i<count($data);$i++) {
+			for($i=0;$i<countTriade($data);$i++) {
 				$idprofp=$data[$i][0];
 				$to=recupEmail("menuprof",$idprofp,'');
 				mailTriade($sujet,$message,$message,$to,$email_expediteur,$email_expediteur,$nom_expediteur,"");
@@ -105,11 +105,11 @@ if (($_SESSION["membre"] == "menututeur") && (isset($_POST["create"]))) {
 
 
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <form method='post' action='savoiretrevisututeur.php' >
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Savoir / être" ?></font></b>
@@ -153,7 +153,7 @@ if ($_SESSION["membre"] == "menututeur") {
 </tr>
 <?php
 $dataInfo=recupSavoirEtre($Seid,$idClasse,$anneeScolaire);
-for($j=0;$j<count($dataInfo);$j++) { 
+for($j=0;$j<countTriade($dataInfo);$j++) { 
 	$ponct=stripslashes($dataInfo[$j][0]);
 	$motiv=stripslashes($dataInfo[$j][1]);
 	$dynam=stripslashes($dataInfo[$j][2]);
@@ -205,17 +205,17 @@ print "<tr><td colspan='5' height='40' bgcolor='#FFFFFF' align='center'><table a
        // Test du membre pour savoir quel fichier JS je dois executer
        if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")):
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."2.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."2.js'>";
             print "</SCRIPT>";
        else :
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."22.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."22.js'>";
             print "</SCRIPT>";
 
             top_d();
 
             print "<SCRIPT language='JavaScript' ";
-            print "src='./librairie_js/".$_SESSION[membre]."33.js'>";
+            print "src='./librairie_js/".$_SESSION['membre']."33.js'>";
             print "</SCRIPT>";
 
        endif ;

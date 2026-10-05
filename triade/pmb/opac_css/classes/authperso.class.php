@@ -2,13 +2,12 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: authperso.class.php,v 1.25 2019-02-20 14:03:33 tsamson Exp $
+// $Id: authperso.class.php,v 1.37.4.1 2025/01/31 09:18:09 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/custom_parametres_perso.class.php");
-require_once($class_path."/authperso_authority.class.php");
-@ini_set('zend.ze1_compatibility_mode',0);
 require_once($include_path."/h2o/h2o.php");
 require_once("$class_path/aut_link.class.php");
 
@@ -17,13 +16,15 @@ class authperso {
 	public $id=0; // id de authperso
 	public $info=array();
 	public $elt_id=0;
+	public static $antiloop = [];
 	
 	public function __construct($id=0) {
-		$this->id=$id+0;
+		$this->id = intval($id);
 		$this->fetch_data();
 	}
 	
-	public function fetch_data() {		
+	public function fetch_data() {
+	    global $charset;
 		$this->info=array();
 		$this->info['fields']=array();
 		if(!$this->id) return;
@@ -31,15 +32,19 @@ class authperso {
 		$req="select * from authperso where id_authperso=". $this->id." order by authperso_name";		
 		$resultat=pmb_mysql_query($req);	
 		if (pmb_mysql_num_rows($resultat)) {
-			$r=pmb_mysql_fetch_object($resultat);		
-			$this->info['id']= $r->id_authperso;	
-			$this->info['name']= $r->authperso_name;
-			$this->info['onglet_num']= $r->authperso_notice_onglet_num;			
-			$this->info['isbd_script']= $r->authperso_isbd_script;			
-			$this->info['opac_search']= $r->authperso_opac_search;			
-			$this->info['opac_multi_search']= $r->authperso_opac_multi_search;
-			$this->info['comment']= $r->authperso_comment;
-			$this->info['onglet_name']="";
+			$r=pmb_mysql_fetch_object($resultat);
+			$this->info=array(
+			    'id' => $r->id_authperso,
+			    'name' => translation::get_translated_text($r->id_authperso, 'authperso', 'authperso_name', $r->authperso_name),
+			    'onglet_num' => $r->authperso_notice_onglet_num,
+			    'isbd_script' => $r->authperso_isbd_script,
+			    'opac_search' => $r->authperso_opac_search,
+			    'opac_multi_search' => $r->authperso_opac_multi_search,
+			    'comment' => $r->authperso_comment,
+			    'event' => $r->authperso_oeuvre_event,
+			    'responsability_authperso' => $r->authperso_responsability_authperso,
+			    'onglet_name' => ''
+			);
 			$req="SELECT * FROM notice_onglet where id_onglet=".$r->authperso_notice_onglet_num;
 			$resultat=pmb_mysql_query($req);
 			if (pmb_mysql_num_rows($resultat)) {
@@ -47,26 +52,29 @@ class authperso {
 				$this->info['onglet_name']= $r_onglet->onglet_name;						
 			}	
 		}		
-		$req="select * from authperso_custom where num_type=". $this->id." order by ordre";		
-		$resultat=pmb_mysql_query($req);	
-		$i=0;
+		$req = "select * from authperso_custom where num_type=". $this->id." order by ordre";		
+		$resultat = pmb_mysql_query($req);	
+		$i = 0;
 		if (pmb_mysql_num_rows($resultat)) {
-			while($r=pmb_mysql_fetch_object($resultat)){	
-				$this->info['fields'][$i]['id']= $r->idchamp;	
-				$this->info['fields'][$i]['name']= $r->name;	
-				$this->info['fields'][$i]['label']= $r->titre;	
-				$this->info['fields'][$i]['type']= $r->type ;	
-				$this->info['fields'][$i]['ordre']= $r->ordre ;				
-				$this->info['fields'][$i]['search']=$r->search;				
-				$this->info['fields'][$i]['pond']=$r->pond;
-				$this->info['fields'][$i]['obligatoire']=$r->obligatoire;
-				$this->info['fields'][$i]['export']=$r->export;
-				$this->info['fields'][$i]['multiple']=$r->multiple;
-				$this->info['fields'][$i]['opac_sort']=$r->opac_sort;
-				$this->info['fields'][$i]['code_champ']=$this->id;
-				$this->info['fields'][$i]['code_ss_champ']=$r->idchamp;
-				$this->info['fields'][$i]['data']= array();		
-							
+			while ($r = pmb_mysql_fetch_object($resultat)) {
+			    $this->info['fields'][$i]= array();
+			    $this->info['fields'][$i]['id'] = (int) $r->idchamp;
+				$this->info['fields'][$i]['custom_prefixe'] = $r->custom_prefixe;
+				$this->info['fields'][$i]['name'] = $r->name;
+				$this->info['fields'][$i]['label'] = $r->titre;
+				$this->info['fields'][$i]['type'] = $r->type;
+				$this->info['fields'][$i]['datatype'] = $r->datatype;
+				$this->info['fields'][$i]['ordre'] = (int) $r->ordre;
+				$this->info['fields'][$i]['search'] = (int) $r->search;
+				$this->info['fields'][$i]['pond'] = (int) $r->pond;
+				$this->info['fields'][$i]['obligatoire'] = (int) $r->obligatoire;
+				$this->info['fields'][$i]['export'] = (int) $r->export;
+				$this->info['fields'][$i]['multiple'] = (int) $r->multiple;
+				$this->info['fields'][$i]['opac_sort'] = (int) $r->opac_sort;
+				$this->info['fields'][$i]['code_champ'] = $this->id;
+				$this->info['fields'][$i]['code_ss_champ'] = (int) $r->idchamp;
+				$this->info['fields'][$i]['data'] = array();		
+				$this->info['fields'][$i]['OPTIONS'] = [_parser_text_no_function_("<?xml version='1.0' encoding='".$charset."'?>\n".$r->options, "OPTIONS")];
 				$i++;
 			}
 		}
@@ -78,17 +86,18 @@ class authperso {
 	
 	public function get_info_fields($id=0){
 		$info= array();
-		$id += 0;
+		$id = intval($id);
 		if($id){
 			$req="select * from authperso_authorities,authperso where id_authperso=authperso_authority_authperso_num and id_authperso_authority=". $id;
 			$res = pmb_mysql_query($req);
 			if(($r=pmb_mysql_fetch_object($res))) {
 				$p_perso=new custom_parametres_perso("authperso","authperso",$r->authperso_authority_authperso_num,"./autorites.php?categ=authperso&sub=update&id_authperso=".$this->id);
-				$fields=$p_perso->get_out_values($id);
+				$p_perso->get_out_values($id);
 				$authperso_fields=$p_perso->values;
 			}
 		}
 		foreach($this->info['fields'] as $field){
+		    $info[$field['id']]= array();
 			$info[$field['id']]['id']= $field['id'];
 			$info[$field['id']]['name']= $field['name'];
 			$info[$field['id']]['label']= $field['label'];
@@ -110,7 +119,7 @@ class authperso {
 	
 	public function fetch_data_auth($id) {
 		$p_perso=new custom_parametres_perso("authperso","authperso",$this->id);
-		$authperso_fields=$p_perso->get_out_values($id);
+		$p_perso->get_out_values($id);
 		
 		$this->info['data_auth'][$id]=$p_perso->values;
 		//pour ne pas louper les champs vides...
@@ -131,51 +140,63 @@ class authperso {
 		return $p_perso->values;
 	}
 	
-	// GÃ©nÃ©ration de l'isbd de l'autoritÃ©
+	// Génération de l'isbd de l'autorité
 	public static function get_isbd($id){
 	    global $base_path;
-	    $id+= 0;
+	    
+	    $id = intval($id);
 	    if(!$id) return '';
-		$isbd = '';
-		$req="select * from authperso_authorities,authperso where id_authperso=authperso_authority_authperso_num and id_authperso_authority=". $id;
-		$res = pmb_mysql_query($req);
-		if(($r=pmb_mysql_fetch_object($res))) {			
-			$p_perso=new custom_parametres_perso("authperso","authperso",$r->authperso_authority_authperso_num,"./autorites.php?categ=authperso&sub=update&id_authperso=".$id);
-			$fields=$p_perso->get_out_values($id);			
-			$authperso_fields=$p_perso->values;			
-			if($r->authperso_isbd_script){			    
-				$index_concept = new index_concept($id, TYPE_AUTHPERSO);
-				$authperso_fields['index_concepts'] = $index_concept->get_data();
-				
-				$template_path = $base_path.'/temp/'.LOCATION.'_authperso_isbd_'.$r->authperso_authority_authperso_num;
-				if(!file_exists($template_path) || (md5($r->authperso_isbd_script) != md5_file($template_path))){
-				    file_put_contents($template_path, $r->authperso_isbd_script);
-				}
-				$h2o = H2o_collection::get_instance($template_path);
-				$isbd = $h2o->render($authperso_fields);
-			}else{
-				foreach ($authperso_fields as $field){					
-					$isbd.=$field['values'][0]['format_value'].".  ";
-				}
-			}
-		}
-		return $isbd;
+ 	    $isbd = '';
+	    $req="select * from authperso_authorities,authperso where id_authperso=authperso_authority_authperso_num and id_authperso_authority=". $id;
+	    $res = pmb_mysql_query($req);
+	    if(($r=pmb_mysql_fetch_object($res))) {
+	        $p_perso=new custom_parametres_perso("authperso","authperso",$r->authperso_authority_authperso_num,"./autorites.php?categ=authperso&sub=update&id_authperso=".$id);
+	        $p_perso->get_out_values($id);
+	        $authperso_fields=$p_perso->values;
+	        if($r->authperso_isbd_script){
+	            $index_concept = new index_concept($id, TYPE_AUTHPERSO);
+	            $authperso_fields['index_concepts'] = $index_concept->get_data();
+	            if($r->authperso_responsability_authperso) {
+	            	$authperso_fields["responsability_authperso"] = static::get_responsability_authperso_data($id);
+	            }
+	            $template_path = $base_path.'/temp/'.LOCATION.'_authperso_isbd_'.$r->authperso_authority_authperso_num;
+	            if(!file_exists($template_path) || (md5($r->authperso_isbd_script) != md5_file($template_path))){
+	                file_put_contents($template_path, $r->authperso_isbd_script);
+	            }
+	            $h2o = H2o_collection::get_instance($template_path);
+	            $isbd = $h2o->render($authperso_fields);
+	            
+	        }else{
+	            $first = true;
+	            foreach ($authperso_fields as $field){
+	                if (!$first){
+	                    $isbd.=". ";
+	                }
+	                $isbd.=$field['values'][0]['format_value'];
+	                $first=false;
+	            }
+	        }
+	    }
+	    $isbd =  str_replace(array("\n", "\t", "\r"), '', strip_tags($isbd));
+	    return $isbd;
 	}
 	
-	// GÃ©nÃ©ration de la notice d'autoritÃ©
+	// Génération de la notice d'autorité
 	public function get_view($id){
 	    global $base_path;
 	    
-	    $id += 0;
+	    $id = intval($id);
 		$req="select * from authperso_authorities,authperso where id_authperso=authperso_authority_authperso_num and id_authperso_authority=". $id;
 		$res = pmb_mysql_query($req);
 		if(($r=pmb_mysql_fetch_object($res))) {
 			$p_perso=new custom_parametres_perso("authperso","authperso",$r->authperso_authority_authperso_num,"./autorites.php?categ=authperso&sub=update&id_authperso=".$id);
-			$fields=$p_perso->get_out_values($id);
+			$p_perso->get_out_values($id);
 			$authperso_fields=$p_perso->values;
-			$aut_link= new aut_link($r->authperso_authority_authperso_num + 1000,$id);		
-			$authperso_fields['authorities_link']=$aut_link->get_data();
-			//printr($authperso_fields);
+			if (empty(static::$antiloop[$id])) {
+			    static::$antiloop[$id] = true;
+    			$aut_link= new aut_link($r->authperso_authority_authperso_num + 1000,$id);
+    			$authperso_fields['authorities_link']=$aut_link->get_data();
+			}
 			if($r->authperso_view_script){
 			    $template_path = $base_path.'/temp/'.LOCATION.'_authperso_isbd_'.$r->authperso_authority_authperso_num;
 			    if(!file_exists($template_path)  || (md5($r->authperso_view_script) != md5_file($template_path))){
@@ -196,7 +217,7 @@ class authperso {
 	public function get_ajax_list($user_input){
 		$values=array();
 		$search_word = str_replace('*','%',$user_input);
-		$req = "select * from authperso_authorities where ( authperso_infos_global like ' ".addslashes($search_word)."%' or authperso_index_infos_global like ' ".addslashes($user_input)."%' ) and  authperso_authority_authperso_num= ".$this->id;
+		$req = "select * from authperso_authorities where ( authperso_infos_global like '".addslashes($search_word)."%' or authperso_index_infos_global like ' ".addslashes($user_input)."%' ) and  authperso_authority_authperso_num= ".$this->id;
 		$req .= " order by authperso_index_infos_global limit 20";
 		$res = pmb_mysql_query($req);
 		while(($r=pmb_mysql_fetch_object($res))) {
@@ -210,8 +231,8 @@ class authperso {
 	}
 
 	public function get_list_selector($id_to_view=0,$url = '',$nb_per_page=10) {
-		global $msg,$charset,$dbh;
-		global $user_query, $user_input, $f_user_input, $page,$nbr_lignes,$last_param;
+		global $charset;
+		global $user_input, $f_user_input, $page, $nb_per_page_search, $nbr_lignes,$last_param;
 		global $callback;
 		global $caller;
 		global $base_url;
@@ -242,7 +263,7 @@ class authperso {
 		if(!$last_param){
 			$debut =($page-1)*$nb_per_page;
 			$requete = "SELECT count(1) FROM authperso_authorities where ( authperso_infos_global like '%".$search_word."%' or authperso_index_infos_global like '%".$user_input."%' ) and authperso_authority_authperso_num= ".$this->id;
-			$res = pmb_mysql_query($requete, $dbh);
+			$res = pmb_mysql_query($requete);
 			$nbr_lignes = pmb_mysql_result($res, 0, 0);
 			$nbepages = ceil($nbr_lignes/$nb_per_page);
 			if($page>$nbepages){
@@ -251,11 +272,11 @@ class authperso {
 			}
 			$req = "select * from authperso_authorities where ( authperso_infos_global like '%".$search_word."%' or authperso_index_infos_global like '%".$user_input."%' ) and  authperso_authority_authperso_num= ".$this->id;
 			$req .= " order by authperso_index_infos_global LIMIT ".$debut.",".$nb_per_page." ";
-		}else{ // les derniers crÃ©Ã©s
+		}else{ // les derniers créés
 			$req = "select * from authperso_authorities where  authperso_authority_authperso_num= ".$this->id;
 			$req .= " order by id_authperso_authority DESC LIMIT $nb_per_page";
 		}
-		$res = pmb_mysql_query($req,$dbh);
+		$res = pmb_mysql_query($req);
 		while(($r=pmb_mysql_fetch_object($res))) {
 			$id=$r->id_authperso_authority;
 			$isbd=strip_tags(static::get_isbd($id));
@@ -277,15 +298,39 @@ class authperso {
 	
 		return $authperso_list_tpl;
 	}
+	
+	/**
+	 * Récupération des données des responsabilités sous forme d'un tableau ["isbd" => "", "function" => ""]
+	 * @param int $id_authperso
+	 * @return array
+	 */
+	public static function get_responsability_authperso_data($id_authperso) {
+		$result = array();
+		
+		$responsabilities = new responsabilities();
+		$responsability_list = $responsabilities->get_responsabilities_authperso($id_authperso);
+		
+		foreach($responsability_list as $responsability) {
+			$result[] = array(
+				"isbd" => $responsability["isbd"] ?? "",
+				"fonction_name" => $responsability["fonction_name"] ?? "",
+				"fonction_id" => $responsability["fonction_id"] ?? "",
+				"qualification" => $responsability["qualification"] ?? ""
+			);
+		}
+		
+		return $result;
+	}
 } //authperso class end
 
 
 class authpersos {	
 	public $info=array();
 	protected static $instance;
+	public $simple_seach_list_checked=0;
 	
 	public static function get_name($id_authperso){
-		$id_authperso+=0;
+		$id_authperso = intval($id_authperso);
 		$query = "select authperso_name from authperso where id_authperso = ".$id_authperso;
 		$result = pmb_mysql_query($query);
 		if(pmb_mysql_num_rows($result)){
@@ -298,7 +343,6 @@ class authpersos {
 	}
 	
 	public function fetch_data() {
-		global $PMBuserid;
 		$this->info=array();
 		$i=0;
 		$req="select * from authperso order by authperso_name";
@@ -370,14 +414,13 @@ class authpersos {
 	}
 	
 	public function get_field_text($id) {
-				
-		$auth=new authperso_authority($id);		
-		return  array('valeur_champ'=>get_isbd(),"look_AUTHPERSO_".'typ_search'=>get_authperso_num());
-		
-	}	
+	    // BT : fonction probablement plus/pas utilisée
+		$auth = new authperso_data($id);
+		return array('valeur_champ' => $auth->get_isbd(), "look_AUTHPERSO_typ_search" => $auth->get_authperso_num());
+	}
 	
 	public function search_authperso($user_query) {
-    	global $opac_search_other_function,$typdoc,$charset,$dbh;
+    	global $opac_search_other_function,$typdoc,$charset;
     	global $opac_stemming_active;
     	$total_results=0;
 		foreach($this->info as $authperso){
@@ -403,12 +446,12 @@ class authpersos {
 			$tri = 'order by pert desc, authperso_index_infos_global';
 			$pert=$members["select"]." as pert";
 			
-			$auth_res = pmb_mysql_query("SELECT COUNT(distinct id_authperso_authority) FROM authperso_authorities $clause", $dbh);
+			$auth_res = pmb_mysql_query("SELECT COUNT(distinct id_authperso_authority) FROM authperso_authorities $clause");
 			$nb_result = pmb_mysql_result($auth_res, 0 , 0);
 			if ($nb_result) {
 				$total_results+=$nb_result;
-				//dÃ©finition du formulaire
-				$form = "<div class='search_result'><form name=\"search_authperso_".$authperso['id']."\" action=\"./index.php?lvl=more_results\" method=\"post\">";
+				//définition du formulaire
+				$form = "<div class='search_result'><form id='search_authperso_".$authperso['id']."' name=\"search_authperso_".$authperso['id']."\" action=\"./index.php?lvl=more_results\" method=\"post\">";
 				$form .= "<input type=\"hidden\" name=\"user_query\" value=\"".htmlentities(stripslashes($user_query),ENT_QUOTES,$charset)."\">\n";
 				if (function_exists("search_other_function_post_values")){
 					$form .=search_other_function_post_values();
@@ -470,5 +513,15 @@ class authpersos {
 		}
 		return static::$instance;
 	}
+	
+	public function is_responsability_authperso() {
+	    $req = "select authperso_responsability_authperso from authperso where id_authperso=". $this->id;
+	    $res = pmb_mysql_query($req);
+	    if(($r=pmb_mysql_fetch_object($res))) {
+	        return $r->authperso_responsability_authperso;
+	    }
+	    return 0;
+	}
+	
 } // authpersos class end
 	

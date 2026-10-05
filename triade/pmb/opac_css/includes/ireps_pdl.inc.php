@@ -1,19 +1,24 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: ireps_pdl.inc.php,v 1.11 2015-04-03 11:16:17 jpermanne Exp $
+// $Id: ireps_pdl.inc.php,v 1.13.4.1 2025/03/25 07:32:25 dgoron Exp $
 
 function search_other_function_filters() { //OK
 	global $charset,$ireps_ss_type,$ireps_location,$ireps_public,$ireps_expertise, $ireps_indexint;
 	
-	if(!isset($ireps_ss_type)) $ireps_ss_type='0';
-	if(!isset($ireps_location)) $ireps_location='0';
-	if(!isset($ireps_indexint)) $ireps_indexint='0';
-	
+	if(!isset($ireps_ss_type)) {
+	    $ireps_ss_type='0';
+	}
+	if(!isset($ireps_location)) {
+	    $ireps_location='0';
+	}
+	if(!isset($ireps_indexint)) {
+	    $ireps_indexint='0';
+	}
 	$ireps_js_location="var ireps_location_code= new Array();\n var ireps_location_libelle = new Array();\n";
 	
-	//Pour la sÃ©lection par sous type
+	//Pour la sélection par sous type
 	$q="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ='3' order by notices_custom_list_lib";
 	$r=pmb_mysql_query($q);
 	$ireps_sel_ss_type="<select name='ireps_ss_type'>" ;
@@ -37,7 +42,7 @@ function search_other_function_filters() { //OK
 	}
 	$ireps_sel_ss_type.="</select>";
 	
-	//Pour la sÃ©lection par localisation
+	//Pour la sélection par localisation
 	$q="select idlocation,location_libelle, if(left(location_libelle, 5 )='IREPS',1,2) as o from docs_location where location_visible_opac='1' order by o,cp";
 	$r=pmb_mysql_query($q);
 	$ireps_sel_location="<select name='ireps_location'>" ;
@@ -57,7 +62,7 @@ function search_other_function_filters() { //OK
 	}
 	$ireps_sel_location.="</select>";
 
-	//Pour la sÃ©lection par public cible
+	//Pour la sélection par public cible
 	$q="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ='4' order by notices_custom_list_lib";
 	$r=pmb_mysql_query($q);
 	$ireps_sel_public="<select name='ireps_public'>" ;
@@ -77,7 +82,7 @@ function search_other_function_filters() { //OK
 	}
 	$ireps_sel_public.="</select>";
 	
-	//Pour la sÃ©lection par expertise
+	//Pour la sélection par expertise
 	$q="select notices_custom_list_value,notices_custom_list_lib from notices_custom_lists where notices_custom_champ='8' order by notices_custom_list_lib";
 	$r=pmb_mysql_query($q);
 	$ireps_sel_expertise="<select name='ireps_expertise'>" ;
@@ -97,7 +102,7 @@ function search_other_function_filters() { //OK
 	}
 	$ireps_sel_expertise.="</select>";
 	
-	$ireps_js="<script type=\"text/javascript\">".$ireps_js_location."
+	$ireps_js="<script>".$ireps_js_location."
 	document.search_input.typdoc.onchange=par_doc_type;
 	par_doc_type();
 	document.search_input.ireps_ss_type.onchange=par_ss_type;
@@ -110,7 +115,7 @@ function search_other_function_filters() { //OK
 				trouve_select(visible);
 				affiche_selecteurs_outils('none');
 				break;
-			case 'x'://PÃ©riodique
+			case 'x'://Périodique
 				var visible = new Array('2','24');
 				trouve_select(visible);
 				affiche_selecteurs_outils('none');
@@ -145,7 +150,7 @@ function search_other_function_filters() { //OK
 				break;
 			case '2' :
 			case '24' :
-				//PÃ©riodique
+				//Périodique
 				var visible = new Array('2','24');
 				trouve_select(visible);
 				affiche_selecteurs_outils('none');
@@ -222,28 +227,29 @@ function search_other_function_filters() { //OK
 	
 	</script>";
 	
-	// pour la sÃ©lection par plan de classement
-	$entete_indexint['A'] = "SantÃ© publique, promotion de la santÃ©";
-	$entete_indexint['B'] = "SystÃ¨me sanitaire et social";
+	// pour la sélection par plan de classement
+	$entete_indexint = [];
+	$entete_indexint['A'] = "Santé publique, promotion de la santé";
+	$entete_indexint['B'] = "Système sanitaire et social";
 	$entete_indexint['C'] = "Prise en charge, soins";
-	$entete_indexint['D'] = "DÃ©veloppement des compÃ©tences";
+	$entete_indexint['D'] = "Développement des compétences";
 	$entete_indexint['E'] = "Violences";
 	$entete_indexint['F'] = "Accidents";
-	$entete_indexint['G'] = "HygiÃ¨ne de vie";
-	$entete_indexint['H'] = "Environnement et santÃ©";
-	$entete_indexint['I'] = "SantÃ© et sexualitÃ©";
+	$entete_indexint['G'] = "Hygiène de vie";
+	$entete_indexint['H'] = "Environnement et santé";
+	$entete_indexint['I'] = "Santé et sexualité";
 	$entete_indexint['J'] = "Conduites addictives";
 	$entete_indexint['K'] = "Ages et temps de la vie";
-	$entete_indexint['L'] = "Populations et milieux spÃ©cifiques";
-	$entete_indexint['M'] = "PrÃ©vention, dÃ©pistage";
+	$entete_indexint['L'] = "Populations et milieux spécifiques";
+	$entete_indexint['M'] = "Prévention, dépistage";
 	$entete_indexint['N'] = "Education du patient";
-	$entete_indexint['O'] = "Pathologies et problÃ¨mes de santÃ©";
+	$entete_indexint['O'] = "Pathologies et problèmes de santé";
 	$q="select indexint_id, indexint_name, indexint_comment from indexint where num_pclass=1 order by indexint_name";
 	$r=pmb_mysql_query($q);
 	$ireps_sel_indexint="<select name='ireps_indexint'>" ;
 	$ireps_sel_indexint.="<option value='0' ";
 	if(!$ireps_indexint) $ireps_sel_indexint.="selected=\"selected\" ";
-	$ireps_sel_indexint.=">Toutes thÃ©matiques</option>";
+	$ireps_sel_indexint.=">Toutes thématiques</option>";
 	$anc_chap="";
 	if (pmb_mysql_num_rows($r)) {
 		while (($row = pmb_mysql_fetch_object($r))) {
@@ -390,7 +396,7 @@ function search_other_function_human_query($n) { //OK
 		}
 	}
 	if($ret && $app) $ret.=", ";
-	if($app) $ret.="Outil expertisÃ© : ".$app;
+	if($app) $ret.="Outil expertisé : ".$app;
 	
 	$app="";
 	if ($ireps_indexint) {
@@ -401,21 +407,19 @@ function search_other_function_human_query($n) { //OK
 		}
 	}
 	if($ret && $app) $ret.=", ";
-	if($app) $ret.="ThÃ©matique : ".$app;
+	if($app) $ret.="Thématique : ".$app;
 	
 	return $ret;
 }
 
 
 function search_other_function_post_values() { //OK
-	global $ireps_ss_type,$ireps_location,$ireps_public,$ireps_expertise, $ireps_indexint;
-	$retour ="<input type=\"hidden\" name=\"ireps_ss_type\" value=\"$ireps_ss_type\">\n";
-	$retour.="<input type=\"hidden\" name=\"ireps_location\" value=\"$ireps_location\">\n";
-	$retour.="<input type=\"hidden\" name=\"ireps_public\" value=\"$ireps_public\">\n";
-	$retour.="<input type=\"hidden\" name=\"ireps_expertise\" value=\"$ireps_expertise\">\n";
-	$retour.="<input type=\"hidden\" name=\"ireps_indexint\" value=\"$ireps_indexint\">\n";
+	global $ireps_ss_type,$ireps_location,$ireps_public,$ireps_expertise, $ireps_indexint, $charset;
+	$retour ="<input type=\"hidden\" name=\"ireps_ss_type\" value=\"".htmlentities($ireps_ss_type, ENT_QUOTES, $charset)."\">\n";
+	$retour.="<input type=\"hidden\" name=\"ireps_location\" value=\"".htmlentities($ireps_location, ENT_QUOTES, $charset)."\">\n";
+	$retour.="<input type=\"hidden\" name=\"ireps_public\" value=\"".htmlentities($ireps_public, ENT_QUOTES, $charset)."\">\n";
+	$retour.="<input type=\"hidden\" name=\"ireps_expertise\" value=\"".htmlentities($ireps_expertise, ENT_QUOTES, $charset)."\">\n";
+	$retour.="<input type=\"hidden\" name=\"ireps_indexint\" value=\"".htmlentities($ireps_indexint, ENT_QUOTES, $charset)."\">\n";
 	
 	return $retour;
 }
-
-?>

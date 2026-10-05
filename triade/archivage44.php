@@ -10,7 +10,7 @@ if ($id != 1) {
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -49,11 +49,11 @@ if (empty($_SESSION["adminplus"])) {
 	exit;
 }
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]".".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript"<?php print "src='./librairie_js/$_SESSION[membre]"."1.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript"<?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print "Archivage des données"?></font></b></td></tr>
 <tr id='cadreCentral0'>
@@ -102,7 +102,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_notes();  
 		// note_id,elev_id,prof_id,code_mat,coef,date,sujet,TRUNCATE(note,2),id_classe,id_groupe,typenote,noteexam,notationsur,notevisiblele
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -150,7 +150,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_abs();  
 		$db->queryExec('BEGIN TRANSACTION');
 		//elev_id, date_ab, date_saisie,origin_saisie,duree_ab ,date_fin, motif,  duree_heure, id_matiere, time
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -200,7 +200,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_rtd();  
 		//elev_id,heure_ret,date_ret,date_saisie,origin_saisie,duree_ret,motif,idmatiere,justifier,heure_saisie,idprof,creneaux
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -247,7 +247,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_sanction();  
 		//id,id_eleve,motif,id_category,date_saisie,origin_saisie,enr_en_retenue,signature_parent,attribuer_par,devoir_a_faire
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -291,7 +291,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_entretienEleve();  
 		// ideleve,date,heuredebut,heurefin,nomclasse,objet,recupar,id
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -333,7 +333,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_retenu();  
 		// id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -379,7 +379,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_affectation();  
 		// ordre_affichage, code_matiere, code_prof, code_classe, coef, code_groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -423,7 +423,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_devoirScolaire();  
 		// ordre_affichage, code_matiere, code_prof, code_classe, coef, code_groupe, langue, avec_sous_matiere, visubull, nb_heure, trim, ects
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -472,7 +472,7 @@ if (empty($_SESSION["adminplus"])) {
 		$data=SQLite_cahierDeTextes();  
 		// id,id_class_or_grp,matiere_id,date_saisie,heure_saisie,classorgrp,number,fichier,idprof,objectif,contenu,date_contenu,number_obj,fichier_obj,blocnote,visadirecteur
 		$db->queryExec('BEGIN TRANSACTION');
-		for($i=0;$i<count($data);$i++) {
+		for($i=0;$i<countTriade($data);$i++) {
 			$val1=$data[$i][0];
 			$val2=$data[$i][1];
 			$val3=$data[$i][2];
@@ -520,6 +520,6 @@ if (empty($_SESSION["adminplus"])) {
 <br /><br />
 <!-- // fin  -->
 </td></tr></table>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/$_SESSION[membre]"."2.js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."2.js'>" ?></SCRIPT>
 <?php attente(); ?>
 </BODY></HTML>

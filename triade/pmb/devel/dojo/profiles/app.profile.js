@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // © 2002-2015 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: app.profile.js,v 1.2 2015-12-21 11:20:05 vtouchard Exp $
+// $Id: app.profile.js,v 1.2 2015/12/21 11:20:05 vtouchard Exp $
 
 
 /**

@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_common_view_charte.class.php,v 1.2 2019-05-09 09:26:02 ccraig Exp $
+// $Id: cms_module_common_view_charte.class.php,v 1.5 2019/11/27 15:36:54 gneveu Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
@@ -11,11 +11,10 @@ class cms_module_common_view_charte extends cms_module_common_view_django{
 	public function __construct($id=0){
 		parent::__construct($id);
 		$this->default_template = '
-<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+<div class="uk-modal-dialog modal-first" id="modal-usage-policy">
     <div class="uk-modal-header">
 		<h2 class="uk-modal-title">{{title}}</h2>
     </div>
-    {% if resume %}<div class="uk-block uk-alert">{{resume}}</div>{% endif %}
 	<div class="uk-overflow-container">{{content}}</div>
 	<div class="uk-modal-footer">
 		<div class="uk-text-right">
@@ -26,16 +25,16 @@ class cms_module_common_view_charte extends cms_module_common_view_django{
 	}
 	
 	public function get_form() {
-		if(!isset($this->parameters['css']) || !$this->parameters['css']){
-			$this->parameters['css'] = (isset($this->managed_datas['css']) ? $this->managed_datas['css'] : '');
+		if(!isset($this->parameters['modal_only_connected']) || !$this->parameters['modal_only_connected']){
+		    $this->parameters['modal_only_connected'] = (isset($this->managed_datas['modal_only_connected']) ? $this->managed_datas['modal_only_connected'] : false);
 		}
 		$form = parent::get_form()."
 			<div class='row'>
 				<div class='colonne3'>
-					<label for='".$this->get_form_value_name('charte_css')."'>".$this->format_text($this->msg['cms_module_common_view_charte_css'])."</label>
+					<label for='".$this->get_form_value_name('charte_modal_only_connected')."'>".$this->format_text($this->msg['cms_module_common_view_charte_modal_only_connected'])."</label>
 				</div>
 				<div class='colonne-suite'>
-					<textarea name='".$this->get_form_value_name('charte_css')."'>".$this->format_text($this->parameters['css'])."</textarea>
+					<input type='checkbox' name='".$this->get_form_value_name('charte_modal_only_connected'). "' ".(!empty($this->parameters['modal_only_connected'])? 'checked' : '' ).">
 				</div>
 			</div>
 		";
@@ -43,42 +42,56 @@ class cms_module_common_view_charte extends cms_module_common_view_django{
 	}
 	
 	public function save_form() {
-		$this->parameters['css'] = $this->get_value_from_form('charte_css');
+		$this->parameters['modal_only_connected'] = $this->get_value_from_form('charte_modal_only_connected');
 		
 		return parent::save_form();
 	}
 	
 	public function render($datas){
-		if (empty($_SESSION["id_empr_session"])) {
-			return '';
-		}
-		$datas['css'] = $this->parameters['css'];
-		$datas['script_close_modal'] = '
+	    if (!empty($this->parameters['modal_only_connected'])) {
+    		if (empty($_SESSION["id_empr_session"])) {
+    			return '';
+    		}
+	    }
+	    $datas->script_close_modal = '
 			var modal_'.$this->get_module_dom_id().' = UIkit.modal("#'.$this->get_module_dom_id().'", {
 				keyboard: false,
 				bgclose: false,
 				modal: false
 			});
-					
-			modal_'.$this->get_module_dom_id().'.show();
-			if (document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").offsetHeight !=
-				document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").scrollHeight) {
-				document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").addEventListener("scroll",
-					handleScroll_'.$this->get_module_dom_id().');
-			} else {
-				document.querySelector("#'.$this->get_module_dom_id().' .uk-modal-close").removeAttribute("disabled");
-			}
-						
-			document.querySelector("#'.$this->get_module_dom_id().' .uk-modal-close").addEventListener("click", function() {
-				fetch("./ajax.php?module=cms&categ=module&elem='.$this->class_name.'&id='.$this->id.'&action=ajax'.$request.'")
-				.then(function(res) {
-					if (res.ok)	modal_'.$this->get_module_dom_id().'.hide();
-				})
-			})
-							
-			function handleScroll_'.$this->get_module_dom_id().'() {
-				checkScrollPosition("'.$this->get_module_dom_id().'");
-			}
+            var id_connected = '.(!$_SESSION["id_empr_session"]? 'null' : $_SESSION["id_empr_session"]).';
+            if (!localStorage.getItem("empr_accepted_conditions") == 1 || (localStorage.getItem("empr_accepted_conditions") == 1 && id_connected != null)) {
+    			modal_'.$this->get_module_dom_id().'.show();
+            
+    			if (document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").clientHeight !=
+    				document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").scrollHeight) {
+    				document.querySelector("#'.$this->get_module_dom_id().' .uk-overflow-container").addEventListener("scroll",
+    					handleScroll_'.$this->get_module_dom_id().');
+    			} else {
+    				document.querySelector("#'.$this->get_module_dom_id().' .uk-modal-close").removeAttribute("disabled");
+    			}
+    						
+    			document.querySelector("#'.$this->get_module_dom_id().' .uk-modal-close").addEventListener("click", function() {
+    				fetch("'.$this->get_ajax_link([]).'",{
+                        credentials: "same-origin"
+                    })
+        				.then(function(res) {
+        					if (res.ok)	{
+                                modal_'.$this->get_module_dom_id().'.hide();
+                                localStorage.setItem("empr_accepted_conditions", 1);
+                            }
+    				})
+    			})
+    							
+    			function handleScroll_'.$this->get_module_dom_id().'() {
+    				checkScrollPosition("'.$this->get_module_dom_id().'");
+    			}
+            } else if(localStorage.getItem("empr_accepted_conditions") == 1) {
+                var modal = document.getElementById("modal-usage-policy");
+                if (modal) {
+                    modal.remove();
+                }
+            }
 		';
 		
 		if (!isset($_SESSION['empr_accepted_conditions'])) {
@@ -87,7 +100,7 @@ class cms_module_common_view_charte extends cms_module_common_view_django{
 		
 		if (!$_SESSION['empr_accepted_conditions']) {
 			$html = parent::render($datas);
-			if (!empty($datas['script_close_modal'])) $html.= '<script>'.$datas['script_close_modal'].'</script>';
+			if (!empty($datas->script_close_modal)) $html.= '<script>'.$datas->script_close_modal.'</script>';
 			return $html;
 		}
 		return '';

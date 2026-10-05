@@ -1,13 +1,15 @@
 <?php
 // +----------------------------------------------------------------------------------------+
-// Â© 2002-2006 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2006 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +----------------------------------------------------------------------------------------+
-// $Id: index.php,v 1.9 2013-04-04 09:44:23 mbertin Exp $
+// $Id: index.php,v 1.9.30.1 2025/03/25 10:46:38 dgoron Exp $
 
 //enregistrement des variables get et post en variables globales
 error_reporting(E_ERROR);
+
+require_once ("../includes/pmb_cookie.inc.php");  
 require_once ("../includes/global_vars.inc.php");  
-//dÃ©finition du frameset
+//définition du frameset
 echo "<HTML>
 <HEAD>
 	<TITLE>Documentation PMB</TITLE>
@@ -17,7 +19,7 @@ if(!isset($lang) || !$lang){
 	$lang="fr_FR";
 }
 
-//affichage ou non : pas de traduction dans la langue dÃ©sirÃ©e
+//affichage ou non : pas de traduction dans la langue désirée
 if ($lang=="fr_FR") {
 	echo "
 		<FRAMESET ROWS='0%,*' border=0 frameborder=0 framespacing=0>
@@ -28,7 +30,7 @@ if ($lang=="fr_FR") {
 	if ($lang=="en_US") $lang="en_UK";
 	$doc_directory="documentation/".$lang;
 	if (!is_dir($doc_directory)) {
-		//il n'y a qu'un rÃ©pertoire pour la doc
+		//il n'y a qu'un répertoire pour la doc
 		$lang="fr_FR";
 		$doc_directory="documentation/fr_FR";
 	}
@@ -48,7 +50,7 @@ if(!is_dir($doc_directory)) {
 	include($doc_correspondance);			
 }
 
-//fin du frame affichant la doc correspondant aux infos postÃ©es
+//fin du frame affichant la doc correspondant aux infos postées
 echo "' NAME='main'>";        
 //fermeture du frameset
 echo "

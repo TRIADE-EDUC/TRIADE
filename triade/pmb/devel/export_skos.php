@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2014 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: export_skos.php,v 1.4 2017-06-02 07:34:37 jpermanne Exp $
+// $Id: export_skos.php,v 1.6 2023/10/17 14:18:55 tsamson Exp $
 
 $base_path="..";
 $base_noheader = 1;
@@ -11,9 +11,8 @@ $base_nobody = 1;
 $base_nosession =1;
 
 require_once($base_path."/includes/init.inc.php");
-require_once("../classes/rdf/arc2/ARC2.php");
 
-$numt=$_GET["thesaurus"];
+$numt = intval($_GET["thesaurus"]);
 $prefix=$_GET["prefix"]; //http://http://www.ressources-de-la-formation.fr
 $tname=$_GET["tname"]; //thesaurus_formation
 

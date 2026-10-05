@@ -1,7 +1,7 @@
 /* +--------------------------------------------------------------------------+
 // 2002-2008 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: layout.css,v 1.63 2018-03-27 07:48:19 arenou Exp $
+// $Id: layout.css,v 1.74 2024/01/30 14:39:05 jparis Exp $
 */
 
 
@@ -100,6 +100,7 @@ img {
 	border: none;
 }
 
+button,
 select,
 input {
 	background: white;
@@ -1128,7 +1129,7 @@ ol {
 }
 
 .erreur-child {
-	display: none;
+	display: block;
 	margin-left: 12%;
 	padding: 0;
 	color: #000;
@@ -1500,7 +1501,7 @@ table td .img_notice {
 iframe#history {
 	width: 40%;
 	height: 97%;
-	position: absolute;
+	position: fixed;
 	top: 1%;
 	left: 1%;
 	z-index: 1000;
@@ -1747,6 +1748,7 @@ body.abonnement_parution_edition .left {
 	height: 250px;
 }
 
+#a_recevoirChild .colonne_suite button,
 #a_recevoirChild .colonne_suite input {
 	margin-right: 20px;
 }
@@ -2055,6 +2057,7 @@ body.abonnement_parution_edition .left {
 }
 
 .tab_sug input,
+.tab_sug button,
 .tab_sug textarea {
 	width: 95%;
 	height: 100%;
@@ -2154,4 +2157,64 @@ body.catalog #conteneur #contenu form #speech_timeline #speech_timeline_edit_men
 body.catalog #conteneur #contenu form #speech_timeline #speech_timeline_edit_menu ul li:hover {
 	background: url("images/menu_liens_hover.png") repeat-x scroll 0 0 #756D6C;
 	color: #FFFFFF;
+}
+ 
+/* Correction d'un bug Drag & Drop dojo dans Firefox
+https://github.com/dojo/dijit/issues/161 */
+.dijitTree {
+    -moz-user-select: none;
+}
+
+
+/* ------------------ Vignette Administration ------------------ */
+.admin .accordion-trigger:focus, 
+.admin .accordion-trigger:hover {
+	background: #a02c35 !important;
+	color: white;
+}
+
+/* ------------------ Refonte Dsi ------------------ */
+#views .accordion .accordion-trigger,
+#views .accordion .accordion-trigger:focus,
+#views .accordion .accordion-trigger:hover,
+#diffusionsPending .accordion .accordion-trigger,
+#diffusionsPending .accordion .accordion-trigger:focus,
+#diffusionsPending .accordion .accordion-trigger:hover,
+#subscriberList .accordion .accordion-trigger,
+#subscriberList .accordion .accordion-trigger:focus,
+#subscriberList .accordion .accordion-trigger:hover,
+#products .accordion .accordion-trigger,
+#products .accordion .accordion-trigger:focus,
+#products .accordion .accordion-trigger:hover,
+#diffusions .accordion .accordion-trigger,
+#diffusions .accordion .accordion-trigger:focus,
+#diffusions .accordion .accordion-trigger:hover {
+	background: #d18c3b !important;
+	color: white;
+}
+
+.accordion-trigger:focus .accordion-title {
+	border-color: white !important;
+}
+
+.source-list .source-item::before {
+	content: "\2022"; 
+	color: #a02c35;
+	display: inline-block; 
+	width: 1em;
+	margin-left: -1em
+}
+
+#sub-container {
+	height: 100% !important;
+}
+
+.pagination button.bouton-page.active {
+	background-color: #d18c3b;
+	color: white;
+}
+
+/* ------------------ Refonte Dashboard ------------------ */
+#dashboard .bouton {
+	background: #0280cc;
 }

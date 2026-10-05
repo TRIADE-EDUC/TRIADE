@@ -1,12 +1,12 @@
-<?php
+﻿<?php
 session_start();
 /***************************************************************************
  *                              T.R.I.A.D.E
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
- *   Site                 : http://www.triade-educ.com
+ *   copyright            : (C) 2000 E. TAESCH -
+ *   Site                 : http://www.triade-educ.org
  *
  *
  ***************************************************************************/
@@ -29,11 +29,35 @@ include_once("./librairie_php/db_triade_admin.php");
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/css-v4-2.css">
+<LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="../librairie_css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="../librairie_js/info-bulle.js"></script>
-<title>Triade</title>
+<title>Triade — Configuration modules</title>
+<style>
+.acc-panel{border:1px solid #c5cae9;border-radius:8px;margin-bottom:8px;}
+.acc-header{background:#080A66;color:#fff;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;font-family:Electrolize,Trebuchet MS,Arial;user-select:none;}
+.acc-header > span:first-child{flex:1;}
+.acc-header:hover{background:#152a8a;}
+.acc-arrow{transition:transform .25s;font-size:10px;}
+.acc-open .acc-arrow{transform:rotate(180deg);}
+.acc-body{display:none;}
+.acc-open .acc-body{display:block;}
+.conf-inner{width:100%;border-collapse:collapse;}
+.conf-inner tr{border-bottom:1px solid #e8eaf6;}
+.conf-inner tr:last-child{border-bottom:none;}
+.conf-inner tr{background:#fff;transition:background .15s;}
+.conf-inner td{background:transparent !important;}
+.conf-inner tr:hover{background:#eef0fb !important;}
+.conf-inner td[align="right"]{width:54%;font-size:12px;font-weight:700;color:#080A66;font-family:Electrolize,Trebuchet MS,Arial;padding:6px 10px 6px 4px;text-align:right;vertical-align:middle;}
+.conf-inner td[align="left"]{padding:6px 10px;vertical-align:middle;font-family:Electrolize,Trebuchet MS,Arial;font-size:12px;}
+.acc-alert{background:#c62828;color:#fff;border-radius:50%;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;margin-left:2px;flex-shrink:0;cursor:default;vertical-align:middle;}
+.acc-inline-alert{background:#c62828;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-left:6px;cursor:default;vertical-align:middle;}
+</style>
 </head>
 <body id="bodyfond" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" >
 <SCRIPT language="JavaScript" src="librairie_js/menudepart.js"></SCRIPT>
@@ -45,13 +69,68 @@ include_once("./librairie_php/db_triade_admin.php");
 <tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' >Droit d'accès aux modules Triade</font></b></td></tr>
 <tr id="cadreCentral0" ><td > <p align="left" ><font color="#000000">
 <!-- // debut de la saisie -->
-<br>
-<form method='post' action='config_module2.php' >
-<center><font class=T2>Autoriser ou non l'accès aux différents modules.</font></center>
-<br>
-<table width=100% border=0 >
+<form method='post' action='config_module2.php'>
 
-<tr><td colspan=2 >&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Générale</b></font></td></tr>
+<!-- ===== Barre de recherche ===== -->
+<div style="background:#f0f2fa;border:1px solid #c5cae9;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+  <i class="bi bi-search" style="color:#080A66;font-size:14px;flex-shrink:0;"></i>
+  <input type="text" id="conf-search" placeholder="Rechercher un module de configuration…"
+    autocomplete="off"
+    style="flex:1;border:1px solid #c5cae9;border-radius:6px;padding:6px 12px;font-size:13px;font-family:Electrolize,Trebuchet MS,Arial;color:#333;outline:none;background:#fff;">
+  <span id="conf-search-count" style="font-size:12px;color:#888;white-space:nowrap;display:none;"></span>
+  <button type="button" id="conf-search-clear" onclick="document.getElementById('conf-search').value='';confSearch();"
+    style="display:none;background:none;border:none;cursor:pointer;color:#c62828;font-size:16px;line-height:1;padding:0 2px;">&#x2715;</button>
+</div>
+<script>
+var _confInitOpen = null;
+function confSearch() {
+  var panels = document.querySelectorAll('.acc-panel');
+  if (!_confInitOpen) {
+    _confInitOpen = Array.from(panels).map(function(p) { return p.classList.contains('acc-open'); });
+  }
+  var q = document.getElementById('conf-search').value.trim().toLowerCase();
+  var total = 0;
+  document.getElementById('conf-search-clear').style.display = q ? 'block' : 'none';
+  panels.forEach(function(panel, i) {
+    var rows = panel.querySelectorAll('.na-row, .conf-inner tr');
+    var hits = 0;
+    rows.forEach(function(row) {
+      if (!q) {
+        row.style.display = '';
+      } else {
+        var txt = (row.innerText || row.textContent || '').toLowerCase();
+        if (txt.indexOf(q) !== -1) { row.style.display = ''; hits++; total++; }
+        else { row.style.display = 'none'; }
+      }
+    });
+    if (!q) {
+      panel.style.display = '';
+      if (_confInitOpen[i]) { panel.classList.add('acc-open'); }
+      else { panel.classList.remove('acc-open'); }
+    } else if (hits > 0) {
+      panel.style.display = ''; panel.classList.add('acc-open');
+    } else {
+      panel.style.display = 'none';
+    }
+  });
+  var countEl = document.getElementById('conf-search-count');
+  if (q) {
+    countEl.style.display = 'inline';
+    countEl.textContent = total + ' résultat' + (total > 1 ? 's' : '');
+  } else {
+    countEl.style.display = 'none';
+  }
+}
+document.getElementById('conf-search').addEventListener('input', confSearch);
+document.getElementById('conf-search').addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { this.value = ''; confSearch(); }
+});
+</script>
+
+<!-- ===== Section 1 : Configuration Générale ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Générale</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <?php
 include_once("../common/config-module.php");
@@ -367,372 +446,354 @@ $modulebulletinvisututeurstagenon="";
 $moduleadminevalensoui="";
 $moduleadminevalensnon="";
 
+$moduletriadecoachoui="";
+$moduletriadecoachnon="";
 
-if (VIESCOLAIRECAHIERDETEXTE == "oui") { $cahierdetexteviescolaireoui="checked"; }
-if (VIESCOLAIRECAHIERDETEXTE == "non") { $cahierdetexteviescolairenon="checked"; }
-
-if (PREINSCRIPTION == "oui") { $preinsciptionoui="checked"; }
-if (PREINSCRIPTION == "non") { $preinsciptionnon="checked"; }
-if (DISPENSE == "oui") { $dispenseoui="checked"; }
-if (DISPENSE == "non") { $dispensenon="checked"; }
-if (DISCIPLINE == "oui") { $disciplineoui="checked"; }
-if (DISCIPLINE == "non") { $disciplinenon="checked"; }
-if (CAHIERDETEXTE == "oui") { $cahierdetexteoui="checked"; }
-if (CAHIERDETEXTE == "non") { $cahierdetextenon="checked"; }
-if (PLANCLASSE == "oui") { $planclasseoui="checked"; }
-if (PLANCLASSE == "non") { $planclassenon="checked"; }
-if (DST == "oui") { $DSToui="checked"; }
-if (DST == "non") { $DSTnon="checked"; }
-
-if (PARENTDISPENSE == "oui") { $parentdispenseoui="checked"; }
-if (PARENTDISPENSE == "non") { $parentdispensenon="checked"; }
-if (PARENTDISCIPLINE == "oui") { $parentdisciplineoui="checked"; }
-if (PARENTDISCIPLINE == "non") { $parentdisciplinenon="checked"; }
-if (PARENTCAHIERDETEXTE == "oui") { $parentcahierdetexteoui="checked"; }
-if (PARENTCAHIERDETEXTE == "non") { $parentcahierdetextenon="checked"; }
-if (PARENTPLANCLASSE == "oui") { $parentplanclasseoui="checked"; }
-if (PARENTPLANCLASSE == "non") { $parentplanclassenon="checked"; }
-if (PARENTDST == "oui") { $parentDSToui="checked"; }
-if (PARENTDST == "non") { $parentDSTnon="checked"; }
-
-if (VISUDEVOIRPROF == "oui") { $visudevoirprofoui="checked"; }
-if (VISUDEVOIRPROF == "non") { $visudevoirprofnon="checked"; }
-if (SUPPDEVOIRPROF == "oui") { $suppdevoirprofoui="checked"; }
-if (SUPPDEVOIRPROF == "non") { $suppdevoirprofnon="checked"; }
-if (CAHIERTEXTPROF == "oui") { $cahiertexteprofoui="checked"; }
-if (CAHIERTEXTPROF == "non") { $cahiertexteprofnon="checked"; }
-if (SANCTIONPROF == "oui") { $sanctionprofoui="checked"; }
-if (SANCTIONPROF == "non") { $sanctionprofnon="checked"; }
-if (FICHEELEVEPROF == "oui") { $ficheeleveprofoui="checked"; }
-if (FICHEELEVEPROF == "non") { $ficheeleveprofnon="checked"; }
-if (LISTEELEVEPROF == "oui") { $listeleveprofoui="checked"; }
-if (LISTEELEVEPROF == "non") { $listeleveprofnon="checked"; }
-if (PLANPROF == "oui") { $planprofoui="checked"; }
-if (PLANPROF == "non") { $planprofnon="checked"; }
-if (STAGEPROPROF == "oui") { $stageproprofoui="checked"; }
-if (STAGEPROPROF == "non") { $stageproprofnon="checked"; }
-if (DSTPROFACCES == "oui") { $DSTProfoui="checked"; }
-if (DSTPROFACCES == "non") { $DSTProfnon="checked"; }
-if (DOKEOSPROF == "oui") { $DOKEOSProfoui="checked"; }
-if (DOKEOSPROF == "non") { $DOKEOSProfnon="checked"; }
-if (DOKEOSELEVE == "oui") { $DOKEOSeleveoui="checked"; }
-if (DOKEOSELEVE == "non") { $DOKEOSelevenon="checked"; }
-if (COMPTAPROF == "oui") { $comptaProfoui="checked"; }
-if (COMPTAPROF == "non") { $comptaProfnon="checked"; }
-if (PARENTTROMBINOSCOPE == "oui") { $parentTrombinoscopeoui="checked"; }
-if (PARENTTROMBINOSCOPE == "non") { $parentTrombinoscopenon="checked"; }
-if (STAGEPROELEVE == "oui") { $stageProeleveoui="checked"; }
-if (STAGEPROELEVE == "non") { $stageProelevenon="checked"; }
-if (STAGEPROPARENT == "oui") { $stageProparentoui="checked"; }
-if (STAGEPROPARENT == "non") { $stageProparentnon="checked"; }
-
-if (STOCKAGEPROF == "oui") { $stockageprofoui="checked"; }
-if (STOCKAGEPROF == "non") { $stockageprofnon="checked"; }
-if (INTRAMSNPROF == "oui") { $intramsnprofoui="checked"; }
-if (INTRAMSNPROF == "non") { $intramsnprofnon="checked"; }
-if (AGENDAMSNPROF == "oui") { $agendaprofoui="checked"; }
-if (AGENDAMSNPROF == "non") { $agendaprofnon="checked"; }
-if (FLUXRSSPROF == "oui") { $fluxrssprofoui="checked"; }
-if (FLUXRSSPROF == "non") { $fluxrssprofnon="checked"; }
-if (NOTESPROF == "oui") { $notesprofoui="checked"; }
-if (NOTESPROF == "non") { $notesprofnon="checked"; }
-if (BULLETINPROF == "oui") { $bulletinprofoui="checked"; }
-if (BULLETINPROF == "non") { $bulletinprofnon="checked"; }
-if (RESAPROF == "oui") { $resaprofoui="checked"; }
-if (RESAPROF == "non") { $resaprofnon="checked"; }
-if (CIRCULAIREPROF == "oui") { $circulaireprofoui="checked"; }
-if (CIRCULAIREPROF == "non") { $circulaireprofnon="checked"; }
-if (INFORMATIONPROF == "oui") { $informationprofoui="checked"; }
-if (INFORMATIONPROF == "non") { $informationprofnon="checked"; }
-if (CALENDRIERPROF == "oui") { $calendrierprofoui="checked"; }
-if (CALENDRIERPROF == "non") { $calendrierprofnon="checked"; }
-
-if (STOCKAGEVIESCOLAIRE == "oui") { $stockageviescolaireoui="checked"; }
-if (STOCKAGEVIESCOLAIRE == "non") { $stockageviescolairenon="checked"; }
-if (INTRAMSNVIESCOLAIRE == "oui") { $intramsnviescolaireoui="checked"; }
-if (INTRAMSNVIESCOLAIRE == "non") { $intramsnviescolairenon="checked"; }
-if (AGENDAVIESCOLAIRE == "oui") { $agendaviescolaireoui="checked"; }
-if (AGENDAVIESCOLAIRE == "non") { $agendaviescolairenon="checked"; }
-if (FLUXRSSVIESCOLAIRE == "oui") { $fluxrssviescolaireoui="checked"; }
-if (FLUXRSSVIESCOLAIRE == "non") { $fluxrssviescolairenon="checked"; }
-if (ETUDEVIESCOLAIRE == "oui") { $etudeviescolaireoui="checked"; }
-if (ETUDEVIESCOLAIRE == "non") { $etudeviescolairenon="checked"; }
-if (CIRCULAIREVIESCOLAIRE == "oui") { $circulaireviescolaireoui="checked"; }
-if (CIRCULAIREVIESCOLAIRE == "non") { $circulaireviescolairenon="checked"; }
-if (STAGEVIESCOLAIRE == "oui") { $stageviescolaireoui="checked"; }
-if (STAGEVIESCOLAIRE == "non") { $stageviescolairenon="checked"; }
-if (DSTVIESCOLAIRE == "oui") { $dstviescolaireoui="checked"; }
-if (DSTVIESCOLAIRE == "non") { $dstviescolairenon="checked"; }
-if (VISAVIESCOLAIRE == "oui") { $visaviescolaireoui="checked"; }
-if (VISAVIESCOLAIRE == "non") { $visaviescolairenon="checked"; }
-if (NOTEVIESCOLAIRE == "oui") { $noteviescolaireoui="checked"; }
-if (NOTEVIESCOLAIRE == "non") { $noteviescolairenon="checked"; }
-if (IMPTABLEAUVIESCOLAIRE == "oui") { $imptableauviescolaireoui="checked"; }
-if (IMPTABLEAUVIESCOLAIRE == "non") { $imptableauviescolairenon="checked"; }
-if (BULLETINVIESCOLAIRE == "oui") { $bulletinviescolaireoui="checked"; }
-if (BULLETINVIESCOLAIRE == "non") { $bulletinviescolairenon="checked"; }
-if (PERIODEVIESCOLAIRE == "oui") { $periodeviescolaireoui="checked"; }
-if (PERIODEVIESCOLAIRE == "non") { $periodeviescolairenon="checked"; }
-if (VIDEOPROJOVIESCOLAIRE == "oui") { $videoprojoviescolaireoui="checked"; }
-if (VIDEOPROJOVIESCOLAIRE == "non") { $videoprojoviescolairenon="checked"; }
-if (PLANCLASSEVIESCOLAIRE == "oui") { $planclasseviescolaireoui="checked"; }
-if (PLANCLASSEVIESCOLAIRE == "non") { $planclasseviescolairenon="checked"; }
-if (HISTORYVIESCOLAIRE == "oui") { $historyviescolaireoui="checked"; }
-if (HISTORYVIESCOLAIRE == "non") { $historyviescolairenon="checked"; }
-if (RESAVIESCOLAIRE == "oui") { $resaviescolaireoui="checked"; }
-if (RESAVIESCOLAIRE == "non") { $resaviescolairenon="checked"; }
-if (EXPORTVIESCOLAIRE == "oui") { $exportviescolaireoui="checked"; }
-if (EXPORTVIESCOLAIRE == "non") { $exportviescolairenon="checked"; }
-if (VACATIONVIESCOLAIRE == "oui") { $vacationviescolaireoui="checked"; }
-if (VACATIONVIESCOLAIRE == "non") { $vacationviescolairenon="checked"; }
-
-if (NOTEENSEIGNANTVIASCOLAIRE == "oui") { $noteenseignantviascolaireoui="checked"; }
-if (NOTEENSEIGNANTVIASCOLAIRE == "non") { $noteenseignantviascolairenon="checked"; }
+$modulepacteadminoui="";
+$modulepacteadminnon="";
+$modulepacteprofoui="";
+$modulepacteprofnon="";
 
 
-if (MODULECANTINEPROF == "oui") { $cantineprofoui="checked"; }
-if (MODULECANTINEPROF == "non") { $cantineprofnon="checked"; }
-if (MODULECANTINEVIESCOLAIRE == "oui") { $cantineviascolaireoui="checked"; }
-if (MODULECANTINEVIESCOLAIRE == "non") { $cantineviascolairenon="checked"; }
-
-
-if (STOCKAGEADMIN == "oui") { $stockageadminoui="checked"; }
-if (STOCKAGEADMIN == "non") { $stockageadminnon="checked"; }
-if (INTRAMSNADMIN == "oui") { $intramsnadminoui="checked"; }
-if (INTRAMSNADMIN == "non") { $intramsnadminnon="checked"; }
-if (AGENDAADMIN == "oui") { $agendaadminoui="checked"; }
-if (AGENDAADMIN == "non") { $agendaadminnon="checked"; }
-if (FLUXRSSADMIN == "oui") { $fluxrssadminoui="checked"; }
-if (FLUXRSSADMIN == "non") { $fluxrssadminnon="checked"; }
-if (RESAADMIN == "oui") { $resaadminoui="checked"; }
-if (RESAADMIN == "non") { $resaadminnon="checked"; }
-if (VACATIONADMIN == "oui") { $vacationadminoui="checked"; }
-if (VACATIONADMIN == "non") { $vacationadminnon="checked"; }
-if (HISTORYADMIN == "oui") { $historyadminoui="checked"; }
-if (HISTORYADMIN == "non") { $historyadminnon="checked"; }
-if (MODULECANTINEADMIN == "oui") { $cantineadminoui="checked"; }
-if (MODULECANTINEADMIN == "non") { $cantineadminnon="checked"; }
-if (DROITSCOLARITEADMIN == "oui") { $droitscolariteadminoui="checked"; }
-if (DROITSCOLARITEADMIN == "non") { $droitscolariteadminnon="checked"; }
-if (NOTEPROFVIAADMIN == "oui") { $noteenseignantadminoui="checked"; }
-if (NOTEPROFVIAADMIN == "non") { $noteenseignantadminnon="checked"; }
-
-if (PARENTABSENCE == "oui") { $parentabsenceoui="checked"; }
-if (PARENTABSENCE == "non") { $parentabsencenon="checked"; }
-if (PARENTRETARD == "oui") { $parentretardoui="checked"; }
-if (PARENTRETARD == "non") { $parentretardnon="checked"; }
-
-if (MODULECHAMBRESADMIN == "oui") { $modulechambresvateladminoui="checked"; }
-if (MODULECHAMBRESADMIN == "non") { $modulechambresvateladminnon="checked"; }
-if (MODULEFINANCIERADMIN == "oui") { $modulefinanciervateladminoui="checked"; }
-if (MODULEFINANCIERADMIN == "non") { $modulefinanciervateladminnon="checked"; }
-
-if (MODULECHAMBRESVIESCOLAIRE == "oui") { $chambreviescolaireoui="checked"; }
-if (MODULECHAMBRESVIESCOLAIRE == "non") { $chambreviescolairenon="checked"; }
-
-
-if (MODULETUTEURNOTE == "oui") {$tuteurnoteoui="checked"; }
-if (MODULETUTEURNOTE == "non") {$tuteurnotenon="checked"; }
-if (MODULETUTEURDISCIPLINE == "oui") {$tuteurdisciplineoui="checked"; }
-if (MODULETUTEURDISCIPLINE == "non") {$tuteurdisciplinenon="checked"; }
-if (MODULETUTEURABS == "oui") {$tuteurabsoui="checked"; }
-if (MODULETUTEURABS == "non") {$tuteurabsnon="checked"; }
-if (MODULETUTEURDISPENSE == "oui") {$tuteurdispenseoui="checked"; }
-if (MODULETUTEURDISPENSE == "non") {$tuteurdispensenon="checked"; }
-if (MODULETUTEUREDT == "oui") {$tuteurEDToui="checked"; }
-if (MODULETUTEUREDT == "non") {$tuteurEDTnon="checked"; }
-if (MODULETUTEURCAHIERDETEXTE == "oui") {$tuteurcahierdetexteoui="checked"; }
-if (MODULETUTEURCAHIERDETEXTE == "non") {$tuteurcahierdetextenon="checked"; }
-if (MODULETUTEURCIRCULAIRE == "oui") {$tuteurcirculaireoui="checked"; }
-if (MODULETUTEURCIRCULAIRE == "non") {$tuteurcirculairenon="checked"; }
-if (MODULETUTEURCALENDRIER == "oui") {$tuteurcalendrieroui="checked"; }
-if (MODULETUTEURCALENDRIER == "non") {$tuteurcalendriernon="checked"; }
-if (MODULEPROFEMARGEMENT == "oui") {$emargementprofoui="checked"; }
-if (MODULEPROFEMARGEMENT == "non") {$emargementprofnon="checked"; }
-
-
-if (MODULEPARENTAGENDA == "oui") { $agendaparentoui="checked"; }
-if (MODULEPARENTAGENDA == "non") { $agendaparentnon="checked"; }
-if (MODULEPARENTSTOCKAGE == "oui") { $stockageparentoui="checked"; }
-if (MODULEPARENTSTOCKAGE == "non") { $stockageparentnon="checked"; }
-if (MODULEPARENTMSN == "oui") { $intramsnparentoui="checked"; }
-if (MODULEPARENTMSN == "non") { $intramsnparentnon="checked"; }
-if (MODULEPARENTCOMPTA == "oui") {$comptaparentoui="checked"; }
-if (MODULEPARENTCOMPTA == "non") {$comptaparentnon="checked"; }
-if (MODULEPARENTRSS == "oui") {$rssparentoui="checked"; }
-if (MODULEPARENTRSS == "non") {$rssparentnon="checked"; }
-if (MODULEPARENTCANTINE == "oui") {$cantineparentoui="checked"; }
-if (MODULEPARENTCANTINE == "non") {$cantineparentnon="checked"; }
-
-if (MODULEELEVEAGENDA == "oui") { $agendaeleveoui="checked"; }
-if (MODULEELEVEAGENDA == "non") { $agendaelevenon="checked"; }
-if (MODULEELEVESTOCKAGE == "oui") { $stockageeleveoui="checked"; }
-if (MODULEELEVESTOCKAGE == "non") { $stockageelevenon="checked"; }
-if (MODULEELEVEMSN == "oui") { $intramsneleveoui="checked"; }
-if (MODULEELEVEMSN == "non") { $intramsnelevenon="checked"; }
-if (MODULEELEVECOMPTA == "oui") {$comptaeleveoui="checked"; }
-if (MODULEELEVECOMPTA == "non") {$comptaelevenon="checked"; }
-if (MODULEELEVERSS == "oui") {$rsseleveoui="checked"; }
-if (MODULEELEVERSS == "non") {$rsselevenon="checked"; }
-if (MODULEELEVECANTINE == "oui") {$cantineeleveoui="checked"; }
-if (MODULEELEVECANTINE == "non") {$cantineelevenon="checked"; }
-
-if (MODULENEWSPAGEVIESCOLAIRE == "oui") {$newspageviescolaireoui="checked"; }
-if (MODULENEWSPAGEVIESCOLAIRE == "non") {$newspageviescolairenon="checked"; }
-if (MODULENEWSVIESCOLAIRE == "oui") {$newsviescolaireoui="checked"; }
-if (MODULENEWSVIESCOLAIRE == "non") {$newsviescolairenon="checked"; }
-if (MODULEBOURSIERADMIN == "oui") {$moduleboursieradminoui="checked"; }
-if (MODULEBOURSIERADMIN == "non") {$moduleboursieradminnon="checked"; }
-
-if (MODULEMESSAGERIEADMIN == "oui") {$messagerieadminoui="checked"; }
-if (MODULEMESSAGERIEADMIN == "non") {$messagerieadminnon="checked"; }
-if (MODULEMESSAGERIESCOLAIRE == "oui") {$messagerieviescolaireoui="checked"; }
-if (MODULEMESSAGERIESCOLAIRE == "non") {$messagerieviescolairenon="checked"; }
-if (MODULEMESSAGERIEPROF == "oui") {$messagerieProfoui="checked"; }
-if (MODULEMESSAGERIEPROF == "non") {$messagerieProfnon="checked"; }
-if (MODULEMESSAGERIEELEVE == "oui") {$messagerieEleveoui="checked"; }
-if (MODULEMESSAGERIEELEVE == "non") {$messagerieElevenon="checked"; }
-if (MODULEMESSAGERIEPARENT == "oui") {$messagerieParentoui="checked"; }
-if (MODULEMESSAGERIEPARENT == "non") {$messagerieParentnon="checked"; }
-if (MODULEMESSAGERIETUTEUR == "oui") {$messagerietuteuroui="checked"; }
-if (MODULEMESSAGERIETUTEUR == "non") {$messagerietuteurnon="checked"; }
-
-if (MODULEPREINSCRIPTIONVIESCOLAIRE == "oui") {$preinscriptionviescolaireoui="checked"; }
-if (MODULEPREINSCRIPTIONVIESCOLAIRE == "non") {$preinscriptionviescolairenon="checked"; }
-
-if (MODULEPLANNINGELEVE == "oui") {$planningeleveoui="checked"; }
-if (MODULEPLANNINGELEVE == "non") {$planningelevenon="checked"; }
-if (MODULEPLANNINGPARENT == "oui") {$planningparentoui="checked"; }
-if (MODULEPLANNINGPARENT == "non") {$planningparentnon="checked"; }
-if (MODULEPLANNINGPROF == "oui") {$planningprofoui="checked"; }
-if (MODULEPLANNINGPROF == "non") {$planningprofnon="checked"; }
-
-if (RUBRIQUEBULLETIN == "oui") {$rubriquebulletinoui="checked"; }
-if (RUBRIQUEBULLETIN == "non") {$rubriquebulletinnon="checked"; }
-if (RUBRIQUEANNEXE == "oui") {$rubriqueannexeoui="checked"; }
-if (RUBRIQUEANNEXE == "non") {$rubriqueannexenon="checked"; }
-if (RUBRIQUEGESTION == "oui") {$rubriquegestionoui="checked"; }
-if (RUBRIQUEGESTION == "non") {$rubriquegestionnon="checked"; }
-
-if (RUBRIQUEAFFECTATION == "oui") {$rubriqueaffectationoui="checked"; }
-if (RUBRIQUEAFFECTATION == "non") {$rubriqueaffectationnon="checked"; }
-
-if (RUBRIQUEETABLISSEMENT == "oui") {$rubriqueetablissementoui="checked"; }
-if (RUBRIQUEETABLISSEMENT == "non") {$rubriqueetablissementnon="checked"; }
-
-if (RUBRIQUEVIESCOLAIRE == "oui") {$rubriqueviescolaireoui="checked"; }
-if (RUBRIQUEVIESCOLAIRE == "non") {$rubriqueviescolairenon="checked"; }
-
-if (RUBRIQUEETUDIANT == "oui") {$rubriqueetudiantoui="checked"; }
-if (RUBRIQUEETUDIANT == "non") {$rubriqueetudiantnon="checked"; }
-
-if (RUBRIQUEACTUALITE == "oui") {$rubriqueactualiteoui="checked"; }
-if (RUBRIQUEACTUALITE == "non") {$rubriqueactualitenon="checked"; }
-
+if (defined('VIESCOLAIRECAHIERDETEXTE') && VIESCOLAIRECAHIERDETEXTE == "oui") { $cahierdetexteviescolaireoui="checked"; }
+if (defined('VIESCOLAIRECAHIERDETEXTE') && VIESCOLAIRECAHIERDETEXTE == "non") { $cahierdetexteviescolairenon="checked"; }
+if (defined('PREINSCRIPTION') && PREINSCRIPTION == "oui") { $preinsciptionoui="checked"; }
+if (defined('PREINSCRIPTION') && PREINSCRIPTION == "non") { $preinsciptionnon="checked"; }
+if (defined('DISPENSE') && DISPENSE == "oui") { $dispenseoui="checked"; }
+if (defined('DISPENSE') && DISPENSE == "non") { $dispensenon="checked"; }
+if (defined('DISCIPLINE') && DISCIPLINE == "oui") { $disciplineoui="checked"; }
+if (defined('DISCIPLINE') && DISCIPLINE == "non") { $disciplinenon="checked"; }
+if (defined('CAHIERDETEXTE') && CAHIERDETEXTE == "oui") { $cahierdetexteoui="checked"; }
+if (defined('CAHIERDETEXTE') && CAHIERDETEXTE == "non") { $cahierdetextenon="checked"; }
+if (defined('PLANCLASSE') && PLANCLASSE == "oui") { $planclasseoui="checked"; }
+if (defined('PLANCLASSE') && PLANCLASSE == "non") { $planclassenon="checked"; }
+if (defined('DST') && DST == "oui") { $DSToui="checked"; }
+if (defined('DST') && DST == "non") { $DSTnon="checked"; }
+if (defined('PARENTDISPENSE') && PARENTDISPENSE == "oui") { $parentdispenseoui="checked"; }
+if (defined('PARENTDISPENSE') && PARENTDISPENSE == "non") { $parentdispensenon="checked"; }
+if (defined('PARENTDISCIPLINE') && PARENTDISCIPLINE == "oui") { $parentdisciplineoui="checked"; }
+if (defined('PARENTDISCIPLINE') && PARENTDISCIPLINE == "non") { $parentdisciplinenon="checked"; }
+if (defined('PARENTCAHIERDETEXTE') && PARENTCAHIERDETEXTE == "oui") { $parentcahierdetexteoui="checked"; }
+if (defined('PARENTCAHIERDETEXTE') && PARENTCAHIERDETEXTE == "non") { $parentcahierdetextenon="checked"; }
+if (defined('PARENTPLANCLASSE') && PARENTPLANCLASSE == "oui") { $parentplanclasseoui="checked"; }
+if (defined('PARENTPLANCLASSE') && PARENTPLANCLASSE == "non") { $parentplanclassenon="checked"; }
+if (defined('PARENTDST') && PARENTDST == "oui") { $parentDSToui="checked"; }
+if (defined('PARENTDST') && PARENTDST == "non") { $parentDSTnon="checked"; }
+if (defined('VISUDEVOIRPROF') && VISUDEVOIRPROF == "oui") { $visudevoirprofoui="checked"; }
+if (defined('VISUDEVOIRPROF') && VISUDEVOIRPROF == "non") { $visudevoirprofnon="checked"; }
+if (defined('SUPPDEVOIRPROF') && SUPPDEVOIRPROF == "oui") { $suppdevoirprofoui="checked"; }
+if (defined('SUPPDEVOIRPROF') && SUPPDEVOIRPROF == "non") { $suppdevoirprofnon="checked"; }
+if (defined('CAHIERTEXTPROF') && CAHIERTEXTPROF == "oui") { $cahiertexteprofoui="checked"; }
+if (defined('CAHIERTEXTPROF') && CAHIERTEXTPROF == "non") { $cahiertexteprofnon="checked"; }
+if (defined('SANCTIONPROF') && SANCTIONPROF == "oui") { $sanctionprofoui="checked"; }
+if (defined('SANCTIONPROF') && SANCTIONPROF == "non") { $sanctionprofnon="checked"; }
+if (defined('FICHEELEVEPROF') && FICHEELEVEPROF == "oui") { $ficheeleveprofoui="checked"; }
+if (defined('FICHEELEVEPROF') && FICHEELEVEPROF == "non") { $ficheeleveprofnon="checked"; }
+if (defined('LISTEELEVEPROF') && LISTEELEVEPROF == "oui") { $listeleveprofoui="checked"; }
+if (defined('LISTEELEVEPROF') && LISTEELEVEPROF == "non") { $listeleveprofnon="checked"; }
+if (defined('PLANPROF') && PLANPROF == "oui") { $planprofoui="checked"; }
+if (defined('PLANPROF') && PLANPROF == "non") { $planprofnon="checked"; }
+if (defined('STAGEPROPROF') && STAGEPROPROF == "oui") { $stageproprofoui="checked"; }
+if (defined('STAGEPROPROF') && STAGEPROPROF == "non") { $stageproprofnon="checked"; }
+if (defined('DSTPROFACCES') && DSTPROFACCES == "oui") { $DSTProfoui="checked"; }
+if (defined('DSTPROFACCES') && DSTPROFACCES == "non") { $DSTProfnon="checked"; }
+if (defined('DOKEOSPROF') && DOKEOSPROF == "oui") { $DOKEOSProfoui="checked"; }
+if (defined('DOKEOSPROF') && DOKEOSPROF == "non") { $DOKEOSProfnon="checked"; }
+if (defined('DOKEOSELEVE') && DOKEOSELEVE == "oui") { $DOKEOSeleveoui="checked"; }
+if (defined('DOKEOSELEVE') && DOKEOSELEVE == "non") { $DOKEOSelevenon="checked"; }
+if (defined('COMPTAPROF') && COMPTAPROF == "oui") { $comptaProfoui="checked"; }
+if (defined('COMPTAPROF') && COMPTAPROF == "non") { $comptaProfnon="checked"; }
+if (defined('PARENTTROMBINOSCOPE') && PARENTTROMBINOSCOPE == "oui") { $parentTrombinoscopeoui="checked"; }
+if (defined('PARENTTROMBINOSCOPE') && PARENTTROMBINOSCOPE == "non") { $parentTrombinoscopenon="checked"; }
+if (defined('STAGEPROELEVE') && STAGEPROELEVE == "oui") { $stageProeleveoui="checked"; }
+if (defined('STAGEPROELEVE') && STAGEPROELEVE == "non") { $stageProelevenon="checked"; }
+if (defined('STAGEPROPARENT') && STAGEPROPARENT == "oui") { $stageProparentoui="checked"; }
+if (defined('STAGEPROPARENT') && STAGEPROPARENT == "non") { $stageProparentnon="checked"; }
+if (defined('STOCKAGEPROF') && STOCKAGEPROF == "oui") { $stockageprofoui="checked"; }
+if (defined('STOCKAGEPROF') && STOCKAGEPROF == "non") { $stockageprofnon="checked"; }
+if (defined('INTRAMSNPROF') && INTRAMSNPROF == "oui") { $intramsnprofoui="checked"; }
+if (defined('INTRAMSNPROF') && INTRAMSNPROF == "non") { $intramsnprofnon="checked"; }
+if (defined('AGENDAMSNPROF') && AGENDAMSNPROF == "oui") { $agendaprofoui="checked"; }
+if (defined('AGENDAMSNPROF') && AGENDAMSNPROF == "non") { $agendaprofnon="checked"; }
+if (defined('FLUXRSSPROF') && FLUXRSSPROF == "oui") { $fluxrssprofoui="checked"; }
+if (defined('FLUXRSSPROF') && FLUXRSSPROF == "non") { $fluxrssprofnon="checked"; }
+if (defined('NOTESPROF') && NOTESPROF == "oui") { $notesprofoui="checked"; }
+if (defined('NOTESPROF') && NOTESPROF == "non") { $notesprofnon="checked"; }
+if (defined('BULLETINPROF') && BULLETINPROF == "oui") { $bulletinprofoui="checked"; }
+if (defined('BULLETINPROF') && BULLETINPROF == "non") { $bulletinprofnon="checked"; }
+if (defined('RESAPROF') && RESAPROF == "oui") { $resaprofoui="checked"; }
+if (defined('RESAPROF') && RESAPROF == "non") { $resaprofnon="checked"; }
+if (defined('CIRCULAIREPROF') && CIRCULAIREPROF == "oui") { $circulaireprofoui="checked"; }
+if (defined('CIRCULAIREPROF') && CIRCULAIREPROF == "non") { $circulaireprofnon="checked"; }
+if (defined('INFORMATIONPROF') && INFORMATIONPROF == "oui") { $informationprofoui="checked"; }
+if (defined('INFORMATIONPROF') && INFORMATIONPROF == "non") { $informationprofnon="checked"; }
+if (defined('CALENDRIERPROF') && CALENDRIERPROF == "oui") { $calendrierprofoui="checked"; }
+if (defined('CALENDRIERPROF') && CALENDRIERPROF == "non") { $calendrierprofnon="checked"; }
+if (defined('STOCKAGEVIESCOLAIRE') && STOCKAGEVIESCOLAIRE == "oui") { $stockageviescolaireoui="checked"; }
+if (defined('STOCKAGEVIESCOLAIRE') && STOCKAGEVIESCOLAIRE == "non") { $stockageviescolairenon="checked"; }
+if (defined('INTRAMSNVIESCOLAIRE') && INTRAMSNVIESCOLAIRE == "oui") { $intramsnviescolaireoui="checked"; }
+if (defined('INTRAMSNVIESCOLAIRE') && INTRAMSNVIESCOLAIRE == "non") { $intramsnviescolairenon="checked"; }
+if (defined('AGENDAVIESCOLAIRE') && AGENDAVIESCOLAIRE == "oui") { $agendaviescolaireoui="checked"; }
+if (defined('AGENDAVIESCOLAIRE') && AGENDAVIESCOLAIRE == "non") { $agendaviescolairenon="checked"; }
+if (defined('FLUXRSSVIESCOLAIRE') && FLUXRSSVIESCOLAIRE == "oui") { $fluxrssviescolaireoui="checked"; }
+if (defined('FLUXRSSVIESCOLAIRE') && FLUXRSSVIESCOLAIRE == "non") { $fluxrssviescolairenon="checked"; }
+if (defined('ETUDEVIESCOLAIRE') && ETUDEVIESCOLAIRE == "oui") { $etudeviescolaireoui="checked"; }
+if (defined('ETUDEVIESCOLAIRE') && ETUDEVIESCOLAIRE == "non") { $etudeviescolairenon="checked"; }
+if (defined('CIRCULAIREVIESCOLAIRE') && CIRCULAIREVIESCOLAIRE == "oui") { $circulaireviescolaireoui="checked"; }
+if (defined('CIRCULAIREVIESCOLAIRE') && CIRCULAIREVIESCOLAIRE == "non") { $circulaireviescolairenon="checked"; }
+if (defined('STAGEVIESCOLAIRE') && STAGEVIESCOLAIRE == "oui") { $stageviescolaireoui="checked"; }
+if (defined('STAGEVIESCOLAIRE') && STAGEVIESCOLAIRE == "non") { $stageviescolairenon="checked"; }
+if (defined('DSTVIESCOLAIRE') && DSTVIESCOLAIRE == "oui") { $dstviescolaireoui="checked"; }
+if (defined('DSTVIESCOLAIRE') && DSTVIESCOLAIRE == "non") { $dstviescolairenon="checked"; }
+if (defined('VISAVIESCOLAIRE') && VISAVIESCOLAIRE == "oui") { $visaviescolaireoui="checked"; }
+if (defined('VISAVIESCOLAIRE') && VISAVIESCOLAIRE == "non") { $visaviescolairenon="checked"; }
+if (defined('NOTEVIESCOLAIRE') && NOTEVIESCOLAIRE == "oui") { $noteviescolaireoui="checked"; }
+if (defined('NOTEVIESCOLAIRE') && NOTEVIESCOLAIRE == "non") { $noteviescolairenon="checked"; }
+if (defined('IMPTABLEAUVIESCOLAIRE') && IMPTABLEAUVIESCOLAIRE == "oui") { $imptableauviescolaireoui="checked"; }
+if (defined('IMPTABLEAUVIESCOLAIRE') && IMPTABLEAUVIESCOLAIRE == "non") { $imptableauviescolairenon="checked"; }
+if (defined('BULLETINVIESCOLAIRE') && BULLETINVIESCOLAIRE == "oui") { $bulletinviescolaireoui="checked"; }
+if (defined('BULLETINVIESCOLAIRE') && BULLETINVIESCOLAIRE == "non") { $bulletinviescolairenon="checked"; }
+if (defined('PERIODEVIESCOLAIRE') && PERIODEVIESCOLAIRE == "oui") { $periodeviescolaireoui="checked"; }
+if (defined('PERIODEVIESCOLAIRE') && PERIODEVIESCOLAIRE == "non") { $periodeviescolairenon="checked"; }
+if (defined('VIDEOPROJOVIESCOLAIRE') && VIDEOPROJOVIESCOLAIRE == "oui") { $videoprojoviescolaireoui="checked"; }
+if (defined('VIDEOPROJOVIESCOLAIRE') && VIDEOPROJOVIESCOLAIRE == "non") { $videoprojoviescolairenon="checked"; }
+if (defined('PLANCLASSEVIESCOLAIRE') && PLANCLASSEVIESCOLAIRE == "oui") { $planclasseviescolaireoui="checked"; }
+if (defined('PLANCLASSEVIESCOLAIRE') && PLANCLASSEVIESCOLAIRE == "non") { $planclasseviescolairenon="checked"; }
+if (defined('HISTORYVIESCOLAIRE') && HISTORYVIESCOLAIRE == "oui") { $historyviescolaireoui="checked"; }
+if (defined('HISTORYVIESCOLAIRE') && HISTORYVIESCOLAIRE == "non") { $historyviescolairenon="checked"; }
+if (defined('RESAVIESCOLAIRE') && RESAVIESCOLAIRE == "oui") { $resaviescolaireoui="checked"; }
+if (defined('RESAVIESCOLAIRE') && RESAVIESCOLAIRE == "non") { $resaviescolairenon="checked"; }
+if (defined('EXPORTVIESCOLAIRE') && EXPORTVIESCOLAIRE == "oui") { $exportviescolaireoui="checked"; }
+if (defined('EXPORTVIESCOLAIRE') && EXPORTVIESCOLAIRE == "non") { $exportviescolairenon="checked"; }
+if (defined('VACATIONVIESCOLAIRE') && VACATIONVIESCOLAIRE == "oui") { $vacationviescolaireoui="checked"; }
+if (defined('VACATIONVIESCOLAIRE') && VACATIONVIESCOLAIRE == "non") { $vacationviescolairenon="checked"; }
+if (defined('NOTEENSEIGNANTVIASCOLAIRE') && NOTEENSEIGNANTVIASCOLAIRE == "oui") { $noteenseignantviascolaireoui="checked"; }
+if (defined('NOTEENSEIGNANTVIASCOLAIRE') && NOTEENSEIGNANTVIASCOLAIRE == "non") { $noteenseignantviascolairenon="checked"; }
+if (defined('MODULECANTINEPROF') && MODULECANTINEPROF == "oui") { $cantineprofoui="checked"; }
+if (defined('MODULECANTINEPROF') && MODULECANTINEPROF == "non") { $cantineprofnon="checked"; }
+if (defined('MODULECANTINEVIESCOLAIRE') && MODULECANTINEVIESCOLAIRE == "oui") { $cantineviascolaireoui="checked"; }
+if (defined('MODULECANTINEVIESCOLAIRE') && MODULECANTINEVIESCOLAIRE == "non") { $cantineviascolairenon="checked"; }
+if (defined('STOCKAGEADMIN') && STOCKAGEADMIN == "oui") { $stockageadminoui="checked"; }
+if (defined('STOCKAGEADMIN') && STOCKAGEADMIN == "non") { $stockageadminnon="checked"; }
+if (defined('INTRAMSNADMIN') && INTRAMSNADMIN == "oui") { $intramsnadminoui="checked"; }
+if (defined('INTRAMSNADMIN') && INTRAMSNADMIN == "non") { $intramsnadminnon="checked"; }
+if (defined('AGENDAADMIN') && AGENDAADMIN == "oui") { $agendaadminoui="checked"; }
+if (defined('AGENDAADMIN') && AGENDAADMIN == "non") { $agendaadminnon="checked"; }
+if (defined('FLUXRSSADMIN') && FLUXRSSADMIN == "oui") { $fluxrssadminoui="checked"; }
+if (defined('FLUXRSSADMIN') && FLUXRSSADMIN == "non") { $fluxrssadminnon="checked"; }
+if (defined('RESAADMIN') && RESAADMIN == "oui") { $resaadminoui="checked"; }
+if (defined('RESAADMIN') && RESAADMIN == "non") { $resaadminnon="checked"; }
+if (defined('VACATIONADMIN') && VACATIONADMIN == "oui") { $vacationadminoui="checked"; }
+if (defined('VACATIONADMIN') && VACATIONADMIN == "non") { $vacationadminnon="checked"; }
+if (defined('HISTORYADMIN') && HISTORYADMIN == "oui") { $historyadminoui="checked"; }
+if (defined('HISTORYADMIN') && HISTORYADMIN == "non") { $historyadminnon="checked"; }
+if (defined('MODULECANTINEADMIN') && MODULECANTINEADMIN == "oui") { $cantineadminoui="checked"; }
+if (defined('MODULECANTINEADMIN') && MODULECANTINEADMIN == "non") { $cantineadminnon="checked"; }
+if (defined('DROITSCOLARITEADMIN') && DROITSCOLARITEADMIN == "oui") { $droitscolariteadminoui="checked"; }
+if (defined('DROITSCOLARITEADMIN') && DROITSCOLARITEADMIN == "non") { $droitscolariteadminnon="checked"; }
+if (defined('NOTEPROFVIAADMIN') && NOTEPROFVIAADMIN == "oui") { $noteenseignantadminoui="checked"; }
+if (defined('NOTEPROFVIAADMIN') && NOTEPROFVIAADMIN == "non") { $noteenseignantadminnon="checked"; }
+if (defined('PARENTABSENCE') && PARENTABSENCE == "oui") { $parentabsenceoui="checked"; }
+if (defined('PARENTABSENCE') && PARENTABSENCE == "non") { $parentabsencenon="checked"; }
+if (defined('PARENTRETARD') && PARENTRETARD == "oui") { $parentretardoui="checked"; }
+if (defined('PARENTRETARD') && PARENTRETARD == "non") { $parentretardnon="checked"; }
+if (defined('MODULECHAMBRESADMIN') && MODULECHAMBRESADMIN == "oui") { $modulechambresvateladminoui="checked"; }
+if (defined('MODULECHAMBRESADMIN') && MODULECHAMBRESADMIN == "non") { $modulechambresvateladminnon="checked"; }
+if (defined('MODULEFINANCIERADMIN') && MODULEFINANCIERADMIN == "oui") { $modulefinanciervateladminoui="checked"; }
+if (defined('MODULEFINANCIERADMIN') && MODULEFINANCIERADMIN == "non") { $modulefinanciervateladminnon="checked"; }
+if (defined('MODULECHAMBRESVIESCOLAIRE') && MODULECHAMBRESVIESCOLAIRE == "oui") { $chambreviescolaireoui="checked"; }
+if (defined('MODULECHAMBRESVIESCOLAIRE') && MODULECHAMBRESVIESCOLAIRE == "non") { $chambreviescolairenon="checked"; }
+if (defined('MODULETUTEURNOTE') && MODULETUTEURNOTE == "oui") {$tuteurnoteoui="checked"; }
+if (defined('MODULETUTEURNOTE') && MODULETUTEURNOTE == "non") {$tuteurnotenon="checked"; }
+if (defined('MODULETUTEURDISCIPLINE') && MODULETUTEURDISCIPLINE == "oui") {$tuteurdisciplineoui="checked"; }
+if (defined('MODULETUTEURDISCIPLINE') && MODULETUTEURDISCIPLINE == "non") {$tuteurdisciplinenon="checked"; }
+if (defined('MODULETUTEURABS') && MODULETUTEURABS == "oui") {$tuteurabsoui="checked"; }
+if (defined('MODULETUTEURABS') && MODULETUTEURABS == "non") {$tuteurabsnon="checked"; }
+if (defined('MODULETUTEURDISPENSE') && MODULETUTEURDISPENSE == "oui") {$tuteurdispenseoui="checked"; }
+if (defined('MODULETUTEURDISPENSE') && MODULETUTEURDISPENSE == "non") {$tuteurdispensenon="checked"; }
+if (defined('MODULETUTEUREDT') && MODULETUTEUREDT == "oui") {$tuteurEDToui="checked"; }
+if (defined('MODULETUTEUREDT') && MODULETUTEUREDT == "non") {$tuteurEDTnon="checked"; }
+if (defined('MODULETUTEURCAHIERDETEXTE') && MODULETUTEURCAHIERDETEXTE == "oui") {$tuteurcahierdetexteoui="checked"; }
+if (defined('MODULETUTEURCAHIERDETEXTE') && MODULETUTEURCAHIERDETEXTE == "non") {$tuteurcahierdetextenon="checked"; }
+if (defined('MODULETUTEURCIRCULAIRE') && MODULETUTEURCIRCULAIRE == "oui") {$tuteurcirculaireoui="checked"; }
+if (defined('MODULETUTEURCIRCULAIRE') && MODULETUTEURCIRCULAIRE == "non") {$tuteurcirculairenon="checked"; }
+if (defined('MODULETUTEURCALENDRIER') && MODULETUTEURCALENDRIER == "oui") {$tuteurcalendrieroui="checked"; }
+if (defined('MODULETUTEURCALENDRIER') && MODULETUTEURCALENDRIER == "non") {$tuteurcalendriernon="checked"; }
+if (defined('MODULEPROFEMARGEMENT') && MODULEPROFEMARGEMENT == "oui") {$emargementprofoui="checked"; }
+if (defined('MODULEPROFEMARGEMENT') && MODULEPROFEMARGEMENT == "non") {$emargementprofnon="checked"; }
+if (defined('MODULEPARENTAGENDA') && MODULEPARENTAGENDA == "oui") { $agendaparentoui="checked"; }
+if (defined('MODULEPARENTAGENDA') && MODULEPARENTAGENDA == "non") { $agendaparentnon="checked"; }
+if (defined('MODULEPARENTSTOCKAGE') && MODULEPARENTSTOCKAGE == "oui") { $stockageparentoui="checked"; }
+if (defined('MODULEPARENTSTOCKAGE') && MODULEPARENTSTOCKAGE == "non") { $stockageparentnon="checked"; }
+if (defined('MODULEPARENTMSN') && MODULEPARENTMSN == "oui") { $intramsnparentoui="checked"; }
+if (defined('MODULEPARENTMSN') && MODULEPARENTMSN == "non") { $intramsnparentnon="checked"; }
+if (defined('MODULEPARENTCOMPTA') && MODULEPARENTCOMPTA == "oui") {$comptaparentoui="checked"; }
+if (defined('MODULEPARENTCOMPTA') && MODULEPARENTCOMPTA == "non") {$comptaparentnon="checked"; }
+if (defined('MODULEPARENTRSS') && MODULEPARENTRSS == "oui") {$rssparentoui="checked"; }
+if (defined('MODULEPARENTRSS') && MODULEPARENTRSS == "non") {$rssparentnon="checked"; }
+if (defined('MODULEPARENTCANTINE') && MODULEPARENTCANTINE == "oui") {$cantineparentoui="checked"; }
+if (defined('MODULEPARENTCANTINE') && MODULEPARENTCANTINE == "non") {$cantineparentnon="checked"; }
+if (defined('MODULEELEVEAGENDA') && MODULEELEVEAGENDA == "oui") { $agendaeleveoui="checked"; }
+if (defined('MODULEELEVEAGENDA') && MODULEELEVEAGENDA == "non") { $agendaelevenon="checked"; }
+if (defined('MODULEELEVESTOCKAGE') && MODULEELEVESTOCKAGE == "oui") { $stockageeleveoui="checked"; }
+if (defined('MODULEELEVESTOCKAGE') && MODULEELEVESTOCKAGE == "non") { $stockageelevenon="checked"; }
+if (defined('MODULEELEVEMSN') && MODULEELEVEMSN == "oui") { $intramsneleveoui="checked"; }
+if (defined('MODULEELEVEMSN') && MODULEELEVEMSN == "non") { $intramsnelevenon="checked"; }
+if (defined('MODULEELEVECOMPTA') && MODULEELEVECOMPTA == "oui") {$comptaeleveoui="checked"; }
+if (defined('MODULEELEVECOMPTA') && MODULEELEVECOMPTA == "non") {$comptaelevenon="checked"; }
+if (defined('MODULEELEVERSS') && MODULEELEVERSS == "oui") {$rsseleveoui="checked"; }
+if (defined('MODULEELEVERSS') && MODULEELEVERSS == "non") {$rsselevenon="checked"; }
+if (defined('MODULEELEVECANTINE') && MODULEELEVECANTINE == "oui") {$cantineeleveoui="checked"; }
+if (defined('MODULEELEVECANTINE') && MODULEELEVECANTINE == "non") {$cantineelevenon="checked"; }
+if (defined('MODULENEWSPAGEVIESCOLAIRE') && MODULENEWSPAGEVIESCOLAIRE == "oui") {$newspageviescolaireoui="checked"; }
+if (defined('MODULENEWSPAGEVIESCOLAIRE') && MODULENEWSPAGEVIESCOLAIRE == "non") {$newspageviescolairenon="checked"; }
+if (defined('MODULENEWSVIESCOLAIRE') && MODULENEWSVIESCOLAIRE == "oui") {$newsviescolaireoui="checked"; }
+if (defined('MODULENEWSVIESCOLAIRE') && MODULENEWSVIESCOLAIRE == "non") {$newsviescolairenon="checked"; }
+if (defined('MODULEBOURSIERADMIN') && MODULEBOURSIERADMIN == "oui") {$moduleboursieradminoui="checked"; }
+if (defined('MODULEBOURSIERADMIN') && MODULEBOURSIERADMIN == "non") {$moduleboursieradminnon="checked"; }
+if (defined('MODULEMESSAGERIEADMIN') && MODULEMESSAGERIEADMIN == "oui") {$messagerieadminoui="checked"; }
+if (defined('MODULEMESSAGERIEADMIN') && MODULEMESSAGERIEADMIN == "non") {$messagerieadminnon="checked"; }
+if (defined('MODULEMESSAGERIESCOLAIRE') && MODULEMESSAGERIESCOLAIRE == "oui") {$messagerieviescolaireoui="checked"; }
+if (defined('MODULEMESSAGERIESCOLAIRE') && MODULEMESSAGERIESCOLAIRE == "non") {$messagerieviescolairenon="checked"; }
+if (defined('MODULEMESSAGERIEPROF') && MODULEMESSAGERIEPROF == "oui") {$messagerieProfoui="checked"; }
+if (defined('MODULEMESSAGERIEPROF') && MODULEMESSAGERIEPROF == "non") {$messagerieProfnon="checked"; }
+if (defined('MODULEMESSAGERIEELEVE') && MODULEMESSAGERIEELEVE == "oui") {$messagerieEleveoui="checked"; }
+if (defined('MODULEMESSAGERIEELEVE') && MODULEMESSAGERIEELEVE == "non") {$messagerieElevenon="checked"; }
+if (defined('MODULEMESSAGERIEPARENT') && MODULEMESSAGERIEPARENT == "oui") {$messagerieParentoui="checked"; }
+if (defined('MODULEMESSAGERIEPARENT') && MODULEMESSAGERIEPARENT == "non") {$messagerieParentnon="checked"; }
+if (defined('MODULEMESSAGERIETUTEUR') && MODULEMESSAGERIETUTEUR == "oui") {$messagerietuteuroui="checked"; }
+if (defined('MODULEMESSAGERIETUTEUR') && MODULEMESSAGERIETUTEUR == "non") {$messagerietuteurnon="checked"; }
+if (defined('MODULEPREINSCRIPTIONVIESCOLAIRE') && MODULEPREINSCRIPTIONVIESCOLAIRE == "oui") {$preinscriptionviescolaireoui="checked"; }
+if (defined('MODULEPREINSCRIPTIONVIESCOLAIRE') && MODULEPREINSCRIPTIONVIESCOLAIRE == "non") {$preinscriptionviescolairenon="checked"; }
+if (defined('MODULEPLANNINGELEVE') && MODULEPLANNINGELEVE == "oui") {$planningeleveoui="checked"; }
+if (defined('MODULEPLANNINGELEVE') && MODULEPLANNINGELEVE == "non") {$planningelevenon="checked"; }
+if (defined('MODULEPLANNINGPARENT') && MODULEPLANNINGPARENT == "oui") {$planningparentoui="checked"; }
+if (defined('MODULEPLANNINGPARENT') && MODULEPLANNINGPARENT == "non") {$planningparentnon="checked"; }
+if (defined('MODULEPLANNINGPROF') && MODULEPLANNINGPROF == "oui") {$planningprofoui="checked"; }
+if (defined('MODULEPLANNINGPROF') && MODULEPLANNINGPROF == "non") {$planningprofnon="checked"; }
+if (defined('RUBRIQUEBULLETIN') && RUBRIQUEBULLETIN == "oui") {$rubriquebulletinoui="checked"; }
+if (defined('RUBRIQUEBULLETIN') && RUBRIQUEBULLETIN == "non") {$rubriquebulletinnon="checked"; }
+if (defined('RUBRIQUEANNEXE') && RUBRIQUEANNEXE == "oui") {$rubriqueannexeoui="checked"; }
+if (defined('RUBRIQUEANNEXE') && RUBRIQUEANNEXE == "non") {$rubriqueannexenon="checked"; }
+if (defined('RUBRIQUEGESTION') && RUBRIQUEGESTION == "oui") {$rubriquegestionoui="checked"; }
+if (defined('RUBRIQUEGESTION') && RUBRIQUEGESTION == "non") {$rubriquegestionnon="checked"; }
+if (defined('RUBRIQUEAFFECTATION') && RUBRIQUEAFFECTATION == "oui") {$rubriqueaffectationoui="checked"; }
+if (defined('RUBRIQUEAFFECTATION') && RUBRIQUEAFFECTATION == "non") {$rubriqueaffectationnon="checked"; }
+if (defined('RUBRIQUEETABLISSEMENT') && RUBRIQUEETABLISSEMENT == "oui") {$rubriqueetablissementoui="checked"; }
+if (defined('RUBRIQUEETABLISSEMENT') && RUBRIQUEETABLISSEMENT == "non") {$rubriqueetablissementnon="checked"; }
+if (defined('RUBRIQUEVIESCOLAIRE') && RUBRIQUEVIESCOLAIRE == "oui") {$rubriqueviescolaireoui="checked"; }
+if (defined('RUBRIQUEVIESCOLAIRE') && RUBRIQUEVIESCOLAIRE == "non") {$rubriqueviescolairenon="checked"; }
+if (defined('RUBRIQUEETUDIANT') && RUBRIQUEETUDIANT == "oui") {$rubriqueetudiantoui="checked"; }
+if (defined('RUBRIQUEETUDIANT') && RUBRIQUEETUDIANT == "non") {$rubriqueetudiantnon="checked"; }
+if (defined('RUBRIQUEACTUALITE') && RUBRIQUEACTUALITE == "oui") {$rubriqueactualiteoui="checked"; }
+if (defined('RUBRIQUEACTUALITE') && RUBRIQUEACTUALITE == "non") {$rubriqueactualitenon="checked"; }
 // -------------------------------------------------------------------------------
-
-if (MODULEADMINCDI == "oui") {$moduleadmincdioui="checked"; }
-if (MODULEADMINCDI == "non") {$moduleadmincdinon="checked"; }
-if (MODULEADMINNOTANET == "oui") {$moduleadminnotanetoui="checked"; }
-if (MODULEADMINNOTANET == "non") {$moduleadminnotanetnon="checked"; }
-if (MODULEADMINGESTIONSMS == "oui") {$moduleadmingestionsmsoui="checked"; }
-if (MODULEADMINGESTIONSMS == "non") {$moduleadmingestionsmsnon="checked"; }
-if (MODULEADMINRESERVEQUIP == "oui") {$moduleadminreservequipoui="checked"; }
-if (MODULEADMINRESERVEQUIP == "non") {$moduleadminreservequipnon="checked"; }
-if (MODULEADMINRESERVSALLE == "oui") {$moduleadminreservsalleoui="checked"; }
-if (MODULEADMINRESERVSALLE == "non") {$moduleadminreservsallenon="checked"; }
-if (MODULEADMINFOURNITURE == "oui") {$moduleadminfournitureoui="checked"; }
-if (MODULEADMINFOURNITURE == "non") {$moduleadminfourniturenon="checked"; }
-if (MODULEADMINEXAMBREVET == "oui") {$moduleadminexambrevetoui="checked"; }
-if (MODULEADMINEXAMBREVET == "non") {$moduleadminexambrevetnon="checked"; }
-if (MODULEADMINGESTIONETUDE == "oui") {$moduleadmingestionetudeoui="checked"; }
-if (MODULEADMINGESTIONETUDE == "non") {$moduleadmingestionetudenon="checked"; }
-if (MODULEADMINGESTIONDISCIPLINE == "oui") {$moduleadmingestiondisciplineoui="checked"; }
-if (MODULEADMINGESTIONDISCIPLINE == "non") {$moduleadmingestiondisciplinenon="checked"; }
-if (MODULEADMINRETENUDJ == "oui") {$moduleadminretenudjoui="checked"; }
-if (MODULEADMINRETENUDJ == "non") {$moduleadminretenudjnon="checked"; }
-if (MODULEADMINSANCTIONDUJOUR == "oui") {$moduleadminsanctiondujouroui="checked"; }
-if (MODULEADMINSANCTIONDUJOUR == "non") {$moduleadminsanctiondujournon="checked"; }
-if (MODULEADMINGESTIONDISPENSE == "oui") {$moduleadmingestiondispenseoui="checked"; }
-if (MODULEADMINGESTIONDISPENSE == "non") {$moduleadmingestiondispensenon="checked"; }
-if (MODULEADMINDOSMEDICAL == "oui") {$moduleadmindosmedicaloui="checked"; }
-if (MODULEADMINDOSMEDICAL == "non") {$moduleadmindosmedicalnon="checked"; }
-if (MODULEADMINPLANCLASSE == "oui") {$moduleadminplanclasseoui="checked"; }
-if (MODULEADMINPLANCLASSE == "non") {$moduleadminplanclassenon="checked"; }
-if (MODULEADMINGESTIONDELEGUE == "oui") {$moduleadmingestiondelegueoui="checked"; }
-if (MODULEADMINGESTIONDELEGUE == "non") {$moduleadmingestiondeleguenon="checked"; }
-if (MODULEADMINSOUSMATIERE == "oui") {$moduleadminsousmatiereoui="checked"; }
-if (MODULEADMINSOUSMATIERE == "non") {$moduleadminsousmatierenon="checked"; }
-if (MODULEADMINPROFP == "oui") {$moduleprofPoui="checked"; }
-if (MODULEADMINPROFP == "non") {$moduleprofPnon="checked"; }
-if (MODULEADMINCONFIGNOTEUSA == "oui") {$moduleconfignoteusaoui="checked"; }
-if (MODULEADMINCONFIGNOTEUSA == "non") {$moduleconfignoteusanon="checked"; }
-if (MODULEADMINENTRETIENINDIVIDUEL == "oui") {$moduleentretienindividueloui="checked"; }
-if (MODULEADMINENTRETIENINDIVIDUEL == "non") {$moduleentretienindividuelnon="checked"; }
-if (MODULEADMINCARNETSUIVI == "oui") {$modulecarnetsuivioui="checked"; }
-if (MODULEADMINCARNETSUIVI == "non") {$modulecarnetsuivinon="checked"; }
-if (MODULEADMINVERIFBULLETIN == "oui") {$moduleverifbulletinoui="checked"; }
-if (MODULEADMINVERIFBULLETIN == "non") {$moduleverifbulletinnon="checked"; }
-if (MODULEADMINNOTEVIESCOLAIRE == "oui") {$modulenoteviescolaireoui="checked"; }
-if (MODULEADMINNOTEVIESCOLAIRE == "non") {$modulenoteviescolairenon="checked"; }
-if (MODULEADMINIMPRPERIODE == "oui") {$moduleadminimprperiodeoui="checked"; }
-if (MODULEADMINIMPRPERIODE == "non") {$moduleadminimprperiodenon="checked"; }
-if (MODULEADMINSUPPLEANT == "oui") {$moduleadminsuppleantoui="checked"; }
-if (MODULEADMINSUPPLEANT == "non") {$moduleadminsuppleantnon="checked"; }
-if (MODULEADMINABSRTD == "oui") {$moduleadminabsrtdoui="checked"; }
-if (MODULEADMINABSRTD == "non") {$moduleadminabsrtdnon="checked"; }
-if (MODULEADMINPREINSCRIPTION == "oui") {$moduleadminpreinscriptionoui="checked"; }
-if (MODULEADMINPREINSCRIPTION == "non") {$moduleadminpreinscriptionnon="checked"; }
-if (MODULEADMINNOUVELLEANNEE == "oui") {$moduleadminnouvelleanneeoui="checked"; }
-if (MODULEADMINNOUVELLEANNEE == "non") {$moduleadminnouvelleanneenon="checked"; }
-if (MODULEADMINARCHIVAGE == "oui") {$moduleadminarchivageoui="checked"; }
-if (MODULEADMINARCHIVAGE == "non") {$moduleadminarchivagenon="checked"; }
-if (MODULEADMINNEWSDEFILANT == "oui") {$moduleadminnewsdefilantoui="checked"; }
-if (MODULEADMINNEWSDEFILANT == "non") {$moduleadminnewsdefilantnon="checked"; }
-if (MODULEADMINPURGERINFO == "oui") {$moduleadminpurgerinfooui="checked"; }
-if (MODULEADMINPURGERINFO == "non") {$moduleadminpurgerinfonon="checked"; }
+if (defined('MODULEADMINCDI') && MODULEADMINCDI == "oui") {$moduleadmincdioui="checked"; }
+if (defined('MODULEADMINCDI') && MODULEADMINCDI == "non") {$moduleadmincdinon="checked"; }
+if (defined('MODULEADMINNOTANET') && MODULEADMINNOTANET == "oui") {$moduleadminnotanetoui="checked"; }
+if (defined('MODULEADMINNOTANET') && MODULEADMINNOTANET == "non") {$moduleadminnotanetnon="checked"; }
+if (defined('MODULEADMINGESTIONSMS') && MODULEADMINGESTIONSMS == "oui") {$moduleadmingestionsmsoui="checked"; }
+if (defined('MODULEADMINGESTIONSMS') && MODULEADMINGESTIONSMS == "non") {$moduleadmingestionsmsnon="checked"; }
+if (defined('MODULEADMINRESERVEQUIP') && MODULEADMINRESERVEQUIP == "oui") {$moduleadminreservequipoui="checked"; }
+if (defined('MODULEADMINRESERVEQUIP') && MODULEADMINRESERVEQUIP == "non") {$moduleadminreservequipnon="checked"; }
+if (defined('MODULEADMINRESERVSALLE') && MODULEADMINRESERVSALLE == "oui") {$moduleadminreservsalleoui="checked"; }
+if (defined('MODULEADMINRESERVSALLE') && MODULEADMINRESERVSALLE == "non") {$moduleadminreservsallenon="checked"; }
+if (defined('MODULEADMINFOURNITURE') && MODULEADMINFOURNITURE == "oui") {$moduleadminfournitureoui="checked"; }
+if (defined('MODULEADMINFOURNITURE') && MODULEADMINFOURNITURE == "non") {$moduleadminfourniturenon="checked"; }
+if (defined('MODULEADMINEXAMBREVET') && MODULEADMINEXAMBREVET == "oui") {$moduleadminexambrevetoui="checked"; }
+if (defined('MODULEADMINEXAMBREVET') && MODULEADMINEXAMBREVET == "non") {$moduleadminexambrevetnon="checked"; }
+if (defined('MODULEADMINGESTIONETUDE') && MODULEADMINGESTIONETUDE == "oui") {$moduleadmingestionetudeoui="checked"; }
+if (defined('MODULEADMINGESTIONETUDE') && MODULEADMINGESTIONETUDE == "non") {$moduleadmingestionetudenon="checked"; }
+if (defined('MODULEADMINGESTIONDISCIPLINE') && MODULEADMINGESTIONDISCIPLINE == "oui") {$moduleadmingestiondisciplineoui="checked"; }
+if (defined('MODULEADMINGESTIONDISCIPLINE') && MODULEADMINGESTIONDISCIPLINE == "non") {$moduleadmingestiondisciplinenon="checked"; }
+if (defined('MODULEADMINRETENUDJ') && MODULEADMINRETENUDJ == "oui") {$moduleadminretenudjoui="checked"; }
+if (defined('MODULEADMINRETENUDJ') && MODULEADMINRETENUDJ == "non") {$moduleadminretenudjnon="checked"; }
+if (defined('MODULEADMINSANCTIONDUJOUR') && MODULEADMINSANCTIONDUJOUR == "oui") {$moduleadminsanctiondujouroui="checked"; }
+if (defined('MODULEADMINSANCTIONDUJOUR') && MODULEADMINSANCTIONDUJOUR == "non") {$moduleadminsanctiondujournon="checked"; }
+if (defined('MODULEADMINGESTIONDISPENSE') && MODULEADMINGESTIONDISPENSE == "oui") {$moduleadmingestiondispenseoui="checked"; }
+if (defined('MODULEADMINGESTIONDISPENSE') && MODULEADMINGESTIONDISPENSE == "non") {$moduleadmingestiondispensenon="checked"; }
+if (defined('MODULEADMINDOSMEDICAL') && MODULEADMINDOSMEDICAL == "oui") {$moduleadmindosmedicaloui="checked"; }
+if (defined('MODULEADMINDOSMEDICAL') && MODULEADMINDOSMEDICAL == "non") {$moduleadmindosmedicalnon="checked"; }
+if (defined('MODULEADMINPLANCLASSE') && MODULEADMINPLANCLASSE == "oui") {$moduleadminplanclasseoui="checked"; }
+if (defined('MODULEADMINPLANCLASSE') && MODULEADMINPLANCLASSE == "non") {$moduleadminplanclassenon="checked"; }
+if (defined('MODULEADMINGESTIONDELEGUE') && MODULEADMINGESTIONDELEGUE == "oui") {$moduleadmingestiondelegueoui="checked"; }
+if (defined('MODULEADMINGESTIONDELEGUE') && MODULEADMINGESTIONDELEGUE == "non") {$moduleadmingestiondeleguenon="checked"; }
+if (defined('MODULEADMINSOUSMATIERE') && MODULEADMINSOUSMATIERE == "oui") {$moduleadminsousmatiereoui="checked"; }
+if (defined('MODULEADMINSOUSMATIERE') && MODULEADMINSOUSMATIERE == "non") {$moduleadminsousmatierenon="checked"; }
+if (defined('MODULEADMINPROFP') && MODULEADMINPROFP == "oui") {$moduleprofPoui="checked"; }
+if (defined('MODULEADMINPROFP') && MODULEADMINPROFP == "non") {$moduleprofPnon="checked"; }
+if (defined('MODULEADMINCONFIGNOTEUSA') && MODULEADMINCONFIGNOTEUSA == "oui") {$moduleconfignoteusaoui="checked"; }
+if (defined('MODULEADMINCONFIGNOTEUSA') && MODULEADMINCONFIGNOTEUSA == "non") {$moduleconfignoteusanon="checked"; }
+if (defined('MODULEADMINENTRETIENINDIVIDUEL') && MODULEADMINENTRETIENINDIVIDUEL == "oui") {$moduleentretienindividueloui="checked"; }
+if (defined('MODULEADMINENTRETIENINDIVIDUEL') && MODULEADMINENTRETIENINDIVIDUEL == "non") {$moduleentretienindividuelnon="checked"; }
+if (defined('MODULEADMINCARNETSUIVI') && MODULEADMINCARNETSUIVI == "oui") {$modulecarnetsuivioui="checked"; }
+if (defined('MODULEADMINCARNETSUIVI') && MODULEADMINCARNETSUIVI == "non") {$modulecarnetsuivinon="checked"; }
+if (defined('MODULEADMINVERIFBULLETIN') && MODULEADMINVERIFBULLETIN == "oui") {$moduleverifbulletinoui="checked"; }
+if (defined('MODULEADMINVERIFBULLETIN') && MODULEADMINVERIFBULLETIN == "non") {$moduleverifbulletinnon="checked"; }
+if (defined('MODULEADMINNOTEVIESCOLAIRE') && MODULEADMINNOTEVIESCOLAIRE == "oui") {$modulenoteviescolaireoui="checked"; }
+if (defined('MODULEADMINNOTEVIESCOLAIRE') && MODULEADMINNOTEVIESCOLAIRE == "non") {$modulenoteviescolairenon="checked"; }
+if (defined('MODULEADMINIMPRPERIODE') && MODULEADMINIMPRPERIODE == "oui") {$moduleadminimprperiodeoui="checked"; }
+if (defined('MODULEADMINIMPRPERIODE') && MODULEADMINIMPRPERIODE == "non") {$moduleadminimprperiodenon="checked"; }
+if (defined('MODULEADMINSUPPLEANT') && MODULEADMINSUPPLEANT == "oui") {$moduleadminsuppleantoui="checked"; }
+if (defined('MODULEADMINSUPPLEANT') && MODULEADMINSUPPLEANT == "non") {$moduleadminsuppleantnon="checked"; }
+if (defined('MODULEADMINABSRTD') && MODULEADMINABSRTD == "oui") {$moduleadminabsrtdoui="checked"; }
+if (defined('MODULEADMINABSRTD') && MODULEADMINABSRTD == "non") {$moduleadminabsrtdnon="checked"; }
+if (defined('MODULEADMINPREINSCRIPTION') && MODULEADMINPREINSCRIPTION == "oui") {$moduleadminpreinscriptionoui="checked"; }
+if (defined('MODULEADMINPREINSCRIPTION') && MODULEADMINPREINSCRIPTION == "non") {$moduleadminpreinscriptionnon="checked"; }
+if (defined('MODULEADMINNOUVELLEANNEE') && MODULEADMINNOUVELLEANNEE == "oui") {$moduleadminnouvelleanneeoui="checked"; }
+if (defined('MODULEADMINNOUVELLEANNEE') && MODULEADMINNOUVELLEANNEE == "non") {$moduleadminnouvelleanneenon="checked"; }
+if (defined('MODULEADMINARCHIVAGE') && MODULEADMINARCHIVAGE == "oui") {$moduleadminarchivageoui="checked"; }
+if (defined('MODULEADMINARCHIVAGE') && MODULEADMINARCHIVAGE == "non") {$moduleadminarchivagenon="checked"; }
+if (defined('MODULEADMINNEWSDEFILANT') && MODULEADMINNEWSDEFILANT == "oui") {$moduleadminnewsdefilantoui="checked"; }
+if (defined('MODULEADMINNEWSDEFILANT') && MODULEADMINNEWSDEFILANT == "non") {$moduleadminnewsdefilantnon="checked"; }
+if (defined('MODULEADMINPURGERINFO') && MODULEADMINPURGERINFO == "oui") {$moduleadminpurgerinfooui="checked"; }
+if (defined('MODULEADMINPURGERINFO') && MODULEADMINPURGERINFO == "non") {$moduleadminpurgerinfonon="checked"; }
 $CDIEleveoui="";
 $CDIElevenon="";
-if (MODULEELEVECDI == "oui") {$CDIEleveoui="checked"; }
-if (MODULEELEVECDI == "non") {$CDIElevenon="checked"; }
-if (MODULEADMINGESTIONSAVOIRETRE == "oui") {$moduleadmingestionsavoiretreoui="checked"; }
-if (MODULEADMINGESTIONSAVOIRETRE == "non") {$moduleadmingestionsavoiretrenon="checked"; }
-if (MODULEPROFGESTIONSAVOIRETRE == "oui") {$moduleprofgestionsavoiretreoui="checked"; }
-if (MODULEPROFGESTIONSAVOIRETRE == "non") {$moduleprofgestionsavoiretrenon="checked"; }
-if (MODULEELEVEGESTIONSAVOIRETRE == "non") {$moduleelevegestionsavoiretrenon="checked"; }
-if (MODULEELEVEGESTIONSAVOIRETRE == "oui") {$moduleelevegestionsavoiretreoui="checked"; }
-if (MODULEPARENTGESTIONSAVOIRETRE == "oui") {$moduleparentgestionsavoiretreoui="checked"; }
-if (MODULEPARENTGESTIONSAVOIRETRE == "non") {$moduleparentgestionsavoiretrenon="checked"; }
-if (MODULETUTEURGESTIONSAVOIRETRE == "oui") {$moduletuteursavoiretreoui="checked"; }
-if (MODULETUTEURGESTIONSAVOIRETRE == "non") {$moduletuteursavoiretrenon="checked"; }
-if (MODULEVIESCOLAIREGESTIONSAVOIRETRE == "oui") {$moduleviescolairesavoiretreoui="checked"; }
-if (MODULEVIESCOLAIREGESTIONSAVOIRETRE == "non") {$moduleviescolairesavoiretrenon="checked"; }
-
-if (MODULEBULLETINVISUELEVE == "oui") {$modulebulletinvisueleveoui="checked"; }
-if (MODULEBULLETINVISUELEVE == "non") {$modulebulletinvisuelevenon="checked"; }
-if (MODULEBULLETINVISUPARENT == "oui") {$modulebulletinvisuparentoui="checked"; }
-if (MODULEBULLETINVISUPARENT == "non") {$modulebulletinvisuparentnon="checked"; }
-
-if (MODULEBULLETINVISUTUTEUR == "oui") {$modulebulletinvisututeurstageoui="checked"; }
-if (MODULEBULLETINVISUTUTEUR == "non") {$modulebulletinvisututeurstagenon="checked"; }
-
-if (MODULEADMINEVALENS == "oui") {$moduleadminevalensoui="checked"; }
-if (MODULEADMINEVALENS == "non") {$moduleadminevalensnon="checked"; }
-
+if (defined('MODULEELEVECDI') && MODULEELEVECDI == "oui") {$CDIEleveoui="checked"; }
+if (defined('MODULEELEVECDI') && MODULEELEVECDI == "non") {$CDIElevenon="checked"; }
+if (defined('MODULEADMINGESTIONSAVOIRETRE') && MODULEADMINGESTIONSAVOIRETRE == "oui") {$moduleadmingestionsavoiretreoui="checked"; }
+if (defined('MODULEADMINGESTIONSAVOIRETRE') && MODULEADMINGESTIONSAVOIRETRE == "non") {$moduleadmingestionsavoiretrenon="checked"; }
+if (defined('MODULEPROFGESTIONSAVOIRETRE') && MODULEPROFGESTIONSAVOIRETRE == "oui") {$moduleprofgestionsavoiretreoui="checked"; }
+if (defined('MODULEPROFGESTIONSAVOIRETRE') && MODULEPROFGESTIONSAVOIRETRE == "non") {$moduleprofgestionsavoiretrenon="checked"; }
+if (defined('MODULEELEVEGESTIONSAVOIRETRE') && MODULEELEVEGESTIONSAVOIRETRE == "non") {$moduleelevegestionsavoiretrenon="checked"; }
+if (defined('MODULEELEVEGESTIONSAVOIRETRE') && MODULEELEVEGESTIONSAVOIRETRE == "oui") {$moduleelevegestionsavoiretreoui="checked"; }
+if (defined('MODULEPARENTGESTIONSAVOIRETRE') && MODULEPARENTGESTIONSAVOIRETRE == "oui") {$moduleparentgestionsavoiretreoui="checked"; }
+if (defined('MODULEPARENTGESTIONSAVOIRETRE') && MODULEPARENTGESTIONSAVOIRETRE == "non") {$moduleparentgestionsavoiretrenon="checked"; }
+if (defined('MODULETUTEURGESTIONSAVOIRETRE') && MODULETUTEURGESTIONSAVOIRETRE == "oui") {$moduletuteursavoiretreoui="checked"; }
+if (defined('MODULETUTEURGESTIONSAVOIRETRE') && MODULETUTEURGESTIONSAVOIRETRE == "non") {$moduletuteursavoiretrenon="checked"; }
+if (defined('MODULEVIESCOLAIREGESTIONSAVOIRETRE') && MODULEVIESCOLAIREGESTIONSAVOIRETRE == "oui") {$moduleviescolairesavoiretreoui="checked"; }
+if (defined('MODULEVIESCOLAIREGESTIONSAVOIRETRE') && MODULEVIESCOLAIREGESTIONSAVOIRETRE == "non") {$moduleviescolairesavoiretrenon="checked"; }
+if (defined('MODULEBULLETINVISUELEVE') && MODULEBULLETINVISUELEVE == "oui") {$modulebulletinvisueleveoui="checked"; }
+if (defined('MODULEBULLETINVISUELEVE') && MODULEBULLETINVISUELEVE == "non") {$modulebulletinvisuelevenon="checked"; }
+if (defined('MODULEBULLETINVISUPARENT') && MODULEBULLETINVISUPARENT == "oui") {$modulebulletinvisuparentoui="checked"; }
+if (defined('MODULEBULLETINVISUPARENT') && MODULEBULLETINVISUPARENT == "non") {$modulebulletinvisuparentnon="checked"; }
+if (defined('MODULEBULLETINVISUTUTEUR') && MODULEBULLETINVISUTUTEUR == "oui") {$modulebulletinvisututeurstageoui="checked"; }
+if (defined('MODULEBULLETINVISUTUTEUR') && MODULEBULLETINVISUTUTEUR == "non") {$modulebulletinvisututeurstagenon="checked"; }
+if (defined('MODULEADMINEVALENS') && MODULEADMINEVALENS == "oui") {$moduleadminevalensoui="checked"; }
+if (defined('MODULEADMINEVALENS') && MODULEADMINEVALENS == "non") {$moduleadminevalensnon="checked"; }
 $radiooui="";
 $radionon="";
-if (MODULERADIO == "oui") {$radiooui="checked"; }
-if (MODULERADIO == "non") {$radionon="checked"; }
-
+if (defined('MODULERADIO') && MODULERADIO == "oui") {$radiooui="checked"; }
+if (defined('MODULERADIO') && MODULERADIO == "non") {$radionon="checked"; }
 $modulefourniturescolaireoui="";
 $modulefourniturescolairenon="";
-if (MODULEFOURNITURESCOLAIRE == "oui") {$modulefourniturescolaireoui="checked"; }
-if (MODULEFOURNITURESCOLAIRE == "non") {$modulefourniturescolairenon="checked"; }
- 
+if (defined('MODULEFOURNITURESCOLAIRE') && MODULEFOURNITURESCOLAIRE == "oui") {$modulefourniturescolaireoui="checked"; }
+if (defined('MODULEFOURNITURESCOLAIRE') && MODULEFOURNITURESCOLAIRE == "non") {$modulefourniturescolairenon="checked"; }
 $moduledelegueparentoui="";
 $moduledelegueparentnon="";
-if (MODULEDELEGUEPARENT == "oui") {$moduledelegueparentoui="checked"; }
-if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
+if (defined('MODULEDELEGUEPARENT') && MODULEDELEGUEPARENT == "oui") {$moduledelegueparentoui="checked"; }
+if (defined('MODULEDELEGUEPARENT') && MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
+$moduleparentlocalisationoui="";
+$moduleparentlocalisationnon="";
+if (defined('MODULEPARENTLOCALISATION') && MODULEPARENTLOCALISATION == "oui") {$moduleparentlocalisationoui="checked"; }
+if (defined('MODULEPARENTLOCALISATION') && MODULEPARENTLOCALISATION == "non") {$moduleparentlocalisationnon="checked"; }
+if (defined('MODULETRIADECOACH') && MODULETRIADECOACH == "oui") {$moduletriadecoachoui="checked"; }
+if (defined('MODULETRIADECOACH') && MODULETRIADECOACH == "non") {$moduletriadecoachnon="checked"; }
+if (defined('MODULEPACTEADMIN') && MODULEPACTEADMIN == "oui") {$modulepacteadminoui="checked"; }
+if (defined('MODULEPACTEADMIN') && MODULEPACTEADMIN == "non") {$modulepacteadminnon="checked"; }
+if (defined('MODULEPACTEPROF')  && MODULEPACTEPROF  == "oui") {$modulepacteprofoui="checked"; }
+if (defined('MODULEPACTEPROF')  && MODULEPACTEPROF  == "non") {$modulepacteprofnon="checked"; }
 
 ?>
 
@@ -750,7 +811,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
 <tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Parent</b></font></td></tr>
 -->
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Elève</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 2 : Configuration Élève ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Élève</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Module Agenda : </td>
 <td align=left><input type=radio <?php print $agendaeleveoui ?> name="agendaeleve" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -840,7 +905,15 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $modulebulletinvisuelevenon ?> name="modulebulletinvisueleve" value="non" class=btradio1  > non </td>
 </tr>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Parent</b></font></td></tr>
+<tr><td align=right >Module Triade-coach (IA) : </td>
+<td align=left><input type=radio <?php print $moduletriadecoachoui ?> name="moduletriadecoach" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+               <input type=radio <?php print $moduletriadecoachnon ?> name="moduletriadecoach" value="non" class=btradio1  > non </td>
+</tr>
+</table></div></div>
+<!-- ===== Section 3 : Configuration Parent ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Parent</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 
 
@@ -853,11 +926,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
 <td align=left><input type=radio <?php print $stockageparentoui ?> name="stockageparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $stockageparentnon ?> name="stockageparent" value="non" class=btradio1  > non </td>
 </tr>
-<!-- <tr><td align=right >Module Intra-MSN : </td>
+<tr><td align=right >Module Intra-MSN : </td>
 <td align=left><input type=radio <?php print $intramsnparentoui ?> name="intramsnparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $intramsnparentnon ?> name="intramsnparent" value="non" class=btradio1  > non </td>
 </tr>
---> 
+
 <tr><td align=right >Module Comptabilité : </td>
 <td align=left><input type=radio <?php print $comptaparentoui ?> name="comptaparent" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $comptaparentnon ?> name="comptaparent" value="non" class=btradio1  > non </td>
@@ -951,8 +1024,16 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
 	       <input type=radio <?php print $moduledelegueparentnon ?> name="moduledelegueparent" value="non" class=btradio1  > non </td>
 </tr>
 
+<tr><td align=right >Module Localisation : </td>
+<td align=left><input type=radio <?php print $moduleparentlocalisationoui ?> name="moduleparentlocalisation" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
+	       <input type=radio <?php print $moduleparentlocalisationnon ?> name="moduleparentlocalisation" value="non" class=btradio1  > non </td>
+</tr>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Tuteur de stage</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 4 : Configuration Tuteur de stage ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Tuteur de stage</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Module Note : </td>
 <td align=left><input type=radio <?php print $tuteurnoteoui ?> name="tuteurnote" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1008,7 +1089,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $modulebulletinvisututeurstagenon ?> name="modulebulletinvisututeurstage" value="non" class=btradio1  > non </td>
 </tr>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Enseignant</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 5 : Configuration Enseignant ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Enseignant</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Module Stockage : </td>
 <td align=left><input type=radio <?php print $stockageprofoui ?> name=stockageprof value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1127,6 +1212,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $comptaProfnon ?> name="comptaProf" value="non" class=btradio1  > non </td>
 </tr>
 
+<tr><td align=right >Module Pacte Enseignant :</td>
+<td align=left><input type=radio <?php print $modulepacteprofoui ?> name="modulepacteprof" value="oui" class=btradio1> oui &nbsp;&nbsp;&nbsp;
+               <input type=radio <?php print $modulepacteprofnon ?> name="modulepacteprof" value="non" class=btradio1> non </td>
+</tr>
+
 <tr><td align=right >Module Messagerie : </td>
 <td align=left><input type=radio <?php print $messagerieProfoui ?> name="messagerieProf" value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
                <input type=radio <?php print $messagerieProfnon ?> name="messagerieProf" value="non" class=btradio1  > non </td>
@@ -1138,7 +1228,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $moduleprofgestionsavoiretrenon ?> name="moduleprofgestionsavoiretre" value="non" class=btradio1  > non </td>
 </tr>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Vie Scolaire</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 6 : Configuration Vie Scolaire ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Vie Scolaire</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Module News 1er page : </td>
 <td align=left><input type=radio <?php print $newspageviescolaireoui ?> name=newspageviescolaire value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1283,7 +1377,11 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $chambreviescolairenon ?> name=chambreviescolaire value="non" class=btradio1  > non </td>
 </tr>
 
-<tr><td colspan=2 ><br><br><br>&nbsp;<img src="../image/commun/ico_conf.gif" align="center" > <font class="T2"><b>Configuration Direction</b></font></td></tr>
+</table></div></div>
+<!-- ===== Section 7 : Configuration Direction ===== -->
+<div class="acc-panel">
+<div class="acc-header" onclick="accToggle(this.parentElement)"><span>Configuration Direction</span><span class="acc-arrow">&#9660;</span></div>
+<div class="acc-body"><table class="conf-inner" width="100%">
 
 <tr><td align=right >Module Stockage : </td>
 <td align=left><input type=radio <?php print $stockageadminoui ?> name=stockageadmin value="oui" class=btradio1  > oui &nbsp;&nbsp;&nbsp;
@@ -1549,19 +1647,79 @@ if (MODULEDELEGUEPARENT == "non") {$moduledelegueparentnon="checked"; }
                <input type=radio <?php print $moduleadminevalensnon ?>  name="moduleadminevalens" value="non" class=btradio1  > non </td>
 </tr>
 
+<tr><td align=right >Module Pacte Enseignant :</td>
+<td align=left><input type=radio <?php print $modulepacteadminoui ?> name="modulepacteadmin" value="oui" class=btradio1> oui &nbsp;&nbsp;&nbsp;
+               <input type=radio <?php print $modulepacteadminnon ?> name="modulepacteadmin" value="non" class=btradio1> non </td>
+</tr>
 
 
 
-<!-------------------------------- -- -->
-<tr><td colspan=2><br>
-<br><br><br>
-<script language=JavaScript>buttonMagicSubmit("Enregistrer","create"); //text,nomInput</script>
-<script language=JavaScript>buttonMagic("Valeur par défaut","config_module-default.php","_parent","","") //text,nomInput</script>
-<br><br>
+
+
+</table></div></div>
+
+<br>
+<div class="na-foot">
+  <span style="display:flex;"><script language=JavaScript>buttonMagicSubmit("Enregistrer","create"); //text,nomInput</script></span>
+  &nbsp;&nbsp;
+  <script language=JavaScript>buttonMagic("Valeur par défaut","config_module-default.php","_parent","","") //text,nomInput</script>
+</div>
+<br>
+
+<script>
+function accToggle(panel) {
+  var o = panel.classList.contains('acc-open');
+  document.querySelectorAll('.acc-panel').forEach(function(p){ p.classList.remove('acc-open'); });
+  if (!o) panel.classList.add('acc-open');
+}
+function accCheckAlerts() {
+  document.querySelectorAll('.acc-panel').forEach(function(panel) {
+    var unset = false;
+    var groups = {};
+    panel.querySelectorAll('input[type="radio"]').forEach(function(r) {
+      if (!groups[r.name]) groups[r.name] = { checked: false, first: r };
+      if (r.checked) groups[r.name].checked = true;
+    });
+    Object.keys(groups).forEach(function(name) {
+      var g = groups[name];
+      var container = g.first.closest('span') || g.first.closest('td');
+      var inlineBadge = container ? container.querySelector('.acc-inline-alert[data-group="' + CSS.escape(name) + '"]') : null;
+      if (!g.checked) {
+        unset = true;
+        if (container && !inlineBadge) {
+          inlineBadge = document.createElement('span');
+          inlineBadge.className = 'acc-inline-alert';
+          inlineBadge.setAttribute('data-group', name);
+          inlineBadge.title = 'Veuillez sélectionner une option';
+          inlineBadge.textContent = '!';
+          container.appendChild(inlineBadge);
+        }
+      } else {
+        if (inlineBadge) inlineBadge.remove();
+      }
+    });
+    var badge = panel.querySelector('.acc-alert');
+    if (unset) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'acc-alert';
+        badge.title = 'Option(s) non sélectionnée(s) dans cette section';
+        badge.textContent = '!';
+        panel.querySelector('.acc-arrow').insertAdjacentElement('beforebegin', badge);
+      }
+    } else {
+      if (badge) badge.remove();
+    }
+  });
+}
+accCheckAlerts();
+document.querySelectorAll('.acc-panel input[type="radio"]').forEach(function(r) {
+  r.addEventListener('change', accCheckAlerts);
+});
+document.querySelector('.acc-panel').classList.add('acc-open');
+</script>
+
 </td></tr></table>
-
-</td></tr></table>
-
 </form>
 
 <SCRIPT language="JavaScript">InitBulle("#000000","#FFFFFF","red",1);</SCRIPT>

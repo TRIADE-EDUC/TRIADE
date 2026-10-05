@@ -1,41 +1,18 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: statuts.inc.php,v 1.3 2015-11-05 14:23:32 ngantier Exp $
+// $Id: statuts.inc.php,v 1.5 2021/01/21 07:42:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// Page de gestion des statuts d'autoritÃ©s
+global $class_path, $id;
+// Page de gestion des statuts d'autorités
 
-//dÃ©pendances
-require_once($class_path.'/authorities_statuts.class.php');
+//dépendances
+require_once($class_path.'/authorities_statut.class.php');
+require_once($class_path."/configuration/configuration_controller.class.php");
 
-switch($action) {
-	case 'update':
-		$statut = authorities_statuts::get_from_from();
-		if(!authorities_statuts::save($statut)){
-			error_message("",$msg['save_error'], 0);
-		}
-		authorities_statuts::show_list();
-		break;
-	case 'add':
-		authorities_statuts::show_form(0);
-		break;
-	case 'edit':
-		authorities_statuts::show_form($id);
-		break;
-	case 'del':
-		if(!authorities_statuts::delete($id)){
-			$used=authorities_statuts::check_used($id);			
-			foreach($used as $auth){
-				$list.=$auth['link'].'<br/>';
-			}
-			error_message("", $msg['authorities_statut_used'].'<br/>'.$list);
-		}
-		authorities_statuts::show_list();
-		break;
-	default:
-		authorities_statuts::show_list();
-		break;
-}
+configuration_controller::set_model_class_name('authorities_statut');
+configuration_controller::set_list_ui_class_name('list_configuration_authorities_statuts_ui');
+configuration_controller::proceed($id);

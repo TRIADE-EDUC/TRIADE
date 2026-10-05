@@ -1,12 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: func_opsys_morges.inc.php,v 1.12 2019-06-10 15:14:33 btafforeau Exp $
+// $Id: func_opsys_morges.inc.php,v 1.16 2021/06/30 12:00:18 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path;
+global $class_path, $msg;
+
 require_once($class_path."/serials.class.php");
 require_once($class_path."/categories.class.php");
 require_once($class_path."/notice.class.php");
@@ -18,6 +19,13 @@ require_once($class_path."/docs_codestat.class.php");
 require_once($class_path."/notice_relations.class.php");
 
 //	DATA_BASE == "morges"
+
+global $flag_titre_serie_recuperation;
+global $flag_depouillements_464, $flag_depouillements_464_doc_sonore, $flag_depouillements_464_doc_imprime;
+global $flag_import_610_in_mot_cles;
+global $num_thesaurus, $num_thesaurus_centre_interet, $num_thesaurus_610, $sous_coll;
+global $thes, $thes_centre_interet, $thes_610;
+
 $flag_titre_serie_recuperation=0;
 $flag_depouillements_464=1;
 $flag_depouillements_464_doc_sonore=1;
@@ -54,23 +62,22 @@ function create_categ($th,$num_parent, $libelle, $index,$num_aut='') {
 }
 
 function del_notice($item) {
-	global $dbh ;
 	$requete_suppr = "delete from analysis where analysis_notice='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from notices_categories WHERE notcateg_notice='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from notices_langues WHERE num_notice='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from responsability WHERE responsability_notice='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from bannette_contenu WHERE num_notice='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from audit WHERE object_id='".$item."' and type_obj=1 ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from notices_custom_values WHERE notices_custom_origine='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 	$requete_suppr = "delete from notices where notice_id='".$item."' ";
-	$result_suppr = @pmb_mysql_query($requete_suppr, $dbh);
+	pmb_mysql_query($requete_suppr);
 }
 
 $tpl_beforeupload_expl = "
@@ -88,11 +95,11 @@ $tpl_beforeupload_expl = "
 	<input type='hidden' name='isbn_only' value='1'/>
 
                     <div class='row'>
-                        <label class='etiquette'>Supprimer, Mettre Ã  jour ou Ajouter ?</label>
+                        <label class='etiquette'>Supprimer, Mettre à jour ou Ajouter ?</label>
                         </div>
                     <div class='row'>
                         <INPUT TYPE='radio' NAME='que_faire' id='sdc0' VALUE='0' CLASS='radio' /><label for='sdc0'> Supprimer </label><br />
-                        <INPUT TYPE='radio' NAME='que_faire' id='sdc1' VALUE='1' CLASS='radio' /><label for='sdc1'> Mettre Ã  jour </label><br />
+                        <INPUT TYPE='radio' NAME='que_faire' id='sdc1' VALUE='1' CLASS='radio' /><label for='sdc1'> Mettre à jour </label><br />
                         <INPUT TYPE='radio' NAME='que_faire' id='sdc2' VALUE='2' CLASS='radio' /><label for='sdc2'> Ajouter </label><br />
                         </div>
 
@@ -172,7 +179,7 @@ function recup_noticeunimarc_suite($notice) {
 	$aut_712=$record->get_subfield("712","a","b","3","p","4");
 
 	$accomp_345_c=$record->get_subfield("345","c");
-	//CDU : classification dÃ©cimale universelle
+	//CDU : classification décimale universelle
 	$info_675_a=$record->get_subfield("675","a");
 	// Prix pour disque et video
 	$info_345_d=$record->get_subfield("345","d");
@@ -180,7 +187,7 @@ function recup_noticeunimarc_suite($notice) {
 	$info_071_a=$record->get_subfield("071","a");
 	// Producteur -> editeur
 	$info_071_b=$record->get_subfield("071","b");
-	// Centre d'intÃ©rÃªt
+	// Centre d'intérêt
 	//$info_901_a=$record->get_subfield_array_array("901","a");
 	$info_901=$record->get_subfield("901","a","3");
 
@@ -191,7 +198,7 @@ function xml_save_table($filename,$table) {
 	$fp = fopen($filename, "w");
 	fwrite($fp,"<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<!DOCTYPE XMLlist SYSTEM \"../../XMLlist.dtd\">\n<XMLlist>\n");
 	foreach ($table_responsability_function as $key=>$val) {
-		fwrite($fp,"<entry code=\"".$key."\">".$table_responsability_function[$key]."</entry>\n");
+		fwrite($fp,"<entry code=\"".$key."\">".$val."</entry>\n");
 	}
 	fwrite($fp,"</XMLlist>\n");
 	fclose($fp);
@@ -237,7 +244,7 @@ function update_authors_num_opsys($aut_ ,$responsability_type)
 				if($aut_i_4>=900) {
 					$index='';
 					if($table_responsability_function)foreach ($table_responsability_function as $key=>$val) {
-						if($table_responsability_function[$key]==$aut_i_4) {
+						if($val==$aut_i_4) {
 							 $index=$key;
 							 break;
 						}
@@ -258,7 +265,7 @@ function update_authors_num_opsys($aut_ ,$responsability_type)
 					$result=pmb_mysql_query($requete);
 					$index='';
 					if($table_responsability_function)foreach ($table_responsability_function as $key=>$val) {
-						if($table_responsability_function[$key]==$aut_i_p) {
+						if($val==$aut_i_p) {
 							 $index=$key;
 							 break;
 						}
@@ -282,7 +289,6 @@ function update_authors_num_opsys($aut_ ,$responsability_type)
 	}
 }
 function import_new_notice_suite() {
-	global $dbh ;
 	global $notice_id ;
 
 	global $index_sujets ;
@@ -339,7 +345,7 @@ function import_new_notice_suite() {
 		$requete="update notices set ed1_id='".$ed_id."' where notice_id='$notice_id' ";
 		pmb_mysql_query($requete);
 	}
-	// 345_c MatÃ©riel d'accompagnement
+	// 345_c Matériel d'accompagnement
 	if($accomp_345_c[0]) {
 		$requete="update notices set accomp='".addslashes($accomp_345_c[0])."' where notice_id='$notice_id' ";
 		pmb_mysql_query($requete);
@@ -376,7 +382,7 @@ function import_new_notice_suite() {
 	if ($sous_coll=='1'&& $collection_225[0]['a']!="" && $collection_225[1]['a']!="") {
 
 		$q="select coll_id from notices where notice_id='$notice_id' ";
-		$r=pmb_mysql_query($q, $dbh);
+		$r=pmb_mysql_query($q);
 		$coll_id = pmb_mysql_result($r,0,0);
 		if ($coll_id!='0') {
 			/* sous collection */
@@ -400,13 +406,13 @@ function import_new_notice_suite() {
 		//print "$requete <br />";
 		pmb_mysql_query($requete);
 	}
-	if(($type_opsys=='UMO:23') || ($type_opsys=='UMO:3')) { // Titre de pÃ©riodique
+	if(($type_opsys=='UMO:23') || ($type_opsys=='UMO:3')) { // Titre de périodique
 		$requete="select * from notices_custom_values where notices_custom_small_text='".$num_opsys."'";
 		//print "new $type_opsys:    $requete <br />";
 		$resultat=pmb_mysql_query($requete);
 		//Notice existe-t-elle comme notice temporaire?
 		if (@pmb_mysql_num_rows($resultat)) {
-			//Si oui, rÃ©cupÃ©ration id notice temporaire a supprimer
+			//Si oui, récupération id notice temporaire a supprimer
 			$old_n=pmb_mysql_fetch_object($resultat);
 			$notice_id_old=$old_n->notices_custom_origine;
 			// modifie les anciennes relations sur la vrai notice
@@ -430,15 +436,15 @@ function import_new_notice_suite() {
 			$requete="update notices set niveau_biblio='s', niveau_hierar='1' where notice_id='$notice_id' ";
 			pmb_mysql_query($requete);
 		}
-	} else if(($type_opsys=='UMO:41') || ($type_opsys=='UMO:42')){	 // DÃ©pouillement (hors article)
+	} else if(($type_opsys=='UMO:41') || ($type_opsys=='UMO:42')){	 // Dépouillement (hors article)
 		//Rien
-	} else if($type_opsys=='UMO:43'){	 // DÃ©pouillement article de pÃ©riodique
+	} else if($type_opsys=='UMO:43'){	 // Dépouillement article de périodique
 		$requete="select * from notices_custom_values where notices_custom_small_text='".$num_opsys."'";
 		//print "new $type_opsys:    $requete <br />";
 		$resultat=pmb_mysql_query($requete);
 		//Notice existe-t-elle comme notice temporaire?
 		if (@pmb_mysql_num_rows($resultat)) {
-			//Si oui, rÃ©cupÃ©ration id notice temporaire a supprimer
+			//Si oui, récupération id notice temporaire a supprimer
 			$old_n=pmb_mysql_fetch_object($resultat);
 			$notice_id_old=$old_n->notices_custom_origine;
 			// modifie les anciennes relations sur la vrai notice
@@ -470,7 +476,7 @@ function import_new_notice_suite() {
 			$resultat=pmb_mysql_query($requete);
 			//Notice existe-t-elle comme notice temporaire?
 			if (@pmb_mysql_num_rows($resultat)) {
-				//Si oui, rÃ©cupÃ©ration id notice temporaire a supprimer
+				//Si oui, récupération id notice temporaire a supprimer
 				$old_n=pmb_mysql_fetch_object($resultat);
 				$notice_id_old=$old_n->notices_custom_origine;
 				// modifie les anciennes relations sur la vrai notice
@@ -493,12 +499,12 @@ function import_new_notice_suite() {
 		for ($j=0; $j<count($info_902_a[$i]); $j++) {
 			$resultat = categories::searchLibelle(addslashes($info_902_a[$i][$j]), $num_thesaurus, 'fr_FR');
 			if (!$resultat){
-				/*vÃ©rification de l'existence des categs, sinon crÃ©ation */
+				/*vérification de l'existence des categs, sinon création */
 				$resultat = create_categ($thes,$thes->num_noeud_racine, $info_902_a[$i][$j], ' '.strip_empty_words($info_902_a[$i][$j]).' ');
 			}
-			/* ajout de l'indexation Ã  la notice dans la table notices_categories*/
+			/* ajout de l'indexation à la notice dans la table notices_categories*/
 			$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$resultat."' " ;
-			$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+			pmb_mysql_query($rqt_ajout);
 		}
 	}
 
@@ -508,12 +514,12 @@ function import_new_notice_suite() {
 
 		$resultat = categories::searchLibelle(addslashes($info_901[$i]['a']), $num_thesaurus_centre_interet, 'fr_FR');
 		if (!$resultat){
-			/*vÃ©rification de l'existence des categs, sinon crÃ©ation */
+			/*vérification de l'existence des categs, sinon création */
 			$resultat = create_categ($thes_centre_interet,$thes_centre_interet->num_noeud_racine, $info_901[$i]['a'], ' '.strip_empty_words($info_901[$i]['a']).' ',$info_901[$i][3]);
 		}
-		/* ajout de l'indexation Ã  la notice dans la table notices_categories*/
+		/* ajout de l'indexation à la notice dans la table notices_categories*/
 		$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$resultat."' " ;
-		$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+		pmb_mysql_query($rqt_ajout);
 
 	}
 
@@ -522,7 +528,7 @@ function import_new_notice_suite() {
 //	print "<pre>";	print_r($info_686_a);print "</pre>";
 	if(count($info_686_a) ) {
 
-			//vÃ©rification de l'existence des categs, sinon crÃ©ation
+			//vérification de l'existence des categs, sinon création
 			$requete="select indexint_id from indexint where indexint_name='".addslashes($info_686_a[0])."' and num_pclass='2'";
 			//print "$requete <br />";
 			$result=pmb_mysql_query($requete);
@@ -537,7 +543,7 @@ function import_new_notice_suite() {
 
 			$requete="update notices set indexint='$indexint_id' where notice_id='$notice_id' ";
 		//	print "$requete <br />";
-			@pmb_mysql_query($requete, $dbh);
+			@pmb_mysql_query($requete);
 
 	}
 
@@ -546,66 +552,66 @@ function import_new_notice_suite() {
 //		else $mots_cles = $index_sujets;
 	$mots_cles='';
 
-	for ($a=0; $a<sizeof($info_600_a); $a++) {
+	for ($a=0; $a<count($info_600_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_600_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_600_b[$a]); $j++) $mots_cles .= " , ".$info_600_b[$a][0];
-		for ($j=0; $j<sizeof($info_600_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_600_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_600_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_600_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_z[$a][$j] ;
+		for ($j=0; $j<count($info_600_b[$a]); $j++) $mots_cles .= " , ".$info_600_b[$a][0];
+		for ($j=0; $j<count($info_600_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_j[$a][$j] ;
+		for ($j=0; $j<count($info_600_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_x[$a][$j] ;
+		for ($j=0; $j<count($info_600_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_y[$a][$j] ;
+		for ($j=0; $j<count($info_600_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_600_z[$a][$j] ;
 		}
-	for ($a=0; $a<sizeof($info_601_a); $a++) {
+	for ($a=0; $a<count($info_601_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_601_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_601_b[$a]); $j++) $mots_cles .= " , ".$info_601_b[$a][0];
-		for ($j=0; $j<sizeof($info_601_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_601_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_601_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_601_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_z[$a][$j] ;
+		for ($j=0; $j<count($info_601_b[$a]); $j++) $mots_cles .= " , ".$info_601_b[$a][0];
+		for ($j=0; $j<count($info_601_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_j[$a][$j] ;
+		for ($j=0; $j<count($info_601_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_x[$a][$j] ;
+		for ($j=0; $j<count($info_601_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_y[$a][$j] ;
+		for ($j=0; $j<count($info_601_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_601_z[$a][$j] ;
 		}
-	for ($a=0; $a<sizeof($info_602_a); $a++) {
+	for ($a=0; $a<count($info_602_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_602_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_602_b[$a]); $j++) $mots_cles .= " , ".$info_602_b[$a][0];
-		for ($j=0; $j<sizeof($info_602_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_602_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_602_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_602_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_z[$a][$j] ;
+		for ($j=0; $j<count($info_602_b[$a]); $j++) $mots_cles .= " , ".$info_602_b[$a][0];
+		for ($j=0; $j<count($info_602_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_j[$a][$j] ;
+		for ($j=0; $j<count($info_602_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_x[$a][$j] ;
+		for ($j=0; $j<count($info_602_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_y[$a][$j] ;
+		for ($j=0; $j<count($info_602_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_602_z[$a][$j] ;
 		}
-	for ($a=0; $a<sizeof($info_605_a); $a++) {
+	for ($a=0; $a<count($info_605_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_605_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_605_b[$a]); $j++) $mots_cles .= " , ".$info_605_b[$a][0];
-		for ($j=0; $j<sizeof($info_605_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_605_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_605_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_605_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_z[$a][$j] ;
+		for ($j=0; $j<count($info_605_b[$a]); $j++) $mots_cles .= " , ".$info_605_b[$a][0];
+		for ($j=0; $j<count($info_605_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_j[$a][$j] ;
+		for ($j=0; $j<count($info_605_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_x[$a][$j] ;
+		for ($j=0; $j<count($info_605_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_y[$a][$j] ;
+		for ($j=0; $j<count($info_605_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_605_z[$a][$j] ;
 		}
-	for ($a=0; $a<sizeof($info_606_a); $a++) {
+	for ($a=0; $a<count($info_606_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_606_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_606_b[$a]); $j++) $mots_cles .= " , ".$info_606_b[$a][0];
-		for ($j=0; $j<sizeof($info_606_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_606_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_606_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_606_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_z[$a][$j] ;
+		for ($j=0; $j<count($info_606_b[$a]); $j++) $mots_cles .= " , ".$info_606_b[$a][0];
+		for ($j=0; $j<count($info_606_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_j[$a][$j] ;
+		for ($j=0; $j<count($info_606_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_x[$a][$j] ;
+		for ($j=0; $j<count($info_606_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_y[$a][$j] ;
+		for ($j=0; $j<count($info_606_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_606_z[$a][$j] ;
 		}
-	for ($a=0; $a<sizeof($info_607_a); $a++) {
+	for ($a=0; $a<count($info_607_a); $a++) {
 		$mots_cles .= " $pmb_keyword_sep ".$info_607_a[$a][0] ;
-		for ($j=0; $j<sizeof($info_607_b[$a]); $j++) $mots_cles .= " , ".$info_607_b[$a][0];
-		for ($j=0; $j<sizeof($info_607_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_j[$a][$j] ;
-		for ($j=0; $j<sizeof($info_607_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_x[$a][$j] ;
-		for ($j=0; $j<sizeof($info_607_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_y[$a][$j] ;
-		for ($j=0; $j<sizeof($info_607_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_z[$a][$j] ;
+		for ($j=0; $j<count($info_607_b[$a]); $j++) $mots_cles .= " , ".$info_607_b[$a][0];
+		for ($j=0; $j<count($info_607_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_j[$a][$j] ;
+		for ($j=0; $j<count($info_607_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_x[$a][$j] ;
+		for ($j=0; $j<count($info_607_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_y[$a][$j] ;
+		for ($j=0; $j<count($info_607_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_607_z[$a][$j] ;
 		}
 
 	if($flag_import_610_in_mot_cles) {
-		for ($a=0; $a<sizeof($info_610_a); $a++) {
+		for ($a=0; $a<count($info_610_a); $a++) {
 			$mots_cles .= " $pmb_keyword_sep ".$info_610_a[$a][0] ;
-			for ($j=0; $j<sizeof($info_610_b[$a]); $j++) $mots_cles .= " , ".$info_610_b[$a][0];
-			for ($j=0; $j<sizeof($info_610_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_j[$a][$j] ;
-			for ($j=0; $j<sizeof($info_610_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_x[$a][$j] ;
-			for ($j=0; $j<sizeof($info_610_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_y[$a][$j] ;
-			for ($j=0; $j<sizeof($info_610_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_z[$a][$j] ;
-			if (sizeof($info_610_e[$a]))	{
+			for ($j=0; $j<count($info_610_b[$a]); $j++) $mots_cles .= " , ".$info_610_b[$a][0];
+			for ($j=0; $j<count($info_610_j[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_j[$a][$j] ;
+			for ($j=0; $j<count($info_610_x[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_x[$a][$j] ;
+			for ($j=0; $j<count($info_610_y[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_y[$a][$j] ;
+			for ($j=0; $j<count($info_610_z[$a]); $j++) $mots_cles .= " $pmb_keyword_sep ".$info_610_z[$a][$j] ;
+			if (count($info_610_e[$a]))	{
 				$mots_cles .= " ( ";
-				for ($j=0; $j<sizeof($info_610_e[$a]); $j++) {
+				for ($j=0; $j<count($info_610_e[$a]); $j++) {
 					if ($j) $mots_cles .= " , ";
 					$mots_cles .= $info_610_e[$a][$j] ;
 				}
@@ -616,28 +622,28 @@ function import_new_notice_suite() {
 
 	//print"<pre>";print_r($info_610_a);print_r($info_610_e);print"</pre>";
 
-	for ($a=0; $a<sizeof($info_610_a); $a++) {
+	for ($a=0; $a<count($info_610_a); $a++) {
 
 		$resultat = categories::searchLibelle(addslashes($info_610_a[$a][0]), $num_thesaurus_610, 'fr_FR', $thes_610->num_noeud_racine);
 		if (!$resultat){
-			/*vÃ©rification de l'existence des categs, sinon crÃ©ation */
+			/*vérification de l'existence des categs, sinon création */
 			$resultat = create_categ($thes_610,$thes_610->num_noeud_racine, $info_610_a[$a][0], ' '.strip_empty_words($info_610_a[$a][0]).' ',$info_610_3[$a][0]);
 		}
-		for ($j=0; $j<sizeof($info_610_e[$a]); $j++) {
+		for ($j=0; $j<count($info_610_e[$a]); $j++) {
 			if($info_610_e[$a][$j]){
 				$num_parent=$resultat;
 				$resultat = categories::searchLibelle(addslashes($info_610_e[$a][$j]), $num_thesaurus_610, 'fr_FR',$num_parent);
 				if (!$resultat){
-					/*vÃ©rification de l'existence des categs, sinon crÃ©ation */
+					/*vérification de l'existence des categs, sinon création */
 					$resultat = create_categ($thes_610,$num_parent, $info_610_e[$a][$j], ' '.strip_empty_words($info_610_e[$a][$j]).' ',$info_610_3[$a][0]);
 				}
 			}
 		}
 
 
-		/* ajout de l'indexation Ã  la notice dans la table notices_categories*/
+		/* ajout de l'indexation à la notice dans la table notices_categories*/
 		$rqt_ajout = "insert into notices_categories set notcateg_notice='".$notice_id."', num_noeud='".$resultat."' " ;
-		$res_ajout = @pmb_mysql_query($rqt_ajout, $dbh);
+		pmb_mysql_query($rqt_ajout);
 
 
 	}
@@ -646,15 +652,15 @@ function import_new_notice_suite() {
 	if( substr($mots_cles,0,2)== ' ;')$mots_cles=substr($mots_cles,2);
 	$mots_cles ? $index_matieres = strip_empty_words($mots_cles) : $index_matieres = '';
 	$rqt_maj = "update notices set index_l='".addslashes($mots_cles)."', index_matieres=' ".addslashes($index_matieres)." ' where notice_id='$notice_id' " ;
-	$res_ajout = pmb_mysql_query($rqt_maj, $dbh);
+	pmb_mysql_query($rqt_maj);
 
-	// insert du param perso mÃ©morisant le numero Opsys de la notice
+	// insert du param perso mémorisant le numero Opsys de la notice
 	if(!$id_notices_custom_opsys) {
 		$rqt="select idchamp from notices_custom where name='num_opsys'";
-		$res = pmb_mysql_query($rqt, $dbh);
+		$res = pmb_mysql_query($rqt);
 		if ($res && ($r = pmb_mysql_fetch_object($res)))	$id_notices_custom_opsys= $r->idchamp;
 		$rqt="select idchamp from notices_custom where name='type_opsys'";
-		$res = pmb_mysql_query($rqt, $dbh);
+		$res = pmb_mysql_query($rqt);
 		if ($res && ($r = pmb_mysql_fetch_object($res)))	$id_notices_custom_type_opsys= $r->idchamp;
 	}
 
@@ -666,11 +672,11 @@ function import_new_notice_suite() {
 	$r=pmb_mysql_fetch_object($resultat);
 
 	// $flag_depouillements_464_doc_sonore //	$flag_depouillements_464_doc_imprime=0;
-	// Traiter les dÃ©pouillement du champ 464
+	// Traiter les dépouillement du champ 464
 	if ($flag_depouillements_464) {
 		if(is_array($info_464)) {
 			switch ($type_opsys) {
-				case 'UMO:1':  // Documents imprimÃ©s Unimarc moyen
+				case 'UMO:1':  // Documents imprimés Unimarc moyen
 					$niveau_biblio='m';
 					$niveau_hierar= '0';
 				break;
@@ -696,16 +702,16 @@ function import_new_notice_suite() {
 				break;
 			}
 			//print "<pre>";print_r	($info_464);print "</pre>";
-			for ($i=0; $i<sizeof($info_464); $i++) {
+			for ($i=0; $i<count($info_464); $i++) {
 				$a_464=$e_464=$_3_464=array();
 				$author_id=0;
-				for ($j=0; $j<sizeof($info_464[$i]); $j++) {
+				for ($j=0; $j<count($info_464[$i]); $j++) {
 					if($info_464[$i][$j]['label']=='a') $a_464[]=$info_464[$i][$j]['content'];
-					if($info_464[$i][$j]['label']=='e') $e_464[]=$info_464[$i][$j]['content'];		// ComplÃ©ment du titre
-					if($info_464[$i][$j]['label']=='3') $_3_464[]=$info_464[$i][$j]['content'];		// ComplÃ©ment du titre
+					if($info_464[$i][$j]['label']=='e') $e_464[]=$info_464[$i][$j]['content'];		// Complément du titre
+					if($info_464[$i][$j]['label']=='3') $_3_464[]=$info_464[$i][$j]['content'];		// Complément du titre
 				}
 				//print "<pre>";print_r	($_3_464);print "</pre>";
-				for ($j=0; $j<sizeof($a_464); $j++) {
+				for ($j=0; $j<count($a_464); $j++) {
 					if($_3_464[$j]) {
 						$requete="select author_id from authors where author_comment='".addslashes($_3_464[$j])."' ";
 						$result=pmb_mysql_query($requete);
@@ -738,8 +744,8 @@ function import_new_notice_suite() {
 
 
 
-	// $info_461_3,$info_461_t : dÃ©pendance d'une notice chapeau
-	for ($_3=0; $_3<sizeof($info_461_3); $_3++) {
+	// $info_461_3,$info_461_t : dépendance d'une notice chapeau
+	for ($_3=0; $_3<count($info_461_3); $_3++) {
 		switch ($type_opsys) {
 			case 'UMO:1': case 'UMO:2': case 'UMO:4': case 'UMO:8':
 				if($flag_titre_serie_recuperation) { // que si on veut
@@ -748,12 +754,12 @@ function import_new_notice_suite() {
 					$resultat=pmb_mysql_query($requete);
 					//Notice chapeau existe-t-elle ?
 					if (@pmb_mysql_num_rows($resultat)) {
-						//Si oui, rÃ©cupÃ©ration id
+						//Si oui, récupération id
 						$chapeau_id=pmb_mysql_result($resultat,0,0);
 					} else {
 						$niveau_biblio='m';
 						$niveau_hierar='1';
-						// CrÃ©ation de la notice temporaire chapeau
+						// Création de la notice temporaire chapeau
 						$requete="insert into notices set typdoc='$r->typdoc', tit1 ='".addslashes($info_461_t[$a])."' , niveau_biblio='$niveau_biblio',niveau_hierar='$niveau_hierar'  ";
 						//print "$requete  <br />";
 						pmb_mysql_query($requete);
@@ -768,18 +774,18 @@ function import_new_notice_suite() {
 					}
 				}
 			break;
-			case 'UMO:13': // bulletin  de pÃ©riodique
+			case 'UMO:13': // bulletin  de périodique
 				$requete="select notices_custom_origine from notices_custom_values where notices_custom_small_text='".$info_461_3[$_3]."'";
 				//print "$requete  <br />";
 				$resultat=pmb_mysql_query($requete);
 				//Notice chapeau existe-t-elle ?
 				if (@pmb_mysql_num_rows($resultat)) {
-					//Si oui, rÃ©cupÃ©ration id
+					//Si oui, récupération id
 					$chapeau_id=pmb_mysql_result($resultat,0,0);
 				} else {
 					$niveau_biblio='s';
 					$niveau_hierar='1';
-					// CrÃ©ation de la notice temporaire chapeau
+					// Création de la notice temporaire chapeau
 					$requete="insert into notices set typdoc='$r->typdoc', tit1 ='".addslashes($info_461_t[$a])."' , niveau_biblio='$niveau_biblio',niveau_hierar='$niveau_hierar'  ";
 					//print "$requete  <br />";
 					pmb_mysql_query($requete);
@@ -792,7 +798,7 @@ function import_new_notice_suite() {
 					//link notice
 					notice_relations::insert($notice_id, $chapeau_id, 'b', 1, 'up', false);
 
-					// crÃ©ation bulletin
+					// création bulletin
 					$info=array();
 					$bulletin=new bulletinage("",$chapeau_id);
 					$info['bul_titre']=addslashes($info_200_a[0]);
@@ -812,8 +818,8 @@ function import_new_notice_suite() {
 	}
 
 
-	// $info_462_3,$info_462_t : DÃ©pouillement, article
-	for ($_3=0; $_3<sizeof($info_462_3); $_3++) {
+	// $info_462_3,$info_462_t : Dépouillement, article
+	for ($_3=0; $_3<count($info_462_3); $_3++) {
 		switch ($type_opsys) {
 			case 'UMO:1': case 'UMO:2': case 'UMO:8':
 				$requete="select notices_custom_origine from notices_custom_values where notices_custom_small_text='".$info_462_3[$_3]."'";
@@ -821,12 +827,12 @@ function import_new_notice_suite() {
 				$resultat=pmb_mysql_query($requete);
 				//Notice chapeau existe-t-elle ?
 				if (@pmb_mysql_num_rows($resultat)) {
-					//Si oui, rÃ©cupÃ©ration id
+					//Si oui, récupération id
 					$chapeau_id=pmb_mysql_result($resultat,0,0);
 				} else {
 					$niveau_biblio='m';
 					$niveau_hierar='0';
-					// CrÃ©ation de la notice temporaire chapeau
+					// Création de la notice temporaire chapeau
 					$requete="insert into notices set typdoc='$r->typdoc', tit1 ='".addslashes($info_462_t[$a])."' , niveau_biblio='$niveau_biblio',niveau_hierar='$niveau_hierar'  ";
 					//print "$requete  <br />";
 					pmb_mysql_query($requete);
@@ -840,18 +846,18 @@ function import_new_notice_suite() {
 					notice_relations::insert($notice_id, $chapeau_id, 'a');
 				}
 			break;
-			case 'UMO:13': // bulletin de pÃ©riodique => crÃ©ation des articles
+			case 'UMO:13': // bulletin de périodique => création des articles
 				$requete="select notices_custom_origine from notices_custom_values where notices_custom_small_text='".$info_462_3[$_3]."'";
 				//print "$requete  <br />";
 				$resultat=pmb_mysql_query($requete);
 				//Notice article existe-t-elle ?
 				if (@pmb_mysql_num_rows($resultat)) {
-					//Si oui, rÃ©cupÃ©ration id
+					//Si oui, récupération id
 					$article_id=pmb_mysql_result($resultat,0,0);
 				} else {
 					$niveau_biblio='a';
 					$niveau_hierar='2';
-					// CrÃ©ation de la notice temporaire de l'article
+					// Création de la notice temporaire de l'article
 					$requete="insert into notices set typdoc='$r->typdoc', tit1 ='".addslashes($info_462_t[$a])."' , niveau_biblio='$niveau_biblio',niveau_hierar='$niveau_hierar'  ";
 					//print "$requete  <br />";
 					pmb_mysql_query($requete);
@@ -861,7 +867,7 @@ function import_new_notice_suite() {
 					pmb_mysql_query($requete);
 				}
 				if ($article_id) {
-					//lien article de bulletin crÃ©Ã© dans table analitique
+					//lien article de bulletin créé dans table analitique
 					$requete="insert into analysis set analysis_bulletin='$bulletin_id', analysis_notice ='$article_id' ";
 					//print "$requete  <br />";
 					pmb_mysql_query($requete);
@@ -898,17 +904,17 @@ function gen_date($bul_date,$ed_date) {
 		$str_month=strtolower($d_field[count($d_field)-2]);
 		switch($str_month) {
 			case "janvier":$month='01';break;
-			case "fÃ©vrier":case "fevrier":$month='02';break;
+			case "février":case "fevrier":$month='02';break;
 			case "mars":$month='03';break;
 			case "avril":$month='04';break;
 			case "mai":$month='05';break;
 			case "juin":$month='06';break;
 			case "juillet":$month='07';break;
-			case "aout":case "aoÃ»t":$month='08';break;
+			case "aout":case "août":$month='08';break;
 			case "septembre":$month='09';break;
 			case "octobre":$month='10';break;
 			case "novembre":$month='11';break;
-			case "dÃ©cembre":case "decembre":$month='12';break;
+			case "décembre":case "decembre":$month='12';break;
 			default:
 				$month='01';
 			break;
@@ -933,12 +939,12 @@ function gen_date($bul_date,$ed_date) {
 
 // TRAITEMENT DES EXEMPLAIRES ICI
 function traite_exemplaires () {
-	global $msg, $dbh ;
+	global $msg ;
 	global $nb_expl_ignores ;
 	global $prix, $notice_id, $info_996, $info_995, $info_001,$info_345_d ;
 	global $bulletin_id;
 	global $id_expl_fournisseur_opsys,$id_expl_inventaire_opsys;
-	// Afin de ne pas remettre en cause le script programmÃ© en 995 :
+	// Afin de ne pas remettre en cause le script programmé en 995 :
 	$info_995 = $info_996 ;
 	// lu en 010$d de la notice
 	$price = $prix[0];
@@ -946,13 +952,13 @@ function traite_exemplaires () {
 	if($info_345_d[0]) {
 		$price=$info_345_d[0];
 	}
-	// la zone 995 est rÃ©pÃ©table
+	// la zone 995 est répétable
 
-	for ($nb_expl = 0; $nb_expl < sizeof ($info_995); $nb_expl++) {
+	for ($nb_expl = 0; $nb_expl < count($info_995); $nb_expl++) {
 
 		/* RAZ expl */
 		$expl = array();
-		/* prÃ©paration du tableau Ã  passer Ã  la mÃ©thode */
+		/* préparation du tableau à passer à la méthode */
 		$expl['notice']     = $notice_id ;
 		$expl['cb'] 	    = $info_995[$nb_expl]['f'];
         $expl['cote'] 		= $info_995[$nb_expl]['k'];
@@ -960,10 +966,14 @@ function traite_exemplaires () {
 		$expl['prix']       = $price;
 		$expl['cote_mandatory'] = 0 ;
 
-		$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
-		$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
-
-		// propriÃ©taire
+		if (!empty($info_995[$nb_expl]['m'])) {
+			$expl['date_depot'] = substr($info_995[$nb_expl]['m'],0,4)."-".substr($info_995[$nb_expl]['m'],4,2)."-".substr($info_995[$nb_expl]['m'],6,2) ;
+		}
+		if (!empty($info_995[$nb_expl]['n'])) {
+			$expl['date_retour'] = substr($info_995[$nb_expl]['n'],0,4)."-".substr($info_995[$nb_expl]['n'],4,2)."-".substr($info_995[$nb_expl]['n'],6,2) ;
+		}
+		
+		// propriétaire
 		$owner=array();
 		$owner['lender_libelle'] = $info_995[$nb_expl]['a'] ;
 		if (!$owner['lender_libelle']) $owner['lender_libelle'] = $info_995[$nb_expl]['b'] ;
@@ -995,7 +1005,7 @@ function traite_exemplaires () {
 		if(!$data_doc['tdoc_libelle']) $data_doc['tdoc_libelle']= $info_995[$nb_expl]['r'];
 		$data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['r'] ;
 		if (!$data_doc['tdoc_codage_import']) $data_doc['tdoc_codage_import'] = $info_995[$nb_expl]['e'] ;
-		$data_doc['duree_pret'] = 28 ; /* valeur par dÃ©faut */
+		$data_doc['duree_pret'] = 28 ; /* valeur par défaut */
 		$data_doc['tdoc_owner'] = $book_lender_id ;
 		$expl['typdoc'] = docs_type::import($data_doc);
 
@@ -1010,11 +1020,12 @@ function traite_exemplaires () {
 
 		// codestat
 		//$expl['codestat'] = 10 ;
+		$data_codestat=array();
 		$data_codestat['codestat_libelle'] = strtolower($info_995[$nb_expl]['x']) ;
 		$expl['codestat'] = docs_codestat::import($data_codestat);
 
 		// quoi_faire
-		// $que_faire vient du formulaire de chargement, Ã  utiliser en attente de l'info dans la zone 996
+		// $que_faire vient du formulaire de chargement, à utiliser en attente de l'info dans la zone 996
 		global $que_faire ;
 		if ($que_faire=="") {
 			if ($info_995[$nb_expl]['0']) $expl['quoi_faire'] = $info_995[$nb_expl]['0']  ;
@@ -1022,7 +1033,7 @@ function traite_exemplaires () {
 		} else {
 			$expl['quoi_faire'] = $que_faire ;
 		}
-		// 0 : supprimer, 1 ou vide : Mettre Ã  jour ou ajouter, 2 : ajouter si possible, sinon rien.
+		// 0 : supprimer, 1 ou vide : Mettre à jour ou ajouter, 2 : ajouter si possible, sinon rien.
 		//print "<pre>";print_r($info_995);print_r($expl);print "</pre>";
 		$expl_id = exemplaire::import($expl);
 		if ($expl_id == 0) {
@@ -1038,12 +1049,12 @@ function traite_exemplaires () {
 
 		if(!$id_expl_fournisseur_opsys) {
 			$rqt="select idchamp from expl_custom where name='fournisseur'";
-			$res = pmb_mysql_query($rqt, $dbh);
+			$res = pmb_mysql_query($rqt);
 			if ($res && ($r = pmb_mysql_fetch_object($res)))	$id_expl_fournisseur_opsys= $r->idchamp;
 		}
 		if(!$id_expl_inventaire_opsys) {
 			$rqt="select idchamp from expl_custom where name='inventaire'";
-			$res = pmb_mysql_query($rqt, $dbh);
+			$res = pmb_mysql_query($rqt);
 			if ($res && ($r = pmb_mysql_fetch_object($res)))	$id_expl_inventaire_opsys= $r->idchamp;
 		}
 		//inventaire en champ perso
@@ -1056,7 +1067,7 @@ function traite_exemplaires () {
 			$requete="insert into expl_custom_values (expl_custom_champ,expl_custom_origine,expl_custom_small_text) values($id_expl_fournisseur_opsys,$expl_id,'".addslashes($field)."')";
 			pmb_mysql_query($requete);
 		}
-		//Date de crÃ©ation
+		//Date de création
 		if($field=$info_995[$nb_expl]['8']) {
 			$requete="update exemplaires set create_date='$field 12:00:00' where expl_id='$expl_id' ";
 			//print $requete;
@@ -1066,7 +1077,7 @@ function traite_exemplaires () {
 	} // fin for
 } // fin traite_exemplaires	TRAITEMENT DES EXEMPLAIRES JUSQU'ICI
 
-// fonction spÃ©cifique d'export de la zone 995
+// fonction spécifique d'export de la zone 995
 function export_traite_exemplaires ($ex=array()) {
 	return import_expl::export_traite_exemplaires($ex);
 }

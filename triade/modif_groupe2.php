@@ -5,7 +5,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -60,20 +60,20 @@ if(isset($_POST["create"])) {
 		$nbEl=$_POST["nbEl"];
 		for ($i=0;$i<=$nbEl;$i++) {
 			$saisie_choix_eleve="saisie_choix_eleve_$i";
-			if ($_POST[$saisie_choix_eleve] >= 0) { $params[liste_eleve].=$_POST[$saisie_choix_eleve].","; }
+			if ($_POST[$saisie_choix_eleve] >= 0) { $params['liste_eleve'].=$_POST[$saisie_choix_eleve].","; }
 
 			$saisie_eleve_supp="saisie_eleve_supp_$i";
-			if ($_POST[$saisie_eleve_supp] >= 0) { $params2[liste_eleve_supp].=$_POST[$saisie_eleve_supp].","; }
+			if ($_POST[$saisie_eleve_supp] >= 0) { $params2['liste_eleve_supp'].=$_POST[$saisie_eleve_supp].","; }
 		}
-		$params[liste_eleve]=preg_replace('/,+/',',',$params[liste_eleve]);
-		$params[liste_eleve]=preg_replace('/,+$/','',$params[liste_eleve]);
-		$params[liste_eleve]=preg_replace('/^,+/','',$params[liste_eleve]);
+		$params['liste_eleve']=preg_replace('/,+/',',',$params['liste_eleve']);
+		$params['liste_eleve']=preg_replace('/,+$/','',$params['liste_eleve']);
+		$params['liste_eleve']=preg_replace('/^,+/','',$params['liste_eleve']);
 
-		$params2[liste_eleve_supp]=preg_replace('/,+/','',$params2[liste_eleve_supp]);
-		$params2[liste_eleve_supp]=preg_replace('/,+$/','',$params2[liste_eleve_supp]);
-		$params2[liste_eleve_supp]=preg_replace('/^,+/','',$params2[liste_eleve_supp]);
+		$params2['liste_eleve_supp']=preg_replace('/,+/','',$params2['liste_eleve_supp']);
+		$params2['liste_eleve_supp']=preg_replace('/,+$/','',$params2['liste_eleve_supp']);
+		$params2['liste_eleve_supp']=preg_replace('/^,+/','',$params2['liste_eleve_supp']);
 
-		$params[nomgr]=trim($_POST["saisie_intitule"]);
+		$params['nomgr']=trim($_POST["saisie_intitule"]);
 		
 
 		if(modif_group($params)):
@@ -93,7 +93,7 @@ if(isset($_POST["create"])) {
 
 $gid=$_GET["gid"];
 
-$sql="SELECT libelle,liste_elev FROM ${prefixe}groupes WHERE group_id='$gid'";
+$sql="SELECT libelle,liste_elev FROM {$prefixe}groupes WHERE group_id='$gid'";
 
 $res=execSql($sql);
 $data=chargeMat($res);
@@ -101,7 +101,7 @@ $nomgrp=$data[0][0];
 $liste_eleves=preg_replace('/\{/',"",$data[0][1]);
 $liste_eleves=preg_replace('/\}/',"",$liste_eleves);
 if ($liste_eleves != "") {
-	$sql="SELECT nom,prenom,libelle,elev_id FROM ${prefixe}eleves, ${prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves) ";
+	$sql="SELECT nom,prenom,libelle,elev_id FROM {$prefixe}eleves, {$prefixe}classes where classe=code_class AND elev_id IN ($liste_eleves) ";
 	$res=execSql($sql);
 	$data=chargeMat($res);
 	$pasdeleve="non";
@@ -158,7 +158,7 @@ function check(i,y) {
 <?php
 // debut for
 if ( $pasdeleve != "oui" ) {
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 ?>
 <tr class="tabnormal2" onmouseover="this.className='tabover2'" onmouseout="this.className='tabnormal2'">
 	<td ><?php print ucwords($data[$i][0])?></td>
@@ -173,7 +173,7 @@ if ( $pasdeleve != "oui" ) {
 </table>
 <BR><BR>
 <b><font color=red class="T2" ><?php print LANGGRP58 ?></font></b><br><br>
-<input type=hidden name="nbEl" value="<?php print count($data)?>">
+<input type=hidden name="nbEl" value="<?php print countTriade($data)?>">
 <input type=hidden name="idgroupe" value="<?php print $gid ?>">
 <input type=hidden name="sClasseGrp" value="<?php print $saisie_classe ?>">
 <table align=center><tr><td>

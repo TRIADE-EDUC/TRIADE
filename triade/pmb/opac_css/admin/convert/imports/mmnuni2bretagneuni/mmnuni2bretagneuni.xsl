@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: mmnuni2bretagneuni.xsl,v 1.2 2006-04-28 05:35:04 touraine37 Exp $ -->
+<!-- $Id: mmnuni2bretagneuni.xsl,v 1.2 2006/04/28 05:35:04 touraine37 Exp $ -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	
 	<xsl:output method="xml" encoding="ISO-8859-1" indent="yes"/>

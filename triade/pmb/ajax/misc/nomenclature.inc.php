@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: nomenclature.inc.php,v 1.11 2019-05-29 12:03:09 btafforeau Exp $
+// $Id: nomenclature.inc.php,v 1.13 2022/06/08 14:45:16 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
@@ -38,6 +38,10 @@ switch($sub){
 			case "delete_record":
 				$record_child->delete_record_child();
 				break;
+			case "get_explnums":
+				require_once($class_path."/notice.class.php");
+				print encoding_normalize::json_encode(notice::get_notice_explnum_list($record_child->get_id()));
+				break;
 		}
 		break;
 	case 'record_formation':
@@ -55,4 +59,14 @@ switch($sub){
 		}
 	
 		break;
+	case "nomenclature_record_formations":
+	    require_once($class_path."/nomenclature/nomenclature_record_formations.class.php");
+	    $record_formation = new nomenclature_record_formations($id_parent);
+	    switch($action){
+	        case "reorder_children":
+	            $record_formation->reorder_children();
+	            break;
+	    }
+	    
+	    break;
 }

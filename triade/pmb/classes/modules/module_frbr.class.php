@@ -2,10 +2,11 @@
 // +-------------------------------------------------+
 // | 2002-2007 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: module_frbr.class.php,v 1.15 2018-03-12 16:44:30 vtouchard Exp $
+// $Id: module_frbr.class.php,v 1.18.10.1 2025/03/04 15:50:02 dbellamy Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/modules/module.class.php");
 require_once($class_path."/frbr/cataloging/frbr_cataloging_items.class.php");
 require_once($class_path."/frbr/cataloging/frbr_cataloging_item.class.php");
@@ -21,49 +22,35 @@ require_once($class_path."/frbr/cataloging/frbr_cataloging_graph.class.php");
 
 
 class module_frbr extends module{
-	
-	public function get_left_menu() {
-		global $module_frbr_left_menu;
-	
-		return $module_frbr_left_menu;
-	}
-	
-	
+
 	public function proceed_cataloging(){
-		global $sub, $msg, $module_frbr_cataloging_content, $module_frbr_cataloging_schemes;
-		$layout_template = $this->get_layout_template();
-		$layout_template = str_replace("!!menu_contextuel!!", '', $layout_template);
+		global $sub, $module_frbr_cataloging_content;
 		switch($sub){
 			case "schemes" :
-				print str_replace("!!menu_sous_rub!!","",$layout_template);
 		 		$frbr_cataloging_schemes_controler = new frbr_cataloging_schemes_controler();
 		 		print $frbr_cataloging_schemes_controler->proceed();
 				break;
 			default :
-				print str_replace("!!menu_sous_rub!!","",$layout_template);
 				print $module_frbr_cataloging_content;
 				break;
 		}
 	}
-	
+
 	public function proceed(){
 		global $categ;
 		global $module_layout_end;
 		global $module_frbr_cataloging_content;
-	
+
 		if($categ && method_exists($this, "proceed_".$categ)) {
 			$method_name = "proceed_".$categ;
 			$this->{$method_name}();
 		} else {
-			$layout_template = $this->get_layout_template();
-			$layout_template = str_replace("!!menu_contextuel!!", "", $layout_template);
-			print str_replace("!!menu_sous_rub!!","",$layout_template);
 			//par defaut on affiche le catalogage frbr
 			print $module_frbr_cataloging_content;
 		}
 		print $module_layout_end;
 	}
-	
+
 	public function proceed_ajax_cataloging() {
 		global $sub;
 		global $action;
@@ -72,7 +59,7 @@ class module_frbr extends module{
 		global $type;
 		global $num_datanode;
 		global $msg;
-		
+
 		switch($sub){
 			case 'entities':
 				switch($action){
@@ -125,7 +112,7 @@ class module_frbr extends module{
 							$frbr_cataloging_datanodes = new frbr_cataloging_datanodes($frbr_cataloging_category->get_id());
 							$response = $frbr_cataloging_datanodes->get_format_data();
 						}
-					
+
 						$response = array(
 								'result' => $result,
 								'elementId' => $frbr_cataloging_category->get_id(),
@@ -209,19 +196,22 @@ class module_frbr extends module{
 							$items = json_decode(stripslashes($items_list));
 							$graph->set_graph_data($items);
 							print encoding_normalize::json_encode($graph->get_graph_data());
-							
+
 						}
 						break;
 					case "get_entity_info" :
 						global $type, $id;
+						/*
+                        // DB : commente car la methode correspondante ne comporte pas les memes parametres
 						$entity = new frbr_cataloging_entity();
+						*/
 						break;
 					case 'get_graph_data':
 						global $num_datanode;
 						if (isset($num_datanode)) {
 							$graph = new frbr_cataloging_graph($num_datanode);
 							print encoding_normalize::json_encode($graph->get_graph_data());
-						} 
+						}
 						break;
 					case 'set_graph_data':
 						global $num_datanode, $items_list;
@@ -230,21 +220,21 @@ class module_frbr extends module{
 							$items = json_decode(stripslashes($items_list));
 							$graph->set_graph_data($items);
 							print encoding_normalize::json_encode($graph->get_graph_data());
-						} 
+						}
 						break;
 					case 'get_link_form':
 						global $source, $target;
 						$source = json_decode(stripslashes($source));
 						$target = json_decode(stripslashes($target));
 						print encoding_normalize::json_encode(frbr_cataloging_entities_links::get_link_form($source, $target));
-						
+
 						break;
 					case 'add_link':
 						global $source, $target, $link, $link_type;
 						$linking = frbr_cataloging_entities_links::link_entities($source, $target, $link, $link_type);
 						print '<textarea>'.encoding_normalize::json_encode(array('response' => $linking)).'</textarea>';
 						break;
-						
+
 				}
 				break;
 		}

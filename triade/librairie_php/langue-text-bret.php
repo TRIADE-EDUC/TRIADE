@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -19,9 +19,9 @@
  ***************************************************************************/
 
 
-if (!defined(INTITULEDIRECTION)) { define("INTITULEDIRECTION","direction"); }
-if (!defined(INTITULEELEVE)) { define("INTITULEELEVE","élève"); }
-if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
+if (!defined("INTITULEDIRECTION")) { define("INTITULEDIRECTION","direction"); }
+if (!defined("INTITULEELEVE")) { define("INTITULEELEVE","élève"); }
+if (!defined("INTITULEELEVES")) { define("INTITULEELEVES","élèves"); }
 
 
 // fichier pour langue cote admin.
@@ -30,7 +30,7 @@ if (!defined(INTITULEELEVES)) { define("INTITULEELEVES","élèves"); }
 define("CLICKICI","Klikañ amañ");
 define("VALIDER","Asantiñ");
 define("LANGTP22"," DIWALLIT - Goulenn prouadoù - RANN");
-define("LANGTP3"," deiziataer ar prouadoù ");
+define("LANGTP33"," deiziataer ar prouadoù ");
 define("LANGCHOIX","Dibab ...");
 define("LANGCHOIX2","klas ebet");
 define("LANGCHOIX3","--- Dibab ---");
@@ -2170,7 +2170,7 @@ define("LANGMODIF26","Kemmañ isdanvez");
 define("LANGPROF38","Notennoù trimiziad");
 define("LANGPROF39","Titourerezh ouzhpenn");
 
-define("LANGCIRCU21","Prest a-b."); // abréviation de "prest a-benn" 
+define("LANGCIRCU211","Prest a-b."); // abréviation de "prest a-benn" 
 
 define("LANGTELECHARGE","Pellgargañ"); //  downloader
 
@@ -2372,7 +2372,7 @@ define("LANGDISP23","Anv an abeg ");
 define("LANGDISP24","Listenn an abegoù ");
 define("LANGDISP25","Niver a skolidi nevesaet");
 define("LANGDISP26","Rankout a ra ar fichennaoueg bezañ e stumm xls");
-define("LANGCARNET63","Karned heuliañ enporzhiet betek penn");
+define("LANGCARNET633","Karned heuliañ enporzhiet betek penn");
 define("LANGCARNET64","Listenn ar chastizoù");
 // News 2
 define("LANGCARNET67","ouzhpennañ ur chastiz");
@@ -2803,7 +2803,7 @@ define("LANGMESS257","All classes.");
 define("LANGMESS258","Search");
 define("LANGMESS299","    Titre : ");
 define("LANGMESS300","Votre TRIADE n'est pas configuré en accès Internet, veuillez consulter votre compte administrateur Triade pour valider l'option de la connexion Internet.");
-define("LANGMESS365","Actualités  de la 1er page");
+define("LANGMESS3655","Actualités  de la 1er page");
 define("LANGMESS301","Lien de la video : ");
 define("LANGMESS302","ou Lien Youtube : ");
 define("LANGMESS303","Gestion des émargements ");
@@ -3229,4 +3229,43 @@ define("LANGMESSE02","Gestion des SMS");
 define("LANGNEW100","Sanction(s)");
 define("LANGNEW101","Prévision sur ");
 
+define("LANGTT2","Impression du tableau de bulletin");
+
+
+// --- SIECLE-BEE Export ---
+define('LANG_SIECLE_EXPORT_TITRE', 'Ezporzhiñ SIECLE-BEE (XML / ZIP)');
+define('LANG_SIECLE_EXPORT_DESC', 'Krouiñ an diell ZIP hervez ar reolennoù broadel evit enporzhiñ e SIECLE-BEE.');
+define('LANG_SIECLE_PROFIL', 'Profil ar steuñv SIECLE');
+define('LANG_SIECLE_PROFIL_STANDARD', 'Reoliek (Dindan gevrat - XSD 4.0)');
+define('LANG_SIECLE_PROFIL_EPHC', 'Prevez e-maez kevrat (EPHC - XSD 1.1)');
+define('LANG_SIECLE_UAI', 'Kod UAI ar skol');
+define('LANG_SIECLE_ANNEE', 'Bloavezh-skol');
+define('LANG_SIECLE_VALIDATION_XSD', 'Gwiriañ kenglotadur XSD a-raok ezporzhañ');
+define('LANG_SIECLE_PERIMETRE', 'Tachenn an ezporzhiadur');
+define('LANG_SIECLE_BTN_EXPORTER', 'Genel ha pellgargañ an teul ZIP');
+
+define('LANG_CODE_MEF', 'Kod MEF (SIECLE)');
+
+// --- Kemm ar ger-tremen (Lec'h Prevez) ---
+define('LANG_CHG_PASS_TITLE', 'Ger-tremen');
+define('LANG_CHG_PASS_ACTUEL', 'Ger-tremen red');
+define('LANG_CHG_PASS_NOUVEAU', 'Ger-tremen nevez');
+define('LANG_CHG_PASS_CONFIRM', 'Kadarnaat ar ger-tremen nevez');
+define('LANG_CHG_PASS_BTN', 'Kemmañ ar ger-tremen');
+define('LANG_CHG_PASS_OK', 'Kemmet eo bet ho ker-tremen gant berzh.');
+define('LANG_CHG_PASS_ERR_ACTUEL', 'Fazi zo gant ar ger-tremen red.');
+define('LANG_CHG_PASS_ERR_CONFIRM', 'Ne glot ket ar ger-tremen nevez gant an hini kadarnaet.');
+define('LANG_CHG_PASS_ERR_EMPTY', 'Leugnit holl vaezennoù ar ger-tremen mar plij.');
+define('LANG_CHG_PASS_ERR_SECURITY', 'Ne heuilh ket ar ger-tremen nevez reolennoù surentez ar savadur.');
+define('LANG_CHG_PASS_DISABLED', 'Diweredekaet eo bet kemm ar ger-tremen gant ho savadur.');
+define('LANG_CHG_PASS_STRENGTH_LABEL', 'Kreñvder ar ger-tremen:');
+define('LANG_CHG_PASS_STRENGTH_1', 'Gwan-tre');
+define('LANG_CHG_PASS_STRENGTH_2', 'Gwan');
+define('LANG_CHG_PASS_STRENGTH_3', 'Krenn');
+define('LANG_CHG_PASS_STRENGTH_4', 'Kreñv');
+define('LANG_CHG_PASS_MAIL_SUBJECT', 'TRIADE: Kadarnadenn kemm ar ger-tremen');
+define('LANG_CHG_PASS_MAIL_BODY1', 'Demat');
+define('LANG_CHG_PASS_MAIL_BODY2', 'Kadarnaat a reomp eo bet kemmet ger-tremen ho kont TRIADE d\'an');
+define('LANG_CHG_PASS_MAIL_BODY3', 'da');
+define('LANG_CHG_PASS_MAIL_BODY4', 'Ma n\'oc\'h ket kaoz d\'ar c\'hemm-se, kit e darempred raktal gant merour ho savadur.');
 ?>

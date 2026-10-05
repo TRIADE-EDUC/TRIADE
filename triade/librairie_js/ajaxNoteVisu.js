@@ -2,7 +2,13 @@ ajaxVisuNote = function (idEleve,idClasse,mois,annee) {
 	var myAjax = new Ajax.Request(
 		"ajaxNoteVisu.php",
 		{	method: "post",
-			parameters : "idEleve="+idEleve+"&idClasse="+idClasse+"&m="+mois+"&annee="+annee,
+			parameters: {
+    				idEleve: idEleve,
+    				idClasse: idClasse,
+    				m: mois,
+    				annee: annee
+			},
+		/*	parameters : "idEleve="+idEleve+"&idClasse="+idClasse+"&m="+mois+"&annee="+annee, */
 			asynchronous: true,
 			timeout: 5000,
 			onComplete: displayText

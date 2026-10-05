@@ -1,8 +1,8 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: cms_module_tagcloud_view_tagcloud_3d.class.php,v 1.3 2017-07-12 15:15:02 tsamson Exp $
+// $Id: cms_module_tagcloud_view_tagcloud_3d.class.php,v 1.3 2017/07/12 15:15:02 tsamson Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: DnDElement.js,v 1.7 2017-07-10 14:37:03 apetithomme Exp $
+// $Id: DnDElement.js,v 1.8 2021/11/16 15:48:32 dgoron Exp $
 
 
 define(['dojo/_base/declare', 
@@ -72,6 +72,7 @@ define(['dojo/_base/declare',
 					  for(var i=0 ; i<fields.length ; i++){
 						  var eltToEdit = this.element.zone.parent.getElementFromId(fields[i].id);
 						  eltToEdit.switchClass('colonne'+(fields.length));
+						  eltToEdit.switchWidth(fields.length);
 					  }  
 				  }
 				  

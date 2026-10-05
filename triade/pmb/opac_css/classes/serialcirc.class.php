@@ -2,29 +2,30 @@
 // +-------------------------------------------------+
 // | 2002-2011 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: serialcirc.class.php,v 1.4 2017-05-05 09:12:15 dgoron Exp $
+// $Id: serialcirc.class.php,v 1.6 2022/02/01 07:57:50 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path, $include_path;
 require_once($class_path."/serialcirc_diff.class.php") ;
 require_once($include_path."/serialcirc.inc.php");
 
 class serialcirc {
 	public $id_serialcirc;			// identifiant unique
-	public $num_abt;				// identifiant de l'abonnement associÃ©
+	public $num_abt;				// identifiant de l'abonnement associé
 	public $type;					// type de circulation
-	public $virtual;				// boolÃ©en dÃ©finissant si la circulation est virtuelle ou non
-	public $check;					// boolÃ©en dÃ©finissant si le pointage est demandÃ©e!
-	public $allow_resa;			// boolÃ©en dÃ©finissant si la demande de rÃ©sa est permise
-	public $allow_copy;			// boolÃ©en dÃ©finissant si la demande de copie est permise
-	public $duration_before_send;	// nombre de jours avant le dÃ©marrage de la circulation depuis la date de bulletinnage
-	public $allow_subscription;	// boolÃ©en dÃ©finissant si l'inscription est permise
-	public $serial_title;			// titre du pÃ©riodique
-	public $state;					// Ã©tat de la circulation
+	public $virtual;				// booléen définissant si la circulation est virtuelle ou non
+	public $check;					// booléen définissant si le pointage est demandée!
+	public $allow_resa;			// booléen définissant si la demande de résa est permise
+	public $allow_copy;			// booléen définissant si la demande de copie est permise
+	public $duration_before_send;	// nombre de jours avant le démarrage de la circulation depuis la date de bulletinnage
+	public $allow_subscription;	// booléen définissant si l'inscription est permise
+	public $serial_title;			// titre du périodique
+	public $state;					// état de la circulation
 	public $late_mode;				// mode de retard
 	
 	public function __construct($id){
-		$this->id_serialcirc = $id*1;
+		$this->id_serialcirc = intval($id);
 		$this->_fetch_data();
 	}
 	
@@ -70,7 +71,7 @@ class serialcirc {
 	}
 	
 	public function get_serial_title(){
-		if(!$this->serial_title){
+	    if(!$this->serial_title && $this->num_abt){
 			$query="select tit1 from notices join abts_abts on num_notice = notice_id where abt_id = ".$this->num_abt;
 			$result = pmb_mysql_query($query);
 			if(pmb_mysql_num_rows($result)){

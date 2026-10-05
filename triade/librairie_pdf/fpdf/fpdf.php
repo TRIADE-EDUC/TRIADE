@@ -7,9 +7,12 @@
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
+if (file_exists("../common/version.php")) include_once("../common/version.php");  
+if (file_exists("./common/version.php")) include_once("./common/version.php");  
+
 class FPDF
 {
-const VERSION = '1.85';
+const VERSION = '1.85 - TRIADE '.VERSION ;
 protected $page;               // current page number
 protected $n;                  // current object number
 protected $offsets;            // array of object offsets

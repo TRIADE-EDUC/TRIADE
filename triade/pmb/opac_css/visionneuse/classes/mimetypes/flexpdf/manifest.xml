@@ -4,7 +4,7 @@
 ****************************************************************************************
 © 2002-2010 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: manifest.xml,v 1.3 2012-03-23 14:10:19 dbellamy Exp $ -->
+$Id: manifest.xml,v 1.3 2012/03/23 14:10:19 dbellamy Exp $ -->
 
 <manifest name="flexpdf">
 	<desc msg="Affichage des PDF en visionneuse Flash. N'oubliez pas d'installer flexpaper (http://flexpaper.devaldi.com) et pdf2swf (http://www.swftools.org)"/>

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: DnDZone.js,v 1.2 2015-10-27 11:28:57 vtouchard Exp $
+// $Id: DnDZone.js,v 1.2 2015/10/27 11:28:57 vtouchard Exp $
 
 
 define([

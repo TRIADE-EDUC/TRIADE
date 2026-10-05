@@ -1,6 +1,6 @@
 {% extends 'gabarit.html' %}
 
-<!-- $Id: category.html,v 1.14 2018-10-01 14:12:04 dgoron Exp $ -->
+<!-- $Id: category.html,v 1.17 2023/03/10 15:55:15 tsamson Exp $ -->
 
 {% block header %}
 	<h1><span>{{ msg.category_see_title }}</span></h1>
@@ -11,10 +11,18 @@
 		{% if global.thesaurus_mode_pmb %}
 			[{{ authority.thes.libelle_thesaurus }}]
 		{% endif %}
-		{{ authority.libelle }}
+		{% if authority.voir_id %}
+			{{ authority.libelle | strip_tags | safe }} -&gt; <i>{{ authority.renvoivoir.libelle | strip_tags | safe }}@</i>
+		{% else %}
+			{{ authority.libelle }}
+		{% endif %}
 	</h3>
 	<script type="text/javascript">
-		document.title = "{{ authority.libelle }}";
+		{% if authority.voir_id %}
+				document.title = "{{ authority.libelle | strip_tags | safe }} -> {{ authority.renvoivoir.libelle | strip_tags | safe }}@";
+		{% else %}
+				document.title = "{{ authority.libelle }}";
+		{% endif %}
 	</script>
 {% endblock %}
 
@@ -86,10 +94,14 @@
 		{% endif %}
 	{% endfor %}
 	
-	{% if authority.voir %}
-		<div id="categ_see_renvoi_voir" class="categ_see_title">
-			<h5><span>{{ msg.term_show_see }}</span></h5>
-			<a href="./autorites.php?categ=see&sub=category&id={{ authority.voir.id }}">{{ authority.voir.libelle_categorie  }}</a>
+	{% if authority.voir_id %}
+		<div class="aut_display_row">
+			<div class="aut_display_cell">
+				<b>{{ msg.term_show_see }}</b>
+			</div>
+			<div class="aut_display_cell" id="categ_see_renvoi_voir">
+				<a href="./autorites.php?categ=see&sub=category&id={{ authority.voir_id }}">{{ authority.renvoivoir.libelle  }}</a>
+			</div>
 		</div>
 	{% endif %}
 	{% if authority.see_also %}
@@ -117,7 +129,13 @@
 		</div>
 	{% endif %}
 {% endblock %}
-
+{% block map %}
+	{% if authority.map.map %}
+		<div id="map_notice" class="map_notice">
+			{{ authority.map.map }}
+		</div>
+	{% endif %}
+{% endblock %}
 {% block aut_buttons %}
 	{% if authority.right %}
 	<div class='row'>

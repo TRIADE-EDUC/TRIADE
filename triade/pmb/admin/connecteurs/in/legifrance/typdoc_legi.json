@@ -1,0 +1,61 @@
+{
+	"JURI - Judiciaire" : {
+		"value" : "Jurisprudence judiciaire",
+		"typdoc" : [
+			"ARRET",
+			"AUTRES_DECISIONS",
+			"AVIS",
+			"ORDONNANCE"
+		]
+	},
+	"JURI - Constitutionnelle" : {
+		"value" : "Jurisprudence constitutionnelle",
+		"typdoc" : [
+			"AN",
+			"AR16",
+			"AUTR",
+			"D",
+			"DC",
+			"ELEC",
+			"FNR",
+			"I",
+			"L",
+			"LOM",
+			"LP",
+			"NOM",
+			"OF",
+			"ORGA",
+			"PDR",
+			"QPC",
+			"REF",
+			"SEN"
+		]
+	},
+	"JURI - Administrative" : {
+		"value" : "Jurisprudence administrative",
+		"typdoc" : [
+			"texte",
+			"Texte"
+		]
+	},
+	"LEGI" : {
+		"value" : "Textes",
+		"typdoc" : [
+			"ARRETE",
+			"Article",
+			"AVIS",
+			"CODE",
+			"CONSTITUTION",
+			"CONVENTION",
+			"DECISION",
+			"DECLARATION",
+			"DECRET",
+			"DECRET_LOI",
+			"DELIBERATION",
+			"LOI",
+			"LOI_CONSTIT",
+			"LOI_ORGANIQUE",
+			"ORDONNANCE"
+		]
+	}
+}

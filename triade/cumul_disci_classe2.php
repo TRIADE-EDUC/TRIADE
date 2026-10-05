@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - F. ORY
+ *   copyright            : (C) 2000 E. TAESCH -  - F. ORY
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -49,11 +49,11 @@ $cnx=cnx();
 // affichage de la liste d élèves trouvées
 $idclasse=$_POST["saisie_classe"];
 
-$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM ${prefixe}eleves  WHERE classe='$idclasse' ORDER BY nom,prenom ";
+$sql="SELECT nom,prenom,classe,elev_id,telephone,tel_prof_pere,tel_prof_mere FROM {$prefixe}eleves  WHERE classe='$idclasse' ORDER BY nom,prenom ";
 $res=execSql($sql);
 $data=chargeMat($res);
 
-if (count($data) <= 0) {
+if (countTriade($data) <= 0) {
         print("<BR><center>".LANGABS67."<BR><BR></center>");
 } else {
 ?>
@@ -64,7 +64,7 @@ if (count($data) <= 0) {
 	<TD bgcolor=#FFFFFF width=20%><b><?php print "Nombre de sanction" ?></B></TD>
 	<TD bgcolor=#FFFFFF width=20%><b><?php print "Nombre de retenue" ?></b></TD>
 	<?php
-	for($i=0;$i<count($data);$i++) {
+	for($i=0;$i<countTriade($data);$i++) {
 
 		$cumulsanc=0;	
 		$bgcolor="#FFFFFF";
@@ -72,13 +72,13 @@ if (count($data) <= 0) {
 
 		$data_2=affDiscipline_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
 		//id,id_eleve,motif,id_category,date_saisie,origin_saisie,enr_en_retenue,signature_parent,attribuer_par,devoir_a_faire
-		for($j=0;$j<count($data_2);$j++) {
+		for($j=0;$j<countTriade($data_2);$j++) {
 				$bgcolor="#CCCCCC";
 				$cumulsanc=$cumulsanc + 1 ;
 		}
 		// id_elev,date_de_la_retenue,heure_de_la_retenue,date_de_saisie,origi_saisie,id_category,retenue_effectuer,motif,attribuer_par,signature_parent,duree_retenu,devoir_a_faire
 		$data_3=affRetenue_via_date($data[$i][3],$_POST["saisie_date_debut"],$_POST["saisie_date_fin"]);
-		for($j=0;$j<count($data_3);$j++) {
+		for($j=0;$j<countTriade($data_3);$j++) {
 				$bgcolor="#CCCCCC";
 				$cumulret=$cumulret + 1 ;
 		}

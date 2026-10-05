@@ -4,7 +4,7 @@
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET - 
+ *   copyright            : (C) 2000 E. TAESCH -  - 
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -52,11 +52,11 @@ if (file_exists("./common/productId.php")) include_once("./common/productId.php"
 
 // -----------------------------------------------------------------------------
 // syxtaxe d'utilisation
-// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuparent",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuprof",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION[membre]);
-// verifplus("menudeux",$_SESSION[id_pers],$_SESSION[membre]);
+// verifplus("menuadmin",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuparent",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuprof",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menuscolaire",$_SESSION[id_pers],$_SESSION['membre']);
+// verifplus("menudeux",$_SESSION[id_pers],$_SESSION['membre']);
 // scolaire et admin
 function verifplus($verifplus,$idpers,$idmembre) {
 	if ($verifplus == "menudeux") {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Article
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_common_selector_generic_cart_authorities.xml,v 1.2 2019/09/03 15:33:13 arenou Exp $ -->
+
+<XMLlist>
+	<entry code="cms_module_common_selector_sub_choice_label">Récupérer le panier via</entry>
+	<entry code="cms_module_common_selector_sub_choice">Choisissez une méthode</entry>
+	<entry code="cms_module_common_selector_global_var">Une variable globale</entry>
+	<entry code="cms_module_common_selector_env_var">Une variable d'environnement</entry>
+	<entry code="cms_module_common_selector_generic_authority_by_type">Son type</entry>
+	<entry code="cms_module_common_selector_record_cp_val">Un champ personnalisé de notice</entry>
+	<entry code="cms_module_common_selector_type_section">Un champ de type de contenu d'une rubrique</entry>
+	<entry code="cms_module_common_selector_type_article">Un champ de type de contenu d'un article</entry>
+	<entry code="cms_module_common_selector_type_article_generic">Un champ générique d'une rubrique</entry>
+	<entry code="cms_module_common_selector_type_section_generic">Un champ générique d'un article</entry>
+	<entry code="cms_module_common_selector_authorities_used_by_composed_concepts">Des concepts composés</entry>
+</XMLlist>

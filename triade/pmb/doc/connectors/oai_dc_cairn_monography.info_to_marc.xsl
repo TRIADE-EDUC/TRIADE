@@ -21,6 +21,7 @@
 					<xsl:call-template name="title"/>
 					<xsl:call-template name="publisher"/>
 					<xsl:call-template name="notes"/>
+					<xsl:call-template name="subject"/>
 					<xsl:call-template name="responsabilities"/>
 					<xsl:call-template name="isbn-url"/>
 				</xsl:for-each>
@@ -80,6 +81,16 @@
 					<s c="a"><xsl:value-of select="."/></s>
 				</xsl:for-each>
 			</f>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="subject">
+		<xsl:if test="dc:subject!=''">
+			<xsl:for-each select="dc:subject">
+				<f c="606">
+					<s c="a"><xsl:value-of select="."></xsl:value-of></s>
+				</f>
+			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
 	

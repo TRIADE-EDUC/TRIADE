@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!-- Declaration d'un module
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: manifest.xml,v 1.1 2019/08/19 09:27:30 jlaurent Exp $ -->
+
+<manifest>
+	<name lang="fr_FR">Exemplaires</name>
+	<author>
+		<name>Dimitri Goron</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2017-05-04</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<path_indexation directory="notices"></path_indexation>
+	<use>
+		<datasources>
+			<datasource>frbr_entity_expl_datasource_custom_fields</datasource>
+		</datasources>
+		<views>
+			<view>frbr_entity_expl_view_expllist</view>
+		</views>
+	</use>
+</manifest>

@@ -1,11 +1,13 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: quota_table.inc.php,v 1.7 2009-05-16 11:11:52 dbellamy Exp $
+// $Id: quota_table.inc.php,v 1.8 2021/02/19 08:54:00 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
+global $include_path, $categ, $sub;
+global $qt, $first, $elements, $elements_quota_form, $query_compl;
 //Affichage d'un tableau de quota
 
 require_once($include_path."/templates/quotas.tpl.php");

@@ -5,7 +5,7 @@ session_start();
  *                            ---------------
  *
  *   begin                : Janvier 2000
- *   copyright            : (C) 2000 E. TAESCH - T. TRACHET -
+ *   copyright            : (C) 2000 E. TAESCH -  -
  *   Site                 : http://www.triade-educ.com
  *
  *
@@ -27,113 +27,126 @@ session_start();
 <META http-equiv="expires" content = -1>
 <meta name="Copyright" content="Triade©, 2001">
 <LINK TITLE="style" TYPE="text/CSS" rel="stylesheet" HREF="./librairie_css/css.css">
+<link rel="stylesheet" type="text/css" href="./librairie_css/css-v4.css">
 <script language="JavaScript" src="./librairie_js/verif_creat.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_defil.js"></script>
 <script language="JavaScript" src="./librairie_js/clickdroit.js"></script>
 <script language="JavaScript" src="./librairie_js/function.js"></script>
 <script language="JavaScript" src="./librairie_js/lib_css.js"></script>
-<title>Triade - Compte de <?php print "$_SESSION[nom] $_SESSION[prenom] "?></title>
+<title>Triade - Compte de <?php print htmlspecialchars($_SESSION['nom'])." ".htmlspecialchars($_SESSION['prenom']) ?></title>
 </head>
 <body id='bodyfond' marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" onload="Init();" >
-<?php include("./librairie_php/lib_licence.php");
+<?php
+include("./librairie_php/lib_licence.php");
 include_once('librairie_php/db_triade.php');
 validerequete("7");
-$cnx=cnx();
-$etatmodif=0;
-$intitule="";
-$cacher="";
-$public="";
+$cnx = cnx();
+$etatmodif = 0;
+$intitule = "";
+$cacher = "";
+$public = "";
+$idgroupemail = "";
 if (isset($_GET["id"])) {
-	$data=verifGroupMailEleve($_GET["id"],$_SESSION["id_pers"]);
-	if (count($data) > 0) {  //id,idpers,liste_id,libelle,cacher,public
-		$etatmodif=1;
-		$idgroupemail=$_GET["id"];
-		$intitule=$data[0][3];
-		$cacher=($data[0][4] == 1) ? "checked='checked'" : "" ;
-		$public=($data[0][5] == 1) ? "checked='checked'" : "" ;
-		$liste=$data[0][2];
-	}
-
+    $data = verifGroupMailEleve($_GET["id"], $_SESSION["id_pers"]);
+    if (countTriade($data) > 0) {
+        $etatmodif = 1;
+        $idgroupemail = $_GET["id"];
+        $intitule = $data[0][3];
+        $cacher = ($data[0][4] == 1) ? "checked='checked'" : "";
+        $public = ($data[0][5] == 1) ? "checked='checked'" : "";
+        $liste = $data[0][2];
+    }
 }
-//error($cnx);
+$bt = ($etatmodif == 1) ? "Valider la modification" : LANGMESS26;
 ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre].".js'>" ?></SCRIPT>
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre'].".js'>" ?></SCRIPT>
 <?php include("./librairie_php/lib_defilement.php"); ?>
 </TD><td width="472" valign="middle" rowspan="3" align="center">
 <div align='center'><?php top_h(); ?>
-<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION[membre]."1.js'>" ?></SCRIPT>
-<form method=post name="formulaire" action='./messagerie_creat_grpmailele2.php' >
+<SCRIPT language="JavaScript" <?php print "src='./librairie_js/".$_SESSION['membre']."1.js'>" ?></SCRIPT>
 <table border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="#0B3A0C" height="85">
-<tr id='coulBar0' ><td height="2"><b><font   id='menumodule1' ><?php print LANGMESS23?></font></b></td>
-</tr>
+<tr id='coulBar0'><td height="2"><b><font id='menumodule1'><?php print LANGMESS23 ?></font></b></td></tr>
 <tr id='cadreCentral0'>
-<td >
-<ul><BR>
-<font class="T2"><?php print LANGGRP1?> :</font> <input type=text name='saisie_intitule' size=35 maxlength=15 value="<?php print $intitule ?>" ><BR>
-<BR><U><?php print LANGMESS24?></U><BR><BR></UL>
-<center>
-<table width=100% border=0>
-<TR><TD>&nbsp;&nbsp;
-<select align=top name="saisie_liste[]" size=20  style="width:190px" multiple="multiple">
-<?php
-$tri="ele";
-if (isset($_GET['tri'])) { $tri=$_GET['tri']; }
+<td>
 
-if ($etatmodif == 1) {
-	$liste=preg_replace('/\{/',"",$liste);
-	$liste=preg_replace('/\}/',"",$liste);
-	$liste=explode(",",$liste);
-	print "<optgroup label='".Elèves."'>";
-	select_eleve_grpmail($tri,$liste);
-}else{
-	print "<optgroup label='".Elèves."'>";
-	select_eleve($tri);
-}
+<form method="post" name="formulaire" action='./messagerie_creat_grpmailele2.php'>
+<div class="mcge-card">
 
+  <div class="mcge-field-row">
+    <label class="mcge-lbl"><?php print LANGGRP1 ?></label>
+    <input type="text" name="saisie_intitule" size="35" maxlength="15"
+           value="<?php print htmlspecialchars($intitule) ?>" class="mcge-input">
+  </div>
 
-?>
-</select>
-</TD>
-<TD valign=top>
-<ul>
-<TABLE border="1" width=80% bordercolor="#000000">
-<TR><TD bgcolor="#FFFFFF">
-<?php print LANGMESS25?> <font color=red><B><?php print LANGGRP4?></b></font> <?php print LANGGRP5?><BR>  <BR>
-</td></tr>
-</table>
-<?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire"))  {  ?>
-<br><br>
-<input type=checkbox name='public'  <?php print $public ?>  value="on" class='btradio1' onclick="document.formulaire.cacher.checked=false" > <?php print LANGMESS35?>
-<?php } ?>
-<br><br>
-<input type=checkbox name='cacher' <?php print $cacher ?> value="on" class='btradio1' onclick="document.formulaire.public.checked=false" > <?php print "Cacher la liste des pers."?>
-<input type='hidden' value="<?php print $idgroupemail ?>" name='idgroupemaileleve' />
-<br><br>
-[<a href='messagerie_creat_grpmailele.php?tri=cls&id=<?php print $idgroupemail ?>'>Trier par classe</a>]&nbsp;&nbsp;[<a href='messagerie_creat_grpmailele.php?tri=ele&id=<?php print $idgroupemail ?>'>Trier par nom</a>]
-</ul>
-</TD></TR></TABLE></center>
-<BR><BR><UL>
-<?php if ($etatmodif == 1) { $bt="Valider la modification"; }else{ $bt=LANGMESS26; } ?>
-<script language=JavaScript>buttonMagic("<?php print LANGAGENDA30." / ".LANGAGENDA26 ?>","messagerie_liste_grpmailele.php","_parent","","");</script>
-<script language=JavaScript>buttonMagicSubmit("<?php print $bt?>","rien"); //text,nomInput</script>
-<script language=JavaScript>buttonMagicRetour("messagerie_envoi.php",'_self'); //text,nomInput</script>
-<ul><br> <br><br>
-<!-- // fin  -->
-</td></tr></table>
+  <div class="mcge-section-title"><?php print LANGMESS24 ?></div>
+
+  <div class="mcge-sort-links">
+    [<a href="messagerie_creat_grpmailele.php?tri=cls&amp;id=<?php print htmlspecialchars($idgroupemail) ?>">Trier par classe</a>]
+    &nbsp;&nbsp;
+    [<a href="messagerie_creat_grpmailele.php?tri=ele&amp;id=<?php print htmlspecialchars($idgroupemail) ?>">Trier par nom</a>]
+  </div>
+
+  <div class="mcge-two-col">
+
+    <select name="saisie_liste[]" size="20" multiple="multiple" class="mcge-multiselect">
+    <?php
+    $tri = "ele";
+    if (isset($_GET['tri'])) { $tri = $_GET['tri']; }
+    if ($etatmodif == 1) {
+        $liste = preg_replace('/\{/', "", $liste);
+        $liste = preg_replace('/\}/', "", $liste);
+        $liste = explode(",", $liste);
+        print "<optgroup label='Élèves'>";
+        select_eleve_grpmail($tri, $liste);
+    } else {
+        print "<optgroup label='Élèves'>";
+        select_eleve($tri);
+    }
+    print "</optgroup>";
+    ?>
+    </select>
+
+    <div class="mcge-options">
+      <div class="mcge-info-box">
+        <?php print LANGMESS25 ?> <strong><?php print LANGGRP4 ?></strong> <?php print LANGGRP5 ?>
+      </div>
+
+      <?php if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) { ?>
+      <label class="mcge-check-row">
+        <input type="checkbox" name="public" <?php print $public ?> value="on"
+               onclick="document.formulaire.cacher.checked=false">
+        <?php print LANGMESS35 ?>
+      </label>
+      <?php } ?>
+
+      <label class="mcge-check-row">
+        <input type="checkbox" name="cacher" <?php print $cacher ?> value="on"
+               onclick="document.formulaire.public.checked=false">
+        Cacher la liste des pers.
+      </label>
+
+      <input type="hidden" value="<?php print htmlspecialchars($idgroupemail) ?>" name="idgroupemaileleve">
+    </div>
+
+  </div>
+
+  <div class="mcge-actions">
+    <script language="JavaScript">buttonMagic("<?php print LANGAGENDA30." / ".LANGAGENDA26 ?>","messagerie_liste_grpmailele.php","_parent","","");</script>
+    <script language="JavaScript">buttonMagicSubmit("<?php print $bt ?>","rien");</script>
+    <script language="JavaScript">buttonMagicRetour("messagerie_envoi.php",'_self');</script>
+  </div>
+
+</div>
 </form>
+
+</td></tr></table>
 <?php
-if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")){
-     	print "<SCRIPT type='text/javascript' ";
-       	print "src='./librairie_js/".$_SESSION["membre"]."2.js'>";
-       	print "</SCRIPT>";
-}else{
-       	print "<SCRIPT type='text/javascript' ";
-      	print "src='./librairie_js/".$_SESSION["membre"]."22.js'>";
-      	print "</SCRIPT>";
-      	top_d();
-      	print "<SCRIPT type='text/javascript' ";
-      	print "src='./librairie_js/".$_SESSION["membre"]."33.js'>";
-	print "</SCRIPT>";
+if (($_SESSION["membre"] == "menuadmin") || ($_SESSION["membre"] == "menuscolaire")) {
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."2.js'></SCRIPT>";
+} else {
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."22.js'></SCRIPT>";
+    top_d();
+    print "<SCRIPT type='text/javascript' src='./librairie_js/".$_SESSION["membre"]."33.js'></SCRIPT>";
 }
 ?>
 </BODY></HTML>

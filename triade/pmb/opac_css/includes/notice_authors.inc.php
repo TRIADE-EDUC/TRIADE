@@ -1,27 +1,26 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: notice_authors.inc.php,v 1.7 2017-09-21 15:15:19 dgoron Exp $
+// $Id: notice_authors.inc.php,v 1.8 2022/01/04 09:23:42 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-// rÃ©cupÃ©ration des responsabilitÃ©s d'une notice
+// récupération des responsabilités d'une notice
 
-// get_notice_authors : retourne un tableau avec les responsabilitÃ©s d'une notice donnÃ©e
+// get_notice_authors : retourne un tableau avec les responsabilités d'une notice donnée
 function get_notice_authors($notice=0) {
-	global $dbh;
-	
 	$responsabilites = array() ;
 	$auteurs = array() ;
 	
+	$res = array();
 	$res["responsabilites"] = array() ;
 	$res["auteurs"] = array() ;
 	
 	$rqt = "select author_id, responsability_fonction, responsability_type ";
 	$rqt.= "from responsability, authors where responsability_notice='$notice' and responsability_author=author_id order by responsability_type, responsability_ordre " ;
 
-	$res_sql = pmb_mysql_query($rqt, $dbh);
+	$res_sql = pmb_mysql_query($rqt);
 	while ($notice=pmb_mysql_fetch_object($res_sql)) {
 		$responsabilites[] = $notice->responsability_type ;
 		$auteurs[] = array( 
@@ -35,7 +34,7 @@ function get_notice_authors($notice=0) {
 	return $res;
 }
 
-// constitution du header de responsabilitÃ©
+// constitution du header de responsabilité
 function gen_authors_header($responsabilites, $separator=',') {
 	global $pmb_notice_author_functions_grouping;
 

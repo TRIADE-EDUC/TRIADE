@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE XMLlist SYSTEM "../XMLlist.dtd" [<!ENTITY nbsp "&amp;nbsp;">]>
+
+<!-- messages localisés en français pour le module Animationslist
+****************************************************************************************
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+****************************************************************************************
+$Id: cms_module_artecampus_selector_artecampus.xml,v 1.1.2.1 2024/07/18 12:38:21 qvarin Exp $ -->
+
+<XMLlist>
+    <entry code="id_connector">Identifiant du connecteur :</entry>
+    <entry code="id_connector_placeholder">Source id</entry>
+</XMLlist>

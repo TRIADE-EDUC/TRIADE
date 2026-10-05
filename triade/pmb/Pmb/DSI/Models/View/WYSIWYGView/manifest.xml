@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+
+<!--
+**************************************************************************************** 
+© 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net) 
+**************************************************************************************** 
+$Id: manifest.xml,v 1.7 2023/12/08 09:27:33 jparis Exp $ 
+-->
+
+<manifest>
+	<type>view</type>
+	<namespace>Pmb\DSI\Models\View\WYSIWYGView\WYSIWYGView</namespace>
+	<author>
+		<name>Equipe DEV</name>
+		<organisation>PMB Services</organisation>
+	</author>
+	<created_date>2022-10-07</created_date>
+	<version>1.0</version>
+	<default_language>fr_FR</default_language>
+	<customizable>false</customizable>
+	<previewable>false</previewable>
+	<limitable>false</limitable>
+	<default_model_image>images/dsi/views/view_default.png</default_model_image>
+	<compatibility>
+		<item>Pmb\DSI\Models\Item\Aggregator\AggregatorItem</item>
+	</compatibility>
+	<levels>
+		<level_1>
+			<element>aggregator</element>
+		</level_1>
+		<level_2>
+			<element>basic</element>
+		</level_2>
+		<level_3>
+			<element>enriched</element>
+		</level_3>
+	</levels>
+	<!-- <levels>
+		<level1>
+			<element>simple</element>
+			<element>aggregator</element>
+		</level1>
+		<level2>
+			<element>basic</element>
+			<element>expert</element>
+		</level2>
+		<level3>
+			<element>enriched</element>
+			<element>plain_text</element>
+			<element>other_format</element>
+		</level3>
+	</levels> -->
+</manifest>

@@ -1,0 +1,41 @@
+@startuml
+
+namespace PMB {
+	namespace CMS {
+		namespace Library {
+			namespace UrlBuilder {
+			
+				interface UrlBuilder {
+					+makeUrl(): string
+		        }
+        
+				class RootUrlBuilder implements UrlBuilder {
+					+{static}getClassUrlBuilder($type, $subtype = ""): RootUrlBuilder
+				}
+				
+				class EntityUrlBuilder extends RootUrlBuilder {
+					+LVL = ""
+					+{static}$entitiesIds = null
+					+{static}$acces = null
+					+{static}$domain = []
+					..
+					#getQuery(): string
+					+getEntityId()
+					+getEntityType()
+					#getEntitiesIds(): array
+					#getAccesClass()
+					#getAccesDomain(int $id)
+				}
+
+				'' Création d'une classe par type/sous-type
+				'' Exemple : 
+				'' UrlBuilder_6_601 = notice_display
+				class UrlBuilder_6_601 extends EntityUrlBuilder {
+					+LVL = "notice_display"
+				}
+			}
+		}
+	}
+}
+
+@enduml

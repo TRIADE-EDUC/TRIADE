@@ -8,8 +8,8 @@ $cnx=cnx();
 
 $data=listingGroupeMail($idgroupe); // id,idpers,liste_id,libelle,public
 $liste="";
-if (count($data) > 0) {
-	$liste="Groupe Mail : ".nomDuGroupeMail($idgroupe)." ( ".count($data)." personne(s) )<br><br>";
+if (countTriade($data) > 0) {
+	$liste="Groupe Mail : ".nomDuGroupeMail($idgroupe)." ( ".countTriade($data)." personne(s) )<br><br>";
 	foreach($data as $liste_pers=>$value) {
 		$personne=recherche_personne($value);
 		if ($personne != "") {

@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: SubTabHierarchicalSearch.js,v 1.1 2018-10-08 13:59:39 vtouchard Exp $
+// $Id: SubTabHierarchicalSearch.js,v 1.2 2020/07/22 13:17:20 jlaurent Exp $
 
 
 define([
@@ -30,7 +30,11 @@ define([
 				this.form = searchButton.form;			
 				
 				on(this.form, 'submit', lang.hitch(this, this.postForm));				
-				this.getParent().resizeIframe();
+				if(typeof this.getParent().resizeIframe == "function"){
+					this.getParent().resizeIframe();
+				} else {
+					this.getParent().getParent().resizeIframe();
+				}
 			},
 			destroy: function(){
 				this.inherited(arguments);

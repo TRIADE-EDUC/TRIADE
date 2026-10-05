@@ -1,7 +1,7 @@
 // +-------------------------------------------------+
 // � 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: FormsList.js,v 1.2 2017-01-20 09:54:51 tsamson Exp $
+// $Id: FormsList.js,v 1.2 2017/01/20 09:54:51 tsamson Exp $
 
 
 define(["dojo/_base/declare", "dojo/topic", "dojo/_base/lang", "dijit/layout/ContentPane", "dojo/dom", "dojo/dom-construct", "dojo/on","dojo/query", 'dojo/dom-class'], function(declare, topic, lang, ContentPane, dom, domConstruct, on, query, domClass){

@@ -1,12 +1,17 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: factures.inc.php,v 1.43 2019-05-28 15:12:23 btafforeau Exp $
+// $Id: factures.inc.php,v 1.48 2023/05/04 10:35:19 rtigero Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".inc.php")) die("no access");
 
-global $class_path, $include_path, $msg, $charset, $action, $id_bibli, $id_cde, $id_fac;
+global $class_path, $include_path, $msg, $charset, $id_bibli, $id, $id_fac;
+
+if(!isset($id)) {
+	$id = 0; 
+}
+$id = intval($id);
 
 // gestion des factures
 require_once("$class_path/entites.class.php");
@@ -14,7 +19,7 @@ require_once("$class_path/actes.class.php");
 require_once("$class_path/liens_actes.class.php");
 require_once("$include_path/templates/actes.tpl.php");
 require_once("$include_path/templates/factures.tpl.php");
-require_once($class_path."/list/accounting/list_accounting_invoices_ui.class.php");
+require_once($class_path.'/accounting/accounting_invoices_controller.class.php');
 
 //Affiche la liste des factures pour un etablissement
 function show_list_fac($id_bibli, $id_exercice = 0) {
@@ -22,17 +27,16 @@ function show_list_fac($id_bibli, $id_exercice = 0) {
 	global $accounting_invoices_ui_status;
 	
 	$filters = array();
-	$filters['user_input'] = stripslashes($accounting_invoices_ui_user_input);
+	$filters['user_input'] = stripslashes($accounting_invoices_ui_user_input ?? "");
 	$filters['status'] = $accounting_invoices_ui_status;
 	
 	$list_accounting_invoices_ui = new list_accounting_invoices_ui($filters);
 	print $list_accounting_invoices_ui->get_display_list();		
 }
 
-//Affiche le formulaire de crÃ©ation de facture depuis une commande
+//Affiche le formulaire de création de facture depuis une commande
 function show_from_cde($id_bibli, $id_cde) {
-	global $msg;
-	global $lang, $charset;
+	global $msg, $charset;
 	global $fact_modif_form, $frame_show_from_cde, $form_search, $bt_enr;
 
 	$form = $fact_modif_form;
@@ -81,8 +85,7 @@ function show_from_cde($id_bibli, $id_cde) {
 
 //Affiche le formulaire de modification de facture
 function show_form_fac($id_bibli, $id_fac) {
-	global $msg;
-	global $lang, $charset;
+	global $msg, $charset;
 	global $fact_modif_form, $frame_show, $bt_sup, $bt_enr, $bt_pay, $form_search;
 	global $pmb_type_audit, $bt_audit;
 
@@ -101,7 +104,7 @@ function show_form_fac($id_bibli, $id_fac) {
 	$form = str_replace('<!-- frame_show -->', $frame_show, $form);
 
 	if( (($factu->statut & STA_ACT_PAY) == STA_ACT_PAY) || (($factu->statut & STA_ACT_ARC) == STA_ACT_ARC) )  {
-		//La facture est payÃ©e ou archivÃ©e, donc non modifiable
+		//La facture est payée ou archivée, donc non modifiable
 	} else {
 		$form = str_replace('<!-- bouton_pay -->', $bt_pay, $form);
 		$form = str_replace('<!-- bouton_sup -->', $bt_sup, $form);
@@ -144,37 +147,14 @@ function show_form_fac($id_bibli, $id_fac) {
 //Supprime la facture
 function sup_fac($id_fac, $id_cde) {
 	$cde = new actes($id_cde);
-	$cde->statut = ($cde->statut & (~STA_ACT_FAC)); //Statut commande = facturÃ©->non facturÃ©
-	$cde->statut = ($cde->statut & (~STA_ACT_PAY)); //Statut commande = payÃ©->non payÃ©
+	$cde->statut = ($cde->statut & (~STA_ACT_FAC)); //Statut commande = facturé->non facturé
+	$cde->statut = ($cde->statut & (~STA_ACT_PAY)); //Statut commande = payé->non payé
 	$cde->update_statut();
 
 	actes::delete($id_fac);
 	liens_actes::delete($id_fac);
 }
 
-//Traitement des actions
-print "<h1>".htmlentities($msg['acquisition_ach_ges'],ENT_QUOTES, $charset)."&nbsp;:&nbsp;".htmlentities($msg['acquisition_ach_fac'],ENT_QUOTES, $charset)."</h1>";
-
-switch($action) {
-	case 'list':
-		entites::setSessionBibliId($id_bibli);
-		show_list_fac($id_bibli);
-		break;
-	case 'from_cde' :
-		show_from_cde($id_bibli, $id_cde);
-		break;
-	case 'modif':
-		show_form_fac($id_bibli, $id_fac);
-		break;
-	case 'delete' :
-		sup_fac($id_fac, $id_cde);
-		show_list_fac($id_bibli);
-		break;
-	case 'list_pay':
-		list_accounting_invoices_ui::run_action_list('pay');
-		show_list_fac($id_bibli);
-		break;
-	default:
-		print entites::show_list_biblio('show_list_fac');
-		break;
-}
+accounting_invoices_controller::set_id_bibli($id_bibli);
+accounting_invoices_controller::set_id_acte($id_fac);
+accounting_invoices_controller::proceed($id);

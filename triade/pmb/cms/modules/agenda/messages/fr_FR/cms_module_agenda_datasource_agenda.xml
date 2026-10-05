@@ -5,7 +5,7 @@
 ****************************************************************************************
 © 2002-2012 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 ****************************************************************************************
-$Id: cms_module_agenda_datasource_agenda.xml,v 1.5 2016-09-20 10:25:41 apetithomme Exp $ -->
+$Id: cms_module_agenda_datasource_agenda.xml,v 1.6 2023/12/06 14:23:14 qvarin Exp $ -->
 
 <XMLlist>
 	<entry code="cms_module_common_selector_env_var">Evènement depuis une variable d'environnement</entry>
@@ -23,4 +23,5 @@ $Id: cms_module_agenda_datasource_agenda.xml,v 1.5 2016-09-20 10:25:41 apetithom
 	<entry code="cms_module_agenda_datasource_agenda_color_desc">Couleur du calendrier associé</entry>
 	<entry code="cms_module_agenda_datasource_agenda_calendar_desc">Nom du calendrier associé</entry>
 	<entry code="cms_module_agenda_datasource_agenda_events_desc">Tableau d'évènements</entry>
+	<entry code="cms_module_common_datasource_list_sort_by_event_date">Date de l'évènements</entry>
 </XMLlist>

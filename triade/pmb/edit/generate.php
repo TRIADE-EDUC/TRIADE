@@ -1,17 +1,23 @@
 <?php
 // +-------------------------------------------------+
-// Â© 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
+// © 2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: generate.php,v 1.18 2017-01-31 15:41:41 dgoron Exp $
+// $Id: generate.php,v 1.21.6.1 2024/09/09 14:35:45 dgoron Exp $
 
-//modifiÃ© 12/2007 FranÃ§ois CEROVETTI pour affichage code en clair avec police vectorielle.
-// lire exemple de valeurs adaptÃ©es Ã  65 etiquettes AVERY A4 plus bas:
+//modifié 12/2007 François CEROVETTI pour affichage code en clair avec police vectorielle.
+// lire exemple de valeurs adaptées à 65 etiquettes AVERY A4 plus bas:
 
 $base_path="..";                            
 $base_auth = "";  
 $base_title = "PDF";
 $base_noheader=1;
 require_once ("$base_path/includes/init.inc.php");  
+
+global $class_path, $source, $bibli_name, $fpdf, $cb_first, $truc;
+global $CBG_NBR_X_CELLS, $CBG_NBR_Y_CELLS, $ORIENTATION;
+global $CBG_TOP_MARGIN, $CBG_BOTTOM_MARGIN, $CBG_LEFT_MARGIN, $CBG_RIGHT_MARGIN;
+global $pmb_pdf_font, $CBG_TEXT_FONT_SIZE, $CBG_CB_TEXT_SIZE, $CBG_TEXT_HEIGHT, $CBG_CB_RES;
+global $CBG_INNER_LEFT_MARGIN, $CBG_INNER_RIGHT_MARGIN, $CBG_INNER_TOP_MARGIN, $CBG_INNER_BOTTOM_MARGIN;
 
 if(!isset($truc)) $truc = '';
 
@@ -21,13 +27,13 @@ include("$class_path/fpdf_etiquette.class.php");
 
 // PARAMETRES
 // ----------
-//   bibli_name : nom de la bibliothÃ¨que
-//   cb_first : code barre de dÃ©but
-//   nbr_cb : nombre de codes-barres Ã  produire
+//   bibli_name : nom de la bibliothèque
+//   cb_first : code barre de début
+//   nbr_cb : nombre de codes-barres à produire
 
 // save params
 /*
- * DÃ©but du commantaire : Si on laisse Ã§a on Ã©crase les anciens paramÃ¨tres 
+ * Début du commantaire : Si on laisse ça on écrase les anciens paramètres 
 $mep_etiq_cb[bibli_name]               =   $bibli_name ;
 $mep_etiq_cb[nbr_cb]                   =   $nbr_cb ;
 $mep_etiq_cb[ORIENTATION]              =   $ORIENTATION ;
@@ -50,11 +56,11 @@ $querry = "update parametres set valeur_param='".serialize($mep_etiq_cb)."' wher
 $res = pmb_mysql_query($querry, $dbh);*/
 
 
-// exemple de valeurs fonctionnelles pour AVERY 65 Ã©tiquettes par page OISEAULIRE Cerovetti
-// Constantes non activÃ©es, valeurs passÃ©es par le formulaire
+// exemple de valeurs fonctionnelles pour AVERY 65 étiquettes par page OISEAULIRE Cerovetti
+// Constantes non activées, valeurs passées par le formulaire
 /*
-define("CBG_NBR_X_CELLS",        5);     // Nombre d'Ã©tiquettes en largeur sur la page
-define("CBG_NBR_Y_CELLS",        13);     // Nombre d'Ã©tiquettes en hauteur
+define("CBG_NBR_X_CELLS",        5);     // Nombre d'étiquettes en largeur sur la page
+define("CBG_NBR_Y_CELLS",        13);     // Nombre d'étiquettes en hauteur
 
 // marges, mesures en mm
 define("CBG_LEFT_MARGIN",        4);
@@ -62,25 +68,25 @@ define("CBG_RIGHT_MARGIN",       4);
 define("CBG_TOP_MARGIN",         11);
 define("CBG_BOTTOM_MARGIN",      10);
 
-// marges intÃ©rieures du bord de l'Ã©tiquette au code barre, mesures en mm
+// marges intérieures du bord de l'étiquette au code barre, mesures en mm
 define("CBG_INNER_LEFT_MARGIN",   4);
 define("CBG_INNER_RIGHT_MARGIN",  4);
 define("CBG_INNER_TOP_MARGIN",    1);
 define("CBG_INNER_BOTTOM_MARGIN", 1);
 
-// place allouÃ©e au nom de la bibliothÃ¨que, mesure en mm
+// place allouée au nom de la bibliothèque, mesure en mm
 define("CBG_TEXT_HEIGHT",         4);
 // Taille de la police, en points
 define("CBG_TEXT_FONT_SIZE",      11);
 // Taille du texte du code-barre, 1 : le plus petit ; 5 : le plus grand
 define("CBG_CB_TEXT_SIZE",        1);
-// RÃ©solution du code barre. Si vous augmentez ce paramÃ¨tre, il faudra peut-Ãªtre
+// Résolution du code barre. Si vous augmentez ce paramètre, il faudra peut-être
 // augmenter la taille de la police. Une valeur faible produit un fichier moins volumineux
 define("CBG_CB_RES",              2);
-// l'apparence du code barre dÃ©pend Ã©troitement de la rÃ©solution et de la taille du texte
+// l'apparence du code barre dépend étroitement de la résolution et de la taille du texte
 */
 
-// DÃ©marrage et configuration du pdf
+// Démarrage et configuration du pdf
 $nom_classe=$fpdf."_Etiquette";
 $pdf=new $nom_classe($CBG_NBR_X_CELLS, $CBG_NBR_Y_CELLS, $ORIENTATION);
 $pdf->Open();
@@ -100,7 +106,7 @@ switch ($source) {
     		print "error while opening file ".$fname; 
     		exit();
     	}
-		// on charge tout en mÃ©moire, on coupe aux espaces et on met le tout dans un tableau
+		// on charge tout en mémoire, on coupe aux espaces et on met le tout dans un tableau
 		$filecontent = fread ($f, filesize($fname));
 		if (!$filecontent) {
 			print "empty file ".$fname; 
@@ -135,8 +141,9 @@ $cbheight = $pdf->GetStickHeight() - $CBG_INNER_TOP_MARGIN - $CBG_INNER_BOTTOM_M
 	$cbheight -= $CBG_TEXT_HEIGHT;
  // }
 
+$cb_last = '';
 while ( ! $fini) {
-	// Ajoute une Ã©tiquette
+	// Ajoute une étiquette
 	$pdf->AddStick();
 
 	// texte
@@ -158,43 +165,39 @@ while ( ! $fini) {
 	$pdf->SetXY($pdf->GetStickX(), $pdf->GetStickY() + $CBG_INNER_TOP_MARGIN + $CBG_TEXT_HEIGHT + $cbheight);
 		$pdf->Cell($pdf->GetStickWidth(), $CBG_TEXT_HEIGHT, $cb, 0, 0, 'C');
 
-	// incrÃ©mentation et test de fin
+	$cb_last = $cb;
+	// incrémentation et test de fin
 	switch ($source) {
 		case 'fromfile' :
 			$i_cb++;
-			if ($i_cb >= $nbr_cb)
-			{
+			if ($i_cb >= $nbr_cb) {
 				$fini = true;
-			}
-			else
-			{
+			} else {
 				$cb = $cbarray[$i_cb];
 			}
 			break;
-
 		case 'autoinc' :
 		default :
-			// incrÃ©mentation
+			// incrémentation
 			$i = strlen($cb) - 1;
 			do {
-				if ($cb{$i} == "9") {
-					$cb{$i} = 0;
+			    $cb_char = pmb_substr($cb, $i, 1);
+			    if ($cb_char == "9") {
+				    $cb = pmb_substr_replace($cb, '0', $i, 1);
 					if ($i == 0) {
 						$cb = "1".$cb;
 					}
 				}
 				else {
-					$cb{$i} = chr(ord($cb{$i}) + 1);
+				    $cb = pmb_substr_replace($cb, chr(ord($cb_char) + 1), $i, 1);
 				}
 				$i--;
-			} while (($i >= 0) && ($cb{$i+1} == 0));
+			} while (($i >= 0) && (pmb_substr($cb, $i+1, 1) == 0));
 			// test de fin
-			if ($pdf->GetNbrSticks() >= $nbr_cb)
-			{
+			if ($pdf->GetNbrSticks() >= $nbr_cb) {
 				$fini = true;
 			}
 			break;
 	}
 }
-
-$pdf->Output('CB'.$cb_first.'-'.($cb_first+$nbr_cb).'.pdf', true);
+$pdf->Output('CB'.$cb_first.'-'.$cb_last.'.pdf', true);

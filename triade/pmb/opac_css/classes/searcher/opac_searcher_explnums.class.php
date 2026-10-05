@@ -2,17 +2,18 @@
 // +-------------------------------------------------+
 //  2002-2004 PMB Services / www.sigb.net pmb@sigb.net et contributeurs (voir www.sigb.net)
 // +-------------------------------------------------+
-// $Id: opac_searcher_explnums.class.php,v 1.2 2015-04-03 11:16:21 jpermanne Exp $
+// $Id: opac_searcher_explnums.class.php,v 1.3 2021/12/27 08:17:27 dgoron Exp $
 
 if (stristr($_SERVER['REQUEST_URI'], ".class.php")) die("no access");
 
+global $class_path;
 require_once($class_path.'/searcher/opac_searcher_generic.class.php');
 
 class opac_searcher_explnums extends opac_searcher_generic {
 	
-	protected $notices_searched = false;		// boolÃ©en pour Ã©viter de tourner en rond...
+	protected $notices_searched = false;		// booléen pour éviter de tourner en rond...
 	protected $notices_ids = '';
-	protected $explnums_notices = array();		//tableau association identifiant de doc.numÃ©rique <=> identifiant de notice
+	protected $explnums_notices = array();		//tableau association identifiant de doc.numérique <=> identifiant de notice
 	
 	public function __construct($user_query=''){
 		parent::__construct($user_query);
@@ -36,10 +37,6 @@ class opac_searcher_explnums extends opac_searcher_generic {
 	}
 
 	protected function _filter_results(){
-		global $dbh;
-		
-//TODO Filtrage par statut de document numerique 
-	
 		$this->_get_notices_ids();
 		
 		if($this->notices_ids!='') {
@@ -83,7 +80,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 			
 			if($query) {
 				$notices_ids = array();
-				$r = pmb_mysql_query($query,$dbh);
+				$r = pmb_mysql_query($query);
 				if(pmb_mysql_num_rows($r)) {
 					while($o=pmb_mysql_fetch_object($r)) {
 						$notices_ids[] = $o->notice_id;
@@ -96,7 +93,6 @@ class opac_searcher_explnums extends opac_searcher_generic {
 	}
 	
 	protected function _get_notices_ids() {
-		global $dbh;
 		if(!$this->notices_searched) {
 			$this->notices_ids='';
 			$this->_get_objects_ids();
@@ -122,7 +118,7 @@ class opac_searcher_explnums extends opac_searcher_generic {
 				$q.= 'union ';
 	 			$q.= 'select num_notice as notice_id, explnum_id as num_obj from explnum join bulletins on explnum_bulletin=bulletin_id where num_notice!=0 ';
 			} 	
-			$r = pmb_mysql_query($q,$dbh);
+			$r = pmb_mysql_query($q);
 			if(pmb_mysql_num_rows($r)) {
 				$this->explnums_notices=array();
 				while($o=pmb_mysql_fetch_object($r)) {
